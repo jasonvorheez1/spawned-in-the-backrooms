@@ -96,7 +96,7 @@ function closeLoot(ctx) {
   const s = ctx.self.state, c = s.lootOpen ? ctx.getObject(s.lootOpen) : null
   if (c) snd(ctx, 'container-close-thud', 0.35)
   if (c && c.tags?.includes('remains') && !itemsOf(c.state?.items).length) ctx.destroy(c.id) // an emptied corpse is cleared away
-  s.lootOpen = ''; s.lootList = ''; s.lootName = ''
+  s.lootOpen = ''; s.lootList = ''; s.lootName = ''; s.pocket = false
   mem(ctx).key = ''
 }
 
@@ -216,18 +216,32 @@ function pickpocket(ctx, it) {
   const s = ctx.self.state, now = ctx.now(), m = mem(ctx)
   if (now - (m.pickAt ?? -1e9) < 900) return
   m.pickAt = now
-  const chance = pickChance(ctx, it), items = pocketsOf(ctx, it), who = (it.state.name ?? 'Stranger').split(' ·')[0]
+  const items = pocketsOf(ctx, it), who = (it.state.name ?? 'Stranger').split(' ·')[0]
+  if (!items.length) { note(ctx, `${who}'s pockets are empty.`); return }
+  s.lootOpen = it.id; s.lootName = `${who}'s pockets`; s.lootList = it.state.pockets; s.pocket = true; s.focus = null
+  snd(ctx, 'loot-take-all-rustle', 0.15)
+}
+// one grab from an open pocket: the roll happens here, per item
+function liftOne(ctx, it, i) {
+  const s = ctx.self.state, items = pocketsOf(ctx, it), who = (it.state.name ?? 'Stranger').split(' ·')[0]
+  const chance = pickChance(ctx, it) ?? 0.5
   it.state.picked = { ...(it.state.picked ?? {}), [ctx.self.id]: (it.state.picked?.[ctx.self.id] ?? 0) + 1 }
+  if (!(i >= 0 && i < items.length)) return
   if (ctx.random() < chance) {
-    if (!items.length) { note(ctx, `${who}'s pockets are empty.`); return }
-    const i = Math.floor(ctx.random() * items.length), t = items[i], r = takeToken(ctx, t)
+    const t = items[i], r = takeToken(ctx, t)
     if (!r.ok) { note(ctx, r.msg || "You can't carry that."); return }
-    items.splice(i, 1); it.state.pockets = items.join(',')
+    items.splice(i, 1); it.state.pockets = items.join(','); s.lootList = it.state.pockets
     note(ctx, `Lifted ${describe(t).name} from ${who}`)
     snd(ctx, 'loot-take-all-rustle', 0.25)
     s.xp = (s.xp ?? 0) + 8
+    if (!items.length) closeLoot(ctx)
     return
   }
+  closeLoot(ctx)
+  caught(ctx, it, who)
+}
+function caught(ctx, it, who) {
+  const s = ctx.self.state
   // caught: they spin round. the first time they shove you off with a warning; the second, they turn on you (creator's rule)
   const p = ctx.self.feetPosition, q = it.feetPosition
   it.rotation = { yaw: Math.atan2(-(p.x - q.x), -(p.z - q.z)) * 57.2958 }
@@ -286,6 +300,7 @@ function lootAction(ctx, d) {
   if (d.k === 'close') { closeLoot(ctx); return }
   const c = ctx.getObject(s.lootOpen)
   if (!c) { closeLoot(ctx); return }
+  if (s.pocket) { if (d.k === 'take') liftOne(ctx, c, Number(d.i)); else if (d.k === 'all') { note(ctx, 'One thing at a time, or they\'ll feel it.'); snd(ctx, 'ui-denied-click', 0.3) } return }
   let items = itemsOf(c.state?.items), fail = ''
   if (d.k === 'take') {
     const i = Number(d.i)
