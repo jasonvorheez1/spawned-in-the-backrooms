@@ -1,6 +1,7 @@
 // Level 3 loot: crates, generator-room caches, assembly-line output. Tables in data/loot3.yml.
 import T from "./data/loot3.yml";
-import { rollWeapon, rollLock, rollVariant } from "./loot.js";
+import { rollWeapon, rollLock } from "./loot.js";
+import { rollVariant } from "./weapons.js";
 import P from "./data/l3items.yml";
 import { rollCloth } from "./clothes.js";
 import { SKILLS } from "./stats.js";
