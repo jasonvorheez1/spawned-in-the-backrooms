@@ -3,6 +3,7 @@
 // scripts/interact.js reads and writes them, scripts/loot-ui.js names them, scripts/player.js applies them.
 import L from './data/level0.yml'
 import W from './data/weapons.yml'
+import L1 from './data/level1.yml'
 
 export const itemsOf = (str) => (str ? String(str).split(',').filter(Boolean) : [])
 
@@ -14,6 +15,9 @@ export function describe(token) {
   if (token === 'almond') return { name: 'Almond water', info: `+${L.almondHp} HP · +${L.almondSanity} sanity`, color: '#f3e7b0' }
   if (token === 'ammo') return { name: 'Pistol rounds', info: `x${W.ammo.perPickup}`, color: '#e9c46a' }
   if (token === 'shells') return { name: 'Shotgun shells', info: `x${W.shells.perPickup}`, color: '#e76f51' }
+  if (token === 'ration') return { name: 'Canned ration', info: `+${L1.rationHp} HP · +${L1.rationSanity} sanity`, color: '#c9b48a' }
+  if (token === 'bandage') return { name: 'Bandage', info: `+${L1.bandageHp} HP`, color: '#f2f2ee' }
+  if (token === 'battery') return { name: 'Battery', info: `+${L1.batteryCharge}% light`, color: '#9fd3ff' }
   if (token.startsWith('weapon:')) {
     const k = token.slice(7), w = W[k]
     if (!w) return { name: 'Something', info: '', color: '#cccccc' }

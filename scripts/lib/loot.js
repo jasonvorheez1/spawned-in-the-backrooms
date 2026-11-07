@@ -24,7 +24,7 @@ export function spawnShells(ctx, c) {
 
 // Weighted pick over every found weapon; rarer ones carry a smaller weight in weapons.yml.
 export function rollWeapon(ctx) {
-  const kinds = W.order.slice(1), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
+  const kinds = W.order.slice(1).filter((k) => !W[k].level1), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
   let r = ctx.random() * total;
   for (const k of kinds) { r -= W[k].weight ?? 1; if (r <= 0) return k; }
   return kinds[0];
@@ -57,4 +57,18 @@ export function dropLoot(ctx, pos, name = "Remains") {
   if (ctx.random() < W.dropChance.shells) items.push("shells");
   if (ctx.random() < W.dropChance.weapon) items.push("weapon:" + rollWeapon(ctx));
   if (items.length) spawnRemains(ctx, pos, items, name);
+}
+
+// Level 1's crates: rations, bandages and batteries join the roll. Weights are Savi's picks.
+const L1_WEIGHTS = [["ration", 5], ["almond", 4], ["bandage", 3], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2]];
+export function rollItemL1(ctx) {
+  const total = L1_WEIGHTS.reduce((a, [, w]) => a + w, 0);
+  let r = ctx.random() * total;
+  for (const [k, w] of L1_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + (ctx.random() < 0.6 ? (ctx.random() < 0.55 ? "rebar" : "wrench") : rollWeapon(ctx)) : k; }
+  return "ration";
+}
+export function spawnCrateL1(ctx, p) {
+  const n = 2 + Math.floor(ctx.random() * 3), items = [];
+  for (let i = 0; i < n; i++) items.push(rollItemL1(ctx));
+  ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name: ctx.random() < 0.25 ? "Rations crate" : "Wooden crate", items: items.join(",") } });
 }

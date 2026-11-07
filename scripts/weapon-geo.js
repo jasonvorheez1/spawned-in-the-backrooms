@@ -152,6 +152,24 @@ const builders = {
     for (let k = 0; k < 6; k++) { const z = 0.18 - k * 0.032, top = Y + 0.04 - k * 0.002, bot = Y - 0.012 - k * 0.012; bar(ctx, 0, (top + bot) / 2, 0.018 + k * 0.001, (top - bot) / 2, z - 0.034, z, 0.008); }
     plain(ctx, "oklch(0.15 0.01 60)", 0.95); bar(ctx, 0, Y - 0.018, 0.024, 0.045, -0.035, -0.014, 0.008); // rubber butt pad
   },
+  rebar(ctx, M) { // a bent length of ribbed rebar, sharpened, concrete still crusted on the butt
+    ctx.albedo(STEELTEX); ctx.color(RUST); ctx.metalness(0.5); ctx.roughness(0.8);
+    rod(ctx, [[0, Y, -0.05], [0, Y, 0.3], [0.01, Y, 0.7], [0.03, Y, 0.95], [0.035, Y, 1.04]], [0.011, 0.011, 0.011, 0.009, 0.001], M);
+    for (let z = 0; z < 0.9; z += 0.035) rod(ctx, [[0, Y, z], [0, Y, z + 0.008]], [0.013, 0.013], 8);
+    ctx.albedo(null); ctx.color("oklch(0.7 0.01 90)"); ctx.metalness(0); ctx.roughness(1);
+    rod(ctx, [[0, Y, -0.08], [0.004, Y, -0.04], [0, Y, 0.02]], [0.03, 0.035, 0.025], 7);
+    ctx.color(TAPE); rod(ctx, [[0, Y, 0.06], [0, Y, 0.26]], [0.016, 0.016], M);
+  },
+  wrench(ctx, M) { // a heavy red-handled pipe wrench, toothed jaw at the head
+    ctx.albedo(STEELTEX); ctx.color("oklch(0.55 0.17 25)"); ctx.metalness(0.4); ctx.roughness(0.55);
+    bar(ctx, 0, Y, 0.016, 0.011, 0, 0.42, 0.006);
+    ctx.color(STEEL); ctx.metalness(0.85);
+    bar(ctx, 0, Y, 0.022, 0.016, 0.42, 0.5, 0.005);
+    bar(ctx, 0.03, Y, 0.012, 0.014, 0.46, 0.6, 0.004);
+    bar(ctx, -0.035, Y, 0.012, 0.014, 0.5, 0.6, 0.004);
+    rod(ctx, [[0, Y, 0.44], [0, Y, 0.48]], [0.024, 0.024], M);
+    for (let z = 0.53; z < 0.6; z += 0.012) { bar(ctx, 0.016, Y, 0.003, 0.012, z, z + 0.005, 0.001, 1); bar(ctx, -0.021, Y, 0.003, 0.012, z, z + 0.005, 0.001, 1); }
+  },
 };
 
 export function geometry(ctx) {

@@ -8,6 +8,9 @@ import { raycast } from 'builtin/physics'
 import { dropLoot, spawnWeapon } from './lib/loot.js'
 import { weaponBody } from './lib/weapon-look.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
+import { zoneAt as zoneAt1 } from './lib/level1.js'
+import L1 from './lib/data/level1.yml'
+const zoneHere = (ctx, x, z) => ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : zoneAt(x, z)
 
 import SOUNDS from './lib/data/sounds.yml'
 const sndTurn = {}
@@ -67,6 +70,19 @@ export function takeToken(ctx, token) {
   if (token === 'shells') {
     s.shells = (s.shells ?? 0) + W.shells.perPickup; s.pickedAt = now
     sound(ctx, 'pickup-ammo', 0.7, true)
+    return { ok: true }
+  }
+  if (token === 'ration' || token === 'bandage') { // eaten or wrapped on the spot
+    const mh = maxHp(s.level), ms = maxSan(s.level)
+    s.hp = Math.min(mh, (s.hp ?? mh) + (token === 'ration' ? L1.rationHp : L1.bandageHp))
+    if (token === 'ration') s.sanity = Math.min(ms, (s.sanity ?? ms) + L1.rationSanity)
+    s.pickedAt = now; gain(ctx, L.xpAlmond)
+    sound(ctx, token === 'ration' ? 'plastic-bottle-pickup-rattle' : 'pickup-ammo', 0.7, true)
+    return { ok: true }
+  }
+  if (token === 'battery') {
+    const w = walkOf(ctx); w.battery = Math.min(100, (w.battery ?? s.battery ?? 0) + L1.batteryCharge); s.battery = Math.round(w.battery)
+    s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.7, true)
     return { ok: true }
   }
   if (token.startsWith('weapon:')) {
@@ -183,7 +199,7 @@ function swing(ctx, power = 0) {
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   const cone = (s.ads && wp.adsCone) || wp.cone || (wp.ranged ? 0.985 : 0.4), radius = wp.ranged ? wp.range : wp.reach + 0.6 + power * P.reach
   const found = []
-  for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius })]) {
+  for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius }), ...ctx.query({ tags: ['hound'], radius }), ...ctx.query({ tags: ['stealer'], radius })]) {
     if (m.state?.dead) continue
     const dx = m.feetPosition.x - p.x, dz = m.feetPosition.z - p.z, d = Math.hypot(dx, dz)
     if (d > 0.3 && (dx * f.x + dz * f.z) / d < cone) continue
@@ -348,7 +364,7 @@ export function update(ctx, dt) {
   const dir = w.dir ?? { x: 0, z: 0 }, moving = dir.x !== 0 || dir.z !== 0
   const sprinting = w.sprint && moving && w.stamina > 1 && !s.ads
   w.stamina = Math.max(0, Math.min(L.stamina, w.stamina + (sprinting ? -L.staminaDrain : L.staminaRegen * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
-  const fp = ctx.self.feetPosition, inArch = zoneAt(fp.x, fp.z) === 'arches'
+  const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
   const speed = (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1)
   const intent = { x: dir.x * speed, z: dir.z * speed }
@@ -382,7 +398,7 @@ function tickStats(ctx, t, moving) {
   const af = w.fwd ?? { x: 0, z: -1 }, ax = Math.round(af.x * 20) / 20, az = Math.round(af.z * 20) / 20
   if (s.aimX !== ax) s.aimX = ax
   if (s.aimZ !== az) s.aimZ = az
-  const zone = zoneAt(p.x, p.z)
+  const zone = zoneHere(ctx, p.x, p.z)
   if (zone !== s.zone) s.zone = zone
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
   let drain = L.sanityDrain[zone] ?? 0.12
@@ -409,7 +425,7 @@ function tickStats(ctx, t, moving) {
   }
 
   // the lights' hum spikes: a loud surge that eats sanity while you stand in it; keep moving
-  if (zone !== 'hub') {
+  if (zone !== 'hub' && ctx.self.place !== 'level1') {
     const [a, b] = L.humSpikeEvery
     w.nextSpike ??= now + (a + ctx.random() * (b - a)) * 1000
     if (now >= w.nextSpike && !w.spikeUntil) {
@@ -434,7 +450,7 @@ function tickStats(ctx, t, moving) {
     }
   }
   // a dark figure at the far end of the hall you face: only you see it, and it is gone in a breath
-  if (zone !== 'hub') {
+  if (zone !== 'hub' && ctx.self.place !== 'level1') {
     const [e, f] = L.figureEvery
     w.nextFigure ??= now + (e + ctx.random() * (f - e)) * 1000
     if (now >= w.nextFigure) {
@@ -453,6 +469,14 @@ function tickStats(ctx, t, moving) {
   const st = Math.round(w.stamina), bt = Math.round(w.battery)
   if (st !== s.stamina) s.stamina = st
   if (bt !== s.battery) s.battery = bt
+  // the save: where you stand, every few seconds; a fresh visit wakes you there (level, items, weapons already live in player.state)
+  if (!ctx.session.wokeAt) {
+    ctx.session.wokeAt = now
+    const sp = s.savePos
+    if (sp && s.savePlace && s.savePlace !== ctx.self.place) { ctx.cross(ctx.self, s.savePlace); return }
+    if (sp && s.savePlace === ctx.self.place) { ctx.self.feetPosition = { x: sp.x, y: sp.y + 0.1, z: sp.z }; return }
+  }
+  if (now - (w.savedAt ?? 0) > 4000) { w.savedAt = now; s.savePos = { x: Math.round(p.x * 10) / 10, y: Math.round(p.y * 10) / 10, z: Math.round(p.z * 10) / 10 }; s.savePlace = ctx.self.place }
   // exploring: every new cell is xp
   const { cx, cz } = cellAt(p.x, p.z)
   if (cx >= 0 && cz >= 0 && cx < N && cz < N) {
@@ -462,12 +486,12 @@ function tickStats(ctx, t, moving) {
   // (items are taken with E on what you look at: takeToken above, called from scripts/interact.js)
   // the flickering wall: the way out
   const ex = cellCenter(EXIT.cx, EXIT.cz)
-  if (p.x < -HALF + 1.3 && Math.abs(p.z - ex.z) < 1.8) {
+  if (ctx.self.place === 'main' && p.x < -HALF + 1.3 && Math.abs(p.z - ex.z) < 1.8) {
     s.escapes += 1; s.exitAt = now
     gain(ctx, L.xpExit)
     sound(ctx, 'static-burst-glitch', 0.95, true)
     ctx.emit('screenFlash', { color: '#fff6c8', duration: 0.6, intensity: 0.8 }, { audience: { player: ctx.self.id } })
-    ctx.self.feetPosition = { x: (ctx.random() - 0.5) * 6, y: 0.1, z: (ctx.random() - 0.5) * 6 }
+    ctx.cross(ctx.self, 'level1') // through the flickering wall: Level 1
     return
   }
   // taken
