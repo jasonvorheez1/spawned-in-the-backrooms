@@ -213,11 +213,11 @@ ti = N.new("ShaderNodeTexImage"); ti.image = img_col; N.active = ti
 low.data.materials.clear(); low.data.materials.append(bm_)
 scene.render.engine = "CYCLES"; scene.cycles.samples = 16; scene.cycles.device = 'CPU'
 sel(low); bpy.ops.object.bake(type='EMIT', margin=8)
-ti.image = img_ao; bpy.ops.object.bake(type='AO', margin=8)
+ti.image = img_ao; scene.cycles.samples = 64; bpy.ops.object.bake(type='AO', margin=8); scene.cycles.samples = 16
 ti.image = img_nrm; sel(high, low, active=low)
 bpy.ops.object.bake(type='NORMAL', use_selected_to_active=True, cage_extrusion=0.015, max_ray_distance=0.04, margin=8)
 col = np.array(img_col.pixels[:]).reshape(-1, 4); ao = np.array(img_ao.pixels[:]).reshape(-1, 4)
-col[:, :3] *= (0.5 + 0.5 * ao[:, :1]); img_col.pixels[:] = col.ravel()
+col[:, :3] *= (0.85 + 0.15 * ao[:, :1]); img_col.pixels[:] = col.ravel()
 for i in (img_col, img_nrm):
     i.filepath_raw = f"{OUT}/{i.name}.png"; i.file_format = 'PNG'; i.save()
 bpy.data.objects.remove(high)
