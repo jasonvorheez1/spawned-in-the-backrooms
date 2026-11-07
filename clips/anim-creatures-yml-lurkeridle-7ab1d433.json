@@ -1,0 +1,6 @@
+{"contentHash":"534:5250a339","duration":5,"fps":30,"identity":"anim/creatures.yml#lurkerIdle","tracks":[
+{"bone":"head","prop":"rotation","times":[0,1.25,2.5,3.75,5],"values":[0,0,0,1,0.01062,0.08651,0.12141,0.98877,-0.01274,-0.10375,0.1212,0.98711,0,0,-0.05234,0.99863,0,0,0,1]},
+{"bone":"spine","prop":"rotation","times":[0,2.5,5],"values":[0,0,0,1,-0.02618,0,0,0.99966,0,0,0,1]},
+{"bone":"armL","prop":"rotation","times":[0,2.5,5],"values":[0,0,0,1,0.03489,0.00091,-0.02616,0.99905,0,0,0,1]},
+{"bone":"armR","prop":"rotation","times":[0,2.5,5],"values":[0,0,0,1,-0.02617,0.00069,0.02617,0.99931,0,0,0,1]}
+]}

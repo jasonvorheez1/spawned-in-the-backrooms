@@ -108,7 +108,7 @@ function swing(ctx) {
     if ((s[loadedKey] ?? 0) <= 0) {
       w.nextSwing = now + 350
       if ((s[ammoKey] ?? 0) > 0) startReload(ctx)
-      else sound(ctx, 'gun-dry-fire-click', 0.6, true)
+      else { sound(ctx, 'gun-dry-fire-click', 0.6, true); s.dryAt = now }
       return
     }
     s[loadedKey] -= 1
