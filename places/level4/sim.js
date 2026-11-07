@@ -112,9 +112,9 @@ export function tick(ctx) {
       state: { name: g.name, role: g.role, voice: g.voice, rounds, ...npcState(ctx, "agent", MEG.hp) } });
     ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
   }); }
-  tickPeople(ctx);
+  try { tickPeople(ctx); } catch (e) { if (!ctx.session.pErr) { ctx.session.pErr = 1; ctx.log("[l4] people", String(e?.stack ?? e).slice(0, 300)); } }
   // breakables: smashed office walls (lib/wallgrid.js level4) grow back after a while; every loose prop takes a material and hp
-  if (!(Math.abs(ctx.now() - (ctx.session.wallTick ?? -1e9)) < 3000)) { ctx.session.wallTick = ctx.now(); tickWalls(ctx); breakProps(ctx); }
+  if (!(Math.abs(ctx.now() - (ctx.session.wallTick ?? -1e9)) < 3000)) { ctx.session.wallTick = ctx.now(); try { tickWalls(ctx); breakProps(ctx); } catch (e) { ctx.log("[l4] breakables", String(e?.stack ?? e).slice(0, 300)); } }
   if (!s.officeV) { s.officeV = 1; layOffice(ctx); }
   if (s.officeV < 3) { // working computers (scripts/computer.js, Back OS): every island desk, and the locked one in Base Omega
     s.officeV = 3; let n = 1;

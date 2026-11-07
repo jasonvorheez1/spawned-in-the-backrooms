@@ -66,9 +66,10 @@ export function gridWallAt(G, pos, normal, key) {
   return { key: `${axis}:${cx}:${cz}`, vox: `${axis}:${cx}:${cz}:${u}:${v}`, u, v, axis, cx, cz, prot: G.prot(axis, cx, cz), mat: sk.mat, G }
 }
 const patchId = (k) => 'wp-' + k.replace(/:/g, '_')
-export function syncWalls(ctx) {
-  const pl = ctx.self?.place ?? Object.keys(GRIDS).find((k) => ctx.place.objects[GRIDS[k].obj])
-  const name = Object.keys(GRIDS).find((k) => ctx.place.objects[GRIDS[k].obj]); if (!name) return
+// which grid this place uses: the caller's word (a sim names its place, a hit names its wall), else the level mesh present
+const gridHere = (ctx, gname) => (gname && GRIDS[gname] ? gname : Object.keys(GRIDS).reverse().find((k) => ctx.place.objects[GRIDS[k].obj]))
+export function syncWalls(ctx, gname) {
+  const name = gridHere(ctx, gname); if (!name) return
   const G = GRIDS[name], o = ctx.place.objects[G.obj]; void pl
   const br = ctx.place.state.broken ?? {}, walls = {}
   for (const k of Object.keys(br)) { const p = k.split(':'), w = p.slice(0, 3).join(':'); (walls[w] ??= []); if (p.length === 5) walls[w].push(`${p[3]}:${p[4]}`); else walls[w].whole = true }
@@ -82,6 +83,7 @@ export function syncWalls(ctx) {
     const params = { len: fr.len, H: G.H, T: G.T, cols: V.cols, rows: V.rows, seed: (+cx * 31 + +cz * 17) % 97, broken: walls[w].sort(), tex: sk.tex, col: sk.col, rough: sk.rough, rebar: !!B.materials[sk.mat]?.rebar, core: sk.mat === 'brick' ? 'oklch(0.5 0.05 40)' : undefined }
     const ex = ctx.place.objects[id]
     if (!ex) ctx.spawn(id, { tags: ['wallpatch'], feetPosition: { x: fr.center.x, y: 0, z: fr.center.z }, rotation: { yaw: axis === 'x' ? 0 : 90 }, physics: { body: 'static', collider: 'mesh' }, receiveShadow: true, castShadow: false, primitive: { kind: 'scripted', script: 'scripts/wallpatch-geo.js', params }, material: { roughness: 0.9 }, state: { wall: w } })
+    else if (Math.abs(ex.feetPosition.x - fr.center.x) > 0.05 || Math.abs(ex.feetPosition.z - fr.center.z) > 0.05 || ex.primitive?.params?.len !== params.len) { ctx.destroy(id); want.delete(id) }
     else if ((ex.primitive?.params?.broken ?? []).join(',') !== params.broken.join(',')) ex.primitive = { kind: 'scripted', script: 'scripts/wallpatch-geo.js', params }
   }
   for (const r of ctx.query({ tags: ['wallpatch'], select: 'ids' })) { const id = r.id ?? r; if (!want.has(id)) ctx.destroy(id) }
@@ -102,9 +104,9 @@ export function sweepProps(ctx) {
   }
 }
 
-export function tickWalls(ctx) {
+export function tickWalls(ctx, gname) {
   sweepProps(ctx)
-  const name = Object.keys(GRIDS).find((k) => ctx.place.objects[GRIDS[k].obj]); if (!name) return
+  const name = gridHere(ctx, gname); if (!name) return
   const G = GRIDS[name], br = ctx.place.state.broken, now = ctx.now()
   if (br) for (const [k, at] of Object.entries(br)) {
     if (now - at < B.regrowMinutes * 60000) continue
@@ -112,7 +114,7 @@ export function tickWalls(ctx) {
     if (ctx.place.players.some((p) => Math.abs(p.feetPosition.x - c.x) < 1.4 && Math.abs(p.feetPosition.z - c.z) < 1.4)) continue
     delete br[k]
   }
-  syncWalls(ctx)
+  syncWalls(ctx, name)
 }
 
 // ---- drops
