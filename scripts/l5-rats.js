@@ -29,8 +29,8 @@ function ratSpawn(ctx, pk, n, at) {
 // a scurry on the rig's own legs (front 0_, hind 1_): set when its gait changes, never per tick
 const LEG = (ph, amp) => ({ pitch: ph ? [amp, -amp, amp] : [-amp, amp, -amp] });
 const gait = (dur, amp) => ({ clip: { duration: dur, tracks: {
-  "0_Left_Limb_1": LEG(0, amp), "0_Right_Limb_1": LEG(1, amp), "1_Left_Limb_2": LEG(1, amp), "1_Right_Limb_2": LEG(0, amp),
-  Tail_1: { yaw: [-amp * 0.6, amp * 0.6, -amp * 0.6] }, Spine_2: { roll: [-amp * 0.15, amp * 0.15, -amp * 0.15] } } }, loop: true });
+  "tripo::0_Left_Limb_1": LEG(0, amp), "tripo::0_Right_Limb_1": LEG(1, amp), "tripo::1_Left_Limb_2": LEG(1, amp), "tripo::1_Right_Limb_2": LEG(0, amp),
+  "tripo::Tail_1": { yaw: [-amp * 0.6, amp * 0.6, -amp * 0.6] }, "tripo::Spine_2": { roll: [-amp * 0.15, amp * 0.15, -amp * 0.15] } } }, loop: true }); // the Tripo rig names its bones tripo::…
 function setGait(r, m, g) { if (m.g === g) return; m.g = g; r.anim.move = g === "still" ? null : g === "walk" ? gait(0.34, 28) : gait(0.18, 38); }
 
 export function onSpawn(ctx) { ctx.self.state.packs ??= {}; }
