@@ -641,11 +641,12 @@ function toggleLight(ctx) {
 
 // First person: the local player's own arm and held weapon, riding the camera. Only this machine sees it.
 const Q_MELEE = { x: -0.5, y: 0.5, z: 0.5, w: 0.5 } // its length up, its blade forward
+const Q_ID = { x: 0, y: 0, z: 0, w: 1 } // the pistol mesh already points its muzzle down -Z
 const Q_GUN = { x: 0, y: 1, z: 0, w: 0 } // yaw 180: lays the mesh's +Z barrel forward (-Z) in camera space
 // The Tripo shotgun mesh lies tilted ~35 deg muzzle-up (butt at its origin, trigger at mesh (0,-0.08,0.33)).
 // Inside the Q_GUN frame (yaw 180), a child pitch of 35 levels it to point straight forward (-Z).
 // `at` = { x: 0, y: 0.255, z: -0.224 } translates the trigger to (0, 0, 0) so it lands in the fist.
-const GUN_FIX = { shotgun: { yaw: 0, pitch: 35, at: { x: 0, y: 0.255, z: -0.224 } } }
+const GUN_FIX = { shotgun: { yaw: 0, pitch: 35, at: { x: 0, y: -0.245, z: -0.03 } } } // measured on a render: the engine centres the mesh on its box, so the trigger sat ~0.5 m above the fist
 function toggleHolster(ctx) {
   const s = ctx.self.state; cancelReload(ctx); s.ads = false
   if (!s.sheathed) { if (s.equipped !== 'fists') s.holstered = s.equipped; s.equipped = 'fists'; s.sheathed = true; s.sheathAt = ctx.now() } // hands away: nothing in view
@@ -662,7 +663,7 @@ function viewmodel(ctx, moving, sprinting) {
   if (w.vm && w.vmEq === kind && !w.vmCheck) { if (w.plyWant && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 500; plyArm(ctx, w) } return }
   w.vmEq = kind; w.vmCheck = false
   const ply = l.modelUrl || '' // a worn .plymodel: its own arm holds the weapon instead of the critter paw
-  const arm = ply ? { hidden: true } : { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v10' + JSON.stringify(s.vmTune ?? null)
+  const arm = ply ? { hidden: true } : { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v11' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     w.plyRig = null
@@ -671,7 +672,7 @@ function viewmodel(ctx, moving, sprinting) {
       ? (GUN_FIX[bk]
         // the Tripo shotgun mesh lies tilted ~35 deg muzzle-up with its butt at the origin: level it and put its trigger in the fist
         ? { feetPosition: { x: 0, y: 0.01, z: 0.02 }, rotation: s.vmTune?.rot ?? Q_GUN, audience: 'local', children: [{ feetPosition: s.vmTune?.at ?? GUN_FIX[bk].at, rotation: { yaw: GUN_FIX[bk].yaw ?? 0, pitch: s.vmTune?.pitch ?? GUN_FIX[bk].pitch }, castShadow: false, ...weaponBody(kind), audience: 'local' }] }
-        : { feetPosition: s.vmTune?.at ?? { x: 0, y: bk === 'pistol' ? 0.03 : -0.04, z: bk === 'pistol' ? 0.04 : 0.14 }, rotation: s.vmTune?.rot ?? Q_GUN, castShadow: false, ...weaponBody(kind), audience: 'local' })
+        : { feetPosition: s.vmTune?.at ?? { x: 0, y: bk === 'pistol' ? 0.03 : -0.04, z: bk === 'pistol' ? 0.04 : 0.14 }, rotation: s.vmTune?.rot ?? (bk === 'pistol' ? Q_ID : Q_GUN), castShadow: false, ...weaponBody(kind), audience: 'local' })
       : MESHGRIP[bk]
         ? { feetPosition: s.vmTune?.mat ?? { x: MESHGRIP[bk].at[0], y: MESHGRIP[bk].at[1], z: MESHGRIP[bk].at[2] }, rotation: s.vmTune?.mrot ?? { x: MESHGRIP[bk].q[0], y: MESHGRIP[bk].q[1], z: MESHGRIP[bk].q[2], w: MESHGRIP[bk].q[3] }, castShadow: false, ...weaponBody(kind), audience: 'local' }
         : { feetPosition: s.vmTune?.mat ?? { x: 0, y: -g, z: 0 }, rotation: s.vmTune?.mrot ?? Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
