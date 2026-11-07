@@ -888,7 +888,7 @@ l5-dolores:
   physics: character
   rotation: {yaw: 0}
   scale: {x: 1.22, y: 0.94, z: 1.22}
-  state: {attr: "4,6,5,8,7,7,5", faction5: hotel, factionName: "Homely Hotel (the staff of this endless hotel: polite, proprietary, they dislike the Originals in the salon and lean on Housekeeping)", fresh: {}, home: {x: -12.6, z: 20.2}, hp: 144, maxHp: 144, mode: day, name: "Dolores · Dining Room Cook", offers: [], outfit: apron/longskirt/#efe6d4, picked: {}, ri: 0, role: trader, rounds: [{act: cdn/clip-pickup.glb, dwell: 50, look: {x: -12.6, z: 21}, x: -12.6, y: 0, z: 20.2}, {act: null, dwell: 25, look: {x: -12, z: 16}, x: -7.6, y: 0, z: 16.4}, {act: cdn/clip-talk-loop.glb, dwell: 30, look: {x: -9, z: 15}, x: -12.4, y: 0, z: 15.2}], species: pig, title: "", trespass: {}, voice: dolores, warned: {}}
+  state: {arm: fists, attr: "4,6,5,8,7,7,5", faction5: hotel, factionName: "Homely Hotel (the staff of this endless hotel: polite, proprietary, they dislike the Originals in the salon and lean on Housekeeping)", fresh: {}, home: {x: -12.6, z: 20.2}, hp: 144, maxHp: 144, mode: day, name: "Dolores · Dining Room Cook", offers: [], outfit: apron/longskirt/#efe6d4, picked: {}, ri: 0, role: trader, rounds: [{act: cdn/clip-pickup.glb, dwell: 50, look: {x: -12.6, z: 21}, x: -12.6, y: 0, z: 20.2}, {act: null, dwell: 25, look: {x: -12, z: 16}, x: -7.6, y: 0, z: 16.4}, {act: cdn/clip-talk-loop.glb, dwell: 30, look: {x: -9, z: 15}, x: -12.4, y: 0, z: 15.2}], species: pig, title: "", trespass: {}, voice: dolores, warned: {}}
   tags: [npc, l5res, l5-hotel]
 l5-door-6:
   behavior: scripts/l5-door.js
@@ -4052,7 +4052,7 @@ l5-whitlock:
   physics: character
   rotation: {yaw: 0}
   scale: {x: 1.12, y: 1.12, z: 1.12}
-  state: {attr: "7,6,4,4,6,7,7", faction5: orig, factionName: "The Originals (eccentrics who wandered in between 1300 and 1940; they gossip, play cards, keep Samantha the cat fed, and refuse membership to anyone modern)", fresh: {}, home: {x: 7, z: -20.4}, hp: 192, maxHp: 192, mode: day, name: "Capt. Whitlock · Master Mariner (1912)", offers: [["o:member", Ask to join the salon], ["o:lore", Ask about the hotel]], outfit: longsleeve/pants/#1c2340, picked: {}, ri: 0, role: captain, rounds: [{act: cdn/clip-sit-loop.glb, dwell: 50, look: {x: 5, z: -19}, x: 7, y: 0, z: -20.4}, {act: null, dwell: 20, look: {x: 14, z: -12}, x: 12.6, y: 0, z: -14}, {act: cdn/clip-talk-loop.glb, dwell: 40, look: {x: 5, z: -19}, x: 7, y: 0, z: -20.4}], species: wolf, title: "", trespass: {}, voice: whitlock, warned: {}}
+  state: {arm: fists, attr: "7,6,4,4,6,7,7", faction5: orig, factionName: "The Originals (eccentrics who wandered in between 1300 and 1940; they gossip, play cards, keep Samantha the cat fed, and refuse membership to anyone modern)", fresh: {}, home: {x: 7, z: -20.4}, hp: 192, maxHp: 192, mode: day, name: "Capt. Whitlock · Master Mariner (1912)", offers: [["o:member", Ask to join the salon], ["o:lore", Ask about the hotel]], outfit: longsleeve/pants/#1c2340, picked: {}, ri: 0, role: captain, rounds: [{act: cdn/clip-sit-loop.glb, dwell: 50, look: {x: 5, z: -19}, x: 7, y: 0, z: -20.4}, {act: null, dwell: 20, look: {x: 14, z: -12}, x: 12.6, y: 0, z: -14}, {act: cdn/clip-talk-loop.glb, dwell: 40, look: {x: 5, z: -19}, x: 7, y: 0, z: -20.4}], species: wolf, title: "", trespass: {}, voice: whitlock, warned: {}}
   tags: [npc, l5res, l5-orig]
 l5-zelda:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
