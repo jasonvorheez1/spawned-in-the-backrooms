@@ -132,6 +132,11 @@ export function onInput(ctx, input) {
   if (input.pressed.inv && input.actionData?.inv) invAction(ctx, input.actionData.inv)
   if (input.pressed.drink) drink(ctx)
   if (input.pressed.cycleWeapon) cycleWeapon(ctx)
+  if (input.pressed.holster) { // H: put it away, H again: draw the last one
+    const s = ctx.self.state; cancelReload(ctx); s.ads = false
+    if (s.equipped !== 'fists') { s.holstered = s.equipped; s.equipped = 'fists' } else if (s.holstered && owned(s).includes(s.holstered) && usable(s, s.holstered)) s.equipped = s.holstered
+    s.equipAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.45, true)
+  }
   if (input.pressed.reload) startReload(ctx)
   {
     // aiming down the sights: a ranged weapon, button held, not mid-reload, not downed
@@ -145,7 +150,7 @@ export function onInput(ctx, input) {
 function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
   m.state.hp -= dmg
   const npc = m.tags?.includes('npc')
-  if (npc) m.state.angry = { ...(m.state.angry ?? {}), [ctx.self.id]: true } // the camp remembers who shot first
+  if (npc) { m.state.angry = { ...(m.state.angry ?? {}), [ctx.self.id]: true }; m.state.fresh = { ...(m.state.fresh ?? {}), [ctx.self.id]: true } } // the camp remembers who shot first; a fresh shot spreads even after a pardon
   const hit = { x: m.feetPosition.x, y: m.feetPosition.y + 1.5, z: m.feetPosition.z }
   if (loud) sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)
   ctx.emit('damageNumber', { position: hit, value: dmg, color: '#f7d98b' })

@@ -8,7 +8,7 @@ meg-ale:
   physics: character
   primitive: {kind: scripted, params: {bottom: "#4a5a3a", botw: pants, expr: smile, hat: cap, hatc: "#b6e04a", sex: f, shoec: "#2a2420", shoes: boots, species: fox, top: "#b6e04a", topw: jacket}, script: scripts/critter-geo.js}
   rotation: {yaw: 90}
-  state: {home: {x: 6.072, z: 2.619}, name: "Ale · M.E.G. Scout", role: scout}
+  state: {angry: {}, home: {x: 6.072, z: 2.619}, name: "Ale · M.E.G. Scout", role: scout}
   tags: [npc]
 meg-ale/object/xba5b309b4f070466/0:
   attachment: {bone: RightHand}
@@ -24,7 +24,7 @@ meg-callum:
   physics: character
   primitive: {kind: scripted, params: {bottom: "#4a5a3a", botw: pants, expr: grin, hat: beanie, hatc: "#7a3a2a", sex: m, shoec: "#2a2420", shoes: boots, species: bear, top: "#b6e04a", topw: jacket}, script: scripts/critter-geo.js}
   rotation: {yaw: 90}
-  state: {home: {x: 11.613, z: 1.507}, name: "Callum · Quartermaster", role: quarter}
+  state: {angry: {}, home: {x: 11.613, z: 1.507}, name: "Callum · Quartermaster", role: quarter}
   tags: [npc]
 meg-callum/object/xba5b309b4f070466/2:
   attachment: {bone: RightHand}
@@ -40,7 +40,7 @@ meg-ortiz:
   physics: character
   primitive: {kind: scripted, params: {bottom: "#4a5a3a", botw: pants, expr: smile, neck: scarf, neckc: "#b6e04a", sex: f, shoec: "#2a2420", shoes: boots, species: bunny, top: "#eef2f0", topw: jacket}, script: scripts/critter-geo.js}
   rotation: {yaw: 90}
-  state: {home: {x: 14.789, z: -0.215}, name: "Dr. Ortiz · M.E.G. Medic", role: medic}
+  state: {angry: {}, home: {x: 14.789, z: -0.215}, name: "Dr. Ortiz · M.E.G. Medic", role: medic}
   tags: [npc]
 meg-ortiz/object/xba5b309b4f070466/1:
   attachment: {bone: RightHand}

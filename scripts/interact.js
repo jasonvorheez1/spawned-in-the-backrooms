@@ -101,6 +101,8 @@ function speak(ctx, it, who, line) {
 }
 function talk(ctx, it) {
   const s = ctx.self.state, now = ctx.now(), role = it.state?.role
+  if (it.state?.angry?.[ctx.self.id]) { note(ctx, `${it.state.name.split(' ·')[0]} won't talk to you.`); return }
+  it.state.talkAt = now; it.state.talkTo = ctx.self.id // they gesture while they speak
   if (role === 'scout') { s.megTip = ((s.megTip ?? -1) + 1) % TIPS.length; speak(ctx, it, 'ale', TIPS[s.megTip]); return }
   if (role === 'medic') {
     if (now - (s.megMedAt ?? -1e9) < 90000) { speak(ctx, it, 'ortiz', "you're patched. give it a minute and come back."); return }
