@@ -3255,6 +3255,14 @@ l5-lobby:
   feetPosition: {x: -38, y: 0.1, z: 0}
   id: l5-lobby
   rotation: {yaw: 90}
+l5-people:
+  audience: all
+  behavior: scripts/l5-people.js
+  feetPosition: {x: -38, y: 0, z: 4}
+  id: l5-people
+  state: {}
+  tags: [l5-people-mgr]
+  visible: false
 l5-radio-ball:
   audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
   behavior: scripts/l5-door.js
