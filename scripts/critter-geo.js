@@ -547,9 +547,9 @@ export function geometry(ctx) {
   if (!sp.wool && !sp.mane && mid) { // kemono cheek fluff: three soft points at each jaw
     wOverride = { Head: 1 };
     ctx.color(sp.cheeks ? BELLY : (sp.headFur || FUR));
-    for (const sd of [-1, 1]) for (const [v, dx, dy, r] of [[-0.02, 0.09, 0.01, 0.034], [-0.09, 0.1, -0.03, 0.04], [-0.16, 0.07, -0.06, 0.03]]) {
-      const b = onHead(sd * 0.32, v, 0); b[0] -= sd * 0.03; b[2] += 0.02;
-      limb(b, [b[0] + sd * dx, b[1] + dy, b[2] + 0.02], r, 0.004, hi ? 10 : 6);
+    for (const sd of [-1, 1]) for (const [v, out, r] of [[-0.05, 0.02, 0.055], [-0.13, 0.03, 0.05]]) { // soft puffs half sunk into the jaw, tipped down and out
+      const p = onHead(sd * 0.3, v, 0);
+      ell([p[0] + sd * out, p[1] - 0.01, p[2] + 0.03], [r * 0.9, r * 0.7, r * 0.8], null, { seg: hi ? 12 : 8 });
     }
     wOverride = null;
   }
