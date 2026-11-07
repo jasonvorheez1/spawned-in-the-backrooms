@@ -33,9 +33,19 @@ function pickTarget(ctx, me, m) {
   }
   // a player who attacked the camp: this agent's grudge, or a neighbour's
   const grudges = new Set(Object.keys(me.state.angry ?? {}));
-  for (const n of ctx.query({ tags: ["npc"], radius: 30 })) for (const k of Object.keys(n.state?.angry ?? {})) if (!grudges.has(k)) { grudges.add(k); me.state.angry = { ...(me.state.angry ?? {}), [k]: true }; }
+  for (const n of ctx.query({ tags: ["npc"], radius: 30 })) for (const k of Object.keys(n.state?.angry ?? {})) if (!grudges.has(k) && !(me.state.pardoned?.[k] && !me.state.angry?.[k] && !n.state?.fresh?.[k])) { grudges.add(k); me.state.angry = { ...(me.state.angry ?? {}), [k]: true }; }
   for (const pl of ctx.place.players) {
     if (!grudges.has(pl.id) || (pl.state?.hp ?? 1) <= 0) continue;
+    // holstering calms the camp once (like Fallout): weapon away within sight, never pardoned before
+    if (pl.state?.equipped === "fists" && !me.state.pardoned?.[pl.id] && flat(pl.feetPosition, p) < G.sight) {
+      for (const n of [me, ...ctx.query({ tags: ["npc"], radius: 40 })]) {
+        const a = { ...(n.state?.angry ?? {}) }; delete a[pl.id]; n.state.angry = a;
+        n.state.pardoned = { ...(n.state?.pardoned ?? {}), [pl.id]: true };
+      }
+      grudges.delete(pl.id);
+      ctx.emit("damageNumber", { position: { x: p.x, y: p.y + 2.1, z: p.z }, text: "STAND DOWN", color: "#c6f060", size: 1.1 }, { audience: { player: pl.id } });
+      continue;
+    }
     const d = flat(pl.feetPosition, p); if (d < bd) { bd = d; best = pl; }
   }
   return best;
