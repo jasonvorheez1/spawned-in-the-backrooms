@@ -30,7 +30,7 @@ export const PEOPLE = {
 function person(ctx, id) {
   const g = PEOPLE[id];
   ctx.spawn(id, { tags: ["npc", "gamma"], feetPosition: { x: g.at[0], y: 0, z: g.at[1] }, rotation: { yaw: g.yaw ?? 0 }, physics: "character",
-    ...critterSpec(fullLook(g.look)), behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
+    ...critterSpec(fullLook(g.look)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"], state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
   ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
 }
 // a framed plate: dark steel face, big words, a warm light over it

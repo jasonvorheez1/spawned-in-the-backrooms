@@ -77,7 +77,7 @@ export function lay(ctx) {
     ui: '<div face="front" width="2.6m" style="font-size:150px;font-weight:900;color:#d8f0a0;text-align:center;line-height:1">M.E.G. BASE OMEGA<div style="font-size:70px;color:#b8d080">wanderers welcome · weapons lowered</div></div>' });
   for (let i = 0; i < 4; i++) ctx.spawn({ feetPosition: { x: -23.3, y: (i % 2) * 0.32, z: -23.2 + (i >> 1) * 0.0 + (i >> 1) * 0.6 }, primitive: { kind: "capsule", radius: 0.16, halfHeight: 0.3 }, rotation: { yaw: 90, roll: 90 }, physics: "static", material: { color: "oklch(0.6 0.05 85)", roughness: 1 } });
   for (const [id, g] of Object.entries(OMEGA)) {
-    ctx.spawn(id, { tags: ["npc", "omega"], feetPosition: { x: g.at[0], y: 0, z: g.at[1] }, rotation: { yaw: g.yaw }, physics: "character", ...critterSpec(fullLook(g.look)), behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
+    ctx.spawn(id, { tags: ["npc", "omega"], feetPosition: { x: g.at[0], y: 0, z: g.at[1] }, rotation: { yaw: g.yaw }, physics: "character", ...critterSpec(fullLook(g.look)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"], state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
     ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
   }
   // sound beds: the buzz, a far hvac, the lift's hum, the break room's fridge

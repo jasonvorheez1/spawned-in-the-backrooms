@@ -36,7 +36,7 @@ const VOICES3 = { "gamma-reyes": "reyes", "gamma-pell": "pell", "gamma-ito": "it
 function agent(ctx, id) {
   const g = GAMMA[id], a = cellCenter(0, ARRIVE.cz);
   ctx.spawn(id, { tags: ["npc"], feetPosition: { x: a.x + g.at[0], y: 0, z: a.z + g.at[1] }, rotation: { yaw: -90 }, physics: "character",
-    ...critterSpec(fullLook(g.look)), behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role, voice: g.voice, rounds: roundsOf(id), ...npcState(ctx, "agent", MEG.hp) } });
+    ...critterSpec(fullLook(g.look)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"], state: { name: g.name, role: g.role, voice: g.voice, rounds: roundsOf(id), ...npcState(ctx, "agent", MEG.hp) } });
   ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
 }
 

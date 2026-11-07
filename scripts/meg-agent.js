@@ -26,7 +26,7 @@ export function onSpawn(ctx) {
   me.state.hp ??= G.hp;
   me.state.home ??= { x: me.feetPosition.x, y: me.feetPosition.y, z: me.feetPosition.z };
   dress(ctx, me);
-  me.anim.idle = { clip: "Idle", loop: "loop", weight: 1 };
+  me.state.turnTo ??= "movement"; // humanoid-locomotion picks Idle/Walk/Run off the speed the body really moved, each clip at its measured pace, and faces the walk
 }
 // every agent wears the cute Blender critter: an old scripted body swaps in place, and the look it wears is kept in state.wear (garments to loot, redress)
 function dress(ctx, me) {
@@ -99,18 +99,19 @@ function moveAlong(ctx, me, m, goal, speed, dt) {
   let to = goal;
   if (m.path) { while (m.i < m.path.length - 1 && flat(m.path[m.i], p) < 0.6) m.i++; to = m.path[m.i] ?? goal; }
   const dx = to.x - p.x, dz = to.z - p.z, d = Math.hypot(dx, dz) || 1;
-  me.velocity = { x: dx / d * speed, y: (me.velocity?.y ?? 0) - 20 * dt, z: dz / d * speed };
-  face(me, dx, dz, dt);
+  // a body eases into its pace and out of it (ACCEL m/s²), so the legs ramp walk → run instead of popping, and corners round off
+  const v = me.velocity ?? { x: 0, z: 0 }, slow = d < 1.2 && to === goal ? Math.max(0.35, d / 1.2) : 1;
+  me.velocity = { x: ease(v.x ?? 0, dx / d * speed * slow, dt), y: (v.y ?? 0) - 20 * dt, z: ease(v.z ?? 0, dz / d * speed * slow, dt) };
 }
-function stop(me, dt) { me.velocity = { x: 0, y: (me.velocity?.y ?? 0) - 20 * dt, z: 0 }; }
+const ACCEL = 9, DECEL = 14; // m/s² (Savi's picks): a jog starts in about half a second, a stop lands in a step
+function ease(cur, want, dt) { const k = (Math.abs(want) > Math.abs(cur) ? ACCEL : DECEL) * dt, d = want - cur; return Math.abs(d) <= k ? want : cur + Math.sign(d) * k; }
+function stop(me, dt) { const v = me.velocity ?? { x: 0, z: 0 }; me.velocity = { x: ease(v.x ?? 0, 0, dt), y: (v.y ?? 0) - 20 * dt, z: ease(v.z ?? 0, 0, dt) }; }
 function face(me, dx, dz, dt) {
   const want = Math.atan2(-dx, -dz) * 57.2958, cur = me.rotation?.yaw ?? 0, d = ((want - cur + 540) % 360) - 180;
   if (Math.abs(d) > 3) me.rotation = { yaw: cur + d * Math.min(1, dt * 8) };
 }
-function gait(me, m, kind) {
-  if (m.gait === kind) return; m.gait = kind;
-  me.anim.idle = { clip: kind === "run" ? "Run" : kind === "walk" ? "Walk" : "Idle", loop: "loop", weight: 1, blendIn: 0.2 };
-}
+// the gait is the legs' business (scripts/humanoid-locomotion.js reads the speed the body moved and plays each clip at its pace): this only notes the intent
+function gait(me, m, kind) { m.gait = kind; }
 
 // two-handed aim: both hands reach for the target's chest, followed every frame; written only when the target changes
 // the pistol: on the right hip while calm, in the right hand while fighting
