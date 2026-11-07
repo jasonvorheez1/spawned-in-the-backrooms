@@ -2,7 +2,11 @@
 // CONTINUE closes it; CHARACTER opens the critter creator, whose "done" comes back here.
 export function update(ctx) {
   if (!ctx.self.isLocal && ctx.self.isLocal !== undefined) return ctx.sleep()
-  if (!ctx.session.menuMark) { ctx.session.menuMark = true; ctx.self.state.menuOpen = true }
+  if (!ctx.session.menuMark) {
+    ctx.session.menuMark = true; const st = ctx.self.state
+    if (!st.madeChar) { st.madeChar = true; st.menuOpen = false; st.wardrobeOpen = true; st.wrMenu = true; st.wrTab = 'body' } // a new save makes its critter first (Shelly)
+    else st.menuOpen = true
+  }
   ctx.sleep()
 }
 export function onInput(ctx, input) {
