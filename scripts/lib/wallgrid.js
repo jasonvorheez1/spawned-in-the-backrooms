@@ -5,7 +5,14 @@
 import * as L1 from './level1.js'
 import * as L2 from './level2.js'
 import * as L3 from './level3.js'
-import { SKIN as SKIN3, skinOf as skin3 } from '../level3-geo.js'
+// Level 3's wall skins (mirrors SKIN / skinOf in scripts/level3-geo.js, kept here so the lib never imports a mesh file)
+const SKIN3 = {
+  orange: { tex: 'cdn/texture-photoreal-weathered-orange-clay-brick-wall-thin-grey-mortar-soot-stains.png', col: 'oklch(0.97 0.015 60)', rough: 0.85 },
+  grey: { tex: 'cdn/texture-large-grey-brick-wall-dusty-mortar.png', col: 'oklch(0.9 0.01 80)', rough: 0.9 },
+  tile: { tex: 'cdn/texture-photoreal-glazed-tan-brown-ceramic-wall-tile-grimy-grout-institutional.png', col: 'oklch(0.99 0.04 85)', rough: 0.3 },
+  brown: { tex: 'cdn/texture-dark-brown-brick-wall-grimy-mortar.png', col: 'oklch(0.88 0.03 55)', rough: 0.9 },
+}
+const skin3 = (cx, cz) => { const z = L3.zoneOf(Math.max(0, Math.min(L3.N - 1, cx)), Math.max(0, Math.min(L3.N - 1, cz))); if (z === 'dark') return 'brown'; const r = L3.hash(Math.floor(Math.max(cx, 0) / 3), Math.floor(Math.max(cz, 0) / 3), 21); return r < 0.4 ? 'orange' : r < 0.65 ? 'grey' : 'tile' }
 
 const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]]
 const nb = (axis, cx, cz) => [axis === 'x' ? cx + 1 : cx, axis === 'z' ? cz + 1 : cz]
@@ -70,5 +77,10 @@ const l3 = {
   },
 }
 
+// where a wall sits: centre of its span and the run's start, in world metres
+export function wallFrame(G, axis, cx, cz) {
+  const fixed = (axis === 'x' ? cx + 1 : cz + 1) * G.S - G.HALF, a0 = (axis === 'x' ? cz : cx) * G.S - G.HALF - G.ext, len = G.S + 2 * G.ext
+  return { fixed, a0, len, center: axis === 'x' ? { x: fixed, z: a0 + len / 2 } : { x: a0 + len / 2, z: fixed } }
+}
 export const GRIDS = { level1: l1, level2: l2, level3: l3 }
 export const gridOfObj = (id) => Object.entries(GRIDS).find(([, g]) => g.obj === id)?.[0] ?? null
