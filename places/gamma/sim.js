@@ -55,7 +55,7 @@ function lay(ctx) {
   for (const [x, y, z, color, intensity, distance, kind] of LIGHTS)
     ctx.spawn({ tags: ["gamma-light"], feetPosition: { x, y: kind === "pendant" ? y - 0.3 : y - 0.15, z }, light: { kind: "point", color, intensity, distance, shadow: { enabled: false } } });
   // the doors: out to Level 3 through the great door; the tunnel's grate stays shut
-  door(ctx, "gamma-out", 0, 40, 0, "level3", "LEVEL 3", "electrical station · fortress gate");
+  door(ctx, "gamma-out", 0, 40, 0, "level3#l3-gamma-door", "LEVEL 3", "electrical station · fortress gate");
   // signs
   plate(ctx, 0, 6.2, 39.55, 0, 7, "ALL WANDERERS WELCOME", "· ALL WANDERERS SCANNED ·", "#e8f4c0");
   plate(ctx, 0, 6.6, 18.3, 0, 5, "M.E.G. BASE GAMMA", "public sector · residence beyond", "#f0e0b0", "oklch(0.25 0.05 60)");
