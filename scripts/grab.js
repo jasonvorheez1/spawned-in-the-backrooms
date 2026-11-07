@@ -53,6 +53,7 @@ export function onInput(ctx, input) {
 }
 function lift(ctx, o, kg, cap) {
   const ses = ctx.self.session, s = ctx.self.state, f = ctx.self.feetPosition;
+  spill(ctx, o);
   ses.held = o.id; ses.kg = kg; ses.phys = o.physics; o.physics = "none";
   s.carry = o.state?.name ?? "something"; s.carryMul = kg > cap ? Math.max(0.15, 0.4 - (kg / cap - 1) * 0.12) : Math.max(0.45, 1 - (kg / cap) * 0.6);
   heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-furniture-lift-wood-creak-scrape.mp3", position: { x: f.x, y: f.y + 1, z: f.z }, volume: 0.45, maxDistance: 12 });
@@ -98,4 +99,18 @@ export function update(ctx) {
     ctx.emit("cameraPunch", { direction: n, intensity: 0.25 }, { audience: { player: ctx.self.id } });
     heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-heavy-wooden-object-smash-impact-thud.mp3", position: at, volume: 0.8, maxDistance: 26 });
   }
+}
+
+// what rests on a lifted thing falls: its loose children come free and anything small standing on its top tumbles (real physics)
+function spill(ctx, o) {
+  const b = o.bounds; if (!b) return;
+  const fall = (it) => { if (!it || it.id === o.id) return; const tg = it.tags ?? []; if (tg.includes("npc") || tg.includes("wall") || tg.includes("door") || it.id.startsWith("player")) return;
+    const s = it.bounds?.size; if (!s || s.x * s.y * s.z > 0.6) return;
+    if (it.parent) it.parent = null;
+    it.physics = { body: "dynamic", collider: "box", density: 400, friction: 0.6, restitution: 0.15 };
+    ctx.emit("impulse", { target: it.id, impulse: { x: (ctx.random() - 0.5) * 0.6, y: 0.4, z: (ctx.random() - 0.5) * 0.6 } }); };
+  for (const c of o.children ?? []) fall(ctx.getObject(c.id ?? c));
+  const r = Math.max(b.size.x, b.size.z) * 0.75 + 0.3;
+  for (const q of ctx.query({ center: b.center, radius: r })) { const it = ctx.getObject(q.id), f = q.feetPosition;
+    if (f.y >= b.max.y - 0.15 && f.y <= b.max.y + 0.4 && f.x >= b.min.x - 0.1 && f.x <= b.max.x + 0.1 && f.z >= b.min.z - 0.1 && f.z <= b.max.z + 0.1) fall(it); }
 }
