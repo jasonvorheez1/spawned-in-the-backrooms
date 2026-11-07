@@ -1,6 +1,6 @@
 import { rollLoot, garmentsOf } from "./lib/loot.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
-import { toMesh, lookFromModel, rewear, HEAD_ID } from "./lib/critter-model.js";
+import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID } from "./lib/critter-model.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
@@ -30,6 +30,8 @@ export function onSpawn(ctx) {
 }
 // every agent wears the cute Blender critter: an old scripted body swaps in place, and the look it wears is kept in state.wear (garments to loot, redress)
 function dress(ctx, me) {
+  if (me.model && me.primitive) me.primitive = null; // a body caught half-swapped
+  if (me.model && me.state.wear) seatHead(ctx, me, me.state.wear);
   const was = toMesh(ctx, me);
   if (was) me.state.wear = was;
   else if (!me.state.wear && me.model) { const l = lookFromModel(me.model, ctx.getObject(me.id + "/" + HEAD_ID)?.model?.id ?? ctx.getObject(me.id + "/" + HEAD_ID)?.model); if (l?.species) me.state.wear = l; }
@@ -142,6 +144,7 @@ export function bark(ctx, o, kind, force) {
 }
 export function update(ctx, dt) {
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
+  if (!m.dressed) { m.dressed = true; if (!s.dead) dress(ctx, me); }
   if (s.dead || (s.hp ?? 1) <= 0) {
     if (!m.down) {
       m.down = true; bark(ctx, me, "death", true);

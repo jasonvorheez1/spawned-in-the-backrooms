@@ -59,6 +59,12 @@ export function toMesh(ctx, obj) {
   if (!MESH || obj?.primitive?.script !== 'scripts/critter2-geo.js') return null
   const l = { ...obj.primitive.params }, spec = critterSpec(l)
   obj.primitive = null; obj.model = spec.model; obj.material = spec.material; obj.jiggle = spec.jiggle
-  if (!ctx.getObject(obj.id + '/' + HEAD_ID)) ctx.spawn(HEAD_ID, { parent: obj.id, ...spec.children[0] })
+  seatHead(ctx, obj, l)
   return l
+}
+// the head rides the body's skin, at its origin: an old scripted head (hung on Hips) is re-seated, a missing one spawned
+export function seatHead(ctx, obj, l) {
+  const want = critterSpec(l).children[0], h = ctx.getObject(obj.id + '/' + HEAD_ID)
+  if (!h) { ctx.spawn(HEAD_ID, { parent: obj.id, ...want }); return }
+  if (!h.attachment?.skin) { h.primitive = null; h.attachment = { skin: true }; h.feetPosition = { x: 0, y: 0, z: 0 }; h.rotation = 0; h.model = want.model; h.morph = want.morph }
 }
