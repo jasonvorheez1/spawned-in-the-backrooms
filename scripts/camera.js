@@ -67,7 +67,7 @@ export function update(ctx, dt) {
 
   // At a computer: you sit, and the eye glides in until the monitor fills the view (Back OS draws over it).
   const os = ps?.os, comp = os?.id ? ctx.getObject(os.id) : null, dv = ctx.self.session.dive ??= { k: 0 }
-  dv.k += ((comp ? 1 : 0) - dv.k) * Math.min(1, dt * (comp ? 2.2 : 5))
+  dv.k += ((comp ? 1 : 0) - dv.k) * Math.min(1, dt * (comp ? 2.2 : 2.6))
   if (comp) dv.c = { ...comp.feetPosition }
   if (dv.k > 0.002 && dv.c) {
     const c = dv.c, e = ctx.self.feetPosition
