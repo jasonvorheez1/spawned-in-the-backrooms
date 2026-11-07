@@ -4,7 +4,6 @@
 import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
 import { ZONE_NAMES } from './lib/maze.js'
-import * as modelingStudio from '../mods/modeling-studio/hud.js'
 import { wardrobe } from './wardrobe-ui.js'
 import { pickUi } from './lockpick-ui.js'
 import { lootUi } from './loot-ui.js'
@@ -20,7 +19,6 @@ import { noclipUi } from './noclip-ui.js'
 import PAGES from './lib/data/pages.yml'
 // the .plymodel converter is read on the first upload press, not at boot
 export async function plyUpload(input) { const m = await import('./lib/plyimport.js'); return m.plyUpload(input) }
-export { m3dPvDown, m3dPvWheel, m3dPvReset, m3dPvTool, m3dPvDraft, m3dPvEdit, m3dPvClear, m3dTkMeasure, m3dTkDown, m3dTkWheel, m3dTkReset, m3dMpvMove, m3dMpvSize, m3dDraft, m3dPose, m3dPick, m3dPreview, m3dUpload, m3dAsk, m3dClearRefs, m3dGuide } from '../mods/modeling-studio/hud.js'
 
 const THEME = `<style>@keyframes hud-pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 #hud { --a: #ffb642; --ad: rgba(255,182,66,0.35); color: var(--a); font-family: 'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; user-select: none; text-shadow: 0 0 4px rgba(255,170,40,0.7), 0 1px 2px rgba(0,0,0,0.9) }
@@ -239,5 +237,5 @@ export default function render(ctx, player) {
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>
 
-</div>${lootUi(ctx, player)}${pickUi(ctx, player)}${talkUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}${modelingStudio.render(ctx, player)}`
+</div>${lootUi(ctx, player)}${pickUi(ctx, player)}${talkUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
 }
