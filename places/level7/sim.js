@@ -24,8 +24,8 @@ export function breakables(FY, PY) {
   });
   return R;
 }
-const V = 6;
-const GONE = ["l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
+const V = 7;
+const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
 const CONCRETE = {
   color: "oklch(0.48 0.01 240)",
