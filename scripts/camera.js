@@ -85,6 +85,18 @@ export function update(ctx, dt) {
     if (!rot) rot = want
     else { let dyaw = ((want.yaw - rot.yaw + 540) % 360) - 180; rot = { yaw: rot.yaw + dyaw * k, pitch: rot.pitch + (want.pitch - rot.pitch) * k } }
   } else if (!comp) dv.c = null
+  // in conversation: the view narrows and turns onto their face, Bethesda-style; leaving, or a fight closing the talk (scripts/talk.js), eases it back
+  const tw = ps?.talkWith && !ps?.shopOpen && !ps?.downAt ? (ctx.place?.objects?.[ps.talkWith] ?? null) : null, tz = ctx.self.session.talkCam ??= { k: 0 }
+  tz.k += ((tw && !tw.state?.dead ? 1 : 0) - tz.k) * Math.min(1, dt * (tw ? 3 : 7))
+  if (tw) { const b = tw.bounds; tz.c = b ? { x: b.center.x, y: b.max.y - (b.size.y * 0.18), z: b.center.z } : { ...tw.feetPosition, y: tw.feetPosition.y + 1.3 } }
+  if (tz.k > 0.002 && tz.c) {
+    const k = tz.k * tz.k * (3 - 2 * tz.k), e = ctx.self.feetPosition, c = tz.c
+    ctx.self.fov = ctx.self.fov + (38 - ctx.self.fov) * k // her pick: 60 → 38
+    const dx = c.x - e.x, dy = c.y - e.y, dz = c.z - e.z
+    const want = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
+    if (!rot) rot = want
+    else { const dyaw = ((want.yaw - rot.yaw + 540) % 360) - 180; rot = { yaw: rot.yaw + dyaw * k, pitch: rot.pitch + (want.pitch - rot.pitch) * k } }
+  } else if (!tw) tz.c = null
   // taken: the eye leaves your head and pulls back and up, circling slowly over the body as it falls (DOWN_MS in player.js)
   const down = ps?.downAt ? ctx.now() - ps.downAt : 1e9
   if (down < 3200 && ctx.player?.feetPosition) {
