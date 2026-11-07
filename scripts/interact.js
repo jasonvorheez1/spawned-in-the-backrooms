@@ -42,10 +42,10 @@ function findFocus(ctx, ray) {
       const wp = !it.state?.c && tag === 'usable' ? ctx.getObject(it.id)?.worldFeetPosition : null
       const p = it.state?.c ?? (wp ? { x: wp.x, y: wp.y + (it.state?.kind === 'boilerdoor' ? 0.9 : 0), z: wp.z } : it.feetPosition)
       let lift = it.state?.c ? 0 : big ? 0.28 : 0.1
-      if (tag === 'npc' && !it.state?.dead && (it.state?.hp ?? 1) > 0) { // a standing person is a whole body: the look ray finds the nearest point from shins to head
-        const top = (it.state?.build?.h ?? 1) * 1.55, t = Math.max(0, d.y > -0.999 ? 0 : 0)
-        const hx = p.x - o.x, hz = p.z - o.z, along = hx * d.x + hz * d.z, hy = o.y + d.y * along / Math.max(0.05, Math.hypot(d.x, d.z) ** 2 || 1) * 1 - p.y
-        lift = Math.max(0.3, Math.min(top, o.y + d.y * (along / Math.max(0.0025, d.x * d.x + d.z * d.z)) - p.y)) + t * 0 + (hy * 0)
+      if (tag === 'npc' && !it.state?.dead && (it.state?.hp ?? 1) > 0) { // a standing person is a whole body: the look ray picks the height it crosses at their spot, shins to head
+        const top = Math.max(1.1, (it.state?.build?.h ?? 1) * 1.55), hd = Math.hypot(d.x, d.z) || 1e-3
+        const along = ((p.x - o.x) * d.x + (p.z - o.z) * d.z) / hd // horizontal metres to their spot along the look
+        lift = Math.max(0.3, Math.min(top, o.y + d.y / hd * along - p.y))
       }
       const vx = p.x - o.x, vy = p.y + lift - o.y, vz = p.z - o.z
       const dist = Math.hypot(vx, vy, vz)
