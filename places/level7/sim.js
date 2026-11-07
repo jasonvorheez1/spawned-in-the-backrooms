@@ -5,7 +5,7 @@
 // Channel buoys bob in the swells, and Entity 20 ("The Thing on Level 7") cruises submerged in the bay.
 
 export const cadence = "2s";
-const V = 3;
+const V = 4;
 const GONE = ["l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
 const CONCRETE = {
@@ -258,10 +258,10 @@ function lay(ctx) {
   // =========================================================================
   const P5 = (kind) => ({ kind: "scripted", script: "scripts/level5-props-geo.js", params: { kind } });
   ctx.spawn("l7-bookcase", { feetPosition: { x: -2.66, y: FY, z: 0.3 }, rotation: { yaw: -90 }, scale: 0.8, physics: "static", primitive: P5("bookshelf") });
-  ctx.spawn("l7-armchair", { feetPosition: { x: 1.7, y: FY, z: 0.2 }, rotation: { yaw: -115 }, physics: "static", primitive: P5("armchair") });
+  ctx.spawn("l7-armchair", { feetPosition: { x: 1.7, y: FY, z: 0.2 }, rotation: { yaw: -115 }, scale: 0.8, physics: "static", primitive: P5("armchair") });
   ctx.spawn("l7-table", { feetPosition: { x: 0.5, y: FY, z: -0.6 }, rotation: { yaw: 8 }, physics: "static", primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "table" } } });
   ctx.spawn("l7-troffer", { feetPosition: { x: 0, y: FY + 2.6, z: 0 }, primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "troffer" } },
-    children: [{ feetPosition: { x: 0, y: -0.15, z: 0 }, light: { kind: "point", color: "oklch(0.93 0.06 95)", intensity: 2.6, distance: 10 } }],
+    children: [{ feetPosition: { x: 0, y: -0.15, z: 0 }, light: { kind: "point", color: "oklch(0.93 0.06 95)", intensity: 4.5, distance: 11 } }],
     audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-single-fluorescent-tube-buzzing-hum-loop.mp3", loop: true, gain: 0.12, spatial: true, maxDistance: 9 } });
   // a caged work lamp over the sea door, so the room is a light seen from the water
   ctx.spawn("l7-door-lamp", { feetPosition: { x: 0, y: FY + 2.5, z: -3.32 }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.11, height: 0.18 }, material: { color: "#ffffff", emissive: "oklch(0.88 0.1 80)", emissiveIntensity: 3 },
