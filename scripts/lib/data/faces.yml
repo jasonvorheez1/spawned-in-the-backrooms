@@ -18,6 +18,16 @@ traits:
   focused:  { w: 1, Angry: 0.1, Wide: 0.1 }
   wry:      { w: 1, Smile: 0.15, Half: 0.2, Frown: 0.1 }
   soft:     { w: 1, Blush: 0.3, Smile: 0.1 }
+  pouty:    { w: 1, Frown: 0.2, O: 0.12, Blush: 0.1 }
+  smug:     { w: 1, Half: 0.35, Smile: 0.28 }
+  startled: { w: 1, Wide: 0.35, O: 0.15 }
+  weary:    { w: 1, Half: 0.3, Sad: 0.2, Frown: 0.08 }
+  goofy:    { w: 1, Blep: 0.3, Wide: 0.12, Smile: 0.1 }
+  shy:      { w: 1, Blush: 0.4, Sad: 0.08, Half: 0.1 }
+  warm:     { w: 2, Happy: 0.15, Smile: 0.2 }
+  wary:     { w: 1, Angry: 0.08, Half: 0.2, Wide: 0.05 }
+# how strongly an NPC wears its trait, rolled per id (Savi's pick): some faces barely show it, some wear it plainly
+strength: [0.55, 1.45]
 eye: ["#15121a", "#3a2418", "#8a6a2a", "#d4902a", "#2f9a5a", "#2aa0a0", "#3f7fd9", "#7ab8e8", "#8a4fd8", "#d4547a", "#d03a3a", "#e0b838", "#8a909a", "#6a8a2a"]
 blush: ["#ff6285", "#ff8a9a", "#ff9f6a", "#e870b0", "#c86aa8", "#ffb0a0"]
 nose: ["", "#231816", "#3a2a28", "#ff5f9e", "#ff9fbd", "#c86a6a", "#e0a090", "#6a4a3a"]

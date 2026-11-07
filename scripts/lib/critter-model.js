@@ -83,16 +83,18 @@ export function faceFill(l) {
   if (!l || l.trait || l.vary === false) return l
   const u = rngOf(l), names = Object.keys(FACES.traits), tot = names.reduce((a, k) => a + (FACES.traits[k].w ?? 1), 0)
   let r = u() * tot, trait = names[0]; for (const k of names) { r -= FACES.traits[k].w ?? 1; if (r <= 0) { trait = k; break } }
-  const o = { ...l, trait }
-  if (!l.eye || l.eye === '#2b2233') o.eye = pickOf(FACES.eye, u)
-  if (!l.blush) o.blush = pickOf(FACES.blush, u)
-  if (!l.nose) { const n = pickOf(FACES.nose, u); if (n) o.nose = n }
+  const [s0, s1] = FACES.strength ?? [1, 1]
+  const o = { ...l, trait, tstr: Math.round((s0 + u() * (s1 - s0)) * 100) / 100 }
+  const own = l.fseed != null && l.faceOwn !== true // an NPC rolls its whole face from its id (a bespoke resident sets faceOwn to keep theirs)
+  if (own || !l.eye || l.eye === '#2b2233') o.eye = pickOf(FACES.eye, u)
+  if (own || !l.blush) o.blush = pickOf(FACES.blush, u)
+  if (own || !l.nose) { const n = pickOf(FACES.nose, u); o.nose = n || (own ? '' : l.nose) }
   return o
 }
 export function faceMorph(expr, blink, isFemale, look) {
   const f = { ...(M.faces[expr] || M.faces.smile) }
-  const tr = look ? FACES.traits[faceFill(look)?.trait] : null
-  if (tr) for (const [k, v] of Object.entries(tr)) if (k !== 'w') f[k] = Math.min(1, (f[k] ?? 0) + v)
+  const ff = look ? faceFill(look) : null, tr = ff ? FACES.traits[ff.trait] : null, ts = ff?.tstr ?? 1
+  if (tr) for (const [k, v] of Object.entries(tr)) if (k !== 'w') f[k] = Math.min(1, (f[k] ?? 0) + v * ts)
   if (isFemale && f.Blush == null) f.Blush = 0.28
   if (blink) f.Blink = 1
   return f
