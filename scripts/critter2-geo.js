@@ -228,15 +228,15 @@ export function geometry(ctx) {
   const cone = (base, tip, r, c, m = hi ? 7 : 5) => { if (c) col(c); tube(path([[base, r], [lerp3(base, tip, 0.55), r * 0.62], [tip, 0.003]], hi ? 3 : 2), { m, domeA: true }); };
 
   // ---------- the head: a wide soft kemono head as one radial surface ----------
-  const SNL = (sp.snout || 0.08) * SZ("snoutS", 0.3, 1.8), SNW = 0.36 * Math.sqrt(SZ("snoutS", 0.3, 1.8)), SNH = 0.24, SNY = -0.3;
+  const SNL = (0.035 + (sp.snout || 0.08) * 0.9) * SZ("snoutS", 0.3, 1.8), SNW = 0.4 * Math.sqrt(SZ("snoutS", 0.3, 1.8)), SNH = 0.27, SNY = -0.34;
   const CHK = sp.cheek || 1;
   const headR = (d) => {
     const [x, y, z] = d;
-    const rx = RX * (1 + 0.085 * CHK * Math.exp(-(((y + 0.42) / 0.3) ** 2)));
+    const rx = RX * (1 + 0.13 * CHK * Math.exp(-(((y + 0.38) / 0.32) ** 2)));
     let r = 1 / Math.sqrt((x / rx) ** 2 + (y / RY) ** 2 + (z / RZ) ** 2);
     if (y > 0) r *= 1 - 0.07 * y ** 3;
     if (y < -0.5) r *= 1 - 0.12 * (-0.5 - y) * (1 - Math.abs(x)); // tuck the chin
-    if (z < 0) { const u = x / SNW, v = (y - SNY) / SNH, q = u * u + v * v; if (q < 1) { const t = 1 - q; r += SNL * t * t * (3 - 2 * t) * Math.min(1, -z * 2); } }
+    if (z < 0) { const u = x / SNW, v = (y - SNY) / SNH, q = u * u + v * v; if (q < 1) { const t = 1 - q; r += SNL * Math.sqrt(t) * (0.6 + 0.4 * t) * Math.min(1, -z * 2); } }
     return r;
   };
   const headPt = (d, off = 0) => add3(HC, mul3(d, headR(d) + off));
@@ -253,7 +253,7 @@ export function geometry(ctx) {
     const [x, y, z] = d, ax = Math.abs(x);
     if (sp.skunk && ax < 0.13 && y > 0.25 && z > -0.75) return sp.skunk;
     if (sp.stripes && ((y > 0.55 && ax < 0.3 && ((ax * 9 + y * 2) % 1) < 0.32 && z < 0.2) || (ax > 0.72 && y > -0.35 && y < 0.25 && ((y * 6 + 10) % 1) < 0.34))) return sp.stripes;
-    const pale = y < 0.06 - 0.38 * ax && z < 0.15;
+    const pale = z < 0.1 && (((x / 0.46) ** 2 + ((y + 0.36) / 0.3) ** 2 < 1) || (y < -0.3 && ax > 0.3 && y < -0.3 - 0.15 * (ax - 0.3)) || y < -0.62);
     if (sp.face && (pale || (ax > 0.75 && y < -0.1))) return sp.face;
     if (sp.muzzle && pale) return BELLY;
     if (sp.cheek && y < -0.05 && ax > 0.45 && z < 0.3) return BELLY;
@@ -273,14 +273,15 @@ export function geometry(ctx) {
   if (!low) {
     for (const s of [-1, 1]) {
       const tc = headCol(norm3([s, -0.3, -0.2]));
-      const tufts = sp.wool ? [] : [[-0.18, 0.09, -25], [-0.36, 0.1, -50], [-0.02, 0.07, -5]];
+      const tufts = sp.wool ? [] : [[-0.22, 0.09, -12], [-0.42, 0.12, -38], [-0.6, 0.09, -62]];
+      col(tc);
       for (const [dy, l, ang] of tufts) {
-        const d = norm3([s * 0.97, dy, -0.05]), b = headPt(d, -0.03), a = (ang * Math.PI) / 180;
-        cone(b, add3(b, [s * l * Math.cos(a), l * Math.sin(a) * 0.9, 0.01]), 0.05, tc);
+        const d = norm3([s * 0.95, dy, -0.12]), b = headPt(d, -0.04), a = (ang * Math.PI) / 180, tip = add3(b, [s * l * Math.cos(a), l * Math.sin(a), 0.015]);
+        tube(path([[b, [0.028, 0.055]], [lerp3(b, tip, 0.5), [0.02, 0.038]], [tip, [0.003, 0.004]]], hi ? 3 : 2), { m: hi ? 8 : 5, domeA: true, up: [0, 0, -1] });
       }
     }
     if (!sp.wool && !sp.mane) for (const [x, l, lean] of [[-0.06, 0.08, -0.4], [0.03, 0.1, 0.2], [0.1, 0.07, 0.6]]) {
-      const b = headPt(norm3([x, 0.92, -0.18]), -0.02); cone(b, add3(b, [lean * l * 0.6, l, -0.02]), 0.035, HFUR);
+      const b = headPt(norm3([x, 0.86, -0.42]), -0.02); col(HFUR); tube(path([[b, [0.035, 0.016]], [add3(b, [lean * l * 0.3, l * 0.5, -l * 0.25]), [0.024, 0.012]], [add3(b, [lean * l * 0.6, l * 0.8, -l * 0.15]), [0.003, 0.003]]], hi ? 3 : 2), { m: hi ? 8 : 5, domeA: true, up: [0, 0, -1] });
     }
   }
   // lion mane / sheep wool
@@ -405,7 +406,7 @@ export function geometry(ctx) {
   }
   // mouth
   if (!low) {
-    const W0 = 0.065;
+    const W0 = 0.082;
     col(INK);
     if (!sp.pig) stroke([[0, NY - 0.02], [0, MY]], 0.012, 0.005);
     const openM = (w, top0, curv, depth, opt = {}) => { // open mouth: top curve, bottom bowl
