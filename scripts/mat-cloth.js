@@ -1,15 +1,14 @@
 // cloth patterns for the critter garments (Shelly, Nov 7: "add textures to most of the clothes"). Drawn on the garment's own
 // bind-pose geometry (positionGeometry), so a pattern sticks to the cloth as it moves, and needs no UVs (many garment meshes have none).
 // The garment's colour (material color = the look's hex) is the base; each pattern darkens/lightens it. params: { pat, s }
-import { materialColor, positionGeometry, normalGeometry, vec2, vec3, float, abs, fract, floor, sin, mix, smoothstep, step, max, min, mx_noise_float, mx_fractal_noise_float, mx_worley_noise_float } from "builtin/tsl";
+import { materialColor, positionGeometry, vec2, vec3, float, abs, fract, floor, sin, mix, smoothstep, step, max, min, mx_noise_float, mx_fractal_noise_float, mx_worley_noise_float } from "builtin/tsl";
 import { MeshStandardNodeMaterial } from "builtin/three";
 
 export function material(ctx) {
   const m = new MeshStandardNodeMaterial();
   const pat = String(ctx.params.pat ?? "weave"), S = Number(ctx.params.s ?? 1);
   const p = positionGeometry.mul(S);
-  const n = abs(normalGeometry);
-  const u = mix(p.x, p.z, step(n.z, n.x)); // around the body: the axis facing sideways to the normal
+  const u = p.x.add(p.z.mul(0.7)); // across the body
   const v = p.y;
   const base = materialColor;
   const fine = mx_noise_float(p.mul(260)).mul(0.5).add(0.5); // thread fuzz everywhere
