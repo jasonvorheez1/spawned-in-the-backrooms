@@ -2,30 +2,31 @@
 # Body parts toggle by name (Top_<kind>, Bot_<kind>, Shoes_<kind>, Hat_<kind>, Eyew_<kind>, Neck_<kind>); cloth_* materials take the look's hex.
 # A species row: its head GLB and its colours (fur/belly/tip/nose/mark/inner/limb/antler); a look's own fur overrides fur and limb.
 body: { m: "/cdn/value.c6e19f7ca72c3661f7702cebb7be2504e25141ea823fb146a2a616483ae85891.glb", f: "/cdn/value.36aefc7cc3e2c61b269f1c0385d14acb2ad14558245bd4090ad95822a225155e.glb" }
+bodyMats: [fur, belly, pad, cloth_bottom, button, metal, lens, cloth_hat, gold, cloth_neck, cloth_shoes, sole, cloth_top]
 slots: { topw: Top, botw: Bot, shoes: Shoes, hat: Hat, eyew: Eyew, neck: Neck }
 parts: [Top_apron, Top_dress, Top_hoodie, Top_jacket, Top_longsleeve, Top_pajamas, Top_sweater, Top_tank, Top_tee, Bot_longskirt, Bot_overalls, Bot_pants, Bot_pjpants, Bot_shorts, Bot_skirt, Shoes_boots, Shoes_slippers, Shoes_sneakers, Hat_beanie, Hat_bow, Hat_cap, Hat_crown, Hat_flower, Hat_headphones, Hat_partyhat, Hat_tophat, Eyew_glasses, Eyew_shades, Neck_bell, Neck_bowtie, Neck_cape, Neck_scarf]
 pad: "#ff9fb4"
 species:
-  cat: { head: "/cdn/value.39475d6c30a31a106698dc67c5c138ef73cf40d0a7ce76154a7581c040684b01.glb", fur: "#f2a65a", belly: "#fff1dc", nose: "#ff8fa3", tip: "#fff1dc" }
-  dog: { head: "/cdn/value.a70bdf8a0681ab2acc0b3e1284b68b1b259776f51daf51385940ad63fe151ea3.glb", fur: "#c98b55", belly: "#fbe8cf", nose: "#2a1c18", tip: "#fbe8cf", mark: "#8a5a36" }
-  fox: { head: "/cdn/value.e0721b0dbc6562a06a45fbbb5df49a342ded7ac6741bcee4a57894f8facf7976.glb", fur: "#f07a2e", belly: "#ffffff", nose: "#231816", tip: "#ffffff", mark: "#2c1c18" }
-  bunny: { head: "/cdn/value.5358dde889c71b52cec733e8793c7ee6f3240be59d9a1a939671f12c1a7d5925.glb", fur: "#f4efe9", belly: "#ffffff", nose: "#ff9fb4", tip: "#ffffff", inner: "#ffc2d1" }
-  bear: { head: "/cdn/value.62d2d43be560293613c1dda6898fbc9dae18680e109eabe13e77e28f223b62ef.glb", fur: "#9a6440", belly: "#e8c79e", nose: "#2a1c18", tip: "#e8c79e", mark: "#6e4329" }
-  deer: { head: "/cdn/value.5ab1354a88f628a57a284666c907aca2674aca8ab3374db63df25c6009bc34ec.glb", fur: "#a8703f", belly: "#f1d4ae", nose: "#2a1612", tip: "#ffffff", mark: "#4a2a1c", antler: "#e9d8b4" }
-  reindeer: { head: "/cdn/value.c90eebb89071df1e6322bf3913ab64f987900cce58b3c8b8199fb588674de5c0.glb", fur: "#8a5a3a", belly: "#f1e0c8", nose: "#e0404c", tip: "#f6efe4", mark: "#4a2e20", antler: "#efe0bd" }
-  mouse: { head: "/cdn/value.f3e1cdca0756a0d9ac3113d43e761f5f100d4842811bbb2dc25b340843e62cc9.glb", fur: "#b9b3c2", belly: "#f6eef4", nose: "#ff8fa3", tip: "#f6eef4", inner: "#ffc2d1" }
-  wolf: { head: "/cdn/value.2353d51d23bdff4100cbfec5af2846d2f1aaa9000fb60081d93d61f6e87433c9.glb", fur: "#4f6f9f", belly: "#a9bfdc", nose: "#16141c", tip: "#a9bfdc", mark: "#26406c" }
-  raccoon: { head: "/cdn/value.c50919972e156870689e4df2ad280329350035a6f7a6019e01c6756bf9d33330.glb", fur: "#8b8a92", belly: "#e9e6ea", nose: "#1c1a20", tip: "#2a2830", mark: "#2c2a32" }
-  panda: { head: "/cdn/value.cb702d4aa02cacf31256ff87c849d7283fc28686132fd8f8abda433942c2436e.glb", fur: "#f7f3ee", belly: "#ffffff", nose: "#1c1a20", tip: "#2b2530", mark: "#2b2530", limb: "#2b2530" }
-  pig: { head: "/cdn/value.0c685be2ac4c097abbecc194a5806e2c385d5196f5b38d390b58f836f3f5406a.glb", fur: "#ffb3c1", belly: "#ffd9e0", nose: "#ff8ca2", tip: "#ffd9e0" }
-  sheep: { head: "/cdn/value.2b2452b907604b3ee3c4274aa9a0910273295203d4ceae7dc23dc356a0e3af6a.glb", fur: "#f6f1e7", belly: "#ffffff", nose: "#2a1c18", tip: "#ffffff", mark: "#5d5560", inner: "#8a7f8c" }
-  lion: { head: "/cdn/value.b826be4a0769fbb9a1fdf857ebe6e233b0ca95812d61a82f2edf240306443411.glb", fur: "#ebb04e", belly: "#fbe3b0", nose: "#8a4a2a", tip: "#a3592a", mark: "#a3592a" }
-  tiger: { head: "/cdn/value.097a7d4bb967f6f62bbd0ee66efb847a49acd279499cea5c394bfce3da139ac4.glb", fur: "#f08a24", belly: "#fff6ea", nose: "#ff8fa3", tip: "#2a1c18", mark: "#2a1c18" }
-  redpanda: { head: "/cdn/value.c8245a7b0110501a81161ca6e5bd4148638f3aece0718d6a68b1f8658840d4ed.glb", fur: "#c4532a", belly: "#f4ece2", nose: "#1c1a20", tip: "#7a2e16", mark: "#2b1a14", limb: "#2b1a14" }
-  skunk: { head: "/cdn/value.ebd582ebd166be8f934ae7f8c0955a41e3f515e99c29665f847e73799c3c01fb.glb", fur: "#2e2c36", belly: "#f4f1ea", nose: "#16141c", tip: "#f4f1ea", mark: "#f4f1ea" }
-  hamster: { head: "/cdn/value.d4d433d1fe74e848f8fc04131fe82718792022b5b03b33dca6da830e2c843190.glb", fur: "#e8b77a", belly: "#fff4e0", nose: "#ff8fa3", tip: "#fff4e0", inner: "#ffc2d1" }
-  otter: { head: "/cdn/value.f48027802252c272d0c308b251fee47dd4df8c1558d7d31ca51e75a0b3e29d9e.glb", fur: "#7a5236", belly: "#e8d2b4", nose: "#2a1c18", tip: "#e8d2b4", mark: "#5a3a24" }
-  koala: { head: "/cdn/value.53dde7902f4c5be2a2f5ecec6189cc99001c07981b2f414cd8de1917ded57e88.glb", fur: "#9a9aa4", belly: "#ececf0", nose: "#2a2830", tip: "#ececf0", inner: "#f4f4f6" }
+  cat: { head: "/cdn/value.39475d6c30a31a106698dc67c5c138ef73cf40d0a7ce76154a7581c040684b01.glb", fur: "#f2a65a", belly: "#fff1dc", nose: "#ff8fa3", tip: "#fff1dc", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly, tip] }
+  dog: { head: "/cdn/value.a70bdf8a0681ab2acc0b3e1284b68b1b259776f51daf51385940ad63fe151ea3.glb", fur: "#c98b55", belly: "#fbe8cf", nose: "#2a1c18", tip: "#fbe8cf", mark: "#8a5a36", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly, tip] }
+  fox: { head: "/cdn/value.e0721b0dbc6562a06a45fbbb5df49a342ded7ac6741bcee4a57894f8facf7976.glb", fur: "#f07a2e", belly: "#ffffff", nose: "#231816", tip: "#ffffff", mark: "#2c1c18", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly, tip] }
+  bunny: { head: "/cdn/value.5358dde889c71b52cec733e8793c7ee6f3240be59d9a1a939671f12c1a7d5925.glb", fur: "#f4efe9", belly: "#ffffff", nose: "#ff9fb4", tip: "#ffffff", inner: "#ffc2d1", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly, tip] }
+  bear: { head: "/cdn/value.62d2d43be560293613c1dda6898fbc9dae18680e109eabe13e77e28f223b62ef.glb", fur: "#9a6440", belly: "#e8c79e", nose: "#2a1c18", tip: "#e8c79e", mark: "#6e4329", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly] }
+  deer: { head: "/cdn/value.5ab1354a88f628a57a284666c907aca2674aca8ab3374db63df25c6009bc34ec.glb", fur: "#a8703f", belly: "#f1d4ae", nose: "#2a1612", tip: "#ffffff", mark: "#4a2a1c", antler: "#e9d8b4", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly, tip, antler] }
+  reindeer: { head: "/cdn/value.c90eebb89071df1e6322bf3913ab64f987900cce58b3c8b8199fb588674de5c0.glb", fur: "#8a5a3a", belly: "#f1e0c8", nose: "#e0404c", tip: "#f6efe4", mark: "#4a2e20", antler: "#efe0bd", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly, tip, antler] }
+  mouse: { head: "/cdn/value.f3e1cdca0756a0d9ac3113d43e761f5f100d4842811bbb2dc25b340843e62cc9.glb", fur: "#b9b3c2", belly: "#f6eef4", nose: "#ff8fa3", tip: "#f6eef4", inner: "#ffc2d1", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly] }
+  wolf: { head: "/cdn/value.2353d51d23bdff4100cbfec5af2846d2f1aaa9000fb60081d93d61f6e87433c9.glb", fur: "#4f6f9f", belly: "#a9bfdc", nose: "#16141c", tip: "#a9bfdc", mark: "#26406c", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly, tip] }
+  raccoon: { head: "/cdn/value.c50919972e156870689e4df2ad280329350035a6f7a6019e01c6756bf9d33330.glb", fur: "#8b8a92", belly: "#e9e6ea", nose: "#1c1a20", tip: "#2a2830", mark: "#2c2a32", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly, mark] }
+  panda: { head: "/cdn/value.cb702d4aa02cacf31256ff87c849d7283fc28686132fd8f8abda433942c2436e.glb", fur: "#f7f3ee", belly: "#ffffff", nose: "#1c1a20", tip: "#2b2530", mark: "#2b2530", limb: "#2b2530", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, mark] }
+  pig: { head: "/cdn/value.0c685be2ac4c097abbecc194a5806e2c385d5196f5b38d390b58f836f3f5406a.glb", fur: "#ffb3c1", belly: "#ffd9e0", nose: "#ff8ca2", tip: "#ffd9e0", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur] }
+  sheep: { head: "/cdn/value.2b2452b907604b3ee3c4274aa9a0910273295203d4ceae7dc23dc356a0e3af6a.glb", fur: "#f6f1e7", belly: "#ffffff", nose: "#2a1c18", tip: "#ffffff", mark: "#5d5560", inner: "#8a7f8c", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly, mark, tip] }
+  lion: { head: "/cdn/value.b826be4a0769fbb9a1fdf857ebe6e233b0ca95812d61a82f2edf240306443411.glb", fur: "#ebb04e", belly: "#fbe3b0", nose: "#8a4a2a", tip: "#a3592a", mark: "#a3592a", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly, tip] }
+  tiger: { head: "/cdn/value.097a7d4bb967f6f62bbd0ee66efb847a49acd279499cea5c394bfce3da139ac4.glb", fur: "#f08a24", belly: "#fff6ea", nose: "#ff8fa3", tip: "#2a1c18", mark: "#2a1c18", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly, mark] }
+  redpanda: { head: "/cdn/value.c8245a7b0110501a81161ca6e5bd4148638f3aece0718d6a68b1f8658840d4ed.glb", fur: "#c4532a", belly: "#f4ece2", nose: "#1c1a20", tip: "#7a2e16", mark: "#2b1a14", limb: "#2b1a14", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly, mark] }
+  skunk: { head: "/cdn/value.ebd582ebd166be8f934ae7f8c0955a41e3f515e99c29665f847e73799c3c01fb.glb", fur: "#2e2c36", belly: "#f4f1ea", nose: "#16141c", tip: "#f4f1ea", mark: "#f4f1ea", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly, tip] }
+  hamster: { head: "/cdn/value.d4d433d1fe74e848f8fc04131fe82718792022b5b03b33dca6da830e2c843190.glb", fur: "#e8b77a", belly: "#fff4e0", nose: "#ff8fa3", tip: "#fff4e0", inner: "#ffc2d1", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly] }
+  otter: { head: "/cdn/value.f48027802252c272d0c308b251fee47dd4df8c1558d7d31ca51e75a0b3e29d9e.glb", fur: "#7a5236", belly: "#e8d2b4", nose: "#2a1c18", tip: "#e8d2b4", mark: "#5a3a24", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur, belly] }
+  koala: { head: "/cdn/value.53dde7902f4c5be2a2f5ecec6189cc99001c07981b2f414cd8de1917ded57e88.glb", fur: "#9a9aa4", belly: "#ececf0", nose: "#2a2830", tip: "#ececf0", inner: "#f4f4f6", mats: [eyewhite, iris, pupil, eyeink, mouth, tongue, blush, fur] }
 # expressions as the head's shape keys (Blink Happy Sad Angry Wide Half Smile Open Frown O Blep Blush), 0..1
 faces:
   grin: { Smile: 1, Open: .4 }
