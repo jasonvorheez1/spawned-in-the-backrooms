@@ -12,7 +12,6 @@ import { stepToward as stepToward1 } from "./lib/maze1path.js";
 import { stepToward as stepToward2 } from "./lib/maze2path.js";
 import { stepToward as stepToward3, cellNear } from "./lib/maze3path.js";
 import { stepToward as stepTowardBoiler } from "./lib/boilerpath.js";
-import { raycast } from "builtin/physics";
 import C from "./lib/data/creatures3.yml";
 const H3 = C.hounds3;
 const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
