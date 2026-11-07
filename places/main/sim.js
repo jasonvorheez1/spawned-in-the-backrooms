@@ -90,16 +90,6 @@ export function tick(ctx) {
   if (!s.furnished) { s.furnished = true; furnish(ctx); }
   regrow(ctx, s, now);
   syncLevel0(ctx);
-  const almonds = ctx.query({ tags: ["almond"] }).length;
-  if (almonds < L.almonds && now >= (s.nextAlmond ?? 0)) {
-    const fill = s.almondsSeeded ? 1 : L.almonds - almonds;
-    for (let i = 0; i < fill; i++) {
-      const c = cell(ctx);
-      if (c) spawnAlmond(ctx, c);
-    }
-    s.almondsSeeded = true;
-    s.nextAlmond = now + (L.almondRespawn * 1000) / 4;
-  }
   const weapons = ctx.query({ tags: ["weapon"] }).length;
   if (weapons < W.pickups && now >= (s.nextWeapon ?? 0)) {
     const fill = s.weaponsSeeded ? 1 : W.pickups - weapons;
