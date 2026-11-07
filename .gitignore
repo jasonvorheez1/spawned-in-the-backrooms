@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 node_modules/
 art/level3/*.glb
+art/critter-cute/out/
+art/critter-cute/proof/
