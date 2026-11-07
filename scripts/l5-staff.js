@@ -13,14 +13,25 @@ import { npcLook } from "./lib/clothes.js";
 const INK = { color: "#060606", roughness: 1, metalness: 0 };
 export function faceless(spec) { const h = spec.children?.[0]; if (h?.model) { if (typeof h.model === "string") h.model = { id: h.model }; h.model.materials = { fur: INK, ...h.model.materials, pupil: INK, eyewhite: INK, eyeink: INK, mouth: INK, blush: INK, tongue: INK, nose: INK, tip: INK, mark: INK }; h.morph = undefined; } return spec; }
 export const staffLook = (f, i) => ({ ...npcLook("l5staff" + i, { species: ["wolf", "cat", "fox", "bear"][i % 4], sex: i % 3 ? "m" : "f" }, "wanderer", 12), fur: "#060606", vary: false, eye: "#000000" });
+// in disguise: an ordinary hotel critter, own fur, own face; the mask only drops when someone gets close or stares
+export const maskLook = (f, i) => npcLook("l5staff" + i, { species: ["wolf", "cat", "fox", "bear"][i % 4], sex: i % 3 ? "m" : "f" }, "wanderer", 12);
+const REVEAL = { near: 3.2, stareRange: 9, stareMs: 2500 }; // Savi's picks
+function reveal(ctx, f, o) {
+  const at = o.feetPosition, st = { ...o.state, disguised: false, verb: "Look", info: f.info }, rot = o.rotation;
+  ctx.destroy(f.id);
+  ctx.spawn(f.id, { tags: ["moths", "l5staff", "l5-hostile", "usable", "faceling"], feetPosition: at, rotation: rot, ...faceless(critterSpec(staffLook(f, T.figures.indexOf(f)))), scale: (f.height ?? 2.2) / 1.8, physics: { body: "character" }, state: st });
+  ctx.emit("playSound", { clip: SND("wet-skin-peeling-face-slipping-off-low-drone"), position: { ...at, y: at.y + 2 }, volume: 1, maxDistance: 16 });
+  ctx.emit("screenFlash", { color: "#000000", duration: 0.35, intensity: 0.6 }, { audience: { nearby: at, radius: 10 } });
+  ctx.emit("screenShake", { intensity: 0.3, duration: 0.4 }, { audience: { nearby: at, radius: 10 } });
+}
 const T = E.staff, AVOID = new Set(T.avoid ?? []), COS = Math.cos((T.lookCone * Math.PI) / 180);
 const WALK = { clip: "cdn/clip-walk-loop.glb", loop: true, speed: 0.55 }, IDLE = { clip: "cdn/clip-idle-loop.glb", loop: true, speed: 0.25 };
 function place(ctx, f) {
   return ctx.spawn(f.id, {
     tags: ["moths", "l5staff", "l5-hostile", "usable", "faceling"], feetPosition: { x: f.post.x, y: 0.02, z: f.post.z }, rotation: f.yaw,
-    ...faceless(critterSpec(staffLook(f, T.figures.indexOf(f)))), scale: (f.height ?? 2.2) / 1.8,
+    ...critterSpec(maskLook(f, T.figures.indexOf(f))), scale: (f.height ?? 2.2) / 1.8,
     physics: { body: "character" },
-    state: { ...npcState(ctx, "staff", T.hp, { xp: 80 }), kind: "staff", name: f.name, verb: "Look", info: f.info, mode: "post" },
+    state: { ...npcState(ctx, "staff", T.hp, { xp: 80 }), kind: "staff", name: f.name, verb: "Look", info: "One of the hotel staff. Polite. Very still.", mode: "post", disguised: true },
   });
 }
 // a player looks at it: the camera's forward within the cone toward it
@@ -41,6 +52,15 @@ export function update(ctx, dt) {
     if (st.dead || (st.hp ?? 1) <= 0) {
       if (!m.deadAt) { m.deadAt = now; becomeCorpse(ctx, o, `${f.name}'s body`, ["bobbypin", "battery", ctx.random() < 0.5 ? "kit" : "tape"], killerOf(ctx, pos)?.feetPosition); ctx.emit("playSound", { clip: SND("hollow-sigh-fading-whisper-thank-you-for-staying"), position: pos, volume: 0.9 }); }
       if (now - m.deadAt > 3600000 || (now - m.deadAt > 3000 && !(o.state.items ?? "").length)) { ctx.destroy(f.id); delete mem[f.id]; mem["re" + f.id] = now + 240000; }
+      continue;
+    }
+    if (st.disguised) {
+      // passing as staff: it keeps its post; someone close, or a long stare, and the mask slips
+      o.velocity = { x: 0, y: vy, z: 0 }; if (flat(pos, f.post) < 0.5) o.rotation = f.yaw;
+      if (!o.anim?.move) o.anim.move = IDLE;
+      const close = everyone.some((p) => flat(p.feetPosition, pos) < REVEAL.near), seer = watched(ctx, pos, everyone);
+      if (seer && flat(seer.feetPosition, pos) < REVEAL.stareRange) { m.stare ??= now; } else m.stare = null;
+      if (close || (m.stare && now - m.stare > REVEAL.stareMs)) { reveal(ctx, f, o); mem[f.id] = {}; }
       continue;
     }
     let mode = "post", goal = null, sp = 0;
