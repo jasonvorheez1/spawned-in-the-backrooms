@@ -63,8 +63,10 @@ function shoot(ctx, me, t) {
 
 function moveAlong(ctx, me, m, goal, speed, dt) {
   const p = me.feetPosition, now = ctx.now();
+  const fin = (q, y0) => ({ x: Number.isFinite(q?.x) ? q.x : p.x, y: Number.isFinite(q?.y) ? q.y : y0, z: Number.isFinite(q?.z) ? q.z : p.z });
+  goal = fin(goal, Number.isFinite(p.y) ? p.y : 0);
   if (!m.path || now > m.repath || flat(goal, m.pathGoal ?? goal) > 2) {
-    const r = findPath(ctx, p, goal, {});
+    const r = findPath(ctx, fin(p, goal.y), goal, {});
     if (r?.points?.length) { m.path = r.points; m.i = 0; m.pathGoal = { ...goal }; }
     m.repath = now + (r?.partial ? 150 : 1200);
   }
