@@ -39,7 +39,6 @@ shops:
     - [weapon:crowbar, 1, 8]
     - [weapon:pistol, 1, 24]
     - [weapon:shotgun, 1, 34]
-    - [weapon:rifle, 1, 48]
   gamma-june:
     - [ration, 6, 2]
     - [beans, 6, 2]
