@@ -2,8 +2,16 @@
 dbg-critter-bunny:
   feetPosition: {x: 92.5, y: 0, z: -7}
   id: dbg-critter-bunny
-  primitive: {kind: scripted, params: {expr: grin, outfit: hoodie, sex: m, species: bunny}, script: scripts/critter2-geo.js}
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.c2d2cf30258e5a9dffe20340b842637fe5106a6def1e54dc7db9d2ef462e0cdf.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: false}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#ffffff"}, fur: {color: "#f4efe9"}, limb: {color: "#f4efe9"}}}
   rotation: {yaw: -90}
+dbg-critter-bunny/critter-head:
+  attachment: {skin: true}
+  id: dbg-critter-bunny/critter-head
+  model: {id: /cdn/value.197c6676c1d1532f7be38824adc8ed3e477e72f6c3d4e68074ee282037d9dd32.glb, materials: {belly: {color: "#ffffff"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f4efe9"}, inner: {color: "#ffc2d1"}, nose: {color: "#ff9fb4"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#ffffff"}}}
+  morph: {Open: 0.4, Smile: 1}
+  parent: dbg-critter-bunny
 dbg-matdb-aluminum:
   feetPosition: {x: 91.5, y: 0.92, z: -1.25}
   id: dbg-matdb-aluminum
