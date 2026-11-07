@@ -3,12 +3,13 @@
 # Metres; origin at the base, on the wall plane for wall pieces (wall = Blender y 0, the room is +Y = glTF -Z, up +Z).
 import bpy, bmesh, math, os, sys, random
 from mathutils import Vector
+MATS = {}
 OUT = "/workspace/lore"; os.makedirs(OUT, exist_ok=True)
 only = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else ["purp", "moths", "pipe", "kegs", "boiler", "drum"]
 R = random.Random(56)
 
-def reset(): bpy.ops.wm.read_factory_settings(use_empty=True)
-MATS = {}
+def reset(): MATS.clear(); bpy.ops.wm.read_factory_settings(use_empty=True)
+
 def mat(name, rgb, rough=0.7, metal=0.0, emit=None, es=2.0, img=None):
     if name in MATS: return MATS[name]
     m = bpy.data.materials.new(name); m.use_nodes = True
@@ -66,7 +67,8 @@ def mesh(name, verts, faces, m, smooth=False):
 def blob(elems, m, res=0.035, cut=None):
     mb = bpy.data.metaballs.new("mb"); mb.resolution = res; mb.render_resolution = res; mb.threshold = 0.6
     for kind, co, rad, extra in elems:
-        e = mb.elements.new(type=kind); e.co = co; e.radius = rad
+        e = mb.elements.new(type=kind); e.radius = rad
+        if co is not None: e.co = co
         if kind == "CAPSULE":
             a, b = Vector(extra[0]), Vector(extra[1]); e.co = (a + b) / 2; e.size_x = (b - a).length / 2
             e.rotation = Vector((1, 0, 0)).rotation_difference((b - a).normalized())
@@ -78,7 +80,7 @@ def blob(elems, m, res=0.035, cut=None):
         bm = bmesh.new(); bm.from_mesh(me)
         bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=(0, cut, 0), plane_no=(0, 1, 0), clear_inner=True)
         bm.to_mesh(me); bm.free()
-    md = o2.modifiers.new("d", "DECIMATE"); md.ratio = 0.5
+    md = o2.modifiers.new("d", "DECIMATE"); md.ratio = 0.3
     for o in bpy.context.selected_objects: o.select_set(False)
     bpy.context.view_layer.objects.active = o2; o2.select_set(True); bpy.ops.object.modifier_apply(modifier="d")
     return fin(o2, m)
