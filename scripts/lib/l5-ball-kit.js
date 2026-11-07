@@ -64,14 +64,14 @@ export function coupe(ctx, x, y, z, fill = 0.5, tip = false) {
   if (fill > 0) { paint(ctx, "oklch(0.88 0.11 92)", null, 0.05, 0, "oklch(0.25 0.05 90)"); const yy = y + 0.098 + 0.026 * fill; lathe(ctx, x, z, [[yy - 0.002, 0.001], [yy - 0.002, 0.028 + 0.025 * fill], [yy, 0.028 + 0.025 * fill], [yy + 0.0005, 0.001]], 10); }
 }
 // a gilt Chiavari chair, front -Z, seat at 0.46, at x, z turned yaw (radians)
-export function chair(ctx, x, z, yaw, tilt = 0) {
-  const R = (lx, ly, lz) => { const c = Math.cos(yaw), s = Math.sin(yaw); return [x + lx * c - lz * s, ly + Math.max(0, lz) * tilt, z + lx * s + lz * c]; };
+export function chair(ctx, x, z, yaw, tilt = 0, y0 = 0) {
+  const R = (lx, ly, lz) => { const c = Math.cos(yaw), s = Math.sin(yaw); return [x + lx * c - lz * s, y0 + ly + Math.max(0, lz) * tilt, z + lx * s + lz * c]; };
   GILT(ctx);
   for (const [lx, lz, top] of [[-0.2, -0.2, 0.46], [0.2, -0.2, 0.46], [-0.19, 0.19, 0.95], [0.19, 0.19, 0.95]]) rod(ctx, R(lx, 0, lz), R(lx * 0.95, top, lz), 0.013);
   for (const ly of [0.18, 0.46]) { rod(ctx, R(-0.2, ly, -0.2), R(0.2, ly, -0.2), 0.009); rod(ctx, R(-0.2, ly, -0.2), R(-0.19, ly, 0.19), 0.009); rod(ctx, R(0.2, ly, -0.2), R(0.19, ly, 0.19), 0.009); }
   for (const ly of [0.62, 0.76, 0.9]) rod(ctx, R(-0.185, ly, 0.19), R(0.185, ly, 0.19), 0.01);
   for (const lx of [-0.09, 0, 0.09]) rod(ctx, R(lx, 0.47, 0.19), R(lx, 0.9, 0.19), 0.007);
   paint(ctx, "oklch(0.93 0.03 85)", "cdn/texture-ivory-silk-brocade-fabric.png", 0.8);
-  const c = R(0, 0.5, 0); const yawPts = rrect(-0.19, 0.19, -0.19, 0.18, 0.05).map(([px, pz]) => { const p = R(px, 0, pz); return [p[0], p[2]]; });
-  loft(ctx, [{ y: 0.46, pts: yawPts }, { y: 0.5, pts: yawPts }, { y: 0.51, pts: yawPts.map(([px, pz]) => [c[0] + (px - c[0]) * 0.9, c[2] + (pz - c[2]) * 0.9]) }]);
+  const c = R(0, 0.5, 0), S0 = y0; const yawPts = rrect(-0.19, 0.19, -0.19, 0.18, 0.05).map(([px, pz]) => { const p = R(px, 0, pz); return [p[0], p[2]]; });
+  loft(ctx, [{ y: S0 + 0.46, pts: yawPts }, { y: S0 + 0.5, pts: yawPts }, { y: S0 + 0.51, pts: yawPts.map(([px, pz]) => [c[0] + (px - c[0]) * 0.9, c[2] + (pz - c[2]) * 0.9]) }]);
 }
