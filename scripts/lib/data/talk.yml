@@ -1,7 +1,7 @@
 # Free talk with NPCs (scripts/lib/npc-talk.js). Every number here is Savi's pick; tune freely.
 rate: 3             # seconds between two things one player says (Savi's pick)
 log: 8              # lines the card keeps on screen (Savi's pick)
-memory: 16          # turns the model remembers per npc per player (Savi's pick)
+memory: 12          # lines the model remembers per npc per player, kept in player.state.talks (Savi's pick)
 model: fast
 maxText: 220        # characters a player can type in one go (Savi's pick)
 range: 5            # walk farther than this and the card closes (Savi's pick)
