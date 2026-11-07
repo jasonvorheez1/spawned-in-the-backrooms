@@ -1,29 +1,159 @@
 {
-  "rat": {
-    "model": "/cdn/value.cb60d1de7936f6abca692c59905428783f74afafbec298c40e9a7f9833ec1007.glb",
-    "hp": 18, "walk": 1.4, "run": 4.6, "flee": 5.2, "scream": 7.5,
-    "bite": [2, 3], "biteEvery": [650, 950], "reach": 0.75, "sense": 11, "scareLight": 9, "scareWeapon": 6, "alone": 10, "wounded": 0.5,
-    "outEvery": [150000, 300000], "outFor": [60000, 100000], "screamChance": 0.3, "screamMs": 3500, "flickerMs": 4200, "flickerReach": 16,
-    "packs": [
-      { "id": "a", "nest": { "x": 19.5, "z": -9.5 }, "size": 5 },
-      { "id": "b", "nest": { "x": 43.5, "z": -21.5 }, "size": 4 },
-      { "id": "c", "nest": { "x": 19.5, "z": 11.5 }, "size": 3 }
-    ],
-    "vents": [
-      { "x": -24.5, "z": -11.6, "zone": "corrN" },
-      { "x": -11.5, "z": 11.4, "zone": "corrS" },
-      { "x": -27.0, "z": 2.3, "zone": "gallery" },
-      { "x": -9.5, "z": -2.3, "zone": "gallery" },
-      { "x": -38.0, "z": 11.0, "zone": "lobby" }
-    ]
-  },
-  "staff": {
-    "hp": 160, "creep": 1.5, "home": 1.1, "strike": 25, "strikeEvery": 5000, "reach": 1.4, "sense": 22, "lookCone": 62, "alone": 12,
-    "figures": [
-      { "id": "l5-staff-bellhop", "name": "The Bellhop", "model": "/cdn/value.68efc4b4f1c2b0343cd4070c6d5f42de06eae57ae2eeefeff765ba74347509f8.glb", "height": 2.35, "post": { "x": -22.8, "z": -12.55 }, "yaw": 0, "whisper": "polite-hotel-bellhop-whisper-may-i-take-your-bags-sir" },
-      { "id": "l5-staff-maid", "name": "The Chambermaid", "model": "/cdn/value.8928d9e0ff2b49e170c357c1164b0b0cfb3458f320b9d237630ba53ec337d87e.glb", "height": 2.2, "post": { "x": -13.5, "z": 12.55 }, "yaw": 180, "whisper": "soft-maid-whisper-turndown-service-dont-mind-me" },
-      { "id": "l5-staff-porter", "name": "The Night Porter", "model": "/cdn/value.045b9bf87682f9cca81ca05bc7d34d76d79ae345c63b98c4a8e6862c79997c38.glb", "height": 2.5, "post": { "x": -6.55, "z": -11.5 }, "yaw": -90, "whisper": "deep-hotel-porter-whisper-your-room-is-ready" }
-    ]
-  },
-  "safe": ["housekeeping", "salon", "kitchen", "suite-nw", "suite-ne", "suite-sw", "suite-se"]
+ "rat": {
+  "model": "/cdn/value.cb60d1de7936f6abca692c59905428783f74afafbec298c40e9a7f9833ec1007.glb",
+  "hp": 18,
+  "walk": 1.4,
+  "run": 4.6,
+  "flee": 5.2,
+  "scream": 7.5,
+  "bite": [
+   2,
+   3
+  ],
+  "biteEvery": [
+   650,
+   950
+  ],
+  "reach": 0.75,
+  "sense": 11,
+  "scareLight": 9,
+  "scareWeapon": 6,
+  "alone": 10,
+  "wounded": 0.5,
+  "outEvery": [
+   150000,
+   300000
+  ],
+  "outFor": [
+   60000,
+   100000
+  ],
+  "screamChance": 0.3,
+  "screamMs": 3500,
+  "flickerMs": 4200,
+  "flickerReach": 16,
+  "packs": [
+   {
+    "id": "a",
+    "nest": {
+     "x": 19.5,
+     "z": -9.5
+    },
+    "size": 5
+   },
+   {
+    "id": "b",
+    "nest": {
+     "x": 43.5,
+     "z": -21.5
+    },
+    "size": 4
+   },
+   {
+    "id": "c",
+    "nest": {
+     "x": 19.5,
+     "z": 11.5
+    },
+    "size": 3
+   }
+  ],
+  "vents": [
+   {
+    "x": -24.5,
+    "z": -11.6,
+    "zone": "corrN"
+   },
+   {
+    "x": -11.5,
+    "z": 11.4,
+    "zone": "corrS"
+   },
+   {
+    "x": -27.0,
+    "z": 2.3,
+    "zone": "gallery"
+   },
+   {
+    "x": -9.5,
+    "z": -2.3,
+    "zone": "gallery"
+   },
+   {
+    "x": -17.5,
+    "z": 6.5,
+    "zone": "crossS"
+   }
+  ]
+ },
+ "staff": {
+  "hp": 160,
+  "creep": 1.5,
+  "home": 1.1,
+  "strike": 25,
+  "strikeEvery": 5000,
+  "reach": 1.4,
+  "sense": 22,
+  "lookCone": 62,
+  "alone": 12,
+  "figures": [
+   {
+    "id": "l5-staff-bellhop",
+    "name": "The Bellhop",
+    "model": "/cdn/value.68efc4b4f1c2b0343cd4070c6d5f42de06eae57ae2eeefeff765ba74347509f8.glb",
+    "height": 2.35,
+    "post": {
+     "x": -22.8,
+     "z": -12.55
+    },
+    "yaw": 0,
+    "whisper": "polite-hotel-bellhop-whisper-may-i-take-your-bags-sir"
+   },
+   {
+    "id": "l5-staff-maid",
+    "name": "The Chambermaid",
+    "model": "/cdn/value.8928d9e0ff2b49e170c357c1164b0b0cfb3458f320b9d237630ba53ec337d87e.glb",
+    "height": 2.2,
+    "post": {
+     "x": -13.5,
+     "z": 12.55
+    },
+    "yaw": 180,
+    "whisper": "soft-maid-whisper-turndown-service-dont-mind-me"
+   },
+   {
+    "id": "l5-staff-porter",
+    "name": "The Night Porter",
+    "model": "/cdn/value.045b9bf87682f9cca81ca05bc7d34d76d79ae345c63b98c4a8e6862c79997c38.glb",
+    "height": 2.5,
+    "post": {
+     "x": -6.55,
+     "z": -11.5
+    },
+    "yaw": -90,
+    "whisper": "deep-hotel-porter-whisper-your-room-is-ready"
+   }
+  ],
+  "avoid": [
+   "lobby",
+   "library",
+   "stairs4",
+   "beverly",
+   "boiler",
+   "salon",
+   "housekeeping",
+   "kitchen"
+  ],
+  "leash": 16,
+  "spread": 1.6
+ },
+ "safe": [
+  "housekeeping",
+  "salon",
+  "kitchen",
+  "suite-nw",
+  "suite-ne",
+  "suite-sw",
+  "suite-se"
+ ]
 }
