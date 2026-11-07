@@ -89,10 +89,15 @@ export function update(ctx, dt) {
   // in conversation: the view narrows and turns onto their face, Bethesda-style; leaving, or a fight closing the talk (scripts/talk.js), eases it back
   const tw = ps?.talkWith && !ps?.shopOpen && !ps?.downAt ? (ctx.place?.objects?.[ps.talkWith] ?? null) : null, tz = ctx.self.session.talkCam ??= { k: 0 }
   tz.k += ((tw && !tw.state?.dead ? 1 : 0) - tz.k) * Math.min(1, dt * (tw ? 3 : 7))
-  if (tw) { const b = tw.bounds; tz.c = b ? { x: b.center.x, y: b.max.y - (b.size.y * 0.18), z: b.center.z } : { ...tw.feetPosition, y: tw.feetPosition.y + 1.3 } }
+  if (tw) { const f = tw.feetPosition, b = tw.bounds, hy = b ? Math.min(f.y + 2.1, Math.max(f.y + 0.7, b.max.y - b.size.y * 0.16)) : f.y + 1.3; tz.c = { x: f.x, y: hy, z: f.z } } // their face over their own feet: a held gun or a swinging arm never drags the frame
   if (tz.k > 0.002 && tz.c) {
-    const k = tz.k * tz.k * (3 - 2 * tz.k), e = ctx.self.feetPosition, c = tz.c
-    ctx.self.fov = ctx.self.fov + (38 - ctx.self.fov) * k // her pick: 60 → 38
+    const k = tz.k * tz.k * (3 - 2 * tz.k), e0 = ctx.self.feetPosition, c = tz.c
+    ctx.self.fov = ctx.self.fov + (50 - ctx.self.fov) * k // her pick: 60 → 50, head and shoulders
+    // New Vegas framing: the eye steps in to a set distance at their eye line, so a short critter isn't looked down on and a tall one isn't up a nostril
+    const hx = e0.x - c.x, hz = e0.z - c.z, hl = Math.hypot(hx, hz) || 1, dist = Math.min(hl, 1.45)
+    const goal = { x: c.x + hx / hl * dist, y: c.y + 0.04, z: c.z + hz / hl * dist }
+    const e = { x: e0.x + (goal.x - e0.x) * k, y: e0.y + (goal.y - e0.y) * k, z: e0.z + (goal.z - e0.z) * k }
+    ctx.self.feetPosition = e
     const dx = c.x - e.x, dy = c.y - e.y, dz = c.z - e.z
     const want = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
     if (!rot) rot = want

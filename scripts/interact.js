@@ -40,7 +40,14 @@ function findFocus(ctx, ray) {
       if (tag === 'usable' && it.tags?.includes?.('seat')) continue // a seat that's also usable is sat in, never pressed
       // a usable hung on a parent (the boiler door's panel) reads local feet: aim at its world spot, mid-height for a door
       const wp = !it.state?.c && tag === 'usable' ? ctx.getObject(it.id)?.worldFeetPosition : null
-      const p = it.state?.c ?? (wp ? { x: wp.x, y: wp.y + (it.state?.kind === 'boilerdoor' ? 0.9 : 0), z: wp.z } : it.feetPosition), vx = p.x - o.x, vy = p.y + (it.state?.c ? 0 : big ? 0.28 : 0.1) - o.y, vz = p.z - o.z
+      const p = it.state?.c ?? (wp ? { x: wp.x, y: wp.y + (it.state?.kind === 'boilerdoor' ? 0.9 : 0), z: wp.z } : it.feetPosition)
+      let lift = it.state?.c ? 0 : big ? 0.28 : 0.1
+      if (tag === 'npc' && !it.state?.dead && (it.state?.hp ?? 1) > 0) { // a standing person is a whole body: the look ray finds the nearest point from shins to head
+        const top = (it.state?.build?.h ?? 1) * 1.55, t = Math.max(0, d.y > -0.999 ? 0 : 0)
+        const hx = p.x - o.x, hz = p.z - o.z, along = hx * d.x + hz * d.z, hy = o.y + d.y * along / Math.max(0.05, Math.hypot(d.x, d.z) ** 2 || 1) * 1 - p.y
+        lift = Math.max(0.3, Math.min(top, o.y + d.y * (along / Math.max(0.0025, d.x * d.x + d.z * d.z)) - p.y)) + t * 0 + (hy * 0)
+      }
+      const vx = p.x - o.x, vy = p.y + lift - o.y, vz = p.z - o.z
       const dist = Math.hypot(vx, vy, vz)
       if (dist > REACH || dist < 0.05) continue
       const ang = Math.acos(Math.max(-1, Math.min(1, (vx * d.x + vy * d.y + vz * d.z) / dist)))
