@@ -4,7 +4,8 @@ import { weaponBody } from "../../scripts/lib/weapon-look.js";
 // Level 1's referee: lays the lamps, crates, supplies and thresholds once, then runs the Flickering.
 import L from "../../scripts/lib/data/level1.yml";
 import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ONWARD, ARRIVE, hash, S, HALF, hasPillar } from "../../scripts/lib/level1.js";
-import { spawnAlmond, spawnCrateL1 } from "../../scripts/lib/loot.js";
+import { spawnAlmond } from "../../scripts/lib/loot.js";
+import { spawnFurniture, pickKind, wallSpot1, sizeOf } from "../../scripts/lib/furniture.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "250ms";
 const LAMP_ON = 9;
@@ -48,12 +49,7 @@ export function tick(ctx) {
       ctx.spawn({ feetPosition: { x, y: 0.5, z: z + 0.465 }, rotation: { yaw: 0 }, primitive: { kind: "box", width: 0.01, height: 0.01, depth: 0.01 }, ui: '<div face="front" width="0.6m" style="font-size:220px;font-weight:800;color:#3a4048;text-align:center;opacity:.8">' + letter + '</div>' });
     }
     // supplies: crates on the racks first, then loose ones; almond water; M.E.G. landmarks near arrival
-    let crates = 0;
-    for (let cx = 0; cx < N && crates < L.crates; cx++) for (let cz = 0; cz < N && crates < L.crates; cz++) {
-      const slots = shelfSlots(cx, cz); if (!slots.length || hash(cx, cz, 91) > 0.7) continue;
-      const p = slots[Math.floor(hash(cx, cz, 93) * slots.length)];
-      spawnCrateL1(ctx, p); crates++;
-    }
+    seedFurniture(ctx, L.crates);
     for (let i = 0; i < L.almonds; i++) {
       const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N);
       if (zoneOf(cx, cz) === "corridors" && ctx.random() < 0.7) continue;
@@ -142,11 +138,26 @@ export function tick(ctx) {
 function afterFlicker(ctx) {
   const hounds = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((h) => !h.state?.dead);
   for (const h of hounds.slice(L.hounds)) ctx.destroy(h.id);
-  const have = ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).length;
-  let add = Math.min(8, L.crates - have);
-  for (let tries = 0; add > 0 && tries < 200; tries++) {
-    const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N), slots = shelfSlots(cx, cz);
-    if (!slots.length) continue;
-    spawnCrateL1(ctx, slots[Math.floor(ctx.random() * slots.length)]); add--;
-  }
+  const have = ctx.query({ tags: ["furniture"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).length;
+  seedFurniture(ctx, Math.min(8, L.crates - have));
 }
+
+// searchable furniture: steel bins on the rack shelves, toolboxes, lockers and dropped duffels back to a wall
+function placeOne(ctx) {
+  for (let k = 0; k < 12; k++) {
+    const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N), kind = pickKind("level1", ctx.random());
+    let spot = null;
+    if (kind === "shelfbin") {
+      const slots = shelfSlots(cx, cz); if (!slots.length) continue;
+      const p = slots[Math.floor(ctx.random() * slots.length)], c = cellCenter(cx, cz), out = p.z < c.z ? -1 : 1; // face the aisle beside its rack row
+      spot = { x: p.x, y: p.y, z: p.z + out * 0.02 - out * sizeOf(kind)[2] / 2 + out * sizeOf(kind)[2] / 2, dx: 0, dz: -out };
+      spot.z = p.z - (-out) * (sizeOf(kind)[2] / 2 + 0.015) + (-out) * 0.0; // centred on the shelf: spawnFurniture backs it off by half its depth
+      spot.z = p.z + -out * (sizeOf(kind)[2] / 2 + 0.015) * -1;
+      spot.z = p.z - out * (sizeOf(kind)[2] / 2 + 0.015) * -1;
+    } else spot = wallSpot1(cx, cz, kind, ctx.random(), ctx.random());
+    if (!spot || ctx.query({ tags: ["container"], radius: 0.9, center: { x: spot.x, y: spot.y ?? 0, z: spot.z } }).length) continue;
+    spawnFurniture(ctx, "level1", kind, spot); return true;
+  }
+  return false;
+}
+function seedFurniture(ctx, n) { for (let i = 0; i < n; i++) placeOne(ctx); }
