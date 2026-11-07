@@ -165,7 +165,7 @@ high = dup(body, "high"); hj = dup(jaw, "highjaw"); sel(high, hj, active=high); 
 # low skin
 def decimate(o, target):
     r = target / max(1, tris(o)); d = o.modifiers.new("dec", "DECIMATE"); d.ratio = r; sel(o); bpy.ops.object.modifier_apply(modifier="dec")
-decimate(body, 8600); decimate(jaw, 900)
+decimate(body, 7600); decimate(jaw, 900)
 g = jaw.vertex_groups.new(name="jaw"); g.add(list(range(len(jaw.data.vertices))), 1.0, 'REPLACE')
 sel(body, jaw, active=body); bpy.ops.object.join(); low = body; low.name = "hound_skin"
 bpy.ops.object.shade_smooth()
@@ -195,10 +195,10 @@ def mix(fac, a, b):
     if isinstance(fac, float): m.inputs[0].default_value = fac
     else: Lk.new(fac, m.inputs[0])
     Lk.new(a, m.inputs[6]); Lk.new(b, m.inputs[7]); return m.outputs[2]
-mott = ramp(noise(5, 8, 0.7).outputs[0], [(0.25, (0.50, 0.48, 0.46)), (0.5, (0.60, 0.58, 0.55)), (0.75, (0.66, 0.64, 0.6))])
+mott = ramp(noise(5, 8, 0.7).outputs[0], [(0.2, (0.55, 0.535, 0.51)), (0.8, (0.64, 0.62, 0.585))])
 vor = N.new("ShaderNodeTexVoronoi"); vor.feature = 'DISTANCE_TO_EDGE'; vor.inputs["Scale"].default_value = 7
 dn = noise(4, 2); vm = N.new("ShaderNodeMix"); vm.data_type = 'VECTOR'; vm.inputs[0].default_value = 0.25; Lk.new(co, vm.inputs[4]); Lk.new(dn.outputs["Color"], vm.inputs[5]); Lk.new(vm.outputs[1], vor.inputs["Vector"])
-veins = ramp(vor.outputs["Distance"], [(0.0, (0.55, 0.55, 0.55)), (0.012, (0, 0, 0))])
+veins = ramp(vor.outputs["Distance"], [(0.0, (0.3, 0.3, 0.3)), (0.01, (0, 0, 0))])
 vc = N.new("ShaderNodeRGB"); vc.outputs[0].default_value = (0.36, 0.38, 0.46, 1)
 c1 = mix(veins.outputs[0], mott.outputs[0], vc.outputs[0])
 bruise = ramp(noise(2.5, 3).outputs[0], [(0.58, (0, 0, 0)), (0.7, (0.55, 0.55, 0.55))])
@@ -285,7 +285,7 @@ clumps = []
 for c in range(30):
     a = rng.uniform(-1.9, 1.9); yr = rng.uniform(0.54, 0.79)
     clumps.append((a, yr, rng.uniform(0.26, 0.44), V(rng.uniform(-0.02, 0.02), rng.uniform(-0.02, 0.03), 0)))
-for i in range(120):
+for i in range(92):
     a0, y0, Lh, off = clumps[i % len(clumps)]
     a = a0 + rng.uniform(-0.18, 0.18); yr = y0 + rng.uniform(-0.025, 0.025)
     d_ = V(math.sin(a) * 0.2, yr - C0.y, math.cos(a) * 0.2); e_ = math.sqrt((d_.x / RAD.x) ** 2 + (d_.y / RAD.y) ** 2 + (d_.z / RAD.z) ** 2); root = C0 + d_ * (0.93 / e_)
