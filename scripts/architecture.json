@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1213,
-  "updatedAt": "2026-11-07T21:35:29.817Z",
+  "basedOnSpecVersion": 1219,
+  "updatedAt": "2026-11-07T21:51:49.767Z",
   "summary": "The Backrooms is a shared multiplayer survival RPG across Level 0, Levels 1–7, Base Gamma and a debug room. Authored cells and place simulations assemble distinct spaces; shared player, creature, NPC, loot and UI systems support scavenging, combat, dialogue and per-player progression.",
   "scriptPaths": [],
   "places": [
@@ -12,7 +12,7 @@
     "places/level4 (3D) - Abandoned Office; offices, fountains, break-room vending, lift/stairs and Base Omega; sim lays residents and office systems.",
     "places/level5 (3D) - Terror Hotel; Main Hall, guest rooms, Beverly Room and Boiler Room; residents, rentals, mahjong, rat packs, Level 6 portal and Ines's goggles quest.",
     "places/level6 (3D) - Lights Out; seeded dark concrete labyrinth, survivor notes/props, shifting wall, auditory hazards, hounds and a Smiler; stairs return to 5 or descend to 7.",
-    "places/level7 (3D) - Thalassophobia; Drowned Parlor on basalt, stilted pier and open sea with modeled boat, buoys and rocks; breakable modeled furnishings/crates and regrowing props, under a concrete ceiling with Entity 20 cruising offshore."
+    "places/level7 (3D) - Thalassophobia; Drowned Parlor with knee-deep murky water, stained floral wallpaper and piled model furnishings, opening to the stilted pier, open sea, boat, buoys and rocks; Entity 20 cruises offshore."
   ],
   "roots": [
     "world.config.yaml - multiplayer entry at main; declares camera, player actions, player template and HUD renderer.",
@@ -35,7 +35,7 @@
     "scripts/lib/l4-people.js + level4-people.yml; scripts/lib/l5-people.js + level5-people.yml - NPC definitions, rounds, speech, spawning and place simulation helpers."
   ],
   "notableExports": [
-    "places/*/sim.js - cadence and tick; Level 4/5 also export lay; places/gamma/sim.js exports PEOPLE; places/level7/sim.js exports breakables(FY, PY).",
+    "places/*/sim.js - cadence and tick; Level 4/5 also export lay; places/gamma/sim.js exports PEOPLE; places/level7/sim.js exports cadence, breakables and tick.",
     "scripts/lib/level3.js - grid/constants, cell/zone queries, openings, blocks/hazards, crawl spans and exits; maze3path.js - stepToward, cellNear.",
     "scripts/lib/level2.js - grid/layout queries and sludge sites; scripts/lib/level4.js, level5.js, level6.js - plan constants and queries.",
     "scripts/lib/level6path.js - cellAt, cellCenter, isWalkable, stepToward6; scripts/terrain7.js - ISLES, heightAt, materialAt.",
@@ -52,7 +52,7 @@
     "scripts/build.js + player.js - player scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
     "scripts/interact.js + scripts/lib/seat.js - focus/loot/interaction and player sit state; scripts/lockpick.js owns pick state, pins and boiler-pick timestamp; seats own occupancy.",
     "scripts/talk.js + scripts/meg-agent.js - dialogue/social memory and NPC follow; meg-agent owns routines, nerve, loadout, combat, fear/want, cover and corpse inspections.",
-    "places/level7/sim.js - place builtV and state.smashed regrowth timestamps for its modeled breakables; its session.regrowAt throttles checks, while each breakable object's state holds material and HP."
+    "places/level7/sim.js - place builtV and state.smashed regrowth timestamps for modeled breakables; session.regrowAt throttles checks, while each breakable object's state holds material and HP."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered handlers: locomotion before movement; interact, grab, rest, mahjong, talk, build, noclip, stats, craft, OS, lockpick and horde before critter and view3.",
@@ -65,8 +65,8 @@
     "player.js ranged attack → lib/ballistics.js traces from eye and returns target/world impact; player.js applies damage and show() emits tracer/impact FX; weapons.yml supplies projectile parameters.",
     "scripts/lib/loot.js place pools/item rolls → interact.js containers and player.js kill drops; Level 3 has special rolls and Level 5's Ines quest makes NVG available.",
     "scripts/player.js writes state.loud on swings/shots → scripts/lib/hunt.js uses combat and movement noise to locate prey; hound/maze hunters use level-specific path helpers, including boiler aisles and level6path.",
-    "places/main/sim.js counts live smilers/lurkers across a large radius and replenishes toward Level 0 caps; scripts/l5-rats.js refills nest packs; Level 6 sim lays hound/Smiler managers; places/level7/sim.js lays Entity 20 and ticks ocean motion plus broken-prop regrowth.",
-    "Level 7 breakables(FY, PY) supplies initial object specs and regrowth specs → tick tracks missing IDs in place.state.smashed → respawns after 15 minutes only when no player is within 8 m; crates also retain container item lists."
+    "places/main/sim.js counts live smilers/lurkers across a large radius and replenishes toward Level 0 caps; scripts/l5-rats.js refills nest packs; Level 6 sim lays hound/Smiler managers; places/level7/sim.js lays Entity 20 and ticks ocean movement and local interactions.",
+    "Level 7 breakables(FY, PY) supplies initial object specs and regrowth specs → tick tracks missing IDs in place.state.smashed → respawns after 15 minutes only when no player is within 8 m; crates and selected piled furnishings retain container item lists."
   ],
   "behaviorFamilies": [
     "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; Level 5 cells hold the hotel portal and quest props.",
@@ -76,15 +76,15 @@
     "smilers.js and lurkers.js use lib/hunt.js hearing/lost-trail prediction but keep distinct light/gaze and attack behavior; hounds, stealers and deathmoths retain distinct pursuit and attacks.",
     "scripts/lib/maze0path.js, maze1path.js, maze2path.js, maze3path.js, boilerpath.js and level6path.js - creatures route by level grid; controllers add direct-sight pursuit, obstacle/stuck evasion and pack separation where applicable.",
     "scripts/meg-agent.js + scripts/lib/data/meg.yml - shared NPC combat/follow controller varies by faction, arm, nerve and target; agents fight hall creatures, inspect eligible corpses and seek cover.",
-    "places/level7/sim.js breakables() - model-backed crates, furnishings and ten terrain-positioned boulders vary by location/scale and wood/concrete HP; all use the shared breakable tag/state convention and regrow from the same specs."
+    "places/level7/sim.js breakables() - model-backed crates, furnishings, containers and ten terrain-positioned boulders vary by location/scale and wood/concrete HP; drowned-room props are piled/stacked and share the breakable tag/state and regrowth convention."
   ],
   "probableOrphans": [],
   "migrationNotes": [
     "Grid contracts differ: Level 0 is 56×56 at 4 m; Level 1 30×30 at 8 m; Level 2 24×24 at 5 m; Level 3 26×26 at 4 m; Level 4 64×64 m with 8 m offices; Level 5 96×60 m; Level 6 27×41 cells at 1.8 m and 2.4 m high.",
     "Level 6 builtV is versioned to 3: moving trigger/prop sites requires keeping endpoint coordinates aligned to scripts/lib/level6.js plan(); shift wall toggles only outside a 7 m player radius.",
-    "Level 6 has no working flashlight: player.js suppresses the toggle and destroys any carried torch on arrival; NVG F uses a local camera-attached green light and spare goggles replenish the shared battery. craft.js holds hunger/thirst steady there.",
+    "Level 6 has no working flashlight: player.js suppresses the toggle and destroys any carried torch on arrival; NVG F uses a local camera-attached green light and spare goggles replenish the shared battery. craft.js holds hunger/thirst steady during this place.",
     "Level 5's Ines quest progress is per-player state.nvgQ (1 asked, 2 case, 3 goggles, 4 complete); current Level 5 placements include a locked Room 1408 trunk with NVG/batteries and Ines's hand-in at the M.E.G. drop box.",
     "Level 5's north portal is the Level 6 route; the separately listed Level 6 auxiliary bulkhead remains welded shut. Level 6 stair entry E(1) connects to Level 7; marker IDs l6-from-l7/l7-from-l6 must remain paired.",
-    "Level 7 uses sea y=0, room floor FY=4 and pier deck PY=1.1; pier extends north (-Z). breakables(FY, PY) is the shared source for initial and respawn specs; tick checks every ~5 s and waits 15 min plus an 8 m clear radius before restoring absent objects."
+    "Level 7 room floor is FY=4, pier deck PY=1.1, and the pier extends north (-Z); the room water box is now 0.32 m high with tide marks and wallpaper. sim.js builtV=9; breakables(FY, PY) remains the shared source for initial/respawn specs, with 15-minute regrowth gated by an 8 m clear radius."
   ]
 }
