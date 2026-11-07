@@ -1173,18 +1173,6 @@ l5-elev-salon/object/xe5bfa1adb29c7d30/19:
   id: l5-elev-salon/object/xe5bfa1adb29c7d30/19
   light: {color: "#ffd9a0", distance: 4.5, intensity: 3, kind: point}
   parent: l5-elev-salon
-l5-elev-test-a:
-  feetPosition: {x: -44.85, y: 0.1, z: -7}
-  id: l5-elev-test-a
-  primitive: {halfHeight: 0.5, kind: capsule, radius: 0.3}
-  state: {hp: 100}
-  tags: [temp, l5-rider]
-l5-elev-test-b:
-  feetPosition: {x: -44.85, y: 0.1, z: 7}
-  id: l5-elev-test-b
-  primitive: {halfHeight: 0.5, kind: capsule, radius: 0.3}
-  state: {hp: 100}
-  tags: [temp, l5-rider]
 l5-from-l3:
   feetPosition: {x: -42.5, y: 0.1, z: 0}
   id: l5-from-l3
