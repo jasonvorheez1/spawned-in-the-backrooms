@@ -9,7 +9,7 @@ const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 const CSS = `<style>
 #tk{position:fixed;left:22px;bottom:192px;max-width:300px;pointer-events:none;font-size:11px;letter-spacing:.08em;color:#f2c14e;text-shadow:0 1px 3px #000}
 #tk b{color:#fff3d6}
-#nd{position:fixed;left:22px;bottom:150px;width:150px;pointer-events:none;font-size:10.5px;letter-spacing:.14em;color:#ffcf87;text-shadow:0 1px 3px #000}
+#nd{position:fixed;left:22px;bottom:192px;width:150px;pointer-events:none;font-size:10.5px;letter-spacing:.14em;color:#ffcf87;text-shadow:0 1px 3px #000}
 #nd .r{display:flex;align-items:center;gap:6px;margin-top:3px}
 #nd .r span{width:34px}
 #nd .b{flex:1;height:5px;background:#0009;border:1px solid #ffb34755}
