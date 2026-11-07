@@ -155,7 +155,7 @@ export function tick(ctx) {
   // a creature that falls out of the world is put back at the player spawn (the safe room) by the engine: send it back out into the maze
   for (const m of ctx.query({ anyTags: ["smiler", "lurker", "hound", "stealer"] })) {
     if (m.state?.dead || (m.state?.owner ?? m.state?.horde)) continue;
-    const f = m.feetPosition, cx = Math.floor(f.x / CELL + MID), cz = Math.floor(f.z / CELL + MID);
+    const f = m.feetPosition, o0 = cellCenter(0, 0), cs = L.cellSize ?? 4, cx = Math.round((f.x - o0.x) / cs), cz = Math.round((f.z - o0.z) / cs);
     if (!inHub(cx, cz) && f.y > -3) continue;
     const c = cell(ctx, m.tags.includes("smiler") ? ["dark", "red", "pillars", "expanse"] : ["halls", "arches", "holes", "offices"]);
     if (!c) continue;
