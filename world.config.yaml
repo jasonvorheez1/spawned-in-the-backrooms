@@ -22,6 +22,15 @@ inputs:
         - shift
     attack:
       mouse: left
+    aim:
+      mouse: right
+      touch:
+        button: false
+    reload:
+      keys:
+        - r
+      touch:
+        button: false
     drink:
       keys:
         - q

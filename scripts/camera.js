@@ -9,6 +9,8 @@
 // dies with the rig), never a flag on the camera def: a rewrite to an orbit rig shows the body again
 // with nothing to un-set.
 import CAMERA from './lib/data/camera.yml'
+import W from './lib/data/weapons.yml'
+import { poseViewmodel } from './lib/vmpose.js'
 
 const RAD_TO_DEG = 180 / Math.PI
 // The body the eye height is for: camera.yml's eyeHeight is the eye on a body drawn 1.8 m tall.
@@ -27,6 +29,17 @@ function seatedOn(player, ride) {
 export function update(ctx, dt) {
   // The eye sits inside the body, so the body is not drawn for its owner (everyone else still sees it).
   ctx.self.hideLocalPlayer = true
+
+  // Aiming down sights eases the field of view in (player.state.ads is written by scripts/player.js).
+  const ps = ctx.player?.state, sess = (ctx.self.session.cam ??= { t: 0 })
+  const goal = ps?.ads ? 1 : 0
+  sess.t += (goal - sess.t) * (1 - Math.exp(-finiteNumber(CAMERA.adsSpeed, 12) * dt))
+  if (Math.abs(goal - sess.t) < 0.002) sess.t = goal
+  const fov0 = finiteNumber(CAMERA.fov, 60), fovAds = finiteNumber(W[ps?.equipped]?.fovAds, finiteNumber(CAMERA.fovAdsDefault, 50))
+  ctx.self.fov = fov0 + (fovAds - fov0) * sess.t
+
+  // The arm and weapon you hold are moved here, once per display frame, so they never step with the game tick.
+  poseViewmodel(ctx, dt)
 
   const target = ctx.self.target
   if (!target) return

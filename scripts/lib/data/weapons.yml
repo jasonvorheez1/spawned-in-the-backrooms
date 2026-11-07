@@ -17,7 +17,10 @@ crowbar:    { name: Crowbar,    damage: 22, levelScale: 1,   cooldown: 0.7,  rea
 bat:        { name: Bat,        damage: 28, levelScale: 1,   cooldown: 0.8,  reach: 2.9, stamina: 14, minLevel: 4, rarity: uncommon, weight: 4, xp: 12, color: "oklch(0.7 0.07 70)",   length: 1.0 }
 hatchet:    { name: Hatchet,    damage: 36, levelScale: 1.1, cooldown: 0.75, reach: 2.6, stamina: 15, minLevel: 6, rarity: rare, weight: 2, xp: 30, color: "oklch(0.5 0.1 40)", length: 0.75 }
 fire_axe:   { name: Fire axe,   damage: 48, levelScale: 1.2, cooldown: 1.0,  reach: 3.0, stamina: 20, minLevel: 8, rarity: rare, weight: 1, xp: 45, color: "oklch(0.5 0.2 25)", length: 1.0 }
-pistol:     { name: Pistol,     damage: 34, levelScale: 0.8, cooldown: 0.55, reach: 2, range: 28, ranged: true, stamina: 2, minLevel: 5, rarity: rare, weight: 1, xp: 40, color: "oklch(0.3 0.02 260)", length: 0.3 }
-shotgun:    { name: Shotgun,    damage: 60, levelScale: 1, cooldown: 1.1, reach: 2, range: 11, cone: 0.9, pellets: 8, ammoType: shells, ranged: true, stamina: 6, minLevel: 10, rarity: rare, weight: 1, xp: 70, color: "oklch(0.3 0.03 60)", length: 0.9 }
+pistol:     { name: Pistol,     damage: 34, levelScale: 0.8, cooldown: 0.55, reach: 2, range: 28, ranged: true, magSize: 8, reloadTime: 1.7, cone: 0.975, adsCone: 0.997, fovAds: 44, ads: [0, -0.118, 0.36], muzzle: [0, 0.1, -0.31], stamina: 2, minLevel: 5, rarity: rare, weight: 1, xp: 40, color: "oklch(0.3 0.02 260)", length: 0.3 }
+shotgun:    { name: Shotgun,    damage: 60, levelScale: 1, cooldown: 1.1, reach: 2, range: 11, cone: 0.88, adsCone: 0.94, pellets: 8, ammoType: shells, ranged: true, magSize: 4, reloadStart: 0.4, reloadShell: 0.55, fovAds: 52, ads: [0, -0.09, 0.3], muzzle: [0, 0.065, -0.92], stamina: 6, minLevel: 10, rarity: rare, weight: 1, xp: 70, color: "oklch(0.3 0.03 60)", length: 0.9 }
 pickups: 14        # weapons lying in the maze at once
 pickupRespawn: 90  # seconds between refills
+# First person. magSize: rounds in the gun (the ammo / shells counts are the reserve). reloadTime: a magazine swap. reloadStart/reloadShell: a shotgun loads one shell at a time and can be fired mid-reload.
+# ads: where the arm sits on the camera (x right, y up, depth forward) when aiming down sights, so the sights line up with the crosshair. muzzle: the muzzle point in the same space, for the flash.
+# adsCone: the tighter aim cone while aiming. fovAds: the zoomed field of view.

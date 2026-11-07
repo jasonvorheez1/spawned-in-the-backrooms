@@ -1,1 +1,4 @@
 eyeHeight: 1.6
+fov: 60
+fovAdsDefault: 50
+adsSpeed: 12   # how fast the zoom eases in and out

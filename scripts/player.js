@@ -63,6 +63,13 @@ export function onInput(ctx, input) {
   if (input.pressed.attack) swing(ctx)
   if (input.pressed.drink) drink(ctx)
   if (input.pressed.cycleWeapon) cycleWeapon(ctx)
+  if (input.pressed.reload) startReload(ctx)
+  {
+    // aiming down the sights: a ranged weapon, button held, not mid-reload, not downed
+    const sv = ctx.self.state, aw = W[sv.equipped]
+    const ads = !!(input.held.aim && aw?.ranged && !sv.reloading && !(sv.downAt && ctx.now() - sv.downAt < 1200))
+    if (!!sv.ads !== ads) { sv.ads = ads; sound(ctx, 'gun-raise-cloth-rustle', 0.25, true) }
+  }
   if (input.pressed.flashlight) toggleLight(ctx)
 }
 
@@ -89,19 +96,32 @@ function swing(ctx) {
   if (now < (w.nextSwing ?? 0) || (s.downAt && now - s.downAt < 1200)) return
   const wp = weaponOf(s)
   if ((w.stamina ?? s.stamina) < wp.stamina) return
-  const ammoKey = wp.ammoType ?? 'ammo'
+  const ammoKey = wp.ammoType ?? 'ammo', loadedKey = 'loaded_' + s.equipped
   if (wp.ranged) {
-    if ((s[ammoKey] ?? 0) <= 0) { w.nextSwing = now + 400; sound(ctx, 'flashlight-switch-click', 0.6, true); return }
-    s[ammoKey] -= 1
+    if (s.reloading) {
+      // a shotgun can be fired mid-reload (the reload stops); a magazine gun has to finish
+      if (wp.pellets && (s[loadedKey] ?? 0) > 0) cancelReload(ctx)
+      else return
+    }
+    if ((s[loadedKey] ?? 0) <= 0) {
+      w.nextSwing = now + 350
+      if ((s[ammoKey] ?? 0) > 0) startReload(ctx)
+      else sound(ctx, 'gun-dry-fire-click', 0.6, true)
+      return
+    }
+    s[loadedKey] -= 1
     sound(ctx, wp.pellets ? 'shotgun-blast-boom' : 'pistol-gunshot-echo', 0.95)
     ctx.emit('screenFlash', { color: '#fff1c8', duration: 0.08, intensity: wp.pellets ? 0.45 : 0.25 }, { audience: { player: ctx.self.id } })
-    if (wp.pellets) ctx.emit('screenShake', { intensity: 0.35, duration: 0.2 }, { audience: { player: ctx.self.id } })
+    if (wp.pellets) {
+      ctx.emit('screenShake', { intensity: 0.35, duration: 0.2 }, { audience: { player: ctx.self.id } })
+      ctx.after(0.55, 'pumpRack', {})
+    }
   }
   w.stamina = (w.stamina ?? s.stamina) - wp.stamina
   w.nextSwing = now + wp.cooldown * 1000
   s.swingAt = now
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
-  const cone = wp.cone ?? (wp.ranged ? 0.985 : 0.4), radius = wp.ranged ? wp.range : wp.reach + 0.6
+  const cone = (s.ads && wp.adsCone) || wp.cone || (wp.ranged ? 0.985 : 0.4), radius = wp.ranged ? wp.range : wp.reach + 0.6
   const found = []
   for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius })]) {
     if (m.state?.dead) continue
@@ -124,7 +144,67 @@ function swing(ctx) {
   hitTarget(ctx, s, found[0].m, Math.round(base), f)
 }
 
+// ---- reloading: a magazine gun swaps its magazine; a shotgun loads one shell at a time and can be fired mid-reload.
+// player.state.loaded_<weapon> is the rounds in the gun; the ammo / shells counts are the reserve.
+const reloadLive = (ctx, p) => { const s = ctx.self.state; return s.reloading === p.k && s.equipped === p.k && walkOf(ctx).reloadTok === p.tok }
+
+function startReload(ctx) {
+  const s = ctx.self.state, wp = weaponOf(s), k = s.equipped, w = walkOf(ctx)
+  if (!wp.ranged || !wp.magSize || s.reloading) return
+  if ((s['loaded_' + k] ?? 0) >= wp.magSize || (s[wp.ammoType ?? 'ammo'] ?? 0) <= 0) return
+  w.reloadTok = (w.reloadTok ?? 0) + 1
+  s.reloading = k; s.ads = false
+  if (wp.pellets) ctx.after(wp.reloadStart ?? 0.4, 'reloadStep', { k, tok: w.reloadTok })
+  else {
+    sound(ctx, 'pistol-magazine-eject-click', 0.6, true)
+    ctx.after(wp.reloadTime * 0.55, 'reloadMagIn', { k, tok: w.reloadTok })
+    ctx.after(wp.reloadTime, 'reloadDone', { k, tok: w.reloadTok })
+  }
+}
+
+function cancelReload(ctx) {
+  walkOf(ctx).reloadTok = (walkOf(ctx).reloadTok ?? 0) + 1
+  ctx.self.state.reloading = ''
+}
+
+export function reloadMagIn(ctx, p) {
+  if (!reloadLive(ctx, p)) return
+  sound(ctx, 'pistol-magazine-insert-slide', 0.65, true)
+  ctx.self.state.reloadN = (ctx.self.state.reloadN ?? 0) + 1
+}
+
+export function reloadDone(ctx, p) {
+  if (!reloadLive(ctx, p)) return
+  const s = ctx.self.state, wp = W[p.k], rk = wp.ammoType ?? 'ammo'
+  const take = Math.min(wp.magSize - (s['loaded_' + p.k] ?? 0), s[rk] ?? 0)
+  s['loaded_' + p.k] = (s['loaded_' + p.k] ?? 0) + take
+  s[rk] = (s[rk] ?? 0) - take
+  s.reloading = ''
+  s.reloadN = (s.reloadN ?? 0) + 1
+  sound(ctx, 'pistol-slide-rack', 0.7, true)
+}
+
+export function reloadStep(ctx, p) {
+  if (!reloadLive(ctx, p)) return
+  const s = ctx.self.state, wp = W[p.k], rk = wp.ammoType ?? 'ammo'
+  if ((s['loaded_' + p.k] ?? 0) < wp.magSize && (s[rk] ?? 0) > 0) {
+    s['loaded_' + p.k] = (s['loaded_' + p.k] ?? 0) + 1
+    s[rk] -= 1
+    s.reloadN = (s.reloadN ?? 0) + 1
+    sound(ctx, 'shotgun-shell-insert-click', 0.7, true)
+  }
+  if ((s['loaded_' + p.k] ?? 0) < wp.magSize && (s[rk] ?? 0) > 0) ctx.after(wp.reloadShell ?? 0.55, 'reloadStep', p)
+  else { s.reloading = ''; ctx.after(0.25, 'pumpRack', {}) }
+}
+
+export function pumpRack(ctx) {
+  sound(ctx, 'shotgun-pump-rack', 0.8)
+  ctx.self.state.pumpAt = ctx.now()
+}
+
 function cycleWeapon(ctx) {
+  cancelReload(ctx)
+  ctx.self.state.ads = false
   const s = ctx.self.state, list = W.order.filter((k) => owned(s).includes(k) && usable(s, k))
   s.equipped = list[(list.indexOf(s.equipped) + 1) % list.length] ?? 'fists'
   s.equipAt = ctx.now()
@@ -173,24 +253,11 @@ function viewmodel(ctx, moving, sprinting) {
     const child = g == null ? [] : [gun
       ? { feetPosition: { x: 0, y: kind === 'pistol' ? 0.03 : 0.0, z: -0.0 + (kind === 'pistol' ? -0.03 : 0.0) }, rotation: Q_GUN, castShadow: false, primitive: { kind: 'scripted', script: 'scripts/weapon-geo.js', params: { kind } }, audience: 'local' }
       : { feetPosition: { x: 0, y: -g, z: 0 }, rotation: Q_MELEE, castShadow: false, primitive: { kind: 'scripted', script: 'scripts/weapon-geo.js', params: { kind } }, audience: 'local' }]
-    w.vm = ctx.spawn({ feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
-      primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js' }, children: child })
+    w.vm = ctx.spawn({ feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
+      primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', ...(wp.muzzle ? { sockets: { muzzle: wp.muzzle } } : {}) }, children: child })
     w.vmKind = kind
   }
-  const vm = ctx.getObject ? ctx.getObject(w.vm) : null
-  if (!vm) return
-  const now = ctx.now(), wp = W[kind] ?? {}, gun = !!wp.ranged
-  const t = (now - (s.swingAt ?? -1e9)) / 1000, eq = Math.min(1, (now - (s.equipAt ?? -1e9)) / 350)
-  const bobT = now / 1000 * (sprinting ? 11 : 7.5), amp = moving ? (sprinting ? 0.022 : 0.012) : 0.003
-  let pitch = gun ? 0 : -42, yaw = gun ? 0 : 8, roll = gun ? 0 : 18, dz = 0, dx = 0, dy = 0
-  if (gun) { const k = Math.max(0, 1 - t / 0.18); pitch += 9 * k; dz += 0.05 * k }
-  else if (t < 0.4) { const a = t < 0.12 ? t / 0.12 : Math.max(0, 1 - (t - 0.12) / 0.28); pitch -= 70 * a; yaw += 25 * a; roll -= 20 * a; dx -= 0.1 * a; dy -= 0.04 * a }
-  dy -= (1 - eq) * 0.3
-  const key = Math.round(pitch) + '|' + Math.round(yaw) + '|' + Math.round(roll) + '|' + Math.round((dx + Math.sin(bobT) * amp) * 400) + '|' + Math.round((dy - Math.abs(Math.cos(bobT)) * amp + dz) * 400)
-  if (key === w.vmKey) return
-  w.vmKey = key
-  vm.rotation = { yaw, pitch, roll }
-  vm.feetPosition = { attach: 'camera', x: 0.2 + dx + Math.sin(bobT) * amp, y: -0.2 + dy - Math.abs(Math.cos(bobT)) * amp, depth: 0.42 + dz }
+  if (w.vm && s.vmId !== w.vm) s.vmId = w.vm // scripts/lib/vmpose.js poses it every display frame from the camera rig
 }
 
 export function update(ctx, dt) {
@@ -199,11 +266,11 @@ export function update(ctx, dt) {
   const w = walkOf(ctx), s = ctx.self.state
   w.stamina ??= s.stamina; w.battery ??= s.battery
   const dir = w.dir ?? { x: 0, z: 0 }, moving = dir.x !== 0 || dir.z !== 0
-  const sprinting = w.sprint && moving && w.stamina > 1
+  const sprinting = w.sprint && moving && w.stamina > 1 && !s.ads
   w.stamina = Math.max(0, Math.min(L.stamina, w.stamina + (sprinting ? -L.staminaDrain : L.staminaRegen * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
   const fp = ctx.self.feetPosition, inArch = zoneAt(fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
-  const speed = (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1)
+  const speed = (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1)
   const intent = { x: dir.x * speed, z: dir.z * speed }
   viewmodel(ctx, moving, sprinting)
   const v = ctx.self.velocity
@@ -343,6 +410,7 @@ function tickStats(ctx, t, moving) {
     if (!W[k] || owned(s).includes(k)) continue
     ctx.destroy(g.id)
     s.weapons = [...owned(s).slice(1), k].join(',')
+    if (W[k].magSize) s['loaded_' + k] = W[k].magSize
     if (usable(s, k) && W[k].damage > weaponOf(s).damage) s.equipped = k
     s.pickedAt = now; s.gotWeapon = W[k].name
     gain(ctx, W[k].xp ?? L.xpAlmond)
