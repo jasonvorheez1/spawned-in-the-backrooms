@@ -1,6 +1,7 @@
 // Level 1's hounds: one manager steps the pack. They roam the halls, hunt when they see or hear you,
 // hunt harder in a Flickering, and never cross into the corridors (safe ground).
 import { heard } from "./lib/hear.js";
+import { raycast } from "builtin/physics";
 import L from "./lib/data/level1.yml";
 import { zoneAt, safeZone, cellCenter, N } from "./lib/level1.js";
 import { zoneAt as zoneAt2 } from "./lib/level2.js";
@@ -28,6 +29,13 @@ const POOF = `fx
 pop dust burst=16 life=.6..1 on=box(.5,.5,.8).c(.5) v=sdir()*(.4..1)+up(.4) size=.2..0.4 acc=drag(1.4) col=<.4,.38,.36> a=0>.4:.5>0 sz=$size*(.6>1.5) r=sprite(smoke-puff,alpha)`;
 const BLOOD = `fx
 pop drip burst=6..9 life=.4..0.7 v=sdir()*(.6..1.4)+up(.3) size=.03..0.06 acc=grav()*.8 col=<.35,.02,.03> a=1>0 sz=$size floor=die r=sprite(soft-disc,alpha)`;
+// line of sight: nothing static between the hound's head and the prey's chest
+function sees(ctx, h, p) {
+  const a = { x: h.feetPosition.x, y: h.feetPosition.y + 0.7, z: h.feetPosition.z }, b = { x: p.feetPosition.x, y: p.feetPosition.y + 1, z: p.feetPosition.z };
+  const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z, d = Math.hypot(dx, dy, dz);
+  if (d < 0.8) return true;
+  return !raycast(ctx, a, { x: dx / d, y: dy / d, z: dz / d }, { distance: d - 0.4, bodies: "static", physicsOnly: true, ignoreEntities: [h.id, p.id] });
+}
 export function update(ctx, dt) {
   const L3 = ctx.self.place === "level3";
   const safeAt = L3 ? (x, z) => zoneAt3(x, z) === "gamma" : ctx.self.place === "level2" ? (x, z) => zoneAt2(x, z) === "camp" : ctx.self.place === "level5" ? (x, z) => zoneAt5(x, z)?.id !== "boiler" : (x, z) => safeZone(zoneAt(x, z));
@@ -73,7 +81,10 @@ export function update(ctx, dt) {
     for (const p of [...players, ...ctx.query({ tags: ["npc"], radius: sight, center: pos }).filter((n) => !n.state?.dead)]) { // agents are meat too
       const d = Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z);
       const loud = (p.state?.sprinting ? L.houndHear : 0) || (dark && p.state?.light ? L.houndHearLight : 0);
-      if (d < Math.max(sight, loud) * sn(p) && d < best) { best = d; prey = p; }
+      if (!(d < Math.max(sight, loud) * sn(p) && d < best)) continue;
+      const isNpc = !players.includes(p);
+      if (!sees(ctx, h, p) && (isNpc || !(loud && d < loud * sn(p)))) continue; // walls block sight; only a player's noise carries through
+      best = d; prey = p;
     }
     if (st.horde) { const hp = players.find((p) => p.id === st.horde); if (hp) { prey = hp; best = Math.hypot(hp.feetPosition.x - pos.x, hp.feetPosition.z - pos.z); } } // a blackout horde hunts its player
     if (L3) { // brigades: share the spotter's prey, and lie in wait in dead ends
@@ -84,7 +95,8 @@ export function update(ctx, dt) {
       heard(ctx, { clip: SND("hound-bark-howl-call"), position: pos, volume: 1, maxDistance: 60 });
       for (const o of ctx.query({ tags: ["hound"], radius: T.callRadius, center: pos })) if (o.id !== h.id) { const om = (mem[o.id] ??= {}); om.pack = prey.id; om.packUntil = now + T.callHold * 1000; om.howled = true; }
     }
-    if (!prey && m.pack && now < m.packUntil) { prey = players.find((p) => p.id === m.pack) ?? ctx.query({ tags: ["npc"], radius: 60, center: pos }).find((n) => n.id === m.pack && !n.state?.dead) ?? null; if (prey) best = Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z); }
+    if (!prey && m.pack && now < m.packUntil) { prey = players.find((p) => p.id === m.pack) ?? ctx.query({ tags: ["npc"], radius: 60, center: pos }).find((n) => n.id === m.pack && !n.state?.dead) ?? null; if (prey && !sees(ctx, h, prey)) { m.lastSeen ??= { x: prey.feetPosition.x, z: prey.feetPosition.z }; prey = null; } if (prey) best = Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z); }
+    if (prey) m.lastSeen = { x: prey.feetPosition.x, z: prey.feetPosition.z, at: now };
     if (L3) {
       if (!prey) { // ambush: crouched in a dead end until someone walks past or turns their back
         m.home ??= { x: pos.x, z: pos.z };
@@ -104,7 +116,8 @@ export function update(ctx, dt) {
     let goal;
     if (prey) goal = prey.feetPosition;
     else if (L3 && m.lurkAt) goal = m.lurkAt;
-    else { if (!m.roam || now > m.until) { const a = ctx.random() * 6.283; m.roam = { x: pos.x + Math.cos(a) * 14, z: pos.z + Math.sin(a) * 14 }; m.until = now + 4000; } goal = m.roam; }
+    else if (m.lastSeen && now - (m.lastSeen.at ?? now) < 5000 && Math.hypot(m.lastSeen.x - pos.x, m.lastSeen.z - pos.z) > 1) goal = m.lastSeen; // sniff where it last saw them
+    else { m.lastSeen = null; if (!m.roam || now > m.until) { const a = ctx.random() * 6.283; m.roam = { x: pos.x + Math.cos(a) * 14, z: pos.z + Math.sin(a) * 14 }; m.until = now + 4000; } goal = m.roam; }
     const way = L3 ? stepToward(pos.x, pos.z, goal.x, goal.z, 30) : null; // level 3: follow the halls cell by cell
     if (L3 && !way && !prey) m.roam = null;
     const tgt = way && way.cells > 0 ? way.next : goal;
