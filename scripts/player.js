@@ -302,6 +302,10 @@ export function onInput(ctx, input) {
 function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
   if (s.studied && m.tags?.some((tg) => s.studied.split(',').some((k) => tg.includes(k)))) dmg = Math.round(dmg * 1.1) // read its Database page
   const npc = m.tags?.includes('npc')
+  if (npc && m.state?.follow && ctx.place.players.some((p) => p.id === m.state.follow)) { // a companion: no friendly fire
+    ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 1.7, z: m.feetPosition.z }, text: 'ALLY', color: '#9fd7ff', size: 0.8 }, { audience: { player: ctx.self.id } })
+    return
+  }
   if (npc) dmg = dmgAfterArmor(lookOfNpc(m), dmg) // an agent's or survivor's clothes soak the hit like yours do
   m.state.hp -= dmg
   if (npc) { m.state.angry = { ...(m.state.angry ?? {}), [ctx.self.id]: true }; m.state.fresh = { ...(m.state.fresh ?? {}), [ctx.self.id]: true } } // the camp remembers who shot first; a fresh shot spreads even after a pardon

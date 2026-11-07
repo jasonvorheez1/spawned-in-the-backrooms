@@ -257,6 +257,12 @@ export function update(ctx, dt) {
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
   if (m.dressed !== 4) { m.dressed = 4; if (!s.dead) dress(ctx, me); }
   if (!m.armed && !s.dead && now - (m.bornAt ??= now) > 1500) arm(ctx, me, m); // after the spawner has handed over its weapon
+  // essential: whoever walks with a player drops to a knee instead of dying, then gets back up
+  if (!s.dead && (s.hp ?? 1) <= 0 && s.follow && ctx.place.players.some((p) => p.id === s.follow)) {
+    s.hp = Math.max(1, Math.round((s.maxHp ?? 100) * 0.3)); s.stunUntil = now + 4000;
+    animate(ctx, me.id, { "feetPosition.y": [me.feetPosition.y, me.feetPosition.y - 0.35, me.feetPosition.y - 0.35, me.feetPosition.y] }, { duration: 4 });
+    ctx.emit("damageNumber", { position: { x: me.feetPosition.x, y: me.feetPosition.y + 1.8, z: me.feetPosition.z }, text: "DOWN", color: "#ffb347" });
+  }
   if (s.dead || (s.hp ?? 1) <= 0) {
     if (!m.down) {
       m.down = true; bark(ctx, me, "death", true);
