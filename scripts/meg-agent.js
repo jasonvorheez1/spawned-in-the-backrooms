@@ -3,7 +3,7 @@ import { heard } from "./lib/hear.js";
 import { seatFor } from "./lib/seat.js";
 import { rollLoot, garmentsOf } from "./lib/loot.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
-import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec, faceMorph } from "./lib/critter-model.js";
+import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec, faceMorph, baseBones } from "./lib/critter-model.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
@@ -160,7 +160,7 @@ function holster(ctx, me, m, drawn) {
 function aim(me, m, t) {
   const id = t?.id ?? null;
   if (m.aimAt === id) return; m.aimAt = id;
-  me.bones = id ? { ...baseBones(me.state.build), RightHand: { reach: { to: { object: id, offset: { x: 0, y: 1.1, z: 0 } }, blendIn: 0.15, blendOut: 0.3 } }, LeftHand: { reach: { to: { object: id, offset: { x: 0, y: 1.05, z: 0 } }, blendIn: 0.2, blendOut: 0.3 } } } : null;
+  me.bones = id ? { ...baseBones(me.state.build), RightHand: { reach: { to: { object: id, offset: { x: 0, y: 1.1, z: 0 } }, blendIn: 0.15, blendOut: 0.3 } }, LeftHand: { reach: { to: { object: id, offset: { x: 0, y: 1.05, z: 0 } }, blendIn: 0.2, blendOut: 0.3 } } } : baseBones(me.state.build);
 }
 
 
@@ -189,7 +189,7 @@ export function update(ctx, dt) {
     if (!m.down) {
       m.down = true; bark(ctx, me, "death", true);
       for (const id of Object.keys(VOICES)) { const o = ctx.place.objects[id]; if (o && id !== me.id && !o.state?.dead && (o.state?.hp ?? 1) > 0 && Math.hypot(o.feetPosition.x - me.feetPosition.x, o.feetPosition.z - me.feetPosition.z) < 30) { bark(ctx, o, "allyDown", true); break; } } // the nearest friend sees it
-      stop(me, dt); aim(me, m, null); me.anim.talk = null; me.anim.hit = null; me.anim.wave = null; me.bones = null;
+      stop(me, dt); aim(me, m, null); me.anim.talk = null; me.anim.hit = null; me.anim.wave = null; me.bones = baseBones(me.state.build);
       // a ragdoll: the body drops where it was hit, in its own fur and jacket, knocked back off its feet
       const yaw = ((typeof me.rotation === "number" ? me.rotation : me.rotation?.yaw) ?? 0) * Math.PI / 180;
       me.ragdoll = { impulse: { x: Math.sin(yaw) * 60, y: 25, z: Math.cos(yaw) * 60 }, settleSeconds: 2 };
@@ -220,9 +220,9 @@ export function update(ctx, dt) {
   const isTwitching = now < (m.twitchUntil ?? 0);
   if (isTwitching && !s.dead && !me.bones) {
     const dir = m.twitchEar === "EarL" ? -1 : 1;
-    me.bones = { [m.twitchEar]: { rotate: [0, 0, dir * 24] } };
-  } else if (!isTwitching && me.bones && (me.bones.EarL || me.bones.EarR) && !m.aimAt) {
-    me.bones = null;
+    me.bones = { ...baseBones(s.build), [m.twitchEar]: { rotate: [0, 0, dir * 24] } };
+  } else if (!isTwitching && (!me.bones || me.bones.EarL || me.bones.EarR || !me.bones.Head) && !m.aimAt) {
+    me.bones = baseBones(s.build);
   }
   // talking: interact.js stamps state.talkAt and talkTo when a player presses E on them
   const talking = s.talkAt && now - s.talkAt < 2600;
