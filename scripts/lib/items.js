@@ -15,7 +15,7 @@ export const tokenOf = (tag, o) => (tag === 'weapon' ? 'weapon:' + (o?.state?.ki
 // what a token is called and what it does, for the prompt and the loot menu
 export function describe(token) {
   const d = describe0(token)
-  const kg = ['ration', 'bandage', 'battery', 'kit', 'compass', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('book:') || token.startsWith('page:') ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
+  const kg = ['ration', 'bandage', 'battery', 'kit', 'bobbypin', 'compass', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('book:') || token.startsWith('page:') ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
   return kg ? { ...d, info: d.info + ` · ${kg.toFixed(1)} kg` } : d
 }
 // Level 2's finds: eaten, wrapped or taped on the spot, or keys you carry (fuse, valve wheel, keycard) that open its doors
@@ -46,6 +46,7 @@ function describe0(token) {
   if (token === 'ration') return { name: 'Canned ration', info: `+${L1.rationHp} HP · +${L1.rationSanity} sanity`, color: '#c9b48a' }
   if (token === 'bandage') return { name: 'Bandage', info: `+${L1.bandageHp} HP`, color: '#f2f2ee' }
   if (token === 'battery') return { name: 'Battery', info: `+${L1.batteryCharge}% light`, color: '#9fd3ff' }
+  if (token === 'bobbypin') return { name: 'Bobby pin', info: 'Picks locks · snaps under strain', color: '#c8c4b8' }
   if (token === 'kit') return { name: 'Repair kit', info: 'Mends your weapon', color: '#d9b27a' }
   if (token.startsWith('book:')) { const k = SKILLS.find((x) => x.k === token.slice(5)); return { name: `Skill book: ${k?.name ?? '?'}`, info: `+3 ${k?.name ?? ''}`, color: '#7fd1a8' } }
   if (token.startsWith('cloth:')) { // a garment: "cloth:<slot>:<kind>:<hex>"

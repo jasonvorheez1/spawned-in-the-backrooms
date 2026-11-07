@@ -121,6 +121,7 @@ function takeToken0(ctx, token) {
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
     return { ok: true }
   }
+  if (token === 'bobbypin') { s.bobbypins = (s.bobbypins ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Bobby pin (${s.bobbypins} carried)`, at: now }; sound(ctx, 'pickup-ammo', 0.5, true); return { ok: true } }
   if (token === 'firesalt') { s.firesalt = (s.firesalt ?? 0) + 1; s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } }
   if (token.startsWith('page:')) { // a torn notebook page: kept and read now
     const n = parseInt(token.slice(5)) || 1, have = String(s.pages ?? '').split(',').filter(Boolean)

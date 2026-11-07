@@ -33,7 +33,7 @@ export function rollWeapon(ctx) {
 }
 
 // ---- containers: a crate in the maze, or the remains of what you killed. Their contents are tokens (scripts/lib/items.js).
-const ITEM_WEIGHTS = [["almond", 40], ["ammo", 16], ["shells", 7], ["weapon", 22], ["kit", 4], ["book", 3], ["cloth", CL.crateWeight]];
+const ITEM_WEIGHTS = [["almond", 40], ["ammo", 16], ["shells", 7], ["weapon", 22], ["kit", 4], ["bobbypin", 10], ["book", 3], ["cloth", CL.crateWeight]];
 const bookOf = (ctx) => { const ks = SKILL_KEYS.filter((k) => k !== "energy" && k !== "explosives"); return "book:" + ks[Math.floor(ctx.random() * ks.length)]; };
 // some containers are locked, Fallout style: a Lockpick or Science level you need to have. Locked ones hold more.
 export function rollLock(ctx) {

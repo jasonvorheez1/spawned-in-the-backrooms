@@ -26,10 +26,10 @@ sideOrder: [boiler, locker, electrical, office, cage, break, pump, office, locke
 skillLockShare: 0.3  # an ordinary room door is picked shut this often (Lockpick 25 or 50)
 types:
   boiler:     { label: "BOILER ROOM",  light: "oklch(0.78 0.14 55)", containers: [toolbox, locker] }
-  locker:     { label: "MAINTENANCE",  light: "oklch(0.92 0.03 200)", containers: [locker, locker, locker] }
+  locker:     { bobbypin: 4, label: "MAINTENANCE",  light: "oklch(0.92 0.03 200)", containers: [locker, locker, locker] }
   pump:       { label: "PUMP ROOM",    light: "oklch(0.85 0.06 200)", lock: valve, containers: [cabinet, toolbox, locker] }
-  office:     { label: "OFFICE",       light: "oklch(0.9 0.06 90)",  containers: [filing, filing, desk] }
-  cage:       { label: "STORAGE",      light: "oklch(0.88 0.04 230)", lock: keycard, containers: [cagecrate, cagecrate, toolbox], bonus: 2 }
+  office:     { bobbypin: 4, label: "OFFICE",       light: "oklch(0.9 0.06 90)",  containers: [filing, filing, desk] }
+  cage:       { bobbypin: 4, label: "STORAGE",      light: "oklch(0.88 0.04 230)", lock: keycard, containers: [cagecrate, cagecrate, toolbox], bonus: 2 }
   break:      { label: "BREAK ROOM",   light: "oklch(0.9 0.08 80)",  containers: [vending, fridge] }
   electrical: { label: "ELECTRICAL",   light: "oklch(0.8 0.1 240)",  lock: fuse, containers: [cabinet, toolbox], bonus: 1 }
 # what each container is: its name, size (w h d), how many rolls, its loot table
@@ -45,7 +45,7 @@ containers:
   lockbox:   { name: "Foreman's lockbox", size: [0.7, 0.45, 0.45], n: [3, 4], table: cage }
 # loot tables: token weights. "weapon" rolls a Level 2 weapon, "book" a skill book
 tables:
-  tools:  { tape: 8, fuse: 5, valve: 3, battery: 8, kit: 4, ammo: 4, shells: 2, weapon: 4, almond: 2 }
+  tools:  { bobbypin: 4, tape: 8, fuse: 5, valve: 3, battery: 8, kit: 4, ammo: 4, shells: 2, weapon: 4, almond: 2 }
   locker: { bar: 5, almond: 4, firstaid: 3, tape: 4, battery: 4, keycard: 2, ammo: 4, shells: 2, weapon: 4, book: 1 }
   office: { keycard: 5, battery: 4, bar: 3, book: 4, almond: 3, ammo: 2, fuse: 2, beans: 2 }
   food:   { beans: 8, bar: 9, almond: 7, ration: 2, keycard: 1 }

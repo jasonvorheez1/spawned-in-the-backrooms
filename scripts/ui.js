@@ -6,6 +6,7 @@ import W from './lib/weapons.js'
 import { ZONE_NAMES } from './lib/maze.js'
 import * as modelingStudio from '../mods/modeling-studio/hud.js'
 import { wardrobe } from './wardrobe-ui.js'
+import { pickUi } from './lockpick-ui.js'
 import { lootUi } from './loot-ui.js'
 import { talkUi } from './talk-ui.js'
 import { buildUi } from './build-ui.js'
@@ -230,5 +231,5 @@ export default function render(ctx, player) {
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>
 
-</div>${lootUi(ctx, player)}${talkUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}${modelingStudio.render(ctx, player)}`
+</div>${lootUi(ctx, player)}${pickUi(ctx, player)}${talkUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}${modelingStudio.render(ctx, player)}`
 }

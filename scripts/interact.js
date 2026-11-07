@@ -1,4 +1,5 @@
 import { rollItemL3 } from './lib/loot3.js'
+import { startPick } from './lockpick.js'
 // Fallout-style looting. Nothing is picked up by walking over it any more: look at an item and the HUD
 // names it ("[E] Take  Pipe scrap"), press E to take it. Crates and the remains of what you kill are
 // containers: look at one, press E, and a loot menu lists what is inside (take one thing, take all,
@@ -97,6 +98,7 @@ export function openLoot(ctx, c) {
   if (c.state.lock) { // Fallout-style lock: you need the skill level, no minigame
     const [sk, lv] = c.state.lock.split(':'), have = skillsOf(s)[sk] ?? 0
     if (have < Number(lv)) { note(ctx, `Locked: requires ${SKN[sk]} ${lv}`); snd(ctx, 'ui-denied-click', 0.35); return }
+    if (sk === 'lockpick') { startPick(ctx, c, Number(lv), 'crate'); return } // the minigame (scripts/lockpick.js) opens it
     c.state.lock = ''; c.state.name = sk === 'science' ? 'Unlocked locker' : 'Opened crate'
     note(ctx, `[${SKN[sk]} ${lv}] ${sk === 'science' ? 'You crack the locker' : 'You pick the lock'}`); snd(ctx, 'lock-picking-click', 0.5)
   }
@@ -167,6 +169,7 @@ function useDoor(ctx, it) {
     } else {
       const [sk, lv] = lk.split(':'), have = skillsOf(s)[sk] ?? 0
       if (have < Number(lv)) { note(ctx, `Locked · needs ${SKN[sk]} ${lv} (you have ${Math.floor(have)})`); snd(ctx, 'door-handle-locked-rattle', 0.5); return }
+      if (sk === 'lockpick') { startPick(ctx, it, Number(lv), 'door'); return }
       it.state.lock = ''; note(ctx, `[${SKN[sk]} ${lv}] You pick the lock`); snd(ctx, 'lock-picking-click', 0.5)
     }
   }
