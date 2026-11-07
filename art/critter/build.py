@@ -818,7 +818,14 @@ if STAGE in ("all", "export"):
     for o in scene.objects: o.hide_render = False
     for o in list(scene.objects):
         if o.type not in ("MESH", "ARMATURE"): bpy.data.objects.remove(o)
-    sel(*([rig] + [o for o in scene.objects if o.type == "MESH"]), active=rig)
-    bpy.ops.export_scene.gltf(filepath=f"{OUT}/critter-{SEX}.glb", export_apply=False, use_selection=True, export_morph=True, export_skins=True,
-                              export_animations=False, export_yup=True)
-    log("export", os.path.getsize(f"{OUT}/critter-{SEX}.glb") // 1024, "KB")
+    for o in scene.objects:
+        if o.type == "MESH": o.data.validate(clean_customdata=False)
+    def exp(path, objs):
+        bpy.ops.object.select_all(action='DESELECT')
+        for o in [rig] + objs: o.select_set(True)
+        bpy.context.view_layer.objects.active = rig
+        bpy.ops.export_scene.gltf(filepath=path, export_apply=False, use_selection=True, export_morph=True, export_skins=True, export_animations=False, export_yup=True)
+        log("export", os.path.basename(path), os.path.getsize(path) // 1024, "KB")
+    exp(f"{OUT}/critter-{SEX}.glb", [body, fl] + list(garments.values()))
+    if SEX == "f" or os.environ.get("SPECIES_TOO"):
+        for sp in SP: exp(f"{OUT}/critter-sp-{sp}.glb", [species[sp], species["Face_" + sp]])
