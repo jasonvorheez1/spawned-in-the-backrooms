@@ -3334,7 +3334,7 @@ l5-radio-salon:
   tags: [usable, l5-radio]
 l5-samantha:
   behavior: [scripts/samantha.js]
-  feetPosition: {x: 4.9, y: 0, z: 1.2}
+  feetPosition: {x: 3, y: 0, z: 2.5}
   id: l5-samantha
   layout: {box: {max: {x: 0.2, y: 0.45, z: 0.45}, min: {x: -0.2, y: 0, z: -0.45}}}
   model: /cdn/value.05b6fcdb02ae0489f79f366c2285414facaa51f7639114b24430fb4ac82f5455.glb
