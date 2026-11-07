@@ -49,7 +49,34 @@ function flairClip(face) {
 }
 function flair(obj, face) { obj.anim.flair = { clip: flairClip(face), loop: 'loop', weight: 1, blendIn: 0.3 } }
 
-function lookOf(ctx) { return { ...C.default, ...(ctx.self.state.look || {}) } }
+// an old look (one outfit + one accessory) reads into the clothing slots
+const LEGACY = { tee: ['tee', 'pants'], hoodie: ['hoodie', 'pants'], sweater: ['sweater', 'pants'], jacket: ['jacket', 'pants'], overalls: ['tee', 'overalls'], apron: ['apron', 'pants'], pajamas: ['pajamas', 'pjpants'], skirt: ['tee', 'skirt'], dress: ['dress', 'none'], none: ['none', 'none'] }
+function lookOf(ctx) {
+  const s = ctx.self.state.look || {}, l = { ...C.default, ...s }
+  if (s.outfit && !s.topw) { const m = LEGACY[s.outfit] || LEGACY.tee; l.topw = m[0]; l.botw = m[1] }
+  if (s.acc && !s.hat && !s.eyew && !s.neck) {
+    if (C.hat.includes(s.acc)) l.hat = s.acc; else if (C.eyew.includes(s.acc)) l.eyew = s.acc; else if (C.neck.includes(s.acc)) l.neck = s.acc
+    if (s.top) { l.hatc = s.top }
+  }
+  delete l.outfit; delete l.acc
+  return l
+}
+const pick = (ctx, list) => list[Math.floor(ctx.random() * list.length)]
+function randomLook(ctx, cur, scope) {
+  const l = { ...cur }
+  for (const k of ['topw', 'botw', 'shoes']) l[k] = pick(ctx, C[k].filter((v) => v !== 'none'))
+  l.hat = ctx.random() < 0.55 ? pick(ctx, C.hat) : 'none'
+  l.eyew = ctx.random() < 0.25 ? pick(ctx, C.eyew) : 'none'
+  l.neck = ctx.random() < 0.4 ? pick(ctx, C.neck) : 'none'
+  if (l.topw === 'dress') l.botw = 'none'
+  for (const k of ['top', 'bottom', 'shoec', 'hatc', 'neckc']) l[k] = pick(ctx, C.cloth)
+  if (scope === 'all') {
+    l.species = pick(ctx, C.species); l.sex = pick(ctx, C.sex); l.fur = ctx.random() < 0.5 ? '' : pick(ctx, C.fur)
+    l.eye = pick(ctx, C.eye); l.eyes = pick(ctx, C.eyes); l.marks = ctx.random() < 0.5 ? 'none' : pick(ctx, C.marks)
+    l.expr = pick(ctx, ['grin', 'smile', 'joy', 'sparkle', 'smug', 'wink', 'blep'])
+  }
+  return l
+}
 
 export function onInput(ctx, input) {
   const st = ctx.self.state
@@ -63,8 +90,18 @@ export function onInput(ctx, input) {
   if (input.pressed?.dress && d && typeof d.k === 'string') {
     if (d.k === 'close') { st.wardrobeOpen = false; return }
     if (d.k === 'face') { st.face = { expr: d.v, until: ctx.now() + C.holdFace * 1000 }; return }
+    if (d.k === 'tab') { if (['body', 'face', 'clothes', 'outfits'].includes(d.v)) st.wrTab = d.v; return }
+    if (d.k === 'spin') { st.wrSpin = ((st.wrSpin || 0) + (Number(d.v) || 0)) % 360; return }
+    if (d.k === 'random') { st.look = randomLook(ctx, lookOf(ctx), d.v === 'all' ? 'all' : 'clothes'); st.face = null; return }
+    if (d.k === 'reset') { st.look = { ...C.default }; st.face = null; return }
+    if (d.k === 'strip') { st.look = { ...lookOf(ctx), topw: 'none', botw: 'none', shoes: 'none', hat: 'none', eyew: 'none', neck: 'none' }; return }
+    const slotN = Number(d.v)
+    if (d.k === 'save' && slotN >= 0 && slotN < C.outfitSlots) { const o = [...(st.outfits || [])]; while (o.length < C.outfitSlots) o.push(null); o[slotN] = lookOf(ctx); st.outfits = o; return }
+    if (d.k === 'wear' && st.outfits?.[slotN]) { st.look = { ...st.outfits[slotN] }; st.face = null; return }
     if (!(d.k in C.default)) return
-    st.look = { ...(st.look || {}), [d.k]: d.v }
+    const list = C[d.k === 'top' || d.k === 'bottom' || d.k === 'shoec' || d.k === 'hatc' || d.k === 'neckc' ? 'cloth' : d.k]
+    if (Array.isArray(list) && !list.includes(d.v)) return
+    st.look = { ...lookOf(ctx), [d.k]: d.v }
     if (d.k === 'expr') st.face = null
   }
 }
@@ -87,7 +124,7 @@ export function update(ctx) {
   ses.face = face
   if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
   life(ctx, face)
-  const params = { species: l.species, sex: l.sex, eye: l.eye, outfit: l.outfit, top: l.top, bottom: l.bottom, acc: l.acc, expr: face, eyes: l.eyes, marks: l.marks }
+  const params = { species: l.species, sex: l.sex, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks }
   if (l.fur) params.fur = l.fur
   const key = JSON.stringify(params)
   if (key !== ses.key) { ses.key = key; ctx.self.primitive = { kind: 'scripted', script: SCRIPT, params } }
@@ -98,8 +135,8 @@ export function update(ctx) {
     const yaw = ((me.camera?.rotation?.yaw ?? 0) * Math.PI) / 180, f = ctx.self.feetPosition
     const fx = -Math.sin(yaw), fz = -Math.cos(yaw), rx = Math.cos(yaw), rz = -Math.sin(yaw)
     ses.spin = (ses.spin || 0) + 0.2 * 40
-    const pos = { x: f.x + fx * 2.3 + rx * 0.55, y: f.y, z: f.z + fz * 2.3 + rz * 0.55 }
-    const rot = { yaw: (yaw * 180) / Math.PI + Math.sin(ctx.now() / 1400) * 35 }
+    const pos = { x: f.x + fx * 2.1 + rx * 0.6, y: f.y, z: f.z + fz * 2.1 + rz * 0.6 }
+    const rot = { yaw: (yaw * 180) / Math.PI + 180 + (ctx.self.state.wrSpin || 0) + Math.sin(ctx.now() / 1600) * 18 }
     const mirror = ses.mirror && ctx.getObject(ses.mirror)
     if (!mirror) { ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, primitive: { kind: 'scripted', script: SCRIPT, params }, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } }); const m = ctx.getObject(ses.mirror); if (m) { m.anim.idle = { clip: 'Idle', loop: 'loop', weight: 1 }; flair(m, face) } }
     else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
