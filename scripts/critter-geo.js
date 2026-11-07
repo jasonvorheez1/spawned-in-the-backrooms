@@ -100,6 +100,18 @@ const mixc = (h1, h2, f) => {
 export function geometry(ctx) {
   const P = ctx.params || {};
   const sp = SPECIES[P.species] || SPECIES.cat;
+  // the snout: a real 3d bump on the front of the head, per animal. len = how far it pushes out (m), w/h its half-width/height, y its centre below the head's middle, p how sharp its tip
+  const SNOUTS = {
+    cat: { len: 0.07, w: 0.12, h: 0.085, y: -0.1, p: 2 }, dog: { len: 0.13, w: 0.12, h: 0.09, y: -0.105, p: 2 },
+    fox: { len: 0.16, w: 0.1, h: 0.08, y: -0.105, p: 1.6 }, wolf: { len: 0.16, w: 0.11, h: 0.085, y: -0.105, p: 1.7 },
+    bunny: { len: 0.06, w: 0.11, h: 0.08, y: -0.095, p: 2.2 }, bear: { len: 0.11, w: 0.13, h: 0.095, y: -0.105, p: 2.4 },
+    deer: { len: 0.11, w: 0.1, h: 0.09, y: -0.105, p: 2 }, mouse: { len: 0.09, w: 0.09, h: 0.075, y: -0.095, p: 1.7 },
+    raccoon: { len: 0.12, w: 0.11, h: 0.085, y: -0.105, p: 1.8 }, panda: { len: 0.09, w: 0.13, h: 0.09, y: -0.105, p: 2.4 },
+    pig: { len: 0.08, w: 0.12, h: 0.09, y: -0.1, p: 2.4 }, sheep: { len: 0.1, w: 0.11, h: 0.095, y: -0.1, p: 2.2 },
+    lion: { len: 0.11, w: 0.13, h: 0.095, y: -0.105, p: 2.2 },
+  };
+  const SN = SNOUTS[P.species] || SNOUTS.cat;
+  const snoutAt = (u, v) => { const d = Math.abs(u / SN.w) ** SN.p + Math.abs((v - SN.y) / SN.h) ** SN.p; return SN.len * Math.exp(-d * 1.4); };
   const fem = P.sex === "f";
   const FUR = P.fur || sp.fur;
   const BELLY = P.belly || sp.belly;
@@ -248,12 +260,10 @@ export function geometry(ctx) {
       const cheekOut = cheekFactor * (Math.abs(Math.cos(th)) ** 1.3) * 0.042;
       rx += cheekOut;
       // Soft 3D muzzle protrusion forward (-Z direction, th near 3*PI/2)
-      const forwardMuzzle = Math.max(0, -Math.sin(th));
-      const muzzleFactor = Math.exp(-Math.pow((ph - 2.0) / 0.35, 2)) * (forwardMuzzle ** 2.2);
-      const muzzleOut = muzzleFactor * (sp.snout ? 0.055 : sp.muzzle ? 0.045 : 0.024);
-
       const px = HC[0] + (rx * s) * Math.cos(th);
       const py = HC[1] + (ry * cPh);
+      const front = Math.max(0, -Math.sin(th) * s);
+      const muzzleOut = snoutAt(px - HC[0], py - HC[1]) * Math.min(1, front * 1.6);
       const pz = HC[2] + (rz * s) * Math.sin(th) - muzzleOut;
       return [px, py, pz];
     };
@@ -263,8 +273,10 @@ export function geometry(ctx) {
       const m = mul3(add3(add3(a, b), add3(c2, d)), 0.25);
       const nrm = norm3(sub3(m, HC));
       let col = sp.headFur || FUR;
-      if (sp.cheeks && nrm[2] < -0.15 && m[1] < 1.25 && Math.abs(m[0]) > 0.15) col = BELLY;
-      if (sp.muzzle && nrm[2] < -0.45 && m[1] > 1.14 && m[1] < 1.28 && Math.abs(m[0]) < 0.14) col = BELLY;
+      { // the muzzle is the snout's own lighter fur, its edge a smooth oval
+        const du = (m[0] - HC[0]) / (SN.w * 1.15), dv = (m[1] - HC[1] - SN.y + 0.01) / (SN.h * 1.25);
+        if (!sp.patch && m[2] < HC[2] - 0.1 && du * du + dv * dv < 1) col = BELLY;
+      }
       ctx.color(col);
 
       if (j === 0) tri(a, c2, d);
@@ -278,8 +290,7 @@ export function geometry(ctx) {
   const onHead = (u, v, e = 0) => {
     const k = Math.max(0.0004, 1 - (u / (HR[0] + 0.03)) ** 2 - (v / HR[1]) ** 2);
     const zBase = -HR[2] * Math.sqrt(k);
-    const dMuzzle = Math.exp(-((u / 0.16) ** 2 + ((v + 0.11) / 0.12) ** 2));
-    const muz = dMuzzle * (sp.snout ? 0.055 : sp.muzzle ? 0.045 : 0.024);
+    const muz = snoutAt(u, v) * Math.min(1, Math.sqrt(k) * 1.6);
     return [HC[0] + u * (1 + e), HC[1] + v * (1 + e), HC[2] + (zBase - muz) * (1 + e)];
   };
 
@@ -507,16 +518,10 @@ export function geometry(ctx) {
   // Layered fluffy cheek tufts for species with cheek fur
   if (sp.cheeks && mid) {
     wOverride = { Head: 1 };
-    for (const s of [-1, 1]) {
-      ctx.color(BELLY);
-      for (let n = 0; n < 3; n++) {
-        const a = -0.32 + n * 0.32;
-        const base = [s * 0.28, 1.24 + a * 0.12, -0.1];
-        const tip = [s * (0.42 + (n === 1 ? 0.04 : 0)), 1.20 + a * 0.14, -0.04];
-        const lower = [s * 0.29, 1.16 + a * 0.12, -0.02];
-        tri(base, tip, lower);
-        if (s < 0) tri(base, lower, tip);
-      }
+    ctx.color(FUR);
+    for (const s of [-1, 1]) { // two soft fluff puffs at the jaw, the cartoon cheek ruff
+      ell([s * 0.33, 1.2, -0.08], [0.07, 0.055, 0.06], null, { seg: hi ? 14 : 9 });
+      ell([s * 0.36, 1.15, -0.03], [0.055, 0.045, 0.05], null, { seg: hi ? 12 : 8 });
     }
     wOverride = null;
   }
@@ -1084,18 +1089,19 @@ export function geometry(ctx) {
   if (sp.snout) {
     ctx.smooth();
     ctx.color(sp.nose);
-    ell([0, HC[1] - 0.062, onHead(0, -0.062, 0)[2] - 0.014], [0.065, 0.046, 0.03], null, { seg: hi ? 16 : 10 });
+    ell([0, HC[1] + SN.y + 0.02, onHead(0, SN.y + 0.02, 0)[2] - 0.012], [0.065, 0.046, 0.03], null, { seg: hi ? 16 : 10 });
     ctx.flat();
     ctx.color(INK);
     for (const s of [-1, 1]) {
-      fill(ellipse(s * 0.022, -0.062, 0.009, 0.015, 8), 0.016);
+      fill(ellipse(s * 0.022, SN.y + 0.02, 0.009, 0.015, 8), 0.05);
     }
   } else {
     ctx.smooth();
     ctx.color(sp.nose);
-    ell([0, HC[1] - 0.05, onHead(0, -0.05, 0)[2] - 0.01], [0.034, 0.026, 0.028], null, { seg: hi ? 14 : 8 });
+    const nv = SN.y + SN.h * 0.45, nz = onHead(0, nv, 0)[2], nr = SN.len > 0.1 ? 1.25 : 1; // the nose caps the snout's tip
+    ell([0, HC[1] + nv, nz - 0.008], [0.036 * nr, 0.026 * nr, 0.028], null, { seg: hi ? 14 : 8 });
     ctx.color("#ffffff");
-    ell([0.008, HC[1] - 0.044, onHead(0, -0.05, 0)[2] - 0.022], [0.008, 0.008, 0.008], null, { seg: 6 });
+    ell([0.01, HC[1] + nv + 0.008, nz - 0.03], [0.008, 0.008, 0.008], null, { seg: 6 });
   }
 
   // Whiskers for cat/mouse
