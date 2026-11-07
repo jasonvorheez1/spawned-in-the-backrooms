@@ -8,5 +8,6 @@ fireEvery: 0.9   # seconds between shots
 hitChance: 0.75  # a miss still cracks and flashes
 walk: 2.2
 run: 5.0
+sprint: 7.0      # fleeing, closing a long gap, catching up to whoever they follow (her pick)
 leash: 45        # they never chase farther than this from their post
 respawn: 150     # seconds until a fallen agent is replaced

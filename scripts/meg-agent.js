@@ -364,13 +364,13 @@ export function update(ctx, dt) {
     if (breaks && dT > 1.6) {
       holster(ctx, me, m, false); aim(me, m, null); gait(me, m, "run");
       const dx = me.feetPosition.x - t.feetPosition.x, dz = me.feetPosition.z - t.feetPosition.z, l = Math.hypot(dx, dz) || 1;
-      moveAlong(ctx, me, m, { x: me.feetPosition.x + dx / l * 6, y: me.feetPosition.y, z: me.feetPosition.z + dz / l * 6 }, G.run * (nv === "coward" ? 1.1 : 1), dt);
+      moveAlong(ctx, me, m, { x: me.feetPosition.x + dx / l * 6, y: me.feetPosition.y, z: me.feetPosition.z + dz / l * 6 }, (G.sprint ?? 7) * (nv === "coward" ? 1.05 : 1), dt); // a broken nerve sprints
       if (now - (m.fleeSaid ?? 0) > 9000) { m.fleeSaid = now; s.line = { t: FLEE[nv][Math.floor(ctx.random() * FLEE[nv].length)], at: now, d: 2000 }; }
       m.fearAt = now; return;
     }
     const d = flat(t.feetPosition, me.feetPosition), see = seesIt(ctx, me, t), reloading = now < (m.reloadUntil ?? 0);
     const A = WP[s.arm] ?? WP.pistol, ranged = !!A.ranged, range = ranged ? (s.arm === "shotgun" ? 9 : G.range) : 1.4 + (A.reach ?? 2.4) * 0.2; // melee closes to arm's length
-    if (d > range || !see) { gait(me, m, "run"); aim(me, m, null); moveAlong(ctx, me, m, t.feetPosition, G.run * (ranged ? 1 : 1.12), dt); }
+    if (d > range || !see) { gait(me, m, "run"); aim(me, m, null); moveAlong(ctx, me, m, t.feetPosition, d > range + 8 ? (G.sprint ?? 7) : G.run * (ranged ? 1 : 1.12), dt); } // a long gap is sprinted
     else { gait(me, m, "idle"); stop(me, dt); aim(me, m, reloading || !ranged ? null : t); face(me, t.feetPosition.x - me.feetPosition.x, t.feetPosition.z - me.feetPosition.z, dt); }
     if (!ranged && see && d <= range && now >= m.next) { m.next = now + Math.max(700, (A.cooldown ?? 0.7) * 1700) * (0.85 + ctx.random() * 0.3); swing(ctx, me, t, A); }
     if (ranged && see && d <= range && !reloading && now >= m.next) {
@@ -380,7 +380,7 @@ export function update(ctx, dt) {
     return;
   }
   aim(me, m, null);
-  if (lead) { const d = flat(home, me.feetPosition); if (d > TK.join.near) { const run = d > TK.join.run; gait(me, m, run ? "run" : "walk"); moveAlong(ctx, me, m, home, run ? G.run : G.walk, dt); return; } }
+  if (lead) { const d = flat(home, me.feetPosition); if (d > TK.join.near) { const run = d > TK.join.run; gait(me, m, run ? "run" : "walk"); moveAlong(ctx, me, m, home, d > TK.join.run * 2.5 ? (G.sprint ?? 7) : run ? G.run : G.walk, dt); return; } }
   else if (flat(home, me.feetPosition) > 1) {
     work(me, m, null); m.at = 0; m.leftAt ||= now;
     if (stop0 && now - m.leftAt > 25000) { s.ri = ((s.ri ?? 0) + 1) % s.rounds.length; m.leftAt = now; m.path = null; } // can't reach it: on to the next chore
