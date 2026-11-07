@@ -22,8 +22,14 @@ const zoneHere = (ctx, x, z) => ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x,
 
 import SOUNDS from './lib/data/sounds.yml'
 import { useCompass, COMPASS } from './lib/compass.js'
+import L3I from './lib/data/l3items.yml'
 const sndTurn = {}
 const SND = (n) => { const takes = SOUNDS[n]; if (!takes?.length) return `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`; sndTurn[n] = ((sndTurn[n] ?? -1) + 1 + (takes.length > 2 ? Math.floor(takes.length / 2) : 0)) % takes.length; return takes[sndTurn[n]] }
+const ZAP = `fx
+pop arc burst=18..26 life=.12..0.3 v=sdir()*(2.5..5) size=.03..0.06 acc=drag(3) col=hdr(3,4,6)>hdr(1.2,1.8,4) a=1>0 sz=$size r=sprite(ember,add,velocity,.03)
+pop glow burst=1 life=.18 col=<.6,.8,1> a=1>0 r=light(<.6,.8,1>,6,4)`
+const EMBER = `fx
+pop ember burst=8..12 life=.4..0.8 v=up(.6..1.4)+sdir()*(.6..1.2) size=.02..0.04 acc=grav()*.3+drag(1.2) col=hdr(4,1.6,.3)>hdr(1.6,.4,.05) a=1>0 sz=$size r=sprite(ember,add,velocity,.02)`
 const ICHOR = `fx
 pop ichor burst=18..26 life=.5..0.9 v=sdir()*(1.5..3.2)+up(1) size=.04..0.09 acc=grav()*.8+drag(1.2) col=<.04,.03,.05> a=1>.6:1>0 sz=$size floor=stick r=sprite(soft-disc,alpha)
 pop smoke burst=4..6 life=.6..1 v=sdir()*(.3..0.7) size=.25..0.4 acc=buoy(.4)+drag(1.5) col=<.06,.05,.07> a=0>.15:.5>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)`
@@ -92,6 +98,20 @@ export function takeToken(ctx, token) {
   if (token === 'shells') {
     s.shells = (s.shells ?? 0) + W.shells.perPickup; s.pickedAt = now
     sound(ctx, 'pickup-ammo', 0.7, true)
+    return { ok: true }
+  }
+  if (token === 'royal_ration') { // Level 3's rare tin: eaten on the spot, all of it
+    s.hp = maxHp(s.level, s); s.sanity = Math.min(maxSan(s.level, s), (s.sanity ?? 0) + L3I.royal_ration.sanity)
+    s.pickedAt = now; gain(ctx, L.xpAlmond); s.notice = { text: 'You eat the royal ration. You feel whole again', at: now }
+    sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
+    return { ok: true }
+  }
+  if (token === 'firesalt') { s.firesalt = (s.firesalt ?? 0) + 1; s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } }
+  if (token.startsWith('page:')) { // a torn notebook page: kept and read now
+    const n = parseInt(token.slice(5)) || 1, have = String(s.pages ?? '').split(',').filter(Boolean)
+    if (!have.includes(String(n))) have.push(String(n))
+    s.pages = have.join(','); s.reading = n; s.pickedAt = now
+    sound(ctx, 'gun-raise-cloth-rustle', 0.5, true)
     return { ok: true }
   }
   if (token === 'ration' || token === 'bandage') { // eaten or wrapped on the spot
@@ -227,6 +247,12 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
   if (loud) sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)
   ctx.emit('damageNumber', { position: hit, value: dmg, color: '#f7d98b' })
   ctx.emit('fx', { position: hit, script: ICHOR })
+  if (L3I.stun.kinds.includes(baseOf(s.equipped ?? 'fists'))) { // the baton arcs: sparks, a zap, and the thing struck staggers
+    m.state.stunUntil = ctx.now() + L3I.stun.ms
+    ctx.emit('fx', { position: hit, script: ZAP })
+    sound(ctx, 'electric-zap-arc-crackle', 0.85)
+  }
+  if ((s.firesaltUntil ?? 0) > ctx.now() && !W[s.equipped]?.ranged) ctx.emit('fx', { position: hit, script: EMBER })
   ctx.emit('squash', { target: m.id, axis: 'y', intensity: 0.25, duration: 0.18 })
   ctx.emit('flash', { target: m.id, color: '#ffffff', duration: 0.1 })
   ctx.emit('hitstop', { duration: 0.06 + heavy * 0.07 }, { audience: { player: ctx.self.id } })
@@ -300,7 +326,7 @@ function swing(ctx, power = 0) {
     return
   }
   const dv = derived(s), crit = ctx.random() < dv.crit
-  const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * dmgMul(s, wp) * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100) * (crit ? 1.75 : 1)
+  const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * dmgMul(s, wp) * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100) * (crit ? 1.75 : 1) * (!wp.ranged && (s.firesaltUntil ?? 0) > ctx.now() ? L3I.firesalt.damage : 1)
   if (crit) ctx.emit('damageNumber', { position: { x: found[0].m.feetPosition.x, y: found[0].m.feetPosition.y + 2, z: found[0].m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
   if (wp.pellets) {
     // a spread of pellets: everything in the cone is hit, hard up close and weak at range
@@ -375,6 +401,13 @@ function invAction(ctx, d) {
   const s = ctx.self.state
   if (d.k === 'close') { s.invOpen = false; return }
   if (d.k === 'drink') { drink(ctx); return }
+  if (d.k === 'firesalt') { // rub a pinch on the blade or head: melee hits burn harder for a while
+    if ((s.firesalt ?? 0) <= 0 || W[s.equipped]?.ranged || s.equipped === 'fists') { s.notice = { text: 'Hold a melee weapon to rub firesalt on it', at: ctx.now() }; return }
+    s.firesalt -= 1; s.firesaltUntil = ctx.now() + L3I.firesalt.seconds * 1000
+    s.notice = { text: `Firesalt on your ${W[s.equipped]?.name?.toLowerCase() ?? 'weapon'}: x${L3I.firesalt.damage} melee for ${L3I.firesalt.seconds}s`, at: ctx.now() }
+    sound(ctx, 'gun-raise-cloth-rustle', 0.5, true); return
+  }
+  if (d.k === 'read') { s.reading = parseInt(d.n) || null; s.invOpen = false; return }
   if (d.k === 'compass') { s.invOpen = false; useCompass(ctx); return }
   const k = String(d.w || '')
   if (d.k === 'wear' || d.k === 'unwear') { // clothes: wearing one swaps out what was in that slot (back into the bag); unwear strips it
