@@ -4,6 +4,8 @@
 import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
 import { bodyModel, headModel, faceMorph, HEAD_ID, GAIT_LIB } from './lib/critter-model.js'
+import { weaponBody, HOLD } from './lib/weapon-look.js'
+import { baseOf } from './lib/weapons.js'
 export const updateSchedule = { every: { seconds: 0.2 } }
 
 // ---- life: blinking and ear twitches, as brief bone changes the whole room sees (two small writes each)
@@ -161,6 +163,24 @@ export function update(ctx) {
   if (!worn && ses.headFace !== face) { ses.headFace = face; applyBones(ctx) }
   const hs = Number(l.headS) || 1, ts = Number(l.tailS) || 1
   if (!worn && (hs !== (ses.headS || 1) || ts !== (ses.tailS || 1))) { ses.headS = hs; ses.tailS = ts; applyBones(ctx) }
+
+  // held weapon in third person: attached to RightHand bone so other players and third-person camera see it
+  const eq = ctx.self.state.equipped ?? 'fists'
+  if (ses.heldKind !== eq) {
+    ses.heldKind = eq
+    if (ses.heldObj) { try { ctx.destroy(ses.heldObj) } catch (e) {} ses.heldObj = null }
+    if (eq !== 'fists') {
+      const bk = baseOf(eq), g = HOLD[bk] ?? 0
+      ses.heldObj = ctx.spawn({
+        parent: ctx.self.id,
+        attachment: { bone: 'RightHand' },
+        feetPosition: { x: 0, y: 0, z: -g },
+        visibleInFirstPerson: false,
+        ...weaponBody(eq),
+      })
+    }
+  }
+
   // the wardrobe mirror: only on this player's own screen
   const me = ctx.place.players.find((p) => p.id === ctx.self.id)
   if (!me?.isLocal) return
@@ -175,7 +195,27 @@ export function update(ctx) {
     else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { if (worn) { mirror.model = worn.url; dropHead(ctx, mirror); mirror.anim.flair = null } else { mirror.model = bodyModel(params); wearHead(ctx, mirror, params); flair(mirror, face) } }
       mirror.bones = { ...(hs !== 1 ? { Head: { scale: hs } } : {}), ...(ts !== 1 ? { Tail: { scale: ts } } : {}) } }
     ses.mirrorKey = key
-  } else if (ses.mirror) { ctx.destroy(ses.mirror); ses.mirror = null; ses.mirrorKey = null }
+    if (ses.mirror) {
+      if (ses.mirrorHeldKind !== eq) {
+        ses.mirrorHeldKind = eq
+        if (ses.mirrorHeldId) { try { ctx.destroy(ses.mirrorHeldId) } catch (e) {} ses.mirrorHeldId = null }
+        if (eq !== 'fists') {
+          const bk = baseOf(eq), g = HOLD[bk] ?? 0
+          ses.mirrorHeldId = ctx.spawn({
+            parent: ses.mirror,
+            attachment: { bone: 'RightHand' },
+            feetPosition: { x: 0, y: 0, z: -g },
+            audience: 'local',
+            ...weaponBody(eq),
+          })
+        }
+      }
+    }
+  } else if (ses.mirror) {
+    if (ses.mirrorHeldId) { try { ctx.destroy(ses.mirrorHeldId) } catch (e) {} ses.mirrorHeldId = null }
+    ses.mirrorHeldKind = null
+    ctx.destroy(ses.mirror); ses.mirror = null; ses.mirrorKey = null
+  }
 }
 
 // the species head (face, ears, tail) rides the body's rig as a skinned child; restyled when the look changes
