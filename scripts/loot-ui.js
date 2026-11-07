@@ -115,7 +115,7 @@ function inventory(s) {
   const drop = eqKey !== 'fists' ? `<button onclick="sendAction('inv',{k:'drop',w:'${eqKey}'})">Drop ${eq.name}</button>` : ''
   return `<div class="pbw pb"><div class="pbp" data-modal>
     <div class="hd"><h2>Items</h2><div class="st"><span><b>LVL</b>${lv}</span><span><b>HP</b>${Math.round(s.hp ?? 0)}/${maxHp(lv, s)}</span><span><b>SAN</b>${Math.round(s.sanity ?? 0)}/${maxSan(lv, s)}</span><span><b>XP</b>${s.xp ?? 0}/${L.xpBase * lv}</span><span><b>DR</b>${wornDR(s.look)}</span></div></div>
-    <div class="bd"><div class="ls"><div class="sec">Weapons</div>${weapons}<div class="sec">Aid</div>${aid}${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="eq"></span><span class="nm" style="color:#d8b56a">Old compass</span><span class="n">${s.compass} reads</span></button>` : ''}<div class="sec">Ammo</div>${ammo}<div class="sec">Apparel</div>${app}</div>${detail(eqKey, s, true)}</div>
+    <div class="bd"><div class="ls"><div class="sec">Weapons</div>${weapons}<div class="sec">Aid</div>${aid}${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="eq"></span><span class="nm" style="color:#d8b56a">Old compass</span><span class="n">${s.compass} reads</span></button>` : ''}${s.firesalt > 0 ? `<button class="it" onclick="sendAction('inv',{k:'firesalt'})"><span class="eq"></span><span class="nm" style="color:#ff8a3a">Firesalt · Rub on weapon</span><span class="n">${s.firesalt}</span></button>` : ''}<div class="sec">Ammo</div>${ammo}<div class="sec">Apparel</div>${app}${s.pages ? `<div class="sec">Notes</div>${String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="eq"></span><span class="nm" style="color:#e8dcc0">Torn notebook page ${+n}</span><span class="n">read</span></button>`).join('')}` : ''}</div>${detail(eqKey, s, true)}</div>
     <div class="ft"><span class="c">${s.kills ?? 0} kills</span>${drop}<button onclick="sendAction('inv',{k:'close'})"><kbd>I</kbd>Close</button></div>
   </div></div>`
 }
@@ -124,7 +124,7 @@ function container(s, key) {
   const items = itemsOf(s.lootList)
   const rows = items.map((t, i) => `<button class="it" onclick="sendAction('loot',{k:'take',i:${i}})"><span class="eq"></span><span class="nm" style="color:${t.startsWith('weapon:') ? describe(t).color : 'inherit'}">${describe(t).name}</span><span class="n">${t === 'ammo' ? W.ammo.perPickup : t === 'shells' ? W.shells.perPickup : ''}</span>${detail(t, s, false)}</button>`).join('')
   const n = owned(s).length - 1
-  const carry = `Carrying ${n} weapon${n === 1 ? '' : 's'} · almond ${s.almonds ?? 0} · rounds ${s.ammo ?? 0} · shells ${s.shells ?? 0}`
+  const carry = `Carrying ${n} weapon${n === 1 ? '' : 's'} · almond ${s.almonds ?? 0} · rounds ${s.ammo ?? 0} · shells ${s.shells ?? 0}${s.firesalt ? ` · firesalt ${s.firesalt}` : ''}`
   return `<div class="pbw pb"><div class="pbp" data-modal>
     <div class="hd"><h2>${s.lootName || 'Container'}</h2><div class="st"><span><b>ITEMS</b>${items.length}</span></div></div>
     <div class="bd"><div class="ls">${rows || '<div class="em">Empty.</div>'}</div>${items[0] ? detail(items[0], s, true) : ''}</div>
