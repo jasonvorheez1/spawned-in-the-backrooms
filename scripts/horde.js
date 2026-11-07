@@ -73,6 +73,11 @@ export function update(ctx, dt) {
   const s = ctx.self.state, m = mem(ctx)
   if (s.level == null || !ctx.self.feetPosition) return
   s.hordeT ??= H.firstAt
+  // blackouts are Level 3's alone: anywhere else the clock holds, and leaving Level 3 mid-blackout calls it off
+  if (ctx.self.place !== 'level3') {
+    if (s.horde) { for (const e of mine(ctx)) ctx.destroy(e.id); s.horde = ''; s.hordeAlive = 0; m.wave = 0; s.hordeT = H.every[0] + ctx.random() * (H.every[1] - H.every[0]) }
+    ctx.sleep(2); return
+  }
   const now = ctx.now()
   if (!s.horde) {
     s.hordeT -= dt
