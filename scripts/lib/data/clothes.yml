@@ -1,0 +1,52 @@
+# Clothing as loot and armor (Shelly #10224: "every critter should start out with just regular clothes and they should get
+# the other types of clothes as random loot ... used as armor"; "strip them naked and wear their clothes like in fallout").
+# A garment is an item token "cloth:<slot>:<kind>:<hex>" (scripts/lib/items.js). slot = the critter look key
+# (topw, botw, shoes, hat, eyew, neck), kind = a garment scripts/critter-geo.js draws, hex = its colour without '#'.
+# dr = damage resistance points, subtracted from every hit (Fallout NV DT: a hit never drops below `floor` of itself).
+# Every number below is Savi's pick. regular: true = the plain set every new critter starts in.
+# A row with `strict: true` only matches its own colours (the M.E.G. jacket is a jacket in agency lime).
+colourKey: { topw: top, botw: bottom, shoes: shoec, hat: hatc, neck: neckc }   # eyewear has no colour
+floor: 0.2          # Savi's pick: a hit keeps at least 20% of itself, however armored
+findBase: 0.05      # Savi's pick: chance a remains body holds a garment at Observation 5, Luck 5
+crateWeight: 6      # Savi's pick: weight of "cloth" among Level 0 crate rolls (almond is 40)
+rarity:
+  common:   { label: Common,   color: "#d8c9a0", weight: 10 }
+  uncommon: { label: Uncommon, color: "#8fd07a", weight: 4 }
+  rare:     { label: Rare,     color: "#6fb4ff", weight: 1.5 }
+  agency:   { label: M.E.G.,   color: "#b6e04a", weight: 0.6 }
+regularColours: ["e85d75", "ff9f43", "ffd93d", "6bcb77", "4d96ff", "3d5a98", "9b5de5", "f4f1ea", "2b2b33", "8b5a3c"]
+rows:
+  # slot   kind         name                  dr  kg    rarity    colours                                         (dr, kg, rarity: Savi's picks)
+  - { id: tee,        slot: topw, kind: tee,        name: T-shirt,          dr: 0, kg: 0.2, rarity: common,   regular: true, colours: [e85d75, ffd93d, 4d96ff, 6bcb77, f4f1ea, 2b2b33] }
+  - { id: tank,       slot: topw, kind: tank,       name: Tank top,         dr: 0, kg: 0.1, rarity: common,   regular: true, colours: [ffffff, 2b2b33, ff9f43] }
+  - { id: longsleeve, slot: topw, kind: longsleeve, name: Long-sleeve shirt,dr: 1, kg: 0.3, rarity: common,   regular: true, colours: [3d5a98, 8b5a3c, f4f1ea] }
+  - { id: pajamas,    slot: topw, kind: pajamas,    name: Pajama top,       dr: 0, kg: 0.2, rarity: common,   colours: [ff8fc7, 9fd3ff] }
+  - { id: dress,      slot: topw, kind: dress,      name: Dress,            dr: 0, kg: 0.3, rarity: uncommon, colours: [e85d75, 9b5de5, 2b2b33] }
+  - { id: sweater,    slot: topw, kind: sweater,    name: Wool sweater,     dr: 2, kg: 0.7, rarity: common,   colours: [c0392b, 6bcb77, 8b5a3c, f4f1ea] }
+  - { id: hoodie,     slot: topw, kind: hoodie,     name: Hoodie,           dr: 2, kg: 0.8, rarity: common,   colours: [e85d75, 2b2b33, 4d96ff, 8a6a4a] }
+  - { id: apron,      slot: topw, kind: apron,      name: Canvas work apron,dr: 3, kg: 1.0, rarity: uncommon, colours: [8b5a3c, 2b2b33] }
+  - { id: jacket,     slot: topw, kind: jacket,     name: Work jacket,      dr: 4, kg: 1.5, rarity: uncommon, colours: [c27a2a, 3d5a98, 2b2b33, eef2f0] }
+  - { id: megjacket,  slot: topw, kind: jacket,     name: M.E.G. hi-vis jacket, dr: 6, kg: 1.8, rarity: agency, strict: true, colours: [b6e04a] }
+  - { id: pants,      slot: botw, kind: pants,      name: Pants,            dr: 1, kg: 0.5, rarity: common,   regular: true, colours: [3d5a98, 2b2b33, 8b5a3c, 4a5a3a, 3a3a40] }
+  - { id: shorts,     slot: botw, kind: shorts,     name: Shorts,           dr: 0, kg: 0.2, rarity: common,   regular: true, colours: [3d5a98, 6bcb77, ff9f43] }
+  - { id: pjpants,    slot: botw, kind: pjpants,    name: Pajama pants,     dr: 0, kg: 0.2, rarity: common,   colours: [ff8fc7, 9fd3ff] }
+  - { id: skirt,      slot: botw, kind: skirt,      name: Skirt,            dr: 0, kg: 0.2, rarity: common,   regular: true, colours: [e85d75, 2b2b33, 9b5de5] }
+  - { id: longskirt,  slot: botw, kind: longskirt,  name: Long skirt,       dr: 1, kg: 0.4, rarity: uncommon, colours: [8b5a3c, 3d5a98] }
+  - { id: overalls,   slot: botw, kind: overalls,   name: Denim overalls,   dr: 3, kg: 1.4, rarity: uncommon, colours: [3d5a98, 4a5a3a, c27a2a] }
+  - { id: sneakers,   slot: shoes, kind: sneakers,  name: Plain sneakers,   dr: 0, kg: 0.4, rarity: common,   regular: true, colours: [f4f1ea, 2b2b33, e85d75] }
+  - { id: slippers,   slot: shoes, kind: slippers,  name: Slippers,         dr: 0, kg: 0.2, rarity: common,   colours: [ff8fc7, f4f1ea] }
+  - { id: boots,      slot: shoes, kind: boots,     name: Work boots,       dr: 2, kg: 1.2, rarity: uncommon, colours: [2a2420, 8b5a3c] }
+  - { id: cap,        slot: hat,  kind: cap,        name: Ball cap,         dr: 2, kg: 0.2, rarity: common,   colours: [e85d75, 3d5a98, 2b2b33, b6e04a] }
+  - { id: beanie,     slot: hat,  kind: beanie,     name: Knit beanie,      dr: 2, kg: 0.2, rarity: common,   colours: [7a3a2a, 5a2a2a, 2b2b33, ffd93d] }
+  - { id: tophat,     slot: hat,  kind: tophat,     name: Top hat,          dr: 1, kg: 0.4, rarity: rare,     colours: [2b2b33] }
+  - { id: headphones, slot: hat,  kind: headphones, name: Headphones,       dr: 1, kg: 0.3, rarity: uncommon, colours: [2b2b33, e85d75] }
+  - { id: bow,        slot: hat,  kind: bow,        name: Hair bow,         dr: 0, kg: 0.05,rarity: common,   colours: [e85d75, ff8fc7, 4d96ff] }
+  - { id: flower,     slot: hat,  kind: flower,     name: Flower clip,      dr: 0, kg: 0.05,rarity: uncommon, colours: [ffd93d, ff8fc7] }
+  - { id: partyhat,   slot: hat,  kind: partyhat,   name: Party hat,        dr: 0, kg: 0.05,rarity: uncommon, colours: [9b5de5, ffd93d] }
+  - { id: crown,      slot: hat,  kind: crown,      name: Paper crown,      dr: 0, kg: 0.1, rarity: rare,     colours: [ffd93d] }
+  - { id: glasses,    slot: eyew, kind: glasses,    name: Glasses,          dr: 0, kg: 0.05,rarity: common,   colours: ["000000"] }
+  - { id: shades,     slot: eyew, kind: shades,     name: Safety shades,    dr: 1, kg: 0.1, rarity: uncommon, colours: ["000000"] }
+  - { id: scarf,      slot: neck, kind: scarf,      name: Scarf,            dr: 1, kg: 0.2, rarity: common,   colours: [c0392b, b6e04a, f3c64a, 3d5a98] }
+  - { id: bowtie,     slot: neck, kind: bowtie,     name: Bow tie,          dr: 0, kg: 0.05,rarity: uncommon, colours: [c0392b, 2b2b33] }
+  - { id: bell,       slot: neck, kind: bell,       name: Bell collar,      dr: 0, kg: 0.1, rarity: uncommon, colours: [f3c64a] }
+  - { id: cape,       slot: neck, kind: cape,       name: Cape,             dr: 1, kg: 0.6, rarity: rare,     colours: [c0392b, 2b2b33] }
