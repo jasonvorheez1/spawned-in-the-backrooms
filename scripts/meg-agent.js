@@ -97,21 +97,41 @@ function shoot(ctx, me, t) {
   if (isPlayer) { ctx.emit("cameraPunch", { direction: { x: dx / l, y: 0, z: dz / l }, intensity: 0.35 }, { audience: { player: t.id } }); ctx.emit("screenShake", { intensity: 0.25, duration: 0.15 }, { audience: { player: t.id } }); }
 }
 
+// nextbot-style walking: a path from builtin/nav, smoothed by line of sight (skip to the farthest corner it can see),
+// a shove away from other people so crowds slide past each other, and a stuck check that sidesteps and repaths.
+const clearLine = (ctx, me, a, b) => { const dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz); if (d < 0.3) return true;
+  const h = raycast(ctx, { x: a.x, y: a.y + 0.5, z: a.z }, { x: dx / d, y: 0, z: dz / d }, { distance: d, radius: 0.3, ignoreEntities: [me.id], bodies: "static", physicsOnly: true }); return !h; };
 function moveAlong(ctx, me, m, goal, speed, dt) {
   const p = me.feetPosition, now = ctx.now();
   const fin = (q, y0) => ({ x: Number.isFinite(q?.x) ? q.x : p.x, y: Number.isFinite(q?.y) ? q.y : y0, z: Number.isFinite(q?.z) ? q.z : p.z });
   goal = fin(goal, Number.isFinite(p.y) ? p.y : 0);
   if (!m.path || now > m.repath || flat(goal, m.pathGoal ?? goal) > 2) {
     const r = findPath(ctx, fin(p, goal.y), goal, {});
-    if (r?.points?.length) { m.path = r.points; m.i = 0; m.pathGoal = { ...goal }; }
-    m.repath = now + (r?.partial ? 150 : 1200);
+    if (r?.points?.length) { m.path = r.points; m.i = 0; m.pathGoal = { ...goal }; m.seeAt = 0; }
+    m.repath = now + (r?.partial ? 150 : 1500);
   }
   let to = goal;
-  if (m.path) { while (m.i < m.path.length - 1 && flat(m.path[m.i], p) < 0.6) m.i++; to = m.path[m.i] ?? goal; }
-  const dx = to.x - p.x, dz = to.z - p.z, d = Math.hypot(dx, dz) || 1;
+  if (m.path) {
+    while (m.i < m.path.length - 1 && flat(m.path[m.i], p) < 0.6) m.i++;
+    if (now > (m.seeAt ?? 0)) { m.seeAt = now + 300; // a few looks a second: skip ahead to the farthest corner in plain sight
+      for (let k = Math.min(m.path.length - 1, m.i + 4); k > m.i; k--) if (clearLine(ctx, me, p, m.path[k])) { m.i = k; break; } }
+    to = m.path[m.i] ?? goal;
+  }
+  // stuck: trying to move but barely moved in a second: sidestep for a beat, then a fresh path
+  m.sk ??= { x: p.x, z: p.z, at: now };
+  if (now - m.sk.at > 1000) { const moved = Math.hypot(p.x - m.sk.x, p.z - m.sk.z); if (moved < 0.25 * speed && flat(to, p) > 0.8) { m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 600 }; m.repath = 0; } m.sk = { x: p.x, z: p.z, at: now }; }
+  let dx = to.x - p.x, dz = to.z - p.z, d = Math.hypot(dx, dz) || 1;
+  let ux = dx / d, uz = dz / d;
+  if (m.side && now < m.side.until) { const s = m.side.s; ux = ux * 0.4 + -uz * s * 0.9; uz = uz * 0.4 + (dx / d) * s * 0.9; }
+  // personal space: other people inside 0.9 m push this one aside (checked a few times a second, kept between)
+  if (now > (m.sepAt ?? 0)) { m.sepAt = now + 250; let sx = 0, sz = 0;
+    for (const o of ctx.query({ tags: ["npc"], center: p, radius: 0.9 })) { if (o.id === me.id) continue; const ox = p.x - o.feetPosition.x, oz = p.z - o.feetPosition.z, od = Math.hypot(ox, oz) || 0.01; sx += ox / od * (0.9 - od); sz += oz / od * (0.9 - od); }
+    m.sep = { x: sx, z: sz }; }
+  if (m.sep) { ux += m.sep.x * 1.2; uz += m.sep.z * 1.2; }
+  const ul = Math.hypot(ux, uz) || 1; ux /= ul; uz /= ul;
   // a body eases into its pace and out of it (ACCEL m/s²), so the legs ramp walk → run instead of popping, and corners round off
   const v = me.velocity ?? { x: 0, z: 0 }, slow = d < 1.2 && to === goal ? Math.max(0.35, d / 1.2) : 1;
-  me.velocity = { x: ease(v.x ?? 0, dx / d * speed * slow, dt), y: (v.y ?? 0) - 20 * dt, z: ease(v.z ?? 0, dz / d * speed * slow, dt) };
+  me.velocity = { x: ease(v.x ?? 0, ux * speed * slow, dt), y: (v.y ?? 0) - 20 * dt, z: ease(v.z ?? 0, uz * speed * slow, dt) };
 }
 const ACCEL = 9, DECEL = 14; // m/s² (Savi's picks): a jog starts in about half a second, a stop lands in a step
 function ease(cur, want, dt) { const k = (Math.abs(want) > Math.abs(cur) ? ACCEL : DECEL) * dt, d = want - cur; return Math.abs(d) <= k ? want : cur + Math.sign(d) * k; }
