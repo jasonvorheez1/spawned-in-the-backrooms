@@ -1,0 +1,13 @@
+{
+  "name": "ui-builder",
+  "displayName": "UI Builder",
+  "description": "",
+  "tags": [
+    "ui",
+    "skill",
+    "guide",
+    "hud"
+  ],
+  "visibility": "public",
+  "version": "1.0.0"
+}
