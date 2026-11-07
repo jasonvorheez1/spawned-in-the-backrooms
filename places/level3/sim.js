@@ -83,6 +83,7 @@ export function tick(ctx) {
     }
     // generators hum
     for (const g of GENS) ctx.spawn(`l3-gen-${g.i}`, { feetPosition: { x: g.x, y: 1.2, z: g.z }, audio: { clip: GRIT("generator-heavy-hum-loop"), gain: 0.35, loop: true, spatial: true, maxDistance: 16 } });
+    ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level3-details-geo.js" }, material: { roughness: 0.85 } }); // tile wainscot, signs, sludge pools, the statue, violet bricks, almond piles
     for (const l of LINES) ctx.spawn({ feetPosition: { x: (l.x0 + l.x1) / 2, y: 1.2, z: l.z }, audio: { clip: GRIT("factory-conveyor-clank-loop"), gain: 0.3, loop: true, spatial: true, maxDistance: 14 } });
     // supplies: crates in dead ends and rooms, almond water, the odd weapon on the floor
     let crates = 0;

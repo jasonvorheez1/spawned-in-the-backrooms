@@ -56,7 +56,7 @@ export function geometry(ctx) {
     else for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) box(ctx, c.x + sx * 0.75, c.x + sx * S / 2, 0, TH, c.z + sz * 0.75, c.z + sz * S / 2); // a junction keeps its arms, loses its corners
   }
   // bars: across the barred edges, floor to ceiling, never a gate
-  ctx.albedo(STEEL); ctx.color("oklch(0.42 0.01 250)"); ctx.metalness(0.7); ctx.roughness(0.45);
+  ctx.albedo(STEEL); ctx.color("oklch(0.84 0.014 90)"); ctx.metalness(0.25); ctx.roughness(0.8);
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) for (const d of [0, 1]) {
     if (!isBars(cx, cz, d)) continue;
     const h = Math.min(ceilingAt(cx, cz), ceilingAt(cx + D4[d][0], cz + D4[d][1]));
@@ -64,7 +64,7 @@ export function geometry(ctx) {
     else { const z = (cz + 1) * S - HALF; barRow(ctx, cx * S - HALF + T, z, (cx + 1) * S - HALF - T, z, h, M); }
   }
   // cage gates: a barred frame around the opening and a gate swung back flat against the wall
-  ctx.color("oklch(0.48 0.012 250)");
+  ctx.color("oklch(0.8 0.016 90)");
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) for (const d of [0, 1]) {
     if (!isGate(cx, cz, d)) continue;
     const h = Math.min(ceilingAt(cx, cz), ceilingAt(cx + D4[d][0], cz + D4[d][1]));
@@ -130,7 +130,8 @@ export function geometry(ctx) {
       // behind the bars: something waits in every vault
       const vx = x0 + W / 2, vz = z0 + D / 2;
       ctx.albedo(null); ctx.metalness(0); ctx.roughness(0.9);
-      if (b.content === "statue") { // a pale figure with no face, standing too still
+      if (b.content === "statue") { ctx.color("oklch(0.85 0.01 90)"); // drawn in level3-details-geo.js
+      } else if (false) {
         ctx.color("oklch(0.85 0.01 90)"); box(ctx, vx - 0.35, vx + 0.35, 0, 0.3, vz - 0.35, vz + 0.35);
         tube(ctx, [[vx, 0.3, vz], [vx, 0.9, vz], [vx, 1.5, vz], [vx, 1.75, vz], [vx, 2.0, vz]], [0.2, 0.22, 0.2, 0.08, 0.14], 10, [1, 0.8], 0, 1, 1);
       } else if (b.content === "shadow") { // a heap of something dark that is not quite a coat
