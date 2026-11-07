@@ -79,6 +79,9 @@ export function onInput(ctx, input) {
 
 export function update(ctx, dt) {
   const s = ctx.self.state
+  const sit = !!s.os // everyone sees you sit at the desk while Back OS is up
+  if (sit !== !!ctx.self.session.osSit) { ctx.self.session.osSit = sit; ctx.self.anim.os = sit ? { clip: 'cdn/clip-sit-loop.glb', weight: 1, loop: true } : null }
+  if (sit) { const c = ctx.getObject(s.os.id); if (c) { const p = ctx.self.feetPosition; ctx.self.rotation = { yaw: Math.atan2(-(c.feetPosition.x - p.x), -(c.feetPosition.z - p.z)) * 180 / Math.PI }; const v = ctx.self.velocity; ctx.self.velocity = { x: 0, y: v.y, z: 0 } } }
   if (!s.os) return
   const os = s.os, now = ctx.now()
   if (os.app === 'boot' && now - os.at > BOOT_MS) s.os = { ...os, app: os.lock && os.user !== 'admin' ? 'login' : 'desktop' }

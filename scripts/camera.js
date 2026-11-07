@@ -63,5 +63,26 @@ export function update(ctx, dt) {
 
   // The presented facing (radians) as the one rotation grammar (degrees): undefined before the first frame.
   const view = ctx.self.view
-  if (view) ctx.self.rotation = { yaw: view.yaw * RAD_TO_DEG, pitch: view.pitch * RAD_TO_DEG }
+  let rot = view ? { yaw: view.yaw * RAD_TO_DEG, pitch: view.pitch * RAD_TO_DEG } : null
+
+  // At a computer: you sit, and the eye glides in until the monitor fills the view (Back OS draws over it).
+  const os = ps?.os, comp = os?.id ? ctx.getObject(os.id) : null, dv = ctx.self.session.dive ??= { k: 0 }
+  dv.k += ((comp ? 1 : 0) - dv.k) * Math.min(1, dt * (comp ? 2.2 : 5))
+  if (comp) dv.c = { ...comp.feetPosition }
+  if (dv.k > 0.002 && dv.c) {
+    const c = dv.c, e = ctx.self.feetPosition
+    const scr = { x: c.x, y: c.y + 0.28, z: c.z } // the monitor's face, her pick
+    const hx = e.x - scr.x, hz = e.z - scr.z, hl = Math.hypot(hx, hz) || 1
+    const sitEye = { x: pos.x, y: pos.y + 1.15, z: pos.z } // a seated eye
+    const near = { x: scr.x + (hx / hl) * 0.42, y: scr.y + 0.02, z: scr.z + (hz / hl) * 0.42 }
+    const k = dv.k * dv.k * (3 - 2 * dv.k), k1 = Math.min(1, k * 2), k2 = Math.max(0, k * 2 - 1)
+    const mid = { x: e.x + (sitEye.x - e.x) * k1, y: e.y + (sitEye.y - e.y) * k1, z: e.z + (sitEye.z - e.z) * k1 }
+    const eye = { x: mid.x + (near.x - mid.x) * k2, y: mid.y + (near.y - mid.y) * k2, z: mid.z + (near.z - mid.z) * k2 }
+    ctx.self.feetPosition = eye
+    const dx = scr.x - eye.x, dy = scr.y - eye.y, dz = scr.z - eye.z
+    const want = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
+    if (!rot) rot = want
+    else { let dyaw = ((want.yaw - rot.yaw + 540) % 360) - 180; rot = { yaw: rot.yaw + dyaw * k, pitch: rot.pitch + (want.pitch - rot.pitch) * k } }
+  } else if (!comp) dv.c = null
+  if (rot) ctx.self.rotation = rot
 }
