@@ -133,7 +133,7 @@ export const burden = (s) => { const cap = derived(s).carry, now = carried(s); r
 // ---- armor: one rule for every hit on a critter (player or NPC) from what it wears. look = player.state.look or an NPC's look
 export const dmgAfterArmor = (look, dmg) => afterDR(wornDR(look), dmg)
 // an NPC's look: its state.look, else the params its critter body was drawn from
-export const lookOfNpc = (o) => o?.state?.look ?? (['scripts/critter2-geo.js', 'scripts/critter-geo.js'].includes(o?.primitive?.script) ? o.primitive.params : null)
+export const lookOfNpc = (o) => o?.state?.look ?? (o?.primitive?.params?.species && o?.primitive?.params?.topw ? o.primitive.params : null) // either critter body's params carry the worn slots
 
 // ---- creatures: every individual rolls its own attributes around its species' template
 const TEMPLATE = {
