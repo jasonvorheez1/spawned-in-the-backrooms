@@ -34,6 +34,8 @@ export const ZONES = [
   { id: "housekeeping", kind: "outpost", name: "M.E.G. Outpost \"Housekeeping\"", x0: -6, x1: 18, z0: 12, z1: 24, h: 3.6, drain: -0.5 },
   // the Boiler Room: hot, loud, a maze of machines (scripts/lib/l5/boiler.js lays its insides from BOILER)
   { id: "boiler", kind: "boiler", name: "The Boiler Room", x0: 18, x1: 46, z0: -26, z1: 26, h: 6, drain: 1.5, hot: true },
+  // M.E.G.'s cold room, the boiler's northeast corner behind the painted line: a chiller keeps it cool, the hounds won't cross into it (scripts/hounds.js reads any non-boiler zone as safe)
+  { id: "coldroom", kind: "shelter", name: "M.E.G. Cold Room", x0: 40.6, x1: 46, z0: -26, z1: -21.3, h: 6, drain: -0.3 },
 ];
 // openings: { ax, at, a0, a1, h, kind }. ax "z" = in a wall at z = at, spanning x a0..a1; ax "x" = in a wall at x = at, spanning z a0..a1
 export const OPENINGS = [

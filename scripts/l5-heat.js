@@ -49,7 +49,20 @@ export function update(ctx, dt) {
       rate = HEAT.base;
       for (const fu of FURNACES) { const d = d2(f, fu); if (d < HEAT.furnaceReach) rate += HEAT.furnace * (1 - d / HEAT.furnaceReach); }
       for (const b of BOILERS) { const d = d2(f, b) - Math.min(b.w, b.d) / 2; if (d < HEAT.boilerReach) rate += HEAT.boiler * (1 - Math.max(0, d) / HEAT.boilerReach); }
-      for (const l of LEAKS) if (d2(f, l) < HEAT.leakReach) { rate = -HEAT.leakCool; break; }
+      let wet = false
+      for (const l of LEAKS) if (d2(f, l) < HEAT.leakReach) { rate = -HEAT.leakCool; wet = true; break; }
+      const nowMs = ctx.now()
+      if (wet) { // soaked under a leak: wet fur keeps the heat off for a while after you walk out
+        const fresh = nowMs > (s.soakUntil ?? 0)
+        if ((s.soakUntil ?? 0) < nowMs + HEAT.soakMs - 5000) s.soakUntil = nowMs + HEAT.soakMs
+        if (fresh) s.notice = { text: "Soaked in almond water. The heat can't reach you for a while.", at: nowMs }
+      } else if (nowMs < (s.soakUntil ?? 0) && rate > 0) rate *= HEAT.soakMul
+    } else if (zoneAt(f.x, f.z)?.id === "coldroom") {
+      rate = -HEAT.coldCool
+      if (!ss.cold?.[p.id]) { (ss.cold ??= {})[p.id] = true; s.notice = { text: "M.E.G. Cold Room. The hounds won't cross the line.", at: ctx.now() }; }
+    }
+    if (ss.cold?.[p.id] && zoneAt(f.x, f.z)?.id !== "coldroom") delete ss.cold[p.id]
+    {
     }
     const was = s.heat ?? 0, heat = Math.max(0, Math.min(100, was + rate * step)), r = Math.round(heat * 10) / 10;
     if (r !== was && !(was === 0 && r === 0)) s.heat = r;
