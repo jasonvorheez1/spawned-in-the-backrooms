@@ -33,7 +33,7 @@ export function update(ctx, dt) {
     e.velocity = { x: d > 1.1 ? dx / d * sp : 0, y: (e.velocity?.y ?? 0) - 20 * dt, z: d > 1.1 ? dz / d * sp : 0 };
     if (sp > 0 || prey) e.rotation = { yaw: Math.atan2(-dx, -dz) * 57.2958 };
     if (prey && st.revealed && best < 1.7 && now >= (m.next ?? 0)) {
-      m.next = now + L.stealerCooldown * 1000; prey.state.hp -= dmgAfterArmor(prey.state.look, Math.round(L.stealerHit * mu.dmg)); // worn clothes soak the hit (lib/clothes.yml DR) prey.state.sanity = (prey.state.sanity ?? 100) - L.stealerSanity;
+      m.next = now + L.stealerCooldown * 1000; prey.state.hp -= dmgAfterArmor(prey.state.look, Math.round(L.stealerHit * mu.dmg)); /* worn clothes soak the hit */ prey.state.sanity = (prey.state.sanity ?? 100) - L.stealerSanity;
       const at = { x: prey.feetPosition.x, y: prey.feetPosition.y + 1, z: prey.feetPosition.z };
       ctx.emit("damageNumber", { position: at, value: Math.round(L.stealerHit * mu.dmg), color: "#ff3030" });
       ctx.emit("playSound", { clip: SND("claw-slash-flesh"), position: at, volume: 1 });
