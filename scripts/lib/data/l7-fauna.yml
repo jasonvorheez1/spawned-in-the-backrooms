@@ -1,0 +1,27 @@
+# Level 7 creatures (Savi's picks, Nov 7). Tidecrawlers hold the island shores; the Deep owns the open water.
+crawler:
+  hp: 45
+  bite: 9          # per claw slam, before armor
+  biteMs: 1500     # between slams
+  reach: 1.5
+  sight: 10        # metres, shrinks with sneak
+  leash: 24        # from home, then it walks back
+  walk: 1.1
+  run: 3.6
+  xp: 30
+  sites:           # home spots on the shore (x, z); the entrance rock stays clear
+    - [55, -116]
+    - [38, -113]
+    - [43, -130]
+    - [55, -127]
+    - [-74, -224]
+    - [-110, -210]
+    - [-116, -243]
+    - [-82, -250]
+deep:
+  openFrom: 9      # metres past an island's rim before the Deep notices a swimmer
+  noticeS: 5       # seconds in open water before it circles under you
+  strikeS: 13      # seconds before it takes you
+  bite: 70
+  coolS: 25
+  boatPassS: 110   # roughly how often it slides under a boat out on the water

@@ -900,6 +900,7 @@ export function tick(ctx) {
     s.builtV = V;
   }
 
+  if (!ctx.getObject("l7-fauna")) ctx.spawn("l7-fauna", { behavior: "scripts/l7-fauna.js" }); // tidecrawlers on the shores, the Deep in open water
   // Ensure NPCs come back home after respawn window via level-kit
   if (every(ctx, "people", 5000)) {
     keepPeople(ctx, Object.keys(L7_NPCS), () => spawnL7People(ctx));
