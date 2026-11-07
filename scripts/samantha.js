@@ -174,7 +174,8 @@ export function read(ctx, r, pay) {
   let text = r?.ok === false ? null : (r?.data?.text ?? r?.text ?? (typeof r?.data === 'string' ? r.data : null))
   text = String(text ?? '').replace(/\s+/g, ' ').replace(/^["']|["']$/g, '').trim()
   if (text.length < 40 || text.startsWith('{')) text = pay.fb
-  say(ctx, p, text.slice(0, 700), 'happy', false)
+  if (text.length > 700) { const cut = text.slice(0, 700), end = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '), cut.lastIndexOf('? ')); text = end > 200 ? cut.slice(0, end + 1) : cut.replace(/\s+\S*$/, '') + '…' } // whole sentences, never cut mid-word
+  say(ctx, p, text, 'happy', false)
 }
 export function poorRead(ctx, pay) { const p = ctx.getObject(pay?.by); if (p?.state) say(ctx, p, S.poorReadings[pay.i] ?? S.poorReadings[0], 'annoyed') }
 function warn(ctx, p, now, refused) { const ses = ctx.self.session; if (!ses.warn || ses.warn.pid !== p.id) ses.warn = { pid: p.id, at: now, refused: !!refused }; else if (refused) ses.warn.refused = true }

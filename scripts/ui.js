@@ -110,6 +110,7 @@ function chatBubbles(ctx, now) {
 // subtitles: every voiced line within earshot, speaker first, along the bottom (chatter rows from chatter.js, s.sub from interact/stealers)
 function subtitles(ctx, player, now) {
   const rows = [], s = player.state ?? {}, me = player.feetPosition, objs = ctx.place?.objects
+  if (s.talkWith) return '' // the open talk card already shows the line
   if (objs && me) for (const id of TALKERS) {
     const o = objs[id], l = o?.state?.line
     if (!l || now - l.at > l.d || o.state.dead) continue
