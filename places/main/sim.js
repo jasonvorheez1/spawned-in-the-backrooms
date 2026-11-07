@@ -1,5 +1,6 @@
 // Level 0's referee: keeps almond water on the floor and smilers in the dark.
 import L from "../../scripts/lib/data/level0.yml";
+import W from "../../scripts/lib/data/weapons.yml";
 import { N, zoneOf, inHub, hasPit, cellCenter } from "../../scripts/lib/maze.js";
 export const cadence = "1s";
 
@@ -25,6 +26,16 @@ export function tick(ctx) {
     }
     s.almondsSeeded = true;
     s.nextAlmond = now + (L.almondRespawn * 1000) / 4;
+  }
+  const weapons = ctx.query({ tags: ["weapon"] }).length;
+  if (weapons < W.pickups && now >= (s.nextWeapon ?? 0)) {
+    const fill = s.weaponsSeeded ? 1 : W.pickups - weapons;
+    for (let i = 0; i < fill; i++) {
+      const c = cell(ctx), kinds = W.order.slice(1), kind = kinds[Math.floor(ctx.random() * ctx.random() * kinds.length)];
+      if (c) ctx.spawn({ tags: ["weapon"], state: { kind }, feetPosition: { x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 }, rotation: ctx.random() * 360, primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind } } });
+    }
+    s.weaponsSeeded = true;
+    s.nextWeapon = now + (W.pickupRespawn * 1000) / 4;
   }
   const smilers = ctx.query({ tags: ["smiler"] }).filter((m) => !m.state?.dead).length;
   if (smilers < L.smilers && now >= (s.nextSmiler ?? 0)) {

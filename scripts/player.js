@@ -3,6 +3,7 @@
 // player.state is the player's save: their level, xp and almonds follow them between visits.
 import PLAYER from './lib/data/player.yml'
 import L from './lib/data/level0.yml'
+import W from './lib/data/weapons.yml'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
 
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
@@ -14,11 +15,15 @@ export const maxHp = (lv) => L.hp + (lv - 1) * L.perLevel.hp
 export const maxSan = (lv) => L.sanity + (lv - 1) * L.perLevel.sanity
 export const xpNeed = (lv) => L.xpBase * lv
 
+const owned = (s) => ['fists', ...(s.weapons ? s.weapons.split(',') : [])]
+const usable = (s, k) => W[k] && s.level >= W[k].minLevel
+export const weaponOf = (s) => W[s.equipped] ?? W.fists
+
 function walkOf(ctx) { return (ctx.self.session['player.js'] ??= {}) }
 
 function ensure(ctx) {
   const s = ctx.self.state
-  if (s.level == null) Object.assign(s, { level: 1, xp: 0, hp: L.hp, sanity: L.sanity, stamina: L.stamina, battery: L.battery, almonds: 2, visited: '', kills: 0, escapes: 0, deaths: 0 })
+  if (s.level == null) Object.assign(s, { level: 1, xp: 0, hp: L.hp, sanity: L.sanity, stamina: L.stamina, battery: L.battery, almonds: 2, visited: '', kills: 0, escapes: 0, deaths: 0, weapons: '', equipped: 'fists' })
 }
 
 function decode(hex) { const v = new Uint8Array(N * N); for (let i = 0; i < hex.length; i++) { const n = parseInt(hex[i], 16); for (let b = 0; b < 4; b++) if (n & (1 << b)) v[i * 4 + b] = 1 } return v }
@@ -54,24 +59,28 @@ export function onInput(ctx, input) {
   }
   if (input.pressed.attack) swing(ctx)
   if (input.pressed.drink) drink(ctx)
+  if (input.pressed.cycleWeapon) cycleWeapon(ctx)
   if (input.pressed.flashlight) toggleLight(ctx)
 }
 
 function swing(ctx) {
   const w = walkOf(ctx), s = ctx.self.state, now = ctx.now()
   if (now < (w.nextSwing ?? 0) || (s.downAt && now - s.downAt < 1200)) return
-  w.nextSwing = now + L.swingCooldown * 1000
+  const wp = weaponOf(s)
+  if ((w.stamina ?? s.stamina) < wp.stamina) return
+  w.stamina = (w.stamina ?? s.stamina) - wp.stamina
+  w.nextSwing = now + wp.cooldown * 1000
   s.swingAt = now
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   let best = null, bd = 1e9
-  for (const m of ctx.query({ tags: ['smiler'], radius: L.reach + 0.6 })) {
+  for (const m of ctx.query({ tags: ['smiler'], radius: wp.reach + 0.6 })) {
     if (m.state?.dead) continue
     const dx = m.feetPosition.x - p.x, dz = m.feetPosition.z - p.z, d = Math.hypot(dx, dz)
     if (d > 0.3 && (dx * f.x + dz * f.z) / d < 0.4) continue
     if (d < bd) { bd = d; best = m }
   }
   if (!best) { sound(ctx, 'pipe-whoosh-swing', 0.5); return }
-  const dmg = L.damage + (s.level - 1) * L.perLevel.damage
+  const dmg = Math.round(wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale)
   best.state.hp -= dmg
   const hit = { x: best.feetPosition.x, y: best.feetPosition.y + 1.5, z: best.feetPosition.z }
   sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.9)
@@ -86,6 +95,13 @@ function swing(ctx) {
     s.kills += 1
     gain(ctx, L.xpKill)
   }
+}
+
+function cycleWeapon(ctx) {
+  const s = ctx.self.state, list = W.order.filter((k) => owned(s).includes(k) && usable(s, k))
+  s.equipped = list[(list.indexOf(s.equipped) + 1) % list.length] ?? 'fists'
+  s.equipAt = ctx.now()
+  sound(ctx, 'flashlight-switch-click', 0.4, true)
 }
 
 function drink(ctx) {
@@ -167,6 +183,17 @@ function tickStats(ctx, t) {
     s.pickedAt = now
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
   }
+  // weapons on the floor: new ones are kept; the best one you can wield is equipped
+  for (const g of ctx.query({ tags: ['weapon'], radius: 1.5 })) {
+    const k = g.state?.kind
+    if (!W[k] || owned(s).includes(k)) continue
+    ctx.destroy(g.id)
+    s.weapons = [...owned(s).slice(1), k].join(',')
+    if (usable(s, k) && W[k].damage > weaponOf(s).damage) s.equipped = k
+    s.pickedAt = now; s.gotWeapon = W[k].name
+    gain(ctx, L.xpAlmond)
+    sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
+  }
   // the flickering wall: the way out
   const ex = cellCenter(EXIT.cx, EXIT.cz)
   if (p.x < -HALF + 1.3 && Math.abs(p.z - ex.z) < 1.8) {
@@ -179,7 +206,7 @@ function tickStats(ctx, t) {
   }
   // taken
   if (s.hp <= 0) {
-    s.deaths += 1; s.downAt = now; s.almonds = 0
+    s.deaths += 1; s.downAt = now
     s.hp = mh; s.sanity = Math.round(ms * 0.6)
     sound(ctx, 'static-burst-glitch', 0.9, true)
     ctx.emit('screenFlash', { color: '#000000', duration: 0.8, intensity: 1 }, { audience: { player: ctx.self.id } })

@@ -1,0 +1,10 @@
+# Melee weapons. Fists are what you start with: weak on purpose. Found weapons need a level to wield.
+# damage: base hit. levelScale: share of the per-level damage bonus it gets. cooldown: seconds. reach: metres. stamina: cost per swing.
+order: [fists, table_leg, pipe_scrap, crowbar, bat]
+fists:      { name: Fists,      damage: 4,  levelScale: 0.3, cooldown: 0.45, reach: 1.9, stamina: 5,  minLevel: 1 }
+table_leg:  { name: Table leg,  damage: 11, levelScale: 0.8, cooldown: 0.5,  reach: 2.4, stamina: 8,  minLevel: 1, color: "oklch(0.55 0.08 60)",  length: 0.7 }
+pipe_scrap: { name: Pipe scrap, damage: 16, levelScale: 1,   cooldown: 0.6,  reach: 2.6, stamina: 10, minLevel: 2, color: "oklch(0.6 0.02 250)",  length: 0.8 }
+crowbar:    { name: Crowbar,    damage: 22, levelScale: 1,   cooldown: 0.7,  reach: 2.7, stamina: 12, minLevel: 3, color: "oklch(0.4 0.03 260)",  length: 0.9 }
+bat:        { name: Bat,        damage: 28, levelScale: 1,   cooldown: 0.8,  reach: 2.9, stamina: 14, minLevel: 4, color: "oklch(0.7 0.07 70)",   length: 1.0 }
+pickups: 14        # weapons lying in the maze at once
+pickupRespawn: 90  # seconds between refills

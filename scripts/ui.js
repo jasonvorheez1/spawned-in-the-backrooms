@@ -1,6 +1,7 @@
 // Level 0's HUD: what a wanderer needs this second. Bars bottom-left, level top-left,
 // almond water + battery bottom-right, the zone you just stepped into, top-centre.
 import L from './lib/data/level0.yml'
+import W from './lib/data/weapons.yml'
 import { ZONE_NAMES } from './lib/maze.js'
 
 const THEME = `<style>
@@ -49,6 +50,7 @@ export default function render(ctx, player) {
     ${bar('STAMINA', s.stamina, L.stamina, 'var(--sta)')}
   </div>
   <div class="plate br" style="position:absolute;bottom:24px;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px);min-width:170px">
+    <div class="row"><span class="lbl">WEAPON [E]</span><span style="font-size:22px;line-height:1">${W[s.equipped]?.name ?? 'Fists'}</span></div>
     <div class="row"><span class="lbl">ALMOND WATER</span><span id="al${s.almonds}" style="font-size:30px;line-height:1;animation:kick .3s">${s.almonds}/${L.almondMax}</span></div>
     <div class="lbl" style="margin-top:4px">${lab('drink', 'Q')} TO DRINK</div>
     ${bar(s.light ? 'FLASHLIGHT · ON' : 'FLASHLIGHT', s.battery, L.battery, s.light ? 'oklch(.95 .05 95)' : 'oklch(.6 .03 95)')}
@@ -58,7 +60,7 @@ export default function render(ctx, player) {
     <div style="font-size:44px;line-height:1.1;color:${zone === 'red' ? 'oklch(.7 .2 28)' : 'var(--paper)'}">${ZONE_NAMES[zone] ?? ''}</div>
     ${zone === 'hub' ? '<div style="font-size:16px">sanity returns here. nothing follows you in.</div>' : zone === 'dark' ? `<div style="font-size:16px">${lab('flashlight', 'F')} for your flashlight</div>` : ''}
   </div>
-  ${down ? `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:oklch(.05 .01 290 / .6);animation:fade 3.5s forwards"><div class="plate" style="text-align:center;padding:18px 30px"><div style="font-size:48px;line-height:1">YOU WERE TAKEN</div><div class="lbl" style="margin-top:6px">woke in the safe room · almond water lost · your level stays</div></div></div>` : ''}
+  ${down ? `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:oklch(.05 .01 290 / .6);animation:fade 3.5s forwards"><div class="plate" style="text-align:center;padding:18px 30px"><div style="font-size:48px;line-height:1">YOU WERE TAKEN</div><div class="lbl" style="margin-top:6px">woke in the safe room · you keep everything</div></div></div>` : ''}
   ${out ? `<div style="position:absolute;left:0;right:0;display:flex;justify-content:center;top:38%;animation:fade 4.5s forwards"><div class="plate" style="text-align:center;padding:16px 28px"><div style="font-size:40px;line-height:1">YOU FOUND THE WAY OUT</div><div class="lbl" style="margin-top:6px">+${L.xpExit} XP · level 1 is still forming. the halls pull you back.</div></div></div>` : ''}
   ${lvl ? `<div style="position:absolute;left:0;right:0;display:flex;justify-content:center;top:24%;animation:fade 3s forwards"><div style="font-size:52px;color:var(--sta)">LEVEL ${lv}</div></div>` : ''}
   <div id="hint" style="position:absolute;left:0;right:0;text-align:center;padding:0 calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px);bottom:220px;font-size:17px;animation:fade 9s 1s forwards;opacity:0">${lab('attack', 'click')} swing · ${lab('sprint', 'shift')} sprint · ${lab('flashlight', 'F')} light · find the flickering wall</div>

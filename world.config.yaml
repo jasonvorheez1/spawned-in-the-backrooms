@@ -28,6 +28,9 @@ inputs:
     flashlight:
       keys:
         - f
+    cycleWeapon:
+      keys:
+        - e
   axes:
     moveX:
       keys: a/d
