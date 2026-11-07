@@ -10,8 +10,7 @@ import { talk as service } from './interact.js'
 import { skillsOf, SKILLS } from './lib/stats.js'
 import { describe } from './lib/items.js'
 
-let startersP = null
-const getStartersLib = () => (startersP ??= import('./lib/npc-starters.js'))
+const getStartersLib = (ctx) => ((ctx.session ??= {}).startersP ??= import('./lib/npc-starters.js'))
 
 const short = (it) => String(it.id).split('/').pop()
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z)
@@ -49,7 +48,7 @@ export function openDialogue(ctx, it) {
   const lastLine = hist[hist.length - 1]
   const recent = lastLine && now - (ses.lastGreetAt ?? -1e9) < 60000
 
-  getStartersLib().then(({ getStarter, getChoices }) => {
+  getStartersLib(ctx).then(({ getStarter, getChoices }) => {
     if (!live(ctx, s.talkWith)) return
     const starter = getStarter(ctx, it, s)
     if (starter && (!hist.length || !recent)) {
@@ -84,7 +83,7 @@ export function heard(ctx, r, pay) {
   const it = live(ctx, pay?.id); if (!it) return
   const text = r?.data?.text ?? r?.text ?? (typeof r?.data === 'string' ? r.data : null)
   const o = r?.ok === false ? null : parseReply(text)
-  if (!o) { const line = T.fallback[Math.floor(ctx.random() * T.fallback.length)]; say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); getStartersLib().then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, null) }); return }
+  if (!o) { const line = T.fallback[Math.floor(ctx.random() * T.fallback.length)]; say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, null) }); return }
   let { reply: line, rapportDelta: delta, intent } = o, passed = false
   if (o.check) {
     const c = rollCheck(ctx, s, o.check); passed = c.ok
@@ -116,7 +115,7 @@ export function heard(ctx, r, pay) {
   }
   if (r1 < 0 && it.state.follow === ctx.self.id) { it.state.follow = null; logLine(ctx, it, 'x', `${who} stopped following you`) }
   say(ctx, it, line, o.mood); logLine(ctx, it, 'n', line)
-  getStartersLib().then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, o) })
+  getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, o) })
 }
 
 function act(ctx, d) {
