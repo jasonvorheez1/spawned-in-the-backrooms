@@ -129,20 +129,35 @@ export function update(ctx, dt) {
     const look = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
     if (rot) { const dyaw = ((look.yaw - rot.yaw + 540) % 360) - 180; rot = { yaw: rot.yaw + dyaw * k, pitch: rot.pitch + (look.pitch - rot.pitch) * k } } else rot = look
   } else if (!want3) sc.yaw = null
-  // held middle mouse: over the shoulder, 2.8 m back, pulled in where a wall would cut it; eased both ways
-  const tc = ctx.self.session.tpCam ??= { k: 0 }, tpWant = ps?.tp && !ps?.sit && !ps?.talkWith && down >= 3200 && !ps?.mj?.seats ? 1 : 0
-  tc.k += (tpWant - tc.k) * Math.min(1, dt * 8)
+  // third person (middle mouse toggles it, scripts/view3.js): over the right shoulder. The distance and shoulder follow what you are doing (aiming tucks the eye in,
+  // sprinting backs it off and widens the view, crouching lowers it); a thick ray sweeps from the shoulder so a wall or a low ceiling pushes the eye in without
+  // clipping, and it eases back out slowly so it never pops. While it is out, the point under the crosshair is kept in player.state.aimPt so shots fly where it points.
+  const tc = ctx.self.session.tpCam ??= { k: 0, d: 3.1, sh: 0.52, h: 1.6, sp: 0, at: 0 }, tpWant = ps?.tp && !ps?.sit && !ps?.talkWith && !comp && down >= 3200 && !ps?.mj?.seats ? 1 : 0
+  tc.d ??= 3.1; tc.sh ??= 0.52; tc.h ??= 1.6; tc.sp ??= 0; tc.at ??= 0 // a session note from an older version of this script keeps working
+  tc.k += (tpWant - tc.k) * Math.min(1, dt * 7)
   if (tc.k > 0.01 && ctx.player && rot) {
     ctx.self.hideLocalPlayer = tc.k < 0.3
-    const wp = ctx.player.worldFeetPosition ?? ctx.player.feetPosition, head = { x: wp.x, y: wp.y + 1.55, z: wp.z }
+    const v = ctx.player.velocity ?? { x: 0, z: 0 }, speed = Math.hypot(v.x, v.z), ads = !!ps?.ads, crouch = !!ps?.crouch, sprint = speed > 6.2 && !ads
+    const wantD = ads ? 1.7 : sprint ? 3.7 : crouch ? 2.5 : 3.1, wantSh = ads ? 0.38 : sprint ? 0.3 : 0.52, wantH = crouch ? 1.15 : 1.6, ez = Math.min(1, dt * 6)
+    tc.sh += (wantSh - tc.sh) * ez; tc.h += (wantH - tc.h) * ez; tc.sp += ((sprint ? 1 : 0) - tc.sp) * Math.min(1, dt * 4)
+    const wp = ctx.player.worldFeetPosition ?? ctx.player.feetPosition, pivot = { x: wp.x, y: wp.y + tc.h, z: wp.z }
     const yw = rot.yaw * Math.PI / 180, pt = rot.pitch * Math.PI / 180
-    const back = { x: Math.sin(yw) * Math.cos(pt), y: -Math.sin(pt), z: Math.cos(yw) * Math.cos(pt) }, side = { x: Math.cos(yw) * 0.45, z: -Math.sin(yw) * 0.45 }
-    const from = { x: head.x + side.x, y: head.y + 0.15, z: head.z + side.z }
-    const hit = raycast(ctx, from, back, { distance: 2.8, physicsOnly: true, ignoreEntities: [ctx.player.id] })
-    const dist = (hit ? Math.max(0.3, hit.distance - 0.25) : 2.8) * tc.k
-    const e0 = ctx.self.feetPosition, k = tc.k * tc.k * (3 - 2 * tc.k)
+    const back = { x: Math.sin(yw) * Math.cos(pt), y: -Math.sin(pt), z: Math.cos(yw) * Math.cos(pt) }, right = { x: Math.cos(yw), z: -Math.sin(yw) }
+    let sh = tc.sh; const hs = raycast(ctx, pivot, { x: right.x, y: 0, z: right.z }, { distance: sh + 0.25, radius: 0.12, physicsOnly: true, ignoreEntities: [ctx.player.id] }); if (hs) sh = Math.max(0, hs.distance - 0.25)
+    const from = { x: pivot.x + right.x * sh, y: pivot.y + 0.1, z: pivot.z + right.z * sh }
+    const hit = raycast(ctx, from, back, { distance: wantD + 0.3, radius: 0.22, physicsOnly: true, ignoreEntities: [ctx.player.id] })
+    const free = hit ? Math.max(0.25, hit.distance - 0.3) : wantD
+    tc.d = free < tc.d ? free : tc.d + (free - tc.d) * Math.min(1, dt * 2.5) // pushed in at once, eased back out
+    const e0 = ctx.self.feetPosition, k = tc.k * tc.k * (3 - 2 * tc.k), dist = tc.d * tc.k
     const out = { x: from.x + back.x * dist, y: from.y + back.y * dist, z: from.z + back.z * dist }
     ctx.self.feetPosition = { x: e0.x + (out.x - e0.x) * k, y: e0.y + (out.y - e0.y) * k, z: e0.z + (out.z - e0.z) * k }
-  }
+    ctx.self.fov = ctx.self.fov + 7 * tc.sp * tc.k // the view opens up when you run
+    if (ps && ctx.now() - tc.at > 100) { // the crosshair's point in the world, ten times a second
+      tc.at = ctx.now()
+      const eye = ctx.self.feetPosition, fwd = { x: -back.x, y: -back.y, z: -back.z }, h = raycast(ctx, eye, fwd, { distance: 150, physicsOnly: true, ignoreEntities: [ctx.player.id] })
+      const pt3 = h ? h.position : { x: eye.x + fwd.x * 150, y: eye.y + fwd.y * 150, z: eye.z + fwd.z * 150 }, o = ps.aimPt
+      if (!o || Math.hypot(o.x - pt3.x, o.y - pt3.y, o.z - pt3.z) > 0.15) ps.aimPt = { x: Math.round(pt3.x * 100) / 100, y: Math.round(pt3.y * 100) / 100, z: Math.round(pt3.z * 100) / 100 }
+    }
+  } else if (ps?.aimPt) ps.aimPt = null
   if (rot) ctx.self.rotation = rot
 }
