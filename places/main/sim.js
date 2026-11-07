@@ -152,4 +152,14 @@ export function tick(ctx) {
     s.lurkersSeeded = true;
     s.nextLurker = now + L.lurkerRespawn * 1000;
   }
+  // a creature that falls out of the world is put back at the player spawn (the safe room) by the engine: send it back out into the maze
+  for (const m of ctx.query({ anyTags: ["smiler", "lurker", "hound", "stealer"] })) {
+    if (m.state?.dead || (m.state?.owner ?? m.state?.horde)) continue;
+    const f = m.feetPosition, cx = Math.floor(f.x / CELL + MID), cz = Math.floor(f.z / CELL + MID);
+    if (!inHub(cx, cz) && f.y > -3) continue;
+    const c = cell(ctx, m.tags.includes("smiler") ? ["dark", "red", "pillars", "expanse"] : ["halls", "arches", "holes", "offices"]);
+    if (!c) continue;
+    const o = ctx.getObject(m.id); if (!o) continue;
+    o.feetPosition = { x: c.x, y: 0.05, z: c.z }; o.velocity = { x: 0, y: 0, z: 0 };
+  }
 }
