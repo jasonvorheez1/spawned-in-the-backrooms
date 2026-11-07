@@ -117,8 +117,14 @@ function fileRig(d, dv, vh, vs, n, stride, zUp, sc, ymin) {
   // A⁻¹ = Mᵀ · (1/s) · T(0,+ymin·s,0); IBM' = IBM · A⁻¹, written column-major
   const Ai = [[M[0][0] / sc, M[1][0] / sc, M[2][0] / sc, 0], [M[0][1] / sc, M[1][1] / sc, M[2][1] / sc, 0], [M[0][2] / sc, M[1][2] / sc, M[2][2] / sc, 0], [0, 0, 0, 1]]
   for (let r = 0; r < 3; r++) Ai[r][3] = -(Ai[r][1] * ty)
+  // rest frames in game space, then each joint re-seated with no rest turn at the same pivot (what clip retargeting expects):
+  // world position of joint i = A · (inverse of its file bind) · origin
+  const Pw = J.map((j) => { const B = [[j.ib[0], j.ib[1], j.ib[2]], [j.ib[4], j.ib[5], j.ib[6]], [j.ib[8], j.ib[9], j.ib[10]]], tb = [j.ib[3], j.ib[7], j.ib[11]]
+    const o = [0, 1, 2].map((r) => -(B[0][r] * tb[0] + B[1][r] * tb[1] + B[2][r] * tb[2])) // Bᵀ(-t): the joint's file-space position
+    return [0, 1, 2].map((r) => sc * (M[r][0] * o[0] + M[r][1] * o[1] + M[r][2] * o[2]) + (r === 1 ? ty : 0)) })
+  J.forEach((j, i) => { const pp = j.parent >= 0 ? Pw[j.parent] : [0, 0, 0]; j.lt = [Pw[i][0] - pp[0], Pw[i][1] - pp[1], Pw[i][2] - pp[2]]; j.lq = [0, 0, 0, 1] })
   const IBM = new Float32Array(J.length * 16)
-  J.forEach((j, i) => { const B = [[j.ib[0], j.ib[1], j.ib[2], j.ib[3]], [j.ib[4], j.ib[5], j.ib[6], j.ib[7]], [j.ib[8], j.ib[9], j.ib[10], j.ib[11]], [0, 0, 0, 1]]; for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) { let v = 0; for (let k = 0; k < 4; k++) v += B[r][k] * Ai[k][c]; IBM[i * 16 + c * 4 + r] = r < 3 ? v * sc : v } })
+  J.forEach((j, i) => IBM.set([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -Pw[i][0], -Pw[i][1], -Pw[i][2], 1], i * 16))
   // weights: the four strongest of eight, renormalized; an unweighted vertex rides the root's first child
   const JO = new Uint16Array(n * 4), W = new Float32Array(n * 4), fb = Math.max(0, J.findIndex((j) => j.name === 'pelvis'))
   let bad = 0
