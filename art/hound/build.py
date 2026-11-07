@@ -31,7 +31,7 @@ def chain(mb, pts, rs, st=2.0):
 # ---------------- anatomy (metres, ground z=0, front +Y) ----------------
 A = dict(
   pelvis=V(0, -0.42, 0.86), lumbar=V(0, -0.18, 0.83), chest=V(0, 0.10, 0.80), upper=V(0, 0.30, 0.79),
-  neck0=V(0, 0.40, 0.80), neck1=V(0, 0.58, 0.80), skull=V(0, 0.66, 0.80), jawHinge=V(0, 0.66, 0.73), chin=V(0, 0.90, 0.64),
+  neck0=V(0, 0.40, 0.80), neck1=V(0, 0.58, 0.80), skull=V(0, 0.64, 0.75), jawHinge=V(0, 0.68, 0.68), chin=V(0, 0.93, 0.595),
 )
 def side(s):
     return dict(hip=V(0.12*s, -0.45, 0.83), knee=V(0.17*s, -0.24, 0.42), ankle=V(0.17*s, -0.62, 0.12), toe=V(0.17*s, -0.47, 0.01),
@@ -43,7 +43,7 @@ def build_body():
     # torso: pelvis, emaciated waist, ribcage
     ell(mb, A["pelvis"], 0.15, 0.13, 0.12)
     ell(mb, V(0, -0.20, 0.835), 0.095, 0.16, 0.085)
-    ell(mb, V(0, 0.12, 0.80), 0.155, 0.22, 0.14)
+    ell(mb, V(0, 0.12, 0.80), 0.16, 0.22, 0.145)
     ell(mb, V(0, 0.30, 0.795), 0.15, 0.10, 0.12)
     # hip bones jutting, shoulder blades
     for s in (1, -1):
@@ -56,28 +56,29 @@ def build_body():
             prev = None
             for k in range(6):
                 t = k / 5; ang = math.radians(80 - 150 * t)
-                a_ = 0.165 - 0.02*abs(i-3.5)/3.5; b_ = 0.15
+                a_ = 0.15 - 0.02*abs(i-3.5)/3.5; b_ = 0.135
                 p = V(s * a_ * math.cos(ang) * (0.35 + 0.65 * min(1, t * 3)), y - 0.06 * t, 0.80 + b_ * math.sin(ang))
-                if prev is not None: cap(mb, prev, p, 0.014, st=3.0)
+                if prev is not None: cap(mb, prev, p, 0.0105, st=2.2)
                 prev = p
     # knobby spine
     for i in range(16):
         t = i / 15; y = -0.52 + t * 1.0
         z = 0.97 if y < -0.3 else 0.925 + 0.03 * math.cos((y + 0.3) * 3) if y < 0.35 else 0.93
         ball(mb, V(0, y, z - 0.035), 0.028 + 0.006 * math.sin(t * 9), st=3.0)
+    H = lambda x, y, z: V(x, y, z - 0.07)
     # neck: thin, sinewy, with tendons
-    cap(mb, A["neck0"], A["neck1"], 0.06)
-    for s in (1, -1): cap(mb, V(0.04*s, 0.44, 0.77), V(0.03*s, 0.64, 0.74), 0.018, st=3)
+    cap(mb, A["neck0"], V(0, 0.58, 0.74), 0.06)
+    for s in (1, -1): cap(mb, V(0.04*s, 0.44, 0.77), V(0.03*s, 0.64, 0.68), 0.018, st=3)
     # skull: human cranium, brow, cheekbones, small nose; maxilla stretched long
-    ell(mb, V(0, 0.66, 0.83), 0.095, 0.11, 0.10)
-    ell(mb, V(0, 0.75, 0.80), 0.075, 0.06, 0.07)
-    cap(mb, V(-0.055, 0.80, 0.835), V(0.055, 0.80, 0.835), 0.022)      # brow ridge
-    for s in (1, -1): ball(mb, V(0.06*s, 0.79, 0.775), 0.026)         # cheekbones
-    cap(mb, V(0, 0.80, 0.81), V(0, 0.835, 0.785), 0.016)               # nose bridge
-    ball(mb, V(0, 0.84, 0.775), 0.017)                                  # nose tip
-    cap(mb, V(0, 0.78, 0.755), V(0, 0.89, 0.71), 0.04)                  # long upper muzzle (maxilla)
-    for s in (1, -1): cap(mb, V(0.045*s, 0.77, 0.745), V(0.03*s, 0.88, 0.705), 0.022)
-    for s in (1, -1): ball(mb, V(0.042*s, 0.815, 0.80), 0.026, neg=True)  # eye sockets
+    ell(mb, H(0, 0.64, 0.83), 0.095, 0.125, 0.10)
+    ell(mb, H(0, 0.75, 0.80), 0.075, 0.06, 0.07)
+    cap(mb, H(-0.055, 0.80, 0.835), H(0.055, 0.80, 0.835), 0.018)      # brow ridge
+    for s in (1, -1): ball(mb, H(0.06*s, 0.79, 0.775), 0.022)         # cheekbones
+    cap(mb, H(0, 0.80, 0.81), H(0, 0.835, 0.785), 0.014)               # nose bridge
+    ball(mb, H(0, 0.84, 0.775), 0.016)                                  # nose tip
+    cap(mb, H(0, 0.78, 0.755), H(0, 0.89, 0.71), 0.036)                  # long upper muzzle (maxilla)
+    for s in (1, -1): cap(mb, H(0.045*s, 0.77, 0.745), H(0.03*s, 0.88, 0.705), 0.02)
+    for s in (1, -1): ball(mb, H(0.042*s, 0.812, 0.80), 0.03, neg=True, st=3)  # eye sockets
     # limbs: long human arms, bent human legs
     for S, s in ((L, 1), (R, -1)):
         cap(mb, S["scap"], S["shoulder"], 0.06)
@@ -89,7 +90,7 @@ def build_body():
             k0 = S["knuck"] + V(fx, 0, 0.005); k1 = k0 + V(fx * 0.6, 0.05, 0.012); k2 = k1 + V(fx * 0.3, 0.035, -0.02)
             chain(mb, [k0, k1, k2], [0.011, 0.009, 0.007], st=3)
         ball(mb, S["wrist"] + V(-0.035*s, 0.06, 0.0), 0.011)   # thumb stub
-        ell(mb, S["hip"].lerp(S["knee"], 0.4), 0.075, 0.08, 0.13, rot=Euler((0.4, 0, 0)).to_quaternion())   # gaunt thigh
+        ell(mb, S["hip"].lerp(S["knee"], 0.4), 0.085, 0.09, 0.15, rot=Euler((0.4, 0, 0)).to_quaternion())   # gaunt thigh
         chain(mb, [S["hip"], S["knee"], S["ankle"]], [0.07, 0.045, 0.03])
         ball(mb, S["knee"] + V(0, 0.015, 0), 0.04)
         ell(mb, S["knee"].lerp(S["ankle"], 0.3), 0.045, 0.05, 0.06, rot=Euler((-0.65, 0, 0)).to_quaternion())  # calf
@@ -102,9 +103,10 @@ def build_body():
 
 def build_jaw():
     mb = mball("Jaw")
-    for s in (1, -1): cap(mb, V(0.06*s, 0.69, 0.75), V(0.022*s, 0.93, 0.665), 0.019)
-    cap(mb, V(-0.025, 0.925, 0.665), V(0.025, 0.925, 0.665), 0.02)
-    ell(mb, V(0, 0.84, 0.68), 0.035, 0.07, 0.02)
+    H = lambda x, y, z: V(x, y, z - 0.07)
+    for s in (1, -1): cap(mb, H(0.06*s, 0.69, 0.75), H(0.022*s, 0.93, 0.665), 0.019)
+    cap(mb, H(-0.025, 0.925, 0.665), H(0.025, 0.925, 0.665), 0.02)
+    ell(mb, H(0, 0.84, 0.68), 0.035, 0.07, 0.02)
     return bpy.data.objects["Jaw"]
 
 def to_mesh(o, voxel):
@@ -144,5 +146,5 @@ def shot(name, pos, tgt, lens=40):
 
 if STAGE == "shape":
     lights_and_cam()
-    shot("a", (1.9, 2.0, 1.2), (0, 0.1, 0.55)); shot("b", (2.6, 0.1, 0.7), (0, 0.1, 0.55)); shot("c", (0.25, 1.6, 0.85), (0, 0.75, 0.75), 60)
+    shot("a", (1.9, 2.0, 1.2), (0, 0.1, 0.55)); shot("b", (2.6, 0.1, 0.7), (0, 0.1, 0.55)); shot("c", (0.3, 1.5, 0.8), (0, 0.75, 0.7), 60)
     sys.exit(0)
