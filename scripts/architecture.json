@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 673,
-  "updatedAt": "2026-11-07T14:55:56.029Z",
-  "summary": "The Backrooms is a multiplayer survival game spanning Level 0, authored/generated Levels 1–3 and M.E.G. Base Gamma. Ordered player behaviors own personal survival and progression; place simulations build local spaces and actors, while shared maze, breakable and loot helpers connect local geometry and gameplay. Blackout hordes are now confined to Level 3, where they also drive an emergency-light state.",
+  "basedOnSpecVersion": 676,
+  "updatedAt": "2026-11-07T15:04:24.002Z",
+  "summary": "The Backrooms is a multiplayer survival game spanning Level 0, authored/generated Levels 1–3 and M.E.G. Base Gamma. Ordered player behaviors own personal survival and progression; place simulations build local spaces and actors, while shared maze, breakable and loot helpers connect local geometry and gameplay. First-person weapon presentation uses fitted mesh grips for melee variants.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0's generated yellow maze and safe-room hub; authored cells, loot, shifting walls, seeded hash-positioned moments and smilers/lurkers.",
@@ -25,7 +25,7 @@
     "scripts/lib/level3.js + scripts/lib/data/level3.yml + scripts/lib/maze3path.js - Electrical Station grid, zones, openings and routes for geometry, sim and creatures.",
     "scripts/lib/level0-moments.js + scripts/moments-geo.js + scripts/moments.js - deterministic Level 0 oddity placement, shared prop geometry and interactive/sound behavior.",
     "scripts/lib/furniture.js + scripts/lib/data/furniture-loot.yml - searchable container placement and loot factory shared by Level 0, 1 and 3; Level 2 has its own path.",
-    "scripts/lib/data/weapons.yml + scripts/lib/weapons.js, weapon-look.js, weapon-prof.js and weapon-geo.js - weapon definitions and fitted variants shared by pickups, viewmodels and NPCs.",
+    "scripts/lib/data/weapons.yml + scripts/lib/weapons.js, weapon-look.js, weapon-prof.js and weapon-geo.js - weapon definitions and fitted variants shared by pickups, viewmodels and NPCs; weapon-look maps melee mesh grip poses.",
     "scripts/lib/items.js + scripts/lib/loot.js + scripts/lib/loot3.js - shared token vocabulary and general loot, with Level 3-specific tables and drops.",
     "scripts/lib/clothes.js + clothes.yml; scripts/lib/stats.js - apparel/armor and HALOGEN derivations reused by player, NPC combat, loot and UI.",
     "scripts/lib/wallgrid.js + scripts/lib/breakables.js + scripts/lib/data/breakables.yml - Level 1/2/3 wall-grid damage and mesh sync plus Level 0 wall damage; sweeps live-box, l2box and container props into breakables."
@@ -36,7 +36,7 @@
     "scripts/lib/level0-moments.js - wallPose, layMoments; scripts/moments.js - ears, update; scripts/moments-geo.js - geometry, collider, PILLARS, FALSEDOOR_COLLIDER.",
     "scripts/lib/gamma-exterior.js - GATE, layGammaExterior; scripts/gamma-fortress-geo.js - geometry, collider; scripts/l3-lamp-geo.js - geometry.",
     "scripts/lib/critter-model.js - HEAD_ID, GAIT_LIB, speciesOf, bodyModel, headModel, faceMorph, critterSpec; data is in scripts/lib/data/critter-models.yml.",
-    "scripts/lib/furniture.js - sizeOf, pickKind, spawnFurniture and wallSpot0/1/3; scripts/lib/breakables.js - strike/damage/drop/rubble, sweepProps, Level 0 sync and gridWallAt/syncWalls/tickWalls.",
+    "scripts/lib/furniture.js - sizeOf, pickKind, spawnFurniture and wallSpot0/1/3; scripts/lib/breakables.js - strike/damage/drop/rubble, sweepProps, Level 0 sync and gridWallAt/syncWalls/tickWalls; weapon-look.js - MESHGRIP, HOLD, weaponBody.",
     "scripts/build.js - onInput, update; scripts/build-ui.js - buildUi; scripts/lib/craft.js - recipeStatus; scripts/craft.js - onInput, update.",
     "scripts/smilers.js - MODEL, SCALE, update; scripts/lurkers.js - LURKER_MODEL, LURKER_SCALE, update; scripts/horde.js - update; scripts/horde-ui.js - hordeUi."
   ],
@@ -48,7 +48,7 @@
     "scripts/build.js + scripts/player.js - player.state.scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
     "scripts/interact.js - player focus, loot menu, notices and interaction; NPCs own pockets/picked and per-player warned/angry state, containers own item lists/lock/scavenged state.",
     "scripts/talk.js and scripts/critter.js - dialogue state is split across player/NPC; player.state.look owns appearance/worn slots and avatar scratch is local/session state.",
-    "Place simulations - place.state owns seed/version flags, local schedules, Level 3 blackout/flicker and broken/wallHp keys; session.wallTick gates wall regrowth ticks; main owns momentsV and almondTidy, Level 3 owns gammaExtV/roundsV and stage flags."
+    "Place simulations - place.state owns seed/version flags, local schedules, Level 3 blackout/flicker and broken/wallHp keys; session.wallTick gates wall regrowth ticks; main owns momentsV and almondTidy, Level 3 owns gammaExtV/roundsV."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js chain: locomotion reads prior movement; player owns movement/survival/combat; interact, talk, build, noclip, stats, craft and horde handle their ordered actions before critter behavior.",
@@ -62,7 +62,7 @@
     "Level 3 players' horde === night → places/level3/sim.js sets place.state.blackout/flicker, saves lamp light in lamp state and dims lit l3lamp objects red; ending the night restores saved light.",
     "Place simulations and enemy deaths → scripts/lib/loot.js or loot3.js → weapon/clothing/item tokens or containers; main/level1/level3 seed searchable furniture through scripts/lib/furniture.js.",
     "player.js attack → scripts/lib/breakables.js: Level 0 wall/voxel or Level 1–3 grid wall/entity hp and broken keys → wall mesh cut plus scripts/wallpatch-geo.js remnants; tickWalls regrows cleared sections when the gap is unoccupied.",
-    "scripts/build.js spends player scrap and places breakable pieces using scripts/build-geo.js; strikes use the shared breakables material/tool damage and rubble drops."
+    "scripts/player.js local first-person viewmodel → weapon-look.js weaponBody and MESHGRIP pose (unless vmTune overrides) → fitted melee mesh sits at the fist grip; unlisted weapons use the generic hold transform."
   ],
   "behaviorFamilies": [
     "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state.",
@@ -70,7 +70,7 @@
     "scripts/hounds.js + hound-geo.js - shared Level 1/2/3 hound AI with rigged hound-v2 mesh; safe zones and grids vary by place, Level 3 brigades use maze routing and stun state; blackout nights raise their dark hunt pressure.",
     "scripts/stealers.js + stealer-geo.js - Level 1 skin-stealer behavior swaps legacy rows to rigged mesh; disguise/creature/shed parts and reveal animation vary by hunt phase.",
     "scripts/meg-agent.js + scripts/critter2-geo.js - common NPC avatar and behavior varies by species/look, role, voice, weapon and place; used by M.E.G., Survivors and Gamma agents, with optional patrol/work rounds at Level 3.",
-    "scripts/lib/weapons.js + weapon-look.js, weapon-prof.js, weapon-geo.js and viewmodel-geo.js - weapon kinds reuse fitted bodies with variant stats/tint/overlays and viewmodel framing.",
+    "scripts/lib/weapons.js + weapon-look.js, weapon-prof.js, weapon-geo.js and viewmodel-geo.js - weapon kinds reuse fitted bodies with variant stats/tint/overlays and viewmodel framing; melee Tripo meshes have per-kind grip poses.",
     "scripts/lib/furniture.js + loot-bags-geo.js + l2-props-geo.js - searchable containers share item/lock state and placement API, with kind-specific shape/material/loot tables; separate from breakable office furniture in main.",
     "scripts/deathmoths.js + templates/deathmoths.js - one Level 3 manager steers multiple swarms; each uses rigged moth models and clips, while swarms vary by home and target."
   ],
@@ -82,8 +82,8 @@
     "Grid contracts differ: Level 0 is 56×56 at 4 m with hub cells 26–29; Level 1 is 30×30 at 8 m; Level 2 is 24×24 at 5 m; Level 3 is 26×26 at 4 m. Keep geometry, wallgrid, zones, exits and routes aligned.",
     "Level 3 tight cells are 1 m clear width (tightHalf 0.5), 1.6 m springline and 2.15 m crown; tightArms/tightSpans drive structural/detail vaults, and gates/furniture are excluded from crawl halls.",
     "Player behavior order is intentional: humanoid-locomotion.js before player.js, then interact.js, talk.js, build.js, noclip.js, stats.js, craft.js, horde.js and critter.js; locomotion reads movement before player control writes velocity.",
-    "Weapon ids remain kind or kind~variant across inventory, condition, magazines and entities; use baseOf only where base-kind framing/behavior is intended.",
-    "Building scrap is a per-kind player.state.scrap object, unlike comma-separated inventory/container tokens; breakables require tag plus state.mat/hp/maxHp. Grid wall damage stores per-voxel wallHp/broken timestamps and tickWalls regrows only after the gap clears.",
-    "scripts/lib/breakables.js sweepProps assigns materials/hp to selected live-box, l2box and container props; keep its kind-to-material mapping aligned with breakables.yml. Level 3 blackout restores lamps from saved state.lit, not a freshly generated light."
+    "Weapon ids remain kind or kind~variant across inventory, condition, magazines and entities; viewmodel MESHGRIP is keyed by base weapon kind, while vmTune mat/mrot can override its grip position/rotation.",
+    "Building scrap is a per-kind player.state.scrap object, unlike comma-separated inventory/container tokens; breakables require tag plus state.mat/hp/maxHp. Grid wall damage stores per-voxel wallHp/broken timestamps and tickWalls regrows only when clear.",
+    "scripts/lib/breakables.js sweepProps assigns materials/hp to selected live-box, l2box and container props; keep its kind-to-material mapping aligned with breakables.yml. wallHp is one wall section: cinderblock/brick/tile now use 300/260/200 respectively."
   ]
 }
