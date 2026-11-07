@@ -10,7 +10,7 @@ const THEME = `<style>
 .bar{height:14px;background:oklch(.3 .03 80);box-shadow:inset 0 0 0 2px var(--ink);position:relative;overflow:hidden}
 .fill{position:absolute;inset:2px auto 2px 2px;transition:width .25s}
 .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-@media (max-width:640px){#hud .bl,#hud .br{bottom:auto;top:24px;transform:scale(.8);transform-origin:top left}#hud .br{transform-origin:top right;top:150px}#hud .tl{display:none}}
+@media (max-width:640px){#hud .bl,#hud .br{bottom:auto!important;top:12px!important;transform:scale(.72);transform-origin:top left}#hud .br{transform-origin:top right;right:60px!important}#hud .tl{display:none}#hud #hint{display:none}}
 @keyframes fade{0%{opacity:0}10%{opacity:1}75%{opacity:1}100%{opacity:0;visibility:hidden}}
 @keyframes pulse{50%{opacity:.55}}
 @keyframes kick{40%{scale:1.25}}
