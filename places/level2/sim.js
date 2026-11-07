@@ -76,6 +76,10 @@ export function tick(ctx) {
     for (const id of Object.keys(SURV)) survivor(ctx, id);
     s.gone = {};
   }
+  if (!s.arrive2) { s.arrive2 = true; // where a doorway lets you out
+    ctx.spawn("l2-from-l1", { feetPosition: { x: BACK.x + 2.6, y: 0.1, z: BACK.z }, rotation: { yaw: -90 } });
+    ctx.spawn("l2-from-l3", { feetPosition: { x: SEALED.x - 2.6, y: 0.1, z: SEALED.z }, rotation: { yaw: 90 } });
+  }
   if (!s.l3door) { // the barred "3" door at the east end opens onto Level 3 now
     s.l3door = true;
     ctx.spawn("l2-to-l3", { feetPosition: { x: SEALED.x - 0.7, y: 0, z: SEALED.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 1.4 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level3" } });

@@ -7,7 +7,7 @@ const MID = (L.hub[0] + L.hub[1]) / 2; // the safe room's centre cell
 import W from "../../scripts/lib/weapons.js";
 import { spawnAlmond, spawnAmmo, spawnShells, spawnWeapon, rollWeapon } from "../../scripts/lib/loot.js";
 import { spawnFurniture, pickKind, wallSpot0 } from "../../scripts/lib/furniture.js";
-import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ } from "../../scripts/lib/maze.js";
+import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ, EXIT } from "../../scripts/lib/maze.js";
 const PAPER = { texture: "/cdn/value.00a4e744acf9ab763779bbb0cc7f26fb1dd20aeafc69448c536939cd7212caeb.png", color: "oklch(0.98 0.01 90)", repeat: [1, 1] };
 import B from "../../scripts/lib/data/breakables.yml";
 import { syncLevel0 } from "../../scripts/lib/breakables.js";
@@ -74,6 +74,7 @@ function shift(ctx, s, now) {
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
   if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(false)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
+  if (!s.arrive2) { s.arrive2 = true; const ex = cellCenter(EXIT.cx, EXIT.cz); ctx.spawn("main-from-l1", { feetPosition: { x: -HALF + 2.4, y: 0.1, z: ex.z }, rotation: { yaw: -90 } }); } // Level 1's way back lets you out by the flickering wall
   if (!s.stairsSeeded) {
     s.stairsSeeded = true;
     let n = 0;

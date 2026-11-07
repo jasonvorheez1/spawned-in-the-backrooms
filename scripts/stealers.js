@@ -23,7 +23,7 @@ pop mist burst=12 on=box(.4,1,.4).c(.7) life=.8..1.4 v=sdir()*(.3..0.8) size=.3.
 const play = (e, m, ch, clip, opt = {}) => { const k = clip ? clip + (opt.tag ?? "") : null; if (m[ch] === k) return; m[ch] = k; e.anim[ch] = clip ? { clip, weight: ch === "act" ? 4 : 1, loop: false, ...opt } : null; };
 export function update(ctx, dt) {
   const now = ctx.now(), mem = (ctx.self.session.m ??= {}), bleeds = (ctx.self.session.b ??= {});
-  const players = ctx.place.players.filter((p) => !safeZone(zoneAt(p.feetPosition.x, p.feetPosition.z)) && !(p.state?.downAt && now - p.state.downAt < 2000));
+  const players = ctx.place.players.filter((p) => !safeZone(zoneAt(p.feetPosition.x, p.feetPosition.z)) && !(p.state?.downAt && now - p.state.downAt < 4500));
   // bleeds tick on in the manager's own loop: small hits, a drip each
   for (const pid in bleeds) {
     const b = bleeds[pid], p = ctx.place.players.find((q) => q.id === pid);

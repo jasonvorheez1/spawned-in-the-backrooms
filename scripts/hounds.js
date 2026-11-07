@@ -30,7 +30,7 @@ export function update(ctx, dt) {
   const L3 = ctx.self.place === "level3";
   const safeAt = L3 ? (x, z) => zoneAt3(x, z) === "gamma" : ctx.self.place === "level2" ? (x, z) => zoneAt2(x, z) === "camp" : (x, z) => safeZone(zoneAt(x, z));
   const now = ctx.now(), dark = ctx.place.state.flicker === "dark", mem = (ctx.self.session.m ??= {});
-  const players = ctx.place.players.filter((p) => !safeAt(p.feetPosition.x, p.feetPosition.z) && !(p.state?.downAt && now - p.state.downAt < 2000));
+  const players = ctx.place.players.filter((p) => !safeAt(p.feetPosition.x, p.feetPosition.z) && !(p.state?.downAt && now - p.state.downAt < 4500));
   const byId = (id) => players.find((p) => p.id === id) ?? ctx.place.players.find((p) => p.id === id) ?? ctx.query({ tags: ["npc"], radius: 80, center: { x: 0, y: 0, z: 0 } }).find((n) => n.id === id) ?? null;
   for (const h of ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
     const m = (mem[h.id] ??= {}), pos = h.feetPosition, st = h.state ?? {}, mu = npcMul(st);

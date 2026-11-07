@@ -132,6 +132,7 @@ export function tick(ctx) {
     }
     s.layoutV = 2;
   }
+  if (!s.arrive2 && s.seeded) { s.arrive2 = true; ctx.spawn("l3-from-l2", { feetPosition: { x: BACK.x + 2.4, y: 0.1, z: BACK.z }, rotation: { yaw: -90 } }); } // where the Level 2 door lets you out
   if (!s.seeded) {
     s.seeded = true;
     ctx.spawn("l3-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level3-geo.js" }, material: { roughness: 0.9 } });

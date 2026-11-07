@@ -63,6 +63,10 @@ export function tick(ctx) {
     ctx.spawn({ feetPosition: { x: BACK.x + 0.4, y: 0, z: BACK.z }, light: { kind: "point", color: "oklch(0.85 0.12 92)", intensity: 3, distance: 6 } });
     s.nextFlicker = now + 60000;
   }
+  if (!s.arrive2) { s.arrive2 = true; // where a doorway lets you out: just inside each door, facing into the level
+    ctx.spawn("l1-from-main", { feetPosition: { x: BACK.x + 2.4, y: 0.1, z: BACK.z }, rotation: { yaw: -90 } });
+    ctx.spawn("l1-from-l2", { feetPosition: { x: ONWARD.x - 2.4, y: 0.1, z: ONWARD.z }, rotation: { yaw: 90 } });
+  }
   if (!s.l2door) { s.l2door = true; // the pipeworks: a green door in the east wall, down into Level 2
     ctx.spawn("l1-onward", { feetPosition: { x: ONWARD.x - 0.3, y: 0, z: ONWARD.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2.4, depth: 1.6 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level2" } });
     ctx.spawn("l1-onward-door", { feetPosition: { x: ONWARD.x + 0.45, y: 0, z: ONWARD.z }, physics: "static", primitive: { kind: "box", width: 0.12, height: 2.25, depth: 1.25 }, material: { color: "oklch(0.82 0.03 85)", metalness: 0.3, roughness: 0.75 },

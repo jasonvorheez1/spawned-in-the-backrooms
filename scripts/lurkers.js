@@ -68,7 +68,7 @@ function held(ctx, dt) {
 export function update(ctx, dt) {
   if (ctx.self.tags?.includes?.("player") || ctx.self.userId) return held(ctx, dt);
   const now = ctx.now();
-  const players = ctx.place.players.filter((p) => !(p.state?.downAt && now - p.state.downAt < 2000));
+  const players = ctx.place.players.filter((p) => !(p.state?.downAt && now - p.state.downAt < 4500));
   const mem = (ctx.self.session.m ??= {});
   for (const w of ctx.query({ tags: ["lurker"] })) {
     const m = (mem[w.id] ??= {}), st = w.state ?? {}, pos = w.feetPosition, mu = npcMul(st);

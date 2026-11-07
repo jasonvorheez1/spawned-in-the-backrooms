@@ -84,5 +84,19 @@ export function update(ctx, dt) {
     if (!rot) rot = want
     else { let dyaw = ((want.yaw - rot.yaw + 540) % 360) - 180; rot = { yaw: rot.yaw + dyaw * k, pitch: rot.pitch + (want.pitch - rot.pitch) * k } }
   } else if (!comp) dv.c = null
+  // taken: the eye leaves your head and pulls back and up, circling slowly over the body as it falls (DOWN_MS in player.js)
+  const down = ps?.downAt ? ctx.now() - ps.downAt : 1e9
+  if (down < 3200 && ctx.player?.feetPosition) {
+    ctx.self.hideLocalPlayer = false
+    const b = ctx.player.bounds?.center ?? { ...ctx.player.feetPosition, y: ctx.player.feetPosition.y + 0.5 }
+    const dc = ctx.self.session.deathCam ??= { at: ps.downAt, yaw: (rot?.yaw ?? 0) * Math.PI / 180 }
+    if (dc.at !== ps.downAt) { dc.at = ps.downAt; dc.yaw = (rot?.yaw ?? 0) * Math.PI / 180 }
+    const t = Math.min(1, down / 1400), e = 1 - Math.pow(1 - t, 3), a = dc.yaw + down / 1000 * 0.35
+    const r = 1.2 + e * 3.2, h = 0.6 + e * 2.4
+    const eye = { x: b.x + Math.sin(a) * r, y: b.y + h, z: b.z + Math.cos(a) * r }
+    ctx.self.feetPosition = eye
+    const dx = b.x - eye.x, dy = b.y - eye.y, dz = b.z - eye.z
+    rot = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
+  } else if (ctx.self.session.deathCam) ctx.self.session.deathCam = null
   if (rot) ctx.self.rotation = rot
 }

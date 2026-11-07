@@ -48,6 +48,19 @@ const owned = (s) => ['fists', ...(s.weapons ? s.weapons.split(',') : [])]
 const usable = (s, k) => W[k] && s.level >= W[k].minLevel
 export const weaponOf = (s) => W[s.equipped] ?? W.fists
 
+const DOWN_MS = 3200 // how long you watch yourself lie there (Savi's pick); camera.js and the creatures read the same window
+// checkpoints: each place's safe spawn plus every doorway's arrival marker; you wake at the nearest one
+const CHECKS = { main: ['main-from-l1'], level1: ['l1-from-main', 'l1-from-l2'], level2: ['l2-from-l1', 'l2-from-l3'], level3: ['l3-from-l2', 'l3-gamma-door', 'l3-lift-arrive'], level4: ['l4-lift-arrive'], gamma: [] }
+function nearestCheckpoint(ctx, at) {
+  const sp = ctx.place.defaultSpawnPoint ?? {}, yaw0 = ctx.place.defaultSpawnRotation?.yaw
+  let best = { pos: { x: sp.x ?? 0, y: 0.1, z: sp.z ?? 0 }, rot: yaw0 }, bd = Math.hypot(best.pos.x - at.x, best.pos.z - at.z)
+  for (const id of CHECKS[ctx.self.place] ?? []) {
+    const o = ctx.getObject(id); if (!o) continue
+    const f = o.feetPosition, d = Math.hypot(f.x - at.x, f.z - at.z)
+    if (d < bd) { bd = d; best = { pos: { x: f.x, y: (f.y ?? 0) + 0.1, z: f.z }, rot: typeof o.rotation === 'number' ? o.rotation : o.rotation?.yaw } }
+  }
+  return best
+}
 function walkOf(ctx) { return (ctx.self.session['player.js'] ??= {}) }
 
 function ensure(ctx) {
@@ -735,6 +748,20 @@ function tickStats(ctx, t, moving) {
   const st = Math.round(w.stamina), bt = Math.round(w.battery)
   if (st !== s.stamina) s.stamina = st
   if (bt !== s.battery) s.battery = bt
+  // a new level: the transition card fades off the black (scripts/ui.js reads s.xfer)
+  if (w.lastPlace && w.lastPlace !== ctx.self.place) s.xfer = { at: now, to: ctx.self.place }
+  w.lastPlace = ctx.self.place
+  // down: the body lies where it fell (third person, scripts/camera.js), then you wake at the nearest checkpoint
+  if (w.respawnAt) {
+    if (now < w.respawnAt) { const v = ctx.self.velocity; ctx.self.velocity = { x: 0, y: v.y, z: 0 }; return }
+    w.respawnAt = 0; ctx.self.ragdoll = null
+    const cp = nearestCheckpoint(ctx, w.fellAt ?? p)
+    ctx.self.feetPosition = cp.pos; if (cp.rot != null) ctx.self.rotation = { yaw: cp.rot }
+    ctx.emit('screenFlash', { color: '#000000', duration: 1.0, intensity: 1 }, { audience: { player: ctx.self.id } })
+    s.wokeAt = now
+    return
+  }
+  if (!ctx.session.wokeAt && ctx.self.ragdoll) ctx.self.ragdoll = null // a reload mid-fall stands you back up
   // the save: where you stand, every few seconds; a fresh visit wakes you there (level, items, weapons already live in player.state)
   if (!ctx.session.wokeAt) {
     ctx.session.wokeAt = now
@@ -756,8 +783,8 @@ function tickStats(ctx, t, moving) {
     s.escapes += 1; s.exitAt = now
     gain(ctx, L.xpExit)
     sound(ctx, 'static-burst-glitch', 0.95, true)
-    ctx.emit('screenFlash', { color: '#fff6c8', duration: 0.6, intensity: 0.8 }, { audience: { player: ctx.self.id } })
-    ctx.cross(ctx.self, 'level1') // through the flickering wall: Level 1
+    ctx.emit('screenFlash', { color: '#000000', duration: 0.9, intensity: 1 }, { audience: { player: ctx.self.id } })
+    ctx.cross(ctx.self, 'level1#l1-from-main') // through the flickering wall: out of Level 1's door home
     return
   }
   // taken
@@ -769,8 +796,10 @@ function tickStats(ctx, t, moving) {
     }
     s.hp = mh; s.sanity = Math.round(ms * 0.6)
     sound(ctx, 'static-burst-glitch', 0.95, true)
-    ctx.emit('screenFlash', { color: '#000000', duration: 0.8, intensity: 1 }, { audience: { player: ctx.self.id } })
-    const sp = ctx.place.defaultSpawnPoint ?? {}
-    ctx.self.feetPosition = { x: (sp.x ?? 0) + (ctx.random() - 0.5) * 6, y: 0.1, z: (sp.z ?? 0) + (ctx.random() - 0.5) * 6 }
+    ctx.emit('screenFlash', { color: '#5a0000', duration: 0.5, intensity: 0.6 }, { audience: { player: ctx.self.id } })
+    // the body goes limp and is knocked back off its feet; the camera pulls out to watch (scripts/camera.js)
+    const yaw = ((typeof ctx.self.rotation === 'number' ? ctx.self.rotation : ctx.self.rotation?.yaw) ?? 0) * Math.PI / 180
+    ctx.self.ragdoll = { impulse: { x: Math.sin(yaw) * 70, y: 30, z: Math.cos(yaw) * 70 }, settleSeconds: 2.5 }
+    w.fellAt = { ...p }; w.respawnAt = now + DOWN_MS
   }
 }
