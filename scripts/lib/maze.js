@@ -65,7 +65,9 @@ export const hasLight = (cx, cz) => zoneOf(cx, cz) !== "dark" && (inHub(cx, cz) 
 // the way down: a flickering wall far from the safe room
 export const EXIT = { cx: 0, cz: N - 3 }; // against the west outer wall
 
+import { L3_NAMES } from "./level3.js";
 export const ZONE_NAMES = {
+  ...L3_NAMES,
   hub: "The Safe Room", halls: "The Yellow Halls", arches: "Arch Rooms", pillars: "Pillar Field",
   holes: "The Pits", red: "Red Room", dark: "Blackout Zone", expanse: "The Expanse", offices: "Abandoned Offices",
   l1_halls: "Level 1 · The Halls", l1_storage: "Level 1 · Storage Racks", l1_corridors: "Level 1 · The Corridors", l1_camp: "Level 1 · M.E.G. Waypoint", l1_pipes: "Level 1 · The Pipeworks", l1_void: "Level 1 · The Halls",

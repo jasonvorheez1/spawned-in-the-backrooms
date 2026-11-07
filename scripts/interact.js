@@ -1,3 +1,4 @@
+import { rollItemL3 } from './lib/loot3.js'
 // Fallout-style looting. Nothing is picked up by walking over it any more: look at an item and the HUD
 // names it ("[E] Take  Pipe scrap"), press E to take it. Crates and the remains of what you kill are
 // containers: look at one, press E, and a loot menu lists what is inside (take one thing, take all,
@@ -92,7 +93,7 @@ export function openLoot(ctx, c) {
   }
   if (!c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per container
     c.state.scavved = true
-    if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : rollItem(ctx))].filter(Boolean).join(',')
+    if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : ctx.self.place === 'level3' ? rollItemL3(ctx) : rollItem(ctx))].filter(Boolean).join(',')
     const cl = spotCloth(ctx, derived(s).clothFind) // Observation (Perception) spots a wearable tucked in the junk
     if (cl) c.state.items = [c.state.items, cl].filter(Boolean).join(',')
   }

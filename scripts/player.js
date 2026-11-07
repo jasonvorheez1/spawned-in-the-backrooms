@@ -16,7 +16,9 @@ import { zoneAt as zoneAt1 } from './lib/level1.js'
 import L1 from './lib/data/level1.yml'
 import { zoneAt as zoneAt2 } from './lib/level2.js'
 import L2 from './lib/data/level2.yml'
-const zoneHere = (ctx, x, z) => ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : zoneAt(x, z)
+import { zoneAt as zoneAt3 } from './lib/level3.js'
+import L3 from './lib/data/level3.yml'
+const zoneHere = (ctx, x, z) => ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : zoneAt(x, z)
 
 import SOUNDS from './lib/data/sounds.yml'
 import { useCompass, COMPASS } from './lib/compass.js'
@@ -538,8 +540,8 @@ function tickStats(ctx, t, moving) {
   const zone = zoneHere(ctx, p.x, p.z)
   if (zone !== s.zone) s.zone = zone
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
-  let drain = (ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : L.sanityDrain[zone]) ?? 0.12
-  if (w.light && (zone === 'dark' || zone === 'red')) drain *= 0.4
+  let drain = (ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : ctx.self.place === 'level3' ? L3.sanityDrain[zone.slice(3)] : L.sanityDrain[zone]) ?? 0.12
+  if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4
   s.sanity -= drain * (drain > 0 ? derived(s).drain : 1) * t
   if (w.ledge) s.sanity += L.ledgeRest.sanity * t
   const rest = !!w.ledge, wet = !!w.wet

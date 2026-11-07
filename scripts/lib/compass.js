@@ -3,13 +3,15 @@
 // words ("a way out", "voices", "something breathing", "something worth taking"). Low sanity makes it lie more.
 import { cellCenter, EXIT } from './maze.js'
 import { BACK as BACK1, ONWARD as ONWARD1 } from './level1.js'
-import { BACK as BACK2 } from './level2.js'
+import { BACK as BACK2, SEALED as SEALED2 } from './level2.js'
+import { BACK as BACK3, LIFT as LIFT3 } from './level3.js'
 // her picks: 5 reads a compass, 70 m sense range, the needle shows 8 s
 export const COMPASS = { charges: 5, range: 70, show: 8000, wobble: 35, spinBase: 0.12 }
 const D = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
 function exitsOf(place) {
   if (place === 'level1') return [BACK1, ONWARD1]
-  if (place === 'level2') return [BACK2]
+  if (place === 'level2') return [BACK2, SEALED2]
+  if (place === 'level3') return [BACK3, LIFT3]
   if (place === 'main') return [cellCenter(EXIT.cx, EXIT.cz)]
   return []
 }
