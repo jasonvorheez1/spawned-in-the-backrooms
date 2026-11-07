@@ -34,6 +34,7 @@ button.it{cursor:pointer}
 .it.on .eq{background:var(--a)}
 .it .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .it .n{margin-left:auto;color:var(--ad);font-size:13px;flex:none}
+.ft{flex-wrap:wrap}
 .it.lock{color:var(--ad)}
 .dt{display:none;position:absolute;right:30px;top:62px;width:calc(48% - 52px);pointer-events:none}
 .it:hover .dt,.def{display:block}
@@ -76,10 +77,10 @@ function detail(t, s, def) {
       ${w.ranged ? cell('MAG', `${s['loaded_' + k] ?? 0}/${w.magSize}`) + cell(w.ammoType === 'shells' ? 'SHELLS' : 'ROUNDS', s[w.ammoType ?? 'ammo'] ?? 0) : ''}
       ${cell('REQ', `<span style="color:${lvOk ? 'inherit' : '#e07a5a'}">LV ${w.minLevel ?? 1}</span>`, true)}</div></div>`
   }
-  if (t === 'almond') return `<div class="${cls}"><h4>Almond water</h4><div class="r" style="color:var(--ad)">AID</div><div class="g">${cell('HP', `+${L.almondHp}`)}${cell('SAN', `+${L.almondSanity}`)}${cell('CARRIED', `${s.almonds ?? 0}/${L.almondMax}`, true)}</div></div>`
+  if (t === 'almond') return `<div class="${cls}"><h4>Almond water</h4><div class="r" style="color:var(--ad)">AID</div><div class="g">${cell('HP', `+${L.almondHp}`)}${cell('SAN', `+${L.almondSanity}`)}${cell('CARRIED', s.almonds ?? 0, true)}</div></div>`
   if (t === 'ammo' || t === 'shells') {
     const a = W[t], nm = t === 'ammo' ? 'Pistol rounds' : 'Shotgun shells'
-    return `<div class="${cls}"><h4>${nm}</h4><div class="r" style="color:var(--ad)">AMMO</div><div class="g">${cell('QTY', `+${a.perPickup}`)}${cell('FOR', t === 'ammo' ? 'PISTOL' : 'SHOTGUN')}${cell('CARRIED', `${s[t] ?? 0}/${a.max}`, true)}</div></div>`
+    return `<div class="${cls}"><h4>${nm}</h4><div class="r" style="color:var(--ad)">AMMO</div><div class="g">${cell('QTY', `+${a.perPickup}`)}${cell('FOR', t === 'ammo' ? 'PISTOL' : 'SHOTGUN')}${cell('CARRIED', s[t] ?? 0, true)}</div></div>`
   }
   return ''
 }
@@ -107,7 +108,7 @@ function container(s, key) {
   const items = itemsOf(s.lootList)
   const rows = items.map((t, i) => `<button class="it" onclick="sendAction('loot',{k:'take',i:${i}})"><span class="eq"></span><span class="nm" style="color:${t.startsWith('weapon:') ? describe(t).color : 'inherit'}">${describe(t).name}</span><span class="n">${t === 'ammo' ? W.ammo.perPickup : t === 'shells' ? W.shells.perPickup : ''}</span>${detail(t, s, false)}</button>`).join('')
   const n = owned(s).length - 1
-  const carry = `Carrying ${n} weapon${n === 1 ? '' : 's'} · almond ${s.almonds ?? 0}/${L.almondMax} · rounds ${s.ammo ?? 0} · shells ${s.shells ?? 0}`
+  const carry = `Carrying ${n} weapon${n === 1 ? '' : 's'} · almond ${s.almonds ?? 0} · rounds ${s.ammo ?? 0} · shells ${s.shells ?? 0}`
   return `<div class="pbw pb"><div class="pbp" data-modal>
     <div class="hd"><h2>${s.lootName || 'Container'}</h2><div class="st"><span><b>ITEMS</b>${items.length}</span></div></div>
     <div class="bd"><div class="ls">${rows || '<div class="em">Empty.</div>'}</div>${items[0] ? detail(items[0], s, true) : ''}</div>

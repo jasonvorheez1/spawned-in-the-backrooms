@@ -17,7 +17,7 @@ sanityDrain: { halls: 0.12, arches: 0.06, pillars: 0.12, holes: 0.15, red: 0.9, 
 insanityHurt: 3    # hp per second at 0 sanity
 almondHp: 35
 almondSanity: 30
-almondMax: 5
+almondRefill: 5   # the debug heal pad tops you up to this. No carry limit on any item (Shelly, 2026-11-07)
 battery: 100
 batteryDrain: 1.2  # per second while the flashlight is on
 xpPerCell: 2

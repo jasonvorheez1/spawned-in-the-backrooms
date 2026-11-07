@@ -78,7 +78,6 @@ export default function render(ctx, player) {
   const hpColor = hpF > 0.6 ? 'oklch(0.75 0.12 85)' : hpF > 0.3 ? 'oklch(0.72 0.15 55)' : 'oklch(0.65 0.22 28)'
   const sanWord = sanF > 0.75 ? 'steady' : sanF > 0.5 ? 'uneasy' : sanF > 0.25 ? 'fraying' : 'breaking'
   const rar = wp.rarity ? W.rarities?.[wp.rarity] : null
-  const pips = Array.from({ length: L.almondMax }, (_, i) => `<div class="pip${i < (s.almonds ?? 0) ? ' full' : ''}"></div>`).join('')
 
   const have = ['fists', ...(s.weapons ? s.weapons.split(',') : [])].filter((k) => W[k])
   const invHtml = have.length > 1 ? have.map((k) => `<span style="opacity:${k === s.equipped ? 1 : 0.4};margin-left:6px">${W[k].name}</span>`).join('') : ''
@@ -110,7 +109,7 @@ export default function render(ctx, player) {
     ${invHtml ? `<div style="font-size:10px;opacity:.8">${invHtml}</div>` : ''}
     ${bar('AP', s.stamina, L.stamina, s.stamina < 25 ? 'var(--ad)' : 'var(--a)', `${Math.ceil(s.stamina)}`, true)}
     <div class="row" style="margin-top:6px;justify-content:flex-end;gap:8px">
-      <span>ALMOND</span><div class="pips">${pips}</div><span style="font-size:15px">${s.almonds}/${L.almondMax}</span>
+      <span>ALMOND</span><span style="font-size:15px">${s.almonds ?? 0}</span>
     </div>
     <div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px">
       <span>LIGHT</span><span style="${s.light ? '' : 'opacity:.45'}">${s.light ? Math.round(s.battery) + '%' : 'OFF'}</span>

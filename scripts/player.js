@@ -54,20 +54,17 @@ function gain(ctx, n) {
 export function takeToken(ctx, token) {
   const s = ctx.self.state, now = ctx.now()
   if (token === 'almond') {
-    if (s.almonds >= L.almondMax) return { ok: false, msg: 'You cannot carry any more almond water' }
-    s.almonds += 1; gain(ctx, L.xpAlmond); s.pickedAt = now
+    s.almonds = (s.almonds ?? 0) + 1; gain(ctx, L.xpAlmond); s.pickedAt = now
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.75, true)
     return { ok: true }
   }
   if (token === 'ammo') {
-    if ((s.ammo ?? 0) >= W.ammo.max) return { ok: false, msg: 'Your pistol rounds are full' }
-    s.ammo = Math.min(W.ammo.max, (s.ammo ?? 0) + W.ammo.perPickup); s.pickedAt = now
+    s.ammo = (s.ammo ?? 0) + W.ammo.perPickup; s.pickedAt = now
     sound(ctx, 'pickup-ammo', 0.7, true)
     return { ok: true }
   }
   if (token === 'shells') {
-    if ((s.shells ?? 0) >= W.shells.max) return { ok: false, msg: 'Your shotgun shells are full' }
-    s.shells = Math.min(W.shells.max, (s.shells ?? 0) + W.shells.perPickup); s.pickedAt = now
+    s.shells = (s.shells ?? 0) + W.shells.perPickup; s.pickedAt = now
     sound(ctx, 'pickup-ammo', 0.7, true)
     return { ok: true }
   }

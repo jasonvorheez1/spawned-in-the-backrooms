@@ -10,5 +10,5 @@ export function onTriggerEnter(ctx, other) {
   if (act === "exit") { ctx.cross(other, "main"); return; }
   if (act === "lv10" || act === "lv1") { s.level = act === "lv10" ? 10 : 1; s.xp = 0; s.leveledAt = ctx.now(); }
   s.hp = maxHp(s.level); s.sanity = maxSan(s.level); s.stamina = L.stamina; s.battery = L.battery;
-  if (act === "heal") s.almonds = L.almondMax;
+  if (act === "heal") s.almonds = Math.max(s.almonds ?? 0, L.almondRefill);
 }
