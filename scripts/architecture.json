@@ -1,52 +1,52 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 515,
-  "updatedAt": "2026-11-07T14:07:31.699Z",
-  "summary": "The Backrooms: Level 0 is a multiplayer survival game spanning the yellow maze, the Habitable Zone, utility halls and the Electrical Station. Shared player behaviors own survival, combat, social interactions and progression, while each place simulation builds and maintains its own world; player state persists across places and NPCs carry individual relationships, gear and behavior state.",
+  "basedOnSpecVersion": 550,
+  "updatedAt": "2026-11-07T14:20:37.334Z",
+  "summary": "The Backrooms is a multiplayer survival game spanning Level 0's yellow maze, the Habitable Zone, Utility Halls and the Electrical Station. Shared player behaviors own survival, combat, social interaction and progression; place simulations generate and maintain local worlds, while player state persists across places and NPCs hold their own relationships, gear and behavior state.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0 yellow maze and hub; generated maze plus authored cells, loot and sim-managed smilers/lurkers; authored cells include repeated lighting and local variants.",
-    "places/level1 (3D) - Habitable Zone and M.E.G. camp; sim manages environment, camp agents, supplies and encounters including hounds and skin-stealers.",
+    "places/main (3D) - Level 0 yellow maze and safe-room hub; generated maze plus authored cells, loot furniture, shifting walls, stairs and sim-managed smilers/lurkers.",
+    "places/level1 (3D) - Habitable Zone and M.E.G. camp; sim manages the car-park layout, camp agents, shelf/wall loot furniture and hounds/skin-stealers.",
     "places/level2 (3D) - Abandoned Utility Halls and Survivor camp; seeded halls/rooms, supplies, NPCs and the Level 3 threshold.",
-    "places/level3 (3D) - Electrical Station and Base Gamma; seeded maze, hazards, loot, hound brigades, deathmoth swarms and station detail geometry; x0z0.scene contains the gate photo assembly.",
-    "places/debug (3D) - isolated combat and loot test room; authored cells hold weapon/item stations, enemy pens and test stands, including a temporary hound manager test."
+    "places/level3 (3D) - Electrical Station and Base Gamma; seeded maze with barred edges and 1 m arched crawl halls, hazards, searchable wall furniture, station models, hound brigades and deathmoth swarms.",
+    "places/debug (3D) - isolated combat and loot test room; authored cells hold weapon/item stations, enemy pens and test stands."
   ],
   "roots": [
-    "world.config.yaml - multiplayer entry and default main place; declares camera, player, input actions (including crouch/talk/shop) and HUD wiring.",
+    "world.config.yaml - multiplayer entry and default main place; declares camera, player, input actions and HUD wiring.",
     "templates/player.js - ordered player behavior chain: locomotion, player, interact, talk, build, noclip, stats, critter.",
-    "templates/camera.js + scripts/camera.js - look camera with yaw/pitch and smoothed eye-height adjustment while crouching.",
-    "places/main/sim.js, places/level1/sim.js, places/level2/sim.js, places/level3/sim.js, places/debug/sim.js - per-place cadence/tick roots for local setup and simulation.",
-    "places/<place>/config.yaml + cells - place config and authored placements; main, level1 and debug contain authored cell sets, and level3 adds a gate-photo scene.",
+    "templates/camera.js + scripts/camera.js - look camera owning yaw/pitch and smoothed crouch eye height.",
+    "places/main/sim.js, places/level1/sim.js, places/level2/sim.js, places/level3/sim.js, places/debug/sim.js - per-place setup and simulation tick roots.",
+    "places/<place>/config.yaml + cells - place config and authored placements; main, level1 and debug have authored cell sets.",
     "scripts/ui.js + scripts/loot-ui.js, talk-ui.js, build-ui.js, stats-ui.js and noclip-ui.js - HUD composition and action routing for survival, social, loot, build and stats panels."
   ],
   "shared": [
     "scripts/lib/maze.js + scripts/lib/data/level0.yml; scripts/lib/level1.js and level2.js with their data - per-level grids/layouts reused by simulation, geometry and gameplay.",
-    "scripts/lib/level3.js + scripts/lib/data/level3.yml + scripts/lib/maze3path.js - deterministic Electrical Station grid, zone/opening data and open-edge routes for geometry, sim, player and creatures.",
+    "scripts/lib/level3.js + scripts/lib/data/level3.yml + scripts/lib/maze3path.js - deterministic Electrical Station grid/zones/open edges and routes used by geometry, sim, player and creatures.",
+    "scripts/lib/level3-arch.js - vault mesh helper used by Level 3 structural and detail geometry for crawl-hall brick arches.",
+    "scripts/lib/furniture.js + scripts/lib/data/furniture-loot.yml - searchable loot furniture placement/container factory shared by Level 0, Level 1 and Level 3 simulations; Level 2 retains its separate container path.",
     "scripts/lib/data/weapons.yml + scripts/lib/weapons.js; weapon-look.js, weapon-prof.js and weapon-geo.js - weapon definitions and fitted variants shared by pickups, viewmodels and NPCs.",
     "scripts/lib/items.js + scripts/lib/loot.js + scripts/lib/loot3.js - shared token vocabulary and general loot, with Level 3-specific tables, pages, garments and weapons.",
     "scripts/lib/clothes.js + clothes.yml; scripts/lib/stats.js - worn-slot/armor helpers and HALOGEN derivations reused by player, NPC combat, loot and UI.",
-    "scripts/lib/breakables.js + breakables.yml - damage, harvest, rubble and Level 0 wall synchronization used by player attacks and main simulation.",
-    "scripts/lib/npc-talk.js + scripts/lib/data/talk.yml and shops.yml - dialogue policy/model prompt parsing, rolls, NPC voice/name and trader stock/pricing helpers, called by scripts/talk.js and talk-ui.js.",
-    "scripts/critter2-geo.js + scripts/meg-agent.js - shared NPC avatar and movement/combat/talk/death behavior for M.E.G., Survivors and Gamma agents."
+    "scripts/lib/npc-talk.js + scripts/lib/data/talk.yml and shops.yml - dialogue policy/model prompt parsing, rolls, NPC voice/name and trader stock/pricing helpers for talk.js and talk-ui.js."
   ],
   "notableExports": [
-    "places/main/sim.js, places/level1/sim.js, places/level2/sim.js, places/level3/sim.js and places/debug/sim.js - cadence and tick; place simulations own local setup/ticking.",
-    "scripts/lib/level3.js - grid/constants, cell/zone queries, openings, blocks/hazards and exits; scripts/lib/maze3path.js - stepToward, cellNear.",
+    "places/main/sim.js, places/level1/sim.js, places/level2/sim.js, places/level3/sim.js and places/debug/sim.js - cadence and tick; simulations own local setup/ticking.",
+    "scripts/lib/level3.js - grid/constants, cell/zone queries, openings, blocks/hazards, crawl spans and exits; scripts/lib/maze3path.js - stepToward, cellNear.",
+    "scripts/lib/level3-arch.js - vault; scripts/lib/furniture.js - sizeOf, pickKind, spawnFurniture, wallSpot0/1/3.",
     "scripts/lib/breakables.js - strike, damageEntity, damageWall, rollDrops, spawnRubble, syncLevel0 and material/tool helpers.",
     "scripts/build.js - onInput, update; scripts/build-ui.js - buildUi; scripts/ui.js - default render and plyUpload.",
     "scripts/lib/loot3.js - rollWeaponL3, rollTableL3, rollItemL3, spawnCrateL3; scripts/deathmoths.js - update.",
     "scripts/player.js - survival/combat/token and reload APIs; scripts/interact.js - openLoot, talk, onInput, update; scripts/talk.js - heard, onInput, update.",
-    "scripts/lib/items.js - itemsOf, tokenOf, describe; scripts/lib/clothes.js and scripts/lib/stats.js - apparel and HALOGEN helpers; scripts/stats-ui.js - statsUi.",
-    "scripts/lib/furniture.js - sizeOf, pickKind, spawnFurniture, wallSpot0/1/3; scripts/stealers.js and scripts/hounds.js - update."
+    "scripts/lib/items.js - itemsOf, tokenOf, describe; scripts/lib/clothes.js and scripts/lib/stats.js - apparel and HALOGEN helpers; scripts/stats-ui.js - statsUi."
   ],
   "ownership": [
     "scripts/player.js - player.state owns level/XP, health/survival, visited cells/zones, kills/deaths, equipment/inventory/ammo/condition, clothes, compass and Level 3 consumable/page fields; crouch and detect are also player state.",
     "scripts/stats.js - player.state owns HALOGEN attributes, skills, points, tags, schema version, sheetOpen and target; initializes/migrates the sheet and spends points.",
     "scripts/build.js + scripts/player.js - player.state.scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
-    "scripts/interact.js - player focus, loot menu, notices and interaction; NPCs own pockets/picked plus per-player warned and angry state, containers own item lists/lock/scavenged state, and looted bodies' look drives worn clothing.",
+    "scripts/interact.js - player focus, loot menu, notices and interaction; NPCs own pockets/picked and per-player warned/angry state, containers own item lists/lock/scavenged state, and looted bodies' look drives worn clothing.",
     "scripts/talk.js - player state holds talkWith, shopOpen, talks, subtitle and busy/mood fields; NPC state holds rapport, line/talk target, follow, per-player anger/discount/gift and trader stock.",
     "scripts/critter.js - player.state.look owns appearance/worn slots; avatar scratch is local/session state.",
-    "Place simulations - place.state owns seed flags and local refill/respawn/hazard schedules; Level 3 also tracks generators, line output and actor managers.",
+    "Place simulations - place.state owns seed flags and local refill/respawn/hazard schedules; Level 3 also tracks layoutV/furnitureSeeded, generators, line output and actor managers.",
     "Creature/NPC entity state - smilers, lurkers, hounds, stealers, deathmoths and meg-agent own health/death, rolled stats, drops and behavior flags; movement/path scratch is session-local."
   ],
   "flows": [
@@ -55,36 +55,34 @@
     "Level 0 exit in scripts/player.js → Level 1; later thresholds connect Level 1 to 2 and Level 2 to 3; Level 3 BACK door returns to Level 2 via scripts/level-door.js.",
     "interact.js focus/E on living NPC → player.state.talkWith; scripts/talk-ui.js sends typed text/actions through talk/talkdo/shop inputs to scripts/talk.js; talk.js submits llm:chat and its heard handler validates reply/checks before rapport changes.",
     "talk.js writes NPC state.line and player subtitle → scripts/talk-ui.js / scripts/ui.js; NPC voice is emitted nearby; shop actions update almond water, inventory and NPC stock.",
-    "interact.js crouched E near NPC → Sneak roll and NPC pockets → player.js takeToken/player inventory; any caught attempt warns and shoves once, repeat caught theft turns that NPC hostile; facing/detection lower the odds.",
+    "interact.js crouched E near NPC → Sneak roll and NPC pockets → player.js takeToken/player inventory; caught attempts warn/shove and repeat caught theft turns that NPC hostile.",
     "interact loot of a body → player inventory and scripts/interact.js strips removed clothing from the body's look/primitive params; stats/clothes helpers resolve NPC worn gear and armor.",
-    "place simulations and enemy deaths → scripts/lib/loot.js or loot3.js → weapon/clothing/item tokens → floor entities or searchable containers.",
-    "player.js attack → scripts/lib/breakables.js → entity hp or Level 0 wall hp/broken keys; rubble becomes containers and main/sim syncs wall geometry; BUILD similarly spends scrap and places breakable pieces.",
-    "scripts/lib/level3.js and level3 data → places/level3/sim.js geometry, details, checkpoints and hazards; sim starts hound/deathmoth managers and spawns station actors; maze3path routes creatures across open edges, while hounds.js applies the shared hound mesh and combat behavior across levels.",
-    "Level 3 loot3 → page/weapon/item tokens → player.js takeToken; UI renders pages; firesalt changes melee damage and stun_baton writes hound stunUntil.",
-    "scripts/player.js useCompass → scripts/lib/compass.js chooses place exits and writes compassRead → scripts/ui.js timed bearing/readout; player death also clears local NPC angry/warned/fresh grudges."
+    "place simulations and enemy deaths → scripts/lib/loot.js or loot3.js → weapon/clothing/item tokens → floor entities or searchable containers; main/level1/level3 sims seed searchable furniture through scripts/lib/furniture.js.",
+    "player.js attack → scripts/lib/breakables.js → entity hp or Level 0 wall hp/broken keys; rubble becomes containers and main/sim syncs wall geometry; BUILD spends scrap and places breakable pieces.",
+    "scripts/lib/level3.js and level3 data → places/level3/sim.js geometry, details, checkpoints and hazards; sim places Blender-built models, starts hound/deathmoth managers and spawns station actors; maze3path routes creatures across open edges.",
+    "Level 3 sim layoutV migration clears/re-lays layout-attached hazards and loot furniture after grid changes, and moves loose loot in tight cells to their centerlines; Level 3 loot3 tokens are consumed by player.js and rendered by UI.",
+    "scripts/player.js useCompass → scripts/lib/compass.js chooses place exits and writes compassRead → scripts/ui.js timed bearing/readout; player death clears local NPC angry/warned/fresh grudges."
   ],
   "behaviorFamilies": [
-    "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cell also owns flicker-wall markings, sound and local flicker/light state.",
-    "scripts/smilers.js and scripts/lurkers.js - Level 0 pack managers with distinct gaze/light/sanity reactions; lurkers use the uploaded animated mesh, spawned at scale 1.23 (2.4 m), including the debug test spawn.",
-    "scripts/hounds.js + hound-geo.js - shared Level 1/2/3 hound AI with the rigged hound-v2 mesh; safe zones and grids vary by place, while Level 3 brigades use maze routing and stun state. Legacy coded geometry is swapped out on manager ticks.",
-    "scripts/stealers.js + stealer-geo.js - Level 1 skin-stealer behavior swaps legacy rows to the rigged mesh; disguise/creature/shed parts and reveal animation vary with its skin-to-hunt phase.",
-    "scripts/meg-agent.js + scripts/critter2-geo.js - common NPC behavior/avatar varies by species/look, role, voice, weapon and place; used by M.E.G., Survivors and Gamma agents.",
+    "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state.",
+    "scripts/smilers.js and scripts/lurkers.js - Level 0 pack managers with distinct gaze/light/sanity reactions; lurkers use uploaded animated mesh at scale 1.23 (2.4 m), including debug test placement.",
+    "scripts/hounds.js + hound-geo.js - shared Level 1/2/3 hound AI with rigged hound-v2 mesh; safe zones and grids vary by place, Level 3 brigades use maze routing and stun state.",
+    "scripts/stealers.js + stealer-geo.js - Level 1 skin-stealer behavior swaps legacy rows to rigged mesh; disguise/creature/shed parts and reveal animation vary by skin-to-hunt phase.",
+    "scripts/meg-agent.js + scripts/critter2-geo.js - common NPC avatar and behavior varies by species/look, role, voice, weapon and place; used by M.E.G., Survivors and Gamma agents.",
     "scripts/lib/weapons.js + weapon-look.js + weapon-prof.js + weapon-geo.js + viewmodel-geo.js - weapon kinds reuse fitted bodies with variant stats/tint/overlays and viewmodel framing.",
-    "scripts/build-geo.js + breakables.yml - built structures, Level 0 office furniture, rubble and breakable props share geometry/crack stages while material, dimensions, hp and harvest outcomes vary.",
+    "scripts/lib/furniture.js + loot-bags-geo.js + l2-props-geo.js - searchable containers share item/lock state and placement API, with kind-specific shape/material/loot tables; separate from breakable office furniture in main.",
     "scripts/deathmoths.js + templates/deathmoths.js - one Level 3 manager steers multiple swarms; each uses three rigged moth models and clips, while swarms vary by home and target."
   ],
   "probableOrphans": [
-    "scripts/l2-door.js - exports a door-leaf swing animation, but no current tree/package reference to the script is visible.",
     "scripts/flat-starter-terrain.js - no active place uses it; place terrain is off.",
-    "scripts/flower.js, scripts/grass.js, scripts/grass-look.js and scripts/reed.js - no active terrain layers or placed references are visible; terrain is off.",
-    "scripts/lib/furniture.js - no active place simulation calls its furniture-spawn helpers; Level 2 still has its separate container path."
+    "scripts/flower.js, scripts/grass.js, scripts/grass-look.js and scripts/reed.js - no active terrain layers or placed references are visible; terrain is off."
   ],
   "migrationNotes": [
-    "Grid contracts differ: Level 0 is 56×56 at 4 m with hub cells 26–29; Level 1 is 30×30 at 8 m; Level 2 is 24×24 at 5 m; Level 3 is 26×26 at 4 m. Keep geometry, zones, exits and routes aligned to each grid.",
+    "Grid contracts differ: Level 0 is 56×56 at 4 m with hub cells 26–29; Level 1 is 30×30 at 8 m; Level 2 is 24×24 at 5 m; Level 3 is 26×26 at 4 m. Keep geometry, zones, exits and routes aligned.",
+    "Level 3 tight cells are 1 m clear width (tightHalf 0.5), 1.6 m springline and 2.15 m crown; tightArms/tightSpans drive both structural/detail vaults, and gates/furniture are excluded from crawl halls.",
     "Player behavior order is intentional: humanoid-locomotion.js before player.js, then interact.js, talk.js, build.js, noclip.js, stats.js and critter.js; locomotion reads movement before player control writes velocity.",
     "Weapon ids remain kind or kind~variant across inventory, condition, magazines and entities; use baseOf only where base-kind framing/behavior is intended.",
     "Building scrap is a per-kind player.state.scrap object, unlike comma-separated inventory/container tokens; breakables need tag plus state.mat/hp/maxHp, and Level 0 wall hp/broken state is separate place.state data.",
-    "Level-specific zone keys are prefixed l1_/l2_/l3_; Level 3 generation is seeded from level3.yml, Gamma is safe, and LIFT remains a freight-elevator/sign rather than an implemented Level 4 crossing.",
-    "HALOGEN attributes/skills and apparel/pages use their existing state/token encodings; hounds and stealers replace legacy primitive bodies with rigged models, deathmoths are three child models per swarm, and furniture faces out from a wall while retaining interact.js's container tag/state.items/name/lock contract."
+    "Level 3 layoutV/furnitureSeeded migrations deliberately clear and respawn attached furniture/hazards when the seeded layout changes; keep those migration versions and the new grid placement in sync."
   ]
 }
