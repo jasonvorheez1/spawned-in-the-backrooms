@@ -1,3 +1,4 @@
+import { vo } from "./lib/voices.js";
 import { heard } from "./lib/hear.js";
 import { seatFor } from "./lib/seat.js";
 import { rollLoot, garmentsOf } from "./lib/loot.js";
@@ -163,7 +164,7 @@ function aim(me, m, t) {
 
 // combat barks: a shout over the head (ui.js bubble + subtitle) and the speaker's voice; a short gap so they never talk over themselves
 const VOICES = { "meg-ale": "ale", "meg-ortiz": "ortiz", "meg-callum": "callum", "surv-wren": "wren", "surv-hollis": "hollis", "surv-mags": "mags" };
-const BVO = (who, line) => `/cdn/voice-meg-${who}-saying-${line.replace(/[^a-z ]/gi, "").trim().toLowerCase().replace(/ +/g, "-")}.mp3`;
+const BVO = (who, line) => vo(who, line)
 export function bark(ctx, o, kind, force) {
   const pool = CHAT.barks?.[kind], now = ctx.now(), st = o?.state;
   if (!pool?.length || !st) return;

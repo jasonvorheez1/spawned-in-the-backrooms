@@ -1,3 +1,4 @@
+import { vo } from './lib/voices.js';
 import { heard } from "./lib/hear.js";
 import { sitDown, standUp, seatTick, spotsOf } from './lib/seat.js'
 import { rollItemL3 } from './lib/loot3.js'
@@ -135,7 +136,7 @@ const TIPS2 = [
   "toolboxes and parts bins in the warehouses. batteries, shells, the odd sledgehammer.",
   "the barred door at the east wall has a three on it. something heavy leans on the other side.",
 ];
-const VO = (who, line) => `/cdn/voice-meg-${who}-saying-${line.replace(/[^a-z ]/gi, '').trim().toLowerCase().replace(/ +/g, '-')}.mp3`
+const VO = (who, line) => vo(who, line)
 function speak(ctx, it, who, line) {
   ctx.self.state.sub = { who: it.state.name.split(' ·')[0], t: line, at: ctx.now(), d: 1600 + line.length * 60 } // the subtitle strip shows it
   const p = it.feetPosition

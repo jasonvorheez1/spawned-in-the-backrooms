@@ -1,3 +1,4 @@
+import { vo } from './voices.js';
 // Free talk with NPCs: who they are, what the model is told, how its answer is read, the skill roll,
 // and the trader's prices. Pure helpers: scripts/talk.js (on the player) does the calling and the writes.
 // Numbers live in data/talk.yml and data/shops.yml.
@@ -17,7 +18,7 @@ export const isTrader = (it) => SH.roles.includes(it?.state?.role)
 export const faction = (it, place) => { const id = String(it?.id ?? '').split('/').pop(); if (it?.state?.factionName) return it.state.factionName; return id.startsWith('tbd') ? 'T.B.D. (hoarders who only trade for strange useless objects)' : id.startsWith('amor') ? 'Amor Incrementum (a tiny agricultural cult that grows mold and distrusts outsiders)' : id.startsWith('l4-') ? 'none, a wanderer living in an office on Level 4' : id.startsWith('surv') || place === 'level2' ? 'Survivor' : 'M.E.G.' }
 const DEFV = { scout: 'ale', medic: 'ortiz', quarter: 'callum' }
 export const voiceOf = (it) => it?.state?.voice ?? DEFV[it?.state?.role] ?? 'ale'
-export const VO = (who, line) => `/cdn/voice-meg-${who}-saying-${String(line).slice(0, 180).replace(/[^a-z ]/gi, '').trim().toLowerCase().replace(/ +/g, '-')}.mp3`
+export const VO = (who, line) => vo(who, line)
 const feel = (r) => (r <= -60 ? 'you hate them' : r <= -25 ? 'you dislike them' : r < 10 ? 'neutral, you barely know them' : r < 40 ? 'you like them okay' : r < 70 ? 'you like them' : 'you trust them a lot')
 
 export function systemPrompt({ it, place, pl, rapport, following }) {

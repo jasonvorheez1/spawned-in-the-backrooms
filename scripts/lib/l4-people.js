@@ -1,3 +1,4 @@
+import { vo } from "./voices.js";
 // Level 4's people, run from places/level4/sim.js once a second. Every resident is an M.E.G.-style agent (scripts/meg-agent.js
 // walks state.rounds, waves, talks, fights); this director gives them lives on top:
 //   homes      each resident claims an office (its door plate shows their name, a cot and desk inside), so the floor has neighbours
@@ -9,7 +10,7 @@
 import { heard } from "./hear.js";
 import { ROOMS, FOUNTAINS, HALF, facing } from "./level4.js";
 import P from "./data/level4-people.yml";
-const VO = (who, line) => `/cdn/voice-meg-${who}-saying-${line.replace(/[^a-z ]/gi, "").trim().toLowerCase().replace(/ +/g, "-")}.mp3`;
+const VO = (who, line) => vo(who, line)
 const SIT = "cdn/clip-sit-loop.glb", SLEEP = "cdn/clip-sleep-loop.glb", TALK = "cdn/clip-talk-loop.glb", CROUCH = "cdn/clip-crouch-idle-loop.glb", IDLE = null;
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 const alive = (o) => o && !o.state?.dead && (o.state?.hp ?? 1) > 0;

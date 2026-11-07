@@ -1,9 +1,10 @@
+import { vo } from "./voices.js";
 // Camp chatter director: called from a place's sim tick. When a player stands near the camp, two or three
 // NPCs run one exchange from chatter.yml, a line at a time: the speaker's state.line carries the words
 // (ui.js floats them over its head), state.talkAt/talkTo start the talk gesture and turn them to the listener.
 import { heard } from "./hear.js";
 import C from "./data/chatter.yml";
-const VO = (who, line) => `/cdn/voice-meg-${who}-saying-${line.replace(/[^a-z ]/gi, "").trim().toLowerCase().replace(/ +/g, "-")}.mp3`;
+const VO = (who, line) => vo(who, line)
 const alive = (o) => o && !o.state?.dead && (o.state?.hp ?? 1) > 0;
 export function tickChatter(ctx, list, voices) {
   const s = ctx.place.state, now = ctx.now();
