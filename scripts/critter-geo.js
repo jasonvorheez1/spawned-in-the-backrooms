@@ -290,7 +290,7 @@ export function geometry(ctx) {
     if (!e) return [HC[0] + u, HC[1] + v, HC[2] + zBase - muz];
     // a mark's layer lifts off the skin along its facing, never sideways, so stacked layers stay registered on the snout
     const n = norm3([u, v, zBase - muz * 2.2]);
-    const d = e * 0.36;
+    const d = e * 0.6;
     return [HC[0] + u + n[0] * d, HC[1] + v + n[1] * d, HC[2] + zBase - muz + n[2] * d];
   };
 
@@ -495,7 +495,7 @@ export function geometry(ctx) {
   sculptedHead({ seg: hi ? 36 : SEG });
   if (!sp.patch && !sp.wool) { // the muzzle: the snout's lighter fur as one smooth oval, under every other face mark
     wOverride = { Head: 1 }; ctx.color(BELLY);
-    fill(ellipse(0, SN.y - 0.004, SN.w * 1.08, SN.h * 1.12, hi ? 32 : 18), 0.004, hi ? 4 : 2);
+    fill(ellipse(0, SN.y - 0.004, SN.w * 1.08, SN.h * 1.12, hi ? 32 : 18), 0.006, hi ? 4 : 2);
     wOverride = null;
   }
 
