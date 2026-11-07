@@ -53,7 +53,7 @@ function layLayout(ctx) {
     if (z !== "gamma" && z !== "gen" && z !== "line" && r > 0.42) continue;
     const cold = z === "line" || hash(cx, cz, 203) < 0.25, col = z === "gamma" ? "oklch(0.92 0.06 95)" : cold ? "oklch(0.93 0.03 210)" : "oklch(0.82 0.13 62)";
     ctx.spawn({ tags: ["l3lamp"], feetPosition: { x: c.x + (hash(cx, cz, 205) - 0.5), y: top - 0.25, z: c.z + (hash(cx, cz, 207) - 0.5) }, primitive: { kind: "sphere", radius: 0.07 },
-      material: { color: col, emissive: col, emissiveIntensity: z === "gamma" ? 3 : 1.6 }, light: { kind: "point", color: col, intensity: z === "gamma" ? 5.5 : 3, distance: z === "tight" ? 7 : 11, shadow: { enabled: false } } });
+      material: { color: col, emissive: col, emissiveIntensity: z === "gamma" ? 3 : 1.6 }, light: { kind: "point", color: col, intensity: z === "gamma" ? 5.5 : 3, distance: z === "tight" ? 10 : 11, shadow: { enabled: false } } });
   }
     // hazards: black sludge pooled under leaking pipes; live junction boxes that arc
   for (const h of SLUDGE) {

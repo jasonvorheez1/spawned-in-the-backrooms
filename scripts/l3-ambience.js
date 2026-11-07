@@ -14,8 +14,8 @@ function tuneLamps(ctx) {
     if (r.state?.t) continue;
     const o = ctx.getObject(r.id), k = cellAt(r.feetPosition.x, r.feetPosition.z); if (!o || !k) continue;
     const z = zoneOf(k.cx, k.cz), h = hash(k.cx, k.cz, 911);
-    if (z !== "gamma" && h < 0.12) { o.light = null; o.material = { ...o.material, emissive: "oklch(0.2 0.01 60)", emissiveIntensity: 0.2 }; }
-    else if (z !== "gamma" && h < 0.3) { o.light = null; o.fx = { script: FLK }; }
+    if (z !== "gamma" && z !== "tight" && h < 0.12) { o.light = null; o.material = { ...o.material, emissive: "oklch(0.2 0.01 60)", emissiveIntensity: 0.2 }; }
+    else if (z !== "gamma" && z !== "tight" && h < 0.3) { o.light = null; o.fx = { script: FLK }; }
     else if (z !== "gamma" && o.light) { o.light = { ...o.light, intensity: 3 }; o.material = { ...o.material, emissiveIntensity: 1.6 }; }
     if (hash(k.cx, k.cz, 913) < 0.18 && hum++ < 26) o.audio = { clip: GRIT("fluorescent-light-buzz-loop"), gain: 0.12, loop: true, spatial: true, maxDistance: 9 };
     o.state = { ...(o.state ?? {}), t: 1 };
