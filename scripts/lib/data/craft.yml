@@ -37,6 +37,8 @@ recipes:
   steeltoe:   { cat: armor, name: Steel-toe boots,    in: { sheet_steel: 1, scrap_metal: 2, bolts: 2 },     out: ["cloth:shoes:boots:3a3a30"],    skill: [repair, 30],   bench: true, desc: "Shoes · DR 4" }
   wirehood:   { cat: armor, name: Wire-mesh hoodie,   in: { copper_wire: 4, wire: 3, springs: 1 },          out: ["cloth:topw:hoodie:6e6e64"],    skill: [repair, 45],   bench: true, desc: "Top · DR 6 · Level 3 copper woven through" }
   platevest:  { cat: armor, name: Drywall plate vest, in: { drywall: 4, sheet_steel: 2, bolts: 4, wire: 2 }, out: ["cloth:topw:apron:cfc8b8"],    skill: [repair, 60],   bench: true, desc: "Top · DR 7 · heavy" }
+  oilskin:    { cat: armor, name: Storm oilskin foulie, in: { drywall: 2, wire: 2, scrap_wood: 1 },          out: ["cloth:topw:hoodie:d49b27"],   skill: [survival, 20], bench: true, desc: "Top · DR 6 · Level 7 waterproof storm coat" }
+  abysshauberk: { cat: armor, name: Abyssal tar-scale hauberk, in: { sheet_steel: 2, wire: 3, bolts: 3 },    out: ["cloth:topw:apron:1c282e"],    skill: [survival, 45], bench: true, desc: "Top · DR 8 · Level 7 tar-cured deep-sea armor" }
   # weapons (Savi's picks): what the levels break into, made into something to swing
   pipeclub:   { cat: weapons, name: Pipe scrap,        in: { steel_pipe: 1, wire: 1 },                     out: ["weapon:pipe_scrap"],   skill: [repair, 5],    desc: "A length of pipe, grip wrapped in wire" }
   rebarspike: { cat: weapons, name: Rebar spike,       in: { rebar_rod: 2, wire: 1 },                      out: ["weapon:rebar"],        skill: [repair, 15],   desc: "Rebar ground to a point · reach 3.1 m" }
@@ -46,6 +48,7 @@ recipes:
   sledge:     { cat: weapons, name: Sledgehammer,      in: { cinder: 2, steel_pipe: 1, bolts: 3 },         out: ["weapon:sledgehammer"], skill: [repair, 45],   bench: true, desc: "A cinderblock head · slow, brutal" }
   machete:    { cat: weapons, name: "Lineman's machete", in: { sheet_steel: 2, scrap_wood: 1, rust_flakes: 2 }, out: ["weapon:lineman_machete"], skill: [repair, 55], bench: true, desc: "Hammered from sheet steel" }
   baton:      { cat: weapons, name: Stun baton,        in: { steel_pipe: 1, circuit: 1, copper_coil: 1, copper_wire: 2 }, out: ["weapon:stun_baton"], skill: [science, 50], bench: true, desc: "Wired to bite" }
+  fishing_rod: { cat: tools, name: Salvaged fishing rod, in: { scrap_wood: 2, wire: 2, nails: 1 },           out: ["weapon:fishing_rod"],  skill: [survival, 10], desc: "Swing at water on Level 7 to catch fish and sunken salvage" }
   # more ammo and tools
   ammo4:      { cat: ammo,  name: Pistol rounds (bulk), in: { scrap_metal: 4, springs: 2, rust_flakes: 1 }, out: [ammo, ammo, ammo, ammo], skill: [guns, 45], bench: true, desc: "Four boxes at once" }
   valve:      { cat: tools, name: Valve wheel,       in: { brass_valve: 1, bolts: 1 },                     out: [valve],                 skill: [repair, 15],   bench: true, desc: "Opens a PUMP ROOM door" }

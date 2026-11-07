@@ -77,7 +77,8 @@ function describe0(token) {
     if (!w) return { name: 'Something', info: '', color: '#cccccc' }
     const r = W.rarities?.[w.rarity] ?? {}
     const rq = w.req ? ` · REQ ${[w.req.h && 'HAR ' + w.req.h, w.req.guns && 'GUNS ' + w.req.guns, w.req.melee && 'MELEE ' + w.req.melee].filter(Boolean).join(' ')}` : '' // what it takes to use it well (scripts/lib/stats.js handling)
-    return { name: w.name, info: `${r.label ?? ''} · DMG ${w.damage}${w.ranged ? ' · ranged' : ''}${w.two ? ' · two-handed' : ''}${rq}`, color: r.color ?? '#cccccc' }
+    const fishHint = k.startsWith('fishing_rod') ? ' · Swing at water to fish' : ''
+    return { name: w.name, info: `${r.label ?? ''} · DMG ${w.damage}${w.ranged ? ' · ranged' : ''}${w.two ? ' · two-handed' : ''}${fishHint}${rq}`, color: r.color ?? '#cccccc' }
   }
   return { name: token, info: '', color: '#cccccc' }
 }

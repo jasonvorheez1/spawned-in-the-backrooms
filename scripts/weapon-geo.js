@@ -402,6 +402,41 @@ const builders = {
     bar(ctx, 0, B - 0.014, 0.0145, 0.03, -0.17, -0.1, 0.005); // the stock, adjustable
     plain(ctx, "oklch(0.14 0.01 60)", 0.95); bar(ctx, 0, B - 0.014, 0.0155, 0.036, -0.175, -0.165, 0.004); // butt pad
   },
+  fishing_rod(ctx, M, hi) { // Salvaged fiberglass & cork spinning rod: cork handle, brass & steel reel, line guides, red-and-white bobber & barbed hook
+    plain(ctx, "oklch(0.18 0.01 250)", 0.85);
+    rod(ctx, [[0, Y, -0.025], [0, Y, 0.005]], [0.015, 0.016], M); // rubber butt cap
+    wood(ctx, "oklch(0.76 0.09 72)");
+    rod(ctx, [[0, Y, 0.005], [0, Y, 0.16]], [0.015, 0.0145], M); // lower cork grip
+    rod(ctx, [[0, Y, 0.25], [0, Y, 0.34]], [0.014, 0.011], M); // fore cork grip
+    steel(ctx, "oklch(0.32 0.02 250)", 0.4);
+    rod(ctx, [[0, Y, 0.16], [0, Y, 0.25]], [0.0155, 0.0155], M); // threaded reel seat
+    // Spinning reel mounted under the reel seat
+    rod(ctx, [[0, Y, 0.205], [0, Y - 0.042, 0.215]], [0.0055, 0.0065], 8); // reel stem
+    plain(ctx, "oklch(0.28 0.03 235)", 0.35, 0.85);
+    rod(ctx, [[0, Y - 0.048, 0.185], [0, Y - 0.048, 0.245]], [0.02, 0.022], M); // reel body & spool
+    plain(ctx, "oklch(0.74 0.13 80)", 0.3, 0.9);
+    rod(ctx, [[0, Y - 0.048, 0.21], [0, Y - 0.048, 0.238]], [0.023, 0.023], M); // brass line spool
+    rod(ctx, [[0.02, Y - 0.048, 0.21], [0.045, Y - 0.056, 0.195]], [0.0035, 0.004], 6); // crank handle
+    // Tapered fiberglass rod blank (amber-teal marine rod)
+    plain(ctx, "oklch(0.52 0.09 75)", 0.35, 0.15);
+    rod(ctx, [[0, Y, 0.34], [0, Y + 0.004, 0.65], [0, Y + 0.014, 0.95], [0, Y + 0.028, 1.22]], [0.0085, 0.006, 0.0038, 0.002], M);
+    // Wire line guides (eyelets) along the blank
+    steel(ctx, "oklch(0.82 0.01 250)", 0.25);
+    for (const [gz, gy, gr] of [[0.48, 0.002, 0.012], [0.72, 0.006, 0.009], [0.96, 0.015, 0.007], [1.21, 0.028, 0.005]]) {
+      rod(ctx, [[0, Y + gy - gr, gz], [0, Y + gy - gr, gz + 0.006]], [gr, gr], 8);
+    }
+    // Hanging monofilament line, red-white bobber float & steel fishhook at the tip
+    if (hi) {
+      plain(ctx, "oklch(0.88 0.02 220)", 0.2);
+      rod(ctx, [[0, Y + 0.026, 1.215], [0, Y - 0.055, 1.21]], [0.0012, 0.0012], 5); // dangling line
+    }
+    plain(ctx, "oklch(0.58 0.22 28)", 0.3);
+    rod(ctx, [[0, Y - 0.02, 1.212], [0, Y - 0.034, 1.212]], [0.006, 0.011], 8); // red bobber top
+    plain(ctx, "oklch(0.95 0.01 90)", 0.3);
+    rod(ctx, [[0, Y - 0.034, 1.212], [0, Y - 0.048, 1.212]], [0.011, 0.005], 8); // white bobber bottom
+    steel(ctx, "oklch(0.85 0.01 250)", 0.2);
+    rod(ctx, [[0, Y - 0.052, 1.21], [0, Y - 0.072, 1.21], [0.008, Y - 0.076, 1.218], [0.014, Y - 0.064, 1.22]], [0.0018, 0.0018, 0.0016, 0.0008], 6); // J-hook
+  },
 };
 
 // Tripo meshes, sampled along their length in their own file frame: rows [z, x, y, r] (r: the thinner half-width there).
@@ -419,7 +454,7 @@ const SCRIPTED = { // grip and head along +Z, and the radius there, for the kind
   cleaver: { grip: [0.0, 0.13, 0.0155], head: [0.14, 0.33, 0.01] },
   revolver: { grip: [0.02, 0.1, 0.016], head: [0.2, 0.3, 0.03], mag: [0.2, 0.3, -0.03] }, coach_gun: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.6, 0.0135] },
   lever_rifle: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.6, 0.011] }, hunting_rifle: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.7, 0.012] },
-  carbine: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.5, 0.021] },
+  carbine: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.5, 0.021] }, fishing_rod: { grip: [0.0, 0.28, 0.015], head: [0.7, 1.22, 0.005] },
   pistol: { grip: [0.02, 0.06, 0.016], head: [0.08, 0.2, 0.016], mag: [0.018, 0.05, -0.085] }, shotgun: { grip: [0.44, 0.6, 0.03], head: [0.62, 0.8, 0.02] },
 };
 // where the shaft is at z: [x, y, r]

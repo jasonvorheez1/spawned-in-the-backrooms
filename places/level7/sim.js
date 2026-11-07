@@ -40,15 +40,15 @@ const brk = (mat, hp) => ({ mat, hp, maxHp: hp });
 export function breakables(FY, PY) {
   const R = {
     // ---- Room 1 (The Floating House / Drowned Parlor) ----
-    "l7-crate": { tags: ["container", "breakable"], feetPosition: { x: -2.1, y: FY, z: -1.8 }, rotation: { yaw: 12 }, model: GLB.crate, layout: fit(0.8, 0.8, 0.8), physics: { body: "static", collider: "box" }, state: { name: "Waterlogged M.E.G. crate", items: "almond,ration,rope,battery", ...brk("wood", 45) } },
-    "l7-pier-crate": { tags: ["container", "breakable"], feetPosition: { x: -0.9, y: PY + 0.04, z: -32.5 }, rotation: { yaw: -20 }, model: GLB.crate, layout: fit(0.6, 0.6, 0.6), physics: { body: "static", collider: "box" }, state: { name: "Salt-crusted maritime locker", items: "almond,battery,bandage", ...brk("wood", 35) } },
+    "l7-crate": { tags: ["container", "breakable"], feetPosition: { x: -2.1, y: FY, z: -1.8 }, rotation: { yaw: 12 }, model: GLB.crate, layout: fit(0.8, 0.8, 0.8), physics: { body: "static", collider: "box" }, state: { name: "Waterlogged M.E.G. crate", items: "almond,ration,wire,battery", ...brk("wood", 45) } },
+    "l7-pier-crate": { tags: ["container", "breakable"], feetPosition: { x: -0.9, y: PY + 0.04, z: -32.5 }, rotation: { yaw: -20 }, model: GLB.crate, layout: fit(0.6, 0.6, 0.6), physics: { body: "static", collider: "box" }, state: { name: "Salt-crusted maritime locker", items: "weapon:fishing_rod,cloth:topw:hoodie:d49b27,almond,battery,bandage", ...brk("wood", 35) } },
     "l7-bookcase": { tags: ["breakable"], feetPosition: { x: -2.72, y: FY, z: 0.3 }, rotation: { yaw: 0 }, model: GLB.bookcase, layout: fit(1.5, 2.3, 1.5), physics: { body: "static", collider: "box" }, state: brk("wood", 90) },
     "l7-armchair": { tags: ["breakable"], feetPosition: { x: 1.7, y: FY, z: 0.2 }, rotation: { yaw: -115 }, model: GLB.armchair, layout: fit(0.95, 0.95, 0.95), physics: { body: "static", collider: "box" }, state: brk("wood", 50) },
     "l7-table": { tags: ["breakable"], feetPosition: { x: 1.15, y: FY, z: -0.9 }, rotation: { yaw: 8 }, model: GLB.table, layout: fit(1.15, 0.5, 1.15), physics: { body: "static", collider: "box" }, state: brk("wood", 40) },
     "l7-dresser": { tags: ["container", "breakable"], feetPosition: { x: 2.4, y: FY, z: -2.15 }, rotation: { yaw: 84 }, model: GLB.dresser, layout: fit(1.0, 1.1, 1.0), physics: { body: "static", collider: "box" }, state: { name: "Swollen chest of drawers", items: "almond,bandage,bobbypin", ...brk("wood", 70) } },
     "l7-dresser-top": { tags: ["breakable"], feetPosition: { x: 1.15, y: FY + 0.5, z: -0.9 }, rotation: { yaw: 172, roll: 4 }, model: GLB.dresser, layout: fit(0.75, 0.8, 0.75), physics: { body: "static", collider: "box" }, state: brk("wood", 50) },
     "l7-sideboard": { tags: ["container", "breakable"], feetPosition: { x: 2.42, y: FY, z: 2.2 }, rotation: { yaw: 90 }, model: GLB.sideboard, layout: fit(1.15, 1.25, 1.15), physics: { body: "static", collider: "box" }, state: { name: "Waterlogged sideboard", items: "ration,battery", ...brk("wood", 80) } },
-    "l7-boxes": { tags: ["breakable"], feetPosition: { x: 1.25, y: FY, z: 2.45 }, rotation: { yaw: 6 }, model: GLB.boxes, layout: fit(0.8, 1.05, 0.8), physics: { body: "static", collider: "box" }, state: { items: "rope", ...brk("wood", 20) } },
+    "l7-boxes": { tags: ["breakable"], feetPosition: { x: 1.25, y: FY, z: 2.45 }, rotation: { yaw: 6 }, model: GLB.boxes, layout: fit(0.8, 1.05, 0.8), physics: { body: "static", collider: "box" }, state: { items: "wire", ...brk("wood", 20) } },
     "l7-lamp": { tags: ["breakable"], feetPosition: { x: -2.5, y: FY, z: 2.3 }, rotation: { yaw: 210, roll: -9 }, model: GLB.floorlamp, layout: fit(0.9, 1.7, 0.9), physics: { body: "static", collider: "box" },
       children: [{ feetPosition: { x: 0, y: 1.45, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.11 70)", intensity: 0.7, distance: 4 } }], state: brk("wood", 25) },
     "l7-plant": { tags: ["breakable"], feetPosition: { x: -1.3, y: FY, z: 2.5 }, rotation: { yaw: 40 }, model: GLB.plant, layout: fit(0.6, 0.75, 0.6), physics: { body: "static", collider: "box" }, state: brk("wood", 15) },
@@ -62,16 +62,16 @@ export function breakables(FY, PY) {
     "l7-debris-2": { feetPosition: { x: -1.5, y: FY + 0.12, z: -2.3 }, rotation: { yaw: 200 }, model: GLB.debris, layout: fit(0.65, 0.4, 0.65) },
 
     // ---- Daylight Zone Drifting Flotsam Salvage ----
-    "l7-flotsam-crate-0": { tags: ["container", "breakable"], feetPosition: { x: 8.2, y: 0.22, z: -43.5 }, rotation: { yaw: 35 }, model: GLB.crate, layout: fit(0.7, 0.7, 0.7), physics: { body: "static", collider: "box" }, state: { name: "Drifting flotsam crate", items: "almond,rope,bobbypin", ...brk("wood", 35) } },
-    "l7-flotsam-crate-1": { tags: ["container", "breakable"], feetPosition: { x: 25.5, y: 0.22, z: -69.5 }, rotation: { yaw: -40 }, model: GLB.crate, layout: fit(0.7, 0.7, 0.7), physics: { body: "static", collider: "box" }, state: { name: "Barnacled cargo box", items: "ration,shells,bandage", ...brk("wood", 40) } },
+    "l7-flotsam-crate-0": { tags: ["container", "breakable"], feetPosition: { x: 8.2, y: 0.22, z: -43.5 }, rotation: { yaw: 35 }, model: GLB.crate, layout: fit(0.7, 0.7, 0.7), physics: { body: "static", collider: "box" }, state: { name: "Drifting flotsam crate", items: "almond,wire,bobbypin,cloth:hat:beanie:d46a28", ...brk("wood", 35) } },
+    "l7-flotsam-crate-1": { tags: ["container", "breakable"], feetPosition: { x: 25.5, y: 0.22, z: -69.5 }, rotation: { yaw: -40 }, model: GLB.crate, layout: fit(0.7, 0.7, 0.7), physics: { body: "static", collider: "box" }, state: { name: "Barnacled cargo box", items: "ration,shells,bandage,cloth:botw:overalls:28322c", ...brk("wood", 40) } },
 
     // ---- Near Island (M.E.G. Outpost Seawatch, y = 7.0) ----
-    "l7-meg-locker": { tags: ["container", "breakable"], feetPosition: { x: 42.5, y: 7.0, z: -117.5 }, rotation: { yaw: 25 }, model: GLB.crate, layout: fit(0.85, 0.85, 0.85), physics: { body: "static", collider: "box" }, state: { name: "M.E.G. Waterproof Dive Locker", lock: "lockpick:35", items: "weapon:revolver,ammo,kit,blue,battery", ...brk("wood", 95) } },
+    "l7-meg-locker": { tags: ["container", "breakable"], feetPosition: { x: 42.5, y: 7.0, z: -117.5 }, rotation: { yaw: 25 }, model: GLB.crate, layout: fit(0.85, 0.85, 0.85), physics: { body: "static", collider: "box" }, state: { name: "M.E.G. Waterproof Dive Locker", lock: "lockpick:35", items: "weapon:revolver,cloth:topw:jacket:2b4c5e,cloth:shoes:boots:1c1e22,ammo,kit,blue,battery", ...brk("wood", 95) } },
     "l7-seawatch-boxes": { tags: ["container", "breakable"], feetPosition: { x: 48.2, y: 7.0, z: -116.5 }, rotation: { yaw: -15 }, model: GLB.boxes, layout: fit(0.8, 1.0, 0.8), physics: { body: "static", collider: "box" }, state: { name: "Seawatch supply cartons", items: "almond,tape,fuse,ration", ...brk("wood", 30) } },
 
     // ---- Far Island (Fort Surrender, y = 11.0) ----
-    "l7-cult-chest": { tags: ["container", "breakable"], feetPosition: { x: -91.5, y: 11.0, z: -232.0 }, rotation: { yaw: -60 }, model: GLB.sideboard, layout: fit(1.1, 1.15, 1.1), physics: { body: "static", collider: "box" }, state: { name: "Fort Surrender Reliquary Chest", lock: "lockpick:45", items: "weapon:carbine,ammo,shells,royal_ration,firesalt,firstaid", ...brk("wood", 110) } },
-    "l7-fort-dresser": { tags: ["container", "breakable"], feetPosition: { x: -98.5, y: 11.0, z: -226.5 }, rotation: { yaw: 15 }, model: GLB.dresser, layout: fit(1.0, 1.1, 1.0), physics: { body: "static", collider: "box" }, state: { name: "Lashed drift-furniture cabinet", items: "almond,bandage,bobbypin,rope", ...brk("wood", 65) } },
+    "l7-cult-chest": { tags: ["container", "breakable"], feetPosition: { x: -91.5, y: 11.0, z: -232.0 }, rotation: { yaw: -60 }, model: GLB.sideboard, layout: fit(1.1, 1.15, 1.1), physics: { body: "static", collider: "box" }, state: { name: "Fort Surrender Reliquary Chest", lock: "lockpick:45", items: "weapon:carbine,cloth:topw:apron:1c282e,cloth:neck:cape:c85a28,ammo,shells,royal_ration,firesalt,firstaid", ...brk("wood", 110) } },
+    "l7-fort-dresser": { tags: ["container", "breakable"], feetPosition: { x: -98.5, y: 11.0, z: -226.5 }, rotation: { yaw: 15 }, model: GLB.dresser, layout: fit(1.0, 1.1, 1.0), physics: { body: "static", collider: "box" }, state: { name: "Lashed drift-furniture cabinet", items: "almond,bandage,bobbypin,cloth:hat:cap:b88838", ...brk("wood", 65) } },
     "l7-fort-crate": { tags: ["container", "breakable"], feetPosition: { x: -93.0, y: 11.0, z: -224.0 }, rotation: { yaw: 110 }, model: GLB.crate, layout: fit(0.8, 0.8, 0.8), physics: { body: "static", collider: "box" }, state: { name: "Tar-caulked provision crate", items: "meat:fish,ration,almond,battery", ...brk("wood", 50) } },
   };
 
@@ -86,7 +86,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 10;
+const V = 11;
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
 const CONCRETE = {
@@ -138,7 +138,7 @@ const L7_NPCS = {
       { x: 47.2, y: 7.0, z: -123.5, dwell: 14, act: null, look: { x: 30.0, z: -140.0 } },
       { x: 44.5, y: 7.0, z: -117.5, dwell: 16, act: null, look: { x: 43.0, z: -118.0 } },
     ],
-    look: { species: "otter", sex: "m", eye: "#38a89d", belly: "#e6d2b5", nose: "#221814", topw: "jacket", top: "#2b4c5e", botw: "pants", bottom: "#2b3036", shoes: "boots", shoec: "#1c1e22", hat: "beanie", hatc: "#d46a28", expr: "calm" },
+    look: { species: "otter", sex: "m", eye: "#38a89d", belly: "#e6d2b5", nose: "#221814", topw: "jacket", top: "#2b4c5e", botw: "overalls", bottom: "#2b3036", shoes: "boots", shoec: "#1c1e22", hat: "beanie", hatc: "#d46a28", neck: "cape", neckc: "#c85a28", expr: "calm" },
   },
   "l7-jude": {
     name: "Brother Jude · Fort Surrender",
@@ -154,7 +154,7 @@ const L7_NPCS = {
       { x: -92.5, y: 11.0, z: -227.5, dwell: 15, act: null, look: { x: -85.0, z: -215.0 } },
       { x: -97.5, y: 11.0, z: -230.0, dwell: 18, act: null, look: { x: -108.0, z: -250.0 } },
     ],
-    look: { species: "deer", sex: "m", eye: "#5ae0d0", belly: "#d8cbb8", nose: "#1e1816", topw: "longsleeve", top: "#1c282e", botw: "pants", bottom: "#181c20", shoes: "boots", shoec: "#141618", neck: "scarf", neckc: "#3a4e54", expr: "calm" },
+    look: { species: "deer", sex: "m", eye: "#5ae0d0", belly: "#d8cbb8", nose: "#1e1816", topw: "apron", top: "#1c282e", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#141618", neck: "cape", neckc: "#3a4e54", expr: "calm" },
   },
   "l7-mara": {
     name: "Sister Mara · Fort Surrender Trader",
@@ -169,7 +169,7 @@ const L7_NPCS = {
       { x: -92.0, y: 11.0, z: -227.0, dwell: 28, act: null, look: { x: -95.0, z: -229.0 } },
       { x: -96.5, y: 11.0, z: -227.5, dwell: 16, act: null, look: { x: -98.0, z: -226.5 } },
     ],
-    look: { species: "raccoon", sex: "f", eye: "#e0a838", belly: "#dcd8d0", nose: "#1c1816", topw: "jacket", top: "#3a4842", botw: "pants", bottom: "#282c30", shoes: "boots", shoec: "#1e1c1a", hat: "beret", hatc: "#24343e", expr: "smirk" },
+    look: { species: "raccoon", sex: "f", eye: "#e0a838", belly: "#dcd8d0", nose: "#1c1816", topw: "hoodie", top: "#3a4842", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#1c1e22", hat: "beanie", hatc: "#24343e", expr: "smirk" },
   },
 };
 
@@ -406,6 +406,20 @@ function lay(ctx) {
     rotation: { pitch: -90, yaw: 180 },
     vector: chalk("IT IS UNDER THE WATER. TAKE THE SKIFF.", "1.9m"),
   });
+
+  // Salvaged Fishing Rods resting at the Entrance Pier and Seawatch Jetty (ready to pick up and cast!)
+  for (const [rid, rx, ry, rz, ryaw] of [
+    ["l7-rod-pier", 0.95, PY + 0.04, -31.2, 155],
+    ["l7-rod-seawatch", 37.1, PY + 0.04, -93.6, -140],
+  ]) {
+    ctx.spawn(rid, {
+      tags: ["weapon"],
+      state: { kind: "fishing_rod" },
+      feetPosition: { x: rx, y: ry, z: rz },
+      rotation: { yaw: ryaw },
+      primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: "fishing_rod" } },
+    });
+  }
 
   // Interactive Ferry Rowboat moored at the Entrance Pier -> rows to M.E.G. Outpost Seawatch!
   ctx.spawn("l7-rowboat", {
@@ -952,18 +966,29 @@ export function tick(ctx) {
     }
 
     // Freezing open-ocean immersion hazard (Wikidot Daylight/Twilight Zone hypothermia & Leviathan attraction)
+    // Level 7 unique diving & oilskin armor insulates against the abyssal chill!
     const onPier = Math.abs(fp.x) < 3.0 && fp.z <= -8 && fp.z >= -35;
     const onRock = Math.hypot(fp.x, fp.z) < 22 || Math.hypot(fp.x - 46, fp.z + 120) < 30 || Math.hypot(fp.x + 95, fp.z + 230) < 48;
     if (fp.y < 0.25 && !onPier && !onRock) {
       s.chillClock ??= {};
       if (now - (s.chillClock[p.id] ?? 0) > 12000) {
         s.chillClock[p.id] = now;
-        p.state.sanity = Math.max(0, (p.state.sanity ?? 100) - 4);
-        p.state.hp = Math.max(5, (p.state.hp ?? 100) - 2);
-        p.state.notice = {
-          text: "The freezing abyssal water numbs your limbs—and the vibrations of your swimming echo down into the Midnight Zone! Board a skiff or climb onto a raft!",
-          at: now,
-        };
+        const lk = p.state.look ?? {};
+        const l7Hex = ["2b4c5e", "1e3b4b", "d49b27", "3a4842", "1c282e", "142024", "28322c", "2b3036", "1c1e22", "141618", "d46a28", "24343e", "b88838", "c85a28", "3a4e54"];
+        const suitPieces = [lk.top, lk.bottom, lk.shoec, lk.hatc, lk.neckc].filter((c) => c && l7Hex.includes(String(c).replace("#", "").toLowerCase())).length;
+        if (suitPieces >= 2) {
+          p.state.notice = {
+            text: "Your insulated Level 7 dive & oilskin gear seals out the freezing abyssal brine!",
+            at: now,
+          };
+        } else {
+          p.state.sanity = Math.max(0, (p.state.sanity ?? 100) - (suitPieces === 1 ? 2 : 4));
+          p.state.hp = Math.max(5, (p.state.hp ?? 100) - (suitPieces === 1 ? 1 : 2));
+          p.state.notice = {
+            text: "The freezing abyssal water numbs your limbs! Wear Level 7 dive/oilskin armor, board a skiff, or climb onto a raft!",
+            at: now,
+          };
+        }
       }
     }
 

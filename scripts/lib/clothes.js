@@ -104,9 +104,9 @@ const pickW = (list, u) => { let x = u * list.reduce((a, [, w]) => a + w, 0); fo
 // a random garment off the leveled list (a find in a crate or on remains); regular: true rolls only the plain set
 export function rollCloth(ctx, regular = false, level) {
   const lv = level ?? rollLevel(ctx)
-  const here = ctx?.self?.place, inHotel = here === 'level5'
+  const here = ctx?.self?.place, inSpecial = here === 'level5' || here === 'level7'
   const list = leveledRows(regular ? 1 : lv, (r) => (r.places ? r.places.includes(here) && !regular : regular ? r.regular : true))
-  if (inHotel && !regular && ctx.random() < 0.6) { const h = list.filter(([r]) => r.places); if (h.length) { const row = pickW(h, ctx.random()); return clothToken(row.slot, row.kind, row.colours[Math.floor(ctx.random() * row.colours.length)]) } } // the hotel mostly turns up its own wardrobe
+  if (inSpecial && !regular && ctx.random() < 0.65) { const h = list.filter(([r]) => r.places); if (h.length) { const row = pickW(h, ctx.random()); return clothToken(row.slot, row.kind, row.colours[Math.floor(ctx.random() * row.colours.length)]) } } // Level 5 & Level 7 mostly turn up their own wardrobe
   const row = pickW(list, ctx.random()) ?? CL.rows[0]
   return clothToken(row.slot, row.kind, row.colours[Math.floor(ctx.random() * row.colours.length)])
 }
