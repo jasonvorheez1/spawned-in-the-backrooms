@@ -70,7 +70,7 @@ const patchId = (k) => 'wp-' + k.replace(/:/g, '_')
 const gridHere = (ctx, gname) => (gname && GRIDS[gname] ? gname : Object.keys(GRIDS).reverse().find((k) => ctx.place.objects[GRIDS[k].obj]))
 export function syncWalls(ctx, gname) {
   const name = gridHere(ctx, gname); if (!name) return
-  const G = GRIDS[name], o = ctx.place.objects[G.obj]; void pl
+  const G = GRIDS[name], o = ctx.place.objects[G.obj]
   const br = ctx.place.state.broken ?? {}, walls = {}
   for (const k of Object.keys(br)) { const p = k.split(':'), w = p.slice(0, 3).join(':'); (walls[w] ??= []); if (p.length === 5) walls[w].push(`${p[3]}:${p[4]}`); else walls[w].whole = true }
   const cut = Object.keys(walls).sort(), cur = (o.primitive?.params?.cut ?? []).join(',')
