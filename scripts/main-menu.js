@@ -4,6 +4,7 @@ export function update(ctx) {
   if (!ctx.self.isLocal && ctx.self.isLocal !== undefined) return ctx.sleep()
   if (!ctx.session.menuMark) {
     ctx.session.menuMark = true; const st = ctx.self.state
+    if (!st.madeChar && (st.xp || st.lvl || st.level || st.visits)) st.madeChar = true // a save that already played keeps its critter
     if (!st.madeChar) { st.madeChar = true; st.menuOpen = false; st.wardrobeOpen = true; st.wrMenu = true; st.wrTab = 'body' } // a new save makes its critter first (Shelly)
     else st.menuOpen = true
   }
