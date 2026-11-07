@@ -9,6 +9,7 @@ const LID_SCALE = 1000 // the lids are modelled this many times too small (scrip
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 import { weaponBody, HOLD } from './lib/weapon-look.js'
 import { baseOf } from './lib/weapons.js'
+const WARDROBE_OFF = true // Shelly, Nov 7: character creator off for now; false brings it back
 export const updateSchedule = { every: { seconds: 0.2 } }
 
 // ---- life: blinking and ear twitches, as brief bone changes the whole room sees (two small writes each)
@@ -93,7 +94,7 @@ function randomLook(ctx, cur, scope) {
 
 export function onInput(ctx, input) {
   const st = ctx.self.state
-  if (input.pressed?.wardrobe) st.wardrobeOpen = !st.wardrobeOpen
+  if (WARDROBE_OFF) { if (st.wardrobeOpen) st.wardrobeOpen = false; } else if (input.pressed?.wardrobe) st.wardrobeOpen = !st.wardrobeOpen
   if (input.pressed?.emote) {
     const l = lookOf(ctx), cur = ctx.self.session.face || l.expr
     const next = C.expr[(C.expr.indexOf(cur) + 1) % C.expr.length]
