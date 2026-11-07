@@ -1,4 +1,17 @@
 # spawn-scene v2 yaml x0z0
+l5-ambrose:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.79934f170ef9260304b202ef4205824dba9052af0c9475c6b8846522d9c15e91.glb, materials: {belly: {color: "#e5c5af"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#c8662e"}, mark: {color: "#96522d"}, nose: {color: "#231816"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e5c5af"}}}, morph: {Smile: 0.8}}]
+  feetPosition: {x: -44.1, y: 0, z: 3.2}
+  id: l5-ambrose
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.c2d2cf30258e5a9dffe20340b842637fe5106a6def1e54dc7db9d2ef462e0cdf.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: true}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: true}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#e5c5af"}, cloth_bottom: {color: "#1e1c22"}, cloth_hat: {color: "#1e1c22"}, cloth_neck: {color: "#b8902e"}, cloth_shoes: {color: "#141210"}, cloth_top: {color: "#1e1c22"}, fur: {color: "#c8662e"}}}
+  physics: character
+  rotation: {yaw: 0}
+  scale: {x: 0.88, y: 1.14, z: 0.88}
+  state: {attr: "7,7,6,7,6,4,6", faction5: hotel, factionName: "Homely Hotel (the staff of this endless hotel: polite, proprietary, they dislike the Originals in the salon and lean on Housekeeping)", home: {x: -44.1, z: 3.2}, hp: 192, maxHp: 192, mode: day, name: "Mr. Ambrose · Front Desk", offers: [["o:rent", Rent a suite (6 almond water)], ["o:checkout", Return the key]], outfit: longsleeve/pants/#1e1c22, ri: 0, role: concierge, rounds: [{act: null, dwell: 120, look: {x: -38, z: 3.2}, x: -44.1, y: 0, z: 3.2}, {act: cdn/clip-pickup.glb, dwell: 9, look: {x: -46, z: 5.4}, x: -44.1, y: 0, z: 5.4}, {act: null, dwell: 40, look: {x: -38, z: 1.6}, x: -44.1, y: 0, z: 1.6}], species: fox, title: "", voice: ambrose}
+  tags: [npc, l5res, l5-hotel]
 l5-ball-banner:
   feetPosition: {x: 8, y: 2, z: 23.78}
   id: l5-ball-banner
@@ -841,6 +854,20 @@ l5-boil-vent-4:
   material: {pbr: true}
   primitive: {kind: scripted, params: {kind: grate}, script: scripts/l5-boiler-props.js}
   tags: [l5-boiler, l5-boil-vent]
+l5-dolores:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.024b96c74631af9ed1835de73d25b82c14ee641980370c3cef3fb4edeeca00e1.glb, materials: {belly: {color: "#fbe1cf"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f2b7a6"}, mark: {color: "#9f786e"}, nose: {color: "#ff8ca2"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#a87f74"}}}, morph: {Open: 0.4, Smile: 1}}]
+  feetPosition: {x: -12.6, y: 0, z: 20.2}
+  id: l5-dolores
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.84a70b8d75b12131065c76710aefcf0d70c6269933225d78ae7e68e3359c81ef.glb, parts: {Bot_longskirt: {visible: true}, Bot_overalls: {visible: false}, Bot_pants: {visible: false}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: true}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: true}, Shoes_sneakers: {visible: false}, Top_apron: {visible: true}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#fbe1cf"}, cloth_bottom: {color: "#3a2a24"}, cloth_hat: {color: "#c0392b"}, cloth_neck: {color: "#f3c64a"}, cloth_shoes: {color: "#d8cfc0"}, cloth_top: {color: "#efe6d4"}, fur: {color: "#f2b7a6"}}}
+  morph: {Bust: 0}
+  physics: character
+  rotation: {yaw: 0}
+  scale: {x: 1.22, y: 0.94, z: 1.22}
+  state: {attr: "4,6,5,8,7,7,5", faction5: hotel, factionName: "Homely Hotel (the staff of this endless hotel: polite, proprietary, they dislike the Originals in the salon and lean on Housekeeping)", home: {x: -12.6, z: 20.2}, hp: 144, maxHp: 144, mode: day, name: "Dolores · Dining Room Cook", offers: [], outfit: apron/longskirt/#efe6d4, ri: 0, role: trader, rounds: [{act: cdn/clip-pickup.glb, dwell: 50, look: {x: -12.6, z: 21}, x: -12.6, y: 0, z: 20.2}, {act: null, dwell: 25, look: {x: -12, z: 16}, x: -7.6, y: 0, z: 16.4}, {act: cdn/clip-talk-loop.glb, dwell: 30, look: {x: -9, z: 15}, x: -12.4, y: 0, z: 15.2}], species: pig, title: "", voice: dolores}
+  tags: [npc, l5res, l5-hotel]
 l5-door-6:
   behavior: scripts/l5-door.js
   feetPosition: {x: 45.72, y: 0, z: 20}
@@ -2900,12 +2927,49 @@ l5-hall-suite-sw-window:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+l5-harlan:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.496ed1318603080d4fcbb7455baf9897f459ceea16ee9bc824dedb190bf9e6aa.glb, materials: {belly: {color: "#d6cbbf"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#5a3e2a"}, mark: {color: "#423025"}, nose: {color: "#2a1c18"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#d6cbbf"}}}, morph: {Frown: 0.5, Half: 0.8}}]
+  feetPosition: {x: 13, y: 0, z: 22.4}
+  id: l5-harlan
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.c2d2cf30258e5a9dffe20340b842637fe5106a6def1e54dc7db9d2ef462e0cdf.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: true}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: true}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#d6cbbf"}, cloth_bottom: {color: "#4a4c50"}, cloth_hat: {color: "#55585c"}, cloth_neck: {color: "#f3c64a"}, cloth_shoes: {color: "#22201c"}, cloth_top: {color: "#6b6e72"}, fur: {color: "#5a3e2a"}}}
+  physics: character
+  rotation: {yaw: 0}
+  scale: {x: 1.26, y: 1.12, z: 1.26}
+  state: {attr: "5,7,6,7,8,6,5", faction5: hk, factionName: "Housekeeping, a M.E.G. outpost on Level 5 (grey uniforms, practical, they back the Homely Hotel staff and keep the Boiler Room rats down)", home: {x: 13, z: 22.4}, hp: 160, maxHp: 160, mode: day, name: "Harlan · Housekeeping Quartermaster", offers: [], outfit: longsleeve/pants/#6b6e72, ri: 0, role: quarter, rounds: [{act: null, dwell: 90, look: {x: 10, z: 17}, x: 13, y: 0, z: 22.4}, {act: cdn/clip-pickup.glb, dwell: 15, look: {x: 8.5, z: 23.5}, x: 8.5, y: 0, z: 22.4}], species: bear, title: "", voice: harlan}
+  tags: [npc, l5res, l5-hk]
+l5-harlan/object/x595cd23e2238773d/0:
+  attachment: {bone: RightHand}
+  id: l5-harlan/object/x595cd23e2238773d/0
+  parent: l5-harlan
+  primitive: {kind: scripted, params: {kind: smg}, script: scripts/weapon-geo.js}
 l5-heat:
   audience: all
   behavior: scripts/l5-heat.js
   feetPosition: {x: 32, y: 0, z: 0}
   id: l5-heat
   tags: [l5-boiler, manager]
+l5-imani:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.c311c03fa9b4cbfde4f98fa7c1e3b5d43972575487e3dc4e801b0735138ee2bc.glb, materials: {belly: {color: "#e6d1b3"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#d4a45e"}, mark: {color: "#896944"}, nose: {color: "#8a4a2a"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e6d1b3"}}}, morph: {Half: 0.3, Open: 0.2, Smile: 1}}]
+  feetPosition: {x: 6, y: 0, z: 14.2}
+  id: l5-imani
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.84a70b8d75b12131065c76710aefcf0d70c6269933225d78ae7e68e3359c81ef.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: true}, Hat_beanie: {visible: true}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: true}, Top_tee: {visible: false}, belly: {color: "#e6d1b3"}, cloth_bottom: {color: "#4a4c50"}, cloth_hat: {color: "#55585c"}, cloth_neck: {color: "#f3c64a"}, cloth_shoes: {color: "#22201c"}, cloth_top: {color: "#7a7c80"}, fur: {color: "#d4a45e"}}}
+  morph: {Bust: 0}
+  physics: character
+  rotation: {yaw: 0}
+  scale: {x: 1.06, y: 1.06, z: 1.06}
+  state: {attr: "6,5,4,6,9,6,6", faction5: hk, factionName: "Housekeeping, a M.E.G. outpost on Level 5 (grey uniforms, practical, they back the Homely Hotel staff and keep the Boiler Room rats down)", home: {x: 6, z: 14.2}, hp: 176, maxHp: 176, mode: day, name: "Imani · Housekeeping Agent", offers: [["o:gossip", Anything moving?]], outfit: tank/pants/#7a7c80, ri: 0, role: agent, rounds: [{act: null, dwell: 15, look: {x: 6, z: 10}, x: 6, y: 0, z: 14.2}, {act: null, dwell: 8, look: {x: -6, z: 18}, x: -3, y: 0, z: 14.5}, {act: null, dwell: 8, look: {x: 15, z: 18}, x: 10, y: 0, z: 17.5}, {act: null, dwell: 10, look: {x: 6, z: -8}, x: 6, y: 0, z: 8}], species: lion, title: "", voice: imani}
+  tags: [npc, l5res, l5-hk]
+l5-imani/object/x595cd23e2238773d/3:
+  attachment: {bone: RightHand}
+  id: l5-imani/object/x595cd23e2238773d/3
+  parent: l5-imani
+  primitive: {kind: scripted, params: {kind: smg}, script: scripts/weapon-geo.js}
 l5-lift3:
   behavior: scripts/level-door.js
   feetPosition: {x: -44.800000000000004, y: 0, z: -2.4492935982947065e-17}
@@ -3255,6 +3319,34 @@ l5-lobby:
   feetPosition: {x: -38, y: 0.1, z: 0}
   id: l5-lobby
   rotation: {yaw: 90}
+l5-millie:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.436740c4291dbdda1dcb292e385a017e50042ca420654a6f54211b6b0578dc16.glb, materials: {belly: {color: "#dfbfad"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#b4542a"}, mark: {color: "#653b2a"}, nose: {color: "#1c1a20"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#713f2a"}}}, morph: {Open: 0.4, Smile: 1}}]
+  feetPosition: {x: 3, y: 0, z: -20.4}
+  id: l5-millie
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.84a70b8d75b12131065c76710aefcf0d70c6269933225d78ae7e68e3359c81ef.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: true}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: true}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: true}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#dfbfad"}, cloth_bottom: {color: "#a8916a"}, cloth_hat: {color: "#5c3a22"}, cloth_neck: {color: "#f4efe4"}, cloth_shoes: {color: "#3a2416"}, cloth_top: {color: "#5c3a22"}, fur: {color: "#b4542a"}}}
+  morph: {Bust: 0}
+  physics: character
+  rotation: {yaw: 0}
+  scale: {x: 0.96, y: 1.04, z: 0.96}
+  state: {attr: "6,8,3,9,5,4,7", faction5: orig, factionName: "The Originals (eccentrics who wandered in between 1300 and 1940; they gossip, play cards, keep Samantha the cat fed, and refuse membership to anyone modern)", home: {x: 3, z: -20.4}, hp: 176, maxHp: 176, mode: day, name: "Millie Lockheart · Aviatrix (1937)", offers: [["o:member", Ask to join the salon], ["o:lore", Ask about the hotel]], outfit: jacket/pants/#5c3a22, ri: 0, role: trader, rounds: [{act: cdn/clip-sit-loop.glb, dwell: 60, look: {x: 5, z: -19}, x: 3, y: 0, z: -20.4}, {act: null, dwell: 15, look: {x: 6, z: -12}, x: 8, y: 0, z: -14.5}, {act: cdn/clip-talk-loop.glb, dwell: 40, look: {x: 5, z: -19}, x: 3, y: 0, z: -20.4}], species: redpanda, title: Swift, voice: millie}
+  tags: [npc, l5res, l5-orig]
+l5-odette:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.d206916575ccbe6d031f0934134d27d2acea05a26d027868fc5ec32e3031a56b.glb, materials: {belly: {color: "#f7e8d4"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f1ece2"}, inner: {color: "#8a7f8c"}, mark: {color: "#6e6259"}, nose: {color: "#2a1c18"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#9b9188"}}}, morph: {Half: 0.7, Smile: 0.3}}]
+  feetPosition: {x: -24.5, y: 0, z: -6.6}
+  id: l5-odette
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.84a70b8d75b12131065c76710aefcf0d70c6269933225d78ae7e68e3359c81ef.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: false}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: true}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: true}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: true}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#f7e8d4"}, cloth_bottom: {color: "#3d5a98"}, cloth_hat: {color: "#f4f1ea"}, cloth_neck: {color: "#f3c64a"}, cloth_shoes: {color: "#f4f1ea"}, cloth_top: {color: "#22222a"}, fur: {color: "#f1ece2"}}}
+  morph: {Bust: 0}
+  physics: character
+  rotation: {yaw: 0}
+  scale: {x: 1.04, y: 0.98, z: 1.04}
+  state: {attr: "7,5,3,6,7,5,7", faction5: hotel, factionName: "Homely Hotel (the staff of this endless hotel: polite, proprietary, they dislike the Originals in the salon and lean on Housekeeping)", home: {x: -24.5, z: -6.6}, hp: 192, maxHp: 192, mode: day, name: "Odette · Maid", offers: [["o:gossip", Heard anything?]], outfit: dress/none/#22222a, ri: 0, role: maid, rounds: [{act: cdn/clip-crouch-idle-loop.glb, dwell: 25, look: {x: -27, z: -5}, x: -24.5, y: 0, z: -6.6}, {act: cdn/clip-crouch-idle-loop.glb, dwell: 25, look: {x: -8, z: -5}, x: -11, y: 0, z: -6.6}, {act: cdn/clip-crouch-idle-loop.glb, dwell: 25, look: {x: -8, z: 5}, x: -11, y: 0, z: 6.6}, {act: cdn/clip-crouch-idle-loop.glb, dwell: 25, look: {x: -27, z: 5}, x: -24.5, y: 0, z: 6.6}, {act: null, dwell: 12, look: {x: -40, z: 11}, x: -33, y: 0, z: 11}], species: sheep, title: "", voice: odette}
+  tags: [npc, l5res, l5-hotel]
 l5-people:
   audience: all
   behavior: scripts/l5-people.js
@@ -3263,6 +3355,19 @@ l5-people:
   state: {}
   tags: [l5-people-mgr]
   visible: false
+l5-pip:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.aedfeb0d9ee23900c4664425e5c04ed6e620e5bdeaa9e6a4b3061988393ac921.glb, materials: {belly: {color: "#e2d5c5"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#b9aca0"}, inner: {color: "#ffc2d1"}, mark: {color: "#c9bcaf"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#6a5e58"}}}, morph: {Happy: 1, Open: 0.5, Smile: 1}}]
+  feetPosition: {x: -36, y: 0, z: -7}
+  id: l5-pip
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.c2d2cf30258e5a9dffe20340b842637fe5106a6def1e54dc7db9d2ef462e0cdf.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: true}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: true}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: true}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: true}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#e2d5c5"}, cloth_bottom: {color: "#1e1c22"}, cloth_hat: {color: "#9e1f24"}, cloth_neck: {color: "#d8b040"}, cloth_shoes: {color: "#1e1c22"}, cloth_top: {color: "#9e1f24"}, fur: {color: "#b9aca0"}}}
+  physics: character
+  rotation: {yaw: 0}
+  scale: {x: 0.9, y: 0.82, z: 0.9}
+  state: {attr: "7,6,5,6,6,8,4", faction5: hotel, factionName: "Homely Hotel (the staff of this endless hotel: polite, proprietary, they dislike the Originals in the salon and lean on Housekeeping)", home: {x: -36, z: -7}, hp: 192, maxHp: 192, mode: day, name: "Pip · Bellhop", offers: [["o:gossip", Heard anything?]], outfit: jacket/pants/#9e1f24, ri: 0, role: bellhop, rounds: [{act: null, dwell: 8, look: {x: -42, z: -7}, x: -36, y: 0, z: -7}, {act: null, dwell: 4, look: {x: -8, z: -11.6}, x: -27, y: 0, z: -11.6}, {act: null, dwell: 6, look: {x: -8, z: 0}, x: -8, y: 0, z: -11.6}, {act: null, dwell: 5, look: {x: -6, z: 0}, x: -17.5, y: 0, z: 0}, {act: null, dwell: 6, look: {x: -30, z: 11.6}, x: -8, y: 0, z: 11.6}, {act: null, dwell: 4, look: {x: -36, z: 8}, x: -27, y: 0, z: 11.6}, {act: cdn/clip-waving-single-hand-loop.glb, dwell: 10, look: {x: -40, z: 3}, x: -36, y: 0, z: 7}], species: mouse, title: Tireless, voice: pip}
+  tags: [npc, l5res, l5-hotel]
 l5-radio-ball:
   audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
   behavior: scripts/l5-door.js
@@ -3484,3 +3589,93 @@ l5-stairs-up-plate:
   primitive: {depth: 0.03, height: 0.36, kind: box, width: 1.2}
   rotation: {yaw: 180}
   ui: "<div face=\"front\" width=\"1.2m\" style=\"font-family:serif;text-align:center;color:#e8c983;background:#2a1c12;border:14px solid #8a6a2a;padding:18px 10px;line-height:1.05\"><div style=\"font-size:130px;font-weight:900;letter-spacing:10px\">LEVEL 4</div><div style=\"font-size:64px;font-style:italic;opacity:.85\">▲ abandoned office</div></div>"
+l5-tobias:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.43c1427f34c45c4356a682d359e3c1d9009830432ed20ba8f7a0d0332015d2a6.glb, materials: {belly: {color: "#e8e2da"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#7a7470"}, mark: {color: "#5c5451"}, nose: {color: "#1c1a20"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#554d4a"}}}, morph: {Frown: 0.3, Half: 0.5}}]
+  feetPosition: {x: -3.4, y: 0, z: 22.6}
+  id: l5-tobias
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.c2d2cf30258e5a9dffe20340b842637fe5106a6def1e54dc7db9d2ef462e0cdf.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: true}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: true}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: true}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#e8e2da"}, cloth_bottom: {color: "#3e4044"}, cloth_hat: {color: "#6b6e72"}, cloth_neck: {color: "#f3c64a"}, cloth_shoes: {color: "#55585c"}, cloth_top: {color: "#6b6e72"}, fur: {color: "#7a7470"}}}
+  physics: character
+  rotation: {yaw: 0}
+  scale: {x: 1.02, y: 0.95, z: 1.02}
+  state: {attr: "6,7,5,10,8,6,5", faction5: hk, factionName: "Housekeeping, a M.E.G. outpost on Level 5 (grey uniforms, practical, they back the Homely Hotel staff and keep the Boiler Room rats down)", home: {x: -3.4, z: 22.6}, hp: 176, maxHp: 176, mode: day, name: "Tobias · Housekeeping Jobs", offers: [["o:job", The rat job]], outfit: hoodie/pants/#6b6e72, ri: 0, role: clerk, rounds: [{act: null, dwell: 60, look: {x: -4.6, z: 23.6}, x: -3.4, y: 0, z: 22.6}, {act: null, dwell: 10, look: {x: 6, z: 13}, x: 0, y: 0, z: 14.6}, {act: cdn/clip-sit-loop.glb, dwell: 20, look: {x: -4.6, z: 23}, x: -3.4, y: 0, z: 19}], species: raccoon, title: Keen-eyed, voice: tobias}
+  tags: [npc, l5res, l5-hk]
+l5-tobias/object/x595cd23e2238773d/2:
+  attachment: {bone: RightHand}
+  id: l5-tobias/object/x595cd23e2238773d/2
+  model: {id: /cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb, offset: [0, -0.064, 0]}
+  parent: l5-tobias
+l5-vanderholt:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.912806c11c0383f0abee4647d5fd0f29d67c59af03b26f81f114c47260339e75.glb, materials: {belly: {color: "#e9bf95"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#d8822e"}, mark: {color: "#e9bf95"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e9bf95"}}}, morph: {Half: 0.5, Smile: 0.7}}]
+  feetPosition: {x: 5, y: 0, z: -22.2}
+  id: l5-vanderholt
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.c2d2cf30258e5a9dffe20340b842637fe5106a6def1e54dc7db9d2ef462e0cdf.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: true}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: true}, Neck_bell: {visible: false}, Neck_bowtie: {visible: true}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: true}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#e9bf95"}, cloth_bottom: {color: "#3a3234"}, cloth_hat: {color: "#1a1a1e"}, cloth_neck: {color: "#e8e0cc"}, cloth_shoes: {color: "#141210"}, cloth_top: {color: "#262028"}, fur: {color: "#d8822e"}}}
+  physics: character
+  rotation: {yaw: 0}
+  scale: {x: 1.24, y: 0.98, z: 1.24}
+  state: {attr: "7,5,5,8,7,7,5", faction5: orig, factionName: "The Originals (eccentrics who wandered in between 1300 and 1940; they gossip, play cards, keep Samantha the cat fed, and refuse membership to anyone modern)", home: {x: 5, z: -22.2}, hp: 192, maxHp: 192, mode: day, name: "Cornelius Vanderholt · Railway Baron (1889)", offers: [["o:member", Ask to join the salon], ["o:lore", Ask about the hotel]], outfit: longsleeve/pants/#262028, ri: 0, role: trader, rounds: [{act: cdn/clip-sit-loop.glb, dwell: 70, look: {x: 5, z: -19}, x: 5, y: 0, z: -22.2}, {act: null, dwell: 15, look: {x: -2, z: -18}, x: 0, y: 0, z: -15}, {act: cdn/clip-talk-loop.glb, dwell: 40, look: {x: 5, z: -19}, x: 5, y: 0, z: -22.2}], species: tiger, title: "", voice: vanderholt}
+  tags: [npc, l5res, l5-orig]
+l5-vesna:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.e5324b109eba65a4ebeca641151f68f13e5c82ba531d8d6b3d2761cf8bf2f486.glb, materials: {antler: {color: "#e9d8b4"}, belly: {color: "#f3e3ce"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#a87a4e"}, mark: {color: "#664b37"}, nose: {color: "#2a1612"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#6b4f39"}}}, morph: {Half: 0.5, Smile: 0.7}}]
+  feetPosition: {x: 14.6, y: 0, z: 15.4}
+  id: l5-vesna
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.84a70b8d75b12131065c76710aefcf0d70c6269933225d78ae7e68e3359c81ef.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: true}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: true}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: true}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#f3e3ce"}, cloth_bottom: {color: "#4a4c50"}, cloth_hat: {color: "#55585c"}, cloth_neck: {color: "#8a8c90"}, cloth_shoes: {color: "#2a2420"}, cloth_top: {color: "#7a7c80"}, fur: {color: "#a87a4e"}}}
+  morph: {Bust: 0}
+  physics: character
+  rotation: {yaw: 0}
+  scale: {x: 0.92, y: 1.1, z: 0.92}
+  state: {attr: "6,6,5,7,4,7,8", faction5: hk, factionName: "Housekeeping, a M.E.G. outpost on Level 5 (grey uniforms, practical, they back the Homely Hotel staff and keep the Boiler Room rats down)", home: {x: 14.6, z: 15.4}, hp: 176, maxHp: 176, mode: day, name: "Vesna · Housekeeping Guide", offers: [["o:escort", Escort me to the Boiler Room]], outfit: jacket/pants/#7a7c80, ri: 0, role: guide, rounds: [{act: null, dwell: 30, look: {x: 17, z: 18}, x: 14.6, y: 0, z: 15.4}, {act: null, dwell: 18, look: {x: 6, z: 13}, x: 2, y: 0, z: 16}, {act: null, dwell: 22, look: {x: 17, z: 18}, x: 14.8, y: 0, z: 20.6}], species: deer, title: Cunning, voice: vesna}
+  tags: [npc, l5res, l5-hk]
+l5-vesna/object/x595cd23e2238773d/1:
+  attachment: {bone: RightHand}
+  id: l5-vesna/object/x595cd23e2238773d/1
+  model: {id: /cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb, offset: [0, -0.064, 0]}
+  parent: l5-vesna
+l5-wat:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.ecce1e1490a06674369554980ddc66fba91e26f5d6af26ec59ad9faa18d700ac.glb, materials: {belly: {color: "#e6d1b7"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#d9a466"}, inner: {color: "#ffc2d1"}, mark: {color: "#664d37"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e6d1b7"}}}, morph: {Half: 0.5, O: 0.5}}]
+  feetPosition: {x: 13, y: 0, z: -16}
+  id: l5-wat
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.c2d2cf30258e5a9dffe20340b842637fe5106a6def1e54dc7db9d2ef462e0cdf.glb, parts: {Bot_longskirt: {visible: true}, Bot_overalls: {visible: false}, Bot_pants: {visible: false}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: true}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: true}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: true}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#e6d1b7"}, cloth_bottom: {color: "#5a4430"}, cloth_hat: {color: "#6a5236"}, cloth_neck: {color: "#4a3a2a"}, cloth_shoes: {color: "#4a3826"}, cloth_top: {color: "#6a5236"}, fur: {color: "#d9a466"}}}
+  physics: character
+  rotation: {yaw: 0}
+  scale: {x: 1.06, y: 0.84, z: 1.06}
+  state: {attr: "8,5,8,5,7,7,7", faction5: orig, factionName: "The Originals (eccentrics who wandered in between 1300 and 1940; they gossip, play cards, keep Samantha the cat fed, and refuse membership to anyone modern)", home: {x: 13, z: -16}, hp: 208, maxHp: 208, mode: day, name: "Brother Wat · Pilgrim (1348)", offers: [["o:member", Ask to join the salon], ["o:lore", Ask about the hotel]], outfit: sweater/longskirt/#6a5236, ri: 0, role: pilgrim, rounds: [{act: cdn/clip-crouch-idle-loop.glb, dwell: 30, look: {x: 14, z: -16}, x: 13, y: 0, z: -16}, {act: null, dwell: 25, look: {x: -2, z: -22.8}, x: -1, y: 0, z: -22.8}, {act: null, dwell: 12, look: {x: 6, z: -8}, x: 6.5, y: 0, z: -13.4}, {act: cdn/clip-sit-loop.glb, dwell: 20, look: {x: 5, z: -19}, x: 8, y: 0, z: -16.5}], species: hamster, title: Charmed, voice: wat}
+  tags: [npc, l5res, l5-orig]
+l5-whitlock:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.2cd659a66f73ed90b210a5f46e6ec6687f4f4617a65b382320c0d1a372053680.glb, materials: {belly: {color: "#c1beb9"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#9aa0a8"}, mark: {color: "#686262"}, nose: {color: "#16141c"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#c1beb9"}}}, morph: {Frown: 0.5, Half: 0.8}}]
+  feetPosition: {x: 7, y: 0, z: -20.4}
+  id: l5-whitlock
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.c2d2cf30258e5a9dffe20340b842637fe5106a6def1e54dc7db9d2ef462e0cdf.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: true}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: true}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: true}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#c1beb9"}, cloth_bottom: {color: "#1c2340"}, cloth_hat: {color: "#f4f1ea"}, cloth_neck: {color: "#d8b040"}, cloth_shoes: {color: "#141210"}, cloth_top: {color: "#1c2340"}, fur: {color: "#9aa0a8"}}}
+  physics: character
+  rotation: {yaw: 0}
+  scale: {x: 1.12, y: 1.12, z: 1.12}
+  state: {attr: "7,6,4,4,6,7,7", faction5: orig, factionName: "The Originals (eccentrics who wandered in between 1300 and 1940; they gossip, play cards, keep Samantha the cat fed, and refuse membership to anyone modern)", home: {x: 7, z: -20.4}, hp: 192, maxHp: 192, mode: day, name: "Capt. Whitlock · Master Mariner (1912)", offers: [["o:member", Ask to join the salon], ["o:lore", Ask about the hotel]], outfit: longsleeve/pants/#1c2340, ri: 0, role: captain, rounds: [{act: cdn/clip-sit-loop.glb, dwell: 50, look: {x: 5, z: -19}, x: 7, y: 0, z: -20.4}, {act: null, dwell: 20, look: {x: 14, z: -12}, x: 12.6, y: 0, z: -14}, {act: cdn/clip-talk-loop.glb, dwell: 40, look: {x: 5, z: -19}, x: 7, y: 0, z: -20.4}], species: wolf, title: "", voice: whitlock}
+  tags: [npc, l5res, l5-orig]
+l5-zelda:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.0a341d60ed49d8102effdb4700b36df293e648fd71310921888b5ed849ec09f9.glb, materials: {belly: {color: "#a29c99"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#2a2428"}, mark: {color: "#352824"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#322725"}}}, morph: {Half: 0.3, Smile: 0.8}}]
+  feetPosition: {x: 5, y: 0, z: -17.6}
+  id: l5-zelda
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.84a70b8d75b12131065c76710aefcf0d70c6269933225d78ae7e68e3359c81ef.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: false}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: true}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: true}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: true}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: true}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#a29c99"}, cloth_bottom: {color: "#3d5a98"}, cloth_hat: {color: "#f4efe4"}, cloth_neck: {color: "#d8b040"}, cloth_shoes: {color: "#1a1a1e"}, cloth_top: {color: "#d8b040"}, fur: {color: "#2a2428"}}}
+  morph: {Bust: 0}
+  physics: character
+  rotation: {yaw: 0}
+  scale: {x: 0.94, y: 0.96, z: 0.94}
+  state: {attr: "8,5,6,8,7,5,7", faction5: orig, factionName: "The Originals (eccentrics who wandered in between 1300 and 1940; they gossip, play cards, keep Samantha the cat fed, and refuse membership to anyone modern)", home: {x: 5, z: -17.6}, hp: 208, maxHp: 208, mode: day, name: "Zelda Fairweather · Flapper (1926)", offers: [["o:member", Ask to join the salon], ["o:lore", Ask about the hotel]], outfit: dress/none/#d8b040, ri: 0, role: socialite, rounds: [{act: cdn/clip-sit-loop.glb, dwell: 40, look: {x: 5, z: -19}, x: 5, y: 0, z: -17.6}, {act: cdn/clip-waving-single-hand-loop.glb, dwell: 20, look: {x: 12, z: -18}, x: 10, y: 0, z: -18}, {act: null, dwell: 15, look: {x: -2, z: -14}, x: 1, y: 0, z: -14}, {act: cdn/clip-talk-loop.glb, dwell: 30, look: {x: 5, z: -19}, x: 5, y: 0, z: -17.6}], species: cat, title: Brute, voice: zelda}
+  tags: [npc, l5res, l5-orig]
