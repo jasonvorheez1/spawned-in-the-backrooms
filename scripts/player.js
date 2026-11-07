@@ -142,7 +142,7 @@ function takeToken0(ctx, token) {
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
     return { ok: true }
   }
-  if (token === 'bobbypin') { s.bobbypins = (s.bobbypins ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Bobby pin (${s.bobbypins} carried)`, at: now }; sound(ctx, 'pickup-ammo', 0.5, true); return { ok: true } }
+  if (token === 'bobbypin' || token === 'pin' || token === 'bobby_pin') { s.bobbypins = (s.bobbypins ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Bobby pin (${s.bobbypins} carried)`, at: now }; sound(ctx, 'pickup-ammo', 0.5, true); return { ok: true } }
   if (token === 'firesalt') { s.firesalt = (s.firesalt ?? 0) + 1; s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } }
   if (token.startsWith('page:')) { // a torn notebook page: kept and read now
     const n = parseInt(token.slice(5)) || 1, have = String(s.pages ?? '').split(',').filter(Boolean)
@@ -732,7 +732,7 @@ function tickStats(ctx, t, moving) {
   if (s.sanity > ms) s.sanity = ms
   if (s.sanity < 0) s.sanity = 0
   if (s.sanity <= 0) s.hp -= L.insanityHurt * t
-  if (zone === 'hub' || zone === 'l4_home') { s.hp = Math.min(mh, s.hp + 3 * t); w.battery = Math.min(L.battery, w.battery + 15 * t) }
+  if (zone === 'hub' || zone === 'l4_home' || zone === 'l5_housekeeping' || zone === 'l5_kitchen') { s.hp = Math.min(mh, s.hp + 3 * t); w.battery = Math.min(L.battery, w.battery + 15 * t) }
   if (s.hp > mh) s.hp = mh
 
   // Rare, subtle auditory hallucination only under deep psychological decay

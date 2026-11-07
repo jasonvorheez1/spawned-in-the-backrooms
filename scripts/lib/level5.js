@@ -99,6 +99,12 @@ export const DRAIN5 = Object.fromEntries(ZONES.map((r) => [r.id, r.drain]));
 export const ZONE_NAMES = Object.fromEntries(ZONES.map((r) => [r.id, r.name ?? (r.kind === "guest" ? "Guest Room" : r.kind === "suite" ? "Suite" : r.id)]));
 // a guest room's gold placard: numbers that follow no pattern (stable per room)
 export const PLACARDS = { "room-n3": "217", "room-n4": "1408", "room-n5": "9", "room-s1": "313", "room-s2": "66", "room-s3": "1932", "room-s4": "4½", "suite-nw": "800", "suite-ne": "12A", "suite-sw": "237", "suite-se": "0" };
+export const L5_NAMES = Object.fromEntries(
+  ZONES.map((r) => [
+    "l5_" + r.id,
+    "Level 5 · " + (r.name ?? (r.kind === "guest" ? `Guest Room ${PLACARDS[r.id] ?? ""}` : r.kind === "suite" ? `Suite ${PLACARDS[r.id] ?? ""}` : r.id)),
+  ])
+);
 export const HOT = ZONES.filter((r) => r.hot).map((r) => r.id);
 // every lamp the sim lights; dressing lanes hang the fixture mesh at the same point (kind says which)
 export const LIGHTS = (() => {

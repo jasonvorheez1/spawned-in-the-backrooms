@@ -16,6 +16,17 @@ export const ears = {
     if (s.kind === "sealed") {
       ctx.emit("playSound", { clip: G(s.sound ?? "heavy-door-handle-rattle-locked"), position: { ...ctx.self.worldFeetPosition, y: 1 }, volume: 0.7, maxDistance: 12 });
       say(who, s.text, ctx);
+      return;
+    }
+    if (s.kind === "bell") {
+      ctx.emit("playSound", { clip: G("eerie-low-chime-level-up"), position: { ...ctx.self.worldFeetPosition, y: 1 }, volume: 0.7, pitch: 1.6, maxDistance: 14 });
+      say(who, "The brass service bell rings with a clear, sharp chime. The sound echoes into the empty gallery.", ctx);
+      return;
+    }
+    if (s.kind === "piano") {
+      ctx.emit("playSound", { clip: G("eerie-low-chime-level-up"), position: { ...ctx.self.worldFeetPosition, y: 1 }, volume: 0.8, pitch: 0.65, maxDistance: 24 });
+      say(who, "You press a yellowed ivory key. A haunting, deep chord reverberates off the coffered ballroom ceiling.", ctx);
+      return;
     }
   },
 };
