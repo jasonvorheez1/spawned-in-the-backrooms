@@ -92,16 +92,16 @@ export function update(ctx, dt) {
   b.feetPosition = { x: m.base.x, y: RIDE_Y + bob, z: m.base.z };
   b.rotation = { yaw: m.base.yaw, pitch, roll };
   // the oars row: a stroke while a key is down (backwards for S, one side harder when turning), at rest raised and feathered; the rower's hands ride the handles
-  const oars = oarsOf(ctx, b), rowing = !!b.controller && (Math.abs(m.mz) > 0.1 || Math.abs(m.mx) > 0.1)
+  const oars = oarsOf(ctx, b), rowKeys = !!b.controller && (Math.abs(m.mz) > 0.1 || Math.abs(m.mx) > 0.1)
   m.ph ??= 0; m.amp ??= { R: 0, L: 0 };
-  if (rowing) {
+  if (rowKeys) {
     m.ph = (m.ph + (m.mz > 0.1 ? -1 : 1) * 0.8 * dt + 1) % 1;
     const turn = Math.abs(m.mz) < 0.1 ? m.mx : m.mx * 0.5 // D (mx > 0) turns right: the left oar pulls, the right holds
     m.amp.L += ((turn > 0.1 ? 1 : turn < -0.1 ? 0.35 : 1) - m.amp.L) * Math.min(1, dt * 6); m.amp.R += ((turn < -0.1 ? 1 : turn > 0.1 ? 0.35 : 1) - m.amp.R) * Math.min(1, dt * 6);
   }
   const pose = {};
   for (const [side, sx] of [["R", 1], ["L", -1]]) {
-    const o = oars[side], k = strokeAt(m.ph), A = m.amp[side], rest = rowing ? 0 : 1; m.rest ??= { R: 1, L: 1 };
+    const o = oars[side], k = strokeAt(m.ph), A = m.amp[side], rest = rowKeys ? 0 : 1; m.rest ??= { R: 1, L: 1 };
     m.rest[side] += (rest ? 1 - m.rest[side] : -m.rest[side]) * Math.min(1, dt * 3);
     const e = m.rest[side], a = (k.a * A) * (1 - e) + REST.a * e, lift = k.lift * (1 - e) + REST.lift * e, fe = k.feather * (1 - e) + REST.feather * e
     const oa = ctx.getObject(o.a), ob = ctx.getObject(o.b), oc = ctx.getObject(o.c);
