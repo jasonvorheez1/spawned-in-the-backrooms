@@ -80,6 +80,7 @@ export function tick(ctx) {
   }
   if (s.seeded && s.layoutV !== 2) { // the halls were re-cut (narrow crawls, more bars): move what hangs on them
     for (const t of ["l3lamp", "sludge", "live-box", "l3drip", "l3oob"]) for (const o of ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
+    for (const o of ctx.query({ radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (!o.tags?.length && String(ctx.getObject(o.id)?.audio?.clip ?? "").includes("water-drip")) ctx.destroy(o.id); // the first leaks wore no tag
     layLayout(ctx);
     for (const o of ctx.query({ tags: ["lootfurn"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id); // furniture backs onto walls that moved
     seedFurniture3(ctx);
