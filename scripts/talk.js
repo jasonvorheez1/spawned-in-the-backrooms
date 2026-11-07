@@ -5,11 +5,13 @@
 import { heard as hearAt } from "./lib/hear.js";
 import T from './lib/data/talk.yml'
 import { nameOf, keyOf, isTrader, voiceOf, VO, systemPrompt, userMessage, parseReply, rollCheck, freshStock, buyPrice, sellPrice, sellables, removeOne, SHOPS } from './lib/npc-talk.js'
-import { getStarter, getChoices } from './lib/npc-starters.js'
 import { takeToken } from './player.js'
 import { talk as service } from './interact.js'
 import { skillsOf, SKILLS } from './lib/stats.js'
 import { describe } from './lib/items.js'
+
+let startersP = null
+const getStartersLib = () => (startersP ??= import('./lib/npc-starters.js'))
 
 const short = (it) => String(it.id).split('/').pop()
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z)
@@ -47,14 +49,16 @@ export function openDialogue(ctx, it) {
   const lastLine = hist[hist.length - 1]
   const recent = lastLine && now - (ses.lastGreetAt ?? -1e9) < 60000
 
-  const starter = getStarter(ctx, it, s)
-  if (starter && (!hist.length || !recent)) {
-    ses.lastGreetAt = now
-    say(ctx, it, starter.text, starter.mood)
-    logLine(ctx, it, 'n', starter.text)
-  }
-
-  s.talkChoices = getChoices(ctx, it, s, starter?.text)
+  getStartersLib().then(({ getStarter, getChoices }) => {
+    if (!live(ctx, s.talkWith)) return
+    const starter = getStarter(ctx, it, s)
+    if (starter && (!hist.length || !recent)) {
+      ses.lastGreetAt = now
+      say(ctx, it, starter.text, starter.mood)
+      logLine(ctx, it, 'n', starter.text)
+    }
+    s.talkChoices = getChoices(ctx, it, s, starter?.text)
+  })
 }
 
 function send(ctx, d) {
@@ -80,7 +84,7 @@ export function heard(ctx, r, pay) {
   const it = live(ctx, pay?.id); if (!it) return
   const text = r?.data?.text ?? r?.text ?? (typeof r?.data === 'string' ? r.data : null)
   const o = r?.ok === false ? null : parseReply(text)
-  if (!o) { const line = T.fallback[Math.floor(ctx.random() * T.fallback.length)]; say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); s.talkChoices = getChoices(ctx, it, s, line, null); return }
+  if (!o) { const line = T.fallback[Math.floor(ctx.random() * T.fallback.length)]; say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); getStartersLib().then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, null) }); return }
   let { reply: line, rapportDelta: delta, intent } = o, passed = false
   if (o.check) {
     const c = rollCheck(ctx, s, o.check); passed = c.ok
@@ -112,7 +116,7 @@ export function heard(ctx, r, pay) {
   }
   if (r1 < 0 && it.state.follow === ctx.self.id) { it.state.follow = null; logLine(ctx, it, 'x', `${who} stopped following you`) }
   say(ctx, it, line, o.mood); logLine(ctx, it, 'n', line)
-  s.talkChoices = getChoices(ctx, it, s, line, o)
+  getStartersLib().then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, o) })
 }
 
 function act(ctx, d) {
