@@ -33,12 +33,14 @@ export function update(ctx, dt) {
     }
     if (now >= (m.look ?? 0)) {
       m.look = now + 300 + ctx.random() * 200;
-      let best = null, bd = L.smilerSight;
+      let best = null, bd = Infinity;
       for (const p of players) {
         const pp = p.feetPosition, c = cellAt(pp.x, pp.z);
         if (inHub(c.cx, c.cz)) continue;
         const dx = pp.x - pos.x, dz = pp.z - pos.z, dy = pp.y + 1.3 - (pos.y + 1.7), d = Math.hypot(dx, dz);
-        if (d >= bd) continue;
+        // drawn to light: a lit flashlight is seen from far off, a dark wanderer only up close (prey already found keeps the normal range)
+        const reach = L.smilerSight * (p.state?.light ? L.smilerSightLit : m.prey === p.id ? 1 : L.smilerSightDark);
+        if (d >= reach || d >= bd) continue;
         const L3 = Math.hypot(dx, dy, dz) || 1;
         const hit = raycast(ctx, { x: pos.x, y: pos.y + 1.7, z: pos.z }, { x: dx / L3, y: dy / L3, z: dz / L3 }, { distance: L3, physicsOnly: true, ignoreEntities: [w.id, p.id], bodies: "static" });
         if (hit) continue;
@@ -50,7 +52,18 @@ export function update(ctx, dt) {
     }
     const prey = m.prey ? players.find((p) => p.id === m.prey) : null;
     let goal, speed;
-    if (prey) { goal = prey.feetPosition; speed = Math.hypot(goal.x - pos.x, goal.z - pos.z) < 9 ? L.chargeSpeed : L.stalkSpeed; }
+    if (prey) {
+      goal = prey.feetPosition; speed = Math.hypot(goal.x - pos.x, goal.z - pos.z) < 9 ? L.chargeSpeed : L.stalkSpeed;
+      // eye contact: while the wanderer looks straight at it, it creeps; turn your back and it runs
+      const yaw = prey.camera?.rotation?.yaw;
+      if (yaw != null) {
+        const r = (yaw * Math.PI) / 180, fx = -Math.sin(r), fz = -Math.cos(r);
+        const tx = pos.x - goal.x, tz = pos.z - goal.z, tl = Math.hypot(tx, tz) || 1;
+        const staring = (fx * tx + fz * tz) / tl > Math.cos((L.stareCone * Math.PI) / 180);
+        if (staring) speed = L.stareSpeed;
+        if (staring !== !!m.stared) { m.stared = staring; if (!staring) ctx.emit("playSound", { clip: SND("creepy-wet-giggle-close"), position: pos, volume: 0.7, maxDistance: 20 }); }
+      }
+    }
     else if (m.last && now - m.last.at < 6000) { goal = m.last; speed = L.stalkSpeed; if (Math.hypot(goal.x - pos.x, goal.z - pos.z) < 0.8) m.last = null; }
     else { if (!m.next || Math.hypot(m.next.x - pos.x, m.next.z - pos.z) < 0.5 || now > (m.nextBy ?? 0)) { m.next = neighbor(ctx, pos); m.nextBy = now + 6000; } goal = m.next; speed = 1.3; }
     let vx = 0, vz = 0;

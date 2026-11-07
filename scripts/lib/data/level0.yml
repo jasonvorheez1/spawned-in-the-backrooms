@@ -35,6 +35,10 @@ smilerHp: 60
 stalkSpeed: 2.2
 chargeSpeed: 4.6
 smilerSight: 22
+smilerSightLit: 1.8      # her pick: a lit flashlight is seen this many times farther
+smilerSightDark: 0.5     # her pick: light off, they only notice you this close
+stareCone: 18            # her pick: degrees off your aim that still counts as eye contact
+stareSpeed: 0.35         # her pick: a stared-down smiler creeps at this many m/s
 biteDamage: 12
 biteSanity: 10
 biteCooldown: 1.2
