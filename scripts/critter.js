@@ -96,7 +96,7 @@ function randomLook(ctx, cur, scope) {
 
 export function onInput(ctx, input) {
   const st = ctx.self.state
-  if (WARDROBE_OFF) { if (st.wardrobeOpen) st.wardrobeOpen = false; } else if (input.pressed?.wardrobe) st.wardrobeOpen = !st.wardrobeOpen
+  if (WARDROBE_OFF) { if (st.wardrobeOpen && !st.wrMenu) st.wardrobeOpen = false; } // the O key stays off; the main menu's CHARACTER opens it else if (input.pressed?.wardrobe) st.wardrobeOpen = !st.wardrobeOpen
   if (input.pressed?.emote) {
     const l = lookOf(ctx), cur = ctx.self.session.face || l.expr
     const next = C.expr[(C.expr.indexOf(cur) + 1) % C.expr.length]
@@ -104,7 +104,7 @@ export function onInput(ctx, input) {
   }
   const d = input.actionData?.dress
   if (input.pressed?.dress && d && typeof d.k === 'string') {
-    if (d.k === 'close') { st.wardrobeOpen = false; return }
+    if (d.k === 'close') { st.wardrobeOpen = false; if (st.wrMenu) { st.wrMenu = false; st.menuOpen = true } return }
     if (d.k === 'face') { st.face = { expr: d.v, until: ctx.now() + C.holdFace * 1000 }; return }
     if (d.k === 'tab') { if (['body', 'face', 'clothes', 'outfits'].includes(d.v)) st.wrTab = d.v; return }
     if (d.k === 'spin') { st.wrSpin = ((st.wrSpin || 0) + (Number(d.v) || 0)) % 360; return }

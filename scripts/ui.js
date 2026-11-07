@@ -5,6 +5,7 @@ import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
 import { ZONE_NAMES } from './lib/maze.js'
 import { wardrobe } from './wardrobe-ui.js'
+import { mainMenu } from './main-menu-ui.js'
 import { pickUi } from './lockpick-ui.js'
 import { lootUi } from './loot-ui.js'
 import { talkUi } from './talk-ui.js'
@@ -161,6 +162,8 @@ import { mahjongPanel } from './mahjong-ui.js'
 export default function render(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
+  if (s.menuOpen) return mainMenu(ctx, player)
+  if (s.wardrobeOpen) return `${THEME}<div id="hud" style="position:fixed;inset:0;pointer-events:none">${wardrobe(ctx, player)}</div>`
   if (s.mj?.seats) return `${THEME}${LIVE}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">${mahjongPanel(s, ctx.now())}${chatBubbles(ctx, ctx.now(), player)}</div>` // at the mahjong table: only the game and who's talking
   const now = ctx.now(), lv = s.level, mh = maxHp(lv, s), ms = maxSan(lv, s)
   const hpF = Math.max(0, s.hp / mh), sanF = Math.max(0, s.sanity / ms)
