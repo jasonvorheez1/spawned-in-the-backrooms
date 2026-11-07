@@ -259,3 +259,211 @@ def copy_weights(dst, src, blend_hips=0.0):
             if x < .01: continue
             if k not in dg: dg[k] = dst.vertex_groups.new(name=k)
             dg[k].add([v.index], x, 'REPLACE')
+
+# ================= species =================
+# head: snout length, pig, cheek, wide | ears: type, scale | tail type | extras | zones on the head
+SP = {
+ "cat":      dict(sn=.06, ears=("point", 1.0), tail="cat", ex=[], z=["muzzle"]),
+ "dog":      dict(sn=.11, ears=("flop", 1.0), tail="bushy", ex=[], z=["muzzle"]),
+ "fox":      dict(sn=.12, ears=("point", 1.3), tail="bushy", ex=[], z=["muzzle", "cheeks"]),
+ "bunny":    dict(sn=.05, ears=("long", 1.0), tail="puff", ex=[], z=["muzzle"]),
+ "bear":     dict(sn=.09, ears=("round", 1.0), tail="stub", ex=[], z=["muzzle"], wide=1.06),
+ "deer":     dict(sn=.09, ears=("leaf", 1.0), tail="flag", ex=["antlers"], z=["muzzle"]),
+ "reindeer": dict(sn=.1, ears=("leaf", .9), tail="flag", ex=["bigantlers"], z=["muzzle", "cheeks"]),
+ "mouse":    dict(sn=.07, ears=("round", 1.5), tail="thin", ex=[], z=["muzzle"]),
+ "wolf":     dict(sn=.12, ears=("point", 1.35), tail="bushy", ex=[], z=["muzzle", "cheeks"]),
+ "raccoon":  dict(sn=.1, ears=("point", .8), tail="ringed", ex=[], z=["muzzle", "mask"]),
+ "panda":    dict(sn=.07, ears=("round", 1.0), tail="stub", ex=[], z=["patches"], wide=1.06),
+ "pig":      dict(sn=.04, ears=("pig", 1.0), tail="curly", ex=[], z=[], pig=True),
+ "sheep":    dict(sn=.07, ears=("flop", .7), tail="puff", ex=["wool"], z=["face"]),
+ "lion":     dict(sn=.09, ears=("round", .85), tail="lion", ex=["mane"], z=["muzzle"]),
+ "tiger":    dict(sn=.08, ears=("round", .95), tail="ringed", ex=[], z=["muzzle", "cheeks", "stripes"]),
+ "redpanda": dict(sn=.08, ears=("point", .85), tail="ringed", ex=[], z=["muzzle", "cheeks", "brows"]),
+ "skunk":    dict(sn=.09, ears=("round", .9), tail="bushy", ex=[], z=["stripe"]),
+ "hamster":  dict(sn=.04, ears=("round", .95), tail="stub", ex=[], z=["muzzle"], cheek=1.6, wide=1.05),
+ "otter":    dict(sn=.07, ears=("round", .6), tail="otter", ex=[], z=["muzzle"]),
+ "koala":    dict(sn=.04, ears=("round", 1.45), tail="stub", ex=[], z=[], bignose=True, wide=1.04),
+}
+if ONLY: SP = {k: v for k, v in SP.items() if k in ONLY.split(",")}
+EYE_C, EYE_R, EYE_Z = .13, .068, 1.37
+
+def build_head(name, p):
+    mb = mball(name, .007); wd = p.get("wide", 1.0)
+    ell(mb, (0, .01, 1.32), .31 * wd, .25, .25)
+    ell(mb, (0, .07, 1.17), .19 * wd, .16, .09)                                         # jaw/chin
+    for s in (-1, 1):                                                                   # cheek tufts flaring out
+        ck = p.get("cheek", 1.0)
+        ball(mb, (.2 * s * wd, .1, 1.21), .1 * ck)
+        cap(mb, (.24 * s * wd, .03, 1.24), (.37 * s * wd, .0, 1.2), .045)
+        cap(mb, (.24 * s * wd, .03, 1.2), (.33 * s * wd, .0, 1.1), .036)
+        cap(mb, (.25 * s * wd, .0, 1.3), (.36 * s * wd, -.03, 1.3), .036)
+    for x, z in ((0, 1.53), (-.06, 1.52), (.06, 1.52)):                                 # forehead tuft
+        cap(mb, (x * .7, .06, 1.46), (x, .14, z + .03), .03)
+    sn = p["sn"]
+    if p.get("pig"):
+        cap(mb, (0, .22, 1.24), (0, .3, 1.24), .062, st=3)
+    else:
+        ell(mb, (0, .19 + sn * .5, 1.235), .1 + sn * .15, .06 + sn * .55, .068)
+    o = to_mesh(bpy.data.objects[name], .007, 2); o.name = name
+    decimate(o, 1900)
+    # nose
+    bvh = BVHTree.FromObject(o, bpy.context.evaluated_depsgraph_get())
+    hit = bvh.ray_cast(V(0, 1, 1.275 if not p.get("pig") else 1.24), V(0, -1, 0))[0]
+    bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=14, v_segments=8, radius=1)
+    if p.get("pig"): sc = (.04, .012, .03)
+    elif p.get("bignose"): sc = (.05, .03, .045)
+    else: sc = (.03, .02, .021)
+    for v in bm.verts:
+        v.co = V(v.co.x * sc[0] * (1 - .35 * max(0, -v.co.z)), v.co.y * sc[1], v.co.z * sc[2])
+    bmesh.ops.translate(bm, vec=hit + V(0, -.004, 0), verts=bm.verts)
+    nm = bpy.data.meshes.new(name + "n"); bm.to_mesh(nm); bm.free(); no = bpy.data.objects.new(name + "n", nm); scene.collection.objects.link(no)
+    for pl in nm.polygons: pl.material_index = 1
+    set_mats(o, ["fur"]); set_mats(no, ["fur", "nose"])
+    for pl in nm.polygons: pl.material_index = 1
+    o = join([o, no], name)
+    zones = p["z"]
+    def zone(c, n):
+        x, y, z = c; ax = abs(x)
+        if ax < .02 and y > .2 and abs(z - 1.24) < .045 and False: return "nose"
+        if "patches" in zones:
+            for s in (-1, 1):
+                if ((x - EYE_C * s) / .095) ** 2 + ((z - EYE_Z + .015) / .085) ** 2 < 1 and y > .05: return "mark"
+        if "mask" in zones and .03 < ax < .3 and 1.3 < z < 1.43 and y > .06: return "mark"
+        if "brows" in zones and any(((x - .12 * s) / .04) ** 2 + ((z - 1.47) / .025) ** 2 < 1 for s in (-1, 1)) and y > 0: return "belly"
+        if "stripe" in zones and ax < .035 and z > 1.3 and y > -.15: return "belly"
+        if "face" in zones and y > .05 and z < 1.47: return "mark"
+        if "muzzle" in zones and y > .14 and z < 1.285 and ax < .14 + p["sn"] * .3: return "belly"
+        if "cheeks" in zones and ax > .2 and z < 1.27 and y > -.05: return "belly"
+        if "stripes" in zones and (y < .2 or z > 1.45) and ((z * 16 + ax * 4) % 1) < .22 and (ax > .22 or z > 1.45): return "mark"
+        return "fur"
+    names = ["fur", "nose", "belly", "mark"]
+    idx = {n: i for i, n in enumerate(names)}
+    keep = [m.name for m in o.data.materials]
+    set_mats(o, names)
+    for pl in o.data.polygons:
+        if keep[pl.material_index] == "nose": pl.material_index = 1
+        else: pl.material_index = idx[zone(pl.center, pl.normal)]
+    smooth_shade(o); return o
+
+# ---- ears: a cupped leaf with an inner face and base tufts, built for the LEFT side then mirrored ----
+EAR = {
+ "point": dict(h=.24, w=lambda t: .105 * (1 - t) ** .85, cup=.03, base=V(-.19, -.03, 1.47), tilt=(-6, 22), tuft=True),
+ "long":  dict(h=.4, w=lambda t: .068 * math.sin(math.pi * (.08 + .9 * t)) ** .55, cup=.03, base=V(-.13, -.04, 1.5), tilt=(-10, 12), tuft=True),
+ "round": dict(h=.13, w=lambda t: .095 * max(0, 1 - t * t) ** .5, cup=.02, base=V(-.21, -.03, 1.5), tilt=(-4, 30), tuft=True),
+ "leaf":  dict(h=.21, w=lambda t: .07 * math.sin(math.pi * min(1, t * 1.05)) ** .7, cup=.025, base=V(-.25, -.02, 1.44), tilt=(-10, 62), tuft=True),
+ "flop":  dict(h=.24, w=lambda t: .075 * math.sin(math.pi * (.12 + .86 * t)) ** .5, cup=.015, base=V(-.25, 0, 1.47), tilt=(10, 150), tuft=False),
+ "pig":   dict(h=.14, w=lambda t: .08 * (1 - t) ** .75, cup=.02, base=V(-.2, .02, 1.48), tilt=(35, 25), tuft=False),
+}
+def build_ear(kind, side):
+    e = EAR[kind]; R, C = 14, 9; bm = bmesh.new(); front, back = [], []
+    for i in range(R + 1):
+        t = i / R; w = max(.004, e["w"](t)); row_f, row_b = [], []
+        for j in range(C + 1):
+            u = j / C * 2 - 1; x = u * w; cupd = -e["cup"] * (1 - u * u) * min(1, t * 3)
+            th = .012 * (1 - .6 * t) * (1 - u * u) + .002
+            row_f.append(bm.verts.new((x, cupd + th * .5, t * e["h"] - .04))); row_b.append(bm.verts.new((x, cupd - th * .5 - .004, t * e["h"] - .04)))
+        front.append(row_f); back.append(row_b)
+    inner_faces = []
+    for i in range(R):
+        for j in range(C):
+            f = bm.faces.new((front[i][j], front[i][j + 1], front[i + 1][j + 1], front[i + 1][j]))
+            if .15 < j / C < .85 and i / R < .82: inner_faces.append(f)
+            bm.faces.new((back[i][j + 1], back[i][j], back[i + 1][j], back[i + 1][j + 1]))
+    for i in range(R):
+        bm.faces.new((front[i][0], front[i + 1][0], back[i + 1][0], back[i][0])); bm.faces.new((front[i + 1][C], front[i][C], back[i][C], back[i + 1][C]))
+    for j in range(C): bm.faces.new((front[R][j], front[R][j + 1], back[R][j + 1], back[R][j]))
+    for f in inner_faces: f.material_index = 1
+    if e["tuft"]:                                                                          # fluffy tufts out of the inner base
+        for k, (x, ang) in enumerate(((-.025, -14), (.0, 0), (.025, 14))):
+            base = V(x, .012, .0); tip = base + V(math.sin(math.radians(ang)) * .06, .03, .075 + .01 * (k == 1))
+            ring = [bm.verts.new(base + V(math.cos(a) * .012, math.sin(a) * .008, 0)) for a in [i * math.tau / 5 for i in range(5)]]
+            tv = bm.verts.new(tip)
+            for i in range(5): f = bm.faces.new((ring[i], ring[(i + 1) % 5], tv)); f.material_index = 2
+    me = bpy.data.meshes.new("ear"); bm.to_mesh(me); bm.free(); o = bpy.data.objects.new("ear", me); scene.collection.objects.link(o)
+    set_mats(o, ["fur", "inner", "belly"])
+    for pl in me.polygons: pl.material_index = min(pl.material_index, 2)
+    s = o.modifiers.new("sub", "SUBSURF"); s.levels = 1; sel(o); bpy.ops.object.modifier_apply(modifier="sub")
+    pitch, roll = e["tilt"]
+    M = Matrix.Translation(e["base"]) @ Euler((math.radians(pitch), math.radians(-roll), 0), 'XYZ').to_matrix().to_4x4()
+    if side > 0: M = Matrix.Scale(-1, 4, V(1, 0, 0)) @ M
+    o.data.transform(M)
+    if side > 0: o.data.flip_normals()
+    smooth_shade(o); rigid(o, "EarL" if side < 0 else "EarR"); return o
+
+# ---- tails: a fluffy sweep along a path ----
+def sweep(name, pts, radius, sides=10, segs=24, fluff=.18, mats=None, flat=1.0):
+    from mathutils import geometry
+    P = [V(*p) for p in pts]
+    path = [geometry.interpolate_bezier(P[0], P[0], P[1], P[1], 2)[0]]
+    # catmull-rom
+    def cr(t):
+        n = len(P) - 1; f = min(n - 1e-6, t * n); i = int(f); u = f - i
+        p0, p1, p2, p3 = P[max(0, i - 1)], P[i], P[i + 1], P[min(n, i + 2)]
+        return .5 * ((2 * p1) + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u ** 3)
+    bm = bmesh.new(); rings = []; prevn = None
+    for k in range(segs + 1):
+        t = k / segs; c = cr(t); tg = (cr(min(1, t + .01)) - cr(max(0, t - .01))).normalized()
+        n = (prevn if prevn else V(1, 0, 0)); n = (n - tg * n.dot(tg)).normalized(); prevn = n; b = tg.cross(n)
+        r = radius(t); ring = []
+        for j in range(sides):
+            a = j / sides * math.tau; fl = 1 + fluff * (math.sin(a * 3 + k * 1.3) * .5 + .5) * (1 if .05 < t < .97 else 0)
+            ring.append(bm.verts.new(c + (n * math.cos(a) * flat + b * math.sin(a)) * r * fl))
+        rings.append((ring, t))
+    for k in range(segs):
+        for j in range(sides):
+            f = bm.faces.new((rings[k][0][j], rings[k][0][(j + 1) % sides], rings[k + 1][0][(j + 1) % sides], rings[k + 1][0][j]))
+            if mats: f.material_index = mats(rings[k][1])
+    for ring, t in (rings[0], rings[-1]):
+        cv = bm.verts.new(sum((v.co for v in ring), V(0, 0, 0)) / len(ring))
+        for j in range(sides):
+            f = bm.faces.new((ring[j], ring[(j + 1) % sides], cv) if t > 0 else (ring[(j + 1) % sides], ring[j], cv))
+            if mats: f.material_index = mats(t)
+    me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free(); o = bpy.data.objects.new(name, me); scene.collection.objects.link(o)
+    s = o.modifiers.new("sub", "SUBSURF"); s.levels = 1; sel(o); bpy.ops.object.modifier_apply(modifier="sub"); smooth_shade(o)
+    return o
+TIP = lambda f: (lambda t: 1 if t > f else 0)
+TAIL = {
+ "cat":    lambda: sweep("t", [(0, -.06, .6), (0, -.22, .56), (0, -.36, .66), (0, -.4, .84), (0, -.33, .96)], lambda t: .034 * (1 - .2 * t) * min(1, (1 - t) * 8 + .3), mats=TIP(.86)),
+ "bushy":  lambda: sweep("t", [(0, -.06, .6), (0, -.2, .54), (0, -.35, .58), (0, -.44, .72), (0, -.43, .86)], lambda t: .03 + .085 * math.sin(math.pi * min(1, t * 1.05)) ** .8, fluff=.3, mats=TIP(.76)),
+ "thin":   lambda: sweep("t", [(0, -.06, .6), (0, -.25, .5), (0, -.45, .55), (0, -.55, .7), (0, -.5, .8)], lambda t: .016 * (1 - .7 * t), sides=8, fluff=0),
+ "stub":   lambda: sweep("t", [(0, -.06, .61), (0, -.12, .63), (0, -.17, .66)], lambda t: .06 * math.sin(math.pi * (.15 + .85 * t)) ** .5, fluff=.25),
+ "puff":   lambda: sweep("t", [(0, -.06, .62), (0, -.13, .64), (0, -.2, .66)], lambda t: .08 * math.sin(math.pi * (.1 + .9 * t)) ** .45, fluff=.35, mats=TIP(-1)),
+ "flag":   lambda: sweep("t", [(0, -.06, .64), (0, -.15, .7), (0, -.19, .8)], lambda t: .05 * math.sin(math.pi * (.1 + .9 * t)) ** .5, fluff=.2, flat=1.5, mats=TIP(.55)),
+ "ringed": lambda: sweep("t", [(0, -.06, .6), (0, -.22, .54), (0, -.37, .6), (0, -.45, .74), (0, -.44, .87)], lambda t: .03 + .06 * math.sin(math.pi * min(1, t * 1.03)) ** .7, fluff=.22, segs=28, mats=lambda t: 2 if (t * 7) % 1 > .55 or t > .9 else 0),
+ "curly":  lambda: sweep("t", [(0, -.06, .62), (0, -.13, .6), (.03, -.18, .64), (0, -.2, .69), (-.03, -.16, .7), (0, -.14, .66)], lambda t: .013, sides=8, fluff=0),
+ "lion":   lambda: join([sweep("t", [(0, -.06, .6), (0, -.25, .52), (0, -.42, .55), (0, -.5, .68)], lambda t: .02, sides=8, fluff=0),
+                         sweep("tt", [(0, -.47, .63), (0, -.5, .69), (0, -.52, .76)], lambda t: .045 * math.sin(math.pi * (.1 + .9 * t)) ** .5, fluff=.35, mats=TIP(-1))], "t"),
+ "otter":  lambda: sweep("t", [(0, -.05, .6), (0, -.22, .5), (0, -.38, .42), (0, -.5, .4)], lambda t: .075 * (1 - .8 * t) + .008, fluff=.06, flat=1.3),
+}
+def build_tail(kind):
+    o = TAIL[kind](); o.name = "Tail_" + kind; o.data.name = o.name
+    names = ["fur", "tip", "mark"]; cur = [m.name for m in o.data.materials]
+    idx = [p.material_index for p in o.data.polygons]; set_mats(o, names)
+    for p, i in zip(o.data.polygons, idx): p.material_index = i
+    return o
+
+def build_extra(kind):
+    if kind in ("antlers", "bigantlers"):
+        big = kind == "bigantlers"; parts = []
+        for s in (-1, 1):
+            k = 1.5 if big else 1.0
+            main = [(.1 * s, -.03, 1.52), (.15 * s, -.05, 1.62), (.2 * s * k, -.04, 1.72 + .05 * k), (.24 * s * k, .0, 1.8 + .1 * k)]
+            parts.append(sweep("a", main, lambda t: .022 * (1 - .55 * t), sides=7, fluff=0))
+            for t0, d in ((.35, (.0, .09, .07)), (.65, (.07 * s, .05, .09))) + (((.5, (-.03 * s, .1, .12)), (.85, (.0, .07, .11))) if big else ()):
+                a = V(*main[1]).lerp(V(*main[2]), t0) if t0 < .66 else V(*main[2]).lerp(V(*main[3]), (t0 - .66) * 3)
+                parts.append(sweep("b", [tuple(a), tuple(a + V(*d) * .5 + V(0, 0, .02)), tuple(a + V(*d))], lambda t: .014 * (1 - .6 * t), sides=6, fluff=0))
+        o = join(parts, "Extra_" + kind); set_mats(o, ["antler"])
+    elif kind == "mane":
+        mb = mball("Mane", .01)
+        for i in range(18):
+            a = i / 18 * math.tau; x, z = math.cos(a) * .36, 1.3 + math.sin(a) * .33
+            cap(mb, (x * .8, -.08, 1.3 + (z - 1.3) * .8), (x * 1.15, -.04, 1.3 + (z - 1.3) * 1.15), .07)
+        ell(mb, (0, -.12, 1.28), .3, .12, .3)
+        o = to_mesh(bpy.data.objects["Mane"], .01, 2); decimate(o, 1600); o.name = "Extra_mane"; set_mats(o, ["tip"])
+    elif kind == "wool":
+        mb = mball("Wool", .008)
+        for i in range(9):
+            a = i / 9 * math.tau; ball(mb, (math.cos(a) * .12, .02 + math.sin(a) * .08, 1.56 + .02 * math.sin(a * 2)), .065)
+        ball(mb, (0, .03, 1.6), .07)
+        o = to_mesh(bpy.data.objects["Wool"], .008, 2); decimate(o, 1200); o.name = "Extra_wool"; set_mats(o, ["belly"])
+    smooth_shade(o); rigid(o, "Head"); return o
