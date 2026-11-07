@@ -49,7 +49,7 @@ function shopUi(ctx, s, it) {
 export function talkUi(ctx, player) {
   const s = player?.state ?? {}
   const id = s.shopOpen ?? s.talkWith; if (!id) return ''
-  const it = ctx.getObject ? ctx.getObject(id) : ctx.place?.objects?.[id]; if (!it) return ''
+  const it = ctx.place?.objects?.[id] ?? ctx.getObject?.(id); if (!it) return ''
   if (s.shopOpen) return `${CSS}<div class="tk tkw" data-modal>${shopUi({ self: player }, s, it)}</div>`
   const role = it.state?.role, key = player.userId ?? player.id, r = it.state?.rapport?.[key] ?? 0
   const log = (s.talks?.[String(it.id).split('/').pop()] ?? []).slice(-T.log)
