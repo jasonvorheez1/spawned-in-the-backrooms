@@ -1,3 +1,5 @@
+import { critterSpec } from "../../scripts/lib/critter-model.js";
+import { fullLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import MEG from "../../scripts/lib/data/meg.yml";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
@@ -19,8 +21,7 @@ const AGENTS = [["meg-ale", 2.6, -0.6], ["meg-ortiz", 11.5, -3.6], ["meg-callum"
 export function agentSpec(a, id, dx, dz) {
   const g = AGENT[id];
   return { tags: ["npc"], feetPosition: { x: a.x + dx, y: 0, z: a.z + dz }, rotation: { yaw: 90 }, physics: "character",
-    primitive: { kind: "scripted", script: "scripts/critter2-geo.js", params: g.look }, material: { outline: { color: "#1d1420", width: 2.4 } },
-    jiggle: { bones: ["Tail*", "Ear*"], amount: 0.6, bounce: 0.6 }, behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role } };
+    ...critterSpec(fullLook(g.look)), behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role } };
 }
 const STOVE = `fx
 pop flame rate=26 on=disc(.18) life=.4..0.7 v=up(1.1)+cone(18)*(.2..0.5) size=.14..0.26 acc=curl(.5)+buoy(1.6)+drag(1.5) sz=$size*(.5>1:.25>.12) col=hdr(4,2.6,1)>hdr(2.6,1,.25)>hdr(.5,.1,.03) a=0>.15:1>.7:.8>0 r=sprite(flame-wisp,add)

@@ -3,13 +3,19 @@ meg-ale:
   behavior: scripts/meg-agent.js
   feetPosition: {x: 6.6, y: 0, z: 3.4}
   id: meg-ale
-  jiggle: {amount: 0.6, bones: [Tail*, Ear*], bounce: 0.6}
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
   material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.36aefc7cc3e2c61b269f1c0385d14acb2ad14558245bd4090ad95822a225155e.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: true}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: true}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#ffffff"}, cloth_bottom: {color: "#4a5a3a"}, cloth_hat: {color: "#b6e04a"}, cloth_neck: {color: "#f3c64a"}, cloth_shoes: {color: "#2a2420"}, cloth_top: {color: "#b6e04a"}, fur: {color: "#f07a2e"}, limb: {color: "#f07a2e"}, mark: {color: "#2c1c18"}, nose: {color: "#231816"}, pad: {color: "#ff9fb4"}, tip: {color: "#ffffff"}}}
   physics: character
-  primitive: {kind: scripted, params: {bottom: "#4a5a3a", botw: pants, expr: smile, hat: cap, hatc: "#b6e04a", sex: f, shoec: "#2a2420", shoes: boots, species: fox, top: "#b6e04a", topw: jacket}, script: scripts/critter2-geo.js}
   rotation: {yaw: 90}
   state: {angry: {}, home: {x: 6.072, z: 2.619}, name: "Ale · M.E.G. Scout", role: scout}
   tags: [npc]
+meg-ale/critter-head:
+  attachment: {skin: true}
+  id: meg-ale/critter-head
+  model: {id: /cdn/value.e0721b0dbc6562a06a45fbbb5df49a342ded7ac6741bcee4a57894f8facf7976.glb, materials: {belly: {color: "#ffffff"}, fur: {color: "#f07a2e"}, limb: {color: "#f07a2e"}, mark: {color: "#2c1c18"}, nose: {color: "#231816"}, tip: {color: "#ffffff"}}}
+  morph: {Smile: 0.8}
+  parent: meg-ale
 meg-ale/object/xba5b309b4f070466/0:
   attachment: {bone: RightHand}
   id: meg-ale/object/xba5b309b4f070466/0
@@ -19,13 +25,19 @@ meg-callum:
   behavior: scripts/meg-agent.js
   feetPosition: {x: 11.9, y: 0, z: 2.4}
   id: meg-callum
-  jiggle: {amount: 0.6, bones: [Tail*, Ear*], bounce: 0.6}
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
   material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.c6e19f7ca72c3661f7702cebb7be2504e25141ea823fb146a2a616483ae85891.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: true}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: true}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#e8c79e"}, cloth_bottom: {color: "#4a5a3a"}, cloth_hat: {color: "#7a3a2a"}, cloth_neck: {color: "#f3c64a"}, cloth_shoes: {color: "#2a2420"}, cloth_top: {color: "#b6e04a"}, fur: {color: "#9a6440"}, limb: {color: "#9a6440"}, mark: {color: "#6e4329"}, nose: {color: "#2a1c18"}, pad: {color: "#ff9fb4"}, tip: {color: "#e8c79e"}}}
   physics: character
-  primitive: {kind: scripted, params: {bottom: "#4a5a3a", botw: pants, expr: grin, hat: beanie, hatc: "#7a3a2a", sex: m, shoec: "#2a2420", shoes: boots, species: bear, top: "#b6e04a", topw: jacket}, script: scripts/critter2-geo.js}
   rotation: {yaw: 90}
   state: {angry: {}, home: {x: 11.613, z: 1.507}, name: "Callum · Quartermaster", role: quarter}
   tags: [npc]
+meg-callum/critter-head:
+  attachment: {skin: true}
+  id: meg-callum/critter-head
+  model: {id: /cdn/value.62d2d43be560293613c1dda6898fbc9dae18680e109eabe13e77e28f223b62ef.glb, materials: {belly: {color: "#e8c79e"}, fur: {color: "#9a6440"}, limb: {color: "#9a6440"}, mark: {color: "#6e4329"}, nose: {color: "#2a1c18"}, tip: {color: "#e8c79e"}}}
+  morph: {Open: 0.4, Smile: 1}
+  parent: meg-callum
 meg-callum/object/xba5b309b4f070466/2:
   attachment: {bone: RightHand}
   id: meg-callum/object/xba5b309b4f070466/2
@@ -35,13 +47,19 @@ meg-ortiz:
   behavior: scripts/meg-agent.js
   feetPosition: {x: 15.5, y: 0, z: 0.3999999999999999}
   id: meg-ortiz
-  jiggle: {amount: 0.6, bones: [Tail*, Ear*], bounce: 0.6}
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
   material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.36aefc7cc3e2c61b269f1c0385d14acb2ad14558245bd4090ad95822a225155e.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: true}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: true}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#ffffff"}, cloth_bottom: {color: "#4a5a3a"}, cloth_hat: {color: "#eef2f0"}, cloth_neck: {color: "#b6e04a"}, cloth_shoes: {color: "#2a2420"}, cloth_top: {color: "#eef2f0"}, fur: {color: "#f4efe9"}, inner: {color: "#ffc2d1"}, limb: {color: "#f4efe9"}, nose: {color: "#ff9fb4"}, pad: {color: "#ff9fb4"}, tip: {color: "#ffffff"}}}
   physics: character
-  primitive: {kind: scripted, params: {bottom: "#4a5a3a", botw: pants, expr: smile, neck: scarf, neckc: "#b6e04a", sex: f, shoec: "#2a2420", shoes: boots, species: bunny, top: "#eef2f0", topw: jacket}, script: scripts/critter2-geo.js}
   rotation: {yaw: 90}
   state: {angry: {}, home: {x: 14.789, z: -0.215}, name: "Dr. Ortiz · M.E.G. Medic", role: medic}
   tags: [npc]
+meg-ortiz/critter-head:
+  attachment: {skin: true}
+  id: meg-ortiz/critter-head
+  model: {id: /cdn/value.5358dde889c71b52cec733e8793c7ee6f3240be59d9a1a939671f12c1a7d5925.glb, materials: {belly: {color: "#ffffff"}, fur: {color: "#f4efe9"}, inner: {color: "#ffc2d1"}, limb: {color: "#f4efe9"}, nose: {color: "#ff9fb4"}, tip: {color: "#ffffff"}}}
+  morph: {Smile: 0.8}
+  parent: meg-ortiz
 meg-ortiz/object/xba5b309b4f070466/1:
   attachment: {bone: RightHand}
   id: meg-ortiz/object/xba5b309b4f070466/1

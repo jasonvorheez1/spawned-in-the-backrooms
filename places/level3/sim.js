@@ -1,3 +1,5 @@
+import { critterSpec } from "../../scripts/lib/critter-model.js";
+import { fullLook } from "../../scripts/lib/clothes.js";
 // Level 3's referee, "Electrical Station": lays the halls, lamps, hazards and Base Gamma's checkpoint once,
 // then runs the station: live boxes that arc, black sludge that burns, generators that overload and blow,
 // assembly lines that keep turning out goods, hounds in brigades and deathmoth swarms drawn to light.
@@ -9,6 +11,7 @@ import { rollWeaponL3 } from "../../scripts/lib/loot3.js";
 import { spawnFurniture, pickKind, wallSpot3 } from "../../scripts/lib/furniture.js";
 import { npcState, dmgAfterArmor } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
+import { layLore } from "../../scripts/lib/level3-lore.js";
 export const cadence = "250ms";
 const GRIT = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]];
@@ -22,8 +25,7 @@ const GAMMA = {
 function agent(ctx, id) {
   const g = GAMMA[id], a = cellCenter(0, ARRIVE.cz);
   ctx.spawn(id, { tags: ["npc"], feetPosition: { x: a.x + g.at[0], y: 0, z: a.z + g.at[1] }, rotation: { yaw: -90 }, physics: "character",
-    primitive: { kind: "scripted", script: "scripts/critter2-geo.js", params: g.look }, material: { outline: { color: "#1d1420", width: 2.4 } },
-    jiggle: { bones: ["Tail*", "Ear*"], amount: 0.6, bounce: 0.6 }, behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
+    ...critterSpec(fullLook(g.look)), behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
   ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
 }
 
@@ -130,6 +132,8 @@ export function tick(ctx) {
     for (let i = 0, n = 0; n < L.floorWeapons && i < 400; i++) { const cx = 6 + Math.floor(ctx.random() * (N - 6)), cz = Math.floor(ctx.random() * N); if (!open(cx, cz)) continue; const c = cellCenter(cx, cz); spawnWeapon(ctx, { x: c.x - 0.6, z: c.z + 0.4 }, rollWeaponL3(ctx)); n++; }
     s.gen = {}; s.line = {}; s.gone = {};
   }
+
+  if (s.layoutV && s.loreV !== 1) { s.lore = layLore(ctx); s.loreV = 1; } // lore set pieces (scripts/lib/level3-lore.js)
 
   // ---- the station, every tick
   const players = ctx.place.players;
