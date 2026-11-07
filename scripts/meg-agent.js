@@ -8,6 +8,7 @@ import { raycast } from "builtin/physics";
 import { animate } from "builtin/tween";
 import G from "./lib/data/meg.yml";
 import { npcState, npcMul, lookOfNpc, dmgAfterArmor } from "./lib/stats.js";
+import CHAT from "./lib/data/chatter.yml";
 const SHOT = "/cdn/moodboard-realistic-gritty/sfx-pistol-gunshot-concrete-echo.mp3";
 const FLASH = `fx
 pop flash burst=1 life=.06 size=.35 col=hdr(5,3.4,1.4) a=1>0 sz=$size r=sprite(soft-disc,add)
@@ -117,11 +118,26 @@ function aim(me, m, t) {
   me.bones = id ? { RightHand: { reach: { to: { object: id, offset: { x: 0, y: 1.1, z: 0 } }, blendIn: 0.15, blendOut: 0.3 } }, LeftHand: { reach: { to: { object: id, offset: { x: 0, y: 1.05, z: 0 } }, blendIn: 0.2, blendOut: 0.3 } } } : null;
 }
 
+
+// combat barks: a shout over the head (ui.js bubble + subtitle) and the speaker's voice; a short gap so they never talk over themselves
+const VOICES = { "meg-ale": "ale", "meg-ortiz": "ortiz", "meg-callum": "callum", "surv-wren": "wren", "surv-hollis": "hollis", "surv-mags": "mags" };
+const BVO = (who, line) => `/cdn/voice-meg-${who}-saying-${line.replace(/[^a-z ]/gi, "").trim().toLowerCase().replace(/ +/g, "-")}.mp3`;
+export function bark(ctx, o, kind, force) {
+  const pool = CHAT.barks?.[kind], now = ctx.now(), st = o?.state;
+  if (!pool?.length || !st) return;
+  if (!force && now - (st.line?.at ?? -1e9) < 3500) return;
+  const t = pool[Math.floor(ctx.random() * pool.length)], d = 1300 + t.length * 55, who = st.voice ?? VOICES[o.id] ?? "ale";
+  st.line = { t, at: now, d };
+  const p = o.feetPosition;
+  ctx.emit("playSound", { clip: BVO(who, t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 1, refDistance: 4, maxDistance: 30 }, { audience: { nearby: p, radius: 32 } });
+}
 export function update(ctx, dt) {
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
   if (s.dead || (s.hp ?? 1) <= 0) {
     if (!m.down) {
-      m.down = true; stop(me, dt); aim(me, m, null); me.anim.talk = null; me.anim.hit = null; me.anim.wave = null; me.bones = null;
+      m.down = true; bark(ctx, me, "death", true);
+      for (const id of Object.keys(VOICES)) { const o = ctx.place.objects[id]; if (o && id !== me.id && !o.state?.dead && (o.state?.hp ?? 1) > 0 && Math.hypot(o.feetPosition.x - me.feetPosition.x, o.feetPosition.z - me.feetPosition.z) < 30) { bark(ctx, o, "allyDown", true); break; } } // the nearest friend sees it
+      stop(me, dt); aim(me, m, null); me.anim.talk = null; me.anim.hit = null; me.anim.wave = null; me.bones = null;
       // a ragdoll: the body drops where it was hit, in its own fur and jacket, knocked back off its feet
       const yaw = ((typeof me.rotation === "number" ? me.rotation : me.rotation?.yaw) ?? 0) * Math.PI / 180;
       me.ragdoll = { impulse: { x: Math.sin(yaw) * 60, y: 25, z: Math.cos(yaw) * 60 }, settleSeconds: 2 };
@@ -138,6 +154,7 @@ export function update(ctx, dt) {
     return;
   }
   // a flinch every time something takes hp off them
+  if (m.lastHp != null && (s.hp ?? 0) < m.lastHp - 0.5 && ctx.random() < 0.6) bark(ctx, me, "hit");
   if (m.lastHp != null && (s.hp ?? 0) < m.lastHp - 0.5) me.anim.hit = { clip: "cdn/clip-hit-react.glb", loop: "once", weight: 0.8, blendIn: 0.05, blendOut: 0.3, timeAt: now };
   m.lastHp = s.hp;
   // talking: interact.js stamps state.talkAt and talkTo when a player presses E on them
@@ -145,6 +162,14 @@ export function update(ctx, dt) {
   if (talking !== !!m.talking) { m.talking = talking; me.anim.talk = talking ? { clip: "cdn/clip-talk-loop.glb", loop: "loop", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } } : null; }
   const home = s.home ?? me.feetPosition;
   const t = pickTarget(ctx, me, m);
+  const tid = t && flat(t.feetPosition, home) < G.leash ? t.id : null;
+  if (tid !== (m.barkT ?? null)) {
+    const prev = m.barkT ? ctx.getObject(m.barkT) : null, prevDead = prev && (prev.state?.dead || (prev.state?.hp ?? 1) <= 0);
+    if (tid) bark(ctx, me, t.tags?.includes?.("player") || ctx.place.players.some((p) => p.id === tid) ? "hostile" : (prevDead ? "kill" : "spot"), !!prevDead);
+    else if (m.barkT) { bark(ctx, me, prevDead || !prev ? "kill" : "clear", true); m.clearAt = now + 2600; }
+    m.barkT = tid;
+  }
+  if (m.clearAt && now > m.clearAt) { m.clearAt = 0; if (!tid) bark(ctx, me, "clear", true); }
   holster(ctx, me, m, !!(t && flat(t.feetPosition, home) < G.leash));
   if (t && flat(t.feetPosition, home) < G.leash) {
     const d = flat(t.feetPosition, me.feetPosition), see = seesIt(ctx, me, t), reloading = now < (m.reloadUntil ?? 0);
@@ -152,7 +177,7 @@ export function update(ctx, dt) {
     else { gait(me, m, "idle"); stop(me, dt); aim(me, m, reloading ? null : t); face(me, t.feetPosition.x - me.feetPosition.x, t.feetPosition.z - me.feetPosition.z, dt); }
     if (see && d <= G.range && !reloading && now >= m.next) {
       m.next = now + G.fireEvery * 1000 * (0.85 + ctx.random() * 0.3); shoot(ctx, me, t);
-      if (++m.shots >= 8) { m.shots = 0; m.reloadUntil = now + 1800; ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-pistol-magazine-reload-click.mp3", position: me.feetPosition, volume: 0.6, maxDistance: 20 }); } // arms drop, a fresh mag
+      if (++m.shots >= 8) { m.shots = 0; m.reloadUntil = now + 1800; bark(ctx, me, "reload", true); ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-pistol-magazine-reload-click.mp3", position: me.feetPosition, volume: 0.6, maxDistance: 20 }); } // arms drop, a fresh mag
     }
     return;
   }

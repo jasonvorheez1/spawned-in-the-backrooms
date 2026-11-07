@@ -22,3 +22,13 @@ level2:
   - [[surv-hollis, "that barred door with the three on it."], [surv-mags, "don't."], [surv-hollis, "i'm just saying something's breathing back there."], [surv-mags, "and i'm just saying don't."]]
   - [[surv-mags, "hollis, you still got that radio working?"], [surv-hollis, "it hisses. sometimes the hiss has words in it."], [surv-mags, "what words?"], [surv-hollis, "never the ones you want."]]
   - [[surv-wren, "hounds were close last night."], [surv-mags, "how close?"], [surv-wren, "close enough i could smell 'em."], [surv-hollis, "then we double up on watch."]]
+# combat barks: what anyone in a camp shouts mid-fight, picked at random per moment
+barks:
+  spot: ["contact! over there!", "hound, on the left!", "something's coming in!", "eyes up, we got company.", "there! by the shelves!", "oh, not again."]
+  hit: ["ah! it got me!", "ow, son of a-", "i'm hit, i'm fine!", "ugh! that's gonna bruise.", "get it off me!"]
+  reload: ["reloading!", "changing mags, cover me!", "i'm dry! give me a second!", "hang on, hang on, reloading."]
+  kill: ["got it.", "it's down.", "stay down.", "that's one.", "and don't come back."]
+  clear: ["okay. okay, i think that's it.", "clear. everybody breathe.", "that's all of 'em. i hope.", "quiet again. i hate the quiet."]
+  allyDown: ["no! they're down!", "man down! man down!", "oh god, no.", "they got them! push it back!"]
+  death: ["ugh-", "ah...", "not like this..."]
+  hostile: ["hey! put it down!", "you wanna do this? fine.", "big mistake, friend.", "that's it, you're done."]
