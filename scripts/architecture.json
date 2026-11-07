@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 694,
-  "updatedAt": "2026-11-07T15:23:58.984Z",
-  "summary": "The Backrooms is a multiplayer survival game spanning Level 0, authored and generated Levels 1–4, and M.E.G. Base Gamma. Ordered player behaviors own personal survival and progression; place simulations build local spaces and actors, while shared level plans, loot, breakable and critter-model helpers connect gameplay to geometry and presentation.",
+  "basedOnSpecVersion": 698,
+  "updatedAt": "2026-11-07T15:28:11.851Z",
+  "summary": "The Backrooms is a multiplayer survival game spanning Level 0, authored and generated Levels 1–4, and M.E.G. Base Gamma. Ordered player and NPC behavior chains pair movement/combat or agent logic with shared humanoid locomotion; place simulations build local spaces and actors, while shared level plans, loot, breakables and critter-model helpers connect gameplay to geometry and presentation.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0's generated yellow maze and safe-room hub; authored cells, loot, shifting walls, seeded moments and smilers/lurkers.",
     "places/level1 (3D) - Habitable Zone and M.E.G. camp; car-park cells, camp agents, searchable loot, hounds and skin-stealers; grid walls and props are destructible.",
     "places/level2 (3D) - Abandoned Utility Halls and Survivor camp; seeded halls, rooms, NPCs, supplies, hounds and Level 3 threshold; grid walls and props are destructible.",
-    "places/level3 (3D) - Electrical Station; maze zones/crawl halls, lamps, Gamma fortress checkpoint, hazards, loot and creature brigades; blackouts and the newly powered lift lead to Level 4.",
-    "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards and residents; objects.scene carries skin-attached critter heads for its named agents.",
-    "places/level4 (3D) - Abandoned Office, a 64×64 m floor with 24 perimeter offices (three trap-window rooms), four corner rooms, fountains, break-room vending, Level 3 lift, chained Level 5 stairwell and M.E.G. Base Omega; home/cooler interaction is built by its simulation.",
+    "places/level3 (3D) - Electrical Station; maze zones/crawl halls, lamps, Gamma fortress checkpoint, hazards, loot and creature brigades; blackouts and the powered lift lead to Level 4.",
+    "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards and residents; objects.scene carries skin-attached critter heads for named agents.",
+    "places/level4 (3D) - Abandoned Office, a 64×64 m floor with 24 perimeter offices (three trap-window rooms), four corner rooms, fountains, break-room vending, Level 3 lift, chained Level 5 stairwell and M.E.G. Base Omega; home/cooler interactions.",
     "places/debug (3D) - isolated combat and loot test room; authored cells hold weapon/item stations, enemy pens and test stands."
   ],
   "roots": [
@@ -22,14 +22,14 @@
     "scripts/ui.js with loot-ui.js, talk-ui.js, build-ui.js, stats-ui.js, craft-ui.js, horde-ui.js and noclip-ui.js - HUD composition and action routing."
   ],
   "shared": [
+    "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait/heading behavior; player template and M.E.G. NPC behavior chains use it before their movement controllers.",
     "scripts/lib/maze.js + scripts/lib/data/level0.yml; scripts/lib/level1.js and level2.js with their data - per-level grids/layouts reused by simulation, geometry and gameplay.",
     "scripts/lib/level3.js + scripts/lib/data/level3.yml + scripts/lib/maze3path.js - Electrical Station grid, zones, openings and routes for geometry, sim and creatures.",
     "scripts/lib/level4.js - Abandoned Office's shared room/wall plan, zones, sanity rates and names read by level4-geo.js, places/level4/sim.js and player.js.",
     "scripts/lib/level0-moments.js + scripts/moments-geo.js + scripts/moments.js - deterministic Level 0 oddity placement, prop geometry and interactive/sound behavior.",
     "scripts/lib/furniture.js + scripts/lib/data/furniture-loot.yml - searchable container placement and loot factory shared by Level 0, 1 and 3; Level 2 has its own path.",
     "scripts/lib/data/weapons.yml + scripts/lib/weapons.js, weapon-look.js, weapon-prof.js and weapon-geo.js - weapon definitions and fitted variants shared by pickups, viewmodels and NPCs.",
-    "scripts/lib/items.js + loot.js/loot3.js; clothes.js + clothes.yml; stats.js - shared item, apparel/armor and HALOGEN data/helpers used by player, NPC combat, loot and UI.",
-    "scripts/lib/critter-model.js + scripts/lib/data/critter-models.yml - cute Blender body/head selection and look conversion used by player critter, NPC agents and mesh redressing; art/critter-cute/build.py generates/uploads the models."
+    "scripts/lib/items.js + loot.js/loot3.js; clothes.js + clothes.yml; stats.js; critter-model.js + critter-models.yml - shared items, apparel/stats and avatar model helpers used by player, NPC combat, loot and UI."
   ],
   "notableExports": [
     "places/*/sim.js - cadence and tick; places/gamma/sim.js also exports PEOPLE.",
@@ -49,10 +49,10 @@
     "scripts/build.js + scripts/player.js - player.state.scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
     "scripts/interact.js - player focus, loot menu, notices and interaction; NPCs own pockets/picked and per-player warned/angry state, containers own item lists/lock/scavenged state.",
     "scripts/talk.js and scripts/critter.js - dialogue state is split across player/NPC; player.state.look owns appearance/worn slots and avatar scratch is local/session state; NPC mesh looks are stored in state.wear.",
-    "Place simulations and usable behaviors - place.state owns build/version flags, schedules, Level 3 blackout/flicker and wall keys; Level 4 plates own office owner/name, coolers own fill/jug/streak, fountains/vending own cooldowns; session throttles window events."
+    "Place simulations and usable behaviors - place.state owns build/version flags, schedules, Level 3 blackout/flicker and wall keys; Level 4 plates own office owner/name, coolers own fill/jug/streak, fountains/vending own cooldowns; session timing is local."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js chain: locomotion reads prior movement; player owns movement/survival/combat; interact, talk, build, noclip, stats, craft and horde handle ordered actions before critter behavior.",
+    "world.config.yaml actions → templates/player.js chain: humanoid-locomotion reads prior movement before player writes control; interact, talk, build, noclip, stats, craft and horde handle ordered actions before critter behavior.",
     "world.config.yaml camera → scripts/camera.js owns presented yaw/pitch and crouched eye height; player/enemy gaze and targeting consume camera direction/state.",
     "Level 0 exit in scripts/player.js → Level 1; thresholds connect Level 1 to 2 and Level 2 to 3; Level 3 sim's powered lift door → level4#l4-lift-arrive; Gamma door returns to the Level 3 fortress gate.",
     "interact.js focus/E on living NPC → player.state.talkWith; talk-ui.js sends typed text/actions through talk/talkdo/shop inputs to talk.js; talk.js submits llm:chat and heard validates replies/checks before rapport changes.",
@@ -70,7 +70,7 @@
     "scripts/smilers.js and scripts/lurkers.js - Level 0 pack managers with distinct gaze/light/sanity reactions; uploaded Tripo rigged meshes and horde hunt hooks.",
     "scripts/hounds.js + hound-geo.js - shared Level 1/2/3 hound AI with safe zones/grids varied by place; Level 3 brigades use maze routing/stun state and blackout dark-hunt pressure.",
     "scripts/stealers.js + stealer-geo.js - Level 1 skin-stealer behavior swaps legacy rows to rigged mesh; disguise/creature/shed parts and reveal animation vary by hunt phase.",
-    "scripts/meg-agent.js + scripts/critter2-geo.js + critter-model.js - common NPC avatar/behavior varies by species/look, role, voice, weapon and place; Level 1/2/3/Gamma/Omega agents share it, with optional patrol/work rounds; NPCs can be converted to mesh and redressed after loot.",
+    "scripts/meg-agent.js + scripts/humanoid-locomotion.js + scripts/critter2-geo.js + critter-model.js - common NPC avatar/behavior varies by species/look, role, voice, weapon and place; Level 1/2/3/Gamma/Omega agents share it, with optional patrol/work rounds and speed-matched gait.",
     "scripts/critter.js + critter-model.js - player looks map to sex-specific cute Blender bodies and species/sex heads with morph faces; appearance slots and custom worn models vary by look.",
     "scripts/lib/weapons.js + weapon-look.js, weapon-prof.js, weapon-geo.js and viewmodel-geo.js - weapon kinds reuse fitted bodies with variant stats/tint/overlays and viewmodel framing; melee Tripo meshes have per-kind grip poses.",
     "scripts/deathmoths.js + templates/deathmoths.js - one Level 3 manager steers multiple swarms; each uses rigged moth models and clips, while swarms vary by home and target."
@@ -83,8 +83,8 @@
     "Grid contracts differ: Level 0 is 56×56 at 4 m with hub cells 26–29; Level 1 is 30×30 at 8 m; Level 2 is 24×24 at 5 m; Level 3 is 26×26 at 4 m; Level 4's plan is 64×64 m, with 8 m-wide, 6 m-deep offices. Keep geometry/zones/exits aligned to each plan.",
     "Level 3 tight cells are 1 m clear width (tightHalf 0.5), 1.6 m springline and 2.15 m crown; tightArms/tightSpans drive structural/detail vaults, and gates/furniture are excluded from crawl halls.",
     "Player behavior order is intentional: humanoid-locomotion.js before player.js, then interact.js, talk.js, build.js, noclip.js, stats.js, craft.js, horde.js and critter.js; locomotion reads movement before player control writes velocity.",
+    "NPC agent behavior arrays also put humanoid-locomotion.js before meg-agent.js; the locomotion behavior derives gait and heading from the body's actual motion, while meg-agent eases movement at 9 m/s² acceleration and 14 m/s² deceleration.",
     "Weapon ids remain kind or kind~variant across inventory, condition, magazines and entities; viewmodel MESHGRIP is keyed by base weapon kind, with vmTune mat/mrot overrides.",
-    "Building scrap is a per-kind player.state.scrap object, unlike comma-separated inventory/container tokens; breakables require tag plus state.mat/hp/maxHp and wallHp/broken timestamps are per wall section.",
     "Cute critter models use skinned child HEAD_ID heads attached to body skin; use critter-model.js conversion/redress helpers so NPC garment loot and head placement survive body swaps; model parts/material keys must match critter-models.yml."
   ]
 }
