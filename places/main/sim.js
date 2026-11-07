@@ -1,7 +1,7 @@
 // Level 0's referee: keeps almond water on the floor and smilers in the dark.
 import L from "../../scripts/lib/data/level0.yml";
 import W from "../../scripts/lib/data/weapons.yml";
-import { spawnAlmond, spawnWeapon, rollWeapon } from "../../scripts/lib/loot.js";
+import { spawnAlmond, spawnAmmo, spawnWeapon, rollWeapon } from "../../scripts/lib/loot.js";
 import { N, zoneOf, inHub, hasPit, cellCenter } from "../../scripts/lib/maze.js";
 export const cadence = "1s";
 
@@ -37,6 +37,13 @@ export function tick(ctx) {
     }
     s.weaponsSeeded = true;
     s.nextWeapon = now + (W.pickupRespawn * 1000) / 4;
+  }
+  const ammo = ctx.query({ tags: ["ammo"] }).length;
+  if (ammo < W.ammo.floor && now >= (s.nextAmmo ?? 0)) {
+    const fill = s.ammoSeeded ? 1 : W.ammo.floor - ammo;
+    for (let i = 0; i < fill; i++) { const c = cell(ctx); if (c) spawnAmmo(ctx, c); }
+    s.ammoSeeded = true;
+    s.nextAmmo = now + (W.ammo.respawn * 1000) / 4;
   }
   const smilers = ctx.query({ tags: ["smiler"] }).filter((m) => !m.state?.dead).length;
   if (smilers < L.smilers && now >= (s.nextSmiler ?? 0)) {

@@ -169,7 +169,7 @@ export default function render(ctx, player) {
   <div class="hud-card br" style="position:absolute;bottom:20px;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 20px);min-width:180px">
     <div class="row">
       <span class="muted">Weapon</span>
-      <span style="color:#f0ece0;font-weight:600">${wp.name}</span>
+      <span style="color:#f0ece0;font-weight:600">${wp.name}${wp.ranged ? ` · ${s.ammo ?? 0} rds` : ''}</span>
     </div>
     ${invHtml ? `<div style="font-size:10px;margin-top:2px">${invHtml}</div>` : ''}
     <div class="muted" style="font-size:10px;margin-bottom:6px"><kbd>${lab('cycleWeapon', 'E')}</kbd> switch</div>

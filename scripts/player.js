@@ -4,6 +4,7 @@
 import PLAYER from './lib/data/player.yml'
 import L from './lib/data/level0.yml'
 import W from './lib/data/weapons.yml'
+import { raycast } from 'builtin/physics'
 import { dropLoot } from './lib/loot.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
 
@@ -70,15 +71,25 @@ function swing(ctx) {
   if (now < (w.nextSwing ?? 0) || (s.downAt && now - s.downAt < 1200)) return
   const wp = weaponOf(s)
   if ((w.stamina ?? s.stamina) < wp.stamina) return
+  if (wp.ranged) {
+    if ((s.ammo ?? 0) <= 0) { w.nextSwing = now + 400; sound(ctx, 'flashlight-switch-click', 0.6, true); return }
+    s.ammo -= 1
+    sound(ctx, 'pistol-gunshot-echo', 0.9)
+    ctx.emit('screenFlash', { color: '#fff1c8', duration: 0.08, intensity: 0.25 }, { audience: { player: ctx.self.id } })
+  }
   w.stamina = (w.stamina ?? s.stamina) - wp.stamina
   w.nextSwing = now + wp.cooldown * 1000
   s.swingAt = now
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   let best = null, bd = 1e9
-  for (const m of ctx.query({ tags: ['smiler'], radius: wp.reach + 0.6 })) {
+  for (const m of ctx.query({ tags: ['smiler'], radius: wp.ranged ? wp.range : wp.reach + 0.6 })) {
     if (m.state?.dead) continue
     const dx = m.feetPosition.x - p.x, dz = m.feetPosition.z - p.z, d = Math.hypot(dx, dz)
-    if (d > 0.3 && (dx * f.x + dz * f.z) / d < 0.4) continue
+    if (d > 0.3 && (dx * f.x + dz * f.z) / d < (wp.ranged ? 0.985 : 0.4)) continue
+    if (wp.ranged) {
+      const o = { x: p.x, y: p.y + 1.3, z: p.z }, tx = m.feetPosition.x - o.x, ty = m.feetPosition.y + 1.5 - o.y, tz = m.feetPosition.z - o.z, tl = Math.hypot(tx, ty, tz) || 1
+      if (raycast(ctx, o, { x: tx / tl, y: ty / tl, z: tz / tl }, { distance: tl, physicsOnly: true, ignoreEntities: [m.id, ctx.self.id], bodies: 'static' })) continue
+    }
     if (d < bd) { bd = d; best = m }
   }
   if (!best) { sound(ctx, 'pipe-whoosh-swing', 0.55); return }
@@ -201,6 +212,14 @@ function tickStats(ctx, t, moving) {
   if (cx >= 0 && cz >= 0 && cx < N && cz < N) {
     const vis = (w.visited ??= decode(s.visited ?? '')), i = cz * N + cx
     if (!vis[i]) { vis[i] = 1; s.visited = encode(vis); s.explored = (s.explored ?? 0) + 1; gain(ctx, L.xpPerCell) }
+  }
+  // ammo boxes on the floor
+  for (const a of ctx.query({ tags: ['ammo'], radius: 1.5 })) {
+    if ((s.ammo ?? 0) >= W.ammo.max) break
+    ctx.destroy(a.id)
+    s.ammo = Math.min(W.ammo.max, (s.ammo ?? 0) + W.ammo.perPickup)
+    s.pickedAt = now
+    sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
   }
   // almond water on the floor
   for (const a of ctx.query({ tags: ['almond'], radius: 1.5 })) {

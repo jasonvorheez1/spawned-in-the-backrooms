@@ -60,6 +60,14 @@ const builders = {
     prism(ctx, [[0.25, 0.74], [0.27, 0.735], [0.27, 1.085], [0.25, 1.08]], Y - 0.007, Y + 0.007);
     ctx.metalness(0);
   },
+  pistol(ctx) {
+    ctx.roughness(0.35); ctx.metalness(0.8); ctx.color("oklch(0.28 0.02 260)");
+    slab(ctx, [0, Y + 0.03, 0.15], [0.016, 0.022, 0.12]);   // the slide
+    ctx.color("oklch(0.2 0.02 260)");
+    slab(ctx, [0, Y + 0.012, 0.06], [0.014, 0.012, 0.05]);  // the frame
+    ctx.metalness(0); ctx.roughness(0.8); ctx.color("oklch(0.18 0.01 60)");
+    prism(ctx, [[-0.016, 0.0], [0.016, 0.0], [0.016, -0.05], [-0.016, -0.08]], Y - 0.04, Y + 0.02); // the grip
+  },
 };
 
 export function geometry(ctx) {

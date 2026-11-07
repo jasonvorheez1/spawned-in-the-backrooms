@@ -41,3 +41,4 @@ Take the mechanics, not the assets: a block world you can dig and build in, scav
 - Weapon tiers: common / uncommon / rare, set in `weapons.yml`. Added Hatchet (Lv 6) and Fire axe (Lv 8) as rare; guns stay a later rare-loot step.
 - Inventory: the HUD lists every owned weapon in its rarity colour; ones above your level are greyed with the level needed.
 - Fixed a stray brace in `scripts/player.js` that stopped the player script from loading.
+- 2026-11-06: first gun is a rare Pistol (level 5, 34 damage, 28 m, needs a clear line). It spends ammo, found as brass boxes in the maze (6 rounds each, 36 max, scarce) or dropped by smilers. Empty it just clicks; fists and melee still work.

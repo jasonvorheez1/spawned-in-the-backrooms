@@ -13,6 +13,10 @@ export function spawnWeapon(ctx, c, kind) {
   ctx.spawn({ tags: ["weapon"], state: { kind }, feetPosition: scatter(ctx, c), rotation: ctx.random() * 360, primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind } } });
 }
 
+export function spawnAmmo(ctx, c) {
+  ctx.spawn({ tags: ["ammo"], feetPosition: scatter(ctx, c), rotation: ctx.random() * 360, primitive: { kind: "box", width: 0.14, height: 0.07, depth: 0.09 }, material: { color: "oklch(0.72 0.12 85)", metalness: 0.7, roughness: 0.4, emissive: "oklch(0.6 0.1 85)", emissiveIntensity: 0.5 } });
+}
+
 // Weighted pick over every found weapon; rarer ones carry a smaller weight in weapons.yml.
 export function rollWeapon(ctx) {
   const kinds = W.order.slice(1), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
@@ -24,5 +28,6 @@ export function rollWeapon(ctx) {
 // A dead smiler may leave almond water, or a weapon.
 export function dropLoot(ctx, pos) {
   if (ctx.random() < W.dropChance.almond) spawnAlmond(ctx, pos);
+  if (ctx.random() < W.dropChance.ammo) spawnAmmo(ctx, pos);
   if (ctx.random() < W.dropChance.weapon) spawnWeapon(ctx, pos, rollWeapon(ctx));
 }
