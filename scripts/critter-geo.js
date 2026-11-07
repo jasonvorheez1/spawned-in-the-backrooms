@@ -374,7 +374,7 @@ export function geometry(ctx) {
     if (fem) {
       for (const s of [-1, 1]) {
         ctx.color(sp.dark ? sp.dark : FUR);
-        ell([s * 0.062, 0.875, -0.09], [0.065, 0.058, 0.058], null, { seg: hi ? 14 : 9 });
+        ell([s * 0.05, 0.868, -0.078], [0.078, 0.066, 0.066], null, { seg: hi ? 18 : 10 });
       }
     }
 
@@ -718,7 +718,7 @@ export function geometry(ctx) {
       if (fem) { const pinch = Math.exp(-((tf - 0.42) ** 2) / 0.02) * 0.03; rx -= pinch; rz -= pinch * 0.4; } // waist between hips and bust
       return [rx, rz];
     }, [0, 0, -1], null, hi ? 20 : 12);
-    if (fem) for (const sd of [-1, 1]) ell([sd * 0.062, 0.872, -0.1], [0.072, 0.063, 0.062], null, { seg: hi ? 14 : 9 }); // the top follows her bust, modest and soft
+    if (fem) for (const sd of [-1, 1]) ell([sd * 0.05, 0.868, -0.08], [0.09, 0.076, 0.076], null, { seg: hi ? 18 : 10 }); // the top follows her bust, modest and soft
   };
 
   const pants = (col, knee = 0.12, shorts = false) => {
