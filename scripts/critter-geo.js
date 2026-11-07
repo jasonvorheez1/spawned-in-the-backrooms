@@ -817,7 +817,8 @@ export function geometry(ctx) {
   } else if (topw === "jacket") {
     shirt("#ffffff", 0.62); shirt(TOP, 0.60, 0.008); sleeve(0.36, TOP, 0.058);
     ctx.color(mixc(TOP, "#000000", 0.2));
-    for (const sd of [-1, 1]) limb([sd * 0.07, 0.95, frontZ(0.95)], [sd * 0.06, 0.72, frontZ(0.72)], 0.014, 0.012, 6);
+    const lowL = fem ? BUST.y + BUST.r[1] * 0.6 : 0.72; // on her the lapels stop where the bust starts, so they never spear out of it
+    for (const sd of [-1, 1]) { let prev = null; for (let i = 0; i <= 6; i++) { const y = lerp(0.95, lowL, i / 6), p = [sd * lerp(0.07, 0.06, i / 6), y, frontZ(y) + 0.006]; if (prev) limb(prev, p, 0.012, 0.012, 6); prev = p; } }
   } else if (topw === "apron") {
     shirt(TOP); sleeve(0.10, TOP);
     ctx.color("#fdf6e3"); ell([0, 0.6, frontZ(0.64) + 0.02], [0.15, 0.13, 0.03], null, { seg: hi ? 16 : 10 });
