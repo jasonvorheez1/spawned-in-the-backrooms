@@ -1,0 +1,17 @@
+# M.E.G. (Major Explorer Group): lore digest from Shelly's wikidot paste, 2026-11-07
+- Founded 2012. Biggest hegemonic group: explore, document, protect wanderers, find an exit. Runs most of the General Public Database.
+- Loose, messy structure. Leaders disagree. Far-off outposts grow their own subcultures (a base in entity-heavy levels turns militaristic, even in vocabulary). Bureaucracy as messy as its database.
+- Many veterans left, some bitter or hostile after mistreatment. Splinters and wars, but the group always heals. Unified by hope.
+- Oversight Council (2014): Overseers (oldest, hold veto) + Underseers (skilled managers, grew from 6). Three wings: exploration, research, archiving; diplomacy/logistics across all.
+- Then base leaders, M.E.G. positions, civilians. Jobs vary per settlement.
+- History: 1997-2007 "the Drought", power vacuum after the Leaders fell. Nomadic Coalition (recruits fresh noclippers on Level 1), Early Home (shelter camp), Station 01.3 (Leaders' ex-researchers rebuilding the database). These merged into Base Alpha.
+- Original triumvirate "Team Overseer": Justin Zimals (Overseer A, "Stretch"), Katherine "Kat" Zimals (Overseer B), Andrew Donovan (Overseer C). Teens (16) when they entered.
+- Major Teams ("regiments" to old members):
+  - Compass Point, explorers; based at Base Alpha; biggest, most popular, dangerous.
+  - Life Line, mobile medics, rescue and aid.
+  - Quick Match, first response, rapid recon, data retrieval; in every base; rare emergency gear.
+  - Track Mappers, stationed on a level to map routes, threats, resources; often settle there.
+  - Trial Testers, field testing of objects, phenomena, level behavior.
+  - Wild Warriors, offensive wing, ex-military, violent tactics, highest casualties, criticized for collateral damage (peaked in the Veiled Conflict).
+- Special teams: Epiphany (Dr. Rhinehart, Anne Dune, Amy Cochrane; esoteric metaphysics), The First Discovery (Justin's 2009 Nomadic Coalition team, mapped the Main 12, highest-risk jobs, reports straight to council since 2022), New Horizons (Dawn Marchesa, Axel Lowe, Faith Silversong, Killian Teles; Cygnus Archive, Blanche.net), Postal Delivery (2017, M.E.G. mailboxes on postal paths).
+- Main 12 = Levels 0-11. Base Gamma (Level 3) focuses on object/entity research because Level 3 lacks something other bases have.

@@ -1,0 +1,12 @@
+# Object 1: Almond Water, lore digest from Shelly's wikidot paste, 2026-11-07
+- Metal thermoses ~1 ft tall, dented and scratched, always filled to the brim (2-4 cups). Found singly on most levels, in groups where abundant (Level 4 most of all; Level 3 has plenty).
+- A not-full bottle: don't drink, may be tampered or carry Crawler Fungus. "When in doubt, boil the water." Firesalt boils it instantly (too much makes it spicy). Some levels make it poisonous (cyanide-like).
+- One bottle = a healthy 600-calorie meal; 3 a day is enough. Tastes like water with a hint of almond. Unexplained nutrition; may not be water at all.
+- Main barter currency across levels (like 1 dollar).
+- Variants:
+  - Grey: most common, slightly sweet, most filling, no extra effect; can briefly tame Deathmoths and Jerry.
+  - Green: frosted green, sweetest, caffeine like an energy drink; abuse: insomnia, fatigue, heart trouble, addiction.
+  - Red: very bitter ("orange juice after brushing teeth"); antibiotic/cough syrup, only cure for The Disease, heavy tiredness after; max 1 per 8 hours.
+  - Blue: tastes like plain water; melatonin, drowsiness, blocks outside influence on the mind, can stop/reverse the Wretched Cycle early; abuse: reliance, vision, muscle weakness.
+- Hurts Skin-Stealers: splashing it makes them roar, writhe; used as defense.
+- Discovery, Log 001, Jan 13 2012, Level 2: Team Overseer. Kat had Entity 19 (coughing blood, hives). Justin found a red thermos, it cured her in a week. A skin-stealer attacked; the water burned it; Andrew stabbed it with a knife from the white brick hallway. Andrew's phone was hacked into an audio recorder.
