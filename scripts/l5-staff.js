@@ -6,13 +6,16 @@ import { npcState } from "./lib/stats.js";
 import { critterSpec } from "./lib/critter-model.js";
 import { npcLook } from "./lib/clothes.js";
 // the staff are critters too (the creator's rule: a world full of critters): faceless, fur pitch black, in old hotel livery
+// facelings: every face part on the head goes the fur's black, so nothing looks back
+const INK = { color: "#060606", roughness: 1, metalness: 0 };
+export function faceless(spec) { const h = spec.children?.[0]; if (h?.model) { h.model.materials = { ...h.model.materials, pupil: INK, iris: INK, eyewhite: INK, mouth: INK, blush: INK, cheek: INK, tongue: INK, teeth: INK, nose: INK, inner: INK, belly: INK, tip: INK, mark: INK, face: INK, lash: INK, brow: INK }; h.morph = undefined; } return spec; }
 export const staffLook = (f, i) => ({ ...npcLook("l5staff" + i, { species: ["wolf", "cat", "fox", "bear"][i % 4], sex: i % 3 ? "m" : "f" }, "wanderer", 12), fur: "#060606", vary: false, eye: "#000000" });
 const T = E.staff, COS = Math.cos((T.lookCone * Math.PI) / 180);
 const WALK = { clip: "cdn/clip-walk-loop.glb", loop: true, speed: 0.55 }, IDLE = { clip: "cdn/clip-idle-loop.glb", loop: true, speed: 0.25 };
 function place(ctx, f) {
   return ctx.spawn(f.id, {
     tags: ["moths", "l5staff", "l5-hostile"], feetPosition: { x: f.post.x, y: 0.02, z: f.post.z }, rotation: f.yaw,
-    ...critterSpec(staffLook(f, T.figures.indexOf(f))), scale: (f.height ?? 2.2) / 1.8,
+    ...faceless(critterSpec(staffLook(f, T.figures.indexOf(f)))), scale: (f.height ?? 2.2) / 1.8,
     physics: { body: "character" },
     state: { ...npcState(ctx, "staff", T.hp, { xp: 80 }), kind: "staff", name: f.name, mode: "post" },
   });
