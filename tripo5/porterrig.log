@@ -1,0 +1,10 @@
+task df3c066f-ade5-46d2-98ba-ffbb438589bb · animate_rig
+files: porter-rig.glb (model/gltf-binary)
+each file lands in your folder under its name, and its `fetched:` line names its /cdn/ address, the one the world uses. With no `fetched:` line below, `spawn tripo status df3c066f-ade5-46d2-98ba-ffbb438589bb --out porter-rig.glb` lands them.
+output: {"normalize_scale":0.555555533479762,"normalize_translation":[0,0,0]}
+image: https://studio-chat-prod.jacob-a34.workers.dev/room/app%3A%3Aade97716-37cc-4643-8a28-e6a99776abbd%3A%3Aplayer%3A%3Ad42e24ab-0efe-40f9-8c22-a4b9ed31a731/images/ade97716-37cc-4643-8a28-e6a99776abbd/0238f1de-8691-4278-b26e-ff38d668eeb8.png (image/png, preview): shown in this result
+fetched: /workspace/tripo5/porter-rig.glb (2.8MB) · in the world: /cdn/value.045b9bf87682f9cca81ca05bc7d34d76d79ae345c63b98c4a8e6862c79997c38.glb (named porter-rig) (an asset's bytes live in the workshop, never in the world's tree, which carries its /cdn/ name)
+raw: /cdn/value.045b9bf87682f9cca81ca05bc7d34d76d79ae345c63b98c4a8e6862c79997c38.glb?raw, the model with its 3 jpeg/png pictures as they went up, for Blender and other tools; the address above is the game's copy, packed for loading once the store has cooked it
+pictures: the game's copy holds each to 1024 px on its longer side, and the largest went up at 2048 x 2048; spawn upload '/workspace/tripo5/porter-rig.glb' --full-size keeps them at their own size, only when the creator asks
+facing: the rig faces +X (read from its toes); forward: "+x" stands it facing that way; with no forward it stands side-on
+limbs: how far the centre of each limb's skin sits off its bone at rest (0 is on the bone; this is not thickness): upper arm 2.5 cm (16 % of the bone's length), forearm 1.8 cm (16 %), thigh 2.1 cm (7 %), shin 1.4 cm (5 %); a sound human rig reads up to 6 cm on its arms, 7 on its legs
