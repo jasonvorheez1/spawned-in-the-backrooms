@@ -1,0 +1,5 @@
+# spawn-scene v2 yaml objects
+temp-houndmgr:
+  behavior: scripts/hounds.js
+  id: temp-houndmgr
+  tags: [temp]
