@@ -5,7 +5,7 @@
 // inventory buttons send 'inv' {k:'equip',w}|{k:'drop',w}|{k:'drink'}|{k:'close'}.
 import { describe, itemsOf } from './lib/items.js'
 import L from './lib/data/level0.yml'
-import W from './lib/data/weapons.yml'
+import W from './lib/weapons.js'
 
 const CSS = `<style>
 .pb{--a:#ffb642;--ad:rgba(255,182,66,.45);--al:rgba(255,182,66,.22);color:var(--a);font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;text-transform:uppercase;text-shadow:0 0 2px rgba(255,160,30,.45)}

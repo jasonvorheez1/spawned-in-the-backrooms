@@ -1,7 +1,7 @@
 // Loot: one place that knows how almond water and weapons appear in the maze, whether from the
 // floor spawner (places/main/sim.js) or from a smiler that just died (scripts/player.js).
 import L from "./data/level0.yml";
-import W from "./data/weapons.yml";
+import W from "./weapons.js";
 import { SKILL_KEYS } from "./stats.js";
 import { weaponBody } from "./weapon-look.js";
 

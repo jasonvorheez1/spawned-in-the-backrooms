@@ -1,7 +1,7 @@
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 // The debug room's referee: puts every test item back a few seconds after it is taken or killed.
 import L from "../../scripts/lib/data/level0.yml";
-import W from "../../scripts/lib/data/weapons.yml";
+import W from "../../scripts/lib/weapons.js";
 import { WEAPON_SLOTS, ALMOND_SLOTS, AMMO_SLOTS, SMILER_PEN, LURKER_PEN } from "../../scripts/lib/debug-layout.js";
 export const cadence = "1s";
 const REFILL = 4000; // ms before a taken item comes back (her pick)

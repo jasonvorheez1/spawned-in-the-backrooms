@@ -1,7 +1,7 @@
 // The character sheet (K), the carry-weight chip and the creature read-out. All from player.state
 // (written by scripts/stats.js): attr, skl, apts, spts, sheetOpen, target. Buttons send the 'stat' action.
 import L from './lib/data/level0.yml'
-import W from './lib/data/weapons.yml'
+import W from './lib/weapons.js'
 import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, attrsOf, skillsOf, spentOf, tagsOf, dmgMul, derived, carried, burden } from './lib/stats.js'
 
 const CSS = `<style>

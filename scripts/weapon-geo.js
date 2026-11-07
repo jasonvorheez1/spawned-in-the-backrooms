@@ -1,6 +1,6 @@
 // Weapons lying on the carpet, laid along +Z, flat side down. params.kind picks which (weapons.yml keys).
 import { tube, face } from "./lib/shapes.js";
-import W from "./lib/data/weapons.yml";
+import W from "./lib/weapons.js";
 
 const WOODTEX = "cdn/texture-worn-hardwood-grain.png", STEELTEX = "cdn/texture-scratched-worn-steel.png";
 const WOOD = "oklch(0.93 0.03 70)", DARKWOOD = "oklch(0.78 0.05 50)", STEEL = "oklch(0.95 0.005 250)", BLACK = "oklch(0.24 0.01 260)";

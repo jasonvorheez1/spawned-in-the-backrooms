@@ -3,7 +3,7 @@
 // player.state is the player's save: their level, xp and almonds follow them between visits.
 import PLAYER from './lib/data/player.yml'
 import L from './lib/data/level0.yml'
-import W from './lib/data/weapons.yml'
+import W from './lib/weapons.js'
 import { raycast } from 'builtin/physics'
 import { dropLoot, spawnWeapon } from './lib/loot.js'
 import { derived, canCarry, burden, npcMul, START, dmgMul, skillsOf, spentOf, SKILLS, SKILL_MAX } from './lib/stats.js'

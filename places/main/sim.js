@@ -2,7 +2,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 // Level 0's referee: keeps almond water on the floor and smilers in the dark.
 import L from "../../scripts/lib/data/level0.yml";
 const MID = (L.hub[0] + L.hub[1]) / 2; // the safe room's centre cell
-import W from "../../scripts/lib/data/weapons.yml";
+import W from "../../scripts/lib/weapons.js";
 import { spawnAlmond, spawnAmmo, spawnShells, spawnWeapon, spawnCrate, rollWeapon } from "../../scripts/lib/loot.js";
 import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ } from "../../scripts/lib/maze.js";
 const PAPER = { texture: "cdn/texture-yellow-chevron-damask-wallpaper-aged.png", color: "oklch(0.98 0.01 90)", repeat: [1, 1] };

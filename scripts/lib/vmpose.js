@@ -6,7 +6,7 @@
 // a pump stroke that throws the spent hull. Everything: sway that lags the look, strafe lean, walking bob,
 // breathing at rest, a dip on landing, a lowered carry when sprinting, a raise with overshoot on equip.
 // Springs and timelines run on real frame time; the object is posed with interpolation off.
-import W from './data/weapons.yml'
+import W from './weapons.js'
 
 export const VM_FOV = 55
 const REST = [0.19, -0.17, 0.44]

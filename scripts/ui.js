@@ -2,7 +2,7 @@
 // Clean, minimal, and atmospheric.
 // Designed with quiet restraint: unobstructed sightlines, crisp typography, and non-intrusive status readouts.
 import L from './lib/data/level0.yml'
-import W from './lib/data/weapons.yml'
+import W from './lib/weapons.js'
 import { ZONE_NAMES } from './lib/maze.js'
 import * as modelingStudio from '../mods/modeling-studio/hud.js'
 import { wardrobe } from './wardrobe-ui.js'

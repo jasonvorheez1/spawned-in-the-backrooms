@@ -2,7 +2,7 @@
 //   "almond"  "ammo"  "shells"  "weapon:<kind>"        a container's state.items is "almond,weapon:bat,ammo"
 // scripts/interact.js reads and writes them, scripts/loot-ui.js names them, scripts/player.js applies them.
 import L from './data/level0.yml'
-import W from './data/weapons.yml'
+import W from './weapons.js'
 import { tokenWeight, SKILLS } from './stats.js'
 import L1 from './data/level1.yml'
 

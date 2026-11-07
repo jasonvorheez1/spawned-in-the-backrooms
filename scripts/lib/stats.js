@@ -12,7 +12,7 @@
 //   N Nous        (Intelligence) skill points per level, max sanity
 // Attributes live in player.state.attr as "5,5,5,5,5,5,5" (1 to 10); skills in player.state.skl as the points spent
 // (13 numbers), tagged skills in player.state.tags ("guns,sneak,lockpick").
-import W from './data/weapons.yml'
+import W from './weapons.js'
 
 export const ATTRS = [
   { k: 'h', name: 'Hardiness', short: 'HAR', info: 'Carry weight, melee and unarmed damage' },

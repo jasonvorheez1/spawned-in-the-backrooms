@@ -9,7 +9,7 @@
 // dies with the rig), never a flag on the camera def: a rewrite to an orbit rig shows the body again
 // with nothing to un-set.
 import CAMERA from './lib/data/camera.yml'
-import W from './lib/data/weapons.yml'
+import W from './lib/weapons.js'
 import { poseViewmodel } from './lib/vmpose.js'
 
 const RAD_TO_DEG = 180 / Math.PI
