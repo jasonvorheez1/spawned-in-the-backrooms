@@ -243,9 +243,9 @@ export function tick(ctx) {
     else if (now - s.gone[id] > MEG.respawn * 1000) { const g = { ...s.gone }; delete g[id]; s.gone = g; if (o) ctx.destroy(id); agent(ctx, id); }
   }
   // hounds in brigades, deathmoth swarms, kept topped up far from the checkpoint
-  if (!s.packMgr) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
+  if ((!s.packMgr || !(s.packMgr in ctx.place.objects))) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
   const hasMoths = ctx.world.files.includes("templates/deathmoths.js") && ctx.world.files.includes("scripts/deathmoths.js");
-  if (hasMoths && !s.mothMgr) s.mothMgr = ctx.spawn({ behavior: "scripts/deathmoths.js" });
+  if (hasMoths && (!s.mothMgr || !(s.mothMgr in ctx.place.objects))) s.mothMgr = ctx.spawn({ behavior: "scripts/deathmoths.js" });
   if (now - (s.houndAt ?? 0) > L.entityRespawn * 1000 || !s.houndAt) {
     s.houndAt = now;
     const far = () => { for (let i = 0; i < 50; i++) { const cx = 8 + Math.floor(ctx.random() * (N - 8)), cz = Math.floor(ctx.random() * N), z = zoneOf(cx, cz); if (z !== "vault" && z !== "gamma") return cellCenter(cx, cz); } return cellCenter(N - 2, 2); };

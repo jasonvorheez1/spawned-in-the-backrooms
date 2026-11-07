@@ -101,7 +101,7 @@ export function tick(ctx) {
     for (const o of ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.tags?.includes("container")) ctx.destroy(o.id);
     s.furnitureSeeded = true; if (s.seeded) seedFurniture(ctx, L.crates);
   }
-  if (!s.packMgr) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
+  if ((!s.packMgr || !(s.packMgr in ctx.place.objects))) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
   const want = L.hounds + (s.flicker === "dark" ? L.flickerHounds : 0);
   const have = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((h) => !h.state?.dead).length;
   if (have < want && now >= (s.nextHound ?? 0)) {
@@ -116,7 +116,7 @@ export function tick(ctx) {
     }
   }
   // the skin-stealers: a manager, and a few kept walking the halls
-  if (!s.stealMgr) s.stealMgr = ctx.spawn({ behavior: "scripts/stealers.js" });
+  if ((!s.stealMgr || !(s.stealMgr in ctx.place.objects))) s.stealMgr = ctx.spawn({ behavior: "scripts/stealers.js" });
   const stealers = ctx.query({ tags: ["stealer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((h) => !h.state?.dead).length;
   if (stealers < L.stealers && now >= (s.nextStealer ?? 0)) {
     s.nextStealer = now + (s.stealersSeeded ? L.entityRespawn * 1000 : 0);

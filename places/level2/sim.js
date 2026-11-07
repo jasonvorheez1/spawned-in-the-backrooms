@@ -91,7 +91,7 @@ export function tick(ctx) {
     else if (now - s.gone[id] > MEG.respawn * 1000) { const g = { ...s.gone }; delete g[id]; s.gone = g; if (o) ctx.destroy(id); survivor(ctx, id); }
   }
   // hounds roam the far halls, kept topped up
-  if (!s.packMgr) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
+  if ((!s.packMgr || !(s.packMgr in ctx.place.objects))) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
   if (now - (s.houndAt ?? 0) > L.entityRespawn * 1000 || !s.houndAt) {
     s.houndAt = now;
     const have = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((h) => !h.state?.dead).length;
