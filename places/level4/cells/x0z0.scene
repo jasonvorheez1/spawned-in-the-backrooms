@@ -1,4 +1,11 @@
 # spawn-scene v2 yaml x0z0
+l4-detail:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l4-detail
+  material: {roughness: 0.9}
+  primitive: {kind: scripted, script: scripts/level4-detail-geo.js}
+  receiveShadow: true
 l4-geo:
   castShadow: false
   feetPosition: {x: 0, y: 0, z: 0}
@@ -461,6 +468,213 @@ l4-office-9-plate:
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-09", label2: vacant, name: Office 4-09, room: {id: l4-office-9, kit: {cot: {x: -2.4, y: 0, z: 30.6}, desk: {x: -6.4, y: 0, z: 30.9}, yaw: 180}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-09</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-prop-0:
+  castShadow: true
+  feetPosition: {x: -11.5, y: 0, z: 3.2}
+  id: l4-prop-0
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 35}
+  tags: [l4-prop]
+l4-prop-1:
+  castShadow: true
+  feetPosition: {x: 5.4, y: 0, z: -12.6}
+  id: l4-prop-1
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 200}
+  tags: [l4-prop]
+l4-prop-10:
+  castShadow: true
+  feetPosition: {x: -5.2, y: 0, z: 13.6}
+  id: l4-prop-10
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: box}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 80}
+  tags: [l4-prop]
+l4-prop-11:
+  castShadow: true
+  feetPosition: {x: 12.6, y: 0, z: -21.8}
+  id: l4-prop-11
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: boxes}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 5}
+  tags: [l4-prop]
+l4-prop-12:
+  castShadow: true
+  feetPosition: {x: -23.6, y: 0, z: 23.6}
+  id: l4-prop-12
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: plant}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [l4-prop]
+l4-prop-13:
+  castShadow: true
+  feetPosition: {x: 23.4, y: 0, z: -23.4}
+  id: l4-prop-13
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: plant}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 40}
+  tags: [l4-prop]
+l4-prop-14:
+  castShadow: true
+  feetPosition: {x: 1.6, y: 0, z: -24.2}
+  id: l4-prop-14
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: plant}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  tags: [l4-prop]
+l4-prop-15:
+  castShadow: true
+  feetPosition: {x: -14.5, y: 0, z: 13}
+  id: l4-prop-15
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 20}
+  tags: [l4-prop]
+l4-prop-16:
+  castShadow: true
+  feetPosition: {x: 15.5, y: 0, z: 4.6}
+  id: l4-prop-16
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 95}
+  tags: [l4-prop]
+l4-prop-17:
+  castShadow: true
+  feetPosition: {x: -2.5, y: 0, z: -16}
+  id: l4-prop-17
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 170}
+  tags: [l4-prop]
+l4-prop-18:
+  castShadow: true
+  feetPosition: {x: 6.8, y: 0, z: 15.2}
+  id: l4-prop-18
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 60}
+  tags: [l4-prop]
+l4-prop-19:
+  castShadow: true
+  feetPosition: {x: 25.2, y: 0, z: 9.6}
+  id: l4-prop-19
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  tags: [l4-prop]
+l4-prop-2:
+  castShadow: true
+  feetPosition: {x: 13.8, y: 0, z: 11.2}
+  id: l4-prop-2
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 110}
+  tags: [l4-prop]
+l4-prop-20:
+  castShadow: true
+  feetPosition: {x: -25.2, y: 0, z: -10.4}
+  id: l4-prop-20
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  tags: [l4-prop]
+l4-prop-21:
+  castShadow: true
+  feetPosition: {x: -9.6, y: 0, z: 25.2}
+  id: l4-prop-21
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  tags: [l4-prop]
+l4-prop-22:
+  castShadow: true
+  feetPosition: {x: 10.4, y: 0, z: -25.2}
+  id: l4-prop-22
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [l4-prop]
+l4-prop-3:
+  castShadow: true
+  feetPosition: {x: -3.1, y: 0, z: 21.5}
+  id: l4-prop-3
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 290}
+  tags: [l4-prop]
+l4-prop-4:
+  castShadow: true
+  feetPosition: {x: 22.5, y: 0, z: -2.2}
+  id: l4-prop-4
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 160}
+  tags: [l4-prop]
+l4-prop-5:
+  castShadow: true
+  feetPosition: {x: -21.6, y: 0, z: -12.4}
+  id: l4-prop-5
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 60}
+  tags: [l4-prop]
+l4-prop-6:
+  castShadow: true
+  feetPosition: {x: -13.2, y: 0, z: -21.5}
+  id: l4-prop-6
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: boxes}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 12}
+  tags: [l4-prop]
+l4-prop-7:
+  castShadow: true
+  feetPosition: {x: -12.4, y: 0, z: -20.9}
+  id: l4-prop-7
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: box}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 70}
+  tags: [l4-prop]
+l4-prop-8:
+  castShadow: true
+  feetPosition: {x: 21.2, y: 0, z: 13.4}
+  id: l4-prop-8
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: boxes}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: -20}
+  tags: [l4-prop]
+l4-prop-9:
+  castShadow: true
+  feetPosition: {x: 3.6, y: 0, z: 4.1}
+  id: l4-prop-9
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: box}, script: scripts/l4-prop-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 33}
+  tags: [l4-prop]
 object/xad4c834675863151/0:
   feetPosition: {x: -24, y: 2.85, z: -24}
   id: object/xad4c834675863151/0
