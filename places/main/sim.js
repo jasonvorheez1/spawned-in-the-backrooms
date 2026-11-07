@@ -55,4 +55,14 @@ export function tick(ctx) {
     s.smilersSeeded = true;
     s.nextSmiler = now + L.smilerRespawn * 1000;
   }
+  const lurkers = ctx.query({ tags: ["lurker"] }).filter((m) => !m.state?.dead).length;
+  if (lurkers < L.lurkers && now >= (s.nextLurker ?? 0)) {
+    const fill = s.lurkersSeeded ? 1 : L.lurkers - lurkers;
+    for (let i = 0; i < fill; i++) {
+      const c = cell(ctx, ["halls", "arches", "holes"]);
+      if (c) ctx.spawn({ tags: ["lurker"], feetPosition: { x: c.x, y: 0.05, z: c.z }, primitive: { kind: "scripted", script: "scripts/lurker-geo.js" }, physics: { body: "character" }, state: { hp: L.lurkerHp, kind: "lurker" } });
+    }
+    s.lurkersSeeded = true;
+    s.nextLurker = now + L.lurkerRespawn * 1000;
+  }
 }

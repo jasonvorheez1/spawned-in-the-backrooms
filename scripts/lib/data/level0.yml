@@ -41,3 +41,15 @@ biteCooldown: 1.2
 smilerRespawn: 45
 almonds: 40
 almondRespawn: 60
+# the lurkers: pale things that freeze while watched and rush when you look away
+lurkers: 4
+lurkerHp: 45
+lurkerSpeed: 5.4
+lurkerSight: 28
+lurkerWatchCos: 0.5  # how squarely you must face one to hold it still
+lurkerGaze: 1.5      # sanity lost per second while watching one
+lurkerBite: 18
+lurkerSanity: 15
+lurkerBiteCooldown: 1.4
+lurkerRespawn: 60
+xpLurker: 80

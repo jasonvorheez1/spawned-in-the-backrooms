@@ -82,7 +82,7 @@ function swing(ctx) {
   s.swingAt = now
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   let best = null, bd = 1e9
-  for (const m of ctx.query({ tags: ['smiler'], radius: wp.ranged ? wp.range : wp.reach + 0.6 })) {
+  for (const m of [...ctx.query({ tags: ['smiler'], radius: wp.ranged ? wp.range : wp.reach + 0.6 }), ...ctx.query({ tags: ['lurker'], radius: wp.ranged ? wp.range : wp.reach + 0.6 })]) {
     if (m.state?.dead) continue
     const dx = m.feetPosition.x - p.x, dz = m.feetPosition.z - p.z, d = Math.hypot(dx, dz)
     if (d > 0.3 && (dx * f.x + dz * f.z) / d < (wp.ranged ? 0.985 : 0.4)) continue
@@ -106,7 +106,7 @@ function swing(ctx) {
   if (best.state.hp <= 0 && !best.state.dead) {
     best.state.dead = true
     s.kills += 1
-    gain(ctx, L.xpKill)
+    gain(ctx, best.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
     dropLoot(ctx, best.feetPosition)
   }
 }
@@ -180,6 +180,9 @@ export function update(ctx, dt) {
 function tickStats(ctx, t, moving) {
   const s = ctx.self.state, w = walkOf(ctx), p = ctx.self.feetPosition, now = ctx.now()
   const mh = maxHp(s.level), ms = maxSan(s.level)
+  const af = w.fwd ?? { x: 0, z: -1 }, ax = Math.round(af.x * 20) / 20, az = Math.round(af.z * 20) / 20
+  if (s.aimX !== ax) s.aimX = ax
+  if (s.aimZ !== az) s.aimZ = az
   const zone = zoneAt(p.x, p.z)
   if (zone !== s.zone) s.zone = zone
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back

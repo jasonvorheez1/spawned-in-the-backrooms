@@ -1065,3 +1065,7 @@ smiler-pack:
   behavior: scripts/smilers.js
   feetPosition: {x: 0, y: 0, z: 0}
   id: smiler-pack
+lurker-pack:
+  behavior: scripts/lurkers.js
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: lurker-pack
