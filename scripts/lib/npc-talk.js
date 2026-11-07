@@ -32,7 +32,7 @@ export function systemPrompt({ it, place, pl, rapport, following }) {
   const sk = skillsOf(pl.state ?? {}), id = String(it.id).split('/').pop()
   const persona = T.personas[id] ?? backstory(id)
   const lv = LORE.levels[place] ?? '', fac = LORE.factions[it.state?.faction] ?? ''
-  const mem = it.state?.mem?.[keyOf(pl)] ?? null, now = Date.now()
+  const mem = it.state?.mem?.[keyOf(pl)] ?? null
   const memLine = mem ? `You have met ${pl.displayName ?? 'them'} ${mem.met} time${mem.met === 1 ? '' : 's'} before.${mem.notes?.length ? ' What you remember about them: ' + mem.notes.join('; ') + '.' : ''}` : `You have never met ${pl.displayName ?? 'them'} before. Treat them as a stranger.`
   const seen = (it.state?.sawKill ? `You saw a killing recently${it.state.sawKill.by === pl.id ? ', and it was THIS person who did it' : ''}. ` : '') + (it.state?.angry?.[pl.id] ? 'They wronged you before. ' : '')
   return [
