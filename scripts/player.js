@@ -170,6 +170,13 @@ function takeToken0(ctx, token) {
     sound(ctx, token === 'ration' ? 'plastic-bottle-pickup-rattle' : 'pickup-ammo', 0.7, true)
     return { ok: true }
   }
+  if (token === 'lobby_wafer') { // Level 0's own snack: stale yellow wafers in every third desk drawer (Savi made it up)
+    const mh = maxHp(s.level, s), ms = maxSan(s.level, s), U = L2.use
+    s.hp = Math.min(mh, (s.hp ?? mh) + U.waferHp * derived(s).heal); s.sanity = Math.min(ms, (s.sanity ?? ms) + U.waferSanity)
+    s.pickedAt = now; s.notice = { text: 'Lobby Wafers. Crunchy, somehow damp.', at: now }
+    sound(ctx, 'plastic-bottle-pickup-rattle', 0.6, true)
+    return { ok: true }
+  }
   if (token === 'beans' || token === 'bar' || token === 'firstaid') { // Level 2 food and first aid, used on the spot
     const mh = maxHp(s.level, s), ms = maxSan(s.level, s), U = L2.use
     s.hp = Math.min(mh, (s.hp ?? mh) + (token === 'beans' ? U.beansHp * derived(s).heal : token === 'bar' ? U.barHp * derived(s).heal : U.firstaidHp * derived(s).healMed))
