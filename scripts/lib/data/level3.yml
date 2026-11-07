@@ -8,8 +8,8 @@ arrive: [1, 12]      # the Base Gamma checkpoint, by the door back to Level 2
 outpost: { x0: 0, z0: 10, w: 4, d: 5 }   # Base Gamma's forward checkpoint: safe ground
 loops: 0.16          # extra openings so it is not a pure tree
 barShare: 0.55       # of those extra openings, this share are indestructible bars instead (you see through, never pass)
-gateShare: 0.12      # tree openings that wear an open barred gate
-darkShare: 0.24      # 4x4 sectors with no working light: paranoia hotspots
+gateShare: 0.05      # tree openings that wear an open barred gate
+darkShare: 0.18      # 4x4 sectors with no working light: paranoia hotspots
 tightShare: 0.2      # 3x3 sectors of low, cramped crawl halls
 generators: 3        # generator rooms, 3x3 cells
 lines: 2             # assembly lines, 4x2 cells
