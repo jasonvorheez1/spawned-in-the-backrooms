@@ -33,7 +33,7 @@ export function becomeCorpse(ctx, o, name, items, from) {
   o.anim.move = null; o.velocity = { x: 0, y: 0, z: 0 };
   o.ragdoll = { impulse: { x: (dx / d) * k, y: k * 0.4, z: (dz / d) * k }, settleSeconds: 2 };
   o.tags = [...new Set([...(o.tags ?? []).filter((t) => t !== "l5-hostile" && t !== "usable"), "container", "remains"])];
-  o.state.name = name; o.state.items = items.join(","); o.state.c = null;
+  o.state.name = name; o.state.items = items.join(","); o.state.c = null; o.state.corpseAt = ctx.now();
 }
 // the player nearest a death gets the credit (melee kills land within reach; a shot from far still finds its shooter first among few)
 export const killerOf = (ctx, pos) => ctx.place.players.map((p) => [p, flat(p.feetPosition, pos)]).filter(([, d]) => d < 30).sort((a, b) => a[1] - b[1])[0]?.[0] ?? null;
