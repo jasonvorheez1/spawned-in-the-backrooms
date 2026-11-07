@@ -7,7 +7,7 @@ import { getInputRay, raycast } from 'builtin/physics'
 import { tokenOf, describe, itemsOf } from './lib/items.js'
 import { takeToken } from './player.js'
 
-const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container'] // what can be looked at and used
+const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc'] // what can be looked at and used
 const REACH = 3.0 // metres from the eye
 const OPEN_RANGE = 4.5 // a container you walk away from closes
 const mem = (ctx) => (ctx.self.session.interact ??= { ray: null, last: -1e9, acc: 0, key: '', focus: null, hl: 0 })
@@ -23,7 +23,7 @@ function findFocus(ctx, ray) {
   const o = ray.origin, d = ray.direction
   let best = null, bestAng = 1e9
   for (const tag of KINDS) {
-    const big = tag === 'container'
+    const big = tag === 'container' || tag === 'npc'
     for (const it of ctx.query({ tags: [tag], radius: REACH + 1 })) {
       if (it.state?.taken) continue
       const p = it.feetPosition, vx = p.x - o.x, vy = p.y + (big ? 0.28 : 0.1) - o.y, vz = p.z - o.z
@@ -50,7 +50,9 @@ function refocus(ctx, force = false) {
   if (f) {
     const it = ctx.getObject(f.id)
     if (it) {
-      if (f.tag === 'container') {
+      if (f.tag === 'npc') {
+        info = { id: f.id, name: it.state?.name ?? 'Stranger', info: 'M.E.G.', verb: 'Talk', color: '#c6f060' }
+      } else if (f.tag === 'container') {
         const n = itemsOf(it.state?.items).length
         info = { id: f.id, name: it.state?.name ?? 'Container', info: n ? `${n} item${n > 1 ? 's' : ''}` : 'empty', verb: 'Search', color: '#d9d3b8' }
       } else {
@@ -77,6 +79,35 @@ function openLoot(ctx, c) {
   snd(ctx, 'container-open-rustle', 0.5)
 }
 
+// the M.E.G. agents: the scout tells you how Level 1 works, the medic patches you up, the quartermaster hands out supplies
+const TIPS = [
+  "when the lights flicker, get into the corridors. the green exit signs. nothing hunts in there.",
+  "people call out hello in the halls. real people walk in groups. don't go to a lone voice.",
+  "crates show up on the racks after every blackout. that's how we eat out here.",
+  "the hounds hunt in the dark. keep your light off and walk, don't run.",
+  "follow the pipes east. that's the way toward the utility halls.",
+];
+const VO = (who, line) => `/cdn/voice-meg-${who}-saying-${line.replace(/[^a-z ]/gi, '').trim().toLowerCase().replace(/ +/g, '-')}.mp3`
+function speak(ctx, it, who, line) {
+  note(ctx, `${it.state.name.split(' ·')[0]}: "${line}"`)
+  const p = it.feetPosition
+  ctx.emit('playSound', { clip: VO(who, line), position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.9, maxDistance: 14 }, { audience: { player: ctx.self.id } })
+}
+function talk(ctx, it) {
+  const s = ctx.self.state, now = ctx.now(), role = it.state?.role
+  if (role === 'scout') { s.megTip = ((s.megTip ?? -1) + 1) % TIPS.length; speak(ctx, it, 'ale', TIPS[s.megTip]); return }
+  if (role === 'medic') {
+    if (now - (s.megMedAt ?? -1e9) < 90000) { speak(ctx, it, 'ortiz', "you're patched. give it a minute and come back."); return }
+    s.megMedAt = now; s.hp = maxHp(s.level ?? 1); s.sanity = Math.max(s.sanity ?? 0, maxSan(s.level ?? 1))
+    speak(ctx, it, 'ortiz', "hold still. there. you're good to walk."); snd(ctx, 'bandage-wrap-cloth', 0.6); return
+  }
+  if (role === 'quarter') {
+    if (now - (s.megQmAt ?? -1e9) < 180000) { speak(ctx, it, 'callum', "rations are counted. come back after the next patrol."); return }
+    s.megQmAt = now; takeToken(ctx, 'almond'); takeToken(ctx, 'almond'); takeToken(ctx, 'ration')
+    speak(ctx, it, 'callum', "two almond waters and a ration. don't waste them."); return
+  }
+}
+
 function press(ctx) {
   const m = mem(ctx), s = ctx.self.state
   if (s.lootOpen) { closeLoot(ctx); return }
@@ -84,6 +115,7 @@ function press(ctx) {
   if (!f) return
   const it = ctx.getObject(f.id)
   if (!it || it.state?.taken) return
+  if (f.tag === 'npc') { talk(ctx, it); return }
   if (f.tag === 'container') { openLoot(ctx, it); return }
   const r = takeToken(ctx, tokenOf(f.tag, it))
   if (r.ok) { it.state.taken = true; ctx.destroy(f.id); s.focus = null; m.key = ''; m.focus = null } else if (r.msg) { note(ctx, r.msg); snd(ctx, 'ui-denied-click', 0.35) }
