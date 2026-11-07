@@ -5,13 +5,14 @@
 // face out while the sit pose blends in; standing it steps forward, the pose blends out, and the seat lets it go.
 // scripts/camera.js pulls the eye out to third person through both glides.
 export const SIT_S = 0.7, STAND_S = 0.55
+const LIFT = 0.1 // Savi's pick: the sit clip's hips sat below the cushion; a seat's own state.seat.y overrides
 export const SIT_CLIP = { m: 'cdn/clip-sit-loop.glb', f: 'cdn/clip-sit-female-loop.glb' }
 const yawOf = (rot) => (typeof rot === 'number' ? rot : rot?.yaw != null ? rot.yaw : rot?.w != null ? (2 * Math.atan2(rot.y, rot.w) * 180) / Math.PI : 0)
 const fwdOf = (yaw) => { const r = (yaw * Math.PI) / 180; return { x: -Math.sin(r), z: -Math.cos(r) } }
 // local spots on the seat (its own frame): x across, z toward the back
 function localSpots(seat) {
   const c = seat.state?.seat ?? {}, n = c.w ?? 1, gap = c.gap ?? 0.62, d = c.d ?? 0.0, out = []
-  for (let i = 0; i < n; i++) out.push({ i, lx: (i - (n - 1) / 2) * gap, lz: d })
+  for (let i = 0; i < n; i++) out.push({ i, lx: (i - (n - 1) / 2) * gap, lz: d, ly: c.y ?? LIFT })
   return out
 }
 // world spots (for focus and NPCs)
@@ -51,7 +52,7 @@ export function sitDown(ctx, seat) {
   me.parent = seat.id
   me.feetPosition = { x: lp.x, y: 0, z: lp.z }
   me.rotation = { yaw: fromYaw }
-  s.sit = { id: seat.id, i: best.i, lx: best.lx, lz: best.lz, fx: lp.x, fz: lp.z, fromYaw, at: ctx.now(), phase: 'down' }
+  s.sit = { id: seat.id, i: best.i, lx: best.lx, lz: best.lz, ly: best.ly, fx: lp.x, fz: lp.z, fromYaw, at: ctx.now(), phase: 'down' }
   me.anim.sit = { clip: SIT_CLIP[sexOf(me)], loop: 'loop', weight: 1, blendIn: SIT_S }
   const w = spotsOf(seat)[best.i]
   ctx.emit('playSound', { clip: SIT_SND, position: { x: w.x, y: w.y + 0.5, z: w.z }, volume: 0.45, maxDistance: 8 }, { audience: { nearby: w, radius: 10 } })
@@ -77,14 +78,14 @@ export function seatTick(ctx) {
   const k = Math.min(1, (ctx.now() - s.at) / 1000 / (s.phase === 'up' ? STAND_S : SIT_S)), e = ease(k)
   me.velocity = { x: 0, y: 0, z: 0 }
   if (s.phase === 'down') {
-    me.feetPosition = { x: s.fx + (s.lx - s.fx) * e, y: 0, z: s.fz + (s.lz - s.fz) * e }
+    me.feetPosition = { x: s.fx + (s.lx - s.fx) * e, y: (s.ly ?? 0) * e, z: s.fz + (s.lz - s.fz) * e }
     me.rotation = { yaw: lerpYaw(s.fromYaw, 0, Math.min(1, e * 1.5)) }
     if (k >= 1) me.state.sit = { ...s, phase: 'sat', satAt: ctx.now() }
   } else if (s.phase === 'sat') {
     const p = me.feetPosition
-    if (Math.abs(p.x - s.lx) + Math.abs(p.z - s.lz) > 0.01 || Math.abs(p.y) > 0.01) { me.feetPosition = { x: s.lx, y: 0, z: s.lz }; me.rotation = { yaw: 0 } }
+    if (Math.abs(p.x - s.lx) + Math.abs(p.z - s.lz) > 0.01 || Math.abs(p.y - (s.ly ?? 0)) > 0.01) { me.feetPosition = { x: s.lx, y: s.ly ?? 0, z: s.lz }; me.rotation = { yaw: 0 } }
   } else {
-    me.feetPosition = { x: s.lx, y: 0, z: s.lz - 0.6 * e }
+    me.feetPosition = { x: s.lx, y: (s.ly ?? 0) * (1 - e), z: s.lz - 0.6 * e }
     if (k >= 1) { me.parent = null; free(ctx, s.id, s.i, me.id); me.state.sit = null }
   }
   return true

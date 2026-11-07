@@ -153,43 +153,32 @@ export function lay(ctx) {
   }
 
   // Lobby Front Desk, Service Bell, and Brass Luggage Carts
-  if (!ctx.getObject("l5-front-desk")) {
-    ctx.spawn("l5-front-desk", {
-      feetPosition: { x: -42.6, y: 0, z: 0 },
-      rotation: { yaw: -90 },
-      physics: { body: "static", collider: "box" },
-      primitive: { kind: "scripted", script: "scripts/level5-props-geo.js", params: { kind: "front_desk" } },
-    });
+  // Lobby service bell and brass luggage carts (the Main Hall's own desk stands; the old duplicate desk is gone)
+  if (!ctx.getObject("l5-front-bell")) {
     ctx.spawn("l5-front-bell", {
       tags: ["usable"],
-      feetPosition: { x: -42.4, y: 1.12, z: -0.6 },
+      feetPosition: { x: -42.35, y: 1.12, z: 1.9 },
       primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.06 },
       material: { color: "oklch(0.78 0.14 78)", metalness: 0.9, roughness: 0.2 },
       behavior: "scripts/l5-door.js",
       state: { kind: "bell", name: "Service bell", verb: "Ring", info: "Polished brass desk bell", tint: "#f2c14e" },
     });
-    ctx.spawn("l5-cart-lobby-n", {
-      feetPosition: { x: -35, y: 0, z: -8 },
-      rotation: { yaw: 24 },
-      physics: { body: "static", collider: "box" },
-      primitive: { kind: "scripted", script: "scripts/level5-props-geo.js", params: { kind: "luggage_cart" } },
-    });
-    ctx.spawn("l5-cart-lobby-s", {
-      feetPosition: { x: -35, y: 0, z: 8 },
-      rotation: { yaw: -18 },
+    for (const [id, x, z, yaw] of [["l5-cart-lobby-n", -43.6, -3.9, 15], ["l5-cart-lobby-s", -41.5, 10.8, -20]]) ctx.spawn(id, {
+      feetPosition: { x, y: 0, z }, rotation: { yaw },
       physics: { body: "static", collider: "box" },
       primitive: { kind: "scripted", script: "scripts/level5-props-geo.js", params: { kind: "luggage_cart" } },
     });
   }
+  for (const id of ["l5-front-desk", "l5-lib-desk", "l5-shelf-0", "l5-shelf-1", "l5-shelf-2", "l5-shelf-3", "l5-shelf-4"]) if (ctx.getObject(id)) ctx.destroy(id);
 
   // Lost Hall Society Library: Shelves, Reading Desk with Banker's Lamp, and Filing Cabinet
-  if (!ctx.getObject("l5-lib-desk")) {
+  if (!ctx.getObject("l5-lib-cabinet")) {
     const shelves = [
       { x: -29.6, z: -17, yaw: 90 }, { x: -29.6, z: -19, yaw: 90 },
       { x: -22.4, z: -17, yaw: -90 }, { x: -22.4, z: -19, yaw: -90 },
       { x: -26, z: -20.6, yaw: 0 },
     ];
-    for (let i = 0; i < shelves.length; i++) {
+    for (let i = 0; i < 0; i++) { // the Main Hall lays the library shelves now
       const sh = shelves[i];
       ctx.spawn(`l5-shelf-${i}`, {
         feetPosition: { x: sh.x, y: 0, z: sh.z },
@@ -198,7 +187,7 @@ export function lay(ctx) {
         primitive: { kind: "scripted", script: "scripts/level5-props-geo.js", params: { kind: "bookshelf" } },
       });
     }
-    ctx.spawn("l5-lib-desk", {
+    if (false) ctx.spawn("l5-lib-desk", {
       feetPosition: { x: -26, y: 0, z: -15.5 },
       rotation: { yaw: 180 },
       physics: "static",
