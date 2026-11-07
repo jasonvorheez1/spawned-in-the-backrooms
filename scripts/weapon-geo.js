@@ -222,7 +222,7 @@ const builders = {
     plain(ctx, "oklch(0.62 0.17 50)", 0.7);
     rod(ctx, [[0, Y, 0], [0, Y, 0.012], [0, Y, 0.09], [0, Y, 0.17], [0, Y, 0.182]], [0.014, 0.0175, 0.016, 0.0175, 0.014], M, [1.3, 1]); // insulated grip, oval
     ctx.color(TAPE); ctx.roughness(0.9);
-    for (const [z0, z1] of [[0.02, 0.07], [0.1, 0.16]]) wraps(ctx, z0, z1, 0.0178, M, 0.014); // two bindings of black tape, a gap of orange between
+    for (const [z0, z1] of [[0.02, 0.07], [0.1, 0.16]]) for (let z = z0; z < z1; z += 0.012) rod(ctx, [[0, Y, z], [0, Y, z + 0.0105]], [0.0182, 0.0184], M, [1.3, 1]); // two bindings of black tape, a gap of orange between
     if (hi) { ctx.color("oklch(0.85 0.15 90)"); bar(ctx, 0.022, Y, 0.0015, 0.006, 0.075, 0.095, 0.001, 1); } // a yellow 1000V sticker
     steel(ctx, "oklch(0.55 0.005 250)", 0.4); bar(ctx, 0.004, Y, 0.022, 0.009, 0.175, 0.19, 0.003, 2); // the bolster
     rod(ctx, [[0, Y, -0.012], [0, Y, 0.004]], [0.006, 0.006], 8); // pommel rivet
