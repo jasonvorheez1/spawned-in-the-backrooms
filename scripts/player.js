@@ -8,6 +8,7 @@ import { raycast } from 'builtin/physics'
 import BRK from './lib/data/breakables.yml'
 import { strike } from './lib/breakables.js'
 import { dropLoot, spawnWeapon } from './lib/loot.js'
+import { markKill } from './lib/witness.js'
 import { derived, canCarry, burden, npcMul, START, dmgMul, skillsOf, spentOf, SKILLS, SKILL_MAX, dmgAfterArmor, lookOfNpc } from './lib/stats.js'
 import { parseCloth, wear, takeOff } from './lib/clothes.js'
 import { weaponBody, HOLD, MESHGRIP } from './lib/weapon-look.js'
@@ -307,6 +308,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
   }
   if (m.state.hp <= 0 && !m.state.dead) {
     m.state.dead = true
+    { const seen = markKill(ctx, m, ctx.self); if (!seen.length && s.crouch) s.notice = { text: 'Nobody saw that', at: ctx.now() } } // witnesses: scripts/lib/witness.js
     s.kills += 1
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
     if (!npc && !(m.tags ?? []).some((g) => g === 'l5staff' || g === 'l5rat')) dropLoot(ctx, m.feetPosition, m.state?.kind === 'lurker' ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot, derived(s).clothFind) // an agent's own body is searched (scripts/meg-agent.js)
