@@ -141,7 +141,7 @@ function revamp(ctx, s) {
     for (const l of ctx.query({ tags: ["l2lamp"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
       const { cx, cz } = cellAt(l.feetPosition.x, l.feetPosition.z), o = ctx.place.objects[l.id]; if (!o) continue;
       if (inHall(cx, cz) || sideOf(cx, cz)) { ctx.destroy(l.id); continue; }
-      if (flickerSector(cx, cz)) { const col = o.material?.color ?? "oklch(0.95 0.02 200)"; o.light = null; o.fx = { script: flickFx(col.includes(" 65") ? "<1,.7,.4>" : "<.85,.92,1>", hash(cx, cz, 11)) }; }
+      if (flickerSector(cx, cz)) { const col = typeof o.material?.color === "string" ? o.material.color : JSON.stringify(o.material?.color ?? "oklch(0.95 0.02 200)"); o.light = null; o.fx = { script: flickFx(col.includes(" 65") ? "<1,.7,.4>" : "<.85,.92,1>", hash(cx, cz, 11)) }; }
     }
     ctx.spawn("l2-rooms", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-rooms-geo.js" }, material: { roughness: 0.85 } });
     // the Boiler Hall: high sodium lamps, the firebox, the drone, loot on the floor and up on the catwalk
