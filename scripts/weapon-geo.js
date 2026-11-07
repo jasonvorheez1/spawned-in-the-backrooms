@@ -53,7 +53,7 @@ const builders = {
   smg(ctx, M, hi) { // a 1930s Thompson: walnut stock, finned barrel, Cutts compensator, stick magazine, vertical foregrip; grip at z 0.14
     const B = Y + 0.03; // the bore line
     wood(ctx, "oklch(0.8 0.07 50)");
-    for (let k = 0; k < 7; k++) { const t0 = k / 7, t1 = (k + 1) / 7, z0 = 0.06 - t0 * 0.28, z1 = 0.06 - t1 * 0.28, h = 0.016 + t1 * 0.03; bar(ctx, 0, B - 0.006 - t1 * 0.03, 0.016, h, z1, z0 + 0.002, 0.008); } // stock, deepening to the butt
+    const SN = hi ? 16 : 6; for (let k = 0; k < SN; k++) { const t0 = k / SN, t1 = (k + 1) / SN, z0 = 0.06 - t0 * 0.28, z1 = 0.06 - t1 * 0.28, tm = (t0 + t1) / 2, h = 0.016 + tm * 0.03; bar(ctx, 0, B - 0.006 - tm * 0.03, 0.016, h, z1, z0 + 0.001, 0.008); } // stock, deepening to the butt
     steel(ctx, "oklch(0.35 0.01 260)", 0.4);
     bar(ctx, 0, B - 0.036, 0.0175, 0.048, -0.232, -0.218, 0.006); // butt plate
     plain(ctx, "oklch(0.26 0.01 260)", 0.45, 0.85);
@@ -85,7 +85,7 @@ const builders = {
   knife(ctx, M, hi) { // a combat knife lying flat: ridged black grip, steel pommel and guard, clip-point blade with a fuller; grip at z 0.05
     plain(ctx, "oklch(0.2 0.01 60)", 0.85, 0);
     const zs = [], rs = []; for (let k = 0; k <= 10; k++) { zs.push([0, Y, 0.012 + k * 0.0105]); rs.push(0.0115 + (hi && k % 2 ? 0.0016 : 0) + Math.sin(k / 10 * Math.PI) * 0.0015); }
-    rod(ctx, zs, rs, M, true); // grip, ringed
+    rod(ctx, zs, rs, M); // grip, ringed
     steel(ctx, "oklch(0.72 0.01 250)", 0.3);
     rod(ctx, [[0, Y, -0.004], [0, Y, 0.013]], [0.0125, 0.0105], M); // pommel
     bar(ctx, 0, Y, 0.032, 0.006, 0.12, 0.13, 0.004); // crossguard
