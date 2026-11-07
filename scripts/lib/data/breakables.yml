@@ -10,6 +10,7 @@ materials:
   wood:     { name: Wood,     hp: 70,  mul: { blunt: 1.0, edged: 1.5, firearm: 0.45 }, sound: wood-plank-crack-hit,      dust: [0.62, 0.48, 0.3],  drops: [[scrap_wood, 2, 4], [nails, 1, 3]] }
   metal:    { name: Metal,    hp: 160, mul: { blunt: 0.7, edged: 0.35, firearm: 0.6 }, sound: metal-sheet-clang-hit,    dust: [0.55, 0.55, 0.58], drops: [[scrap_metal, 2, 4], [wire, 0, 2], [nails, 0, 1]] }
   concrete: { name: Concrete, hp: 400, mul: { blunt: 0.45, edged: 0.15, firearm: 0.2 }, sound: concrete-chip-impact-crack, dust: [0.7, 0.7, 0.68], drops: [[scrap_metal, 1, 2], [wire, 0, 1]] }
+  machine:  { name: Machine,  hp: 110, mul: { blunt: 0.8, edged: 0.4, firearm: 0.5 }, sound: metal-sheet-clang-hit,    dust: [0.6, 0.6, 0.62], drops: [[scrap_metal, 1, 3], [wire, 0, 2]] }
   fixture:  { name: Fixture,  hp: 25,  mul: { blunt: 1.4, edged: 1.0, firearm: 1.2 }, sound: metal-sheet-clang-hit,    dust: [0.95, 0.95, 0.85], drops: [[wire, 1, 2], [scrap_metal, 0, 1]] }
 breakSound: debris-collapse-crumble
 buildSound: hammer-nail-wood-build
@@ -20,11 +21,52 @@ scrap:
   drywall:     { name: Drywall chunk, kg: 0.5, color: "#e8dcb6" }
   nails:       { name: Nails,       kg: 0.05, color: "#c8c8c8" }
   wire:        { name: Wire,        kg: 0.1, color: "#e0915a" }
+  bolts:       { name: Bolts,       kg: 0.05, color: "#a8b0b8" }
+  gears:       { name: Gears,       kg: 0.3, color: "#d8c070" }
+  springs:     { name: Springs,     kg: 0.1, color: "#c0d0d8" }
+  fuse:        { name: Fuse,        kg: 0.05, color: "#f0d080" }
+  copper_coil: { name: Copper coil, kg: 0.4, color: "#e88a4a" }
+  circuit:     { name: Circuit board, kg: 0.2, color: "#7fd1a0" }
+  motor:       { name: Small motor, kg: 1.2, color: "#f0a040" }
 # what B mode builds. size: [w, h, d] in metres (the ghost and the collider); cost in scrap
 pieces:
   plank_wall:  { name: Plank wall,       mat: wood,  hp: 140, size: [2, 2.4, 0.16], cost: { scrap_wood: 4, nails: 2 } }
   metal_wall:  { name: Metal sheet wall, mat: metal, hp: 260, size: [2, 2.4, 0.12], cost: { scrap_metal: 4, wire: 1 } }
   barricade:   { name: Barricade,        mat: wood,  hp: 90,  size: [2, 1.2, 0.5],  cost: { scrap_wood: 3, nails: 2 } }
   crate:       { name: Crate,            mat: wood,  hp: 60,  size: [1, 1, 1],      cost: { scrap_wood: 3, nails: 1 } }
+  steel_barricade: { name: Steel barricade, mat: metal, hp: 380, size: [2, 1.3, 0.4], cost: { scrap_metal: 3, bolts: 4, gears: 1 } }
   ramp:        { name: Ramp,             mat: wood,  hp: 120, size: [1.2, 1, 2],    cost: { scrap_wood: 5, nails: 3 } }
-order: [plank_wall, metal_wall, barricade, crate, ramp]
+order: [plank_wall, metal_wall, barricade, steel_barricade, crate, ramp]
+
+# Level 0 walls are voxels: 4 across x 3 high, each its own hp; a chunk with nothing under it and nothing beside it falls too.
+voxel: { cols: 4, rows: 3 }
+# Tools (my picks): which class a weapon harvests as. Everything else is "rough": base drops only.
+tools:
+  wrench: mech
+  screwdriver: mech
+  crowbar: pry
+  hatchet: chop
+  fire_axe: chop
+  lineman_machete: chop
+  sledgehammer: smash
+  stun_baton: mech
+# harvest[material][tool class]: mul scales the base drops (rolled per item, 7dtd-style), rare are [token, chance %, min, max]
+# rolled one by one. A machine smashed with the wrong tool loses its parts; the right one strips them.
+harvest:
+  machine:
+    mech:  { mul: 1.6, rare: [[gears, 45, 1, 2], [springs, 35, 1, 3], [fuse, 25, 1, 2], [circuit, 22, 1, 1], [copper_coil, 18, 1, 1], [bolts, 60, 2, 5], [motor, 6, 1, 1]] }
+    pry:   { mul: 1.2, rare: [[bolts, 40, 1, 3], [springs, 15, 1, 1], [gears, 10, 1, 1]] }
+    smash: { mul: 0.9, rare: [[bolts, 25, 1, 2]] }
+  metal:
+    mech:  { mul: 1.4, rare: [[bolts, 55, 2, 4], [springs, 10, 1, 1]] }
+    pry:   { mul: 1.3, rare: [[bolts, 30, 1, 3]] }
+  fixture:
+    mech:  { mul: 1.3, rare: [[fuse, 30, 1, 1], [copper_coil, 12, 1, 1], [circuit, 6, 1, 1]] }
+  wood:
+    chop:  { mul: 1.7, rare: [] }
+    pry:   { mul: 1.2, rare: [[nails, 60, 2, 5]] }
+  drywall:
+    pry:   { mul: 1.3, rare: [[nails, 35, 1, 3], [wire, 20, 1, 2]] }
+    smash: { mul: 1.5, rare: [[wire, 15, 1, 1]] }
+  concrete:
+    smash: { mul: 1.8, rare: [[scrap_metal, 40, 1, 2]] }

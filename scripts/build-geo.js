@@ -82,6 +82,18 @@ export function geometry(ctx) {
     for (const x of [-0.48, 0.48]) for (const z of [-0.18, 0.18]) box(ctx, x, 0, z, 0.04, 1.9, 0.04);
     for (let i = 0; i < 5; i++) box(ctx, 0, 0.1 + i * 0.44, 0, 1, 0.03, 0.4);
     if (hi) { ctx.color("oklch(0.62 0.07 70)"); for (let i = 0; i < 4; i++) if ((i * 7) % 3) box(ctx, -0.2 + (i % 2) * 0.35, 0.13 + i * 0.44, 0, 0.32, 0.26, 0.3); }
+  } else if (kind === "copier") { // a beige office copier, the kind that jams on purpose
+    ctx.albedo(null); ctx.color("oklch(0.82 0.03 85)"); box(ctx, 0, 0, 0, 0.9, 0.95, 0.65);
+    ctx.color("oklch(0.4 0.01 250)"); box(ctx, 0, 0.95, 0, 0.92, 0.08, 0.67); box(ctx, 0.25, 0.6, -0.34, 0.3, 0.2, 0.03);
+    ctx.color("oklch(0.7 0.02 85)"); box(ctx, 0, 1.03, 0.02, 0.85, 0.05, 0.55); box(ctx, -0.55, 0.55, 0, 0.2, 0.04, 0.4);
+    ctx.color("oklch(0.6 0.15 145)"); box(ctx, 0.3, 0.75, -0.34, 0.04, 0.04, 0.02);
+    ctx.color("oklch(0.3 0.01 250)"); for (let i = 0; i < 4; i++) box(ctx, -0.2, 0.15 + i * 0.12, -0.33, 0.5, 0.015, 0.02);
+  } else if (kind === "steel_barricade") { // riveted plates bolted onto a geared frame
+    ctx.albedo(METAL); ctx.color("oklch(0.62 0.02 240)");
+    for (let i = 0; i < 3; i++) box(ctx, -0.66 + i * 0.66, 0, 0, 0.62, 1.3 - (i % 2) * 0.1, 0.08);
+    ctx.albedo(null); ctx.color("oklch(0.35 0.01 250)"); for (const x of [-0.95, 0.95]) box(ctx, x, 0, 0.1, 0.1, 1.3, 0.3);
+    ctx.color("oklch(0.75 0.1 85)"); for (let i = 0; i < 6; i++) box(ctx, -0.8 + i * 0.32, 1.0, -0.05, 0.05, 0.05, 0.02);
+    cracks(ctx, dmg, 2, 1.3, 0.08, 9);
   } else { // rubble: a low heap of chunks and splinters
     ctx.albedo(null);
     let r = 7; const rnd = () => ((r = (r * 9301 + 49297) % 233280) / 233280);

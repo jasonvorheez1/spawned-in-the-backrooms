@@ -5,7 +5,7 @@ import B from './data/breakables.yml'
 import { attrsOf } from './stats.js'
 import { baseOf } from './weapons.js'
 import { raycast } from 'builtin/physics'
-import { N, S, HALF, wallX, wallZ, isArchWall, inHub, EXIT } from './maze.js'
+import { N, S, H, HALF, wallX, wallZ, isArchWall, inHub, EXIT } from './maze.js'
 export { B }
 const EDGED = ['hatchet', 'fire_axe', 'rebar', 'screwdriver', 'knife', 'machete']
 export const classOf = (wp, kind) => (wp?.ranged ? 'firearm' : EDGED.includes(baseOf(kind ?? '')) ? 'edged' : 'blunt')
@@ -31,7 +31,10 @@ export function wallKeyAt(pos, normal) {
   const cz = axis === 'z' ? Math.round((pos.z + HALF) / S) - 1 : Math.floor((pos.z + HALF) / S)
   const has = axis === 'x' ? cx >= 0 && cx < N - 1 && wallX(cx, cz) : cz >= 0 && cz < N - 1 && wallZ(cx, cz)
   if (!has || isArchWall(cx, cz, axis)) return null
-  return { key: `${axis}:${cx}:${cz}`, axis, cx, cz, prot: wallProtected(axis, cx, cz) }
+  const V = B.voxel ?? { cols: 4, rows: 3 }, a = (axis === 'x' ? cz : cx) * S - HALF - 0.1, len = S + 0.2
+  const u = Math.max(0, Math.min(V.cols - 1, Math.floor(((axis === 'x' ? pos.z : pos.x) - a) / (len / V.cols))))
+  const v = Math.max(0, Math.min(V.rows - 1, Math.floor(pos.y / (H / V.rows))))
+  return { key: `${axis}:${cx}:${cz}`, vox: `${axis}:${cx}:${cz}:${u}:${v}`, u, v, axis, cx, cz, prot: wallProtected(axis, cx, cz) }
 }
 export const brokenList = (st) => Object.keys(st?.broken ?? {}).sort()
 export function syncLevel0(ctx) {
@@ -41,9 +44,15 @@ export function syncLevel0(ctx) {
 }
 
 // ---- drops
-export function rollDrops(ctx, mat) {
-  const out = []
-  for (const [t, a, b] of B.materials[mat]?.drops ?? []) { const n = a + Math.floor(ctx.random() * (b - a + 1)); for (let i = 0; i < n; i++) out.push(t) }
+export const toolOf = (kind) => B.tools?.[baseOf(kind ?? '')] ?? 'rough'
+// 7dtd-style: every base item is its own roll scaled by the tool's fit, then each rare part rolls on its own
+export function rollDrops(ctx, mat, kind) {
+  const out = [], h = B.harvest?.[mat]?.[toolOf(kind)], mul = h?.mul ?? 1
+  for (const [t, a, b] of B.materials[mat]?.drops ?? []) {
+    const n = (a + ctx.random() * (b - a + 1)) * mul * (0.6 + ctx.random() * 0.8)
+    for (let i = 0; i < Math.floor(n); i++) out.push(t)
+  }
+  for (const [t, pct, a, b] of h?.rare ?? []) if (ctx.random() * 100 < pct) { const n = a + Math.floor(ctx.random() * (b - a + 1)); for (let i = 0; i < n; i++) out.push(t) }
   return out
 }
 function crumble(ctx, at, mat, big) {
@@ -69,7 +78,7 @@ export function spawnRubble(ctx, at, items, name = 'Rubble') {
 }
 
 // one hit on a breakable entity or a wall. dmg is already the structure damage. Returns true if it landed on something breakable.
-export function damageEntity(ctx, o, dmg, at, normal) {
+export function damageEntity(ctx, o, dmg, at, normal, kind) {
   const mat = o.state?.mat ?? 'wood'
   if (o.state.hp == null) o.state.hp = B.materials[mat]?.hp ?? 60
   o.state.hp -= dmg
@@ -84,31 +93,42 @@ export function damageEntity(ctx, o, dmg, at, normal) {
     o.state.broke = true
     const fp = o.feetPosition, big = (o.state.size ?? 1) > 1.5
     crumble(ctx, { x: fp.x, y: fp.y + 0.6, z: fp.z }, mat, big)
-    const items = [...rollDrops(ctx, mat), ...(o.state.items ? String(o.state.items).split(',').filter(Boolean) : [])]
-    spawnRubble(ctx, { x: fp.x, y: fp.y + 0.02, z: fp.z }, items, o.state.items ? (o.state.name ?? 'Wreck') : 'Rubble')
+    const rare = rollDrops(ctx, mat, kind), items = [...rare, ...(o.state.items ? String(o.state.items).split(',').filter(Boolean) : [])]
+    spawnRubble(ctx, { x: fp.x, y: fp.y + 0.02, z: fp.z }, items, o.state.items ? (o.state.name ?? 'Wreck') : mat === 'machine' ? `${o.state.name ?? 'Machine'} parts` : 'Rubble')
+    const good = rare.filter((t) => !['scrap_metal', 'scrap_wood', 'drywall', 'nails', 'wire'].includes(t))
+    if (good.length) { ctx.emit('damageNumber', { position: { x: fp.x, y: fp.y + 1.4, z: fp.z }, text: `+${good.length} parts`, color: '#7fd1a0', size: 1 }); ctx.emit('playSound', { clip: SND('mechanical-parts-salvage-clink'), position: fp, volume: 0.8 }) }
     ctx.destroy(o.id)
   }
   return true
 }
-export function damageWall(ctx, w, dmg, at, normal) {
-  const st = ctx.place.state
+export function damageWall(ctx, w, dmg, at, normal, kind) {
+  const st = ctx.place.state, V = B.voxel ?? { cols: 4, rows: 3 }
   if (w.prot) { chip(ctx, at, normal, 'concrete', 0); return true } // shells, edges and exits never give
-  st.wallHp ??= {}
-  if (st.wallHp[w.key] == null) st.wallHp[w.key] = B.materials.drywall.hp * B.wallHpMul
-  st.wallHp[w.key] -= dmg
+  st.wallHp ??= {}; st.broken ??= {}
+  const vhp = Math.round(B.materials.drywall.hp * B.wallHpMul / V.cols)
+  if (st.wallHp[w.vox] == null) st.wallHp[w.vox] = vhp
+  st.wallHp[w.vox] -= dmg
   chip(ctx, at, normal, 'drywall', dmg)
-  if (st.wallHp[w.key] <= 0) {
-    delete st.wallHp[w.key]
-    st.broken ??= {}; st.broken[w.key] = ctx.now()
-    const c = w.axis === 'x' ? { x: (w.cx + 1) * S - HALF, z: (w.cz + 0.5) * S - HALF } : { x: (w.cx + 0.5) * S - HALF, z: (w.cz + 1) * S - HALF }
-    crumble(ctx, { x: c.x, y: 1.3, z: c.z }, 'drywall', true)
-    syncLevel0(ctx)
-    const items = [...rollDrops(ctx, 'drywall'), ...rollDrops(ctx, 'drywall')]
-    spawnRubble(ctx, { x: c.x + (normal?.x ?? 0) * 0.6, y: 0.02, z: c.z + (normal?.z ?? 0) * 0.6 }, items)
+  if (st.wallHp[w.vox] > 0) return true
+  const gone = (u, v) => u < 0 || u >= V.cols || v < 0 || !!st.broken[`${w.key}:${u}:${v}`]
+  const pop = (u, v) => {
+    const k = `${w.key}:${u}:${v}`; delete st.wallHp[k]; st.broken[k] = ctx.now()
+    const a = (w.axis === 'x' ? w.cz : w.cx) * S - HALF - 0.1 + (u + 0.5) * (S + 0.2) / V.cols, y = (v + 0.5) * H / V.rows, p = (w.axis === 'x' ? w.cx + 1 : w.cz + 1) * S - HALF
+    const c = w.axis === 'x' ? { x: p, y, z: a } : { x: a, y, z: p }
+    crumble(ctx, c, 'drywall', false)
+    spawnRubble(ctx, { x: c.x + (normal?.x ?? 0) * 0.5, y: 0.02, z: c.z + (normal?.z ?? 0) * 0.5 }, rollDrops(ctx, 'drywall', kind))
   }
+  pop(w.u, w.v)
+  // no support: a chunk with a hole under it and holes (or the wall's end) both sides comes down with it
+  for (let pass = 0; pass < V.rows; pass++) for (let v = 1; v < V.rows; v++) for (let u = 0; u < V.cols; u++)
+    if (!gone(u, v) && gone(u, v - 1) && gone(u - 1, v) && gone(u + 1, v)) pop(u, v)
+  // every chunk gone: store the wall whole so the mesh params stay short
+  let all = true; for (let u = 0; u < V.cols && all; u++) for (let v = 0; v < V.rows; v++) if (!gone(u, v)) { all = false; break }
+  if (all) { for (let u = 0; u < V.cols; u++) for (let v = 0; v < V.rows; v++) delete st.broken[`${w.key}:${u}:${v}`]; st.broken[w.key] = ctx.now() }
+  ctx.emit('screenShake', { intensity: 0.15, duration: 0.2 }, { audience: { nearby: at, radius: 6 } })
+  syncLevel0(ctx)
   return true
 }
-
 // the swing / shot reaching the world: rays from chest and waist along the aim. Returns true when it struck structure.
 export function strike(ctx, s, wp, kind, base, fwd, pitch = 0) {
   const p = ctx.self.feetPosition, cls = classOf(wp, kind)
@@ -124,12 +144,12 @@ export function strike(ctx, s, wp, kind, base, fwd, pitch = 0) {
   const fac = (wp.ranged ? 1 : strFactor(s)) * (kind === 'fists' ? B.fistsMul : 1)
   if (hit.id === 'level0') {
     const w = wallKeyAt(hit.position, hit.normal); if (!w) return false
-    return damageWall(ctx, w, base * mul * fac, hit.position, hit.normal)
+    return damageWall(ctx, w, base * mul * fac, hit.position, hit.normal, kind)
   }
   const o = ctx.getObject(hit.id)
   let t = o
   while (t && !t.tags?.includes('breakable') && t.parent?.id) t = ctx.getObject(t.parent.id)
   if (!t?.tags?.includes('breakable') || t.state?.broke) return false
   const m = B.materials[t.state?.mat ?? 'wood'] ?? B.materials.wood
-  return damageEntity(ctx, t, base * (m.mul[cls] ?? 1) * fac, hit.position, hit.normal)
+  return damageEntity(ctx, t, base * (m.mul[cls] ?? 1) * fac, hit.position, hit.normal, kind)
 }

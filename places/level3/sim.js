@@ -78,7 +78,7 @@ export function tick(ctx) {
     }
     for (const h of SPARKS) {
       const [nx, nz] = D4[h.d];
-      ctx.spawn({ tags: ["live-box"], feetPosition: { x: h.wx - nx * 0.1, y: 1.2, z: h.wz - nz * 0.1 }, primitive: { kind: "box", width: 0.45, height: 0.6, depth: 0.45 }, material: { color: "oklch(0.55 0.01 240)", metalness: 0.6, roughness: 0.5 },
+      ctx.spawn({ tags: ["live-box", "breakable"], feetPosition: { x: h.wx - nx * 0.1, y: 1.2, z: h.wz - nz * 0.1 }, physics: { body: "static", collider: "box" }, state: { mat: "machine", hp: 90, maxHp: 90, name: "Junction box" }, primitive: { kind: "box", width: 0.45, height: 0.6, depth: 0.45 }, material: { color: "oklch(0.55 0.01 240)", metalness: 0.6, roughness: 0.5 },
         fx: { script: ARC, params: { dir: { x: -nx, y: 0.2, z: -nz } } }, audio: { clip: GRIT("electrical-arc-buzz-loop"), gain: 0.3, loop: true, spatial: true, maxDistance: 9 } });
     }
     // generators hum

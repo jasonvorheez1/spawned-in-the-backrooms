@@ -77,8 +77,36 @@ function wall(ctx, axis, p, a, b, arch) {
 let BRK = new Set();
 const wallX = (cx, cz) => wallX0(cx, cz) && !BRK.has(`x:${cx}:${cz}`);
 const wallZ = (cx, cz) => wallZ0(cx, cz) && !BRK.has(`z:${cx}:${cz}`);
+// chunks knocked out of a wall: "x:cx:cz:u:v" -> the wall draws as 4 x 3 voxels with torn, uneven lips round each hole
+let VOX = new Map();
+function voxWall(ctx, axis, p, a, b, holes, seed) {
+  const C = 4, R = 3, du = (b - a) / C, dv = H / R, gone = (u, v) => u >= 0 && u < C && v >= 0 && v < R && holes.has(`${u}:${v}`);
+  for (let u = 0; u < C; u++) for (let v = 0; v < R; v++) {
+    if (gone(u, v)) continue;
+    const j = (k) => 0.05 + hash(seed + u * 7 + v * 13, k, 77) * 0.16; // a ragged inset only where it borders a hole
+    let u0 = a + u * du + (gone(u - 1, v) ? j(1) : 0), u1 = a + (u + 1) * du - (gone(u + 1, v) ? j(2) : 0);
+    let y0 = v * dv + (gone(u, v - 1) ? j(3) : 0), y1 = (v + 1) * dv - (gone(u, v + 1) ? j(4) : 0);
+    const [x0, z0, x1, z1] = axis === "x" ? [p - T, u0, p + T, u1] : [u0, p - T, u1, p + T];
+    box(ctx, x0, y0, z0, x1, y1, z1, false);
+    // torn drywall lips and a hanging shard or two along each hole edge
+    for (const [nu, nv, k] of [[-1, 0, 5], [1, 0, 6], [0, -1, 7], [0, 1, 8]]) {
+      if (!gone(u + nu, v + nv)) continue;
+      for (let i = 0; i < 3; i++) {
+        const r1 = hash(seed + u * 11 + v * 5 + i, k, 91), r2 = hash(seed + u * 3 + v * 17 + i, k, 93), L = 0.06 + r2 * 0.14, w = 0.08 + r1 * 0.2, th = T * (0.4 + r1 * 0.5);
+        let cu, cy, su, sy;
+        if (nu) { cu = nu < 0 ? u0 - L / 2 : u1 + L / 2; cy = y0 + (y1 - y0) * (0.15 + 0.7 * ((i + r1) / 3)); su = L; sy = w; }
+        else { cu = u0 + (u1 - u0) * (0.15 + 0.7 * ((i + r2) / 3)); cy = nv < 0 ? y0 - L / 2 : y1 + L / 2; su = w; sy = L; }
+        const side = (r1 < 0.5 ? -1 : 1) * (T - th);
+        const [bx0, bz0, bx1, bz1] = axis === "x" ? [p + side - th, cu - su / 2, p + side + th, cu + su / 2] : [cu - su / 2, p + side - th, cu + su / 2, p + side + th];
+        box(ctx, bx0, cy - sy / 2, bz0, bx1, cy + sy / 2, bz1, false);
+      }
+    }
+  }
+}
 export function geometry(ctx) {
   BRK = new Set(ctx.params?.broken ?? []);
+  VOX = new Map();
+  for (const k of BRK) { const q = k.split(":"); if (q.length === 5) { const w = q.slice(0, 3).join(":"); if (!VOX.has(w)) VOX.set(w, new Set()); VOX.get(w).add(`${q[3]}:${q[4]}`); } }
   const lod = ctx.lod;
   // CARPET + PITS
   ctx.albedo(CARPET);
@@ -111,8 +139,11 @@ export function geometry(ctx) {
     const zone = zoneOf(Math.max(cx, 0), Math.max(cz, 0));
     tint(ctx, zone, cx, cz);
     const xw = (cx + 1) * S - HALF, zw = (cz + 1) * S - HALF;
-    if (cz >= 0 && (cx === -1 ? true : wallX(cx, cz))) wall(ctx, "x", xw, cz * S - HALF - T, (cz + 1) * S - HALF + T, cx >= 0 && cx < N - 1 && isArchWall(cx, cz, "x"));
-    if (cx >= 0 && (cz === -1 ? true : wallZ(cx, cz))) wall(ctx, "z", zw, cx * S - HALF - T, (cx + 1) * S - HALF + T, cz >= 0 && cz < N - 1 && isArchWall(cx, cz, "z"));
+    const vx = VOX.get(`x:${cx}:${cz}`), vz = VOX.get(`z:${cx}:${cz}`);
+    if (vx && wallX(cx, cz)) voxWall(ctx, "x", xw, cz * S - HALF - T, (cz + 1) * S - HALF + T, vx, cx * 131 + cz);
+    else if (cz >= 0 && (cx === -1 ? true : wallX(cx, cz))) wall(ctx, "x", xw, cz * S - HALF - T, (cz + 1) * S - HALF + T, cx >= 0 && cx < N - 1 && isArchWall(cx, cz, "x"));
+    if (vz && wallZ(cx, cz)) voxWall(ctx, "z", zw, cx * S - HALF - T, (cx + 1) * S - HALF + T, vz, cx * 137 + cz * 3);
+    else if (cx >= 0 && (cz === -1 ? true : wallZ(cx, cz))) wall(ctx, "z", zw, cx * S - HALF - T, (cx + 1) * S - HALF + T, cz >= 0 && cz < N - 1 && isArchWall(cx, cz, "z"));
     if (cx >= 0 && cz >= 0 && hasPillar(cx, cz)) {
       const mx = cx * S - HALF + S / 2, mz = cz * S - HALF + S / 2, w = zone === "pillars" ? 0.75 : 0.5;
       box(ctx, mx - w, 0, mz - w, mx + w, H, mz + w);

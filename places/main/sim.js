@@ -10,14 +10,14 @@ import B from "../../scripts/lib/data/breakables.yml";
 import { syncLevel0 } from "../../scripts/lib/breakables.js";
 export const cadence = "1s";
 // office furniture: breakable props scattered through the halls (desk, chair, shelf: [mat, hp])
-const FURN = { desk: ["wood", 80], chair: ["metal", 45], shelf: ["metal", 110] };
+const FURN = { desk: ["wood", 80], chair: ["metal", 45], shelf: ["metal", 110], copier: ["machine", 110] };
 function furnish(ctx) {
   let n = 0;
   for (let k = 0; k < 900 && n < (L.furniture ?? 140); k++) {
     const cx = 1 + Math.floor(ctx.random() * (N - 2)), cz = 1 + Math.floor(ctx.random() * (N - 2));
     if (inHub(cx, cz) || hasPit(cx, cz) || hasPillar(cx, cz) || !["halls", "expanse", "dark", "red"].includes(zoneOf(cx, cz))) continue;
-    const c = cellCenter(cx, cz), r = ctx.random(), kind = r < 0.45 ? "desk" : r < 0.75 ? "chair" : "shelf", [mat, hp] = FURN[kind];
-    const along = ctx.random() < 0.5, side = ctx.random() < 0.5 ? -1 : 1, off = kind === "shelf" ? S / 2 - 0.35 : (ctx.random() - 0.5) * 1.6;
+    const c = cellCenter(cx, cz), r = ctx.random(), kind = r < 0.38 ? "desk" : r < 0.64 ? "chair" : r < 0.84 ? "shelf" : "copier", [mat, hp] = FURN[kind];
+    const along = ctx.random() < 0.5, side = ctx.random() < 0.5 ? -1 : 1, off = kind === "shelf" || kind === "copier" ? S / 2 - 0.35 : (ctx.random() - 0.5) * 1.6;
     const pos = along ? { x: c.x + side * off, y: 0, z: c.z + (ctx.random() - 0.5) } : { x: c.x + (ctx.random() - 0.5), y: 0, z: c.z + side * off };
     const yaw = kind === "chair" ? ctx.random() * 360 : (along ? 90 : 0) + (side < 0 ? 180 : 0);
     ctx.spawn({ tags: ["breakable", "furniture", kind], feetPosition: pos, rotation: yaw, physics: { body: "static", collider: "box" }, primitive: { kind: "scripted", script: "scripts/build-geo.js", params: { kind } }, state: { mat, hp, maxHp: hp, name: kind[0].toUpperCase() + kind.slice(1) } });
