@@ -250,7 +250,7 @@ object/x05249135d8ba8922/13:
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: backpack, seed: 518}, script: scripts/loot-bags-geo.js}
   rotation: {yaw: 0}
-  state: {hp: 35, items: "almond,almond,weapon:bat~rusty", kind: backpack, mat: wood, maxHp: 35, name: Dropped backpack}
+  state: {hp: 35, items: "almond,almond,weapon:bat~rusty,beans", kind: backpack, mat: wood, maxHp: 35, name: Dropped backpack}
   tags: [container, furniture, lootfurn, breakable]
 object/x05249135d8ba8922/14:
   feetPosition: {x: 80.24499999999999, y: 0.01, z: -75.39270568700508}
@@ -266,7 +266,7 @@ object/x05249135d8ba8922/17:
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: desk, seed: 993}, script: scripts/l2-props-geo.js}
   rotation: {yaw: 0}
-  state: {hp: 35, items: ammo, kind: desk, mat: wood, maxHp: 35, name: Desk drawers}
+  state: {hp: 35, items: "ammo,lobby_wafer", kind: desk, mat: wood, maxHp: 35, name: Desk drawers}
   tags: [container, furniture, lootfurn, breakable]
 object/x05249135d8ba8922/3:
   feetPosition: {x: 71.575, y: 0.01, z: -70.31760179961566}
@@ -274,7 +274,7 @@ object/x05249135d8ba8922/3:
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: filing, seed: 192}, script: scripts/l2-props-geo.js}
   rotation: {yaw: 90}
-  state: {hp: 80, items: "almond,cloth:hat:cap:b6e04a", kind: filing, mat: metal, maxHp: 80, name: Filing cabinet}
+  state: {hp: 80, items: "almond,cloth:hat:cap:b6e04a,lobby_wafer", kind: filing, mat: metal, maxHp: 80, name: Filing cabinet}
   tags: [container, furniture, lootfurn, breakable]
 object/x05249135d8ba8922/31:
   feetPosition: {x: 105.2055352015607, y: 0.01, z: -80.425}
