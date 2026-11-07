@@ -546,10 +546,9 @@ export function geometry(ctx) {
   // Layered fluffy cheek tufts for species with cheek fur
   if (!sp.wool && !sp.mane && mid) { // kemono cheek fluff: three soft points at each jaw
     wOverride = { Head: 1 };
-    ctx.color(sp.cheeks ? BELLY : (sp.headFur || FUR));
-    for (const sd of [-1, 1]) for (const [v, out, r] of [[-0.05, 0.02, 0.055], [-0.13, 0.03, 0.05]]) { // soft puffs half sunk into the jaw, tipped down and out
-      const p = onHead(sd * 0.3, v, 0);
-      ell([p[0] + sd * out, p[1] - 0.01, p[2] + 0.03], [r * 0.9, r * 0.7, r * 0.8], null, { seg: hi ? 12 : 8 });
+    ctx.color(sp.headFur || FUR); // the head's own fur: it widens the jaw's silhouette, never a spot on the face
+    for (const sd of [-1, 1]) for (const [v, r] of [[-0.06, 0.07], [-0.15, 0.06]]) {
+      ell([sd * (HR[0] - 0.02), HC[1] + v, HC[2] + 0.04], [r, r * 0.75, r * 1.1], null, { seg: hi ? 12 : 8 });
     }
     wOverride = null;
   }
