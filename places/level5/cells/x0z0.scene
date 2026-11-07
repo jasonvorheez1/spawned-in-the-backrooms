@@ -3380,6 +3380,14 @@ l5-l6-frame:
   material: {color: oklch(0.18 0.005 240), roughness: 0.8}
   primitive: {depth: 0.06, height: 2.3, kind: box, width: 1.35}
   rotation: {yaw: 90}
+l5-l6-locker:
+  feetPosition: {x: 45.1, y: 0.01, z: 4.3}
+  id: l5-l6-locker
+  physics: static
+  primitive: {kind: scripted, params: {kind: crate}, script: scripts/loot-geo.js}
+  rotation: {yaw: -90}
+  state: {hp: 60, items: "nvg,battery,battery,almond", mat: wood, maxHp: 60, name: Explorer's drop box}
+  tags: [container, breakable]
 l5-l6-note:
   feetPosition: {x: 45.699999999999996, y: 1, z: 7.05}
   id: l5-l6-note
