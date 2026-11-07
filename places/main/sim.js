@@ -142,7 +142,7 @@ export function tick(ctx) {
     const fill = s.lurkersSeeded ? 1 : L.lurkers - lurkers;
     for (let i = 0; i < fill; i++) {
       const c = cell(ctx, ["halls", "arches", "holes", "offices"]);
-      if (c) ctx.spawn({ tags: ["lurker"], feetPosition: { x: c.x, y: 0.05, z: c.z }, model: LURKER_MODEL, scale: 1.08, physics: { body: "character" }, state: { ...npcState(ctx, "lurker", L.lurkerHp, { kind: "lurker" }), mesh: 1 } });
+      if (c) ctx.spawn({ tags: ["lurker"], feetPosition: { x: c.x, y: 0.05, z: c.z }, model: LURKER_MODEL, scale: 1.23, physics: { body: "character" }, state: { ...npcState(ctx, "lurker", L.lurkerHp, { kind: "lurker" }), mesh: 2 } });
     }
     s.lurkersSeeded = true;
     s.nextLurker = now + L.lurkerRespawn * 1000;

@@ -69,7 +69,7 @@ export function update(ctx, dt) {
   const mem = (ctx.self.session.m ??= {});
   for (const w of ctx.query({ tags: ["lurker"] })) {
     const m = (mem[w.id] ??= {}), st = w.state ?? {}, pos = w.feetPosition, mu = npcMul(st);
-    if (!st.mesh) { w.primitive = null; w.model = LURKER_MODEL; w.scale = 1.08; st.mesh = 1; }
+    if (st.mesh !== 2) { w.primitive = null; w.model = LURKER_MODEL; w.scale = 1.23; st.mesh = 2; }
     const play = (clip, loop = true) => { if (m.clip !== clip) { m.clip = clip; w.anim.body = { clip, loop, clampWhenFinished: !loop }; } };
     if (st.dead) {
       if (!m.dying) { m.dying = now; play("Death", false); w.velocity = { x: 0, y: -2, z: 0 }; ctx.emit("playSound", { clip: SND("bone-crack-twist"), position: pos, volume: 0.9, maxDistance: 24 }); }
