@@ -3,12 +3,15 @@
 // and it stops dead. If it reaches you it strikes hard. Slow enough to outwalk. Never onto safe ground.
 import { E, SND, isSafe, flat, yawTo, prey, aloneOf, hit, claimRemains } from "./lib/l5-hostile.js";
 import { npcState } from "./lib/stats.js";
+import { critterSpec } from "./lib/critter-model.js";
+// the staff are critters too (the creator's rule: a world full of critters): faceless, fur pitch black, in old hotel livery
+export const staffLook = (f, i) => ({ species: ["wolf", "cat", "fox", "bear"][i % 4], sex: i % 3 ? "m" : "f", fur: "#060606", vary: false, eye: "#000000", top: "jacket", topc: "#1f2a1e", bottom: "pants", bottomc: "#141414", shoes: "boots", shoec: "#0a0a0a", expr: "blank" });
 const T = E.staff, COS = Math.cos((T.lookCone * Math.PI) / 180);
 const WALK = { clip: "cdn/clip-walk-loop.glb", loop: true, speed: 0.55 }, IDLE = { clip: "cdn/clip-idle-loop.glb", loop: true, speed: 0.25 };
 function place(ctx, f) {
   return ctx.spawn(f.id, {
     tags: ["moths", "l5staff", "l5-hostile"], feetPosition: { x: f.post.x, y: 0.02, z: f.post.z }, rotation: f.yaw,
-    model: { id: f.model, forward: "+x" }, layout: { box: { min: { x: -1.2, y: 0, z: -1.2 }, max: { x: 1.2, y: f.height, z: 1.2 } } },
+    ...critterSpec(staffLook(f, T.figures.indexOf(f))), scale: (f.height ?? 2.2) / 1.8,
     physics: { body: "character" },
     state: { ...npcState(ctx, "staff", T.hp, { xp: 80 }), kind: "staff", name: f.name, mode: "post" },
   });
