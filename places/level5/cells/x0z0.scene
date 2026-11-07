@@ -854,6 +854,11 @@ l5-boil-vent-4:
   material: {pbr: true}
   primitive: {kind: scripted, params: {kind: grate}, script: scripts/l5-boiler-props.js}
   tags: [l5-boiler, l5-boil-vent]
+l5-corpse-crew:
+  behavior: scripts/l5-corpse-crew.js
+  feetPosition: {x: -36, y: 0, z: 0}
+  id: l5-corpse-crew
+  tags: [l5-corpse-crew]
 l5-dolores:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
   children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.024b96c74631af9ed1835de73d25b82c14ee641980370c3cef3fb4edeeca00e1.glb, materials: {belly: {color: "#fbe1cf"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f2b7a6"}, mark: {color: "#9f786e"}, nose: {color: "#ff8ca2"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#a87f74"}}}, morph: {Open: 0.4, Smile: 1}}]
