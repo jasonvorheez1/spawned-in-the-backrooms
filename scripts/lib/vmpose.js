@@ -30,6 +30,29 @@ const PISTOL_RELOAD = [
   [0.86, -0.02, 0.012, 0.005, 1, -2, 3],     // and let it snap forward
   [1.00, 0, 0, 0, 0, 0, 0],
 ]
+// the same swap from an empty gun (the slide is locked back): after the slap home the thumb comes up to the slide stop and lets it fly
+const PISTOL_RELOAD_EMPTY = [
+  [0.00, 0, 0, 0, 0, 0, 0],
+  [0.14, -0.05, 0.03, -0.03, 18, -10, 38],
+  [0.21, -0.05, 0.048, -0.03, 24, -11, 41],
+  [0.30, -0.05, 0.0, -0.02, 13, -8, 35],
+  [0.48, -0.055, -0.012, -0.02, 11, -8, 33],
+  [0.54, -0.05, 0.036, -0.035, 21, -10, 36],  // slap it home
+  [0.66, -0.04, 0.02, -0.03, 14, -8, 26],     // roll the gun toward you: thumb to the slide stop
+  [0.76, -0.04, 0.026, -0.035, 16, -9, 24],   // press
+  [0.82, -0.02, 0.0, 0.03, -5, -2, 8],        // the slide flies forward: a kick
+  [0.90, -0.01, -0.006, -0.01, 2, -1, 3],
+  [1.00, 0, 0, 0, 0, 0, 0],
+]
+// one shell going into the shotgun's port, over one reloadShell: the gun tips to meet the thumb, holds, then the shell is pushed in
+const SHELL_CYCLE = [
+  [0.00, 0, 0, 0, 0, 0, 0],
+  [0.22, 0.004, 0.012, 0.01, -4, 1, -5],   // lifts to meet the shell
+  [0.50, 0.0, 0.004, 0.0, -1, 0, -2],
+  [0.80, -0.006, -0.004, -0.024, 5, -2, 4], // thumb pushes it home
+  [0.92, 0.0, 0.006, 0.006, -2, 0, 0],
+  [1.00, 0, 0, 0, 0, 0, 0],
+]
 const SHOTGUN_LOAD = [-0.045, 0.03, -0.02, 14, -9, 27] // loading port rolled up
 const PUMP = [
   [0.00, 0, 0, 0, 0, 0, 0],
@@ -128,7 +151,7 @@ export function poseViewmodel(ctx, dt) {
 
   // ---- reload clock, local to this machine
   const reloading = !!ps.reloading && gun
-  if (reloading && !m.relOn) { m.relOn = true; m.relT = 0; m.relKind = kind }
+  if (reloading && !m.relOn) { m.relOn = true; m.relT = 0; m.relKind = kind; m.relEmpty = (ps['loaded_' + kind] ?? 1) <= 0 }
   if (!reloading) m.relOn = false
   if (m.relOn) m.relT += dt
 
@@ -171,8 +194,12 @@ export function poseViewmodel(ctx, dt) {
   // reload pose target: the pistol plays its timeline, the shotgun holds the loading roll
   let target = [0, 0, 0, 0, 0, 0], rate = 10
   if (m.relOn && m.relKind === kind) {
-    if (wp.pellets) { target = SHOTGUN_LOAD; rate = 9 }
-    else { target = sample(PISTOL_RELOAD, m.relT / (wp.reloadTime ?? 1.7)); rate = 30 }
+    if (wp.pellets) {
+      const start = wp.reloadStart ?? 0.4, per = wp.reloadShell ?? 0.55, ph = (m.relT - start) / per
+      if (ph < 0) { const k = ease(Math.max(0, m.relT / start)); target = SHOTGUN_LOAD.map((v) => v * k); rate = 14 }
+      else { const c = sample(SHELL_CYCLE, ph - Math.floor(ph)); target = SHOTGUN_LOAD.map((v, i) => v + c[i]); rate = 22 }
+    }
+    else { target = sample(m.relEmpty ? PISTOL_RELOAD_EMPTY : PISTOL_RELOAD, m.relT / (wp.reloadTime ?? 1.7)); rate = 30 }
   }
   const fr = Math.min(1, dt * rate)
   for (let i = 0; i < 6; i++) m.off[i] += (target[i] - m.off[i]) * fr
