@@ -7,12 +7,10 @@ atmosphere:
     near: 5
     color: oklch(0.56 0.075 92)
   look:
-    script: mods/raytraced-lighting/look-raytrace.js
+    script: scripts/look-default.js
     params:
-      bloomThreshold: 0.6
-      aoStrength: 0.5
-      bloom: 1
-      reflection: 1
+      bloomThreshold: 0.72
+      bloomStrength: 0.55
   moon:
     intensity: 0
     enabled: false
