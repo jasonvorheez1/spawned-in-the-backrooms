@@ -1,7 +1,8 @@
 // Samantha: The Beverly Room psychic cat (Wikidot Backrooms Level 5 lore).
-// A sleek black cat with glowing golden eyes that communicates telepathically.
+// A sleek tuxedo cat with glowing golden eyes that communicates telepathically.
 // Trades fortunes, predictions, and blessings for meat cuts (player.state.meat).
 import { MEAT } from "./lib/items.js";
+import { faceMorph, HEAD_ID } from "./lib/critter-model.js";
 
 const SND_PURR = "/cdn/moodboard-realistic-gritty/sfx-eerie-low-chime-level-up.mp3";
 const SND_HISS = "/cdn/moodboard-realistic-gritty/sfx-low-whisper-breath-swell-unsettling.mp3";
@@ -31,6 +32,47 @@ function bestMeat(meatMap) {
   return null;
 }
 
+export const updateSchedule = { every: { seconds: 0.15 } };
+export function update(ctx, dt) {
+  const me = ctx.self, ses = (me.session ??= {}), now = ctx.now();
+  // natural golden-eyed blinking
+  if (!ses.nextBlink || now > ses.nextBlink) { ses.nextBlink = now + 2500 + ctx.random() * 3000; ses.blinkUntil = now + 130; }
+  const isBlinking = now < (ses.blinkUntil ?? 0);
+
+  // soft ear twitches
+  if (!ses.nextTwitch || now > ses.nextTwitch) { ses.nextTwitch = now + 4500 + ctx.random() * 6000; ses.twitchUntil = now + 160; ses.twitchEar = ctx.random() < 0.5 ? "EarL" : "EarR"; }
+  const isTwitching = now < (ses.twitchUntil ?? 0);
+  if (isTwitching) {
+    const dir = ses.twitchEar === "EarL" ? -1 : 1;
+    me.bones = { [ses.twitchEar]: { rotate: [0, 0, dir * 26] } };
+  } else if (me.bones && (me.bones.EarL || me.bones.EarR)) {
+    me.bones = null;
+  }
+
+  // smoothly look toward nearest wanderer
+  let near = null, bd = 8;
+  for (const pl of ctx.place.players) {
+    const d = Math.hypot(pl.feetPosition.x - me.feetPosition.x, pl.feetPosition.z - me.feetPosition.z);
+    if (d < bd) { bd = d; near = pl; }
+  }
+  if (near) {
+    const dx = near.feetPosition.x - me.feetPosition.x, dz = near.feetPosition.z - me.feetPosition.z;
+    const wantYaw = Math.atan2(-dx, -dz) * 180 / Math.PI;
+    const curYaw = me.rotation?.yaw ?? -130;
+    const diff = ((wantYaw - curYaw + 540) % 360) - 180;
+    if (Math.abs(diff) > 2) me.rotation = { yaw: curYaw + diff * Math.min(1, dt * 5) };
+  }
+
+  // sync expressive facial morphs on her cute feline head
+  const h = ctx.getObject(me.id + "/" + HEAD_ID);
+  if (h) {
+    let expr = "smug";
+    if (now - (ses.hitAt ?? 0) < 1400) expr = "evil";
+    else if (now - (ses.fedAt ?? 0) < 3800) expr = "joy";
+    h.morph = faceMorph(expr, isBlinking, true);
+  }
+}
+
 export const ears = {
   press: (ctx, { by }) => {
     const who = ctx.getObject(by);
@@ -45,6 +87,7 @@ export const ears = {
       // Consume 1 meat cut
       const mInfo = MEAT[cut];
       ws.meat = { ...meatMap, [cut]: meatMap[cut] - 1 };
+      ctx.self.session.fedAt = ctx.now();
 
       // Play telepathic chime/purr
       ctx.emit("playSound", {
@@ -98,6 +141,8 @@ export const ears = {
     const who = ctx.getObject(by);
     if (!who) return;
 
+    ctx.self.session.hitAt = ctx.now();
+
     // Psychic counter-repulsion when struck
     const me = ctx.self.worldFeetPosition, p = who.worldFeetPosition;
     let dx = p.x - me.x, dz = p.z - me.z;
@@ -108,7 +153,7 @@ export const ears = {
     ctx.emit("playSound", { clip: SND_HISS, position: me, volume: 0.9, maxDistance: 24 });
     ctx.emit("screenFlash", { color: "#8a2be2", duration: 0.4, intensity: 0.6 }, { audience: { player: by } });
 
-    who.state.hp = (who.state.hp ?? 100) - 15;
+    who.state.hp = Math.max(1, (who.state.hp ?? 100) - 15);
     who.state.notice = {
       text: "Samantha's golden eyes blaze purple! A psychic shockwave violently hurls you backward: 'Insolent wanderer! You do not strike a queen of the Beverly Room!'",
       at: ctx.now(),

@@ -1,6 +1,6 @@
 import { rollLoot, garmentsOf } from "./lib/loot.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
-import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec } from "./lib/critter-model.js";
+import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec, faceMorph } from "./lib/critter-model.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
@@ -176,12 +176,38 @@ export function update(ctx, dt) {
     return;
   }
   // a flinch every time something takes hp off them
-  if (m.lastHp != null && (s.hp ?? 0) < m.lastHp - 0.5 && ctx.random() < 0.6) bark(ctx, me, "hit");
-  if (m.lastHp != null && (s.hp ?? 0) < m.lastHp - 0.5) me.anim.hit = { clip: "cdn/clip-hit-react.glb", loop: "once", weight: 0.8, blendIn: 0.05, blendOut: 0.3, timeAt: now };
+  if (m.lastHp != null && (s.hp ?? 0) < m.lastHp - 0.5) {
+    m.hitAt = now;
+    if (ctx.random() < 0.6) bark(ctx, me, "hit");
+    me.anim.hit = { clip: "cdn/clip-hit-react.glb", loop: "once", weight: 0.8, blendIn: 0.05, blendOut: 0.3, timeAt: now };
+  }
   m.lastHp = s.hp;
+  // life: natural blinks, cute ear twitches, and responsive facial expressions
+  if (!m.nextBlink || now > m.nextBlink) { m.nextBlink = now + 2400 + ctx.random() * 3200; m.blinkUntil = now + 130; }
+  const isBlinking = now < (m.blinkUntil ?? 0);
+  if (!m.nextTwitch || now > m.nextTwitch) { m.nextTwitch = now + 5000 + ctx.random() * 8000; m.twitchUntil = now + 180; m.twitchEar = ctx.random() < 0.5 ? "EarL" : "EarR"; }
+  const isTwitching = now < (m.twitchUntil ?? 0);
+  if (isTwitching && !s.dead && !me.bones) {
+    const dir = m.twitchEar === "EarL" ? -1 : 1;
+    me.bones = { [m.twitchEar]: { rotate: [0, 0, dir * 24] } };
+  } else if (!isTwitching && me.bones && (me.bones.EarL || me.bones.EarR) && !m.aimAt) {
+    me.bones = null;
+  }
   // talking: interact.js stamps state.talkAt and talkTo when a player presses E on them
   const talking = s.talkAt && now - s.talkAt < 2600;
   if (talking !== !!m.talking) { m.talking = talking; me.anim.talk = talking ? { clip: "cdn/clip-talk-loop.glb", loop: "loop", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } } : null; }
+  // head morph sync: articulates speech, smiles when waving, winces when hit, blinks naturally
+  const headObj = ctx.getObject(me.id + "/" + HEAD_ID);
+  if (headObj && !s.dead) {
+    const isFem = (s.wear?.sex ?? s.look?.sex) === "f";
+    const baseExpr = s.wear?.expr || s.look?.expr || "smile";
+    let curExpr = baseExpr;
+    if (now - (m.hitAt ?? 0) < 650) curExpr = "scared";
+    else if (now - (m.wavedAt ?? 0) < 2200) curExpr = "joy";
+    else if (talking) curExpr = Math.floor(now / 220) % 2 === 0 ? "beam" : "smile";
+    else if (m.aimAt) curExpr = "cocky";
+    headObj.morph = faceMorph(curExpr, isBlinking, isFem);
+  }
   // a companion a player talked into tagging along (scripts/talk.js): their leader is home, so it walks after them and fights what comes at them
   let lead = s.follow ? ctx.place.players.find((p) => p.id === s.follow) : null;
   if (s.follow) { if (lead) m.lostAt = 0; else m.lostAt ||= now; if (s.angry?.[s.follow] || (!lead && now - m.lostAt > 20000)) { s.follow = null; lead = null; } }
@@ -234,7 +260,7 @@ export function update(ctx, dt) {
     ctx.sleep(0.5); return;
   }
   face(me, near.feetPosition.x - me.feetPosition.x, near.feetPosition.z - me.feetPosition.z, dt);
-  if (!m.waved[near.id] && best < 5 && !s.angry?.[near.id]) { m.waved[near.id] = true; me.anim.wave = { clip: "cdn/clip-wave-loop.glb", loop: "once", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } }; }
+  if (!m.waved[near.id] && best < 5 && !s.angry?.[near.id]) { m.waved[near.id] = true; m.wavedAt = now; me.anim.wave = { clip: "cdn/clip-wave-loop.glb", loop: "once", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } }; }
 }
 function work(me, m, clip) {
   if (m.work === clip) return; m.work = clip;

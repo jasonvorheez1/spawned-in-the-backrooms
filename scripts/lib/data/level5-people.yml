@@ -34,67 +34,67 @@ meets:   # where two residents stop to talk, by faction pair
 people:
   l5-ambrose:
     { faction: hotel, role: concierge, voice: ambrose, name: "Mr. Ambrose · Front Desk", build: { h: 1.14, w: 0.88 },
-      look: { species: fox, sex: m, topw: longsleeve, top: "#1e1c22", botw: pants, bottom: "#1e1c22", shoes: boots, shoec: "#141210", neck: bowtie, neckc: "#b8902e", expr: smile, fur: "#c8662e" },
+      look: { species: fox, sex: m, eye: "#e29020", belly: "#ffffff", tip: "#ffffff", nose: "#241814", topw: longsleeve, top: "#1e1c22", botw: pants, bottom: "#1e1c22", shoes: boots, shoec: "#141210", neck: bowtie, neckc: "#b8902e", expr: smile, fur: "#c8662e" },
       rounds: [[-44.1, 3.2, 120, idle, -38, 3.2], [-44.1, 5.4, 9, pickup, -46, 5.4], [-44.1, 1.6, 40, idle, -38, 1.6]],
       night: [[-44.1, 3.2, 999, idle, -38, 3.2]] }
   l5-dolores:
     { faction: hotel, role: trader, voice: dolores, name: "Dolores · Dining Room Cook", build: { h: 0.94, w: 1.22, bust: 0.95 },
-      look: { species: pig, sex: f, topw: apron, top: "#efe6d4", botw: longskirt, bottom: "#3a2a24", shoes: slippers, shoec: "#d8cfc0", hat: bow, hatc: "#c0392b", expr: grin, fur: "#f2b7a6" },
+      look: { species: pig, sex: f, eye: "#543422", belly: "#ffded4", nose: "#ff8fa3", topw: apron, top: "#efe6d4", botw: longskirt, bottom: "#3a2a24", shoes: slippers, shoec: "#d8cfc0", hat: bow, hatc: "#c0392b", expr: grin, fur: "#f2b7a6" },
       rounds: [[-12.6, 20.2, 50, pickup, -12.6, 21], [-7.6, 16.4, 25, idle, -12, 16], [-12.4, 15.2, 30, talk, -9, 15]],
       night: [[-13.2, 19.8, 999, sit, -10, 17]] }
   l5-pip:
     { faction: hotel, role: bellhop, voice: pip, name: "Pip · Bellhop", build: { h: 0.82, w: 0.9 },
-      look: { species: mouse, sex: m, topw: jacket, top: "#9e1f24", botw: pants, bottom: "#1e1c22", shoes: sneakers, shoec: "#1e1c22", hat: cap, hatc: "#9e1f24", neck: bowtie, neckc: "#d8b040", expr: beam, fur: "#b9aca0" },
+      look: { species: mouse, sex: m, eye: "#322630", belly: "#f4ede8", nose: "#ff9eb2", topw: jacket, top: "#9e1f24", botw: pants, bottom: "#1e1c22", shoes: sneakers, shoec: "#1e1c22", hat: cap, hatc: "#9e1f24", neck: bowtie, neckc: "#d8b040", expr: beam, fur: "#b9aca0" },
       rounds: [[-36, -7, 8, idle, -42, -7], [-27, -11.6, 4, idle, -8, -11.6], [-8, -11.6, 6, idle, -8, 0], [-17.5, 0, 5, idle, -6, 0], [-8, 11.6, 6, idle, -30, 11.6], [-27, 11.6, 4, idle, -36, 8], [-36, 7, 10, wave, -40, 3]],
       night: [[-34, 11, 999, sit, -40, 8]] }
   l5-odette:
     { faction: hotel, role: maid, voice: odette, name: "Odette · Maid", build: { h: 0.98, w: 1.04, bust: 1.12 },
-      look: { species: sheep, sex: f, topw: dress, top: "#22222a", botw: none, shoes: slippers, shoec: "#f4f1ea", hat: bow, hatc: "#f4f1ea", neck: none, expr: lidded, fur: "#f1ece2" },
+      look: { species: sheep, sex: f, eye: "#68506e", belly: "#ffffff", nose: "#2a1c18", topw: dress, top: "#22222a", botw: none, shoes: slippers, shoec: "#f4f1ea", hat: bow, hatc: "#f4f1ea", neck: none, expr: lidded, fur: "#f1ece2" },
       rounds: [[-24.5, -6.6, 25, crouch, -27, -5], [-11, -6.6, 25, crouch, -8, -5], [-11, 6.6, 25, crouch, -8, 5], [-24.5, 6.6, 25, crouch, -27, 5], [-33, 11, 12, idle, -40, 11]],
       night: [[-33, -11, 999, sleep, -40, -11]] }
   l5-harlan:
     { faction: hk, role: quarter, voice: harlan, gun: smg, name: "Harlan · Housekeeping Quartermaster", build: { h: 1.12, w: 1.26 },
-      look: { species: bear, sex: m, topw: longsleeve, top: "#6b6e72", botw: pants, bottom: "#4a4c50", shoes: boots, shoec: "#22201c", hat: cap, hatc: "#55585c", expr: unimpressed, fur: "#5a3e2a" },
+      look: { species: bear, sex: m, eye: "#7c4a22", belly: "#e8c8a0", nose: "#221814", topw: longsleeve, top: "#6b6e72", botw: pants, bottom: "#4a4c50", shoes: boots, shoec: "#22201c", hat: cap, hatc: "#55585c", expr: unimpressed, fur: "#5a3e2a" },
       rounds: [[13, 22.4, 90, idle, 10, 17], [8.5, 22.4, 15, pickup, 8.5, 23.5]],
       night: [[13, 22.4, 999, sit, 10, 17]] }
   l5-vesna:
     { faction: hk, role: guide, voice: vesna, gun: pistol, name: "Vesna · Housekeeping Guide", build: { h: 1.1, w: 0.92, bust: 0.85 },
-      look: { species: deer, sex: f, topw: jacket, top: "#7a7c80", botw: pants, bottom: "#4a4c50", shoes: boots, shoec: "#2a2420", hat: beanie, hatc: "#55585c", neck: scarf, neckc: "#8a8c90", expr: smug, fur: "#a87a4e" },
+      look: { species: deer, sex: f, eye: "#4a2c18", belly: "#fce9d2", tip: "#ffffff", nose: "#281612", topw: jacket, top: "#7a7c80", botw: pants, bottom: "#4a4c50", shoes: boots, shoec: "#2a2420", hat: beanie, hatc: "#55585c", neck: scarf, neckc: "#8a8c90", expr: smug, fur: "#a87a4e" },
       rounds: [[14.6, 15.4, 30, idle, 17, 18], [2, 16, 18, idle, 6, 13], [14.8, 20.6, 22, idle, 17, 18]],
       night: [[14.6, 15.4, 999, idle, 6, 13]] }
   l5-tobias:
     { faction: hk, role: clerk, voice: tobias, gun: pistol, name: "Tobias · Housekeeping Jobs", build: { h: 0.95, w: 1.02 },
-      look: { species: raccoon, sex: m, topw: hoodie, top: "#6b6e72", botw: pants, bottom: "#3e4044", shoes: sneakers, shoec: "#55585c", eyew: glasses, expr: sideeye, fur: "#7a7470" },
+      look: { species: raccoon, sex: m, eye: "#b46c24", belly: "#ebe6ec", tip: "#2a2830", nose: "#1c1a20", topw: hoodie, top: "#6b6e72", botw: pants, bottom: "#3e4044", shoes: sneakers, shoec: "#55585c", eyew: glasses, expr: sideeye, fur: "#7a7470" },
       rounds: [[-3.4, 22.6, 60, idle, -4.6, 23.6], [0, 14.6, 10, idle, 6, 13], [-3.4, 19, 20, sit, -4.6, 23]],
       night: [[-3.4, 19, 999, sleep, 0, 19]] }
   l5-imani:
     { faction: hk, role: agent, voice: imani, gun: smg, name: "Imani · Housekeeping Agent", build: { h: 1.06, w: 1.06, bust: 1.0 },
-      look: { species: lion, sex: f, topw: tank, top: "#7a7c80", botw: pants, bottom: "#4a4c50", shoes: boots, shoec: "#22201c", hat: cap, hatc: "#55585c", eyew: shades, expr: cocky, fur: "#d4a45e" },
+      look: { species: lion, sex: f, eye: "#e2a01c", belly: "#fceac6", tip: "#a05626", nose: "#8a4828", topw: tank, top: "#7a7c80", botw: pants, bottom: "#4a4c50", shoes: boots, shoec: "#22201c", hat: cap, hatc: "#55585c", eyew: shades, expr: cocky, fur: "#d4a45e" },
       rounds: [[6, 14.2, 15, idle, 6, 10], [-3, 14.5, 8, idle, -6, 18], [10, 17.5, 8, idle, 15, 18], [6, 8, 10, idle, 6, -8]],
       night: [[6, 14.2, 999, idle, 6, 10]] }
   l5-millie:
     { faction: orig, role: trader, voice: millie, name: "Millie Lockheart · Aviatrix (1937)", build: { h: 1.04, w: 0.96, bust: 0.9 },
-      look: { species: redpanda, sex: f, topw: jacket, top: "#5c3a22", botw: pants, bottom: "#a8916a", shoes: boots, shoec: "#3a2416", eyew: glasses, neck: scarf, neckc: "#f4efe4", expr: grin, fur: "#b4542a" },
+      look: { species: redpanda, sex: f, eye: "#487436", belly: "#fceddf", tip: "#782c16", nose: "#1c1a20", topw: jacket, top: "#5c3a22", botw: pants, bottom: "#a8916a", shoes: boots, shoec: "#3a2416", eyew: glasses, neck: scarf, neckc: "#f4efe4", expr: grin, fur: "#b4542a" },
       rounds: [[3, -20.4, 60, sit, 5, -19], [8, -14.5, 15, idle, 6, -12], [3, -20.4, 40, talk, 5, -19]],
       night: [[1.2, -23.2, 999, sleep, 5, -19]] }
   l5-whitlock:
     { faction: orig, role: captain, voice: whitlock, name: "Capt. Whitlock · Master Mariner (1912)", build: { h: 1.12, w: 1.12 },
-      look: { species: wolf, sex: m, topw: longsleeve, top: "#1c2340", botw: pants, bottom: "#1c2340", shoes: boots, shoec: "#141210", hat: cap, hatc: "#f4f1ea", neck: bowtie, neckc: "#d8b040", expr: unimpressed, fur: "#9aa0a8" },
+      look: { species: wolf, sex: m, eye: "#588cb6", belly: "#d4dbe4", tip: "#d4dbe4", nose: "#16141c", topw: longsleeve, top: "#1c2340", botw: pants, bottom: "#1c2340", shoes: boots, shoec: "#141210", hat: cap, hatc: "#f4f1ea", neck: bowtie, neckc: "#d8b040", expr: unimpressed, fur: "#9aa0a8" },
       rounds: [[7, -20.4, 50, sit, 5, -19], [12.6, -14, 20, idle, 14, -12], [7, -20.4, 40, talk, 5, -19]],
       night: [[12.4, -23, 999, sit, 8, -19]] }
   l5-vanderholt:
     { faction: orig, role: trader, voice: vanderholt, name: "Cornelius Vanderholt · Railway Baron (1889)", build: { h: 0.98, w: 1.24 },
-      look: { species: tiger, sex: m, topw: longsleeve, top: "#262028", botw: pants, bottom: "#3a3234", shoes: boots, shoec: "#141210", hat: tophat, hatc: "#1a1a1e", eyew: glasses, neck: bowtie, neckc: "#e8e0cc", expr: smug, fur: "#d8822e" },
+      look: { species: tiger, sex: m, eye: "#ea9218", belly: "#fff6ea", tip: "#241a18", nose: "#ff8fa3", topw: longsleeve, top: "#262028", botw: pants, bottom: "#3a3234", shoes: boots, shoec: "#141210", hat: tophat, hatc: "#1a1a1e", eyew: glasses, neck: bowtie, neckc: "#e8e0cc", expr: smug, fur: "#d8822e" },
       rounds: [[5, -22.2, 70, sit, 5, -19], [0, -15, 15, idle, -2, -18], [5, -22.2, 40, talk, 5, -19]],
       night: [[5, -22.2, 999, sit, 5, -19]] }
   l5-zelda:
     { faction: orig, role: socialite, voice: zelda, name: "Zelda Fairweather · Flapper (1926)", build: { h: 0.96, w: 0.94, bust: 1.08 },
-      look: { species: cat, sex: f, topw: dress, top: "#d8b040", botw: none, shoes: slippers, shoec: "#1a1a1e", hat: flower, hatc: "#f4efe4", neck: bell, neckc: "#d8b040", expr: wink, fur: "#2a2428" },
+      look: { species: cat, sex: f, eye: "#26c268", belly: "#fff5ea", nose: "#ff8fa3", topw: dress, top: "#d8b040", botw: none, shoes: slippers, shoec: "#1a1a1e", hat: flower, hatc: "#f4efe4", neck: bell, neckc: "#d8b040", expr: wink, fur: "#2a2428" },
       rounds: [[5, -17.6, 40, sit, 5, -19], [10, -18, 20, wave, 12, -18], [1, -14, 15, idle, -2, -14], [5, -17.6, 30, talk, 5, -19]],
       night: [[10, -23, 999, sleep, 8, -19]] }
   l5-wat:
     { faction: orig, role: pilgrim, voice: wat, name: "Brother Wat · Pilgrim (1348)", build: { h: 0.84, w: 1.06 },
-      look: { species: hamster, sex: m, topw: sweater, top: "#6a5236", botw: longskirt, bottom: "#5a4430", shoes: slippers, shoec: "#4a3826", neck: cape, neckc: "#4a3a2a", expr: dizzy, fur: "#d9a466" },
+      look: { species: hamster, sex: m, eye: "#241e26", belly: "#fff5e2", nose: "#ff92a6", topw: sweater, top: "#6a5236", botw: longskirt, bottom: "#5a4430", shoes: slippers, shoec: "#4a3826", neck: cape, neckc: "#4a3a2a", expr: dizzy, fur: "#d9a466" },
       rounds: [[13, -16, 30, crouch, 14, -16], [-1, -22.8, 25, idle, -2, -22.8], [6.5, -13.4, 12, idle, 6, -8], [8, -16.5, 20, sit, 5, -19]],
       night: [[13, -16, 999, crouch, 14, -16]] }
 # Conversations between residents: who stands in, and the lines they trade (a / b). Picked when both are free.
