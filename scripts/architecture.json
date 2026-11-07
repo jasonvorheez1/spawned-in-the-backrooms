@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1013,
-  "updatedAt": "2026-11-07T18:09:03.812Z",
-  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, Levels 1–5 and M.E.G. Base Gamma, combining authored scenes with place simulations and shared survival, creature and NPC systems. Players scavenge, fight, build and talk; Level 5's hotel now also has a playable resident mahjong table, while wait/sleep advances a shared world clock.",
+  "basedOnSpecVersion": 1019,
+  "updatedAt": "2026-11-07T18:17:59.442Z",
+  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, Levels 1–5 and M.E.G. Base Gamma, combining authored scenes with place simulations and shared survival, creature and NPC systems. Players scavenge, fight, build and talk; Level 5's hotel includes residents, rentals and playable mahjong, while wait/sleep advances a shared world clock.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, loot, shifting walls, seeded moments, smilers and lurkers.",
@@ -50,7 +50,7 @@
     "scripts/horde.js - player.state horde phase/countdown/alive/result; session holds wave timing; spawned creature state carries owner horde id.",
     "scripts/build.js + scripts/player.js - player.state scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
     "scripts/interact.js + scripts/lib/seat.js - focus/loot/interaction and player sit state; seats own by-occupancy claims, NPCs own pockets/pickpocket reactions, containers own item/lock/scavenged state.",
-    "scripts/rest.js + scripts/lib/clock.js - player waitOpen/waitBed/waitClock/restFx and rest recovery; world.state.clockSkip is the shared skipped-time offset (Level 4 shift clock adjusts locally).",
+    "scripts/interact.js + scripts/talk.js - interaction sets player.state.talkWith; talk owns shopOpen, talkBusy, talkChoices and session talkingTo; talk-ui.js presents this state.",
     "scripts/grab.js and scripts/mahjong.js - grab session owns held object/physics and heave state; player state carries carry/carryMul; player.state.mj owns the table game, with cents debited/awarded by play."
   ],
   "flows": [
@@ -59,19 +59,19 @@
     "Level 0 exit in scripts/player.js → Level 1; paired thresholds connect Levels 1–3; Level 3 sim lifts → Levels 4/5, Level 4 stairs → Level 5; hotel lift/stairs return to Level 3/4.",
     "scripts/level-door.js trigger → paired arrival marker IDs (PAIR) or state.to fallback; Level 3/4/5 sims place inbound markers, while player.js selects safe spawn/door checkpoints after death.",
     "scripts/player.js writes player.state.xfer on place change → scripts/ui.js draws named transition card; level-door crossing emits black transition and threshold sound.",
-    "interact.js E on living NPC → player.state.talkWith; talk-ui.js submits dialogue/shop input to talk.js/NPC ears; talk.js lazy-loads npc-starters.js for greeting and clickable choices, and handlers update lines/subtitles and approved actions.",
+    "interact.js E on living NPC → player.state.talkWith; talk-ui.js submits numbered dialogue choices, free text or Trade/Goodbye → talk.js/NPC ears; talk.js loads npc-starters.js for greetings/choices and updates dialogue state; its combat check closes talk on player/NPC damage, an active target or nearby foe.",
     "interact.js E → door/container/bench/usable press; Level 4/5 handlers own their special use cases; E on lockpick-locked target starts lockpick.js and lockpick-ui.js renders it.",
     "Level 4 phones/printers/shift board → l4-office.js tasks and player.state.l4task; completion writes payout, which craft.js redeems and craft-ui.js displays.",
-    "Level 5 l5-hall-mgr → l5-hall-lay.js reads hall layout and lays furnishings/guest leaves; l5-heat manager → l5-heat.js reads boiler plan, phases vents and writes player heat/hp.",
+    "Level 5 l5-hall-mgr → l5-hall-lay.js reads hall layout and lays furnishings/guest leaves; l5-heat manager → l5-heat.js reads boiler plan, phases vents and writes player heat/hp; level5/sim.js registers breakables while excluding whole-room meshes.",
     "Level 5 l5-people director → lib/l5-people.js reads level5-people.yml and maintains residents/suite storage; resident ears handle talk, rent/checkout, escorts and jobs; shared clock offset drives day/night rounds.",
     "Level 3 objects.scene l3-visits manager → l3-visits.js reads visit data and Level 3 grid/path helpers; it spawns Samantha/Death Rat encounters whose outcomes use hostile and witness helpers.",
-    "T → rest.js opens wait UI; waitdo advances world.state.clockSkip, heals at a nearby bed and drains hunger/thirst; clock.js and resident routines read the shifted clock. Level 5 mahjong table press → l5-ball.js warning/re-entry → mahjong.js player game and three residents; mahjong-ui renders it and wins pay cents."
+    "T → rest.js opens wait UI; waitdo advances world.state.clockSkip, heals at a nearby bed and drains hunger/thirst; clock.js and resident routines read the shifted clock. Level 5 mahjong table press → l5-ball.js warning/re-entry → mahjong.js table state and mahjong-ui.js."
   ],
   "behaviorFamilies": [
     "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; Level 5 x0z0.scene groups hotel detail by room tags.",
     "places/level4/cells/x0z0.scene + level4-geo.js, level4-detail-geo.js, l4-prop-geo.js and look-level4.js - office structure, non-colliding detail, varied abandoned props and post-processing share the Level 4 plan.",
     "scripts/l4-office.js + l4-office-geo.js - repeated open-floor cubicle islands, phones and printers vary by placement; manager schedules rings, ambient sounds, tasks and supply rewards.",
-    "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - agent/resident rounds and talk vary by faction, role, voice, look/build and day/night routine.",
+    "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - agent/resident rounds and talk vary by faction, role, voice, look/build and day/night routine; scripts/meg-agent.js smooths routes, separates crowds and sidesteps stuck movement.",
     "scripts/lib/clothes.js + clothes.yml - leveled garment lists vary by player/place tier and rarity; faction wardrobes roll for agents; Level 5 residents keep authored outfits.",
     "scripts/smilers.js, lurkers.js, hounds.js and stealers.js - distinct pursuit/senses adapt to place grids, safe zones, gaze/light and hunt phase; deathmoths manage their own swarms.",
     "scripts/l5-hall-lay.js + l5-hall-geo.js/l5-hall-fix.js - Main Hall furnishings/fixtures derive from layout rows; kind and loot metadata vary geometry, collision, breakability and containers.",
