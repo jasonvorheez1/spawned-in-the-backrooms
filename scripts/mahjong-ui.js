@@ -33,7 +33,7 @@ const CSS = `<style>
 @keyframes mjStamp{0%{transform:translate(-50%,-50%) scale(3.4) rotate(-14deg);opacity:0}18%{transform:translate(-50%,-50%) scale(1) rotate(-6deg);opacity:1}80%{opacity:1}100%{transform:translate(-50%,-50%) scale(1.06) rotate(-6deg);opacity:0}}
 @keyframes mjPop{0%{transform:translateX(-50%) scale(.4);opacity:0}20%{transform:translateX(-50%) scale(1.08);opacity:1}100%{transform:translateX(-50%) scale(1)}}
 @keyframes mjSlam{0%{transform:scale(3.2) rotate(-8deg);opacity:0}45%{transform:scale(.92) rotate(2deg);opacity:1}70%{transform:scale(1.06)}100%{transform:none;opacity:1}}
-@keyframes mjRing{0%,100%{box-shadow:0 0 0 2px #f2c14e,0 0 10px #f2c14e88}50%{box-shadow:0 0 0 3px #fff2b0,0 0 22px #f2c14e}}
+@keyframes mjRing{0%,100%{opacity:.85}50%{opacity:1}}
 @keyframes mjRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @keyframes mjFlip{0%{transform:rotateY(90deg) scale(.6);opacity:0}100%{transform:none;opacity:1}}
 @keyframes mjCoin{0%{transform:translate(0,-40px) rotate(0);opacity:0}10%{opacity:1}100%{transform:translate(var(--cx),var(--cy)) rotate(var(--cr));opacity:0}}
@@ -52,7 +52,7 @@ const CSS = `<style>
 #mj .sc{position:relative;background:#0003;border:1px solid #f3e7c833;border-radius:8px;padding:6px;text-align:center;min-height:92px}
 #mj .sc .pt{width:44px;height:44px;margin:0 auto 2px;border-radius:50%;font-size:26px;line-height:44px;border:2px solid #0006}
 #mj .sc .nm{font-weight:800;font-size:12px;line-height:1.1}#mj .sc .rl{opacity:.65;font-size:10px}
-#mj .sc.turn{animation:mjRing 1.1s infinite}
+#mj .sc.turn{box-shadow:0 0 0 3px #f2c14e,0 0 18px #f2c14e;animation:mjRing 1.1s infinite}
 #mj .sc .bub{position:absolute;left:50%;bottom:100%;margin-bottom:6px;z-index:6;width:max-content;max-width:210px;background:#fff8e4;color:#2a1a08;padding:5px 9px;border-radius:10px;font-size:12px;line-height:1.25;text-align:left;box-shadow:2px 3px 0 #0006;pointer-events:none}
 #mj .sc .bub::after{content:'';position:absolute;left:50%;top:100%;margin-left:-6px;border:6px solid transparent;border-top-color:#fff8e4}
 #mj .sc.t2 .bub{bottom:auto;top:100%;margin:6px 0 0}#mj .sc.t2 .bub::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:#fff8e4}

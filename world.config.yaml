@@ -34,6 +34,10 @@ inputs:
       mouse: right
       touch:
         button: false
+    thirdPerson:
+      mouse: middle
+      touch:
+        button: false
     reload:
       keys:
         - r
@@ -81,6 +85,7 @@ inputs:
       touch:
         button: false
     waitdo: {}
+    elevdo: {}
     mj: {}
     inventory:
       keys:

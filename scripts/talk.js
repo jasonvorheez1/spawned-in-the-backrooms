@@ -123,9 +123,12 @@ export function heard(ctx, r, pay) {
     if (fresh) ses2.memWith = it.id
     const notes = o.remember ? [...(m0.notes ?? []).filter((n) => n !== o.remember), o.remember].slice(-6) : (m0.notes ?? [])
     it.state.mem = { ...(it.state.mem ?? {}), [key]: { met: m0.met + (fresh ? 1 : 0), notes, at: now } } }
+  // a spoken yes to come along counts even when the model forgot to mark it: their words are the promise
+  const ESCORT = /\b(follow me|stay (close|behind me)|come with me|i('ll| will| can) (walk|take|lead|escort|show) you|let'?s (go|move)|we move|lead the way|i'?m coming with you|right behind you)\b/i
+  if (intent === 'none' && line && ESCORT.test(line) && !/\b(won'?t|not going|no way|can'?t)\b.{0,20}\b(come|walk|go|lead)\b/i.test(line)) intent = 'join'
   if (intent === 'join' && it.state.follow !== ctx.self.id) {
     const mine = ctx.query({ tags: ['npc'] }).filter((q) => q.state?.follow === ctx.self.id).length
-    if (r1 < T.join.rapport && !passed) {}
+    if (r1 < T.join.rapport && !passed && o.intent !== 'join' && !ESCORT.test(line ?? '')) {}
     else if (mine >= T.join.max) logLine(ctx, it, 'x', `${T.join.max} people already follow you`)
     else { it.state.follow = ctx.self.id; logLine(ctx, it, 'x', `${who} is coming with you`); note(ctx, `${who} is coming with you.`) }
   }

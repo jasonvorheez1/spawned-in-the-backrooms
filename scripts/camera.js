@@ -11,6 +11,7 @@
 import CAMERA from './lib/data/camera.yml'
 import W from './lib/weapons.js'
 import { poseViewmodel } from './lib/vmpose.js'
+import { raycast } from 'builtin/physics'
 
 const RAD_TO_DEG = 180 / Math.PI
 // The body the eye height is for: camera.yml's eyeHeight is the eye on a body drawn 1.8 m tall.
@@ -128,5 +129,20 @@ export function update(ctx, dt) {
     const look = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
     if (rot) { const dyaw = ((look.yaw - rot.yaw + 540) % 360) - 180; rot = { yaw: rot.yaw + dyaw * k, pitch: rot.pitch + (look.pitch - rot.pitch) * k } } else rot = look
   } else if (!want3) sc.yaw = null
+  // held middle mouse: over the shoulder, 2.8 m back, pulled in where a wall would cut it; eased both ways
+  const tc = ctx.self.session.tpCam ??= { k: 0 }, tpWant = ps?.tp && !ps?.sit && !ps?.talkWith && down >= 3200 && !ps?.mj?.seats ? 1 : 0
+  tc.k += (tpWant - tc.k) * Math.min(1, dt * 8)
+  if (tc.k > 0.01 && ctx.player && rot) {
+    ctx.self.hideLocalPlayer = tc.k < 0.3
+    const wp = ctx.player.worldFeetPosition ?? ctx.player.feetPosition, head = { x: wp.x, y: wp.y + 1.55, z: wp.z }
+    const yw = rot.yaw * Math.PI / 180, pt = rot.pitch * Math.PI / 180
+    const back = { x: Math.sin(yw) * Math.cos(pt), y: -Math.sin(pt), z: Math.cos(yw) * Math.cos(pt) }, side = { x: Math.cos(yw) * 0.45, z: -Math.sin(yw) * 0.45 }
+    const from = { x: head.x + side.x, y: head.y + 0.15, z: head.z + side.z }
+    const hit = raycast(ctx, from, back, { distance: 2.8, physicsOnly: true, ignoreEntities: [ctx.player.id] })
+    const dist = (hit ? Math.max(0.3, hit.distance - 0.25) : 2.8) * tc.k
+    const e0 = ctx.self.feetPosition, k = tc.k * tc.k * (3 - 2 * tc.k)
+    const out = { x: from.x + back.x * dist, y: from.y + back.y * dist, z: from.z + back.z * dist }
+    ctx.self.feetPosition = { x: e0.x + (out.x - e0.x) * k, y: e0.y + (out.y - e0.y) * k, z: e0.z + (out.z - e0.z) * k }
+  }
   if (rot) ctx.self.rotation = rot
 }

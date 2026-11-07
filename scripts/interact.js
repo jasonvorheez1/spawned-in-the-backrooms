@@ -38,7 +38,9 @@ function findFocus(ctx, ray) {
     for (const it of ctx.query({ tags: [tag], radius: REACH + 1 })) {
       if (it.state?.taken) continue
       if (tag === 'usable' && it.tags?.includes?.('seat')) continue // a seat that's also usable is sat in, never pressed
-      const p = it.state?.c ?? it.feetPosition, vx = p.x - o.x, vy = p.y + (it.state?.c ? 0 : big ? 0.28 : 0.1) - o.y, vz = p.z - o.z
+      // a usable hung on a parent (the boiler door's panel) reads local feet: aim at its world spot, mid-height for a door
+      const wp = !it.state?.c && tag === 'usable' ? ctx.getObject(it.id)?.worldFeetPosition : null
+      const p = it.state?.c ?? (wp ? { x: wp.x, y: wp.y + (it.state?.kind === 'boilerdoor' ? 0.9 : 0), z: wp.z } : it.feetPosition), vx = p.x - o.x, vy = p.y + (it.state?.c ? 0 : big ? 0.28 : 0.1) - o.y, vz = p.z - o.z
       const dist = Math.hypot(vx, vy, vz)
       if (dist > REACH || dist < 0.05) continue
       const ang = Math.acos(Math.max(-1, Math.min(1, (vx * d.x + vy * d.y + vz * d.z) / dist)))
@@ -286,8 +288,8 @@ function press(ctx) {
     }
     m.key = ''; return
   }
-  if (f.tag === 'usable' && it.state?.kind === 'boilerdoor' && !it.state.open && !s.l5boilerKey && (s.feetPosition?.x ?? ctx.self.feetPosition.x) < (it.worldFeetPosition?.x ?? 0) && (skillsOf(s).lockpick ?? 0) >= 25 && (s.bobbypins ?? 6) > 0) { startPick(ctx, it, 25, 'boiler'); m.key = ''; return } // no key: pick it (scripts/lockpick.js), else the door says what it wants
-  if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); m.key = ''; return }
+  if (f.tag === 'usable' && it.state?.kind === 'boilerdoor' && !it.state.open && !s.l5boilerKey && !ctx.query({ tags: ['npc'], radius: 60 }).some((q) => /harlan$/.test(q.id) && q.state?.follow === ctx.self.id) && (s.feetPosition?.x ?? ctx.self.feetPosition.x) < (it.worldFeetPosition?.x ?? 0) && (skillsOf(s).lockpick ?? 0) >= 25 && (s.bobbypins ?? 6) > 0) { startPick(ctx, it, 25, 'boiler'); m.key = ''; return } // no key: pick it (scripts/lockpick.js), else the door says what it wants
+  if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); if (it.tags?.includes?.('l5-elev-panel')) s.elevPanel = f.id; m.key = ''; return } // an elevator plate opens a clickable floor list (ui.js)
   if (f.tag === 'seat') { sitDown(ctx, it); m.key = ''; return }
   if (f.tag === 'bench') { s.craftOpen = 'bench'; s.craftBench = f.id; return }
   if (f.tag === 'container') { openLoot(ctx, it); return }
@@ -339,6 +341,14 @@ export function onInput(ctx, input) {
   const m = mem(ctx)
   const ray = getInputRay(ctx, input)
   if (ray) m.ray = ray
+  if (input.pressed?.elevdo) { // the floor list: a floor, 'yes'/'no' for the deadly ones, '' to close
+    const s = ctx.self.state, f = String(input.actionData?.elevdo?.f ?? ''), id = s.elevPanel
+    if (id && f === 'yes') ctx.emit('ui:yes', { by: ctx.self.id }, { to: id })
+    else if (id && f === 'no') ctx.emit('ui:no', { by: ctx.self.id }, { to: id })
+    else if (id && f) { ctx.emit('ui:f' + f, { by: ctx.self.id }, { to: id }); if (['13', '66', '382'].includes(f)) { s.elevAsk = f; return } }
+    s.elevPanel = null; s.elevAsk = null; return
+  }
+  { const s = ctx.self.state; if (s.elevPanel) { const pn = ctx.getObject(s.elevPanel)?.worldFeetPosition; if (!pn || Math.hypot(pn.x - ctx.self.feetPosition.x, pn.z - ctx.self.feetPosition.z) > 3) { s.elevPanel = null; s.elevAsk = null } } }
   const d = input.actionData?.loot
   if (input.pressed?.loot && d && typeof d.k === 'string') { lootAction(ctx, d); return }
   if (ctx.self.state.lootOpen && input.pressed?.reload) { lootAction(ctx, { k: 'all' }); return } // R takes everything, as in Fallout

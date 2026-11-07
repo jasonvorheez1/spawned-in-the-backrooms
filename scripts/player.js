@@ -303,6 +303,10 @@ export function onInput(ctx, input) {
 function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
   if (s.studied && m.tags?.some((tg) => s.studied.split(',').some((k) => tg.includes(k)))) dmg = Math.round(dmg * 1.1) // read its Database page
   const npc = m.tags?.includes('npc')
+  if (npc && m.state?.follow && ctx.place.players.some((p) => p.id === m.state.follow)) { // a companion: no friendly fire
+    ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 1.7, z: m.feetPosition.z }, text: 'ALLY', color: '#9fd7ff', size: 0.8 }, { audience: { player: ctx.self.id } })
+    return
+  }
   if (npc) dmg = dmgAfterArmor(lookOfNpc(m), dmg) // an agent's or survivor's clothes soak the hit like yours do
   m.state.hp -= dmg
   if (npc) { m.state.angry = { ...(m.state.angry ?? {}), [ctx.self.id]: true }; m.state.fresh = { ...(m.state.fresh ?? {}), [ctx.self.id]: true } } // the camp remembers who shot first; a fresh shot spreads even after a pardon
@@ -653,7 +657,7 @@ function viewmodel(ctx, moving, sprinting) {
   if (!ctx.self.isLocal) return
   const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists', l = s.look ?? {}
   if (s.sheathed && w.vm && ctx.now() - (s.sheathAt ?? 0) < 400) return // still lowering out of view
-  if (s.sheathed || s.mj?.seats) { if (w.vm) { ctx.destroy(w.vm); w.vm = null; w.vmKind = null; w.vmEq = null; w.plyRig = null } if (s.vmId) s.vmId = null; return } // holstered: the hands are down, out of view
+  if (s.sheathed || s.mj?.seats || s.tp) { if (w.vm) { ctx.destroy(w.vm); w.vm = null; w.vmKind = null; w.vmEq = null; w.plyRig = null } if (s.vmId) s.vmId = null; return } // holstered: the hands are down, out of view
   // the look and tune only change by a press: the full key is rebuilt when the weapon changes or on the 4 Hz stats beat
   if (w.vm && w.vmEq === kind && !w.vmCheck) { if (w.plyWant && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 500; plyArm(ctx, w) } return }
   w.vmEq = kind; w.vmCheck = false

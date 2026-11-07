@@ -25,13 +25,19 @@ const poolOf = (s) => s.role === "medic" ? ARMS.medic : ["trader", "quarter", "c
 function rollArm(id, pool) { let h = 2166136261; for (const c of String(id)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); const tot = pool.reduce((a, [, w]) => a + w, 0); let r = ((h >>> 0) % 1000) / 1000 * tot; for (const [k, w] of pool) { if ((r -= w) < 0) return k; } return pool[0][0]; }
 const heldOf = (ctx, me) => (me.children ?? []).map((c) => (typeof c === "string" ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) : c)).find((c) => c && !String(c.id).endsWith("/" + HEAD_ID) && (c.model || c.primitive));
 // once per agent: keep what its spawner handed it unless that was the stock pistol, else roll from its kind's rack and swap the held body
+// nerve (Shelly's confidence system): brave hold their ground, steady fight until hurt, cowards run, frenzied (rare) go for anyone. Savi's odds: 24/50/23/3
+const hashN = (id, salt) => { let h = 2166136261 ^ salt; for (const c of String(id)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return ((h >>> 0) % 1000) / 1000; };
+export const nerveOf = (id) => { const r = hashN(id, 77); return r < 0.24 ? "brave" : r < 0.74 ? "steady" : r < 0.97 ? "coward" : "frenzied"; };
+const UNARMED = { brave: 0.08, steady: 0.3, coward: 0.7, frenzied: 0 }; // chance they carry nothing at all
+const FLEE = { coward: ["nope. nope nope nope.", "not my fight!", "somebody else do it!", "i'm out, i'm out!"], steady: ["fall back! fall back!", "i'm hit, i'm getting out!", "can't hold it!"], brave: ["just a scratch... ugh, back!", "regroup! i'll be back!"] };
 function arm(ctx, me, m) {
-  const s = me.state; if (s.mjguest) { m.armed = true; return; }
+  const s = me.state; s.nerve ??= nerveOf(me.id); if (s.mjguest) { m.armed = true; return; }
   const held = heldOf(ctx, me), given = held?.state?.kind;
-  if (!s.arm) s.arm = given && given !== "pistol" ? given : rollArm(me.id, poolOf(s));
+  if (!s.arm) s.arm = given && given !== "pistol" ? given : hashN(me.id, 31) < UNARMED[s.nerve] ? "fists" : s.nerve === "frenzied" ? rollArm(me.id, ARMS.civ.filter(([k]) => !WP[k]?.ranged)) : rollArm(me.id, poolOf(s));
+  if (s.arm === "fists") { if (held) ctx.destroy(held.id); m.armed = true; m.drawn = undefined; return; }
   if (held && given === s.arm) { m.armed = true; return; }
   if (held) ctx.destroy(held.id);
-  ctx.spawn({ parent: me.id, attachment: { bone: "Hips" }, feetPosition: { x: 0.17, y: -0.06, z: 0.02 }, rotation: { yaw: 0, pitch: -90, roll: 0 }, state: { kind: s.arm }, ...weaponBody(s.arm) });
+  ctx.spawn({ parent: me.id, attachment: { bone: "RightHand" }, visible: false, state: { kind: s.arm }, ...weaponBody(s.arm) });
   m.drawn = undefined; m.armed = true;
 }
 const SHOTS = { shotgun: "/cdn/moodboard-realistic-gritty/sfx-shotgun-blast-heavy-boom.mp3", smg: "/cdn/moodboard-realistic-gritty/sfx-smg-tommy-gun-loud-rattle-shot.mp3" };
@@ -100,6 +106,10 @@ function pickTarget(ctx, me, m) {
   if (!me.state.faction5 && !me.state.mjguest) for (const tag of FOES) for (const f of ctx.query({ tags: [tag], radius: G.sight })) { // hotel guests are no fighters: a hound is something to run from, not at
     if (f.state?.dead || (f.state?.hp ?? 1) <= 0) continue;
     const d = flat(f.feetPosition, p); if (d < bd) { bd = d; best = f; }
+  }
+  if (me.state.nerve === "frenzied" && !me.state.mjguest) { // anyone close enough: npc or player
+    for (const n of ctx.query({ tags: ["npc"], radius: 12 })) { if (n.state?.dead || (n.state?.hp ?? 1) <= 0) continue; const d = flat(n.feetPosition, p); if (d < bd) { bd = d; best = n; } }
+    for (const pl of ctx.place.players) { if ((pl.state?.hp ?? 1) <= 0) continue; const d = flat(pl.feetPosition, p); if (d < Math.min(bd, 12)) { bd = d; best = pl; } }
   }
   // a player who attacked the camp: this agent's grudge, or a neighbour's
   const grudges = new Set(Object.keys(me.state.angry ?? {}));
@@ -193,10 +203,13 @@ function holster(ctx, me, m, drawn) {
   if (m.drawn === drawn) return;
   const gun = (me.children ?? []).map((c) => (typeof c === "string" ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) : c)).find((c) => c && !String(c.id).endsWith("/" + HEAD_ID) && (c.model || c.primitive)); // the gun, never the head
   if (!gun) return; m.drawn = drawn;
-  gun.attachment = drawn ? { bone: "RightHand" } : { bone: "Hips" };
-  gun.feetPosition = drawn ? { x: 0, y: 0, z: 0 } : { x: 0.17, y: -0.06, z: 0.02 };
-  gun.rotation = drawn ? { yaw: 0, pitch: 0, roll: 0 } : { yaw: 0, pitch: -90, roll: 0 };
-  heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-gun-holster-leather.mp3", position: me.feetPosition, volume: 0.5, maxDistance: 15 });
+  const ranged = !!(WP[me.state.arm ?? gun.state?.kind ?? "pistol"] ?? WP.pistol).ranged;
+  // calm: a gun rides slung across the back; a melee weapon is put away out of sight. a fight brings either to the right hand
+  gun.visible = drawn || ranged;
+  gun.attachment = drawn ? { bone: "RightHand" } : { bone: "Spine2" };
+  gun.feetPosition = drawn ? { x: 0, y: 0, z: 0 } : { x: 0, y: 0.05, z: -0.17 };
+  gun.rotation = drawn ? { yaw: 0, pitch: 0, roll: 0 } : { yaw: 0, pitch: -90, roll: 35 };
+  if (ranged || drawn) heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-gun-holster-leather.mp3", position: me.feetPosition, volume: 0.5, maxDistance: 15 });
 }
 function aim(me, m, t) {
   const id = t?.id ?? null;
@@ -244,6 +257,12 @@ export function update(ctx, dt) {
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
   if (m.dressed !== 4) { m.dressed = 4; if (!s.dead) dress(ctx, me); }
   if (!m.armed && !s.dead && now - (m.bornAt ??= now) > 1500) arm(ctx, me, m); // after the spawner has handed over its weapon
+  // essential: whoever walks with a player drops to a knee instead of dying, then gets back up
+  if (!s.dead && (s.hp ?? 1) <= 0 && s.follow && ctx.place.players.some((p) => p.id === s.follow)) {
+    s.hp = Math.max(1, Math.round((s.maxHp ?? 100) * 0.3)); s.stunUntil = now + 4000;
+    animate(ctx, me.id, { "feetPosition.y": [me.feetPosition.y, me.feetPosition.y - 0.35, me.feetPosition.y - 0.35, me.feetPosition.y] }, { duration: 4 });
+    ctx.emit("damageNumber", { position: { x: me.feetPosition.x, y: me.feetPosition.y + 1.8, z: me.feetPosition.z }, text: "DOWN", color: "#ffb347" });
+  }
   if (s.dead || (s.hp ?? 1) <= 0) {
     if (!m.down) {
       m.down = true; bark(ctx, me, "death", true);
@@ -331,6 +350,16 @@ export function update(ctx, dt) {
   holster(ctx, me, m, !!(t && flat(t.feetPosition, home) < G.leash));
   if (t && flat(t.feetPosition, home) < G.leash) {
     work(me, m, null);
+    // nerve: break and run when it fails them; cornered (arm's length) they lash out anyway
+    const nv = s.nerve ?? "steady", hpF = (s.hp ?? 1) / (s.maxHp ?? 100), dT = flat(t.feetPosition, me.feetPosition);
+    const breaks = nv === "frenzied" ? false : nv === "coward" ? true : nv === "brave" ? hpF < 0.15 : hpF < 0.45 || s.arm === "fists";
+    if (breaks && dT > 1.6) {
+      holster(ctx, me, m, false); aim(me, m, null); gait(me, m, "run");
+      const dx = me.feetPosition.x - t.feetPosition.x, dz = me.feetPosition.z - t.feetPosition.z, l = Math.hypot(dx, dz) || 1;
+      moveAlong(ctx, me, m, { x: me.feetPosition.x + dx / l * 6, y: me.feetPosition.y, z: me.feetPosition.z + dz / l * 6 }, G.run * (nv === "coward" ? 1.1 : 1), dt);
+      if (now - (m.fleeSaid ?? 0) > 9000) { m.fleeSaid = now; s.line = { t: FLEE[nv][Math.floor(ctx.random() * FLEE[nv].length)], at: now, d: 2000 }; }
+      m.fearAt = now; return;
+    }
     const d = flat(t.feetPosition, me.feetPosition), see = seesIt(ctx, me, t), reloading = now < (m.reloadUntil ?? 0);
     const A = WP[s.arm] ?? WP.pistol, ranged = !!A.ranged, range = ranged ? (s.arm === "shotgun" ? 9 : G.range) : 1.4 + (A.reach ?? 2.4) * 0.2; // melee closes to arm's length
     if (d > range || !see) { gait(me, m, "run"); aim(me, m, null); moveAlong(ctx, me, m, t.feetPosition, G.run * (ranged ? 1 : 1.12), dt); }
