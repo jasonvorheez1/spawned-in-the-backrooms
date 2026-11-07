@@ -1,0 +1,6 @@
+# spawn-scene v2 yaml x-1z-1
+level0-lights/l0_0:
+  feetPosition: {x: -70, y: 2.7, z: -70}
+  id: level0-lights/l0_0
+  light: {color: oklch(0.62 0.24 28), distance: 11, intensity: 7, kind: point, shadow: {enabled: false}}
+  parent: level0-lights

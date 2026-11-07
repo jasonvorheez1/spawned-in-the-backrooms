@@ -1,0 +1,51 @@
+# spawn-scene v2 yaml x0z-1
+level0-lights/l18_0:
+  feetPosition: {x: 2, y: 2.7, z: -70}
+  id: level0-lights/l18_0
+  light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l21_1:
+  feetPosition: {x: 14, y: 2.7, z: -66}
+  id: level0-lights/l21_1
+  light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l22_0:
+  feetPosition: {x: 18, y: 2.7, z: -70}
+  id: level0-lights/l22_0
+  light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l24_0:
+  feetPosition: {x: 26, y: 2.7, z: -70}
+  id: level0-lights/l24_0
+  light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l26_0:
+  feetPosition: {x: 34, y: 2.7, z: -70}
+  id: level0-lights/l26_0
+  light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l29_1:
+  feetPosition: {x: 46, y: 2.7, z: -66}
+  id: level0-lights/l29_1
+  light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l2_0:
+  feetPosition: {x: -62, y: 2.7, z: -70}
+  id: level0-lights/l2_0
+  light: {color: oklch(0.62 0.24 28), distance: 11, intensity: 7, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l30_0:
+  feetPosition: {x: 50, y: 2.7, z: -70}
+  id: level0-lights/l30_0
+  light: {color: oklch(0.62 0.24 28), distance: 11, intensity: 7, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l32_0:
+  feetPosition: {x: 58, y: 2.7, z: -70}
+  id: level0-lights/l32_0
+  light: {color: oklch(0.62 0.24 28), distance: 11, intensity: 7, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l5_1:
+  feetPosition: {x: -50, y: 2.7, z: -66}
+  id: level0-lights/l5_1
+  light: {color: oklch(0.62 0.24 28), distance: 11, intensity: 7, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
