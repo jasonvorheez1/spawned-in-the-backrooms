@@ -548,9 +548,9 @@ object/x955101e2a6d7f07b/43:
   model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
   rotation: {w: 1, x: 0, y: 0, z: 0}
   tags: [almond]
-temp-hound2:
-  feetPosition: {x: 106, y: 0.05, z: 16}
-  id: temp-hound2
+temp-hound3:
+  feetPosition: {x: 100, y: 0.05, z: -2}
+  id: temp-hound3
   physics: {body: character}
   primitive: {kind: scripted, script: scripts/hound-geo.js}
   state: {hp: 60, maxHp: 60}
