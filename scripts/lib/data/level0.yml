@@ -23,7 +23,8 @@ almondSanity: 30
 almondRefill: 5   # the debug heal pad tops you up to this. No carry limit on any item (Shelly, 2026-11-07)
 battery: 100
 batteryDrain: 1.2  # per second while the flashlight is on
-xpPerCell: 2
+xpPerCell: 3        # paid once per xpCellsPer new squares explored (Shelly: xp came too easy, 2026-11-07)
+xpCellsPer: 10
 xpAlmond: 5
 xpKill: 45
 xpExit: 150

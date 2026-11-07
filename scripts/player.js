@@ -844,7 +844,7 @@ function tickStats(ctx, t, moving) {
   const { cx, cz } = cellAt(p.x, p.z)
   if (cx >= 0 && cz >= 0 && cx < N && cz < N) {
     const vis = (w.visited ??= decode(s.visited ?? '')), i = cz * N + cx
-    if (!vis[i]) { vis[i] = 1; s.visited = encode(vis); s.explored = (s.explored ?? 0) + 1; gain(ctx, L.xpPerCell) }
+    if (!vis[i]) { vis[i] = 1; s.visited = encode(vis); s.explored = (s.explored ?? 0) + 1; if (s.explored % (L.xpCellsPer ?? 10) === 0) gain(ctx, L.xpPerCell) }
   }
   // (items are taken with E on what you look at: takeToken above, called from scripts/interact.js)
   // the flickering wall: the way out
