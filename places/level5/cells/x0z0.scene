@@ -3332,6 +3332,11 @@ l5-radio-salon:
   rotation: {yaw: 0}
   state: {info: "A polonaise, from the Originals' salon. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
   tags: [usable, l5-radio]
+l5-rats:
+  behavior: scripts/l5-rats.js
+  feetPosition: {x: 32, y: 0, z: 0}
+  id: l5-rats
+  state: {packs: {}}
 l5-samantha:
   behavior: [scripts/samantha.js]
   feetPosition: {x: 3, y: 0, z: 2.5}
@@ -3342,6 +3347,37 @@ l5-samantha:
   rotation: {yaw: -130}
   state: {faction: The Beverly Room, hp: 1000, info: A very small cat. She is looking at you., maxHp: 1000, name: Samantha, offers: [["o:feed", Offer meat], ["o:refuse", Refuse]], role: psychic, tint: "#7dff9a", verb: Talk}
   tags: [npc, samantha, usable, entity26]
+l5-staff:
+  behavior: scripts/l5-staff.js
+  feetPosition: {x: -18, y: 0, z: 0}
+  id: l5-staff
+l5-staff-bellhop:
+  feetPosition: {x: -22.8, y: 0.02, z: -12.55}
+  id: l5-staff-bellhop
+  layout: {box: {max: {x: 1.2, y: 2.35, z: 1.2}, min: {x: -1.2, y: 0, z: -1.2}}}
+  model: {forward: "+x", id: /cdn/value.68efc4b4f1c2b0343cd4070c6d5f42de06eae57ae2eeefeff765ba74347509f8.glb}
+  physics: {body: character}
+  rotation: 0
+  state: {attr: "6,7,6,5,8,5,4", hp: 176, kind: staff, maxHp: 176, mode: post, name: The Bellhop, title: Swift, xp: 80}
+  tags: [moths, l5staff, l5-hostile]
+l5-staff-maid:
+  feetPosition: {x: -13.5, y: 0.02, z: 12.55}
+  id: l5-staff-maid
+  layout: {box: {max: {x: 1.2, y: 2.2, z: 1.2}, min: {x: -1.2, y: 0, z: -1.2}}}
+  model: {forward: "+x", id: /cdn/value.8928d9e0ff2b49e170c357c1164b0b0cfb3458f320b9d237630ba53ec337d87e.glb}
+  physics: {body: character}
+  rotation: 180
+  state: {attr: "7,3,2,7,9,6,2", hp: 192, kind: staff, maxHp: 192, mode: post, name: The Chambermaid, title: Thick, xp: 80}
+  tags: [moths, l5staff, l5-hostile]
+l5-staff-porter:
+  feetPosition: {x: -6.55, y: 0.02, z: -11.5}
+  id: l5-staff-porter
+  layout: {box: {max: {x: 1.2, y: 2.5, z: 1.2}, min: {x: -1.2, y: 0, z: -1.2}}}
+  model: {forward: "+x", id: /cdn/value.045b9bf87682f9cca81ca05bc7d34d76d79ae345c63b98c4a8e6862c79997c38.glb}
+  physics: {body: character}
+  rotation: -90
+  state: {attr: "4,5,3,8,8,5,5", hp: 144, kind: staff, maxHp: 144, mode: post, name: The Night Porter, title: Keen-eyed, xp: 80}
+  tags: [moths, l5staff, l5-hostile]
 l5-stairs-up:
   behavior: scripts/level-door.js
   feetPosition: {x: -8, y: 0, z: -20.400000000000002}
