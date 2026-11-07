@@ -698,6 +698,10 @@ function tickStats(ctx, t, moving) {
   // taken
   if (s.hp <= 0) {
     s.deaths += 1; s.downAt = now
+    for (const n of ctx.query({ tags: ['npc'] })) { // dying wipes the slate: every npc here drops its grudge and warning on you (creator's rule)
+      const id = ctx.self.id
+      for (const k of ['angry', 'fresh', 'warned']) if (n.state?.[k]?.[id]) { const o = { ...n.state[k] }; delete o[id]; n.state[k] = o }
+    }
     s.hp = mh; s.sanity = Math.round(ms * 0.6)
     sound(ctx, 'static-burst-glitch', 0.95, true)
     ctx.emit('screenFlash', { color: '#000000', duration: 0.8, intensity: 1 }, { audience: { player: ctx.self.id } })
