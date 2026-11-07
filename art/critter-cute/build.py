@@ -399,7 +399,12 @@ SP = {  # ears, tail, extras, muzzle(belly patch), nose dot, whiskers
 }
 if ONLY: SP = {k: v for k, v in SP.items() if k in ONLY.split(",")}
 F_HEAD = False
-FACE_KEYS = ["Blink", "Happy", "Sad", "Angry", "Wide", "Half", "Smile", "Open", "Frown", "O", "Blep", "Blush"]
+FACE_KEYS = ["Blink", "Happy", "Sad", "Angry", "Wide", "Half", "Smile", "Open", "Frown", "O", "Blep", "Blush", "EyeTall", "EyeWide"]
+# eye types: the round eye is the Basis; EyeTall / EyeWide reshape the whole eye (sclera, ink ring, pupil) about its centre, the game sets one from look.eyes
+EYE_TYPES = {"EyeTall": (.84, 1.17), "EyeWide": (1.18, .82)}
+def eye_types(st):
+    for k, (sx, sy) in EYE_TYPES.items(): st[k] = [(x * sx, y * sy) for x, y in st["Basis"]]
+    return st
 
 class HeadMesh:
     """One mesh built vertex by vertex, with a position per shape key and a bone per vertex."""
@@ -488,7 +493,7 @@ def build_face(H, sp):
         pts, ff = disc(ew, eh, N, 4)
         st = {"Basis": pts}
         for k in ("Wide", "Half", "Sad", "Angry", "Blink", "Happy"): st[k] = eyeT(pts, k)
-        add_decal(H, u, EYE_V, .004, st, ff, "eyewhite")
+        add_decal(H, u, EYE_V, .004, eye_types(st), ff, "eyewhite")
         # ink outline ring (becomes the closed/happy line)
         inner = ellipse(ew, eh, N); outer = ellipse(ew + .011, eh + .011, N)
         st = {"Basis": inner + outer}
@@ -500,14 +505,14 @@ def build_face(H, sp):
                 xx = max(-ew, min(ew, x)) * .98; sgn = 1 if math.sin(2 * math.pi * i / N) >= 0 else -1
                 a_in.append((xx, arc(xx))); a_out.append((xx, arc(xx) + sgn * .0075 * (1 - (xx / ew) ** 6)))
             st[k] = a_in + a_out
-        add_decal(H, u, EYE_V, .0045, st, ring_faces(N), "eyeink")
+        add_decal(H, u, EYE_V, .0045, eye_types(st), ring_faces(N), "eyeink")
         # the big matte black pupil, a little toward the nose and down
         pw, ph = .047, .061; pc = (-s * .016, -.017)
         pts, ff = disc(pw, ph, N, 4, *pc)
         st = {"Basis": pts, "Wide": [(pc[0] + (x - pc[0]) * .78, pc[1] + (y - pc[1]) * .78) for x, y in pts],
               "Half": [(x, min(y, cut - .004)) for x, y in pts], "Sad": [(x, y + .012) for x, y in pts], "Angry": [(x - s * .004, y - .006) for x, y in pts]}
         for k in ("Blink", "Happy"): st[k] = eyeT(pts, k)
-        add_decal(H, u, EYE_V, .0052, st, ff, "pupil")
+        add_decal(H, u, EYE_V, .0052, eye_types(st), ff, "pupil")
         if F_HEAD:
             lp, lf = [], []
             for j, ang in enumerate((18, 40, 62)):
@@ -840,7 +845,8 @@ def proof(tag, objs_sets):
 
 FACESETS = [("smile", {"Smile": .8}), ("grin", {"Smile": 1, "Open": .4}), ("joy", {"Happy": 1, "Smile": 1, "Open": .7}), ("sad", {"Sad": 1, "Frown": .8}),
             ("angry", {"Angry": 1, "Frown": 1, "Open": .2}), ("shock", {"Wide": 1, "O": 1}), ("blink", {"Smile": .8, "Blink": 1}), ("smug", {"Half": .5, "Smile": .7}),
-            ("blep", {"Smile": .4, "Blep": 1}), ("love", {"Happy": 1, "Smile": 1, "Blush": 1}), ("pout", {"Frown": .8, "Blush": .4}), ("neutral", {})]
+            ("blep", {"Smile": .4, "Blep": 1}), ("love", {"Happy": 1, "Smile": 1, "Blush": 1}), ("pout", {"Frown": .8, "Blush": .4}), ("neutral", {}),
+            ("eyetall", {"EyeTall": 1, "Smile": .8}), ("eyewide", {"EyeWide": 1, "Smile": .8}), ("tall_sad", {"EyeTall": 1, "Sad": 1, "Frown": .8}), ("wide_angry", {"EyeWide": 1, "Angry": 1, "Frown": 1})]
 def faces_sheet(head, body):
     sc = scene(); cam = sc.camera
     for o in sc.objects:
