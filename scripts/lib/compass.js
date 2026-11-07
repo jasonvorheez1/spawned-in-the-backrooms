@@ -12,6 +12,7 @@ function exitsOf(place) {
   if (place === 'level1') return [BACK1, ONWARD1]
   if (place === 'level2') return [BACK2, SEALED2]
   if (place === 'level3') return [BACK3, LIFT3]
+  if (place === 'gamma') return [{ x: 0, z: 40 }]
   if (place === 'main') return [cellCenter(EXIT.cx, EXIT.cz)]
   return []
 }
