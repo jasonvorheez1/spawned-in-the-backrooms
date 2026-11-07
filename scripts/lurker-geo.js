@@ -17,33 +17,58 @@ export function skeleton() {
 
 export function geometry(ctx) {
   const hi = ctx.lod <= 2, M = hi ? 20 : 9, LM = hi ? 12 : 6;
-  ctx.smooth(); ctx.roughness(0.7);
-  const SKIN = "oklch(0.86 0.025 85)", SHADE = "oklch(0.74 0.03 70)";
+  ctx.smooth(); ctx.roughness(0.62);
+  const SKIN = "oklch(0.84 0.03 80)", SHADE = "oklch(0.7 0.035 60)", DARK = "oklch(0.2 0.02 40)";
+  const close = (pts, rads) => { // a tube closed at both ends
+    const s = (p, q, t) => p.map((v, i) => v + (q[i] - v) * t), n = pts.length;
+    return [[s(pts[0], pts[1], -0.08), ...pts, s(pts[n - 1], pts[n - 2], -0.08)], [1e-4, ...rads, 1e-4]];
+  };
+  const T = (pts, rads, m = LM, sq) => { const [P, R] = close(pts, rads); tube(ctx, P, R, m, sq); };
   ctx.color(SKIN);
   for (const s of [-1, 1]) {
     const L = s < 0 ? "L" : "R", x = s * 0.11;
-    ctx.bone("thigh" + L); tube(ctx, [[x, 1.0, 0], [x * 1.05, 0.75, -0.01], [x, 0.5, 0.01]], [0.085, 0.07, 0.055], LM);
-    ctx.bone({ ["thigh" + L]: 0.5, ["shin" + L]: 0.5 }); sphere(ctx, [x, 0.5, 0.0], 0.058, LM);
-    ctx.bone("shin" + L); tube(ctx, [[x, 0.5, 0.01], [x, 0.25, 0.03], [x, 0.06, 0.02]], [0.055, 0.045, 0.035], LM);
-    tube(ctx, [[x, 0.05, 0.05], [x, 0.03, -0.06], [x * 1.1, 0.015, -0.17]], [0.04, 0.035, 0.018], LM, [1, 0.55]); // long foot
+    ctx.bone("thigh" + L); T([[x, 1.0, 0], [x * 1.08, 0.85, -0.015], [x * 1.04, 0.66, -0.01], [x, 0.52, 0.0]], [0.085, 0.08, 0.06, 0.05]);
+    ctx.bone({ ["thigh" + L]: 0.5, ["shin" + L]: 0.5 }); sphere(ctx, [x, 0.5, -0.012], 0.054, LM, [1, 1, 1.1]); // knobby knee
+    ctx.bone("shin" + L);
+    T([[x, 0.5, 0.01], [x, 0.38, 0.03], [x, 0.2, 0.025], [x, 0.07, 0.02]], [0.045, 0.05, 0.035, 0.03]); // calf bulge
+    sphere(ctx, [x * 1.15, 0.07, 0.02], 0.026, LM); // ankle bone
+    T([[x, 0.05, 0.05], [x, 0.03, -0.04], [x * 1.08, 0.02, -0.14], [x * 1.1, 0.012, -0.2]], [0.035, 0.034, 0.025, 0.012], LM, [1.3, 0.6]); // long foot
+    if (hi) for (let t = -1; t <= 1; t++) T([[x * 1.1 + t * 0.016, 0.012, -0.19], [x * 1.1 + t * 0.022, 0.006, -0.24]], [0.008, 0.003], 5); // toes
   }
-  ctx.bone("hips"); sphere(ctx, [0, 0.92, 0], 0.13, M, [1, 0.75, 0.75]); tube(ctx, [[0, 0.88, 0], [0, 1.02, 0], [0, 1.12, -0.01]], [0.12, 0.15, 0.14], M, [1, 0.7]);
+  ctx.bone("hips");
+  T([[0, 0.86, 0.01], [0, 0.95, 0.0], [0, 1.06, -0.01], [0, 1.14, -0.02]], [0.11, 0.15, 0.13, 0.105], M, [1, 0.72]); // pelvis
   ctx.bone("spine");
-  tube(ctx, [[0, 1.1, -0.01], [0, 1.35, -0.04], [0, 1.6, -0.1], [0, 1.74, -0.14]], [0.13, 0.17, 0.2, 0.14], M, [1, 0.62]);
-  if (hi) { ctx.color(SHADE); for (let r = 0; r < 5; r++) { const y = 1.36 + r * 0.06; tube(ctx, [[-0.15, y, -0.05 - r * 0.01], [0, y + 0.03, -0.15 - r * 0.012], [0.15, y, -0.05 - r * 0.01]], [0.012, 0.015, 0.012], 6); } ctx.color(SKIN); } // ribs
-  for (const s of [-1, 1]) sphere(ctx, [s * 0.19, 1.69, -0.11], 0.065, LM); // shoulders
-  sphere(ctx, [0, 1.72, -0.13], 0.1, M, [1.25, 0.45, 0.8]); // collar caps the torso
-  ctx.bone("neck"); tube(ctx, [[0, 1.72, -0.13], [0, 1.82, -0.18], [0, 1.9, -0.22]], [0.05, 0.045, 0.05], LM);
+  T([[0, 1.1, -0.015], [0, 1.25, -0.03], [0, 1.42, -0.07], [0, 1.6, -0.12], [0, 1.72, -0.15]], [0.1, 0.11, 0.165, 0.19, 0.12], M, [1, 0.6]); // sunken belly, deep chest
+  if (hi) { // ribs, sternum and the knuckled spine
+    ctx.color(SHADE);
+    for (let r = 0; r < 6; r++) { const y = 1.36 + r * 0.05, f = 0.17 - Math.abs(r - 2) * 0.006; tube(ctx, [[-f, y - 0.03, -0.06 - r * 0.012], [-f * 0.6, y, -0.16 - r * 0.012], [0, y + 0.02, -0.19 - r * 0.012], [f * 0.6, y, -0.16 - r * 0.012], [f, y - 0.03, -0.06 - r * 0.012]], [0.008, 0.011, 0.006, 0.011, 0.008], 6); }
+    for (let v = 0; v < 9; v++) { const t = v / 8; sphere(ctx, [0, 1.12 + t * 0.6, 0.1 - t * 0.12 + Math.sin(t * 3.1) * 0.03], 0.02, 6); }
+    ctx.color(SKIN);
+  }
+  for (const s of [-1, 1]) { sphere(ctx, [s * 0.19, 1.68, -0.12], 0.06, LM); T([[s * 0.04, 1.73, -0.17], [s * 0.19, 1.7, -0.13]], [0.02, 0.016], 6); } // shoulders, collarbones
+  ctx.bone("neck"); T([[0, 1.7, -0.12], [0, 1.82, -0.18], [0, 1.92, -0.23]], [0.055, 0.042, 0.05]);
   ctx.bone("head");
-  sphere(ctx, [0, 2.0, -0.28], 0.16, M, [0.82, 1.2, 0.95]);
-  if (ctx.lod <= 3) { ctx.color("oklch(0.25 0.02 60)"); ctx.roughness(1); for (const s of [-1, 1]) sphere(ctx, [s * 0.055, 2.03, -0.418], 0.03, hi ? 10 : 6, [1.3, 0.75, 0.22]); ctx.color(SKIN); ctx.roughness(0.7); } // eye hollows
+  sphere(ctx, [0, 2.02, -0.27], 0.15, M, [0.8, 1.15, 0.95]); // cranium
+  sphere(ctx, [0, 1.93, -0.34], 0.085, M, [0.85, 0.75, 0.9]); // long jaw
+  if (ctx.lod <= 3) {
+    T([[-0.09, 2.075, -0.39], [0, 2.085, -0.415], [0.09, 2.075, -0.39]], [0.02, 0.024, 0.02], 8); // brow ridge
+    for (const s of [-1, 1]) sphere(ctx, [s * 0.085, 1.99, -0.37], 0.03, 8, [1, 0.6, 1]); // cheekbones
+    ctx.color(DARK); ctx.roughness(1);
+    for (const s of [-1, 1]) sphere(ctx, [s * 0.05, 2.035, -0.405], 0.028, hi ? 10 : 6, [1.3, 0.8, 0.3]); // eye hollows
+    T([[-0.045, 1.9, -0.405], [0, 1.895, -0.418], [0.045, 1.9, -0.405]], [0.005, 0.007, 0.005], 6); // lipless mouth
+    ctx.color(SKIN); ctx.roughness(0.62);
+  }
   for (const s of [-1, 1]) {
     const L = s < 0 ? "L" : "R";
-    ctx.bone("arm" + L); tube(ctx, [[s * 0.21, 1.7, -0.11], [s * 0.27, 1.45, -0.11], [s * 0.3, 1.18, -0.1]], [0.05, 0.042, 0.036], LM);
-    ctx.bone({ ["arm" + L]: 0.5, ["fore" + L]: 0.5 }); sphere(ctx, [s * 0.3, 1.18, -0.1], 0.04, LM);
-    ctx.bone("fore" + L); tube(ctx, [[s * 0.3, 1.18, -0.1], [s * 0.33, 0.75, -0.06], [s * 0.33, 0.36, -0.02]], [0.036, 0.03, 0.024], LM);
-    sphere(ctx, [s * 0.33, 0.32, -0.02], 0.04, LM, [0.7, 1.2, 1]); // palm
-    if (ctx.lod <= 3) for (let f = -2; f <= 1; f++) tube(ctx, [[s * (0.33 + f * 0.012), 0.29, -0.02], [s * (0.33 + f * 0.022), 0.17, -0.01 + f * 0.01], [s * (0.33 + f * 0.03), 0.05, 0.02 + f * 0.012]], [0.011, 0.008, 0.003], hi ? 6 : 4);
+    ctx.bone("arm" + L); T([[s * 0.21, 1.7, -0.11], [s * 0.25, 1.52, -0.11], [s * 0.29, 1.2, -0.1]], [0.05, 0.044, 0.032]);
+    ctx.bone({ ["arm" + L]: 0.5, ["fore" + L]: 0.5 }); sphere(ctx, [s * 0.3, 1.18, -0.1], 0.036, LM);
+    ctx.bone("fore" + L); T([[s * 0.3, 1.18, -0.1], [s * 0.32, 0.9, -0.07], [s * 0.33, 0.62, -0.04], [s * 0.33, 0.38, -0.02]], [0.032, 0.036, 0.026, 0.02]);
+    sphere(ctx, [s * 0.33, 0.33, -0.02], 0.038, LM, [0.6, 1.3, 1]); // narrow palm
+    if (ctx.lod <= 3) for (let f = -2; f <= 1; f++) { // long jointed fingers, curled
+      const x0 = s * (0.33 + f * 0.01), z0 = -0.02 + f * 0.012;
+      T([[x0, 0.29, z0], [s * (0.335 + f * 0.016), 0.19, z0 + 0.005], [s * (0.34 + f * 0.02), 0.1, z0 + 0.02], [s * (0.34 + f * 0.022), 0.04, z0 + 0.05]], [0.01, 0.008, 0.006, 0.002], hi ? 6 : 4);
+      if (hi) { ctx.color(DARK); sphere(ctx, [s * (0.34 + f * 0.022), 0.04, z0 + 0.05], 0.004, 4); ctx.color(SKIN); }
+    }
   }
   ctx.bone(null); ctx.color(null);
 }
