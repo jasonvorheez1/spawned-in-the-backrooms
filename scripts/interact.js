@@ -1,3 +1,4 @@
+import { sitDown, standUp, seatTick, spotsOf } from './lib/seat.js'
 import { rollItemL3 } from './lib/loot3.js'
 import { startPick } from './lockpick.js'
 // Fallout-style looting. Nothing is picked up by walking over it any more: look at an item and the HUD
@@ -14,7 +15,7 @@ import { derived, skillsOf, SKILLS } from './lib/stats.js'
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 import { rollItem, rollItemL1, rollItemL2, spotCloth } from './lib/loot.js'
 
-const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc', 'door', 'bench', 'usable'] // usable: anything with its own press ear (state.name/verb/info) // what can be looked at and used
+const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc', 'door', 'bench', 'usable', 'seat'] // usable: anything with its own press ear (state.name/verb/info) // what can be looked at and used
 const REACH = 3.0 // metres from the eye
 const OPEN_RANGE = 4.5 // a container you walk away from closes
 const mem = (ctx) => (ctx.self.session.interact ??= { ray: null, last: -1e9, acc: 0, key: '', focus: null, hl: 0 })
@@ -30,7 +31,7 @@ function findFocus(ctx, ray) {
   const o = ray.origin, d = ray.direction
   let best = null, bestAng = 1e9
   for (const tag of KINDS) {
-    const big = tag === 'container' || tag === 'npc' || tag === 'door' || tag === 'bench' || tag === 'usable'
+    const big = tag === 'container' || tag === 'npc' || tag === 'door' || tag === 'bench' || tag === 'usable' || tag === 'seat'
     for (const it of ctx.query({ tags: [tag], radius: REACH + 1 })) {
       if (it.state?.taken) continue
       const p = it.state?.c ?? it.feetPosition, vx = p.x - o.x, vy = p.y + (it.state?.c ? 0 : big ? 0.28 : 0.1) - o.y, vz = p.z - o.z
@@ -39,7 +40,7 @@ function findFocus(ctx, ray) {
       const ang = Math.acos(Math.max(-1, Math.min(1, (vx * d.x + vy * d.y + vz * d.z) / dist)))
       if (ang > Math.max(0.075, Math.atan((big ? 0.55 : 0.3) / dist)) || ang >= bestAng) continue
       const wall = raycast(ctx, o, { x: vx / dist, y: vy / dist, z: vz / dist }, { distance: dist - 0.05, physicsOnly: true, ignoreEntities: [it.id, ctx.self.id], bodies: 'static' })
-      if (wall && (tag !== 'usable' || dist - wall.distance > 0.6)) continue // a usable set into furniture (a desk's computer) is reached through its own desk's shell
+      if (wall && ((tag !== 'usable' && tag !== 'seat') || dist - wall.distance > 0.6)) continue // a usable set into furniture (a desk's computer) is reached through its own desk's shell
       best = { id: it.id, tag }; bestAng = ang
     }
   }
@@ -65,6 +66,9 @@ function refocus(ctx, force = false) {
         else if (lk) { const [sk, lv] = lk.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = sk === 'lockpick' ? 'Pick Lock' : (ok ? 'Unlock' : 'Locked:'); info.color = ok ? '#f2c14e' : '#e0644f' }
       } else if (f.tag === 'usable') {
         info = { id: f.id, name: it.state?.name ?? 'Thing', info: it.state?.info ?? '', verb: it.state?.verb ?? 'Use', color: it.state?.tint ?? '#d9d3b8' }
+      } else if (f.tag === 'seat') {
+        const full = spotsOf(it).every((sp) => it.state?.by?.[sp.i] && it.state.by[sp.i] !== ctx.self.id)
+        info = { id: f.id, name: it.state?.name ?? 'Chair', info: full ? 'taken' : '', verb: full ? 'Taken:' : 'Sit', color: full ? '#e0644f' : '#d9d3b8' }
       } else if (f.tag === 'bench') {
         info = { id: f.id, name: it.state?.name ?? 'Workbench', info: 'Craft ammo, repair kits, batteries, fuses', verb: 'Use', color: '#f2c14e' }
       } else if (f.tag === 'npc') {
@@ -248,6 +252,7 @@ function pickpocket(ctx, it) {
 function press(ctx) {
   const m = mem(ctx), s = ctx.self.state
   if (s.lootOpen) { closeLoot(ctx); return }
+  if (s.sit) { standUp(ctx); m.key = ''; return }
   const f = m.focus
   if (!f) return
   const it = ctx.getObject(f.id)
@@ -263,6 +268,7 @@ function press(ctx) {
     m.key = ''; return
   }
   if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); m.key = ''; return }
+  if (f.tag === 'seat') { sitDown(ctx, it); m.key = ''; return }
   if (f.tag === 'bench') { s.craftOpen = 'bench'; s.craftBench = f.id; return }
   if (f.tag === 'container') { openLoot(ctx, it); return }
   if (f.tag === 'door') { useDoor(ctx, it); m.key = ''; refocus(ctx, true); return }
@@ -315,12 +321,14 @@ export function onInput(ctx, input) {
   const d = input.actionData?.loot
   if (input.pressed?.loot && d && typeof d.k === 'string') { lootAction(ctx, d); return }
   if (ctx.self.state.lootOpen && input.pressed?.reload) { lootAction(ctx, { k: 'all' }); return } // R takes everything, as in Fallout
+  if (ctx.self.state.sit?.phase === 'sat' && (Math.abs(input.axes?.moveX ?? 0) > 0.3 || Math.abs(input.axes?.moveZ ?? 0) > 0.3 || input.pressed?.jump)) { standUp(ctx); return }
   refocus(ctx)
   if (input.pressed?.interact) press(ctx)
 }
 
 export function update(ctx, dt) {
   const m = mem(ctx), s = ctx.self.state
+  seatTick(ctx)
   if (s.level == null) return
   m.acc += dt
   if (m.acc < 0.2) return
