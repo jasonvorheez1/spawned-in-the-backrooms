@@ -10,7 +10,9 @@ def mat(name, rgb, rough=0.6, metal=0.0):
     m.use_nodes = True; b = m.node_tree.nodes["Principled BSDF"]
     b.inputs["Base Color"].default_value = (*rgb, 1); b.inputs["Roughness"].default_value = rough; b.inputs["Metallic"].default_value = metal
     return m
-M = {
+M = {}
+def mats():
+  M.update({
  "wood": mat("wood", (0.42, 0.30, 0.18), 0.55),
  "laminate": mat("laminate", (0.62, 0.55, 0.42), 0.45),
  "metal": mat("metal", (0.38, 0.39, 0.37), 0.45, 0.8),
@@ -19,11 +21,11 @@ M = {
  "plastic": mat("plastic", (0.70, 0.66, 0.55), 0.5),
  "rubber": mat("rubber", (0.04, 0.04, 0.04), 0.8),
  "glass": mat("glass", (0.08, 0.10, 0.10), 0.1),
-}
+  })
 
 def clear():
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    for k, v in list(M.items()): pass
+    mats()
 
 def box(name, size, loc, m, bev=0.008, segs=2, rot=(0, 0, 0)):
     bpy.ops.mesh.primitive_cube_add(size=1, location=loc, rotation=rot)
