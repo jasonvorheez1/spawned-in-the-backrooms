@@ -14,7 +14,13 @@ const THEME = `<style>
   font-size: 12px;
   letter-spacing: 0.04em;
   user-select: none;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.85);
 }
+.pips { display:flex; gap:3px; margin-top:4px }
+.pip { width:8px; height:13px; border-radius:2px 2px 1px 1px; border:1px solid rgba(240,236,224,0.35); background:rgba(0,0,0,0.4); position:relative }
+.pip.full { background:linear-gradient(#f3ead2 0 25%, #e9dcb8 25% 55%, #b98a3e 55% 75%, #e9dcb8 75%); border-color:rgba(240,236,224,0.7) }
+.pip::before { content:""; position:absolute; left:2px; right:2px; top:-3px; height:2px; background:rgba(240,236,224,0.6); border-radius:1px }
+.tag { font-size:9px; padding:0 4px; border:1px solid currentColor; border-radius:2px; margin-left:6px; opacity:0.85 }
 
 .hud-card {
   background: rgba(12, 11, 9, 0.75);
@@ -97,6 +103,7 @@ kbd {
     right: 55px !important;
   }
   #hud .tl, #hud #hint { display: none; }
+  #hud .zone { top: 42% !important; padding-right: calc(var(--spawn-chrome-reservation-right-inset, 50px) + 8px); padding-left: 8px }
 }
 </style>`
 
@@ -131,7 +138,10 @@ export default function render(ctx, player) {
 
   const wp = W[s.equipped] ?? W.fists
   const sanColor = sanF > 0.5 ? 'oklch(0.78 0.12 300)' : sanF > 0.25 ? 'oklch(0.8 0.14 85)' : 'oklch(0.65 0.22 28)'
-  const hpColor = hpF > 0.35 ? 'oklch(0.75 0.12 85)' : 'oklch(0.65 0.22 28)'
+  const hpColor = hpF > 0.6 ? 'oklch(0.75 0.12 85)' : hpF > 0.3 ? 'oklch(0.72 0.15 55)' : 'oklch(0.65 0.22 28)'
+  const sanWord = sanF > 0.75 ? 'steady' : sanF > 0.5 ? 'uneasy' : sanF > 0.25 ? 'fraying' : 'breaking'
+  const rar = wp.rarity ? W.rarities?.[wp.rarity] : null
+  const pips = Array.from({ length: L.almondMax }, (_, i) => `<div class="pip${i < (s.almonds ?? 0) ? ' full' : ''}"></div>`).join('')
 
   const have = ['fists', ...(s.weapons ? s.weapons.split(',') : [])].filter((k) => W[k])
   const invHtml = have.length > 1 ? have.map((k) => `<span style="color:${k === s.equipped ? '#f0ece0' : 'rgba(232,228,216,0.35)'};margin-right:6px">${W[k].name}</span>`).join('') : ''
@@ -161,15 +171,15 @@ export default function render(ctx, player) {
   <!-- BOTTOM-LEFT: Vitals (Health, Sanity, Stamina) -->
   <div class="hud-card bl" style="position:absolute;left:20px;bottom:20px;width:min(200px, 42vw)">
     ${bar('Health', s.hp, mh, hpColor, `${Math.ceil(s.hp)}`)}
-    ${bar('Sanity', s.sanity, ms, sanColor, `${Math.ceil(s.sanity)}%`)}
-    ${bar('Stamina', s.stamina, L.stamina, 'oklch(0.82 0.12 85)', `${Math.ceil(s.stamina)}%`)}
+    ${bar(`Sanity <span style="color:${sanColor};opacity:0.8">· ${sanWord}</span>`, s.sanity, ms, sanColor, `${Math.ceil(s.sanity)}%`)}
+    ${bar('Stamina', s.stamina, L.stamina, s.stamina < 25 ? 'oklch(0.6 0.06 85)' : 'oklch(0.82 0.12 85)', `${Math.ceil(s.stamina)}%`)}
   </div>
 
   <!-- BOTTOM-RIGHT: Gear (Weapon, Almond Water, Flashlight) -->
   <div class="hud-card br" style="position:absolute;bottom:20px;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 20px);min-width:180px">
     <div class="row">
       <span class="muted">Weapon</span>
-      <span style="color:#f0ece0;font-weight:600">${wp.name}</span>
+      <span style="color:${rar?.color ?? '#f0ece0'};font-weight:600">${wp.name}${rar ? `<span class="tag">${rar.label}</span>` : ''}</span>
     </div>
     ${invHtml ? `<div style="font-size:10px;margin-top:2px">${invHtml}</div>` : ''}
     <div class="muted" style="font-size:10px;margin-bottom:6px"><kbd>${lab('cycleWeapon', 'E')}</kbd> switch</div>
@@ -178,6 +188,7 @@ export default function render(ctx, player) {
       <span class="muted">Almond Water</span>
       <span style="color:#f0ece0">${s.almonds}/${L.almondMax}</span>
     </div>
+    <div class="pips">${pips}</div>
     <div class="muted" style="font-size:10px;margin-bottom:6px"><kbd>${lab('drink', 'Q')}</kbd> drink</div>
 
     <div class="row" style="border-top:1px solid rgba(255,255,255,0.08);padding-top:5px">
@@ -188,7 +199,7 @@ export default function render(ctx, player) {
   </div>
 
   <!-- CENTER: Minimal Zone Header -->
-  <div id="z-${zone}" style="position:absolute;left:0;right:0;text-align:center;top:100px;animation:hud-fade 3.5s forwards;pointer-events:none">
+  <div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:100px;animation:hud-fade 3.5s forwards;pointer-events:none">
     <div style="font-size:22px;color:#f0ece0;letter-spacing:0.08em;font-weight:600">${ZONE_NAMES[zone] ?? 'The Lobby'}</div>
     <div class="muted" style="font-size:12px;margin-top:2px">
       ${zone === 'hub' ? 'Sanity stabilizes here. Nothing follows.' : zone === 'dark' ? 'Total blackout. Watch the corners.' : zone === 'red' ? 'Severe sanity decay.' : ''}
