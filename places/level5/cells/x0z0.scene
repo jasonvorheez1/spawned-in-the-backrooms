@@ -3325,7 +3325,7 @@ l5-harlan:
   physics: character
   rotation: {yaw: 0}
   scale: {x: 1.26, y: 1.12, z: 1.26}
-  state: {attr: "5,7,6,7,8,6,5", faction5: hk, factionName: "Housekeeping, a M.E.G. outpost on Level 5 (grey uniforms, practical, they back the Homely Hotel staff and keep the Boiler Room rats down)", fresh: {}, home: {x: 13, z: 22.4}, hp: 160, maxHp: 160, mode: day, name: "Harlan · Housekeeping Quartermaster", offers: [["o:boilerkey", "[Speech 25] \"I need the boiler room key.\""]], outfit: longsleeve/pants/#6b6e72, picked: {}, ri: 0, role: quarter, rounds: [{act: null, dwell: 90, look: {x: 10, z: 17}, x: 13, y: 0, z: 22.4}, {act: cdn/clip-pickup.glb, dwell: 15, look: {x: 8.5, z: 23.5}, x: 8.5, y: 0, z: 22.4}], species: bear, title: "", trespass: {}, voice: harlan, warned: {}}
+  state: {attr: "5,7,6,7,8,6,5", faction5: hk, factionName: "Housekeeping, a M.E.G. outpost on Level 5 (grey uniforms, practical, they back the Homely Hotel staff and keep the Boiler Room rats down)", follow: "player/c_actor:pa_f969e1d8522ef94d6f96b34bf4d2d8d1", fresh: {}, home: {x: 13, z: 22.4}, hp: 160, maxHp: 160, mode: day, name: "Harlan · Housekeeping Quartermaster", offers: [["o:boilerkey", "[Speech 25] \"I need the boiler room key.\""]], outfit: longsleeve/pants/#6b6e72, picked: {}, ri: 0, role: quarter, rounds: [{act: null, dwell: 90, look: {x: 10, z: 17}, x: 13, y: 0, z: 22.4}, {act: cdn/clip-pickup.glb, dwell: 15, look: {x: 8.5, z: 23.5}, x: 8.5, y: 0, z: 22.4}], species: bear, title: "", trespass: {}, voice: harlan, warned: {}}
   tags: [npc, l5res, l5-hk]
 l5-harlan/object/x595cd23e2238773d/0:
   attachment: {bone: RightHand}
