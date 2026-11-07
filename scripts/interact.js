@@ -10,7 +10,7 @@ import { derived, skillsOf, SKILLS } from './lib/stats.js'
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 import { rollItem, rollItemL1, rollItemL2, spotCloth } from './lib/loot.js'
 
-const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc'] // what can be looked at and used
+const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc', 'door'] // what can be looked at and used
 const REACH = 3.0 // metres from the eye
 const OPEN_RANGE = 4.5 // a container you walk away from closes
 const mem = (ctx) => (ctx.self.session.interact ??= { ray: null, last: -1e9, acc: 0, key: '', focus: null, hl: 0 })
@@ -26,10 +26,10 @@ function findFocus(ctx, ray) {
   const o = ray.origin, d = ray.direction
   let best = null, bestAng = 1e9
   for (const tag of KINDS) {
-    const big = tag === 'container' || tag === 'npc'
+    const big = tag === 'container' || tag === 'npc' || tag === 'door'
     for (const it of ctx.query({ tags: [tag], radius: REACH + 1 })) {
       if (it.state?.taken) continue
-      const p = it.feetPosition, vx = p.x - o.x, vy = p.y + (big ? 0.28 : 0.1) - o.y, vz = p.z - o.z
+      const p = it.state?.c ?? it.feetPosition, vx = p.x - o.x, vy = p.y + (it.state?.c ? 0 : big ? 0.28 : 0.1) - o.y, vz = p.z - o.z
       const dist = Math.hypot(vx, vy, vz)
       if (dist > REACH || dist < 0.05) continue
       const ang = Math.acos(Math.max(-1, Math.min(1, (vx * d.x + vy * d.y + vz * d.z) / dist)))
@@ -53,7 +53,12 @@ function refocus(ctx, force = false) {
   if (f) {
     const it = ctx.getObject(f.id)
     if (it) {
-      if (f.tag === 'npc') {
+      if (f.tag === 'door') {
+        const lk = it.state?.lock ?? ''
+        info = { id: f.id, name: it.state?.name ?? 'Door', info: it.state?.open ? 'open' : 'shut', verb: it.state?.open ? 'Close' : 'Open', color: '#d9d3b8' }
+        if (lk && DOORKEY[lk]) { const have = ctx.self.state[DOORKEY[lk].f] ?? 0; info.info = `Locked · needs a ${DOORKEY[lk].n} (${have})`; info.verb = have ? `Use ${DOORKEY[lk].n}:` : 'Locked:'; info.color = have ? '#f2c14e' : '#e0644f' }
+        else if (lk) { const [sk, lv] = lk.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = ok ? 'Unlock' : 'Locked:'; info.color = ok ? '#f2c14e' : '#e0644f' }
+      } else if (f.tag === 'npc') {
         info = { id: f.id, name: it.state?.name ?? 'Stranger', info: 'M.E.G.', verb: 'Talk', color: '#c6f060' }
       } else if (f.tag === 'container') {
         const n = itemsOf(it.state?.items).length
@@ -139,6 +144,26 @@ export function talk(ctx, it) {
   }
 }
 
+// Level 2 doors: E opens and shuts; a locked one takes the key item it names (fuse, valve wheel, keycard) or a skill
+const DOORKEY = { fuse: { f: 'fuses', n: 'fuse' }, valve: { f: 'valves', n: 'valve wheel' }, keycard: { f: 'keycards', n: 'keycard' } }
+function useDoor(ctx, it) {
+  const s = ctx.self.state, lk = it.state.lock ?? '', at = it.state.c ?? it.feetPosition
+  const loud = (n, v) => ctx.emit('playSound', { clip: SND(n), position: at, volume: v, maxDistance: 16 }, { audience: { nearby: at, radius: 18 } })
+  if (lk) {
+    const K = DOORKEY[lk]
+    if (K) {
+      if (!(s[K.f] > 0)) { note(ctx, `Locked. It needs a ${K.n}.`); snd(ctx, 'door-handle-locked-rattle', 0.5); return }
+      s[K.f] -= 1; it.state.lock = ''; note(ctx, lk === 'fuse' ? 'You seat the fuse. The lock clunks open.' : lk === 'valve' ? 'You fit the valve wheel and crank it. The door unseals.' : 'The keycard reader blinks green.')
+    } else {
+      const [sk, lv] = lk.split(':'), have = skillsOf(s)[sk] ?? 0
+      if (have < Number(lv)) { note(ctx, `Locked · needs ${SKN[sk]} ${lv} (you have ${Math.floor(have)})`); snd(ctx, 'door-handle-locked-rattle', 0.5); return }
+      it.state.lock = ''; note(ctx, `[${SKN[sk]} ${lv}] You pick the lock`); snd(ctx, 'lock-picking-click', 0.5)
+    }
+  }
+  it.state.open = !it.state.open
+  loud(it.state.open ? 'heavy-metal-door-creak-open' : 'heavy-metal-door-slam-shut', 0.7)
+}
+
 function press(ctx) {
   const m = mem(ctx), s = ctx.self.state
   if (s.lootOpen) { closeLoot(ctx); return }
@@ -148,6 +173,7 @@ function press(ctx) {
   if (!it || it.state?.taken) return
   if (f.tag === 'npc') { if (it.state?.dead) { if (it.state.items !== undefined) openLoot(ctx, it) } else talk(ctx, it); return }
   if (f.tag === 'container') { openLoot(ctx, it); return }
+  if (f.tag === 'door') { useDoor(ctx, it); m.key = ''; refocus(ctx, true); return }
   const r = takeToken(ctx, tokenOf(f.tag, it))
   if (r.ok) { it.state.taken = true; ctx.destroy(f.id); s.focus = null; m.key = ''; m.focus = null } else if (r.msg) { note(ctx, r.msg); snd(ctx, 'ui-denied-click', 0.35) }
 }
