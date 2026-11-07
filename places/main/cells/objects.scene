@@ -1,0 +1,3 @@
+# spawn-scene v2 yaml objects
+modeling-studio:
+  template: mods/modeling-studio/templates/studio.js#studio

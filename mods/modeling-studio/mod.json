@@ -1,0 +1,61 @@
+{
+  "name": "modeling-studio",
+  "displayName": "Spawn 3D Modeling Studio",
+  "description": "Turn a sentence or a picture into a clean, high-detail 3D model in your world. Open the 🎨 Studio tab in god mode, or press M (the 🎨 3D studio button) without god mode, describe what you want, add a reference picture, and press Paint or Build 3D: Savi paints the concept onto the studio canvas, then builds a high-poly, fully textured model that turns on the glowing pedestal and gets its own lit shelf slot with a brass name plaque. Every piece remembers how it was made so you can make another the same way. Turn, show or remove pieces from the tab. After installing, run /modeling-studio once to place the studio and add the 🎨 button to your HUD.",
+  "tags": [
+    "3d",
+    "modeling",
+    "art",
+    "tools",
+    "creator-tools"
+  ],
+  "visibility": "public",
+  "version": "1.4.0",
+  "objects": [
+    {
+      "id": "modeling-studio",
+      "template": "templates/studio.js#studio"
+    }
+  ],
+  "inputs": {
+    "actions": {
+      "ask": {},
+      "pick": {},
+      "show": {},
+      "turn": {},
+      "cancel": {},
+      "remove": {},
+      "studio": {
+        "keys": [
+          "m"
+        ]
+      }
+    }
+  },
+  "attach": [
+    {
+      "target": {
+        "kind": "god"
+      },
+      "behavior": "god.js"
+    },
+    {
+      "target": {
+        "kind": "player"
+      },
+      "behavior": "player.js"
+    },
+    {
+      "target": {
+        "kind": "player"
+      },
+      "behavior": "god.js"
+    }
+  ],
+  "tab": {
+    "id": "studio",
+    "label": "Studio",
+    "icon": "🎨",
+    "render": "panel.js"
+  }
+}
