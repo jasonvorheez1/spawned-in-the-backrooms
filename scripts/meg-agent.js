@@ -196,7 +196,7 @@ function holster(ctx, me, m, drawn) {
   const ranged = !!(WP[me.state.arm ?? gun.state?.kind ?? "pistol"] ?? WP.pistol).ranged;
   // calm: a gun rides slung across the back; a melee weapon is put away out of sight. a fight brings either to the right hand
   gun.visible = drawn || ranged;
-  gun.attachment = drawn ? { bone: "RightHand" } : { bone: me.model ? "Spine02" : "Spine2" };
+  gun.attachment = drawn ? { bone: "RightHand" } : { bone: "Spine2" };
   gun.feetPosition = drawn ? { x: 0, y: 0, z: 0 } : { x: 0, y: 0.05, z: -0.17 };
   gun.rotation = drawn ? { yaw: 0, pitch: 0, roll: 0 } : { yaw: 0, pitch: -90, roll: 35 };
   if (ranged || drawn) heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-gun-holster-leather.mp3", position: me.feetPosition, volume: 0.5, maxDistance: 15 });
