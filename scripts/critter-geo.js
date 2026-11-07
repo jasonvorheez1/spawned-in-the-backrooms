@@ -518,11 +518,7 @@ export function geometry(ctx) {
   // Layered fluffy cheek tufts for species with cheek fur
   if (sp.cheeks && mid) {
     wOverride = { Head: 1 };
-    ctx.color(FUR);
-    for (const s of [-1, 1]) { // two soft fluff puffs at the jaw, the cartoon cheek ruff
-      ell([s * 0.33, 1.2, -0.08], [0.07, 0.055, 0.06], null, { seg: hi ? 14 : 9 });
-      ell([s * 0.36, 1.15, -0.03], [0.055, 0.045, 0.05], null, { seg: hi ? 12 : 8 });
-    }
+
     wOverride = null;
   }
 
@@ -580,12 +576,13 @@ export function geometry(ctx) {
       loft(path.map((p) => [p[0], p[1], p[2] - 0.018]), (t) => [0.036 * Math.sin(Math.PI * (0.2 + 0.7 * t)) + 0.004, 0.012], [0, 0, -1], null, 8);
     } else if (ear === "flop") {
       const path = [];
-      for (let i = 0; i <= 10; i++) {
-        const t = i / 10;
-        path.push([s * (0.29 + 0.07 * Math.sin(t * 2.2)), 1.52 - 0.32 * t, 0.02 - 0.03 * t]);
+      const L = 0.34 * eS / (eS < 1 ? 0.75 : 1); // a flap rooted on the crown's side that folds over and hangs past the cheek
+      for (let i = 0; i <= 12; i++) {
+        const t = i / 12, a = Math.min(1, t * 2.2) * Math.PI * 0.5;
+        path.push([s * (0.24 + 0.18 * Math.sin(a) + 0.015 * t), 1.6 - 0.06 * Math.sin(a) - L * Math.max(0, t - 0.4), 0.03 - 0.03 * t]);
       }
-      ctx.color(sp.ear2 || P.ear2 || FUR);
-      loft(path, (t) => [0.032, 0.078 * Math.sin(Math.PI * (0.2 + 0.75 * t)) + 0.022], [1, 0, 0], null, 10);
+      ctx.color(sp.ear2 || P.ear2 || mixc(FUR, "#000000", 0.18));
+      loft(path, (t) => [0.024, (0.07 + 0.035 * Math.sin(Math.PI * Math.min(1, t * 1.1))) * Math.min(1, (1 - t) * 6 + 0.25)], [0, 0, -1], null, 10);
     } else if (ear === "leaf") {
       const h = 0.2 * eS;
       const tip = [b[0] + s * h * 0.85, b[1] + h * 0.5, b[2] + 0.02];
