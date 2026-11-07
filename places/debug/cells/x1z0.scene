@@ -374,7 +374,7 @@ dbg/wlabel-table_leg:
 maxpayne-statue:
   feetPosition: {x: 103, y: 0, z: -2}
   id: maxpayne-statue
-  model: /cdn/value.3f48f17a2e8635f4cd9eda27507ce79f85213a14d832fe69dabbfa6fba72b2ef.glb
+  model: /cdn/value.115c0f2d4fad4963162481c8e3c4b77cdd85e4c49199387d1ccc21e19adc62b6.glb
   physics: static
   rotation: 200
   tags: [plymodel]
