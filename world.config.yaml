@@ -52,8 +52,6 @@ inputs:
     inventory:
       keys:
         - i
-      touch:
-        button: false
     inv: {}
     wardrobe:
       keys:
