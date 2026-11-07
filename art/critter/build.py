@@ -564,8 +564,8 @@ def build_face(head, p):
         for f in fc: faces.append(tuple(o0 + i for i in f)); fmat.append(names.index(mt))
     o = mesh_from("Face", verts, faces); set_mats(o, names)
     for pl, mi in zip(o.data.polygons, fmat): pl.material_index = mi
-    for pl in o.data.polygons:   # wind toward +Y-ish (outward)
-        pass
+    bm = bmesh.new(); bm.from_mesh(o.data); bm.normal_update()
+    bmesh.ops.reverse_faces(bm, faces=[f for f in bm.faces if f.normal.y < 0]); bm.to_mesh(o.data); bm.free()
     o.shape_key_add(name="Basis")
     for key in EYE_KEYS + MOUTH_KEYS:
         sk = o.shape_key_add(name=key)
@@ -573,7 +573,168 @@ def build_face(head, p):
             X, Z, off = fn(key, x, z); sk.data[i].co = proj(X, Z, off)
     smooth_shade(o)
     # outward normals
-    me = o.data
-    flip = sum(1 for pl in me.polygons if pl.normal.y < 0) > len(me.polygons) / 2
-    if flip: me.flip_normals()
     return o
+
+# ================= garments: shells grown off the body, plus lathed skirts and rigid accessories =================
+def is_arm(p): return abs(p.x) > .17 and p.z > .86
+def shell(body, name, keep, off, mat_, thick=.006, extra_mats=None, matfn=None):
+    o = body.copy(); o.data = body.data.copy(); o.name = name; o.data.name = name; scene.collection.objects.link(o)
+    o.shape_key_clear() if o.data.shape_keys else None
+    bm = bmesh.new(); bm.from_mesh(o.data)
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not keep(v.co)], context='VERTS')
+    bm.normal_update()
+    for v in bm.verts: v.co += v.normal * off(v.co) if callable(off) else v.normal * off
+    bm.to_mesh(o.data); bm.free()
+    so = o.modifiers.new("so", "SOLIDIFY"); so.thickness = thick; so.offset = -1; so.use_rim = True
+    sm = o.modifiers.new("cs", "CORRECTIVE_SMOOTH"); sm.iterations = 4; sm.factor = .5; sm.use_only_smooth = True
+    sel(o); bpy.ops.object.modifier_apply(modifier="so"); bpy.ops.object.modifier_apply(modifier="cs")
+    set_mats(o, [mat_] + (extra_mats or []))
+    if matfn:
+        for pl in o.data.polygons: pl.material_index = matfn(pl.center)
+    smooth_shade(o); return o
+def lathe(name, prof, mat_, segs=32, cx=0, cy=0, scy=1.0, ruffle=0.0):
+    bm = bmesh.new(); rings = []
+    for (r, z) in prof:
+        ring = []
+        for j in range(segs):
+            a = j / segs * math.tau; rr = r * (1 + ruffle * math.sin(a * 9) * (1 if z < prof[0][1] - .03 else 0))
+            ring.append(bm.verts.new((cx + math.cos(a) * rr, cy + math.sin(a) * rr * scy, z)))
+        rings.append(ring)
+    for k in range(len(rings) - 1):
+        for j in range(segs): bm.faces.new((rings[k][j], rings[k][(j + 1) % segs], rings[k + 1][(j + 1) % segs], rings[k + 1][j]))
+    me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free(); o = bpy.data.objects.new(name, me); scene.collection.objects.link(o)
+    me.update(); 
+    if sum(p.normal.dot(V(p.center.x - cx, p.center.y - cy, 0)) for p in me.polygons) < 0: me.flip_normals()
+    so = o.modifiers.new("so", "SOLIDIFY"); so.thickness = .006; sel(o); bpy.ops.object.modifier_apply(modifier="so")
+    set_mats(o, [mat_]); smooth_shade(o); return o
+
+def tops(body):
+    out = {}
+    neck_ok = lambda p: p.z < .985 - (.03 if p.y > .03 and abs(p.x) < .07 else 0)
+    def top(name, sleeve, zlo, off, extra=None):
+        keep = lambda p: neck_ok(p) and p.z > zlo and ((abs(p.x) < .2 and not is_arm(p)) or (is_arm(p) and abs(p.x) < sleeve))
+        return shell(body, "Top_" + name, keep, off, "cloth_top", extra_mats=["button", "cloth_neck"], matfn=extra)
+    out["tee"] = top("tee", .27, .6, .008)
+    out["tank"] = shell(body, "Top_tank", lambda p: p.z < .97 - (.05 if p.y > .02 and abs(p.x) < .08 else 0) and p.z > .6 and abs(p.x) < (.12 if p.z > .9 else .2) and not is_arm(p), .008, "cloth_top")
+    out["longsleeve"] = top("longsleeve", WR - .01, .6, .008)
+    out["sweater"] = top("sweater", WR - .005, .57, .014, lambda c: 0)
+    out["hoodie"] = top("hoodie", WR - .005, .56, .016, lambda c: 2 if (abs(c.x) < .05 and .7 < c.z < .8 and c.y > .05) else 0)
+    hood = lathe("hood", [(.11, 1.0), (.13, 1.04), (.12, 1.08), (.08, 1.1)], "cloth_top", cy=-.035, scy=1.1)
+    out["hoodie"] = join([out["hoodie"], hood], "Top_hoodie")
+    out["jacket"] = top("jacket", WR - .002, .55, .022, lambda c: 1 if (abs(c.x) < .012 and c.y > .05 and c.z < .95) else (2 if c.z > .94 and abs(c.x) < .14 else 0))
+    out["pajamas"] = top("pajamas", WR - .01, .58, .012, lambda c: 1 if (abs(c.x) < .01 and c.y > .05 and (c.z * 30) % 1 < .35) else 0)
+    out["apron"] = shell(body, "Top_apron", lambda p: p.y > .03 and abs(p.x) < .13 and .45 < p.z < .97, .03, "cloth_top")
+    hw = .175 if FEM else .16
+    dtop = top("dress", .25, .62, .009)
+    skirt = lathe("dskirt", [(hw * .95, .68), (hw * 1.05, .6), (.26, .45), (.3, .33)], "cloth_top", scy=.85, ruffle=.03)
+    out["dress"] = join([dtop, skirt], "Top_dress")
+    return out
+def bottoms(body):
+    out = {}
+    def legs(name, zlo, off, z_hi=.7):
+        return shell(body, "Bot_" + name, lambda p: zlo < p.z < z_hi and abs(p.x) < .2 and not is_arm(p), off, "cloth_bottom", extra_mats=["button"])
+    out["pants"] = legs("pants", .11, .01)
+    out["shorts"] = legs("shorts", .45, .012)
+    out["pjpants"] = legs("pjpants", .1, .016)
+    ov = shell(body, "Bot_overalls", lambda p: (.11 < p.z < .7 and abs(p.x) < .2 and not is_arm(p)) or (.68 <= p.z < .9 and p.y > .02 and abs(p.x) < .1) or (.68 <= p.z < .99 and abs(abs(p.x) - .07) < .018 and not is_arm(p)), .014, "cloth_bottom", extra_mats=["button"],
+               matfn=lambda c: 1 if (abs(abs(c.x) - .07) < .015 and abs(c.z - .89) < .015 and c.y > .05) else 0)
+    out["overalls"] = ov
+    hw = .175 if FEM else .16
+    band = shell(body, "band", lambda p: .62 < p.z < .71 and abs(p.x) < .2, .01, "cloth_bottom")
+    out["skirt"] = join([band, lathe("sk", [(hw * .98, .68), (hw * 1.1, .6), (.27, .45), (.29, .42)], "cloth_bottom", scy=.85, ruffle=.04)], "Bot_skirt")
+    band = shell(body, "band2", lambda p: .62 < p.z < .71 and abs(p.x) < .2, .01, "cloth_bottom")
+    out["longskirt"] = join([band, lathe("lsk", [(hw * .98, .68), (hw * 1.08, .58), (.25, .35), (.29, .14), (.3, .12)], "cloth_bottom", scy=.85, ruffle=.02)], "Bot_longskirt")
+    return out
+def shoes(body):
+    out = {}
+    out["sneakers"] = shell(body, "Shoes_sneakers", lambda p: p.z < .11 and abs(p.x) > .03, lambda c: .012 if c.z > .025 else .016, "cloth_shoes", thick=.008, extra_mats=["sole"], matfn=lambda c: 1 if c.z < .03 else 0)
+    out["boots"] = shell(body, "Shoes_boots", lambda p: p.z < .24 and abs(p.x) > .03, .016, "cloth_shoes", thick=.01, extra_mats=["sole"], matfn=lambda c: 1 if c.z < .03 else 0)
+    out["slippers"] = shell(body, "Shoes_slippers", lambda p: p.z < .085 and abs(p.x) > .03, .022, "cloth_shoes", thick=.012)
+    return out
+def rigid_obj(o, bone): smooth_shade(o); rigid(o, bone); return o
+def hats():
+    out = {}; top = 1.55
+    cap_ = lathe("c", [(.29, 1.42), (.28, 1.5), (.22, 1.6), (.1, 1.645), (.0, 1.65)], "cloth_hat")
+    brim = lathe("b", [(.0, 1.43), (.16, 1.43)], "cloth_hat", segs=24); brim.data.transform(Matrix.Translation(V(0, .2, 0)) @ Matrix.Diagonal((1.2, 1, 1, 1)))
+    out["cap"] = join([cap_, brim], "Hat_cap")
+    out["beanie"] = lathe("Hat_beanie", [(.305, 1.4), (.31, 1.44), (.295, 1.5), (.24, 1.6), (.12, 1.66), (.0, 1.675)], "cloth_hat")
+    pom = bpy.data.meshes.new("pom"); bm = bmesh.new(); bmesh.ops.create_icosphere(bm, subdivisions=2, radius=.045); bmesh.ops.translate(bm, vec=V(0, 0, 1.7), verts=bm.verts); bm.to_mesh(pom); bm.free()
+    po = bpy.data.objects.new("pom", pom); scene.collection.objects.link(po); set_mats(po, ["cloth_hat"]); smooth_shade(po)
+    out["beanie"] = join([out["beanie"], po], "Hat_beanie")
+    th = lathe("Hat_tophat", [(.0, 1.58), (.28, 1.58), (.29, 1.6), (.16, 1.6), (.15, 1.62), (.16, 1.86), (.0, 1.86)], "cloth_hat")
+    out["tophat"] = th
+    band = lathe("hb", [(.21, 1.55), (.22, 1.6), (.2, 1.68), (.12, 1.72)], "metal", segs=24, scy=.35)
+    cups = []
+    for s in (-1, 1):
+        cu = lathe("cup", [(.0, -.03), (.07, -.03), (.075, .0), (.06, .03), (.0, .035)], "cloth_hat", segs=20)
+        cu.data.transform(Matrix.Translation(V(.32 * s, 0, 1.32)) @ Matrix.Rotation(math.radians(90 * s), 4, 'Y')); cups.append(cu)
+    band.data.transform(Matrix.Rotation(math.radians(90), 4, 'Z')); band.data.transform(Matrix.Diagonal((1.45, 1, 1, 1)) @ Matrix.Translation(V(0, 0, -.25)) @ Matrix.Diagonal((1, 1, 1.2, 1)))
+    out["headphones"] = join([band] + cups, "Hat_headphones")
+    def bow(name, at, sz):
+        bm = bmesh.new(); parts = []
+        for s in (-1, 1):
+            m = bpy.data.meshes.new("l"); b2 = bmesh.new(); bmesh.ops.create_uvsphere(b2, u_segments=12, v_segments=8, radius=1)
+            for v in b2.verts: v.co = V(v.co.x * sz * (1.1 - .5 * (v.co.x * s < 0)) + s * sz * .9, v.co.y * sz * .35, v.co.z * sz * (.75 - .25 * (v.co.x * s < 0)))
+            b2.to_mesh(m); b2.free(); ob = bpy.data.objects.new("l", m); scene.collection.objects.link(ob); parts.append(ob)
+        m = bpy.data.meshes.new("k"); b2 = bmesh.new(); bmesh.ops.create_uvsphere(b2, u_segments=10, v_segments=6, radius=sz * .38); b2.to_mesh(m); b2.free(); ob = bpy.data.objects.new("k", m); scene.collection.objects.link(ob); parts.append(ob)
+        o = join(parts, name); set_mats(o, ["cloth_hat"]); o.data.transform(at); smooth_shade(o); return o
+    out["bow"] = bow("Hat_bow", Matrix.Translation(V(-.17, .05, 1.58)) @ Matrix.Rotation(math.radians(-25), 4, 'Y'), .065)
+    pet = []
+    for i in range(5):
+        a = i / 5 * math.tau; m = bpy.data.meshes.new("p"); b2 = bmesh.new(); bmesh.ops.create_uvsphere(b2, u_segments=10, v_segments=6, radius=1)
+        for v in b2.verts: v.co = V(v.co.x * .03 + math.cos(a) * .03, v.co.y * .008, v.co.z * .022 + math.sin(a) * .03)
+        b2.to_mesh(m); b2.free(); ob = bpy.data.objects.new("p", m); scene.collection.objects.link(ob); set_mats(ob, ["cloth_hat"]); pet.append(ob)
+    m = bpy.data.meshes.new("c"); b2 = bmesh.new(); bmesh.ops.create_uvsphere(b2, u_segments=10, v_segments=6, radius=.018); bmesh.ops.translate(b2, vec=V(0, .008, 0), verts=b2.verts); b2.to_mesh(m); b2.free()
+    ob = bpy.data.objects.new("c", m); scene.collection.objects.link(ob); set_mats(ob, ["gold"]); pet.append(ob)
+    fl = join(pet, "Hat_flower"); fl.data.transform(Matrix.Translation(V(.2, .12, 1.52)) @ Matrix.Rotation(math.radians(-30), 4, 'Z')); smooth_shade(fl); out["flower"] = fl
+    out["partyhat"] = lathe("Hat_partyhat", [(.0, 1.5), (.14, 1.5), (.0, 1.82)], "cloth_hat", segs=24)
+    out["partyhat"].data.transform(Matrix.Translation(V(.0, 0, 1.5)) @ Matrix.Rotation(math.radians(-12), 4, 'Y') @ Matrix.Translation(V(0, 0, -1.5)))
+    cr = lathe("Hat_crown", [(.27, 1.5), (.275, 1.62)], "gold", segs=40)
+    bm = bmesh.new(); bm.from_mesh(cr.data)
+    for v in bm.verts:
+        if v.co.z > 1.56: a = math.atan2(v.co.y, v.co.x); v.co.z = 1.56 + .07 * abs(math.cos(a * 4)) ** 3
+    bm.to_mesh(cr.data); bm.free(); out["crown"] = cr
+    for o in out.values(): rigid_obj(o, "Head")
+    return {k: v for k, v in out.items()}
+def eyewear():
+    out = {}
+    def frame(name, ring_mat, lens):
+        parts = []
+        for s in (-1, 1):
+            t = lathe("r", [(.07, -.006), (.078, -.006), (.078, .006), (.07, .006)], ring_mat, segs=24)
+            t.data.transform(Matrix.Translation(V(EYE_C * s, .31, EYE_Z)) @ Matrix.Rotation(math.radians(90), 4, 'X') @ Matrix.Diagonal((1, 1.12, 1, 1)))
+            parts.append(t)
+            if lens:
+                l = lathe("l", [(.0, 0), (.072, 0)], "lens", segs=24); l.data.transform(Matrix.Translation(V(EYE_C * s, .312, EYE_Z)) @ Matrix.Rotation(math.radians(-90), 4, 'X') @ Matrix.Diagonal((1, 1.12, 1, 1))); parts.append(l)
+            arm_ = sweep("a", [(.205 * s, .29, EYE_Z), (.29 * s, .12, EYE_Z + .01), (.3 * s, -.05, EYE_Z)], lambda t: .007, sides=6, fluff=0); set_mats(arm_, [ring_mat]); parts.append(arm_)
+        br = sweep("b", [(-.06, .31, EYE_Z + .01), (0, .33, EYE_Z + .02), (.06, .31, EYE_Z + .01)], lambda t: .007, sides=6, fluff=0); set_mats(br, [ring_mat]); parts.append(br)
+        return join(parts, name)
+    out["glasses"] = frame("Eyew_glasses", "metal", False); out["shades"] = frame("Eyew_shades", "metal", True)
+    for o in out.values(): rigid_obj(o, "Head")
+    return out
+def necks():
+    out = {}
+    sc = lathe("Neck_scarf", [(.085, .99), (.095, 1.0), (.1, 1.04), (.09, 1.07)], "cloth_neck", segs=28, cy=.005)
+    tail_ = sweep("st", [(.05, .1, 1.0), (.07, .14, .92), (.06, .15, .82)], lambda t: .025, sides=8, fluff=0, flat=1.8); set_mats(tail_, ["cloth_neck"])
+    out["scarf"] = join([sc, tail_], "Neck_scarf"); rigid(out["scarf"], "Spine02")
+    bt = []
+    for s in (-1, 1):
+        w = sweep("w", [(0, .1, 1.0), (.03 * s, .1, 1.01), (.055 * s, .095, 1.0)], lambda t: .01 + .02 * t, sides=8, fluff=0, flat=.5); set_mats(w, ["cloth_neck"]); bt.append(w)
+    co = lathe("co", [(.07, .995), (.075, 1.01)], "cloth_neck", segs=24, cy=.01); bt.append(co)
+    out["bowtie"] = join(bt, "Neck_bowtie"); rigid(out["bowtie"], "Spine02")
+    co = lathe("co", [(.072, .99), (.078, .995), (.078, 1.02), (.072, 1.025)], "cloth_neck", segs=24, cy=.01)
+    m = bpy.data.meshes.new("bell"); b2 = bmesh.new(); bmesh.ops.create_uvsphere(b2, u_segments=14, v_segments=8, radius=.024); bmesh.ops.translate(b2, vec=V(0, .1, .97), verts=b2.verts); b2.to_mesh(m); b2.free()
+    ob = bpy.data.objects.new("bell", m); scene.collection.objects.link(ob); set_mats(ob, ["gold"])
+    out["bell"] = join([co, ob], "Neck_bell"); rigid(out["bell"], "Spine02")
+    R, C = 10, 12; vs, fs = [], []
+    for i in range(R + 1):
+        t = i / R
+        for j in range(C + 1):
+            u = j / C * 2 - 1; w = .14 + .14 * t; vs.append(V(u * w, -.12 - .04 * t - .03 * (1 - u * u) * t, 1.0 - .72 * t))
+    for i in range(R):
+        for j in range(C): fs.append((i * (C + 1) + j, i * (C + 1) + j + 1, (i + 1) * (C + 1) + j + 1, (i + 1) * (C + 1) + j))
+    cp = mesh_from("cape", vs, fs); so = cp.modifiers.new("s", "SOLIDIFY"); so.thickness = .006; sub = cp.modifiers.new("u", "SUBSURF"); sub.levels = 1
+    sel(cp); bpy.ops.object.modifier_apply(modifier="s"); bpy.ops.object.modifier_apply(modifier="u"); set_mats(cp, ["cloth_neck"])
+    cl = lathe("cl", [(.078, .985), (.082, 1.0)], "cloth_neck", segs=24, cy=.0)
+    out["cape"] = join([cp, cl], "Neck_cape"); smooth_shade(out["cape"])
+    return out
