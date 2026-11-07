@@ -86,9 +86,24 @@ export function lay(ctx) {
   bed(0, 0, "distant-hvac-hum-room-tone-loop", 0.14, 45);
   bed(HALF - 4, HALF - 4, "old-refrigerator-hum-loop", 0.12, 9);
 }
+// the open floor's life: four cubicle islands, two desk phones each that ring in turn, a printer of memos (scripts/l4-office.js)
+function layOffice(ctx) {
+  for (const [x, z] of [[0, 13], [0, -13], [13, 0], [-13, 0]]) {
+    ctx.spawn({ tags: ["l4-island"], feetPosition: { x, y: 0, z }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "island" } } });
+    for (const [cx, face] of [[0.82, 1], [-0.82, -1], [-0.82, 1], [0.82, -1]]) ctx.spawn({ tags: ["l4-island"], feetPosition: { x: x + cx, y: 0, z: z + face * 1.25 }, rotation: { yaw: face > 0 ? 180 : 0 }, primitive: { kind: "scripted", script: "scripts/l4-prop-geo.js", params: { kind: "chair" } } });
+    for (const [cx, face] of [[0.82, 1], [-0.82, -1]]) ctx.spawn({ tags: ["usable", "l4-phone"], feetPosition: { x: x + cx + 0.42, y: 0.75, z: z + face * 0.3 }, physics: "static", behavior: "scripts/l4-office.js",
+      primitive: { kind: "box", width: 0.22, height: 0.08, depth: 0.18 }, material: { color: "oklch(0.82 0.03 85)", roughness: 0.6 },
+      children: [{ feetPosition: { x: 0, y: 0.08, z: 0 }, primitive: { kind: "box", width: 0.2, height: 0.04, depth: 0.05 }, material: { color: "oklch(0.78 0.03 85)" } }],
+      state: { kind: "phone", name: "Desk phone", verb: "Pick up", info: "Desk phone" } });
+    ctx.spawn({ tags: ["usable", "l4-printer"], feetPosition: { x: x + 2.15, y: 0, z }, rotation: { yaw: 90 }, physics: "static", behavior: "scripts/l4-office.js",
+      primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "printer" } }, state: { kind: "printer", name: "Printer", verb: "Read", info: "Something is half printed" } });
+  }
+  ctx.spawn("l4-office-mgr", { feetPosition: { x: 0, y: 0, z: 0 }, behavior: "scripts/l4-office.js", state: { kind: "manager" } });
+}
 export function tick(ctx) {
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; lay(ctx); }
+  if (s.officeV !== 1) { s.officeV = 1; layOffice(ctx); }
   // the bare windows: stand near one and something out there notices you (sanity drains in player.js; this is the voice)
   for (const p of ctx.place.players) {
     const r = roomAt(p.feetPosition.x, p.feetPosition.z); if (!r || r.kind !== "trap") continue;
