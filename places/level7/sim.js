@@ -1,4 +1,3 @@
-import { regrowWrecks } from "../../scripts/lib/breakables.js";
 // Level 7 "Thalassophobia" Simulation:
 // Wikidot Backrooms Level 7 - An infinite subterranean ocean beneath a towering cavern void.
 // Wanderers emerge from the Level 6 staircase landing into the Drowned Parlor atop a basalt sea rock,
@@ -337,7 +336,6 @@ function lay(ctx) {
 }
 
 export function tick(ctx) {
-  if (ctx.now() - (ctx.session.wreckAt ?? 0) > 5000) { ctx.session.wreckAt = ctx.now(); regrowWrecks(ctx); } // smashed props stand again after an hour
   const s = ctx.place.state;
   if ((s.builtV ?? 0) < V) {
     for (const id of Object.keys(ctx.place.objects)) if (GONE.includes(id) || /^l7-(plank|post)-/.test(id)) ctx.destroy(id);

@@ -1,3 +1,4 @@
+import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { heard } from "../../scripts/lib/hear.js";
 import { tickWalls } from "../../scripts/lib/breakables.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
@@ -84,12 +85,8 @@ export function tick(ctx) {
     for (const [id, dx, dz] of AGENTS) ctx.spawn(id, agentSpec(a, id, dx, dz));
   }
   if (s.megCamp) { // a fallen agent is replaced after a while; the new one holds no grudge
-    const a = cellCenter(ARRIVE.cx, ARRIVE.cz), t0 = ctx.now(); s.megGone ??= {};
-    for (const [id, dx, dz] of AGENTS) {
-      if (ctx.place.objects[id]) { if (s.megGone[id]) delete s.megGone[id]; continue; }
-      if (!s.megGone[id]) s.megGone[id] = t0;
-      else if (t0 - s.megGone[id] > MEG.respawn * 1000) { delete s.megGone[id]; const sp = agentSpec(a, id, dx, dz); ctx.spawn(id, sp); ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody("pistol") }); }
-    }
+    const a = cellCenter(ARRIVE.cx, ARRIVE.cz), at = Object.fromEntries(AGENTS.map(([id, dx, dz]) => [id, [dx, dz]]));
+    keepPeople(ctx, Object.keys(at), (ctx, id) => { ctx.spawn(id, agentSpec(a, id, ...at[id])); ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody("pistol") }); });
   }
   if (!s.puddles) { s.puddles = true;
     for (let i = 0; i < 70; i++) { const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N); if (zoneOf(cx, cz) !== "halls" && zoneOf(cx, cz) !== "storage") continue;

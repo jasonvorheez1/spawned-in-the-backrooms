@@ -1,3 +1,4 @@
+import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { tickWalls } from "../../scripts/lib/breakables.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { fullLook, npcLook } from "../../scripts/lib/clothes.js";
@@ -91,12 +92,7 @@ export function tick(ctx) {
   if (s.sludgeV !== 1) { s.sludgeV = 1; laySludge2(ctx); }
   if (s.graffitiV !== 1) { s.graffitiV = 1; layGraffiti2(ctx); }
   // a fallen survivor is replaced after a while
-  for (const id of Object.keys(SURV)) {
-    const o = ctx.place.objects[id];
-    if (o && !o.state?.dead) { if (s.gone?.[id]) { const g = { ...s.gone }; delete g[id]; s.gone = g; } continue; }
-    if (!s.gone?.[id]) s.gone = { ...s.gone, [id]: now };
-    else if (now - s.gone[id] > MEG.respawn * 1000) { const g = { ...s.gone }; delete g[id]; s.gone = g; if (o) ctx.destroy(id); survivor(ctx, id); }
-  }
+  keepPeople(ctx, Object.keys(SURV), survivor);
   // hounds roam the far halls, kept topped up
   if ((!s.packMgr || !(s.packMgr in ctx.place.objects))) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
   if (now - (s.houndAt ?? 0) > L.entityRespawn * 1000 || !s.houndAt) {

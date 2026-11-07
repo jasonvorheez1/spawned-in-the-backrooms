@@ -1,3 +1,4 @@
+import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { heard } from "../../scripts/lib/hear.js";
 import { tickWalls } from "../../scripts/lib/breakables.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
@@ -272,12 +273,7 @@ export function tick(ctx) {
   if (s.roundsV !== 1) { s.roundsV = 1; for (const id of Object.keys(GAMMA)) { const o = ctx.place.objects[id]; if (o) { o.state.rounds = roundsOf(id); o.state.ri = 0; } } } // the agents already standing pick up their work
   tickChatter(ctx, CHATTER.level3, VOICES3);
   // Base Gamma's agents come back after a while if they fall
-  for (const id of Object.keys(GAMMA)) {
-    const o = ctx.place.objects[id];
-    if (o && !o.state?.dead) { if (s.gone?.[id]) { const g = { ...s.gone }; delete g[id]; s.gone = g; } continue; }
-    if (!s.gone?.[id]) s.gone = { ...s.gone, [id]: now };
-    else if (now - s.gone[id] > MEG.respawn * 1000) { const g = { ...s.gone }; delete g[id]; s.gone = g; if (o) ctx.destroy(id); agent(ctx, id); }
-  }
+  keepPeople(ctx, Object.keys(GAMMA), agent);
   // hounds in brigades, deathmoth swarms, kept topped up far from the checkpoint
   if ((!s.packMgr || !(s.packMgr in ctx.place.objects))) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
   const hasMoths = ctx.world.files.includes("templates/deathmoths.js") && ctx.world.files.includes("scripts/deathmoths.js");

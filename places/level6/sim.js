@@ -1,4 +1,3 @@
-import { regrowWrecks } from "../../scripts/lib/breakables.js";
 // Level 6 "Lights Out": lays the halls once (place.state.builtV); then the dark talks to whoever is in it.
 // No light works here (scripts/player.js kills the flashlight on this place). Plan: scripts/lib/level6.js.
 import { W, H, C, HT, START, cx, cz, plan, wallRuns, NOTES } from "../../scripts/lib/level6.js";
@@ -181,7 +180,6 @@ function lay3(ctx) {
 }
 
 export function tick(ctx) {
-  if (ctx.now() - (ctx.session.wreckAt ?? 0) > 5000) { ctx.session.wreckAt = ctx.now(); regrowWrecks(ctx); } // smashed props stand again after an hour
   const st = ctx.place.state;
   if ((st.builtV ?? 0) < 1) lay(ctx);
   if ((st.builtV ?? 0) < 2) lay2(ctx);
