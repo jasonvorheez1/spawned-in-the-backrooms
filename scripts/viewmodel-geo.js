@@ -16,6 +16,7 @@ function rod(ctx, pts, rads, M, sq = [1, 1]) {
   const ext = (p, q, t) => p.map((v, i) => v + (q[i] - v) * t)
   tube(ctx, [ext(a, b, -0.04), ext(a, b, -0.02), a, ...pts.slice(1, -1), y, ext(y, z, -0.02), ext(y, z, -0.04)].map(P),
     [1e-4, rads[0] * 0.75, rads[0], ...rads.slice(1, -1), rads[n - 1], rads[n - 1] * 0.7, 1e-4].map((r) => r * S), M, sq, 0, 1)
+  sphere(ctx, P(a), rads[0] * 0.97 * S, M, [sq[0], sq[1], sq[0]]); sphere(ctx, P(y), rads[n - 1] * 0.97 * S, M, [sq[0], sq[1], sq[0]]) // round caps: no flat cut ends
 }
 const ball = (ctx, c, r, M, sq) => sphere(ctx, P(c), r * S, M, sq)
 
