@@ -86,8 +86,14 @@ function lay(ctx) {
   bed(-26, -1, 30, "water-drip-echo-loop", 0.14, 12);
   for (const id of Object.keys(PEOPLE)) person(ctx, id);
 }
+function layComputers(ctx) { // the Administration's Database terminal (scripts/computer.js, Back OS)
+  ctx.spawn({ tags: ["gamma-terminal"], feetPosition: { x: 9.6, y: 0, z: 22 }, rotation: { yaw: -90 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "terminal" } } });
+  ctx.spawn({ tags: ["usable", "computer"], feetPosition: { x: 9.9, y: 0.76, z: 22 }, rotation: { yaw: -90 }, visible: false, behavior: "scripts/computer.js", physics: "static", primitive: { kind: "box", width: 0.46, height: 0.36, depth: 0.36 },
+    state: { kind: "computer", host: "GAMMA-DB-01", lock: "science:50", name: "The Database", verb: "Log in", info: "Locked · Science 50 or a password", tint: "#f2c200" } });
+}
 export function tick(ctx) {
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; lay(ctx); }
+  if (s.osV !== 1) { s.osV = 1; layComputers(ctx); }
   if (s.doorV !== 1) { const d = ctx.getObject("gamma-out"); if (d) d.state = { ...d.state, to: "level3#l3-gamma-door" }; s.doorV = 1; } // rooms built before the gate door existed
 }

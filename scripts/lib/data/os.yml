@@ -1,0 +1,62 @@
+# BackOS: the M.E.G.'s Backdoor client that every working computer in the Backrooms boots into. All text is ours (a game's version of the wiki).
+# A computer's state: host, lock ('' | 'science:N' | 'pw:<word>'), profile (office | omega | gamma). Guests see public data; admin sees all.
+version: "Back OS(tm) 95 (Backdoor client)"
+boot:
+  - "Back OS(tm) · Backdoor client"
+  - "checking reality anchor ............ OK"
+  - "mounting BACKDRIVE ................. OK"
+  - "syncing the database ............... 1 of 3 servers reachable"
+  - "you are now blinking manually"
+  - "welcome."
+profiles:
+  office:  { owner: "Facilities", motd: "Quarterly review postponed indefinitely." }
+  omega:   { owner: "Base Omega · Overseer desk", motd: "Authorised M.E.G. personnel. Everyone else: hi." }
+  gamma:   { owner: "Base Gamma · Administration", motd: "The Database. Handle with care." }
+passwords: { omega: "overseerb", gamma: "minerva2015" }
+# the database. restricted entries and every "weak" line are admin only. studied: reading it sharpens you against that creature (+10% damage)
+entries:
+  - { id: l0, cat: Levels, title: "Level 0 · The Lobby", sc: "Class 2", text: "Endless yellow rooms, damp carpet, a hum that gets into your teeth. Smilers and lurkers wander the maze. The only way on is the flickering wall on the west edge. Sanity drains everywhere except the safe room.", weak: "Red rooms and dark rooms drain sanity several times faster. Walk, do not run, when the hum spikes. A lit flashlight is seen from forty metres; a dark one from eleven." }
+  - { id: l1, cat: Levels, title: "Level 1 · The Habitable Zone", sc: "Class 3", text: "Concrete halls with banded pillars, storage racks and rooms behind push doors with green signs. Hounds hunt the halls and never enter the corridors. The lights fail in a Flickering every few minutes. The M.E.G. keeps a waypoint at the centre.", weak: "During a Flickering get into a corridor and keep your light off. New crates appear on the racks afterwards." }
+  - { id: l2, cat: Levels, title: "Level 2 · Abandoned Utility Halls", sc: "Class 3", text: "Narrow maintenance tunnels with corners cut at forty-five degrees, wrapped pipes and dead circuits. Survivors keep a camp by the green door home. Many doors are locked; some hold toolboxes, lockers and parts.", weak: "Lights are wired in series: one dead tube darkens the block. Violet emergency light marks a dead circuit." }
+  - { id: l3, cat: Levels, title: "Level 3 · Electrical Station", sc: "Class 4", text: "Brick halls with conduit on every wall, indestructible white bars that block most of the level, generators, assembly lines that never run out, and black sludge in the pipes. Its entities hunt in organised brigades. Base Gamma stands at the end.", weak: "The bars cannot be passed. Some have gates that can be picked. Sludge burns through boots. Generators overload on a cycle: do not stand beside one." }
+  - { id: l4, cat: Levels, title: "Level 4 · Abandoned Office", sc: "Class 2", text: "A single office floor: perimeter offices, open plan in the middle, fountains with clean water. Any wanderer may claim an empty office as a home. Base Omega holds the north-west corner. Stairs down lead to Level 5; the lift goes back to Level 3.", weak: "Three offices still have bare windows. Do not stand near them. The desk phones ring for a reason." }
+  - { id: smiler, cat: Entities, title: "Smiler", sc: "Class 3", studied: smiler, text: "A shape with a grin and nothing else, drawn to light. Looking straight at one slows it to a creep. It cannot be outrun in the open, so use walls and corners.", weak: "Weapons work; guns do little against the shade itself, so close with something heavy. They ignore the safe room." }
+  - { id: lurker, cat: Entities, title: "Lurker", sc: "Class 3", studied: lurker, text: "Pale, hairless, too tall. It freezes while you watch it with a clear line of sight, and rushes the moment you look away. Watching it costs sanity; so does being grabbed.", weak: "Back up while keeping it in view. Break line of sight only when a door is between you." }
+  - { id: hound, cat: Entities, title: "Hound", sc: "Class 3", studied: hound, text: "A black, long-legged hunter that howls once on sight, calling every hound within thirty metres. It pounces from a few metres and mauls. On Level 3 they work in brigades and lie in wait in dead ends.", weak: "They will not enter corridors on Level 1 or the camp on Level 2. Kill the spotter first and the pack loses its target." }
+  - { id: stealer, cat: Entities, title: "Skin-Stealer", sc: "Class 4", studied: stealer, text: "Wears a wanderer's skin. It calls out hello from far away and walks slowly toward you; the skin slides off when it is close, then it lunges.", weak: "Real people travel in groups. A lone voice in the halls is not a person. Aim for the moment the skin comes off." }
+  - { id: moth, cat: Entities, title: "Deathmoth", sc: "Class 3", studied: moth, text: "Swarms drawn to any light. They gnaw wiring and wanderers alike.", weak: "Flashlights draw them. Dark halls are safer than lit ones when a swarm is out." }
+  - { id: obj94, cat: Objects, title: "Object-94 · Back OS(tm)", sc: "-", text: "An operating system found on flash drives (94-A) and hard drives (94-B) lying around the Backrooms. Its logo is the logo of a very old Frontrooms system with one colour left. Nobody knows who writes it, or whether it writes itself. It always boots.", weak: "Do not leave it running unattended. It has never been seen to shut down on its own." }
+  - { id: almond, cat: Objects, title: "Almond Water", sc: "-", text: "Drinkable, restores health and sanity, and replaces food for many. It is the Backrooms' common currency. Eating or drinking nothing else for long enough will still hurt you.", weak: "A drink restores 40 thirst. Carry some; Level 3 assembly lines make more." }
+  - { id: firesalt, cat: Objects, title: "Firesalt", sc: "-", text: "A hot orange crystal found in generator rooms. Valuable to traders.", weak: "" }
+  - { id: pain, cat: Objects, title: "Liquid Pain", sc: "Restricted", restricted: true, text: "A fluid that hurts the way a burn hurts. Used heated in Base Gamma's defences against brigades.", weak: "The M.E.G. Human and Entity Rights Committee dislikes it. It works." }
+  - { id: meg, cat: Groups, title: "The M.E.G. (Major Explorer Group)", sc: "-", text: "The largest group in the Backrooms. Runs bases on many levels (Omega on Level 4, Gamma on Level 3), maintains this database and pays wanderers for reports.", weak: "" }
+  - { id: bntg, cat: Groups, title: "B.N.T.G.", sc: "-", text: "The Backrooms Nonaligned Trade Group. Runs warehouses and trade, neutral toward nearly everyone.", weak: "" }
+  - { id: uec, cat: Groups, title: "U.E.C.", sc: "Hostile", restricted: true, text: "The Unbound Explorers Coalition. Hostile to entities and to visitors it does not know. Do not approach their colony.", weak: "" }
+# email. from, subj, body. tip: crate (a supply crate appears in a Level 4 office) | xp | key (a keycard, admin only) . where: office | omega | gamma | any
+mails:
+  - { where: office, from: "Facilities", subj: "Re: the windows", body: "We have blacked out every window on the floor. Three were missed. We know which three. Please do not go near them to check.", tip: "" }
+  - { where: office, from: "Dana in Accounts", subj: "Lunch?", body: "Anyone want to split a jug from the cooler? The one in the middle is clean. The rest, I do not know. Also the phone in the break room rang twice again.", tip: "" }
+  - { where: office, from: "IT Helpdesk", subj: "Your password", body: "As requested we have reset your password. It is the same as before. It was always the same as before. Admin boxes follow the pattern: the surname of whoever photographed Level 3 first.", tip: "" }
+  - { where: office, from: "Marcus", subj: "supply box", body: "I hid a box in the corner office on the north wall before I left. Under the desk. If you read this, it is yours. Take it before the next shift does.", tip: "crate" }
+  - { where: office, from: "Shift Board", subj: "Notice", body: "Tasks are posted on the board by the north desks. Complete them and the supply cupboard will pay. Nobody remembers who stocks the cupboard.", tip: "" }
+  - { where: office, from: "HR", subj: "Mandatory fun", body: "Please clear your desk by the end of the day. The day has not ended. Please clear your desk.", tip: "" }
+  - { where: office, from: "(no sender)", subj: "you", body: "You are reading this at a desk that is not yours. That is fine. Sit down. You are early.", tip: "xp" }
+  - { where: omega, from: "Overseer B", subj: "Omega log", body: "Base Omega is holding. The lift to Level 3 works only from this side. The stairwell is chained: we do not unchain it for anyone who cannot tell us what is under it.", tip: "" }
+  - { where: omega, from: "Quartermaster", subj: "stores", body: "Spare keycard is in the safe under the radio. Combination is on a sticky note on the monitor. Do not tell the new people.", tip: "key" }
+  - { where: omega, from: "Overseer B", subj: "to whoever finds this", body: "If you have hacked this machine, you have the Science for it, and you should come to Base Gamma. They need people who can open things.", tip: "xp" }
+  - { where: gamma, from: "Cmdr. Moss", subj: "Brigades", body: "Third brigade this week. The hoses held. Reminder: the Database servers stay on the top floor, never in the tunnels. Minerva has the only key, and her password is in my head.", tip: "" }
+  - { where: gamma, from: "Archivist", subj: "new entries", body: "Added the stealer's habits and what the hounds do in dead ends. Restricted view shows the weak points. Please do not print those.", tip: "xp" }
+  - { where: gamma, from: "Base Leader", subj: "Re: security", body: "Yes the Administration door is open during the day. No, I do not want it locked. People should be able to find us.", tip: "" }
+  - { where: any, from: "Backmail", subj: "Welcome", body: "Your mailbox is empty except for this message. This message was empty too.", tip: "" }
+forum:
+  - { title: "Anyone else hear the phone in 4-09?", by: "late_shift", replies: ["yes. do not answer it twice", "I answered it once. nothing happened. that is the worst part", "it knew my name"] }
+  - { title: "Best way to carry almond water", by: "carry_weight_gang", replies: ["bag, obviously", "Hardiness 8 and no regrets", "I got the Hardiness. I regret it now, I never rest"] }
+  - { title: "[Level 3] are the bars really impossible", by: "bolt_cutter_dave", replies: ["we tried acid", "we tried the lava squirt gun", "dave please", "dave stop"] }
+  - { title: "Is it safe to claim an office?", by: "new_arrival", replies: ["yes, the cooler refills", "the cot is surprisingly OK", "the plate on the door does not lie about whose it is"] }
+  - { title: "Hounds howl before they jump", by: "field_note", replies: ["pinned. standard advice, kill the one that howls first", "or walk away from the one that howls first. none of us did"] }
+files:
+  - { where: any, name: "readme.txt", text: "Back OS(tm). BACKDRIVE. Files here belong to whoever sat here last. They have not come back to claim them." }
+  - { where: office, name: "todo.txt", text: "- water the plant (dead)\n- ask facilities about the windows\n- do not look at the windows\n- finish report on the stairwell" }
+  - { where: office, name: "map_l4.txt", text: "LEVEL 4 (office floor, 64 x 64 m)\nNW corner: Base Omega.   NE corner: lift to Level 3.\nSW corner: stairwell down to Level 5 (chained).   SE corner: break room, vending.\nFour water fountains on the open floor. Offices run along every wall." }
+  - { where: omega, name: "safe.txt", text: "The spare keycard opens a fused door on Level 2. The fuse you will have to find yourself." }
+  - { where: gamma, name: "database_stats.txt", text: "Entries: levels 0-4, six entities, three objects, four groups. Reading the entity pages gives you an edge. Reading them twice does not." }

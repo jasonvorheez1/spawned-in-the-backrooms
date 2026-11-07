@@ -250,6 +250,7 @@ export function onInput(ctx, input) {
 }
 
 function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
+  if (s.studied && m.tags?.some((tg) => s.studied.split(',').some((k) => tg.includes(k)))) dmg = Math.round(dmg * 1.1) // read its Database page
   const npc = m.tags?.includes('npc')
   if (npc) dmg = dmgAfterArmor(lookOfNpc(m), dmg) // an agent's or survivor's clothes soak the hit like yours do
   m.state.hp -= dmg

@@ -26,6 +26,7 @@ function desk(ctx, cx, cz, face, hi, seed) { // face: +1 = the desk's user sits 
 export function geometry(ctx) {
   const kind = ctx.params?.kind ?? "island", hi = ctx.lod <= 2;
   ctx.smooth(); ctx.metalness(0);
+  if (kind === "terminal") { desk(ctx, 0, 0, 1, hi, 3); ctx.color(null); return; } // one desk with a CRT: Base Omega and Base Gamma's machines
   if (kind === "printer") {
     ctx.color("oklch(0.4 0.01 250)"); ctx.metalness(0.4); box(ctx, -0.35, 0.35, 0, 0.62, -0.28, 0.28); ctx.metalness(0);
     ctx.color("oklch(0.85 0.01 90)"); box(ctx, -0.32, 0.32, 0.62, 0.95, -0.26, 0.26);

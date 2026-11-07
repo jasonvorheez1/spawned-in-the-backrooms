@@ -80,6 +80,7 @@ inputs:
       keys:
         - y
     make: {}
+    os: {}
     wardrobe:
       keys:
         - c

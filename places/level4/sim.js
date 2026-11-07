@@ -116,6 +116,15 @@ export function tick(ctx) {
   // breakables: smashed office walls (lib/wallgrid.js level4) grow back after a while; every loose prop takes a material and hp
   if (!(Math.abs(ctx.now() - (ctx.session.wallTick ?? -1e9)) < 3000)) { ctx.session.wallTick = ctx.now(); tickWalls(ctx); breakProps(ctx); }
   if (!s.officeV) { s.officeV = 1; layOffice(ctx); }
+  if (s.officeV < 3) { // working computers (scripts/computer.js, Back OS): every island desk, and the locked one in Base Omega
+    s.officeV = 3; let n = 1;
+    for (const [x, z] of [[0, 13], [0, -13], [13, 0], [-13, 0]]) for (const [cx, face] of [[0.82, 1], [-0.82, -1], [-0.82, 1], [0.82, -1]])
+      ctx.spawn({ tags: ["usable", "computer"], feetPosition: { x: x + cx, y: 0.76, z: z + face * 0.33 }, rotation: { yaw: face > 0 ? 0 : 180 }, visible: false, behavior: "scripts/computer.js", physics: "static",
+        primitive: { kind: "box", width: 0.46, height: 0.36, depth: 0.36 }, state: { kind: "computer", host: `OFC4-${String(n++).padStart(2, "0")}`, lock: "", name: "Computer", verb: "Use", info: "Back OS", tint: "#f2c200" } });
+    ctx.spawn({ tags: ["l4-terminal"], feetPosition: { x: -28.5, y: 0, z: -30.8 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "terminal" } } });
+    ctx.spawn({ tags: ["usable", "computer"], feetPosition: { x: -28.5, y: 0.76, z: -30.5 }, visible: false, behavior: "scripts/computer.js", physics: "static", primitive: { kind: "box", width: 0.46, height: 0.36, depth: 0.36 },
+      state: { kind: "computer", host: "OMEGA-OVERSEER", lock: "science:35", name: "Overseer's computer", verb: "Log in", info: "Locked · Science 35 or a password", tint: "#f2c200" } });
+  }
   if (s.officeV < 2) { // the shift board: a corkboard on legs by the north desks, handing out office tasks (scripts/l4-office.js)
     s.officeV = 2;
     ctx.spawn("l4-shift-board", { tags: ["usable", "l4-board"], feetPosition: { x: -3.2, y: 0, z: 13 }, rotation: { yaw: 90 }, physics: "static", behavior: "scripts/l4-office.js",

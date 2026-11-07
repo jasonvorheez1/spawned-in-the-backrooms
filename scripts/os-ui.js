@@ -1,0 +1,103 @@
+// Back OS(tm): the screen. A Windows 95 look with only the yellow left (the Object-94 logo): gray bevelled windows, gold title bars, a taskbar with
+// a Start button. Drawn from player.state.os (scripts/os.js). Buttons send the 'os' action.
+import O from './lib/data/os.yml'
+import { mailsOf, filesOf, entriesOf, entryById, forumOf } from './lib/os.js'
+
+const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+const A = (o) => `sendAction('os',${JSON.stringify(o).replace(/"/g, "'")})`
+const LOGO = (n = 1) => `<svg width="${46 * n}" height="${40 * n}" viewBox="0 0 46 40"><g stroke="#000" stroke-width="1.4"><path d="M12 6 L24 8 L23 20 L11 18Z" fill="#f2c200"/><path d="M26 8.5 L40 10 L38 23 L25 21Z" fill="#f2c200"/><path d="M10.5 21 L22.5 23 L21.5 35 L9.5 33Z" fill="#f2c200"/><path d="M24.5 23.5 L37.5 25.5 L36 38 L23.5 36Z" fill="#f2c200"/></g><g fill="#c98a00"><rect x="1" y="9" width="3" height="3"/><rect x="5" y="12" width="3" height="3"/><rect x="2" y="17" width="3" height="3"/><rect x="6" y="22" width="3" height="3"/><rect x="2" y="27" width="3" height="3"/></g><g fill="#000"><rect x="4" y="5" width="3" height="3"/><rect x="8" y="9" width="2" height="2"/><rect x="1" y="21" width="3" height="3"/><rect x="5" y="30" width="3" height="3"/></g></svg>`
+const CSS = `<style>
+#os{position:fixed;inset:0;z-index:70;background:#0a0800;display:flex;align-items:center;justify-content:center;font-family:'MS Sans Serif',Tahoma,Arial,sans-serif;color:#000;pointer-events:auto}
+#os .scr{width:min(860px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 12px)));height:min(600px,calc(100vh - 24px));background:#5a4a00;border:6px solid #2a2a26;box-shadow:0 0 0 2px #000,0 0 60px #f2c20033 inset;display:flex;flex-direction:column;position:relative;overflow:hidden}
+#os .scr::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.12) 0 1px,transparent 1px 3px);pointer-events:none}
+#os .boot{flex:1;background:#000;color:#f2c200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:monospace}
+#os .boot .ln{opacity:0;animation:osln .01s forwards;font-size:13px;letter-spacing:.06em}
+@keyframes osln{to{opacity:1}}
+#os .boot .bar{width:260px;height:14px;border:2px solid #f2c200;padding:2px;margin-top:10px}
+#os .boot .bar i{display:block;height:100%;background:repeating-linear-gradient(90deg,#f2c200 0 14px,#000 14px 18px);animation:osbar 3.1s linear forwards}
+@keyframes osbar{from{width:0}to{width:100%}}
+#os .boot h1{font:700 40px Georgia,serif;color:#fff;margin:6px 0 0;text-shadow:2px 2px 0 #000}
+#os .desk{flex:1;display:flex;flex-direction:column;background:#6b5a00;min-height:0}
+#os .area{flex:1;position:relative;min-height:0;padding:10px}
+#os .icons{display:flex;flex-direction:column;flex-wrap:wrap;gap:14px;height:100%;align-content:flex-start}
+#os .ic{width:78px;text-align:center;cursor:pointer;color:#fff;font-size:11px;text-shadow:1px 1px 0 #000;background:none;border:0}
+#os .ic .g{font-size:32px;display:block;line-height:1.2}
+#os .win{position:absolute;inset:14px 14px 14px 14px;background:#c0c0c0;border:2px outset #fff;box-shadow:1px 1px 0 #000;display:flex;flex-direction:column;min-height:0}
+#os .tb{background:linear-gradient(90deg,#8a6a00,#f2c200);color:#000;font-weight:700;font-size:12px;padding:3px 4px;display:flex;align-items:center;gap:6px}
+#os .tb span{flex:1}
+#os .tb button{width:18px;height:16px;font:700 10px Arial;background:#c0c0c0;border:2px outset #fff;padding:0;cursor:pointer}
+#os .body{flex:1;display:flex;min-height:0;background:#fff;margin:3px;border:2px inset #fff;overflow:hidden}
+#os .lst{width:230px;overflow:auto;border-right:2px solid #808080;background:#fff}
+#os .lst button{display:block;width:100%;text-align:left;font:12px Tahoma,Arial;padding:5px 7px;border:0;border-bottom:1px solid #ddd;background:#fff;cursor:pointer;color:#000}
+#os .lst button.on,#os .lst button:hover{background:#f2c200}
+#os .lst small{display:block;color:#666}
+#os .rd{flex:1;overflow:auto;padding:12px 14px;font-size:13px;line-height:1.45}
+#os .rd h3{margin:0 0 6px;font-size:16px}
+#os .rd .meta{color:#555;font-size:11px;margin-bottom:8px}
+#os .rd .weak{margin-top:12px;padding:8px;background:#fff6c4;border:1px solid #b89a00;font-size:12px}
+#os .tabs{display:flex;gap:2px;padding:3px 3px 0;background:#c0c0c0}
+#os .tabs button{font:11px Tahoma,Arial;padding:3px 9px;border:2px outset #fff;background:#c0c0c0;cursor:pointer}
+#os .tabs button.on{background:#f2c200;font-weight:700}
+#os .term{flex:1;background:#000;color:#f2c200;font:13px/1.35 monospace;padding:8px 10px;overflow:auto;display:flex;flex-direction:column;justify-content:flex-end}
+#os .term div{white-space:pre-wrap}
+#os .cmd{display:flex;background:#000;border-top:1px solid #f2c20055}
+#os .cmd input{flex:1;background:#000;color:#f2c200;border:0;outline:0;font:13px monospace;padding:6px 10px}
+#os .q{display:flex;gap:4px;flex-wrap:wrap;padding:6px;background:#000}
+#os .q button{font:11px monospace;background:#000;color:#f2c200;border:1px solid #f2c20066;padding:2px 8px;cursor:pointer}
+#os .task{height:30px;background:#c0c0c0;border-top:2px outset #fff;display:flex;align-items:center;gap:6px;padding:2px 4px;font-size:12px}
+#os .task .st{display:flex;align-items:center;gap:5px;font-weight:700;border:2px outset #fff;padding:1px 10px 1px 4px;cursor:pointer;background:#c0c0c0}
+#os .task .tw{border:2px inset #fff;padding:1px 8px;font-size:12px;background:#d8d8d8}
+#os .task .clk{margin-left:auto;border:1px inset #fff;padding:2px 8px}
+#os .btn{font:12px Tahoma,Arial;padding:4px 16px;border:2px outset #fff;background:#c0c0c0;cursor:pointer;color:#000}
+#os .login{flex:1;display:flex;align-items:center;justify-content:center;background:#6b5a00}
+#os .login .win{position:static;width:380px;inset:auto}
+#os .login input{width:100%;padding:4px;font:13px monospace;box-sizing:border-box;border:2px inset #fff}
+</style>`
+
+const ICONS = [['mail', '✉', 'Backmail'], ['db', '📚', 'The Database'], ['files', '🗂', 'BACKDRIVE'], ['forum', '💬', 'Backdoor'], ['term', '⌨', 'Terminal'], ['about', '💾', 'About Back OS']]
+const TITLE = { mail: 'Backmail', db: 'The Database', files: 'BACKDRIVE', forum: 'Backdoor Forum', term: 'Terminal', about: 'About Back OS(tm)' }
+
+function chrome(title, inner) {
+  return `<div class="win"><div class="tb">${LOGO(0.4)}<span>${esc(title)}</span><button onclick="${A({ k: 'app', v: 'desktop' })}">_</button><button onclick="${A({ k: 'close' })}">x</button></div>${inner}</div>`
+}
+function list(items, sel, key, fn) { return `<div class="lst">${items.map((it) => `<button class="${fn.id(it) === sel ? 'on' : ''}" onclick="${A({ k: key, [key === 'file' ? 'v' : 'id']: fn.id(it) })}">${fn.html(it)}</button>`).join('')}</div>` }
+
+export function osUi(ctx, player) {
+  const s = player.state ?? {}, os = s.os
+  if (!os) return ''
+  const admin = os.user === 'admin', now = ctx.now()
+  let body = ''
+  if (os.app === 'boot') {
+    const t = Math.max(0, (now - os.at) / 1000)
+    const lines = O.boot.map((l, i) => `<div class="ln" style="animation-delay:${(i * 0.45 - t).toFixed(2)}s">${esc(l)}</div>`).join('')
+    body = `<div class="boot">${LOGO(2.6)}<h1>Back OS<sup style="font-size:14px">™</sup></h1>${lines}<div class="bar"><i style="animation-delay:-${Math.min(t, 3.1).toFixed(2)}s"></i></div></div>`
+  } else if (os.app === 'login') {
+    body = `<div class="login">${chrome('Welcome to Back OS', `<div style="padding:14px 16px;background:#c0c0c0"><div style="display:flex;gap:14px;align-items:center">${LOGO(1)}<div style="font-size:13px"><b>${esc(O.profiles[os.host.startsWith('OMEGA') ? 'omega' : os.host.startsWith('GAMMA') ? 'gamma' : 'office'].owner)}</b><br>${esc(os.host)}<br><span style="color:#444">This machine asks for a password.</span></div></div>
+      <div style="margin:12px 0 4px;font-size:12px">Password:</div><input id="pw" type="password" onkeydown="if(event.key==='Enter')${A({ k: 'pw', v: '__PW__' }).replace("'__PW__'", 'this.value')}">
+      ${os.err ? `<div style="color:#a00;font-size:12px;margin-top:6px">${esc(os.err)}</div>` : ''}
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="btn" onclick="${A({ k: 'hack' })}">Hack...</button><button class="btn" onclick="${A({ k: 'login' })}">Guest</button><button class="btn" onclick="${A({ k: 'close' })}">Shut down</button></div></div>`)}</div>`
+  } else {
+    let win = ''
+    if (os.app === 'mail') {
+      const ml = mailsOf(os.host, admin), m = ml.find((x) => x.id === os.sel) ?? null
+      win = chrome(`Backmail · ${os.host}`, `<div class="body">${list(ml, os.sel, 'mail', { id: (x) => x.id, html: (x) => `<b>${esc(x.from)}</b><small>${esc(x.subj)}</small>` })}<div class="rd">${m ? `<h3>${esc(m.subj)}</h3><div class="meta">From: ${esc(m.from)}</div>${esc(m.body)}` : '<div class="meta">Select a message.</div>'}</div></div>`)
+    } else if (os.app === 'db') {
+      const all = entriesOf(admin), cats = ['All', ...new Set(all.map((e) => e.cat))], cat = os.cat && os.cat !== 'All' ? os.cat : '', es = cat ? all.filter((e) => e.cat === cat) : all, e = os.sel ? entryById(os.sel) : null
+      win = chrome('The Database · M.E.G.', `<div class="tabs">${cats.map((c) => `<button class="${(cat || 'All') === c ? 'on' : ''}" onclick="${A({ k: 'cat', v: c })}">${esc(c)}</button>`).join('')}</div><div class="body">${list(es, os.sel, 'entry', { id: (x) => x.id, html: (x) => `${esc(x.title)}<small>${esc(x.cat)} · ${esc(x.sc)}</small>` })}<div class="rd">${e ? `<h3>${esc(e.title)}</h3><div class="meta">Survival class: ${esc(e.sc)}${e.restricted ? ' · RESTRICTED' : ''}</div>${esc(e.text)}${e.weak ? (admin ? `<div class="weak"><b>Restricted notes:</b> ${esc(e.weak)}</div>` : '<div class="weak">Restricted notes hidden. Admin access required.</div>') : ''}` : '<div class="meta">Select an entry. Reading the creature pages gives you an edge.</div>'}</div></div>`)
+    } else if (os.app === 'files') {
+      const fs = filesOf(os.host), f = fs.find((x) => x.name === os.sel) ?? null
+      win = chrome(`BACKDRIVE · ${os.host}`, `<div class="body">${list(fs, os.sel, 'file', { id: (x) => x.name, html: (x) => `📄 ${esc(x.name)}` })}<div class="rd">${f ? `<h3>${esc(f.name)}</h3><div style="white-space:pre-wrap;font-family:monospace">${esc(f.text)}</div>` : '<div class="meta">Select a file.</div>'}</div></div>`)
+    } else if (os.app === 'forum') {
+      win = chrome('Backdoor Forum', `<div class="body"><div class="rd">${forumOf(os.host).map((t) => `<h3>${esc(t.title)}</h3><div class="meta">started by ${esc(t.by)}</div>${t.replies.map((r) => `<div style="margin:3px 0 3px 14px;padding-left:8px;border-left:3px solid #f2c200">${esc(r)}</div>`).join('')}<hr>`).join('')}</div></div>`)
+    } else if (os.app === 'term') {
+      const lines = (os.term?.length ? os.term : [`${O.version}`, `${esc(os.host)} · type help`]).map((l) => `<div>${esc(l)}</div>`).join('')
+      win = chrome(`Terminal · ${os.host}${admin ? ' · admin' : ''}`, `<div class="body" style="flex-direction:column;background:#000"><div class="term">${lines}</div><div class="q">${['help', 'ls', 'whoami', 'entities', 'hack', 'blink'].map((c) => `<button onclick="${A({ k: 'cmd', v: c })}">${c}</button>`).join('')}</div><div class="cmd"><span style="color:#f2c200;padding:6px 0 6px 10px;font:13px monospace">&gt;</span><input id="tin" autofocus onkeydown="if(event.key==='Enter'){${A({ k: 'cmd', v: '__V__' }).replace("'__V__'", 'this.value')};this.value=''}"></div></div>`)
+    } else if (os.app === 'about') {
+      win = chrome('About Back OS(tm)', `<div class="body"><div class="rd" style="display:flex;gap:18px;align-items:flex-start">${LOGO(1.6)}<div><h3>${esc(O.version)}</h3>The Back OS logo is identical to that of a very old Frontrooms system, except that only the yellow colour is used. Maybe it is the work of one of us. Maybe some kind of entity. Or maybe the OS itself. Who knows...<div class="meta" style="margin-top:10px">Found as Object-94-A (flash drive) and Object-94-B (hard drive).<br>You are logged in as ${admin ? 'admin' : 'guest'} on ${esc(os.host)}.</div></div></div></div>`)
+    }
+    const apps = ICONS.map(([k, g, n]) => `<button class="ic" onclick="${A({ k: 'app', v: k })}"><span class="g">${g}</span>${esc(n)}</button>`).join('')
+    const tw = os.app !== 'desktop' ? `<div class="tw">${esc(TITLE[os.app] ?? '')}</div>` : ''
+    body = `<div class="desk"><div class="area">${win || `<div class="icons">${apps}</div>`}</div><div class="task"><div class="st" onclick="${A({ k: 'app', v: 'desktop' })}">${LOGO(0.34)} Start</div>${tw}<div class="clk">15:40</div></div></div>`
+  }
+  return CSS + `<div id="os" data-modal><div class="scr">${body}</div></div>`
+}
