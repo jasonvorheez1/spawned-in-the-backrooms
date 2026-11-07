@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1044,
-  "updatedAt": "2026-11-07T18:32:48.938Z",
-  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, Levels 1–5 and M.E.G. Base Gamma, built from authored scenes and place simulations alongside shared survival, creature and NPC systems. Players scavenge, fight, build and talk; the hotel has residents, rentals and mahjong, while the newer NPC life and memory systems make individual people speak and act from stable personal histories.",
+  "basedOnSpecVersion": 1057,
+  "updatedAt": "2026-11-07T18:41:13.564Z",
+  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, Levels 1–5 and M.E.G. Base Gamma, built from authored scenes and place simulations alongside shared survival, creature and NPC systems. Players scavenge, fight, build and talk; the hotel has residents, cash-paid room rentals and interactive spaces, while Level 0 hunters share hearing and lost-player tracking rules.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, loot, shifting walls, seeded encounters, smilers and lurkers.",
@@ -11,7 +11,7 @@
     "places/level3 (3D) - Electrical Station; maze/crawl halls, hazards, lore set pieces, loot, creature brigades and Gamma checkpoint; generators overload and lift to Levels 4/5.",
     "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards, residents and locked Database terminal.",
     "places/level4 (3D) - Abandoned Office; offices, fountains, break-room vending, lift/stairs and Base Omega; sim lays residents, office systems and tasks.",
-    "places/level5 (3D) - Terror Hotel; authored Main Hall, guest rooms, Beverly Room ballroom and Boiler Room; residents, elevator banks, hostile staff, Death Rats, rentals and playable mahjong.",
+    "places/level5 (3D) - Terror Hotel; authored Main Hall, guest rooms, Beverly Room ballroom and Boiler Room; residents, elevator banks, hostile staff, Death Rats, cash-paid rentals, mahjong and a player-operated boiler door.",
     "places/debug (3D) - isolated combat and loot test room; authored cells hold weapon/item stations, enemy pens and test stands."
   ],
   "roots": [
@@ -41,7 +41,7 @@
     "scripts/lib/l5-hostile.js - safe-zone, prey, hit, remains and hostile data helpers; scripts/lib/witness.js - markKill; scripts/lib/breakables.js - damage/sync/sweep helpers.",
     "scripts/lib/clothes.js - clothing/look/roll helpers; scripts/lib/critter-model.js - critter model/look/morph/baseBones helpers; scripts/lib/seat.js - seat claims/sit/stand.",
     "scripts/lib/npc-life.js - lifeOf, FEAR_TAGS, FEAR_LINES, WANT_LINES; scripts/lib/voices.js - throatOf, vo; scripts/lib/npc-talk.js - dialogue config, voiceOf, systemPrompt, parseReply, checks and trading helpers.",
-    "scripts/lib/clock.js - DAY_MS, HOUR_MS, gameNow, clockOf; scripts/lib/hear.js - heard; scripts/lib/npc-starters.js - dialogue starters/choices; scripts/lib/mahjong.js - game rules and names."
+    "scripts/lib/clock.js - DAY_MS, HOUR_MS, gameNow, clockOf; scripts/lib/hear.js - heard; scripts/lib/npc-starters.js - dialogue starters/choices; scripts/lib/mahjong.js - game rules and names; scripts/lib/hunt.js - hearOf, sighting, leadOf."
   ],
   "ownership": [
     "scripts/player.js - player.state progression, health/sanity, inventory/equipment, hunger/thirst, cash (cents), visited areas, kills/deaths and combat; movement consumes carryMul from grab.js.",
@@ -49,9 +49,9 @@
     "scripts/craft.js - player.state craftOpen/craftBench and payout redemption; recipes validate skill/materials; craft also owns hunger/thirst drain and food/water use.",
     "scripts/horde.js - player.state horde phase/countdown/alive/result; session holds wave timing; spawned creature state carries owner horde id.",
     "scripts/build.js + scripts/player.js - player.state scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
-    "scripts/interact.js + scripts/lib/seat.js - focus/loot/interaction and player sit state; seats own occupancy claims, NPCs own pockets/pickpocket reactions and player-specific dialogue memory/rapport, containers own item/lock/scavenged state.",
-    "scripts/interact.js + scripts/talk.js - interaction sets player.state.talkWith; talk owns shopOpen, talkBusy, talkChoices and session talkingTo; NPC object state holds mem, rapport and speech line; meg-agent session holds derived life/fear/want timing.",
-    "scripts/grab.js and scripts/mahjong.js - grab session owns held object/physics, heave and grab animation expiry; player state carries carry/carryMul; player.state.mj owns table game, with cents debited/awarded by play."
+    "scripts/interact.js + scripts/lib/seat.js - focus/loot/interaction and player sit state; seats own occupancy claims, NPCs own pockets/pickpocket reactions and player-specific dialogue memory/rapport, containers own item/lock/scavenged stats.",
+    "scripts/interact.js + scripts/talk.js - interaction sets player.state.talkWith; talk owns shopOpen, talkBusy, talkChoices and session talkingTo; NPC object state holds mem, rapport and speech line; meg-agent session holds derived life/fear state.",
+    "scripts/l5-resident.js + places/level5 state - concierge rental payments debit player cash in cents; place state l5rent tracks room/suite bookings and player state holds the assigned key/expiry."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered handlers: locomotion precedes player movement; interact, grab, rest, mahjong, talk, build, noclip, stats, craft, OS, lockpick and horde process actions before critter behavior.",
@@ -59,31 +59,31 @@
     "Level 0 exit in scripts/player.js → Level 1; paired thresholds connect Levels 1–3; Level 3 sim lifts → Levels 4/5, Level 4 stairs → Level 5; hotel lift/stairs return to Level 3/4.",
     "scripts/level-door.js trigger → paired arrival marker IDs (PAIR) or state.to fallback; Level 3/4/5 sims place inbound markers, while player.js selects safe spawn/door checkpoints after death.",
     "scripts/player.js writes player.state.xfer on place change → scripts/ui.js draws named transition card; level-door crossing emits black transition and threshold sound.",
-    "interact.js E on living NPC → player.state.talkWith; talk-ui.js submits numbered choices, free text or Trade/Goodbye → talk.js/NPC ears; npc-talk.js builds lore-, memory- and relationship-informed prompt, then reply updates rapport and NPC memory.",
+    "interact.js E on living NPC → player.state.talkWith; talk-ui.js submits numbered choices, free text or Trade/Goodbye → talk.js/NPC ears; npc-talk.js builds lore-, memory- and relationship-informed prompt, then reply updates rapport and NPC speech state.",
     "talk.js asks scripts/lib/voices.js for reply/thinking clips through hear.js; interact, meg-agent barks, chatter.js and l4-people.js use the same voice mapping; NPC state.line/talkAt drives subtitles and meg-agent speech gestures.",
     "talk.js once-per-second social tick → remembered NPCs greet nearby player by name and may pass memory notes to nearby NPCs; walking out mid-talk closes conversation and records the departure.",
     "meg-agent.js reads npc-life.js stable fear/want traits → nearby tagged threats provoke fear speech and retreat; nearby players may hear want mutters; agent state also owns routine/combat and gestures.",
-    "interact.js E → door/container/bench/usable press; Level 4/5 handlers own special uses; E on lockpick-locked target starts lockpick.js and lockpick-ui.js renders it.",
+    "interact.js E → door/container/bench/usable press; Level 4/5 handlers own special uses; E on lockpick-locked target starts lockpick.js and lockpick-ui.js renders it; Level 5 boilerdoor press → l5-door.js opens/auto-shuts the steel door.",
     "Level 2 sim places SLUDGE2 pools, vents and markings → sim damages player health/sanity or health with armor mitigation and emits warning/audio/feedback; player.js drains/recharges stamina more harshly in hot pipe/hall zones.",
-    "Level 3 sim lays signage, sludge, live boxes and generator overload events; level3-lore.js lays notebook/set pieces, l3-ambience.js tunes lamp hum/voices, while level3 data controls sanity drain, including stronger generator-zone pressure."
+    "Level 0 smilers.js/lurkers.js → lib/hunt.js shared hearOf/sighting/leadOf; hunters hear non-crouching players through walls, track last sighting and predicted heading for the configured chase-memory window."
   ],
   "behaviorFamilies": [
     "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; Level 5 x0z0.scene groups hotel detail by room tags.",
     "places/level4/cells/x0z0.scene + level4-geo.js, level4-detail-geo.js, l4-prop-geo.js and look-level4.js - office structure, non-colliding detail, varied abandoned props and post-processing share the Level 4 plan.",
     "scripts/l4-office.js + l4-office-geo.js - repeated open-floor cubicle islands, phones and printers vary by placement; manager schedules rings, ambient sounds, tasks and supply rewards.",
-    "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - agent/resident rounds and talk vary by faction, role, voice, look/build and day/night routine; scripts/meg-agent.js handles movement, combat and expressive behavior.",
+    "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - agent/resident rounds and talk vary by faction, role, voice, look/build and day/night routine; scripts/meg-agent.js handles movement, combat and animation.",
     "scripts/lib/clothes.js + clothes.yml - leveled garment lists vary by player/place tier and rarity; faction wardrobes roll for agents; Level 5 residents keep authored outfits.",
-    "scripts/smilers.js, lurkers.js, hounds.js and stealers.js - distinct pursuit/senses adapt to place grids, safe zones, gaze/light and hunt phase; deathmoths manage their own swarms.",
+    "scripts/smilers.js and lurkers.js use scripts/lib/hunt.js for shared hearing and lost-trail prediction, but retain different light/gaze, pursuit and attack rules; hounds and stealers have distinct pursuit rules, deathmoths manage their own swarms.",
     "scripts/l5-hall-lay.js + l5-hall-geo.js/l5-hall-fix.js - Main Hall furnishings/fixtures derive from layout rows; kind and loot metadata vary geometry, collision, breakability and containers.",
     "Level 5 elevator banks reuse behavior with copper/modern/freight geometry; l5-staff.js disguises facelings as hotel figures, l5-rats.js manages packs, while grab.js shares lift/throw/break behavior across eligible props."
   ],
   "probableOrphans": [],
   "migrationNotes": [
     "Grid contracts differ: Level 0 is 56×56 at 4 m (hub cells 26–29); Level 1 30×30 at 8 m; Level 2 24×24 at 5 m; Level 3 26×26 at 4 m; Level 4 64×64 m with 8 m offices; Level 5 96×60 m, x ±48/z ±30.",
-    "Level 4 base l4-geo is structural mesh/collider; l4-detail-geo draws non-colliding ceiling/carpet/wall wear; props and scene/sim bodies supply collision.",
-    "Level 3 tight cells clear width 1 m (tightHalf 0.5), springline 1.6 m and crown 2.15 m; tightArms/tightSpans drive vaults and gates/furniture stay out of crawl halls.",
+    "Level 0 sim's creature recovery converts positions relative to cellCenter(0,0) using cellSize before inHub checks; keep that origin/math aligned with maze.js when changing grid placement.",
+    "Level 0 stamina uses data/level0.yml: walk 4.6, sprint 7.4, drain 21/s, regen 10/s; exhausting AP sets winded, sprint stays disabled until 30 stamina and regen is multiplied by 0.6. Hunter hearing/chase ranges and memory are in the same data file.",
+    "Level 3 tight cells clear width 1 m (tightHalf 0.5), springline 1.6 m and crown 2.15 m; tightArms/tightSpans drive vaults. Level 4 l4-geo is structural mesh/collider; l4-detail-geo is non-colliding detail and props/scene bodies supply collision. Level 3 dark positions cache in ctx.session.dark, not module state.",
     "Player behavior order is intentional: locomotion, player, interact, grab, rest, mahjong, talk, build, noclip, stats, craft, OS, lockpick, horde, critter; NPC chains likewise place locomotion before controllers.",
-    "Door IDs couple level-door.js PAIR, place arrival markers and player.js CHECKS; Level 5 routes include l3-lift5 ↔ l5-from-l3 and l4-stairs-down ↔ l5-from-l4, with lift/stairs returns.",
-    "world.state.clockSkip is milliseconds added to ctx.now() by gameNow; a day is 600000 ms and an hour 25000 ms. Rest advances the shared clock; Level 4 l4clock is separately adjusted, not replaced."
+    "Door IDs couple level-door.js PAIR, place arrival markers and player.js CHECKS; Level 5 routes include l3-lift5 ↔ l5-from-l3 and l4-stairs-down ↔ l5-from-l4. Cash is cents, rental prices whole backdollars ×100; world.state.clockSkip is ms added by gameNow (day 600000 ms, hour 25000 ms), while Level 4 l4clock is separate."
   ]
 }
