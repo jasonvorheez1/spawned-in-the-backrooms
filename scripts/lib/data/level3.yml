@@ -2,15 +2,17 @@
 cells: 26            # 26 x 26 cells
 cellSize: 4          # metres per cell
 height: 3.0          # floor to ceiling in the halls
-tightHeight: 2.15    # the low crawl halls
+tightHeight: 2.15    # the low crawl halls: arch crown
+tightHalf: 0.5       # half the clear width of a crawl hall (1.0 m: a 0.7 m body plus 0.15 m each side)
+tightSpring: 1.6     # where the crawl hall's brick arch springs from its walls
 seed: 3303
 arrive: [1, 12]      # the Base Gamma checkpoint, by the door back to Level 2
 outpost: { x0: 0, z0: 10, w: 4, d: 5 }   # Base Gamma's forward checkpoint: safe ground
-loops: 0.16          # extra openings so it is not a pure tree
-barShare: 0.55       # of those extra openings, this share are indestructible bars instead (you see through, never pass)
-gateShare: 0.05      # tree openings that wear an open barred gate
+loops: 0.22          # extra openings so it is not a pure tree
+barShare: 0.75       # of those extra openings, this share are indestructible bars instead (you see through, never pass)
+gateShare: 0.18      # tree openings that wear an open barred gate
 darkShare: 0.18      # 4x4 sectors with no working light: paranoia hotspots
-tightShare: 0.2      # 3x3 sectors of low, cramped crawl halls
+tightShare: 0.3      # 3x3 sectors of low, cramped crawl halls
 generators: 3        # generator rooms, 3x3 cells
 lines: 2             # assembly lines, 4x2 cells
 vaults: 5            # sealed 2x2 rooms you only see through bars
@@ -27,6 +29,7 @@ lineMax: 4           # items a line lets pile up
 hounds: 6            # in brigades of 3
 moths: 4             # deathmoth swarms
 crates: 26
+oobPlates: 8         # yellow OUT OF BOUNDS plates hung on bar walls
 almonds: 22
 floorWeapons: 8
 entityRespawn: 80

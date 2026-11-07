@@ -6,6 +6,7 @@
 import L from "./data/level3.yml";
 
 export const N = L.cells, S = L.cellSize, H = L.height, TH = L.tightHeight, HALF = (N * S) / 2;
+export const TW = L.tightHalf ?? 0.5, TSP = L.tightSpring ?? 1.6; // crawl hall: clear half width, arch springline
 export const ARRIVE = { cx: L.arrive[0], cz: L.arrive[1] };
 export function hash(x, z, s = 0) {
   let h = (Math.imul(x | 0, 374761393) + Math.imul(z | 0, 668265263) + Math.imul(s | 0, 1442695041)) | 0;
@@ -77,7 +78,7 @@ export const BLOCKS = []; // { type: "gen" | "line" | "vault", x0, z0, w, d, i, 
 })();
 export const isOpen = (cx, cz, d) => inside(cx, cz) && !!(open[cz * N + cx] & DIRS[d][2]);
 export const isBars = (cx, cz, d) => inside(cx, cz) && !!(bars[cz * N + cx] & DIRS[d][2]);
-export const isGate = (cx, cz, d) => inside(cx, cz) && !!(gate[cz * N + cx] & DIRS[d][2]) && isOpen(cx, cz, d);
+export const isGate = (cx, cz, d) => inside(cx, cz) && !!(gate[cz * N + cx] & DIRS[d][2]) && isOpen(cx, cz, d) && zoneOf(cx, cz) !== "tight" && zoneOf(cx + DIRS[d][0], cz + DIRS[d][1]) !== "tight"; // no cage frame in a crawl hall
 export const openings = (cx, cz) => [0, 1, 2, 3].filter((d) => isOpen(cx, cz, d));
 export const blockOf = (cx, cz) => (inside(cx, cz) ? BLOCKS[blockId[cz * N + cx]] ?? null : null);
 const special = (cx, cz) => inside(cx, cz) && kind[cz * N + cx] !== 0;
@@ -94,6 +95,14 @@ export function zoneOf(cx, cz) {
   if (tightSector(cx, cz)) return "tight";
   return "hall";
 }
+// crawl halls: the arms (open or barred sides) a 1 m brick passage runs out to, and the arch spans over them
+export const tightArms = (cx, cz) => [0, 1, 2, 3].filter((d) => isOpen(cx, cz, d) || isBars(cx, cz, d));
+export function tightSpans(cx, cz) { // [{ ax: "x" | "z", a0, a1 }] in world metres along the arch's axis
+  const c = cellCenter(cx, cz), a = tightArms(cx, cz), h = S / 2;
+  if (a.every((d) => d % 2 === 0)) return [{ ax: "x", a0: c.x - (a.includes(2) ? h : TW), a1: c.x + (a.includes(0) ? h : TW) }];
+  if (a.every((d) => d % 2 === 1)) return [{ ax: "z", a0: c.z - (a.includes(3) ? h : TW), a1: c.z + (a.includes(1) ? h : TW) }];
+  return a.map((d) => d === 0 ? { ax: "x", a0: c.x + TW, a1: c.x + h } : d === 2 ? { ax: "x", a0: c.x - h, a1: c.x - TW } : d === 1 ? { ax: "z", a0: c.z + TW, a1: c.z + h } : { ax: "z", a0: c.z - h, a1: c.z - TW });
+}
 export const zoneAt = (x, z) => { const { cx, cz } = cellAt(x, z); return zoneOf(cx, cz); };
 export const ceilingAt = (cx, cz) => (zoneOf(cx, cz) === "tight" ? TH : H);
 // the ways out: the door home to Level 2 in the checkpoint's west wall; the dead freight elevator to Level 4 at the far east
@@ -102,7 +111,7 @@ export const LIFT = (() => { for (let i = 0; i < N; i++) { const cz = (13 + (i %
 export const L3_NAMES = { l3_hall: "Level 3 · Electrical Station", l3_tight: "Level 3 · Crawl Halls", l3_dark: "Level 3 · Blind Halls", l3_gen: "Level 3 · Generator Room", l3_line: "Level 3 · Assembly Line", l3_gamma: "Level 3 · Base Gamma Checkpoint", l3_vault: "Level 3 · Behind the Bars" };
 
 // hazards, laid the same on every machine: sludge leaks under the wall pipes, live boxes that arc, one generator a room
-const hallCells = []; for (let cz = 0; cz < N; cz++) for (let cx = 0; cx < N; cx++) { const z = zoneOf(cx, cz); if ((z === "hall" || z === "tight" || z === "dark") && cx > 4) hallCells.push([cx, cz]); }
+const hallCells = []; for (let cz = 0; cz < N; cz++) for (let cx = 0; cx < N; cx++) { const z = zoneOf(cx, cz); if ((z === "hall" || z === "dark") && cx > 4) hallCells.push([cx, cz]); }
 function pickCells(n, s, gap) { const out = []; const c = hallCells.slice().sort((a, b) => hash(a[0], a[1], s) - hash(b[0], b[1], s)); for (const p of c) { if (out.length >= n) break; if (out.some((q) => Math.max(Math.abs(q[0] - p[0]), Math.abs(q[1] - p[1])) < gap)) continue; out.push(p); } return out; }
 // a hazard hugs a closed wall of its cell: side d (0 +x … 3 -z), and its point sits 0.9 m off that wall
 function hug(cx, cz, s) { const closed = [0, 1, 2, 3].filter((d) => !isOpen(cx, cz, d) && !isBars(cx, cz, d)); const d = closed.length ? closed[Math.floor(hash(cx, cz, s) * closed.length)] : 0; const c = cellCenter(cx, cz), [dx, dz] = DIRS[d]; return { cx, cz, d, x: c.x + dx * (S / 2 - 0.9), z: c.z + dz * (S / 2 - 0.9), wx: c.x + dx * (S / 2 - 0.4), wz: c.z + dz * (S / 2 - 0.4) }; }
