@@ -63,9 +63,9 @@ export function headModel(l0) {
       eyewhite: { color: '#fffdfa', roughness: 0.4 },
       eyeink: { color: '#161214', roughness: 0.85 },
       pupil: {
-        color: eyeCol || '#121014',
-        roughness: 0.22,
-        metalness: 0.05,
+        color: eyeCol && (l?.glowEye || l?.species === 'samantha') ? eyeCol : '#000000', // pupils all black, no shine (Shelly); colour rides the iris
+        roughness: 1,
+        metalness: 0,
         ...(eyeCol && (l?.glowEye || l?.species === 'samantha') ? { emissive: eyeCol, emissiveIntensity: 0.4 } : {})
       },
       iris: { color: eyeCol || '#8a5a2e', roughness: 0.25 },
