@@ -2,12 +2,13 @@ import { tickWalls } from "../../scripts/lib/breakables.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { fullLook, npcLook } from "../../scripts/lib/clothes.js";
 import { raycast } from "builtin/physics";
+import { heard } from "../../scripts/lib/hear.js";
 // Level 2's referee: lays the halls, lights, camp and supplies once, then keeps the hounds and survivors topped up.
 import L from "../../scripts/lib/data/level2.yml";
 import MEG from "../../scripts/lib/data/meg.yml";
-import { N, H, S, zoneOf, cellCenter, cellAt, openings, isOpen, hash, ARRIVE, BACK, SEALED, SIDE, HALL, HALL_H, CATWALK, inHall, inPipes, sideOf, flickerSector } from "../../scripts/lib/level2.js";
+import { N, H, S, zoneOf, cellCenter, cellAt, openings, isOpen, hash, ARRIVE, BACK, SEALED, SIDE, HALL, HALL_H, CATWALK, inHall, inPipes, sideOf, flickerSector, SLUDGE2 } from "../../scripts/lib/level2.js";
 import { spawnAlmond, spawnCrateL2, spawnWeapon, rollWeaponL2, spawnContainerL2 } from "../../scripts/lib/loot.js";
-import { npcState } from "../../scripts/lib/stats.js";
+import { npcState, dmgAfterArmor } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "250ms";
@@ -87,6 +88,8 @@ export function tick(ctx) {
   }
   if ((s.rev ?? 0) >= 4 && (s.snapped ?? 0) < 1) { snapContainers(ctx); s.snapped = 1; }
   if ((s.rev ?? 0) < 4) revamp(ctx, s); // the revamp lays itself over a few ticks: rooms, doors, the hall, vents
+  if (s.sludgeV !== 1) { s.sludgeV = 1; laySludge2(ctx); }
+  if (s.graffitiV !== 1) { s.graffitiV = 1; layGraffiti2(ctx); }
   // a fallen survivor is replaced after a while
   for (const id of Object.keys(SURV)) {
     const o = ctx.place.objects[id];
@@ -102,6 +105,54 @@ export function tick(ctx) {
     for (let i = have; i < L.hounds; i++) {
       const c = cellCenter(8 + Math.floor(ctx.random() * (N - 8)), Math.floor(ctx.random() * N));
       ctx.spawn({ tags: ["hound"], feetPosition: { x: c.x, y: 0.05, z: c.z }, physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/hound-geo.js" }, state: npcState(ctx, "hound", 60, { xp: 40 }) });
+    }
+  }
+
+  // player hazards: boiling black pipe fluid and scalding steam vents
+  const players = ctx.place.players;
+  if (players.length) {
+    for (const p of players) {
+      const ps = p.state; if (!ps || ps.hp == null || ps.hp <= 0) continue;
+      const f = p.feetPosition, dt = 0.25;
+
+      // boiling black sludge pools under cracked pipes
+      for (const h of SLUDGE2) {
+        if (Math.hypot(f.x - h.x, f.z - h.z) < 1.15 && f.y < 0.3) {
+          ps.hp -= dmgAfterArmor(ps.look, (L.sludgeHurt ?? 7) * dt);
+          ps.sanity = Math.max(0, (ps.sanity ?? 0) - (L.sludgeSanity ?? 3) * dt);
+          if (!p.session?.slAt || now - p.session.slAt > 1500) {
+            p.session.slAt = now;
+            heard(ctx, { maxDistance: 24, refDistance: 4, clip: GRIT("acid-sizzle-hiss"), position: f, volume: 0.5 }, { audience: { player: p.id } });
+            ctx.emit("screenFlash", { color: "#25101a", duration: 0.3, intensity: 0.4 }, { audience: { player: p.id } });
+            if (!p.session?.sludgeWarn) {
+              p.session.sludgeWarn = 1;
+              ps.notice = { text: "Boiling black fluid burns your boots! It is NOT almond water.", at: now };
+            }
+          }
+          break;
+        }
+      }
+
+      // scalding steam vents: high pressure jets burn wanderers
+      for (const v of ctx.query({ tags: ["l2steam"], radius: 10, center: f })) {
+        const vp = v.feetPosition;
+        if (Math.hypot(f.x - vp.x, f.z - vp.z) < 1.45 && Math.abs(f.y + 1.2 - vp.y) < 1.3 && now - (ps.steamAt ?? 0) > 1600) {
+          ps.steamAt = now;
+          const dmg = L.steamHurt ?? 8;
+          ps.hp -= dmgAfterArmor(ps.look, dmg);
+          const at = { x: f.x, y: f.y + 1.2, z: f.z };
+          heard(ctx, { maxDistance: 24, refDistance: 4, clip: GRIT("steam-pipe-hiss-loop"), position: at, volume: 0.85 });
+          ctx.emit("damageNumber", { position: at, value: dmg, color: "#ff8c3a" });
+          ctx.emit("screenShake", { intensity: 0.35, duration: 0.25 }, { audience: { player: p.id } });
+          ctx.emit("screenFlash", { color: "#ff7722", duration: 0.25, intensity: 0.5 }, { audience: { player: p.id } });
+          const kx = f.x - vp.x, kz = f.z - vp.z, kd = Math.hypot(kx, kz) || 1;
+          ctx.emit("cameraPunch", { direction: { x: kx / kd, y: 0.2, z: kz / kd }, intensity: 0.5 }, { audience: { player: p.id } });
+          if (!p.session?.steamWarn) {
+            p.session.steamWarn = 1;
+            ps.notice = { text: "High-pressure steam scalds your skin!", at: now };
+          }
+        }
+      }
     }
   }
 }
@@ -201,4 +252,37 @@ function snapContainers(ctx) {
     o.feetPosition = { x: r.feetPosition.x + best.d.x * shift, y: r.feetPosition.y, z: r.feetPosition.z + best.d.z * shift };
     o.rotation = { yaw: Math.atan2(best.d.x, best.d.z) * 180 / Math.PI };
   }
+}
+
+const DRIP2 = `fx
+pop drip rate=3 on=disc(.05) life=.6 v=<0,-1,0>*(.2..0.4) size=.025..0.04 acc=grav() floor=die col=<.02,.02,.03> a=1 sz=$size r=sprite(soft-disc,alpha)
+pop fume rate=4 on=disc(.5).c(-1.9) life=1.5..2.5 v=up(.15..0.3) size=.2..0.35 acc=curl(.3)+drag(.8) sz=$size*(.6>2) col=<.12,.1,.14> a=0>.2:.25>.7:.1>0 r=sprite(smoke-puff,alpha)`;
+
+function laySludge2(ctx) {
+  for (const h of SLUDGE2) {
+    ctx.spawn({ tags: ["l2sludge", "sludge"], feetPosition: { x: h.x, y: 0.015, z: h.z }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 1.15, segments: 20 }, material: { color: "oklch(0.08 0.01 280)", roughness: 0.08, metalness: 0.35 } });
+    ctx.spawn({ tags: ["l2drip"], feetPosition: { x: h.wx, y: H - 0.25, z: h.wz }, fx: { script: DRIP2 }, audio: { clip: GRIT("water-drip-echo-loop"), gain: 0.2, loop: true, spatial: true, maxDistance: 8 } });
+  }
+}
+
+function layGraffiti2(ctx) {
+  const a = cellCenter(1, ARRIVE.cz);
+  // over hallway heading east out of Survivor camp:
+  ctx.spawn({ tags: ["l2sign"], feetPosition: { x: a.x + 8.5, y: 2.3, z: a.z }, rotation: { yaw: -90 }, primitive: { kind: "box", width: 1.8, height: 0.5, depth: 0.02 }, material: { color: "oklch(0.24 0.02 120)", roughness: 0.85 },
+    ui: '<div face="left" width="1.8m" style="font-size:85px;font-weight:900;color:#d4f0b8;text-align:center;line-height:1.15">◄ OFFICE SPACE EL3A<div style="font-size:55px;color:#a8c880">SURVIVOR SANCTUARY · MEDIC & QUARTER</div></div>' });
+  // directional sign along main hallway (cx=6, cz=12):
+  const c6 = cellCenter(6, ARRIVE.cz);
+  ctx.spawn({ tags: ["l2sign"], feetPosition: { x: c6.x, y: 1.7, z: c6.z - 2.45 }, rotation: { yaw: 0 }, primitive: { kind: "box", width: 1.6, height: 0.35, depth: 0.02 }, material: { color: "oklch(0.22 0.01 240)", roughness: 0.9 },
+    ui: '<div face="front" width="1.6m" style="font-size:85px;font-weight:900;color:#e8d890;text-align:center;letter-spacing:4px">◄ SURVIVORS · WEST</div>' });
+  // near entrance to Boiler Hall (cx=9, cz=10):
+  const c9 = cellCenter(9, 10);
+  ctx.spawn({ tags: ["l2sign"], feetPosition: { x: c9.x + 2.45, y: 1.8, z: c9.z }, rotation: { yaw: -90 }, primitive: { kind: "box", width: 1.8, height: 0.45, depth: 0.02 }, material: { color: "oklch(0.25 0.04 40)", roughness: 0.9 },
+    ui: '<div face="left" width="1.8m" style="font-size:85px;font-weight:900;color:#ff9848;text-align:center;line-height:1.2">BOILER SECTOR<div style="font-size:55px;color:#ffd090">110°F EXTREME HEAT · SCALD HAZARDS</div></div>' });
+  // near Pipe Maze (cx=15, cz=15):
+  const c15 = cellCenter(15, 15);
+  ctx.spawn({ tags: ["l2sign"], feetPosition: { x: c15.x + 2.45, y: 1.7, z: c15.z }, rotation: { yaw: -90 }, primitive: { kind: "box", width: 2.0, height: 0.45, depth: 0.02 }, material: { color: "oklch(0.25 0.03 20)", roughness: 0.9 },
+    ui: '<div face="left" width="2.0m" style="font-size:80px;font-weight:900;color:#ffaa55;text-align:center;line-height:1.15">PIPE MAZE<div style="font-size:52px;color:#eedd88">DO NOT DRINK BLACK RUNOFF · SCALD HAZARDS</div></div>' });
+  // stenciled caution on wall next to SEALED door:
+  ctx.spawn({ tags: ["l2sign"], feetPosition: { x: SEALED.x - 0.6, y: 0.7, z: SEALED.z }, primitive: { kind: "box", width: 0.02, height: 0.45, depth: 1.6 }, material: { color: "oklch(0.22 0.03 30)" },
+    ui: '<div face="left" width="1.6m" style="font-size:75px;font-weight:900;color:#ff6644;text-align:center;line-height:1.15">M.E.G. ADVISORY<div style="font-size:50px;color:#ffa088">LEVEL 3 CLASS 4 HAZARD · UNGROUNDED VOLTAGE</div></div>' });
 }

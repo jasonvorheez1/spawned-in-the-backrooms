@@ -86,3 +86,30 @@ export const SIDE = (() => {
 })();
 const sideIdx = new Int16Array(N * N).fill(-1); for (const r of SIDE) sideIdx[r.cz * N + r.cx] = r.i;
 export const sideOf = (cx, cz) => (cx < 0 || cz < 0 || cx >= N || cz >= N ? null : SIDE[sideIdx[cz * N + cx]] ?? null);
+
+// boiling black pipe leaks: puddles under rusted wall pipes in the pipe maze and utility corridors
+const l2Cells = [];
+for (let cz = 0; cz < N; cz++) for (let cx = 3; cx < N; cx++) {
+  const z = zoneOf(cx, cz);
+  if (z === "pipes" || z === "dark" || (z === "tunnel" && openings(cx, cz).length === 1)) {
+    if (!sideOf(cx, cz) && !inHall(cx, cz)) l2Cells.push([cx, cz]);
+  }
+}
+function pickL2(n, s, gap) {
+  const out = [];
+  const c = l2Cells.slice().sort((a, b) => hash(a[0], a[1], s) - hash(b[0], b[1], s));
+  for (const p of c) {
+    if (out.length >= n) break;
+    if (out.some((q) => Math.max(Math.abs(q[0] - p[0]), Math.abs(q[1] - p[1])) < gap)) continue;
+    out.push(p);
+  }
+  return out;
+}
+function hug2(cx, cz, s) {
+  const closed = [0, 1, 2, 3].filter((d) => !isOpen(cx, cz, d));
+  const d = closed.length ? closed[Math.floor(hash(cx, cz, s) * closed.length)] : 0;
+  const c = cellCenter(cx, cz), [dx, dz] = DIRS[d];
+  return { cx, cz, d, x: c.x + dx * (S / 2 - 1.1), z: c.z + dz * (S / 2 - 1.1), wx: c.x + dx * (S / 2 - 0.45), wz: c.z + dz * (S / 2 - 0.45) };
+}
+export const SLUDGE2 = pickL2(L.sludge ?? 12, 881, 3).map(([x, z]) => hug2(x, z, 882));
+

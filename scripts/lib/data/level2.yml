@@ -20,6 +20,10 @@ hall: { x0: 10, z0: 9, w: 4, d: 4, height: 8, catwalk: 3.6 }
 pipes: { x0: 16, z0: 15, w: 5, d: 5 }
 flickerShare: 0.22   # share of 4x4 sectors whose tubes flicker
 steamVents: 18
+steamHurt: 8         # scald damage touching a high-pressure steam vent
+sludge: 12           # boiling black sludge pools leaking from pipes
+sludgeHurt: 7        # hp a second standing in boiling pipe liquid
+sludgeSanity: 3      # sanity a second from the boiling fumes
 # side rooms: dead-end cells closed off by a real door. One of each type, then again, in this order.
 sideRooms: 14
 sideOrder: [boiler, locker, electrical, office, cage, break, pump, office, locker, electrical, cage, break, boiler, pump]

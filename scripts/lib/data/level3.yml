@@ -18,7 +18,7 @@ lines: 2             # assembly lines, 4x2 cells
 vaults: 5            # sealed 2x2 rooms you only see through bars
 sludge: 16           # black sludge leaks from the wall pipes
 sparks: 14           # live electrical boxes that arc
-sanityDrain: { hall: 0.12, tight: 0.2, dark: 0.34, gen: 0.1, line: 0.06, gamma: -1.4, vault: 0.3 }
+sanityDrain: { hall: 0.12, tight: 0.2, dark: 0.34, gen: 0.26, line: 0.06, gamma: -1.4, vault: 0.3 }
 sludgeHurt: 9        # hp a second standing in sludge (armor soaks some)
 sludgeSanity: 4      # sanity a second from the fumes
 sparkHurt: 14        # one arc

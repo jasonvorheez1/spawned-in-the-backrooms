@@ -95,6 +95,29 @@ function layLayout(ctx) {
   }
 }
 
+function layGammaSignage(ctx) {
+  const a = cellCenter(1, ARRIVE.cz);
+  // Corridor outside Base Gamma heading into the station:
+  ctx.spawn({ tags: ["l3sign"], feetPosition: { x: a.x + 10.5, y: 1.8, z: a.z }, rotation: { yaw: -90 }, primitive: { kind: "box", width: 2.2, height: 0.55, depth: 0.02 }, material: { color: "oklch(0.24 0.03 140)", roughness: 0.85 },
+    ui: '<div face="left" width="2.2m" style="font-size:95px;font-weight:900;color:#d8e8b0;text-align:center;line-height:1.15">◄ M.E.G. BASE GAMMA<div style="font-size:55px;color:#a8c880">CHECKPOINT · WEAPONS HOLSTERED · REFUGE</div></div>' });
+  // Blood test directive stencil on wall:
+  ctx.spawn({ tags: ["l3sign"], feetPosition: { x: a.x + 6.2, y: 0.9, z: a.z + 4.5 }, rotation: { yaw: 0 }, primitive: { kind: "box", width: 2.0, height: 0.45, depth: 0.02 }, material: { color: "oklch(0.22 0.02 240)", roughness: 0.9 },
+    ui: '<div face="front" width="2.0m" style="font-size:80px;font-weight:900;color:#e8f0c0;text-align:center;line-height:1.2">SECURITY DIRECTIVE<div style="font-size:50px;color:#c8d890">MANDATORY BLOOD TEST · ANTI-STEALER PROTOCOL</div></div>' });
+  // High voltage caution stencil:
+  if (GENS.length) {
+    const g0 = GENS[0];
+    ctx.spawn({ tags: ["l3sign"], feetPosition: { x: g0.x - 3.8, y: 1.9, z: g0.z }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.8, height: 0.45, depth: 0.02 }, material: { color: "oklch(0.25 0.04 40)", roughness: 0.9 },
+      ui: '<div face="right" width="1.8m" style="font-size:85px;font-weight:900;color:#ffaa33;text-align:center;line-height:1.15">DANGER: 10,000 VOLTS<div style="font-size:50px;color:#ffd060">TRANSFORMER SUB-STATION · LIVE ARC HAZARD</div></div>' });
+  }
+  // Indestructible bars caution stencil:
+  if (OOB.length) {
+    const o0 = OOB[0];
+    const e = o0.d === 0 ? { x: (o0.cx + 1) * S - HALF, z: o0.cz * S - HALF + S / 2 } : { x: o0.cx * S - HALF + S / 2, z: (o0.cz + 1) * S - HALF };
+    ctx.spawn({ tags: ["l3sign"], feetPosition: { x: e.x, y: 0.9, z: e.z }, primitive: { kind: "box", width: 0.8, height: 0.35, depth: 0.02 }, material: { color: "oklch(0.22 0.03 30)" },
+      ui: '<div face="front" width="0.8m" style="font-size:65px;font-weight:900;color:#ff7766;text-align:center;line-height:1.15">IMPERVIOUS<div style="font-size:42px;color:#ffa090">DO NOT APPROACH</div></div>' });
+  }
+}
+
 export function tick(ctx) {
   if (ctx.place.state.liftV !== 1) { ctx.place.state.liftV = 1; // the freight lift has power again: up to Level 4
     ctx.spawn("l3-lift", { tags: ["door"], feetPosition: { x: LIFT.x - 0.6, y: 0, z: LIFT.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 2.2 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level4#l4-lift-arrive" } });
@@ -126,6 +149,7 @@ export function tick(ctx) {
   if (!(Math.abs(now - (ctx.session.wallTick ?? -1e9)) < 2000)) { ctx.session.wallTick = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)
   if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(false)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   if (s.seeded && s.gammaExtV !== 1) layGammaExterior(ctx);
+  if (s.seeded && s.signsV !== 1) { s.signsV = 1; layGammaSignage(ctx); }
   if (s.furnitureSeeded !== 2) { // loot moved from crates into fuse cabinets, toolboxes, lockers and satchels: clear the old crates once
     for (const o of ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.tags?.includes("container")) ctx.destroy(o.id);
     s.furnitureSeeded = 2; if (s.seeded && !ctx.query({ tags: ["lootfurn"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).length) seedFurniture3(ctx);
@@ -182,6 +206,7 @@ export function tick(ctx) {
     const open = (cx, cz) => zoneOf(cx, cz) !== "vault" && zoneOf(cx, cz) !== "gamma";
     for (let i = 0, n = 0; n < L.floorWeapons && i < 400; i++) { const cx = 6 + Math.floor(ctx.random() * (N - 6)), cz = Math.floor(ctx.random() * N); if (!open(cx, cz)) continue; const c = cellCenter(cx, cz); spawnWeapon(ctx, { x: c.x - 0.6, z: c.z + 0.4 }, rollWeaponL3(ctx)); n++; }
     s.gen = {}; s.line = {}; s.gone = {};
+    layGammaSignage(ctx); s.signsV = 1;
   }
 
   if (s.layoutV && s.loreV !== 1) { s.lore = layLore(ctx); s.loreV = 1; } // lore set pieces (scripts/lib/level3-lore.js)

@@ -102,11 +102,21 @@ export function layLore(ctx) {
     ctx.spawn({ tags: ["lore"], feetPosition: wallPt(cx, cz, d, 0, 0.9, 2.6), light: { kind: "point", color: "oklch(0.78 0.08 75)", intensity: 0.7, distance: 4 } });
     n.mural++; }
   // 4. diary pages: torn notebook pages by the walls, E reads them (a container holding page:<n>)
-  for (let i = 0; i < 5; i++) { const t = take(5701 + i * 17, false); if (!t) continue; const { cx, cz, d } = t;
+  const PAGES = [
+    "they hum when nobody's there. they HUM. it gets in your head",
+    "do not follow the ringing. do not look into the generator vents",
+    "the statue moved. 2 rooms behind the bars. i counted",
+    "moths on the wall. thousands of them. all facing me",
+    "purple in the brick. it was Hank. he noclipped into the mortar",
+    "the hounds bark in code. they herd you into the blind crawlways",
+    "the black sludge is boiling. do not drink it. not almond water",
+    "Base Gamma has the only thick walls left. pray they let you in"
+  ];
+  for (let i = 0; i < PAGES.length; i++) { const t = take(5701 + i * 17, false); if (!t) continue; const { cx, cz, d } = t;
     const p = wallPt(cx, cz, d, (hash(cx, cz, 3) - 0.5) * 2, 0.25, 0.005);
     ctx.spawn({ tags: ["lore", "lore-page", "container", "breakable"], feetPosition: p, rotation: { yaw: yawOf(d) + (hash(cx, cz, 4) - 0.5) * 50 }, physics: "static",
       primitive: { kind: "box", width: 0.21, height: 0.004, depth: 0.28 }, material: { color: "oklch(0.86 0.025 90)", roughness: 1 },
-      ui: `<div face="top" width="0.21m" style="padding:10px;font-family:serif;font-size:15px;line-height:1.05;color:#1d2a52;background:repeating-linear-gradient(#e6dfcc 0 17px,#9fb0cf 17px 18px)">${["they hum when nobody's there. they HUM", "do not follow the ringing. do not", "the statue moved. 2 rooms. i counted", "moths on the wall. all facing me", "purple in the brick. it was Hank"][i]}<br>— — — —<br>it's so quiet when you stop</div>`,
+      ui: `<div face="top" width="0.21m" style="padding:10px;font-family:serif;font-size:15px;line-height:1.05;color:#1d2a52;background:repeating-linear-gradient(#e6dfcc 0 17px,#9fb0cf 17px 18px)">${PAGES[i]}<br>— — — —<br>it's so quiet when you stop</div>`,
       state: { mat: "wood", hp: 5, maxHp: 5, name: "Notebook page", items: "page:" + (1 + (i * 3) % 8) } });
     n.page++; }
   // 2. Object 56 (the Blender statue in its vault): one bare bulb over her

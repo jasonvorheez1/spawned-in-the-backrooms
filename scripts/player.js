@@ -671,7 +671,13 @@ export function update(ctx, dt) {
   const sprinting = w.sprint && moving && w.stamina > 1 && !s.ads && !crouched
   const dv = w.dv ??= derived(s) // the sheet's numbers, re-derived 4x a second in the stats beat, not three times a tick
   const nowS = ctx.now(), green = nowS < (s.greenUntil ?? 0), tired = nowS < (s.tiredUntil ?? 0) // green almond water: sprint longer; red: heavy limbs
-  w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain * (green ? AW.green.staminaMul : 1) : L.staminaRegen * dv.staRegen * (tired ? 0.3 : 1) * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
+  const zh = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z)
+  const l2Hot = ctx.self.place === 'level2' && (zh === 'l2_pipes' || zh === 'l2_hall')
+  if (l2Hot && nowS - (s.heatWarnAt ?? 0) > 45000) {
+    s.heatWarnAt = nowS
+    s.notice = { text: 'Suffocating heat (110°F) radiates from the pipes — stamina drains faster.', at: nowS }
+  }
+  w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain * (green ? AW.green.staminaMul : 1) * (l2Hot ? 1.25 : 1) : L.staminaRegen * dv.staRegen * (tired ? 0.3 : 1) * (l2Hot ? 0.68 : 1) * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
   const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
   const speed = (w.walkMode && !sprinting ? 0.5 : 1) * (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (s.carryMul ?? 1) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * dv.speed * (w.bur ??= burden(s))

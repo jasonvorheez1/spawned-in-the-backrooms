@@ -35,10 +35,14 @@ export function update(ctx) {
       const a = ctx.random() * 6.283, d = A.clank.near + ctx.random() * (A.clank.far - A.clank.near);
       heard(ctx, { clip: GRIT(A.clanks[Math.floor(ctx.random() * A.clanks.length)]), position: { x: f.x + Math.cos(a) * d, y: 2, z: f.z + Math.sin(a) * d }, volume: A.clank.volume, pitch: 0.85 + ctx.random() * 0.3, refDistance: 4, maxDistance: 40 }, { audience: { player: p.id } });
     }
-    if (now - (last[p.id] ?? -1e9) < A.voice.cooldown * 1000 || ctx.random() >= A.voice.chance) continue;
-    const near = DARK.filter((c) => { const d = Math.hypot(c.x - f.x, c.z - f.z); return d > 6 && d < A.voice.reach; });
+    const inDark = zoneOf(k.cx, k.cz) === "dark";
+    const lowSan = (p.state?.sanity ?? 100) < 45;
+    const cd = inDark || lowSan ? 25 : A.voice.cooldown;
+    const ch = inDark ? A.voice.chance * 2.8 : lowSan ? A.voice.chance * 1.8 : A.voice.chance;
+    if (now - (last[p.id] ?? -1e9) < cd * 1000 || ctx.random() >= ch) continue;
+    const near = DARK.filter((c) => { const d = Math.hypot(c.x - f.x, c.z - f.z); return d > 4 && d < A.voice.reach; });
     if (!near.length) continue;
     const c = near[Math.floor(ctx.random() * near.length)]; last[p.id] = now;
-    heard(ctx, { clip: A.voices[Math.floor(ctx.random() * A.voices.length)], position: { x: c.x, y: 1.4, z: c.z }, volume: A.voice.volume, refDistance: 3, maxDistance: 32 }, { audience: { player: p.id } });
+    heard(ctx, { clip: A.voices[Math.floor(ctx.random() * A.voices.length)], position: { x: c.x, y: 1.4, z: c.z }, volume: inDark ? A.voice.volume * 1.3 : A.voice.volume, refDistance: 3, maxDistance: 32 }, { audience: { player: p.id } });
   }
 }
