@@ -1,6 +1,7 @@
 // Level 5's things you press that aren't people (state.kind): a radio (E turns the polonaise off and on, for the whole room),
 // a sealed door (the lore's other levels: it tells you what's behind it and why it won't open).
 import { heard } from "./lib/hear.js";
+import { animate } from "builtin/tween";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const say = (who, text, ctx) => { if (who) who.state.notice = { text, at: ctx.now() }; };
 export const ears = {
@@ -19,6 +20,17 @@ export const ears = {
       say(who, s.text, ctx);
       return;
     }
+    if (s.kind === "boilerdoor") { // a locked steel door: residents can't open it, a player's E swings it for a few seconds, then it slams and bolts
+      const hinge = ctx.getObject(s.hinge), pos = { ...ctx.self.worldFeetPosition, y: 1.2 };
+      if (!hinge) return;
+      if (s.open) return;
+      s.open = true; s.verb = "Open"; s.info = "Swinging";
+      animate(ctx, hinge, { "rotation.yaw": s.yaw0 + s.swing }, { duration: 0.6, easing: "easeOutCubic" });
+      heard(ctx, { clip: G("heavy-metal-door-bolt-unlock-creak-open"), position: pos, volume: 0.8, maxDistance: 16 });
+      say(who, "You slide the bolt. Heat and noise roll out. It'll slam shut behind you.", ctx);
+      ctx.after(4, "shut");
+      return;
+    }
     if (s.kind === "bell") {
       heard(ctx, { clip: G("eerie-low-chime-level-up"), position: { ...ctx.self.worldFeetPosition, y: 1 }, volume: 0.7, pitch: 1.6, maxDistance: 14 });
       say(who, "The brass service bell rings with a clear, sharp chime. The sound echoes into the empty gallery.", ctx);
@@ -31,3 +43,14 @@ export const ears = {
     }
   },
 };
+
+// the boiler door's slam: back on its frame and bolted
+export function shut(ctx) {
+  const s = ctx.self.state, hinge = ctx.getObject(s.hinge);
+  if (hinge) animate(ctx, hinge, { "rotation.yaw": s.yaw0 }, { duration: 0.35, easing: "easeInQuad" });
+  s.open = false; s.verb = "Unbolt"; s.info = "Locked · staff only";
+  ctx.after(0.35, "slam");
+}
+export function slam(ctx) {
+  heard(ctx, { clip: G("heavy-steel-door-slam-shut-bolt-clang"), position: { ...ctx.self.worldFeetPosition, y: 1.2 }, volume: 0.9, maxDistance: 20 });
+}
