@@ -7,10 +7,8 @@ arrive: [1, 12]      # the Survivors' camp, by the door back to Level 1
 rooms: 9             # warehouse rooms behind the tunnels
 loops: 0.14          # share of extra openings so it's not a pure tree
 darkShare: 0.3       # share of 4x4 sectors whose circuit is dead (violet emergency light only)
-sanityDrain: { tunnel: 0.1, room: 0.07, dark: 0.22, camp: -1.2 }
 sanityDrain: { tunnel: 0.1, room: 0.07, dark: 0.22, camp: -1.2, side: 0.04, hall: 0.14, pipes: 0.18 }
 hounds: 3
-crates: 28
 crates: 22
 almonds: 18
 floorWeapons: 8
