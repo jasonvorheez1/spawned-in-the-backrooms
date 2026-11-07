@@ -140,10 +140,11 @@ export function geometry(ctx) {
   }
   // a limb: a capsule between two points
   function limb(a, b, ra, rb, M) {
-    const L = 7, path = [];
+    const L = 10, path = [];
     for (let i = 0; i <= L; i++) path.push([lerp(a[0], b[0], i / L), lerp(a[1], b[1], i / L), lerp(a[2], b[2], i / L)]);
     const up = Math.abs(b[1] - a[1]) > Math.abs(b[0] - a[0]) ? [0, 0, -1] : [0, 1, 0];
-    loft(path, (t) => { const r = lerp(ra, rb, t) * (t < 0.08 ? 0.75 + t * 3 : t > 0.92 ? 0.75 + (1 - t) * 3 : 1); return [r, r]; }, up, null, M);
+    // round ends: the radius closes like a hemisphere over the last few rings
+    loft(path, (t) => { const r = lerp(ra, rb, t), e = Math.min(t, 1 - t) * L / 1.2; const k = e >= 1 ? 1 : Math.sqrt(Math.max(0.05, 1 - (1 - e) * (1 - e))); return [r * k, r * k]; }, up, null, M);
   }
 
   // ---------- the face: shapes drawn onto the head's surface ----------
@@ -195,8 +196,7 @@ export function geometry(ctx) {
   // arms (T-pose), mitten hands with a thumb
   for (const s of [-1, 1]) {
     const furArm = sp.socks ? (t) => ctx.color(FUR) : null;
-    ctx.color(FUR); limb([s * 0.12, 0.965, 0], [s * 0.35, 0.965, 0], fem ? 0.042 : 0.047, 0.04, hi ? 12 : 8);
-    limb([s * 0.35, 0.965, 0], [s * 0.53, 0.965, 0], 0.04, 0.037, hi ? 12 : 8);
+    ctx.color(FUR); limb([s * 0.1, 0.965, 0], [s * 0.56, 0.965, 0], fem ? 0.043 : 0.047, 0.036, hi ? 12 : 8);
     ctx.color(sp.socks || FUR);
     ell([s * 0.6, 0.965, 0], [0.075, 0.058, 0.052], null, { seg: hi ? 16 : 10 });
     ell([s * 0.565, 0.975, -0.052], [0.026, 0.024, 0.034], null, { seg: hi ? 10 : 6 });
@@ -204,8 +204,8 @@ export function geometry(ctx) {
   // legs, round feet
   for (const s of [-1, 1]) {
     const x = s * 0.085;
-    ctx.color(FUR); limb([x, 0.6, 0], [x, 0.33, 0], fem ? 0.068 : 0.06, 0.05, hi ? 12 : 8);
-    ctx.color(sp.socks || FUR); limb([x, 0.33, 0], [x, 0.1, 0], 0.05, 0.046, hi ? 12 : 8);
+    ctx.color(FUR); limb([x, 0.64, 0], [x, sp.socks ? 0.3 : 0.06, 0], fem ? 0.07 : 0.062, 0.047, hi ? 12 : 8);
+    if (sp.socks) { ctx.color(sp.socks); limb([x, 0.34, 0], [x, 0.06, 0], 0.051, 0.046, hi ? 12 : 8); }
     ell([x, 0.055, -0.035], [0.072, 0.058, 0.115], null, { seg: hi ? 16 : 10 });
   }
   // head
@@ -285,7 +285,7 @@ export function geometry(ctx) {
   const pants = (col, knee = 0.12, shorts = false) => {
     ctx.color(col);
     ell(...inflate([0, 0.66, 0.005], fem ? [0.18, 0.11, 0.14] : [0.15, 0.1, 0.125], 0.016), null, { clip: (p) => p[1] > 0.7 });
-    for (const s of [-1, 1]) { const x = s * 0.085; limb([x, 0.61, 0], [x, shorts ? 0.4 : 0.34, 0], (fem ? 0.068 : 0.06) + 0.016, 0.065, hi ? 12 : 8); if (!shorts) limb([x, 0.35, 0], [x, knee, 0], 0.064, 0.058, hi ? 12 : 8); }
+    for (const s of [-1, 1]) { const x = s * 0.085; limb([x, 0.66, 0], [x, shorts ? 0.38 : knee, 0], (fem ? 0.07 : 0.062) + 0.016, shorts ? 0.07 : 0.06, hi ? 12 : 8); }
   };
   const skirt = (col, top = 0.7, bottom = 0.42, flare = 0.27) => {
     wOverride = { Hips: 1 };
