@@ -117,7 +117,7 @@ export function tick(ctx) {
     const fill = s.smilersSeeded ? 1 : L.smilers - smilers;
     for (let i = 0; i < fill; i++) {
       const c = cell(ctx, ["dark", "red", "pillars", "expanse"]);
-      if (c) ctx.spawn({ tags: ["smiler"], feetPosition: { x: c.x, y: 0.05, z: c.z }, primitive: { kind: "scripted", script: "scripts/smiler-geo.js" }, physics: { body: "character" }, material: { emissiveIntensity: 3.5 }, state: npcState(ctx, "smiler", L.smilerHp) });
+      if (c) ctx.spawn({ tags: ["smiler"], feetPosition: { x: c.x, y: 0.05, z: c.z }, model: { id: "/cdn/value.7cfa2d2f6aac7eda42803f3c50e8e6d723bf1c53b8467ed0a8530eb57304b737.glb", forward: "+z" }, physics: { body: "character" }, state: { ...npcState(ctx, "smiler", L.smilerHp), mdl: 1 } });
     }
     s.smilersSeeded = true;
     s.nextSmiler = now + L.smilerRespawn * 1000;
