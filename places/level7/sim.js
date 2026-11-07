@@ -138,7 +138,7 @@ const L7_NPCS = {
       { x: 47.2, y: 7.0, z: -123.5, dwell: 14, act: null, look: { x: 30.0, z: -140.0 } },
       { x: 44.5, y: 7.0, z: -117.5, dwell: 16, act: null, look: { x: 43.0, z: -118.0 } },
     ],
-    look: { species: "otter", sex: "m", eye: "#38a89d", belly: "#e6d2b5", nose: "#221814", topw: "jacket", top: "#2b4c5e", botw: "overalls", bottom: "#2b3036", shoes: "boots", shoec: "#1c1e22", hat: "beanie", hatc: "#d46a28", neck: "cape", neckc: "#c85a28", expr: "calm" },
+    look: { species: "otter", sex: "m", eye: "#38a89d", belly: "#e6d2b5", nose: "#221814", topw: "jacket", top: "#1e3b4b", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#141618", hat: "cap", hatc: "#b88838", eyew: "none", neck: "cape", neckc: "#c85a28", expr: "calm" }, // Seawatch dive coat, tar-caulked waders, lead-ballast boots, brass-rimmed dive hood, cork lifebelt mantle
   },
   "l7-jude": {
     name: "Brother Jude · Fort Surrender",
