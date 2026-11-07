@@ -41,18 +41,18 @@ kbd { display:inline-block; padding:0 4px; font-family:inherit; font-size:10px; 
 @keyframes hud-fade { 0%{opacity:0} 10%{opacity:1} 80%{opacity:1} 100%{opacity:0} }
 @keyframes pulse-red { 0%,100%{opacity:.6} 50%{opacity:.2} }
 @keyframes blink { 50%{opacity:.35} }
+@media (max-width: 640px) {
+  #hud .bl, #hud .br { bottom:auto !important; top:10px !important; transform:scale(0.72); transform-origin:top left }
+  #hud .br { transform-origin:top right; right:55px !important }
+  #hud #hint { display:none }
+  #hud .zone { top:42% !important; padding-right: calc(var(--spawn-chrome-reservation-right-inset, 50px) + 8px); padding-left:8px }
+}
 @media (pointer: coarse) {
   /* a phone: the thumbs own the bottom corners and the right column, so the readouts stack small on the left */
   #hud #hint { display:none }
   #hud .bl { bottom:auto !important; top:8px !important; left:10px !important; transform:scale(0.6); transform-origin:top left }
   #hud .br { bottom:auto !important; right:auto !important; top:96px !important; left:10px !important; transform:scale(0.6); transform-origin:top left; text-align:left }
   #hud .zone { top:38% !important }
-}
-@media (max-width: 640px) {
-  #hud .bl, #hud .br { bottom:auto !important; top:10px !important; transform:scale(0.72); transform-origin:top left }
-  #hud .br { transform-origin:top right; right:55px !important }
-  #hud #hint { display:none }
-  #hud .zone { top:42% !important; padding-right: calc(var(--spawn-chrome-reservation-right-inset, 50px) + 8px); padding-left:8px }
 }
 </style>`
 
