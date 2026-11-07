@@ -76,7 +76,7 @@ export function update(ctx, dt) {
     // the split: once, at 3 m
     const hungry = (m.hunger ?? 0) >= 1 || m.angry;
     if (m.ph === "skin" && prey && (best < T.reveal || (m.angry && best < 8)) && hungry) {
-      go("reveal"); o.state.revealed = true; o.model = MODEL(true); shedSkin(ctx, o); ctx.emit("fx", { position: { x: pos.x, y: pos.y, z: pos.z }, script: FUR(ctx.getObject(o.id + "/skin")?.state?.fur ?? "oklch(.6 .08 60)") }); play(e, m, "act", "Reveal", { clampWhenFinished: true });
+      go("reveal"); const fur = ctx.getObject(o.id + "/skin")?.state?.fur ?? "oklch(.6 .08 60)"; o.state.revealed = true; o.model = MODEL(true); shedSkin(ctx, o); ctx.emit("fx", { position: { x: pos.x, y: pos.y, z: pos.z }, script: FUR(fur) }); play(e, m, "act", "Reveal", { clampWhenFinished: true });
       const chest = { x: pos.x, y: pos.y, z: pos.z };
       ctx.emit("fx", { position: chest, script: SPLIT });
       ctx.emit("playSound", { clip: SND("flesh-tear-wet-shriek"), position: chest, volume: 1, maxDistance: 34 });
