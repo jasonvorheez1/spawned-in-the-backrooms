@@ -36,7 +36,9 @@ export function onInput(ctx, input) {
   const f = ctx.self.feetPosition, eye = { x: f.x, y: f.y + 1.5, z: f.z }, d = ses.dir ?? look(ctx, input);
   const hit = raycast(ctx, eye, d, { distance: 2.6, ignoreEntities: [ctx.self.id] });
   const o = hit?.id && ctx.getObject(hit.id);
-  if (!o || !o.tags?.includes("breakable") || NOT.some((t) => o.tags.includes(t)) || o.parent) { note(ctx, "Nothing to pick up."); return; }
+  const sz = o?.bounds?.size, small = sz && sz.x * sz.y * sz.z < 0.5 && Math.max(sz.x, sz.y, sz.z) < 1.4; // a radio, a lamp, a bottle: anything small enough is fair game
+  if (!o || !(o.tags?.includes("breakable") || small) || NOT.some((t) => o.tags.includes(t)) || o.parent || o.tags.includes("l5-elev-panel") || o.tags.includes("l5-sealed")) { note(ctx, "Nothing to pick up."); return; }
+  if (!o.tags.includes("breakable")) { o.tags = [...o.tags, "breakable"]; o.state.mat ??= "fixture"; o.state.hp ??= 30; o.state.maxHp ??= o.state.hp; } // picked up once, it can be smashed too
   const kg = massOf(o), cap = power(ctx);
   const over = kg / cap; // past 1 it's a struggle; past 3 nobody moves it
   if (over > 3) { note(ctx, `It won't budge. ${Math.round(kg)} kg.`); heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-strained-grunt-lifting-heavy.mp3", position: eye, volume: 0.5, maxDistance: 10 }); return; }
