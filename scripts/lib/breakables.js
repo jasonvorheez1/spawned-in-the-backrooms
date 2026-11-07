@@ -87,7 +87,23 @@ export function syncWalls(ctx) {
   for (const r of ctx.query({ tags: ['wallpatch'], select: 'ids' })) { const id = r.id ?? r; if (!want.has(id)) ctx.destroy(id) }
 }
 // the sims call this: broken walls grow back after regrowMinutes (never with someone in the gap), then the mesh follows
+// props the levels lay without a material (containers, Level 2 boxes, Level 3 live junction boxes) join the breakables here
+const PROP_MAT = { 'live-box': 'junction', l2box: 'sheet_steel', container: 'wood' }
+const L2_MAT = { toolbox: 'sheet_steel', locker: 'sheet_steel', vending: 'sheet_steel', cabinet: 'sheet_steel', valvebox: 'pipe', pipebox: 'pipe', crate: 'wood', pallet: 'wood', desk: 'wood' }
+export function sweepProps(ctx) {
+  for (const t of ['live-box', 'l2box', 'container']) for (const o of ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+    const st = o.state ?? {}
+    if (o.tags?.includes('breakable') && st.mat && st.hp != null && !(t === 'live-box' && st.mat === 'machine')) continue
+    const h = ctx.getObject(o.id); if (!h) continue
+    const mat = t === 'live-box' ? 'junction' : t === 'l2box' ? (L2_MAT[st.kind] ?? 'sheet_steel') : (st.mat ?? PROP_MAT[t])
+    const hp = Math.round((B.materials[mat]?.hp ?? 80) * (t === 'live-box' ? 1 : 0.5))
+    if (!h.tags.includes('breakable')) h.tags = [...h.tags, 'breakable']
+    h.state.mat = mat; if (st.hp == null || st.mat !== mat) { h.state.hp = hp; h.state.maxHp = hp }
+  }
+}
+
 export function tickWalls(ctx) {
+  sweepProps(ctx)
   const name = Object.keys(GRIDS).find((k) => ctx.place.objects[GRIDS[k].obj]); if (!name) return
   const G = GRIDS[name], br = ctx.place.state.broken, now = ctx.now()
   if (br) for (const [k, at] of Object.entries(br)) {
