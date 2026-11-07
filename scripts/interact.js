@@ -65,6 +65,7 @@ function refocus(ctx, force = false) {
 
 function closeLoot(ctx) {
   const s = ctx.self.state, c = s.lootOpen ? ctx.getObject(s.lootOpen) : null
+  if (c) snd(ctx, 'container-close-thud', 0.35)
   if (c && c.tags?.includes('remains') && !itemsOf(c.state?.items).length) ctx.destroy(c.id) // an emptied corpse is cleared away
   s.lootOpen = ''; s.lootList = ''; s.lootName = ''
   mem(ctx).key = ''
@@ -85,7 +86,7 @@ function press(ctx) {
   if (!it || it.state?.taken) return
   if (f.tag === 'container') { openLoot(ctx, it); return }
   const r = takeToken(ctx, tokenOf(f.tag, it))
-  if (r.ok) { it.state.taken = true; ctx.destroy(f.id); s.focus = null; m.key = ''; m.focus = null } else if (r.msg) note(ctx, r.msg)
+  if (r.ok) { it.state.taken = true; ctx.destroy(f.id); s.focus = null; m.key = ''; m.focus = null } else if (r.msg) { note(ctx, r.msg); snd(ctx, 'ui-denied-click', 0.35) }
 }
 
 // the loot menu's buttons: take one, take all, close
@@ -100,11 +101,12 @@ function lootAction(ctx, d) {
     const i = Number(d.i)
     if (!(i >= 0 && i < items.length)) return
     const r = takeToken(ctx, items[i])
-    if (r.ok) items.splice(i, 1); else fail = r.msg || ''
+    if (r.ok) items.splice(i, 1); else { fail = r.msg || ''; snd(ctx, 'ui-denied-click', 0.35) }
   } else if (d.k === 'all') {
     const keep = []
     for (const t of items) { const r = takeToken(ctx, t); if (!r.ok) { keep.push(t); fail = r.msg || fail } }
     items = keep
+    snd(ctx, 'loot-take-all-rustle', 0.55)
   } else return
   c.state.items = items.join(',')
   s.lootList = c.state.items

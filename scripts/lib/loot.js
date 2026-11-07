@@ -41,11 +41,11 @@ export function rollItem(ctx) {
 export function spawnCrate(ctx, c) {
   const n = 1 + Math.floor(ctx.random() * 3), items = [];
   for (let i = 0; i < n; i++) items.push(rollItem(ctx));
-  ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 }, rotation: ctx.random() * 360, physics: "static", primitive: { kind: "box", width: 0.7, height: 0.5, depth: 0.55 }, material: { color: "oklch(0.58 0.07 70)", roughness: 0.9 }, state: { name: "Supply crate", items: items.join(",") } });
+  ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 }, rotation: ctx.random() * 360, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name: "Supply crate", items: items.join(",") } });
 }
 
 export function spawnRemains(ctx, pos, items, name = "Remains") {
-  ctx.spawn({ tags: ["container", "remains"], feetPosition: { x: pos.x, y: 0.02, z: pos.z }, rotation: ctx.random() * 360, lifetime: 150, primitive: { kind: "cylinder", radiusTop: 0.42, radiusBottom: 0.47, height: 0.05 }, material: { color: "#14101a", roughness: 0.2, emissive: "#44238a", emissiveIntensity: 0.5 }, state: { name, items: items.join(",") } });
+  ctx.spawn({ tags: ["container", "remains"], feetPosition: { x: pos.x, y: 0.02, z: pos.z }, rotation: ctx.random() * 360, lifetime: 150, primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: name.startsWith("Lurker") ? "lurker" : "smiler" } }, state: { name, items: items.join(",") } });
 }
 
 // What a dead smiler or lurker leaves: a body to search, if it was carrying anything.
