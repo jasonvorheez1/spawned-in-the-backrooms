@@ -34,7 +34,7 @@ export function update(ctx, dt) {
   const byId = (id) => players.find((p) => p.id === id) ?? ctx.place.players.find((p) => p.id === id) ?? ctx.query({ tags: ["npc"], radius: 80, center: { x: 0, y: 0, z: 0 } }).find((n) => n.id === id) ?? null;
   for (const h of ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
     const m = (mem[h.id] ??= {}), pos = h.feetPosition, st = h.state ?? {}, mu = npcMul(st);
-    if (!m.meshed) { m.meshed = true; const o = ctx.getObject(h.id); if (o && !String(o.model?.id ?? o.model ?? "").includes(MODEL.slice(5))) { o.primitive = null; o.model = { id: MODEL }; } } // the old coded body gives way to the mesh
+    if (now >= (m.meshChk ?? 0)) { m.meshChk = now + 2000; const o = ctx.getObject(h.id); if (o && !String(o.model?.id ?? o.model ?? "").includes(MODEL.slice(5))) { o.primitive = null; o.model = { id: MODEL }; } } // the old coded body gives way to the mesh
     if (m.bleed && now >= m.bleed.next) { // the maul's wound: 2 a second for 4 s, dealt from here
       const v = now < m.bleed.until ? byId(m.bleed.id) : null;
       if (v && !v.state?.dead && (v.state?.hp ?? 0) > 0) { hitPrey(ctx, h, v, T.bleedDmg, now, "#a0101a"); ctx.emit("fx", { position: { x: v.feetPosition.x, y: v.feetPosition.y + 0.9, z: v.feetPosition.z }, script: BLOOD }); m.bleed.next = now + 1000; }
