@@ -8,8 +8,11 @@ import { raycast } from "builtin/physics";
 import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
 const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
 
-export const MODEL = { id: "/cdn/value.7cfa2d2f6aac7eda42803f3c50e8e6d723bf1c53b8467ed0a8530eb57304b737.glb", forward: "+z" };
-const MDL = 1; // bump with a new upload: older rows swap their body
+export const MODEL = { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" }; // Tripo shadow crawler, mixamo rig (art/creatures/build.py)
+export const SCALE = 1.6; // 1.2 m file -> ~1.9 m hunched
+// the manager's clip names, played as library clips on the mixamo rig
+const CLIP = { idle: "cdn/clip-crouch-idle-loop.glb", skitter: "cdn/clip-crouch-walk-loop.glb", freeze: "cdn/clip-block-loop.glb", "lunge-bite": "cdn/clip-attack.glb", recoil: "cdn/clip-hit-react.glb", death: "cdn/clip-die.glb" };
+const MDL = 2; // bump with a new upload: older rows swap their body
 const EYE = 1.1; // head height of the crawler
 const LUNGE = { range: 4, speed: 9.5, ms: 430, hit: 1.35, pull: 4.5, cooldown: 1.8 };
 const FREEZE_RANGE = 14; // a beam held on it from this close pins it
@@ -29,7 +32,7 @@ function neighbor(ctx, pos) {
   const [a, b] = ok[Math.floor(ctx.random() * ok.length)];
   return cellCenter(a, b);
 }
-const act = (w, clip, extra) => { w.anim.act = { clip, loop: "once", blend: "override", weight: 4, time: 0, ...extra }; };
+const act = (w, clip, extra) => { w.anim.act = { clip: CLIP[clip] ?? clip, loop: "once", blend: "override", weight: 4, time: 0, ...extra }; };
 
 export function update(ctx, dt) {
   const now = ctx.now();
@@ -37,7 +40,7 @@ export function update(ctx, dt) {
   const mem = (ctx.self.session.m ??= {});
   for (const w of ctx.query({ tags: ["smiler"] })) {
     const m = (mem[w.id] ??= {}), st = w.state ?? {}, pos = w.feetPosition, mu = npcMul(st);
-    if (st.mdl !== MDL) { w.primitive = null; w.material = null; w.model = MODEL; w.state.mdl = MDL; m.mode = null; }
+    if (st.mdl !== MDL) { w.primitive = null; w.material = null; w.model = MODEL; w.scale = SCALE; w.state.mdl = MDL; m.mode = null; }
     if (st.dead) {
       // folds and melts into the carpet, then the shade lifts off it
       if (!m.dieAt) {
@@ -111,7 +114,7 @@ export function update(ctx, dt) {
     // the gait: frozen rigid in the beam, skitter at the pace it moves, else the head-tilt sway
     const hs = Math.hypot(vx, vz);
     const mode = lit ? "freeze" : hs > 0.1 ? "skitter:" + Math.max(0.3, Math.min(1.8, Math.round((hs / 3.5) * 4) / 4)) : "idle";
-    if (m.mode !== mode) { m.mode = mode; const [clip, sp] = mode.split(":"); w.anim.body = { clip, loop: "loop", speed: sp ? +sp : 1 }; }
+    if (m.mode !== mode) { m.mode = mode; const [clip, sp] = mode.split(":"); w.anim.body = { clip: CLIP[clip] ?? clip, loop: "loop", speed: sp ? +sp : 1 }; }
     if (m.lunge && !m.lunge.hit && prey && pd < LUNGE.hit) {
       m.lunge.hit = true;
       const dmg = Math.round(L.biteDamage * mu.dmg);

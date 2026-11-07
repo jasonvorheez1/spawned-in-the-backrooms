@@ -1,4 +1,5 @@
-import { LURKER_MODEL } from "../../scripts/lurkers.js";
+import { LURKER_MODEL, LURKER_SCALE } from "../../scripts/lurkers.js";
+import { MODEL as SMILER_MODEL, SCALE as SMILER_SCALE } from "../../scripts/smilers.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 // The debug room's referee: puts every test item back a few seconds after it is taken or killed.
 import L from "../../scripts/lib/data/level0.yml";
@@ -30,9 +31,9 @@ export function tick(ctx) {
   });
   const smilers = ctx.query({ tags: ["smiler"] }).filter((m) => !m.state?.dead).length;
   if (!smilers && s.want_smiler && !(s.want_smiler = false))
-    ctx.spawn({ tags: ["smiler"], feetPosition: { x: SMILER_PEN.x, y: 0.05, z: SMILER_PEN.z }, model: { id: "/cdn/value.7cfa2d2f6aac7eda42803f3c50e8e6d723bf1c53b8467ed0a8530eb57304b737.glb", forward: "+z" }, physics: { body: "character" }, state: { hp: L.smilerHp } });
+    ctx.spawn({ tags: ["smiler"], feetPosition: { x: SMILER_PEN.x, y: 0.05, z: SMILER_PEN.z }, model: SMILER_MODEL, scale: SMILER_SCALE, physics: { body: "character" }, state: { hp: L.smilerHp } });
   const lurkers = ctx.query({ tags: ["lurker"] }).filter((m) => !m.state?.dead).length;
   if (!lurkers && s.want_lurker && !(s.want_lurker = false))
-    ctx.spawn({ tags: ["lurker"], feetPosition: { x: LURKER_PEN.x, y: 0.05, z: LURKER_PEN.z }, model: LURKER_MODEL, scale: 1.23, physics: { body: "character" }, state: { hp: L.lurkerHp, kind: "lurker" } });
+    ctx.spawn({ tags: ["lurker"], feetPosition: { x: LURKER_PEN.x, y: 0.05, z: LURKER_PEN.z }, model: LURKER_MODEL, scale: LURKER_SCALE, physics: { body: "character" }, state: { hp: L.lurkerHp, kind: "lurker" } });
   s.seeded = true;
 }

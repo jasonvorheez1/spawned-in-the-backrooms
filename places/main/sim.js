@@ -1,5 +1,6 @@
 import { npcState } from "../../scripts/lib/stats.js";
-import { LURKER_MODEL } from "../../scripts/lurkers.js";
+import { LURKER_MODEL, LURKER_SCALE } from "../../scripts/lurkers.js";
+import { MODEL as SMILER_MODEL, SCALE as SMILER_SCALE } from "../../scripts/smilers.js";
 // Level 0's referee: keeps almond water on the floor and smilers in the dark.
 import L from "../../scripts/lib/data/level0.yml";
 const MID = (L.hub[0] + L.hub[1]) / 2; // the safe room's centre cell
@@ -119,7 +120,7 @@ export function tick(ctx) {
     const fill = s.smilersSeeded ? 1 : L.smilers - smilers;
     for (let i = 0; i < fill; i++) {
       const c = cell(ctx, ["dark", "red", "pillars", "expanse"]);
-      if (c) ctx.spawn({ tags: ["smiler"], feetPosition: { x: c.x, y: 0.05, z: c.z }, model: { id: "/cdn/value.7cfa2d2f6aac7eda42803f3c50e8e6d723bf1c53b8467ed0a8530eb57304b737.glb", forward: "+z" }, physics: { body: "character" }, state: { ...npcState(ctx, "smiler", L.smilerHp), mdl: 1 } });
+      if (c) ctx.spawn({ tags: ["smiler"], feetPosition: { x: c.x, y: 0.05, z: c.z }, model: SMILER_MODEL, scale: SMILER_SCALE, physics: { body: "character" }, state: { ...npcState(ctx, "smiler", L.smilerHp), mdl: 2 } });
     }
     s.smilersSeeded = true;
     s.nextSmiler = now + L.smilerRespawn * 1000;
@@ -152,7 +153,7 @@ export function tick(ctx) {
     const fill = s.lurkersSeeded ? 1 : L.lurkers - lurkers;
     for (let i = 0; i < fill; i++) {
       const c = cell(ctx, ["halls", "arches", "holes", "offices"]);
-      if (c) ctx.spawn({ tags: ["lurker"], feetPosition: { x: c.x, y: 0.05, z: c.z }, model: LURKER_MODEL, scale: 1.23, physics: { body: "character" }, state: { ...npcState(ctx, "lurker", L.lurkerHp, { kind: "lurker" }), mesh: 2 } });
+      if (c) ctx.spawn({ tags: ["lurker"], feetPosition: { x: c.x, y: 0.05, z: c.z }, model: LURKER_MODEL, scale: LURKER_SCALE, physics: { body: "character" }, state: { ...npcState(ctx, "lurker", L.lurkerHp, { kind: "lurker" }), mesh: 3 } });
     }
     s.lurkersSeeded = true;
     s.nextLurker = now + L.lurkerRespawn * 1000;

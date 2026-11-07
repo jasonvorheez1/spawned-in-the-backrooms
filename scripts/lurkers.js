@@ -7,7 +7,10 @@ import { raycast } from "builtin/physics";
 import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
 const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
 
-export const LURKER_MODEL = { id: "/cdn/value.6ef6cf4a33e340d090c75472f9f85bf9911a3e467b6d28c2de3e005849cf3c4b.glb", forward: "+z" };
+export const LURKER_MODEL = { id: "/cdn/value.1ab72159712e0df88095f833909b0aaffb6ee0d75924e3fc05806836daa110af.glb", forward: "+x" }; // Tripo gaunt pale entity, mixamo rig (art/creatures/build.py)
+export const LURKER_SCALE = 1.333; // 1.8 m file -> 2.4 m
+// the pack's clip names, played as library clips on the mixamo rig
+const CLIP = { Idle: "cdn/clip-crouch-idle-loop.glb", Creep: "cdn/clip-crouch-walk-loop.glb", Death: "cdn/clip-die.glb", Grab: "cdn/clip-attack.glb", Scream: "cdn/clip-angry.glb", PoseReach: "cdn/clip-point.glb", PoseCock: "cdn/clip-shrug.glb", PoseCrouch: "cdn/clip-crouch-idle-loop.glb", PoseClose: "cdn/clip-block-loop.glb" };
 const POSES = ["PoseReach", "PoseCock", "PoseCrouch", "PoseClose"]; // it snaps to a new one each time it is caught
 const HOLD = 1.2, ME = "scripts/lurkers.js";
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
@@ -69,8 +72,8 @@ export function update(ctx, dt) {
   const mem = (ctx.self.session.m ??= {});
   for (const w of ctx.query({ tags: ["lurker"] })) {
     const m = (mem[w.id] ??= {}), st = w.state ?? {}, pos = w.feetPosition, mu = npcMul(st);
-    if (st.mesh !== 2) { w.primitive = null; w.model = LURKER_MODEL; w.scale = 1.23; st.mesh = 2; }
-    const play = (clip, loop = true) => { if (m.clip !== clip) { m.clip = clip; w.anim.body = { clip, loop, clampWhenFinished: !loop }; } };
+    if (st.mesh !== 3) { w.primitive = null; w.model = LURKER_MODEL; w.scale = LURKER_SCALE; st.mesh = 3; m.clip = null; }
+    const play = (clip, loop = true) => { if (m.clip !== clip) { m.clip = clip; w.anim.body = { clip: CLIP[clip] ?? clip, loop, clampWhenFinished: !loop }; } };
     if (st.dead) {
       if (!m.dying) { m.dying = now; play("Death", false); w.velocity = { x: 0, y: -2, z: 0 }; ctx.emit("playSound", { clip: SND("bone-crack-twist"), position: pos, volume: 0.9, maxDistance: 24 }); }
       if (now - m.dying > 3200 && !m.gone) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1, z: pos.z }, script: POOF }); ctx.emit("playSound", { clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.8, maxDistance: 30 }); ctx.destroy(w.id); }
