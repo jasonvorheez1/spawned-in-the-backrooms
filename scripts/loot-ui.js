@@ -16,7 +16,7 @@ const CSS = `<style>
 #ln{position:fixed;inset-inline:0;top:66%;display:flex;justify-content:center;pointer-events:none}
 #ln span{padding:3px 12px;background:rgba(10,7,2,.92);border-left:2px solid var(--a);border-right:2px solid var(--a);font-size:12px}
 .pbw{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;background:radial-gradient(ellipse at center,rgba(0,0,0,.55),rgba(0,0,0,.25) 70%)}
-.pbp{pointer-events:auto;position:relative;background:rgba(10,7,2,.94);padding:14px 20px 12px;width:min(760px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px)));height:min(440px,84vh);display:flex;flex-direction:column}
+.pbp{pointer-events:auto;position:relative;background:rgba(10,7,2,.94);padding:14px 20px 12px;width:min(760px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px)));min-height:300px;max-height:min(520px,84vh);box-sizing:border-box;display:flex;flex-direction:column}
 .hd{display:flex;align-items:flex-end;gap:14px;position:relative;padding:0 10px 5px;border-bottom:2px solid var(--a)}
 .hd::before,.hd::after{content:'';position:absolute;bottom:-2px;width:2px;height:10px;background:var(--a);transform:translateY(100%)}
 .hd::before{left:0}.hd::after{right:0}
@@ -27,7 +27,7 @@ const CSS = `<style>
 .ls{flex:0 0 52%;overflow-y:auto;overflow-x:hidden;min-height:0;scrollbar-width:thin;scrollbar-color:var(--ad) transparent}
 .sec{font-size:11px;color:var(--ad);margin:8px 0 3px;letter-spacing:.08em}
 .sec:first-child{margin-top:0}
-.it{display:flex;align-items:center;gap:8px;width:100%;padding:3px 8px;background:none;border:1px solid transparent;color:inherit;font:inherit;font-size:16px;text-align:left;text-transform:inherit;text-shadow:inherit;cursor:default}
+.it{box-sizing:border-box;display:flex;align-items:center;gap:8px;width:100%;padding:3px 8px;background:none;border:1px solid transparent;color:inherit;font:inherit;font-size:16px;text-align:left;text-transform:inherit;text-shadow:inherit;cursor:default}
 button.it{cursor:pointer}
 .it:hover{border-color:var(--a)}
 .it .eq{width:9px;height:9px;flex:none;border:1px solid transparent}
