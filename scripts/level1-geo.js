@@ -29,10 +29,11 @@ export function geometry(ctx) {
   }
   // walls: every cell edge, the outer ring included
   ctx.albedo(WALL);
-  const signs = [];
+  const signs = [], cut = new Set(ctx.params?.cut ?? []); // broken walls: scripts/wallpatch-geo.js draws what is left
   for (let cx = -1; cx < N; cx++) for (let cz = -1; cz < N; cz++) for (const axis of ["x", "z"]) {
     if ((axis === "x" && (cz < 0)) || (axis === "z" && (cx < 0))) continue;
     const e = edge(cx, cz, axis); if (!e) continue;
+    if (cut.has(`${axis}:${cx}:${cz}`)) continue;
     const corridor = zoneOf(cx, cz) === "corridors" || zoneOf(axis === "x" ? cx + 1 : cx, axis === "z" ? cz + 1 : cz) === "corridors";
     ctx.color(corridor ? "oklch(0.95 0.01 85)" : "oklch(0.8 0.012 250)");
     const fixed = axis === "x" ? (cx + 1) * S - HALF : (cz + 1) * S - HALF, start = axis === "x" ? cz * S - HALF : cx * S - HALF;

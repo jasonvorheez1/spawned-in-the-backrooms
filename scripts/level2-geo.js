@@ -26,14 +26,15 @@ export function geometry(ctx) {
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) { if (inHall(cx, cz)) continue; const x0 = cx * S - HALF, z0 = cz * S - HALF; ctx.quad(x0, H, z0, x0 + S, H, z0, x0 + S, H, z0 + S, x0, H, z0 + S); }
 
   // walls on every closed edge; brick in some sectors, chalky concrete elsewhere
+  const cut = new Set(ctx.params?.cut ?? []); // broken walls: scripts/wallpatch-geo.js draws what is left
   const wallTone = (cx, cz) => hash(Math.floor(cx / 3), Math.floor(cz / 3), 21) < 0.3;
   for (const brick of [false, true]) {
     ctx.albedo(brick ? BRICK : WALL); ctx.color(brick ? "oklch(0.62 0.04 45)" : "oklch(0.78 0.012 85)");
     for (let cx = -1; cx < N; cx++) for (let cz = -1; cz < N; cz++) {
       if (wallTone(Math.max(cx, 0), Math.max(cz, 0)) !== brick) continue;
       const xe = (cx + 1) * S - HALF, ze = (cz + 1) * S - HALF;
-      if (cz >= 0 && (cx < 0 ? true : closed(cx, cz, 0)) && !pipeEdge(cx, cz, 0)) box(ctx, xe - T, xe + T, 0, hallEdge(cx, cz, 0) ? HALL_H : H, cz * S - HALF - T, cz * S - HALF + S + T);
-      if (cx >= 0 && (cz < 0 ? true : closed(cx, cz, 1)) && !pipeEdge(cx, cz, 1)) box(ctx, cx * S - HALF - T, cx * S - HALF + S + T, 0, hallEdge(cx, cz, 1) ? HALL_H : H, ze - T, ze + T);
+      if (cz >= 0 && (cx < 0 ? true : closed(cx, cz, 0)) && !pipeEdge(cx, cz, 0) && !cut.has(`x:${cx}:${cz}`)) box(ctx, xe - T, xe + T, 0, hallEdge(cx, cz, 0) ? HALL_H : H, cz * S - HALF - T, cz * S - HALF + S + T);
+      if (cx >= 0 && (cz < 0 ? true : closed(cx, cz, 1)) && !pipeEdge(cx, cz, 1) && !cut.has(`z:${cx}:${cz}`)) box(ctx, cx * S - HALF - T, cx * S - HALF + S + T, 0, hallEdge(cx, cz, 1) ? HALL_H : H, ze - T, ze + T);
       // over a tunnel mouth into the boiler hall, the wall carries on above the tunnel's ceiling
       if (cx >= 0 && cz >= 0 && !closed(cx, cz, 0) && hallEdge(cx, cz, 0) && inHall(cx, cz) !== inHall(cx + 1, cz)) box(ctx, xe - T, xe + T, H, HALL_H, cz * S - HALF - T, cz * S - HALF + S + T);
       if (cx >= 0 && cz >= 0 && !closed(cx, cz, 1) && hallEdge(cx, cz, 1) && inHall(cx, cz) !== inHall(cx, cz + 1)) box(ctx, cx * S - HALF - T, cx * S - HALF + S + T, H, HALL_H, ze - T, ze + T);
