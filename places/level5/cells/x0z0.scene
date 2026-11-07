@@ -19,6 +19,409 @@ l5-bed-hum:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-old-building-electrical-hum-room-tone-loop.mp3, gain: 0.12, loop: true, spatial: false}
   feetPosition: {x: -20, y: 2, z: 0}
   id: l5-bed-hum
+l5-boil-cage-0:
+  castShadow: false
+  feetPosition: {x: 22, y: 5.1000000000000005, z: -22}
+  id: l5-boil-cage-0
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-1:
+  castShadow: false
+  feetPosition: {x: 22, y: 5.1000000000000005, z: -11}
+  id: l5-boil-cage-1
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-10:
+  castShadow: false
+  feetPosition: {x: 38, y: 5.1000000000000005, z: -22}
+  id: l5-boil-cage-10
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-11:
+  castShadow: false
+  feetPosition: {x: 38, y: 5.1000000000000005, z: -11}
+  id: l5-boil-cage-11
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-12:
+  castShadow: false
+  feetPosition: {x: 38, y: 5.1000000000000005, z: 0}
+  id: l5-boil-cage-12
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-13:
+  castShadow: false
+  feetPosition: {x: 38, y: 5.1000000000000005, z: 11}
+  id: l5-boil-cage-13
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-14:
+  castShadow: false
+  feetPosition: {x: 38, y: 5.1000000000000005, z: 22}
+  id: l5-boil-cage-14
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-2:
+  castShadow: false
+  feetPosition: {x: 22, y: 5.1000000000000005, z: 0}
+  id: l5-boil-cage-2
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-3:
+  castShadow: false
+  feetPosition: {x: 22, y: 5.1000000000000005, z: 11}
+  id: l5-boil-cage-3
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-4:
+  castShadow: false
+  feetPosition: {x: 22, y: 5.1000000000000005, z: 22}
+  id: l5-boil-cage-4
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-5:
+  castShadow: false
+  feetPosition: {x: 30, y: 5.1000000000000005, z: -22}
+  id: l5-boil-cage-5
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-6:
+  castShadow: false
+  feetPosition: {x: 30, y: 5.1000000000000005, z: -11}
+  id: l5-boil-cage-6
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-7:
+  castShadow: false
+  feetPosition: {x: 30, y: 5.1000000000000005, z: 0}
+  id: l5-boil-cage-7
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-8:
+  castShadow: false
+  feetPosition: {x: 30, y: 5.1000000000000005, z: 11}
+  id: l5-boil-cage-8
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-cage-9:
+  castShadow: false
+  feetPosition: {x: 30, y: 5.1000000000000005, z: 22}
+  id: l5-boil-cage-9
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
+  state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
+  tags: [l5-boiler, l5-fixture, breakable]
+l5-boil-m0:
+  castShadow: true
+  feetPosition: {x: 22.5, y: 0, z: -24.5}
+  id: l5-boil-m0
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: tank, w: 2.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  state: {hp: 300, mat: machine, maxHp: 300, name: Pressure tank}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m1:
+  castShadow: true
+  feetPosition: {x: 27, y: 0, z: -23}
+  id: l5-boil-m1
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 5.5, kind: boiler, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  state: {hp: 420, mat: machine, maxHp: 420, name: Riveted boiler}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m10:
+  castShadow: true
+  feetPosition: {x: 40.5, y: 0, z: -6.5}
+  id: l5-boil-m10
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: pump, w: 2.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  state: {hp: 200, mat: machine, maxHp: 200, name: Feed pump}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m11:
+  castShadow: true
+  feetPosition: {x: 42, y: 0, z: -3.5}
+  id: l5-boil-m11
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: condenser, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  state: {hp: 260, mat: machine, maxHp: 260, name: Condenser}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m12:
+  castShadow: true
+  feetPosition: {x: 34.5, y: 0, z: 1}
+  id: l5-boil-m12
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: panel, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  state: {hp: 140, mat: machine, maxHp: 140, name: Gauge panel}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m13:
+  castShadow: true
+  feetPosition: {x: 21, y: 0, z: 7}
+  id: l5-boil-m13
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 5.5, kind: boiler, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  state: {hp: 420, mat: machine, maxHp: 420, name: Riveted boiler}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m14:
+  castShadow: true
+  feetPosition: {x: 28.5, y: 0, z: 7}
+  id: l5-boil-m14
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: condenser, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  state: {hp: 260, mat: machine, maxHp: 260, name: Condenser}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m15:
+  castShadow: true
+  feetPosition: {x: 28.5, y: 0, z: 11.5}
+  id: l5-boil-m15
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: tank, w: 2.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  state: {hp: 300, mat: machine, maxHp: 300, name: Pressure tank}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m16:
+  castShadow: true
+  feetPosition: {x: 42, y: 0, z: 5.5}
+  id: l5-boil-m16
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: turbine, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  state: {hp: 360, mat: machine, maxHp: 360, name: Steam turbine}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m17:
+  castShadow: true
+  feetPosition: {x: 36, y: 0, z: 10}
+  id: l5-boil-m17
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 5.5, kind: furnace, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  state: {hp: 520, mat: machine, maxHp: 520, name: Coal furnace}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m18:
+  castShadow: true
+  feetPosition: {x: 43.5, y: 0, z: 11.5}
+  id: l5-boil-m18
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: pump, w: 2.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  state: {hp: 200, mat: machine, maxHp: 200, name: Feed pump}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m19:
+  castShadow: true
+  feetPosition: {x: 22.5, y: 0, z: 16}
+  id: l5-boil-m19
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: coal, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  state: {hp: 180, mat: metal, maxHp: 180, name: Coal bunker}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m2:
+  castShadow: true
+  feetPosition: {x: 36, y: 0, z: -23}
+  id: l5-boil-m2
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 5.5, kind: turbine, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  state: {hp: 360, mat: machine, maxHp: 360, name: Steam turbine}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m20:
+  castShadow: true
+  feetPosition: {x: 43.5, y: 0, z: 14.5}
+  id: l5-boil-m20
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: tank, w: 2.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  state: {hp: 300, mat: machine, maxHp: 300, name: Pressure tank}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m21:
+  castShadow: true
+  feetPosition: {x: 30, y: 0, z: 19}
+  id: l5-boil-m21
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 5.5, kind: boiler, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  state: {hp: 420, mat: machine, maxHp: 420, name: Riveted boiler}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m22:
+  castShadow: true
+  feetPosition: {x: 39, y: 0, z: 17.5}
+  id: l5-boil-m22
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: panel, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  state: {hp: 140, mat: machine, maxHp: 140, name: Gauge panel}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m23:
+  castShadow: true
+  feetPosition: {x: 27, y: 0, z: 23.5}
+  id: l5-boil-m23
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: compressor, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  state: {hp: 240, mat: machine, maxHp: 240, name: Compressor}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m24:
+  castShadow: true
+  feetPosition: {x: 39, y: 0, z: 23.5}
+  id: l5-boil-m24
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: coal, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  state: {hp: 180, mat: metal, maxHp: 180, name: Coal bunker}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m3:
+  castShadow: true
+  feetPosition: {x: 19.5, y: 0, z: -18.5}
+  id: l5-boil-m3
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: pump, w: 2.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  state: {hp: 200, mat: machine, maxHp: 200, name: Feed pump}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m4:
+  castShadow: true
+  feetPosition: {x: 34.5, y: 0, z: -17}
+  id: l5-boil-m4
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: panel, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  state: {hp: 140, mat: machine, maxHp: 140, name: Gauge panel}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m5:
+  castShadow: true
+  feetPosition: {x: 27, y: 0, z: -14}
+  id: l5-boil-m5
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 5.5, kind: furnace, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  state: {hp: 520, mat: machine, maxHp: 520, name: Coal furnace}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m6:
+  castShadow: true
+  feetPosition: {x: 19.5, y: 0, z: -14}
+  id: l5-boil-m6
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 2.5, kind: coal, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  state: {hp: 180, mat: metal, maxHp: 180, name: Coal bunker}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m7:
+  castShadow: true
+  feetPosition: {x: 42, y: 0, z: -14}
+  id: l5-boil-m7
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 5.5, kind: boiler, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  state: {hp: 420, mat: machine, maxHp: 420, name: Riveted boiler}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m8:
+  castShadow: true
+  feetPosition: {x: 33, y: 0, z: -8}
+  id: l5-boil-m8
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 5.5, kind: furnace, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  state: {hp: 520, mat: machine, maxHp: 520, name: Coal furnace}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-m9:
+  castShadow: true
+  feetPosition: {x: 24, y: 0, z: -5}
+  id: l5-boil-m9
+  material: {pbr: true}
+  physics: {body: static}
+  primitive: {kind: scripted, params: {d: 5.5, kind: turbine, w: 5.5}, script: scripts/l5-boiler-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  state: {hp: 360, mat: machine, maxHp: 360, name: Steam turbine}
+  tags: [l5-boiler, l5-boil-machine, breakable]
+l5-boil-pipes:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l5-boil-pipes
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {kind: pipes}, script: scripts/l5-boiler-props.js}
+  receiveShadow: true
+  tags: [l5-boiler]
 l5-door-6:
   behavior: scripts/l5-door.js
   feetPosition: {x: 45.72, y: 0, z: 20}
