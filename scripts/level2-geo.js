@@ -1,7 +1,7 @@
 // Level 2 "Abandoned Utility Halls": chalky concrete tunnels with 45 degree corners, banks of pipe along the walls
 // that bend out of the concrete and back in, dead machines in the dead ends, locked steel doors, barrels and
 // trolleys in the warehouse rooms, the Survivors' corner by the door home. Layout: scripts/lib/level2.js.
-import { N, S, H, HALF, isOpen, openings, zoneOf, roomOf, hash, cellCenter, ARRIVE, BACK, SEALED } from "./lib/level2.js";
+import { N, S, H, HALF, isOpen, openings, zoneOf, roomOf, hash, cellCenter, ARRIVE, BACK, SEALED, inHall, inPipes, sideOf, HALL_H } from "./lib/level2.js";
 import { slab, tube, prism } from "./lib/shapes.js";
 
 const FLOOR = "cdn/texture-grimy-wet-utility-concrete-floor.png", WALL = "cdn/texture-chalky-stained-concrete-wall.png";
@@ -9,6 +9,9 @@ const BRICK = "cdn/texture-soot-dark-brown-industrial-brick.png", CEIL = "cdn/te
 const T = 0.4, CH = 1.0; // half wall thickness, 45 degree corner leg
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [Math.abs(x1 - x0) / 2, Math.abs(y1 - y0) / 2, Math.abs(z1 - z0) / 2]);
 const closed = (cx, cz, d) => !isOpen(cx, cz, d);
+const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+const hallEdge = (cx, cz, d) => inHall(cx, cz) || inHall(cx + D4[d][0], cz + D4[d][1]);
+const pipeEdge = (cx, cz, d) => inPipes(cx, cz) && inPipes(cx + D4[d][0], cz + D4[d][1]); // inside the pipe maze the walls are pipe banks (level2-rooms-geo.js)
 
 export function geometry(ctx) {
   const hi = ctx.lod <= 2, M = hi ? 10 : 6;
@@ -20,7 +23,7 @@ export function geometry(ctx) {
     ctx.quad(x0, 0, z0, x0, 0, z0 + S, x0 + S, 0, z0 + S, x0 + S, 0, z0);
   }
   ctx.albedo(CEIL); ctx.color("oklch(0.55 0.01 70)");
-  for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) { const x0 = cx * S - HALF, z0 = cz * S - HALF; ctx.quad(x0, H, z0, x0 + S, H, z0, x0 + S, H, z0 + S, x0, H, z0 + S); }
+  for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) { if (inHall(cx, cz)) continue; const x0 = cx * S - HALF, z0 = cz * S - HALF; ctx.quad(x0, H, z0, x0 + S, H, z0, x0 + S, H, z0 + S, x0, H, z0 + S); }
 
   // walls on every closed edge; brick in some sectors, chalky concrete elsewhere
   const wallTone = (cx, cz) => hash(Math.floor(cx / 3), Math.floor(cz / 3), 21) < 0.3;
@@ -29,17 +32,20 @@ export function geometry(ctx) {
     for (let cx = -1; cx < N; cx++) for (let cz = -1; cz < N; cz++) {
       if (wallTone(Math.max(cx, 0), Math.max(cz, 0)) !== brick) continue;
       const xe = (cx + 1) * S - HALF, ze = (cz + 1) * S - HALF;
-      if (cz >= 0 && (cx < 0 ? true : closed(cx, cz, 0))) box(ctx, xe - T, xe + T, 0, H, cz * S - HALF - T, cz * S - HALF + S + T);
-      if (cx >= 0 && (cz < 0 ? true : closed(cx, cz, 1))) box(ctx, cx * S - HALF - T, cx * S - HALF + S + T, 0, H, ze - T, ze + T);
+      if (cz >= 0 && (cx < 0 ? true : closed(cx, cz, 0)) && !pipeEdge(cx, cz, 0)) box(ctx, xe - T, xe + T, 0, hallEdge(cx, cz, 0) ? HALL_H : H, cz * S - HALF - T, cz * S - HALF + S + T);
+      if (cx >= 0 && (cz < 0 ? true : closed(cx, cz, 1)) && !pipeEdge(cx, cz, 1)) box(ctx, cx * S - HALF - T, cx * S - HALF + S + T, 0, hallEdge(cx, cz, 1) ? HALL_H : H, ze - T, ze + T);
+      // over a tunnel mouth into the boiler hall, the wall carries on above the tunnel's ceiling
+      if (cx >= 0 && cz >= 0 && !closed(cx, cz, 0) && hallEdge(cx, cz, 0) && inHall(cx, cz) !== inHall(cx + 1, cz)) box(ctx, xe - T, xe + T, H, HALL_H, cz * S - HALF - T, cz * S - HALF + S + T);
+      if (cx >= 0 && cz >= 0 && !closed(cx, cz, 1) && hallEdge(cx, cz, 1) && inHall(cx, cz) !== inHall(cx, cz + 1)) box(ctx, cx * S - HALF - T, cx * S - HALF + S + T, H, HALL_H, ze - T, ze + T);
     }
   }
   // 45 degree corners: wherever two walls of a cell meet, a diagonal face cuts the corner
   ctx.albedo(WALL); ctx.color("oklch(0.74 0.012 85)");
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
-    if (zoneOf(cx, cz) === "camp") continue;
+    if (zoneOf(cx, cz) === "camp" || inPipes(cx, cz)) continue;
     const x0 = cx * S - HALF + T, x1 = (cx + 1) * S - HALF - T, z0 = cz * S - HALF + T, z1 = (cz + 1) * S - HALF - T;
     for (const [dx, dz, X, Z, sx, sz] of [[0, 1, x1, z1, -1, -1], [0, 3, x1, z0, -1, 1], [2, 1, x0, z1, 1, -1], [2, 3, x0, z0, 1, 1]])
-      if (closed(cx, cz, dx) && closed(cx, cz, dz)) prism(ctx, [[X, Z], [X + sx * CH, Z], [X, Z + sz * CH]], 0, H);
+      if (closed(cx, cz, dx) && closed(cx, cz, dz)) prism(ctx, [[X, Z], [X + sx * CH, Z], [X, Z + sz * CH]], 0, inHall(cx, cz) ? HALL_H : H);
   }
 
   // pipes along the tunnel walls: each comes out of the concrete, runs the cell and goes back in
@@ -56,14 +62,14 @@ export function geometry(ctx) {
   for (let k = 0; k < 3; k++) {
     ctx.color(PIPE[k]); ctx.metalness(0.45); ctx.roughness(0.7);
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
-      const z = zoneOf(cx, cz); if (z === "camp" || z === "room") continue;
+      const z = zoneOf(cx, cz); if (z === "camp" || z === "room" || inPipes(cx, cz)) continue;
       for (const d of [0, 1, 2, 3]) if (closed(cx, cz, d) && hash(cx * 4 + d, cz, 31 + k) < [0.75, 0.55, 0.4][k]) pipe(cx, cz, d, k);
     }
   }
   // a cable tray down the middle of every tunnel ceiling
   ctx.albedo(null); ctx.color("oklch(0.35 0.01 250)"); ctx.metalness(0.6); ctx.roughness(0.5);
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
-    if (zoneOf(cx, cz) === "camp") continue; const c = cellCenter(cx, cz);
+    if (zoneOf(cx, cz) === "camp" || inHall(cx, cz) || sideOf(cx, cz)) continue; const c = cellCenter(cx, cz);
     if (isOpen(cx, cz, 0)) box(ctx, c.x, c.x + S, H - 0.12, H - 0.06, c.z - 0.15, c.z + 0.15);
     if (isOpen(cx, cz, 1)) box(ctx, c.x - 0.15, c.x + 0.15, H - 0.12, H - 0.06, c.z, c.z + S);
   }
@@ -71,7 +77,7 @@ export function geometry(ctx) {
 
   // dead machines in the dead ends, against the closed wall facing the way in
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
-    const o = openings(cx, cz); if (o.length !== 1 || zoneOf(cx, cz) === "camp") continue;
+    const o = openings(cx, cz); if (o.length !== 1 || zoneOf(cx, cz) === "camp" || sideOf(cx, cz) || inPipes(cx, cz)) continue;
     const back = (o[0] + 2) % 4, c = cellCenter(cx, cz), [nx, nz] = [[1, 0], [0, 1], [-1, 0], [0, -1]][back], tx = -nz, tz = nx;
     const w = S / 2 - T - 0.5, cxm = c.x + nx * w, czm = c.z + nz * w, kind = hash(cx, cz, 41);
     const along = 1.6 + kind * 0.8, deep = 0.9;
@@ -89,7 +95,7 @@ export function geometry(ctx) {
 
   // locked steel doors on some tunnel walls: cream paint, a darker frame, a black window, a handle
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
-    if (zoneOf(cx, cz) === "camp") continue;
+    if (zoneOf(cx, cz) === "camp" || sideOf(cx, cz) || inPipes(cx, cz) || inHall(cx, cz)) continue;
     for (const d of [0, 1, 2, 3]) {
       if (!closed(cx, cz, d) || hash(cx * 4 + d, cz, 51) > 0.07) continue;
       const c = cellCenter(cx, cz), [nx, nz] = [[1, 0], [0, 1], [-1, 0], [0, -1]][d], tx = -nz, tz = nx, w = S / 2 - T;
