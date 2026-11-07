@@ -103,6 +103,7 @@ export function takeToken(ctx, token) {
 }
 function takeToken0(ctx, token) {
   const s = ctx.self.state, now = ctx.now()
+  if (token.startsWith('cash:')) { s.cents = (s.cents ?? 0) + (+token.slice(5) || 1); sound(ctx, 'loot-take-all-rustle', 0.35, true); return { ok: true } } // Backdollars: a wallet, no weight
   const cw = canCarry(s, token); if (!cw.ok) return cw
   if (token.startsWith('cloth:')) { // a garment: into the bag (player.state.clothes); I > Apparel puts it on
     if (!parseCloth(token)) return { ok: false, why: 'Rags' }

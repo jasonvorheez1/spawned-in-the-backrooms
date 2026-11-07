@@ -41,7 +41,10 @@ export function rollLock(ctx) {
   const sci = r < 0.07, q = ctx.random(), lv = q < 0.4 ? 25 : q < 0.7 ? 50 : q < 0.9 ? 75 : 100;
   return { lock: (sci ? "science:" : "lockpick:") + lv, name: sci ? "Secured locker" : "Locked crate", bonus: 1 + (lv >= 75 ? 1 : 0) };
 }
+// money found loose: mostly coins, sometimes a bill or a wad (Savi's picks)
+export function rollCash(ctx) { const r = ctx.random(); return r < 0.3 ? 'cash:1' : r < 0.5 ? 'cash:5' : r < 0.72 ? 'cash:25' : r < 0.92 ? 'cash:100' : 'cash:' + (100 * (2 + Math.floor(ctx.random() * 9))); }
 export function rollItem(ctx) {
+  if (ctx.random() < 0.14) return rollCash(ctx);
   const total = ITEM_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
   for (const [k, w] of ITEM_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeapon(ctx) : k === "book" ? bookOf(ctx) : k === "cloth" ? rollCloth(ctx) : k; }
@@ -68,6 +71,7 @@ export function spotCloth(ctx, clothMul = 1) { return ctx.random() < CL.findBase
 // clothMul: the killer's eye for a wearable (derived(s).clothFind: Observation, then Luck)
 export function rollLoot(ctx, luck = 1, clothMul = 1) {
   const items = [];
+  if (ctx.random() < 0.45) items.push(rollCash(ctx));
   if (ctx.random() < CL.findBase * luck * clothMul) items.push(rollCloth(ctx));
   if (ctx.random() < W.dropChance.almond * luck) items.push("almond");
   if (ctx.random() < W.dropChance.ammo * luck) items.push("ammo");
@@ -83,6 +87,7 @@ export function dropLoot(ctx, pos, name = "Remains", luck = 1, clothMul = 1) {
 // Level 1's crates: rations, bandages and batteries join the roll. Weights are Savi's picks.
 const L1_WEIGHTS = [["bobbypin", 8], ["ration", 5], ["almond", 4], ["bandage", 3], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["book", 1.4], ["cloth", 2.2], ["compass", 1]]; // cloth: Savi's pick
 export function rollItemL1(ctx) {
+  if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L1_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
   for (const [k, w] of L1_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + (ctx.random() < 0.6 ? rollVariant(ctx, ctx.random() < 0.55 ? "rebar" : "wrench") : rollWeapon(ctx)) : k === "book" ? bookOf(ctx) : k === "cloth" ? rollCloth(ctx) : k; }
@@ -97,6 +102,7 @@ export function spawnCrateL1(ctx, p) {
 // Level 2: a tool depot. More batteries and ammo, fewer rations; its own tools.
 const L2_WEIGHTS = [["almond", 14], ["bobbypin", 7], ["ammo", 18], ["shells", 9], ["battery", 14], ["bandage", 10], ["ration", 6], ["weapon", 20], ["kit", 5], ["book", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2]]; // cloth: Savi's pick; the rest are Level 2's own finds
 export function rollItemL2(ctx) {
+  if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L2_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
   for (const [k, w] of L2_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL2(ctx) : k === "book" ? bookOf(ctx) : k === "cloth" ? rollCloth(ctx) : k; }
@@ -137,6 +143,7 @@ export const MEAT5 = [["steak", 3], ["fish", 4], ["chicken", 6], ["spam", 8], ["
 export function rollMeat(ctx) { const t = MEAT5.reduce((a, [, w]) => a + w, 0); let r = ctx.random() * t; for (const [k, w] of MEAT5) { r -= w; if (r <= 0) return "meat:" + k; } return "meat:rat"; }
 export function rollWeaponL5(ctx) { const q = ctx.random(); return q < 0.3 ? rollVariant(ctx, "smg") : q < 0.65 ? rollVariant(ctx, "knife") : rollWeapon(ctx); }
 export function rollItemL5(ctx) {
+  if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L5_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
   for (const [k, w] of L5_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL5(ctx) : k === "meat" ? rollMeat(ctx) : k === "book" ? bookOf(ctx) : k === "cloth" ? rollCloth(ctx) : k; }

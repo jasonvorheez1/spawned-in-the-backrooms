@@ -112,17 +112,18 @@ function shop(ctx, d) {
   if (d.k === 'buy') {
     const row = stock[t]; if (!row || row[0] < 1) { note(ctx, 'Sold out.'); return }
     const price = buyPrice(row[1], barter, disc)
-    if ((s.almonds ?? 0) < price) { note(ctx, `Not enough almond water: ${price} needed.`); return }
-    s.almonds -= price
+    const cents = price * 100, cash = (s.cents ?? 0) >= cents
+    if (!cash && (s.almonds ?? 0) < price) { note(ctx, `Not enough: $${price}.00 or ${price} almond water.`); return }
+    if (cash) s.cents -= cents; else s.almonds -= price
     const got = takeToken(ctx, t)
-    if (!got?.ok) { s.almonds += price; note(ctx, got?.msg ?? (got?.why ? `Can't take it: ${got.why}` : "You can't carry that.")); return }
+    if (!got?.ok) { if (cash) s.cents += cents; else s.almonds += price; note(ctx, got?.msg ?? (got?.why ? `Can't take it: ${got.why}` : "You can't carry that.")); return }
     stock[t] = [row[0] - 1, row[1]]; it.state.stock = stock
-    note(ctx, `Bought ${describe(t).name} for ${price} almond water.`)
+    note(ctx, `Bought ${describe(t).name} for ${cash ? '$' + price + '.00' : price + ' almond water'}.`)
   } else if (d.k === 'sell') {
     const row = sellables(s).find((x) => x[0] === t); if (!row || !removeOne(s, t)) return
-    const pay = sellPrice(row[2], barter); s.almonds = (s.almonds ?? 0) + pay
+    const pay = sellPrice(row[2], barter); s.cents = (s.cents ?? 0) + pay * 100
     stock[t] = [(stock[t]?.[0] ?? 0) + 1, stock[t]?.[1] ?? Math.round(row[2] * 2)]; it.state.stock = stock
-    note(ctx, `Sold ${describe(t).name} for ${pay} almond water.`)
+    note(ctx, `Sold ${describe(t).name} for $${pay}.00.`)
   }
 }
 

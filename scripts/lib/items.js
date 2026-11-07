@@ -15,7 +15,7 @@ export const tokenOf = (tag, o) => (tag === 'weapon' ? 'weapon:' + (o?.state?.ki
 // what a token is called and what it does, for the prompt and the loot menu
 export function describe(token) {
   const d = describe0(token)
-  const kg = token.startsWith('meat:') ? 0.3 : ['ration', 'bandage', 'battery', 'kit', 'bobbypin', 'compass', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('book:') || token.startsWith('page:') ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
+  const kg = token.startsWith('cash:') ? 0 : token.startsWith('meat:') ? 0.3 : ['ration', 'bandage', 'battery', 'kit', 'bobbypin', 'compass', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('book:') || token.startsWith('page:') ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
   return kg ? { ...d, info: d.info + ` · ${kg.toFixed(1)} kg` } : d
 }
 // Level 2's finds: eaten, wrapped or taped on the spot, or keys you carry (fuse, valve wheel, keycard) that open its doors
@@ -43,7 +43,11 @@ export const MEAT = {
   rat:      { name: 'Dead rat',         tier: 'poor',    hp: 3,  food: 8,  color: '#8a7a6a' },
 }
 const TIER = { premium: 'PREMIUM', good: 'GOOD', poor: 'POOR' }
+// Backdollars: "cash:<cents>". A bill or a coin by its value; a wad is several bills (Savi's picks for the look)
+export const CASH = { 100: ['Backdollar', '#9fcf8a'], 25: ['Backquarter', '#d8d8d0'], 5: ['Backnickel', '#c8c8c0'], 1: ['Backpenny', '#d08a5a'] }
+export const money = (c) => '$' + (Math.max(0, c ?? 0) / 100).toFixed(2)
 function describe0(token) {
+  if (token.startsWith('cash:')) { const c = +token.slice(5) || 1, k = CASH[c]; return { name: k ? k[0] : `Backdollars (${money(c)})`, info: money(c) + ' · NPCs take it', color: k ? k[1] : '#9fcf8a' } }
   if (token.startsWith('meat:')) { const m = MEAT[token.slice(5)]; return m ? { name: m.name, info: `${TIER[m.tier]} meat · +${m.hp} HP eaten · Samantha's price`, color: m.color } : { name: 'Spoiled meat', info: '', color: '#777' } }
   if (BRK.scrap[token]) return { name: BRK.scrap[token].name, info: 'Building scrap · B to build', color: BRK.scrap[token].color }
   if (L2_DESC[token]) return L2_DESC[token]()
