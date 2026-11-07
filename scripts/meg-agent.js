@@ -185,7 +185,7 @@ const GEST = {
 };
 export function update(ctx, dt) {
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
-  if (m.dressed !== 3) { m.dressed = 3; if (!s.dead) dress(ctx, me); }
+  if (m.dressed !== 4) { m.dressed = 4; if (!s.dead) dress(ctx, me); }
   if (s.dead || (s.hp ?? 1) <= 0) {
     if (!m.down) {
       m.down = true; bark(ctx, me, "death", true);
