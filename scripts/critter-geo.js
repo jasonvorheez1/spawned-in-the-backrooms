@@ -194,7 +194,7 @@ export function geometry(ctx) {
       const m = [(a[0] + c[0]) / 2, (a[1] + c[1]) / 2, (a[2] + c[2]) / 2];
       const h = Math.sin(m[0] * 127.1 + m[1] * 311.7 + m[2] * 74.7) * 43758.5453, n = h - Math.floor(h);
       const rib = CLOTH.rib ? 0.5 + 0.5 * Math.sin(m[1] * CLOTH.rib) : 0.5;
-      const f = n * 0.025 + rib * 0.035 + (CLOTH.hem ? CLOTH.hem(m) : 0);
+      const f = CLOTH.hem ? CLOTH.hem(m) : 0; // per-quad noise and fine ribs aliased into blotches on these quads: clean fabric, shaded hems
       ctx.color(f > 0 ? mixc(CLOTH.col, "#120c10", Math.min(0.45, f)) : mixc(CLOTH.col, "#ffffff", Math.min(0.2, -f)));
     }
     tri(a, b, c); tri(a, c, d);
@@ -220,7 +220,7 @@ export function geometry(ctx) {
   }
 
   // Loft along a 3D path with elliptical sections
-  function loft(path, radius, upHint, colorAt, M = hi ? 14 : 9) {
+  function loft(path, radius, upHint, colorAt, M = hi ? 20 : 12) {
     const n = path.length, rings = [];
     for (let i = 0; i < n; i++) {
       const T = norm3(sub3(path[Math.min(n - 1, i + 1)], path[Math.max(0, i - 1)]));
@@ -748,7 +748,7 @@ export function geometry(ctx) {
     CLOTH = { col, rib: 260, hem: (m) => (m[1] < low + 0.035 ? 0.16 : m[1] > 0.945 ? 0.12 : -0.03 * Math.max(0, -m[2]) * 10) };
     const N = 12, path = [];
     for (let i = 0; i <= N; i++) path.push([0, lerp(low, 0.97, i / N), 0]);
-    loft(path, (t) => { const r = shirtR(lerp(low, 0.97, t)); return [r[0] + pad, r[1] + pad]; }, [0, 0, -1], null, hi ? 24 : 14);
+    loft(path, (t) => { const r = shirtR(lerp(low, 0.97, t)); return [r[0] + pad, r[1] + pad]; }, [0, 0, -1], null, hi ? 32 : 18);
     if (fem) { // the top drapes her bust as one soft curve
       for (const sd of [-1, 1]) ell([sd * BUST.x, BUST.y - 0.004, BUST.z], [BUST.r[0] + 0.026 + pad, BUST.r[1] + 0.024 + pad, BUST.r[2] + 0.022 + pad], null, { seg: hi ? 18 : 10 });
       ell([0, BUST.y - 0.01, BUST.z + 0.004], [0.095 + pad, BUST.r[1] + 0.02 + pad, BUST.r[2] + 0.016 + pad], null, { seg: hi ? 16 : 10 });
@@ -758,7 +758,7 @@ export function geometry(ctx) {
 
   const pants = (col, knee = 0.12, shorts = false) => {
     ctx.color(col);
-    CLOTH = { col, rib: 0, hem: (m) => 0.05 * (0.5 + 0.5 * Math.sin((m[1] + m[0]) * 300)) + (m[1] < (shorts ? 0.41 : knee + 0.035) ? 0.14 : 0) + (Math.abs(m[1] - 0.3) < 0.05 && m[2] < 0 && !shorts ? -0.09 : 0) + (m[1] > 0.7 ? 0.1 : 0) };
+    CLOTH = { col, rib: 0, hem: (m) => (m[1] < (shorts ? 0.41 : knee + 0.035) ? 0.14 : 0) + (Math.abs(m[1] - 0.3) < 0.05 && m[2] < 0 && !shorts ? -0.09 : 0) + (m[1] > 0.7 ? 0.1 : 0) };
     ell([0, 0.66, 0.005], [HIP_R[0] + 0.016, 0.115, HIP_R[1] + 0.016], null, { clip: (p) => p[1] > 0.72 });
     for (const s of [-1, 1]) {
       const x = s * 0.085;
