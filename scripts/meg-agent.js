@@ -264,7 +264,7 @@ export function update(ctx, dt) {
     const isFem = (s.wear?.sex ?? s.look?.sex) === "f";
     const baseExpr = s.wear?.expr || s.look?.expr || "smile";
     let curExpr = baseExpr;
-    if (now - (m.hitAt ?? 0) < 650) curExpr = "scared";
+    if (now - (m.hitAt ?? 0) < 650 || now - (m.fearAt ?? 0) < 1600) curExpr = "scared";
     else if (now - (m.wavedAt ?? 0) < 2200) curExpr = "catmouth"; // :3 on hello
     else if (talking) curExpr = Math.floor(now / 220) % 2 === 0 ? "beam" : "smile";
     else if (m.aimAt) curExpr = "cocky";
