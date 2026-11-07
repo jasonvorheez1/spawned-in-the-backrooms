@@ -73,7 +73,7 @@ export function poseViewmodel(ctx, dt) {
     lastSwing: 0, lastReload: 0, lastPump: 0, lastEquip: 0, lastDry: 0, equipT: 1, pumpT: 1,
     relT: 0, relOn: false, relKind: null, eject: false, lastYaw: null, lastPitch: 0, bob: 0, vy: 0,
   })
-  if (m.id !== ps.vmId) { m.id = ps.vmId; if (!m.seeded) { m.lastEquip = ps.equipAt ?? 0; m.seeded = true } // a draw rebuilds the viewmodel: keep the old equip stamp so the new one still rises m.lastSwing = ps.swingAt ?? 0; m.lastPump = ps.pumpAt ?? 0; m.lastReload = ps.reloadN ?? 0; m.lastDry = ps.dryAt ?? 0; try { vm.interpolation = null } catch (e) { /* the engine keeps its default smoothing */ } }
+  if (m.id !== ps.vmId) { m.id = ps.vmId; if (!m.seeded) { m.lastEquip = ps.equipAt ?? 0; m.seeded = true } /* a draw rebuilds the viewmodel: keep the old equip stamp so the new one still rises */ m.lastSwing = ps.swingAt ?? 0; m.lastPump = ps.pumpAt ?? 0; m.lastReload = ps.reloadN ?? 0; m.lastDry = ps.dryAt ?? 0; try { vm.interpolation = null } catch (e) { /* the engine keeps its default smoothing */ } }
 
   const kind = ps.equipped ?? 'fists', wp = W[kind] ?? W.fists, gun = !!wp.ranged
   const rc = wp.recoil ?? {}, aimDamp = 1 - 0.55 * m.ads
