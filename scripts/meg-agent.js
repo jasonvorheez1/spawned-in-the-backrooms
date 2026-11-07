@@ -274,7 +274,7 @@ export function update(ctx, dt) {
     m.at ||= now;
     const busy = (near && best < 3) || chatTo || talking;
     let act = busy ? null : stop0.act ?? null;
-    if (act && /sit/.test(act)) { if (m.seatAt !== s.ri) { m.seatAt = s.ri; m.seatOk = !!seatFor(ctx, me.feetPosition, 1.2, me.id); } if (!m.seatOk) act = null; } // a sit with no seat under it lies flat: stand instead
+    if (act && /sit/.test(act) && !s.sit) act = null; // the sit clip only plays seated (state.sit); on the floor it lies flat like a corpse
     work(me, m, act);
     if (!busy && !near && stop0.look) face(me, stop0.look.x - me.feetPosition.x, stop0.look.z - me.feetPosition.z, dt);
     if (!busy && now - m.at > (stop0.dwell ?? 10) * 1000) { s.ri = ((s.ri ?? 0) + 1) % s.rounds.length; m.at = 0; if (ctx.random() < 0.3) bark(ctx, me, "move"); }
