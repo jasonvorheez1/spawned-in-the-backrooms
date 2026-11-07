@@ -219,7 +219,7 @@ export default function render(ctx, player) {
   <!-- CENTER: Minimal Zone Header -->
   ${zone === 'l6_halls' ? `<div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:90px;animation:hud-fade 6s forwards;pointer-events:none;color:#f2c14e;text-shadow:3px 3px #000">
     <div style="font-size:14px;letter-spacing:.6em;opacity:.7">LEVEL 6</div>
-    <div style="font-size:56px;letter-spacing:.28em;line-height:1.1;margin:4px 0">LIGHTS OUT</div>
+    <div style="font-size:clamp(26px,7vw,56px);letter-spacing:.28em;line-height:1.1;margin:4px 0;white-space:nowrap">LIGHTS OUT</div>
     <div style="font-size:13px;letter-spacing:.18em;opacity:.75">THE DARK HERE IS OLDER THAN YOU</div>
   </div>` : `<div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:100px;animation:hud-fade 3.5s forwards;pointer-events:none">
     <div style="font-size:22px;letter-spacing:0.12em">${ZONE_NAMES[zone] ?? 'The Lobby'}</div>
