@@ -21,7 +21,7 @@ function tuneLamps(ctx) {
     o.state = { ...(o.state ?? {}), t: 1 };
   }
   for (const r of ctx.query({ tags: ["live-box"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { // an arc's flash once whited out the hall
-    const o = ctx.getObject(r.id), f = o?.fx?.script; if (f && f.includes("*18,6)")) o.fx = { ...o.fx, script: f.replace("*18,6)", "*6,5)") };
+    const o = ctx.getObject(r.id), f = o?.fx?.script; if (f && !f.includes("*1.5,4)")) o.fx = { ...o.fx, script: f.replace(/\*(18,6|6,5)\)/, "*1.5,4)") };
   }
 }
 export function update(ctx) {

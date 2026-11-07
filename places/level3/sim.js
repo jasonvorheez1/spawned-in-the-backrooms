@@ -31,7 +31,7 @@ function agent(ctx, id) {
 
 const ARC = `fx
 pop spark rate=(flick(1.1,1)^10)*320 on=disc(.05) life=.2..0.55 v=<%dir|0,0,1>*(1.5..3)+sdir()*1.8 size=.012..0.03 acc=grav()+drag(.4) floor=bounce(.3) sz=$size col=hdr(4,5,8)>hdr(3,1.6,.4) a=1>0 r=sprite(ember,add,velocity,.03)
-pop zap n=1 r=light(<.6,.75,1>,(flick(1.1,1)^10)*6,5)`;
+pop zap n=1 r=light(<.6,.75,1>,(flick(1.1,1)^10)*1.5,4)`;
 const DRIP = `fx
 pop drip rate=3 on=disc(.05) life=.6 v=<0,-1,0>*(.2..0.4) size=.025..0.04 acc=grav() floor=die col=<.02,.02,.03> a=1 sz=$size r=sprite(soft-disc,alpha)
 pop fume rate=4 on=disc(.5).c(-1.9) life=1.5..2.5 v=up(.15..0.3) size=.2..0.35 acc=curl(.3)+drag(.8) sz=$size*(.6>2) col=<.12,.1,.14> a=0>.2:.25>.7:.1>0 r=sprite(smoke-puff,alpha)`;
