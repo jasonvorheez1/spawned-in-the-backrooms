@@ -187,7 +187,8 @@ export function update(ctx, dt) {
   // struck or crossed in words: whoever it was, she remembers in claws
   const ang = st.angry && Object.keys(st.angry).find((k) => st.angry[k])
   if (ang) { st.angry = {}; st.fresh = {}; enrage(ctx, ang, now) }
-  if ((st.hp ?? 100) < S.blinkHp) { st.hp = 100; if (ses.mode !== 'gone') vanish(ctx, now) }
+  if (st.dead) st.dead = false
+  if ((st.hp ?? 1000) < 1000 - S.blinkHp) { st.hp = 1000; if (ses.mode !== 'gone') vanish(ctx, now) }
   if (ses.mode === 'gone') {
     if (now < ses.until) return
     ses.mode = null; teleport(ctx, S.home); clip(ctx, 'Idle'); ses.mode = 'sit'; ses.until = now + 8000; st.away = 0
