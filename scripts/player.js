@@ -56,7 +56,7 @@ export const weaponOf = (s) => W[s.equipped] ?? W.fists
 
 const DOWN_MS = 3200 // how long you watch yourself lie there (Savi's pick); camera.js and the creatures read the same window
 // checkpoints: each place's safe spawn plus every doorway's arrival marker; you wake at the nearest one
-const CHECKS = { main: ['main-from-l1'], level1: ['l1-from-main', 'l1-from-l2'], level2: ['l2-from-l1', 'l2-from-l3'], level3: ['l3-from-l2', 'l3-gamma-door', 'l3-lift-arrive', 'l3-from-l5'], level4: ['l4-lift-arrive', 'l4-from-l5'], level5: ['l5-from-l3', 'l5-from-l4', 'l5-lobby'], level6: ['l6-from-l5'], gamma: [] }
+const CHECKS = { main: ['main-from-l1'], level1: ['l1-from-main', 'l1-from-l2'], level2: ['l2-from-l1', 'l2-from-l3'], level3: ['l3-from-l2', 'l3-gamma-door', 'l3-lift-arrive', 'l3-from-l5'], level4: ['l4-lift-arrive', 'l4-from-l5'], level5: ['l5-from-l3', 'l5-from-l4', 'l5-from-l6', 'l5-lobby'], level6: ['l6-from-l5'], gamma: [] }
 function nearestCheckpoint(ctx, at) {
   const sp = ctx.place.defaultSpawnPoint ?? {}, yaw0 = ctx.place.defaultSpawnRotation?.yaw
   let best = { pos: { x: sp.x ?? 0, y: 0.1, z: sp.z ?? 0 }, rot: yaw0 }, bd = Math.hypot(best.pos.x - at.x, best.pos.z - at.z)

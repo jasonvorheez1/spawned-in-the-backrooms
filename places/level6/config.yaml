@@ -11,7 +11,6 @@ atmosphere:
   moon: { enabled: false, intensity: 0 }
   sky: { kind: color, color: oklch(0.02 0 0) }
   stars: { enabled: false }
-  sun: { intensity: 0 }
   timeOfDay: 0
   wind: { direction: 0, speed: 0 }
   ambient: { light: { color: oklch(0.8 0.01 250), intensity: 0.07 } }
