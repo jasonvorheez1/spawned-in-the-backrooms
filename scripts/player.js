@@ -205,6 +205,7 @@ export function onInput(ctx, input) {
   const nx = mag > 1 ? mx / mag : mx, nz = mag > 1 ? mz / mag : mz
   w.dir = { x: cos * nx - sin * nz, z: -(sin * nx + cos * nz) }
   // on a phone, pushing the stick all the way runs: no sprint button to hold beside it
+  if (input.pressed.walk) w.walkMode = !w.walkMode // caps lock: a slow, steady walk until pressed again
   w.sprint = !!input.held.sprint || (input.axes.touchActive === 1 && Math.hypot(input.axes.moveX ?? 0, input.axes.moveZ ?? 0) > 0.95)
   if (input.pressed.crouch) ctx.self.state.crouch = !ctx.self.state.crouch // ctrl toggles a crouch: slow, quiet, low
   if (ctx.self.state.crouch && (input.pressed.jump || (w.sprint && Math.hypot(mx, mz) > 0.1))) ctx.self.state.crouch = false // jumping or running stands you up
@@ -547,7 +548,7 @@ export function update(ctx, dt) {
   w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain : L.staminaRegen * dv.staRegen * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
   const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
-  const speed = (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * dv.speed * (w.bur ??= burden(s))
+  const speed = (w.walkMode && !sprinting ? 0.5 : 1) * (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * dv.speed * (w.bur ??= burden(s))
   const intent = { x: dir.x * speed, z: dir.z * speed }
   viewmodel(ctx, moving, sprinting)
   const v = ctx.self.velocity

@@ -20,9 +20,12 @@ inputs:
     sprint:
       keys:
         - shift
+    walk:
+      keys:
+        - capslock
     crouch:
       keys:
-        - ctrl
+        - control
         - z
       touch:
         label: Crouch
