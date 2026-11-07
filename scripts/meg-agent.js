@@ -44,8 +44,10 @@ function dress(ctx, me) {
     const spec = critterSpec(l); me.model = spec.model; me.material = spec.material; me.jiggle = spec.jiggle; me.state.wear = l; seatHead(ctx, me, l);
   }
   const sc = me.scale, plain = !sc || (typeof sc === "number" ? sc === 1 : sc.x === 1 && sc.y === 1);
-  if (!me.state.build && plain) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = b; me.scale = { x: b.w, y: b.h, z: b.w }; } // its own height and build
-  if (me.model && (me.state.wear?.sex ?? me.state.look?.sex) === 'f' && me.morph?.Bust == null) { const b = me.state.build?.bust != null ? me.state.build : buildFor(String(me.id).split("/").pop(), 'f'); me.morph = { ...(me.morph ?? {}), Bust: b.bust }; } // her own bust
+  if (me.state.build && me.state.build.v !== 2) { me.state.build = null; me.scale = 1; } // the reset: rebuilt with the new ranges
+  const sc2 = me.scale, plain2 = !sc2 || (typeof sc2 === "number" ? sc2 === 1 : sc2.x === 1 && sc2.y === 1);
+  if (!me.state.build && plain2) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = b; me.scale = { x: b.w, y: b.h, z: b.w }; } // its own height and build
+  if (me.model && (me.state.wear?.sex ?? me.state.look?.sex) === 'f' && (me.morph?.Bust == null || me.session.bustV !== 2)) { me.session.bustV = 2; const b = me.state.build?.bust != null ? me.state.build : buildFor(String(me.id).split("/").pop(), 'f'); me.morph = { ...(me.morph ?? {}), Bust: b.bust }; } // her own bust
 }
 
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
@@ -158,7 +160,7 @@ function holster(ctx, me, m, drawn) {
 function aim(me, m, t) {
   const id = t?.id ?? null;
   if (m.aimAt === id) return; m.aimAt = id;
-  me.bones = id ? { RightHand: { reach: { to: { object: id, offset: { x: 0, y: 1.1, z: 0 } }, blendIn: 0.15, blendOut: 0.3 } }, LeftHand: { reach: { to: { object: id, offset: { x: 0, y: 1.05, z: 0 } }, blendIn: 0.2, blendOut: 0.3 } } } : null;
+  me.bones = id ? { ...baseBones(me.state.build), RightHand: { reach: { to: { object: id, offset: { x: 0, y: 1.1, z: 0 } }, blendIn: 0.15, blendOut: 0.3 } }, LeftHand: { reach: { to: { object: id, offset: { x: 0, y: 1.05, z: 0 } }, blendIn: 0.2, blendOut: 0.3 } } } : null;
 }
 
 

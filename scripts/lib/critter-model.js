@@ -152,8 +152,15 @@ export const speciesFor = (id) => SPECIES[hashOf(id + ':sp') % SPECIES.length]
 export function buildFor(id, sex) {
   const a = (hashOf(id + ':h') % 1000) / 1000, b = (hashOf(id + ':w') % 1000) / 1000
   const h = +(0.86 + a * 0.28 - (sex === 'f' ? 0.03 : 0)).toFixed(3), w = +(0.88 + b * 0.28).toFixed(3)
-  const c = (hashOf(id + ':b') % 1000) / 1000
-  return sex === 'f' ? { h, w, bust: +(c * 0.75).toFixed(2) } : { h, w } // Bust morph 0..0.75, stable per npc
+  const c = (hashOf(id + ':b') % 1000) / 1000, d = (hashOf(id + ':hd') % 1000) / 1000, e = (hashOf(id + ':tl') % 1000) / 1000
+  // Savi's picks: bust spans flat to full (-0.5..1.0, a curve so both ends show up); head 0.92..1.1, narrow on purpose; tail curl 0.7..1.3
+  const bust = +(-0.5 + Math.pow(c, 0.85) * 1.5).toFixed(2), head = +(0.92 + d * 0.18).toFixed(3), curl = +(0.7 + e * 0.6).toFixed(2)
+  return sex === 'f' ? { v: 2, h, w, bust, head, curl } : { v: 2, h, w, head, curl } // stable per npc
+}
+// the resting pose every npc keeps under its other bone writes: its head size and an S-curve in the tail (up off the hips, tip curling back)
+export function baseBones(b) {
+  const k = b?.curl ?? 1, hs = b?.head ?? 1
+  return { Head: { scale: hs }, Tail: { rotate: [-28 * k, 0, 0] }, Tail1: { rotate: [34 * k, 0, 0] } }
 }
 // the body's Bust morph from a creator slider (bustS 0.6..1.3, 1 = as built)
 export function bustMorph(l) { return _bust(l) }

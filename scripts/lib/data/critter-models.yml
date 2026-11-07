@@ -32,6 +32,7 @@ species:
   koala: { head: "/cdn/value.62d8355ca8cab45821335e923093d1054c26ec4418048f5d5abcd951fda4ef4b.glb", headM: "/cdn/value.62d8355ca8cab45821335e923093d1054c26ec4418048f5d5abcd951fda4ef4b.glb", headF: "/cdn/value.ad3600a8106b006900aece0d017a575573c14db5ed05417353beb33b39179b3d.glb", fur: "#9a9aa4", belly: "#ececf0", nose: "#2a2830", tip: "#ececf0", inner: "#f4f4f6", mats: [eyewhite, eyeink, pupil, iris, mouth, tongue, blush, fur, belly, tip, nose, mark, inner, antler] }
 # expressions as the head's shape keys (Blink Happy Sad Angry Wide Half Smile Open Frown O Blep Blush), 0..1
 faces:
+  catmouth: { Happy: 1, Smile: .55, O: .22, Blush: .45 } # :3
   grin: { Smile: 1, Open: .4, Blush: .25 }
   smile: { Smile: .8, Blush: .2 }
   beam: { Happy: 1, Smile: 1, Open: .5, Blush: .35 }
