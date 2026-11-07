@@ -1,0 +1,24 @@
+# Camp chatter: short exchanges two or three NPCs have with each other while a player is near.
+# Each exchange is a list of [speaker id, line]. Lines are plain talk: tired people with jobs, not a tutorial.
+# her picks: hear range 20 m, a gap of 25-50 s between exchanges
+hear: 20
+gapMin: 25
+gapMax: 50
+level1:
+  - [[meg-callum, "who took the last can of peaches."], [meg-ale, "define took."], [meg-callum, "ale."], [meg-ale, "it was expiring. i did us a favor."]]
+  - [[meg-ortiz, "hold still, your hand's bleeding again."], [meg-ale, "it's fine, it's a scratch."], [meg-ortiz, "it's a bite. there's a difference."], [meg-ale, "...okay yeah, that's a bite."]]
+  - [[meg-ale, "lights went out in the east block again."], [meg-callum, "how long?"], [meg-ale, "long enough that i stopped counting."], [meg-callum, "great. so no one's walking that way tonight."]]
+  - [[meg-callum, "you ever think about what's up there? level zero?"], [meg-ortiz, "try not to."], [meg-callum, "i miss the carpet. isn't that stupid."], [meg-ortiz, "a little. i get it though."]]
+  - [[meg-ortiz, "did you sleep at all?"], [meg-callum, "couple hours."], [meg-ortiz, "you said that yesterday."], [meg-callum, "and it was true yesterday too."]]
+  - [[meg-ale, "heard someone yelling hello down the pipes earlier."], [meg-ortiz, "did you answer?"], [meg-ale, "no. i'm not new."], [meg-ortiz, "good."]]
+  - [[meg-callum, "count's off. we're short two almond waters."], [meg-ale, "don't look at me."], [meg-callum, "i'm looking at the crate. the crate's looking at you."]]
+  - [[meg-ortiz, "base wants a report by the next blackout."], [meg-ale, "tell them nothing's changed."], [meg-ortiz, "that's what i told them last time."], [meg-ale, "so it's still true."]]
+level2:
+  - [[surv-mags, "found a toolbox in the north rooms. half of it's rust."], [surv-hollis, "and the other half?"], [surv-mags, "also rust, but useful rust."]]
+  - [[surv-wren, "pipes are knocking again."], [surv-hollis, "it's just pressure."], [surv-wren, "you say that every time."], [surv-hollis, "and every time i'm right. mostly."]]
+  - [[surv-hollis, "you're limping."], [surv-wren, "no i'm not."], [surv-hollis, "sit down."], [surv-wren, "...fine. two minutes."]]
+  - [[surv-mags, "if anyone comes asking, shells are four waters each."], [surv-wren, "that's robbery."], [surv-mags, "that's business, honey."]]
+  - [[surv-wren, "you remember what the sky looked like?"], [surv-mags, "blue, mostly."], [surv-wren, "i keep forgetting if clouds were white or grey."], [surv-mags, "both. depended on the day."]]
+  - [[surv-hollis, "that barred door with the three on it."], [surv-mags, "don't."], [surv-hollis, "i'm just saying something's breathing back there."], [surv-mags, "and i'm just saying don't."]]
+  - [[surv-mags, "hollis, you still got that radio working?"], [surv-hollis, "it hisses. sometimes the hiss has words in it."], [surv-mags, "what words?"], [surv-hollis, "never the ones you want."]]
+  - [[surv-wren, "hounds were close last night."], [surv-mags, "how close?"], [surv-wren, "close enough i could smell 'em."], [surv-hollis, "then we double up on watch."]]

@@ -5,6 +5,7 @@ import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import L from "../../scripts/lib/data/level1.yml";
 import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ONWARD, ARRIVE, hash, S, HALF, hasPillar } from "../../scripts/lib/level1.js";
 import { spawnAlmond, spawnCrateL1 } from "../../scripts/lib/loot.js";
+import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "250ms";
 const LAMP_ON = 9;
 // the M.E.G. agents are critters like the players: lime hi-vis jackets, the agency's look
@@ -27,6 +28,7 @@ pop glow n=1 r=light(<1,.55,.24>,fire()*6,7)`;
 
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
+  tickChatter(ctx, CHATTER.level1, {"meg-ale": "ale", "meg-ortiz": "ortiz", "meg-callum": "callum"}); // the camp talks among itself while someone's near
   if (!s.seeded) {
     s.seeded = true;
     ctx.spawn("l1-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level1-geo.js" }, material: { roughness: 0.85, emissiveIntensity: 2 } });

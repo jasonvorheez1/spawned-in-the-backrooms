@@ -5,6 +5,7 @@ import { N, H, S, zoneOf, cellCenter, openings, hash, ARRIVE, BACK, SEALED } fro
 import { spawnAlmond, spawnCrateL2, spawnWeapon, rollWeaponL2 } from "../../scripts/lib/loot.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
+import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "250ms";
 // the Survivors: critters in work clothes, the old Aiding Stragglers' heirs
 const SURV = {
@@ -23,6 +24,7 @@ const lit = (cx, cz) => zoneOf(cx, cz) !== "dark";
 
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
+  tickChatter(ctx, CHATTER.level2, {"surv-wren": "wren", "surv-hollis": "hollis", "surv-mags": "mags"}); // the camp talks among itself while someone's near
   if (!s.seeded) {
     s.seeded = true;
     ctx.spawn("l2-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-geo.js" }, material: { roughness: 0.9 } });
