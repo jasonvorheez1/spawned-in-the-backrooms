@@ -68,7 +68,7 @@ export function tick(ctx) {
   }
   if (!s.l2door) { s.l2door = true; // the pipeworks: a green door in the east wall, down into Level 2
     ctx.spawn("l1-onward", { feetPosition: { x: ONWARD.x - 0.3, y: 0, z: ONWARD.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2.4, depth: 1.6 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level2" } });
-    ctx.spawn("l1-onward-door", { feetPosition: { x: ONWARD.x + 0.45, y: 0, z: ONWARD.z }, physics: "static", primitive: { kind: "box", width: 0.12, height: 2.25, depth: 1.25 }, material: { color: "oklch(0.5 0.11 150)", metalness: 0.4, roughness: 0.6 },
+    ctx.spawn("l1-onward-door", { feetPosition: { x: ONWARD.x + 0.45, y: 0, z: ONWARD.z }, physics: "static", primitive: { kind: "box", width: 0.12, height: 2.25, depth: 1.25 }, material: { color: "oklch(0.82 0.03 85)", metalness: 0.3, roughness: 0.75 },
       ui: '<div face="left" width="1.1m" style="font-size:150px;font-weight:900;color:#e8f0d0;text-align:center;letter-spacing:8px">LEVEL 2</div>' });
     ctx.spawn({ feetPosition: { x: ONWARD.x - 0.6, y: 2.6, z: ONWARD.z }, light: { kind: "point", color: "oklch(0.8 0.12 150)", intensity: 2.5, distance: 7 } });
   }
