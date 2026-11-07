@@ -261,9 +261,9 @@ for wantjaw, bone in ((False, "head"), (True, "jaw")):
             x = s * (0.034 - k * 0.0025) if not wantjaw else s * (0.04 - k * 0.0035)
             z = column(x, y, wantjaw, top=wantjaw)
             if z is None: continue
-            L = 0.03 if k in (1, 2) else 0.018
+            TL = 0.03 if k in (1, 2) else 0.018
             base = Vector((x, y, z + (0.004 if not wantjaw else -0.004)))
-            cone(bm, base, base + Vector((0, 0.004, L if wantjaw else -L)), 0.0045)
+            cone(bm, base, base + Vector((0, 0.004, TL if wantjaw else -TL)), 0.0045)
     parts.append((mesh_obj("teeth", bm, toothm), bone))
 bm = bmesh.new()
 for S, s, nm_ in ((L, 1, "L"), (R, -1, "R")):
