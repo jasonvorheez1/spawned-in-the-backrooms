@@ -3,6 +3,7 @@
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
 import { findPath } from "builtin/nav";
 import { raycast } from "builtin/physics";
+import { animate } from "builtin/tween";
 import G from "./lib/data/meg.yml";
 const SHOT = "/cdn/moodboard-realistic-gritty/sfx-pistol-gunshot-concrete-echo.mp3";
 const FLASH = `fx
@@ -50,6 +51,7 @@ function shoot(ctx, me, t) {
   const muzzle = { x: o.x + dx / l * 0.5, y: o.y + 0.15, z: o.z + dz / l * 0.5 };
   ctx.emit("fx", { position: muzzle, script: FLASH });
   ctx.emit("playSound", { clip: SHOT, position: muzzle, volume: 0.9, maxDistance: 45 });
+  animate(ctx, me.id, { "bones.Spine2.pitch": [0, 7, 0], "bones.RightArm.pitch": [0, 12, 0] }, { duration: 0.2 }); // the kick
   if (ctx.random() > G.hitChance) return;
   const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), dmg = isPlayer ? G.playerShot : G.shot;
   t.state.hp -= dmg;
@@ -82,28 +84,48 @@ function gait(me, m, kind) {
   me.anim.idle = { clip: kind === "run" ? "Run" : kind === "walk" ? "Walk" : "Idle", loop: "loop", weight: 1, blendIn: 0.2 };
 }
 
+// two-handed aim: both hands reach for the target's chest, followed every frame; written only when the target changes
+function aim(me, m, t) {
+  const id = t?.id ?? null;
+  if (m.aimAt === id) return; m.aimAt = id;
+  me.bones = id ? { RightHand: { reach: { to: { object: id, offset: { x: 0, y: 1.1, z: 0 } }, blendIn: 0.15, blendOut: 0.3 } }, LeftHand: { reach: { to: { object: id, offset: { x: 0, y: 1.05, z: 0 } }, blendIn: 0.2, blendOut: 0.3 } } } : null;
+}
+
 export function update(ctx, dt) {
-  const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0 }), now = ctx.now();
+  const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
   if (s.dead || (s.hp ?? 1) <= 0) {
-    if (!m.down) { m.down = true; stop(me, dt); me.anim.idle = { clip: "cdn/clip-death-backward.glb", loop: "once", weight: 1, blendIn: 0.15 }; ctx.after(4, "vanish", {}); }
+    if (!m.down) { m.down = true; stop(me, dt); aim(me, m, null); me.anim.talk = null; me.anim.idle = { clip: "cdn/clip-die.glb", loop: "once", weight: 1, blendIn: 0.1, clampWhenFinished: true }; ctx.after(6, "vanish", {}); }
     return;
   }
+  // a flinch every time something takes hp off them
+  if (m.lastHp != null && (s.hp ?? 0) < m.lastHp - 0.5) me.anim.hit = { clip: "cdn/clip-hit-react.glb", loop: "once", weight: 0.8, blendIn: 0.05, blendOut: 0.3, timeAt: now };
+  m.lastHp = s.hp;
+  // talking: interact.js stamps state.talkAt and talkTo when a player presses E on them
+  const talking = s.talkAt && now - s.talkAt < 2600;
+  if (talking !== !!m.talking) { m.talking = talking; me.anim.talk = talking ? { clip: "cdn/clip-talk-loop.glb", loop: "loop", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } } : null; }
   const home = s.home ?? me.feetPosition;
   const t = pickTarget(ctx, me, m);
   if (t && flat(t.feetPosition, home) < G.leash) {
-    const d = flat(t.feetPosition, me.feetPosition), see = seesIt(ctx, me, t);
-    if (d > G.range || !see) { gait(me, m, "run"); moveAlong(ctx, me, m, t.feetPosition, G.run, dt); }
-    else { gait(me, m, "idle"); stop(me, dt); face(me, t.feetPosition.x - me.feetPosition.x, t.feetPosition.z - me.feetPosition.z, dt); }
-    if (see && d <= G.range && now >= m.next) { m.next = now + G.fireEvery * 1000 * (0.85 + ctx.random() * 0.3); shoot(ctx, me, t); }
+    const d = flat(t.feetPosition, me.feetPosition), see = seesIt(ctx, me, t), reloading = now < (m.reloadUntil ?? 0);
+    if (d > G.range || !see) { gait(me, m, "run"); aim(me, m, null); moveAlong(ctx, me, m, t.feetPosition, G.run, dt); }
+    else { gait(me, m, "idle"); stop(me, dt); aim(me, m, reloading ? null : t); face(me, t.feetPosition.x - me.feetPosition.x, t.feetPosition.z - me.feetPosition.z, dt); }
+    if (see && d <= G.range && !reloading && now >= m.next) {
+      m.next = now + G.fireEvery * 1000 * (0.85 + ctx.random() * 0.3); shoot(ctx, me, t);
+      if (++m.shots >= 8) { m.shots = 0; m.reloadUntil = now + 1800; ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-pistol-magazine-reload-click.mp3", position: me.feetPosition, volume: 0.6, maxDistance: 20 }); } // arms drop, a fresh mag
+    }
     return;
   }
+  aim(me, m, null);
   if (flat(home, me.feetPosition) > 1) { gait(me, m, "walk"); moveAlong(ctx, me, m, home, G.walk, dt); return; }
   stop(me, dt); gait(me, m, "idle"); m.path = null;
   // at the post: turn to whoever walks up, wave once (not at someone the camp is at war with)
   let near = null, best = 7;
   for (const pl of ctx.place.players) { const d = flat(pl.feetPosition, me.feetPosition); if (d < best) { best = d; near = pl; } }
-  if (!near) { ctx.sleep(0.5); return; }
+  if (!near) {
+    if (now > (m.glance ?? 0)) { m.glance = now + 5000 + ctx.random() * 5000; animate(ctx, me.id, { "bones.Head.yaw": [0, (ctx.random() - 0.5) * 80, 0] }, { duration: 2.8, easing: "easeInOutSine" }); } // a glance down the halls
+    ctx.sleep(0.5); return;
+  }
   face(me, near.feetPosition.x - me.feetPosition.x, near.feetPosition.z - me.feetPosition.z, dt);
-  if (!m.waved[near.id] && best < 5 && !s.angry?.[near.id]) { m.waved[near.id] = true; me.anim.wave = { clip: "cdn/clip-wave-loop.glb", loop: "once", weight: 1, blendIn: 0.25, blendOut: 0.4 }; }
+  if (!m.waved[near.id] && best < 5 && !s.angry?.[near.id]) { m.waved[near.id] = true; me.anim.wave = { clip: "cdn/clip-wave-loop.glb", loop: "once", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } }; }
 }
 export function vanish(ctx) { ctx.destroy(ctx.self.id); }
