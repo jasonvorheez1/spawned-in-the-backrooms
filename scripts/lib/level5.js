@@ -5,23 +5,23 @@
 export const T = 0.15, DOORH = 2.4;
 // zone: { id, kind, x0, x1, z0, z1, h (ceiling), name, drain (sanity / min, negative heals) }
 export const ZONES = [
-  { id: "lobby", kind: "lobby", name: "The Main Hall · Lobby", x0: -46, x1: -30, z0: -13, z1: 13, h: 7.5, drain: 0.6 },
-  { id: "gallery", kind: "hall", name: "The Main Hall", x0: -30, x1: -6, z0: -3, z1: 3, h: 5, drain: 0.8 },
-  { id: "crossN", kind: "hall", name: "The Main Hall", x0: -19, x1: -16, z0: -10, z1: -3, h: 3.6, drain: 0.8 },
-  { id: "crossS", kind: "hall", name: "The Main Hall", x0: -19, x1: -16, z0: 3, z1: 10, h: 3.6, drain: 0.8 },
-  { id: "corrN", kind: "corridor", name: "Guest Wing North", x0: -30, x1: -6, z0: -13, z1: -10, h: 3.6, drain: 1.0 },
-  { id: "corrS", kind: "corridor", name: "Guest Wing South", x0: -30, x1: -6, z0: 10, z1: 13, h: 3.6, drain: 1.0 },
+  { id: "lobby", kind: "lobby", name: "The Main Hall · Lobby", x0: -46, x1: -30, z0: -13, z1: 13, h: 7.5, drain: 0.15 },
+  { id: "gallery", kind: "hall", name: "The Main Hall", x0: -30, x1: -6, z0: -3, z1: 3, h: 5, drain: 0.15 },
+  { id: "crossN", kind: "hall", name: "The Main Hall", x0: -19, x1: -16, z0: -10, z1: -3, h: 3.6, drain: 0.15 },
+  { id: "crossS", kind: "hall", name: "The Main Hall", x0: -19, x1: -16, z0: 3, z1: 10, h: 3.6, drain: 0.15 },
+  { id: "corrN", kind: "corridor", name: "Guest Wing North", x0: -30, x1: -6, z0: -13, z1: -10, h: 3.6, drain: 0.15 },
+  { id: "corrS", kind: "corridor", name: "Guest Wing South", x0: -30, x1: -6, z0: 10, z1: 13, h: 3.6, drain: 0.15 },
   // north row off corrN (doors on z = -13)
-  { id: "library", kind: "library", name: "Lost Hall Society Library", x0: -30, x1: -22, z0: -21, z1: -13, h: 3.6, drain: 0.3 },
-  { id: "room-n3", kind: "guest", x0: -22, x1: -18, z0: -21, z1: -13, h: 3.2, drain: 0.9 },
-  { id: "room-n4", kind: "guest", x0: -18, x1: -14, z0: -21, z1: -13, h: 3.2, drain: 0.9 },
-  { id: "room-n5", kind: "guest", x0: -14, x1: -10, z0: -21, z1: -13, h: 3.2, drain: 0.9 },
+  { id: "library", kind: "library", name: "Lost Hall Society Library", x0: -30, x1: -22, z0: -21, z1: -13, h: 3.6, drain: 0.15 },
+  { id: "room-n3", kind: "guest", x0: -22, x1: -18, z0: -21, z1: -13, h: 3.2, drain: 0.15 },
+  { id: "room-n4", kind: "guest", x0: -18, x1: -14, z0: -21, z1: -13, h: 3.2, drain: 0.15 },
+  { id: "room-n5", kind: "guest", x0: -14, x1: -10, z0: -21, z1: -13, h: 3.2, drain: 0.15 },
   { id: "stairs4", kind: "stairs", name: "Old Stairway · up to Level 4", x0: -10, x1: -6, z0: -21, z1: -13, h: 3.6, drain: 0.5 },
   // south row off corrS (doors on z = 13)
-  { id: "room-s1", kind: "guest", x0: -30, x1: -26, z0: 13, z1: 21, h: 3.2, drain: 0.9 },
-  { id: "room-s2", kind: "guest", x0: -26, x1: -22, z0: 13, z1: 21, h: 3.2, drain: 0.9 },
-  { id: "room-s3", kind: "guest", x0: -22, x1: -18, z0: 13, z1: 21, h: 3.2, drain: 0.9 },
-  { id: "room-s4", kind: "guest", x0: -18, x1: -14, z0: 13, z1: 21, h: 3.2, drain: 0.9 },
+  { id: "room-s1", kind: "guest", x0: -30, x1: -26, z0: 13, z1: 21, h: 3.2, drain: 0.15 },
+  { id: "room-s2", kind: "guest", x0: -26, x1: -22, z0: 13, z1: 21, h: 3.2, drain: 0.15 },
+  { id: "room-s3", kind: "guest", x0: -22, x1: -18, z0: 13, z1: 21, h: 3.2, drain: 0.15 },
+  { id: "room-s4", kind: "guest", x0: -18, x1: -14, z0: 13, z1: 21, h: 3.2, drain: 0.15 },
   { id: "kitchen", kind: "kitchen", name: "Homely Hotel · Dining Room", x0: -14, x1: -6, z0: 13, z1: 21, h: 3.6, drain: -0.4 },
   // suites between the corridors and the gallery (doors on the corridor side): Homely Hotel's rentals
   { id: "suite-nw", kind: "suite", x0: -30, x1: -19, z0: -10, z1: -3, h: 3.4, drain: 0.4 },

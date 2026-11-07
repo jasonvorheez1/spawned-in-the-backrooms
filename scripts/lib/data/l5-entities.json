@@ -154,12 +154,27 @@
   "spread": 1.6
  },
  "safe": [
+  "corrN",
+  "corrS",
+  "crossN",
+  "crossS",
+  "gallery",
   "housekeeping",
-  "salon",
   "kitchen",
-  "suite-nw",
+  "library",
+  "lobby",
+  "room-n3",
+  "room-n4",
+  "room-n5",
+  "room-s1",
+  "room-s2",
+  "room-s3",
+  "room-s4",
+  "salon",
+  "stairs4",
   "suite-ne",
-  "suite-sw",
-  "suite-se"
+  "suite-nw",
+  "suite-se",
+  "suite-sw"
  ]
 }
