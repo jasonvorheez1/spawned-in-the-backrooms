@@ -37,7 +37,10 @@ for o in list(objs.values()):
 # ---- the creature: a full (unmasked) copy of the body, reshaped gaunt and long, before masks go ----
 act(body); bpy.ops.object.duplicate(); crea = bpy.context.active_object; crea.name = "creature"
 for md in list(crea.modifiers):
-    if md.type == "MASK": crea.modifiers.remove(md)
+    if md.type == "MASK":
+        print("MASK", md.name, md.vertex_group, md.invert_vertex_group)
+        if any(k in (md.name + md.vertex_group).lower() for k in ("elegant", "shoes", "short", "low-poly", "delete")): crea.modifiers.remove(md)
+        else: apply_mod(crea, md.name)
 for md in list(body.modifiers):
     if md.type == "MASK": apply_mod(body, md.name)
 for md in list(body.modifiers):
@@ -321,7 +324,7 @@ def shoot(path, action, frame, show, loc, tgt=(0, 0, 0.95)):
 shoot("/tmp/stealer/p_a.png", "Walk", 9, "disguise", (1.6, -3.4, 1.4))
 shoot("/tmp/stealer/p_b.png", "Reveal", 32, "creature", (1.4, -3.2, 1.5), (0, 0, 1.1))
 shoot("/tmp/stealer/p_c.png", "Slash", 9, "creature", (-1.8, -2.6, 1.3), (0, 0, 0.8))
-shoot("/tmp/stealer/p_d.png", "Hunt", 0, "creature", (0.4, -1.2, 1.55), (0, -0.1, 1.35))
+shoot("/tmp/stealer/p_d.png", "Hunt", 0, "creature", (0.6, -1.9, 1.5), (0, -0.2, 1.2))
 rig.animation_data.action = None
 for n, a in CLIPS.items():
     tr = rig.animation_data.nla_tracks.new(); tr.name = n; tr.strips.new(n, int(a.frame_range[0]), a)
