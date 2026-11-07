@@ -1,4 +1,5 @@
 import { heard } from "./lib/hear.js";
+import { seatFor } from "./lib/seat.js";
 import { rollLoot, garmentsOf } from "./lib/loot.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
 import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec, faceMorph } from "./lib/critter-model.js";
@@ -251,7 +252,9 @@ export function update(ctx, dt) {
   if (stop0) {
     m.at ||= now;
     const busy = (near && best < 3) || chatTo || talking;
-    work(me, m, busy ? null : stop0.act ?? null);
+    let act = busy ? null : stop0.act ?? null;
+    if (act && /sit/.test(act)) { if (m.seatAt !== s.ri) { m.seatAt = s.ri; m.seatOk = !!seatFor(ctx, me.feetPosition, 1.2, me.id); } if (!m.seatOk) act = null; } // a sit with no seat under it lies flat: stand instead
+    work(me, m, act);
     if (!busy && !near && stop0.look) face(me, stop0.look.x - me.feetPosition.x, stop0.look.z - me.feetPosition.z, dt);
     if (!busy && now - m.at > (stop0.dwell ?? 10) * 1000) { s.ri = ((s.ri ?? 0) + 1) % s.rounds.length; m.at = 0; if (ctx.random() < 0.3) bark(ctx, me, "move"); }
   }
