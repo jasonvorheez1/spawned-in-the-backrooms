@@ -99,6 +99,16 @@ function gait(me, m, kind) {
 }
 
 // two-handed aim: both hands reach for the target's chest, followed every frame; written only when the target changes
+// the pistol: on the right hip while calm, in the right hand while fighting
+function holster(ctx, me, m, drawn) {
+  if (m.drawn === drawn) return;
+  const gun = (me.children ?? []).map((c) => (typeof c === "string" ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) : c)).find((c) => c && (c.model || c.primitive));
+  if (!gun) return; m.drawn = drawn;
+  gun.attachment = drawn ? { bone: "RightHand" } : { bone: "Hips" };
+  gun.feetPosition = drawn ? { x: 0, y: 0, z: 0 } : { x: 0.17, y: -0.06, z: 0.02 };
+  gun.rotation = drawn ? { yaw: 0, pitch: 0, roll: 0 } : { yaw: 0, pitch: -90, roll: 0 };
+  ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-gun-holster-leather.mp3", position: me.feetPosition, volume: 0.5, maxDistance: 15 });
+}
 function aim(me, m, t) {
   const id = t?.id ?? null;
   if (m.aimAt === id) return; m.aimAt = id;
@@ -119,6 +129,7 @@ export function update(ctx, dt) {
   if (talking !== !!m.talking) { m.talking = talking; me.anim.talk = talking ? { clip: "cdn/clip-talk-loop.glb", loop: "loop", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } } : null; }
   const home = s.home ?? me.feetPosition;
   const t = pickTarget(ctx, me, m);
+  holster(ctx, me, m, !!(t && flat(t.feetPosition, home) < G.leash));
   if (t && flat(t.feetPosition, home) < G.leash) {
     const d = flat(t.feetPosition, me.feetPosition), see = seesIt(ctx, me, t), reloading = now < (m.reloadUntil ?? 0);
     if (d > G.range || !see) { gait(me, m, "run"); aim(me, m, null); moveAlong(ctx, me, m, t.feetPosition, G.run, dt); }
