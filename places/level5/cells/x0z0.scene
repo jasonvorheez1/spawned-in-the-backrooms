@@ -1188,7 +1188,7 @@ l5-elev-salon/object/xe5bfa1adb29c7d30/19:
 l5-from-l3:
   feetPosition: {x: -42.5, y: 0.1, z: 0}
   id: l5-from-l3
-  rotation: {yaw: 90}
+  rotation: {yaw: -90}
 l5-from-l4:
   feetPosition: {x: -8, y: 0.1, z: -17.5}
   id: l5-from-l4
@@ -3585,7 +3585,7 @@ l5-light-9:
 l5-lobby:
   feetPosition: {x: -38, y: 0.1, z: 0}
   id: l5-lobby
-  rotation: {yaw: 90}
+  rotation: {yaw: -90}
 l5-millie:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
   children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.436740c4291dbdda1dcb292e385a017e50042ca420654a6f54211b6b0578dc16.glb, materials: {belly: {color: "#dfbfad"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#b4542a"}, mark: {color: "#653b2a"}, nose: {color: "#1c1a20"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#713f2a"}}}, morph: {Open: 0.4, Smile: 1}}]
