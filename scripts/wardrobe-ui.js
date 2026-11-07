@@ -50,7 +50,6 @@ export function wardrobe(ctx, player) {
     <div class="sec"><span>FUR</span></div>${sws('fur', C.fur)}
     <div class="sec"><span>MARKINGS</span></div>${grid('marks', C.marks)}
     <div class="sec"><span>SHAPE</span><span>${l.model ? 'critter only' : ''}</span></div>${C.sliders.map(([k, nm, lo, hi]) => { const v = Number(l[k]) || 1; return `<div class="sl"><span class="nm">${nm}</span><button onclick="${act('sz', k + ':-')}">−</button><input type="range" min="${lo}" max="${hi}" step="${C.sliderStep}" value="${v}" onchange="sendAction('dress',{k:'sz',v:'${k}:'+this.value})"><button onclick="${act('sz', k + ':+')}">+</button><span class="v">${Math.round(v * 100)}%</span></div>` }).join('')}
-    <div class="ft" style="padding:8px 0 0;border:0"><button onclick="${C.sliders.map(() => '').join('')}${act('sz', 'reset:1')}" style="display:none"></button></div>
     <div class="sec"><span>IMPORTED MODELS</span><span>${l.model ? C.models[l.model]?.name || '' : 'critter'}</span></div><div class="grid">${tile('model', '', !l.model, 'critter')}${Object.entries(C.models || {}).map(([k, m]) => tile('model', k, l.model === k, m.name)).join('')}</div>`
   else if (tab === 'face') body = `
     <div class="sec"><span>EYE SHAPE</span></div>${grid('eyes', C.eyes)}
