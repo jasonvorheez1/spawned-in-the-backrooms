@@ -55,8 +55,9 @@ export function update(ctx, dt) {
   // you drive and do not sit on keeps its scale.
   const height = body.id === ctx.player?.id ? 2 * body.bounds?.obb.halfExtents.y : undefined
   const eyeHeight = finiteNumber(CAMERA.eyeHeight, 1.6) * (height > 0 ? height / BODY_HEIGHT : finiteNumber(body.effectiveScale?.y, 1))
-  const crouchWant = !seated && body.id === ctx.player?.id && body.state?.crouch ? 0.62 : 1
-  const ck = (ctx.self.session.crouchK ??= 1), crouchK = ck + (crouchWant - ck) * Math.min(1, dt * 10)
+  const sat = body.id === ctx.player?.id && body.state?.sit && body.state.sit.phase !== 'up'
+  const crouchWant = sat ? 0.7 : !seated && body.id === ctx.player?.id && body.state?.crouch ? 0.62 : 1
+  const ck = (ctx.self.session.crouchK ??= 1), crouchK = ck + (crouchWant - ck) * Math.min(1, dt * (sat || ck < 0.69 ? 4.5 : 10))
   ctx.self.session.crouchK = crouchK
   const pos = seated ? seated.worldFeetPosition : target.feetPosition
   ctx.self.feetPosition = { x: pos.x, y: pos.y + eyeHeight * crouchK, z: pos.z }

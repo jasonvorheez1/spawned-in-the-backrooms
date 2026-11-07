@@ -92,7 +92,7 @@ export function lay(ctx) {
 function layOffice(ctx) {
   for (const [x, z] of [[0, 13], [0, -13], [13, 0], [-13, 0]]) {
     ctx.spawn({ tags: ["l4-island"], feetPosition: { x, y: 0, z }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l4-office-geo.js", params: { kind: "island" } } });
-    for (const [cx, face] of [[0.82, 1], [-0.82, -1], [-0.82, 1], [0.82, -1]]) ctx.spawn({ tags: ["l4-island"], feetPosition: { x: x + cx, y: 0, z: z + face * 1.25 }, rotation: { yaw: face > 0 ? 180 : 0 }, primitive: { kind: "scripted", script: "scripts/l4-prop-geo.js", params: { kind: "chair" } } });
+    for (const [cx, face] of [[0.82, 1], [-0.82, -1], [-0.82, 1], [0.82, -1]]) ctx.spawn({ tags: ["l4-island"], feetPosition: { x: x + cx, y: 0, z: z + face * 1.25 }, rotation: { yaw: face > 0 ? 0 : 180 }, primitive: { kind: "scripted", script: "scripts/l4-prop-geo.js", params: { kind: "chair" } } });
     for (const [cx, face] of [[0.82, 1], [-0.82, -1]]) ctx.spawn({ tags: ["usable", "l4-phone"], feetPosition: { x: x + cx + 0.42, y: 0.75, z: z + face * 0.3 }, physics: "static", behavior: "scripts/l4-office.js",
       primitive: { kind: "box", width: 0.22, height: 0.08, depth: 0.18 }, material: { color: "oklch(0.82 0.03 85)", roughness: 0.6 },
       children: [{ feetPosition: { x: 0, y: 0.08, z: 0 }, primitive: { kind: "box", width: 0.2, height: 0.04, depth: 0.05 }, material: { color: "oklch(0.78 0.03 85)" } }],
