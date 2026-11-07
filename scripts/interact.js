@@ -6,7 +6,8 @@
 import { getInputRay, raycast } from 'builtin/physics'
 import { tokenOf, describe, itemsOf } from './lib/items.js'
 import { takeToken, maxHp, maxSan } from './player.js'
-import { derived } from './lib/stats.js'
+import { derived, skillsOf, SKILLS } from './lib/stats.js'
+const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 import { rollItem, rollItemL1 } from './lib/loot.js'
 
 const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc'] // what can be looked at and used
@@ -57,6 +58,7 @@ function refocus(ctx, force = false) {
       } else if (f.tag === 'container') {
         const n = itemsOf(it.state?.items).length
         info = { id: f.id, name: it.state?.name ?? 'Container', info: n ? `${n} item${n > 1 ? 's' : ''}` : 'empty', verb: 'Search', color: '#d9d3b8' }
+        if (it.state?.lock) { const [sk, lv] = it.state.lock.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = ok ? 'Unlock' : 'Locked:'; info.color = ok ? '#f2c14e' : '#e0644f' }
       } else {
         const dsc = describe(tokenOf(f.tag, it))
         info = { id: f.id, name: dsc.name, info: dsc.info, verb: 'Take', color: dsc.color }
@@ -77,6 +79,12 @@ function closeLoot(ctx) {
 
 function openLoot(ctx, c) {
   const s = ctx.self.state
+  if (c.state.lock) { // Fallout-style lock: you need the skill level, no minigame
+    const [sk, lv] = c.state.lock.split(':'), have = skillsOf(s)[sk] ?? 0
+    if (have < Number(lv)) { note(ctx, `Locked: requires ${SKN[sk]} ${lv}`); snd(ctx, 'ui-denied-click', 0.35); return }
+    c.state.lock = ''; c.state.name = sk === 'science' ? 'Unlocked locker' : 'Opened crate'
+    note(ctx, `[${SKN[sk]} ${lv}] ${sk === 'science' ? 'You crack the locker' : 'You pick the lock'}`); snd(ctx, 'lock-picking-click', 0.5)
+  }
   if (!c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per container
     c.state.scavved = true
     if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : rollItem(ctx))].filter(Boolean).join(',')
@@ -105,14 +113,19 @@ function talk(ctx, it) {
   it.state.talkAt = now; it.state.talkTo = ctx.self.id // they gesture while they speak
   if (role === 'scout') { s.megTip = ((s.megTip ?? -1) + 1) % TIPS.length; speak(ctx, it, 'ale', TIPS[s.megTip]); return }
   if (role === 'medic') {
-    if (now - (s.megMedAt ?? -1e9) < 90000) { speak(ctx, it, 'ortiz', "you're patched. give it a minute and come back."); return }
+    if (now - (s.megMedAt ?? -1e9) < 90000 * (1 - skillsOf(s).medicine / 200)) { speak(ctx, it, 'ortiz', "you're patched. give it a minute and come back."); return }
     s.megMedAt = now; s.hp = maxHp(s.level ?? 1, s); s.sanity = Math.max(s.sanity ?? 0, maxSan(s.level ?? 1, s))
     speak(ctx, it, 'ortiz', "hold still. there. you're good to walk."); snd(ctx, 'bandage-wrap-cloth', 0.6); return
   }
   if (role === 'quarter') {
     if (now - (s.megQmAt ?? -1e9) < 180000) { speak(ctx, it, 'callum', "rations are counted. come back after the next patrol."); return }
     s.megQmAt = now; takeToken(ctx, 'almond'); takeToken(ctx, 'almond'); takeToken(ctx, 'ration')
-    speak(ctx, it, 'callum', "two almond waters and a ration. don't waste them."); return
+    speak(ctx, it, 'callum', "two almond waters and a ration. don't waste them.")
+    const sk = skillsOf(s), extra = []
+    if (sk.barter >= 40) { takeToken(ctx, 'almond'); extra.push(`[Barter 40] +1 almond water`) }
+    if (sk.speech >= 50) { takeToken(ctx, 'bandage'); extra.push(`[Speech 50] +1 bandage`) }
+    if (extra.length) note(ctx, `Callum: "two almond waters and a ration." ${extra.join(' · ')}`)
+    return
   }
 }
 

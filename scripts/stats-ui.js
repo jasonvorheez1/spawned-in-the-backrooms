@@ -2,7 +2,7 @@
 // (written by scripts/stats.js): attr, skl, apts, spts, sheetOpen, target. Buttons send the 'stat' action.
 import L from './lib/data/level0.yml'
 import W from './lib/data/weapons.yml'
-import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, attrsOf, skillsOf, spentOf, derived, carried, burden } from './lib/stats.js'
+import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, attrsOf, skillsOf, spentOf, tagsOf, dmgMul, derived, carried, burden } from './lib/stats.js'
 
 const CSS = `<style>
 #wt{position:fixed;left:22px;bottom:128px;font-size:11px;letter-spacing:.14em;color:#ffcf87;text-shadow:0 1px 3px #000;pointer-events:none;opacity:.85}
@@ -53,19 +53,20 @@ export function statsUi(ctx, player) {
   if (!s.sheetOpen) return out
   const at = attrsOf(s), sk = skillsOf(s), sp = spentOf(s), d = derived(s), apts = s.apts ?? 0, spts = s.spts ?? 0
   const attrRows = ATTRS.map((a, i) => `<div class="row"><div class="n">${a.name}<small>${a.info}</small></div><div class="pips">${Array.from({ length: ATTR_MAX }, (_, q) => `<i class="${q < at[a.k] ? 'on' : ''}"></i>`).join('')}</div><div class="v">${at[a.k]}</div><button ${apts > 0 && at[a.k] < ATTR_MAX ? '' : 'disabled'} onclick="sendAction('stat',{k:'attr',i:${i}})">+</button></div>`).join('')
-  const skillRows = SKILLS.map((k, i) => `<div class="row"><div class="n">${k.name}<small>${k.info}</small></div><div class="v">${sk[k.k]}</div><button ${spts > 0 && sp[i] < SKILL_MAX ? '' : 'disabled'} onclick="sendAction('stat',{k:'skill',i:${i}})">+</button></div>`).join('')
+  const tg = tagsOf(s), tl = s.tagsLeft ?? 0
+  const skillRows = SKILLS.map((k, i) => `<div class="row"><div class="n">${tg.includes(k.k) ? '<b style="color:#ffe2a8">★ </b>' : ''}${k.name}<small>${k.info}</small></div><div class="v">${sk[k.k]}</div>${tl > 0 && !tg.includes(k.k) ? `<button style="width:34px;font-size:10px" onclick="sendAction('stat',{k:'tag',i:${i}})">TAG</button>` : ''}<button ${spts > 0 && sk[k.k] < SKILL_MAX ? '' : 'disabled'} onclick="sendAction('stat',{k:'skill',i:${i}})">+</button></div>`).join('')
   const slow = burden(s) < 1
   const wp = W[s.equipped] ?? W.fists
-  const dam = (w) => Math.round((w.damage + (s.level - 1) * L.perLevel.damage * (w.levelScale ?? 1)) * (w.ranged ? d.gun : d.melee))
+  const dam = (w) => Math.round((w.damage + (s.level - 1) * L.perLevel.damage * (w.levelScale ?? 1)) * dmgMul(s, w))
   out += `<div id="sh" data-modal>
-    <div class="hd"><h2>HALOGEN · LEVEL ${s.level}</h2><div class="pt">ATTRIBUTE POINTS <b>${apts}</b></div><div class="pt">SKILL POINTS <b>${spts}</b></div></div>
+    <div class="hd"><h2>HALOGEN · LEVEL ${s.level}</h2><div class="pt">ATTRIBUTE POINTS <b>${apts}</b></div><div class="pt">SKILL POINTS <b>${spts}</b></div>${tl > 0 ? `<div class="pt">TAG <b>${tl}</b> MORE</div>` : ''}</div>
     <div class="cols"><div class="col"><div class="sec">ATTRIBUTES</div>${attrRows}</div><div class="col"><div class="sec">SKILLS</div>${skillRows}</div></div>
     <div class="dv">
       <span>Max HP <b>${L.hp + (s.level - 1) * L.perLevel.hp + d.hpBonus}</b></span><span>Max sanity <b>${L.sanity + (s.level - 1) * L.perLevel.sanity + d.sanBonus}</b></span>
       <span>Carry weight <b>${kg.toFixed(1)} / ${cap} kg${slow ? ' (slowed)' : ''}</b></span><span>Stamina <b>${Math.round(d.staMax)}</b></span>
       <span>${wp.name} DAM <b>${dam(wp)}</b></span><span>DPS <b>${Math.round(dam(wp) * (wp.pellets ? 1 : 1) / (wp.cooldown * (wp.ranged ? 1 : d.swing)))}</b></span>
       <span>Unarmed DAM <b>${dam(W.fists)}</b></span><span>Crit chance <b>${Math.round(d.crit * 100)}%</b></span>
-      ${wp.ranged ? `<span>Reload <b>${(wp.reloadTime ?? (wp.reloadStart + wp.reloadShell * wp.magSize)).toFixed(1) * 1 && ((wp.reloadTime ?? (wp.reloadStart + wp.reloadShell * wp.magSize)) * d.reload).toFixed(1)} s</b></span>` : `<span>Swing <b>${(wp.cooldown * d.swing).toFixed(2)} s</b></span>`}<span>Find chance <b>${Math.round(d.scav * 100)}%</b></span>
+      ${wp.ranged ? `<span>Reload <b>${(wp.reloadTime ?? (wp.reloadStart + wp.reloadShell * wp.magSize)).toFixed(1) * 1 && ((wp.reloadTime ?? (wp.reloadStart + wp.reloadShell * wp.magSize)) * d.reload).toFixed(1)} s</b></span>` : `<span>Swing <b>${(wp.cooldown * d.swing).toFixed(2)} s</b></span>`}<span>Find chance <b>${Math.round(d.scav * 100)}%</b></span><span>${wp.name} condition <b>${Math.round(s['cnd_' + s.equipped] ?? 100)}%</b></span>
     </div>
     <div class="ft"><button style="color:#16140e" onclick="sendAction('stat',{k:'close'})">CLOSE (K)</button></div>
   </div>`

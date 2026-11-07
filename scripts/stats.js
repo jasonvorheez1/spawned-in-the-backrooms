@@ -3,7 +3,7 @@
 // scripts/stats-ui.js). The effects themselves are applied where they matter: scripts/player.js (damage, speed,
 // stamina, reload, carry weight), the creatures' scripts (their own attributes) and scripts/interact.js (Scavenge).
 import { getInputRay, raycast } from 'builtin/physics'
-import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, START, attrsOf, spentOf, derived, packAttrs, npcMul } from './lib/stats.js'
+import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, START, attrsOf, spentOf, skillsOf, tagsOf, derived, packAttrs, npcMul } from './lib/stats.js'
 import L0 from './lib/data/level0.yml'
 import L1 from './lib/data/level1.yml'
 import G from './lib/data/meg.yml'
@@ -31,8 +31,12 @@ function spend(s, d) {
     a[key] += 1; s.attr = packAttrs(a); s.apts -= 1
   } else if (d.k === 'skill' && i >= 0 && i < SKILLS.length && (s.spts ?? 0) > 0) {
     const sp = spentOf(s)
-    if (sp[i] >= SKILL_MAX) return
+    if (skillsOf(s)[SKILLS[i].k] >= SKILL_MAX) return
     sp[i] += 1; s.skl = sp.join(','); s.spts -= 1
+  } else if (d.k === 'tag' && i >= 0 && i < SKILLS.length && (s.tagsLeft ?? 0) > 0) { // tag a skill, once: +15
+    const tg = tagsOf(s), key = SKILLS[i].k
+    if (tg.includes(key)) return
+    s.tags = [...tg, key].join(','); s.tagsLeft -= 1
   }
 }
 
@@ -55,9 +59,10 @@ function look(ctx, ray) {
 export function update(ctx, dt) {
   const s = ctx.self.state, m = mem(ctx)
   if (s.level == null) return
-  if (s.attr == null) { // an older wanderer gets the standard spread and the points they would have earned
-    Object.assign(s, START)
-    s.spts = START.spts + (s.level - 1) * 3; s.apts = START.apts + Math.floor((s.level - 1) / 3)
+  if (s.attr == null) Object.assign(s, START) // a new wanderer: 5 in everything, 5 points, three skills to tag
+  else if (s.sver !== 2) { // an older sheet: attributes stay, skills become the thirteen Fallout-style ones with their points
+    const n = attrsOf(s).n
+    Object.assign(s, { skl: START.skl, tags: '', tagsLeft: START.tagsLeft, sver: 2, spts: (s.level - 1) * (10 + Math.floor(n / 2)), apts: s.apts ?? 0 })
   }
   const dv = derived(s)
   if (s.hp > 0 && dv.hpRegen > 0 && !(s.downAt && ctx.now() - s.downAt < 3000)) { // slow regeneration, only up to 70% of max

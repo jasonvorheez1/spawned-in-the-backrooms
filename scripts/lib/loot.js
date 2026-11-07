@@ -2,6 +2,7 @@
 // floor spawner (places/main/sim.js) or from a smiler that just died (scripts/player.js).
 import L from "./data/level0.yml";
 import W from "./data/weapons.yml";
+import { SKILL_KEYS } from "./stats.js";
 import { weaponBody } from "./weapon-look.js";
 
 const scatter = (ctx, c) => ({ x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 });
@@ -31,18 +32,26 @@ export function rollWeapon(ctx) {
 }
 
 // ---- containers: a crate in the maze, or the remains of what you killed. Their contents are tokens (scripts/lib/items.js).
-const ITEM_WEIGHTS = [["almond", 40], ["ammo", 16], ["shells", 7], ["weapon", 22]];
+const ITEM_WEIGHTS = [["almond", 40], ["ammo", 16], ["shells", 7], ["weapon", 22], ["kit", 4], ["book", 3]];
+const bookOf = (ctx) => { const ks = SKILL_KEYS.filter((k) => k !== "energy" && k !== "explosives"); return "book:" + ks[Math.floor(ctx.random() * ks.length)]; };
+// some containers are locked, Fallout style: a Lockpick or Science level you need to have. Locked ones hold more.
+export function rollLock(ctx) {
+  const r = ctx.random(); if (r > 0.3) return null;
+  const sci = r < 0.07, q = ctx.random(), lv = q < 0.4 ? 25 : q < 0.7 ? 50 : q < 0.9 ? 75 : 100;
+  return { lock: (sci ? "science:" : "lockpick:") + lv, name: sci ? "Secured locker" : "Locked crate", bonus: 1 + (lv >= 75 ? 1 : 0) };
+}
 export function rollItem(ctx) {
   const total = ITEM_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
-  for (const [k, w] of ITEM_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeapon(ctx) : k; }
+  for (const [k, w] of ITEM_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeapon(ctx) : k === "book" ? bookOf(ctx) : k; }
   return "almond";
 }
 
 export function spawnCrate(ctx, c) {
   const n = 1 + Math.floor(ctx.random() * 3), items = [];
   for (let i = 0; i < n; i++) items.push(rollItem(ctx));
-  ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 }, rotation: ctx.random() * 360, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name: "Supply crate", items: items.join(",") } });
+  const lk = rollLock(ctx); if (lk) for (let i = 0; i < lk.bonus; i++) items.push(rollItem(ctx));
+  ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 }, rotation: ctx.random() * 360, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name: lk ? lk.name : "Supply crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }
 
 export function spawnRemains(ctx, pos, items, name = "Remains") {
@@ -60,15 +69,16 @@ export function dropLoot(ctx, pos, name = "Remains", luck = 1) {
 }
 
 // Level 1's crates: rations, bandages and batteries join the roll. Weights are Savi's picks.
-const L1_WEIGHTS = [["ration", 5], ["almond", 4], ["bandage", 3], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2]];
+const L1_WEIGHTS = [["ration", 5], ["almond", 4], ["bandage", 3], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["book", 1.4]];
 export function rollItemL1(ctx) {
   const total = L1_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
-  for (const [k, w] of L1_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + (ctx.random() < 0.6 ? (ctx.random() < 0.55 ? "rebar" : "wrench") : rollWeapon(ctx)) : k; }
+  for (const [k, w] of L1_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + (ctx.random() < 0.6 ? (ctx.random() < 0.55 ? "rebar" : "wrench") : rollWeapon(ctx)) : k === "book" ? bookOf(ctx) : k; }
   return "ration";
 }
 export function spawnCrateL1(ctx, p) {
   const n = 2 + Math.floor(ctx.random() * 3), items = [];
   for (let i = 0; i < n; i++) items.push(rollItemL1(ctx));
-  ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name: ctx.random() < 0.25 ? "Rations crate" : "Wooden crate", items: items.join(",") } });
+  const lk = rollLock(ctx); if (lk) for (let i = 0; i < lk.bonus; i++) items.push(rollItemL1(ctx));
+  ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name: lk ? lk.name : ctx.random() < 0.25 ? "Rations crate" : "Wooden crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }

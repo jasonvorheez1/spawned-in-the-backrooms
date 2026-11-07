@@ -6,7 +6,7 @@ import L from './lib/data/level0.yml'
 import W from './lib/data/weapons.yml'
 import { raycast } from 'builtin/physics'
 import { dropLoot, spawnWeapon } from './lib/loot.js'
-import { derived, canCarry, burden, npcMul, START } from './lib/stats.js'
+import { derived, canCarry, burden, npcMul, START, dmgMul, skillsOf, spentOf, SKILLS, SKILL_MAX } from './lib/stats.js'
 import { weaponBody } from './lib/weapon-look.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
 import { zoneAt as zoneAt1 } from './lib/level1.js'
@@ -49,7 +49,7 @@ function gain(ctx, n) {
   while (s.xp >= xpNeed(s.level)) {
     s.xp -= xpNeed(s.level); s.level += 1
     s.hp = maxHp(s.level, s); s.sanity = maxSan(s.level, s); s.leveledAt = ctx.now()
-    s.spts = (s.spts ?? 0) + derived(s).skillPerLevel; if (s.level % 3 === 0) s.apts = (s.apts ?? 0) + 1
+    s.spts = (s.spts ?? 0) + derived(s).skillPerLevel
     sound(ctx, 'eerie-low-chime-level-up', 0.85, true)
     ctx.emit('milestone', { step: s.level, name: `level ${s.level}` }, { audience: { player: ctx.self.id } })
   }
@@ -77,7 +77,7 @@ export function takeToken(ctx, token) {
   }
   if (token === 'ration' || token === 'bandage') { // eaten or wrapped on the spot
     const mh = maxHp(s.level, s), ms = maxSan(s.level, s)
-    s.hp = Math.min(mh, (s.hp ?? mh) + (token === 'ration' ? L1.rationHp : L1.bandageHp) * derived(s).heal)
+    s.hp = Math.min(mh, (s.hp ?? mh) + (token === 'ration' ? L1.rationHp * derived(s).heal : L1.bandageHp * derived(s).healMed))
     if (token === 'ration') s.sanity = Math.min(ms, (s.sanity ?? ms) + L1.rationSanity)
     s.pickedAt = now; gain(ctx, L.xpAlmond)
     sound(ctx, token === 'ration' ? 'plastic-bottle-pickup-rattle' : 'pickup-ammo', 0.7, true)
@@ -86,6 +86,24 @@ export function takeToken(ctx, token) {
   if (token === 'battery') {
     const w = walkOf(ctx); w.battery = Math.min(100, (w.battery ?? s.battery ?? 0) + L1.batteryCharge); s.battery = Math.round(w.battery)
     s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.7, true)
+    return { ok: true }
+  }
+  if (token.startsWith('book:')) { // a skill book: +3 to that skill, read on the spot
+    const i = SKILLS.findIndex((k) => k.k === token.slice(5))
+    if (i < 0) return { ok: false, msg: '' }
+    if (skillsOf(s)[SKILLS[i].k] >= SKILL_MAX) return { ok: false, msg: `${SKILLS[i].name} is already 100` }
+    const sp = spentOf(s); sp[i] += 3; s.skl = sp.join(',')
+    s.pickedAt = now; s.notice = { text: `You read the book: ${SKILLS[i].name} +3`, at: now }; gain(ctx, L.xpAlmond)
+    sound(ctx, 'pickup-weapon', 0.5, true)
+    return { ok: true }
+  }
+  if (token === 'kit') { // a repair kit mends the weapon in your hand, up to what your Repair skill can manage
+    const k = s.equipped, cap = derived(s).repairCap, c = s['cnd_' + k] ?? 100
+    if (k === 'fists') return { ok: false, msg: 'Nothing to repair: you are holding your fists' }
+    if (c >= cap - 0.5) return { ok: false, msg: c >= 99.5 ? `Your ${W[k].name.toLowerCase()} is in perfect shape` : `Repair ${Math.round(cap)}: that is as good as you can make it` }
+    s['cnd_' + k] = Math.min(cap, c + 40 + skillsOf(s).repair * 0.3)
+    s.pickedAt = now; s.notice = { text: `Repaired your ${W[k].name.toLowerCase()} to ${Math.round(s['cnd_' + k])}%`, at: now }
+    sound(ctx, 'pickup-ammo', 0.6, true)
     return { ok: true }
   }
   if (token.startsWith('weapon:')) {
@@ -205,6 +223,7 @@ function swing(ctx, power = 0) {
   w.nextSwing = now + wp.cooldown * 1000 * (power ? P.cooldown : 1) * derived(s).swing
   s.swingHeavy = Math.round(power * 100) / 100
   s.swingAt = now
+  if (s.equipped !== 'fists') s['cnd_' + s.equipped] = Math.max(0, (s['cnd_' + s.equipped] ?? 100) - (wp.ranged ? 0.3 : 0.6) * derived(s).wear) // weapons wear with use; Repair slows it
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   const cone = (s.ads && wp.adsCone) || wp.cone || (wp.ranged ? 0.985 : 0.4), radius = wp.ranged ? wp.range : wp.reach + 0.6 + power * P.reach
   const found = []
@@ -221,7 +240,7 @@ function swing(ctx, power = 0) {
   if (!wp.ranged) sound(ctx, 'pipe-whoosh-swing', power ? 0.9 : 0.55)
   if (!found.length) return
   const dv = derived(s), crit = ctx.random() < dv.crit
-  const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * (wp.ranged ? dv.gun : dv.melee) * (crit ? 1.75 : 1)
+  const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * dmgMul(s, wp) * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100) * (crit ? 1.75 : 1)
   if (crit) ctx.emit('damageNumber', { position: { x: found[0].m.feetPosition.x, y: found[0].m.feetPosition.y + 2, z: found[0].m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
   if (wp.pellets) {
     // a spread of pellets: everything in the cone is hit, hard up close and weak at range
