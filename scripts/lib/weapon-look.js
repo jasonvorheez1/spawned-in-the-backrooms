@@ -16,7 +16,7 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
 export function weaponBody(kind) {
   const base = baseOf(kind), w = W[kind] ?? {}, m = MESH[base], look = w.look, short = look === 'sawn' ? 0.72 : 1
   const body = m
-    ? { model: { id: m[0], offset: [0, m[1], 0], ...(w.tint ? { materials: { [m[3]]: { texture: '#' + m[3], color: w.tint } } } : {}) } }
+    ? { model: { id: m[0], offset: [0, m[1], 0] } }
     : { primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: base } }, ...(w.tint ? { material: { color: w.tint } } : {}) }
   const sc = m?.[2] || 1
   if (sc !== 1 || short !== 1) body.scale = { x: sc, y: sc, z: sc * short }
