@@ -28,14 +28,29 @@ export function onInput(ctx, input) {
   const o = hit?.id && ctx.getObject(hit.id);
   if (!o || !o.tags?.includes("breakable") || NOT.some((t) => o.tags.includes(t)) || o.parent) { note(ctx, "Nothing to pick up."); return; }
   const kg = massOf(o), cap = CAP(h);
-  if (kg > cap) { note(ctx, `Too heavy: ${Math.round(kg)} kg. You can lift ${Math.round(cap)}.`); heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-strained-grunt-lifting-heavy.mp3", position: eye, volume: 0.5, maxDistance: 10 }); return; }
+  const over = kg / cap; // past 1 it's a struggle; past 3 nobody moves it
+  if (over > 3) { note(ctx, `It won't budge. ${Math.round(kg)} kg.`); heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-strained-grunt-lifting-heavy.mp3", position: eye, volume: 0.5, maxDistance: 10 }); return; }
+  ctx.self.anim.grab = { clip: "cdn/clip-pickup.glb", loop: "once", weight: 1, blendIn: 0.15, blendOut: 0.3 };
+  if (over > 1) { // the heave: a long strained lift before it leaves the floor
+    ses.heave = { id: o.id, kg, until: ctx.now() + 900 + over * 700 };
+    ctx.self.velocity = { x: 0, y: ctx.self.velocity?.y ?? 0, z: 0 }; s.carryMul = 0.05;
+    note(ctx, `Heaving ${Math.round(kg)} kg...`);
+    heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-strained-grunt-lifting-heavy.mp3", position: eye, volume: 0.7, maxDistance: 14 });
+    ctx.emit("screenShake", { intensity: 0.15, duration: 0.9 }, { audience: { player: ctx.self.id } });
+    return;
+  }
+  lift(ctx, o, kg, cap);
+}
+function lift(ctx, o, kg, cap) {
+  const ses = ctx.self.session, s = ctx.self.state, f = ctx.self.feetPosition;
   ses.held = o.id; ses.kg = kg; ses.phys = o.physics; o.physics = "none";
-  s.carry = o.state?.name ?? "something"; s.carryMul = Math.max(0.45, 1 - (kg / cap) * 0.6);
-  heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-furniture-lift-wood-creak-scrape.mp3", position: eye, volume: 0.45, maxDistance: 12 });
+  s.carry = o.state?.name ?? "something"; s.carryMul = kg > cap ? Math.max(0.15, 0.4 - (kg / cap - 1) * 0.12) : Math.max(0.45, 1 - (kg / cap) * 0.6);
+  heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-furniture-lift-wood-creak-scrape.mp3", position: { x: f.x, y: f.y + 1, z: f.z }, volume: 0.45, maxDistance: 12 });
 }
 function toss(ctx, o, h) {
   const ses = ctx.self.session, s = ctx.self.state, d = ses.dir ?? { x: 0, y: 0, z: -1 };
-  const speed = Math.max(3, Math.min(20, 3 + (CAP(h) / ses.kg) * 2.2)); // light things fly, heavy things drop at your feet
+  const over = ses.kg / CAP(h), speed = over > 1 ? Math.max(1.5, 4 - over) : Math.max(3, Math.min(20, 3 + (CAP(h) / ses.kg) * 2.2)); // light things fly; past your strength it tips a few feet away
+  ctx.self.anim.grab = { clip: "cdn/clip-throw.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 };
   o.physics = { body: "dynamic", collider: "box", mass: ses.kg, friction: 0.7 };
   o.velocity = { x: d.x * speed, y: d.y * speed + 2, z: d.z * speed };
   ses.flying = { id: o.id, at: ctx.now(), speed, kg: ses.kg, hit: {} };
@@ -45,6 +60,7 @@ function toss(ctx, o, h) {
 }
 export function update(ctx) {
   const ses = ctx.self.session;
+  if (ses.heave && ctx.now() >= ses.heave.until) { const o = ctx.getObject(ses.heave.id), kg = ses.heave.kg; ses.heave = null; if (o) lift(ctx, o, kg, CAP(attrsOf(ctx.self.state).h ?? 5)); else ctx.self.state.carryMul = 1; }
   if (ses.held) { // carried: in front of the chest, along the look
     const o = ctx.getObject(ses.held);
     if (!o || ctx.self.state.dead) { ses.held = null; ctx.self.state.carry = null; ctx.self.state.carryMul = 1; if (o) o.physics = ses.phys ?? "static"; }
