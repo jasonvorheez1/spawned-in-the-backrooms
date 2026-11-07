@@ -51,6 +51,8 @@ export function update(ctx, dt) {
       if (best) m.last = { x: best.feetPosition.x, z: best.feetPosition.z, at: now };
     }
     const prey = m.prey ? players.find((p) => p.id === m.prey) : null;
+    const mode = prey ? "Hunt" : "Idle";
+    if (m.mode !== mode) { m.mode = mode; w.anim.body = { clip: "anim/creatures.yml#smiler" + mode, loop: "loop" }; }
     let goal, speed;
     if (prey) {
       goal = prey.feetPosition; speed = Math.hypot(goal.x - pos.x, goal.z - pos.z) < 9 ? L.chargeSpeed : L.stalkSpeed;
@@ -85,6 +87,7 @@ export function update(ctx, dt) {
       ctx.emit("screenShake", { intensity: 0.35, duration: 0.25 }, { audience: { player: prey.id } });
       ctx.emit("screenFlash", { color: "#7a0a05", duration: 0.25, intensity: 0.35 }, { audience: { player: prey.id } });
       ctx.emit("squash", { target: w.id, axis: "z", intensity: 0.2, duration: 0.2 });
+      w.anim.bite = { clip: "anim/creatures.yml#smilerBite", loop: "once", blend: "override", time: 0 };
     }
   }
 }
