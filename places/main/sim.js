@@ -4,7 +4,8 @@ import { LURKER_MODEL } from "../../scripts/lurkers.js";
 import L from "../../scripts/lib/data/level0.yml";
 const MID = (L.hub[0] + L.hub[1]) / 2; // the safe room's centre cell
 import W from "../../scripts/lib/weapons.js";
-import { spawnAlmond, spawnAmmo, spawnShells, spawnWeapon, spawnCrate, rollWeapon } from "../../scripts/lib/loot.js";
+import { spawnAlmond, spawnAmmo, spawnShells, spawnWeapon, rollWeapon } from "../../scripts/lib/loot.js";
+import { spawnFurniture, pickKind, wallSpot0 } from "../../scripts/lib/furniture.js";
 import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ } from "../../scripts/lib/maze.js";
 const PAPER = { texture: "cdn/texture-yellow-chevron-damask-wallpaper-aged.png", color: "oklch(0.98 0.01 90)", repeat: [1, 1] };
 import B from "../../scripts/lib/data/breakables.yml";
@@ -123,10 +124,19 @@ export function tick(ctx) {
     s.smilersSeeded = true;
     s.nextSmiler = now + L.smilerRespawn * 1000;
   }
-  const crates = ctx.query({ tags: ["crate"] }).length;
+  if (!s.furnitureSeeded) { // loot moved from crates into office furniture: clear the old crates once, then seed afresh
+    for (const o of ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.tags?.includes("container")) ctx.destroy(o.id);
+    s.furnitureSeeded = true; s.cratesSeeded = false; s.nextCrate = 0;
+  }
+  const crates = ctx.query({ tags: ["furniture"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).length;
   if (crates < W.crates.count && now >= (s.nextCrate ?? 0)) {
     const fill = s.cratesSeeded ? 1 : W.crates.count - crates;
-    for (let i = 0; i < fill; i++) { const c = cell(ctx); if (c) spawnCrate(ctx, c); }
+    for (let i = 0; i < fill; i++) for (let k = 0; k < 8; k++) {
+      const c = cell(ctx); if (!c) continue;
+      const { cx, cz } = cellAt(c.x, c.z), kind = pickKind("main", ctx.random()), spot = wallSpot0(ctx, cx, cz, kind, ctx.random(), ctx.random());
+      if (!spot || ctx.query({ tags: ["container"], radius: 1.2, center: { x: spot.x, y: 0, z: spot.z } }).length) continue;
+      spawnFurniture(ctx, "main", kind, spot); break;
+    }
     s.cratesSeeded = true;
     s.nextCrate = now + (W.crates.respawn * 1000);
   }

@@ -58,7 +58,7 @@ export function wallSpot1(cx, cz, kind, r1, r2) {
   const [d, e] = E[Math.floor(r1 * E.length)];
   let t = 0.9 + w / 2 + r2 * (S - 1.8 - w); // metres from the edge's start
   if (e.door != null && Math.abs(t - e.door) < M1.DOOR / 2 + w / 2 + 0.3) t = e.door < S / 2 ? Math.min(S - 0.9 - w / 2, e.door + M1.DOOR / 2 + w / 2 + 0.4) : Math.max(0.9 + w / 2, e.door - M1.DOOR / 2 - w / 2 - 0.4);
-  const along = (t - S / 2) * (d === 0 || d === 3 ? 1 : -1) * (d === 1 || d === 3 ? -1 : 1); // the edge runs +z (x sides) or +x (z sides)
+  const along = (t - S / 2) * (d === 0 || d === 3 ? 1 : -1); // the edge runs +z (x sides) or +x (z sides)
   return face(M1.cellCenter(cx, cz), S, T, d, along);
 }
 

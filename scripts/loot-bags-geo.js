@@ -11,6 +11,7 @@ export function geometry(ctx) {
   const p = ctx.params ?? {}, kind = p.kind ?? "backpack", sd = p.seed ?? 0;
   const [w, h, d] = D.kinds[kind]?.size ?? [0.5, 0.5, 0.5], X = w / 2, Z = d / 2, F = -Z - 0.01;
   ctx.roughness(0.85); ctx.metalness(0);
+  if (kind === "backpack" || kind === "duffel" || kind === "satchel") ctx.smooth();
   if (kind === "backpack") { // slumped against the wall, top flap open a crack
     ctx.albedo(CANVAS); ctx.color(pick(["oklch(0.5 0.07 145)", "oklch(0.42 0.06 250)", "oklch(0.55 0.12 35)", "oklch(0.35 0.02 60)"], sd));
     tube(ctx, [[0, 0, 0.02], [0, 0.04, 0.0], [0, h * 0.45, -0.01], [0, h * 0.85, 0.02], [0, h, 0.04]], [0.13, X * 0.95, X, X * 0.85, 0.05], 14, [1, Z / X]);
