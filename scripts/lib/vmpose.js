@@ -198,7 +198,8 @@ export function poseViewmodel(ctx, dt) {
   }
 
   // raising a freshly equipped weapon: up from below the frame, a little past, and settle
-  const up = backOut(m.equipT), lo = 1 - up
+  let up = backOut(m.equipT), lo = 1 - up
+  if (ps.sheathed && ps.sheathAt) { const k = Math.min(1, Math.max(0, (Date.now() - (m.sheathSeen ??= Date.now())) / 350)); lo = Math.max(lo, k * k * 1.3); up = 1 - lo } else m.sheathSeen = undefined // holstering: the hand drops below the frame, then goes
   y -= lo * 0.3
   if (gun) { pitch -= lo * 35; roll += lo * 18; x += lo * 0.04 } else { roll += lo * 10 }
 

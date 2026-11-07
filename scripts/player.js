@@ -266,8 +266,8 @@ export function onInput(ctx, input) {
   if (input.pressed.cycleWeapon && !ctx.self.state.building) cycleWeapon(ctx)
   if (input.pressed.holster) { // H: put it away, H again: draw the last one
     const s = ctx.self.state; cancelReload(ctx); s.ads = false
-    if (!s.sheathed) { if (s.equipped !== 'fists') s.holstered = s.equipped; s.equipped = 'fists'; s.sheathed = true } // hands away: nothing in view
-    else { s.sheathed = false; if (s.holstered && owned(s).includes(s.holstered) && usable(s, s.holstered)) s.equipped = s.holstered }
+    if (!s.sheathed) { if (s.equipped !== 'fists') s.holstered = s.equipped; s.equipped = 'fists'; s.sheathed = true; s.sheathAt = ctx.now() } // hands away: nothing in view
+    else { s.sheathed = false; w0vm(ctx); if (s.holstered && owned(s).includes(s.holstered) && usable(s, s.holstered)) s.equipped = s.holstered }
     s.equipAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.45, true)
   }
   if (input.pressed.reload && !ctx.self.state.building) startReload(ctx) // R turns the piece in build mode
@@ -597,9 +597,11 @@ const Q_GUN = { x: 0, y: 1, z: 0, w: 0 } // yaw 180: lays the mesh's +Z barrel f
 // Inside the Q_GUN frame (yaw 180), a child pitch of 35 levels it to point straight forward (-Z).
 // `at` = { x: 0, y: 0.255, z: -0.224 } translates the trigger to (0, 0, 0) so it lands in the fist.
 const GUN_FIX = { shotgun: { yaw: 0, pitch: 35, at: { x: 0, y: 0.255, z: -0.224 } } }
+function w0vm(ctx) { const w = walkOf(ctx); w.vmCheck = true } // a draw rebuilds the viewmodel, which rises from below
 function viewmodel(ctx, moving, sprinting) {
   if (!ctx.self.isLocal) return
   const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists', l = s.look ?? {}
+  if (s.sheathed && w.vm && ctx.now() - (s.sheathAt ?? 0) < 400) return // still lowering out of view
   if (s.sheathed) { if (w.vm) { ctx.destroy(w.vm); w.vm = null; w.vmKind = null; w.vmEq = null; w.plyRig = null } if (s.vmId) s.vmId = null; return } // holstered: the hands are down, out of view
   // the look and tune only change by a press: the full key is rebuilt when the weapon changes or on the 4 Hz stats beat
   if (w.vm && w.vmEq === kind && !w.vmCheck) { if (w.plyWant && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 500; plyArm(ctx, w) } return }
