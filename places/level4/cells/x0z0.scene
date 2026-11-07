@@ -12,7 +12,7 @@ l4-geo:
   id: l4-geo
   material: {roughness: 0.9}
   physics: {body: static, collider: mesh}
-  primitive: {kind: scripted, script: scripts/level4-geo.js}
+  primitive: {kind: scripted, params: {cut: []}, script: scripts/level4-geo.js}
   receiveShadow: true
 l4-lift-arrive:
   feetPosition: {x: 28.7, y: 0.1, z: -27}
