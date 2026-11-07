@@ -11,6 +11,7 @@ import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wa
 const PAPER = { texture: "/cdn/value.00a4e744acf9ab763779bbb0cc7f26fb1dd20aeafc69448c536939cd7212caeb.png", color: "oklch(0.98 0.01 90)", repeat: [1, 1] };
 import B from "../../scripts/lib/data/breakables.yml";
 import { syncLevel0 } from "../../scripts/lib/breakables.js";
+import { layMoments } from "../../scripts/lib/level0-moments.js";
 export const cadence = "1s";
 // office furniture: breakable props scattered through the halls (desk, chair, shelf: [mat, hp])
 const FURN = { desk: ["wood", 80], chair: ["metal", 45], shelf: ["metal", 110], copier: ["machine", 110] };
@@ -84,6 +85,7 @@ export function tick(ctx) {
       n++;
     }
   }
+  if (s.momentsV !== 1) { s.momentsV = 1; s.moments = layMoments(ctx); }
   shift(ctx, s, now);
   if (!s.furnished) { s.furnished = true; furnish(ctx); }
   regrow(ctx, s, now);
