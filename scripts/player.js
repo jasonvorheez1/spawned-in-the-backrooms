@@ -370,13 +370,13 @@ const HOLD = { // how each weapon sits in the fist: offset of its grip from its 
   fists: null, table_leg: 0.16, pipe_scrap: 0.1, crowbar: 0.12, bat: 0.12, hatchet: 0.1, fire_axe: 0.18, pistol: 0.04, shotgun: 0.14,
 }
 const Q_MELEE = { x: -0.5, y: 0.5, z: 0.5, w: 0.5 } // its length up, its blade forward
-const Q_GUN = { x: 0, y: 1, z: 0, w: 0 } // its barrel forward
-const GUN_FIX = { shotgun: { pitch: 35, at: { x: 0, y: 0.255, z: -0.224 } } }
+const Q_GUN = { x: -0.7071, y: 0, z: 0, w: 0.7071 } // seen in play: this lays the mesh's +Z barrel forward in the fist
+const GUN_FIX = { shotgun: { yaw: 0, pitch: 37, at: { x: 0, y: 0.262, z: -0.216 } } } // positive pitch tips +Z up here; trigger at mesh (0,-0.08,0.33)
 function viewmodel(ctx, moving, sprinting) {
   if (!ctx.self.isLocal) return
   const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists', l = s.look ?? {}
   const ply = l.modelUrl || '' // a worn .plymodel: its own arm holds the weapon instead of the critter paw
-  const arm = ply ? { hidden: true } : { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v3'
+  const arm = ply ? { hidden: true } : { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v7' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     w.plyRig = null
@@ -384,8 +384,8 @@ function viewmodel(ctx, moving, sprinting) {
     const child = g == null ? [] : [gun
       ? (GUN_FIX[kind]
         // the Tripo shotgun mesh lies tilted ~35 deg muzzle-up with its butt at the origin: level it and put its trigger in the fist
-        ? { feetPosition: { x: 0, y: 0.01, z: 0.02 }, rotation: Q_GUN, audience: 'local', children: [{ feetPosition: GUN_FIX[kind].at, rotation: { pitch: GUN_FIX[kind].pitch }, castShadow: false, ...weaponBody(kind), audience: 'local' }] }
-        : { feetPosition: { x: 0, y: kind === 'pistol' ? 0.03 : -0.04, z: kind === 'pistol' ? 0.04 : 0.14 }, rotation: Q_GUN, castShadow: false, ...weaponBody(kind), audience: 'local' })
+        ? { feetPosition: { x: 0, y: 0.03, z: 0.04 }, rotation: s.vmTune?.rot ?? Q_GUN, audience: 'local', children: [{ feetPosition: s.vmTune?.at ?? GUN_FIX[kind].at, rotation: { yaw: GUN_FIX[kind].yaw, pitch: s.vmTune?.pitch ?? GUN_FIX[kind].pitch }, castShadow: false, ...weaponBody(kind), audience: 'local' }] }
+        : { feetPosition: s.vmTune?.at ?? { x: 0, y: kind === 'pistol' ? 0.03 : -0.04, z: kind === 'pistol' ? 0.04 : 0.14 }, rotation: s.vmTune?.rot ?? Q_GUN, castShadow: false, ...weaponBody(kind), audience: 'local' })
       : { feetPosition: { x: 0, y: -g, z: 0 }, rotation: Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
     if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: 0.02, y: -1.62, z: 0.62 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
