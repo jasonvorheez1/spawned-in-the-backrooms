@@ -99,8 +99,8 @@ img.big{position:fixed!important;left:50%!important;top:50%!important;transform:
 #m3d button.gq{background:none;box-shadow:none;color:var(--dim);padding:4px 6px;font-size:12px}#m3d button.gq:hover{color:var(--text)}
 #m3d .gc button.gq{color:#d8c8ff}
 @keyframes m3dIn{from{opacity:0;translate:0 -6px}}
-@keyframes m3dGlow{50%{box-shadow:0 0 0 3px var(--cool),0 0 20px var(--cool)}}
-#m3d[data-step="text"] [data-g="text"],#m3d[data-step="pic"] [data-g="pic"],#m3d[data-step="make"] [data-g="make"],#m3d[data-step="wait"] [data-g="wait"],#m3d[data-step="show"] [data-g="show"]{position:relative;border-radius:8px;box-shadow:0 0 0 2px var(--cool);animation:m3dGlow 1.2s ease-in-out infinite}
+@keyframes m3dGlow{50%{opacity:1}}
+#m3d[data-step="text"] [data-g="text"],#m3d[data-step="pic"] [data-g="pic"],#m3d[data-step="make"] [data-g="make"],#m3d[data-step="wait"] [data-g="wait"],#m3d[data-step="show"] [data-g="show"]{position:relative;border-radius:8px;box-shadow:0 0 0 2px var(--cool)}#m3d[data-step="text"] [data-g="text"]::after,#m3d[data-step="pic"] [data-g="pic"]::after,#m3d[data-step="make"] [data-g="make"]::after,#m3d[data-step="wait"] [data-g="wait"]::after,#m3d[data-step="show"] [data-g="show"]::after{content:"";position:absolute;inset:0;border-radius:8px;pointer-events:none;box-shadow:0 0 0 3px var(--cool),0 0 20px var(--cool);opacity:0;animation:m3dGlow 1.2s ease-in-out infinite;will-change:opacity}
 #m3d[data-step="text"] [data-g="text"]::before,#m3d[data-step="pic"] [data-g="pic"]::before,#m3d[data-step="make"] [data-g="make"]::before,#m3d[data-step="wait"] [data-g="wait"]::before,#m3d[data-step="show"] [data-g="show"]::before{content:"▼ here";position:absolute;top:-18px;left:6px;font-size:11px;font-weight:700;color:#0b8a94;pointer-events:none;width:auto;height:auto;background:none;box-shadow:none;border-radius:0}
 </style>`;
 export function m3dDraft(el) { draft = el.value; }
