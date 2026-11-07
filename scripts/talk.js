@@ -2,7 +2,7 @@
 // state.talkWith); what you type goes to the built-in model as 'talk', its JSON comes back to heard().
 // The model only ever picks words, a mood, a rapport nudge and one whitelisted intent; every check is rolled here.
 // Traders open a shop from the card. Numbers: lib/data/talk.yml, lib/data/shops.yml.
-import { heard } from "./lib/hear.js";
+import { heard as hearAt } from "./lib/hear.js";
 import T from './lib/data/talk.yml'
 import { nameOf, keyOf, isTrader, voiceOf, VO, systemPrompt, userMessage, parseReply, rollCheck, freshStock, buyPrice, sellPrice, sellables, removeOne, SHOPS } from './lib/npc-talk.js'
 import { takeToken } from './player.js'
@@ -29,7 +29,7 @@ function say(ctx, it, line, mood) {
   ctx.self.state.sub = { who: nameOf(it), t: line, at: now, d }
   it.state.line = { t: line, at: now, d }; it.state.talkAt = now; it.state.talkTo = ctx.self.id
   if (mood) ctx.self.state.talkMood = mood
-  heard(ctx, { clip: VO(voiceOf(it), line), position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.9, maxDistance: 14 }, { audience: { nearby: p, radius: 16 } })
+  hearAt(ctx, { clip: VO(voiceOf(it), line), position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.9, maxDistance: 14 }, { audience: { nearby: p, radius: 16 } })
 }
 function close(ctx) { const s = ctx.self.state; s.talkWith = null; s.shopOpen = null; s.talkBusy = 0 }
 
@@ -51,7 +51,7 @@ function send(ctx, d) {
 }
 
 // the model's answer comes back here; only whitelisted intents touch the world
-export function heard(ctx, r, pay) {
+export function hearAt(ctx, r, pay) {
   const s = ctx.self.state; s.talkBusy = 0
   const it = live(ctx, pay?.id); if (!it) return
   const text = r?.data?.text ?? r?.text ?? (typeof r?.data === 'string' ? r.data : null)
