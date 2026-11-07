@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 808,
-  "updatedAt": "2026-11-07T17:10:11.953Z",
-  "summary": "The Backrooms is a multiplayer survival game spanning Level 0, Levels 1–5 and M.E.G. Base Gamma, with place-local simulations assembling spaces, actors and encounters around shared layout, loot, creature and NPC systems. The ordered player behavior chain connects movement, combat, interaction, progression and HUD; Level 5's authored Boiler Room now places machine and pipe geometry, while its separate heat/vent manager remains unattached.",
+  "basedOnSpecVersion": 882,
+  "updatedAt": "2026-11-07T17:27:00.800Z",
+  "summary": "The Backrooms is a multiplayer survival game spanning Level 0, Levels 1–5 and M.E.G. Base Gamma, with place-local simulations and authored scenes assembling spaces, actors and encounters around shared layout, loot, creature and NPC systems. Level 5's Terror Hotel now has an authored Beverly Room ballroom and a sim-built Main Hall, guest rooms, and residents; the ordered player behavior chain connects movement, combat, interaction, progression and HUD.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0's generated yellow maze and safe-room hub; authored cells, loot, shifting walls, seeded moments and smilers/lurkers.",
@@ -11,16 +11,16 @@
     "places/level3 (3D) - Electrical Station; maze zones/crawl halls, hazards, loot, creature brigades and Gamma checkpoint; breakable walls and powered lifts lead to Levels 4 and 5.",
     "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards and residents; sim adds the locked Database computer.",
     "places/level4 (3D) - Abandoned Office, a 64×64 m floor with perimeter/corner offices, fountains, break-room vending, Level 3 lift, stairs down to Level 5 and Base Omega; sim adds residents, offices and tasks.",
-    "places/level5 (3D) - Terror Hotel, a 96×60 m 1930s hotel floor; lobby, authored cells and Boiler Room machines, pipe web and caged bulbs, plus sim-built shell, lamps, radios and exits.",
+    "places/level5 (3D) - Terror Hotel, a 96×60 m 1930s hotel; Main Hall and guest rooms from the scene Main Hall manager, Beverly Room ballroom, Boiler Room, lobby/library and sim-built characters, props and exits.",
     "places/debug (3D) - isolated combat and loot test room; authored cells hold weapon/item stations, enemy pens and test stands."
   ],
   "roots": [
-    "world.config.yaml - multiplayer entry at main; declares camera, actions, player template and HUD renderer; crouch is Z and almond-water splash is an action.",
+    "world.config.yaml - multiplayer entry at main; declares camera, actions, player template and HUD renderer.",
     "templates/player.js - ordered behavior chain: humanoid-locomotion, player, interact, talk, build, noclip, stats, craft, os, lockpick, horde, critter.",
-    "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch, crouched eye height, computer view and the third-person death camera.",
-    "places/<place>/sim.js - local setup/tick roots; level sims lay arrival markers and maintain creature packs; Level 4 builds office systems and Level 5 lays hotel shell, lamps, radios and exits.",
-    "places/<place>/config.yaml + cells - place configuration and authored placements; Level 5 x0z0.scene now places Boiler Room machines via l5-boiler-geo.js and fixtures/props via l5-boiler-props.js.",
-    "places/level5/config.yaml - Level 5's dark, fogged 3D environment, color sky, warm ambient light and scripts/look-level5.js post-processing.",
+    "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch, crouched eye height, computer view, seated eye and third-person death view.",
+    "places/<place>/sim.js - local setup/tick roots; Level 4 builds office systems, Level 5 lays hotel shell, lamps, radios, exits and residents; Level 5's scene Main Hall manager separately lays hall furnishings.",
+    "places/<place>/config.yaml + cells - place configuration and authored placements; Level 5 x0z0.scene holds the ballroom, Main Hall manager and Boiler heat manager.",
+    "places/level5/config.yaml - Level 5's dark, fogged 3D environment, colored sky, warm ambient light and scripts/look-level5.js post-processing.",
     "scripts/ui.js with loot-ui.js, talk-ui.js, build-ui.js, stats-ui.js, craft-ui.js, os-ui.js, horde-ui.js, noclip-ui.js and lockpick-ui.js - HUD composition, level transition card and action overlays."
   ],
   "shared": [
@@ -29,9 +29,9 @@
     "scripts/lib/level3.js + scripts/lib/data/level3.yml + scripts/lib/maze3path.js - Electrical Station grid, zones, openings and routes for geometry, sim and creatures.",
     "scripts/lib/level4.js - office room/wall plan, zones, sanity rates and names read by Level 4 geometry, resident/office systems and player.js.",
     "scripts/lib/level5.js - the 96×60 m hotel plan, zones, openings, exits, arrivals, elevator/boiler layout and sanity rates shared by Level 5 geometry/sim and player.js.",
-    "scripts/lib/l5-boiler-plan.js - Boiler Room 3 m cell coordinates for machine footprints, furnace mouths, pipe runs, leaks, steam vents and heat parameters; imports BOILER from level5.js and informs geometry/vent/heat systems.",
-    "scripts/lib/l5-kit.js - small oriented-mesh helper kit (beveled boxes, cylinders, flanges, domes, rivets, wheels, gauges) imported by scripts/l5-boiler-geo.js.",
-    "scripts/lib/l4-people.js + scripts/lib/data/level4-people.yml - Level 4 resident homes, routines, meetups, greetings and phone errands; sim spawns their shared NPC agents."
+    "scripts/lib/l5-boiler-plan.js - Boiler Room cell coordinates for machines, pipes, leaks, vents and heat parameters; geometry and active scripts/l5-heat.js share it.",
+    "scripts/lib/l5-hall-layout.js + scripts/lib/l5-hall-kit.js - Main Hall furnishing/door/fixture data and mesh helpers consumed by l5-hall-lay.js, l5-hall-geo.js and l5-hall-fix.js.",
+    "scripts/lib/seat.js - multi-occupant seat spots, claims and sit/stand animation; interact.js and Level 4/5 seats use the shared contract."
   ],
   "notableExports": [
     "places/*/sim.js - cadence and tick; Level 4 and Level 5 sims also export lay; places/gamma/sim.js also exports PEOPLE.",
@@ -40,56 +40,50 @@
     "scripts/lib/l4-people.js - roundsFor, speak, settle, tickPeople, PEOPLE4; scripts/l4-office.js - ears, phoneTask, update; scripts/computer.js - ears.",
     "scripts/lib/os.js - PROFILE, mailsOf, filesOf, entriesOf, entryById, binOf, forumOf, passwordOf, runCmd; scripts/os.js - onInput, update; scripts/os-ui.js - osUi.",
     "scripts/lib/clothes.js - fullLook, rollLevel, leveledRows, rollCloth, npcLook and clothing helpers; scripts/lib/breakables.js - wall/prop damage, sync and sweep helpers.",
-    "scripts/lib/critter-model.js - shared critter model/look/morph helpers; scripts/lib/stats.js - attribute/skill helpers; scripts/lockpick.js - onInput, update, startPick; scripts/lockpick-ui.js - pickUi.",
-    "scripts/weapon-geo.js - geometry, collider (including SMG and knife); scripts/l5-boiler-geo.js and scripts/l5-boiler-props.js - geometry, collider; scripts/l5-heat.js - updateSchedule, update."
+    "scripts/lib/critter-model.js - critter model/look/morph helpers; scripts/lib/seat.js - spotsOf, seatFor, sitDown, standUp, seatTick, claim, free; scripts/lockpick.js - onInput, update, startPick.",
+    "scripts/weapon-geo.js - geometry/collider; scripts/l5-boiler-geo.js, l5-boiler-props.js, l5-hall-geo.js, l5-hall-fix.js and l5-ball-geo.js - scripted geometry/collider; scripts/l5-heat.js - updateSchedule, update."
   ],
   "ownership": [
-    "scripts/player.js - player.state owns level/XP, health/sanity, visited cells/zones, kills/deaths, equipment/inventory/ammo/condition, clothes, compass, crouch and almond-water counts/timers; player-local session holds transient movement/combat state.",
+    "scripts/player.js - player.state owns level/XP, health/sanity, visited cells/zones, kills/deaths, equipment/inventory/ammo/condition, clothes, compass, crouch, meat and consumable counts/timers; player-local session holds transient combat/movement state.",
     "scripts/stats.js - player.state owns HALOGEN attributes, skills, points, tags, schema version, sheetOpen and target; initializes/migrates the sheet and spends points.",
-    "scripts/craft.js - player.state hunger/thirst, craftOpen/craftBench and payout redemption; needs drain and starvation reduces hp but floors it at 1; crafts validate recipe/skill/materials.",
+    "scripts/craft.js - player.state hunger/thirst, craftOpen/craftBench and payout redemption; crafts validate recipe/skill/materials.",
     "scripts/horde.js - player.state horde phase/countdown/alive/result; session holds wave timing; spawned creature state carries the owning player's horde id.",
     "scripts/build.js + scripts/player.js - player.state.scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
-    "scripts/interact.js - player focus, loot menu, notices and interaction; NPCs own pockets/picked and per-player warned/angry state, containers own item lists/lock/scavenged state.",
-    "scripts/talk.js and scripts/critter.js - dialogue state is split across player/NPC; player.state.look owns appearance/worn slots; NPC appearance/build is saved in state.look/wear/build.",
-    "Place simulations own persisted build/schedule state (including Level 5 place.state.builtV); Level 5 radios own on/track and sealed-door description in entity state; lockpick.js owns active pick attempt; unattached l5-heat.js writes player.state.heat and place-session vent/heat timers."
+    "scripts/interact.js and scripts/lib/seat.js - focus/loot menu/interaction plus player.state.sit and seat.state.by occupancy claims; NPCs own pockets/picked and per-player warned/angry state; containers own item lists/lock/scavenged state.",
+    "scripts/talk.js / scripts/samantha.js - dialogue and per-player talk memory are split across player/NPC; Samantha behavior owns her line/mode/session and trades from player.state.meat.",
+    "Place simulations own persisted build/schedule state (including Level 5 place.state.builtV); scripts/l5-heat.js owns vent phases and per-player heat warning/damage timers, writing player.state.heat and hp; Level 5 room doors own open/held state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js chain: humanoid-locomotion reads prior movement before player writes control; interact, talk, build, noclip, stats, craft, os, lockpick and horde handle ordered actions before critter behavior.",
-    "world.config.yaml camera → scripts/camera.js owns presented yaw/pitch and crouched eye height; player/enemy gaze and targeting consume camera direction/state; death state pulls the view to third person briefly.",
+    "world.config.yaml camera → scripts/camera.js owns presented yaw/pitch and eye position; player/enemy gaze and targeting consume camera direction/state; seat parenting and sit state lower the seated view.",
     "Level 0 exit in scripts/player.js → Level 1; paired thresholds connect Levels 1–3; Level 3 sim lift → level5#l5-from-l3, Level 4 stairs → level5#l5-from-l4; Level 5 lift/stairs return to Level 3/4.",
-    "scripts/level-door.js trigger → paired arrival marker IDs (PAIR) or state.to fallback; Level 3/4/5 sims place inbound markers, and scripts/player.js chooses the nearest safe spawn/door checkpoint after death.",
+    "scripts/level-door.js trigger → paired arrival marker IDs (PAIR) or state.to fallback; Level 3/4/5 sims place inbound markers, and scripts/player.js chooses nearest safe spawn/door checkpoint after death.",
     "scripts/player.js writes player.state.xfer on place change → scripts/ui.js draws named level transition card; level-door.js crossing uses the black transition.",
-    "interact.js focus/E on living NPC → player.state.talkWith; talk-ui.js sends typed text/actions through talk/talkdo/shop inputs to talk.js; talk.js submits llm:chat and heard validates replies/checks before rapport changes.",
-    "talk.js writes NPC state.line and player subtitle → talk-ui.js / ui.js; nearby NPC voice is emitted; shop actions update almond water, inventory and NPC stock; Level 3 Gamma agents use chatter data for nearby conversations.",
-    "interact.js E → door/container/bench or usable-specific press event; Level 4 l4-home.js ears.press handles home/utility interactions; Level 5 l5-door.js toggles radios and handles sealed doors, service bell and piano; l5-samantha.js trades psychic fortunes and readings for meat cuts; usable computers create player.state.os, serviced by os.js/lib/os.js and rendered by os-ui.js.",
-    "E on lockpick-locked door/container → interact.js shows Pick Lock and calls lockpick.js startPick; lockpick.js reads A/D/W/S and target, consumes a bobby pin on snap and clears lock on success; lockpick-ui.js renders attempt.",
+    "interact.js focus/E on living NPC → player.state.talkWith; talk-ui.js sends text/actions via talk/talkdo/shop inputs to talk.js; NPC talk handlers can provide card options and react to talkopt.",
+    "talk.js or scripts/samantha.js writes NPC state.line and player subtitle/talk memory → talk-ui.js / ui.js; shop and Samantha offer actions update stock or consume player.state.meat and give readings/rewards.",
+    "interact.js E → door/container/bench/usable press event; Level 4 home/office handlers and Level 5 l5-door.js/l5-ball.js/l5-hall-door.js handle their respective use cases.",
+    "E on lockpick-locked door/container → interact.js shows Pick Lock and calls lockpick.js startPick; lockpick.js reads A/D/W/S, consumes a bobby pin on snap and clears lock on success; lockpick-ui.js renders attempt.",
     "Level 4 phone/printer/shift board → l4-office.js tasks and player.state.l4task; completion writes player.state.payout, which craft.js redeems as XP/items and craft-ui.js displays task progress.",
-    "scripts/lib/loot.js rolls bobby pins into containers/Level 1–2 loot; player.js pickup token increments player.state.bobbypins; lockpick.js consumes one on each snapped pin.",
-    "places/level5/cells/x0z0.scene scripted primitives → l5-boiler-geo.js/l5-boiler-props.js geometry; l5-boiler-plan.js supplies room-machine/pipe parameters. l5-heat.js reads that plan but has no active place attachment."
+    "E on tagged seat → interact.js sitDown; scripts/lib/seat.js claims a spot, parents the player and sets sit animation/state; movement/E stands them up, camera.js reads that state, and seatTick maintains/releases the claim.",
+    "Level 5 scene manager l5-hall-mgr → l5-hall-lay.js reads l5-hall-layout.js and spawns hall geometry, fixtures and opening guest leaves; scene l5-heat manager → l5-heat.js reads l5-boiler-plan.js, phases steam vents and writes player heat/hp."
   ],
   "behaviorFamilies": [
-    "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; places/level5/cells/x0z0.scene varies Boiler Room fixtures and props by scripted kind.",
+    "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; Level 5 x0z0.scene likewise groups authored hotel detail by room tags.",
     "places/level4/cells/x0z0.scene + scripts/level4-geo.js, level4-detail-geo.js, l4-prop-geo.js and look-level4.js - office base, non-colliding lived-in detail, varied abandoned props and post-processing share the Level 4 plan.",
     "scripts/l4-office.js + scripts/l4-office-geo.js - repeated open-floor cubicle islands, phones and printers vary by placement; manager schedules rings, ambient sounds, office tasks and supply rewards.",
     "scripts/lib/l4-people.js + data/level4-people.yml - Level 4 agents share home/round/meetup/phone/greeting logic, varied by faction, role, voice, look/build and routine.",
     "scripts/lib/clothes.js + clothes.yml - leveled garment lists vary by player/place tier and rarity; faction wardrobe rolls vary by faction, level and stable NPC id across Level 1–4, Gamma and Omega spawners.",
-    "scripts/smilers.js and scripts/lurkers.js - Level 0 pack managers with distinct gaze/light/sanity reactions; uploaded Tripo rigged meshes and horde hunt hooks.",
-    "scripts/hounds.js + hound-geo.js and scripts/stealers.js + stealer-geo.js - shared level-specific hound grids/safe zones and skin-stealer disguise/reveal behavior vary by place and hunt phase; Level 1–3 sims restore missing pack managers.",
-    "scripts/lockpick.js + lockpick-ui.js + scripts/lib/loot.js - skill-gated Fallout-style picking is reused by locked doors and containers; lock level/skill changes sweet-spot width and pin durability."
+    "scripts/smilers.js and scripts/lurkers.js - Level 0 pack managers with distinct gaze/light/sanity reactions; scripts/hounds.js and scripts/stealers.js adapt shared pursuit/disguise behavior to place grids, safe zones and hunt phase.",
+    "scripts/l5-hall-lay.js + l5-hall-geo.js/l5-hall-fix.js - Main Hall/guest-room furniture and fixtures are parameterized by layout rows; placement kind and loot metadata vary geometry, collision, breakability and containers.",
+    "places/level4/cells/x0z0.scene and places/level5/cells/x0z0.scene + scripts/lib/seat.js - tagged chairs, sofas and stools share multi-seat interaction and player sit/stand behavior, varied by seat spot count and spacing."
   ],
-  "probableOrphans": [
-    "scripts/l5-heat.js - Boiler Room player-heat and timed steam-vent manager, but no active place/sim attaches or schedules it.",
-    "scripts/lib/l5-hall-kit.js - Main Hall/guest-room mesh helpers; no current code imports the kit.",
-    "scripts/lib/l5-ball-kit.js - Beverly Room lane mesh/material helpers; no current code imports the kit.",
-    "scripts/flat-starter-terrain.js - no active place uses it; place terrain is off.",
-    "scripts/flower.js, scripts/grass.js, scripts/grass-look.js and scripts/reed.js - no active terrain layers or placed references are visible; terrain is off."
-  ],
+  "probableOrphans": [],
   "migrationNotes": [
     "Grid contracts differ: Level 0 is 56×56 at 4 m with hub cells 26–29; Level 1 is 30×30 at 8 m; Level 2 is 24×24 at 5 m; Level 3 is 26×26 at 4 m; Level 4 is 64×64 m with 8 m-wide, 6 m-deep offices; Level 5 is 96×60 m, x ±48/z ±30.",
     "Level 4 base l4-geo is structural mesh/collider; l4-detail-geo draws ceiling, carpet and wall wear without a collider; l4-prop-geo and l4-office-geo supply repeated placed detail. Scene entries or sim-spawned bodies provide collision.",
     "Level 3 tight cells are 1 m clear width (tightHalf 0.5), 1.6 m springline and 2.15 m crown; tightArms/tightSpans drive structural/detail vaults, and gates/furniture are excluded from crawl halls.",
-    "Player behavior order is intentional: humanoid-locomotion.js before player.js, then interact.js, talk.js, build.js, noclip.js, stats.js, craft.js, os.js, lockpick.js, horde.js and critter.js; NPC arrays likewise put locomotion before M.E.G. controllers.",
-    "Door IDs are coupled across level-door.js PAIR, place sims' arrival markers and player.js CHECKS (Level 5 routes: l3-lift5 ↔ l5-from-l3, l4-stairs-down ↔ l5-from-l4, l5-lift3/l5-stairs-up return); locks use entity.state.lock 'lockpick:<level>' or 'science:<level>' and consume player.state.bobbypins on snapped pins.",
-    "Level 5 boiler machine scene entries route params.kind to l5-boiler-geo.js; smaller prop kinds route to l5-boiler-props.js, while l5-boiler-plan.js is their shared room coordinate source. weapons.yml now defines knife/SMG; weapon-geo.js and weapon-look.js need matching weapon keys, and weaponWeight prefers kg over weight."
+    "Player behavior order is intentional: humanoid-locomotion.js before player.js, then interact.js, talk.js, build.js, noclip.js, stats.js, craft.js, os.js, lockpick.js, horde.js and critter.js; NPC arrays likewise put locomotion before M.E.G. agent control.",
+    "Door IDs are coupled across level-door.js PAIR, place sims' arrival markers and player.js CHECKS (Level 5 routes: l3-lift5 ↔ l5-from-l3, l4-stairs-down ↔ l5-from-l4, l5-lift3/l5-stairs-up return); lock strings use entity.state.lock and lockpick skills.",
+    "Level 5 Main Hall manager is authored in x0z0.scene at l5-hall-mgr and lays from PIECES/LEAVES; do not duplicate its room-door leaves. l5-heat is also an authored scene behavior; the plan in l5-boiler-plan.js is shared by it and boiler geometry."
   ]
 }
