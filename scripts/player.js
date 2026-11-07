@@ -345,18 +345,42 @@ const Q_GUN = { x: 0, y: 1, z: 0, w: 0 } // its barrel forward
 function viewmodel(ctx, moving, sprinting) {
   if (!ctx.self.isLocal) return
   const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists', l = s.look ?? {}
-  const arm = { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm)
+  const ply = l.modelUrl || '' // a worn .plymodel: its own arm holds the weapon instead of the critter paw
+  const arm = ply ? { hidden: true } : { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
+    w.plyRig = null
     const g = HOLD[kind], wp = W[kind] ?? {}, gun = !!wp.ranged
     const child = g == null ? [] : [gun
       ? { feetPosition: { x: 0, y: kind === 'pistol' ? 0.03 : -0.04, z: kind === 'pistol' ? 0.04 : 0.14 }, rotation: Q_GUN, castShadow: false, ...weaponBody(kind), audience: 'local' }
       : { feetPosition: { x: 0, y: -g, z: 0 }, rotation: Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
+    // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
+    if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: -0.22, y: -1.5, z: 0.55 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
     w.vm = ctx.spawn({ feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
       primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: arm, ...(wp.muzzle ? { sockets: { muzzle: wp.muzzle } } : {}) }, children: child })
     w.vmKind = armKey
   }
+  if (ply && !w.plyRig) plyArm(ctx, w)
   if (w.vm && s.vmId !== w.vm) s.vmId = w.vm // scripts/lib/vmpose.js poses it every display frame from the camera rig
+}
+
+// once the worn model's skeleton is in: keep only its right arm (head, left arm and legs shrink to their joints)
+// and put its right hand on the viewmodel's grip, so it follows every sway, recoil and reload pose
+const RH = /(^|[^a-z])(r|right)[_. ]?hand$|hand[_. ]?(r|right)$/i
+const CUT = [/head$|neck/i, /(^|[^a-z])(l|left)[_. ]?(clavicle|shoulder|upperarm|arm)$|(clavicle|shoulder|upperarm)[_. ]?(l|left)$/i, /thigh|upleg|(^|[^a-z])(l|r|left|right)[_. ]?leg$|calf/i]
+function plyArm(ctx, w) {
+  const body = ctx.getObject(w.vm + '/plyarm') ?? ctx.getObject('plyarm')
+  const names = body?.skeleton ? (Array.isArray(body.skeleton) ? body.skeleton : Object.keys(body.skeleton)).map((b) => (typeof b === 'string' ? b : b.name)) : null
+  if (!names?.length) return
+  const bones = {}
+  for (const n of names) if (CUT.some((r) => r.test(n.replace(/^mixamorig:/, '')))) {
+    const par = names.find((m) => m !== n && CUT.some((r) => r.test(m.replace(/^mixamorig:/, ''))) && n.startsWith(m)) // a parent already cut covers it
+    if (!par) bones[n] = { scale: 0 }
+  }
+  const hand = names.find((n) => RH.test(n.replace(/^mixamorig:/, '')))
+  if (hand) bones[hand] = { reach: { to: { object: w.vm, offset: { x: 0.03, y: -0.02, z: 0.05 } }, pole: { object: w.vm, offset: { x: 0.6, y: -0.6, z: 0.4 } } } }
+  body.bones = bones
+  w.plyRig = true
 }
 
 export function update(ctx, dt) {

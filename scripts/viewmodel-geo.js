@@ -21,6 +21,7 @@ const ball = (ctx, c, r, M, sq) => sphere(ctx, P(c), r * S, M, sq)
 
 export function geometry(ctx) {
   const M = ctx.lod <= 2 ? 16 : 9, P0 = ctx.params ?? {}
+  if (P0.hidden) { ctx.tri(0, 0, 0, 0.0001, 0, 0, 0, 0.0001, 0); return } // a worn model's own arm holds the weapon
   const sp = SPECIES[P0.species] ?? null, FUR = P0.fur || sp?.fur || "oklch(0.74 0.055 55)", PAD = sp?.nose && sp.nose !== "#2a1c18" ? "#ffb3c1" : "oklch(0.45 0.03 40)"
   const sleeved = !sp || LONG.has(P0.topw), SLEEVE = sp ? (P0.top || "#7a8aa0") : "oklch(0.36 0.03 85)"
   ctx.smooth()
