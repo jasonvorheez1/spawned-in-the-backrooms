@@ -101,6 +101,7 @@ function chatBubbles(ctx, now) {
   for (const id of TALKERS) {
     const o = objs[id], l = o?.state?.line
     if (!l || now - l.at > l.d || o.state.dead) continue
+    if (o.place && player.place && o.place !== player.place) continue
     const who = String(o.state.name ?? '').split(' ·')[0]
     h += `<div data-world-anchor="${id}" data-anchor-offset="0 2.05 0" style="transform:translate(-50%,-100%);opacity:clamp(0,calc(1.6 - var(--anchor-depth,0) / 14),1)"><div id="cb${l.at}" style="max-width:260px;padding:6px 10px;background:oklch(0.16 0.02 80 / .88);border:1px solid oklch(0.7 0.12 85 / .55);color:oklch(0.93 0.03 90);font-size:14px;line-height:1.3;animation:hud-pop .18s ease-out"><span style="color:oklch(0.8 0.13 85);font-size:11px;letter-spacing:.06em">${who.toUpperCase()}</span><br>${l.t}</div></div>`
   }
@@ -114,7 +115,7 @@ function subtitles(ctx, player, now) {
   if (objs && me) for (const id of TALKERS) {
     const o = objs[id], l = o?.state?.line
     if (!l || now - l.at > l.d || o.state.dead) continue
-    if (Math.hypot(o.feetPosition.x - me.x, o.feetPosition.z - me.z) > 20) continue
+    if ((o.place && player.place && o.place !== player.place) || Math.hypot(o.feetPosition.x - me.x, o.feetPosition.z - me.z) > 12) continue // same level, in earshot
     rows.push([l.at, String(o.state.name ?? '').split(' ·')[0], l.t])
   }
   if (s.sub && now - s.sub.at < s.sub.d) rows.push([s.sub.at, s.sub.who, s.sub.t])
