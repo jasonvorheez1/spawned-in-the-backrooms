@@ -12,6 +12,7 @@ import { spawnFurniture, pickKind, wallSpot3 } from "../../scripts/lib/furniture
 import { npcState, dmgAfterArmor } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { layLore } from "../../scripts/lib/level3-lore.js";
+import { layGammaExterior } from "../../scripts/lib/gamma-exterior.js";
 export const cadence = "250ms";
 const GRIT = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]];
@@ -76,6 +77,7 @@ function layLayout(ctx) {
 
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
+  if (s.seeded && s.gammaExtV !== 1) layGammaExterior(ctx);
   if (s.furnitureSeeded !== 2) { // loot moved from crates into fuse cabinets, toolboxes, lockers and satchels: clear the old crates once
     for (const o of ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.tags?.includes("container")) ctx.destroy(o.id);
     s.furnitureSeeded = 2; if (s.seeded && !ctx.query({ tags: ["lootfurn"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).length) seedFurniture3(ctx);
