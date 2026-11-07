@@ -11,34 +11,34 @@ people:
   omega-rhea: { faction: omega, role: medic, voice: ito, gun: wrench, name: "Rhea · Omega Medic" }
   omega-dace:
     { faction: omega, role: quarter, voice: dace, gun: pistol, name: "Dace · Omega Quartermaster",
-      look: { species: panda, sex: m, topw: longsleeve, top: "#3d5a98", botw: pants, bottom: "#3a3a32", shoes: boots, shoec: "#22201c", hat: cap, hatc: "#4a5a2a", expr: smile } }
+      build: { h: 1.12, w: 1.18 }, look: { species: panda, sex: m, topw: longsleeve, top: "#3d5a98", botw: pants, bottom: "#3a3a32", shoes: boots, shoec: "#22201c", hat: cap, hatc: "#4a5a2a", expr: smile, eyew: none, neck: bandana, neckc: "#4a5a2a", fur: "#efeae0" } }
   omega-lin:
     { faction: omega, role: scout, voice: lin, gun: pistol, name: "Lin · Omega Patrol", night: guard,
-      look: { species: wolf, sex: f, topw: jacket, top: "#b8d040", botw: pants, bottom: "#2a3040", shoes: boots, shoec: "#2a2420", expr: smile } }
+      build: { h: 1.08, w: 0.92 }, look: { species: wolf, sex: f, topw: jacket, top: "#b8d040", botw: pants, bottom: "#2a3040", shoes: boots, shoec: "#2a2420", expr: smile, eyew: shades, fur: "#8a8f99" } }
   l4-moss:
     { faction: wanderer, role: wanderer, voice: moss, gun: pistol, name: "Moss · Wanderer", home: [3, 4, 2],
-      look: { species: cat, sex: f, topw: sweater, top: "#6bcb77", botw: skirt, bottom: "#2b2b33", shoes: sneakers, shoec: "#f4f1ea", expr: smile } }
+      build: { h: 0.9, w: 0.95 }, look: { species: cat, sex: f, topw: sweater, top: "#6bcb77", botw: skirt, bottom: "#2b2b33", shoes: sneakers, shoec: "#f4f1ea", expr: smile, eyew: glasses, neck: scarf, neckc: "#c9a227", fur: "#3a3533" } }
   l4-gus:
     { faction: wanderer, role: wanderer, voice: gus, gun: pistol, name: "Gus · Wanderer", home: [9, 10, 8],
-      look: { species: dog, sex: m, topw: tee, top: "#ffd93d", botw: pants, bottom: "#3d5a98", shoes: sneakers, shoec: "#2b2b33", expr: grin } }
+      build: { h: 1.0, w: 1.15 }, look: { species: dog, sex: m, topw: tee, top: "#ffd93d", botw: pants, bottom: "#3d5a98", shoes: sneakers, shoec: "#2b2b33", expr: grin, hat: cap, hatc: "#c0392b", fur: "#c98b4b" } }
   l4-penny:
     { faction: wanderer, role: wanderer, voice: penny, gun: pistol, name: "Penny · Wanderer", home: [16, 17, 15],
-      look: { species: bunny, sex: f, topw: pajamas, top: "#9fd3ff", botw: pants, bottom: "#f4f1ea", shoes: sneakers, shoec: "#ff8fc7", expr: beam } }
+      build: { h: 0.86, w: 0.9 }, look: { species: bunny, sex: f, topw: pajamas, top: "#9fd3ff", botw: pants, bottom: "#f4f1ea", shoes: sneakers, shoec: "#ff8fc7", expr: beam, hat: bow, hatc: "#ff8fc7", neck: bell, neckc: "#f2c200", fur: "#f4efe8" } }
   l4-bram:
     { faction: wanderer, role: wanderer, voice: bram, gun: pistol, name: "Bram · Wanderer", home: [23, 24, 22],
-      look: { species: otter, sex: m, topw: longsleeve, top: "#8b5a3c", botw: pants, bottom: "#2b2b33", shoes: boots, shoec: "#2a2420", hat: beanie, hatc: "#5a2a2a", expr: smile } }
+      build: { h: 1.15, w: 1.05 }, look: { species: otter, sex: m, topw: longsleeve, top: "#8b5a3c", botw: pants, bottom: "#2b2b33", shoes: boots, shoec: "#2a2420", hat: beanie, hatc: "#5a2a2a", expr: smile, neck: scarf, neckc: "#2e4a3a", fur: "#6b4a32" } }
   tbd-quill:
     { faction: tbd, role: trader, voice: quill, gun: pistol, name: "Quill · T.B.D.", home: [11, 12, 7],
-      look: { species: raccoon, sex: m, topw: hoodie, top: "#2b2b33", botw: pants, bottom: "#3a3a32", shoes: boots, shoec: "#22201c", hat: beanie, hatc: "#2b2b33", expr: wink } }
+      build: { h: 1.04, w: 0.9 }, look: { species: raccoon, sex: m, topw: hoodie, top: "#2b2b33", botw: pants, bottom: "#3a3a32", shoes: boots, shoec: "#22201c", expr: wink, eyew: shades, hat: tophat, hatc: "#1e1c22" } }
   tbd-nib:
     { faction: tbd, role: scavenger, voice: nib, gun: pistol, name: "Nib · T.B.D.", home: [11, 12, 7], shares: tbd-quill,
-      look: { species: mouse, sex: f, topw: hoodie, top: "#6a3a7a", botw: pants, bottom: "#2b2b33", shoes: sneakers, shoec: "#2b2b33", expr: blep } }
+      build: { h: 0.82, w: 0.86 }, look: { species: mouse, sex: f, topw: hoodie, top: "#6a3a7a", botw: pants, bottom: "#2b2b33", shoes: sneakers, shoec: "#2b2b33", expr: blep, hat: headphones, hatc: "#f2c200", fur: "#b9aea4" } }
   amor-vell:
     { faction: amor, role: keeper, voice: vell, gun: wrench, name: "Sister Vell · Amor Incrementum", home: [20, 19, 18],
-      look: { species: sheep, sex: f, topw: dress, top: "#2b2b33", botw: skirt, bottom: "#2b2b33", shoes: boots, shoec: "#22201c", expr: smile } }
+      build: { h: 1.1, w: 0.94 }, look: { species: sheep, sex: f, topw: dress, top: "#2b2b33", botw: skirt, bottom: "#2b2b33", shoes: boots, shoec: "#22201c", expr: smile, hat: flower, hatc: "#7aa35a", neck: cape, neckc: "#3a4a2a" } }
   amor-hask:
     { faction: amor, role: keeper, voice: hask, gun: wrench, name: "Brother Hask · Amor Incrementum", home: [20, 19, 18], shares: amor-vell,
-      look: { species: deer, sex: m, topw: sweater, top: "#8b5a3c", botw: pants, bottom: "#2b2b33", shoes: boots, shoec: "#22201c", expr: smile } }
+      build: { h: 1.18, w: 1.12 }, look: { species: deer, sex: m, topw: sweater, top: "#8b5a3c", botw: pants, bottom: "#2b2b33", shoes: boots, shoec: "#22201c", expr: smile, neck: cape, neckc: "#3a4a2a", fur: "#7a6a58" } }
 greet:
   omega: ["base omega. keep your weapon down and you're welcome.", "water's free at the fountains. don't hog it.", "you look like you walked up from three. sit a minute."]
   wanderer: ["oh, hey. you new on four?", "hi. don't go near the window rooms.", "you heard the phones yet? don't answer the break room one.", "nice to see a face that isn't mine."]
