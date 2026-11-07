@@ -194,7 +194,7 @@ export function geometry(ctx) {
       const m = [(a[0] + c[0]) / 2, (a[1] + c[1]) / 2, (a[2] + c[2]) / 2];
       const h = Math.sin(m[0] * 127.1 + m[1] * 311.7 + m[2] * 74.7) * 43758.5453, n = h - Math.floor(h);
       const rib = CLOTH.rib ? 0.5 + 0.5 * Math.sin(m[1] * CLOTH.rib) : 0.5;
-      const f = n * 0.07 + rib * 0.06 + (CLOTH.hem ? CLOTH.hem(m) : 0);
+      const f = n * 0.025 + rib * 0.035 + (CLOTH.hem ? CLOTH.hem(m) : 0);
       ctx.color(f > 0 ? mixc(CLOTH.col, "#120c10", Math.min(0.45, f)) : mixc(CLOTH.col, "#ffffff", Math.min(0.2, -f)));
     }
     tri(a, b, c); tri(a, c, d);
@@ -764,6 +764,7 @@ export function geometry(ctx) {
       const x = s * 0.085;
       limb([x, 0.66, 0], [x, shorts ? 0.38 : knee, 0], (fem ? 0.058 : 0.05) + 0.016, shorts ? 0.06 : 0.05, hi ? 12 : 8);
     }
+    CLOTH = null; ctx.color(col);
   };
 
   const skirt = (col, top = 0.72, bottom = 0.40, flare = 0.28) => {
