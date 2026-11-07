@@ -27,7 +27,9 @@ export async function plyToGlb(buf) {
   const d = new Uint8Array(buf), dv = new DataView(buf)
   if (String.fromCharCode(d[0], d[1], d[2], d[3]) !== 'MODL') throw new Error('not a plymodel (no MODL header)')
   // header: (offset, size) u32 pairs from 0x12, each block right after the last
-  const blocks = []; for (let o = 0x12; o + 8 <= d.length && blocks.length < 32; o += 8) { const off = dv.getUint32(o, true), size = dv.getUint32(o + 4, true); if (blocks.length && off !== blocks[blocks.length - 1].off + blocks[blocks.length - 1].size) break; if (off + size > d.length) break; blocks.push({ off, size }) }
+  // newer files carry a version string first (v3: "1.4"), so the table's start moves: take the start whose chain runs longest
+  const chain = (start) => { const b = []; for (let o = start; o + 8 <= d.length && b.length < 32; o += 8) { const off = dv.getUint32(o, true), size = dv.getUint32(o + 4, true); if (b.length && off !== b[b.length - 1].off + b[b.length - 1].size) break; if (off < start || off + size > d.length) break; b.push({ off, size }) } return b }
+  let blocks = []; for (let st = 0x0c; st < 0x60; st++) { const b = chain(st); if (b.length > blocks.length) blocks = b }
   const so = blocks[0]?.off ?? 0x4a, nsec = d[so]; if (!nsec || nsec > 64) throw new Error('no mesh sections')
   const secs = []; for (let i = 0; i < nsec; i++) { const o = so + 1 + 16 * i; secs.push([dv.getUint32(o, true), dv.getUint32(o + 4, true), dv.getUint32(o + 8, true)]) }
   let vb = blocks.findIndex((b) => d[b.off] === 1 && d[b.off + 1] === 1 && dv.getUint32(b.off + 2, true) >= 24 && dv.getUint32(b.off + 2, true) <= 128 && (b.size - 9) % dv.getUint32(b.off + 2, true) === 0)
