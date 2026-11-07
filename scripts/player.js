@@ -5,6 +5,8 @@ import PLAYER from './lib/data/player.yml'
 import L from './lib/data/level0.yml'
 import W, { baseOf } from './lib/weapons.js'
 import { raycast } from 'builtin/physics'
+import BRK from './lib/data/breakables.yml'
+import { strike } from './lib/breakables.js'
 import { dropLoot, spawnWeapon } from './lib/loot.js'
 import { derived, canCarry, burden, npcMul, START, dmgMul, skillsOf, spentOf, SKILLS, SKILL_MAX, dmgAfterArmor, lookOfNpc } from './lib/stats.js'
 import { parseCloth, wear, takeOff } from './lib/clothes.js'
@@ -203,7 +205,7 @@ export function onInput(ctx, input) {
     if (s.equipped !== 'fists') { s.holstered = s.equipped; s.equipped = 'fists' } else if (s.holstered && owned(s).includes(s.holstered) && usable(s, s.holstered)) s.equipped = s.holstered
     s.equipAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.45, true)
   }
-  if (input.pressed.reload) startReload(ctx)
+  if (input.pressed.reload && !ctx.self.state.building) startReload(ctx) // R turns the piece in build mode
   {
     // aiming down the sights: a ranged weapon, button held, not mid-reload, not downed
     const sv = ctx.self.state, aw = W[sv.equipped]
@@ -241,6 +243,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
 
 function swing(ctx, power = 0) {
   const w = walkOf(ctx), s = ctx.self.state, now = ctx.now(), P = W.power
+  if (s.building) return // B mode: the click places a piece (scripts/build.js)
   if (now < (w.nextSwing ?? 0) || (s.downAt && now - s.downAt < 1200)) return
   const wp = weaponOf(s)
   if (wp.ranged) power = 0
@@ -287,7 +290,12 @@ function swing(ctx, power = 0) {
     found.push({ m, d })
   }
   if (!wp.ranged) sound(ctx, 'pipe-whoosh-swing', power ? 0.9 : 0.55)
-  if (!found.length) return
+  if (!found.length) { // nothing alive in reach: the swing or shot lands on the world (walls, furniture, crates, what was built)
+    let pc = ctx.self.camera?.rotation?.pitch ?? 0; if (Math.abs(pc) > 1.6) pc = pc * Math.PI / 180
+    const sb = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100)
+    strike(ctx, s, wp, s.equipped, sb, f, pc)
+    return
+  }
   const dv = derived(s), crit = ctx.random() < dv.crit
   const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * dmgMul(s, wp) * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100) * (crit ? 1.75 : 1)
   if (crit) ctx.emit('damageNumber', { position: { x: found[0].m.feetPosition.x, y: found[0].m.feetPosition.y + 2, z: found[0].m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
