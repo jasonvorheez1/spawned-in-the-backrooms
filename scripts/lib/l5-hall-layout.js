@@ -10,16 +10,16 @@ function frame(cd, zDoor, s) { const doorYaw = s > 0 ? 0 : 180; return { at: (u,
 // ---- guest rooms: 4 x 8, door centred
 const GUEST = {
   "room-n3": { bedU: 0.35, quilt: "oklch(0.82 0.08 20)", wood: "mahog", rug: "oklch(0.85 0.05 25)", odd: "suitcase", loot: ["almond,bandage", "ration,bobbypin", "almond,battery"], lockW: null },
-  "room-n4": { bedU: -0.7, quilt: "oklch(0.75 0.06 150)", wood: "walnut", rug: "oklch(0.8 0.05 150)", odd: "radio", loot: ["firstaid", "beans,bar", "ammo"], lockW: "lockpick:25" },
+  "room-n4": { flip: true, bedU: -0.7, quilt: "oklch(0.75 0.06 150)", wood: "walnut", rug: "oklch(0.8 0.05 150)", odd: "radio", loot: ["firstaid", "beans,bar", "ammo"], lockW: "lockpick:25" },
   "room-n5": { bedU: 0.35, quilt: "oklch(0.86 0.04 240)", wood: "oak", rug: "oklch(0.82 0.04 240)", odd: "letter", loot: ["tape,almond", "bandage", "bar,bobbypin"] },
   "room-s1": { bedU: -0.35, quilt: "oklch(0.88 0.05 85)", wood: "walnut", rug: "oklch(0.8 0.06 70)", odd: "birdcage", loot: ["almond,almond", "battery,kit", "ration"] },
-  "room-s2": { bedU: 0.35, quilt: "oklch(0.7 0.09 330)", wood: "mahog", rug: "oklch(0.75 0.07 330)", odd: "tea", loot: ["bar,beans", "bandage,almond", "shells"], lockW: "lockpick:40" },
+  "room-s2": { flip: true, bedU: 0.35, quilt: "oklch(0.7 0.09 330)", wood: "mahog", rug: "oklch(0.75 0.07 330)", odd: "tea", loot: ["bar,beans", "bandage,almond", "shells"], lockW: "lockpick:40" },
   "room-s3": { bedU: -0.35, quilt: "oklch(0.8 0.06 200)", wood: "oak", rug: "oklch(0.78 0.05 190)", odd: "typewriter", loot: ["tape", "almond,ration", "bobbypin,bobbypin"] },
-  "room-s4": { bedU: 0.7, quilt: "oklch(0.9 0.02 90)", wood: "walnut", rug: "oklch(0.7 0.06 45)", odd: "portrait", loot: ["firesalt", "almond,bandage", "meat:sardines,bar"] },
+  "room-s4": { flip: true, bedU: 0.7, quilt: "oklch(0.9 0.02 90)", wood: "walnut", rug: "oklch(0.7 0.06 45)", odd: "portrait", loot: ["firesalt", "almond,bandage", "meat:sardines,bar"] },
 };
 for (const o of OPENINGS) if (o.kind === "door" && GUEST[o.room]) {
   const g = GUEST[o.room], z = ZONES.find((q) => q.id === o.room), cd = (o.a0 + o.a1) / 2, s = o.at < 0 ? -1 : 1, F = frame(cd, o.at, s), n = o.room, no = PLACARDS[n];
-  const uL = z.x0 - cd + T, uR = z.x1 - cd - T, vB = 8 - T, put = (id, kind, u, v, yaw, p, oo) => { const [x, zz] = F.at(u, v); add(n + "-" + id, kind, x, zz, yaw, p, oo); };
+  const uL = z.x0 - cd + T, uR = z.x1 - cd - T, vB = 8 - T, put = (id, kind, u, v, yaw, p, oo) => { const m = g.flip ? -1 : 1, [x, zz] = F.at(m * u, v); add(n + "-" + id, kind, x, zz, m * yaw, p, oo); };
   put("rug", "rug", 0, 4.6, 0, { w: 2.6, d: 3.6, col: g.rug });
   put("bed", "bed", g.bedU, vB - 1.08, F.door, { w: 1.4, wood: g.wood, quilt: g.quilt, seed: no.length });
   const nsU = g.bedU > 0 ? g.bedU - 1.0 : g.bedU + 1.0;
@@ -29,7 +29,7 @@ for (const o of OPENINGS) if (o.kind === "door" && GUEST[o.room]) {
   put("chair", "sofa", uL + 0.55, 5.7, F.L + 25, { w: 1.0, up: g.odd === "tea" ? "velvet" : "leather", col: g.quilt });
   put("bag", g.odd === "suitcase" ? "openbag" : "luggage", uR - 0.45, 1.75, F.R + 10, { col: g.quilt, seed: no.length }, { loot: L(g.loot[2], g.odd === "suitcase" ? "Half-packed suitcase" : "Suitcase", "luggage", n === "room-s4" ? "lockpick:20" : undefined, "leather") });
   put("window", "window", uL + 0.02, 6.0, F.L, { w: 1.1, col: g.quilt, seed: no.length }, { y: 0.85 });
-  put("art", "painting", g.bedU, vB - 0.02, F.door, { w: 0.9, h: 0.6, style: "landscape", seed: no.length + 7 }, { y: 1.45 });
+  put("art", "painting", g.bedU, vB - 0.02, F.door, { w: 0.9, h: 0.6, style: "landscape", seed: no.length + 7 }, { y: 1.78 });
   if (g.odd === "radio") put("radiotable", "sidetable", 0.95, 7.4, F.door, { h: 0.7, wood: g.wood });
   if (g.odd === "letter") put("letter", "letter", g.bedU, vB - 0.55, F.door + 12, {}, { y: 0.67 });
   if (g.odd === "birdcage") put("cage", "birdcage", uR - 0.26, 3.0, F.R + 30, {}, { y: 0.86 });
@@ -54,7 +54,7 @@ for (const o of OPENINGS) if (o.kind === "door" && SUITE[o.room]) {
   put("sofa", "sofa", uL + 0.46, 2.6, F.L, { w: 2.0, up: "velvet", col });
   put("ctable", "ctable", uL + 1.6, 2.6, F.L, { w: 1.0, d: 0.55 });
   put("bags", "luggage", uL + 3.5, vB - 0.3, F.door + 8, { col: "oklch(0.55 0.08 40)", seed: 5 }, { loot: L(loot[3], "Steamer trunk", "luggage", undefined, "leather") });
-  put("art", "painting", uL + 1.6, vB - 0.02, F.door, { w: 1.2, h: 0.8, style: "landscape", seed: 40 + no.length }, { y: 1.5 });
+  put("art", "painting", uL + 1.6, vB - 0.02, F.door, { w: 1.2, h: 0.8, style: "landscape", seed: 40 + no.length }, { y: 1.85 });
   put("palm", "palm", uR - 0.4, 6.3, 0, { seed: 3 });
   put("window", "window", uL + 0.02, 5.1, F.L, { w: 1.4, col, seed: 9 + no.length }, { y: 0.85 });
   R.push({ leafFor: o, room: n, no, cd, s: -s });
@@ -107,5 +107,23 @@ add("stairs", "stairs", -8, -17.9, 0, { w: 2.6, n: 6, land: 1.33 }, { fix: true 
 const MINE = new Set(["lobby", "gallery", "crossN", "crossS", "corrN", "corrS", "library", "room-n3", "room-n4", "room-n5", "stairs4", "room-s1", "room-s2", "room-s3", "room-s4", "kitchen", "suite-nw", "suite-ne", "suite-sw", "suite-se"]);
 LIGHTS.forEach((l, i) => { const z = zoneAt(l.x, l.z); if (!z || !MINE.has(z.id) || !["chandelier", "pendant", "sconce", "flush", "lamp", "bulb"].includes(l.kind)) return; if (l.kind === "chandelier" && z.id !== "lobby") return;
   add("fx-" + i, l.kind, l.x, l.z, 0, { drop: +(z.h - l.y).toFixed(2) }, { y: l.y, fix: true }); });
+// ---- wall snap: every wall's finished face stands WALL in from its zone line (level5-geo draws walls inward, T 0.15);
+// furniture backs stand GAP off it, side faces clear of it, hung pieces (paintings, windows) sit flat on it.
+const WALL = 0.15, GAP = 0.05;
+const DEP = { sofa: 0.45, chair: 0.23, stool: 0.2, sidetable: 0.2, wardrobe: 0.3, dresser: 0.26, nightstand: 0.21, cabinet: 0.23, bookshelf: 0.21, bed: 1.03, luggage: 0.24, openbag: 0.24,
+  frontdesk: 0.39, cubbies: 0.18, clock: 0.2, range: 0.36, counter: 0.335, icebox: 0.31, wdesk: 0.32, vanity: 0.25, console: 0.2, cart: 0.28 };
+const WID = { sofa: (p) => p.w ?? 2.1, chair: () => 0.46, wardrobe: (p) => p.w ?? 1.1, dresser: (p) => p.w ?? 1.1, nightstand: () => 0.5, cabinet: () => 1, bookshelf: (p) => p.w ?? 1.6,
+  bed: (p) => (p.w ?? 1.4) + 0.08, luggage: () => 0.72, openbag: () => 0.72, console: (p) => p.w ?? 1.2, wdesk: () => 1.27, vanity: () => 1.17, counter: (p) => p.w ?? 2, icebox: () => 0.9, range: () => 1.3, sidetable: () => 0.5, clock: () => 0.6 };
+const HANG = { painting: 0.025, window: 0.005 };
+for (const r of R) { if (!r.id || r.fix || r.pitch) continue; const z = zoneAt(r.x, r.z); if (!z) continue;
+  const q = ((Math.round(r.yaw) % 360) + 360) % 360; if (q % 90) continue; // only square-set pieces meet a wall flat
+  const bx = Math.round(Math.sin(q * Math.PI / 180)), bz = Math.round(Math.cos(q * Math.PI / 180)); // the back points +Z local
+  const face = (ax, d) => ax === "x" ? (d > 0 ? z.x1 - WALL : z.x0 + WALL) : (d > 0 ? z.z1 - WALL : z.z0 + WALL);
+  const ax = bx ? "x" : "z", d = bx || bz, f = face(ax, d);
+  if (HANG[r.kind] != null) { if (Math.abs(f - r[ax]) < 0.35) r[ax] = +(f - d * HANG[r.kind]).toFixed(3); continue; }
+  const h = DEP[r.kind]; if (h == null) continue;
+  const back = r[ax] + d * h, want = f - d * GAP; if ((back - want) * d > 0 && Math.abs(back - f) < 0.4) r[ax] = +(r[ax] - (back - want)).toFixed(3);
+  const sw = WID[r.kind]?.(r.p); if (!sw) continue; const sa = ax === "x" ? "z" : "x";
+  for (const sd of [-1, 1]) { const sf = face(sa, sd), edge = r[sa] + sd * sw / 2, lim = sf - sd * 0.02; if ((edge - lim) * sd > 0 && Math.abs(edge - sf) < 0.4) r[sa] = +(r[sa] - (edge - lim)).toFixed(3); } }
 export const PIECES = R.filter((r) => r.id);
 export const LEAVES = R.filter((r) => r.leafFor);

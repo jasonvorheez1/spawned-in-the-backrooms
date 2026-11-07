@@ -2,7 +2,7 @@
 // and dresses the radios and sealed doors in their real meshes (same ids, state/audio/behavior kept).
 import { PIECES, LEAVES } from "./lib/l5-hall-layout.js";
 import { ZONES } from "./lib/level5.js";
-const V = 4, GEO = "scripts/l5-hall-geo.js", FIX = "scripts/l5-hall-fix.js";
+const V = 5, GEO = "scripts/l5-hall-geo.js", FIX = "scripts/l5-hall-fix.js";
 const FIXK = new Set(["chandelier", "pendant", "sconce", "flush", "lamp", "bulb", "stairs", "leaf", "placard"]);
 const NOCOL = new Set(["rug", "painting", "letter", "typewriter", "tomes", "birdcage", "window", "chandelier", "pendant", "sconce", "flush", "lamp", "bulb", "placard"]);
 const SEATK = new Set(["chair", "sofa", "stool", "bench", "armchair"]);
