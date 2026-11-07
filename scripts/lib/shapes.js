@@ -32,7 +32,7 @@ export function tube(ctx, pts0, rads0, M = 10, squash = [1, 1], jitter = 0, seed
     const ring = [];
     for (let k = 0; k < M; k++) {
       const t = (k / M) * Math.PI * 2;
-      const j = jitter ? 1 + jitter * Math.sin(k * 12.9898 + i * 78.233 + seed * 3.1) : 1;
+      const j = jitter ? 1 + jitter * Math.sin(k * 12.9898 + seed * 3.1) * (0.55 + 0.45 * Math.sin((i / sub) * 1.7 + k * 0.9)) : 1;
       const r = rads[i] * j;
       ring.push([p[0] + (u[0] * Math.cos(t) * squash[0] + v[0] * Math.sin(t) * squash[1]) * r, p[1] + (u[1] * Math.cos(t) * squash[0] + v[1] * Math.sin(t) * squash[1]) * r, p[2] + (u[2] * Math.cos(t) * squash[0] + v[2] * Math.sin(t) * squash[1]) * r]);
     }
