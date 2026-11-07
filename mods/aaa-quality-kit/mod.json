@@ -1,0 +1,33 @@
+{
+  "name": "aaa-quality-kit",
+  "displayName": "AAA Quality Kit",
+  "description": "Honest scope: scripts + skills only — the skills ARE the training; no model, brain, or engine is changed, and the 'mode' brain skills alter zero appearance by themselves.",
+  "tags": [
+    "aaa",
+    "quality",
+    "look",
+    "postfx",
+    "juice",
+    "sound",
+    "ui",
+    "animation",
+    "sprites",
+    "polish",
+    "training",
+    "wisps",
+    "fleet",
+    "cinematic",
+    "direction",
+    "math",
+    "performance",
+    "playtest",
+    "qa",
+    "clean-code",
+    "shaders",
+    "voxel",
+    "homage",
+    "horror"
+  ],
+  "visibility": "public",
+  "version": "2.2.0"
+}
