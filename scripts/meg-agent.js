@@ -246,7 +246,7 @@ export function update(ctx, dt) {
     const baseExpr = s.wear?.expr || s.look?.expr || "smile";
     let curExpr = baseExpr;
     if (now - (m.hitAt ?? 0) < 650) curExpr = "scared";
-    else if (now - (m.wavedAt ?? 0) < 2200) curExpr = "joy";
+    else if (now - (m.wavedAt ?? 0) < 2200) curExpr = "catmouth"; // :3 on hello
     else if (talking) curExpr = Math.floor(now / 220) % 2 === 0 ? "beam" : "smile";
     else if (m.aimAt) curExpr = "cocky";
     headObj.morph = faceMorph(curExpr, isBlinking, isFem);
