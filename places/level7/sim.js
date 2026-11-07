@@ -17,26 +17,30 @@ export function breakables(FY, PY) {
     "l7-pier-crate": { tags: ["container", "breakable"], feetPosition: { x: -0.9, y: PY + 0.04, z: -32.5 }, rotation: { yaw: -20 }, model: GLB.crate, layout: fit(0.6, 0.6, 0.6), physics: { body: "static", collider: "box" }, state: { name: "Salt-crusted maritime locker", items: "almond,battery,bandage", ...brk("wood", 35) } },
     "l7-bookcase": { tags: ["breakable"], feetPosition: { x: -2.72, y: FY, z: 0.3 }, rotation: { yaw: 0 }, model: GLB.bookcase, layout: fit(1.5, 2.3, 1.5), physics: { body: "static", collider: "box" }, state: brk("wood", 90) },
     "l7-armchair": { tags: ["breakable"], feetPosition: { x: 1.7, y: FY, z: 0.2 }, rotation: { yaw: -115 }, model: GLB.armchair, layout: fit(0.95, 0.95, 0.95), physics: { body: "static", collider: "box" }, state: brk("wood", 50) },
-    "l7-table": { tags: ["breakable"], feetPosition: { x: 0.5, y: FY, z: -0.6 }, rotation: { yaw: 8 }, model: GLB.table, layout: fit(1.15, 0.5, 1.15), physics: { body: "static", collider: "box" }, state: brk("wood", 40) },
+    "l7-table": { tags: ["breakable"], feetPosition: { x: 1.15, y: FY, z: -0.9 }, rotation: { yaw: 8 }, model: GLB.table, layout: fit(1.15, 0.5, 1.15), physics: { body: "static", collider: "box" }, state: brk("wood", 40) },
     // the drowned-house pile (ref: a flooded parlour, furniture stacked where the water left it)
     "l7-dresser": { tags: ["container", "breakable"], feetPosition: { x: 2.4, y: FY, z: -2.15 }, rotation: { yaw: 84 }, model: GLB.dresser, layout: fit(1.0, 1.1, 1.0), physics: { body: "static", collider: "box" }, state: { name: "Swollen chest of drawers", items: "almond,bandage", ...brk("wood", 70) } },
-    "l7-dresser-top": { tags: ["breakable"], feetPosition: { x: 2.45, y: FY + 1.08, z: -2.1 }, rotation: { yaw: 100, roll: 8 }, model: GLB.dresser, layout: fit(0.75, 0.8, 0.75), physics: { body: "static", collider: "box" }, state: brk("wood", 50) },
+    "l7-dresser-top": { tags: ["breakable"], feetPosition: { x: 1.15, y: FY + 0.5, z: -0.9 }, rotation: { yaw: 172, roll: 4 }, model: GLB.dresser, layout: fit(0.75, 0.8, 0.75), physics: { body: "static", collider: "box" }, state: brk("wood", 50) },
     "l7-sideboard": { tags: ["container", "breakable"], feetPosition: { x: 2.42, y: FY, z: 2.2 }, rotation: { yaw: 90 }, model: GLB.sideboard, layout: fit(1.15, 1.25, 1.15), physics: { body: "static", collider: "box" }, state: { name: "Waterlogged sideboard", items: "ration,battery", ...brk("wood", 80) } },
     "l7-boxes": { tags: ["breakable"], feetPosition: { x: 1.25, y: FY, z: 2.45 }, rotation: { yaw: 6 }, model: GLB.boxes, layout: fit(0.8, 1.05, 0.8), physics: { body: "static", collider: "box" }, state: { items: "rope", ...brk("wood", 20) } },
     "l7-lamp": { tags: ["breakable"], feetPosition: { x: -2.5, y: FY, z: 2.3 }, rotation: { yaw: 210, roll: -9 }, model: GLB.floorlamp, layout: fit(0.9, 1.7, 0.9), physics: { body: "static", collider: "box" },
       children: [{ feetPosition: { x: 0, y: 1.45, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.11 70)", intensity: 0.7, distance: 4 } }], state: brk("wood", 25) },
     "l7-plant": { tags: ["breakable"], feetPosition: { x: -1.3, y: FY, z: 2.5 }, rotation: { yaw: 40 }, model: GLB.plant, layout: fit(0.6, 0.75, 0.6), physics: { body: "static", collider: "box" }, state: brk("wood", 15) },
-    "l7-vase": { tags: ["breakable"], feetPosition: { x: 2.3, y: FY + 1.25, z: 1.95 }, rotation: { yaw: 20 }, model: GLB.vase, layout: fit(0.35, 0.75, 0.35), physics: { body: "static", collider: "box" }, state: brk("wood", 10) },
-    "l7-painting": { feetPosition: { x: -1.75, y: FY + 1.15, z: 2.86 }, rotation: { yaw: 180, roll: 5 }, model: GLB.painting, layout: fit(0.95, 0.85, 0.95) },
-    "l7-debris-1": { feetPosition: { x: -0.95, y: FY - 0.05, z: 0.9 }, rotation: { yaw: 30 }, model: GLB.debris, layout: fit(0.8, 0.45, 0.8) },
-    "l7-debris-2": { feetPosition: { x: 1.4, y: FY - 0.05, z: -2.35 }, rotation: { yaw: 200 }, model: GLB.debris, layout: fit(0.65, 0.4, 0.65) },
+    "l7-vase": { tags: ["breakable"], feetPosition: { x: 1.0, y: FY + 1.28, z: -0.85 }, rotation: { yaw: 20 }, model: GLB.vase, layout: fit(0.35, 0.75, 0.35), physics: { body: "static", collider: "box" }, state: brk("wood", 10) },
+    "l7-dresser-2": { tags: ["breakable"], feetPosition: { x: 2.4, y: FY + 1.08, z: -2.1 }, rotation: { yaw: 70, roll: -6 }, model: GLB.boxes, layout: fit(0.7, 0.9, 0.7), physics: { body: "static", collider: "box" }, state: { items: "ration", ...brk("wood", 20) } },
+    "l7-boxes-2": { tags: ["breakable"], feetPosition: { x: -2.35, y: FY, z: -0.95 }, rotation: { yaw: 80, roll: 3 }, model: GLB.boxes, layout: fit(0.7, 0.9, 0.7), physics: { body: "static", collider: "box" }, state: brk("wood", 20) },
+    "l7-vase-2": { tags: ["breakable"], feetPosition: { x: 2.35, y: FY + 1.25, z: 2.0 }, rotation: { yaw: 160 }, model: GLB.vase, layout: fit(0.3, 0.6, 0.3), physics: { body: "static", collider: "box" }, state: brk("wood", 10) },
+    "l7-plant-2": { tags: ["breakable"], feetPosition: { x: -2.2, y: FY + 0.8, z: -1.8 }, rotation: { yaw: 250 }, model: GLB.plant, layout: fit(0.5, 0.6, 0.5), physics: { body: "static", collider: "box" }, state: brk("wood", 15) },
+    "l7-painting": { feetPosition: { x: -1.6, y: FY + 1.0, z: 2.86 }, rotation: { yaw: 180, roll: 5 }, model: GLB.painting, layout: fit(1.3, 1.1, 1.3) },
+    "l7-debris-1": { feetPosition: { x: -0.95, y: FY + 0.12, z: 0.9 }, rotation: { yaw: 30 }, model: GLB.debris, layout: fit(0.8, 0.45, 0.8) },
+    "l7-debris-2": { feetPosition: { x: -1.5, y: FY + 0.12, z: -2.3 }, rotation: { yaw: 200 }, model: GLB.debris, layout: fit(0.65, 0.4, 0.65) },
   };
   [[-9, -6, 1.3, 1], [-12, 4, 1.8, 2], [8, -7, 1.1, 3], [13, 2, 2.2, 4], [-6, 12, 1.5, 5], [10, 11, 1.2, 6], [-17, -3, 2.6, 7], [17, -9, 2, 8], [3, -11, 0.8, 9], [-4, -9, 0.7, 10]].forEach(([x, z, sc, seed], i) => {
     R[`l7-boulder-${i}`] = { tags: ["breakable"], feetPosition: { x, z, y: { terrain: -0.15 * sc } }, rotation: { yaw: seed * 47 }, model: GLB.boulder, layout: fit(1.9 * sc, 1.9 * sc, 1.9 * sc), physics: { body: "static", collider: "auto" }, state: brk("concrete", Math.round(140 * sc)) };
   });
   return R;
 }
-const V = 8;
+const V = 9;
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
 const CONCRETE = {
@@ -53,7 +57,7 @@ const WOOD = {
   repeat: [1, 1],
   wrap: "repeat",
 };
-const PAPER = { color: "oklch(0.62 0.05 85)", roughness: 0.95, texture: "cdn/texture-faded-water-stained-vintage-floral-wallpaper.png", repeat: [1, 1], wrap: "repeat" };
+const PAPER = { color: "oklch(0.8 0.05 85)", roughness: 0.95, texture: "cdn/texture-faded-water-stained-vintage-floral-wallpaper.png", repeat: [1, 1], wrap: "repeat" };
 const RUST = { color: "oklch(0.38 0.06 45)", metalness: 0.6, roughness: 0.8 };
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const FY = 4.0; // The landing room floor elevation atop the basalt rock
@@ -91,8 +95,8 @@ function lay(ctx) {
 
   // Ankle-deep seawater puddle on the room floor with rippling water shader
   ctx.spawn("l7-puddle", {
-    feetPosition: { x: 0, y: FY + 0.03, z: 0 },
-    primitive: { kind: "box", width: 5.8, height: 0.025, depth: 5.8 },
+    feetPosition: { x: 0, y: FY, z: 0 },
+    primitive: { kind: "box", width: 5.84, height: 0.32, depth: 5.84 },
     material: { kind: "water", color: "oklch(0.3 0.045 80)", opacity: 0.88, waveIntensity: 0.12 },
   });
 
@@ -282,7 +286,7 @@ function lay(ctx) {
   // =========================================================================
   for (const [id, spec] of Object.entries(breakables(FY, PY))) ctx.spawn(id, spec);
   ctx.spawn("l7-troffer", { feetPosition: { x: 0, y: FY + 2.6, z: 0 }, primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "troffer" } },
-    children: [{ feetPosition: { x: 0, y: -0.15, z: 0 }, light: { kind: "point", color: "oklch(0.9 0.09 85)", intensity: 3.6, distance: 10 } }],
+    children: [{ feetPosition: { x: 0, y: -0.15, z: 0 }, light: { kind: "point", color: "oklch(0.9 0.09 85)", intensity: 7, distance: 12 } }],
     audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-single-fluorescent-tube-buzzing-hum-loop.mp3", loop: true, gain: 0.12, spatial: true, maxDistance: 9 } });
   // a caged work lamp over the sea door, so the room is a light seen from the water
   ctx.spawn("l7-door-lamp", { feetPosition: { x: 0, y: FY + 2.5, z: -3.32 }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.11, height: 0.18 }, material: { color: "#ffffff", emissive: "oklch(0.88 0.1 80)", emissiveIntensity: 3 },
