@@ -115,7 +115,7 @@ export function geometry(ctx) {
   let SHRINK = null; // while a blink lid is built: shrink every vertex toward its bone pivot
   const shr = (p) => [SHRINK.c[0] + (p[0] - SHRINK.c[0]) * SHRINK.k, SHRINK.c[1] + (p[1] - SHRINK.c[1]) * SHRINK.k, SHRINK.c[2] + (p[2] - SHRINK.c[2]) * SHRINK.k];
   let REV = false; // true while the ink outline shell is built: its faces point inward
-  const HIP = fem ? [0.17, 0.11, 0.14] : [0.135, 0.1, 0.12];
+  const HIP = fem ? [0.18, 0.11, 0.145] : [0.14, 0.1, 0.128];
   const tri = (a, b, c) => { if (REV) { const x = b; b = c; c = x; } if (SHRINK) { a = shr(a); b = shr(b); c = shr(c); } ctx.tri(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]); pushW(a); pushW(b); pushW(c); };
   const quad = (a, b, c, d) => { tri(a, b, c); tri(a, c, d); };
 
@@ -221,17 +221,21 @@ export function geometry(ctx) {
     col(FUR); LB([0, 0.94, 0], [0, 1.06, 0], 0.065, 0.07, hi ? 12 : 8);
     // arms (T-pose), mitten hands with a thumb
     for (const s of [-1, 1]) {
-      col(sp.dark || FUR); LB([s * 0.1, 0.965, 0], [s * 0.56, 0.965, 0], fem ? 0.04 : 0.044, 0.034, hi ? 12 : 8);
+      col(sp.dark || FUR);
+      EL([s * 0.122, 0.955, 0], [0.058, 0.056, 0.056], null, { seg: hi ? 14 : 9 }); // a round shoulder, so the arm joins the body smoothly
+      LB([s * 0.1, 0.965, 0], [s * 0.56, 0.965, 0], fem ? 0.04 : 0.044, 0.034, hi ? 12 : 8);
+      // mitten hand, like the reference bases: a soft flat paddle with a thumb nub at the front, and a rolled cuff at the wrist
       col(sp.dark || sp.socks || FUR);
-      EL([s * 0.6, 0.965, 0], [0.075, 0.058, 0.052], null, { seg: hi ? 16 : 10 });
-      EL([s * 0.565, 0.975, -0.052], [0.026, 0.024, 0.034], null, { seg: hi ? 10 : 6 });
+      EL([s * 0.548, 0.965, 0], [0.034, 0.05, 0.05], null, { seg: hi ? 14 : 9 }); // cuff
+      EL([s * 0.63, 0.965, 0], [0.09, 0.04, 0.066], null, { seg: hi ? 18 : 10 }); // the paddle
+      EL([s * 0.588, 0.96, -0.07], [0.032, 0.024, 0.036], null, { seg: hi ? 12 : 8 }); // the thumb
     }
     // legs, round feet
     for (const s of [-1, 1]) {
       const x = s * 0.085;
-      col(sp.dark || FUR); LB([x, 0.64, 0], [x, sp.socks ? 0.3 : 0.06, 0], fem ? 0.068 : 0.06, 0.045, hi ? 12 : 8);
+      col(sp.dark || FUR); LB([x, 0.64, 0], [x, sp.socks ? 0.3 : 0.06, 0], fem ? 0.072 : 0.064, 0.045, hi ? 12 : 8);
       if (sp.socks) { col(sp.socks); LB([x, 0.34, 0], [x, 0.06, 0], 0.049, 0.045, hi ? 12 : 8); }
-      EL([x, 0.055, -0.035], [0.072, 0.058, 0.115], null, { seg: hi ? 16 : 10 });
+      EL([x, 0.058, -0.04], [0.078, 0.062, 0.125], null, { seg: hi ? 18 : 10 }); // a big round bean of a foot
     }
     // head
     col(sp.headFur || FUR);
