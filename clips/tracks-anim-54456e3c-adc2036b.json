@@ -1,0 +1,6 @@
+{"contentHash":"506:9d5b18ee","duration":1,"fps":30,"identity":"tracks#anim-54456e3c","tracks":[
+{"bone":"LeftArm","prop":"rotation","times":[0,1],"values":[0.23087,0.44351,0.39989,0.76817,0.23087,0.44351,0.39989,0.76817]},
+{"bone":"LeftForeArm","prop":"rotation","times":[0,1],"values":[0,0.76604,0,0.64279,0,0.76604,0,0.64279]},
+{"bone":"RightArm","prop":"rotation","times":[0,1],"values":[0.23087,-0.44351,-0.39989,0.76817,0.23087,-0.44351,-0.39989,0.76817]},
+{"bone":"RightForeArm","prop":"rotation","times":[0,1],"values":[0,-0.76604,0,0.64279,0,-0.76604,0,0.64279]}
+]}
