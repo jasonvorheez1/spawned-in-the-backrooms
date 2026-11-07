@@ -83,11 +83,16 @@ function sound(ctx, name, volume = 0.7, mine = false) {
 
 export function gain(ctx, n) {
   const s = ctx.self.state
-  s.xp += Math.round(n * derived(s).xp)
+  const got = Math.round(n * derived(s).xp)
+  if (got <= 0) return
+  s.xp += got
+  const now0 = ctx.now(), prev = s.xpPop
+  s.xpPop = { n: prev && now0 - prev.at < 1500 ? prev.n + got : got, at: now0 } // new vegas: gains in a burst add up in one tick-up
+  ctx.emit('playSound', { clip: 'cdn/sfx-cash-register-cha-ching-bell-and-drawer.mp3', volume: 0.45, bus: 'UI', mode: 'restart' })
   while (s.xp >= xpNeed(s.level)) {
     s.xp -= xpNeed(s.level); s.level += 1
     s.hp = maxHp(s.level, s); s.sanity = maxSan(s.level, s); s.leveledAt = ctx.now()
-    if (!s.lootOpen) { s.sheetOpen = true; s.invOpen = false; s.levelUpAt = ctx.now() } // HALOGEN opens itself: spend the points now
+    s.lvlPrompt = true; s.levelUpAt = ctx.now() // HALOGEN waits: the HUD asks you to press K (Shelly, 2026-11-07)
     ctx.emit('playSound', { clip: 'cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3', volume: 0.6, bus: 'UI' })
     s.spts = (s.spts ?? 0) + derived(s).skillPerLevel
     sound(ctx, 'eerie-low-chime-level-up', 0.85, true)
