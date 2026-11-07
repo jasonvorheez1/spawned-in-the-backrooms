@@ -1,6 +1,6 @@
 // The conversation card and the trader's shop (scripts/talk.js writes the state they read).
 import T from './lib/data/talk.yml'
-import { nameOf, keyOf, isTrader, faction, buyPrice, sellPrice, sellables } from './lib/npc-talk.js'
+import { nameOf, keyOf, isTrader, faction, buyPrice, sellPrice, sellables, SECTIONS, sectionOf, money } from './lib/npc-talk.js'
 import { describe } from './lib/items.js'
 import { skillsOf } from './lib/stats.js'
 
@@ -28,21 +28,29 @@ const CSS = `<style>
 .tkb{display:flex;gap:6px;flex-wrap:wrap}.tkb .lv{margin-left:auto}
 .tks{display:flex;gap:18px;flex:1;min-height:0}
 .tks>div{flex:1;overflow-y:auto;min-height:0;scrollbar-width:thin;scrollbar-color:var(--ad) transparent}
-.tks h4{font-size:11px;color:var(--ad);margin:0 0 4px;font-weight:400;letter-spacing:.08em;text-transform:uppercase}
+.tks h4{font-size:11px;color:var(--ad);margin:8px 0 3px;border-bottom:1px solid rgba(255,182,66,.2);font-weight:400;letter-spacing:.08em;text-transform:uppercase}
 .tks button{display:flex;width:100%;gap:8px;text-align:left;border-color:transparent;font-size:14px;text-transform:none;padding:3px 6px}
 .tks button .c{margin-left:auto;white-space:nowrap}.tks .no{opacity:.4;pointer-events:none}
 .tks .em{font-size:13px;opacity:.5}
 </style>`
 
+// the shop: BUY / SELL tabs, goods in sections, your Backdollars beside each price (Shelly #44597)
 function shopUi(ctx, s, it) {
-  const barter = skillsOf(s).barter ?? 0, disc = it.state?.discount?.[keyOf(ctx.self ?? {})] ?? 0, cash = s.almonds ?? 0
-  const stock = Object.entries(it.state?.stock ?? {})
-  const buy = stock.map(([t, [n, base]]) => { const p = buyPrice(base, barter, disc), d = describe(t)
-    return `<button class="${n < 1 || p > cash ? 'no' : ''}" onclick="sendAction('shop',{k:'buy',t:'${q(t)}'})"><span style="color:${d.color}">${esc(d.name)}</span><span style="opacity:.6">×${n}</span><span class="c">${p} AW</span></button>` }).join('') || '<div class="em">Shelves are bare.</div>'
-  const sell = sellables(s).map(([t, n, base]) => { const d = describe(t)
-    return `<button onclick="sendAction('shop',{k:'sell',t:'${q(t)}'})"><span style="color:${d.color}">${esc(d.name)}</span><span style="opacity:.6">×${n}</span><span class="c">+${sellPrice(base, barter)} AW</span></button>` }).join('') || '<div class="em">Nothing they want.</div>'
-  return `<div class="tkp"><div class="tkh"><h2>${esc(nameOf(it))}'s stock</h2><span class="f">BARTER ${barter}${disc ? ` · ${Math.round(disc * 100)}% OFF` : ''}</span><span class="r">ALMOND WATER ${cash}</span></div>
-    <div class="tks"><div><h4>Buy</h4>${buy}</div><div><h4>Sell</h4>${sell}</div></div>
+  const barter = skillsOf(s).barter ?? 0, disc = it.state?.discount?.[keyOf(ctx.self ?? {})] ?? 0, cash = s.cents ?? 0, tab = s.shopTab === 'sell' ? 'sell' : 'buy'
+  const rows = tab === 'buy'
+    ? Object.entries(it.state?.stock ?? {}).map(([t, [n, base]]) => ({ t, n, p: buyPrice(base, barter, disc) }))
+    : sellables(s).map(([t, n, base]) => ({ t, n, p: sellPrice(base, barter) }))
+  let list = ''
+  for (const [sec, title] of SECTIONS) {
+    const here = rows.filter((r) => sectionOf(r.t) === sec).sort((a, b) => a.p - b.p); if (!here.length) continue
+    list += `<h4>${title}</h4>` + here.map(({ t, n, p }) => { const d = describe(t), no = tab === 'buy' && (n < 1 || p * 100 > cash)
+      return `<button class="${no ? 'no' : ''}" onclick="sendAction('shop',{k:'${tab}',t:'${q(t)}'})" title="${esc(d.info ?? '')}"><span style="color:${d.color}">${esc(d.name)}</span><span style="opacity:.55">${tab === 'buy' ? (n < 1 ? 'SOLD OUT' : n + ' left') : '×' + n}</span><span class="c">${tab === 'sell' ? '+' : ''}$${p}.00</span></button>` }).join('')
+  }
+  if (!list) list = `<div class="em">${tab === 'buy' ? 'Shelves are bare. Come back later.' : 'Nothing they want.'}</div>`
+  const tb = (k, l) => `<button style="${tab === k ? 'background:var(--a);color:#140f06;text-shadow:none' : ''}" onclick="sendAction('talkdo',{k:'stab',t:'${k}'})">${l}</button>`
+  return `<div class="tkp"><div class="tkh"><h2>${esc(nameOf(it))}</h2><span class="f">BARTER ${barter}${disc ? ` · ${Math.round(disc * 100)}% OFF` : ''}</span><span class="r" style="color:#9fcf8a">${money(cash)}</span></div>
+    <div class="tkb">${tb('buy', 'Buy')}${tb('sell', 'Sell')}</div>
+    <div class="tks"><div>${list}</div></div>
     <div class="tkb"><button onclick="sendAction('talkdo',{k:'back'})">Back to talking</button><button class="lv" onclick="sendAction('talkdo',{k:'leave'})">Leave</button></div></div>`
 }
 
