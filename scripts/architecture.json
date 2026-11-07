@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1292,
-  "updatedAt": "2026-11-07T22:58:52.038Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, Levels 1–7, Base Gamma and a debug room. Authored cells and place simulations assemble the maze and outposts; shared player, creature, NPC, loot, clothing, crafting and UI systems support individual progression, combat and scavenging. NPC looks now vary deterministically by identity across fur, markings, proportions and clothing, including the standing NPCs authored in four cells.",
+  "basedOnSpecVersion": 1295,
+  "updatedAt": "2026-11-07T23:07:38.710Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, Levels 1–7, Base Gamma and a debug room. Authored cells and place simulations assemble the maze and outposts; shared player, creature, NPC, loot, clothing, crafting and UI systems support individual progression, combat and scavenging. NPC looks vary deterministically by identity across fur, markings, proportions and clothing, including the standing NPCs authored in four cells.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, containers, breakable furniture, shifting walls and hunters.",
@@ -17,11 +17,10 @@
   "roots": [
     "world.config.yaml - multiplayer entry at main; declares camera, player actions, player template and HUD renderer; Backspace opens the main menu.",
     "templates/player.js - ordered player behavior chain; locomotion precedes movement and gameplay handlers run before critter, main-menu and view3.",
-    "templates/camera.js + scripts/camera.js - camera entry; owns presented view and eye position, including seated/talk views and collision-limited third person.",
+    "templates/camera.js + scripts/camera.js - camera entry; owns presented view and eye position, including seated/talk views and collision-limited third person; scripts/view3.js toggles player.state.tp for the shoulder camera.",
     "places/<place>/sim.js + config.yaml/cells - place setup and authored placements; sims build local layouts, manage respawns/regrowth and tick local behavior.",
     "scripts/ui.js and *-ui.js renderers - HUD and overlays, including main menu, wardrobe, mahjong, loot, talk/trade, build, stats, craft and OS panels.",
     "scripts/main-menu.js + scripts/main-menu-ui.js - local player menu and Continue/Character actions; fresh profiles enter the critter creator, returning profiles the menu.",
-    "scripts/view3.js - middle-mouse toggle writes player.state.tp; scripts/camera.js consumes it for the over-shoulder camera.",
     "places/level7/config.yaml atmosphere.look → scripts/look-level7.js; terrain7.js supplies sea/island heightmap, and level7/sim.js plus its cells lay/tick the world and camp chatter."
   ],
   "shared": [
@@ -30,7 +29,7 @@
     "scripts/lib/level3.js + Level 3 data + scripts/lib/maze3path.js - Electrical Station grid, zones, openings and routes for geometry, sim, creatures and visits.",
     "scripts/lib/level4.js, level5.js and level6.js - office/hotel plans and sanity data plus Level 6 seeded hall grid shared by geometry, simulation and player place behavior.",
     "scripts/lib/level-kit.js + scripts/lib/npc-respawn.js - named-person management and throttling for place sims, with shared one-hour NPC return timing.",
-    "scripts/lib/clothes.js + data/clothes.yml and scripts/lib/critter-model.js + data/faces.yml - identity-seeded NPC clothing/body rolls and rendered heads/bodies; per-look fur, markings, proportions, dyes and face details feed the critter model.",
+    "scripts/lib/clothes.js + data/clothes.yml and scripts/lib/critter-model.js + data/faces.yml - identity-seeded NPC clothing/body rolls and rendered heads/bodies; per-look fur, markings, proportions and face details feed the model; mat-cloth.js renders garment materials.",
     "scripts/lib/craft.js + data/craft.yml - recipe readiness, batch capacity and category list shared by craft.js and craft-ui.js.",
     "scripts/lib/chatter.js + data/chatter.yml - shared proximity-gated camp conversation director and combat-bark content, used by Level 1–3 and Level 7 sims."
   ],
@@ -63,10 +62,10 @@
     "Level 0 exit in scripts/player.js → Level 1; paired thresholds connect Levels 1–3; lifts/stairs connect Levels 3–5; Level 5 portal → Level 6 → Level 7; Level 6/7 stair markers remain paired.",
     "scripts/level-door.js trigger → paired arrival marker IDs or state.to fallback; place sims add inbound markers and player.js selects safe spawn/checkpoints after death.",
     "scripts/player.js writes state.xfer → scripts/ui.js transition card; player.js gain() writes xpPop → UI aggregates XP; lvlPrompt prompts K and stats.js clears it when opening the sheet.",
-    "interact.js E on living NPC → player.state.talkWith; talk-ui.js submits choices/text/trade → talk.js/NPC ears; parsed join intent writes NPC state.follow → meg-agent.js pursuit/return and companion recovery; armed agents fight, inspect eligible corpses and seek cover.",
+    "interact.js E on living NPC → player.state.talkWith; talk-ui.js submits choices/text/trade → talk.js/NPC ears; parsed join intent writes NPC state.follow → meg-agent.js pursuit/return and companion recovery; armed agents fight, inspect eli…",
     "talk-ui.js buy/sell tab and goods actions → talk.js; shops.yml sets Backdollar base prices, talk.js debits/credits player.state.cents and mutates trader stock; almond water is sellable but is not currency.",
-    "NPC identity/look seed → scripts/lib/clothes.js deterministically rolls NPC clothing and (unless bodyOwn) fur, markings and body proportions into the worn look → scripts/lib/critter-model.js builds the rendered body/head; authored scene NPCs also carry explicit look materials and scale.",
-    "Level 1–3 and Level 7 sim ticks call chatter.js with a place-specific exchange list and voice-ID map → place.state.chat schedules lines; chatter writes NPC state.line/talkAt/talkTo and emits voiced audio → scripts/ui.js floats/subtitles the exchange."
+    "NPC identity/look seed → scripts/lib/clothes.js deterministically rolls NPC clothing and (unless bodyOwn) fur, markings and body proportions into the worn look → scripts/lib/critter-model.js builds the rendered body/head; authored scene NPCs store explicit rendered looks.",
+    "Level 1–3 and Level 7 sim ticks call chatter.js with a place-specific exchange list and voice-ID map → place.state.chat schedules lines; chatter writes NPC state.line/talkAt/talkTo and emits voiced audio → scripts/ui.js floats/subtitles the lines."
   ],
   "behaviorFamilies": [
     "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; Level 5 cells hold the hotel portal and quest props.",
@@ -75,7 +74,7 @@
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - rounds, talk, faction, role, voice, looks and routines vary by NPC; meg-agent.js adds shared nerve, loadout and combat behavior.",
     "scripts/lib/craft.js + data/craft.yml - crafting actions/menu reuse category and recipe checks; category, scrap costs, skills, bench requirement, output batches and item families vary by recipe.",
     "scripts/lib/npc-talk.js + shops.yml/talk.yml - shared NPC dialogue and trader interfaces vary by persona, stock, barter, discount and item section; buy/sell uses Backdollars.",
-    "scripts/lib/clothes.js, critter-model.js + data/faces.yml/critter-models.yml and mat-cloth.js - identity-seeded looks vary face details, species-aware natural/pastel coats, markings, body proportions and garment dyes/patterns; model slots render per-look fur/limb colors and clothing.",
+    "scripts/lib/clothes.js, critter-model.js + data/faces.yml/critter-models.yml and mat-cloth.js - identity-seeded looks vary face details, species-aware natural/pastel coats, markings, body proportions and garment dyes/patterns; model slots vary by species and sex.",
     "scripts/lib/chatter.js + data/chatter.yml - Level 1–3 camps and Level 7 crews reuse timed multi-NPC exchanges, with dialogue and voice maps varying by site; combat bark pools are shared."
   ],
   "probableOrphans": [],
@@ -85,6 +84,6 @@
     "Level 6 has no working flashlight: player.js suppresses the toggle and destroys any carried torch on arrival; NVG F uses a local camera-attached green light and spare goggles replenish the shared battery.",
     "Level 5 Ines quest progress is per-player state.nvgQ (1 asked, 2 case, 3 goggles, 4 complete); its north portal leads to Level 6, while the separately listed Level 6 auxiliary bulkhead remains welded shut.",
     "Level 6 stair entry E(1) connects to Level 7; marker IDs l6-from-l7/l7-from-l6 must remain paired. Level 7 FY=4.0 room floor, PY=1.1 pier deck extending north (-Z); island summits are y=7 and y=11.",
-    "NPC bodyRoll in clothes.js is deterministic from identity and keeps species/sex; critter-model.js maps buildS to body x/z scale and heightS to y. The four edited standing-NPC cells store explicit rendered looks, so keep scene wear/materials and scale aligned when changing those placements; EyeTall/EyeWide Blender keys must still match faceMorph and body GLBs expose limb/pad slots listed in critter-model.js."
+    "NPC bodyRoll in clothes.js is deterministic from identity and keeps species/sex; critter-model.js maps buildS to body x/z scale and heightS to y. The four edited standing-NPC cells store explicit rendered looks, so keep scene wear/material overrides aligned with those looks."
   ]
 }
