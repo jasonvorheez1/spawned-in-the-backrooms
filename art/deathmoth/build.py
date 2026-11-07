@@ -31,7 +31,7 @@ me = bpy.data.meshes.new("body"); me.from_pydata(verts, edges, []); body = link(
 sk = body.modifiers.new("skin", "SKIN")
 for i, r in enumerate(radii): body.data.skin_vertices[0].data[i].radius = (r, r*0.92)
 body.data.skin_vertices[0].data[ids[4]].use_root = True
-body.modifiers.new("sub", "SUBSURF").levels = 2
+body.modifiers.new("sub", "SUBSURF").levels = 1
 bpy.context.view_layer.objects.active = body
 for m in list(body.modifiers): bpy.ops.object.modifier_apply(modifier=m.name)
 # lumpy fur on the body
@@ -43,7 +43,7 @@ bpy.ops.object.modifier_apply(modifier="disp")
 bm = bmesh.new()
 for v in body.data.vertices:
     p = v.co
-    if -0.15 < p.y < 0.08 and abs(p.x) < 0.075 and p.z > CZ-0.04 and random.random() < 0.55:
+    if -0.15 < p.y < 0.08 and abs(p.x) < 0.075 and p.z > CZ-0.04 and random.random() < 0.8:
         n = (v.normal + Vector((random.uniform(-.5,.5), random.uniform(0,.6), random.uniform(-.3,.3)))).normalized()
         L = random.uniform(0.018, 0.04); w = 0.005
         t = n.orthogonal().normalized(); b = n.cross(t)
@@ -85,7 +85,7 @@ prob = mesh_obj("prob", tube(ppts, 0.005, 0.0015, 6))
 
 # ---------- wings: shaped grids with camber, UV into one painted atlas ----------
 def wing(side, fore):
-    NU, NV = 22, 12; bm = bmesh.new(); uv = bm.loops.layers.uv.new()
+    NU, NV = 22, 12; bm = bmesh.new(); uv = bm.loops.layers.uv.new("UVMap")
     span = 0.56 if fore else 0.40; root = Vector((side*0.045, -0.06 if fore else 0.0, CZ+0.03))
     grid = []
     for i in range(NU+1):
@@ -169,9 +169,9 @@ def mat(name, color=None, image=None, rough=0.8, metal=0.0, spec=0.5, double=Fal
     m.use_backface_culling = not double; return m
 # fur/body texture: banded abdomen painted in object space onto a smart-UV map
 bpy.context.view_layer.objects.active = body; body.select_set(True)
-bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.uv.smart_project(island_margin=0.02); bpy.ops.object.mode_set(mode="OBJECT")
+bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.uv.smart_project(island_margin=0.02); body.data.uv_layers[0].name = "UVMap"; bpy.ops.object.mode_set(mode="OBJECT")
 BH = 512; bimg = bpy.data.images.new("moth_body", BH, BH)
-bn = fbm(BH, BH); bp = np.ones((BH, BH, 4)); bp[..., 0] = 0.30*(0.6+0.7*bn); bp[..., 1] = 0.26*(0.6+0.7*bn); bp[..., 2] = 0.21*(0.6+0.7*bn)
+bn = fbm(BH, BH); bp = np.ones((BH, BH, 4)); bp[..., 0] = 0.46*(0.6+0.7*bn); bp[..., 1] = 0.40*(0.6+0.7*bn); bp[..., 2] = 0.33*(0.6+0.7*bn)
 bimg.pixels = (bp ** [2.2, 2.2, 2.2, 1]).ravel()
 # abdomen bands as vertex darkening baked into a second tone: split abdomen faces into the dark/light slots
 M_BODY = mat("body", image=bimg, rough=0.95); M_BAND = mat("body_band", color=(0.035, 0.03, 0.025), rough=0.95)
