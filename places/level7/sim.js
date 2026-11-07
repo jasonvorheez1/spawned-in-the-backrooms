@@ -5,7 +5,26 @@
 // Channel buoys bob in the swells, and Entity 20 ("The Thing on Level 7") cruises submerged in the bay.
 
 export const cadence = "2s";
-const V = 4;
+
+// Tripo models for the props (Savi, Nov 7): each fits a layout box; breakables take tag + { mat, hp, maxHp } (lib/breakables.js)
+const GLB = {"armchair": "/cdn/value.324d9a05c6aca4bc72f791c510f751bee89cfbbc0e2104e59ad075531e70a750.glb", "bookcase": "/cdn/value.4c489f1bef268c9b458d866e6deeb7a9d89cea5d90a70dace67a12c48e8bcf05.glb", "boulder": "/cdn/value.42d919dcb3a5731dd59103721bf944cc852d5f72e23cbb63b6c5050708d6593c.glb", "buoy": "/cdn/value.d5523049085d74c40e3d4beced2fa139b38ef940839ffff99aae7f482aeff80c.glb", "crate": "/cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb", "rowboat": "/cdn/value.a8149ca591b3615ade17735a3a0a1e972028c35be8f1351899565924f9d32a16.glb", "table": "/cdn/value.ae333c2667c26f3447936196f710a35594496dcf39c35d76b8c06a720189174d.glb"};
+const fit = (w, h, d) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
+const brk = (mat, hp) => ({ mat, hp, maxHp: hp });
+// every breakable here, by id: laid with the level, re-laid 15 min after it is smashed (nobody within 8 m)
+export function breakables(FY, PY) {
+  const R = {
+    "l7-crate": { tags: ["container", "breakable"], feetPosition: { x: -2.1, y: FY, z: -1.8 }, rotation: { yaw: 12 }, model: GLB.crate, layout: fit(0.8, 0.8, 0.8), physics: { body: "static", collider: "box" }, state: { name: "Waterlogged M.E.G. crate", items: "almond,ration,rope,battery", ...brk("wood", 45) } },
+    "l7-pier-crate": { tags: ["container", "breakable"], feetPosition: { x: -0.9, y: PY + 0.04, z: -32.5 }, rotation: { yaw: -20 }, model: GLB.crate, layout: fit(0.6, 0.6, 0.6), physics: { body: "static", collider: "box" }, state: { name: "Salt-crusted maritime locker", items: "almond,battery,bandage", ...brk("wood", 35) } },
+    "l7-bookcase": { tags: ["breakable"], feetPosition: { x: -2.72, y: FY, z: 0.3 }, rotation: { yaw: 90 }, model: GLB.bookcase, layout: fit(1.5, 2.3, 1.5), physics: { body: "static", collider: "box" }, state: brk("wood", 90) },
+    "l7-armchair": { tags: ["breakable"], feetPosition: { x: 1.7, y: FY, z: 0.2 }, rotation: { yaw: -115 }, model: GLB.armchair, layout: fit(0.95, 0.95, 0.95), physics: { body: "static", collider: "box" }, state: brk("wood", 50) },
+    "l7-table": { tags: ["breakable"], feetPosition: { x: 0.5, y: FY, z: -0.6 }, rotation: { yaw: 8 }, model: GLB.table, layout: fit(1.15, 0.5, 1.15), physics: { body: "static", collider: "box" }, state: brk("wood", 40) },
+  };
+  [[-9, -6, 1.3, 1], [-12, 4, 1.8, 2], [8, -7, 1.1, 3], [13, 2, 2.2, 4], [-6, 12, 1.5, 5], [10, 11, 1.2, 6], [-17, -3, 2.6, 7], [17, -9, 2, 8], [3, -11, 0.8, 9], [-4, -9, 0.7, 10]].forEach(([x, z, sc, seed], i) => {
+    R[`l7-boulder-${i}`] = { tags: ["breakable"], feetPosition: { x, z, y: { terrain: -0.15 * sc } }, rotation: { yaw: seed * 47 }, model: GLB.boulder, layout: fit(1.9 * sc, 1.9 * sc, 1.9 * sc), physics: { body: "static", collider: "auto" }, state: brk("concrete", Math.round(140 * sc)) };
+  });
+  return R;
+}
+const V = 5;
 const GONE = ["l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
 const CONCRETE = {
@@ -104,10 +123,6 @@ function lay(ctx) {
   });
 
   // Flooded room props
-  box(ctx, "l7-crate", -2.1, FY, -1.8, 0.85, 0.65, 0.65, WOOD, {
-    tags: ["container"],
-    state: { name: "Waterlogged M.E.G. crate", items: "almond,ration,rope,battery" },
-  });
   ctx.spawn("l7-tally", {
     feetPosition: { x: 2.88, y: FY + 1.4, z: 0.6 },
     rotation: { yaw: -90 },
@@ -192,16 +207,12 @@ function lay(ctx) {
 
   // Weathered Clinker Wooden Rowboat moored alongside the pier
   ctx.spawn("l7-rowboat", {
-    feetPosition: { x: 2.5, y: -0.15, z: -31 },
+    feetPosition: { x: 2.5, y: -0.4, z: -31 },
     rotation: { yaw: 14, roll: 3 },
-    primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "rowboat" } },
+    model: GLB.rowboat, layout: fit(3.8, 1.2, 3.8),
   });
 
   // Pierhead M.E.G. supply cache
-  box(ctx, "l7-pier-crate", -0.9, PY + 0.04, -32.5, 0.7, 0.5, 0.5, WOOD, {
-    tags: ["container"],
-    state: { name: "Salt-crusted maritime locker", items: "almond,battery,bandage" },
-  });
 
   // =========================================================================
   // 4. NAVIGATIONAL CHANNEL WARNING BUOYS (Bobbing out in the bay)
@@ -213,12 +224,12 @@ function lay(ctx) {
   ];
   buoys.forEach((b) => {
     ctx.spawn(b.id, {
-      feetPosition: { x: b.x, y: -0.15, z: b.z },
-      primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "buoy" } },
+      feetPosition: { x: b.x, y: -0.7, z: b.z },
+      model: GLB.buoy, layout: fit(4.2, 4.2, 4.2),
       children: [
         {
           id: `${b.id}-light`,
-          feetPosition: { x: 0, y: 2.3, z: 0 },
+          feetPosition: { x: 0, y: 3.9, z: 0 },
           light: { kind: "point", color: "oklch(0.85 0.22 45)", intensity: 2.8, distance: 18 },
         },
       ],
@@ -256,10 +267,7 @@ function lay(ctx) {
   // =========================================================================
   // 7. THE ROOM AS THE WIKI KNOWS IT: bookcase left, coffee table, one chair, one fluorescent lamp
   // =========================================================================
-  const P5 = (kind) => ({ kind: "scripted", script: "scripts/level5-props-geo.js", params: { kind } });
-  ctx.spawn("l7-bookcase", { feetPosition: { x: -2.66, y: FY, z: 0.3 }, rotation: { yaw: -90 }, scale: 0.8, physics: "static", primitive: P5("bookshelf") });
-  ctx.spawn("l7-armchair", { feetPosition: { x: 1.7, y: FY, z: 0.2 }, rotation: { yaw: -115 }, scale: 0.8, physics: "static", primitive: P5("armchair") });
-  ctx.spawn("l7-table", { feetPosition: { x: 0.5, y: FY, z: -0.6 }, rotation: { yaw: 8 }, physics: "static", primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "table" } } });
+  for (const [id, spec] of Object.entries(breakables(FY, PY))) ctx.spawn(id, spec);
   ctx.spawn("l7-troffer", { feetPosition: { x: 0, y: FY + 2.6, z: 0 }, primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "troffer" } },
     children: [{ feetPosition: { x: 0, y: -0.15, z: 0 }, light: { kind: "point", color: "oklch(0.93 0.06 95)", intensity: 4.5, distance: 11 } }],
     audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-single-fluorescent-tube-buzzing-hum-loop.mp3", loop: true, gain: 0.12, spatial: true, maxDistance: 9 } });
@@ -320,6 +328,17 @@ export function tick(ctx) {
 
   const now = ctx.now();
 
+  // smashed props grow back after 15 min, never in someone's face
+  if (now - (ctx.session.regrowAt ?? -1e9) > 5000) {
+    ctx.session.regrowAt = now; s.smashed ??= {};
+    for (const [id, spec] of Object.entries(breakables(FY, PY))) {
+      if (ctx.place.objects[id]) { if (s.smashed[id]) delete s.smashed[id]; continue; }
+      if (!s.smashed[id]) { s.smashed[id] = now; continue; }
+      const f = spec.feetPosition;
+      if (now - s.smashed[id] > 15 * 60000 && !ctx.place.players.some((p) => Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z) < 8)) { ctx.spawn(id, spec); delete s.smashed[id]; }
+    }
+  }
+
   // 1. DYNAMIC OCEAN WATER BOBBING & SWELL
   // Clinker rowboat bobs and sways with the wave period
   const boat = ctx.getObject("l7-rowboat");
@@ -327,7 +346,7 @@ export function tick(ctx) {
     const bob = Math.sin(now * 0.0016) * 0.07;
     const roll = Math.cos(now * 0.0012) * 2.8;
     const yawDrift = Math.sin(now * 0.0008) * 1.6;
-    boat.feetPosition = { x: 2.5, y: -0.15 + bob, z: -31 };
+    boat.feetPosition = { x: 2.5, y: -0.4 + bob, z: -31 };
     boat.rotation = { yaw: 14 + yawDrift, roll: 3 + roll };
   }
 
@@ -343,7 +362,7 @@ export function tick(ctx) {
       const bob = Math.sin(now * 0.002 + b.phase) * 0.09;
       const pitch = Math.sin(now * 0.0018 + b.phase) * 4.5;
       const roll = Math.cos(now * 0.0015 + b.phase) * 4.5;
-      buoy.feetPosition = { x: b.x, y: -0.15 + bob, z: b.z };
+      buoy.feetPosition = { x: b.x, y: -0.7 + bob, z: b.z };
       buoy.rotation = { pitch, roll };
     }
   });
