@@ -95,6 +95,13 @@ function layLayout(ctx) {
 }
 
 export function tick(ctx) {
+  if (ctx.place.state.liftV !== 1) { ctx.place.state.liftV = 1; // the freight lift has power again: up to Level 4
+    ctx.spawn("l3-lift", { tags: ["door"], feetPosition: { x: LIFT.x - 0.6, y: 0, z: LIFT.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 2.2 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level4#l4-lift-arrive" } });
+    ctx.spawn("l3-lift-arrive", { feetPosition: { x: LIFT.x - 3, y: 0.1, z: LIFT.z }, rotation: { yaw: 90 } });
+    ctx.spawn({ feetPosition: { x: LIFT.x - 0.54, y: 1.4, z: LIFT.z }, primitive: { kind: "box", width: 0.02, height: 0.56, depth: 1.2 }, material: { color: "oklch(0.62 0.14 85)" },
+      ui: '<div face="left" width="1.2m" style="font-size:120px;font-weight:900;color:#1a1410;text-align:center;line-height:1.1">LIFT 4<div style="font-size:70px">▲ abandoned office</div></div>' });
+    ctx.spawn({ feetPosition: { x: LIFT.x - 1.2, y: 2.6, z: LIFT.z }, light: { kind: "point", color: "oklch(0.85 0.1 85)", intensity: 3, distance: 6 } });
+  }
   const s = ctx.place.state, now = ctx.now();
   // a blackout (scripts/horde.js) on anyone here kills the level's lamps: a faint red emergency glow, and the hounds see farther in the dark
   const night = ctx.place.players.some((p) => p.state?.horde === "night");

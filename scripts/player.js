@@ -17,8 +17,9 @@ import L1 from './lib/data/level1.yml'
 import { zoneAt as zoneAt2 } from './lib/level2.js'
 import L2 from './lib/data/level2.yml'
 import { zoneAt as zoneAt3 } from './lib/level3.js'
+import { zoneAt as zoneAt4, DRAIN4 } from './lib/level4.js'
 import L3 from './lib/data/level3.yml'
-const zoneHere = (ctx, x, z) => ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : zoneAt(x, z)
+const zoneHere = (ctx, x, z) => ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : ctx.self.place === 'level4' ? 'l4_' + zoneAt4(x, z, ctx.self.state.home) : zoneAt(x, z)
 
 import SOUNDS from './lib/data/sounds.yml'
 import { useCompass, COMPASS } from './lib/compass.js'
@@ -610,7 +611,7 @@ function tickStats(ctx, t, moving) {
   const det = s.crouch ? detection(ctx, p, w) : null
   if ((s.detect ?? null) !== det) s.detect = det
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
-  let drain = (ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : (ctx.self.place === 'level3' || ctx.self.place === 'gamma') ? L3.sanityDrain[zone.slice(3)] : L.sanityDrain[zone]) ?? 0.12
+  let drain = (ctx.self.place === 'level4' ? DRAIN4[zone.slice(3)] : ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : (ctx.self.place === 'level3' || ctx.self.place === 'gamma') ? L3.sanityDrain[zone.slice(3)] : L.sanityDrain[zone]) ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4
   s.sanity -= drain * (drain > 0 ? derived(s).drain : 1) * t
   if (w.ledge) s.sanity += L.ledgeRest.sanity * t
@@ -620,7 +621,7 @@ function tickStats(ctx, t, moving) {
   if (s.sanity > ms) s.sanity = ms
   if (s.sanity < 0) s.sanity = 0
   if (s.sanity <= 0) s.hp -= L.insanityHurt * t
-  if (zone === 'hub') { s.hp = Math.min(mh, s.hp + 3 * t); w.battery = Math.min(L.battery, w.battery + 15 * t) }
+  if (zone === 'hub' || zone === 'l4_home') { s.hp = Math.min(mh, s.hp + 3 * t); w.battery = Math.min(L.battery, w.battery + 15 * t) }
   if (s.hp > mh) s.hp = mh
 
   // Rare, subtle auditory hallucination only under deep psychological decay
