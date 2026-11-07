@@ -1,0 +1,146 @@
+# spawn-scene v2 yaml x0z0
+object/x5263d12a9cbb9719/0:
+  feetPosition: {x: 0, y: 7.55, z: 37}
+  id: object/x5263d12a9cbb9719/0
+  light: {color: oklch(0.95 0.03 95), distance: 16, intensity: 5, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/1:
+  feetPosition: {x: 0, y: 7.55, z: 29}
+  id: object/x5263d12a9cbb9719/1
+  light: {color: oklch(0.95 0.03 95), distance: 16, intensity: 5, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/10:
+  feetPosition: {x: 18.5, y: 4.05, z: 12}
+  id: object/x5263d12a9cbb9719/10
+  light: {color: oklch(0.9 0.08 75), distance: 12, intensity: 4, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/11:
+  feetPosition: {x: -26, y: 4.05, z: 10}
+  id: object/x5263d12a9cbb9719/11
+  light: {color: oklch(0.85 0.12 65), distance: 12, intensity: 4, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/12:
+  feetPosition: {x: -26, y: 4.05, z: -4}
+  id: object/x5263d12a9cbb9719/12
+  light: {color: oklch(0.85 0.12 65), distance: 12, intensity: 4, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/13:
+  feetPosition: {x: 26, y: 3.0500000000000003, z: 8}
+  id: object/x5263d12a9cbb9719/13
+  light: {color: oklch(0.8 0.1 330), distance: 10, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/14:
+  feetPosition: {x: 26, y: 3.0500000000000003, z: 15}
+  id: object/x5263d12a9cbb9719/14
+  light: {color: oklch(0.85 0.08 60), distance: 10, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/15:
+  feetPosition: {x: 15, y: 3.25, z: 22}
+  id: object/x5263d12a9cbb9719/15
+  light: {color: oklch(0.97 0.02 90), distance: 12, intensity: 5, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/16:
+  feetPosition: {x: 15, y: 3.25, z: 28}
+  id: object/x5263d12a9cbb9719/16
+  light: {color: oklch(0.97 0.02 90), distance: 12, intensity: 5, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/17:
+  feetPosition: {x: -26, y: 2.45, z: 24}
+  id: object/x5263d12a9cbb9719/17
+  light: {color: oklch(0.8 0.13 65), distance: 8, intensity: 2.2, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/18:
+  feetPosition: {x: -26, y: -1.15, z: 33}
+  id: object/x5263d12a9cbb9719/18
+  light: {color: oklch(0.7 0.14 50), distance: 7, intensity: 1.6, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/19:
+  feetPosition: {x: -5.6, y: 4.449999999999999, z: -18}
+  id: object/x5263d12a9cbb9719/19
+  light: {color: oklch(0.85 0.1 75), distance: 22, intensity: 10, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/2:
+  feetPosition: {x: 0, y: 7.55, z: 21}
+  id: object/x5263d12a9cbb9719/2
+  light: {color: oklch(0.95 0.03 95), distance: 16, intensity: 5, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/20:
+  feetPosition: {x: 5.6, y: 4.449999999999999, z: -26}
+  id: object/x5263d12a9cbb9719/20
+  light: {color: oklch(0.85 0.1 75), distance: 22, intensity: 10, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/21:
+  feetPosition: {x: -5.6, y: 4.449999999999999, z: -34}
+  id: object/x5263d12a9cbb9719/21
+  light: {color: oklch(0.85 0.1 75), distance: 22, intensity: 10, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/22:
+  feetPosition: {x: 5.6, y: 4.449999999999999, z: -18}
+  id: object/x5263d12a9cbb9719/22
+  light: {color: oklch(0.85 0.1 75), distance: 22, intensity: 10, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/23:
+  feetPosition: {x: -5.6, y: 4.449999999999999, z: -26}
+  id: object/x5263d12a9cbb9719/23
+  light: {color: oklch(0.85 0.1 75), distance: 22, intensity: 10, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/24:
+  feetPosition: {x: 5.6, y: 4.449999999999999, z: -34}
+  id: object/x5263d12a9cbb9719/24
+  light: {color: oklch(0.85 0.1 75), distance: 22, intensity: 10, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/25:
+  feetPosition: {x: 0, y: 9.85, z: -26}
+  id: object/x5263d12a9cbb9719/25
+  light: {color: oklch(0.88 0.06 80), distance: 30, intensity: 8, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/26:
+  feetPosition: {x: 23.5, y: 4.449999999999999, z: -30}
+  id: object/x5263d12a9cbb9719/26
+  light: {color: oklch(0.6 0.22 25), distance: 16, intensity: 5, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/27:
+  feetPosition: {x: -24, y: 2.25, z: -26}
+  id: object/x5263d12a9cbb9719/27
+  light: {color: oklch(0.85 0.03 220), distance: 9, intensity: 1.6, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/28:
+  feetPosition: {x: -24, y: 2.25, z: -34}
+  id: object/x5263d12a9cbb9719/28
+  light: {color: oklch(0.85 0.03 220), distance: 9, intensity: 1.6, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/3:
+  feetPosition: {x: -12, y: 11.299999999999999, z: 0}
+  id: object/x5263d12a9cbb9719/3
+  light: {color: oklch(0.93 0.06 80), distance: 28, intensity: 9, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/4:
+  feetPosition: {x: 12, y: 11.299999999999999, z: 0}
+  id: object/x5263d12a9cbb9719/4
+  light: {color: oklch(0.93 0.06 80), distance: 28, intensity: 9, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/5:
+  feetPosition: {x: 0, y: 11.299999999999999, z: 9}
+  id: object/x5263d12a9cbb9719/5
+  light: {color: oklch(0.93 0.06 80), distance: 28, intensity: 9, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/6:
+  feetPosition: {x: 0, y: 11.299999999999999, z: -4}
+  id: object/x5263d12a9cbb9719/6
+  light: {color: oklch(0.93 0.06 80), distance: 28, intensity: 9, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/7:
+  feetPosition: {x: -18.5, y: 4.05, z: -6}
+  id: object/x5263d12a9cbb9719/7
+  light: {color: oklch(0.9 0.08 75), distance: 12, intensity: 4, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/8:
+  feetPosition: {x: 18.5, y: 4.05, z: -6}
+  id: object/x5263d12a9cbb9719/8
+  light: {color: oklch(0.9 0.08 75), distance: 12, intensity: 4, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
+object/x5263d12a9cbb9719/9:
+  feetPosition: {x: -18.5, y: 4.05, z: 12}
+  id: object/x5263d12a9cbb9719/9
+  light: {color: oklch(0.9 0.08 75), distance: 12, intensity: 4, kind: point, shadow: {enabled: false}}
+  tags: [gamma-light]
