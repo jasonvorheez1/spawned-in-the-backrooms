@@ -25,7 +25,7 @@ export function spawnShells(ctx, c) {
 
 // Weighted pick over every found weapon; rarer ones carry a smaller weight in weapons.yml.
 export function rollWeapon(ctx) {
-  const kinds = W.order.slice(1).filter((k) => !W[k].level1), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
+  const kinds = W.order.slice(1).filter((k) => !W[k].level1 && !W[k].level2), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
   let r = ctx.random() * total;
   for (const k of kinds) { r -= W[k].weight ?? 1; if (r <= 0) return k; }
   return kinds[0];
@@ -85,4 +85,20 @@ export function spawnCrateL1(ctx, p) {
   for (let i = 0; i < n; i++) items.push(rollItemL1(ctx));
   const lk = rollLock(ctx); if (lk) for (let i = 0; i < lk.bonus; i++) items.push(rollItemL1(ctx));
   ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name: lk ? lk.name : ctx.random() < 0.25 ? "Rations crate" : "Wooden crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
+}
+// Level 2: a tool depot. More batteries and ammo, fewer rations; its own tools.
+const L2_WEIGHTS = [["almond", 14], ["ammo", 18], ["shells", 9], ["battery", 14], ["bandage", 10], ["ration", 6], ["weapon", 20], ["kit", 5], ["book", 4]];
+export function rollItemL2(ctx) {
+  const total = L2_WEIGHTS.reduce((a, [, w]) => a + w, 0);
+  let r = ctx.random() * total;
+  for (const [k, w] of L2_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL2(ctx) : k === "book" ? bookOf(ctx) : k; }
+  return "battery";
+}
+export function rollWeaponL2(ctx) { const r = ctx.random(); return r < 0.4 ? "screwdriver" : r < 0.55 ? "sledgehammer" : r < 0.75 ? "wrench" : rollWeapon(ctx); }
+export function spawnCrateL2(ctx, p) {
+  const n = 2 + Math.floor(ctx.random() * 3), items = [];
+  for (let i = 0; i < n; i++) items.push(rollItemL2(ctx));
+  const lk = rollLock(ctx); if (lk) for (let i = 0; i < lk.bonus; i++) items.push(rollItemL2(ctx));
+  const name = lk ? lk.name : ["Toolbox", "Metal crate", "Parts bin", "Wooden crate"][Math.floor(ctx.random() * 4)];
+  ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name, items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }

@@ -160,6 +160,22 @@ const builders = {
     rod(ctx, [[0, Y, -0.08], [0.004, Y, -0.04], [0, Y, 0.02]], [0.03, 0.035, 0.025], 7);
     ctx.color(TAPE); rod(ctx, [[0, Y, 0.06], [0, Y, 0.26]], [0.016, 0.016], M);
   },
+  screwdriver(ctx, M) { // a long flathead with a chipped orange handle
+    ctx.color("oklch(0.62 0.18 45)"); ctx.roughness(0.4);
+    rod(ctx, [[0, Y, 0], [0, Y, 0.05], [0, Y, 0.11]], [0.017, 0.019, 0.015], M);
+    ctx.color(BLACK); rod(ctx, [[0, Y, 0.11], [0, Y, 0.125]], [0.012, 0.012], M);
+    ctx.albedo(STEELTEX); ctx.color(STEEL); ctx.metalness(0.9); ctx.roughness(0.3);
+    rod(ctx, [[0, Y, 0.125], [0, Y, 0.28]], [0.004, 0.004], M);
+    bar(ctx, 0, Y, 0.007, 0.0015, 0.28, 0.3, 0.001, 1);
+  },
+  sledgehammer(ctx, M) { // a hickory shaft and a heavy black head, dented
+    ctx.albedo(WOODTEX); ctx.color(WOOD); ctx.roughness(0.7);
+    rod(ctx, [[0, Y, -0.02], [0, Y, 0.4], [0, Y, 0.86]], [0.017, 0.015, 0.016], M);
+    ctx.color(TAPE); rod(ctx, [[0, Y, 0.0], [0, Y, 0.18]], [0.019, 0.019], M);
+    ctx.albedo(STEELTEX); ctx.color("oklch(0.32 0.01 250)"); ctx.metalness(0.7); ctx.roughness(0.55);
+    bar(ctx, 0, Y, 0.045, 0.045, 0.84, 0.94, 0.008);
+    rod(ctx, [[-0.13, Y, 0.89], [0.13, Y, 0.89]], [0.045, 0.045], M);
+  },
   wrench(ctx, M) { // a heavy red-handled pipe wrench, toothed jaw at the head
     ctx.albedo(STEELTEX); ctx.color("oklch(0.55 0.17 25)"); ctx.metalness(0.4); ctx.roughness(0.55);
     bar(ctx, 0, Y, 0.016, 0.011, 0, 0.42, 0.006);

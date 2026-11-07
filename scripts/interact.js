@@ -8,7 +8,7 @@ import { tokenOf, describe, itemsOf } from './lib/items.js'
 import { takeToken, maxHp, maxSan } from './player.js'
 import { derived, skillsOf, SKILLS } from './lib/stats.js'
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
-import { rollItem, rollItemL1 } from './lib/loot.js'
+import { rollItem, rollItemL1, rollItemL2 } from './lib/loot.js'
 
 const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc'] // what can be looked at and used
 const REACH = 3.0 // metres from the eye
@@ -87,7 +87,7 @@ export function openLoot(ctx, c) {
   }
   if (!c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per container
     c.state.scavved = true
-    if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : rollItem(ctx))].filter(Boolean).join(',')
+    if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : rollItem(ctx))].filter(Boolean).join(',')
   }
   s.lootOpen = c.id; s.lootName = c.state?.name ?? 'Container'; s.lootList = c.state?.items ?? ''; s.focus = null
   snd(ctx, 'container-open-rustle', 0.5)
@@ -101,6 +101,13 @@ const TIPS = [
   "the hounds hunt in the dark. keep your light off and walk, don't run.",
   "follow the pipes east. that's the way toward the utility halls.",
 ];
+const TIPS2 = [
+  "the lights here are wired in series. one dies, the whole block goes dark. violet means emergency power, move on.",
+  "most doors are locked. don't waste your shoulder on them. the green one behind us goes back up to level one.",
+  "the hounds came through here once and took everyone. stay near the camp when you hear them.",
+  "toolboxes and parts bins in the warehouses. batteries, shells, the odd sledgehammer.",
+  "the barred door at the east wall has a three on it. something heavy leans on the other side.",
+];
 const VO = (who, line) => `/cdn/voice-meg-${who}-saying-${line.replace(/[^a-z ]/gi, '').trim().toLowerCase().replace(/ +/g, '-')}.mp3`
 function speak(ctx, it, who, line) {
   note(ctx, `${it.state.name.split(' ·')[0]}: "${line}"`)
@@ -111,16 +118,17 @@ export function talk(ctx, it) {
   const s = ctx.self.state, now = ctx.now(), role = it.state?.role
   if (it.state?.angry?.[ctx.self.id]) { note(ctx, `${it.state.name.split(' ·')[0]} won't talk to you.`); return }
   it.state.talkAt = now; it.state.talkTo = ctx.self.id // they gesture while they speak
-  if (role === 'scout') { s.megTip = ((s.megTip ?? -1) + 1) % TIPS.length; speak(ctx, it, 'ale', TIPS[s.megTip]); return }
+  const v = it.state?.voice
+  if (role === 'scout') { const tips = ctx.self.place === 'level2' ? TIPS2 : TIPS; s.megTip = ((s.megTip ?? -1) + 1) % tips.length; speak(ctx, it, v ?? 'ale', tips[s.megTip]); return }
   if (role === 'medic') {
-    if (now - (s.megMedAt ?? -1e9) < 90000 * (1 - skillsOf(s).medicine / 200)) { speak(ctx, it, 'ortiz', "you're patched. give it a minute and come back."); return }
+    if (now - (s.megMedAt ?? -1e9) < 90000 * (1 - skillsOf(s).medicine / 200)) { speak(ctx, it, v ?? 'ortiz', "you're patched. give it a minute and come back."); return }
     s.megMedAt = now; s.hp = maxHp(s.level ?? 1, s); s.sanity = Math.max(s.sanity ?? 0, maxSan(s.level ?? 1, s))
-    speak(ctx, it, 'ortiz', "hold still. there. you're good to walk."); snd(ctx, 'bandage-wrap-cloth', 0.6); return
+    speak(ctx, it, v ?? 'ortiz', "hold still. there. you're good to walk."); snd(ctx, 'bandage-wrap-cloth', 0.6); return
   }
   if (role === 'quarter') {
-    if (now - (s.megQmAt ?? -1e9) < 180000) { speak(ctx, it, 'callum', "rations are counted. come back after the next patrol."); return }
+    if (now - (s.megQmAt ?? -1e9) < 180000) { speak(ctx, it, v ?? 'callum', "rations are counted. come back after the next patrol."); return }
     s.megQmAt = now; takeToken(ctx, 'almond'); takeToken(ctx, 'almond'); takeToken(ctx, 'ration')
-    speak(ctx, it, 'callum', "two almond waters and a ration. don't waste them.")
+    speak(ctx, it, v ?? 'callum', "two almond waters and a ration. don't waste them.")
     const sk = skillsOf(s), extra = []
     if (sk.barter >= 40) { takeToken(ctx, 'almond'); extra.push(`[Barter 40] +1 almond water`) }
     if (sk.speech >= 50) { takeToken(ctx, 'bandage'); extra.push(`[Speech 50] +1 bandage`) }

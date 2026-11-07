@@ -11,7 +11,9 @@ import { weaponBody } from './lib/weapon-look.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
 import { zoneAt as zoneAt1 } from './lib/level1.js'
 import L1 from './lib/data/level1.yml'
-const zoneHere = (ctx, x, z) => ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : zoneAt(x, z)
+import { zoneAt as zoneAt2 } from './lib/level2.js'
+import L2 from './lib/data/level2.yml'
+const zoneHere = (ctx, x, z) => ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : zoneAt(x, z)
 
 import SOUNDS from './lib/data/sounds.yml'
 const sndTurn = {}
@@ -367,7 +369,7 @@ function toggleLight(ctx) {
 
 // First person: the local player's own arm and held weapon, riding the camera. Only this machine sees it.
 const HOLD = { // how each weapon sits in the fist: offset of its grip from its own origin (m along its length)
-  fists: null, table_leg: 0.16, pipe_scrap: 0.1, crowbar: 0.12, bat: 0.12, hatchet: 0.1, fire_axe: 0.18, pistol: 0.04, shotgun: 0.14,
+  fists: null, table_leg: 0.16, pipe_scrap: 0.1, crowbar: 0.12, bat: 0.12, hatchet: 0.1, fire_axe: 0.18, pistol: 0.04, shotgun: 0.14, rebar: 0.14, wrench: 0.1, screwdriver: 0.05, sledgehammer: 0.12,
 }
 const Q_MELEE = { x: -0.5, y: 0.5, z: 0.5, w: 0.5 } // its length up, its blade forward
 const Q_GUN = { x: -0.7071, y: 0, z: 0, w: 0.7071 } // seen in play: this lays the mesh's +Z barrel forward in the fist
@@ -463,7 +465,7 @@ function tickStats(ctx, t, moving) {
   const zone = zoneHere(ctx, p.x, p.z)
   if (zone !== s.zone) s.zone = zone
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
-  let drain = L.sanityDrain[zone] ?? 0.12
+  let drain = (ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : L.sanityDrain[zone]) ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red')) drain *= 0.4
   s.sanity -= drain * (drain > 0 ? derived(s).drain : 1) * t
   if (w.ledge) s.sanity += L.ledgeRest.sanity * t
@@ -487,7 +489,7 @@ function tickStats(ctx, t, moving) {
   }
 
   // the lights' hum spikes: a loud surge that eats sanity while you stand in it; keep moving
-  if (zone !== 'hub' && ctx.self.place !== 'level1') {
+  if (zone !== 'hub' && ctx.self.place === 'main') {
     const [a, b] = L.humSpikeEvery
     w.nextSpike ??= now + (a + ctx.random() * (b - a)) * 1000
     if (now >= w.nextSpike && !w.spikeUntil) {
@@ -512,7 +514,7 @@ function tickStats(ctx, t, moving) {
     }
   }
   // a dark figure at the far end of the hall you face: only you see it, and it is gone in a breath
-  if (zone !== 'hub' && ctx.self.place !== 'level1') {
+  if (zone !== 'hub' && ctx.self.place === 'main') {
     const [e, f] = L.figureEvery
     w.nextFigure ??= now + (e + ctx.random() * (f - e)) * 1000
     if (now >= w.nextFigure) {

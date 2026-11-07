@@ -3,7 +3,7 @@ import MEG from "../../scripts/lib/data/meg.yml";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 // Level 1's referee: lays the lamps, crates, supplies and thresholds once, then runs the Flickering.
 import L from "../../scripts/lib/data/level1.yml";
-import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ARRIVE, hash, S, HALF, hasPillar } from "../../scripts/lib/level1.js";
+import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ONWARD, ARRIVE, hash, S, HALF, hasPillar } from "../../scripts/lib/level1.js";
 import { spawnAlmond, spawnCrateL1 } from "../../scripts/lib/loot.js";
 export const cadence = "250ms";
 const LAMP_ON = 9;
@@ -65,6 +65,12 @@ export function tick(ctx) {
     ctx.spawn("l1-back", { feetPosition: { x: BACK.x + 0.5, y: 0, z: BACK.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2.4, depth: 2.2 }, visible: false, behavior: "scripts/level-door.js", state: { to: "main" } });
     ctx.spawn({ feetPosition: { x: BACK.x + 0.4, y: 0, z: BACK.z }, light: { kind: "point", color: "oklch(0.85 0.12 92)", intensity: 3, distance: 6 } });
     s.nextFlicker = now + 60000;
+  }
+  if (!s.l2door) { s.l2door = true; // the pipeworks: a green door in the east wall, down into Level 2
+    ctx.spawn("l1-onward", { feetPosition: { x: ONWARD.x - 0.3, y: 0, z: ONWARD.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2.4, depth: 1.6 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level2" } });
+    ctx.spawn("l1-onward-door", { feetPosition: { x: ONWARD.x + 0.45, y: 0, z: ONWARD.z }, physics: "static", primitive: { kind: "box", width: 0.12, height: 2.25, depth: 1.25 }, material: { color: "oklch(0.5 0.11 150)", metalness: 0.4, roughness: 0.6 },
+      ui: '<div face="left" width="1.1m" style="font-size:150px;font-weight:900;color:#e8f0d0;text-align:center;letter-spacing:8px">LEVEL 2</div>' });
+    ctx.spawn({ feetPosition: { x: ONWARD.x - 0.6, y: 2.6, z: ONWARD.z }, light: { kind: "point", color: "oklch(0.8 0.12 150)", intensity: 2.5, distance: 7 } });
   }
   if (!s.megCamp) { s.megCamp = true; // the M.E.G. waypoint: the camp, its fire, its lamps, and three agents
     if (ctx.place.objects["meg-cloth"]) ctx.destroy("meg-cloth");
