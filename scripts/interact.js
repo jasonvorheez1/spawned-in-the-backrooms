@@ -6,6 +6,7 @@ import { rollItemL3 } from './lib/loot3.js'
 // scripts/loot-ui.js draws the prompt and the menu from player.state (focus, lootOpen, lootList, notice).
 import { getInputRay, raycast } from 'builtin/physics'
 import { stripTo, SLOTS } from './lib/clothes.js'
+import { rewear } from './lib/critter-model.js'
 import { tokenOf, describe, itemsOf } from './lib/items.js'
 import { takeToken, maxHp, maxSan } from './player.js'
 import { derived, skillsOf, SKILLS } from './lib/stats.js'
@@ -278,9 +279,9 @@ function lootAction(ctx, d) {
   } else return
   c.state.items = items.join(',')
   s.lootList = c.state.items
-  if (c.state.look && c.primitive?.params) { // a garment taken off a body comes off the body, now, on every screen
-    const l = stripTo(c.state.look, items), pr = c.primitive.params
-    if (SLOTS.some((k) => (pr[k] ?? 'none') !== l[k])) c.primitive = { ...c.primitive, params: { ...pr, ...Object.fromEntries(SLOTS.map((k) => [k, l[k]])) } }
+  if (c.state.look && (c.primitive?.params || c.model)) { // a garment taken off a body comes off the body, now, on every screen, scripted or mesh
+    const l = stripTo(c.state.look, items), pr = c.primitive?.params ?? c.state.wear ?? c.state.look
+    if (SLOTS.some((k) => (pr[k] ?? 'none') !== l[k])) { const next = { ...pr, ...Object.fromEntries(SLOTS.map((k) => [k, l[k]])) }; rewear(ctx, c, next); if (!c.primitive) c.state.wear = next }
   }
   if (fail) note(ctx, fail)
   if (!items.length && c.tags?.includes('rubble')) { // emptied rubble crumbles away

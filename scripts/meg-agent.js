@@ -1,5 +1,6 @@
 import { rollLoot, garmentsOf } from "./lib/loot.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
+import { toMesh, lookFromModel, rewear, HEAD_ID } from "./lib/critter-model.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
@@ -24,7 +25,14 @@ export function onSpawn(ctx) {
   if (!me.state.attr) { const r = npcState(ctx, "agent", G.hp); me.state.attr = r.attr; me.state.title = r.title; me.state.maxHp = r.hp; me.state.hp ??= r.hp; }
   me.state.hp ??= G.hp;
   me.state.home ??= { x: me.feetPosition.x, y: me.feetPosition.y, z: me.feetPosition.z };
+  dress(ctx, me);
   me.anim.idle = { clip: "Idle", loop: "loop", weight: 1 };
+}
+// every agent wears the cute Blender critter: an old scripted body swaps in place, and the look it wears is kept in state.wear (garments to loot, redress)
+function dress(ctx, me) {
+  const was = toMesh(ctx, me);
+  if (was) me.state.wear = was;
+  else if (!me.state.wear && me.model) { const l = lookFromModel(me.model, ctx.getObject(me.id + "/" + HEAD_ID)?.model?.id ?? ctx.getObject(me.id + "/" + HEAD_ID)?.model); if (l?.species) me.state.wear = l; }
 }
 
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
@@ -67,7 +75,7 @@ function shoot(ctx, me, t) {
   const muzzle = { x: o.x + dx / l * 0.5, y: o.y + 0.15, z: o.z + dz / l * 0.5 };
   ctx.emit("fx", { position: muzzle, script: FLASH });
   ctx.emit("playSound", { clip: SHOT, position: muzzle, volume: 0.9, maxDistance: 45 });
-  animate(ctx, me.id, { "bones.Spine2.pitch": [0, 7, 0], "bones.RightArm.pitch": [0, 12, 0] }, { duration: 0.2 }); // the kick
+  animate(ctx, me.id, { [me.model ? "bones.Spine02.pitch" : "bones.Spine2.pitch"]: [0, 7, 0], "bones.RightArm.pitch": [0, 12, 0] }, { duration: 0.2 }); // the kick
   if (ctx.random() > G.hitChance) return;
   const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), dmg = dmgAfterArmor(isPlayer ? t.state.look : lookOfNpc(t), Math.round((isPlayer ? G.playerShot : G.shot) * npcMul(me.state).dmg)); // the target's clothes soak it
   t.state.hp -= dmg;
@@ -150,7 +158,8 @@ export function update(ctx, dt) {
     if (s.look && m.stripped !== s.items) { // a garment taken from the remains comes off the body
       m.stripped = s.items;
       const l = stripTo(s.look, String(s.items ?? "").split(",").filter(Boolean));
-      if (me.primitive?.params && SLOTS.some((k) => (me.primitive.params[k] ?? "none") !== l[k])) me.primitive = { ...me.primitive, params: { ...me.primitive.params, ...Object.fromEntries(SLOTS.map((k) => [k, l[k]])) } };
+      const cur = me.primitive?.params ?? s.wear ?? s.look;
+      if (cur && SLOTS.some((k) => (cur[k] ?? "none") !== l[k])) { const next = { ...cur, ...Object.fromEntries(SLOTS.map((k) => [k, l[k]])) }; rewear(ctx, me, next); if (!me.primitive) s.wear = next; }
     }
     return;
   }
