@@ -361,7 +361,7 @@ export function geometry(ctx) {
   ctx.metalness(0);
 
   // ---------- Body: continuous lofted pear/chibi torso ----------
-  const HIP_R = (fem ? [0.215, 0.165] : [0.14, 0.128]).map((v) => v * SZ('hipS', 0.75, 1.3));
+  const HIP_R = (fem ? [0.198, 0.158] : [0.14, 0.128]).map((v) => v * SZ('hipS', 0.75, 1.3));
   const WAIST_R = (fem ? [0.116, 0.108] : (sp.chunky ? [0.165, 0.15] : [0.148, 0.138])).map((v) => v * SZ('waistS', 0.75, 1.35));
   const CHEST_R = fem ? [0.16, 0.15] : [0.15, 0.132];
   const torsoRadius = (t) => {
