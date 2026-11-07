@@ -13,7 +13,7 @@ const short = (it) => String(it.id).split('/').pop()
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z)
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v))
 const note = (ctx, text) => { ctx.self.state.notice = { text, at: ctx.now() } }
-const skn = (k) => SKILLS?.[k]?.name ?? (k[0].toUpperCase() + k.slice(1))
+const skn = (k) => SKILLS.find((x) => x.k === k)?.name ?? (k[0].toUpperCase() + k.slice(1))
 function live(ctx, id) { const it = id && ctx.getObject(id); return it && !it.state?.dead && (it.state?.hp ?? 1) > 0 ? it : null }
 const rapportOf = (ctx, it) => it.state?.rapport?.[keyOf(ctx.self)] ?? (it.state?.angry?.[ctx.self.id] ? -60 : 0)
 function setRapport(ctx, it, v) { it.state.rapport = { ...(it.state.rapport ?? {}), [keyOf(ctx.self)]: clamp(Math.round(v), -100, 100) } }
