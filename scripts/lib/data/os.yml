@@ -34,6 +34,10 @@ entries:
   - { id: meg, cat: Groups, title: "The M.E.G. (Major Explorer Group)", sc: "-", text: "The largest group in the Backrooms. Runs bases on many levels (Omega on Level 4, Gamma on Level 3), maintains this database and pays wanderers for reports.", weak: "" }
   - { id: bntg, cat: Groups, title: "B.N.T.G.", sc: "-", text: "The Backrooms Nonaligned Trade Group. Runs warehouses and trade, neutral toward nearly everyone.", weak: "" }
   - { id: uec, cat: Groups, title: "U.E.C.", sc: "Hostile", restricted: true, text: "The Unbound Explorers Coalition. Hostile to entities and to visitors it does not know. Do not approach their colony.", weak: "" }
+  - { id: l5, cat: Levels, title: "Level 5 · The Terror Hotel", sc: "Class 3", text: "A 1930s hotel floor that never ends: a grand lobby, guest rooms and suites, a library, a kitchen, the Beverly Room ballroom and a Boiler Room underneath. The radios all play the same polonaise. Reached by the brass lift from Level 3 or the stairs down from Level 4. Things in the drawers are real and worth searching.", weak: "The Boiler Room vents steam on a cycle: heat builds while you stand in it and burns once it peaks. Leave before the gauge fills. Guest-room doors close behind you; the Staff do not knock." }
+  - { id: samantha, cat: Entities, title: "Entity 26 · Samantha", sc: "Friendly", text: "A very small black-and-white cat with green eyes and serrated teeth. Speaks eloquently. Keeps the Beverly Room on Level 5 and has been seen near the Level 3 lift. Offers psychic readings in exchange for meat. Her readings have so far been accurate.", weak: "Steak gets the best reading. Spam gets a polite one. Do not offer her rat. Do not touch her." }
+  - { id: deathrat, cat: Entities, title: "Death Rat", sc: "Class 3", studied: l5rat, text: "Rats the size of a dog that pour out of walls and vents in the Terror Hotel and, lately, the Level 3 maze. They hunt in small packs and go for the legs. Their meat is edible if you are desperate.", weak: "They flinch from light and break off when the pack thins. Kill the first one; the rest hesitate." }
+  - { id: staff, cat: Entities, title: "The Staff (Facelings)", sc: "Class 4", studied: l5staff, restricted: true, text: "Faceless figures in hotel livery who walk the corridors of Level 5 as if on shift. Usually indifferent. They do not like guests in rooms that are not theirs, and they do not like noise.", weak: "Holster your weapon and they lose interest once. Never block a doorway they are walking to." }
 # email. from, subj, body. tip: crate (a supply crate appears in a Level 4 office) | xp | key (a keycard, admin only) . where: office | omega | gamma | any
 mails:
   - { where: office, from: "Facilities", subj: "Re: the windows", body: "We have blacked out every window on the floor. Three were missed. We know which three. Please do not go near them to check.", tip: "" }
@@ -55,6 +59,8 @@ mails:
   - { where: office, from: "IT Helpdesk", subj: "Ticket #0000001 closed", body: "Issue: computer turns on by itself. Resolution: working as intended.", tip: "" }
   - { where: omega, from: "Sgt. Okafor", subj: "night watch", body: "Two more wanderers came up from the lift last night. One of them said hello from too far away. We did not let that one in. Good work, everyone.", tip: "" }
   - { where: any, from: "Backmail", subj: "Welcome", body: "Your mailbox is empty except for this message. This message was empty too.", tip: "" }
+  - { where: any, from: "Homely Hotel Management", subj: "RENTAL NOTICE: rooms available", body: "The Homely Hotel is pleased to announce vacancies on every floor. Rooms are let by the night, the week, or permanently. Meals are served in the kitchen at all hours. Guests are reminded that the thirteenth floor is closed for refurbishment. Please do not ask the Staff about it. Rent is collected.", tip: "" }
+  - { where: gamma, from: "Archivist", subj: "Terror Hotel files", body: "New pages for Level 5: the hotel, Entity 26 (the cat, yes, the talking one), the Death Rats and the Staff. The Staff page is restricted. If you meet Samantha, bring meat and be polite.", tip: "xp" }
 forum:
   - { title: "Anyone else hear the phone in 4-09?", by: "late_shift", replies: ["yes. do not answer it twice", "I answered it once. nothing happened. that is the worst part", "it knew my name"] }
   - { title: "Best way to carry almond water", by: "carry_weight_gang", replies: ["bag, obviously", "Hardiness 8 and no regrets", "I got the Hardiness. I regret it now, I never rest"] }
@@ -67,6 +73,8 @@ forum:
   - { title: "what is Back OS actually", by: "curious_temp", replies: ["it is an operating system", "who installs it", "nobody. it is on every hard drive you find", "i formatted one. it booted Back OS anyway", "thread locked by: (no moderator)"] }
   - { title: "the clock says 15:40", by: "timekeeper", replies: ["every machine says 15:40", "mine said 15:41 once", "what happened", "i would rather not say"] }
   - { title: "TBD will trade for your weirdest stuff", by: "quill", replies: ["they gave me two almond waters for a single left shoe", "they asked if i had a spoon that was not a spoon", "i did"] }
+  - { title: "[Level 5] the hotel has a floor 13", by: "bellhop_no_more", replies: ["the lift skips it", "the stairs do not", "I walked up to 13. the corridor was the same corridor. the room numbers were all 1313", "there is no stairway up from Level 5", "there was when I took it", "thread moved to: (no forum)"] }
+  - { title: "a cat read my fortune for a steak", by: "meat_courier", replies: ["Samantha. she was right about the drawer, right?", "she told me where the rats were before I heard them", "she seemed disappointed by my spam", "she is always disappointed by spam"] }
 files:
   - { where: any, name: "readme.txt", text: "Back OS(tm). BACKDRIVE. Files here belong to whoever sat here last. They have not come back to claim them." }
   - { where: office, name: "todo.txt", text: "- water the plant (dead)\n- ask facilities about the windows\n- do not look at the windows\n- finish report on the stairwell" }
@@ -74,7 +82,8 @@ files:
   - { where: office, name: "phone_log.txt", text: "09:12  ring. answered. breathing.\n09:40  ring. answered. my own voice, saying 09:40.\n15:40  ring.\n15:40  ring.\n15:40  ring." }
   - { where: office, name: "quarterly_report_v9.doc", text: "Q3 SUMMARY\nRevenue: n/a\nHeadcount: decreasing\nOffice count: increasing\nRecommendation: do not count the offices" }
   - { where: omega, name: "safe.txt", text: "The spare keycard opens a fused door on Level 2. The fuse you will have to find yourself." }
-  - { where: gamma, name: "database_stats.txt", text: "Entries: levels 0-4, six entities, three objects, four groups. Reading the entity pages gives you an edge. Reading them twice does not." }
+  - { where: gamma, name: "database_stats.txt", text: "Entries: levels 0-5, nine entities, three objects, four groups. Reading the entity pages gives you an edge. Reading them twice does not." }
+  - { where: any, name: "homely_hotel_notice.txt", text: "HOMELY HOTEL · RENTAL NOTICE\nVacancies: all floors.\nTerms: nightly / weekly / permanent.\nThe 13th floor is closed. It has always been closed.\nGuests must not prop doors open. Guests must not leave.\n- Management" }
 
 # System Properties (the About page): what this machine says about itself. Written in-world, by whoever had it last.
 about:
