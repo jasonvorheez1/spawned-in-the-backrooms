@@ -42,7 +42,7 @@ function dress(ctx, me) {
   }
   const sc = me.scale, plain = !sc || (typeof sc === "number" ? sc === 1 : sc.x === 1 && sc.y === 1);
   if (!me.state.build && plain) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = b; me.scale = { x: b.w, y: b.h, z: b.w }; } // its own height and build
-  if (plain && me.model && (me.state.wear?.sex ?? me.state.look?.sex) === 'f' && me.morph?.Bust == null) { const b = me.state.build?.bust != null ? me.state.build : buildFor(String(me.id).split("/").pop(), 'f'); me.morph = { ...(me.morph ?? {}), Bust: b.bust }; } // her own bust
+  if (me.model && (me.state.wear?.sex ?? me.state.look?.sex) === 'f' && me.morph?.Bust == null) { const b = me.state.build?.bust != null ? me.state.build : buildFor(String(me.id).split("/").pop(), 'f'); me.morph = { ...(me.morph ?? {}), Bust: b.bust }; } // her own bust
 }
 
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
