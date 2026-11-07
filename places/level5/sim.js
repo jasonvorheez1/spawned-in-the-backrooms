@@ -328,7 +328,16 @@ export function lay(ctx) {
   }
 }
 
+// lamps and loose ballroom props join the hotel's breakables (the halls' furniture already is): Z lifts them, swings break them
+function breakablesOnce(ctx) {
+  const s = ctx.place.state; if (s.brk5 === 2) return; s.brk5 = 2;
+  for (const [tag, mat] of [["l5-fix-lamp", "fixture"], ["l5-ball", "wood"]]) for (const r of ctx.query({ tags: [tag], radius: 1e4, center: { x: 0, y: 0, z: 0 } })) {
+    const o = ctx.getObject(r.id); if (!o || o.tags.includes("breakable") || o.tags.includes("l5-chandelier") || o.tags.includes("usable") || o.parent) continue;
+    o.tags = [...o.tags, "breakable", "furniture"]; o.state.mat = mat; o.state.hp = mat === "fixture" ? 25 : 60; o.state.maxHp = o.state.hp;
+  }
+}
 export function tick(ctx) {
+  breakablesOnce(ctx);
   const s = ctx.place.state;
   if (s.builtV !== V) {
     s.builtV = V;
