@@ -35,6 +35,7 @@ function link(cx, cz, d) { const [dx, dz, a, b] = DIRS[d], nx = cx + dx, nz = cz
     const w = 2 + Math.floor(rnd() * 2), d = 2 + Math.floor(rnd() * 2), x0 = 4 + Math.floor(rnd() * (N - 5 - w)), z0 = 1 + Math.floor(rnd() * (N - 2 - d));
     for (let x = x0; x < x0 + w; x++) for (let z = z0; z < z0 + d; z++) { room[z * N + x] = r; if (x < x0 + w - 1) link(x, z, 0); if (z < z0 + d - 1) link(x, z, 1); }
   }
+  for (let x = L.hall.x0; x < L.hall.x0 + L.hall.w; x++) for (let z = L.hall.z0; z < L.hall.z0 + L.hall.d; z++) { room[z * N + x] = -1; if (x < L.hall.x0 + L.hall.w - 1) link(x, z, 0); if (z < L.hall.z0 + L.hall.d - 1) link(x, z, 1); }
   for (let cx = 0; cx <= 2; cx++) for (let cz = ARRIVE.cz - 1; cz <= ARRIVE.cz + 1; cz++) { if (cx < 2) link(cx, cz, 0); if (cz < ARRIVE.cz + 1) link(cx, cz, 1); }
 })();
 export const isOpen = (cx, cz, d) => cx >= 0 && cz >= 0 && cx < N && cz < N && !!(open[cz * N + cx] & DIRS[d][2]);
@@ -44,6 +45,9 @@ export const darkSector = (cx, cz) => !inCamp(cx, cz) && hash(Math.floor(cx / 4)
 export function zoneOf(cx, cz) {
   if (cx < 0 || cz < 0 || cx >= N || cz >= N) return "void";
   if (inCamp(cx, cz)) return "camp";
+  if (inHall(cx, cz)) return "hall";
+  if (sideOf(cx, cz)) return "side";
+  if (inPipes(cx, cz)) return "pipes";
   if (darkSector(cx, cz)) return "dark";
   if (roomOf(cx, cz) >= 0) return "room";
   return "tunnel";
@@ -52,4 +56,33 @@ export const zoneAt = (x, z) => { const { cx, cz } = cellAt(x, z); return zoneOf
 // the ways out: the door home in the camp's west wall, the sealed stencilled door at the far east wall
 export const BACK = { x: -HALF, z: cellCenter(0, ARRIVE.cz).z };
 export const SEALED = { x: HALF, z: cellCenter(N - 1, 6).z };
-export const L2_NAMES = { l2_tunnel: "Utility Tunnels", l2_room: "Packing Warehouse", l2_dark: "Dead Circuit", l2_camp: "Survivors' Camp", l2_void: "Utility Tunnels" };
+export const L2_NAMES = { l2_tunnel: "Utility Tunnels", l2_room: "Packing Warehouse", l2_dark: "Dead Circuit", l2_camp: "Survivors' Camp", l2_side: "Side Room", l2_hall: "Boiler Hall", l2_pipes: "Pipe Maze", l2_void: "Utility Tunnels" };
+
+// ---- the revamp: the boiler hall, the pipe maze, flickering sectors and the side rooms behind doors
+const HL = L.hall, PZ = L.pipes;
+export const HALL_H = HL.height, CATWALK = HL.catwalk;
+export const inHall = (cx, cz) => cx >= HL.x0 && cx < HL.x0 + HL.w && cz >= HL.z0 && cz < HL.z0 + HL.d;
+export const inPipes = (cx, cz) => cx >= PZ.x0 && cx < PZ.x0 + PZ.w && cz >= PZ.z0 && cz < PZ.z0 + PZ.d;
+export const HALL = { x0: HL.x0 * S - HALF, x1: (HL.x0 + HL.w) * S - HALF, z0: HL.z0 * S - HALF, z1: (HL.z0 + HL.d) * S - HALF };
+export const flickerSector = (cx, cz) => inPipes(cx, cz) || hash(Math.floor(cx / 4), Math.floor(cz / 4), 91) < L.flickerShare;
+// SIDE: [{ cx, cz, o (the way out: 0 +x, 1 +z, 2 -x, 3 -z), type, lock, i }]; the door stands in the o edge
+export const SIDE = (() => {
+  const out = [], picks = [];
+  for (let cz = 0; cz < N; cz++) for (let cx = 3; cx < N; cx++) {
+    const o = openings(cx, cz); if (o.length !== 1 || inCamp(cx, cz) || inHall(cx, cz) || inPipes(cx, cz) || roomOf(cx, cz) >= 0) continue;
+    const [dx, dz] = DIRS[o[0]]; if (inHall(cx + dx, cz + dz)) continue;
+    picks.push({ cx, cz, o: o[0], r: hash(cx, cz, 4242) });
+  }
+  picks.sort((a, b) => a.r - b.r);
+  for (const p of picks) {
+    if (out.length >= L.sideRooms) break;
+    if (out.some((q) => Math.max(Math.abs(q.cx - p.cx), Math.abs(q.cz - p.cz)) < 3)) continue;
+    const type = L.sideOrder[out.length % L.sideOrder.length], T = L.types[type], i = out.length;
+    let lock = T.lock ?? "";
+    if (!lock && hash(p.cx, p.cz, 4243) < L.skillLockShare) lock = "lockpick:" + (hash(p.cx, p.cz, 4244) < 0.6 ? 25 : 50);
+    out.push({ cx: p.cx, cz: p.cz, o: p.o, type, lock, i });
+  }
+  return out;
+})();
+const sideIdx = new Int16Array(N * N).fill(-1); for (const r of SIDE) sideIdx[r.cz * N + r.cx] = r.i;
+export const sideOf = (cx, cz) => (cx < 0 || cz < 0 || cx >= N || cz >= N ? null : SIDE[sideIdx[cz * N + cx]] ?? null);
