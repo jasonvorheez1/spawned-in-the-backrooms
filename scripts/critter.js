@@ -10,6 +10,7 @@ const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb
 import { weaponBody, HOLD } from './lib/weapon-look.js'
 import { baseOf } from './lib/weapons.js'
 import { stance } from './lib/body3.js'
+const MENU_CLOTH = ['topw', 'botw', 'shoes', 'hat', 'eyew', 'neck', 'top', 'bottom', 'shoec', 'hatc', 'neckc', 'topp', 'botp', 'shoep', 'hatp', 'neckp']
 const WARDROBE_OFF = true // Shelly, Nov 7: character creator off for now; false brings it back
 export const updateSchedule = { every: { seconds: 0.1 } } // 10 Hz: the hands follow the aim (scripts/lib/body3.js)
 
@@ -107,7 +108,13 @@ export function onInput(ctx, input) {
   if (input.pressed?.dress && d && typeof d.k === 'string') {
     if (d.k === 'close') { st.wardrobeOpen = false; if (st.wrMenu) { st.wrMenu = false; st.menuOpen = true } return }
     if (d.k === 'face') { st.face = { expr: d.v, until: ctx.now() + C.holdFace * 1000 }; return }
-    if (d.k === 'tab') { if (['body', 'face', 'clothes', 'outfits'].includes(d.v)) st.wrTab = d.v; return }
+    if (d.k === 'tab') { if ((st.wrMenu ? ['body', 'face'] : ['body', 'face', 'clothes', 'outfits']).includes(d.v)) st.wrTab = d.v; return }
+    if (st.wrMenu) { // the menu's creator shapes the critter alone: clothes are loot, never picked here (Shelly)
+      const keep = (l) => { const o = {}; for (const k of MENU_CLOTH) if (k in l) o[k] = l[k]; return o }
+      if (d.k === 'random') { const cur = lookOf(ctx); dress(st, cur, { ...randomLook(ctx, cur, 'all'), ...keep(cur) }); st.face = null; return }
+      if (d.k === 'reset') { const cur = lookOf(ctx); dress(st, cur, { ...C.default, ...keep(cur) }); st.face = null; return }
+      if (MENU_CLOTH.includes(d.k) || ['strip', 'save', 'wear'].includes(d.k)) return
+    }
     if (d.k === 'spin') { st.wrSpin = ((st.wrSpin || 0) + (Number(d.v) || 0)) % 360; return }
     if (d.k === 'random') { dress(st, lookOf(ctx), randomLook(ctx, lookOf(ctx), d.v === 'all' ? 'all' : 'clothes')); st.face = null; return }
     if (d.k === 'reset') { dress(st, lookOf(ctx), { ...C.default }); st.face = null; return }

@@ -68,7 +68,8 @@ export function wardrobe(ctx, player) {
   if (!st.wardrobeOpen) return ''
   const l = { ...C.default, ...(st.look || {}) }
   SL_LOOK = l
-  const tab = st.wrTab || 'body'
+  const tabs = st.wrMenu ? TABS.slice(0, 2) : TABS // from the main menu: body and face only, clothes come from the world
+  const tab = st.wrMenu && !['body', 'face'].includes(st.wrTab) ? 'body' : (st.wrTab || 'body')
   const grid = (k, list, names = NAMES) => `<div class="grid">${list.map((v) => tile(k, v, l[k] === v, names[v] || v)).join('')}</div>`
   const sws = (k, list) => `<div class="sws">${list.map((v) => sw(k, v, l[k] === v)).join('')}</div>`
   const slot = (title, k, colourKey) => `<div class="slot"><div class="sec" style="margin-top:2px"><span>${title}</span><span>${NAMES[l[k]] || l[k]}</span></div>${grid(k, C[k])}${colourKey && l[k] !== 'none' ? sws(colourKey, C.cloth) : ''}</div>`
@@ -104,7 +105,7 @@ export function wardrobe(ctx, player) {
   }
   return `${CSS}<div id="cc" data-modal>
   <div class="hd"><div class="ttl"><h2>CRITTER CREATOR</h2><div class="sub">${l.species} · ${NAMES[l.sex] || l.sex} · ${Math.round(170 * (Number(l.heightS) || 1))} cm · M.E.G. intake form 7-B</div></div><button class="x" onclick="${act('close')}">✕</button></div>
-  <div class="main"><div class="tabs">${TABS.map(([k, n, i]) => `<button class="${tab === k ? 'on' : ''}" onclick="${act('tab', k)}"><span class="n">${i}</span>${n}</button>`).join('')}</div>
+  <div class="main"><div class="tabs">${tabs.map(([k, n, i]) => `<button class="${tab === k ? 'on' : ''}" onclick="${act('tab', k)}"><span class="n">${i}</span>${n}</button>`).join('')}</div>
   <div class="bd">${body}</div></div>
   <div class="ft"><button onclick="${act('spin', -45)}">◀ turn</button><button onclick="${act('spin', 45)}">turn ▶</button><button onclick="${act('random', 'all')}">randomize</button><button onclick="${act('reset')}">reset</button><button class="go" onclick="${act('close')}">done</button></div>
 </div>`
