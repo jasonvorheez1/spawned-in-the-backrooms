@@ -34,7 +34,7 @@ damage: 14
 swingCooldown: 0.55
 reach: 2.8
 # the smilers
-smilers: 11
+smilers: 6  # was 11; shelly: enemies spawn too much
 smilerHp: 60
 stalkSpeed: 3.2
 chargeSpeed: 6.6   # her pick (was 4.6): faster than your walk, slower than your sprint
@@ -46,11 +46,11 @@ stareSpeed: 0.35         # her pick: a stared-down smiler creeps at this many m/
 biteDamage: 12
 biteSanity: 10
 biteCooldown: 1.2
-smilerRespawn: 45
+smilerRespawn: 150
 almonds: 90
 almondRespawn: 60
 # the lurkers: pale things that freeze while watched and rush when you look away
-lurkers: 6
+lurkers: 3  # was 6
 lurkerHp: 35
 lurkerSpeed: 6.6   # lurch speed; with the stop-motion hold it averages ~6.2 m/s
 hearSprint: 16     # her pick: m a sprinting wanderer is heard through walls
@@ -67,7 +67,7 @@ lurkerGaze: 1.5      # sanity lost per second while watching one
 lurkerBite: 12
 lurkerSanity: 8
 lurkerBiteCooldown: 1.4
-lurkerRespawn: 60
+lurkerRespawn: 180
 xpLurker: 80
 
 # noises (wiki: hum spikes, whispers, scratching behind walls). all her picks

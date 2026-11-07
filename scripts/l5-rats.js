@@ -52,7 +52,7 @@ export function update(ctx, dt) {
     const mine = all.filter((r) => r.state?.pack === pk.id);
     const live = mine.filter((r) => !r.state?.dead && (r.state?.hp ?? 1) > 0);
     // the nest refills while they're home
-    if (P.phase === "nest" && live.length < pk.size && now >= (P.refill ?? 0)) { P.refill = now + 45000; for (let i = live.length; i < pk.size; i++) ratSpawn(ctx, pk, i, pk.nest); }
+    if (P.phase === "nest" && live.length < pk.size && now >= (P.refill ?? 0)) { P.refill = now + 240000; for (let i = live.length; i < pk.size; i++) ratSpawn(ctx, pk, i, pk.nest); }
     // up a vent / back down
     if (P.phase === "nest" && now >= P.next && live.length) {
       const v = R.vents[Math.floor(ctx.random() * R.vents.length)];

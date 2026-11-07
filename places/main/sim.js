@@ -132,7 +132,7 @@ export function tick(ctx) {
     s.ammoSeeded = true;
     s.nextAmmo = now + (W.ammo.respawn * 1000) / 4;
   }
-  const smilers = ctx.query({ tags: ["smiler"] }).filter((m) => !m.state?.dead).length;
+  const smilers = ctx.query({ tags: ["smiler"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((m) => !m.state?.dead).length;
   if (smilers < L.smilers && now >= (s.nextSmiler ?? 0)) {
     const fill = s.smilersSeeded ? 1 : L.smilers - smilers;
     for (let i = 0; i < fill; i++) {
@@ -165,7 +165,7 @@ export function tick(ctx) {
     s.shellsSeeded = true;
     s.nextShells = now + (W.shells.respawn * 1000) / 4;
   }
-  const lurkers = ctx.query({ tags: ["lurker"] }).filter((m) => !m.state?.dead).length;
+  const lurkers = ctx.query({ tags: ["lurker"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((m) => !m.state?.dead).length;
   if (lurkers < L.lurkers && now >= (s.nextLurker ?? 0)) {
     const fill = s.lurkersSeeded ? 1 : L.lurkers - lurkers;
     for (let i = 0; i < fill; i++) {
