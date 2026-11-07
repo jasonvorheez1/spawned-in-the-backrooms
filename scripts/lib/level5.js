@@ -35,7 +35,6 @@ export const ZONES = [
   // the Boiler Room: hot, loud, a maze of machines (scripts/lib/l5/boiler.js lays its insides from BOILER)
   { id: "boiler", kind: "boiler", name: "The Boiler Room", x0: 18, x1: 46, z0: -26, z1: 26, h: 6, drain: 1.5, hot: true },
   // M.E.G.'s cold room, the strip of floor under the hotel wall in the boiler room's northeast, behind the painted line: a chiller keeps it cool, the hounds won't cross into it (scripts/hounds.js reads any non-boiler zone as safe)
-  { id: "coldroom", kind: "shelter", name: "M.E.G. Cold Room", x0: 39.5, x1: 46, z0: -21.3, z1: -17.3, h: 6, drain: -0.3 },
 ];
 // openings: { ax, at, a0, a1, h, kind }. ax "z" = in a wall at z = at, spanning x a0..a1; ax "x" = in a wall at x = at, spanning z a0..a1
 export const OPENINGS = [
@@ -60,8 +59,6 @@ export const OPENINGS = [
   { ax: "x", at: 18, a0: -1.1, a1: 1.1, h: 2.6, kind: "metal", placard: "BOILER ROOM · STAFF ONLY" },
   // housekeeping ↔ boiler: M.E.G. guide the way in
   { ax: "x", at: 18, a0: 17, a1: 19, h: 2.6, kind: "metal" },
-  // boiler ↔ M.E.G. cold room: the way into the shelter (it was sealed on every side)
-  { ax: "x", at: 39.5, a0: -20.4, a1: -18.2, h: 2.6, kind: "metal", placard: "M.E.G. COLD ROOM" },
 ];
 // the ways in and out (sim lays each; scripts/level-door.js crosses). to: a live place, or sealed: words for a door that won't open yet
 export const EXITS = [
