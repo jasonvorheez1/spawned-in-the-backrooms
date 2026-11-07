@@ -130,7 +130,7 @@ export function geometry(ctx) {
   const E = EXPR[P.expr] || EXPR.grin;
   const marks = P.marks || "none";
   const LOD = ctx.lod || 1, hi = LOD <= 1, mid = LOD <= 2, low = LOD >= 4;
-  const M = hi ? 18 : mid ? 12 : LOD === 3 ? 9 : 6; // ring segments for limbs
+  const M = hi ? 14 : mid ? 12 : LOD === 3 ? 9 : 6; // ring segments for limbs
 
   // ---------- emit with skin weights ----------
   const J = [], Wt = [];
@@ -513,9 +513,9 @@ export function geometry(ctx) {
     else { const gy = Math.exp(-(((y - 0.555) / 0.07) ** 2)); z += (fem ? 0.032 : 0.018) * hipS * gy * Math.min(1, Math.sin(a) * 1.3) * (1 - 0.35 * Math.exp(-((x / 0.025) ** 2))); }
     return [x, y, z];
   };
-  const TM = hi ? 30 : mid ? 18 : 10;
+  const TM = hi ? 26 : mid ? 18 : 10;
   const torsoShell = (y0, y1, off, colFn, o = {}) => {
-    const n = o.n || Math.max(3, Math.round((y1 - y0) / (hi ? 0.028 : 0.05))), R = [], C = [];
+    const n = o.n || Math.max(3, Math.round((y1 - y0) / (hi ? 0.034 : 0.05))), R = [], C = [];
     for (let i = 0; i <= n; i++) { const y = lerp(y0, y1, i / n), ring = []; for (let k = 0; k < TM; k++) { const a = o.a0 !== undefined ? lerp(o.a0, o.a1, k / (TM - 1)) : (k / TM) * TAU; ring.push(torsoPt(y, a, off + (o.offFn ? o.offFn(y, a) : 0), o.bridged)); } R.push(ring); C.push([0, y, 0]); }
     if (o.a0 !== undefined) { // open strip
       for (let i = 0; i < n; i++) for (let k = 0; k < TM - 1; k++) { const a = R[i][k], b = R[i + 1][k], c = R[i + 1][k + 1], d = R[i][k + 1]; if (colFn) colFn(i / n, k / TM, a); Q(a, b, c, d, lerp3(C[i], C[i + 1], 0.5)); }
