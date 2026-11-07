@@ -11,6 +11,7 @@ import { rollWeaponL3 } from "../../scripts/lib/loot3.js";
 import { spawnFurniture, pickKind, wallSpot3 } from "../../scripts/lib/furniture.js";
 import { npcState, dmgAfterArmor } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
+import { layLore } from "../../scripts/lib/level3-lore.js";
 export const cadence = "250ms";
 const GRIT = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]];
@@ -131,6 +132,8 @@ export function tick(ctx) {
     for (let i = 0, n = 0; n < L.floorWeapons && i < 400; i++) { const cx = 6 + Math.floor(ctx.random() * (N - 6)), cz = Math.floor(ctx.random() * N); if (!open(cx, cz)) continue; const c = cellCenter(cx, cz); spawnWeapon(ctx, { x: c.x - 0.6, z: c.z + 0.4 }, rollWeaponL3(ctx)); n++; }
     s.gen = {}; s.line = {}; s.gone = {};
   }
+
+  if (s.layoutV && s.loreV !== 1) { s.lore = layLore(ctx); s.loreV = 1; } // lore set pieces (scripts/lib/level3-lore.js)
 
   // ---- the station, every tick
   const players = ctx.place.players;
