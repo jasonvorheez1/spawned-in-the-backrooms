@@ -141,6 +141,13 @@ function compassRead(s, yaw, now) {
     </div>
   </div>`
 }
+// T: the wait menu, and the fade after a rest (scripts/rest.js)
+function restUi(ctx, s) {
+  let out = ''
+  if (s.restFx && ctx.now() - s.restFx.at < 3500) out += `<style>@keyframes restF{0%{opacity:0}20%,70%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="rest${s.restFx.at}" style="position:absolute;inset:0;background:#050403;display:flex;align-items:center;justify-content:center;animation:restF 3.4s forwards;color:#f2c14e;font-size:24px;letter-spacing:.12em;text-shadow:2px 2px #000">${s.restFx.text}</div>`
+  if (s.waitOpen) out += `<div data-modal style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto"><div style="background:oklch(0.14 0.02 75 / .94);border:2px solid oklch(0.8 0.13 85);padding:18px 24px;color:oklch(0.9 0.1 85);text-align:center;min-width:300px;max-width:calc(100vw - 148px)"><div style="font-size:13px;letter-spacing:.2em;opacity:.7">${s.waitBed ? 'SLEEP' : 'WAIT'} · ${s.waitClock ?? ''}</div><div style="font-size:15px;margin:6px 0 12px">How many hours?</div><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${[1, 2, 4, 8, 12, 24].map((h) => `<button onclick="sendAction('waitdo',{h:${h}})" style="min-width:52px;padding:8px 10px;background:oklch(0.8 0.13 85);color:oklch(0.18 0.03 70);font-size:18px;border:none">${h}</button>`).join('')}</div><button onclick="sendAction('waitdo',{h:0})" style="margin-top:12px;background:none;border:1px solid oklch(0.8 0.13 85 / .5);color:inherit;padding:4px 14px">cancel ✕</button></div></div>`
+  return out
+}
 export default function render(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''

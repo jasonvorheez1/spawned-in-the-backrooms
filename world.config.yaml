@@ -75,6 +75,12 @@ inputs:
     grab:
       keys:
         - z
+    wait:
+      keys:
+        - t
+      touch:
+        button: false
+    waitdo: {}
     inventory:
       keys:
         - i
@@ -95,7 +101,7 @@ inputs:
         button: false
     emote:
       keys:
-        - t
+        - n
       touch:
         button: false
     dress: {}

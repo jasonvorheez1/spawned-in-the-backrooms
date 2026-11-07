@@ -40,7 +40,7 @@ const pickIn = (ctx, a) => a[Math.floor(ctx.random() * a.length)];
 const busy = (o, now) => !o || (o.state.escortUntil ?? 0) > now || (o.state.talkAt && now - o.state.talkAt < 8000 && !o.state.meeting) || o.state.dead;
 export function tickPeople(ctx) {
   const now = ctx.now(), ses = ctx.self.session, cyc = (P.day + P.night) * 1000;
-  const phase = (now % cyc) < P.day * 1000 ? "day" : "night";
+  const phase = ((now + (ctx.world.state.clockSkip ?? 0)) % cyc) < P.day * 1000 ? "day" : "night";
   let made = 0;
   for (const id of Object.keys(P.people)) {
     let o = ctx.getObject(id);
