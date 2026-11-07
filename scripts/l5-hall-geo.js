@@ -419,7 +419,17 @@ function cart(c, p) { // the room-service trolley: cloth, a silver cloche (still
   paint(c, "oklch(0.35 0.08 140)"); pipe(c, [0.25, h + 0.05, 0.1], [0.27, h + 0.35, 0.1], 0.004, 4); paint(c, "oklch(0.35 0.15 20)", "velvet"); ball(c, 0.27, h + 0.37, 0.1, 0.03, 8, 0.9);
   paint(c, "oklch(0.97 0.01 240)", "ceramic", 0.15); for (const x of [0.1, 0.3]) lathe(c, x, 0.25, -0.05, [[0, 0], [0.11, 0], [0.12, 0.01], [0, 0.005]], 16); tea(c, 0.15, h + 0.003, -0.13, false); }
 // ---------- dispatch ----------
-const K = { sofa, chair, stool, rtable, ctable, sidetable, wardrobe, dresser, nightstand, cabinet, bookshelf, bed, luggage, letter, birdcage, typewriter, hatstand, frontdesk, cubbies, palm, rug, clock, painting, ladder, maptable, lectern, tomes, range, counter, icebox, dtable, wdesk, vanity, console, urn, cart,
+// a faux window: cased frame, mullioned panes on a dark night beyond, sill, pelmet and two pleated velvet drapes
+function window(c, p) { const w = p.w ?? 1.1, h = 1.3, hw = w / 2, rnd = ((p.seed ?? 1) * 9301 + 49297) % 233280 / 233280;
+  paint(c, "oklch(0.2 0.03 250)", null, 0.1, 0, "oklch(0.16 0.04 250)"); bx(c, -hw, hw, 0, h, -0.03, -0.01, 0);
+  paint(c, "oklch(0.93 0.02 85)", "paint", 0.5); bx(c, -hw - 0.08, -hw, -0.04, h + 0.06, -0.06, 0); bx(c, hw, hw + 0.08, -0.04, h + 0.06, -0.06, 0); bx(c, -hw - 0.08, hw + 0.08, h, h + 0.08, -0.06, 0);
+  bx(c, -hw - 0.12, hw + 0.12, -0.06, 0, -0.14, 0, 0.015); bx(c, -0.02, 0.02, 0, h, -0.045, -0.02, 0.004); for (const f of [0.34, 0.67]) bx(c, -hw, hw, h * f - 0.018, h * f + 0.018, -0.045, -0.02, 0.004);
+  WOODP(c); bx(c, -hw - 0.3, hw + 0.3, h + 0.22, h + 0.42, -0.2, 0, 0.02);
+  paint(c, p.col ?? "oklch(0.55 0.12 25)", "velvet", 0.85); const cw = 0.34 + rnd * 0.08, n = 6;
+  for (const sd of [-1, 1]) { const xo = sd * (hw + 0.24); for (let i = 0; i < n; i++) { const t0 = i / n, t1 = (i + 1) / n, dz = i % 2 ? -0.11 : -0.06, a = xo - sd * cw * t0, b = xo - sd * cw * t1; bx(c, Math.min(a, b), Math.max(a, b), -0.85, h + 0.24, dz - 0.04, dz, 0.012); }
+    paint(c, "oklch(0.85 0.1 85)", "brass", 0.35, 0.8); bx(c, xo - sd * cw * 0.5 - 0.02, xo - sd * cw * 0.5 + 0.02, 0.2, 0.25, -0.16, -0.05, 0.005); paint(c, p.col ?? "oklch(0.55 0.12 25)", "velvet", 0.85); } }
+const WOODP = (c) => paint(c, "oklch(0.95 0.02 40)", "mahog", 0.42);
+const K = { window, sofa, chair, stool, rtable, ctable, sidetable, wardrobe, dresser, nightstand, cabinet, bookshelf, bed, luggage, letter, birdcage, typewriter, hatstand, frontdesk, cubbies, palm, rug, clock, painting, ladder, maptable, lectern, tomes, range, counter, icebox, dtable, wdesk, vanity, console, urn, cart,
   armchair: (c, p) => sofa(c, { ...p, w: 1.0 }), teatray: (c, p) => tea(c, 0.15, 0, 0, true), openbag: (c, p) => luggage(c, { ...p, open: true }) };
 export function geometry(ctx) { const p = ctx.params ?? {}; (K[p.kind] ?? K.dresser)(ctx, p); }
 const B = (w, h, d, cx = 0, cz = 0, y0 = 0) => box([cx - w / 2, cx + w / 2, y0, y0 + h, cz - d / 2, cz + d / 2]);

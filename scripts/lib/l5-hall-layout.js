@@ -28,7 +28,7 @@ for (const o of OPENINGS) if (o.kind === "door" && GUEST[o.room]) {
   put("dresser", "dresser", uR - 0.26, 3.0, F.R, { wood: g.wood, w: 1.1, deco: g.odd === "birdcage" ? undefined : "vase", seed: no.length }, { loot: L(g.loot[1], "Dresser", "dresser") });
   put("chair", "sofa", uL + 0.55, 5.7, F.L + 25, { w: 1.0, up: g.odd === "tea" ? "velvet" : "leather", col: g.quilt });
   put("bag", g.odd === "suitcase" ? "openbag" : "luggage", uR - 0.45, 1.75, F.R + 10, { col: g.quilt, seed: no.length }, { loot: L(g.loot[2], g.odd === "suitcase" ? "Half-packed suitcase" : "Suitcase", "luggage", n === "room-s4" ? "lockpick:20" : undefined, "leather") });
-  put("window", "window", uL + 0.02, 6.0, F.R, { w: 1.1, col: g.quilt, seed: no.length }, { y: 0.85 });
+  put("window", "window", uL + 0.02, 6.0, F.L, { w: 1.1, col: g.quilt, seed: no.length }, { y: 0.85 });
   put("art", "painting", g.bedU, vB - 0.02, F.door, { w: 0.9, h: 0.6, style: "landscape", seed: no.length + 7 }, { y: 1.45 });
   if (g.odd === "radio") put("radiotable", "sidetable", 0.95, 7.4, F.door, { h: 0.7, wood: g.wood });
   if (g.odd === "letter") put("letter", "letter", g.bedU, vB - 0.55, F.door + 12, {}, { y: 0.67 });
@@ -56,7 +56,7 @@ for (const o of OPENINGS) if (o.kind === "door" && SUITE[o.room]) {
   put("bags", "luggage", uL + 3.5, vB - 0.3, F.door + 8, { col: "oklch(0.55 0.08 40)", seed: 5 }, { loot: L(loot[3], "Steamer trunk", "luggage", undefined, "leather") });
   put("art", "painting", uL + 1.6, vB - 0.02, F.door, { w: 1.2, h: 0.8, style: "landscape", seed: 40 + no.length }, { y: 1.5 });
   put("palm", "palm", uR - 0.4, 6.3, 0, { seed: 3 });
-  put("window", "window", uL + 0.02, 5.1, F.R, { w: 1.4, col, seed: 9 + no.length }, { y: 0.85 });
+  put("window", "window", uL + 0.02, 5.1, F.L, { w: 1.4, col, seed: 9 + no.length }, { y: 0.85 });
   R.push({ leafFor: o, room: n, no, cd, s: -s });
 }
 // ---- lobby (x -46..-30, z -13..13)
