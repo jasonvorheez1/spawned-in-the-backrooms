@@ -25,7 +25,10 @@ export const ears = {
       if (!hinge) return;
       if (s.open) return;
       const inside = (who?.worldFeetPosition?.x ?? 0) > ctx.self.worldFeetPosition.x + 0.2; // the boiler side always opens: nobody gets bolted in
-      if (!inside && !who?.state?.l5boilerKey && !(ctx.now() - (who?.state?.l5boilerPick ?? -1e9) < 6000)) {
+      // Harlan walking with you unbolts it himself: the sign says escort only
+      const escort = who && ctx.query({ tags: ["npc"], radius: 8, center: ctx.self.worldFeetPosition }).some((q) => /harlan$/.test(q.id) && q.state?.follow === who.id && !q.state?.dead);
+      if (escort && !who.state.l5boilerKey) { who.state.l5boilerKey = true; say(who, "Harlan works the padlock and slides the bolt. \"Stay close.\"", ctx); }
+      if (!inside && !escort && !who?.state?.l5boilerKey && !(ctx.now() - (who?.state?.l5boilerPick ?? -1e9) < 6000)) {
         heard(ctx, { clip: G("heavy-door-handle-rattle-locked"), position: pos, volume: 0.7, maxDistance: 12 });
         say(who, "Bolted from the other side and padlocked. Harlan keeps the key, or you could pick it.", ctx);
         return;
