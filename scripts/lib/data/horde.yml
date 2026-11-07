@@ -12,7 +12,7 @@ perLevel: 0.55          # more per level
 cap: 20
 waves: 3                # the horde arrives in this many bursts
 waveGap: 24             # seconds between bursts
-ring: [14, 26]          # how far from you they appear (metres)
+ring: [8, 18]          # how far from you they appear (metres)
 hpPerLevel: 0.03        # extra hp per level on horde creatures
 buildHit: 16            # hp a second a horde creature tears off a built piece it is pressed against
 buildReach: 2.4

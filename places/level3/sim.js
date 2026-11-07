@@ -96,6 +96,16 @@ function layLayout(ctx) {
 
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
+  // a blackout (scripts/horde.js) on anyone here kills the level's lamps: a faint red emergency glow, and the hounds see farther in the dark
+  const night = ctx.place.players.some((p) => p.state?.horde === "night");
+  if (night !== !!s.blackout) {
+    s.blackout = night; s.flicker = night ? "dark" : null;
+    for (const r of ctx.query({ tags: ["l3lamp"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+      const o = ctx.getObject(r.id); if (!o) continue;
+      if (night && o.light) { o.state.lit = o.light; o.light = { ...o.light, color: "oklch(0.42 0.2 25)", intensity: o.light.intensity * 0.05 }; }
+      else if (!night && o.state?.lit) { o.light = o.state.lit; delete o.state.lit; }
+    }
+  }
   if (!(Math.abs(now - (ctx.session.wallTick ?? -1e9)) < 2000)) { ctx.session.wallTick = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)
   if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(false)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   if (s.seeded && s.gammaExtV !== 1) layGammaExterior(ctx);
