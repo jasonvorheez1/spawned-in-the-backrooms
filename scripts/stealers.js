@@ -125,6 +125,6 @@ export function update(ctx, dt) {
     e.velocity = { x: moving ? dx / d * sp : 0, y: (e.velocity?.y ?? 0) - 20 * dt, z: moving ? dz / d * sp : 0 };
     if (moving || prey) e.rotation = { yaw: Math.atan2(-dx, -dz) * 57.2958 };
     play(e, m, "base", rev ? (moving ? "Run" : "Hunt") : moving ? "Walk" : "Idle", { loop: true });
-    if (!rev && m.gait !== moving) { m.gait = moving; const sk = ctx.getObject(e.id + "/skin"); if (sk) sk.anim = { base: { clip: moving ? GAIT_LIB.walk : GAIT_LIB.idle, loop: true, timeScale: moving ? 0.75 : 0.4 } }; } // stiff: too slow for its stride
+    if (!rev && m.gait !== moving) { m.gait = moving; const sk = ctx.getObject(e.id + "/skin"); if (sk) sk.anim.base = { clip: moving ? GAIT_LIB.walk : GAIT_LIB.idle, loop: true, timeScale: moving ? 0.75 : 0.4 }; } // stiff: too slow for its stride
   }
 }
