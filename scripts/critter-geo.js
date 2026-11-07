@@ -88,19 +88,19 @@ export function geometry(ctx) {
   function autoW(p) {
     if (wOverride) return wOverride;
     const [x, y, z] = p, side = x < 0 ? "Left" : "Right", ax = Math.abs(x);
-    if (y > 1.04) return { Head: 1 };
+    if (y > 1.04) return { Head: 0.65, Spine2: 0.35 }; // a head this big amplifies every clip nod: it rides the chest a third of the way
     if (y > 0.86 && ax > 0.13) { // arms (T-pose along X)
       if (ax < 0.2) return { Spine2: 1 - sstep(0.13, 0.2, ax), [side + "Arm"]: sstep(0.13, 0.2, ax) };
       const e = sstep(0.31, 0.39, ax), h = sstep(0.5, 0.56, ax);
       if (h > 0) return { [side + "ForeArm"]: 1 - h, [side + "Hand"]: h };
       return { [side + "Arm"]: 1 - e, [side + "ForeArm"]: e };
     }
-    if (y > 0.97) return { Spine2: 1 - sstep(0.97, 1.04, y), Head: sstep(0.97, 1.04, y) };
+    if (y > 0.97) return { Spine2: 1 - 0.65 * sstep(0.97, 1.04, y), Head: 0.65 * sstep(0.97, 1.04, y) };
     if (y < 0.6 && ax > 0.015) {
       if (y > 0.5) { const t = sstep(0.6, 0.5, y); return { Hips: 1 - t, [side + "UpLeg"]: t }; }
       if (y > 0.26) { const k = sstep(0.38, 0.28, y); return { [side + "UpLeg"]: 1 - k, [side + "Leg"]: k }; }
       if (y > 0.12) return { [side + "Leg"]: 1 };
-      const f = sstep(0.12, 0.08, y); return z < -0.07 ? { [side + "Foot"]: 0.5, [side + "ToeBase"]: 0.5 } : { [side + "Leg"]: 1 - f, [side + "Foot"]: f };
+      const f = sstep(0.12, 0.08, y); return { [side + "Leg"]: 1 - f, [side + "Foot"]: f }; // the toe rides the foot whole: a toe bone tore the mitten foot into a spike
     }
     if (y < 0.68) return { Hips: 1 };
     if (y < 0.78) { const t = sstep(0.68, 0.78, y); return { Hips: 1 - t, Spine: t }; }

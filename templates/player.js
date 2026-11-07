@@ -6,5 +6,7 @@ export const player = {
   tags: ["player"],
   primitive: { kind: "scripted", script: "scripts/critter-geo.js", params: { species: "cat" } },
   jiggle: { amount: 0.6, bounce: 0.5, gravity: 0.5, bones: ["EarL", "EarR", "Tail", "Tail1"] }, // ears and tail swing when the body moves
+  jiggle: { bones: ["Tail*", "Ear*"], amount: 0.6, bounce: 0.6, gravity: 0.2 }, // ears and tail spring as you run and turn
+  jiggle: { bones: ["Tail*", "Ear*"], amount: 0.6, bounce: 0.6, gravity: 0.2 }, // ears and tail spring as you run and turn
   material: { outline: { color: "#1d1420", width: 2.4 } }, // the cartoon ink line round every critter
 };
