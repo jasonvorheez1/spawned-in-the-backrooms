@@ -23,6 +23,7 @@ const zoneHere = (ctx, x, z) => ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x,
 import SOUNDS from './lib/data/sounds.yml'
 import { useCompass, COMPASS } from './lib/compass.js'
 import L3I from './lib/data/l3items.yml'
+import CR from './lib/data/craft.yml'
 const sndTurn = {}
 const SND = (n) => { const takes = SOUNDS[n]; if (!takes?.length) return `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`; sndTurn[n] = ((sndTurn[n] ?? -1) + 1 + (takes.length > 2 ? Math.floor(takes.length / 2) : 0)) % takes.length; return takes[sndTurn[n]] }
 const ZAP = `fx
@@ -71,7 +72,13 @@ function gain(ctx, n) {
 
 // Apply one looted item (a token from scripts/lib/items.js) to the player. Returns { ok } or { ok: false, msg }.
 // Nothing is picked up by walking over it: scripts/interact.js calls this when you press E on what you are looking at.
+// eaten food also feeds hunger (scripts/craft.js drains it)
 export function takeToken(ctx, token) {
+  const r = takeToken0(ctx, token), f = CR.food[token]
+  if (r.ok && f) { const s = ctx.self.state; s.hunger = Math.min(100, (s.hunger ?? 100) + f) }
+  return r
+}
+function takeToken0(ctx, token) {
   const s = ctx.self.state, now = ctx.now()
   const cw = canCarry(s, token); if (!cw.ok) return cw
   if (token.startsWith('cloth:')) { // a garment: into the bag (player.state.clothes); I > Apparel puts it on
@@ -447,8 +454,9 @@ function drink(ctx) {
   const s = ctx.self.state
   if (s.almonds <= 0) return
   const mh = maxHp(s.level, s), ms = maxSan(s.level, s)
-  if (s.hp >= mh && s.sanity >= ms) return
+  if (s.hp >= mh && s.sanity >= ms && (s.thirst ?? 100) >= 99) return
   s.almonds -= 1
+  s.thirst = Math.min(100, (s.thirst ?? 100) + CR.needs.almondThirst)
   s.hp = Math.min(mh, s.hp + L.almondHp * derived(s).heal)
   s.sanity = Math.min(ms, s.sanity + L.almondSanity * derived(s).heal)
   s.drankAt = ctx.now()

@@ -36,7 +36,8 @@ pieces:
   crate:       { name: Crate,            mat: wood,  hp: 60,  size: [1, 1, 1],      cost: { scrap_wood: 3, nails: 1 } }
   steel_barricade: { name: Steel barricade, mat: metal, hp: 380, size: [2, 1.3, 0.4], cost: { scrap_metal: 3, bolts: 4, gears: 1 } }
   ramp:        { name: Ramp,             mat: wood,  hp: 120, size: [1.2, 1, 2],    cost: { scrap_wood: 5, nails: 3 } }
-order: [plank_wall, metal_wall, barricade, steel_barricade, crate, ramp]
+  workbench:   { name: Workbench,        mat: wood,  hp: 120, size: [1.6, 1.0, 0.8], bench: true, cost: { scrap_wood: 6, nails: 4, bolts: 2 } }
+order: [plank_wall, metal_wall, barricade, steel_barricade, crate, ramp, workbench]
 
 # Level 0 walls are voxels: 4 across x 3 high, each its own hp; a chunk with nothing under it and nothing beside it falls too.
 voxel: { cols: 4, rows: 3 }

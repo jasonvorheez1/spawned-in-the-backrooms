@@ -30,6 +30,16 @@ function cracks(ctx, n, w, h, d, seed) {
 }
 export function geometry(ctx) {
   const P = ctx.params ?? {}, kind = P.kind ?? "crate", dmg = P.dmg ?? 0, hi = ctx.lod <= 2;
+  if (kind === "workbench") { // a heavy plank top on trestle legs, a vise, a pegboard of tools
+    ctx.albedo(WOOD); ctx.color("oklch(0.6 0.06 62)"); box(ctx, 0, 0.88, 0, 1.6, 0.1, 0.8);
+    ctx.color("oklch(0.45 0.06 60)"); for (const x of [-0.7, 0.7]) for (const z of [-0.32, 0.32]) box(ctx, x, 0, z, 0.1, 0.88, 0.1);
+    box(ctx, 0, 0.25, 0, 1.4, 0.06, 0.06); box(ctx, 0, 0.12, -0.32, 1.4, 0.06, 0.06); box(ctx, 0, 0.12, 0.32, 1.4, 0.06, 0.06);
+    ctx.albedo(METAL); ctx.color("oklch(0.4 0.03 250)"); box(ctx, -0.55, 0.98, 0.22, 0.2, 0.14, 0.22); box(ctx, -0.55, 1.1, 0.22, 0.12, 0.04, 0.3);
+    ctx.albedo(WOOD); ctx.color("oklch(0.52 0.05 60)"); box(ctx, 0, 1.55, -0.4, 1.5, 0.8, 0.04);
+    ctx.albedo(null); ctx.color("oklch(0.55 0.02 250)"); for (let i = 0; i < 5; i++) box(ctx, -0.6 + i * 0.3, 1.45 + (i % 2) * 0.18, -0.37, 0.05, 0.3, 0.02);
+    ctx.color("oklch(0.5 0.15 30)"); box(ctx, 0.35, 0.98, 0.1, 0.18, 0.1, 0.12);
+    return;
+  }
   if (kind === "plank_wall") {
     ctx.albedo(WOOD);
     for (let i = 0; i < 6; i++) { ctx.color(`oklch(${0.62 + ((i * 37) % 7) * 0.02} 0.06 65)`); box(ctx, 0, 0.02 + i * 0.4, 0, 2, 0.37, 0.06); }

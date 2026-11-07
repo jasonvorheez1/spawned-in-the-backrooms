@@ -1,0 +1,29 @@
+# Crafting and survival: every tuned number. (7 Days to Die: scrap into tools, a workbench, hunger and thirst. Fallout: skills gate recipes.)
+# needs: hunger and thirst run 0..100. Both fall with time (faster sprinting); at 0 you waste away (never to death: hp stops at 1).
+needs:
+  thirstPerSec: 0.045      # about 37 minutes from full to empty
+  hungerPerSec: 0.028      # about 60 minutes
+  sprintMul: 1.7
+  low: 25                  # under this you are weak: sanity drains faster
+  lowSanity: 0.08          # extra sanity per second while a need is low
+  starveHp: 0.9            # hp per second at 0 (stops at 1)
+  almondThirst: 40         # one almond water drunk
+# food: what each eaten token gives back to hunger (it is eaten where you pick it up)
+food:
+  ration: 30
+  royal_ration: 60
+  beans: 25
+  bar: 12
+# recipes. in: scrap tokens (scripts/lib/data/breakables.yml scrap) and counts. out: item tokens, each one a takeToken().
+# skill: [name, level] you must have; each skill point above it adds 1% to a chance of one extra output (Fallout style).
+# bench: needs a workbench (B builds one) within reach.
+recipes:
+  kit:        { name: Repair kit,      in: { scrap_metal: 2, bolts: 2, nails: 2 },         out: [kit],              skill: [repair, 15],   desc: "Mends the weapon in your hand" }
+  tape:       { name: Duct tape,       in: { wire: 1, drywall: 1 },                         out: [tape],             skill: [repair, 5],    desc: "A quick patch on a weapon" }
+  ammo:       { name: Pistol rounds,   in: { scrap_metal: 2, springs: 1 },                  out: [ammo, ammo],       skill: [guns, 20],     bench: true, desc: "Two boxes of rounds" }
+  shells:     { name: Shotgun shells,  in: { scrap_metal: 2, wire: 1, nails: 1 },           out: [shells],           skill: [guns, 30],     bench: true, desc: "One box of shells" }
+  battery:    { name: Battery,         in: { copper_coil: 1, scrap_metal: 1, bolts: 1 },    out: [battery],          skill: [science, 20],  bench: true, desc: "Recharges the flashlight" }
+  fuse:       { name: Fuse,            in: { wire: 2, scrap_metal: 1 },                     out: [fuse],             skill: [repair, 20],   bench: true, desc: "Opens a fused door" }
+  bandage:    { name: Bandage,         in: { drywall: 2, wire: 1 },                          out: [bandage],          skill: [medicine, 15], desc: "Heals on the spot" }
+  firstaid:   { name: First aid kit,   in: { drywall: 3, wire: 2, copper_coil: 1 },          out: [firstaid],         skill: [medicine, 40], bench: true, desc: "A proper kit: a big heal" }
+  kit2:       { name: Field repair set, in: { scrap_metal: 4, gears: 1, springs: 1, bolts: 3 }, out: [kit, kit],      skill: [repair, 50],   bench: true, desc: "Two kits at once" }

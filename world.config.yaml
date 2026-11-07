@@ -72,6 +72,10 @@ inputs:
       keys:
         - k
     stat: {}
+    craft:
+      keys:
+        - y
+    make: {}
     wardrobe:
       keys:
         - c

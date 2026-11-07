@@ -12,7 +12,7 @@ import { derived, skillsOf, SKILLS } from './lib/stats.js'
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 import { rollItem, rollItemL1, rollItemL2, spotCloth } from './lib/loot.js'
 
-const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc', 'door'] // what can be looked at and used
+const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc', 'door', 'bench'] // what can be looked at and used
 const REACH = 3.0 // metres from the eye
 const OPEN_RANGE = 4.5 // a container you walk away from closes
 const mem = (ctx) => (ctx.self.session.interact ??= { ray: null, last: -1e9, acc: 0, key: '', focus: null, hl: 0 })
@@ -28,7 +28,7 @@ function findFocus(ctx, ray) {
   const o = ray.origin, d = ray.direction
   let best = null, bestAng = 1e9
   for (const tag of KINDS) {
-    const big = tag === 'container' || tag === 'npc' || tag === 'door'
+    const big = tag === 'container' || tag === 'npc' || tag === 'door' || tag === 'bench'
     for (const it of ctx.query({ tags: [tag], radius: REACH + 1 })) {
       if (it.state?.taken) continue
       const p = it.state?.c ?? it.feetPosition, vx = p.x - o.x, vy = p.y + (it.state?.c ? 0 : big ? 0.28 : 0.1) - o.y, vz = p.z - o.z
@@ -60,6 +60,8 @@ function refocus(ctx, force = false) {
         info = { id: f.id, name: it.state?.name ?? 'Door', info: it.state?.open ? 'open' : 'shut', verb: it.state?.open ? 'Close' : 'Open', color: '#d9d3b8' }
         if (lk && DOORKEY[lk]) { const have = ctx.self.state[DOORKEY[lk].f] ?? 0; info.info = `Locked · needs a ${DOORKEY[lk].n} (${have})`; info.verb = have ? `Use ${DOORKEY[lk].n}:` : 'Locked:'; info.color = have ? '#f2c14e' : '#e0644f' }
         else if (lk) { const [sk, lv] = lk.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = ok ? 'Unlock' : 'Locked:'; info.color = ok ? '#f2c14e' : '#e0644f' }
+      } else if (f.tag === 'bench') {
+        info = { id: f.id, name: it.state?.name ?? 'Workbench', info: 'Craft ammo, repair kits, batteries, fuses', verb: 'Use', color: '#f2c14e' }
       } else if (f.tag === 'npc') {
         info = { id: f.id, name: it.state?.name ?? 'Stranger', info: 'M.E.G.', verb: 'Talk', color: '#c6f060' }
         const pc = pickChance(ctx, it)
@@ -245,6 +247,7 @@ function press(ctx) {
   if (!it || it.state?.taken) return
   if (f.tag === 'npc' && pickChance(ctx, it) != null) { pickpocket(ctx, it); m.key = ''; refocus(ctx, true); return }
   if (f.tag === 'npc') { if (it.state?.dead) { if (it.state.items !== undefined) openLoot(ctx, it) } else if (it.state?.angry?.[ctx.self.id]) talk(ctx, it); else { ctx.self.state.talkWith = it.id; ctx.self.state.shopOpen = null; it.state.talkAt = ctx.now(); it.state.talkTo = ctx.self.id } return } // the conversation card (scripts/talk.js); the old services sit on its buttons
+  if (f.tag === 'bench') { s.craftOpen = 'bench'; s.craftBench = f.id; return }
   if (f.tag === 'container') { openLoot(ctx, it); return }
   if (f.tag === 'door') { useDoor(ctx, it); m.key = ''; refocus(ctx, true); return }
   const r = takeToken(ctx, tokenOf(f.tag, it))

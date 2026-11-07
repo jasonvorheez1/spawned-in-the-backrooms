@@ -46,7 +46,7 @@ function place(ctx, s) {
   if (!at.ok) { s.notice = 'No room to build there'; s.noticeAt = ctx.now(); return }
   const sc = { ...s.scrap }; for (const [k, n] of Object.entries(pc.cost)) sc[k] -= n; s.scrap = sc
   ctx.spawn({
-    tags: ['breakable', 'built'], feetPosition: { x: at.x, y: at.y, z: at.z }, rotation: { yaw: at.rot },
+    tags: pc.bench ? ['breakable', 'built', 'bench'] : ['breakable', 'built'], feetPosition: { x: at.x, y: at.y, z: at.z }, rotation: { yaw: at.rot },
     primitive: { kind: 'scripted', script: 'scripts/build-geo.js', params: { kind: s.building, dmg: 0 } },
     material: { pbr: true }, physics: { body: 'static', collider: s.building === 'ramp' ? 'mesh' : 'box' },
     state: { mat: pc.mat, hp: pc.hp, maxHp: pc.hp, name: pc.name, size: Math.max(...pc.size), by: ctx.self.id },
