@@ -1,0 +1,16 @@
+# Level 2 "Abandoned Utility Halls": every tuned number. All Savi's picks, tune freely.
+cells: 24            # 24 x 24 cells
+cellSize: 5          # metres per cell (lore: hall lengths come in multiples of 5)
+height: 3.0          # floor to ceiling: tight
+seed: 2202
+arrive: [1, 12]      # the Survivors' camp, by the door back to Level 1
+rooms: 9             # warehouse rooms behind the tunnels
+loops: 0.14          # share of extra openings so it's not a pure tree
+darkShare: 0.3       # share of 4x4 sectors whose circuit is dead (violet emergency light only)
+sanityDrain: { tunnel: 0.1, room: 0.07, dark: 0.22, camp: -1.2 }
+hounds: 3
+crates: 28
+almonds: 18
+floorWeapons: 8
+entityRespawn: 75
+xpArrive: 90
