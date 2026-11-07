@@ -3930,8 +3930,46 @@ l5-nvg-case:
   physics: static
   primitive: {depth: 0.36, height: 0.22, kind: box, width: 0.55}
   rotation: {yaw: 25}
-  state: {info: "INES · M.E.G. MAINT.", kind: case, name: Dented goggle case, verb: Take}
+  state: {info: "INES · M.E.G. MAINT.", kind: case, name: Ines's goggle case, verb: Check}
   tags: [usable]
+l5-nvg-den:
+  behavior: scripts/l5-goggles.js
+  children: [{feetPosition: {x: 0.3, y: 0.03, z: 0}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 0}}, {feetPosition: {x: 0.4206632030064687, y: 0.03, z: 0.3543197279807301}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.2, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 47}}, {feetPosition: {x: 0.1359737143201928, y: 0.03, z: 0.7883597839907681}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 94}}, {feetPosition: {x: -0.15145383137995713, y: 0.03, z: 0.25896280999466215}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.2, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 141}}, {feetPosition: {x: -0.518222287367762, y: 0.03, z: 0.1842434825857478}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 188}}, {feetPosition: {x: -0.7491653498326372, y: 0.03, z: -0.2806265821516959}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.2, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 235}}, {feetPosition: {x: -0.14707824640221007, y: 0.03, z: -0.2614727317240763}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 282}}, {feetPosition: {x: 0.10258180318241619, y: 0.03, z: -0.5403489369433829}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.2, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 329}}, {feetPosition: {x: 0.6204527028081998, y: 0.03, z: -0.5050133102978572}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 376}}, {feetPosition: {x: -0.9, y: 0, z: 0.4}, layout: {box: {max: {x: 0.4, y: 0.35, z: 0.9}, min: {x: -0.4, y: 0, z: -0.9}}}, model: {id: /cdn/value.03b3fdc79fbd59839dde8183a19d878e352ce04fa4f5b9fa111f4cec94a36f76.glb}, rotation: {yaw: 70}}, {feetPosition: {x: 0.5, y: 0, z: -0.5}, material: {color: oklch(0.3 0.03 50), roughness: 0.9}, primitive: {height: 0.35, kind: cylinder, radiusBottom: 0.14, radiusTop: 0.12}, rotation: {roll: 80, yaw: 20}}, {feetPosition: {x: 0, y: 0.08, z: 0}, id: glint, light: {color: oklch(0.8 0.2 145), distance: 3, intensity: 0.5, kind: point}, material: {color: oklch(0.25 0.02 140), emissive: oklch(0.8 0.2 145), emissiveIntensity: 1.5, metalness: 0.6}, primitive: {depth: 0.08, height: 0.06, kind: box, width: 0.18}}]
+  feetPosition: {x: 44, y: 0, z: 1}
+  id: l5-nvg-den
+  material: {color: oklch(0.22 0.03 40), roughness: 1}
+  physics: none
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 1.3, radiusTop: 1.1}
+  state: {info: "bones · scrap · something green", kind: den, name: Hound den, verb: Search}
+  tags: [usable]
+l5-nvg-drag-0:
+  children: [{feetPosition: {x: 0.22, y: 0, z: 0}, material: {color: oklch(0.15 0.02 30), roughness: 1}, primitive: {depth: 1.2, height: 0.004, kind: box, width: 0.06}}]
+  feetPosition: {x: 32.4, y: 0.012, z: 22.4}
+  id: l5-nvg-drag-0
+  material: {color: oklch(0.15 0.02 30), roughness: 1}
+  primitive: {depth: 1.4, height: 0.004, kind: box, width: 0.08}
+  rotation: {yaw: 60}
+l5-nvg-drag-1:
+  children: [{feetPosition: {x: 0.22, y: 0, z: 0}, material: {color: oklch(0.15 0.02 30), roughness: 1}, primitive: {depth: 1.2, height: 0.004, kind: box, width: 0.06}}]
+  feetPosition: {x: 33.5, y: 0.012, z: 21}
+  id: l5-nvg-drag-1
+  material: {color: oklch(0.15 0.02 30), roughness: 1}
+  primitive: {depth: 1.4, height: 0.004, kind: box, width: 0.08}
+  rotation: {yaw: 55}
+l5-nvg-drag-2:
+  children: [{feetPosition: {x: 0.22, y: 0, z: 0}, material: {color: oklch(0.15 0.02 30), roughness: 1}, primitive: {depth: 1.2, height: 0.004, kind: box, width: 0.06}}]
+  feetPosition: {x: 42.6, y: 0.012, z: 2.6}
+  id: l5-nvg-drag-2
+  material: {color: oklch(0.15 0.02 30), roughness: 1}
+  primitive: {depth: 1.4, height: 0.004, kind: box, width: 0.08}
+  rotation: {yaw: 50}
+l5-nvg-drag-3:
+  children: [{feetPosition: {x: 0.22, y: 0, z: 0}, material: {color: oklch(0.15 0.02 30), roughness: 1}, primitive: {depth: 1.2, height: 0.004, kind: box, width: 0.06}}]
+  feetPosition: {x: 41.4, y: 0.012, z: 4.2}
+  id: l5-nvg-drag-3
+  material: {color: oklch(0.15 0.02 30), roughness: 1}
+  primitive: {depth: 1.4, height: 0.004, kind: box, width: 0.08}
+  rotation: {yaw: 55}
 l5-nvg-drop:
   behavior: scripts/l5-goggles.js
   children: [{feetPosition: {x: 0, y: 0.85, z: -0.255}, material: {color: oklch(0.15 0 0), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.02, height: 0.05, kind: box, width: 0.45}}, {feetPosition: {x: 0, y: 0.55, z: -0.256}, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 80' width='0.5m'><rect width='200' height='80' fill='#f0f0e8'/><text x='100' y='34' text-anchor='middle' font-family='sans-serif' font-size='26' fill='#1a3a7a'>M.E.G.</text><text x='100' y='62' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>RETURNS · DROP HERE</text></svg>"}]
@@ -3952,7 +3990,7 @@ l5-nvg-radio:
   physics: static
   primitive: {depth: 0.4, height: 0.9, kind: box, width: 0.5}
   rotation: {yaw: 90}
-  state: {info: "Ines · Boiler Tech", kind: radio, name: M.E.G. field radio, verb: Listen}
+  state: {info: "Ines · stuck in the Cold Room", kind: radio, name: M.E.G. field radio, verb: Talk}
   tags: [usable]
 l5-odette:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
