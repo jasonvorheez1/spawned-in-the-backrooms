@@ -82,7 +82,8 @@ export function settle(ctx, spawnAgent) {
     }
   }
   s.l4homes = homes;
-  for (const [id, g] of Object.entries(P.people)) if (!ctx.place.objects[id] && g.look && (!s.npcGone?.[id] || mayReturn(ctx, id))) spawnAgent(id, g, roundsFor(ctx, id, s.l4clock?.phase ?? "day"));
+  for (const [id, g] of Object.entries(P.people)) if (!ctx.place.objects[id] && g.look && (!s.l4seen?.[id] || mayReturn(ctx, id))) spawnAgent(id, g, roundsFor(ctx, id, s.l4clock?.phase ?? "day"));
+  { const seen = { ...(s.l4seen ?? {}) }; let n = 0; for (const id of Object.keys(P.people)) if (ctx.place.objects[id] && !seen[id]) { seen[id] = 1; n++; } if (n) s.l4seen = seen; }
   for (const id of Object.keys(P.people)) { const o = ctx.place.objects[id]; if (o) { o.state.rounds = roundsFor(ctx, id, s.l4clock?.phase ?? "day"); o.state.ri = 0; o.state.faction4 = P.people[id].faction; } }
 }
 function errand(ctx, o, stops, ms) { o.state.rounds = stops; o.state.ri = 0; (ctx.place.state.l4err ??= {})[o.id] = ctx.now() + ms; }
