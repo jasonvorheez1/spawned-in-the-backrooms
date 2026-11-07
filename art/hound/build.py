@@ -199,7 +199,8 @@ mott = ramp(noise(9, 6, 0.65).outputs[0], [(0.3, (0.40, 0.39, 0.38)), (0.5, (0.5
 vor = N.new("ShaderNodeTexVoronoi"); vor.feature = 'DISTANCE_TO_EDGE'; vor.inputs["Scale"].default_value = 14
 dn = noise(4, 2); vm = N.new("ShaderNodeMix"); vm.data_type = 'VECTOR'; vm.inputs[0].default_value = 0.25; Lk.new(co, vm.inputs[4]); Lk.new(dn.outputs["Color"], vm.inputs[5]); Lk.new(vm.outputs[1], vor.inputs["Vector"])
 veins = ramp(vor.outputs["Distance"], [(0.0, (1, 1, 1)), (0.035, (0, 0, 0))])
-c1 = mix(veins.outputs[0], mott.outputs[0], N.new("ShaderNodeRGB").outputs[0]); N["RGB"].outputs[0].default_value = (0.36, 0.38, 0.46, 1)
+vc = N.new("ShaderNodeRGB"); vc.outputs[0].default_value = (0.36, 0.38, 0.46, 1)
+c1 = mix(veins.outputs[0], mott.outputs[0], vc.outputs[0])
 bruise = ramp(noise(2.5, 3).outputs[0], [(0.58, (0, 0, 0)), (0.7, (0.55, 0.55, 0.55))])
 br = N.new("ShaderNodeRGB"); br.outputs[0].default_value = (0.46, 0.33, 0.33, 1)
 c2 = mix(bruise.outputs[0], c1, br.outputs[0])
