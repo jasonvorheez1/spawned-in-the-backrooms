@@ -182,7 +182,7 @@ function viewmodel(ctx, moving, sprinting) {
   const now = ctx.now(), wp = W[kind] ?? {}, gun = !!wp.ranged
   const t = (now - (s.swingAt ?? -1e9)) / 1000, eq = Math.min(1, (now - (s.equipAt ?? -1e9)) / 350)
   const bobT = now / 1000 * (sprinting ? 11 : 7.5), amp = moving ? (sprinting ? 0.022 : 0.012) : 0.003
-  let pitch = gun ? 0 : -22, yaw = 0, roll = 0, dz = 0, dx = 0, dy = 0
+  let pitch = gun ? 0 : -42, yaw = gun ? 0 : 8, roll = gun ? 0 : 18, dz = 0, dx = 0, dy = 0
   if (gun) { const k = Math.max(0, 1 - t / 0.18); pitch += 9 * k; dz += 0.05 * k }
   else if (t < 0.4) { const a = t < 0.12 ? t / 0.12 : Math.max(0, 1 - (t - 0.12) / 0.28); pitch -= 70 * a; yaw += 25 * a; roll -= 20 * a; dx -= 0.1 * a; dy -= 0.04 * a }
   dy -= (1 - eq) * 0.3
