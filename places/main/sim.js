@@ -93,7 +93,7 @@ export function tick(ctx) {
   regrow(ctx, s, now);
   syncLevel0(ctx);
   const weapons = ctx.query({ tags: ["weapon"] }).length;
-  if (weapons < W.pickups && now >= (s.nextWeapon ?? 0)) {
+  if (false && weapons < W.pickups && now >= (s.nextWeapon ?? 0)) {
     const fill = s.weaponsSeeded ? 1 : W.pickups - weapons;
     for (let i = 0; i < fill; i++) {
       const c = cell(ctx);
