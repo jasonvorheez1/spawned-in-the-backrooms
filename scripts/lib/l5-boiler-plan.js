@@ -36,4 +36,4 @@ export const VENTS = [
   { id: "l5-boil-vent-4", x: 25.5, z: 20.5, period: 12, phase: 7 },
 ];
 export const VENT = { tell: 1.0, burst: 1.6, radius: 0.7, height: 3.2, damage: 4 };
-export const HEAT = { base: 1.2, furnace: 3.2, furnaceReach: 7, boiler: 0.6, boilerReach: 4, leakCool: 7, leakReach: 2.0, outsideCool: 5, coldCool: 12, soakMs: 60000, soakMul: 0.3, hurtAt: 70, hurtEvery: 2.5, hurt: 1 };
+export const HEAT = { base: 1.8, furnace: 4.5, furnaceReach: 8, boiler: 0.9, boilerReach: 4.5, leakCool: 4, leakReach: 1.6, outsideCool: 5, coldCool: 12, soakMs: 45000, soakMul: 0.5, hurtAt: 60, hurtEvery: 1.5, hurt: 3 };

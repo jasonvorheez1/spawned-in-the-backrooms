@@ -19,7 +19,7 @@ const LINES = {
   done: "Lens holds. They work. Keep them, you earned them. Batteries go fast down in six, so don't waste them.",
   had: "Already gave you a pair. Go on, I'm fine in here.",
 };
-const TIP = { 1: "Find Ines's goggle case at the south end of the Boiler Room", 2: "Follow the drag marks east to the hound den", 3: "Bring the goggles and a battery to the Cold Room drop box" };
+const TIP = { 1: "Find Ines's goggle case at the south end of the Boiler Room", 2: "Follow the drag marks east to the hound den", 3: "Bring the goggles and a battery to the M.E.G. drop box, northeast" };
 function say(ctx, p, key, at) {
   heard(ctx, { clip: CLICK, position: at, volume: 0.6, maxDistance: 14, refDistance: 2 }, { audience: { player: p.id } });
   heard(ctx, { clip: VO(LINES[key]), position: at, volume: 1, maxDistance: 30, refDistance: 3 }, { audience: { player: p.id } });
