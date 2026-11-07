@@ -1,10 +1,18 @@
 # Melee weapons. Fists are what you start with: weak on purpose. Found weapons need a level to wield.
 # damage: base hit. levelScale: share of the per-level damage bonus it gets. cooldown: seconds. reach: metres. stamina: cost per swing.
-order: [fists, table_leg, pipe_scrap, crowbar, bat]
+order: [fists, table_leg, pipe_scrap, crowbar, bat, hatchet, fire_axe]
+# rarity: common < uncommon < rare. weight: how often it is rolled for floor spawns and smiler drops. xp: reward for picking one up.
+rarities:
+  common:   { label: COMMON,   color: '#c9c2a0' }
+  uncommon: { label: UNCOMMON, color: '#7fd1a0' }
+  rare:     { label: RARE,     color: '#f0a040' }
+dropChance: { weapon: 0.18, almond: 0.35 }  # per smiler kill
 fists:      { name: Fists,      damage: 4,  levelScale: 0.3, cooldown: 0.45, reach: 1.9, stamina: 5,  minLevel: 1 }
-table_leg:  { name: Table leg,  damage: 11, levelScale: 0.8, cooldown: 0.5,  reach: 2.4, stamina: 8,  minLevel: 1, color: "oklch(0.55 0.08 60)",  length: 0.7 }
-pipe_scrap: { name: Pipe scrap, damage: 16, levelScale: 1,   cooldown: 0.6,  reach: 2.6, stamina: 10, minLevel: 2, color: "oklch(0.6 0.02 250)",  length: 0.8 }
-crowbar:    { name: Crowbar,    damage: 22, levelScale: 1,   cooldown: 0.7,  reach: 2.7, stamina: 12, minLevel: 3, color: "oklch(0.4 0.03 260)",  length: 0.9 }
-bat:        { name: Bat,        damage: 28, levelScale: 1,   cooldown: 0.8,  reach: 2.9, stamina: 14, minLevel: 4, color: "oklch(0.7 0.07 70)",   length: 1.0 }
+table_leg:  { name: Table leg,  damage: 11, levelScale: 0.8, cooldown: 0.5,  reach: 2.4, stamina: 8,  minLevel: 1, rarity: common, weight: 10, xp: 5, color: "oklch(0.55 0.08 60)",  length: 0.7 }
+pipe_scrap: { name: Pipe scrap, damage: 16, levelScale: 1,   cooldown: 0.6,  reach: 2.6, stamina: 10, minLevel: 2, rarity: common, weight: 8, xp: 5, color: "oklch(0.6 0.02 250)",  length: 0.8 }
+crowbar:    { name: Crowbar,    damage: 22, levelScale: 1,   cooldown: 0.7,  reach: 2.7, stamina: 12, minLevel: 3, rarity: uncommon, weight: 5, xp: 12, color: "oklch(0.4 0.03 260)",  length: 0.9 }
+bat:        { name: Bat,        damage: 28, levelScale: 1,   cooldown: 0.8,  reach: 2.9, stamina: 14, minLevel: 4, rarity: uncommon, weight: 4, xp: 12, color: "oklch(0.7 0.07 70)",   length: 1.0 }
+hatchet:    { name: Hatchet,    damage: 36, levelScale: 1.1, cooldown: 0.75, reach: 2.6, stamina: 15, minLevel: 6, rarity: rare, weight: 2, xp: 30, color: "oklch(0.5 0.1 40)", length: 0.75 }
+fire_axe:   { name: Fire axe,   damage: 48, levelScale: 1.2, cooldown: 1.0,  reach: 3.0, stamina: 20, minLevel: 8, rarity: rare, weight: 1, xp: 45, color: "oklch(0.5 0.2 25)", length: 1.0 }
 pickups: 14        # weapons lying in the maze at once
 pickupRespawn: 90  # seconds between refills

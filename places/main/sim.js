@@ -1,6 +1,7 @@
 // Level 0's referee: keeps almond water on the floor and smilers in the dark.
 import L from "../../scripts/lib/data/level0.yml";
 import W from "../../scripts/lib/data/weapons.yml";
+import { spawnAlmond, spawnWeapon, rollWeapon } from "../../scripts/lib/loot.js";
 import { N, zoneOf, inHub, hasPit, cellCenter } from "../../scripts/lib/maze.js";
 export const cadence = "1s";
 
@@ -22,7 +23,7 @@ export function tick(ctx) {
     const fill = s.almondsSeeded ? 1 : L.almonds - almonds;
     for (let i = 0; i < fill; i++) {
       const c = cell(ctx);
-      if (c) ctx.spawn({ tags: ["almond"], feetPosition: { x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 }, rotation: ctx.random() * 360, scale: 1.7, primitive: { kind: "scripted", script: "scripts/almond-geo.js" }, material: { emissiveIntensity: 1.6 } });
+      if (c) spawnAlmond(ctx, c);
     }
     s.almondsSeeded = true;
     s.nextAlmond = now + (L.almondRespawn * 1000) / 4;
@@ -31,8 +32,8 @@ export function tick(ctx) {
   if (weapons < W.pickups && now >= (s.nextWeapon ?? 0)) {
     const fill = s.weaponsSeeded ? 1 : W.pickups - weapons;
     for (let i = 0; i < fill; i++) {
-      const c = cell(ctx), kinds = W.order.slice(1), kind = kinds[Math.floor(ctx.random() * ctx.random() * kinds.length)];
-      if (c) ctx.spawn({ tags: ["weapon"], state: { kind }, feetPosition: { x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 }, rotation: ctx.random() * 360, primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind } } });
+      const c = cell(ctx);
+      if (c) spawnWeapon(ctx, c, rollWeapon(ctx));
     }
     s.weaponsSeeded = true;
     s.nextWeapon = now + (W.pickupRespawn * 1000) / 4;

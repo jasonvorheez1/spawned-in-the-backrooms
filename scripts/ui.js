@@ -260,6 +260,11 @@ export default function render(ctx, player) {
 
   // Weapon data
   const currentWeapon = W[s.equipped] ?? W.fists
+  const have = ['fists', ...(s.weapons ? s.weapons.split(',') : [])].filter((k) => W[k])
+  const invHtml = have.map((k) => {
+    const w = W[k], ok = lv >= w.minLevel, col = (W.rarities[w.rarity] ?? {}).color ?? '#c9c2a0'
+    return `<span style="color:${ok ? col : 'var(--bk-dim)'};${k === s.equipped ? 'text-decoration:underline;' : ''}margin-right:8px">${w.name}${ok ? '' : ' (LV ' + w.minLevel + ')'}</span>`
+  }).join('')
 
   return `${THEME}
 <div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
@@ -330,6 +335,8 @@ export default function render(ctx, player) {
         <span class="lbl">WEAPON</span>
         <span style="font-size:15px;font-weight:700;color:var(--bk-yellow)">${currentWeapon.name}</span>
       </div>
+      <div style="margin-top:3px;font-size:11px;font-weight:700;color:${(W.rarities[currentWeapon.rarity] ?? {}).color ?? 'var(--bk-dim)'}">${(W.rarities[currentWeapon.rarity] ?? {}).label ?? 'BARE HANDS'}</div>
+      <div style="margin-top:4px;font-size:10px;line-height:1.5">${invHtml}</div>
       <div class="lbl" style="margin-top:2px;font-size:10px"><kbd>${lab('cycleWeapon', 'E')}</kbd> SWITCH (DMG ${currentWeapon.damage} · REACH ${currentWeapon.reach}m)</div>
     </div>
 

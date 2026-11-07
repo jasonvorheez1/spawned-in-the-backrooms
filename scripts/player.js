@@ -4,6 +4,7 @@
 import PLAYER from './lib/data/player.yml'
 import L from './lib/data/level0.yml'
 import W from './lib/data/weapons.yml'
+import { dropLoot } from './lib/loot.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
 
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
@@ -95,6 +96,7 @@ function swing(ctx) {
     best.state.dead = true
     s.kills += 1
     gain(ctx, L.xpKill)
+    dropLoot(ctx, best.feetPosition)
   }
 }
 
@@ -107,7 +109,6 @@ function cycleWeapon(ctx) {
 
 export function drinkExhale(ctx) {
   sound(ctx, 'deep-breath-relief-exhale', 0.5, true)
-}
 }
 
 function drink(ctx) {
@@ -242,7 +243,7 @@ function tickStats(ctx, t, moving) {
     s.weapons = [...owned(s).slice(1), k].join(',')
     if (usable(s, k) && W[k].damage > weaponOf(s).damage) s.equipped = k
     s.pickedAt = now; s.gotWeapon = W[k].name
-    gain(ctx, L.xpAlmond)
+    gain(ctx, W[k].xp ?? L.xpAlmond)
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
   }
   // the flickering wall: the way out

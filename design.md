@@ -35,3 +35,9 @@ Take the mechanics, not the assets: a block world you can dig and build in, scav
 - Crafting from scavenged parts (ties into weapons: rare guns, crafted pipe weapons).
 - Base defense: placeable barricades and traps, with periodic smiler hordes that test the base.
 - Day/night or "the lights fail" timer that raises the threat.
+
+## Phase 2 decisions (2026-11-06, agent @@antigravity_pair)
+- Loot: smilers can drop almond water (35%) or a weapon (18%) on death. Floor spawns use the same weighted roll.
+- Weapon tiers: common / uncommon / rare, set in `weapons.yml`. Added Hatchet (Lv 6) and Fire axe (Lv 8) as rare; guns stay a later rare-loot step.
+- Inventory: the HUD lists every owned weapon in its rarity colour; ones above your level are greyed with the level needed.
+- Fixed a stray brace in `scripts/player.js` that stopped the player script from loading.
