@@ -69,4 +69,17 @@ export function seatHead(ctx, obj, l) {
   const want = critterSpec(l).children[0], h = ctx.getObject(obj.id + '/' + HEAD_ID)
   if (!h) { ctx.spawn(HEAD_ID, { parent: obj.id, ...want }); return }
   if (!h.attachment?.skin) { h.primitive = null; h.attachment = { skin: true }; h.feetPosition = { x: 0, y: 0, z: 0 }; h.rotation = 0; h.model = want.model; h.morph = want.morph }
+  else if ((h.model?.id ?? h.model) !== want.model.id) { h.model = want.model; h.morph = want.morph } // an old-pass head swaps to the current one
+}
+
+// a body from an older Blender pass (not one of M.body) is out of date
+export const staleBody = (model) => !!model && !Object.values(M.body).includes(model.id ?? model)
+const SPECIES = Object.keys(M.species)
+const hashOf = (str) => { let h = 2166136261; for (const c of String(str)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
+export const speciesFor = (id) => SPECIES[hashOf(id + ':sp') % SPECIES.length]
+// each body its own height and build, stable by id: h 0.86..1.14, w 0.88..1.16 (Savi's picks)
+export function buildFor(id, sex) {
+  const a = (hashOf(id + ':h') % 1000) / 1000, b = (hashOf(id + ':w') % 1000) / 1000
+  const h = +(0.86 + a * 0.28 - (sex === 'f' ? 0.03 : 0)).toFixed(3), w = +(0.88 + b * 0.28).toFixed(3)
+  return { h, w }
 }

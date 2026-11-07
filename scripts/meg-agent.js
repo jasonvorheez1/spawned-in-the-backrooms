@@ -1,6 +1,6 @@
 import { rollLoot, garmentsOf } from "./lib/loot.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
-import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID } from "./lib/critter-model.js";
+import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec } from "./lib/critter-model.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
@@ -35,6 +35,12 @@ function dress(ctx, me) {
   const was = toMesh(ctx, me);
   if (was) me.state.wear = was;
   else if (!me.state.wear && me.model) { const l = lookFromModel(me.model, ctx.getObject(me.id + "/" + HEAD_ID)?.model?.id ?? ctx.getObject(me.id + "/" + HEAD_ID)?.model); if (l?.species) me.state.wear = l; }
+  if (staleBody(me.model)) { // an older Blender pass: re-dress on the current body and head, keeping its clothes and colours
+    const local = String(me.id).split("/").pop(), old = me.state.wear ?? lookFromModel(me.model, null) ?? {}
+    const l = { ...old, species: old.species && old.species !== "cat" ? old.species : speciesFor(local), sex: old.sex ?? (me.model.id ?? me.model) === "" ? "m" : (old.sex ?? "m") }
+    const spec = critterSpec(l); me.model = spec.model; me.material = spec.material; me.jiggle = spec.jiggle; me.state.wear = l; seatHead(ctx, me, l);
+  }
+  if (!me.state.build) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = b; me.scale = { x: b.w, y: b.h, z: b.w }; } // its own height and build
 }
 
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
