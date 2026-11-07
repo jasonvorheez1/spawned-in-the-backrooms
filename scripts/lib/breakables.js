@@ -177,6 +177,19 @@ export function damageEntity(ctx, o, dmg, at, normal, kind) {
   }
   return true
 }
+// a hole at body height is a doorway: what hangs over it comes down, and once a column is open floor to top
+// the column beside it (toward the wall's middle) gives way too, so the gap is wide enough to walk through
+function breach(V, gone, pop) {
+  const body = Math.min(1, V.rows - 1)
+  for (let u = 0; u < V.cols; u++) {
+    let open = true; for (let v = 0; v <= body; v++) if (!gone(u, v)) { open = false; break }
+    if (!open) continue
+    for (let v = body + 1; v < V.rows; v++) if (!gone(u, v)) pop(u, v)
+    if (V.cols > 2) { const n = u < V.cols / 2 ? u + 1 : u - 1; if (n >= 0 && n < V.cols) for (let v = 0; v < V.rows; v++) if (!gone(n, v)) pop(n, v) }
+  }
+  for (let pass = 0; pass < V.rows; pass++) for (let v = 1; v < V.rows; v++) for (let u = 0; u < V.cols; u++)
+    if (!gone(u, v) && gone(u, v - 1) && (gone(u - 1, v) || gone(u + 1, v))) pop(u, v)
+}
 export function damageWall(ctx, w, dmg, at, normal, kind) {
   const st = ctx.place.state, V = B.voxel ?? { cols: 4, rows: 3 }
   if (w.prot) { chip(ctx, at, normal, w.mat ?? 'concrete', 0); return true } // shells, edges and exits never give
@@ -196,9 +209,7 @@ export function damageWall(ctx, w, dmg, at, normal, kind) {
     spawnRubble(ctx, { x: c.x + (normal?.x ?? 0) * 0.5, y: 0.02, z: c.z + (normal?.z ?? 0) * 0.5 }, rollDrops(ctx, 'drywall', kind))
   }
   pop(w.u, w.v)
-  // no support: a chunk with a hole under it and holes (or the wall's end) both sides comes down with it
-  for (let pass = 0; pass < V.rows; pass++) for (let v = 1; v < V.rows; v++) for (let u = 0; u < V.cols; u++)
-    if (!gone(u, v) && gone(u, v - 1) && gone(u - 1, v) && gone(u + 1, v)) pop(u, v)
+  breach(V, gone, pop)
   // every chunk gone: store the wall whole so the mesh params stay short
   let all = true; for (let u = 0; u < V.cols && all; u++) for (let v = 0; v < V.rows; v++) if (!gone(u, v)) { all = false; break }
   if (all) { for (let u = 0; u < V.cols; u++) for (let v = 0; v < V.rows; v++) delete st.broken[`${w.key}:${u}:${v}`]; st.broken[w.key] = ctx.now() }
@@ -224,8 +235,7 @@ function damageGridWall(ctx, w, dmg, at, normal, kind) {
     spawnRubble(ctx, { x: c.x + (normal?.x ?? 0) * (G.T + 0.4), y: 0.02, z: c.z + (normal?.z ?? 0) * (G.T + 0.4) }, rollDrops(ctx, mat, kind), `${m.name} rubble`)
   }
   pop(w.u, w.v)
-  for (let pass = 0; pass < V.rows; pass++) for (let v = 1; v < V.rows; v++) for (let u = 0; u < V.cols; u++)
-    if (!gone(u, v) && gone(u, v - 1) && gone(u - 1, v) && gone(u + 1, v)) pop(u, v)
+  breach(V, gone, pop)
   let all = true; for (let u = 0; u < V.cols && all; u++) for (let v = 0; v < V.rows; v++) if (!gone(u, v)) { all = false; break }
   if (all) { for (let u = 0; u < V.cols; u++) for (let v = 0; v < V.rows; v++) delete st.broken[`${w.key}:${u}:${v}`]; st.broken[w.key] = ctx.now() }
   ctx.emit('screenShake', { intensity: 0.15, duration: 0.2 }, { audience: { nearby: at, radius: 6 } })
