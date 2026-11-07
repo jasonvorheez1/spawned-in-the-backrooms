@@ -988,19 +988,12 @@ export function geometry(ctx) {
       fill(ellipse(pu - s * 0.018, pv + 0.032, 0.016, 0.016), 0.018);
     } else {
       // dandy eye: a huge dark pupil filling the white, the chosen colour as its rim
-      ctx.color(EYE);
-      fill(ellipse(pu, pv - 0.006, 0.084 * pr * ESH[0], 0.1 * pr * ESH[1]), 0.011);
-      ctx.color(mixc(EYE, "#07040b", 0.82));
-      fill(ellipse(pu, pv - 0.002, 0.074 * pr * ESH[0], 0.09 * pr * ESH[1]), 0.012);
+      ctx.color("#050407"); // a solid black pupil, no shine (Shelly's call)
+      fill(ellipse(pu, pv - 0.004, 0.08 * pr * ESH[0], 0.096 * pr * ESH[1]), 0.012);
 
       if (E.eye === "star") {
         ctx.color("#ffffff");
         fill(star(pu, pv, 0.065, 0.019), 0.018);
-      } else {
-        // Specular highlights
-        ctx.color("#ffffff");
-        fill(ellipse(pu - s * 0.026, pv + 0.036, 0.03, 0.036, 16, s * 0.4), 0.018);
-        fill(ellipse(pu + s * 0.03, pv - 0.04, 0.012, 0.012), 0.018);
       }
     }
 
