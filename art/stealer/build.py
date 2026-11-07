@@ -140,9 +140,11 @@ neck = bones["mixamorig:Neck"][0].z
 bm = bmesh.new(); bm.from_mesh(shed.data); SM = shed.matrix_world
 cyb = bones["mixamorig:Spine2"][0].y
 kill = []
+P0 = 'mixamorig:'
 for f in bm.faces:
     c = SM @ f.calc_center_median()
     if c.z > neck + 0.02: kill.append(f); continue
+    if any((c - closest(c, bones[P0 + sd + "Hand"][0], bones[P0 + sd + "Hand"][0] + (bones[P0 + sd + "Hand"][1] - bones[P0 + sd + "Hand"][0]).normalized() * 0.2)[0]).length < 0.075 for sd in ("Left", "Right")): kill.append(f); continue
     if 0.9 < c.z < neck + 0.02 and c.y < cyb and abs(c.x) < 0.035 + (c.z - 0.9) * 0.12: kill.append(f)
 bmesh.ops.delete(bm, geom=kill, context="FACES")
 for v in bm.verts:
@@ -201,8 +203,7 @@ def mat(name, image=None, color=None, rough=0.5, double=False):
     b.inputs["Roughness"].default_value = rough; mt.use_backface_culling = not double; return mt
 FLESH = mat("flesh", fi, rough=0.16, double=True); TEETH = mat("teeth", color=(0.55, 0.5, 0.36), rough=0.35)
 crea.data.materials.clear(); crea.data.materials.append(FLESH); teeth.data.materials.append(TEETH)
-for o in (crea, teeth):
-    o.modifiers.new("arm", "ARMATURE").object = rig; o.parent = rig
+teeth.modifiers.new("arm", "ARMATURE").object = rig; teeth.parent = rig
 # slot names: skin, suit, shoes, eyes, hair
 for o, nm in ((body, "skin"), (clothes, "suit"), (shoes, "shoes"), (eyes, "eyes"), (hair, "hair")):
     for ms in o.material_slots: ms.material.name = nm
