@@ -12,7 +12,7 @@ const CSS = `<style>
 #lp{position:fixed;inset-inline:0;top:57%;display:flex;flex-direction:column;align-items:center;pointer-events:none}
 #lp .nm{font-size:17px;display:flex;align-items:center;gap:8px;text-shadow:0 1px 2px #000,0 0 2px rgba(255,160,30,.45)}
 #lp .key{display:inline-block;min-width:18px;padding:0 4px;border:1px solid var(--a);font-size:12px;text-align:center}
-#lp .in{font-size:11px;color:var(--ad);margin-top:2px;text-shadow:0 1px 2px #000}
+#lp .in{font-size:12px;opacity:.8;margin-top:2px;text-shadow:0 1px 2px #000,0 0 3px #000}
 #ln{position:fixed;inset-inline:0;top:66%;display:flex;justify-content:center;pointer-events:none}
 #ln span{padding:3px 12px;background:rgba(10,7,2,.92);border-left:2px solid var(--a);border-right:2px solid var(--a);font-size:12px}
 .pbw{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;background:radial-gradient(ellipse at center,rgba(0,0,0,.55),rgba(0,0,0,.25) 70%)}
