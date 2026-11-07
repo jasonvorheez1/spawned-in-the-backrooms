@@ -169,7 +169,7 @@ export default function render(ctx, player) {
   return `${THEME}
 <div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
 
-  ${xferCard(s, now)}
+  ${xferCard(s, now)}${restUi(ctx, s)}
   ${chatBubbles(ctx, now)}
   <!-- Unobtrusive Center Point -->
   <div class="dot-crosshair"></div>${s.crouch ? `<div class="sneak sneak-${s.detect ?? 'hidden'}" id="sn-${s.detect ?? 'hidden'}">[${(s.detect ?? 'hidden').toUpperCase()}]</div>` : ''}
