@@ -7,7 +7,7 @@
 export const cadence = "2s";
 
 // Tripo models for the props (Savi, Nov 7): each fits a layout box; breakables take tag + { mat, hp, maxHp } (lib/breakables.js)
-const GLB = {"armchair": "/cdn/value.324d9a05c6aca4bc72f791c510f751bee89cfbbc0e2104e59ad075531e70a750.glb", "bookcase": "/cdn/value.e5cb5f63f8bafd91816ef7385146f9277f104159e7e936e7c42095649e736239.glb", "boulder": "/cdn/value.42d919dcb3a5731dd59103721bf944cc852d5f72e23cbb63b6c5050708d6593c.glb", "buoy": "/cdn/value.d5523049085d74c40e3d4beced2fa139b38ef940839ffff99aae7f482aeff80c.glb", "crate": "/cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb", "rowboat": "/cdn/value.a8149ca591b3615ade17735a3a0a1e972028c35be8f1351899565924f9d32a16.glb", "table": "/cdn/value.ae333c2667c26f3447936196f710a35594496dcf39c35d76b8c06a720189174d.glb"};
+const GLB = {"dresser": "/cdn/value.6b73846286fe58c95018a876f85d847e8af3c7a0187d06a8838072345f9ca49e.glb", "sideboard": "/cdn/value.4594d9a21e6d7e2e5f94a71011243747c652c77035a1fc981fbcf4bee983324f.glb", "floorlamp": "/cdn/value.0871d1626b929961d73cb28c05f82070ad822c5cc2e6b8deec5046248fb4086d.glb", "plant": "/cdn/value.88c7684212164aa0495a65fc294a12752ef506c35708f70485202b9366795b43.glb", "boxes": "/cdn/value.03043a5c4b3b53a18930a0c88c7326a0dc9d5b573d956151044390dfab77c966.glb", "painting": "/cdn/value.4a21d3a89bea899be89b163f7a8f7dff6154ed42a4cc293f4dc61d1417ddb01d.glb", "vase": "/cdn/value.b0e16d774955bb71599f3de00b0530daf0091b38a420dd17e70fd067c6fc317e.glb", "debris": "/cdn/value.8d1753333c511dbe2a78f3262c0c0a43906f3f976c835839c27c1540ade2075d.glb", "armchair": "/cdn/value.324d9a05c6aca4bc72f791c510f751bee89cfbbc0e2104e59ad075531e70a750.glb", "bookcase": "/cdn/value.e5cb5f63f8bafd91816ef7385146f9277f104159e7e936e7c42095649e736239.glb", "boulder": "/cdn/value.42d919dcb3a5731dd59103721bf944cc852d5f72e23cbb63b6c5050708d6593c.glb", "buoy": "/cdn/value.d5523049085d74c40e3d4beced2fa139b38ef940839ffff99aae7f482aeff80c.glb", "crate": "/cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb", "rowboat": "/cdn/value.a8149ca591b3615ade17735a3a0a1e972028c35be8f1351899565924f9d32a16.glb", "table": "/cdn/value.ae333c2667c26f3447936196f710a35594496dcf39c35d76b8c06a720189174d.glb"};
 const fit = (w, h, d) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
 const brk = (mat, hp) => ({ mat, hp, maxHp: hp });
 // every breakable here, by id: laid with the level, re-laid 15 min after it is smashed (nobody within 8 m)
@@ -18,13 +18,25 @@ export function breakables(FY, PY) {
     "l7-bookcase": { tags: ["breakable"], feetPosition: { x: -2.72, y: FY, z: 0.3 }, rotation: { yaw: 0 }, model: GLB.bookcase, layout: fit(1.5, 2.3, 1.5), physics: { body: "static", collider: "box" }, state: brk("wood", 90) },
     "l7-armchair": { tags: ["breakable"], feetPosition: { x: 1.7, y: FY, z: 0.2 }, rotation: { yaw: -115 }, model: GLB.armchair, layout: fit(0.95, 0.95, 0.95), physics: { body: "static", collider: "box" }, state: brk("wood", 50) },
     "l7-table": { tags: ["breakable"], feetPosition: { x: 0.5, y: FY, z: -0.6 }, rotation: { yaw: 8 }, model: GLB.table, layout: fit(1.15, 0.5, 1.15), physics: { body: "static", collider: "box" }, state: brk("wood", 40) },
+    // the drowned-house pile (ref: a flooded parlour, furniture stacked where the water left it)
+    "l7-dresser": { tags: ["container", "breakable"], feetPosition: { x: 2.4, y: FY, z: -2.15 }, rotation: { yaw: 84 }, model: GLB.dresser, layout: fit(1.0, 1.1, 1.0), physics: { body: "static", collider: "box" }, state: { name: "Swollen chest of drawers", items: "almond,bandage", ...brk("wood", 70) } },
+    "l7-dresser-top": { tags: ["breakable"], feetPosition: { x: 2.45, y: FY + 1.08, z: -2.1 }, rotation: { yaw: 100, roll: 8 }, model: GLB.dresser, layout: fit(0.75, 0.8, 0.75), physics: { body: "static", collider: "box" }, state: brk("wood", 50) },
+    "l7-sideboard": { tags: ["container", "breakable"], feetPosition: { x: 2.42, y: FY, z: 2.2 }, rotation: { yaw: 90 }, model: GLB.sideboard, layout: fit(1.15, 1.25, 1.15), physics: { body: "static", collider: "box" }, state: { name: "Waterlogged sideboard", items: "ration,battery", ...brk("wood", 80) } },
+    "l7-boxes": { tags: ["breakable"], feetPosition: { x: 1.25, y: FY, z: 2.45 }, rotation: { yaw: 6 }, model: GLB.boxes, layout: fit(0.8, 1.05, 0.8), physics: { body: "static", collider: "box" }, state: { items: "rope", ...brk("wood", 20) } },
+    "l7-lamp": { tags: ["breakable"], feetPosition: { x: -2.5, y: FY, z: 2.3 }, rotation: { yaw: 210, roll: -9 }, model: GLB.floorlamp, layout: fit(0.9, 1.7, 0.9), physics: { body: "static", collider: "box" },
+      children: [{ feetPosition: { x: 0, y: 1.45, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.11 70)", intensity: 0.7, distance: 4 } }], state: brk("wood", 25) },
+    "l7-plant": { tags: ["breakable"], feetPosition: { x: -1.3, y: FY, z: 2.5 }, rotation: { yaw: 40 }, model: GLB.plant, layout: fit(0.6, 0.75, 0.6), physics: { body: "static", collider: "box" }, state: brk("wood", 15) },
+    "l7-vase": { tags: ["breakable"], feetPosition: { x: 2.3, y: FY + 1.25, z: 1.95 }, rotation: { yaw: 20 }, model: GLB.vase, layout: fit(0.35, 0.75, 0.35), physics: { body: "static", collider: "box" }, state: brk("wood", 10) },
+    "l7-painting": { feetPosition: { x: -1.75, y: FY + 1.15, z: 2.86 }, rotation: { yaw: 180, roll: 5 }, model: GLB.painting, layout: fit(0.95, 0.85, 0.95) },
+    "l7-debris-1": { feetPosition: { x: -0.95, y: FY - 0.05, z: 0.9 }, rotation: { yaw: 30 }, model: GLB.debris, layout: fit(0.8, 0.45, 0.8) },
+    "l7-debris-2": { feetPosition: { x: 1.4, y: FY - 0.05, z: -2.35 }, rotation: { yaw: 200 }, model: GLB.debris, layout: fit(0.65, 0.4, 0.65) },
   };
   [[-9, -6, 1.3, 1], [-12, 4, 1.8, 2], [8, -7, 1.1, 3], [13, 2, 2.2, 4], [-6, 12, 1.5, 5], [10, 11, 1.2, 6], [-17, -3, 2.6, 7], [17, -9, 2, 8], [3, -11, 0.8, 9], [-4, -9, 0.7, 10]].forEach(([x, z, sc, seed], i) => {
     R[`l7-boulder-${i}`] = { tags: ["breakable"], feetPosition: { x, z, y: { terrain: -0.15 * sc } }, rotation: { yaw: seed * 47 }, model: GLB.boulder, layout: fit(1.9 * sc, 1.9 * sc, 1.9 * sc), physics: { body: "static", collider: "auto" }, state: brk("concrete", Math.round(140 * sc)) };
   });
   return R;
 }
-const V = 7;
+const V = 8;
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
 const CONCRETE = {
