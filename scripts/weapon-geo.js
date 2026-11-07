@@ -202,6 +202,39 @@ const builders = {
     bar(ctx, 0.012, Y, 0.028, 0.014, 0.585, 0.612, 0.005); // the hook's crown
     for (let z = 0.52; z < 0.58; z += 0.01) { bar(ctx, 0.014, Y, 0.003, 0.012, z, z + 0.004, 0.001, 1); bar(ctx, -0.021, Y, 0.003, 0.012, z, z + 0.004, 0.001, 1); }
   },
+  stun_baton(ctx, M, hi) { // a ridged black rubber grip, a switch collar, a steel shaft, an insulator and two copper prongs
+    plain(ctx, "oklch(0.18 0.005 260)", 0.85);
+    rod(ctx, [[0, Y, 0], [0, Y, 0.01], [0, Y, 0.1], [0, Y, 0.19], [0, Y, 0.2]], [0.017, 0.021, 0.019, 0.02, 0.018], M); // grip, a pommel swell
+    if (hi) { ctx.color("oklch(0.24 0.005 260)"); for (let z = 0.03; z < 0.18; z += 0.014) rod(ctx, [[0, Y, z], [0, Y, z + 0.006]], [0.0205, 0.0205], M); } // finger ridges
+    plain(ctx, "oklch(0.3 0.01 260)", 0.5);
+    rod(ctx, [[0, Y, 0.195], [0, Y, 0.205], [0, Y, 0.24], [0, Y, 0.25]], [0.02, 0.025, 0.023, 0.016], M); // the collar
+    plain(ctx, "oklch(0.55 0.2 25)", 0.4); bar(ctx, 0, Y + 0.024, 0.007, 0.004, 0.21, 0.232, 0.002, 1); // the red trigger switch on top
+    if (hi) { plain(ctx, "oklch(0.85 0.12 230)", 0.2); ctx.emissive?.("oklch(0.8 0.15 230)"); rod(ctx, [[0, Y + 0.0225, 0.238], [0, Y + 0.0225, 0.243]], [0.004, 0.004], 6); ctx.emissive?.(null); } // the charge lamp
+    steel(ctx, STEEL, 0.32);
+    rod(ctx, [[0, Y, 0.245], [0, Y, 0.4], [0, Y, 0.545]], [0.0125, 0.0115, 0.011], M); // the shaft
+    if (hi) { ctx.color("oklch(0.7 0.01 250)"); for (const z of [0.3, 0.42]) rod(ctx, [[0, Y, z], [0, Y, z + 0.004]], [0.0128, 0.0128], M); } // seam rings
+    plain(ctx, "oklch(0.22 0.01 260)", 0.6);
+    rod(ctx, [[0, Y, 0.54], [0, Y, 0.552], [0, Y, 0.568], [0, Y, 0.574]], [0.012, 0.0155, 0.0155, 0.012], M); // insulator cap
+    ctx.albedo(null); ctx.color("oklch(0.68 0.13 50)"); ctx.metalness(1); ctx.roughness(0.28);
+    for (const sx of [-1, 1]) { rod(ctx, [[sx * 0.0075, Y, 0.565], [sx * 0.0085, Y, 0.59], [sx * 0.0095, Y, 0.61]], [0.0032, 0.003, 0.0026], 7); rod(ctx, [[sx * 0.0095, Y, 0.607], [sx * 0.0095, Y, 0.614]], [0.0034, 0.0005], 6); } // copper prongs, beaded tips
+  },
+  lineman_machete(ctx, M, hi) { // a long dark blade with a hooked spine, a bright ground edge, an orange insulated grip bound in black tape
+    plain(ctx, "oklch(0.62 0.17 50)", 0.7);
+    rod(ctx, [[0, Y, 0], [0, Y, 0.012], [0, Y, 0.09], [0, Y, 0.17], [0, Y, 0.182]], [0.014, 0.0175, 0.016, 0.0175, 0.014], M, [1.3, 1]); // insulated grip, oval
+    ctx.color(TAPE); ctx.roughness(0.9);
+    for (const [z0, z1] of [[0.02, 0.07], [0.1, 0.16]]) wraps(ctx, z0, z1, 0.0178, M, 0.014); // two bindings of black tape, a gap of orange between
+    if (hi) { ctx.color("oklch(0.85 0.15 90)"); bar(ctx, 0.022, Y, 0.0015, 0.006, 0.075, 0.095, 0.001, 1); } // a yellow 1000V sticker
+    steel(ctx, "oklch(0.55 0.005 250)", 0.4); bar(ctx, 0.004, Y, 0.022, 0.009, 0.175, 0.19, 0.003, 2); // the bolster
+    rod(ctx, [[0, Y, -0.012], [0, Y, 0.004]], [0.006, 0.006], 8); // pommel rivet
+    steel(ctx, "oklch(0.3 0.008 250)", 0.55); // the blade: blackened steel
+    blade(ctx, [[-0.012, 0.185], [-0.012, 0.4], [-0.012, 0.6], [-0.01, 0.66], [-0.004, 0.705], [0, 0.722]],
+      [[0.026, 0.185], [0.032, 0.4], [0.045, 0.6], [0.041, 0.66], [0.023, 0.705], [0.001, 0.722]], 0.003, 0.0008);
+    blade(ctx, [[-0.011, 0.555], [-0.011, 0.6], [-0.011, 0.628]], [[-0.013, 0.555], [-0.03, 0.62], [-0.04, 0.657]], 0.0026, 0.0006); // the hooked spine
+    ctx.color("oklch(0.85 0.008 250)"); ctx.metalness(1); ctx.roughness(0.15);
+    blade(ctx, [[0.02, 0.2], [0.026, 0.4], [0.038, 0.6], [0.034, 0.66], [0.018, 0.703]],
+      [[0.0265, 0.2], [0.0325, 0.4], [0.0455, 0.6], [0.0415, 0.66], [0.0235, 0.705]], 0.0013, 0.0009); // ground edge, bright
+    if (hi) { ctx.color(RUST); ctx.roughness(1); ctx.metalness(0.1); ctx.albedo(null); rod(ctx, [[-0.002, Y + 0.0028, 0.3], [0.004, Y + 0.0028, 0.33]], [0.004, 0.003], 5); } // a rust freckle
+  },
 };
 
 // Tripo meshes, sampled along their length in their own file frame: rows [z, x, y, r] (r: the thinner half-width there).
@@ -213,6 +246,7 @@ const SCRIPTED = { // grip and head along +Z, and the radius there, for the kind
   hatchet: { grip: [0.02, 0.26, 0.022], head: [0.4, 0.6, 0.021] }, fire_axe: { grip: [0.1, 0.3, 0.028], head: [0.5, 0.8, 0.025] },
   rebar: { grip: [0.05, 0.26, 0.018], head: [0.4, 0.8, 0.013] }, wrench: { grip: [0.04, 0.32, 0.019], head: [0.3, 0.4, 0.019] },
   screwdriver: { grip: [0.0, 0.11, 0.021], head: [0.14, 0.26, 0.006] }, sledgehammer: { grip: [0.0, 0.24, 0.022], head: [0.6, 0.82, 0.018] },
+  stun_baton: { grip: [0.0, 0.19, 0.02], head: [0.4, 0.54, 0.012] }, lineman_machete: { grip: [0.01, 0.17, 0.017], head: [0.4, 0.66, 0.004] },
   pistol: { grip: [0.02, 0.06, 0.016], head: [0.08, 0.2, 0.016], mag: [0.018, 0.05, -0.085] }, shotgun: { grip: [0.44, 0.6, 0.03], head: [0.62, 0.8, 0.02] },
 };
 // where the shaft is at z: [x, y, r]
@@ -245,7 +279,7 @@ function overlay(ctx, kind, look, mesh, M, hi) {
   } else if (look === "edge") { // a leather-wrapped grip; scripted blades also get a freshly ground edge
     ctx.albedo(null); ctx.color(LEATHER); ctx.roughness(0.8);
     for (let z = g0; z < g1; z += 0.014) band(ctx, z, z + 0.012, mp, gr, 1.1, M);
-    const e = !mp && { hatchet: [0.185, 0.62, 0.84], fire_axe: [0.235, 0.8, 1.08], rebar: [0.032, 0.94, 1.04], screwdriver: [0, 0.27, 0.3] }[kind];
+    const e = !mp && { hatchet: [0.185, 0.62, 0.84], fire_axe: [0.235, 0.8, 1.08], rebar: [0.032, 0.94, 1.04], screwdriver: [0, 0.27, 0.3], lineman_machete: [0.042, 0.3, 0.62] }[kind];
     if (e) { ctx.color("oklch(0.97 0.005 250)"); ctx.metalness(1); ctx.roughness(0.08); bar(ctx, e[0], Y, 0.0025, 0.004, e[1], e[2], 0.001, 1); }
   } else if (look === "meg") { // M.E.G. property: lime paint bands and a stamped tag
     ctx.albedo(null); ctx.color(LIME); ctx.roughness(0.45);
