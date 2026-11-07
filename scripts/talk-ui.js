@@ -5,7 +5,7 @@ import { describe } from './lib/items.js'
 import { skillsOf } from './lib/stats.js'
 
 const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-const q = (t) => esc(t).replace(/'/g, '&#39;')
+const q = (t) => esc(String(t ?? '').replace(/\\/g, '\\\\').replace(/'/g, "\\'"))
 const MOOD = { calm: '#d9c79a', happy: '#9fe07a', annoyed: '#f2b14e', angry: '#ff6a4f', scared: '#9fc8ff' }
 const feel = (r) => (r <= -60 ? 'HOSTILE' : r <= -25 ? 'COLD' : r < 10 ? 'WARY' : r < 40 ? 'OKAY' : r < 70 ? 'FRIENDLY' : 'TRUSTS YOU')
 const SVC = { scout: 'Ask for tips', medic: 'Get patched up', quarter: 'Collect rations' }
