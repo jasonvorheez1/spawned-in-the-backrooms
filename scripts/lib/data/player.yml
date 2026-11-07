@@ -11,4 +11,5 @@ turnInPlace: 90
 turnSmoothing: 0.06
 turnSpeed: 900
 turnTo: movement
-walkSpeed: 6
+walkSpeed: 4.5
+runSpeed: 8

@@ -1,6 +1,6 @@
 # name: the game's name: fill it once you know what this is. description: one line for the box art.
-name: ""
-description: ""
+name: "The Backrooms: Level 0"
+description: "Noclip into the yellow maze. Survive the smilers, find the exit, level up with whoever you meet."
 camera: templates/camera.js#camera
 lighting: scripts/lighting.js
 defaultPlace: main
@@ -17,6 +17,17 @@ inputs:
     jump:
       keys:
         - space
+    sprint:
+      keys:
+        - shift
+    attack:
+      mouse: left
+    drink:
+      keys:
+        - q
+    flashlight:
+      keys:
+        - f
   axes:
     moveX:
       keys: a/d
