@@ -96,6 +96,9 @@ function detail(t, s, def) {
     const a = W[t], nm = t === 'ammo' ? 'Pistol rounds' : 'Shotgun shells'
     return `<div class="${cls}"><h4>${nm}</h4><div class="r" style="color:var(--ad)">AMMO</div><div class="g">${cell('QTY', `+${a.perPickup}`)}${cell('FOR', t === 'ammo' ? 'PISTOL' : 'SHOTGUN')}${cell('CARRIED', s[t] ?? 0, true)}</div></div>`
   }
+  if (t === 'bobbypin') {
+    return `<div class="${cls}"><h4>Bobby pin</h4><div class="r" style="color:var(--ad)">TOOL</div><div class="g">${cell('USE', 'LOCKPICKING')}${cell('CARRIED', s.bobbypins != null ? s.bobbypins : 6, true)}</div></div>`
+  }
   return ''
 }
 
