@@ -36,7 +36,7 @@ function spawnCrawler(ctx, i) {
   const [x, z] = C.sites[i];
   return ctx.spawn(`l7-crawler-${i}`, {
     tags: ["moths", "moth", "l7beast", "hostile"], feetPosition: { x, y: shoreY(ctx, x, z), z }, rotation: ctx.random() * 360,
-    model: { id: CRAB, materials: { shell: { texture: "cdn/texture-wet-barnacle-crusted-dark-green-crab-shell.png", color: "oklch(0.55 0.04 150)", roughness: 0.35 }, barnacle: { color: "oklch(0.72 0.02 90)", roughness: 0.9 }, flesh: { color: "oklch(0.6 0.06 30)" }, eye: { color: "#000000", roughness: 1, metalness: 0 } } },
+    model: { id: CRAB, materials: { shell: { texture: "cdn/texture-wet-barnacle-crusted-dark-green-crab-shell.png", color: "oklch(0.92 0.07 150)", roughness: 0.3, emissive: "oklch(0.3 0.05 160)", emissiveIntensity: 0.25 }, barnacle: { color: "oklch(0.72 0.02 90)", roughness: 0.9 }, flesh: { color: "oklch(0.6 0.06 30)" }, eye: { color: "#000000", roughness: 1, metalness: 0 } } },
     physics: { body: "character", collider: "capsule" }, scale: 1,
     state: { kind: "tidecrawler", name: "Tidecrawler", hp: C.hp, maxHp: C.hp, home: { x, z } },
   });
