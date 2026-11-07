@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 232,
-  "updatedAt": "2026-11-07T03:29:11.668Z",
+  "basedOnSpecVersion": 235,
+  "updatedAt": "2026-11-07T03:30:42.673Z",
   "summary": "The Backrooms is a multiplayer survival game spanning Level 0's yellow maze and Level 1's concrete Habitable Zone. world.config.yaml enters through main and wires shared player, camera and HUD behavior; each place simulates its own layout and supplies while shared player, combat, interaction and loot code follows players across place transitions.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0's 56×56-cell maze and hub; cell scenes hold authored props/lights, while sim.js generates maze geometry, stairs, shifting walls, loot, crates and smilers/lurkers.",
+    "places/main (3D) - Level 0's 56×56-cell maze and hub; cell scenes hold authored props/lights, including x-1z1's buzzing, glitching wallpaper wall with a local flicker/static effect, while sim.js generates maze geometry, stairs, shifting walls, loot, crates and smilers/lurkers.",
     "places/level1 (3D) - Level 1's 30×30-cell Habitable Zone; sim.js seeds concrete/rack geometry, lamps, supplies, M.E.G. arrival landmark and the return threshold, then runs the Flickering.",
     "places/debug (3D) - isolated combat and loot test room; cells contain stations, enemy pens, release pads and test objects, and sim.js restores test pickups and releases requested enemies."
   ],
@@ -64,8 +64,8 @@
     "scripts/player.js reload callbacks update loaded magazine/reserve counts; reload token/equipped checks reject stale callbacks; player.js viewmodel markers → scripts/camera.js + scripts/lib/vmpose.js use weapons.yml tuning."
   ],
   "behaviorFamilies": [
-    "places/main/cells/* authored lights - fluorescent fixtures repeat across maze cells, with red-zone variants; places/level1/sim.js separately lays a deterministic repeating tube/bulb lamp pattern that the Flickering toggles.",
-    "scripts/almond-geo.js, scripts/figure-geo.js, scripts/smiler-geo.js, scripts/lurker-geo.js, scripts/stairs-geo.js, scripts/weapon-geo.js, scripts/viewmodel-geo.js, scripts/level0-geo.js and scripts/level1-geo.js - procedural geometry reuses shared shape/layout helpers.",
+    "places/main/cells/* authored lights - fluorescent fixtures repeat across maze cells, with red-zone variants; x-1z1's separate flicker-wall uses aged yellow chevron wallpaper, spatial looping buzz/crackle audio and a local flicker/light/static effect; places/level1/sim.js separately lays a deterministic repeating tube/bulb lamp pattern that the Flickering toggles.",
+    "scripts/almond-geo.js, scripts/figure-geo.js, scripts/smiler-geo.js, scripts/lurker-geo.js, scripts/stairs-geo.js, scripts/weapon-geo.js, scripts/viewmodel-geo.js, scripts/level0-geo.js and scripts/level1-geo.js - procedural geometry reuse…",
     "scripts/smilers.js and scripts/lurkers.js - parallel enemy loops share player targeting, maze path/line checks, bite/death/effect patterns; smilers react to light/eye contact, lurkers to gaze-freeze/sanity.",
     "scripts/camera.js + scripts/lib/vmpose.js - display-frame camera/viewmodel motion varies by weapon recoil, reload/sight/muzzle positions and melee charge tuning in weapons.yml.",
     "scripts/critter-geo.js - procedural critter rig varies species, sex, body sliders, face/eye/mark choices and clothing/accessory slots; layered cloth uses fabric with shaded hems/cuffs.",
