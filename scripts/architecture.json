@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1121,
-  "updatedAt": "2026-11-07T19:19:18.428Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, Levels 1–5, Base Gamma and an isolated debug room. Authored place cells and simulations assemble the spaces; shared player, combat, NPC, loot and UI systems let players scavenge, fight, build, trade and talk, with progression and inventory saved per player.",
+  "basedOnSpecVersion": 1126,
+  "updatedAt": "2026-11-07T19:24:03.642Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, Levels 1–5, Base Gamma and an isolated debug room. Authored place cells and simulations assemble the spaces; shared player, combat, NPC, loot and UI systems support scavenging, fighting, building, trade and dialogue, with progression and inventory saved per player.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, containers, breakable furniture, shifting walls, smilers and lurkers.",
@@ -15,9 +15,9 @@
     "places/debug (3D) - isolated combat and loot test room; authored cells hold weapon/item stations, enemy pens and test stands."
   ],
   "roots": [
-    "world.config.yaml - multiplayer entry at main; declares camera, player actions, template and HUD renderer, including the elevator floor-list action.",
-    "templates/player.js - ordered player behavior chain: locomotion precedes movement; interaction, gameplay and critter handlers run before scripts/view3.js.",
-    "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and eye position, computer/seated/death views, talk close-up and pulled-back third-person view.",
+    "world.config.yaml - multiplayer entry at main; declares camera, player actions, template and HUD renderer, including elevator floor-list action.",
+    "templates/player.js - ordered player behavior chain: locomotion precedes movement; interaction/gameplay handlers run before critter and view3 handlers.",
+    "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and eye position, computer/seated/death views, talk close-up and third-person view.",
     "places/<place>/sim.js - place setup/tick roots; simulations assemble geometry, residents, encounters and exits; Level 4/5 also lay place systems.",
     "places/<place>/config.yaml + cells - place configuration and authored placements; Level 3 objects.scene hosts visits, Level 5 x0z0.scene hosts hotel fixtures and managers.",
     "scripts/ui.js and *-ui.js renderers - HUD and overlays for transitions, loot, talk, build, stats, craft, OS, horde, lockpick, mahjong and elevator floors.",
@@ -51,21 +51,21 @@
     "scripts/horde.js - player.state horde phase/countdown/alive/result; session holds wave timing and spawned creatures carry owner horde id.",
     "scripts/build.js + scripts/player.js - player.state scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
     "scripts/interact.js + scripts/lib/seat.js - focus/loot/interaction and player sit state; scripts/lockpick.js owns player.state pick/pickP/pickR, bobby pins and boiler-pick timestamp; seats own occupancy.",
-    "scripts/talk.js + scripts/meg-agent.js - dialogue, social memory and NPC follow state; meg-agent owns routines, nerve, chosen arm, combat, fear/want reactions and gestures; an active follower is downed/recovered rather than killed.",
+    "scripts/talk.js + scripts/meg-agent.js - dialogue, social memory and NPC follow state; meg-agent owns routines, nerve, arm loadout, combat, fear/want reactions and gestures; active companions are downed/recovered rather than killed.",
     "scripts/mahjong.js + Level 5 table state - player.state.mj, cents paid/won and session mjLive; table owns mjGuests roster/solo play/travel lifecycle; boiler door state owns open/hinge/swing."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered handlers: locomotion precedes movement; interact, grab, rest, mahjong, talk, build, noclip, stats, craft, OS, lockpick and horde process before critter and view3 handlers.",
-    "world.config.yaml camera → scripts/camera.js owns presented yaw/pitch and eye position; player/enemy gaze and targeting read camera; talkWith, seats and sit state alter view. view3.js writes player.state.tp → camera.js shoulder view, shortened by wall raycast.",
+    "world.config.yaml camera → scripts/camera.js owns presented yaw/pitch and eye position; player/enemy gaze and targeting read camera; talkWith, seats and sit state alter view. view3.js writes player.state.tp → camera.js shoulder view, raycast avoids walls.",
     "Level 0 exit in scripts/player.js → Level 1; paired thresholds connect Levels 1–3; Level 3 lifts → Levels 4/5, Level 4 stairs → Level 5; hotel lift/stairs return to Level 3/4.",
     "scripts/level-door.js trigger → paired arrival marker IDs (PAIR) or state.to fallback; place sims place inbound markers and player.js selects safe spawn/door checkpoints after death.",
     "scripts/player.js writes state.xfer → scripts/ui.js transition card; player.js gain() writes xpPop → UI aggregates XP, while lvlPrompt prompts K and stats.js clears it when opening the sheet.",
     "interact.js E on living NPC → player.state.talkWith; talk-ui.js submits choices/text/trade → talk.js/NPC ears; talk.js parses join intent into NPC state.follow; npc-talk.js builds lore/memory-informed prompts and replies update rapport.",
-    "A following M.E.G. NPC's state.follow → meg-agent.js pursuit and revival/downed state; player.js ignores hits on an active companion, preventing friendly fire; meg-agent restores companions hit to zero HP.",
+    "Following NPC state.follow → meg-agent.js pursuit/return and companion recovery; player.js ignores hits on an active companion; hotel faction followers can acquire foes and fight back. meg-agent.js reads meg.yml for combat tuning; sprint closes long gaps, fleeing and catch-up.",
     "Harlan's resident card option → scripts/l5-resident.js checks Speech 25 and writes player.state.l5boilerKey; interact.js targets the parented boiler panel and routes E; l5-door.js also opens it for a following Harlan or from boiler side.",
     "player.js ranged attack → lib/ballistics.js fire() traces bullets from the eye, returning target hits/headshots or first world impact; player.js applies damage and show() emits tracers/impact FX; weapons.yml supplies mv/drag/acc/zero.",
     "scripts/lib/loot.js poolOf(place)/rollWeapon(pool) + loot3.js special Level 3 rolls → interact.js containers and player.js kill drops; weapons.yml pools keep new weapons in their specified level loot tables.",
-    "scripts/player.js writes state.loud on swings/shots → scripts/lib/hunt.js uses fight/gunshot radius as well as movement noise; hounds.js now requires line of sight to acquire prey and drops pursuit behind walls.",
+    "scripts/player.js writes state.loud on swings/shots → scripts/lib/hunt.js uses fight/gunshot radius as well as movement noise to locate prey.",
     "interact.js E on usable l5 elevator panel → player.state.elevPanel; ui.js renders clickable floors → interact.js elevdo emits ui:fN/ui:yes/ui:no to panel; panel scripts handle the selected floor."
   ],
   "behaviorFamilies": [
@@ -73,18 +73,18 @@
     "places/level4/cells/x0z0.scene + level4-geo.js, level4-detail-geo.js, l4-prop-geo.js and look-level4.js - office structure, non-colliding detail, varied props and post-processing share the Level 4 plan.",
     "scripts/l4-office.js + l4-office-geo.js - repeated open-floor cubicle islands, phones and printers vary by placement; manager schedules rings, ambience, tasks and rewards.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - agent/resident rounds and talk vary by faction, role, voice, look/build and routine; meg-agent.js adds deterministic nerve and arm loadout.",
-    "scripts/smilers.js and lurkers.js use lib/hunt.js hearing and lost-trail prediction but keep distinct light/gaze, pursuit and attacks; hounds, stealers and deathmoths have distinct pursuit (hounds now require sight and lose prey behind walls).",
+    "scripts/smilers.js and lurkers.js use lib/hunt.js hearing and lost-trail prediction but keep distinct light/gaze, pursuit and attacks; hounds, stealers and deathmoths have distinct pursuit (hounds require sight and lose prey behind walls).",
+    "scripts/meg-agent.js + scripts/lib/data/meg.yml - shared NPC combat/follow controller varies by faction, arm, nerve and target; followers can sprint to flee, close combat gaps or catch up, and hotel followers engage foes.",
     "scripts/mahjong.js + mahjong.yml + mahjong-looks.yml - shared game lifecycle and rules vary among six guests by persona, suit preference, species/look, dialogue and call/sloppiness; l5-ball.js handles solo continuation and guest cleanup.",
-    "scripts/l5-hall-lay.js + l5-hall-geo.js/l5-hall-fix.js - Main Hall furnishings/fixtures derive from layout rows; hotel elevator banks vary geometry; grab.js shares lift/throw/break behavior across eligible props.",
-    "scripts/lib/vmpose.js and weapon data - first-person melee poses share styles by weapon class; clubs combo and fists alternate; weapon-specific reload timing includes empty-pistol slide-stop and per-shell shotgun/tube reloads; weapons.yml requirements and two-hand offsets vary per weapon."
+    "scripts/l5-hall-lay.js + l5-hall-geo.js/l5-hall-fix.js - Main Hall furnishings/fixtures derive from layout rows; hotel elevator banks vary geometry; grab.js shares lift/throw/break behavior across eligible props."
   ],
   "probableOrphans": [],
   "migrationNotes": [
-    "Grid contracts differ: Level 0 is 56×56 at 4 m (hub cells 26–29); Level 1 30×30 at 8 m; Level 2 24×24 at 5 m; Level 3 26×26 at 4 m; Level 4 64×64 m with 8 m offices; Level 5 96×60 m, x ±48/z ±30. Level 0 creature recovery uses positions relative to its maze.",
+    "Grid contracts differ: Level 0 is 56×56 at 4 m (hub cells 26–29); Level 1 30×30 at 8 m; Level 2 24×24 at 5 m; Level 3 26×26 at 4 m; Level 4 64×64 m with 8 m offices; Level 5 96×60 m, x ±48/z ±30.",
     "Level 0 weapons no longer replenish as loose pickups; find weapons in desks, cabinets, backpacks or containers. Lobby Wafers use token lobby_wafer; food tokens are applied in player.js and configured through item/loot and level data.",
-    "Weapon kinds/variants are centralized in weapons.yml/lib/weapons.js; pools restrict new weapons by place via loot.js poolOf/rollWeapon. Keep req {h, guns|melee}, mv/drag/acc/zero, tube/reload timing and two-hand offsets in sync with stats handling, player.js ballistics and first-person/viewmodel rendering.",
-    "NPC held weapon props need state.kind; meg-agent.js preserves non-pistol spawner arms, can use explicit state.arm: fists, otherwise rolls by role/faction and nerve, then controls hand/back visibility and ranged/melee attacks. Active followers have zero-HP down/recovery semantics and player damage skips them.",
-    "Mahjong uses cents (100-cent stake per seat) and tile IDs d/b/c + 1–9, w1–w4 winds and r1–r3 dragons; table guest IDs/state must stay aligned with MJ visitor keys, stools and l5-ball cleanup/solo lifecycle.",
-    "Third-person input is held thirdPerson (middle mouse) written by scripts/view3.js to player.state.tp; scripts/camera.js reads it and raycasts against physics to prevent the shoulder camera crossing walls."
+    "Weapon kinds/variants are centralized in weapons.yml/lib/weapons.js; pools restrict new weapons by place via loot.js poolOf/rollWeapon. Keep req {h, guns|melee}, mv/drag/acc/zero, tube/reload timing and two-hand offsets in sync with stats and weapon assets.",
+    "NPC held weapon props need state.kind; meg-agent.js preserves non-pistol spawner arms, accepts explicit state.arm: fists, otherwise rolls by role/faction and nerve, then controls hand/back visibility and ranged/melee attacks. Active followers are downed/recovered, not killed.",
+    "M.E.G. gait tuning is scripts/lib/data/meg.yml: sprint 7.0 is used for flee, long-gap combat and catching up; leash 45 bounds pursuit from post. Hotel-faction hostility is enabled for followers, not idle hotel guests.",
+    "First-person weapon meshes are camera-local: player.js uses Q_ID for pistol muzzle-forward orientation, Q_GUN for other gun mesh orientation and a measured shotgun trigger offset; bump vm arm cache version when changing attachment geometry."
   ]
 }
