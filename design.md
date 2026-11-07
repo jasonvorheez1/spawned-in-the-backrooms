@@ -11,6 +11,9 @@ The tone is dread first: you start weak and the place is bigger than you.
 - Progress: saved per player (player.state), not shared across the world.
 - First-push scope: not decided yet (default: Phase 1 first).
 
+- 2026-11-07: Smilers follow the wiki: a lit flashlight draws them from ~40 m (11 m dark); eye contact slows them to a creep. Shelly said yes.
+- 2026-11-07: Level 0 wiki additions (Shelly: "i want all of it"): stairs to nowhere, walls that shift behind you (arch rooms never), deep wet carpet slows you in arch rooms, arch ledges restore stamina/sanity, hum spikes drain sanity while standing still, whispers/scratching behind walls, dark figures down long halls.
+
 ## Power curve
 | Stage | Player | Weapons and tools | Threat |
 |---|---|---|---|
