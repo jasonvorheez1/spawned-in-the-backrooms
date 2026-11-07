@@ -1097,7 +1097,7 @@ object/xad4c834675863151/99:
   primitive: {depth: 0.04, height: 0.05, kind: box, width: 1.05}
   rotation: {roll: 18, yaw: 0}
 omega-okafor:
-  behavior: scripts/meg-agent.js
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js]
   children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.496ed1318603080d4fcbb7455baf9897f459ceea16ee9bc824dedb190bf9e6aa.glb, materials: {belly: {color: "#e8c79e"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#9a6440"}, mark: {color: "#6e4329"}, nose: {color: "#2a1c18"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e8c79e"}}}, morph: {Half: 0.9}}]
   feetPosition: {x: -25.5, y: 0, z: -22.6}
   id: omega-okafor
@@ -1114,7 +1114,7 @@ omega-okafor/object/xad4c834675863151/106:
   model: {id: /cdn/value.5a2a421d33cd848a6df5ae7bf263814fc33ed17392a1dca306d6006fc6b33c34.glb, offset: [0, -0.032, 0]}
   parent: omega-okafor
 omega-rhea:
-  behavior: scripts/meg-agent.js
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js]
   children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.58f56d191ddcc7f2a2ba6b9d7fc685d73710240c589ff13158d7acfb20f5dcdb.glb, materials: {belly: {color: "#ffffff"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f07a2e"}, mark: {color: "#2c1c18"}, nose: {color: "#231816"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#ffffff"}}}, morph: {Smile: 0.8}}]
   feetPosition: {x: -28, y: 0, z: -28.5}
   id: omega-rhea

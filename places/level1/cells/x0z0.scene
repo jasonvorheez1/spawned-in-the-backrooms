@@ -1,6 +1,6 @@
 # spawn-scene v2 yaml x0z0
 meg-ale:
-  behavior: scripts/meg-agent.js
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js]
   feetPosition: {x: 6.6, y: 0, z: 3.4}
   id: meg-ale
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -22,7 +22,7 @@ meg-ale/object/xba5b309b4f070466/0:
   model: {id: /cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb, offset: [0, -0.064, 0]}
   parent: meg-ale
 meg-callum:
-  behavior: scripts/meg-agent.js
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js]
   feetPosition: {x: 11.9, y: 0, z: 2.4}
   id: meg-callum
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -44,7 +44,7 @@ meg-callum/object/xba5b309b4f070466/2:
   model: {id: /cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb, offset: [0, -0.064, 0]}
   parent: meg-callum
 meg-ortiz:
-  behavior: scripts/meg-agent.js
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js]
   feetPosition: {x: 15.5, y: 0, z: 0.3999999999999999}
   id: meg-ortiz
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
