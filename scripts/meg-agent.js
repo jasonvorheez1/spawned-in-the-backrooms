@@ -124,9 +124,15 @@ export function update(ctx, dt) {
       // a ragdoll: the body drops where it was hit, in its own fur and jacket, knocked back off its feet
       const yaw = ((typeof me.rotation === "number" ? me.rotation : me.rotation?.yaw) ?? 0) * Math.PI / 180;
       me.ragdoll = { impulse: { x: Math.sin(yaw) * 60, y: 25, z: Math.cos(yaw) * 60 }, settleSeconds: 2 };
-      if (s.items === undefined) s.items = ["ammo", ...rollLoot(ctx, 1.4)].join(","); // what they carried: always a box of rounds
+      if (s.items === undefined) s.items = ["ammo", ...rollLoot(ctx, 1.4), ...garmentsOf(lookOfNpc(me))].join(","); // what they carried (always a box of rounds) and every garment they wore
+      if (!s.look) s.look = lookOfNpc(me); // the body's look as it fell; looting a garment strips it off
       s.name = (s.name ?? "Agent") + "'s body";
       ctx.after(90, "vanish", {});
+    }
+    if (s.look && m.stripped !== s.items) { // a garment taken from the remains comes off the body
+      m.stripped = s.items;
+      const l = stripTo(s.look, String(s.items ?? "").split(",").filter(Boolean));
+      if (me.primitive?.params && SLOTS.some((k) => (me.primitive.params[k] ?? "none") !== l[k])) me.primitive = { ...me.primitive, params: { ...me.primitive.params, ...Object.fromEntries(SLOTS.map((k) => [k, l[k]])) } };
     }
     return;
   }

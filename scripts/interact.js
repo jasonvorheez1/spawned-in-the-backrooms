@@ -8,7 +8,7 @@ import { tokenOf, describe, itemsOf } from './lib/items.js'
 import { takeToken, maxHp, maxSan } from './player.js'
 import { derived, skillsOf, SKILLS } from './lib/stats.js'
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
-import { rollItem, rollItemL1, rollItemL2 } from './lib/loot.js'
+import { rollItem, rollItemL1, rollItemL2, spotCloth } from './lib/loot.js'
 
 const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc'] // what can be looked at and used
 const REACH = 3.0 // metres from the eye
@@ -88,6 +88,8 @@ export function openLoot(ctx, c) {
   if (!c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per container
     c.state.scavved = true
     if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : rollItem(ctx))].filter(Boolean).join(',')
+    const cl = spotCloth(ctx, derived(s).clothFind) // Observation (Perception) spots a wearable tucked in the junk
+    if (cl) c.state.items = [c.state.items, cl].filter(Boolean).join(',')
   }
   s.lootOpen = c.id; s.lootName = c.state?.name ?? 'Container'; s.lootList = c.state?.items ?? ''; s.focus = null
   snd(ctx, 'container-open-rustle', 0.5)
