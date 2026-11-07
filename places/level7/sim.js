@@ -479,41 +479,27 @@ function lay(ctx) {
   }
 
   // Ferry Skiff back to Entrance Pier
-  ctx.spawn("l7-boat-to-pier", {
-    tags: ["usable"],
+  ctx.spawn("l7-boat-to-pier", { // rowed by hand like the pier dory (Shelly: "why is it just fast travel now")
+    tags: ["seat", "boat"],
+    physics: { body: "kinematic", collider: "box" },
     feetPosition: { x: 35.6, y: -0.4, z: -91.5 },
     rotation: { yaw: -12, roll: -2 },
-    model: GLB.rowboat,
+    model: { id: GLB.rowboat, forward: "+x" },
     layout: fit(3.8, 1.2, 3.8),
-    behavior: "scripts/l7-use.js",
-    state: {
-      kind: "ferry",
-      name: "Seawatch return skiff",
-      verb: "Row to Entrance Pier",
-      info: "Return to the Floating House pier",
-      tint: "#7fd6ff",
-      c: { x: 36.4, y: PY + 0.2, z: -91.5 },
-      dest: { x: 0, y: PY + 0.2, z: -31, yaw: 0, name: "the Entrance Pier" },
-    },
+    behavior: "scripts/l7-dory.js",
+    state: { name: "Seawatch dory", verb: "Get in", seat: { d: 0.35, y: 0.3 }, boat: true },
   });
 
   // Ferry Skiff onward to Fort Surrender (Far Island)
-  ctx.spawn("l7-boat-to-fort", {
-    tags: ["usable"],
+  ctx.spawn("l7-boat-to-fort", { // rowed by hand like the pier dory (Shelly: "why is it just fast travel now")
+    tags: ["seat", "boat"],
+    physics: { body: "kinematic", collider: "box" },
     feetPosition: { x: 40.4, y: -0.4, z: -92.5 },
     rotation: { yaw: 145, roll: 3 },
-    model: GLB.rowboat,
+    model: { id: GLB.rowboat, forward: "+x" },
     layout: fit(3.8, 1.2, 3.8),
-    behavior: "scripts/l7-use.js",
-    state: {
-      kind: "ferry",
-      name: "Deep-water outrigger skiff",
-      verb: "Row to Fort Surrender",
-      info: "Cross the Twilight Trench to the Far Island",
-      tint: "#f2c14e",
-      c: { x: 39.6, y: PY + 0.2, z: -92.5 },
-      dest: { x: -72.0, y: PY + 0.2, z: -193.0, yaw: 150, name: "Fort Surrender" },
-    },
+    behavior: "scripts/l7-dory.js",
+    state: { name: "Deep-water outrigger dory", verb: "Get in", seat: { d: 0.35, y: 0.3 }, boat: true },
   });
 
   // Seawatch Outpost Summit Checkpoint & Signboard (x: 46, y: 7.0, z: -120)
@@ -596,22 +582,15 @@ function lay(ctx) {
   });
 
   // Ferry Skiff from Fort Surrender back to M.E.G. Seawatch
-  ctx.spawn("l7-boat-from-fort", {
-    tags: ["usable"],
+  ctx.spawn("l7-boat-from-fort", { // rowed by hand like the pier dory (Shelly: "why is it just fast travel now")
+    tags: ["seat", "boat"],
+    physics: { body: "kinematic", collider: "box" },
     feetPosition: { x: -69.5, y: -0.4, z: -192.5 },
     rotation: { yaw: -35, roll: 2 },
-    model: GLB.rowboat,
+    model: { id: GLB.rowboat, forward: "+x" },
     layout: fit(3.8, 1.2, 3.8),
-    behavior: "scripts/l7-use.js",
-    state: {
-      kind: "ferry",
-      name: "Fort Surrender ferry skiff",
-      verb: "Row to Seawatch Outpost",
-      info: "Return to M.E.G. Near Island",
-      tint: "#7fd6ff",
-      c: { x: -70.4, y: PY + 0.2, z: -192.5 },
-      dest: { x: 38.0, y: PY + 0.2, z: -93.0, yaw: 165, name: "M.E.G. Outpost Seawatch" },
-    },
+    behavior: "scripts/l7-dory.js",
+    state: { name: "Fort Surrender dory", verb: "Get in", seat: { d: 0.35, y: 0.3 }, boat: true },
   });
 
   // Winding stone steps from Fort Surrender Wharf (y = 1.1) up to Summit Compound (y = 11.0)
