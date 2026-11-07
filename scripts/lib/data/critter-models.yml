@@ -1,6 +1,8 @@
 # Blender-built critters (art/critter/build.py): one rigged body per sex, one skinned head+ears+tail per species riding it.
 # Body parts toggle by name (Top_<kind>, Bot_<kind>, Shoes_<kind>, Hat_<kind>, Eyew_<kind>, Neck_<kind>); cloth_* materials take the look's hex.
 # A species row: its head GLB and its colours (fur/belly/tip/nose/mark/inner/limb/antler); a look's own fur overrides fur and limb.
+# mesh: false = everyone wears the scripted critter (scripts/critter2-geo.js) until the Blender heads pass the cute bar; true = the GLBs below
+mesh: false
 body: { m: "/cdn/value.c6e19f7ca72c3661f7702cebb7be2504e25141ea823fb146a2a616483ae85891.glb", f: "/cdn/value.36aefc7cc3e2c61b269f1c0385d14acb2ad14558245bd4090ad95822a225155e.glb" }
 bodyMats: [fur, belly, pad, cloth_bottom, button, metal, lens, cloth_hat, gold, cloth_neck, cloth_shoes, sole, cloth_top]
 slots: { topw: Top, botw: Bot, shoes: Shoes, hat: Hat, eyew: Eyew, neck: Neck }

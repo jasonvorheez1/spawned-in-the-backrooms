@@ -30,7 +30,9 @@ export function faceMorph(expr, blink) {
   return f
 }
 // a whole critter for a spawn (place sims): body, head child, gait clips on the library
+export const MESH = M.mesh === true
 export function critterSpec(l) {
+  if (!MESH) return { primitive: { kind: 'scripted', script: 'scripts/critter2-geo.js', params: l }, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 } }
   return { model: bodyModel(l), children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel(l), morph: faceMorph(l.expr) }],
     material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.6, bounce: 0.6 } }
 }
