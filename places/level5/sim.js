@@ -44,4 +44,34 @@ export function lay(ctx) {
 export function tick(ctx) {
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; if (!ctx.getObject("l5-geo")) lay(ctx); } // the shell is saved in the place's cells; a fresh room only lays what's missing
+  if (s.exitsV !== 1) { s.exitsV = 1; dressExits(ctx); }
+}
+// every live way out reads as one: a walnut stair door swung open on a dark climbing stair, or a copper cage lift with its gate folded back
+const WAL = { color: "oklch(0.3 0.05 45)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.5 };
+const VOID = { color: "oklch(0.06 0.01 50)", roughness: 1 };
+const BRASS = { color: "oklch(0.68 0.11 75)", roughness: 0.35, metalness: 0.85 };
+const COPPER = { color: "oklch(0.55 0.11 50)", roughness: 0.4, metalness: 0.85 };
+function dressExits(ctx) {
+  for (const e of EXITS) {
+    if (!e.to) continue;
+    const id = `${e.id}-dress`; if (ctx.getObject(id)) continue;
+    const box = (x, y, z, w, h, d, material, extra = {}) => ({ feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material, ...extra });
+    const kids = [
+      box(0, 0, -0.02, 1.3, 2.35, 0.03, VOID), // the dark beyond the doorway
+      box(-0.72, 0, -0.06, 0.14, 2.5, 0.12, e.kind === "lift" ? BRASS : WAL), box(0.72, 0, -0.06, 0.14, 2.5, 0.12, e.kind === "lift" ? BRASS : WAL), box(0, 2.38, -0.06, 1.58, 0.14, 0.12, e.kind === "lift" ? BRASS : WAL),
+      box(0, 0, -0.3, 1.5, 0.02, 0.5, e.kind === "lift" ? BRASS : { color: "oklch(0.32 0.1 25)", roughness: 0.9 }), // threshold plate / runner
+    ];
+    if (e.kind === "stairs") {
+      kids.push(box(0.62, 0, -0.62, 0.05, 2.25, 1.1, WAL, { rotation: { yaw: 20 } })); // the door, swung in toward the room
+      kids.push(box(0.47, 1.0, -0.95, 0.06, 0.06, 0.06, BRASS)); // its knob
+      for (let i = 0; i < 6; i++) kids.push(box(0, i * 0.18, 0.15 + i * 0.28, 1.2, 0.18, 0.28, { color: `oklch(${0.22 - i * 0.03} 0.04 45)`, roughness: 0.8 }, { physics: "none" })); // the first steps climbing into the dark
+      kids.push({ feetPosition: { x: 0, y: 2.0, z: 0.6 }, light: { kind: "point", color: "oklch(0.75 0.1 65)", intensity: 0.6, distance: 3 } });
+    } else {
+      for (let i = 0; i < 7; i++) { kids.push(box(-0.9 - i * 0.05, 0, -0.1, 0.025, 2.3, 0.025, COPPER)); kids.push(box(0.9 + i * 0.05, 0, -0.1, 0.025, 2.3, 0.025, COPPER)); } // the cage gate folded back each side
+      for (const y of [0.4, 1.2, 2.0]) kids.push(box(0, y, 0.6, 1.3, 0.03, 1.2, COPPER)); // the cage's rails inside
+      kids.push(box(0, 2.62, -0.04, 0.5, 0.26, 0.04, BRASS)); // the floor dial above
+      kids.push({ feetPosition: { x: 0, y: 2.0, z: 0.6 }, light: { kind: "point", color: "oklch(0.8 0.12 75)", intensity: 1.2, distance: 3.5 } });
+    }
+    ctx.spawn(id, { feetPosition: { x: e.at.x, y: 0, z: e.at.z }, rotation: { yaw: e.yaw }, children: kids });
+  }
 }
