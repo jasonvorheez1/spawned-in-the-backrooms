@@ -168,7 +168,7 @@ export function read(ctx, r, pay) {
   say(ctx, p, text.slice(0, 700), 'happy', false)
 }
 export function poorRead(ctx, pay) { const p = ctx.getObject(pay?.by); if (p?.state) say(ctx, p, S.poorReadings[pay.i] ?? S.poorReadings[0], 'annoyed') }
-function warn(ctx, p, now) { const ses = ctx.self.session; if (!ses.warn || ses.warn.pid !== p.id) ses.warn = { pid: p.id, at: now } }
+function warn(ctx, p, now, refused) { const ses = ctx.self.session; if (!ses.warn || ses.warn.pid !== p.id) ses.warn = { pid: p.id, at: now, refused: !!refused }; else if (refused) ses.warn.refused = true }
 
 export const ears = {
   press: (ctx, d) => { const p = ctx.getObject(d?.by), ses = ctx.self.session; if (!p?.state || ses.mode === 'gone' || ses.mode === 'rage') return; p.state.talkWith = ctx.self.id; p.state.shopOpen = null },
