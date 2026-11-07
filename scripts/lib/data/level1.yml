@@ -1,0 +1,39 @@
+# Level 1 "The Habitable Zone": every tuned number. All Savi's picks, tune freely.
+cells: 30            # 30 x 30 cells
+cellSize: 8          # metres per cell: 240 m across
+height: 4.2          # floor to ceiling
+block: 5             # cells per zone square
+arrive: [15, 15]     # the cell you land in from level 0 (the M.E.G. landmark stands here)
+# zones: halls (open concrete, pillars), corridors (tight, walled, safe from entities), storage (shelves of crates)
+sanityDrain: { halls: 0.08, storage: 0.06, corridors: -0.6, arrival: -1.5 }
+# flickering: every light dies, the hounds come out
+flickerEvery: [90, 160]   # seconds between events
+flickerLength: [14, 24]   # seconds of black
+flickerHounds: 4          # extra hounds that hunt during a flicker
+# entities
+hounds: 4
+houndHp: 45
+houndSpeed: 6.2           # faster than a walk, slower than a sprint
+houndSight: 20
+houndHear: 26             # a sprinting wanderer is heard this far
+houndBite: 14
+houndCooldown: 1.0
+xpHound: 70
+stealers: 3
+stealerHp: 120
+stealerWalk: 1.4
+stealerLunge: 7.5
+stealerCallRange: 22      # "hello?" from this far
+stealerReveal: 4          # the skin slides off this close
+stealerHit: 30
+stealerSanity: 15
+stealerCooldown: 1.6
+xpStealer: 160
+entityRespawn: 60
+# supplies
+almonds: 30
+crates: 46                # mostly on the storage shelves
+rations: 12               # loose cans
+landmarks: 6              # M.E.G. cloths: almond water + a note
+xpCell: 3
+xpArrive: 60
