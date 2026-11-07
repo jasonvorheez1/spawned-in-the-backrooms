@@ -82,5 +82,8 @@ export const speciesFor = (id) => SPECIES[hashOf(id + ':sp') % SPECIES.length]
 export function buildFor(id, sex) {
   const a = (hashOf(id + ':h') % 1000) / 1000, b = (hashOf(id + ':w') % 1000) / 1000
   const h = +(0.86 + a * 0.28 - (sex === 'f' ? 0.03 : 0)).toFixed(3), w = +(0.88 + b * 0.28).toFixed(3)
-  return { h, w }
+  const c = (hashOf(id + ':b') % 1000) / 1000
+  return sex === 'f' ? { h, w, bust: +(c * 0.75).toFixed(2) } : { h, w } // Bust morph 0..0.75, stable per npc
 }
+// the body's Bust morph from a creator slider (bustS 0.6..1.3, 1 = as built)
+export const bustMorph = (l) => l?.sex === 'f' ? { Bust: Math.max(-0.6, Math.min(0.9, ((Number(l.bustS) || 1) - 1) * 3)) } : null
