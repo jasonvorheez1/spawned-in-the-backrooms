@@ -568,6 +568,28 @@ export function update(ctx, dt) {
   if (w.acc >= 0.25) { w.dv = derived(s); w.bur = burden(s); w.vmCheck = true; tickStats(ctx, w.acc, moving); w.acc = 0 }
 }
 
+const HOSTILE = ['smiler', 'lurker', 'hound', 'stealer', 'deathmoth', 'moth']
+function detection(ctx, p, w) {
+  const me = ctx.self.id, sneak = skillsOf(ctx.self.state).sneak ?? 0
+  const reach = (w.light ? 16 : 10) * (1 - Math.min(0.5, sneak / 200)) // a lit flashlight gives you away from further off
+  let seen = false
+  for (const o of ctx.query({ anyTags: [...HOSTILE, 'npc'], radius: 24 })) {
+    const st = o.state ?? {}; if (st.dead || (st.hp ?? 1) <= 0) continue
+    const q = o.feetPosition, dx = p.x - q.x, dz = p.z - q.z, d = Math.hypot(dx, dz)
+    const hostile = !o.tags?.includes('npc') || st.angry?.[me]
+    if (hostile && (st.target === me || st.prey === me || st.hunting === me || st.chase === me) ) return 'danger'
+    if (d > reach) continue
+    const r = ctx.getObject(o.id)?.rotation, yaw = ((typeof r === 'number' ? r : r?.yaw) ?? 0) * Math.PI / 180
+    const facing = (-Math.sin(yaw) * dx - Math.cos(yaw) * dz) / (d || 1) // 1 = looking straight at you
+    if (facing < 0.25 && d > 1.6) continue
+    const eye = { x: q.x, y: q.y + 1.3, z: q.z }, to = { x: p.x - eye.x, y: p.y + 0.8 - eye.y, z: p.z - eye.z }, n = Math.hypot(to.x, to.y, to.z) || 1
+    if (raycast(ctx, eye, { x: to.x / n, y: to.y / n, z: to.z / n }, { distance: n - 0.3, physicsOnly: true, bodies: 'static', ignoreEntities: [o.id, me] })) continue
+    if (hostile && d < reach * 0.6) return 'danger'
+    seen = true
+  }
+  return seen ? 'detected' : 'hidden'
+}
+
 function tickStats(ctx, t, moving) {
   const s = ctx.self.state, w = walkOf(ctx), p = ctx.self.feetPosition, now = ctx.now()
   const mh = maxHp(s.level, s), ms = maxSan(s.level, s)
@@ -576,6 +598,9 @@ function tickStats(ctx, t, moving) {
   if (s.aimZ !== az) s.aimZ = az
   const zone = zoneHere(ctx, p.x, p.z)
   if (zone !== s.zone) s.zone = zone
+  // sneaking: who can see you, written only when the answer changes (the HUD's [HIDDEN] / [DETECTED] / [DANGER])
+  const det = s.crouch ? detection(ctx, p, w) : null
+  if ((s.detect ?? null) !== det) s.detect = det
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
   let drain = (ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : ctx.self.place === 'level3' ? L3.sanityDrain[zone.slice(3)] : L.sanityDrain[zone]) ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4

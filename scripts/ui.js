@@ -36,6 +36,12 @@ const THEME = `<style>@keyframes hud-pop{from{opacity:0;transform:translateY(6px
 .pip { width:8px; height:13px; border:1px solid var(--a); opacity:.45 }
 .pip.full { background:var(--a); opacity:1; box-shadow:0 0 4px rgba(255,170,40,.7) }
 .tag { font-size:10px; padding:0 4px; border:1px solid currentColor; margin-left:6px }
+.sneak { position:absolute; left:0; right:0; top:calc(50% - 64px); text-align:center; font-size:20px; letter-spacing:.14em; pointer-events:none; text-shadow:0 0 4px #000,0 2px 2px #000; animation:snk .25s ease-out }
+.sneak-hidden { color:var(--a); opacity:.85 }
+.sneak-detected { color:#ffd84a }
+.sneak-danger { color:#ff4a36; animation:snk .25s ease-out, snkp .7s ease-in-out infinite }
+@keyframes snk { from { transform:scale(1.35); opacity:0 } }
+@keyframes snkp { 50% { opacity:.55 } }
 .dot-crosshair { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:14px; height:14px; pointer-events:none }
 .dot-crosshair::before,.dot-crosshair::after { content:""; position:absolute; background:var(--a); box-shadow:0 0 3px rgba(255,170,40,.8) }
 .dot-crosshair::before { left:6px; top:0; width:2px; height:4px; box-shadow: 0 10px 0 var(--a) }
@@ -148,7 +154,7 @@ export default function render(ctx, player) {
 
   ${chatBubbles(ctx, now)}
   <!-- Unobtrusive Center Point -->
-  <div class="dot-crosshair"></div>
+  <div class="dot-crosshair"></div>${s.crouch ? `<div class="sneak sneak-${s.detect ?? 'hidden'}" id="sn-${s.detect ?? 'hidden'}">[${(s.detect ?? 'hidden').toUpperCase()}]</div>` : ''}
   ${s.chargeAt && !W[s.equipped ?? 'fists']?.ranged ? `<style>@keyframes pwrfill{from{stroke-dashoffset:113}to{stroke-dashoffset:0}}@keyframes pwrfull{0%,100%{opacity:1}50%{opacity:.45}}</style><svg id="pwr${s.chargeAt}" width="44" height="44" viewBox="0 0 44 44" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-90deg)"><circle cx="22" cy="22" r="18" fill="none" stroke="rgba(20,16,8,.6)" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="#ffb347" stroke-width="3" stroke-dasharray="113" style="filter:drop-shadow(0 0 3px rgba(255,170,40,.9));animation:pwrfill ${(W.power?.charge ?? 0.9)}s linear forwards, pwrfull .25s ${(W.power?.charge ?? 0.9)}s steps(2) infinite"/></svg>` : ''}
 
   <!-- Subtle Sanity Edge Vignette (gently narrows peripheral vision as sanity drops) -->

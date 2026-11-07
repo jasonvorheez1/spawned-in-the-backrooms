@@ -22,7 +22,7 @@ inputs:
         - shift
     crouch:
       keys:
-        - control
+        - z
       touch:
         label: Crouch
     attack:
