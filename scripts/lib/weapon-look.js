@@ -50,6 +50,10 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
 // each mesh's box centre in the scripted frame (x, z), from art/weapons/fit.json
 const CENTER = { table_leg: [0, 0.3325], pipe_scrap: [0, 0.415], crowbar: [0, 0.4425], bat: [0, 0.4895], hatchet: [0.07, 0.417], fire_axe: [0.0175, 0.5395], pistol: [0, 0.114], shotgun: [0.002, 0.452] }
 // how each weapon sits in the fist: offset of its grip from its own origin (m along its length)
+// first-person grip for each Tripo melee mesh, solved from the glb itself (handle line fitted, grip 8.5 cm up from
+// the butt, head-side offset turned forward): the child's local position and rotation that put the grip at the fist's
+// origin with the handle running up +Y and the blade facing -Z. The engine stands a model centred on its box (x, z).
+export const MESHGRIP = {"table_leg": {"at": [-0.205, 0.3532, 0.0032], "q": [0.5202, 0.3007, -0.5034, 0.6209]}, "pipe_scrap": {"at": [-0.0056, 0.3459, 0.1018], "q": [-0.7142, 0.0025, -0.0025, 0.6999]}, "crowbar": {"at": [0.0002, 0.4031, 0.0438], "q": [-0.0281, 0.794, -0.6055, 0.0456]}, "bat": {"at": [0.0111, 0.4275, 0.0859], "q": [-0.0571, -0.703, 0.7089, -0.0051]}, "hatchet": {"at": [0.0619, 0.3438, 0.0075], "q": [-0.5163, 0.4987, 0.4812, 0.5032]}, "fire_axe": {"at": [0.0216, 0.6145, -0.271], "q": [0.3232, 0.4489, 0.809, 0.1988]}}
 export const HOLD = {
   fists: null, table_leg: 0.16, pipe_scrap: 0.12, crowbar: 0.14, bat: 0.14, hatchet: 0.12, fire_axe: 0.18, pistol: 0.04, shotgun: 0.14, rebar: 0.14, wrench: 0.12, screwdriver: 0.05, sledgehammer: 0.14, stun_baton: 0.10, lineman_machete: 0.09,
 }
