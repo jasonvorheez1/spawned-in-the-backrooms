@@ -17,9 +17,9 @@ const VOX = (line) => `/cdn/voice-samantha-saying-${String(line).toLowerCase().r
 const HOST = ['smiler', 'lurker', 'hound', 'stealer', 'deathmoth', 'moth', 'entity', 'hostile']
 const rr = (a, ctx) => a[0] + ctx.random() * (a[1] - a[0])
 // a visit off her own floor (Level 3's lift: scripts/l3-samantha.js) hands her state.home and state.spots; no perches there
-let AWAY = false
-const HOME = (ctx) => ctx.self.state.home ?? HOME(ctx), SPOTS = (ctx) => ctx.self.state.spots ?? S.spots
-const zn = (x, z) => { if (AWAY) return 'the station halls'; const r = zoneAt(x, z); return r ? ZONE_NAMES[r.id] ?? r.id : 'the dark between rooms' }
+const AWAYOF = (ctx) => !!ctx.self.state.spots
+const HOME = (ctx) => ctx.self.state.home ?? S.home, SPOTS = (ctx) => ctx.self.state.spots ?? S.spots
+const zn = (ctx, x, z) => { if (AWAYOF(ctx)) return 'the station halls'; const r = zoneAt(x, z); return r ? ZONE_NAMES[r.id] ?? r.id : 'the dark between rooms' }
 const yawTo = (dx, dz) => Math.atan2(-dx, -dz) * 180 / Math.PI
 const BLINK = `fx
 pop mist burst=24..32 life=.7..1.3 on=sphere(.3).c(.25) v=sdir()*(.3..0.9)+up(.4) size=.18..0.34 acc=buoy(.4)+curl(.6)+drag(1.4) col=<.35,.8,.45> a=0>.3:.3>0 sz=$size*(.5>1.7) rot=spin(.3) r=sprite(smoke-puff,add)
@@ -57,7 +57,7 @@ function perches(ctx) {
 }
 function plan(ctx, now) {
   const ses = ctx.self.session, me = ctx.self, at = me.feetPosition
-  const ps = ses.perchList ??= (AWAY ? [] : perches(ctx))
+  const ps = ses.perchList ??= (AWAYOF(ctx) ? [] : perches(ctx))
   let goal, perch = null
   if (ps.length && ctx.random() < 0.35) {
     perch = ps[Math.floor(ctx.random() * ps.length)]
@@ -122,19 +122,19 @@ function pounce(ctx, dt, now) {
 // ---- readings ----
 function facts(ctx, p) {
   const s = p.state ?? {}, at = p.feetPosition, f = []
-  f.push(`They stand in ${zn(at.x, at.z)} on Level 5, the Terror Hotel.`)
+  f.push(`They stand in ${zn(ctx, at.x, at.z)} on Level 5, the Terror Hotel.`)
   f.push(`Health ${Math.round(s.hp ?? 100)}, sanity ${Math.round(s.sanity ?? 100)}, level ${s.level ?? 1}, hunger ${Math.round(s.hunger ?? 100)}, thirst ${Math.round(s.thirst ?? 100)} (out of 100; low is bad).`)
   const cons = ctx.query({ tags: ['container'], center: at, radius: 140 })
   const lock = cons.find((c) => String(c.state?.lock ?? '').startsWith('lockpick'))
-  if (lock) f.push(`The nearest locked container: the ${lock.state.name ?? lock.state.kind ?? 'cabinet'} in ${zn(lock.feetPosition.x, lock.feetPosition.z)}, lock difficulty ${String(lock.state.lock).split(':')[1]}; inside: ${itemsOf(lock)}.`)
+  if (lock) f.push(`The nearest locked container: the ${lock.state.name ?? lock.state.kind ?? 'cabinet'} in ${zn(ctx, lock.feetPosition.x, lock.feetPosition.z)}, lock difficulty ${String(lock.state.lock).split(':')[1]}; inside: ${itemsOf(lock)}.`)
   const full = cons.filter((c) => !c.state?.lock && String(c.state?.items ?? '').trim()).slice(0, 2)
-  for (const c of full) f.push(`Unsearched: the ${c.state.name ?? c.state.kind ?? 'drawer'} in ${zn(c.feetPosition.x, c.feetPosition.z)} holds ${itemsOf(c)}.`)
-  const ex = EXITS.filter((e) => e.to && !e.sealed).map((e) => `${e.label} by ${zn(e.at.x, e.at.z)}`)
+  for (const c of full) f.push(`Unsearched: the ${c.state.name ?? c.state.kind ?? 'drawer'} in ${zn(ctx, c.feetPosition.x, c.feetPosition.z)} holds ${itemsOf(c)}.`)
+  const ex = EXITS.filter((e) => e.to && !e.sealed).map((e) => `${e.label} by ${zn(ctx, e.at.x, e.at.z)}`)
   f.push(`Ways out: ${ex.join('; ')}. Sealed doors hint at other levels but do not open.`)
   const foe = ctx.query({ anyTags: HOST, center: at, radius: 90 }).find((o) => !o.state?.dead)
-  if (foe) f.push(`A danger nearby: a ${foe.tags.find((t) => HOST.includes(t)) ?? 'thing'} in ${zn(foe.feetPosition.x, foe.feetPosition.z)}.`)
+  if (foe) f.push(`A danger nearby: a ${foe.tags.find((t) => HOST.includes(t)) ?? 'thing'} in ${zn(ctx, foe.feetPosition.x, foe.feetPosition.z)}.`)
   const npc = ctx.query({ tags: ['npc'], center: at, radius: 90 }).find((o) => o.id !== ctx.self.id && !o.state?.dead)
-  if (npc) f.push(`Someone else close: ${String(npc.state?.name ?? 'a stranger').split(' ·')[0]} in ${zn(npc.feetPosition.x, npc.feetPosition.z)}.`)
+  if (npc) f.push(`Someone else close: ${String(npc.state?.name ?? 'a stranger').split(' ·')[0]} in ${zn(ctx, npc.feetPosition.x, npc.feetPosition.z)}.`)
   f.push(`Their past: died ${s.deaths ?? 0} times, killed ${s.kills ?? 0} things, ${Object.keys(s.visited ?? {}).length || 'few'} places walked, came here from ${s.lastPlace ?? s.from ?? 'the levels above'}.`)
   return f
 }
@@ -186,7 +186,6 @@ export function onSpawn(ctx) { ctx.self.session.mode = null }
 
 export function update(ctx, dt) {
   const me = ctx.self, st = me.state, ses = me.session, now = ctx.now()
-  AWAY = !!st.spots
   if (!ses.mode) { ses.y = me.feetPosition.y > 0.05 ? me.feetPosition.y : 0; rest(ctx, now, 'sit'); ses.blinkAt = now + rr(S.blinkEvery, ctx); ses.talkers = {} }
   // struck or crossed in words: whoever it was, she remembers in claws
   const ang = st.angry && Object.keys(st.angry).find((k) => st.angry[k])
