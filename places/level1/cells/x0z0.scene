@@ -6,7 +6,7 @@ meg-ale:
   jiggle: {amount: 0.6, bones: [Tail*, Ear*], bounce: 0.6}
   material: {outline: {color: "#1d1420", width: 2.4}}
   physics: character
-  primitive: {kind: scripted, params: {bottom: "#4a5a3a", botw: pants, expr: smile, hat: cap, hatc: "#b6e04a", sex: f, shoec: "#2a2420", shoes: boots, species: fox, top: "#b6e04a", topw: jacket}, script: scripts/critter-geo.js}
+  primitive: {kind: scripted, params: {bottom: "#4a5a3a", botw: pants, expr: smile, hat: cap, hatc: "#b6e04a", sex: f, shoec: "#2a2420", shoes: boots, species: fox, top: "#b6e04a", topw: jacket}, script: scripts/critter2-geo.js}
   rotation: {yaw: 90}
   state: {angry: {}, home: {x: 6.072, z: 2.619}, name: "Ale · M.E.G. Scout", role: scout}
   tags: [npc]
@@ -22,7 +22,7 @@ meg-callum:
   jiggle: {amount: 0.6, bones: [Tail*, Ear*], bounce: 0.6}
   material: {outline: {color: "#1d1420", width: 2.4}}
   physics: character
-  primitive: {kind: scripted, params: {bottom: "#4a5a3a", botw: pants, expr: grin, hat: beanie, hatc: "#7a3a2a", sex: m, shoec: "#2a2420", shoes: boots, species: bear, top: "#b6e04a", topw: jacket}, script: scripts/critter-geo.js}
+  primitive: {kind: scripted, params: {bottom: "#4a5a3a", botw: pants, expr: grin, hat: beanie, hatc: "#7a3a2a", sex: m, shoec: "#2a2420", shoes: boots, species: bear, top: "#b6e04a", topw: jacket}, script: scripts/critter2-geo.js}
   rotation: {yaw: 90}
   state: {angry: {}, home: {x: 11.613, z: 1.507}, name: "Callum · Quartermaster", role: quarter}
   tags: [npc]
@@ -38,7 +38,7 @@ meg-ortiz:
   jiggle: {amount: 0.6, bones: [Tail*, Ear*], bounce: 0.6}
   material: {outline: {color: "#1d1420", width: 2.4}}
   physics: character
-  primitive: {kind: scripted, params: {bottom: "#4a5a3a", botw: pants, expr: smile, neck: scarf, neckc: "#b6e04a", sex: f, shoec: "#2a2420", shoes: boots, species: bunny, top: "#eef2f0", topw: jacket}, script: scripts/critter-geo.js}
+  primitive: {kind: scripted, params: {bottom: "#4a5a3a", botw: pants, expr: smile, neck: scarf, neckc: "#b6e04a", sex: f, shoec: "#2a2420", shoes: boots, species: bunny, top: "#eef2f0", topw: jacket}, script: scripts/critter2-geo.js}
   rotation: {yaw: 90}
   state: {angry: {}, home: {x: 14.789, z: -0.215}, name: "Dr. Ortiz · M.E.G. Medic", role: medic}
   tags: [npc]

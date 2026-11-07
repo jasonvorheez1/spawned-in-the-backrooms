@@ -3,12 +3,12 @@
 // game's moods show on the face: a hit makes you wince, low hp is sad, low sanity is scared.
 import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
-const SCRIPT = 'scripts/critter-geo.js'
+const SCRIPT = 'scripts/critter2-geo.js'
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 export const updateSchedule = { every: { seconds: 0.2 } }
 
 // ---- life: blinking and ear twitches, as brief bone changes the whole room sees (two small writes each)
-const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter-geo.js)
+const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
 const EYES_SHUT = ['joy', 'laugh', 'kiss', 'dizzy']
 function applyBones(ctx) {
   const ses = ctx.self.session, b = {}

@@ -1,7 +1,7 @@
 # Clothing as loot and armor (Shelly #10224: "every critter should start out with just regular clothes and they should get
 # the other types of clothes as random loot ... used as armor"; "strip them naked and wear their clothes like in fallout").
 # A garment is an item token "cloth:<slot>:<kind>:<hex>" (scripts/lib/items.js). slot = the critter look key
-# (topw, botw, shoes, hat, eyew, neck), kind = a garment scripts/critter-geo.js draws, hex = its colour without '#'.
+# (topw, botw, shoes, hat, eyew, neck), kind = a garment scripts/critter2-geo.js draws, hex = its colour without '#'.
 # dr = damage resistance points, subtracted from every hit (Fallout NV DT: a hit never drops below `floor` of itself).
 # Every number below is Savi's pick. regular: true = the plain set every new critter starts in.
 # A row with `strict: true` only matches its own colours (the M.E.G. jacket is a jacket in agency lime).

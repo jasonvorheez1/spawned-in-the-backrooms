@@ -3,7 +3,7 @@
 // Every limb is a capped, tapered tube (no hollow ends) with joints that swell, so the hand reads as
 // soft knuckled fingers and not as a pile of pipes and balls.
 import { tube, sphere } from "./lib/shapes.js";
-import { SPECIES } from "./critter-geo.js";
+import { SPECIES } from "./critter2-geo.js";
 // params (from the wearer's critter look): species, fur, topw, top. A long-sleeved top dresses the forearm; otherwise it is bare fur.
 const LONG = new Set(["longsleeve", "hoodie", "sweater", "jacket", "pajamas"]);
 

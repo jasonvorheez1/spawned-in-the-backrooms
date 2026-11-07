@@ -16,7 +16,7 @@ const SURV = {
 function survivor(ctx, id) {
   const g = SURV[id], a = cellCenter(1, ARRIVE.cz);
   ctx.spawn(id, { tags: ["npc"], feetPosition: { x: a.x + g.at[0], y: 0, z: a.z + g.at[1] }, rotation: { yaw: -90 }, physics: "character",
-    primitive: { kind: "scripted", script: "scripts/critter-geo.js", params: g.look }, material: { outline: { color: "#1d1420", width: 2.4 } },
+    primitive: { kind: "scripted", script: "scripts/critter2-geo.js", params: g.look }, material: { outline: { color: "#1d1420", width: 2.4 } },
     jiggle: { bones: ["Tail*", "Ear*"], amount: 0.6, bounce: 0.6 }, behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
   ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
 }

@@ -10,7 +10,7 @@ export const SLOT_NAME = { topw: 'Top', botw: 'Bottom', shoes: 'Shoes', hat: 'Ha
 const LEGACY = { tee: ['tee', 'pants'], hoodie: ['hoodie', 'pants'], sweater: ['sweater', 'pants'], jacket: ['jacket', 'pants'], overalls: ['tee', 'overalls'], apron: ['apron', 'pants'], pajamas: ['pajamas', 'pjpants'], skirt: ['tee', 'skirt'], dress: ['dress', 'none'], none: ['none', 'none'] }
 const hex = (c) => String(c || '').replace('#', '').toLowerCase().slice(0, 6) || '000000'
 
-// a look with every slot and colour filled in, as scripts/critter-geo.js reads it
+// a look with every slot and colour filled in, as scripts/critter2-geo.js reads it
 export function fullLook(look) {
   const s = look || {}, l = { ...C.default, ...s }
   if (s.outfit && !s.topw) { const m = LEGACY[s.outfit] || LEGACY.tee; l.topw = m[0]; l.botw = m[1] }

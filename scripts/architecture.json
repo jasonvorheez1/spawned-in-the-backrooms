@@ -28,7 +28,7 @@
     "scripts/lib/weapon-look.js + scripts/lib/weapon-prof.js + scripts/weapon-geo.js - shared fitted weapon bodies and variant overlays for pickups, viewmodels and NPC attachments.",
     "scripts/lib/items.js + scripts/lib/loot.js - item-token vocabulary, descriptions/weights and pickup, crate, remains, clothing and level-specific loot rolls.",
     "scripts/lib/clothes.js + scripts/lib/data/clothes.yml; scripts/lib/stats.js - apparel token/slot/DR rules, HALOGEN derivations and NPC stats reused across player, loot, combat and UI.",
-    "scripts/lib/data/meg.yml + scripts/meg-agent.js + scripts/critter-geo.js - common agent combat, movement, talk/death behavior and procedural avatars reused by M.E.G. and Survivors.",
+    "scripts/lib/data/meg.yml + scripts/meg-agent.js + scripts/critter2-geo.js - common agent combat, movement, talk/death behavior and procedural avatars reused by M.E.G. and Survivors.",
     "scripts/lib/chatter.js + scripts/lib/data/chatter.yml - timed camp exchanges and voice lines shared by Level 1 M.E.G. and Level 2 Survivors; scripts/lib/compass.js supplies the player's vague nearby-sensing compass."
   ],
   "notableExports": [
@@ -60,7 +60,7 @@
     "place simulations and enemy deaths → scripts/lib/loot.js weighted rolls → scripts/lib/weapons.js registry or scripts/lib/clothes.js tokens → weapon entities/player inventory or container items.",
     "scripts/interact.js E on Level 2 doors → key item counters (fuses/valves/keycards) or HALOGEN skill check unlock state.lock, then toggles state.open; door interaction drives attached door motion when wired.",
     "scripts/player.js reads weapon variants for gates, damage, ammo, condition, wear and reload; weapon ids retain kind or kind~variant; weapon-look.js/weapon-geo.js/weapon-prof.js align entity, viewmodel and NPC weapon meshes/overlays.",
-    "I inventory input → scripts/player.js owns invOpen and equip/drink/drop/wear/unwear; scripts/lib/clothes.js swaps worn/spare garments and scripts/critter.js wardrobe updates render via scripts/critter-geo.js.",
+    "I inventory input → scripts/player.js owns invOpen and equip/drink/drop/wear/unwear; scripts/lib/clothes.js swaps worn/spare garments and scripts/critter.js wardrobe updates render via scripts/critter2-geo.js.",
     "K sheet/stat action → scripts/stats.js toggles/spends and writes target → scripts/stats-ui.js renders sheet, carry and creature readout; player/enemy hits use scripts/lib/stats.js armor DR from worn look.",
     "G compass action → scripts/player.js useCompass → scripts/lib/compass.js spends player.state.compass and writes compassRead hints; scripts/ui.js draws timed dial/readout from camera yaw.",
     "places/level1/sim.js and places/level2/sim.js → scripts/lib/chatter.js selects exchanges from chatter.yml, writes NPC state.line/talkAt/talkTo and emits voice; scripts/ui.js renders speech bubbles and subtitles."
@@ -72,7 +72,7 @@
     "scripts/hounds.js + scripts/hound-geo.js - shared Level 1/Level 2 hound behavior and model; safe zones vary by place and hits apply clothing DR; scripts/stealers.js + scripts/stealer-geo.js manage Level 1 disguised wanderers.",
     "scripts/camera.js + scripts/lib/vmpose.js + scripts/player.js - first-person viewmodel pose varies with weapon recoil/reload/sight/muzzle and melee charge; base weapon controls grip offsets while variants retain framing.",
     "scripts/lib/weapons.js + scripts/lib/weapon-look.js + scripts/lib/weapon-prof.js + scripts/weapon-geo.js - weapon kinds reuse base meshes with varied stats, condition, tint and measured-frame overlays.",
-    "scripts/critter-geo.js and scripts/meg-agent.js - procedural agent avatars and shared agent pathing/combat/talk/death behavior vary by species/look, role, voice, gun and place; player, agents and Survivors use apparel slots.",
+    "scripts/critter2-geo.js and scripts/meg-agent.js - procedural agent avatars and shared agent pathing/combat/talk/death behavior vary by species/look, role, voice, gun and place; player, agents and Survivors use apparel slots.",
     "scripts/lib/chatter.js + scripts/lib/data/chatter.yml run authored exchanges at both camps; scripts/l2-props-geo.js reuses container/door-leaf geometry by Level 2 prop kind and style."
   ],
   "probableOrphans": [

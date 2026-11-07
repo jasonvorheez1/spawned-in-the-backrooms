@@ -18,7 +18,7 @@ const AGENTS = [["meg-ale", 2.6, -0.6], ["meg-ortiz", 11.5, -3.6], ["meg-callum"
 export function agentSpec(a, id, dx, dz) {
   const g = AGENT[id];
   return { tags: ["npc"], feetPosition: { x: a.x + dx, y: 0, z: a.z + dz }, rotation: { yaw: 90 }, physics: "character",
-    primitive: { kind: "scripted", script: "scripts/critter-geo.js", params: g.look }, material: { outline: { color: "#1d1420", width: 2.4 } },
+    primitive: { kind: "scripted", script: "scripts/critter2-geo.js", params: g.look }, material: { outline: { color: "#1d1420", width: 2.4 } },
     jiggle: { bones: ["Tail*", "Ear*"], amount: 0.6, bounce: 0.6 }, behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role } };
 }
 const STOVE = `fx

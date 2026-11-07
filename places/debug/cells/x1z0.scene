@@ -2,7 +2,7 @@
 dbg-critter-bunny:
   feetPosition: {x: 92.5, y: 0, z: -7}
   id: dbg-critter-bunny
-  primitive: {kind: scripted, params: {expr: grin, outfit: hoodie, sex: m, species: bunny}, script: scripts/critter-geo.js}
+  primitive: {kind: scripted, params: {expr: grin, outfit: hoodie, sex: m, species: bunny}, script: scripts/critter2-geo.js}
   rotation: {yaw: -90}
 dbg-matdb-aluminum:
   feetPosition: {x: 91.5, y: 0.92, z: -1.25}
