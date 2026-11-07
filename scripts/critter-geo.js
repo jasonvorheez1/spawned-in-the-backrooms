@@ -140,6 +140,7 @@ export function geometry(ctx) {
   // Vertex skin weights
   const J = [];
   const W = [];
+  const UV = []; let UVF = null; // explicit uvs: only face-mark decals read them, every other face paints colour alone
   let wOverride = null;
 
   function autoW(p) {
@@ -187,6 +188,7 @@ export function geometry(ctx) {
     if (SHRINK) { a = shr(a); b = shr(b); c = shr(c); }
     ctx.tri(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]);
     pushW(a); pushW(b); pushW(c);
+    for (const p of [a, b, c]) { const q = UVF ? UVF(p) : [0, 0]; UV.push(q[0], q[1]); }
   };
   let CLOTH = null; // { col, rib }: fabric on — every quad takes a woven shade of col
   const quad = (a, b, c, d) => {
@@ -1138,33 +1140,29 @@ export function geometry(ctx) {
     }
   }
 
-  // Face Markings
+  // Face Markings: painted fur decals (see-through pictures) laid on the head, tinted from the fur
   {
-    const dark = mixc(FUR, "#1d1420", 0.45);
-    if (P.marks === "freckles") {
-      ctx.color(dark);
-      for (const s of [-1, 1]) for (let n = 0; n < 5; n++) {
-        fill(ellipse(s * (0.17 + (n % 3) * 0.032 + (n > 2 ? 0.016 : 0)), -0.04 - (n > 2 ? 0.026 : 0) - 0.006 * (n % 2), 0.0085, 0.0085, 8), 0.005);
+    const MARK = {
+      freckles: ["/cdn/value.612376a8fbe9afea906198682825c2705a96932daf8c3c8ce299e0832f2d7ded.png", [0.28, 0.36, 0.72, 0.62]],
+      stripes: ["/cdn/value.2b648d7de26b1b9941c648416224f7c3a386d41fff6a5db67377ee315c776ebf.png", [0.22, 0.04, 0.78, 0.96]],
+      patch: ["/cdn/value.6c5456d9721e5bf4b86545b2f88a2c5746272fd61123be4b57ffe006ef32f707.png", [0.22, 0.1, 0.78, 0.9]],
+      heart: ["/cdn/value.394fba5f71736b6688b19db0ca6e78f8d1381e8f393b5dcadc5494b6730caf4f.png", [0.2, 0.2, 0.8, 0.8]],
+    };
+    const decal = (kind, cu, cv, ru, rv, e, tint, flip = false) => {
+      const [tex, [x0, y0, x1, y1]] = MARK[kind], N = hi ? 8 : 4;
+      ctx.albedo(tex); ctx.color(tint);
+      UVF = (p) => { let s = ((p[0] - HC[0]) - cu) / (2 * ru) + 0.5; const r = ((p[1] - HC[1]) - cv) / (2 * rv) + 0.5; if (flip) s = 1 - s; return [x0 + s * (x1 - x0), 1 - (y0 + (1 - r) * (y1 - y0))]; };
+      for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+        const u0 = cu - ru + (2 * ru * i) / N, u1 = cu - ru + (2 * ru * (i + 1)) / N, v0 = cv - rv + (2 * rv * j) / N, v1 = cv - rv + (2 * rv * (j + 1)) / N;
+        quad(onHead(u0, v0, e), onHead(u1, v0, e), onHead(u1, v1, e), onHead(u0, v1, e));
       }
-    } else if (P.marks === "stripes") {
-      ctx.color(dark);
-      for (const [u, h] of [[-0.075, 0.05], [0, 0.07], [0.075, 0.05]]) {
-        fill(ellipse(u, 0.255 - (0.07 - h) * 0.4, 0.011, h * 0.5, 10), 0.005);
-      }
-    } else if (P.marks === "patch") {
-      ctx.color(dark);
-      fill(ellipse(-EX, EY - 0.005, 0.15, 0.17), 0.003);
-    } else if (P.marks === "heart") {
-      ctx.color("#ff6f9a");
-      const h = [];
-      for (let i = 0; i < 20; i++) {
-        const a = -(i / 20) * Math.PI * 2;
-        const x = 16 * Math.sin(a) ** 3;
-        const y = 13 * Math.cos(a) - 5 * Math.cos(2 * a) - 2 * Math.cos(3 * a) - Math.cos(4 * a);
-        h.push([-0.255 + x * 0.0016, -0.012 + y * 0.0016]);
-      }
-      fill(h, 0.005);
-    }
+      UVF = null; ctx.albedo(null);
+    };
+    const dark = mixc(FUR, "#1d1420", 0.55), see = (c) => c.length === 7 ? c + "fc" : c; // alpha under 1: the picture blends, soft fur edges
+    if (P.marks === "freckles") for (const s of [-1, 1]) decal("freckles", s * 0.205, -0.05, 0.065, 0.035, 0.005, see(dark), s < 0);
+    else if (P.marks === "stripes") decal("stripes", 0, 0.235, 0.09, 0.075, 0.005, see(dark));
+    else if (P.marks === "patch") decal("patch", -EX, EY - 0.005, 0.16, 0.18, 0.003, see(dark));
+    else if (P.marks === "heart") decal("heart", -0.255, -0.012, 0.04, 0.04, 0.005, "#fffffffc");
   }
 
   // Mouth & Expressions
@@ -1391,5 +1389,5 @@ export function geometry(ctx) {
   }
   wOverride = null;
 
-  return { joints: J, weights: W };
+  return { joints: J, weights: W, uvs: UV };
 }
