@@ -9,12 +9,12 @@ const VO = (t) => `/cdn/voice-tired-young-woman-mechanic-over-crackly-radio-sayi
 const CLICK = "/cdn/moodboard-realistic-gritty/sfx-walkie-talkie-radio-click-static-burst.mp3";
 const NAME = "Ines's goggles";
 const LINES = {
-  ask: "Hey. You, by the door. I'm stuck in the cold room and I dropped my goggle case by the compressor, south end. Bring me what's in it and a pair is yours.",
+  ask: "Hey. You, by the door. I'm holed up by the drop box and I dropped my goggle case by the compressor, south end. Bring me what's in it and a pair is yours.",
   ask2: "South end, by the compressor. Keep moving near the furnaces.",
   empty: "Empty? Teeth marks? Oh no. The hounds hoard anything shiny. Their den is east, past the condenser. Follow the drag marks.",
   empty2: "The den. East, past the condenser. Grab them and run, they wake up mean.",
-  got: "You got them! Now get to the cold room before they catch you. And I need a battery cell to test them, find one if you can.",
-  got2: "Cold room, northeast. Bring a battery, the cell in these is dead.",
+  got: "You got them! Now get to the drop box before they catch you. And I need a battery cell to test them, find one if you can.",
+  got2: "Drop box, northeast. Bring a battery, the cell in these is dead.",
   nocell: "They're cracked but they'll work. I just need a battery to power them. Check the hotel rooms.",
   done: "Lens holds. They work. Keep them, you earned them. Batteries go fast down in six, so don't waste them.",
   had: "Already gave you a pair. Go on, I'm fine in here.",
