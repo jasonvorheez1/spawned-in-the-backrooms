@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 479,
-  "updatedAt": "2026-11-07T13:59:08.446Z",
+  "basedOnSpecVersion": 492,
+  "updatedAt": "2026-11-07T14:03:08.598Z",
   "summary": "The Backrooms: Level 0 is a multiplayer survival game spanning the yellow maze, the Habitable Zone, utility halls and the Electrical Station. Shared player behaviors own survival, combat, social interactions and progression, while each place simulation builds and maintains its own world; player state persists across places and NPCs carry individual relationships, gear and behavior state.",
   "scriptPaths": [],
   "places": [
@@ -43,7 +43,7 @@
     "scripts/player.js - player.state owns level/XP, health/survival, visited cells/zones, kills/deaths, equipment/inventory/ammo/condition, clothes, compass and Level 3 consumable/page fields; crouch and detect are also player state.",
     "scripts/stats.js - player.state owns HALOGEN attributes, skills, points, tags, schema version, sheetOpen and target; initializes/migrates the sheet and spends points.",
     "scripts/build.js + scripts/player.js - player.state.scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
-    "scripts/interact.js - player focus, loot menu, notices and interaction; NPCs own pockets/picked and anger state, containers own item lists/lock/scavenged state, and looted bodies' look drives worn clothing.",
+    "scripts/interact.js - player focus, loot menu, notices and interaction; NPCs own pockets/picked plus per-player warned and angry state, containers own item lists/lock/scavenged state, and looted bodies' look drives worn clothing.",
     "scripts/talk.js - player state holds talkWith, shopOpen, talks, subtitle and busy/mood fields; NPC state holds rapport, line/talk target, follow, per-player anger/discount/gift and trader stock.",
     "scripts/critter.js - player.state.look owns appearance/worn slots; avatar scratch is local/session state.",
     "Place simulations - place.state owns seed flags and local refill/respawn/hazard schedules; Level 3 also tracks generators, line output and actor managers.",
@@ -53,19 +53,19 @@
     "world.config.yaml actions → templates/player.js chain: locomotion reads prior movement; player owns movement/survival/combat; interact handles use; talk handles dialogue/shop; then build, noclip, stats and critter behaviors.",
     "world.config.yaml camera → scripts/camera.js owns presented yaw/pitch and crouched eye height; player/enemy gaze and targeting consume camera direction/state.",
     "Level 0 exit in scripts/player.js → Level 1; later thresholds connect Level 1 to 2 and Level 2 to 3; Level 3 BACK door returns to Level 2 via scripts/level-door.js.",
-    "interact.js focus/E on living NPC → player.state.talkWith; scripts/talk-ui.js sends typed text/actions through talk/talkdo/shop inputs to scripts/talk.js; talk.js submits llm:chat and its heard handler validates reply/checks before rapport, follow, hostility, gifts or trades are written.",
+    "interact.js focus/E on living NPC → player.state.talkWith; scripts/talk-ui.js sends typed text/actions through talk/talkdo/shop inputs to scripts/talk.js; talk.js submits llm:chat and its heard handler validates reply/checks before rapport changes.",
     "talk.js writes NPC state.line and player subtitle → scripts/talk-ui.js / scripts/ui.js; NPC voice is emitted nearby; shop actions update almond water, inventory and NPC stock.",
-    "interact.js crouched E behind NPC → Sneak roll and NPC pockets → player.js takeToken/player inventory; caught attempt marks anger and makes the NPC hostile.",
+    "interact.js crouched E near NPC → Sneak roll and NPC pockets → player.js takeToken/player inventory; any caught attempt warns and shoves once, repeat caught theft turns that NPC hostile; facing/detection lower the odds.",
     "interact loot of a body → player inventory and scripts/interact.js strips removed clothing from the body's look/primitive params; stats/clothes helpers resolve NPC worn gear and armor.",
     "place simulations and enemy deaths → scripts/lib/loot.js or loot3.js → weapon/clothing/item tokens → floor entities or searchable containers.",
     "player.js attack → scripts/lib/breakables.js → entity hp or Level 0 wall hp/broken keys; rubble becomes containers and main/sim syncs wall geometry; BUILD similarly spends scrap and places breakable pieces.",
     "scripts/lib/level3.js and level3 data → places/level3/sim.js geometry, details, checkpoints and hazards; sim starts hound/deathmoth managers and spawns station actors; maze3path routes creatures across open edges.",
     "Level 3 loot3 → page/weapon/item tokens → player.js takeToken; UI renders pages; firesalt changes melee damage and stun_baton writes hound stunUntil.",
-    "scripts/player.js useCompass → scripts/lib/compass.js chooses place exits and writes compassRead → scripts/ui.js timed bearing/readout."
+    "scripts/player.js useCompass → scripts/lib/compass.js chooses place exits and writes compassRead → scripts/ui.js timed bearing/readout; player death also clears local NPC angry/warned/fresh grudges."
   ],
   "behaviorFamilies": [
     "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cell also owns flicker-wall markings, sound and local flicker/light state.",
-    "scripts/smilers.js and scripts/lurkers.js - Level 0 pack managers with distinct gaze/light/sanity reactions; both now drive uploaded creature meshes and animation rather than procedural silhouettes.",
+    "scripts/smilers.js and scripts/lurkers.js - Level 0 pack managers with distinct gaze/light/sanity reactions; lurkers use the uploaded animated mesh, spawned at scale 1.23 (2.4 m), including the debug test spawn.",
     "scripts/hounds.js + hound-geo.js - shared Level 1/2/3 hound AI/model; safe zones and grids vary by place, Level 3 brigades use maze routing and stun state.",
     "scripts/meg-agent.js + critter2-geo.js - common NPC behavior/avatar varies by species/look, role, voice, weapon and place; used by M.E.G., Survivors and Gamma agents.",
     "scripts/lib/weapons.js + weapon-look.js + weapon-prof.js + weapon-geo.js + viewmodel-geo.js - weapon kinds reuse fitted bodies with variant stats/tint/overlays and viewmodel framing.",
@@ -84,6 +84,6 @@
     "Weapon ids remain kind or kind~variant across inventory, condition, magazines and entities; use baseOf only where base-kind framing/behavior is intended.",
     "Building scrap is a per-kind player.state.scrap object, unlike comma-separated inventory/container tokens; breakables need tag plus state.mat/hp/maxHp, and Level 0 wall hp/broken state is separate place.state data.",
     "Level-specific zone keys are prefixed l1_/l2_/l3_; Level 3 generation is seeded from level3.yml, Gamma is safe, and LIFT remains a freight-elevator/sign rather than an implemented Level 4 crossing.",
-    "HALOGEN stores seven comma-separated attributes and thirteen spent skill values (sver=2); clothing tokens encode slot/kind/color, page ownership is a separate comma-separated pages field, and NPC talk/check results are constrained by scripts/lib/npc-talk.js rather than free model-side world writes."
+    "HALOGEN stores seven comma-separated attributes and thirteen spent skill values (sver=2); clothing tokens encode slot/kind/color, page ownership is a separate comma-separated pages field. Art/stealer/build.py creates disguise/creature/shed meshes on one Mixamo rig, but scripts/stealers.js still swaps scripts/stealer-geo.js primitives; the new asset source is not wired into runtime."
   ]
 }
