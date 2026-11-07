@@ -10,7 +10,7 @@ l5-ambrose:
   physics: character
   rotation: {yaw: 0}
   scale: {x: 0.88, y: 1.14, z: 0.88}
-  state: {attr: "7,7,6,7,6,4,6", faction5: hotel, factionName: "Homely Hotel (the staff of this endless hotel: polite, proprietary, they dislike the Originals in the salon and lean on Housekeeping)", home: {x: -44.1, z: 3.2}, hp: 192, maxHp: 192, mode: day, name: "Mr. Ambrose · Front Desk", offers: [["o:rent", Rent a suite (6 almond water)], ["o:checkout", Return the key]], outfit: longsleeve/pants/#1e1c22, picked: {}, ri: 0, role: concierge, rounds: [{act: null, dwell: 120, look: {x: -38, z: 3.2}, x: -44.1, y: 0, z: 3.2}, {act: cdn/clip-pickup.glb, dwell: 9, look: {x: -46, z: 5.4}, x: -44.1, y: 0, z: 5.4}, {act: null, dwell: 40, look: {x: -38, z: 1.6}, x: -44.1, y: 0, z: 1.6}], species: fox, title: "", trespass: {}, voice: ambrose, warned: {}}
+  state: {attr: "7,7,6,7,6,4,6", faction5: hotel, factionName: "Homely Hotel (the staff of this endless hotel: polite, proprietary, they dislike the Originals in the salon and lean on Housekeeping)", home: {x: -44.1, z: 3.2}, hp: 192, maxHp: 192, mode: day, name: "Mr. Ambrose · Front Desk", offers: [["o:rent", Rent a suite ($40)], ["o:checkout", Return the key]], outfit: longsleeve/pants/#1e1c22, picked: {}, ri: 0, role: concierge, rounds: [{act: null, dwell: 120, look: {x: -38, z: 3.2}, x: -44.1, y: 0, z: 3.2}, {act: cdn/clip-pickup.glb, dwell: 9, look: {x: -46, z: 5.4}, x: -44.1, y: 0, z: 5.4}, {act: null, dwell: 40, look: {x: -38, z: 1.6}, x: -44.1, y: 0, z: 1.6}], species: fox, title: "", trespass: {}, voice: ambrose, warned: {}}
   tags: [npc, l5res, l5-hotel]
 l5-ball-banner:
   feetPosition: {x: 8, y: 2, z: 23.78}
