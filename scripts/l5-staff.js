@@ -78,7 +78,7 @@ export function update(ctx, dt) {
     for (const p of hunt) { const d = flat(p.feetPosition, pos); if (d < best && aloneOf(ctx, p, T.alone) && flat(p.feetPosition, f.post) < (T.leash ?? 16) && !AVOID.has(zoneId(p.feetPosition.x, p.feetPosition.z))) { best = d; target = p; } }
     if (seer) mode = "frozen";
     // stared at up close, it speaks: polite, hollow, never moving its blank face
-    if (seer && flat(seer.feetPosition, pos) < 4 && now >= (m.spoke ?? 0)) { m.spoke = now + 20000; st.line = f.line; st.lineAt = now; ctx.emit("playSound", { clip: `/cdn/voice-faceling-${f.id.slice(9)}-saying-${f.line.toLowerCase().replace(/[^a-z ]/g, "").trim().replace(/ +/g, "-")}.mp3`, position: { ...pos, y: pos.y + 2 }, volume: 0.7, maxDistance: 10 }); }
+    if (seer) { if (flat(seer.feetPosition, pos) < 4 && now >= (m.spoke ?? 0)) { m.spoke = now + 20000; st.line = f.line; st.lineAt = now; ctx.emit("playSound", { clip: `/cdn/voice-faceling-${f.id.slice(9)}-saying-${f.line.toLowerCase().replace(/[^a-z ]/g, "").trim().replace(/ +/g, "-")}.mp3`, position: { ...pos, y: pos.y + 2 }, volume: 0.7, maxDistance: 10 }); } }
     else if (target) { mode = "creep"; goal = target.feetPosition; sp = T.creep; }
     else if (flat(pos, f.post) > 0.3) { mode = "return"; goal = f.post; sp = T.home; }
     if (mode === "creep" && best < T.reach && now >= (m.strike ?? 0)) {
