@@ -11,7 +11,8 @@ import { statsUi } from './stats-ui.js'
 import { derived as _dv, carried as _kg } from './lib/stats.js'
 import { derived } from './lib/stats.js'
 import { noclipUi } from './noclip-ui.js'
-export { plyUpload } from './lib/plyimport.js'
+// the .plymodel converter is read on the first upload press, not at boot
+export async function plyUpload(input) { const m = await import('./lib/plyimport.js'); return m.plyUpload(input) }
 export { m3dPvDown, m3dPvWheel, m3dPvReset, m3dPvTool, m3dPvDraft, m3dPvEdit, m3dPvClear, m3dTkMeasure, m3dTkDown, m3dTkWheel, m3dTkReset, m3dMpvMove, m3dMpvSize, m3dDraft, m3dPose, m3dPick, m3dPreview, m3dUpload, m3dAsk, m3dClearRefs, m3dGuide } from '../mods/modeling-studio/hud.js'
 
 const THEME = `<style>
