@@ -38,6 +38,21 @@ export function tick(ctx) {
     ctx.spawn({ feetPosition: { x: BACK.x + 0.4, y: 0, z: BACK.z }, light: { kind: "point", color: "oklch(0.85 0.12 92)", intensity: 3, distance: 6 } });
     s.nextFlicker = now + 60000;
   }
+  // the pack: a manager, and hounds kept topped up (more while the lights are out)
+  if (!s.packMgr) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
+  const want = L.hounds + (s.flicker === "dark" ? L.flickerHounds : 0);
+  const have = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((h) => !h.state?.dead).length;
+  if (have < want && now >= (s.nextHound ?? 0)) {
+    s.nextHound = now + (s.flicker === "dark" ? 1500 : L.entityRespawn * 1000);
+    for (let tries = 0; tries < 20; tries++) {
+      const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N), z = zoneOf(cx, cz);
+      if (z !== "halls" && z !== "storage") continue;
+      if (Math.abs(cx - ARRIVE.cx) + Math.abs(cz - ARRIVE.cz) < 4) continue;
+      const c = cellCenter(cx, cz);
+      ctx.spawn({ tags: ["hound"], feetPosition: { x: c.x, y: 0.05, z: c.z }, physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/hound-geo.js" }, state: { hp: L.houndHp, xp: L.xpHound } });
+      break;
+    }
+  }
   // the Flickering: a stutter, then black, then the lights come back
   const lamps = () => ctx.query({ tags: ["l1lamp"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   const set = (on) => { for (const r of lamps()) { const o = ctx.place.objects[r.id]; if (!o) continue; o.light = { ...o.light, intensity: on ? (o.light?.distance > 10 ? LAMP_ON : 2.5) : 0 }; o.material = { ...o.material, emissiveIntensity: on ? 2.2 : 0 }; } };
