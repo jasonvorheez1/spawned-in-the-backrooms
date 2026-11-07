@@ -5,7 +5,6 @@ import { N, zoneOf, cellCenter, cellAt, inGamma, hash } from "./lib/level3.js";
 import A from "./lib/data/l3-ambience.yml";
 const GRIT = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 export const updateSchedule = { every: { seconds: 5 } };
-let DARK = null;
 const FLK = `fx
 pop glow n=1 r=light(<.95,.97,1>,(flick(1.3,1)^.2)*flick(13,.3)*2.6,9)`;
 // the lamps sim.js lays: a few tubes dead, some flickering, a quiet buzz on some; each lamp marked once it is set
@@ -27,7 +26,7 @@ function tuneLamps(ctx) {
 }
 export function update(ctx) {
   if (ctx.now() - (ctx.self.session.tunedAt ?? -1e9) > 30000) { ctx.self.session.tunedAt = ctx.now(); tuneLamps(ctx); }
-  if (!DARK) { DARK = []; for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) if (zoneOf(cx, cz) === "dark") DARK.push(cellCenter(cx, cz)); }
+  const darkList = (ctx.session.dark ??= (() => { const d = []; for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) if (zoneOf(cx, cz) === "dark") d.push(cellCenter(cx, cz)); return d; })());
   const now = ctx.now(), last = (ctx.self.session.voiceAt ??= {});
   for (const p of ctx.place.players) {
     const f = p.feetPosition, k = cellAt(f.x, f.z); if (!k || inGamma(k.cx, k.cz)) continue;
@@ -40,7 +39,7 @@ export function update(ctx) {
     const cd = inDark || lowSan ? 25 : A.voice.cooldown;
     const ch = inDark ? A.voice.chance * 2.8 : lowSan ? A.voice.chance * 1.8 : A.voice.chance;
     if (now - (last[p.id] ?? -1e9) < cd * 1000 || ctx.random() >= ch) continue;
-    const near = DARK.filter((c) => { const d = Math.hypot(c.x - f.x, c.z - f.z); return d > 4 && d < A.voice.reach; });
+    const near = darkList.filter((c) => { const d = Math.hypot(c.x - f.x, c.z - f.z); return d > 4 && d < A.voice.reach; });
     if (!near.length) continue;
     const c = near[Math.floor(ctx.random() * near.length)]; last[p.id] = now;
     heard(ctx, { clip: A.voices[Math.floor(ctx.random() * A.voices.length)], position: { x: c.x, y: 1.4, z: c.z }, volume: inDark ? A.voice.volume * 1.3 : A.voice.volume, refDistance: 3, maxDistance: 32 }, { audience: { player: p.id } });
