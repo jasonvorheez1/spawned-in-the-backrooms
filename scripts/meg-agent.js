@@ -4,6 +4,7 @@
 import { findPath } from "builtin/nav";
 import { raycast } from "builtin/physics";
 import G from "./lib/data/meg.yml";
+import { npcState, npcMul } from "./lib/stats.js";
 const SHOT = "/cdn/moodboard-realistic-gritty/sfx-pistol-gunshot-concrete-echo.mp3";
 const FLASH = `fx
 pop flash burst=1 life=.06 size=.35 col=hdr(5,3.4,1.4) a=1>0 sz=$size r=sprite(soft-disc,add)
@@ -15,6 +16,7 @@ const FOES = ["hound", "stealer"];
 
 export function onSpawn(ctx) {
   const me = ctx.self;
+  if (!me.state.attr) { const r = npcState(ctx, "agent", G.hp); me.state.attr = r.attr; me.state.title = r.title; me.state.maxHp = r.hp; me.state.hp ??= r.hp; }
   me.state.hp ??= G.hp;
   me.state.home ??= { x: me.feetPosition.x, y: me.feetPosition.y, z: me.feetPosition.z };
   me.anim.idle = { clip: "Idle", loop: "loop", weight: 1 };
@@ -51,7 +53,7 @@ function shoot(ctx, me, t) {
   ctx.emit("fx", { position: muzzle, script: FLASH });
   ctx.emit("playSound", { clip: SHOT, position: muzzle, volume: 0.9, maxDistance: 45 });
   if (ctx.random() > G.hitChance) return;
-  const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), dmg = isPlayer ? G.playerShot : G.shot;
+  const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), dmg = Math.round((isPlayer ? G.playerShot : G.shot) * npcMul(me.state).dmg);
   t.state.hp -= dmg;
   ctx.emit("damageNumber", { position: { x: q.x, y: q.y + 0.4, z: q.z }, value: dmg, color: isPlayer ? "#ff5040" : "#c6f060" });
   ctx.emit("fx", { position: q, script: HIT, params: {} });

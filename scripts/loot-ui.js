@@ -58,8 +58,9 @@ button.it{cursor:pointer}
 </style>`
 
 const owned = (s) => ['fists', ...(s.weapons ? s.weapons.split(',').filter(Boolean) : [])]
-const maxHp = (lv) => L.hp + (lv - 1) * L.perLevel.hp
-const maxSan = (lv) => L.sanity + (lv - 1) * L.perLevel.sanity
+import { derived as dv } from './lib/stats.js'
+const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? dv(s).hpBonus : 0)
+const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + (s?.attr ? dv(s).sanBonus : 0)
 const cell = (k, v, wide) => `<div${wide ? ' class="w"' : ''}><span>${k}</span>${v}</div>`
 
 // the right-hand pane for one item token; s = the player's state (to compare against what they hold)
@@ -99,7 +100,7 @@ function inventory(s) {
   const eq = W[eqKey] ?? W.fists
   const drop = eqKey !== 'fists' ? `<button onclick="sendAction('inv',{k:'drop',w:'${eqKey}'})">Drop ${eq.name}</button>` : ''
   return `<div class="pbw pb"><div class="pbp" data-modal>
-    <div class="hd"><h2>Items</h2><div class="st"><span><b>LVL</b>${lv}</span><span><b>HP</b>${Math.round(s.hp ?? 0)}/${maxHp(lv)}</span><span><b>SAN</b>${Math.round(s.sanity ?? 0)}/${maxSan(lv)}</span><span><b>XP</b>${s.xp ?? 0}/${L.xpBase * lv}</span></div></div>
+    <div class="hd"><h2>Items</h2><div class="st"><span><b>LVL</b>${lv}</span><span><b>HP</b>${Math.round(s.hp ?? 0)}/${maxHp(lv, s)}</span><span><b>SAN</b>${Math.round(s.sanity ?? 0)}/${maxSan(lv, s)}</span><span><b>XP</b>${s.xp ?? 0}/${L.xpBase * lv}</span></div></div>
     <div class="bd"><div class="ls"><div class="sec">Weapons</div>${weapons}<div class="sec">Aid</div>${aid}<div class="sec">Ammo</div>${ammo}</div>${detail(eqKey, s, true)}</div>
     <div class="ft"><span class="c">${s.kills ?? 0} kills</span>${drop}<button onclick="sendAction('inv',{k:'close'})"><kbd>I</kbd>Close</button></div>
   </div></div>`

@@ -1,3 +1,4 @@
+import { npcState } from "../../scripts/lib/stats.js";
 import MEG from "../../scripts/lib/data/meg.yml";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 // Level 1's referee: lays the lamps, crates, supplies and thresholds once, then runs the Flickering.
@@ -103,7 +104,7 @@ export function tick(ctx) {
       if (z !== "halls" && z !== "storage") continue;
       if (Math.abs(cx - ARRIVE.cx) + Math.abs(cz - ARRIVE.cz) < 4) continue;
       const c = cellCenter(cx, cz);
-      ctx.spawn({ tags: ["hound"], feetPosition: { x: c.x, y: 0.05, z: c.z }, physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/hound-geo.js" }, state: { hp: L.houndHp, xp: L.xpHound } });
+      ctx.spawn({ tags: ["hound"], feetPosition: { x: c.x, y: 0.05, z: c.z }, physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/hound-geo.js" }, state: npcState(ctx, "hound", L.houndHp, { xp: L.xpHound }) });
       break;
     }
   }
@@ -116,7 +117,7 @@ export function tick(ctx) {
       const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N);
       if (zoneOf(cx, cz) !== "halls" || Math.abs(cx - ARRIVE.cx) + Math.abs(cz - ARRIVE.cz) < 5) continue;
       const c = cellCenter(cx, cz);
-      ctx.spawn({ tags: ["stealer"], feetPosition: { x: c.x, y: 0.05, z: c.z }, physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/stealer-geo.js", params: { revealed: false } }, state: { hp: L.stealerHp, xp: L.xpStealer } });
+      ctx.spawn({ tags: ["stealer"], feetPosition: { x: c.x, y: 0.05, z: c.z }, physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/stealer-geo.js", params: { revealed: false } }, state: npcState(ctx, "stealer", L.stealerHp, { xp: L.xpStealer }) });
       break;
     }
     if (stealers + 1 >= L.stealers) s.stealersSeeded = true;

@@ -6,6 +6,7 @@ import L from './lib/data/level0.yml'
 import W from './lib/data/weapons.yml'
 import { raycast } from 'builtin/physics'
 import { dropLoot, spawnWeapon } from './lib/loot.js'
+import { derived, canCarry, burden, npcMul, START } from './lib/stats.js'
 import { weaponBody } from './lib/weapon-look.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
 import { zoneAt as zoneAt1 } from './lib/level1.js'
@@ -19,8 +20,8 @@ const ICHOR = `fx
 pop ichor burst=18..26 life=.5..0.9 v=sdir()*(1.5..3.2)+up(1) size=.04..0.09 acc=grav()*.8+drag(1.2) col=<.04,.03,.05> a=1>.6:1>0 sz=$size floor=stick r=sprite(soft-disc,alpha)
 pop smoke burst=4..6 life=.6..1 v=sdir()*(.3..0.7) size=.25..0.4 acc=buoy(.4)+drag(1.5) col=<.06,.05,.07> a=0>.15:.5>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)`
 
-export const maxHp = (lv) => L.hp + (lv - 1) * L.perLevel.hp
-export const maxSan = (lv) => L.sanity + (lv - 1) * L.perLevel.sanity
+export const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? derived(s).hpBonus : 0)
+export const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + (s?.attr ? derived(s).sanBonus : 0)
 export const xpNeed = (lv) => L.xpBase * lv
 
 const owned = (s) => ['fists', ...(s.weapons ? s.weapons.split(',') : [])]
@@ -31,7 +32,7 @@ function walkOf(ctx) { return (ctx.self.session['player.js'] ??= {}) }
 
 function ensure(ctx) {
   const s = ctx.self.state
-  if (s.level == null) Object.assign(s, { level: 1, xp: 0, hp: L.hp, sanity: L.sanity, stamina: L.stamina, battery: L.battery, almonds: 2, visited: '', kills: 0, escapes: 0, deaths: 0, weapons: '', equipped: 'fists' })
+  if (s.level == null) Object.assign(s, { level: 1, xp: 0, hp: L.hp, sanity: L.sanity, stamina: L.stamina, battery: L.battery, almonds: 2, visited: '', kills: 0, escapes: 0, deaths: 0, weapons: '', equipped: 'fists', ...START })
 }
 
 function decode(hex) { const v = new Uint8Array(N * N); for (let i = 0; i < hex.length; i++) { const n = parseInt(hex[i], 16); for (let b = 0; b < 4; b++) if (n & (1 << b)) v[i * 4 + b] = 1 } return v }
@@ -44,10 +45,11 @@ function sound(ctx, name, volume = 0.7, mine = false) {
 
 function gain(ctx, n) {
   const s = ctx.self.state
-  s.xp += n
+  s.xp += Math.round(n * derived(s).xp)
   while (s.xp >= xpNeed(s.level)) {
     s.xp -= xpNeed(s.level); s.level += 1
-    s.hp = maxHp(s.level); s.sanity = maxSan(s.level); s.leveledAt = ctx.now()
+    s.hp = maxHp(s.level, s); s.sanity = maxSan(s.level, s); s.leveledAt = ctx.now()
+    s.spts = (s.spts ?? 0) + derived(s).skillPerLevel; if (s.level % 3 === 0) s.apts = (s.apts ?? 0) + 1
     sound(ctx, 'eerie-low-chime-level-up', 0.85, true)
     ctx.emit('milestone', { step: s.level, name: `level ${s.level}` }, { audience: { player: ctx.self.id } })
   }
@@ -57,6 +59,7 @@ function gain(ctx, n) {
 // Nothing is picked up by walking over it: scripts/interact.js calls this when you press E on what you are looking at.
 export function takeToken(ctx, token) {
   const s = ctx.self.state, now = ctx.now()
+  const cw = canCarry(s, token); if (!cw.ok) return cw
   if (token === 'almond') {
     s.almonds = (s.almonds ?? 0) + 1; gain(ctx, L.xpAlmond); s.pickedAt = now
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.75, true)
@@ -73,8 +76,8 @@ export function takeToken(ctx, token) {
     return { ok: true }
   }
   if (token === 'ration' || token === 'bandage') { // eaten or wrapped on the spot
-    const mh = maxHp(s.level), ms = maxSan(s.level)
-    s.hp = Math.min(mh, (s.hp ?? mh) + (token === 'ration' ? L1.rationHp : L1.bandageHp))
+    const mh = maxHp(s.level, s), ms = maxSan(s.level, s)
+    s.hp = Math.min(mh, (s.hp ?? mh) + (token === 'ration' ? L1.rationHp : L1.bandageHp) * derived(s).heal)
     if (token === 'ration') s.sanity = Math.min(ms, (s.sanity ?? ms) + L1.rationSanity)
     s.pickedAt = now; gain(ctx, L.xpAlmond)
     sound(ctx, token === 'ration' ? 'plastic-bottle-pickup-rattle' : 'pickup-ammo', 0.7, true)
@@ -160,7 +163,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
     m.state.dead = true
     s.kills += 1
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
-    dropLoot(ctx, m.feetPosition, npc ? "Agent's pack" : m.state?.kind === 'lurker' ? 'Lurker remains' : 'Smiler remains')
+    dropLoot(ctx, m.feetPosition, npc ? "Agent's pack" : m.state?.kind === 'lurker' ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot)
   }
 }
 
@@ -194,7 +197,7 @@ function swing(ctx, power = 0) {
     }
   }
   w.stamina = (w.stamina ?? s.stamina) - wp.stamina * (power ? P.stamina : 1)
-  w.nextSwing = now + wp.cooldown * 1000 * (power ? P.cooldown : 1)
+  w.nextSwing = now + wp.cooldown * 1000 * (power ? P.cooldown : 1) * derived(s).swing
   s.swingHeavy = Math.round(power * 100) / 100
   s.swingAt = now
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
@@ -212,7 +215,9 @@ function swing(ctx, power = 0) {
   }
   if (!wp.ranged) sound(ctx, 'pipe-whoosh-swing', power ? 0.9 : 0.55)
   if (!found.length) return
-  const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul
+  const dv = derived(s), crit = ctx.random() < dv.crit
+  const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * (wp.ranged ? dv.gun : dv.melee) * (crit ? 1.75 : 1)
+  if (crit) ctx.emit('damageNumber', { position: { x: found[0].m.feetPosition.x, y: found[0].m.feetPosition.y + 2, z: found[0].m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
   if (wp.pellets) {
     // a spread of pellets: everything in the cone is hit, hard up close and weak at range
     for (const { m, d } of found) hitTarget(ctx, s, m, Math.max(1, Math.round(base * Math.max(0.2, 1 - d / wp.range))), f, false)
@@ -236,8 +241,8 @@ function startReload(ctx) {
   if (wp.pellets) ctx.after(wp.reloadStart ?? 0.4, 'reloadStep', { k, tok: w.reloadTok })
   else {
     sound(ctx, 'pistol-magazine-eject-click', 0.6, true)
-    ctx.after(wp.reloadTime * 0.55, 'reloadMagIn', { k, tok: w.reloadTok })
-    ctx.after(wp.reloadTime, 'reloadDone', { k, tok: w.reloadTok })
+    ctx.after(wp.reloadTime * derived(s).reload * 0.55, 'reloadMagIn', { k, tok: w.reloadTok })
+    ctx.after(wp.reloadTime * derived(s).reload, 'reloadDone', { k, tok: w.reloadTok })
   }
 }
 
@@ -312,11 +317,11 @@ function cycleWeapon(ctx) {
 function drink(ctx) {
   const s = ctx.self.state
   if (s.almonds <= 0) return
-  const mh = maxHp(s.level), ms = maxSan(s.level)
+  const mh = maxHp(s.level, s), ms = maxSan(s.level, s)
   if (s.hp >= mh && s.sanity >= ms) return
   s.almonds -= 1
-  s.hp = Math.min(mh, s.hp + L.almondHp)
-  s.sanity = Math.min(ms, s.sanity + L.almondSanity)
+  s.hp = Math.min(mh, s.hp + L.almondHp * derived(s).heal)
+  s.sanity = Math.min(ms, s.sanity + L.almondSanity * derived(s).heal)
   s.drankAt = ctx.now()
   sound(ctx, 'gulping-water-from-plastic-bottle', 0.65)
 }
@@ -392,10 +397,10 @@ export function update(ctx, dt) {
   w.stamina ??= s.stamina; w.battery ??= s.battery
   const dir = w.dir ?? { x: 0, z: 0 }, moving = dir.x !== 0 || dir.z !== 0
   const sprinting = w.sprint && moving && w.stamina > 1 && !s.ads
-  w.stamina = Math.max(0, Math.min(L.stamina, w.stamina + (sprinting ? -L.staminaDrain : L.staminaRegen * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
+  w.stamina = Math.max(0, Math.min(derived(s).staMax, w.stamina + (sprinting ? -L.staminaDrain : L.staminaRegen * derived(s).staRegen * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
   const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
-  const speed = (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1)
+  const speed = (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * derived(s).speed * burden(s)
   const intent = { x: dir.x * speed, z: dir.z * speed }
   viewmodel(ctx, moving, sprinting)
   const v = ctx.self.velocity
@@ -423,7 +428,7 @@ export function update(ctx, dt) {
 
 function tickStats(ctx, t, moving) {
   const s = ctx.self.state, w = walkOf(ctx), p = ctx.self.feetPosition, now = ctx.now()
-  const mh = maxHp(s.level), ms = maxSan(s.level)
+  const mh = maxHp(s.level, s), ms = maxSan(s.level, s)
   const af = w.fwd ?? { x: 0, z: -1 }, ax = Math.round(af.x * 20) / 20, az = Math.round(af.z * 20) / 20
   if (s.aimX !== ax) s.aimX = ax
   if (s.aimZ !== az) s.aimZ = az
@@ -432,7 +437,7 @@ function tickStats(ctx, t, moving) {
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
   let drain = L.sanityDrain[zone] ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red')) drain *= 0.4
-  s.sanity -= drain * t
+  s.sanity -= drain * (drain > 0 ? derived(s).drain : 1) * t
   if (w.ledge) s.sanity += L.ledgeRest.sanity * t
   const rest = !!w.ledge, wet = !!w.wet
   if (s.onLedge !== rest) s.onLedge = rest

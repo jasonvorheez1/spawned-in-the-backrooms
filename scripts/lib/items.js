@@ -3,6 +3,7 @@
 // scripts/interact.js reads and writes them, scripts/loot-ui.js names them, scripts/player.js applies them.
 import L from './data/level0.yml'
 import W from './data/weapons.yml'
+import { tokenWeight } from './stats.js'
 import L1 from './data/level1.yml'
 
 export const itemsOf = (str) => (str ? String(str).split(',').filter(Boolean) : [])
@@ -12,6 +13,11 @@ export const tokenOf = (tag, o) => (tag === 'weapon' ? 'weapon:' + (o?.state?.ki
 
 // what a token is called and what it does, for the prompt and the loot menu
 export function describe(token) {
+  const d = describe0(token)
+  const kg = ['ration', 'bandage', 'battery'].includes(token) ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
+  return kg ? { ...d, info: d.info + ` · ${kg.toFixed(1)} kg` } : d
+}
+function describe0(token) {
   if (token === 'almond') return { name: 'Almond water', info: `+${L.almondHp} HP · +${L.almondSanity} sanity`, color: '#f3e7b0' }
   if (token === 'ammo') return { name: 'Pistol rounds', info: `x${W.ammo.perPickup}`, color: '#e9c46a' }
   if (token === 'shells') return { name: 'Shotgun shells', info: `x${W.shells.perPickup}`, color: '#e76f51' }

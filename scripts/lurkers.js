@@ -4,6 +4,8 @@
 import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
 import { raycast } from "builtin/physics";
+import { npcMul, derived } from "./lib/stats.js";
+const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
 
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 const POOF = `fx
@@ -32,7 +34,7 @@ export function update(ctx, dt) {
   const players = ctx.place.players.filter((p) => !(p.state?.downAt && now - p.state.downAt < 2000));
   const mem = (ctx.self.session.m ??= {});
   for (const w of ctx.query({ tags: ["lurker"] })) {
-    const m = (mem[w.id] ??= {}), st = w.state ?? {}, pos = w.feetPosition;
+    const m = (mem[w.id] ??= {}), st = w.state ?? {}, pos = w.feetPosition, mu = npcMul(st);
     if (st.dead) {
       if (!m.gone) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1, z: pos.z }, script: POOF }); ctx.emit("playSound", { clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.8, maxDistance: 30 }); ctx.destroy(w.id); }
       continue;
@@ -40,12 +42,12 @@ export function update(ctx, dt) {
     const eye = { x: pos.x, y: pos.y + 1.6, z: pos.z };
     if (now >= (m.look ?? 0)) {
       m.look = now + 150 + ctx.random() * 100;
-      let best = null, bd = L.lurkerSight, watched = null;
+      let best = null, bd = L.lurkerSight * mu.sight, watched = null;
       for (const p of players) {
         const pp = p.feetPosition, c = cellAt(pp.x, pp.z);
         if (inHub(c.cx, c.cz)) continue;
         const dx = pp.x - pos.x, dz = pp.z - pos.z, d = Math.hypot(dx, dz);
-        if (d >= L.lurkerSight) continue;
+        if (d >= L.lurkerSight * mu.sight * sn(p)) continue;
         const head = { x: pp.x, y: pp.y + 1.5, z: pp.z };
         if (!clear(ctx, eye, head, [w.id, p.id])) continue;
         // is the wanderer facing it? (aim is the direction they look; the lurker is at -d from them)
@@ -66,7 +68,7 @@ export function update(ctx, dt) {
     else { if (!m.next || Math.hypot(m.next.x - pos.x, m.next.z - pos.z) < 0.5 || now > (m.nextBy ?? 0)) { m.next = neighbor(ctx, pos); m.nextBy = now + 7000; } goal = m.next; speed = 1.0; }
     let vx = 0, vz = 0;
     const dx = goal.x - pos.x, dz = goal.z - pos.z, d = Math.hypot(dx, dz);
-    if (d > (prey ? 1.1 : 0.3)) { vx = (dx / d) * speed; vz = (dz / d) * speed; }
+    if (d > (prey ? 1.1 : 0.3)) { vx = (dx / d) * speed * mu.speed; vz = (dz / d) * speed * mu.speed; }
     if (m.watched) { vx = 0; vz = 0; } // frozen under a gaze
     const ahead = cellAt(pos.x + vx * 0.5, pos.z + vz * 0.5);
     if (inHub(ahead.cx, ahead.cz)) { vx = 0; vz = 0; m.next = null; m.last = null; m.prey = null; }
@@ -78,10 +80,10 @@ export function update(ctx, dt) {
     if (!m.watched && (face.x || face.z)) { const yaw = (Math.atan2(-face.x, -face.z) * 180) / Math.PI; if (Math.abs(((yaw - (m.yaw ?? 999) + 540) % 360) - 180) > 6) { m.yaw = yaw; w.rotation = yaw; } }
     if (prey && !m.watched && Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z) < 1.6 && now >= (m.bite ?? 0)) {
       m.bite = now + L.lurkerBiteCooldown * 1000;
-      prey.state.hp -= L.lurkerBite;
+      prey.state.hp -= Math.round(L.lurkerBite * mu.dmg);
       prey.state.sanity -= L.lurkerSanity;
       const at = { x: prey.feetPosition.x, y: prey.feetPosition.y + 1.4, z: prey.feetPosition.z };
-      ctx.emit("damageNumber", { position: at, value: L.lurkerBite, color: "#ff4a3a" });
+      ctx.emit("damageNumber", { position: at, value: Math.round(L.lurkerBite * mu.dmg), color: "#ff4a3a" });
       ctx.emit("playSound", { clip: SND("creature-bite-snarl-wet"), position: at, volume: 1, maxDistance: 25 });
       ctx.emit("screenShake", { intensity: 0.5, duration: 0.3 }, { audience: { player: prey.id } });
       ctx.emit("screenFlash", { color: "#e8e4d8", duration: 0.2, intensity: 0.4 }, { audience: { player: prey.id } });

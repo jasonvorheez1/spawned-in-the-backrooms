@@ -6,6 +6,8 @@
 import { getInputRay, raycast } from 'builtin/physics'
 import { tokenOf, describe, itemsOf } from './lib/items.js'
 import { takeToken, maxHp, maxSan } from './player.js'
+import { derived } from './lib/stats.js'
+import { rollItem, rollItemL1 } from './lib/loot.js'
 
 const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc'] // what can be looked at and used
 const REACH = 3.0 // metres from the eye
@@ -75,6 +77,10 @@ function closeLoot(ctx) {
 
 function openLoot(ctx, c) {
   const s = ctx.self.state
+  if (!c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per container
+    c.state.scavved = true
+    if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : rollItem(ctx))].filter(Boolean).join(',')
+  }
   s.lootOpen = c.id; s.lootName = c.state?.name ?? 'Container'; s.lootList = c.state?.items ?? ''; s.focus = null
   snd(ctx, 'container-open-rustle', 0.5)
 }
@@ -98,7 +104,7 @@ function talk(ctx, it) {
   if (role === 'scout') { s.megTip = ((s.megTip ?? -1) + 1) % TIPS.length; speak(ctx, it, 'ale', TIPS[s.megTip]); return }
   if (role === 'medic') {
     if (now - (s.megMedAt ?? -1e9) < 90000) { speak(ctx, it, 'ortiz', "you're patched. give it a minute and come back."); return }
-    s.megMedAt = now; s.hp = maxHp(s.level ?? 1); s.sanity = Math.max(s.sanity ?? 0, maxSan(s.level ?? 1))
+    s.megMedAt = now; s.hp = maxHp(s.level ?? 1, s); s.sanity = Math.max(s.sanity ?? 0, maxSan(s.level ?? 1, s))
     speak(ctx, it, 'ortiz', "hold still. there. you're good to walk."); snd(ctx, 'bandage-wrap-cloth', 0.6); return
   }
   if (role === 'quarter') {

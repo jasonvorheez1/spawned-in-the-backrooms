@@ -7,6 +7,8 @@ import { ZONE_NAMES } from './lib/maze.js'
 import * as modelingStudio from '../mods/modeling-studio/hud.js'
 import { wardrobe } from './wardrobe-ui.js'
 import { lootUi } from './loot-ui.js'
+import { statsUi } from './stats-ui.js'
+import { derived } from './lib/stats.js'
 import { noclipUi } from './noclip-ui.js'
 export { plyUpload } from './lib/plyimport.js'
 export { m3dPvDown, m3dPvWheel, m3dPvReset, m3dPvTool, m3dPvDraft, m3dPvEdit, m3dPvClear, m3dTkMeasure, m3dTkDown, m3dTkWheel, m3dTkReset, m3dMpvMove, m3dMpvSize, m3dDraft, m3dPose, m3dPick, m3dPreview, m3dUpload, m3dAsk, m3dClearRefs, m3dGuide } from '../mods/modeling-studio/hud.js'
@@ -45,8 +47,8 @@ kbd { display:inline-block; padding:0 4px; font-family:inherit; font-size:10px; 
 }
 </style>`
 
-const maxHp = (lv) => L.hp + (lv - 1) * L.perLevel.hp
-const maxSan = (lv) => L.sanity + (lv - 1) * L.perLevel.sanity
+const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? derived(s).hpBonus : 0)
+const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + (s?.attr ? derived(s).sanBonus : 0)
 
 function bar(label, cur, max, color, valText = '', left = false) {
   const pct = Math.max(0, Math.min(100, (cur / max) * 100))
@@ -65,7 +67,7 @@ function compass(yaw) {
 export default function render(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
-  const now = ctx.now(), lv = s.level, mh = maxHp(lv), ms = maxSan(lv)
+  const now = ctx.now(), lv = s.level, mh = maxHp(lv, s), ms = maxSan(lv, s)
   const hpF = Math.max(0, s.hp / mh), sanF = Math.max(0, s.sanity / ms)
   const zone = s.zone ?? 'hub'
   const acts = ctx.world.inputs?.actions ?? {}
@@ -145,8 +147,8 @@ export default function render(ctx, player) {
 
   <!-- Subdued Initial Hint -->
   <div id="hint" style="position:absolute;left:0;right:0;text-align:center;bottom:180px;font-size:12px;color:rgba(232,228,216,0.45);animation:hud-fade 7s 1s forwards;opacity:0">
-    <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('wardrobe', 'C')}</kbd> wardrobe · <kbd>${lab('emote', 'T')}</kbd> face
+    <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('wardrobe', 'C')}</kbd> wardrobe · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>
 
-</div>${wardrobe(ctx, player)}${lootUi(ctx, player)}${noclipUi(ctx, player)}${modelingStudio.render(ctx, player)}`
+</div>${wardrobe(ctx, player)}${lootUi(ctx, player)}${statsUi(ctx, player)}${noclipUi(ctx, player)}${modelingStudio.render(ctx, player)}`
 }

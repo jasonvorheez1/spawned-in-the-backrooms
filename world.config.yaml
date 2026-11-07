@@ -53,6 +53,10 @@ inputs:
       keys:
         - i
     inv: {}
+    sheet:
+      keys:
+        - k
+    stat: {}
     wardrobe:
       keys:
         - c
