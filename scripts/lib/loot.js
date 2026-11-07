@@ -1,7 +1,7 @@
 // Loot: one place that knows how almond water and weapons appear in the maze, whether from the
 // floor spawner (places/main/sim.js) or from a smiler that just died (scripts/player.js).
 import L from "./data/level0.yml";
-import W from "./weapons.js";
+import W, { rollVariant } from "./weapons.js";
 import { SKILL_KEYS } from "./stats.js";
 import { weaponBody } from "./weapon-look.js";
 
@@ -27,7 +27,7 @@ export function spawnShells(ctx, c) {
 export function rollWeapon(ctx) {
   const kinds = W.order.slice(1).filter((k) => !W[k].level1 && !W[k].level2), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
   let r = ctx.random() * total;
-  for (const k of kinds) { r -= W[k].weight ?? 1; if (r <= 0) return k; }
+  for (const k of kinds) { r -= W[k].weight ?? 1; if (r <= 0) return rollVariant(ctx, k); }
   return kinds[0];
 }
 
@@ -77,7 +77,7 @@ const L1_WEIGHTS = [["ration", 5], ["almond", 4], ["bandage", 3], ["battery", 3]
 export function rollItemL1(ctx) {
   const total = L1_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
-  for (const [k, w] of L1_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + (ctx.random() < 0.6 ? (ctx.random() < 0.55 ? "rebar" : "wrench") : rollWeapon(ctx)) : k === "book" ? bookOf(ctx) : k; }
+  for (const [k, w] of L1_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + (ctx.random() < 0.6 ? rollVariant(ctx, ctx.random() < 0.55 ? "rebar" : "wrench") : rollWeapon(ctx)) : k === "book" ? bookOf(ctx) : k; }
   return "ration";
 }
 export function spawnCrateL1(ctx, p) {
