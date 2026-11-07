@@ -15,10 +15,12 @@ function furMats(l) {
   return m
 }
 const only = (m, keys) => { const o = {}; for (const k of keys || []) if (m[k]) o[k] = m[k]; return o }
+// a garment whose Blender piece doesn't sit on the big cute heads wears its nearest kin (the cap's brim lands on the snout); the look and its loot keep the real name
+const MESH_SWAP = { hat: { cap: 'beanie' } }
 export function bodyModel(l) {
   const parts = {}
   for (const p of M.parts) parts[p] = { visible: false }
-  for (const [slot, pre] of Object.entries(M.slots)) { const k = l[slot]; if (k && k !== 'none' && parts[pre + '_' + k]) parts[pre + '_' + k].visible = true }
+  for (const [slot, pre] of Object.entries(M.slots)) { const k = MESH_SWAP[slot]?.[l[slot]] ?? l[slot]; if (k && k !== 'none' && parts[pre + '_' + k]) parts[pre + '_' + k].visible = true }
   const materials = { ...furMats(l), pad: { color: M.pad } }
   for (const [slot, [mat, key]] of Object.entries(CLOTH)) if (l[key]) materials[mat] = { color: l[key] }
   return { id: M.body[l.sex === 'f' ? 'f' : 'm'], materials: only(materials, M.bodyMats), parts }
