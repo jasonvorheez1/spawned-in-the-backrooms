@@ -19,7 +19,7 @@ export function tick(ctx) {
   ALMOND_SLOTS.forEach((a, i) => {
     if (near(almonds, a)) { delete s["a" + i]; return; }
     if (s.seeded && !due(s, "a" + i, now)) return;
-    ctx.spawn({ tags: ["almond"], feetPosition: { x: a.x, y: 0.02, z: a.z }, scale: 1.7, primitive: { kind: "scripted", script: "scripts/almond-geo.js" }, material: { emissiveIntensity: 1.6 } });
+    ctx.spawn({ tags: ["almond"], feetPosition: { x: a.x, y: 0.02, z: a.z }, model: "/cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb", layout: { box: { min: { x: -0.07, y: 0, z: -0.07 }, max: { x: 0.07, y: 0.32, z: 0.07 } } } });
   });
   AMMO_SLOTS.forEach((a, i) => {
     if (near(ammo, a)) { delete s["m" + i]; return; }

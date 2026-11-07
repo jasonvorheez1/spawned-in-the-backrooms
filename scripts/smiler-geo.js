@@ -1,7 +1,7 @@
 // A smiler: a gaunt, hunched smear of shadow, arms too long, a grin too wide. Faces -Z.
 import { tube, sphere, face } from "./lib/shapes.js";
 export function geometry(ctx) {
-  const hi = ctx.lod <= 2, M = hi ? 14 : 8;
+  const hi = ctx.lod <= 2, M = hi ? 22 : 10;
   ctx.roughness(1);
   ctx.smooth();
   ctx.color("oklch(0.09 0.012 290)");
@@ -9,14 +9,14 @@ export function geometry(ctx) {
   tube(ctx, [[0, 0.0, 0.02], [0, 0.18, 0.03], [0, 0.55, 0.05], [0, 0.95, 0.06], [0, 1.3, 0.1], [0, 1.6, 0.06], [0, 1.78, -0.04]], [0.5, 0.42, 0.3, 0.22, 0.27, 0.3, 0.14], M, [1, 0.75], 0.22, 7);
   // tattered wisps trailing off the hem
   if (ctx.lod <= 3) for (let i = 0; i < 9; i++) { const a = (i / 9) * Math.PI * 2 + 0.3, r = 0.44 + 0.05 * Math.sin(i * 3.1);
-    tube(ctx, [[Math.cos(a) * r * 0.85, 0.22, Math.sin(a) * r * 0.65], [Math.cos(a) * (r + 0.06), 0.06, Math.sin(a) * (r * 0.75)], [Math.cos(a) * (r + 0.1), 0.0, Math.sin(a) * (r * 0.8)]], [0.06, 0.035, 0.004], 5); }
+    tube(ctx, [[Math.cos(a) * r * 0.85, 0.22, Math.sin(a) * r * 0.65], [Math.cos(a) * (r + 0.06), 0.06, Math.sin(a) * (r * 0.75)], [Math.cos(a) * (r + 0.1), 0.0, Math.sin(a) * (r * 0.8)]], [0.06, 0.035, 0.004], hi ? 8 : 5); }
   // neck craning forward, head jutting
-  tube(ctx, [[0, 1.72, -0.02], [0, 1.86, -0.1], [0, 1.95, -0.16]], [0.09, 0.07, 0.08], hi ? 8 : 5);
+  tube(ctx, [[0, 1.72, -0.02], [0, 1.86, -0.1], [0, 1.95, -0.16]], [0.09, 0.07, 0.08], hi ? 12 : 6);
   sphere(ctx, [0, 2.05, -0.2], 0.27, M, [1, 1.18, 0.92]);
   // long jointed arms, elbows out, hanging past the knees
   for (const s of [-1, 1]) {
-    tube(ctx, [[s * 0.26, 1.62, 0.04], [s * 0.4, 1.58, 0.02], [s * 0.52, 1.25, 0.0], [s * 0.6, 1.0, -0.08], [s * 0.54, 0.62, -0.18], [s * 0.5, 0.4, -0.22]], [0.07, 0.065, 0.05, 0.045, 0.035, 0.03], hi ? 7 : 5);
-    if (ctx.lod <= 3) for (let f = -2; f <= 2; f++) tube(ctx, [[s * 0.5, 0.4, -0.22], [s * (0.5 + f * 0.025), 0.28, -0.26], [s * (0.5 + f * 0.04), 0.15, -0.24], [s * (0.5 + f * 0.045), 0.08, -0.19]], [0.016, 0.012, 0.007, 0.001], 4);
+    tube(ctx, [[s * 0.26, 1.62, 0.04], [s * 0.4, 1.58, 0.02], [s * 0.52, 1.25, 0.0], [s * 0.6, 1.0, -0.08], [s * 0.54, 0.62, -0.18], [s * 0.5, 0.4, -0.22]], [0.07, 0.065, 0.05, 0.045, 0.035, 0.03], hi ? 12 : 6);
+    if (ctx.lod <= 3) for (let f = -2; f <= 2; f++) tube(ctx, [[s * 0.5, 0.4, -0.22], [s * (0.5 + f * 0.025), 0.28, -0.26], [s * (0.5 + f * 0.04), 0.15, -0.24], [s * (0.5 + f * 0.045), 0.08, -0.19]], [0.016, 0.012, 0.007, 0.001], hi ? 6 : 4);
   }
   ctx.flat();
   // the eyes and grin: white-hot, the only light it has

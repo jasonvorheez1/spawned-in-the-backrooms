@@ -1,7 +1,8 @@
 // A lurker: a tall, pale, hairless figure with long limbs and a smooth, faceless head, caught mid-stride. Faces -Z.
 import { tube, sphere } from "./lib/shapes.js";
 export function geometry(ctx) {
-  const M = ctx.lod <= 2 ? 12 : 7, LM = ctx.lod <= 2 ? 6 : 4;
+  const M = ctx.lod <= 2 ? 20 : 9, LM = ctx.lod <= 2 ? 12 : 6;
+  ctx.smooth();
   ctx.roughness(0.85);
   ctx.color("oklch(0.86 0.02 85)");
   // legs, one forward
@@ -14,7 +15,7 @@ export function geometry(ctx) {
   // arms, far too long, fingers nearly at the floor
   for (const s of [-1, 1]) {
     tube(ctx, [[s * 0.2, 1.7, -0.12], [s * 0.3, 1.2, -0.1], [s * 0.34, 0.6, -0.02], [s * 0.32, 0.08, 0.04]], [0.045, 0.04, 0.032, 0.02], LM);
-    if (ctx.lod <= 3) for (let f = -1; f <= 1; f++) tube(ctx, [[s * 0.32, 0.08, 0.04], [s * (0.32 + f * 0.025), 0.03, 0.1], [s * (0.32 + f * 0.04), 0.0, 0.14]], [0.012, 0.008, 0.002], 3);
+    if (ctx.lod <= 3) for (let f = -1; f <= 1; f++) tube(ctx, [[s * 0.32, 0.08, 0.04], [s * (0.32 + f * 0.025), 0.03, 0.1], [s * (0.32 + f * 0.04), 0.0, 0.14]], [0.012, 0.008, 0.002], ctx.lod <= 2 ? 6 : 4);
   }
   ctx.color(null);
 }

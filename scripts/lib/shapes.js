@@ -7,7 +7,23 @@ export function face(ctx, a, b, c, d, n) {
 const norm = (v) => { const l = Math.hypot(...v) || 1; return v.map((x) => x / l); };
 const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
 // a tube through points with a radius per point (rx, rz squash optional)
-export function tube(ctx, pts, rads, M = 10, squash = [1, 1], jitter = 0, seed = 1) {
+// Catmull-Rom: a polyline of points becomes a smooth curve, `sub` rings per segment
+function curve(pts, rads, sub) {
+  if (sub <= 1 || pts.length < 3) return [pts, rads];
+  const P = [], R = [], n = pts.length;
+  for (let i = 0; i < n - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(n - 1, i + 2)];
+    for (let k = 0; k < sub; k++) {
+      const t = k / sub, t2 = t * t, t3 = t2 * t;
+      P.push([0, 1, 2].map((a) => 0.5 * (2 * p1[a] + (-p0[a] + p2[a]) * t + (2 * p0[a] - 5 * p1[a] + 4 * p2[a] - p3[a]) * t2 + (-p0[a] + 3 * p1[a] - 3 * p2[a] + p3[a]) * t3)));
+      R.push(Math.max(1e-4, rads[i] + (rads[i + 1] - rads[i]) * (3 * t2 - 2 * t3)));
+    }
+  }
+  P.push(pts[n - 1]); R.push(rads[n - 1]);
+  return [P, R];
+}
+export function tube(ctx, pts0, rads0, M = 10, squash = [1, 1], jitter = 0, seed = 1, sub = ctx.lod <= 2 ? 4 : 2) {
+  const [pts, rads] = curve(pts0, rads0, sub);
   const rings = pts.map((p, i) => {
     const a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)];
     const d = norm([b[0] - a[0], b[1] - a[1], b[2] - a[2]]);
@@ -32,7 +48,7 @@ export function tube(ctx, pts, rads, M = 10, squash = [1, 1], jitter = 0, seed =
 export function sphere(ctx, c, r, M = 12, sq = [1, 1, 1]) {
   const pts = [], rads = [];
   for (let i = 0; i <= M / 2; i++) { const th = (i / (M / 2)) * Math.PI; pts.push([c[0], c[1] - Math.cos(th) * r * sq[1], c[2]]); rads.push(Math.max(1e-4, Math.sin(th) * r)); }
-  tube(ctx, pts, rads, M, [sq[0], sq[2]]);
+  tube(ctx, pts, rads, M, [sq[0], sq[2]], 0, 1, 1);
 }
 // an axis-aligned box from its centre and half-sizes
 export function slab(ctx, c, h) {

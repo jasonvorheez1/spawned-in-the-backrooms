@@ -71,7 +71,8 @@ const builders = {
 };
 
 export function geometry(ctx) {
-  const kind = W[ctx.params?.kind] ? ctx.params.kind : "table_leg", M = ctx.lod <= 2 ? 10 : 6;
+  const kind = W[ctx.params?.kind] ? ctx.params.kind : "table_leg", M = ctx.lod <= 2 ? 20 : 8;
+  ctx.smooth();
   (builders[kind] ?? builders.table_leg)(ctx, M);
   ctx.color(null);
 }

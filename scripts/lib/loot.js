@@ -6,7 +6,7 @@ import W from "./data/weapons.yml";
 const scatter = (ctx, c) => ({ x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 });
 
 export function spawnAlmond(ctx, c) {
-  ctx.spawn({ tags: ["almond"], feetPosition: scatter(ctx, c), rotation: ctx.random() * 360, scale: 1.7, primitive: { kind: "scripted", script: "scripts/almond-geo.js" }, material: { emissiveIntensity: 1.6 } });
+  ctx.spawn({ tags: ["almond"], feetPosition: scatter(ctx, c), rotation: ctx.random() * 360, model: "/cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb", layout: { box: { min: { x: -0.07, y: 0, z: -0.07 }, max: { x: 0.07, y: 0.32, z: 0.07 } } } });
 }
 
 export function spawnWeapon(ctx, c, kind) {
