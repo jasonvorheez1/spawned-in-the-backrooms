@@ -11,17 +11,17 @@ const X0 = 18.25, X1 = 45.75, Z0 = -25.75, Z1 = 25.75;
 function run(ctx, a, b, r, lag, leakAt = []) {
   const L = Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]), d = [(b[0] - a[0]) / L, (b[1] - a[1]) / L, (b[2] - a[2]) / L];
   lag ? paint(ctx, LAG, "oklch(0.95 0.02 85)", 0.9, 0) : paint(ctx, RUST, "oklch(0.92 0.02 60)", 0.6, 0.5);
-  cyl(ctx, a, b, r, ctx.lod <= 2 ? 12 : 6, false);
+  cyl(ctx, a, b, r, ctx.lod <= 1 ? 10 : 6, false);
   paint(ctx, IRON, "oklch(0.8 0.01 60)", 0.5, 0.6);
-  const step = lag ? 1.6 : 2.4;
+  const step = lag ? 2.0 : 2.8;
   for (let s = 0.8; s < L - 0.4; s += step) {
     const p = [a[0] + d[0] * s, a[1] + d[1] * s, a[2] + d[2] * s];
-    if (lag) { paint(ctx, null, "oklch(0.3 0.02 60)", 0.8, 0); torus(ctx, p, d, r + 0.005, 0.02, 12, 3); }
-    else { torus(ctx, p, d, r + 0.02, 0.035, 12, 4); }
+    if (lag) { paint(ctx, null, "oklch(0.3 0.02 60)", 0.8, 0); torus(ctx, p, d, r + 0.005, 0.02, 10, 2); }
+    else if (ctx.lod <= 2) { torus(ctx, p, d, r + 0.02, 0.035, 10, 3); }
     paint(ctx, IRON, "oklch(0.8 0.01 60)", 0.5, 0.6);
   }
   // hangers up to the ceiling every ~3 m
-  for (let s = 1.5; s < L; s += 3.1) { const p = [a[0] + d[0] * s, a[1] + d[1] * s, a[2] + d[2] * s]; if (p[1] < 5.85) { cyl(ctx, [p[0], p[1] + r, p[2]], [p[0], 6, p[2]], 0.015, 4, false); torus(ctx, p, d, r + 0.03, 0.012, 10, 3); } }
+  for (let s = 1.5; s < L; s += 3.1) { const p = [a[0] + d[0] * s, a[1] + d[1] * s, a[2] + d[2] * s]; if (p[1] < 5.85) { cyl(ctx, [p[0], p[1] + r, p[2]], [p[0], 6, p[2]], 0.015, 3, false); if (ctx.lod <= 1) torus(ctx, p, d, r + 0.03, 0.012, 8, 2); } }
   // exhaust valves: a stub up with a wheel and a flared mouth, a brass tag
   for (let s = 2.9; s < L - 1; s += 6.3) {
     const p = [a[0] + d[0] * s, a[1] + d[1] * s, a[2] + d[2] * s], up = Math.min(0.45, 5.9 - p[1] - 0.1);
