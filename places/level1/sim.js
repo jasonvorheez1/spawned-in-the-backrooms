@@ -4,6 +4,19 @@ import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ARRIVE, hash } from
 import { spawnAlmond, spawnCrateL1 } from "../../scripts/lib/loot.js";
 export const cadence = "250ms";
 const LAMP_ON = 9;
+// the M.E.G. agents are critters like the players: lime hi-vis jackets, the agency's look
+const AGENT = {
+  "meg-ale": { name: "Ale · M.E.G. Scout", role: "scout", look: { species: "fox", sex: "f", topw: "jacket", top: "#b6e04a", botw: "pants", bottom: "#4a5a3a", shoes: "boots", shoec: "#2a2420", hat: "cap", hatc: "#b6e04a", expr: "smile" } },
+  "meg-ortiz": { name: "Dr. Ortiz · M.E.G. Medic", role: "medic", look: { species: "bunny", sex: "f", topw: "jacket", top: "#eef2f0", botw: "pants", bottom: "#4a5a3a", shoes: "boots", shoec: "#2a2420", neck: "scarf", neckc: "#b6e04a", expr: "smile" } },
+  "meg-callum": { name: "Callum · Quartermaster", role: "quarter", look: { species: "bear", sex: "m", topw: "jacket", top: "#b6e04a", botw: "pants", bottom: "#4a5a3a", shoes: "boots", shoec: "#2a2420", hat: "beanie", hatc: "#7a3a2a", expr: "grin" } },
+};
+const AGENTS = [["meg-ale", 2.6, -0.6], ["meg-ortiz", 11.5, -3.6], ["meg-callum", 7.9, -1.6]];
+export function agentSpec(a, id, dx, dz) {
+  const g = AGENT[id];
+  return { tags: ["npc"], feetPosition: { x: a.x + dx, y: 0, z: a.z + dz }, rotation: { yaw: 90 }, physics: { body: "kinematic", collider: "capsule" },
+    primitive: { kind: "scripted", script: "scripts/critter-geo.js", params: g.look }, material: { outline: { color: "#1d1420", width: 2.4 } },
+    jiggle: { bones: ["Tail*", "Ear*"], amount: 0.6, bounce: 0.6 }, behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role } };
+}
 const STOVE = `fx
 pop flame rate=26 on=disc(.18) life=.4..0.7 v=up(1.1)+cone(18)*(.2..0.5) size=.14..0.26 acc=curl(.5)+buoy(1.6)+drag(1.5) sz=$size*(.5>1:.25>.12) col=hdr(4,2.6,1)>hdr(2.6,1,.25)>hdr(.5,.1,.03) a=0>.15:1>.7:.8>0 r=sprite(flame-wisp,add)
 pop smoke on=@flame?.2 life=1.5..2.5 size=.15..0.25 acc=buoy(.8)+curl(.3)*.4+drag(.8) sz=$size*(.7>2.6) col=<.3,.28,.26> a=0>.2:.25>0 r=sprite(smoke-puff,alpha)
@@ -49,11 +62,7 @@ export function tick(ctx) {
     ctx.spawn("meg-stove", { feetPosition: { x: a.x + 9.5, y: 0.72, z: a.z - 2.8 }, fx: { script: STOVE }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-small-fire-crackle-loop.mp3", gain: 0.25, loop: true, spatial: true, maxDistance: 14 } });
     ctx.spawn("meg-radio", { feetPosition: { x: a.x + 6.9, y: 1, z: a.z - 0.6 }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-radio-static-chatter-loop.mp3", gain: 0.12, loop: true, spatial: true, maxDistance: 10 } });
     for (const [dx, dz, col] of [[6, 4.2, "oklch(0.85 0.12 75)"], [6, -4.2, "oklch(0.85 0.12 75)"], [13, 0, "oklch(0.92 0.04 220)"]]) ctx.spawn({ feetPosition: { x: a.x + dx, y: 2.3, z: a.z + dz }, light: { kind: "point", color: col, intensity: 2.5, distance: 9 } });
-    const AG = [["meg-ale", "Ale · M.E.G. Scout", "scout", 2.6, -0.6, "oklch(0.7 0.07 55)", "oklch(0.25 0.04 50)"],
-      ["meg-ortiz", "Dr. Ortiz · M.E.G. Medic", "medic", 11.5, -3.6, "oklch(0.55 0.08 50)", "oklch(0.15 0.01 50)"],
-      ["meg-callum", "Callum · Quartermaster", "quarter", 7.9, -1.6, "oklch(0.8 0.05 60)", "oklch(0.55 0.1 50)"]];
-    for (const [id, name, role, dx, dz, skin, hair] of AG)
-      ctx.spawn(id, { tags: ["npc"], feetPosition: { x: a.x + dx, y: 0, z: a.z + dz }, rotation: { yaw: 90 }, physics: { body: "kinematic", collider: "capsule" }, primitive: { kind: "scripted", script: "scripts/meg-agent-geo.js", params: { role, skin, hair } }, behavior: "scripts/meg-agent.js", state: { name, role } });
+    for (const [id, dx, dz] of AGENTS) ctx.spawn(id, agentSpec(a, id, dx, dz));
   }
   if (!s.puddles) { s.puddles = true;
     for (let i = 0; i < 70; i++) { const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N); if (zoneOf(cx, cz) !== "halls" && zoneOf(cx, cz) !== "storage") continue;
