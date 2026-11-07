@@ -5,7 +5,7 @@
 // scripts/loot-ui.js draws the prompt and the menu from player.state (focus, lootOpen, lootList, notice).
 import { getInputRay, raycast } from 'builtin/physics'
 import { tokenOf, describe, itemsOf } from './lib/items.js'
-import { takeToken } from './player.js'
+import { takeToken, maxHp, maxSan } from './player.js'
 
 const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc'] // what can be looked at and used
 const REACH = 3.0 // metres from the eye
