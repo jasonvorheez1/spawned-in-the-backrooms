@@ -25,7 +25,8 @@ function box(ctx, x0, y0, z0, x1, y1, z1, skipBottom = true) {
 }
 
 function tint(ctx, zone, cx, cz) {
-  if (zone === "red") ctx.color("oklch(0.93 0.07 30)");
+  if (zone === "offices") ctx.color(hash(cx, cz, 31) < 0.3 ? "oklch(0.86 0.02 85)" : "oklch(0.92 0.02 90)");
+  else if (zone === "red") ctx.color("oklch(0.93 0.07 30)");
   else if (zone === "dark") ctx.color("oklch(0.9 0.02 90)");
   else ctx.color(hash(cx, cz, 31) < 0.15 ? "oklch(0.9 0.03 80)" : "oklch(0.98 0.01 90)");
 }
@@ -123,6 +124,72 @@ export function geometry(ctx) {
       if (wallZ(cx, cz) && !isArchWall(cx, cz, "z")) box(ctx, cx * S - HALF, 0, zw - T - 0.02, (cx + 1) * S - HALF, 0.1, zw + T + 0.02);
     }
     ctx.roughness(null);
+  }
+  // WEAR (near detail): water stains bleeding down the paper, damp carpet, dead outlets, missing tiles
+  if (lod <= 2) {
+    ctx.albedo(null); ctx.roughness(0.9);
+    const blob = (c, ua, va, r, seed, n = 9) => { // an irregular blob in the plane spanned by ua, va round c
+      const pts = [];
+      for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2, k = r * (0.6 + 0.6 * hash(seed, i, 61)); pts.push([c[0] + (ua[0] * Math.cos(a) + va[0] * Math.sin(a)) * k, c[1] + (ua[1] * Math.cos(a) + va[1] * Math.sin(a)) * k, c[2] + (ua[2] * Math.cos(a) + va[2] * Math.sin(a)) * k]); }
+      return pts;
+    };
+    const fan = (c, pts, nrm) => { for (let i = 0; i < pts.length; i++) face(ctx, c, pts[i], pts[(i + 1) % pts.length], pts[(i + 1) % pts.length], nrm); };
+    for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+      const zone = zoneOf(cx, cz); if (zone === "hub") continue;
+      const x0 = cx * S - HALF, z0 = cz * S - HALF, mx = x0 + S / 2, mz = z0 + S / 2;
+      // a stain where the ceiling leaked: a tea-brown bloom under the ceiling and a run down toward the baseboard
+      for (const [axis, has] of [["x", wallX(cx, cz) && !isArchWall(cx, cz, "x")], ["z", wallZ(cx, cz) && !isArchWall(cx, cz, "z")]]) {
+        if (!has || hash(cx, cz, axis === "x" ? 71 : 73) > 0.22) continue;
+        const u = (axis === "x" ? mz : mx) + (hash(cx, cz, 75) - 0.5) * 2.4, p = (axis === "x" ? x0 + S : z0 + S);
+        for (const sd of [-1, 1]) {
+          if (hash(cx, cz, 77 + sd) < 0.4) continue;
+          const off = p + sd * (T + 0.004), nrm = axis === "x" ? [sd, 0, 0] : [0, 0, sd];
+          const P = (uu, y) => (axis === "x" ? [off, y, uu] : [uu, y, off]);
+          const ua = axis === "x" ? [0, 0, 1] : [1, 0, 0], va = [0, 1, 0], seed = cx * 97 + cz * 13 + sd;
+          const r = 0.35 + hash(cx, cz, 79) * 0.5, top = H - 0.25 - hash(cx, cz, 81) * 0.25;
+          ctx.color("oklch(0.42 0.06 70)", 0.16); fan(P(u, top), blob(P(u, top), ua, va, r * 1.5, seed), nrm);
+          ctx.color("oklch(0.36 0.06 65)", 0.22); fan(P(u, top), blob(P(u, top), ua, va, r, seed + 5), nrm);
+          const runs = 1 + Math.floor(hash(cx, cz, 83) * 3); // drips
+          for (let d = 0; d < runs; d++) {
+            const du = u + (hash(seed, d, 85) - 0.5) * r * 1.4, len = 0.4 + hash(seed, d, 87) * 1.4, w = 0.02 + hash(seed, d, 89) * 0.03;
+            ctx.color("oklch(0.38 0.06 65)", 0.2);
+            face(ctx, P(du - w, top - len), P(du + w, top - len), P(du + w * 1.6, top), P(du - w * 1.6, top), nrm);
+          }
+        }
+      }
+      // damp carpet: dark wet blooms, more in the arch rooms and the pits
+      if (!hasPit(cx, cz) && hash(cx, cz, 91) < (zone === "arches" || zone === "holes" ? 0.5 : 0.12)) {
+        const c = [mx + (hash(cx, cz, 93) - 0.5) * 2, 0.006, mz + (hash(cx, cz, 95) - 0.5) * 2], r = 0.5 + hash(cx, cz, 97) * 0.9;
+        ctx.color("oklch(0.3 0.04 70)", 0.22); fan(c, blob(c, [1, 0, 0], [0, 0, 1], r * 1.4, cx * 31 + cz), [0, 1, 0]);
+        ctx.color("oklch(0.24 0.04 70)", 0.28); fan([c[0], 0.008, c[2]], blob([c[0], 0.008, c[2]], [1, 0, 0], [0, 0, 1], r * 0.8, cx * 31 + cz + 3), [0, 1, 0]);
+      }
+      // a dead wall outlet, low on a plain wall
+      if (wallX(cx, cz) && !isArchWall(cx, cz, "x") && hash(cx, cz, 99) < 0.12) {
+        const xw = x0 + S - T - 0.006, zz = mz + (hash(cx, cz, 101) - 0.5) * 2.5;
+        ctx.color("oklch(0.9 0.02 90)"); box(ctx, xw - 0.006, 0.28, zz - 0.04, xw + 0.004, 0.4, zz + 0.04);
+        ctx.color("oklch(0.25 0.01 90)");
+        for (const yy of [0.31, 0.36]) face(ctx, [xw - 0.0065, yy, zz - 0.012], [xw - 0.0065, yy, zz + 0.012], [xw - 0.0065, yy + 0.018, zz + 0.012], [xw - 0.0065, yy + 0.018, zz - 0.012], [-1, 0, 0]);
+      }
+    }
+    ctx.roughness(null);
+  }
+  // CEILING DAMAGE: a missing tile shows the black plenum, a water-logged one sags brown
+  ctx.albedo(null);
+  for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+    if (inHub(cx, cz)) continue;
+    const h = hash(cx, cz, 103); if (h > 0.07) continue;
+    const tx = cx * S - HALF + 0.6 + Math.floor(hash(cx, cz, 105) * 4) * 0.6 + (hash(cx, cz, 105) < 0.5 ? 0 : 1.2), tz = cz * S - HALF + 0.6 + Math.floor(hash(cx, cz, 107) * 2) * 0.6 + (hash(cx, cz, 107) < 0.5 ? 0 : 2.0);
+    if (h < 0.035) { // missing: a dark hole with the grid lip and a wire hanging out of it
+      ctx.color("oklch(0.06 0.01 80)");
+      box(ctx, tx, H - 0.002, tz, tx + 0.6, H + 0.4, tz + 0.6);
+      ctx.color("oklch(0.2 0.01 250)");
+      face(ctx, [tx + 0.3, H + 0.1, tz + 0.29], [tx + 0.31, H + 0.1, tz + 0.29], [tx + 0.36, H - 0.55, tz + 0.31], [tx + 0.35, H - 0.55, tz + 0.31], [0, 0, -1]);
+      face(ctx, [tx + 0.3, H + 0.1, tz + 0.31], [tx + 0.35, H - 0.55, tz + 0.31], [tx + 0.36, H - 0.55, tz + 0.31], [tx + 0.31, H + 0.1, tz + 0.31], [0, 0, 1]);
+    } else { // sagging, stained tea brown
+      ctx.color("oklch(0.62 0.07 70)");
+      const c = [tx + 0.3, H - 0.07, tz + 0.3], k = [[tx, tz], [tx + 0.6, tz], [tx + 0.6, tz + 0.6], [tx, tz + 0.6]];
+      for (let i = 0; i < 4; i++) { const a = k[i], b = k[(i + 1) % 4]; face(ctx, c, [a[0], H - 0.003, a[1]], [b[0], H - 0.003, b[1]], [b[0], H - 0.003, b[1]], [0, -1, 0]); }
+    }
   }
   // LIGHT PANELS
   ctx.albedo(null);
