@@ -75,6 +75,9 @@ function send(ctx, d) {
   logLine(ctx, it, 'p', text)
   it.state.talkAt = now; it.state.talkTo = ctx.self.id
   ctx.job('llm:chat', { system, message, model: T.model }, 'heard', { id: it.id })
+  // the wait for a reply is filled at once: a short thinking sound in their own voice (one of three, cached per character after first use)
+  const fill = ['hmm', 'well', 'let me think'][Math.floor(ctx.random() * 3)], fp = it.feetPosition
+  hearAt(ctx, { clip: VO(voiceOf(it), fill), position: { x: fp.x, y: fp.y + 1.6, z: fp.z }, volume: 0.7, maxDistance: 10 }, { audience: { nearby: fp, radius: 12 } })
 }
 
 // the model's answer comes back here; only whitelisted intents touch the world
