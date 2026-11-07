@@ -4,6 +4,9 @@ import { HALF, H, T, DOORH, ROOMS, WALLS, COLUMNS, LIFT, STAIRS } from "./lib/le
 import { box, paint } from "./lib/gamma-kit.js";
 const CARPET = "cdn/texture-light-grey-beige-office-carpet-tiles-worn.png", DRY = "cdn/texture-scuffed-off-white-painted-office-drywall.png";
 const wb = (ctx, ax, at, a, b, y0, y1, t = T) => ax === "z" ? box(ctx, a, b, y0, y1, at - t, at + t) : box(ctx, at - t, at + t, y0, y1, a, b);
+// smashed sections: params.cut keys "x:cx:cz" (a wall at x = (cx+1)*2 - HALF over z in [cz*2 - HALF, +2]) → { "x:at": [[a0, a1]] }
+function cutsOf(ctx) { const out = {}; for (const k of ctx.params?.cut ?? []) { const [ax, cx, cz] = String(k).split(":"), i = +cx, j = +cz, at = ((ax === "x" ? i : j) + 1) * 2 - HALF, a0 = (ax === "x" ? j : i) * 2 - HALF; (out[`${ax}:${at}`] ??= []).push([a0, a0 + 2]); } return out; }
+function wcut(ctx, cuts, ax, at, a, b, y0, y1, t = T) { let s = a; for (const [c0, c1] of (cuts[`${ax}:${at}`] ?? []).slice().sort((p, q) => p[0] - q[0])) { if (c1 <= s || c0 >= b) continue; if (c0 > s) wb(ctx, ax, at, s, c0, y0, y1, t); s = Math.max(s, c1); } if (s < b) wb(ctx, ax, at, s, b, y0, y1, t); }
 function build(ctx, vis) {
   // floor, ceiling
   if (vis) paint(ctx, "oklch(0.9 0.01 90)", CARPET, 0.95); box(ctx, -HALF, HALF, -0.2, 0, -HALF, HALF);
@@ -12,14 +15,16 @@ function build(ctx, vis) {
   if (vis) paint(ctx, "oklch(0.88 0.015 85)", DRY, 0.9);
   for (const [ax, at] of [["z", -HALF], ["z", HALF], ["x", -HALF], ["x", HALF]]) wb(ctx, ax, at, -HALF, HALF, 0, H, 0.2);
   // interior walls with door gaps and lintels
+  // a wall section someone smashed (params.cut, keys "x:cx:cz" on the 2 m grid of lib/wallgrid.js) is left out here; scripts/wallpatch-geo.js draws what remains
+  const cuts = cutsOf(ctx);
   for (const [ax, at, a, b, gaps] of WALLS) {
-    let s = a; for (const [g0, g1] of [...gaps].sort((p, q) => p[0] - q[0])) { if (g0 > s) wb(ctx, ax, at, s, g0, 0, H); wb(ctx, ax, at, g0, g1, DOORH, H); s = g1; } if (s < b) wb(ctx, ax, at, s, b, 0, H);
+    let s = a; for (const [g0, g1] of [...gaps].sort((p, q) => p[0] - q[0])) { if (g0 > s) wcut(ctx, cuts, ax, at, s, g0, 0, H); wb(ctx, ax, at, g0, g1, DOORH, H); s = g1; } if (s < b) wcut(ctx, cuts, ax, at, s, b, 0, H);
   }
   for (const [x, z] of COLUMNS) box(ctx, x - 0.35, x + 0.35, 0, H, z - 0.35, z + 0.35);
   if (!vis) return;
   // baseboards on every wall face
   paint(ctx, "oklch(0.32 0.02 60)", null, 0.6);
-  for (const [ax, at, a, b, gaps] of WALLS) { let s = a; for (const [g0, g1] of gaps) { if (g0 > s) wb(ctx, ax, at, s, g0, 0, 0.1, T + 0.012); s = g1; } if (s < b) wb(ctx, ax, at, s, b, 0, 0.1, T + 0.012); }
+  for (const [ax, at, a, b, gaps] of WALLS) { let s = a; for (const [g0, g1] of gaps) { if (g0 > s) wcut(ctx, cuts, ax, at, s, g0, 0, 0.1, T + 0.012); s = g1; } if (s < b) wcut(ctx, cuts, ax, at, s, b, 0, 0.1, T + 0.012); }
   for (const [ax, at] of [["z", -HALF], ["z", HALF], ["x", -HALF], ["x", HALF]]) wb(ctx, ax, at, -HALF, HALF, 0, 0.1, 0.212);
   // door trim: two jambs and a head on both faces, warm brown
   paint(ctx, "oklch(0.45 0.05 60)", "hardwood", 0.6);

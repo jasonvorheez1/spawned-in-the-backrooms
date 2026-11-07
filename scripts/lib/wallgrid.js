@@ -5,6 +5,7 @@
 import * as L1 from './level1.js'
 import * as L2 from './level2.js'
 import * as L3 from './level3.js'
+import * as L4 from './level4.js'
 // Level 3's wall skins (mirrors SKIN / skinOf in scripts/level3-geo.js, kept here so the lib never imports a mesh file)
 const SKIN3 = {
   orange: { tex: 'cdn/texture-photoreal-weathered-orange-clay-brick-wall-thin-grey-mortar-soot-stains.png', col: 'oklch(0.97 0.015 60)', rough: 0.85 },
@@ -82,5 +83,21 @@ export function wallFrame(G, axis, cx, cz) {
   const fixed = (axis === 'x' ? cx + 1 : cz + 1) * G.S - G.HALF, a0 = (axis === 'x' ? cz : cx) * G.S - G.HALF - G.ext, len = G.S + 2 * G.ext
   return { fixed, a0, len, center: axis === 'x' ? { x: fixed, z: a0 + len / 2 } : { x: a0 + len / 2, z: fixed } }
 }
-export const GRIDS = { level1: l1, level2: l2, level3: l3 }
+// ---- Level 4: the office drywall on a 2 m grid (Base Omega, the lift lobby, the stairwell and the break room stay; door frames stay)
+const L4ROOM = (x, z) => L4.roomAt(x, z)
+const l4 = {
+  obj: 'l4-geo', script: 'scripts/level4-geo.js', N: 32, S: 2, H: L4.H, HALF: L4.HALF, T: L4.T, ext: 0, cols: 2, rows: 3,
+  has(axis, cx, cz) {
+    if (cx < 0 || cz < 0 || cx >= 32 || cz >= 32) return false
+    const at = ((axis === 'x' ? cx : cz) + 1) * 2 - L4.HALF, a0 = (axis === 'x' ? cz : cx) * 2 - L4.HALF, a1 = a0 + 2
+    return L4.WALLS.some(([ax, wat, a, b, gaps]) => ax === axis && Math.abs(wat - at) < 1e-6 && a <= a0 + 1e-6 && b >= a1 - 1e-6 && !gaps.some(([g0, g1]) => g0 < a1 && g1 > a0))
+  },
+  prot(axis, cx, cz) {
+    const at = ((axis === 'x' ? cx : cz) + 1) * 2 - L4.HALF, mid = (axis === 'x' ? cz : cx) * 2 - L4.HALF + 1
+    for (const d of [-0.3, 0.3]) { const r = axis === 'x' ? L4ROOM(at + d, mid) : L4ROOM(mid, at + d); if (r && r.kind !== 'office' && r.kind !== 'trap') return true }
+    return false
+  },
+  skin() { return { mat: 'drywall', tex: 'cdn/texture-scuffed-off-white-painted-office-drywall.png', col: 'oklch(0.88 0.015 85)', rough: 0.9 } },
+}
+export const GRIDS = { level1: l1, level2: l2, level3: l3, level4: l4 }
 export const gridOfObj = (id) => Object.entries(GRIDS).find(([, g]) => g.obj === id)?.[0] ?? null

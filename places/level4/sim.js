@@ -7,6 +7,7 @@ import MEG from "../../scripts/lib/data/meg.yml";
 import { npcState } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { settle, tickPeople } from "../../scripts/lib/l4-people.js";
+import { tickWalls, B as BRK } from "../../scripts/lib/breakables.js";
 export const cadence = "1s";
 const V = 1;
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
@@ -112,6 +113,8 @@ export function tick(ctx) {
     ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
   }); }
   tickPeople(ctx);
+  // breakables: smashed office walls (lib/wallgrid.js level4) grow back after a while; every loose prop takes a material and hp
+  if (!(Math.abs(ctx.now() - (ctx.session.wallTick ?? -1e9)) < 3000)) { ctx.session.wallTick = ctx.now(); tickWalls(ctx); breakProps(ctx); }
   if (!s.officeV) { s.officeV = 1; layOffice(ctx); }
   if (s.officeV < 2) { // the shift board: a corkboard on legs by the north desks, handing out office tasks (scripts/l4-office.js)
     s.officeV = 2;
@@ -131,5 +134,18 @@ export function tick(ctx) {
     if (ctx.now() - (s[k] ?? 0) < 9000) continue; s[k] = ctx.now();
     ctx.emit("playSound", { clip: "/cdn/voice-dry-breathy-close-whispering-stranger-saying-come-closer-its-warm-out-here.mp3", position: { ...p.feetPosition, y: 1.6 }, volume: 0.8, maxDistance: 6 }, { audience: { player: p.id } });
     ctx.emit("screenFlash", { color: "#dff0ff", duration: 0.5, intensity: 0.35 }, { audience: { player: p.id } });
+  }
+}
+
+// what each Level 4 prop breaks as (Savi's picks); hp is the material's, scaled
+const PROP4 = { chair: ["metal", 0.4], box: ["wood", 0.5], boxes: ["wood", 0.8], plant: ["wood", 0.4], panel: ["wood", 0.9], cabinet: ["sheet_steel", 0.6], island: ["wood", 2.2], printer: ["machine", 0.8] };
+function breakProps(ctx) {
+  for (const o of Object.values(ctx.place.objects)) {
+    if (o.tags?.includes("breakable") || !o.physics) continue;
+    const kind = /l4-(prop|office)-geo/.test(o.primitive?.script ?? "") ? o.primitive.params?.kind : o.tags?.some((t) => t === "homekit" || t === "l4-npc-home") ? "kit" : null;
+    const [mat, k] = kind === "kit" ? ["wood", 1.2] : PROP4[kind] ?? [];
+    if (!mat) continue;
+    const hp = Math.round((BRK.materials[mat]?.hp ?? 80) * k);
+    o.tags = [...o.tags, "breakable"]; o.state.mat = mat; o.state.hp = hp; o.state.maxHp = hp;
   }
 }
