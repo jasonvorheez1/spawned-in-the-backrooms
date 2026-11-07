@@ -5,7 +5,7 @@ import PLAYER from './lib/data/player.yml'
 import L from './lib/data/level0.yml'
 import W from './lib/data/weapons.yml'
 import { raycast } from 'builtin/physics'
-import { dropLoot } from './lib/loot.js'
+import { dropLoot, spawnWeapon } from './lib/loot.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
 
 import SOUNDS from './lib/data/sounds.yml'
@@ -102,7 +102,8 @@ export function onInput(ctx, input) {
   {
     // melee: hold to wind up, release to swing (a heavy past power.min); a gun fires on the press
     const sv = ctx.self.state, aw = weaponOf(sv), P = W.power
-    if (aw.ranged) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) swing(ctx) }
+    if (sv.invOpen || sv.lootOpen) { if (sv.chargeAt) sv.chargeAt = 0 } // a click on a menu is no swing
+    else if (aw.ranged) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) swing(ctx) }
     else {
       if (input.pressed.attack && !sv.chargeAt && ctx.now() >= (walkOf(ctx).nextSwing ?? 0)) { sv.chargeAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.3, true) }
       if (input.released.attack && sv.chargeAt) {
@@ -111,6 +112,8 @@ export function onInput(ctx, input) {
       }
     }
   }
+  if (input.pressed.inventory) { const sv = ctx.self.state; sv.invOpen = !sv.invOpen && !sv.lootOpen; sound(ctx, 'flashlight-switch-click', 0.35, true) }
+  if (input.pressed.inv && input.actionData?.inv) invAction(ctx, input.actionData.inv)
   if (input.pressed.drink) drink(ctx)
   if (input.pressed.cycleWeapon) cycleWeapon(ctx)
   if (input.pressed.reload) startReload(ctx)
@@ -261,6 +264,24 @@ export function reloadStep(ctx, p) {
 export function pumpRack(ctx) {
   sound(ctx, 'shotgun-pump-rack', 0.8)
   ctx.self.state.pumpAt = ctx.now()
+}
+
+// the inventory's buttons (scripts/loot-ui.js): equip a weapon, drink almond water, drop a weapon at your feet, close
+function invAction(ctx, d) {
+  const s = ctx.self.state
+  if (d.k === 'close') { s.invOpen = false; return }
+  if (d.k === 'drink') { drink(ctx); return }
+  const k = String(d.w || '')
+  if (d.k === 'equip' && owned(s).includes(k) && usable(s, k) && s.equipped !== k) {
+    cancelReload(ctx); s.ads = false; s.equipped = k; s.equipAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.45, true); return
+  }
+  if (d.k === 'drop' && k !== 'fists' && owned(s).includes(k)) {
+    if (s.equipped === k) { cancelReload(ctx); s.ads = false; s.equipped = 'fists'; s.equipAt = ctx.now() }
+    s.weapons = owned(s).slice(1).filter((w) => w !== k).join(',')
+    const f = ctx.self.feetPosition, fw = walkOf(ctx).fwd ?? { x: 0, z: -1 }
+    spawnWeapon(ctx, { x: f.x + fw.x * 0.9, z: f.z + fw.z * 0.9 }, k)
+    sound(ctx, 'pickup-weapon', 0.5, true)
+  }
 }
 
 function cycleWeapon(ctx) {
