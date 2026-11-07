@@ -6,7 +6,7 @@ import * as panel from "lib/panel.js";
 export { m3dPvDown, m3dPvWheel, m3dPvReset, m3dPvTool, m3dPvDraft, m3dPvEdit, m3dPvClear, m3dTkMeasure, m3dTkDown, m3dTkWheel, m3dTkReset, m3dMpvMove, m3dMpvSize };
 export { m3dDraft, m3dPose, m3dPick, m3dPreview, m3dUpload, m3dAsk, m3dClearRefs, m3dGuide, m3dJobs } from "lib/panel.js";
 const ST = `<style>
-#msx .btn{position:fixed;left:64px;bottom:14px;pointer-events:auto;font:600 13px "Fredoka",sans-serif;cursor:pointer;border:0;border-radius:10px;padding:8px 12px;color:#3a1d04;background:linear-gradient(#ffe08a,#ffb347 55%,#e0812a);box-shadow:inset 0 1px 0 #fff8,0 0 0 2px #8a4b12,0 3px 0 #5a2e08}
+#msx .btn{position:fixed;left:24px;bottom:150px;pointer-events:auto;font:600 13px "Fredoka",sans-serif;cursor:pointer;border:0;border-radius:10px;padding:8px 12px;color:#3a1d04;background:linear-gradient(#ffe08a,#ffb347 55%,#e0812a);box-shadow:inset 0 1px 0 #fff8,0 0 0 2px #8a4b12,0 3px 0 #5a2e08}
 #msx .btn kbd{font:700 11px monospace;margin-left:6px;padding:1px 5px;border-radius:4px;background:#3a1d0422}
 #msx .pan{position:fixed;left:16px;top:50%;transform:translateY(-50%);width:min(400px,calc(100vw - 2 * (var(--spawn-chrome-reservation-right-inset,50px) + 16px)));max-height:88vh;overflow:auto;pointer-events:auto;border-radius:16px}
 #msx .x{position:sticky;top:0;float:right;z-index:3;margin:6px 6px -40px 0;font:700 16px sans-serif;cursor:pointer;border:0;border-radius:50%;width:32px;height:32px;color:#fff3dc;background:#2a170ccc;box-shadow:0 0 0 2px #e0b45a}
