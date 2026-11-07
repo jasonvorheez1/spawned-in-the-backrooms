@@ -1,0 +1,11 @@
+# Level 3's rare guests from Level 5 (scripts/l3-visits.js). Times in ms.
+checkEvery: [420000, 780000]   # how often a visit is rolled while someone is on Level 3
+samantha:
+  chance: 0.3                 # per roll: she comes up the brass lift
+  stay: [180000, 300000]      # a few minutes, then she blinks home
+rats:
+  chance: 0.4                 # per roll: a Death Rat pack comes up out of the conduit
+  size: [2, 4]
+  stay: [70000, 120000]
+  from: [3, 6]                # cells away from the player they surface near
+  roam: 3                     # cells they wander round their hole
