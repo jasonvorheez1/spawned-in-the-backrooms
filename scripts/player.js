@@ -878,6 +878,7 @@ function tickStats(ctx, t, moving) {
     }
   }
   // flashlight battery
+  if (s.batteryTake) { w.battery = Math.max(0, (w.battery ?? s.battery ?? 0) - s.batteryTake); s.batteryTake = 0 } // a quest or trade spends charge (scripts/l5-goggles.js): the walk's battery is the truth, state mirrors it
   if (w.light) { w.battery -= L.batteryDrain * t; if (w.battery <= 0) { w.battery = 0; toggleLight(ctx) } }
   if (w.nvg) { w.battery -= L.batteryDrain * 1.5 * t; if (w.battery <= 0 || ctx.self.place !== 'level6') { w.battery = Math.max(0, w.battery); ctx.destroy(w.nvg); w.nvg = null; s.nvgOn = false } } // goggles drink faster than a torch
   else if (s.nvgOn) s.nvgOn = false
