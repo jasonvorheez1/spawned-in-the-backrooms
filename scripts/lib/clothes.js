@@ -142,7 +142,7 @@ export function npcLook(id, look, faction, level, role) {
     const list = jl.length ? jl : leveledRows(level, (r) => r.slot === slot && F.rows.includes(r.id))
     if (!list.length) { if (CL.patKey[slot] && l[slot] && l[slot] !== 'none') { const r0 = rowOf(slot, l[slot], l[CL.colourKey[slot]]); if (r0 && !l[CL.patKey[slot]]) l[CL.patKey[slot]] = pickPat(r0, u) ?? '' } continue }
     const row = pickW(list, u())
-    l[slot] = row.kind; if (CL.colourKey[slot]) l[CL.colourKey[slot]] = '#' + row.colours[Math.floor(u() * row.colours.length)]
+    l[slot] = row.kind; if (CL.colourKey[slot]) { const cu = u(); l[CL.colourKey[slot]] = '#' + (!row.strict && cu < 0.5 ? DYES[Math.floor(cu * 2 * DYES.length)] : row.colours[Math.floor(u() * row.colours.length)]) } // half the plain garments come re-dyed: colour variety (Shelly)
     if (CL.patKey[slot]) l[CL.patKey[slot]] = pickPat(row, u, J?.pats) ?? ''
   }
   if (l.topw === 'dress') l.botw = 'none'
@@ -172,12 +172,15 @@ const NATURAL = { cat: ['f2a65a', 'c98b55', '3b3440', 'f4efe9', 'b9b3c2', '9a644
   bear: ['9a6440', '6a4630', '3b3440', 'c98b55'], deer: ['c98b55', 'b07a4a', '9a6440'], mouse: ['b9b3c2', '9a8478', 'f4efe9', 'c98b55'], wolf: ['6f7d93', 'b9b3c2', '3b3440', '8a8278'], raccoon: ['6f7d93', '8a8278', 'b9b3c2'],
   panda: ['f4efe9'], pig: ['ffb3cf', 'f0a0a8', 'e8c0b0'], sheep: ['f4efe9', 'e8e0d0', '3b3440'], lion: ['e0a850', 'c98b55'], tiger: ['f07a2e', 'f4efe9'], redpanda: ['c8502a', 'b04a2a'], skunk: ['3b3440', '2b2633'],
   hamster: ['f2a65a', 'e8c090', 'f4efe9'], otter: ['7a5236', '9a6440', '6a4630'], koala: ['8a909a', 'b9b3c2'] }
-const PASTEL = ['ffb3cf', '9fd3ff', 'b8e986', 'c9a0ff', 'ffe066']
+const COMMON = ['e8c890', 'd89060', '7a4a30', '5a5a6a', 'a89080', 'f0e0c8', 'c87040', '484050']
+const PASTEL = ['ffb3cf', '9fd3ff', 'b8e986', 'c9a0ff', 'ffe066', 'ffc8a0', 'a0e8d8', 'e8a0e0', 'f8f0a0', 'a8c0ff']
+// dyes a plain garment may come in: Savi's picks, wide on purpose
+const DYES = ['e85d75', 'ff9f43', 'ffd93d', '6bcb77', '4d96ff', '3d5a98', '9b5de5', 'ff8fc7', '5ec7c7', 'c0392b', '2f6b4a', '7a3b5e', 'd4a24a', '4a5a8a', 'a8d8a0', 'f2c4a0', '1f3a5a', '8a2a2a', 'e0e070', '6a4a8a', '2aa08a', 'ff6a3a', 'b0b8c8', '5a3a2a', 'f4f1ea', '2b2b33']
 function bodyRoll(id, l) {
   let h = 2166136261; for (const c of String(id) + '|body') { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) }
   const u = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 100000) / 100000 }, pick = (a) => a[Math.floor(u() * a.length)], r = (a, b) => Math.round((a + u() * (b - a)) * 100) / 100
   const nat = NATURAL[l.species] ?? NATURAL.cat
-  l.fur = '#' + (u() < 0.12 ? pick(PASTEL) : pick(nat))
+  l.fur = '#' + (u() < 0.22 ? pick(PASTEL) : pick([...nat, ...COMMON]))
   l.marks = pick(['none', 'none', 'none', 'freckles', 'stripes', 'patch', 'heart'])
   const f = l.sex === 'f'
   l.heightS = r(0.88, 1.12); l.buildS = r(f ? 0.86 : 0.9, f ? 1.1 : 1.18)
