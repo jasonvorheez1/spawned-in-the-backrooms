@@ -131,7 +131,7 @@ n1 = N_.new("ShaderNodeTexNoise"); n1.inputs["Scale"].default_value = 9; n1.inpu
 n2 = N_.new("ShaderNodeTexNoise"); n2.inputs["Scale"].default_value = 3.2; n2.inputs["Detail"].default_value = 6; n2.inputs["Roughness"].default_value = 0.65
 vor = N_.new("ShaderNodeTexVoronoi"); vor.inputs["Scale"].default_value = 26; vor.feature = "DISTANCE_TO_EDGE"
 for n in (n1, n2, vor): Lk(tc.outputs["Object"], n.inputs["Vector"])
-r1 = N_.new("ShaderNodeValToRGB"); r1.color_ramp.elements[0].color = (0.52, 0.42, 0.17, 1); r1.color_ramp.elements[1].color = (0.80, 0.68, 0.36, 1)
+r1 = N_.new("ShaderNodeValToRGB"); r1.color_ramp.elements[0].color = (0.42, 0.33, 0.07, 1); r1.color_ramp.elements[1].color = (0.74, 0.62, 0.20, 1)
 Lk(n1.outputs["Fac"], r1.inputs["Fac"])
 r2 = N_.new("ShaderNodeValToRGB"); r2.color_ramp.elements[0].position = 0.5; r2.color_ramp.elements[1].position = 0.62
 r2.color_ramp.elements[0].color = (0, 0, 0, 1); r2.color_ramp.elements[1].color = (1, 1, 1, 1)
