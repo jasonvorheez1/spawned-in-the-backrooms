@@ -260,7 +260,7 @@ export function onInput(ctx, input) {
     const sv = ctx.self.state, aw = weaponOf(sv), P = W.power
     if (sv.invOpen || sv.lootOpen) { if (sv.chargeAt) sv.chargeAt = 0 } // a click on a menu is no swing
     else if (ctx.self.state.building) { if (sv.chargeAt) sv.chargeAt = 0 }
-    else if (ctx.self.state.sheathed) { if (sv.chargeAt) sv.chargeAt = 0 } // holstered: hands are down, no attack (Shelly, 2026-11-07)
+    else if (ctx.self.state.sheathed) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) { sv.sheathed = false; w0vm(ctx); if (sv.holstered && owned(sv).includes(sv.holstered) && usable(sv, sv.holstered)) sv.equipped = sv.holstered; walkOf(ctx).nextSwing = ctx.now() + 450 } } // holstered: a click draws (fallout), it never hits
     else if (aw.ranged) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack || (aw.auto && input.held.attack)) swing(ctx) }
     else {
       if (input.pressed.attack && !sv.chargeAt && ctx.now() >= (walkOf(ctx).nextSwing ?? 0)) { sv.chargeAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.3, true) }
