@@ -11,7 +11,7 @@ import { npcLook } from "./lib/clothes.js";
 // the staff are critters too (the creator's rule: a world full of critters): faceless, fur pitch black, in old hotel livery
 // facelings: every face part on the head goes the fur's black, so nothing looks back
 const INK = { color: "#060606", roughness: 1, metalness: 0 };
-export function faceless(spec) { const h = spec.children?.[0]; if (h?.model) { h.model.materials = { ...h.model.materials, pupil: INK, eyewhite: INK, eyeink: INK, mouth: INK, blush: INK, tongue: INK, nose: INK, tip: INK, mark: INK }; h.morph = undefined; } return spec; }
+export function faceless(spec) { const h = spec.children?.[0]; if (h?.model) { if (typeof h.model === "string") h.model = { id: h.model }; h.model.materials = { fur: INK, ...h.model.materials, pupil: INK, eyewhite: INK, eyeink: INK, mouth: INK, blush: INK, tongue: INK, nose: INK, tip: INK, mark: INK }; h.morph = undefined; } return spec; }
 export const staffLook = (f, i) => ({ ...npcLook("l5staff" + i, { species: ["wolf", "cat", "fox", "bear"][i % 4], sex: i % 3 ? "m" : "f" }, "wanderer", 12), fur: "#060606", vary: false, eye: "#000000" });
 const T = E.staff, AVOID = new Set(T.avoid ?? []), COS = Math.cos((T.lookCone * Math.PI) / 180);
 const WALK = { clip: "cdn/clip-walk-loop.glb", loop: true, speed: 0.55 }, IDLE = { clip: "cdn/clip-idle-loop.glb", loop: true, speed: 0.25 };
