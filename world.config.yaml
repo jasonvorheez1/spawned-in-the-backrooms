@@ -44,6 +44,17 @@ inputs:
         - e
       touch:
         button: false
+    wardrobe:
+      keys:
+        - c
+      touch:
+        button: false
+    emote:
+      keys:
+        - t
+      touch:
+        button: false
+    dress: {}
   axes:
     moveX:
       keys: a/d
