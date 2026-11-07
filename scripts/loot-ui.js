@@ -25,14 +25,14 @@ const CSS = `<style>
 .cols{display:flex;gap:14px;min-height:0;flex:1}
 .col{flex:1;min-width:0;display:flex;flex-direction:column;min-height:0}
 .col h3{font-size:11px;font-weight:400;color:var(--ad);margin:0 0 4px;border-bottom:1px solid var(--ad);padding-bottom:2px}
-.ls{overflow-y:auto;overflow-x:hidden;min-height:0}
+.ls{overflow-y:auto;overflow-x:hidden;min-height:0;padding-right:4px}
 .it{display:flex;align-items:center;gap:8px;width:100%;padding:4px 6px;margin:1px 0;background:none;border:1px solid transparent;color:inherit;font:inherit;font-size:13px;text-align:left;cursor:pointer;text-transform:inherit;letter-spacing:inherit;text-shadow:inherit}
 .it:hover{background:var(--a);color:#140c02;text-shadow:none}
 .it:hover small,.it:hover .q{color:#140c02}
 .it .dot{width:6px;height:6px;flex:none;background:currentColor}
 .it.on .dot{box-shadow:0 0 0 2px var(--bg),0 0 0 3px currentColor}
-.it span{white-space:nowrap}
-.it small{margin-left:auto;font-size:10px;color:var(--ad);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.it span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.it small{margin-left:auto;font-size:10px;color:var(--ad);white-space:nowrap;flex:none;padding-right:2px}
 .it .q{color:var(--ad)}
 .it.dim{opacity:.45;cursor:default}
 .it.dim:hover{background:none;color:inherit}
