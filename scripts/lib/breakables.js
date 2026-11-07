@@ -6,6 +6,7 @@ import { attrsOf } from './stats.js'
 import { baseOf } from './weapons.js'
 import { raycast } from 'builtin/physics'
 import { N, S, H, HALF, wallX, wallZ, isArchWall, inHub, EXIT } from './maze.js'
+import { GRIDS, gridOfObj, wallFrame } from './wallgrid.js'
 export { B }
 const EDGED = ['hatchet', 'fire_axe', 'rebar', 'screwdriver', 'knife', 'machete']
 export const classOf = (wp, kind) => (wp?.ranged ? 'firearm' : EDGED.includes(baseOf(kind ?? '')) ? 'edged' : 'blunt')
@@ -43,6 +44,61 @@ export function syncLevel0(ctx) {
   if (cur !== list.join(',')) o.primitive = { kind: 'scripted', script: 'scripts/level0-geo.js', params: { broken: list } }
 }
 
+// ---- walls below Level 0 (lib/wallgrid.js): same keys and voxels, per place, each wall its own material
+const VG = (G) => ({ cols: G.cols ?? 4, rows: G.rows ?? 3 })
+export function gridWallAt(G, pos, normal, key) {
+  let axis, cx, cz
+  if (key) { [axis, cx, cz] = key.split(':'); cx = +cx; cz = +cz }
+  else {
+    if (Math.abs(normal?.y ?? 0) > 0.6) return null
+    axis = Math.abs(normal.x) > Math.abs(normal.z) ? 'x' : 'z'
+    cx = axis === 'x' ? Math.round((pos.x + G.HALF) / G.S) - 1 : Math.floor((pos.x + G.HALF) / G.S)
+    cz = axis === 'z' ? Math.round((pos.z + G.HALF) / G.S) - 1 : Math.floor((pos.z + G.HALF) / G.S)
+    // only a hit on the wall's face itself (not a pillar, a rack or a door frame near it)
+    const f = (axis === 'x' ? cx + 1 : cz + 1) * G.S - G.HALF
+    if (Math.abs((axis === 'x' ? pos.x : pos.z) - f) > G.T + 0.15) return null
+    if (!G.has(axis, cx, cz)) return null
+  }
+  const V = VG(G), fr = wallFrame(G, axis, cx, cz)
+  const u = Math.max(0, Math.min(V.cols - 1, Math.floor(((axis === 'x' ? pos.z : pos.x) - fr.a0) / (fr.len / V.cols))))
+  const v = Math.max(0, Math.min(V.rows - 1, Math.floor(pos.y / (G.H / V.rows))))
+  const sk = G.skin(axis, cx, cz)
+  return { key: `${axis}:${cx}:${cz}`, vox: `${axis}:${cx}:${cz}:${u}:${v}`, u, v, axis, cx, cz, prot: G.prot(axis, cx, cz), mat: sk.mat, G }
+}
+const patchId = (k) => 'wp-' + k.replace(/:/g, '_')
+export function syncWalls(ctx) {
+  const pl = ctx.self?.place ?? Object.keys(GRIDS).find((k) => ctx.place.objects[GRIDS[k].obj])
+  const name = Object.keys(GRIDS).find((k) => ctx.place.objects[GRIDS[k].obj]); if (!name) return
+  const G = GRIDS[name], o = ctx.place.objects[G.obj]; void pl
+  const br = ctx.place.state.broken ?? {}, walls = {}
+  for (const k of Object.keys(br)) { const p = k.split(':'), w = p.slice(0, 3).join(':'); (walls[w] ??= []); if (p.length === 5) walls[w].push(`${p[3]}:${p[4]}`); else walls[w].whole = true }
+  const cut = Object.keys(walls).sort(), cur = (o.primitive?.params?.cut ?? []).join(',')
+  if (cur !== cut.join(',')) o.primitive = { ...o.primitive, kind: 'scripted', script: G.script, params: { ...(o.primitive?.params ?? {}), cut } }
+  const want = new Set()
+  for (const w of cut) {
+    if (walls[w].whole) continue
+    const id = patchId(w), [axis, cx, cz] = w.split(':'), fr = wallFrame(G, axis, +cx, +cz), sk = G.skin(axis, +cx, +cz), V = VG(G)
+    want.add(id)
+    const params = { len: fr.len, H: G.H, T: G.T, cols: V.cols, rows: V.rows, seed: (+cx * 31 + +cz * 17) % 97, broken: walls[w].sort(), tex: sk.tex, col: sk.col, rough: sk.rough, rebar: !!B.materials[sk.mat]?.rebar, core: sk.mat === 'brick' ? 'oklch(0.5 0.05 40)' : undefined }
+    const ex = ctx.place.objects[id]
+    if (!ex) ctx.spawn(id, { tags: ['wallpatch'], feetPosition: { x: fr.center.x, y: 0, z: fr.center.z }, rotation: { yaw: axis === 'x' ? 0 : 90 }, physics: { body: 'static', collider: 'mesh' }, receiveShadow: true, castShadow: false, primitive: { kind: 'scripted', script: 'scripts/wallpatch-geo.js', params }, material: { roughness: 0.9 }, state: { wall: w } })
+    else if ((ex.primitive?.params?.broken ?? []).join(',') !== params.broken.join(',')) ex.primitive = { kind: 'scripted', script: 'scripts/wallpatch-geo.js', params }
+  }
+  for (const r of ctx.query({ tags: ['wallpatch'], select: 'ids' })) { const id = r.id ?? r; if (!want.has(id)) ctx.destroy(id) }
+}
+// the sims call this: broken walls grow back after regrowMinutes (never with someone in the gap), then the mesh follows
+export function tickWalls(ctx) {
+  const name = Object.keys(GRIDS).find((k) => ctx.place.objects[GRIDS[k].obj]); if (!name) return
+  const G = GRIDS[name], br = ctx.place.state.broken, now = ctx.now()
+  if (br) for (const [k, at] of Object.entries(br)) {
+    if (now - at < B.regrowMinutes * 60000) continue
+    const [ax, cx, cz] = k.split(':'), c = wallFrame(G, ax, +cx, +cz).center
+    if (ctx.place.players.some((p) => Math.abs(p.feetPosition.x - c.x) < 1.4 && Math.abs(p.feetPosition.z - c.z) < 1.4)) continue
+    delete br[k]
+  }
+  syncWalls(ctx)
+}
+
 // ---- drops
 export const toolOf = (kind) => B.tools?.[baseOf(kind ?? '')] ?? 'rough'
 // 7dtd-style: every base item is its own roll scaled by the tool's fit, then each rare part rolls on its own
@@ -60,8 +116,10 @@ function crumble(ctx, at, mat, big) {
   const FX = `fx
 pop chunk burst=${big ? '26..34' : '12..18'} on=box(<${big ? '1.6,1.1,.15' : '.5,.4,.5'}>) life=1.4..2.2 v=sdir()*(1.5..3.5)+up(1..2.5) size=.06..0.2 spin=-8..8 acc=grav()+drag(.4) col=<${r * 0.8},${g * 0.8},${b * 0.8}> a=1>.8:1>0 sz=$size rot=$age*$spin floor=bounce(.3) r=mesh(box,1,.6,.8)
 pop dust burst=${big ? 14 : 7} on=box(<${big ? '1.6,1.1,.3' : '.5,.4,.5'}>) life=1.6..2.6 v=sdir()*(.4..1)+up(.2..0.6) size=.5..0.9 acc=buoy(.2)+drag(1.2) col=<${r},${g},${b}> a=0>.45:.2>.7:.25>0 sz=$size*(.6>2.2) rot=spin(.2) r=sprite(smoke-puff,alpha)`
-  ctx.emit('fx', { position: at, script: FX })
-  ctx.emit('playSound', { clip: SND(B.breakSound), position: at, volume: 0.9, maxDistance: 28 })
+  ctx.emit('fx', { position: at, script: m.sparks ? FX + `
+pop spark burst=18..26 life=.2..0.5 v=sdir()*(3..6)+up(1..2) size=.015..0.03 acc=grav()*.6 col=hdr(5,3,1)>hdr(2,.7,.1) a=1>0 sz=$size r=sprite(ember,add,velocity,.03)
+pop arc n=1 life=.3 r=light(<.6,.75,1>,12,6)` : FX })
+  ctx.emit('playSound', { clip: SND(m.breakSound ?? B.breakSound), position: at, volume: 0.9, maxDistance: 28 })
   ctx.emit('screenShake', { intensity: big ? 0.25 : 0.12, duration: 0.25 }, { audience: { nearby: at, radius: 8 } })
 }
 function chip(ctx, at, normal, mat, dmg) {
@@ -70,7 +128,7 @@ function chip(ctx, at, normal, mat, dmg) {
 pop bits burst=6..10 life=.5..0.9 v=<%normal|0,1,0>*(1.5..3)+sdir()*(.6..1.2) size=.02..0.06 spin=-9..9 acc=grav()+drag(.6) col=<${r * 0.85},${g * 0.85},${b * 0.85}> a=1>.7:1>0 sz=$size rot=$age*$spin floor=die r=mesh(box,1,.6,.8)
 pop puff burst=3..4 life=.6..1 v=<%normal|0,1,0>*(.4..0.8)+sdir()*.2 size=.18..0.3 acc=buoy(.3)+drag(1.6) col=<${r},${g},${b}> a=0>.4:.25>.7:.15>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)` })
   ctx.emit('damageNumber', { position: { x: at.x + n.x * 0.15, y: at.y + 0.2, z: at.z + n.z * 0.15 }, value: Math.round(dmg), color: '#ffb642', size: 0.8 })
-  ctx.emit('playSound', { clip: HIT_SND, position: at, volume: 0.6, pitch: mat === 'metal' ? 1.5 : mat === 'drywall' ? 0.8 : 1.1, maxDistance: 18 })
+  ctx.emit('playSound', { clip: HIT_SND, position: at, volume: 0.6, pitch: ['metal', 'sheet_steel', 'pipe', 'conduit', 'junction'].includes(mat) ? 1.5 : ['drywall', 'brick', 'cinderblock', 'concrete'].includes(mat) ? 0.8 : 1.1, maxDistance: 18 })
 }
 export function spawnRubble(ctx, at, items, name = 'Rubble') {
   if (!items.length) return
@@ -95,7 +153,7 @@ export function damageEntity(ctx, o, dmg, at, normal, kind) {
     crumble(ctx, { x: fp.x, y: fp.y + 0.6, z: fp.z }, mat, big)
     const rare = rollDrops(ctx, mat, kind), items = [...rare, ...(o.state.items ? String(o.state.items).split(',').filter(Boolean) : [])]
     spawnRubble(ctx, { x: fp.x, y: fp.y + 0.02, z: fp.z }, items, o.state.items ? (o.state.name ?? 'Wreck') : mat === 'machine' ? `${o.state.name ?? 'Machine'} parts` : 'Rubble')
-    const good = rare.filter((t) => !['scrap_metal', 'scrap_wood', 'drywall', 'nails', 'wire'].includes(t))
+    const good = rare.filter((t) => !['scrap_metal', 'scrap_wood', 'drywall', 'nails', 'wire', 'rubble', 'rust_flakes', 'mortar_dust', 'bricks', 'cinder', 'tile_shard'].includes(t))
     if (good.length) { ctx.emit('damageNumber', { position: { x: fp.x, y: fp.y + 1.4, z: fp.z }, text: `+${good.length} parts`, color: '#7fd1a0', size: 1 }); ctx.emit('playSound', { clip: SND('mechanical-parts-salvage-clink'), position: fp, volume: 0.8 }) }
     ctx.destroy(o.id)
   }
@@ -103,7 +161,8 @@ export function damageEntity(ctx, o, dmg, at, normal, kind) {
 }
 export function damageWall(ctx, w, dmg, at, normal, kind) {
   const st = ctx.place.state, V = B.voxel ?? { cols: 4, rows: 3 }
-  if (w.prot) { chip(ctx, at, normal, 'concrete', 0); return true } // shells, edges and exits never give
+  if (w.prot) { chip(ctx, at, normal, w.mat ?? 'concrete', 0); return true } // shells, edges and exits never give
+  if (w.G) return damageGridWall(ctx, w, dmg, at, normal, kind)
   st.wallHp ??= {}; st.broken ??= {}
   const vhp = Math.round(B.materials.drywall.hp * B.wallHpMul / V.cols)
   if (st.wallHp[w.vox] == null) st.wallHp[w.vox] = vhp
@@ -129,6 +188,32 @@ export function damageWall(ctx, w, dmg, at, normal, kind) {
   syncLevel0(ctx)
   return true
 }
+function damageGridWall(ctx, w, dmg, at, normal, kind) {
+  const st = ctx.place.state, G = w.G, V = VG(G), mat = w.mat, m = B.materials[mat] ?? B.materials.drywall
+  st.wallHp ??= {}; st.broken ??= {}
+  if (st.broken[w.key] || st.broken[w.vox]) return true
+  if (st.wallHp[w.vox] == null) st.wallHp[w.vox] = Math.round((m.wallHp ?? m.hp * 2) / V.cols)
+  st.wallHp[w.vox] -= dmg
+  chip(ctx, at, normal, mat, dmg)
+  if (st.wallHp[w.vox] > 0) return true
+  const fr = wallFrame(G, w.axis, w.cx, w.cz)
+  const gone = (u, v) => u < 0 || u >= V.cols || v < 0 || !!st.broken[`${w.key}:${u}:${v}`]
+  const pop = (u, v) => {
+    const k = `${w.key}:${u}:${v}`; delete st.wallHp[k]; st.broken[k] = ctx.now()
+    const a = fr.a0 + (u + 0.5) * fr.len / V.cols, y = (v + 0.5) * G.H / V.rows
+    const c = w.axis === 'x' ? { x: fr.fixed, y, z: a } : { x: a, y, z: fr.fixed }
+    crumble(ctx, c, mat, false)
+    spawnRubble(ctx, { x: c.x + (normal?.x ?? 0) * (G.T + 0.4), y: 0.02, z: c.z + (normal?.z ?? 0) * (G.T + 0.4) }, rollDrops(ctx, mat, kind), `${m.name} rubble`)
+  }
+  pop(w.u, w.v)
+  for (let pass = 0; pass < V.rows; pass++) for (let v = 1; v < V.rows; v++) for (let u = 0; u < V.cols; u++)
+    if (!gone(u, v) && gone(u, v - 1) && gone(u - 1, v) && gone(u + 1, v)) pop(u, v)
+  let all = true; for (let u = 0; u < V.cols && all; u++) for (let v = 0; v < V.rows; v++) if (!gone(u, v)) { all = false; break }
+  if (all) { for (let u = 0; u < V.cols; u++) for (let v = 0; v < V.rows; v++) delete st.broken[`${w.key}:${u}:${v}`]; st.broken[w.key] = ctx.now() }
+  ctx.emit('screenShake', { intensity: 0.15, duration: 0.2 }, { audience: { nearby: at, radius: 6 } })
+  syncWalls(ctx)
+  return true
+}
 // the swing / shot reaching the world: rays from chest and waist along the aim. Returns true when it struck structure.
 export function strike(ctx, s, wp, kind, base, fwd, pitch = 0) {
   const p = ctx.self.feetPosition, cls = classOf(wp, kind)
@@ -146,10 +231,17 @@ export function strike(ctx, s, wp, kind, base, fwd, pitch = 0) {
     const w = wallKeyAt(hit.position, hit.normal); if (!w) return false
     return damageWall(ctx, w, base * mul * fac, hit.position, hit.normal, kind)
   }
+  const gname = gridOfObj(hit.id), patch = !gname && String(hit.id).startsWith('wp-') ? ctx.getObject(hit.id) : null
+  if (gname || patch) {
+    const G = GRIDS[gname ?? Object.keys(GRIDS).find((k) => ctx.place.objects[GRIDS[k].obj])]; if (!G) return false
+    const w = gridWallAt(G, hit.position, hit.normal, patch?.state?.wall); if (!w) return false
+    const m = B.materials[w.mat] ?? B.materials.drywall
+    return damageWall(ctx, w, base * (m.mul[cls] ?? 1) * (m.toolMul?.[toolOf(kind)] ?? 1) * fac, hit.position, hit.normal, kind)
+  }
   const o = ctx.getObject(hit.id)
   let t = o
   while (t && !t.tags?.includes('breakable') && t.parent?.id) t = ctx.getObject(t.parent.id)
   if (!t?.tags?.includes('breakable') || t.state?.broke) return false
   const m = B.materials[t.state?.mat ?? 'wood'] ?? B.materials.wood
-  return damageEntity(ctx, t, base * (m.mul[cls] ?? 1) * fac, hit.position, hit.normal, kind)
+  return damageEntity(ctx, t, base * (m.mul[cls] ?? 1) * (m.toolMul?.[toolOf(kind)] ?? 1) * fac, hit.position, hit.normal, kind)
 }
