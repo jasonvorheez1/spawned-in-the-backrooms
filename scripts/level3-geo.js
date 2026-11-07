@@ -115,11 +115,11 @@ export function geometry(ctx) {
         rod(ctx, P(off, -S / 2, y), P(off, S / 2, y), r, M);
         if (drop) { // the bundle turns down the wall, fanning in to sit side by side over the box
           const sx = drop.a + (i - (k - 1) / 2) * (drop.glb ? 0.16 : 0.055), lo = drop.glb ? drop.by : drop.by + 0.6;
-          tube(ctx, [P(off, sx, y), P(off - 0.02, sx, y - 0.12), P((off + w) / 2, sx, y - 0.32), P(w, sx, y - 0.55), P(w, sx, lo + 0.08)], [r, r, r, r, r], M, [1, 1], 0, 1, hi ? 3 : 2);
+          tube(ctx, [P(off, sx, y), P(off - 0.02, sx, y - 0.12), P((off + w) / 2, sx, y - 0.32), P(w, sx, y - 0.55), P(w, sx, lo + 0.08)], [r, r, r, r, r], 5, [1, 1], 0, 1, 1);
         }
       }
       if (drop && !drop.glb) boxes.push({ ...P(w - 0.045, drop.a, 0), nx, nz, by: drop.by });
-      if (hash(cx * 4 + d, cz, 43) < 0.45) cables.push({ P, w, y });
+      if (hash(cx * 4 + d, cz, 43) < 0.25) cables.push({ P, w, y });
     }
   }
   // the long rounded steel boxes, flattened against the wall, a bevelled cap on the bottom
@@ -132,8 +132,8 @@ export function geometry(ctx) {
   // black corrugated cable sagging between hangers along the beam
   ctx.albedo(null); ctx.color("oklch(0.14 0.005 250)"); ctx.metalness(0.05); ctx.roughness(0.7);
   for (const { P, w, y } of cables) {
-    const pts = [], rs = []; for (let j = 0; j <= 8; j++) { const along = -S / 2 + (j / 8) * S; pts.push(P(w - 0.02, along, y - 0.28 - (j % 2 ? 0.14 : 0))); rs.push(0.022); }
-    tube(ctx, pts, rs, hi ? 5 : 4, [1, 1], 0, 1, hi ? 3 : 1);
+    const pts = [], rs = []; for (let j = 0; j <= 4; j++) { const along = -S / 2 + (j / 4) * S; pts.push(P(w - 0.02, along, y - 0.28 - (j % 2 ? 0.14 : 0))); rs.push(0.022); }
+    tube(ctx, pts, rs, 4, [1, 1], 0, 1, 2);
   }
   ctx.metalness(0);
   // generator rooms: three big humming generator housings with stacks of cable, a catwalk rail around the middle one
