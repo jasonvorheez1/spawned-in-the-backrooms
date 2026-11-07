@@ -104,7 +104,9 @@ export function derived(s) {
 // ---- carry weight, in kilograms
 const FIXED = { almond: 0.5, ammo: 0.4, shells: 0.5, ration: 0.4, bandage: 0.1, battery: 0.3, kit: 1.0, book: 0.3 }
 export function weaponWeight(k) { const w = W[k]; return w ? (w.weight ?? (w.ranged ? 2.8 : w.damage > 30 ? 3.2 : 1.6)) : 0 }
+import BRK from './data/breakables.yml'
 export function tokenWeight(token) {
+  if (BRK.scrap[token]) return BRK.scrap[token].kg
   if (token.startsWith('weapon:')) return weaponWeight(token.slice(7))
   if (token.startsWith('book:')) return FIXED.book
   if (token.startsWith('cloth:')) return parseCloth(token)?.row.kg ?? 0.3
@@ -114,6 +116,7 @@ export function tokenWeight(token) {
 export function carried(s) {
   let kg = (s.almonds ?? 0) * FIXED.almond + (s.ammo ?? 0) * 0.03 + (s.shells ?? 0) * 0.07
   for (const k of String(s.weapons ?? '').split(',').filter(Boolean)) kg += weaponWeight(k)
+  for (const [t, n] of Object.entries(s.scrap ?? {})) kg += (BRK.scrap[t]?.kg ?? 0.2) * n // building scrap
   for (const t of String(s.clothes ?? '').split(',').filter(Boolean)) kg += tokenWeight(t) // spare clothes; what's worn weighs nothing
   return Math.round(kg * 10) / 10
 }

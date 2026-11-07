@@ -20,6 +20,7 @@ export function describe(token) {
 }
 // Level 2's finds: eaten, wrapped or taped on the spot, or keys you carry (fuse, valve wheel, keycard) that open its doors
 import L2 from './data/level2.yml'
+import BRK from './data/breakables.yml'
 export const L2_NOW = ['beans', 'bar', 'firstaid', 'tape']
 export const L2_KEYS = { fuse: 'fuses', valve: 'valves', keycard: 'keycards' }
 const L2_DESC = {
@@ -32,6 +33,7 @@ const L2_DESC = {
   keycard: () => ({ name: 'Keycard', info: 'Opens a STORAGE cage', color: '#9ff0b0' }),
 }
 function describe0(token) {
+  if (BRK.scrap[token]) return { name: BRK.scrap[token].name, info: 'Building scrap · B to build', color: BRK.scrap[token].color }
   if (L2_DESC[token]) return L2_DESC[token]()
   if (token === 'compass') return { name: 'Old compass', info: 'Senses what is near · wears out', color: '#d8b56a' }
   if (token === 'almond') return { name: 'Almond water', info: `+${L.almondHp} HP · +${L.almondSanity} sanity`, color: '#f3e7b0' }

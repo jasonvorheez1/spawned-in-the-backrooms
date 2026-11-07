@@ -70,6 +70,11 @@ export function takeToken(ctx, token) {
     sound(ctx, 'gun-raise-cloth-rustle', 0.5, true)
     return { ok: true }
   }
+  if (BRK.scrap[token]) { // building scrap: counted per kind in player.state.scrap
+    s.scrap = { ...(s.scrap ?? {}), [token]: (s.scrap?.[token] ?? 0) + 1 }; s.pickedAt = now
+    sound(ctx, 'pickup-ammo', 0.5, true)
+    return { ok: true }
+  }
   if (token === 'almond') {
     s.almonds = (s.almonds ?? 0) + 1; gain(ctx, L.xpAlmond); s.pickedAt = now
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.75, true)
