@@ -59,8 +59,8 @@ export function layMoments(ctx) {
   if (dk) {
     const { cx, cz } = dk, c = cellCenter(cx, cz);
     const FLICK = `fx
-pop glow n=1 at=point().c(2.8) lit=(.55+.45*flick(.9,.5))*(.35+.65*~(noise(time()*.4)*3)) r=light(<1,.9,.66>,$lit*7,11)
-pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=$lit*.0+(.35+.4*flick(.9,.5)) sz=$size r=sprite(soft-disc,add)`;
+pop glow n=1 at=point().c(2.8) lit=(.55+.45*flick(.9,.5))*(.6+.4*noise(time()*.4)) r=light(<1,.9,.66>,$lit*7,11)
+pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5) sz=$size r=sprite(soft-disc,add)`;
     put("troffer", { feetPosition: { x: c.x, y: 0, z: c.z }, primitive: geo("troffer", { lit: true }), fx: { script: FLICK } });
     for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1]]) { const n = cellCenter(cx + dx, cz + dz); if (!inHub(cx + dx, cz + dz)) put("troffer", { feetPosition: { x: n.x, y: 0, z: n.z }, primitive: geo("troffer", { lit: false }) }); }
     put("farsound", { feetPosition: { x: c.x, y: 0, z: c.z }, behavior: "scripts/moments.js", state: { kind: "far" } });
