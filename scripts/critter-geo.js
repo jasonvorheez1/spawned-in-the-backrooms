@@ -111,7 +111,7 @@ export function geometry(ctx) {
     lion: { len: 0.11, w: 0.13, h: 0.095, y: -0.105, p: 2.2 },
   };
   const SN = SNOUTS[P.species] || SNOUTS.cat;
-  const snoutAt = (u, v) => { const d = Math.abs(u / SN.w) ** SN.p + Math.abs((v - SN.y) / SN.h) ** SN.p; return SN.len * Math.exp(-d * 1.4); };
+  const snoutAt = (u, v) => { const d = Math.abs(u / SN.w) ** SN.p + Math.abs((v - SN.y) / SN.h) ** SN.p; if (d >= 1) return 0; const t = 1 - d; return SN.len * t * t * (3 - 2 * t); }; // zero past its oval, so it never pushes into the eyes
   const fem = P.sex === "f";
   const FUR = P.fur || sp.fur;
   const BELLY = P.belly || sp.belly;
@@ -273,10 +273,6 @@ export function geometry(ctx) {
       const m = mul3(add3(add3(a, b), add3(c2, d)), 0.25);
       const nrm = norm3(sub3(m, HC));
       let col = sp.headFur || FUR;
-      { // the muzzle is the snout's own lighter fur, its edge a smooth oval
-        const du = (m[0] - HC[0]) / (SN.w * 1.15), dv = (m[1] - HC[1] - SN.y + 0.01) / (SN.h * 1.25);
-        if (!sp.patch && m[2] < HC[2] - 0.1 && du * du + dv * dv < 1) col = BELLY;
-      }
       ctx.color(col);
 
       if (j === 0) tri(a, c2, d);
