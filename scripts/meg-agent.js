@@ -235,7 +235,7 @@ function holster(ctx, me, m, drawn) {
   gun.attachment = drawn ? { bone: "RightHand" } : { bone: "Spine2" };
   gun.feetPosition = drawn ? { x: 0, y: 0, z: 0 } : { x: 0, y: 0.05, z: -0.17 };
   gun.rotation = drawn ? { yaw: 0, pitch: 0, roll: 0 } : { yaw: 0, pitch: -90, roll: 35 };
-  if (ranged || drawn) heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-gun-holster-leather.mp3", position: me.feetPosition, volume: 0.5, maxDistance: 15 });
+  if ((ranged || drawn) && ctx.now() - (m.holsterSnd ?? 0) > 1500 && (m.holsterSnd = ctx.now())) heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-gun-holster-leather.mp3", position: me.feetPosition, volume: 0.5, maxDistance: 15 });
 }
 // a straight walk to a spot within 6 m that the threat has no line of sight to: cover. null when there is none.
 function findCover(ctx, me, t) {

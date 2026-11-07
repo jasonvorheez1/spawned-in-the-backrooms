@@ -20,8 +20,15 @@ function walls(ctx, a, b) {
 // voice gate: a tab coming back from the background replays a backlog of NPC lines at once. Each listener hears one
 // voice line at a time (a gap of VOICE_GAP ms), and the same line twice inside VOICE_REPEAT ms is dropped. Savi's picks.
 const VOICE_GAP = 1800, VOICE_REPEAT = 20000, lastVoice = new Map();
+const SFX_GAP = 600, lastSfx = new Map(); // the same one-shot to the same listener within SFX_GAP ms is one sound (a holster flapping, a backlog)
 function voiceOk(ctx, pid, clip) {
-  if (!clip || !String(clip).includes("/voice-")) return true;
+  if (!clip) return true;
+  if (!String(clip).includes("/voice-")) {
+    const k = pid + "|" + clip, t = lastSfx.get(k), now = ctx.now();
+    if (t && now - t < SFX_GAP) return false;
+    lastSfx.set(k, now); if (lastSfx.size > 500) lastSfx.clear();
+    return true;
+  }
   const now = ctx.now(), v = lastVoice.get(pid);
   if (v && (now - v.at < VOICE_GAP || (v.clip === clip && now - v.at < VOICE_REPEAT))) return false;
   lastVoice.set(pid, { at: now, clip });
