@@ -872,159 +872,163 @@ l5-boilerdoor-hk:
   id: l5-boilerdoor-hk
   rotation: {yaw: 0}
 l5-cold-bench:
-  feetPosition: {x: 45.4, y: 0, z: -23.2}
+  feetPosition: {x: 43.8, y: 0, z: -20.9}
   id: l5-cold-bench
   material: {color: oklch(0.45 0.03 60), metalness: 0.4, roughness: 0.7}
   physics: static
-  primitive: {depth: 0.5, height: 0.45, kind: box, width: 2.2}
-  rotation: {yaw: 90}
+  primitive: {depth: 0.5, height: 0.45, kind: box, width: 2}
   tags: [l5-coldroom]
 l5-cold-chiller:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-industrial-chiller-compressor-hum-loop.mp3, gain: 0.35, loop: true, maxDistance: 12, spatial: true}
   castShadow: true
-  feetPosition: {x: 41.7, y: 0, z: -25.45}
+  feetPosition: {x: 41.6, y: 0, z: -20.8}
   fx: {script: "fx\npop mist rate=?mobile:6|12 on=box(1.6,.1,.1).c(1.2) life=1.5..2.5 v=<0,-.2,.6>+sdir()*.15 size=.3..0.5 acc=grav()*.08+drag(1.2)+curl(.3)*.3 sz=$size*(.6>2.2) col=<.8,.92,1> a=0>.18:.3>.7:.15>0 rot=spin(.15) r=sprite(smoke-puff,alpha)"}
   id: l5-cold-chiller
   material: {color: oklch(0.62 0.04 220), metalness: 0.6, roughness: 0.5}
   physics: static
   primitive: {depth: 0.9, height: 1.9, kind: box, width: 1.9}
   tags: [l5-coldroom]
-  ui: "<div face=\"front\" width=\"1.9m\" style=\"height:1900px;background:linear-gradient(#5b6f80,#3d4c58);display:flex;flex-direction:column;align-items:center;padding-top:120px;gap:60px\"><div style=\"width:1500px;height:700px;background:repeating-linear-gradient(#1c252c 0 40px,#6d8494 40px 70px);border:20px solid #2a343c\"></div><div style=\"font:bold 110px monospace;color:#d8f0ff\">COLD-AIR UNIT 3</div><div style=\"width:90px;height:90px;border-radius:50%;background:#7cf3ff;box-shadow:0 0 80px #7cf3ff\"></div></div>"
+  ui: "<div face=\"back\" width=\"1.9m\" style=\"height:1900px;background:linear-gradient(#5b6f80,#3d4c58);display:flex;flex-direction:column;align-items:center;padding-top:120px;gap:60px\"><div style=\"width:1500px;height:700px;background:repeating-linear-gradient(#1c252c 0 40px,#6d8494 40px 70px);border:20px solid #2a343c\"></div><div style=\"font:bold 110px monospace;color:#d8f0ff\">COLD-AIR UNIT 3</div><div style=\"width:90px;height:90px;border-radius:50%;background:#7cf3ff;box-shadow:0 0 80px #7cf3ff\"></div></div>"
 l5-cold-floor:
-  feetPosition: {x: 43.3, y: 0.004, z: -23.65}
+  feetPosition: {x: 42.75, y: 0.004, z: -19.3}
   id: l5-cold-floor
-  material: {color: oklch(0.55 0.03 230), metalness: 0.2, roughness: 0.35}
-  primitive: {depth: 4.5, height: 0.008, kind: box, width: 5.2}
+  material: {color: oklch(0.5 0.03 230), metalness: 0.2, roughness: 0.35}
+  primitive: {depth: 3.8, height: 0.008, kind: box, width: 6.3}
   tags: [l5-coldroom]
 l5-cold-lamp:
-  feetPosition: {x: 43.3, y: 3.4, z: -23.6}
+  feetPosition: {x: 42.7, y: 3.4, z: -19.3}
   id: l5-cold-lamp
   light: {color: oklch(0.85 0.09 220), distance: 9, intensity: 2.4, kind: point}
   material: {color: oklch(0.95 0.05 220), emissive: oklch(0.9 0.08 220), emissiveIntensity: 3}
   primitive: {depth: 0.3, height: 0.08, kind: box, width: 1.2}
   tags: [l5-coldroom]
 l5-cold-line-a0:
-  feetPosition: {x: 40.6, y: 0.005, z: -25.75}
+  feetPosition: {x: 39.5, y: 0.005, z: -21.05}
   id: l5-cold-line-a0
   material: {color: oklch(0.78 0.15 92), roughness: 0.8}
   primitive: {depth: 0.5, height: 0.012, kind: box, width: 0.18}
   tags: [l5-coldroom]
 l5-cold-line-a1:
-  feetPosition: {x: 40.6, y: 0.005, z: -25.25}
+  feetPosition: {x: 39.5, y: 0.005, z: -20.55}
   id: l5-cold-line-a1
   material: {color: oklch(0.2 0.01 80), roughness: 0.8}
   primitive: {depth: 0.5, height: 0.012, kind: box, width: 0.18}
   tags: [l5-coldroom]
 l5-cold-line-a2:
-  feetPosition: {x: 40.6, y: 0.005, z: -24.75}
+  feetPosition: {x: 39.5, y: 0.005, z: -20.05}
   id: l5-cold-line-a2
   material: {color: oklch(0.78 0.15 92), roughness: 0.8}
   primitive: {depth: 0.5, height: 0.012, kind: box, width: 0.18}
   tags: [l5-coldroom]
 l5-cold-line-a3:
-  feetPosition: {x: 40.6, y: 0.005, z: -24.25}
+  feetPosition: {x: 39.5, y: 0.005, z: -19.55}
   id: l5-cold-line-a3
   material: {color: oklch(0.2 0.01 80), roughness: 0.8}
   primitive: {depth: 0.5, height: 0.012, kind: box, width: 0.18}
   tags: [l5-coldroom]
 l5-cold-line-a4:
-  feetPosition: {x: 40.6, y: 0.005, z: -23.75}
+  feetPosition: {x: 39.5, y: 0.005, z: -19.05}
   id: l5-cold-line-a4
   material: {color: oklch(0.78 0.15 92), roughness: 0.8}
   primitive: {depth: 0.5, height: 0.012, kind: box, width: 0.18}
   tags: [l5-coldroom]
 l5-cold-line-a5:
-  feetPosition: {x: 40.6, y: 0.005, z: -23.25}
+  feetPosition: {x: 39.5, y: 0.005, z: -18.55}
   id: l5-cold-line-a5
   material: {color: oklch(0.2 0.01 80), roughness: 0.8}
   primitive: {depth: 0.5, height: 0.012, kind: box, width: 0.18}
   tags: [l5-coldroom]
 l5-cold-line-a6:
-  feetPosition: {x: 40.6, y: 0.005, z: -22.75}
+  feetPosition: {x: 39.5, y: 0.005, z: -18.05}
   id: l5-cold-line-a6
   material: {color: oklch(0.78 0.15 92), roughness: 0.8}
   primitive: {depth: 0.5, height: 0.012, kind: box, width: 0.18}
   tags: [l5-coldroom]
 l5-cold-line-a7:
-  feetPosition: {x: 40.6, y: 0.005, z: -22.25}
+  feetPosition: {x: 39.5, y: 0.005, z: -17.55}
   id: l5-cold-line-a7
   material: {color: oklch(0.2 0.01 80), roughness: 0.8}
   primitive: {depth: 0.5, height: 0.012, kind: box, width: 0.18}
   tags: [l5-coldroom]
-l5-cold-line-a8:
-  feetPosition: {x: 40.6, y: 0.005, z: -21.75}
-  id: l5-cold-line-a8
-  material: {color: oklch(0.78 0.15 92), roughness: 0.8}
-  primitive: {depth: 0.5, height: 0.012, kind: box, width: 0.18}
-  tags: [l5-coldroom]
 l5-cold-line-b0:
-  feetPosition: {x: 40.85, y: 0.005, z: -21.3}
+  feetPosition: {x: 39.75, y: 0.005, z: -17.3}
   id: l5-cold-line-b0
   material: {color: oklch(0.78 0.15 92), roughness: 0.8}
   primitive: {depth: 0.18, height: 0.012, kind: box, width: 0.5}
   tags: [l5-coldroom]
 l5-cold-line-b1:
-  feetPosition: {x: 41.35, y: 0.005, z: -21.3}
+  feetPosition: {x: 40.25, y: 0.005, z: -17.3}
   id: l5-cold-line-b1
   material: {color: oklch(0.2 0.01 80), roughness: 0.8}
   primitive: {depth: 0.18, height: 0.012, kind: box, width: 0.5}
   tags: [l5-coldroom]
+l5-cold-line-b10:
+  feetPosition: {x: 44.75, y: 0.005, z: -17.3}
+  id: l5-cold-line-b10
+  material: {color: oklch(0.78 0.15 92), roughness: 0.8}
+  primitive: {depth: 0.18, height: 0.012, kind: box, width: 0.5}
+  tags: [l5-coldroom]
+l5-cold-line-b11:
+  feetPosition: {x: 45.25, y: 0.005, z: -17.3}
+  id: l5-cold-line-b11
+  material: {color: oklch(0.2 0.01 80), roughness: 0.8}
+  primitive: {depth: 0.18, height: 0.012, kind: box, width: 0.5}
+  tags: [l5-coldroom]
 l5-cold-line-b2:
-  feetPosition: {x: 41.85, y: 0.005, z: -21.3}
+  feetPosition: {x: 40.75, y: 0.005, z: -17.3}
   id: l5-cold-line-b2
   material: {color: oklch(0.78 0.15 92), roughness: 0.8}
   primitive: {depth: 0.18, height: 0.012, kind: box, width: 0.5}
   tags: [l5-coldroom]
 l5-cold-line-b3:
-  feetPosition: {x: 42.35, y: 0.005, z: -21.3}
+  feetPosition: {x: 41.25, y: 0.005, z: -17.3}
   id: l5-cold-line-b3
   material: {color: oklch(0.2 0.01 80), roughness: 0.8}
   primitive: {depth: 0.18, height: 0.012, kind: box, width: 0.5}
   tags: [l5-coldroom]
 l5-cold-line-b4:
-  feetPosition: {x: 42.85, y: 0.005, z: -21.3}
+  feetPosition: {x: 41.75, y: 0.005, z: -17.3}
   id: l5-cold-line-b4
   material: {color: oklch(0.78 0.15 92), roughness: 0.8}
   primitive: {depth: 0.18, height: 0.012, kind: box, width: 0.5}
   tags: [l5-coldroom]
 l5-cold-line-b5:
-  feetPosition: {x: 43.35, y: 0.005, z: -21.3}
+  feetPosition: {x: 42.25, y: 0.005, z: -17.3}
   id: l5-cold-line-b5
   material: {color: oklch(0.2 0.01 80), roughness: 0.8}
   primitive: {depth: 0.18, height: 0.012, kind: box, width: 0.5}
   tags: [l5-coldroom]
 l5-cold-line-b6:
-  feetPosition: {x: 43.85, y: 0.005, z: -21.3}
+  feetPosition: {x: 42.75, y: 0.005, z: -17.3}
   id: l5-cold-line-b6
   material: {color: oklch(0.78 0.15 92), roughness: 0.8}
   primitive: {depth: 0.18, height: 0.012, kind: box, width: 0.5}
   tags: [l5-coldroom]
 l5-cold-line-b7:
-  feetPosition: {x: 44.35, y: 0.005, z: -21.3}
+  feetPosition: {x: 43.25, y: 0.005, z: -17.3}
   id: l5-cold-line-b7
   material: {color: oklch(0.2 0.01 80), roughness: 0.8}
   primitive: {depth: 0.18, height: 0.012, kind: box, width: 0.5}
   tags: [l5-coldroom]
 l5-cold-line-b8:
-  feetPosition: {x: 44.85, y: 0.005, z: -21.3}
+  feetPosition: {x: 43.75, y: 0.005, z: -17.3}
   id: l5-cold-line-b8
   material: {color: oklch(0.78 0.15 92), roughness: 0.8}
   primitive: {depth: 0.18, height: 0.012, kind: box, width: 0.5}
   tags: [l5-coldroom]
 l5-cold-line-b9:
-  feetPosition: {x: 45.35, y: 0.005, z: -21.3}
+  feetPosition: {x: 44.25, y: 0.005, z: -17.3}
   id: l5-cold-line-b9
   material: {color: oklch(0.2 0.01 80), roughness: 0.8}
   primitive: {depth: 0.18, height: 0.012, kind: box, width: 0.5}
   tags: [l5-coldroom]
 l5-cold-sign:
-  feetPosition: {x: 40.62, y: 2.3, z: -23.6}
+  feetPosition: {x: 42.7, y: 2.4, z: -21.25}
   id: l5-cold-sign
   material: {color: oklch(0.22 0.02 230)}
   primitive: {depth: 0.04, height: 0.7, kind: box, width: 2.4}
-  rotation: {yaw: -90}
   tags: [l5-coldroom]
-  ui: "<div face=\"front\" width=\"2.4m\" style=\"height:700px;background:#11202a;border:18px solid #7cc8e8;display:flex;flex-direction:column;justify-content:center;align-items:center;font-family:monospace;color:#cfeeff\"><div style=\"font:bold 150px monospace;letter-spacing:12px\">COLD ROOM</div><div style=\"font-size:70px;color:#ffd36a\">M.E.G. · STAY BEHIND THE LINE · THEY DON'T CROSS</div></div>"
+  ui: "<div face=\"back\" width=\"2.4m\" style=\"height:700px;background:#11202a;border:18px solid #7cc8e8;display:flex;flex-direction:column;justify-content:center;align-items:center;font-family:monospace;color:#cfeeff\"><div style=\"font:bold 150px monospace;letter-spacing:12px\">COLD ROOM</div><div style=\"font-size:70px;color:#ffd36a\">M.E.G. · STAY BEHIND THE LINE · THEY DON'T CROSS</div></div>"
 l5-corpse-crew:
   behavior: scripts/l5-corpse-crew.js
   feetPosition: {x: -36, y: 0, z: 0}
