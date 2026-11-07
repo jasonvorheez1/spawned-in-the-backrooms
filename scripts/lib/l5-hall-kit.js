@@ -11,6 +11,7 @@ export const TX = {
   steel: C("scratched-worn-steel"), cloth: C("white-linen-tablecloth"), wicker: C("dark-rattan-wicker-weave"), soil: C("dark-potting-soil"),
   ceramic: C("glazed-blue-and-white-porcelain"), terracotta: C("aged-terracotta-clay"), grille: C("woven-gold-radio-speaker-grille-cloth"),
   rivet: C("riveted-dark-steel-plate"), tweed: C("brown-tweed-fabric"), crystal: null,
+  silk: C("cream-silk-lampshade-fabric"), paint: C("matte-white-painted-plaster-wall"),
 };
 export function paint(ctx, color, tex = null, rough = 0.7, metal = 0, glow = null) {
   ctx.albedo(tex ? TX[tex] ?? tex : null); ctx.color(color); ctx.roughness(rough); ctx.metalness(metal); ctx.emissive(glow);
