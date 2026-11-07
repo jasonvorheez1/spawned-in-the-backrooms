@@ -29,7 +29,7 @@ function barRow(ctx, x0, z0, x1, z1, h, M, gap = 0.17) {
 }
 
 export function geometry(ctx) {
-  const hi = ctx.lod <= 2, M = hi ? 6 : 4;
+  const hi = ctx.lod <= 2, M = 4;
   // floor: terrazzo tile in the kept halls, dusty cracked concrete in the crawls and blind halls
   for (const terr of [true, false]) {
     ctx.albedo(terr ? TERRAZZO : FLOOR); ctx.roughness(terr ? 0.45 : 0.95);
@@ -76,7 +76,7 @@ export function geometry(ctx) {
     if (!arms.includes(2)) box(ctx, c.x - h, c.x - TW, 0, TH, c.z - TW, c.z + TW);
     if (!arms.includes(1)) box(ctx, c.x - TW, c.x + TW, 0, TH, c.z + TW, c.z + h);
     if (!arms.includes(3)) box(ctx, c.x - TW, c.x + TW, 0, TH, c.z - h, c.z - TW);
-    ctx.smooth(); for (const sp of tightSpans(cx, cz)) vault(ctx, cx, cz, sp, 0, hi ? 10 : 6); ctx.flat();
+    ctx.smooth(); for (const sp of tightSpans(cx, cz)) vault(ctx, cx, cz, sp, 0, hi ? 7 : 5); ctx.flat();
   }
   // bars: across the barred edges, floor to ceiling, never a gate
   ctx.albedo(STEEL); ctx.color("oklch(0.84 0.014 90)"); ctx.metalness(0.25); ctx.roughness(0.8);
@@ -112,10 +112,10 @@ export function geometry(ctx) {
       const drop = h ? { a: (h.wx - c.x) * tx + (h.wz - c.z) * tz, by: 1.62, glb: true } : hash(cx * 4 + d, cz, 37) < 0.3 ? { a: (hash(cx, cz, 39) - 0.5) * 1.8, by: 0.9 + hash(cx, cz, 41) * 0.3 } : null;
       for (let i = 0; i < k; i++) {
         const off = w - i * 0.085, r = 0.024 + (i === 0 ? 0.008 : 0);
-        rod(ctx, P(off, -S / 2, y), P(off, S / 2, y), r, M);
+        rod(ctx, P(off, -S / 2, y), P(off, S / 2, y), r, hi ? 5 : 3);
         if (drop) { // the bundle turns down the wall, fanning in to sit side by side over the box
           const sx = drop.a + (i - (k - 1) / 2) * (drop.glb ? 0.16 : 0.055), lo = drop.glb ? drop.by : drop.by + 0.6;
-          tube(ctx, [P(off, sx, y), P(off - 0.02, sx, y - 0.12), P((off + w) / 2, sx, y - 0.32), P(w, sx, y - 0.55), P(w, sx, lo + 0.08)], [r, r, r, r, r], 5, [1, 1], 0, 1, 1);
+          tube(ctx, [P(off, sx, y), P(off - 0.02, sx, y - 0.12), P((off + w) / 2, sx, y - 0.32), P(w, sx, y - 0.55), P(w, sx, lo + 0.08)], [r, r, r, r, r], hi ? 5 : 3, [1, 1], 0, 1, 1);
         }
       }
       if (drop && !drop.glb) boxes.push({ ...P(w - 0.045, drop.a, 0), nx, nz, by: drop.by });
@@ -126,14 +126,14 @@ export function geometry(ctx) {
   ctx.color("oklch(0.78 0.01 240)"); ctx.metalness(0.7); ctx.roughness(0.35); ctx.smooth();
   for (const b of boxes) {
     const x = b[0], z = b[2], sq = b.nx ? [1, 0.36] : [0.36, 1];
-    tube(ctx, [[x, b.by - 0.62, z], [x, b.by - 0.58, z], [x, b.by - 0.45, z], [x, b.by + 0.55, z], [x, b.by + 0.6, z], [x, b.by + 0.62, z]], [0.03, 0.1, 0.125, 0.125, 0.11, 0.06], hi ? 12 : 6, sq, 0, 1, 1);
+    tube(ctx, [[x, b.by - 0.62, z], [x, b.by - 0.58, z], [x, b.by - 0.45, z], [x, b.by + 0.55, z], [x, b.by + 0.6, z], [x, b.by + 0.62, z]], [0.03, 0.1, 0.125, 0.125, 0.11, 0.06], hi ? 10 : 6, sq, 0, 1, 1);
   }
   ctx.flat();
   // black corrugated cable sagging between hangers along the beam
   ctx.albedo(null); ctx.color("oklch(0.14 0.005 250)"); ctx.metalness(0.05); ctx.roughness(0.7);
   for (const { P, w, y } of cables) {
     const pts = [], rs = []; for (let j = 0; j <= 4; j++) { const along = -S / 2 + (j / 4) * S; pts.push(P(w - 0.02, along, y - 0.28 - (j % 2 ? 0.14 : 0))); rs.push(0.022); }
-    tube(ctx, pts, rs, 4, [1, 1], 0, 1, 2);
+    tube(ctx, pts, rs, 4, [1, 1], 0, 1, 1);
   }
   ctx.metalness(0);
   // generator rooms: three big humming generator housings with stacks of cable, a catwalk rail around the middle one
