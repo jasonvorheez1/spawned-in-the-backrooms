@@ -231,6 +231,9 @@ export function update(ctx, dt) {
     else if (m.aimAt) curExpr = "cocky";
     headObj.morph = faceMorph(curExpr, isBlinking, isFem);
   }
+  // held in conversation: while a player's dialogue is open on this one (player.state.talkWith), it stops where it stands and faces them; a threat or a hit still breaks it
+  const listener = !s.dead && !m.aimAt && now - (m.hitAt ?? 0) > 3000 ? ctx.place.players.find((p) => p.state?.talkWith === me.id && Math.hypot(p.feetPosition.x - me.feetPosition.x, p.feetPosition.z - me.feetPosition.z) < 7) : null;
+  if (listener) { stop(me, dt); face(me, listener.feetPosition.x - me.feetPosition.x, listener.feetPosition.z - me.feetPosition.z, dt); s.talkAt = Math.max(s.talkAt ?? 0, now - 2000); return; }
   // a companion a player talked into tagging along (scripts/talk.js): their leader is home, so it walks after them and fights what comes at them
   let lead = s.follow ? ctx.place.players.find((p) => p.id === s.follow) : null;
   if (s.follow) { if (lead) m.lostAt = 0; else m.lostAt ||= now; if (s.angry?.[s.follow] || (!lead && now - m.lostAt > 20000)) { s.follow = null; lead = null; } }
