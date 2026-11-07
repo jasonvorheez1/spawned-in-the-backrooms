@@ -165,7 +165,7 @@ high = dup(body, "high"); hj = dup(jaw, "highjaw"); sel(high, hj, active=high); 
 # low skin
 def decimate(o, target):
     r = target / max(1, tris(o)); d = o.modifiers.new("dec", "DECIMATE"); d.ratio = r; sel(o); bpy.ops.object.modifier_apply(modifier="dec")
-decimate(body, 9800); decimate(jaw, 900)
+decimate(body, 8600); decimate(jaw, 900)
 g = jaw.vertex_groups.new(name="jaw"); g.add(list(range(len(jaw.data.vertices))), 1.0, 'REPLACE')
 sel(body, jaw, active=body); bpy.ops.object.join(); low = body; low.name = "hound_skin"
 bpy.ops.object.shade_smooth()
@@ -195,10 +195,10 @@ def mix(fac, a, b):
     if isinstance(fac, float): m.inputs[0].default_value = fac
     else: Lk.new(fac, m.inputs[0])
     Lk.new(a, m.inputs[6]); Lk.new(b, m.inputs[7]); return m.outputs[2]
-mott = ramp(noise(9, 6, 0.65).outputs[0], [(0.3, (0.40, 0.39, 0.38)), (0.5, (0.56, 0.55, 0.52)), (0.72, (0.66, 0.64, 0.6))])
-vor = N.new("ShaderNodeTexVoronoi"); vor.feature = 'DISTANCE_TO_EDGE'; vor.inputs["Scale"].default_value = 14
+mott = ramp(noise(5, 8, 0.7).outputs[0], [(0.25, (0.50, 0.48, 0.46)), (0.5, (0.60, 0.58, 0.55)), (0.75, (0.66, 0.64, 0.6))])
+vor = N.new("ShaderNodeTexVoronoi"); vor.feature = 'DISTANCE_TO_EDGE'; vor.inputs["Scale"].default_value = 7
 dn = noise(4, 2); vm = N.new("ShaderNodeMix"); vm.data_type = 'VECTOR'; vm.inputs[0].default_value = 0.25; Lk.new(co, vm.inputs[4]); Lk.new(dn.outputs["Color"], vm.inputs[5]); Lk.new(vm.outputs[1], vor.inputs["Vector"])
-veins = ramp(vor.outputs["Distance"], [(0.0, (1, 1, 1)), (0.035, (0, 0, 0))])
+veins = ramp(vor.outputs["Distance"], [(0.0, (0.55, 0.55, 0.55)), (0.012, (0, 0, 0))])
 vc = N.new("ShaderNodeRGB"); vc.outputs[0].default_value = (0.36, 0.38, 0.46, 1)
 c1 = mix(veins.outputs[0], mott.outputs[0], vc.outputs[0])
 bruise = ramp(noise(2.5, 3).outputs[0], [(0.58, (0, 0, 0)), (0.7, (0.55, 0.55, 0.55))])
@@ -279,16 +279,16 @@ C0 = V(0, 0.655, 0.765); RAD = V(0.112, 0.15, 0.115)
 def push_out(p):
     d = p - C0; e = math.sqrt((d.x / RAD.x) ** 2 + (d.y / RAD.y) ** 2 + (d.z / RAD.z) ** 2)
     return C0 + d * (1.0 / e) if e < 1.0 else p
-cd = bpy.data.curves.new("hair", "CURVE"); cd.dimensions = '3D'; cd.bevel_depth = 0.0075; cd.bevel_resolution = 0; cd.resolution_u = 2
+cd = bpy.data.curves.new("hair", "CURVE"); cd.dimensions = '3D'; cd.bevel_depth = 0.0055; cd.bevel_resolution = 0; cd.resolution_u = 2
 rng = random.Random(11)
 clumps = []
-for c in range(22):
+for c in range(30):
     a = rng.uniform(-1.9, 1.9); yr = rng.uniform(0.54, 0.79)
     clumps.append((a, yr, rng.uniform(0.26, 0.44), V(rng.uniform(-0.02, 0.02), rng.uniform(-0.02, 0.03), 0)))
-for i in range(66):
+for i in range(120):
     a0, y0, Lh, off = clumps[i % len(clumps)]
     a = a0 + rng.uniform(-0.18, 0.18); yr = y0 + rng.uniform(-0.025, 0.025)
-    root = push_out(C0 + V(math.sin(a) * 0.2, yr - C0.y, math.cos(a) * 0.2))
+    d_ = V(math.sin(a) * 0.2, yr - C0.y, math.cos(a) * 0.2); e_ = math.sqrt((d_.x / RAD.x) ** 2 + (d_.y / RAD.y) ** 2 + (d_.z / RAD.z) ** 2); root = C0 + d_ * (0.93 / e_)
     front = yr > 0.72 and abs(a) < 0.7
     pts = []
     for k in range(8):
@@ -298,7 +298,7 @@ for i in range(66):
         else:
             side_ = math.sin(a); out = 1 + 0.35 * u
             p = V(root.x * out + side_ * 0.04 * u, root.y + 0.04 * u, root.z - Lh * u ** 1.3)
-        p = p + off * u + V(rng.uniform(-1, 1), rng.uniform(-1, 1), 0) * 0.006 * u
+        p = p + off * u + V(math.sin(u * 9 + i), math.cos(u * 7 + i * 1.3), 0) * 0.008 * u
         pts.append(push_out(p) if k < 6 else p)
     sp = cd.splines.new('POLY'); sp.points.add(len(pts) - 1)
     for k, p in enumerate(pts): sp.points[k].co = (*p, 1); sp.points[k].radius = (1.25 - 0.95 * k / 7) * rng.uniform(0.7, 1.3)
