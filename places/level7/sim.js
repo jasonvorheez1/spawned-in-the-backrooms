@@ -413,7 +413,7 @@ function lay(ctx) {
     physics: { body: "kinematic", collider: "box" },
     feetPosition: { x: 2.3, y: -0.4, z: -31 },
     rotation: { yaw: 14, roll: 3 },
-    model: GLB.rowboat,
+    model: { id: GLB.rowboat, forward: "+x" }, // the dory was built along X: its bow turned onto -Z, the way you row
     layout: fit(3.8, 1.2, 3.8),
     behavior: "scripts/l7-dory.js", // a boat you row yourself: E sits, WASD rows, E steps out
     state: { name: "Moored wooden dory", verb: "Get in", seat: { d: 0.35, y: 0.3 }, boat: true },
