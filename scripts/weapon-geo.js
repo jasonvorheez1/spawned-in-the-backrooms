@@ -233,7 +233,7 @@ const LIME = "oklch(0.84 0.2 128)", DUCT = "oklch(0.62 0.01 250)", LEATHER = "ok
 function band(ctx, z0, z1, mp, r0, k, M) { const [x, y, r] = shaftAt((z0 + z1) / 2, mp, r0); rod(ctx, [[x, y, z0], [x, y, z1]], [r * k, r * k], M); }
 function overlay(ctx, kind, look, mesh, M, hi) {
   const mp = mesh ? MESHPROF[kind] : null;
-  if (mesh && !mp) return; // a slanted mesh
+  if (mesh && (!mp || (!mp.p && look !== "mag"))) return; // a slanted mesh, or a pistol's only drawn look is its magazine
   const sz = SCRIPTED[kind] ?? SCRIPTED.table_leg, [g0, g1] = mp?.grip ?? sz.grip, [h0, h1] = mp?.head ?? sz.head, gr = sz.grip[2], hr = sz.head[2];
   if (look === "rust") { // flaking rust blooms down the shaft
     ctx.albedo(null); ctx.color(RUST); ctx.roughness(1); ctx.metalness(0.1);
