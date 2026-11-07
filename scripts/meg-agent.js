@@ -151,7 +151,7 @@ function pickTarget(ctx, me, m) {
 
 function seesIt(ctx, me, t) {
   const o = chest(me.feetPosition), q = chest(t.feetPosition), dx = q.x - o.x, dy = q.y - o.y, dz = q.z - o.z, l = Math.hypot(dx, dy, dz) || 1;
-  return !raycast(ctx, o, { x: dx / l, y: dy / l, z: dz / l }, { distance: l, physicsOnly: true, bodies: "static", ignoreEntities: [me.id, t.id] });
+  return !raycast(ctx, o, { x: dx / l, y: dy / l, z: dz / l }, { distance: l, physicsOnly: true, bodies: "all", excludeTags: ["npc", "player", "hound", "rat", "smiler", "lurker", "stealer", "deathmoth", "weapon", "almond"], ignoreEntities: [me.id, t.id] }); // a shut door (kinematic) blocks the view too
 }
 
 function shoot(ctx, me, t, A = WP.pistol) {
