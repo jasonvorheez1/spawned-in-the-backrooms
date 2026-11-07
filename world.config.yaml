@@ -78,6 +78,9 @@ inputs:
       touch:
         button: false
     dress: {}
+    build:
+      keys:
+        - b
   axes:
     moveX:
       keys: a/d
@@ -85,7 +88,7 @@ inputs:
       keys: s/w
   touch:
     style: "[data-part=\"button\"]{background:oklch(0.86 0.09 92 / .82);border:2px solid oklch(0.32 0.05 75);color:oklch(0.22 0.04 70);font-weight:800;letter-spacing:.04em;box-shadow:3px 3px 0 oklch(0.2 0.03 70 / .7)}\n[data-part=\"button\"][data-size=\"primary\"]{background:oklch(0.72 0.14 40 / .88);color:oklch(0.97 0.02 90)}\n[data-part=\"button\"][data-pressed]{transform:translate(2px,2px);box-shadow:1px 1px 0 oklch(0.2 0.03 70 / .7);filter:brightness(1.12)}\n[data-part=\"stick\"]{background:oklch(0.86 0.09 92 / .3);border:2px solid oklch(0.32 0.05 75 / .8)}\n[data-part=\"thumb\"]{background:oklch(0.32 0.05 75);border:none}"
-    surfaces: {default: {buttons: [{action: attack, label: ATTACK, size: primary, slot: 1}, {action: aim, label: AIM, slot: 2}, {action: interact, label: USE, slot: 3}, {action: jump, label: JUMP, slot: 4}, {action: reload, label: RELOAD, size: secondary, slot: 5}, {action: cycleWeapon, label: SWAP, size: secondary, slot: 6}, {action: flashlight, label: LIGHT, size: secondary, slot: 7}, {action: drink, label: DRINK, size: secondary, slot: 8}, {action: holster, label: HOLSTER, size: secondary, slot: 9}, {action: inventory, label: BAG, size: secondary, slot: 10}, {action: sheet, label: STATS, size: secondary, slot: 11}], look: true, orientation: any, pinch: true, sticks: [{x: moveX, y: moveZ}]}}
+    surfaces: {default: {buttons: [{action: attack, label: ATTACK, size: primary, slot: 1}, {action: aim, label: AIM, slot: 2}, {action: interact, label: USE, slot: 3}, {action: jump, label: JUMP, slot: 4}, {action: reload, label: RELOAD, size: secondary, slot: 5}, {action: cycleWeapon, label: SWAP, size: secondary, slot: 6}, {action: flashlight, label: LIGHT, size: secondary, slot: 7}, {action: drink, label: DRINK, size: secondary, slot: 8}, {action: holster, label: HOLSTER, size: secondary, slot: 9}, {action: inventory, label: BAG, size: secondary, slot: 10}, {action: sheet, label: STATS, size: secondary, slot: 11}, {action: build, label: BUILD, size: secondary, slot: 12}], look: true, orientation: any, pinch: true, sticks: [{x: moveX, y: moveZ}]}}
 player: templates/player.js#player
 ui:
   render: scripts/ui.js

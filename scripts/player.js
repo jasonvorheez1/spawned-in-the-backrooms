@@ -188,6 +188,7 @@ export function onInput(ctx, input) {
     // melee: hold to wind up, release to swing (a heavy past power.min); a gun fires on the press
     const sv = ctx.self.state, aw = weaponOf(sv), P = W.power
     if (sv.invOpen || sv.lootOpen) { if (sv.chargeAt) sv.chargeAt = 0 } // a click on a menu is no swing
+    else if (ctx.self.state.building) { if (sv.chargeAt) sv.chargeAt = 0 }
     else if (aw.ranged) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) swing(ctx) }
     else {
       if (input.pressed.attack && !sv.chargeAt && ctx.now() >= (walkOf(ctx).nextSwing ?? 0)) { sv.chargeAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.3, true) }
@@ -201,7 +202,7 @@ export function onInput(ctx, input) {
   if (input.pressed.inv && input.actionData?.inv) invAction(ctx, input.actionData.inv)
   if (input.pressed.drink) drink(ctx)
   if (input.pressed.compass) useCompass(ctx)
-  if (input.pressed.cycleWeapon) cycleWeapon(ctx)
+  if (input.pressed.cycleWeapon && !ctx.self.state.building) cycleWeapon(ctx)
   if (input.pressed.holster) { // H: put it away, H again: draw the last one
     const s = ctx.self.state; cancelReload(ctx); s.ads = false
     if (s.equipped !== 'fists') { s.holstered = s.equipped; s.equipped = 'fists' } else if (s.holstered && owned(s).includes(s.holstered) && usable(s, s.holstered)) s.equipped = s.holstered
