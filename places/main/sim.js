@@ -28,6 +28,25 @@ function furnish(ctx) {
     n++;
   }
 }
+// sunken furniture (Kane Pixel's Backrooms): office pieces half swallowed by the carpet, tilted where they went under, a dark damp ring around each
+const SUNK_H = { desk: 0.76, chair: 0.95, shelf: 1.9, copier: 1.15 }; // her pick: rough heights of build-geo's kinds
+function sink(ctx) {
+  let n = 0;
+  for (let k = 0; k < 600 && n < (L.sunken ?? 42); k++) {
+    const cx = 1 + Math.floor(ctx.random() * (N - 2)), cz = 1 + Math.floor(ctx.random() * (N - 2));
+    if (inHub(cx, cz) || hasPit(cx, cz) || hasPillar(cx, cz)) continue;
+    if (Math.abs(cx - MID) < 5 && Math.abs(cz - MID) < 5) continue;
+    const c = cellCenter(cx, cz), r = ctx.random(), kind = r < 0.35 ? "desk" : r < 0.65 ? "chair" : r < 0.85 ? "shelf" : "copier";
+    const h = SUNK_H[kind], depth = h * (0.35 + ctx.random() * 0.4); // 35-75% under the carpet
+    const x = c.x + (ctx.random() - 0.5) * 1.6, z = c.z + (ctx.random() - 0.5) * 1.6;
+    const tilt = (ctx.random() - 0.5) * 36, roll = (ctx.random() - 0.5) * 28;
+    const id = ctx.spawn({ tags: ["furniture", "sunken", kind], feetPosition: { x, y: -depth, z }, rotation: { yaw: ctx.random() * 360, pitch: tilt, roll }, physics: { body: "static", collider: "box" }, primitive: { kind: "scripted", script: "scripts/build-geo.js", params: { kind } }, state: { name: "Sunken " + kind } });
+    // the carpet slumps into a wet dark ring where it went down
+    ctx.spawn({ tags: ["sunken-stain"], feetPosition: { x, y: 0.012, z }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.9 + h * 0.5, segments: 20 }, material: { color: "oklch(0.2 0.03 70 / 0.55)", transparent: true, roughness: 0.35, depthWrite: false }, receiveShadow: true });
+    ctx.spawn({ tags: ["sunken-stain"], feetPosition: { x, y: 0.014, z }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.45 + h * 0.3, segments: 16 }, material: { color: "oklch(0.13 0.02 70 / 0.7)", transparent: true, roughness: 0.2, depthWrite: false } });
+    n++;
+  }
+}
 // broken walls stay broken for this room, then grow back (never while someone stands in the gap)
 function regrow(ctx, s, now) {
   const br = s.broken; if (!br) return;
@@ -90,6 +109,7 @@ export function tick(ctx) {
   if (s.momentsV !== 1) { s.momentsV = 1; s.moments = layMoments(ctx); }
   shift(ctx, s, now);
   if (!s.furnished) { s.furnished = true; furnish(ctx); }
+  if (s.sunkV !== 1) { s.sunkV = 1; sink(ctx); }
   regrow(ctx, s, now);
   syncLevel0(ctx);
   const weapons = ctx.query({ tags: ["weapon"] }).length;
