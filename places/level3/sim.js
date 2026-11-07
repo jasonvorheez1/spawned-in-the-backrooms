@@ -42,24 +42,50 @@ const WARN = `fx
 pop spark rate=90 on=box(2,.1,1) life=.2..0.5 v=sdir()*(1..2.5)+up(1.2) size=.01..0.025 acc=grav()+drag(.4) col=hdr(4,5,8) a=1>0 sz=$size r=sprite(ember,add,velocity,.03)
 pop glow n=1 r=light(<.55,.7,1>,flick(7,.9)*12,8)`;
 
+// everything placed by the seeded layout (lamps, leaks, live boxes, plates): laid at seeding, relaid when the layout's version moves
+function layLayout(ctx) {
+    // lamps: bare caged bulbs in warm sodium, a cold tube here and there; the blind halls get nothing
+  for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+    const z = zoneOf(cx, cz), c = cellCenter(cx, cz), r = hash(cx, cz, 201), top = ceilingAt(cx, cz);
+    if (z === "dark" || z === "vault" || (z === "gamma" && (cx + cz) % 2)) continue;
+    if (z !== "gamma" && z !== "gen" && z !== "line" && r > 0.42) continue;
+    const cold = z === "line" || hash(cx, cz, 203) < 0.25, col = z === "gamma" ? "oklch(0.92 0.06 95)" : cold ? "oklch(0.93 0.03 210)" : "oklch(0.82 0.13 62)";
+    ctx.spawn({ tags: ["l3lamp"], feetPosition: { x: c.x + (hash(cx, cz, 205) - 0.5), y: top - 0.25, z: c.z + (hash(cx, cz, 207) - 0.5) }, primitive: { kind: "sphere", radius: 0.07 },
+      material: { color: col, emissive: col, emissiveIntensity: 3 }, light: { kind: "point", color: col, intensity: z === "tight" ? 3 : 5.5, distance: z === "tight" ? 7 : 11, shadow: { enabled: false } } });
+  }
+    // hazards: black sludge pooled under leaking pipes; live junction boxes that arc
+  for (const h of SLUDGE) {
+    ctx.spawn({ tags: ["sludge"], feetPosition: { x: h.x, y: 0.015, z: h.z }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 1.1, segments: 20 }, material: { color: "oklch(0.1 0.01 300)", roughness: 0.05, metalness: 0.3 } });
+    ctx.spawn({ feetPosition: { x: h.wx, y: ceilingAt(h.cx, h.cz) - 0.3, z: h.wz }, tags: ["l3drip"], fx: { script: DRIP }, audio: { clip: GRIT("water-drip-echo-loop"), gain: 0.18, loop: true, spatial: true, maxDistance: 8 } });
+  }
+  for (const h of SPARKS) {
+    const [nx, nz] = D4[h.d];
+    ctx.spawn({ tags: ["live-box", "breakable"], feetPosition: { x: h.wx - nx * 0.1, y: 1.2, z: h.wz - nz * 0.1 }, physics: { body: "static", collider: "box" }, state: { mat: "machine", hp: 90, maxHp: 90, name: "Junction box" }, primitive: { kind: "box", width: 0.45, height: 0.6, depth: 0.45 }, material: { color: "oklch(0.55 0.01 240)", metalness: 0.6, roughness: 0.5 },
+      fx: { script: ARC, params: { dir: { x: -nx, y: 0.2, z: -nz } } }, audio: { clip: GRIT("electrical-arc-buzz-loop"), gain: 0.3, loop: true, spatial: true, maxDistance: 9 } });
+  }
+  // yellow OUT OF BOUNDS plates with real lettering, hung on the bars
+  for (const o of OOB) {
+    const e = o.d === 0 ? { x: (o.cx + 1) * S - HALF, z: o.cz * S - HALF + S / 2 } : { x: o.cx * S - HALF + S / 2, z: (o.cz + 1) * S - HALF };
+    const side = o.r < 0.5 ? 1 : -1, x = o.d === 0 ? e.x + side * 0.06 : e.x - 0.9, z = o.d === 0 ? e.z - 0.9 : e.z + side * 0.06;
+    ctx.spawn({ tags: ["l3oob"], feetPosition: { x, y: 1.55, z }, rotation: { yaw: o.d === 0 ? (side > 0 ? -90 : 90) : (side > 0 ? 180 : 0) }, primitive: { kind: "box", width: 0.62, height: 0.3, depth: 0.02 }, material: { color: "oklch(0.8 0.15 88)", roughness: 0.6 },
+      ui: '<div face="front" width="0.62m" style="font-size:118px;font-weight:900;color:#17130c;text-align:center;line-height:1.05;letter-spacing:4px;padding-top:30px">OUT OF<br>BOUNDS</div>' });
+  }
+}
+
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
   if (s.furnitureSeeded !== 2) { // loot moved from crates into fuse cabinets, toolboxes, lockers and satchels: clear the old crates once
     for (const o of ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.tags?.includes("container")) ctx.destroy(o.id);
     s.furnitureSeeded = 2; if (s.seeded && !ctx.query({ tags: ["lootfurn"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).length) seedFurniture3(ctx);
   }
+  if (s.seeded && s.layoutV !== 2) { // the halls were re-cut (narrow crawls, more bars): move what hangs on them
+    for (const t of ["l3lamp", "sludge", "live-box", "l3drip", "l3oob"]) for (const o of ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
+    layLayout(ctx); s.layoutV = 2;
+  }
   if (!s.seeded) {
     s.seeded = true;
     ctx.spawn("l3-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level3-geo.js" }, material: { roughness: 0.9 } });
-    // lamps: bare caged bulbs in warm sodium, a cold tube here and there; the blind halls get nothing
-    for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
-      const z = zoneOf(cx, cz), c = cellCenter(cx, cz), r = hash(cx, cz, 201), top = ceilingAt(cx, cz);
-      if (z === "dark" || z === "vault" || (z === "gamma" && (cx + cz) % 2)) continue;
-      if (z !== "gamma" && z !== "gen" && z !== "line" && r > 0.42) continue;
-      const cold = z === "line" || hash(cx, cz, 203) < 0.25, col = z === "gamma" ? "oklch(0.92 0.06 95)" : cold ? "oklch(0.93 0.03 210)" : "oklch(0.82 0.13 62)";
-      ctx.spawn({ tags: ["l3lamp"], feetPosition: { x: c.x + (hash(cx, cz, 205) - 0.5), y: top - 0.25, z: c.z + (hash(cx, cz, 207) - 0.5) }, primitive: { kind: "sphere", radius: 0.07 },
-        material: { color: col, emissive: col, emissiveIntensity: 3 }, light: { kind: "point", color: col, intensity: z === "tight" ? 3 : 5.5, distance: z === "tight" ? 7 : 11, shadow: { enabled: false } } });
-    }
+    layLayout(ctx); s.layoutV = 2;
     // the door home, west wall: a green LEVEL 2 plate and a light over it
     ctx.spawn("l3-back", { feetPosition: { x: BACK.x + 0.6, y: 0, z: BACK.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 1.3 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level2" } });
     ctx.spawn({ feetPosition: { x: BACK.x + 0.52, y: 2.6, z: BACK.z }, primitive: { kind: "box", width: 0.02, height: 0.4, depth: 1.2 }, material: { color: "oklch(0.25 0.03 150)" },
@@ -76,16 +102,6 @@ export function tick(ctx) {
     ctx.spawn({ feetPosition: { x: LIFT.x - 0.5, y: 1.4, z: LIFT.z }, primitive: { kind: "box", width: 0.02, height: 0.5, depth: 1.1 }, material: { color: "oklch(0.6 0.13 80)" },
       ui: '<div face="left" width="1.1m" style="font-size:120px;font-weight:900;color:#1a1410;text-align:center;line-height:1.1">LIFT 4<div style="font-size:70px">no power</div></div>' });
     ctx.spawn({ feetPosition: { x: LIFT.x - 1.2, y: 2.6, z: LIFT.z }, light: { kind: "point", color: "oklch(0.7 0.16 30)", intensity: 2.5, distance: 6 } });
-    // hazards: black sludge pooled under leaking pipes; live junction boxes that arc
-    for (const h of SLUDGE) {
-      ctx.spawn({ tags: ["sludge"], feetPosition: { x: h.x, y: 0.015, z: h.z }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 1.1, segments: 20 }, material: { color: "oklch(0.1 0.01 300)", roughness: 0.05, metalness: 0.3 } });
-      ctx.spawn({ feetPosition: { x: h.wx, y: ceilingAt(h.cx, h.cz) - 0.3, z: h.wz }, fx: { script: DRIP }, audio: { clip: GRIT("water-drip-echo-loop"), gain: 0.18, loop: true, spatial: true, maxDistance: 8 } });
-    }
-    for (const h of SPARKS) {
-      const [nx, nz] = D4[h.d];
-      ctx.spawn({ tags: ["live-box", "breakable"], feetPosition: { x: h.wx - nx * 0.1, y: 1.2, z: h.wz - nz * 0.1 }, physics: { body: "static", collider: "box" }, state: { mat: "machine", hp: 90, maxHp: 90, name: "Junction box" }, primitive: { kind: "box", width: 0.45, height: 0.6, depth: 0.45 }, material: { color: "oklch(0.55 0.01 240)", metalness: 0.6, roughness: 0.5 },
-        fx: { script: ARC, params: { dir: { x: -nx, y: 0.2, z: -nz } } }, audio: { clip: GRIT("electrical-arc-buzz-loop"), gain: 0.3, loop: true, spatial: true, maxDistance: 9 } });
-    }
     // generators hum
     for (const g of GENS) ctx.spawn(`l3-gen-${g.i}`, { feetPosition: { x: g.x, y: 1.2, z: g.z }, audio: { clip: GRIT("generator-heavy-hum-loop"), gain: 0.35, loop: true, spatial: true, maxDistance: 16 } });
     ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level3-details-geo.js" }, material: { roughness: 0.85 } }); // tile wainscot, signs, sludge pools, the statue, violet bricks, almond piles
