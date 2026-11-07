@@ -1,0 +1,115 @@
+# The Beverly Room's mahjong table: the stake, the four stools, the door guests walk in from, and the people who come to play.
+# Used by scripts/mahjong.js (the game) and scripts/mahjong-ui.js (its panel); their bodies are scripts/lib/data/mahjong-looks.yml.
+stake: 100                 # cents each player puts in
+door: [-7.4, 0.2]          # where a guest steps in from (the ballroom's west double doors)
+table: [6, 0]
+stools: [l5-seat-mahjong0, l5-seat-mahjong1, l5-seat-mahjong2, l5-seat-mahjong3]
+arrive: 2600               # ms between guests stepping in
+# persona: pon / chi = how readily they call (0..1), suit = a favourite to chase, sloppy = how often they play a worse tile (0..1), cheek = how often they talk
+# lines: greet (sitting down) draw disc pon chi win lose ron (they win off a discard) tsumo (they win off the wall) near (one tile from winning) bye
+visitors:
+  ines:
+    name: Inès Marchetti
+    role: Opera Singer (1931)
+    species: fox
+    persona: { pon: 0.8, chi: 0.35, suit: d, sloppy: 0.45, cheek: 0.7 }
+    lines:
+      greet: ["ah, a new face at the table. do sit, darling.", "i was warming up my voice, and then, the tiles. fate."]
+      draw: ["mm. a note i can use.", "oh, lovely."]
+      disc: ["not for me, that one.", "off it goes."]
+      pon: ["PON! and a high C!", "mine, mine, mine, darling."]
+      chi: ["a little run, a little scale.", "chi. hush now."]
+      win: ["bravo, bravo. to me!", "i do so love a curtain call."]
+      lose: ["well played. quite."]
+      ron: ["RON! encore!", "oh, you shouldn't have thrown that."]
+      tsumo: ["it came to me. as i always knew it would."]
+      near: ["i can hear it. one tile from the chorus."]
+      bye: ["i must run. there's a show, somewhere."]
+  bisi:
+    name: Auntie Bisi
+    role: Hotel Matriarch
+    species: bear
+    persona: { pon: 0.5, chi: 0.5, suit: "", sloppy: 0.05, cheek: 0.3 }
+    lines:
+      greet: ["sit. you play, or you watch. i don't care which.", "ah. fresh money."]
+      draw: ["hm.", "mm-hm."]
+      disc: ["that one.", "take it."]
+      pon: ["pon. thank you.", "mine."]
+      chi: ["chi.", "that fits."]
+      win: ["hand's over. pay the lady.", "i told you."]
+      lose: ["lucky. don't get used to it."]
+      ron: ["ron. you threw it. i caught it.", "ha. i was waiting on that."]
+      tsumo: ["self-drawn. no help from you."]
+      near: ["...careful what you throw."]
+      bye: ["i have rooms to run."]
+  teddy:
+    name: Teddy Voss
+    role: Bookmaker (1958)
+    species: raccoon
+    persona: { pon: 0.55, chi: 0.25, suit: b, sloppy: 0.5, cheek: 0.95 }
+    lines:
+      greet: ["finally, new money. what are we playing for, a dollar? cute.", "pull up a stool, pal. the house always wins, and i'm the house."]
+      draw: ["come to papa.", "ooh, a live one."]
+      disc: ["never liked that tile anyway.", "toss it, who cares."]
+      pon: ["PON! sorry, not sorry.", "mine, thanks for the donation."]
+      chi: ["chi. watch me stack this.", "that's a run. you wouldn't know."]
+      win: ["pay up, champ. ha!", "all bamboo, baby. told you."]
+      lose: ["lucky. lucky!! rematch.", "that was a fluke and you know it."]
+      ron: ["RON! can't believe you threw that, kid.", "oh, he gave me a present!"]
+      tsumo: ["drew it myself. no charity needed."]
+      near: ["one tile away. five bucks says i draw it."]
+      bye: ["gotta make a call. don't touch my chips."]
+  pym:
+    name: Dr. Hollis Pym
+    role: Retired Surgeon
+    species: wolf
+    persona: { pon: 0.3, chi: 0.0, suit: "", sloppy: 0.1, cheek: 0.35 }
+    lines:
+      greet: ["good evening. do mind the cigarette, it's not mine.", "i've been told this table is cursed. i find that comforting."]
+      draw: ["a steady hand.", "let's see."]
+      disc: ["i'll part with this.", "no harm in that one, i think."]
+      pon: ["a pon. most gratifying.", "if you don't mind."]
+      chi: ["chi, then. reluctantly."]
+      win: ["clean work. thank you all.", "a tidy hand, if i say so."]
+      lose: ["congratulations. a clean hand."]
+      ron: ["ron. i'm sorry, truly.", "ah. i'm afraid that's mine."]
+      tsumo: ["no complications. self-drawn."]
+      near: ["i'm one tile from a good result."]
+      bye: ["my rounds. such as they are."]
+  june:
+    name: June Kowalczyk
+    role: Night Nurse (1962)
+    species: lion
+    persona: { pon: 0.45, chi: 0.4, suit: c, sloppy: 0.8, cheek: 0.5 }
+    lines:
+      greet: ["oh! sorry, i was somewhere else. hi.", "i only came to sit down for a minute. that was an hour ago."]
+      draw: ["oh, a tile.", "hm, hold on."]
+      disc: ["that one, i think? sure.", "...this?"]
+      pon: ["oh! pon, i think. is that right?", "i've got a pair of those, hold on."]
+      chi: ["a run! look at that.", "chi, chi, is it chi?"]
+      win: ["oh. oh! did i win?", "i won? the nurses will never believe this."]
+      lose: ["well done. honestly."]
+      ron: ["ron? that's ron! sorry!", "oh no, i'm sorry. that's a win."]
+      tsumo: ["wait, i drew it? i drew it."]
+      near: ["i think i'm close. maybe."]
+      bye: ["shift's about to start. night, everyone."]
+  oswin:
+    name: Oswin Tate
+    role: Lamplighter (1888)
+    species: cat
+    persona: { pon: 0.6, chi: 0.45, suit: d, sloppy: 0.25, cheek: 0.6 }
+    lines:
+      greet: ["evening. i lit the lamps in this hall once, you know. they went out again.", "a game of tiles. grand. grand."]
+      draw: ["ah.", "there she is."]
+      disc: ["out you go.", "i won't be needing that."]
+      pon: ["pon, if it pleases the gentleman.", "and a pon for the lamplighter."]
+      chi: ["a little run, a little light.", "chi! like a row of lamps."]
+      win: ["well, the lamps are lit now.", "mahjong! i'll have my pay in gaslight, please."]
+      lose: ["fair play. fair play to you."]
+      ron: ["ron! thank you kindly.", "that's the one, sir. that's the lamp i needed."]
+      tsumo: ["drawn myself. like a match to a wick."]
+      near: ["one more tile and she lights."]
+      bye: ["the lamps want me. always the lamps."]
+common:
+  watch: ["...", "hm.", "hmm.", "bold.", "interesting."]
+  slow: ["any day now.", "we're not getting younger. well, you're not.", "tick, tick."]

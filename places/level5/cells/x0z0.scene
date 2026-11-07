@@ -3891,10 +3891,10 @@ l5-seat-mahjong1:
   tags: [seat]
   visible: false
 l5-seat-mahjong2:
-  feetPosition: {x: 5.999996510455152, y: 0, z: 0.949999999993591}
+  feetPosition: {x: 6, y: 0, z: 0.7}
   id: l5-seat-mahjong2
   primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
-  rotation: {yaw: -28.648100215690867}
+  rotation: {yaw: 0}
   state: {name: Gilt stool, seat: {d: 0, w: 1}}
   tags: [seat]
   visible: false
