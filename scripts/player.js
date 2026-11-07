@@ -381,6 +381,9 @@ const GUN_FIX = { shotgun: { yaw: 0, pitch: -55, at: { x: 0, y: -0.224, z: -0.25
 function viewmodel(ctx, moving, sprinting) {
   if (!ctx.self.isLocal) return
   const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists', l = s.look ?? {}
+  // the look and tune only change by a press: the full key is rebuilt when the weapon changes or on the 4 Hz stats beat
+  if (w.vm && w.vmEq === kind && !w.vmCheck) { if (w.plyWant && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 500; plyArm(ctx, w) } return }
+  w.vmEq = kind; w.vmCheck = false
   const ply = l.modelUrl || '' // a worn .plymodel: its own arm holds the weapon instead of the critter paw
   const arm = ply ? { hidden: true } : { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v7' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
@@ -399,7 +402,8 @@ function viewmodel(ctx, moving, sprinting) {
       primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: arm, ...(wp.muzzle ? { sockets: { muzzle: wp.muzzle } } : {}) }, children: child })
     w.vmKind = armKey
   }
-  if (ply && !w.plyRig) plyArm(ctx, w)
+  w.plyWant = !!ply
+  if (ply && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 500; plyArm(ctx, w) } // its skeleton arrives with the model: look twice a second, not every tick
   if (w.vm && s.vmId !== w.vm) s.vmId = w.vm // scripts/lib/vmpose.js poses it every display frame from the camera rig
 }
 
@@ -431,10 +435,11 @@ export function update(ctx, dt) {
   w.stamina ??= s.stamina; w.battery ??= s.battery
   const dir = w.dir ?? { x: 0, z: 0 }, moving = dir.x !== 0 || dir.z !== 0
   const sprinting = w.sprint && moving && w.stamina > 1 && !s.ads
-  w.stamina = Math.max(0, Math.min(derived(s).staMax, w.stamina + (sprinting ? -L.staminaDrain : L.staminaRegen * derived(s).staRegen * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
+  const dv = w.dv ??= derived(s) // the sheet's numbers, re-derived 4x a second in the stats beat, not three times a tick
+  w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain : L.staminaRegen * dv.staRegen * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
   const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
-  const speed = (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * derived(s).speed * burden(s)
+  const speed = (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * dv.speed * (w.bur ??= burden(s))
   const intent = { x: dir.x * speed, z: dir.z * speed }
   viewmodel(ctx, moving, sprinting)
   const v = ctx.self.velocity
@@ -457,7 +462,7 @@ export function update(ctx, dt) {
   }
 
   w.acc = (w.acc ?? 0) + dt
-  if (w.acc >= 0.25) { tickStats(ctx, w.acc, moving); w.acc = 0 }
+  if (w.acc >= 0.25) { w.dv = derived(s); w.bur = burden(s); w.vmCheck = true; tickStats(ctx, w.acc, moving); w.acc = 0 }
 }
 
 function tickStats(ctx, t, moving) {
