@@ -194,7 +194,8 @@ function pocketsOf(ctx, it) {
   }
   return itemsOf(it.state.pockets)
 }
-const CAUGHT = ['hands off!', "that doesn't belong to you.", 'hey! give it back!', 'you little thief!']
+const CAUGHT = ["that's it. you're done.", 'i warned you, thief!', 'twice? you little thief!']
+const WARN = ['what the hell do you think you\'re doing?', 'hey! hands off my stuff.', 'try that again and see what happens.']
 function pickpocket(ctx, it) {
   const s = ctx.self.state, now = ctx.now(), m = mem(ctx)
   if (now - (m.pickAt ?? -1e9) < 900) return
@@ -211,14 +212,26 @@ function pickpocket(ctx, it) {
     s.xp = (s.xp ?? 0) + 8
     return
   }
-  // caught: they spin round, shout, and turn on you
+  // caught: they spin round. the first time they shove you off with a warning; the second, they turn on you (creator's rule)
   const p = ctx.self.feetPosition, q = it.feetPosition
   it.rotation = { yaw: Math.atan2(-(p.x - q.x), -(p.z - q.z)) * 57.2958 }
-  it.state.angry = { ...(it.state.angry ?? {}), [ctx.self.id]: true }
   s.crouch = false
+  const warned = it.state.warned?.[ctx.self.id]
+  if (!warned) {
+    it.state.warned = { ...(it.state.warned ?? {}), [ctx.self.id]: true }
+    const dx = p.x - q.x, dz = p.z - q.z, d = Math.hypot(dx, dz) || 1
+    ctx.self.velocity = { x: dx / d * 7, y: 2.5, z: dz / d * 7 } // the shove
+    ctx.emit('cameraPunch', { direction: { x: dx / d, y: 0, z: dz / d }, intensity: 0.5 }, { audience: { player: ctx.self.id } })
+    speak(ctx, it, it.state.voice ?? 'callum', WARN[Math.floor(ctx.random() * WARN.length)])
+    note(ctx, `${who} caught you. Next time they fight.`)
+    ctx.emit('screenShake', { intensity: 0.3, duration: 0.25 }, { audience: { player: ctx.self.id } })
+    snd(ctx, 'ui-denied-click', 0.5)
+    return
+  }
+  it.state.angry = { ...(it.state.angry ?? {}), [ctx.self.id]: true }
   const line = CAUGHT[Math.floor(ctx.random() * CAUGHT.length)]
   speak(ctx, it, it.state.voice ?? 'callum', line)
-  note(ctx, `Caught! ${who} saw you.`)
+  note(ctx, `Caught again! ${who} turns on you.`)
   ctx.emit('screenShake', { intensity: 0.25, duration: 0.25 }, { audience: { player: ctx.self.id } })
   snd(ctx, 'ui-denied-click', 0.5)
 }
