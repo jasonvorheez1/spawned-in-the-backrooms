@@ -89,4 +89,5 @@ function lay(ctx) {
 export function tick(ctx) {
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; lay(ctx); }
+  if (s.doorV !== 1) { const d = ctx.getObject("gamma-out"); if (d) d.state = { ...d.state, to: "level3#l3-gamma-door" }; s.doorV = 1; } // rooms built before the gate door existed
 }
