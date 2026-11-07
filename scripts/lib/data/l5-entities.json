@@ -107,7 +107,9 @@
      "z": -12.55
     },
     "yaw": 0,
-    "whisper": "polite-hotel-bellhop-whisper-may-i-take-your-bags-sir"
+    "whisper": "polite-hotel-bellhop-whisper-may-i-take-your-bags-sir",
+    "info": "A faceling in a bellhop's coat. It still carries a room key nobody gave it. It only moves when you look away.",
+    "line": "May I take your bags, guest? You look so tired."
    },
    {
     "id": "l5-staff-maid",
@@ -119,7 +121,9 @@
      "z": 12.55
     },
     "yaw": 180,
-    "whisper": "soft-maid-whisper-turndown-service-dont-mind-me"
+    "whisper": "soft-maid-whisper-turndown-service-dont-mind-me",
+    "info": "A faceling that turns down beds no one sleeps in. Its apron pocket is full of other people's hair pins.",
+    "line": "Turndown service. Don't mind me. I'll be right behind you."
    },
    {
     "id": "l5-staff-porter",
@@ -131,7 +135,9 @@
      "z": -11.5
     },
     "yaw": -90,
-    "whisper": "deep-hotel-porter-whisper-your-room-is-ready"
+    "whisper": "deep-hotel-porter-whisper-your-room-is-ready",
+    "info": "The tallest of them. It waits at the end of the north wing, facing the wallpaper, as if listening to the walls.",
+    "line": "Your room is ready. It has always been ready."
    }
   ],
   "avoid": [
