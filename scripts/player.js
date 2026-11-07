@@ -151,8 +151,10 @@ export function update(ctx, dt) {
   w.stamina ??= s.stamina; w.battery ??= s.battery
   const dir = w.dir ?? { x: 0, z: 0 }, moving = dir.x !== 0 || dir.z !== 0
   const sprinting = w.sprint && moving && w.stamina > 1
-  w.stamina = Math.max(0, Math.min(L.stamina, w.stamina + (sprinting ? -L.staminaDrain : L.staminaRegen) * dt))
-  const speed = sprinting ? L.sprintSpeed : L.walkSpeed
+  w.stamina = Math.max(0, Math.min(L.stamina, w.stamina + (sprinting ? -L.staminaDrain : L.staminaRegen * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
+  const fp = ctx.self.feetPosition, inArch = zoneAt(fp.x, fp.z) === 'arches'
+  w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
+  const speed = (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1)
   const intent = { x: dir.x * speed, z: dir.z * speed }
   const v = ctx.self.velocity
   const along = intent.x * v.x + intent.z * v.z > 0 || (v.x === 0 && v.z === 0 && moving)
@@ -166,8 +168,8 @@ export function update(ctx, dt) {
     const interval = sprinting ? 0.32 : 0.48
     if (w.stepClock >= interval) {
       w.stepClock = 0
-      const clip = sprinting ? 'footstep-damp-carpet-run' : 'footstep-damp-carpet-squelch-soft'
-      sound(ctx, clip, sprinting ? 0.28 : 0.2, true)
+      const clip = w.wet ? 'footstep-soaked-carpet-deep-squelch' : sprinting ? 'footstep-damp-carpet-run' : 'footstep-damp-carpet-squelch-soft'
+      sound(ctx, clip, w.wet ? 0.4 : sprinting ? 0.28 : 0.2, true)
     }
   } else {
     w.stepClock = 0.22
@@ -189,6 +191,10 @@ function tickStats(ctx, t, moving) {
   let drain = L.sanityDrain[zone] ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red')) drain *= 0.4
   s.sanity -= drain * t
+  if (w.ledge) s.sanity += L.ledgeRest.sanity * t
+  const rest = !!w.ledge, wet = !!w.wet
+  if (s.onLedge !== rest) s.onLedge = rest
+  if (s.wet !== wet) s.wet = wet
   if (s.sanity > ms) s.sanity = ms
   if (s.sanity < 0) s.sanity = 0
   if (s.sanity <= 0) s.hp -= L.insanityHurt * t

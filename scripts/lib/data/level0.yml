@@ -65,3 +65,6 @@ humSpikeSanity: 2.5        # sanity per second lost standing still in a spike (m
 wallNoiseEvery: [25, 55]   # seconds between whispers / scratching
 figureEvery: [40, 90]      # seconds between dark-figure sightings (her pick)
 figureSeen: 1.4            # seconds one stands before it is gone
+# arch rooms (wiki: deep wet carpet, archways wide enough to rest on). her picks
+wetCarpetSpeed: 0.65       # walking speed multiplier on the soaked arch-room floor
+ledgeRest: { stamina: 3, sanity: 1.2 }   # on an arch sill: stamina regen x3, sanity back per second
