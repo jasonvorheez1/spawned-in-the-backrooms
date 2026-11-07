@@ -80,7 +80,13 @@ export function tick(ctx) {
   }
   if (s.seeded && s.layoutV !== 2) { // the halls were re-cut (narrow crawls, more bars): move what hangs on them
     for (const t of ["l3lamp", "sludge", "live-box", "l3drip", "l3oob"]) for (const o of ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
-    layLayout(ctx); s.layoutV = 2;
+    layLayout(ctx);
+    for (const o of ctx.query({ tags: ["lootfurn"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id); // furniture backs onto walls that moved
+    seedFurniture3(ctx);
+    for (const t of ["almond", "weapon", "ammo", "shells", "crate"]) for (const o of ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { // loose loot inside a crawl hall's liner rolls to its centre line
+      const k = cellAt(o.feetPosition.x, o.feetPosition.z); if (!k || zoneOf(k.cx, k.cz) !== "tight") continue; const c = cellCenter(k.cx, k.cz); o.feetPosition = { x: c.x, y: o.feetPosition.y, z: c.z };
+    }
+    s.layoutV = 2;
   }
   if (!s.seeded) {
     s.seeded = true;
