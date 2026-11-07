@@ -58,7 +58,7 @@ const chest = (p) => ({ x: p.x, y: p.y + 1.1, z: p.z });
 function pickTarget(ctx, me, m) {
   const p = me.feetPosition;
   let best = null, bd = G.sight;
-  for (const tag of FOES) for (const f of ctx.query({ tags: [tag], radius: G.sight })) {
+  if (!me.state.faction5) for (const tag of FOES) for (const f of ctx.query({ tags: [tag], radius: G.sight })) { // hotel guests are no fighters: a hound is something to run from, not at
     if (f.state?.dead || (f.state?.hp ?? 1) <= 0) continue;
     const d = flat(f.feetPosition, p); if (d < bd) { bd = d; best = f; }
   }
@@ -187,12 +187,12 @@ const GEST = {
 // their own life, every 1.5 s: a feared thing close makes them show it and back away; a player near hears what they want, now and then
 function life(ctx, me, m, now) {
   if (now < (m.lifeAt ?? 0)) return; m.lifeAt = now + 1500
-  const L = (m.L ??= lifeOf(me.id)), tags = FEAR_TAGS[L.fear], p = me.feetPosition
+  const L = (m.L ??= lifeOf(me.id)), tags = me.state.faction5 ? [...new Set([...(FEAR_TAGS[L.fear] ?? []), ...FOES])] : FEAR_TAGS[L.fear], p = me.feetPosition
   if (tags && !me.state.follow) {
-    const t = ctx.query({ anyTags: tags, radius: 10 })[0]
+    const t = ctx.query({ anyTags: tags, radius: me.state.faction5 ? 14 : 10 })[0]
     if (t && !t.state?.dead) {
       m.fearAt = now; const dx = p.x - t.feetPosition.x, dz = p.z - t.feetPosition.z, d = Math.hypot(dx, dz) || 1
-      me.velocity = { x: dx / d * 2.6, y: me.velocity?.y ?? 0, z: dz / d * 2.6 }
+      const run = me.state.faction5 ? 4.2 : 2.6; me.velocity = { x: dx / d * run, y: me.velocity?.y ?? 0, z: dz / d * run }
       if (now - (m.fearSaid ?? 0) > 12000) { m.fearSaid = now; me.state.line = { t: FEAR_LINES[Math.floor(ctx.random() * FEAR_LINES.length)], at: now, d: 2200 } }
       return
     }
