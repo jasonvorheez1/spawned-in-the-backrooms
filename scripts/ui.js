@@ -10,6 +10,7 @@ const THEME = `<style>
 .bar{height:14px;background:oklch(.3 .03 80);box-shadow:inset 0 0 0 2px var(--ink);position:relative;overflow:hidden}
 .fill{position:absolute;inset:2px auto 2px 2px;transition:width .25s}
 .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+@media (max-width:640px){#hud .bl,#hud .br{bottom:auto;top:24px;transform:scale(.8);transform-origin:top left}#hud .br{transform-origin:top right;top:150px}#hud .tl{display:none}}
 @keyframes fade{0%{opacity:0}10%{opacity:1}75%{opacity:1}100%{opacity:0;visibility:hidden}}
 @keyframes pulse{50%{opacity:.55}}
 @keyframes kick{40%{scale:1.25}}
@@ -37,17 +38,17 @@ export default function render(ctx, player) {
   return `${THEME}<div id="hud" style="position:fixed;inset:0;pointer-events:none">
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 45%,oklch(.08 .02 290) 100%);opacity:${(1 - sanF) * 0.9}"></div>
   ${hpF < 0.35 ? `<div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 50%,oklch(.35 .2 25) 100%);animation:pulse 1.1s infinite;opacity:${(0.35 - hpF) * 2.6}"></div>` : ''}
-  <div class="plate" style="position:absolute;left:24px;top:24px;min-width:190px">
+  <div class="plate tl" style="position:absolute;left:24px;top:24px;min-width:190px">
     <div class="row"><span class="lbl">WANDERER</span><span id="lv${lv}" style="font-size:30px;line-height:1;animation:kick .4s">LV ${lv}</span></div>
     ${bar('XP', s.xp, L.xpBase * lv, 'var(--sta)')}
     <div class="lbl" style="margin-top:6px">${s.explored ?? 0} ROOMS · ${s.kills ?? 0} SMILERS · ${s.escapes ?? 0} EXITS</div>
   </div>
-  <div class="plate" style="position:absolute;left:24px;bottom:24px;width:min(250px,45vw)">
+  <div class="plate bl" style="position:absolute;left:24px;bottom:24px;width:min(250px,45vw)">
     ${bar('HEALTH', s.hp, mh, 'var(--hp)')}
     ${bar('SANITY', s.sanity, ms, 'var(--san)')}
     ${bar('STAMINA', s.stamina, L.stamina, 'var(--sta)')}
   </div>
-  <div class="plate" style="position:absolute;bottom:24px;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px);min-width:170px">
+  <div class="plate br" style="position:absolute;bottom:24px;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px);min-width:170px">
     <div class="row"><span class="lbl">ALMOND WATER</span><span id="al${s.almonds}" style="font-size:30px;line-height:1;animation:kick .3s">${s.almonds}/${L.almondMax}</span></div>
     <div class="lbl" style="margin-top:4px">${lab('drink', 'Q')} TO DRINK</div>
     ${bar(s.light ? 'FLASHLIGHT · ON' : 'FLASHLIGHT', s.battery, L.battery, s.light ? 'oklch(.95 .05 95)' : 'oklch(.6 .03 95)')}

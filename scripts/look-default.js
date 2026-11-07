@@ -15,7 +15,9 @@ export function look(ctx) {
   // place's look.params.
   let c = ctx.scene;
   // Uncomment to start grading: a touch warmer, a little more contrast:
-  c = grade(c, { exposure: 1.06, saturation: 1.1, contrast: 1, temperature: 0.12 });
+  c = grade(c, { exposure: 1.02, saturation: 0.82, contrast: 1.05, temperature: 0.04, lift: 0.01 });
+  c = vignette(c, ctx.param('vignette', 0.3), { color: [0.03, 0.025, 0.01] });
+  c = grain(c, 0.05);
   // Uncomment to darken the edges of the frame:
   // c = vignette(c, ctx.param('vignette', 0.2), { color: [0.02, 0.02, 0.05] });
   // Uncomment for a faint film grain:
