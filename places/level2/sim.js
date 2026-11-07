@@ -1,3 +1,4 @@
+import { raycast } from "builtin/physics";
 // Level 2's referee: lays the halls, lights, camp and supplies once, then keeps the hounds and survivors topped up.
 import L from "../../scripts/lib/data/level2.yml";
 import MEG from "../../scripts/lib/data/meg.yml";
@@ -77,6 +78,7 @@ export function tick(ctx) {
     ctx.spawn("l2-to-l3", { feetPosition: { x: SEALED.x - 0.7, y: 0, z: SEALED.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 1.4 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level3" } });
     ctx.spawn({ feetPosition: { x: SEALED.x - 0.6, y: 2.25, z: SEALED.z }, primitive: { kind: "box", width: 0.02, height: 0.3, depth: 1.2 }, material: { color: "oklch(0.25 0.03 150)" }, ui: '<div face="left" width="1.2m" style="font-size:100px;font-weight:900;color:#ffd890;text-align:center">LEVEL 3 · ELECTRICAL</div>' });
   }
+  if ((s.rev ?? 0) >= 4 && (s.snapped ?? 0) < 1) { snapContainers(ctx); s.snapped = 1; }
   if ((s.rev ?? 0) < 4) revamp(ctx, s); // the revamp lays itself over a few ticks: rooms, doors, the hall, vents
   // a fallen survivor is replaced after a while
   for (const id of Object.keys(SURV)) {
@@ -173,5 +175,23 @@ function revamp(ctx, s) {
       n++;
     }
     s.rev = 4;
+  }
+}
+
+// every container backs flush onto its nearest wall and faces out (creator: "fix oddly placed stuff like this supply cabinet")
+function snapContainers(ctx) {
+  for (const r of ctx.query({ tags: ["container"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+    const o = ctx.getObject(r.id); if (!o?.bounds) continue;
+    const sz = o.bounds.size, depth = Math.min(sz.x, sz.z), c = { x: o.bounds.center.x, y: r.feetPosition.y + Math.min(0.5, sz.y / 2), z: o.bounds.center.z };
+    let best = null;
+    for (const d of [{ x: 1, z: 0 }, { x: -1, z: 0 }, { x: 0, z: 1 }, { x: 0, z: -1 }]) {
+      const h = raycast(ctx, c, { x: d.x, y: 0, z: d.z }, { distance: 9, ignoreEntities: [r.id], physicsOnly: true, bodies: "static" });
+      if (!h || String(h.id ?? "").startsWith("player") || ctx.getObject(h.id)?.tags?.includes("container")) continue;
+      if (!best || h.distance < best.dist) best = { d, dist: h.distance };
+    }
+    if (!best) continue;
+    const shift = best.dist - (depth / 2 + 0.03);
+    o.feetPosition = { x: r.feetPosition.x + best.d.x * shift, y: r.feetPosition.y, z: r.feetPosition.z + best.d.z * shift };
+    o.rotation = { yaw: Math.atan2(best.d.x, best.d.z) * 180 / Math.PI };
   }
 }
