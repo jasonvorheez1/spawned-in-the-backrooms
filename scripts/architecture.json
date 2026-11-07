@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 89,
-  "updatedAt": "2026-11-07T01:14:53.869Z",
-  "summary": "The Backrooms: Level 0 is a multiplayer survival game in a seeded yellow maze: players scavenge, fight smilers and lurkers, manage sanity and progress toward the exit. world.config.yaml wires the player, look camera and HUD; shared maze/tuning/loot code supports the main maze and a separate combat test room, while the safe hub hosts the modeling-studio mod. Ranged weapons now have aim-down-sights, per-weapon magazines and reloads; the camera drives smooth local viewmodel posing each display frame.",
+  "basedOnSpecVersion": 103,
+  "updatedAt": "2026-11-07T01:28:21.849Z",
+  "summary": "The Backrooms: Level 0 is a multiplayer survival game in a seeded yellow maze: players scavenge, fight smilers and lurkers, manage sanity and progress toward the exit. world.config.yaml wires player, camera, inputs and HUD; shared maze, tuning and loot code supports the main maze and a separate combat test room, with the safe hub hosting the modeling-studio mod. Players now use a procedurally rigged animal-critter avatar with a local wardrobe preview; ranged combat remains driven by the camera and local viewmodel pose.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0's nine-cell maze and safe hub; x0z0.scene holds maze, hub props and modeling-studio display, while places/main/sim.js seeds stairs, shifts walls and replenishes pickups/enemies.",
+    "places/main (3D) - Level 0's nine-cell maze and safe hub; x0z0.scene holds maze, hub props and modeling-studio display, including the non-spatial hum bed; places/main/sim.js seeds stairs, shifts walls and replenishes pickups/enemies.",
     "places/debug (3D) - isolated combat test room with weapon, almond-water and ammo stations, penned enemy release pads, level/heal pads and return-to-main pad; places/debug/sim.js maintains test items and consumes release requests."
   ],
   "roots": [
     "world.config.yaml - multiplayer world entry: main default place, player/camera templates, inputs, lighting, arrival handler, HUD and nametags.",
-    "templates/player.js - player body/tag and behavior chain; humanoid-locomotion.js intentionally runs before player.js.",
+    "templates/player.js - player body and behavior chain; humanoid-locomotion.js runs before player.js and critter.js, with critter-geo.js as the default scripted avatar.",
     "templates/camera.js - custom look-oriented camera; scripts/camera.js owns yaw/pitch and display-frame camera/viewmodel updates.",
     "places/main/config.yaml and places/main/cells/* - 3D no-terrain maze atmosphere and nine partitioned cells; x0z0.scene includes hub and placed modeling-studio display.",
     "places/debug/config.yaml and places/debug/cells/x1z0.scene - separate no-terrain test-room setup, stations, pens, labels and trigger pads.",
@@ -20,52 +20,53 @@
     "scripts/lib/maze.js - canonical seeded maze coordinate, zone, hub, wall, arch, pit, pillar and exit helpers; shared by level geometry, player, enemy AI and main-place spawning.",
     "scripts/lib/data/level0.yml - maze dimensions and survival/combat/enemy/noise/figure/arch/stairs/wall-shift tuning consumed by gameplay, AI and place sims.",
     "scripts/lib/data/weapons.yml - weapon keys/stats, per-gun magazine/reload/ADS/muzzle settings, rarity/roll and ammo/shell pickup tuning used by player, UI, loot/spawning, geometry and debug stations.",
+    "scripts/lib/data/critter.yml - avatar defaults, species/sex/outfit/accessory/face and colour choices plus face reaction timings; read by critter.js and wardrobe-ui.js.",
+    "scripts/lib/data/sounds.yml - named Fallout-pack sound takes for player gameplay; scripts/player.js rotates variants and falls back to moodboard clips for unmapped names.",
     "scripts/lib/loot.js and scripts/lib/debug-layout.js - tagged pickup/drop constructors (including shells) and debug room's fixed test-slot coordinates.",
     "scripts/lib/shapes.js - mesh primitives used by almond, figure, smiler, lurker, weapon and first-person viewmodel geometry.",
-    "scripts/lib/data/player.yml and scripts/lib/data/camera.yml - movement/turn and camera defaults; camera tuning includes base/default ADS FOV and zoom easing speed.",
-    "anim/creatures.yml and clips/anim-creatures-yml-*.json - creature animation definitions and generated clip assets assigned by smiler/lurker AI.",
-    "mods/modeling-studio/ - installed creator tool: scene template, player/god behaviors, HUD/panel and display use world-state-backed models; scripts/ui.js imports its HUD integration."
+    "anim/creatures.yml and clips/anim-creatures-yml-*.json - creature animation definitions and generated clips assigned by smiler/lurker AI; mods/modeling-studio/ is the installed scene/player/HUD tool integrated by scripts/ui.js."
   ],
   "notableExports": [
     "places/main/sim.js and places/debug/sim.js - export cadence, tick.",
     "scripts/lib/maze.js - exports N, hash, inHub, zoneOf, cellCenter, cellAt, zoneAt, wallX, wallZ, isArchWall, hasPit, hasPillar.",
     "scripts/player.js - exports maxHp, maxSan, xpNeed, weaponOf, onInput, reloadMagIn, reloadDone, reloadStep, pumpRack, update; scripts/smilers.js and scripts/lurkers.js each export update.",
     "scripts/humanoid-locomotion.js - exports sit, onInput, update; scripts/camera.js - exports finiteNumber, update; scripts/lib/vmpose.js - exports VM_FOV, poseViewmodel.",
-    "scripts/level0-geo.js exports geometry; creature geo scripts export geometry, skeleton, collider; scripts/weapon-geo.js and scripts/viewmodel-geo.js export geometry, collider.",
+    "scripts/critter.js - exports updateSchedule, onInput, update; scripts/critter-geo.js - exports geometry, skeleton, collider; scripts/wardrobe-ui.js - exports wardrobe.",
+    "scripts/level0-geo.js and creature geo scripts export geometry, skeleton, collider; scripts/weapon-geo.js and scripts/viewmodel-geo.js export geometry, collider.",
     "scripts/lib/loot.js - exports spawnAlmond, spawnWeapon, spawnAmmo, spawnShells, rollWeapon, dropLoot; scripts/lib/debug-layout.js exports ROOM and test slot/pen constants.",
-    "scripts/ui.js and ui/nametag.js - default renderers; scripts/lighting.js exports lighting; scripts/arrival.js exports onArrive/onLeave; scripts/debug-pad.js exports onTriggerEnter.",
-    "mods/modeling-studio/templates/studio.js - exports studio; mods/modeling-studio/studio.js exports updateSchedule and update; mods/modeling-studio/player.js exports onInput and onBugMailed."
+    "scripts/ui.js and ui/nametag.js - default renderers; scripts/lighting.js exports lighting; scripts/arrival.js exports onArrive/onLeave; scripts/debug-pad.js exports onTriggerEnter; modeling-studio exports remain integrated via its mod."
   ],
   "ownership": [
-    "scripts/player.js - player.state owns level/XP, HP, sanity, stamina, battery, almond count, visited-cell/zone tracking, kills/deaths, weapon inventory/reserve ammo, loaded_<weapon> magazines, equipped weapon, ADS/reload/pump markers, wet/onLedge and hum-warning timestamp; local control scratch is player session.",
+    "scripts/player.js - player.state owns level/XP, HP, sanity, stamina, battery, almond count, visited-cell/zone tracking, kills/deaths, weapon inventory/reserve ammo, loaded_<weapon> magazines, equipped weapon, ADS/reload/pump markers, wet/other survival timers.",
+    "scripts/critter.js - player.state.look owns chosen avatar appearance; wardrobeOpen and face are persistent player-state controls; face mood/hurt/spin/mirror cache and avatar primitive key are session/local scratch.",
     "scripts/smilers.js and scripts/lurkers.js - enemy state.hp/dead and AI mode/prey/gaze fields form the shared enemy row; path, animation mode and bite scratch is per-enemy session data.",
     "places/main/sim.js - main place.state owns seed flags/refill times plus stairsSeeded and per-player shifted-wall timers; shifted walls and stairs are spawned entities.",
     "places/debug/sim.js - debug place.state owns seeded/refill timing and want_smiler/want_lurker release requests set by debug pads.",
     "scripts/camera.js - camera state owns yaw and pitch; camera session smooths ADS FOV interpolation, while scripts/lib/vmpose.js keeps local pose smoothing/animation scratch in camera session.",
     "scripts/humanoid-locomotion.js - body state holds shared turn/seat fields; gait smoothing and measured-pace scratch is in body session.",
-    "mods/modeling-studio/ - world.state.m3d owns shared studio model/edit/bug records; player state owns studio UI flags, while player session owns local previews/manipulation scratch.",
-    "scripts/ui.js - owns no gameplay state; renders player.state and weapon tuning, including loaded/reserve ammunition and reload status."
+    "mods/modeling-studio/ - world.state.m3d owns shared studio model/edit/bug records; player state owns studio UI flags, while player session owns local previews/manipulation scratch; scripts/ui.js renders player state without owning gameplay state."
   ],
   "flows": [
-    "world.config.yaml input axes/actions → templates/player.js → humanoid-locomotion.js turns/animates first, then scripts/player.js moves the body and handles survival, weapon use, pickups and combat.",
+    "world.config.yaml input axes/actions → templates/player.js → humanoid-locomotion.js runs first, then scripts/player.js handles movement/survival/weapons and scripts/critter.js handles avatar inputs and appearance.",
     "world.config.yaml camera template → scripts/camera.js reads look orientation and writes camera yaw/pitch; player movement and smiler eye-contact checks use aim/camera direction.",
+    "world.config.yaml wardrobe (C), emote (T), dress action → scripts/critter.js onInput → player.state.wardrobeOpen/look/face; scripts/wardrobe-ui.js renders options and sends dress actions through scripts/ui.js.",
+    "scripts/critter.js update reads player.state look and mood → scripts/critter-geo.js params/primitive for the replicated avatar; local wardrobe-open player gets a rotating preview entity, destroyed on close.",
     "world.config.yaml aim (right mouse)/reload (R) → scripts/player.js onInput → player.state.ads/reloading and weapon loaded_<weapon>/reserve fields; scripts/ui.js renders magazine/reserve counts or RELOADING.",
     "scripts/player.js writes player.state survival/level/weapons/ammo → scripts/ui.js and mods/modeling-studio/hud.js render HUD; humAt drives the transient HUM SPIKE warning.",
     "scripts/player.js ranged attack reads loaded magazine and ADS cone → tagged smiler/lurker state.hp/dead; scripts/smilers.js and scripts/lurkers.js run AI, reward/remove dead enemies and damage/sap sanity from players.",
     "scripts/player.js reload callbacks (reloadMagIn/reloadDone/reloadStep) mutate rounds and reloadN; token/equipped checks reject stale callbacks, while shotgun loads shell-by-shell and may fire mid-reload.",
     "scripts/smilers.js and scripts/lurkers.js target ctx.place.players and write prey player.state HP/sanity → scripts/ui.js; damage effects are audience-targeted to the affected player.",
     "scripts/smilers.js assigns anim/creatures.yml smilerIdle/smilerHunt body clips and smilerBite clip; scripts/lurkers.js selects lurkerIdle/lurkerWalk/lurkerFrozen from AI movement/gaze state; creature geo skeletons provide bones/clips.",
-    "scripts/player.js spawns a local camera-attached scripts/viewmodel-geo.js arm with scripts/weapon-geo.js child and publishes vmId/swing/reload/equip markers; scripts/camera.js calls scripts/lib/vmpose.js every display frame to pose it from weapon data and camera state.",
-    "places/main/sim.js (1s) queries pickup/enemy tags, reads level0.yml/weapons.yml and uses loot.js/maze.js → spawns/refills safe-zone-aware items, shell pickups and enemies; place.state stores timers.",
-    "places/main/sim.js uses maze helpers → seeds stairs-geo.js in eligible halls and spawns static shifted walls behind individual players; hub/arch zones are excluded and shifted walls expire.",
-    "places/debug/cells/x1z0.scene trigger pads → scripts/debug-pad.js onTriggerEnter → player stat resets, debug place.state enemy-release requests or ctx.cross(player, 'main'); debug sim consumes requests; world.config.yaml also wires arrival, HUD/nametag and lighting, while modeling-studio behaviors use world.state.m3d."
+    "scripts/player.js spawns a local camera-attached scripts/viewmodel-geo.js arm with scripts/weapon-geo.js child and publishes vmId/swing/reload/equip markers; scripts/camera.js calls scripts/lib/vmpose.js every display frame to pose it from weapon tuning.",
+    "places/main/sim.js (1s) queries pickup/enemy tags, reads level0.yml/weapons.yml and uses loot.js/maze.js → spawns/refills safe-zone-aware items; debug pads request releases through debug place.state; world.config.yaml arrival handler crosses places."
   ],
   "behaviorFamilies": [
     "places/main/cells/* authored lights - repeated warm fluorescent fixtures across nine cells, with red-zone variants aligned to the maze layout.",
-    "scripts/almond-geo.js, scripts/figure-geo.js, scripts/smiler-geo.js, scripts/lurker-geo.js, scripts/stairs-geo.js, scripts/weapon-geo.js and scripts/viewmodel-geo.js - procedural geometry shares scripts/lib/shapes.js helpers; creature rigs expose skeletons for animation.",
-    "templates/player.js behavior chain - humanoid-locomotion.js precedes player.js so gait reads prior body movement before player control writes velocity.",
+    "scripts/almond-geo.js, scripts/figure-geo.js, scripts/smiler-geo.js, scripts/lurker-geo.js, scripts/stairs-geo.js, scripts/weapon-geo.js, scripts/viewmodel-geo.js and scripts/critter-geo.js - procedural geometry shares scripts/lib/shapes.js helpers; creature rigs expose skeletons and colliders.",
+    "templates/player.js behavior chain - humanoid-locomotion.js precedes player.js and critter.js; gait reads prior body movement before player control writes velocity.",
     "scripts/smilers.js and scripts/lurkers.js - parallel enemy update loops share player targeting, maze path/line checks, bite/death/effect patterns, with smiler light attraction/stare slowdown and lurker gaze-freeze/sanity behavior.",
-    "scripts/camera.js + scripts/lib/vmpose.js - camera display-frame family smooths per-weapon ADS FOV and viewmodel pose; weapon.yml varies sights position, muzzle point, aim cone and zoom by firearm."
+    "scripts/camera.js + scripts/lib/vmpose.js - camera display-frame family smooths per-weapon ADS FOV and viewmodel pose; weapons.yml varies sights position, muzzle point, aim cone and zoom by firearm.",
+    "scripts/lib/data/sounds.yml - named player action sounds map to one or more CDN takes; scripts/player.js rotates variants, with shared fallback for names absent from the table."
   ],
   "probableOrphans": [
     "scripts/flat-starter-terrain.js - no active place uses it; both places explicitly have terrain off.",
@@ -74,9 +75,9 @@
   "migrationNotes": [
     "scripts/lib/maze.js and scripts/lib/data/level0.yml are a coupled layout/gameplay contract: keep geometry, zones, spawning, and AI rules aligned; maze uses 36 cells at 4 metres each, around HALF, with 3m walls.",
     "The safe hub spans indices 16–19 on both axes; mesh doorway, zone logic and enemy restrictions depend on this shared definition; the exit is maze cell (0,33).",
-    "The player template order is intentional: humanoid-locomotion.js before player.js; reversing it changes which velocity locomotion reads.",
-    "Player progression/inventory and ADS/reload state are player.state; local control/viewmodel animation and reload tokens are session scratch. Ammo/shells are reserves; loaded_<weapon> stores rounds in each firearm.",
-    "weapons.yml order/keys, ammoType, magSize and ADS offsets are contracts across cycling, pickups, drops, debug slots, UI, weapon geometry and scripts/lib/vmpose.js; muzzle offsets use the camera-attached viewmodel space.",
+    "The player template order is intentional: humanoid-locomotion.js before player.js and critter.js; reversing it changes which velocity locomotion reads.",
+    "Player progression/inventory, ADS/reload state and critter look/wardrobe state live in player.state; local control, face reaction, avatar preview and viewmodel animation/token scratch live in session. Ammo/shells are reserves; loaded_<weapon> stores rounds in each firearm.",
+    "weapons.yml order/keys, ammoType, magSize and ADS offsets are contracts across cycling, pickups, drops, debug slots, UI, weapon geometry and scripts/lib/vmpose.js; muzzle offsets use camera-attached viewmodel space.",
     "The debug room is at x≈100, far outside the maze coordinate grid; debug-layout.js owns station coordinates, and pads request one enemy release through place.state rather than automatically releasing penned enemies."
   ]
 }
