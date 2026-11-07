@@ -476,8 +476,8 @@ l4-prop-0:
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 35}
-  state: {hp: 64, mat: metal, maxHp: 64}
-  tags: [l4-prop, breakable]
+  state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
+  tags: [l4-prop, breakable, seat]
 l4-prop-1:
   castShadow: true
   feetPosition: {x: 5.4, y: 0, z: -12.6}
@@ -486,8 +486,8 @@ l4-prop-1:
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 200}
-  state: {hp: 64, mat: metal, maxHp: 64}
-  tags: [l4-prop, breakable]
+  state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
+  tags: [l4-prop, breakable, seat]
 l4-prop-10:
   castShadow: true
   feetPosition: {x: -5.2, y: 0, z: 13.6}
@@ -596,8 +596,8 @@ l4-prop-2:
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 110}
-  state: {hp: 64, mat: metal, maxHp: 64}
-  tags: [l4-prop, breakable]
+  state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
+  tags: [l4-prop, breakable, seat]
 l4-prop-20:
   castShadow: true
   feetPosition: {x: -25.2, y: 0, z: -10.4}
@@ -636,8 +636,8 @@ l4-prop-3:
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 290}
-  state: {hp: 64, mat: metal, maxHp: 64}
-  tags: [l4-prop, breakable]
+  state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
+  tags: [l4-prop, breakable, seat]
 l4-prop-4:
   castShadow: true
   feetPosition: {x: 22.5, y: 0, z: -2.2}
@@ -646,8 +646,8 @@ l4-prop-4:
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 160}
-  state: {hp: 64, mat: metal, maxHp: 64}
-  tags: [l4-prop, breakable]
+  state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
+  tags: [l4-prop, breakable, seat]
 l4-prop-5:
   castShadow: true
   feetPosition: {x: -21.6, y: 0, z: -12.4}
@@ -656,8 +656,8 @@ l4-prop-5:
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 60}
-  state: {hp: 64, mat: metal, maxHp: 64}
-  tags: [l4-prop, breakable]
+  state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
+  tags: [l4-prop, breakable, seat]
 l4-prop-6:
   castShadow: true
   feetPosition: {x: -13.2, y: 0, z: -21.5}
