@@ -7,7 +7,7 @@ const V = 1;
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const plate = (text, sub, bg = "#2a1c12", fg = "#e8c983") => `<div face="front" width="1.2m" style="font-family:serif;text-align:center;color:${fg};background:${bg};border:14px solid #8a6a2a;padding:18px 10px;line-height:1.05"><div style="font-size:130px;font-weight:900;letter-spacing:10px">${text}</div>${sub ? `<div style="font-size:64px;font-style:italic;opacity:.85">${sub}</div>` : ""}</div>`;
 function fwd(yaw) { const r = (yaw * Math.PI) / 180; return { x: -Math.sin(r), z: -Math.cos(r) }; } // a yaw's front (-Z) direction
-function lay(ctx) {
+export function lay(ctx) {
   ctx.spawn("l5-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level5-geo.js" }, material: { roughness: 0.85 } });
   LIGHTS.forEach((l, i) => ctx.spawn(`l5-light-${i}`, { tags: ["l5-light", `l5-fix-${l.kind}`], feetPosition: { x: l.x, y: l.y, z: l.z }, state: { kind: l.kind },
     light: { kind: "point", color: l.color, intensity: l.intensity, distance: l.distance, shadow: { enabled: l.kind === "chandelier" && l.intensity >= 14 } } }));
@@ -43,5 +43,5 @@ function lay(ctx) {
 }
 export function tick(ctx) {
   const s = ctx.place.state;
-  if (s.builtV !== V) { s.builtV = V; lay(ctx); }
+  if (s.builtV !== V) { s.builtV = V; if (!ctx.getObject("l5-geo")) lay(ctx); } // the shell is saved in the place's cells; a fresh room only lays what's missing
 }
