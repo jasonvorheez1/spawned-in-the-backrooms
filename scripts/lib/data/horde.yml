@@ -1,3 +1,5 @@
+# the dangerous levels where blackouts happen (Shelly: only very dangerous levels get them)
+places: [level3]
 # Blackout (horde night): every tuned number. The 7 Days to Die clock: a countdown you can see, then the lights go and a horde
 # comes for you and the base you built. Per player (scripts/horde.js).
 firstAt: 420            # seconds of play before the first warning
