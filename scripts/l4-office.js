@@ -6,6 +6,7 @@
 //            a door, footsteps on the carpet, a copier starting up, a chair rolling.
 import { ROOMS } from "./lib/level4.js";
 import { spawnCrate } from "./lib/loot.js";
+import { skillsOf } from "./lib/stats.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const VO = (line) => `/cdn/voice-office-phone-caller-saying-${line.replace(/[^a-z ]/gi, "").trim().toLowerCase().replace(/ +/g, "-").slice(0, 120)}.mp3`;
 const RING = 25000, GAP = [35000, 80000];
@@ -47,13 +48,71 @@ function ringOn(ctx, ph, on) {
   if (on) s.ringUntil = ctx.now() + RING;
 }
 
+// ---- office tasks: the shift board on the north island hands one task at a time to whoever asks (player.state.l4task).
+// phones: answer two ringing phones. memo: carry a memo into a named office. printer: clear a jammed printer (Repair 20, or
+// kick it and hope). papers: pick up three spilled paper stacks. Done = paid: XP and a supply item (player.state.payout,
+// cashed in by scripts/craft.js on the player's own side).
+const TASKS = ["phones", "memo", "printer", "papers"];
+function progress(ctx, who, n = 1) {
+  const t = who?.state?.l4task; if (!t) return;
+  t.have = Math.min(t.need, (t.have ?? 0) + n); who.state.l4task = { ...t };
+  if (t.have >= t.need) finish(ctx, who);
+}
+function finish(ctx, who) {
+  const lv = who.state.level ?? 1, xp = 45 + 6 * lv;
+  who.state.payout = { xp, items: [pick(ctx, ["almond", "almond", "battery", "ammo", "kit", "bandage"])], text: `Task done. +${xp} XP and something from the supply cupboard.` };
+  who.state.l4task = null; who.state.l4done = (who.state.l4done ?? 0) + 1;
+  for (const o of ctx.query({ tags: ["l4-papers"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.state.owner === who.id) ctx.destroy(o.id);
+}
+function giveTask(ctx, who) {
+  const kind = pick(ctx, TASKS), t = { kind, have: 0, need: 1 };
+  if (kind === "phones") { t.need = 2; t.text = "Answer two ringing phones" }
+  if (kind === "memo") { const r = pick(ctx, ROOMS.filter((q) => q.kind === "office")); t.room = r.id; t.text = `Take this memo to office ${r.label}` }
+  if (kind === "printer") {
+    const pr = pick(ctx, ctx.query({ tags: ["l4-printer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }));
+    pr.state.jammed = true; pr.state.info = "Jammed. A red light blinks"; pr.state.verb = "Fix"; pr.state.tint = "#ff8a6a"
+    t.printer = pr.id; const f = pr.feetPosition; t.text = `Clear the jammed printer (${f.x < -5 ? "west" : f.x > 5 ? "east" : f.z < 0 ? "north" : "south"} desks)`
+  }
+  if (kind === "papers") {
+    t.need = 3; t.text = "Pick up three spilled paper stacks on the floor"
+    for (let i = 0; i < 3; i++) {
+      const a = ctx.random() * Math.PI * 2, d = 6 + ctx.random() * 14, x = Math.cos(a) * d, z = Math.sin(a) * d
+      ctx.spawn({ tags: ["usable", "l4-papers"], feetPosition: { x, y: 0.01, z }, rotation: { yaw: ctx.random() * 360 }, behavior: "scripts/l4-office.js",
+        primitive: { kind: "box", width: 0.42, height: 0.05, depth: 0.32 }, material: { color: "oklch(0.95 0.01 90)", emissive: "oklch(0.5 0.02 90)", emissiveIntensity: 0.3 },
+        state: { kind: "papers", owner: who.id, name: "Spilled papers", verb: "Pick up", info: "Somebody's paperwork", tint: "#f2c14e" } })
+    }
+  }
+  who.state.l4task = t
+  sub(who, `New task: ${t.text}.`, ctx, "Shift board")
+}
+
 export const ears = {
   press: (ctx, { by }) => {
     const s = ctx.self.state, who = ctx.getObject(by), now = ctx.now(), p = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
+    if (s.kind === "board") {
+      const t = who?.state?.l4task
+      if (t) { sub(who, `Your task: ${t.text} (${t.have ?? 0}/${t.need}). Press again to give it up.`, ctx, "Shift board"); if (now - (who.state.l4ask ?? 0) < 4000) { who.state.l4task = null; sub(who, "Task dropped. Take another when you like.", ctx, "Shift board") } who.state.l4ask = now; return }
+      giveTask(ctx, who); snd(ctx, G("paper-note-tear-off-pin"), p, 0.5); return
+    }
+    if (s.kind === "papers") {
+      if (s.owner !== by) { sub(who, "Someone else's mess.", ctx, "Papers"); return }
+      snd(ctx, G("paper-shuffle-pick-up"), p, 0.6); ctx.destroy(ctx.self.id); progress(ctx, who); return
+    }
+    if (s.kind === "printer" && s.jammed) {
+      const rep = skillsOf(who?.state ?? {}).repair ?? 0
+      if (rep >= 20 || ctx.random() < 0.3) {
+        s.jammed = false; s.info = "Something is half printed"; s.verb = "Read"; s.tint = "#d9d3b8"
+        snd(ctx, G("office-printer-printing-page"), p, 0.7)
+        sub(who, rep >= 20 ? `[Repair ${rep}] You pull out a crumpled page and reseat the tray. It whirs back to life.` : "You kick it. Something clunks. It works.", ctx, "Printer")
+        const t = who?.state?.l4task; if (t?.kind === "printer" && t.printer === ctx.self.id) progress(ctx, who)
+      } else { sub(who, "You kick it. Nothing. (Repair 20 would help.)", ctx, "Printer"); snd(ctx, G("metal-panel-kick-thud"), p, 0.6) }
+      return
+    }
     if (s.kind === "phone") {
       snd(ctx, G("phone-handset-pick-up-click"), p, 0.6);
       if (!s.ringing) { sub(who, pick(ctx, DEAD), ctx, "Phone"); if (who && ctx.random() < 0.15) who.state.sanity = Math.max(0, (who.state.sanity ?? 100) - 4); return; }
       ringOn(ctx, ctx.self, false)
+      if (who?.state?.l4task?.kind === "phones") ctx.after(2.5, "phoneTask", { by })
       let line = pick(ctx, LINES)
       if (ctx.random() < 0.35) { // a tip: a supply crate turns up in an office nobody owns
         const free = ROOMS.filter((r) => r.kind === "office");
@@ -74,11 +133,18 @@ export const ears = {
   },
 };
 
+export function phoneTask(ctx, d) { progress(ctx, ctx.getObject(d.by)) } // after the caller's line has had its moment
+
 export function update(ctx, dt) {
   const s = ctx.self.state;
   if (s.kind !== "manager") return;
   const now = ctx.now();
   s.acc = (s.acc ?? 0) + dt; if (s.acc < 1) return; s.acc = 0;
+  for (const pl of ctx.place.players) { // a memo is delivered by walking into its office
+    const t = pl.state?.l4task; if (t?.kind !== "memo") continue
+    const r = ROOMS.find((q) => q.id === t.room), f = pl.feetPosition
+    if (r && f.x > r.x0 + 0.3 && f.x < r.x1 - 0.3 && f.z > r.z0 + 0.3 && f.z < r.z1 - 0.3) { sub(pl, `You leave the memo on the desk in ${r.label}.`, ctx, "Memo"); progress(ctx, pl) }
+  }
   const all = phones(ctx);
   const live = all.find((ph) => ph.state.ringing);
   if (live && now > (live.state.ringUntil ?? 0)) { ringOn(ctx, live, false); s.nextRing = now + GAP[0] + ctx.random() * (GAP[1] - GAP[0]); }

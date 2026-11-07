@@ -7,6 +7,8 @@ import { recipeStatus } from './lib/craft.js'
 
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 const CSS = `<style>
+#tk{position:fixed;left:22px;bottom:192px;max-width:300px;pointer-events:none;font-size:11px;letter-spacing:.08em;color:#f2c14e;text-shadow:0 1px 3px #000}
+#tk b{color:#fff3d6}
 #nd{position:fixed;left:22px;bottom:150px;width:150px;pointer-events:none;font-size:10.5px;letter-spacing:.14em;color:#ffcf87;text-shadow:0 1px 3px #000}
 #nd .r{display:flex;align-items:center;gap:6px;margin-top:3px}
 #nd .r span{width:34px}
@@ -36,6 +38,7 @@ export function craftUi(ctx, player) {
   if (s.level == null || s.hunger == null) return ''
   const lo = C.needs.low
   let out = CSS + `<div id="nd"><div class="r h ${s.hunger < lo ? 'lo' : ''}"><span>FOOD</span><div class="b"><u style="width:${s.hunger}%"></u></div></div><div class="r ${s.thirst < lo ? 'lo' : ''}"><span>WATER</span><div class="b"><u style="width:${s.thirst}%"></u></div></div></div>`
+  if (s.l4task) out += `<div id="tk">TASK · ${s.l4task.text} <b>${s.l4task.have ?? 0}/${s.l4task.need}</b></div>` // Level 4's office task (scripts/l4-office.js)
   if (!s.craftOpen) return out
   const sc = s.scrap ?? {}, sk = skillsOf(s), bench = s.craftOpen === 'bench'
   const stock = Object.entries(B.scrap).filter(([k]) => (sc[k] ?? 0) > 0).map(([k, v]) => `<span>${v.name} <b>${sc[k]}</b></span>`).join('') || '<span>No scrap yet. Hit walls, furniture and machines to break them down.</span>'

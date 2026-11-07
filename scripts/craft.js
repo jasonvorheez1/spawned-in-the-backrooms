@@ -5,7 +5,7 @@
 import C from './lib/data/craft.yml'
 import B from './lib/data/breakables.yml'
 import { skillsOf, SKILLS, canCarry } from './lib/stats.js'
-import { takeToken } from './player.js'
+import { takeToken, gain } from './player.js'
 import { recipeStatus } from './lib/craft.js'
 
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
@@ -56,6 +56,7 @@ export function update(ctx, dt) {
   m.acc += dt
   if (m.acc >= 0.5) { // a bench you walk away from closes
     m.acc = 0
+    if (s.payout) { const p = s.payout; s.payout = null; gain(ctx, p.xp ?? 0); for (const t of p.items ?? []) takeToken(ctx, t); if (p.text) s.notice = { text: p.text, at: ctx.now() } } // rewards other things owe you (Level 4's office tasks)
     if (s.craftOpen === 'bench') { const b = s.craftBench ? ctx.getObject(s.craftBench) : null, p = ctx.self.feetPosition; if (!b || Math.hypot(b.feetPosition.x - p.x, b.feetPosition.z - p.z) > 4.5) s.craftOpen = '' }
   }
 }

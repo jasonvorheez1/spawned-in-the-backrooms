@@ -103,7 +103,18 @@ function layOffice(ctx) {
 export function tick(ctx) {
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; lay(ctx); }
-  if (s.officeV !== 1) { s.officeV = 1; layOffice(ctx); }
+  if (!s.officeV) { s.officeV = 1; layOffice(ctx); }
+  if (s.officeV < 2) { // the shift board: a corkboard on legs by the north desks, handing out office tasks (scripts/l4-office.js)
+    s.officeV = 2;
+    ctx.spawn("l4-shift-board", { tags: ["usable", "l4-board"], feetPosition: { x: -3.2, y: 0, z: 13 }, rotation: { yaw: 90 }, physics: "static", behavior: "scripts/l4-office.js",
+      primitive: { kind: "box", width: 1.3, height: 0.95, depth: 0.06 }, material: { color: "oklch(0.55 0.08 60)", roughness: 1 },
+      children: [{ feetPosition: { x: 0, y: -0.95, z: 0 }, primitive: { kind: "box", width: 0.08, height: 0.95, depth: 0.3 }, material: { color: "oklch(0.35 0.01 250)", metalness: 0.4 } },
+        ...[[-0.4, 0.62, "#fff3a8"], [-0.05, 0.5, "#ffffff"], [0.32, 0.66, "#bfe3ff"], [0.15, 0.25, "#ffd0d6"], [-0.38, 0.2, "#ffffff"]].map(([x, y, c]) => ({ feetPosition: { x, y, z: 0.035 }, primitive: { kind: "box", width: 0.24, height: 0.28, depth: 0.004 }, material: { color: c } }))],
+      ui: '<div face="front" width="1.2m" style="font-family:sans-serif;font-weight:800;font-size:90px;color:#2a2018;text-align:center;margin-top:-6px">SHIFT BOARD</div>',
+      state: { kind: "board", name: "Shift board", verb: "Take a task", info: "Office work for supplies", tint: "#f2c14e" } });
+    // the board stands on 0.95 m legs: lift the panel to eye height
+    const b = ctx.getObject("l4-shift-board"); if (b) b.feetPosition = { x: -3.2, y: 0.95, z: 13 };
+  }
   // the bare windows: stand near one and something out there notices you (sanity drains in player.js; this is the voice)
   for (const p of ctx.place.players) {
     const r = roomAt(p.feetPosition.x, p.feetPosition.z); if (!r || r.kind !== "trap") continue;
