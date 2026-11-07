@@ -148,6 +148,7 @@ function restUi(ctx, s) {
   if (s.waitOpen) out += `<div data-modal style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto"><div style="background:oklch(0.14 0.02 75 / .94);border:2px solid oklch(0.8 0.13 85);padding:18px 24px;color:oklch(0.9 0.1 85);text-align:center;min-width:300px;max-width:calc(100vw - 148px)"><div style="font-size:13px;letter-spacing:.2em;opacity:.7">HALOGEN · ${s.waitBed ? 'REST CYCLE' : 'WAIT'} · ${s.waitClock ?? ''}</div><div style="font-size:15px;margin:6px 0 12px">How many hours?</div><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${[1, 2, 4, 8, 12, 24].map((h) => `<button onclick="sendAction('waitdo',{h:${h}})" style="min-width:52px;padding:8px 10px;background:oklch(0.8 0.13 85);color:oklch(0.18 0.03 70);font-size:18px;border:none">${h}</button>`).join('')}</div><button onclick="sendAction('waitdo',{h:0})" style="margin-top:12px;background:none;border:1px solid oklch(0.8 0.13 85 / .5);color:inherit;padding:4px 14px">cancel ✕</button></div></div>`
   return out
 }
+const LIVE = `<style>@keyframes hudBreath{0%,100%{opacity:.92}50%{opacity:1}}@keyframes hudIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}#hud .bl,#hud .br{animation:hudIn .5s ease-out both,hudBreath 3.2s ease-in-out .5s infinite;filter:drop-shadow(0 0 4px rgba(255,170,40,.35))}</style>`
 export default function render(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
@@ -166,7 +167,7 @@ export default function render(ctx, player) {
   const rar = wp.rarity ? W.rarities?.[wp.rarity] : null
 
 
-  return `${THEME}
+  return `${THEME}${LIVE}
 <div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
 
   ${xferCard(s, now)}${restUi(ctx, s)}

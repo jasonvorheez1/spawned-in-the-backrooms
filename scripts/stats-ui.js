@@ -15,6 +15,15 @@ const CSS = `<style>
 #tg .bar u{display:block;height:100%;background:#d9503a}
 #tg .at{font-size:10.5px;opacity:.8;margin-top:5px;letter-spacing:.1em}
 #tg .bar{width:160px;margin-top:6px}
+@keyframes halRaise{0%{transform:translate(-50%,40%) perspective(900px) rotateX(38deg) scale(.82);opacity:0;filter:brightness(3) blur(3px)}55%{transform:translate(-50%,-52%) perspective(900px) rotateX(-4deg) scale(1.01);opacity:1;filter:brightness(1.6) blur(0)}72%{filter:brightness(.6)}78%{filter:brightness(1.4)}100%{transform:translate(-50%,-50%) perspective(900px) rotateX(0) scale(1);filter:none}}
+@keyframes halScan{from{background-position:0 0}to{background-position:0 6px}}
+@keyframes halRoll{0%{top:-20%}100%{top:120%}}
+@keyframes halRows{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+#sh{animation:halRaise .55s cubic-bezier(.2,.9,.25,1) both}
+#sh::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(rgba(0,0,0,.18) 0 1px,transparent 1px 3px);animation:halScan .4s linear infinite;z-index:2}
+#sh::after{content:"";position:absolute;left:0;right:0;height:18%;pointer-events:none;background:linear-gradient(transparent,rgba(255,190,90,.07),transparent);animation:halRoll 4s linear infinite;z-index:2}
+#sh .row{animation:halRows .3s ease-out both}
+#sh .row:nth-child(2){animation-delay:.04s}#sh .row:nth-child(3){animation-delay:.08s}#sh .row:nth-child(4){animation-delay:.12s}#sh .row:nth-child(5){animation-delay:.16s}#sh .row:nth-child(6){animation-delay:.2s}#sh .row:nth-child(7){animation-delay:.24s}#sh .row:nth-child(n+8){animation-delay:.28s}
 #sh{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(760px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 16px)));max-height:calc(100vh - 40px);overflow:auto;background:linear-gradient(oklch(0.2 0.02 78 / .97),oklch(0.15 0.02 78 / .97));border:1px solid #ffb347;box-shadow:0 0 0 1px #000,6px 6px 0 #000;color:#ffcf87;pointer-events:auto;font-family:inherit}
 #sh .hd{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid #ffb34755}
 #sh h2{margin:0;font-size:19px;letter-spacing:.2em;color:#ffb347;flex:1;text-shadow:0 0 6px rgba(255,170,40,.6)}
