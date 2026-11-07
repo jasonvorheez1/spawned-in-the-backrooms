@@ -18,6 +18,7 @@ function ring(mp, oy, z0, z1, k, color, rough = 0.6, metal = 0) {
   return { primitive: { kind: "cylinder", radiusTop: R, radiusBottom: R, height: h, radialSegments: 16 }, rotation: { pitch: 90 }, pivot: "center",
     feetPosition: { x: ex(mp, x), y: y + (mp.engine ? 0 : oy) - h / 2, z: ez(mp, (z0 + z1) / 2) }, material: { color, roughness: rough, metalness: metal }, castShadow: false }
 }
+const MESHTINT = { rust: "oklch(0.72 0.1 50)", nails: "oklch(0.8 0.05 30)", meg: "oklch(0.86 0.07 128)", tape: "oklch(0.88 0.01 250)", edge: "oklch(0.96 0.02 230)" }
 function meshLook(base, look, oy) {
   if (base === 'pistol' && look === 'mag') // an extended magazine out of the butt, brass base plate: the grip's foot sits at file z≈0.17, y≈-0.096
     return [{ primitive: { kind: "box", width: 0.024, height: 0.06, depth: 0.03 }, feetPosition: { x: 0, y: -0.05, z: 0.056 }, material: { color: "oklch(0.22 0.01 260)", roughness: 0.45, metalness: 0.6 }, castShadow: false },
@@ -58,6 +59,10 @@ export function weaponBody(kind) {
   // the look rides along: on a scripted body it is drawn by weapon-geo.js in the same frame; on a mesh it is a few plain
   // primitives laid along the mesh's own measured shaft (scripts/lib/weapon-prof.js), so it hugs the real model
   if (look && !m) body.children = [{ primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: base, look } }, castShadow: false }]
-  else if (look && m) { const ch = meshLook(base, look, m[1]); if (ch.length) body.children = ch }
+  else if (look && m) {
+    const ch = meshLook(base, look, m[1]); if (ch.length) body.children = ch
+    // a mesh with no overlay wears its variant as a tint on its own texture (a rusty crowbar browns, an M.E.G. one greens)
+    const t = w.tint ?? (!ch.length ? MESHTINT[look] : null); if (t) body.model.materials = { [m[3]]: { color: t } }
+  }
   return body
 }
