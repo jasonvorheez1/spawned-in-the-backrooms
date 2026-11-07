@@ -69,7 +69,7 @@ export function headModel(l0) {
         ...(eyeCol && (l?.glowEye || l?.species === 'samantha') ? { emissive: eyeCol, emissiveIntensity: 0.4 } : {})
       },
       iris: { color: eyeCol || '#8a5a2e', roughness: 0.9, metalness: 0 },
-      blush: { color: blushCol, roughness: 0.85 },
+      blush: speciesOf(l) === 'fox' ? { color: blushCol, transparent: true, opacity: 0, depthWrite: false } : { color: blushCol, roughness: 0.85 }, // foxes wear no cheek blush (Shelly)
       mouth: { color: '#4a1622', roughness: 0.9 },
       tongue: { color: '#ff7f93', roughness: 0.7 }
     }, sp.mats)

@@ -51,7 +51,7 @@ export function collider() { return { kind: "capsule", radius: 0.3, halfHeight: 
 export const SPECIES = {
   cat:      { fur: "#f2a65a", belly: "#fff1dc", nose: "#ff8fa3", ears: "point", earL: 0.25, tail: "cat", tip: "#fff1dc", snout: 0.06, fangs: true, whisk: true, muzzle: true },
   dog:      { fur: "#c98b55", belly: "#fbe8cf", nose: "#2a1c18", ears: "flop", earL: 0.24, tail: "bushy", tip: "#fbe8cf", snout: 0.12, muzzle: true, paw: "#8a5a36" },
-  fox:      { fur: "#f07a2e", belly: "#ffffff", nose: "#231816", ears: "point", earL: 0.34, earTip: "#2c1c18", tail: "bushy", tip: "#ffffff", snout: 0.13, fangs: true, muzzle: true, paw: "#2c1c18" },
+  fox:      { noBlush: true, fur: "#f07a2e", belly: "#ffffff", nose: "#231816", ears: "point", earL: 0.34, earTip: "#2c1c18", tail: "bushy", tip: "#ffffff", snout: 0.13, fangs: true, muzzle: true, paw: "#2c1c18" },
   bunny:    { fur: "#f4efe9", belly: "#ffffff", nose: "#ff9fb4", ears: "long", earL: 0.42, tail: "puff", snout: 0.06, buck: true, muzzle: true, earIn: "#ffc2d1" },
   bear:     { fur: "#9a6440", belly: "#e8c79e", nose: "#2a1c18", ears: "round", earL: 0.13, tail: "stub", snout: 0.1, muzzle: true, chunky: true, paw: "#6e4329" },
   deer:     { fur: "#a8703f", belly: "#f1d4ae", nose: "#2a1612", ears: "leaf", earL: 0.22, tail: "flag", tip: "#ffffff", snout: 0.1, muzzle: true, antlers: true, spots: "#f1d4ae", paw: "#4a2a1c", freck: true },
@@ -393,10 +393,10 @@ export function geometry(ctx) {
       stroke(curve((t) => [cu + (t - 0.5) * 0.09, by + up + (t - 0.5) * s * -tilt * 2 * (E.e === "sad" || E.m === "wobble" || E.m === "frown" || E.m === "wail" || E.m === "scream" || E.e === "down" ? -1 : 1) + 0.01 * Math.sin(Math.PI * t)], 6), [0.024, 0.012], 0.006);
     }
     if (E.tear && !low) { col("#8fd3ff"); if (E.tear === 1) fill(ellipse(cu + s * 0.06, EY - ERV - 0.01, 0.018, 0.028, 12), 0.016); else { stroke(curve((t) => [cu + s * 0.02 + s * 0.01 * Math.sin(t * 5), EY - 0.03 - t * 0.2], 8), 0.035, 0.016); } }
-    if (!low) {
+    if (!low && !sp.noBlush) {
       col(BLUSH); fill(ellipse(s * 0.24, EY - 0.115, 0.046, 0.026, hi ? 14 : 8), 0.004);
     }
-    if (E.blush && !low) { col(BLUSH); fill(ellipse(s * 0.25, EY - 0.115, 0.058, 0.032, 14), 0.008); col(mixc(BLUSH, "#a0304a", 0.5)); for (let k = -1; k <= 1; k++) stroke([[s * 0.25 + k * 0.022 - 0.008, EY - 0.135], [s * 0.25 + k * 0.022 + 0.008, EY - 0.095]], 0.007, 0.01); }
+    if (E.blush && !low && !sp.noBlush) { col(BLUSH); fill(ellipse(s * 0.25, EY - 0.115, 0.058, 0.032, 14), 0.008); col(mixc(BLUSH, "#a0304a", 0.5)); for (let k = -1; k <= 1; k++) stroke([[s * 0.25 + k * 0.022 - 0.008, EY - 0.135], [s * 0.25 + k * 0.022 + 0.008, EY - 0.095]], 0.007, 0.01); }
   }
   if (E.sweat && !low) { col("#8fd3ff"); fill([...ellipse(0.29, EY + 0.12, 0.025, 0.03, 12).filter((p) => p[1] <= EY + 0.12), [0.29, EY + 0.19]], 0.008); }
   if (E.hearts && !low) { col("#ff5d84"); fill(heartPts(0.3, EY + 0.2, 0.04), 0.01); fill(heartPts(-0.33, EY + 0.13, 0.03), 0.01); }
