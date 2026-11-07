@@ -112,7 +112,8 @@ function inventory(s) {
   }).join('')
   const AWK = [['grey', 'almonds', 'Grey almond water', '#b9bcb4'], ['green', 'almondsG', 'Green almond water', '#7fcf6a'], ['red', 'almondsR', 'Red almond water', '#d0574a'], ['blue', 'almondsB', 'Blue almond water', '#6f9be0']]
   const anyAw = AWK.some(([, k]) => s[k])
-  const aid = anyAw ? AWK.filter(([, k]) => s[k]).map(([c, k, nm, col]) => `<button class="it" onclick="sendAction('inv',{k:'drink',c:'${c}'})"><span class="eq" style="background:${col}"></span><span class="nm" style="color:${col}">${nm}</span><span class="n">${s[k]}</span>${detail('almond:' + c, s, false)}</button>`).join('')
+  const meatRows = Object.entries(s.meat ?? {}).filter(([c, n]) => n > 0 && MEAT[c]).map(([c, n]) => `<button class="it" onclick="sendAction('inv',{k:'eat',c:'${c}'})"><span class="eq" style="background:${MEAT[c].color}"></span><span class="nm" style="color:${MEAT[c].color}">${MEAT[c].name}</span><span class="n">${n}</span><span class="dt">${MEAT[c].tier} · eat +${MEAT[c].hp} HP</span></button>`).join('')
+  const aid0 = anyAw ? AWK.filter(([, k]) => s[k]).map(([c, k, nm, col]) => `<button class="it" onclick="sendAction('inv',{k:'drink',c:'${c}'})"><span class="eq" style="background:${col}"></span><span class="nm" style="color:${col}">${nm}</span><span class="n">${s[k]}</span>${detail('almond:' + c, s, false)}</button>`).join('')
     + `<button class="it" onclick="sendAction('inv',{k:'splash'})"><span class="eq"></span><span class="nm">Splash a bottle</span><span class="n">J</span></button>` : '<div class="em">None.</div>'
   const ammo = ['ammo', 'shells'].filter((t) => s[t]).map((t) => `<div class="it"><span class="eq"></span><span class="nm">${t === 'ammo' ? 'Pistol rounds' : 'Shotgun shells'}</span><span class="n">${s[t]}</span>${detail(t, s, false)}</div>`).join('') || '<div class="em">None.</div>'
   const on = wornTokens(s.look), bag = (s.clothes ? s.clothes.split(',').filter(Boolean) : [])

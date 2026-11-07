@@ -15,7 +15,7 @@ export const tokenOf = (tag, o) => (tag === 'weapon' ? 'weapon:' + (o?.state?.ki
 // what a token is called and what it does, for the prompt and the loot menu
 export function describe(token) {
   const d = describe0(token)
-  const kg = ['ration', 'bandage', 'battery', 'kit', 'bobbypin', 'compass', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('book:') || token.startsWith('page:') ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
+  const kg = token.startsWith('meat:') ? 0.3 : ['ration', 'bandage', 'battery', 'kit', 'bobbypin', 'compass', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('book:') || token.startsWith('page:') ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
   return kg ? { ...d, info: d.info + ` · ${kg.toFixed(1)} kg` } : d
 }
 // Level 2's finds: eaten, wrapped or taped on the spot, or keys you carry (fuse, valve wheel, keycard) that open its doors
@@ -33,7 +33,18 @@ const L2_DESC = {
   valve: () => ({ name: 'Valve wheel', info: 'Opens a PUMP ROOM door', color: '#e05a3a' }),
   keycard: () => ({ name: 'Keycard', info: 'Opens a STORAGE cage', color: '#9ff0b0' }),
 }
+// Meat: what Samantha takes for a reading (Level 5). Eaten from I > Aid for a little HP; quality tiers premium/good/poor.
+export const MEAT = {
+  steak:    { name: 'Raw steak',        tier: 'premium', hp: 18, food: 30, color: '#e0524a' },
+  fish:     { name: 'Fresh fish',       tier: 'premium', hp: 14, food: 25, color: '#8fc6d8' },
+  chicken:  { name: 'Chicken thigh',    tier: 'good',    hp: 12, food: 22, color: '#f0c49a' },
+  spam:     { name: 'Tin of spam',      tier: 'good',    hp: 9,  food: 18, color: '#d98aa0' },
+  sardines: { name: 'Tin of sardines',  tier: 'poor',    hp: 7,  food: 14, color: '#b8c4c8' },
+  rat:      { name: 'Dead rat',         tier: 'poor',    hp: 3,  food: 8,  color: '#8a7a6a' },
+}
+const TIER = { premium: 'PREMIUM', good: 'GOOD', poor: 'POOR' }
 function describe0(token) {
+  if (token.startsWith('meat:')) { const m = MEAT[token.slice(5)]; return m ? { name: m.name, info: `${TIER[m.tier]} meat · +${m.hp} HP eaten · Samantha's price`, color: m.color } : { name: 'Spoiled meat', info: '', color: '#777' } }
   if (BRK.scrap[token]) return { name: BRK.scrap[token].name, info: 'Building scrap · B to build', color: BRK.scrap[token].color }
   if (L2_DESC[token]) return L2_DESC[token]()
   if (token === 'royal_ration') return { name: 'Royal ration', info: `Full HP · +${L3I.royal_ration.sanity} sanity · rare`, color: '#ffd36a' }
