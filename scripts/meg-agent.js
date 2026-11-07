@@ -44,10 +44,11 @@ function dress(ctx, me) {
     const spec = critterSpec(l); me.model = spec.model; me.material = spec.material; me.jiggle = spec.jiggle; me.state.wear = l; seatHead(ctx, me, l);
   }
   const sc = me.scale, plain = !sc || (typeof sc === "number" ? sc === 1 : sc.x === 1 && sc.y === 1);
-  if (me.state.build && me.state.build.v !== 2) { me.state.build = null; me.scale = 1; } // the reset: rebuilt with the new ranges
+  if (me.state.build && me.state.build.v !== 2) { const sx = me.scale; me.state.build = null; if (sx && typeof sx === 'object' && Math.abs(sx.x - sx.y) < 1e-6) {} } // the reset: rebuilt with the new ranges
   const sc2 = me.scale, plain2 = !sc2 || (typeof sc2 === "number" ? sc2 === 1 : sc2.x === 1 && sc2.y === 1);
+  if (!me.state.build && !plain2) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = { ...b, h: typeof sc2 === "number" ? sc2 : sc2.y, w: typeof sc2 === "number" ? sc2 : sc2.x }; } // a hand-cast height stays; bust, head and tail still roll
   if (!me.state.build && plain2) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = b; me.scale = { x: b.w, y: b.h, z: b.w }; } // its own height and build
-  if (me.model && (me.state.wear?.sex ?? me.state.look?.sex) === 'f' && (me.morph?.Bust == null || me.session.bustV !== 2)) { me.session.bustV = 2; const b = me.state.build?.bust != null ? me.state.build : buildFor(String(me.id).split("/").pop(), 'f'); me.morph = { ...(me.morph ?? {}), Bust: b.bust }; } // her own bust
+  if (me.model && (me.state.wear?.sex ?? me.state.look?.sex) === 'f' && (me.morph?.Bust == null || me.session.bustV !== 2)) { me.session.bustV = 2; me.bones = baseBones(me.state.build); const b = me.state.build?.bust != null ? me.state.build : buildFor(String(me.id).split("/").pop(), 'f'); me.morph = { ...(me.morph ?? {}), Bust: b.bust }; } // her own bust
 }
 
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
