@@ -1,10 +1,12 @@
 # Custom critter options: what the wardrobe offers and what a new player wears (her picks)
-default: { species: cat, sex: m, fur: "", eye: "#2b2233", outfit: tee, top: "#e85d75", bottom: "#3d5a98", acc: none, expr: grin }
+default: { species: cat, sex: m, fur: "", eye: "#2b2233", outfit: tee, top: "#e85d75", bottom: "#3d5a98", acc: none, expr: grin, eyes: round, marks: none }
 species: [cat, dog, fox, bunny, bear, deer, mouse, wolf, raccoon]
 sex: [m, f]
 outfit: [none, tee, hoodie, sweater, overalls, skirt, dress]
 acc: [none, bow, flower, cap, glasses, scarf, tuft]
-expr: [grin, smile, joy, wink, love, smug, surprised, sad, angry, scared, sleepy]
+expr: [grin, smile, joy, laugh, wink, blep, love, sparkle, kiss, shy, smug, pout, evil, bored, surprised, scared, sad, cry, angry, dizzy, sleepy]
+eyes: [round, tall, wide]
+marks: [none, freckles, stripes, patch, heart]
 fur: ["", "#f2a65a", "#c98b55", "#9a6440", "#f07a2e", "#f4efe9", "#b9b3c2", "#6f7d93", "#3b3440", "#ffb3cf", "#9fd3ff", "#b8e986", "#c9a0ff", "#ffe066"]
 eye: ["#2b2233", "#3f7fd9", "#2fa36b", "#9b5de5", "#e04f5f", "#c98b2b"]
 cloth: ["#e85d75", "#ff9f43", "#ffd93d", "#6bcB77", "#4d96ff", "#3d5a98", "#9b5de5", "#ff8fc7", "#ffffff", "#2b2b33", "#8b5a3c", "#5ec7c7"]

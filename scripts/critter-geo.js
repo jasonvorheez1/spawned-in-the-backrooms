@@ -44,14 +44,14 @@ export function collider() { return { kind: "capsule", radius: 0.3, halfHeight: 
 
 // ---------- species ----------
 const SPECIES = {
-  cat:     { fur: "#f2a65a", belly: "#fff1dc", ears: "point", earS: 1.0, tail: "thin", nose: "#ff8fa3", whisk: true },
+  cat:     { fangs: true, fur: "#f2a65a", belly: "#fff1dc", ears: "point", earS: 1.0, tail: "thin", nose: "#ff8fa3", whisk: true },
   dog:     { fur: "#c98b55", belly: "#fbe8cf", ears: "flop", tail: "wag", nose: "#2a1c18", muzzle: true },
-  fox:     { fur: "#f07a2e", belly: "#ffffff", ears: "point", earS: 1.35, tail: "bushy", tip: "#ffffff", nose: "#231816", muzzle: true, socks: "#3a2622", cheeks: true },
+  fox:     { fangs: true, fur: "#f07a2e", belly: "#ffffff", ears: "point", earS: 1.35, tail: "bushy", tip: "#ffffff", nose: "#231816", muzzle: true, socks: "#3a2622", cheeks: true },
   bunny:   { fur: "#f4efe9", belly: "#ffffff", ears: "long", tail: "puff", nose: "#ff9fb4", buck: true },
   bear:    { fur: "#9a6440", belly: "#e8c79e", ears: "round", earS: 1.0, tail: "stub", nose: "#2a1c18", muzzle: true },
   deer:    { fur: "#b9804e", belly: "#fff3e2", ears: "leaf", tail: "stub", nose: "#3a1f1a", muzzle: true, antlers: true, spots: true },
   mouse:   { fur: "#b9b3c2", belly: "#f6eef4", ears: "round", earS: 1.7, tail: "thin", nose: "#ff8fa3", whisk: true },
-  wolf:    { fur: "#6f7d93", belly: "#e3e8f0", ears: "point", earS: 1.2, tail: "bushy", tip: "#e3e8f0", nose: "#1c1a20", muzzle: true, cheeks: true },
+  wolf:    { fangs: true, fur: "#6f7d93", belly: "#e3e8f0", ears: "point", earS: 1.2, tail: "bushy", tip: "#e3e8f0", nose: "#1c1a20", muzzle: true, cheeks: true },
   raccoon: { fur: "#8b8a92", belly: "#e9e6ea", ears: "round", earS: 1.0, tail: "ringed", tip: "#3a3840", nose: "#1c1a20", muzzle: true, mask: "#3a3840" },
 };
 
@@ -104,7 +104,9 @@ export function geometry(ctx) {
     let s = 0; for (const [, v] of es) s += v;
     for (let i = 0; i < 4; i++) { J.push(es[i] ? IDX[es[i][0]] : 0); W.push(es[i] ? es[i][1] / s : 0); }
   }
-  const tri = (a, b, c) => { ctx.tri(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]); pushW(a); pushW(b); pushW(c); };
+  let REV = false; // true while the ink outline shell is built: its faces point inward
+  const HIP = fem ? [0.17, 0.11, 0.14] : [0.135, 0.1, 0.12];
+  const tri = (a, b, c) => { if (REV) { const x = b; b = c; c = x; } ctx.tri(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]); pushW(a); pushW(b); pushW(c); };
   const quad = (a, b, c, d) => { tri(a, b, c); tri(a, c, d); };
 
   // ellipsoid; colorAt(p, n) may switch paint per face; clip(p) drops faces
@@ -178,100 +180,117 @@ export function geometry(ctx) {
   const INK = "#1d1420";
 
   // ---------- body ----------
+  // The cartoon ink line comes from the material's native `outline` (set where the critter is placed: templates/player.js, scripts/critter.js).
+  // An inverted-hull shell (every part built a second time, larger, with its faces flipped) is kept behind INK_SHELL, but this engine draws
+  // both sides of a face, so the shell covers the fur: leave it off.
+  const INK_SHELL = false;
   ctx.smooth();
-  ctx.roughness(0.85);
+  ctx.roughness(1);
+  ctx.metalness(0);
   const furPaint = (p, nrm) => {
     let col = FUR;
     if (nrm[2] < -0.45 && Math.abs(p[0]) < 0.11 && p[1] > 0.62 && p[1] < 0.98) col = BELLY; // tummy patch
     if (sp.spots && nrm[2] > 0.3 && p[1] > 0.7 && ((Math.sin(p[0] * 61) + Math.sin(p[1] * 53)) > 1.3)) col = "#f6e7cf";
     ctx.color(col);
   };
-  // torso: chest, waist, hips
-  const tw = fem ? 0.145 : 0.165;
-  ell([0, 0.84, 0], [tw, 0.17, 0.125], furPaint);
-  ell([0, 0.66, 0.005], fem ? [0.18, 0.11, 0.14] : [0.15, 0.1, 0.125], furPaint);
-  if (fem) for (const s of [-1, 1]) ell([s * 0.06, 0.875, -0.085], [0.068, 0.062, 0.06], (p, n) => ctx.color(FUR), { seg: hi ? 16 : 10 });
-  // neck
-  ctx.color(FUR); limb([0, 0.94, 0], [0, 1.06, 0], 0.065, 0.07, hi ? 12 : 8);
-  // arms (T-pose), mitten hands with a thumb
-  for (const s of [-1, 1]) {
-    const furArm = sp.socks ? (t) => ctx.color(FUR) : null;
-    ctx.color(FUR); limb([s * 0.1, 0.965, 0], [s * 0.56, 0.965, 0], fem ? 0.043 : 0.047, 0.036, hi ? 12 : 8);
-    ctx.color(sp.socks || FUR);
-    ell([s * 0.6, 0.965, 0], [0.075, 0.058, 0.052], null, { seg: hi ? 16 : 10 });
-    ell([s * 0.565, 0.975, -0.052], [0.026, 0.024, 0.034], null, { seg: hi ? 10 : 6 });
-  }
-  // legs, round feet
-  for (const s of [-1, 1]) {
-    const x = s * 0.085;
-    ctx.color(FUR); limb([x, 0.64, 0], [x, sp.socks ? 0.3 : 0.06, 0], fem ? 0.07 : 0.062, 0.047, hi ? 12 : 8);
-    if (sp.socks) { ctx.color(sp.socks); limb([x, 0.34, 0], [x, 0.06, 0], 0.051, 0.046, hi ? 12 : 8); }
-    ell([x, 0.055, -0.035], [0.072, 0.058, 0.115], null, { seg: hi ? 16 : 10 });
-  }
-  // head
-  ctx.color(FUR);
-  ell(HC, HR, (p, n) => ctx.color(sp.cheeks && n[2] < -0.2 && p[1] < 1.24 && Math.abs(p[0]) > 0.17 ? BELLY : FUR), { seg: hi ? 36 : SEG });
-  if (sp.cheeks && mid) for (const s of [-1, 1]) { // fluffy cheek tufts
-    ctx.color(BELLY);
-    for (let k = 0; k < 3; k++) { const a = -0.35 + k * 0.35; tri([s * 0.3, 1.22 + a * 0.12, -0.12], [s * (0.43 + 0.03 * (k === 1)), 1.18 + a * 0.15, -0.05], [s * 0.31, 1.15 + a * 0.12, -0.02]); }
-  }
-
-  // ears
-  const earBase = (s) => [s * 0.2, 1.56, 0.0];
-  const ear = sp.ears, eS = sp.earS || 1;
-  for (const s of [-1, 1]) {
-    wOverride = { [s < 0 ? "EarL" : "EarR"]: 1 };
-    const b = earBase(s);
-    if (ear === "point" || ear === "leaf") {
-      const h = 0.2 * eS, tilt = ear === "leaf" ? 0.9 : 0.25;
-      const tip = [b[0] + s * h * Math.sin(tilt), b[1] + h * Math.cos(tilt), b[2] + 0.02];
-      const path = []; for (let i = 0; i <= 8; i++) path.push([lerp(b[0], tip[0], i / 8), lerp(b[1] - 0.04, tip[1], i / 8), lerp(b[2], tip[2], i / 8)]);
-      ctx.color(FUR); loft(path, (t) => [0.1 * eS * Math.pow(1 - t, 0.85) + 0.004, 0.035 * (1 - t) + 0.004], [0, 0, -1], null);
-      // pink inner ear on the front
-      ctx.color(ear === "leaf" ? "#f3c3b8" : "#ffb3c6");
-      const inn = []; for (let i = 0; i <= 6; i++) inn.push([lerp(b[0], tip[0], i / 6) * 1.0, lerp(b[1], tip[1], i / 6) - 0.01, lerp(b[2], tip[2], i / 6) - 0.022]);
-      loft(inn, (t) => [0.062 * eS * Math.pow(1 - t, 0.9) + 0.003, 0.012], [0, 0, -1], null, 8);
-      if (ear === "point" && sp.tip && P.species === "fox") { ctx.color("#2a1c18"); const tp = []; for (let i = 0; i <= 4; i++) tp.push([lerp(path[6][0], tip[0], i / 4), lerp(path[6][1], tip[1], i / 4), lerp(path[6][2], tip[2], i / 4) + 0.003]); loft(tp, (t) => [0.03 * (1 - t) + 0.004, 0.012 * (1 - t) + 0.003], [0, 0, -1], null, 8); }
-    } else if (ear === "round") {
-      const c = [s * 0.24, 1.58, 0.02], r = 0.085 * eS;
-      ctx.color(FUR); ell(c, [r, r, 0.035], null, { seg: hi ? 16 : 10 });
-      ctx.color(P.species === "mouse" ? "#ffb3c6" : BELLY); ell([c[0], c[1] - 0.005, c[2] - 0.028], [r * 0.62, r * 0.62, 0.012], null, { seg: hi ? 14 : 8 });
-    } else if (ear === "long") {
-      const path = []; for (let i = 0; i <= 10; i++) { const t = i / 10; path.push([s * (0.12 + 0.07 * t + 0.05 * t * t), 1.55 + 0.42 * t, 0.03 + 0.06 * t * t]); }
-      ctx.color(FUR); loft(path, (t) => [0.055 * Math.sin(Math.PI * (0.15 + 0.8 * t)) + 0.012, 0.022], [0, 0, -1], null);
-      ctx.color("#ffb3c6"); loft(path.map((p) => [p[0], p[1], p[2] - 0.016]), (t) => [0.034 * Math.sin(Math.PI * (0.2 + 0.7 * t)) + 0.004, 0.01], [0, 0, -1], null, 8);
-    } else if (ear === "flop") {
-      const path = []; for (let i = 0; i <= 10; i++) { const t = i / 10; path.push([s * (0.3 + 0.08 * Math.sin(t * 2.4)), 1.5 - 0.3 * t, 0.02 - 0.02 * t]); }
-      ctx.color(P.ear2 || "#7a4f32"); loft(path, (t) => [0.03, 0.075 * Math.sin(Math.PI * (0.2 + 0.75 * t)) + 0.02], [1, 0, 0], null);
-    }
-    wOverride = null;
-  }
-  // antlers
-  if (sp.antlers && !lowest) {
-    ctx.color("#e9d9b8");
+  const tw = fem ? 0.135 : 0.15; // a small torso under a big head, like the reference bases
+  const OUT = 0.011; // outline thickness in metres
+  for (const inkPass of INK_SHELL ? [false, true] : [false]) {
+    REV = inkPass;
+    const k = inkPass ? OUT : 0;
+    const col = (c) => ctx.color(inkPass ? INK : c);
+    const EL = (c, r, colorAt, o) => ell(c, r.map((x) => x + k), inkPass ? null : colorAt, o);
+    const LB = (a, b, ra, rb, M) => limb(a, b, ra + k, rb + k, M);
+    const LF = (path, radius, up, colorAt, M) => loft(path, inkPass ? (t) => radius(t).map((x) => x + k) : radius, up, inkPass ? null : colorAt, M);
+    col(FUR);
+    // torso: chest, waist, hips
+    EL([0, 0.84, 0], [tw, 0.17, 0.125], furPaint);
+    EL([0, 0.66, 0.005], HIP, furPaint);
+    if (fem) for (const s of [-1, 1]) EL([s * 0.06, 0.875, -0.085], [0.068, 0.062, 0.06], () => ctx.color(FUR), { seg: hi ? 16 : 10 });
+    // neck
+    col(FUR); LB([0, 0.94, 0], [0, 1.06, 0], 0.065, 0.07, hi ? 12 : 8);
+    // arms (T-pose), mitten hands with a thumb
     for (const s of [-1, 1]) {
-      wOverride = { Head: 1 };
-      const base = [s * 0.12, 1.6, 0.02], mid1 = [s * 0.18, 1.78, 0.04], top = [s * 0.14, 1.92, 0.02];
-      limb(base, mid1, 0.022, 0.017, 8); limb(mid1, top, 0.017, 0.01, 8);
-      limb(mid1, [s * 0.29, 1.86, 0.02], 0.014, 0.008, 8); limb([s * 0.15, 1.69, 0.03], [s * 0.06, 1.78, 0.0], 0.013, 0.008, 8);
+      col(FUR); LB([s * 0.1, 0.965, 0], [s * 0.56, 0.965, 0], fem ? 0.04 : 0.044, 0.034, hi ? 12 : 8);
+      col(sp.socks || FUR);
+      EL([s * 0.6, 0.965, 0], [0.075, 0.058, 0.052], null, { seg: hi ? 16 : 10 });
+      EL([s * 0.565, 0.975, -0.052], [0.026, 0.024, 0.034], null, { seg: hi ? 10 : 6 });
+    }
+    // legs, round feet
+    for (const s of [-1, 1]) {
+      const x = s * 0.085;
+      col(FUR); LB([x, 0.64, 0], [x, sp.socks ? 0.3 : 0.06, 0], fem ? 0.068 : 0.06, 0.045, hi ? 12 : 8);
+      if (sp.socks) { col(sp.socks); LB([x, 0.34, 0], [x, 0.06, 0], 0.049, 0.045, hi ? 12 : 8); }
+      EL([x, 0.055, -0.035], [0.072, 0.058, 0.115], null, { seg: hi ? 16 : 10 });
+    }
+    // head
+    col(FUR);
+    EL(HC, HR, (p, n) => ctx.color(sp.cheeks && n[2] < -0.2 && p[1] < 1.24 && Math.abs(p[0]) > 0.17 ? BELLY : FUR), { seg: hi ? 36 : SEG });
+    if (!inkPass && sp.cheeks && mid) for (const s of [-1, 1]) { // fluffy cheek tufts
+      ctx.color(BELLY);
+      for (let n = 0; n < 3; n++) { const a = -0.35 + n * 0.35; tri([s * 0.3, 1.22 + a * 0.12, -0.12], [s * (0.43 + 0.03 * (n === 1)), 1.18 + a * 0.15, -0.05], [s * 0.31, 1.15 + a * 0.12, -0.02]); }
+    }
+
+    // ears
+    const earBase = (s) => [s * 0.2, 1.56, 0.0];
+    const ear = sp.ears, eS = sp.earS || 1;
+    for (const s of [-1, 1]) {
+      wOverride = { [s < 0 ? "EarL" : "EarR"]: 1 };
+      const b = earBase(s);
+      if (ear === "point" || ear === "leaf") {
+        const h = 0.2 * eS, tilt = ear === "leaf" ? 0.9 : 0.25;
+        const tip = [b[0] + s * h * Math.sin(tilt), b[1] + h * Math.cos(tilt), b[2] + 0.02];
+        const path = []; for (let i = 0; i <= 8; i++) path.push([lerp(b[0], tip[0], i / 8), lerp(b[1] - 0.04, tip[1], i / 8), lerp(b[2], tip[2], i / 8)]);
+        col(FUR); LF(path, (t) => [0.1 * eS * Math.pow(1 - t, 0.85) + 0.004, 0.035 * (1 - t) + 0.004], [0, 0, -1], null);
+        if (!inkPass) {
+          // pink inner ear on the front
+          ctx.color(ear === "leaf" ? "#f3c3b8" : "#ffb3c6");
+          const inn = []; for (let i = 0; i <= 6; i++) inn.push([lerp(b[0], tip[0], i / 6) * 1.0, lerp(b[1], tip[1], i / 6) - 0.01, lerp(b[2], tip[2], i / 6) - 0.022]);
+          loft(inn, (t) => [0.062 * eS * Math.pow(1 - t, 0.9) + 0.003, 0.012], [0, 0, -1], null, 8);
+          if (ear === "point" && sp.tip && P.species === "fox") { ctx.color("#2a1c18"); const tp = []; for (let i = 0; i <= 4; i++) tp.push([lerp(path[6][0], tip[0], i / 4), lerp(path[6][1], tip[1], i / 4), lerp(path[6][2], tip[2], i / 4) + 0.003]); loft(tp, (t) => [0.03 * (1 - t) + 0.004, 0.012 * (1 - t) + 0.003], [0, 0, -1], null, 8); }
+        }
+      } else if (ear === "round") {
+        const c = [s * 0.24, 1.58, 0.02], r = 0.085 * eS;
+        col(FUR); EL(c, [r, r, 0.035], null, { seg: hi ? 16 : 10 });
+        if (!inkPass) { ctx.color(P.species === "mouse" ? "#ffb3c6" : BELLY); ell([c[0], c[1] - 0.005, c[2] - 0.028], [r * 0.62, r * 0.62, 0.012], null, { seg: hi ? 14 : 8 }); }
+      } else if (ear === "long") {
+        const path = []; for (let i = 0; i <= 10; i++) { const t = i / 10; path.push([s * (0.12 + 0.07 * t + 0.05 * t * t), 1.55 + 0.42 * t, 0.03 + 0.06 * t * t]); }
+        col(FUR); LF(path, (t) => [0.055 * Math.sin(Math.PI * (0.15 + 0.8 * t)) + 0.012, 0.022], [0, 0, -1], null);
+        if (!inkPass) { ctx.color("#ffb3c6"); loft(path.map((p) => [p[0], p[1], p[2] - 0.016]), (t) => [0.034 * Math.sin(Math.PI * (0.2 + 0.7 * t)) + 0.004, 0.01], [0, 0, -1], null, 8); }
+      } else if (ear === "flop") {
+        const path = []; for (let i = 0; i <= 10; i++) { const t = i / 10; path.push([s * (0.3 + 0.08 * Math.sin(t * 2.4)), 1.5 - 0.3 * t, 0.02 - 0.02 * t]); }
+        col(P.ear2 || "#7a4f32"); LF(path, (t) => [0.03, 0.075 * Math.sin(Math.PI * (0.2 + 0.75 * t)) + 0.02], [1, 0, 0], null);
+      }
+      wOverride = null;
+    }
+    // antlers
+    if (sp.antlers && !lowest) {
+      col("#e9d9b8");
+      for (const s of [-1, 1]) {
+        wOverride = { Head: 1 };
+        const base = [s * 0.12, 1.6, 0.02], mid1 = [s * 0.18, 1.78, 0.04], top = [s * 0.14, 1.92, 0.02];
+        LB(base, mid1, 0.022, 0.017, 8); LB(mid1, top, 0.017, 0.01, 8);
+        LB(mid1, [s * 0.29, 1.86, 0.02], 0.014, 0.008, 8); LB([s * 0.15, 1.69, 0.03], [s * 0.06, 1.78, 0.0], 0.013, 0.008, 8);
+        wOverride = null;
+      }
+    }
+    // tail
+    {
+      wOverride = { Tail: 0.35, Tail1: 0.65 };
+      const T = sp.tail, path = [];
+      const pathOf = (n, f) => { for (let i = 0; i <= n; i++) path.push(f(i / n)); };
+      if (T === "thin") { pathOf(12, (t) => [0.06 * Math.sin(t * 3), 0.6 + 0.38 * t, 0.13 + 0.22 * Math.sin(t * 1.6)]); col(FUR); LF(path, (t) => [0.028 * (1 - t * 0.4), 0.028 * (1 - t * 0.4)], [1, 0, 0], null, 8); }
+      else if (T === "bushy" || T === "ringed") {
+        pathOf(12, (t) => [0.05 * Math.sin(t * 2.5), 0.58 + 0.32 * Math.sin(t * 1.4), 0.12 + 0.34 * t]);
+        LF(path, (t) => { const r = (T === "bushy" ? 0.105 : 0.075) * Math.sin(Math.PI * (0.12 + 0.82 * t)) + 0.02; return [r, r]; }, [1, 0, 0],
+          (t) => ctx.color(T === "ringed" ? (Math.floor(t * 7) % 2 ? sp.tip : FUR) : (t > 0.72 ? sp.tip : FUR)), 12);
+      } else if (T === "wag") { pathOf(8, (t) => [0, 0.6 + 0.22 * t, 0.13 + 0.12 * t - 0.04 * t * t]); col(FUR); LF(path, (t) => [0.035 * (1 - 0.5 * t) + 0.01, 0.035 * (1 - 0.5 * t) + 0.01], [1, 0, 0], null, 8); }
+      else if (T === "puff") { col("#ffffff"); EL([0, 0.62, 0.16], [0.07, 0.07, 0.065], null, { seg: hi ? 14 : 8 }); }
+      else { col(FUR); EL([0, 0.63, 0.14], [0.05, 0.06, 0.05], null, { seg: hi ? 12 : 8 }); }
       wOverride = null;
     }
   }
-  // tail
-  {
-    wOverride = { Tail: 0.35, Tail1: 0.65 };
-    const T = sp.tail, path = [];
-    const pathOf = (n, f) => { for (let i = 0; i <= n; i++) path.push(f(i / n)); };
-    if (T === "thin") { pathOf(12, (t) => [0.06 * Math.sin(t * 3), 0.6 + 0.38 * t, 0.13 + 0.22 * Math.sin(t * 1.6)]); ctx.color(FUR); loft(path, (t) => [0.028 * (1 - t * 0.4), 0.028 * (1 - t * 0.4)], [1, 0, 0], null, 8); }
-    else if (T === "bushy" || T === "ringed") {
-      pathOf(12, (t) => [0.05 * Math.sin(t * 2.5), 0.58 + 0.32 * Math.sin(t * 1.4), 0.12 + 0.34 * t]);
-      loft(path, (t) => { const r = (T === "bushy" ? 0.105 : 0.075) * Math.sin(Math.PI * (0.12 + 0.82 * t)) + 0.02; return [r, r]; }, [1, 0, 0],
-        (t) => ctx.color(T === "ringed" ? (Math.floor(t * 7) % 2 ? sp.tip : FUR) : (t > 0.72 ? sp.tip : FUR)), 12);
-    } else if (T === "wag") { pathOf(8, (t) => [0, 0.6 + 0.22 * t, 0.13 + 0.12 * t - 0.04 * t * t]); ctx.color(FUR); loft(path, (t) => [0.035 * (1 - 0.5 * t) + 0.01, 0.035 * (1 - 0.5 * t) + 0.01], [1, 0, 0], null, 8); }
-    else if (T === "puff") { ctx.color("#ffffff"); ell([0, 0.62, 0.16], [0.07, 0.07, 0.065], null, { seg: hi ? 14 : 8 }); }
-    else { ctx.color(FUR); ell([0, 0.63, 0.14], [0.05, 0.06, 0.05], null, { seg: hi ? 12 : 8 }); }
-    wOverride = null;
-  }
+  REV = false;
 
   // ---------- clothes: shells a hair outside the body ----------
   const inflate = (c, r, k) => [c, r.map((x) => x + k)];
@@ -279,19 +298,19 @@ export function geometry(ctx) {
   const shirt = (col, low = 0.6) => {
     ctx.color(col);
     ell(...inflate([0, 0.84, 0], [tw, 0.17, 0.125], 0.012), null, { clip: (p) => p[1] < low });
-    ell(...inflate([0, 0.66, 0.005], fem ? [0.18, 0.11, 0.14] : [0.15, 0.1, 0.125], 0.012), null, { clip: (p) => p[1] < low || p[1] > 0.74 });
+    ell(...inflate([0, 0.66, 0.005], HIP, 0.012), null, { clip: (p) => p[1] < low || p[1] > 0.74 });
     if (fem) for (const s of [-1, 1]) ell([s * 0.06, 0.876, -0.09], [0.078, 0.071, 0.068], null, { seg: hi ? 16 : 10 });
   };
   const pants = (col, knee = 0.12, shorts = false) => {
     ctx.color(col);
-    ell(...inflate([0, 0.66, 0.005], fem ? [0.18, 0.11, 0.14] : [0.15, 0.1, 0.125], 0.016), null, { clip: (p) => p[1] > 0.7 });
+    ell(...inflate([0, 0.66, 0.005], HIP, 0.016), null, { clip: (p) => p[1] > 0.7 });
     for (const s of [-1, 1]) { const x = s * 0.085; limb([x, 0.66, 0], [x, shorts ? 0.38 : knee, 0], (fem ? 0.07 : 0.062) + 0.016, shorts ? 0.07 : 0.06, hi ? 12 : 8); }
   };
   const skirt = (col, top = 0.7, bottom = 0.42, flare = 0.27) => {
     wOverride = { Hips: 1 };
     ctx.color(col);
     const M = hi ? 32 : 16, R = hi ? 6 : 3;
-    const ring = (t) => { const y = lerp(top, bottom, t), rx = lerp(fem ? 0.19 : 0.165, flare, t), rz = lerp(0.15, flare * 0.85, t), o = []; for (let k = 0; k < M; k++) { const a = (k / M) * Math.PI * 2, wav = t * 0.012 * Math.sin(a * 8); o.push([Math.cos(a) * (rx + wav), y, Math.sin(a) * (rz + wav) + 0.005]); } return o; };
+    const ring = (t) => { const y = lerp(top, bottom, t), rx = lerp(fem ? 0.185 : 0.15, flare, t), rz = lerp(0.15, flare * 0.85, t), o = []; for (let k = 0; k < M; k++) { const a = (k / M) * Math.PI * 2, wav = t * 0.012 * Math.sin(a * 8); o.push([Math.cos(a) * (rx + wav), y, Math.sin(a) * (rz + wav) + 0.005]); } return o; };
     for (let r = 0; r < R; r++) { const A = ring(r / R), B = ring((r + 1) / R); for (let k = 0; k < M; k++) { const k2 = (k + 1) % M; quad(A[k], A[k2], B[k2], B[k]); } }
     wOverride = null;
   };
@@ -308,7 +327,7 @@ export function geometry(ctx) {
     shirt(TOP); sleeve(0.1, TOP); pants(BOT, 0.13);
     ctx.color(BOT); ell([0, 0.8, -0.115], [0.11, 0.1, 0.035], null, { seg: 14 }); // bib
     for (const s of [-1, 1]) limb([s * 0.08, 0.86, -0.135], [s * 0.09, 1.0, 0.0], 0.016, 0.016, 6), limb([s * 0.09, 1.0, 0], [s * 0.08, 0.8, 0.14], 0.016, 0.016, 6);
-    ctx.color("#f5d36a"); for (const s of [-1, 1]) ell([s * 0.08, 0.86, -0.155], [0.014, 0.014, 0.008], null, { seg: 8 });
+    ctx.color("#f5d36a"); for (const s of [-1, 1]) ell([s * 0.09, 0.945, -0.06], [0.014, 0.014, 0.008], null, { seg: 8 });
   }
   else if (outfit === "sweater") { shirt(TOP, 0.56); sleeve(0.38, TOP, 0.056); pants(BOT, 0.13, true); ctx.color("#ffffff"); for (let k = 0; k < 2; k++) ell([0, 0.8 + k * 0.07, 0], [tw + 0.016, 0.009, 0.141], null, { clip: (p) => p[2] > 0 }); }
 
@@ -322,108 +341,173 @@ export function geometry(ctx) {
   if (sp.muzzle) { ctx.color(BELLY); fill(ellipse(0, -0.11, 0.135, 0.095), 0.004); }
 
   const E = (() => { // expression table
-    const t = { eye: "open", pupil: 1, lid: 0, lidTilt: 0, brow: 0, browY: 0, mouth: "grin", blush: false, tear: false };
-    if (expr === "smile") Object.assign(t, { mouth: "smile" });
-    if (expr === "joy") Object.assign(t, { eye: "closed", mouth: "grin", blush: true, browY: 0.02 });
-    if (expr === "surprised") Object.assign(t, { pupil: 0.55, browY: 0.04, mouth: "o" });
-    if (expr === "sad") Object.assign(t, { brow: -0.4, lid: 0.15, lidTilt: -0.12, mouth: "frown", tear: true, pupil: 1.1 });
-    if (expr === "angry") Object.assign(t, { brow: 0.5, lid: 0.32, lidTilt: 0.25, mouth: "gritted", pupil: 0.8 });
-    if (expr === "smug") Object.assign(t, { lid: 0.45, brow: 0.12, mouth: "smirk", blush: true });
-    if (expr === "scared") Object.assign(t, { pupil: 0.45, brow: -0.45, browY: 0.03, mouth: "wavy" });
-    if (expr === "sleepy") Object.assign(t, { lid: 0.6, brow: -0.1, mouth: "o_small" });
-    if (expr === "love") Object.assign(t, { eye: "heart", mouth: "grin", blush: true });
-    if (expr === "wink") Object.assign(t, { eye: "wink", mouth: "tongue", blush: true });
+    const t = { eye: "open", pupil: 1, lid: 0, lidTilt: 0, brow: 0, browY: 0, mouth: "grin", blush: false, tear: false, look: 0, sweat: false, wide: false };
+    switch (expr) {
+      case "smile": t.mouth = "smile"; break;
+      case "joy": Object.assign(t, { eye: "closed", mouth: "grin", blush: true, browY: 0.02 }); break;
+      case "laugh": Object.assign(t, { eye: "closed", mouth: "laugh", blush: true, browY: 0.03, tear: "joy" }); break;
+      case "surprised": Object.assign(t, { pupil: 0.55, browY: 0.03, mouth: "o" }); break;
+      case "sad": Object.assign(t, { brow: -0.4, lid: 0.15, lidTilt: -0.12, mouth: "frown", tear: true, pupil: 1.1 }); break;
+      case "cry": Object.assign(t, { brow: -0.5, lid: 0.1, lidTilt: -0.1, mouth: "wail", tear: "stream", pupil: 1.15 }); break;
+      case "angry": Object.assign(t, { brow: 0.5, lid: 0.32, lidTilt: 0.25, mouth: "gritted", pupil: 0.8 }); break;
+      case "evil": Object.assign(t, { brow: 0.55, lid: 0.36, lidTilt: 0.3, mouth: "grin", wide: true, pupil: 0.62 }); break;
+      case "smug": Object.assign(t, { lid: 0.45, brow: 0.12, mouth: "smirk", blush: true }); break;
+      case "scared": Object.assign(t, { pupil: 0.45, brow: -0.45, browY: 0.02, mouth: "wavy", sweat: true }); break;
+      case "sleepy": Object.assign(t, { lid: 0.6, brow: -0.1, mouth: "o_small" }); break;
+      case "bored": Object.assign(t, { lid: 0.5, pupil: 0.8, mouth: "flat" }); break;
+      case "love": Object.assign(t, { eye: "heart", mouth: "grin", blush: true }); break;
+      case "sparkle": Object.assign(t, { eye: "star", mouth: "grin", blush: true, browY: 0.03 }); break;
+      case "wink": Object.assign(t, { eye: "wink", mouth: "tongue", blush: true }); break;
+      case "blep": Object.assign(t, { mouth: "blep", blush: true, browY: 0.015, pupil: 1.05 }); break;
+      case "pout": Object.assign(t, { lid: 0.12, brow: 0.3, mouth: "pout", blush: true, pupil: 0.95 }); break;
+      case "shy": Object.assign(t, { look: 1, brow: -0.25, lid: 0.08, mouth: "smile_small", blush: true, pupil: 0.95 }); break;
+      case "kiss": Object.assign(t, { eye: "closed", mouth: "kiss", blush: true }); break;
+      case "dizzy": Object.assign(t, { eye: "x", mouth: "wavy" }); break;
+    }
     return t;
   })();
 
-  // eyes
-  const EX = 0.125, EY = 0.045, ERU = 0.092, ERV = 0.112;
+  // the eyes: a thick ink ring round a white, and one flat pupil (the references: big ringed eyes, no shine)
+  const ESH = { round: [1, 1], tall: [0.88, 1.2], wide: [1.18, 0.86] }[P.eyes] || [1, 1];
+  const EX = 0.132, EY = 0.065 + (ESH[1] - 1) * 0.07, ERU = 0.104 * ESH[0], ERV = 0.124 * ESH[1];
+  const vmax = (u) => HR[1] * Math.sqrt(Math.max(0, 1 - (u / HR[0]) ** 2)) * 0.9;
+  const hex2 = (h) => { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  const mixc = (h, to, f) => { const a = hex2(h), b = hex2(to); return "#" + a.map((x, i) => Math.round(x + (b[i] - x) * f).toString(16).padStart(2, "0")).join(""); };
+  const star = (cu, cv, R, r, pts = 4) => { const o = []; for (let i = 0; i < pts * 2; i++) { const a = -(i / (pts * 2)) * Math.PI * 2 + Math.PI / 2, rad = i % 2 ? r : R; o.push([cu + Math.cos(a) * rad, cv + Math.sin(a) * rad]); } return o; };
+  const brow = (s, cu) => {
+    ctx.color(INK);
+    const by = EY + ERV + 0.036 + E.browY;
+    stroke((t) => { const u = cu + (t - 0.5) * 0.14; return [u, Math.min(by - E.brow * (u - cu) * s * -0.5 + 0.014 * Math.sin(Math.PI * t), vmax(u))]; }, 0.024, 0.008, 8);
+  };
   for (const s of [-1, 1]) {
     const cu = s * EX, closed = E.eye === "closed" || (E.eye === "wink" && s > 0);
-    if (closed) { // a happy ^ arc
+    if (closed) { // a happy ^ arc, thick and round
       ctx.color(INK);
-      stroke((t) => [cu + (t - 0.5) * 0.17, EY - 0.01 + 0.055 * Math.sin(Math.PI * t)], 0.026, 0.012);
+      stroke((t) => [cu + (t - 0.5) * 0.21, EY - 0.02 + 0.07 * Math.sin(Math.PI * t)], 0.032, 0.012);
+      if (E.tear === "joy") { ctx.color("#8fd3ff"); fill(ellipse(cu + s * 0.12, EY - 0.01, 0.013, 0.024), 0.02); }
+      brow(s, cu);
       continue;
     }
-    ctx.color(INK); fill(ellipse(cu, EY, ERU + 0.014, ERV + 0.014), 0.006);
+    if (E.eye === "x") { // knocked-out cross eyes
+      ctx.color(INK);
+      for (const sg of [-1, 1]) stroke((t) => { const d = (t - 0.5) * 0.105; return [cu + d, EY + sg * d]; }, 0.022, 0.012, 6);
+      brow(s, cu);
+      continue;
+    }
+    ctx.color(INK); fill(ellipse(cu, EY, ERU + 0.02, ERV + 0.02), 0.006);
     ctx.color("#ffffff"); fill(ellipse(cu, EY, ERU, ERV), 0.009);
-    const pr = E.pupil, pu = cu - s * 0.008, pv = EY - 0.012;
+    const pr = E.pupil, pu = cu - s * 0.006 + E.look * 0.032, pv = EY - 0.012;
     if (E.eye === "heart") {
       ctx.color("#ff3d6e");
-      const h = []; for (let i = 0; i < 24; i++) { const a = -(i / 24) * Math.PI * 2, x = 16 * Math.sin(a) ** 3, y = 13 * Math.cos(a) - 5 * Math.cos(2 * a) - 2 * Math.cos(3 * a) - Math.cos(4 * a); h.push([pu + x * 0.0042, pv + y * 0.0042]); }
+      const h = []; for (let i = 0; i < 24; i++) { const a = -(i / 24) * Math.PI * 2, x = 16 * Math.sin(a) ** 3, y = 13 * Math.cos(a) - 5 * Math.cos(2 * a) - 2 * Math.cos(3 * a) - Math.cos(4 * a); h.push([pu + x * 0.0052, pv + 0.01 + y * 0.0052]); }
       fill(h, 0.012);
     } else {
-      ctx.color(EYE); fill(ellipse(pu, pv, 0.066 * pr, 0.08 * pr), 0.012);
-      ctx.color("#0b0710"); fill(ellipse(pu, pv - 0.004, 0.044 * pr, 0.056 * pr), 0.015);
-      ctx.color("#ffffff"); fill(ellipse(pu + 0.022 * pr, pv + 0.03 * pr, 0.019 * pr + 0.004, 0.022 * pr + 0.004, 12), 0.018);
-      if (hi) fill(ellipse(pu - 0.02 * pr, pv - 0.03 * pr, 0.009, 0.009, 10), 0.018);
+      // one big flat pupil in the eye colour, darkened, like the reference bases: no rings, no glints
+      ctx.color(mixc(EYE, "#0b0710", 0.4)); fill(ellipse(pu, pv, 0.074 * pr, 0.094 * pr), 0.012);
+      if (E.eye === "star") { ctx.color("#ffffff"); fill(star(pu, pv, 0.062, 0.018), 0.018); }
     }
     if (E.lid > 0) { // a fur-coloured lid closing from the top, tilted
       ctx.color(FUR);
       const cut = EY + ERV + 0.016 - E.lid * 2 * (ERV + 0.016), poly = [];
       const tiltAt = (u) => cut + E.lidTilt * (u - cu) * s * -1;
-      for (let i = 0; i <= 14; i++) { const a = Math.PI * (i / 14), u = cu + Math.cos(a) * (ERU + 0.02), v = EY + Math.sin(a) * (ERV + 0.02); poly.push([u, Math.max(v, tiltAt(u))]); }
+      for (let i = 0; i <= 14; i++) { const a = Math.PI * (i / 14), u = cu + Math.cos(a) * (ERU + 0.03), v = EY + Math.sin(a) * (ERV + 0.03); poly.push([u, Math.max(v, tiltAt(u))]); }
       fill(poly.reverse().concat([]), 0.021);
-      ctx.color(INK); stroke((t) => { const u = cu + (t - 0.5) * 2 * (ERU + 0.012); const k = 1 - ((u - cu) / (ERU + 0.014)) ** 2; return [u, Math.min(tiltAt(u), EY + Math.sqrt(Math.max(0, k)) * (ERV + 0.014))]; }, 0.014, 0.022);
+      ctx.color(INK); stroke((t) => { const u = cu + (t - 0.5) * 2 * (ERU + 0.018); const kk = 1 - ((u - cu) / (ERU + 0.02)) ** 2; return [u, Math.min(tiltAt(u), EY + Math.sqrt(Math.max(0, kk)) * (ERV + 0.02))]; }, 0.016, 0.022);
     }
     if (fem) { // lashes flicking out at the outer corner
       ctx.color(INK);
-      for (let k = 0; k < 3; k++) {
-        const a = 0.35 + k * 0.32, bu = cu + s * Math.cos(a) * (ERU + 0.01), bv = EY + Math.sin(a) * (ERV + 0.01);
-        tri(onHead(bu, bv + 0.008, 0.02), onHead(bu + s * 0.05 * Math.cos(a - 0.1), bv + 0.045 * Math.sin(a + 0.5) + 0.01, 0.02), onHead(bu - s * 0.006, bv - 0.008, 0.02).map((x) => x));
-        if (s < 0) { /* winding for both sides */ tri(onHead(bu, bv + 0.008, 0.02), onHead(bu - s * 0.006, bv - 0.008, 0.02), onHead(bu + s * 0.05 * Math.cos(a - 0.1), bv + 0.045 * Math.sin(a + 0.5) + 0.01, 0.02)); }
+      for (let n = 0; n < 2; n++) {
+        const a = 0.45 + n * 0.36, bu = cu + s * Math.cos(a) * (ERU + 0.014), bv = EY + Math.sin(a) * (ERV + 0.014);
+        tri(onHead(bu, bv + 0.008, 0.02), onHead(bu + s * 0.055 * Math.cos(a - 0.1), bv + 0.05 * Math.sin(a + 0.5) + 0.012, 0.02), onHead(bu - s * 0.006, bv - 0.008, 0.02));
+        if (s < 0) tri(onHead(bu, bv + 0.008, 0.02), onHead(bu - s * 0.006, bv - 0.008, 0.02), onHead(bu + s * 0.055 * Math.cos(a - 0.1), bv + 0.05 * Math.sin(a + 0.5) + 0.012, 0.02));
       }
     }
-    if (E.tear) { ctx.color("#8fd3ff"); fill(ellipse(cu + s * 0.05, EY - 0.1, 0.016, 0.026), 0.02); }
-    // brow
-    ctx.color(INK);
-    const by = EY + ERV + 0.045 + E.browY;
-    stroke((t) => { const u = cu + (t - 0.5) * 0.12; return [u, by - E.brow * (u - cu) * s * -0.5 + 0.012 * Math.sin(Math.PI * t)]; }, 0.02, 0.008, 8);
+    if (E.tear === true) { ctx.color("#8fd3ff"); fill(ellipse(cu + s * 0.05, EY - ERV - 0.01, 0.018, 0.03), 0.02); }
+    if (E.tear === "stream") {
+      ctx.color("#8fd3ff");
+      fill(ellipse(cu + s * 0.03, EY - ERV - 0.03, 0.026, 0.045), 0.02); fill(ellipse(cu + s * 0.045, EY - ERV - 0.105, 0.02, 0.04), 0.02);
+    }
+    brow(s, cu);
   }
-  if (E.blush) { ctx.color("#ff8aa8"); for (const s of [-1, 1]) fill(ellipse(s * 0.21, -0.07, 0.05, 0.026), 0.006); }
+  if (E.blush) { ctx.color("#ff8aa8"); for (const s of [-1, 1]) fill(ellipse(s * 0.225, -0.075, 0.055, 0.03), 0.006); }
+  if (E.sweat) { ctx.color("#8fd3ff"); fill(ellipse(0.245, 0.17, 0.02, 0.034), 0.02); }
 
   // nose
   ctx.color(sp.nose);
   fill([[-0.034, -0.035], [0.034, -0.035], [0.02, -0.06], [0, -0.068], [-0.02, -0.06]], 0.012);
-  ctx.color("#ffffff"); fill(ellipse(-0.012, -0.044, 0.009, 0.005, 8), 0.015);
-  if (sp.whisk && mid) { ctx.color(INK); for (const s of [-1, 1]) for (let k = 0; k < 2; k++) stroke((t) => [s * (0.17 + t * 0.14), -0.09 + k * 0.03 + t * (0.01 - k * 0.03)], 0.007, 0.008, 4); }
+  if (sp.whisk && mid) { ctx.color(INK); for (const s of [-1, 1]) for (let n = 0; n < 2; n++) stroke((t) => [s * (0.17 + t * 0.14), -0.1 + n * 0.03 + t * (0.01 - n * 0.03)], 0.007, 0.008, 4); }
+
+  // markings (a wardrobe choice)
+  {
+    const dark = mixc(FUR, "#1d1420", 0.45);
+    if (P.marks === "freckles") { ctx.color(dark); for (const s of [-1, 1]) for (let n = 0; n < 5; n++) fill(ellipse(s * (0.17 + (n % 3) * 0.032 + (n > 2 ? 0.016 : 0)), -0.04 - (n > 2 ? 0.026 : 0) - 0.006 * (n % 2), 0.0085, 0.0085, 8), 0.005); }
+    else if (P.marks === "stripes") { ctx.color(dark); for (const [u, h] of [[-0.075, 0.05], [0, 0.07], [0.075, 0.05]]) fill(ellipse(u, 0.255 - (0.07 - h) * 0.4, 0.011, h * 0.5, 10), 0.005); }
+    else if (P.marks === "patch") { ctx.color(dark); fill(ellipse(-EX, EY - 0.005, 0.15, 0.17), 0.003); }
+    else if (P.marks === "heart") {
+      ctx.color("#ff6f9a");
+      const h = []; for (let i = 0; i < 20; i++) { const a = -(i / 20) * Math.PI * 2, x = 16 * Math.sin(a) ** 3, y = 13 * Math.cos(a) - 5 * Math.cos(2 * a) - 2 * Math.cos(3 * a) - Math.cos(4 * a); h.push([-0.255 + x * 0.0016, -0.012 + y * 0.0016]); }
+      fill(h, 0.005);
+    }
+  }
 
   // mouth
-  const MY = -0.115;
+  const MY = -0.135;
   ctx.color(INK);
-  if (E.mouth === "grin" || E.mouth === "tongue" || E.mouth === "gritted") {
-    const w = E.mouth === "gritted" ? 0.1 : 0.115;
-    const up = (t) => { const u = (t - 0.5) * 2 * w; return [u, MY + 0.03 + 1.1 * u * u]; };
-    const lo = (t) => { const u = (t - 0.5) * 2 * w; return E.mouth === "gritted" ? [u, MY - 0.035 + 0.8 * u * u] : [u, MY + 0.03 + 1.1 * u * u - 0.085 * Math.sin(Math.PI * t) ** 0.8]; };
+  const MO = E.mouth;
+  if (MO === "grin" || MO === "laugh" || MO === "tongue" || MO === "gritted") {
+    const w = MO === "gritted" ? 0.1 : MO === "laugh" ? 0.13 : E.wide ? 0.135 : 0.122, D = MO === "laugh" ? 0.125 : E.wide ? 0.1 : 0.09, cv = MO === "laugh" ? 1.3 : 1.1;
+    const up = (t) => { const u = (t - 0.5) * 2 * w; return [u, MY + 0.03 + cv * u * u]; };
+    const lo = (t) => { const u = (t - 0.5) * 2 * w; return MO === "gritted" ? [u, MY - 0.035 + 0.8 * u * u] : [u, MY + 0.03 + cv * u * u - D * Math.sin(Math.PI * t) ** 0.8]; };
     // ink outline, then the dark mouth
-    band((t) => { const p = up(t); return [p[0] * 1.06, p[1] + 0.011]; }, (t) => { const p = lo(t); return [p[0] * 1.06, p[1] - 0.011]; }, 0.007);
+    band((t) => { const p = up(t); return [p[0] * 1.07, p[1] + 0.013]; }, (t) => { const p = lo(t); return [p[0] * 1.07, p[1] - 0.013]; }, 0.007);
     ctx.color("#5a1a2a"); band(up, lo, 0.01);
-    // tongue
-    if (E.mouth !== "gritted") { ctx.color("#ff6f8e"); fill(ellipse(0.01, MY - 0.03, 0.05, E.mouth === "tongue" ? 0.04 : 0.025), 0.013); }
-    if (E.mouth === "tongue") { ctx.color("#ff6f8e"); fill(ellipse(0.02, MY - 0.07, 0.035, 0.035), 0.016); }
-    // teeth: a row of cute pointed teeth along the top (a full block when gritted)
+    if (MO !== "gritted") { // the tongue, with a lighter middle
+      const tv = MY - 0.035 - (D - 0.09) * 0.55, tr = MO === "laugh" ? 0.07 : 0.055;
+      ctx.color("#ff6f8e"); fill(ellipse(0.005, tv, tr, MO === "tongue" ? 0.045 : MO === "laugh" ? 0.04 : 0.028), 0.013);
+    }
+    if (MO === "tongue") { ctx.color("#ff6f8e"); fill(ellipse(0.02, MY - 0.075, 0.035, 0.035), 0.016); }
     ctx.color("#ffffff");
-    if (E.mouth === "gritted") {
+    if (MO === "gritted") {
       band((t) => up(0.04 + t * 0.92), (t) => lo(0.04 + t * 0.92), 0.014);
       ctx.color(INK); stroke((t) => [(t - 0.5) * 2 * w * 0.94, MY - 0.002 + 0.95 * ((t - 0.5) * 2 * w) ** 2], 0.006, 0.017);
-      for (let k = 1; k < 6; k++) { const u = (k / 6 - 0.5) * 2 * w; band(() => [u - 0.003, MY + 0.03 + 1.1 * u * u], () => [u - 0.003, MY - 0.035 + 0.8 * u * u], 0.017, 1); }
+      for (let n = 1; n < 6; n++) { const u = (n / 6 - 0.5) * 2 * w; band(() => [u - 0.003, MY + 0.03 + 1.1 * u * u], () => [u - 0.003, MY - 0.035 + 0.8 * u * u], 0.017, 1); }
+    } else if (sp.buck) {
+      for (const s of [-1, 1]) fill([[s * 0.002, MY + 0.03], [s * 0.036, MY + 0.031], [s * 0.034, MY - 0.018], [s * 0.004, MY - 0.018]], 0.016);
     } else {
-      const N = sp.buck ? 2 : 7;
-      if (sp.buck) { for (const s of [-1, 1]) fill([[s * 0.002, MY + 0.03], [s * 0.034, MY + 0.031], [s * 0.032, MY - 0.012], [s * 0.004, MY - 0.012]], 0.016); }
-      else for (let k = 0; k < N; k++) {
-        const t0 = 0.08 + (k / N) * 0.84, t1 = 0.08 + ((k + 1) / N) * 0.84, a = up(t0), b = up(t1), m = up((t0 + t1) / 2);
-        const len = 0.026 + (k === 1 || k === N - 2 ? 0.01 : 0);
-        tri(onHead(a[0], a[1] + 0.002, 0.016), onHead(m[0], m[1] - len, 0.016), onHead(b[0], b[1] + 0.002, 0.016));
+      // a row of small round teeth under the top lip, and longer fangs on the sharp-toothed species
+      const N = 6, len = MO === "laugh" ? 0.036 : 0.03;
+      for (let n = 0; n < N; n++) {
+        const t0 = 0.09 + (n / N) * 0.82, t1 = 0.09 + ((n + 1) / N) * 0.82, a = up(t0), b = up(t1), m = up((t0 + t1) / 2), g = 0.0035;
+        fill([[a[0] + g, a[1] + 0.004], [b[0] - g, b[1] + 0.004], [b[0] - g * 1.4, b[1] - len * 0.7], [m[0], m[1] - len], [a[0] + g * 1.4, a[1] - len * 0.7]], 0.014);
       }
+      if (sp.fangs) for (const t of [0.27, 0.73]) { const a = up(t - 0.045), b = up(t + 0.045), m = up(t); fill([[a[0], a[1] + 0.004], [b[0], b[1] + 0.004], [m[0] + 0.001, m[1] - len - 0.03]], 0.0155); }
     }
-  } else if (E.mouth === "smile" || E.mouth === "frown" || E.mouth === "smirk") {
-    const k = E.mouth === "frown" ? -1 : 1;
-    stroke((t) => { const u = (t - 0.5) * 0.15 + (E.mouth === "smirk" ? 0.02 : 0); const lift = E.mouth === "smirk" ? (t > 0.5 ? 2.6 : 0.6) : 1.6; return [u, MY + k * (lift * u * u) - (k < 0 ? -0.02 : 0)]; }, 0.016, 0.01, 12);
-    if (E.mouth === "smirk" && !sp.buck) { ctx.color("#ffffff"); tri(onHead(0.06, MY + 0.012, 0.014), onHead(0.068, MY - 0.012, 0.014), onHead(0.078, MY + 0.018, 0.014)); }
-  } else if (E.mouth === "o" || E.mouth === "o_small") {
-    const r = E.mouth === "o" ? 1 : 0.55;
+  } else if (MO === "smile" || MO === "frown" || MO === "smirk") {
+    const kk = MO === "frown" ? -1 : 1;
+    stroke((t) => { const u = (t - 0.5) * 0.15 + (MO === "smirk" ? 0.02 : 0); const lift = MO === "smirk" ? (t > 0.5 ? 2.6 : 0.6) : 1.6; return [u, MY + 0.01 + kk * (lift * u * u) - (kk < 0 ? -0.02 : 0)]; }, 0.016, 0.01, 12);
+    if (MO === "smirk" && !sp.buck) { ctx.color("#ffffff"); tri(onHead(0.06, MY + 0.022, 0.014), onHead(0.068, MY - 0.002, 0.014), onHead(0.078, MY + 0.028, 0.014)); }
+  } else if (MO === "smile_small") {
+    stroke((t) => { const u = (t - 0.5) * 0.09; return [u, MY + 0.016 + 2.2 * u * u]; }, 0.015, 0.01, 8);
+  } else if (MO === "blep") { // a small smile and the tongue poking out
+    stroke((t) => { const u = (t - 0.5) * 0.17; return [u, MY + 0.02 + 1.9 * u * u]; }, 0.016, 0.01, 12);
+    ctx.color("#ff6f8e"); fill(ellipse(0.025, MY - 0.012, 0.032, 0.042), 0.013);
+  } else if (MO === "wail") { // a wide open frown, tongue sliding out the bottom
+    const w = 0.115, up = (t) => { const u = (t - 0.5) * 2 * w; return [u, MY + 0.03 - 1.0 * u * u]; };
+    const lo = (t) => { const p = up(t); return [p[0], p[1] - 0.085 * Math.sin(Math.PI * t) ** 0.8]; };
+    band((t) => { const p = up(t); return [p[0] * 1.07, p[1] + 0.013]; }, (t) => { const p = lo(t); return [p[0] * 1.07, p[1] - 0.013]; }, 0.007);
+    ctx.color("#5a1a2a"); band(up, lo, 0.01);
+    ctx.color("#ff6f8e"); fill(ellipse(0, MY - 0.05, 0.05, 0.022), 0.013);
+  } else if (MO === "pout") { // a tiny wobbly downturned line
+    stroke((t) => { const u = (t - 0.5) * 0.11; return [u, MY + 0.005 - 3 * u * u + 0.004 * Math.sin(t * Math.PI * 3)]; }, 0.015, 0.01, 10);
+  } else if (MO === "flat") {
+    stroke((t) => [(t - 0.5) * 0.1, MY + 0.008], 0.013, 0.01, 4);
+  } else if (MO === "kiss") {
+    ctx.color("#ff7a9a"); fill(ellipse(0, MY + 0.005, 0.034, 0.028), 0.01);
+    ctx.color(INK); fill(ellipse(0.004, MY + 0.005, 0.012, 0.008, 8), 0.012);
+  } else if (MO === "o" || MO === "o_small") {
+    const r = MO === "o" ? 1 : 0.55;
     fill(ellipse(0, MY - 0.01, 0.042 * r, 0.05 * r), 0.008); ctx.color("#5a1a2a"); fill(ellipse(0, MY - 0.01, 0.03 * r, 0.038 * r), 0.011);
-  } else if (E.mouth === "wavy") {
+  } else if (MO === "wavy") {
     band((t) => { const u = (t - 0.5) * 0.18; return [u, MY + 0.012 * Math.sin(t * Math.PI * 4) + 0.02]; }, (t) => { const u = (t - 0.5) * 0.18; return [u, MY + 0.012 * Math.sin(t * Math.PI * 4) - 0.03]; }, 0.008);
     ctx.color("#ffffff"); band((t) => { const u = (t - 0.5) * 0.16; return [u, MY + 0.012 * Math.sin(t * Math.PI * 4) + 0.012]; }, (t) => { const u = (t - 0.5) * 0.16; return [u, MY + 0.012 * Math.sin(t * Math.PI * 4) - 0.022]; }, 0.011);
     ctx.color(INK); stroke((t) => [(t - 0.5) * 0.16, MY + 0.012 * Math.sin(t * Math.PI * 4) - 0.005], 0.005, 0.014);

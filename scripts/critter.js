@@ -41,7 +41,7 @@ function moodFace(ctx, l) {
 export function update(ctx) {
   const l = lookOf(ctx), face = moodFace(ctx, l), ses = ctx.self.session
   ses.face = face
-  const params = { species: l.species, sex: l.sex, eye: l.eye, outfit: l.outfit, top: l.top, bottom: l.bottom, acc: l.acc, expr: face }
+  const params = { species: l.species, sex: l.sex, eye: l.eye, outfit: l.outfit, top: l.top, bottom: l.bottom, acc: l.acc, expr: face, eyes: l.eyes, marks: l.marks }
   if (l.fur) params.fur = l.fur
   const key = JSON.stringify(params)
   if (key !== ses.key) { ses.key = key; ctx.self.primitive = { kind: 'scripted', script: SCRIPT, params } }
@@ -55,7 +55,7 @@ export function update(ctx) {
     const pos = { x: f.x + fx * 2.3 + rx * 0.55, y: f.y, z: f.z + fz * 2.3 + rz * 0.55 }
     const rot = { yaw: (yaw * 180) / Math.PI + Math.sin(ctx.now() / 1400) * 35 }
     const mirror = ses.mirror && ctx.getObject(ses.mirror)
-    if (!mirror) ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, primitive: { kind: 'scripted', script: SCRIPT, params }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } })
+    if (!mirror) ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, primitive: { kind: 'scripted', script: SCRIPT, params }, material: { outline: { color: '#1d1420', width: 2.4 } }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } })
     else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) mirror.primitive = { kind: 'scripted', script: SCRIPT, params } }
     ses.mirrorKey = key
   } else if (ses.mirror) { ctx.destroy(ses.mirror); ses.mirror = null; ses.mirrorKey = null }
