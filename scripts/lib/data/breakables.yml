@@ -3,7 +3,8 @@
 # Strength factor (melee and fists only) = base + per x Hardiness (1..10): HAR 1 = 0.8, HAR 5 = 1.2, HAR 10 = 1.7. Guns ignore it.
 strength: { base: 0.7, per: 0.1 }
 fistsMul: 0.35            # bare hands barely scratch a wall
-regrowMinutes: 25         # a broken Level 0 wall grows back after this long, so the maze stays a maze
+regrowMinutes: 25
+wallHpMul: 1.5          # a Level 0 wall is a double sheet of drywall: 180 hp         # a broken Level 0 wall grows back after this long, so the maze stays a maze
 materials:
   drywall:  { name: Drywall,  hp: 120, mul: { blunt: 1.3, edged: 0.9, firearm: 0.35 }, sound: drywall-punch-crumble-thud, dust: [0.92, 0.88, 0.72], drops: [[drywall, 1, 3], [nails, 0, 2], [wire, 0, 1]] }
   wood:     { name: Wood,     hp: 70,  mul: { blunt: 1.0, edged: 1.5, firearm: 0.45 }, sound: wood-plank-crack-hit,      dust: [0.62, 0.48, 0.3],  drops: [[scrap_wood, 2, 4], [nails, 1, 3]] }
