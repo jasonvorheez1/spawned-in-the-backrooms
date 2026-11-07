@@ -10,10 +10,7 @@ boot:
   - "keyboard ......................... found (sticky)"
   - "last session ended: improperly"
   - "welcome back."
-pro  - { title: "what is Back OS actually", by: "curious_temp", replies: ["it is an operating system", "who installs it", "nobody. it is on every hard drive you find", "i formatted one. it booted Back OS anyway", "thread locked by: (no moderator)"] }
-  - { title: "the clock says 15:40", by: "timekeeper", replies: ["every machine says 15:40", "mine said 15:41 once", "what happened", "i would rather not say"] }
-  - { title: "TBD will trade for your weirdest stuff", by: "quill", replies: ["they gave me two almond waters for a single left shoe", "they asked if i had a spoon that was not a spoon", "i did"] }
-files:
+profiles:
   office:  { owner: "Facilities", motd: "Quarterly review postponed indefinitely." }
   omega:   { owner: "Base Omega · Overseer desk", motd: "Authorised M.E.G. personnel. Everyone else: hi." }
   gamma:   { owner: "Base Gamma · Administration", motd: "The Database. Handle with care." }
@@ -64,6 +61,9 @@ forum:
   - { title: "[Level 3] are the bars really impossible", by: "bolt_cutter_dave", replies: ["we tried acid", "we tried the lava squirt gun", "dave please", "dave stop"] }
   - { title: "Is it safe to claim an office?", by: "new_arrival", replies: ["yes, the cooler refills", "the cot is surprisingly OK", "the plate on the door does not lie about whose it is"] }
   - { title: "Hounds howl before they jump", by: "field_note", replies: ["pinned. standard advice, kill the one that howls first", "or walk away from the one that howls first. none of us did"] }
+  - { title: "what is Back OS actually", by: "curious_temp", replies: ["it is an operating system", "who installs it", "nobody. it is on every hard drive you find", "i formatted one. it booted Back OS anyway", "thread locked by: (no moderator)"] }
+  - { title: "the clock says 15:40", by: "timekeeper", replies: ["every machine says 15:40", "mine said 15:41 once", "what happened", "i would rather not say"] }
+  - { title: "TBD will trade for your weirdest stuff", by: "quill", replies: ["they gave me two almond waters for a single left shoe", "they asked if i had a spoon that was not a spoon", "i did"] }
   - { title: "what is Back OS actually", by: "curious_temp", replies: ["it is an operating system", "who installs it", "nobody. it is on every hard drive you find", "i formatted one. it booted Back OS anyway", "thread locked by: (no moderator)"] }
   - { title: "the clock says 15:40", by: "timekeeper", replies: ["every machine says 15:40", "mine said 15:41 once", "what happened", "i would rather not say"] }
   - { title: "TBD will trade for your weirdest stuff", by: "quill", replies: ["they gave me two almond waters for a single left shoe", "they asked if i had a spoon that was not a spoon", "i did"] }
