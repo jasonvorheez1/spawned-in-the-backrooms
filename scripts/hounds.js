@@ -72,6 +72,7 @@ export function update(ctx, dt) {
       const loud = (p.state?.sprinting ? L.houndHear : 0) || (dark && p.state?.light ? L.houndHearLight : 0);
       if (d < Math.max(sight, loud) * sn(p) && d < best) { best = d; prey = p; }
     }
+    if (st.horde) { const hp = players.find((p) => p.id === st.horde); if (hp) { prey = hp; best = Math.hypot(hp.feetPosition.x - pos.x, hp.feetPosition.z - pos.z); } } // a blackout horde hunts its player
     if (L3) { // brigades: share the spotter's prey, and lie in wait in dead ends
     }
     if (prey && !m.hunting && !m.howled) { // it HOWLS once on sight: head back, jaw wide, and every hound in 30 m comes

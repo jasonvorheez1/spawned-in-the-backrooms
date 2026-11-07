@@ -58,7 +58,7 @@ function sound(ctx, name, volume = 0.7, mine = false) {
   ctx.emit('playSound', { clip: SND(name), position: chest(ctx), volume, maxDistance: 30 }, mine ? { audience: { player: ctx.self.id } } : undefined)
 }
 
-function gain(ctx, n) {
+export function gain(ctx, n) {
   const s = ctx.self.state
   s.xp += Math.round(n * derived(s).xp)
   while (s.xp >= xpNeed(s.level)) {
