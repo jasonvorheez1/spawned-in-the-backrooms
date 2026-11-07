@@ -1,14 +1,14 @@
 # spawn-scene v2 yaml x-1z1
 flicker-wall:
-  audio: {clip: cdn/moodboard-realistic-gritty/sfx-electric-buzz-crackle-loop.mp3, gain: 0.7, loop: true, maxDistance: 22, spatial: true}
+  audio: {clip: cdn/moodboard-realistic-gritty/sfx-electric-buzz-crackle-loop.mp3, gain: 0.35, loop: true, maxDistance: 16, spatial: true}
   feetPosition: {x: -111.86, y: 0, z: 102}
   id: flicker-wall
-  material: {color: oklch(0.95 0.06 92), emissive: oklch(0.95 0.05 92), emissiveIntensity: 2.5, repeat: [2, 2], texture: cdn/texture-tv-static-noise.png, wrap: repeat}
+  material: {color: oklch(0.97 0.03 92), emissive: oklch(0.75 0.08 92), emissiveIntensity: 0.35, repeat: [1.4, 1.5], roughness: 0.9, texture: cdn/texture-yellow-chevron-damask-wallpaper-aged.png, wrap: repeat}
   primitive: {depth: 0.04, height: 2.9, kind: box, width: 2.8}
   rotation: 90
 flicker-wall-fx:
   feetPosition: {x: -111.71, y: 0, z: 102}
-  fx: {script: "fx\npop glow n=1 at=<0,1.3,0> lv=flick(9,.85) r=light(<1,.95,.75>,$lv*14,9)\npop staticp rate=?mobile:30|70 on=box(.02,1.4,1.6) life=.08..0.25 size=.04..0.12 col=hdr(3,2.8,2.2) a=flick(20,.8) sz=$size r=sprite(soft-disc,add)\npop band rate=6 on=box(.02,1.4,1.6) life=.15..0.35 size=.6..1.4 col=hdr(1.6,1.5,1.1) a=(1>0)*.5 sz=$size r=sprite(soft-disc,add)"}
+  fx: {script: "fx\npop glow n=1 at=<0,1.4,0> lv=flick(7,.9) r=light(<1,.93,.7>,$lv*3.5,6)\npop tear rate=?mobile:4|8 on=box(.01,1.3,1.3) life=.05..0.14 size=.02..0.05 len=.6..1.8 col=hdr(1.5,1.4,1) a=.6 sz=$size asp=$len/$size r=sprite(soft-disc,add)\npop fleck rate=?mobile:10|20 on=box(.01,1.4,1.4) life=.05..0.12 size=.015..0.04 col=<.15,.13,.08> a=.8 sz=$size r=sprite(soft-disc,alpha)"}
   id: flicker-wall-fx
 level0-lights/l0_44:
   feetPosition: {x: -110, y: 2.7, z: 66}
