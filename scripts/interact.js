@@ -77,7 +77,7 @@ function closeLoot(ctx) {
   mem(ctx).key = ''
 }
 
-function openLoot(ctx, c) {
+export function openLoot(ctx, c) {
   const s = ctx.self.state
   if (c.state.lock) { // Fallout-style lock: you need the skill level, no minigame
     const [sk, lv] = c.state.lock.split(':'), have = skillsOf(s)[sk] ?? 0
@@ -107,7 +107,7 @@ function speak(ctx, it, who, line) {
   const p = it.feetPosition
   ctx.emit('playSound', { clip: VO(who, line), position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.9, maxDistance: 14 }, { audience: { player: ctx.self.id } })
 }
-function talk(ctx, it) {
+export function talk(ctx, it) {
   const s = ctx.self.state, now = ctx.now(), role = it.state?.role
   if (it.state?.angry?.[ctx.self.id]) { note(ctx, `${it.state.name.split(' ·')[0]} won't talk to you.`); return }
   it.state.talkAt = now; it.state.talkTo = ctx.self.id // they gesture while they speak

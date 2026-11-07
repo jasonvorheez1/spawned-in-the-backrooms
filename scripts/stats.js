@@ -22,7 +22,7 @@ export function onInput(ctx, input) {
   if (input.pressed?.stat && d && typeof d.k === 'string') spend(s, d)
 }
 
-function spend(s, d) {
+export function spend(s, d) {
   if (d.k === 'close') { s.sheetOpen = false; return }
   const i = Number(d.i)
   if (d.k === 'attr' && i >= 0 && i < ATTRS.length && (s.apts ?? 0) > 0) {

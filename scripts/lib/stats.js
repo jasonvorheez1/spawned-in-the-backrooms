@@ -63,7 +63,7 @@ export function skillsOf(s) {
 }
 // a weapon's class: fists are Unarmed, guns are Guns, everything else Melee Weapons
 export const wclass = (w) => (w?.ranged ? 'guns' : w && w.name !== 'Fists' ? 'melee' : 'unarmed')
-const skillMul = (v) => 0.9 + v / 250 // 15 is about the old balance, 100 is +30%
+const skillMul = (v) => 0.94 + v / 250 // 15 is about the old balance, 100 is +30%
 // the damage multiplier for a weapon: its skill and the attribute behind it
 export function dmgMul(s, w) {
   const a = attrsOf(s), k = skillsOf(s), c = wclass(w)
@@ -130,11 +130,11 @@ const TEMPLATE = {
   stealer: { h: 8, a: 4, l: 5, o: 6, g: 9, e: 5, n: 7 },
   agent: { h: 6, a: 6, l: 5, o: 7, g: 7, e: 6, n: 6 },
 }
-const NICK = { h: ['Brute', 'Thick'], a: ['Swift', 'Quick'], l: ['Charmed', 'Lucky'], o: ['Keen-eyed', 'Watchful'], g: ['Unshaken', 'Hollow'], e: ['Tireless', 'Gaunt'], n: ['Cunning', 'Wise'] }
+const NICK = { h: ['Brute', 'Thick'], a: ['Swift', 'Quick'], l: ['Charmed', 'Lucky'], o: ['Keen-eyed', 'Watchful'], g: ['Smooth', 'Silver-tongued'], e: ['Tireless', 'Gaunt'], n: ['Cunning', 'Wise'] }
 export function rollNpc(ctx, kind) {
   const t = TEMPLATE[kind] ?? TEMPLATE.smiler, o = {}
   for (const a of ATTRS) o[a.k] = Math.max(1, Math.min(10, t[a.k] + Math.round((ctx.random() + ctx.random() - 1) * 3)))
-  let best = 'h'; for (const a of ATTRS) if (o[a.k] - t[a.k] > o[best] - t[best]) best = a.k
+  let best = 'h'; for (const a of ATTRS) if (a.k !== 'g' && o[a.k] - t[a.k] > o[best] - t[best]) best = a.k
   const title = o[best] - t[best] >= 2 ? NICK[best][Math.floor(ctx.random() * 2)] : ''
   return { attr: packAttrs(o), title }
 }
