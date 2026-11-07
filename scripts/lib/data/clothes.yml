@@ -77,13 +77,13 @@ rows:
   - { id: steeltoe,    slot: shoes, kind: boots,     name: Steel-toe boots,    dr: 4, kg: 1.8, rarity: uncommon, strict: true, level: 9,  colours: [3a3a30], crafted: true }
   - { id: platevest,   slot: topw, kind: apron,      name: Drywall plate vest, dr: 7, kg: 3.2, rarity: rare,     strict: true, level: 14, colours: [cfc8b8], crafted: true }
   # Level 5's hotel wardrobe: old kinds in the Terror Hotel's own cuts (reuse is fine, Shelly). places: rolls only there (Savi's picks for dr/kg/rarity)
-  - { id: bellhop,     slot: topw, kind: jacket,     name: Bellhop jacket,     dr: 3, kg: 0.8, rarity: uncommon, places: [level5], colours: [b0302a, 7a1f1f] }
-  - { id: tailcoat,    slot: topw, kind: jacket,     name: Evening tailcoat,   dr: 2, kg: 0.9, rarity: uncommon, places: [level5], colours: [1a1a22, 2b2b33] }
-  - { id: gown,        slot: topw, kind: dress,      name: Ballroom gown,      dr: 1, kg: 0.6, rarity: rare,     places: [level5], colours: [7a1f3d, d4af37, 1f3a5a] }
-  - { id: maidapron,   slot: topw, kind: apron,      name: Chambermaid apron,  dr: 1, kg: 0.3, rarity: common,   places: [level5], colours: [f4f1ea, 2b2b33] }
-  - { id: hotelrobe,   slot: topw, kind: pajamas,    name: Hotel bathrobe,     dr: 1, kg: 0.7, rarity: common,   places: [level5], colours: [f4f1ea, d8c9a0] }
-  - { id: pinstripe,   slot: botw, kind: pants,      name: Pinstripe trousers, dr: 1, kg: 0.5, rarity: common,   places: [level5], colours: [2b2b33, 3a2a20] }
-  - { id: velvetskirt, slot: botw, kind: longskirt,  name: Velvet skirt,       dr: 1, kg: 0.5, rarity: uncommon, places: [level5], colours: [7a1f3d, 1a1a22] }
-  - { id: hotelslip,   slot: shoes, kind: slippers,  name: Hotel slippers,     dr: 0, kg: 0.2, rarity: common,   places: [level5], colours: [f4f1ea] }
-  - { id: balltie,     slot: neck, kind: bowtie,     name: Ballroom bow tie,   dr: 0, kg: 0.05,rarity: common,   places: [level5], colours: [1a1a22, b0302a] }
-  - { id: opera,       slot: hat,  kind: tophat,     name: Opera hat,          dr: 1, kg: 0.4, rarity: uncommon, places: [level5], colours: [1a1a22, 7a1f3d] }
+  - { id: bellhop,     slot: topw, kind: jacket,     name: Bellhop jacket,     dr: 3, kg: 0.8, rarity: uncommon, places: [level5], strict: true, colours: [b0302a, 7a1f1f] }
+  - { id: tailcoat,    slot: topw, kind: jacket,     name: Evening tailcoat,   dr: 2, kg: 0.9, rarity: uncommon, places: [level5], strict: true, colours: [1a1a22, 2b2b33] }
+  - { id: gown,        slot: topw, kind: dress,      name: Ballroom gown,      dr: 1, kg: 0.6, rarity: rare,     places: [level5], strict: true, colours: [7a1f3d, d4af37, 1f3a5a] }
+  - { id: maidapron,   slot: topw, kind: apron,      name: Chambermaid apron,  dr: 1, kg: 0.3, rarity: common,   places: [level5], strict: true, colours: [f4f1ea, 2b2b33] }
+  - { id: hotelrobe,   slot: topw, kind: pajamas,    name: Hotel bathrobe,     dr: 1, kg: 0.7, rarity: common,   places: [level5], strict: true, colours: [f4f1ea, d8c9a0] }
+  - { id: pinstripe,   slot: botw, kind: pants,      name: Pinstripe trousers, dr: 1, kg: 0.5, rarity: common,   places: [level5], strict: true, colours: [2b2b33, 3a2a20] }
+  - { id: velvetskirt, slot: botw, kind: longskirt,  name: Velvet skirt,       dr: 1, kg: 0.5, rarity: uncommon, places: [level5], strict: true, colours: [7a1f3d, 1a1a22] }
+  - { id: hotelslip,   slot: shoes, kind: slippers,  name: Hotel slippers,     dr: 0, kg: 0.2, rarity: common,   places: [level5], strict: true, colours: [f4f1ea] }
+  - { id: balltie,     slot: neck, kind: bowtie,     name: Ballroom bow tie,   dr: 0, kg: 0.05,rarity: common,   places: [level5], strict: true, colours: [1a1a22, b0302a] }
+  - { id: opera,       slot: hat,  kind: tophat,     name: Opera hat,          dr: 1, kg: 0.4, rarity: uncommon, places: [level5], strict: true, colours: [1a1a22, 7a1f3d] }
