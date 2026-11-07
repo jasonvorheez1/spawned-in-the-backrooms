@@ -7,6 +7,9 @@ export function skeleton() {
     legL: { parent: "spine", pivot: [-0.1, 0.95, 0] }, legR: { parent: "spine", pivot: [0.1, 0.95, 0] } };
 }
 export function geometry(ctx) {
+  // RETIRED: the skin-stealer is a Blender mesh now (art/stealer/build.py), swapped in by scripts/stealers.js on its first tick.
+  // A row still spawned with this primitive draws only a speck for that tick.
+  ctx.color("oklch(0.1 0 0)"); sphere(ctx, [0, 0.01, 0], 0.005, 4); return;
   const rev = !!ctx.params?.revealed, hi = ctx.lod <= 2, M = hi ? 16 : 8;
   ctx.smooth(); ctx.roughness(0.85);
   const SKIN = "oklch(0.78 0.04 60)", COAT = "oklch(0.38 0.03 80)", PANTS = "oklch(0.3 0.02 250)", BODY = "oklch(0.12 0.01 20)";
