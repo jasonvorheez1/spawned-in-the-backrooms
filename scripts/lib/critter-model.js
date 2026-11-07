@@ -97,6 +97,18 @@ export function faceMorph(expr, blink, isFemale, look) {
   if (tr) for (const [k, v] of Object.entries(tr)) if (k !== 'w') f[k] = Math.min(1, (f[k] ?? 0) + v * ts)
   if (isFemale && f.Blush == null) f.Blush = 0.28
   if (blink) f.Blink = 1
+  return eyeClean(f, ff?.eyes ?? look?.eyes)
+}
+// eye keys are whole shapes, so stacking them smears the eye: a shut or happy eye wins over the open-eye shapes, the open shapes share one budget,
+// and the eye type (EyeTall / EyeWide on the Blender heads) fades out as the lids close
+const OPEN_EYE = ['Half', 'Sad', 'Angry', 'Wide']
+function eyeClean(f, eyes) {
+  const shut = Math.min(1, Math.max(f.Blink ?? 0, f.Happy ?? 0))
+  if ((f.Blink ?? 0) > 0 && (f.Happy ?? 0) > 0) { if (f.Blink >= f.Happy) f.Happy = 0; else f.Blink = 0 }
+  let sum = 0; for (const k of OPEN_EYE) if (f[k]) { f[k] *= 1 - shut; sum += f[k] }
+  if (sum > 1) for (const k of OPEN_EYE) if (f[k]) f[k] /= sum
+  const t = eyes === 'tall' ? 'EyeTall' : eyes === 'wide' ? 'EyeWide' : null
+  if (t) f[t] = 1 - shut
   return f
 }
 // a whole critter for a spawn (place sims): body, head child, gait clips on the library
