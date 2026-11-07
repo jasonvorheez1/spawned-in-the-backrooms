@@ -87,9 +87,11 @@ export function tickPeople(ctx) {
   const s = ctx.place.state, now = ctx.now(), players = ctx.place.players;
   const ids = Object.keys(P.people).filter((id) => alive(ctx.place.objects[id])), objs = ids.map((id) => ctx.place.objects[id]);
   // the floor's clock
-  const c = s.l4clock ?? (s.l4clock = { phase: "day", until: now + P.day * 1000 });
+  const DAY = +(P?.day ?? P?.daySeconds) || 480, NIGHT = +(P?.night ?? P?.nightSeconds) || 240; // her pick: an 8-minute day, a 4-minute night when the table says nothing
+  if (!s.l4clock || !Number.isFinite(s.l4clock.until)) s.l4clock = { phase: s.l4clock?.phase ?? "day", until: now + DAY * 1000 };
+  const c = s.l4clock;
   if (now > c.until) {
-    const phase = c.phase === "day" ? "night" : "day"; s.l4clock = { phase, until: now + (phase === "day" ? P.day : P.night) * 1000 };
+    const phase = c.phase === "day" ? "night" : "day"; s.l4clock = { phase, until: now + (phase === "day" ? DAY : NIGHT) * 1000 };
     s.meet = null; s.l4err = {};
     for (const o of objs) { o.state.rounds = roundsFor(ctx, o.id, phase); o.state.ri = 0; o.state.asleep = phase === "night" && !(P.people[o.id].faction === "omega" && P.people[o.id].night === "guard"); }
     const near = objs.filter((o) => players.some((p) => flat(p.feetPosition, o.feetPosition) < 18));
