@@ -126,7 +126,7 @@ export function fillContainerL2(ctx, kind, bonus = 0) {
 }
 export function spawnContainerL2(ctx, kind, p, yaw, opts = {}) {
   const C = L2C.containers[kind], lk = opts.noLock ? null : rollLock(ctx);
-  return ctx.spawn({ tags: ["container", "l2box"], feetPosition: { x: p.x, y: 0.01, z: p.z }, rotation: { yaw }, physics: { body: "static", collider: "box" },
+  return ctx.spawn({ tags: ["container", "l2box"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: { yaw }, physics: { body: "static", collider: "box" },
     primitive: { kind: "scripted", script: "scripts/l2-props-geo.js", params: { kind, seed: Math.floor(ctx.random() * 1000) } },
     state: { name: lk ? `${C.name} (locked)` : C.name, kind, items: fillContainerL2(ctx, kind, (opts.bonus ?? 0) + (lk ? lk.bonus : 0)), ...(lk ? { lock: lk.lock } : {}), room: opts.room ?? -1 } });
 }

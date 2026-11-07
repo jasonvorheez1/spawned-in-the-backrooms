@@ -1,8 +1,8 @@
 // Level 2's referee: lays the halls, lights, camp and supplies once, then keeps the hounds and survivors topped up.
 import L from "../../scripts/lib/data/level2.yml";
 import MEG from "../../scripts/lib/data/meg.yml";
-import { N, H, S, zoneOf, cellCenter, openings, hash, ARRIVE, BACK, SEALED } from "../../scripts/lib/level2.js";
-import { spawnAlmond, spawnCrateL2, spawnWeapon, rollWeaponL2 } from "../../scripts/lib/loot.js";
+import { N, H, S, zoneOf, cellCenter, cellAt, openings, isOpen, hash, ARRIVE, BACK, SEALED, SIDE, HALL, HALL_H, CATWALK, inHall, inPipes, sideOf, flickerSector } from "../../scripts/lib/level2.js";
+import { spawnAlmond, spawnCrateL2, spawnWeapon, rollWeaponL2, spawnContainerL2 } from "../../scripts/lib/loot.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
@@ -71,6 +71,7 @@ export function tick(ctx) {
     for (const id of Object.keys(SURV)) survivor(ctx, id);
     s.gone = {};
   }
+  if ((s.rev ?? 0) < 4) revamp(ctx, s); // the revamp lays itself over a few ticks: rooms, doors, the hall, vents
   // a fallen survivor is replaced after a while
   for (const id of Object.keys(SURV)) {
     const o = ctx.place.objects[id];
@@ -87,5 +88,84 @@ export function tick(ctx) {
       const c = cellCenter(8 + Math.floor(ctx.random() * (N - 8)), Math.floor(ctx.random() * N));
       ctx.spawn({ tags: ["hound"], feetPosition: { x: c.x, y: 0.05, z: c.z }, physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/hound-geo.js" }, state: npcState(ctx, "hound", 60, { xp: 40 }) });
     }
+  }
+}
+
+// ---- the revamp: side rooms behind doors, the Boiler Hall, steam vents, flickering circuits
+const GRIT = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
+const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+const STEAM = `fx
+pop steam rate=(flick(.3,1)^3)*?mobile:22|40 on=disc(.04) life=.7..1.3 v=<%dir|0,0,1>*(1.6..2.6)+sdir()*.35 size=.12..0.22 acc=buoy(.5)+curl(.5)*.6+drag(1.3) sz=$size*(.5>3.4) col=<.82,.84,.86> a=0>.08:.38>.6:.18>0 rot=spin(.3) r=sprite(smoke-puff,alpha)`;
+const SPARKS = `fx
+pop spark rate=(flick(1.4,1)^8)*260 on=disc(.06) life=.25..0.6 v=<%dir|0,0,1>*(1..2.5)+sdir()*1.6 size=.012..0.025 acc=grav()+drag(.4) floor=bounce(.3) sz=$size col=hdr(4,4,6)>hdr(3,1.6,.4) a=1>0 r=sprite(ember,add,velocity,.03)
+pop zap n=1 r=light(<.65,.8,1>,(flick(1.4,1)^8)*14,5)`;
+const flickFx = (col, k) => `fx\npop glow n=1 r=light(${col},(.15+.85*flick(${(3 + k * 5).toFixed(2)},.85))*6,11)`;
+const FIREBOX = `fx
+pop glow n=1 r=light(<1,.45,.15>,fire()*10,9)
+pop ember rate=3 on=disc(.4) life=1..2 v=up(.6..1.2)+sdir()*.2 size=.015..0.03 acc=curl(.6)+drag(.4) col=hdr(4,1.6,.3)>hdr(1,.2,.04) a=(1>0)*flick(9,.4) sz=$size r=sprite(ember,add)`;
+const yawOf = (dx, dz) => Math.atan2(-dx, -dz) * 180 / Math.PI; // the yaw that turns a front (-Z) toward (dx, dz)
+// where each room type puts its containers, in the room's own frame: [a (out toward the door), b (across)]
+const SLOTS = { boiler: [[-1.85, 1.2], [-1.85, -0.4]], locker: [[-1.85, -1.2], [-1.85, -0.5], [-1.85, 0.2]], pump: [[-1.85, 0], [1.5, -1.6], [1.5, 1.6]],
+  office: [[-1.75, -1.5], [-1.75, 1.5], [0.2, 0]], cage: [[-1.7, 0], [1.4, -1.5], [1.4, 1.5]], break: [[-1.7, -1.2], [-1.75, 0.6]], electrical: [[-1.85, 0], [-1.9, -1.4]] };
+
+function sideRoom(ctx, r) {
+  const c = cellCenter(r.cx, r.cz), [nx, nz] = D4[r.o], tx = -nz, tz = nx, E = S / 2, T = L.types[r.type];
+  const P = (a, b, y = 0) => ({ x: c.x + nx * a + tx * b, y, z: c.z + nz * a + tz * b });
+  const style = r.type === "cage" ? "cage" : r.type === "electrical" ? "elec" : "steel";
+  const label = T.label.charAt(0) + T.label.slice(1).toLowerCase();
+  ctx.spawn(`l2-door-${r.i}`, { tags: ["door", "l2door"], feetPosition: P(E, -0.55), rotation: { yaw: Math.atan2(-tz, tx) * 180 / Math.PI }, physics: { body: "kinematic", collider: "box" },
+    primitive: { kind: "scripted", script: "scripts/l2-props-geo.js", params: { kind: "door", style, seed: r.i } }, behavior: "scripts/l2-door.js",
+    state: { name: `${label} door`, lock: r.lock, open: false, yaw0: Math.atan2(-tz, tx) * 180 / Math.PI, c: P(E, 0, 1.1) } });
+  // the stencil over the door, on the tunnel side
+  ctx.spawn({ feetPosition: P(E + 0.14, 0, 2.4), rotation: { yaw: yawOf(nx, nz) }, primitive: { kind: "box", width: 1.1, height: 0.22, depth: 0.02 }, material: { color: "oklch(0.3 0.01 250)", roughness: 0.8 },
+    ui: `<div face="front" width="1.1m" style="font-size:150px;font-weight:900;color:#e6dcc0;text-align:center;letter-spacing:12px;line-height:1.4">${T.label}</div>` });
+  // the room's lamp: a caged bulb, flickering on the electrical rooms
+  const lamp = { feetPosition: P(0, 0, H - 0.2), primitive: { kind: "sphere", radius: 0.07 }, material: { color: T.light, emissive: T.light, emissiveIntensity: 3 } };
+  if (r.type === "electrical") ctx.spawn({ ...lamp, fx: { script: flickFx(`<.6,.75,1>`, hash(r.cx, r.cz, 9)) } });
+  else ctx.spawn({ ...lamp, light: { kind: "point", color: T.light, intensity: 5, distance: 8, shadow: { enabled: false } } });
+  if (r.type === "electrical") ctx.spawn({ feetPosition: P(-0.5, 2.1 - 0.02, 1.6), fx: { script: SPARKS, params: { dir: { x: -tx, y: 0.3, z: -tz } } }, audio: { clip: GRIT("electrical-arc-buzz-loop"), gain: 0.3, loop: true, spatial: true, maxDistance: 9 } });
+  if (r.type === "pump") {
+    ctx.spawn({ feetPosition: P(-0.2, 0, 0.1), rotation: { pitch: -90 }, primitive: { kind: "plane", width: S - 0.8, height: S - 0.8 }, material: { kind: "water", color: "oklch(0.35 0.04 200)", opacity: 0.7, waveIntensity: 0.15 } });
+    ctx.spawn({ feetPosition: P(0, 0, 1.5), audio: { clip: GRIT("water-drip-echo-loop"), gain: 0.25, loop: true, spatial: true, maxDistance: 10 } });
+  }
+  if (r.type === "boiler") ctx.spawn({ feetPosition: P(0.6, -1.4, 0.4), fx: { script: FIREBOX }, audio: { clip: GRIT("boiler-low-rumble-loop"), gain: 0.25, loop: true, spatial: true, maxDistance: 10 } });
+  // what can be looted: its type's containers on their slots, facing the door
+  const S0 = SLOTS[r.type] ?? [[-1.8, 0]], lockedRoom = !!T.lock;
+  T.containers.forEach((k, j) => { const [a, b] = S0[j % S0.length], d = L.containers[k].size[2]; spawnContainerL2(ctx, k, P(a + (a < 0 ? d / 2 - 0.25 : 0), b), yawOf(nx, nz), { bonus: T.bonus ?? 0, noLock: lockedRoom, room: r.i }); });
+}
+
+function revamp(ctx, s) {
+  const step = s.rev ?? 0;
+  if (step === 0) {
+    // lamps that now stand in the hall or inside a room go (each gets its own), lamps in a flickering circuit flicker
+    for (const l of ctx.query({ tags: ["l2lamp"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+      const { cx, cz } = cellAt(l.feetPosition.x, l.feetPosition.z), o = ctx.place.objects[l.id]; if (!o) continue;
+      if (inHall(cx, cz) || sideOf(cx, cz)) { ctx.destroy(l.id); continue; }
+      if (flickerSector(cx, cz)) { const col = o.material?.color ?? "oklch(0.95 0.02 200)"; o.light = null; o.fx = { script: flickFx(col.includes(" 65") ? "<1,.7,.4>" : "<.85,.92,1>", hash(cx, cz, 11)) }; }
+    }
+    ctx.spawn("l2-rooms", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-rooms-geo.js" }, material: { roughness: 0.85 } });
+    // the Boiler Hall: high sodium lamps, the firebox, the drone, loot on the floor and up on the catwalk
+    const cx = (HALL.x0 + HALL.x1) / 2, cz = (HALL.z0 + HALL.z1) / 2;
+    for (const [dx, dz] of [[-6, -6], [6, -6], [-6, 6], [6, 6]]) ctx.spawn({ feetPosition: { x: cx + dx, y: HALL_H - 0.6, z: cz + dz }, primitive: { kind: "cylinder", radiusTop: 0.15, radiusBottom: 0.35, height: 0.3 }, material: { color: "oklch(0.85 0.14 65)", emissive: "oklch(0.8 0.15 60)", emissiveIntensity: 2.5 }, light: { kind: "point", color: "oklch(0.8 0.13 62)", intensity: 16, distance: 22, shadow: { enabled: false } } });
+    ctx.spawn({ feetPosition: { x: cx - 6.8, y: 2.2, z: cz }, fx: { script: FIREBOX }, audio: { clip: GRIT("boiler-low-rumble-loop"), gain: 0.4, loop: true, spatial: true, maxDistance: 26 } });
+    spawnContainerL2(ctx, "lockbox", { x: HALL.x1 - 0.4 - 0.7, y: CATWALK + 0.01, z: HALL.z1 - 0.4 - 0.7 }, 225, { bonus: 1 });
+    spawnContainerL2(ctx, "toolbox", { x: HALL.x0 + 1.2, z: cz + 3 }, -90);
+    spawnContainerL2(ctx, "cabinet", { x: cx + 2, z: HALL.z1 - 0.7 }, 180);
+    s.rev = 1; return;
+  }
+  if (step === 1 || step === 2) { const half = Math.ceil(SIDE.length / 2); for (const r of SIDE.slice((step - 1) * half, step * half)) sideRoom(ctx, r); s.rev = step + 1; return; }
+  if (step === 3) {
+    // steam vents: split joints along the wall pipes, in the pipe maze most of all; each hisses
+    let n = 0;
+    for (let cz = 0; cz < N && n < L.steamVents; cz++) for (let cx = 3; cx < N && n < L.steamVents; cx++) {
+      const z = zoneOf(cx, cz); if (z === "camp" || inHall(cx, cz) || sideOf(cx, cz)) continue;
+      if (hash(cx, cz, 515) > (inPipes(cx, cz) ? 0.5 : 0.07)) continue;
+      const d = [0, 1, 2, 3].find((k) => !isOpen(cx, cz, k)); if (d == null) continue;
+      const c = cellCenter(cx, cz), [dx, dz] = D4[d], off = S / 2 - 0.55;
+      ctx.spawn({ tags: ["l2steam"], feetPosition: { x: c.x + dx * off, y: 1.6 + hash(cx, cz, 516) * 0.8, z: c.z + dz * off }, fx: { script: STEAM, params: { dir: { x: -dx, y: 0.15, z: -dz } } },
+        audio: { clip: GRIT("steam-pipe-hiss-loop"), gain: 0.3, loop: true, spatial: true, maxDistance: 9 } });
+      n++;
+    }
+    s.rev = 4;
   }
 }
