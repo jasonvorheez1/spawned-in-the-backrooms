@@ -203,7 +203,7 @@ export function update(ctx) {
     const pos = { x: f.x + fx * 2.1 + rx * 0.6, y: f.y, z: f.z + fz * 2.1 + rz * 0.6 }
     const rot = { yaw: (yaw * 180) / Math.PI + 180 + (ctx.self.state.wrSpin || 0) + Math.sin(ctx.now() / 1600) * 18 }
     const mirror = ses.mirror && ctx.getObject(ses.mirror)
-    const look = worn ? { model: worn.url } : MESH ? { model: bodyModel(params), children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel(params), morph: faceMorph(face), audience: 'local' }] } : { primitive: { kind: 'scripted', script: SCRIPT, params } }
+    const look = worn ? { model: worn.url } : MESH ? { model: bodyModel(params), children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel({ ...params, vary: false }), morph: faceMorph(face), audience: 'local' }] } : { primitive: { kind: 'scripted', script: SCRIPT, params } }
     if (!mirror) { ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, ...look, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } }); const m = ctx.getObject(ses.mirror); if (m) { m.anim.idle = { clip: worn ? GAIT_LIB.idle : 'Idle', loop: 'loop', weight: 1 }; if (!worn) flair(m, face) } }
     else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { if (worn) { mirror.primitive = null; mirror.model = worn.url; mirror.anim.flair = null; mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else if (MESH) { mirror.primitive = null; mirror.model = bodyModel(params); wearHead(ctx, mirror, params); flair(mirror, face) } else { mirror.model = null; mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
       if (MESH && !worn) { const mh = ctx.getObject(mirror.id + '/' + HEAD_ID); if (mh) mh.morph = faceMorph(face) }
@@ -235,7 +235,7 @@ export function update(ctx) {
 function dropHead(ctx, o) { if (ctx.getObject(o.id + '/' + HEAD_ID)) ctx.destroy(o.id + '/' + HEAD_ID) }
 // the species head (face, ears, tail) rides the body's rig as a skinned child; restyled when the look changes
 function wearHead(ctx, o, l) {
-  const h = ctx.getObject(o.id + '/' + HEAD_ID), model = headModel(l)
+  const h = ctx.getObject(o.id + '/' + HEAD_ID), model = headModel({ ...l, vary: false })
   if (h) { h.model = model; h.visible = true; h.morph = faceMorph(l.expr) }
   else ctx.spawn({ parent: o.id, id: HEAD_ID, attachment: { skin: true }, model, morph: faceMorph(l.expr), ...(o.audience === 'local' ? { audience: 'local' } : {}) })
 }

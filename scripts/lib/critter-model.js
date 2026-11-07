@@ -15,7 +15,7 @@ const INKS = ['#1e1a1c', '#2c2220', '#3a2a22', '#24242c', '#40302a']
 function furMats(l) {
   const sp = M.species[speciesOf(l)], fur = l.fur || sp.fur
   let belly = sp.belly, tip = sp.tip || sp.belly, mark = sp.mark
-  if (l.fur) {
+  if (l.fur && l.vary !== false) {
     const u = seedOf(l), cream = CREAMS[Math.floor(u() * CREAMS.length)], ink = INKS[Math.floor(u() * INKS.length)]
     belly = mix(fur, cream, 0.45 + u() * 0.45)
     tip = u() < 0.5 ? belly : mix(fur, ink, 0.35 + u() * 0.4)
