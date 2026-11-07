@@ -97,7 +97,7 @@ export default function render(ctx, player) {
     ${bar('HP', s.hp, mh, hpF < 0.3 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.ceil(s.hp)}/${mh}`)}
     ${bar(`SAN <span style="opacity:.7">· ${sanWord}</span>`, s.sanity, ms, sanF < 0.25 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.ceil(s.sanity)}%`)}
     ${compass(((player.camera?.rotation?.yaw ?? 0) % 360 + 360) % 360)}
-    <div style="font-size:11px;margin-top:4px;opacity:.85">LV ${lv} · XP ${s.xp}/${L.xpBase * lv} · ${s.explored ?? 0} rooms · ${s.kills ?? 0} smilers</div>
+    <div style="font-size:11px;margin-top:4px;opacity:.85">LV ${lv} · XP ${s.xp}/${L.xpBase * lv}</div>
   </div>
 
   <!-- BOTTOM-RIGHT: weapon, stamina, almond water, light -->
