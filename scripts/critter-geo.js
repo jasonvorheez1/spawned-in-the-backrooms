@@ -374,7 +374,7 @@ export function geometry(ctx) {
     if (fem) {
       for (const s of [-1, 1]) {
         ctx.color(sp.dark ? sp.dark : FUR);
-        ell([s * 0.062, 0.875, -0.09], [0.065, 0.058, 0.058], null, { seg: hi ? 14 : 9 });
+        ell([s * 0.05, 0.868, -0.078], [0.078, 0.066, 0.066], null, { seg: hi ? 18 : 10 });
       }
     }
 
@@ -707,7 +707,7 @@ export function geometry(ctx) {
       [0, Math.max(0.6, low), 0.005],
       [0, 0.73, 0.0],
       [0, 0.82, 0.0],
-      [0, 0.90, -0.005],
+      [0, 0.90, fem ? -0.02 : -0.005],
       [0, 0.97, 0.0]
     ];
     loft(path, (t) => {
@@ -715,6 +715,7 @@ export function geometry(ctx) {
       const tf = (y - 0.58) / (0.97 - 0.58);
       let rx = lerp(HIP_R[0], CHEST_R[0], tf) + 0.014;
       let rz = lerp(HIP_R[1], CHEST_R[1], tf) + 0.014;
+      if (fem) { const pinch = Math.exp(-((tf - 0.42) ** 2) / 0.02) * 0.03; rx -= pinch; rz -= pinch * 0.4; rz += Math.exp(-((tf - 0.78) ** 2) / 0.012) * 0.03; } // waist pinch, then a soft bust curve
       return [rx, rz];
     }, [0, 0, -1], null, hi ? 20 : 12);
   };
