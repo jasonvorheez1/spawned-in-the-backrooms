@@ -5,9 +5,9 @@ const TABS = [['body', 'BODY', '01'], ['face', 'FACE', '02'], ['clothes', 'CLOTH
 const CSS = `<style>
 @media (max-width:700px){#hud{visibility:hidden}}
 @keyframes ccIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
-@keyframes ccScan{from{background-position:0 0}to{background-position:0 6px}}
+@keyframes ccScan{from{transform:translateY(-6px)}to{transform:translateY(0)}}
 #cc{--a:#ffb347;--a2:#ffcf87;--ink:#16140e;--bg:oklch(0.17 0.025 75 / .97);position:absolute;left:24px;top:24px;bottom:24px;width:min(560px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px)));display:flex;flex-direction:column;background:var(--bg);border:2px solid var(--a);box-shadow:8px 8px 0 rgba(0,0,0,0.7),0 0 30px rgba(255,170,40,.18) inset,0 0 0 1px rgba(255,179,71,.25);color:var(--a2);font-family:'Geist Pixel Square',ui-monospace,monospace;animation:ccIn .18s ease-out;overflow:hidden}
-#cc:before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 3px,#0003 3px 6px);animation:ccScan 1.2s linear infinite;opacity:.35}
+#cc:before{content:'';position:absolute;inset:-6px 0 0 0;will-change:transform;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 3px,#0003 3px 6px);animation:ccScan 1.2s linear infinite;opacity:.35}
 #cc .hd{display:flex;align-items:stretch;border-bottom:2px solid var(--a);background:oklch(0.14 0.025 75)}
 #cc .hd .ttl{flex:1;padding:12px 16px 10px}
 #cc h2{font-size:22px;margin:0;letter-spacing:.18em;color:var(--a);text-shadow:0 0 8px rgba(255,170,40,.55)}
