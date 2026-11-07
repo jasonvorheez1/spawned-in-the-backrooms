@@ -15,24 +15,38 @@ food:
   beans: 25
   bar: 12
   lobby_wafer: 18
+# cat: the menu tab it sits under (weapons, ammo, aid, tools, armor).
 # recipes. in: scrap tokens (scripts/lib/data/breakables.yml scrap) and counts. out: item tokens, each one a takeToken().
 # skill: [name, level] you must have; each skill point above it adds 1% to a chance of one extra output (Fallout style).
 # bench: needs a workbench (B builds one) within reach.
 recipes:
-  kit:        { name: Repair kit,      in: { scrap_metal: 2, bolts: 2, nails: 2 },         out: [kit],              skill: [repair, 15],   desc: "Mends the weapon in your hand" }
-  tape:       { name: Duct tape,       in: { wire: 1, drywall: 1 },                         out: [tape],             skill: [repair, 5],    desc: "A quick patch on a weapon" }
-  bobbypin:   { name: Bobby pins,      in: { wire: 1, nails: 1 },                            out: [bobbypin, bobbypin, bobbypin], skill: [repair, 10],   desc: "3 bobby pins for picking locks" }
-  ammo:       { name: Pistol rounds,   in: { scrap_metal: 2, springs: 1 },                  out: [ammo, ammo],       skill: [guns, 20],     bench: true, desc: "Two boxes of rounds" }
-  shells:     { name: Shotgun shells,  in: { scrap_metal: 2, wire: 1, nails: 1 },           out: [shells],           skill: [guns, 30],     bench: true, desc: "One box of shells" }
-  battery:    { name: Battery,         in: { copper_coil: 1, scrap_metal: 1, bolts: 1 },    out: [battery],          skill: [science, 20],  bench: true, desc: "Recharges the flashlight" }
-  fuse:       { name: Fuse,            in: { wire: 2, scrap_metal: 1 },                     out: [fuse],             skill: [repair, 20],   bench: true, desc: "Opens a fused door" }
-  bandage:    { name: Bandage,         in: { drywall: 2, wire: 1 },                          out: [bandage],          skill: [medicine, 15], desc: "Heals on the spot" }
-  firstaid:   { name: First aid kit,   in: { drywall: 3, wire: 2, copper_coil: 1 },          out: [firstaid],         skill: [medicine, 40], bench: true, desc: "A proper kit: a big heal" }
-  kit2:       { name: Field repair set, in: { scrap_metal: 4, gears: 1, springs: 1, bolts: 3 }, out: [kit, kit],      skill: [repair, 50],   bench: true, desc: "Two kits at once" }
+  kit:        { cat: aid, name: Repair kit,      in: { scrap_metal: 2, bolts: 2, nails: 2 },         out: [kit],              skill: [repair, 15],   desc: "Mends the weapon in your hand" }
+  tape:       { cat: aid, name: Duct tape,       in: { wire: 1, drywall: 1 },                         out: [tape],             skill: [repair, 5],    desc: "A quick patch on a weapon" }
+  bobbypin:   { cat: tools, name: Bobby pins,      in: { wire: 1, nails: 1 },                            out: [bobbypin, bobbypin, bobbypin], skill: [repair, 10],   desc: "3 bobby pins for picking locks" }
+  ammo:       { cat: ammo, name: Pistol rounds,   in: { scrap_metal: 2, springs: 1 },                  out: [ammo, ammo],       skill: [guns, 20],     bench: true, desc: "Two boxes of rounds" }
+  shells:     { cat: ammo, name: Shotgun shells,  in: { scrap_metal: 2, wire: 1, nails: 1 },           out: [shells],           skill: [guns, 30],     bench: true, desc: "One box of shells" }
+  battery:    { cat: tools, name: Battery,         in: { copper_coil: 1, scrap_metal: 1, bolts: 1 },    out: [battery],          skill: [science, 20],  bench: true, desc: "Recharges the flashlight" }
+  fuse:       { cat: tools, name: Fuse,            in: { wire: 2, scrap_metal: 1 },                     out: [fuse],             skill: [repair, 20],   bench: true, desc: "Opens a fused door" }
+  bandage:    { cat: aid, name: Bandage,         in: { drywall: 2, wire: 1 },                          out: [bandage],          skill: [medicine, 15], desc: "Heals on the spot" }
+  firstaid:   { cat: aid, name: First aid kit,   in: { drywall: 3, wire: 2, copper_coil: 1 },          out: [firstaid],         skill: [medicine, 40], bench: true, desc: "A proper kit: a big heal" }
+  kit2:       { cat: aid, name: Field repair set, in: { scrap_metal: 4, gears: 1, springs: 1, bolts: 3 }, out: [kit, kit],      skill: [repair, 50],   bench: true, desc: "Two kits at once" }
   # outfits (Savi's picks): improvised armor from what the levels break into. Each lands as a garment you can wear (I menu).
-  poncho:     { name: Carpet poncho,      in: { wire: 2, drywall: 1 },                          out: ["cloth:neck:cape:b39a4e"],      skill: [repair, 5],    desc: "Neck · DR 3 · cut from Level 0 carpet" }
-  padbeanie:  { name: Padded beanie,      in: { wire: 1, drywall: 2 },                          out: ["cloth:hat:beanie:4a5a3a"],     skill: [repair, 10],   desc: "Hat · DR 3" }
-  padjacket:  { name: Padded jacket,      in: { drywall: 3, wire: 2, nails: 2 },                out: ["cloth:topw:jacket:5a4a3a"],    skill: [repair, 25],   bench: true, desc: "Top · DR 5" }
-  steeltoe:   { name: Steel-toe boots,    in: { sheet_steel: 1, scrap_metal: 2, bolts: 2 },     out: ["cloth:shoes:boots:3a3a30"],    skill: [repair, 30],   bench: true, desc: "Shoes · DR 4" }
-  wirehood:   { name: Wire-mesh hoodie,   in: { copper_wire: 4, wire: 3, springs: 1 },          out: ["cloth:topw:hoodie:6e6e64"],    skill: [repair, 45],   bench: true, desc: "Top · DR 6 · Level 3 copper woven through" }
-  platevest:  { name: Drywall plate vest, in: { drywall: 4, sheet_steel: 2, bolts: 4, wire: 2 }, out: ["cloth:topw:apron:cfc8b8"],    skill: [repair, 60],   bench: true, desc: "Top · DR 7 · heavy" }
+  poncho:     { cat: armor, name: Carpet poncho,      in: { wire: 2, drywall: 1 },                          out: ["cloth:neck:cape:b39a4e"],      skill: [repair, 5],    desc: "Neck · DR 3 · cut from Level 0 carpet" }
+  padbeanie:  { cat: armor, name: Padded beanie,      in: { wire: 1, drywall: 2 },                          out: ["cloth:hat:beanie:4a5a3a"],     skill: [repair, 10],   desc: "Hat · DR 3" }
+  padjacket:  { cat: armor, name: Padded jacket,      in: { drywall: 3, wire: 2, nails: 2 },                out: ["cloth:topw:jacket:5a4a3a"],    skill: [repair, 25],   bench: true, desc: "Top · DR 5" }
+  steeltoe:   { cat: armor, name: Steel-toe boots,    in: { sheet_steel: 1, scrap_metal: 2, bolts: 2 },     out: ["cloth:shoes:boots:3a3a30"],    skill: [repair, 30],   bench: true, desc: "Shoes · DR 4" }
+  wirehood:   { cat: armor, name: Wire-mesh hoodie,   in: { copper_wire: 4, wire: 3, springs: 1 },          out: ["cloth:topw:hoodie:6e6e64"],    skill: [repair, 45],   bench: true, desc: "Top · DR 6 · Level 3 copper woven through" }
+  platevest:  { cat: armor, name: Drywall plate vest, in: { drywall: 4, sheet_steel: 2, bolts: 4, wire: 2 }, out: ["cloth:topw:apron:cfc8b8"],    skill: [repair, 60],   bench: true, desc: "Top · DR 7 · heavy" }
+  # weapons (Savi's picks): what the levels break into, made into something to swing
+  pipeclub:   { cat: weapons, name: Pipe scrap,        in: { steel_pipe: 1, wire: 1 },                     out: ["weapon:pipe_scrap"],   skill: [repair, 5],    desc: "A length of pipe, grip wrapped in wire" }
+  rebarspike: { cat: weapons, name: Rebar spike,       in: { rebar_rod: 2, wire: 1 },                      out: ["weapon:rebar"],        skill: [repair, 15],   desc: "Rebar ground to a point · reach 3.1 m" }
+  crowbar:    { cat: weapons, name: Crowbar,           in: { steel_pipe: 1, sheet_steel: 1, bolts: 1 },    out: ["weapon:crowbar"],      skill: [repair, 25],   bench: true, desc: "Pries doors and skulls alike" }
+  hatchet:    { cat: weapons, name: Hatchet,           in: { scrap_wood: 2, sheet_steel: 1, nails: 2 },    out: ["weapon:hatchet"],      skill: [repair, 30],   bench: true, desc: "Steel head on a scrap-wood haft" }
+  wrench:     { cat: weapons, name: Pipe wrench,       in: { steel_pipe: 2, gears: 1, bolts: 2 },          out: ["weapon:wrench"],       skill: [repair, 35],   bench: true, desc: "Heavy · harvests more off machines" }
+  sledge:     { cat: weapons, name: Sledgehammer,      in: { cinder: 2, steel_pipe: 1, bolts: 3 },         out: ["weapon:sledgehammer"], skill: [repair, 45],   bench: true, desc: "A cinderblock head · slow, brutal" }
+  machete:    { cat: weapons, name: "Lineman's machete", in: { sheet_steel: 2, scrap_wood: 1, rust_flakes: 2 }, out: ["weapon:lineman_machete"], skill: [repair, 55], bench: true, desc: "Hammered from sheet steel" }
+  baton:      { cat: weapons, name: Stun baton,        in: { steel_pipe: 1, circuit: 1, copper_coil: 1, copper_wire: 2 }, out: ["weapon:stun_baton"], skill: [science, 50], bench: true, desc: "Wired to bite" }
+  # more ammo and tools
+  ammo4:      { cat: ammo,  name: Pistol rounds (bulk), in: { scrap_metal: 4, springs: 2, rust_flakes: 1 }, out: [ammo, ammo, ammo, ammo], skill: [guns, 45], bench: true, desc: "Four boxes at once" }
+  valve:      { cat: tools, name: Valve wheel,       in: { brass_valve: 1, bolts: 1 },                     out: [valve],                 skill: [repair, 15],   bench: true, desc: "Opens a PUMP ROOM door" }
+  compass:    { cat: tools, name: Old compass,       in: { copper_wire: 1, scrap_metal: 1, tile_shard: 1 }, out: [compass],              skill: [science, 35],  bench: true, desc: "Senses what is near · wears out" }
