@@ -1,5 +1,5 @@
-critter-f.glb 201 /cdn/value.84a70b8d75b12131065c76710aefcf0d70c6269933225d78ae7e68e3359c81ef.glb
-critter-m.glb 201 /cdn/value.c2d2cf30258e5a9dffe20340b842637fe5106a6def1e54dc7db9d2ef462e0cdf.glb
+critter-f.glb 201 /cdn/value.682501798e8138b9346c8fc59bc505fa52fafd071bdc7f566468535e1afcc273.glb
+critter-m.glb 201 /cdn/value.7881d7f27de1c28b970263e16694310cb94ae5ece79639de9752d49d65a1299c.glb
 critter-sp-bear-f.glb 201 /cdn/value.07e49ddfb2cb4bd1effb27c39c68bf60ba0c0ec794563eb251d31f1dc9ef5342.glb
 critter-sp-bear-m.glb 201 /cdn/value.cde49f5d8f621cfc5bf77fd9a78bbd8ece34513c3477c63a14aaddc85affe0fa.glb
 critter-sp-bunny-f.glb 201 /cdn/value.9bfadd7374576c94731197ff2a40f22e07dc7c1e0f52ad9613c81d0848132321.glb

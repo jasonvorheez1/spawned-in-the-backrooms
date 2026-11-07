@@ -204,53 +204,138 @@ def parent_to(o, rig):
 # ================= body =================
 def torso_shapes(mb, F, inflate=0.0, lo=0.0, hi=9.0, sleeves=None, legs=None, bust=True):
     i = inflate
-    if lo <= .66 <= hi: ell(mb, (0, -.01, .655), (.162 if F else .12) + i, (.108 if F else .095) + i, (.1 if F else .09) + i)          # pelvis
-    if F and lo <= .64 <= hi: ell(mb, (0, -.05, .63), .125 + i, .075 + i, .085 + i)                                                     # a rounder seat
-    if lo <= .78 <= hi: ell(mb, (0, 0, .772), (.078 if F else .105) + i, (.07 if F else .078) + i, .085 + i)             # waist
-    if lo <= .88 <= hi: ell(mb, (0, 0, .878), (.1 if F else .122) + i, (.078 if F else .084) + i, .08 + i)              # chest
+    if lo <= .65 <= hi:
+        if F:
+            ell(mb, (0, -.006, .668), .136 + i, .092 + i, .082 + i)                                           # smooth high-hip flare from waist
+            ell(mb, (0, -.008, .622), .154 + i, .104 + i, .092 + i)                                           # wide curvy female hips & pelvis
+            ell(mb, (0, .016, .662), .092 + i, .076 + i, .072 + i)                                            # soft lower tummy curve
+            for s in (-1, 1): ell(mb, (.054 * s, -.058, .606), .074 + i, .074 + i, .080 + i)                  # twin sculpted rounded glutes/seat
+        else:
+            ell(mb, (0, -.006, .645), .114 + i, .090 + i, .088 + i)                                           # sturdy male pelvis
+            for s in (-1, 1): ell(mb, (.046 * s, -.044, .612), .058 + i, .056 + i, .068 + i)                  # male seat
+    if lo <= .77 <= hi:
+        if F: ell(mb, (0, -.005, .768), .074 + i, .063 + i, .078 + i)                                         # pinched hourglass female waist
+        else: ell(mb, (0, 0, .768), .104 + i, .082 + i, .088 + i)                                             # tapered male waist
+    if lo <= .88 <= hi:
+        if F:
+            ell(mb, (0, -.008, .868), .095 + i, .068 + i, .076 + i)                                           # feminine ribcage
+            ell(mb, (0, -.004, .912), .094 + i, .066 + i, .058 + i)                                           # upper chest / collarbone bridge
+        else:
+            ell(mb, (0, .004, .878), .126 + i, .090 + i, .088 + i)                                            # broad male chest
+            for s in (-1, 1): ell(mb, (.052 * s, .032, .882), .062 + i, .052 + i, .056 + i)                   # subtle masculine pec contour
     if F and bust and lo <= .87 <= hi:
-        for s in (-1, 1): ell(mb, (.048 * s, .055, .866), .053 + i, .05 + i, .048 + i)                   # a soft round bust
+        ell(mb, (0, .048 + i * .25, .856), .052 + i, .052 + i, .052 + i)                                   # smooth sternum bridge
+        for s in (-1, 1):
+            ell(mb, (.054 * s, .078 + i * .35, .858), .063 + i, .072 + i, .059 + i, rot=(math.radians(-6), 0, math.radians(-10 * s))) # full curvy breasts
+            ell(mb, (.048 * s, .052 + i * .25, .890), .050 + i, .050 + i, .046 + i)                           # natural upper-bust teardrop slope
+            ell(mb, (.050 * s, .052 + i * .30, .830), .054 + i, .052 + i, .048 + i)                           # smooth underbust-to-ribcage transition
     if lo <= .94 <= hi:
-        for s in (-1, 1): ball(mb, ((.098 if F else .105) * s, 0, .935), (.042 if F else .048) + i)          # round shoulders
+        for s in (-1, 1):
+            ell(mb, ((.098 if F else .114) * s, -.004, .942), (.044 if F else .052) + i, (.040 if F else .048) + i, (.042 if F else .048) + i)
+            if F: ell(mb, (.082 * s, .014, .916), .044 + i, .042 + i, .044 + i)                               # smooth shoulder-to-bust bridge (no armpit crease)
     if sleeves:
-        for s in (-1, 1): cap(mb, (.11 * s, 0, .94), (sleeves * s, 0, .953), (.04 if F else .043) + i)
+        for s in (-1, 1):
+            cap(mb, (.105 * s, -.002, .945), (min(sleeves, .33) * s, -.004, .952), (.034 if F else .039) + i)
+            if sleeves > .33:
+                cap(mb, (.33 * s, -.004, .952), (sleeves * s, 0, .955), (.028 if F else .032) + i)
+                if sleeves >= .42: ell(mb, (.385 * s, .002, .953), .062 + i, (.035 if F else .040) + i, (.035 if F else .040) + i)
     if legs:
         for s in (-1, 1):
-            cap(mb, (.085 * s, 0, .63), (.088 * s, 0, max(legs, .1)), (.047 if F else .045) + i)
-            if F: ell(mb, (.086 * s, -.004, .55), .06 + i, .058 + i, .1 + i)                              # soft thighs
+            cap(mb, (.090 * s, 0, .61), (.090 * s, .004, max(legs, .34)), (.050 if F else .048) + i)
+            if F: ell(mb, (.092 * s, -.004, .525), .068 + i, .066 + i, .115 + i, rot=(0, math.radians(5 * s), 0)) # lush curvy thighs
+            else: ell(mb, (.090 * s, 0, .515), .056 + i, .056 + i, .105 + i)
+            if legs < .34:
+                cap(mb, (.090 * s, .004, .34), (.090 * s, -.005, max(legs, .1)), (.041 if F else .043) + i)
+                ell(mb, (.090 * s, -.010, .235), (.048 if F else .049) + i, .052 + i, .082 + i)
+
+def add_bust_key(o):
+    if not o.data.shape_keys: o.shape_key_add(name="Basis")
+    sk = o.shape_key_add(name="Bust")
+    for i, v in enumerate(o.data.vertices):
+        p = v.co
+        if p.y <= 0.005 or p.z < 0.76 or p.z > 0.95 or abs(p.x) > 0.17:
+            sk.data[i].co = p.copy(); continue
+        s = 1 if p.x >= 0 else -1
+        dx = (abs(p.x) - 0.054) / 0.088
+        dz = (p.z - 0.858) / 0.074
+        dy = max(0.0, min(1.0, (p.y - 0.005) / 0.065))
+        r2 = dx * dx + dz * dz
+        w = ((1.0 - r2) ** 1.55) * dy if r2 < 1.0 else 0.0
+        # keep cleavage bridge moving smoothly when garments stretch across the chest
+        wb = ((1.0 - min(1.0, dz * dz)) ** 1.6) * dy * max(0.0, 1.0 - (p.x / 0.065) ** 2) * 0.58
+        w = max(w, wb)
+        if w > 1e-4:
+            out_x = s * 0.016 * w * min(1.0, abs(p.x) / 0.054)
+            sk.data[i].co = p + Vector((out_x, 0.044 * w, (-0.006 + 0.014 * dz) * w))
+        else:
+            sk.data[i].co = p.copy()
 
 def build_body(F):
-    mb, o = mball("CBody", 0.006)
-    torso_shapes(mb, F)
+    mb, o = mball("CBody", 0.0045)
+    torso_shapes(mb, F, sleeves=.498, legs=.10)
     cap(mb, (0, 0, .93), (0, 0, 1.12), .046)                                                               # neck, buried in the head
+    digits = []
     for s in (-1, 1):
-        cap(mb, (.1 * s, 0, .94), (.505 * s, 0, .955), .029 if F else .034)                              # noodle arms
-        ell(mb, (.56 * s, 0, .955), .062, .046, .054)                                                    # mitten
-        ball(mb, (.528 * s, .044, .962), .022)                                                           # thumb nub
-        cap(mb, (.085 * s, 0, .63), (.088 * s, 0, .1), .04 if F else .042)                                # legs
-        if F: ell(mb, (.086 * s, -.004, .55), .057, .055, .1)
-        ell(mb, (.088 * s, .035, .052), .056, .092, .052)                                                # round bean feet
-    body = mb_mesh(o, .0055, 2, 9000, "Body")
-    # materials: fur (torso), limb (arms, legs, hands, feet), belly (a soft oval tummy patch)
+        # sculpted plush paw-palm cushion at the wrist (fuller in Z & Y with a smooth coplanar thumb-web blend)
+        ell(mb, (.542 * s, .002, .955), .046, .045, .032)
+        ell(mb, (.534 * s, .024, .955), .028, .024, .022)                                                   # smooth thumb-web transition
+        # 4 plump, sculpted paw-hand digits (opposable Thumb + 3 rounded finger digits)
+        th_pts = [(.524 * s, .022, .955), (.546 * s, .046, .955), (.565 * s, .060, .955)]
+        th, _ = tube(f"Thumb_{s}", th_pts, [.0180, .0165, .0150], 12); digits.append(th)
+        for fnm, y0, y1, y2, z0, z1, z2, x1, x2, r0 in (
+            ("Idx",  .024,  .031,  .036, .955, .955, .955, .586, .610, .0165),
+            ("Mid",  .000,  .000,  .000, .955, .955, .955, .592, .618, .0174),
+            ("Rng", -.024, -.031, -.036, .955, .955, .955, .584, .606, .0160),
+        ):
+            fpts = [(.558 * s, y0, z0), (x1 * s, y1, z1), (x2 * s, y2, z2)]
+            fg, _ = tube(f"Fing_{fnm}_{s}", fpts, [r0, r0 * .95, r0 * .88], 12); digits.append(fg)
+        # sculpted paw-feet with 3 distinct rounded toes
+        ell(mb, (.090 * s, .026, .046), .053, .080, .045)
+        for ti in (-1, 0, 1):
+            tx = (.090 + .027 * ti * s) * s
+            ty0, ty1 = .072 - .005 * abs(ti), .104 - .006 * abs(ti)
+            tpts = [(tx, ty0, .040), (tx, (ty0 + ty1) * .5, .038), (tx, ty1, .034)]
+            to, _ = tube(f"Toe_{ti}_{s}", tpts, [.0195, .0190, .0172], 12); digits.append(to)
+    sel(o); bpy.ops.object.convert(target='MESH'); base = bpy.context.active_object
+    raw = join([base] + digits, "BodyRaw")
+    r = raw.modifiers.new("vox", "REMESH"); r.mode = 'VOXEL'; r.voxel_size = 0.0038; sel(raw); bpy.ops.object.modifier_apply(modifier="vox")
+    sm = raw.modifiers.new("sm", "SMOOTH"); sm.iterations = 3; sm.factor = 0.48; bpy.ops.object.modifier_apply(modifier="sm")
+    if tris(raw) > 12000:
+        d = raw.modifiers.new("dec", "DECIMATE"); d.ratio = 12000 / tris(raw); bpy.ops.object.modifier_apply(modifier="dec")
+    smooth(raw); raw.name = raw.data.name = "Body"; body = raw
+    if F: add_bust_key(body)
+    # materials: fur (torso), limb (arms, legs, hands, feet), pad (pink paw pads & toe beans), belly
     body.data.materials.clear()
-    for n in ("fur", "limb", "belly"): body.data.materials.append(mat(n, "#f2a65a" if n != "belly" else "#fff1dc"))
+    body.data.materials.append(mat("fur", "#f2a65a"))
+    body.data.materials.append(mat("limb", "#f2a65a"))
+    body.data.materials.append(mat("pad", "#ff9fb4", 0.6))
+    body.data.materials.append(mat("belly", "#fff1dc"))
     for p in body.data.polygons:
-        c = p.center
-        limb = abs(c.x) > .15 or c.z < .56
-        tummy = False
-        p.material_index = 2 if tummy else 1 if limb else 0
+        c = p.center; n = p.normal; ax = abs(c.x)
+        palm_pad = (.522 < ax < .564 and abs(c.y - .002) < .024 and c.z < .944 and n.z < -.45)
+        ftip_pad = (ax > .558 and c.z < .946 and n.z < -.40 and (
+            ((ax - .600) / .013) ** 2 + ((c.y - .033) / .011) ** 2 < 1.0 or
+            ((ax - .608) / .013) ** 2 + (c.y / .011) ** 2 < 1.0 or
+            ((ax - .596) / .013) ** 2 + ((c.y + .033) / .011) ** 2 < 1.0 or
+            ((ax - .558) / .012) ** 2 + ((c.y - .056) / .012) ** 2 < 1.0
+        ))
+        sole_pad = (c.z < .014 and ax > .04 and -.01 < c.y < .075 and n.z < -.45)
+        if palm_pad or ftip_pad or sole_pad:
+            p.material_index = 2; continue
+        limb = ax > .15 or c.z < .555
+        p.material_index = 1 if limb else 0
     return body
 
 # ---- garments: soft shells a little bigger than the body part they cover ----
-def mb_part(name, fn, voxel=.006, target=5000):
+def mb_part(name, fn, voxel=.0055, target=5200):
     mb, o = mball("G" + name.replace("_", ""), voxel); fn(mb); return mb_mesh(o, voxel, 2, target, name)
-def lathe(name, prof, segs=40, ruffle=0.0, flare_front=0.0):
+def lathe(name, prof, segs=40, ruffle=0.0, flare_front=0.0, cy=-0.006):
     bm = bmesh.new(); rings = []
     for (r, z) in prof:
         ring = []
         for j in range(segs):
             a = j / segs * 2 * math.pi; rr = r * (1 + ruffle * math.sin(a * 8) * (1 if z < prof[0][1] - .05 else 0))
-            ring.append(bm.verts.new((math.cos(a) * rr * 1.02, math.sin(a) * rr * (0.86 + flare_front), z)))
+            ring.append(bm.verts.new((math.cos(a) * rr * 1.04, cy + math.sin(a) * rr * (0.93 + flare_front), z)))
         rings.append(ring)
     for i in range(len(rings) - 1):
         for j in range(segs): bm.faces.new((rings[i][j], rings[i][(j + 1) % segs], rings[i + 1][(j + 1) % segs], rings[i + 1][j]))
@@ -262,10 +347,10 @@ def build_garments(F, body, rig):
     G = {}
     def top(kind):
         def fn(mb):
-            sl = {"tee": .25, "tank": None, "longsleeve": .49, "hoodie": .49, "sweater": .48, "jacket": .49, "pajamas": .49, "dress": .2, "apron": None}[kind]
-            torso_shapes(mb, F, .014, .6 if kind == "dress" else .7, 9, sleeves=sl)
+            sl = {"tee": .25, "tank": None, "longsleeve": .49, "hoodie": .49, "sweater": .48, "jacket": .49, "pajamas": .49, "dress": .22, "apron": None}[kind]
+            torso_shapes(mb, F, .015, .73 if kind == "dress" else .68, 9, sleeves=sl)
             if kind == "sweater":
-                for s in (-1, 1): ball(mb, (.48 * s, 0, .953), .052)
+                for s in (-1, 1): ball(mb, (.48 * s, 0, .953), .048)
             if kind == "hoodie": ell(mb, (0, -.09, 1.02), .13, .075, .07)
         return fn
     for kind in ("tee", "tank", "longsleeve", "hoodie", "sweater", "jacket", "pajamas"):
@@ -273,61 +358,67 @@ def build_garments(F, body, rig):
         extra = []
         if kind == "jacket":
             c = prim_torus((0, 0, 1.0), .066, .02, (0, 0, 0), 24, 8); set_mat(c, "cloth_top"); extra.append(c)
-            z = prim_cyl((0, .1, .78), .006, .26, (0, 0, 0), 8); set_mat(z, "metal", "#c8c8d0", .4, .8); extra.append(z)
+            z = prim_cyl((0, .148 if F else .114, .81), .006, .24, (math.radians(8 if F else 0), 0, 0), 8); set_mat(z, "metal", "#c8c8d0", .4, .8); extra.append(z)
         if kind in ("pajamas", "jacket"):
             for zz in (.9, .82, .74):
-                b = prim_sphere((0, .104 if kind == "pajamas" else .108, zz), .012, (1, .6, 1), 10, 6); set_mat(b, "button", "#f4f1ea", .5); extra.append(b)
+                by = (.146 if zz > .80 else .105) if F else (.114 if kind == "pajamas" else .118)
+                b = prim_sphere((0, by, zz), .012, (1, .6, 1), 10, 6); set_mat(b, "button", "#f4f1ea", .5); extra.append(b)
         if kind == "hoodie":
             for s in (-1, 1):
-                d = prim_cyl((.03 * s, .1, .8), .005, .12, (0, 0, 0), 6); set_mat(d, "button", "#f4f1ea"); extra.append(d)
+                d = prim_cyl((.030 * s, .136 if F else .114, .895), .0045, .095, (math.radians(-18 if F else -4), 0, 0), 6); set_mat(d, "button", "#f4f1ea"); extra.append(d)
         G["Top_" + kind] = join([g] + extra, "Top_" + kind) if extra else g
-    # dress: a fitted bodice and a bell skirt
+    # dress: a fitted curvy bodice and a flared A-line bell skirt
     bod = mb_part("Top_dress", top("dress")); set_mat(bod, "cloth_top")
-    sk = lathe("DressSkirt", [(.12 if F else .13, .76), (.17, .64), (.25, .5), (.31, .37)], ruffle=.03); set_mat(sk, "cloth_top")
+    sk = lathe("DressSkirt", [(.096 if F else .122, .765), (.182 if F else .165, .645), (.255, .50), (.315, .36)], ruffle=.03, flare_front=.04 if F else .0); set_mat(sk, "cloth_top")
     G["Top_dress"] = join([bod, sk], "Top_dress")
-    # apron: a soft bib and a front skirt panel with a pocket
+    # apron: a fitted bib over the bust and a front skirt panel with a pocket
     def apron(mb):
-        ell(mb, (0, .085, .83), .085, .022, .09); ell(mb, (0, .1, .62), .14, .03, .12)
-        for s in (-1, 1): cap(mb, (.06 * s, .07, .9), (.09 * s, -.02, 1.0), .012)
+        ell(mb, (0, .092, .84), .085, .026, .09); ell(mb, (0, .112 if F else .102, .62), .145, .034, .125)
+        if F:
+            for s in (-1, 1): ell(mb, (.054 * s, .092, .858), .064, .068, .058, rot=(math.radians(-8), 0, math.radians(-10 * s)))
+        for s in (-1, 1): cap(mb, (.06 * s, .092 if F else .075, .9), (.09 * s, -.02, 1.0), .013)
     ap = mb_part("Top_apron", apron); set_mat(ap, "cloth_top")
-    pk = prim_sphere((0, .132, .6), .05, (1.2, .25, .7), 16, 8); set_mat(pk, "button", "#f4f1ea")
+    pk = prim_sphere((0, .144 if F else .134, .6), .05, (1.2, .25, .7), 16, 8); set_mat(pk, "button", "#f4f1ea")
     G["Top_apron"] = join([ap, pk], "Top_apron")
     # bottoms
     def pants(knee):
         def fn(mb):
-            torso_shapes(mb, F, .016, .6, .7, legs=knee, bust=False)
+            torso_shapes(mb, F, .016, .6, .78, legs=knee, bust=False)
         return fn
     for kind, knee in (("pants", .13), ("pjpants", .12), ("shorts", .44)):
         g = mb_part("Bot_" + kind, pants(knee)); set_mat(g, "cloth_bottom", "#3d5a98"); G["Bot_" + kind] = g
     def overalls(mb):
-        torso_shapes(mb, F, .018, .6, .7, legs=.14, bust=False)
-        ell(mb, (0, .07, .8), .095, .03, .09)
-        for s in (-1, 1): cap(mb, (.06 * s, .085, .87), (.08 * s, -.05, .97), .014)
+        torso_shapes(mb, F, .018, .6, .78, legs=.14, bust=False)
+        ell(mb, (0, .085 if F else .08, .81), .092, .032, .09)
+        if F:
+            for s in (-1, 1): ell(mb, (.054 * s, .090, .858), .064, .066, .056, rot=(math.radians(-8), 0, math.radians(-10 * s)))
+        for s in (-1, 1): cap(mb, (.06 * s, .105 if F else .088, .88), (.08 * s, -.05, .97), .014)
     ov = mb_part("Bot_overalls", overalls); set_mat(ov, "cloth_bottom")
-    bt = [prim_sphere((.06 * s, .1, .86), .012, (1, .6, 1), 10, 6) for s in (-1, 1)]
+    bt = [prim_sphere((.06 * s, .135 if F else .105, .88), .012, (1, .6, 1), 10, 6) for s in (-1, 1)]
     for b in bt: set_mat(b, "gold", "#e8c35a", .35, .9)
     G["Bot_overalls"] = join([ov] + bt, "Bot_overalls")
-    for kind, prof in (("skirt", [(.135, .74), (.17, .64), (.22, .5)]), ("longskirt", [(.135, .74), (.17, .6), (.22, .4), (.26, .16)])):
-        g = lathe("Bot_" + kind, prof, ruffle=.02 if kind == "skirt" else 0); set_mat(g, "cloth_bottom"); g.name = g.data.name = "Bot_" + kind; G["Bot_" + kind] = g
+    for kind, prof in (("skirt", [(.102 if F else .125, .76), (.184 if F else .165, .64), (.235, .48)]), ("longskirt", [(.102 if F else .125, .76), (.184 if F else .165, .62), (.225, .4), (.265, .15)])):
+        g = lathe("Bot_" + kind, prof, ruffle=.02 if kind == "skirt" else 0, flare_front=.03 if F else 0); set_mat(g, "cloth_bottom"); g.name = g.data.name = "Bot_" + kind; G["Bot_" + kind] = g
     # shoes
     def shoe(kind):
         def fn(mb):
             for s in (-1, 1):
-                ell(mb, (.088 * s, .04, .055), .066, .104, .06 if kind != "slippers" else .068)
-                if kind == "boots": cap(mb, (.088 * s, 0, .06), (.088 * s, 0, .25), .056)
+                ell(mb, (.090 * s, .042, .055), .066, .108, .06 if kind != "slippers" else .068)
+                if kind == "boots": cap(mb, (.090 * s, 0, .06), (.090 * s, -.004, .25), .056)
         return fn
     for kind in ("sneakers", "boots", "slippers"):
         g = mb_part("Shoes_" + kind, shoe(kind)); set_mat(g, "cloth_shoes", "#f4f1ea")
         ex = []
         if kind != "slippers":
             for s in (-1, 1):
-                so = prim_sphere((.088 * s, .04, .012), .07, (1, 1.55, .22), 20, 8); set_mat(so, "sole", "#3a3440"); ex.append(so)
+                so = prim_sphere((.090 * s, .042, .012), .07, (1, 1.58, .22), 20, 8); set_mat(so, "sole", "#3a3440"); ex.append(so)
         else:
             for s in (-1, 1):
                 for e in (-1, 1):
-                    ea = prim_sphere((.088 * s + .03 * e, .12, .11), .025, (1, .5, 1.3), 12, 8); set_mat(ea, "cloth_shoes"); ex.append(ea)
+                    ea = prim_sphere((.090 * s + .03 * e, .12, .11), .025, (1, .5, 1.3), 12, 8); set_mat(ea, "cloth_shoes"); ex.append(ea)
         G["Shoes_" + kind] = join([g] + ex, "Shoes_" + kind)
     for nm, g in G.items():
+        if F and (nm.startswith("Top_") or nm == "Bot_overalls"): add_bust_key(g)
         copy_weights(g, body); parent_to(g, rig)
     # hats, glasses and neckwear ride one bone
     R = HR[2]
@@ -1258,6 +1349,10 @@ def run_sex(SEX):
         return
     body = build_body(F); auto_weights(body, rig); parent_to(body, rig)
     G = build_garments(F, body, rig); log("body + garments", SEX, tris(body), len(G))
+    if STAGE == "body":
+        build_anims(rig)
+        export_body(os.path.join(OUT, f"critter-{SEX}.glb"), rig, [body] + list(G.values()))
+        return
     heads = {}
     for name, sp in SP.items(): heads[name] = build_head(name, sp, rig, F)
     log("heads", len(heads))
