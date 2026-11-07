@@ -1,0 +1,218 @@
+# spawn-scene v2 yaml x0z0
+object/x955101e2a6d7f07b/0:
+  feetPosition: {x: 30.737347778398544, y: 0.01, z: -62.17388602299616}
+  id: object/x955101e2a6d7f07b/0
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.1502743363380432, x: 0, y: -0.9886443614959717, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/1:
+  feetPosition: {x: 33.31872254842892, y: 0.01, z: 6.58800577186048}
+  id: object/x955101e2a6d7f07b/1
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.9653050303459167, x: 0, y: 0.2611249089241028, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/12:
+  feetPosition: {x: 30.71901344601065, y: 0.01, z: 61.01279201172292}
+  id: object/x955101e2a6d7f07b/12
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.3820662200450897, x: 0, y: 0.9241349697113037, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/13:
+  feetPosition: {x: -42.978354633785784, y: 0.01, z: -14.31530088558793}
+  id: object/x955101e2a6d7f07b/13
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.8279243111610413, x: 0, y: 0.5608398914337158, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/15:
+  feetPosition: {x: -50.05628078710288, y: 0.01, z: 17.179971439298242}
+  id: object/x955101e2a6d7f07b/15
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.8272620439529419, x: 0, y: -0.5618162751197815, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/16:
+  feetPosition: {x: -5.878129153046757, y: 0.01, z: -33.605108765885234}
+  id: object/x955101e2a6d7f07b/16
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.16434133052825928, x: 0, y: 0.9864035248756409, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/17:
+  feetPosition: {x: 17.781729141715914, y: 0.01, z: 37.23096786532551}
+  id: object/x955101e2a6d7f07b/17
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.8729341626167297, x: 0, y: 0.4878380596637726, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/18:
+  feetPosition: {x: 53.43827380891889, y: 0.01, z: -29.318086609244347}
+  id: object/x955101e2a6d7f07b/18
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.3553940951824188, x: 0, y: 0.9347165822982788, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/2:
+  feetPosition: {x: 10.864630507770926, y: 0.01, z: 33.06680899951607}
+  id: object/x955101e2a6d7f07b/2
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.9806615710258484, x: 0, y: -0.19571112096309662, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/20:
+  feetPosition: {x: 29.265948035288602, y: 0.01, z: 37.35233174869791}
+  id: object/x955101e2a6d7f07b/20
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.9535146951675415, x: 0, y: 0.3013466000556946, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/21:
+  feetPosition: {x: 45.59833718603477, y: 0.01, z: 46.039689163677394}
+  id: object/x955101e2a6d7f07b/21
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.36206361651420593, x: 0, y: 0.9321534037590027, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/23:
+  feetPosition: {x: 45.657131341286004, y: 0.01, z: 29.924628796055913}
+  id: object/x955101e2a6d7f07b/23
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.9487720727920532, x: 0, y: 0.3159613013267517, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/24:
+  feetPosition: {x: -62.54400419257581, y: 0.01, z: 10.577880746684968}
+  id: object/x955101e2a6d7f07b/24
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.9987638592720032, x: 0, y: 0.04970628023147583, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/25:
+  feetPosition: {x: -49.03839858015999, y: 0.01, z: 38.90378126176074}
+  id: object/x955101e2a6d7f07b/25
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.854162335395813, x: 0, y: 0.5200064778327942, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/26:
+  feetPosition: {x: 45.50266081793234, y: 0.01, z: -62.5221295603551}
+  id: object/x955101e2a6d7f07b/26
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.07151800394058228, x: 0, y: 0.9974393248558044, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/27:
+  feetPosition: {x: 42.31092940270901, y: 0.01, z: -61.29533673543483}
+  id: object/x955101e2a6d7f07b/27
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.9999449849128723, x: 0, y: -0.01049104705452919, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/28:
+  feetPosition: {x: -45.092001859564334, y: 0.01, z: -26.470782587770373}
+  id: object/x955101e2a6d7f07b/28
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.8277362585067749, x: 0, y: -0.56111741065979, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/29:
+  feetPosition: {x: -5.90827318187803, y: 0.01, z: 62.30800478067249}
+  id: object/x955101e2a6d7f07b/29
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.8383712768554688, x: 0, y: -0.5450996160507202, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/3:
+  feetPosition: {x: -26.590433017816395, y: 0.01, z: -34.856013119686395}
+  id: object/x955101e2a6d7f07b/3
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.9580932259559631, x: 0, y: -0.28645649552345276, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/30:
+  feetPosition: {x: -50.126266319304705, y: 0.01, z: -62.74361083935946}
+  id: object/x955101e2a6d7f07b/30
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.509308934211731, x: 0, y: -0.8605837225914001, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/34:
+  feetPosition: {x: -5.657700021285564, y: 0.01, z: 29.13800022471696}
+  id: object/x955101e2a6d7f07b/34
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.9932587146759033, x: 0, y: -0.11591850221157074, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/35:
+  feetPosition: {x: -33.51661934936419, y: 0.01, z: 9.501267187297344}
+  id: object/x955101e2a6d7f07b/35
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.16265329718589783, x: 0, y: -0.9866833090782166, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/36:
+  feetPosition: {x: -45.2034703111276, y: 0.01, z: 62.289950215723366}
+  id: object/x955101e2a6d7f07b/36
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.5450258851051331, x: 0, y: -0.8384192585945129, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/37:
+  feetPosition: {x: 50.78544141817838, y: 0.01, z: -22.922096584923565}
+  id: object/x955101e2a6d7f07b/37
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.8282333612442017, x: 0, y: -0.5603833198547363, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/39:
+  feetPosition: {x: -29.768365415278822, y: 0.01, z: -18.982608038000762}
+  id: object/x955101e2a6d7f07b/39
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.9993919730186462, x: 0, y: -0.034866053611040115, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/4:
+  feetPosition: {x: -46.898532114923, y: 0.01, z: 13.231500246562064}
+  id: object/x955101e2a6d7f07b/4
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.43584144115448, x: 0, y: 0.9000234603881836, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/5:
+  feetPosition: {x: -17.424065141938627, y: 0.01, z: 57.990919715724885}
+  id: object/x955101e2a6d7f07b/5
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.1174931526184082, x: 0, y: 0.9930737018585205, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/6:
+  feetPosition: {x: 37.456214694306254, y: 0.01, z: 45.30593446549028}
+  id: object/x955101e2a6d7f07b/6
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.7591703534126282, x: 0, y: 0.6508919596672058, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/7:
+  feetPosition: {x: -33.18668410181999, y: 0.01, z: -26.740456375293434}
+  id: object/x955101e2a6d7f07b/7
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.8601483106613159, x: 0, y: 0.5100439786911011, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/8:
+  feetPosition: {x: -21.160540282726288, y: 0.01, z: -29.276521590538323}
+  id: object/x955101e2a6d7f07b/8
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.9993224740028381, x: 0, y: 0.03680497780442238, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/9:
+  feetPosition: {x: -49.22972111450508, y: 0.01, z: -14.575888628140092}
+  id: object/x955101e2a6d7f07b/9
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.6801205277442932, x: 0, y: -0.7331003546714783, z: 0}
+  tags: [almond]

@@ -1,0 +1,15 @@
+# spawn-scene v2 yaml x-1z0
+object/x955101e2a6d7f07b/19:
+  feetPosition: {x: -65.24308857833967, y: 0.01, z: -17.211979679763317}
+  id: object/x955101e2a6d7f07b/19
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.5919039249420166, x: 0, y: -0.806008517742157, z: 0}
+  tags: [almond]
+object/x955101e2a6d7f07b/33:
+  feetPosition: {x: -69.76307303039357, y: 0.01, z: 1.0370601657778025}
+  id: object/x955101e2a6d7f07b/33
+  layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  rotation: {w: 0.19054462015628815, x: 0, y: 0.9816785454750061, z: 0}
+  tags: [almond]
