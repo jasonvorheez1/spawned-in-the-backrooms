@@ -9,7 +9,7 @@
 //   sex: m | f (f: curvier hips, feminine waist & bust contour, elegant winged eyelashes)
 //   fur, belly, eye: colors
 //   outfit: none tee hoodie sweater jacket overalls apron pajamas skirt dress
-//   top, bottom: outfit colors
+//   topw, botw, shoes, hat, eyew, neck: clothing slots; top, bottom, shoec, hatc, neckc: their colours
 //   acc: none bow flower cap beanie crown headphones partyhat glasses shades scarf tuft
 //   expr: grin smile joy laugh wink blep love sparkle kiss shy smug pout evil bored surprised scared sad cry angry dizzy sleepy
 //   eyes: round tall wide
@@ -108,6 +108,15 @@ export function geometry(ctx) {
   const BOT = P.bottom || "#3d5a98";
   const outfit = P.outfit || "tee";
   const acc = P.acc || "none";
+  // clothing slots (old outfit/acc rows still read through)
+  const LEGACY = { tee: ["tee", "pants"], hoodie: ["hoodie", "pants"], sweater: ["sweater", "pants"], jacket: ["jacket", "pants"], overalls: ["tee", "overalls"], apron: ["apron", "pants"], pajamas: ["pajamas", "pjpants"], skirt: ["tee", "skirt"], dress: ["dress", "none"], none: ["none", "none"] };
+  const topw = P.topw || (LEGACY[outfit] || LEGACY.tee)[0];
+  const botw = P.botw || (LEGACY[outfit] || LEGACY.tee)[1];
+  const hat = P.hat || (["bow", "flower", "cap", "beanie", "crown", "headphones", "partyhat", "tuft"].includes(acc) ? acc : "none");
+  const eyew = P.eyew || (["glasses", "shades"].includes(acc) ? acc : "none");
+  const neck = P.neck || (acc === "scarf" ? "scarf" : "none");
+  const shoes = P.shoes || "none";
+  const HATC = P.hatc || TOP, NECKC = P.neckc || (TOP === "#e85d75" ? "#f3c64a" : TOP), SHOEC = P.shoec || "#f4f1ea";
   const expr = P.expr || "grin";
   const hi = ctx.lod <= 1;
   const mid = ctx.lod <= 2;
@@ -745,90 +754,99 @@ export function geometry(ctx) {
     wOverride = null;
   };
 
-  if (outfit === "tee") {
-    shirt(TOP);
-    sleeve(0.10, TOP);
-    pants(BOT, 0.13);
-  } else if (outfit === "hoodie") {
-    shirt(TOP, 0.58);
-    sleeve(0.35, TOP);
-    pants(BOT, 0.13);
+  // ---- TOP ----
+  if (topw === "tee") { shirt(TOP); sleeve(0.10, TOP); }
+  else if (topw === "tank") { shirt(TOP); }
+  else if (topw === "longsleeve") { shirt(TOP); sleeve(0.36, TOP, 0.056); }
+  else if (topw === "hoodie") {
+    shirt(TOP, 0.58); sleeve(0.35, TOP);
     wOverride = { Spine2: 1 };
     ctx.color(mixc(TOP, "#000000", 0.1));
     ell([0, 0.98, 0.13], [0.155, 0.08, 0.09], null, { seg: 12 });
     ctx.color(mixc(TOP, "#ffffff", 0.06));
     ell([0, 0.68, -WAIST_R[1] - 0.014], [0.085, 0.05, 0.02], null, { seg: 10 });
-    ctx.color("#ffffff");
-    for (const s of [-1, 1]) {
-      limb([s * 0.035, 0.95, -CHEST_R[1] - 0.015], [s * 0.035, 0.82, -CHEST_R[1] - 0.018], 0.004, 0.004, 6);
-      ctx.color("#e0e0e0");
-      ell([s * 0.035, 0.816, -CHEST_R[1] - 0.018], [0.006, 0.008, 0.006], null, { seg: 6 });
-      ctx.color("#ffffff");
+    for (const sd of [-1, 1]) {
+      ctx.color("#ffffff"); limb([sd * 0.035, 0.95, -CHEST_R[1] - 0.015], [sd * 0.035, 0.82, -CHEST_R[1] - 0.018], 0.004, 0.004, 6);
+      ctx.color("#e0e0e0"); ell([sd * 0.035, 0.816, -CHEST_R[1] - 0.018], [0.006, 0.008, 0.006], null, { seg: 6 });
     }
     wOverride = null;
-  } else if (outfit === "sweater") {
-    shirt(TOP, 0.60);
-    sleeve(0.36, TOP, 0.058);
-    pants(BOT, 0.13);
-    wOverride = { Spine2: 1 };
-    ctx.color(mixc(TOP, "#000000", 0.15));
-    ell([0, 0.97, 0], [0.12, 0.028, 0.11], null, { clip: (p) => p[1] > 0.985 });
-    wOverride = null;
-  } else if (outfit === "jacket") {
-    shirt("#ffffff", 0.62);
-    shirt(TOP, 0.60);
-    sleeve(0.36, TOP, 0.058);
-    pants(BOT, 0.12);
+  } else if (topw === "sweater") {
+    shirt(TOP, 0.60); sleeve(0.36, TOP, 0.058);
+    wOverride = { Spine2: 1 }; ctx.color(mixc(TOP, "#000000", 0.15));
+    ell([0, 0.97, 0], [0.12, 0.028, 0.11], null, { clip: (q) => q[1] > 0.985 }); wOverride = null;
+  } else if (topw === "jacket") {
+    shirt("#ffffff", 0.62); shirt(TOP, 0.60); sleeve(0.36, TOP, 0.058);
     ctx.color(mixc(TOP, "#000000", 0.2));
-    for (const s of [-1, 1]) {
-      limb([s * 0.07, 0.95, -CHEST_R[1] - 0.016], [s * 0.06, 0.72, -WAIST_R[1] - 0.016], 0.014, 0.012, 6);
-    }
-  } else if (outfit === "overalls") {
-    shirt(TOP, 0.62);
-    sleeve(0.12, TOP);
-    pants(BOT, 0.12);
-    ctx.color(BOT);
-    wOverride = { Spine1: 1 };
-    ell([0, 0.84, -CHEST_R[1] - 0.01], [0.095, 0.075, 0.012], null, { seg: 10 });
-    for (const s of [-1, 1]) {
-      limb([s * 0.065, 0.74, -WAIST_R[1] - 0.01], [s * 0.075, 0.97, 0.02], 0.016, 0.016, 6);
-      limb([s * 0.075, 0.97, 0.02], [s * 0.065, 0.74, WAIST_R[1] + 0.01], 0.016, 0.016, 6);
-      ctx.color("#ffd700");
-      ell([s * 0.065, 0.88, -CHEST_R[1] - 0.018], [0.009, 0.009, 0.006], null, { seg: 8 });
-      ctx.color(BOT);
-    }
-    wOverride = null;
-  } else if (outfit === "apron") {
-    shirt(TOP);
-    sleeve(0.10, TOP);
-    pants(BOT, 0.13);
-    ctx.color("#fdf6e3");
-    ell([0, 0.58, -0.125], [0.15, 0.13, 0.04], null, { seg: hi ? 16 : 10 });
-    ctx.color("#e8d9b5");
-    ell([0, 0.73, 0], [0.172, 0.018, 0.15], null, { seg: hi ? 20 : 12 });
-    ctx.color(TOP);
-    ell([0, 0.55, -0.16], [0.05, 0.04, 0.012], null, { seg: 10 });
-  } else if (outfit === "pajamas") {
-    shirt(TOP, 0.56);
-    sleeve(0.38, TOP, 0.056);
-    pants(BOT, 0.07);
+    for (const sd of [-1, 1]) limb([sd * 0.07, 0.95, -CHEST_R[1] - 0.016], [sd * 0.06, 0.72, -WAIST_R[1] - 0.016], 0.014, 0.012, 6);
+  } else if (topw === "apron") {
+    shirt(TOP); sleeve(0.10, TOP);
+    ctx.color("#fdf6e3"); ell([0, 0.58, -0.125], [0.15, 0.13, 0.04], null, { seg: hi ? 16 : 10 });
+    ctx.color("#e8d9b5"); ell([0, 0.73, 0], [0.172, 0.018, 0.15], null, { seg: hi ? 20 : 12 });
+    ctx.color(TOP); ell([0, 0.55, -0.16], [0.05, 0.04, 0.012], null, { seg: 10 });
+  } else if (topw === "pajamas") {
+    shirt(TOP, 0.56); sleeve(0.38, TOP, 0.056);
     ctx.color("#ffffff");
-    for (let k = 0; k < 3; k++) {
-      ell([0, 0.93 - k * 0.07, -0.138], [0.012, 0.012, 0.006], null, { seg: 8 });
+    for (let k = 0; k < 3; k++) ell([0, 0.93 - k * 0.07, -0.138], [0.012, 0.012, 0.006], null, { seg: 8 });
+  } else if (topw === "dress") {
+    shirt(TOP, 0.66); sleeve(0.08, TOP); skirt(TOP, 0.68, 0.38, 0.30);
+    wOverride = { Hips: 1 }; ctx.color(BOT);
+    ell([0, 0.68, 0.005], [WAIST_R[0] + 0.018, 0.025, WAIST_R[1] + 0.018], null, { seg: 14 }); wOverride = null;
+  }
+  // ---- BOTTOM ----
+  if (botw === "pants") pants(BOT, 0.13);
+  else if (botw === "shorts") pants(BOT, 0.13, true);
+  else if (botw === "pjpants") pants(BOT, 0.07);
+  else if (botw === "skirt") skirt(BOT, 0.71, 0.40, 0.28);
+  else if (botw === "longskirt") skirt(BOT, 0.71, 0.18, 0.30);
+  else if (botw === "overalls") {
+    pants(BOT, 0.12); ctx.color(BOT); wOverride = { Spine1: 1 };
+    ell([0, 0.84, -CHEST_R[1] - 0.01], [0.095, 0.075, 0.012], null, { seg: 10 });
+    for (const sd of [-1, 1]) {
+      ctx.color(BOT);
+      limb([sd * 0.065, 0.74, -WAIST_R[1] - 0.01], [sd * 0.075, 0.97, 0.02], 0.016, 0.016, 6);
+      limb([sd * 0.075, 0.97, 0.02], [sd * 0.065, 0.74, WAIST_R[1] + 0.01], 0.016, 0.016, 6);
+      ctx.color("#ffd700"); ell([sd * 0.065, 0.88, -CHEST_R[1] - 0.018], [0.009, 0.009, 0.006], null, { seg: 8 });
     }
-  } else if (outfit === "skirt") {
-    shirt(TOP, 0.70);
-    sleeve(0.10, TOP);
-    skirt(BOT, 0.71, 0.40, 0.28);
-  } else if (outfit === "dress") {
-    shirt(TOP, 0.66);
-    sleeve(0.08, TOP);
-    skirt(TOP, 0.68, 0.38, 0.30);
-    wOverride = { Hips: 1 };
-    ctx.color(BOT);
-    ell([0, 0.68, 0.005], [WAIST_R[0] + 0.018, 0.025, WAIST_R[1] + 0.018], null, { seg: 14 });
     wOverride = null;
   }
+  // ---- SHOES ----
+  for (const sd of [-1, 1]) {
+    const x = sd * 0.085;
+    if (shoes === "sneakers") {
+      ctx.color(SHOEC); ell([x, 0.064, -0.045], [0.088, 0.07, 0.138], null, { seg: hi ? 16 : 10 });
+      ctx.color("#ffffff"); ell([x, 0.024, -0.045], [0.093, 0.024, 0.143], null, { seg: hi ? 16 : 10 });
+      ctx.color(mixc(SHOEC, "#000000", 0.35)); ell([x, 0.118, -0.09], [0.04, 0.014, 0.05], null, { seg: 8 });
+    } else if (shoes === "boots") {
+      ctx.color(SHOEC); ell([x, 0.064, -0.045], [0.09, 0.07, 0.14], null, { seg: hi ? 16 : 10 });
+      limb([x, 0.07, 0], [x, 0.26, 0], 0.062, 0.058, hi ? 12 : 8);
+      ctx.color(mixc(SHOEC, "#000000", 0.45)); ell([x, 0.022, -0.045], [0.094, 0.022, 0.145], null, { seg: hi ? 16 : 10 });
+      ell([x, 0.26, 0], [0.066, 0.018, 0.066], null, { seg: 10 });
+    } else if (shoes === "slippers") {
+      ctx.color(SHOEC); ell([x, 0.06, -0.05], [0.095, 0.072, 0.145], null, { seg: hi ? 16 : 10 });
+      ctx.color("#ffffff"); ell([x, 0.11, -0.16], [0.03, 0.03, 0.03], null, { seg: 10 });
+    }
+  }
+  // ---- NECK ----
+  wOverride = { Spine2: 0.5, Neck: 0.5 };
+  if (neck === "bowtie") {
+    ctx.color(NECKC);
+    for (const sd of [-1, 1]) ell([sd * 0.045, 0.985, -0.135], [0.045, 0.032, 0.016], null, { seg: 10 });
+    ell([0, 0.985, -0.142], [0.018, 0.018, 0.014], null, { seg: 8 });
+  } else if (neck === "bell") {
+    ctx.color(NECKC); ell([0, 1.0, 0], [0.12, 0.022, 0.115], null, { seg: 16 });
+    ctx.color("#ffd23f"); ctx.metalness(0.6); ell([0, 0.965, -0.125], [0.032, 0.032, 0.032], null, { seg: 10 }); ctx.metalness(null);
+  } else if (neck === "cape") {
+    wOverride = { Spine2: 0.7, Spine1: 0.3 };
+    ctx.color(NECKC); ell([0, 1.0, 0], [0.14, 0.03, 0.13], null, { seg: 16 });
+    const M = 10, R = 5;
+    const pt = (u, v) => { const x = (u - 0.5) * lerp(0.34, 0.5, v); return [x, lerp(0.99, 0.5, v), 0.16 + 0.05 * v + 0.05 * (1 - Math.cos((u - 0.5) * 3)) * -1 + 0.02]; };
+    for (let r = 0; r < R; r++) for (let k = 0; k < M; k++) {
+      const A = pt(k / M, r / R), B = pt((k + 1) / M, r / R), C2 = pt((k + 1) / M, (r + 1) / R), D = pt(k / M, (r + 1) / R);
+      ctx.color(r === R - 1 ? mixc(NECKC, "#ffffff", 0.35) : NECKC);
+      quad(A, B, C2, D); quad(D, C2, B, A);
+    }
+  }
+  wOverride = null;
 
   // ---------- Face: Sparkling anime eyes, expressive mouths, cute blush ----------
   ctx.flat();
@@ -1203,15 +1221,15 @@ export function geometry(ctx) {
   ctx.smooth();
   wOverride = { Head: 1 };
 
-  if (acc === "bow") {
-    ctx.color(TOP);
+  if (hat === "bow") {
+    ctx.color(HATC);
     const c = [-0.17, 1.60, -0.12];
     ell(c, [0.03, 0.034, 0.034], null, { seg: 10 });
     ell([c[0] - 0.065, c[1] + 0.01, c[2]], [0.07, 0.048, 0.028], null, { seg: 12 });
     ell([c[0] + 0.065, c[1] + 0.01, c[2]], [0.07, 0.048, 0.028], null, { seg: 12 });
     limb([c[0] - 0.02, c[1] - 0.02, c[2]], [c[0] - 0.05, c[1] - 0.10, c[2] - 0.01], 0.02, 0.024, 6);
     limb([c[0] + 0.02, c[1] - 0.02, c[2]], [c[0] + 0.05, c[1] - 0.10, c[2] - 0.01], 0.02, 0.024, 6);
-  } else if (acc === "flower") {
+  } else if (hat === "flower") {
     const c = [0.20, 1.57, -0.16];
     ctx.color("#ffd1e3");
     for (let k = 0; k < 5; k++) {
@@ -1222,16 +1240,16 @@ export function geometry(ctx) {
     ell([c[0], c[1], c[2] - 0.01], [0.024, 0.024, 0.014], null, { seg: 10 });
     ctx.color("#6bc877");
     ell([c[0] + 0.05, c[1] - 0.04, c[2] + 0.01], [0.03, 0.018, 0.01], null, { seg: 8 });
-  } else if (acc === "cap") {
-    ctx.color(TOP);
+  } else if (hat === "cap") {
+    ctx.color(HATC);
     ell([0, 1.48, 0.0], [0.34, 0.18, 0.32], null, { clip: (p) => p[1] < 1.50 });
     ell([0, 1.50, -0.34], [0.21, 0.014, 0.15], null, { clip: (p) => p[2] > -0.24 });
     ctx.color("#ffffff");
     ell([0, 1.67, 0], [0.026, 0.014, 0.026], null, { seg: 8 });
-  } else if (acc === "beanie") {
-    ctx.color(TOP);
+  } else if (hat === "beanie") {
+    ctx.color(HATC);
     ell([0, 1.47, 0], [0.352, 0.20, 0.332], null, { clip: (p) => p[1] < 1.47 });
-    ctx.color(TOP === "#ffffff" ? "#dddddd" : "#ffffff");
+    ctx.color(HATC === "#ffffff" ? "#dddddd" : "#ffffff");
     {
       const ring = [];
       for (let i = 0; i <= 28; i++) {
@@ -1242,7 +1260,7 @@ export function geometry(ctx) {
     }
     ctx.color("#ffffff");
     ell([0, 1.69, 0], [0.055, 0.055, 0.055], null, { seg: 12 });
-  } else if (acc === "crown") {
+  } else if (hat === "crown") {
     ctx.color("#ffd23f");
     {
       const ring = [];
@@ -1258,7 +1276,7 @@ export function geometry(ctx) {
     }
     ctx.color("#ff5d8f");
     ell([0, 1.66, -0.2], [0.02, 0.02, 0.012], null, { seg: 8 });
-  } else if (acc === "headphones") {
+  } else if (hat === "headphones") {
     ctx.color("#2b2b33");
     {
       const arc = [];
@@ -1268,12 +1286,12 @@ export function geometry(ctx) {
       }
       loft(arc, () => [0.02, 0.02], [0, 0, 1], null, 8);
     }
-    ctx.color(TOP);
+    ctx.color(HATC);
     for (const s of [-1, 1]) {
       ell([s * 0.375, 1.30, 0], [0.065, 0.10, 0.10], null, { seg: 14 });
     }
-  } else if (acc === "partyhat") {
-    ctx.color(TOP);
+  } else if (hat === "partyhat") {
+    ctx.color(HATC);
     loft([[0.04, 1.58, 0.0], [0.07, 1.82, 0.02]], (t) => [0.12 * (1 - t) + 0.006, 0.12 * (1 - t) + 0.006], [0, 0, 1], null, 14);
     ctx.color("#ffffff");
     ell([0.07, 1.83, 0.02], [0.03, 0.03, 0.03], null, { seg: 10 });
@@ -1281,7 +1299,13 @@ export function geometry(ctx) {
     for (const [x, y] of [[0.02, 1.64], [0.06, 1.70], [0.04, 1.76]]) {
       ell([x, y, -0.085], [0.014, 0.014, 0.008], null, { seg: 8 });
     }
-  } else if (acc === "tuft") {
+  } else if (hat === "tophat") {
+    ctx.color(HATC);
+    ell([0, 1.6, 0], [0.27, 0.014, 0.26], null, { seg: hi ? 20 : 12 });
+    loft([[0, 1.6, 0], [0, 1.86, 0]], () => [0.17, 0.165], [0, 0, 1], null, hi ? 18 : 10);
+    ell([0, 1.86, 0], [0.17, 0.012, 0.165], null, { seg: hi ? 18 : 10 });
+    ctx.color("#e85d75"); loft([[0, 1.62, 0], [0, 1.66, 0]], () => [0.176, 0.171], [0, 0, 1], null, hi ? 18 : 10);
+  } else if (hat === "tuft") {
     ctx.color(sp.headFur || FUR);
     const ahogePath = [
       [0.0, 1.62, -0.04],
@@ -1294,7 +1318,8 @@ export function geometry(ctx) {
       const x = k * 0.05;
       loft([[x, 1.60, -0.03], [x + 0.02, 1.67, -0.06], [x + 0.05, 1.71, -0.02]], (t) => [0.024 * (1 - t) + 0.004, 0.016 * (1 - t) + 0.003], [0, 0, -1], null, 8);
     }
-  } else if (acc === "glasses") {
+  }
+  if (eyew === "glasses") {
     ctx.flat();
     ctx.color(INK);
     ctx.metalness(0.2);
@@ -1310,15 +1335,16 @@ export function geometry(ctx) {
     }
     stroke((t) => [(t - 0.5) * 0.05, EY + 0.02], 0.012, 0.03, 3);
     ctx.metalness(null);
-  } else if (acc === "shades") {
+  } else if (eyew === "shades") {
     ctx.flat();
     ctx.color(INK);
     for (const s of [-1, 1]) {
       fill(ellipse(s * EX, EY, ERU + 0.04, ERV * 0.78 + 0.03, hi ? 28 : 14), 0.03);
     }
     stroke((t) => [(t - 0.5) * 0.06, EY + 0.02], 0.014, 0.03, 3);
-  } else if (acc === "scarf") {
-    ctx.color(TOP === "#e85d75" ? "#f3c64a" : TOP);
+  }
+  if (neck === "scarf") {
+    ctx.color(NECKC);
     wOverride = { Spine2: 0.5, Neck: 0.5 };
     ell([0, 1.01, 0], [0.125, 0.045, 0.12], null);
     limb([0.05, 0.99, -0.11], [0.07, 0.81, -0.14], 0.032, 0.026, 8);
