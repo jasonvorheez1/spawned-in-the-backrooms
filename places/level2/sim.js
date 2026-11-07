@@ -41,17 +41,14 @@ export function tick(ctx) {
           material: { color: "oklch(0.6 0.25 300)", emissive: "oklch(0.55 0.26 300)", emissiveIntensity: 2.5 }, light: { kind: "point", color: "oklch(0.55 0.24 300)", intensity: 3, distance: 9, shadow: { enabled: false } } });
       }
     }
-    // the camp sign, painted by a survivor: crooked spray, one word struck out and redone
-    const SIGN = '<div face="back" width="2.4m" style="font-family:sans-serif;font-weight:900;color:#6e1a12;text-shadow:0 0 6px rgba(110,26,18,.55);line-height:1.1;padding:60px 120px;text-align:left">'
-      + '<div style="font-size:130px;transform:rotate(-3deg)">PEOPLE HERE</div>'
-      + '<div style="font-size:70px;color:#2a2418;text-shadow:0 0 3px rgba(42,36,24,.5);transform:rotate(2deg);text-align:right;margin-top:30px">dont shoot. knock <s>twice</s> 3x</div></div>';
+    // the camp sign: plywood a survivor spray-painted, drips and all
+    const SIGN_TEX = "/cdn/value.184984b3698a8e811d65fabd0495cb2d59125220555cc5346558efc46ebf9c4b.png";
     // the camp: three warm lanterns and a stove
     const a = cellCenter(1, ARRIVE.cz);
     for (const [dx, dz] of [[2, 0], [5, 4.5], [5, -4.5]]) ctx.spawn({ feetPosition: { x: a.x + dx, y: 1.0, z: a.z + dz }, primitive: { kind: "sphere", radius: 0.08 }, material: { color: "oklch(0.85 0.14 70)", emissive: "oklch(0.85 0.14 70)", emissiveIntensity: 2 }, light: { kind: "point", color: "oklch(0.85 0.14 70)", intensity: 5, distance: 12, shadow: { enabled: false } } });
     ctx.spawn({ feetPosition: { x: a.x + 5, y: 0.85, z: a.z - 4.7 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.14, height: 0.12 }, material: { color: "oklch(0.3 0.01 250)", metalness: 0.6 },
       fx: { script: `fx\npop flame rate=18 on=disc(.07) life=.3..0.5 v=up(.6) size=.06..0.1 sz=$size*(1>.2) col=hdr(1.2,2,4)>hdr(.4,.6,2) a=0>.15:1>.7:.6>0 r=sprite(flame-wisp,add)\npop glow n=1 r=light(<.6,.7,1>,fire()*2,4)` } });
-    ctx.spawn({ feetPosition: { x: a.x + 3, y: 2.4, z: a.z + 0.01 - 2.45 }, primitive: { kind: "box", width: 2.4, height: 0.8, depth: 0.02 }, material: { color: "oklch(0.85 0.03 85)", roughness: 0.95 },
-      ui: SIGN });
+    ctx.spawn({ feetPosition: { x: a.x + 3, y: 2.4, z: a.z + 0.01 - 2.45 }, primitive: { kind: "box", width: 2.4, height: 0.8, depth: 0.02 }, material: { texture: SIGN_TEX, roughness: 0.95 }, rotation: { roll: -2 } });
     // the doors: home to Level 1 in the west wall; the barred "3" door in the east
     ctx.spawn("l2-back", { feetPosition: { x: BACK.x + 0.7, y: 0, z: BACK.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 1.4 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level1" } });
     ctx.spawn({ feetPosition: { x: BACK.x + 0.55, y: 2.45, z: BACK.z }, primitive: { kind: "box", width: 0.02, height: 0.45, depth: 1.2 }, material: { color: "oklch(0.25 0.02 150)" },
