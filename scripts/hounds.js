@@ -131,15 +131,15 @@ export function update(ctx, dt) {
     else if (L3 && m.lurkAt) goal = m.lurkAt;
     else if (m.lastSeen && now - (m.lastSeen.at ?? now) < 5000 && Math.hypot(m.lastSeen.x - pos.x, m.lastSeen.z - pos.z) > 1) goal = m.lastSeen; // sniff where it last saw them
     else { m.lastSeen = null; if (!m.roam || now > m.until) { const a = ctx.random() * 6.283; m.roam = { x: pos.x + Math.cos(a) * 14, z: pos.z + Math.sin(a) * 14 }; m.until = now + 4000; } goal = m.roam; }
-    const sight = prey && hasClearSight(ctx, pos, prey.feetPosition, h.id, prey.id);
+    const directSight = prey && hasClearSight(ctx, pos, prey.feetPosition, h.id, prey.id);
     let way = null;
-    if (!sight) {
+    if (!directSight) {
       if (L3) way = stepToward3(pos.x, pos.z, goal.x, goal.z, 30);
       else if (L2) way = stepToward2(pos.x, pos.z, goal.x, goal.z, 30);
       else if (L5) way = stepTowardBoiler(pos.x, pos.z, goal.x, goal.z, 30);
       else way = stepToward1(pos.x, pos.z, goal.x, goal.z, 30);
     }
-    if (!way && !prey && !sight && !m.lastSeen) m.roam = null;
+    if (!way && !prey && !directSight && !m.lastSeen) m.roam = null;
     const tgt = way && way.cells > 0 ? way.next : goal;
     const dx = tgt.x - pos.x, dz = tgt.z - pos.z, d = Math.hypot(dx, dz) || 1;
     let ux = dx / d, uz = dz / d;
