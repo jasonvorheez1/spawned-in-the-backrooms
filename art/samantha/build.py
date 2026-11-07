@@ -75,7 +75,7 @@ for vv in o.data.vertices:
 empty = [(g.name, cnt[g.index]) for g in o.vertex_groups]
 print("emptygroups", empty)
 # ---- clips: degrees about each bone's local X (pitch: + lifts a forward bone / swings a down bone forward), Z (side)
-SIT = {"hips": dict(x=38, loc=(0, 0, -0.13)), "spine": dict(x=-6), "neck": dict(x=-18), "head": dict(x=-14),
+SIT = {"hips": dict(x=42, loc=(0, 0, -0.15)), "spine": dict(x=-6), "neck": dict(x=-18), "head": dict(x=-14),
        "thigh.L": dict(x=62), "thigh.R": dict(x=62), "shin.L": dict(x=-120), "shin.R": dict(x=-120), "hfoot.L": dict(x=18), "hfoot.R": dict(x=18),
        "arm.L": dict(x=-30), "arm.R": dict(x=-30), "fore.L": dict(x=-4), "fore.R": dict(x=-4), "tail1": dict(x=-70), "tail2": dict(x=-35), "tail3": dict(x=-20)}
 def merge(*ps):
@@ -107,8 +107,8 @@ C = lambda p: math.cos(p * 2 * math.pi)
 clip("Idle", 4.0, cyc(16, lambda p: merge(SIT, {"spine": dict(x=1.5 * S(p * 2)), "head": dict(y=14 * S(p), x=4 * S(p * 2)),
      "tail2": dict(z=10 * S(p)), "tail3": dict(z=35 * S(p * 2) * max(0, S(p)), x=8 * S(p * 2))})))
 # Groom: sat, left forepaw up to the mouth, head dipping to lick it
-clip("Groom", 2.0, cyc(12, lambda p: merge(SIT, {"arm.L": dict(x=85), "fore.L": dict(x=-95), "paw.L": dict(x=-30),
-     "neck": dict(x=-8 + 6 * S(p * 3), y=-10), "head": dict(x=-28 + 8 * S(p * 3), y=-12), "tail3": dict(z=12 * S(p))})))
+clip("Groom", 2.0, cyc(12, lambda p: merge(SIT, {"arm.L": dict(x=72), "fore.L": dict(x=-85), "paw.L": dict(x=-30),
+     "neck": dict(x=2 + 3 * S(p * 3), y=-14), "head": dict(x=-12 + 7 * S(p * 3), y=-18), "tail3": dict(z=12 * S(p))})))
 def gait(amp, bob, ph):
     return lambda p: {"hips": dict(loc=(0, 0, bob * abs(S(p))), x=3 * S(p * 2)), "spine": dict(x=-3 * S(p * 2)),
         "thigh.L": dict(x=amp * S(p + ph)), "shin.L": dict(x=-25 * max(0, C(p + ph)) ), "thigh.R": dict(x=amp * S(p + ph + 0.5)), "shin.R": dict(x=-25 * max(0, C(p + ph + 0.5))),
@@ -118,9 +118,9 @@ clip("Walk", 0.9, cyc(12, gait(24, 0.008, 0.25)))
 clip("Run", 0.42, cyc(10, gait(38, 0.02, 0.1)))
 CROUCH = {"hips": dict(loc=(0, 0, -0.07)), "thigh.L": dict(x=30), "thigh.R": dict(x=30), "shin.L": dict(x=-40), "shin.R": dict(x=-40),
           "arm.L": dict(x=-35), "arm.R": dict(x=-35), "fore.L": dict(x=55), "fore.R": dict(x=55), "neck": dict(x=-10), "tail1": dict(x=-50)}
-LEAP = {"hips": dict(loc=(0, 0.12, 0.10), x=12), "thigh.L": dict(x=-50), "thigh.R": dict(x=-50), "shin.L": dict(x=20), "shin.R": dict(x=20),
+LEAP = {"hips": dict(loc=(0, 0.12, 0.07), x=10), "thigh.L": dict(x=-50), "thigh.R": dict(x=-50), "shin.L": dict(x=20), "shin.R": dict(x=20),
         "arm.L": dict(x=75), "arm.R": dict(x=75), "fore.L": dict(x=10), "fore.R": dict(x=10), "paw.L": dict(x=-30), "paw.R": dict(x=-30), "head": dict(x=10), "tail1": dict(x=-10)}
-STRIKE = merge(LEAP, {"hips": dict(loc=(0, 0.14, -0.08), x=-24), "arm.L": dict(x=-30), "arm.R": dict(x=10), "paw.L": dict(x=-50), "head": dict(x=-10)})
+STRIKE = merge(LEAP, {"hips": dict(loc=(0, 0.14, -0.03), x=-8), "arm.L": dict(x=-30), "arm.R": dict(x=10), "paw.L": dict(x=-50), "head": dict(x=-10)})
 clip("Pounce", 0.9, [(0, {}), (0.18, CROUCH), (0.3, merge(CROUCH, {"hips": dict(z=8)})), (0.4, merge(CROUCH, {"hips": dict(z=-8)})), (0.55, LEAP), (0.72, STRIKE), (1.0, {})])
 bpy.context.scene.frame_end = 200
 bpy.ops.export_scene.gltf(filepath=OUT, export_format='GLB', export_animation_mode='NLA_TRACKS', export_apply=False, export_yup=True)
