@@ -157,6 +157,42 @@ function toggleLight(ctx) {
   sound(ctx, 'flashlight-switch-click', 0.65, true)
 }
 
+
+// First person: the local player's own arm and held weapon, riding the camera. Only this machine sees it.
+const HOLD = { // how each weapon sits in the fist: offset of its grip from its own origin (m along its length)
+  fists: null, table_leg: 0.16, pipe_scrap: 0.1, crowbar: 0.12, bat: 0.12, hatchet: 0.1, fire_axe: 0.18, pistol: 0.04, shotgun: 0.14,
+}
+const Q_MELEE = { x: -0.5, y: 0.5, z: 0.5, w: 0.5 } // its length up, its blade forward
+const Q_GUN = { x: 0, y: 1, z: 0, w: 0 } // its barrel forward
+function viewmodel(ctx, moving, sprinting) {
+  if (!ctx.self.isLocal) return
+  const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists'
+  if (w.vmKind !== kind || !w.vm) {
+    if (w.vm) ctx.destroy(w.vm)
+    const g = HOLD[kind], wp = W[kind] ?? {}, gun = !!wp.ranged
+    const child = g == null ? [] : [gun
+      ? { feetPosition: { x: 0, y: kind === 'pistol' ? 0.03 : 0.0, z: -0.0 + (kind === 'pistol' ? -0.03 : 0.0) }, rotation: Q_GUN, castShadow: false, primitive: { kind: 'scripted', script: 'scripts/weapon-geo.js', params: { kind } }, audience: 'local' }
+      : { feetPosition: { x: 0, y: -g, z: 0 }, rotation: Q_MELEE, castShadow: false, primitive: { kind: 'scripted', script: 'scripts/weapon-geo.js', params: { kind } }, audience: 'local' }]
+    w.vm = ctx.spawn({ feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
+      primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js' }, children: child })
+    w.vmKind = kind
+  }
+  const vm = ctx.getObject ? ctx.getObject(w.vm) : null
+  if (!vm) return
+  const now = ctx.now(), wp = W[kind] ?? {}, gun = !!wp.ranged
+  const t = (now - (s.swingAt ?? -1e9)) / 1000, eq = Math.min(1, (now - (s.equipAt ?? -1e9)) / 350)
+  const bobT = now / 1000 * (sprinting ? 11 : 7.5), amp = moving ? (sprinting ? 0.022 : 0.012) : 0.003
+  let pitch = gun ? 0 : -22, yaw = 0, roll = 0, dz = 0, dx = 0, dy = 0
+  if (gun) { const k = Math.max(0, 1 - t / 0.18); pitch += 9 * k; dz += 0.05 * k }
+  else if (t < 0.4) { const a = t < 0.12 ? t / 0.12 : Math.max(0, 1 - (t - 0.12) / 0.28); pitch -= 70 * a; yaw += 25 * a; roll -= 20 * a; dx -= 0.1 * a; dy -= 0.04 * a }
+  dy -= (1 - eq) * 0.3
+  const key = Math.round(pitch) + '|' + Math.round(yaw) + '|' + Math.round(roll) + '|' + Math.round((dx + Math.sin(bobT) * amp) * 400) + '|' + Math.round((dy - Math.abs(Math.cos(bobT)) * amp + dz) * 400)
+  if (key === w.vmKey) return
+  w.vmKey = key
+  vm.rotation = { yaw, pitch, roll }
+  vm.feetPosition = { attach: 'camera', x: 0.2 + dx + Math.sin(bobT) * amp, y: -0.2 + dy - Math.abs(Math.cos(bobT)) * amp, depth: 0.42 + dz }
+}
+
 export function update(ctx, dt) {
   ensure(ctx)
   if (ctx.self.parent) return
@@ -169,6 +205,7 @@ export function update(ctx, dt) {
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
   const speed = (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1)
   const intent = { x: dir.x * speed, z: dir.z * speed }
+  viewmodel(ctx, moving, sprinting)
   const v = ctx.self.velocity
   const along = intent.x * v.x + intent.z * v.z > 0 || (v.x === 0 && v.z === 0 && moving)
   const step = (along ? PLAYER.acceleration : PLAYER.deceleration) * dt
