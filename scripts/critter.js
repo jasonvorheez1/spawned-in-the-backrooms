@@ -138,7 +138,7 @@ function moodFace(ctx, l) {
 }
 
 export function update(ctx) {
-  if (!ctx.self.state.look) ctx.self.state.look = randomLook(ctx, { ...C.default }, 'all') // a new critter: random body, regular clothes only (saved looks are never touched)
+  if (!ctx.self.state.look) ctx.self.state.look = randomLook(ctx, { ...C.default }, 'clothes') // a new critter: regular clothes only (saved looks are never touched)
   const l = lookOf(ctx), face = moodFace(ctx, l), ses = ctx.self.session
   ses.face = face
   const wornNow = !!(l.modelUrl || (l.model && C.models?.[l.model]))
