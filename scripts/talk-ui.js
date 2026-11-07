@@ -85,7 +85,7 @@ export function talkUi(ctx, player) {
   let lastN = -1; for (let i = log.length - 1; i >= 0; i--) if (log[i][0] !== 'p') { lastN = i; break }
   const shown = lastN >= 0 ? log[lastN] : null, prior = log.slice(Math.max(0, lastN - 2), Math.max(0, lastN)).filter((l) => l[0] !== 'x')
   const old = prior.map(([w, t]) => `<div class="old">${w === 'p' ? 'you: ' : ''}${esc(t)}</div>`).join('')
-  const now = s.talkBusy ? `<div class="now dots" style="color:${col}"><span>.</span><span>.</span><span>.</span></div>`
+  const now = s.talkBusy ? `<div class="now dots" style="color:${col}"><i>${who.toUpperCase()}</i><span>.</span><span>.</span><span>.</span></div>`
     : shown ? (shown[0] === 'x' ? `<div class="chk" id="c${lastN}">${esc(shown[1])}</div>` : `<div class="now" id="n${lastN}-${log.length}" style="color:${col}"><i>${who.toUpperCase()}</i>${esc(shown[1])}</div>`)
     : `<div class="now" style="opacity:.6"><i>${who.toUpperCase()}</i>…</div>`
   const opts = [SVC[role] ? ['svc', SVC[role]] : null, isTrader(it) ? ['trade', 'Trade'] : null, ['leave', 'Leave']].filter(Boolean)
@@ -95,7 +95,7 @@ export function talkUi(ctx, player) {
     <div class="who"><b>${who}</b><span>${faction(it, player.place)} · ${esc(role ?? 'drifter')}${it.state?.follow === player.id ? ' · with you' : ''}</span></div>
     <div class="sub">${old}${now}</div>
     <div class="low">
-      <form data-interactive onsubmit="event.preventDefault();${send}"><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" autofocus placeholder="say anything to ${who.toLowerCase()}…"/></form>
+      <form data-interactive onsubmit="event.preventDefault();${send}"><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" autofocus placeholder="Speak with ${who}…"/></form>
       <div class="opts">${opts}<span class="feel" style="color:${col}">${feel(r)}</span></div>
     </div></div>`
 }
