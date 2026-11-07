@@ -1,0 +1,13 @@
+{
+  "name": "materials-database",
+  "displayName": "Materials Database",
+  "description": "80+ real-world materials with physical, acoustic, mechanical, and visual properties. Universal data layer for any project needing material science.",
+  "tags": [
+    "data",
+    "materials",
+    "physics",
+    "library"
+  ],
+  "visibility": "public",
+  "version": "3.1.0"
+}
