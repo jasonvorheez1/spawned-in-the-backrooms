@@ -26,20 +26,30 @@ export function rowOf(slot, kind, colour) {
   return CL.rows.find((r) => r.slot === slot && r.kind === kind && r.strict && r.colours.includes(c))
     ?? CL.rows.find((r) => r.slot === slot && r.kind === kind && !r.strict) ?? null
 }
+// a garment's fabric (data patKey/pats): the row's own list, the first its usual one; anything else reads as that first
+export const patsOf = (row) => row?.pats ?? []
+export const patOk = (row, pat) => patsOf(row).includes(pat) ? pat : (patsOf(row)[0] ?? null)
+const patOf = (l, slot, row) => patOk(row, CL.patKey?.[slot] ? l[CL.patKey[slot]] : null)
 const ALIAS = { top: 'topw', bottom: 'botw', shoe: 'shoes', shoec: 'shoes', hatc: 'hat', neckc: 'neck' }
 export function parseCloth(token) {
-  const [t, s0, kind, c] = String(token).split(':')
+  const [t, s0, kind, c, pt] = String(token).split(':')
   const slot = ALIAS[s0] ?? s0 // 'cloth:top:…' and 'cloth:topw:…' are the same garment
   if (t !== 'cloth' || !SLOTS.includes(slot) || !kind) return null
   const row = rowOf(slot, kind, c)
-  return row ? { slot, kind, colour: hex(c), row } : null
+  return row ? { slot, kind, colour: hex(c), row, pat: patOk(row, pt) } : null
 }
+// one spelling per garment, so a bag and a body compare tokens alike (old 4-part tokens read as the usual fabric)
+export const normToken = (token) => { const p = parseCloth(token); return p ? clothToken(p.slot, p.kind, p.colour, p.pat) : token }
 const colourOf = (l, slot) => (CL.colourKey[slot] ? hex(l[CL.colourKey[slot]]) : '000000')
-export const clothToken = (slot, kind, colour) => `cloth:${slot}:${kind}:${hex(colour)}`
+export function clothToken(slot, kind, colour, pat) {
+  const row = rowOf(slot, kind, colour), pt = pat && row ? patOk(row, pat) : null
+  return `cloth:${slot}:${kind}:${hex(colour)}` + (pt && pt !== patsOf(row)[0] ? ':' + pt : '')
+}
+const tokOf = (l, slot) => { const c = colourOf(l, slot), row = rowOf(slot, l[slot], c); return row ? clothToken(slot, l[slot], c, patOf(l, slot, row)) : null }
 // every garment a critter wears, as tokens (unknown kinds, like a bare 'shirt', are skipped)
 export function wornTokens(look) {
   const l = fullLook(look), out = []
-  for (const slot of SLOTS) { const k = l[slot]; if (k && k !== 'none' && rowOf(slot, k, colourOf(l, slot))) out.push(clothToken(slot, k, colourOf(l, slot))) }
+  for (const slot of SLOTS) { const k = l[slot]; if (k && k !== 'none') { const t = tokOf(l, slot); if (t) out.push(t) } }
   return out
 }
 // total damage resistance of what's worn
@@ -56,25 +66,26 @@ export function afterDR(dr, dmg) { return dmg <= 0 ? dmg : Math.max(1, Math.ceil
 // put a garment on: { look, back } where back is the token of what came off (null if the slot was bare)
 export function wear(look, token) {
   const p = parseCloth(token); if (!p) return null
-  const l = fullLook(look), old = l[p.slot] && l[p.slot] !== 'none' && rowOf(p.slot, l[p.slot], colourOf(l, p.slot)) ? clothToken(p.slot, l[p.slot], colourOf(l, p.slot)) : null
+  const l = fullLook(look), old = l[p.slot] && l[p.slot] !== 'none' ? tokOf(l, p.slot) : null
   const next = { ...l, [p.slot]: p.kind }
   if (CL.colourKey[p.slot]) next[CL.colourKey[p.slot]] = '#' + p.colour
+  if (CL.patKey?.[p.slot]) next[CL.patKey[p.slot]] = p.pat ?? ''
   if (p.slot === 'topw' && p.kind === 'dress') next.botw = 'none' // a dress is the whole outfit
-  return { look: next, back: old, extra: p.slot === 'topw' && p.kind === 'dress' && l.botw !== 'none' && rowOf('botw', l.botw, l.bottom) ? clothToken('botw', l.botw, l.bottom) : null }
+  return { look: next, back: old, extra: p.slot === 'topw' && p.kind === 'dress' && l.botw !== 'none' && rowOf('botw', l.botw, l.bottom) ? tokOf(l, 'botw') : null }
 }
 // take a garment off: { look, back }
 export function takeOff(look, slot) {
   const l = fullLook(look)
   if (!SLOTS.includes(slot) || !l[slot] || l[slot] === 'none') return null
-  const back = rowOf(slot, l[slot], colourOf(l, slot)) ? clothToken(slot, l[slot], colourOf(l, slot)) : null
+  const back = tokOf(l, slot)
   return { look: { ...l, [slot]: 'none' }, back }
 }
 // a body's look after some of its garments were taken: any worn token not left in `items` comes off
 export function stripTo(look, items) {
-  const l = fullLook(look), left = [...items]
+  const l = fullLook(look), left = items.map(normToken)
   for (const slot of SLOTS) {
     const k = l[slot]; if (!k || k === 'none' || !rowOf(slot, k, colourOf(l, slot))) continue
-    const i = left.indexOf(clothToken(slot, k, colourOf(l, slot)))
+    const i = left.indexOf(tokOf(l, slot))
     if (i >= 0) left.splice(i, 1); else l[slot] = 'none'
   }
   return l
@@ -87,7 +98,7 @@ export function honest(cur, next) {
     const same = r0 && r1 && r0.id === r1.id
     // hats, glasses and neckwear that are only dress-up (scarf, cape, bow tie, bell, hair bow...) are free to wear in the creator; armour, crafted and place-bound gear stays earned
     const free = r1 && !r1.strict && !r1.crafted && !r1.places && (slot === 'hat' || slot === 'eyew' || slot === 'neck')
-    if (r1 && !r1.regular && !same && !free) { b[slot] = a[slot]; if (CL.colourKey[slot]) b[CL.colourKey[slot]] = a[CL.colourKey[slot]] }
+    if (r1 && !r1.regular && !same && !free) { b[slot] = a[slot]; if (CL.colourKey[slot]) b[CL.colourKey[slot]] = a[CL.colourKey[slot]]; if (CL.patKey?.[slot]) b[CL.patKey[slot]] = a[CL.patKey[slot]] }
   }
   return b
 }
@@ -102,20 +113,22 @@ const rowLevel = (r) => Math.max(r.level ?? 1, CL.leveled.rarityAt[r.rarity] ?? 
 export function leveledRows(level, filter = () => true) {
   return CL.rows.filter((r) => filter(r) && rowLevel(r) <= level).map((r) => [r, (CL.rarity[r.rarity]?.weight ?? 1) * (r.rarity === 'common' ? 1 : 1 + CL.leveled.lift * (level - rowLevel(r)))])
 }
+const pickPat = (row, u, lean) => { const ps = patsOf(row); if (!ps.length) return null; const fav = lean ? ps.filter((x) => lean.includes(x)) : []; return fav.length && u() < 0.6 ? fav[Math.floor(u() * fav.length)] : ps[Math.floor(u() * ps.length)] }
 const pickW = (list, u) => { let x = u * list.reduce((a, [, w]) => a + w, 0); for (const [r, w] of list) { x -= w; if (x <= 0) return r } return list[list.length - 1]?.[0] }
 // a random garment off the leveled list (a find in a crate or on remains); regular: true rolls only the plain set
 export function rollCloth(ctx, regular = false, level) {
   const lv = level ?? rollLevel(ctx)
   const here = ctx?.self?.place, inSpecial = here === 'level5' || here === 'level7'
   const list = leveledRows(regular ? 1 : lv, (r) => (r.places ? r.places.includes(here) && !regular : regular ? r.regular : true))
-  if (inSpecial && !regular && ctx.random() < 0.65) { const h = list.filter(([r]) => r.places); if (h.length) { const row = pickW(h, ctx.random()); return clothToken(row.slot, row.kind, row.colours[Math.floor(ctx.random() * row.colours.length)]) } } // Level 5 & Level 7 mostly turn up their own wardrobe
+  if (inSpecial && !regular && ctx.random() < 0.65) { const h = list.filter(([r]) => r.places); if (h.length) { const row = pickW(h, ctx.random()); return clothToken(row.slot, row.kind, row.colours[Math.floor(ctx.random() * row.colours.length)], pickPat(row, () => ctx.random())) } } // Level 5 & Level 7 mostly turn up their own wardrobe
   const row = pickW(list, ctx.random()) ?? CL.rows[0]
-  return clothToken(row.slot, row.kind, row.colours[Math.floor(ctx.random() * row.colours.length)])
+  return clothToken(row.slot, row.kind, row.colours[Math.floor(ctx.random() * row.colours.length)], pickPat(row, () => ctx.random()))
 }
 // an NPC dressed from its faction's leveled list, the same every time for the same id: species, fur, face and a signature
 // agency top (the M.E.G. lime) stay; everything else is rolled from what that faction wears at that level
-export function npcLook(id, look, faction, level) {
+export function npcLook(id, look, faction, level, role) {
   const F = CL.leveled.factions[faction] ?? CL.leveled.factions.wanderer
+  const J = F.rows.length ? CL.leveled.roles?.[role] : null // a job's wardrobe (bespoke factions keep their own clothes)
   let h = 2166136261; for (const c of String(id)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) }
   const h0 = h >>> 0
   const u = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 100000) / 100000 }
@@ -123,12 +136,14 @@ export function npcLook(id, look, faction, level) {
   const keepTop = rowOf('topw', base.topw, base.top)?.rarity === 'agency'
   for (const slot of SLOTS) {
     if (slot === 'topw' && keepTop) continue
-    const extra = F.extra?.[slot]
+    const extra = J?.extra?.[slot] ?? F.extra?.[slot]
     if (extra !== undefined && u() > extra) { l[slot] = 'none'; continue }
-    const list = leveledRows(level, (r) => r.slot === slot && F.rows.includes(r.id))
-    if (!list.length) continue
+    const jl = J ? leveledRows(Math.max(level, 14), (r) => r.slot === slot && J.rows.includes(r.id) && !r.places) : []
+    const list = jl.length ? jl : leveledRows(level, (r) => r.slot === slot && F.rows.includes(r.id))
+    if (!list.length) { if (CL.patKey[slot] && l[slot] && l[slot] !== 'none') { const r0 = rowOf(slot, l[slot], l[CL.colourKey[slot]]); if (r0 && !l[CL.patKey[slot]]) l[CL.patKey[slot]] = pickPat(r0, u) ?? '' } continue }
     const row = pickW(list, u())
     l[slot] = row.kind; if (CL.colourKey[slot]) l[CL.colourKey[slot]] = '#' + row.colours[Math.floor(u() * row.colours.length)]
+    if (CL.patKey[slot]) l[CL.patKey[slot]] = pickPat(row, u, J?.pats) ?? ''
   }
   if (l.topw === 'dress') l.botw = 'none'
   if (F.rows.length && l.neck === 'none' && u() < 0.24) { // some NPCs just wear a scarf, a cape, a bow tie or a bell collar, whatever the faction's list says
@@ -145,6 +160,7 @@ export function plainLook(ctx, cur) {
   for (const slot of ['topw', 'botw', 'shoes']) {
     const row = pick(CL.rows.filter((r) => r.regular && r.slot === slot && (slot !== 'topw' || r.kind !== 'tank')))
     l[slot] = row.kind; l[CL.colourKey[slot]] = '#' + pick(CL.regularColours)
+    l[CL.patKey[slot]] = pickPat(row, () => ctx.random()) ?? ''
   }
   return l
 }

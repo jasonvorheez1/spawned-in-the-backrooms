@@ -80,7 +80,7 @@ export function lay(ctx) {
     ui: '<div face="front" width="2.6m" style="font-size:150px;font-weight:900;color:#d8f0a0;text-align:center;line-height:1">M.E.G. BASE OMEGA<div style="font-size:70px;color:#b8d080">wanderers welcome · weapons lowered</div></div>' });
   for (let i = 0; i < 4; i++) ctx.spawn({ feetPosition: { x: -23.3, y: (i % 2) * 0.32, z: -23.2 + (i >> 1) * 0.0 + (i >> 1) * 0.6 }, primitive: { kind: "capsule", radius: 0.16, halfHeight: 0.3 }, rotation: { yaw: 90, roll: 90 }, physics: "static", material: { color: "oklch(0.6 0.05 85)", roughness: 1 } });
   for (const [id, g] of Object.entries(OMEGA)) {
-    ctx.spawn(id, { tags: ["npc", "omega"], feetPosition: { x: g.at[0], y: 0, z: g.at[1] }, rotation: { yaw: g.yaw }, physics: "character", ...critterSpec(npcLook(id, g.look, "meg", g.level ?? 14)), ...(g.build ? { scale: { x: g.build.w ?? 1, y: g.build.h ?? 1, z: g.build.w ?? 1 } } : {}), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"], state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
+    ctx.spawn(id, { tags: ["npc", "omega"], feetPosition: { x: g.at[0], y: 0, z: g.at[1] }, rotation: { yaw: g.yaw }, physics: "character", ...critterSpec(npcLook(id, g.look, "meg", g.level ?? 14, g.role)), ...(g.build ? { scale: { x: g.build.w ?? 1, y: g.build.h ?? 1, z: g.build.w ?? 1 } } : {}), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"], state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
     ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: g.gun }, ...weaponBody(g.gun) });
   }
   // sound beds: the buzz, a far hvac, the lift's hum, the break room's fridge
@@ -115,7 +115,7 @@ export function tick(ctx) {
   // Level 4's people (scripts/lib/l4-people.js): homes, the floor's day and night, meetups, phones, greetings, the mold room
   if (s.peopleV !== 1) { s.peopleV = 1; settle(ctx, (id, g, rounds) => {
     const home = rounds[0] ?? { x: 0, z: 0 };
-    ctx.spawn(id, { tags: ["npc", "l4-person", g.faction], feetPosition: { x: home.x, y: 0, z: home.z }, physics: "character", ...critterSpec(npcLook(id, g.look, g.faction === "omega" ? "meg" : g.faction, g.level ?? 10)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
+    ctx.spawn(id, { tags: ["npc", "l4-person", g.faction], feetPosition: { x: home.x, y: 0, z: home.z }, physics: "character", ...critterSpec(npcLook(id, g.look, g.faction === "omega" ? "meg" : g.faction, g.level ?? 10, g.role)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
       state: { name: g.name, role: g.role, voice: g.voice, rounds, ...npcState(ctx, "agent", MEG.hp) } });
     ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: g.gun }, ...weaponBody(g.gun) });
   }); }

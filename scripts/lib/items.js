@@ -70,7 +70,8 @@ function describe0(token) {
     const p = parseCloth(token)
     if (!p) return { name: 'Rags', info: '', color: '#cccccc' }
     const r = CLOTHES.rarity[p.row.rarity] ?? {}
-    return { name: p.row.name, info: `${r.label ?? ''} · DR ${p.row.dr}`, color: r.color ?? '#cccccc' }
+    const fab = p.pat && p.pat !== p.row.pats?.[0] ? CLOTHES.patterns?.[p.pat] : '' // a texture variant names its cloth: "Plaid Long-sleeve shirt"
+    return { name: fab ? `${fab} ${p.row.name}` : p.row.name, info: `${r.label ?? ''} · DR ${p.row.dr}`, color: r.color ?? '#cccccc' }
   }
   if (token.startsWith('weapon:')) {
     const k = token.slice(7), w = W[k]

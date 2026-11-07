@@ -6,6 +6,11 @@
 # Every number below is Savi's pick. regular: true = the plain set every new critter starts in.
 # A row with `strict: true` only matches its own colours (the M.E.G. jacket is a jacket in agency lime).
 colourKey: { topw: top, botw: bottom, shoes: shoec, hat: hatc, neck: neckc }   # eyewear has no colour
+# Fabric patterns (Shelly, Nov 7: "add textures to most of the clothes and new variants ... that only changes their texture").
+# A row's pats: the patterns it comes in, the first its usual one. The pattern rides the look (patKey) and the token's 5th part
+# ("cloth:topw:longsleeve:3d5a98:plaid"); same DR and weight, a different cloth. Drawn by scripts/mat-cloth.js.
+patKey: { topw: topp, botw: botp, shoes: shoep, hat: hatp, neck: neckp }
+patterns: { weave: "", denim: Denim, plaid: Plaid, tartan: Tartan, gingham: Gingham, stripes: Striped, pinstripe: Pinstripe, breton: Breton, camo: Camo, knit: Knit, cable: Cable-knit, argyle: Argyle, polka: Polka-dot, floral: Floral, leather: Leather, canvas: Canvas, hivis: Reflective, scales: Scaled, velvet: Velvet, oilskin: Waxed }
 floor: 0.2          # Savi's pick: a hit keeps at least 20% of itself, however armored
 findBase: 0.05      # Savi's pick: chance a remains body holds a garment at Observation 5, Luck 5
 crateWeight: 6      # Savi's pick: weight of "cloth" among Level 0 crate rolls (almond is 40)
@@ -33,69 +38,84 @@ leveled:
     homely:   { rows: [] }   # Homely Hotel staff keep their bespoke uniforms
     orig:     { rows: [] }   # The Originals keep their vintage period clothing
     amor:     { rows: [dress, sweater, apron, longskirt, pants, boots, flower, cape, scarf], extra: { hat: 0.3, eyew: 0.05, neck: 0.6 } }
+  # what a job wears (Shelly, Nov 7: "disperse clothes/armors to existing npcs and make sure they make sense"): a role's rows replace its
+  # faction's for the slots they cover; pats: fabrics it leans to (60%). Savi's picks.
+  roles:
+    scout:     { rows: [jacket, padjacket, cargo, pants, boots, steeltoe, beanie, padbeanie, cap, shades, scarf], pats: [camo, canvas], extra: { hat: 0.65, eyew: 0.35, neck: 0.3 } }
+    guard:     { rows: [megjacket, padjacket, wirehood, cargo, steeltoe, boots, cap, padbeanie, shades], pats: [camo, canvas, leather], extra: { hat: 0.85, eyew: 0.5, neck: 0.05 } }
+    agent:     { rows: [megjacket, padjacket, cargo, pants, boots, steeltoe, cap, shades, scarf], pats: [camo, canvas], extra: { hat: 0.6, eyew: 0.45, neck: 0.15 } }
+    captain:   { rows: [padjacket, jacket, cargo, slacks, steeltoe, boots, cap, shades, scarf], pats: [leather, canvas], extra: { hat: 0.9, eyew: 0.3, neck: 0.4 } }
+    medic:     { rows: [longsleeve, apron, slacks, pants, sneakers, boots, glasses, cap], pats: [weave, canvas], extra: { hat: 0.15, eyew: 0.6, neck: 0.05 } }
+    trader:    { rows: [apron, sweater, jacket, overalls, pants, cargo, boots, sneakers, beanie, cap, scarf, glasses], pats: [plaid, denim, knit, canvas], extra: { hat: 0.5, eyew: 0.3, neck: 0.4 } }
+    quarter:   { rows: [apron, padjacket, jacket, cargo, overalls, steeltoe, boots, cap, glasses], pats: [canvas, denim, leather], extra: { hat: 0.5, eyew: 0.4, neck: 0.1 } }
+    keeper:    { rows: [sweater, apron, longskirt, pants, slippers, boots, scarf, glasses], pats: [knit, cable, floral], extra: { hat: 0.1, eyew: 0.5, neck: 0.5 } }
+    clerk:     { rows: [officeshirt, longsleeve, slacks, longskirt, sneakers, glasses, bowtie], pats: [pinstripe, weave], extra: { hat: 0, eyew: 0.6, neck: 0.5 } }
+    psychic:   { rows: [sweater, dress, longskirt, cape, scarf, slippers, flower, bow, glasses], pats: [velvet, floral, knit], extra: { hat: 0.5, eyew: 0.2, neck: 0.7 } }
+    pilgrim:   { rows: [hoodie, pants, longskirt, boots, beanie, carpetponcho, cape, scarf], pats: [knit, canvas], extra: { hat: 0.5, eyew: 0, neck: 0.8 } }
+    scavenger: { rows: [hoodie, wirehood, padjacket, cargo, overalls, boots, padbeanie, beanie, shades], pats: [camo, denim, canvas], extra: { hat: 0.6, eyew: 0.4, neck: 0.2 } }
 rows:
   # slot   kind         name                  dr  kg    rarity    colours                                         (dr, kg, rarity: Savi's picks)
-  - { id: tee,        slot: topw, kind: tee,        name: T-shirt,          dr: 0, kg: 0.2, rarity: common,   regular: true, colours: [e85d75, ffd93d, 4d96ff, 6bcb77, f4f1ea, 2b2b33] }
-  - { id: tank,       slot: topw, kind: tank,       name: Tank top,         dr: 0, kg: 0.1, rarity: common,   regular: true, colours: [ffffff, 2b2b33, ff9f43] }
-  - { id: longsleeve, slot: topw, kind: longsleeve, name: Long-sleeve shirt,dr: 1, kg: 0.3, rarity: common,   regular: true, colours: [3d5a98, 8b5a3c, f4f1ea] }
-  - { id: pajamas,    slot: topw, kind: pajamas,    name: Pajama top,       dr: 0, kg: 0.2, rarity: common,   colours: [ff8fc7, 9fd3ff] }
-  - { id: dress,      slot: topw, kind: dress,      name: Dress,            dr: 0, kg: 0.3, rarity: uncommon, colours: [e85d75, 9b5de5, 2b2b33] }
-  - { id: sweater,    slot: topw, kind: sweater,    name: Wool sweater,     dr: 2, kg: 0.7, rarity: common,   colours: [c0392b, 6bcb77, 8b5a3c, f4f1ea] }
-  - { id: hoodie,     slot: topw, kind: hoodie,     name: Hoodie,           dr: 2, kg: 0.8, rarity: common,   colours: [e85d75, 2b2b33, 4d96ff, 8a6a4a] }
-  - { id: apron,      slot: topw, kind: apron,      name: Canvas work apron,dr: 3, kg: 1.0, rarity: uncommon, colours: [8b5a3c, 2b2b33] }
-  - { id: jacket,     slot: topw, kind: jacket,     name: Work jacket,      dr: 4, kg: 1.5, rarity: uncommon, colours: [c27a2a, 3d5a98, 2b2b33, eef2f0] }
-  - { id: megjacket,  slot: topw, kind: jacket,     name: M.E.G. hi-vis jacket, dr: 6, kg: 1.8, rarity: agency, strict: true, colours: [b6e04a] }
-  - { id: pants,      slot: botw, kind: pants,      name: Pants,            dr: 1, kg: 0.5, rarity: common,   regular: true, colours: [3d5a98, 2b2b33, 8b5a3c, 4a5a3a, 3a3a40] }
-  - { id: shorts,     slot: botw, kind: shorts,     name: Shorts,           dr: 0, kg: 0.2, rarity: common,   regular: true, colours: [3d5a98, 6bcb77, ff9f43] }
-  - { id: pjpants,    slot: botw, kind: pjpants,    name: Pajama pants,     dr: 0, kg: 0.2, rarity: common,   colours: [ff8fc7, 9fd3ff] }
-  - { id: skirt,      slot: botw, kind: skirt,      name: Skirt,            dr: 0, kg: 0.2, rarity: common,   regular: true, colours: [e85d75, 2b2b33, 9b5de5] }
-  - { id: longskirt,  slot: botw, kind: longskirt,  name: Long skirt,       dr: 1, kg: 0.4, rarity: uncommon, colours: [8b5a3c, 3d5a98] }
-  - { id: overalls,   slot: botw, kind: overalls,   name: Denim overalls,   dr: 3, kg: 1.4, rarity: uncommon, colours: [3d5a98, 4a5a3a, c27a2a] }
-  - { id: sneakers,   slot: shoes, kind: sneakers,  name: Plain sneakers,   dr: 0, kg: 0.4, rarity: common,   regular: true, colours: [f4f1ea, 2b2b33, e85d75] }
-  - { id: slippers,   slot: shoes, kind: slippers,  name: Slippers,         dr: 0, kg: 0.2, rarity: common,   colours: [ff8fc7, f4f1ea] }
-  - { id: boots,      slot: shoes, kind: boots,     name: Work boots,       dr: 2, kg: 1.2, rarity: uncommon, colours: [2a2420, 8b5a3c] }
-  - { id: cap,        slot: hat,  kind: cap,        name: Ball cap,         dr: 2, kg: 0.2, rarity: common,   colours: [e85d75, 3d5a98, 2b2b33, b6e04a] }
-  - { id: beanie,     slot: hat,  kind: beanie,     name: Knit beanie,      dr: 2, kg: 0.2, rarity: common,   colours: [7a3a2a, 5a2a2a, 2b2b33, ffd93d] }
-  - { id: tophat,     slot: hat,  kind: tophat,     name: Top hat,          dr: 1, kg: 0.4, rarity: rare,     colours: [2b2b33] }
+  - { id: tee,        slot: topw, kind: tee,        name: T-shirt,          dr: 0, kg: 0.2, rarity: common,   regular: true, colours: [e85d75, ffd93d, 4d96ff, 6bcb77, f4f1ea, 2b2b33], pats: [weave, stripes, breton, polka, camo, floral] }
+  - { id: tank,       slot: topw, kind: tank,       name: Tank top,         dr: 0, kg: 0.1, rarity: common,   regular: true, colours: [ffffff, 2b2b33, ff9f43], pats: [weave, stripes, camo] }
+  - { id: longsleeve, slot: topw, kind: longsleeve, name: Long-sleeve shirt,dr: 1, kg: 0.3, rarity: common,   regular: true, colours: [3d5a98, 8b5a3c, f4f1ea], pats: [weave, plaid, tartan, stripes, gingham] }
+  - { id: pajamas,    slot: topw, kind: pajamas,    name: Pajama top,       dr: 0, kg: 0.2, rarity: common,   colours: [ff8fc7, 9fd3ff], pats: [gingham, polka, stripes, floral] }
+  - { id: dress,      slot: topw, kind: dress,      name: Dress,            dr: 0, kg: 0.3, rarity: uncommon, colours: [e85d75, 9b5de5, 2b2b33], pats: [weave, floral, polka, gingham, velvet] }
+  - { id: sweater,    slot: topw, kind: sweater,    name: Wool sweater,     dr: 2, kg: 0.7, rarity: common,   colours: [c0392b, 6bcb77, 8b5a3c, f4f1ea], pats: [knit, cable, argyle, stripes] }
+  - { id: hoodie,     slot: topw, kind: hoodie,     name: Hoodie,           dr: 2, kg: 0.8, rarity: common,   colours: [e85d75, 2b2b33, 4d96ff, 8a6a4a], pats: [weave, camo, stripes, knit] }
+  - { id: apron,      slot: topw, kind: apron,      name: Canvas work apron,dr: 3, kg: 1.0, rarity: uncommon, colours: [8b5a3c, 2b2b33], pats: [canvas, gingham, stripes, leather] }
+  - { id: jacket,     slot: topw, kind: jacket,     name: Work jacket,      dr: 4, kg: 1.5, rarity: uncommon, colours: [c27a2a, 3d5a98, 2b2b33, eef2f0], pats: [canvas, denim, leather, camo, plaid] }
+  - { id: megjacket,  slot: topw, kind: jacket,     name: M.E.G. hi-vis jacket, dr: 6, kg: 1.8, rarity: agency, strict: true, colours: [b6e04a], pats: [hivis] }
+  - { id: pants,      slot: botw, kind: pants,      name: Pants,            dr: 1, kg: 0.5, rarity: common,   regular: true, colours: [3d5a98, 2b2b33, 8b5a3c, 4a5a3a, 3a3a40], pats: [denim, weave, camo, plaid, pinstripe] }
+  - { id: shorts,     slot: botw, kind: shorts,     name: Shorts,           dr: 0, kg: 0.2, rarity: common,   regular: true, colours: [3d5a98, 6bcb77, ff9f43], pats: [denim, weave, camo, plaid] }
+  - { id: pjpants,    slot: botw, kind: pjpants,    name: Pajama pants,     dr: 0, kg: 0.2, rarity: common,   colours: [ff8fc7, 9fd3ff], pats: [gingham, polka, stripes] }
+  - { id: skirt,      slot: botw, kind: skirt,      name: Skirt,            dr: 0, kg: 0.2, rarity: common,   regular: true, colours: [e85d75, 2b2b33, 9b5de5], pats: [weave, plaid, tartan, denim, polka] }
+  - { id: longskirt,  slot: botw, kind: longskirt,  name: Long skirt,       dr: 1, kg: 0.4, rarity: uncommon, colours: [8b5a3c, 3d5a98], pats: [weave, floral, tartan, velvet] }
+  - { id: overalls,   slot: botw, kind: overalls,   name: Denim overalls,   dr: 3, kg: 1.4, rarity: uncommon, colours: [3d5a98, 4a5a3a, c27a2a], pats: [denim, canvas, stripes] }
+  - { id: sneakers,   slot: shoes, kind: sneakers,  name: Plain sneakers,   dr: 0, kg: 0.4, rarity: common,   regular: true, colours: [f4f1ea, 2b2b33, e85d75], pats: [canvas, weave, leather] }
+  - { id: slippers,   slot: shoes, kind: slippers,  name: Slippers,         dr: 0, kg: 0.2, rarity: common,   colours: [ff8fc7, f4f1ea], pats: [knit, velvet, polka] }
+  - { id: boots,      slot: shoes, kind: boots,     name: Work boots,       dr: 2, kg: 1.2, rarity: uncommon, colours: [2a2420, 8b5a3c], pats: [leather, canvas, camo] }
+  - { id: cap,        slot: hat,  kind: cap,        name: Ball cap,         dr: 2, kg: 0.2, rarity: common,   colours: [e85d75, 3d5a98, 2b2b33, b6e04a], pats: [weave, denim, camo, plaid] }
+  - { id: beanie,     slot: hat,  kind: beanie,     name: Knit beanie,      dr: 2, kg: 0.2, rarity: common,   colours: [7a3a2a, 5a2a2a, 2b2b33, ffd93d], pats: [knit, cable, stripes, camo] }
+  - { id: tophat,     slot: hat,  kind: tophat,     name: Top hat,          dr: 1, kg: 0.4, rarity: rare,     colours: [2b2b33], pats: [velvet, weave] }
   - { id: headphones, slot: hat,  kind: headphones, name: Headphones,       dr: 1, kg: 0.3, rarity: uncommon, colours: [2b2b33, e85d75] }
-  - { id: bow,        slot: hat,  kind: bow,        name: Hair bow,         dr: 0, kg: 0.05,rarity: common,   colours: [e85d75, ff8fc7, 4d96ff] }
+  - { id: bow,        slot: hat,  kind: bow,        name: Hair bow,         dr: 0, kg: 0.05,rarity: common,   colours: [e85d75, ff8fc7, 4d96ff], pats: [weave, polka, gingham, velvet] }
   - { id: flower,     slot: hat,  kind: flower,     name: Flower clip,      dr: 0, kg: 0.05,rarity: uncommon, colours: [ffd93d, ff8fc7] }
-  - { id: partyhat,   slot: hat,  kind: partyhat,   name: Party hat,        dr: 0, kg: 0.05,rarity: uncommon, colours: [9b5de5, ffd93d] }
+  - { id: partyhat,   slot: hat,  kind: partyhat,   name: Party hat,        dr: 0, kg: 0.05,rarity: uncommon, colours: [9b5de5, ffd93d], pats: [stripes, polka] }
   - { id: crown,      slot: hat,  kind: crown,      name: Paper crown,      dr: 0, kg: 0.1, rarity: rare,     colours: [ffd93d] }
   - { id: glasses,    slot: eyew, kind: glasses,    name: Glasses,          dr: 0, kg: 0.05,rarity: common,   colours: ["000000"] }
   - { id: shades,     slot: eyew, kind: shades,     name: Safety shades,    dr: 1, kg: 0.1, rarity: uncommon, colours: ["000000"] }
-  - { id: scarf,      slot: neck, kind: scarf,      name: Scarf,            dr: 1, kg: 0.2, rarity: common,   colours: [c0392b, b6e04a, f3c64a, 3d5a98] }
-  - { id: bowtie,     slot: neck, kind: bowtie,     name: Bow tie,          dr: 0, kg: 0.05,rarity: uncommon, colours: [c0392b, 2b2b33] }
+  - { id: scarf,      slot: neck, kind: scarf,      name: Scarf,            dr: 1, kg: 0.2, rarity: common,   colours: [c0392b, b6e04a, f3c64a, 3d5a98], pats: [knit, tartan, stripes, plaid] }
+  - { id: bowtie,     slot: neck, kind: bowtie,     name: Bow tie,          dr: 0, kg: 0.05,rarity: uncommon, colours: [c0392b, 2b2b33], pats: [weave, polka, plaid, velvet] }
   - { id: bell,       slot: neck, kind: bell,       name: Bell collar,      dr: 0, kg: 0.1, rarity: uncommon, colours: [f3c64a] }
-  - { id: cape,       slot: neck, kind: cape,       name: Cape,             dr: 1, kg: 0.6, rarity: rare,     colours: [c0392b, 2b2b33] }
+  - { id: cape,       slot: neck, kind: cape,       name: Cape,             dr: 1, kg: 0.6, rarity: rare,     colours: [c0392b, 2b2b33], pats: [velvet, weave, plaid] }
   # --- new: scavenged and crafted outfits (strict colours make each its own garment; level = its leveled-list floor) ---
-  - { id: officeshirt, slot: topw, kind: longsleeve, name: Office shirt,       dr: 1, kg: 0.3, rarity: common,   strict: true, level: 1,  colours: [eef0f5, dfe8f2] }
-  - { id: slacks,      slot: botw, kind: pants,      name: Office slacks,      dr: 1, kg: 0.4, rarity: common,   strict: true, level: 1,  colours: [55565c, 4a4438] }
-  - { id: cargo,       slot: botw, kind: pants,      name: Cargo pants,        dr: 2, kg: 0.8, rarity: common,   strict: true, level: 3,  colours: [6a6a4a, 5a5040] }
-  - { id: carpetponcho,slot: neck, kind: cape,       name: Carpet poncho,      dr: 3, kg: 1.2, rarity: uncommon, strict: true, level: 2,  colours: [b39a4e], crafted: true }
-  - { id: padbeanie,   slot: hat,  kind: beanie,     name: Padded beanie,      dr: 3, kg: 0.4, rarity: uncommon, strict: true, level: 5,  colours: [4a5a3a, 3a3a30], crafted: true }
-  - { id: canvasskirt, slot: botw, kind: longskirt,  name: Canvas long skirt,  dr: 3, kg: 0.9, rarity: uncommon, strict: true, level: 5,  colours: [6a5a3a] }
-  - { id: padjacket,   slot: topw, kind: jacket,     name: Padded jacket,      dr: 5, kg: 2.0, rarity: uncommon, strict: true, level: 8,  colours: [5a4a3a, 3a4048], crafted: true }
-  - { id: wirehood,    slot: topw, kind: hoodie,     name: Wire-mesh hoodie,   dr: 6, kg: 2.4, rarity: rare,     strict: true, level: 12, colours: [6e6e64], crafted: true }
-  - { id: steeltoe,    slot: shoes, kind: boots,     name: Steel-toe boots,    dr: 4, kg: 1.8, rarity: uncommon, strict: true, level: 9,  colours: [3a3a30], crafted: true }
-  - { id: platevest,   slot: topw, kind: apron,      name: Drywall plate vest, dr: 7, kg: 3.2, rarity: rare,     strict: true, level: 14, colours: [cfc8b8], crafted: true }
+  - { id: officeshirt, slot: topw, kind: longsleeve, name: Office shirt,       dr: 1, kg: 0.3, rarity: common,   strict: true, level: 1,  colours: [eef0f5, dfe8f2], pats: [weave, pinstripe, stripes, gingham] }
+  - { id: slacks,      slot: botw, kind: pants,      name: Office slacks,      dr: 1, kg: 0.4, rarity: common,   strict: true, level: 1,  colours: [55565c, 4a4438], pats: [weave, pinstripe, plaid] }
+  - { id: cargo,       slot: botw, kind: pants,      name: Cargo pants,        dr: 2, kg: 0.8, rarity: common,   strict: true, level: 3,  colours: [6a6a4a, 5a5040], pats: [canvas, camo] }
+  - { id: carpetponcho,slot: neck, kind: cape,       name: Carpet poncho,      dr: 3, kg: 1.2, rarity: uncommon, strict: true, level: 2,  colours: [b39a4e], crafted: true, pats: [canvas] }
+  - { id: padbeanie,   slot: hat,  kind: beanie,     name: Padded beanie,      dr: 3, kg: 0.4, rarity: uncommon, strict: true, level: 5,  colours: [4a5a3a, 3a3a30], crafted: true, pats: [knit, camo] }
+  - { id: canvasskirt, slot: botw, kind: longskirt,  name: Canvas long skirt,  dr: 3, kg: 0.9, rarity: uncommon, strict: true, level: 5,  colours: [6a5a3a], pats: [canvas] }
+  - { id: padjacket,   slot: topw, kind: jacket,     name: Padded jacket,      dr: 5, kg: 2.0, rarity: uncommon, strict: true, level: 8,  colours: [5a4a3a, 3a4048], crafted: true, pats: [canvas, camo, leather] }
+  - { id: wirehood,    slot: topw, kind: hoodie,     name: Wire-mesh hoodie,   dr: 6, kg: 2.4, rarity: rare,     strict: true, level: 12, colours: [6e6e64], crafted: true, pats: [canvas, camo] }
+  - { id: steeltoe,    slot: shoes, kind: boots,     name: Steel-toe boots,    dr: 4, kg: 1.8, rarity: uncommon, strict: true, level: 9,  colours: [3a3a30], crafted: true, pats: [leather] }
+  - { id: platevest,   slot: topw, kind: apron,      name: Drywall plate vest, dr: 7, kg: 3.2, rarity: rare,     strict: true, level: 14, colours: [cfc8b8], crafted: true, pats: [canvas] }
   # Level 5's hotel wardrobe: old kinds in the Terror Hotel's own cuts (reuse is fine, Shelly). places: rolls only there (Savi's picks for dr/kg/rarity)
-  - { id: bellhop,     slot: topw, kind: jacket,     name: Bellhop jacket,     dr: 3, kg: 0.8, rarity: uncommon, places: [level5], strict: true, colours: [b0302a, 7a1f1f] }
-  - { id: tailcoat,    slot: topw, kind: jacket,     name: Evening tailcoat,   dr: 2, kg: 0.9, rarity: uncommon, places: [level5], strict: true, colours: [1a1a22, 2b2b33] }
-  - { id: gown,        slot: topw, kind: dress,      name: Ballroom gown,      dr: 1, kg: 0.6, rarity: rare,     places: [level5], strict: true, colours: [7a1f3d, d4af37, 1f3a5a] }
-  - { id: maidapron,   slot: topw, kind: apron,      name: Chambermaid apron,  dr: 1, kg: 0.3, rarity: common,   places: [level5], strict: true, colours: [f4f1ea, 2b2b33] }
-  - { id: hotelrobe,   slot: topw, kind: pajamas,    name: Hotel bathrobe,     dr: 1, kg: 0.7, rarity: common,   places: [level5], strict: true, colours: [f4f1ea, d8c9a0] }
-  - { id: pinstripe,   slot: botw, kind: pants,      name: Pinstripe trousers, dr: 1, kg: 0.5, rarity: common,   places: [level5], strict: true, colours: [2b2b33, 3a2a20] }
-  - { id: velvetskirt, slot: botw, kind: longskirt,  name: Velvet skirt,       dr: 1, kg: 0.5, rarity: uncommon, places: [level5], strict: true, colours: [7a1f3d, 1a1a22] }
-  - { id: hotelslip,   slot: shoes, kind: slippers,  name: Hotel slippers,     dr: 0, kg: 0.2, rarity: common,   places: [level5], strict: true, colours: [f4f1ea] }
-  - { id: balltie,     slot: neck, kind: bowtie,     name: Ballroom bow tie,   dr: 0, kg: 0.05,rarity: common,   places: [level5], strict: true, colours: [1a1a22, b0302a] }
-  - { id: opera,       slot: hat,  kind: tophat,     name: Opera hat,          dr: 1, kg: 0.4, rarity: uncommon, places: [level5], strict: true, colours: [1a1a22, 7a1f3d] }
+  - { id: bellhop,     slot: topw, kind: jacket,     name: Bellhop jacket,     dr: 3, kg: 0.8, rarity: uncommon, places: [level5], strict: true, colours: [b0302a, 7a1f1f], pats: [velvet, weave] }
+  - { id: tailcoat,    slot: topw, kind: jacket,     name: Evening tailcoat,   dr: 2, kg: 0.9, rarity: uncommon, places: [level5], strict: true, colours: [1a1a22, 2b2b33], pats: [velvet, pinstripe] }
+  - { id: gown,        slot: topw, kind: dress,      name: Ballroom gown,      dr: 1, kg: 0.6, rarity: rare,     places: [level5], strict: true, colours: [7a1f3d, d4af37, 1f3a5a], pats: [velvet, floral] }
+  - { id: maidapron,   slot: topw, kind: apron,      name: Chambermaid apron,  dr: 1, kg: 0.3, rarity: common,   places: [level5], strict: true, colours: [f4f1ea, 2b2b33], pats: [weave, gingham] }
+  - { id: hotelrobe,   slot: topw, kind: pajamas,    name: Hotel bathrobe,     dr: 1, kg: 0.7, rarity: common,   places: [level5], strict: true, colours: [f4f1ea, d8c9a0], pats: [weave, stripes] }
+  - { id: pinstripe,   slot: botw, kind: pants,      name: Pinstripe trousers, dr: 1, kg: 0.5, rarity: common,   places: [level5], strict: true, colours: [2b2b33, 3a2a20], pats: [pinstripe] }
+  - { id: velvetskirt, slot: botw, kind: longskirt,  name: Velvet skirt,       dr: 1, kg: 0.5, rarity: uncommon, places: [level5], strict: true, colours: [7a1f3d, 1a1a22], pats: [velvet] }
+  - { id: hotelslip,   slot: shoes, kind: slippers,  name: Hotel slippers,     dr: 0, kg: 0.2, rarity: common,   places: [level5], strict: true, colours: [f4f1ea], pats: [velvet] }
+  - { id: balltie,     slot: neck, kind: bowtie,     name: Ballroom bow tie,   dr: 0, kg: 0.05,rarity: common,   places: [level5], strict: true, colours: [1a1a22, b0302a], pats: [velvet] }
+  - { id: opera,       slot: hat,  kind: tophat,     name: Opera hat,          dr: 1, kg: 0.4, rarity: uncommon, places: [level5], strict: true, colours: [1a1a22, 7a1f3d], pats: [velvet] }
   # Level 7's Thalassophobia maritime & abyssal armor: M.E.G. Seawatch diving gear, storm oilskins, and Fort Surrender tar-scale armor
-  - { id: seawatchsuit,slot: topw, kind: jacket,     name: "M.E.G. Seawatch dive coat", dr: 7, kg: 2.2, rarity: agency, places: [level7], strict: true, colours: [2b4c5e, 1e3b4b] }
-  - { id: oilskin,     slot: topw, kind: hoodie,     name: "Storm oilskin foulie",  dr: 6, kg: 1.9, rarity: uncommon, places: [level7], strict: true, colours: [d49b27, 3a4842] }
-  - { id: abysshauberk,slot: topw, kind: apron,      name: "Abyssal tar-scale hauberk", dr: 8, kg: 2.8, rarity: rare, places: [level7], strict: true, colours: [1c282e, 142024] }
-  - { id: tarwaders,   slot: botw, kind: overalls,   name: "Tar-caulked deck waders", dr: 5, kg: 1.8, rarity: uncommon, places: [level7], strict: true, colours: [28322c, 2b3036] }
-  - { id: ballastboots,slot: shoes, kind: boots,     name: "Lead-ballast diving boots", dr: 5, kg: 2.4, rarity: rare, places: [level7], strict: true, colours: [1c1e22, 141618] }
-  - { id: souwester,   slot: hat,  kind: beanie,     name: "Sou'wester storm watch cap", dr: 4, kg: 0.4, rarity: uncommon, places: [level7], strict: true, colours: [d46a28, 24343e] }
-  - { id: divehelm,    slot: hat,  kind: cap,        name: "Brass-rimmed dive hood", dr: 5, kg: 0.9, rarity: rare,    places: [level7], strict: true, colours: [b88838, 1e3b4b] }
-  - { id: lifemantle,  slot: neck, kind: cape,       name: "Cork lifebelt mantle",  dr: 4, kg: 1.1, rarity: rare, places: [level7], strict: true, colours: [c85a28, 3a4e54] }
+  - { id: seawatchsuit,slot: topw, kind: jacket,     name: "M.E.G. Seawatch dive coat", dr: 7, kg: 2.2, rarity: agency, places: [level7], strict: true, colours: [2b4c5e, 1e3b4b], pats: [hivis, canvas] }
+  - { id: oilskin,     slot: topw, kind: hoodie,     name: "Storm oilskin foulie",  dr: 6, kg: 1.9, rarity: uncommon, places: [level7], strict: true, colours: [d49b27, 3a4842], pats: [oilskin] }
+  - { id: abysshauberk,slot: topw, kind: apron,      name: "Abyssal tar-scale hauberk", dr: 8, kg: 2.8, rarity: rare, places: [level7], strict: true, colours: [1c282e, 142024], pats: [scales] }
+  - { id: tarwaders,   slot: botw, kind: overalls,   name: "Tar-caulked deck waders", dr: 5, kg: 1.8, rarity: uncommon, places: [level7], strict: true, colours: [28322c, 2b3036], pats: [oilskin] }
+  - { id: ballastboots,slot: shoes, kind: boots,     name: "Lead-ballast diving boots", dr: 5, kg: 2.4, rarity: rare, places: [level7], strict: true, colours: [1c1e22, 141618], pats: [leather] }
+  - { id: souwester,   slot: hat,  kind: beanie,     name: "Sou'wester storm watch cap", dr: 4, kg: 0.4, rarity: uncommon, places: [level7], strict: true, colours: [d46a28, 24343e], pats: [oilskin] }
+  - { id: divehelm,    slot: hat,  kind: cap,        name: "Brass-rimmed dive hood", dr: 5, kg: 0.9, rarity: rare,    places: [level7], strict: true, colours: [b88838, 1e3b4b], pats: [leather] }
+  - { id: lifemantle,  slot: neck, kind: cape,       name: "Cork lifebelt mantle",  dr: 4, kg: 1.1, rarity: rare, places: [level7], strict: true, colours: [c85a28, 3a4e54], pats: [canvas] }
