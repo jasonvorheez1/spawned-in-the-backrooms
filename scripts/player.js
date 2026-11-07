@@ -8,7 +8,9 @@ import { raycast } from 'builtin/physics'
 import { dropLoot } from './lib/loot.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
 
-const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
+import SOUNDS from './lib/data/sounds.yml'
+const sndTurn = {}
+const SND = (n) => { const takes = SOUNDS[n]; if (!takes?.length) return `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`; sndTurn[n] = ((sndTurn[n] ?? -1) + 1 + (takes.length > 2 ? Math.floor(takes.length / 2) : 0)) % takes.length; return takes[sndTurn[n]] }
 const ICHOR = `fx
 pop ichor burst=18..26 life=.5..0.9 v=sdir()*(1.5..3.2)+up(1) size=.04..0.09 acc=grav()*.8+drag(1.2) col=<.04,.03,.05> a=1>.6:1>0 sz=$size floor=stick r=sprite(soft-disc,alpha)
 pop smoke burst=4..6 life=.6..1 v=sdir()*(.3..0.7) size=.25..0.4 acc=buoy(.4)+drag(1.5) col=<.06,.05,.07> a=0>.15:.5>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)`
@@ -385,7 +387,7 @@ function tickStats(ctx, t, moving) {
     ctx.destroy(a.id)
     s.ammo = Math.min(W.ammo.max, (s.ammo ?? 0) + W.ammo.perPickup)
     s.pickedAt = now
-    sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
+    sound(ctx, 'pickup-ammo', 0.7, true)
   }
   // shotgun shells on the floor
   for (const a of ctx.query({ tags: ['shells'], radius: 1.5 })) {
@@ -393,7 +395,7 @@ function tickStats(ctx, t, moving) {
     ctx.destroy(a.id)
     s.shells = Math.min(W.shells.max, (s.shells ?? 0) + W.shells.perPickup)
     s.pickedAt = now
-    sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
+    sound(ctx, 'pickup-ammo', 0.7, true)
   }
   // almond water on the floor
   for (const a of ctx.query({ tags: ['almond'], radius: 1.5 })) {
@@ -414,7 +416,7 @@ function tickStats(ctx, t, moving) {
     if (usable(s, k) && W[k].damage > weaponOf(s).damage) s.equipped = k
     s.pickedAt = now; s.gotWeapon = W[k].name
     gain(ctx, W[k].xp ?? L.xpAlmond)
-    sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
+    sound(ctx, 'pickup-weapon', 0.7, true)
   }
   // the flickering wall: the way out
   const ex = cellCenter(EXIT.cx, EXIT.cz)

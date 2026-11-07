@@ -1,0 +1,64 @@
+# Sound design: Shelly's Fallout 3 / New Vegas packs. A name the game plays -> its takes, rotated each play.
+# A name missing here falls back to the conjured moodboard sound.
+pistol-gunshot-echo:
+  - "/cdn/value.1ebde9fab84877a76faec5250dedfcd09e112dfa9f90aa7686df3f808e0f01e9.mp3"
+  - "/cdn/value.48de67f3bb41181aa881c4ab795bf61d8520fe3bdd33ef9f8787dcea89a82676.mp3"
+  - "/cdn/value.263a3d9da22c46d2cafbad4682e2c7a7a4c3a691c6735774b33bfffef6c32ab4.mp3"
+shotgun-blast-boom:
+  - "/cdn/value.8167f17bdd3c5c9817cb62d576ebb837add03a70ad1a33d06a8eb5a6dd615d74.mp3"
+  - "/cdn/value.7a283feb5ba9011c4707af5f84c9b9c1489d474bf1a379b96dd424cf1480eee4.mp3"
+  - "/cdn/value.28d07a2821f9010750b8e86217408bc249cca68b19fa336fc92428b5338474f8.mp3"
+gun-dry-fire-click:
+  - "/cdn/value.e2189b0a90e1ec48824d6484e49a06525b137af7c71db0773ce91c231b7b2e95.mp3"
+pipe-whoosh-swing:
+  - "/cdn/value.1b54f776109785af714996e49d9bd2b4c066029168e6adb94a9a7ded18e0bc98.mp3"
+  - "/cdn/value.a5b840f5afb7ef9617ac02a8d9e2ff3b07243ff88e3aa0cd5c99054a20162b1d.mp3"
+  - "/cdn/value.55a65cbcac9404fa7d7e7347c66dc664f3969e8ba37b9b286a35e7e92ed66d07.mp3"
+heavy-pipe-hit-flesh-thud:
+  - "/cdn/value.cfc58a0b0cfdf122917ab195d01064a2ae5f076683edb408518787bb3f64c070.mp3"
+  - "/cdn/value.166d77ad5c6edc0bd723f475d4bdbbaac0a79ce430063c941a559b97f935bc5f.mp3"
+  - "/cdn/value.03d9df81c701820fc72d69704d359b267bf5e4fa7127f3f3c37c22a6dc8e0630.mp3"
+  - "/cdn/value.2b54bfb97533e03e81c3471e13d2d887e6041dc465f35321cf0464e05e1acffb.mp3"
+  - "/cdn/value.14bba379aa4e8ac9eaa69323b918842e29aa0b6773f239edbbbba4072b485411.mp3"
+pistol-magazine-eject-click:
+  - "/cdn/value.39264d61e164208491becced796ccb84356b6794efc98d8d70365f2a4b8018db.mp3"
+pistol-magazine-insert-slide:
+  - "/cdn/value.136f86998a53c88f8b77da3e3fcbda32b3089e261a6393ed7d27145592617fca.mp3"
+pistol-slide-rack:
+  - "/cdn/value.5869289ece250692fd9e23f478c65fd52ade438718dd72baa795397ec3a7044d.mp3"
+shotgun-shell-insert-click:
+  - "/cdn/value.71c13f9c55476e862c8932c974f199d3b532f5efc17f02819450cdf349c013e9.mp3"
+shotgun-pump-rack:
+  - "/cdn/value.647c76f72a424fa265b554887fc5e72b41a0e6463c85be500e1d8b5d8d0d3d6b.mp3"
+gun-raise-cloth-rustle:
+  - "/cdn/value.60f4401ee983445dbf152866d011f69c141fb1cbfd3379b3a81130da201ffdda.mp3"
+pickup-ammo:
+  - "/cdn/value.43cf3aa7823433995ecad43d1cfd7f6858cbd9e506d3b6ce99bf3e0f57163ce4.mp3"
+  - "/cdn/value.d3b06e3111e2c11e42946ebf53b4013e55d2072aac9b31da6dbeff0294dbe60c.mp3"
+  - "/cdn/value.d7a7e9eda7a3b4f80dcc796ab53b7199b74c6ff5e86085d0e8882d0d60a90f07.mp3"
+pickup-weapon:
+  - "/cdn/value.fbcc1ac857ec1021007c82f57399c18a2de1c1ca443540967af4fe935218d32d.mp3"
+plastic-bottle-pickup-rattle:
+  - "/cdn/value.fe5cc9eff9d052c2265cdac3b2c0332f9dc749be0367fe958651c55830f8c696.mp3"
+  - "/cdn/value.c805e3ec198b1146615f6542a3d5eb19d457f94101ca1cf776e6c201b6c275cc.mp3"
+footstep-damp-carpet-squelch-soft:
+  - "/cdn/value.524e6e47fa1fd349c4125f35a8013c401c906f01ac003f653f9cf59e88fd96dc.mp3"
+  - "/cdn/value.19a2c939255a75519f5ad00d3ed38d2e5614c704c28a8d42879d7561a87069fa.mp3"
+  - "/cdn/value.ea642bf75cb394853bf3a18c3ad9ce40a685a668aef131bdb1e8131c0aab5782.mp3"
+  - "/cdn/value.91a351e260917c32ec315dc014d6bd712e25f83353814f8d3f3f4a2200a234dc.mp3"
+  - "/cdn/value.a8162d9285c8c7774daba006a306903ac7873d08610fb17dee43ae68dfa956f5.mp3"
+  - "/cdn/value.821bb6ca2105bc351520d05b7e40ec123648c5614e510adfd780133a13d13946.mp3"
+footstep-damp-carpet-run:
+  - "/cdn/value.be860961ad2ef867f60d518a6f066b05dfbde5c16f52ba82aec639ba3a1e5ef3.mp3"
+  - "/cdn/value.65ec991662b8f695b643f622ce22540574f7a3f593fbb6532a836aab7905deca.mp3"
+  - "/cdn/value.2bd16598aa953ba66b80ea7c7b76f61b6255085e24532a6b19ce6a1a964dc338.mp3"
+  - "/cdn/value.2df36f3beaf241c079569b8847772cc53b473a4ec13ef75766ee9a03a811c8e9.mp3"
+  - "/cdn/value.0f3d230e47c6bdad562f36caaac72e105a6d255fdaf7a454431f30923c03a997.mp3"
+  - "/cdn/value.bbbaab6b51aa90f25da63b63d91b8165dafbbdcf8afe02d283490ca98542cbbc.mp3"
+footstep-soaked-carpet-deep-squelch:
+  - "/cdn/value.f463af86f51e9edecc22d2754a0b3048a8c32b1844d46ebd93dd568659a9637b.mp3"
+  - "/cdn/value.994fb2b9a34f725e3edfa9c236fb644efb3eb7c26c79670b4dcff67a7060fc9e.mp3"
+  - "/cdn/value.f24f875d4b2a113199c2a3e67a5906df3e2559f92b185e448b5434f463ad1b85.mp3"
+  - "/cdn/value.d6178d126b5e32cb8b57a7bc609b287e657fb6f11a17634669a66f3f3fcaba85.mp3"
+  - "/cdn/value.0d96200841f29b33e4e41f3714bd1a127c131f2000d978912ecb7081be9bbc5a.mp3"
+  - "/cdn/value.113c3a952e8e372058bfe72474e8778547b384877ef06f45f86702486e3e0f6c.mp3"
