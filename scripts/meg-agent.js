@@ -174,6 +174,12 @@ export function bark(ctx, o, kind, force) {
   const p = o.feetPosition;
   heard(ctx, { clip: BVO(who, t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 1, refDistance: 4, maxDistance: 30 }, { audience: { nearby: p, radius: 32 } });
 }
+// Savi's picks: [clip, how long it holds (ms), weight, upper body only]
+const GEST = {
+  idle: [["cdn/clip-shrug.glb", 1800, 0.9, true], ["cdn/clip-nod-yes.glb", 1500, 0.8, true], ["cdn/clip-point.glb", 1900, 0.85, true], ["cdn/clip-laugh-loop.glb", 2600, 0.8, true], ["cdn/clip-shake-no.glb", 1500, 0.7, true], ["cdn/clip-clap-loop.glb", 1600, 0.6, true]],
+  talk: [["cdn/clip-nod-yes.glb", 1400, 0.7, true], ["cdn/clip-shake-no.glb", 1400, 0.6, true], ["cdn/clip-shrug.glb", 1700, 0.8, true], ["cdn/clip-point.glb", 1700, 0.7, true], ["cdn/clip-laugh-loop.glb", 1800, 0.6, true]],
+  cross: [["cdn/clip-angry.glb", 2200, 1, true], ["cdn/clip-shake-no.glb", 1500, 0.9, true]],
+};
 export function update(ctx, dt) {
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
   if (m.dressed !== 2) { m.dressed = 2; if (!s.dead) dress(ctx, me); }
@@ -218,7 +224,18 @@ export function update(ctx, dt) {
   }
   // talking: interact.js stamps state.talkAt and talkTo when a player presses E on them
   const talking = s.talkAt && now - s.talkAt < 2600;
-  if (talking !== !!m.talking) { m.talking = talking; me.anim.talk = talking ? { clip: "cdn/clip-talk-loop.glb", loop: "loop", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } } : null; }
+  if (talking !== !!m.talking) { m.talking = talking; me.anim.talk = talking ? { clip: (s.wear?.sex ?? s.look?.sex) === "f" ? "cdn/clip-talk-female-loop.glb" : "cdn/clip-talk-loop.glb", loop: "loop", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } } : null; }
+  // one-shot clips end: cleared after their length, so a body never holds a wave's or a flinch's last frame
+  if (me.anim.hit && now - (m.hitAt ?? 0) > 900) me.anim.hit = null;
+  if (me.anim.wave && now - (m.wavedAt ?? 0) > 2400) me.anim.wave = null;
+  // gestures: idle fidgets when standing about, hand talk in conversation, a scowl when crossed; one channel, upper body over the gait
+  if (m.gestEnd && now > m.gestEnd) { me.anim.gest = null; m.gestEnd = 0; }
+  if (!s.dead && !m.aimAt && !m.gestEnd && now > (m.gestNext ?? 0)) {
+    const spd = Math.hypot(me.velocity?.x ?? 0, me.velocity?.z ?? 0), cross = s.angry && Object.keys(s.angry).length;
+    const pool = talking ? GEST.talk : spd > 0.35 ? null : cross ? GEST.cross : GEST.idle;
+    m.gestNext = now + (talking ? 2200 + ctx.random() * 2600 : 6000 + ctx.random() * 9000);
+    if (pool) { const [clip, ms, w, upper] = pool[Math.floor(ctx.random() * pool.length)]; me.anim.gest = { clip, loop: /loop/.test(clip) ? "loop" : "once", weight: w, blendIn: 0.25, blendOut: 0.35, ...(upper ? { mask: { from: "Spine" } } : {}) }; m.gestEnd = now + ms; }
+  }
   // head morph sync: articulates speech, smiles when waving, winces when hit, blinks naturally
   const headObj = ctx.getObject(me.id + "/" + HEAD_ID);
   if (headObj && !s.dead) {
