@@ -13,6 +13,7 @@ import { spawnFurniture, pickKind, wallSpot3 } from "../../scripts/lib/furniture
 import { npcState, dmgAfterArmor } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { layLore } from "../../scripts/lib/level3-lore.js";
+import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { layGammaExterior } from "../../scripts/lib/gamma-exterior.js";
 export const cadence = "250ms";
 const GRIT = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
@@ -24,10 +25,18 @@ const GAMMA = {
   "gamma-pell": { name: "Pell · M.E.G. Quartermaster", role: "quarter", voice: "pell", look: { species: "otter", sex: "f", topw: "jacket", top: "#b8c040", botw: "pants", bottom: "#3a3a3a", shoes: "boots", shoec: "#2a2420", expr: "grin" }, at: [3.0, -3.2], gun: "pistol" },
   "gamma-ito": { name: "Dr. Ito · M.E.G. Medic", role: "medic", voice: "ito", look: { species: "bunny", sex: "f", topw: "longsleeve", top: "#e8e4dc", botw: "skirt", bottom: "#4a4a52", shoes: "boots", shoec: "#2a2420", expr: "smile" }, at: [4.6, 1.6], gun: "wrench" },
 };
+// their day's work, offsets from the checkpoint: stops with a dwell (s), a chore clip and a thing to face (Savi's picks)
+const ROUNDS = {
+  "gamma-reyes": [{ at: [1.2, 3.0], dwell: 10, act: null, look: [8, 3] }, { at: [8.5, 0], dwell: 9, act: "cdn/clip-point.glb", look: [14, 0] }, { at: [16.5, 0], dwell: 12, act: null, look: [22, 0] }, { at: [8.5, 0], dwell: 6, act: null, look: [2, 0] }],
+  "gamma-pell": [{ at: [3.0, -3.2], dwell: 16, act: "cdn/clip-pickup.glb", look: [3, -5] }, { at: [5.6, -0.6], dwell: 10, act: "cdn/clip-talk-female-loop.glb", look: [6.5, 0.5] }, { at: [1.5, -2.6], dwell: 12, act: "cdn/clip-pickup.glb", look: [1.5, -5] }],
+  "gamma-ito": [{ at: [4.6, 1.6], dwell: 14, act: null, look: [2, 1.6] }, { at: [6.4, 1.6], dwell: 18, act: "cdn/clip-sit-floor-loop.glb", look: [6.5, 0.5] }, { at: [3.0, 2.6], dwell: 10, act: "cdn/clip-idle-female-loop.glb", look: [1.2, 3] }],
+};
+const roundsOf = (id) => { const a = cellCenter(0, ARRIVE.cz); return ROUNDS[id].map((r) => ({ x: a.x + r.at[0], y: 0, z: a.z + r.at[1], dwell: r.dwell, act: r.act, look: { x: a.x + r.look[0], z: a.z + r.look[1] } })); };
+const VOICES3 = { "gamma-reyes": "reyes", "gamma-pell": "pell", "gamma-ito": "ito" };
 function agent(ctx, id) {
   const g = GAMMA[id], a = cellCenter(0, ARRIVE.cz);
   ctx.spawn(id, { tags: ["npc"], feetPosition: { x: a.x + g.at[0], y: 0, z: a.z + g.at[1] }, rotation: { yaw: -90 }, physics: "character",
-    ...critterSpec(fullLook(g.look)), behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
+    ...critterSpec(fullLook(g.look)), behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role, voice: g.voice, rounds: roundsOf(id), ...npcState(ctx, "agent", MEG.hp) } });
   ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
 }
 
@@ -208,6 +217,8 @@ export function tick(ctx) {
     }
   }
 
+  if (s.roundsV !== 1) { s.roundsV = 1; for (const id of Object.keys(GAMMA)) { const o = ctx.place.objects[id]; if (o) { o.state.rounds = roundsOf(id); o.state.ri = 0; } } } // the agents already standing pick up their work
+  tickChatter(ctx, CHATTER.level3, VOICES3);
   // Base Gamma's agents come back after a while if they fall
   for (const id of Object.keys(GAMMA)) {
     const o = ctx.place.objects[id];

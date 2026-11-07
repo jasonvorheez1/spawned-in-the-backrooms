@@ -164,7 +164,9 @@ export function update(ctx, dt) {
   // a companion a player talked into tagging along (scripts/talk.js): their leader is home, so it walks after them and fights what comes at them
   let lead = s.follow ? ctx.place.players.find((p) => p.id === s.follow) : null;
   if (s.follow) { if (lead) m.lostAt = 0; else m.lostAt ||= now; if (s.angry?.[s.follow] || (!lead && now - m.lostAt > 20000)) { s.follow = null; lead = null; } }
-  const home = lead ? lead.feetPosition : (s.home ?? me.feetPosition);
+  // a day's work (state.rounds: stops with a dwell, a chore clip, a thing to face): the post moves stop to stop
+  const stop0 = !lead && s.rounds?.length ? s.rounds[(s.ri ?? 0) % s.rounds.length] : null;
+  const home = lead ? lead.feetPosition : (stop0 ?? s.home ?? me.feetPosition);
   const t = pickTarget(ctx, me, m);
   const tid = t && flat(t.feetPosition, home) < G.leash ? t.id : null;
   if (tid !== (m.barkT ?? null)) {
@@ -176,6 +178,7 @@ export function update(ctx, dt) {
   if (m.clearAt && now > m.clearAt) { m.clearAt = 0; if (!tid) bark(ctx, me, "clear", true); }
   holster(ctx, me, m, !!(t && flat(t.feetPosition, home) < G.leash));
   if (t && flat(t.feetPosition, home) < G.leash) {
+    work(me, m, null);
     const d = flat(t.feetPosition, me.feetPosition), see = seesIt(ctx, me, t), reloading = now < (m.reloadUntil ?? 0);
     if (d > G.range || !see) { gait(me, m, "run"); aim(me, m, null); moveAlong(ctx, me, m, t.feetPosition, G.run, dt); }
     else { gait(me, m, "idle"); stop(me, dt); aim(me, m, reloading ? null : t); face(me, t.feetPosition.x - me.feetPosition.x, t.feetPosition.z - me.feetPosition.z, dt); }
@@ -187,12 +190,23 @@ export function update(ctx, dt) {
   }
   aim(me, m, null);
   if (lead) { const d = flat(home, me.feetPosition); if (d > TK.join.near) { const run = d > TK.join.run; gait(me, m, run ? "run" : "walk"); moveAlong(ctx, me, m, home, run ? G.run : G.walk, dt); return; } }
-  else if (flat(home, me.feetPosition) > 1) { gait(me, m, "walk"); moveAlong(ctx, me, m, home, G.walk, dt); return; }
-  stop(me, dt); gait(me, m, "idle"); m.path = null;
+  else if (flat(home, me.feetPosition) > 1) {
+    work(me, m, null); m.at = 0; m.leftAt ||= now;
+    if (stop0 && now - m.leftAt > 25000) { s.ri = ((s.ri ?? 0) + 1) % s.rounds.length; m.leftAt = now; m.path = null; } // can't reach it: on to the next chore
+    gait(me, m, "walk"); moveAlong(ctx, me, m, home, G.walk, dt); return;
+  }
+  stop(me, dt); gait(me, m, "idle"); m.path = null; m.leftAt = 0;
   // at the post: turn to whoever walks up, wave once (not at someone the camp is at war with)
   let near = null, best = 7;
   for (const pl of ctx.place.players) { const d = flat(pl.feetPosition, me.feetPosition); if (d < best) { best = d; near = pl; } }
   const chatTo = s.talkTo && now - (s.talkAt ?? 0) < 6000 ? ctx.place.objects[s.talkTo] : null; // mid-conversation with another npc
+  if (stop0) {
+    m.at ||= now;
+    const busy = (near && best < 3) || chatTo || talking;
+    work(me, m, busy ? null : stop0.act ?? null);
+    if (!busy && !near && stop0.look) face(me, stop0.look.x - me.feetPosition.x, stop0.look.z - me.feetPosition.z, dt);
+    if (!busy && now - m.at > (stop0.dwell ?? 10) * 1000) { s.ri = ((s.ri ?? 0) + 1) % s.rounds.length; m.at = 0; if (ctx.random() < 0.3) bark(ctx, me, "move"); }
+  }
   if (chatTo && !(near && best < 3)) { face(me, chatTo.feetPosition.x - me.feetPosition.x, chatTo.feetPosition.z - me.feetPosition.z, dt); ctx.sleep(0.1); return; }
   if (!near) {
     if (now > (m.glance ?? 0)) { m.glance = now + 5000 + ctx.random() * 5000; animate(ctx, me.id, { "bones.Head.yaw": [0, (ctx.random() - 0.5) * 80, 0] }, { duration: 2.8, easing: "easeInOutSine" }); } // a glance down the halls
@@ -200,5 +214,9 @@ export function update(ctx, dt) {
   }
   face(me, near.feetPosition.x - me.feetPosition.x, near.feetPosition.z - me.feetPosition.z, dt);
   if (!m.waved[near.id] && best < 5 && !s.angry?.[near.id]) { m.waved[near.id] = true; me.anim.wave = { clip: "cdn/clip-wave-loop.glb", loop: "once", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } }; }
+}
+function work(me, m, clip) {
+  if (m.work === clip) return; m.work = clip;
+  me.anim.work = clip ? { clip, loop: /loop/.test(clip) ? "loop" : "once", weight: 1, blendIn: 0.4, blendOut: 0.4 } : null;
 }
 export function vanish(ctx) { ctx.destroy(ctx.self.id); }

@@ -22,8 +22,18 @@ level2:
   - [[surv-hollis, "that barred door with the three on it."], [surv-mags, "don't."], [surv-hollis, "i'm just saying something's breathing back there."], [surv-mags, "and i'm just saying don't."]]
   - [[surv-mags, "hollis, you still got that radio working?"], [surv-hollis, "it hisses. sometimes the hiss has words in it."], [surv-mags, "what words?"], [surv-hollis, "never the ones you want."]]
   - [[surv-wren, "hounds were close last night."], [surv-mags, "how close?"], [surv-wren, "close enough i could smell 'em."], [surv-hollis, "then we double up on watch."]]
+level3:
+  - [[gamma-reyes, "generator four is coughing again."], [gamma-pell, "it's been coughing for a month."], [gamma-reyes, "it's coughing louder."], [gamma-pell, "then walk faster past it."]]
+  - [[gamma-ito, "reyes. sleeve. now."], [gamma-reyes, "it's a burn, doc. the wiring bit me."], [gamma-ito, "the wiring bites everyone. hold still."]]
+  - [[gamma-pell, "two crates of wire came in, one crate went out. explain that."], [gamma-reyes, "moths?"], [gamma-pell, "moths don't sign the ledger, reyes."]]
+  - [[gamma-reyes, "heard the hounds down by the lines."], [gamma-ito, "how many?"], [gamma-reyes, "enough that i came back."], [gamma-ito, "good call."]]
+  - [[gamma-ito, "you ever sleep through the hum?"], [gamma-pell, "first week, no. now i can't sleep without it."], [gamma-ito, "that's the part that worries me."]]
+  - [[gamma-pell, "base wants a tally by shift change."], [gamma-reyes, "tell them the halls moved again."], [gamma-pell, "they'll want it in writing."], [gamma-reyes, "write 'the halls moved again.'"]]
+  - [[gamma-reyes, "somebody chalked an arrow by the crawl tube."], [gamma-ito, "pointing in or out?"], [gamma-reyes, "in."], [gamma-ito, "then nobody follows it."]]
+  - [[gamma-ito, "stove's low. who's on fuel?"], [gamma-pell, "the ledger says reyes."], [gamma-reyes, "the ledger lies."], [gamma-pell, "the ledger is never wrong."]]
 # combat barks: what anyone in a camp shouts mid-fight, picked at random per moment
 barks:
+  move: ["right. back to it.", "rounds.", "where was i.", "okay. next thing."]
   spot: ["contact! over there!", "hound, on the left!", "something's coming in!", "eyes up, we got company.", "there! by the shelves!", "oh, not again."]
   hit: ["ah! it got me!", "ow, son of a-", "i'm hit, i'm fine!", "ugh! that's gonna bruise.", "get it off me!"]
   reload: ["reloading!", "changing mags, cover me!", "i'm dry! give me a second!", "hang on, hang on, reloading."]

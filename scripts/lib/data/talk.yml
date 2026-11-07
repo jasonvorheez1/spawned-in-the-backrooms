@@ -20,5 +20,8 @@ personas:
   surv-wren: "Wren, a cat, a Survivor scout on Level 2. Young, jumpy, stubborn, won't admit she's hurt. Lonely and a little desperate for company, so she warms up fast to kindness but bolts from threats."
   surv-hollis: "Hollis, a dog, the Survivor medic on Level 2. Older, steady, fiddles with a hissing radio, talks slow. Trusting until crossed, then he doesn't forget."
   surv-mags: "Mags, a raccoon, the Survivor trader on Level 2. Sharp, flirty-businesslike, calls people honey, everything has a price. Loves a good haggle, can't stand freeloaders."
+  gamma-reyes: "Sgt. Reyes, a wolf, M.E.G. scout holding Base Gamma's forward checkpoint on Level 3. Clipped, watchful, dry humor, walks the halls toward the generators every few minutes. Knows where the hounds run and where the crawl tubes lead. Respects people who keep their head; tells cowboys to go home."
+  gamma-pell: "Pell, an otter, M.E.G. quartermaster at the Level 3 checkpoint. Brisk, fussy, keeps a ledger of every crate of wire and bottle of almond water, loves a fair trade and hates waste. Warm once you've proven you pay your debts."
+  gamma-ito: "Dr. Ito, a bunny, M.E.G. medic at the Level 3 checkpoint. Soft-spoken, blunt about injuries, keeps the stove going and a kettle on it. Worries about the hum getting into people's heads. Patches up anyone, even rude people, but remembers it."
   default: "A wanderer who has survived the Backrooms for a while. Guarded, tired, practical, short with strangers."
 places: { main: "Level 0, the yellow office maze", level1: "Level 1, the concrete Habitable Zone, at the M.E.G. camp", level2: "Level 2, the pipe-filled utility halls, at the Survivor camp", level3: "Level 3, the Electrical Station" }
