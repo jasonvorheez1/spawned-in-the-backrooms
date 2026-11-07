@@ -98,6 +98,10 @@ export function tick(ctx) {
       ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-distant-metal-pipe-clang-echo.mp3", position: { x: p.feetPosition.x + Math.cos(a) * 14, y: H - 0.3, z: p.feetPosition.z + Math.sin(a) * 14 }, volume: 0.5, maxDistance: 40 }, { audience: { player: p.id } }); }
   }
   // the pack: a manager, and hounds kept topped up (more while the lights are out)
+  if (!s.furnitureSeeded) { // loot moved from crates into shelving bins, toolboxes, lockers and duffels: clear the old crates once
+    for (const o of ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.tags?.includes("container")) ctx.destroy(o.id);
+    s.furnitureSeeded = true; if (s.seeded) seedFurniture(ctx, L.crates);
+  }
   if (!s.packMgr) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
   const want = L.hounds + (s.flicker === "dark" ? L.flickerHounds : 0);
   const have = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((h) => !h.state?.dead).length;
@@ -147,13 +151,10 @@ function placeOne(ctx) {
   for (let k = 0; k < 12; k++) {
     const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N), kind = pickKind("level1", ctx.random());
     let spot = null;
-    if (kind === "shelfbin") {
+    if (kind === "shelfbin") { // on a rack shelf, back to the rack's spine, open side to the aisle
       const slots = shelfSlots(cx, cz); if (!slots.length) continue;
-      const p = slots[Math.floor(ctx.random() * slots.length)], c = cellCenter(cx, cz), out = p.z < c.z ? -1 : 1; // face the aisle beside its rack row
-      spot = { x: p.x, y: p.y, z: p.z + out * 0.02 - out * sizeOf(kind)[2] / 2 + out * sizeOf(kind)[2] / 2, dx: 0, dz: -out };
-      spot.z = p.z - (-out) * (sizeOf(kind)[2] / 2 + 0.015) + (-out) * 0.0; // centred on the shelf: spawnFurniture backs it off by half its depth
-      spot.z = p.z + -out * (sizeOf(kind)[2] / 2 + 0.015) * -1;
-      spot.z = p.z - out * (sizeOf(kind)[2] / 2 + 0.015) * -1;
+      const p = slots[Math.floor(ctx.random() * slots.length)], c = cellCenter(cx, cz), into = p.z < c.z ? 1 : -1, back = sizeOf(kind)[2] / 2 + 0.015;
+      spot = { x: p.x, y: p.y, z: p.z + into * back, dx: 0, dz: into };
     } else spot = wallSpot1(cx, cz, kind, ctx.random(), ctx.random());
     if (!spot || ctx.query({ tags: ["container"], radius: 0.9, center: { x: spot.x, y: spot.y ?? 0, z: spot.z } }).length) continue;
     spawnFurniture(ctx, "level1", kind, spot); return true;

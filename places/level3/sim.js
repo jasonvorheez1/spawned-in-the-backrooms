@@ -5,7 +5,8 @@ import L from "../../scripts/lib/data/level3.yml";
 import MEG from "../../scripts/lib/data/meg.yml";
 import { N, H, TH, S, HALF, zoneOf, zoneAt, cellCenter, cellAt, openings, hash, ARRIVE, BACK, LIFT, SLUDGE, SPARKS, GENS, LINES, ceilingAt } from "../../scripts/lib/level3.js";
 import { spawnAlmond, spawnWeapon } from "../../scripts/lib/loot.js";
-import { spawnCrateL3, rollWeaponL3 } from "../../scripts/lib/loot3.js";
+import { rollWeaponL3 } from "../../scripts/lib/loot3.js";
+import { spawnFurniture, pickKind, wallSpot3 } from "../../scripts/lib/furniture.js";
 import { npcState, dmgAfterArmor } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 export const cadence = "250ms";
@@ -43,6 +44,10 @@ pop glow n=1 r=light(<.55,.7,1>,flick(7,.9)*12,8)`;
 
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
+  if (!s.furnitureSeeded) { // loot moved from crates into fuse cabinets, toolboxes, lockers and satchels: clear the old crates once
+    for (const o of ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.tags?.includes("container")) ctx.destroy(o.id);
+    s.furnitureSeeded = true; if (s.seeded) seedFurniture3(ctx);
+  }
   if (!s.seeded) {
     s.seeded = true;
     ctx.spawn("l3-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level3-geo.js" }, material: { roughness: 0.9 } });
@@ -86,13 +91,7 @@ export function tick(ctx) {
     ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level3-details-geo.js" }, material: { roughness: 0.85 } }); // tile wainscot, signs, sludge pools, the statue, violet bricks, almond piles
     for (const l of LINES) ctx.spawn({ feetPosition: { x: (l.x0 + l.x1) / 2, y: 1.2, z: l.z }, audio: { clip: GRIT("factory-conveyor-clank-loop"), gain: 0.3, loop: true, spatial: true, maxDistance: 14 } });
     // supplies: crates in dead ends and rooms, almond water, the odd weapon on the floor
-    let crates = 0;
-    for (let cx = 5; cx < N && crates < L.crates; cx++) for (let cz = 0; cz < N && crates < L.crates; cz++) {
-      const z = zoneOf(cx, cz); if (z === "vault") continue;
-      const chance = z === "gen" ? 0.3 : openings(cx, cz).length === 1 ? 0.45 : 0.04;
-      if (hash(cx, cz, 301) > chance) continue;
-      const c = cellCenter(cx, cz); spawnCrateL3(ctx, { x: c.x + (hash(cx, cz, 303) - 0.5) * 1.2, z: c.z + (hash(cx, cz, 305) - 0.5) * 1.2 }, z === "gen" ? "gen" : "crate"); crates++;
-    }
+    seedFurniture3(ctx);
     const open = (cx, cz) => zoneOf(cx, cz) !== "vault" && zoneOf(cx, cz) !== "gamma";
     for (let i = 0, n = 0; n < L.almonds && i < 400; i++) { const cx = 4 + Math.floor(ctx.random() * (N - 4)), cz = Math.floor(ctx.random() * N); if (!open(cx, cz)) continue; const c = cellCenter(cx, cz); spawnAlmond(ctx, { x: c.x + 0.6, z: c.z - 0.5 }); n++; }
     for (let i = 0, n = 0; n < L.floorWeapons && i < 400; i++) { const cx = 6 + Math.floor(ctx.random() * (N - 6)), cz = Math.floor(ctx.random() * N); if (!open(cx, cz)) continue; const c = cellCenter(cx, cz); spawnWeapon(ctx, { x: c.x - 0.6, z: c.z + 0.4 }, rollWeaponL3(ctx)); n++; }
@@ -152,7 +151,7 @@ export function tick(ctx) {
       s.line = { ...s.line, [k]: now };
       const end = { x: l.x1 + 1.3, z: l.z };
       if (ctx.query({ tags: ["container"], radius: 2.5, center: { ...end, y: 0 } }).length >= L.lineMax) continue;
-      spawnCrateL3(ctx, { x: end.x + (ctx.random() - 0.5) * 1.4, z: end.z + (ctx.random() - 0.5) * 1.6 }, "line", "Line output box");
+      spawnFurniture(ctx, "level3", "shelfbin", { x: end.x + 0.3, z: end.z + (ctx.random() - 0.5) * 1.2, dx: 1, dz: 0 }, { table: "line", name: "Line output bin", noLock: true }); // the catch bin at the line's end, open to the line
       ctx.emit("playSound", { clip: GRIT("machine-press-stamp-thunk"), position: { x: (l.x0 + l.x1) / 2, y: 1, z: l.z }, volume: 0.6, maxDistance: 18 });
     }
   }
@@ -177,5 +176,18 @@ export function tick(ctx) {
       const mothsHave = ctx.query({ tags: ["moths"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((m) => !m.state?.dead).length;
       for (let i = mothsHave; i < L.moths; i++) { const c = far(); ctx.spawn({ template: "templates/deathmoths.js#swarm", feetPosition: { x: c.x, y: 1.4, z: c.z }, state: { home: { x: c.x, z: c.z } } }); }
     }
+  }
+}
+
+// supplies: searchable furniture back to a closed wall in dead ends and rooms (generator rooms hold fuse cabinets)
+function seedFurniture3(ctx) {
+  let n = 0;
+  for (let cx = 5; cx < N && n < L.crates; cx++) for (let cz = 0; cz < N && n < L.crates; cz++) {
+    const z = zoneOf(cx, cz); if (z === "vault" || z === "gamma") continue;
+    const chance = z === "gen" ? 0.3 : openings(cx, cz).length === 1 ? 0.45 : 0.04;
+    if (hash(cx, cz, 301) > chance) continue;
+    const kind = z === "gen" ? "fuse" : pickKind("level3", hash(cx, cz, 307)), spot = wallSpot3(cx, cz, kind, hash(cx, cz, 303), hash(cx, cz, 305));
+    if (!spot) continue;
+    spawnFurniture(ctx, "level3", kind, spot, z === "gen" ? { table: "gen" } : {}); n++;
   }
 }
