@@ -9,6 +9,7 @@ import { raycast } from 'builtin/physics'
 import BRK from './lib/data/breakables.yml'
 import { strike } from './lib/breakables.js'
 import { fire as fireBullets, show as showBullets } from './lib/ballistics.js'
+import { swing3, fire3 } from './lib/body3.js'
 import { dropLoot, rollLoot, spawnWeapon, poolOf } from './lib/loot.js'
 import { becomeCorpse } from './lib/l5-hostile.js'
 import { markKill } from './lib/witness.js'
@@ -381,14 +382,17 @@ function swing(ctx, power = 0) {
   w.nextSwing = now + wp.cooldown * 1000 * (power ? P.cooldown : 1) * derived(s).swing * Hd.swing
   s.swingHeavy = Math.round(power * 100) / 100
   s.swingAt = now
+  { const st = (w.combo3 ??= { n: 0, at: 0 }); st.n = now - st.at > 1100 ? 0 : st.n + 1; st.at = now; if (wp.ranged) fire3(ctx); else swing3(ctx, s.equipped, power, st.n) } // the body's own swing, for the third-person camera and everyone else
   if (s.equipped !== 'fists') s['cnd_' + s.equipped] = Math.max(0, (s['cnd_' + s.equipped] ?? 100) - (wp.ranged ? 0.3 : 0.6) * (wp.wear ?? 1) * derived(s).wear) // weapons wear with use; Repair slows it
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   if (wp.ranged) { // real bullets: spread, drop and drag down each pellet's path (scripts/lib/ballistics.js)
     let pc = ctx.self.camera?.rotation?.pitch ?? 0; if (Math.abs(pc) > 1.6) pc = pc * Math.PI / 180
     const eye = { x: p.x, y: p.y + (s.crouch ? 1.0 : 1.45), z: p.z }, crit = ctx.random() < derived(s).crit
     const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100) * (crit ? 1.75 : 1)
-    const res = fireBullets(ctx, s, wp, w, eye, f, pc, base)
-    const cp = Math.cos(pc), mz = { x: eye.x + f.x * cp * 0.8 - f.z * 0.12, y: eye.y + Math.sin(pc) * 0.8 - 0.14, z: eye.z + f.z * cp * 0.8 + f.x * 0.12 }
+    let fv = f, pv = pc // in third person the shot goes from your eye to the point under the crosshair (scripts/camera.js keeps it in state.aimPt)
+    if (s.tp && s.aimPt) { const dx = s.aimPt.x - eye.x, dy = s.aimPt.y - eye.y, dz = s.aimPt.z - eye.z, hh = Math.hypot(dx, dz); if (hh > 1.2) { fv = { x: dx / hh, z: dz / hh }; pv = Math.atan2(dy, hh) } }
+    const res = fireBullets(ctx, s, wp, w, eye, fv, pv, base)
+    const cp = Math.cos(pv), mz = { x: eye.x + fv.x * cp * 0.8 - fv.z * 0.12, y: eye.y + Math.sin(pv) * 0.8 - 0.14, z: eye.z + fv.z * cp * 0.8 + fv.x * 0.12 }
     showBullets(ctx, res, wp, mz)
     s.kick = Hd.recoil; s.spreadNow = Math.round(res.spread * 10) / 10 // vmpose scales the kick; the HUD can show the cone
     for (const t of res.targets) {

@@ -9,8 +9,9 @@ const LID_SCALE = 1000 // the lids are modelled this many times too small (scrip
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 import { weaponBody, HOLD } from './lib/weapon-look.js'
 import { baseOf } from './lib/weapons.js'
+import { stance } from './lib/body3.js'
 const WARDROBE_OFF = true // Shelly, Nov 7: character creator off for now; false brings it back
-export const updateSchedule = { every: { seconds: 0.2 } }
+export const updateSchedule = { every: { seconds: 0.1 } } // 10 Hz: the hands follow the aim (scripts/lib/body3.js)
 
 // ---- life: blinking and ear twitches, as brief bone changes the whole room sees (two small writes each)
 const EYES_SHUT = ['joy', 'laugh', 'kiss', 'dizzy']
@@ -21,6 +22,7 @@ function applyBones(ctx) {
   if (ses.twitch) b[ses.twitch] = { rotate: [0, 0, ses.twitchDir * 24] }
   if (ses.headS && ses.headS !== 1) b.Head = { scale: ses.headS }
   if (ses.tailS && ses.tailS !== 1) b.Tail = { scale: ses.tailS }
+  if (ses.pose) Object.assign(b, ses.pose) // the hands on a gun: IK reach points (scripts/lib/body3.js)
   ctx.self.bones = b
 }
 export function blinkEnd(ctx) { if (ctx.self.session.flair === 'worn') return; ctx.self.session.lids = false; applyBones(ctx) }
@@ -149,6 +151,16 @@ export function update(ctx) {
   if (!ctx.self.state.look) ctx.self.state.look = randomLook(ctx, { ...C.default }, 'clothes') // a new critter: regular clothes only (saved looks are never touched)
   const l = lookOf(ctx), face = moodFace(ctx, l), ses = ctx.self.session
   ses.face = face
+  { // third person: a flinch when hurt; a gun in the hands is aimed or carried ready, and an aimed body faces where the camera looks
+    const s3 = ctx.self.state, now3 = ctx.now(), hp3 = s3.hp ?? 100
+    if (ses.hp3 != null && hp3 < ses.hp3 - 0.5 && now3 - (ses.hitAt3 ?? 0) > 700) { ses.hitAt3 = now3; ctx.self.anim.hit = { clip: 'cdn/clip-hit-react.glb', loop: 'once', weight: 0.8, blendIn: 0.05, blendOut: 0.3 } }
+    ses.hp3 = hp3
+    if (ctx.self.anim.hit && now3 - (ses.hitAt3 ?? 0) > 900) ctx.self.anim.hit = null
+    const st3 = stance(ctx), had = !!ses.pose
+    ses.pose = st3?.bones ?? null
+    if (st3?.aiming) { if (s3.turnTo !== 'camera') s3.turnTo = 'camera' } else if (s3.turnTo === 'camera') s3.turnTo = null
+    if (ses.pose || had) applyBones(ctx)
+  }
   { const h = Number(l.heightS) || 1, w = Number(l.buildS) || 1, k = h + ':' + w // height and build: the whole body, everyone sees it
     if (ses.hw !== k) { ses.hw = k; ctx.self.scale = { x: w, y: h, z: w } } }
   const wornNow = !!(l.modelUrl || (l.model && C.models?.[l.model]))
