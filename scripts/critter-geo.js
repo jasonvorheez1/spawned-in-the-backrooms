@@ -284,14 +284,19 @@ export function geometry(ctx) {
 
   // Projection of 2D face elements onto the sculpted 3D head surface
   const onHead = (u, v, e = 0) => {
-    const k = Math.max(0.0004, 1 - (u / (HR[0] + 0.03)) ** 2 - (v / HR[1]) ** 2);
-    const zBase = -HR[2] * Math.sqrt(k);
-    const muz = snoutAt(u, v) * Math.min(1, Math.sqrt(k) * 1.6);
-    if (!e) return [HC[0] + u, HC[1] + v, HC[2] + zBase - muz];
-    // a mark's layer lifts off the skin along its facing, never sideways, so stacked layers stay registered on the snout
-    const n = norm3([u, v, zBase - muz * 2.2]);
+    // the head mesh's own surface at (u, v): the same sphere, cheeks and snout sculptedHead draws, solved back from x and y
+    const cph = Math.max(-0.999, Math.min(0.999, v / HR[1])), ph = Math.acos(cph), sn = Math.sin(ph);
+    const cheek = Math.exp(-Math.pow((ph - 1.95) / 0.45, 2));
+    let ct = 0;
+    for (let i = 0; i < 3; i++) { const rx = HR[0] + cheek * (Math.abs(ct) ** 1.3) * 0.042; ct = Math.max(-0.999, Math.min(0.999, u / (rx * sn))); }
+    const st = -Math.sqrt(1 - ct * ct), front = -st * sn;
+    const muz = snoutAt(u, v) * Math.min(1, front * 1.6);
+    const z = HR[2] * sn * st - muz;
+    if (!e) return [HC[0] + u, HC[1] + v, HC[2] + z];
+    // a mark's layer lifts off the skin along its facing, never sideways, so stacked layers stay registered
+    const n = norm3([u, v, z - muz * 1.2]);
     const d = e * 0.6;
-    return [HC[0] + u + n[0] * d, HC[1] + v + n[1] * d, HC[2] + zBase - muz + n[2] * d];
+    return [HC[0] + u + n[0] * d, HC[1] + v + n[1] * d, HC[2] + z + n[2] * d];
   };
 
   const fill = (poly, e, rings = hi ? 3 : 2) => {
