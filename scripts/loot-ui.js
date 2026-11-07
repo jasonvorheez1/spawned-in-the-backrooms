@@ -17,7 +17,7 @@ const CSS = `<style>
 #ln{position:fixed;inset-inline:0;top:66%;display:flex;justify-content:center;pointer-events:none}
 #ln span{padding:3px 12px;background:var(--bg);border:1px solid var(--ad);font-size:12px}
 .pbw{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.pbp{pointer-events:auto;background:var(--bg);border:1px solid var(--ad);box-shadow:inset 0 0 40px rgba(255,150,30,.08),0 0 0 1px #000;padding:12px 16px 10px;width:min(640px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px)));max-height:min(560px,86vh);display:flex;flex-direction:column;position:relative;overflow:hidden}
+.pbp{pointer-events:auto;background:var(--bg);border:1px solid var(--ad);box-shadow:inset 0 0 40px rgba(255,150,30,.08),0 0 0 1px #000;padding:12px 16px 10px;width:min(720px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px)));max-height:min(560px,86vh);display:flex;flex-direction:column;position:relative;overflow:hidden}
 .pbp::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px)}
 .pbh{display:flex;align-items:flex-end;gap:12px;border-bottom:2px solid var(--a);padding-bottom:4px;margin-bottom:8px}
 .pbh h2{font-size:20px;margin:0;font-weight:400}
@@ -25,13 +25,14 @@ const CSS = `<style>
 .cols{display:flex;gap:14px;min-height:0;flex:1}
 .col{flex:1;min-width:0;display:flex;flex-direction:column;min-height:0}
 .col h3{font-size:11px;font-weight:400;color:var(--ad);margin:0 0 4px;border-bottom:1px solid var(--ad);padding-bottom:2px}
-.ls{overflow-y:auto;min-height:0}
+.ls{overflow-y:auto;overflow-x:hidden;min-height:0}
 .it{display:flex;align-items:center;gap:8px;width:100%;padding:4px 6px;margin:1px 0;background:none;border:1px solid transparent;color:inherit;font:inherit;font-size:13px;text-align:left;cursor:pointer;text-transform:inherit;letter-spacing:inherit;text-shadow:inherit}
 .it:hover{background:var(--a);color:#140c02;text-shadow:none}
 .it:hover small,.it:hover .q{color:#140c02}
 .it .dot{width:6px;height:6px;flex:none;background:currentColor}
 .it.on .dot{box-shadow:0 0 0 2px var(--bg),0 0 0 3px currentColor}
-.it small{margin-left:auto;font-size:10px;color:var(--ad);white-space:nowrap}
+.it span{white-space:nowrap}
+.it small{margin-left:auto;font-size:10px;color:var(--ad);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .it .q{color:var(--ad)}
 .it.dim{opacity:.45;cursor:default}
 .it.dim:hover{background:none;color:inherit}
@@ -58,7 +59,7 @@ function carried(s, act) {
   const rows = []
   for (const k of (W.order ?? owned(s)).filter((k) => owned(s).includes(k))) {
     const w = W[k], r = W.rarities?.[w.rarity], on = s.equipped === k || (!s.equipped && k === 'fists'), ok = (s.level ?? 1) >= (w.minLevel ?? 1)
-    const info = `${w.ranged ? `${s['loaded_' + k] ?? 0}/${s[w.ammoType ?? 'ammo'] ?? 0} · ` : ''}DMG ${w.damage}${ok ? '' : ` · LV ${w.minLevel}`}`
+    const info = ok ? `${w.ranged ? `${s['loaded_' + k] ?? 0}/${s[w.ammoType ?? 'ammo'] ?? 0} · ` : ''}DMG ${w.damage}` : `NEEDS LV ${w.minLevel}`
     const tag = `<span class="dot"></span><span style="color:${r?.color ?? 'inherit'}">${w.name}</span><small>${on ? 'EQUIPPED · ' : ''}${info}</small>`
     rows.push(act && ok && !on ? `<button class="it" onclick="sendAction('inv',{k:'equip',w:'${k}'})">${tag}</button>` : `<div class="it ${on ? 'on' : ''} ${act && !ok ? 'dim' : ''}" style="cursor:default">${tag}</div>`)
   }
