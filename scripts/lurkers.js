@@ -4,7 +4,7 @@
 import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
 import { raycast } from "builtin/physics";
-import { npcMul, derived } from "./lib/stats.js";
+import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
 const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
 
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
@@ -80,7 +80,7 @@ export function update(ctx, dt) {
     if (!m.watched && (face.x || face.z)) { const yaw = (Math.atan2(-face.x, -face.z) * 180) / Math.PI; if (Math.abs(((yaw - (m.yaw ?? 999) + 540) % 360) - 180) > 6) { m.yaw = yaw; w.rotation = yaw; } }
     if (prey && !m.watched && Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z) < 1.6 && now >= (m.bite ?? 0)) {
       m.bite = now + L.lurkerBiteCooldown * 1000;
-      prey.state.hp -= Math.round(L.lurkerBite * mu.dmg);
+      prey.state.hp -= dmgAfterArmor(prey.state.look, Math.round(L.lurkerBite * mu.dmg)); // worn clothes soak the hit (lib/clothes.yml DR)
       prey.state.sanity -= L.lurkerSanity;
       const at = { x: prey.feetPosition.x, y: prey.feetPosition.y + 1.4, z: prey.feetPosition.z };
       ctx.emit("damageNumber", { position: at, value: Math.round(L.lurkerBite * mu.dmg), color: "#ff4a3a" });

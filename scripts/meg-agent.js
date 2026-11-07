@@ -67,7 +67,7 @@ function shoot(ctx, me, t) {
   ctx.emit("playSound", { clip: SHOT, position: muzzle, volume: 0.9, maxDistance: 45 });
   animate(ctx, me.id, { "bones.Spine2.pitch": [0, 7, 0], "bones.RightArm.pitch": [0, 12, 0] }, { duration: 0.2 }); // the kick
   if (ctx.random() > G.hitChance) return;
-  const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), dmg = Math.round((isPlayer ? G.playerShot : G.shot) * npcMul(me.state).dmg);
+  const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), dmg = dmgAfterArmor(isPlayer ? t.state.look : lookOfNpc(t), Math.round((isPlayer ? G.playerShot : G.shot) * npcMul(me.state).dmg)); // the target's clothes soak it
   t.state.hp -= dmg;
   ctx.emit("damageNumber", { position: { x: q.x, y: q.y + 0.4, z: q.z }, value: dmg, color: isPlayer ? "#ff5040" : "#c6f060" });
   ctx.emit("fx", { position: q, script: HIT, params: {} });

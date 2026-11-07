@@ -170,8 +170,9 @@ export function onInput(ctx, input) {
 }
 
 function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
-  m.state.hp -= dmg
   const npc = m.tags?.includes('npc')
+  if (npc) dmg = dmgAfterArmor(lookOfNpc(m), dmg) // an agent's or survivor's clothes soak the hit like yours do
+  m.state.hp -= dmg
   if (npc) { m.state.angry = { ...(m.state.angry ?? {}), [ctx.self.id]: true }; m.state.fresh = { ...(m.state.fresh ?? {}), [ctx.self.id]: true } } // the camp remembers who shot first; a fresh shot spreads even after a pardon
   const hit = { x: m.feetPosition.x, y: m.feetPosition.y + 1.5, z: m.feetPosition.z }
   if (loud) sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)
@@ -190,7 +191,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
     m.state.dead = true
     s.kills += 1
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
-    if (!npc) dropLoot(ctx, m.feetPosition, m.state?.kind === 'lurker' ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot) // an agent's own body is searched (scripts/meg-agent.js)
+    if (!npc) dropLoot(ctx, m.feetPosition, m.state?.kind === 'lurker' ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot, derived(s).clothFind) // an agent's own body is searched (scripts/meg-agent.js)
   }
 }
 

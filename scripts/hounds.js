@@ -3,7 +3,7 @@
 import L from "./lib/data/level1.yml";
 import { zoneAt, safeZone, cellCenter, N } from "./lib/level1.js";
 import { zoneAt as zoneAt2 } from "./lib/level2.js";
-import { npcMul, derived } from "./lib/stats.js";
+import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
 const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 const POOF = `fx
@@ -34,7 +34,7 @@ export function update(ctx, dt) {
     if (prey && !m.hunting) { m.hunting = true; ctx.emit("playSound", { clip: SND("hound-snarl-growl"), position: pos, volume: 0.9, maxDistance: 35 }); }
     if (!prey) m.hunting = false;
     if (prey && best < 1.6 && now >= (m.next ?? 0)) {
-      m.next = now + L.houndCooldown * 1000; prey.state.hp -= Math.round(L.houndBite * mu.dmg);
+      m.next = now + L.houndCooldown * 1000; prey.state.hp -= dmgAfterArmor(prey.state.look, Math.round(L.houndBite * mu.dmg)); // worn clothes soak the hit (lib/clothes.yml DR)
       const at = { x: prey.feetPosition.x, y: prey.feetPosition.y + 1, z: prey.feetPosition.z };
       ctx.emit("damageNumber", { position: at, value: Math.round(L.houndBite * mu.dmg), color: "#ff5040" });
       ctx.emit("playSound", { clip: SND("hound-bite-snap"), position: at, volume: 0.9 });
