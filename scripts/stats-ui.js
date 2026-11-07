@@ -68,7 +68,7 @@ export function statsUi(ctx, player) {
   const wp = W[s.equipped] ?? W.fists
   const dam = (w) => Math.round((w.damage + (s.level - 1) * L.perLevel.damage * (w.levelScale ?? 1)) * dmgMul(s, w))
   out += `<div id="sh" data-modal>
-    <div class="hd"><h2>HALOGEN&trade; · LEVEL ${s.level}</h2><div class="pt" style="opacity:.6">a BACKROOMS ROBOTICS product · property of BR</div><div class="pt">ATTRIBUTE POINTS <b>${apts}</b></div><div class="pt">SKILL POINTS <b>${spts}</b></div>${tl > 0 ? `<div class="pt">TAG <b>${tl}</b> MORE</div>` : ''}</div>
+    <div class="hd"><h2>HALOGEN&trade; · LEVEL ${s.level}</h2>${(apts > 0 || spts > 0) ? `<div class="pt" style="color:#ffe2a8;animation:halBlink .8s steps(2) infinite">LEVEL UP · ALLOCATE NOW</div><style>@keyframes halBlink{50%{opacity:.3}}</style>` : ""}<div class="pt" style="opacity:.6">a BACKROOMS ROBOTICS product · property of BR</div><div class="pt">ATTRIBUTE POINTS <b>${apts}</b></div><div class="pt">SKILL POINTS <b>${spts}</b></div>${tl > 0 ? `<div class="pt">TAG <b>${tl}</b> MORE</div>` : ''}</div>
     <div class="cols"><div class="col"><div class="sec">ATTRIBUTES</div>${attrRows}</div><div class="col"><div class="sec">SKILLS</div>${skillRows}</div></div>
     <div class="dv">
       <span>Max HP <b>${L.hp + (s.level - 1) * L.perLevel.hp + d.hpBonus}</b></span><span>Max sanity <b>${L.sanity + (s.level - 1) * L.perLevel.sanity + d.sanBonus}</b></span>

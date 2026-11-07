@@ -102,6 +102,7 @@ function detail(t, s, def) {
   return ''
 }
 
+const HALRAISE = `<style>@keyframes halRaiseI{0%{transform:perspective(900px) translateY(45%) rotateX(38deg) scale(.82);opacity:0;filter:brightness(3) blur(3px)}55%{transform:perspective(900px) translateY(-2%) rotateX(-4deg);opacity:1;filter:brightness(1.6)}72%{filter:brightness(.6)}78%{filter:brightness(1.4)}100%{transform:none;filter:none}}.halinv .pbp{animation:halRaiseI .55s cubic-bezier(.2,.9,.25,1) both;position:relative}.halinv .pbp::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(rgba(0,0,0,.18) 0 1px,transparent 1px 3px);z-index:2}</style>`
 function inventory(s) {
   const lv = s.level ?? 1, eqKey = s.equipped ?? 'fists'
   const weapons = (W.order ?? []).filter((k) => owned(s).includes(k)).map((k) => {
@@ -123,8 +124,8 @@ function inventory(s) {
       return `<button class="it" onclick="sendAction('inv',{k:'wear',w:'${t}'})"><span class="eq"></span><span class="nm">${p.row.name}${n > 1 ? ` ×${n}` : ''}</span><span class="n">DR ${p.row.dr}</span>${detail(t, s, false)}</button>` }).join('') || '<div class="em">Nothing on.</div>'
   const eq = W[eqKey] ?? W.fists
   const drop = eqKey !== 'fists' ? `<button onclick="sendAction('inv',{k:'drop',w:'${eqKey}'})">Drop ${eq.name}</button>` : ''
-  return `<div class="pbw pb"><div class="pbp" data-modal>
-    <div class="hd"><h2>Items</h2><div class="st"><span><b>LVL</b>${lv}</span><span><b>HP</b>${Math.round(s.hp ?? 0)}/${maxHp(lv, s)}</span><span><b>SAN</b>${Math.round(s.sanity ?? 0)}/${maxSan(lv, s)}</span><span><b>XP</b>${s.xp ?? 0}/${L.xpBase * lv}</span><span><b>DR</b>${wornDR(s.look)}</span></div></div>
+  return HALRAISE + `<div class="pbw pb halinv"><div class="pbp" data-modal>
+    <div class="hd"><h2>HALOGEN&trade; · INVENTORY</h2><div class="st"><span><b>LVL</b>${lv}</span><span><b>HP</b>${Math.round(s.hp ?? 0)}/${maxHp(lv, s)}</span><span><b>SAN</b>${Math.round(s.sanity ?? 0)}/${maxSan(lv, s)}</span><span><b>XP</b>${s.xp ?? 0}/${L.xpBase * lv}</span><span><b>DR</b>${wornDR(s.look)}</span></div></div>
     <div class="bd"><div class="ls"><div class="sec">Weapons</div>${weapons}<div class="sec">Aid</div>${aid}${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="eq"></span><span class="nm" style="color:#d8b56a">Old compass</span><span class="n">${s.compass} reads</span></button>` : ''}${s.firesalt > 0 ? `<button class="it" onclick="sendAction('inv',{k:'firesalt'})"><span class="eq"></span><span class="nm" style="color:#ff8a3a">Firesalt · Rub on weapon</span><span class="n">${s.firesalt}</span></button>` : ''}<div class="sec">Ammo</div>${ammo}<div class="sec">Apparel</div>${app}${s.pages ? `<div class="sec">Notes</div>${String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="eq"></span><span class="nm" style="color:#e8dcc0">Torn notebook page ${+n}</span><span class="n">read</span></button>`).join('')}` : ''}</div>${detail(eqKey, s, true)}</div>
     <div class="ft"><span class="c">${s.kills ?? 0} kills</span>${drop}<button onclick="sendAction('inv',{k:'close'})"><kbd>I</kbd>Close</button></div>
   </div></div>`

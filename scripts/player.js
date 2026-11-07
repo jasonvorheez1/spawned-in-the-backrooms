@@ -87,6 +87,8 @@ export function gain(ctx, n) {
   while (s.xp >= xpNeed(s.level)) {
     s.xp -= xpNeed(s.level); s.level += 1
     s.hp = maxHp(s.level, s); s.sanity = maxSan(s.level, s); s.leveledAt = ctx.now()
+    if (!s.lootOpen) { s.sheetOpen = true; s.invOpen = false; s.levelUpAt = ctx.now() } // HALOGEN opens itself: spend the points now
+    ctx.emit('playSound', { clip: 'cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3', volume: 0.6, bus: 'UI' })
     s.spts = (s.spts ?? 0) + derived(s).skillPerLevel
     sound(ctx, 'eerie-low-chime-level-up', 0.85, true)
     ctx.emit('milestone', { step: s.level, name: `level ${s.level}` }, { audience: { player: ctx.self.id } })
