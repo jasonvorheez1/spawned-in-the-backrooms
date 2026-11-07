@@ -64,7 +64,7 @@ export function update(ctx, dt) {
     let dx = 0, dz = 0;
     if (goal && sp) {
       // walk the hotel's halls, not through its walls: a path re-asked each second, its next corner the heading
-      if (!m.path || now - (m.pathAt ?? 0) > 1000 || flat(m.pathGoal ?? goal, goal) > 1.5) { const r = findPath(ctx, pos, goal); if (!r.partial) { m.path = r.points?.length ? r.points : null; m.pathAt = now; m.pathGoal = { ...goal }; } }
+      if (!m.path || now - (m.pathAt ?? 0) > 1000 || flat(m.pathGoal ?? goal, goal) > 1.5) { const r = findPath(ctx, { x: pos.x, y: pos.y ?? 0, z: pos.z }, { x: goal.x, y: goal.y ?? pos.y ?? 0, z: goal.z }); if (!r.partial) { m.path = r.points?.length ? r.points : null; m.pathAt = now; m.pathGoal = { ...goal }; } }
       let aim = goal; if (m.path) { while (m.path.length > 1 && flat(pos, m.path[0]) < 0.6) m.path.shift(); aim = m.path[0] ?? goal; }
       dx = aim.x - pos.x; dz = aim.z - pos.z; const d = Math.hypot(dx, dz) || 1; dx /= d; dz /= d;
       const nx = pos.x + dx * 0.6, nz = pos.z + dz * 0.6; if (isSafe(nx, nz) || (mode === "creep" && AVOID.has(zoneId(nx, nz)))) sp = 0;
