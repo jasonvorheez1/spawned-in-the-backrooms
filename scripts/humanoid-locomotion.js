@@ -120,7 +120,9 @@ function paceRate(speed, pace, running) {
 const CUTE = { duration: 3.6, tracks: {
   Spine: { roll: [0, 3, 0, -3, 0], pitch: [0, 1.5, 0, 1.5, 0] },
   Spine2: { roll: [0, 4, 0, -4, 0], pitch: [-1, 2, -1, 2, -1] },
+  Spine02: { roll: [0, 4, 0, -4, 0], pitch: [-1, 2, -1, 2, -1] },
   Neck: { roll: [0, -2, 0, 2, 0] },
+  neck: { roll: [0, -2, 0, 2, 0] },
   Head: { roll: [-6, 4, 12, 4, -6], pitch: [2, -3, 1, -4, 2], yaw: [0, 6, 0, -6, 0] },
 } }
 export function sit() {
@@ -366,7 +368,7 @@ export function update(ctx, dt) {
   // the cute layer: standing still, a body sways side to side, tilts its head and breathes, layered over the Idle (critter bones; another rig just ignores it)
   { const still = rung === 'idle' && !creeping && !ctx.self.state?.crouch && !ctx.self.state?.sit && !ctx.self.state?.dead
     let h = 0; for (const c of String(ctx.self.id)) h = (h * 31 + c.charCodeAt(0)) | 0
-    ctx.self.anim.cute = { clip: CUTE, loop: 'loop', weight: still ? 0.85 : 0.001, speed: 0.85 + (Math.abs(h) % 30) / 100, blendIn: 0.6 } }
+    ctx.self.anim.cute = { clip: CUTE, loop: 'loop', weight: still ? 0.35 : 0.001, speed: 0.85 + (Math.abs(h) % 30) / 100, blendIn: 0.6 } }
   if (ctx.self.state?.crouch) { // crouched: the crouch pair takes the body; the walk's share is the crouch-walk's
     const go = Math.min(1, Math.max(0.001, 1 - idleWeight))
     ctx.self.anim.idle = { clip: 'cdn/clip-crouch-idle-loop.glb', loop: 'loop', weight: Math.max(0.001, 1 - go), blendIn: 0.2 }

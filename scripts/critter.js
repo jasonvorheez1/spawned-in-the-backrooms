@@ -157,7 +157,8 @@ export function update(ctx) {
     if (ses.flair !== 'worn') { ses.flair = 'worn'; ctx.self.anim.flair = null; ctx.self.bones = {}; ses.lids = false; ses.twitch = null }
     if (!ctx.self.state.gaitClips) ctx.self.state.gaitClips = GAIT_LIB
   } else {
-    if (ctx.self.state.gaitClips) delete ctx.self.state.gaitClips // both the scripted and the Blender critter carry their own Idle/Walk/Run/Sprint/Sit
+    // the Blender critter's file carries no clips of its own: its humanoid bones play the library gait; the scripted one has its own
+    if (MESH) { if (ctx.self.state.gaitClips?.walk !== GAIT_LIB.walk) ctx.self.state.gaitClips = GAIT_LIB } else if (ctx.self.state.gaitClips) delete ctx.self.state.gaitClips
     if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
     life(ctx, face)
   }
@@ -204,7 +205,7 @@ export function update(ctx) {
     const rot = { yaw: (yaw * 180) / Math.PI + 180 + (ctx.self.state.wrSpin || 0) + Math.sin(ctx.now() / 1600) * 18 }
     const mirror = ses.mirror && ctx.getObject(ses.mirror)
     const look = worn ? { model: worn.url } : MESH ? { model: bodyModel(params), children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel({ ...params, vary: false }), morph: faceMorph(face), audience: 'local' }] } : { primitive: { kind: 'scripted', script: SCRIPT, params } }
-    if (!mirror) { ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, ...look, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } }); const m = ctx.getObject(ses.mirror); if (m) { m.anim.idle = { clip: worn ? GAIT_LIB.idle : 'Idle', loop: 'loop', weight: 1 }; if (!worn) flair(m, face) } }
+    if (!mirror) { ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, ...look, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } }); const m = ctx.getObject(ses.mirror); if (m) { m.anim.idle = { clip: worn || MESH ? GAIT_LIB.idle : 'Idle', loop: 'loop', weight: 1 }; if (!worn) flair(m, face) } }
     else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { if (worn) { mirror.primitive = null; mirror.model = worn.url; mirror.anim.flair = null; mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else if (MESH) { mirror.primitive = null; mirror.model = bodyModel(params); wearHead(ctx, mirror, params); flair(mirror, face) } else { mirror.model = null; mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
       if (MESH && !worn) { const mh = ctx.getObject(mirror.id + '/' + HEAD_ID); if (mh) mh.morph = faceMorph(face) }
       mirror.bones = { ...(hs !== 1 ? { Head: { scale: hs } } : {}), ...(ts !== 1 ? { Tail: { scale: ts } } : {}) } }
