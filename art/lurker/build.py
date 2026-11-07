@@ -32,11 +32,11 @@ def chain(start_idx, pts, step=0.04):
 
 torso = chain(None, [((0, 0, 1.15), 0.10), ((0, 0.0, 1.22), 0.105), ((0, 0.0, 1.36), 0.075), ((0, 0.0, 1.5), 0.115),
                      ((0, 0.0, 1.68), 0.135), ((0, 0.01, 1.86), 0.13), ((0, 0.01, 1.96), 0.09), ((0, 0.0, 2.03), 0.05),
-                     ((0, -0.01, 2.1), 0.043)], 0.035)
-pelvis, chest_top = torso[1], torso[6]
+                     ((0, -0.01, 2.1), 0.043)], 0.022)
+pelvis, chest_top = torso[1], torso[6]  # indices of the listed anchor points
 neck_top = torso[-1]
 head = chain(neck_top, [((0, -0.02, 2.16), 0.07), ((0, -0.025, 2.24), 0.104), ((0, -0.025, 2.33), 0.112),
-                        ((0, -0.02, 2.42), 0.095), ((0, -0.015, 2.49), 0.05)], 0.03)
+                        ((0, -0.02, 2.42), 0.095), ((0, -0.015, 2.49), 0.05)], 0.02)
 
 def side(sx):
     sh = chain(chest_top, [((0.19 * sx, 0.015, 1.955), 0.05)], 0.04)[-1]
@@ -75,7 +75,7 @@ body = bpy.data.objects.new("Lurker", me); scene.collection.objects.link(body)
 sk = body.modifiers.new("skin", "SKIN"); sk.use_smooth_shade = True
 for i, sv in enumerate(me.skin_vertices[0].data):
     sv.radius = (radii[i], radii[i]); sv.use_root = (i == 0)
-body.modifiers.new("sub", "SUBSURF").levels = 2
+body.modifiers.new("sub", "SUBSURF").levels = 1
 bpy.context.view_layer.objects.active = body; body.select_set(True)
 bpy.ops.object.modifier_apply(modifier="skin"); bpy.ops.object.modifier_apply(modifier="sub")
 
@@ -273,7 +273,7 @@ BASE = S_({"Hips": [("X", 6)], "Spine": [("X", 10)], "Spine1": [("X", 14)], "Spi
 def merge(*ds):
     out = {}
     for d in ds:
-        for k, v in d.items(): out[k] = out.get(k, []) + v
+        for k, v in d.items(): out[k] = v if k.endswith("@loc") else out.get(k, []) + v
     return out
 def apply(pose, frame):
     for pb in PB:
