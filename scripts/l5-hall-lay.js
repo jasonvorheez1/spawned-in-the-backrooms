@@ -2,9 +2,10 @@
 // and dresses the radios and sealed doors in their real meshes (same ids, state/audio/behavior kept).
 import { PIECES, LEAVES } from "./lib/l5-hall-layout.js";
 import { ZONES } from "./lib/level5.js";
-const V = 3, GEO = "scripts/l5-hall-geo.js", FIX = "scripts/l5-hall-fix.js";
+const V = 4, GEO = "scripts/l5-hall-geo.js", FIX = "scripts/l5-hall-fix.js";
 const FIXK = new Set(["chandelier", "pendant", "sconce", "flush", "lamp", "bulb", "stairs", "leaf", "placard"]);
 const NOCOL = new Set(["rug", "painting", "letter", "typewriter", "tomes", "birdcage", "window", "chandelier", "pendant", "sconce", "flush", "lamp", "bulb", "placard"]);
+const SEATK = new Set(["chair", "sofa", "stool", "bench", "armchair"]);
 const HP = { wood: 60, metal: 120, leather: 30 };
 function row(r) {
   const fix = FIXK.has(r.kind), mat = r.loot?.mat ?? (["range", "icebox", "cart", "urn"].includes(r.kind) ? "metal" : "wood");
@@ -13,6 +14,10 @@ function row(r) {
   if (!NOCOL.has(r.kind)) spec.physics = "static";
   if (fix && r.kind !== "stairs") { spec.tags = ["l5-hall", "l5-hall-fix"]; delete spec.state; }
   if (r.kind === "stairs") spec.tags = ["l5-hall"];
+  if (SEATK.has(r.kind)) {
+    spec.tags.push("seat", "usable");
+    spec.state = { ...(spec.state ?? {}), seat: { d: r.kind === "sofa" ? 0.15 : 0.04, w: r.kind === "sofa" ? ((r.p?.w ?? 1) > 1.5 ? 3 : 2) : 1, gap: 0.62 }, verb: "Sit", name: r.kind === "sofa" ? "Velvet sofa" : r.kind === "chair" ? "Hotel chair" : r.kind === "armchair" ? "Leather armchair" : "Stool" };
+  }
   if (r.loot) { spec.tags = ["l5-hall", "container", "furniture", "lootfurn", "breakable"]; Object.assign(spec.state, { items: r.loot.items, kind: r.loot.kind, name: r.loot.name }); if (r.loot.lock) spec.state.lock = r.loot.lock; }
   return spec;
 }
