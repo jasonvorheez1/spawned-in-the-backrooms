@@ -250,6 +250,14 @@ function press(ctx) {
   if (!it || it.state?.taken) return
   if (f.tag === 'npc' && pickChance(ctx, it) != null) { pickpocket(ctx, it); m.key = ''; refocus(ctx, true); return }
   if (f.tag === 'npc') { if (it.state?.dead) { if (it.state.items !== undefined) openLoot(ctx, it) } else if (it.state?.angry?.[ctx.self.id]) talk(ctx, it); else { ctx.self.state.talkWith = it.id; ctx.self.state.shopOpen = null; it.state.talkAt = ctx.now(); it.state.talkTo = ctx.self.id } return } // the conversation card (scripts/talk.js); the old services sit on its buttons
+  if (f.tag === 'usable' && it.state?.kind === 'computer') { // Back OS boots on the presser's own machine: their state, their screen
+    const c = it.state, now = ctx.now()
+    if (!s.os && now - (s.osClosedAt ?? 0) > 600) {
+      s.os = { id: it.id, host: c.host, lock: c.unlocked ? '' : c.lock || '', user: c.unlocked ? 'admin' : 'guest', app: 'boot', at: now, term: [], sel: '' }
+      ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-old-computer-boot-startup-chime.mp3', position: { ...it.feetPosition, y: (it.feetPosition?.y ?? 0) + 0.4 }, volume: 0.6, maxDistance: 10 }, { audience: { player: ctx.self.id } })
+    }
+    m.key = ''; return
+  }
   if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); m.key = ''; return }
   if (f.tag === 'bench') { s.craftOpen = 'bench'; s.craftBench = f.id; return }
   if (f.tag === 'container') { openLoot(ctx, it); return }
