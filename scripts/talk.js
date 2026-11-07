@@ -131,8 +131,26 @@ export function onInput(ctx, input) {
   if (P.shop && A.shop) shop(ctx, A.shop)
 }
 
+// the conversation is a shot: the camera eases over your shoulder onto their face, and gives itself back when you leave
+function cine(ctx, s) {
+  if (!ctx.self.isLocal || !ctx.view) return
+  const ses = ctx.self.session, id = s.talkWith && !s.shopOpen ? s.talkWith : null
+  if (id === ses.cineFor) return
+  ses.cineFor = id
+  if (!id) { ctx.view.camera = null; return }
+  const it = live(ctx, id); if (!it) { ctx.view.camera = null; return }
+  const a = ctx.self.feetPosition, b = it.feetPosition, dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz) || 1
+  const ux = dx / d, uz = dz / d, back = Math.min(1.1, d * 0.5)
+  const head = (it.bounds?.size?.y ?? 1.6) * 0.85
+  ctx.view.camera = {
+    eye: { x: b.x - ux * (back + 0.9) - uz * 0.45, y: b.y + head + 0.05, z: b.z - uz * (back + 0.9) + ux * 0.45 },
+    aim: { x: b.x, y: b.y + head - 0.05, z: b.z }, fov: 42,
+  }
+}
+
 export function update(ctx, dt) {
   const s = ctx.self.state, m = (ctx.self.session.tk ??= { acc: 0 })
+  cine(ctx, s)
   if (!s.talkWith && !s.shopOpen) return
   m.acc += dt; if (m.acc < 0.3) return; m.acc = 0
   const it = live(ctx, s.talkWith ?? s.shopOpen)

@@ -46,6 +46,33 @@ function shopUi(ctx, s, it) {
     <div class="tkb"><button onclick="sendAction('talkdo',{k:'back'})">Back to talking</button><button class="lv" onclick="sendAction('talkdo',{k:'leave'})">Leave</button></div></div>`
 }
 
+const CINE = `<style>
+@keyframes tkbar{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes tkin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes tkdot{0%,100%{opacity:.2}50%{opacity:1}}
+.tc{position:fixed;inset:0;pointer-events:none;font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;color:#f3e7c6}
+.tc .bar{position:absolute;left:0;right:0;height:11vh;background:#000;animation:tkbar .45s ease-out both}
+.tc .bt{top:0;transform-origin:top}.tc .bb{bottom:0;height:23vh;transform-origin:bottom}
+.tc .who{position:absolute;top:calc(11vh + 18px);left:6vw;text-transform:uppercase;letter-spacing:.14em;text-shadow:0 2px 6px #000;animation:tkin .6s .2s both}
+.tc .who b{display:block;font-size:30px;font-weight:400;color:#ffcf7a;letter-spacing:.08em}
+.tc .who span{font-size:12px;opacity:.7}
+.tc .sub{position:absolute;left:0;right:0;bottom:calc(23vh + 18px);display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px)}
+.tc .old{font-size:15px;opacity:.38;max-width:900px;text-align:center;text-shadow:0 2px 4px #000}
+.tc .now{font-size:24px;line-height:1.35;max-width:1000px;text-align:center;text-shadow:0 2px 6px #000,0 0 18px #000;animation:tkin .5s ease-out both}
+.tc .now i{color:#ffcf7a;font-style:normal;margin-right:10px;font-size:15px;letter-spacing:.12em;vertical-align:3px}
+.tc .chk{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#c6f060;text-shadow:0 1px 3px #000;animation:tkin .4s both}
+.tc .dots span{animation:tkdot 1s infinite}.tc .dots span:nth-child(2){animation-delay:.2s}.tc .dots span:nth-child(3){animation-delay:.4s}
+.tc .low{position:absolute;left:6vw;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px);bottom:0;height:23vh;display:flex;flex-direction:column;justify-content:center;gap:10px;pointer-events:auto}
+.tc form{display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,207,122,.35);padding:4px 0}
+.tc form em{color:#ffcf7a;font-style:normal}
+.tc input{flex:1;background:none;border:0;outline:0;color:#f3e7c6;font:inherit;font-size:19px}
+.tc input::placeholder{color:rgba(243,231,198,.35)}
+.tc .opts{display:flex;gap:22px;flex-wrap:wrap;font-size:14px}
+.tc .opts button{background:none;border:0;color:rgba(243,231,198,.6);font:inherit;cursor:pointer;padding:0;letter-spacing:.06em}
+.tc .opts button:hover{color:#ffcf7a}
+.tc .opts button b{color:#ffcf7a;font-weight:400;margin-right:6px}
+.tc .feel{margin-left:auto;font-size:12px;letter-spacing:.14em}
+</style>`
 export function talkUi(ctx, player) {
   const s = player?.state ?? {}
   const id = s.shopOpen ?? s.talkWith; if (!id) return ''
@@ -53,14 +80,22 @@ export function talkUi(ctx, player) {
   if (s.shopOpen) return `${CSS}<div class="tk tkw" data-modal>${shopUi({ self: player }, s, it)}</div>`
   const role = it.state?.role, key = player.userId ?? player.id, r = it.state?.rapport?.[key] ?? 0
   const log = (s.talks?.[String(it.id).split('/').pop()] ?? []).slice(-T.log)
-  const who = esc(nameOf(it)), mood = s.talkMood ?? 'calm'
-  const lines = log.map(([w, t]) => w === 'p' ? `<div class="p"><b>YOU:</b> ${esc(t)}</div>` : w === 'n' ? `<div class="n" style="color:${MOOD[mood] ?? MOOD.calm}"><b>${who.toUpperCase()}:</b> ${esc(t)}</div>` : `<div class="x">${esc(t)}</div>`).join('') || `<div class="w">${who} looks at you, waiting.</div>`
-  const busy = s.talkBusy ? `<div class="w">${who} is thinking…</div>` : ''
-  const btn = [SVC[role] ? `<button onclick="sendAction('talkdo',{k:'svc'})">${SVC[role]}</button>` : '', isTrader(it) ? `<button onclick="sendAction('talkdo',{k:'trade'})">Trade</button>` : ''].join('')
+  const who = esc(nameOf(it)), mood = s.talkMood ?? 'calm', col = MOOD[mood] ?? MOOD.calm
+  // the newest exchange is the subtitle; the two lines before it fade above; a skill check flashes as its own line
+  let lastN = -1; for (let i = log.length - 1; i >= 0; i--) if (log[i][0] !== 'p') { lastN = i; break }
+  const shown = lastN >= 0 ? log[lastN] : null, prior = log.slice(Math.max(0, lastN - 2), Math.max(0, lastN)).filter((l) => l[0] !== 'x')
+  const old = prior.map(([w, t]) => `<div class="old">${w === 'p' ? 'you: ' : ''}${esc(t)}</div>`).join('')
+  const now = s.talkBusy ? `<div class="now dots" style="color:${col}"><span>.</span><span>.</span><span>.</span></div>`
+    : shown ? (shown[0] === 'x' ? `<div class="chk" id="c${lastN}">${esc(shown[1])}</div>` : `<div class="now" id="n${lastN}-${log.length}" style="color:${col}"><i>${who.toUpperCase()}</i>${esc(shown[1])}</div>`)
+    : `<div class="now" style="opacity:.6"><i>${who.toUpperCase()}</i>…</div>`
+  const opts = [SVC[role] ? ['svc', SVC[role]] : null, isTrader(it) ? ['trade', 'Trade'] : null, ['leave', 'Leave']].filter(Boolean)
+    .map(([k, t], i) => `<button onclick="sendAction('talkdo',{k:'${k}'})"><b>${i + 1}</b>${t}</button>`).join('')
   const send = `const i=document.getElementById('tkin');if(i&&i.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:i.value});i.value=''}`
-  return `${CSS}<div class="tk tkw" data-modal><div class="tkp">
-    <div class="tkh"><h2>${who}</h2><span class="f">${faction(it, player.place)} · ${esc(role ?? 'drifter')}${it.state?.follow === player.id ? ' · WITH YOU' : ''}</span><span class="r" style="color:${MOOD[mood] ?? MOOD.calm}">${feel(r)}</span></div>
-    <div class="tkl">${lines}${busy}</div>
-    <form class="tkf" data-interactive onsubmit="event.preventDefault();${send}"><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" placeholder="say something to ${who.toLowerCase()}…"/><button type="submit">Send</button></form>
-    <div class="tkb">${btn}<button class="lv" onclick="sendAction('talkdo',{k:'leave'})">Leave</button></div></div></div>`
+  return `${CINE}<div class="tc" data-modal><div class="bar bt"></div><div class="bar bb"></div>
+    <div class="who"><b>${who}</b><span>${faction(it, player.place)} · ${esc(role ?? 'drifter')}${it.state?.follow === player.id ? ' · with you' : ''}</span></div>
+    <div class="sub">${old}${now}</div>
+    <div class="low">
+      <form data-interactive onsubmit="event.preventDefault();${send}"><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" autofocus placeholder="say anything to ${who.toLowerCase()}…"/></form>
+      <div class="opts">${opts}<span class="feel" style="color:${col}">${feel(r)}</span></div>
+    </div></div>`
 }
