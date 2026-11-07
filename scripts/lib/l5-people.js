@@ -1,3 +1,4 @@
+import { mayReturn } from "./npc-respawn.js";
 // Level 5's residents (Homely Hotel staff, Housekeeping, the Originals), run by scripts/l5-people.js once a second.
 // Each is an M.E.G.-style agent (scripts/meg-agent.js walks state.rounds); this director gives them day/night rounds,
 // walks two of them together to talk (data: scripts/lib/data/level5-people.yml talks), and sets each one's card buttons.
@@ -45,7 +46,8 @@ export function tickPeople(ctx) {
   let made = 0;
   for (const id of Object.keys(P.people)) {
     let o = ctx.getObject(id);
-    if (!o) { if (made++ < 4) spawnResident(ctx, id); continue; }
+    if (!o) { if (ctx.place.state.l5seen?.[id] && !mayReturn(ctx, id)) continue; if (made++ < 4) spawnResident(ctx, id); continue; }
+    if (!ctx.place.state.l5seen?.[id]) ctx.place.state.l5seen = { ...(ctx.place.state.l5seen ?? {}), [id]: 1 };
     const s = o.state;
     if ((s.escortUntil ?? 0) && now > s.escortUntil) { s.escortUntil = 0; s.mode = ""; }
     if (s.meeting || (s.escortUntil ?? 0) > now) continue;

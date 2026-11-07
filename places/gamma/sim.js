@@ -1,3 +1,4 @@
+import { mayReturn } from "../../scripts/lib/npc-respawn.js";
 // Base Gamma's inside: the M.E.G.'s fortress at the end of Level 3. Lays the shell, the dressing, lights, signs, doors,
 // sound beds, guards, traders and residents once (place.state.builtV); the agents run themselves (scripts/meg-agent.js).
 import { critterSpec } from "../../scripts/lib/critter-model.js";
@@ -95,5 +96,6 @@ export function tick(ctx) {
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; lay(ctx); }
   if (s.osV !== 1) { s.osV = 1; layComputers(ctx); }
+  if (ctx.now() - (s.peopleAt ?? 0) > 5000) { s.peopleAt = ctx.now(); for (const id of Object.keys(PEOPLE)) if (!ctx.place.objects[id] && mayReturn(ctx, id)) person(ctx, id); } // the fallen come back after an hour
   if (s.doorV !== 1) { const d = ctx.getObject("gamma-out"); if (d) d.state = { ...d.state, to: "level3#l3-gamma-door" }; s.doorV = 1; } // rooms built before the gate door existed
 }

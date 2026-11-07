@@ -1,3 +1,4 @@
+import { mayReturn } from "./npc-respawn.js";
 import { vo } from "./voices.js";
 // Level 4's people, run from places/level4/sim.js once a second. Every resident is an M.E.G.-style agent (scripts/meg-agent.js
 // walks state.rounds, waves, talks, fights); this director gives them lives on top:
@@ -81,7 +82,7 @@ export function settle(ctx, spawnAgent) {
     }
   }
   s.l4homes = homes;
-  for (const [id, g] of Object.entries(P.people)) if (!ctx.place.objects[id] && g.look) spawnAgent(id, g, roundsFor(ctx, id, s.l4clock?.phase ?? "day"));
+  for (const [id, g] of Object.entries(P.people)) if (!ctx.place.objects[id] && g.look && (!s.npcGone?.[id] || mayReturn(ctx, id))) spawnAgent(id, g, roundsFor(ctx, id, s.l4clock?.phase ?? "day"));
   for (const id of Object.keys(P.people)) { const o = ctx.place.objects[id]; if (o) { o.state.rounds = roundsFor(ctx, id, s.l4clock?.phase ?? "day"); o.state.ri = 0; o.state.faction4 = P.people[id].faction; } }
 }
 function errand(ctx, o, stops, ms) { o.state.rounds = stops; o.state.ri = 0; (ctx.place.state.l4err ??= {})[o.id] = ctx.now() + ms; }
