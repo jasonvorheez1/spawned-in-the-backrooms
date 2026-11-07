@@ -179,7 +179,7 @@ export default function render(ctx, player) {
     <div style="font-size:15px;color:${rar?.color ?? 'var(--a)'}">${wp.name}${wp.ranged ? (s.reloading ? " · RELOADING" : ` · ${s["loaded_" + s.equipped] ?? 0}/${s[wp.ammoType ?? "ammo"] ?? 0}`) : ""}${rar ? `<span class="tag">${rar.label}</span>` : ''}</div>
     ${bar('AP', s.stamina, L.stamina, s.stamina < 25 ? 'var(--ad)' : 'var(--a)', `${Math.ceil(s.stamina)}`, true)}
     <div class="row" style="margin-top:6px;justify-content:flex-end;gap:8px">
-      <span>ALMOND</span><span style="font-size:15px">${s.almonds ?? 0}</span>
+      <span>ALMOND</span><span style="font-size:15px">${s.almonds ?? 0}</span>${[['almondsG','#7fcf6a'],['almondsR','#d0574a'],['almondsB','#6f9be0']].filter(([k]) => s[k]).map(([k, c]) => `<span style="font-size:15px;color:${c}">${s[k]}</span>`).join('')}
     </div>
     ${s.attr != null ? (() => { const cap = _dv(s).carry, kg = _kg(s); return `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px;${kg > cap ? 'color:oklch(0.68 0.2 35)' : ''}"><span>WG</span><span>${kg.toFixed(1)}/${cap}</span></div>` })() : ''}
     <div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px">

@@ -1,0 +1,7 @@
+# Almond water colours (lore: scripts/lib/data/lore/almond-water.md). Savi's picks, 2026-11-07.
+weights: { grey: 70, green: 11, red: 10, blue: 9 }   # a found bottle rolls one
+grey:  { name: Grey almond water,  color: "#b9bcb4", hp: 35, sanity: 30, thirst: 55, note: "Sweet, a hint of almond. Filling." }
+green: { name: Green almond water, color: "#7fcf6a", hp: 10, sanity: 10, thirst: 35, seconds: 60, staminaMul: 0.35, abuseWithin: 180, abuseSanity: 12, note: "Energy drink sweet. Sprint longer for 60s. Two close together: jitters." }
+red:   { name: Red almond water,   color: "#d0574a", hp: 90, sanity: 5, thirst: 30, cooldown: 480, sickHp: 15, tiredSeconds: 25, note: "Bitter medicine. Big heal, stops bleeding, leaves you tired. One per 8 minutes." }
+blue:  { name: Blue almond water,  color: "#6f9be0", hp: 10, sanity: 80, thirst: 35, seconds: 90, note: "Tastes like plain water. Calms the mind: no sanity loss for 90s." }
+splash: { reach: 3.4, cone: 0.45, damage: 45, stun: 1.6 }   # J: throws one bottle (grey first) at a skin-stealer

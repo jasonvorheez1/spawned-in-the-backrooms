@@ -3,6 +3,7 @@
 // player.state: focus, lootOpen, lootName, lootList, notice (scripts/interact.js); invOpen, weapons, equipped,
 // almonds, ammo, shells (scripts/player.js). Loot buttons send 'loot' {k:'take',i}|{k:'all'}|{k:'close'};
 // inventory buttons send 'inv' {k:'equip',w}|{k:'drop',w}|{k:'drink'}|{k:'close'}|{k:'wear',w:cloth token}|{k:'unwear',w:slot}.
+import AW from './lib/data/almond.yml'
 import { describe, itemsOf } from './lib/items.js'
 import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
@@ -88,6 +89,8 @@ function detail(t, s, def) {
       ${cell('DR', `${p.row.dr}${cmp}`)}${cell('SLOT', SLOT_NAME[p.slot].toUpperCase())}${cell('WG', `${p.row.kg}KG`)}${cell('COLOR', `<span style="display:inline-block;width:12px;height:12px;background:#${p.colour};border:1px solid var(--ad)"></span>`)}
       ${cell('WORN', cur ? `${cur.name} · DR ${cur.dr}` : 'NOTHING', true)}</div></div>`
   }
+  if (t.startsWith('almond:')) { const c = t.slice(7), a = AW[c], key = { grey: 'almonds', green: 'almondsG', red: 'almondsR', blue: 'almondsB' }[c]
+    return `<div class="${cls}"><h4>${a.name}</h4><div class="r" style="color:${a.color}">AID</div><div class="g">${cell('HP', `+${a.hp}`)}${cell('SAN', `+${a.sanity}`)}${cell('CARRIED', s[key] ?? 0)}${cell('NOTE', a.note, true)}</div></div>` }
   if (t === 'almond') return `<div class="${cls}"><h4>Almond water</h4><div class="r" style="color:var(--ad)">AID</div><div class="g">${cell('HP', `+${L.almondHp}`)}${cell('SAN', `+${L.almondSanity}`)}${cell('CARRIED', s.almonds ?? 0, true)}</div></div>`
   if (t === 'ammo' || t === 'shells') {
     const a = W[t], nm = t === 'ammo' ? 'Pistol rounds' : 'Shotgun shells'
@@ -104,8 +107,10 @@ function inventory(s) {
     const inner = `<span class="eq"></span><span class="nm">${w.name}${cnt > 1 ? ` ×${cnt}` : ''}</span><span class="n">${ok ? (w.ranged ? `${s['loaded_' + k] ?? 0}/${s[w.ammoType ?? 'ammo'] ?? 0}` : '') : `LV ${w.minLevel}`}</span>${detail(k, s, false)}`
     return ok && !on ? `<button class="it" onclick="sendAction('inv',{k:'equip',w:'${k}'})">${inner}</button>` : `<div class="it${on ? ' on' : ''}${ok ? '' : ' lock'}">${inner}</div>`
   }).join('')
-  const a = s.almonds ?? 0
-  const aid = a ? `<button class="it" onclick="sendAction('inv',{k:'drink'})"><span class="eq"></span><span class="nm">Almond water</span><span class="n">${a}</span>${detail('almond', s, false)}</button>` : '<div class="em">None.</div>'
+  const AWK = [['grey', 'almonds', 'Grey almond water', '#b9bcb4'], ['green', 'almondsG', 'Green almond water', '#7fcf6a'], ['red', 'almondsR', 'Red almond water', '#d0574a'], ['blue', 'almondsB', 'Blue almond water', '#6f9be0']]
+  const anyAw = AWK.some(([, k]) => s[k])
+  const aid = anyAw ? AWK.filter(([, k]) => s[k]).map(([c, k, nm, col]) => `<button class="it" onclick="sendAction('inv',{k:'drink',c:'${c}'})"><span class="eq" style="background:${col}"></span><span class="nm" style="color:${col}">${nm}</span><span class="n">${s[k]}</span>${detail('almond:' + c, s, false)}</button>`).join('')
+    + `<button class="it" onclick="sendAction('inv',{k:'splash'})"><span class="eq"></span><span class="nm">Splash a bottle</span><span class="n">J</span></button>` : '<div class="em">None.</div>'
   const ammo = ['ammo', 'shells'].filter((t) => s[t]).map((t) => `<div class="it"><span class="eq"></span><span class="nm">${t === 'ammo' ? 'Pistol rounds' : 'Shotgun shells'}</span><span class="n">${s[t]}</span>${detail(t, s, false)}</div>`).join('') || '<div class="em">None.</div>'
   const on = wornTokens(s.look), bag = (s.clothes ? s.clothes.split(',').filter(Boolean) : [])
   const app = on.map((t) => { const p = parseCloth(t); return `<button class="it on" onclick="sendAction('inv',{k:'unwear',w:'${p.slot}'})"><span class="eq"></span><span class="nm">${p.row.name}</span><span class="n">DR ${p.row.dr}</span>${detail(t, s, false)}</button>` }).join('')

@@ -25,6 +25,7 @@ import SOUNDS from './lib/data/sounds.yml'
 import { useCompass, COMPASS } from './lib/compass.js'
 import L3I from './lib/data/l3items.yml'
 import CR from './lib/data/craft.yml'
+import AW from './lib/data/almond.yml'
 const sndTurn = {}
 const SND = (n) => { const takes = SOUNDS[n]; if (!takes?.length) return `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`; sndTurn[n] = ((sndTurn[n] ?? -1) + 1 + (takes.length > 2 ? Math.floor(takes.length / 2) : 0)) % takes.length; return takes[sndTurn[n]] }
 const ZAP = `fx
@@ -32,6 +33,9 @@ pop arc burst=18..26 life=.12..0.3 v=sdir()*(2.5..5) size=.03..0.06 acc=drag(3) 
 pop glow burst=1 life=.18 col=<.6,.8,1> a=1>0 r=light(<.6,.8,1>,6,4)`
 const EMBER = `fx
 pop ember burst=8..12 life=.4..0.8 v=up(.6..1.4)+sdir()*(.6..1.2) size=.02..0.04 acc=grav()*.3+drag(1.2) col=hdr(4,1.6,.3)>hdr(1.6,.4,.05) a=1>0 sz=$size r=sprite(ember,add,velocity,.02)`
+const CLEAR = `fx
+pop blood burst=16..22 life=.4..0.8 v=sdir()*(1.2..2.6)+up(.8) size=.025..0.05 acc=grav()+drag(.4) col=<.82,.88,.86> a=.55 sz=$size floor=stick r=sprite(soft-disc,alpha,velocity,.02)
+pop sheen burst=6 life=.3..0.5 v=sdir()*(1..2) size=.03..0.05 acc=grav() col=hdr(1.3,1.4,1.4) a=.7>0 r=sprite(soft-disc,add)`
 const ICHOR = `fx
 pop ichor burst=18..26 life=.5..0.9 v=sdir()*(1.5..3.2)+up(1) size=.04..0.09 acc=grav()*.8+drag(1.2) col=<.04,.03,.05> a=1>.6:1>0 sz=$size floor=stick r=sprite(soft-disc,alpha)
 pop smoke burst=4..6 life=.6..1 v=sdir()*(.3..0.7) size=.25..0.4 acc=buoy(.4)+drag(1.5) col=<.06,.05,.07> a=0>.15:.5>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)`
@@ -93,8 +97,11 @@ function takeToken0(ctx, token) {
     sound(ctx, 'pickup-ammo', 0.5, true)
     return { ok: true }
   }
-  if (token === 'almond') {
-    s.almonds = (s.almonds ?? 0) + 1; gain(ctx, L.xpAlmond); s.pickedAt = now
+  if (token === 'almond' || token.startsWith('almond:')) { // a found bottle rolls its colour; grey stays s.almonds (the barter currency)
+    let c = token.slice(7)
+    if (!AW[c]) { let r = ctx.random() * Object.values(AW.weights).reduce((a, b) => a + b, 0); c = 'grey'; for (const [k, wt] of Object.entries(AW.weights)) { if ((r -= wt) < 0) { c = k; break } } }
+    const key = AW_KEY[c]; s[key] = (s[key] ?? 0) + 1; gain(ctx, L.xpAlmond); s.pickedAt = now
+    if (c !== 'grey') s.notice = { text: `${AW[c].name}`, at: now }
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.75, true)
     return { ok: true }
   }
@@ -232,6 +239,7 @@ export function onInput(ctx, input) {
   if (input.pressed.inventory) { const sv = ctx.self.state; sv.invOpen = !sv.invOpen && !sv.lootOpen; sound(ctx, 'flashlight-switch-click', 0.35, true) }
   if (input.pressed.inv && input.actionData?.inv) invAction(ctx, input.actionData.inv)
   if (input.pressed.drink) drink(ctx)
+  if (input.pressed.splash) splash(ctx)
   if (input.pressed.compass) useCompass(ctx)
   if (input.pressed.cycleWeapon && !ctx.self.state.building) cycleWeapon(ctx)
   if (input.pressed.holster) { // H: put it away, H again: draw the last one
@@ -258,7 +266,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
   const hit = { x: m.feetPosition.x, y: m.feetPosition.y + 1.5, z: m.feetPosition.z }
   if (loud) sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)
   ctx.emit('damageNumber', { position: hit, value: dmg, color: '#f7d98b' })
-  ctx.emit('fx', { position: hit, script: ICHOR })
+  ctx.emit('fx', { position: hit, script: m.tags?.includes('stealer') ? CLEAR : ICHOR }) // blood runs clear, don't get near
   if (L3I.stun.kinds.includes(baseOf(s.equipped ?? 'fists'))) { // the baton arcs: sparks, a zap, and the thing struck staggers
     m.state.stunUntil = ctx.now() + L3I.stun.ms
     ctx.emit('fx', { position: hit, script: ZAP })
@@ -412,7 +420,8 @@ export function pumpRack(ctx) {
 function invAction(ctx, d) {
   const s = ctx.self.state
   if (d.k === 'close') { s.invOpen = false; return }
-  if (d.k === 'drink') { drink(ctx); return }
+  if (d.k === 'drink') { drink(ctx, d.c); return }
+  if (d.k === 'splash') { s.invOpen = false; splash(ctx); return }
   if (d.k === 'firesalt') { // rub a pinch on the blade or head: melee hits burn harder for a while
     if ((s.firesalt ?? 0) <= 0 || W[s.equipped]?.ranged || s.equipped === 'fists') { s.notice = { text: 'Hold a melee weapon to rub firesalt on it', at: ctx.now() }; return }
     s.firesalt -= 1; s.firesaltUntil = ctx.now() + L3I.firesalt.seconds * 1000
@@ -453,17 +462,60 @@ function cycleWeapon(ctx) {
   sound(ctx, 'flashlight-switch-click', 0.5, true)
 }
 
-function drink(ctx) {
-  const s = ctx.self.state
-  if (s.almonds <= 0) return
-  const mh = maxHp(s.level, s), ms = maxSan(s.level, s)
-  if (s.hp >= mh && s.sanity >= ms && (s.thirst ?? 100) >= 99) return
-  s.almonds -= 1
-  s.thirst = Math.min(100, (s.thirst ?? 100) + CR.needs.almondThirst)
-  s.hp = Math.min(mh, s.hp + L.almondHp * derived(s).heal)
-  s.sanity = Math.min(ms, s.sanity + L.almondSanity * derived(s).heal)
-  s.drankAt = ctx.now()
+const AW_KEY = { grey: 'almonds', green: 'almondsG', red: 'almondsR', blue: 'almondsB' }
+function drink(ctx, c) {
+  const s = ctx.self.state, now = ctx.now()
+  if (!AW_KEY[c]) c = (s.almonds ?? 0) > 0 ? 'grey' : ['blue', 'green', 'red'].find((k) => (s[AW_KEY[k]] ?? 0) > 0)
+  if (!c || (s[AW_KEY[c]] ?? 0) <= 0) return
+  const a = AW[c], mh = maxHp(s.level, s), ms = maxSan(s.level, s), heal = derived(s).heal
+  if (c === 'grey' && s.hp >= mh && s.sanity >= ms && (s.thirst ?? 100) >= 99) return
+  s[AW_KEY[c]] -= 1
+  s.thirst = Math.min(100, (s.thirst ?? 100) + a.thirst)
+  s.hp = Math.min(mh, s.hp + a.hp * heal)
+  s.sanity = Math.min(ms, s.sanity + a.sanity * heal)
+  if (c === 'green') {
+    if (now - (s.greenAt ?? -1e9) < a.abuseWithin * 1000) { s.sanity = Math.max(0, s.sanity - a.abuseSanity); s.notice = { text: 'Too much green. Your heart is racing', at: now } }
+    else s.notice = { text: 'Green almond water: you could run forever', at: now }
+    s.greenAt = now; s.greenUntil = now + a.seconds * 1000; walkOf(ctx).stamina = derived(s).staMax
+  }
+  if (c === 'red') {
+    if (now - (s.redAt ?? -1e9) < a.cooldown * 1000) { s.hp = Math.max(1, s.hp - a.sickHp); s.notice = { text: 'Too much red. Your stomach turns', at: now } }
+    else s.notice = { text: 'Red almond water: bitter. The bleeding stops. You feel heavy', at: now }
+    s.redAt = now; s.tiredUntil = now + a.tiredSeconds * 1000
+  }
+  if (c === 'blue') { s.blueUntil = now + a.seconds * 1000; s.notice = { text: 'Blue almond water: your thoughts go quiet', at: now } }
+  s.drankAt = now
   sound(ctx, 'gulping-water-from-plastic-bottle', 0.65)
+}
+
+// J: throw a bottle (grey first). Skin-stealers burn, stagger, and a disguised one splits open
+const SPRAY = `fx
+pop drops burst=40..55 life=.35..0.6 v=<%dir|0,0,-1>*(4..7)+sdir()*(.6..1.4)+up(1) size=.02..0.045 acc=grav()+drag(.6) col=<.85,.9,.95> a=.8>0 floor=die r=sprite(soft-disc,alpha,velocity,.02)
+pop mist burst=6 life=.4..0.7 v=<%dir|0,0,-1>*(2..3) size=.2..0.35 acc=drag(2.5) col=<.9,.92,.95> a=0>.25:.2>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)`
+const STEAM = `fx
+pop steam burst=18..24 on=box(.35,.8,.35).c(1.1) life=.8..1.5 v=up(1.2..2.2)+sdir()*.4 size=.25..0.45 acc=buoy(.8)+curl(.4)+drag(1.2) col=<.92,.9,.82> a=0>.45:.3>0 sz=$size*(.6>2.2) r=sprite(smoke-puff,alpha)
+pop fizz burst=20 on=box(.3,.7,.3).c(1.1) life=.3..0.6 v=sdir()*(1..2.2) size=.02..0.04 acc=grav()*.5 col=hdr(1.6,1.5,1.2) a=1>0 r=sprite(soft-disc,add)`
+function splash(ctx) {
+  const s = ctx.self.state, now = ctx.now()
+  if (now < (walkOf(ctx).splashCool ?? 0)) return
+  const c = (s.almonds ?? 0) > 0 ? 'grey' : ['green', 'blue', 'red'].find((k) => (s[AW_KEY[k]] ?? 0) > 0)
+  if (!c) { s.notice = { text: 'No almond water to throw', at: now }; return }
+  s[AW_KEY[c]] -= 1; walkOf(ctx).splashCool = now + 900
+  const p = ctx.self.feetPosition, f = walkOf(ctx).fwd ?? { x: 0, z: -1 }, S = AW.splash
+  ctx.emit('fx', { position: { x: p.x + f.x * 0.5, y: p.y + 1.3, z: p.z + f.z * 0.5 }, script: SPRAY, params: { dir: { x: f.x, y: 0.1, z: f.z } } })
+  ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-water-splash-thrown-from-bottle.mp3', position: chest(ctx), volume: 0.8, maxDistance: 20 })
+  for (const m of ctx.query({ tags: ['stealer'], radius: S.reach })) {
+    if (m.state?.dead) continue
+    const dx = m.feetPosition.x - p.x, dz = m.feetPosition.z - p.z, d = Math.hypot(dx, dz)
+    if (d > 0.4 && (dx * f.x + dz * f.z) / d < S.cone) continue
+    m.state.hp -= S.damage; m.state.splashedAt = now
+    const at = { x: m.feetPosition.x, y: m.feetPosition.y + 1.2, z: m.feetPosition.z }
+    ctx.emit('fx', { position: m.feetPosition, script: STEAM })
+    ctx.emit('damageNumber', { position: at, value: S.damage, color: '#bfe8ff' })
+    ctx.emit('playSound', { clip: '/cdn/moodboard-gothic-horror/sfx-flesh-sizzle-steam-hiss.mp3', position: at, volume: 1, maxDistance: 26 })
+    ctx.emit('hitstop', { duration: 0.04 }, { audience: { player: ctx.self.id } })
+    return
+  }
 }
 
 function toggleLight(ctx) {
@@ -549,7 +601,8 @@ export function update(ctx, dt) {
   const crouched = !!s.crouch
   const sprinting = w.sprint && moving && w.stamina > 1 && !s.ads && !crouched
   const dv = w.dv ??= derived(s) // the sheet's numbers, re-derived 4x a second in the stats beat, not three times a tick
-  w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain : L.staminaRegen * dv.staRegen * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
+  const nowS = ctx.now(), green = nowS < (s.greenUntil ?? 0), tired = nowS < (s.tiredUntil ?? 0) // green almond water: sprint longer; red: heavy limbs
+  w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain * (green ? AW.green.staminaMul : 1) : L.staminaRegen * dv.staRegen * (tired ? 0.3 : 1) * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
   const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
   const speed = (w.walkMode && !sprinting ? 0.5 : 1) * (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * dv.speed * (w.bur ??= burden(s))
@@ -614,6 +667,7 @@ function tickStats(ctx, t, moving) {
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
   let drain = (ctx.self.place === 'level4' ? DRAIN4[zone.slice(3)] : ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : (ctx.self.place === 'level3' || ctx.self.place === 'gamma') ? L3.sanityDrain[zone.slice(3)] : L.sanityDrain[zone]) ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4
+  if (drain > 0 && ctx.now() < (s.blueUntil ?? 0)) drain = 0 // blue almond water: the halls can't get in
   s.sanity -= drain * (drain > 0 ? derived(s).drain : 1) * t
   if (w.ledge) s.sanity += L.ledgeRest.sanity * t
   const rest = !!w.ledge, wet = !!w.wet

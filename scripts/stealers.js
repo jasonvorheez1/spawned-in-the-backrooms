@@ -27,7 +27,7 @@ export function update(ctx, dt) {
   // bleeds tick on in the manager's own loop: small hits, a drip each
   for (const pid in bleeds) {
     const b = bleeds[pid], p = ctx.place.players.find((q) => q.id === pid);
-    if (!p || now > b.until || (p.state?.hp ?? 0) <= 0) { delete bleeds[pid]; continue; }
+    if (!p || now > b.until || (p.state?.hp ?? 0) <= 0 || (p.state?.redAt ?? 0) > b.from) { delete bleeds[pid]; continue; } // red almond water stops the bleeding
     if (now >= b.next) { b.next = now + T.bleedEvery * 1000; p.state.hp -= T.bleed;
       const at = { x: p.feetPosition.x, y: p.feetPosition.y + 1.1, z: p.feetPosition.z };
       ctx.emit("damageNumber", { position: at, value: T.bleed, color: "#a01010", size: 0.7 }); ctx.emit("fx", { position: at, script: DRIP }); }
@@ -42,6 +42,15 @@ export function update(ctx, dt) {
       else if (now - m.deadAt > 2600 && !m.gone) { m.gone = true; ctx.emit("fx", { position: pos, script: POOF }); ctx.emit("playSound", { clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.9 }); ctx.destroy(e.id); }
       continue;
     }
+    if ((st.splashedAt ?? 0) > (m.splash ?? 0)) { // almond water: it burns. a disguise splits, then it reels
+      m.splash = st.splashedAt; m.stunUntil = now + 1600;
+      if (m.ph === "skin") { o.state.revealed = true; o.model = MODEL(true); ctx.emit("fx", { position: pos, script: SPLIT }); ctx.emit("screenShake", { intensity: 0.5, duration: 0.4 }, { audience: { nearby: pos, radius: 9 } }); }
+      m.ph = "hunt"; m.at = now; play(e, m, "act", "Reveal", { clampWhenFinished: true, tag: now });
+      ctx.emit("playSound", { clip: SND("flesh-tear-wet-shriek"), position: pos, volume: 1, pitch: 1.35, maxDistance: 34 });
+    }
+    if (now < (m.stunUntil ?? 0)) { e.velocity = { x: 0, y: (e.velocity?.y ?? 0) - 20 * dt, z: 0 }; continue; }
+    if (m.stunUntil && !m.stunDone) { m.stunDone = true; play(e, m, "act", null); }
+    if (now >= (m.stunUntil ?? 0) + 50) m.stunDone = false;
     let prey = null, best = L.stealerCallRange;
     for (const p of players) { const d = Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z); if (d < best) { best = d; prey = p; } }
     const t = (now - (m.at ?? 0)) / 1000, go = (ph) => { m.ph = ph; m.at = now; };
@@ -73,7 +82,7 @@ export function update(ctx, dt) {
           ctx.emit("fx", { position: at, script: CUT }); ctx.emit("playSound", { clip: SND("claw-slash-flesh"), position: at, volume: 1 });
           ctx.emit("cameraPunch", { direction: { x: m.hits === 1 ? 1 : -1, y: 0, z: 0 }, intensity: 0.4 }, { audience: { player: p.id } });
           ctx.emit("hitstop", { duration: 0.03 }, { audience: { player: p.id } });
-          bleeds[p.id] = { until: now + T.bleedFor * 1000, next: now + T.bleedEvery * 1000 };
+          bleeds[p.id] = { from: now, until: now + T.bleedFor * 1000, next: now + T.bleedEvery * 1000 };
         } else ctx.emit("playSound", { clip: SND("claw-slash-flesh"), position: pos, volume: 0.35, pitch: 1.4 });
       }
       if (t > T.comboFor) { go("hunt"); m.cool = now + L.stealerCooldown * 1000; play(e, m, "act", null); }
