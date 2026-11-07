@@ -78,7 +78,7 @@ export function geometry(ctx) {
     if (!arms.includes(2)) box(ctx, c.x - h, c.x - TW, 0, TH, c.z - TW, c.z + TW);
     if (!arms.includes(1)) box(ctx, c.x - TW, c.x + TW, 0, TH, c.z + TW, c.z + h);
     if (!arms.includes(3)) box(ctx, c.x - TW, c.x + TW, 0, TH, c.z - h, c.z - TW);
-    ctx.smooth(); for (const sp of tightSpans(cx, cz)) vault(ctx, cx, cz, sp, 0, hi ? 5 : 3); ctx.flat();
+    ctx.smooth(); for (const sp of tightSpans(cx, cz)) vault(ctx, cx, cz, sp, 0, hi ? 4 : 3); ctx.flat();
   }
   // bars: across the barred edges, floor to ceiling, never a gate
   ctx.albedo(PAINTED); ctx.color("oklch(0.95 0.01 90)"); ctx.metalness(0.15); ctx.roughness(0.7);
