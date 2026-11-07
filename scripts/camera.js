@@ -99,5 +99,22 @@ export function update(ctx, dt) {
     const dx = b.x - eye.x, dy = b.y - eye.y, dz = b.z - eye.z
     rot = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
   } else if (ctx.self.session.deathCam) ctx.self.session.deathCam = null
+  // sitting down / standing up: the eye leaves your head for a moment, swings out to the side and watches the body settle
+  const st = ps?.sit, sc = ctx.self.session.sitCam ??= { k: 0 }
+  const want3 = st && (st.phase === 'down' || st.phase === 'up' || (st.phase === 'sat' && ctx.now() - (st.satAt ?? 0) < 250)) ? 1 : 0
+  sc.k += (want3 - sc.k) * Math.min(1, dt * (want3 ? 5 : 6))
+  if (sc.k > 0.01 && ctx.player && down >= 3200) {
+    ctx.self.hideLocalPlayer = sc.k < 0.35
+    const wp = ctx.player.worldFeetPosition ?? ctx.player.feetPosition
+    const b = { x: wp.x, y: wp.y + 0.9, z: wp.z }
+    if (want3 && sc.yaw == null) sc.yaw = (rot?.yaw ?? 0) * Math.PI / 180
+    const a = (sc.yaw ?? 0) + 0.9, k = sc.k * sc.k * (3 - 2 * sc.k)
+    const out = { x: b.x + Math.sin(a) * 2.4, y: b.y + 0.9, z: b.z + Math.cos(a) * 2.4 }
+    const e0 = ctx.self.feetPosition
+    ctx.self.feetPosition = { x: e0.x + (out.x - e0.x) * k, y: e0.y + (out.y - e0.y) * k, z: e0.z + (out.z - e0.z) * k }
+    const dx = b.x - out.x, dy = b.y - out.y, dz = b.z - out.z
+    const look = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
+    if (rot) { const dyaw = ((look.yaw - rot.yaw + 540) % 360) - 180; rot = { yaw: rot.yaw + dyaw * k, pitch: rot.pitch + (look.pitch - rot.pitch) * k } } else rot = look
+  } else if (!want3) sc.yaw = null
   if (rot) ctx.self.rotation = rot
 }
