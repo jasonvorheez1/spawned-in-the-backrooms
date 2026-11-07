@@ -189,8 +189,8 @@ export function poseViewmodel(ctx, dt) {
   // a held power attack: cocked back over the shoulder, trembling once it is full
   if (!gun && m.wind > 0.001) {
     const k = ease(m.wind), full = m.wind > 0.97 ? 1 : 0, tr = full ? Math.sin(m.breath * 70) : 0
-    if (kind === 'fists') { d -= 0.12 * k; x += 0.05 * k; y -= 0.02 * k; roll += 12 * k + tr * 1.5 }
-    else { pitch += 38 * k + tr * 1.2; yaw -= 22 * k; roll += 18 * k + tr * 1.5; x += 0.07 * k; y += 0.06 * k; d -= 0.08 * k }
+    if (kind === 'fists') { d -= 0.22 * k; x += 0.1 * k; y -= 0.06 * k; roll += 28 * k + tr * 2; yaw -= 18 * k; pitch += 10 * k }
+    else { pitch += 60 * k + tr * 1.5; yaw -= 35 * k; roll += 30 * k + tr * 2; x += 0.14 * k; y += 0.14 * k; d -= 0.14 * k }
   }
 
   // raising a freshly equipped weapon: up from below the frame, a little past, and settle
