@@ -26,8 +26,10 @@ export function rowOf(slot, kind, colour) {
   return CL.rows.find((r) => r.slot === slot && r.kind === kind && r.strict && r.colours.includes(c))
     ?? CL.rows.find((r) => r.slot === slot && r.kind === kind && !r.strict) ?? null
 }
+const ALIAS = { top: 'topw', bottom: 'botw', shoe: 'shoes', shoec: 'shoes', hatc: 'hat', neckc: 'neck' }
 export function parseCloth(token) {
-  const [t, slot, kind, c] = String(token).split(':')
+  const [t, s0, kind, c] = String(token).split(':')
+  const slot = ALIAS[s0] ?? s0 // 'cloth:top:…' and 'cloth:topw:…' are the same garment
   if (t !== 'cloth' || !SLOTS.includes(slot) || !kind) return null
   const row = rowOf(slot, kind, c)
   return row ? { slot, kind, colour: hex(c), row } : null
