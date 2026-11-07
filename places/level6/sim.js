@@ -3,14 +3,14 @@
 import { W, H, C, HT, START, cx, cz, plan, wallRuns, NOTES } from "../../scripts/lib/level6.js";
 export const cadence = "1s";
 const V = 2;
+const CONCRETE = { color: "oklch(0.55 0.005 250)", roughness: 0.95, texture: "cdn/texture-smooth-cold-poured-concrete-wall.png", repeat: [1, 1], wrap: "repeat" };
+const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
+const WHISPERS = [G("faint-skittering-claws-on-concrete-in-dark"), G("slow-close-breathing-in-pitch-dark"), G("unintelligible-whisper-behind-ear"), G("bare-footsteps-stop-on-concrete")];
 const VO = (who, t) => `/cdn/voice-${who}-saying-${encodeURIComponent(t)}.mp3`;
 const MIMIC = "hoarse-young-woman-whispering-in-the-dark"; // the voice in the halls: it learned it from someone
 const MIMIC_LINES = ["Kacey? Kacey, where are you?", "Hello? I can hear you breathing.", "Over here. Follow my voice.", "Is someone there? I can't see."];
 const STATIC = G("low-radio-static-hiss-crackle-in-ear-loop");
 const SKITTER = G("many-small-claws-skittering-fast-across-concrete-ceiling");
-const CONCRETE = { color: "oklch(0.55 0.005 250)", roughness: 0.95, texture: "cdn/texture-smooth-cold-poured-concrete-wall.png", repeat: [1, 1], wrap: "repeat" };
-const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
-const WHISPERS = [G("faint-skittering-claws-on-concrete-in-dark"), G("slow-close-breathing-in-pitch-dark"), G("unintelligible-whisper-behind-ear"), G("bare-footsteps-stop-on-concrete")];
 const chalk = (text) => `<svg viewBox='0 0 300 120' width='1.3m'><text x='150' y='60' text-anchor='middle' font-family='sans-serif' font-size='${text.length > 40 ? 15 : 26}' fill='#cfc9bb' fill-opacity='0.75'>${text.length > 40 ? text.match(/.{1,34}(\s|$)/g).map((l, k) => `<tspan x='150' dy='${k ? 18 : -18}'>${l.trim()}</tspan>`).join("") : text}</text></svg>`;
 
 function lay(ctx) {
