@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 629,
-  "updatedAt": "2026-11-07T14:39:11.589Z",
-  "summary": "The Backrooms is a multiplayer survival game whose default entry is Level 0, with deeper authored places through Level 3 and a separate walk-in M.E.G. Base Gamma. Ordered player behaviors own personal progression and survival; place simulations build local spaces, actors, hazards and supplies.",
+  "basedOnSpecVersion": 647,
+  "updatedAt": "2026-11-07T14:43:54.441Z",
+  "summary": "The Backrooms is a multiplayer survival game entered through Level 0, with authored and generated places through Level 3 and a separate M.E.G. Base Gamma. Ordered player behaviors own personal survival and progression; place simulations construct local spaces, actors, hazards and supplies, using shared grid, loot and geometry helpers.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0's generated yellow maze and safe-room hub; authored cells, loot, shifting walls, stairs and sim-managed smilers/lurkers.",
+    "places/main (3D) - Level 0's generated yellow maze and safe-room hub; authored cells, loot, shifting walls, seeded hash-positioned moments and smilers/lurkers.",
     "places/level1 (3D) - Habitable Zone and M.E.G. camp; car-park cells, camp agents, searchable loot, hounds and skin-stealers.",
     "places/level2 (3D) - Abandoned Utility Halls and Survivor camp; seeded halls, rooms, NPCs, supplies, hounds and the Level 3 threshold.",
-    "places/level3 (3D) - Electrical Station; maze zones and crawl halls, Gamma checkpoint, hazards, lore props, loot, hound brigades and deathmoth swarms.",
-    "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards, residents and a door back to Level 3.",
+    "places/level3 (3D) - Electrical Station; maze zones and crawl halls, lit/dead caged lamps, Gamma fortress checkpoint, hazards, lore props, loot, hound brigades and deathmoth swarms.",
+    "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards, residents and a door back to the Level 3 fortress gate.",
     "places/debug (3D) - isolated combat and loot test room; authored cells hold weapon/item stations, enemy pens and test stands."
   ],
   "roots": [
@@ -23,22 +23,22 @@
   "shared": [
     "scripts/lib/maze.js + scripts/lib/data/level0.yml; scripts/lib/level1.js and level2.js with their data - per-level grids/layouts reused by simulation, geometry and gameplay.",
     "scripts/lib/level3.js + scripts/lib/data/level3.yml + scripts/lib/maze3path.js - Electrical Station grid, zones, openings and routes for geometry, sim and creatures.",
+    "scripts/lib/level0-moments.js + scripts/moments-geo.js + scripts/moments.js - deterministic Level 0 oddity placement, shared prop geometry and interactive/sound behavior.",
     "scripts/lib/furniture.js + scripts/lib/data/furniture-loot.yml - searchable container placement and loot factory shared by Level 0, 1 and 3; Level 2 has its own path.",
     "scripts/lib/data/weapons.yml + scripts/lib/weapons.js, weapon-look.js, weapon-prof.js and weapon-geo.js - weapon definitions and fitted variants shared by pickups, viewmodels and NPCs.",
     "scripts/lib/items.js + scripts/lib/loot.js + scripts/lib/loot3.js - shared token vocabulary and general loot, with Level 3-specific tables and drops.",
     "scripts/lib/clothes.js + clothes.yml; scripts/lib/stats.js - apparel/armor and HALOGEN derivations reused by player, NPC combat, loot and UI.",
-    "scripts/lib/npc-talk.js + talk.yml and shops.yml - dialogue parsing/policy and trader stock/pricing helpers for talk.js and talk-ui.js.",
-    "scripts/lib/gamma-layout.js + gamma-kit.js - Base Gamma room/light plan and procedural mesh primitives used by gamma shell, security, public, town and fixture geometry."
+    "scripts/lib/gamma-layout.js + gamma-kit.js - Base Gamma room/light plan and procedural mesh primitives used by Gamma shell, security, public, town and fixture geometry."
   ],
   "notableExports": [
-    "places/*/sim.js - cadence and tick; simulations own local setup and ticking; places/gamma/sim.js also exports PEOPLE.",
+    "places/*/sim.js - cadence and tick; places/gamma/sim.js also exports PEOPLE.",
     "scripts/lib/level3.js - grid/constants, cell/zone queries, openings, blocks/hazards, crawl spans and exits; maze3path.js - stepToward, cellNear.",
-    "scripts/lib/gamma-layout.js - Base Gamma layout constants; scripts/lib/gamma-kit.js - box, paint, rod, post, disc, cyl, gable, wire and mesh helpers.",
+    "scripts/lib/level0-moments.js - wallPose, layMoments; scripts/moments.js - ears, update; scripts/moments-geo.js - geometry, collider, PILLARS, FALSEDOOR_COLLIDER.",
+    "scripts/lib/gamma-exterior.js - GATE, layGammaExterior; scripts/gamma-fortress-geo.js - geometry, collider; scripts/l3-lamp-geo.js - geometry.",
     "scripts/lib/critter-model.js - HEAD_ID, GAIT_LIB, speciesOf, bodyModel, headModel, faceMorph, critterSpec; data is in scripts/lib/data/critter-models.yml.",
     "scripts/lib/furniture.js - sizeOf, pickKind, spawnFurniture and wallSpot0/1/3; scripts/lib/breakables.js - strike/damage/drop/rubble and Level 0 sync APIs.",
     "scripts/build.js - onInput, update; scripts/build-ui.js - buildUi; scripts/lib/craft.js - recipeStatus; scripts/craft.js - onInput, update.",
-    "scripts/horde.js - update; scripts/horde-ui.js - hordeUi; scripts/lib/level3-lore.js - layLore; scripts/l3-ambience.js - updateSchedule, update.",
-    "scripts/player.js - health, XP, token, weapon and reload APIs; scripts/interact.js - openLoot, talk, onInput, update; scripts/talk.js - heard, onInput, update."
+    "scripts/smilers.js - MODEL, SCALE, update; scripts/lurkers.js - LURKER_MODEL, LURKER_SCALE, update; scripts/horde.js - update; scripts/horde-ui.js - hordeUi."
   ],
   "ownership": [
     "scripts/player.js - player.state owns level/XP, health/sanity, visited cells/zones, kills/deaths, equipment/inventory/ammo/condition, clothes, compass and Level 3 consumable/page fields.",
@@ -48,12 +48,12 @@
     "scripts/build.js + scripts/player.js - player.state.scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
     "scripts/interact.js - player focus, loot menu, notices and interaction; NPCs own pockets/picked and per-player warned/angry state, containers own item lists/lock/scavenged state.",
     "scripts/talk.js and scripts/critter.js - dialogue state is split across player/NPC; player.state.look owns appearance/worn slots and avatar scratch is local/session state.",
-    "Place simulations - place.state owns seed flags and local refill/respawn/hazard schedules; Level 3 also owns layoutV, hazards, generators, line output and actor managers; Gamma owns builtV."
+    "Place simulations - place.state owns seed/version flags and local refill/respawn/hazard schedules; main owns momentsV and moments placements, level3 owns gammaExtV and station managers, Gamma owns builtV."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js chain: locomotion reads prior movement; player owns movement/survival/combat; interact, talk, build, noclip, stats, craft and horde handle their ordered actions before critter behavior.",
     "world.config.yaml camera → scripts/camera.js owns presented yaw/pitch and crouched eye height; player/enemy gaze and targeting consume camera direction/state.",
-    "Level 0 exit in scripts/player.js → Level 1; thresholds connect Level 1 to 2 and Level 2 to 3; places/gamma/sim.js door target → Level 3 via level-door behavior.",
+    "Level 0 exit in scripts/player.js → Level 1; thresholds connect Level 1 to 2 and Level 2 to 3; Gamma door in places/gamma/sim.js returns to the Level 3 fortress gate.",
     "interact.js focus/E on living NPC → player.state.talkWith; talk-ui.js sends typed text/actions through talk/talkdo/shop inputs to talk.js; talk.js submits llm:chat and heard validates replies/checks before rapport changes.",
     "talk.js writes NPC state.line and player subtitle → talk-ui.js / ui.js; nearby NPC voice is emitted; shop actions update almond water, inventory and NPC stock.",
     "interact.js E → door/container/bench or usable-specific press event; bench opens crafting; usable entities receive press and own their response.",
@@ -61,12 +61,12 @@
     "scripts/horde.js countdown/waves → player horde state and horde-ui.js; tagged smilers/lurkers/hounds read creature state.horde and hunt that player; successful end grants XP, scrap and supplies.",
     "Place simulations and enemy deaths → scripts/lib/loot.js or loot3.js → weapon/clothing/item tokens or containers; main/level1/level3 seed searchable furniture through scripts/lib/furniture.js.",
     "player.js attack → scripts/lib/breakables.js → entity hp or Level 0 wall hp/broken keys; rubble becomes containers and main/sim syncs wall geometry; BUILD spends scrap and places breakable pieces.",
-    "places/level3/sim.js consumes level3 grid/data and layLore; level3-geo.js, level3-details-geo.js and l3-ambience.js provide the station structure, dressing and bulb/flicker/hum state; maze3path routes creatures across open edges.",
-    "places/gamma/sim.js lays Gamma geometry via gamma-* geo scripts and spawns residents/traders using meg-agent.js; shops.yml configures stock, and Gamma door returns to Level 3."
+    "places/main/sim.js → layMoments once per momentsV; moments.js ears handles payphone/note press and update rings the phone or emits distant sounds; notices/audio are consumed by player/UI and nearby players.",
+    "places/level3/sim.js builds station/lamp state and calls layGammaExterior once per gammaExtV; level3-geo.js, level3-details-geo.js, l3-lamp-geo.js and l3-ambience.js supply structure, dressing, lamps and ambience; maze3path routes creatures."
   ],
   "behaviorFamilies": [
     "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state.",
-    "scripts/smilers.js and scripts/lurkers.js - Level 0 pack managers with distinct gaze/light/sanity reactions; both use uploaded rigged models, with horde hunt hooks.",
+    "scripts/smilers.js and scripts/lurkers.js - Level 0 pack managers with distinct gaze/light/sanity reactions; now use uploaded Tripo rigged meshes, with horde hunt hooks.",
     "scripts/hounds.js + hound-geo.js - shared Level 1/2/3 hound AI with rigged hound-v2 mesh; safe zones and grids vary by place, Level 3 brigades use maze routing and stun state.",
     "scripts/stealers.js + stealer-geo.js - Level 1 skin-stealer behavior swaps legacy rows to rigged mesh; disguise/creature/shed parts and reveal animation vary by hunt phase.",
     "scripts/meg-agent.js + scripts/critter2-geo.js - common NPC avatar and behavior varies by species/look, role, voice, weapon and place; used by M.E.G., Survivors and Gamma agents.",
@@ -75,6 +75,7 @@
     "scripts/deathmoths.js + templates/deathmoths.js - one Level 3 manager steers multiple swarms; each uses rigged moth models and clips, while swarms vary by home and target."
   ],
   "probableOrphans": [
+    "scripts/lib/wallgrid.js - exports grid adapters for Levels 1/2/3, but no current file imports or otherwise references it.",
     "scripts/flat-starter-terrain.js - no active place uses it; place terrain is off.",
     "scripts/flower.js, scripts/grass.js, scripts/grass-look.js and scripts/reed.js - no active terrain layers or placed references are visible; terrain is off."
   ],
@@ -84,6 +85,6 @@
     "Player behavior order is intentional: humanoid-locomotion.js before player.js, then interact.js, talk.js, build.js, noclip.js, stats.js, craft.js, horde.js and critter.js; locomotion reads movement before player control writes velocity.",
     "Weapon ids remain kind or kind~variant across inventory, condition, magazines and entities; use baseOf only where base-kind framing/behavior is intended.",
     "Building scrap is a per-kind player.state.scrap object, unlike comma-separated inventory/container tokens; breakables need tag plus state.mat/hp/maxHp, and Level 0 wall hp/broken state is separate place.state data.",
-    "Level 3 layoutV/furnitureSeeded migrations deliberately clear and respawn attached furniture/hazards when the seeded layout changes; keep migration versions and grid placement in sync."
+    "Level 3 layoutV/furnitureSeeded migrations deliberately clear and respawn attached furniture/hazards when the seeded layout changes; gammaExtV and main momentsV are separate one-time placement flags."
   ]
 }
