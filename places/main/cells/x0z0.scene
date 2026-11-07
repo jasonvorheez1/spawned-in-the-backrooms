@@ -1729,11 +1729,6 @@ lurker-pack:
   behavior: scripts/lurkers.js
   feetPosition: {x: 0, y: 0, z: 0}
   id: lurker-pack
-modeling-studio:
-  overrides:
-    feetPosition: {x: 1.2, y: 0, z: -5.4}
-    rotation: 0
-  template: mods/modeling-studio/templates/studio.js#studio
 smiler-pack:
   behavior: scripts/smilers.js
   feetPosition: {x: 0, y: 0, z: 0}

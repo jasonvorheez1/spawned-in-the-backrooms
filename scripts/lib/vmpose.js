@@ -168,13 +168,14 @@ export function poseViewmodel(ctx, dt) {
   // ---- compose: position
   const ads = wp.ads ?? REST, a = ease(m.ads), sway = 1 - 0.7 * m.ads
   let x = REST[0] + (ads[0] - REST[0]) * a, y = REST[1] + (ads[1] - REST[1]) * a, d = REST[2] + (ads[2] - REST[2]) * a
+  if (!gun && kind !== 'fists') { x += 0.1; y -= 0.1; d += 0.3 } // a melee weapon rides out at the right edge, the fist low
   x += m.swayX * sway + bobX + m.sp[0] + m.off[0] + pump[0]
   y += m.swayY * sway + bobY + brY + m.sp[1] + m.off[1] + pump[1]
   d += -m.sp[2] + m.off[2] + pump[2]
   // ---- rotation
-  let pitch = (gun ? 0 : -42) + m.sp[3] + m.swayY * 140 * sway + brP + m.off[3] + pump[3]
-  let yaw = (gun ? 0 : 8) - m.swayX * 140 * sway + m.sp[4] + brYaw + m.off[4] + pump[4]
-  let roll = (gun ? 0 : 18) - m.swayX * 70 * sway + m.sp[5] - m.lean * 1.4 * sway + m.off[5] + pump[5]
+  let pitch = (gun ? 0 : -14) + m.sp[3] + m.swayY * 140 * sway + brP + m.off[3] + pump[3]
+  let yaw = (gun ? 0 : -6) - m.swayX * 140 * sway + m.sp[4] + brYaw + m.off[4] + pump[4]
+  let roll = (gun ? 0 : -14) - m.swayX * 70 * sway + m.sp[5] - m.lean * 1.4 * sway + m.off[5] + pump[5]
 
   // sprinting: lower it and turn it away
   y -= run * 0.07; pitch -= run * 18; yaw += run * 14; x -= run * 0.03
@@ -190,7 +191,7 @@ export function poseViewmodel(ctx, dt) {
   if (!gun && m.wind > 0.001) {
     const k = ease(m.wind), full = m.wind > 0.97 ? 1 : 0, tr = full ? Math.sin(m.breath * 70) : 0
     if (kind === 'fists') { d -= 0.22 * k; x += 0.1 * k; y -= 0.06 * k; roll += 28 * k + tr * 2; yaw -= 18 * k; pitch += 10 * k }
-    else { pitch += 60 * k + tr * 1.5; yaw -= 35 * k; roll += 30 * k + tr * 2; x += 0.14 * k; y += 0.14 * k; d -= 0.14 * k }
+    else { pitch += 30 * k + tr * 1.5; yaw -= 25 * k; roll -= 20 * k + tr * 2; x += 0.14 * k; y += 0.14 * k; d -= 0.14 * k }
   }
 
   // raising a freshly equipped weapon: up from below the frame, a little past, and settle
