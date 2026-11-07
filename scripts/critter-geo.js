@@ -407,7 +407,7 @@ export function geometry(ctx) {
     }
 
     // Feminine bust curve if sex === 'f'
-    if (fem) {
+    if (fem && topw === "none") { // under a top the cloth carries the bust: fur never pokes through
       for (const s of [-1, 1]) {
         ctx.color(sp.dark ? sp.dark : FUR);
         ell([s * BUST.x, BUST.y, BUST.z], BUST.r, null, { seg: hi ? 18 : 10 });
@@ -740,18 +740,18 @@ export function geometry(ctx) {
     const w = Math.min(1, Math.max(0, (0.77 - y) / 0.07));
     return [Math.max(bx + 0.024, lerp(bx + 0.024, HIP_R[0] + 0.032, w)), Math.max(bz + 0.024, lerp(bz + 0.024, HIP_R[1] + 0.032, w))];
   };
-  const bustOut = (y) => (fem && Math.abs(y - BUST.y) < 0.09 ? 0.02 : 0);
+  const bustOut = (y) => (fem && Math.abs(y - BUST.y) < 0.09 ? 0.026 : 0);
   const frontZ = (y) => -((topw === "none" ? bodyR(y)[1] + 0.004 : shirtR(y)[1]) + (topw === "none" ? 0 : bustOut(y)) + 0.006); // the cloth's face, for pockets, buttons, straps
 
-  const shirt = (col, low = 0.6) => {
+  const shirt = (col, low = 0.6, pad = 0) => { // pad: an outer layer sits this much over the one beneath
     ctx.color(col);
     CLOTH = { col, rib: 260, hem: (m) => (m[1] < low + 0.035 ? 0.16 : m[1] > 0.945 ? 0.12 : -0.03 * Math.max(0, -m[2]) * 10) };
     const N = 12, path = [];
     for (let i = 0; i <= N; i++) path.push([0, lerp(low, 0.97, i / N), 0]);
-    loft(path, (t) => shirtR(lerp(low, 0.97, t)), [0, 0, -1], null, hi ? 24 : 14);
+    loft(path, (t) => { const r = shirtR(lerp(low, 0.97, t)); return [r[0] + pad, r[1] + pad]; }, [0, 0, -1], null, hi ? 24 : 14);
     if (fem) { // the top drapes her bust as one soft curve
-      for (const sd of [-1, 1]) ell([sd * BUST.x, BUST.y - 0.004, BUST.z + 0.004], [BUST.r[0] + 0.024, BUST.r[1] + 0.022, BUST.r[2] + 0.018], null, { seg: hi ? 18 : 10 });
-      ell([0, BUST.y - 0.01, BUST.z + 0.006], [0.09, BUST.r[1] + 0.016, BUST.r[2] + 0.012], null, { seg: hi ? 16 : 10 });
+      for (const sd of [-1, 1]) ell([sd * BUST.x, BUST.y - 0.004, BUST.z], [BUST.r[0] + 0.026 + pad, BUST.r[1] + 0.024 + pad, BUST.r[2] + 0.022 + pad], null, { seg: hi ? 18 : 10 });
+      ell([0, BUST.y - 0.01, BUST.z + 0.004], [0.095 + pad, BUST.r[1] + 0.02 + pad, BUST.r[2] + 0.016 + pad], null, { seg: hi ? 16 : 10 });
     }
     CLOTH = null; ctx.color(col);
   };
@@ -815,7 +815,7 @@ export function geometry(ctx) {
     wOverride = { Spine2: 1 }; ctx.color(mixc(TOP, "#000000", 0.15));
     ell([0, 0.97, 0], [0.12, 0.028, 0.11], null, { clip: (q) => q[1] > 0.985 }); wOverride = null;
   } else if (topw === "jacket") {
-    shirt("#ffffff", 0.62); shirt(TOP, 0.60); sleeve(0.36, TOP, 0.058);
+    shirt("#ffffff", 0.62); shirt(TOP, 0.60, 0.008); sleeve(0.36, TOP, 0.058);
     ctx.color(mixc(TOP, "#000000", 0.2));
     for (const sd of [-1, 1]) limb([sd * 0.07, 0.95, frontZ(0.95)], [sd * 0.06, 0.72, frontZ(0.72)], 0.014, 0.012, 6);
   } else if (topw === "apron") {
