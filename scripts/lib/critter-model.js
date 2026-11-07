@@ -89,6 +89,7 @@ export function faceFill(l) {
   if (own || !l.eye || l.eye === '#2b2233') o.eye = pickOf(FACES.eye, u)
   if (own || !l.blush) o.blush = pickOf(FACES.blush, u)
   if (own || !l.nose) { const n = pickOf(FACES.nose, u); o.nose = n || (own ? '' : l.nose) }
+  if (own || !l.eyes) o.eyes = pickOf(['round', 'round', 'tall', 'wide'], u) // rolled last so the older rolls keep their faces
   return o
 }
 export function faceMorph(expr, blink, isFemale, look) {
