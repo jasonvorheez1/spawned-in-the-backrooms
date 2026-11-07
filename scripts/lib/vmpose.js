@@ -6,7 +6,7 @@
 // a pump stroke that throws the spent hull. Everything: sway that lags the look, strafe lean, walking bob,
 // breathing at rest, a dip on landing, a lowered carry when sprinting, a raise with overshoot on equip.
 // Springs and timelines run on real frame time; the object is posed with interpolation off.
-import W from './weapons.js'
+import W, { baseOf } from './weapons.js'
 
 export const VM_FOV = 55
 const REST = [0.19, -0.17, 0.44]
@@ -37,6 +37,29 @@ const PUMP = [
   [0.62, 0.0, 0.004, 0.012, -2, 0, 1],    // and shoved home
   [1.00, 0, 0, 0, 0, 0, 0],
 ]
+
+// melee: how each weapon is swung. Offsets [t, x, y, depth, pitch, yaw, roll] from the carried pose, for a right-handed swing; the
+// next swing in a combo is mirrored. club: a diagonal haul across the body; slash: a wide flat sweep; stab: draw and thrust;
+// chop: a short overhand; heavy: lifted overhead, held, then slammed down and left to bounce.
+const SWING = {
+  club: { dur: 0.34, f: [
+    [0, 0, 0, 0, 0, 0, 0], [0.18, 0.12, 0.1, -0.1, 35, -30, -35], [0.4, -0.16, -0.08, 0.18, -55, 40, 25],
+    [0.55, -0.22, -0.12, 0.12, -70, 55, 35], [0.78, -0.1, -0.05, 0.04, -30, 22, 12], [1, 0, 0, 0, 0, 0, 0]] },
+  slash: { dur: 0.3, f: [
+    [0, 0, 0, 0, 0, 0, 0], [0.15, 0.14, 0, -0.08, 5, -55, -45], [0.38, -0.2, -0.03, 0.2, -8, 60, 40],
+    [0.55, -0.24, -0.04, 0.14, -10, 72, 46], [0.8, -0.1, -0.02, 0.05, -4, 30, 18], [1, 0, 0, 0, 0, 0, 0]] },
+  stab: { dur: 0.22, f: [
+    [0, 0, 0, 0, 0, 0, 0], [0.22, 0.02, 0.02, -0.16, 8, -6, -10], [0.42, -0.02, -0.01, 0.34, -4, 4, 6],
+    [0.62, -0.02, -0.01, 0.3, -3, 3, 5], [1, 0, 0, 0, 0, 0, 0]] },
+  chop: { dur: 0.36, f: [
+    [0, 0, 0, 0, 0, 0, 0], [0.2, 0.1, 0.16, -0.12, 55, -10, -15], [0.42, -0.08, -0.12, 0.2, -75, 20, -10],
+    [0.58, -0.1, -0.15, 0.16, -88, 24, -12], [0.8, -0.04, -0.05, 0.05, -30, 8, -4], [1, 0, 0, 0, 0, 0, 0]] },
+  heavy: { dur: 0.64, f: [
+    [0, 0, 0, 0, 0, 0, 0], [0.3, 0.06, 0.26, -0.18, 80, 0, -8], [0.46, 0.06, 0.28, -0.2, 86, 0, -8],
+    [0.56, -0.04, -0.2, 0.24, -80, 6, 5], [0.64, -0.04, -0.25, 0.2, -90, 6, 5], [0.8, -0.02, -0.12, 0.1, -40, 3, 2], [1, 0, 0, 0, 0, 0, 0]] },
+}
+const STYLE = { table_leg: 'club', pipe_scrap: 'club', crowbar: 'club', bat: 'club', rebar: 'club', wrench: 'club', stun_baton: 'club',
+  hatchet: 'chop', fire_axe: 'heavy', sledgehammer: 'heavy', knife: 'stab', screwdriver: 'stab', lineman_machete: 'slash' }
 
 function sample(frames, t) {
   t = Math.max(0, Math.min(1, t))
@@ -81,7 +104,8 @@ export function poseViewmodel(ctx, dt) {
 
   // ---- events written by player.js
   if (ps.swingAt && ps.swingAt !== m.lastSwing) {
-    m.lastSwing = ps.swingAt; m.swingT = 0
+    m.lastSwing = ps.swingAt; m.swingT = 0; m.thud = false
+    if (!gun) { const n = ctx.now(); m.combo = n - (m.lastHit ?? 0) > 1100 ? 0 : (m.combo ?? 0) + 1; m.lastHit = n } // a quick second swing comes back the other way
     if (gun) {
       m.sv[3] += (rc.up ?? 220) * aimDamp * rnd(0.85, 1.15)
       m.sv[2] -= (rc.back ?? 1.2) * aimDamp
@@ -136,7 +160,8 @@ export function poseViewmodel(ctx, dt) {
     if (m.eject) { m.eject = false; const mz = ctx.getObjectSocket(ps.vmId, 'muzzle'); if (mz?.position && view) emitCasing(ctx, mz.position, view.yaw, true) }
   }
   if (ps.swingAt !== m.heavyFor) { m.heavyFor = ps.swingAt; m.heavy = ps.swingHeavy ?? 0 }
-  if (m.swingT != null && m.swingT < 1) m.swingT = Math.min(1, m.swingT + dt / ((kind === 'fists' ? 0.2 : 0.34) * (1 + 0.45 * m.heavy)))
+  const style = SWING[STYLE[baseOf(kind)]] ?? SWING.club
+  if (m.swingT != null && m.swingT < 1) m.swingT = Math.min(1, m.swingT + dt / ((kind === 'fists' ? 0.2 : style.dur) * (1 + 0.45 * m.heavy)))
   // the wind-up: how far into a held power attack, 0..1, eased in the pose below
   const wind = !gun && ps.chargeAt ? Math.min(1, (ctx.now() - ps.chargeAt) / ((W.power?.charge ?? 0.9) * 1000)) : 0
   m.wind = (m.wind ?? 0) + (wind - (m.wind ?? 0)) * Math.min(1, dt * (wind ? 14 : 30))
@@ -186,9 +211,13 @@ export function poseViewmodel(ctx, dt) {
   // a melee chop (or a jab for the fists), eased
   if (!gun && m.swingT != null && m.swingT < 1) {
     const e = ease(Math.sin(m.swingT * Math.PI))
-    const h = 1 + 0.7 * (m.heavy ?? 0)
-    if (kind === 'fists') { d += 0.28 * e * h; x -= 0.07 * e * h; y += 0.03 * e }
-    else { pitch -= 70 * e * h; yaw += 25 * e * h; roll -= 20 * e * h; x -= 0.1 * e * h; y -= 0.04 * e * h; d += 0.06 * e * (h - 1) }
+    const h = 1 + 0.7 * (m.heavy ?? 0), side = (m.combo ?? 0) % 2 ? -1 : 1
+    if (kind === 'fists') { d += 0.28 * e * h; x -= 0.07 * e * h * side; y += 0.03 * e; roll -= 10 * e * side; yaw += 8 * e * side }
+    else {
+      const o = sample(style.f, m.swingT), g = 1 + 0.45 * (m.heavy ?? 0)
+      x += o[0] * g * side; y += o[1] * g; d += o[2] * g; pitch += o[3] * g; yaw += o[4] * g * side; roll += o[5] * g * side
+      if (style === SWING.heavy && m.swingT > 0.56 && !m.thud) { m.thud = true; ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: -0.3 }, intensity: 0.22 + 0.3 * (m.heavy ?? 0) }, { audience: { player: ctx.self.id } }) } // the slam lands
+    }
   }
   // a held power attack: cocked back over the shoulder, trembling once it is full
   if (!gun && m.wind > 0.001) {
