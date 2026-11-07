@@ -68,7 +68,7 @@ export function noclipUi(ctx, player) {
       <div style="position:absolute;top:0;bottom:0;right:0;width:50%;background:linear-gradient(270deg,oklch(.84 .12 92),oklch(.7 .1 85));clip-path:polygon(0 0,100% 0,100% 100%,0 100%,4% 90%,0 76%,6% 62%,0 48%,5% 34%,0 20%,4% 8%);${a('nc-R', OUT)}"></div>
       <div style="position:absolute;left:0;right:0;top:34%;text-align:center;${a('nc-oc', OUT)}">
         <div style="font-size:min(7vw,46px);font-weight:600;color:#fff;text-shadow:0 0 20px #000,0 2px 0 #000">You clipped through.</div>
-        <div style="margin-top:8px;font-size:14px;color:#f6e9a8;letter-spacing:.12em;text-shadow:0 1px 4px #000">+${L.xpExit} XP · the yellow goes on somewhere else</div>
+        <div style="margin-top:8px;font-size:14px;color:#f6e9a8;letter-spacing:.12em;text-shadow:0 1px 4px #000">+${L.xpExit} XP · Level 1, The Habitable Zone</div>
       </div></div>`
   }
   return out

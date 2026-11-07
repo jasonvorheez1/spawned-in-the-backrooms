@@ -21,6 +21,8 @@ export function tick(ctx) {
         material: { color: "oklch(0.97 0.02 220)", emissive: "oklch(0.95 0.03 220)", emissiveIntensity: 2.2 },
         light: { kind: "point", color: tube ? "oklch(0.95 0.02 220)" : "oklch(0.9 0.08 80)", intensity: tube ? LAMP_ON : 2.5, distance: tube ? 20 : 9, shadow: { enabled: false } } });
     }
+    ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level1-props-geo.js" }, material: { roughness: 0.85 } }); // clutter, camp and guide line
+    { const c = cellCenter(ARRIVE.cx, ARRIVE.cz); for (const [dx, dz, col] of [[3.4, 3.4, "oklch(0.85 0.14 70)"], [-5, 0, "oklch(0.85 0.12 80)"], [1, 8.2, "oklch(0.9 0.08 90)"]]) ctx.spawn({ feetPosition: { x: c.x + dx, y: 0.9, z: c.z + dz }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: col, emissive: col, emissiveIntensity: 2 }, light: { kind: "point", color: col, intensity: 4, distance: 11, shadow: { enabled: false } } }); } // camp lanterns
     // supplies: crates on the racks first, then loose ones; almond water; M.E.G. landmarks near arrival
     let crates = 0;
     for (let cx = 0; cx < N && crates < L.crates; cx++) for (let cz = 0; cz < N && crates < L.crates; cz++) {
