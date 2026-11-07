@@ -14,7 +14,7 @@ blinkEvery: [120000, 240000]  # a psychic hop between rooms now and then
 sit: [6000, 14000]
 groom: [3000, 6000]
 perchTop: 1.4       # furniture lower than this she will sit on
-home: { x: 4.9, z: 1.2 }
+home: { x: 3, z: 2.5 }
 spots:              # the slow round: Beverly Room, Main Hall gallery, lobby
   - { x: 4.9, z: 1.2 }
   - { x: 2.2, z: -3.0 }

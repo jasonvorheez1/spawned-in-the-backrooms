@@ -175,7 +175,7 @@ export const ears = {
   talkopt: (ctx, d) => {
     const p = ctx.getObject(d?.by), ses = ctx.self.session; if (!p?.state || ses.mode === 'gone' || ses.mode === 'rage') return
     if (d.k === 'feed') feed(ctx, p)
-    else if (d.k === 'refuse') { say(ctx, p, S.lines.refuse, 'annoyed'); warn(ctx, p, ctx.now()) }
+    else if (d.k === 'refuse') { say(ctx, p, S.lines.refuse, 'annoyed'); warn(ctx, p, ctx.now(), true) }
   },
 }
 
@@ -197,7 +197,7 @@ export function update(ctx, dt) {
   }
   if (ses.mode === 'rage') { pounce(ctx, dt, now); return }
   // the rude one has had their warning
-  if (ses.warn && now - ses.warn.at > S.warnMs) { const p = ctx.getObject(ses.warn.pid); ses.warn = null; if (p?.state && !meatOf(p)) enrage(ctx, p.id, now); return }
+  if (ses.warn && now - ses.warn.at > S.warnMs) { const w = ses.warn, p = ctx.getObject(w.pid); ses.warn = null; if (p?.state && (w.refused || !meatOf(p))) enrage(ctx, p.id, now); return }
   // whoever holds her card: greet once, stay put, look at them
   let talker = null
   for (const p of ctx.place.players) {
