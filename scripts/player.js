@@ -204,6 +204,7 @@ function takeToken0(ctx, token) {
     return { ok: true }
   }
   if (token === 'nvg') { // night vision goggles: they make no light, so Level 6's dark can't eat them (Savi's pick, Shelly asked for a way to see)
+    if (s.nvg) { s.nvgSpare = (s.nvgSpare ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Spare night vision goggles (${s.nvgSpare}) · swap in when the battery dies`, at: now }; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } } // a duplicate is a full spare, not wasted
     s.nvg = true; s.pickedAt = now; s.notice = { text: 'Night vision goggles · press F in the dark of Level 6 · they eat batteries', at: now }
     sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true }
   }
@@ -637,7 +638,8 @@ function toggleLight(ctx) {
   if (w.light) { ctx.destroy(w.light); w.light = null }
   else if (ctx.self.place === 'level6') { /* Level 6: no light works. the switch clicks, nothing comes; goggles see without light */
     if (w.nvg) { ctx.destroy(w.nvg); w.nvg = null }
-    else if (s.nvg && (w.battery ?? s.battery) > 1) w.nvg = ctx.spawn({ feetPosition: { attach: 'camera', x: 0, y: 0, depth: 0 }, light: { kind: 'point', color: 'oklch(0.85 0.2 145)', intensity: 2.6, distance: 9 }, audience: 'local', scope: 'session' })
+    else if (s.nvg && (w.battery ?? s.battery) <= 1 && (s.nvgSpare ?? 0) > 0) { s.nvgSpare -= 1; w.battery = 100; s.battery = 100; s.notice = { text: `Swapped in a spare pair · ${s.nvgSpare} left`, at: ctx.now() } }
+    if (!w.nvg && s.nvg && (w.battery ?? s.battery) > 1) w.nvg = ctx.spawn({ feetPosition: { attach: 'camera', x: 0, y: 0, depth: 0 }, light: { kind: 'point', color: 'oklch(0.85 0.2 145)', intensity: 2.6, distance: 9 }, audience: 'local', scope: 'session' })
     else if (!s.nvg) s.notice = { text: 'Nothing. The dark eats light here.', at: ctx.now() }
     s.nvgOn = !!w.nvg; sound(ctx, w.nvg ? 'flashlight-switch-click' : 'flashlight-switch-click', 0.65, true); return
   }
@@ -880,7 +882,7 @@ function tickStats(ctx, t, moving) {
   // flashlight battery
   if (s.batteryTake) { w.battery = Math.max(0, (w.battery ?? s.battery ?? 0) - s.batteryTake); s.batteryTake = 0 } // a quest or trade spends charge (scripts/l5-goggles.js): the walk's battery is the truth, state mirrors it
   if (w.light) { w.battery -= L.batteryDrain * t; if (w.battery <= 0) { w.battery = 0; toggleLight(ctx) } }
-  if (w.nvg) { w.battery -= L.batteryDrain * 1.5 * t; if (w.battery <= 0 || ctx.self.place !== 'level6') { w.battery = Math.max(0, w.battery); ctx.destroy(w.nvg); w.nvg = null; s.nvgOn = false } } // goggles drink faster than a torch
+  if (w.nvg) { w.battery -= L.batteryDrain * 0.25 * t; if (w.battery <= 0 && (s.nvgSpare ?? 0) > 0) { s.nvgSpare -= 1; w.battery = 100; s.notice = { text: `Goggles died · swapped in a spare · ${s.nvgSpare} left`, at: ctx.now() } } if (w.battery <= 0 || ctx.self.place !== 'level6') { w.battery = Math.max(0, w.battery); ctx.destroy(w.nvg); w.nvg = null; s.nvgOn = false } } // goggles drink faster than a torch
   else if (s.nvgOn) s.nvgOn = false
   const st = Math.round(w.stamina), bt = Math.round(w.battery)
   if (st !== s.stamina) s.stamina = st
