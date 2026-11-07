@@ -161,7 +161,7 @@ import { mahjongPanel } from './mahjong-ui.js'
 export default function render(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
-  if (s.mj?.seats) return `${THEME}${LIVE}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">${mahjongPanel(s, ctx.now())}${chatBubbles(ctx, ctx.now())}</div>` // at the mahjong table: only the game and who's talking
+  if (s.mj?.seats) return `${THEME}${LIVE}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">${mahjongPanel(s, ctx.now())}${chatBubbles(ctx, ctx.now(), player)}</div>` // at the mahjong table: only the game and who's talking
   const now = ctx.now(), lv = s.level, mh = maxHp(lv, s), ms = maxSan(lv, s)
   const hpF = Math.max(0, s.hp / mh), sanF = Math.max(0, s.sanity / ms)
   const zone = s.zone ?? 'hub'
