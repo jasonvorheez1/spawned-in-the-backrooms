@@ -53,12 +53,6 @@ hub/rug:
   material: {color: oklch(0.42 0.09 35), roughness: 1}
   parent: hub
   primitive: {depth: 4.5, height: 0.01, kind: box, width: 6}
-hub/sign:
-  feetPosition: {x: 0, y: 1.6, z: -7.88}
-  id: hub/sign
-  parent: hub
-  rotation: 180
-  vector: "<svg viewBox='0 0 300 80' width='3m'><text x='150' y='40' text-anchor='middle' font-family='display' font-size='34' fill='#3b2a12'>SAFE ROOM</text><text x='150' y='70' text-anchor='middle' font-family='sans-serif' font-size='15' fill='#5a3a12'>they can't come in. rest here.</text></svg>"
 hub/table:
   children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.88 0.02 90), roughness: 0.6}, primitive: {depth: 0.75, height: 0.04, kind: box, width: 1.8}}, {feetPosition: {x: -0.8, y: 0, z: -0.3}, material: {color: oklch(0.45 0.01 250), metalness: 0.7, roughness: 0.4}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.02, radiusTop: 0.02}}, {feetPosition: {x: 0.8, y: 0, z: -0.3}, material: {color: oklch(0.45 0.01 250), metalness: 0.7, roughness: 0.4}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.02, radiusTop: 0.02}}, {feetPosition: {x: -0.8, y: 0, z: 0.3}, material: {color: oklch(0.45 0.01 250), metalness: 0.7, roughness: 0.4}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.02, radiusTop: 0.02}}, {feetPosition: {x: 0.8, y: 0, z: 0.3}, material: {color: oklch(0.45 0.01 250), metalness: 0.7, roughness: 0.4}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.02, radiusTop: 0.02}}, {feetPosition: {x: -0.5, y: 0.74, z: -0.1}, material: {emissiveIntensity: 1.6}, primitive: {kind: scripted, script: scripts/almond-geo.js}, scale: 1.7}, {feetPosition: {x: -0.3, y: 0.74, z: 0.04999999999999999}, material: {emissiveIntensity: 1.6}, primitive: {kind: scripted, script: scripts/almond-geo.js}, scale: 1.7}, {feetPosition: {x: 0.1, y: 0.74, z: -0.1}, material: {emissiveIntensity: 1.6}, primitive: {kind: scripted, script: scripts/almond-geo.js}, scale: 1.7}, {feetPosition: {x: 0.35, y: 0.74, z: 0.04999999999999999}, material: {emissiveIntensity: 1.6}, primitive: {kind: scripted, script: scripts/almond-geo.js}, scale: 1.7}, {feetPosition: {x: 0.7, y: 0.74, z: 0.1}, material: {color: oklch(0.95 0.01 90)}, primitive: {depth: 0.24, height: 0.02, kind: box, width: 0.32}, ui: "<div face=\"top\" width=\"0.32m\" style=\"font-size:26px;color:#3a2a14;padding:14px;font-family:serif\">day 41. the smilers don't come past the doorway. drink the water. find the wall that flickers.</div>"}]
   feetPosition: {x: -4.5, y: 0, z: -4}
@@ -1056,6 +1050,10 @@ level0-lights/l9_7:
   id: level0-lights/l9_7
   light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+lurker-pack:
+  behavior: scripts/lurkers.js
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: lurker-pack
 modeling-studio:
   overrides:
     feetPosition: {x: 1.2, y: 0, z: -5.4}
@@ -1065,7 +1063,3 @@ smiler-pack:
   behavior: scripts/smilers.js
   feetPosition: {x: 0, y: 0, z: 0}
   id: smiler-pack
-lurker-pack:
-  behavior: scripts/lurkers.js
-  feetPosition: {x: 0, y: 0, z: 0}
-  id: lurker-pack
