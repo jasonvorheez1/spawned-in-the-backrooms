@@ -62,7 +62,7 @@ function refocus(ctx, force = false) {
         const lk = it.state?.lock ?? ''
         info = { id: f.id, name: it.state?.name ?? 'Door', info: it.state?.open ? 'open' : 'shut', verb: it.state?.open ? 'Close' : 'Open', color: '#d9d3b8' }
         if (lk && DOORKEY[lk]) { const have = ctx.self.state[DOORKEY[lk].f] ?? 0; info.info = `Locked · needs a ${DOORKEY[lk].n} (${have})`; info.verb = have ? `Use ${DOORKEY[lk].n}:` : 'Locked:'; info.color = have ? '#f2c14e' : '#e0644f' }
-        else if (lk) { const [sk, lv] = lk.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = ok ? 'Unlock' : 'Locked:'; info.color = ok ? '#f2c14e' : '#e0644f' }
+        else if (lk) { const [sk, lv] = lk.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = sk === 'lockpick' ? 'Pick Lock' : (ok ? 'Unlock' : 'Locked:'); info.color = ok ? '#f2c14e' : '#e0644f' }
       } else if (f.tag === 'usable') {
         info = { id: f.id, name: it.state?.name ?? 'Thing', info: it.state?.info ?? '', verb: it.state?.verb ?? 'Use', color: it.state?.tint ?? '#d9d3b8' }
       } else if (f.tag === 'bench') {
@@ -74,7 +74,7 @@ function refocus(ctx, force = false) {
       } else if (f.tag === 'container') {
         const n = itemsOf(it.state?.items).length
         info = { id: f.id, name: it.state?.name ?? 'Container', info: n ? `${n} item${n > 1 ? 's' : ''}` : 'empty', verb: 'Search', color: '#d9d3b8' }
-        if (it.state?.lock) { const [sk, lv] = it.state.lock.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = ok ? 'Unlock' : 'Locked:'; info.color = ok ? '#f2c14e' : '#e0644f' }
+        if (it.state?.lock) { const [sk, lv] = it.state.lock.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = sk === 'lockpick' ? 'Pick Lock' : (ok ? 'Unlock' : 'Locked:'); info.color = ok ? '#f2c14e' : '#e0644f' }
       } else {
         const dsc = describe(tokenOf(f.tag, it))
         info = { id: f.id, name: dsc.name, info: dsc.info, verb: 'Take', color: dsc.color }

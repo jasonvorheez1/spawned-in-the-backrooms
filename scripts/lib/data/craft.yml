@@ -20,6 +20,7 @@ food:
 recipes:
   kit:        { name: Repair kit,      in: { scrap_metal: 2, bolts: 2, nails: 2 },         out: [kit],              skill: [repair, 15],   desc: "Mends the weapon in your hand" }
   tape:       { name: Duct tape,       in: { wire: 1, drywall: 1 },                         out: [tape],             skill: [repair, 5],    desc: "A quick patch on a weapon" }
+  bobbypin:   { name: Bobby pins,      in: { wire: 1, nails: 1 },                            out: [bobbypin, bobbypin, bobbypin], skill: [repair, 10],   desc: "3 bobby pins for picking locks" }
   ammo:       { name: Pistol rounds,   in: { scrap_metal: 2, springs: 1 },                  out: [ammo, ammo],       skill: [guns, 20],     bench: true, desc: "Two boxes of rounds" }
   shells:     { name: Shotgun shells,  in: { scrap_metal: 2, wire: 1, nails: 1 },           out: [shells],           skill: [guns, 30],     bench: true, desc: "One box of shells" }
   battery:    { name: Battery,         in: { copper_coil: 1, scrap_metal: 1, bolts: 1 },    out: [battery],          skill: [science, 20],  bench: true, desc: "Recharges the flashlight" }
