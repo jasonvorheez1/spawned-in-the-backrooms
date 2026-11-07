@@ -1,0 +1,4 @@
+{"contentHash":"305:c119e5b","duration":0.9,"fps":30,"identity":"anim/creatures.yml#smilerHunt","tracks":[
+{"bone":"head","prop":"rotation","times":[0,0.45,0.9],"values":[-0.05221,-0.00365,-0.06966,0.9962,0.01741,-0.00122,0.06975,0.99741,-0.05221,-0.00365,-0.06966,0.9962]},
+{"bone":"jaw","prop":"rotation","times":[0,0.45,0.9],"values":[0,0,0,1,-0.13917,0,0,0.99027,0,0,0,1]}
+]}
