@@ -37,7 +37,7 @@ function dress(ctx, me) {
   else if (!me.state.wear && me.model) { const l = lookFromModel(me.model, ctx.getObject(me.id + "/" + HEAD_ID)?.model?.id ?? ctx.getObject(me.id + "/" + HEAD_ID)?.model); if (l?.species) me.state.wear = l; }
   if (staleBody(me.model)) { // an older Blender pass: re-dress on the current body and head, keeping its clothes and colours
     const local = String(me.id).split("/").pop(), old = me.state.wear ?? lookFromModel(me.model, null) ?? {}
-    const l = { ...old, species: old.species && old.species !== "cat" ? old.species : speciesFor(local), sex: old.sex ?? (me.model.id ?? me.model) === "" ? "m" : (old.sex ?? "m") }
+    const l = { ...old, species: old.species && old.species !== "cat" ? old.species : speciesFor(local), sex: old.sex ?? "m" }
     const spec = critterSpec(l); me.model = spec.model; me.material = spec.material; me.jiggle = spec.jiggle; me.state.wear = l; seatHead(ctx, me, l);
   }
   if (!me.state.build) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = b; me.scale = { x: b.w, y: b.h, z: b.w }; } // its own height and build
