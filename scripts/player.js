@@ -425,7 +425,7 @@ function tickStats(ctx, t, moving) {
   }
 
   // the lights' hum spikes: a loud surge that eats sanity while you stand in it; keep moving
-  if (zone !== 'hub') {
+  if (zone !== 'hub' && ctx.self.place !== 'level1') {
     const [a, b] = L.humSpikeEvery
     w.nextSpike ??= now + (a + ctx.random() * (b - a)) * 1000
     if (now >= w.nextSpike && !w.spikeUntil) {
@@ -450,7 +450,7 @@ function tickStats(ctx, t, moving) {
     }
   }
   // a dark figure at the far end of the hall you face: only you see it, and it is gone in a breath
-  if (zone !== 'hub') {
+  if (zone !== 'hub' && ctx.self.place !== 'level1') {
     const [e, f] = L.figureEvery
     w.nextFigure ??= now + (e + ctx.random() * (f - e)) * 1000
     if (now >= w.nextFigure) {
