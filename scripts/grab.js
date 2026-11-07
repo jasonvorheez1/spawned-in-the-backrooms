@@ -14,7 +14,8 @@ function look(ctx, input) {
   const c = Math.cos(pc);
   return { x: -sin * c, y: Math.sin(pc), z: -cos * c };
 }
-const massOf = (o) => o.state?.carryKg ?? o.measure?.mass ?? Math.max(2, (o.measure?.volume ?? 0.05) * 350);
+// weight from its drawn size: a box of furniture at ~120 kg/m³ (chair ~30 kg, armchair ~70, dining table ~190, Savi's pick)
+const massOf = (o) => { if (o.state?.carryKg) return o.state.carryKg; const b = o.bounds?.size; const box = b ? b.x * b.y * b.z : (o.measure?.volume ?? 0.05); return Math.max(2, box * 120, o.measure?.mass ?? 0); };
 export function onInput(ctx, input) {
   const ses = ctx.self.session;
   if (input.axes) ses.dir = look(ctx, input);
