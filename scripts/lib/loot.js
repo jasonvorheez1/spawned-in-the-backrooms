@@ -95,7 +95,7 @@ export function spawnCrateL1(ctx, p) {
   ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name: lk ? lk.name : ctx.random() < 0.25 ? "Rations crate" : "Wooden crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }
 // Level 2: a tool depot. More batteries and ammo, fewer rations; its own tools.
-const L2_WEIGHTS = [["almond", 14], ["ammo", 18], ["shells", 9], ["battery", 14], ["bandage", 10], ["ration", 6], ["weapon", 20], ["kit", 5], ["book", 4], ["cloth", 8]]; // cloth: Savi's pick
+const L2_WEIGHTS = [["almond", 14], ["ammo", 18], ["shells", 9], ["battery", 14], ["bandage", 10], ["ration", 6], ["weapon", 20], ["kit", 5], ["book", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3]]; // cloth: Savi's pick; the rest are Level 2's own finds
 export function rollItemL2(ctx) {
   const total = L2_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
@@ -109,4 +109,24 @@ export function spawnCrateL2(ctx, p) {
   const lk = rollLock(ctx); if (lk) for (let i = 0; i < lk.bonus; i++) items.push(rollItemL2(ctx));
   const name = lk ? lk.name : ["Toolbox", "Metal crate", "Parts bin", "Wooden crate"][Math.floor(ctx.random() * 4)];
   ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name, items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
+}
+
+// Level 2 side-room containers: a kind from level2.yml containers (locker, toolbox, vending …), rolled from its own loot table
+import L2C from "./data/level2.yml";
+export function rollTableL2(ctx, table) {
+  const T = Object.entries(L2C.tables[table] ?? {}), total = T.reduce((a, [, w]) => a + w, 0);
+  let r = ctx.random() * total;
+  for (const [k, w] of T) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL2(ctx) : k === "book" ? bookOf(ctx) : k; }
+  return rollItemL2(ctx);
+}
+export function fillContainerL2(ctx, kind, bonus = 0) {
+  const C = L2C.containers[kind], n = C.n[0] + Math.floor(ctx.random() * (C.n[1] - C.n[0] + 1)) + bonus, items = [];
+  for (let i = 0; i < n; i++) items.push(rollTableL2(ctx, C.table));
+  return items.join(",");
+}
+export function spawnContainerL2(ctx, kind, p, yaw, opts = {}) {
+  const C = L2C.containers[kind], lk = opts.noLock ? null : rollLock(ctx);
+  return ctx.spawn({ tags: ["container", "l2box"], feetPosition: { x: p.x, y: 0.01, z: p.z }, rotation: { yaw }, physics: { body: "static", collider: "box" },
+    primitive: { kind: "scripted", script: "scripts/l2-props-geo.js", params: { kind, seed: Math.floor(ctx.random() * 1000) } },
+    state: { name: lk ? `${C.name} (locked)` : C.name, kind, items: fillContainerL2(ctx, kind, (opts.bonus ?? 0) + (lk ? lk.bonus : 0)), ...(lk ? { lock: lk.lock } : {}), room: opts.room ?? -1 } });
 }
