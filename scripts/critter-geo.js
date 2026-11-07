@@ -745,8 +745,7 @@ export function geometry(ctx) {
 
   const shirtR = (y) => { // a top's radius at y: body + ease, held out over the hips and the pants' waistband
     const [bx, bz] = bodyR(y);
-    const w = Math.min(1, Math.max(0, (0.77 - y) / 0.07));
-    return [Math.max(bx + 0.016, lerp(bx + 0.016, HIP_R[0] + 0.02, w)), Math.max(bz + 0.016, lerp(bz + 0.016, HIP_R[1] + 0.02, w))]; // fitted: the waist and hips read through the cloth
+    return [bx + 0.018, bz + 0.018]; // fitted: the cloth follows the body's own waist and hips
   };
   const bustOut = (y) => (fem && Math.abs(y - BUST.y) < 0.09 ? 0.026 : 0);
   const frontZ = (y) => -((topw === "none" ? bodyR(y)[1] + 0.004 : shirtR(y)[1]) + (topw === "none" ? 0 : bustOut(y)) + 0.006); // the cloth's face, for pockets, buttons, straps
