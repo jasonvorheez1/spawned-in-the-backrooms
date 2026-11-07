@@ -429,9 +429,10 @@ export function geometry(ctx) {
   M = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0];
   STACK.length = 0;
 
-  const kind = ctx.param?.("kind") || "chandelier";
-  const scale = ctx.param?.("scale") || 1.0;
-  const num = ctx.param?.("num") || "";
+  const pr = ctx.params ?? {};
+  const kind = pr.kind || "chandelier";
+  const scale = pr.scale || 1.0;
+  const num = String(pr.num ?? "");
 
   if (kind === "chandelier") chandelier(scale);
   else if (kind === "piano") piano();
