@@ -190,7 +190,7 @@ function wreck(ctx, o) {
 export function regrowWrecks(ctx) {
   const now = ctx.now()
   for (const r of ctx.query({ tags: ['wreck'], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
-    const w = r.state?.wreck; ctx.log('[wreck]', r.id, now - (w?.at ?? now)); if (!w || now - w.at < REGROW_MS) continue
+    const w = r.state?.wreck; if (!w || now - w.at < REGROW_MS) continue
     const f = r.feetPosition; if (ctx.place.players.some((p) => Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z) < 2)) continue
     const o = ctx.getObject(r.id); if (!o) continue
     o.tags = w.tags; o.physics = w.physics; o.visible = true

@@ -1,3 +1,4 @@
+import { regrowWrecks } from "./lib/breakables.js";
 import { vo } from './lib/voices.js';
 import { heard } from "./lib/hear.js";
 import { sitDown, standUp, seatTick, spotsOf } from './lib/seat.js'
@@ -373,6 +374,7 @@ export function onInput(ctx, input) {
 }
 
 export function update(ctx, dt) {
+  if (ctx.self.isLocal !== false && ctx.now() - (ctx.self.session.wreckAt ?? 0) > 5000) { ctx.self.session.wreckAt = ctx.now(); try { regrowWrecks(ctx) } catch (e) { ctx.log('[wreck] ' + e) } } // smashed props near a player stand again after their hour
   const m = mem(ctx), s = ctx.self.state
   seatTick(ctx)
   if (s.level == null) return
