@@ -1,4 +1,247 @@
 # spawn-scene v2 yaml x0z0
+l5-ball-banner:
+  feetPosition: {x: 8, y: 2, z: 23.78}
+  id: l5-ball-banner
+  rotation: {yaw: 180}
+  tags: [l5-ball]
+  vector: "<svg viewBox='0 0 480 200' width='4.6m'><rect x='0' y='0' width='480' height='200' fill='#1c2a3a'/><rect x='8' y='8' width='464' height='184' fill='none' stroke='#c9b46a' stroke-width='4'/><text x='240' y='108' font-family='display' font-size='92' fill='#e9e1c4' text-anchor='middle'>M.E.G.</text><text x='240' y='160' font-family='sans-serif' font-size='30' fill='#c9b46a' text-anchor='middle'>OUTPOST · HOUSEKEEPING</text></svg>"
+l5-ball-barcart:
+  feetPosition: {x: -0.95, y: 0, z: -20.6}
+  id: l5-ball-barcart
+  material: {pbr: true}
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {part: barcart}, script: scripts/l5-ball-geo.js}
+  rotation: {yaw: -90}
+  state: {hp: 70, items: "almond,royal_ration,bar", kind: cart, mat: wood, maxHp: 70, name: Bar cart}
+  tags: [container, furniture, lootfurn, breakable, l5-ball]
+l5-ball-boilersign:
+  feetPosition: {x: 17.82, y: 1.9, z: 16.25}
+  id: l5-ball-boilersign
+  rotation: {yaw: -90}
+  tags: [l5-ball]
+  vector: "<svg viewBox='0 0 200 120' width='0.9m'><rect width='200' height='120' rx='6' fill='#e8d24a'/><rect x='5' y='5' width='190' height='110' rx='4' fill='none' stroke='#151515' stroke-width='5'/><text x='100' y='56' font-family='display' font-size='34' fill='#151515' text-anchor='middle'>BOILER ROOM</text><text x='100' y='94' font-family='sans-serif' font-size='24' fill='#a01818' text-anchor='middle'>ESCORT ONLY</text></svg>"
+l5-ball-cart-0:
+  feetPosition: {x: 2.6, y: 0, z: 15.6}
+  id: l5-ball-cart-0
+  material: {pbr: true}
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {part: linencart}, script: scripts/l5-ball-geo.js}
+  rotation: {yaw: 20}
+  state: {hp: 110, items: "bandage,bobbypin,beans", kind: cart, mat: metal, maxHp: 110, name: Linen cart}
+  tags: [container, furniture, lootfurn, breakable, l5-ball]
+l5-ball-cart-1:
+  feetPosition: {x: 12.2, y: 0, z: 16.8}
+  id: l5-ball-cart-1
+  material: {pbr: true}
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {part: linencart}, script: scripts/l5-ball-geo.js}
+  rotation: {yaw: -15}
+  state: {hp: 110, items: "almond,bar", kind: cart, mat: metal, maxHp: 110, name: Linen cart}
+  tags: [container, furniture, lootfurn, breakable, l5-ball]
+l5-ball-chand-0:
+  castShadow: false
+  feetPosition: {x: 0, y: 9, z: -6}
+  id: l5-ball-chand-0
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {part: chandelier, size: 1.1}, script: scripts/l5-ball-geo.js}
+  tags: [l5-ball, l5-chandelier]
+l5-ball-chand-1:
+  castShadow: false
+  feetPosition: {x: 12, y: 9, z: -6}
+  id: l5-ball-chand-1
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {part: chandelier, size: 1.1}, script: scripts/l5-ball-geo.js}
+  tags: [l5-ball, l5-chandelier]
+l5-ball-chand-2:
+  castShadow: false
+  feetPosition: {x: 0, y: 9, z: 6}
+  id: l5-ball-chand-2
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {part: chandelier, size: 1.1}, script: scripts/l5-ball-geo.js}
+  tags: [l5-ball, l5-chandelier]
+l5-ball-chand-3:
+  castShadow: false
+  feetPosition: {x: 12, y: 9, z: 6}
+  id: l5-ball-chand-3
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {part: chandelier, size: 1.1}, script: scripts/l5-ball-geo.js}
+  tags: [l5-ball, l5-chandelier]
+l5-ball-chand-4:
+  castShadow: false
+  feetPosition: {x: 6, y: 9, z: 0}
+  id: l5-ball-chand-4
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {part: chandelier, size: 1.7}, script: scripts/l5-ball-geo.js}
+  tags: [l5-ball, l5-chandelier]
+l5-ball-chand-5:
+  castShadow: false
+  feetPosition: {x: 6, y: 4.5, z: -18}
+  id: l5-ball-chand-5
+  material: {pbr: true}
+  primitive: {kind: scripted, params: {part: chandelier, size: 0.62}, script: scripts/l5-ball-geo.js}
+  tags: [l5-ball, l5-chandelier]
+l5-ball-cig:
+  feetPosition: {x: 5.66, y: 0.77, z: -0.4}
+  fx: {script: "fx\npop wisp rate=flick(.3,.5)*3 on=point() life=3..5 v=up(.12..0.2)+sdir()*.03 size=.03..0.05 acc=curl(.4)*.15+buoy(.05)+drag(.6) sz=$size*(1>5) col=<.55,.53,.5> a=0>.15:.25>.6:.12>0 rot=spin(.1) r=sprite(smoke-puff,alpha)"}
+  id: l5-ball-cig
+  tags: [l5-ball]
+l5-ball-coatcheck:
+  feetPosition: {x: -4.7, y: 0, z: 7.7}
+  id: l5-ball-coatcheck
+  material: {pbr: true}
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {part: coatcheck}, script: scripts/l5-ball-geo.js}
+  rotation: {yaw: -90}
+  state: {hp: 90, items: "bobbypin,ammo,battery", kind: counter, mat: wood, maxHp: 90, name: Coat check}
+  tags: [container, furniture, lootfurn, breakable, l5-ball]
+l5-ball-fire:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-fireplace-crackle-loop.mp3, gain: 0.35, loop: true, maxDistance: 12, spatial: true}
+  feetPosition: {x: 6, y: 0.26, z: -23.5}
+  fx: {script: "fx\npop coals n=10 on=disc(.35) size=.06..0.12 tint=<2.4,.9,.25>..<1.1,.3,.08> sz=$size*flick(.5,.12) col=$tint*flick(.8,.3) a=.9 r=sprite(soft-disc,add)\npop flame rate=flick(.45,.2)*50 on=disc(.3) life=.5..0.9 v=up(1.2)+cone(20)*(.2..0.6) size=.18..0.32 acc=curl(.5)*1.1+buoy(1.8)+drag(1.6) sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(4.6,3.4,1.4)>.3:hdr(3.2,1.4,.3)>.65:hdr(1.8,.5,.1)>hdr(.6,.12,.03) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)\npop embers rate=3 on=disc(.3) life=.6..1.1 v=up(1.6)+cone(25)*(.3..0.8) size=.02..0.04 acc=curl(.8)+grav()*.4+drag(.6) sz=$size col=hdr(5,2.8,.8)>hdr(1,.22,.04) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)\npop glow n=1 at=disc(.2).c(.5) glo=fire()*(#flame/30)~ r=light(<1,.55,.24>,$glo*14,9)"}
+  id: l5-ball-fire
+  tags: [l5-ball]
+l5-ball-hk:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l5-ball-hk
+  material: {pbr: true}
+  physics: {body: static, collider: mesh}
+  primitive: {kind: scripted, params: {part: hk}, script: scripts/l5-ball-geo.js}
+  receiveShadow: true
+  tags: [l5-ball]
+l5-ball-instcase:
+  feetPosition: {x: 17.1, y: 0.45, z: -9.4}
+  id: l5-ball-instcase
+  material: {pbr: true}
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {part: instcase}, script: scripts/l5-ball-geo.js}
+  rotation: {yaw: 90}
+  state: {hp: 50, items: "ammo,tape,bobbypin", kind: case, mat: wood, maxHp: 50, name: Instrument case}
+  tags: [container, furniture, lootfurn, breakable, l5-ball]
+l5-ball-locker-0:
+  feetPosition: {x: 14.4, y: 0, z: 12.5}
+  id: l5-ball-locker-0
+  material: {pbr: true}
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {part: locker}, script: scripts/l5-ball-geo.js}
+  rotation: {yaw: 180}
+  state: {hp: 160, items: "ammo,ammo,bandage,battery", kind: locker, lock: "lockpick:25", mat: metal, maxHp: 160, name: M.E.G. supply locker}
+  tags: [container, furniture, lootfurn, breakable, l5-ball]
+l5-ball-locker-1:
+  feetPosition: {x: 15.35, y: 0, z: 12.5}
+  id: l5-ball-locker-1
+  material: {pbr: true}
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {part: locker}, script: scripts/l5-ball-geo.js}
+  rotation: {yaw: 180}
+  state: {hp: 160, items: "meat:fish,ration,almond", kind: locker, mat: metal, maxHp: 160, name: M.E.G. supply locker}
+  tags: [container, furniture, lootfurn, breakable, l5-ball]
+l5-ball-locker-2:
+  feetPosition: {x: 16.3, y: 0, z: 12.5}
+  id: l5-ball-locker-2
+  material: {pbr: true}
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {part: locker}, script: scripts/l5-ball-geo.js}
+  rotation: {yaw: 180}
+  state: {hp: 160, items: "firstaid,tape,shells", kind: locker, lock: "lockpick:50", mat: metal, maxHp: 160, name: M.E.G. supply locker}
+  tags: [container, furniture, lootfurn, breakable, l5-ball]
+l5-ball-mahjong:
+  behavior: scripts/l5-ball.js
+  feetPosition: {x: 6, y: 0, z: 0}
+  fx: {params: {}, script: "fx\npop wisp rate=flick(.3,.5)*3 on=point() life=3..5 v=up(.12..0.2)+sdir()*.03 size=.03..0.05 acc=curl(.4)*.15+buoy(.05)+drag(.6) sz=$size*(1>5) col=<.55,.53,.5> a=0>.15:.25>.6:.12>0 rot=spin(.1) r=sprite(smoke-puff,alpha)"}
+  id: l5-ball-mahjong
+  material: {pbr: true}
+  physics: {body: static, collider: mesh}
+  primitive: {kind: scripted, params: {part: mahjong}, script: scripts/l5-ball-geo.js}
+  state: {info: Somebody left mid-turn. Their hand is still fanned open., kind: mahjong, name: Mahjong table, tint: "#9fd8b0", verb: Touch}
+  tags: [usable, l5-ball]
+l5-ball-placard-n:
+  feetPosition: {x: 6, y: 3.73, z: -11.84}
+  id: l5-ball-placard-n
+  rotation: {yaw: 0}
+  tags: [l5-ball]
+  vector: "<svg viewBox='0 0 400 80' width='1.9m'><text x='200' y='54' font-family='serif' font-size='40' fill='#2a2a30' text-anchor='middle'>The Beverly Room</text></svg>"
+l5-ball-placard-s:
+  feetPosition: {x: 6, y: 3.73, z: 11.84}
+  id: l5-ball-placard-s
+  rotation: {yaw: 180}
+  tags: [l5-ball]
+  vector: "<svg viewBox='0 0 400 80' width='1.9m'><text x='200' y='54' font-family='serif' font-size='40' fill='#2a2a30' text-anchor='middle'>The Beverly Room</text></svg>"
+l5-ball-placard-w:
+  feetPosition: {x: -5.84, y: 3.73, z: 0}
+  id: l5-ball-placard-w
+  rotation: {yaw: -90}
+  tags: [l5-ball]
+  vector: "<svg viewBox='0 0 400 80' width='1.9m'><text x='200' y='54' font-family='serif' font-size='40' fill='#2a2a30' text-anchor='middle'>The Beverly Room</text></svg>"
+l5-ball-portrait-0:
+  feetPosition: {x: -1.81, y: 1.68, z: -20.5}
+  id: l5-ball-portrait-0
+  material: {roughness: 0.6, texture: cdn/texture-oil-painting-portrait-amelia-earhart-aviator-1930s-leather-cap.png}
+  primitive: {depth: 0.01, height: 1.24, kind: box, width: 1}
+  rotation: {yaw: 90}
+  state: {hp: 20, mat: wood, maxHp: 20}
+  tags: [l5-ball, breakable]
+l5-ball-portrait-1:
+  feetPosition: {x: -1.81, y: 1.68, z: -14.8}
+  id: l5-ball-portrait-1
+  material: {roughness: 0.6, texture: cdn/texture-oil-painting-portrait-john-jacob-astor-iv-edwardian-gentleman-mustache.png}
+  primitive: {depth: 0.01, height: 1.24, kind: box, width: 1}
+  rotation: {yaw: 90}
+  state: {hp: 20, mat: wood, maxHp: 20}
+  tags: [l5-ball, breakable]
+l5-ball-portrait-2:
+  feetPosition: {x: 2, y: 1.68, z: -23.81}
+  id: l5-ball-portrait-2
+  material: {roughness: 0.6, texture: cdn/texture-oil-painting-portrait-captain-edward-smith-titanic-white-beard-uniform.png}
+  primitive: {depth: 0.01, height: 1.24, kind: box, width: 1}
+  rotation: {yaw: 0}
+  state: {hp: 20, mat: wood, maxHp: 20}
+  tags: [l5-ball, breakable]
+l5-ball-portrait-3:
+  feetPosition: {x: 10, y: 1.68, z: -23.81}
+  id: l5-ball-portrait-3
+  material: {roughness: 0.6, texture: cdn/texture-oil-painting-portrait-dorothy-arnold-1910-socialite-woman-large-hat.png}
+  primitive: {depth: 0.01, height: 1.24, kind: box, width: 1}
+  rotation: {yaw: 0}
+  state: {hp: 20, mat: wood, maxHp: 20}
+  tags: [l5-ball, breakable]
+l5-ball-room:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l5-ball-room
+  material: {pbr: true}
+  physics: {body: static, collider: mesh}
+  primitive: {kind: scripted, params: {part: ball}, script: scripts/l5-ball-geo.js}
+  receiveShadow: true
+  tags: [l5-ball]
+l5-ball-salon:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l5-ball-salon
+  material: {pbr: true}
+  physics: {body: static, collider: mesh}
+  primitive: {kind: scripted, params: {part: salon}, script: scripts/l5-ball-geo.js}
+  receiveShadow: true
+  tags: [l5-ball]
+l5-ball-sideboard:
+  feetPosition: {x: 8.6, y: 0, z: -11.5}
+  id: l5-ball-sideboard
+  material: {pbr: true}
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {part: sideboard}, script: scripts/l5-ball-geo.js}
+  rotation: {yaw: 180}
+  state: {hp: 90, items: "meat:steak,meat:chicken,beans", kind: sideboard, mat: wood, maxHp: 90, name: Banquet sideboard}
+  tags: [container, furniture, lootfurn, breakable, l5-ball]
+l5-ball-smoke-0:
+  feetPosition: {x: 6.2, y: 0.48, z: -19.52}
+  fx: {script: "fx\npop wisp rate=flick(.25,.5)*2.5 on=point() life=4..6 v=up(.1..0.18)+sdir()*.03 size=.03..0.05 acc=curl(.35)*.15+buoy(.04)+drag(.5) sz=$size*(1>6) col=<.6,.57,.52> a=0>.12:.22>.6:.1>0 rot=spin(.08) r=sprite(smoke-puff,alpha)"}
+  id: l5-ball-smoke-0
+  tags: [l5-ball]
+l5-ball-smoke-1:
+  feetPosition: {x: 1.65, y: 0.78, z: -14.75}
+  fx: {script: "fx\npop wisp rate=flick(.25,.5)*2.5 on=point() life=4..6 v=up(.1..0.18)+sdir()*.03 size=.03..0.05 acc=curl(.35)*.15+buoy(.04)+drag(.5) sz=$size*(1>6) col=<.6,.57,.52> a=0>.12:.22>.6:.1>0 rot=spin(.08) r=sprite(smoke-puff,alpha)"}
+  id: l5-ball-smoke-1
+  tags: [l5-ball]
 l5-bed-ball:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-distant-party-crowd-murmur-glasses-clink-loop.mp3, gain: 0.35, loop: true, maxDistance: 20, refDistance: 6, spatial: true}
   feetPosition: {x: 6, y: 2, z: 0}
