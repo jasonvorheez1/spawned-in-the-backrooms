@@ -20,8 +20,8 @@ function ring(mp, oy, z0, z1, k, color, rough = 0.6, metal = 0) {
 }
 function meshLook(base, look, oy) {
   if (base === 'pistol' && look === 'mag') // an extended magazine out of the butt, brass base plate: the grip's foot sits at file z≈0.17, y≈-0.096
-    return [{ primitive: { kind: "box", width: 0.024, height: 0.07, depth: 0.03 }, feetPosition: { x: 0, y: -0.096 + oy - 0.06, z: 0.114 - 0.175 }, material: { color: "oklch(0.22 0.01 260)", roughness: 0.45, metalness: 0.6 }, castShadow: false },
-            { primitive: { kind: "box", width: 0.026, height: 0.006, depth: 0.034 }, feetPosition: { x: 0, y: -0.096 + oy - 0.066, z: 0.114 - 0.175 }, material: { color: "oklch(0.75 0.13 85)", roughness: 0.3, metalness: 0.9 }, castShadow: false }]
+    return [{ primitive: { kind: "box", width: 0.024, height: 0.06, depth: 0.03 }, feetPosition: { x: 0, y: -0.05, z: 0.056 }, material: { color: "oklch(0.22 0.01 260)", roughness: 0.45, metalness: 0.6 }, castShadow: false },
+            { primitive: { kind: "box", width: 0.026, height: 0.006, depth: 0.034 }, feetPosition: { x: 0, y: -0.056, z: 0.056 }, material: { color: "oklch(0.75 0.13 85)", roughness: 0.3, metalness: 0.9 }, castShadow: false }]
   const mp = MESHPROF[base]; if (!mp) return [] // the fire axe and shotgun lie on a slant: their name and stats carry the variant
   const [g0, g1] = mp.grip, [h0, h1] = mp.head, out = []
   if (look === 'rust') for (const t of [0.15, 0.45, 0.8]) { const z = g1 + (h1 - g1) * t; out.push(ring(mp, oy, z, z + 0.025, 1.06, RUST, 1, 0.1)) }
