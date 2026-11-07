@@ -303,7 +303,7 @@ def build_head(name, p):
     if p.get("pig"):
         cap(mb, (0, .22, 1.24), (0, .3, 1.24), .062, st=3)
     else:
-        ell(mb, (0, .19 + sn * .5, 1.235), .1 + sn * .15, .06 + sn * .55, .068)
+        ell(mb, (0, .2 + sn * .6, 1.235), .105 + sn * .2, .075 + sn * .7, .072)
     o = to_mesh(bpy.data.objects[name], .007, 2); o.name = name
     decimate(o, 4200)
     # nose
@@ -640,9 +640,9 @@ def bottoms(body):
                matfn=lambda c: 1 if (abs(abs(c.x) - .07) < .015 and abs(c.z - .89) < .015 and c.y > .05) else 0)
     out["overalls"] = ov
     hw = .175 if FEM else .16
-    band = shell(body, "band", lambda p: .62 < p.z < .71 and abs(p.x) < .2, .01, "cloth_bottom")
+    band = shell(body, "band", lambda p: .62 < p.z < .71 and abs(p.x) < .3, .01, "cloth_bottom")
     out["skirt"] = join([band, lathe("sk", [(hw * .98, .68), (hw * 1.1, .6), (.27, .45), (.29, .42)], "cloth_bottom", scy=.85, ruffle=.04)], "Bot_skirt")
-    band = shell(body, "band2", lambda p: .62 < p.z < .71 and abs(p.x) < .2, .01, "cloth_bottom")
+    band = shell(body, "band2", lambda p: .62 < p.z < .71 and abs(p.x) < .3, .01, "cloth_bottom")
     out["longskirt"] = join([band, lathe("lsk", [(hw * .98, .68), (hw * 1.08, .58), (.25, .35), (.29, .14), (.3, .12)], "cloth_bottom", scy=.85, ruffle=.02)], "Bot_longskirt")
     return out
 def shoes(body):
