@@ -10,10 +10,12 @@ pitDepth: 1.4
 hp: 100
 sanity: 100
 stamina: 100
-walkSpeed: 6
-sprintSpeed: 8
-staminaDrain: 28   # per second sprinting
-staminaRegen: 16
+walkSpeed: 4.6    # her pick (was 6): walking no longer outruns anything
+sprintSpeed: 7.4  # her pick (was 8): beats a chase only while AP lasts
+staminaDrain: 21   # per second sprinting: a full bar is ~4.8 s of sprint
+staminaRegen: 10   # per second resting
+windedAt: 30       # her pick: run AP to 0 and you can't sprint again until it's back to this
+windedRegen: 0.6   # regen multiplier while winded
 sanityDrain: { expanse: 0.18, offices: 0.1, halls: 0.12, arches: 0.06, pillars: 0.12, holes: 0.15, red: 0.9, dark: 0.6, hub: -4 }
 insanityHurt: 3    # hp per second at 0 sanity
 almondHp: 35
@@ -33,8 +35,8 @@ reach: 2.8
 # the smilers
 smilers: 11
 smilerHp: 60
-stalkSpeed: 2.2
-chargeSpeed: 4.6
+stalkSpeed: 3.2
+chargeSpeed: 6.6   # her pick (was 4.6): faster than your walk, slower than your sprint
 smilerSight: 22
 smilerSightLit: 1.8      # her pick: a lit flashlight is seen this many times farther
 smilerSightDark: 0.5     # her pick: light off, they only notice you this close
@@ -49,7 +51,11 @@ almondRespawn: 60
 # the lurkers: pale things that freeze while watched and rush when you look away
 lurkers: 6
 lurkerHp: 35
-lurkerSpeed: 5.4
+lurkerSpeed: 6.6   # lurch speed; with the stop-motion hold it averages ~6.2 m/s
+hearSprint: 16     # her pick: m a sprinting wanderer is heard through walls
+hearWalk: 6        # m a walking one is heard (crouching is silent)
+chaseMemory: 12    # s a hunter keeps after losing sight, heading where you were going
+leadSeconds: 1.6   # how far ahead along your path it guesses
 lurkerSight: 28
 lurkerWatchCos: 0.5  # how squarely you must face one to hold it still
 lurkerGaze: 1.5      # sanity lost per second while watching one
