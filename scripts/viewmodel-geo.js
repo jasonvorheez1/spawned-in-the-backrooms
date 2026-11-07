@@ -3,6 +3,9 @@
 // Every limb is a capped, tapered tube (no hollow ends) with joints that swell, so the hand reads as
 // soft knuckled fingers and not as a pile of pipes and balls.
 import { tube, sphere } from "./lib/shapes.js";
+import { SPECIES } from "./critter-geo.js";
+// params (from the wearer's critter look): species, fur, topw, top. A long-sleeved top dresses the forearm; otherwise it is bare fur.
+const LONG = new Set(["longsleeve", "hoodie", "sweater", "jacket", "pajamas"]);
 
 const S = 0.9 // the whole arm, a little smaller than the first version so it never crowds the weapon
 const P = (p) => [p[0] * S, p[1] * S, p[2] * S]
@@ -17,19 +20,27 @@ function rod(ctx, pts, rads, M, sq = [1, 1]) {
 const ball = (ctx, c, r, M, sq) => sphere(ctx, P(c), r * S, M, sq)
 
 export function geometry(ctx) {
-  const M = ctx.lod <= 2 ? 16 : 9
+  const M = ctx.lod <= 2 ? 16 : 9, P0 = ctx.params ?? {}
+  const sp = SPECIES[P0.species] ?? null, FUR = P0.fur || sp?.fur || "oklch(0.74 0.055 55)", PAD = sp?.nose && sp.nose !== "#2a1c18" ? "#ffb3c1" : "oklch(0.45 0.03 40)"
+  const sleeved = !sp || LONG.has(P0.topw), SLEEVE = sp ? (P0.top || "#7a8aa0") : "oklch(0.36 0.03 85)"
   ctx.smooth()
 
   // ---- sleeve: worn canvas jacket, two cuff folds at the wrist
-  ctx.color("oklch(0.36 0.03 85)"); ctx.roughness(0.95)
+  ctx.color(sleeved ? SLEEVE : FUR); ctx.roughness(0.95)
   rod(ctx, [[0.03, -0.075, 0.075], [0.06, -0.15, 0.2], [0.1, -0.26, 0.4], [0.14, -0.4, 0.62]], [0.056, 0.062, 0.07, 0.078], M, [1, 0.92])
-  ctx.color("oklch(0.3 0.03 85)")
-  rod(ctx, [[0.03, -0.066, 0.062], [0.036, -0.094, 0.1]], [0.057, 0.059], M, [1, 0.92]) // cuff, inner fold
-  ctx.color("oklch(0.34 0.03 85)")
-  rod(ctx, [[0.037, -0.098, 0.105], [0.042, -0.118, 0.14]], [0.06, 0.062], M, [1, 0.92]) // cuff, outer fold
+  if (sleeved) {
+    ctx.color(sp ? mix(SLEEVE, 0.82) : "oklch(0.3 0.03 85)")
+    rod(ctx, [[0.03, -0.066, 0.062], [0.036, -0.094, 0.1]], [0.057, 0.059], M, [1, 0.92]) // cuff, inner fold
+    ctx.color(sp ? mix(SLEEVE, 0.92) : "oklch(0.34 0.03 85)")
+    rod(ctx, [[0.037, -0.098, 0.105], [0.042, -0.118, 0.14]], [0.06, 0.062], M, [1, 0.92]) // cuff, outer fold
+  } else if (sp) { // a fur ruff at the wrist where the bare arm meets the paw
+    ctx.color(mix(FUR, 1.08))
+    for (let k = 0; k < 7; k++) { const a = k / 7 * 6.283; ball(ctx, [0.032 + Math.cos(a) * 0.036, -0.074 + Math.sin(a) * 0.03, 0.072], 0.016, 6, [1, 1, 1.6]) }
+  }
 
   // ---- skin
-  ctx.color("oklch(0.74 0.055 55)"); ctx.roughness(0.55)
+  const SKIN = sp ? FUR : "oklch(0.74 0.055 55)", TIP = sp ? PAD : "oklch(0.86 0.04 60)"
+  ctx.color(SKIN); ctx.roughness(sp ? 0.9 : 0.55)
   // wrist, rounder across than deep
   rod(ctx, [[0.032, -0.07, 0.07], [0.033, -0.048, 0.044]], [0.033, 0.038], M, [1, 0.8])
   // palm and the back of the hand: one broad pad running up the grip, thickest across the knuckles
@@ -51,16 +62,23 @@ export function geometry(ctx) {
       rad.push(r * (1.02 + bump) * (1 - 0.34 * t * t))
     }
     rod(ctx, pts, rad, ctx.lod <= 2 ? 10 : 6)
-    ctx.color("oklch(0.86 0.04 60)") // a nail catches the light at each tip
-    const e = pts[steps]; ball(ctx, [e[0] * 1.03, e[1] + r * 0.2, e[2] * 1.03], r * 0.62, 6, [1, 0.5, 1])
-    ctx.color("oklch(0.74 0.055 55)")
+    ctx.color(TIP) // a nail, or on a critter a soft toe bean, at each tip
+    const e = pts[steps]; ball(ctx, [e[0] * 1.03, e[1] + r * 0.2, e[2] * 1.03], r * (sp ? 0.8 : 0.62), 6, sp ? [1, 0.8, 1] : [1, 0.5, 1])
+    ctx.color(SKIN)
   }
 
   // ---- thumb laid over the top of the fingers
   rod(ctx, [[0.05, -0.016, 0.052], [0.042, 0.02, 0.034], [0.018, 0.048, 0.0], [-0.006, 0.054, -0.024], [-0.026, 0.046, -0.026]],
     [0.019, 0.0165, 0.0145, 0.0135, 0.011], ctx.lod <= 2 ? 10 : 6, [1, 0.9])
-  ctx.color("oklch(0.86 0.04 60)")
-  ball(ctx, [-0.026, 0.052, -0.027], 0.0075, 6, [1, 0.5, 1]) // thumbnail
+  ctx.color(TIP)
+  ball(ctx, [-0.026, 0.052, -0.027], sp ? 0.0095 : 0.0075, 6, sp ? [1, 0.8, 1] : [1, 0.5, 1]) // thumbnail / bean
   ctx.color(null)
 }
 export function collider() { return null }
+
+// a hex colour lightened or darkened by a factor (oklch strings pass through)
+function mix(c, k) {
+  if (typeof c !== "string" || c[0] !== "#") return c
+  const n = parseInt(c.slice(1, 7), 16), f = (v) => Math.max(0, Math.min(255, Math.round(v * k))).toString(16).padStart(2, "0")
+  return "#" + f(n >> 16) + f((n >> 8) & 255) + f(n & 255)
+}

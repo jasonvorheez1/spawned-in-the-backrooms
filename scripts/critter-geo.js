@@ -62,7 +62,7 @@ export function collider() {
 }
 
 // ---------- Species configurations ----------
-const SPECIES = {
+export const SPECIES = {
   cat:     { fangs: true, fur: "#f2a65a", belly: "#fff1dc", ears: "point", earS: 1.05, tail: "cat", nose: "#ff8fa3", whisk: true, cheeks: true },
   dog:     { fur: "#c98b55", belly: "#fbe8cf", ears: "flop", earS: 1.0, tail: "wag", nose: "#2a1c18", muzzle: true },
   fox:     { fangs: true, fur: "#f07a2e", belly: "#ffffff", ears: "fox", earS: 1.35, tail: "fox", tip: "#ffffff", nose: "#231816", muzzle: true, socks: "#2c1c18", cheeks: true },

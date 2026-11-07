@@ -344,16 +344,17 @@ const Q_MELEE = { x: -0.5, y: 0.5, z: 0.5, w: 0.5 } // its length up, its blade 
 const Q_GUN = { x: 0, y: 1, z: 0, w: 0 } // its barrel forward
 function viewmodel(ctx, moving, sprinting) {
   if (!ctx.self.isLocal) return
-  const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists'
-  if (w.vmKind !== kind || !w.vm) {
+  const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists', l = s.look ?? {}
+  const arm = { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm)
+  if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     const g = HOLD[kind], wp = W[kind] ?? {}, gun = !!wp.ranged
     const child = g == null ? [] : [gun
       ? { feetPosition: { x: 0, y: kind === 'pistol' ? 0.03 : -0.04, z: kind === 'pistol' ? 0.04 : 0.14 }, rotation: Q_GUN, castShadow: false, ...weaponBody(kind), audience: 'local' }
       : { feetPosition: { x: 0, y: -g, z: 0 }, rotation: Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
     w.vm = ctx.spawn({ feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
-      primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', ...(wp.muzzle ? { sockets: { muzzle: wp.muzzle } } : {}) }, children: child })
-    w.vmKind = kind
+      primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: arm, ...(wp.muzzle ? { sockets: { muzzle: wp.muzzle } } : {}) }, children: child })
+    w.vmKind = armKey
   }
   if (w.vm && s.vmId !== w.vm) s.vmId = w.vm // scripts/lib/vmpose.js poses it every display frame from the camera rig
 }
