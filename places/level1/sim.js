@@ -3,7 +3,7 @@ import L from "../../scripts/lib/data/level1.yml";
 import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ARRIVE, hash } from "../../scripts/lib/level1.js";
 import { spawnAlmond, spawnCrate } from "../../scripts/lib/loot.js";
 export const cadence = "250ms";
-const LAMP_ON = 4.5;
+const LAMP_ON = 9;
 
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
@@ -15,7 +15,7 @@ export function tick(ctx) {
       const c = cellCenter(cx, cz), tube = k === "tube";
       ctx.spawn({ tags: ["l1lamp"], feetPosition: { x: c.x, y: H - (tube ? 0.08 : 0.5), z: c.z }, primitive: tube ? { kind: "box", width: 0.35, height: 0.06, depth: 2.4 } : { kind: "sphere", radius: 0.09 },
         material: { color: "oklch(0.97 0.02 220)", emissive: "oklch(0.95 0.03 220)", emissiveIntensity: 2.2 },
-        light: { kind: "point", color: tube ? "oklch(0.95 0.02 220)" : "oklch(0.9 0.08 80)", intensity: tube ? LAMP_ON : 2.5, distance: tube ? 15 : 8, shadow: { enabled: false } } });
+        light: { kind: "point", color: tube ? "oklch(0.95 0.02 220)" : "oklch(0.9 0.08 80)", intensity: tube ? LAMP_ON : 2.5, distance: tube ? 20 : 9, shadow: { enabled: false } } });
     }
     // supplies: crates on the racks first, then loose ones; almond water; M.E.G. landmarks near arrival
     let crates = 0;

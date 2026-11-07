@@ -455,6 +455,14 @@ function tickStats(ctx, t, moving) {
   const st = Math.round(w.stamina), bt = Math.round(w.battery)
   if (st !== s.stamina) s.stamina = st
   if (bt !== s.battery) s.battery = bt
+  // the save: where you stand, every few seconds; a fresh visit wakes you there (level, items, weapons already live in player.state)
+  if (!ctx.session.wokeAt) {
+    ctx.session.wokeAt = now
+    const sp = s.savePos
+    if (sp && s.savePlace && s.savePlace !== ctx.self.place) { ctx.cross(ctx.self, s.savePlace); return }
+    if (sp && s.savePlace === ctx.self.place) { ctx.self.feetPosition = { x: sp.x, y: sp.y + 0.1, z: sp.z }; return }
+  }
+  if (now - (w.savedAt ?? 0) > 4000) { w.savedAt = now; s.savePos = { x: Math.round(p.x * 10) / 10, y: Math.round(p.y * 10) / 10, z: Math.round(p.z * 10) / 10 }; s.savePlace = ctx.self.place }
   // exploring: every new cell is xp
   const { cx, cz } = cellAt(p.x, p.z)
   if (cx >= 0 && cz >= 0 && cx < N && cz < N) {
