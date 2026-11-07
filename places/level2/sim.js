@@ -42,9 +42,9 @@ export function tick(ctx) {
       }
     }
     // the camp sign, painted by a survivor: crooked spray, one word struck out and redone
-    const SIGN = '<div face="back" width="2.4m" style="font-family:sans-serif;font-weight:900;color:#6e1a12;text-shadow:0 0 6px rgba(110,26,18,.55);line-height:1">'
-      + '<div style="font-size:140px;transform:rotate(-3deg) translateX(-60px)">PEOPLE HERE</div>'
-      + '<div style="font-size:72px;color:#2a2418;text-shadow:0 0 3px rgba(42,36,24,.5);transform:rotate(2deg) translateX(120px);margin-top:14px">dont shoot. knock <s>twice</s> 3x</div></div>';
+    const SIGN = '<div face="back" width="2.4m" style="font-family:sans-serif;font-weight:900;color:#6e1a12;text-shadow:0 0 6px rgba(110,26,18,.55);line-height:1.1;padding:60px 120px;text-align:left">'
+      + '<div style="font-size:130px;transform:rotate(-3deg)">PEOPLE HERE</div>'
+      + '<div style="font-size:70px;color:#2a2418;text-shadow:0 0 3px rgba(42,36,24,.5);transform:rotate(2deg);text-align:right;margin-top:30px">dont shoot. knock <s>twice</s> 3x</div></div>';
     // the camp: three warm lanterns and a stove
     const a = cellCenter(1, ARRIVE.cz);
     for (const [dx, dz] of [[2, 0], [5, 4.5], [5, -4.5]]) ctx.spawn({ feetPosition: { x: a.x + dx, y: 1.0, z: a.z + dz }, primitive: { kind: "sphere", radius: 0.08 }, material: { color: "oklch(0.85 0.14 70)", emissive: "oklch(0.85 0.14 70)", emissiveIntensity: 2 }, light: { kind: "point", color: "oklch(0.85 0.14 70)", intensity: 5, distance: 12, shadow: { enabled: false } } });
