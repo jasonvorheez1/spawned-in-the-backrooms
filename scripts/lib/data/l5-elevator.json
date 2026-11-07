@@ -1,0 +1,15 @@
+{
+  "floors": ["1","2","3","4","5","6","7","8","9","10","11","12","13","66","382","B"],
+  "deadly": ["13","66","382"],
+  "rideMs": 3000, "closeMs": 900, "fallMs": 5200, "openRadius": 2.4, "panelOpenMs": 30000,
+  "freightDropChance": 0.2, "freightDropDamage": 15, "dropTo": { "x": -38, "z": 0 },
+  "sfx": {
+    "chime": "/cdn/moodboard-realistic-gritty/sfx-old-elevator-bell-ding.mp3",
+    "doors": "/cdn/moodboard-realistic-gritty/sfx-elevator-doors-sliding.mp3",
+    "gate": "/cdn/moodboard-realistic-gritty/sfx-metal-scissor-gate-rattle-slide.mp3",
+    "hum": "/cdn/moodboard-realistic-gritty/sfx-elevator-motor-hum-rumble.mp3",
+    "grind": "/cdn/moodboard-realistic-gritty/sfx-freight-elevator-grinding-clank.mp3",
+    "fall": "/cdn/moodboard-realistic-gritty/sfx-elevator-cable-snap-long-fall.mp3",
+    "button": "/cdn/moodboard-realistic-gritty/sfx-brass-elevator-button-click.mp3"
+  }
+}
