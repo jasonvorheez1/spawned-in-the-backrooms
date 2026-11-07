@@ -200,7 +200,7 @@ export function lay(ctx) {
     });
     ctx.spawn("l5-lib-cabinet", {
       tags: ["container"],
-      feetPosition: { x: -23.5, y: 0, z: -14 },
+      feetPosition: { x: -22.37, y: 0, z: -14 },
       rotation: { yaw: -90 },
       physics: "static",
       primitive: { kind: "box", width: 0.7, height: 1.3, depth: 0.6 },
