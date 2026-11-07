@@ -1,0 +1,37 @@
+{
+  "name": "tunedb",
+  "displayName": "TuneDB — Game Database & Tuning",
+  "description": "Your game's numbers, in one window — tune them yourself instead of asking Savi every time. 🎚️ Tune: every value in scripts/lib/data/*.yml (walk speed, jump height, camera, spawn rates, recoil…) becomes a slider you drag while the game runs, and one button writes clear slider ranges into your files. 🗃️ Database: start from an RPG, Action or Minimal starter set and reshape it — stats, enemies, weapons, armor, items, skills, passives, traits, states (poison, burn, stun), elements, levels, rules, loot (rarities, drop tables, prefixes, suffixes), party-size scaling, achievements, and a save layout (what stays per player vs per character). Form and grid views, link checks between tables, copy/paste with Excel and Google Sheets. 💰 Spoins: every buyable at a glance — price, what the buyer pays, your 50% — and edit prices in place. Every edit saves into the game's own files as one undoable change. Savi reads the included guide, so she wires new numbers into TuneDB as she builds. English UI with a Japanese toggle. Install, open god mode → TuneDB, or type /tunedb.",
+  "tags": [
+    "creator-tools",
+    "tuning",
+    "database",
+    "balance",
+    "god-mode",
+    "rpg",
+    "workflow"
+  ],
+  "visibility": "public",
+  "version": "1.1.0",
+  "inputs": {
+    "actions": {
+      "op": {
+        "keys": []
+      }
+    }
+  },
+  "attach": [
+    {
+      "target": {
+        "kind": "god"
+      },
+      "behavior": "db-writer.js"
+    }
+  ],
+  "tab": {
+    "id": "db",
+    "label": "TuneDB",
+    "icon": "🗃️",
+    "render": "panel.js"
+  }
+}
