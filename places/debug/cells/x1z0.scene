@@ -378,6 +378,11 @@ maxpayne-statue:
   physics: static
   rotation: 200
   tags: [plymodel]
+modeling-studio:
+  overrides:
+    feetPosition: {x: 95, y: 0, z: 1}
+    rotation: 0
+  template: mods/modeling-studio/templates/studio.js#studio
 object/x955101e2a6d7f07b/11:
   feetPosition: {x: 70.65163172362372, y: 0.01, z: -5.330910932738334}
   id: object/x955101e2a6d7f07b/11
