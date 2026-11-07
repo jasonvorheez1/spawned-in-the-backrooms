@@ -339,8 +339,6 @@ export function lay(ctx) {
 
 export function tick(ctx) {
   const s = ctx.place.state;
-export function tick(ctx) {
-  const s = ctx.place.state;
   if (s.builtV !== V) {
     s.builtV = V;
     lay(ctx);
@@ -385,7 +383,6 @@ function relight(ctx) {
   for (let i = 0; i < 200; i++) if (ctx.getObject(`l5-light-${i}`)) ctx.destroy(`l5-light-${i}`);
   LIGHTS.forEach((l, i) => ctx.spawn(`l5-light-${i}`, { tags: ["l5-light", `l5-fix-${l.kind}`], feetPosition: { x: l.x, y: l.y, z: l.z }, state: { kind: l.kind },
     light: { kind: "point", color: l.color, intensity: l.intensity, distance: l.distance, shadow: { enabled: l.kind === "chandelier" && l.intensity >= 14 } } }));
-}
 }
 
 // every live way out reads as one: a walnut stair door swung open on a dark climbing stair, or a copper cage lift with its gate folded back
