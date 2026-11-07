@@ -1,3 +1,4 @@
+import { tickWalls } from "../../scripts/lib/breakables.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { fullLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
@@ -28,8 +29,10 @@ pop flame rate=26 on=disc(.18) life=.4..0.7 v=up(1.1)+cone(18)*(.2..0.5) size=.1
 pop smoke on=@flame?.2 life=1.5..2.5 size=.15..0.25 acc=buoy(.8)+curl(.3)*.4+drag(.8) sz=$size*(.7>2.6) col=<.3,.28,.26> a=0>.2:.25>0 r=sprite(smoke-puff,alpha)
 pop glow n=1 r=light(<1,.55,.24>,fire()*6,7)`;
 
+let wallTick = 0;
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
+  if (now - wallTick > 2000) { wallTick = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)
   if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(Math.hypot(p.x - cellCenter(ARRIVE.cx, ARRIVE.cz).x - 2.4, p.z - cellCenter(ARRIVE.cx, ARRIVE.cz).z + 2.4) < 3)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   tickChatter(ctx, CHATTER.level1, {"meg-ale": "ale", "meg-ortiz": "ortiz", "meg-callum": "callum"}); // the camp talks among itself while someone's near
   if (!s.seeded) {
