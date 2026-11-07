@@ -14,7 +14,7 @@ the engine clone line in AGENTS.md (it carries the token helper), or
 - interactive-objects — pickups, levers, doors
 - jev — give a boss, npc, crowd or puzzle a mind: jev:decide
 - leaf-sprays — bushes, hedges, ivy, leaves
-- mobile-controls — Touch controls: auto + authored
+- mobile-controls — touch: auto + authored
 - physics — limbs on joints
 - platform-systems — cheat-proof saves, SQL boards, timers, LLM jobs, notify players, player names
 - player-settings — creator policy: enable protections, lock controls
@@ -26,4 +26,4 @@ the engine clone line in AGENTS.md (it carries the token helper), or
 - trees — forest, woods, park
 - uploaded-models — a dropped/built .glb, picture to model: place, dress, socket, mouth/talk, ?parts
 - vehicles — cars/trucks/karts/tanks
-- voxel-terrain — block worlds: dig-and-place, caves
+- voxel-terrain — block worlds: dig/place, caves
