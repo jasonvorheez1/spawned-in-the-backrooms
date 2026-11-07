@@ -40,8 +40,7 @@ export function wardrobe(ctx, player) {
   if (!st.wardrobeOpen) return ''
   const l = { ...C.default, ...(st.look || {}) }
   const tab = st.wrTab || 'body'
-  const grid = (k, list, names = NAMES) => `<div class="grid">${list.map((v) => tile(k, v, l[k] === v, names[v] || v)).join('')}</div>
-    <div class="sl"><button style="flex:1;width:auto;padding:6px 0" onclick="this.nextElementSibling.click()">⬆ upload .plymodel</button><input type="file" accept=".plymodel" style="display:none" onchange="plyUpload(this)"></div><div id="ply-st" style="font-size:11px;opacity:.75;margin-top:4px">${l.modelUrl ? 'wearing your upload' : 'any tower unite .plymodel, worn as your body'}</div>`
+  const grid = (k, list, names = NAMES) => `<div class="grid">${list.map((v) => tile(k, v, l[k] === v, names[v] || v)).join('')}</div>`
   const sws = (k, list) => `<div class="sws">${list.map((v) => sw(k, v, l[k] === v)).join('')}</div>`
   const slot = (title, k, colourKey) => `<div class="slot"><div class="sec" style="margin-top:2px"><span>${title}</span><span>${NAMES[l[k]] || l[k]}</span></div>${grid(k, C[k])}${colourKey && l[k] !== 'none' ? sws(colourKey, C.cloth) : ''}</div>`
   let body = ''
@@ -51,7 +50,8 @@ export function wardrobe(ctx, player) {
     <div class="sec"><span>FUR</span></div>${sws('fur', C.fur)}
     <div class="sec"><span>MARKINGS</span></div>${grid('marks', C.marks)}
     <div class="sec"><span>SHAPE</span><span>${l.model || l.modelUrl ? 'critter only' : ''}</span></div>${C.sliders.map(([k, nm, lo, hi]) => { const v = Number(l[k]) || 1; return `<div class="sl"><span class="nm">${nm}</span><button onclick="${act('sz', k + ':-')}">−</button><input type="range" min="${lo}" max="${hi}" step="${C.sliderStep}" value="${v}" onchange="sendAction('dress',{k:'sz',v:'${k}:'+this.value})"><button onclick="${act('sz', k + ':+')}">+</button><span class="v">${Math.round(v * 100)}%</span></div>` }).join('')}
-    <div class="sec"><span>IMPORTED MODELS</span><span>${l.modelUrl ? 'your upload' : l.model ? C.models[l.model]?.name || '' : 'critter'}</span></div><div class="grid">${tile('model', '', !l.model && !l.modelUrl, 'critter')}${Object.entries(C.models || {}).map(([k, m]) => tile('model', k, l.model === k, m.name)).join('')}</div>`
+    <div class="sec"><span>IMPORTED MODELS</span><span>${l.modelUrl ? 'your upload' : l.model ? C.models[l.model]?.name || '' : 'critter'}</span></div><div class="grid">${tile('model', '', !l.model && !l.modelUrl, 'critter')}${Object.entries(C.models || {}).map(([k, m]) => tile('model', k, l.model === k, m.name)).join('')}</div>
+    <div class="sl"><button style="flex:1;width:auto;padding:6px 0" onclick="this.nextElementSibling.click()">⬆ upload .plymodel</button><input type="file" accept=".plymodel" style="display:none" onchange="plyUpload(this)"></div><div id="ply-st" style="font-size:11px;opacity:.75;margin-top:4px">${l.modelUrl ? 'wearing your upload' : 'any tower unite .plymodel, worn as your body'}</div>`
   else if (tab === 'face') body = `
     <div class="sec"><span>EYE SHAPE</span></div>${grid('eyes', C.eyes)}
     <div class="sec"><span>EYE COLOUR</span></div>${sws('eye', C.eye)}
