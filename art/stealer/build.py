@@ -144,7 +144,7 @@ P0 = 'mixamorig:'
 for f in bm.faces:
     c = SM @ f.calc_center_median()
     if c.z > neck + 0.02: kill.append(f); continue
-    if any((c - closest(c, bones[P0 + sd + "Hand"][0], bones[P0 + sd + "Hand"][0] + (bones[P0 + sd + "Hand"][1] - bones[P0 + sd + "Hand"][0]).normalized() * 0.2)[0]).length < 0.075 for sd in ("Left", "Right")): kill.append(f); continue
+    if any((c - closest(c, bones[P0 + sd + "Hand"][0], bones[P0 + sd + "Hand"][0] + (bones[P0 + sd + "Hand"][1] - bones[P0 + sd + "Hand"][0]).normalized() * 0.22)[0]).length < 0.1 for sd in ("Left", "Right")): kill.append(f); continue
     if 0.9 < c.z < neck + 0.02 and c.y < cyb and abs(c.x) < 0.035 + (c.z - 0.9) * 0.12: kill.append(f)
 bmesh.ops.delete(bm, geom=kill, context="FACES")
 for v in bm.verts:
