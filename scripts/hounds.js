@@ -74,7 +74,7 @@ export function update(ctx, dt) {
     }
     if (m.pounceAt && now - m.pounceAt < T.pounceMs) { // mid-leap: the body flies; contact lands the blow once
       const v = byId(m.pounceOn);
-      if (v && !m.pounceHit && Math.hypot(v.feetPosition.x - pos.x, v.feetPosition.z - pos.z) < 1.5) {
+      if (v && !m.pounceHit && Math.hypot(v.feetPosition.x - pos.x, v.feetPosition.z - pos.z) < 1.5 && !safeAt(v.feetPosition.x, v.feetPosition.z) && sees(ctx, h, v)) {
         m.pounceHit = true; const dmg = Math.round(L.houndBite * mu.dmg * T.pounceDmg), at = hitPrey(ctx, h, v, dmg, now);
         const kx = v.feetPosition.x - pos.x, kz = v.feetPosition.z - pos.z, kd = Math.hypot(kx, kz) || 1;
         ctx.emit("impulse", { target: v.id, impulse: { x: kx / kd * T.knock * 70, y: 220, z: kz / kd * T.knock * 70 } });
