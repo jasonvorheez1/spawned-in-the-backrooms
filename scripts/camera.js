@@ -95,16 +95,15 @@ export function update(ctx, dt) {
     ctx.self.fov = ctx.self.fov + (44 - ctx.self.fov) * k // her pick: 60 → 44, head and shoulders
     // New Vegas framing: the eye steps in to a set distance at their eye line, so a short critter isn't looked down on and a tall one isn't up a nostril
     // straight on: the eye sits in front of their face along the way they face (they turn to you, meg-agent.js), not wherever you happened to stand
-    const fy = ((tw.rotation?.yaw ?? null) != null && typeof tw.rotation.yaw === 'number') ? tw.rotation.yaw * Math.PI / 180 : null
+    const fy = typeof tw?.rotation?.yaw === 'number' ? tw.rotation.yaw * Math.PI / 180 : null
     let hx = e0.x - c.x, hz = e0.z - c.z; const hl0 = Math.hypot(hx, hz) || 1
     if (fy != null) { const fx = -Math.sin(fy), fz = -Math.cos(fy), m0 = Math.hypot(hx, hz) || 1; if ((fx * hx + fz * hz) / m0 > 0.2) { hx = hx / m0 * 0.4 + fx * 0.6; hz = hz / m0 * 0.4 + fz * 0.6 } }
     const hl = Math.hypot(hx, hz) || 1, dist = Math.min(hl0, 1.3)
     let goal = { x: c.x + hx / hl * dist, y: c.y + 0.02, z: c.z + hz / hl * dist }
-    const block = raycast(ctx, { x: c.x, y: c.y, z: c.z }, { x: hx / hl, y: 0, z: hz / hl }, { distance: dist, radius: 0.1, physicsOnly: true, bodies: 'static', ignoreEntities: [tw.id, ctx.player?.id].filter(Boolean) })
+    const block = raycast(ctx, { x: c.x, y: c.y, z: c.z }, { x: hx / hl, y: 0, z: hz / hl }, { distance: dist, radius: 0.1, physicsOnly: true, bodies: 'static', ignoreEntities: [tw?.id, ctx.player?.id].filter(Boolean) })
     if (block) goal = { x: c.x + hx / hl * Math.max(0.6, block.distance - 0.15), y: goal.y, z: c.z + hz / hl * Math.max(0.6, block.distance - 0.15) }
     const e = { x: e0.x + (goal.x - e0.x) * k, y: e0.y + (goal.y - e0.y) * k, z: e0.z + (goal.z - e0.z) * k }
     ctx.self.feetPosition = e
-    if (k > 0.5) ctx.self.hideLocalPlayer = true // your own arms and gun out of the shot
     const dx = c.x - e.x, dy = c.y - 0.24 - e.y, dz = c.z - e.z // aimed at their chin-to-chest: the face rides the upper third, clear of the dialogue box
     const want = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
     if (!rot) rot = want
