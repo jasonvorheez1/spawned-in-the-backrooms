@@ -309,7 +309,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
     m.state.dead = true
     s.kills += 1
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
-    if (!npc) dropLoot(ctx, m.feetPosition, m.state?.kind === 'lurker' ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot, derived(s).clothFind) // an agent's own body is searched (scripts/meg-agent.js)
+    if (!npc && !(m.tags ?? []).some((g) => g === 'l5staff' || g === 'l5rat')) dropLoot(ctx, m.feetPosition, m.state?.kind === 'lurker' ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot, derived(s).clothFind) // an agent's own body is searched (scripts/meg-agent.js)
   }
 }
 
