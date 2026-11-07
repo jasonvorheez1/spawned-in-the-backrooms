@@ -64,6 +64,7 @@ export function statsUi(ctx, player) {
     <div class="dv">
       <span>Max HP <b>${L.hp + (s.level - 1) * L.perLevel.hp + d.hpBonus}</b></span><span>Max sanity <b>${L.sanity + (s.level - 1) * L.perLevel.sanity + d.sanBonus}</b></span>
       <span>Carry weight <b>${kg.toFixed(1)} / ${cap} kg${slow ? ' (slowed)' : ''}</b></span><span>Stamina <b>${Math.round(d.staMax)}</b></span>
+      <span>Damage resist <b>DR ${d.dr}</b></span><span>Clothes find <b>×${d.clothFind.toFixed(2)}</b></span>
       <span>${wp.name} DAM <b>${dam(wp)}</b></span><span>DPS <b>${Math.round(dam(wp) * (wp.pellets ? 1 : 1) / (wp.cooldown * (wp.ranged ? 1 : d.swing)))}</b></span>
       <span>Unarmed DAM <b>${dam(W.fists)}</b></span><span>Crit chance <b>${Math.round(d.crit * 100)}%</b></span>
       ${wp.ranged ? `<span>Reload <b>${(wp.reloadTime ?? (wp.reloadStart + wp.reloadShell * wp.magSize)).toFixed(1) * 1 && ((wp.reloadTime ?? (wp.reloadStart + wp.reloadShell * wp.magSize)) * d.reload).toFixed(1)} s</b></span>` : `<span>Swing <b>${(wp.cooldown * d.swing).toFixed(2)} s</b></span>`}<span>Find chance <b>${Math.round(d.scav * 100)}%</b></span><span>${wp.name} condition <b>${Math.round(s['cnd_' + s.equipped] ?? 100)}%</b></span>
