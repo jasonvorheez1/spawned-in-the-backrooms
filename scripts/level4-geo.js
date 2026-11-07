@@ -2,11 +2,11 @@
 // windows (blacked out, three left bare), columns, the lift doors and the stairwell door. Plan in scripts/lib/level4.js.
 import { HALF, H, T, DOORH, ROOMS, WALLS, COLUMNS, LIFT, STAIRS } from "./lib/level4.js";
 import { box, paint } from "./lib/gamma-kit.js";
-const CARPET = "cdn/texture-worn-grey-blue-commercial-office-carpet.png", DRY = "cdn/texture-scuffed-off-white-painted-office-drywall.png";
+const CARPET = "cdn/texture-light-grey-beige-office-carpet-tiles-worn.png", DRY = "cdn/texture-scuffed-off-white-painted-office-drywall.png";
 const wb = (ctx, ax, at, a, b, y0, y1, t = T) => ax === "z" ? box(ctx, a, b, y0, y1, at - t, at + t) : box(ctx, at - t, at + t, y0, y1, a, b);
 function build(ctx, vis) {
   // floor, ceiling
-  if (vis) paint(ctx, "oklch(0.97 0.012 230)", CARPET, 0.95); box(ctx, -HALF, HALF, -0.2, 0, -HALF, HALF);
+  if (vis) paint(ctx, "oklch(0.9 0.01 90)", CARPET, 0.95); box(ctx, -HALF, HALF, -0.2, 0, -HALF, HALF);
   if (vis) paint(ctx, "oklch(0.93 0.01 90)", "acoustic", 0.9); box(ctx, -HALF, HALF, H, H + 0.2, -HALF, HALF);
   // outer walls, the lift and stairwell openings cut
   if (vis) paint(ctx, "oklch(0.88 0.015 85)", DRY, 0.9);

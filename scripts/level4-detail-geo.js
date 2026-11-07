@@ -5,7 +5,7 @@
 import { HALF, H, T, DOORH, ROOMS, COLUMNS } from "./lib/level4.js";
 import { box, paint, cyl, rod } from "./lib/gamma-kit.js";
 import { prism } from "./lib/shapes.js";
-const CARPET = "cdn/texture-worn-grey-blue-commercial-office-carpet.png";
+const CARPET = "cdn/texture-light-grey-beige-office-carpet-tiles-worn.png";
 const rnd = (i, k = 0) => { let h = Math.imul((i + 1) * 374761393 + k * 668265263, 1274126177); h ^= h >>> 13; h = Math.imul(h, 1103515245); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 const nearCol = (x, z, r = 1.1) => COLUMNS.some(([cx, cz]) => Math.abs(cx - x) < r && Math.abs(cz - z) < r);
 const inRoom = (x, z, pad = 0.4) => ROOMS.some((r) => x > r.x0 - pad && x < r.x1 + pad && z > r.z0 - pad && z < r.z1 + pad);
@@ -48,17 +48,10 @@ export function geometry(ctx) {
   paint(ctx, "oklch(0.75 0.03 80)", null, 0.4, 0.8);
   for (let x = -30; x <= 30; x += 3) for (let z = -30; z <= 30; z += 3) { if (inRoom(x, z, -0.3) && rnd(x * 97 + z, 11) < 0.5) continue; cyl(ctx, x + 0.5, z + 0.5, H - 0.07, H, 0.022, hi ? 6 : 4); }
   // ── the carpet ───────────────────────────────────────────────
-  // a worn cross where everyone walks from the lift to the stairs: the pile flattened grey, ragged at its edges
-  paint(ctx, "oklch(0.86 0.012 230)", CARPET, 1);
-  for (let s = -28; s < 28; s += 1.5) {
-    const w1 = 0.7 + rnd(Math.round(s * 10), 12) * 0.5, w2 = 0.7 + rnd(Math.round(s * 10), 13) * 0.5;
-    if (!nearCol(0, s, 0.6)) box(ctx, -w1, w1, 0, 0.0015, s, s + 1.5);
-    if (!nearCol(s, 0, 0.6) && Math.abs(s) > 1.2) box(ctx, s, s + 1.5, 0, 0.0015, -w2, w2);
-  }
   // stains: coffee, something darker, a long-dried puddle under a ceiling ring
   for (let i = 0; i < 30; i++) {
     const x = (rnd(i, 14) - 0.5) * 58, z = (rnd(i, 15) - 0.5) * 58; if (nearCol(x, z, 0.6)) continue;
-    paint(ctx, ["oklch(0.3 0.03 60)", "oklch(0.24 0.02 40)", "oklch(0.36 0.03 85)"][i % 3], null, 1); blob(ctx, x, z, 0.2 + rnd(i, 16) * 0.7, 0.002 + (i % 5) * 0.0002, i * 7 + 2);
+    paint(ctx, ["oklch(0.46 0.035 65)", "oklch(0.42 0.03 50)", "oklch(0.5 0.03 85)"][i % 3], null, 1); blob(ctx, x, z, 0.2 + rnd(i, 16) * 0.7, 0.002 + (i % 5) * 0.0002, i * 7 + 2);
   }
   // paper: drifts of it against walls and in doorways, single sheets in the open
   paint(ctx, "oklch(0.93 0.015 95)", null, 0.95);
@@ -103,8 +96,8 @@ export function geometry(ctx) {
       hand(0.08, 2.4 + r.no, 0.006); hand(0.115, 0.7 + r.no * 2, 0.004);
     }
     // rust-brown streaks run down from the taped windows' sills
-    const o = r.outer; paint(ctx, "oklch(0.45 0.06 55)", null, 1);
-    for (let k = 0; k < 4; k++) { const a = r.mid - 1.1 + rnd(r.no * 5 + k, 32) * 2.2; onWall(ctx, o.ax, o.at, r.inward, a, 0.04 + rnd(r.no * 5 + k, 33) * 0.1, 0.85 - 0.2 - rnd(r.no * 5 + k, 34) * 0.55, 0.85, 0, 0.002, 0.2); }
+    const o = r.outer; paint(ctx, "oklch(0.6 0.05 65)", null, 1);
+    for (let k = 0; k < 4; k++) { const a = r.mid - 1.1 + rnd(r.no * 5 + k, 32) * 2.2; onWall(ctx, o.ax, o.at, r.inward, a, 0.015 + rnd(r.no * 5 + k, 33) * 0.03, 0.85 - 0.2 - rnd(r.no * 5 + k, 34) * 0.55, 0.85, -0.004, -0.002, 0.2); }
   }
   // ── the columns ──────────────────────────────────────────────
   for (const [x, z] of COLUMNS) {
