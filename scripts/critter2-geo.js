@@ -9,7 +9,7 @@
 // Rig: same bone names and pivots as v1 (T-pose); LidL/LidR blink lids are modelled 1/1000 size (critter.js scales them).
 
 const HC = [0, 1.335, 0];
-const RX = 0.4, RY = 0.295, RZ = 0.33;
+const RX = 0.41, RY = 0.29, RZ = 0.3;
 const EX = 0.14, EY = 1.39, LIDZ = -0.3;
 
 const BONES = {
@@ -277,7 +277,7 @@ export function geometry(ctx) {
       col(tc);
       for (const [dy, l, ang] of tufts) {
         const d = norm3([s * 0.95, dy, -0.12]), b = headPt(d, -0.04), a = (ang * Math.PI) / 180, tip = add3(b, [s * l * Math.cos(a), l * Math.sin(a), 0.015]);
-        tube(path([[b, [0.028, 0.055]], [lerp3(b, tip, 0.5), [0.02, 0.038]], [tip, [0.003, 0.004]]], hi ? 3 : 2), { m: hi ? 8 : 5, domeA: true, up: [0, 0, -1] });
+        tube(path([[b, [0.06, 0.024]], [lerp3(b, tip, 0.5), [0.04, 0.018]], [tip, [0.004, 0.003]]], hi ? 3 : 2), { m: hi ? 8 : 5, domeA: true, up: [0, 0, -1] });
       }
     }
     if (!sp.wool && !sp.mane) for (const [x, l, lean] of [[-0.06, 0.08, -0.4], [0.03, 0.1, 0.2], [0.1, 0.07, 0.6]]) {
@@ -604,6 +604,7 @@ export function geometry(ctx) {
       col(darker(c, 0.15)); for (const s of [-1, 1]) tube(path([[torsoPt(0.93, -Math.PI / 2 + s * 0.45, 0.04, true), 0.008], [[s * 0.09, 1.03, -0.02], 0.008], [[s * 0.07, 1.06, 0.06], 0.008]], 2), { m: 6 });
     } else {
       const pjStripe = topw === "pajamas", ribbed = topw === "sweater";
+      const flare = (y) => 0.03 * sstep(0.68, 0.53, y);
       torsoShell(yHem, yNeck, TOFF, (t, k, p) => {
         let cc = c;
         if (pjStripe && Math.floor((Math.atan2(p[2], p[0]) + 7) * 6) % 2) cc = mixc(c, "#ffffff", 0.3);
@@ -611,8 +612,8 @@ export function geometry(ctx) {
         if (topw === "hoodie" && p[2] < 0 && p[1] > 0.6 && p[1] < 0.72 && Math.abs(p[0]) < 0.11) cc = darker(c, 0.1);
         if (topw === "jacket" && p[2] < 0 && Math.abs(p[0]) < 0.012) cc = "#c8c8d0";
         col(cc);
-      }, { bridged: true });
-      hemBand(yHem, TOFF, c, ribbed ? 0.04 : 0.022);
+      }, { bridged: true, offFn: (y) => flare(y) });
+      hemBand(yHem, TOFF + flare(yHem), c, ribbed ? 0.04 : 0.022);
       col(darker(c, 0.12)); torsoShell(yNeck - 0.022, yNeck, TOFF + 0.004, null, { n: 1, bridged: true }); // collar band
       if (topw !== "tank" && topw !== "dress") sleeve(-1, ["tee", "apron"].includes(topw) ? 0.36 : 0.93, TOFF * 0.6, c, true), sleeve(1, ["tee", "apron"].includes(topw) ? 0.36 : 0.93, TOFF * 0.6, c, true);
       if (topw === "dress") { sleeve(-1, 0.22, TOFF * 0.6, c, true); sleeve(1, 0.22, TOFF * 0.6, c, true); }
