@@ -263,42 +263,42 @@ object/xd97c3a78408835bb/9:
   tags: [container, furniture, lootfurn, breakable]
 object/xe393a57e317afb15/0:
   feetPosition: {x: -34, y: 2.68, z: 30}
-  fx: {script: "fx\npop core n=1 size=.55 col=hdr(3,2.3,1.5) a=.85 sz=$size*flick(.4,.06) r=sprite(soft-disc,add)\npop rays n=6 ang=0..3.14 size=2..3 sz=$size rot=$ang asp=.03 col=hdr(1.4,1.1,.75) a=.45 r=sprite(soft-disc,add)\npop glow n=1 r=light(<1,.78,.5>,flick(.5,.08)*7,15)"}
+  fx: {script: "fx\npop core n=1 size=.55 col=hdr(3,2.3,1.5) a=.85 sz=$size*flick(.4,.06) r=sprite(soft-disc,add)\npop rays n=6 ang=0..3.14 size=2..3 sz=$size rot=$ang asp=.03 col=hdr(1.4,1.1,.75) a=.45 r=sprite(soft-disc,add)\npop glow n=1 r=light(<1,.78,.5>,flick(.5,.08)*12,18)"}
   id: object/xe393a57e317afb15/0
   material: {color: oklch(0.95 0.08 75), emissive: oklch(0.95 0.08 75), emissiveIntensity: 4}
   primitive: {kind: sphere, radius: 0.06}
   tags: [l3farbulb]
 object/xe393a57e317afb15/1:
   feetPosition: {x: 6, y: 2.68, z: -22}
-  fx: {script: "fx\npop core n=1 size=.55 col=hdr(3,2.3,1.5) a=.85 sz=$size*flick(.4,.06) r=sprite(soft-disc,add)\npop rays n=6 ang=0..3.14 size=2..3 sz=$size rot=$ang asp=.03 col=hdr(1.4,1.1,.75) a=.45 r=sprite(soft-disc,add)\npop glow n=1 r=light(<1,.78,.5>,flick(.5,.08)*7,15)"}
+  fx: {script: "fx\npop core n=1 size=.55 col=hdr(3,2.3,1.5) a=.85 sz=$size*flick(.4,.06) r=sprite(soft-disc,add)\npop rays n=6 ang=0..3.14 size=2..3 sz=$size rot=$ang asp=.03 col=hdr(1.4,1.1,.75) a=.45 r=sprite(soft-disc,add)\npop glow n=1 r=light(<1,.78,.5>,flick(.5,.08)*12,18)"}
   id: object/xe393a57e317afb15/1
   material: {color: oklch(0.95 0.08 75), emissive: oklch(0.95 0.08 75), emissiveIntensity: 4}
   primitive: {kind: sphere, radius: 0.06}
   tags: [l3farbulb]
 object/xe393a57e317afb15/2:
   feetPosition: {x: 10, y: 2.68, z: 42}
-  fx: {script: "fx\npop core n=1 size=.55 col=hdr(3,2.3,1.5) a=.85 sz=$size*flick(.4,.06) r=sprite(soft-disc,add)\npop rays n=6 ang=0..3.14 size=2..3 sz=$size rot=$ang asp=.03 col=hdr(1.4,1.1,.75) a=.45 r=sprite(soft-disc,add)\npop glow n=1 r=light(<1,.78,.5>,flick(.5,.08)*7,15)"}
+  fx: {script: "fx\npop core n=1 size=.55 col=hdr(3,2.3,1.5) a=.85 sz=$size*flick(.4,.06) r=sprite(soft-disc,add)\npop rays n=6 ang=0..3.14 size=2..3 sz=$size rot=$ang asp=.03 col=hdr(1.4,1.1,.75) a=.45 r=sprite(soft-disc,add)\npop glow n=1 r=light(<1,.78,.5>,flick(.5,.08)*12,18)"}
   id: object/xe393a57e317afb15/2
   material: {color: oklch(0.95 0.08 75), emissive: oklch(0.95 0.08 75), emissiveIntensity: 4}
   primitive: {kind: sphere, radius: 0.06}
   tags: [l3farbulb]
 object/xe393a57e317afb15/3:
   feetPosition: {x: 26, y: 2.68, z: -34}
-  fx: {script: "fx\npop core n=1 size=.55 col=hdr(3,2.3,1.5) a=.85 sz=$size*flick(.4,.06) r=sprite(soft-disc,add)\npop rays n=6 ang=0..3.14 size=2..3 sz=$size rot=$ang asp=.03 col=hdr(1.4,1.1,.75) a=.45 r=sprite(soft-disc,add)\npop glow n=1 r=light(<1,.78,.5>,flick(.5,.08)*7,15)"}
+  fx: {script: "fx\npop core n=1 size=.55 col=hdr(3,2.3,1.5) a=.85 sz=$size*flick(.4,.06) r=sprite(soft-disc,add)\npop rays n=6 ang=0..3.14 size=2..3 sz=$size rot=$ang asp=.03 col=hdr(1.4,1.1,.75) a=.45 r=sprite(soft-disc,add)\npop glow n=1 r=light(<1,.78,.5>,flick(.5,.08)*12,18)"}
   id: object/xe393a57e317afb15/3
   material: {color: oklch(0.95 0.08 75), emissive: oklch(0.95 0.08 75), emissiveIntensity: 4}
   primitive: {kind: sphere, radius: 0.06}
   tags: [l3farbulb]
 object/xe393a57e317afb15/4:
   feetPosition: {x: 30, y: 2.68, z: -18}
-  fx: {script: "fx\npop core n=1 size=.55 col=hdr(3,2.3,1.5) a=.85 sz=$size*flick(.4,.06) r=sprite(soft-disc,add)\npop rays n=6 ang=0..3.14 size=2..3 sz=$size rot=$ang asp=.03 col=hdr(1.4,1.1,.75) a=.45 r=sprite(soft-disc,add)\npop glow n=1 r=light(<1,.78,.5>,flick(.5,.08)*7,15)"}
+  fx: {script: "fx\npop core n=1 size=.55 col=hdr(3,2.3,1.5) a=.85 sz=$size*flick(.4,.06) r=sprite(soft-disc,add)\npop rays n=6 ang=0..3.14 size=2..3 sz=$size rot=$ang asp=.03 col=hdr(1.4,1.1,.75) a=.45 r=sprite(soft-disc,add)\npop glow n=1 r=light(<1,.78,.5>,flick(.5,.08)*12,18)"}
   id: object/xe393a57e317afb15/4
   material: {color: oklch(0.95 0.08 75), emissive: oklch(0.95 0.08 75), emissiveIntensity: 4}
   primitive: {kind: sphere, radius: 0.06}
   tags: [l3farbulb]
 object/xe393a57e317afb15/5:
   feetPosition: {x: 42, y: 2.68, z: 26}
-  fx: {script: "fx\npop core n=1 size=.55 col=hdr(3,2.3,1.5) a=.85 sz=$size*flick(.4,.06) r=sprite(soft-disc,add)\npop rays n=6 ang=0..3.14 size=2..3 sz=$size rot=$ang asp=.03 col=hdr(1.4,1.1,.75) a=.45 r=sprite(soft-disc,add)\npop glow n=1 r=light(<1,.78,.5>,flick(.5,.08)*7,15)"}
+  fx: {script: "fx\npop core n=1 size=.55 col=hdr(3,2.3,1.5) a=.85 sz=$size*flick(.4,.06) r=sprite(soft-disc,add)\npop rays n=6 ang=0..3.14 size=2..3 sz=$size rot=$ang asp=.03 col=hdr(1.4,1.1,.75) a=.45 r=sprite(soft-disc,add)\npop glow n=1 r=light(<1,.78,.5>,flick(.5,.08)*12,18)"}
   id: object/xe393a57e317afb15/5
   material: {color: oklch(0.95 0.08 75), emissive: oklch(0.95 0.08 75), emissiveIntensity: 4}
   primitive: {kind: sphere, radius: 0.06}
