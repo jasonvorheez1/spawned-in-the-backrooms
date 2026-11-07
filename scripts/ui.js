@@ -197,7 +197,7 @@ export default function render(ctx, player) {
   <!-- BOTTOM-RIGHT: weapon, stamina, almond water, light -->
   <div class="br" style="position:absolute;bottom:22px;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);width:min(300px,44vw);text-align:right">
     <div style="font-size:15px;color:${rar?.color ?? 'var(--a)'}">${wp.name}${wp.ranged ? (s.reloading ? " · RELOADING" : ` · ${s["loaded_" + s.equipped] ?? 0}/${s[wp.ammoType ?? "ammo"] ?? 0}`) : ""}${rar ? `<span class="tag">${rar.label}</span>` : ''}</div>
-    ${bar('AP', s.stamina, L.stamina, s.stamina < 25 ? 'var(--ad)' : 'var(--a)', `${Math.ceil(s.stamina)}`, true)}
+    ${bar(s.winded ? 'AP · WINDED' : 'AP', s.stamina, L.stamina, s.winded || s.stamina < 25 ? 'var(--ad)' : 'var(--a)', `${Math.ceil(s.stamina)}`, true)}
     <div class="row" style="margin-top:6px;justify-content:flex-end;gap:8px">
       <span>CASH</span><span style="font-size:15px;color:#9fcf8a">$${((s.cents ?? 0) / 100).toFixed(2)}</span><span>ALMOND</span><span style="font-size:15px">${s.almonds ?? 0}</span>${[['almondsG','#7fcf6a'],['almondsR','#d0574a'],['almondsB','#6f9be0']].filter(([k]) => s[k]).map(([k, c]) => `<span style="font-size:15px;color:${c}">${s[k]}</span>`).join('')}
     </div>
