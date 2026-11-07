@@ -3635,6 +3635,11 @@ l5-pip:
   scale: {x: 0.9, y: 0.82, z: 0.9}
   state: {attr: "7,6,5,6,6,8,4", faction5: hotel, factionName: "Homely Hotel (the staff of this endless hotel: polite, proprietary, they dislike the Originals in the salon and lean on Housekeeping)", home: {x: -36, z: -7}, hp: 192, maxHp: 192, mode: day, name: "Pip · Bellhop", offers: [["o:gossip", Heard anything?]], outfit: jacket/pants/#9e1f24, ri: 0, role: bellhop, rounds: [{act: null, dwell: 8, look: {x: -42, z: -7}, x: -36, y: 0, z: -7}, {act: null, dwell: 4, look: {x: -8, z: -11.6}, x: -27, y: 0, z: -11.6}, {act: null, dwell: 6, look: {x: -8, z: 0}, x: -8, y: 0, z: -11.6}, {act: null, dwell: 5, look: {x: -6, z: 0}, x: -17.5, y: 0, z: 0}, {act: null, dwell: 6, look: {x: -30, z: 11.6}, x: -8, y: 0, z: 11.6}, {act: null, dwell: 4, look: {x: -36, z: 8}, x: -27, y: 0, z: 11.6}, {act: cdn/clip-waving-single-hand-loop.glb, dwell: 10, look: {x: -40, z: 3}, x: -36, y: 0, z: 7}], species: mouse, title: Tireless, voice: pip}
   tags: [npc, l5res, l5-hotel]
+l5-play-lib-fill:
+  feetPosition: {x: -26, y: 2.7, z: -17.5}
+  id: l5-play-lib-fill
+  light: {color: oklch(0.85 0.09 70), distance: 11, intensity: 7, kind: point}
+  tags: [l5-play]
 l5-radio-ball:
   audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
   behavior: scripts/l5-door.js
