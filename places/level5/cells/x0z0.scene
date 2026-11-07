@@ -3361,6 +3361,12 @@ l5-imani/object/x595cd23e2238773d/3:
   id: l5-imani/object/x595cd23e2238773d/3
   parent: l5-imani
   primitive: {kind: scripted, params: {kind: smg}, script: scripts/weapon-geo.js}
+l5-l6-bulb:
+  feetPosition: {x: 45.2, y: 2.75, z: 6}
+  id: l5-l6-bulb
+  light: {color: oklch(0.85 0.06 85), distance: 5, intensity: 1.6, kind: point}
+  material: {color: "#fff3cc", emissive: "#ffe9b0", emissiveIntensity: 3}
+  primitive: {kind: sphere, radius: 0.06}
 l5-l6-door:
   feetPosition: {x: 45.75, y: 0, z: 6}
   id: l5-l6-door
