@@ -1,0 +1,73 @@
+# spawn-scene v2 yaml objects
+gamma-bo/critter-head:
+  attachment: {skin: true}
+  id: gamma-bo/critter-head
+  model: {id: /cdn/value.fa896213897e6e05e20a3927191dcfd57a41365c2b33a540cb11dd1839786164.glb, materials: {belly: {color: "#fbe8cf"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#c98b55"}, mark: {color: "#8a5a36"}, nose: {color: "#2a1c18"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#fbe8cf"}}}
+  morph: {Smile: 0.8}
+  parent: gamma-bo
+gamma-duke/critter-head:
+  attachment: {skin: true}
+  id: gamma-duke/critter-head
+  model: {id: /cdn/value.2cd659a66f73ed90b210a5f46e6ec6687f4f4617a65b382320c0d1a372053680.glb, materials: {belly: {color: "#a9bfdc"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#4f6f9f"}, mark: {color: "#26406c"}, nose: {color: "#16141c"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#a9bfdc"}}}
+  morph: {Half: 0.3, Open: 0.2, Smile: 1}
+  parent: gamma-duke
+gamma-hask/critter-head:
+  attachment: {skin: true}
+  id: gamma-hask/critter-head
+  model: {id: /cdn/value.496ed1318603080d4fcbb7455baf9897f459ceea16ee9bc824dedb190bf9e6aa.glb, materials: {belly: {color: "#e8c79e"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#9a6440"}, mark: {color: "#6e4329"}, nose: {color: "#2a1c18"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e8c79e"}}}
+  morph: {Half: 0.9}
+  parent: gamma-hask
+gamma-ivy/critter-head:
+  attachment: {skin: true}
+  id: gamma-ivy/critter-head
+  model: {id: /cdn/value.e5324b109eba65a4ebeca641151f68f13e5c82ba531d8d6b3d2761cf8bf2f486.glb, materials: {antler: {color: "#e9d8b4"}, belly: {color: "#f1d4ae"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#a8703f"}, mark: {color: "#4a2a1c"}, nose: {color: "#2a1612"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#ffffff"}}}
+  morph: {Blush: 0.8, Happy: 0.8, O: 0.6}
+  parent: gamma-ivy
+gamma-june/critter-head:
+  attachment: {skin: true}
+  id: gamma-june/critter-head
+  model: {id: /cdn/value.0a341d60ed49d8102effdb4700b36df293e648fd71310921888b5ed849ec09f9.glb, materials: {belly: {color: "#fff1dc"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f2a65a"}, mark: {color: "#d9843a"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#fff1dc"}}}
+  morph: {Happy: 1, Open: 0.7, Smile: 1}
+  parent: gamma-june
+gamma-marlo/critter-head:
+  attachment: {skin: true}
+  id: gamma-marlo/critter-head
+  model: {id: /cdn/value.43c1427f34c45c4356a682d359e3c1d9009830432ed20ba8f7a0d0332015d2a6.glb, materials: {belly: {color: "#e9e6ea"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#8b8a92"}, mark: {color: "#2c2a32"}, nose: {color: "#1c1a20"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#2a2830"}}}
+  morph: {Open: 0.4, Smile: 1}
+  parent: gamma-marlo
+gamma-moss/critter-head:
+  attachment: {skin: true}
+  id: gamma-moss/critter-head
+  model: {id: /cdn/value.d162d4395626ed10ca66bc81aea5a9d7b41c697499eac29a87242caf8ba838ad.glb, materials: {belly: {color: "#fbe3b0"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#ebb04e"}, mark: {color: "#a3592a"}, nose: {color: "#8a4a2a"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#a3592a"}}}
+  morph: {Half: 0.7, Smile: 0.3}
+  parent: gamma-moss
+gamma-nell/critter-head:
+  attachment: {skin: true}
+  id: gamma-nell/critter-head
+  model: {id: /cdn/value.45ed3621aa8ebac43fed22f92d9a5061efe5226ff977a8e7badbb7dc047b02a2.glb, materials: {belly: {color: "#ffffff"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f4efe9"}, inner: {color: "#ffc2d1"}, nose: {color: "#ff9fb4"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#ffffff"}}}
+  morph: {Blep: 1, Smile: 0.4}
+  parent: gamma-nell
+gamma-otto/critter-head:
+  attachment: {skin: true}
+  id: gamma-otto/critter-head
+  model: {id: /cdn/value.ae29de9e8f259a7de313d8e866494f31b12ca37f1a3891169d28e0e45b8e03b1.glb, materials: {belly: {color: "#ffd9e0"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#ffb3c1"}, nose: {color: "#ff8ca2"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#ffd9e0"}}}
+  morph: {Smile: 0.8}
+  parent: gamma-otto
+gamma-pip/critter-head:
+  attachment: {skin: true}
+  id: gamma-pip/critter-head
+  model: {id: /cdn/value.436740c4291dbdda1dcb292e385a017e50042ca420654a6f54211b6b0578dc16.glb, materials: {belly: {color: "#f4ece2"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#c4532a"}, mark: {color: "#2b1a14"}, nose: {color: "#1c1a20"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#7a2e16"}}}
+  morph: {Happy: 1, Open: 0.7, Smile: 1}
+  parent: gamma-pip
+gamma-tess/critter-head:
+  attachment: {skin: true}
+  id: gamma-tess/critter-head
+  model: {id: /cdn/value.d206916575ccbe6d031f0934134d27d2acea05a26d027868fc5ec32e3031a56b.glb, materials: {belly: {color: "#ffffff"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f6f1e7"}, inner: {color: "#8a7f8c"}, mark: {color: "#5d5560"}, nose: {color: "#2a1c18"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#ffffff"}}}
+  morph: {Half: 0.7, Smile: 0.3}
+  parent: gamma-tess
+gamma-vale/critter-head:
+  attachment: {skin: true}
+  id: gamma-vale/critter-head
+  model: {id: /cdn/value.58f56d191ddcc7f2a2ba6b9d7fc685d73710240c589ff13158d7acfb20f5dcdb.glb, materials: {belly: {color: "#ffffff"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f07a2e"}, mark: {color: "#2c1c18"}, nose: {color: "#231816"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#ffffff"}}}
+  morph: {Smile: 0.8}
+  parent: gamma-vale
