@@ -352,12 +352,12 @@ const HOLD = { // how each weapon sits in the fist: offset of its grip from its 
 }
 const Q_MELEE = { x: -0.5, y: 0.5, z: 0.5, w: 0.5 } // its length up, its blade forward
 const Q_GUN = { x: 0, y: 0, z: 0, w: 1 } // the viewmodel's own +Z is already forward: no turn
-const GUN_FIX = { shotgun: { yaw: 180, pitch: -35, at: { x: 0, y: -0.15, z: 0.25 } } }
+const GUN_FIX = { shotgun: { yaw: 0, pitch: -37, at: { x: 0, y: 0.262, z: -0.216 } } } // positive pitch tips +Z up here; trigger at mesh (0,-0.08,0.33)
 function viewmodel(ctx, moving, sprinting) {
   if (!ctx.self.isLocal) return
   const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists', l = s.look ?? {}
   const ply = l.modelUrl || '' // a worn .plymodel: its own arm holds the weapon instead of the critter paw
-  const arm = ply ? { hidden: true } : { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v5'
+  const arm = ply ? { hidden: true } : { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v6'
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     w.plyRig = null
