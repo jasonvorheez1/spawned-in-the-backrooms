@@ -205,6 +205,31 @@ function tickStats(ctx, t, moving) {
     }
   }
 
+  // the lights' hum spikes: a loud surge that eats sanity while you stand in it; keep moving
+  if (zone !== 'hub') {
+    const [a, b] = L.humSpikeEvery
+    w.nextSpike ??= now + (a + ctx.random() * (b - a)) * 1000
+    if (now >= w.nextSpike && !w.spikeUntil) {
+      w.spikeUntil = now + L.humSpikeLength * 1000
+      sound(ctx, 'fluorescent-buzz-surge-loud', 0.9, true)
+      ctx.emit('screenShake', { intensity: 0.12, duration: L.humSpikeLength }, { audience: { player: ctx.self.id } })
+      s.humAt = now
+    }
+    if (w.spikeUntil) {
+      s.sanity -= L.humSpikeSanity * (moving ? 0.2 : 1) * t
+      if (now >= w.spikeUntil) { w.spikeUntil = 0; w.nextSpike = now + (a + ctx.random() * (b - a)) * 1000 }
+    }
+    // whispers and scratching from just behind a wall beside you
+    const [c, d] = L.wallNoiseEvery
+    w.nextNoise ??= now + (c + ctx.random() * (d - c)) * 1000
+    if (now >= w.nextNoise) {
+      w.nextNoise = now + (c + ctx.random() * (d - c)) * 1000
+      const side = ctx.random() < 0.5 ? -1 : 1, back = 0.6 + ctx.random()
+      const at = { x: p.x + (-af.z * side * 2.6) - af.x * back, y: p.y + 1.2, z: p.z + (af.x * side * 2.6) - af.z * back }
+      const clip = ctx.random() < 0.5 ? 'indistinct-whispers-behind-wall' : 'nails-scratching-behind-wall'
+      ctx.emit('playSound', { clip: SND(clip), position: at, volume: 0.55, refDistance: 1.5, maxDistance: 12 }, { audience: { player: ctx.self.id } })
+    }
+  }
   // flashlight battery
   if (w.light) { w.battery -= L.batteryDrain * t; if (w.battery <= 0) { w.battery = 0; toggleLight(ctx) } }
   const st = Math.round(w.stamina), bt = Math.round(w.battery)

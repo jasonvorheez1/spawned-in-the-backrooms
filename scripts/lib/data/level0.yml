@@ -57,3 +57,9 @@ lurkerSanity: 8
 lurkerBiteCooldown: 1.4
 lurkerRespawn: 60
 xpLurker: 80
+
+# noises (wiki: hum spikes, whispers, scratching behind walls). all her picks
+humSpikeEvery: [70, 140]   # seconds between spikes
+humSpikeLength: 6          # seconds a spike lasts
+humSpikeSanity: 2.5        # sanity per second lost standing still in a spike (moving takes a fifth)
+wallNoiseEvery: [25, 55]   # seconds between whispers / scratching
