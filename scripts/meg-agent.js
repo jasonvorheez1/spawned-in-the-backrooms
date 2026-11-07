@@ -31,7 +31,7 @@ function arm(ctx, me, m) {
   if (!s.arm) s.arm = given && given !== "pistol" ? given : rollArm(me.id, poolOf(s));
   if (held && given === s.arm) { m.armed = true; return; }
   if (held) ctx.destroy(held.id);
-  ctx.spawn({ parent: me.id, attachment: { bone: "Hips" }, feetPosition: { x: 0.17, y: -0.06, z: 0.02 }, rotation: { yaw: 0, pitch: -90, roll: 0 }, state: { kind: s.arm }, ...weaponBody(s.arm) });
+  ctx.spawn({ parent: me.id, attachment: { bone: "RightHand" }, visible: false, state: { kind: s.arm }, ...weaponBody(s.arm) });
   m.drawn = undefined; m.armed = true;
 }
 const SHOTS = { shotgun: "/cdn/moodboard-realistic-gritty/sfx-shotgun-blast-heavy-boom.mp3", smg: "/cdn/moodboard-realistic-gritty/sfx-smg-tommy-gun-loud-rattle-shot.mp3" };
@@ -193,10 +193,13 @@ function holster(ctx, me, m, drawn) {
   if (m.drawn === drawn) return;
   const gun = (me.children ?? []).map((c) => (typeof c === "string" ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) : c)).find((c) => c && !String(c.id).endsWith("/" + HEAD_ID) && (c.model || c.primitive)); // the gun, never the head
   if (!gun) return; m.drawn = drawn;
-  gun.attachment = drawn ? { bone: "RightHand" } : { bone: "Hips" };
-  gun.feetPosition = drawn ? { x: 0, y: 0, z: 0 } : { x: 0.17, y: -0.06, z: 0.02 };
-  gun.rotation = drawn ? { yaw: 0, pitch: 0, roll: 0 } : { yaw: 0, pitch: -90, roll: 0 };
-  heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-gun-holster-leather.mp3", position: me.feetPosition, volume: 0.5, maxDistance: 15 });
+  const ranged = !!(WP[me.state.arm ?? gun.state?.kind ?? "pistol"] ?? WP.pistol).ranged;
+  // calm: a gun rides slung across the back; a melee weapon is put away out of sight. a fight brings either to the right hand
+  gun.visible = drawn || ranged;
+  gun.attachment = drawn ? { bone: "RightHand" } : { bone: me.model ? "Spine02" : "Spine2" };
+  gun.feetPosition = drawn ? { x: 0, y: 0, z: 0 } : { x: 0, y: 0.05, z: -0.17 };
+  gun.rotation = drawn ? { yaw: 0, pitch: 0, roll: 0 } : { yaw: 0, pitch: -90, roll: 35 };
+  if (ranged || drawn) heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-gun-holster-leather.mp3", position: me.feetPosition, volume: 0.5, maxDistance: 15 });
 }
 function aim(me, m, t) {
   const id = t?.id ?? null;
