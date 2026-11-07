@@ -4,7 +4,7 @@
 // Numbers and places: scripts/lib/l5-boiler-plan.js
 import { zoneAt } from "./lib/level5.js";
 import { FURNACES, MACHINES, LEAKS, VENTS, VENT, HEAT } from "./lib/l5-boiler-plan.js";
-export const updateSchedule = { every: { seconds: 0.25 } };
+export const updateSchedule = { every: { seconds: 0.5 } };
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const BOILERS = MACHINES.filter((m) => m.kind === "boiler");
 const TELL = `fx
