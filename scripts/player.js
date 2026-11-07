@@ -130,7 +130,8 @@ export function onInput(ctx, input) {
   const mx = input.axes.moveX ?? 0, mz = input.axes.moveZ ?? 0, mag = Math.hypot(mx, mz)
   const nx = mag > 1 ? mx / mag : mx, nz = mag > 1 ? mz / mag : mz
   w.dir = { x: cos * nx - sin * nz, z: -(sin * nx + cos * nz) }
-  w.sprint = !!input.held.sprint
+  // on a phone, pushing the stick all the way runs: no sprint button to hold beside it
+  w.sprint = !!input.held.sprint || (input.axes.touchActive === 1 && Math.hypot(input.axes.moveX ?? 0, input.axes.moveZ ?? 0) > 0.95)
   if (input.pressed.jump && ctx.self.grounded && !ctx.self.parent) {
     const v = ctx.self.velocity
     ctx.self.velocity = { x: v.x, y: PLAYER.jumpSpeed, z: v.z }
