@@ -140,8 +140,8 @@ export function tick(ctx) {
 // what each Level 4 prop breaks as (Savi's picks); hp is the material's, scaled
 const PROP4 = { chair: ["metal", 0.4], box: ["wood", 0.5], boxes: ["wood", 0.8], plant: ["wood", 0.4], panel: ["wood", 0.9], cabinet: ["sheet_steel", 0.6], island: ["wood", 2.2], printer: ["machine", 0.8] };
 function breakProps(ctx) {
-  for (const o of Object.values(ctx.place.objects)) {
-    if (o.tags?.includes("breakable") || !o.physics) continue;
+  for (const r of ctx.query({ excludeTags: ["breakable"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+    const o = ctx.getObject(r.id); if (!o || !o.physics) continue;
     const kind = /l4-(prop|office)-geo/.test(o.primitive?.script ?? "") ? o.primitive.params?.kind : o.tags?.some((t) => t === "homekit" || t === "l4-npc-home") ? "kit" : null;
     const [mat, k] = kind === "kit" ? ["wood", 1.2] : PROP4[kind] ?? [];
     if (!mat) continue;
