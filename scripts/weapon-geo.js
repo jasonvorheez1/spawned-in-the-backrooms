@@ -204,61 +204,71 @@ const builders = {
   },
 };
 
-// A variant drawn over a weapon, mesh or scripted: params { kind, look }. Each kind's grip and head along +Z, its radius there,
-// and where a blade's working edge runs (x, z0, z1). Measured off the fitted meshes in art/weapons/fit.json and the builders above.
-const ZONES = {
-  table_leg: { grip: [0.02, 0.2, 0.036], head: [0.45, 0.68, 0.04] },
-  pipe_scrap: { grip: [0.2, 0.34, 0.033], head: [0.5, 0.74, 0.032] },
-  crowbar: { grip: [0.06, 0.26, 0.019], head: [0.5, 0.7, 0.018] },
-  bat: { grip: [0.03, 0.28, 0.025], head: [0.66, 0.95, 0.05] },
-  hatchet: { grip: [0.02, 0.26, 0.022], head: [0.4, 0.6, 0.021], edge: [0.185, 0.62, 0.84] },
-  fire_axe: { grip: [0.1, 0.3, 0.028], head: [0.5, 0.8, 0.025], edge: [0.235, 0.8, 1.08] },
-  rebar: { grip: [0.05, 0.26, 0.018], head: [0.4, 0.8, 0.013], edge: [0.032, 0.94, 1.04] },
-  wrench: { grip: [0.04, 0.32, 0.019], head: [0.3, 0.4, 0.019] },
-  screwdriver: { grip: [0.0, 0.11, 0.021], head: [0.14, 0.26, 0.006], edge: [0, 0.27, 0.3] },
-  sledgehammer: { grip: [0.0, 0.24, 0.022], head: [0.6, 0.82, 0.018] },
-  pistol: { grip: [0.02, 0.06, 0.016], head: [0.08, 0.2, 0.016] },
-  shotgun: { grip: [0.44, 0.6, 0.03], head: [0.62, 0.8, 0.02] },
+// Tripo meshes, sampled along their length in their own file frame: rows [z, x, y, r] (r: the thinner half-width there).
+// The look on a mesh follows these; a kind whose mesh lies on a slant (fire axe, shotgun) wears no drawn look, its name and stats carry it.
+const MESHPROF = {
+  table_leg: { grip: [0.075, 0.296], head: [0.369, 0.554], p: [[-0.036,-0.003,0.193,0.045],[0.001,-0.003,0.18,0.058],[0.038,-0.004,0.176,0.056],[0.075,-0.004,0.157,0.031],[0.111,-0.011,0.149,0.025],[0.148,-0.014,0.131,0.001],[0.296,-0.01,0.147,0.021],[0.332,-0.01,0.147,0.021],[0.406,-0.01,0.144,0.022],[0.443,-0.01,0.144,0.022],[0.48,-0.01,0.144,0.024],[0.517,-0.01,0.143,0.026],[0.554,-0.01,0.143,0.026],[0.59,0.066,0.221,0.164],[0.627,0.078,0.228,0.197],[0.664,0.009,0.276,0.267],[0.701,0.01,0.276,0.266]] },
+  pipe_scrap: { grip: [0.031, 0.244], head: [0.500, 0.714], p: [[-0.012,0.0,0.109,0.114],[0.031,0.0,0.109,0.109],[0.073,0.0,0.109,0.109],[0.116,0.0,0.108,0.109],[0.159,0.0,0.108,0.108],[0.629,0.011,0.106,0.09],[0.671,0.0,0.108,0.104],[0.714,0.0,0.108,0.109],[0.799,0.029,0.003,0.004],[0.842,0.0,0.108,0.113]] },
+  crowbar: { grip: [0.295, 0.541], head: [0.098, 0.246], p: [[-0.05,-0.047,0.223,0.056],[-0.001,-0.044,0.239,0.065],[0.048,-0.044,0.245,0.065],[0.098,-0.03,0.227,0.064],[0.147,-0.028,0.221,0.064],[0.196,-0.026,0.127,0.062],[0.245,-0.013,0.093,0.052],[0.295,-0.013,0.088,0.052],[0.344,-0.011,0.087,0.041],[0.639,0.026,-0.039,0.008],[0.689,0.032,-0.034,0.044],[0.738,0.03,-0.033,0.05],[0.787,0.03,-0.044,0.048],[0.837,0.049,-0.07,0.05],[0.886,0.05,-0.082,0.057],[0.935,0.05,-0.083,0.056]] },
+  bat: { grip: [0.132, 0.387], head: [0.592, 0.898], p: [[-0.021,0.048,0.085,0.065],[0.03,0.048,0.085,0.065],[0.183,0.035,0.086,0.068],[0.234,0.032,0.086,0.068],[0.285,0.028,0.086,0.067],[0.336,0.021,0.085,0.061],[0.387,0.021,0.085,0.061],[0.438,0.014,0.086,0.048],[0.49,0.014,0.086,0.048],[0.541,0.006,0.087,0.049],[0.592,0.006,0.087,0.049],[0.643,0.002,0.085,0.039],[0.694,-0.002,0.087,0.039],[0.745,-0.006,0.087,0.039],[0.796,-0.009,0.088,0.04],[0.847,-0.019,0.089,0.049],[0.898,-0.027,0.089,0.08],[0.949,-0.024,0.089,0.089],[1.0,-0.024,0.089,0.089]] },
+  hatchet: { grip: [0.032, 0.331], head: [0.374, 0.520], p: [[-0.011,0.073,0.066,0.052],[0.032,0.073,0.065,0.053],[0.075,0.073,0.066,0.047],[0.117,0.073,0.065,0.041],[0.16,0.073,0.066,0.04],[0.203,0.072,0.066,0.039],[0.246,0.072,0.066,0.039],[0.374,0.073,0.066,0.038],[0.417,0.073,0.066,0.039],[0.46,0.073,0.066,0.039],[0.503,0.071,0.066,0.007],[0.545,0.073,0.066,0.048],[0.588,0.153,0.066,0.049],[0.631,0.16,0.066,0.049],[0.674,0.148,0.066,0.052],[0.717,0.07,0.066,0.05],[0.759,0.069,0.066,0.052],[0.802,0.138,0.066,0.052],[0.845,0.27,0.066,0.018]] },
+  pistol: { mag: [0.15, 0.2, -0.1] },
 };
+const SCRIPTED = { // grip and head along +Z, and the radius there, for the kinds drawn by the builders above
+  table_leg: { grip: [0.02, 0.2, 0.036], head: [0.45, 0.68, 0.04] }, pipe_scrap: { grip: [0.2, 0.34, 0.033], head: [0.5, 0.74, 0.032] },
+  crowbar: { grip: [0.06, 0.26, 0.019], head: [0.5, 0.7, 0.018] }, bat: { grip: [0.03, 0.28, 0.025], head: [0.66, 0.95, 0.05] },
+  hatchet: { grip: [0.02, 0.26, 0.022], head: [0.4, 0.6, 0.021] }, fire_axe: { grip: [0.1, 0.3, 0.028], head: [0.5, 0.8, 0.025] },
+  rebar: { grip: [0.05, 0.26, 0.018], head: [0.4, 0.8, 0.013] }, wrench: { grip: [0.04, 0.32, 0.019], head: [0.3, 0.4, 0.019] },
+  screwdriver: { grip: [0.0, 0.11, 0.021], head: [0.14, 0.26, 0.006] }, sledgehammer: { grip: [0.0, 0.24, 0.022], head: [0.6, 0.82, 0.018] },
+  pistol: { grip: [0.02, 0.06, 0.016], head: [0.08, 0.2, 0.016], mag: [0.018, 0.05, -0.085] }, shotgun: { grip: [0.44, 0.6, 0.03], head: [0.62, 0.8, 0.02] },
+};
+// where the shaft is at z: [x, y, r]
+function shaftAt(z, mp, r0) {
+  if (!mp?.p) return [0, Y, r0];
+  const p = mp.p; if (z <= p[0][0]) return p[0].slice(1); if (z >= p[p.length - 1][0]) return p[p.length - 1].slice(1);
+  for (let i = 1; i < p.length; i++) if (z <= p[i][0]) { const a = p[i - 1], b = p[i], t = (z - a[0]) / (b[0] - a[0] || 1); return [a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t, a[3] + (b[3] - a[3]) * t]; }
+}
 const LIME = "oklch(0.84 0.2 128)", DUCT = "oklch(0.62 0.01 250)", LEATHER = "oklch(0.42 0.07 50)";
-function overlay(ctx, kind, look, M, hi) {
-  const z = ZONES[kind] ?? ZONES.table_leg, [g0, g1, gr] = z.grip, [h0, h1, hr] = z.head;
+// one band around the shaft from z0 to z1, r scaled
+function band(ctx, z0, z1, mp, r0, k, M) { const [x, y, r] = shaftAt((z0 + z1) / 2, mp, r0); rod(ctx, [[x, y, z0], [x, y, z1]], [r * k, r * k], M); }
+function overlay(ctx, kind, look, mesh, M, hi) {
+  const mp = mesh ? MESHPROF[kind] : null;
+  if (mesh && !mp) return; // a slanted mesh
+  const sz = SCRIPTED[kind] ?? SCRIPTED.table_leg, [g0, g1] = mp?.grip ?? sz.grip, [h0, h1] = mp?.head ?? sz.head, gr = sz.grip[2], hr = sz.head[2];
   if (look === "rust") { // flaking rust blooms down the shaft
     ctx.albedo(null); ctx.color(RUST); ctx.roughness(1); ctx.metalness(0.1);
-    for (const t of [0.15, 0.45, 0.7, 0.9]) { const zz = g1 + (h1 - g1) * t, r = gr + (hr - gr) * t; rod(ctx, [[0, Y, zz], [0, Y, zz + 0.025 + t * 0.02]], [r * 1.04, r * 1.05], M); }
-  } else if (look === "tape") { // grey duct tape wound over the grip, a loose tail
+    for (const t of [0.1, 0.4, 0.65, 0.9]) { const z = g1 + (h1 - g1) * t; band(ctx, z, z + 0.02 + t * 0.02, mp, gr + (hr - gr) * t, 1.08, M); }
+  } else if (look === "tape") { // grey duct tape wound over the grip
     ctx.albedo(null); ctx.color(DUCT); ctx.roughness(0.55);
-    wraps(ctx, g0, g1, gr * 1.12, M, 0.016);
-    if (hi) blade(ctx, [[gr * 1.1, g1 - 0.01], [gr * 1.1 + 0.03, g1 + 0.02]], [[gr * 1.1, g1 + 0.006], [gr * 1.1 + 0.032, g1 + 0.034]], 0.0008, 0.0006);
+    for (let z = g0; z < g1; z += 0.016) band(ctx, z, z + 0.013, mp, gr, 1.12, M);
   } else if (look === "nails") { // nails hammered through the head, a few bent
     ctx.albedo(STEELTEX); ctx.color("oklch(0.72 0.01 250)"); ctx.metalness(0.8); ctx.roughness(0.4);
     const n = hi ? 10 : 6;
-    for (let k = 0; k < n; k++) { const zz = h0 + ((k + 0.5) / n) * (h1 - h0), a = k * 2.4, b = k % 3 === 0 ? 0.02 : 0; rod(ctx, [[Math.cos(a) * hr * 0.6, Y + Math.sin(a) * hr * 0.6, zz], [Math.cos(a) * (hr + 0.045), Y + Math.sin(a) * (hr + 0.045), zz + 0.008 + b]], [0.0035, 0.0015], 4); }
-    ctx.albedo(null); ctx.color("oklch(0.3 0.1 25)"); ctx.roughness(0.7); rod(ctx, [[0, Y, h0 + (h1 - h0) * 0.3], [0, Y, h0 + (h1 - h0) * 0.55]], [hr * 1.03, hr * 1.04], M); // an old stain
-  } else if (look === "edge") { // a freshly ground edge and a leather-wrapped grip
-    ctx.albedo(null); ctx.color(LEATHER); ctx.roughness(0.8); wraps(ctx, g0, g1, gr * 1.1, M, 0.014);
-    if (z.edge) { const [x, e0, e1] = z.edge; ctx.color("oklch(0.97 0.005 250)"); ctx.metalness(1); ctx.roughness(0.08); bar(ctx, x, Y, 0.0025, 0.004, e0, e1, 0.001, 1); }
+    for (let k = 0; k < n; k++) { const z = h0 + ((k + 0.5) / n) * (h1 - h0), [x, y, r] = shaftAt(z, mp, hr), a = k * 2.4, b = k % 3 === 0 ? 0.02 : 0; rod(ctx, [[x + Math.cos(a) * r * 0.6, y + Math.sin(a) * r * 0.6, z], [x + Math.cos(a) * (r + 0.045), y + Math.sin(a) * (r + 0.045), z + 0.008 + b]], [0.0035, 0.0015], 4); }
+    ctx.albedo(null); ctx.color("oklch(0.3 0.1 25)"); ctx.roughness(0.7); band(ctx, h0 + (h1 - h0) * 0.3, h0 + (h1 - h0) * 0.55, mp, hr, 1.04, M); // an old stain
+  } else if (look === "edge") { // a leather-wrapped grip; scripted blades also get a freshly ground edge
+    ctx.albedo(null); ctx.color(LEATHER); ctx.roughness(0.8);
+    for (let z = g0; z < g1; z += 0.014) band(ctx, z, z + 0.012, mp, gr, 1.1, M);
+    const e = !mp && { hatchet: [0.185, 0.62, 0.84], fire_axe: [0.235, 0.8, 1.08], rebar: [0.032, 0.94, 1.04], screwdriver: [0, 0.27, 0.3] }[kind];
+    if (e) { ctx.color("oklch(0.97 0.005 250)"); ctx.metalness(1); ctx.roughness(0.08); bar(ctx, e[0], Y, 0.0025, 0.004, e[1], e[2], 0.001, 1); }
   } else if (look === "meg") { // M.E.G. property: lime paint bands and a stamped tag
-    ctx.albedo(null); ctx.color(LIME); ctx.roughness(0.45); ctx.emissive?.("oklch(0.5 0.15 128)");
-    rod(ctx, [[0, Y, g1 + 0.005], [0, Y, g1 + 0.025]], [gr * 1.06, gr * 1.06], M);
-    rod(ctx, [[0, Y, h0], [0, Y, h0 + 0.015]], [hr * 1.06, hr * 1.06], M);
-    ctx.color("oklch(0.75 0.01 250)"); ctx.metalness(0.9); ctx.roughness(0.35);
-    bar(ctx, gr * 1.1 + 0.002, Y, 0.0015, 0.012, g0 + 0.03, g0 + 0.06, 0.0008, 1); // the tag
-  } else if (look === "mag") { // an extended magazine poking out under the grip, a witness plate
-    ctx.albedo(STEELTEX); ctx.color("oklch(0.22 0.01 260)"); ctx.metalness(0.6); ctx.roughness(0.45);
-    bar(ctx, 0, -0.085, 0.0115, 0.035, 0.018, 0.05, 0.003);
-    ctx.color("oklch(0.75 0.13 85)"); ctx.metalness(0.9); bar(ctx, 0, -0.12, 0.0125, 0.004, 0.016, 0.052, 0.002); // brass base plate
-  } else if (look === "sawn") { // the hacksawn muzzle, bright where it was cut, and a strap of tape on the cut stock
-    ctx.albedo(null); ctx.color("oklch(0.8 0.01 250)"); ctx.metalness(1); ctx.roughness(0.2);
-    rod(ctx, [[0, Y + 0.026, 0.917], [0, Y + 0.026, 0.925]], [0.02, 0.02], M);
-    ctx.color(DUCT); ctx.metalness(0); ctx.roughness(0.6); wraps(ctx, 0.0, 0.08, 0.032, M, 0.018);
+    ctx.albedo(null); ctx.color(LIME); ctx.roughness(0.45);
+    band(ctx, g1 + 0.005, g1 + 0.025, mp, gr, 1.08, M); band(ctx, h0, h0 + 0.015, mp, hr, 1.08, M);
+    const [x, y, r] = shaftAt(g0 + 0.045, mp, gr);
+    ctx.color("oklch(0.75 0.01 250)"); ctx.metalness(0.9); ctx.roughness(0.35); bar(ctx, x + r * 1.1 + 0.002, y, 0.0015, 0.012, g0 + 0.03, g0 + 0.06, 0.0008, 1);
+  } else if (look === "mag") { // an extended magazine out of the grip, brass base plate
+    const [m0, m1, my] = mp?.mag ?? sz.mag ?? [0.02, 0.05, -0.085];
+    ctx.albedo(STEELTEX); ctx.color("oklch(0.22 0.01 260)"); ctx.metalness(0.6); ctx.roughness(0.45); bar(ctx, 0, my, 0.0115, 0.035, m0, m1, 0.003);
+    ctx.color("oklch(0.75 0.13 85)"); ctx.metalness(0.9); bar(ctx, 0, my - 0.035, 0.0125, 0.004, m0 - 0.002, m1 + 0.002, 0.002);
+  } else if (look === "sawn" && !mp) { // the hacksawn muzzle, bright at the cut
+    ctx.albedo(null); ctx.color("oklch(0.8 0.01 250)"); ctx.metalness(1); ctx.roughness(0.2); rod(ctx, [[0, Y + 0.026, 0.917], [0, Y + 0.026, 0.925]], [0.02, 0.02], M);
   }
 }
 
 export function geometry(ctx) {
   const k0 = String(ctx.params?.kind ?? "").split("~")[0], kind = W[k0] ? k0 : "table_leg", hi = ctx.lod <= 2, M = hi ? 18 : 8;
   ctx.smooth();
-  if (ctx.params?.look) overlay(ctx, kind, ctx.params.look, M, hi);
+  if (ctx.params?.look) overlay(ctx, kind, ctx.params.look, !!ctx.params.mesh, M, hi);
   else (builders[kind] ?? builders.table_leg)(ctx, M, hi);
   ctx.albedo(null); ctx.color(null); ctx.metalness(0);
 }

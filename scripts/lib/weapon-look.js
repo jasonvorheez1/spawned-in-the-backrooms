@@ -24,7 +24,7 @@ export function weaponBody(kind) {
   if (sc !== 1 || short !== 1) body.scale = { x: sc, y: sc, z: sc * short }
   // the look rides as a child. A mesh stands centred on its feet and faces the other way from the scripted frame
   // (handle toward +Z), so the look turns half round and sits at the mesh's centre (art/weapons/fit.json)
-  if (look) { const c = CENTER[base]; body.children = [{ primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: base, look } }, castShadow: false,
+  if (look) { const c = CENTER[base]; body.children = [{ primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: base, look, ...(m ? { mesh: 1 } : {}) } }, castShadow: false,
     ...(m && c ? { feetPosition: { x: c[0], y: 0, z: c[1] }, rotation: 180 } : {}) }] }
   return body
 }
