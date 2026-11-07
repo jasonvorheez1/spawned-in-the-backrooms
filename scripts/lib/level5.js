@@ -60,6 +60,8 @@ export const OPENINGS = [
   { ax: "x", at: 18, a0: -1.1, a1: 1.1, h: 2.6, kind: "metal", placard: "BOILER ROOM · STAFF ONLY" },
   // housekeeping ↔ boiler: M.E.G. guide the way in
   { ax: "x", at: 18, a0: 17, a1: 19, h: 2.6, kind: "metal" },
+  // boiler ↔ M.E.G. cold room: the way into the shelter (it was sealed on every side)
+  { ax: "x", at: 39.5, a0: -20.4, a1: -18.2, h: 2.6, kind: "metal", placard: "M.E.G. COLD ROOM" },
 ];
 // the ways in and out (sim lays each; scripts/level-door.js crosses). to: a live place, or sealed: words for a door that won't open yet
 export const EXITS = [
