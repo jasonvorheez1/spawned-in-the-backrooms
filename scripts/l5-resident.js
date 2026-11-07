@@ -1,6 +1,8 @@
 // A Level 5 resident's own card buttons (state.offers ring ears.talkopt): the concierge rents suites, the guide walks you
 // to the Boiler Room, the clerk posts the rat job, staff gossip, the Originals turn moderns away and tell old stories.
 import { PEOPLE5 as P, speak } from "./lib/l5-people.js";
+import { skillsOf } from "./lib/stats.js";
+const KEY_SPEECH = 25; // Savi's pick: Speech to talk Harlan out of the boiler key (lockpick on the door is the other way, scripts/interact.js)
 const pick = (ctx, a) => a[Math.floor(ctx.random() * a.length)];
 const GOSSIP = {
   odette: ["Four-twelve hasn't been slept in for sixty years and the sheets are warm every morning. I just change them.", "The salon crowd tips in coins nobody's minted since the Kaiser. Mr. Ambrose makes me hand them in.", "Don't use the ballroom mirror. It's a nice mirror. Just don't."],
@@ -57,6 +59,12 @@ export const ears = {
       p.state.almonds = (p.state.almonds ?? 0) + RJ.almonds; p.state.ammo = (p.state.ammo ?? 0) + RJ.ammo * 12; p.state.l5job = null; p.state.l5jobsDone = (p.state.l5jobsDone ?? 0) + 1;
       p.state.notice = { text: `+${RJ.almonds} almond water, +${RJ.ammo * 12} rounds`, at: now };
       return say(ctx, p, "That's five. Good work. Board'll have more by tomorrow, it always does.");
+    }
+    if (k === "boilerkey") {
+      if (p.state.l5boilerKey) return say(ctx, p, "You've got one already. Don't lose it in there, I'm not cutting another.");
+      if ((skillsOf(p.state).speech ?? 0) < KEY_SPEECH) { p.state.notice = { text: `[Speech ${KEY_SPEECH}] Failed`, at: now }; return say(ctx, p, pick(ctx, ["Staff only. Nice try.", "And why would I hand a stranger the keys to the hottest room in the house?", "No. Go pick a lock or something. Actually, don't."])); }
+      p.state.l5boilerKey = true; p.state.notice = { text: `[Speech ${KEY_SPEECH}] Got the Boiler Room key`, at: now };
+      return say(ctx, p, "...Fine. You talk like someone who'd go in anyway. Take it. Kill a rat for me while you're down there.");
     }
     if (k === "gossip") return say(ctx, p, pick(ctx, GOSSIP[s.voice] ?? GOSSIP.imani));
     if (k === "member") return say(ctx, p, pick(ctx, REFUSE));

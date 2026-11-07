@@ -133,7 +133,8 @@ export function update(ctx, dt) {
   if (turning) {
     m.r = Math.min(maxR, m.r + 140 * dt)
     if (m.r >= 89.5) { // open
-      const it = target; it.state.lock = ''
+      const it = target; if (pk.kind === 'boiler') { const xp = Math.round(pk.lv * 0.8); gain(ctx, xp); snd(ctx, 'lock-picking-click', 0.8); note(ctx, `[Lockpick ${pk.lv}] The padlock gives! +${xp} XP`); s.pick = null; s.pickP = null; s.pickR = null; s.l5boilerPick = ctx.now(); ctx.emit('press', { by: ctx.self.id }, { to: it.id }); return }
+      it.state.lock = ''
       const xp = Math.round(pk.lv * 0.8)
       gain(ctx, xp)
       snd(ctx, 'lock-picking-click', 0.8); note(ctx, `[Lockpick ${pk.lv}] The lock gives! +${xp} XP`)

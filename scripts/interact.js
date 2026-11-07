@@ -286,6 +286,7 @@ function press(ctx) {
     }
     m.key = ''; return
   }
+  if (f.tag === 'usable' && it.state?.kind === 'boilerdoor' && !it.state.open && !s.l5boilerKey && (s.feetPosition?.x ?? ctx.self.feetPosition.x) < (it.worldFeetPosition?.x ?? 0) && (skillsOf(s).lockpick ?? 0) >= 25 && (s.bobbypins ?? 6) > 0) { startPick(ctx, it, 25, 'boiler'); m.key = ''; return } // no key: pick it (scripts/lockpick.js), else the door says what it wants
   if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); m.key = ''; return }
   if (f.tag === 'seat') { sitDown(ctx, it); m.key = ''; return }
   if (f.tag === 'bench') { s.craftOpen = 'bench'; s.craftBench = f.id; return }

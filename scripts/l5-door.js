@@ -24,6 +24,12 @@ export const ears = {
       const hinge = ctx.getObject(s.hinge), pos = { ...ctx.self.worldFeetPosition, y: 1.2 };
       if (!hinge) return;
       if (s.open) return;
+      const inside = (who?.worldFeetPosition?.x ?? 0) > ctx.self.worldFeetPosition.x + 0.2; // the boiler side always opens: nobody gets bolted in
+      if (!inside && !who?.state?.l5boilerKey && !(ctx.now() - (who?.state?.l5boilerPick ?? -1e9) < 6000)) {
+        heard(ctx, { clip: G("heavy-door-handle-rattle-locked"), position: pos, volume: 0.7, maxDistance: 12 });
+        say(who, "Bolted from the other side and padlocked. Harlan keeps the key, or you could pick it.", ctx);
+        return;
+      }
       s.open = true; s.verb = "Open"; s.info = "Swinging";
       animate(ctx, hinge, { "rotation.yaw": s.yaw0 + s.swing }, { duration: 0.6, easing: "easeOutCubic" });
       heard(ctx, { clip: G("heavy-metal-door-bolt-unlock-creak-open"), position: pos, volume: 0.8, maxDistance: 16 });
@@ -48,7 +54,7 @@ export const ears = {
 export function shut(ctx) {
   const s = ctx.self.state, hinge = ctx.getObject(s.hinge);
   if (hinge) animate(ctx, hinge, { "rotation.yaw": s.yaw0 }, { duration: 0.35, easing: "easeInQuad" });
-  s.open = false; s.verb = "Unbolt"; s.info = "Locked · staff only";
+  s.open = false; s.verb = "Unbolt"; s.info = "Locked · Harlan's key or Lockpick 25";
   ctx.after(0.35, "slam");
 }
 export function slam(ctx) {
