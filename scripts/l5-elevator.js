@@ -44,7 +44,8 @@ function cabUpdate(ctx) {
   if (s.req && s.phase !== "ride" && s.phase !== "fall") {
     const r = s.req; s.req = null;
     const riders = players.filter((p) => inside(c, p.feetPosition)).map((p) => p.id);
-    if (!riders.length) riders.push(r.by);
+    for (const o of ctx.query({ tags: ["l5-rider"], center: { x: s.cx, y: 0, z: s.cz }, radius: 1.5 })) if (inside(c, o.feetPosition)) riders.push(o.id);
+    if (!riders.length && r.by) riders.push(r.by);
     s.riders = riders; s.goTo = r.floor; s.t0 = now; s.step = 0;
     s.phase = DEADLY.has(r.floor) ? "fall" : "ride";
     closePanel(ctx, c); setDoors(ctx, c, false);
@@ -60,7 +61,7 @@ function cabUpdate(ctx) {
       s.step = 2;
       const di = destIndex(s.goTo, s.idx), d = cabOf(ctx, di);
       for (const id of s.riders) {
-        const p = players.find((q) => q.id === id); if (!p) continue;
+        const p = players.find((q) => q.id === id) ?? ctx.getObject(id); if (!p) continue;
         ctx.emit("screenFlash", { color: "#fff6dc", duration: 0.5, intensity: 0.9 }, { audience: { player: id } });
         if (freight && ctx.random() < E.freightDropChance) { // the old cable lets go
           p.feetPosition = { x: E.dropTo.x + (ctx.random() - 0.5), y: 0.1, z: E.dropTo.z + (ctx.random() - 0.5) }; p.velocity = { x: 0, y: -4, z: 0 };
@@ -89,7 +90,7 @@ function cabUpdate(ctx) {
     }
     if (s.step === 1 && t > E.closeMs + E.fallMs) {
       s.step = 2;
-      for (const id of s.riders) { const p = players.find((q) => q.id === id); if (!p) continue; p.state.hp = 0; p.state.notice = { text: "You took the elevator past floor 12.", at: now }; }
+      for (const id of s.riders) { const p = players.find((q) => q.id === id) ?? ctx.getObject(id); if (!p) continue; p.state.hp = 0; p.state.notice = { text: "You took the elevator past floor 12.", at: now }; }
       s.lastFall = { floor: s.goTo, riders: s.riders, at: now };
       setLamp(ctx, c, true); setFloor(ctx, c, s.home ?? "5"); s.phase = "idle"; s.riders = null;
     }
