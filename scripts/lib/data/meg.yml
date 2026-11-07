@@ -1,0 +1,12 @@
+# M.E.G. agents at the Level 1 waypoint (her picks, tuned against hounds: 45 hp, bite 14 every ~1 s)
+hp: 160          # survives ~11 hound bites; a pistol player needs ~5 hits
+sight: 22        # metres they spot a creature or a hostile player
+range: 16        # they stop and shoot inside this
+shot: 15         # damage per shot: a hound drops in 3
+playerShot: 11   # what a shot takes off a player who turned on them
+fireEvery: 0.9   # seconds between shots
+hitChance: 0.75  # a miss still cracks and flashes
+walk: 2.2
+run: 5.0
+leash: 45        # they never chase farther than this from their post
+respawn: 150     # seconds until a fallen agent is replaced

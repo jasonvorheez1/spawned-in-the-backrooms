@@ -1,3 +1,5 @@
+import MEG from "../../scripts/lib/data/meg.yml";
+import { weaponBody } from "../../scripts/lib/weapon-look.js";
 // Level 1's referee: lays the lamps, crates, supplies and thresholds once, then runs the Flickering.
 import L from "../../scripts/lib/data/level1.yml";
 import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ARRIVE, hash } from "../../scripts/lib/level1.js";
@@ -13,7 +15,7 @@ const AGENT = {
 const AGENTS = [["meg-ale", 2.6, -0.6], ["meg-ortiz", 11.5, -3.6], ["meg-callum", 7.9, -1.6]];
 export function agentSpec(a, id, dx, dz) {
   const g = AGENT[id];
-  return { tags: ["npc"], feetPosition: { x: a.x + dx, y: 0, z: a.z + dz }, rotation: { yaw: 90 }, physics: { body: "kinematic", collider: "capsule" },
+  return { tags: ["npc"], feetPosition: { x: a.x + dx, y: 0, z: a.z + dz }, rotation: { yaw: 90 }, physics: "character",
     primitive: { kind: "scripted", script: "scripts/critter-geo.js", params: g.look }, material: { outline: { color: "#1d1420", width: 2.4 } },
     jiggle: { bones: ["Tail*", "Ear*"], amount: 0.6, bounce: 0.6 }, behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role } };
 }
@@ -65,6 +67,14 @@ export function tick(ctx) {
     ctx.spawn("meg-radio", { feetPosition: { x: a.x + 6.9, y: 1, z: a.z - 0.6 }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-radio-static-chatter-loop.mp3", gain: 0.12, loop: true, spatial: true, maxDistance: 10 } });
     for (const [dx, dz, col] of [[6, 4.2, "oklch(0.85 0.12 75)"], [6, -4.2, "oklch(0.85 0.12 75)"], [13, 0, "oklch(0.92 0.04 220)"]]) ctx.spawn({ feetPosition: { x: a.x + dx, y: 2.3, z: a.z + dz }, light: { kind: "point", color: col, intensity: 2.5, distance: 9 } });
     for (const [id, dx, dz] of AGENTS) ctx.spawn(id, agentSpec(a, id, dx, dz));
+  }
+  if (s.megCamp) { // a fallen agent is replaced after a while; the new one holds no grudge
+    const a = cellCenter(ARRIVE.cx, ARRIVE.cz), t0 = ctx.now(); s.megGone ??= {};
+    for (const [id, dx, dz] of AGENTS) {
+      if (ctx.place.objects[id]) { if (s.megGone[id]) delete s.megGone[id]; continue; }
+      if (!s.megGone[id]) s.megGone[id] = t0;
+      else if (t0 - s.megGone[id] > MEG.respawn * 1000) { delete s.megGone[id]; const sp = agentSpec(a, id, dx, dz); ctx.spawn(id, sp); ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody("pistol") }); }
+    }
   }
   if (!s.puddles) { s.puddles = true;
     for (let i = 0; i < 70; i++) { const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N); if (zoneOf(cx, cz) !== "halls" && zoneOf(cx, cz) !== "storage") continue;

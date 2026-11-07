@@ -142,6 +142,8 @@ export function onInput(ctx, input) {
 
 function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
   m.state.hp -= dmg
+  const npc = m.tags?.includes('npc')
+  if (npc) m.state.angry = { ...(m.state.angry ?? {}), [ctx.self.id]: true } // the camp remembers who shot first
   const hit = { x: m.feetPosition.x, y: m.feetPosition.y + 1.5, z: m.feetPosition.z }
   if (loud) sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)
   ctx.emit('damageNumber', { position: hit, value: dmg, color: '#f7d98b' })
@@ -159,7 +161,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
     m.state.dead = true
     s.kills += 1
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
-    dropLoot(ctx, m.feetPosition, m.state?.kind === 'lurker' ? 'Lurker remains' : 'Smiler remains')
+    dropLoot(ctx, m.feetPosition, npc ? "Agent's pack" : m.state?.kind === 'lurker' ? 'Lurker remains' : 'Smiler remains')
   }
 }
 
@@ -199,7 +201,7 @@ function swing(ctx, power = 0) {
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   const cone = (s.ads && wp.adsCone) || wp.cone || (wp.ranged ? 0.985 : 0.4), radius = wp.ranged ? wp.range : wp.reach + 0.6 + power * P.reach
   const found = []
-  for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius }), ...ctx.query({ tags: ['hound'], radius }), ...ctx.query({ tags: ['stealer'], radius })]) {
+  for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius }), ...ctx.query({ tags: ['hound'], radius }), ...ctx.query({ tags: ['stealer'], radius }), ...ctx.query({ tags: ['npc'], radius })]) {
     if (m.state?.dead) continue
     const dx = m.feetPosition.x - p.x, dz = m.feetPosition.z - p.z, d = Math.hypot(dx, dz)
     if (d > 0.3 && (dx * f.x + dz * f.z) / d < cone) continue

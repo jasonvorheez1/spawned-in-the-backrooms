@@ -13,7 +13,7 @@ export function update(ctx, dt) {
     if (st.dead || (st.hp ?? 1) <= 0) { if (!m.gone) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.6, z: pos.z }, script: POOF }); ctx.emit("playSound", { clip: SND("hound-death-yelp"), position: pos, volume: 0.8 }); ctx.destroy(h.id); } continue; }
     const sight = L.houndSight * (dark ? L.houndSightFlicker : 1);
     let prey = null, best = Infinity;
-    for (const p of players) {
+    for (const p of [...players, ...ctx.query({ tags: ["npc"], radius: sight, center: pos }).filter((n) => !n.state?.dead)]) { // agents are meat too
       const d = Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z);
       const loud = (p.state?.sprinting ? L.houndHear : 0) || (dark && p.state?.light ? L.houndHearLight : 0);
       if (d < Math.max(sight, loud) && d < best) { best = d; prey = p; }
