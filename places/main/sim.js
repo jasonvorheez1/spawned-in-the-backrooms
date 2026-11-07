@@ -1,7 +1,7 @@
 // Level 0's referee: keeps almond water on the floor and smilers in the dark.
 import L from "../../scripts/lib/data/level0.yml";
 import W from "../../scripts/lib/data/weapons.yml";
-import { spawnAlmond, spawnAmmo, spawnWeapon, rollWeapon } from "../../scripts/lib/loot.js";
+import { spawnAlmond, spawnAmmo, spawnShells, spawnWeapon, rollWeapon } from "../../scripts/lib/loot.js";
 import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ } from "../../scripts/lib/maze.js";
 const PAPER = { texture: "cdn/texture-yellow-chevron-damask-wallpaper-aged.png", color: "oklch(0.98 0.01 90)", repeat: [1, 1] };
 export const cadence = "1s";
@@ -89,6 +89,13 @@ export function tick(ctx) {
     }
     s.smilersSeeded = true;
     s.nextSmiler = now + L.smilerRespawn * 1000;
+  }
+  const shells = ctx.query({ tags: ["shells"] }).length;
+  if (shells < W.shells.floor && now >= (s.nextShells ?? 0)) {
+    const fill = s.shellsSeeded ? 1 : W.shells.floor - shells;
+    for (let i = 0; i < fill; i++) { const c = cell(ctx); if (c) spawnShells(ctx, c); }
+    s.shellsSeeded = true;
+    s.nextShells = now + (W.shells.respawn * 1000) / 4;
   }
   const lurkers = ctx.query({ tags: ["lurker"] }).filter((m) => !m.state?.dead).length;
   if (lurkers < L.lurkers && now >= (s.nextLurker ?? 0)) {

@@ -66,49 +66,62 @@ export function onInput(ctx, input) {
   if (input.pressed.flashlight) toggleLight(ctx)
 }
 
+function hitTarget(ctx, s, m, dmg, f, loud = true) {
+  m.state.hp -= dmg
+  const hit = { x: m.feetPosition.x, y: m.feetPosition.y + 1.5, z: m.feetPosition.z }
+  if (loud) sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)
+  ctx.emit('damageNumber', { position: hit, value: dmg, color: '#f7d98b' })
+  ctx.emit('fx', { position: hit, script: ICHOR })
+  ctx.emit('squash', { target: m.id, axis: 'y', intensity: 0.25, duration: 0.18 })
+  ctx.emit('flash', { target: m.id, color: '#ffffff', duration: 0.1 })
+  ctx.emit('hitstop', { duration: 0.06 }, { audience: { player: ctx.self.id } })
+  ctx.emit('cameraPunch', { direction: { x: f.x, y: 0, z: f.z }, intensity: 0.3 }, { audience: { player: ctx.self.id } })
+  if (m.state.hp <= 0 && !m.state.dead) {
+    m.state.dead = true
+    s.kills += 1
+    gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
+    dropLoot(ctx, m.feetPosition)
+  }
+}
+
 function swing(ctx) {
   const w = walkOf(ctx), s = ctx.self.state, now = ctx.now()
   if (now < (w.nextSwing ?? 0) || (s.downAt && now - s.downAt < 1200)) return
   const wp = weaponOf(s)
   if ((w.stamina ?? s.stamina) < wp.stamina) return
+  const ammoKey = wp.ammoType ?? 'ammo'
   if (wp.ranged) {
-    if ((s.ammo ?? 0) <= 0) { w.nextSwing = now + 400; sound(ctx, 'flashlight-switch-click', 0.6, true); return }
-    s.ammo -= 1
-    sound(ctx, 'pistol-gunshot-echo', 0.9)
-    ctx.emit('screenFlash', { color: '#fff1c8', duration: 0.08, intensity: 0.25 }, { audience: { player: ctx.self.id } })
+    if ((s[ammoKey] ?? 0) <= 0) { w.nextSwing = now + 400; sound(ctx, 'flashlight-switch-click', 0.6, true); return }
+    s[ammoKey] -= 1
+    sound(ctx, wp.pellets ? 'shotgun-blast-boom' : 'pistol-gunshot-echo', 0.95)
+    ctx.emit('screenFlash', { color: '#fff1c8', duration: 0.08, intensity: wp.pellets ? 0.45 : 0.25 }, { audience: { player: ctx.self.id } })
+    if (wp.pellets) ctx.emit('screenShake', { intensity: 0.35, duration: 0.2 }, { audience: { player: ctx.self.id } })
   }
   w.stamina = (w.stamina ?? s.stamina) - wp.stamina
   w.nextSwing = now + wp.cooldown * 1000
   s.swingAt = now
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
-  let best = null, bd = 1e9
-  for (const m of [...ctx.query({ tags: ['smiler'], radius: wp.ranged ? wp.range : wp.reach + 0.6 }), ...ctx.query({ tags: ['lurker'], radius: wp.ranged ? wp.range : wp.reach + 0.6 })]) {
+  const cone = wp.cone ?? (wp.ranged ? 0.985 : 0.4), radius = wp.ranged ? wp.range : wp.reach + 0.6
+  const found = []
+  for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius })]) {
     if (m.state?.dead) continue
     const dx = m.feetPosition.x - p.x, dz = m.feetPosition.z - p.z, d = Math.hypot(dx, dz)
-    if (d > 0.3 && (dx * f.x + dz * f.z) / d < (wp.ranged ? 0.985 : 0.4)) continue
+    if (d > 0.3 && (dx * f.x + dz * f.z) / d < cone) continue
     if (wp.ranged) {
       const o = { x: p.x, y: p.y + 1.3, z: p.z }, tx = m.feetPosition.x - o.x, ty = m.feetPosition.y + 1.5 - o.y, tz = m.feetPosition.z - o.z, tl = Math.hypot(tx, ty, tz) || 1
       if (raycast(ctx, o, { x: tx / tl, y: ty / tl, z: tz / tl }, { distance: tl, physicsOnly: true, ignoreEntities: [m.id, ctx.self.id], bodies: 'static' })) continue
     }
-    if (d < bd) { bd = d; best = m }
+    found.push({ m, d })
   }
-  if (!best) { sound(ctx, 'pipe-whoosh-swing', 0.55); return }
-  const dmg = Math.round(wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale)
-  best.state.hp -= dmg
-  const hit = { x: best.feetPosition.x, y: best.feetPosition.y + 1.5, z: best.feetPosition.z }
-  sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)
-  ctx.emit('damageNumber', { position: hit, value: dmg, color: '#f7d98b' })
-  ctx.emit('fx', { position: hit, script: ICHOR })
-  ctx.emit('squash', { target: best.id, axis: 'y', intensity: 0.25, duration: 0.18 })
-  ctx.emit('flash', { target: best.id, color: '#ffffff', duration: 0.1 })
-  ctx.emit('hitstop', { duration: 0.06 }, { audience: { player: ctx.self.id } })
-  ctx.emit('cameraPunch', { direction: { x: f.x, y: 0, z: f.z }, intensity: 0.3 }, { audience: { player: ctx.self.id } })
-  if (best.state.hp <= 0 && !best.state.dead) {
-    best.state.dead = true
-    s.kills += 1
-    gain(ctx, best.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
-    dropLoot(ctx, best.feetPosition)
+  if (!found.length) { if (!wp.ranged) sound(ctx, 'pipe-whoosh-swing', 0.55); return }
+  const base = wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale
+  if (wp.pellets) {
+    // a spread of pellets: everything in the cone is hit, hard up close and weak at range
+    for (const { m, d } of found) hitTarget(ctx, s, m, Math.max(1, Math.round(base * Math.max(0.2, 1 - d / wp.range))), f, false)
+    return
   }
+  found.sort((x, y) => x.d - y.d)
+  hitTarget(ctx, s, found[0].m, Math.round(base), f)
 }
 
 function cycleWeapon(ctx) {
@@ -267,6 +280,14 @@ function tickStats(ctx, t, moving) {
     if ((s.ammo ?? 0) >= W.ammo.max) break
     ctx.destroy(a.id)
     s.ammo = Math.min(W.ammo.max, (s.ammo ?? 0) + W.ammo.perPickup)
+    s.pickedAt = now
+    sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
+  }
+  // shotgun shells on the floor
+  for (const a of ctx.query({ tags: ['shells'], radius: 1.5 })) {
+    if ((s.shells ?? 0) >= W.shells.max) break
+    ctx.destroy(a.id)
+    s.shells = Math.min(W.shells.max, (s.shells ?? 0) + W.shells.perPickup)
     s.pickedAt = now
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
   }

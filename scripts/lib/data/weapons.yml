@@ -1,14 +1,15 @@
 # Melee weapons. Fists are what you start with: weak on purpose. Found weapons need a level to wield.
 # damage: base hit. levelScale: share of the per-level damage bonus it gets. cooldown: seconds. reach: metres. stamina: cost per swing.
-order: [fists, table_leg, pipe_scrap, crowbar, bat, hatchet, fire_axe, pistol]
+order: [fists, table_leg, pipe_scrap, crowbar, bat, hatchet, fire_axe, pistol, shotgun]
 # rarity: common < uncommon < rare. weight: how often it is rolled for floor spawns and smiler drops. xp: reward for picking one up.
 rarities:
   common:   { label: COMMON,   color: '#c9c2a0' }
   uncommon: { label: UNCOMMON, color: '#7fd1a0' }
   rare:     { label: RARE,     color: '#f0a040' }
-dropChance: { weapon: 0.18, almond: 0.35, ammo: 0.15 }
+dropChance: { weapon: 0.18, almond: 0.35, ammo: 0.15, shells: 0.08 }  # per smiler kill
 # Ranged weapons spend ammo, not much stamina, and need a clear line to the target. Ammo is scarce on purpose.
-ammo: { perPickup: 6, max: 36, floor: 8, respawn: 120 }  # floor: ammo boxes lying in the maze at once  # per smiler kill
+ammo: { perPickup: 6, max: 36, floor: 8, respawn: 120 }  # floor: ammo boxes lying in the maze at once
+shells: { perPickup: 2, max: 10, floor: 4, respawn: 180 }  # shotgun shells: scarcer than pistol ammo
 fists:      { name: Fists,      damage: 4,  levelScale: 0.3, cooldown: 0.45, reach: 1.9, stamina: 5,  minLevel: 1 }
 table_leg:  { name: Table leg,  damage: 11, levelScale: 0.8, cooldown: 0.5,  reach: 2.4, stamina: 8,  minLevel: 1, rarity: common, weight: 10, xp: 5, color: "oklch(0.55 0.08 60)",  length: 0.7 }
 pipe_scrap: { name: Pipe scrap, damage: 16, levelScale: 1,   cooldown: 0.6,  reach: 2.6, stamina: 10, minLevel: 2, rarity: common, weight: 8, xp: 5, color: "oklch(0.6 0.02 250)",  length: 0.8 }
@@ -17,5 +18,6 @@ bat:        { name: Bat,        damage: 28, levelScale: 1,   cooldown: 0.8,  rea
 hatchet:    { name: Hatchet,    damage: 36, levelScale: 1.1, cooldown: 0.75, reach: 2.6, stamina: 15, minLevel: 6, rarity: rare, weight: 2, xp: 30, color: "oklch(0.5 0.1 40)", length: 0.75 }
 fire_axe:   { name: Fire axe,   damage: 48, levelScale: 1.2, cooldown: 1.0,  reach: 3.0, stamina: 20, minLevel: 8, rarity: rare, weight: 1, xp: 45, color: "oklch(0.5 0.2 25)", length: 1.0 }
 pistol:     { name: Pistol,     damage: 34, levelScale: 0.8, cooldown: 0.55, reach: 2, range: 28, ranged: true, stamina: 2, minLevel: 5, rarity: rare, weight: 1, xp: 40, color: "oklch(0.3 0.02 260)", length: 0.3 }
+shotgun:    { name: Shotgun,    damage: 60, levelScale: 1, cooldown: 1.1, reach: 2, range: 11, cone: 0.9, pellets: 8, ammoType: shells, ranged: true, stamina: 6, minLevel: 10, rarity: rare, weight: 1, xp: 70, color: "oklch(0.3 0.03 60)", length: 0.9 }
 pickups: 14        # weapons lying in the maze at once
 pickupRespawn: 90  # seconds between refills

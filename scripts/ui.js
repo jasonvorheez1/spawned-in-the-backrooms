@@ -102,7 +102,7 @@ export default function render(ctx, player) {
 
   <!-- BOTTOM-RIGHT: weapon, stamina, almond water, light -->
   <div class="br" style="position:absolute;bottom:22px;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);width:min(300px,44vw);text-align:right">
-    <div style="font-size:15px;color:${rar?.color ?? 'var(--a)'}">${wp.name}${rar ? `<span class="tag">${rar.label}</span>` : ''}</div>
+    <div style="font-size:15px;color:${rar?.color ?? 'var(--a)'}">${wp.name}${wp.ranged ? ` · ${s[wp.ammoType ?? "ammo"] ?? 0} ${wp.ammoType === "shells" ? "shells" : "rds"}` : ""}${rar ? `<span class="tag">${rar.label}</span>` : ''}</div>
     ${invHtml ? `<div style="font-size:10px;opacity:.8">${invHtml}</div>` : ''}
     ${bar('AP', s.stamina, L.stamina, s.stamina < 25 ? 'var(--ad)' : 'var(--a)', `${Math.ceil(s.stamina)}`, true)}
     <div class="row" style="margin-top:6px;justify-content:flex-end;gap:8px">

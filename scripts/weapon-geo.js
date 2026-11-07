@@ -68,6 +68,16 @@ const builders = {
     ctx.metalness(0); ctx.roughness(0.8); ctx.color("oklch(0.18 0.01 60)");
     prism(ctx, [[-0.016, 0.0], [0.016, 0.0], [0.016, -0.05], [-0.016, -0.08]], Y - 0.04, Y + 0.02); // the grip
   },
+  shotgun(ctx, M) {
+    ctx.roughness(0.4); ctx.metalness(0.85); ctx.color("oklch(0.25 0.02 260)");
+    tube(ctx, [[0, Y + 0.025, 0.3], [0, Y + 0.025, 0.65], [0, Y + 0.025, 0.9]], [0.02, 0.02, 0.02], M);   // barrel
+    tube(ctx, [[0, Y, 0.35], [0, Y, 0.62]], [0.022, 0.022], M);                                          // magazine tube
+    ctx.metalness(0); ctx.roughness(0.7); ctx.color("oklch(0.4 0.07 55)");
+    tube(ctx, [[0, Y, 0.45], [0, Y, 0.58]], [0.034, 0.034], M);                                          // the pump
+    slab(ctx, [0, Y + 0.02, 0.15], [0.02, 0.03, 0.15]);                                                  // the stock
+    ctx.metalness(0.85); ctx.color("oklch(0.25 0.02 260)");
+    slab(ctx, [0, Y + 0.03, 0.3], [0.025, 0.03, 0.05]);                                                  // the receiver
+  },
 };
 
 export function geometry(ctx) {
