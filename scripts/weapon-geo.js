@@ -234,6 +234,9 @@ function band(ctx, z0, z1, mp, r0, k, M) { const [x, y, r] = shaftAt((z0 + z1) /
 function overlay(ctx, kind, look, mesh, M, hi) {
   const mp = mesh ? MESHPROF[kind] : null;
   if (mesh && (!mp || (!mp.p && look !== "mag"))) return; // a slanted mesh, or a pistol's only drawn look is its magazine
+  // a scripted shape stands on its lowest point: a speck at the origin keeps the look in the weapon's own frame
+  // (a look reaching below 0, the pistol's magazine, is lifted back by its child's feetPosition in weapon-look.js)
+  ctx.color(BLACK); rod(ctx, [[0, 0, 0], [0, 0.0004, 0]], [0.0002, 0.0002], 3);
   const sz = SCRIPTED[kind] ?? SCRIPTED.table_leg, [g0, g1] = mp?.grip ?? sz.grip, [h0, h1] = mp?.head ?? sz.head, gr = sz.grip[2], hr = sz.head[2];
   if (look === "rust") { // flaking rust blooms down the shaft
     ctx.albedo(null); ctx.color(RUST); ctx.roughness(1); ctx.metalness(0.1);

@@ -15,6 +15,7 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
 };
 // each mesh's box centre in the scripted frame (x, z), from art/weapons/fit.json
 const CENTER = { table_leg: [0, 0.3325], pipe_scrap: [0, 0.415], crowbar: [0, 0.4425], bat: [0, 0.4895], hatchet: [0.07, 0.417], fire_axe: [0.0175, 0.5395], pistol: [0, 0.114], shotgun: [0.002, 0.452] }
+const MAGLOW = -0.139 // the extended magazine's base plate, the look's lowest point
 export function weaponBody(kind) {
   const base = baseOf(kind), w = W[kind] ?? {}, m = MESH[base], look = w.look, short = look === 'sawn' ? 0.72 : 1
   const body = m
@@ -25,6 +26,6 @@ export function weaponBody(kind) {
   // the look rides as a child. A mesh stands centred on its feet and faces the other way from the scripted frame
   // (handle toward +Z), so the look turns half round and sits at the mesh's centre (art/weapons/fit.json)
   if (look) { const c = CENTER[base]; body.children = [{ primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: base, look, ...(m ? { mesh: 1 } : {}) } }, castShadow: false,
-    ...(m && c ? { feetPosition: { x: c[0], y: 0, z: c[1] }, rotation: 180 } : {}) }] }
+    ...(m && c ? { feetPosition: { x: c[0], y: look === 'mag' ? MAGLOW : 0, z: c[1] }, rotation: 180 } : look === 'mag' ? { feetPosition: { x: 0, y: MAGLOW, z: 0 } } : {}) }] }
   return body
 }
