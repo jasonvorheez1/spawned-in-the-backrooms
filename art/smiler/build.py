@@ -90,7 +90,7 @@ tex = bpy.data.textures.new("lump", "CLOUDS"); tex.noise_scale = 0.06
 dm = body.modifiers.new("disp", "DISPLACE"); dm.texture = tex; dm.strength = 0.012; dm.mid_level = 0.5
 bpy.ops.object.modifier_apply(modifier="disp")
 # decimate to budget
-dec = body.modifiers.new("dec", "DECIMATE"); dec.ratio = 0.55
+dec = body.modifiers.new("dec", "DECIMATE"); dec.ratio = 0.26
 bpy.ops.object.modifier_apply(modifier="dec")
 bpy.ops.object.shade_smooth()
 
@@ -132,8 +132,10 @@ for v in bm.verts:
     v.co.z -= max(0, -(v.co.y - H.y)) * 0.15  # chin hangs
 bm.to_mesh(jaw.data); bm.free()
 throat = ellipsoid("Throat", H + V((0, 0.02, -0.02)), (0.15, 0.12, 0.06), 16, 8)
-eyes = [ellipsoid("Eye" + s, H + V((sx * 0.085, -0.135, 0.06)), (0.034, 0.02, 0.026), 14, 8) for s, sx in (("L", 1), ("R", -1))]
+eyes = [ellipsoid("Eye" + s, H + V((sx * 0.09, -0.13, 0.075)), (0.046, 0.022, 0.03), 14, 8) for s, sx in (("L", 1), ("R", -1))]
 
+for e, sx in zip(eyes, (1, -1)):
+    e.rotation_euler = (0, -sx * 0.45, 0); bpy.context.view_layer.objects.active = e; bpy.ops.object.select_all(action='DESELECT'); e.select_set(True); bpy.ops.object.transform_apply(rotation=True)
 def needle(bmx, base, tip, r):
     up = (tip - base).normalized(); a = up.orthogonal().normalized(); b = up.cross(a)
     ring = [bmx.verts.new(base + (a * math.cos(k * 2.094) + b * math.sin(k * 2.094)) * r) for k in range(3)]
@@ -147,23 +149,23 @@ def grin(upper):
         for i in range(n):
             u = -1 + 2 * (i + 0.5 * row) / n
             ang = u * 1.25
-            rx, ry = 0.175 - row * 0.02, 0.16 - row * 0.025
+            rx, ry = 0.192 - row * 0.02, 0.172 - row * 0.025
             x = math.sin(ang) * rx; y = -math.cos(ang) * ry
             zc = H.z - 0.012 + 0.05 * u * u  # the smile curls up to the cheeks
-            L = (0.045 - 0.02 * abs(u) + random.uniform(-0.008, 0.012)) * (0.85 if row else 1)
+            L = (0.07 - 0.035 * abs(u) + random.uniform(-0.01, 0.014)) * (0.85 if row else 1)
             base = H + V((x, y, 0)); base.z = zc + (0.012 if upper else -0.012)
             tip = base + V((x * 0.06 * random.uniform(-1, 1), -0.004, -L if upper else L))
-            needle(bmx, base, tip, 0.0065 if row == 0 else 0.005)
+            needle(bmx, base, tip, 0.008 if row == 0 else 0.006)
     m = bpy.data.meshes.new("teeth"); bmx.to_mesh(m); bmx.free()
     o = bpy.data.objects.new("TeethU" if upper else "TeethL", m); scene.collection.objects.link(o); return o
 teethU, teethL = grin(True), grin(False)
 # the grin's ivory gum line: a thin pale lip band that frames every tooth from a distance
 def gumband(upper):
-    cu = bpy.data.curves.new("gum", "CURVE"); cu.dimensions = "3D"; cu.bevel_depth = 0.008
+    cu = bpy.data.curves.new("gum", "CURVE"); cu.dimensions = "3D"; cu.bevel_depth = 0.011
     sp = cu.splines.new("POLY"); n = 25; sp.points.add(n - 1)
     for k in range(n):
         u = -1 + 2 * k / (n - 1); ang = u * 1.25
-        sp.points[k].co = (math.sin(ang) * 0.177, H.y - math.cos(ang) * 0.162, H.z - 0.012 + 0.05 * u * u + (0.014 if upper else -0.014), 1)
+        sp.points[k].co = (math.sin(ang) * 0.194, H.y - math.cos(ang) * 0.174, H.z - 0.012 + 0.05 * u * u + (0.014 if upper else -0.014), 1)
     o = bpy.data.objects.new("Gum", cu); scene.collection.objects.link(o)
     bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); bpy.context.view_layer.objects.active = o
     bpy.ops.object.convert(target="MESH"); return bpy.context.active_object
@@ -176,7 +178,7 @@ def principled(name, base, rough, metal=0.0, emit=None, es=0.0):
     if emit: b.inputs["Emission Color"].default_value = (*emit, 1); b.inputs["Emission Strength"].default_value = es
     return m
 skinMat = bpy.data.materials.new("shadow_skin"); skinMat.use_nodes = True
-toothMat = principled("ivory_teeth", (0.86, 0.80, 0.64), 0.35, emit=(0.95, 0.9, 0.75), es=1.2)
+toothMat = principled("ivory_teeth", (0.86, 0.80, 0.64), 0.35, emit=(0.95, 0.9, 0.75), es=2.0)
 eyeMat = principled("glow_eyes", (0.9, 0.95, 1.0), 0.2, emit=(0.85, 0.93, 1.0), es=12.0)
 throatMat = principled("throat", (0.06, 0.005, 0.008), 0.3)
 
@@ -193,9 +195,9 @@ nt = skinMat.node_tree; N = nt.nodes; Lk = nt.links
 bsdf = N["Principled BSDF"]
 texc = N.new("ShaderNodeTexCoord"); noise = N.new("ShaderNodeTexNoise"); noise.inputs["Scale"].default_value = 18; noise.inputs["Detail"].default_value = 8
 vor = N.new("ShaderNodeTexVoronoi"); vor.feature = "DISTANCE_TO_EDGE"; vor.inputs["Scale"].default_value = 14
-ramp = N.new("ShaderNodeValToRGB"); ramp.color_ramp.elements[0].color = (0.012, 0.008, 0.012, 1); ramp.color_ramp.elements[1].color = (0.07, 0.045, 0.05, 1)
+ramp = N.new("ShaderNodeValToRGB"); ramp.color_ramp.elements[0].color = (0.006, 0.004, 0.006, 1); ramp.color_ramp.elements[1].color = (0.04, 0.025, 0.028, 1)
 vr = N.new("ShaderNodeValToRGB"); vr.color_ramp.elements[0].position = 0.0; vr.color_ramp.elements[0].color = (0.11, 0.03, 0.04, 1); vr.color_ramp.elements[1].position = 0.06; vr.color_ramp.elements[1].color = (1, 1, 1, 1)
-mix = N.new("ShaderNodeMix"); mix.data_type = "RGBA"; mix.blend_type = "MULTIPLY"; mix.inputs["Factor"].default_value = 0.6
+mix = N.new("ShaderNodeMix"); mix.data_type = "RGBA"; mix.blend_type = "MULTIPLY"; mix.inputs["Factor"].default_value = 0.35
 Lk.new(texc.outputs["Object"], noise.inputs["Vector"]); Lk.new(texc.outputs["Object"], vor.inputs["Vector"])
 Lk.new(noise.outputs["Fac"], ramp.inputs["Fac"]); Lk.new(vor.outputs["Distance"], vr.inputs["Fac"])
 Lk.new(ramp.outputs["Color"], mix.inputs[6]); Lk.new(vr.outputs["Color"], mix.inputs[7])
@@ -209,7 +211,7 @@ img.filepath_raw = OUT + "/skin.png"; img.file_format = "PNG"; img.save()
 # final skin: baked albedo, a damp sheen
 for n in (texc, noise, vor, ramp, vr, mix, emitN): N.remove(n)
 Lk.new(imgN.outputs["Color"], bsdf.inputs["Base Color"]); Lk.new(bsdf.outputs["BSDF"], outN.inputs["Surface"])
-bsdf.inputs["Roughness"].default_value = 0.42; bsdf.inputs["Specular IOR Level"].default_value = 0.6
+bsdf.inputs["Roughness"].default_value = 0.5; bsdf.inputs["Specular IOR Level"].default_value = 0.6
 
 for o, m in ((teethU, toothMat), (teethL, toothMat), (gumU, toothMat), (gumL, toothMat), (eyes[0], eyeMat), (eyes[1], eyeMat), (throat, throatMat)):
     o.data.materials.clear(); o.data.materials.append(m)
@@ -359,7 +361,7 @@ scene.render.resolution_x = scene.render.resolution_y = 656; scene.cycles.sample
 def cam(name, loc, tgt):
     c = bpy.data.objects.new(name, bpy.data.cameras.new(name)); scene.collection.objects.link(c); c.location = loc
     d = V(tgt) - V(loc); c.rotation_euler = d.to_track_quat("-Z", "Y").to_euler(); return c
-cams = [cam("A", (1.8, -2.6, 1.6), (0, -0.1, 0.65)), cam("B", (0, -1.7, 1.1), (0, -0.78, 1.0)), cam("C", (2.8, 0.2, 1.0), (0, 0, 0.6))]
+cams = [cam("A", (1.8, -2.6, 1.6), (0, -0.1, 0.65)), cam("B", (0.3, -2.0, 1.2), (0, -0.78, 1.0)), cam("C", (2.8, 0.2, 1.0), (0, 0, 0.6))]
 poses = [("idle", 20), ("lunge-bite", 10), ("skitter", 4)]
 for c, (an, fr) in zip(cams, poses):
     rig.animation_data.action = bpy.data.actions[an]; scene.frame_set(fr)
