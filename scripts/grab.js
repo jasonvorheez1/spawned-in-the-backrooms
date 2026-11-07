@@ -42,7 +42,7 @@ export function onInput(ctx, input) {
   const kg = massOf(o), cap = power(ctx);
   const over = kg / cap; // past 1 it's a struggle; past 3 nobody moves it
   if (over > 3) { note(ctx, `It won't budge. ${Math.round(kg)} kg.`); heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-strained-grunt-lifting-heavy.mp3", position: eye, volume: 0.5, maxDistance: 10 }); return; }
-  ctx.self.anim.grab = { clip: "cdn/clip-pickup.glb", loop: "once", weight: 1, blendIn: 0.15, blendOut: 0.3 };
+  ctx.self.anim.grab = { clip: "cdn/clip-pickup.glb", loop: "once", weight: 1, blendIn: 0.15, blendOut: 0.3 }; ctx.self.session.grabAnimEnd = ctx.now() + 1200;
   if (over > 1) { // the heave: a long strained lift before it leaves the floor
     ses.heave = { id: o.id, kg, until: ctx.now() + 900 + over * 700 };
     ctx.self.velocity = { x: 0, y: ctx.self.velocity?.y ?? 0, z: 0 }; s.carryMul = 0.05;
@@ -63,7 +63,7 @@ function lift(ctx, o, kg, cap) {
 function toss(ctx, o, h) {
   const ses = ctx.self.session, s = ctx.self.state, d = ses.dir ?? { x: 0, y: 0, z: -1 };
   const over = ses.kg / power(ctx), speed = over > 1 ? Math.max(1.5, 4 - over) : Math.max(3, Math.min(20, 3 + (power(ctx) / ses.kg) * 2.2)); // light things fly; past your strength it tips a few feet away
-  ctx.self.anim.grab = { clip: "cdn/clip-throw.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 };
+  ctx.self.anim.grab = { clip: "cdn/clip-throw.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 }; ctx.self.session.grabAnimEnd = ctx.now() + 1000;
   o.physics = { body: "dynamic", collider: "box", mass: ses.kg, friction: 0.7 };
   o.velocity = { x: d.x * speed, y: d.y * speed + 2, z: d.z * speed };
   ses.flying = { id: o.id, at: ctx.now(), speed, kg: ses.kg, hit: {} };
@@ -72,6 +72,7 @@ function toss(ctx, o, h) {
   heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-heavy-object-throw-whoosh.mp3", position: { x: f.x, y: f.y + 1.4, z: f.z }, volume: 0.5, maxDistance: 14 });
 }
 export function update(ctx) {
+  if (ctx.self.anim?.grab && ctx.now() > (ctx.self.session.grabAnimEnd ?? 0)) ctx.self.anim.grab = null; // a once-clip left at weight 1 freezes the body in its last frame
   const ses = ctx.self.session;
   if (ses.heave && ctx.now() >= ses.heave.until) { const o = ctx.getObject(ses.heave.id), kg = ses.heave.kg; ses.heave = null; if (o) lift(ctx, o, kg, power(ctx)); else ctx.self.state.carryMul = 1; }
   if (ses.held) { // carried: in front of the chest, along the look
