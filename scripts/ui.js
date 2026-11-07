@@ -106,11 +106,11 @@ export default function render(ctx, player) {
     ${invHtml ? `<div style="font-size:10px;opacity:.8">${invHtml}</div>` : ''}
     ${bar('AP', s.stamina, L.stamina, s.stamina < 25 ? 'var(--ad)' : 'var(--a)', `${Math.ceil(s.stamina)}`, true)}
     <div class="row" style="margin-top:6px;justify-content:flex-end;gap:8px">
-      <span><kbd>${lab('drink', 'Q')}</kbd> ALMOND</span><div class="pips">${pips}</div><span style="font-size:15px">${s.almonds}/${L.almondMax}</span>
+      <span>ALMOND</span><div class="pips">${pips}</div><span style="font-size:15px">${s.almonds}/${L.almondMax}</span>
     </div>
     <div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px">
-      <span><kbd>${lab('flashlight', 'F')}</kbd> LIGHT</span><span style="${s.light ? '' : 'opacity:.45'}">${s.light ? Math.round(s.battery) + '%' : 'OFF'}</span>
-      <span><kbd>${lab('cycleWeapon', 'E')}</kbd> SWAP</span>
+      <span>LIGHT</span><span style="${s.light ? '' : 'opacity:.45'}">${s.light ? Math.round(s.battery) + '%' : 'OFF'}</span>
+      
     </div>
   </div>
 
