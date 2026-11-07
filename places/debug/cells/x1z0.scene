@@ -33,7 +33,7 @@ dbg/floor:
   physics: static
   primitive: {depth: 20.4, height: 0.1, kind: box, width: 24.4}
 dbg/hum:
-  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-fluorescent-light-buzz-hum-loop.mp3, gain: 0.15, loop: true, spatial: false}
+  audio: {clip: /cdn/value.a8a58686421e9dd3d00a1bfa5ce6988f01e97e775c7e22cb27ce343c6f2ed48b.mp3, gain: 0.15, loop: true, spatial: false}
   feetPosition: {x: 100, y: 2.5, z: 0}
   id: dbg/hum
 dbg/lamp0:
