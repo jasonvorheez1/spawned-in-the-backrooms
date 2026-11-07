@@ -715,8 +715,10 @@ export function geometry(ctx) {
       const tf = (y - 0.58) / (0.97 - 0.58);
       let rx = lerp(HIP_R[0], CHEST_R[0], tf) + 0.014;
       let rz = lerp(HIP_R[1], CHEST_R[1], tf) + 0.014;
+      if (fem) { const pinch = Math.exp(-((tf - 0.42) ** 2) / 0.02) * 0.03; rx -= pinch; rz -= pinch * 0.4; } // waist between hips and bust
       return [rx, rz];
     }, [0, 0, -1], null, hi ? 20 : 12);
+    if (fem) for (const sd of [-1, 1]) ell([sd * 0.062, 0.872, -0.1], [0.072, 0.063, 0.062], null, { seg: hi ? 14 : 9 }); // the top follows her bust, modest and soft
   };
 
   const pants = (col, knee = 0.12, shorts = false) => {
