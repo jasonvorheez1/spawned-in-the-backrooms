@@ -85,7 +85,9 @@ export function honest(cur, next) {
   for (const slot of SLOTS) {
     const r0 = rowOf(slot, a[slot], colourOf(a, slot)), r1 = rowOf(slot, b[slot], colourOf(b, slot))
     const same = r0 && r1 && r0.id === r1.id
-    if (r1 && !r1.regular && !same) { b[slot] = a[slot]; if (CL.colourKey[slot]) b[CL.colourKey[slot]] = a[CL.colourKey[slot]] }
+    // hats, glasses and neckwear that are only dress-up (scarf, cape, bow tie, bell, hair bow...) are free to wear in the creator; armour, crafted and place-bound gear stays earned
+    const free = r1 && !r1.strict && !r1.crafted && !r1.places && (slot === 'hat' || slot === 'eyew' || slot === 'neck')
+    if (r1 && !r1.regular && !same && !free) { b[slot] = a[slot]; if (CL.colourKey[slot]) b[CL.colourKey[slot]] = a[CL.colourKey[slot]] }
   }
   return b
 }
@@ -129,6 +131,10 @@ export function npcLook(id, look, faction, level) {
     l[slot] = row.kind; if (CL.colourKey[slot]) l[CL.colourKey[slot]] = '#' + row.colours[Math.floor(u() * row.colours.length)]
   }
   if (l.topw === 'dress') l.botw = 'none'
+  if (F.rows.length && l.neck === 'none' && u() < 0.24) { // some NPCs just wear a scarf, a cape, a bow tie or a bell collar, whatever the faction's list says
+    const row = CL.rows.find((r) => r.id === ['scarf', 'cape', 'cape', 'bowtie', 'bell', 'cape'][Math.floor(u() * 6)])
+    if (row) { l.neck = row.kind; l.neckc = '#' + row.colours[Math.floor(u() * row.colours.length)] }
+  }
   l.fseed = h0 // the face (scripts/lib/critter-model.js faceFill) rolls from the id, so it never changes with the clothes
   if (!look?.trait) l.trait = '' // fullLook gave the player default; an NPC rolls its own
   return l
