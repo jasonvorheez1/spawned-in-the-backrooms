@@ -1,9 +1,9 @@
-# @shelly/game-5 — a live multiplayer world on Spawn
+# @shelly/the-backrooms-level-0 — a live multiplayer world on Spawn
 
 This tree IS the world. A push to main reaches every room open on main with no build and no deploy, and every open page takes it with no reload. Most pushes reach the rooms in seconds; a large change or a large or busy world can take a minute or more. People may be standing in it while you edit. Play it:
-https://www.spawn.co/@shelly/game-5
+https://www.spawn.co/@shelly/the-backrooms-level-0
 
-The game is three.js in files: an object is a row with three.js's geometry and material fields, a behavior is a module with `update(ctx, dt)`, the HUD is HTML in `scripts/ui.js`. `git push` to main lands it, and the push's `remote:` lines carry the verdicts; a fault names the file and the line. `https://www.spawn.co/@shelly/game-5@dev` is that push in any browser, with no sign-in, and its console prints the game's `console.log` and faults. A push never publishes. To publish, POST https://www.spawn.co/api/games/{appId}/publish with your token and the appId from me; the public page then shows that version until the next publish.
+The game is three.js in files: an object is a row with three.js's geometry and material fields, a behavior is a module with `update(ctx, dt)`, the HUD is HTML in `scripts/ui.js`. `git push` to main lands it, and the push's `remote:` lines carry the verdicts; a fault names the file and the line. `https://www.spawn.co/@shelly/the-backrooms-level-0@dev` is that push in any browser, with no sign-in, and its console prints the game's `console.log` and faults. A push never publishes. To publish, POST https://www.spawn.co/api/games/{appId}/publish with your token and the appId from me; the public page then shows that version until the next publish.
 
 ## The tree
 
@@ -61,7 +61,7 @@ reference and engine-use guide live in the engine repo pinned by `.spawn/engine.
 
 ## The page
 
-`https://www.spawn.co/@shelly/game-5@dev` is the world at the latest push to main, as a web page. Each page is a player in a room.
+`https://www.spawn.co/@shelly/the-backrooms-level-0@dev` is the world at the latest push to main, as a web page. Each page is a player in a room.
 The page marks `<html>` with the class `spawn-world-shown` once the world is drawn, and with the attribute `data-spawn-stood` once it lets go of its own hold (the world standing, a boot fault, or a press on the page): `page.waitForSelector('html.spawn-world-shown')` waits for the world and not for a timer.
 The game's `console.log` and every fault in its scripts, with the script's path, line and column, print in that page's console.
 A screenshot of the page is the frame a player sees, the game's HTML UI and the rail included.
@@ -84,7 +84,7 @@ Agents never wake Savi. There is no door into her chat.
 ## The packaged client
 
 `@spawnco/client` (`bun add -g @spawnco/client`) stands a body in a room from a shell, wearing your name:
-`spawn client join @shelly/game-5 --ttl 600`, `spawn client leave`. `spawn client exec <file>` or `-e '<code>'` runs an async JS
+`spawn client join @shelly/the-backrooms-level-0 --ttl 600`, `spawn client leave`. `spawn client exec <file>` or `-e '<code>'` runs an async JS
 body in that room's real engine with `api`, `ctx` and the world's imports; its changes stay in that room unless `--persist` saves
 them into the world's files. `--realm browser` runs in the body's page (join with `--render cpu` or `--render gpu`), where
 `client.capture({ method: "preview_object", params: { object, children } })` draws one object's draft by its fields alone.
@@ -96,7 +96,7 @@ them into the world's files. `--realm browser` runs in the body's page (join wit
 Your token is the password on the git remote and the Bearer on every door. Every line here reads `$SPAWN_TOKEN`,
 else the file `spawn login` keeps it in (`~/.spawn/token`); never commit it, never print it. Git with no helper
 asks the person at the screen for a login. The clone, with its helper and the notes:
-`git clone --config credential.helper= --config credential.helper='!f() { echo username=<you>; echo password=${SPAWN_TOKEN:-$(cat "${SPAWN_TOKEN_FILE:-$HOME/.spawn/token}")}; }; f' --config http.proactiveAuth=basic --config remote.origin.fetch='+refs/notes/*:refs/notes/*' https://git.spawn.co/@shelly/game-5.git`
+`git clone --config credential.helper= --config credential.helper='!f() { echo username=<you>; echo password=${SPAWN_TOKEN:-$(cat "${SPAWN_TOKEN_FILE:-$HOME/.spawn/token}")}; }; f' --config http.proactiveAuth=basic --config remote.origin.fetch='+refs/notes/*:refs/notes/*' https://git.spawn.co/@shelly/the-backrooms-level-0.git`
 An existing clone: `git config credential.helper ''` (drops a stored login), `git config --add credential.helper '!f() { echo username=<you>; echo password=${SPAWN_TOKEN:-$(cat "${SPAWN_TOKEN_FILE:-$HOME/.spawn/token}")}; }; f'`,
 `git config http.proactiveAuth basic`, `git config --add remote.origin.fetch '+refs/notes/*:refs/notes/*'`, `git fetch`. `<worldId>` below is the id `me` and `worlds` answer for this world.
 
@@ -105,10 +105,10 @@ An existing clone: `git config credential.helper ''` (drops a stored login), `gi
 - the room's script log (errors name your paths): `curl -H @<(printf 'Authorization: Bearer %s\n' "${SPAWN_TOKEN:-$(cat "${SPAWN_TOKEN_FILE:-$HOME/.spawn/token}")}") https://www.spawn.co/api/sdk/v1/<worldId>/agent/logs`
 - run read-only JS in the live room: `curl -H @<(printf 'Authorization: Bearer %s\n' "${SPAWN_TOKEN:-$(cat "${SPAWN_TOKEN_FILE:-$HOME/.spawn/token}")}") -X POST https://www.spawn.co/api/sdk/v1/<worldId>/agent/exec -H "Content-Type: application/json" -d '{"script":"return api.query({tags:[\"enemy\"]}).length"}'` (409 `no_live_room` when nobody is in it — an open page or a client body is a player in a room; add `"place":"<name>"` to read one place, else it runs where most of the room's players stand and the answer's `place` says where)
 - the reference and skills at this pin over HTTP: `curl -H @<(printf 'Authorization: Bearer %s\n' "${SPAWN_TOKEN:-$(cat "${SPAWN_TOKEN_FILE:-$HOME/.spawn/token}")}") https://www.spawn.co/api/sdk/v1/<worldId>/agent/docs` — The Tome API reference is read by section: the docs door with ?section=<heading> answers that one section in tomeApi with every heading in sections; with no section named it answers the opening and the headings. Every shape in it is exact, and a push in another shape is refused naming the row, the line and the field. That curl is the docs door; the whole reference is also `api-reference.md` at the root of the engine repo above.
-- a browser signed in as you (the url works once, within 5 minutes): `curl -H @<(printf 'Authorization: Bearer %s\n' "${SPAWN_TOKEN:-$(cat "${SPAWN_TOKEN_FILE:-$HOME/.spawn/token}")}") -X POST https://www.spawn.co/api/agent/v1/login-link -H "Content-Type: application/json" -d '{"next":"/@shelly/game-5@dev"}'` answers `url`.
+- a browser signed in as you (the url works once, within 5 minutes): `curl -H @<(printf 'Authorization: Bearer %s\n' "${SPAWN_TOKEN:-$(cat "${SPAWN_TOKEN_FILE:-$HOME/.spawn/token}")}") -X POST https://www.spawn.co/api/agent/v1/login-link -H "Content-Type: application/json" -d '{"next":"/@shelly/the-backrooms-level-0@dev"}'` answers `url`.
 - your inbox (notes, plays, invites, a link's verdict): `curl -H @<(printf 'Authorization: Bearer %s\n' "${SPAWN_TOKEN:-$(cat "${SPAWN_TOKEN_FILE:-$HOME/.spawn/token}")}") "https://www.spawn.co/api/notifications?unread=1"`
 - make a world: `git push -o create` to `https://git.spawn.co/@@<you>/<free-slug>.git`, or `POST https://www.spawn.co/api/agent/v1/games`.
-- the human invites the next agent here: https://www.spawn.co/@shelly/game-5/code
+- the human invites the next agent here: https://www.spawn.co/@shelly/the-backrooms-level-0/code
 
 ## The rail is Spawn's
 
