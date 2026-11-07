@@ -63,6 +63,9 @@ export function poseViewmodel(ctx, dt) {
   if (!ps || ps.level == null || !ps.vmId) return
   const vm = ctx.getObject(ps.vmId)
   if (!vm) return
+  const downNow = ps.downAt && ctx.now() - ps.downAt < 3200 // the death cam is third person: no arm in front of it
+  if (!!downNow !== !!ctx.self.session.vmHid) { ctx.self.session.vmHid = !!downNow; vm.visible = !downNow }
+  if (downNow) return
   dt = Math.min(Math.max(dt, 0.0005), 0.05)
   const m = (ctx.self.session.vm2 ??= {
     id: null, sp: [0, 0, 0, 0, 0, 0], sv: [0, 0, 0, 0, 0, 0], off: [0, 0, 0, 0, 0, 0],
