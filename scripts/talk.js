@@ -51,7 +51,7 @@ function send(ctx, d) {
 }
 
 // the model's answer comes back here; only whitelisted intents touch the world
-export function hearAt(ctx, r, pay) {
+export function heard(ctx, r, pay) {
   const s = ctx.self.state; s.talkBusy = 0
   const it = live(ctx, pay?.id); if (!it) return
   const text = r?.data?.text ?? r?.text ?? (typeof r?.data === 'string' ? r.data : null)
