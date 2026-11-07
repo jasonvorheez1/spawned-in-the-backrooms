@@ -12,11 +12,11 @@ gravity: { x: 0, y: -24, z: 0 }
 defaultSpawnPoint: { x: 0, y: 4.2, z: 1.4 }
 defaultSpawnRotation: { yaw: 180 }
 worldBounds: { bottom: -40 }
-look: { script: scripts/look-level7.js, params: { vignette: 0.38, bloom: 0.65 } }
 atmosphere:
+  look: { script: scripts/look-level7.js, params: { vignette: 0.38, bloom: 0.65 } }
   timeOfDay: 17.6
   cycle: { frozen: 17.6 }
-  clouds: { enabled: true, density: 0.85, speed: 0.3 }
+  clouds: { enabled: false }
   sky: { kind: color, color: oklch(0.24 0.02 235) }
   fog: { kind: linear, near: 14, far: 175, color: oklch(0.26 0.025 235) }
   sun: { light: { intensity: 0.38, color: oklch(0.82 0.03 225) } }

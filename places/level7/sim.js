@@ -5,7 +5,8 @@
 // Channel buoys bob in the swells, and Entity 20 ("The Thing on Level 7") cruises submerged in the bay.
 
 export const cadence = "2s";
-const V = 2;
+const V = 3;
+const GONE = ["l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
 const CONCRETE = {
   color: "oklch(0.48 0.01 240)",
@@ -43,7 +44,7 @@ function lay(ctx) {
   // 1. ROOM 1: THE DROWNED PARLOR / STAIR LANDING (Atop Basalt Rock at y = 4)
   // =========================================================================
   // Flooded concrete chamber: 6.4m x 6.4m x 2.8m high
-  box(ctx, "l7-floor", 0, FY - 0.3, 0, 6.4, 0.3, 6.4, { ...CONCRETE, color: "oklch(0.32 0.01 240)" });
+  box(ctx, "l7-floor", 0, FY - 0.3, 0, 6.4, 0.3, 6.4, { color: "oklch(0.42 0.04 75)", roughness: 1, texture: "cdn/texture-soaked-brown-beige-berber-office-carpet.png", repeat: [1, 1], wrap: "repeat" });
   box(ctx, "l7-ceil", 0, FY + 2.7, 0, 6.4, 0.25, 6.4, { ...CONCRETE, color: "oklch(0.36 0.008 240)" });
 
   // Walls with North doorway opening out to the ocean
@@ -107,25 +108,12 @@ function lay(ctx) {
     tags: ["container"],
     state: { name: "Waterlogged M.E.G. crate", items: "almond,ration,rope,battery" },
   });
-  ctx.spawn("l7-chair", {
-    feetPosition: { x: 1.9, y: FY + 0.25, z: -1.2 },
-    rotation: { yaw: 30, roll: 85 },
-    primitive: { kind: "box", width: 0.5, height: 0.85, depth: 0.5 },
-    material: RUST,
-  });
   ctx.spawn("l7-tally", {
     feetPosition: { x: 2.88, y: FY + 1.4, z: 0.6 },
     rotation: { yaw: -90 },
     vector: chalk("DAY 9. THE WATER NEVER ENDS"),
   });
 
-  // Warm overhead brass cage bulb illuminating the flooded parlor
-  ctx.spawn("l7-bulb", {
-    feetPosition: { x: 0, y: FY + 2.5, z: 0 },
-    primitive: { kind: "sphere", radius: 0.09 },
-    material: { color: "oklch(0.95 0.08 85)", emissive: "oklch(0.92 0.1 85)", emissiveIntensity: 3.5 },
-    light: { kind: "point", color: "oklch(0.88 0.09 80)", intensity: 2.4, distance: 11 },
-  });
 
   // =========================================================================
   // 2. BASALT ROCK STEPS & TRANSITION DOWN TO PIER
@@ -151,10 +139,10 @@ function lay(ctx) {
   });
 
   // Static collision boxes for the pier deck and safety
-  box(ctx, "l7-pier-deck-col", 0, PY - 0.1, -21.5, 3.4, 0.2, 26, { visible: false });
+  box(ctx, "l7-pier-deck-col", 0, PY - 0.1, -21.5, 3.4, 0.2, 26, {}, { visible: false });
   // Side safety colliders (prevent falling through gaps while exploring)
-  box(ctx, "l7-pier-rail-w", -1.6, PY, -21.5, 0.2, 1.2, 26, { visible: false });
-  box(ctx, "l7-pier-rail-e", 1.6, PY, -21.5, 0.2, 1.2, 26, { visible: false });
+  box(ctx, "l7-pier-rail-w", -1.6, PY, -21.5, 0.2, 1.2, 26, {}, { visible: false });
+  box(ctx, "l7-pier-rail-e", 1.6, PY, -21.5, 0.2, 1.2, 26, {}, { visible: false });
 
   // Mooring Bollards on the pier
   ctx.spawn("l7-bollard-1", {
@@ -264,6 +252,41 @@ function lay(ctx) {
     ],
   });
 
+
+  // =========================================================================
+  // 7. THE ROOM AS THE WIKI KNOWS IT: bookcase left, coffee table, one chair, one fluorescent lamp
+  // =========================================================================
+  const P5 = (kind) => ({ kind: "scripted", script: "scripts/level5-props-geo.js", params: { kind } });
+  ctx.spawn("l7-bookcase", { feetPosition: { x: -2.66, y: FY, z: 0.3 }, rotation: { yaw: -90 }, scale: 0.8, physics: "static", primitive: P5("bookshelf") });
+  ctx.spawn("l7-armchair", { feetPosition: { x: 1.7, y: FY, z: 0.2 }, rotation: { yaw: -115 }, physics: "static", primitive: P5("armchair") });
+  ctx.spawn("l7-table", { feetPosition: { x: 0.5, y: FY, z: -0.6 }, rotation: { yaw: 8 }, physics: "static", primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "table" } } });
+  ctx.spawn("l7-troffer", { feetPosition: { x: 0, y: FY + 2.6, z: 0 }, primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "troffer" } },
+    children: [{ feetPosition: { x: 0, y: -0.15, z: 0 }, light: { kind: "point", color: "oklch(0.93 0.06 95)", intensity: 2.6, distance: 10 } }],
+    audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-single-fluorescent-tube-buzzing-hum-loop.mp3", loop: true, gain: 0.12, spatial: true, maxDistance: 9 } });
+  // a caged work lamp over the sea door, so the room is a light seen from the water
+  ctx.spawn("l7-door-lamp", { feetPosition: { x: 0, y: FY + 2.5, z: -3.32 }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.11, height: 0.18 }, material: { color: "#ffffff", emissive: "oklch(0.88 0.1 80)", emissiveIntensity: 3 },
+    children: [{ feetPosition: { x: 0, y: -0.2, z: -0.3 }, light: { kind: "point", color: "oklch(0.85 0.1 75)", intensity: 2, distance: 14 } }] });
+  // rust weeping down the outer walls under the roofline
+  for (let i = 0; i < 9; i++) { const x = -2.9 + i * 0.72 + ((i * 37) % 7) * 0.04, h = 0.8 + ((i * 53) % 5) * 0.3;
+    ctx.spawn(`l7-stain-${i}`, { feetPosition: { x, y: FY + 2.85 - h, z: -3.21 }, primitive: { kind: "box", width: 0.08 + (i % 3) * 0.05, height: h, depth: 0.01 }, material: { color: "oklch(0.3 0.05 50 / 0.7)", transparent: true, roughness: 1 } }); }
+
+  // =========================================================================
+  // 8. LEVEL 7 IS A ROOM: the concrete ceiling over the whole sea, the room hanging from it, pillars lost in the fog
+  // =========================================================================
+  const CEIL = { color: "oklch(0.3 0.008 240)", roughness: 0.95, texture: "cdn/texture-smooth-cold-poured-concrete-wall.png", repeat: [0.25, 0.25], wrap: "repeat" };
+  ctx.spawn("l7-sky-ceiling", { feetPosition: { x: 0, y: 34, z: -100 }, primitive: { kind: "box", width: 1600, height: 3, depth: 1600 }, material: CEIL, castShadow: false });
+  ctx.spawn("l7-hanger", { feetPosition: { x: 0, y: FY + 2.85, z: 1 }, primitive: { kind: "box", width: 6.4, height: 34 - FY - 2.85, depth: 9 }, material: { ...CEIL, color: "oklch(0.33 0.008 240)" }, castShadow: false });
+  [[-140, -160, 14], [120, -230, 18], [-60, -330, 22], [210, -60, 16], [-230, -40, 16], [40, -420, 24]].forEach(([x, z, w], i) =>
+    ctx.spawn(`l7-pillar-${i}`, { feetPosition: { x, y: -30, z }, primitive: { kind: "box", width: w, height: 64, depth: w }, material: CEIL, castShadow: false }));
+
+  // =========================================================================
+  // 9. THE ROCK: slumped basalt, tar seeping where the wiki says the deep is made of it
+  // =========================================================================
+  [[-9, -6, 1.3, 1], [-12, 4, 1.8, 2], [8, -7, 1.1, 3], [13, 2, 2.2, 4], [-6, 12, 1.5, 5], [10, 11, 1.2, 6], [-17, -3, 2.6, 7], [17, -9, 2, 8], [3, -11, 0.8, 9], [-4, -9, 0.7, 10]].forEach(([x, z, sc, seed], i) =>
+    ctx.spawn(`l7-boulder-${i}`, { feetPosition: { x, z, y: { terrain: 0 } }, rotation: { yaw: seed * 47 }, scale: sc, physics: "static", primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "boulder", seed } } }));
+  [[-7, -9, 1.4], [6, 8, 1], [-14, 8, 1.8], [12, -4, 0.9]].forEach(([x, z, r], i) =>
+    ctx.spawn(`l7-tar-${i}`, { feetPosition: { x, z, y: { terrain: 0.02 } }, primitive: { kind: "cylinder", radiusTop: r, radiusBottom: r * 1.05, height: 0.04 }, scale: { x: 1, y: 1, z: 0.65 }, material: { color: "oklch(0.1 0.01 60)", roughness: 0.08, metalness: 0.2 } }));
+
   // =========================================================================
   // 6. SPATIAL MARITIME AUDIO BEDS
   // =========================================================================
@@ -292,6 +315,7 @@ function lay(ctx) {
 export function tick(ctx) {
   const s = ctx.place.state;
   if ((s.builtV ?? 0) < V) {
+    for (const id of Object.keys(ctx.place.objects)) if (GONE.includes(id) || /^l7-(plank|post)-/.test(id)) ctx.destroy(id);
     lay(ctx);
     s.builtV = V;
   }
