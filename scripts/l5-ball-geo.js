@@ -198,7 +198,7 @@ function musicStand(ctx, x, z, a) {
 }
 
 // ---------- the ballroom ----------
-const TABLES = [[-2.6, -8.6], [1.8, -9.0], [10.2, -9.2], [-3.4, -4.2], [-3.4, 4.2], [-2.6, 8.6], [1.8, 9.0], [10.2, 9.0], [14.4, -4.4], [14.4, 7.0]];
+const TABLES = [[-2.6, -8.6], [1.8, -9.0], [10.2, -9.2], [-3.4, -4.2], [-3.4, 4.2], [-2.6, 8.6], [1.8, 9.0], [10.2, 9.0], [14.2, -3.4], [14.4, 7.0]];
 export const BALL_TABLES = TABLES;
 const DOORS_W = [[-5.85, -9.4, 0], [-5.85, -5.6, 2], [-5.85, 5.6, 0], [-5.85, 9.6, 1], [-5.85, -3.0, 3, 4.6]]; // x, z, style, raised
 const DOORS_N = [[-3.5, -11.85, 1], [0.6, -11.85, 4], [10.3, -11.85, 0, 3.8], [1.2, -11.85, 2, 5.4]];
@@ -221,7 +221,7 @@ function ballroom(ctx) {
     for (let k = 0; k < n; k++) {
       const a = a0 + (k / n) * 6.2832, push = R() < 0.45 ? 0.25 + R() * 0.35 : 0, rr = 1.25 + push;
       chair(ctx, x + Math.cos(a) * rr, z + Math.sin(a) * rr, Math.atan2(-Math.cos(a), Math.sin(a)) + (push ? (R() - 0.5) * 0.9 : (R() - 0.5) * 0.15));
-      setting(ctx, x, z, a, 0.9, R() < 0.2 ? 0 : 0.3 + R() * 0.65, R, L);
+      if (L <= 2) setting(ctx, x, z, a, 0.9, R() < 0.2 ? 0 : 0.3 + R() * 0.65, R, L);
     }
   });
   // a coupe left on the dance floor, one on its side with its spill
@@ -239,7 +239,9 @@ function ballroom(ctx) {
   GILT(ctx); tube(ctx, stage.slice(1).map(([a, b]) => [cx + (a - cx) * 1.015, 0.43, cz + (b - cz) * 1.015]), Array(17).fill(0.025), 6, [1, 1], 0, 1, 1);
   for (let k = 0; k < 3; k++) { const t = 0.35 + k * 0.4, y0 = 0.15 * (k + 1); } // (steps are drawn below)
   WOOD(ctx, 0.32); rbox(ctx, 13.4, 14.4, 0, 0.15, -8.75, -8.2, 0.015); rbox(ctx, 13.4, 14.4, 0.15, 0.3, -9.0, -8.45, 0.015);
-  piano(ctx, 16.2 - 0.3, -10.6 + 0.4 - 0.6 + 0.2 - 0.0);
+  piano(ctx, 15.7, -6.6);
+  // the radio's little gilt side table on the stage
+  GILT(ctx); lathe(ctx, 15.5, -10.6, [[0.45, 0.18], [0.5, 0.15], [0.55, 0.04], [0.88, 0.035], [0.92, 0.1], [0.93, 0.28], [0.95, 0.28], [0.95, 0.001]], 16);
   ctx.lod <= 3 && bass(ctx, 17.55, -9.1);
   drums(ctx, 14.6, -11.2);
   for (const [x, z, a] of [[13.9, -10.3, 2.6], [14.9, -9.4, 2.4]]) { musicStand(ctx, x, z, a); }
@@ -493,7 +495,7 @@ export function collider(ctx) {
     prism(ctx, circ(15.0, 3.4, 0.68, 12), 0, 0.9);
     const st = [[17.85, -11.85]]; for (let k = 0; k <= 8; k++) { const t = (k / 8) * (Math.PI / 2); st.push([17.85 - Math.cos(t) * 5.0, -11.85 + Math.sin(t) * 3.6]); } prism(ctx, st, 0, 0.45);
     box(ctx, 13.4, 14.4, 0, 0.15, -8.75, -8.2); box(ctx, 13.4, 14.4, 0.15, 0.3, -9.0, -8.45);
-    box(ctx, 15.0, 16.75, 0.45, 1.0, -11.35, -9.9);
+    box(ctx, 14.98, 16.45, 0, 0.98, -7.35, -5.85); prism(ctx, circ(15.5, -10.6, 0.28, 10), 0.45, 0.95);
   } else if (p === "salon") {
     box(ctx, 4.4, 7.6, 0, 1.33, -23.85, -23.3);
     box(ctx, 2.95, 3.85, 0, 0.95, -20.5, -18.3); box(ctx, 8.15, 9.05, 0, 0.95, -20.5, -18.3); box(ctx, 5.2, 6.8, 0, 0.95, -17.15, -16.25);
