@@ -3441,25 +3441,25 @@ l5-light-35:
 l5-light-36:
   feetPosition: {x: -2, y: 3.3, z: 18}
   id: l5-light-36
-  light: {color: oklch(0.93 0.03 120), distance: 10, intensity: 3, kind: point, shadow: {enabled: false}}
+  light: {color: 4294232462, distance: 22, intensity: 14, kind: point, shadow: {enabled: false}}
   state: {kind: tube}
   tags: [l5-light, l5-fix-tube]
 l5-light-37:
   feetPosition: {x: 6, y: 3.3, z: 18}
   id: l5-light-37
-  light: {color: oklch(0.93 0.03 120), distance: 10, intensity: 3, kind: point, shadow: {enabled: false}}
+  light: {color: 4294232462, distance: 22, intensity: 14, kind: point, shadow: {enabled: false}}
   state: {kind: tube}
   tags: [l5-light, l5-fix-tube]
 l5-light-38:
   feetPosition: {x: 14, y: 3.3, z: 18}
   id: l5-light-38
-  light: {color: oklch(0.93 0.03 120), distance: 10, intensity: 3, kind: point, shadow: {enabled: false}}
+  light: {color: 4294232462, distance: 22, intensity: 14, kind: point, shadow: {enabled: false}}
   state: {kind: tube}
   tags: [l5-light, l5-fix-tube]
 l5-light-39:
   feetPosition: {x: 22, y: 5.2, z: -22}
   id: l5-light-39
-  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  light: {color: 4294232462, distance: 22, intensity: 14, kind: point, shadow: {enabled: false}}
   state: {kind: cage}
   tags: [l5-light, l5-fix-cage]
 l5-light-4:
