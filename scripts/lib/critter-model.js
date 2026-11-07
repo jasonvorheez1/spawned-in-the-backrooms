@@ -42,9 +42,10 @@ export function critterSpec(l) {
 const CLOTH_KEY = { topw: 'top', botw: 'bottom', shoes: 'shoec', hat: 'hatc', neck: 'neckc' }
 export function lookFromModel(model, headId) {
   if (!model || typeof model !== 'object') return null
-  const l = { sex: model.id === M.body.f ? 'f' : 'm' }
+  const vis = (n) => model.parts?.[n]?.visible
+  const l = { sex: model.id === M.body.f || vis('Bot_skirt') || vis('Bot_longskirt') || vis('Top_dress') ? 'f' : 'm' }
   for (const [slot, pre] of Object.entries(M.slots)) { l[slot] = 'none'; for (const [n, v] of Object.entries(model.parts || {})) if (v?.visible && n.startsWith(pre + '_')) l[slot] = n.slice(pre.length + 1) }
-  const mats = model.materials || {}
+  const mats = { ...(model.parts || {}), ...(model.materials || {}) }
   for (const [slot, [mat]] of Object.entries(CLOTH)) if (mats[mat]?.color) l[CLOTH_KEY[slot]] = mats[mat].color
   if (mats.fur?.color) l.fur = mats.fur.color
   for (const [sp, row] of Object.entries(M.species)) if ([row.head, row.headM, row.headF].includes(headId)) { l.species = sp; break }

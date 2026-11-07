@@ -36,7 +36,7 @@ function dress(ctx, me) {
   if (was) me.state.wear = was;
   else if (!me.state.wear && me.model) { const l = lookFromModel(me.model, ctx.getObject(me.id + "/" + HEAD_ID)?.model?.id ?? ctx.getObject(me.id + "/" + HEAD_ID)?.model); if (l?.species) me.state.wear = l; }
   if (staleBody(me.model)) { // an older Blender pass: re-dress on the current body and head, keeping its clothes and colours
-    const local = String(me.id).split("/").pop(), old = me.state.wear ?? lookFromModel(me.model, null) ?? {}
+    const local = String(me.id).split("/").pop(), old = { ...(lookFromModel(me.model, null) ?? {}), ...(me.state.wear ?? {}) }
     const l = { ...old, species: old.species && old.species !== "cat" ? old.species : speciesFor(local), sex: old.sex ?? "m" }
     const spec = critterSpec(l); me.model = spec.model; me.material = spec.material; me.jiggle = spec.jiggle; me.state.wear = l; seatHead(ctx, me, l);
   }
@@ -151,7 +151,7 @@ export function bark(ctx, o, kind, force) {
 }
 export function update(ctx, dt) {
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
-  if (!m.dressed) { m.dressed = true; if (!s.dead) dress(ctx, me); }
+  if (m.dressed !== 2) { m.dressed = 2; if (!s.dead) dress(ctx, me); }
   if (s.dead || (s.hp ?? 1) <= 0) {
     if (!m.down) {
       m.down = true; bark(ctx, me, "death", true);
