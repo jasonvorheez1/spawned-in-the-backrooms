@@ -1,0 +1,24 @@
+# Free talk with NPCs (scripts/lib/npc-talk.js). Every number here is Savi's pick; tune freely.
+rate: 3             # seconds between two things one player says (Savi's pick)
+log: 8              # lines the card keeps on screen (Savi's pick)
+memory: 16          # turns the model remembers per npc per player (Savi's pick)
+model: fast
+maxText: 220        # characters a player can type in one go (Savi's pick)
+range: 5            # walk farther than this and the card closes (Savi's pick)
+roll: 20            # a check is skill + 1..roll vs difficulty (Savi's pick)
+failHit: -8         # a failed check knocks rapport at least this far down (Savi's pick)
+deltaCap: 30        # rapportDelta is clamped to +-this (Savi's pick)
+join: { rapport: 25, max: 2, near: 4, run: 9 }   # rapport needed, followers per player, keep within near m, run past run m (Savi's picks)
+gift: { rapport: 30, every: 900, items: [almond, ration, bandage, battery, ammo] }   # rapport needed, seconds between gifts per player (Savi's picks)
+discount: { rapport: 15, per: 0.0025, max: 0.25, check: 0.05 }   # discount = rapport*per (+check if a check passed), capped (Savi's picks)
+hostile: -40        # the model's 'hostile' only lands at or below this rapport (Savi's pick)
+fallback: ["sorry, what? say that again.", "hang on. my head's somewhere else.", "...not now. give me a sec."]
+personas:
+  meg-ale: "Ale, a fox, M.E.G. scout on Level 1. Wiry, quick, sarcastic, nicks food and denies it. Knows the halls better than anyone and likes people who don't panic. Hates being told what to do. Will tag along with someone who seems capable and fun, never with a coward."
+  meg-ortiz: "Dr. Ortiz, a bunny, the M.E.G. medic on Level 1. Calm, dry, tired, fusses over wounds. Polite but no pushover; rudeness gets a cold shoulder fast. Rarely leaves the camp because people there need her, though a really good argument might move her."
+  meg-callum: "Callum, a bear, M.E.G. quartermaster on Level 1. Big, gruff, counts every can twice, misses Level 0's carpet. Fair trader, hates hagglers who waste his time but respects a good barterer. Stays with the supplies."
+  surv-wren: "Wren, a cat, a Survivor scout on Level 2. Young, jumpy, stubborn, won't admit she's hurt. Lonely and a little desperate for company, so she warms up fast to kindness but bolts from threats."
+  surv-hollis: "Hollis, a dog, the Survivor medic on Level 2. Older, steady, fiddles with a hissing radio, talks slow. Trusting until crossed, then he doesn't forget."
+  surv-mags: "Mags, a raccoon, the Survivor trader on Level 2. Sharp, flirty-businesslike, calls people honey, everything has a price. Loves a good haggle, can't stand freeloaders."
+  default: "A wanderer who has survived the Backrooms for a while. Guarded, tired, practical, short with strangers."
+places: { main: "Level 0, the yellow office maze", level1: "Level 1, the concrete Habitable Zone, at the M.E.G. camp", level2: "Level 2, the pipe-filled utility halls, at the Survivor camp", level3: "Level 3, the Electrical Station" }
