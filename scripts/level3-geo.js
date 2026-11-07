@@ -7,6 +7,7 @@ import { slab, tube } from "./lib/shapes.js";
 
 const BRICK = "cdn/texture-photoreal-weathered-orange-clay-brick-wall-thin-grey-mortar-soot-stains.png", FLOOR = "cdn/texture-dusty-cracked-concrete-floor.png", CEIL = "cdn/texture-dirty-concrete-ceiling-slab.png", STEEL = "cdn/texture-scratched-worn-steel.png";
 const T = 0.3;
+const PAINTED = "cdn/texture-photoreal-chipped-white-painted-steel-rust-showing-through.png";
 // wall skins by sector (3 x 3 cell patches, never per wall): orange-red brick, large grey brick, glazed tan tile; brown brick in the blind halls
 const SKIN = {
   orange: { tex: "cdn/texture-photoreal-weathered-orange-clay-brick-wall-thin-grey-mortar-soot-stains.png", col: "oklch(0.97 0.015 60)", rough: 0.85, base: "oklch(0.55 0.05 35)" },
@@ -79,7 +80,7 @@ export function geometry(ctx) {
     ctx.smooth(); for (const sp of tightSpans(cx, cz)) vault(ctx, cx, cz, sp, 0, hi ? 5 : 3); ctx.flat();
   }
   // bars: across the barred edges, floor to ceiling, never a gate
-  ctx.albedo(STEEL); ctx.color("oklch(0.84 0.014 90)"); ctx.metalness(0.25); ctx.roughness(0.8);
+  ctx.albedo(PAINTED); ctx.color("oklch(0.95 0.01 90)"); ctx.metalness(0.15); ctx.roughness(0.7);
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) for (const d of [0, 1]) {
     if (!isBars(cx, cz, d)) continue;
     const h = Math.min(ceilingAt(cx, cz), ceilingAt(cx + D4[d][0], cz + D4[d][1]));
@@ -93,6 +94,18 @@ export function geometry(ctx) {
     const h = Math.min(ceilingAt(cx, cz), ceilingAt(cx + D4[d][0], cz + D4[d][1]));
     if (d === 0) { const x = (cx + 1) * S - HALF, z0 = cz * S - HALF; barRow(ctx, x, z0 + T, x, z0 + 1.0, h, M); barRow(ctx, x, z0 + S - 1.0, x, z0 + S - T, h, M); box(ctx, x - 0.05, x + 0.05, h - 0.5, h, z0 + 1, z0 + S - 1); barRow(ctx, x + 0.12, z0 + S - 1.0, x + 2.0, z0 + S - 1.0 + 0.1, h - 0.55, M, 0.2); }
     else { const z = (cz + 1) * S - HALF, x0 = cx * S - HALF; barRow(ctx, x0 + T, z, x0 + 1.0, z, h, M); barRow(ctx, x0 + S - 1.0, z, x0 + S - T, z, h, M); box(ctx, x0 + 1, x0 + S - 1, h - 0.5, h, z - 0.05, z + 0.05); barRow(ctx, x0 + S - 1.0, z + 0.12, x0 + S - 1.0 + 0.1, z + 2.0, h - 0.55, M, 0.2); }
+  }
+  // handrails: a pale painted pipe rail at hip height on brackets, along some hall walls (the M.E.G. corridor photo)
+  ctx.albedo(PAINTED); ctx.color("oklch(0.92 0.01 90)"); ctx.metalness(0.2); ctx.roughness(0.6);
+  for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+    const z = zoneOf(cx, cz); if (z !== "hall") continue; const c = cellCenter(cx, cz);
+    for (const d of [0, 1, 2, 3]) {
+      if (!solid(cx, cz, d) || hash(cx * 4 + d, cz, 91) > 0.16) continue;
+      const [nx, nz] = D4[d], tx = -nz, tz = nx, w = S / 2 - T - 0.08;
+      const P = (along, y, off = w) => [c.x + nx * off + tx * along, y, c.z + nz * off + tz * along];
+      rod(ctx, P(-S / 2 + 0.2, 0.92), P(S / 2 - 0.2, 0.92), 0.022, 4);
+      for (const a of [-1.4, 0, 1.4]) rod(ctx, P(a, 0.92), P(a, 0.92, w + 0.08), 0.012, 4);
+    }
   }
   // conduit: 3-4 grey steel pipes side by side along the ceiling edge; now and then the bundle bends down the wall together
   // into a long rounded grey box (0.25 x 1.2 m), and a black corrugated cable sags along beneath. The live wall boxes (wallbox.glb
