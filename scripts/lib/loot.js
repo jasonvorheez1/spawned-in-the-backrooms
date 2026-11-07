@@ -130,3 +130,15 @@ export function spawnContainerL2(ctx, kind, p, yaw, opts = {}) {
     primitive: { kind: "scripted", script: "scripts/l2-props-geo.js", params: { kind, seed: Math.floor(ctx.random() * 1000) } },
     state: { name: lk ? `${C.name} (locked)` : C.name, kind, items: fillContainerL2(ctx, kind, (opts.bonus ?? 0) + (lk ? lk.bonus : 0)), ...(lk ? { lock: lk.lock } : {}), room: opts.room ?? -1 } });
 }
+
+// ---- Level 5 (Terror Hotel): what a hotel room's dresser, wardrobe or kitchen holds. Meat feeds Samantha; the SMG and knife are this floor's guns.
+export const L5_WEIGHTS = [["almond", 26], ["ammo", 18], ["meat", 22], ["ration", 6], ["bandage", 6], ["battery", 5], ["bobbypin", 8], ["weapon", 6], ["book", 2], ["cloth", 6], ["royal_ration", 1]];
+export const MEAT5 = [["steak", 3], ["fish", 4], ["chicken", 6], ["spam", 8], ["sardines", 8], ["rat", 6]];
+export function rollMeat(ctx) { const t = MEAT5.reduce((a, [, w]) => a + w, 0); let r = ctx.random() * t; for (const [k, w] of MEAT5) { r -= w; if (r <= 0) return "meat:" + k; } return "meat:rat"; }
+export function rollWeaponL5(ctx) { const q = ctx.random(); return q < 0.3 ? rollVariant(ctx, "smg") : q < 0.65 ? rollVariant(ctx, "knife") : rollWeapon(ctx); }
+export function rollItemL5(ctx) {
+  const total = L5_WEIGHTS.reduce((a, [, w]) => a + w, 0);
+  let r = ctx.random() * total;
+  for (const [k, w] of L5_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL5(ctx) : k === "meat" ? rollMeat(ctx) : k === "book" ? bookOf(ctx) : k === "cloth" ? rollCloth(ctx) : k; }
+  return "almond";
+}

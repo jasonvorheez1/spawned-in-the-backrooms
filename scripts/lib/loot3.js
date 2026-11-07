@@ -6,7 +6,7 @@ import P from "./data/l3items.yml";
 import { rollCloth } from "./clothes.js";
 import { SKILLS } from "./stats.js";
 const bookOf = (ctx) => "book:" + SKILLS[Math.floor(ctx.random() * SKILLS.length)].k;
-export function rollWeaponL3(ctx) { return ctx.random() < (T.weaponL3 ?? 0.45) ? rollVariant(ctx, ctx.random() < 0.5 ? "stun_baton" : "lineman_machete") : rollWeapon(ctx); }
+export function rollWeaponL3(ctx) { const q = ctx.random(); if (q < 0.06) return rollVariant(ctx, "smg"); if (q < 0.16) return rollVariant(ctx, "knife"); return ctx.random() < (T.weaponL3 ?? 0.45) ? rollVariant(ctx, ctx.random() < 0.5 ? "stun_baton" : "lineman_machete") : rollWeapon(ctx); }
 export function rollTableL3(ctx, table = "crate") {
   const E = Object.entries(T.tables[table] ?? T.tables.crate), total = E.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
