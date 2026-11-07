@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 738,
-  "updatedAt": "2026-11-07T16:09:39.556Z",
-  "summary": "The Backrooms is a multiplayer survival game spanning Level 0, Levels 1–4 and M.E.G. Base Gamma, with place simulations building local spaces and actors around shared grid, loot and NPC systems. Ordered player/NPC behavior chains handle movement and actions; Level 4 adds residents, office activities and Back OS terminals, while clothing is now leveled for both finds and faction wardrobes.",
+  "basedOnSpecVersion": 764,
+  "updatedAt": "2026-11-07T16:32:01.250Z",
+  "summary": "The Backrooms is a multiplayer survival game spanning Level 0, Levels 1–4 and M.E.G. Base Gamma, with local place simulations building spaces, supplies and actors around shared grid, loot, creature and NPC systems. Ordered player/NPC behavior chains connect movement, combat, interactions and HUD; HALOGEN stats, colored almond water and breakable environments extend the shared survival loop.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0's generated yellow maze and safe-room hub; authored cells, loot, shifting walls, seeded moments and smilers/lurkers.",
     "places/level1 (3D) - Habitable Zone and M.E.G. camp; car-park cells, agents, searchable loot, hounds and skin-stealers; grid walls and props are destructible.",
     "places/level2 (3D) - Abandoned Utility Halls and Survivor camp; seeded halls, rooms, NPCs, supplies, hounds and Level 3 threshold; grid walls and props are destructible.",
-    "places/level3 (3D) - Electrical Station; maze zones/crawl halls, hazards, loot, creature brigades and Gamma checkpoint; blackouts and powered lift lead to Level 4.",
+    "places/level3 (3D) - Electrical Station; maze zones/crawl halls, hazards, loot, creature brigades and Gamma checkpoint; breakable walls and powered lift lead to Level 4.",
     "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards and residents; sim adds the locked Database computer.",
     "places/level4 (3D) - Abandoned Office, a 64×64 m floor with perimeter/corner offices, fountains, break-room vending, Level 3 lift, chained stairs and Base Omega; sim adds residents, cubicles, phones, printers, tasks and computers.",
     "places/debug (3D) - isolated combat and loot test room; authored cells hold weapon/item stations, enemy pens and test stands."
   ],
   "roots": [
-    "world.config.yaml - multiplayer entry at main; declares camera, actions, player template and HUD renderer.",
+    "world.config.yaml - multiplayer entry at main; declares camera, actions, player template and HUD renderer; crouch is Z and almond-water splash is an action.",
     "templates/player.js - ordered behavior chain: humanoid-locomotion, player, interact, talk, build, noclip, stats, craft, os, horde, critter.",
-    "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and now eases player view/eye position into and out of a Back OS computer screen.",
-    "places/<place>/sim.js - local setup/tick roots; Level 4 builds offices/residents and Gamma places its Database terminal; level sims spawn faction-dressed agents.",
-    "places/<place>/config.yaml + cells - place configuration and authored placements; Level 4 x0z0 scene includes Omega actors with explicit saved look/wear fields.",
-    "scripts/ui.js with loot-ui.js, talk-ui.js, build-ui.js, stats-ui.js, craft-ui.js, os-ui.js, horde-ui.js and noclip-ui.js - HUD composition and action routing."
+    "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and eases player view/eye position into and out of a Back OS computer screen.",
+    "places/<place>/sim.js - local setup/tick roots; Level 4 builds offices/residents and Gamma places its Database terminal; level sims spawn agents and maintain creature packs.",
+    "places/<place>/config.yaml + cells - place configuration and authored placements; scene NPCs carry behavior/state and critter model attachments.",
+    "scripts/ui.js with loot-ui.js, talk-ui.js, build-ui.js, stats-ui.js, craft-ui.js, os-ui.js, horde-ui.js and noclip-ui.js - HUD composition and action routing; wardrobe/character creator is currently switched off in critter.js."
   ],
   "shared": [
     "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait/heading behavior; player and M.E.G. NPC chains run it before their controllers.",
@@ -29,7 +29,7 @@
     "scripts/lib/l4-people.js + scripts/lib/data/level4-people.yml - Level 4 resident homes, routines, meetups, greetings and phone errands; sim spawns their shared NPC agents.",
     "scripts/lib/os.js + scripts/lib/data/os.yml - host profiles, mail/files/Database/forum/Recycle Bin/System Properties and terminal commands for os.js and os-ui.js.",
     "scripts/lib/clothes.js + scripts/lib/data/clothes.yml - garment definitions, fitting and leveled loot/NPC wardrobe rolls reused by loot systems, player clothing and place NPC spawners.",
-    "scripts/lib/data/weapons.yml + scripts/lib/weapons.js, weapon-look.js, weapon-prof.js and weapon-geo.js - weapon definitions and fitted variants shared by pickups, viewmodels and NPCs."
+    "scripts/lib/data/almond.yml and breakables.yml - almond-water variants/effects and material/tool/drops tuning used by player/loot and breakables; critter-models.yml defines shared bodies, heads and faces for player and NPCs."
   ],
   "notableExports": [
     "places/*/sim.js - cadence and tick; places/gamma/sim.js also exports PEOPLE.",
@@ -37,17 +37,18 @@
     "scripts/lib/level4.js - HALF/H/room-plan constants, ROOMS/WALLS/COLUMNS, zoneAt, DRAIN4, L4_NAMES and roomAt.",
     "scripts/lib/l4-people.js - roundsFor, speak, settle, tickPeople, PEOPLE4; scripts/l4-office.js - ears, phoneTask, update; scripts/computer.js - ears.",
     "scripts/lib/os.js - PROFILE, mailsOf, filesOf, entriesOf, entryById, binOf, forumOf, passwordOf, runCmd; scripts/os.js - onInput, update; scripts/os-ui.js - osUi.",
-    "scripts/lib/clothes.js - fullLook, rollLevel, leveledRows, rollCloth, npcLook and clothing helpers; scripts/lib/breakables.js - strike/damage/drop/rubble, sweepProps, wall sync/ticks.",
+    "scripts/lib/clothes.js - fullLook, rollLevel, leveledRows, rollCloth, npcLook and clothing helpers; scripts/lib/breakables.js - B, wallProtected, wallKeyAt, brokenList, syncLevel0, gridWallAt, syncWalls, sweepProps, tickWalls, toolOf, rollDrops, spawnRubble, damageEntity, damageWall, strike.",
+    "scripts/lib/critter-model.js - HEAD_ID, GAIT_LIB, speciesOf, bodyModel, headModel, faceMorph, MESH, critterSpec, lookFromModel, rewear, toMesh, seatHead, staleBody, speciesFor, buildFor, bustMorph; scripts/lib/stats.js exports attributes/skills, derived, carry/weight, armor and NPC-stat helpers.",
     "scripts/build.js - onInput, update; scripts/build-ui.js - buildUi; scripts/lib/craft.js - recipeStatus; scripts/craft.js - onInput, update; scripts/horde.js - update."
   ],
   "ownership": [
-    "scripts/player.js - player.state owns level/XP, health/sanity, visited cells/zones, kills/deaths, equipment/inventory/ammo/condition, clothes, compass and Level 3 consumable/page fields; Level 4 adds home id and zone-derived recovery.",
+    "scripts/player.js - player.state owns level/XP, health/sanity, visited cells/zones, kills/deaths, equipment/inventory/ammo/condition, clothes, compass, crouch, and colored almond-water counts/timers; player-local walk/session data carries stamina and splash cooldown.",
     "scripts/stats.js - player.state owns HALOGEN attributes, skills, points, tags, schema version, sheetOpen and target; initializes/migrates the sheet and spends points.",
     "scripts/craft.js - player.state hunger/thirst, craftOpen/craftBench and payout redemption; needs drain and starvation reduces hp but floors it at 1; crafts validate recipe/skill/materials.",
     "scripts/horde.js - player.state horde phase/countdown/alive/result; session holds wave timing; spawned creature state carries the owning player's horde id.",
     "scripts/build.js + scripts/player.js - player.state.scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
     "scripts/interact.js - player focus, loot menu, notices and interaction; NPCs own pockets/picked and per-player warned/angry state, containers own item lists/lock/scavenged state.",
-    "scripts/talk.js and scripts/critter.js - dialogue state is split across player/NPC; player.state.look owns appearance/worn slots and avatar scratch is local/session state; NPC appearance is represented in state.look/wear.",
+    "scripts/talk.js and scripts/critter.js - dialogue state is split across player/NPC; player.state.look owns appearance/worn slots and avatar scratch is local/session state; NPC appearance/build is saved in state.look/wear/build.",
     "scripts/os.js and Level 4 systems - player.state.os/osNote/osClosedAt own active app, saved notes and close timing; computer entities own host/unlock, while place.state owns resident homes/clock/errands and office scheduling."
   ],
   "flows": [
@@ -62,7 +63,7 @@
     "OS Database study → player.state studied/reward fields; Notepad Save → player.state.osNote; Backmail tips and terminal/app state are rendered from host-derived profile data.",
     "Level 4 office plate press → plate owner/ownerName and player.state.home; homeKit spawns tagged cot/desk replacing the player's prior claimed room; player.js zoneAt4 then marks the claimed room as l4_home.",
     "Level 4 phone/printer/shift board → l4-office.js tasks and player.state.l4task; completion writes player.state.payout, which craft.js redeems as XP/items and craft-ui.js displays task progress.",
-    "scripts/lib/loot.js, loot3.js and clothing searches → clothes.js rollCloth leveled by finder level/place tier; level sims spawn NPCs using clothes.js npcLook and faction lists; craft.yml outfit recipes output wearable cloth tokens."
+    "scripts/lib/loot.js → almond tokens → player.js stores grey/green/red/blue counts and drinks configured effects; splash action spends a bottle and damages skin-stealers. Breakable hits → lib/breakables.js updates entity/wall HP and place.state.broken → rubble/drops and sim wall sync/regrowth."
   ],
   "behaviorFamilies": [
     "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state.",
@@ -71,19 +72,19 @@
     "scripts/lib/l4-people.js + data/level4-people.yml - Level 4 agents share home/round/meetup/phone/greeting logic, varied by faction, role, voice, look/build and routine.",
     "scripts/lib/clothes.js + clothes.yml - leveled garment lists vary by player/place tier and rarity; faction wardrobe rolls vary by faction, level and stable NPC id across Level 1–4, Gamma and Omega spawners.",
     "scripts/smilers.js and scripts/lurkers.js - Level 0 pack managers with distinct gaze/light/sanity reactions; uploaded Tripo rigged meshes and horde hunt hooks.",
-    "scripts/hounds.js + hound-geo.js and scripts/stealers.js + stealer-geo.js - shared level-specific hound grids/safe zones and skin-stealer disguise/reveal behavior vary by place and hunt phase.",
-    "scripts/lib/weapons.js + weapon-look.js, weapon-prof.js, weapon-geo.js and viewmodel-geo.js - weapon kinds reuse fitted bodies with variant stats/tint/overlays and viewmodel framing; melee Tripo meshes have per-kind grip poses."
+    "scripts/hounds.js + hound-geo.js and scripts/stealers.js + stealer-geo.js - shared level-specific hound grids/safe zones and skin-stealer disguise/reveal behavior vary by place and hunt phase; Level 1–3 sims restore missing pack managers.",
+    "scripts/lib/critter-model.js + scripts/meg-agent.js - player and NPC critters share species/sex-specific heads and body dressing; stable NPC id/look varies species, height, build and female bust morph, with authored looks preserved."
   ],
   "probableOrphans": [
     "scripts/flat-starter-terrain.js - no active place uses it; place terrain is off.",
     "scripts/flower.js, scripts/grass.js, scripts/grass-look.js and scripts/reed.js - no active terrain layers or placed references are visible; terrain is off."
   ],
   "migrationNotes": [
-    "Grid contracts differ: Level 0 is 56×56 at 4 m with hub cells 26–29; Level 1 is 30×30 at 8 m; Level 2 is 24×24 at 5 m; Level 3 is 26×26 at 4 m; Level 4's plan is 64×64 m with 8 m-wide, 6 m-deep offices. Keep geometry/zones/exits aligned to each grid.",
+    "Grid contracts differ: Level 0 is 56×56 at 4 m with hub cells 26–29; Level 1 is 30×30 at 8 m; Level 2 is 24×24 at 5 m; Level 3 is 26×26 at 4 m; Level 4's plan is 64×64 m with 8 m-wide, 6 m-deep offices. Keep geometry/zones/exits aligned to each level's own grid.",
     "Level 4 base l4-geo is the structural mesh/collider; l4-detail-geo draws ceiling, carpet and wall wear without a collider; l4-prop-geo and l4-office-geo supply repeated placed detail. Scene entries or sim-spawned bodies provide collision.",
     "Level 3 tight cells are 1 m clear width (tightHalf 0.5), 1.6 m springline and 2.15 m crown; tightArms/tightSpans drive structural/detail vaults, and gates/furniture are excluded from crawl halls.",
     "Player behavior order is intentional: humanoid-locomotion.js before player.js, then interact.js, talk.js, build.js, noclip.js, stats.js, craft.js, os.js, horde.js and critter.js; NPC arrays likewise put locomotion before meg-agent.js.",
-    "Back OS state is split: lock/unlocked lives on the computer entity; app/session and Notepad text live on the player; profile content comes from host. Keep OS action keys, UI state and host profiles/passwords in sync; camera dive and sitting behavior depend on player.state.os.id.",
-    "Clothing rows use slot/kind/colour and leveled-list floors; rarityAt is a minimum level and loot uses player level or placeTier. NPC wardrobe selection is stable by id, while Level 4 authored scene actors need their state look/wear kept consistent with visible model parts/material colours."
+    "Breakable wall HP/broken keys are place.state data; level sims call tickWalls to synchronize wall meshes, sweep supported props into breakables and regrow walls only when the gap is unoccupied. Preserve wall grid keys and material/tool tuning in breakables.yml.",
+    "Colored almond-water counts use player.state.almonds (grey), almondsG/R/B and effect timestamps in player.state; shared almond.yml owns effects. NPC looks/build are stable saved fields and critter-model bust is a morph; character creator is currently disabled by WARDROBE_OFF."
   ]
 }
