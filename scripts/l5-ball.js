@@ -53,7 +53,7 @@ export function update(ctx) {
     }
     // a guest who stalls (a snag, a crowd) for 4 s takes a stride straight at the stool; past 30 s they are simply seated
     if (want === "in" && !o.state.mjSat) {
-      const d = Math.hypot(f.x - e.x, f.z - e.z), ss = (o.session.mjWalk ??= { d, at: now, since: now });
+      const d = Math.hypot(f.x - e.x, f.z - e.z), W = (ctx.self.session.mjWalk ??= {}), ss = (W[e.id] ??= { d, at: now, since: now });
       if (d < ss.d - 0.5) { ss.d = d; ss.at = now; }
       else if (now - ss.at > 4000) { const k = Math.min(1.5, d - 0.5) / d; o.feetPosition = { x: f.x + (e.x - f.x) * k, y: f.y, z: f.z + (e.z - f.z) * k }; ss.d = d - 1.5; ss.at = now; }
       if (now - ss.since > 30000) o.feetPosition = { x: e.x, y: e.y, z: e.z };
