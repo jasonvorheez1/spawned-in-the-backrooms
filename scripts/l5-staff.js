@@ -29,7 +29,7 @@ export function update(ctx, dt) {
     if (!o) { if (now >= (mem["re" + f.id] ?? 0)) { mem["re" + f.id] = now + 240000; if (mem["re" + f.id + "x"]) place(ctx, f); mem["re" + f.id + "x"] = true; } continue; }
     const m = (mem[f.id] ??= {}), pos = o.feetPosition, st = o.state, vy = (o.velocity?.y ?? 0) - 18 * dt;
     if (st.dead || (st.hp ?? 1) <= 0) {
-      if (!m.deadAt) { m.deadAt = now; o.anim = { move: { clip: "cdn/clip-die.glb", clampWhenFinished: true } }; o.velocity = { x: 0, y: vy, z: 0 }; ctx.emit("playSound", { clip: SND("hollow-sigh-fading-whisper-thank-you-for-staying"), position: pos, volume: 0.9 }); }
+      if (!m.deadAt) { m.deadAt = now; o.anim.move = { clip: "cdn/clip-die.glb", clampWhenFinished: true } }; o.velocity = { x: 0, y: vy, z: 0; ctx.emit("playSound", { clip: SND("hollow-sigh-fading-whisper-thank-you-for-staying"), position: pos, volume: 0.9 }); }
       if (!m.claimed) m.claimed = claimRemains(ctx, pos, `${f.name}'s uniform`, ["bobbypin", "battery", ctx.random() < 0.5 ? "kit" : "tape"], m.deadAt, now);
       if (m.claimed && now - m.deadAt > 4000) { ctx.destroy(f.id); delete mem[f.id]; mem["re" + f.id] = now + 240000; }
       continue;
@@ -44,7 +44,7 @@ export function update(ctx, dt) {
     if (mode === "creep" && best < T.reach && now >= (m.strike ?? 0)) {
       m.strike = now + T.strikeEvery; mode = "strike";
       const at = hit(ctx, target, T.strike, "#ff2a2a");
-      o.anim = { move: { clip: "cdn/clip-attack.glb" } }; m.anim = "strike";
+      o.anim.move = { clip: "cdn/clip-attack.glb" }; m.anim = "strike";
       ctx.emit("playSound", { clip: SND("heavy-blunt-body-blow-thud"), position: at, volume: 1 });
       ctx.emit("screenShake", { intensity: 0.55, duration: 0.3 }, { audience: { player: target.id } });
       ctx.emit("cameraPunch", { direction: { x: target.feetPosition.x - pos.x, y: 0, z: target.feetPosition.z - pos.z }, intensity: 0.7 }, { audience: { player: target.id } });
@@ -58,7 +58,7 @@ export function update(ctx, dt) {
     else if (mode === "return" && sp) o.rotation = yawTo(dx, dz);
     else if (mode === "post") o.rotation = f.yaw;
     const want = sp ? "walk" : m.anim === "strike" && now < (m.strike ?? 0) - T.strikeEvery + 900 ? "strike" : mode === "frozen" ? "frozen" : "idle";
-    if (want !== m.anim) { m.anim = want; o.anim = { move: want === "walk" ? WALK : want === "idle" ? IDLE : want === "frozen" ? null : o.anim?.move ?? null }; }
+    if (want !== m.anim) { m.anim = want; o.anim.move = want === "walk" ? WALK : want === "idle" ? IDLE : want === "frozen" ? null : o.anim?.move ?? null; }
     if (st.mode !== mode) st.mode = mode;
     if (mode === "creep" && now >= (m.whisper ?? 0)) { m.whisper = now + 6000 + ctx.random() * 6000; ctx.emit("playSound", { clip: SND(f.whisper), position: { ...pos, y: pos.y + 2 }, volume: 0.55, maxDistance: 14 }); }
   }

@@ -31,7 +31,7 @@ const LEG = (ph, amp) => ({ pitch: ph ? [amp, -amp, amp] : [-amp, amp, -amp] });
 const gait = (dur, amp) => ({ clip: { duration: dur, tracks: {
   "0_Left_Limb_1": LEG(0, amp), "0_Right_Limb_1": LEG(1, amp), "1_Left_Limb_2": LEG(1, amp), "1_Right_Limb_2": LEG(0, amp),
   Tail_1: { yaw: [-amp * 0.6, amp * 0.6, -amp * 0.6] }, Spine_2: { roll: [-amp * 0.15, amp * 0.15, -amp * 0.15] } } }, loop: true });
-function setGait(r, m, g) { if (m.g === g) return; m.g = g; r.anim = { move: g === "still" ? null : g === "walk" ? gait(0.34, 28) : gait(0.18, 38) }; }
+function setGait(r, m, g) { if (m.g === g) return; m.g = g; r.anim.move = g === "still" ? null : g === "walk" ? gait(0.34, 28) : gait(0.18, 38); }
 
 export function onSpawn(ctx) { ctx.self.state.packs ??= {}; }
 export function update(ctx, dt) {
