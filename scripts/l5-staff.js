@@ -4,8 +4,9 @@
 import { E, SND, isSafe, flat, yawTo, prey, aloneOf, hit, claimRemains } from "./lib/l5-hostile.js";
 import { npcState } from "./lib/stats.js";
 import { critterSpec } from "./lib/critter-model.js";
+import { npcLook } from "./lib/clothes.js";
 // the staff are critters too (the creator's rule: a world full of critters): faceless, fur pitch black, in old hotel livery
-export const staffLook = (f, i) => ({ species: ["wolf", "cat", "fox", "bear"][i % 4], sex: i % 3 ? "m" : "f", fur: "#060606", vary: false, eye: "#000000", top: "jacket", topc: "#1f2a1e", bottom: "pants", bottomc: "#141414", shoes: "boots", shoec: "#0a0a0a", expr: "blank" });
+export const staffLook = (f, i) => ({ ...npcLook("l5staff" + i, { species: ["wolf", "cat", "fox", "bear"][i % 4], sex: i % 3 ? "m" : "f" }, "wanderer", 12), fur: "#060606", vary: false, eye: "#000000" });
 const T = E.staff, COS = Math.cos((T.lookCone * Math.PI) / 180);
 const WALK = { clip: "cdn/clip-walk-loop.glb", loop: true, speed: 0.55 }, IDLE = { clip: "cdn/clip-idle-loop.glb", loop: true, speed: 0.25 };
 function place(ctx, f) {
