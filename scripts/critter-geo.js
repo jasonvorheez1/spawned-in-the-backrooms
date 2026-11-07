@@ -478,7 +478,7 @@ export function geometry(ctx) {
     ];
     ctx.color(sp.dark || FUR);
     loft(legPath, (t) => {
-      const r = lerp(fem ? 0.058 : 0.05, 0.04, t); // slim base legs
+      const r = fem ? lerp(0.072, 0.04, Math.pow(t, 0.8)) : lerp(0.054, 0.042, t); // her thighs full, tapering to the ankle
       return [r, r];
     }, [1, 0, 0], (t) => {
       if (sp.dark) ctx.color(sp.dark);
@@ -734,7 +734,7 @@ export function geometry(ctx) {
   const shirtR = (y) => { // a top's radius at y: body + ease, held out over the hips and the pants' waistband
     const [bx, bz] = bodyR(y);
     const w = Math.min(1, Math.max(0, (0.77 - y) / 0.07));
-    return [Math.max(bx + 0.024, lerp(bx + 0.024, HIP_R[0] + 0.032, w)), Math.max(bz + 0.024, lerp(bz + 0.024, HIP_R[1] + 0.032, w))];
+    return [Math.max(bx + 0.016, lerp(bx + 0.016, HIP_R[0] + 0.02, w)), Math.max(bz + 0.016, lerp(bz + 0.016, HIP_R[1] + 0.02, w))]; // fitted: the waist and hips read through the cloth
   };
   const bustOut = (y) => (fem && Math.abs(y - BUST.y) < 0.09 ? 0.026 : 0);
   const frontZ = (y) => -((topw === "none" ? bodyR(y)[1] + 0.004 : shirtR(y)[1]) + (topw === "none" ? 0 : bustOut(y)) + 0.006); // the cloth's face, for pockets, buttons, straps
@@ -758,7 +758,7 @@ export function geometry(ctx) {
     ell([0, 0.66, 0.005], [HIP_R[0] + 0.016, 0.115, HIP_R[1] + 0.016], null, { clip: (p) => p[1] > 0.72 });
     for (const s of [-1, 1]) {
       const x = s * 0.085;
-      limb([x, 0.66, 0], [x, shorts ? 0.38 : knee, 0], (fem ? 0.058 : 0.05) + 0.016, shorts ? 0.06 : 0.05, hi ? 12 : 8);
+      limb([x, 0.66, 0], [x, shorts ? 0.38 : knee, 0], (fem ? 0.072 : 0.054) + 0.014, shorts ? 0.06 : 0.05, hi ? 12 : 8);
     }
     CLOTH = null; ctx.color(col);
   };
