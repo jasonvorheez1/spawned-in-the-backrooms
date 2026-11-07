@@ -107,12 +107,18 @@ function fileRig(d, dv, vh, vs, n, stride, zUp, sc, ymin) {
   const M = zUp ? [[-1, 0, 0], [0, 0, 1], [0, 1, 0]] : [[1, 0, 0], [0, -1, 0], [0, 0, -1]], ty = -ymin * sc
   const q = (m) => { const [a, b, c] = m, tr = a[0] + b[1] + c[2]; let x, y, z, w; if (tr > 0) { const S = Math.sqrt(tr + 1) * 2; w = S / 4; x = (c[1] - b[2]) / S; y = (a[2] - c[0]) / S; z = (b[0] - a[1]) / S } else if (a[0] > b[1] && a[0] > c[2]) { const S = Math.sqrt(1 + a[0] - b[1] - c[2]) * 2; w = (c[1] - b[2]) / S; x = S / 4; y = (a[1] + b[0]) / S; z = (a[2] + c[0]) / S } else if (b[1] > c[2]) { const S = Math.sqrt(1 + b[1] - a[0] - c[2]) * 2; w = (a[2] - c[0]) / S; x = (a[1] + b[0]) / S; y = S / 4; z = (b[2] + c[1]) / S } else { const S = Math.sqrt(1 + c[2] - a[0] - b[1]) * 2; w = (b[0] - a[1]) / S; x = (a[2] + c[0]) / S; y = (b[2] + c[1]) / S; z = S / 4 } const l = Math.hypot(x, y, z, w) || 1; return [x / l, y / l, z / l, w / l] }
   const rows3 = (m) => [[m[0], m[1], m[2]], [m[4], m[5], m[6]], [m[8], m[9], m[10]]]
-  for (const j of J) { const R = rows3(j.lm), sx = Math.hypot(R[0][0], R[1][0], R[2][0]) || 1; j.lt = [j.lm[3], j.lm[7], j.lm[11]]; j.lq = q(R.map((r) => r.map((v) => v / sx))) }
+  const mm = (a, b) => a.map((r) => [0, 1, 2].map((c) => r[0] * b[0][c] + r[1] * b[1][c] + r[2] * b[2][c]))
+  for (const j of J) {
+    let R = rows3(j.lm); const sx = Math.hypot(R[0][0], R[1][0], R[2][0]) || 1; R = R.map((r) => r.map((v) => v / sx))
+    let t = [j.lm[3] * sc, j.lm[7] * sc, j.lm[11] * sc]
+    if (j.parent < 0) { R = mm(M, R); t = [M[0][0] * t[0] + M[0][1] * t[1] + M[0][2] * t[2], M[1][0] * t[0] + M[1][1] * t[1] + M[1][2] * t[2] + ty, M[2][0] * t[0] + M[2][1] * t[1] + M[2][2] * t[2]] }
+    j.lt = t; j.lq = q(R)
+  }
   // A⁻¹ = Mᵀ · (1/s) · T(0,+ymin·s,0); IBM' = IBM · A⁻¹, written column-major
   const Ai = [[M[0][0] / sc, M[1][0] / sc, M[2][0] / sc, 0], [M[0][1] / sc, M[1][1] / sc, M[2][1] / sc, 0], [M[0][2] / sc, M[1][2] / sc, M[2][2] / sc, 0], [0, 0, 0, 1]]
   for (let r = 0; r < 3; r++) Ai[r][3] = -(Ai[r][1] * ty)
   const IBM = new Float32Array(J.length * 16)
-  J.forEach((j, i) => { const B = [[j.ib[0], j.ib[1], j.ib[2], j.ib[3]], [j.ib[4], j.ib[5], j.ib[6], j.ib[7]], [j.ib[8], j.ib[9], j.ib[10], j.ib[11]], [0, 0, 0, 1]]; for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) { let v = 0; for (let k = 0; k < 4; k++) v += B[r][k] * Ai[k][c]; IBM[i * 16 + c * 4 + r] = v } })
+  J.forEach((j, i) => { const B = [[j.ib[0], j.ib[1], j.ib[2], j.ib[3]], [j.ib[4], j.ib[5], j.ib[6], j.ib[7]], [j.ib[8], j.ib[9], j.ib[10], j.ib[11]], [0, 0, 0, 1]]; for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) { let v = 0; for (let k = 0; k < 4; k++) v += B[r][k] * Ai[k][c]; IBM[i * 16 + c * 4 + r] = r < 3 ? v * sc : v } })
   // weights: the four strongest of eight, renormalized; an unweighted vertex rides the root's first child
   const JO = new Uint16Array(n * 4), W = new Float32Array(n * 4), fb = Math.max(0, J.findIndex((j) => j.name === 'pelvis'))
   let bad = 0
@@ -124,7 +130,7 @@ function fileRig(d, dv, vh, vs, n, stride, zUp, sc, ymin) {
     top.forEach(([b, w], k) => { JO[v * 4 + k] = b; W[v * 4 + k] = w / sum })
   }
   if (bad > n * 0.5) return null
-  return { J, JO, W, IBM, arm: { translation: [0, ty, 0], rotation: q(M), scale: [sc, sc, sc] } }
+  return { J, JO, W, IBM }
 }
 // auto-rig (only for a file with no skeleton): a Mixamo-named humanoid skeleton fitted to the mesh's own extents, each vertex skinned to its two nearest bones on its side
 function autoRig(P, n) {
