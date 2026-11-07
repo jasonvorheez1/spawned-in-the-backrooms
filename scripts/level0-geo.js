@@ -3,7 +3,7 @@
 import { N, S, H, HALF, hash, zoneOf, inHub, wallX as wallX0, wallZ as wallZ0, isArchWall, hasPit, hasPillar, hasLight } from "./lib/maze.js";
 import L from "./lib/data/level0.yml";
 
-const WALLPAPER = "cdn/texture-yellow-chevron-damask-wallpaper-aged.png";
+const WALLPAPER = "/cdn/value.00a4e744acf9ab763779bbb0cc7f26fb1dd20aeafc69448c536939cd7212caeb.png";
 const CARPET = "cdn/texture-damp-beige-berber-office-carpet.png";
 const CEILING = "cdn/texture-white-acoustic-drop-ceiling-tile-grid.png";
 const T = 0.1; // half wall thickness

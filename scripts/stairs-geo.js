@@ -16,7 +16,7 @@ export function geometry(ctx) {
     slab(ctx, -W, 0, z0, W, (i + 1) * RISE, z1);
     if (ctx.lod <= 2) { ctx.color("oklch(0.9 0.03 75)"); slab(ctx, -W, (i + 1) * RISE - 0.02, z1 - 0.03, W, (i + 1) * RISE + 0.01, z1 + 0.01); ctx.color("oklch(0.95 0.02 80)"); } // worn nosing
   }
-  ctx.albedo("cdn/texture-yellow-chevron-damask-wallpaper-aged.png");
+  ctx.albedo("/cdn/value.00a4e744acf9ab763779bbb0cc7f26fb1dd20aeafc69448c536939cd7212caeb.png");
   ctx.color("oklch(0.98 0.01 90)");
   const top = STEPS * RISE + 0.4, back = 1.95 - STEPS * TREAD;
   for (const s of [-1, 1]) slab(ctx, s * W + (s < 0 ? -0.08 : 0), 0, back, s * W + (s < 0 ? 0 : 0.08), top, 1.95); // stringers
