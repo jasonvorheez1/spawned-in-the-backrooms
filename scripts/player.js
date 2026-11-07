@@ -88,7 +88,6 @@ export function takeToken(ctx, token) {
   if (token.startsWith('weapon:')) {
     const k = token.slice(7)
     if (!W[k]) return { ok: false, msg: '' }
-    if (owned(s).includes(k)) return { ok: false, msg: `You already have a ${W[k].name.toLowerCase()}` }
     s.weapons = [...owned(s).slice(1), k].join(',')
     if (W[k].magSize) s['loaded_' + k] = W[k].magSize
     if (usable(s, k) && W[k].damage > weaponOf(s).damage) s.equipped = k
@@ -293,7 +292,8 @@ function invAction(ctx, d) {
   }
   if (d.k === 'drop' && k !== 'fists' && owned(s).includes(k)) {
     if (s.equipped === k) { cancelReload(ctx); s.ads = false; s.equipped = 'fists'; s.equipAt = ctx.now() }
-    s.weapons = owned(s).slice(1).filter((w) => w !== k).join(',')
+    { const list = owned(s).slice(1), i = list.indexOf(k); if (i >= 0) list.splice(i, 1); s.weapons = list.join(',') } // drop one, keep the rest
+    if (owned(s).includes(k) && s.equipped === 'fists') { s.equipped = k } // still holding a spare
     const f = ctx.self.feetPosition, fw = walkOf(ctx).fwd ?? { x: 0, z: -1 }
     spawnWeapon(ctx, { x: f.x + fw.x * 0.9, z: f.z + fw.z * 0.9 }, k)
     sound(ctx, 'pickup-weapon', 0.5, true)

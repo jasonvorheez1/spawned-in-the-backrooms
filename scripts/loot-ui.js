@@ -89,7 +89,8 @@ function inventory(s) {
   const lv = s.level ?? 1, eqKey = s.equipped ?? 'fists'
   const weapons = (W.order ?? []).filter((k) => owned(s).includes(k)).map((k) => {
     const w = W[k], on = k === eqKey, ok = lv >= (w.minLevel ?? 1)
-    const inner = `<span class="eq"></span><span class="nm">${w.name}</span><span class="n">${ok ? (w.ranged ? `${s['loaded_' + k] ?? 0}/${s[w.ammoType ?? 'ammo'] ?? 0}` : '') : `LV ${w.minLevel}`}</span>${detail(k, s, false)}`
+    const cnt = owned(s).filter((x) => x === k).length
+    const inner = `<span class="eq"></span><span class="nm">${w.name}${cnt > 1 ? ` ×${cnt}` : ''}</span><span class="n">${ok ? (w.ranged ? `${s['loaded_' + k] ?? 0}/${s[w.ammoType ?? 'ammo'] ?? 0}` : '') : `LV ${w.minLevel}`}</span>${detail(k, s, false)}`
     return ok && !on ? `<button class="it" onclick="sendAction('inv',{k:'equip',w:'${k}'})">${inner}</button>` : `<div class="it${on ? ' on' : ''}${ok ? '' : ' lock'}">${inner}</div>`
   }).join('')
   const a = s.almonds ?? 0
