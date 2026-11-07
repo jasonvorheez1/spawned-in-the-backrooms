@@ -73,7 +73,7 @@ export async function plyToGlb(buf) {
     mats.push({ pbrMetallicRoughness: { ...(texs.length ? { baseColorTexture: { index: Math.min(mat, texs.length - 1) } } : {}), metallicFactor: 0, roughnessFactor: 0.75 }, alphaMode: 'MASK', alphaCutoff: 0.4, doubleSided: true })
     prims.push({ attributes: { POSITION: aP, NORMAL: aN, TEXCOORD_0: aU, JOINTS_0: aJ, WEIGHTS_0: aW }, indices: ai, material: mats.length - 1 })
   }
-  const g = { asset: { version: '2.0' }, scene: 0, scenes: [{ nodes: [0, 1] }], nodes: [{ name: 'body', mesh: 0, skin: 0 }, ...R.J.map((j, i) => { const pp = j.parent >= 0 ? R.J[j.parent].pos : [0, 0, 0], kids = R.J.map((k, ki) => (k.parent === i ? ki + 1 : -1)).filter((x) => x > 0); return { name: j.name, translation: [j.pos[0] - pp[0], j.pos[1] - pp[1], j.pos[2] - pp[2]], ...(kids.length ? { children: kids } : {}) } })], skins: [{ skeleton: 1, joints: R.J.map((_, i) => i + 1), inverseBindMatrices: aIB }], meshes: [{ primitives: prims }], materials: mats, accessors: acc, bufferViews: views, buffers: [{ byteLength: len }],
+  const g = { asset: { version: '2.0' }, scene: 0, scenes: [{ nodes: [0, 1] }], nodes: [{ name: 'body', mesh: 0, skin: 0 }, ...R.J.map((j, i) => { const kids = R.J.map((k, ki) => (k.parent === i ? ki + 1 : -1)).filter((x) => x > 0); return { name: j.name, translation: j.lt, rotation: j.lq, ...(kids.length ? { children: kids } : {}) } })], skins: [{ skeleton: 1, joints: R.J.map((_, i) => i + 1), inverseBindMatrices: aIB }], meshes: [{ primitives: prims }], materials: mats, accessors: acc, bufferViews: views, buffers: [{ byteLength: len }],
     ...(texs.length ? { textures: texs.map((_, i) => ({ source: i, sampler: 0 })), samplers: [{ wrapS: 10497, wrapT: 10497 }], images } : {}) }
   let js = new TextEncoder().encode(JSON.stringify(g)); const jp = (4 - (js.length % 4)) % 4; if (jp) { const t = new Uint8Array(js.length + jp).fill(32); t.set(js); js = t }
   const head = new DataView(new ArrayBuffer(20)); head.setUint32(0, 0x46546c67, true); head.setUint32(4, 2, true); head.setUint32(8, 28 + js.length + len, true); head.setUint32(12, js.length, true); head.setUint32(16, 0x4e4f534a, true)
@@ -94,17 +94,24 @@ function autoRig(P, n) {
     const tip = hand(sd), S = sh(sd), wr = S.map((c, k) => c + (tip[k] - c) * 0.88), el = S.map((c, k) => c + (wr[k] - c) * 0.5)
     const c = add(L + 'Shoulder', sp2, [sd * 0.04 * H, 0.79 * H, 0]), a = add(L + 'Arm', c, S), f = add(L + 'ForeArm', a, el), h = add(L + 'Hand', f, wr), e = add(L + 'HandEnd', h, tip)
     const ul = add(L + 'UpLeg', hips, [sd * 0.09 * H, 0.5 * H, 0]), lg = add(L + 'Leg', ul, [sd * 0.09 * H, 0.27 * H, 0]), ft = add(L + 'Foot', lg, [sd * 0.09 * H, 0.05 * H, 0]), toe = add(L + 'ToeBase', ft, [sd * 0.09 * H, 0.015 * H, -0.07 * H]), te = add(L + 'Toe_End', toe, [sd * 0.09 * H, 0.015 * H, -0.12 * H])
-    segs.push([c, a, sd], [a, f, sd], [f, h, sd], [h, e, sd], [hips, ul, sd], [ul, lg, sd], [lg, ft, sd], [ft, toe, sd], [toe, te, sd])
+    segs.push([c, a, sd, 0.04], [a, f, sd, 0.09], [f, h, sd, 0.09], [h, e, sd, 0.09], [hips, ul, sd], [ul, lg, sd], [lg, ft, sd], [ft, toe, sd], [toe, te, sd])
   }
   const segD = (q, a, b) => { const ab = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], aq = [q[0] - a[0], q[1] - a[1], q[2] - a[2]]; const t = Math.max(0, Math.min(1, (aq[0] * ab[0] + aq[1] * ab[1] + aq[2] * ab[2]) / ((ab[0] ** 2 + ab[1] ** 2 + ab[2] ** 2) || 1))); return Math.hypot(aq[0] - ab[0] * t, aq[1] - ab[1] * t, aq[2] - ab[2] * t) }
   const JO = new Uint16Array(n * 4), W = new Float32Array(n * 4)
   for (let v = 0; v < n; v++) {
     const q = [P[v * 3], P[v * 3 + 1], P[v * 3 + 2]], sv = side(q[0]); let b1 = -1, d1 = Infinity, b2 = -1, d2 = Infinity
-    for (const [a, b, sd] of segs) { if (sd && sv && sd !== sv) continue; if (sd && !sv && q[1] < 0.5 * H) continue; const dd = segD(q, J[a].pos, J[b].pos); if (dd < d1) { b2 = b1; d2 = d1; b1 = a; d1 = dd } else if (dd < d2 && a !== b1) { b2 = a; d2 = dd } }
+    for (const [a, b, sd, out] of segs) { if (sd && sv && sd !== sv) continue; if (out && Math.abs(q[0]) < out * H) continue; if (sd && !sv && q[1] < 0.5 * H) continue; const dd = segD(q, J[a].pos, J[b].pos); if (dd < d1) { b2 = b1; d2 = d1; b1 = a; d1 = dd } else if (dd < d2 && a !== b1) { b2 = a; d2 = dd } }
     const w1 = 1 / Math.pow(d1 + 0.01, 4), w2 = b2 >= 0 ? 1 / Math.pow(d2 + 0.01, 4) : 0
     JO[v * 4] = b1; JO[v * 4 + 1] = Math.max(0, b2); W[v * 4] = w1 / (w1 + w2); W[v * 4 + 1] = w2 / (w1 + w2)
   }
-  const IBM = new Float32Array(J.length * 16); J.forEach((j, i) => { IBM.set([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -j.pos[0], -j.pos[1], -j.pos[2], 1], i * 16) })
+  const qmul = (a, b) => [a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1], a[3] * b[1] - a[0] * b[2] + a[1] * b[3] + a[2] * b[0], a[3] * b[2] + a[0] * b[1] - a[1] * b[0] + a[2] * b[3], a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2]]
+  const qinv = (q) => [-q[0], -q[1], -q[2], q[3]]
+  const qrot = (q, v) => { const p = qmul(qmul(q, [v[0], v[1], v[2], 0]), qinv(q)); return [p[0], p[1], p[2]] }
+  const fromY = (d) => { const l = Math.hypot(...d) || 1, u = d.map((c) => c / l), dt = u[1]; if (dt < -0.9999) return [0, 0, 1, 0]; const ax = [u[2], 0, -u[0]], w = 1 + dt, m = Math.hypot(ax[0], ax[1], ax[2], w); return [ax[0] / m, ax[1] / m, ax[2] / m, w / m] }
+  J.forEach((j, i) => { const kid = J.findIndex((k) => k.parent === i); j.wq = kid >= 0 ? fromY(J[kid].pos.map((c, k) => c - j.pos[k])) : j.parent >= 0 ? J[j.parent].wq : [0, 0, 0, 1] })
+  J.forEach((j) => { const pq = j.parent >= 0 ? J[j.parent].wq : [0, 0, 0, 1], pp = j.parent >= 0 ? J[j.parent].pos : [0, 0, 0]; j.lq = qmul(qinv(pq), j.wq); j.lt = qrot(qinv(pq), j.pos.map((c, k) => c - pp[k])) })
+  const IBM = new Float32Array(J.length * 16)
+  J.forEach((j, i) => { const iq = qinv(j.wq), x = qrot(iq, [1, 0, 0]), y = qrot(iq, [0, 1, 0]), z = qrot(iq, [0, 0, 1]), t = qrot(iq, j.pos).map((c) => -c); IBM.set([x[0], x[1], x[2], 0, y[0], y[1], y[2], 0, z[0], z[1], z[2], 0, t[0], t[1], t[2], 1], i * 16) })
   return { J, JO, W, IBM }
 }
 let busy = false
