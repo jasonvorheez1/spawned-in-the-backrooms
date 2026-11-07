@@ -14,7 +14,7 @@ const hallEdge = (cx, cz, d) => inHall(cx, cz) || inHall(cx + D4[d][0], cz + D4[
 const pipeEdge = (cx, cz, d) => inPipes(cx, cz) && inPipes(cx + D4[d][0], cz + D4[d][1]); // inside the pipe maze the walls are pipe banks (level2-rooms-geo.js)
 
 export function geometry(ctx) {
-  const hi = ctx.lod <= 2, M = hi ? 10 : 6;
+  const hi = ctx.lod <= 2, M = hi ? 8 : 5;
   // floor and ceiling, one quad a cell, tinted by zone
   ctx.albedo(FLOOR);
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
@@ -55,7 +55,7 @@ export function geometry(ctx) {
     const [nx, nz] = [[1, 0], [0, 1], [-1, 0], [0, -1]][d], tx = -nz, tz = nx, wx = c.x + nx * half, wz = c.z + nz * half;
     const P = (along, out) => [wx + tx * along - nx * out, y, wz + tz * along - nz * out];
     const L = half - CH * 0.2;
-    tube(ctx, [P(-L - 0.3, -0.2), P(-L, off * 0.5), P(-L + 0.3, off), P(L - 0.3, off), P(L, off * 0.5), P(L + 0.3, -0.2)], [r, r, r, r, r, r], M, [1, 1], 0, 1, 1);
+    tube(ctx, [P(-L - 0.3, -0.2), P(-L, off * 0.5), P(-L + 0.3, off), P(L - 0.3, off), P(L, off * 0.5), P(L + 0.3, -0.2)], [r, r, r, r, r, r], M, [1, 1], 0, 1, 2); // two rings per bend is enough at a pipe's size
     if (k === 0) for (const a of [-L * 0.5, L * 0.5]) box(ctx, ...[P(a, 0)[0] - 0.04, P(a, 0)[0] + 0.04].sort((p, q) => p - q), y - 0.16, y + 0.03, ...[P(a, 0)[2] - 0.04, P(a, off + 0.05)[2] + 0.04].sort((p, q) => p - q)); // bracket
   };
   const PIPE = ["oklch(0.62 0.03 150)", "oklch(0.5 0.07 40)", "oklch(0.72 0.01 250)"];

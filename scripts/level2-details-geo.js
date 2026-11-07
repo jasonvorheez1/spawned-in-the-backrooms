@@ -28,9 +28,9 @@ export function geometry(ctx) {
       if (r < 0.5) {
         const y = 1.7 + hash(cx, cz, 303) * 0.5, off = 0.5;
         ctx.roughness(0.95); ctx.color("oklch(0.84 0.03 85)");
-        tube(ctx, [P(-half, off, y), P(half, off, y)], [0.2, 0.2], hi ? 12 : 7, [1, 1], 0.03, cx + cz, 1);
+        tube(ctx, [P(-half, off, y), P(half, off, y)], [0.2, 0.2], hi ? 9 : 6, [1, 1], 0.03, cx + cz, 1);
         ctx.color("oklch(0.45 0.04 55)");
-        for (let a = -half + 0.4; a < half; a += 1.1) tube(ctx, [P(a, off, y), P(a + 0.1, off, y)], [0.215, 0.215], hi ? 12 : 7, [1, 1], 0, 1, 1);
+        for (let a = -half + 0.4; a < half; a += 1.1) tube(ctx, [P(a, off, y), P(a + 0.1, off, y)], [0.215, 0.215], hi ? 9 : 6, [1, 1], 0, 1, 1);
         ctx.color("oklch(0.35 0.02 250)"); ctx.metalness(0.6);
         for (let a = -half + 1; a < half; a += 2.3) wb(a - 0.04, a + 0.04, 0, off, y - 0.04, y + 0.04);
         ctx.metalness(0);
@@ -74,7 +74,7 @@ export function geometry(ctx) {
         ctx.color("oklch(0.3 0.015 80)"); ctx.roughness(0.95);
         box(ctx, c.x - ex * S / 2 - ez * 0.55, c.x + ex * S / 2 + ez * 0.55, H - 0.95, H - 0.4, c.z - ez * S / 2 - ex * 0.55, c.z + ez * S / 2 + ex * 0.55);
         ctx.color("oklch(0.2 0.01 80)");
-        for (let a = -S / 2 + 0.2; a < S / 2; a += 0.38) box(ctx, c.x + ex * a - ez * 0.58, c.x + ex * a + 0.05 * ex + ez * 0.58, H - 0.98, H - 0.37, c.z + ez * a - ex * 0.58, c.z + ez * a + 0.05 * ez + ex * 0.58);
+        for (let a = -S / 2 + 0.2; a < S / 2; a += 0.6) box(ctx, c.x + ex * a - ez * 0.58, c.x + ex * a + 0.05 * ex + ez * 0.58, H - 0.98, H - 0.37, c.z + ez * a - ex * 0.58, c.z + ez * a + 0.05 * ez + ex * 0.58);
       }
       if (hash(cx, cz, 373) < 0.35) {
         ctx.color("oklch(0.16 0.01 250)");
