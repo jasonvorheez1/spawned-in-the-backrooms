@@ -35,7 +35,7 @@ export function faceMorph(expr, blink) {
 export const MESH = M.mesh === true
 export function critterSpec(l) {
   if (!MESH) return { primitive: { kind: 'scripted', script: 'scripts/critter2-geo.js', params: l }, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 } }
-  return { model: bodyModel(l), children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel(l), morph: faceMorph(l.expr) }],
+  return { model: bodyModel(l), morph: bustMorph(l) ?? undefined, children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel(l), morph: faceMorph(l.expr) }],
     material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.6, bounce: 0.6 } }
 }
 // a mesh critter's look read back off its own model (the bodies laid before state.wear existed): parts shown = garments, cloth_* = their colours, head GLB = species and sex
@@ -55,13 +55,13 @@ export function lookFromModel(model, headId) {
 export function rewear(ctx, obj, look) {
   if (!obj || !look) return
   if (obj.primitive?.params) { obj.primitive = { ...obj.primitive, params: { ...obj.primitive.params, ...look } }; return }
-  if (obj.model) obj.model = bodyModel(look)
+  if (obj.model) { obj.model = bodyModel(look); const bm = bustMorph(look); if (bm) obj.morph = { ...(obj.morph ?? {}), ...bm } }
 }
 // a scripted critter swapped onto the Blender critter in place: body model, skinned head child, outline and jiggle; returns the look it wore
 export function toMesh(ctx, obj) {
   if (!MESH || obj?.primitive?.script !== 'scripts/critter2-geo.js') return null
   const l = { ...obj.primitive.params }, spec = critterSpec(l)
-  obj.primitive = null; obj.model = spec.model; obj.material = spec.material; obj.jiggle = spec.jiggle
+  obj.primitive = null; obj.model = spec.model; if (spec.morph) obj.morph = spec.morph; obj.material = spec.material; obj.jiggle = spec.jiggle
   seatHead(ctx, obj, l)
   return l
 }
@@ -86,4 +86,5 @@ export function buildFor(id, sex) {
   return sex === 'f' ? { h, w, bust: +(c * 0.75).toFixed(2) } : { h, w } // Bust morph 0..0.75, stable per npc
 }
 // the body's Bust morph from a creator slider (bustS 0.6..1.3, 1 = as built)
-export const bustMorph = (l) => l?.sex === 'f' ? { Bust: Math.max(-0.6, Math.min(0.9, ((Number(l.bustS) || 1) - 1) * 3)) } : null
+export function bustMorph(l) { return _bust(l) }
+const _bust = (l) => l?.sex === 'f' ? { Bust: Math.max(-0.6, Math.min(0.9, ((Number(l.bustS) || 1) - 1) * 3)) } : null
