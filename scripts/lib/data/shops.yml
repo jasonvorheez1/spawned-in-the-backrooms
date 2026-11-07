@@ -1,5 +1,5 @@
-# Traders' shops (scripts/lib/shop.js). Almond water is the money: there is no other currency in the game.
-# stock: [token, count, base price in almond waters]. All numbers Savi's picks; tune freely.
+# Traders' shops (scripts/lib/npc-talk.js). Backdollars are the money (Shelly's ruling, #33323 / #44597): traders buy and sell in $ only.
+# stock: [token, count, base price in Backdollars]. A grey almond water sells for cash like any other good. All numbers Savi's picks; tune freely.
 restock: 600        # seconds until a trader's shelf fills back up (Savi's pick)
 buyMul: 1.25        # price = base * (buyMul - barter/barterDiv) * (1 - discount) (Savi's pick)
 barterDiv: 200      # barter 100 takes 0.5 off the multiplier (Savi's pick)
@@ -190,6 +190,7 @@ shops:
     - [weapon:pipe_scrap, 1, 5]
 # what the player can sell, base price by kind (weapons by rarity, garments by rarity)
 sell:
+  almond: 3          # a grey almond water: about $1 at the counter (Savi's pick)
   ammo: 4
   shells: 5
   fuse: 5

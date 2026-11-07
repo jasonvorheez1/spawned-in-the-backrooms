@@ -160,6 +160,7 @@ function act(ctx, d) {
   if (d.k === 'svc') { const before = s.sub?.at; service(ctx, it); if (s.sub?.at !== before) logLine(ctx, it, 'n', s.sub.t); return }
   if (d.k === 'trade' && isTrader(it)) { restock(ctx, it); s.shopOpen = it.id; return }
   if (d.k === 'back') s.shopOpen = null
+  if (d.k === 'stab') s.shopTab = ['buy', 'sell'].includes(d.t) ? d.t : 'buy'
 }
 
 function restock(ctx, it) {
@@ -175,17 +176,17 @@ function shop(ctx, d) {
   if (d.k === 'buy') {
     const row = stock[t]; if (!row || row[0] < 1) { note(ctx, 'Sold out.'); return }
     const price = buyPrice(row[1], barter, disc)
-    const cents = price * 100, cash = (s.cents ?? 0) >= cents
-    if (!cash && (s.almonds ?? 0) < price) { note(ctx, `Not enough: $${price}.00 or ${price} almond water.`); return }
-    if (cash) s.cents -= cents; else s.almonds -= price
+    const cents = price * 100 // Backdollars only: traders don't take almond water as money any more
+    if ((s.cents ?? 0) < cents) { note(ctx, `Not enough Backdollars: $${price}.00`); return }
+    s.cents -= cents
     const got = takeToken(ctx, t)
-    if (!got?.ok) { if (cash) s.cents += cents; else s.almonds += price; note(ctx, got?.msg ?? (got?.why ? `Can't take it: ${got.why}` : "You can't carry that.")); return }
+    if (!got?.ok) { s.cents += cents; note(ctx, got?.msg ?? (got?.why ? `Can't take it: ${got.why}` : "You can't carry that.")); return }
     stock[t] = [row[0] - 1, row[1]]; it.state.stock = stock
-    note(ctx, `Bought ${describe(t).name} for ${cash ? '$' + price + '.00' : price + ' almond water'}.`)
+    note(ctx, `Bought ${describe(t).name} for $${price}.00.`)
   } else if (d.k === 'sell') {
     const row = sellables(s).find((x) => x[0] === t); if (!row || !removeOne(s, t)) return
     const pay = sellPrice(row[2], barter); s.cents = (s.cents ?? 0) + pay * 100
-    stock[t] = [(stock[t]?.[0] ?? 0) + 1, stock[t]?.[1] ?? Math.round(row[2] * 2)]; it.state.stock = stock
+    if (t !== 'almond') { stock[t] = [(stock[t]?.[0] ?? 0) + 1, stock[t]?.[1] ?? Math.round(row[2] * 2)]; it.state.stock = stock }
     note(ctx, `Sold ${describe(t).name} for $${pay}.00.`)
   }
 }

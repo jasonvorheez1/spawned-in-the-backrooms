@@ -2,10 +2,12 @@
 // W/S row forward/back, A/D turn, E steps you out. It stays where you leave it; left empty and
 // unwatched for 3 minutes it drifts home to the pier. Shallows and anything solid ahead stop it.
 import { raycast } from "builtin/physics";
-const MAX = 4.2, ACC = 2.2, TURN = 48, HOME = { x: 2.3, z: -31, yaw: 14 }, RIDE_Y = -0.4; // Savi's picks
+const MAX = 5.8, ACC = 4.5, TURN = 70, HOME = { x: 2.3, z: -31, yaw: 14 }, RIDE_Y = -0.4; // Savi's picks
 const WAKE = `fx
 pop foam rate=%r|0*30 on=disc(.5) life=.8..1.4 v=sdir()*.3+up(.1) size=.25..0.45 acc=drag(1.5) col=<.85,.9,.92> a=.5>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)`;
-const OAR = "/cdn/moodboard-realistic-gritty/sfx-wooden-oars-dipping-and-pulling-through-calm-water.mp3";
+const OAR = "/cdn/moodboard-realistic-gritty/sfx-single-wooden-oar-blade-dipping-softly-into-calm-sea-water-and-pulling.mp3";
+const CREAK = "/cdn/moodboard-realistic-gritty/sfx-old-wooden-rowboat-oarlock-creak-rope-and-wood.mp3";
+const HULL = "/cdn/moodboard-realistic-gritty/sfx-calm-sea-water-lapping-against-small-wooden-boat-hull-loop.mp3";
 const yawOf = (r) => (typeof r === "number" ? r : r?.yaw ?? 0);
 const mem = (ctx) => (ctx.self.session.dory ??= { v: 0, turn: 0, mz: 0, mx: 0, stroke: 0 });
 
@@ -71,9 +73,9 @@ export function update(ctx, dt) {
   }
   m.base ??= { x: p.x, z: p.z, yaw: s.yaw ?? yaw };
   const target = b.controller ? -m.mz * MAX * (m.mz < 0 ? 1 : -0.5) : 0; // moveZ -1 is forward
-  m.v += Math.sign(target - m.v) * Math.min(Math.abs(target - m.v), (b.controller && Math.abs(m.mz) > 0.1 ? ACC : 0.8) * dt);
-  const turnAim = b.controller ? -m.mx * TURN * (0.35 + 0.65 * Math.min(1, Math.abs(m.v) / 1.5)) : 0;
-  m.turn += (turnAim - m.turn) * Math.min(1, dt * 3);
+  m.v += Math.sign(target - m.v) * Math.min(Math.abs(target - m.v), (b.controller && Math.abs(m.mz) > 0.1 ? ACC : 1.4) * dt); // glides a few metres when you let go
+  const turnAim = b.controller ? -m.mx * TURN * (0.75 + 0.25 * Math.min(1, Math.abs(m.v) / 2)) : 0; // full turning even standing still
+  m.turn += (turnAim - m.turn) * Math.min(1, dt * 6);
   m.base.yaw += m.turn * dt;
   const r = (m.base.yaw * Math.PI) / 180, fx = -Math.sin(r), fz = -Math.cos(r);
   if (Math.abs(m.v) > 0.05) {
@@ -114,10 +116,15 @@ export function update(ctx, dt) {
   if (s.rower) m.hadRider = s.rower;
   // oar strokes and a wake, at their own pace
   const moving = Math.abs(m.v) > 0.4;
-  if (b.controller && Math.abs(m.mz) + Math.abs(m.mx) > 0.2 && now - m.stroke > 1300) {
-    m.stroke = now;
-    ctx.emit("playSound", { clip: OAR, position: { x: m.base.x, y: 0.2, z: m.base.z }, volume: 0.55, maxDistance: 22 });
+  const rowing = b.controller && Math.abs(m.mz) + Math.abs(m.mx) > 0.2;
+  if (rowing && now - m.stroke > 1050) { // one soft stroke a beat, a creak every other one
+    m.stroke = now; m.n = (m.n ?? 0) + 1;
+    ctx.emit("playSound", { clip: OAR, position: { x: m.base.x, y: 0.2, z: m.base.z }, volume: 0.32, pitch: 0.92 + ctx.random() * 0.16, maxDistance: 18 });
+    if (m.n % 2) ctx.emit("playSound", { clip: CREAK, position: { x: m.base.x, y: 0.4, z: m.base.z }, volume: 0.18, pitch: 0.9 + ctx.random() * 0.2, maxDistance: 10 });
   }
+  // the hull's own water: a quiet lap at rest that swells as you move, written only when it changes
+  const g = Math.round((0.08 + Math.min(1, Math.abs(m.v) / MAX) * 0.22) * 50) / 50;
+  if (g !== m.g) { m.g = g; b.audio = { clip: HULL, loop: true, gain: g, spatial: true, maxDistance: 16, pitch: 0.9 + Math.min(1, Math.abs(m.v) / MAX) * 0.2 }; }
   if (moving !== !!m.wake) { m.wake = moving; b.fx = moving ? { script: WAKE, params: { r: 1 } } : null; }
   if (!b.controller && !moving && now - (m.saved ?? 0) > 3000) { m.saved = now; s.yaw = m.base.yaw; }
 }

@@ -83,8 +83,20 @@ export const buyPrice = (base, barter, disc = 0) => Math.max(1, Math.round(base 
 export const sellPrice = (base, barter) => Math.max(1, Math.round(base * SH.sellShare * (0.75 + barter / SH.barterDiv)))
 const csv = (v) => String(v ?? '').split(',').filter(Boolean)
 // what a player can sell, one row per kind: [token, have, base]
+// the shop's sections, from a token's shape
+export const SECTIONS = [['weapon', 'WEAPONS'], ['ammo', 'AMMO'], ['aid', 'MEDICAL'], ['food', 'FOOD & DRINK'], ['cloth', 'APPAREL'], ['gear', 'GEAR & PARTS']]
+export function sectionOf(t) {
+  if (t.startsWith('weapon:')) return 'weapon'
+  if (t.startsWith('cloth:')) return 'cloth'
+  if (t === 'ammo' || t === 'shells') return 'ammo'
+  if (['bandage', 'firstaid', 'kit', 'tape'].includes(t)) return 'aid'
+  if (t.startsWith('meat:') || t === 'almond' || ['ration', 'royal_ration', 'beans', 'bar', 'lobby_wafer'].includes(t)) return 'food'
+  return 'gear'
+}
+export const money = (c) => '$' + (Math.max(0, c ?? 0) / 100).toFixed(2)
 export function sellables(s) {
   const out = [], P = SH.sell
+  if ((s.almonds ?? 0) > 0) out.push(['almond', s.almonds, P.almond ?? 3])
   if ((s.ammo ?? 0) >= W.ammo.perPickup) out.push(['ammo', Math.floor(s.ammo / W.ammo.perPickup), P.ammo])
   if ((s.shells ?? 0) >= W.shells.perPickup) out.push(['shells', Math.floor(s.shells / W.shells.perPickup), P.shells])
   for (const [k, f] of [['fuse', 'fuses'], ['valve', 'valves'], ['keycard', 'keycards'], ['firesalt', 'firesalt']]) if ((s[f] ?? 0) > 0) out.push([k, s[f], P[k]])
@@ -96,6 +108,7 @@ export function sellables(s) {
 }
 // take one of a sellable out of the player's state; false if they don't have it
 export function removeOne(s, token) {
+  if (token === 'almond') { if (!((s.almonds ?? 0) > 0)) return false; s.almonds -= 1; return true }
   if (token === 'ammo') { if ((s.ammo ?? 0) < W.ammo.perPickup) return false; s.ammo -= W.ammo.perPickup; return true }
   if (token === 'shells') { if ((s.shells ?? 0) < W.shells.perPickup) return false; s.shells -= W.shells.perPickup; return true }
   const F = { fuse: 'fuses', valve: 'valves', keycard: 'keycards', firesalt: 'firesalt' }[token]
