@@ -5,6 +5,7 @@ import { rollItemL3 } from './lib/loot3.js'
 // or close it). The looked-at thing glows. scripts/player.js applies the items (takeToken);
 // scripts/loot-ui.js draws the prompt and the menu from player.state (focus, lootOpen, lootList, notice).
 import { getInputRay, raycast } from 'builtin/physics'
+import { stripTo, SLOTS } from './lib/clothes.js'
 import { tokenOf, describe, itemsOf } from './lib/items.js'
 import { takeToken, maxHp, maxSan } from './player.js'
 import { derived, skillsOf, SKILLS } from './lib/stats.js'
@@ -258,6 +259,10 @@ function lootAction(ctx, d) {
   } else return
   c.state.items = items.join(',')
   s.lootList = c.state.items
+  if (c.state.look && c.primitive?.params) { // a garment taken off a body comes off the body, now, on every screen
+    const l = stripTo(c.state.look, items), pr = c.primitive.params
+    if (SLOTS.some((k) => (pr[k] ?? 'none') !== l[k])) c.primitive = { ...c.primitive, params: { ...pr, ...Object.fromEntries(SLOTS.map((k) => [k, l[k]])) } }
+  }
   if (fail) note(ctx, fail)
 }
 
