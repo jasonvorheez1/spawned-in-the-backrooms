@@ -40,7 +40,8 @@ function dress(ctx, me) {
     const l = { ...old, species: old.species && old.species !== "cat" ? old.species : speciesFor(local), sex: old.sex ?? "m" }
     const spec = critterSpec(l); me.model = spec.model; me.material = spec.material; me.jiggle = spec.jiggle; me.state.wear = l; seatHead(ctx, me, l);
   }
-  if (!me.state.build) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = b; me.scale = { x: b.w, y: b.h, z: b.w }; } // its own height and build
+  const sc = me.scale, plain = !sc || (typeof sc === "number" ? sc === 1 : sc.x === 1 && sc.y === 1);
+  if (!me.state.build && plain) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = b; me.scale = { x: b.w, y: b.h, z: b.w }; } // its own height and build
 }
 
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
