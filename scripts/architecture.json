@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1193,
-  "updatedAt": "2026-11-07T20:14:06.757Z",
+  "basedOnSpecVersion": 1194,
+  "updatedAt": "2026-11-07T20:14:53.314Z",
   "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, Levels 1–6, Base Gamma and a debug room. Authored cells and place simulations assemble the spaces; shared player, creature, NPC, loot and UI systems support scavenging, combat, dialogue and per-player progression.",
   "scriptPaths": [],
   "places": [
@@ -11,7 +11,7 @@
     "places/level3 (3D) - Electrical Station; maze/crawl halls, hazards, creatures, Gamma checkpoint, generators and lifts.",
     "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards, residents and Database terminal.",
     "places/level4 (3D) - Abandoned Office; offices, fountains, break-room vending, lift/stairs and Base Omega; sim lays residents and office systems.",
-    "places/level5 (3D) - Terror Hotel; Main Hall, guest rooms, Beverly Room and Boiler Room; residents, rentals, mahjong, rat packs and Level 6 entrance; Ines's goggle quest directs players to the M.E.G. drop box (the Cold Room shelter and its fixtures are removed).",
+    "places/level5 (3D) - Terror Hotel; Main Hall, guest rooms, Beverly Room and Boiler Room; residents, rentals, mahjong, rat packs and Level 6 entrance; Ines's goggle quest directs players to the M.E.G. drop box.",
     "places/level6 (3D) - Lights Out; seeded dark concrete halls, survivor-note set pieces, loot props and triggers; wall shifts when unwatched and whispers/mimic voices haunt the halls."
   ],
   "roots": [
@@ -52,7 +52,7 @@
     "scripts/build.js + player.js - player scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
     "scripts/interact.js + scripts/lib/seat.js - focus/loot/interaction and player sit state; scripts/lockpick.js owns pick state, pins and boiler-pick timestamp; seats own occupancy.",
     "scripts/talk.js + scripts/meg-agent.js - dialogue/social memory and NPC follow; meg-agent owns routines, nerve, loadout, combat, fear/want, cover and corpse inspections.",
-    "scripts/mahjong.js + Level 5 table state own game lifecycle, player stake/winnings and guests; scripts/l5-heat.js owns player heat/soak; scripts/l5-goggles.js writes per-player quest steps and battery hand-in."
+    "scripts/mahjong.js + Level 5 table state own game lifecycle/rules, player stake/winnings and guests; scripts/l5-heat.js owns player heat/soak; scripts/l5-goggles.js writes per-player quest steps and battery hand-in."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered handlers: locomotion before movement; interact, grab, rest, mahjong, talk, build, noclip, stats, craft, OS, lockpick and horde before critter and view3.",
@@ -65,8 +65,8 @@
     "player.js ranged attack → lib/ballistics.js traces from eye and returns target/world impact; player.js applies damage and show() emits tracer/impact FX; weapons.yml supplies projectile parameters.",
     "scripts/lib/loot.js place pools/item rolls → interact.js containers and player.js kill drops; Level 3 has special rolls and NVG is quest-available in Level 5.",
     "scripts/player.js writes state.loud on swings/shots → scripts/lib/hunt.js uses combat and movement noise to locate prey; hound/maze hunters use level-specific path helpers, including boiler aisles.",
-    "places/main/sim.js counts live smilers/lurkers across a large radius and replenishes toward scripts/lib/data/level0.yml caps; that data sets 6 smilers/3 lurkers with 150/180-second respawn; scripts/l5-rats.js refills nest packs every 240 seconds.",
-    "Level 5 pressables via scripts/l5-goggles.js ears.press → player.state.nvgQ quest and batteryTake → player.js spends shared torch battery; goggle pickup adds spares, which player.js swaps in as NVG charge runs out; UI names Level 6 Lights Out."
+    "places/main/sim.js counts live smilers/lurkers across a large radius and replenishes toward scripts/lib/data/level0.yml caps; that data sets 6 smilers/3 lurkers with 150/180-second respawn; scripts/l5-rats.js refills nest packs every 240 s.",
+    "Level 5 pressables via scripts/l5-goggles.js ears.press → player.state.nvgQ quest and batteryTake → player.js spends shared torch battery; goggle pickup adds spares; in Level 6 F toggles the camera-attached NVG light and can fit a spare when the battery is depleted."
   ],
   "behaviorFamilies": [
     "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; Level 5 x0z0.scene hosts the hotel/Level 6 entrance and drop box.",
@@ -83,7 +83,7 @@
     "Grid contracts differ: Level 0 is 56×56 at 4 m; Level 1 30×30 at 8 m; Level 2 24×24 at 5 m; Level 3 26×26 at 4 m; Level 4 64×64 m with 8 m offices; Level 5 96×60 m; Level 6 27×41 cells at 1.8 m and 2.4 m high.",
     "The former Level 5 Cold Room shelter zone and its chiller/bench/lamp/painted line are removed; the Boiler Room remains hot, and the Ines goggles quest now directs hand-in to the M.E.G. drop box.",
     "Level 5 Ines quest progress is per-player state.nvgQ (1 asked, 2 case, 3 goggles, 4 complete); hand-in requires 25 battery charge via batteryTake, consumed by player.js from the shared torch battery pool.",
-    "Level 6 has no working flashlight: player.js suppresses the toggle and destroys any carried torch on arrival. Owned nvg enables F's local camera-attached green light; spare goggles replenish the shared battery, and NVG drain is 0.25× torch drain.",
+    "Level 6 has no working flashlight: player.js suppresses the toggle and destroys any carried torch on arrival. Owned NVG enables F's local camera-attached green light; spare goggles replenish the shared battery, and NVG drains at 0.25× torch rate. F destroys an active NVG light to turn it off; a depleted battery plus a spare can be swapped in while toggling it on.",
     "Level 6 builtV is versioned: moving trigger/prop sites requires keeping endpoint coordinates aligned to scripts/lib/level6.js plan(); the shift wall toggles only outside a 7 m player radius.",
     "Weapon kinds/variants are centralized in weapons.yml/lib/weapons.js; keep requirements, projectile/reload timing, handling stats and first-person weapon mesh offsets in sync when changing weapon definitions."
   ]
