@@ -193,6 +193,7 @@ export function onSpawn(ctx) { ctx.self.scale = S.scale ?? 1.1; ctx.self.session
 
 export function update(ctx, dt) {
   const me = ctx.self, st = me.state, ses = me.session, now = ctx.now()
+  if (!ses.mode && (me.visible === false || me.feetPosition.y < -1)) { const h = HOME(ctx); me.feetPosition = { x: h.x, y: 0, z: h.z }; me.visible = true; me.state.target = null } // a fresh machine forgets she was away: bring her home, seen
   if (!ses.mode) { ses.y = me.feetPosition.y > 0.05 ? me.feetPosition.y : 0; rest(ctx, now, 'sit'); ses.blinkAt = now + rr(S.blinkEvery, ctx); ses.talkers = {} }
   // struck or crossed in words: whoever it was, she remembers in claws
   const ang = st.angry && Object.keys(st.angry).find((k) => st.angry[k])
