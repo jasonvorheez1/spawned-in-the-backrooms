@@ -34,3 +34,25 @@ export function sphere(ctx, c, r, M = 12, sq = [1, 1, 1]) {
   for (let i = 0; i <= M / 2; i++) { const th = (i / (M / 2)) * Math.PI; pts.push([c[0], c[1] - Math.cos(th) * r * sq[1], c[2]]); rads.push(Math.max(1e-4, Math.sin(th) * r)); }
   tube(ctx, pts, rads, M, [sq[0], sq[2]]);
 }
+// an axis-aligned box from its centre and half-sizes
+export function slab(ctx, c, h) {
+  const [x, y, z] = c, [a, b, d] = h;
+  face(ctx, [x - a, y - b, z - d], [x + a, y - b, z - d], [x + a, y + b, z - d], [x - a, y + b, z - d], [0, 0, -1]);
+  face(ctx, [x - a, y - b, z + d], [x + a, y - b, z + d], [x + a, y + b, z + d], [x - a, y + b, z + d], [0, 0, 1]);
+  face(ctx, [x - a, y - b, z - d], [x - a, y + b, z - d], [x - a, y + b, z + d], [x - a, y - b, z + d], [-1, 0, 0]);
+  face(ctx, [x + a, y - b, z - d], [x + a, y + b, z - d], [x + a, y + b, z + d], [x + a, y - b, z + d], [1, 0, 0]);
+  face(ctx, [x - a, y - b, z - d], [x + a, y - b, z - d], [x + a, y - b, z + d], [x - a, y - b, z + d], [0, -1, 0]);
+  face(ctx, [x - a, y + b, z - d], [x + a, y + b, z - d], [x + a, y + b, z + d], [x - a, y + b, z + d], [0, 1, 0]);
+}
+// a flat shape: a convex polygon of [x, z] points standing from y0 to y1
+export function prism(ctx, poly, y0, y1) {
+  const n = poly.length, cx = poly.reduce((s, p) => s + p[0], 0) / n, cz = poly.reduce((s, p) => s + p[1], 0) / n;
+  for (let i = 1; i < n - 1; i++) {
+    ctx.tri(poly[0][0], y1, poly[0][1], poly[i + 1][0], y1, poly[i + 1][1], poly[i][0], y1, poly[i][1]);
+    ctx.tri(poly[0][0], y0, poly[0][1], poly[i][0], y0, poly[i][1], poly[i + 1][0], y0, poly[i + 1][1]);
+  }
+  for (let i = 0; i < n; i++) {
+    const a = poly[i], b = poly[(i + 1) % n], mx = (a[0] + b[0]) / 2 - cx, mz = (a[1] + b[1]) / 2 - cz;
+    face(ctx, [a[0], y0, a[1]], [b[0], y0, b[1]], [b[0], y1, b[1]], [a[0], y1, a[1]], [mx, 0, mz]);
+  }
+}

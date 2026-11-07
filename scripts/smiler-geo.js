@@ -7,10 +7,16 @@ export function geometry(ctx) {
   // the robe of shadow, ragged at the hem
   tube(ctx, [[0, 0.02, 0], [0, 0.3, 0.02], [0, 0.75, 0.03], [0, 1.15, 0], [0, 1.4, 0], [0, 1.55, 0], [0, 1.62, 0]], [0.46, 0.38, 0.3, 0.29, 0.34, 0.2, 0.1], M, [1, 0.8], 0.14, 3);
   sphere(ctx, [0, 1.86, -0.02], 0.33, M, [1, 1.08, 0.95]);
+  // tendrils of shadow trailing from the hem
+  const T = ctx.lod <= 2 ? 6 : 3;
+  for (let i = 0; i < T; i++) {
+    const a = (i / T) * Math.PI * 2 + 0.4, r = 0.34, x = Math.cos(a) * r, z = Math.sin(a) * r;
+    tube(ctx, [[x, 0.3, z], [x * 1.25, 0.14, z * 1.25], [x * 1.55, 0.02, z * 1.55]], [0.05, 0.03, 0.006], 4);
+  }
   // long arms, hanging past the knees, with claws
   for (const s of [-1, 1]) {
     tube(ctx, [[s * 0.3, 1.45, 0], [s * 0.42, 1.15, -0.05], [s * 0.46, 0.8, -0.1], [s * 0.44, 0.48, -0.14]], [0.075, 0.06, 0.05, 0.035], ctx.lod <= 2 ? 7 : 5);
-    if (ctx.lod <= 3) for (let f = -1; f <= 1; f++) tube(ctx, [[s * 0.44, 0.48, -0.14], [s * (0.44 + f * 0.03), 0.34, -0.2], [s * (0.44 + f * 0.05), 0.24, -0.16]], [0.02, 0.012, 0.002], 4);
+    if (ctx.lod <= 3) for (let f = -1.5; f <= 1.5; f++) tube(ctx, [[s * 0.44, 0.48, -0.14], [s * (0.44 + f * 0.03), 0.3, -0.22], [s * (0.44 + f * 0.05), 0.14, -0.18]], [0.018, 0.011, 0.002], 4);
   }
   // the grin and the eyes: they glow
   ctx.emissive("#fff3d6");
