@@ -45,17 +45,26 @@ const WARN = `fx
 pop spark rate=90 on=box(2,.1,1) life=.2..0.5 v=sdir()*(1..2.5)+up(1.2) size=.01..0.025 acc=grav()+drag(.4) col=hdr(4,5,8) a=1>0 sz=$size r=sprite(ember,add,velocity,.03)
 pop glow n=1 r=light(<.55,.7,1>,flick(7,.9)*12,8)`;
 
-// everything placed by the seeded layout (lamps, leaks, live boxes, plates): laid at seeding, relaid when the layout's version moves
-function layLayout(ctx) {
-    // lamps: bare caged bulbs in warm sodium, a cold tube here and there; the blind halls get nothing
+// lamps: caged bulbs on porcelain sockets (scripts/l3-lamp-geo.js), warm sodium, a cold one here and there; a hard white light
+// at the end of a dead-end hall (the wiki's "darker hallways" photo); the blind halls keep their dead bulbs, unlit
+function layLamps(ctx) {
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const z = zoneOf(cx, cz), c = cellCenter(cx, cz), r = hash(cx, cz, 201), top = ceilingAt(cx, cz);
-    if (z === "dark" || z === "vault" || (z === "gamma" && (cx + cz) % 2)) continue;
-    if (z !== "gamma" && z !== "gen" && z !== "line" && r > 0.42) continue;
-    const cold = z === "line" || hash(cx, cz, 203) < 0.25, col = z === "gamma" ? "oklch(0.92 0.06 95)" : cold ? "oklch(0.93 0.03 210)" : "oklch(0.82 0.13 62)";
-    ctx.spawn({ tags: ["l3lamp"], feetPosition: { x: c.x + (hash(cx, cz, 205) - 0.5), y: top - 0.25, z: c.z + (hash(cx, cz, 207) - 0.5) }, primitive: { kind: "sphere", radius: 0.07 },
-      material: { color: col, emissive: col, emissiveIntensity: z === "gamma" ? 3 : 1.6 }, light: { kind: "point", color: col, intensity: z === "gamma" ? 5.5 : 3, distance: z === "tight" ? 10 : 11, shadow: { enabled: false } } });
+    if (z === "vault" || (z === "gamma" && (cx + cz) % 2)) continue;
+    const pos = { x: c.x + (hash(cx, cz, 205) - 0.5) * (z === "tight" ? 0 : 1), y: top - 0.3, z: c.z + (hash(cx, cz, 207) - 0.5) * (z === "tight" ? 0 : 1) };
+    if (z === "dark") { if (r < 0.35) ctx.spawn({ tags: ["l3lamp"], feetPosition: pos, primitive: { kind: "scripted", script: "scripts/l3-lamp-geo.js", params: { drop: 0.3, dead: true } } }); continue; }
+    const deadEnd = (z === "hall" || z === "tight") && openings(cx, cz).length === 1;
+    if (!deadEnd && z !== "gamma" && z !== "gen" && z !== "line" && r > 0.42) continue;
+    const cold = deadEnd || z === "line" || hash(cx, cz, 203) < 0.25, col = z === "gamma" ? "oklch(0.92 0.06 95)" : cold ? "oklch(0.95 0.03 210)" : "oklch(0.82 0.13 62)";
+    const inten = deadEnd ? 9 : z === "gamma" ? 5.5 : 3.2;
+    ctx.spawn({ tags: ["l3lamp"], feetPosition: pos, primitive: { kind: "scripted", script: "scripts/l3-lamp-geo.js", params: { drop: 0.3, cold } },
+      light: { kind: "point", color: col, intensity: inten, distance: deadEnd ? 14 : z === "tight" ? 10 : 11, shadow: { enabled: false } } });
   }
+}
+
+// everything placed by the seeded layout (lamps, leaks, live boxes, plates): laid at seeding, relaid when the layout's version moves
+function layLayout(ctx) {
+  layLamps(ctx);
     // hazards: black sludge pooled under leaking pipes; live junction boxes that arc
   for (const h of SLUDGE) {
     ctx.spawn({ tags: ["sludge"], feetPosition: { x: h.x, y: 0.015, z: h.z }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 1.1, segments: 20 }, material: { color: "oklch(0.1 0.01 300)", roughness: 0.05, metalness: 0.3 } });
@@ -82,6 +91,7 @@ export function tick(ctx) {
     for (const o of ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.tags?.includes("container")) ctx.destroy(o.id);
     s.furnitureSeeded = 2; if (s.seeded && !ctx.query({ tags: ["lootfurn"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).length) seedFurniture3(ctx);
   }
+  if (s.seeded && s.lampV !== 2) { for (const o of ctx.query({ tags: ["l3lamp"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id); layLamps(ctx); s.lampV = 2; } // caged fixtures replaced the bare spheres
   if (s.seeded && s.layoutV !== 2) { // the halls were re-cut (narrow crawls, more bars): move what hangs on them
     for (const t of ["l3lamp", "sludge", "live-box", "l3drip", "l3oob"]) for (const o of ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
     for (const o of ctx.query({ radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (!o.tags?.length && String(ctx.getObject(o.id)?.audio?.clip ?? "").includes("water-drip")) ctx.destroy(o.id); // the first leaks wore no tag
