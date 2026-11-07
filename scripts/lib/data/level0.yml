@@ -1,0 +1,43 @@
+# Level 0 "The Threshold": every tuned number. (picks are Savi's, tune freely)
+cells: 36          # maze is cells x cells
+cellSize: 4        # metres per cell
+wallHeight: 3      # floor to ceiling
+hub: [16, 19]      # the safe room spans these cells on both axes (16 m square, centred on 0,0)
+wallChance: { halls: 0.38, arches: 0.42, red: 0.38, dark: 0.36, holes: 0.12, pillars: 0.0 }
+pitDepth: 1.4
+# the wanderer
+hp: 100
+sanity: 100
+stamina: 100
+walkSpeed: 6
+sprintSpeed: 9.5
+staminaDrain: 28   # per second sprinting
+staminaRegen: 16
+sanityDrain: { halls: 0.12, arches: 0.06, pillars: 0.12, holes: 0.15, red: 0.9, dark: 0.6, hub: -4 }
+insanityHurt: 3    # hp per second at 0 sanity
+almondHp: 35
+almondSanity: 30
+almondMax: 5
+battery: 100
+batteryDrain: 1.2  # per second while the flashlight is on
+xpPerCell: 2
+xpAlmond: 5
+xpKill: 45
+xpExit: 150
+xpBase: 60         # xp to next level = xpBase * level
+perLevel: { hp: 10, sanity: 6, damage: 3 }
+damage: 14
+swingCooldown: 0.55
+reach: 2.8
+# the smilers
+smilers: 7
+smilerHp: 60
+stalkSpeed: 2.2
+chargeSpeed: 4.6
+smilerSight: 22
+biteDamage: 12
+biteSanity: 10
+biteCooldown: 1.2
+smilerRespawn: 45
+almonds: 40
+almondRespawn: 60
