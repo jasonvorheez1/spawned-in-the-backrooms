@@ -28,9 +28,13 @@ inputs:
     flashlight:
       keys:
         - f
+      touch:
+        button: false
     cycleWeapon:
       keys:
         - e
+      touch:
+        button: false
   axes:
     moveX:
       keys: a/d
