@@ -73,6 +73,21 @@ function compass(yaw) {
   return `<div class="cmp"><i></i>${h}</div>`
 }
 
+
+// camp chatter: the line an npc is saying floats over its head while it lasts (chatter.js writes state.line)
+const TALKERS = ['meg-ale', 'meg-ortiz', 'meg-callum', 'surv-wren', 'surv-hollis', 'surv-mags']
+function chatBubbles(ctx, now) {
+  const objs = ctx.place?.objects
+  if (!objs) return ''
+  let h = ''
+  for (const id of TALKERS) {
+    const o = objs[id], l = o?.state?.line
+    if (!l || now - l.at > l.d || o.state.dead) continue
+    const who = String(o.state.name ?? '').split(' ·')[0]
+    h += `<div data-world-anchor="${id}" data-anchor-offset="0 2.05 0" style="transform:translate(-50%,-100%);opacity:clamp(0,calc(1.6 - var(--anchor-depth,0) / 14),1)"><div id="cb${l.at}" style="max-width:260px;padding:6px 10px;background:oklch(0.16 0.02 80 / .88);border:1px solid oklch(0.7 0.12 85 / .55);color:oklch(0.93 0.03 90);font-size:14px;line-height:1.3;animation:hud-pop .18s ease-out"><span style="color:oklch(0.8 0.13 85);font-size:11px;letter-spacing:.06em">${who.toUpperCase()}</span><br>${l.t}</div></div>`
+  }
+  return h ? `<style>@keyframes hud-pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}</style>${h}` : ''
+}
 export default function render(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
@@ -94,6 +109,7 @@ export default function render(ctx, player) {
   return `${THEME}
 <div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
 
+  ${chatBubbles(ctx, now)}
   <!-- Unobtrusive Center Point -->
   <div class="dot-crosshair"></div>
   ${s.chargeAt && !W[s.equipped ?? 'fists']?.ranged ? `<style>@keyframes pwrfill{from{stroke-dashoffset:113}to{stroke-dashoffset:0}}@keyframes pwrfull{0%,100%{opacity:1}50%{opacity:.45}}</style><svg id="pwr${s.chargeAt}" width="44" height="44" viewBox="0 0 44 44" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-90deg)"><circle cx="22" cy="22" r="18" fill="none" stroke="rgba(20,16,8,.6)" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="#ffb347" stroke-width="3" stroke-dasharray="113" style="filter:drop-shadow(0 0 3px rgba(255,170,40,.9));animation:pwrfill ${(W.power?.charge ?? 0.9)}s linear forwards, pwrfull .25s ${(W.power?.charge ?? 0.9)}s steps(2) infinite"/></svg>` : ''}
