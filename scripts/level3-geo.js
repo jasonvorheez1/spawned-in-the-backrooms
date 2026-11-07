@@ -22,7 +22,7 @@ const solid = (cx, cz, d) => !isOpen(cx, cz, d) && !isBars(cx, cz, d);
 const rod = (ctx, a, b, r, M) => tube(ctx, [a, b], [r, r], M, [1, 1], 0, 1, 1);
 
 // a row of bars across one cell edge: (x0,z0)->(x1,z1), floor to h, cross rails top and middle
-function barRow(ctx, x0, z0, x1, z1, h, M, gap = 0.21) {
+function barRow(ctx, x0, z0, x1, z1, h, M, gap = 0.26) {
   const L = Math.hypot(x1 - x0, z1 - z0), n = Math.max(2, Math.round(L / gap));
   for (let i = 0; i <= n; i++) { const t = i / n, x = x0 + (x1 - x0) * t, z = z0 + (z1 - z0) * t; rod(ctx, [x, 0, z], [x, h, z], 0.018, M); }
   for (const y of [0.12, h * 0.55, h - 0.08]) { const ux = (x1 - x0) / L * 0.03, uz = (z1 - z0) / L * 0.03; box(ctx, Math.min(x0, x1) - Math.abs(uz) - 0.02, Math.max(x0, x1) + Math.abs(uz) + 0.02, y - 0.03, y + 0.03, Math.min(z0, z1) - Math.abs(ux) - 0.02, Math.max(z0, z1) + Math.abs(ux) + 0.02); }
@@ -105,7 +105,7 @@ export function geometry(ctx) {
     const c = cellCenter(cx, cz), top = ceilingAt(cx, cz);
     for (const d of [0, 1, 2, 3]) {
       const h = live.get(`${cx},${cz},${d}`);
-      if (!solid(cx, cz, d) || (!h && hash(cx * 4 + d, cz, 31) > 0.42)) continue;
+      if (!solid(cx, cz, d) || (!h && hash(cx * 4 + d, cz, 31) > 0.3)) continue;
       const [nx, nz] = D4[d], tx = -nz, tz = nx, w = S / 2 - T - 0.05;
       const k = 3 + (h && hash(cx, cz, 33 + d) < 0.45 ? 1 : 0), y = top - 0.07;
       const P = (off, along, yy) => [c.x + nx * off + tx * along, yy, c.z + nz * off + tz * along];

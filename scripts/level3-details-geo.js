@@ -43,7 +43,7 @@ export function geometry(ctx) {
         const a = (hash(cx, cz, 407) - 0.5) * 1.4;
         ctx.metalness(0.5); ctx.roughness(0.5); ctx.color("oklch(0.55 0.01 240)"); wb(a - 0.7, a + 0.7, -0.01, 0.2, 1.2, 1.55);
         ctx.color("oklch(0.25 0.01 250)"); wb(a - 0.5, a - 0.38, 0.2, 0.22, 1.28, 1.47); wb(a - 0.05, a + 0.07, 0.2, 0.22, 1.28, 1.47); wb(a + 0.38, a + 0.5, 0.2, 0.22, 1.28, 1.47); ctx.metalness(0);
-        if (hi) { ctx.color("oklch(0.15 0.008 250)"); ctx.roughness(0.9); for (let k = 0; k < 5; k++) { const sx = a - 0.5 + k * 0.25; const P = (aa, o, y) => [wx + tx * aa - nx * o, y, wz + tz * aa - nz * o]; tube(ctx, [P(sx, 0.1, 1.55), P(sx + (k - 2) * 0.12, 0.12, 2.0), P(sx + (k - 2) * 0.3, 0.2, top - 0.2)], [0.014, 0.014, 0.014], 4, [1, 1], 0, 1, 1); } }
+        if (hi) { ctx.color("oklch(0.15 0.008 250)"); ctx.roughness(0.9); for (let k = 0; k < 3; k++) { const sx = a - 0.5 + k * 0.5; const P = (aa, o, y) => [wx + tx * aa - nx * o, y, wz + tz * aa - nz * o]; tube(ctx, [P(sx, 0.1, 1.55), P(sx + (k - 2) * 0.12, 0.12, 2.0), P(sx + (k - 2) * 0.3, 0.2, top - 0.2)], [0.014, 0.014, 0.014], 4, [1, 1], 0, 1, 1); } }
       }
       // a hasp and padlock on the occasional wall hatch (a steel door with a lock, as in the doors photograph)
       if (hash(cx * 4 + d, cz, 409) < 0.04) { ctx.color("oklch(0.88 0.012 90)"); wb(-0.5, 0.5, -0.004, 0.06, 0, 2.15); ctx.color("oklch(0.4 0.02 60)"); wb(0.35, 0.45, 0.06, 0.1, 1.0, 1.25); wb(0.38, 0.42, 0.1, 0.12, 0.85, 1.0); wb(-0.52, -0.5, 0.06, 0.1, 0.3, 0.45); wb(-0.52, -0.5, 0.06, 0.1, 1.6, 1.75); }
@@ -51,7 +51,7 @@ export function geometry(ctx) {
     // soot-dark brick ribs every metre down a crawl hall, like the round brick culvert: flush bands on the walls, a ring under the vault
     if (zone === "tight" && hi) {
       ctx.color("oklch(0.42 0.07 35)");
-      for (const sp of tightSpans(cx, cz)) for (let a = sp.a0 + 0.5; a < sp.a1 - 0.1; a += 1.4) vault(ctx, cx, cz, sp, 0.035, 4, a, a + 0.12, false);
+      for (const sp of tightSpans(cx, cz)) for (let a = sp.a0 + 0.5; a < sp.a1 - 0.1; a += 2.0) vault(ctx, cx, cz, sp, 0.035, 4, a, a + 0.12, false);
     }
     // notebook pages scattered at a dead end
     if (openings(cx, cz).length === 1 && hash(cx, cz, 411) < 0.4) {
