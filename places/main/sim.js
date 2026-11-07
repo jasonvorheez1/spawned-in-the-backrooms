@@ -40,7 +40,7 @@ function sink(ctx) {
     const h = SUNK_H[kind], depth = h * (0.35 + ctx.random() * 0.4); // 35-75% under the carpet
     const x = c.x + (ctx.random() - 0.5) * 1.6, z = c.z + (ctx.random() - 0.5) * 1.6;
     const tilt = (ctx.random() - 0.5) * 36, roll = (ctx.random() - 0.5) * 28;
-    const id = ctx.spawn({ tags: ["furniture", "sunken", kind], feetPosition: { x, y: -depth, z }, rotation: { yaw: ctx.random() * 360, pitch: tilt, roll }, physics: { body: "static", collider: "box" }, primitive: { kind: "scripted", script: "scripts/build-geo.js", params: { kind } }, state: { name: "Sunken " + kind } });
+    const id = ctx.spawn({ tags: ["furniture", "sunken", "breakable", kind], feetPosition: { x, y: -depth, z }, rotation: { yaw: ctx.random() * 360, pitch: tilt, roll }, physics: { body: "static", collider: "box" }, primitive: { kind: "scripted", script: "scripts/build-geo.js", params: { kind } }, state: { name: "Sunken " + kind, mat: kind === "chair" ? "wood" : "metal", hp: 60, maxHp: 60 } }); // Z heaves it out of the carpet (grab.js), a swing breaks it
     // the carpet slumps into a wet dark ring where it went down
     ctx.spawn({ tags: ["sunken-stain"], feetPosition: { x, y: 0.012, z }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.9 + h * 0.5, segments: 20 }, material: { color: "oklch(0.2 0.03 70 / 0.55)", transparent: true, roughness: 0.35, depthWrite: false }, receiveShadow: true });
     ctx.spawn({ tags: ["sunken-stain"], feetPosition: { x, y: 0.014, z }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.45 + h * 0.3, segments: 16 }, material: { color: "oklch(0.13 0.02 70 / 0.7)", transparent: true, roughness: 0.2, depthWrite: false } });
