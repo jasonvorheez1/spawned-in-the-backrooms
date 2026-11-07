@@ -1,7 +1,8 @@
 // Level 3 "Electrical Station": dusty brick halls, bundles of conduit along every wall, grey junction boxes,
 // steel bars across some openings that never open, swung cage gates on others, low crawl halls,
 // humming generator rooms, assembly lines, sealed vaults seen only through the bars. Layout: scripts/lib/level3.js.
-import { N, S, H, TH, HALF, isOpen, isBars, isGate, openings, zoneOf, blockOf, hash, cellCenter, ceilingAt, BLOCKS, BACK, LIFT, inGamma } from "./lib/level3.js";
+import { N, S, H, TH, HALF, isOpen, isBars, isGate, openings, zoneOf, blockOf, hash, cellCenter, ceilingAt, BLOCKS, BACK, LIFT, inGamma, TW, TSP, tightArms, tightSpans } from "./lib/level3.js";
+import { vault } from "./lib/level3-arch.js";
 import { slab, tube } from "./lib/shapes.js";
 
 const BRICK = "cdn/texture-aged-red-brick-wall-soot.png", FLOOR = "cdn/texture-dusty-cracked-concrete-floor.png", CEIL = "cdn/texture-dirty-concrete-ceiling-slab.png", STEEL = "cdn/texture-scratched-worn-steel.png";
@@ -47,13 +48,16 @@ export function geometry(ctx) {
       if (cx >= 0 && (cz < 0 || cz === N - 1 || solid(cx, cz, 1))) box(ctx, cx * S - HALF - T, cx * S - HALF + S + T, 0, H, ze - T, ze + T);
     }
   }
-  // crawl halls: thick brick liners squeeze the passage to a shoulder's width
+  // crawl halls: thick brick liners squeeze the passage to a 1 m culvert (a 0.7 m body, 0.15 m each side), a barrel vault overhead
   ctx.color("oklch(0.6 0.06 38)");
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
-    if (zoneOf(cx, cz) !== "tight") continue; const c = cellCenter(cx, cz), o = openings(cx, cz), ns = o.every((d) => d === 1 || d === 3), ew = o.every((d) => d === 0 || d === 2);
-    if (ns) { box(ctx, c.x - S / 2, c.x - 0.75, 0, TH, c.z - S / 2, c.z + S / 2); box(ctx, c.x + 0.75, c.x + S / 2, 0, TH, c.z - S / 2, c.z + S / 2); }
-    else if (ew) { box(ctx, c.x - S / 2, c.x + S / 2, 0, TH, c.z - S / 2, c.z - 0.75); box(ctx, c.x - S / 2, c.x + S / 2, 0, TH, c.z + 0.75, c.z + S / 2); }
-    else for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) box(ctx, c.x + sx * 0.75, c.x + sx * S / 2, 0, TH, c.z + sz * 0.75, c.z + sz * S / 2); // a junction keeps its arms, loses its corners
+    if (zoneOf(cx, cz) !== "tight") continue; const c = cellCenter(cx, cz), h = S / 2, arms = tightArms(cx, cz);
+    for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) box(ctx, c.x + sx * TW, c.x + sx * h, 0, TH, c.z + sz * TW, c.z + sz * h); // corners always
+    if (!arms.includes(0)) box(ctx, c.x + TW, c.x + h, 0, TH, c.z - TW, c.z + TW);
+    if (!arms.includes(2)) box(ctx, c.x - h, c.x - TW, 0, TH, c.z - TW, c.z + TW);
+    if (!arms.includes(1)) box(ctx, c.x - TW, c.x + TW, 0, TH, c.z + TW, c.z + h);
+    if (!arms.includes(3)) box(ctx, c.x - TW, c.x + TW, 0, TH, c.z - h, c.z - TW);
+    ctx.smooth(); for (const sp of tightSpans(cx, cz)) vault(ctx, cx, cz, sp, 0, hi ? 10 : 6); ctx.flat();
   }
   // bars: across the barred edges, floor to ceiling, never a gate
   ctx.albedo(STEEL); ctx.color("oklch(0.84 0.014 90)"); ctx.metalness(0.25); ctx.roughness(0.8);
@@ -75,10 +79,10 @@ export function geometry(ctx) {
   ctx.color("oklch(0.68 0.01 250)"); ctx.metalness(0.6); ctx.roughness(0.4);
   const boxes = [];
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
-    const z = zoneOf(cx, cz); if (z === "vault") continue;
+    const z = zoneOf(cx, cz); if (z === "vault" || z === "tight") continue; // conduit lives on the tall brick halls
     const c = cellCenter(cx, cz), top = ceilingAt(cx, cz);
     for (const d of [0, 1, 2, 3]) {
-      if (!solid(cx, cz, d) || hash(cx * 4 + d, cz, 31) > 0.62) continue;
+      if (!solid(cx, cz, d) || hash(cx * 4 + d, cz, 31) > 0.8) continue;
       const [nx, nz] = D4[d], tx = -nz, tz = nx, w = S / 2 - T - 0.06 - (z === "tight" ? 1.2 : 0);
       if (z === "tight" && Math.abs(nx) + Math.abs(nz) && !openings(cx, cz).every((o) => o % 2 !== d % 2)) continue;
       const k = 2 + (hash(cx, cz, 33 + d) < 0.4 ? 1 : 0);
@@ -86,7 +90,7 @@ export function geometry(ctx) {
         const y = top - 0.18 - i * 0.11, off = w - i * 0.02, px = c.x + nx * off, pz = c.z + nz * off;
         rod(ctx, [px - tx * S / 2, y, pz - tz * S / 2], [px + tx * S / 2, y, pz + tz * S / 2], 0.03 + (i === 0 ? 0.012 : 0), M);
       }
-      if (hash(cx * 4 + d, cz, 37) < 0.3) { // drops down to a grey junction box, like the photographs
+      if (hash(cx * 4 + d, cz, 37) < 0.42) { // drops down to a grey junction box, like the photographs
         const a = (hash(cx, cz, 39) - 0.5) * 1.6, px = c.x + nx * w + tx * a, pz = c.z + nz * w + tz * a, by = 1.1 + hash(cx, cz, 41) * 0.5;
         for (const s of [-0.05, 0.05]) rod(ctx, [px + tx * s, top - 0.18, pz + tz * s], [px + tx * s, by + 0.45, pz + tz * s], 0.02, M);
         boxes.push([px, pz, nx, nz, tx, tz, by]);

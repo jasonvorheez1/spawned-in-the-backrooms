@@ -4,7 +4,8 @@
 // glossy pools, canvas art with a scribbled-out angel, notebook pages, piles of almond water bottles by the lines and
 // generators, paranoia-hotspot warning plates, M.E.G. cameras round the checkpoint, the Greek-style statue with her
 // theatre mask in its vault, and the violet glow of purpified bricks. Placed from the seeded layout.
-import { N, S, H, TH, HALF, isOpen, isBars, isGate, openings, zoneOf, hash, cellCenter, ceilingAt, BLOCKS, SLUDGE, SPARKS, inGamma } from "./lib/level3.js";
+import { N, S, H, TH, HALF, isOpen, isBars, isGate, openings, zoneOf, hash, cellCenter, ceilingAt, BLOCKS, SLUDGE, SPARKS, inGamma, TW, TSP, OOB, tightSpans } from "./lib/level3.js";
+import { vault } from "./lib/level3-arch.js";
 import { slab, tube, sphere, prism } from "./lib/shapes.js";
 
 const T = 0.3;
@@ -21,7 +22,7 @@ export function geometry(ctx) {
     const zone = zoneOf(cx, cz); if (zone === "vault") continue;
     const c = cellCenter(cx, cz), top = ceilingAt(cx, cz);
     for (const d of [0, 1, 2, 3]) {
-      if (!solid(cx, cz, d)) continue;
+      if (!solid(cx, cz, d) || zone === "tight") continue;
       const [nx, nz] = D4[d], tx = -nz, tz = nx, w = S / 2 - T - (zone === "tight" ? 0.75 : 0), wx = c.x + nx * w, wz = c.z + nz * w;
       // a box in (along the wall, out from the wall, height) space
       const wb = (a0, a1, o0, o1, y0, y1) => { const p = [wx + tx * a0 - nx * o0, wz + tz * a0 - nz * o0], q = [wx + tx * a1 - nx * o1, wz + tz * a1 - nz * o1]; box(ctx, Math.min(p[0], q[0]), Math.max(p[0], q[0]), y0, y1, Math.min(p[1], q[1]), Math.max(p[1], q[1])); };
@@ -47,10 +48,14 @@ export function geometry(ctx) {
       // a hasp and padlock on the occasional wall hatch (a steel door with a lock, as in the doors photograph)
       if (hash(cx * 4 + d, cz, 409) < 0.04) { ctx.color("oklch(0.88 0.012 90)"); wb(-0.5, 0.5, -0.004, 0.06, 0, 2.15); ctx.color("oklch(0.4 0.02 60)"); wb(0.35, 0.45, 0.06, 0.1, 1.0, 1.25); wb(0.38, 0.42, 0.1, 0.12, 0.85, 1.0); wb(-0.52, -0.5, 0.06, 0.1, 0.3, 0.45); wb(-0.52, -0.5, 0.06, 0.1, 1.6, 1.75); }
     }
-    // brick ribs across a crawl hall, like the round brick culvert
+    // soot-dark brick ribs every metre down a crawl hall, like the round brick culvert: flush bands on the walls, a ring under the vault
     if (zone === "tight" && hi) {
-      const o = openings(cx, cz), ns = o.every((q) => q === 1 || q === 3);
-      if (o.length >= 1) { ctx.color("oklch(0.42 0.07 35)"); for (let a = -S / 2 + 0.5; a < S / 2; a += 1.3) { if (ns) { box(ctx, c.x - 0.78, c.x + 0.78, TH - 0.2, TH, c.z + a, c.z + a + 0.14); box(ctx, c.x - 0.78, c.x - 0.7, 0.9, TH - 0.2, c.z + a, c.z + a + 0.14); box(ctx, c.x + 0.7, c.x + 0.78, 0.9, TH - 0.2, c.z + a, c.z + a + 0.14); } else { box(ctx, c.x + a, c.x + a + 0.14, TH - 0.2, TH, c.z - 0.78, c.z + 0.78); box(ctx, c.x + a, c.x + a + 0.14, 0.9, TH - 0.2, c.z - 0.78, c.z - 0.7); box(ctx, c.x + a, c.x + a + 0.14, 0.9, TH - 0.2, c.z + 0.7, c.z + 0.78); } } }
+      ctx.color("oklch(0.42 0.07 35)");
+      for (const sp of tightSpans(cx, cz)) for (let a = sp.a0 + 0.35; a < sp.a1 - 0.1; a += 1.0) {
+        vault(ctx, cx, cz, sp, 0.035, 8, a, a + 0.12, true);
+        const across = sp.ax === "x" ? c.z : c.x;
+        for (const s2 of [-1, 1]) { const u0 = across + s2 * TW, u1 = across + s2 * (TW - 0.012); if (sp.ax === "x") box(ctx, a, a + 0.12, 0, TSP, Math.min(u0, u1), Math.max(u0, u1)); else box(ctx, Math.min(u0, u1), Math.max(u0, u1), 0, TSP, a, a + 0.12); }
+      }
     }
     // notebook pages scattered at a dead end
     if (openings(cx, cz).length === 1 && hash(cx, cz, 411) < 0.4) {
@@ -62,11 +67,11 @@ export function geometry(ctx) {
   // signs and hasps at every set of bars and every open cage gate: the black OUT OF BOUNDS plate, the rusty white lock
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) for (const d of [0, 1]) {
     const bar = isBars(cx, cz, d), gate = isGate(cx, cz, d); if (!bar && !gate) continue;
-    if (hash(cx * 4 + d, cz, 421) > (gate ? 0.9 : 0.4)) continue;
+    if (hash(cx * 4 + d, cz, 421) > (gate ? 0.9 : 0.4) || OOB.some((o) => o.cx === cx && o.cz === cz && o.d === d)) continue;
     const e = d === 0 ? { x: (cx + 1) * S - HALF, z: cz * S - HALF + S / 2 } : { x: cx * S - HALF + S / 2, z: (cz + 1) * S - HALF };
     const sx = d === 0 ? e.x - 0.12 : e.x - 0.9, sz = d === 0 ? e.z - 0.9 : e.z - 0.12, hw = d === 0 ? 0.03 : 0.3, hd = d === 0 ? 0.3 : 0.03;
-    ctx.color("oklch(0.12 0.005 60)"); box(ctx, sx - hw, sx + hw, 1.55, 1.85, sz - hd, sz + hd);
-    ctx.color("oklch(0.82 0.15 80)"); ctx.emissive("oklch(0.6 0.13 80)"); box(ctx, sx - hw * 0.3 - (d === 0 ? 0.02 : 0), sx + hw * 0.3, 1.64, 1.76, sz - hd * 0.3, sz + hd * 0.3); ctx.emissive(null);
+    ctx.color("oklch(0.8 0.15 88)"); box(ctx, sx - hw, sx + hw, 1.55, 1.85, sz - hd, sz + hd); // the yellow plate, a black lettering band
+    ctx.color("oklch(0.14 0.005 60)"); box(ctx, sx - hw * 0.3 - (d === 0 ? 0.02 : 0), sx + hw * 0.3, 1.64, 1.76, sz - hd * 0.3, sz + hd * 0.3);
     if (bar) { ctx.color("oklch(0.45 0.07 45)"); box(ctx, e.x - (d === 0 ? 0.03 : 0.5), e.x + (d === 0 ? 0.03 : 0.5), 0.3, 0.34, e.z - (d === 0 ? 0.5 : 0.03), e.z + (d === 0 ? 0.5 : 0.03)); } // a rust stain run
   }
 

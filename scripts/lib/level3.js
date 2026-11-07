@@ -103,6 +103,8 @@ export function tightSpans(cx, cz) { // [{ ax: "x" | "z", a0, a1 }] in world met
   if (a.every((d) => d % 2 === 1)) return [{ ax: "z", a0: c.z - (a.includes(3) ? h : TW), a1: c.z + (a.includes(1) ? h : TW) }];
   return a.map((d) => d === 0 ? { ax: "x", a0: c.x + TW, a1: c.x + h } : d === 2 ? { ax: "x", a0: c.x - h, a1: c.x - TW } : d === 1 ? { ax: "z", a0: c.z + TW, a1: c.z + h } : { ax: "z", a0: c.z - h, a1: c.z - TW });
 }
+// bar walls that wear a yellow OUT OF BOUNDS plate with real lettering (the sim hangs them; the details mesh skips them)
+export const OOB = (() => { const out = []; for (let cz = 0; cz < N; cz++) for (let cx = 0; cx < N; cx++) for (const d of [0, 1]) if (isBars(cx, cz, d) && zoneOf(cx, cz) !== "tight" && zoneOf(cx + DIRS[d][0], cz + DIRS[d][1]) !== "tight") out.push({ cx, cz, d, r: hash(cx * 4 + d, cz, 451) }); return out.sort((a, b) => a.r - b.r).slice(0, L.oobPlates ?? 8); })();
 export const zoneAt = (x, z) => { const { cx, cz } = cellAt(x, z); return zoneOf(cx, cz); };
 export const ceilingAt = (cx, cz) => (zoneOf(cx, cz) === "tight" ? TH : H);
 // the ways out: the door home to Level 2 in the checkpoint's west wall; the dead freight elevator to Level 4 at the far east
