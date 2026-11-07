@@ -1,6 +1,7 @@
 // Breakables: what a swing or a shot does to the world itself. Numbers live in lib/data/breakables.yml.
 // An entity is breakable by tag "breakable" + state { mat, hp, maxHp }. Level 0's generated walls are one mesh ("level0"):
 // a wall is keyed "x:cx:cz" / "z:cx:cz", its hp in place.state.wallHp, broken ones in place.state.broken { key: at } (the sim regrows them).
+import { heard } from "./hear.js";
 import B from './data/breakables.yml'
 import { attrsOf, skillsOf } from './stats.js'
 import { baseOf } from './weapons.js'
@@ -137,7 +138,7 @@ pop dust burst=${big ? 14 : 7} on=box(<${big ? '1.6,1.1,.3' : '.5,.4,.5'}>) life
   ctx.emit('fx', { position: at, script: m.sparks ? FX + `
 pop spark burst=18..26 life=.2..0.5 v=sdir()*(3..6)+up(1..2) size=.015..0.03 acc=grav()*.6 col=hdr(5,3,1)>hdr(2,.7,.1) a=1>0 sz=$size r=sprite(ember,add,velocity,.03)
 pop arc n=1 life=.3 r=light(<.6,.75,1>,12,6)` : FX })
-  ctx.emit('playSound', { clip: SND(m.breakSound ?? B.breakSound), position: at, volume: 0.9, maxDistance: 28 })
+  heard(ctx, { clip: SND(m.breakSound ?? B.breakSound), position: at, volume: 0.9, maxDistance: 28 })
   ctx.emit('screenShake', { intensity: big ? 0.25 : 0.12, duration: 0.25 }, { audience: { nearby: at, radius: 8 } })
 }
 function chip(ctx, at, normal, mat, dmg) {
@@ -146,7 +147,7 @@ function chip(ctx, at, normal, mat, dmg) {
 pop bits burst=6..10 life=.5..0.9 v=<%normal|0,1,0>*(1.5..3)+sdir()*(.6..1.2) size=.02..0.06 spin=-9..9 acc=grav()+drag(.6) col=<${r * 0.85},${g * 0.85},${b * 0.85}> a=1>.7:1>0 sz=$size rot=$age*$spin floor=die r=mesh(box,1,.6,.8)
 pop puff burst=3..4 life=.6..1 v=<%normal|0,1,0>*(.4..0.8)+sdir()*.2 size=.18..0.3 acc=buoy(.3)+drag(1.6) col=<${r},${g},${b}> a=0>.4:.25>.7:.15>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)` })
   ctx.emit('damageNumber', { position: { x: at.x + n.x * 0.15, y: at.y + 0.2, z: at.z + n.z * 0.15 }, value: Math.round(dmg), color: '#ffb642', size: 0.8 })
-  ctx.emit('playSound', { clip: HIT_SND, position: at, volume: 0.6, pitch: ['metal', 'sheet_steel', 'pipe', 'conduit', 'junction'].includes(mat) ? 1.5 : ['drywall', 'brick', 'cinderblock', 'concrete'].includes(mat) ? 0.8 : 1.1, maxDistance: 18 })
+  heard(ctx, { clip: HIT_SND, position: at, volume: 0.6, pitch: ['metal', 'sheet_steel', 'pipe', 'conduit', 'junction'].includes(mat) ? 1.5 : ['drywall', 'brick', 'cinderblock', 'concrete'].includes(mat) ? 0.8 : 1.1, maxDistance: 18 })
 }
 export function spawnRubble(ctx, at, items, name = 'Rubble') {
   if (!items.length) return
@@ -172,7 +173,7 @@ export function damageEntity(ctx, o, dmg, at, normal, kind) {
     const rare = rollDrops(ctx, mat, kind), items = [...rare, ...(o.state.items ? String(o.state.items).split(',').filter(Boolean) : [])]
     spawnRubble(ctx, { x: fp.x, y: fp.y + 0.02, z: fp.z }, items, o.state.items ? (o.state.name ?? 'Wreck') : mat === 'machine' ? `${o.state.name ?? 'Machine'} parts` : 'Rubble')
     const good = rare.filter((t) => !['scrap_metal', 'scrap_wood', 'drywall', 'nails', 'wire', 'rubble', 'rust_flakes', 'mortar_dust', 'bricks', 'cinder', 'tile_shard'].includes(t))
-    if (good.length) { ctx.emit('damageNumber', { position: { x: fp.x, y: fp.y + 1.4, z: fp.z }, text: `+${good.length} parts`, color: '#7fd1a0', size: 1 }); ctx.emit('playSound', { maxDistance: 8, refDistance: 1.5, clip: SND('mechanical-parts-salvage-clink'), position: fp, volume: 0.8 }) }
+    if (good.length) { ctx.emit('damageNumber', { position: { x: fp.x, y: fp.y + 1.4, z: fp.z }, text: `+${good.length} parts`, color: '#7fd1a0', size: 1 }); heard(ctx, { maxDistance: 8, refDistance: 1.5, clip: SND('mechanical-parts-salvage-clink'), position: fp, volume: 0.8 }) }
     ctx.destroy(o.id)
   }
   return true

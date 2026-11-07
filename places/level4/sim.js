@@ -1,5 +1,6 @@
 // Level 4 "Abandoned Office": lays the floor, lights, door plates, coolers, fountains, vending, the lift and the stairwell,
 // M.E.G. Base Omega's two agents and the sound beds once (place.state.builtV); each second it watches the bare windows.
+import { heard } from "../../scripts/lib/hear.js";
 import { ROOMS, FOUNTAINS, LIFT, STAIRS, HALF, H, T, facing, roomAt } from "../../scripts/lib/level4.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { fullLook, npcLook } from "../../scripts/lib/clothes.js";
@@ -147,7 +148,7 @@ export function tick(ctx) {
     const r = roomAt(p.feetPosition.x, p.feetPosition.z); if (!r || r.kind !== "trap") continue;
     const k = `win${p.id}`, sess = ctx.self?.session ?? (ctx.place.session ??= {});
     if (ctx.now() - (s[k] ?? 0) < 9000) continue; s[k] = ctx.now();
-    ctx.emit("playSound", { clip: "/cdn/voice-dry-breathy-close-whispering-stranger-saying-come-closer-its-warm-out-here.mp3", position: { ...p.feetPosition, y: 1.6 }, volume: 0.8, maxDistance: 6 }, { audience: { player: p.id } });
+    heard(ctx, { clip: "/cdn/voice-dry-breathy-close-whispering-stranger-saying-come-closer-its-warm-out-here.mp3", position: { ...p.feetPosition, y: 1.6 }, volume: 0.8, maxDistance: 6 }, { audience: { player: p.id } });
     ctx.emit("screenFlash", { color: "#dff0ff", duration: 0.5, intensity: 0.35 }, { audience: { player: p.id } });
   }
 }

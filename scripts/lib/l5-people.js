@@ -1,6 +1,7 @@
 // Level 5's residents (Homely Hotel staff, Housekeeping, the Originals), run by scripts/l5-people.js once a second.
 // Each is an M.E.G.-style agent (scripts/meg-agent.js walks state.rounds); this director gives them day/night rounds,
 // walks two of them together to talk (data: scripts/lib/data/level5-people.yml talks), and sets each one's card buttons.
+import { heard } from "./hear.js";
 import P from "./data/level5-people.yml";
 import { critterSpec } from "./critter-model.js";
 import { npcLook } from "./clothes.js";
@@ -24,7 +25,7 @@ const ORIG = [["o:member", "Ask to join the salon"], ["o:lore", "Ask about the h
 export const roundsOf = (rows) => (rows ?? []).map(([x, z, dwell, act, lx, lz]) => ({ x, y: 0, z, dwell, act: ACT[act] ?? null, look: { x: lx, z: lz } }));
 export function speak(ctx, o, t) {
   const now = ctx.now(), d = 1400 + t.length * 60; o.state.line = { t, at: now, d }; o.state.talkAt = now;
-  const p = o.feetPosition; ctx.emit("playSound", { clip: VO(o.state.voice ?? "ale", t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 0.85, refDistance: 3, maxDistance: 18 }, { audience: { nearby: p, radius: 20 } });
+  const p = o.feetPosition; heard(ctx, { clip: VO(o.state.voice ?? "ale", t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 0.85, refDistance: 3, maxDistance: 18 }, { audience: { nearby: p, radius: 20 } });
 }
 export function spawnResident(ctx, id) {
   const g = P.people[id], r0 = g.rounds[0];
@@ -109,7 +110,7 @@ function trespass(ctx, o, z, now) {
     say1(ctx, o, p, pickIn(ctx, asleep ? ["Wh- who's there? Out! Out of my room!", "Hey! I was sleeping! Get out!"] : ["What the hell do you think you're doing in my room?", "Excuse me. This is MY room. Out.", "You lost? The door's behind you. Use it."]));
     const out = { x: (z.x0 + z.x1) / 2, z: z.z0 < 0 ? z.z1 + 1 : z.z0 - 1 }, ox = out.x - f.x, oz = out.z - f.z, ol = Math.hypot(ox, oz) || 1;
     ctx.emit("impulse", { target: p.id, impulse: { x: (ox / ol) * 260, y: 60, z: (oz / ol) * 260 } });
-    ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-body-shove-grunt.mp3", position: f, volume: 0.6, maxDistance: 14 }, { audience: { nearby: f, radius: 16 } });
+    heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-body-shove-grunt.mp3", position: f, volume: 0.6, maxDistance: 14 }, { audience: { nearby: f, radius: 16 } });
   }
 }
 function say1(ctx, o, p, t) { speak(ctx, o, t); p.state.sub = { who: o.state.name, t, at: ctx.now(), d: 1400 + t.length * 60 }; }

@@ -4,6 +4,7 @@
 // (older note) one manager steps them. A slouched office worker who calls "hello?" and shuffles
 // toward you, stiff and a little wrong. At 3 m the skin splits down the chest: a shriek, the screen shakes,
 // a wet red long-limbed thing unfolds, lunges and slashes twice. Each slash opens a bleed that ticks on.
+import { heard } from "./lib/hear.js";
 import L from "./lib/data/level1.yml";
 import { zoneAt, safeZone } from "./lib/level1.js";
 import { npcMul, dmgAfterArmor } from "./lib/stats.js";
@@ -57,15 +58,15 @@ export function update(ctx, dt) {
     if (m.ph === "skin") { m.hunger = (m.hunger ?? 0) + dt / HUNGER_S; if (st.hp != null && m.hp0 != null && st.hp < m.hp0) m.angry = true; m.hp0 = st.hp; }
     if (st.dead || (st.hp ?? 1) <= 0) {
       if (!m.deadAt) { m.deadAt = now; if (!st.dead) o.state.dead = true; e.velocity = { x: 0, y: -2, z: 0 }; play(e, m, "base", null); play(e, m, "act", "Death", { clampWhenFinished: true });
-        ctx.emit("playSound", { maxDistance: 32, refDistance: 5, clip: SND("flesh-tear-wet-shriek"), position: pos, volume: 0.8, pitch: 0.7 }); }
-      else if (now - m.deadAt > 2600 && !m.gone) { m.gone = true; ctx.emit("fx", { position: pos, script: POOF }); ctx.emit("playSound", { maxDistance: 24, refDistance: 4, clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.9 }); ctx.destroy(e.id); }
+        heard(ctx, { maxDistance: 32, refDistance: 5, clip: SND("flesh-tear-wet-shriek"), position: pos, volume: 0.8, pitch: 0.7 }); }
+      else if (now - m.deadAt > 2600 && !m.gone) { m.gone = true; ctx.emit("fx", { position: pos, script: POOF }); heard(ctx, { maxDistance: 24, refDistance: 4, clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.9 }); ctx.destroy(e.id); }
       continue;
     }
     if ((st.splashedAt ?? 0) > (m.splash ?? 0)) { // almond water: it burns. a disguise splits, then it reels
       m.splash = st.splashedAt; m.stunUntil = now + 1600;
       if (m.ph === "skin") { o.state.revealed = true; o.model = MODEL(true); shedSkin(ctx, o); ctx.emit("fx", { position: pos, script: SPLIT }); ctx.emit("screenShake", { intensity: 0.5, duration: 0.4 }, { audience: { nearby: pos, radius: 9 } }); }
       m.ph = "hunt"; m.at = now; play(e, m, "act", "Reveal", { clampWhenFinished: true, tag: now });
-      ctx.emit("playSound", { clip: SND("flesh-tear-wet-shriek"), position: pos, volume: 1, pitch: 1.35, maxDistance: 34 });
+      heard(ctx, { clip: SND("flesh-tear-wet-shriek"), position: pos, volume: 1, pitch: 1.35, maxDistance: 34 });
     }
     if (now < (m.stunUntil ?? 0)) { e.velocity = { x: 0, y: (e.velocity?.y ?? 0) - 20 * dt, z: 0 }; continue; }
     if (m.stunUntil && !m.stunDone) { m.stunDone = true; play(e, m, "act", null); }
@@ -79,7 +80,7 @@ export function update(ctx, dt) {
       go("reveal"); const fur = ctx.getObject(o.id + "/skin")?.state?.fur ?? "oklch(.6 .08 60)"; o.state.revealed = true; o.model = MODEL(true); shedSkin(ctx, o); ctx.emit("fx", { position: { x: pos.x, y: pos.y, z: pos.z }, script: FUR(fur) }); play(e, m, "act", "Reveal", { clampWhenFinished: true });
       const chest = { x: pos.x, y: pos.y, z: pos.z };
       ctx.emit("fx", { position: chest, script: SPLIT });
-      ctx.emit("playSound", { clip: SND("flesh-tear-wet-shriek"), position: chest, volume: 1, maxDistance: 34 });
+      heard(ctx, { clip: SND("flesh-tear-wet-shriek"), position: chest, volume: 1, maxDistance: 34 });
       ctx.emit("screenShake", { intensity: 0.6, duration: 0.5 }, { audience: { nearby: pos, radius: 9 } });
       if (prey.state) prey.state.sanity = Math.max(0, (prey.state.sanity ?? 100) - L.stealerSanity);
     }
@@ -88,11 +89,11 @@ export function update(ctx, dt) {
       m.call = now + 6000 + ctx.random() * 6000;
       const lines = MIMIC(String(prey.displayName ?? "friend").toLowerCase()), [t, ci] = lines[Math.floor(ctx.random() * lines.length)];
       prey.state.sub = { who: "???", t, at: now, d: 3200 };
-      if (ci != null) ctx.emit("playSound", { clip: CALL[ci], position: { x: pos.x, y: pos.y + 1.6, z: pos.z }, volume: 0.9, pitch: 0.9 + ctx.random() * 0.15, maxDistance: L.stealerCallRange + 6 });
+      if (ci != null) heard(ctx, { clip: CALL[ci], position: { x: pos.x, y: pos.y + 1.6, z: pos.z }, volume: 0.9, pitch: 0.9 + ctx.random() * 0.15, maxDistance: L.stealerCallRange + 6 });
     }
     if (m.ph === "hunt" && prey && now >= (m.cool ?? 0)) {
       if (best < T.reach) { go("combo"); m.hits = 0; m.who = prey.id; play(e, m, "act", "Slash", { tag: now }); }
-      else if (best < T.lungeFrom && now >= (m.lungeCool ?? 0)) { go("lunge"); m.lungeCool = now + 3000; play(e, m, "act", "Lunge"); ctx.emit("playSound", { maxDistance: 20, refDistance: 3, clip: SND("claw-slash-flesh"), position: pos, volume: 0.5, pitch: 0.6 }); }
+      else if (best < T.lungeFrom && now >= (m.lungeCool ?? 0)) { go("lunge"); m.lungeCool = now + 3000; play(e, m, "act", "Lunge"); heard(ctx, { maxDistance: 20, refDistance: 3, clip: SND("claw-slash-flesh"), position: pos, volume: 0.5, pitch: 0.6 }); }
     }
     if (m.ph === "lunge" && (t > T.lungeFor || (prey && best < T.reach))) { if (prey && best < T.reach) { go("combo"); m.hits = 0; m.who = prey.id; play(e, m, "act", "Slash", { tag: now }); } else { go("hunt"); play(e, m, "act", null); } }
     if (m.ph === "combo") {
@@ -104,11 +105,11 @@ export function update(ctx, dt) {
           const dmg = dmgAfterArmor(p.state.look, Math.round(L.stealerHit * T.slashDmg * mu.dmg)); p.state.hp -= dmg;
           const at = { x: p.feetPosition.x, y: p.feetPosition.y + 1.2, z: p.feetPosition.z };
           ctx.emit("damageNumber", { position: at, value: dmg, color: "#ff3030" });
-          ctx.emit("fx", { position: at, script: CUT }); ctx.emit("playSound", { maxDistance: 20, refDistance: 3, clip: SND("claw-slash-flesh"), position: at, volume: 1 });
+          ctx.emit("fx", { position: at, script: CUT }); heard(ctx, { maxDistance: 20, refDistance: 3, clip: SND("claw-slash-flesh"), position: at, volume: 1 });
           ctx.emit("cameraPunch", { direction: { x: m.hits === 1 ? 1 : -1, y: 0, z: 0 }, intensity: 0.4 }, { audience: { player: p.id } });
           ctx.emit("hitstop", { duration: 0.03 }, { audience: { player: p.id } });
           bleeds[p.id] = { from: now, until: now + T.bleedFor * 1000, next: now + T.bleedEvery * 1000 };
-        } else ctx.emit("playSound", { maxDistance: 20, refDistance: 3, clip: SND("claw-slash-flesh"), position: pos, volume: 0.35, pitch: 1.4 });
+        } else heard(ctx, { maxDistance: 20, refDistance: 3, clip: SND("claw-slash-flesh"), position: pos, volume: 0.35, pitch: 1.4 });
       }
       if (t > T.comboFor) { m.hunger = Math.max(0, (m.hunger ?? 0) - 0.35); go("hunt"); m.cool = now + L.stealerCooldown * 1000; play(e, m, "act", null); }
     }

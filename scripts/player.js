@@ -1,6 +1,7 @@
 // The wanderer: walk/sprint on stamina, sanity that the halls eat, a flashlight on battery,
 // almond water, swings at smilers, xp and levels. Every number lives in lib/data/level0.yml.
 // player.state is the player's save: their level, xp and almonds follow them between visits.
+import { heard } from "./lib/hear.js";
 import PLAYER from './lib/data/player.yml'
 import L from './lib/data/level0.yml'
 import W, { baseOf } from './lib/weapons.js'
@@ -76,7 +77,7 @@ function encode(v) { let s = ''; for (let i = 0; i < v.length; i += 4) s += (v[i
 
 function chest(ctx) { const p = ctx.self.feetPosition; return { x: p.x, y: p.y + 1.3, z: p.z } }
 function sound(ctx, name, volume = 0.7, mine = false) {
-  ctx.emit('playSound', { clip: SND(name), position: chest(ctx), volume, maxDistance: 30 }, mine ? { audience: { player: ctx.self.id } } : undefined)
+  heard(ctx, { clip: SND(name), position: chest(ctx), volume, maxDistance: 30 }, mine ? { audience: { player: ctx.self.id } } : undefined)
 }
 
 export function gain(ctx, n) {
@@ -562,7 +563,7 @@ function splash(ctx) {
   s[AW_KEY[c]] -= 1; walkOf(ctx).splashCool = now + 900
   const p = ctx.self.feetPosition, f = walkOf(ctx).fwd ?? { x: 0, z: -1 }, S = AW.splash
   ctx.emit('fx', { position: { x: p.x + f.x * 0.5, y: p.y + 1.3, z: p.z + f.z * 0.5 }, script: SPRAY, params: { dir: { x: f.x, y: 0.1, z: f.z } } })
-  ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-water-splash-thrown-from-bottle.mp3', position: chest(ctx), volume: 0.8, maxDistance: 20 })
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-water-splash-thrown-from-bottle.mp3', position: chest(ctx), volume: 0.8, maxDistance: 20 })
   for (const m of ctx.query({ tags: ['stealer'], radius: S.reach })) {
     if (m.state?.dead) continue
     const dx = m.feetPosition.x - p.x, dz = m.feetPosition.z - p.z, d = Math.hypot(dx, dz)
@@ -571,7 +572,7 @@ function splash(ctx) {
     const at = { x: m.feetPosition.x, y: m.feetPosition.y + 1.2, z: m.feetPosition.z }
     ctx.emit('fx', { position: m.feetPosition, script: STEAM })
     ctx.emit('damageNumber', { position: at, value: S.damage, color: '#bfe8ff' })
-    ctx.emit('playSound', { clip: '/cdn/moodboard-gothic-horror/sfx-flesh-sizzle-steam-hiss.mp3', position: at, volume: 1, maxDistance: 26 })
+    heard(ctx, { clip: '/cdn/moodboard-gothic-horror/sfx-flesh-sizzle-steam-hiss.mp3', position: at, volume: 1, maxDistance: 26 })
     ctx.emit('hitstop', { duration: 0.04 }, { audience: { player: ctx.self.id } })
     return
   }
@@ -775,7 +776,7 @@ function tickStats(ctx, t, moving) {
       const side = ctx.random() < 0.5 ? -1 : 1, back = 0.6 + ctx.random()
       const at = { x: p.x + (-af.z * side * 2.6) - af.x * back, y: p.y + 1.2, z: p.z + (af.x * side * 2.6) - af.z * back }
       const clip = ctx.random() < 0.5 ? 'indistinct-whispers-behind-wall' : 'nails-scratching-behind-wall'
-      ctx.emit('playSound', { clip: SND(clip), position: at, volume: 0.55, refDistance: 1.5, maxDistance: 12 }, { audience: { player: ctx.self.id } })
+      heard(ctx, { clip: SND(clip), position: at, volume: 0.55, refDistance: 1.5, maxDistance: 12 }, { audience: { player: ctx.self.id } })
     }
   }
   // a dark figure at the far end of the hall you face: only you see it, and it is gone in a breath

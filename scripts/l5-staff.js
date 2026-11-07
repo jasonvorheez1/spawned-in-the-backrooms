@@ -1,6 +1,7 @@
 // Level 5's Staff (the article's Humanoids): tall pitch-black faceless figures in old hotel uniforms. They stand facing
 // the corridor walls. Turn your back on one while you're alone and it creeps after you, whispering politely; look at it
 // and it stops dead. If it reaches you it strikes hard. Slow enough to outwalk. Never onto safe ground.
+import { heard } from "./lib/hear.js";
 import { E, SND, isSafe, flat, yawTo, prey, aloneOf, hit, claimRemains } from "./lib/l5-hostile.js";
 import { npcState } from "./lib/stats.js";
 import { findPath } from "builtin/nav";
@@ -20,7 +21,7 @@ function reveal(ctx, f, o) {
   const at = o.feetPosition, st = { ...o.state, disguised: false, verb: "Look", info: f.info }, rot = o.rotation;
   ctx.destroy(f.id);
   ctx.spawn(f.id, { tags: ["moths", "l5staff", "l5-hostile", "usable", "faceling"], feetPosition: at, rotation: rot, ...faceless(critterSpec(staffLook(f, T.figures.indexOf(f)))), scale: (f.height ?? 2.2) / 1.8, physics: { body: "character" }, state: st });
-  ctx.emit("playSound", { clip: SND("wet-skin-peeling-face-slipping-off-low-drone"), position: { ...at, y: at.y + 2 }, volume: 1, maxDistance: 16 });
+  heard(ctx, { clip: SND("wet-skin-peeling-face-slipping-off-low-drone"), position: { ...at, y: at.y + 2 }, volume: 1, maxDistance: 16 });
   ctx.emit("screenFlash", { color: "#000000", duration: 0.35, intensity: 0.6 }, { audience: { nearby: at, radius: 10 } });
   ctx.emit("screenShake", { intensity: 0.3, duration: 0.4 }, { audience: { nearby: at, radius: 10 } });
 }
@@ -59,7 +60,7 @@ export function update(ctx, dt) {
     if (!o) { if (now >= (mem["re" + f.id] ?? 0)) { mem["re" + f.id] = now + 240000; if (mem["re" + f.id + "x"]) place(ctx, f); mem["re" + f.id + "x"] = true; } continue; }
     const m = (mem[f.id] ??= {}), pos = o.feetPosition, st = o.state, vy = (o.velocity?.y ?? 0) - 18 * dt;
     if (st.dead || (st.hp ?? 1) <= 0) {
-      if (!m.deadAt) { m.deadAt = now; becomeCorpse(ctx, o, `${f.name}'s body`, ["bobbypin", "battery", ctx.random() < 0.5 ? "kit" : "tape"], killerOf(ctx, pos)?.feetPosition); ctx.emit("playSound", { maxDistance: 22, refDistance: 3, clip: SND("hollow-sigh-fading-whisper-thank-you-for-staying"), position: pos, volume: 0.9 }); }
+      if (!m.deadAt) { m.deadAt = now; becomeCorpse(ctx, o, `${f.name}'s body`, ["bobbypin", "battery", ctx.random() < 0.5 ? "kit" : "tape"], killerOf(ctx, pos)?.feetPosition); heard(ctx, { maxDistance: 22, refDistance: 3, clip: SND("hollow-sigh-fading-whisper-thank-you-for-staying"), position: pos, volume: 0.9 }); }
       if (now - m.deadAt > 3600000 || (now - m.deadAt > 3000 && !(o.state.items ?? "").length)) { ctx.destroy(f.id); delete mem[f.id]; mem["re" + f.id] = now + 240000; }
       continue;
     }
@@ -78,14 +79,14 @@ export function update(ctx, dt) {
     for (const p of hunt) { const d = flat(p.feetPosition, pos); if (d < best && aloneOf(ctx, p, T.alone) && flat(p.feetPosition, f.post) < (T.leash ?? 16) && !AVOID.has(zoneId(p.feetPosition.x, p.feetPosition.z))) { best = d; target = p; } }
     if (seer) mode = "frozen";
     // stared at up close, it speaks: polite, hollow, never moving its blank face
-    if (seer) { if (flat(seer.feetPosition, pos) < 4 && now >= (m.spoke ?? 0)) { m.spoke = now + 20000; st.line = f.line; st.lineAt = now; ctx.emit("playSound", { clip: `/cdn/voice-faceling-${f.id.slice(9)}-saying-${f.line.toLowerCase().replace(/[^a-z ]/g, "").trim().replace(/ +/g, "-")}.mp3`, position: { ...pos, y: pos.y + 2 }, volume: 0.7, maxDistance: 10 }); } }
+    if (seer) { if (flat(seer.feetPosition, pos) < 4 && now >= (m.spoke ?? 0)) { m.spoke = now + 20000; st.line = f.line; st.lineAt = now; heard(ctx, { clip: `/cdn/voice-faceling-${f.id.slice(9)}-saying-${f.line.toLowerCase().replace(/[^a-z ]/g, "").trim().replace(/ +/g, "-")}.mp3`, position: { ...pos, y: pos.y + 2 }, volume: 0.7, maxDistance: 10 }); } }
     else if (target) { mode = "creep"; goal = target.feetPosition; sp = T.creep; }
     else if (flat(pos, f.post) > 0.3) { mode = "return"; goal = f.post; sp = T.home; }
     if (mode === "creep" && best < T.reach && now >= (m.strike ?? 0)) {
       m.strike = now + T.strikeEvery; mode = "strike";
       const at = hit(ctx, target, T.strike, "#ff2a2a");
       o.anim.move = { clip: "cdn/clip-attack.glb" }; m.anim = "strike";
-      ctx.emit("playSound", { maxDistance: 20, refDistance: 3, clip: SND("heavy-blunt-body-blow-thud"), position: at, volume: 1 });
+      heard(ctx, { maxDistance: 20, refDistance: 3, clip: SND("heavy-blunt-body-blow-thud"), position: at, volume: 1 });
       ctx.emit("screenShake", { intensity: 0.55, duration: 0.3 }, { audience: { player: target.id } });
       ctx.emit("cameraPunch", { direction: { x: target.feetPosition.x - pos.x, y: 0, z: target.feetPosition.z - pos.z }, intensity: 0.7 }, { audience: { player: target.id } });
       ctx.emit("screenFlash", { color: "#300000", duration: 0.25, intensity: 0.5 }, { audience: { player: target.id } });
@@ -108,6 +109,6 @@ export function update(ctx, dt) {
     const want = sp ? "walk" : m.anim === "strike" && now < (m.strike ?? 0) - T.strikeEvery + 900 ? "strike" : mode === "frozen" ? "frozen" : "idle";
     if (want !== m.anim || (want !== "frozen" && !o.anim?.move)) { m.anim = want; o.anim.move = want === "walk" ? WALK : want === "idle" ? IDLE : want === "frozen" ? { ...IDLE, speed: 0 } : o.anim.move ?? null; }
     if (st.mode !== mode) st.mode = mode;
-    if (mode === "creep" && now >= (m.whisper ?? 0)) { m.whisper = now + 6000 + ctx.random() * 6000; ctx.emit("playSound", { clip: SND(f.whisper), position: { ...pos, y: pos.y + 2 }, volume: 0.55, maxDistance: 14 }); }
+    if (mode === "creep" && now >= (m.whisper ?? 0)) { m.whisper = now + 6000 + ctx.random() * 6000; heard(ctx, { clip: SND(f.whisper), position: { ...pos, y: pos.y + 2 }, volume: 0.55, maxDistance: 14 }); }
   }
 }

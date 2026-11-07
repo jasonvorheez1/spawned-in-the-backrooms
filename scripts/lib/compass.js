@@ -1,6 +1,7 @@
 // The old compass: a lootable item with a few reads left. A read points the needle toward one or two things
 // nearby, vaguely on purpose: a direction rounded to eight points with a wobble, a distance in words, a kind in
 // words ("a way out", "voices", "something breathing", "something worth taking"). Low sanity makes it lie more.
+import { heard } from "./hear.js";
 import { cellCenter, EXIT } from './maze.js'
 import { BACK as BACK1, ONWARD as ONWARD1 } from './level1.js'
 import { BACK as BACK2, SEALED as SEALED2 } from './level2.js'
@@ -48,6 +49,6 @@ export function useCompass(ctx) {
     return { k: f.kind, h: Math.round(h / 45) * 45 % 360, t: `${pool[Math.floor(ctx.random() * pool.length)]}, ${word(Math.hypot(f.dx, f.dz))}, ${pt}` }
   })
   s.compassRead = { at: now, spun, hints, left: s.compass }
-  ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-old-brass-compass-lid-click.mp3', position: p, volume: 0.6, maxDistance: 8 }, { audience: { player: me.id } })
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-old-brass-compass-lid-click.mp3', position: p, volume: 0.6, maxDistance: 8 }, { audience: { player: me.id } })
   if (s.compass <= 0) s.notice = { text: 'The compass needle comes loose. It is useless now.', at: now + 3000 }
 }

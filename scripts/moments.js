@@ -1,5 +1,6 @@
 // Level 0 moments that do something: the payphone that rings as you near it, the wanderer's note,
 // and the far-sound emitter in the dark sector. state.kind picks the job.
+import { heard } from "./lib/hear.js";
 import { distance } from "builtin/vec3";
 const G = "cdn/moodboard-realistic-gritty/";
 const RING = G + "sfx-old-payphone-mechanical-bell-ringing-loop.mp3";
@@ -15,11 +16,11 @@ export const ears = {
     const s = ctx.self.state, who = ctx.getObject(by), now = ctx.now();
     if (s.kind === "payphone") {
       const pos = { ...ctx.self.worldFeetPosition, y: 1.6 };
-      if (now < (s.quietUntil ?? 0)) { ctx.emit("playSound", { clip: STATIC, position: pos, volume: 0.35, maxDistance: 8 }); if (who) who.state.notice = { text: "Dial tone. Nothing else.", at: now }; return; }
+      if (now < (s.quietUntil ?? 0)) { heard(ctx, { clip: STATIC, position: pos, volume: 0.35, maxDistance: 8 }); if (who) who.state.notice = { text: "Dial tone. Nothing else.", at: now }; return; }
       s.quietUntil = now + 150000; ctx.self.audio = null; ctx.self.session.ring = false;
-      ctx.emit("playSound", { clip: PICKUP, position: pos, volume: 0.6, maxDistance: 12 });
-      ctx.emit("playSound", { clip: STATIC, position: pos, volume: 0.5, maxDistance: 10 });
-      ctx.emit("playSound", { clip: WHISPER, position: pos, volume: 0.9, maxDistance: 6, bus: "Voice" });
+      heard(ctx, { clip: PICKUP, position: pos, volume: 0.6, maxDistance: 12 });
+      heard(ctx, { clip: STATIC, position: pos, volume: 0.5, maxDistance: 10 });
+      heard(ctx, { clip: WHISPER, position: pos, volume: 0.9, maxDistance: 6, bus: "Voice" });
       if (who) who.state.notice = { text: "…static… a whisper: “don't trust the lights.”", at: now };
     } else if (s.kind === "note" && who) {
       who.state.notice = { text: s.text, at: now };
@@ -42,7 +43,7 @@ export function update(ctx) {
       const p = ctx.place.players.find((p) => distance(p.feetPosition, me) < 90);
       if (p) {
         const a = ctx.random() * 6.283, r = 6 + ctx.random() * 12;
-        ctx.emit("playSound", { clip: FAR[Math.floor(ctx.random() * FAR.length)], position: { x: me.x + Math.cos(a) * r, y: 1.5, z: me.z + Math.sin(a) * r }, volume: 0.55, refDistance: 6, maxDistance: 70 });
+        heard(ctx, { clip: FAR[Math.floor(ctx.random() * FAR.length)], position: { x: me.x + Math.cos(a) * r, y: 1.5, z: me.z + Math.sin(a) * r }, volume: 0.55, refDistance: 6, maxDistance: 70 });
       }
     }
     return ctx.sleep(5);

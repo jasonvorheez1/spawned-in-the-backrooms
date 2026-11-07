@@ -1,3 +1,4 @@
+import { heard } from "./lib/hear.js";
 import { sitDown, standUp, seatTick, spotsOf } from './lib/seat.js'
 import { rollItemL3 } from './lib/loot3.js'
 import { startPick } from './lockpick.js'
@@ -22,7 +23,7 @@ const mem = (ctx) => (ctx.self.session.interact ??= { ray: null, last: -1e9, acc
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 function snd(ctx, name, volume = 0.6) {
   const p = ctx.self.feetPosition
-  ctx.emit('playSound', { clip: SND(name), position: { x: p.x, y: p.y + 1.2, z: p.z }, volume, maxDistance: 12 }, { audience: { player: ctx.self.id } })
+  heard(ctx, { clip: SND(name), position: { x: p.x, y: p.y + 1.2, z: p.z }, volume, maxDistance: 12 }, { audience: { player: ctx.self.id } })
 }
 function note(ctx, text) { ctx.self.state.notice = { text, at: ctx.now() } }
 
@@ -137,7 +138,7 @@ const VO = (who, line) => `/cdn/voice-meg-${who}-saying-${line.replace(/[^a-z ]/
 function speak(ctx, it, who, line) {
   ctx.self.state.sub = { who: it.state.name.split(' ·')[0], t: line, at: ctx.now(), d: 1600 + line.length * 60 } // the subtitle strip shows it
   const p = it.feetPosition
-  ctx.emit('playSound', { clip: VO(who, line), position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.9, maxDistance: 14 }, { audience: { player: ctx.self.id } })
+  heard(ctx, { clip: VO(who, line), position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.9, maxDistance: 14 }, { audience: { player: ctx.self.id } })
 }
 export function talk(ctx, it) {
   const s = ctx.self.state, now = ctx.now(), role = it.state?.role
@@ -166,7 +167,7 @@ export function talk(ctx, it) {
 const DOORKEY = { fuse: { f: 'fuses', n: 'fuse' }, valve: { f: 'valves', n: 'valve wheel' }, keycard: { f: 'keycards', n: 'keycard' } }
 function useDoor(ctx, it) {
   const s = ctx.self.state, lk = it.state.lock ?? '', at = it.state.c ?? it.feetPosition
-  const loud = (n, v) => ctx.emit('playSound', { clip: SND(n), position: at, volume: v, maxDistance: 16 }, { audience: { nearby: at, radius: 18 } })
+  const loud = (n, v) => heard(ctx, { clip: SND(n), position: at, volume: v, maxDistance: 16 }, { audience: { nearby: at, radius: 18 } })
   if (lk) {
     const K = DOORKEY[lk]
     if (K) {
@@ -265,7 +266,7 @@ function press(ctx) {
     const c = it.state, now = ctx.now()
     if (!s.os && now - (s.osClosedAt ?? 0) > 600) {
       s.os = { id: it.id, host: c.host, lock: c.unlocked ? '' : c.lock || '', user: c.unlocked ? 'admin' : 'guest', app: 'boot', at: now, term: [], sel: '' }
-      ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-old-computer-boot-startup-chime.mp3', position: { ...it.feetPosition, y: (it.feetPosition?.y ?? 0) + 0.4 }, volume: 0.6, maxDistance: 10 }, { audience: { player: ctx.self.id } })
+      heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-old-computer-boot-startup-chime.mp3', position: { ...it.feetPosition, y: (it.feetPosition?.y ?? 0) + 0.4 }, volume: 0.6, maxDistance: 10 }, { audience: { player: ctx.self.id } })
     }
     m.key = ''; return
   }

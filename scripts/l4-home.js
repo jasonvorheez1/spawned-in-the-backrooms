@@ -1,10 +1,11 @@
 // Level 4's things you press (state.kind): an office's door plate (claim it: it's your home), your office's water cooler
 // (the bottling game: E starts the fill, E again stops it; stop in the band and you keep a bottle), the open floor's
 // fountains, the break room's vending machines, the chained stairwell to Level 5.
+import { heard } from "./lib/hear.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const BAND = [82, 96], JUGS = 3, REFILL = 120000; // her pick: a jug back every 2 minutes, three on the shelf
 const say = (who, text, ctx) => { if (who) who.state.notice = { text, at: ctx.now() }; };
-const snd = (ctx, clip, v = 0.6) => ctx.emit("playSound", { clip: G(clip), position: { ...ctx.self.worldFeetPosition, y: 1 }, volume: v, maxDistance: 12 });
+const snd = (ctx, clip, v = 0.6) => heard(ctx, { clip: G(clip), position: { ...ctx.self.worldFeetPosition, y: 1 }, volume: v, maxDistance: 12 });
 function jugs(ctx) { const s = ctx.self.state, now = ctx.now(); const add = Math.floor((now - (s.jugAt ?? 0)) / REFILL);
   if ((s.jugs ?? JUGS) < JUGS && add > 0) { s.jugs = Math.min(JUGS, (s.jugs ?? JUGS) + add); s.jugAt = now; } return s.jugs ?? JUGS; }
 function homeKit(ctx, room, on) {
@@ -71,6 +72,6 @@ export function update(ctx, dt) {
   if (!s.fillBy) { jugs(ctx); return ctx.sleep(10); }
   s.fill = Math.min(100, (s.fill ?? 0) + s.rate * dt * (0.75 + 0.5 * Math.sin((ctx.now() - s.fillAt) / 180))); // the flow surges and sags
   if (s.fill >= 100) { const who = ctx.getObject(s.fillBy); s.fillBy = null; s.fill = 0; s.streak = 0; s.jugs = jugs(ctx) - 1; s.jugAt = ctx.now();
-    ctx.emit("playSound", { clip: G("water-splash-spill-on-carpet"), position: { ...ctx.self.worldFeetPosition, y: 0.5 }, volume: 0.7, maxDistance: 12 });
+    heard(ctx, { clip: G("water-splash-spill-on-carpet"), position: { ...ctx.self.worldFeetPosition, y: 0.5 }, volume: 0.7, maxDistance: 12 });
     say(who, "It overflows onto the carpet. The jug's wasted.", ctx); }
 }

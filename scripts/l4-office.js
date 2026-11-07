@@ -4,6 +4,7 @@
 //   printer  prints a memo from whoever worked here last (E reads it), a minute between pages.
 //   manager  keeps the phones ringing in turn and, every couple of minutes, plays an office sound somewhere behind a wanderer:
 //            a door, footsteps on the carpet, a copier starting up, a chair rolling.
+import { heard } from "./lib/hear.js";
 import { ROOMS } from "./lib/level4.js";
 import { spawnCrate } from "./lib/loot.js";
 import { skillsOf } from "./lib/stats.js";
@@ -37,7 +38,7 @@ const MEMOS = [
 ];
 const pick = (ctx, a) => a[Math.floor(ctx.random() * a.length)];
 const sub = (who, t, ctx, name) => { if (who) who.state.sub = { who: name, t, at: ctx.now(), d: 1800 + t.length * 60 }; };
-const snd = (ctx, clip, pos, v = 0.7, far = 14) => ctx.emit("playSound", { clip, position: pos, volume: v, maxDistance: far });
+const snd = (ctx, clip, pos, v = 0.7, far = 14) => heard(ctx, { clip, position: pos, volume: v, maxDistance: far });
 const phones = (ctx) => ctx.query({ tags: ["l4-phone"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
 
 function ringOn(ctx, ph, on) {
@@ -120,7 +121,7 @@ export const ears = {
         line = `Listen. There's a supply box in office ${r.label}. Under the desk. Go now.`;
       }
       sub(who, line, ctx, "Voice on the line");
-      ctx.emit("playSound", { clip: VO(line), position: { ...p, y: 1 }, volume: 0.8, maxDistance: 6 }, { audience: { player: by } });
+      heard(ctx, { clip: VO(line), position: { ...p, y: 1 }, volume: 0.8, maxDistance: 6 }, { audience: { player: by } });
       return;
     }
     if (s.kind === "printer") {
@@ -154,6 +155,6 @@ export function update(ctx, dt) {
     s.nextNoise = now + 70000 + ctx.random() * 70000;
     const pl = pick(ctx, ctx.place.players), f = pl.feetPosition, a = ctx.random() * Math.PI * 2;
     const at = { x: f.x + Math.cos(a) * 9, y: 1.2, z: f.z + Math.sin(a) * 9 };
-    ctx.emit("playSound", { clip: G(pick(ctx, ["office-door-slam-distant", "footsteps-on-carpet-behind", "copier-machine-starting-whir", "office-chair-rolling-squeak", "single-phone-ring-far-away"])), position: at, volume: 0.6, maxDistance: 20 }, { audience: { player: pl.id } });
+    heard(ctx, { clip: G(pick(ctx, ["office-door-slam-distant", "footsteps-on-carpet-behind", "copier-machine-starting-whir", "office-chair-rolling-squeak", "single-phone-ring-far-away"])), position: at, volume: 0.6, maxDistance: 20 }, { audience: { player: pl.id } });
   }
 }

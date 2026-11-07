@@ -2,6 +2,7 @@
 // light near (a lit flashlight), wheel round its holder's head, then DIVE: a hit bursts a cloud of wing
 // dust across the bitten player's eyes and eats their nerve. They follow the halls cell by cell so they
 // never fly through brick, and stay out of Base Gamma. Each swarm is three Blender moths (templates/deathmoths.js).
+import { heard } from "./lib/hear.js";
 import C from "./lib/data/creatures3.yml";
 import { cellAt, cellCenter, zoneAt } from "./lib/level3.js";
 import { stepToward, cellNear } from "./lib/maze3path.js";
@@ -40,7 +41,7 @@ export function update(ctx, dt) {
       if (!m.deadAt) {
         m.deadAt = now; m.y0 = pos.y; if (!st.dead) s.state.dead = true; s.fx = null; s.audio = null; clip(ctx, s, m, "Death", { clampWhenFinished: true });
         ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.4, z: pos.z }, script: DEATH });
-        ctx.emit("playSound", { maxDistance: 14, refDistance: 2, clip: SND("dusty-paper-moths-crumble-burst"), position: pos, volume: 0.8 });
+        heard(ctx, { maxDistance: 14, refDistance: 2, clip: SND("dusty-paper-moths-crumble-burst"), position: pos, volume: 0.8 });
       } else if (now - m.deadAt < 1600) { const k = (now - m.deadAt) / 1600; m.spin += D.spinFast * (1 - k) * dt; s.feetPosition = { x: pos.x, y: Math.max(0.05, m.y0 * (1 - k * k)), z: pos.z }; s.rotation = { yaw: m.spin }; }
       else if (now - m.deadAt > 2600 && !m.gone) { m.gone = true; ctx.destroy(s.id); }
       continue;
@@ -56,7 +57,7 @@ export function update(ctx, dt) {
     const t = (now - (m.at ?? 0)) / 1000, go = (mode) => { m.mode = mode; m.at = now; };
     if (!prey && m.mode !== "cruise" && m.mode !== "recover") go("cruise");
     if (prey && m.mode === "cruise" && best < D.diveFrom) { go("circle"); m.circleFor = D.circleFor[0] + rnd() * (D.circleFor[1] - D.circleFor[0]); m.who = prey.id; }
-    if (m.mode === "circle" && prey && t > m.circleFor) { go("dive"); m.who = prey.id; clip(ctx, s, m, "Dive", { clampWhenFinished: true }); ctx.emit("playSound", { clip: SND("moth-wings-flurry-bite"), position: pos, volume: 0.7, pitch: 0.75, maxDistance: 14 }); }
+    if (m.mode === "circle" && prey && t > m.circleFor) { go("dive"); m.who = prey.id; clip(ctx, s, m, "Dive", { clampWhenFinished: true }); heard(ctx, { clip: SND("moth-wings-flurry-bite"), position: pos, volume: 0.7, pitch: 0.75, maxDistance: 14 }); }
     if (m.mode === "recover" && t > D.recoverFor) go(prey ? "circle" : "cruise"), (m.circleFor = 1.5 + rnd() * 2);
     if (m.mode === "cruise" || m.mode === "circle") clip(ctx, s, m, "Flutter");
     m.bob += dt * 2.3; m.spin += (m.mode === "dive" ? D.spinFast : D.spin) * dt;
@@ -82,7 +83,7 @@ export function update(ctx, dt) {
           ctx.emit("fx", { position: at, script: DUST });
           ctx.emit("fx", { position: at, script: BLIND }, { audience: { player: p.id } });
           ctx.emit("screenFlash", { color: "#8a7a5c", duration: 0.5, intensity: 0.35 }, { audience: { player: p.id } });
-          ctx.emit("playSound", { clip: SND("moth-wings-flurry-bite"), position: at, volume: 1, maxDistance: 14 });
+          heard(ctx, { clip: SND("moth-wings-flurry-bite"), position: at, volume: 1, maxDistance: 14 });
           p.vignette = 0.3; blur[p.id] = now + D.blurFor * 1000;
           clip(ctx, s, m, "Bite"); go("recover");
         } else if (t > D.diveFor) { clip(ctx, s, m, "Flutter"); go("recover"); }

@@ -2,6 +2,7 @@
 // Scrap becomes ammo, kits, batteries and fuses at your hands (Y) or at a workbench you built (B, then look at it and press E).
 // Recipes are gated by a Fallout-style skill level, and spare skill points buy a chance of an extra item.
 // State: player.state.hunger, thirst (0..100), craftOpen ('hand' | 'bench'), craftBench (the bench's id).
+import { heard } from "./lib/hear.js";
 import C from './lib/data/craft.yml'
 import B from './lib/data/breakables.yml'
 import { skillsOf, SKILLS, canCarry } from './lib/stats.js'
@@ -25,7 +26,7 @@ function act(ctx, s, d) {
   if (d.k !== 'make' || !s.craftOpen) return
   const id = String(d.id), r = C.recipes[id]; if (!r) return
   const st = recipeStatus(s, id)
-  const deny = (t) => { note(s, ctx, t); ctx.emit('playSound', { clip: SND('ui-denied-click'), position: ctx.self.feetPosition, volume: 0.35, maxDistance: 8 }, { audience: { player: ctx.self.id } }) }
+  const deny = (t) => { note(s, ctx, t); heard(ctx, { clip: SND('ui-denied-click'), position: ctx.self.feetPosition, volume: 0.35, maxDistance: 8 }, { audience: { player: ctx.self.id } }) }
   if (!st.benchOk) return deny('Needs a workbench')
   if (!st.skillOk) return deny(`Needs ${SKN[r.skill[0]]} ${r.skill[1]}`)
   if (st.lack.length) return deny(`Missing ${st.lack.map((k) => B.scrap[k]?.name ?? k).join(', ')}`)
@@ -35,7 +36,7 @@ function act(ctx, s, d) {
   if (r.skill && ctx.random() < Math.max(0, st.got - st.need) / 100) out.push(r.out[0]) // spare skill: an extra one
   for (const t of out) takeToken(ctx, t)
   note(s, ctx, `Made ${r.name}${out.length > r.out.length ? ' (+1 extra)' : ''}`)
-  ctx.emit('playSound', { clip: SND(r.bench ? 'hammer-nail-wood-build' : 'bandage-wrap-cloth'), position: ctx.self.feetPosition, volume: 0.6, maxDistance: 14 })
+  heard(ctx, { clip: SND(r.bench ? 'hammer-nail-wood-build' : 'bandage-wrap-cloth'), position: ctx.self.feetPosition, volume: 0.6, maxDistance: 14 })
 }
 
 export function update(ctx, dt) {

@@ -1,3 +1,4 @@
+import { heard } from "./lib/hear.js";
 import { rollLoot, garmentsOf } from "./lib/loot.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
 import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec, faceMorph } from "./lib/critter-model.js";
@@ -84,7 +85,7 @@ function shoot(ctx, me, t) {
   const o = chest(me.feetPosition), q = chest(t.feetPosition), dx = q.x - o.x, dz = q.z - o.z, l = Math.hypot(dx, dz) || 1;
   const muzzle = { x: o.x + dx / l * 0.5, y: o.y + 0.15, z: o.z + dz / l * 0.5 };
   ctx.emit("fx", { position: muzzle, script: FLASH });
-  ctx.emit("playSound", { clip: SHOT, position: muzzle, volume: 0.9, maxDistance: 45 });
+  heard(ctx, { clip: SHOT, position: muzzle, volume: 0.9, maxDistance: 45 });
   animate(ctx, me.id, { [me.model ? "bones.Spine02.pitch" : "bones.Spine2.pitch"]: [0, 7, 0], "bones.RightArm.pitch": [0, 12, 0] }, { duration: 0.2 }); // the kick
   if (ctx.random() > G.hitChance) return;
   const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), dmg = dmgAfterArmor(isPlayer ? t.state.look : lookOfNpc(t), Math.round((isPlayer ? G.playerShot : G.shot) * npcMul(me.state).dmg)); // the target's clothes soak it
@@ -130,7 +131,7 @@ function holster(ctx, me, m, drawn) {
   gun.attachment = drawn ? { bone: "RightHand" } : { bone: "Hips" };
   gun.feetPosition = drawn ? { x: 0, y: 0, z: 0 } : { x: 0.17, y: -0.06, z: 0.02 };
   gun.rotation = drawn ? { yaw: 0, pitch: 0, roll: 0 } : { yaw: 0, pitch: -90, roll: 0 };
-  ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-gun-holster-leather.mp3", position: me.feetPosition, volume: 0.5, maxDistance: 15 });
+  heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-gun-holster-leather.mp3", position: me.feetPosition, volume: 0.5, maxDistance: 15 });
 }
 function aim(me, m, t) {
   const id = t?.id ?? null;
@@ -149,7 +150,7 @@ export function bark(ctx, o, kind, force) {
   const t = pool[Math.floor(ctx.random() * pool.length)], d = 1300 + t.length * 55, who = st.voice ?? VOICES[o.id] ?? "ale";
   st.line = { t, at: now, d };
   const p = o.feetPosition;
-  ctx.emit("playSound", { clip: BVO(who, t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 1, refDistance: 4, maxDistance: 30 }, { audience: { nearby: p, radius: 32 } });
+  heard(ctx, { clip: BVO(who, t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 1, refDistance: 4, maxDistance: 30 }, { audience: { nearby: p, radius: 32 } });
 }
 export function update(ctx, dt) {
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
@@ -231,7 +232,7 @@ export function update(ctx, dt) {
     else { gait(me, m, "idle"); stop(me, dt); aim(me, m, reloading ? null : t); face(me, t.feetPosition.x - me.feetPosition.x, t.feetPosition.z - me.feetPosition.z, dt); }
     if (see && d <= G.range && !reloading && now >= m.next) {
       m.next = now + G.fireEvery * 1000 * (0.85 + ctx.random() * 0.3); shoot(ctx, me, t);
-      if (++m.shots >= 8) { m.shots = 0; m.reloadUntil = now + 1800; bark(ctx, me, "reload", true); ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-pistol-magazine-reload-click.mp3", position: me.feetPosition, volume: 0.6, maxDistance: 20 }); } // arms drop, a fresh mag
+      if (++m.shots >= 8) { m.shots = 0; m.reloadUntil = now + 1800; bark(ctx, me, "reload", true); heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-pistol-magazine-reload-click.mp3", position: me.feetPosition, volume: 0.6, maxDistance: 20 }); } // arms drop, a fresh mag
     }
     return;
   }

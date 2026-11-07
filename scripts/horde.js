@@ -2,6 +2,7 @@
 // is spawned round you in bursts, all hunting you (state.horde on each creature, read by smilers.js, lurkers.js and hounds.js) and tearing
 // at any piece you built (B) they press against. Survive it and you are paid in XP, scrap and supplies. Numbers: lib/data/horde.yml.
 // State on the player: horde ('' | 'warn' | 'night'), hordeT (seconds to the next one), hordeIn (the shown countdown), hordeAlive, hordeResult.
+import { heard } from "./lib/hear.js";
 import H from './lib/data/horde.yml'
 import { npcState } from './lib/stats.js'
 import { takeToken, gain } from './player.js'
@@ -15,7 +16,7 @@ const mem = (ctx) => (ctx.self.session.horde ??= { acc: 0, wave: 0, nextWave: 0,
 
 function say(ctx, name, volume = 0.8) {
   const p = ctx.self.feetPosition
-  ctx.emit('playSound', { clip: SND(name), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume, maxDistance: 60 }, { audience: { player: ctx.self.id } })
+  heard(ctx, { clip: SND(name), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume, maxDistance: 60 }, { audience: { player: ctx.self.id } })
 }
 
 const mine = (ctx) => KINDS_ALL.flatMap((k) => ctx.query({ tags: [k], radius: 1e5, center: { x: 0, y: 0, z: 0 } })).filter((e) => e.state?.horde === ctx.self.id)
@@ -112,7 +113,7 @@ export function update(ctx, dt) {
     const b = ctx.query({ tags: ['built'], radius: H.buildReach, center: e.feetPosition }).find((o) => (o.state?.hp ?? 0) > 0)
     if (!b) continue
     b.state.hp -= H.buildHit
-    ctx.emit('playSound', { clip: SND('wood-plank-crack-hit'), position: b.feetPosition, volume: 0.6, maxDistance: 25 })
+    heard(ctx, { clip: SND('wood-plank-crack-hit'), position: b.feetPosition, volume: 0.6, maxDistance: 25 })
     if (b.state.hp <= 0) ctx.destroy(b.id)
   }
   if (m.wave >= H.waves && !live.length) return end(ctx, s, m, true)

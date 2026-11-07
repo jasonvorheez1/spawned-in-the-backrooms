@@ -1,3 +1,4 @@
+import { heard } from "../../scripts/lib/hear.js";
 import { tickWalls } from "../../scripts/lib/breakables.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { fullLook, npcLook } from "../../scripts/lib/clothes.js";
@@ -193,7 +194,7 @@ export function tick(ctx) {
       const ps = p.state; if (!ps || ps.hp == null || ps.hp <= 0) continue;
       const f = p.feetPosition, dt = 0.25;
       // sludge: it burns through boots and the fumes get in your head
-      for (const h of SLUDGE) if (Math.hypot(f.x - h.x, f.z - h.z) < 1.05 && f.y < 0.3) { ps.hp -= dmgAfterArmor(ps.look, L.sludgeHurt * dt); ps.sanity = Math.max(0, (ps.sanity ?? 0) - L.sludgeSanity * dt); if (!p.session?.sl || now - (ps.slAt ?? 0) > 1500) { ps.slAt = now; ctx.emit("playSound", { maxDistance: 24, refDistance: 4, clip: GRIT("acid-sizzle-hiss"), position: f, volume: 0.5 }, { audience: { player: p.id } }); ctx.emit("screenFlash", { color: "#201028", duration: 0.3, intensity: 0.35 }, { audience: { player: p.id } }); } break; }
+      for (const h of SLUDGE) if (Math.hypot(f.x - h.x, f.z - h.z) < 1.05 && f.y < 0.3) { ps.hp -= dmgAfterArmor(ps.look, L.sludgeHurt * dt); ps.sanity = Math.max(0, (ps.sanity ?? 0) - L.sludgeSanity * dt); if (!p.session?.sl || now - (ps.slAt ?? 0) > 1500) { ps.slAt = now; heard(ctx, { maxDistance: 24, refDistance: 4, clip: GRIT("acid-sizzle-hiss"), position: f, volume: 0.5 }, { audience: { player: p.id } }); ctx.emit("screenFlash", { color: "#201028", duration: 0.3, intensity: 0.35 }, { audience: { player: p.id } }); } break; }
       // live boxes arc into whoever brushes past
       for (const h of SPARKS) {
         const [nx, nz] = D4[h.d], bx = h.wx - nx * 0.1, bz = h.wz - nz * 0.1;
@@ -201,7 +202,7 @@ export function tick(ctx) {
           ps.zapAt = now; ps.hp -= dmgAfterArmor(ps.look, L.sparkHurt);
           const at = { x: f.x, y: f.y + 1.1, z: f.z };
           ctx.emit("fx", { position: at, script: BLOW.replace("burst=120", "burst=40").replace("size=3", "size=1.2").replace(/pop smoke[^\n]*\n/, "") });
-          ctx.emit("playSound", { maxDistance: 32, refDistance: 5, clip: GRIT("electric-zap-shock"), position: at, volume: 0.9 });
+          heard(ctx, { maxDistance: 32, refDistance: 5, clip: GRIT("electric-zap-shock"), position: at, volume: 0.9 });
           ctx.emit("damageNumber", { position: at, value: L.sparkHurt, color: "#9cc8ff" });
           ctx.emit("screenShake", { intensity: 0.4, duration: 0.25 }, { audience: { player: p.id } });
           ctx.emit("screenFlash", { color: "#b8d8ff", duration: 0.25, intensity: 0.6 }, { audience: { player: p.id } });
@@ -220,7 +221,7 @@ export function tick(ctx) {
       } else if (st.warn && now > st.next) {
         const at = { x: g.x, y: 1.4, z: g.z };
         ctx.emit("fx", { position: at, script: BLOW });
-        ctx.emit("playSound", { clip: GRIT("transformer-explosion-blast"), position: at, volume: 1, maxDistance: 40 });
+        heard(ctx, { clip: GRIT("transformer-explosion-blast"), position: at, volume: 1, maxDistance: 40 });
         ctx.emit("shockwave", { position: at, speed: 14, thickness: 1.5, intensity: 0.6 });
         for (const p of players) {
           const d = Math.hypot(p.feetPosition.x - g.x, p.feetPosition.z - g.z);
@@ -239,7 +240,7 @@ export function tick(ctx) {
       const end = { x: l.x1 + 1.3, z: l.z };
       if (ctx.query({ tags: ["container"], radius: 2.5, center: { ...end, y: 0 } }).length >= L.lineMax) continue;
       spawnFurniture(ctx, "level3", "shelfbin", { x: end.x + 0.3, z: end.z + (ctx.random() - 0.5) * 1.2, dx: 1, dz: 0 }, { table: "line", name: "Line output bin", noLock: true }); // the catch bin at the line's end, open to the line
-      ctx.emit("playSound", { clip: GRIT("machine-press-stamp-thunk"), position: { x: (l.x0 + l.x1) / 2, y: 1, z: l.z }, volume: 0.6, maxDistance: 18 });
+      heard(ctx, { clip: GRIT("machine-press-stamp-thunk"), position: { x: (l.x0 + l.x1) / 2, y: 1, z: l.z }, volume: 0.6, maxDistance: 18 });
     }
   }
 

@@ -2,6 +2,7 @@
 // "cab" = the cabin root: doors (kinematic leaf children), the ride, the fall, the indicator;
 // "panel" = the button plate inside: E opens its buttons, a button writes a request onto the cabin.
 // Floor n rides to ELEVATORS[n % 5] (never the one you're in). 13, 66, 382 ask first, then kill. B goes to the Boiler Room.
+import { heard } from "./lib/hear.js";
 import { ELEVATORS } from "./lib/level5.js";
 import { animate } from "builtin/tween";
 import E from "./lib/data/l5-elevator.json";
@@ -12,7 +13,7 @@ function local(c, p) { // a world point in the cabin's frame: x right, z back
   return { x: dx * Math.cos(r) - dz * Math.sin(r), z: dx * Math.sin(r) + dz * Math.cos(r) };
 }
 const inside = (c, p) => { const l = local(c, p); return Math.abs(l.x) < 0.92 && l.z > -0.98 && l.z < 0.95 && Math.abs((p.y ?? 0)) < 1.5; };
-const sfx = (ctx, k, pos, vol = 0.6, pitch = 1) => ctx.emit("playSound", { clip: E.sfx[k], position: pos, volume: vol, pitch, refDistance: 3, maxDistance: 30 });
+const sfx = (ctx, k, pos, vol = 0.6, pitch = 1) => heard(ctx, { clip: E.sfx[k], position: pos, volume: vol, pitch, refDistance: 3, maxDistance: 30 });
 function cabOf(ctx, idx) { return ctx.getObject(ELEVATORS[idx].id); }
 export function destIndex(floor, from) {
   if (floor === "B") return from === 4 ? 0 : 4;
@@ -108,7 +109,7 @@ function cabUpdate(ctx) {
 function cab(ctx) { return ctx.getObject(ctx.self.state.cab); }
 function pick(ctx, floor, by) {
   const p = ctx.self, c = cab(ctx); if (!c || p.state.closed) return;
-  ctx.emit("playSound", { maxDistance: 8, refDistance: 1.5, clip: E.sfx.button, position: p.worldFeetPosition, volume: 0.5 });
+  heard(ctx, { maxDistance: 8, refDistance: 1.5, clip: E.sfx.button, position: p.worldFeetPosition, volume: 0.5 });
   p.state.lastBy = by; p.state.lastPress = floor;
   if (DEADLY.has(floor)) { p.state.pending = floor; p.state.noconfirm = false; p.state.shut = true; return; }
   c.state.req = { floor, by };
@@ -117,7 +118,7 @@ export const ears = {
   press: (ctx, { by }) => {
     if (ctx.self.state.role !== "panel") return;
     const p = ctx.self.state; p.closed = false; p.ready = true; p.shut = false; p.noconfirm = true; p.pending = null; p.openAt = ctx.now();
-    ctx.emit("playSound", { maxDistance: 8, refDistance: 1.5, clip: E.sfx.button, position: ctx.self.worldFeetPosition, volume: 0.4, pitch: 0.8 });
+    heard(ctx, { maxDistance: 8, refDistance: 1.5, clip: E.sfx.button, position: ctx.self.worldFeetPosition, volume: 0.4, pitch: 0.8 });
   },
   "ui:yes": (ctx, { by }) => { const p = ctx.self.state, c = cab(ctx); if (!p.pending || !c) return; c.state.req = { floor: p.pending, by }; p.pending = null; p.noconfirm = true; },
   "ui:no": (ctx) => { const p = ctx.self.state; p.pending = null; p.noconfirm = true; p.shut = false; },

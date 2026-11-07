@@ -2,6 +2,7 @@
 // lock on to a wanderer they can see, stalk, then lunge and bite. They never cross into the safe room.
 // Body: a Blender crawler (art/smiler/build.py) with baked clips idle, skitter, freeze, lunge-bite, recoil, death.
 // A flashlight held on one makes it flinch (recoil) and lock rigid (freeze) until the beam leaves it.
+import { heard } from "./lib/hear.js";
 import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
 import { raycast } from "builtin/physics";
@@ -46,7 +47,7 @@ export function update(ctx, dt) {
       if (!m.dieAt) {
         m.dieAt = now; w.velocity = { x: 0, y: 0, z: 0 }; w.anim.body = null;
         act(w, "death", { clampWhenFinished: true });
-        ctx.emit("playSound", { clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.9, maxDistance: 35 });
+        heard(ctx, { clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.9, maxDistance: 35 });
       } else if (!m.gone && now - m.dieAt > 1700) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.3, z: pos.z }, script: POOF }); ctx.destroy(w.id); }
       continue;
     }
@@ -65,7 +66,7 @@ export function update(ctx, dt) {
         if (hit) continue;
         best = p; bd = d;
       }
-      if (best && !m.prey) ctx.emit("playSound", { clip: SND("smiler-wet-giggle-hiss-stalking"), position: pos, volume: 1, maxDistance: 30 });
+      if (best && !m.prey) heard(ctx, { clip: SND("smiler-wet-giggle-hiss-stalking"), position: pos, volume: 1, maxDistance: 30 });
       m.prey = best?.id ?? null;
       if (st.horde && players.some((p) => p.id === st.horde)) m.prey = st.horde; // a blackout horde hunts its player wherever they are
       if (best) m.last = { x: best.feetPosition.x, z: best.feetPosition.z, at: now };
@@ -83,14 +84,14 @@ export function update(ctx, dt) {
         const staring = (fx * tx + fz * tz) / tl > Math.cos((L.stareCone * Math.PI) / 180);
         if (staring) speed = L.stareSpeed;
         lit = staring && !!prey.state?.light && pd < FREEZE_RANGE && !m.lunge;
-        if (staring !== !!m.stared) { m.stared = staring; if (!staring) ctx.emit("playSound", { clip: SND("creepy-wet-giggle-close"), position: pos, volume: 0.7, maxDistance: 20 }); }
+        if (staring !== !!m.stared) { m.stared = staring; if (!staring) heard(ctx, { clip: SND("creepy-wet-giggle-close"), position: pos, volume: 0.7, maxDistance: 20 }); }
       }
     }
     else if (m.last && now - m.last.at < 6000) { goal = m.last; speed = L.stalkSpeed; if (Math.hypot(goal.x - pos.x, goal.z - pos.z) < 0.8) m.last = null; }
     else { if (!m.next || Math.hypot(m.next.x - pos.x, m.next.z - pos.z) < 0.5 || now > (m.nextBy ?? 0)) { m.next = neighbor(ctx, pos); m.nextBy = now + 6000; } goal = m.next; speed = 1.3; }
     if (lit !== !!m.lit) {
       m.lit = lit;
-      if (lit) { act(w, "recoil"); ctx.emit("playSound", { clip: SND("smiler-light-flinch-shriek"), position: pos, volume: 0.8, maxDistance: 22 }); }
+      if (lit) { act(w, "recoil"); heard(ctx, { clip: SND("smiler-light-flinch-shriek"), position: pos, volume: 0.8, maxDistance: 22 }); }
     }
     let vx = 0, vz = 0;
     const dx = goal.x - pos.x, dz = goal.z - pos.z, d = Math.hypot(dx, dz);
@@ -99,7 +100,7 @@ export function update(ctx, dt) {
     if (prey && !lit && !m.lunge && pd <= LUNGE.range && now >= (m.bite ?? 0)) {
       m.lunge = { until: now + LUNGE.ms, x: (prey.feetPosition.x - pos.x) / (pd || 1), z: (prey.feetPosition.z - pos.z) / (pd || 1) };
       act(w, "lunge-bite");
-      ctx.emit("playSound", { clip: SND("smiler-lunge-snap-shriek"), position: pos, volume: 1, maxDistance: 26 });
+      heard(ctx, { clip: SND("smiler-lunge-snap-shriek"), position: pos, volume: 1, maxDistance: 26 });
     }
     if (m.lunge) {
       if (now > m.lunge.until) { m.lunge = null; m.bite = now + LUNGE.cooldown * 1000; }
@@ -123,7 +124,7 @@ export function update(ctx, dt) {
       const at = { x: prey.feetPosition.x, y: prey.feetPosition.y + 1.4, z: prey.feetPosition.z };
       const to = { x: -m.lunge.x, y: 0, z: -m.lunge.z }, me = { player: prey.id }, mass = prey.measure?.mass ?? 75;
       ctx.emit("damageNumber", { position: at, value: dmg, color: "#ff4a3a" });
-      ctx.emit("playSound", { clip: SND("creature-bite-snarl-wet"), position: at, volume: 1, maxDistance: 25 });
+      heard(ctx, { clip: SND("creature-bite-snarl-wet"), position: at, volume: 1, maxDistance: 25 });
       ctx.emit("impulse", { target: prey.id, impulse: { x: to.x * mass * LUNGE.pull, y: mass * 1.2, z: to.z * mass * LUNGE.pull } }); // dragged ~1 m in
       ctx.emit("hitstop", { duration: 0.06 }, { audience: me });
       ctx.emit("screenFlash", { color: "#a00a05", duration: 0.3, intensity: 0.5 }, { audience: me });

@@ -1,5 +1,6 @@
 // Level 5's cleanup: Odette the maid lifts any body she walks near onto her shoulder and carries it off on her rounds;
 // a body nobody tends is gone after an hour of play (scripts/l5-staff.js, scripts/l5-rats.js).
+import { heard } from "./lib/hear.js";
 import { speak } from "./lib/l5-people.js";
 const MAIDS = ["l5-odette"], REACH = 5, SETTLE = 20000, CARRY = 25000; // Savi's picks: a body lies 20 s before she'll touch it, she carries it 25 s
 export const updateSchedule = { every: { seconds: 1 } };
@@ -19,7 +20,7 @@ export function update(ctx) {
     const o = ctx.getObject(body.id); if (!o) continue;
     o.ragdoll = null; o.tags = (o.tags ?? []).filter((t) => t !== "container" && t !== "remains");
     o.parent = id; o.feetPosition = { x: 0.1, y: 1.15, z: 0.05 }; o.rotation = { yaw: 90, pitch: 0, roll: 80 };
-    ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-cloth-body-lifted-onto-shoulder-grunt.mp3", position: maid.feetPosition, volume: 0.7, maxDistance: 14 });
+    heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-cloth-body-lifted-onto-shoulder-grunt.mp3", position: maid.feetPosition, volume: 0.7, maxDistance: 14 });
     speak(ctx, maid, ["Another one. On my clean floor.", "Up you come. Don't drip.", "I'll put you somewhere nice. The boiler's nice."][Math.floor(ctx.random() * 3)]);
     s[id] = { body: body.id, at: now };
   }

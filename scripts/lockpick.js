@@ -1,12 +1,13 @@
 // Fallout-style lockpicking: the Lockpick skill gates the lock, then you find the sweet spot.
 // A/D sweeps the bobby pin (0..180°), hold W to turn the lock, S gives up. Turning off the spot strains
 // the pin: hold too long and it snaps. Started by scripts/interact.js (player.state.pick); one pin per snap.
+import { heard } from "./lib/hear.js";
 import { openLoot } from './interact.js'
 import { skillsOf, attrsOf } from './lib/stats.js'
 import { gain } from './player.js'
 
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
-const snd = (ctx, n, v = 0.6) => ctx.emit('playSound', { maxDistance: 22, refDistance: 3, clip: SND(n), position: ctx.self.feetPosition, volume: v }, { audience: { player: ctx.self.id } })
+const snd = (ctx, n, v = 0.6) => heard(ctx, { maxDistance: 22, refDistance: 3, clip: SND(n), position: ctx.self.feetPosition, volume: v }, { audience: { player: ctx.self.id } })
 const note = (ctx, text) => { ctx.self.state.notice = { text, at: ctx.now() } }
 
 // Savi's picks: half-width of the sweet spot grows with skill over the lock's level; partial turn out to +40°
@@ -47,7 +48,7 @@ function handlePickAction(ctx, d) {
       s.pick = null; s.pickP = null; s.pickR = null
       if (pk.kind === 'door') {
         target.state.open = true
-        ctx.emit('playSound', { clip: SND('heavy-metal-door-creak-open'), position: target.state.c ?? target.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: target.feetPosition, radius: 18 } })
+        heard(ctx, { clip: SND('heavy-metal-door-creak-open'), position: target.state.c ?? target.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: target.feetPosition, radius: 18 } })
       } else {
         target.state.name = 'Opened crate'
         openLoot(ctx, target)
@@ -73,7 +74,7 @@ function handlePickAction(ctx, d) {
       s.pick = null; s.pickP = null; s.pickR = null
       if (pk.kind === 'door') {
         target.state.open = true
-        ctx.emit('playSound', { clip: SND('heavy-metal-door-creak-open'), position: target.state.c ?? target.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: target.feetPosition, radius: 18 } })
+        heard(ctx, { clip: SND('heavy-metal-door-creak-open'), position: target.state.c ?? target.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: target.feetPosition, radius: 18 } })
       } else {
         target.state.name = 'Opened crate'
         openLoot(ctx, target)
@@ -100,7 +101,7 @@ function handlePickAction(ctx, d) {
     s.pick = null; s.pickP = null; s.pickR = null
     if (pk.kind === 'door') {
       target.state.open = true
-      ctx.emit('playSound', { clip: SND('heavy-metal-door-creak-open'), position: target.state.c ?? target.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: target.feetPosition, radius: 18 } })
+      heard(ctx, { clip: SND('heavy-metal-door-creak-open'), position: target.state.c ?? target.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: target.feetPosition, radius: 18 } })
     } else {
       target.state.name = 'Opened crate'
       openLoot(ctx, target)
@@ -137,7 +138,7 @@ export function update(ctx, dt) {
       gain(ctx, xp)
       snd(ctx, 'lock-picking-click', 0.8); note(ctx, `[Lockpick ${pk.lv}] The lock gives! +${xp} XP`)
       s.pick = null; s.pickP = null; s.pickR = null
-      if (pk.kind === 'door') { it.state.open = true; ctx.emit('playSound', { clip: SND('heavy-metal-door-creak-open'), position: it.state.c ?? it.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: it.feetPosition, radius: 18 } }) }
+      if (pk.kind === 'door') { it.state.open = true; heard(ctx, { clip: SND('heavy-metal-door-creak-open'), position: it.state.c ?? it.feetPosition, volume: 0.7, maxDistance: 16 }, { audience: { nearby: it.feetPosition, radius: 18 } }) }
       else { it.state.name = 'Opened crate'; openLoot(ctx, it) }
       return
     }

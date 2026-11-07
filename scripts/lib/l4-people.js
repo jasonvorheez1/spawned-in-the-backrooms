@@ -6,6 +6,7 @@
 //   phones     a ringing desk phone nobody's near: the nearest awake resident walks over and answers it
 //   greetings  walk up to someone and they say a line in their faction's voice
 //   amor       the Amor Incrementum office is a mold garden: step in and they warn you, step in again and they shove you out
+import { heard } from "./hear.js";
 import { ROOMS, FOUNTAINS, HALF, facing } from "./level4.js";
 import P from "./data/level4-people.yml";
 const VO = (who, line) => `/cdn/voice-meg-${who}-saying-${line.replace(/[^a-z ]/gi, "").trim().toLowerCase().replace(/ +/g, "-")}.mp3`;
@@ -49,7 +50,7 @@ export function roundsFor(ctx, id, phase) {
 }
 export function speak(ctx, o, t) {
   const now = ctx.now(), d = 1400 + t.length * 60; o.state.line = { t, at: now, d }; o.state.talkAt = now;
-  const p = o.feetPosition; ctx.emit("playSound", { clip: VO(o.state.voice ?? "ale", t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 0.85, refDistance: 3, maxDistance: 18 }, { audience: { nearby: p, radius: 20 } });
+  const p = o.feetPosition; heard(ctx, { clip: VO(o.state.voice ?? "ale", t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 0.85, refDistance: 3, maxDistance: 18 }, { audience: { nearby: p, radius: 20 } });
 }
 // homes: a vacant office per resident (a player's home is never taken), its plate named, a cot and desk inside
 export function settle(ctx, spawnAgent) {

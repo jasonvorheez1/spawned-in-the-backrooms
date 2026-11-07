@@ -1,10 +1,11 @@
 // The noclip sequences' sound and timing. Two moments: you fall into Level 0 the first time you arrive
 // (state.noclipIn, a timestamp), and you clip out through the flickering wall (state.exitAt, written by
 // scripts/player.js). scripts/noclip-ui.js draws both from those timestamps; this plays the sound.
+import { heard } from "./lib/hear.js";
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 function play(ctx, name, volume = 0.8) {
   const p = ctx.self.feetPosition
-  ctx.emit('playSound', { clip: SND(name), position: { x: p.x, y: p.y + 1.2, z: p.z }, volume, maxDistance: 40 }, { audience: { player: ctx.self.id } })
+  heard(ctx, { clip: SND(name), position: { x: p.x, y: p.y + 1.2, z: p.z }, volume, maxDistance: 40 }, { audience: { player: ctx.self.id } })
 }
 export function noclipCue(ctx, d) { play(ctx, d.n, d.v) }
 

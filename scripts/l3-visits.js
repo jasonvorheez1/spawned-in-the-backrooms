@@ -3,6 +3,7 @@
 // A Death Rat pack (Level 5's rats, same model and numbers) surfaces in the maze, roams round its hole, bites the lone or hurt,
 // scatters from light and raised weapons, and goes back down. A kill leaves its body with rat meat.
 // state.force = "samantha" | "rats" starts one now.
+import { heard } from "./lib/hear.js";
 import V from "./lib/data/l3-visits.yml";
 import { LIFT, cellAt, cellCenter, inGamma, zoneAt, N } from "./lib/level3.js";
 import { stepToward, cellNear } from "./lib/maze3path.js";
@@ -36,12 +37,12 @@ function samanthaIn(ctx, now) {
       info: "A very small cat, far from her hotel. She is looking at you.", offers: [["o:feed", "Offer meat"], ["o:refuse", "Refuse"]], home: SAM_HOME, spots: SAM_SPOTS },
   });
   ctx.emit("fx", { position: { x: SAM_HOME.x, y: 0.2, z: SAM_HOME.z }, script: MIST });
-  ctx.emit("playSound", { clip: SND("old-brass-elevator-bell-ding-doors-open"), position: { x: LIFT.x - 0.6, y: 1.2, z: Z5 }, volume: 0.8, maxDistance: 24 });
+  heard(ctx, { clip: SND("old-brass-elevator-bell-ding-doors-open"), position: { x: LIFT.x - 0.6, y: 1.2, z: Z5 }, volume: 0.8, maxDistance: 24 });
 }
 function samanthaOut(ctx) {
   const o = ctx.getObject("l3-samantha"); if (!o) return;
   const a = o.feetPosition; ctx.emit("fx", { position: { x: a.x, y: Math.max(a.y, 0) + 0.2, z: a.z }, script: MIST });
-  ctx.emit("playSound", { clip: SND("soft-magical-whoosh-shimmer"), position: a, volume: 0.5, maxDistance: 14 });
+  heard(ctx, { clip: SND("soft-magical-whoosh-shimmer"), position: a, volume: 0.5, maxDistance: 14 });
   for (const p of ctx.place.players) if (p.state?.talkWith === "l3-samantha") p.state.talkWith = null;
   ctx.destroy("l3-samantha");
 }
@@ -62,7 +63,7 @@ function ratsIn(ctx, now, S) {
   }
   S.rats = { hole, until: now + rr(ctx, V.rats.stay) };
   ctx.emit("fx", { position: { x: hole.x, y: 0.05, z: hole.z }, script: GRIT });
-  ctx.emit("playSound", { clip: SND("rats-scrabbling-up-metal-air-vent-grate"), position: { x: hole.x, y: 0.3, z: hole.z }, volume: 0.9, maxDistance: 26 });
+  heard(ctx, { clip: SND("rats-scrabbling-up-metal-air-vent-grate"), position: { x: hole.x, y: 0.3, z: hole.z }, volume: 0.9, maxDistance: 26 });
   return true;
 }
 function ratsStep(ctx, dt, now, S) {
@@ -72,7 +73,7 @@ function ratsStep(ctx, dt, now, S) {
   for (const r of all) {
     const m = (mem[r.id] ??= {}), pos = r.feetPosition, st = r.state ?? {}, vy = (r.velocity?.y ?? 0) - 18 * dt;
     if (st.corpseAt || st.dead || (st.hp ?? 1) <= 0) {
-      if (!m.deadAt) { m.deadAt = now; setGait(r, m, "still"); if (!st.corpseAt) { const k = killerOf(ctx, pos); becomeCorpse(ctx, r, "Death Rat", ["meat:rat"], k?.feetPosition); r.fx = null; ctx.emit("playSound", { maxDistance: 32, refDistance: 5, clip: SND("rat-death-squeal"), position: pos, volume: 0.8 }); if (k) { k.state.l5rats ??= 0; k.state.l5rats += 1; } } }
+      if (!m.deadAt) { m.deadAt = now; setGait(r, m, "still"); if (!st.corpseAt) { const k = killerOf(ctx, pos); becomeCorpse(ctx, r, "Death Rat", ["meat:rat"], k?.feetPosition); r.fx = null; heard(ctx, { maxDistance: 32, refDistance: 5, clip: SND("rat-death-squeal"), position: pos, volume: 0.8 }); if (k) { k.state.l5rats ??= 0; k.state.l5rats += 1; } } }
       if (now - m.deadAt > 3600000 || (now - m.deadAt > 3000 && !(r.state.items ?? "").length)) { ctx.destroy(r.id); delete mem[r.id]; }
       continue;
     }
@@ -96,7 +97,7 @@ function ratsStep(ctx, dt, now, S) {
         if (flat(t.feetPosition, pos) < R.reach && now >= (m.bite ?? 0)) {
           m.bite = now + rr(ctx, R.biteEvery);
           const at = hit(ctx, t, Math.round(rr(ctx, [R.bite[0], R.bite[1] + 0.99]) - 0.49));
-          ctx.emit("playSound", { maxDistance: 14, refDistance: 2, clip: SND("small-rat-bite-squeak"), position: at, volume: 0.7, pitch: 0.9 + ctx.random() * 0.3 });
+          heard(ctx, { maxDistance: 14, refDistance: 2, clip: SND("small-rat-bite-squeak"), position: at, volume: 0.7, pitch: 0.9 + ctx.random() * 0.3 });
           ctx.emit("fx", { position: { ...at, y: 0.4 }, script: BLOOD });
         }
       } else {
@@ -111,7 +112,7 @@ function ratsStep(ctx, dt, now, S) {
     r.velocity = { x: dx * sp, y: vy, z: dz * sp };
     if (sp) r.rotation = yawTo(dx, dz);
     setGait(r, m, sp === 0 ? "still" : sp <= R.walk ? "walk" : "run");
-    if (sp > 0 && now >= (m.squeak ?? 0)) { m.squeak = now + 4000 + ctx.random() * 9000; ctx.emit("playSound", { clip: SND("rat-squeaks-and-claws-on-wood-floor"), position: pos, volume: 0.45, pitch: 0.85 + ctx.random() * 0.4, maxDistance: 18 }); }
+    if (sp > 0 && now >= (m.squeak ?? 0)) { m.squeak = now + 4000 + ctx.random() * 9000; heard(ctx, { clip: SND("rat-squeaks-and-claws-on-wood-floor"), position: pos, volume: 0.45, pitch: 0.85 + ctx.random() * 0.4, maxDistance: 18 }); }
   }
   if (S.rats && leaving && !alive) S.rats = null;
   return all.length;

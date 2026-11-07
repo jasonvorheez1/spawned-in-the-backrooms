@@ -1,6 +1,7 @@
 // B mode (7 Days / Minecraft style): a ghost of the chosen piece stands on a 1 m grid ahead of you, R turns it 90°,
 // X (or the wheel) picks the next piece, a click builds it if you carry the scrap (player.state.scrap, scripts/player.js).
 // Built pieces are static, tagged breakable: anything that hits them chips them back (scripts/lib/breakables.js).
+import { heard } from "./lib/hear.js";
 import B from './lib/data/breakables.yml'
 import { raycast, overlapPoint } from 'builtin/physics'
 
@@ -51,7 +52,7 @@ function place(ctx, s) {
     material: { pbr: true }, physics: { body: 'static', collider: s.building === 'ramp' ? 'mesh' : 'box' },
     state: { mat: pc.mat, hp: pc.hp, maxHp: pc.hp, name: pc.name, size: Math.max(...pc.size), by: ctx.self.id },
   })
-  ctx.emit('playSound', { clip: `/cdn/moodboard-realistic-gritty/sfx-${B.buildSound}.mp3`, position: { x: at.x, y: at.y + 1, z: at.z }, volume: 0.7, maxDistance: 20 })
+  heard(ctx, { clip: `/cdn/moodboard-realistic-gritty/sfx-${B.buildSound}.mp3`, position: { x: at.x, y: at.y + 1, z: at.z }, volume: 0.7, maxDistance: 20 })
   ctx.emit('fx', { position: { x: at.x, y: at.y + 0.1, z: at.z }, script: `fx
 pop dust burst=8..12 on=disc(.8) life=.5..0.9 v=up(.3..0.7)+sdir()*.4 size=.2..0.35 acc=buoy(.2)+drag(1.5) col=<.62,.55,.4> a=0>.35:.3>.7:.15>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)` })
 }

@@ -1,6 +1,7 @@
 // The lurker pack: pale things that only move when nobody is looking at them. A wanderer who keeps one in view
 // holds it still (and pays sanity for it); look away, or break the line of sight, and it closes the gap fast.
 // They wander the halls like smilers, but never cross into the safe room. Dead lurkers are cleared here.
+import { heard } from "./lib/hear.js";
 import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
 import { raycast } from "builtin/physics";
@@ -58,7 +59,7 @@ function held(ctx, dt) {
     s.sanity = Math.max(0, (s.sanity ?? 100) - h.san);
     const at = { x: p.x, y: p.y + 1.4, z: p.z };
     ctx.emit("damageNumber", { position: at, value: h.dmg, color: "#ff4a3a" });
-    ctx.emit("playSound", { clip: SND("lurker-distorted-tearing-scream"), position: { x: f.x, y: f.y + 2, z: f.z }, volume: 1, maxDistance: 40 });
+    heard(ctx, { clip: SND("lurker-distorted-tearing-scream"), position: { x: f.x, y: f.y + 2, z: f.z }, volume: 1, maxDistance: 40 });
     ctx.emit("screenShake", { intensity: 1.1, duration: 0.9 }, { audience: { player: ctx.self.id } });
     ctx.emit("screenFlash", { color: "#c8a94a", duration: 0.35, intensity: 0.55 }, { audience: { player: ctx.self.id } });
     s.lurkHold = null; drop();
@@ -75,8 +76,8 @@ export function update(ctx, dt) {
     if (st.mesh !== 3) { w.primitive = null; w.model = LURKER_MODEL; w.scale = LURKER_SCALE; st.mesh = 3; m.clip = null; }
     const play = (clip, loop = true) => { if (m.clip !== clip) { m.clip = clip; w.anim.body = { clip: CLIP[clip] ?? clip, loop, clampWhenFinished: !loop }; } };
     if (st.dead) {
-      if (!m.dying) { m.dying = now; play("Death", false); w.velocity = { x: 0, y: -2, z: 0 }; ctx.emit("playSound", { clip: SND("bone-crack-twist"), position: pos, volume: 0.9, maxDistance: 24 }); }
-      if (now - m.dying > 3200 && !m.gone) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1, z: pos.z }, script: POOF }); ctx.emit("playSound", { clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.8, maxDistance: 30 }); ctx.destroy(w.id); }
+      if (!m.dying) { m.dying = now; play("Death", false); w.velocity = { x: 0, y: -2, z: 0 }; heard(ctx, { clip: SND("bone-crack-twist"), position: pos, volume: 0.9, maxDistance: 24 }); }
+      if (now - m.dying > 3200 && !m.gone) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1, z: pos.z }, script: POOF }); heard(ctx, { clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.8, maxDistance: 30 }); ctx.destroy(w.id); }
       continue;
     }
     const eye = { x: pos.x, y: pos.y + 1.6, z: pos.z };
@@ -95,7 +96,7 @@ export function update(ctx, dt) {
         if (((-dx) * ax + (-dz) * az) / (d || 1) > L.lurkerWatchCos) watched = p;
         if (d < bd) { best = p; bd = d; }
       }
-      if (best && !m.prey) ctx.emit("playSound", { clip: SND("bone-crack-twist"), position: pos, volume: 0.8, maxDistance: 24 });
+      if (best && !m.prey) heard(ctx, { clip: SND("bone-crack-twist"), position: pos, volume: 0.8, maxDistance: 24 });
       m.prey = best?.id ?? null;
       if (st.horde && players.some((p) => p.id === st.horde)) m.prey = st.horde; // a blackout horde hunts its player wherever they are
       if (watched && !m.watched) { let k; do k = POSES[Math.floor(ctx.random() * POSES.length)]; while (k === m.pose && POSES.length > 1); m.pose = k; }
@@ -133,7 +134,7 @@ export function update(ctx, dt) {
       m.grab = { id: prey.id, at: now };
       prey.state.lurkHold = { by: w.id, at: now, dmg: Math.round(L.lurkerBite * 1.6 * mu.dmg), san: L.lurkerSanity * 3 };
       const b = prey.behavior; if (Array.isArray(b) && !b.includes(ME)) prey.behavior = [...b, ME];
-      ctx.emit("playSound", { clip: SND("bone-crack-twist"), position: pos, volume: 1, maxDistance: 25 });
+      heard(ctx, { clip: SND("bone-crack-twist"), position: pos, volume: 1, maxDistance: 25 });
       ctx.emit("screenFlash", { color: "#1a160c", duration: 0.25, intensity: 0.6 }, { audience: { player: prey.id } });
     }
   }

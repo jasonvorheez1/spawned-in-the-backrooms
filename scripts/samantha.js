@@ -4,6 +4,7 @@
 // (state.offers) ring ears.talkopt: meat buys a reading (premium = true facts from the player's world, poor = an insult);
 // no meat or a refusal is warned once, then claws. She never kills (hp floors at 1) and cannot be killed (she blinks away).
 // Numbers and lines: scripts/lib/data/samantha.yml.
+import { heard } from "./lib/hear.js";
 import { findPath } from 'builtin/nav'
 import { EXITS, ZONES, zoneAt, ZONE_NAMES } from './lib/level5.js'
 import { describe } from './lib/items.js'
@@ -37,7 +38,7 @@ function say(ctx, p, line, mood = 'calm', voice = true) {
     const all = { ...(p.state.talks ?? {}) }; all[ME] = [...(all[ME] ?? []), ['n', line]].slice(-(TK.memory ?? 12)); p.state.talks = all
   }
   me.state.line = { t: line, at: now, d }
-  if (voice) ctx.emit('playSound', { clip: VOX(line), position: { x: pos.x, y: pos.y + 0.4, z: pos.z }, volume: 0.75, refDistance: 1.5, maxDistance: 9 }, { audience: { nearby: pos, radius: 10 } })
+  if (voice) heard(ctx, { clip: VOX(line), position: { x: pos.x, y: pos.y + 0.4, z: pos.z }, volume: 0.75, refDistance: 1.5, maxDistance: 9 }, { audience: { nearby: pos, radius: 10 } })
 }
 function mark(p, t) { const all = { ...(p.state.talks ?? {}) }; all[ME] = [...(all[ME] ?? []), ['x', t]].slice(-(TK.memory ?? 12)); p.state.talks = all }
 const meatOf = (p) => S.order.find((m) => (p?.state?.meat?.[m] ?? 0) > 0)
@@ -69,10 +70,10 @@ function plan(ctx, now) {
 function teleport(ctx, to, y = 0) {
   const me = ctx.self, a = me.feetPosition
   ctx.emit('fx', { position: { x: a.x, y: a.y + 0.2, z: a.z }, script: BLINK })
-  ctx.emit('playSound', { clip: SND('soft-magical-whoosh-shimmer'), position: a, volume: 0.45, maxDistance: 14 })
+  heard(ctx, { clip: SND('soft-magical-whoosh-shimmer'), position: a, volume: 0.45, maxDistance: 14 })
   me.feetPosition = { x: to.x, y, z: to.z }; me.visible = true
   ctx.emit('fx', { position: { x: to.x, y: y + 0.2, z: to.z }, script: BLINK })
-  ctx.emit('playSound', { clip: SND('soft-magical-whoosh-shimmer'), position: { x: to.x, y, z: to.z }, volume: 0.45, maxDistance: 14 })
+  heard(ctx, { clip: SND('soft-magical-whoosh-shimmer'), position: { x: to.x, y, z: to.z }, volume: 0.45, maxDistance: 14 })
   const ses = me.session; ses.y = y; ses.path = null; ses.perch = null
 }
 function rest(ctx, now, kind) { const ses = ctx.self.session; ses.mode = kind; ses.until = now + rr(kind === 'groom' ? S.groom : S.sit, ctx); clip(ctx, kind === 'groom' ? 'Groom' : 'Idle') }
@@ -85,12 +86,12 @@ function enrage(ctx, pid, now) {
   me.state.target = pid
   if (p.state?.talkWith === me.id) p.state.talkWith = null
   say(ctx, p, S.lines.rage, 'angry')
-  ctx.emit('playSound', { clip: SND('angry-cat-hiss-yowl'), position: me.feetPosition, volume: 0.9, maxDistance: 18 })
+  heard(ctx, { clip: SND('angry-cat-hiss-yowl'), position: me.feetPosition, volume: 0.9, maxDistance: 18 })
 }
 function vanish(ctx, now) {
   const me = ctx.self, ses = me.session, a = me.feetPosition
   ctx.emit('fx', { position: { x: a.x, y: a.y + 0.2, z: a.z }, script: BLINK })
-  ctx.emit('playSound', { clip: SND('soft-magical-whoosh-shimmer'), position: a, volume: 0.5, maxDistance: 14 })
+  heard(ctx, { clip: SND('soft-magical-whoosh-shimmer'), position: a, volume: 0.5, maxDistance: 14 })
   me.feetPosition = { x: HOME(ctx).x, y: -4, z: HOME(ctx).z }; me.visible = false; me.state.target = null; me.state.away = now
   ses.mode = 'gone'; ses.until = now + rr(S.awayMs, ctx); ses.rage = null; ses.y = 0
   for (const p of ctx.place.players) if (p.state?.talkWith === me.id) p.state.talkWith = null
@@ -111,7 +112,7 @@ function pounce(ctx, dt, now) {
   ctx.emit('damageNumber', { position: hit, value: take, color: '#ff6a5a' })
   ctx.emit('fx', { position: hit, script: CLAW })
   ctx.emit('slash', { position: hit, size: 0.55, shape: 'crescent' })
-  ctx.emit('playSound', { clip: SND(bite ? 'cat-bite-snarl' : 'cat-claw-scratch-flesh'), position: hit, volume: 0.9, maxDistance: 16 })
+  heard(ctx, { clip: SND(bite ? 'cat-bite-snarl' : 'cat-claw-scratch-flesh'), position: hit, volume: 0.9, maxDistance: 16 })
   ctx.emit('screenShake', { intensity: 0.35, duration: 0.22 }, { audience: { player: p.id } })
   ctx.emit('screenFlash', { color: '#8a0d0d', duration: 0.18, intensity: 0.35 }, { audience: { player: p.id } })
   // she lunges past and turns: a hop to the other side keeps it fast and hard to track
@@ -152,7 +153,7 @@ function feed(ctx, p) {
   if (ses.warn?.pid === p.id) ses.warn = null
   mark(p, `you gave Samantha ${name.toLowerCase()}`)
   say(ctx, p, premium ? S.lines.premium : S.lines.poor, premium ? 'happy' : 'annoyed')
-  ctx.emit('playSound', { clip: SND('cat-eating-chewing-purr'), position: me.feetPosition, volume: 0.6, maxDistance: 8 })
+  heard(ctx, { clip: SND('cat-eating-chewing-purr'), position: me.feetPosition, volume: 0.6, maxDistance: 8 })
   if (premium) {
     p.state.sanity = Math.min(100, (p.state.sanity ?? 0) + 50)
     p.state.hp = Math.min(100, (p.state.hp ?? 100) + 30)
@@ -249,7 +250,7 @@ export function update(ctx, dt) {
     if (d < 0.12) {
       if (++ses.pi < ses.path.length) return
       const pc = ses.perch
-      if (pc) { ses.offX = a.x - pc.x; ses.offZ = a.z - pc.z; me.feetPosition = { x: pc.x, y: pc.y, z: pc.z }; ses.y = pc.y; rest(ctx, now, 'sit'); ses.mode = 'perched'; ses.perch = null; ctx.emit('playSound', { clip: SND('soft-cat-jump-landing-thump'), position: me.feetPosition, volume: 0.35, maxDistance: 8 }) }
+      if (pc) { ses.offX = a.x - pc.x; ses.offZ = a.z - pc.z; me.feetPosition = { x: pc.x, y: pc.y, z: pc.z }; ses.y = pc.y; rest(ctx, now, 'sit'); ses.mode = 'perched'; ses.perch = null; heard(ctx, { clip: SND('soft-cat-jump-landing-thump'), position: me.feetPosition, volume: 0.35, maxDistance: 8 }) }
       else rest(ctx, now, ctx.random() < 0.25 ? 'groom' : 'sit')
       return
     }

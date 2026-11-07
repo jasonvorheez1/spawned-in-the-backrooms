@@ -1,6 +1,7 @@
 // A threshold between levels: walk into it and you come out of the matching door on the other side,
 // behind a short black transition (scripts/ui.js draws it from player.state.xfer).
 // Each door's partner: the arrival marker its sim lays just inside the door you come through.
+import { heard } from "./lib/hear.js";
 const PAIR = {
   "l1-back": "main#main-from-l1", "l1-onward": "level2#l2-from-l1",
   "l2-back": "level1#l1-from-l2", "l2-to-l3": "level3#l3-from-l2",
@@ -11,6 +12,6 @@ export function onTriggerEnter(ctx, other) {
   if (!other?.state || other.state.level == null || !ctx.self.state.to) return;
   const key = String(ctx.self.id).split("/").pop();
   ctx.emit("screenFlash", { color: "#000000", duration: 0.9, intensity: 1 }, { audience: { player: other.id } });
-  ctx.emit("playSound", { maxDistance: 22, refDistance: 3, clip: "/cdn/moodboard-realistic-gritty/sfx-static-burst-glitch-threshold.mp3", position: other.feetPosition, volume: 0.8 }, { audience: { player: other.id } });
+  heard(ctx, { maxDistance: 22, refDistance: 3, clip: "/cdn/moodboard-realistic-gritty/sfx-static-burst-glitch-threshold.mp3", position: other.feetPosition, volume: 0.8 }, { audience: { player: other.id } });
   ctx.cross(other, PAIR[key] ?? ctx.self.state.to);
 }

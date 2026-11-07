@@ -1,6 +1,7 @@
 // Samantha: The Beverly Room psychic cat (Wikidot Backrooms Level 5 lore).
 // A sleek tuxedo cat with glowing golden eyes that communicates telepathically.
 // Trades fortunes, predictions, and blessings for meat cuts (player.state.meat).
+import { heard } from "./lib/hear.js";
 import { MEAT } from "./lib/items.js";
 import { faceMorph, HEAD_ID } from "./lib/critter-model.js";
 
@@ -90,7 +91,7 @@ export const ears = {
       ctx.self.session.fedAt = ctx.now();
 
       // Play telepathic chime/purr
-      ctx.emit("playSound", {
+      heard(ctx, {
         clip: SND_PURR,
         position: ctx.self.feetPosition,
         volume: 0.7,
@@ -124,7 +125,7 @@ export const ears = {
     }
 
     // No meat carried
-    ctx.emit("playSound", {
+    heard(ctx, {
       clip: SND_HISS,
       position: ctx.self.feetPosition,
       volume: 0.5,
@@ -150,7 +151,7 @@ export const ears = {
     dx /= d; dz /= d;
 
     ctx.emit("impulse", { target: by, impulse: { x: dx * 650, y: 120, z: dz * 650 } });
-    ctx.emit("playSound", { clip: SND_HISS, position: me, volume: 0.9, maxDistance: 24 });
+    heard(ctx, { clip: SND_HISS, position: me, volume: 0.9, maxDistance: 24 });
     ctx.emit("screenFlash", { color: "#8a2be2", duration: 0.4, intensity: 0.6 }, { audience: { player: by } });
 
     who.state.hp = Math.max(1, (who.state.hp ?? 100) - 15);

@@ -4,6 +4,7 @@
 // collider never shoves it: sitting down it glides in the seat's own frame from where it stood onto the spot and turns to
 // face out while the sit pose blends in; standing it steps forward, the pose blends out, and the seat lets it go.
 // scripts/camera.js pulls the eye out to third person through both glides.
+import { heard } from "./hear.js";
 export const SIT_S = 0.7, STAND_S = 0.55
 const LIFT = 0.1 // Savi's pick: the sit clip's hips sat below the cushion; a seat's own state.seat.y overrides
 export const SIT_CLIP = { m: 'cdn/clip-sit-loop.glb', f: 'cdn/clip-sit-female-loop.glb' }
@@ -55,7 +56,7 @@ export function sitDown(ctx, seat) {
   s.sit = { id: seat.id, i: best.i, lx: best.lx, lz: best.lz, ly: best.ly, fx: lp.x, fz: lp.z, fromYaw, at: ctx.now(), phase: 'down' }
   me.anim.sit = { clip: SIT_CLIP[sexOf(me)], loop: 'loop', weight: 1, blendIn: SIT_S }
   const w = spotsOf(seat)[best.i]
-  ctx.emit('playSound', { clip: SIT_SND, position: { x: w.x, y: w.y + 0.5, z: w.z }, volume: 0.45, maxDistance: 8 }, { audience: { nearby: w, radius: 10 } })
+  heard(ctx, { clip: SIT_SND, position: { x: w.x, y: w.y + 0.5, z: w.z }, volume: 0.45, maxDistance: 8 }, { audience: { nearby: w, radius: 10 } })
   return true
 }
 export function standUp(ctx) {
@@ -64,7 +65,7 @@ export function standUp(ctx) {
   me.state.sit = { ...s.sit, phase: 'up', at: ctx.now() }
   me.anim.sit = null
   const p = me.worldFeetPosition ?? me.feetPosition
-  ctx.emit('playSound', { clip: STAND_SND, position: { x: p.x, y: p.y + 0.5, z: p.z }, volume: 0.4, maxDistance: 8 }, { audience: { nearby: p, radius: 10 } })
+  heard(ctx, { clip: STAND_SND, position: { x: p.x, y: p.y + 0.5, z: p.z }, volume: 0.4, maxDistance: 8 }, { audience: { nearby: p, radius: 10 } })
 }
 const ease = (k) => k * k * (3 - 2 * k)
 const lerpYaw = (a, b, k) => a + ((((b - a) + 540) % 360) - 180) * k

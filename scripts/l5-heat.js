@@ -2,6 +2,7 @@
 // by the furnaces and boilers, cools under an almond-water leak or outside; above HEAT.hurtAt it drains hp), and the floor
 // steam vents: a 1 s hiss and wisps (the tell), then a jet that scalds anyone standing in it once per burst.
 // Numbers and places: scripts/lib/l5-boiler-plan.js
+import { heard } from "./lib/hear.js";
 import { zoneAt } from "./lib/level5.js";
 import { FURNACES, MACHINES, LEAKS, VENTS, VENT, HEAT } from "./lib/l5-boiler-plan.js";
 export const updateSchedule = { every: { seconds: 0.5 } };
@@ -26,8 +27,8 @@ export function update(ctx, dt) {
     if (ph !== was?.ph) {
       ss.vent[v.id] = { ph, hit: {} };
       const pos = { x: v.x, y: 0.05, z: v.z };
-      if (ph === "tell") { ctx.emit("fx", { position: pos, script: TELL }); ctx.emit("playSound", { clip: G("pressure-valve-rising-hiss"), position: pos, volume: 0.5, maxDistance: 16 }); }
-      if (ph === "jet") { ctx.emit("fx", { position: pos, script: JET }); ctx.emit("playSound", { clip: G("steam-pipe-burst-loud-hiss"), position: pos, volume: 0.9, maxDistance: 26 }); }
+      if (ph === "tell") { ctx.emit("fx", { position: pos, script: TELL }); heard(ctx, { clip: G("pressure-valve-rising-hiss"), position: pos, volume: 0.5, maxDistance: 16 }); }
+      if (ph === "jet") { ctx.emit("fx", { position: pos, script: JET }); heard(ctx, { clip: G("steam-pipe-burst-loud-hiss"), position: pos, volume: 0.9, maxDistance: 26 }); }
     }
     if (ph === "jet") for (const p of players) {
       const f = p.feetPosition; if (!f || f.y > VENT.height - 0.5 || d2(f, v) > VENT.radius) continue;
