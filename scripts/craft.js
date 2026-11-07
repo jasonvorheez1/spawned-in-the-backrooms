@@ -7,7 +7,7 @@ import C from './lib/data/craft.yml'
 import B from './lib/data/breakables.yml'
 import { skillsOf, SKILLS, canCarry } from './lib/stats.js'
 import { takeToken, gain } from './player.js'
-import { recipeStatus } from './lib/craft.js'
+import { recipeStatus, maxMakes, CATS } from './lib/craft.js'
 
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
@@ -23,6 +23,7 @@ export function onInput(ctx, input) {
 
 function act(ctx, s, d) {
   if (d.k === 'close') { s.craftOpen = ''; return }
+  if (d.k === 'tab') { if (CATS.some(([c]) => c === d.c)) s.craftTab = d.c; return }
   if (d.k !== 'make' || !s.craftOpen) return
   const id = String(d.id), r = C.recipes[id]; if (!r) return
   const st = recipeStatus(s, id)
@@ -30,12 +31,19 @@ function act(ctx, s, d) {
   if (!st.benchOk) return deny('Needs a workbench')
   if (!st.skillOk) return deny(`Needs ${SKN[r.skill[0]]} ${r.skill[1]}`)
   if (st.lack.length) return deny(`Missing ${st.lack.map((k) => B.scrap[k]?.name ?? k).join(', ')}`)
-  const cw = canCarry(s, r.out[0] === 'ammo' ? 'ammo' : r.out[0]); if (!cw.ok) return deny(cw.msg)
-  const sc = { ...s.scrap }; for (const [k, n] of Object.entries(r.in)) sc[k] -= n; s.scrap = sc
-  const out = [...r.out]
-  if (r.skill && ctx.random() < Math.max(0, st.got - st.need) / 100) out.push(r.out[0]) // spare skill: an extra one
-  for (const t of out) takeToken(ctx, t)
-  note(s, ctx, `Made ${r.name}${out.length > r.out.length ? ' (+1 extra)' : ''}`)
+  const want = d.n === 'max' ? maxMakes(s, id) : Math.max(1, Math.min(10, +d.n || 1)) // ×1, ×5 or MAX from the menu
+  let made = 0, extra = 0, why = ''
+  for (let i = 0; i < want && maxMakes(s, id) > 0; i++) {
+    const cw = canCarry(s, r.out[0] === 'ammo' ? 'ammo' : r.out[0]); if (!cw.ok) { why = cw.msg; break }
+    const sc = { ...s.scrap }; for (const [k, n] of Object.entries(r.in)) sc[k] -= n; s.scrap = sc
+    const out = [...r.out]
+    if (r.skill && ctx.random() < Math.max(0, st.got - st.need) / 100) { out.push(r.out[0]); extra++ } // spare skill: an extra one
+    for (const t of out) takeToken(ctx, t)
+    made++
+  }
+  if (!made) return deny(why || 'Nothing made')
+  gain(ctx, (r.skill?.[1] ?? 5) * 0.2 * made) // a little XP for every make, more for harder recipes (Savi's pick)
+  note(s, ctx, `Made ${r.name}${made > 1 ? ' ×' + made : ''}${extra ? ` (+${extra} extra)` : ''}${why ? ' · ' + why : ''}`)
   heard(ctx, { clip: SND(r.bench ? 'hammer-nail-wood-build' : 'bandage-wrap-cloth'), position: ctx.self.feetPosition, volume: 0.6, maxDistance: 14 })
 }
 
