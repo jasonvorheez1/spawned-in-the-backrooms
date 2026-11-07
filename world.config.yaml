@@ -78,6 +78,9 @@ inputs:
       touch:
         button: false
     dress: {}
+    talk: {}
+    talkdo: {}
+    shop: {}
     build:
       keys:
         - b

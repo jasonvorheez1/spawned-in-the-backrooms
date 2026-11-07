@@ -172,7 +172,7 @@ function press(ctx) {
   if (!f) return
   const it = ctx.getObject(f.id)
   if (!it || it.state?.taken) return
-  if (f.tag === 'npc') { if (it.state?.dead) { if (it.state.items !== undefined) openLoot(ctx, it) } else talk(ctx, it); return }
+  if (f.tag === 'npc') { if (it.state?.dead) { if (it.state.items !== undefined) openLoot(ctx, it) } else if (it.state?.angry?.[ctx.self.id]) talk(ctx, it); else { ctx.self.state.talkWith = it.id; ctx.self.state.shopOpen = null; it.state.talkAt = ctx.now(); it.state.talkTo = ctx.self.id } return } // the conversation card (scripts/talk.js); the old services sit on its buttons
   if (f.tag === 'container') { openLoot(ctx, it); return }
   if (f.tag === 'door') { useDoor(ctx, it); m.key = ''; refocus(ctx, true); return }
   const r = takeToken(ctx, tokenOf(f.tag, it))

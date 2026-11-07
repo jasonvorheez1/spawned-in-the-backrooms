@@ -9,6 +9,7 @@ import { animate } from "builtin/tween";
 import G from "./lib/data/meg.yml";
 import { npcState, npcMul, lookOfNpc, dmgAfterArmor } from "./lib/stats.js";
 import CHAT from "./lib/data/chatter.yml";
+import TK from "./lib/data/talk.yml";
 const SHOT = "/cdn/moodboard-realistic-gritty/sfx-pistol-gunshot-concrete-echo.mp3";
 const FLASH = `fx
 pop flash burst=1 life=.06 size=.35 col=hdr(5,3.4,1.4) a=1>0 sz=$size r=sprite(soft-disc,add)
@@ -160,7 +161,10 @@ export function update(ctx, dt) {
   // talking: interact.js stamps state.talkAt and talkTo when a player presses E on them
   const talking = s.talkAt && now - s.talkAt < 2600;
   if (talking !== !!m.talking) { m.talking = talking; me.anim.talk = talking ? { clip: "cdn/clip-talk-loop.glb", loop: "loop", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } } : null; }
-  const home = s.home ?? me.feetPosition;
+  // a companion a player talked into tagging along (scripts/talk.js): their leader is home, so it walks after them and fights what comes at them
+  let lead = s.follow ? ctx.place.players.find((p) => p.id === s.follow) : null;
+  if (s.follow) { if (lead) m.lostAt = 0; else m.lostAt ||= now; if (s.angry?.[s.follow] || (!lead && now - m.lostAt > 20000)) { s.follow = null; lead = null; } }
+  const home = lead ? lead.feetPosition : (s.home ?? me.feetPosition);
   const t = pickTarget(ctx, me, m);
   const tid = t && flat(t.feetPosition, home) < G.leash ? t.id : null;
   if (tid !== (m.barkT ?? null)) {
@@ -182,7 +186,8 @@ export function update(ctx, dt) {
     return;
   }
   aim(me, m, null);
-  if (flat(home, me.feetPosition) > 1) { gait(me, m, "walk"); moveAlong(ctx, me, m, home, G.walk, dt); return; }
+  if (lead) { const d = flat(home, me.feetPosition); if (d > TK.join.near) { const run = d > TK.join.run; gait(me, m, run ? "run" : "walk"); moveAlong(ctx, me, m, home, run ? G.run : G.walk, dt); return; } }
+  else if (flat(home, me.feetPosition) > 1) { gait(me, m, "walk"); moveAlong(ctx, me, m, home, G.walk, dt); return; }
   stop(me, dt); gait(me, m, "idle"); m.path = null;
   // at the post: turn to whoever walks up, wave once (not at someone the camp is at war with)
   let near = null, best = 7;
