@@ -1212,11 +1212,11 @@ l5-geo:
   primitive: {kind: scripted, script: scripts/level5-geo.js}
   receiveShadow: true
 l5-hall-cart:
-  feetPosition: {x: -7.3, y: 0, z: 11.4}
+  feetPosition: {x: -10.6, y: 0, z: 12.4}
   id: l5-hall-cart
   physics: static
   primitive: {kind: scripted, params: {kind: cart}, script: scripts/l5-hall-geo.js}
-  rotation: {pitch: 0, yaw: 62}
+  rotation: {yaw: 90}
   state: {hp: 120, items: "meat:chicken,almond", kind: cart, mat: metal, maxHp: 120, name: Room-service cart (under the cloche)}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
 l5-hall-corrN-console0:
@@ -1664,7 +1664,7 @@ l5-hall-gclock:
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
 l5-hall-hatstand:
-  feetPosition: {x: -43.6, y: 0, z: 6.6}
+  feetPosition: {x: -43.6, y: 0, z: 4.9}
   id: l5-hall-hatstand
   physics: static
   primitive: {kind: scripted, params: {kind: hatstand}, script: scripts/l5-hall-geo.js}
