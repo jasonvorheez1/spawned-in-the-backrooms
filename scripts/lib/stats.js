@@ -13,6 +13,7 @@
 // Attributes live in player.state.attr as "5,5,5,5,5,5,5" (1 to 10); skills in player.state.skl as the points spent
 // (13 numbers), tagged skills in player.state.tags ("guns,sneak,lockpick").
 import W from './weapons.js'
+import { wornDR, afterDR, parseCloth } from './clothes.js'
 
 export const ATTRS = [
   { k: 'h', name: 'Hardiness', short: 'HAR', info: 'Carry weight, melee and unarmed damage' },
@@ -87,6 +88,8 @@ export function derived(s) {
     gun: dmgMul(s, { ranged: true }),
     crit: 0.03 + a.l * 0.012,
     scav: Math.min(0.5, a.l * 0.012), // the chance of one extra find in a container
+    clothFind: 0.5 + a.o * 0.07 + a.l * 0.03, // Observation (Perception) spots the wearable, Luck helps: x1 at O5 L5, x1.35 at O10 (Savi's pick)
+    dr: wornDR(s?.look), // damage resistance from worn clothes (scripts/lib/data/clothes.yml)
     sneak: Math.max(0.35, 1 - (k.sneak - 15) * 0.0065),
     heal: 1 + (k.survival - 15) * 0.006, // almond water, rations
     healMed: 1 + (k.medicine - 15) * 0.008, // bandages and the medic
@@ -104,12 +107,14 @@ export function weaponWeight(k) { const w = W[k]; return w ? (w.weight ?? (w.ran
 export function tokenWeight(token) {
   if (token.startsWith('weapon:')) return weaponWeight(token.slice(7))
   if (token.startsWith('book:')) return FIXED.book
+  if (token.startsWith('cloth:')) return parseCloth(token)?.row.kg ?? 0.3
   return FIXED[token] ?? 0.2
 }
 // what the wanderer is carrying now: almond water 0.5 each, rounds 0.03 each, shells 0.07, every owned weapon
 export function carried(s) {
   let kg = (s.almonds ?? 0) * FIXED.almond + (s.ammo ?? 0) * 0.03 + (s.shells ?? 0) * 0.07
   for (const k of String(s.weapons ?? '').split(',').filter(Boolean)) kg += weaponWeight(k)
+  for (const t of String(s.clothes ?? '').split(',').filter(Boolean)) kg += tokenWeight(t) // spare clothes; what's worn weighs nothing
   return Math.round(kg * 10) / 10
 }
 // can this token be taken, and if not why
@@ -121,6 +126,11 @@ export function canCarry(s, token) {
 }
 // how much slower the weight makes you when you are over the limit
 export const burden = (s) => { const cap = derived(s).carry, now = carried(s); return now <= cap ? 1 : Math.max(0.5, 1 - (now - cap) / cap) }
+
+// ---- armor: one rule for every hit on a critter (player or NPC) from what it wears. look = player.state.look or an NPC's look
+export const dmgAfterArmor = (look, dmg) => afterDR(wornDR(look), dmg)
+// an NPC's look: its state.look, else the params its critter body was drawn from
+export const lookOfNpc = (o) => o?.state?.look ?? (o?.primitive?.script === 'scripts/critter-geo.js' ? o.primitive.params : null)
 
 // ---- creatures: every individual rolls its own attributes around its species' template
 const TEMPLATE = {
