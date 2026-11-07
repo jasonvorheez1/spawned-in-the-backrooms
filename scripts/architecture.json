@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 172,
-  "updatedAt": "2026-11-07T02:26:33.556Z",
-  "summary": "The Backrooms: Level 0 is a multiplayer survival game set in a persistent yellow maze: players scavenge, fight smilers and lurkers, manage survival and progress toward an exit. world.config.yaml wires the main and debug places, player/camera, inputs and HUD; shared maze, combat and loot modules drive place and player behavior. Player avatars are either customizable procedural critters or uploaded Tower Unite models, while local first-person weapons and the camera have a separate viewmodel path.",
+  "basedOnSpecVersion": 182,
+  "updatedAt": "2026-11-07T02:35:54.296Z",
+  "summary": "The Backrooms: Level 0 is a multiplayer survival game set in a persistent yellow maze: players scavenge, fight smilers and lurkers, manage survival and progress toward an exit. world.config.yaml wires the main and debug places, player/camera, inputs and HUD; shared maze, combat and loot modules drive place and player behavior. Player avatars are customizable procedural critters or uploaded Tower Unite models, while local first-person weapons and camera use a separate viewmodel path.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0's nine-cell maze and safe hub; x0z0.scene holds hub props and modeling-studio display; places/main/sim.js seeds maze events, shifting walls, stairs, loot, crates and enemies.",
@@ -54,7 +54,7 @@
     "places/main/sim.js uses scripts/lib/loot.js to spawn loose loot and supply crates; scripts/player.js dropLoot creates container remains for defeated enemies; scripts/interact.js removes emptied remains.",
     "wardrobe (C), emote (T), dress action → scripts/critter.js onInput → player.state.look, saved outfits and creator controls → scripts/wardrobe-ui.js renders tabs/sliders/actions through scripts/ui.js.",
     "scripts/critter.js turns player.state.look into params for scripts/critter-geo.js; critter geometry powers the replicated body and local wardrobe mirror, with mood clips and bone scaling for ears/tail/blinks.",
-    "wardrobe model upload → scripts/ui.js plyUpload → scripts/lib/plyimport.js converts .plymodel to GLB and uploads it → dress modelUrl action → critter.js sets player.model and the local preview; named models come from critter.yml.",
+    "wardrobe imported-model upload control → scripts/ui.js plyUpload → scripts/lib/plyimport.js parses .plymodel, converts to GLB and uploads it → dress modelUrl action → critter.js sets player.model and the local preview; named models come from critter.yml.",
     "player combat writes player.state HP/sanity/weapons/ammo/ADS/reload and attack markers → scripts/ui.js HUD; ranged/melee attacks affect tagged smiler/lurker state, whose updates damage players and reward/drop loot on death.",
     "scripts/player.js reload callbacks update loaded magazine and reserve counts; reload token/equipped checks reject stale callbacks, while shotgun reload is shell-by-shell and can be interrupted by firing.",
     "scripts/player.js spawns camera-attached viewmodel and publishes vm/swing/reload/equip markers → scripts/camera.js calls scripts/lib/vmpose.js each display frame using weapons.yml tuning.",
@@ -66,7 +66,7 @@
     "scripts/smilers.js and scripts/lurkers.js - parallel enemy loops share player targeting, maze path/line checks, bite/death/effect patterns; smilers react to light and eye contact, lurkers to gaze-freeze and sanity.",
     "scripts/camera.js + scripts/lib/vmpose.js - display-frame camera/viewmodel motion varied by weapon recoil, reload/sight/muzzle positions and melee charge tuning in weapons.yml.",
     "scripts/lib/data/sounds.yml - named player action sounds map to CDN variants; scripts/player.js rotates takes and falls back for unmapped names.",
-    "scripts/critter-geo.js - one procedural critter rig varies across 13 species, sex, body sliders, face/eye/mark choices and clothing/accessory slots; critter.js layers mood motion, blink/twitch and wardrobe mirror.",
+    "scripts/critter-geo.js - one procedural critter rig varies across 13 species, sex, body sliders, face/eye/mark choices and clothing/accessory slots; layered cloth uses solid fabric with shaded hems/cuffs, and tops cover the bust without fur showing through.",
     "scripts/lib/loot.js + scripts/lib/items.js - shared item-token vocabulary used both for loose floor pickups and randomized crate/enemy-remains contents, with take rules handled by player/interact.",
     "places/debug/cells/* tagged almond pickups - repeated test props reuse the shared uploaded bottle model while retaining almond tags."
   ],
@@ -75,11 +75,11 @@
     "scripts/flower.js, scripts/grass.js, scripts/grass-look.js and scripts/reed.js - no active terrain layers or placed references; main/debug terrain is off."
   ],
   "migrationNotes": [
-    "scripts/lib/maze.js and scripts/lib/data/level0.yml are a coupled layout/gameplay contract: geometry, zones, spawning and AI must stay aligned; the maze uses 36 cells at 4 metres each around HALF, with 3m walls.",
-    "The safe hub spans indices 16–19 on both axes; doorway geometry, zone logic and enemy restrictions depend on the shared definition; maze exit is cell (0,33).",
+    "scripts/lib/maze.js and scripts/lib/data/level0.yml are a coupled layout/gameplay contract: geometry, zones, spawning and AI must stay aligned; the maze uses 36 cells at 4 metres each around HALF, with 3m walls; the safe hub spans indices 16–19 and the exit is cell (0,33).",
     "Player behavior ordering is intentional: humanoid-locomotion.js before player.js, then interact.js and critter.js; locomotion reads prior movement before player control writes velocity.",
-    "Inventory/container items are comma-separated tokens (almond, ammo, shells, weapon:<kind>); scripts/lib/items.js describes tokens and scripts/player.js takeToken applies them. Do not reintroduce pickup-on-touch in place of interact ray targeting.",
-    "critter-geo.js bone names Tail, Tail1, EarL/EarR and LidL/LidR are shared by jiggle, mood and blink; gait and mood tracks must not compete. Preserve these names and the toe/limb rig weighting.",
+    "Inventory/container items are comma-separated tokens (almond, ammo, shells, weapon:<kind>); scripts/lib/items.js describes tokens and scripts/player.js takeToken applies them. Interaction ray targeting, not touch, consumes pickups.",
+    "critter-geo.js bone names Tail, Tail1, EarL/EarR and LidL/LidR are shared by jiggle, mood and blink; gait and mood tracks must not compete. Preserve bone names and toe/limb rig weighting; keep layered clothing outside the body/bust surface.",
+    "scripts/lib/plyimport.js supports MODL block tables with variable offsets/vertex strides and infers Y-up versus Z-up before orienting models to game forward; keep index bounds and texture extraction aligned with the vertex block layout.",
     "weapons.yml keys/order, ammoType, magSize, ADS/recoil units and melee charge fields couple cycling, reload, loot, debug stations, UI, geometry and vmpose; muzzle offsets are camera-relative."
   ]
 }
