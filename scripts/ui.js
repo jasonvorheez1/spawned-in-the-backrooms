@@ -228,8 +228,8 @@ export default function render(ctx, player) {
     </div>
   </div>` : ''}
 
-  ${s.xpPop && now - s.xpPop.at < 2600 ? `<div id="xp${s.xpPop.at}" style="position:absolute;left:28px;bottom:178px;font-size:15px;letter-spacing:.08em;color:oklch(0.86 0.13 85);text-shadow:0 0 8px rgba(255,190,80,.45);animation:hud-fade 2.6s forwards">+${s.xpPop.n} XP</div>` : ''}
-  ${s.lvlPrompt && !s.sheetOpen ? `<div style="position:absolute;left:28px;bottom:200px;font-size:13px;letter-spacing:.1em;color:oklch(0.86 0.13 85);animation:blink 1.4s ease-in-out infinite">LEVEL UP · press ${(lab('sheet', 'K') + '').toUpperCase()} to spend points</div>` : ''}
+  ${s.xpPop && now - s.xpPop.at < 2600 ? `<div id="xp${s.xpPop.at}" style="position:absolute;left:22px;bottom:250px;font-size:15px;letter-spacing:.08em;color:oklch(0.86 0.13 85);text-shadow:0 0 8px rgba(255,190,80,.45);animation:hud-fade 2.6s forwards">+${s.xpPop.n} XP</div>` : ''}
+  ${s.lvlPrompt && !s.sheetOpen ? `<div style="position:absolute;left:22px;bottom:274px;font-size:13px;letter-spacing:.1em;color:oklch(0.86 0.13 85);animation:blink 1.4s ease-in-out infinite">LEVEL UP · press ${(lab('sheet', 'K') + '').toUpperCase()} to spend points</div>` : ''}
   <!-- Level Up Banner -->
   ${lvl ? `
   <div style="position:absolute;left:0;right:0;display:flex;justify-content:center;top:20%;animation:hud-fade 2.8s forwards">
