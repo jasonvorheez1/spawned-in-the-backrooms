@@ -40,6 +40,11 @@ const pitchOf = (cam) => { let p = cam?.pitch ?? 0; if (Math.abs(p) > 1.6) p *= 
 // returns bones for ctx.self.bones (scripts/critter.js merges them); `aiming` also tells the body to face the camera.
 export function stance(ctx) {
   const me = ctx.self, s = me.state, now = ctx.now()
+  // rowing the dory (scripts/l7-dory.js writes where the oar handles are): both hands on the handles, whatever is equipped
+  if (s.rowHands && now - s.rowHands.at < 500 && s.sit) {
+    const h = s.rowHands, pt = (a) => ({ x: a[0], y: a[1], z: a[2] })
+    return { bones: { RightHand: { reach: { to: pt(h.r), blendIn: 0.1, blendOut: 0.3 } }, LeftHand: { reach: { to: pt(h.l), blendIn: 0.1, blendOut: 0.3 } } }, aiming: false }
+  }
   const wp = W[s.equipped ?? 'fists']
   if (!wp?.ranged || s.sheathed || s.sit || s.downAt || s.os || s.talkWith || s.mj?.seats || s.building || s.reloading) return null
   const cam = me.camera?.rotation ?? null; if (!cam) return null

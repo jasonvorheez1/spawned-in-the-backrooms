@@ -9,6 +9,41 @@ const OAR = "/cdn/moodboard-realistic-gritty/sfx-wooden-oars-dipping-and-pulling
 const yawOf = (r) => (typeof r === "number" ? r : r?.yaw ?? 0);
 const mem = (ctx) => (ctx.self.session.dory ??= { v: 0, turn: 0, mz: 0, mx: 0, stroke: 0 });
 
+// ---- the oars: two real oars in oarlocks that row. Each is three nested pivots (yaw sweep > roll lift > pitch feather) so every rotation is about one axis;
+// the stroke cycle: catch (blade drops in), drive (sweeps aft, blade vertical in the water), finish (squeezed out), recovery (blade up and flat, sweeps forward).
+// Rotations follow three.js: yaw +Y, pitch +X, roll +Z. A right oar (+x outward) swings its blade forward with positive yaw; a left oar with negative.
+const LOCK_Y = 0.62, LOCK_Z = 0.05, LOCK_X = 0.62, INBOARD = 0.5, OAR_LEN = 2.2;
+const smooth = (x) => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); };
+function strokeAt(ph) { // sweep (deg, + forward), lift (deg, blade up), feather (deg, 0 vertical, 80 flat)
+  const lerp = (a, b, k) => a + (b - a) * k;
+  if (ph < 0.05) return { a: 36, lift: lerp(10, -2, smooth(ph / 0.05)), feather: lerp(75, 0, smooth(ph / 0.05)) };            // the catch: blade drops
+  if (ph < 0.5) return { a: lerp(36, -24, smooth((ph - 0.05) / 0.45)), lift: -2, feather: 0 };                                // the drive
+  if (ph < 0.58) return { a: -24, lift: lerp(-2, 12, smooth((ph - 0.5) / 0.08)), feather: lerp(0, 75, smooth((ph - 0.5) / 0.08)) }; // the finish
+  return { a: lerp(-24, 36, smooth((ph - 0.58) / 0.42)), lift: 12, feather: 75 };                                              // the recovery
+}
+const REST = { a: -8, lift: 14, feather: 70 };
+function oarsOf(ctx, b) {
+  const s = b.state, ids = s.oars;
+  if (ids && ctx.getObject(ids.R.a) && ctx.getObject(ids.L.a)) return ids;
+  const wood = { color: "oklch(0.55 0.07 65)", roughness: 0.85 }, make = (sx, tag) => {
+    const a = `l7-oar-${tag}-a`, bb = `l7-oar-${tag}-b`, c = `l7-oar-${tag}-c`;
+    for (const id of [a, bb, c, `${c}-blade`]) { const o = ctx.getObject(id); if (o) ctx.destroy(id); }
+    ctx.spawn(a, { parent: b.id, feetPosition: { x: sx * LOCK_X, y: LOCK_Y, z: LOCK_Z } });
+    ctx.spawn(bb, { parent: a });
+    ctx.spawn(c, { parent: bb, feetPosition: { x: sx * (OAR_LEN / 2 - INBOARD), y: 0, z: 0 }, castShadow: true, primitive: { kind: "box", width: OAR_LEN, height: 0.045, depth: 0.05 }, material: wood });
+    ctx.spawn(`${c}-blade`, { parent: c, feetPosition: { x: sx * (OAR_LEN / 2 - 0.26), y: 0, z: 0 }, castShadow: true, primitive: { kind: "box", width: 0.52, height: 0.17, depth: 0.025 }, material: { color: "oklch(0.5 0.07 65)", roughness: 0.85 } });
+    return { a, b: bb, c };
+  };
+  return (s.oars = { R: make(1, "R"), L: make(-1, "L") });
+}
+// where the rower's hands are: the inboard end of each oar, in the world, for the body's IK (scripts/lib/body3.js reads player.state.rowHands)
+function handle(base, sx, aDeg, liftDeg) {
+  const th = sx * liftDeg * Math.PI / 180, ps = sx * aDeg * Math.PI / 180, vx = -sx * INBOARD * Math.cos(th), vy = -sx * INBOARD * Math.sin(th)
+  const x1 = vx * Math.cos(ps), z1 = -vx * Math.sin(ps), lx = sx * LOCK_X + x1, ly = LOCK_Y + vy, lz = LOCK_Z + z1
+  const r = base.yaw * Math.PI / 180, c = Math.cos(r), s = Math.sin(r)
+  return [base.x + lx * c + lz * s, base.y + ly, base.z - lx * s + lz * c];
+}
+
 export const ears = {
   press: (ctx, { by }) => { if (!ctx.self.controller) { ctx.self.controller = by; ctx.self.state.rower = by; ctx.self.state.leftAt = null; } },
 };
@@ -54,6 +89,29 @@ export function update(ctx, dt) {
   const bob = Math.sin(now * 0.0016) * 0.07, roll = Math.cos(now * 0.0012) * 2.8 - m.turn * 0.05, pitch = Math.sin(now * 0.0011) * 1.5 + m.v * 0.6;
   b.feetPosition = { x: m.base.x, y: RIDE_Y + bob, z: m.base.z };
   b.rotation = { yaw: m.base.yaw, pitch, roll };
+  // the oars row: a stroke while a key is down (backwards for S, one side harder when turning), at rest raised and feathered; the rower's hands ride the handles
+  const oars = oarsOf(ctx, b), rowing = !!b.controller && (Math.abs(m.mz) > 0.1 || Math.abs(m.mx) > 0.1)
+  m.ph ??= 0; m.amp ??= { R: 0, L: 0 };
+  if (rowing) {
+    m.ph = (m.ph + (m.mz > 0.1 ? -1 : 1) * 0.8 * dt + 1) % 1;
+    const turn = Math.abs(m.mz) < 0.1 ? m.mx : m.mx * 0.5 // D (mx > 0) turns right: the left oar pulls, the right holds
+    m.amp.L += ((turn > 0.1 ? 1 : turn < -0.1 ? 0.35 : 1) - m.amp.L) * Math.min(1, dt * 6); m.amp.R += ((turn < -0.1 ? 1 : turn > 0.1 ? 0.35 : 1) - m.amp.R) * Math.min(1, dt * 6);
+  }
+  const pose = {};
+  for (const [side, sx] of [["R", 1], ["L", -1]]) {
+    const o = oars[side], k = strokeAt(m.ph), A = m.amp[side], rest = rowing ? 0 : 1; m.rest ??= { R: 1, L: 1 };
+    m.rest[side] += (rest ? 1 - m.rest[side] : -m.rest[side]) * Math.min(1, dt * 3);
+    const e = m.rest[side], a = (k.a * A) * (1 - e) + REST.a * e, lift = k.lift * (1 - e) + REST.lift * e, fe = k.feather * (1 - e) + REST.feather * e
+    const oa = ctx.getObject(o.a), ob = ctx.getObject(o.b), oc = ctx.getObject(o.c);
+    if (oa) oa.rotation = { yaw: sx * a }; if (ob) ob.rotation = { roll: sx * lift }; if (oc) oc.rotation = { pitch: fe };
+    pose[side] = [a, lift];
+  }
+  const rider = s.rower ? ctx.getObject(s.rower) : null;
+  if (rider && now - (m.handsAt ?? 0) > 100) {
+    m.handsAt = now; const base = { x: m.base.x, y: RIDE_Y + bob, z: m.base.z, yaw: m.base.yaw };
+    rider.state.rowHands = { r: handle(base, 1, pose.R[0], pose.R[1]).map((v) => Math.round(v * 100) / 100), l: handle(base, -1, pose.L[0], pose.L[1]).map((v) => Math.round(v * 100) / 100), at: now };
+  } else if (!s.rower && m.hadRider) { const o = ctx.getObject(m.hadRider); if (o?.state) o.state.rowHands = null; m.hadRider = null; }
+  if (s.rower) m.hadRider = s.rower;
   // oar strokes and a wake, at their own pace
   const moving = Math.abs(m.v) > 0.4;
   if (b.controller && Math.abs(m.mz) + Math.abs(m.mx) > 0.2 && now - m.stroke > 1300) {
