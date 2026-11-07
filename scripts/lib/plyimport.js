@@ -25,22 +25,36 @@ async function png({ w, h, px }) {
 }
 export async function plyToGlb(buf) {
   const d = new Uint8Array(buf), dv = new DataView(buf)
-  const nsec = d[0x4a]; if (!nsec || nsec > 32) throw new Error('not a plymodel')
-  const secs = []; for (let i = 0; i < nsec; i++) { const o = 0x4b + 16 * i; secs.push([dv.getUint32(o, true), dv.getUint32(o + 4, true), dv.getUint32(o + 8, true)]) }
-  const vh = findBytes(d, [1, 1, 0x2c, 0, 0, 0]); if (vh < 0) throw new Error('no vertices')
+  if (String.fromCharCode(d[0], d[1], d[2], d[3]) !== 'MODL') throw new Error('not a plymodel (no MODL header)')
+  // header: (offset, size) u32 pairs from 0x12, each block right after the last
+  const blocks = []; for (let o = 0x12; o + 8 <= d.length && blocks.length < 32; o += 8) { const off = dv.getUint32(o, true), size = dv.getUint32(o + 4, true); if (blocks.length && off !== blocks[blocks.length - 1].off + blocks[blocks.length - 1].size) break; if (off + size > d.length) break; blocks.push({ off, size }) }
+  const so = blocks[0]?.off ?? 0x4a, nsec = d[so]; if (!nsec || nsec > 64) throw new Error('no mesh sections')
+  const secs = []; for (let i = 0; i < nsec; i++) { const o = so + 1 + 16 * i; secs.push([dv.getUint32(o, true), dv.getUint32(o + 4, true), dv.getUint32(o + 8, true)]) }
+  let vb = blocks.findIndex((b) => d[b.off] === 1 && d[b.off + 1] === 1 && dv.getUint32(b.off + 2, true) >= 24 && dv.getUint32(b.off + 2, true) <= 128 && (b.size - 9) % dv.getUint32(b.off + 2, true) === 0)
+  let vh, stride, n
+  if (vb >= 0) { vh = blocks[vb].off; stride = dv.getUint32(vh + 2, true); n = (blocks[vb].size - 9) / stride }
+  else { vh = -1; for (const st of [44, 48, 40, 52, 36, 56, 32, 64]) { vh = findBytes(d, [1, 1, st, 0, 0, 0]); if (vh >= 0) { stride = st; break } } if (vh < 0) throw new Error('no vertex block'); n = 0 }
   const total = Math.max(...secs.map((s) => s[0] + s[1])), i0 = vh - total * 4
-  const I = new Uint32Array(total); let n = 0
-  for (let i = 0; i < total; i++) { I[i] = dv.getUint32(i0 + i * 4, true); if (I[i] + 1 > n) n = I[i] + 1 }
+  if (i0 < 0) throw new Error('index block out of range')
+  const I = new Uint32Array(total); let maxI = 0
+  for (let i = 0; i < total; i++) { I[i] = dv.getUint32(i0 + i * 4, true); if (I[i] + 1 > maxI) maxI = I[i] + 1 }
+  if (!n) n = maxI
+  if (maxI > n) throw new Error('indices past the vertices')
   const vs = vh + 9, P = new Float32Array(n * 3), UV = new Float32Array(n * 2)
   let ymin = Infinity, ymax = -Infinity
-  for (let v = 0; v < n; v++) { const o = vs + v * 44; const x = dv.getFloat32(o, true), y = -dv.getFloat32(o + 4, true), z = -dv.getFloat32(o + 8, true); P.set([x, y, z], v * 3); UV[v * 2] = dv.getFloat32(o + 20, true); UV[v * 2 + 1] = dv.getFloat32(o + 24, true); ymin = Math.min(ymin, y); ymax = Math.max(ymax, y) }
+  for (let v = 0; v < n; v++) { const o = vs + v * stride; const x = dv.getFloat32(o, true), y = -dv.getFloat32(o + 4, true), z = -dv.getFloat32(o + 8, true); P.set([x, y, z], v * 3); UV[v * 2] = dv.getFloat32(o + 20, true); UV[v * 2 + 1] = dv.getFloat32(o + 24, true); ymin = Math.min(ymin, y); ymax = Math.max(ymax, y) }
   const s = 1.8 / (ymax - ymin || 1), mn = [Infinity, Infinity, Infinity], mx = [-Infinity, -Infinity, -Infinity]
   for (let v = 0; v < n; v++) { P[v * 3] *= s; P[v * 3 + 1] = (P[v * 3 + 1] - ymin) * s; P[v * 3 + 2] *= s; for (let k = 0; k < 3; k++) { mn[k] = Math.min(mn[k], P[v * 3 + k]); mx[k] = Math.max(mx[k], P[v * 3 + k]) } }
   const Nn = new Float32Array(n * 3)
   for (let t = 0; t + 2 < total; t += 3) { const [a, b, c] = [I[t] * 3, I[t + 1] * 3, I[t + 2] * 3]; const u = [P[b] - P[a], P[b + 1] - P[a + 1], P[b + 2] - P[a + 2]], w = [P[c] - P[a], P[c + 1] - P[a + 1], P[c + 2] - P[a + 2]]; const f = [u[1] * w[2] - u[2] * w[1], u[2] * w[0] - u[0] * w[2], u[0] * w[1] - u[1] * w[0]]; for (const q of [a, b, c]) for (let k = 0; k < 3; k++) Nn[q + k] += f[k] }
   for (let v = 0; v < n; v++) { const l = Math.hypot(Nn[v * 3], Nn[v * 3 + 1], Nn[v * 3 + 2]) || 1; for (let k = 0; k < 3; k++) Nn[v * 3 + k] /= l }
-  const texs = []; let o = vs + n * 44
-  while (o < d.length - 18 && texs.length < 16) { const t = d[o + 1] === 0 && (d[o + 2] === 2 || d[o + 2] === 10) ? tga(d, o) : null; if (t) { texs.push(await png(t)); o = t.end } else o++ }
+  const texs = []; let o = vs + n * stride
+  const PNG = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a], IEND = [0x49, 0x45, 0x4e, 0x44]
+  while (o < d.length - 18 && texs.length < 16) {
+    if (d[o] === 0x89 && findBytes(d.subarray(o, o + 8), PNG) === 0) { const e = findBytes(d, IEND, o); if (e > 0) { texs.push(d.slice(o, e + 8)); o = e + 8; continue } }
+    if (d[o] === 0xff && d[o + 1] === 0xd8 && d[o + 2] === 0xff) { let e = o + 2; while (e < d.length - 1 && !(d[e] === 0xff && d[e + 1] === 0xd9)) e++; const img = await createImageBitmap(new Blob([d.slice(o, e + 2)])).catch(() => null); if (img) { const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; c.getContext('2d').drawImage(img, 0, 0); const b = await new Promise((r) => c.toBlob(r, 'image/png')); texs.push(new Uint8Array(await b.arrayBuffer())); o = e + 2; continue } }
+    const t = d[o + 1] === 0 && (d[o + 2] === 2 || d[o + 2] === 10) ? tga(d, o) : null; if (t) { texs.push(await png(t)); o = t.end } else o++
+  }
   const parts = [], views = [], acc = []; let len = 0
   const add = (bytes, target) => { views.push({ buffer: 0, byteOffset: len, byteLength: bytes.byteLength, ...(target ? { target } : {}) }); const padn = (4 - (bytes.byteLength % 4)) % 4; parts.push(new Uint8Array(bytes.buffer, bytes.byteOffset, bytes.byteLength), new Uint8Array(padn)); len += bytes.byteLength + padn; return views.length - 1 }
   const A = (view, componentType, count, type, extra = {}) => { acc.push({ bufferView: view, componentType, count, type, ...extra }); return acc.length - 1 }
@@ -69,6 +83,6 @@ export async function plyUpload(input) {
     say('uploading…')
     const r = await window.spawn.assets.upload({ blob: glb, name: f.name.replace(/\.[^.]*$/, '') + '.glb' })
     if (r?.url) { sendAction('dress', { k: 'modelUrl', v: r.url }); say('wearing ' + f.name) } else say('upload failed')
-  } catch (e) { say(e?.code === 'guest_not_allowed' ? 'sign in to upload' : e?.code === 'rate_limited' ? 'too fast, try again in a bit' : /glb|editor|not.allowed/i.test(String(e?.message || e?.code)) ? 'model uploads are for builders here' : "couldn't read that file") }
+  } catch (e) { say(e?.code === 'guest_not_allowed' ? 'sign in to upload' : e?.code === 'rate_limited' ? 'too fast, try again in a bit' : /glb|editor|not.allowed/i.test(String(e?.message || e?.code)) ? 'model uploads are for builders here' : "couldn't read that file: " + (e?.message || e)); console.warn('[plyimport]', f.name, e) }
   busy = false; input.value = ''
 }
