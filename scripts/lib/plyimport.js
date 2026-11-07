@@ -90,7 +90,7 @@ function autoRig(P, n) {
   const hips = add('Hips', -1, [0, 0.53 * H, 0]), sp = add('Spine', hips, [0, 0.6 * H, 0]), sp1 = add('Spine1', sp, [0, 0.66 * H, 0]), sp2 = add('Spine2', sp1, [0, 0.72 * H, 0])
   const neck = add('Neck', sp2, [0, 0.82 * H, 0]), head = add('Head', neck, [0, 0.87 * H, 0]); add('HeadTop_End', head, [0, H, 0])
   const segs = [[hips, sp, 0], [sp, sp1, 0], [sp1, sp2, 0], [sp2, neck, 0], [neck, head, 0], [head, J.length - 1, 0]]
-  for (const [sd, L] of [[1, 'Left'], [-1, 'Right']]) { // the model faces -Z, so its left is +X
+  for (const [sd, L] of [[-1, 'Left'], [1, 'Right']]) { // the model faces -Z, so its left is -X
     const tip = hand(sd), S = sh(sd), wr = S.map((c, k) => c + (tip[k] - c) * 0.88), el = S.map((c, k) => c + (wr[k] - c) * 0.5)
     const c = add(L + 'Shoulder', sp2, [sd * 0.04 * H, 0.79 * H, 0]), a = add(L + 'Arm', c, S), f = add(L + 'ForeArm', a, el), h = add(L + 'Hand', f, wr), e = add(L + 'HandEnd', h, tip)
     const ul = add(L + 'UpLeg', hips, [sd * 0.09 * H, 0.5 * H, 0]), lg = add(L + 'Leg', ul, [sd * 0.09 * H, 0.27 * H, 0]), ft = add(L + 'Foot', lg, [sd * 0.09 * H, 0.05 * H, 0]), toe = add(L + 'ToeBase', ft, [sd * 0.09 * H, 0.015 * H, -0.07 * H]), te = add(L + 'Toe_End', toe, [sd * 0.09 * H, 0.015 * H, -0.12 * H])
