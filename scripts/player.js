@@ -50,7 +50,7 @@ export const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + (s?.a
 export const xpNeed = (lv) => L.xpBase * lv
 
 const owned = (s) => ['fists', ...(s.weapons ? s.weapons.split(',') : [])]
-const usable = (s, k) => W[k] && s.level >= W[k].minLevel
+const usable = (s, k) => !!W[k] // no level lock on weapons (Shelly, #37: any weapon you hold works)
 export const weaponOf = (s) => W[s.equipped] ?? W.fists
 
 const DOWN_MS = 3200 // how long you watch yourself lie there (Savi's pick); camera.js and the creatures read the same window

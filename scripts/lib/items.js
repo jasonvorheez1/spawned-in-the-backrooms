@@ -75,7 +75,7 @@ function describe0(token) {
     const k = token.slice(7), w = W[k]
     if (!w) return { name: 'Something', info: '', color: '#cccccc' }
     const r = W.rarities?.[w.rarity] ?? {}
-    return { name: w.name, info: `${r.label ?? ''} · DMG ${w.damage} · LV ${w.minLevel}${w.ranged ? ' · ranged' : ''}`, color: r.color ?? '#cccccc' }
+    return { name: w.name, info: `${r.label ?? ''} · DMG ${w.damage}${w.ranged ? ' · ranged' : ''}`, color: r.color ?? '#cccccc' }
   }
   return { name: token, info: '', color: '#cccccc' }
 }

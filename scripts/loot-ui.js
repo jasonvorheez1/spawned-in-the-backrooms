@@ -74,12 +74,12 @@ function detail(t, s, def) {
     if (!w) return ''
     const r = W.rarities?.[w.rarity], cur = W[s.equipped] ?? W.fists, d = w.damage - cur.damage
     const cmp = k !== (s.equipped ?? 'fists') && d ? ` <i class="${d > 0 ? 'up' : 'dn'}" style="font-style:normal">${d > 0 ? '▲' : '▼'}${Math.abs(d)}</i>` : ''
-    const lvOk = (s.level ?? 1) >= (w.minLevel ?? 1)
+    const lvOk = true
     return `<div class="${cls}"><h4>${w.name}</h4><div class="r" style="color:${r?.color ?? 'var(--ad)'}">${r?.label ?? 'STANDARD'}${w.ranged ? ' · FIREARM' : ' · MELEE'}</div><div class="g">
       ${cell('DAM', `${w.damage}${cmp}`)}${cell('SPD', `${(1 / w.cooldown).toFixed(1)}/S`)}
       ${cell(w.ranged ? 'RNG' : 'REACH', `${w.ranged ? w.range : w.reach}M`)}${cell('AP', w.stamina)}
       ${w.ranged ? cell('MAG', `${s['loaded_' + k] ?? 0}/${w.magSize}`) + cell(w.ammoType === 'shells' ? 'SHELLS' : 'ROUNDS', s[w.ammoType ?? 'ammo'] ?? 0) : ''}
-      ${cell('REQ', `<span style="color:${lvOk ? 'inherit' : '#e07a5a'}">LV ${w.minLevel ?? 1}</span>`, true)}</div></div>`
+</div></div>`
   }
   if (t.startsWith('cloth:')) { // a garment: its DR against what's worn in that slot now
     const p = parseCloth(t); if (!p) return ''
@@ -106,7 +106,7 @@ const HALRAISE = `<style>@keyframes halRaiseI{0%{transform:perspective(900px) tr
 function inventory(s) {
   const lv = s.level ?? 1, eqKey = s.equipped ?? 'fists'
   const weapons = (W.order ?? []).filter((k) => owned(s).includes(k)).map((k) => {
-    const w = W[k], on = k === eqKey, ok = lv >= (w.minLevel ?? 1)
+    const w = W[k], on = k === eqKey, ok = true
     const cnt = owned(s).filter((x) => x === k).length
     const inner = `<span class="eq"></span><span class="nm">${w.name}${cnt > 1 ? ` ×${cnt}` : ''}</span><span class="n">${ok ? (w.ranged ? `${s['loaded_' + k] ?? 0}/${s[w.ammoType ?? 'ammo'] ?? 0}` : '') : `LV ${w.minLevel}`}</span>${detail(k, s, false)}`
     return ok && !on ? `<button class="it" onclick="sendAction('inv',{k:'equip',w:'${k}'})">${inner}</button>` : `<div class="it${on ? ' on' : ''}${ok ? '' : ' lock'}">${inner}</div>`
