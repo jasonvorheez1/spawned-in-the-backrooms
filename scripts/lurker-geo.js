@@ -18,7 +18,7 @@ export function skeleton() {
 export function geometry(ctx) {
   const hi = ctx.lod <= 2, M = hi ? 20 : 9, LM = hi ? 12 : 6;
   ctx.smooth(); ctx.roughness(0.62);
-  const SKIN = "oklch(0.84 0.03 80)", SHADE = "oklch(0.7 0.035 60)", DARK = "oklch(0.2 0.02 40)";
+  const SKIN = "oklch(0.84 0.03 80)", SHADE = "oklch(0.78 0.035 70)", DARK = "oklch(0.2 0.02 40)";
   const close = (pts, rads) => { // a tube closed at both ends
     const s = (p, q, t) => p.map((v, i) => v + (q[i] - v) * t), n = pts.length;
     return [[s(pts[0], pts[1], -0.08), ...pts, s(pts[n - 1], pts[n - 2], -0.08)], [1e-4, ...rads, 1e-4]];
@@ -27,7 +27,7 @@ export function geometry(ctx) {
   ctx.color(SKIN);
   for (const s of [-1, 1]) {
     const L = s < 0 ? "L" : "R", x = s * 0.11;
-    ctx.bone("thigh" + L); T([[x, 1.0, 0], [x * 1.08, 0.85, -0.015], [x * 1.04, 0.66, -0.01], [x, 0.52, 0.0]], [0.085, 0.08, 0.06, 0.05]);
+    ctx.bone("thigh" + L); T([[x * 0.7, 1.06, 0], [x, 0.98, 0], [x * 1.08, 0.85, -0.015], [x * 1.04, 0.66, -0.01], [x, 0.52, 0.0]], [0.09, 0.09, 0.08, 0.06, 0.05]);
     ctx.bone({ ["thigh" + L]: 0.5, ["shin" + L]: 0.5 }); sphere(ctx, [x, 0.5, -0.012], 0.054, LM, [1, 1, 1.1]); // knobby knee
     ctx.bone("shin" + L);
     T([[x, 0.5, 0.01], [x, 0.38, 0.03], [x, 0.2, 0.025], [x, 0.07, 0.02]], [0.045, 0.05, 0.035, 0.03]); // calf bulge
@@ -41,7 +41,7 @@ export function geometry(ctx) {
   T([[0, 1.1, -0.015], [0, 1.25, -0.03], [0, 1.42, -0.07], [0, 1.6, -0.12], [0, 1.72, -0.15]], [0.1, 0.11, 0.165, 0.19, 0.12], M, [1, 0.6]); // sunken belly, deep chest
   if (hi) { // ribs, sternum and the knuckled spine
     ctx.color(SHADE);
-    for (let r = 0; r < 6; r++) { const y = 1.36 + r * 0.05, f = 0.17 - Math.abs(r - 2) * 0.006; tube(ctx, [[-f, y - 0.03, -0.06 - r * 0.012], [-f * 0.6, y, -0.16 - r * 0.012], [0, y + 0.02, -0.19 - r * 0.012], [f * 0.6, y, -0.16 - r * 0.012], [f, y - 0.03, -0.06 - r * 0.012]], [0.008, 0.011, 0.006, 0.011, 0.008], 6); }
+    for (let r = 0; r < 6; r++) { const y = 1.36 + r * 0.05, f = 0.17 - Math.abs(r - 2) * 0.006; tube(ctx, [[-f, y - 0.03, -0.06 - r * 0.012], [-f * 0.6, y, -0.16 - r * 0.012], [0, y + 0.02, -0.19 - r * 0.012], [f * 0.6, y, -0.16 - r * 0.012], [f, y - 0.03, -0.06 - r * 0.012]], [0.005, 0.008, 0.004, 0.008, 0.005], 6); }
     for (let v = 0; v < 9; v++) { const t = v / 8; sphere(ctx, [0, 1.12 + t * 0.6, 0.1 - t * 0.12 + Math.sin(t * 3.1) * 0.03], 0.02, 6); }
     ctx.color(SKIN);
   }
@@ -49,13 +49,13 @@ export function geometry(ctx) {
   ctx.bone("neck"); T([[0, 1.7, -0.12], [0, 1.82, -0.18], [0, 1.92, -0.23]], [0.055, 0.042, 0.05]);
   ctx.bone("head");
   sphere(ctx, [0, 2.02, -0.27], 0.15, M, [0.8, 1.15, 0.95]); // cranium
-  sphere(ctx, [0, 1.93, -0.34], 0.085, M, [0.85, 0.75, 0.9]); // long jaw
+  sphere(ctx, [0, 1.92, -0.3], 0.075, M, [0.9, 0.9, 1]); // long jaw, tucked under the skull
   if (ctx.lod <= 3) {
-    T([[-0.09, 2.075, -0.39], [0, 2.085, -0.415], [0.09, 2.075, -0.39]], [0.02, 0.024, 0.02], 8); // brow ridge
-    for (const s of [-1, 1]) sphere(ctx, [s * 0.085, 1.99, -0.37], 0.03, 8, [1, 0.6, 1]); // cheekbones
+    T([[-0.08, 2.07, -0.36], [0, 2.075, -0.392], [0.08, 2.07, -0.36]], [0.014, 0.018, 0.014], 8, [1, 0.6]); // brow ridge
+    for (const s of [-1, 1]) sphere(ctx, [s * 0.075, 1.985, -0.335], 0.026, 8, [1, 0.55, 1]); // cheekbones
     ctx.color(DARK); ctx.roughness(1);
-    for (const s of [-1, 1]) sphere(ctx, [s * 0.05, 2.035, -0.405], 0.028, hi ? 10 : 6, [1.3, 0.8, 0.3]); // eye hollows
-    T([[-0.045, 1.9, -0.405], [0, 1.895, -0.418], [0.045, 1.9, -0.405]], [0.005, 0.007, 0.005], 6); // lipless mouth
+    for (const s of [-1, 1]) sphere(ctx, [s * 0.048, 2.03, -0.375], 0.03, hi ? 10 : 6, [1.3, 0.8, 0.3]); // eye hollows
+    T([[-0.04, 1.905, -0.358], [0, 1.9, -0.372], [0.04, 1.905, -0.358]], [0.005, 0.007, 0.005], 6); // lipless mouth
     ctx.color(SKIN); ctx.roughness(0.62);
   }
   for (const s of [-1, 1]) {
