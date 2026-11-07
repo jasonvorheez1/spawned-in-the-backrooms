@@ -14,7 +14,7 @@ export const MOODS = ['calm', 'happy', 'annoyed', 'angry', 'scared']
 export const nameOf = (it) => String(it?.state?.name ?? 'Stranger').split(' ·')[0]
 export const keyOf = (pl) => pl.userId ?? pl.id
 export const isTrader = (it) => SH.roles.includes(it?.state?.role)
-export const faction = (it, place) => (String(it?.id ?? '').startsWith('surv') || place === 'level2' ? 'Survivor' : 'M.E.G.')
+export const faction = (it, place) => { const id = String(it?.id ?? '').split('/').pop(); return id.startsWith('tbd') ? 'T.B.D. (hoarders who only trade for strange useless objects)' : id.startsWith('amor') ? 'Amor Incrementum (a tiny agricultural cult that grows mold and distrusts outsiders)' : id.startsWith('l4-') ? 'none, a wanderer living in an office on Level 4' : id.startsWith('surv') || place === 'level2' ? 'Survivor' : 'M.E.G.' }
 const DEFV = { scout: 'ale', medic: 'ortiz', quarter: 'callum' }
 export const voiceOf = (it) => it?.state?.voice ?? DEFV[it?.state?.role] ?? 'ale'
 export const VO = (who, line) => `/cdn/voice-meg-${who}-saying-${String(line).slice(0, 180).replace(/[^a-z ]/gi, '').trim().toLowerCase().replace(/ +/g, '-')}.mp3`

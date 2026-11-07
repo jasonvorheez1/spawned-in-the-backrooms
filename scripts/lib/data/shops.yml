@@ -51,6 +51,22 @@ shops:
     - ["cloth:hat:beanie:e8d8c0", 2, 3]
     - ["cloth:shoes:boots:2a2420", 2, 7]
     - [tape, 4, 3]
+  omega-dace:
+    - [ammo, 6, 4]
+    - [shells, 4, 5]
+    - [battery, 4, 3]
+    - [firstaid, 3, 8]
+    - [ration, 6, 2]
+    - [weapon:pistol, 1, 24]
+    - ["cloth:topw:jacket:b8d040", 1, 10]
+  tbd-quill:
+    - [keycard, 1, 7]
+    - [compass, 1, 8]
+    - [fuse, 3, 4]
+    - [valve, 2, 4]
+    - [firesalt, 2, 5]
+    - [tape, 3, 3]
+    - [weapon:screwdriver, 1, 5]
   default:
     - [ammo, 2, 5]
     - [ration, 2, 3]

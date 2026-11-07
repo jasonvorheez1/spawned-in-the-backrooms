@@ -1,0 +1,60 @@
+# Level 4's people (Savi's picks). faction: omega | wanderer | tbd | amor. home: preferred office numbers (first vacant wins).
+# day/night: seconds of each phase on the floor's clock. Residents sleep on their cot at night; Omega keeps a guard up.
+day: 360
+night: 150
+meetEvery: [50, 90]   # seconds between two residents walking over to talk
+meetDwell: 45
+phoneReach: 22        # a resident this close walks over to answer a ringing phone nobody's near
+greetAgain: 120       # seconds before the same person greets you again
+people:
+  omega-okafor: { faction: omega, role: scout, voice: reyes, gun: shotgun, name: "Sgt. Okafor · M.E.G. Base Omega", night: guard }
+  omega-rhea: { faction: omega, role: medic, voice: ito, gun: wrench, name: "Rhea · Omega Medic" }
+  omega-dace:
+    { faction: omega, role: quarter, voice: dace, gun: pistol, name: "Dace · Omega Quartermaster",
+      look: { species: panda, sex: m, topw: longsleeve, top: "#3d5a98", botw: pants, bottom: "#3a3a32", shoes: boots, shoec: "#22201c", hat: cap, hatc: "#4a5a2a", expr: smile } }
+  omega-lin:
+    { faction: omega, role: scout, voice: lin, gun: pistol, name: "Lin · Omega Patrol", night: guard,
+      look: { species: wolf, sex: f, topw: jacket, top: "#b8d040", botw: pants, bottom: "#2a3040", shoes: boots, shoec: "#2a2420", expr: smile } }
+  l4-moss:
+    { faction: wanderer, role: wanderer, voice: moss, gun: pistol, name: "Moss · Wanderer", home: [3, 4, 2],
+      look: { species: cat, sex: f, topw: sweater, top: "#6bcb77", botw: skirt, bottom: "#2b2b33", shoes: sneakers, shoec: "#f4f1ea", expr: smile } }
+  l4-gus:
+    { faction: wanderer, role: wanderer, voice: gus, gun: pistol, name: "Gus · Wanderer", home: [9, 10, 8],
+      look: { species: dog, sex: m, topw: tee, top: "#ffd93d", botw: pants, bottom: "#3d5a98", shoes: sneakers, shoec: "#2b2b33", expr: grin } }
+  l4-penny:
+    { faction: wanderer, role: wanderer, voice: penny, gun: pistol, name: "Penny · Wanderer", home: [16, 17, 15],
+      look: { species: bunny, sex: f, topw: pajamas, top: "#9fd3ff", botw: pants, bottom: "#f4f1ea", shoes: sneakers, shoec: "#ff8fc7", expr: beam } }
+  l4-bram:
+    { faction: wanderer, role: wanderer, voice: bram, gun: pistol, name: "Bram · Wanderer", home: [23, 24, 22],
+      look: { species: otter, sex: m, topw: longsleeve, top: "#8b5a3c", botw: pants, bottom: "#2b2b33", shoes: boots, shoec: "#2a2420", hat: beanie, hatc: "#5a2a2a", expr: smile } }
+  tbd-quill:
+    { faction: tbd, role: trader, voice: quill, gun: pistol, name: "Quill · T.B.D.", home: [11, 12, 7],
+      look: { species: raccoon, sex: m, topw: hoodie, top: "#2b2b33", botw: pants, bottom: "#3a3a32", shoes: boots, shoec: "#22201c", hat: beanie, hatc: "#2b2b33", expr: wink } }
+  tbd-nib:
+    { faction: tbd, role: scavenger, voice: nib, gun: pistol, name: "Nib · T.B.D.", home: [11, 12, 7], shares: tbd-quill,
+      look: { species: mouse, sex: f, topw: hoodie, top: "#6a3a7a", botw: pants, bottom: "#2b2b33", shoes: sneakers, shoec: "#2b2b33", expr: blep } }
+  amor-vell:
+    { faction: amor, role: keeper, voice: vell, gun: wrench, name: "Sister Vell · Amor Incrementum", home: [20, 19, 18],
+      look: { species: sheep, sex: f, topw: dress, top: "#2b2b33", botw: skirt, bottom: "#2b2b33", shoes: boots, shoec: "#22201c", expr: smile } }
+  amor-hask:
+    { faction: amor, role: keeper, voice: hask, gun: wrench, name: "Brother Hask · Amor Incrementum", home: [20, 19, 18], shares: amor-vell,
+      look: { species: deer, sex: m, topw: sweater, top: "#8b5a3c", botw: pants, bottom: "#2b2b33", shoes: boots, shoec: "#22201c", expr: smile } }
+greet:
+  omega: ["base omega. keep your weapon down and you're welcome.", "water's free at the fountains. don't hog it.", "you look like you walked up from three. sit a minute."]
+  wanderer: ["oh, hey. you new on four?", "hi. don't go near the window rooms.", "you heard the phones yet? don't answer the break room one.", "nice to see a face that isn't mine."]
+  tbd: ["you got anything weird? like, really weird?", "we don't trade for useful. useful is boring.", "keep walking unless you're selling."]
+  amor: ["the mold provides.", "walk softly. things are growing.", "you carry something holy? no? then walk on."]
+night: ["lights-out hours. i'm going to lie down.", "that's me done. wake me if the lift dings.", "night, everyone. sort of."]
+morning: ["morning. if it's morning.", "okay. up. water first.", "slept. kind of."]
+phone: ["hello? ...no. wrong office.", "four-oh-nine? no, this is... they hung up.", "hello? hello. ...it's breathing again.", "omega desk. who is this? ...right."]
+amorWarn: ["this is a growing room. out.", "the spores don't like your boots. leave.", "step back. you're on the bed."]
+amorShove: ["i said out!", "you trample, you pay.", "the mold remembers your face."]
+meet:
+  - [[A, "you still drinking from the east fountain?"], [B, "it tastes like pennies."], [A, "they all taste like pennies."], [B, "the east one tastes like more pennies."]]
+  - [[A, "phone rang in my office last night."], [B, "you answer?"], [A, "it knew my name."], [B, "then don't sleep in there tonight."]]
+  - [[A, "quill offered me a doorknob for two bottles."], [B, "a doorknob."], [A, "said it was from level six."], [B, "...did you buy it?"], [A, "i bought it."]]
+  - [[A, "how long you been on four?"], [B, "i stopped counting at the vending restock."], [A, "how many restocks?"], [B, "i stopped counting."]]
+  - [[A, "somebody took the tape off a window in the west rooms."], [B, "who'd do that."], [A, "nobody i still see around."]]
+  - [[A, "the cooler in my office fills itself overnight."], [B, "mine too."], [A, "you ever see who fills it?"], [B, "i don't want to."]]
+  - [[A, "omega's hiring runners for five and six."], [B, "you going?"], [A, "with these shoes?"], [B, "fair."]]
+  - [[A, "the cult brought me a plate of mold."], [B, "as a gift?"], [A, "as dinner."], [B, "...and?"], [A, "it was okay. don't tell them."]]

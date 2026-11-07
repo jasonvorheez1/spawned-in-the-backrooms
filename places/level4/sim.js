@@ -6,6 +6,7 @@ import { fullLook } from "../../scripts/lib/clothes.js";
 import MEG from "../../scripts/lib/data/meg.yml";
 import { npcState } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
+import { settle, tickPeople } from "../../scripts/lib/l4-people.js";
 export const cadence = "1s";
 const V = 1;
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
