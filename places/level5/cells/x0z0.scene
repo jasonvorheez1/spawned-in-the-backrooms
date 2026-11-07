@@ -3913,7 +3913,7 @@ l5-staff-bellhop:
   tags: [moths, l5staff, l5-hostile, usable, faceling]
 l5-staff-maid:
   children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.b5ba6340a943f30bf2772d5b6c93a6523798452a5ccdc376816b237606e649ad.glb, materials: {belly: {color: "#fff1dc"}, blush: {color: "#060606", metalness: 0, roughness: 1}, eyeink: {color: "#060606", metalness: 0, roughness: 1}, eyewhite: {color: "#060606", metalness: 0, roughness: 1}, fur: {color: "#060606"}, mark: {color: "#060606", metalness: 0, roughness: 1}, mouth: {color: "#060606", metalness: 0, roughness: 1}, nose: {color: "#060606", metalness: 0, roughness: 1}, pupil: {color: "#060606", metalness: 0, roughness: 1}, tip: {color: "#060606", metalness: 0, roughness: 1}, tongue: {color: "#060606", metalness: 0, roughness: 1}}}}]
-  feetPosition: {x: -13.5, y: 0.02, z: 12.55}
+  feetPosition: {x: -13.675566220656037, y: 0.019999978095292192, z: 12.338879448361695}
   id: l5-staff-maid
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
   material: {outline: {color: "#1d1420", width: 2.4}}
@@ -3921,11 +3921,11 @@ l5-staff-maid:
   physics: {body: character}
   rotation: 180
   scale: 1.2
-  state: {attr: "7,3,2,7,9,6,2", hp: 192, info: A faceling that turns down beds no one sleeps in. Its apron pocket is full of other people's hair pins., kind: staff, maxHp: 192, mode: post, name: The Chambermaid, title: Thick, verb: Look, xp: 80}
+  state: {attr: "7,3,2,7,9,6,2", hp: 192, info: A faceling that turns down beds no one sleeps in. Its apron pocket is full of other people's hair pins., kind: staff, maxHp: 192, mode: frozen, name: The Chambermaid, title: Thick, verb: Look, xp: 80}
   tags: [moths, l5staff, l5-hostile, usable, faceling]
 l5-staff-porter:
   children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.79934f170ef9260304b202ef4205824dba9052af0c9475c6b8846522d9c15e91.glb, materials: {belly: {color: "#ffffff"}, blush: {color: "#060606", metalness: 0, roughness: 1}, eyeink: {color: "#060606", metalness: 0, roughness: 1}, eyewhite: {color: "#060606", metalness: 0, roughness: 1}, fur: {color: "#060606"}, mark: {color: "#060606", metalness: 0, roughness: 1}, mouth: {color: "#060606", metalness: 0, roughness: 1}, nose: {color: "#060606", metalness: 0, roughness: 1}, pupil: {color: "#060606", metalness: 0, roughness: 1}, tip: {color: "#060606", metalness: 0, roughness: 1}, tongue: {color: "#060606", metalness: 0, roughness: 1}}}}]
-  feetPosition: {x: -6.55, y: 0.02, z: -11.5}
+  feetPosition: {x: -7.502, y: 0.02, z: -11.906}
   id: l5-staff-porter
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
   material: {outline: {color: "#1d1420", width: 2.4}}
@@ -3933,7 +3933,7 @@ l5-staff-porter:
   physics: {body: character}
   rotation: -90
   scale: 1.2
-  state: {attr: "4,5,3,8,8,5,5", hp: 116, info: "The tallest of them. It waits at the end of the north wing, facing the wallpaper, as if listening to the walls.", kind: staff, maxHp: 144, mode: post, name: The Night Porter, title: Keen-eyed, verb: Look, xp: 80}
+  state: {attr: "4,5,3,8,8,5,5", hp: 116, info: "The tallest of them. It waits at the end of the north wing, facing the wallpaper, as if listening to the walls.", kind: staff, line: Your room is ready. It has always been ready., lineAt: 62786933.333333336, maxHp: 144, mode: return, name: The Night Porter, title: Keen-eyed, verb: Look, xp: 80}
   tags: [moths, l5staff, l5-hostile, usable, faceling]
 l5-stairs-up:
   behavior: scripts/level-door.js
