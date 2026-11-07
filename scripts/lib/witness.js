@@ -12,6 +12,12 @@ export function markKill(ctx, victim, killer) {
     if (!wall) seen.push(n.id);
     if (seen.length >= 4) break;
   }
+  // factions: a witness of the victim's own faction turns on the killer; anyone else only remembers what they saw
+  const facOf = (s) => s?.faction5 ?? s?.faction ?? null, vf = facOf(victim.state);
+  if (killer?.id) for (const id of seen) { const n = ctx.getObject(id); if (!n) continue;
+    if (vf && facOf(n.state) === vf) n.state.angry = { ...(n.state.angry ?? {}), [killer.id]: true };
+    n.state.sawKill = { by: killer.id, name: killer.displayName, victim: victim.state?.name ?? null, at: ctx.now() } }
+  if (killer?.state && vf && seen.length) killer.state.rep = { ...(killer.state.rep ?? {}), [vf]: (killer.state.rep?.[vf] ?? 0) - 1 }
   victim.state.killedBy = killer?.displayName ?? "someone";
   victim.state.witnesses = seen; victim.state.corpseAt ??= ctx.now(); victim.state.sneakKill = sneaking && !seen.length;
   return seen;
