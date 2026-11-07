@@ -210,6 +210,10 @@ for v in body.data.vertices:
     y = v.co.y
     wa = min(1, max(0, (y-0.03)/0.06)); wh = min(1, max(0, (-0.10-y)/0.03))
     gs["abdomen"].add([v.index], wa, "REPLACE"); gs["head"].add([v.index], wh, "REPLACE"); gs["thorax"].add([v.index], max(0, 1-wa-wh), "REPLACE")
+import bmesh as _bm
+for _o in [body, fur, prob] + ants + eyes:
+    _b = _bm.new(); _b.from_mesh(_o.data); _bm.ops.remove_doubles(_b, verts=_b.verts, dist=0.0005)
+    _bm.ops.recalc_face_normals(_b, faces=_b.faces); _b.to_mesh(_o.data); _b.free()
 parts = [body, fur, prob] + ants + eyes + list(wings.values())
 bpy.ops.object.select_all(action="DESELECT")
 for o in parts: o.select_set(True)
