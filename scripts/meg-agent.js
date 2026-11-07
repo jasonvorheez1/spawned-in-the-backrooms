@@ -116,7 +116,7 @@ function gait(me, m, kind) {
 // the pistol: on the right hip while calm, in the right hand while fighting
 function holster(ctx, me, m, drawn) {
   if (m.drawn === drawn) return;
-  const gun = (me.children ?? []).map((c) => (typeof c === "string" ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) : c)).find((c) => c && (c.model || c.primitive));
+  const gun = (me.children ?? []).map((c) => (typeof c === "string" ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) : c)).find((c) => c && !String(c.id).endsWith("/" + HEAD_ID) && (c.model || c.primitive)); // the gun, never the head
   if (!gun) return; m.drawn = drawn;
   gun.attachment = drawn ? { bone: "RightHand" } : { bone: "Hips" };
   gun.feetPosition = drawn ? { x: 0, y: 0, z: 0 } : { x: 0.17, y: -0.06, z: 0.02 };
