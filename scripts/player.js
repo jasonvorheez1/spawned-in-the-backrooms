@@ -260,6 +260,7 @@ export function onInput(ctx, input) {
     const sv = ctx.self.state, aw = weaponOf(sv), P = W.power
     if (sv.invOpen || sv.lootOpen) { if (sv.chargeAt) sv.chargeAt = 0 } // a click on a menu is no swing
     else if (ctx.self.state.building) { if (sv.chargeAt) sv.chargeAt = 0 }
+    else if (ctx.self.state.sheathed) { if (sv.chargeAt) sv.chargeAt = 0 } // holstered: hands are down, no attack (Shelly, 2026-11-07)
     else if (aw.ranged) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack || (aw.auto && input.held.attack)) swing(ctx) }
     else {
       if (input.pressed.attack && !sv.chargeAt && ctx.now() >= (walkOf(ctx).nextSwing ?? 0)) { sv.chargeAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.3, true) }
@@ -329,6 +330,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
 
 function swing(ctx, power = 0) {
   const w = walkOf(ctx), s = ctx.self.state, now = ctx.now(), P = W.power
+  if (s.sheathed) return // holstered: nothing to swing
   if (s.building) return // B mode: the click places a piece (scripts/build.js)
   if (now < (w.nextSwing ?? 0) || (s.downAt && now - s.downAt < 1200)) return
   const wp = weaponOf(s)
