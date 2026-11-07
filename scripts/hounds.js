@@ -12,6 +12,7 @@ import { stepToward as stepToward1 } from "./lib/maze1path.js";
 import { stepToward as stepToward2 } from "./lib/maze2path.js";
 import { stepToward as stepToward3, cellNear } from "./lib/maze3path.js";
 import { stepToward as stepTowardBoiler } from "./lib/boilerpath.js";
+import { stepToward6 } from "./lib/level6path.js";
 import C from "./lib/data/creatures3.yml";
 const H3 = C.hounds3;
 const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
@@ -49,8 +50,8 @@ function sees(ctx, h, p) {
 }
 export function update(ctx, dt) {
   const place = ctx.self.place;
-  const L3 = place === "level3", L2 = place === "level2", L5 = place === "level5", L1 = !L2 && !L3 && !L5;
-  const safeAt = L3 ? (x, z) => zoneAt3(x, z) === "gamma" : L2 ? (x, z) => zoneAt2(x, z) === "camp" : L5 ? (x, z) => zoneAt5(x, z)?.id !== "boiler" : (x, z) => safeZone(zoneAt(x, z));
+  const L6 = place === "level6", L3 = place === "level3", L2 = place === "level2", L5 = place === "level5", L1 = !L2 && !L3 && !L5 && !L6;
+  const safeAt = L6 ? () => false : L3 ? (x, z) => zoneAt3(x, z) === "gamma" : L2 ? (x, z) => zoneAt2(x, z) === "camp" : L5 ? (x, z) => zoneAt5(x, z)?.id !== "boiler" : (x, z) => safeZone(zoneAt(x, z));
   const now = ctx.now(), dark = ctx.place.state.flicker === "dark", mem = (ctx.self.session.m ??= {});
   const players = ctx.place.players.filter((p) => !safeAt(p.feetPosition.x, p.feetPosition.z) && !(p.state?.downAt && now - p.state.downAt < 4500));
   const byId = (id) => players.find((p) => p.id === id) ?? ctx.place.players.find((p) => p.id === id) ?? ctx.query({ tags: ["npc"], radius: 80, center: { x: 0, y: 0, z: 0 } }).find((n) => n.id === id) ?? null;
@@ -134,7 +135,8 @@ export function update(ctx, dt) {
     const directSight = prey && hasClearSight(ctx, pos, prey.feetPosition, h.id, prey.id);
     let way = null;
     if (!directSight) {
-      if (L3) way = stepToward3(pos.x, pos.z, goal.x, goal.z, 30);
+      if (L6) way = stepToward6(pos.x, pos.z, goal.x, goal.z, 30);
+      else if (L3) way = stepToward3(pos.x, pos.z, goal.x, goal.z, 30);
       else if (L2) way = stepToward2(pos.x, pos.z, goal.x, goal.z, 30);
       else if (L5) way = stepTowardBoiler(pos.x, pos.z, goal.x, goal.z, 30);
       else way = stepToward1(pos.x, pos.z, goal.x, goal.z, 30);

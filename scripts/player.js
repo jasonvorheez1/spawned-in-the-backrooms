@@ -205,7 +205,7 @@ function takeToken0(ctx, token) {
   }
   if (token === 'nvg') { // night vision goggles: they make no light, so Level 6's dark can't eat them (Savi's pick, Shelly asked for a way to see)
     if (s.nvg) { s.nvgSpare = (s.nvgSpare ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Spare night vision goggles (${s.nvgSpare}) · swap in when the battery dies`, at: now }; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } } // a duplicate is a full spare, not wasted
-    s.nvg = true; s.pickedAt = now; s.notice = { text: 'Night vision goggles · press F in the dark of Level 6 · they eat batteries', at: now }
+    s.nvg = true; s.pickedAt = now; s.notice = { text: 'Night vision goggles · Press F to activate · Essential in the anomalous darkness of Level 6', at: now }
     sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true }
   }
   if (token === 'compass') { // an old compass: a few reads left in it (G uses it)
@@ -640,8 +640,9 @@ function toggleLight(ctx) {
     if (w.nvg) { ctx.destroy(w.nvg); w.nvg = null }
     else if (s.nvg && (w.battery ?? s.battery) <= 1 && (s.nvgSpare ?? 0) > 0) { s.nvgSpare -= 1; w.battery = 100; s.battery = 100; w.nvg = ctx.spawn({ feetPosition: { attach: 'camera', x: 0, y: 0, depth: 0 }, light: { kind: 'point', color: 'oklch(0.85 0.2 145)', intensity: 2.6, distance: 9 }, audience: 'local' }); s.notice = { text: `Swapped in a spare pair · ${s.nvgSpare} left`, at: ctx.now() } }
     else if (s.nvg && (w.battery ?? s.battery) > 1) w.nvg = ctx.spawn({ feetPosition: { attach: 'camera', x: 0, y: 0, depth: 0 }, light: { kind: 'point', color: 'oklch(0.85 0.2 145)', intensity: 2.6, distance: 9 }, audience: 'local', scope: 'session' })
-    else if (!s.nvg) s.notice = { text: 'Nothing. The dark eats light here.', at: ctx.now() }
-    s.nvgOn = !!w.nvg; sound(ctx, w.nvg ? 'flashlight-switch-click' : 'flashlight-switch-click', 0.65, true); return
+    else if (!s.nvg) s.notice = { text: 'Nothing. The dark eats light here. You need night vision goggles.', at: ctx.now() }
+    else s.notice = { text: 'Night vision battery depleted. Insert fresh batteries.', at: ctx.now() }
+    s.nvgOn = !!w.nvg; sound(ctx, 'flashlight-switch-click', 0.65, true); return
   }
   else if ((w.battery ?? s.battery) > 1) {
     w.light = ctx.spawn({
@@ -813,7 +814,7 @@ function tickStats(ctx, t, moving) {
   const det = s.crouch ? detection(ctx, p, w) : null
   if ((s.detect ?? null) !== det) s.detect = det
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
-  let drain = (ctx.self.place === 'level6' ? 0.3 : ctx.self.place === 'level4' ? DRAIN4[zone.slice(3)] : ctx.self.place === 'level5' ? (DRAIN5[zone.slice(3)] ?? 0.8) / 60 * 4 : ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : (ctx.self.place === 'level3' || ctx.self.place === 'gamma') ? L3.sanityDrain[zone.slice(3)] : L.sanityDrain[zone]) ?? 0.12
+  let drain = (ctx.self.place === 'level6' ? (w.nvg ? 0.32 : 1.15) : ctx.self.place === 'level4' ? DRAIN4[zone.slice(3)] : ctx.self.place === 'level5' ? (DRAIN5[zone.slice(3)] ?? 0.8) / 60 * 4 : ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : (ctx.self.place === 'level3' || ctx.self.place === 'gamma') ? L3.sanityDrain[zone.slice(3)] : L.sanityDrain[zone]) ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4
   if (ctx.self.place === 'level5' && s.l5room && zone.slice(3) === s.l5room && ctx.now() < (s.l5until ?? 0)) drain = -0.6 // a rented Homely Hotel suite: your own room, the hotel can't reach you (scripts/l5-resident.js)
   if (drain > 0 && ctx.now() < (s.blueUntil ?? 0)) drain = 0 // blue almond water: the halls can't get in
@@ -828,6 +829,17 @@ function tickStats(ctx, t, moving) {
   if (s.sanity <= 0) s.hp -= L.insanityHurt * t
   if (zone === 'hub' || zone === 'l4_home' || zone === 'l5_housekeeping' || zone === 'l5_kitchen') { s.hp = Math.min(mh, s.hp + 3 * t); w.battery = Math.min(L.battery, w.battery + 15 * t) }
   if (s.hp > mh) s.hp = mh
+
+  // Level 6 Wikidot sensory deprivation auditory decay: paranoia whispers and phantom footsteps
+  if (ctx.self.place === 'level6' && s.sanity < 50) {
+    w.l6WhisperClock = (w.l6WhisperClock ?? 0) + t
+    if (w.l6WhisperClock >= (w.nextL6Whisper ?? 22)) {
+      w.l6WhisperClock = 0
+      w.nextL6Whisper = 18 + ctx.random() * 20
+      const clips = ['unintelligible-whisper-behind-ear', 'slow-close-breathing-in-pitch-dark', 'bare-footsteps-stop-on-concrete']
+      sound(ctx, clips[Math.floor(ctx.random() * clips.length)], 0.65, true)
+    }
+  }
 
   // Rare, subtle auditory hallucination only under deep psychological decay
   if (s.sanity < 25 && zone !== 'hub') {

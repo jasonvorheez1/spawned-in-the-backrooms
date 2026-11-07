@@ -36,4 +36,19 @@ export function geometry(ctx) {
     return;
   }
   if (k === "chalk") { ctx.smooth(); ctx.color("oklch(0.9 0.01 90)"); tube(ctx, [[0, 0.008, -0.03], [0, 0.008, 0.03]], [0.008, 0.007], 6); return; }
+  if (k === "puddle") { // an anomalous pool of dark oily condensation on the concrete
+    ctx.flat(); ctx.roughness(0.06); ctx.color("oklch(0.12 0.02 240 / 0.85)");
+    const disc = (cx, cz, r, sx) => { const n = hi ? 20 : 12; for (let i = 0; i < n; i++) { const a = (i / n) * 6.283, b = ((i + 1) / n) * 6.283, w = 1 + 0.22 * Math.sin(i * 3.1); ctx.quad(cx, 0.003, cz, cx + Math.cos(b) * r * sx * w, 0.003, cz + Math.sin(b) * r, cx + Math.cos(a) * r * sx * w, 0.003, cz + Math.sin(a) * r, cx, 0.003, cz); } };
+    disc(0, 0, 0.65, 1.3); disc(0.25, 0.2, 0.35, 1.1); disc(-0.3, -0.15, 0.28, 1);
+    return;
+  }
+  if (k === "pipe") { // rusted industrial pipe run along wall or ceiling
+    ctx.smooth(); ctx.roughness(0.7); ctx.color("oklch(0.3 0.03 40)");
+    tube(ctx, [[-0.9, 0, 0], [0.9, 0, 0]], [0.06, 0.06], M);
+    tube(ctx, [[-0.9, -0.15, 0.04], [0.9, -0.15, 0.04]], [0.035, 0.035], 6);
+    ctx.color("oklch(0.45 0.06 45)");
+    slab(ctx, [-0.4, 0, 0], [0.04, 0.08, 0.08]);
+    slab(ctx, [0.4, 0, 0], [0.04, 0.08, 0.08]);
+    return;
+  }
 }

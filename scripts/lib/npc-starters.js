@@ -394,7 +394,8 @@ export const STARTERS = {
     mood: 'happy',
     choices: [
       { text: "How did an airplane from 1937 end up in Level 5?", tag: "Lore" },
-      { text: "Care to trade vintage heirlooms for fresh supplies?", tag: "Barter 45", check: { skill: 'barter', difficulty: 45 } },
+      { text: "Those aviator goggles around your neck... do they work in anomalous darkness?", tag: "Barter 45", check: { skill: 'barter', difficulty: 45 } },
+      { text: "Care to trade vintage heirlooms for fresh supplies?", tag: "Barter 40", check: { skill: 'barter', difficulty: 40 } },
       { text: "What does it take to get invited into the Originals' card salon?", tag: "Speech 45", check: { skill: 'speech', difficulty: 45 } },
       { text: "Have you fed Samantha the cat her meat today?", tag: "Help" },
     ],

@@ -70,13 +70,14 @@ export const EXITS = [
   { id: "l5-door-98", at: { x: -30.2, z: 6.5 }, yaw: 90, sealed: "LEVEL 98 · A metal door, warm to the touch. Bolted from the other side.", kind: "door" },
   { id: "l5-door-63", at: { x: 17.8, z: -8 }, yaw: 90, sealed: "LEVEL 63 · Birdsong behind this one. Leaves under the door. Locked fast.", kind: "door" },
   { id: "l5-gate-84", at: { x: -1, z: 11.8 }, yaw: 0, sealed: "LEVEL 84 · A tall wooden gate. Barred. It hasn't opened in years.", kind: "gate" },
-  { id: "l5-door-6", at: { x: 45.8, z: 20 }, yaw: 90, sealed: "LEVEL 6 · The handle burns your palm. The heat behind it is unbearable.", kind: "metal" },
+  { id: "l5-door-6", at: { x: 45.8, z: 20 }, yaw: 90, sealed: "LEVEL 6 (Auxiliary Bulkhead) · Welded shut by boiler steam. Scratched into the rust: 'Use the main north portal at z:6 — and don't go in without night vision!'", kind: "metal" },
   { id: "l5-door-78", at: { x: 45.8, z: -20 }, yaw: 90, sealed: "LEVEL 78 · An airlock. The wheel won't turn without pressure.", kind: "airlock" },
 ];
 // arrival markers other places cross into (+ checkpoints for death respawn)
 export const ARRIVALS = {
   "l5-from-l3": { x: -42.5, z: 0, yaw: 90 },
   "l5-from-l4": { x: -8, z: -17.5, yaw: 180 },
+  "l5-from-l6": { x: 43.6, z: 6, yaw: -90 },
   "l5-lobby": { x: -38, z: 0, yaw: 90 },
 };
 // guest elevators: floors 1-12 move you to another bank on this same floor; 13 and up you don't come back from

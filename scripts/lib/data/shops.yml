@@ -87,6 +87,7 @@ shops:
     - [tape, 3, 3]
     - [kit, 1, 9]
     - [weapon:knife, 1, 10]
+    - [nvg, 1, 35]
   l5-vanderholt:
     - [royal_ration, 2, 12]
     - [firesalt, 2, 6]
@@ -147,6 +148,7 @@ shops:
     - [battery, 4, 3]
     - [tape, 4, 3]
     - [almond, 5, 1]
+    - [nvg, 1, 35]
     - ["cloth:topw:jacket:5c3a22", 1, 12]
     - ["cloth:eyew:glasses:none", 1, 6]
     - ["cloth:neck:scarf:f4efe4", 1, 6]
