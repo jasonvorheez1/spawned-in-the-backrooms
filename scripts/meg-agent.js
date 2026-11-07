@@ -106,13 +106,24 @@ function dress(ctx, me) {
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 const chest = (p) => ({ x: p.x, y: p.y + 1.1, z: p.z });
 
+// sight on a creature, read twice a second per creature: seen now, or seen in the last 5 s (it ducked round a corner); one that stays unreachable is dropped for 20 s
+function inView(ctx, me, m, f, d) {
+  const now = ctx.now(); m.vis ??= {}; m.ign ??= {};
+  if ((m.ign[f.id] ?? 0) > now) return false;
+  const v = m.vis[f.id] ??= { at: 0, saw: 0, near: d, since: now };
+  if (now - v.at > 500) { v.at = now; if (d < 1.2 || seesIt(ctx, me, f)) v.saw = now; }
+  if (d < v.near - 1) { v.near = d; v.since = now; } // getting closer: the chase is working
+  if (now - v.since > 6000 && d > 1.6) { m.ign[f.id] = now + 20000; delete m.vis[f.id]; return false; } // six seconds without gaining: it can't be reached
+  return now - v.saw < 5000;
+}
 function pickTarget(ctx, me, m) {
   const p = me.feetPosition;
   let best = null, bd = G.sight;
   const fighter = (!me.state.faction5 || me.state.faction5 === "hk" || me.state.follow) && !me.state.mjguest; // hotel guests are no fighters: a hound is something to run from, but anything on top of them gets the weapon
   if (!me.state.mjguest) for (const tag of HOSTILE) for (const f of ctx.query({ tags: [tag], radius: fighter ? G.sight : 5 })) {
     if (DEAD(f) || f.tags?.includes?.("l5staff")) continue;
-    const d = flat(f.feetPosition, p); if (d < bd) { bd = d; best = f; }
+    const d = flat(f.feetPosition, p); if (d >= bd || !inView(ctx, me, m, f, d)) continue; // a creature behind (or stuck in) a wall is not a target
+    bd = d; best = f;
   }
   if (me.state.nerve === "frenzied" && !me.state.mjguest) { // anyone close enough: npc or player
     for (const n of ctx.query({ tags: ["npc"], radius: 12 })) { if (n.state?.dead || (n.state?.hp ?? 1) <= 0) continue; const d = flat(n.feetPosition, p); if (d < bd) { bd = d; best = n; } }
