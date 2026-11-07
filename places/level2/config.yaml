@@ -8,7 +8,7 @@ worldBounds: { bottom: -20 }
 atmosphere:
   clouds: { enabled: false }
   fog: { kind: linear, near: 6, far: 40, color: oklch(0.14 0.012 60) }
-  look: { script: scripts/look-garage.js, params: { bloomThreshold: 0.65, bloomStrength: 0.7 } }
+  look: { script: scripts/look-utility.js, params: { bloomThreshold: 0.6, bloomStrength: 0.8 } }
   moon: { enabled: false, intensity: 0 }
   sky: { kind: color, color: oklch(0.04 0.004 60) }
   stars: { enabled: false }

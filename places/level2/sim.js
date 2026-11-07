@@ -28,6 +28,7 @@ export function tick(ctx) {
   if (!s.seeded) {
     s.seeded = true;
     ctx.spawn("l2-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-geo.js" }, material: { roughness: 0.9 } });
+    ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-details-geo.js" }, material: { roughness: 0.85 } }); // lagged pipes, conduit, ducts, caged lamps, stains
     // tube lights: industrial white or sodium orange, uneven, some hanging crooked; dead circuits get a violet emergency lamp now and then
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
       const c = cellCenter(cx, cz), r = hash(cx, cz, 201), z = zoneOf(cx, cz);
