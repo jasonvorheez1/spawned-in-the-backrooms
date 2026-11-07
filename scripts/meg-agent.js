@@ -258,6 +258,14 @@ export function update(ctx, dt) {
   if (m.dressed !== 4) { m.dressed = 4; if (!s.dead) dress(ctx, me); }
   if (!m.armed && !s.dead && now - (m.bornAt ??= now) > 1500) arm(ctx, me, m); // after the spawner has handed over its weapon
   // essential: whoever walks with a player drops to a knee instead of dying, then gets back up
+  // a companion who fell anyway (killed by a path that set dead directly) comes back too
+  if (s.dead && s.follow && ctx.place.players.some((p) => p.id === s.follow)) { s.dead = false; s.hp = 0; }
+  // back on their feet: the corpse state (ragdoll, "'s body" name, loot list) comes off
+  if (m.down && !s.dead && (s.hp ?? 1) > 0) {
+    m.down = false; me.ragdoll = null; m.armed = false; m.dressed = 0;
+    if (/'s body$/.test(s.name ?? "")) s.name = s.name.replace(/'s body$/, "");
+    delete s.items; delete s.look;
+  }
   if (!s.dead && (s.hp ?? 1) <= 0 && s.follow && ctx.place.players.some((p) => p.id === s.follow)) {
     s.hp = Math.max(1, Math.round((s.maxHp ?? 100) * 0.3)); s.stunUntil = now + 4000;
     animate(ctx, me.id, { "feetPosition.y": [me.feetPosition.y, me.feetPosition.y - 0.35, me.feetPosition.y - 0.35, me.feetPosition.y] }, { duration: 4 });
@@ -404,4 +412,4 @@ function work(me, m, clip) {
   if (m.work === clip) return; m.work = clip;
   me.anim.work = clip ? { clip, loop: /loop/.test(clip) ? "loop" : "once", weight: 1, blendIn: 0.4, blendOut: 0.4 } : null;
 }
-export function vanish(ctx) { ctx.destroy(ctx.self.id); }
+export function vanish(ctx) { const s = ctx.self.state; if (!s.dead && (s.hp ?? 1) > 0) return; ctx.destroy(ctx.self.id); } // a body that got back up stays
