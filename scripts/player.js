@@ -266,7 +266,8 @@ export function onInput(ctx, input) {
   if (input.pressed.cycleWeapon && !ctx.self.state.building) cycleWeapon(ctx)
   if (input.pressed.holster) { // H: put it away, H again: draw the last one
     const s = ctx.self.state; cancelReload(ctx); s.ads = false
-    if (s.equipped !== 'fists') { s.holstered = s.equipped; s.equipped = 'fists' } else if (s.holstered && owned(s).includes(s.holstered) && usable(s, s.holstered)) s.equipped = s.holstered
+    if (!s.sheathed) { if (s.equipped !== 'fists') s.holstered = s.equipped; s.equipped = 'fists'; s.sheathed = true } // hands away: nothing in view
+    else { s.sheathed = false; if (s.holstered && owned(s).includes(s.holstered) && usable(s, s.holstered)) s.equipped = s.holstered }
     s.equipAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.45, true)
   }
   if (input.pressed.reload && !ctx.self.state.building) startReload(ctx) // R turns the piece in build mode
@@ -513,7 +514,7 @@ function cycleWeapon(ctx) {
   cancelReload(ctx)
   ctx.self.state.ads = false
   const s = ctx.self.state, list = W.order.filter((k) => owned(s).includes(k) && usable(s, k))
-  s.equipped = list[(list.indexOf(s.equipped) + 1) % list.length] ?? 'fists'
+  s.equipped = list[(list.indexOf(s.equipped) + 1) % list.length] ?? 'fists'; s.sheathed = false
   s.equipAt = ctx.now()
   sound(ctx, 'flashlight-switch-click', 0.5, true)
 }
@@ -599,6 +600,7 @@ const GUN_FIX = { shotgun: { yaw: 0, pitch: 35, at: { x: 0, y: 0.255, z: -0.224 
 function viewmodel(ctx, moving, sprinting) {
   if (!ctx.self.isLocal) return
   const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists', l = s.look ?? {}
+  if (s.sheathed) { if (w.vm) { ctx.destroy(w.vm); w.vm = null; w.vmKind = null; w.vmEq = null; w.plyRig = null } if (s.vmId) s.vmId = null; return } // holstered: the hands are down, out of view
   // the look and tune only change by a press: the full key is rebuilt when the weapon changes or on the 4 Hz stats beat
   if (w.vm && w.vmEq === kind && !w.vmCheck) { if (w.plyWant && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 500; plyArm(ctx, w) } return }
   w.vmEq = kind; w.vmCheck = false
