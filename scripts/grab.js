@@ -6,7 +6,17 @@ import { attrsOf } from "./lib/stats.js";
 import { damageEntity } from "./lib/breakables.js";
 import { heard } from "./lib/hear.js";
 const NOT = ["wall", "gridwall", "level0", "npc", "player", "critter", "door", "remains"];
-const CAP = (h) => 12 + h * 9;        // kg you can lift: strength 1 = 21 kg, 5 = 57, 10 = 102 (Savi's picks)
+const CAP = (h) => 12 + h * 9;        // base kg by Hardiness: 1 = 21 kg, 5 = 57, 10 = 102 (Savi's picks)
+// what you can lift right now: Hardiness is the base, Endurance and Agility add leverage, and it shrinks when you're
+// hurt, winded or already loaded (pack weight vs its limit). All factors Savi's picks.
+function power(ctx) {
+  const s = ctx.self.state, A = attrsOf(s), base = CAP(A.h ?? 5);
+  const endu = 1 + ((A.e ?? 5) - 5) * 0.04, agi = 1 + ((A.a ?? 5) - 5) * 0.02;
+  const hp = Math.max(0.35, Math.min(1, (s.hp ?? 100) / Math.max(1, s.maxHp ?? s.hpMax ?? s.hp ?? 100)));
+  const st = ctx.self.session?.walk?.stamina ?? s.stamina, wind = st == null ? 1 : Math.max(0.5, Math.min(1, 0.5 + st / 200));
+  const load = s.wg != null && s.wgMax ? Math.max(0.55, 1 - 0.45 * Math.min(1, s.wg / s.wgMax)) : 1;
+  return base * endu * agi * hp * wind * load;
+}
 const note = (ctx, text) => { ctx.self.state.notice = { text, at: ctx.now() }; };
 function look(ctx, input) {
   const sin = input?.axes?.aimYawSin ?? 0, cos = input?.axes?.aimYawCos ?? 1;
@@ -27,7 +37,7 @@ export function onInput(ctx, input) {
   const hit = raycast(ctx, eye, d, { distance: 2.6, ignoreEntities: [ctx.self.id] });
   const o = hit?.id && ctx.getObject(hit.id);
   if (!o || !o.tags?.includes("breakable") || NOT.some((t) => o.tags.includes(t)) || o.parent) { note(ctx, "Nothing to pick up."); return; }
-  const kg = massOf(o), cap = CAP(h);
+  const kg = massOf(o), cap = power(ctx);
   const over = kg / cap; // past 1 it's a struggle; past 3 nobody moves it
   if (over > 3) { note(ctx, `It won't budge. ${Math.round(kg)} kg.`); heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-strained-grunt-lifting-heavy.mp3", position: eye, volume: 0.5, maxDistance: 10 }); return; }
   ctx.self.anim.grab = { clip: "cdn/clip-pickup.glb", loop: "once", weight: 1, blendIn: 0.15, blendOut: 0.3 };
@@ -49,7 +59,7 @@ function lift(ctx, o, kg, cap) {
 }
 function toss(ctx, o, h) {
   const ses = ctx.self.session, s = ctx.self.state, d = ses.dir ?? { x: 0, y: 0, z: -1 };
-  const over = ses.kg / CAP(h), speed = over > 1 ? Math.max(1.5, 4 - over) : Math.max(3, Math.min(20, 3 + (CAP(h) / ses.kg) * 2.2)); // light things fly; past your strength it tips a few feet away
+  const over = ses.kg / power(ctx), speed = over > 1 ? Math.max(1.5, 4 - over) : Math.max(3, Math.min(20, 3 + (power(ctx) / ses.kg) * 2.2)); // light things fly; past your strength it tips a few feet away
   ctx.self.anim.grab = { clip: "cdn/clip-throw.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 };
   o.physics = { body: "dynamic", collider: "box", mass: ses.kg, friction: 0.7 };
   o.velocity = { x: d.x * speed, y: d.y * speed + 2, z: d.z * speed };
@@ -60,7 +70,7 @@ function toss(ctx, o, h) {
 }
 export function update(ctx) {
   const ses = ctx.self.session;
-  if (ses.heave && ctx.now() >= ses.heave.until) { const o = ctx.getObject(ses.heave.id), kg = ses.heave.kg; ses.heave = null; if (o) lift(ctx, o, kg, CAP(attrsOf(ctx.self.state).h ?? 5)); else ctx.self.state.carryMul = 1; }
+  if (ses.heave && ctx.now() >= ses.heave.until) { const o = ctx.getObject(ses.heave.id), kg = ses.heave.kg; ses.heave = null; if (o) lift(ctx, o, kg, power(ctx)); else ctx.self.state.carryMul = 1; }
   if (ses.held) { // carried: in front of the chest, along the look
     const o = ctx.getObject(ses.held);
     if (!o || ctx.self.state.dead) { ses.held = null; ctx.self.state.carry = null; ctx.self.state.carryMul = 1; if (o) o.physics = ses.phys ?? "static"; }
