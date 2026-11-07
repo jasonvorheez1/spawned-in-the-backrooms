@@ -149,6 +149,7 @@ function restUi(ctx, s) {
   return out
 }
 const LIVE = `<style>@keyframes hudBreath{0%,100%{opacity:.92}50%{opacity:1}}@keyframes hudIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}#hud .bl,#hud .br{animation:hudIn .5s ease-out both,hudBreath 3.2s ease-in-out .5s infinite;filter:drop-shadow(0 0 4px rgba(255,170,40,.35))}</style>`
+import { mahjongPanel } from './mahjong-ui.js'
 export default function render(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
@@ -170,7 +171,7 @@ export default function render(ctx, player) {
   return `${THEME}${LIVE}
 <div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
 
-  ${xferCard(s, now)}${restUi(ctx, s)}
+  ${xferCard(s, now)}${restUi(ctx, s)}${mahjongPanel(s)}
   ${chatBubbles(ctx, now)}
   <!-- Unobtrusive Center Point -->
   <div class="dot-crosshair"></div>${s.crouch ? `<div class="sneak sneak-${s.detect ?? 'hidden'}" id="sn-${s.detect ?? 'hidden'}">[${(s.detect ?? 'hidden').toUpperCase()}]</div>` : ''}

@@ -5,7 +5,9 @@ export const ears = {
   press: (ctx, { by }) => {
     const who = ctx.getObject(by); if (!who) return;
     if (ctx.self.state.kind !== "mahjong") return;
-    who.state.notice = { text: "You feel a strong urge to step away from it.", at: ctx.now() };
+    if (who.state.mjWarned) { who.state.mj = { open: true }; return; } // the second time, you sit down anyway (scripts/mahjong.js)
+    who.state.mjWarned = true;
+    who.state.notice = { text: "You feel a strong urge to step away from it. (Touch it again to sit and play.)", at: ctx.now() };
     const me = ctx.self.worldFeetPosition, p = who.worldFeetPosition;
     let dx = p.x - me.x, dz = p.z - me.z; const d = Math.hypot(dx, dz) || 1; dx /= d; dz /= d;
     who.state.l5Shove = { x: p.x + dx * 1.5, z: p.z + dz * 1.5, at: ctx.now() };
