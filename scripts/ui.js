@@ -89,7 +89,7 @@ function compass(yaw) {
 
 // camp chatter: the line an npc is saying floats over its head while it lasts (chatter.js writes state.line)
 // the doorway transition: black that fades off the new level, its name in the middle
-const LEVEL_NAMES = { main: ['LEVEL 0', 'THE LOBBY'], level1: ['LEVEL 1', 'HABITABLE ZONE'], level2: ['LEVEL 2', 'PIPE DREAMS'], level3: ['LEVEL 3', 'ELECTRICAL STATION'], level4: ['LEVEL 4', 'ABANDONED OFFICE'], gamma: ['M.E.G.', 'BASE GAMMA'] }
+const LEVEL_NAMES = { main: ['LEVEL 0', 'THE LOBBY'], level1: ['LEVEL 1', 'HABITABLE ZONE'], level2: ['LEVEL 2', 'PIPE DREAMS'], level3: ['LEVEL 3', 'ELECTRICAL STATION'], level4: ['LEVEL 4', 'ABANDONED OFFICE'], level5: ['LEVEL 5', 'TERROR HOTEL'], gamma: ['M.E.G.', 'BASE GAMMA'] }
 function xferCard(s, now) {
   const x = s.xfer; if (!x || now - x.at > 2600) return ''
   const [a, b] = LEVEL_NAMES[x.to] ?? [String(x.to).toUpperCase(), '']

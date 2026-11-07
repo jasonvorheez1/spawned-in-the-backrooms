@@ -61,7 +61,7 @@ export const ears = {
       else say(who, "The coil turns. Nothing falls. Something behind the glass waves.", ctx);
       return;
     }
-    if (s.kind === "stairs") { snd(ctx, "heavy-chain-rattle-on-metal-door", 0.7); say(who, "LEVEL 5 · The door's chained from the other side. Someone's still working on it.", ctx); }
+    if (s.kind === "stairs") { snd(ctx, "heavy-chain-rattle-on-metal-door", 0.7); say(who, "LEVEL 5 · The chain lies on the landing, cut. Walk on down.", ctx); }
   },
 };
 export const updateSchedule = { every: 3 };

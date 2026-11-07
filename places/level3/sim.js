@@ -102,6 +102,15 @@ export function tick(ctx) {
       ui: '<div face="left" width="1.2m" style="font-size:120px;font-weight:900;color:#1a1410;text-align:center;line-height:1.1">LIFT 4<div style="font-size:70px">▲ abandoned office</div></div>' });
     ctx.spawn({ feetPosition: { x: LIFT.x - 1.2, y: 2.6, z: LIFT.z }, light: { kind: "point", color: "oklch(0.85 0.1 85)", intensity: 3, distance: 6 } });
   }
+  if (ctx.place.state.lift5V !== 1) { ctx.place.state.lift5V = 1; // the guest lift beside it: brass doors, to Level 5's hotel (one cell south of LIFT 4)
+    const z5 = LIFT.z + 4;
+    ctx.spawn("l3-lift5", { tags: ["door"], feetPosition: { x: LIFT.x - 0.6, y: 0, z: z5 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 2.2 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level5#l5-from-l3" } });
+    ctx.spawn("l3-from-l5", { feetPosition: { x: LIFT.x - 3, y: 0.1, z: z5 }, rotation: { yaw: 90 } });
+    ctx.spawn({ feetPosition: { x: LIFT.x - 0.12, y: 0, z: z5 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.6, height: 2.3, depth: 0.08 }, material: { color: "oklch(0.62 0.11 75)", texture: "cdn/texture-scratched-worn-steel.png", metalness: 0.85, roughness: 0.3 } });
+    ctx.spawn({ feetPosition: { x: LIFT.x - 0.54, y: 1.4 + 1.2, z: z5 }, primitive: { kind: "box", width: 0.02, height: 0.56, depth: 1.2 }, material: { color: "oklch(0.3 0.05 40)" },
+      ui: '<div face="left" width="1.2m" style="font-family:serif;font-size:120px;font-weight:900;color:#e8c983;text-align:center;line-height:1.1">LIFT 5<div style="font-size:66px;font-style:italic">the hotel</div></div>' });
+    ctx.spawn({ feetPosition: { x: LIFT.x - 1.2, y: 2.6, z: z5 }, light: { kind: "point", color: "oklch(0.8 0.12 70)", intensity: 3, distance: 6 } });
+  }
   const s = ctx.place.state, now = ctx.now();
   // a blackout (scripts/horde.js) on anyone here kills the level's lamps: a faint red emergency glow, and the hounds see farther in the dark
   const night = ctx.place.players.some((p) => p.state?.horde === "night");

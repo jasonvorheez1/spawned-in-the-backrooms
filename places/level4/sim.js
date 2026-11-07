@@ -103,6 +103,12 @@ function layOffice(ctx) {
   ctx.spawn("l4-office-mgr", { feetPosition: { x: 0, y: 0, z: 0 }, behavior: "scripts/l4-office.js", state: { kind: "manager" } });
 }
 export function tick(ctx) {
+  if (ctx.place.state.stairsV !== 1) { ctx.place.state.stairsV = 1; // the stairwell's chain came off: down to Level 5
+    ctx.spawn("l4-stairs-down", { tags: ["door"], feetPosition: { x: STAIRS.x, y: 0, z: STAIRS.z - 0.5 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.4, height: 2.4, depth: 0.6 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level5#l5-from-l4" } });
+    ctx.spawn("l4-from-l5", { feetPosition: { x: STAIRS.x, y: 0.1, z: STAIRS.z - 3 }, rotation: { yaw: 0 } });
+    ctx.spawn({ feetPosition: { x: STAIRS.x, y: 2.45, z: STAIRS.z - 0.12 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.1, height: 0.32, depth: 0.03 }, material: { color: "oklch(0.25 0.04 50)" },
+      ui: '<div face="front" width="1.1m" style="font-family:serif;font-size:120px;font-weight:900;color:#e8c983;text-align:center;line-height:1.05">LEVEL 5<div style="font-size:60px;font-style:italic">▼ the hotel</div></div>' });
+  }
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; lay(ctx); }
   // Level 4's people (scripts/lib/l4-people.js): homes, the floor's day and night, meetups, phones, greetings, the mold room
