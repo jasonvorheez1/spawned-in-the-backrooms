@@ -35,7 +35,7 @@ export function spawnResident(ctx, id) {
     behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js", "scripts/l5-resident.js"],
     state: { name: g.name, role: g.role, voice: g.voice, faction5: g.faction, factionName: FNAME[g.faction], species: g.look.species, outfit: `${g.look.topw}/${g.look.botw}/${g.look.top}`,
       offers: g.faction === "orig" ? ORIG : OFFERS[g.role] ?? [], rounds: roundsOf(g.rounds), ri: 0, mode: "day", home: { x: r0[0], z: r0[1] }, ...npcState(ctx, "agent", MEG.hp) } });
-  if (g.gun) ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
+  if (g.gun) ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: g.gun }, ...weaponBody(g.gun) });
 }
 const pickIn = (ctx, a) => a[Math.floor(ctx.random() * a.length)];
 const busy = (o, now) => !o || (o.state.escortUntil ?? 0) > now || (o.state.talkAt && now - o.state.talkAt < 8000 && !o.state.meeting) || o.state.dead;

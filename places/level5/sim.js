@@ -241,7 +241,7 @@ export function lay(ctx) {
       behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
       state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) },
     });
-    ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
+    ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: g.gun }, ...weaponBody(g.gun) });
   }
 
   // Homely Hotel Kitchen Pantry Crate (Fresh meat for Samantha)

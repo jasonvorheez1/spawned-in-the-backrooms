@@ -12,6 +12,45 @@ import { findPath } from "builtin/nav";
 import { raycast } from "builtin/physics";
 import { animate } from "builtin/tween";
 import G from "./lib/data/meg.yml";
+import WP from "./lib/data/weapons.yml";
+import { weaponBody } from "./lib/weapon-look.js";
+// what each kind of person carries (Savi's picks, weights): fighters a real spread of guns and melee, medics small blades, traders shop tools and shotguns, hotel civilians whatever was to hand
+const ARMS = {
+  fight: [["pistol", 3], ["shotgun", 2], ["smg", 1], ["crowbar", 2], ["bat", 2], ["lineman_machete", 2], ["fire_axe", 1], ["stun_baton", 2], ["hatchet", 1], ["knife", 1], ["rebar", 1], ["sledgehammer", 1]],
+  medic: [["knife", 2], ["screwdriver", 2], ["pistol", 2], ["stun_baton", 1]],
+  trade: [["shotgun", 2], ["pistol", 2], ["wrench", 2], ["crowbar", 1], ["bat", 1]],
+  civ: [["bat", 2], ["knife", 2], ["table_leg", 1], ["crowbar", 1], ["pipe_scrap", 2], ["hatchet", 1], ["pistol", 1]],
+};
+const poolOf = (s) => s.role === "medic" ? ARMS.medic : ["trader", "quarter", "clerk", "concierge"].includes(s.role) ? ARMS.trade : (s.faction5 === "orig" || ["socialite", "maid", "bellhop", "cook", "guide"].includes(s.role) && s.faction5 !== "hk") ? ARMS.civ : ARMS.fight;
+function rollArm(id, pool) { let h = 2166136261; for (const c of String(id)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); const tot = pool.reduce((a, [, w]) => a + w, 0); let r = ((h >>> 0) % 1000) / 1000 * tot; for (const [k, w] of pool) { if ((r -= w) < 0) return k; } return pool[0][0]; }
+const heldOf = (ctx, me) => (me.children ?? []).map((c) => (typeof c === "string" ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) : c)).find((c) => c && !String(c.id).endsWith("/" + HEAD_ID) && (c.model || c.primitive));
+// once per agent: keep what its spawner handed it unless that was the stock pistol, else roll from its kind's rack and swap the held body
+function arm(ctx, me, m) {
+  const s = me.state; if (s.mjguest) { m.armed = true; return; }
+  const held = heldOf(ctx, me), given = held?.state?.kind;
+  if (!s.arm) s.arm = given && given !== "pistol" ? given : rollArm(me.id, poolOf(s));
+  if (held && given === s.arm) { m.armed = true; return; }
+  if (held) ctx.destroy(held.id);
+  ctx.spawn({ parent: me.id, attachment: { bone: "Hips" }, feetPosition: { x: 0.17, y: -0.06, z: 0.02 }, rotation: { yaw: 0, pitch: -90, roll: 0 }, state: { kind: s.arm }, ...weaponBody(s.arm) });
+  m.drawn = undefined; m.armed = true;
+}
+const SHOTS = { shotgun: "/cdn/moodboard-realistic-gritty/sfx-shotgun-blast-heavy-boom.mp3", smg: "/cdn/moodboard-realistic-gritty/sfx-smg-tommy-gun-loud-rattle-shot.mp3" };
+const WHOOSH = "/cdn/moodboard-realistic-gritty/sfx-heavy-object-throw-whoosh.mp3", THUD = "/cdn/moodboard-realistic-gritty/sfx-heavy-wooden-object-smash-impact-thud.mp3";
+// a melee swing: the arm hauls back and through, a whoosh, and on a connect a thud, blood and the hit
+function swing(ctx, me, t, A) {
+  const o = me.feetPosition, q = chest(t.feetPosition), dx = q.x - o.x, dz = q.z - o.z, l = Math.hypot(dx, dz) || 1;
+  animate(ctx, me.id, { "bones.RightArm.pitch": [0, -100, 45, 0], "bones.RightForeArm.pitch": [0, -40, 10, 0], [me.model ? "bones.Spine02.yaw" : "bones.Spine2.yaw"]: [0, 25, -20, 0] }, { duration: 0.5 });
+  heard(ctx, { clip: WHOOSH, position: q, volume: 0.6, pitch: 1.3 - Math.min(0.5, (A.length ?? 0.7) * 0.4), maxDistance: 16 });
+  if (ctx.random() > Math.min(0.92, G.hitChance + 0.1)) return;
+  const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), base = isPlayer ? G.playerShot : G.shot;
+  const dmg = dmgAfterArmor(isPlayer ? t.state.look : lookOfNpc(t), Math.round(base * Math.min(2.2, Math.max(0.5, (A.damage ?? 20) / 26)) * npcMul(me.state).dmg));
+  t.state.hp -= dmg;
+  heard(ctx, { clip: THUD, position: q, volume: 0.7, maxDistance: 18 });
+  ctx.emit("damageNumber", { position: { x: q.x, y: q.y + 0.4, z: q.z }, value: dmg, color: isPlayer ? "#ff5040" : "#c6f060" });
+  ctx.emit("fx", { position: q, script: HIT, params: {} });
+  ctx.emit("squash", { target: t.id, axis: "y", intensity: 0.12, duration: 0.18 });
+  if (isPlayer) { ctx.emit("cameraPunch", { direction: { x: dx / l, y: 0, z: dz / l }, intensity: 0.5 }, { audience: { player: t.id } }); ctx.emit("screenShake", { intensity: 0.3, duration: 0.15 }, { audience: { player: t.id } }); }
+}
 import { npcState, npcMul, lookOfNpc, dmgAfterArmor } from "./lib/stats.js";
 import CHAT from "./lib/data/chatter.yml";
 import TK from "./lib/data/talk.yml";
@@ -87,14 +126,14 @@ function seesIt(ctx, me, t) {
   return !raycast(ctx, o, { x: dx / l, y: dy / l, z: dz / l }, { distance: l, physicsOnly: true, bodies: "static", ignoreEntities: [me.id, t.id] });
 }
 
-function shoot(ctx, me, t) {
+function shoot(ctx, me, t, A = WP.pistol) {
   const o = chest(me.feetPosition), q = chest(t.feetPosition), dx = q.x - o.x, dz = q.z - o.z, l = Math.hypot(dx, dz) || 1;
   const muzzle = { x: o.x + dx / l * 0.5, y: o.y + 0.15, z: o.z + dz / l * 0.5 };
   ctx.emit("fx", { position: muzzle, script: FLASH });
-  heard(ctx, { clip: SHOT, position: muzzle, volume: 0.9, maxDistance: 45 });
+  heard(ctx, { clip: SHOTS[me.state.arm] ?? SHOT, position: muzzle, volume: 0.9, maxDistance: 45 });
   animate(ctx, me.id, { [me.model ? "bones.Spine02.pitch" : "bones.Spine2.pitch"]: [0, 7, 0], "bones.RightArm.pitch": [0, 12, 0] }, { duration: 0.2 }); // the kick
   if (ctx.random() > G.hitChance) return;
-  const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), dmg = dmgAfterArmor(isPlayer ? t.state.look : lookOfNpc(t), Math.round((isPlayer ? G.playerShot : G.shot) * npcMul(me.state).dmg)); // the target's clothes soak it
+  const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), dmg = dmgAfterArmor(isPlayer ? t.state.look : lookOfNpc(t), Math.round((isPlayer ? G.playerShot : G.shot) * Math.min(1.9, Math.max(0.35, (A.damage ?? 34) / 34)) * npcMul(me.state).dmg)); // the target's clothes soak it
   t.state.hp -= dmg;
   ctx.emit("damageNumber", { position: { x: q.x, y: q.y + 0.4, z: q.z }, value: dmg, color: isPlayer ? "#ff5040" : "#c6f060" });
   ctx.emit("fx", { position: q, script: HIT, params: {} });
@@ -204,6 +243,7 @@ function life(ctx, me, m, now) {
 export function update(ctx, dt) {
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
   if (m.dressed !== 4) { m.dressed = 4; if (!s.dead) dress(ctx, me); }
+  if (!m.armed && !s.dead && now - (m.bornAt ??= now) > 1500) arm(ctx, me, m); // after the spawner has handed over its weapon
   if (s.dead || (s.hp ?? 1) <= 0) {
     if (!m.down) {
       m.down = true; bark(ctx, me, "death", true);
@@ -292,11 +332,13 @@ export function update(ctx, dt) {
   if (t && flat(t.feetPosition, home) < G.leash) {
     work(me, m, null);
     const d = flat(t.feetPosition, me.feetPosition), see = seesIt(ctx, me, t), reloading = now < (m.reloadUntil ?? 0);
-    if (d > G.range || !see) { gait(me, m, "run"); aim(me, m, null); moveAlong(ctx, me, m, t.feetPosition, G.run, dt); }
-    else { gait(me, m, "idle"); stop(me, dt); aim(me, m, reloading ? null : t); face(me, t.feetPosition.x - me.feetPosition.x, t.feetPosition.z - me.feetPosition.z, dt); }
-    if (see && d <= G.range && !reloading && now >= m.next) {
-      m.next = now + G.fireEvery * 1000 * (0.85 + ctx.random() * 0.3); shoot(ctx, me, t);
-      if (++m.shots >= 8) { m.shots = 0; m.reloadUntil = now + 1800; bark(ctx, me, "reload", true); heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-pistol-magazine-reload-click.mp3", position: me.feetPosition, volume: 0.6, maxDistance: 20 }); } // arms drop, a fresh mag
+    const A = WP[s.arm] ?? WP.pistol, ranged = !!A.ranged, range = ranged ? (s.arm === "shotgun" ? 9 : G.range) : 1.4 + (A.reach ?? 2.4) * 0.2; // melee closes to arm's length
+    if (d > range || !see) { gait(me, m, "run"); aim(me, m, null); moveAlong(ctx, me, m, t.feetPosition, G.run * (ranged ? 1 : 1.12), dt); }
+    else { gait(me, m, "idle"); stop(me, dt); aim(me, m, reloading || !ranged ? null : t); face(me, t.feetPosition.x - me.feetPosition.x, t.feetPosition.z - me.feetPosition.z, dt); }
+    if (!ranged && see && d <= range && now >= m.next) { m.next = now + Math.max(700, (A.cooldown ?? 0.7) * 1700) * (0.85 + ctx.random() * 0.3); swing(ctx, me, t, A); }
+    if (ranged && see && d <= range && !reloading && now >= m.next) {
+      m.next = now + G.fireEvery * 1000 * (s.arm === "shotgun" ? 1.9 : s.arm === "smg" ? 0.28 : 1) * (0.85 + ctx.random() * 0.3); shoot(ctx, me, t, A);
+      if (++m.shots >= (A.magSize ?? 8)) { m.shots = 0; m.reloadUntil = now + 1800; bark(ctx, me, "reload", true); heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-pistol-magazine-reload-click.mp3", position: me.feetPosition, volume: 0.6, maxDistance: 20 }); } // arms drop, a fresh mag
     }
     return;
   }
