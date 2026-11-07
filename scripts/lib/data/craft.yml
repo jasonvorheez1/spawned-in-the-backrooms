@@ -14,6 +14,7 @@ food:
   royal_ration: 60
   beans: 25
   bar: 12
+  lobby_wafer: 18
 # recipes. in: scrap tokens (scripts/lib/data/breakables.yml scrap) and counts. out: item tokens, each one a takeToken().
 # skill: [name, level] you must have; each skill point above it adds 1% to a chance of one extra output (Fallout style).
 # bench: needs a workbench (B builds one) within reach.

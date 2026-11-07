@@ -17,7 +17,7 @@ export function onInput(ctx, input) {
   const s = ctx.self.state, m = mem(ctx)
   const ray = getInputRay(ctx, input); if (ray) m.ray = ray
   if (s.level == null) return
-  if (input.pressed?.sheet) { s.sheetOpen = !s.sheetOpen && !s.lootOpen; if (s.sheetOpen) s.invOpen = false; ctx.emit('playSound', { clip: s.sheetOpen ? 'cdn/moodboard-realistic-gritty/sfx-wrist-device-raise-click-crt-power-on-hum.mp3' : 'cdn/moodboard-realistic-gritty/sfx-wrist-device-lower-click-crt-power-off.mp3', volume: 0.55, bus: 'UI' }) }
+  if (input.pressed?.sheet) { s.sheetOpen = !s.sheetOpen && !s.lootOpen; if (s.sheetOpen) s.lvlPrompt = false; if (s.sheetOpen) s.invOpen = false; ctx.emit('playSound', { clip: s.sheetOpen ? 'cdn/moodboard-realistic-gritty/sfx-wrist-device-raise-click-crt-power-on-hum.mp3' : 'cdn/moodboard-realistic-gritty/sfx-wrist-device-lower-click-crt-power-off.mp3', volume: 0.55, bus: 'UI' }) }
   const d = input.actionData?.stat
   if (input.pressed?.stat && d && typeof d.k === 'string') spend(s, d)
 }

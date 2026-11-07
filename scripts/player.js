@@ -83,11 +83,16 @@ function sound(ctx, name, volume = 0.7, mine = false) {
 
 export function gain(ctx, n) {
   const s = ctx.self.state
-  s.xp += Math.round(n * derived(s).xp)
+  const got = Math.round(n * derived(s).xp)
+  if (got <= 0) return
+  s.xp += got
+  const now0 = ctx.now(), prev = s.xpPop
+  s.xpPop = { n: prev && now0 - prev.at < 1500 ? prev.n + got : got, at: now0 } // new vegas: gains in a burst add up in one tick-up
+  ctx.emit('playSound', { clip: 'cdn/sfx-cash-register-cha-ching-bell-and-drawer.mp3', volume: 0.45, bus: 'UI', mode: 'restart' })
   while (s.xp >= xpNeed(s.level)) {
     s.xp -= xpNeed(s.level); s.level += 1
     s.hp = maxHp(s.level, s); s.sanity = maxSan(s.level, s); s.leveledAt = ctx.now()
-    if (!s.lootOpen) { s.sheetOpen = true; s.invOpen = false; s.levelUpAt = ctx.now() } // HALOGEN opens itself: spend the points now
+    s.lvlPrompt = true; s.levelUpAt = ctx.now() // HALOGEN waits: the HUD asks you to press K (Shelly, 2026-11-07)
     ctx.emit('playSound', { clip: 'cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3', volume: 0.6, bus: 'UI' })
     s.spts = (s.spts ?? 0) + derived(s).skillPerLevel
     sound(ctx, 'eerie-low-chime-level-up', 0.85, true)
@@ -163,6 +168,13 @@ function takeToken0(ctx, token) {
     if (token === 'ration') s.sanity = Math.min(ms, (s.sanity ?? ms) + L1.rationSanity)
     s.pickedAt = now; gain(ctx, L.xpAlmond)
     sound(ctx, token === 'ration' ? 'plastic-bottle-pickup-rattle' : 'pickup-ammo', 0.7, true)
+    return { ok: true }
+  }
+  if (token === 'lobby_wafer') { // Level 0's own snack: stale yellow wafers in every third desk drawer (Savi made it up)
+    const mh = maxHp(s.level, s), ms = maxSan(s.level, s), U = L2.use
+    s.hp = Math.min(mh, (s.hp ?? mh) + U.waferHp * derived(s).heal); s.sanity = Math.min(ms, (s.sanity ?? ms) + U.waferSanity)
+    s.pickedAt = now; s.notice = { text: 'Lobby Wafers. Crunchy, somehow damp.', at: now }
+    sound(ctx, 'plastic-bottle-pickup-rattle', 0.6, true)
     return { ok: true }
   }
   if (token === 'beans' || token === 'bar' || token === 'firstaid') { // Level 2 food and first aid, used on the spot
@@ -255,6 +267,7 @@ export function onInput(ctx, input) {
     const sv = ctx.self.state, aw = weaponOf(sv), P = W.power
     if (sv.invOpen || sv.lootOpen) { if (sv.chargeAt) sv.chargeAt = 0 } // a click on a menu is no swing
     else if (ctx.self.state.building) { if (sv.chargeAt) sv.chargeAt = 0 }
+    else if (ctx.self.state.sheathed) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) { sv.sheathed = false; w0vm(ctx); if (sv.holstered && owned(sv).includes(sv.holstered) && usable(sv, sv.holstered)) sv.equipped = sv.holstered; walkOf(ctx).nextSwing = ctx.now() + 450 } } // holstered: a click draws (fallout), it never hits
     else if (aw.ranged) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack || (aw.auto && input.held.attack)) swing(ctx) }
     else {
       if (input.pressed.attack && !sv.chargeAt && ctx.now() >= (walkOf(ctx).nextSwing ?? 0)) { sv.chargeAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.3, true) }
@@ -324,6 +337,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
 
 function swing(ctx, power = 0) {
   const w = walkOf(ctx), s = ctx.self.state, now = ctx.now(), P = W.power
+  if (s.sheathed) return // holstered: nothing to swing
   if (s.building) return // B mode: the click places a piece (scripts/build.js)
   if (now < (w.nextSwing ?? 0) || (s.downAt && now - s.downAt < 1200)) return
   const wp = weaponOf(s)
@@ -668,7 +682,9 @@ export function update(ctx, dt) {
   w.stamina ??= s.stamina; w.battery ??= s.battery
   const dir = w.dir ?? { x: 0, z: 0 }, moving = dir.x !== 0 || dir.z !== 0
   const crouched = !!s.crouch
-  const sprinting = w.sprint && moving && w.stamina > 1 && !s.ads && !crouched
+  if (w.stamina <= 1) w.winded = true; else if (w.winded && w.stamina >= (L.windedAt ?? 30)) w.winded = false // ran dry: no sprint till you catch your breath
+  if (!!w.winded !== !!s.winded) s.winded = !!w.winded
+  const sprinting = w.sprint && moving && w.stamina > 1 && !w.winded && !s.ads && !crouched
   const dv = w.dv ??= derived(s) // the sheet's numbers, re-derived 4x a second in the stats beat, not three times a tick
   const nowS = ctx.now(), green = nowS < (s.greenUntil ?? 0), tired = nowS < (s.tiredUntil ?? 0) // green almond water: sprint longer; red: heavy limbs
   const zh = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z)
@@ -677,7 +693,7 @@ export function update(ctx, dt) {
     s.heatWarnAt = nowS
     s.notice = { text: 'Suffocating heat (110°F) radiates from the pipes — stamina drains faster.', at: nowS }
   }
-  w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain * (green ? AW.green.staminaMul : 1) * (l2Hot ? 1.25 : 1) : L.staminaRegen * dv.staRegen * (tired ? 0.3 : 1) * (l2Hot ? 0.68 : 1) * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
+  w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain * (green ? AW.green.staminaMul : 1) * (l2Hot ? 1.25 : 1) : L.staminaRegen * dv.staRegen * (tired ? 0.3 : 1) * (w.winded ? (L.windedRegen ?? 0.6) : 1) * (l2Hot ? 0.68 : 1) * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
   const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
   const speed = (w.walkMode && !sprinting ? 0.5 : 1) * (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (s.carryMul ?? 1) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * dv.speed * (w.bur ??= burden(s))
@@ -837,7 +853,7 @@ function tickStats(ctx, t, moving) {
   const { cx, cz } = cellAt(p.x, p.z)
   if (cx >= 0 && cz >= 0 && cx < N && cz < N) {
     const vis = (w.visited ??= decode(s.visited ?? '')), i = cz * N + cx
-    if (!vis[i]) { vis[i] = 1; s.visited = encode(vis); s.explored = (s.explored ?? 0) + 1; gain(ctx, L.xpPerCell) }
+    if (!vis[i]) { vis[i] = 1; s.visited = encode(vis); s.explored = (s.explored ?? 0) + 1; if (s.explored % (L.xpCellsPer ?? 10) === 0) gain(ctx, L.xpPerCell) }
   }
   // (items are taken with E on what you look at: takeToken above, called from scripts/interact.js)
   // the flickering wall: the way out

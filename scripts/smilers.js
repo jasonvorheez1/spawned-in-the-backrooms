@@ -3,6 +3,7 @@
 // Body: a Blender crawler (art/smiler/build.py) with baked clips idle, skitter, freeze, lunge-bite, recoil, death.
 // A flashlight held on one makes it flinch (recoil) and lock rigid (freeze) until the beam leaves it.
 import { heard } from "./lib/hear.js";
+import { hearOf, sighting, leadOf } from "./lib/hunt.js";
 import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
 import { raycast } from "builtin/physics";
@@ -69,7 +70,8 @@ export function update(ctx, dt) {
       if (best && !m.prey) heard(ctx, { clip: SND("smiler-wet-giggle-hiss-stalking"), position: pos, volume: 1, maxDistance: 30 });
       m.prey = best?.id ?? null;
       if (st.horde && players.some((p) => p.id === st.horde)) m.prey = st.horde; // a blackout horde hunts its player wherever they are
-      if (best) m.last = { x: best.feetPosition.x, z: best.feetPosition.z, at: now };
+      if (!best && !m.prey) { const h = hearOf(pos, players, (p) => { const c = cellAt(p.feetPosition.x, p.feetPosition.z); return inHub(c.cx, c.cz); }); if (h) { m.last = sighting(h, now); m.heard = true; } } // heard, not seen: it comes to look
+      if (best) { m.last = sighting(best, now); m.heard = false; m.lead = null; }
     }
     const prey = m.prey ? players.find((p) => p.id === m.prey) : null;
     let goal, speed, lit = false;
@@ -87,7 +89,7 @@ export function update(ctx, dt) {
         if (staring !== !!m.stared) { m.stared = staring; if (!staring) heard(ctx, { clip: SND("creepy-wet-giggle-close"), position: pos, volume: 0.7, maxDistance: 20 }); }
       }
     }
-    else if (m.last && now - m.last.at < 6000) { goal = m.last; speed = L.stalkSpeed; if (Math.hypot(goal.x - pos.x, goal.z - pos.z) < 0.8) m.last = null; }
+    else if (m.last && now - m.last.at < (L.chaseMemory ?? 12) * 1000) { m.lead ??= leadOf(m.last); goal = m.heard ? m.last : m.lead; speed = m.heard ? L.stalkSpeed : (L.chaseMemory ? L.stalkSpeed * 1.25 : L.stalkSpeed); if (Math.hypot(goal.x - pos.x, goal.z - pos.z) < 0.8) { if (!m.heard && m.lead && goal === m.lead) { m.lead = null; m.last = { ...m.last, x: goal.x, z: goal.z }; } else { m.last = null; m.lead = null; } } }
     else { if (!m.next || Math.hypot(m.next.x - pos.x, m.next.z - pos.z) < 0.5 || now > (m.nextBy ?? 0)) { m.next = neighbor(ctx, pos); m.nextBy = now + 6000; } goal = m.next; speed = 1.3; }
     if (lit !== !!m.lit) {
       m.lit = lit;

@@ -609,7 +609,7 @@ object/x05249135d8ba8922/27:
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: filing, seed: 602}, script: scripts/l2-props-geo.js}
   rotation: {yaw: 0}
-  state: {hp: 80, items: "weapon:hatchet~rusty,ammo,weapon:pipe_scrap~rusty", kind: filing, mat: metal, maxHp: 80, name: Filing cabinet}
+  state: {hp: 80, items: "weapon:hatchet~rusty,ammo,weapon:pipe_scrap~rusty,bar", kind: filing, mat: metal, maxHp: 80, name: Filing cabinet}
   tags: [container, furniture, lootfurn, breakable]
 object/x05249135d8ba8922/9:
   feetPosition: {x: -38.189884487167, y: 0.01, z: 96.32499999999999}
