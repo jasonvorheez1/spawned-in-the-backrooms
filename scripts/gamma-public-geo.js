@@ -1,3 +1,4 @@
+// rebound with gamma-kit sphere
 // Base Gamma's public sector dressing (place "gamma"): shopfronts under the balcony ring, two food trucks, trader tents,
 // benches, planters, hanging banners, the TV lounge (sofas, CRT sets, a rug) and the old wing's plank stalls and brick stubs.
 // One static mesh at the origin; shop words are vector signs placed by places/gamma/sim.js.
