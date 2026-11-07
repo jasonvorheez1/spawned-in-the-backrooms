@@ -1,5 +1,6 @@
 // Level 0's referee: keeps almond water on the floor and smilers in the dark.
 import L from "../../scripts/lib/data/level0.yml";
+const MID = (L.hub[0] + L.hub[1]) / 2; // the safe room's centre cell
 import W from "../../scripts/lib/data/weapons.yml";
 import { spawnAlmond, spawnAmmo, spawnShells, spawnWeapon, spawnCrate, rollWeapon } from "../../scripts/lib/loot.js";
 import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ } from "../../scripts/lib/maze.js";
@@ -10,7 +11,7 @@ function cell(ctx, zones) {
   for (let k = 0; k < 60; k++) {
     const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N);
     if (inHub(cx, cz) || hasPit(cx, cz)) continue;
-    if (Math.abs(cx - 17.5) < 6 && Math.abs(cz - 17.5) < 6) continue; // not right outside the safe room
+    if (Math.abs(cx - MID) < 6 && Math.abs(cz - MID) < 6) continue; // not right outside the safe room
     if (zones && k < 45 && !zones.includes(zoneOf(cx, cz))) continue;
     return cellCenter(cx, cz);
   }
@@ -46,7 +47,7 @@ export function tick(ctx) {
     for (let k = 0; k < 400 && n < L.stairsCount; k++) {
       const cx = 1 + Math.floor(ctx.random() * (N - 2)), cz = 1 + Math.floor(ctx.random() * (N - 2));
       if (zoneOf(cx, cz) !== "halls" || inHub(cx, cz) || hasPillar(cx, cz) || hasPit(cx, cz)) continue;
-      if (Math.abs(cx - 17.5) < 5 && Math.abs(cz - 17.5) < 5) continue;
+      if (Math.abs(cx - MID) < 5 && Math.abs(cz - MID) < 5) continue;
       const c = cellCenter(cx, cz);
       ctx.spawn({ tags: ["stairs"], feetPosition: { x: c.x + (ctx.random() < 0.5 ? -1 : 1), y: 0, z: c.z }, primitive: { kind: "scripted", script: "scripts/stairs-geo.js" }, physics: { body: "static", collider: "mesh" } });
       n++;
@@ -84,7 +85,7 @@ export function tick(ctx) {
   if (smilers < L.smilers && now >= (s.nextSmiler ?? 0)) {
     const fill = s.smilersSeeded ? 1 : L.smilers - smilers;
     for (let i = 0; i < fill; i++) {
-      const c = cell(ctx, ["dark", "red", "pillars"]);
+      const c = cell(ctx, ["dark", "red", "pillars", "expanse"]);
       if (c) ctx.spawn({ tags: ["smiler"], feetPosition: { x: c.x, y: 0.05, z: c.z }, primitive: { kind: "scripted", script: "scripts/smiler-geo.js" }, physics: { body: "character" }, material: { emissiveIntensity: 3.5 }, state: { hp: L.smilerHp } });
     }
     s.smilersSeeded = true;
@@ -108,7 +109,7 @@ export function tick(ctx) {
   if (lurkers < L.lurkers && now >= (s.nextLurker ?? 0)) {
     const fill = s.lurkersSeeded ? 1 : L.lurkers - lurkers;
     for (let i = 0; i < fill; i++) {
-      const c = cell(ctx, ["halls", "arches", "holes"]);
+      const c = cell(ctx, ["halls", "arches", "holes", "offices"]);
       if (c) ctx.spawn({ tags: ["lurker"], feetPosition: { x: c.x, y: 0.05, z: c.z }, primitive: { kind: "scripted", script: "scripts/lurker-geo.js" }, physics: { body: "character" }, state: { hp: L.lurkerHp, kind: "lurker" } });
     }
     s.lurkersSeeded = true;

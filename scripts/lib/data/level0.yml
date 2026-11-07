@@ -1,9 +1,10 @@
 # Level 0 "The Threshold": every tuned number. (picks are Savi's, tune freely)
-cells: 36          # maze is cells x cells
+cells: 56          # maze is cells x cells (224 m across; was 36, widened for Shelly 2026-11-07)
 cellSize: 4        # metres per cell
 wallHeight: 3      # floor to ceiling
-hub: [16, 19]      # the safe room spans these cells on both axes (16 m square, centred on 0,0)
-wallChance: { halls: 0.38, arches: 0.42, red: 0.38, dark: 0.36, holes: 0.12, pillars: 0.0 }
+hub: [26, 29]      # the safe room spans these cells on both axes (16 m square, centred on 0,0)
+wallChance: { halls: 0.26, arches: 0.4, red: 0.34, dark: 0.3, holes: 0.12, pillars: 0.0, expanse: 0.02, offices: 0.55 }
+zoneBlock: 8       # cells per zone square (her pick)
 pitDepth: 1.4
 # the wanderer
 hp: 100
@@ -13,7 +14,7 @@ walkSpeed: 6
 sprintSpeed: 8
 staminaDrain: 28   # per second sprinting
 staminaRegen: 16
-sanityDrain: { halls: 0.12, arches: 0.06, pillars: 0.12, holes: 0.15, red: 0.9, dark: 0.6, hub: -4 }
+sanityDrain: { expanse: 0.18, offices: 0.1, halls: 0.12, arches: 0.06, pillars: 0.12, holes: 0.15, red: 0.9, dark: 0.6, hub: -4 }
 insanityHurt: 3    # hp per second at 0 sanity
 almondHp: 35
 almondSanity: 30
@@ -30,7 +31,7 @@ damage: 14
 swingCooldown: 0.55
 reach: 2.8
 # the smilers
-smilers: 7
+smilers: 11
 smilerHp: 60
 stalkSpeed: 2.2
 chargeSpeed: 4.6
@@ -43,10 +44,10 @@ biteDamage: 12
 biteSanity: 10
 biteCooldown: 1.2
 smilerRespawn: 45
-almonds: 40
+almonds: 90
 almondRespawn: 60
 # the lurkers: pale things that freeze while watched and rush when you look away
-lurkers: 4
+lurkers: 6
 lurkerHp: 35
 lurkerSpeed: 5.4
 lurkerSight: 28
@@ -68,6 +69,6 @@ figureSeen: 1.4            # seconds one stands before it is gone
 # arch rooms (wiki: deep wet carpet, archways wide enough to rest on). her picks
 wetCarpetSpeed: 0.65       # walking speed multiplier on the soaked arch-room floor
 ledgeRest: { stamina: 3, sanity: 1.2 }   # on an arch sill: stamina regen x3, sanity back per second
-stairsCount: 9            # stairs that go nowhere, seeded through the halls (her pick)
+stairsCount: 18            # stairs that go nowhere, seeded through the halls (her pick)
 shiftEvery: 25             # seconds between wall shifts behind each wanderer (her pick)
 shiftLife: 90              # seconds a shifted wall stands before it moves on
