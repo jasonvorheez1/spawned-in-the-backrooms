@@ -65,7 +65,7 @@ export async function plyToGlb(buf) {
   const add = (bytes, target) => { views.push({ buffer: 0, byteOffset: len, byteLength: bytes.byteLength, ...(target ? { target } : {}) }); const padn = (4 - (bytes.byteLength % 4)) % 4; parts.push(new Uint8Array(bytes.buffer, bytes.byteOffset, bytes.byteLength), new Uint8Array(padn)); len += bytes.byteLength + padn; return views.length - 1 }
   const A = (view, componentType, count, type, extra = {}) => { acc.push({ bufferView: view, componentType, count, type, ...extra }); return acc.length - 1 }
   const aP = A(add(P, 34962), 5126, n, 'VEC3', { min: mn, max: mx }), aN = A(add(Nn, 34962), 5126, n, 'VEC3'), aU = A(add(UV, 34962), 5126, n, 'VEC2')
-  const R = autoRig(P, n), aJ = A(add(R.JO, 34962), 5123, n, 'VEC4'), aW = A(add(R.W, 34962), 5126, n, 'VEC4'), aIB = A(add(R.IBM), 5126, R.J.length, 'MAT4')
+  const R = fileRig(d, dv, vh, vs, n, stride, zUp, s, ymin) || autoRig(P, n), aJ = A(add(R.JO, 34962), 5123, n, 'VEC4'), aW = A(add(R.W, 34962), 5126, n, 'VEC4'), aIB = A(add(R.IBM), 5126, R.J.length, 'MAT4')
   const images = texs.map((t) => ({ bufferView: add(t), mimeType: 'image/png' }))
   const mats = [], prims = []
   for (const [start, count, mat] of secs) {
@@ -73,14 +73,60 @@ export async function plyToGlb(buf) {
     mats.push({ pbrMetallicRoughness: { ...(texs.length ? { baseColorTexture: { index: Math.min(mat, texs.length - 1) } } : {}), metallicFactor: 0, roughnessFactor: 0.75 }, alphaMode: 'MASK', alphaCutoff: 0.4, doubleSided: true })
     prims.push({ attributes: { POSITION: aP, NORMAL: aN, TEXCOORD_0: aU, JOINTS_0: aJ, WEIGHTS_0: aW }, indices: ai, material: mats.length - 1 })
   }
-  const g = { asset: { version: '2.0' }, scene: 0, scenes: [{ nodes: [0, 1] }], nodes: [{ name: 'body', mesh: 0, skin: 0 }, ...R.J.map((j, i) => { const kids = R.J.map((k, ki) => (k.parent === i ? ki + 1 : -1)).filter((x) => x > 0); return { name: j.name, translation: j.lt, rotation: j.lq, ...(kids.length ? { children: kids } : {}) } })], skins: [{ skeleton: 1, joints: R.J.map((_, i) => i + 1), inverseBindMatrices: aIB }], meshes: [{ primitives: prims }], materials: mats, accessors: acc, bufferViews: views, buffers: [{ byteLength: len }],
+  const jn = R.J.map((j, i) => { const kids = R.J.map((k, ki) => (k.parent === i ? ki + 1 : -1)).filter((x) => x > 0); return { name: j.name, translation: j.lt, rotation: j.lq, ...(kids.length ? { children: kids } : {}) } })
+  const roots = R.J.map((j, i) => (j.parent < 0 ? i + 1 : -1)).filter((x) => x > 0)
+  const arm = R.arm ? [{ name: 'Armature', ...R.arm, children: roots }] : []
+  const g = { asset: { version: '2.0' }, scene: 0, scenes: [{ nodes: R.arm ? [0, R.J.length + 1] : [0, ...roots] }], nodes: [{ name: 'body', mesh: 0, skin: 0 }, ...jn, ...arm], skins: [{ skeleton: R.arm ? R.J.length + 1 : roots[0], joints: R.J.map((_, i) => i + 1), inverseBindMatrices: aIB }], meshes: [{ primitives: prims }], materials: mats, accessors: acc, bufferViews: views, buffers: [{ byteLength: len }],
     ...(texs.length ? { textures: texs.map((_, i) => ({ source: i, sampler: 0 })), samplers: [{ wrapS: 10497, wrapT: 10497 }], images } : {}) }
   let js = new TextEncoder().encode(JSON.stringify(g)); const jp = (4 - (js.length % 4)) % 4; if (jp) { const t = new Uint8Array(js.length + jp).fill(32); t.set(js); js = t }
   const head = new DataView(new ArrayBuffer(20)); head.setUint32(0, 0x46546c67, true); head.setUint32(4, 2, true); head.setUint32(8, 28 + js.length + len, true); head.setUint32(12, js.length, true); head.setUint32(16, 0x4e4f534a, true)
   const bh = new DataView(new ArrayBuffer(8)); bh.setUint32(0, len, true); bh.setUint32(4, 0x004e4942, true)
   return new Blob([head, js, bh, ...parts], { type: 'model/gltf-binary' })
 }
-// auto-rig: a Mixamo-named humanoid skeleton fitted to the mesh's own extents, each vertex skinned to its two nearest bones on its side
+// the file's own rig: Tower Unite plymodels carry their Unreal skeleton (pelvis, spine_01, thigh_l …) as records
+//   0x01, name length, name, 3x4 inverse bind (mesh space, rows), 3x4 local pose (rows), i32 parent, u32 index
+// and each vertex names 8 bones (bytes 28-35) with u8 weights (36-43). Joints keep the file's names and pose;
+// the mesh was turned and scaled into game space (A), so joints ride an Armature node holding A and IBM' = IBM·A⁻¹.
+function fileRig(d, dv, vh, vs, n, stride, zUp, sc, ymin) {
+  if (stride < 44) return null
+  const J = [], mat = (o) => { const m = []; for (let k = 0; k < 12; k++) m.push(dv.getFloat32(o + k * 4, true)); return m }
+  const lim = Math.min(vh > 0 ? vh : d.length, 65536)
+  for (let o = 0; o + 2 < lim; o++) {
+    if (d[o] !== 1) continue
+    const L = d[o + 1]; if (L < 2 || L > 48) continue
+    let ok = true, name = ''
+    for (let k = 0; k < L; k++) { const c = d[o + 2 + k]; if (!((c >= 97 && c <= 122) || c === 95 || (k && c >= 48 && c <= 57))) { ok = false; break } name += String.fromCharCode(c) }
+    if (!ok) continue
+    const r = o + 2 + L; if (r + 104 > d.length) break
+    const par = dv.getInt32(r + 96, true), idx = dv.getUint32(r + 100, true)
+    if (idx !== J.length || par < -1 || par > 400) continue
+    J.push({ name, parent: par, ib: mat(r), lm: mat(r + 48) }); o = r + 103
+  }
+  if (J.length < 8 || J.some((j) => j.parent >= J.length) || !J.some((j) => j.parent < 0)) return null
+  // the turn the vertices took: p = A r (A = T(0,-ymin·s,0) · s · M)
+  const M = zUp ? [[-1, 0, 0], [0, 0, 1], [0, 1, 0]] : [[1, 0, 0], [0, -1, 0], [0, 0, -1]], ty = -ymin * sc
+  const q = (m) => { const [a, b, c] = m, tr = a[0] + b[1] + c[2]; let x, y, z, w; if (tr > 0) { const S = Math.sqrt(tr + 1) * 2; w = S / 4; x = (c[1] - b[2]) / S; y = (a[2] - c[0]) / S; z = (b[0] - a[1]) / S } else if (a[0] > b[1] && a[0] > c[2]) { const S = Math.sqrt(1 + a[0] - b[1] - c[2]) * 2; w = (c[1] - b[2]) / S; x = S / 4; y = (a[1] + b[0]) / S; z = (a[2] + c[0]) / S } else if (b[1] > c[2]) { const S = Math.sqrt(1 + b[1] - a[0] - c[2]) * 2; w = (a[2] - c[0]) / S; x = (a[1] + b[0]) / S; y = S / 4; z = (b[2] + c[1]) / S } else { const S = Math.sqrt(1 + c[2] - a[0] - b[1]) * 2; w = (b[0] - a[1]) / S; x = (a[2] + c[0]) / S; y = (b[2] + c[1]) / S; z = S / 4 } const l = Math.hypot(x, y, z, w) || 1; return [x / l, y / l, z / l, w / l] }
+  const rows3 = (m) => [[m[0], m[1], m[2]], [m[4], m[5], m[6]], [m[8], m[9], m[10]]]
+  for (const j of J) { const R = rows3(j.lm), sx = Math.hypot(R[0][0], R[1][0], R[2][0]) || 1; j.lt = [j.lm[3], j.lm[7], j.lm[11]]; j.lq = q(R.map((r) => r.map((v) => v / sx))) }
+  // A⁻¹ = Mᵀ · (1/s) · T(0,+ymin·s,0); IBM' = IBM · A⁻¹, written column-major
+  const Ai = [[M[0][0] / sc, M[1][0] / sc, M[2][0] / sc, 0], [M[0][1] / sc, M[1][1] / sc, M[2][1] / sc, 0], [M[0][2] / sc, M[1][2] / sc, M[2][2] / sc, 0], [0, 0, 0, 1]]
+  for (let r = 0; r < 3; r++) Ai[r][3] = -(Ai[r][1] * ty)
+  const IBM = new Float32Array(J.length * 16)
+  J.forEach((j, i) => { const B = [[j.ib[0], j.ib[1], j.ib[2], j.ib[3]], [j.ib[4], j.ib[5], j.ib[6], j.ib[7]], [j.ib[8], j.ib[9], j.ib[10], j.ib[11]], [0, 0, 0, 1]]; for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) { let v = 0; for (let k = 0; k < 4; k++) v += B[r][k] * Ai[k][c]; IBM[i * 16 + c * 4 + r] = v } })
+  // weights: the four strongest of eight, renormalized; an unweighted vertex rides the root's first child
+  const JO = new Uint16Array(n * 4), W = new Float32Array(n * 4), fb = Math.max(0, J.findIndex((j) => j.name === 'pelvis'))
+  let bad = 0
+  for (let v = 0; v < n; v++) {
+    const o = vs + v * stride, inf = []
+    for (let k = 0; k < 8; k++) { const w = d[o + 36 + k], b = d[o + 28 + k]; if (w && b < J.length) inf.push([b, w]) }
+    inf.sort((a, b) => b[1] - a[1]); const top = inf.slice(0, 4), sum = top.reduce((a, x) => a + x[1], 0)
+    if (!sum) { bad++; JO[v * 4] = fb; W[v * 4] = 1; continue }
+    top.forEach(([b, w], k) => { JO[v * 4 + k] = b; W[v * 4 + k] = w / sum })
+  }
+  if (bad > n * 0.5) return null
+  return { J, JO, W, IBM, arm: { translation: [0, ty, 0], rotation: q(M), scale: [sc, sc, sc] } }
+}
+// auto-rig (only for a file with no skeleton): a Mixamo-named humanoid skeleton fitted to the mesh's own extents, each vertex skinned to its two nearest bones on its side
 function autoRig(P, n) {
   const H = 1.8, side = (x) => (x > 0.012 ? 1 : x < -0.012 ? -1 : 0), X = (v) => P[v * 3], Y = (v) => P[v * 3 + 1], Z = (v) => P[v * 3 + 2]
   // landmarks read off the mesh: feet, arm line, crotch
