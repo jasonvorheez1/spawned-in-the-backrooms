@@ -11,6 +11,7 @@
 // - Dual Abyssal Titans: Entity 20 ("The Thing on Level 7") and "Tiny" prowling the Twilight & Midnight Zones.
 
 import { keepPeople, every } from "../../scripts/lib/level-kit.js";
+import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "2s";
 
 // Tripo models for the props (Savi, Nov 7): each fits a layout box; breakables take tag + { mat, hp, maxHp } (lib/breakables.js)
@@ -852,6 +853,7 @@ export function tick(ctx) {
   }
 
   const now = ctx.now();
+  tickChatter(ctx, CHATTER.level7, { "l7-vance": "reyes", "l7-jude": "hollis", "l7-mara": "mags" }); // the fort talks among itself, Vance talks to his radio
 
   // Smashed props grow back after 60 min, never in someone's face
   if (every(ctx, "regrow", 5000)) {
