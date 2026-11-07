@@ -280,7 +280,17 @@ function lootAction(ctx, d) {
     if (SLOTS.some((k) => (pr[k] ?? 'none') !== l[k])) c.primitive = { ...c.primitive, params: { ...pr, ...Object.fromEntries(SLOTS.map((k) => [k, l[k]])) } }
   }
   if (fail) note(ctx, fail)
+  if (!items.length && c.tags?.includes('rubble')) { // emptied rubble crumbles away
+    const p = c.feetPosition
+    ctx.emit('fx', { position: { x: p.x, y: p.y + 0.2, z: p.z }, script: RUBBLE_DUST }, { audience: { nearby: p, radius: 40 } })
+    snd(ctx, 'loot-take-all-rustle', 0.3)
+    closeLoot(ctx)
+    ctx.destroy(c.id)
+  }
 }
+const RUBBLE_DUST = `fx
+pop dust burst=10..14 on=disc(.5) life=.7..1.3 v=up(.3..0.8)+sdir()*.5 size=.25..0.45 acc=buoy(.3)+drag(1.5) col=<.72,.66,.52> a=0>.35:.3>.7:.15>0 sz=$size*(.6>1.8) rot=spin(.2) r=sprite(smoke-puff,alpha)
+pop bits burst=6..9 on=disc(.4) life=.5..0.8 v=up(1..2)+sdir()*1 size=.04..0.08 acc=grav() col=<.6,.55,.45> a=1 sz=$size floor=stick r=sprite(soft-disc,alpha)`
 
 export function onInput(ctx, input) {
   const m = mem(ctx)
