@@ -148,7 +148,6 @@ l5-ball-locker-2:
 l5-ball-mahjong:
   behavior: scripts/l5-ball.js
   feetPosition: {x: 6, y: 0, z: 0}
-  fx: {params: {}, script: "fx\npop wisp rate=flick(.3,.5)*3 on=point() life=3..5 v=up(.12..0.2)+sdir()*.03 size=.03..0.05 acc=curl(.4)*.15+buoy(.05)+drag(.6) sz=$size*(1>5) col=<.55,.53,.5> a=0>.15:.25>.6:.12>0 rot=spin(.1) r=sprite(smoke-puff,alpha)"}
   id: l5-ball-mahjong
   material: {pbr: true}
   physics: {body: static, collider: mesh}
