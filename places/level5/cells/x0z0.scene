@@ -3333,12 +3333,15 @@ l5-radio-salon:
   state: {info: "A polonaise, from the Originals' salon. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
   tags: [usable, l5-radio]
 l5-samantha:
-  feetPosition: {x: 3, y: 0, z: 2.5}
+  behavior: [scripts/samantha.js]
+  feetPosition: {x: 4.9, y: 0, z: 1.2}
   id: l5-samantha
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 0.9, height: 0.45, kind: box, width: 0.4}
-  tags: [blueprint]
+  layout: {box: {max: {x: 0.2, y: 0.45, z: 0.45}, min: {x: -0.2, y: 0, z: -0.45}}}
+  model: /cdn/value.05b6fcdb02ae0489f79f366c2285414facaa51f7639114b24430fb4ac82f5455.glb
+  physics: {body: kinematic, collider: box}
+  rotation: {yaw: -130}
+  state: {faction: The Beverly Room, hp: 1000, info: A very small cat. She is looking at you., maxHp: 1000, name: Samantha, offers: [["o:feed", Offer meat], ["o:refuse", Refuse]], role: psychic, tint: "#7dff9a", verb: Talk}
+  tags: [npc, samantha, usable, entity26]
 l5-stairs-up:
   behavior: scripts/level-door.js
   feetPosition: {x: -8, y: 0, z: -20.400000000000002}
