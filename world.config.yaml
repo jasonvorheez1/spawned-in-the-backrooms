@@ -22,6 +22,7 @@ inputs:
         - shift
     crouch:
       keys:
+        - ctrl
         - z
       touch:
         label: Crouch
