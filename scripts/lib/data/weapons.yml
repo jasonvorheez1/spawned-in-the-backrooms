@@ -1,6 +1,6 @@
 # Melee weapons. Fists are what you start with: weak on purpose. Found weapons need a level to wield.
 # damage: base hit. levelScale: share of the per-level damage bonus it gets. cooldown: seconds. reach: metres. stamina: cost per swing.
-order: [fists, table_leg, pipe_scrap, crowbar, bat, hatchet, fire_axe, pistol, shotgun, rebar, wrench, screwdriver, sledgehammer]
+order: [fists, table_leg, pipe_scrap, crowbar, bat, hatchet, fire_axe, pistol, shotgun, rebar, wrench, screwdriver, sledgehammer, stun_baton, lineman_machete]
 # rarity: common < uncommon < rare. weight: how often it is rolled for floor spawns and smiler drops. xp: reward for picking one up.
 rarities:
   common:   { label: COMMON,   color: '#c9c2a0' }
@@ -36,13 +36,16 @@ pickupRespawn: 90  # seconds between refills
 # Level 2 tools (her picks): found in the utility halls
 screwdriver:  { name: Screwdriver,  damage: 14, levelScale: 0.9, cooldown: 0.32, reach: 1.9, stamina: 5,  minLevel: 2, rarity: common, weight: 6, xp: 8,  level2: true, color: "oklch(0.6 0.18 40)", length: 0.3 }
 sledgehammer: { name: Sledgehammer, damage: 64, levelScale: 1.3, cooldown: 1.35, reach: 2.8, stamina: 26, minLevel: 9, rarity: rare,  weight: 1, xp: 55, level2: true, color: "oklch(0.4 0.01 250)", length: 0.95 }
+# Level 3 finds (Electrical Station crates only; level3: true keeps them out of the other levels' rolls). Savi's picks.
+stun_baton:      { name: Stun baton,        damage: 30, levelScale: 1,   cooldown: 0.55, reach: 2.4, stamina: 11, minLevel: 7, rarity: rare, weight: 2, xp: 40, level3: true, color: "oklch(0.25 0.01 260)", length: 0.6 }
+lineman_machete: { name: "Lineman's machete", damage: 44, levelScale: 1.15, cooldown: 0.7, reach: 2.7, stamina: 15, minLevel: 8, rarity: rare, weight: 2, xp: 50, level3: true, color: "oklch(0.3 0.01 250)", length: 0.72 }
 # Variants (my picks): a found weapon may roll one. The key is "<kind>~<variant>" (crowbar~taped), everywhere a kind goes.
 # for: which kinds can roll it (melee, ranged, blunt, blade, or a kind's name). chance: weight against `plain` (no variant).
 # Each number multiplies the base stat; rarity steps the rarity up or down; cnd: the condition it is found at.
 # look: what scripts/weapon-geo.js draws over the weapon (rust, tape, nails, edge, meg, mag, sawn).
 variantPlain: 46
-blunt: [table_leg, pipe_scrap, crowbar, bat, wrench, sledgehammer]
-blade: [hatchet, fire_axe, screwdriver, rebar]
+blunt: [table_leg, pipe_scrap, crowbar, bat, wrench, sledgehammer, stun_baton]
+blade: [hatchet, fire_axe, screwdriver, rebar, lineman_machete]
 variants:
   rusty:    { name: Rusty,        for: [melee, ranged], chance: 20, damage: 0.82, cooldown: 1.06, rarity: -1, xp: 0.6, cnd: 55, look: rust, tint: "oklch(0.62 0.08 50)" }
   taped:    { name: Taped,        for: [melee], chance: 13, cooldown: 0.88, stamina: 0.82, xp: 1.2, look: tape }

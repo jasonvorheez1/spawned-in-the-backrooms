@@ -26,7 +26,7 @@ export function spawnShells(ctx, c) {
 
 // Weighted pick over every found weapon; rarer ones carry a smaller weight in weapons.yml.
 export function rollWeapon(ctx) {
-  const kinds = W.order.slice(1).filter((k) => !W[k].level1 && !W[k].level2), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
+  const kinds = W.order.slice(1).filter((k) => !W[k].level1 && !W[k].level2 && !W[k].level3), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
   let r = ctx.random() * total;
   for (const k of kinds) { r -= W[k].weight ?? 1; if (r <= 0) return rollVariant(ctx, k); }
   return kinds[0];

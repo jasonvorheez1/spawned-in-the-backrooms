@@ -1,14 +1,15 @@
 // Level 3 loot: crates, generator-room caches, assembly-line output. Tables in data/loot3.yml.
 import T from "./data/loot3.yml";
-import { rollWeapon, rollLock } from "./loot.js";
+import { rollWeapon, rollLock, rollVariant } from "./loot.js";
+import P from "./data/l3items.yml";
 import { rollCloth } from "./clothes.js";
 import { SKILLS } from "./stats.js";
 const bookOf = (ctx) => "book:" + SKILLS[Math.floor(ctx.random() * SKILLS.length)].k;
-export function rollWeaponL3(ctx) { return rollWeapon(ctx); }
+export function rollWeaponL3(ctx) { return ctx.random() < (T.weaponL3 ?? 0.45) ? rollVariant(ctx, ctx.random() < 0.5 ? "stun_baton" : "lineman_machete") : rollWeapon(ctx); }
 export function rollTableL3(ctx, table = "crate") {
   const E = Object.entries(T.tables[table] ?? T.tables.crate), total = E.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
-  for (const [k, w] of E) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL3(ctx) : k === "book" ? bookOf(ctx) : k === "cloth" ? rollCloth(ctx) : k; }
+  for (const [k, w] of E) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL3(ctx) : k === "book" ? bookOf(ctx) : k === "cloth" ? rollCloth(ctx) : k === "page" ? "page:" + (1 + Math.floor(ctx.random() * (P.pages ?? 8))) : k; }
   return "almond";
 }
 export const rollItemL3 = (ctx) => rollTableL3(ctx, "crate");

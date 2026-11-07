@@ -1,0 +1,5 @@
+# Level 3 finds: numbers for the new items and the stun baton. All Savi's picks.
+royal_ration: { sanity: 60, kg: 0 }        # eaten on the spot: full HP, +60 sanity
+firesalt: { seconds: 90, damage: 1.4, kg: 0.3 }  # rubbed on a melee weapon: x1.4 melee damage for 90 s
+stun: { kinds: [stun_baton], ms: 1500 }    # a hit from these sets target.state.stunUntil = now + ms (hounds.js reads it)
+pages: 8                                   # torn notebook pages, page:1 .. page:8, text in pages.yml

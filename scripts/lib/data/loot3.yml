@@ -1,8 +1,9 @@
 # Level 3 loot: token weights per table. "weapon" rolls a Level 3 weapon, "book" a skill book, "cloth" a garment.
 # Level 3 is the Backrooms' richest level: tables roll more items than anywhere else.
 tables:
-  crate: { almond: 8, ammo: 6, shells: 3, battery: 6, firstaid: 3, bar: 4, beans: 3, tape: 4, kit: 3, weapon: 4, book: 1, cloth: 2, fuse: 2 }
-  gen:   { almond: 10, battery: 9, fuse: 5, kit: 3, tape: 4, ammo: 3, weapon: 2 }
-  line:  { almond: 9, bar: 6, beans: 5, firstaid: 4, ammo: 6, shells: 3, battery: 5, tape: 4, kit: 3, weapon: 3, cloth: 3, book: 1 }
+  crate: { almond: 8, ammo: 6, shells: 3, battery: 6, firstaid: 3, bar: 4, beans: 3, tape: 4, kit: 3, weapon: 4, book: 1, cloth: 2, fuse: 2, page: 3 }  # page: Savi's pick
+  gen:   { almond: 10, battery: 9, fuse: 5, kit: 3, tape: 4, ammo: 3, weapon: 2, firesalt: 5 }  # firesalt: Savi's pick
+  line:  { almond: 9, bar: 6, beans: 5, firstaid: 4, ammo: 6, shells: 3, battery: 5, tape: 4, kit: 3, weapon: 3, cloth: 3, book: 1, royal_ration: 1 }  # royal_ration: Savi's pick
   gamma: { almond: 6, firstaid: 4, ammo: 5, battery: 4, bar: 3 }
 crateItems: [2, 4]
+weaponL3: 0.45  # share of Level 3 weapon rolls that are a baton or machete. Savi's pick
