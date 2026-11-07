@@ -25,7 +25,6 @@ inputs:
         - capslock
     crouch:
       keys:
-        - control
         - z
       touch:
         label: Crouch
