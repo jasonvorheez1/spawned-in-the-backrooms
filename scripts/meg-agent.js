@@ -287,12 +287,14 @@ const GEST = {
 // their own life, every 1.5 s: a feared thing close makes them show it and back away; a player near hears what they want, now and then
 function life(ctx, me, m, now) {
   if (now < (m.lifeAt ?? 0)) return; m.lifeAt = now + 1500
-  const L = (m.L ??= lifeOf(me.id)), tags = me.state.faction5 ? [...new Set([...(FEAR_TAGS[L.fear] ?? []), ...FOES])] : FEAR_TAGS[L.fear], p = me.feetPosition
+  // fear: only what they can SEE, and an armed hotel hand fights the hall's foes (combat owns those) instead of bolting from them
+  const armed = me.state.arm && me.state.arm !== "fists"
+  const L = (m.L ??= lifeOf(me.id)), tags = me.state.faction5 && !armed ? [...new Set([...(FEAR_TAGS[L.fear] ?? []), ...FOES])] : FEAR_TAGS[L.fear], p = me.feetPosition
   if (tags && !me.state.follow && !me.state.mjguest) {
-    const t = ctx.query({ anyTags: tags, radius: me.state.faction5 ? 14 : 10 })[0]
-    if (t && !t.state?.dead) {
+    const t = ctx.query({ anyTags: tags, radius: me.state.faction5 ? 12 : 9 }).find((q) => !q.state?.dead && seesIt(ctx, me, q))
+    if (t) {
       m.fearAt = now; const dx = p.x - t.feetPosition.x, dz = p.z - t.feetPosition.z, d = Math.hypot(dx, dz) || 1
-      const run = me.state.faction5 ? 4.2 : 2.6; me.velocity = { x: dx / d * run, y: me.velocity?.y ?? 0, z: dz / d * run }
+      m.flee = { x: p.x + dx / d * 7, y: p.y, z: p.z + dz / d * 7, until: now + 2500 } // one committed run away, not a twitch a tick
       if (now - (m.fearSaid ?? 0) > 12000) { m.fearSaid = now; me.state.line = { t: FEAR_LINES[Math.floor(ctx.random() * FEAR_LINES.length)], at: now, d: 2200 } }
       return
     }
@@ -341,6 +343,8 @@ export function update(ctx, dt) {
     return;
   }
   life(ctx, me, m, now);
+  if (m.flee && now < m.flee.until && !s.follow) { gait(me, m, "run"); moveAlong(ctx, me, m, m.flee, 4.2, dt); return; } // holds the run till it's done
+  else if (m.flee) m.flee = null;
   // a flinch every time something takes hp off them
   if (m.lastHp != null && (s.hp ?? 0) < m.lastHp - 0.5) {
     m.hitAt = now;
