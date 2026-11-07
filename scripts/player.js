@@ -63,6 +63,12 @@ function gain(ctx, n) {
 export function takeToken(ctx, token) {
   const s = ctx.self.state, now = ctx.now()
   const cw = canCarry(s, token); if (!cw.ok) return cw
+  if (token.startsWith('cloth:')) { // a garment: into the bag (player.state.clothes); I > Apparel puts it on
+    if (!parseCloth(token)) return { ok: false, why: 'Rags' }
+    s.clothes = [s.clothes, token].filter(Boolean).join(','); s.pickedAt = now
+    sound(ctx, 'gun-raise-cloth-rustle', 0.5, true)
+    return { ok: true }
+  }
   if (token === 'almond') {
     s.almonds = (s.almonds ?? 0) + 1; gain(ctx, L.xpAlmond); s.pickedAt = now
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.75, true)
@@ -322,6 +328,15 @@ function invAction(ctx, d) {
   if (d.k === 'close') { s.invOpen = false; return }
   if (d.k === 'drink') { drink(ctx); return }
   const k = String(d.w || '')
+  if (d.k === 'wear' || d.k === 'unwear') { // clothes: wearing one swaps out what was in that slot (back into the bag); unwear strips it
+    const bag = s.clothes ? s.clothes.split(',').filter(Boolean) : []
+    const r = d.k === 'wear' ? (bag.includes(k) ? wear(s.look, k) : null) : takeOff(s.look, k)
+    if (!r) return
+    if (d.k === 'wear') bag.splice(bag.indexOf(k), 1)
+    for (const t of [r.back, r.extra]) if (t) bag.push(t)
+    s.look = r.look; s.clothes = bag.join(',')
+    sound(ctx, 'gun-raise-cloth-rustle', 0.5, true); return
+  }
   if (d.k === 'equip' && owned(s).includes(k) && usable(s, k) && s.equipped !== k) {
     cancelReload(ctx); s.ads = false; s.equipped = k; s.equipAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.45, true); return
   }
