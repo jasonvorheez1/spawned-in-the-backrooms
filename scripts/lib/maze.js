@@ -57,7 +57,7 @@ export const hasPillar = (cx, cz) => zoneOf(cx, cz) === "pillars" || (zoneOf(cx,
 export const hasLight = (cx, cz) => zoneOf(cx, cz) !== "dark" && (inHub(cx, cz) || hash(cx, cz, 23) < 0.7);
 
 // the way down: a flickering wall far from the safe room
-export const EXIT = { cx: 2, cz: 33 };
+export const EXIT = { cx: 0, cz: 33 }; // against the west outer wall
 
 export const ZONE_NAMES = {
   hub: "THE SAFE ROOM", halls: "THE HALLS", arches: "ARCH ROOMS", pillars: "PILLAR FIELD",
