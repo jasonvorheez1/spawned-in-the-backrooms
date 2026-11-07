@@ -214,7 +214,7 @@ for ms in shed.material_slots:
 for o in (body, crea, clothes, shoes, shed, hair):
     for md in list(o.modifiers):
         if md.type == "SUBSURF": o.modifiers.remove(md)
-decimate(body, 3600); decimate(clothes, 2200); decimate(shoes, 500); decimate(hair, 900); decimate(crea, 5600); decimate(shed, 2400)
+decimate(body, 3600); decimate(clothes, 2200); decimate(shoes, 500); decimate(hair, 900); decimate(crea, 6400); decimate(shed, 2400)
 bpy.ops.object.select_all(action="DESELECT")
 for o in (body, clothes, shoes, eyes, hair): o.select_set(True)
 bpy.context.view_layer.objects.active = body; bpy.ops.object.join(); disg = body; disg.name = "disguise"
