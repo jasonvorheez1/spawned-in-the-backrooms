@@ -1,79 +1,77 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 722,
-  "updatedAt": "2026-11-07T15:54:42.532Z",
-  "summary": "The Backrooms is a multiplayer survival game spanning Level 0, authored and generated Levels 1–4, and M.E.G. Base Gamma. Ordered player and NPC behavior chains pair movement/combat with shared helpers; place simulations build local spaces and actors, and Level 4 now layers resident lives, office activities, destructible interiors and networked Back OS terminals over its office plan.",
+  "basedOnSpecVersion": 738,
+  "updatedAt": "2026-11-07T16:09:39.556Z",
+  "summary": "The Backrooms is a multiplayer survival game spanning Level 0, Levels 1–4 and M.E.G. Base Gamma, with place simulations building local spaces and actors around shared grid, loot and NPC systems. Ordered player/NPC behavior chains handle movement and actions; Level 4 adds residents, office activities and Back OS terminals, while clothing is now leveled for both finds and faction wardrobes.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0's generated yellow maze and safe-room hub; authored cells, loot, shifting walls, seeded moments and smilers/lurkers.",
-    "places/level1 (3D) - Habitable Zone and M.E.G. camp; car-park cells, camp agents, searchable loot, hounds and skin-stealers; grid walls and props are destructible.",
+    "places/level1 (3D) - Habitable Zone and M.E.G. camp; car-park cells, agents, searchable loot, hounds and skin-stealers; grid walls and props are destructible.",
     "places/level2 (3D) - Abandoned Utility Halls and Survivor camp; seeded halls, rooms, NPCs, supplies, hounds and Level 3 threshold; grid walls and props are destructible.",
-    "places/level3 (3D) - Electrical Station; maze zones/crawl halls, lamps, Gamma fortress checkpoint, hazards, loot and creature brigades; blackouts and powered lift lead to Level 4.",
-    "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards and residents; objects.scene carries named agents' skin-attached heads, and sim adds the locked Database computer.",
-    "places/level4 (3D) - Abandoned Office, a 64×64 m floor with perimeter/corner offices, fountains, break-room vending, Level 3 lift, chained stairs and Base Omega; sim adds residents, cubicles, phones, printers, shift board, computers and breakable walls/props.",
+    "places/level3 (3D) - Electrical Station; maze zones/crawl halls, hazards, loot, creature brigades and Gamma checkpoint; blackouts and powered lift lead to Level 4.",
+    "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards and residents; sim adds the locked Database computer.",
+    "places/level4 (3D) - Abandoned Office, a 64×64 m floor with perimeter/corner offices, fountains, break-room vending, Level 3 lift, chained stairs and Base Omega; sim adds residents, cubicles, phones, printers, tasks and computers.",
     "places/debug (3D) - isolated combat and loot test room; authored cells hold weapon/item stations, enemy pens and test stands."
   ],
   "roots": [
     "world.config.yaml - multiplayer entry at main; declares camera, actions, player template and HUD renderer.",
     "templates/player.js - ordered behavior chain: humanoid-locomotion, player, interact, talk, build, noclip, stats, craft, os, horde, critter.",
-    "templates/camera.js + scripts/camera.js - camera entry and presented yaw/pitch with crouched eye height.",
-    "places/<place>/sim.js - local setup/tick roots; Level 4 builds the office and resident routines, and checks windows and breakables; Gamma places its database terminal.",
-    "places/<place>/config.yaml + cells - place configuration and authored placements; Level 4 config supplies office atmosphere/look and x0z0 carries its layered set.",
+    "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and now eases player view/eye position into and out of a Back OS computer screen.",
+    "places/<place>/sim.js - local setup/tick roots; Level 4 builds offices/residents and Gamma places its Database terminal; level sims spawn faction-dressed agents.",
+    "places/<place>/config.yaml + cells - place configuration and authored placements; Level 4 x0z0 scene includes Omega actors with explicit saved look/wear fields.",
     "scripts/ui.js with loot-ui.js, talk-ui.js, build-ui.js, stats-ui.js, craft-ui.js, os-ui.js, horde-ui.js and noclip-ui.js - HUD composition and action routing."
   ],
   "shared": [
-    "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait/heading behavior; player template and M.E.G. NPC behavior chains use it before movement controllers.",
+    "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait/heading behavior; player and M.E.G. NPC chains run it before their controllers.",
     "scripts/lib/maze.js + scripts/lib/data/level0.yml; scripts/lib/level1.js and level2.js with their data - per-level grids/layouts reused by simulation, geometry and gameplay.",
     "scripts/lib/level3.js + scripts/lib/data/level3.yml + scripts/lib/maze3path.js - Electrical Station grid, zones, openings and routes for geometry, sim and creatures.",
     "scripts/lib/level4.js - office room/wall plan, zones, sanity rates and names read by Level 4 geometry, resident/office systems and player.js.",
-    "scripts/lib/l4-people.js + scripts/lib/data/level4-people.yml - Level 4 residents' homes, daily rounds, meetups, greetings and phone errands; place sim spawns the shared NPC agents.",
-    "scripts/lib/os.js + scripts/lib/data/os.yml - shared Back OS profiles, mail/files/Database/forum and terminal commands consumed by os.js and os-ui.js on office, Omega and Gamma hosts.",
-    "scripts/lib/level0-moments.js + scripts/moments-geo.js + scripts/moments.js - deterministic Level 0 oddity placement/behavior; scripts/lib/furniture.js + furniture-loot.yml - searchable container placement/loot shared by Levels 0, 1 and 3 (Level 2 has its own path).",
-    "scripts/lib/data/weapons.yml + scripts/lib/weapons.js, weapon-look.js, weapon-prof.js and weapon-geo.js - weapon definitions and fitted variants shared by pickups, viewmodels and NPCs.",
-    "scripts/lib/items.js + loot.js/loot3.js; clothes.js + clothes.yml; stats.js; critter-model.js + critter-models.yml - shared items, apparel/stats and avatar model helpers used by player, NPC combat, loot and UI."
+    "scripts/lib/l4-people.js + scripts/lib/data/level4-people.yml - Level 4 resident homes, routines, meetups, greetings and phone errands; sim spawns their shared NPC agents.",
+    "scripts/lib/os.js + scripts/lib/data/os.yml - host profiles, mail/files/Database/forum/Recycle Bin/System Properties and terminal commands for os.js and os-ui.js.",
+    "scripts/lib/clothes.js + scripts/lib/data/clothes.yml - garment definitions, fitting and leveled loot/NPC wardrobe rolls reused by loot systems, player clothing and place NPC spawners.",
+    "scripts/lib/data/weapons.yml + scripts/lib/weapons.js, weapon-look.js, weapon-prof.js and weapon-geo.js - weapon definitions and fitted variants shared by pickups, viewmodels and NPCs."
   ],
   "notableExports": [
     "places/*/sim.js - cadence and tick; places/gamma/sim.js also exports PEOPLE.",
     "scripts/lib/level3.js - grid/constants, cell/zone queries, openings, blocks/hazards, crawl spans and exits; maze3path.js - stepToward, cellNear.",
     "scripts/lib/level4.js - HALF/H/room-plan constants, ROOMS/WALLS/COLUMNS, zoneAt, DRAIN4, L4_NAMES and roomAt.",
     "scripts/lib/l4-people.js - roundsFor, speak, settle, tickPeople, PEOPLE4; scripts/l4-office.js - ears, phoneTask, update; scripts/computer.js - ears.",
-    "scripts/lib/os.js - PROFILE, mailsOf, filesOf, entriesOf, entryById, forumOf, passwordOf, runCmd; scripts/os.js - onInput, update; scripts/os-ui.js - osUi.",
-    "scripts/level4-geo.js and scripts/level4-detail-geo.js - Level 4 geometry; level4-geo.js also exports collider; scripts/l4-office-geo.js and l4-prop-geo.js - office/prop geometry.",
-    "scripts/lib/furniture.js - sizeOf, pickKind, spawnFurniture and wallSpot0/1/3; scripts/lib/breakables.js - strike/damage/drop/rubble, sweepProps, wall sync/ticks.",
+    "scripts/lib/os.js - PROFILE, mailsOf, filesOf, entriesOf, entryById, binOf, forumOf, passwordOf, runCmd; scripts/os.js - onInput, update; scripts/os-ui.js - osUi.",
+    "scripts/lib/clothes.js - fullLook, rollLevel, leveledRows, rollCloth, npcLook and clothing helpers; scripts/lib/breakables.js - strike/damage/drop/rubble, sweepProps, wall sync/ticks.",
     "scripts/build.js - onInput, update; scripts/build-ui.js - buildUi; scripts/lib/craft.js - recipeStatus; scripts/craft.js - onInput, update; scripts/horde.js - update."
   ],
   "ownership": [
     "scripts/player.js - player.state owns level/XP, health/sanity, visited cells/zones, kills/deaths, equipment/inventory/ammo/condition, clothes, compass and Level 3 consumable/page fields; Level 4 adds home id and zone-derived recovery.",
     "scripts/stats.js - player.state owns HALOGEN attributes, skills, points, tags, schema version, sheetOpen and target; initializes/migrates the sheet and spends points.",
-    "scripts/craft.js - player.state hunger/thirst, craftOpen/craftBench, needs drain and payout redemption; starvation reduces hp but floors it at 1, and crafting consumes/validates scrap and recipes.",
+    "scripts/craft.js - player.state hunger/thirst, craftOpen/craftBench and payout redemption; needs drain and starvation reduces hp but floors it at 1; crafts validate recipe/skill/materials.",
     "scripts/horde.js - player.state horde phase/countdown/alive/result; session holds wave timing; spawned creature state carries the owning player's horde id.",
     "scripts/build.js + scripts/player.js - player.state.scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
     "scripts/interact.js - player focus, loot menu, notices and interaction; NPCs own pockets/picked and per-player warned/angry state, containers own item lists/lock/scavenged state.",
-    "scripts/talk.js and scripts/critter.js - dialogue state is split across player/NPC; player.state.look owns appearance/worn slots and avatar scratch is local/session state; NPC mesh looks are stored in state.wear.",
-    "Level 4 systems - place.state owns resident homes/clock/meetups/errands and office scheduling; NPCs own rounds/talk/sleep state, phones/printers/board own use state; computer entities own host/unlock and player.state.os owns the active session, while player.state.l4task/payout is owned by office tasks and redeemed by craft.js."
+    "scripts/talk.js and scripts/critter.js - dialogue state is split across player/NPC; player.state.look owns appearance/worn slots and avatar scratch is local/session state; NPC appearance is represented in state.look/wear.",
+    "scripts/os.js and Level 4 systems - player.state.os/osNote/osClosedAt own active app, saved notes and close timing; computer entities own host/unlock, while place.state owns resident homes/clock/errands and office scheduling."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js chain: humanoid-locomotion reads prior movement before player writes control; interact, talk, build, noclip, stats, craft, os and horde handle ordered actions before critter behavior.",
     "world.config.yaml camera → scripts/camera.js owns presented yaw/pitch and crouched eye height; player/enemy gaze and targeting consume camera direction/state.",
-    "Level 0 exit in scripts/player.js → Level 1; thresholds connect Level 1 to 2 and Level 2 to 3; Level 3 sim's powered lift door → level4#l4-lift-arrive; Gamma door returns to the Level 3 fortress gate.",
+    "Level 0 exit in scripts/player.js → Level 1; thresholds connect Level 1 to 2 and Level 2 to 3; Level 3 sim's powered lift door → level4#l4-lift-arrive; Gamma door returns to Level 3 fortress gate.",
     "interact.js focus/E on living NPC → player.state.talkWith; talk-ui.js sends typed text/actions through talk/talkdo/shop inputs to talk.js; talk.js submits llm:chat and heard validates replies/checks before rapport changes.",
     "talk.js writes NPC state.line and player subtitle → talk-ui.js / ui.js; nearby NPC voice is emitted; shop actions update almond water, inventory and NPC stock; Level 3 Gamma agents use chatter data for nearby conversations.",
-    "interact.js E → door/container/bench or usable-specific press event; Level 4 l4-home.js ears.press handles plates, cooler, fountains, vending and chained stairs.",
+    "interact.js E → door/container/bench or usable-specific press event; usable computers boot player-local Back OS directly, while Level 4 l4-home.js ears.press handles plates, cooler, fountains, vending and chained stairs.",
+    "E on usable computer → scripts/interact.js creates player.state.os from entity host/lock; scripts/os.js handles OS action keys and lock/password/Science/admin state via lib/os.js + os.yml; os-ui.js renders the app in scripts/ui.js.",
+    "OS session → scripts/os.js owns boot/login/apps, shutdown and walk-away close; camera.js eases to the host monitor and os.js seats, turns and stops the player; shutting down clears the session after its off-screen delay.",
+    "OS Database study → player.state studied/reward fields; Notepad Save → player.state.osNote; Backmail tips and terminal/app state are rendered from host-derived profile data.",
     "Level 4 office plate press → plate owner/ownerName and player.state.home; homeKit spawns tagged cot/desk replacing the player's prior claimed room; player.js zoneAt4 then marks the claimed room as l4_home.",
-    "Level 4 resident director → place.state.l4homes/clock/errands and NPC rounds; residents walk daily routines, answer unattended phones, meet/greet players and speak via nearby voice/subtitle state.",
     "Level 4 phone/printer/shift board → l4-office.js tasks and player.state.l4task; completion writes player.state.payout, which craft.js redeems as XP/items and craft-ui.js displays task progress.",
-    "E on usable computer → computer.js opens player.state.os; os.js handles the os action and lock/password/Science/admin state using lib/os.js + os.yml, while os-ui.js renders it inside scripts/ui.js; Database study marks player.state.studied for player.js damage bonus.",
-    "scripts/craft.js drains player hunger/thirst and handles craft inputs → craft-ui.js; recipes/costs come from scripts/lib/data/craft.yml, with recipeStatus in scripts/lib/craft.js.",
-    "Place simulations and enemy deaths → scripts/lib/loot.js or loot3.js → weapon/clothing/item tokens or containers; player.js attack → scripts/lib/breakables.js and lib/wallgrid.js update destructible walls/props and geometry."
+    "scripts/lib/loot.js, loot3.js and clothing searches → clothes.js rollCloth leveled by finder level/place tier; level sims spawn NPCs using clothes.js npcLook and faction lists; craft.yml outfit recipes output wearable cloth tokens."
   ],
   "behaviorFamilies": [
     "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state.",
     "places/level4/cells/x0z0.scene + scripts/level4-geo.js, level4-detail-geo.js, l4-prop-geo.js and look-level4.js - office base, non-colliding lived-in detail, varied abandoned props and post-processing share the Level 4 plan.",
-    "scripts/l4-office.js + scripts/l4-office-geo.js - repeated open-floor cubicle islands, phones and printers vary through placement; manager schedules rings, ambient sounds, office tasks and supply rewards.",
-    "scripts/lib/l4-people.js + data/level4-people.yml - Level 4 agents share home/round/meetup/phone/greeting logic, varied by faction, role, voice, look and routine.",
+    "scripts/l4-office.js + scripts/l4-office-geo.js - repeated open-floor cubicle islands, phones and printers vary by placement; manager schedules rings, ambient sounds, office tasks and supply rewards.",
+    "scripts/lib/l4-people.js + data/level4-people.yml - Level 4 agents share home/round/meetup/phone/greeting logic, varied by faction, role, voice, look/build and routine.",
+    "scripts/lib/clothes.js + clothes.yml - leveled garment lists vary by player/place tier and rarity; faction wardrobe rolls vary by faction, level and stable NPC id across Level 1–4, Gamma and Omega spawners.",
     "scripts/smilers.js and scripts/lurkers.js - Level 0 pack managers with distinct gaze/light/sanity reactions; uploaded Tripo rigged meshes and horde hunt hooks.",
     "scripts/hounds.js + hound-geo.js and scripts/stealers.js + stealer-geo.js - shared level-specific hound grids/safe zones and skin-stealer disguise/reveal behavior vary by place and hunt phase.",
-    "scripts/meg-agent.js + scripts/humanoid-locomotion.js + scripts/critter2-geo.js + critter-model.js - common NPC avatar/behavior varies by species/look, role, voice, weapon and place; Level 1/2/3/Gamma/Omega agents share it.",
     "scripts/lib/weapons.js + weapon-look.js, weapon-prof.js, weapon-geo.js and viewmodel-geo.js - weapon kinds reuse fitted bodies with variant stats/tint/overlays and viewmodel framing; melee Tripo meshes have per-kind grip poses."
   ],
   "probableOrphans": [
@@ -84,8 +82,8 @@
     "Grid contracts differ: Level 0 is 56×56 at 4 m with hub cells 26–29; Level 1 is 30×30 at 8 m; Level 2 is 24×24 at 5 m; Level 3 is 26×26 at 4 m; Level 4's plan is 64×64 m with 8 m-wide, 6 m-deep offices. Keep geometry/zones/exits aligned to each grid.",
     "Level 4 base l4-geo is the structural mesh/collider; l4-detail-geo draws ceiling, carpet and wall wear without a collider; l4-prop-geo and l4-office-geo supply repeated placed detail. Scene entries or sim-spawned bodies provide collision.",
     "Level 3 tight cells are 1 m clear width (tightHalf 0.5), 1.6 m springline and 2.15 m crown; tightArms/tightSpans drive structural/detail vaults, and gates/furniture are excluded from crawl halls.",
-    "Player behavior order is intentional: humanoid-locomotion.js before player.js, then interact.js, talk.js, build.js, noclip.js, stats.js, craft.js, os.js, horde.js and critter.js; locomotion reads movement before player control writes velocity.",
-    "NPC agent behavior arrays also put humanoid-locomotion.js before meg-agent.js; locomotion derives gait/heading from actual motion, while meg-agent controls NPC movement. Level 4 people use that same chain and store routine stops in rounds.",
-    "Back OS machine lock/unlocked state lives on the computer entity but the open app/session is player.state.os; profile content is host-derived. Keep OS input action keys, UI state and host profile/password data in sync; Database study tags feed player.js damage matching."
+    "Player behavior order is intentional: humanoid-locomotion.js before player.js, then interact.js, talk.js, build.js, noclip.js, stats.js, craft.js, os.js, horde.js and critter.js; NPC arrays likewise put locomotion before meg-agent.js.",
+    "Back OS state is split: lock/unlocked lives on the computer entity; app/session and Notepad text live on the player; profile content comes from host. Keep OS action keys, UI state and host profiles/passwords in sync; camera dive and sitting behavior depend on player.state.os.id.",
+    "Clothing rows use slot/kind/colour and leveled-list floors; rarityAt is a minimum level and loot uses player level or placeTier. NPC wardrobe selection is stable by id, while Level 4 authored scene actors need their state look/wear kept consistent with visible model parts/material colours."
   ]
 }
