@@ -830,7 +830,7 @@ function plyArm(ctx, w) {
 }
 
 export function update(ctx, dt) {
-  { const h = ctx.self.state.heat; if (h > 0 && ctx.self.place !== 'level5') { const n = Math.max(0, Math.round((h - 5 * dt) * 10) / 10); if (Math.floor(n) !== Math.floor(h) || n === 0) ctx.self.state.heat = n === 0 ? 0 : n } } // heat only lives in the Boiler Room: carried out of Level 5 it cools 5°/s (l5-heat.js cools it inside)
+  { const s0 = ctx.self.state, ses = ctx.self.session; if ((s0.heat ?? 0) > 0 && ctx.self.place !== 'level5') { ses.heatF = Math.max(0, (ses.heatF ?? s0.heat) - 5 * dt); const n = Math.round(ses.heatF); if (n !== Math.round(s0.heat)) s0.heat = n } else ses.heatF = undefined } // heat only lives in the Boiler Room: carried out of Level 5 it cools 5°/s (eased in session, written per whole degree)
   ensure(ctx)
   if (ctx.self.parent) return
   const w = walkOf(ctx), s = ctx.self.state
