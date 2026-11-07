@@ -168,7 +168,7 @@ function useDoor(ctx, it) {
   loud(it.state.open ? 'heavy-metal-door-creak-open' : 'heavy-metal-door-slam-shut', 0.7)
 }
 
-// Pickpocketing: crouched, unseen (they face away), alive and not already after you. The roll is Sneak plus Agility,
+// Pickpocketing: crouched, seen or not (creator's rule: always available; facing them costs odds), alive and not already after you. The roll is Sneak plus Agility,
 // better the more squarely behind them you are, worse each time you have lifted from them. Caught = they turn on you.
 function facingAway(ctx, it) {
   const r = it.rotation, yaw = ((typeof r === 'number' ? r : r?.yaw) ?? 0) * Math.PI / 180
@@ -179,10 +179,10 @@ function facingAway(ctx, it) {
 function pickChance(ctx, it) {
   const s = ctx.self.state, st = it.state ?? {}
   if (!s.crouch || st.dead || st.angry?.[ctx.self.id] || st.follow === ctx.self.id || s.talkWith) return null
-  const f = facingAway(ctx, it); if (f > 0.35) return null // they can see you
+  const f = facingAway(ctx, it) // seen or not, you can try; being watched just makes it much harder
   const sk = skillsOf(s).sneak ?? 0, agi = Number(String(s.attr ?? '5,5,5,5,5,5,5').split(',')[5]) || 5
   const lifted = st.picked?.[ctx.self.id] ?? 0
-  return Math.max(0.05, Math.min(0.95, 0.3 + sk / 160 + (agi - 5) * 0.03 + (0.35 - f) * 0.2 - lifted * 0.12))
+  return Math.max(0.05, Math.min(0.95, 0.3 + sk / 160 + (agi - 5) * 0.03 + (0.35 - f) * 0.2 - (f > 0.35 ? 0.2 : 0) - (s.detect === 'DANGER' ? 0.1 : 0) - lifted * 0.12))
 }
 function pocketsOf(ctx, it) {
   if (it.state.pockets === undefined) {
