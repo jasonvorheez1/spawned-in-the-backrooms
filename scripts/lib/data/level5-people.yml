@@ -7,6 +7,13 @@ meetEvery: [40, 75]     # seconds between two residents walking over to talk (Sa
 lineGap: 4.2            # seconds between lines in a conversation (Savi's pick)
 rent: { price: 6, hours: 2, regen: 0.6 }   # almond waters a suite, real hours it stays yours, sanity a second inside (Savi's picks)
 ratJob: { need: 5, almonds: 8, ammo: 2, bandage: 1 }   # Death Rats to clear, the pay (Savi's picks)
+# each resident's own guest room: they sleep there at night and catch who walks in (Savi's picks). n5 and s4 are left to book.
+homes: { room-n3: l5-pip, room-n4: l5-tobias, room-s1: l5-dolores, room-s2: l5-zelda, room-s3: l5-wat }
+room: { price: 3, hours: 2 }   # a guest room at the front desk: almond waters, real hours (Savi's picks)
+trespass: { see: 7, sneakSee: 2.2, cone: 110, grace: 12 }   # m seen standing, m seen crouched, front cone degrees, s a warning lasts
+rooms:
+  room-n5: { trunk: [-11, -20.4, 0] }
+  room-s4: { trunk: [-15, 20.4, 180] }
 suites:
   suite-nw: { trunk: [-21.0, -9.68, 0], rack: [-22.4, -9.72, 0] }
   suite-ne: { trunk: [-7.4, -9.68, 0], rack: [-8.8, -9.72, 0] }

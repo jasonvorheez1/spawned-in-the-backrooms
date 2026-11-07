@@ -8,11 +8,14 @@ import { npcState } from "./stats.js";
 import { weaponBody } from "./weapon-look.js";
 import { VO } from "./npc-talk.js";
 import MEG from "./data/meg.yml";
+import { ZONES } from "./level5.js";
+const HOME = {}; for (const [rid, who] of Object.entries(P.homes ?? {})) { const z = ZONES.find((q) => q.id === rid); if (z) HOME[who] = z; }
+const inZ = (z, f) => f && f.x > z.x0 && f.x < z.x1 && f.z > z.z0 && f.z < z.z1;
 export const PEOPLE5 = P;
 const ACT = { idle: null, talk: "cdn/clip-talk-loop.glb", sit: "cdn/clip-sit-loop.glb", crouch: "cdn/clip-crouch-idle-loop.glb", sleep: "cdn/clip-sleep-loop.glb", pickup: "cdn/clip-pickup.glb", wave: "cdn/clip-waving-single-hand-loop.glb" };
 const FNAME = { hotel: "Homely Hotel (the staff of this endless hotel: polite, proprietary, they dislike the Originals in the salon and lean on Housekeeping)", hk: "Housekeeping, a M.E.G. outpost on Level 5 (grey uniforms, practical, they back the Homely Hotel staff and keep the Boiler Room rats down)", orig: "The Originals (eccentrics who wandered in between 1300 and 1940; they gossip, play cards, keep Samantha the cat fed, and refuse membership to anyone modern)" };
 const OFFERS = {
-  concierge: [["o:rent", `Rent a suite (${P.rent.price} almond water)`], ["o:checkout", "Return the key"]],
+  concierge: [["o:room", `Book a guest room (${P.room.price} almond water)`], ["o:rent", `Rent a suite (${P.rent.price} almond water)`], ["o:checkout", "Return the key"]],
   guide: [["o:escort", "Escort me to the Boiler Room"]],
   clerk: [["o:job", "The rat job"]],
   maid: [["o:gossip", "Heard anything?"]], bellhop: [["o:gossip", "Heard anything?"]], agent: [["o:gossip", "Anything moving?"]],
@@ -44,7 +47,11 @@ export function tickPeople(ctx) {
     const s = o.state;
     if ((s.escortUntil ?? 0) && now > s.escortUntil) { s.escortUntil = 0; s.mode = ""; }
     if (s.meeting || (s.escortUntil ?? 0) > now) continue;
-    if (s.mode !== phase) { s.mode = phase; s.rounds = roundsOf(phase === "night" && P.people[id].night ? P.people[id].night : P.people[id].rounds); s.ri = 0; }
+    if (s.mode !== phase) {
+      s.mode = phase; const z = HOME[id];
+      s.rounds = phase === "night" && z ? bedtime(z) : roundsOf(phase === "night" && P.people[id].night ? P.people[id].night : P.people[id].rounds); s.ri = 0;
+    }
+    if (HOME[id] && !s.dead) trespass(ctx, o, HOME[id], now);
   }
   // a conversation: two free residents walk to a spot between their rooms and trade lines
   const m = ses.meet;
@@ -71,3 +78,38 @@ export function tickPeople(ctx) {
   o.state.talkTo = other.id; other.state.talkTo = o.id; speak(ctx, o, t); other.state.talkAt = now;
   m.next = now + Math.max(P.lineGap * 1000, 1400 + t.length * 60);
 }
+
+// night: home to their own room, a turn by the bed, then sleep there till day
+function bedtime(z) {
+  const cx = (z.x0 + z.x1) / 2, n = z.z0 < 0, door = n ? z.z1 - 1 : z.z0 + 1, bed = n ? z.z0 + 2.2 : z.z1 - 2.2;
+  return roundsOf([[cx, door, 4, "idle", cx, bed], [cx + 0.9, bed, 999, "sleep", cx + 0.9, n ? z.z0 : z.z1]]);
+}
+// someone in their room while they are in it: seen standing anywhere in sight; crouched only close and in front of them.
+// first time: told off and shoved toward the door; walked in again inside the grace: they turn on you (like pickpocketing).
+function trespass(ctx, o, z, now) {
+  const me = o.feetPosition; if (!inZ(z, me)) return;
+  const T = P.trespass, s = o.state, book = ctx.place.state.l5rent ?? {};
+  for (const p of ctx.place.players) {
+    const f = p.feetPosition; if (!inZ(z, f) || s.angry?.[p.id]) continue;
+    if (book[z.id]?.uid === (p.userId ?? p.id) && book[z.id].until > now) continue;
+    const dx = f.x - me.x, dz = f.z - me.z, d = Math.hypot(dx, dz), sneak = !!p.state?.crouch;
+    const yaw = typeof o.rotation === "number" ? o.rotation : o.rotation?.yaw ?? 0, r = yaw * Math.PI / 180;
+    const ahead = d < 0.01 ? 1 : (-Math.sin(r) * dx - Math.cos(r) * dz) / d, inCone = ahead > Math.cos((T.cone / 2) * Math.PI / 180);
+    const asleep = s.rounds?.[s.ri]?.act === ACT.sleep && Math.hypot(me.x - s.rounds[s.ri].x, me.z - s.rounds[s.ri].z) < 0.8;
+    const seen = sneak ? d < T.sneakSee && inCone && !asleep : d < T.see && (inCone || d < 2.5) && (!asleep || d < 1.5);
+    if (!seen) continue;
+    const w = s.trespass?.[p.id] ?? 0, who = s.name?.split(" ·")[0] ?? "They";
+    if (w && now - w < T.grace * 1000) {
+      if (now - w < 2500) continue; // the shove gets them out first
+      s.angry = { ...(s.angry ?? {}), [p.id]: true }; s.fresh = { ...(s.fresh ?? {}), [p.id]: true };
+      say1(ctx, o, p, pickIn(ctx, ["I warned you. Get OUT!", "That's it. You don't come in here twice.", "Right. You asked for this."]));
+      continue;
+    }
+    s.trespass = { ...(s.trespass ?? {}), [p.id]: now }; s.talkTo = p.id;
+    say1(ctx, o, p, pickIn(ctx, asleep ? ["Wh- who's there? Out! Out of my room!", "Hey! I was sleeping! Get out!"] : ["What the hell do you think you're doing in my room?", "Excuse me. This is MY room. Out.", "You lost? The door's behind you. Use it."]));
+    const out = { x: (z.x0 + z.x1) / 2, z: z.z0 < 0 ? z.z1 + 1 : z.z0 - 1 }, ox = out.x - f.x, oz = out.z - f.z, ol = Math.hypot(ox, oz) || 1;
+    ctx.emit("impulse", { target: p.id, impulse: { x: (ox / ol) * 260, y: 60, z: (oz / ol) * 260 } });
+    ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-body-shove-grunt.mp3", position: f, volume: 0.6, maxDistance: 14 }, { audience: { nearby: f, radius: 16 } });
+  }
+}
+function say1(ctx, o, p, t) { speak(ctx, o, t); p.state.sub = { who: o.state.name, t, at: ctx.now(), d: 1400 + t.length * 60 }; }
