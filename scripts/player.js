@@ -92,6 +92,30 @@ export function takeToken(ctx, token) {
     sound(ctx, token === 'ration' ? 'plastic-bottle-pickup-rattle' : 'pickup-ammo', 0.7, true)
     return { ok: true }
   }
+  if (token === 'beans' || token === 'bar' || token === 'firstaid') { // Level 2 food and first aid, used on the spot
+    const mh = maxHp(s.level, s), ms = maxSan(s.level, s), U = L2.use
+    s.hp = Math.min(mh, (s.hp ?? mh) + (token === 'beans' ? U.beansHp * derived(s).heal : token === 'bar' ? U.barHp * derived(s).heal : U.firstaidHp * derived(s).healMed))
+    if (token === 'beans') s.sanity = Math.min(ms, (s.sanity ?? ms) + U.beansSanity)
+    if (token === 'bar') { const w = walkOf(ctx); w.stamina = Math.min(L.stamina * 2, (w.stamina ?? s.stamina ?? 0) + U.barStamina) }
+    s.pickedAt = now; gain(ctx, L.xpAlmond)
+    sound(ctx, token === 'firstaid' ? 'pickup-ammo' : 'plastic-bottle-pickup-rattle', 0.7, true)
+    return { ok: true }
+  }
+  if (token === 'tape') { // duct tape: a quick patch on the weapon in your hand
+    const k = s.equipped, cap = derived(s).repairCap, c = s['cnd_' + k] ?? 100
+    if (!k || k === 'fists') return { ok: false, msg: 'Nothing to tape up: you are holding your fists' }
+    if (c >= cap - 0.5) return { ok: false, msg: 'Your weapon does not need taping' }
+    s['cnd_' + k] = Math.min(cap, c + L2.use.tapeRepair); s.pickedAt = now
+    s.notice = { text: `Taped your ${W[k]?.name?.toLowerCase() ?? 'weapon'} to ${Math.round(s['cnd_' + k])}%`, at: now }
+    sound(ctx, 'bandage-wrap-cloth', 0.6, true)
+    return { ok: true }
+  }
+  if (token === 'fuse' || token === 'valve' || token === 'keycard') { // Level 2 keys: carried until a door takes one
+    const f = token + 's'; s[f] = (s[f] ?? 0) + 1; s.pickedAt = now
+    s.notice = { text: `${token === 'fuse' ? 'Fuse' : token === 'valve' ? 'Valve wheel' : 'Keycard'} (${s[f]} carried)`, at: now }
+    sound(ctx, 'pickup-ammo', 0.6, true)
+    return { ok: true }
+  }
   if (token === 'battery') {
     const w = walkOf(ctx); w.battery = Math.min(100, (w.battery ?? s.battery ?? 0) + L1.batteryCharge); s.battery = Math.round(w.battery)
     s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.7, true)

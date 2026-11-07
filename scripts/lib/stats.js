@@ -120,7 +120,7 @@ export function carried(s) {
 // can this token be taken, and if not why
 export function canCarry(s, token) {
   const cap = derived(s).carry, add = token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
-  if (['ration', 'bandage', 'battery', 'kit'].includes(token) || token.startsWith('book:')) return { ok: true } // used on the spot, weigh nothing
+  if (['ration', 'bandage', 'battery', 'kit', 'beans', 'bar', 'firstaid', 'tape', 'fuse', 'valve', 'keycard'].includes(token) || token.startsWith('book:')) return { ok: true } // used on the spot (or a Level 2 key), weigh nothing
   const now = carried(s)
   return now + add <= cap + 1e-6 ? { ok: true } : { ok: false, msg: `Too heavy to carry (${now.toFixed(1)}/${cap} kg)` }
 }
