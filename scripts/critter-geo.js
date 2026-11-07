@@ -35,6 +35,10 @@ const BONES = {
   Tail1: { parent: "Tail", pivot: [0, 0.68, 0.3] },
   EarL: { parent: "Head", pivot: [-0.2, 1.55, 0] },
   EarR: { parent: "Head", pivot: [0.2, 1.55, 0] },
+  // blink lids: a closed-eye patch per eye, built a thousand times too small so it is invisible at rest;
+  // scripts/critter.js scales the bone up for a tenth of a second to blink
+  LidL: { parent: "Head", pivot: [-0.132, 1.365, -0.3] },
+  LidR: { parent: "Head", pivot: [0.132, 1.365, -0.3] },
 };
 export function skeleton() { return BONES; }
 const NAMES = Object.keys(BONES);
@@ -108,9 +112,11 @@ export function geometry(ctx) {
     let s = 0; for (const [, v] of es) s += v;
     for (let i = 0; i < 4; i++) { J.push(es[i] ? IDX[es[i][0]] : 0); W.push(es[i] ? es[i][1] / s : 0); }
   }
+  let SHRINK = null; // while a blink lid is built: shrink every vertex toward its bone pivot
+  const shr = (p) => [SHRINK.c[0] + (p[0] - SHRINK.c[0]) * SHRINK.k, SHRINK.c[1] + (p[1] - SHRINK.c[1]) * SHRINK.k, SHRINK.c[2] + (p[2] - SHRINK.c[2]) * SHRINK.k];
   let REV = false; // true while the ink outline shell is built: its faces point inward
   const HIP = fem ? [0.17, 0.11, 0.14] : [0.135, 0.1, 0.12];
-  const tri = (a, b, c) => { if (REV) { const x = b; b = c; c = x; } ctx.tri(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]); pushW(a); pushW(b); pushW(c); };
+  const tri = (a, b, c) => { if (REV) { const x = b; b = c; c = x; } if (SHRINK) { a = shr(a); b = shr(b); c = shr(c); } ctx.tri(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]); pushW(a); pushW(b); pushW(c); };
   const quad = (a, b, c, d) => { tri(a, b, c); tri(a, c, d); };
 
   // ellipsoid; colorAt(p, n) may switch paint per face; clip(p) drops faces
@@ -449,6 +455,13 @@ export function geometry(ctx) {
     if (E.tear === "stream") {
       ctx.color("#8fd3ff");
       fill(ellipse(cu + s * 0.03, EY - ERV - 0.03, 0.026, 0.045), 0.02); fill(ellipse(cu + s * 0.045, EY - ERV - 0.105, 0.02, 0.04), 0.02);
+    }
+    { // the blink lid: skin over the eye with a soft closed-eye line, tiny at rest and scaled up by scripts/critter.js
+      wOverride = { [s < 0 ? "LidL" : "LidR"]: 1 };
+      SHRINK = { c: [s * 0.132, 1.365, -0.3], k: 1 / 1000 };
+      ctx.color(sp.patch || sp.headFur || FUR); fill(ellipse(cu, EY, ERU + 0.028, ERV + 0.026, hi ? 24 : 14), 0.03);
+      ctx.color(INK); stroke((t) => [cu + (t - 0.5) * 2 * (ERU + 0.005), EY - 0.012 - 0.032 * Math.sin(Math.PI * t)], 0.028, 0.034, 10);
+      SHRINK = null; wOverride = null;
     }
     brow(s, cu);
   }

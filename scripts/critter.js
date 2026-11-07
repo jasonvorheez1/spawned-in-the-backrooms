@@ -5,6 +5,31 @@ import C from './lib/data/critter.yml'
 const SCRIPT = 'scripts/critter-geo.js'
 export const updateSchedule = { every: { seconds: 0.2 } }
 
+// ---- life: blinking and ear twitches, as brief bone changes the whole room sees (two small writes each)
+const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter-geo.js)
+const EYES_SHUT = ['joy', 'laugh', 'kiss', 'dizzy']
+function applyBones(ctx) {
+  const ses = ctx.self.session, b = {}
+  if (ses.lids) { b.LidL = { scale: LID_SCALE }; b.LidR = { scale: LID_SCALE } }
+  if (ses.twitch) b[ses.twitch] = { rotate: [0, 0, ses.twitchDir * 24] }
+  ctx.self.bones = b
+}
+export function blinkEnd(ctx) { ctx.self.session.lids = false; applyBones(ctx) }
+export function blinkNow(ctx) { ctx.self.session.lids = true; applyBones(ctx); ctx.after(0.12, 'blinkEnd', {}) }
+export function twitchEnd(ctx) { ctx.self.session.twitch = null; applyBones(ctx) }
+function life(ctx, face) {
+  const ses = ctx.self.session, now = ctx.now()
+  if (ses.nextBlink == null) { ses.nextBlink = now + 1500 + ctx.random() * 2500; ses.nextTwitch = now + 4000 + ctx.random() * 6000 }
+  if (now >= ses.nextBlink) {
+    ses.nextBlink = now + 2400 + ctx.random() * 3800
+    if (!EYES_SHUT.includes(face) && !ses.lids) { blinkNow(ctx); if (ctx.random() < 0.18) ctx.after(0.34, 'blinkNow', {}) } // now and then a double blink
+  }
+  if (now >= ses.nextTwitch) {
+    ses.nextTwitch = now + 5000 + ctx.random() * 9000
+    if (!ses.twitch) { ses.twitch = ctx.random() < 0.5 ? 'EarL' : 'EarR'; ses.twitchDir = ses.twitch === 'EarL' ? -1 : 1; applyBones(ctx); ctx.after(0.16, 'twitchEnd', {}) }
+  }
+}
+
 function lookOf(ctx) { return { ...C.default, ...(ctx.self.state.look || {}) } }
 
 export function onInput(ctx, input) {
@@ -41,6 +66,7 @@ function moodFace(ctx, l) {
 export function update(ctx) {
   const l = lookOf(ctx), face = moodFace(ctx, l), ses = ctx.self.session
   ses.face = face
+  life(ctx, face)
   const params = { species: l.species, sex: l.sex, eye: l.eye, outfit: l.outfit, top: l.top, bottom: l.bottom, acc: l.acc, expr: face, eyes: l.eyes, marks: l.marks }
   if (l.fur) params.fur = l.fur
   const key = JSON.stringify(params)
