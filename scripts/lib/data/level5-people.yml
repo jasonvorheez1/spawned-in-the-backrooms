@@ -1,0 +1,112 @@
+# Level 5's residents (Savi's picks), run by scripts/l5-people.js through scripts/lib/l5-people.js.
+# faction: hotel (Homely Hotel staff) | hk (Housekeeping, the M.E.G. outpost) | orig (the Originals' salon).
+# rounds: [x, z, dwell s, act, lookX, lookZ]; act: idle | talk | sit | crouch | sleep | pickup | wave. night: rounds after lights-down.
+day: 420
+night: 180
+meetEvery: [40, 75]     # seconds between two residents walking over to talk (Savi's pick)
+lineGap: 4.2            # seconds between lines in a conversation (Savi's pick)
+rent: { price: 6, hours: 2, regen: 0.6 }   # almond waters a suite, real hours it stays yours, sanity a second inside (Savi's picks)
+ratJob: { need: 5, almonds: 8, ammo: 2, bandage: 1 }   # Death Rats to clear, the pay (Savi's picks)
+suites:
+  suite-nw: { trunk: [-21.0, -9.68, 0], rack: [-22.4, -9.72, 0] }
+  suite-ne: { trunk: [-7.4, -9.68, 0], rack: [-8.8, -9.72, 0] }
+  suite-sw: { trunk: [-21.0, 9.68, 180], rack: [-22.4, 9.72, 180] }
+  suite-se: { trunk: [-7.4, 9.68, 180], rack: [-8.8, 9.72, 180] }
+props:   # [x, y, z, yaw]
+  bell: [-42.6, 1.12, 2.45, 90]
+  board: [-4.6, 0, 23.62, 180]
+  escort: [14.2, 0, 13.4, 0]
+  ledger: [12.6, 0, -22.9, 180]
+meets:   # where two residents stop to talk, by faction pair
+  hotel: [[-36, -4], [-28, 0], [-10, 16.5]]
+  hk: [[2, 18], [10, 17]]
+  orig: [[4, -18], [9, -16]]
+  hotel-hk: [[-33, 8], [-20, 11.5]]
+  hotel-orig: [[-12, -11.5]]
+  hk-orig: [[6, -9]]
+people:
+  l5-ambrose:
+    { faction: hotel, role: concierge, voice: ambrose, name: "Mr. Ambrose · Front Desk", build: { h: 1.14, w: 0.88 },
+      look: { species: fox, sex: m, topw: longsleeve, top: "#1e1c22", botw: pants, bottom: "#1e1c22", shoes: boots, shoec: "#141210", neck: bowtie, neckc: "#b8902e", expr: smile, fur: "#c8662e" },
+      rounds: [[-44.1, 3.2, 120, idle, -38, 3.2], [-44.1, 5.4, 9, pickup, -46, 5.4], [-44.1, 1.6, 40, idle, -38, 1.6]],
+      night: [[-44.1, 3.2, 999, idle, -38, 3.2]] }
+  l5-dolores:
+    { faction: hotel, role: trader, voice: dolores, name: "Dolores · Dining Room Cook", build: { h: 0.94, w: 1.22, bust: 0.95 },
+      look: { species: pig, sex: f, topw: apron, top: "#efe6d4", botw: longskirt, bottom: "#3a2a24", shoes: slippers, shoec: "#d8cfc0", hat: bow, hatc: "#c0392b", expr: grin, fur: "#f2b7a6" },
+      rounds: [[-12.6, 20.2, 50, pickup, -12.6, 21], [-7.6, 16.4, 25, idle, -12, 16], [-12.4, 15.2, 30, talk, -9, 15]],
+      night: [[-13.2, 19.8, 999, sit, -10, 17]] }
+  l5-pip:
+    { faction: hotel, role: bellhop, voice: pip, name: "Pip · Bellhop", build: { h: 0.82, w: 0.9 },
+      look: { species: mouse, sex: m, topw: jacket, top: "#9e1f24", botw: pants, bottom: "#1e1c22", shoes: sneakers, shoec: "#1e1c22", hat: cap, hatc: "#9e1f24", neck: bowtie, neckc: "#d8b040", expr: beam, fur: "#b9aca0" },
+      rounds: [[-36, -7, 8, idle, -42, -7], [-27, -11.6, 4, idle, -8, -11.6], [-8, -11.6, 6, idle, -8, 0], [-17.5, 0, 5, idle, -6, 0], [-8, 11.6, 6, idle, -30, 11.6], [-27, 11.6, 4, idle, -36, 8], [-36, 7, 10, wave, -40, 3]],
+      night: [[-34, 11, 999, sit, -40, 8]] }
+  l5-odette:
+    { faction: hotel, role: maid, voice: odette, name: "Odette · Maid", build: { h: 0.98, w: 1.04, bust: 1.12 },
+      look: { species: sheep, sex: f, topw: dress, top: "#22222a", botw: none, shoes: slippers, shoec: "#f4f1ea", hat: bow, hatc: "#f4f1ea", neck: none, expr: lidded, fur: "#f1ece2" },
+      rounds: [[-24.5, -6.6, 25, crouch, -27, -5], [-11, -6.6, 25, crouch, -8, -5], [-11, 6.6, 25, crouch, -8, 5], [-24.5, 6.6, 25, crouch, -27, 5], [-33, 11, 12, idle, -40, 11]],
+      night: [[-33, -11, 999, sleep, -40, -11]] }
+  l5-harlan:
+    { faction: hk, role: quarter, voice: harlan, gun: smg, name: "Harlan · Housekeeping Quartermaster", build: { h: 1.12, w: 1.26 },
+      look: { species: bear, sex: m, topw: longsleeve, top: "#6b6e72", botw: pants, bottom: "#4a4c50", shoes: boots, shoec: "#22201c", hat: cap, hatc: "#55585c", expr: unimpressed, fur: "#5a3e2a" },
+      rounds: [[13, 22.4, 90, idle, 10, 17], [8.5, 22.4, 15, pickup, 8.5, 23.5]],
+      night: [[13, 22.4, 999, sit, 10, 17]] }
+  l5-vesna:
+    { faction: hk, role: guide, voice: vesna, gun: pistol, name: "Vesna · Housekeeping Guide", build: { h: 1.1, w: 0.92, bust: 0.85 },
+      look: { species: deer, sex: f, topw: jacket, top: "#7a7c80", botw: pants, bottom: "#4a4c50", shoes: boots, shoec: "#2a2420", hat: beanie, hatc: "#55585c", neck: scarf, neckc: "#8a8c90", expr: smug, fur: "#a87a4e" },
+      rounds: [[14.6, 15.4, 30, idle, 17, 18], [2, 16, 18, idle, 6, 13], [14.8, 20.6, 22, idle, 17, 18]],
+      night: [[14.6, 15.4, 999, idle, 6, 13]] }
+  l5-tobias:
+    { faction: hk, role: clerk, voice: tobias, gun: pistol, name: "Tobias · Housekeeping Jobs", build: { h: 0.95, w: 1.02 },
+      look: { species: raccoon, sex: m, topw: hoodie, top: "#6b6e72", botw: pants, bottom: "#3e4044", shoes: sneakers, shoec: "#55585c", eyew: glasses, expr: sideeye, fur: "#7a7470" },
+      rounds: [[-3.4, 22.6, 60, idle, -4.6, 23.6], [0, 14.6, 10, idle, 6, 13], [-3.4, 19, 20, sit, -4.6, 23]],
+      night: [[-3.4, 19, 999, sleep, 0, 19]] }
+  l5-imani:
+    { faction: hk, role: agent, voice: imani, gun: smg, name: "Imani · Housekeeping Agent", build: { h: 1.06, w: 1.06, bust: 1.0 },
+      look: { species: lion, sex: f, topw: tank, top: "#7a7c80", botw: pants, bottom: "#4a4c50", shoes: boots, shoec: "#22201c", hat: cap, hatc: "#55585c", eyew: shades, expr: cocky, fur: "#d4a45e" },
+      rounds: [[6, 14.2, 15, idle, 6, 10], [-3, 14.5, 8, idle, -6, 18], [10, 17.5, 8, idle, 15, 18], [6, 8, 10, idle, 6, -8]],
+      night: [[6, 14.2, 999, idle, 6, 10]] }
+  l5-millie:
+    { faction: orig, role: trader, voice: millie, name: "Millie Lockheart · Aviatrix (1937)", build: { h: 1.04, w: 0.96, bust: 0.9 },
+      look: { species: redpanda, sex: f, topw: jacket, top: "#5c3a22", botw: pants, bottom: "#a8916a", shoes: boots, shoec: "#3a2416", eyew: glasses, neck: scarf, neckc: "#f4efe4", expr: grin, fur: "#b4542a" },
+      rounds: [[3, -20.4, 60, sit, 5, -19], [8, -14.5, 15, idle, 6, -12], [3, -20.4, 40, talk, 5, -19]],
+      night: [[1.2, -23.2, 999, sleep, 5, -19]] }
+  l5-whitlock:
+    { faction: orig, role: captain, voice: whitlock, name: "Capt. Whitlock · Master Mariner (1912)", build: { h: 1.12, w: 1.12 },
+      look: { species: wolf, sex: m, topw: longsleeve, top: "#1c2340", botw: pants, bottom: "#1c2340", shoes: boots, shoec: "#141210", hat: cap, hatc: "#f4f1ea", neck: bowtie, neckc: "#d8b040", expr: unimpressed, fur: "#9aa0a8" },
+      rounds: [[7, -20.4, 50, sit, 5, -19], [12.6, -14, 20, idle, 14, -12], [7, -20.4, 40, talk, 5, -19]],
+      night: [[12.4, -23, 999, sit, 8, -19]] }
+  l5-vanderholt:
+    { faction: orig, role: trader, voice: vanderholt, name: "Cornelius Vanderholt · Railway Baron (1889)", build: { h: 0.98, w: 1.24 },
+      look: { species: tiger, sex: m, topw: longsleeve, top: "#262028", botw: pants, bottom: "#3a3234", shoes: boots, shoec: "#141210", hat: tophat, hatc: "#1a1a1e", eyew: glasses, neck: bowtie, neckc: "#e8e0cc", expr: smug, fur: "#d8822e" },
+      rounds: [[5, -22.2, 70, sit, 5, -19], [0, -15, 15, idle, -2, -18], [5, -22.2, 40, talk, 5, -19]],
+      night: [[5, -22.2, 999, sit, 5, -19]] }
+  l5-zelda:
+    { faction: orig, role: socialite, voice: zelda, name: "Zelda Fairweather · Flapper (1926)", build: { h: 0.96, w: 0.94, bust: 1.08 },
+      look: { species: cat, sex: f, topw: dress, top: "#d8b040", botw: none, shoes: slippers, shoec: "#1a1a1e", hat: flower, hatc: "#f4efe4", neck: bell, neckc: "#d8b040", expr: wink, fur: "#2a2428" },
+      rounds: [[5, -17.6, 40, sit, 5, -19], [10, -18, 20, wave, 12, -18], [1, -14, 15, idle, -2, -14], [5, -17.6, 30, talk, 5, -19]],
+      night: [[10, -23, 999, sleep, 8, -19]] }
+  l5-wat:
+    { faction: orig, role: pilgrim, voice: wat, name: "Brother Wat · Pilgrim (1348)", build: { h: 0.84, w: 1.06 },
+      look: { species: hamster, sex: m, topw: sweater, top: "#6a5236", botw: longskirt, bottom: "#5a4430", shoes: slippers, shoec: "#4a3826", neck: cape, neckc: "#4a3a2a", expr: dizzy, fur: "#d9a466" },
+      rounds: [[13, -16, 30, crouch, 14, -16], [-1, -22.8, 25, idle, -2, -22.8], [6.5, -13.4, 12, idle, 6, -8], [8, -16.5, 20, sit, 5, -19]],
+      night: [[13, -16, 999, crouch, 14, -16]] }
+# Conversations between residents: who stands in, and the lines they trade (a / b). Picked when both are free.
+talks:
+  - { a: l5-ambrose, b: l5-pip, lines: [[b, "Mr. Ambrose, the man in four-and-a-half asked for towels again."], [a, "Then he shall have towels."], [b, "There's no four-and-a-half. I checked. Twice."], [a, "And yet he asks. Towels, Pip."]] }
+  - { a: l5-dolores, b: l5-odette, lines: [[a, "You took my good ladle."], [b, "I took a ladle. I don't know which one's good, they all look the same."], [a, "The good one's the one that's missing, Odette."], [b, "...it's in suite twelve-A. Don't ask why."]] }
+  - { a: l5-pip, b: l5-odette, lines: [[a, "Did you hear the radio in the ballroom switch songs?"], [b, "It doesn't switch songs. It's only ever had the one."], [a, "Right. Right. Then what was that?"], [b, "Go sweep something, Pip."]] }
+  - { a: l5-ambrose, b: l5-dolores, lines: [[b, "Those salon people sent their plates back again."], [a, "Our guests from the salon are... particular."], [b, "Particular? The captain called my stew 'steerage.'"], [a, "Then we shall serve him first class, and smile while we do it."]] }
+  - { a: l5-harlan, b: l5-tobias, lines: [[b, "Rat count's up again by the boiler door."], [a, "Then put it on the board. Somebody'll want the water."], [b, "Last guy who took it came back with half a boot."], [a, "Half a boot's still a boot. Pay him the full rate."]] }
+  - { a: l5-vesna, b: l5-imani, lines: [[a, "You walked the corridor north side?"], [b, "Twice. Lights flickered on the second pass, nothing else."], [a, "Nothing else is what bothers me."], [b, "You'd complain if it was quiet in a library."]] }
+  - { a: l5-harlan, b: l5-vesna, lines: [[b, "I need four more rounds for tomorrow's escort."], [a, "You had twelve last week."], [b, "And the boiler had eleven rats. Do the math, Harlan."], [a, "...four. Not five. Sign for them."]] }
+  - { a: l5-tobias, b: l5-imani, lines: [[a, "Do you think the hotel knows we're here?"], [b, "I think the hotel knows what you had for breakfast."], [a, "I didn't have breakfast."], [b, "See? It knows that too."]] }
+  - { a: l5-millie, b: l5-whitlock, lines: [[a, "You're bluffing, Captain. Your ears do the thing."], [b, "My ears do nothing of the sort, madam."], [a, "They went flat the second you saw that queen."], [b, "Fold. Fine. Fold. Insufferable woman."]] }
+  - { a: l5-vanderholt, b: l5-zelda, lines: [[b, "Corny, darling, lend me ten. I'll pay you back when the war's over."], [a, "Which war?"], [b, "Whichever one is on, I've honestly lost track."], [a, "That's what you said in eighteen-ninety. Fine. Ten."]] }
+  - { a: l5-wat, b: l5-zelda, lines: [[a, "Good lady, is this the house of the Abbot? I was bid to sup here."], [b, "Sweetie, nobody's supping here, we're playing whist."], [a, "Whist... is that a penance?"], [b, "With these people? Absolutely."]] }
+  - { a: l5-whitlock, b: l5-vanderholt, lines: [[a, "Whose turn is it to feed the cat?"], [b, "Not mine. I brought her the ham last time."], [a, "That was not ham. That was a boot with gravy on it."], [b, "She ate it, didn't she? Samantha's not fussy if you're polite."]] }
+  - { a: l5-millie, b: l5-wat, lines: [[b, "You flew? Like an angel?"], [a, "Like a very tired angel with a bad compass."], [b, "And where did you land?"], [a, "Here, apparently. Same as you."]] }
+  - { a: l5-pip, b: l5-tobias, lines: [[a, "Housekeeping! You're not on the schedule."], [b, "We're never on the schedule, kid. That's the point."], [a, "Mr. Ambrose says everybody's on the schedule."], [b, "Mr. Ambrose hasn't blinked since nineteen-thirty-one."]] }
+  - { a: l5-odette, b: l5-imani, lines: [[a, "Can your people do something about the ballroom? I don't clean that room anymore."], [b, "What happened in there?"], [a, "Nothing. That's why I don't clean it."], [b, "...I'll tell Vesna."]] }
+  - { a: l5-dolores, b: l5-zelda, lines: [[b, "Darling, do you do anything without gravy?"], [a, "I do water. You want water, I've got water."], [b, "Almond water. How modern."], [a, "Says the woman who still thinks it's nineteen twenty-six."]] }
+  - { a: l5-ambrose, b: l5-whitlock, lines: [[b, "Your bellboy stared at me."], [a, "My sincerest apologies, Captain. He is young."], [b, "Young, and staring."], [a, "I will speak with him. Is there anything else I may do for you this evening? Anything at all?"]] }
+  - { a: l5-harlan, b: l5-ambrose, lines: [[a, "Ambrose. The boiler's running hot again."], [b, "The boiler always runs exactly as hot as it wishes, Mr. Harlan."], [a, "We'll take a crew down. Keep your guests off the east stairs."], [b, "Of course. Housekeeping is always welcome."]] }
