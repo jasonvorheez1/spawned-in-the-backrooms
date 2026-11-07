@@ -31,7 +31,7 @@ pop glow n=1 r=light(<1,.55,.24>,fire()*6,7)`;
 
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
-  if (!(Math.abs(now - (globalThis.__wt?.[ctx.self?.place ?? "p"] ?? -1e9)) < 2000)) { (globalThis.__wt ??= {})[ctx.self?.place ?? "p"] = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)
+  if (!(Math.abs(now - (ctx.session.wallTick ?? -1e9)) < 2000)) { ctx.session.wallTick = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)
   if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(Math.hypot(p.x - cellCenter(ARRIVE.cx, ARRIVE.cz).x - 2.4, p.z - cellCenter(ARRIVE.cx, ARRIVE.cz).z + 2.4) < 3)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   tickChatter(ctx, CHATTER.level1, {"meg-ale": "ale", "meg-ortiz": "ortiz", "meg-callum": "callum"}); // the camp talks among itself while someone's near
   if (!s.seeded) {
