@@ -19,6 +19,9 @@ hatchet:    { name: Hatchet,    damage: 36, levelScale: 1.1, cooldown: 0.75, rea
 fire_axe:   { name: Fire axe,   damage: 48, levelScale: 1.2, cooldown: 1.0,  reach: 3.0, stamina: 20, minLevel: 8, rarity: rare, weight: 1, xp: 45, color: "oklch(0.5 0.2 25)", length: 1.0 }
 pistol:     { name: Pistol,     damage: 34, levelScale: 0.8, cooldown: 0.55, reach: 2, range: 28, ranged: true, magSize: 8, reloadTime: 1.7, cone: 0.975, adsCone: 0.997, fovAds: 44, ads: [0, -0.12, 0.5], muzzle: [0, 0.106, -0.19], recoil: { up: 230, back: 1.3, lift: 0.35, side: 45, twist: 60 }, stamina: 2, minLevel: 5, rarity: rare, weight: 1, xp: 40, color: "oklch(0.3 0.02 260)", length: 0.3 }
 shotgun:    { name: Shotgun,    damage: 60, levelScale: 1, cooldown: 1.1, reach: 2, range: 11, cone: 0.88, adsCone: 0.94, pellets: 8, ammoType: shells, ranged: true, magSize: 4, reloadStart: 0.4, reloadShell: 0.55, fovAds: 52, ads: [0, -0.05, 0.44], muzzle: [0, 0.026, -0.78], recoil: { up: 430, back: 2.8, lift: 0.6, side: 70, twist: 90 }, stamina: 6, minLevel: 10, rarity: rare, weight: 1, xp: 70, color: "oklch(0.3 0.03 60)", length: 0.9 }
+# power attack (melee, my picks): hold attack to wind up; release past `min` of the wind-up for a heavy swing.
+# charge: seconds to full. damage: multiplier at full. stamina/cooldown: multipliers for a heavy. reach: extra metres at full.
+power: { charge: 0.9, min: 0.3, damage: 2.2, stamina: 1.8, cooldown: 1.4, reach: 0.5 }
 pickups: 14        # weapons lying in the maze at once
 pickupRespawn: 90  # seconds between refills
 # First person. magSize: rounds in the gun (the ammo / shells counts are the reserve). reloadTime: a magazine swap. reloadStart/reloadShell: a shotgun loads one shell at a time and can be fired mid-reload.

@@ -62,7 +62,18 @@ export function onInput(ctx, input) {
     ctx.self.velocity = { x: v.x, y: PLAYER.jumpSpeed, z: v.z }
     sound(ctx, 'footstep-damp-carpet-squelch-soft', 0.4, true)
   }
-  if (input.pressed.attack) swing(ctx)
+  {
+    // melee: hold to wind up, release to swing (a heavy past power.min); a gun fires on the press
+    const sv = ctx.self.state, aw = weaponOf(sv), P = W.power
+    if (aw.ranged) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) swing(ctx) }
+    else {
+      if (input.pressed.attack && !sv.chargeAt && ctx.now() >= (walkOf(ctx).nextSwing ?? 0)) { sv.chargeAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.3, true) }
+      if (input.released.attack && sv.chargeAt) {
+        const t = Math.min(1, (ctx.now() - sv.chargeAt) / (P.charge * 1000)); sv.chargeAt = 0
+        swing(ctx, t >= P.min ? t : 0)
+      }
+    }
+  }
   if (input.pressed.drink) drink(ctx)
   if (input.pressed.cycleWeapon) cycleWeapon(ctx)
   if (input.pressed.reload) startReload(ctx)
@@ -75,7 +86,7 @@ export function onInput(ctx, input) {
   if (input.pressed.flashlight) toggleLight(ctx)
 }
 
-function hitTarget(ctx, s, m, dmg, f, loud = true) {
+function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
   m.state.hp -= dmg
   const hit = { x: m.feetPosition.x, y: m.feetPosition.y + 1.5, z: m.feetPosition.z }
   if (loud) sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)
@@ -83,8 +94,13 @@ function hitTarget(ctx, s, m, dmg, f, loud = true) {
   ctx.emit('fx', { position: hit, script: ICHOR })
   ctx.emit('squash', { target: m.id, axis: 'y', intensity: 0.25, duration: 0.18 })
   ctx.emit('flash', { target: m.id, color: '#ffffff', duration: 0.1 })
-  ctx.emit('hitstop', { duration: 0.06 }, { audience: { player: ctx.self.id } })
-  ctx.emit('cameraPunch', { direction: { x: f.x, y: 0, z: f.z }, intensity: 0.3 }, { audience: { player: ctx.self.id } })
+  ctx.emit('hitstop', { duration: 0.06 + heavy * 0.07 }, { audience: { player: ctx.self.id } })
+  ctx.emit('cameraPunch', { direction: { x: f.x, y: 0, z: f.z }, intensity: 0.3 + heavy * 0.5 }, { audience: { player: ctx.self.id } })
+  if (heavy) {
+    ctx.emit('screenShake', { intensity: 0.25 * heavy, duration: 0.18 }, { audience: { player: ctx.self.id } })
+    ctx.emit('shockwave', { position: hit, speed: 6, thickness: 0.3, intensity: 0.4 * heavy })
+    ctx.emit('damageNumber', { position: { ...hit, y: hit.y + 0.4 }, text: 'HEAVY', color: '#ffb347', size: 1.2 })
+  }
   if (m.state.hp <= 0 && !m.state.dead) {
     m.state.dead = true
     s.kills += 1
@@ -93,11 +109,14 @@ function hitTarget(ctx, s, m, dmg, f, loud = true) {
   }
 }
 
-function swing(ctx) {
-  const w = walkOf(ctx), s = ctx.self.state, now = ctx.now()
+function swing(ctx, power = 0) {
+  const w = walkOf(ctx), s = ctx.self.state, now = ctx.now(), P = W.power
   if (now < (w.nextSwing ?? 0) || (s.downAt && now - s.downAt < 1200)) return
   const wp = weaponOf(s)
+  if (wp.ranged) power = 0
+  if (power && (w.stamina ?? s.stamina) < wp.stamina * P.stamina) power = 0 // too tired to put weight behind it: a light swing
   if ((w.stamina ?? s.stamina) < wp.stamina) return
+  const heavyMul = power ? 1 + power * (P.damage - 1) : 1
   const ammoKey = wp.ammoType ?? 'ammo', loadedKey = 'loaded_' + s.equipped
   if (wp.ranged) {
     if (s.reloading) {
@@ -119,11 +138,12 @@ function swing(ctx) {
       ctx.after(0.55, 'pumpRack', {})
     }
   }
-  w.stamina = (w.stamina ?? s.stamina) - wp.stamina
-  w.nextSwing = now + wp.cooldown * 1000
+  w.stamina = (w.stamina ?? s.stamina) - wp.stamina * (power ? P.stamina : 1)
+  w.nextSwing = now + wp.cooldown * 1000 * (power ? P.cooldown : 1)
+  s.swingHeavy = Math.round(power * 100) / 100
   s.swingAt = now
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
-  const cone = (s.ads && wp.adsCone) || wp.cone || (wp.ranged ? 0.985 : 0.4), radius = wp.ranged ? wp.range : wp.reach + 0.6
+  const cone = (s.ads && wp.adsCone) || wp.cone || (wp.ranged ? 0.985 : 0.4), radius = wp.ranged ? wp.range : wp.reach + 0.6 + power * P.reach
   const found = []
   for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius })]) {
     if (m.state?.dead) continue
@@ -135,15 +155,17 @@ function swing(ctx) {
     }
     found.push({ m, d })
   }
-  if (!found.length) { if (!wp.ranged) sound(ctx, 'pipe-whoosh-swing', 0.55); return }
-  const base = wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale
+  if (!wp.ranged) sound(ctx, 'pipe-whoosh-swing', power ? 0.9 : 0.55)
+  if (!found.length) return
+  const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul
   if (wp.pellets) {
     // a spread of pellets: everything in the cone is hit, hard up close and weak at range
     for (const { m, d } of found) hitTarget(ctx, s, m, Math.max(1, Math.round(base * Math.max(0.2, 1 - d / wp.range))), f, false)
     return
   }
   found.sort((x, y) => x.d - y.d)
-  hitTarget(ctx, s, found[0].m, Math.round(base), f)
+  hitTarget(ctx, s, found[0].m, Math.round(base), f, true, power)
+  if (power) { const m = found[0].m, d = found[0].d || 1; ctx.emit('impulse', { target: m.id, impulse: { x: f.x * 260 * power, y: 60 * power, z: f.z * 260 * power } }) } // a heavy shoves them back
 }
 
 // ---- reloading: a magazine gun swaps its magazine; a shotgun loads one shell at a time and can be fired mid-reload.

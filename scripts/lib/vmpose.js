@@ -132,7 +132,11 @@ export function poseViewmodel(ctx, dt) {
     m.pumpEjected = true
     if (m.eject) { m.eject = false; const mz = ctx.getObjectSocket(ps.vmId, 'muzzle'); if (mz?.position && view) emitCasing(ctx, mz.position, view.yaw, true) }
   }
-  if (m.swingT != null && m.swingT < 1) m.swingT = Math.min(1, m.swingT + dt / (kind === 'fists' ? 0.2 : 0.34))
+  if (ps.swingAt !== m.heavyFor) { m.heavyFor = ps.swingAt; m.heavy = ps.swingHeavy ?? 0 }
+  if (m.swingT != null && m.swingT < 1) m.swingT = Math.min(1, m.swingT + dt / ((kind === 'fists' ? 0.2 : 0.34) * (1 + 0.45 * m.heavy)))
+  // the wind-up: how far into a held power attack, 0..1, eased in the pose below
+  const wind = !gun && ps.chargeAt ? Math.min(1, (ctx.now() - ps.chargeAt) / ((W.power?.charge ?? 0.9) * 1000)) : 0
+  m.wind = (m.wind ?? 0) + (wind - (m.wind ?? 0)) * Math.min(1, dt * (wind ? 14 : 30))
   m.ads += ((ps.ads ? 1 : 0) - m.ads) * Math.min(1, dt * 12)
   m.breath += dt
 
@@ -178,8 +182,15 @@ export function poseViewmodel(ctx, dt) {
   // a melee chop (or a jab for the fists), eased
   if (!gun && m.swingT != null && m.swingT < 1) {
     const e = ease(Math.sin(m.swingT * Math.PI))
-    if (kind === 'fists') { d += 0.28 * e; x -= 0.07 * e; y += 0.03 * e }
-    else { pitch -= 70 * e; yaw += 25 * e; roll -= 20 * e; x -= 0.1 * e; y -= 0.04 * e }
+    const h = 1 + 0.7 * (m.heavy ?? 0)
+    if (kind === 'fists') { d += 0.28 * e * h; x -= 0.07 * e * h; y += 0.03 * e }
+    else { pitch -= 70 * e * h; yaw += 25 * e * h; roll -= 20 * e * h; x -= 0.1 * e * h; y -= 0.04 * e * h; d += 0.06 * e * (h - 1) }
+  }
+  // a held power attack: cocked back over the shoulder, trembling once it is full
+  if (!gun && m.wind > 0.001) {
+    const k = ease(m.wind), full = m.wind > 0.97 ? 1 : 0, tr = full ? Math.sin(m.breath * 70) : 0
+    if (kind === 'fists') { d -= 0.12 * k; x += 0.05 * k; y -= 0.02 * k; roll += 12 * k + tr * 1.5 }
+    else { pitch += 38 * k + tr * 1.2; yaw -= 22 * k; roll += 18 * k + tr * 1.5; x += 0.07 * k; y += 0.06 * k; d -= 0.08 * k }
   }
 
   // raising a freshly equipped weapon: up from below the frame, a little past, and settle
