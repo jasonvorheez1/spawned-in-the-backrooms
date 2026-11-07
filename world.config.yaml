@@ -41,9 +41,14 @@ inputs:
         button: false
     cycleWeapon:
       keys:
-        - e
+        - x
+      mouse: wheelDown
       touch:
         button: false
+    interact:
+      keys:
+        - e
+    loot: {}
     wardrobe:
       keys:
         - c

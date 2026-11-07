@@ -6,6 +6,7 @@ import W from './lib/data/weapons.yml'
 import { ZONE_NAMES } from './lib/maze.js'
 import * as modelingStudio from '../mods/modeling-studio/hud.js'
 import { wardrobe } from './wardrobe-ui.js'
+import { lootUi } from './loot-ui.js'
 export { m3dPvDown, m3dPvWheel, m3dPvReset, m3dPvTool, m3dPvDraft, m3dPvEdit, m3dPvClear, m3dTkMeasure, m3dTkDown, m3dTkWheel, m3dTkReset, m3dMpvMove, m3dMpvSize, m3dDraft, m3dPose, m3dPick, m3dPreview, m3dUpload, m3dAsk, m3dClearRefs, m3dGuide } from '../mods/modeling-studio/hud.js'
 
 const THEME = `<style>
@@ -156,8 +157,8 @@ export default function render(ctx, player) {
 
   <!-- Subdued Initial Hint -->
   <div id="hint" style="position:absolute;left:0;right:0;text-align:center;bottom:180px;font-size:12px;color:rgba(232,228,216,0.45);animation:hud-fade 7s 1s forwards;opacity:0">
-    <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'E')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('wardrobe', 'C')}</kbd> wardrobe · <kbd>${lab('emote', 'T')}</kbd> face
+    <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('wardrobe', 'C')}</kbd> wardrobe · <kbd>${lab('emote', 'T')}</kbd> face
   </div>
 
-</div>${wardrobe(ctx, player)}${modelingStudio.render(ctx, player)}`
+</div>${wardrobe(ctx, player)}${lootUi(ctx, player)}${modelingStudio.render(ctx, player)}`
 }

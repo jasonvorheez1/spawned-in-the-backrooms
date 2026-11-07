@@ -49,6 +49,43 @@ function gain(ctx, n) {
   }
 }
 
+// Apply one looted item (a token from scripts/lib/items.js) to the player. Returns { ok } or { ok: false, msg }.
+// Nothing is picked up by walking over it: scripts/interact.js calls this when you press E on what you are looking at.
+export function takeToken(ctx, token) {
+  const s = ctx.self.state, now = ctx.now()
+  if (token === 'almond') {
+    if (s.almonds >= L.almondMax) return { ok: false, msg: 'You cannot carry any more almond water' }
+    s.almonds += 1; gain(ctx, L.xpAlmond); s.pickedAt = now
+    sound(ctx, 'plastic-bottle-pickup-rattle', 0.75, true)
+    return { ok: true }
+  }
+  if (token === 'ammo') {
+    if ((s.ammo ?? 0) >= W.ammo.max) return { ok: false, msg: 'Your pistol rounds are full' }
+    s.ammo = Math.min(W.ammo.max, (s.ammo ?? 0) + W.ammo.perPickup); s.pickedAt = now
+    sound(ctx, 'pickup-ammo', 0.7, true)
+    return { ok: true }
+  }
+  if (token === 'shells') {
+    if ((s.shells ?? 0) >= W.shells.max) return { ok: false, msg: 'Your shotgun shells are full' }
+    s.shells = Math.min(W.shells.max, (s.shells ?? 0) + W.shells.perPickup); s.pickedAt = now
+    sound(ctx, 'pickup-ammo', 0.7, true)
+    return { ok: true }
+  }
+  if (token.startsWith('weapon:')) {
+    const k = token.slice(7)
+    if (!W[k]) return { ok: false, msg: '' }
+    if (owned(s).includes(k)) return { ok: false, msg: `You already have a ${W[k].name.toLowerCase()}` }
+    s.weapons = [...owned(s).slice(1), k].join(',')
+    if (W[k].magSize) s['loaded_' + k] = W[k].magSize
+    if (usable(s, k) && W[k].damage > weaponOf(s).damage) s.equipped = k
+    s.pickedAt = now; s.gotWeapon = W[k].name
+    gain(ctx, W[k].xp ?? L.xpAlmond)
+    sound(ctx, 'pickup-weapon', 0.7, true)
+    return { ok: true }
+  }
+  return { ok: false, msg: '' }
+}
+
 export function onInput(ctx, input) {
   const w = walkOf(ctx)
   const sin = input.axes.aimYawSin ?? 0, cos = input.axes.aimYawCos ?? 1
@@ -105,7 +142,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
     m.state.dead = true
     s.kills += 1
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
-    dropLoot(ctx, m.feetPosition)
+    dropLoot(ctx, m.feetPosition, m.state?.kind === 'lurker' ? 'Lurker remains' : 'Smiler remains')
   }
 }
 
@@ -174,7 +211,7 @@ const reloadLive = (ctx, p) => { const s = ctx.self.state; return s.reloading ==
 
 function startReload(ctx) {
   const s = ctx.self.state, wp = weaponOf(s), k = s.equipped, w = walkOf(ctx)
-  if (!wp.ranged || !wp.magSize || s.reloading) return
+  if (!wp.ranged || !wp.magSize || s.reloading || s.lootOpen) return
   if ((s['loaded_' + k] ?? 0) >= wp.magSize || (s[wp.ammoType ?? 'ammo'] ?? 0) <= 0) return
   w.reloadTok = (w.reloadTok ?? 0) + 1
   s.reloading = k; s.ads = false
@@ -403,43 +440,7 @@ function tickStats(ctx, t, moving) {
     const vis = (w.visited ??= decode(s.visited ?? '')), i = cz * N + cx
     if (!vis[i]) { vis[i] = 1; s.visited = encode(vis); s.explored = (s.explored ?? 0) + 1; gain(ctx, L.xpPerCell) }
   }
-  // ammo boxes on the floor
-  for (const a of ctx.query({ tags: ['ammo'], radius: 1.5 })) {
-    if ((s.ammo ?? 0) >= W.ammo.max) break
-    ctx.destroy(a.id)
-    s.ammo = Math.min(W.ammo.max, (s.ammo ?? 0) + W.ammo.perPickup)
-    s.pickedAt = now
-    sound(ctx, 'pickup-ammo', 0.7, true)
-  }
-  // shotgun shells on the floor
-  for (const a of ctx.query({ tags: ['shells'], radius: 1.5 })) {
-    if ((s.shells ?? 0) >= W.shells.max) break
-    ctx.destroy(a.id)
-    s.shells = Math.min(W.shells.max, (s.shells ?? 0) + W.shells.perPickup)
-    s.pickedAt = now
-    sound(ctx, 'pickup-ammo', 0.7, true)
-  }
-  // almond water on the floor
-  for (const a of ctx.query({ tags: ['almond'], radius: 1.5 })) {
-    if (s.almonds >= L.almondMax) break
-    ctx.destroy(a.id)
-    s.almonds += 1
-    gain(ctx, L.xpAlmond)
-    s.pickedAt = now
-    sound(ctx, 'plastic-bottle-pickup-rattle', 0.75, true)
-  }
-  // weapons on the floor: new ones are kept; the best one you can wield is equipped
-  for (const g of ctx.query({ tags: ['weapon'], radius: 1.5 })) {
-    const k = g.state?.kind
-    if (!W[k] || owned(s).includes(k)) continue
-    ctx.destroy(g.id)
-    s.weapons = [...owned(s).slice(1), k].join(',')
-    if (W[k].magSize) s['loaded_' + k] = W[k].magSize
-    if (usable(s, k) && W[k].damage > weaponOf(s).damage) s.equipped = k
-    s.pickedAt = now; s.gotWeapon = W[k].name
-    gain(ctx, W[k].xp ?? L.xpAlmond)
-    sound(ctx, 'pickup-weapon', 0.7, true)
-  }
+  // (items are taken with E on what you look at: takeToken above, called from scripts/interact.js)
   // the flickering wall: the way out
   const ex = cellCenter(EXIT.cx, EXIT.cz)
   if (p.x < -HALF + 1.3 && Math.abs(p.z - ex.z) < 1.8) {

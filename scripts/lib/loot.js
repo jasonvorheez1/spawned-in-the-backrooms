@@ -29,10 +29,31 @@ export function rollWeapon(ctx) {
   return kinds[0];
 }
 
-// A dead smiler may leave almond water, or a weapon.
-export function dropLoot(ctx, pos) {
-  if (ctx.random() < W.dropChance.almond) spawnAlmond(ctx, pos);
-  if (ctx.random() < W.dropChance.ammo) spawnAmmo(ctx, pos);
-  if (ctx.random() < W.dropChance.shells) spawnShells(ctx, pos);
-  if (ctx.random() < W.dropChance.weapon) spawnWeapon(ctx, pos, rollWeapon(ctx));
+// ---- containers: a crate in the maze, or the remains of what you killed. Their contents are tokens (scripts/lib/items.js).
+const ITEM_WEIGHTS = [["almond", 40], ["ammo", 16], ["shells", 7], ["weapon", 22]];
+export function rollItem(ctx) {
+  const total = ITEM_WEIGHTS.reduce((a, [, w]) => a + w, 0);
+  let r = ctx.random() * total;
+  for (const [k, w] of ITEM_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeapon(ctx) : k; }
+  return "almond";
+}
+
+export function spawnCrate(ctx, c) {
+  const n = 1 + Math.floor(ctx.random() * 3), items = [];
+  for (let i = 0; i < n; i++) items.push(rollItem(ctx));
+  ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 }, rotation: ctx.random() * 360, physics: "static", primitive: { kind: "box", width: 0.7, height: 0.5, depth: 0.55 }, material: { color: "oklch(0.58 0.07 70)", roughness: 0.9 }, state: { name: "Supply crate", items: items.join(",") } });
+}
+
+export function spawnRemains(ctx, pos, items, name = "Remains") {
+  ctx.spawn({ tags: ["container", "remains"], feetPosition: { x: pos.x, y: 0.02, z: pos.z }, rotation: ctx.random() * 360, lifetime: 150, primitive: { kind: "cylinder", radiusTop: 0.42, radiusBottom: 0.47, height: 0.05 }, material: { color: "#14101a", roughness: 0.2, emissive: "#44238a", emissiveIntensity: 0.5 }, state: { name, items: items.join(",") } });
+}
+
+// What a dead smiler or lurker leaves: a body to search, if it was carrying anything.
+export function dropLoot(ctx, pos, name = "Remains") {
+  const items = [];
+  if (ctx.random() < W.dropChance.almond) items.push("almond");
+  if (ctx.random() < W.dropChance.ammo) items.push("ammo");
+  if (ctx.random() < W.dropChance.shells) items.push("shells");
+  if (ctx.random() < W.dropChance.weapon) items.push("weapon:" + rollWeapon(ctx));
+  if (items.length) spawnRemains(ctx, pos, items, name);
 }
