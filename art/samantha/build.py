@@ -56,8 +56,18 @@ for b in arm.edit_bones:  # local X = world X on every bone
     b.align_roll(V((1, 0, 0)).cross(b.vector.normalized()))
 bpy.ops.object.mode_set(mode='OBJECT')
 for b in arm.bones: print("bone", b.name, [round(a, 2) for a in b.matrix_local.col[0][:3]])
-o.select_set(True); rig.select_set(True); bpy.context.view_layer.objects.active = rig
+# heat weights on a closed proxy (voxel remesh: the glb's seams split it), transferred to the real skin
+px = o.copy(); px.data = o.data.copy(); bpy.context.scene.collection.objects.link(px)
+rm = px.modifiers.new("rm", 'REMESH'); rm.mode = 'VOXEL'; rm.voxel_size = 0.006
+bpy.ops.object.select_all(action='DESELECT'); bpy.context.view_layer.objects.active = px; px.select_set(True); bpy.ops.object.modifier_apply(modifier="rm")
+rig.select_set(True); bpy.context.view_layer.objects.active = rig
 bpy.ops.object.parent_set(type='ARMATURE_AUTO')
+for g in px.vertex_groups: o.vertex_groups.new(name=g.name)
+dt = o.modifiers.new("dt", 'DATA_TRANSFER'); dt.object = px; dt.use_vert_data = True; dt.data_types_verts = {'VGROUP_WEIGHTS'}; dt.vert_mapping = 'POLYINTERP_NEAREST'
+dt.layers_vgroup_select_src = 'ALL'; dt.layers_vgroup_select_dst = 'NAME'
+bpy.ops.object.select_all(action='DESELECT'); bpy.context.view_layer.objects.active = o; o.select_set(True); bpy.ops.object.modifier_apply(modifier="dt")
+bpy.data.objects.remove(px)
+o.parent = rig; am = o.modifiers.new("Armature", 'ARMATURE'); am.object = rig
 cnt = {g.index: 0 for g in o.vertex_groups}
 for vv in o.data.vertices:
     for e in vv.groups:
