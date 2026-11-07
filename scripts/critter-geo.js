@@ -110,7 +110,9 @@ export function geometry(ctx) {
     pig: { len: 0.08, w: 0.12, h: 0.09, y: -0.1, p: 2.4 }, sheep: { len: 0.1, w: 0.11, h: 0.095, y: -0.1, p: 2.2 },
     lion: { len: 0.11, w: 0.13, h: 0.095, y: -0.105, p: 2.2 },
   };
-  const SN = SNOUTS[P.species] || SNOUTS.cat;
+  const SN0 = SNOUTS[P.species] || SNOUTS.cat;
+  const SZ = (k, lo, hi) => Math.min(hi, Math.max(lo, Number(P[k]) || 1)); // creator sliders, 1 = the animal's own
+  const SN = { ...SN0, len: SN0.len * SZ('snoutS', 0.3, 1.8), w: SN0.w * Math.sqrt(SZ('snoutS', 0.3, 1.8)) };
   const snoutAt = (u, v) => { const d = Math.abs(u / SN.w) ** SN.p + Math.abs((v - SN.y) / SN.h) ** SN.p; if (d >= 1) return 0; const t = 1 - d; return SN.len * t * t * (3 - 2 * t); }; // zero past its oval, so it never pushes into the eyes
   const fem = P.sex === "f";
   const FUR = P.fur || sp.fur;
@@ -347,8 +349,8 @@ export function geometry(ctx) {
   ctx.metalness(0);
 
   // ---------- Body: continuous lofted pear/chibi torso ----------
-  const HIP_R = fem ? [0.18, 0.145] : [0.14, 0.128];
-  const WAIST_R = fem ? [0.132, 0.122] : (sp.chunky ? [0.165, 0.15] : [0.148, 0.138]);
+  const HIP_R = (fem ? [0.18, 0.145] : [0.14, 0.128]).map((v) => v * SZ('hipS', 0.75, 1.3));
+  const WAIST_R = (fem ? [0.132, 0.122] : (sp.chunky ? [0.165, 0.15] : [0.148, 0.138])).map((v) => v * SZ('waistS', 0.75, 1.35));
   const CHEST_R = fem ? [0.155, 0.146] : [0.15, 0.132];
   const torsoRadius = (t) => {
     if (t < 0.2) return [lerp(0.12, HIP_R[0], t / 0.2), lerp(0.1, HIP_R[1], t / 0.2)];
@@ -362,7 +364,8 @@ export function geometry(ctx) {
     for (let i = 0; i < TORSO_Y.length - 1; i++) if (y <= TORSO_Y[i + 1]) return torsoRadius((i + (y - TORSO_Y[i]) / (TORSO_Y[i + 1] - TORSO_Y[i])) / (TORSO_Y.length - 1));
     return torsoRadius(1);
   };
-  const BUST = { y: 0.868, x: 0.05, z: -0.095, r: [0.075, 0.064, 0.07] }; // modest, under every top
+  const bS = SZ('bustS', 0.6, 1.3); // capped: cute and modest
+  const BUST = { y: 0.868, x: 0.05, z: -0.095 + (1 - bS) * 0.03, r: [0.075 * bS, 0.064 * bS, 0.07 * bS] }; // modest, under every top
 
   // Lofted torso sections from hips to neck
   {
@@ -534,7 +537,7 @@ export function geometry(ctx) {
 
   // ---------- Ears: Species-specific high-craft curves ----------
   const earBase = (s) => [s * 0.2, 1.55, 0.0];
-  const ear = sp.ears, eS = sp.earS || 1;
+  const ear = sp.ears, eS = (sp.earS || 1) * SZ('earS', 0.5, 1.6);
   for (const s of [-1, 1]) {
     wOverride = { [s < 0 ? "EarL" : "EarR"]: 1 };
     const b = earBase(s);
