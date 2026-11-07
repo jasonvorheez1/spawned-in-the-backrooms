@@ -17,7 +17,7 @@ const plateUi = (label) => `<div face="front" width="0.5m" style="font-family:sa
 const coolerUi = `<div face="front" facing="player" width="0.42m" style="font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2">JUGS {{ state.jugs | default 3 }}/3<div style="margin-top:8px;height:40px;background:#223;position:relative"><div style="position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a"></div><div style="position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff"></div></div>FILL {{ state.fill | round | default 0 }}%</div>`;
 function inside(r, along, depth) { // a point in an office: along its wall from a0, depth in from the door wall
   const d = r.door.at - r.inward * depth; return r.door.ax === "z" ? { x: along, y: 0, z: d } : { x: d, y: 0, z: along }; }
-function lay(ctx) {
+export function lay(ctx) {
   ctx.spawn("l4-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level4-geo.js" }, material: { roughness: 0.9 } });
   // light: a lamp per 8 m in the open, one per room; the bare windows throw cold light in
   for (let x = -24; x <= 24; x += 8) for (let z = -24; z <= 24; z += 8) ctx.spawn({ tags: ["l4-light"], feetPosition: { x, y: H - 0.15, z }, light: { kind: "point", color: "oklch(0.97 0.02 95)", intensity: 3, distance: 12, shadow: { enabled: false } } });
