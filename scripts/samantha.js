@@ -153,6 +153,12 @@ function feed(ctx, p) {
   mark(p, `you gave Samantha ${name.toLowerCase()}`)
   say(ctx, p, premium ? S.lines.premium : S.lines.poor, premium ? 'happy' : 'annoyed')
   ctx.emit('playSound', { clip: SND('cat-eating-chewing-purr'), position: me.feetPosition, volume: 0.6, maxDistance: 8 })
+  if (premium) {
+    p.state.sanity = Math.min(100, (p.state.sanity ?? 0) + 50)
+    p.state.hp = Math.min(100, (p.state.hp ?? 100) + 30)
+  } else {
+    p.state.sanity = Math.min(100, (p.state.sanity ?? 0) + 15)
+  }
   rest(ctx, now, 'groom'); ses.until = now + 4000
   if (!premium) { ctx.after(2.2, 'poorRead', { by: p.id, i: Math.floor(ctx.random() * S.poorReadings.length) }); return }
   ses.reading = now; p.state.talkBusy = now
@@ -180,9 +186,10 @@ export const ears = {
     if (d.k === 'feed') feed(ctx, p)
     else if (d.k === 'refuse') { say(ctx, p, S.lines.refuse, 'annoyed'); warn(ctx, p, ctx.now(), true) }
   },
+  hit: (ctx, d) => { if (d?.by) enrage(ctx, d.by, ctx.now()) },
 }
 
-export function onSpawn(ctx) { ctx.self.session.mode = null }
+export function onSpawn(ctx) { ctx.self.scale = S.scale ?? 1.1; ctx.self.session.mode = null }
 
 export function update(ctx, dt) {
   const me = ctx.self, st = me.state, ses = me.session, now = ctx.now()

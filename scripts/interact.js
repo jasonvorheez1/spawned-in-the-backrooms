@@ -72,7 +72,8 @@ function refocus(ctx, force = false) {
       } else if (f.tag === 'bench') {
         info = { id: f.id, name: it.state?.name ?? 'Workbench', info: 'Craft ammo, repair kits, batteries, fuses', verb: 'Use', color: '#f2c14e' }
       } else if (f.tag === 'npc') {
-        info = { id: f.id, name: it.state?.name ?? 'Stranger', info: 'M.E.G.', verb: 'Talk', color: '#c6f060' }
+        const fac = it.state?.faction5 === 'hotel' ? 'Homely Hotel' : it.state?.faction5 === 'orig' ? 'The Originals' : it.state?.faction5 === 'hk' ? 'M.E.G.' : (it.state?.faction ?? 'M.E.G.')
+        info = { id: f.id, name: it.state?.name ?? 'Stranger', info: fac, verb: 'Talk', color: '#c6f060' }
         const pc = pickChance(ctx, it)
         if (pc != null) info = { id: f.id, name: it.state?.name ?? 'Stranger', info: `${Math.round(pc * 100)}% · Sneak`, verb: 'Pickpocket', color: pc >= 0.6 ? '#c6f060' : pc >= 0.35 ? '#f2c14e' : '#e0644f' }
       } else if (f.tag === 'container') {

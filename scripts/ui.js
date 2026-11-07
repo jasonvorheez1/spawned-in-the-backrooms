@@ -93,7 +93,7 @@ function xferCard(s, now) {
   const [a, b] = LEVEL_NAMES[x.to] ?? [String(x.to).toUpperCase(), '']
   return `<style>@keyframes xferOut{0%,45%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="xfer${x.at}" style="position:absolute;inset:0;background:#050403;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:xferOut 2.4s forwards;color:#f2c14e;text-shadow:2px 2px #000"><div style="font-size:44px;letter-spacing:.2em">${a}</div><div style="font-size:18px;letter-spacing:.3em;opacity:.75;margin-top:6px">${b}</div></div>`
 }
-const TALKERS = ['meg-ale', 'meg-ortiz', 'meg-callum', 'surv-wren', 'surv-hollis', 'surv-mags', 'hk-constance', 'hk-vance', 'homely-barnaby', 'homely-auguste']
+const TALKERS = ['meg-ale', 'meg-ortiz', 'meg-callum', 'surv-wren', 'surv-hollis', 'surv-mags', 'hk-constance', 'hk-vance', 'homely-barnaby', 'homely-auguste', 'l5-samantha', 'l5-ambrose', 'l5-dolores', 'l5-pip', 'l5-odette', 'l5-harlan', 'l5-vesna', 'l5-tobias', 'l5-imani', 'l5-millie', 'l5-whitlock', 'l5-vanderholt', 'l5-zelda', 'l5-wat']
 function chatBubbles(ctx, now) {
   const objs = ctx.place?.objects
   if (!objs) return ''
