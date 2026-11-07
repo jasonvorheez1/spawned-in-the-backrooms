@@ -28,7 +28,7 @@ function oarsOf(ctx, b) {
   const s = b.state, ids = s.oars;
   if (ids && ctx.getObject(ids.R.a) && ctx.getObject(ids.L.a)) return ids;
   const wood = { color: "oklch(0.55 0.07 65)", roughness: 0.85 }, make = (sx, tag) => {
-    const a = `l7-oar-${tag}-a`, bb = `l7-oar-${tag}-b`, c = `l7-oar-${tag}-c`;
+    const k = b.id === "l7-rowboat" ? "" : b.id.replace(/^l7-/, "") + "-", a = `l7-oar-${k}${tag}-a`, bb = `l7-oar-${k}${tag}-b`, c = `l7-oar-${k}${tag}-c`; // each boat its own oars
     for (const id of [a, bb, c, `${c}-blade`]) { const o = ctx.getObject(id); if (o) ctx.destroy(id); }
     ctx.spawn(a, { parent: b.id, feetPosition: { x: sx * LOCK_X, y: LOCK_Y, z: LOCK_Z } });
     ctx.spawn(bb, { parent: a });
@@ -69,7 +69,7 @@ export function update(ctx, dt) {
   const p = b.feetPosition; let yaw = yawOf(b.rotation) - (m.roll != null ? 0 : 0);
   // a boat nobody rows for 3 min, with no one near, goes home to the pier
   if (!b.controller && s.leftAt && now - s.leftAt > 180000 && !ctx.place.players.some((q) => Math.hypot(q.feetPosition.x - p.x, q.feetPosition.z - p.z) < 30)) {
-    s.leftAt = null; m.v = 0; m.base = { x: HOME.x, z: HOME.z, yaw: HOME.yaw };
+    s.leftAt = null; m.v = 0; const h = s.home ?? HOME; m.base = { x: h.x, z: h.z, yaw: h.yaw }; // its own mooring
   }
   m.base ??= { x: p.x, z: p.z, yaw: s.yaw ?? yaw };
   const target = b.controller ? -m.mz * MAX * (m.mz < 0 ? 1 : -0.5) : 0; // moveZ -1 is forward

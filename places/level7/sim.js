@@ -487,7 +487,7 @@ function lay(ctx) {
     model: { id: GLB.rowboat, forward: "+x" },
     layout: fit(3.8, 1.2, 3.8),
     behavior: "scripts/l7-dory.js",
-    state: { name: "Seawatch dory", verb: "Get in", seat: { d: 0.35, y: 0.3 }, boat: true },
+    state: { name: "Seawatch dory", verb: "Get in", seat: { d: 0.35, y: 0.3 }, boat: true, home: { x: 35.6, z: -91.5, yaw: -12 } },
   });
 
   // Ferry Skiff onward to Fort Surrender (Far Island)
@@ -499,7 +499,7 @@ function lay(ctx) {
     model: { id: GLB.rowboat, forward: "+x" },
     layout: fit(3.8, 1.2, 3.8),
     behavior: "scripts/l7-dory.js",
-    state: { name: "Deep-water outrigger dory", verb: "Get in", seat: { d: 0.35, y: 0.3 }, boat: true },
+    state: { name: "Deep-water outrigger dory", verb: "Get in", seat: { d: 0.35, y: 0.3 }, boat: true, home: { x: 40.4, z: -92.5, yaw: 145 } },
   });
 
   // Seawatch Outpost Summit Checkpoint & Signboard (x: 46, y: 7.0, z: -120)
@@ -590,7 +590,7 @@ function lay(ctx) {
     model: { id: GLB.rowboat, forward: "+x" },
     layout: fit(3.8, 1.2, 3.8),
     behavior: "scripts/l7-dory.js",
-    state: { name: "Fort Surrender dory", verb: "Get in", seat: { d: 0.35, y: 0.3 }, boat: true },
+    state: { name: "Fort Surrender dory", verb: "Get in", seat: { d: 0.35, y: 0.3 }, boat: true, home: { x: -69.5, z: -192.5, yaw: -35 } },
   });
 
   // Winding stone steps from Fort Surrender Wharf (y = 1.1) up to Summit Compound (y = 11.0)
