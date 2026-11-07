@@ -60,18 +60,18 @@ export function headModel(l0) {
     id: (isFemale ? sp.headF : sp.headM) || sp.head,
     materials: only({
       ...furMats(l),
-      eyewhite: { color: '#fffdfa', roughness: 0.4 },
-      eyeink: { color: '#161214', roughness: 0.85 },
+      eyewhite: { color: '#fffaf2', roughness: 0.9, metalness: 0 },
+      eyeink: { color: '#1d1420', roughness: 1, metalness: 0 },
       pupil: {
         color: eyeCol && (l?.glowEye || l?.species === 'samantha') ? eyeCol : '#000000', // pupils all black, no shine (Shelly); colour rides the iris
         roughness: 1,
         metalness: 0,
         ...(eyeCol && (l?.glowEye || l?.species === 'samantha') ? { emissive: eyeCol, emissiveIntensity: 0.4 } : {})
       },
-      iris: { color: eyeCol || '#8a5a2e', roughness: 0.25 },
-      blush: { color: blushCol, roughness: 0.85, emissive: '#ff4065', emissiveIntensity: isFemale ? 0.22 : 0.15 },
-      mouth: { color: '#661625', roughness: 0.9 },
-      tongue: { color: '#ff7b95', roughness: 0.6 }
+      iris: { color: eyeCol || '#8a5a2e', roughness: 0.9, metalness: 0 },
+      blush: { color: blushCol, roughness: 0.85 },
+      mouth: { color: '#4a1622', roughness: 0.9 },
+      tongue: { color: '#ff7f93', roughness: 0.7 }
     }, sp.mats)
   }
 }

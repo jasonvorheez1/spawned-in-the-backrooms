@@ -361,15 +361,8 @@ export function geometry(ctx) {
       else if (E.e === "star") fill(starPts(px, py, 0.075, 4), 0.01, 1);
       else if (E.e === "spiral") stroke(curve((t) => [cu + Math.cos(t * 16 * s) * 0.075 * (1 - t * 0.9), EY + Math.sin(t * 16 * s) * 0.085 * (1 - t * 0.9)], hi ? 40 : 20), 0.011, 0.01);
       else {
-        const irisBase = EYEC && EYEC !== "#2b2233" ? EYEC : "#302636";
-        const irisGlow = mixc(irisBase, "#ffffff", 0.35);
-        col(irisBase); fill(ellipse(px, py, pr[0] + 0.008, pr[1] + 0.008, hi ? 24 : 14), 0.0085);
-        if (hi) { col(irisGlow); fill(ellipse(px, py - pr[1] * 0.16, pr[0] * 0.78, pr[1] * 0.46, 18), 0.009); }
-        col(INK); fill(ellipse(px, py + pr[1] * 0.03, pr[0] * 0.62, pr[1] * 0.65, hi ? 22 : 12), 0.0095);
-        // Glossy catchlight specular highlights: sparkling anime eyes
-        col(WHITE);
-        fill(ellipse(px - s * pr[0] * 0.32, py + pr[1] * 0.32, pr[0] * 0.3, pr[1] * 0.3, hi ? 14 : 8), 0.011);
-        if (hi) fill(ellipse(px + s * pr[0] * 0.28, py - pr[1] * 0.28, pr[0] * 0.14, pr[1] * 0.14, 10), 0.011);
+        const pupilCol = EYEC && EYEC !== "#2b2233" ? EYEC : INK;
+        col(pupilCol); fill(ellipse(px, py, pr[0], pr[1], hi ? 24 : 14), 0.009);
       }
       if (E.e === "half") lid(s, E.uneven && s > 0 ? 0.0 : 0.025, E.uneven && s > 0 ? -0.1 : 0.05);
       if (E.e === "heavy" || E.e === "side") lid(s, -0.005, 0.0);

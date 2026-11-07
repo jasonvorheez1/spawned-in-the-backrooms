@@ -118,13 +118,31 @@ SH, AR, EL, WR = .06, .15, .345, .525
 for s, L in ((-1, "Left"), (1, "Right")):
     J[L + "Shoulder"] = V(SH * s, 0, .955); J[L + "Arm"] = V(AR * s, 0, .955); J[L + "ForeArm"] = V(EL * s, 0, .955); J[L + "Hand"] = V(WR * s, 0, .955)
     J[L + "UpLeg"] = V(.09 * s, 0, .6); J[L + "Leg"] = V(.09 * s, .005, .33); J[L + "Foot"] = V(.09 * s, -.01, .075); J[L + "ToeBase"] = V(.09 * s, .085, .028); J[L + "ToeEnd"] = V(.09 * s, .15, .028)
-HC = V(0, 0, 1.265); HR = (.298, .275, .272)   # the head: a soft ball, a touch wider, with chubby cheeks
+HC = V(0, 0, 1.265); HR = (.304, .276, .272)   # the head: a soft kemono ball with plush cheeks and a gentle 3D muzzle cushion
 EAR_UV = (.6, .78)
+CUR_SP = None
 def head_dir(u, v): return Vector((math.sin(u) * math.cos(v), math.cos(u) * math.cos(v), math.sin(v)))
 def head_r(d):
-    r = 1 / math.sqrt((d.x / HR[0]) ** 2 + (d.y / HR[1]) ** 2 + (d.z / HR[2]) ** 2)
-    side = abs(d.x) / (abs(d.x) + abs(d.y) * .8 + 1e-6)
-    return r * (1 + .06 * math.exp(-((d.z + .3) / .3) ** 2) * side)
+    sp = CUR_SP or {}
+    wd = sp.get("wide", 1.0)
+    r = 1 / math.sqrt((d.x / (HR[0] * wd)) ** 2 + (d.y / HR[1]) ** 2 + (d.z / HR[2]) ** 2)
+    # plush lower-cheek pouches (wider & softer around the lower sides and front-cheeks)
+    ck = sp.get("cheek", 1.18 if sp.get("fluff") else 1.05)
+    side = (abs(d.x) / (abs(d.x) + abs(d.y) * .65 + 1e-6)) ** .85
+    front_bias = max(0.0, 0.55 + 0.45 * d.y)
+    cheek_swell = .095 * ck * math.exp(-((d.z + .24) / .28) ** 2) * side * front_bias
+    # gentle chin tuck underneath so the jaw meets the neck cleanly
+    chin_tuck = -.035 * max(0.0, -d.z - .52) * (1.0 - abs(d.x) * .7)
+    # 3D plush muzzle cushion on the lower-front face (strictly below the eye bridge so eyes sit on a pure ellipsoid)
+    muz_len = sp.get("snout", .026 if sp.get("muzzle") else .016)
+    muz = 0.0
+    if d.y > 0.05 and d.z < -0.105:
+        mu = d.x / (.33 * wd)
+        mv = (d.z + .27) / .165
+        q = mu * mu + mv * mv
+        if q < 1.0:
+            muz = muz_len * ((1.0 - q) ** 1.75) * min(1.0, (d.y - .05) * 3.0)
+    return r * (1.0 + cheek_swell + chin_tuck) + muz
 def head_pt(d, out=0.0): d = d.normalized(); return HC + d * (head_r(d) + out)
 
 def build_rig():
@@ -374,28 +392,28 @@ def build_garments(F, body, rig):
     return G
 
 # ================= heads =================
-EYE_U, EYE_V = .37, .03
+EYE_U, EYE_V = .365, .048
 SP = {  # ears, tail, extras, muzzle(belly patch), nose dot, whiskers
- "cat":      dict(fur="#f2a65a", belly="#fff1dc", tip="#fff1dc", nose="#ff8fa3", ears=("point", 1.0), tail="cat", ex=[], muzzle=False, whisk=True, catnose=True, fluff=True, mark="#d9843a", marks=["tabby"]),
- "dog":      dict(fur="#c98b55", belly="#fbe8cf", tip="#fbe8cf", nose="#2a1c18", mark="#8a5a36", ears=("flop", 1.0), tail="dog", ex=["earmark"], muzzle=True, marks=["eyespot"]),
- "fox":      dict(fur="#f07a2e", belly="#ffffff", tip="#ffffff", nose="#231816", mark="#2c1c18", ears=("point", 1.25), tail="bushy", ex=[], muzzle=True, catnose=True, fluff=True),
- "bunny":    dict(fur="#f4efe9", belly="#ffffff", tip="#ffffff", nose="#ff9fb4", inner="#ffc2d1", ears=("long", 1.0), tail="pom", ex=[], muzzle=False, marks=["pinkcheeks"]),
- "bear":     dict(fur="#9a6440", belly="#e8c79e", tip="#e8c79e", nose="#2a1c18", ears=("round", 1.0), tail="stub", ex=[], muzzle=True),
- "deer":     dict(fur="#a8703f", belly="#f1d4ae", tip="#ffffff", nose="#2a1612", antler="#e9d8b4", ears=("leaf", 1.0), tail="stub", ex=["antlers", "spots"], muzzle=True),
- "reindeer": dict(fur="#8a5a3a", belly="#f1e0c8", tip="#f6efe4", nose="#e0404c", antler="#efe0bd", ears=("leaf", .9), tail="stub", ex=["bigantlers"], muzzle=True, bignose=True),
- "mouse":    dict(fur="#b9b3c2", belly="#f6eef4", tip="#f6eef4", nose="#ff8fa3", inner="#ffc2d1", ears=("round", 1.55), tail="thin", ex=[], muzzle=False, whisk=True, marks=["pinkcheeks"]),
- "wolf":     dict(fur="#4f6f9f", belly="#a9bfdc", tip="#a9bfdc", nose="#16141c", mark="#26406c", ears=("point", 1.3), tail="bushy", ex=[], muzzle=True, catnose=True, fluff=True),
- "raccoon":  dict(fur="#8b8a92", belly="#e9e6ea", tip="#2a2830", nose="#1c1a20", mark="#2c2a32", ears=("point", .85), tail="ringed", ex=["mask"], muzzle=True, whisk=True, catnose=True, fluff=True),
- "panda":    dict(fur="#f7f3ee", belly="#ffffff", tip="#2b2530", nose="#1c1a20", mark="#2b2530", ears=("round", 1.0), tail="stub", ex=["patches"], muzzle=False, earmark=True),
- "pig":      dict(fur="#ffb3c1", belly="#ffd9e0", tip="#ffd9e0", nose="#ff8ca2", ears=("pig", 1.0), tail="curly", ex=["snout"], muzzle=False, nonose=True, marks=["pinkcheeks"]),
- "sheep":    dict(fur="#f6f1e7", belly="#ffffff", tip="#ffffff", nose="#2a1c18", mark="#5d5560", inner="#8a7f8c", ears=("flop", .75), tail="pom", ex=["wool"], muzzle=False, earmark=True),
- "lion":     dict(fur="#ebb04e", belly="#fbe3b0", tip="#a3592a", nose="#8a4a2a", mark="#a3592a", ears=("round", .85), tail="lion", ex=["mane"], muzzle=True, catnose=True, fluff=True),
- "tiger":    dict(fur="#f08a24", belly="#fff6ea", tip="#2a1c18", nose="#ff8fa3", mark="#2a1c18", ears=("round", .95), tail="ringed", ex=["stripes"], muzzle=True, whisk=True, catnose=True, fluff=True),
- "redpanda": dict(fur="#c4532a", belly="#f4ece2", tip="#7a2e16", nose="#1c1a20", mark="#2b1a14", ears=("point", .9), tail="ringed", ex=["cheeks"], muzzle=True, catnose=True, fluff=True),
- "skunk":    dict(fur="#2e2c36", belly="#f4f1ea", tip="#f4f1ea", nose="#16141c", mark="#f4f1ea", ears=("round", .9), tail="skunk", ex=["stripe"], muzzle=False),
- "hamster":  dict(fur="#e8b77a", belly="#fff4e0", tip="#fff4e0", nose="#ff8fa3", inner="#ffc2d1", ears=("round", .9), tail="stub", ex=["puffs"], muzzle=True, whisk=True, marks=["pinkcheeks"]),
- "otter":    dict(fur="#7a5236", belly="#e8d2b4", tip="#e8d2b4", nose="#2a1c18", mark="#5a3a24", ears=("round", .6), tail="otter", ex=[], muzzle=True, whisk=True),
- "koala":    dict(fur="#9a9aa4", belly="#ececf0", tip="#ececf0", nose="#2a2830", inner="#f4f4f6", ears=("fluffy", 1.0), tail="none", ex=[], muzzle=False, bignose=True),
+ "cat":      dict(fur="#f2a65a", belly="#fff1dc", tip="#fff1dc", nose="#ff8fa3", inner="#ffb8c6", ears=("point", 1.05), tail="cat", ex=["eartip"], muzzle=True, snout=.022, whisk=True, catnose=True, fang=True, fluff=True, mark="#d9843a", marks=["tabby"]),
+ "dog":      dict(fur="#c98b55", belly="#fbe8cf", tip="#fbe8cf", nose="#2a1c18", inner="#f6d4be", mark="#8a5a36", ears=("flop", 1.05), tail="dog", ex=["earmark", "brows"], muzzle=True, snout=.038, marks=["eyespot"]),
+ "fox":      dict(fur="#f07a2e", belly="#ffffff", tip="#ffffff", nose="#231816", inner="#f8d2bd", mark="#2c1c18", ears=("point", 1.28), tail="bushy", ex=["eartip", "cheekbelly"], muzzle=True, snout=.038, whisk=True, catnose=True, fang=True, fluff=True),
+ "bunny":    dict(fur="#f4efe9", belly="#ffffff", tip="#ffffff", nose="#ff9fb4", inner="#ffc2d1", ears=("long", 1.05), tail="pom", ex=["buck"], muzzle=True, snout=.020, catnose=True, cheek=1.18, marks=["pinkcheeks"]),
+ "bear":     dict(fur="#9a6440", belly="#e8c79e", tip="#e8c79e", nose="#2a1c18", inner="#d8a682", mark="#6e4329", ears=("round", 1.05), tail="stub", ex=[], muzzle=True, snout=.036, wide=1.05, cheek=1.16),
+ "deer":     dict(fur="#a8703f", belly="#f1d4ae", tip="#ffffff", nose="#2a1612", inner="#f8ded2", mark="#4a2a1c", antler="#e9d8b4", ears=("leaf", 1.05), tail="stub", ex=["antlers", "spots"], muzzle=True, snout=.034),
+ "reindeer": dict(fur="#8a5a3a", belly="#f1e0c8", tip="#f6efe4", nose="#e0404c", inner="#edd2c0", mark="#4a2e20", antler="#efe0bd", ears=("leaf", .95), tail="stub", ex=["bigantlers", "cheekbelly"], muzzle=True, snout=.038, bignose=True),
+ "mouse":    dict(fur="#b9b3c2", belly="#f6eef4", tip="#f6eef4", nose="#ff8fa3", inner="#ffc2d1", ears=("round", 1.55), tail="thin", ex=["buck"], muzzle=True, snout=.022, whisk=True, catnose=True, marks=["pinkcheeks"]),
+ "wolf":     dict(fur="#4f6f9f", belly="#a9bfdc", tip="#a9bfdc", nose="#16141c", inner="#b8cce6", mark="#26406c", ears=("point", 1.3), tail="bushy", ex=["eartip", "cheekbelly", "brows"], muzzle=True, snout=.040, catnose=True, fang=True, fluff=True),
+ "raccoon":  dict(fur="#8b8a92", belly="#e9e6ea", tip="#2a2830", nose="#1c1a20", inner="#ded8e2", mark="#2c2a32", ears=("point", .9), tail="ringed", ex=["mask", "cheekbelly", "eartip"], muzzle=True, snout=.032, whisk=True, catnose=True, fang=True, fluff=True),
+ "panda":    dict(fur="#f7f3ee", belly="#ffffff", tip="#2b2530", nose="#1c1a20", inner="#eee8e2", mark="#2b2530", ears=("round", 1.05), tail="stub", ex=["patches"], muzzle=False, snout=.026, earmark=True, wide=1.05, cheek=1.18),
+ "pig":      dict(fur="#ffb3c1", belly="#ffd9e0", tip="#ffd9e0", nose="#ff8ca2", inner="#ffd4dc", ears=("pig", 1.05), tail="curly", ex=["snout"], muzzle=False, snout=.024, nonose=True, cheek=1.16, marks=["pinkcheeks"]),
+ "sheep":    dict(fur="#f6f1e7", belly="#ffffff", tip="#ffffff", nose="#2a1c18", inner="#8a7f8c", mark="#5d5560", ears=("flop", .8), tail="pom", ex=["wool"], muzzle=False, snout=.022, catnose=True, earmark=True),
+ "lion":     dict(fur="#ebb04e", belly="#fbe3b0", tip="#a3592a", nose="#8a4a2a", inner="#f0d4a8", mark="#a3592a", ears=("round", .9), tail="lion", ex=["mane"], muzzle=True, snout=.034, catnose=True, fang=True, fluff=True),
+ "tiger":    dict(fur="#f08a24", belly="#fff6ea", tip="#2a1c18", nose="#ff8fa3", inner="#fff0dc", mark="#2a1c18", ears=("round", .98), tail="ringed", ex=["stripes", "cheekbelly", "eartip"], muzzle=True, snout=.032, whisk=True, catnose=True, fang=True, fluff=True),
+ "redpanda": dict(fur="#c4532a", belly="#f4ece2", tip="#7a2e16", nose="#1c1a20", inner="#fff0e4", mark="#2b1a14", ears=("point", .95), tail="ringed", ex=["cheeks", "brows", "tears"], muzzle=True, snout=.026, catnose=True, fang=True, fluff=True),
+ "skunk":    dict(fur="#2e2c36", belly="#f4f1ea", tip="#f4f1ea", nose="#16141c", inner="#eeeaf4", mark="#f4f1ea", ears=("round", .95), tail="skunk", ex=["stripe"], muzzle=True, snout=.028, catnose=True),
+ "hamster":  dict(fur="#e8b77a", belly="#fff4e0", tip="#fff4e0", nose="#ff8fa3", inner="#ffc2d1", ears=("round", .95), tail="stub", ex=["cheekbelly", "buck"], muzzle=True, snout=.020, whisk=True, catnose=True, cheek=1.42, wide=1.05, marks=["pinkcheeks"]),
+ "otter":    dict(fur="#7a5236", belly="#e8d2b4", tip="#e8d2b4", nose="#2a1c18", inner="#dec4ac", mark="#5a3a24", ears=("round", .68), tail="otter", ex=["cheekbelly"], muzzle=True, snout=.030, whisk=True, catnose=True, cheek=1.14),
+ "koala":    dict(fur="#9a9aa4", belly="#ececf0", tip="#ececf0", nose="#2a2830", inner="#f4f4f6", ears=("fluffy", 1.15), tail="none", ex=["cheekbelly"], muzzle=False, snout=.024, bignose=True, wide=1.04, cheek=1.2),
 }
 if ONLY: SP = {k: v for k, v in SP.items() if k in ONLY.split(",")}
 F_HEAD = False
@@ -430,20 +448,50 @@ def decal_pt(u, v, a, b, out):
 
 def ellipse(w, h, N, cx=0, cy=0): return [(cx + w * math.cos(2 * math.pi * i / N), cy + h * math.sin(2 * math.pi * i / N)) for i in range(N)]
 
-def add_decal(H, u, v, out, states, faces, matname, bone="Head"):
-    """states: {"Basis": [(a,b)...], key: [...]} 2D points in the decal plane, the same count each; faces index those points"""
-    base = [H.add_v(decal_pt(u, v, a, b, out), bone) for (a, b) in states["Basis"]]
-    for k, pts in states.items():
+def add_decal(H, u, v, out, states, faces, matname, bone="Head", outs=None):
+    """states: {"Basis": [(a,b)...], key: [...]} 2D points in the decal plane, the same count each; faces index those points.
+       outs: optional dict {key: out_offset} so hidden states can tuck inside the head (out < 0) without collapsing to 0 area."""
+    b_out = outs.get("Basis", out) if outs else out
+    base = [H.add_v(decal_pt(u, v, a, b, b_out), bone) for (a, b) in states["Basis"]]
+    all_keys = set(states.keys()) | (set(outs.keys()) if outs else set())
+    for k in all_keys:
         if k == "Basis": continue
-        for i, (a, b) in zip(base, pts): H.keys[k][i] = decal_pt(u, v, a, b, out)
+        pts = states.get(k, states["Basis"])
+        k_out = outs.get(k, out) if outs else out
+        for i, (a, b) in zip(base, pts): H.keys[k][i] = decal_pt(u, v, a, b, k_out)
     def area(f, pts): return sum(pts[f[i]][0] * pts[f[(i + 1) % len(f)]][1] - pts[f[(i + 1) % len(f)]][0] * pts[f[i]][1] for i in range(len(f)))
-    order = [states["Basis"]] + [v for k, v in states.items() if k != "Basis"]
+    order = [states["Basis"]] + [v_ for k, v_ in states.items() if k != "Basis"]
     for f in faces:
         a = 0.0
         for pts in order:
             a = area(f, pts)
             if abs(a) > 1e-10: break
         H.face([base[i] for i in (tuple(reversed(f)) if a > 0 else f)], matname)
+
+def add_dome(H, u, v, nw, nh, h_max, matname, N=24, R=5, shape_fn=None, base_out=-.002, bone="Head"):
+    """Builds a smooth 3D sculpted cushion/dome (for noses and snouts) on the tangent plane at (u, v)."""
+    rings = []
+    center_p = shape_fn(0.0, 0.0) if shape_fn else (0.0, 0.0)
+    c_idx = H.add_v(decal_pt(u, v, center_p[0], center_p[1], h_max), bone)
+    for r in range(1, R + 1):
+        t = r / R
+        # smooth dome profile from h_max at center down to base_out at the tucked rim
+        z_out = base_out + (h_max - base_out) * ((1.0 - t * t) ** 1.15)
+        ring = []
+        for i in range(N):
+            a = 2 * math.pi * i / N
+            x, y = nw * t * math.cos(a), nh * t * math.sin(a)
+            if shape_fn: x, y = shape_fn(x, y)
+            ring.append(H.add_v(decal_pt(u, v, x, y, z_out), bone))
+        rings.append(ring)
+    for i in range(N):
+        j = (i + 1) % N
+        H.face((c_idx, rings[0][j], rings[0][i]), matname)
+    for r in range(R - 1):
+        r0, r1 = rings[r], rings[r + 1]
+        for i in range(N):
+            j = (i + 1) % N
+            H.face((r0[i], r0[j], r1[j], r1[i]), matname)
 
 def disc(w, h, N, R=5, cx=0, cy=0):
     pts = [(cx, cy)]
@@ -470,7 +518,7 @@ def strip(n): return [(i, i + 1, n + i + 1, n + i) for i in range(n - 1)]
 def ring_faces(n): return [(i, (i + 1) % n, n + (i + 1) % n, n + i) for i in range(n)]
 
 def build_face(H, sp):
-    N = 32; ew, eh = .076, .092          # big tall oval eyes
+    N = 32; ew, eh = .074, .090          # signature big tall oval eyes (Dandy's World / rubberhose style, no shines!)
     cut = eh * .18                        # the half-lid line
     for s in (-1, 1):
         u = s * EYE_U
@@ -489,11 +537,11 @@ def build_face(H, sp):
                     xx = max(-ew, min(ew, x)) * .96; out.append((xx, (arcB if key == "Blink" else arcH)(xx)))
                 else: out.append((x, y))
             return out
-        # sclera
-        pts, ff = disc(ew, eh, N, 4)
+        # sclera (6 radial rings so surface curvature is ultra-smooth)
+        pts, ff = disc(ew, eh, N, 6)
         st = {"Basis": pts}
         for k in ("Wide", "Half", "Sad", "Angry", "Blink", "Happy"): st[k] = eyeT(pts, k)
-        add_decal(H, u, EYE_V, .004, eye_types(st), ff, "eyewhite")
+        add_decal(H, u, EYE_V, .0045, eye_types(st), ff, "eyewhite")
         # ink outline ring (becomes the closed/happy line)
         inner = ellipse(ew, eh, N); outer = ellipse(ew + .011, eh + .011, N)
         st = {"Basis": inner + outer}
@@ -505,14 +553,14 @@ def build_face(H, sp):
                 xx = max(-ew, min(ew, x)) * .98; sgn = 1 if math.sin(2 * math.pi * i / N) >= 0 else -1
                 a_in.append((xx, arc(xx))); a_out.append((xx, arc(xx) + sgn * .0075 * (1 - (xx / ew) ** 6)))
             st[k] = a_in + a_out
-        add_decal(H, u, EYE_V, .0045, eye_types(st), ring_faces(N), "eyeink")
-        # the big matte black pupil, a little toward the nose and down
-        pw, ph = .047, .061; pc = (-s * .016, -.017)
-        pts, ff = disc(pw, ph, N, 4, *pc)
+        add_decal(H, u, EYE_V, .0058, eye_types(st), ring_faces(N), "eyeink")
+        # the big matte black pupil, a little toward the nose and down (no specular shines!)
+        pw, ph = .046, .060; pc = (-s * .015, -.016)
+        pts, ff = disc(pw, ph, N, 6, *pc)
         st = {"Basis": pts, "Wide": [(pc[0] + (x - pc[0]) * .78, pc[1] + (y - pc[1]) * .78) for x, y in pts],
               "Half": [(x, min(y, cut - .004)) for x, y in pts], "Sad": [(x, y + .012) for x, y in pts], "Angry": [(x - s * .004, y - .006) for x, y in pts]}
         for k in ("Blink", "Happy"): st[k] = eyeT(pts, k)
-        add_decal(H, u, EYE_V, .0052, eye_types(st), ff, "pupil")
+        add_decal(H, u, EYE_V, .0076, eye_types(st), ff, "pupil")
         if F_HEAD:
             lp, lf = [], []
             for j, ang in enumerate((18, 40, 62)):
@@ -533,123 +581,361 @@ def build_face(H, sp):
                     mx, my = (b0[0] + b1[0]) / 2, (b0[1] + b1[1]) / 2; nmx, nmy = (nb[0][0] + nb[1][0]) / 2, (nb[0][1] + nb[1][1]) / 2
                     out_ += nb + [(tp_[0] - mx + nmx, tp_[1] - my + nmy)]
                 st[k] = out_
-            add_decal(H, u, EYE_V, .0046, st, lf, "eyeink")
-        # brows: hidden until Sad or Angry
-        M_ = 10; xs = [-.055 + .11 * i / (M_ - 1) for i in range(M_)]
-        def brow(fy):
+            add_decal(H, u, EYE_V, .0060, eye_types(st), lf, "eyeink")
+        # expressive eyebrows: soft resting arch that morphs across expressions
+        M_ = 10; xs = [-.048 + .096 * i / (M_ - 1) for i in range(M_)]
+        def brow(fy, th=.0048):
             top, bot = [], []
             for x in xs:
-                t = (1 - (2 * (x + .055) / .11 - 1) ** 2) ** .5 * .007 + .002; y = fy(x)
+                u_ = x / .048
+                t = max(.0012, (1.0 - u_ * u_) ** .55 * th)
+                y = fy(x)
                 top.append((x, y + t)); bot.append((x, y - t))
             return top + bot
-        hid = [(0, eh + .02)] * (2 * M_)
-        st = {"Basis": hid, "Sad": brow(lambda x: eh + .035 + .03 * (0.5 - s * x / .11)), "Angry": brow(lambda x: eh + .03 - .035 * (0.5 - s * x / .11))}
-        add_decal(H, u, EYE_V, .0045, st, strip(M_), "eyeink")
-        # blush: hidden until Blush
-        bp, bf = disc(.05, .028, 20, 3)
-        add_decal(H, s * .62, -.2, .0025, {"Basis": [(0, 0)] * len(bp), "Blush": bp}, bf, "blush")
+        st_b = {
+            "Basis": brow(lambda x: eh + .026 - .009 * (x / .048) ** 2, .0042),
+            "Smile": brow(lambda x: eh + .031 - .010 * (x / .048) ** 2, .0044),
+            "Happy": brow(lambda x: eh + .035 - .011 * (x / .048) ** 2, .0045),
+            "Wide":  brow(lambda x: eh + .042 - .012 * (x / .048) ** 2, .0048),
+            "Half":  brow(lambda x: eh + .018 - .004 * (x / .048) ** 2, .0042),
+            "Sad":   brow(lambda x: eh + .030 + .028 * (0.35 - s * x / .096) - .005 * (x / .048) ** 2, .0052),
+            "Angry": brow(lambda x: eh + .022 - .034 * (0.40 - s * x / .096) - .004 * (x / .048) ** 2, .0055),
+        }
+        add_decal(H, u, EYE_V, .0056, eye_types(st_b), strip(M_), "eyeink")
+        # blush: positioned on the plush outer-lower cheek (cleanly clear of the eye ring)
+        bp, bf = disc(.044, .023, 20, 3)
+        bp_small = [(.35 * x, .35 * y) for x, y in bp]
+        if F_HEAD or "pinkcheeks" in sp.get("marks", []):
+            bp_big = [(1.18 * x, 1.18 * y) for x, y in bp]
+            add_decal(H, s * .68, -.23, .0035, {"Basis": bp, "Blush": bp_big}, bf, "blush")
+        else:
+            add_decal(H, s * .68, -.23, .0035, {"Basis": bp_small, "Blush": bp}, bf, "blush", outs={"Basis": -.008, "Blush": .0035})
+        # sleek tapered whiskers outside the cheek blush
         if sp.get("whisk"):
-            for k_, dy in enumerate((.012, -.006, -.024)):
-                pts = [(s * (.06 + .06 * i / 9), dy - .004 * (i / 9 * 5) * (k_ - 1)) for i in range(10)]
-                add_decal(H, s * .55, -.24, .0035, {"Basis": [(x, y + .0028) for x, y in pts] + [(x, y - .0028) for x, y in pts]}, strip(10), "eyeink")
-    # mouth: a small smile line by default
-    M_ = 14; ts = [-1 + 2 * i / (M_ - 1) for i in range(M_)]
-    w0, w1 = .036, .056
-    lineB = lambda t: (t * w0, -.009 * (1 - t * t))
-    lineS = lambda t: (t * w1, -.024 * (1 - t * t) + .006 * t * t)
-    lineF = lambda t: (t * .04, .014 * (1 - t * t) - .004)
-    def band(fn, th=.0045):
+            for k_, (vy, ang) in enumerate(((-.18, .08), (-.24, -.02), (-.30, -.12))):
+                wpts = [(s * (x * .065), x * ang * .05 - .004 * (x ** 2)) for x in [i / 7 for i in range(8)]]
+                top, bot = [], []
+                for idx_, (wx, wy) in enumerate(wpts):
+                    t_ = 1.0 - idx_ / 7.0
+                    th_ = .0024 * (0.25 + 0.75 * (t_ ** .7))
+                    top.append((wx, wy + th_)); bot.append((wx, wy - th_))
+                add_decal(H, s * .82, vy, .0039, {"Basis": top + bot}, strip(8), "eyeink")
+
+    # 3D sculpted nose / snout cushion
+    NV = -.162
+    if "snout" in sp["ex"]:
+        # 3D oval pig snout disk with recessed dark nostrils
+        add_dome(H, 0, -.185, .054, .040, .024, "nose", N=28, R=5, base_out=-.003)
+        for s in (-1, 1):
+            np_, nf = disc(.010, .015, 14, 2, s * .020, -.002)
+            add_decal(H, 0, -.185, .0248, {"Basis": np_}, nf, "eyeink")
+    elif not sp.get("nonose"):
+        if sp.get("bignose") and "bigantlers" not in sp["ex"]:
+            # Koala's signature tall rounded dark leathery nose
+            def koala_n(x, y): return (x * (1.0 - .18 * (y / .042)), y)
+            add_dome(H, 0, -.175, .034, .044, .024, "nose", N=24, R=5, shape_fn=koala_n, base_out=-.003)
+        elif sp.get("bignose"):
+            # Reindeer's plump round glowing bulb nose
+            add_dome(H, 0, -.162, .033, .027, .025, "nose", N=24, R=5, base_out=-.003)
+        elif sp.get("catnose"):
+            # Cute 3D kemono rounded-triangle button nose
+            nh = .0175; nw = .0245
+            def tri_n(x, y):
+                u_ = y / nh
+                return (x * (1.0 + .38 * u_), y - .22 * abs(x) * (1.0 if y < 0 else 0.2))
+            add_dome(H, 0, NV, nw, nh, .0155, "nose", N=24, R=4, shape_fn=tri_n, base_out=-.002)
+        else:
+            # Plump 3D dog/bear/deer rounded button nose
+            nh = .020; nw = .028
+            def btn_n(x, y): return (x * (1.0 + .22 * (y / nh)), y)
+            add_dome(H, 0, NV, nw, nh, .0185, "nose", N=24, R=5, shape_fn=btn_n, base_out=-.002)
+
+    # mouth: charming :3 kemono double-arch on catnose species, warm curve on others
+    M_ = 19; ts = [-1 + 2 * i / (M_ - 1) for i in range(M_)]
+    MV = -.295 if "snout" not in sp["ex"] and not (sp.get("bignose") and "bigantlers" not in sp["ex"]) else -.34
+    is_kemono = bool(sp.get("catnose"))
+    w0, w1 = (.040, .058) if is_kemono else (.038, .056)
+    def lineB(t):
+        if is_kemono:
+            a = abs(t)
+            return (t * w0, .0055 * math.exp(-((t / .24) ** 2)) - .0095 * math.sin(math.pi * a) + .004 * (t ** 2))
+        return (t * w0, -.009 * (1 - t * t))
+    def lineS(t):
+        if is_kemono:
+            a = abs(t)
+            return (t * w1, .0065 * math.exp(-((t / .24) ** 2)) - .016 * math.sin(math.pi * a) + .011 * (t ** 2))
+        return (t * w1, -.022 * (1 - t * t) + .007 * t * t)
+    def lineF(t):
+        return (t * .040, .014 * (1 - t * t) - .005)
+    def band(fn, th=.0048):
         top, bot = [], []
         for t in ts:
-            x, y = fn(t); w = th * (1 - .6 * t ** 6); top.append((x, y + w)); bot.append((x, y - w))
+            x, y = fn(t); w = th * (1 - .52 * abs(t) ** 4); top.append((x, y + w)); bot.append((x, y - w))
         return top + bot
-    Oc, Or = (0, -.024), .025
+    Oc, Or = (0, -.020), .024
     def oring():
         top, bot = [], []
         for t in ts:
-            a = math.pi * (1 + t)  # a full circle
-            top.append((Oc[0] + math.cos(a) * (Or + .006), Oc[1] + math.sin(a) * (Or + .006))); bot.append((Oc[0] + math.cos(a) * (Or - .003), Oc[1] + math.sin(a) * (Or - .003)))
+            a = math.pi * (1 + t)
+            top.append((Oc[0] + math.cos(a) * (Or + .0055), Oc[1] + math.sin(a) * (Or + .0055)))
+            bot.append((Oc[0] + math.cos(a) * (Or - .003), Oc[1] + math.sin(a) * (Or - .003)))
         return top + bot
-    MV = -.33
-    add_decal(H, 0, MV, .0055, {"Basis": band(lineB), "Smile": band(lineS), "Frown": band(lineF), "O": oring()}, strip(M_), "eyeink")
-    # the open mouth: a D under the lip line, teeth along the top, a tongue at the bottom
-    def fill(fn, depth=0.0, Ofill=False):
+    add_decal(H, 0, MV, .0065, {
+        "Basis": band(lineB), "Smile": band(lineS), "Frown": band(lineF), "Open": band(lineB), "O": oring()
+    }, strip(M_), "eyeink", outs={"Basis": .0065, "Smile": .0065, "Frown": .0065, "Open": .0175, "O": .0175})
+
+    # philtrum connecting nose tip to upper lip peak
+    if "snout" not in sp["ex"] and not (sp.get("bignose") and "bigantlers" not in sp["ex"]):
+        ph_top = .034 if is_kemono else .031
+        ph_bot = lineB(0)[1] + .001
+        lq, lf_ = quadgrid([(-.0026, ph_bot), (.0026, ph_bot), (.0024, ph_top), (-.0024, ph_top)], 1, 4)
+        lq_o = [(x * .4, y * .4 + .02) for x, y in lq]
+        add_decal(H, 0, MV, .0063, {"Basis": lq, "O": lq_o}, lf_, "eyeink", outs={"Basis": .0063, "Open": .0170, "O": -.006})
+
+    # open mouth interior, teeth/fangs, and tongue:
+    # Tucked 2.8mm inside the head when closed (Basis/Smile/Frown) with non-zero area, and projected forward in Open/O
+    # so any Open >= 0.2 is cleanly in front of the muzzle and any Open == 0 is 100% hidden inside the head!
+    def fill(fn, open_mode=False, Ofill=False):
         top, bot = [], []
         for t in ts:
             x, y = fn(t)
             if Ofill:
-                a = math.pi * (1 - (t + 1) / 2); x = Oc[0] + math.cos(a) * Or; top.append((x, Oc[1] + math.sin(a) * Or)); bot.append((x, Oc[1] - math.sin(a) * Or))
-            else: top.append((x, y)); bot.append((x, y - depth * (1 - t * t) ** .5))
+                a = math.pi * (1 - (t + 1) / 2); x = Oc[0] + math.cos(a) * Or
+                top.append((x, Oc[1] + math.sin(a) * Or)); bot.append((x, Oc[1] - math.sin(a) * Or))
+            elif not open_mode:
+                top.append((x * .88, y)); bot.append((x * .88, y - .006 * (1 - .5 * t * t)))
+            else:
+                # Smooth U-shaped lower lip curve (compensating for kemono :3 center peak on the bottom edge)
+                kem_comp = (-.012 * math.exp(-((t / .26) ** 2)) + .008 * math.sin(math.pi * abs(t))) if is_kemono else 0.0
+                top.append((x * .88, y)); bot.append((x * .88, y + kem_comp - .046 * ((1 - t * t) ** .65)))
         return top + bot
-    add_decal(H, 0, MV, .0042, {"Basis": fill(lineB), "Smile": fill(lineS), "Frown": fill(lineF), "Open": [(x, y) for x, y in fill(lineB)[:M_]] + [(x, y - .05 * (1 - t * t) ** .5) for (x, y), t in zip(fill(lineB)[M_:], ts)], "O": fill(lineB, Ofill=True)}, strip(M_), "mouth")
-    def teeth(fn, h=0.0):
+    add_decal(H, 0, MV, -.0028, {
+        "Basis": fill(lineB, False), "Smile": fill(lineS, False), "Frown": fill(lineF, False),
+        "Open": fill(lineB, True), "O": fill(lineB, Ofill=True)
+    }, strip(M_), "mouth", outs={"Basis": -.0028, "Smile": -.0028, "Frown": -.0028, "Open": .0145, "O": .0145})
+
+    def teeth(fn, open_mode=False):
         top, bot = [], []
         for t in ts:
-            x, y = fn(t * .82); top.append((x, y - .003)); bot.append((x, y - .003 - h * (1 - t ** 8)))
+            x, y = fn(t * .80)
+            if not open_mode:
+                top.append((x, y)); bot.append((x, y - .004))
+            else:
+                if sp.get("fang"):
+                    fang_pk = math.exp(-(((abs(t) - .56) / .14) ** 2))
+                    h = .004 * (1 - t ** 6) + .013 * fang_pk
+                elif "buck" in sp["ex"]:
+                    buck_pk = 1.0 if abs(t) < .26 else 0.0
+                    notch = .25 if abs(t) < .03 else 1.0
+                    h = .015 * buck_pk * notch + .003 * (1 - t ** 4)
+                else:
+                    h = .010 * (1 - t ** 8)
+                top.append((x, y - .001)); bot.append((x, y - .002 - h))
         return top + bot
-    add_decal(H, 0, MV, .0048, {"Basis": teeth(lineB), "Smile": teeth(lineS), "Frown": teeth(lineF), "Open": [(x, y) for x, y in teeth(lineB)[:M_]] + [(x, y - .013 * (1 - t ** 8)) for (x, y), t in zip(teeth(lineB)[M_:], ts)]}, strip(M_), "eyewhite")
-    tp = ellipse(.022, .013, 18); tc_open = (0, -.044); tc_blep = (0, -.02)
-    add_decal(H, 0, MV, .0047, {"Basis": [(0, -.012)] * 19, "Open": [tc_open] + [(tc_open[0] + x, tc_open[1] + y) for x, y in tp],
-                                "Smile": [(0, -.027)] * 19, "Blep": [tc_blep] + [(tc_blep[0] + x * .75, tc_blep[1] + y * 1.1 - .004) for x, y in tp]}, fan(18), "tongue")
-    # nose: a soft rounded triangle on the cat family, a round button on the rest
-    if not sp.get("nonose"):
-        nw, nh = (.036, .027) if sp.get("bignose") else (.022, .015)
-        np_, nf = disc(nw, nh, 20, 3)
-        if sp.get("catnose"): np_ = [(x * (1 + .45 * y / nh), y - .3 * abs(x) * (y < 0)) for x, y in np_]
-        add_decal(H, 0, -.2, .0058, {"Basis": np_}, nf, "nose")
-        if sp.get("catnose"):  # the little line from the nose down to the mouth
-            lq, lf_ = quadgrid([(-.0028, -.012), (.0028, -.012), (.0028, -.036), (-.0028, -.036)], 1, 4)
-            add_decal(H, 0, -.2, .0062, {"Basis": lq}, lf_, "eyeink")
-    if F_HEAD:  # girls: rosy cheeks always
-        for s in (-1, 1):
-            rp, rf = disc(.038, .02, 18, 3); add_decal(H, s * .62, -.2, .0022, {"Basis": rp}, rf, "blush")
+    add_decal(H, 0, MV, -.0024, {
+        "Basis": teeth(lineB, False), "Smile": teeth(lineS, False), "Frown": teeth(lineF, False),
+        "Open": teeth(lineB, True)
+    }, strip(M_), "eyewhite", outs={"Basis": -.0024, "Smile": -.0024, "Frown": -.0024, "Open": .0162})
 
-# ---- ears ----
-def chaikin(pts, it=3):
-    for _ in range(it):
-        q = []
-        for i in range(len(pts)):
-            a, b = Vector(pts[i]), Vector(pts[(i + 1) % len(pts)]); q += [a * .75 + b * .25, a * .25 + b * .75]
-        pts = q
-    return [tuple(p) for p in pts]
-def ear_outline(kind, sc):
-    if kind == "point": w, h = .17 * sc, .19 * sc; return chaikin([(-w / 2, 0), (-w * .3, h * .6), (0, h), (w * .3, h * .6), (w / 2, 0), (0, -.03)])
-    if kind == "round": r = .085 * sc; return [(math.cos(a) * r, r * .75 + math.sin(a) * r) for a in [i / 28 * 2 * math.pi for i in range(28)]]
-    if kind == "fluffy": r = .1 * sc; return chaikin([(math.cos(a) * r * (1 + .12 * math.sin(a * 7)), r * .7 + math.sin(a) * r) for a in [i / 21 * 2 * math.pi for i in range(21)]], 2)
-    if kind == "long": return [(math.cos(a) * .06 * sc, .17 * sc + math.sin(a) * .2 * sc) for a in [i / 32 * 2 * math.pi for i in range(32)]]
-    if kind == "flop": return chaikin([(-.06 * sc, 0), (-.075 * sc, .14 * sc), (0, .25 * sc), (.075 * sc, .14 * sc), (.06 * sc, 0), (0, -.02)])
-    if kind == "leaf": return chaikin([(-.055 * sc, 0), (-.06 * sc, .1 * sc), (0, .2 * sc), (.06 * sc, .1 * sc), (.055 * sc, 0), (0, -.02)])
-    if kind == "pig": return chaikin([(-.06, 0), (-.04, .1), (0, .14), (.05, .08), (.06, 0), (0, -.02)])
-    return ear_outline("round", sc)
-def build_ear(H, kind, sc, side, inner_mat):
+    tp = ellipse(.019, .011, 18); tc_open = (0, -.032); tc_blep = (0, -.018)
+    def t_tucked(fn):
+        cy = fn(0)[1] - .005
+        return [(0, cy)] + [(.45 * x, cy + .35 * y) for x, y in tp]
+    t_open = [tc_open] + [(tc_open[0] + x, tc_open[1] + y) for x, y in tp]
+    t_blep = [tc_blep] + [(tc_blep[0] + x * .78, tc_blep[1] + y * 1.15 - .004) for x, y in tp]
+    add_decal(H, 0, MV, -.0026, {
+        "Basis": t_tucked(lineB), "Smile": t_tucked(lineS), "Frown": t_tucked(lineF),
+        "Open": t_open, "Blep": t_blep
+    }, fan(18), "tongue", outs={"Basis": -.0026, "Smile": -.0026, "Frown": -.0026, "Open": .0154, "Blep": .0160})
+
+# ---- Smooth vector-clean fur markings via layered decals (zero stair-stepping, zero Z-fighting) ----
+def rot2d(pts, ang, cx=0.0, cy=0.0):
+    ca, sa = math.cos(ang), math.sin(ang)
+    return [(cx + (x - cx) * ca - (y - cy) * sa, cy + (x - cx) * sa + (y - cy) * ca) for x, y in pts]
+
+def build_markings(H, sp):
+    ex = sp["ex"]; marks = sp.get("marks", [])
+    # Layer 1 (out = .0010): Sweeping lower-cheek belly fur patches
+    if "cheekbelly" in ex:
+        for s in (-1, 1):
+            cp, cf = disc(.112, .068, 28, 5)
+            cp = rot2d(cp, -s * .16)
+            add_decal(H, s * .54, -.26, .0010, {"Basis": cp}, cf, "belly")
+    if "cheeks" in ex:
+        for s in (-1, 1):
+            cp, cf = disc(.072, .050, 24, 4)
+            cp = rot2d(cp, -s * .14)
+            add_decal(H, s * .72, -.22, .0010, {"Basis": cp}, cf, "belly")
+    if "mask" in ex:
+        # Raccoon soft cream brow band framing the top of the dark bandit mask
+        for s in (-1, 1):
+            bp, bf = disc(.086, .040, 24, 4)
+            bp = rot2d(bp, -s * .18)
+            add_decal(H, s * .38, .25, .0013, {"Basis": bp}, bf, "belly")
+
+    # Layer 2 (out = .0020): Dark/colored eye-area markings (mask, patches, eyespot, stripes, spots)
+    if "mask" in ex:
+        # Raccoon bandit mask: center bridge + sweeping eye-mask lobes
+        mb_p, mb_f = disc(.055, .042, 20, 4)
+        add_decal(H, 0, .02, .0018, {"Basis": mb_p}, mb_f, "mark")
+        for s in (-1, 1):
+            mp, mf = disc(.112, .084, 28, 5)
+            mp = rot2d(mp, -s * .18)
+            add_decal(H, s * .39, .03, .0020, {"Basis": mp}, mf, "mark")
+    if "patches" in ex:
+        # Panda classic large tilted oval eye patches framing the eyes
+        for s in (-1, 1):
+            pp, pf = disc(.114, .130, 32, 6)
+            pp = rot2d(pp, s * .22)
+            add_decal(H, s * (EYE_U + .02), EYE_V - .015, .0020, {"Basis": pp}, pf, "mark")
+    if "eyespot" in marks:
+        # Dog warm brown patch generously framing one eye
+        ep, ef = disc(.110, .122, 32, 6)
+        ep = rot2d(ep, .14)
+        add_decal(H, EYE_U + .02, EYE_V + .01, .0020, {"Basis": ep}, ef, "mark")
+    if "tabby" in marks or "stripes" in ex:
+        # 3 sleek tapered forehead stripes + 2 sleek tapered cheek stripes per side
+        for du, vc, w_, h_, ang in ((-.20, .70, .016, .058, .16), (0.0, .73, .018, .068, 0.0), (.20, .70, .016, .058, -.16)):
+            sp_p, sp_f = disc(w_, h_, 18, 3)
+            sp_p = rot2d(sp_p, ang)
+            add_decal(H, du, vc, .0022, {"Basis": sp_p}, sp_f, "mark")
+        for s in (-1, 1):
+            for vc, u0, ln_, ang in ((.02, .96, .054, -s * .12), (-.11, .98, .048, -s * .18)):
+                ck_p, ck_f = disc(ln_, .013, 18, 3)
+                ck_p = rot2d(ck_p, ang)
+                add_decal(H, s * u0, vc, .0022, {"Basis": ck_p}, ck_f, "mark")
+    if "stripe" in ex:
+        sk_p, sk_f = disc(.044, .165, 24, 5)
+        add_decal(H, 0, .76, .0022, {"Basis": sk_p}, sk_f, "tip")
+    if "spots" in ex:
+        for su, sv, sr in ((-.25, .68, .018), (.23, .71, .017), (-.10, .85, .015), (.12, .90, .015), (-.33, .87, .014), (.31, .89, .014)):
+            dp, df = disc(sr, sr * .85, 14, 2)
+            add_decal(H, su, sv, .0022, {"Basis": dp}, df, "tip")
+
+    # Layer 3 (out = .0028): Plush belly muzzle cushion patch (sits cleanly in front of eye patches/masks)
+    if sp.get("muzzle"):
+        mp, mf = disc(.105, .068, 32, 6)
+        add_decal(H, 0, -.265, .0028, {"Basis": mp}, mf, "belly")
+
+    # Layer 4 (out = .0032): Red panda tear-tracks & cute oval cream brow puffs
+    if "tears" in ex:
+        for s in (-1, 1):
+            tp, tf = disc(.028, .072, 24, 5)
+            tp = rot2d(tp, s * .25)
+            add_decal(H, s * .33, -.16, .0032, {"Basis": tp}, tf, "mark")
+    if "brows" in ex:
+        for s in (-1, 1):
+            bp, bf = disc(.034, .020, 18, 3)
+            bp = rot2d(bp, -s * .20)
+            add_decal(H, s * .29, .45, .0032, {"Basis": bp}, bf, "belly")
+
+# ---- 3D sculpted cupped ears with clean rounded tips and optional two-tone tips ----
+def build_ear(H, kind, sc, side, inner_mat, sp):
     u, v = side * EAR_UV[0], EAR_UV[1]
-    root = head_pt(head_dir(u, v), -.025); nrm = (root - HC).normalized(); right = Vector((side, 0, 0))
-    if kind == "flop": root = head_pt(head_dir(side * .85, .72), -.01); up = (V(0, 0, -1) * .8 + right * .45).normalized()
-    elif kind == "leaf": up = (nrm * .5 + right * .7).normalized(); root = head_pt(head_dir(side * .9, .35), -.02)
-    elif kind == "pig": up = (nrm * .7 + V(0, .5, 0)).normalized()
-    else: up = (nrm * .55 + V(0, 0, 1) * .45).normalized()
-    fwd = (V(0, 1, 0) - up * up.y).normalized()
-    if kind == "flop": w_ = V(side * .55, .85, .05); fwd = (w_ - up * w_.dot(up)).normalized(); root = root + V(side, 0, 0) * .02
+    root = head_pt(head_dir(u, v), -.020); nrm = (root - HC).normalized(); right = Vector((side, 0, 0))
+    if kind == "flop":
+        # Start high on the temple and flare outward + downward so the floppy ear drapes cleanly outside the cheek
+        root = head_pt(head_dir(side * .84, .68), .004)
+        up = Vector((side * .56, .10, -.82)).normalized()
+        fwd = Vector((side * .80, .28, .53)).normalized()
+        fwd = (fwd - up * fwd.dot(up)).normalized()
+    elif kind == "leaf":
+        root = head_pt(head_dir(side * .86, .42), -.018)
+        up = (nrm * .52 + right * .68 + V(0, 0, .18)).normalized()
+        fwd = (V(0, 1, 0) - up * up.y).normalized()
+    elif kind == "pig":
+        root = head_pt(head_dir(side * .64, .74), -.018)
+        up = (nrm * .65 + V(0, .48, .25)).normalized()
+        fwd = (V(0, 1, -.35) - up * up.dot(V(0, 1, -.35))).normalized()
+    elif kind == "long":
+        root = head_pt(head_dir(side * .42, .92), -.022)
+        up = (nrm * .32 + V(0, -.04, .94)).normalized()
+        fwd = (V(0, 1, 0) - up * up.y).normalized()
+    elif kind == "fluffy" or sc > 1.35:
+        # Wide-set big round/fluffy ears (mouse, koala) angled outward so they frame the head without colliding
+        root = head_pt(head_dir(side * .78, .66), -.018); nrm = (root - HC).normalized()
+        up = (nrm * .62 + right * .46 + V(0, 0, .44)).normalized()
+        fwd = (V(0, 1, 0) - up * up.y).normalized()
+    else:
+        up = (nrm * .52 + V(0, 0, .54)).normalized()
+        fwd = (V(0, 1, 0) - up * up.y).normalized()
     side_v = up.cross(fwd).normalized()
-    out = ear_outline(kind, sc); th = .022 if kind != "long" else .026
     bone = "EarL" if side < 0 else "EarR"
-    def plate(pts, t0, t1, scale=1.0, lift=0.0, mname="fur"):
-        P = [root + side_v * x * scale + up * (y * scale + lift) for x, y in pts]
-        n = len(P); c = sum(P, Vector()) / n
-        bm = bmesh.new()
-        f_ = [bm.verts.new(p + fwd * t1) for p in P]; b_ = [bm.verts.new(p + fwd * t0) for p in P]
-        cf = bm.verts.new(c + fwd * (t1 + .004)); cb = bm.verts.new(c + fwd * (t0 - .004))
-        for i in range(n):
-            j = (i + 1) % n; bm.faces.new((f_[i], f_[j], cf)); bm.faces.new((b_[j], b_[i], cb)); bm.faces.new((f_[j], f_[i], b_[i], b_[j]))
-        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
-        me = bpy.data.meshes.new("ear"); bm.to_mesh(me); bm.free(); ob = bpy.data.objects.new("ear", me); scene().collection.objects.link(ob)
-        H.add_obj(ob, mname, bone)
-    plate(out, -th / 2, th / 2)
-    if kind != "flop": plate(out, th / 2, th / 2 + .006, .62, .015, inner_mat)
-    if kind == "point":   # a tuft of fur in the ear
-        for dx in (-.02, .02):
-            b = root + up * .03 + fwd * (th / 2 + .006) + side_v * dx
-            o, _ = tube("tuft", [b, b + up * .04 + fwd * .012 - side_v * dx * .4, b + up * .07 + fwd * .028 - side_v * dx], [.014, .008, .002], 6); H.add_obj(o, "tip", bone)
+    outer_mat = "mark" if (sp.get("earmark") or "earmark" in sp["ex"]) else "fur"
+    has_tip = "eartip" in sp["ex"]
+    tip_mat = "mark" if sp.get("mark") else "tip"
+
+    # Build a 3D cupped grid ear with soft rim, concave inner dish, and arched rounded tip
+    R, C = 14, 10
+    if kind == "point":
+        H_len = .205 * sc
+        w_fn = lambda t: .092 * sc * (math.sin(math.pi * (.12 + .84 * (1.0 - t))) ** .68) * ((1.0 - t * .86) ** .52)
+        cup_d = .022 * sc; th_base = .020
+    elif kind == "long":
+        H_len = .36 * sc
+        w_fn = lambda t: .064 * sc * (math.sin(math.pi * (.08 + .88 * t)) ** .58)
+        cup_d = .022 * sc; th_base = .022
+    elif kind == "flop":
+        H_len = .23 * sc
+        w_fn = lambda t: .072 * sc * (math.sin(math.pi * (.10 + .86 * t)) ** .55)
+        cup_d = -.016 * sc; th_base = .018
+    elif kind == "leaf":
+        H_len = .20 * sc
+        w_fn = lambda t: .066 * sc * (math.sin(math.pi * (.10 + .86 * t)) ** .65)
+        cup_d = .020 * sc; th_base = .018
+    elif kind == "pig":
+        H_len = .145 * sc
+        w_fn = lambda t: .068 * sc * (math.sin(math.pi * (.14 + .82 * (1.0 - t))) ** .65) * ((1.0 - t * .82) ** .5)
+        cup_d = .018 * sc; th_base = .018
+    elif kind == "fluffy":
+        H_len = .175 * sc
+        w_fn = lambda t: .102 * sc * (math.sin(math.pi * (.12 + .82 * t)) ** .52)
+        cup_d = .022 * sc; th_base = .022
+    else:  # round
+        H_len = .145 * sc
+        w_fn = lambda t: .088 * sc * (math.sin(math.pi * (.12 + .82 * t)) ** .52)
+        cup_d = .020 * sc; th_base = .020
+
+    f_grid, b_grid = [], []
+    for i in range(R + 1):
+        t = i / R
+        w = max(.004, w_fn(t))
+        bend = (.026 * math.sin(math.pi * t) if kind == "flop" else .012 * math.sin(math.pi * t))
+        rf, rb = [], []
+        for j in range(C + 1):
+            u_ = j / C * 2.0 - 1.0
+            rim = 1.0 - u_ * u_
+            x = u_ * w
+            # Round off the top contour so the tip is a smooth dome arch rather than a flat horizontal cut
+            tip_arch = 1.0 - .14 * (t ** 2) * (u_ * u_)
+            y = (t * H_len * tip_arch - .016)
+            taper = (1.0 - .55 * (t ** 2)) * (.35 + .65 * rim)
+            zf = bend - cup_d * rim * math.sin(math.pi * min(1.0, t * 1.12)) + th_base * .35 * (1.0 - .55 * rim) * taper
+            zb = bend - cup_d * .35 * rim * math.sin(math.pi * min(1.0, t * 1.12)) - th_base * (.65 + .35 * rim) * taper
+            p_f = root + side_v * x + up * y + fwd * zf
+            p_b = root + side_v * x + up * y + fwd * zb
+            rf.append(H.add_v(p_f, bone))
+            rb.append(H.add_v(p_b, bone))
+        f_grid.append(rf); b_grid.append(rb)
+
+    for i in range(R):
+        t_mid = (i + .5) / R
+        for j in range(C):
+            u_mid = abs((j + .5) / C * 2.0 - 1.0)
+            is_inner = (kind != "flop") and (u_mid < .64) and (.08 < t_mid < .78)
+            f_mat = inner_mat if is_inner else (tip_mat if (has_tip and t_mid > .72) else outer_mat)
+            b_mat = tip_mat if (has_tip and t_mid > .72) else outer_mat
+            f_quad = (f_grid[i][j], f_grid[i][j + 1], f_grid[i + 1][j + 1], f_grid[i + 1][j])
+            b_quad = (b_grid[i][j + 1], b_grid[i][j], b_grid[i + 1][j], b_grid[i + 1][j + 1])
+            H.face(f_quad, f_mat)
+            H.face(b_quad, b_mat)
+        rim_mat = tip_mat if (has_tip and t_mid > .72) else outer_mat
+        H.face((f_grid[i][0], f_grid[i + 1][0], b_grid[i + 1][0], b_grid[i][0]), rim_mat)
+        H.face((f_grid[i + 1][C], f_grid[i][C], b_grid[i][C], b_grid[i + 1][C]), rim_mat)
+    cap_top_mat = tip_mat if has_tip else outer_mat
+    for j in range(C):
+        H.face((f_grid[R][j], f_grid[R][j + 1], b_grid[R][j + 1], b_grid[R][j]), cap_top_mat)
+        H.face((b_grid[0][j], b_grid[0][j + 1], f_grid[0][j + 1], f_grid[0][j]), outer_mat)
     return root
 
 # ---- tails ----
@@ -674,10 +960,9 @@ def build_tail(H, kind, sp):
         o, _ = tube("tail", pts, [.012] * len(pts), 8); H.add_obj(o, "fur", "Tail"); return
     pts, rads = shapes.get(kind, shapes["stub"])
     o, S = tube("tail", pts, rads, 12)
-    total = len(S)
     def tbone(p):
         d = (p - base).length; return "Tail" if d < .14 else "Tail1"
-    me = o.data; mats_ = []
+    me = o.data
     ringed = kind == "ringed"
     tipfrac = .78 if kind in ("bushy", "skunk", "cat", "lion") else (.7 if ringed else 2)
     o.data.materials.clear()
@@ -698,114 +983,75 @@ def build_extras(H, sp, name):
     if "antlers" in ex or "bigantlers" in ex:
         big = "bigantlers" in ex
         for s in (-1, 1):
-            r0 = head_pt(head_dir(s * .3, 1.0), -.02)
-            main = [r0, r0 + V(s * .04, 0, .1), r0 + V(s * .1, -.01, .18 if big else .14), r0 + V(s * .14, -.02, .26 if big else .19)]
-            o, _ = tube("ant", main, [.018, .016, .013, .01], 8); H.add_obj(o, "antler")
+            r0 = head_pt(head_dir(s * .32, 1.02), -.02)
+            main = [r0, r0 + V(s * .045, -.01, .10), r0 + V(s * .105, -.02, .19 if big else .145), r0 + V(s * .15, -.02, .27 if big else .20)]
+            o, _ = tube("ant", main, [.019, .016, .013, .009], 8); H.add_obj(o, "antler")
             for k in range(2 if big else 1):
-                b0 = main[1 + k] if k < 2 else main[2]; o, _ = tube("tine", [b0, b0 + V(-s * .01, .03, .07)], [.011, .008], 8); H.add_obj(o, "antler")
+                b0 = main[1 + k] if k < 2 else main[2]
+                o, _ = tube("tine", [b0, b0 + V(-s * .012, .035, .04), b0 + V(-s * .018, .055, .078)], [.012, .009, .006], 8); H.add_obj(o, "antler")
     if "mane" in ex:
-        for i in range(16):
-            a = i / 16 * 2 * math.pi; d = (head_dir(0, 0) * .15 + Vector((math.cos(a), -0.35, math.sin(a))) * .95).normalized()
-            o = prim_sphere(tuple(head_pt(d, .02)), .085, seg=14, ring=10); H.add_obj(o, "mark")
+        for i in range(18):
+            a = i / 18 * 2 * math.pi; d = (head_dir(0, 0) * .12 + Vector((math.cos(a), -0.36, math.sin(a))) * .96).normalized()
+            o = prim_sphere(tuple(head_pt(d, .022)), .088, seg=14, ring=10); H.add_obj(o, "mark")
     if "wool" in ex:
         for i in range(11):
-            a = i / 11 * math.pi; d = Vector((math.cos(a) * .85, -.25 + .2 * math.sin(a * 3), math.sin(a) * .9 + .25)).normalized()
-            o = prim_sphere(tuple(head_pt(d, .015)), .075, seg=14, ring=10); H.add_obj(o, "tip")
-    if "snout" in ex:
-        c = head_pt(head_dir(0, -.2), -.01)
-        o = prim_cyl(tuple(c), .055, .07, (math.pi / 2, 0, 0), 24); o.scale = (1, 1, 1); H.add_obj(o, "nose")
-        for s in (-1, 1): o = prim_sphere(tuple(c + V(s * .02, .036, 0)), .011, (1, .4, 1.4), 10, 6); H.add_obj(o, "eyeink")
-    if "puffs" in ex:
-        for s in (-1, 1): o = prim_sphere(tuple(head_pt(head_dir(s * .55, -.3), -.03)), .08, seg=16, ring=10); H.add_obj(o, "belly")
-    if "patches" in ex:   # panda eye patches under the eyes
-        for s in (-1, 1):
-            pp, pf = disc(.1, .12, 28, 5); add_decal(H, s * EYE_U, EYE_V - .01, .0018, {"Basis": pp}, pf, "mark")
-    if "mask" in ex:      # raccoon mask band across both eyes
-        pts, pf = disc(.27, .1, 40, 6); pts = [(x * (1 + .1 * math.cos(2 * math.atan2(y / .1, x / .27 if x else 1e-9))), y) for x, y in pts]
-        add_decal(H, 0, EYE_V - .01, .0018, {"Basis": pts}, pf, "mark")
-    if "stripes" in ex:
-        for i, du in enumerate((-.12, 0, .12)):
-            q, qf = quadgrid([(-.012, 0), (.012, 0), (.006, .09), (-.006, .09)], 2, 8)
-            add_decal(H, du, .62, .002, {"Basis": q}, qf, "mark")
-        for s in (-1, 1):
-            for k in range(2):
-                q, qf = quadgrid([(0, -.01), (s * .07, -.004), (s * .07, .004), (0, .01)], 6, 2)
-                add_decal(H, s * (1.15 + .12 * k), .05 - .1 * k, .002, {"Basis": q}, qf, "mark")
-    if "stripe" in ex:
-        q, qf = quadgrid([(-.03, -.25), (.03, -.25), (.035, .25), (-.035, .25)], 3, 24)
-        add_decal(H, 0, .95, .002, {"Basis": q}, qf, "mark")
-    if "cheeks" in ex:
-        for s in (-1, 1):
-            cp, cf = disc(.07, .055, 24, 4); add_decal(H, s * .58, -.12, .0018, {"Basis": cp}, cf, "belly")
-    if "spots" in ex:
-        for (du, dv) in ((-.15, .7), (.12, .78), (.02, .9), (-.05, .62)):
-            add_decal(H, du, dv, .002, {"Basis": [(0, 0)] + ellipse(.018, .014, 12)}, fan(12), "tip")
+            a = i / 11 * math.pi; d = Vector((math.cos(a) * .82, -.22 + .18 * math.sin(a * 3), math.sin(a) * .9 + .32)).normalized()
+            o = prim_sphere(tuple(head_pt(d, .016)), .076, seg=14, ring=10); H.add_obj(o, "tip")
 
 def spike(H, base, d1, d2, r, matname, bone="Head"):
-    o, _ = tube("spike", [base, base + d1, base + d1 + d2], [r, r * .55, r * .12], 8); H.add_obj(o, matname, bone)
+    o, _ = tube("spike", [base, base + d1, base + d1 + d2], [r, r * .58, r * .10], 8); H.add_obj(o, matname, bone)
+
 def build_tufts(H, sp):
     if "mane" not in sp["ex"] and "wool" not in sp["ex"]:
-        for k, (u, h) in enumerate(((-.16, .06), (0, .085), (.16, .055))):   # a little fur tuft on top, leaning forward
-            b = head_pt(head_dir(u, 1.12), -.02); n = (b - HC).normalized(); f = V(0, 1, 0)
-            spike(H, b, n * h * .6 + f * .02 + V(u * .15, 0, 0), n * h * .4 + f * .045 + V(u * .2, 0, 0), .032, "fur")
-    if sp.get("fluff"):   # cheek fluff on the cat and dog families
+        # Crown fur tufts placed high on the crown (v=1.32) arching up so they never poke through the forehead
+        for k, (u, h, dx) in enumerate(((-.20, .062, -.025), (0, .082, 0.0), (.20, .058, .025))):
+            b = head_pt(head_dir(u, 1.32), -.016); n = (b - HC).normalized(); f = V(0, .35, .94).normalized()
+            spike(H, b, n * h * .58 + f * .018 + V(dx * .4, 0, 0), n * h * .42 + f * .028 + V(dx * .7, 0, .01), .028, "fur")
+    if sp.get("fluff"):
+        # Sculpted 3D layered cheek ruff tufts flaring out from the plush lower cheeks
+        c_mat = "belly" if ("cheekbelly" in sp["ex"] or "cheeks" in sp["ex"]) else "fur"
         for s in (-1, 1):
-            for v_, ln in ((-.12, .07), (-.3, .06)):
-                b = head_pt(head_dir(s * 1.42, v_), -.025); n = (b - HC).normalized()
-                spike(H, b, n * ln * .55 + V(0, 0, -.01), n * ln * .45 + V(s * .01, 0, -.03), .03, "fur")
-def build_marks(H, sp):
-    for m in sp.get("marks", []):
-        if m == "tabby":   # three soft forehead stripes
-            for du, h in ((-.1, .07), (0, .09), (.1, .07)):
-                q, qf = quadgrid([(-.011, 0), (.011, 0), (.005, h), (-.005, h)], 2, 8)
-                add_decal(H, du, .5, .002, {"Basis": q}, qf, "mark")
-        if m == "eyespot":  # a round patch round one eye
-            pp, pf = disc(.1, .115, 28, 5); add_decal(H, EYE_U, EYE_V - .01, .0018, {"Basis": pp}, pf, "mark")
-        if m == "pinkcheeks":
-            for s in (-1, 1):
-                rp, rf = disc(.04, .022, 18, 3); add_decal(H, s * .64, -.2, .0021, {"Basis": rp}, rf, "blush")
+            for v_, ln, r0, dz in ((-.08, .068, .030, -.006), (-.20, .082, .034, -.016), (-.33, .064, .028, -.024)):
+                b = head_pt(head_dir(s * 1.32, v_), -.022)
+                d_out = Vector((s * .92, -.18, -.22)).normalized()
+                spike(H, b, d_out * (ln * .55) + V(0, 0, dz * .5), d_out * (ln * .48) + V(s * .01, -.01, dz), r0, c_mat)
 
 def build_head(name, sp, rig, F):
-    global F_HEAD; F_HEAD = F
+    global F_HEAD, CUR_SP; F_HEAD = F; CUR_SP = sp
     H = HeadMesh()
-    # the ball: fur, with an optional soft muzzle patch in the belly colour
-    bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=64, v_segments=40, radius=1.0)
-    vmap = {}
-    for v in bm.verts:
-        d = v.co.normalized(); vmap[v] = H.add_v(head_pt(d, 0))
+    # Sculpted 3D kemono head mesh
+    bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=64, v_segments=44, radius=1.0)
+    vmap = {v: H.add_v(head_pt(v.co, 0)) for v in bm.verts}
+    is_sheep = "wool" in sp["ex"]
     for f in bm.faces:
-        c = sum((v.co for v in f.verts), Vector()) / len(f.verts); d = c.normalized()
-        H.face([vmap[v] for v in f.verts], "fur")
+        fmat = "fur"
+        if is_sheep:
+            c = sum((H.v[vmap[v]] - HC for v in f.verts), Vector()) / len(f.verts)
+            if c.y > -.05 and c.z < .18:
+                fmat = "mark"
+        H.face([vmap[v] for v in f.verts], fmat)
     bm.free()
-    if sp["muzzle"]:
-        mp, mf = disc(.12, .075, 40, 6); add_decal(H, 0, -.4, .0016, {"Basis": mp}, mf, "belly")
+
+    build_markings(H, sp)
     build_face(H, sp)
     kind, sc = sp["ears"]
-    inner = "mark" if sp.get("earmark") else "inner" if sp.get("inner") else "belly"
+    inner = "inner" if sp.get("inner") else "belly"
     for s in (-1, 1):
-        if sp.get("earmark") or "earmark" in sp["ex"]:
-            pass
-        build_ear(H, kind, sc, s, inner)
+        build_ear(H, kind, sc, s, inner, sp)
     build_tail(H, sp["tail"], sp)
     build_extras(H, sp, name)
-    build_tufts(H, sp); build_marks(H, sp)
-    # ear colour: some species wear their mark on the ears
+    build_tufts(H, sp)
+
     me = bpy.data.meshes.new("Head_" + name)
     me.from_pydata([tuple(p) for p in H.v], [], [f for f, _ in H.f])
     me.update()
     for mname in H.mats:
         col = {"eyewhite": "#ffffff", "eyeink": "#241c2a", "pupil": "#050505", "mouth": "#4a1622", "tongue": "#ff7f93", "blush": "#ff7fa6"}.get(mname) or sp.get(mname) or sp["fur"]
-        rough = 1.0 if mname in ("pupil", "eyeink") else 0.6 if mname in ("eyewhite",) else 0.85
+        rough = 1.0 if mname in ("pupil", "eyeink") else 0.9 if mname in ("eyewhite",) else 0.85
         me.materials.append(mat(name + "_" + mname, col, rough))
     for i, (_, mi) in enumerate(H.f): me.polygons[i].material_index = mi
     for p in me.polygons: p.use_smooth = True
     o = bpy.data.objects.new("Head_" + name, me); scene().collection.objects.link(o)
-    # ear verts on a mark-eared species take the mark colour
-    if sp.get("earmark") or "earmark" in sp["ex"]:
-        mm = me.materials.find(name + "_mark")
-        if mm < 0: me.materials.append(mat(name + "_mark", sp.get("mark", "#333333"))); mm = len(me.materials) - 1
-        for p in me.polygons:
-            if all(H.bone[i] in ("EarL", "EarR") for i in p.vertices) and me.materials[p.material_index].name.endswith("_fur"): p.material_index = mm
     groups = {}
     for i, b in enumerate(H.bone):
         if b not in groups: groups[b] = o.vertex_groups.new(name=b)
@@ -815,6 +1061,7 @@ def build_head(name, sp, rig, F):
         sk = o.shape_key_add(name=k, from_mix=False)
         for i, p in H.keys[k].items(): sk.data[i].co = p
     parent_to(o, rig)
+    CUR_SP = None
     return o
 
 # ================= proof renders =================
@@ -826,8 +1073,10 @@ def proof(tag, objs_sets):
     sc.view_settings.view_transform = "Standard"
     try:
         sc.render.use_freestyle = True; sc.render.line_thickness_mode = 'ABSOLUTE'; sc.render.line_thickness = 2.2
-        ls = sc.view_layers[0].freestyle_settings.linesets.new("ink"); ls.linestyle = bpy.data.linestyles.new("inkstyle"); ls.select_by_visibility = True; ls.select_by_edge_types = True
-        ls.select_silhouette = True; ls.select_border = True; ls.select_crease = False
+        ls = sc.view_layers[0].freestyle_settings.linesets.new("ink")
+        if not ls.linestyle: ls.linestyle = bpy.data.linestyles.new("inkstyle")
+        ls.select_by_visibility = True; ls.select_by_edge_types = True
+        ls.select_silhouette = True; ls.select_border = False; ls.select_crease = False
         ls.linestyle.color = (.11, .08, .13); ls.linestyle.thickness = 2.4
     except Exception as e: log("freestyle off", e)
     cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam); sc.camera = cam; cam.data.lens = 55
@@ -1002,6 +1251,11 @@ def run_sex(SEX):
     reset(); MATS.clear()
     F = SEX == "f"
     rig = build_rig()
+    if STAGE == "heads":
+        heads = {name: build_head(name, sp, rig, F) for name, sp in SP.items()}
+        log("heads", len(heads))
+        for name, o in heads.items(): export_head(os.path.join(OUT, f"critter-sp-{name}-{SEX}.glb"), rig, o, name)
+        return
     body = build_body(F); auto_weights(body, rig); parent_to(body, rig)
     G = build_garments(F, body, rig); log("body + garments", SEX, tris(body), len(G))
     heads = {}
