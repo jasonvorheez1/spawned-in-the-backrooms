@@ -905,6 +905,10 @@ export function geometry(ctx) {
       case "shy":       Object.assign(t, { look: 1, brow: -0.25, lid: 0.08, mouth: "smile_small", blush: true, pupil: 0.95 }); break;
       case "kiss":      Object.assign(t, { eye: "closed", mouth: "kiss", blush: true }); break;
       case "dizzy":     Object.assign(t, { eye: "x", mouth: "wavy" }); break;
+      case "lidded":    Object.assign(t, { lid: 0.42, mouth: "smile_small" }); break;
+      case "sideeye":   Object.assign(t, { lid: 0.46, look: 1.4, mouth: "flat" }); break;
+      case "unimpressed": Object.assign(t, { lid: 0.5, lidTilt: -0.04, brow: 0.16, mouth: "pout", pupil: 0.92 }); break;
+      case "cocky":     Object.assign(t, { lid: 0.12, brow: 0.32, mouth: "gritted", pupil: 1.05 }); break;
     }
     return t;
   })();
@@ -922,12 +926,13 @@ export function geometry(ctx) {
   };
 
   const brow = (s, cu) => {
+    if (Math.abs(E.brow) < 0.05 && E.browY < 0.025) return; // dandy faces go browless at rest
     ctx.color(INK);
     const by = EY + ERV + 0.036 + E.browY;
     stroke((t) => {
       const u = cu + (t - 0.5) * 0.14;
       return [u, by - E.brow * (u - cu) * s * -0.5 + 0.014 * Math.sin(Math.PI * t)];
-    }, 0.024, 0.008, 8);
+    }, 0.017, 0.008, 8);
   };
 
   for (const s of [-1, 1]) {
@@ -959,7 +964,7 @@ export function geometry(ctx) {
 
     // Eye ink border and white sclera
     ctx.color(INK);
-    fill(ellipse(cu, EY, ERU + 0.02, ERV + 0.02), 0.006);
+    fill(ellipse(cu, EY, ERU + 0.014, ERV + 0.014), 0.006);
     ctx.color("#ffffff");
     fill(ellipse(cu, EY, ERU, ERV), 0.009);
 
@@ -980,12 +985,11 @@ export function geometry(ctx) {
       ctx.color("#ffffff");
       fill(ellipse(pu - s * 0.018, pv + 0.032, 0.016, 0.016), 0.018);
     } else {
-      ctx.color(mixc(EYE, "#08040d", 0.6));
-      fill(ellipse(pu, pv + 0.015, 0.076 * pr, 0.082 * pr), 0.011);
+      // dandy eye: a huge dark pupil filling the white, the chosen colour as its rim
       ctx.color(EYE);
-      fill(ellipse(pu, pv - 0.01, 0.076 * pr, 0.082 * pr), 0.012);
-      ctx.color("#100818");
-      fill(ellipse(pu, pv - 0.005, 0.046 * pr, 0.055 * pr), 0.013);
+      fill(ellipse(pu, pv - 0.006, 0.084 * pr * ESH[0], 0.1 * pr * ESH[1]), 0.011);
+      ctx.color(mixc(EYE, "#07040b", 0.82));
+      fill(ellipse(pu, pv - 0.002, 0.074 * pr * ESH[0], 0.09 * pr * ESH[1]), 0.012);
 
       if (E.eye === "star") {
         ctx.color("#ffffff");
@@ -993,8 +997,8 @@ export function geometry(ctx) {
       } else {
         // Specular highlights
         ctx.color("#ffffff");
-        fill(ellipse(pu - s * 0.022, pv + 0.032, 0.025, 0.032), 0.018);
-        fill(ellipse(pu + s * 0.024, pv - 0.032, 0.014, 0.014), 0.018);
+        fill(ellipse(pu - s * 0.026, pv + 0.036, 0.03, 0.036, 16, s * 0.4), 0.018);
+        fill(ellipse(pu + s * 0.03, pv - 0.04, 0.012, 0.012), 0.018);
       }
     }
 
@@ -1015,16 +1019,16 @@ export function geometry(ctx) {
         const u = cu + (t - 0.5) * 2 * (ERU + 0.018);
         const kk = 1 - ((u - cu) / (ERU + 0.02)) ** 2;
         return [u, Math.min(tiltAt(u), EY + Math.sqrt(Math.max(0, kk)) * (ERV + 0.02))];
-      }, 0.016, 0.022);
+      }, 0.026, 0.022);
     }
 
     if (fem) {
       ctx.color(INK);
-      for (let n = 0; n < 2; n++) {
-        const a = 0.44 + n * 0.38;
-        const bu = cu + s * Math.cos(a) * (ERU + 0.015);
-        const bv = EY + Math.sin(a) * (ERV + 0.015);
-        const tipLash = [bu + s * 0.06 * Math.cos(a - 0.12), bv + 0.055 * Math.sin(a + 0.5) + 0.014];
+      for (let n = 0; n < 3; n++) {
+        const a = 0.12 + n * 0.3;
+        const bu = cu + s * Math.cos(a) * (ERU + 0.01);
+        const bv = EY + Math.sin(a) * (ERV + 0.01);
+        const tipLash = [bu + s * 0.05 * Math.cos(a + 0.25), bv + 0.04 * Math.sin(a + 0.45) + 0.012];
         tri(onHead(bu, bv + 0.008, 0.02), onHead(tipLash[0], tipLash[1], 0.02), onHead(bu - s * 0.006, bv - 0.008, 0.02));
         if (s < 0) tri(onHead(bu, bv + 0.008, 0.02), onHead(bu - s * 0.006, bv - 0.008, 0.02), onHead(tipLash[0], tipLash[1], 0.02));
       }
@@ -1144,47 +1148,47 @@ export function geometry(ctx) {
   const MO = E.mouth;
 
   if (MO === "grin" || MO === "laugh" || MO === "tongue" || MO === "gritted") {
-    const w = MO === "gritted" ? 0.1 : MO === "laugh" ? 0.135 : E.wide ? 0.138 : 0.125;
-    const D = MO === "laugh" ? 0.13 : E.wide ? 0.105 : 0.095;
-    const cv = MO === "laugh" ? 1.3 : 1.1;
+    const w = MO === "gritted" ? 0.068 : MO === "laugh" ? 0.095 : E.wide ? 0.1 : 0.082; // small dandy mouths
+    const D = MO === "laugh" ? 0.095 : E.wide ? 0.078 : 0.068;
+    const cv = MO === "laugh" ? 2.4 : 2.2;
     const up = (t) => { const u = (t - 0.5) * 2 * w; return [u, MY + 0.03 + cv * u * u]; };
     const lo = (t) => {
       const u = (t - 0.5) * 2 * w;
-      return MO === "gritted" ? [u, MY - 0.035 + 0.8 * u * u] : [u, MY + 0.03 + cv * u * u - D * Math.sin(Math.PI * t) ** 0.8];
+      return MO === "gritted" ? [u, MY - 0.03 + 1.2 * u * u] : [u, MY + 0.03 + cv * u * u - D * Math.sin(Math.PI * t) ** 0.8];
     };
-    band((t) => { const p = up(t); return [p[0] * 1.07, p[1] + 0.013]; }, (t) => { const p = lo(t); return [p[0] * 1.07, p[1] - 0.013]; }, 0.007);
+    band((t) => { const p = up(t); return [p[0] * 1.1, p[1] + 0.01]; }, (t) => { const p = lo(t); return [p[0] * 1.1, p[1] - 0.01]; }, 0.007);
     ctx.color("#561626");
     band(up, lo, 0.01);
 
     if (MO !== "gritted") {
-      const tv = MY - 0.035 - (D - 0.09) * 0.55;
-      const tr = MO === "laugh" ? 0.072 : 0.058;
+      const tv = MY - 0.022 - (D - 0.068) * 0.55;
+      const tr = MO === "laugh" ? 0.05 : 0.04;
       ctx.color("#ff6f8e");
-      fill(ellipse(0.005, tv, tr, MO === "tongue" ? 0.046 : MO === "laugh" ? 0.052 : 0.038), 0.012);
+      fill(ellipse(0.004, tv, tr, MO === "tongue" ? 0.034 : MO === "laugh" ? 0.036 : 0.026), 0.012);
       ctx.color("#ff90ab");
       fill(ellipse(0.005, tv + 0.008, tr * 0.58, 0.016), 0.013);
     }
     if (MO !== "tongue") {
       ctx.color("#ffffff");
-      const len = MO === "gritted" ? 0.038 : 0.024;
+      const len = MO === "gritted" ? 0.03 : 0.019;
       band(up, (t) => { const p = up(t); return [p[0], p[1] - len]; }, 0.013);
       if (sp.buck) {
         for (const sg of [-1, 1]) {
-          fill([[sg * 0.004, MY + 0.028], [sg * 0.032, MY + 0.028], [sg * 0.032, MY - 0.015], [sg * 0.004, MY - 0.015]], 0.015);
+          fill([[sg * 0.003, MY + 0.028], [sg * 0.024, MY + 0.028], [sg * 0.024, MY - 0.01], [sg * 0.003, MY - 0.01]], 0.015);
         }
       }
       if (sp.fangs) {
         for (const t of [0.26, 0.74]) {
           const a = up(t - 0.045), b = up(t + 0.045), m = up(t);
-          fill([[a[0], a[1] + 0.004], [b[0], b[1] + 0.004], [m[0] + 0.001, m[1] - len - 0.032]], 0.016);
+          fill([[a[0], a[1] + 0.004], [b[0], b[1] + 0.004], [m[0] + 0.001, m[1] - len - 0.022]], 0.016);
         }
       }
     }
   } else if (MO === "smile" || MO === "frown" || MO === "smirk") {
     const kk = MO === "frown" ? -1 : 1;
     stroke((t) => {
-      const u = (t - 0.5) * 0.16 + (MO === "smirk" ? 0.02 : 0);
-      const lift = MO === "smirk" ? (t > 0.5 ? 2.6 : 0.6) : 1.6;
+      const u = (t - 0.5) * 0.11 + (MO === "smirk" ? 0.016 : 0);
+      const lift = MO === "smirk" ? (t > 0.5 ? 4.2 : 1) : 3;
       return [u, MY + 0.01 + kk * (lift * u * u) - (kk < 0 ? -0.02 : 0)];
     }, 0.016, 0.01, 12);
     if (MO === "smirk" && !sp.buck) {
@@ -1192,7 +1196,7 @@ export function geometry(ctx) {
       tri(onHead(0.06, MY + 0.022, 0.014), onHead(0.068, MY - 0.004, 0.014), onHead(0.078, MY + 0.028, 0.014));
     }
   } else if (MO === "smile_small") {
-    stroke((t) => { const u = (t - 0.5) * 0.095; return [u, MY + 0.016 + 2.2 * u * u]; }, 0.015, 0.01, 8);
+    stroke((t) => { const u = (t - 0.5) * 0.07; return [u, MY + 0.016 + 4 * u * u]; }, 0.014, 0.01, 8);
   } else if (MO === "blep") {
     stroke((t) => { const u = (t - 0.5) * 0.17; return [u, MY + 0.02 + 1.9 * u * u]; }, 0.016, 0.01, 12);
     ctx.color("#ff6f8e");
@@ -1208,12 +1212,12 @@ export function geometry(ctx) {
   } else if (MO === "pout") {
     stroke((t) => { const u = (t - 0.5) * 0.11; return [u, MY + 0.005 - 3 * u * u + 0.004 * Math.sin(t * Math.PI * 3)]; }, 0.015, 0.01, 10);
   } else if (MO === "flat") {
-    stroke((t) => [(t - 0.5) * 0.1, MY + 0.008], 0.014, 0.01, 4);
+    stroke((t) => [(t - 0.5) * 0.06, MY + 0.008], 0.013, 0.01, 4);
   } else if (MO === "kiss") {
     ctx.color("#ff7a9a"); fill(ellipse(0, MY + 0.005, 0.036, 0.03), 0.01);
     ctx.color(INK); fill(ellipse(0.004, MY + 0.005, 0.012, 0.008, 8), 0.012);
   } else if (MO === "o" || MO === "o_small") {
-    const r = MO === "o" ? 1 : 0.55;
+    const r = MO === "o" ? 0.75 : 0.45;
     fill(ellipse(0, MY - 0.01, 0.044 * r, 0.052 * r), 0.008);
     ctx.color("#561626"); fill(ellipse(0, MY - 0.01, 0.032 * r, 0.04 * r), 0.011);
   } else if (MO === "wavy") {
