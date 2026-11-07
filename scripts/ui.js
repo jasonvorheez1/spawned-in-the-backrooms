@@ -15,7 +15,7 @@ import { noclipUi } from './noclip-ui.js'
 export async function plyUpload(input) { const m = await import('./lib/plyimport.js'); return m.plyUpload(input) }
 export { m3dPvDown, m3dPvWheel, m3dPvReset, m3dPvTool, m3dPvDraft, m3dPvEdit, m3dPvClear, m3dTkMeasure, m3dTkDown, m3dTkWheel, m3dTkReset, m3dMpvMove, m3dMpvSize, m3dDraft, m3dPose, m3dPick, m3dPreview, m3dUpload, m3dAsk, m3dClearRefs, m3dGuide } from '../mods/modeling-studio/hud.js'
 
-const THEME = `<style>
+const THEME = `<style>@keyframes hud-pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 #hud { --a: #ffb642; --ad: rgba(255,182,66,0.35); color: var(--a); font-family: 'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; user-select: none; text-shadow: 0 0 4px rgba(255,170,40,0.7), 0 1px 2px rgba(0,0,0,0.9) }
 .hud-card { background: rgba(20,12,2,0.55); border: 2px solid var(--a); padding: 8px 14px; box-shadow: 0 0 6px rgba(255,170,40,0.35) }
 .row { display:flex; justify-content:space-between; align-items:baseline; gap:12px }
@@ -86,7 +86,22 @@ function chatBubbles(ctx, now) {
     const who = String(o.state.name ?? '').split(' ·')[0]
     h += `<div data-world-anchor="${id}" data-anchor-offset="0 2.05 0" style="transform:translate(-50%,-100%);opacity:clamp(0,calc(1.6 - var(--anchor-depth,0) / 14),1)"><div id="cb${l.at}" style="max-width:260px;padding:6px 10px;background:oklch(0.16 0.02 80 / .88);border:1px solid oklch(0.7 0.12 85 / .55);color:oklch(0.93 0.03 90);font-size:14px;line-height:1.3;animation:hud-pop .18s ease-out"><span style="color:oklch(0.8 0.13 85);font-size:11px;letter-spacing:.06em">${who.toUpperCase()}</span><br>${l.t}</div></div>`
   }
-  return h ? `<style>@keyframes hud-pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}</style>${h}` : ''
+  return h
+}
+
+// subtitles: every voiced line within earshot, speaker first, along the bottom (chatter rows from chatter.js, s.sub from interact/stealers)
+function subtitles(ctx, player, now) {
+  const rows = [], s = player.state ?? {}, me = player.feetPosition, objs = ctx.place?.objects
+  if (objs && me) for (const id of TALKERS) {
+    const o = objs[id], l = o?.state?.line
+    if (!l || now - l.at > l.d || o.state.dead) continue
+    if (Math.hypot(o.feetPosition.x - me.x, o.feetPosition.z - me.z) > 20) continue
+    rows.push([l.at, String(o.state.name ?? '').split(' ·')[0], l.t])
+  }
+  if (s.sub && now - s.sub.at < s.sub.d) rows.push([s.sub.at, s.sub.who, s.sub.t])
+  if (!rows.length) return ''
+  rows.sort((a, b) => a[0] - b[0])
+  return `<div style="position:absolute;left:0;right:0;bottom:120px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px)">${rows.slice(-2).map(([at, who, t]) => `<div id="sub${at}" style="max-width:720px;padding:5px 12px;background:oklch(0.1 0.01 80 / .78);color:oklch(0.95 0.02 90);font-size:17px;line-height:1.35;text-align:center;animation:hud-pop .15s ease-out"><span style="color:oklch(0.8 0.13 85)">${who}:</span> ${t}</div>`).join('')}</div>`
 }
 export default function render(ctx, player) {
   const s = player.state ?? {}
@@ -171,6 +186,7 @@ export default function render(ctx, player) {
     </div>
   </div>` : ''}
 
+  ${subtitles(ctx, player, now)}
   <!-- Subdued Initial Hint -->
   <div id="hint" style="position:absolute;left:0;right:0;text-align:center;bottom:180px;font-size:12px;color:rgba(232,228,216,0.45);animation:hud-fade 7s 1s forwards;opacity:0">
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('wardrobe', 'C')}</kbd> wardrobe · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face

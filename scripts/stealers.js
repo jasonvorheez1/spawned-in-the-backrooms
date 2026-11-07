@@ -5,6 +5,7 @@ import { zoneAt, safeZone } from "./lib/level1.js";
 import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
 const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
+const CALL_TEXT = ["hello? is someone there?", "wait, don't go. i need help.", "over here, friend."]; // what the subtitles read
 const CALL = ["/cdn/voice-skinstealer-saying-hello-is-someone-there.mp3", "/cdn/voice-skinstealer-saying-wait-dont-go-i-need-help.mp3", "/cdn/voice-skinstealer-saying-over-here-friend.mp3"];
 const POOF = `fx
 pop dust burst=20 life=.6..1.1 on=box(.5,1.6,.5).c(.9) v=sdir()*(.4..1.2)+up(.4) size=.25..0.45 acc=drag(1.4) col=<.25,.2,.18> a=0>.45:.5>0 sz=$size*(.6>1.5) r=sprite(smoke-puff,alpha)`;
@@ -23,7 +24,7 @@ export function update(ctx, dt) {
       o.primitive = { kind: "scripted", script: "scripts/stealer-geo.js", params: { revealed: reveal } };
       if (reveal) { ctx.emit("playSound", { clip: SND("flesh-tear-wet-shriek"), position: pos, volume: 1, maxDistance: 30 }); ctx.emit("screenShake", { intensity: 0.35, duration: 0.3 }, { audience: { nearby: pos, radius: 8 } }); }
     }
-    if (prey && !reveal && now >= (m.call ?? 0)) { m.call = now + 7000 + ctx.random() * 6000; ctx.emit("playSound", { clip: CALL[Math.floor(ctx.random() * CALL.length)], position: { x: pos.x, y: pos.y + 1.6, z: pos.z }, volume: 0.9, maxDistance: L.stealerCallRange + 6 }); }
+    if (prey && !reveal && now >= (m.call ?? 0)) { m.call = now + 7000 + ctx.random() * 6000; const ci = Math.floor(ctx.random() * CALL.length); prey.state.sub = { who: "???", t: CALL_TEXT[ci], at: now, d: 3000 }; ctx.emit("playSound", { clip: CALL[ci], position: { x: pos.x, y: pos.y + 1.6, z: pos.z }, volume: 0.9, maxDistance: L.stealerCallRange + 6 }); }
     let goal;
     if (prey) goal = prey.feetPosition;
     else { if (!m.roam || now > m.until) { const a = ctx.random() * 6.283; m.roam = { x: pos.x + Math.cos(a) * 8, z: pos.z + Math.sin(a) * 8 }; m.until = now + 6000; } goal = m.roam; }
