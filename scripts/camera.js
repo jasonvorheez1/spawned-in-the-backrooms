@@ -143,7 +143,8 @@ export function update(ctx, dt) {
   if (tc.k > 0.01 && ctx.player && rot) {
     ctx.self.hideLocalPlayer = tc.k < 0.3
     const v = ctx.player.velocity ?? { x: 0, z: 0 }, speed = Math.hypot(v.x, v.z), ads = !!ps?.ads, crouch = !!ps?.crouch, sprint = speed > 6.2 && !ads
-    const wantD = ads ? 1.7 : sprint ? 3.7 : crouch ? 2.5 : 3.1, wantSh = ads ? 0.38 : sprint ? 0.3 : 0.52, wantH = crouch ? 1.15 : 1.6, ez = Math.min(1, dt * 6)
+    const bTop = ctx.player.bounds?.max?.y, fy = (ctx.player.worldFeetPosition ?? ctx.player.feetPosition).y, headH = bTop != null ? Math.min(2.2, Math.max(1.2, bTop - fy)) : 1.6 // the pivot rides over your own head, whatever its size
+    const wantD = ads ? 1.8 : sprint ? 3.6 : crouch ? 2.6 : 3.0, wantSh = ads ? 0.45 : sprint ? 0.35 : 0.6, wantH = (crouch ? headH * 0.75 : headH) + 0.15, ez = Math.min(1, dt * 6)
     tc.sh += (wantSh - tc.sh) * ez; tc.h += (wantH - tc.h) * ez; tc.sp += ((sprint ? 1 : 0) - tc.sp) * Math.min(1, dt * 4)
     const wp = ctx.player.worldFeetPosition ?? ctx.player.feetPosition, pivot = { x: wp.x, y: wp.y + tc.h, z: wp.z }
     const yw = rot.yaw * Math.PI / 180, pt = rot.pitch * Math.PI / 180
@@ -154,7 +155,10 @@ export function update(ctx, dt) {
     const free = hit ? Math.max(0.25, hit.distance - 0.3) : wantD
     tc.d = free < tc.d ? free : tc.d + (free - tc.d) * Math.min(1, dt * 2.5) // pushed in at once, eased back out
     const e0 = ctx.self.feetPosition, k = tc.k * tc.k * (3 - 2 * tc.k), dist = tc.d * tc.k
-    const out = { x: from.x + back.x * dist, y: from.y + back.y * dist, z: from.z + back.z * dist }
+    const tight = Math.max(0, Math.min(1, (1.4 - tc.d) / 1.1)) // a wall at your back: the eye lifts over your head instead of sitting in it
+    let lift = tight * 0.4; if (lift > 0) { const up = raycast(ctx, from, { x: 0, y: 1, z: 0 }, { distance: lift + 0.15, radius: 0.1, physicsOnly: true, ignoreEntities: [ctx.player.id] }); if (up) lift = Math.max(0, up.distance - 0.15) }
+    const out = { x: from.x + back.x * dist, y: from.y + back.y * dist + lift, z: from.z + back.z * dist }
+    if (tc.k >= 0.3) ctx.self.hideLocalPlayer = tc.d < 0.75 // too close to see past yourself: your body steps out of the shot
     ctx.self.feetPosition = { x: e0.x + (out.x - e0.x) * k, y: e0.y + (out.y - e0.y) * k, z: e0.z + (out.z - e0.z) * k }
     ctx.self.fov = ctx.self.fov + 7 * tc.sp * tc.k // the view opens up when you run
     if (ps && ctx.now() - tc.at > 100) { // the crosshair's point in the world, ten times a second
