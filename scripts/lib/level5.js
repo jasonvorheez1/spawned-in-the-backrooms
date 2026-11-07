@@ -103,16 +103,17 @@ export const HOT = ZONES.filter((r) => r.hot).map((r) => r.id);
 // every lamp the sim lights; dressing lanes hang the fixture mesh at the same point (kind says which)
 export const LIGHTS = (() => {
   const L = [], warm = "oklch(0.86 0.09 75)", add = (x, y, z, kind, intensity, distance, color = warm) => L.push({ x, y, z, kind, intensity, distance, color });
-  add(-38, 6.6, -6, "chandelier", 9, 22); add(-38, 6.6, 6, "chandelier", 9, 22); // lobby: two crystal chandeliers
-  for (let x = -27; x <= -9; x += 6) add(x, 4.4, 0, "pendant", 5, 12); // gallery pendants
-  for (let x = -27; x <= -9; x += 6) { add(x, 2.3, -10.2, "sconce", 1.6, 6); add(x, 2.3, 12.8, "sconce", 1.6, 6); } // corridor sconces (one per stretch, the other wall dark)
-  add(-17.5, 3.3, -6.5, "flush", 2, 7); add(-17.5, 3.3, 6.5, "flush", 2, 7);
-  for (const r of ZONES) if (r.kind === "guest" || r.kind === "suite") add((r.x0 + r.x1) / 2, r.h - 0.5, (r.z0 + r.z1) / 2, "lamp", 1.4, 7, "oklch(0.8 0.1 65)");
-  add(-26, 3.2, -17, "lamp", 2.4, 9, "oklch(0.82 0.1 70)"); add(-10, 3.3, 17, "flush", 3, 10, "oklch(0.92 0.05 90)"); add(-8, 3.2, -17, "bulb", 1.2, 6, "oklch(0.75 0.12 55)");
-  for (const [x, z] of [[0, -6], [12, -6], [0, 6], [12, 6], [6, 0]]) add(x, 7.8, z, "chandelier", x === 6 ? 14 : 8, 20); // the Beverly Room
-  add(6, 4, -18, "chandelier", 6, 14, "oklch(0.78 0.11 60)"); // the salon: low and red-gold
-  for (const x of [-2, 6, 14]) add(x, 3.3, 18, "tube", 3, 10, "oklch(0.93 0.03 120)"); // Housekeeping: work lights
-  for (let x = 22; x <= 44; x += 8) for (let z = -22; z <= 22; z += 11) add(x, 5.2, z, "cage", 2.6, 11, "oklch(0.68 0.17 45)"); // the Boiler Room: caged bulbs, orange
+  add(-38, 6.6, -6, "chandelier", 18, 26); add(-38, 6.6, 6, "chandelier", 18, 26); // lobby: two crystal chandeliers
+  for (let x = -27; x <= -9; x += 6) add(x, 4.4, 0, "pendant", 9, 13); // gallery pendants
+  for (let x = -27; x <= -9; x += 6) { add(x, 2.3, -10.2, "sconce", 4.5, 8); add(x, 2.3, 12.8, "sconce", 4.5, 8); } // corridor sconces, one wall
+  for (let x = -24; x <= -12; x += 6) { add(x, 2.3, -12.8, "sconce", 3.5, 7); add(x, 2.3, 10.2, "sconce", 3.5, 7); } // and the other wall, staggered
+  add(-17.5, 3.3, -6.5, "flush", 5, 8); add(-17.5, 3.3, 6.5, "flush", 5, 8);
+  for (const r of ZONES) if (r.kind === "guest" || r.kind === "suite") add((r.x0 + r.x1) / 2, r.h - 0.5, (r.z0 + r.z1) / 2, "lamp", r.kind === "suite" ? 5 : 4, 9, "oklch(0.8 0.1 65)");
+  add(-26, 3.2, -17, "lamp", 5, 10, "oklch(0.82 0.1 70)"); add(-10, 3.3, 17, "flush", 6, 11, "oklch(0.92 0.05 90)"); add(-8, 3.2, -17, "bulb", 3, 7, "oklch(0.75 0.12 55)");
+  for (const [x, z] of [[0, -6], [12, -6], [0, 6], [12, 6], [6, 0]]) add(x, 7.8, z, "chandelier", x === 6 ? 22 : 14, 22); // the Beverly Room
+  add(6, 4, -18, "chandelier", 10, 15, "oklch(0.78 0.11 60)"); // the salon: low and red-gold
+  for (const x of [-2, 6, 14]) add(x, 3.3, 18, "tube", 6, 11, "oklch(0.93 0.03 120)"); // Housekeeping: work lights
+  for (let x = 22; x <= 44; x += 8) for (let z = -22; z <= 22; z += 11) add(x, 5.2, z, "cage", 5, 12, "oklch(0.68 0.17 45)"); // the Boiler Room: caged bulbs, orange
   return L;
 })();
 // radios playing the polonaise (the creator's track): one per lived-in space; E turns one off and on (scripts/l5-radio.js)

@@ -45,6 +45,13 @@ export function tick(ctx) {
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; if (!ctx.getObject("l5-geo")) lay(ctx); } // the shell is saved in the place's cells; a fresh room only lays what's missing
   if (s.exitsV !== 1) { s.exitsV = 1; dressExits(ctx); }
+  if (s.lightsV !== 2) { s.lightsV = 2; relight(ctx); }
+}
+// the lamp set re-laid from LIGHTS whenever its numbers change (ids by index; extras past the list are cleared)
+function relight(ctx) {
+  for (let i = 0; i < 200; i++) if (ctx.getObject(`l5-light-${i}`)) ctx.destroy(`l5-light-${i}`);
+  LIGHTS.forEach((l, i) => ctx.spawn(`l5-light-${i}`, { tags: ["l5-light", `l5-fix-${l.kind}`], feetPosition: { x: l.x, y: l.y, z: l.z }, state: { kind: l.kind },
+    light: { kind: "point", color: l.color, intensity: l.intensity, distance: l.distance, shadow: { enabled: l.kind === "chandelier" && l.intensity >= 14 } } }));
 }
 // every live way out reads as one: a walnut stair door swung open on a dark climbing stair, or a copper cage lift with its gate folded back
 const WAL = { color: "oklch(0.3 0.05 45)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.5 };
