@@ -82,25 +82,35 @@ export async function plyToGlb(buf) {
 }
 // auto-rig: a Mixamo-named humanoid skeleton fitted to the mesh's own extents, each vertex skinned to its two nearest bones on its side
 function autoRig(P, n) {
-  const H = 1.8, side = (x) => (x > 0.012 ? 1 : x < -0.012 ? -1 : 0)
-  // hands: the vertex farthest from each shoulder among arm-height verts out past the torso
-  const sh = (sd) => [sd * 0.1 * H, 0.79 * H, 0]
-  const hand = (sd) => { const S = sh(sd); let best = null, bd = 0; for (let v = 0; v < n; v++) { const x = P[v * 3], y = P[v * 3 + 1], z = P[v * 3 + 2]; if (x * sd < 0.13 * H || y < 0.3 * H || y > 0.92 * H) continue; const dd = Math.hypot(x - S[0], y - S[1], z - S[2]); if (dd > bd) { bd = dd; best = [x, y, z] } } return best || [sd * 0.18 * H, 0.45 * H, 0] }
+  const H = 1.8, side = (x) => (x > 0.012 ? 1 : x < -0.012 ? -1 : 0), X = (v) => P[v * 3], Y = (v) => P[v * 3 + 1], Z = (v) => P[v * 3 + 2]
+  // landmarks read off the mesh: feet, arm line, crotch
+  let lx = 0, ln = 0, fz0 = Infinity, fz1 = -Infinity, mxL = 0, mxR = 0
+  for (let v = 0; v < n; v++) { if (Y(v) < 0.05 * H) { lx += Math.abs(X(v)); ln++; fz0 = Math.min(fz0, Z(v)); fz1 = Math.max(fz1, Z(v)) } if (Y(v) > 0.3 * H && Y(v) < 0.9 * H) { if (X(v) > mxR) mxR = X(v); if (-X(v) > mxL) mxL = -X(v) } }
+  const legX = Math.max(0.03 * H, ln ? lx / ln : 0.09 * H), fzMid = isFinite(fz0) ? (fz0 + fz1) / 2 : 0, legBack = isFinite(fz1) ? fz1 + 0.04 * H : 0.1 * H
+  const span = Math.min(mxL, mxR), tpose = span > 0.26 * H
+  let ay = 0, an = 0; if (tpose) for (let v = 0; v < n; v++) if (Math.abs(X(v)) > 0.75 * span && Y(v) > 0.3 * H) { ay += Y(v); an++ }
+  const armY = tpose && an ? ay / an : 0.72 * H, shX = tpose ? Math.max(0.06 * H, 0.3 * span) : 0.1 * H
+  let crotch = 0.45 * H; for (let y = 0.06 * H; y < armY - 0.1 * H; y += 0.01 * H) { let c = 0; for (let v = 0; v < n; v++) if (Math.abs(Y(v) - y) < 0.005 * H && Math.abs(X(v)) < 0.25 * legX && Z(v) < legBack) c++; if (c >= 3) { crotch = y; break } }
+  const hipY = crotch + 0.04 * H, ank = 0.045 * H, knee = (crotch + ank) / 2, neckY = armY + 0.06 * H, headY = neckY + 0.05 * H
+  const sh = (sd) => [sd * shX, armY, fzMid]
+  const hand = (sd) => { const S = sh(sd); let best = null, bd = 0; for (let v = 0; v < n; v++) { const x = X(v), y = Y(v), z = Z(v); if (x * sd < shX * 1.2 || y < 0.15 * H || y > headY) continue; const dd = Math.hypot(x - S[0], y - S[1], z - S[2]); if (dd > bd) { bd = dd; best = [x, y, z] } } return best || [sd * shX * 1.8, armY - 0.25 * H, fzMid] }
   const J = [], add = (name, parent, pos) => { J.push({ name: 'mixamorig:' + name, parent, pos }); return J.length - 1 }
-  const hips = add('Hips', -1, [0, 0.53 * H, 0]), sp = add('Spine', hips, [0, 0.6 * H, 0]), sp1 = add('Spine1', sp, [0, 0.66 * H, 0]), sp2 = add('Spine2', sp1, [0, 0.72 * H, 0])
-  const neck = add('Neck', sp2, [0, 0.82 * H, 0]), head = add('Head', neck, [0, 0.87 * H, 0]); add('HeadTop_End', head, [0, H, 0])
+  const lerpY = (t) => hipY + (armY - hipY) * t
+  const hips = add('Hips', -1, [0, hipY, fzMid]), sp = add('Spine', hips, [0, lerpY(0.3), fzMid]), sp1 = add('Spine1', sp, [0, lerpY(0.6), fzMid]), sp2 = add('Spine2', sp1, [0, lerpY(0.9), fzMid])
+  const neck = add('Neck', sp2, [0, neckY, fzMid]), head = add('Head', neck, [0, headY, fzMid]); add('HeadTop_End', head, [0, H, fzMid])
   const segs = [[hips, sp, 0], [sp, sp1, 0], [sp1, sp2, 0], [sp2, neck, 0], [neck, head, 0], [head, J.length - 1, 0]]
+  const armOut = shX * 0.85 / H
   for (const [sd, L] of [[-1, 'Left'], [1, 'Right']]) { // the model faces -Z, so its left is -X
-    const tip = hand(sd), S = sh(sd), wr = S.map((c, k) => c + (tip[k] - c) * 0.88), el = S.map((c, k) => c + (wr[k] - c) * 0.5)
-    const c = add(L + 'Shoulder', sp2, [sd * 0.04 * H, 0.79 * H, 0]), a = add(L + 'Arm', c, S), f = add(L + 'ForeArm', a, el), h = add(L + 'Hand', f, wr), e = add(L + 'HandEnd', h, tip)
-    const ul = add(L + 'UpLeg', hips, [sd * 0.09 * H, 0.5 * H, 0]), lg = add(L + 'Leg', ul, [sd * 0.09 * H, 0.27 * H, 0]), ft = add(L + 'Foot', lg, [sd * 0.09 * H, 0.05 * H, 0]), toe = add(L + 'ToeBase', ft, [sd * 0.09 * H, 0.015 * H, -0.07 * H]), te = add(L + 'Toe_End', toe, [sd * 0.09 * H, 0.015 * H, -0.12 * H])
-    segs.push([c, a, sd, 0.04], [a, f, sd, 0.09], [f, h, sd, 0.09], [h, e, sd, 0.09], [hips, ul, sd], [ul, lg, sd], [lg, ft, sd], [ft, toe, sd], [toe, te, sd])
+    const tip = hand(sd), S = sh(sd), wr = S.map((c, k) => c + (tip[k] - c) * 0.85), el = S.map((c, k) => c + (wr[k] - c) * 0.5)
+    const c = add(L + 'Shoulder', sp2, [sd * shX * 0.35, armY, fzMid]), a = add(L + 'Arm', c, S), f = add(L + 'ForeArm', a, el), h = add(L + 'Hand', f, wr), e = add(L + 'HandEnd', h, tip)
+    const ul = add(L + 'UpLeg', hips, [sd * legX, crotch, fzMid]), lg = add(L + 'Leg', ul, [sd * legX, knee, fzMid]), ft = add(L + 'Foot', lg, [sd * legX, ank, fzMid]), toe = add(L + 'ToeBase', ft, [sd * legX, 0.015 * H, fz0 + (fz1 - fz0) * 0.3]), te = add(L + 'Toe_End', toe, [sd * legX, 0.015 * H, fz0])
+    segs.push([c, a, sd, armOut * 0.4], [a, f, sd, armOut], [f, h, sd, armOut], [h, e, sd, armOut], [ul, lg, sd, 0, 1], [lg, ft, sd, 0, 1], [ft, toe, sd, 0, 1], [toe, te, sd, 0, 1])
   }
   const segD = (q, a, b) => { const ab = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], aq = [q[0] - a[0], q[1] - a[1], q[2] - a[2]]; const t = Math.max(0, Math.min(1, (aq[0] * ab[0] + aq[1] * ab[1] + aq[2] * ab[2]) / ((ab[0] ** 2 + ab[1] ** 2 + ab[2] ** 2) || 1))); return Math.hypot(aq[0] - ab[0] * t, aq[1] - ab[1] * t, aq[2] - ab[2] * t) }
   const JO = new Uint16Array(n * 4), W = new Float32Array(n * 4)
   for (let v = 0; v < n; v++) {
     const q = [P[v * 3], P[v * 3 + 1], P[v * 3 + 2]], sv = side(q[0]); let b1 = -1, d1 = Infinity, b2 = -1, d2 = Infinity
-    for (const [a, b, sd, out] of segs) { if (sd && sv && sd !== sv) continue; if (out && Math.abs(q[0]) < out * H) continue; if (sd && !sv && q[1] < 0.5 * H) continue; const dd = segD(q, J[a].pos, J[b].pos); if (dd < d1) { b2 = b1; d2 = d1; b1 = a; d1 = dd } else if (dd < d2 && a !== b1) { b2 = a; d2 = dd } }
+    for (const [a, b, sd, out, leg] of segs) { if (sd && sv && sd !== sv) continue; if (out && Math.abs(q[0]) < out * H) continue; if (leg && (q[2] > legBack || q[1] > hipY + 0.02 * H)) continue; if (sd && !sv && !leg && q[1] < armY - 0.1 * H) continue; const dd = segD(q, J[a].pos, J[b].pos); if (dd < d1) { b2 = b1; d2 = d1; b1 = a; d1 = dd } else if (dd < d2 && a !== b1) { b2 = a; d2 = dd } }
     const w1 = 1 / Math.pow(d1 + 0.01, 4), w2 = b2 >= 0 ? 1 / Math.pow(d2 + 0.01, 4) : 0
     JO[v * 4] = b1; JO[v * 4 + 1] = Math.max(0, b2); W[v * 4] = w1 / (w1 + w2); W[v * 4 + 1] = w2 / (w1 + w2)
   }
