@@ -102,7 +102,7 @@ export function derived(s) {
 }
 
 // ---- carry weight, in kilograms
-const FIXED = { almond: 0.5, ammo: 0.4, shells: 0.5, ration: 0.4, bandage: 0.1, battery: 0.3, kit: 1.0, book: 0.3 }
+const FIXED = { almond: 0.5, ammo: 0.4, shells: 0.5, ration: 0.4, bandage: 0.1, battery: 0.3, kit: 1.0, book: 0.3, firesalt: 0.3 }
 export function weaponWeight(k) { const w = W[k]; return w ? (w.weight ?? (w.ranged ? 2.8 : w.damage > 30 ? 3.2 : 1.6)) : 0 }
 import BRK from './data/breakables.yml'
 export function tokenWeight(token) {
@@ -114,7 +114,7 @@ export function tokenWeight(token) {
 }
 // what the wanderer is carrying now: almond water 0.5 each, rounds 0.03 each, shells 0.07, every owned weapon
 export function carried(s) {
-  let kg = (s.almonds ?? 0) * FIXED.almond + (s.ammo ?? 0) * 0.03 + (s.shells ?? 0) * 0.07
+  let kg = (s.almonds ?? 0) * FIXED.almond + (s.ammo ?? 0) * 0.03 + (s.shells ?? 0) * 0.07 + (s.firesalt ?? 0) * FIXED.firesalt
   for (const k of String(s.weapons ?? '').split(',').filter(Boolean)) kg += weaponWeight(k)
   for (const [t, n] of Object.entries(s.scrap ?? {})) kg += (BRK.scrap[t]?.kg ?? 0.2) * n // building scrap
   for (const t of String(s.clothes ?? '').split(',').filter(Boolean)) kg += tokenWeight(t) // spare clothes; what's worn weighs nothing
@@ -123,7 +123,7 @@ export function carried(s) {
 // can this token be taken, and if not why
 export function canCarry(s, token) {
   const cap = derived(s).carry, add = token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
-  if (['ration', 'bandage', 'battery', 'kit', 'beans', 'bar', 'firstaid', 'tape', 'fuse', 'valve', 'keycard'].includes(token) || token.startsWith('book:')) return { ok: true } // used on the spot (or a Level 2 key), weigh nothing
+  if (['ration', 'bandage', 'battery', 'kit', 'beans', 'bar', 'firstaid', 'tape', 'fuse', 'valve', 'keycard', 'royal_ration'].includes(token) || token.startsWith('book:') || token.startsWith('page:')) return { ok: true } // used on the spot (or a Level 2 key), weigh nothing
   const now = carried(s)
   return now + add <= cap + 1e-6 ? { ok: true } : { ok: false, msg: `Too heavy to carry (${now.toFixed(1)}/${cap} kg)` }
 }

@@ -470,7 +470,7 @@ function toggleLight(ctx) {
 
 // First person: the local player's own arm and held weapon, riding the camera. Only this machine sees it.
 const HOLD = { // how each weapon sits in the fist: offset of its grip from its own origin (m along its length)
-  fists: null, table_leg: 0.16, pipe_scrap: 0.1, crowbar: 0.12, bat: 0.12, hatchet: 0.1, fire_axe: 0.18, pistol: 0.04, shotgun: 0.14, rebar: 0.14, wrench: 0.1, screwdriver: 0.05, sledgehammer: 0.12,
+  fists: null, table_leg: 0.16, pipe_scrap: 0.1, crowbar: 0.12, bat: 0.12, hatchet: 0.1, fire_axe: 0.18, pistol: 0.04, shotgun: 0.14, rebar: 0.14, wrench: 0.1, screwdriver: 0.05, sledgehammer: 0.12, stun_baton: 0.1, lineman_machete: 0.09,
 }
 const Q_MELEE = { x: -0.5, y: 0.5, z: 0.5, w: 0.5 } // its length up, its blade forward
 const Q_GUN = { x: -0.7071, y: 0, z: 0, w: 0.7071 } // seen in play: this lays the mesh's +Z barrel forward in the fist
