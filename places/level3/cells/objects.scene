@@ -1,19 +1,1 @@
 # spawn-scene v2 yaml objects
-gamma-ito/critter-head:
-  attachment: {skin: true}
-  id: gamma-ito/critter-head
-  model: {id: /cdn/value.5358dde889c71b52cec733e8793c7ee6f3240be59d9a1a939671f12c1a7d5925.glb, materials: {belly: {color: "#ffffff"}, fur: {color: "#f4efe9"}, inner: {color: "#ffc2d1"}, limb: {color: "#f4efe9"}, nose: {color: "#ff9fb4"}, tip: {color: "#ffffff"}}}
-  morph: {Smile: 0.8}
-  parent: gamma-ito
-gamma-pell/critter-head:
-  attachment: {skin: true}
-  id: gamma-pell/critter-head
-  model: {id: /cdn/value.f48027802252c272d0c308b251fee47dd4df8c1558d7d31ca51e75a0b3e29d9e.glb, materials: {belly: {color: "#e8d2b4"}, fur: {color: "#7a5236"}, limb: {color: "#7a5236"}, mark: {color: "#5a3a24"}, nose: {color: "#2a1c18"}, tip: {color: "#e8d2b4"}}}
-  morph: {Open: 0.4, Smile: 1}
-  parent: gamma-pell
-gamma-reyes/critter-head:
-  attachment: {skin: true}
-  id: gamma-reyes/critter-head
-  model: {id: /cdn/value.2353d51d23bdff4100cbfec5af2846d2f1aaa9000fb60081d93d61f6e87433c9.glb, materials: {belly: {color: "#a9bfdc"}, fur: {color: "#4f6f9f"}, limb: {color: "#4f6f9f"}, mark: {color: "#26406c"}, nose: {color: "#16141c"}, tip: {color: "#a9bfdc"}}}
-  morph: {Smile: 0.8}
-  parent: gamma-reyes
