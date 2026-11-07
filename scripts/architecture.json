@@ -1,24 +1,24 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1194,
-  "updatedAt": "2026-11-07T20:14:53.314Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, Levels 1–6, Base Gamma and a debug room. Authored cells and place simulations assemble the spaces; shared player, creature, NPC, loot and UI systems support scavenging, combat, dialogue and per-player progression.",
+  "basedOnSpecVersion": 1203,
+  "updatedAt": "2026-11-07T20:21:53.239Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG across Level 0, Levels 1–7, Base Gamma and a debug room. Authored cells and place simulations assemble distinct spaces; shared player, creature, NPC, loot and UI systems support scavenging, combat, dialogue and per-player progression.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, containers, breakable furniture, shifting walls and hunters.",
     "places/level1 (3D) - Habitable Zone and M.E.G. camp; car-park cells, agents, loot, hounds and skin-stealers.",
-    "places/level2 (3D) - Abandoned Utility Halls and Survivor camp; seeded halls, supplies, NPCs, sludge and steam hazards.",
-    "places/level3 (3D) - Electrical Station; maze/crawl halls, hazards, creatures, Gamma checkpoint, generators and lifts.",
+    "places/level2 + places/level3 (3D) - Utility Halls and Electrical Station: seeded halls, camps, hazards, creatures, Gamma checkpoint, generators and lifts.",
     "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards, residents and Database terminal.",
     "places/level4 (3D) - Abandoned Office; offices, fountains, break-room vending, lift/stairs and Base Omega; sim lays residents and office systems.",
-    "places/level5 (3D) - Terror Hotel; Main Hall, guest rooms, Beverly Room and Boiler Room; residents, rentals, mahjong, rat packs and Level 6 entrance; Ines's goggle quest directs players to the M.E.G. drop box.",
-    "places/level6 (3D) - Lights Out; seeded dark concrete halls, survivor-note set pieces, loot props and triggers; wall shifts when unwatched and whispers/mimic voices haunt the halls."
+    "places/level5 (3D) - Terror Hotel; Main Hall, guest rooms, Beverly Room and Boiler Room; residents, rentals, mahjong, rat packs, Level 6 portal and Ines's goggles quest.",
+    "places/level6 (3D) - Lights Out; seeded dark concrete labyrinth, survivor notes/props, shifting wall, auditory hazards, hounds and a Smiler; stairs return to 5 or descend to 7.",
+    "places/level7 (3D) - Thalassophobia; drowned concrete landing on an isolated rock, long pier, ocean audio and distant islands over seeded heightmap sea."
   ],
   "roots": [
     "world.config.yaml - multiplayer entry at main; declares camera, player actions, player template and HUD renderer.",
     "templates/player.js - ordered player behavior chain; locomotion precedes movement and gameplay handlers run before critter and view3.",
     "templates/camera.js + scripts/camera.js - camera entry; owns presented view and eye position, including seated/talk views and collision-limited third person.",
-    "places/<place>/sim.js + config.yaml/cells - place setup and authored placements; Level 4/5 lay place systems, Level 6 builds its hall plan and ticks local events.",
+    "places/<place>/sim.js + config.yaml/cells - place setup and authored placements; Level 4/5/6/7 sims build local layouts and tick place behavior.",
     "scripts/ui.js and *-ui.js renderers - HUD and overlays for transitions, loot, talk, build, stats, craft, OS, horde, lockpick, mahjong and elevator floors.",
     "scripts/view3.js - middle-mouse toggle writes player.state.tp; scripts/camera.js consumes it for the over-shoulder camera.",
     "scripts/stats.js + scripts/stats-ui.js - K opens the HALOGEN attribute/skill sheet; stats.js owns its state and spending.",
@@ -29,20 +29,20 @@
     "scripts/lib/maze.js and scripts/lib/level1.js/level2.js with data - per-level grids/layouts reused by sims, geometry and gameplay.",
     "scripts/lib/level3.js + Level 3 data + scripts/lib/maze3path.js - Electrical Station grid, zones, openings and routes for geometry, sim, creatures and visits.",
     "scripts/lib/level4.js, level5.js and level6.js - office/hotel plans and sanity data plus Level 6 seeded hall grid shared by geometry, simulation and player place behavior.",
+    "scripts/lib/level6path.js - BFS routing over level6.js's carved corridors, used by Level 6 hounds and Smiler.",
     "scripts/lib/l5-hall-layout.js + l5-hall-kit.js and l5-boiler-plan.js - hotel furnishing/door plan and boiler machine, leak, vent and heat coordinates shared by geometry and active systems.",
     "scripts/lib/maze0path.js, maze1path.js, maze2path.js, maze3path.js and boilerpath.js - grid-aware next-step routes for creatures across Levels 0–3 and Level 5 boiler aisles.",
-    "scripts/lib/l4-people.js + level4-people.yml; scripts/lib/l5-people.js + level5-people.yml - NPC definitions, rounds, speech, spawning and place simulation helpers.",
-    "scripts/lib/npc-life.js, voices.js, hear.js - shared NPC traits/voices and spatial speech/audio filtering; hear.js gates repeated/backlogged voice and SFX per listener."
+    "scripts/lib/l4-people.js + level4-people.yml; scripts/lib/l5-people.js + level5-people.yml - NPC definitions, rounds, speech, spawning and place simulation helpers."
   ],
   "notableExports": [
     "places/*/sim.js - cadence and tick; Level 4/5 also export lay; places/gamma/sim.js exports PEOPLE.",
     "scripts/lib/level3.js - grid/constants, cell/zone queries, openings, blocks/hazards, crawl spans and exits; maze3path.js - stepToward, cellNear.",
     "scripts/lib/level2.js - grid/layout queries and sludge sites; scripts/lib/level4.js, level5.js, level6.js - plan constants and queries.",
+    "scripts/lib/level6path.js - cellAt, cellCenter, isWalkable, stepToward6; scripts/terrain7.js - ISLES, heightAt, materialAt.",
     "scripts/lib/maze0path.js, maze1path.js, maze2path.js, boilerpath.js - cell/door passage and stepToward routes; maze1path/2path also export cellNear.",
     "scripts/lib/l5-people.js - PEOPLE5, roundsOf, speak, spawnResident, tickPeople; scripts/l5-elevator.js - destIndex, ears, update.",
     "scripts/lib/clothes.js - clothing/look/roll helpers; scripts/lib/critter-model.js - critter model/look/morph/baseBones; scripts/lib/seat.js - seat claims/sit/stand.",
-    "scripts/lib/npc-life.js - lifeOf and fear/want data; scripts/lib/voices.js - throatOf, vo; scripts/lib/npc-talk.js - dialogue config, prompts, parsing and checks.",
-    "scripts/lib/mahjong.js - tile/rule, fan scoring, shanten and call helpers; scripts/lib/hunt.js - hearing/alert/sighting helpers; scripts/meg-agent.js - nerveOf, onSpawn, bark, update, vanish; scripts/l5-goggles.js - ears, reward."
+    "scripts/lib/mahjong.js - tile/rule, fan scoring, shanten and call helpers; scripts/lib/hunt.js - hearing/alert/sighting helpers; scripts/meg-agent.js - nerveOf, onSpawn, bark, update, vanish."
   ],
   "ownership": [
     "scripts/player.js - player.state progression, health/sanity, inventory/equipment/ammo/weapon condition, hunger/thirst, cents, visits, kills/deaths and combat; owns NVG ownership/spares, battery and loud actions.",
@@ -57,34 +57,34 @@
   "flows": [
     "world.config.yaml actions → templates/player.js ordered handlers: locomotion before movement; interact, grab, rest, mahjong, talk, build, noclip, stats, craft, OS, lockpick and horde before critter and view3.",
     "world.config.yaml camera → scripts/camera.js owns presented yaw/pitch and eye position; view3.js writes player.state.tp → shoulder camera; camera writes player.state.aimPt in third person → player.js crosshair-aligned shots.",
-    "Level 0 exit in scripts/player.js → Level 1; paired thresholds connect Levels 1–3; lifts/stairs connect Levels 3–5; Level 5 east threshold → Level 6, whose stairwell returns to Level 5.",
-    "scripts/level-door.js trigger → paired arrival marker IDs (PAIR) or state.to fallback; Level 5/6 use state.to; place sims add inbound markers and player.js selects safe spawn/checkpoints after death.",
+    "Level 0 exit in scripts/player.js → Level 1; paired thresholds connect Levels 1–3; lifts/stairs connect Levels 3–5; Level 5 main north portal → Level 6 → Level 7, with return stairs to Level 6 and Level 5.",
+    "scripts/level-door.js trigger → paired arrival marker IDs or state.to fallback; Level 5/6/7 thresholds use state.to; place sims add inbound markers and player.js selects safe spawn/checkpoints after death.",
     "scripts/player.js writes state.xfer → scripts/ui.js transition card; player.js gain() writes xpPop → UI aggregates XP; lvlPrompt prompts K and stats.js clears it when opening the sheet.",
     "interact.js E on living NPC → player.state.talkWith; talk-ui.js submits choices/text/trade → talk.js/NPC ears; parsed join intent writes NPC state.follow; npc-talk.js builds lore/memory prompts and replies update rapport.",
     "NPC state.follow → meg-agent.js pursuit/return and companion recovery; NPC threat response uses visible danger, while armed agents fight instead of fleeing; agents inspect eligible corpses.",
     "player.js ranged attack → lib/ballistics.js traces from eye and returns target/world impact; player.js applies damage and show() emits tracer/impact FX; weapons.yml supplies projectile parameters.",
-    "scripts/lib/loot.js place pools/item rolls → interact.js containers and player.js kill drops; Level 3 has special rolls and NVG is quest-available in Level 5.",
-    "scripts/player.js writes state.loud on swings/shots → scripts/lib/hunt.js uses combat and movement noise to locate prey; hound/maze hunters use level-specific path helpers, including boiler aisles.",
-    "places/main/sim.js counts live smilers/lurkers across a large radius and replenishes toward scripts/lib/data/level0.yml caps; that data sets 6 smilers/3 lurkers with 150/180-second respawn; scripts/l5-rats.js refills nest packs every 240 s.",
-    "Level 5 pressables via scripts/l5-goggles.js ears.press → player.state.nvgQ quest and batteryTake → player.js spends shared torch battery; goggle pickup adds spares; in Level 6 F toggles the camera-attached NVG light and can fit a spare when the battery is depleted."
+    "scripts/lib/loot.js place pools/item rolls → interact.js containers and player.js kill drops; Level 3 has special rolls and Level 5's Ines quest makes NVG available.",
+    "scripts/player.js writes state.loud on swings/shots → scripts/lib/hunt.js uses combat and movement noise to locate prey; hound/maze hunters use level-specific path helpers, including boiler aisles and level6path.",
+    "places/main/sim.js counts live smilers/lurkers across a large radius and replenishes toward scripts/lib/data/level0.yml caps; scripts/l5-rats.js refills nest packs every 240 s; Level 6 sim lays hound and Smiler managers/entities.",
+    "Level 5 pressables via scripts/l5-goggles.js ears.press → player.state.nvgQ quest and batteryTake → player.js spends shared torch battery; F toggles camera-attached NVG in Level 6, while craft.js pauses hunger/thirst drain there."
   ],
   "behaviorFamilies": [
-    "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; Level 5 x0z0.scene hosts the hotel/Level 6 entrance and drop box.",
+    "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; Level 5 cells hold the hotel portal and quest props.",
     "places/level4/cells/x0z0.scene + level4-geo.js, level4-detail-geo.js, l4-prop-geo.js and look-level4.js - office structure, non-colliding detail, varied props and post-processing share the Level 4 plan.",
     "scripts/l4-office.js + l4-office-geo.js - repeated cubicle islands, phones and printers vary by placement; manager schedules rings, ambience, tasks and rewards.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - NPC rounds and talk vary by faction, role, voice, look/build and routine; meg-agent.js adds nerve, loadout and combat.",
     "smilers.js and lurkers.js use lib/hunt.js hearing/lost-trail prediction but keep distinct light/gaze and attack behavior; hounds, stealers and deathmoths retain distinct pursuit and attacks.",
-    "scripts/lib/maze0path.js, maze1path.js, maze2path.js, maze3path.js and boilerpath.js - creatures route by level grid; controllers add direct-sight pursuit, obstacle/stuck evasion and pack separation where applicable.",
+    "scripts/lib/maze0path.js, maze1path.js, maze2path.js, maze3path.js, boilerpath.js and level6path.js - creatures route by level grid; controllers add direct-sight pursuit, obstacle/stuck evasion and pack separation where applicable.",
     "scripts/meg-agent.js + scripts/lib/data/meg.yml - shared NPC combat/follow controller varies by faction, arm, nerve and target; agents fight hall creatures, inspect eligible corpses and seek cover.",
     "scripts/mahjong.js + mahjong.yml + mahjong-looks.yml - game lifecycle/rules vary among six guests by persona, suit preference, look, dialogue, calls and sloppiness; l5-ball.js handles table guests and cleanup."
   ],
   "probableOrphans": [],
   "migrationNotes": [
     "Grid contracts differ: Level 0 is 56×56 at 4 m; Level 1 30×30 at 8 m; Level 2 24×24 at 5 m; Level 3 26×26 at 4 m; Level 4 64×64 m with 8 m offices; Level 5 96×60 m; Level 6 27×41 cells at 1.8 m and 2.4 m high.",
-    "The former Level 5 Cold Room shelter zone and its chiller/bench/lamp/painted line are removed; the Boiler Room remains hot, and the Ines goggles quest now directs hand-in to the M.E.G. drop box.",
-    "Level 5 Ines quest progress is per-player state.nvgQ (1 asked, 2 case, 3 goggles, 4 complete); hand-in requires 25 battery charge via batteryTake, consumed by player.js from the shared torch battery pool.",
-    "Level 6 has no working flashlight: player.js suppresses the toggle and destroys any carried torch on arrival. Owned NVG enables F's local camera-attached green light; spare goggles replenish the shared battery, and NVG drains at 0.25× torch rate. F destroys an active NVG light to turn it off; a depleted battery plus a spare can be swapped in while toggling it on.",
-    "Level 6 builtV is versioned: moving trigger/prop sites requires keeping endpoint coordinates aligned to scripts/lib/level6.js plan(); the shift wall toggles only outside a 7 m player radius.",
-    "Weapon kinds/variants are centralized in weapons.yml/lib/weapons.js; keep requirements, projectile/reload timing, handling stats and first-person weapon mesh offsets in sync when changing weapon definitions."
+    "Level 6 builtV is versioned to 3: moving trigger/prop sites requires keeping endpoint coordinates aligned to scripts/lib/level6.js plan(); shift wall toggles only outside a 7 m player radius.",
+    "Level 6 has no working flashlight: player.js suppresses the toggle and destroys any carried torch on arrival; NVG F uses a local camera-attached green light and spare goggles replenish the shared battery. craft.js holds hunger/thirst steady in Level 6.",
+    "Level 5's Ines quest progress is per-player state.nvgQ (1 asked, 2 case, 3 goggles, 4 complete); current Level 5 placements include a locked Room 1408 trunk with NVG/batteries and Ines's hand-in at the M.E.G. drop box.",
+    "Level 5's north portal is the Level 6 route; the separately listed Level 6 auxiliary bulkhead remains welded shut. Level 6 stair entry E(1) connects to Level 7; marker IDs l6-from-l7/l7-from-l6 must remain paired.",
+    "Level 7 uses heightmap sea level 0 and the entrance rock flat top at y≈4; its sim-built room/pier sit around the origin, and the distant island elevations are defined in scripts/terrain7.js."
   ]
 }
