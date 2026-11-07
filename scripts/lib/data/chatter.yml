@@ -33,7 +33,7 @@ level3:
   - [[gamma-ito, "stove's low. who's on fuel?"], [gamma-pell, "the ledger says reyes."], [gamma-reyes, "the ledger lies."], [gamma-pell, "the ledger is never wrong."]]
 # combat barks: what anyone in a camp shouts mid-fight, picked at random per moment
 barks:
-  move: ["right. back to it.", "rounds.", "where was i.", "okay. next thing."]
+  move: ["right. back to it.", "where was i.", "okay. next thing.", "legs, don't fail me now.", "one more lap.", "hm. what was i doing.", "coffee would be nice."]
   spot: ["contact! over there!", "hound, on the left!", "something's coming in!", "eyes up, we got company.", "there! by the shelves!", "oh, not again."]
   hit: ["ah! it got me!", "ow, son of a-", "i'm hit, i'm fine!", "ugh! that's gonna bruise.", "get it off me!"]
   reload: ["reloading!", "changing mags, cover me!", "i'm dry! give me a second!", "hang on, hang on, reloading."]
