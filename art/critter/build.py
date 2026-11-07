@@ -778,7 +778,7 @@ for sp, p in SP.items():
     for v in tl.data.vertices:
         t = max(0, min(1, (-v.co.y - .06) / .3)); g2.add([v.index], max(0, 1 - t * 4) * .5, 'REPLACE'); g0.add([v.index], 1 - t, 'REPLACE'); g1.add([v.index], t, 'REPLACE')
     exs = [build_extra(x) for x in p["ex"]]
-    o = join([face, head] + ears + exs + [tl], "Species_" + sp)
+    o = join([head] + ears + exs + [tl], "Species_" + sp); face.name = face.data.name = "Face_" + sp; species["Face_" + sp] = face
     for m in ("fur", "belly", "mark", "tip", "inner", "nose", "antler", "pad"):
         pass
     species[sp] = o; log("species", sp, tris(o))
@@ -791,7 +791,7 @@ log("tris body", tris(body) + tris(fl))
 # ---- proof: a front/3-4/back turnaround of two dressed critters ----
 def show(sp, worn):
     for o in [body, fl] + list(garments.values()) + list(species.values()):
-        vis = o in (body, fl) or o.name == "Species_" + sp or o.name in worn
+        vis = o in (body, fl) or o.name in ("Species_" + sp, "Face_" + sp) or o.name in worn
         o.hide_render = not vis
 if STAGE in ("all", "proof"):
     scene.render.engine = "CYCLES"; scene.cycles.samples = 16; scene.render.resolution_x = scene.render.resolution_y = 656
