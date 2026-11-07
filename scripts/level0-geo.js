@@ -1,6 +1,6 @@
 // Level 0, "The Threshold": the whole maze as one mesh. Carpet, chevron wallpaper, drop ceiling,
 // light panels, arch walls you can vault, pillar fields and pits. Layout from lib/maze.js.
-import { N, S, H, HALF, hash, zoneOf, inHub, wallX, wallZ, isArchWall, hasPit, hasPillar, hasLight } from "./lib/maze.js";
+import { N, S, H, HALF, hash, zoneOf, inHub, wallX as wallX0, wallZ as wallZ0, isArchWall, hasPit, hasPillar, hasLight } from "./lib/maze.js";
 import L from "./lib/data/level0.yml";
 
 const WALLPAPER = "cdn/texture-yellow-chevron-damask-wallpaper-aged.png";
@@ -73,7 +73,12 @@ function wall(ctx, axis, p, a, b, arch) {
   for (const [u, dir] of [[a, -1], [b, 1]]) face(ctx, P(u, 0, -1), P(u, H, -1), P(u, H, 1), P(u, 0, 1), along.map((v) => v * dir));
 }
 
+// walls broken by players (place.state.broken, synced into params.broken by places/main/sim.js) are left out until they regrow
+let BRK = new Set();
+const wallX = (cx, cz) => wallX0(cx, cz) && !BRK.has(`x:${cx}:${cz}`);
+const wallZ = (cx, cz) => wallZ0(cx, cz) && !BRK.has(`z:${cx}:${cz}`);
 export function geometry(ctx) {
+  BRK = new Set(ctx.params?.broken ?? []);
   const lod = ctx.lod;
   // CARPET + PITS
   ctx.albedo(CARPET);
