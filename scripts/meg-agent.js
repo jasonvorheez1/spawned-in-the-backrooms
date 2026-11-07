@@ -1,4 +1,5 @@
-import { rollLoot } from "./lib/loot.js";
+import { rollLoot, garmentsOf } from "./lib/loot.js";
+import { stripTo, SLOTS } from "./lib/clothes.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
@@ -6,7 +7,7 @@ import { findPath } from "builtin/nav";
 import { raycast } from "builtin/physics";
 import { animate } from "builtin/tween";
 import G from "./lib/data/meg.yml";
-import { npcState, npcMul } from "./lib/stats.js";
+import { npcState, npcMul, lookOfNpc, dmgAfterArmor } from "./lib/stats.js";
 const SHOT = "/cdn/moodboard-realistic-gritty/sfx-pistol-gunshot-concrete-echo.mp3";
 const FLASH = `fx
 pop flash burst=1 life=.06 size=.35 col=hdr(5,3.4,1.4) a=1>0 sz=$size r=sprite(soft-disc,add)
