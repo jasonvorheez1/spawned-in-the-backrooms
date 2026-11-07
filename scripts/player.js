@@ -108,7 +108,6 @@ function cycleWeapon(ctx) {
 export function drinkExhale(ctx) {
   sound(ctx, 'deep-breath-relief-exhale', 0.5, true)
 }
-}
 
 function drink(ctx) {
   const s = ctx.self.state
