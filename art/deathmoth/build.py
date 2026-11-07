@@ -45,7 +45,7 @@ for v in body.data.vertices:
     p = v.co
     if -0.15 < p.y < 0.08 and abs(p.x) < 0.075 and p.z > CZ-0.04 and random.random() < 0.8:
         n = (v.normal + Vector((random.uniform(-.5,.5), random.uniform(0,.6), random.uniform(-.3,.3)))).normalized()
-        L = random.uniform(0.018, 0.04); w = 0.005
+        L = random.uniform(0.016, 0.034); w = 0.0035
         t = n.orthogonal().normalized(); b = n.cross(t)
         base = [bm.verts.new(p + (t*math.cos(a) + b*math.sin(a))*w) for a in (0, 2.09, 4.19)]
         tip = bm.verts.new(p + n*L)
@@ -148,7 +148,7 @@ def paint(fore):
     # the eye-spot
     cx, cy, R = (0.58, 0.55, 0.13) if fore else (0.52, 0.5, 0.2)
     r = np.sqrt(((u-cx)*1.0)**2 + ((v-cy)*0.55)**2) / R
-    ring = [(1.0, [0.08, 0.06, 0.05]), (0.82, [0.78, 0.55, 0.22]), (0.62, [0.06, 0.04, 0.04]), (0.30, [0.05, 0.04, 0.04])]
+    ring = [(1.0, [0.08, 0.06, 0.05]), (0.82, [0.52, 0.40, 0.24]), (0.62, [0.06, 0.04, 0.04]), (0.30, [0.05, 0.04, 0.04])]
     for rr, c in ring: col = np.where((r < rr)[..., None], np.array(c)[None, None], col)
     glint = np.sqrt((u-cx+0.02)**2 + ((v-cy+0.03)*0.55)**2)/R < 0.13
     col = np.where(glint[..., None], np.array([0.85, 0.82, 0.74])[None, None], col)
