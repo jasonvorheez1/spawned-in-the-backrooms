@@ -14,22 +14,25 @@ function furMats(l) {
   if (sp.antler) m.antler = { color: sp.antler }
   return m
 }
+const only = (m, keys) => { const o = {}; for (const k of keys || []) if (m[k]) o[k] = m[k]; return o }
 export function bodyModel(l) {
   const parts = {}
   for (const p of M.parts) parts[p] = { visible: false }
   for (const [slot, pre] of Object.entries(M.slots)) { const k = l[slot]; if (k && k !== 'none' && parts[pre + '_' + k]) parts[pre + '_' + k].visible = true }
   const materials = { ...furMats(l), pad: { color: M.pad } }
   for (const [slot, [mat, key]] of Object.entries(CLOTH)) if (l[key]) materials[mat] = { color: l[key] }
-  return { id: M.body[l.sex === 'f' ? 'f' : 'm'], materials, parts }
+  return { id: M.body[l.sex === 'f' ? 'f' : 'm'], materials: only(materials, M.bodyMats), parts }
 }
-export function headModel(l) { return { id: M.species[speciesOf(l)].head, materials: furMats(l) } }
+export function headModel(l) { const sp = M.species[speciesOf(l)]; return { id: sp.head, materials: only({ ...furMats(l), pupil: { color: '#000000', roughness: 1, metalness: 0 }, iris: { color: l.eye && l.eye !== '#2b2233' ? l.eye : '#8a5a2e', roughness: 0.9 }, eyewhite: { color: '#fffaf2', roughness: 0.9 } }, sp.mats) } }
 export function faceMorph(expr, blink) {
   const f = { ...(M.faces[expr] || M.faces.smile) }
   if (blink) f.Blink = 1
   return f
 }
 // a whole critter for a spawn (place sims): body, head child, gait clips on the library
+export const MESH = M.mesh === true
 export function critterSpec(l) {
+  if (!MESH) return { primitive: { kind: 'scripted', script: 'scripts/critter2-geo.js', params: l }, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 } }
   return { model: bodyModel(l), children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel(l), morph: faceMorph(l.expr) }],
     material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.6, bounce: 0.6 } }
 }

@@ -31,7 +31,7 @@ function agent(ctx, id) {
 
 const ARC = `fx
 pop spark rate=(flick(1.1,1)^10)*320 on=disc(.05) life=.2..0.55 v=<%dir|0,0,1>*(1.5..3)+sdir()*1.8 size=.012..0.03 acc=grav()+drag(.4) floor=bounce(.3) sz=$size col=hdr(4,5,8)>hdr(3,1.6,.4) a=1>0 r=sprite(ember,add,velocity,.03)
-pop zap n=1 r=light(<.6,.75,1>,(flick(1.1,1)^10)*6,5)`;
+pop zap n=1 r=light(<.6,.75,1>,(flick(1.1,1)^10)*1.5,4)`;
 const DRIP = `fx
 pop drip rate=3 on=disc(.05) life=.6 v=<0,-1,0>*(.2..0.4) size=.025..0.04 acc=grav() floor=die col=<.02,.02,.03> a=1 sz=$size r=sprite(soft-disc,alpha)
 pop fume rate=4 on=disc(.5).c(-1.9) life=1.5..2.5 v=up(.15..0.3) size=.2..0.35 acc=curl(.3)+drag(.8) sz=$size*(.6>2) col=<.12,.1,.14> a=0>.2:.25>.7:.1>0 r=sprite(smoke-puff,alpha)`;
@@ -53,7 +53,7 @@ function layLayout(ctx) {
     if (z !== "gamma" && z !== "gen" && z !== "line" && r > 0.42) continue;
     const cold = z === "line" || hash(cx, cz, 203) < 0.25, col = z === "gamma" ? "oklch(0.92 0.06 95)" : cold ? "oklch(0.93 0.03 210)" : "oklch(0.82 0.13 62)";
     ctx.spawn({ tags: ["l3lamp"], feetPosition: { x: c.x + (hash(cx, cz, 205) - 0.5), y: top - 0.25, z: c.z + (hash(cx, cz, 207) - 0.5) }, primitive: { kind: "sphere", radius: 0.07 },
-      material: { color: col, emissive: col, emissiveIntensity: 1.6 }, light: { kind: "point", color: col, intensity: z === "tight" ? 2 : 3, distance: z === "tight" ? 7 : 11, shadow: { enabled: false } } });
+      material: { color: col, emissive: col, emissiveIntensity: z === "gamma" ? 3 : 1.6 }, light: { kind: "point", color: col, intensity: z === "gamma" ? 5.5 : 3, distance: z === "tight" ? 7 : 11, shadow: { enabled: false } } });
   }
     // hazards: black sludge pooled under leaking pipes; live junction boxes that arc
   for (const h of SLUDGE) {
