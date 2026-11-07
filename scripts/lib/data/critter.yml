@@ -24,4 +24,4 @@ sliders: [[headS, head, 0.8, 1.25], [earS, ears, 0.5, 1.6], [snoutS, snout, 0.3,
 sliderStep: 0.05
 # imported models (a .plymodel converts with tools/plymodel2glb.py, then uploads): wearable from the body tab
 models:
-  maxpayne: { name: "max payne", url: "/cdn/value.3f48f17a2e8635f4cd9eda27507ce79f85213a14d832fe69dabbfa6fba72b2ef.glb" }
+  maxpayne: { name: "max payne", url: "/cdn/value.115c0f2d4fad4963162481c8e3c4b77cdd85e4c49199387d1ccc21e19adc62b6.glb" }
