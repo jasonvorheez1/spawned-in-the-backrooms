@@ -35,7 +35,7 @@ function setDoors(ctx, c, open) {
 function setFloor(ctx, c, f) { c.state.floor = f; const i = c.state.kids?.ind && ctx.getObject(c.state.kids.ind); if (i) i.state.floor = f; }
 function setLamp(ctx, c, on) { const l = c.state.kids?.lamp && ctx.getObject(c.state.kids.lamp); if (l && l.light) l.light = { ...l.light, intensity: on ? (c.state.lampI ?? 3) : 0 }; }
 function panelOf(ctx, c) { return c.state.kids?.panel && ctx.getObject(c.state.kids.panel); }
-function closePanel(ctx, c) { const p = panelOf(ctx, c); if (p) { p.state.closed = true; p.state.shut = false; p.state.noconfirm = true; p.state.pending = null; } }
+function closePanel(ctx, c) { const p = panelOf(ctx, c); if (p) { p.state.closed = true; p.state.ready = false; p.state.shut = true; p.state.noconfirm = true; p.state.pending = null; } }
 function cabUpdate(ctx) {
   const c = ctx.self, s = c.state, now = ctx.now(), players = ctx.place.players;
   if (s.cx == null) return;
@@ -115,7 +115,7 @@ function pick(ctx, floor, by) {
 export const ears = {
   press: (ctx, { by }) => {
     if (ctx.self.state.role !== "panel") return;
-    const p = ctx.self.state; p.closed = false; p.shut = false; p.noconfirm = true; p.pending = null; p.openAt = ctx.now();
+    const p = ctx.self.state; p.closed = false; p.ready = true; p.shut = false; p.noconfirm = true; p.pending = null; p.openAt = ctx.now();
     ctx.emit("playSound", { clip: E.sfx.button, position: ctx.self.worldFeetPosition, volume: 0.4, pitch: 0.8 });
   },
   "ui:yes": (ctx, { by }) => { const p = ctx.self.state, c = cab(ctx); if (!p.pending || !c) return; c.state.req = { floor: p.pending, by }; p.pending = null; p.noconfirm = true; },
