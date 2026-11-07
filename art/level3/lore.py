@@ -106,38 +106,45 @@ def render(name):
 # ---------------------------------------------------------------- purpified: a dead body sunk into the brick, the wall stained violet
 def purp():
     reset()
-    skin = mat("body", (0.012, 0.01, 0.014), 0.8, emit=(0.05, 0.0, 0.09), es=0.12)
-    stain = mat("stain", (0.07, 0.015, 0.1), 0.6, emit=(0.18, 0.02, 0.35), es=0.8)
-    vein = mat("vein", (0.5, 0.15, 0.9), 0.4, emit=(0.55, 0.12, 1.0), es=3.5)
-    brick = mat("pbrick", (0.32, 0.08, 0.45), 0.5, emit=(0.35, 0.05, 0.6), es=1.6)
-    E = [("ELLIPSOID", (0, 0.02, 1.0), 0.2, (1.0, 0.75, 0.8)),  # pelvis
-         ("CAPSULE", None, 0.16, ((0, 0.02, 1.05), (0.02, 0.07, 1.42))),  # torso
-         ("ELLIPSOID", (0.01, 0.06, 1.42), 0.21, (1.15, 0.7, 0.8)),  # chest, shoulders
-         ("CAPSULE", None, 0.06, ((0.02, 0.08, 1.52), (0.06, 0.15, 1.6))),  # neck lolling forward
-         ("ELLIPSOID", (0.1, 0.2, 1.62), 0.12, (0.85, 1.0, 1.05)),  # head, dropped to the side, no face
-         ("CAPSULE", None, 0.06, ((0.2, 0.06, 1.45), (0.27, 0.15, 1.16))), ("CAPSULE", None, 0.05, ((0.27, 0.15, 1.16), (0.3, 0.2, 0.88))),  # right arm hangs
-         ("ELLIPSOID", (0.31, 0.22, 0.83), 0.06, (0.8, 0.6, 1.2)),  # hand
-         ("CAPSULE", None, 0.06, ((-0.2, 0.0, 1.45), (-0.28, -0.04, 1.2))),  # left arm, sunk
-         ("CAPSULE", None, 0.085, ((0.1, 0.03, 0.95), (0.13, 0.17, 0.55))), ("CAPSULE", None, 0.065, ((0.13, 0.17, 0.55), (0.15, 0.13, 0.14))),  # right leg
-         ("ELLIPSOID", (0.16, 0.2, 0.08), 0.07, (0.8, 1.6, 0.6)),  # foot
-         ("CAPSULE", None, 0.08, ((-0.1, 0.0, 0.95), (-0.13, 0.06, 0.55))), ("CAPSULE", None, 0.06, ((-0.13, 0.06, 0.55), (-0.15, -0.02, 0.2)))]
-    blob(E, skin, 0.03, cut=-0.03)
-    # the stain: an irregular violet blot centred on the chest, drawn just off the brick
-    n = 40; v = [(0, 0.006, 1.25)]
-    for i in range(n):
-        a = i / n * 6.2832; r = 1.0 + 0.35 * math.sin(a * 3 + 1) + 0.2 * math.sin(a * 7) + R.uniform(-0.12, 0.12)
-        v.append((math.cos(a) * r * 1.1, 0.006, max(0.02, 1.25 + math.sin(a) * r)))
-    mesh("stain", v, [(0, i + 1, (i + 1) % n + 1) for i in range(n)], stain)
+    skin = mat("body", (0.014, 0.011, 0.016), 0.85, emit=(0.04, 0.0, 0.07), es=0.1)
+    stains = [mat(f"stain{i}", (0.035 + 0.02 * i, 0.008, 0.05 + 0.03 * i), 0.55 - 0.08 * i, emit=(0.08 + 0.05 * i, 0.01, 0.16 + 0.1 * i), es=0.35 + 0.15 * i) for i in range(3)]
+    vein = mat("vein", (0.35, 0.1, 0.6), 0.4, emit=(0.5, 0.1, 0.9), es=1.4)
+    brick = mat("pbrick", (0.18, 0.04, 0.26), 0.45, emit=(0.22, 0.03, 0.4), es=0.55)
+    # slumped seated against the wall, half swallowed: the wall plane is y=0, the room +y; the back half lies behind it
+    E = [("ELLIPSOID", (0, 0.06, 0.3), 0.22, (1.0, 0.8, 0.7)),  # pelvis on the floor
+         ("CAPSULE", None, 0.16, ((0, 0.05, 0.36), (0.05, 0.02, 0.78))),  # torso leaning into the brick
+         ("ELLIPSOID", (0.06, 0.02, 0.82), 0.21, (1.15, 0.7, 0.8)),  # chest, shoulders
+         ("CAPSULE", None, 0.06, ((0.08, 0.04, 0.92), (0.17, 0.12, 0.95))),  # neck lolling forward and down
+         ("ELLIPSOID", (0.22, 0.17, 0.9), 0.12, (0.9, 1.0, 1.05)),  # head dropped onto the shoulder, no face
+         ("CAPSULE", None, 0.06, ((0.25, 0.05, 0.82), (0.3, 0.16, 0.52))), ("CAPSULE", None, 0.05, ((0.3, 0.16, 0.52), (0.36, 0.3, 0.2))),  # right arm limp
+         ("ELLIPSOID", (0.38, 0.33, 0.13), 0.06, (0.9, 1.2, 0.5)),  # hand palm-up on the floor
+         ("CAPSULE", None, 0.06, ((-0.17, 0.0, 0.85), (-0.3, -0.06, 0.62))), ("CAPSULE", None, 0.05, ((-0.3, -0.06, 0.62), (-0.42, -0.08, 0.95))),  # left arm drawn up into the brick
+         ("CAPSULE", None, 0.085, ((0.1, 0.12, 0.28), (0.2, 0.55, 0.42))), ("CAPSULE", None, 0.065, ((0.2, 0.55, 0.42), (0.26, 0.85, 0.1))),  # right knee up
+         ("ELLIPSOID", (0.27, 0.92, 0.05), 0.07, (0.8, 1.5, 0.6)),
+         ("CAPSULE", None, 0.085, ((-0.1, 0.12, 0.26), (-0.25, 0.6, 0.12))), ("CAPSULE", None, 0.065, ((-0.25, 0.6, 0.12), (-0.38, 0.95, 0.07))),  # left leg out flat
+         ("ELLIPSOID", (-0.4, 1.0, 0.07), 0.07, (0.8, 0.6, 1.4))]
+    blob(E, skin, 0.03, cut=-0.04)
+    # the stain: three nested irregular blots, darkest wide, wettest and brightest at the body
+    for ring, (rad, yy) in enumerate([(1.0, 0.006), (0.62, 0.009), (0.32, 0.012)]):
+        n = 36; cz = 0.75; v = [(0, yy, cz)]
+        for i in range(n):
+            a = i / n * 6.2832; r = rad * (1.0 + 0.3 * math.sin(a * 3 + ring) + 0.18 * math.sin(a * 7 + 2 * ring) + R.uniform(-0.1, 0.1))
+            v.append((math.cos(a) * r * 1.15, yy, max(0.01, cz + math.sin(a) * r * 0.95)))
+        mesh(f"stain{ring}", v, [(0, i + 1, (i + 1) % n + 1) for i in range(n)], stains[ring])
+    # drips running down from the blot
+    for k in range(7):
+        x = R.uniform(-0.8, 0.8); top = 0.75 + R.uniform(-0.2, 0.3); L = R.uniform(0.4, 0.75)
+        tube([(x, 0.008, top, 1), (x + R.uniform(-0.03, 0.03), 0.008, max(0.02, top - L), 0.4)], 0.014, stains[1], res=1, poly=True)
     # veins crawling out of the body over the brick
-    for k in range(14):
-        a = k / 14 * 6.2832 + R.uniform(-0.2, 0.2); p = Vector((math.cos(a) * 0.2, 0.012, 1.25 + math.sin(a) * 0.35)); pts = []
-        for s in range(7):
-            pts.append((p.x, 0.012, max(0.02, p.z), 1.0 - s / 8)); a += R.uniform(-0.6, 0.6); p += Vector((math.cos(a), 0, math.sin(a))) * R.uniform(0.1, 0.2)
-        tube(pts, 0.012, vein, res=1)
+    for k in range(12):
+        a = k / 12 * 6.2832 + R.uniform(-0.2, 0.2); p = Vector((math.cos(a) * 0.25, 0.014, 0.75 + math.sin(a) * 0.3)); pts = []
+        for s in range(6):
+            pts.append((p.x, 0.014, max(0.02, p.z), 1.0 - s / 7)); a += R.uniform(-0.6, 0.6); p += Vector((math.cos(a), 0, math.sin(a))) * R.uniform(0.08, 0.16)
+        tube(pts, 0.008, vein, res=1)
     # purpified bricks: whole bricks gone violet, proud of the course
-    for k in range(22):
-        a = R.uniform(0, 6.2832); r = R.uniform(0.35, 1.1); x = round(math.cos(a) * r * 1.1 / 0.23) * 0.23; z = 0.04 + round((1.25 + math.sin(a) * r) / 0.075) * 0.075
-        if z > 0.05: box((x + (0.115 if int(z / 0.075) % 2 else 0), 0.012, z), (0.215, 0.02, 0.064), brick, 0.004)
+    for k in range(16):
+        a = R.uniform(0, 6.2832); r = R.uniform(0.3, 1.0); x = round(math.cos(a) * r * 1.1 / 0.23) * 0.23; z = 0.04 + round((0.75 + math.sin(a) * r) / 0.075) * 0.075
+        if z > 0.05: box((x + (0.115 if int(z / 0.075) % 2 else 0), 0.015, z), (0.215, 0.02, 0.064), brick, 0.004)
     export("purp")
 
 # ---------------------------------------------------------------- moth wall: hundreds of still moths on the brick
