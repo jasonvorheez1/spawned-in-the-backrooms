@@ -19,7 +19,7 @@
 // Coordinate space: +Y up, -Z forward.
 
 const HC = [0, 1.3, 0]; // head center
-const HR = [0.355, 0.335, 0.33]; // head radii (cute chibi proportion: ~40% of height)
+const HR = [0.372, 0.358, 0.346]; // dandy's world base: a big round head on a small bean body // head radii (cute chibi proportion: ~40% of height)
 
 const BONES = {
   Hips: { pivot: [0, 0.64, 0] },
@@ -397,7 +397,7 @@ export function geometry(ctx) {
   for (const s of [-1, 1]) {
     ctx.color(sp.dark || FUR);
     // Rounded shoulder nub for seamless anatomical connection
-    ell([s * 0.122, 0.955, 0], [0.058, 0.056, 0.056], null, { seg: hi ? 14 : 9 });
+    ell([s * 0.118, 0.955, 0], [0.046, 0.045, 0.045], null, { seg: hi ? 14 : 9 });
 
     const armPath = [
       [s * 0.11, 0.965, 0],
@@ -406,17 +406,17 @@ export function geometry(ctx) {
       [s * 0.52, 0.965, 0.002]
     ];
     loft(armPath, (t) => {
-      const r = lerp(fem ? 0.042 : 0.046, 0.034, t);
+      const r = lerp(fem ? 0.033 : 0.036, 0.028, t); // noodle arms, base proportions
       return [r, r];
     }, [0, 1, 0], null, hi ? 12 : 8);
 
     // Rolled wrist cuff
     ctx.color(sp.dark || sp.socks || FUR);
-    ell([s * 0.548, 0.965, 0], [0.034, 0.05, 0.05], null, { seg: hi ? 14 : 9 });
+    ell([s * 0.548, 0.965, 0], [0.026, 0.04, 0.04], null, { seg: hi ? 14 : 9 });
 
     // Cute paddle mitten paw
     const pawCenter = [s * 0.63, 0.965, 0];
-    ell(pawCenter, [0.09, 0.04, 0.066], null, { seg: hi ? 18 : 10 });
+    ell(pawCenter, [0.098, 0.052, 0.078], null, { seg: hi ? 18 : 10 });
 
     // Thumb nub
     ell([s * 0.588, 0.96, -0.07], [0.032, 0.024, 0.036], null, { seg: hi ? 12 : 8 });
@@ -446,7 +446,7 @@ export function geometry(ctx) {
     ];
     ctx.color(sp.dark || FUR);
     loft(legPath, (t) => {
-      const r = lerp(fem ? 0.072 : 0.064, 0.045, t);
+      const r = lerp(fem ? 0.058 : 0.05, 0.04, t); // slim base legs
       return [r, r];
     }, [1, 0, 0], (t) => {
       if (sp.dark) ctx.color(sp.dark);
@@ -694,7 +694,7 @@ export function geometry(ctx) {
   }
 
   // ---------- Clothes: Tailored shells smoothly wrapping the new body curves ----------
-  const sleeve = (len, col, r0 = 0.052) => {
+  const sleeve = (len, col, r0 = 0.046) => {
     ctx.color(col);
     for (const s of [-1, 1]) {
       limb([s * 0.1, 0.965, 0], [s * (0.15 + len), 0.965, 0], r0, r0 - 0.004, hi ? 12 : 8);
@@ -724,7 +724,7 @@ export function geometry(ctx) {
     ell([0, 0.66, 0.005], [HIP_R[0] + 0.016, 0.115, HIP_R[1] + 0.016], null, { clip: (p) => p[1] > 0.72 });
     for (const s of [-1, 1]) {
       const x = s * 0.085;
-      limb([x, 0.66, 0], [x, shorts ? 0.38 : knee, 0], (fem ? 0.072 : 0.065) + 0.016, shorts ? 0.072 : 0.062, hi ? 12 : 8);
+      limb([x, 0.66, 0], [x, shorts ? 0.38 : knee, 0], (fem ? 0.058 : 0.05) + 0.016, shorts ? 0.06 : 0.05, hi ? 12 : 8);
     }
   };
 
