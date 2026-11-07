@@ -14,7 +14,7 @@ const hallEdge = (cx, cz, d) => inHall(cx, cz) || inHall(cx + D4[d][0], cz + D4[
 const pipeEdge = (cx, cz, d) => inPipes(cx, cz) && inPipes(cx + D4[d][0], cz + D4[d][1]); // inside the pipe maze the walls are pipe banks (level2-rooms-geo.js)
 
 export function geometry(ctx) {
-  const hi = ctx.lod <= 2, M = hi ? 8 : 5;
+  const hi = ctx.lod <= 2, M = hi ? 6 : 4; // pipe sides: thin pipes read round at six
   // floor and ceiling, one quad a cell, tinted by zone
   ctx.albedo(FLOOR);
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
