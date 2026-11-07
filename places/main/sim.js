@@ -1,3 +1,4 @@
+import { regrowWrecks } from "../../scripts/lib/breakables.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { LURKER_MODEL, LURKER_SCALE } from "../../scripts/lurkers.js";
 import { MODEL as SMILER_MODEL, SCALE as SMILER_SCALE } from "../../scripts/smilers.js";
@@ -94,6 +95,7 @@ function shift(ctx, s, now) {
 }
 
 export function tick(ctx) {
+  if (ctx.now() - (ctx.session.wreckAt ?? 0) > 5000) { ctx.session.wreckAt = ctx.now(); regrowWrecks(ctx); } // smashed props stand again after an hour
   const s = ctx.place.state, now = ctx.now();
   if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(false)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   if (!s.arrive2) { s.arrive2 = true; const ex = cellCenter(EXIT.cx, EXIT.cz); ctx.spawn("main-from-l1", { feetPosition: { x: -HALF + 2.4, y: 0.1, z: ex.z }, rotation: { yaw: -90 } }); } // Level 1's way back lets you out by the flickering wall

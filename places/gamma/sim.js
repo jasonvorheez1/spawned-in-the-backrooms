@@ -1,3 +1,4 @@
+import { regrowWrecks } from "../../scripts/lib/breakables.js";
 import { mayReturn } from "../../scripts/lib/npc-respawn.js";
 // Base Gamma's inside: the M.E.G.'s fortress at the end of Level 3. Lays the shell, the dressing, lights, signs, doors,
 // sound beds, guards, traders and residents once (place.state.builtV); the agents run themselves (scripts/meg-agent.js).
@@ -93,6 +94,7 @@ function layComputers(ctx) { // the Administration's Database terminal (scripts/
     state: { kind: "computer", host: "GAMMA-DB-01", lock: "science:50", name: "The Database", verb: "Log in", info: "Locked · Science 50 or a password", tint: "#f2c200" } });
 }
 export function tick(ctx) {
+  if (ctx.now() - (ctx.session.wreckAt ?? 0) > 5000) { ctx.session.wreckAt = ctx.now(); regrowWrecks(ctx); } // smashed props stand again after an hour
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; lay(ctx); }
   if (s.osV !== 1) { s.osV = 1; layComputers(ctx); }

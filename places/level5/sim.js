@@ -1,3 +1,4 @@
+import { regrowWrecks } from "../../scripts/lib/breakables.js";
 // Level 5 "Terror Hotel": lays the shell, every lamp, the radios, the ways in and out and the sound beds once
 // (place.state.builtV). The plan is scripts/lib/level5.js.
 // Also lays Samantha (the Beverly Room psychic cat), M.E.G. Outpost Housekeeping, Homely Hotel's concierge and chef,
@@ -340,6 +341,7 @@ function breakablesOnce(ctx) {
   }
 }
 export function tick(ctx) {
+  if (ctx.now() - (ctx.session.wreckAt ?? 0) > 5000) { ctx.session.wreckAt = ctx.now(); regrowWrecks(ctx); } // smashed props stand again after an hour
   breakablesOnce(ctx);
   const s = ctx.place.state;
   if (s.builtV !== V) {

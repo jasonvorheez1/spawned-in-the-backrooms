@@ -107,6 +107,7 @@ export function sweepProps(ctx) {
 
 export function tickWalls(ctx, gname) {
   sweepProps(ctx)
+  regrowWrecks(ctx)
   const name = gridHere(ctx, gname); if (!name) return
   const G = GRIDS[name], br = ctx.place.state.broken, now = ctx.now()
   if (br) for (const [k, at] of Object.entries(br)) {
@@ -174,9 +175,29 @@ export function damageEntity(ctx, o, dmg, at, normal, kind) {
     spawnRubble(ctx, { x: fp.x, y: fp.y + 0.02, z: fp.z }, items, o.state.items ? (o.state.name ?? 'Wreck') : mat === 'machine' ? `${o.state.name ?? 'Machine'} parts` : 'Rubble')
     const good = rare.filter((t) => !['scrap_metal', 'scrap_wood', 'drywall', 'nails', 'wire', 'rubble', 'rust_flakes', 'mortar_dust', 'bricks', 'cinder', 'tile_shard'].includes(t))
     if (good.length) { ctx.emit('damageNumber', { position: { x: fp.x, y: fp.y + 1.4, z: fp.z }, text: `+${good.length} parts`, color: '#7fd1a0', size: 1 }); heard(ctx, { maxDistance: 8, refDistance: 1.5, clip: SND('mechanical-parts-salvage-clink'), position: fp, volume: 0.8 }) }
-    ctx.destroy(o.id)
+    wreck(ctx, o)
   }
   return true
+}
+// a smashed prop isn't deleted: it goes out of sight, untouchable, and stands again an hour later (Shelly 2026-11-07)
+export const REGROW_MS = (B.propRegrowMinutes ?? 60) * 60000
+function wreck(ctx, o) {
+  if (o.tags?.includes('rubble') || o.lifetime) { ctx.destroy(o.id); return }
+  o.state.wreck = { at: ctx.now(), tags: [...(o.tags ?? [])], physics: o.physics ?? null, items: o.state.items ?? null }
+  o.tags = ['wreck']; o.visible = false; o.physics = 'none'
+}
+// the sims call this every few seconds: wrecks whose hour is up stand again, never with someone standing in them
+export function regrowWrecks(ctx) {
+  const now = ctx.now()
+  for (const r of ctx.query({ tags: ['wreck'], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+    const w = r.state?.wreck; if (!w || now - w.at < REGROW_MS) continue
+    const f = r.feetPosition; if (ctx.place.players.some((p) => Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z) < 2)) continue
+    const o = ctx.getObject(r.id); if (!o) continue
+    o.tags = w.tags; o.physics = w.physics; o.visible = true
+    const st = { ...o.state }; delete st.wreck; delete st.broke; st.hp = st.maxHp ?? B.materials[st.mat ?? 'wood']?.hp ?? 60
+    if (st.full != null) { st.items = st.full; st.refillAt = 0; st.scavved = false } else if (w.items != null) st.items = w.items
+    o.state = st
+  }
 }
 // a hole at body height is a doorway: what hangs over it comes down, and once a column is open floor to top
 // the column beside it (toward the wall's middle) gives way too, so the gap is wide enough to walk through

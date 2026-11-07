@@ -90,6 +90,7 @@ function refocus(ctx, force = false) {
         const pc = pickChance(ctx, it)
         if (pc != null) info = { id: f.id, name: it.state?.name ?? 'Stranger', info: `${Math.round(pc * 100)}% · Sneak`, verb: 'Pickpocket', color: pc >= 0.6 ? '#c6f060' : pc >= 0.35 ? '#f2c14e' : '#e0644f' }
       } else if (f.tag === 'container') {
+        refill(ctx, it)
         const n = itemsOf(it.state?.items).length
         info = { id: f.id, name: it.state?.name ?? 'Container', info: n ? `${n} item${n > 1 ? 's' : ''}` : 'empty', verb: 'Search', color: '#d9d3b8' }
         if (it.state?.lock) { const [sk, lv] = it.state.lock.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = sk === 'lockpick' ? 'Pick Lock' : (ok ? 'Unlock' : 'Locked:'); info.color = ok ? '#f2c14e' : '#e0644f' }
@@ -111,8 +112,11 @@ function closeLoot(ctx) {
   mem(ctx).key = ''
 }
 
+const REFILL_MS = 60 * 60000 // Shelly: looted containers refill after an hour
+function refill(ctx, c) { const st = c?.state; if (st?.full != null && st.refillAt && ctx.now() >= st.refillAt) { st.items = st.full; st.refillAt = 0; st.scavved = false } }
 export function openLoot(ctx, c) {
   const s = ctx.self.state
+  refill(ctx, c)
   if (c.state.lock) { // Fallout-style lock: you need the skill level, no minigame
     const [sk, lv] = c.state.lock.split(':'), have = skillsOf(s)[sk] ?? 0
     if (have < Number(lv)) { note(ctx, `Locked: requires ${SKN[sk]} ${lv}`); snd(ctx, 'ui-denied-click', 0.35); return }
@@ -325,6 +329,10 @@ function lootAction(ctx, d) {
     items = keep
     snd(ctx, 'loot-take-all-rustle', 0.55)
   } else return
+  if (!c.tags?.includes('rubble') && !c.tags?.includes('npc') && !c.state.dead && items.join(',') !== String(c.state.items ?? '')) { // a looted container fills again in an hour
+    if (c.state.full == null) c.state.full = c.state.items ?? ''
+    c.state.refillAt = ctx.now() + REFILL_MS
+  }
   c.state.items = items.join(',')
   s.lootList = c.state.items
   if (c.state.look && (c.primitive?.params || c.model)) { // a garment taken off a body comes off the body, now, on every screen, scripted or mesh
