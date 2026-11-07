@@ -409,21 +409,14 @@ function lay(ctx) {
 
   // Interactive Ferry Rowboat moored at the Entrance Pier -> rows to M.E.G. Outpost Seawatch!
   ctx.spawn("l7-rowboat", {
-    tags: ["usable"],
+    tags: ["seat", "boat"],
+    physics: { body: "kinematic", collider: "box" },
     feetPosition: { x: 2.3, y: -0.4, z: -31 },
     rotation: { yaw: 14, roll: 3 },
     model: GLB.rowboat,
     layout: fit(3.8, 1.2, 3.8),
-    behavior: "scripts/l7-use.js",
-    state: {
-      kind: "ferry",
-      name: "Moored wooden dory",
-      verb: "Row to Seawatch Outpost",
-      info: "Cross the Daylight Zone to Near Island",
-      tint: "#7fd6ff",
-      c: { x: 1.9, y: PY + 0.2, z: -31 },
-      dest: { x: 38.0, y: PY + 0.2, z: -93.0, yaw: 165, name: "M.E.G. Outpost Seawatch" },
-    },
+    behavior: "scripts/l7-dory.js", // a boat you row yourself: E sits, WASD rows, E steps out
+    state: { name: "Moored wooden dory", verb: "Get in", seat: { d: 0.35, y: 0.3 }, boat: true },
   });
 
   // =========================================================================
@@ -888,7 +881,7 @@ export function tick(ctx) {
   }
 
   // 1. DYNAMIC OCEAN WATER BOBBING & SWELL
-  const boat = ctx.getObject("l7-rowboat");
+  const boat = null; // the dory rocks itself now (scripts/l7-dory.js)
   if (boat) {
     const bob = Math.sin(now * 0.0016) * 0.07;
     const roll = Math.cos(now * 0.0012) * 2.8;

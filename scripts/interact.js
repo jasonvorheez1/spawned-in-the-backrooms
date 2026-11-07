@@ -302,7 +302,7 @@ function press(ctx) {
   }
   if (f.tag === 'usable' && it.state?.kind === 'boilerdoor' && !it.state.open && !s.l5boilerKey && !ctx.query({ tags: ['npc'], radius: 60 }).some((q) => /harlan$/.test(q.id) && q.state?.follow === ctx.self.id) && (s.feetPosition?.x ?? ctx.self.feetPosition.x) < (it.worldFeetPosition?.x ?? 0) && (skillsOf(s).lockpick ?? 0) >= 25 && (s.bobbypins ?? 6) > 0) { startPick(ctx, it, 25, 'boiler'); m.key = ''; return } // no key: pick it (scripts/lockpick.js), else the door says what it wants
   if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); if (it.tags?.includes?.('l5-elev-panel')) s.elevPanel = f.id; m.key = ''; return } // an elevator plate opens a clickable floor list (ui.js)
-  if (f.tag === 'seat') { sitDown(ctx, it); m.key = ''; return }
+  if (f.tag === 'seat') { if (sitDown(ctx, it) && it.state?.boat) ctx.emit('press', { by: ctx.self.id }, { to: it.id }); m.key = ''; return } // a boat's seat also takes the oars
   if (f.tag === 'bench') { s.craftOpen = 'bench'; s.craftBench = f.id; return }
   if (f.tag === 'container') { openLoot(ctx, it); return }
   if (f.tag === 'door') { useDoor(ctx, it); m.key = ''; refocus(ctx, true); return }
@@ -353,6 +353,8 @@ const RUBBLE_DUST = `fx
 pop dust burst=10..14 on=disc(.5) life=.7..1.3 v=up(.3..0.8)+sdir()*.5 size=.25..0.45 acc=buoy(.3)+drag(1.5) col=<.72,.66,.52> a=0>.35:.3>.7:.15>0 sz=$size*(.6>1.8) rot=spin(.2) r=sprite(smoke-puff,alpha)
 pop bits burst=6..9 on=disc(.4) life=.5..0.8 v=up(1..2)+sdir()*1 size=.04..0.08 acc=grav() col=<.6,.55,.45> a=1 sz=$size floor=stick r=sprite(soft-disc,alpha)`
 
+// the dory hands your keys back when you press E in it: you stand up out of the boat
+export const ears = { boatOff: (ctx) => standUp(ctx) }
 export function onInput(ctx, input) {
   const m = mem(ctx)
   const ray = getInputRay(ctx, input)
