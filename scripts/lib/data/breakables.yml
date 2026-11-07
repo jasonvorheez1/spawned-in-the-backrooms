@@ -1,0 +1,29 @@
+# What breaks, how hard it is, and what it gives back (scripts/lib/breakables.js reads every number here).
+# Damage to a structure = weapon damage x heavy swing x condition x material mul[class] x strength factor.
+# Strength factor (melee and fists only) = base + per x Hardiness (1..10): HAR 1 = 0.8, HAR 5 = 1.2, HAR 10 = 1.7. Guns ignore it.
+strength: { base: 0.7, per: 0.1 }
+fistsMul: 0.35            # bare hands barely scratch a wall
+regrowMinutes: 25         # a broken Level 0 wall grows back after this long, so the maze stays a maze
+materials:
+  drywall:  { name: Drywall,  hp: 120, mul: { blunt: 1.3, edged: 0.9, firearm: 0.35 }, sound: drywall-punch-crumble-thud, dust: [0.92, 0.88, 0.72], drops: [[drywall, 1, 3], [nails, 0, 2], [wire, 0, 1]] }
+  wood:     { name: Wood,     hp: 70,  mul: { blunt: 1.0, edged: 1.5, firearm: 0.45 }, sound: wood-plank-crack-hit,      dust: [0.62, 0.48, 0.3],  drops: [[scrap_wood, 2, 4], [nails, 1, 3]] }
+  metal:    { name: Metal,    hp: 160, mul: { blunt: 0.7, edged: 0.35, firearm: 0.6 }, sound: metal-sheet-clang-hit,    dust: [0.55, 0.55, 0.58], drops: [[scrap_metal, 2, 4], [wire, 0, 2], [nails, 0, 1]] }
+  concrete: { name: Concrete, hp: 400, mul: { blunt: 0.45, edged: 0.15, firearm: 0.2 }, sound: concrete-chip-impact-crack, dust: [0.7, 0.7, 0.68], drops: [[scrap_metal, 1, 2], [wire, 0, 1]] }
+  fixture:  { name: Fixture,  hp: 25,  mul: { blunt: 1.4, edged: 1.0, firearm: 1.2 }, sound: metal-sheet-clang-hit,    dust: [0.95, 0.95, 0.85], drops: [[wire, 1, 2], [scrap_metal, 0, 1]] }
+breakSound: debris-collapse-crumble
+buildSound: hammer-nail-wood-build
+# scrap tokens: name, kg each, colour in the amber lists
+scrap:
+  scrap_wood:  { name: Scrap wood,  kg: 0.6, color: "#d9a35a" }
+  scrap_metal: { name: Scrap metal, kg: 0.8, color: "#b9c2c8" }
+  drywall:     { name: Drywall chunk, kg: 0.5, color: "#e8dcb6" }
+  nails:       { name: Nails,       kg: 0.05, color: "#c8c8c8" }
+  wire:        { name: Wire,        kg: 0.1, color: "#e0915a" }
+# what B mode builds. size: [w, h, d] in metres (the ghost and the collider); cost in scrap
+pieces:
+  plank_wall:  { name: Plank wall,       mat: wood,  hp: 140, size: [2, 2.4, 0.16], cost: { scrap_wood: 4, nails: 2 } }
+  metal_wall:  { name: Metal sheet wall, mat: metal, hp: 260, size: [2, 2.4, 0.12], cost: { scrap_metal: 4, wire: 1 } }
+  barricade:   { name: Barricade,        mat: wood,  hp: 90,  size: [2, 1.2, 0.5],  cost: { scrap_wood: 3, nails: 2 } }
+  crate:       { name: Crate,            mat: wood,  hp: 60,  size: [1, 1, 1],      cost: { scrap_wood: 3, nails: 1 } }
+  ramp:        { name: Ramp,             mat: wood,  hp: 120, size: [1.2, 1, 2],    cost: { scrap_wood: 5, nails: 3 } }
+order: [plank_wall, metal_wall, barricade, crate, ramp]
