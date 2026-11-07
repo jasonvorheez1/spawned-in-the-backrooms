@@ -90,7 +90,7 @@ tex = bpy.data.textures.new("lump", "CLOUDS"); tex.noise_scale = 0.06
 dm = body.modifiers.new("disp", "DISPLACE"); dm.texture = tex; dm.strength = 0.012; dm.mid_level = 0.5
 bpy.ops.object.modifier_apply(modifier="disp")
 # decimate to budget
-dec = body.modifiers.new("dec", "DECIMATE"); dec.ratio = 0.26
+dec = body.modifiers.new("dec", "DECIMATE"); dec.ratio = 0.22
 bpy.ops.object.modifier_apply(modifier="dec")
 bpy.ops.object.shade_smooth()
 
@@ -132,10 +132,14 @@ for v in bm.verts:
     v.co.z -= max(0, -(v.co.y - H.y)) * 0.15  # chin hangs
 bm.to_mesh(jaw.data); bm.free()
 throat = ellipsoid("Throat", H + V((0, 0.02, -0.02)), (0.15, 0.12, 0.06), 16, 8)
-eyes = [ellipsoid("Eye" + s, H + V((sx * 0.09, -0.13, 0.075)), (0.046, 0.022, 0.03), 14, 8) for s, sx in (("L", 1), ("R", -1))]
-
-for e, sx in zip(eyes, (1, -1)):
-    e.data.transform(Matrix.Rotation(-sx * 0.45, 4, 'Y'))
+def eyeMesh(name, sx):
+    bmx = bmesh.new(); bmesh.ops.create_uvsphere(bmx, u_segments=14, v_segments=8, radius=1.0)
+    M = Matrix.Translation(H + V((sx * 0.09, -0.145, 0.075))) @ Matrix.Rotation(-sx * 0.45, 4, "Y") @ Matrix.Diagonal((0.046, 0.022, 0.03, 1))
+    bmesh.ops.transform(bmx, matrix=M, verts=bmx.verts)
+    m = bpy.data.meshes.new(name); bmx.to_mesh(m); bmx.free()
+    for pg in m.polygons: pg.use_smooth = True
+    o = bpy.data.objects.new(name, m); scene.collection.objects.link(o); return o
+eyes = [eyeMesh("EyeL", 1), eyeMesh("EyeR", -1)]
 def needle(bmx, base, tip, r):
     up = (tip - base).normalized(); a = up.orthogonal().normalized(); b = up.cross(a)
     ring = [bmx.verts.new(base + (a * math.cos(k * 2.094) + b * math.sin(k * 2.094)) * r) for k in range(3)]
