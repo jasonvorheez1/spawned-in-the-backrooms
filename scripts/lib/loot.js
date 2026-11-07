@@ -104,7 +104,7 @@ export function spawnCrateL1(ctx, p) {
   ctx.spawn({ tags: ["container", "crate", "breakable"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { mat: "wood", hp: 60, maxHp: 60, name: lk ? lk.name : ctx.random() < 0.25 ? "Rations crate" : "Wooden crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }
 // Level 2: a tool depot. More batteries and ammo, fewer rations; its own tools.
-const L2_WEIGHTS = [["almond", 14], ["bobbypin", 7], ["ammo", 18], ["shells", 9], ["battery", 14], ["bandage", 10], ["ration", 6], ["weapon", 20], ["kit", 5], ["book", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2]]; // cloth: Savi's pick; the rest are Level 2's own finds
+const L2_WEIGHTS = [["almond", 14], ["bobbypin", 7], ["ammo", 18], ["shells", 9], ["battery", 14], ["bandage", 10], ["ration", 6], ["weapon", 20], ["kit", 5], ["book", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2], ["nvg", 0.6]]; // cloth: Savi's pick; the rest are Level 2's own finds
 export function rollItemL2(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L2_WEIGHTS.reduce((a, [, w]) => a + w, 0);
@@ -142,7 +142,7 @@ export function spawnContainerL2(ctx, kind, p, yaw, opts = {}) {
 }
 
 // ---- Level 5 (Terror Hotel): what a hotel room's dresser, wardrobe or kitchen holds. Meat feeds Samantha; the SMG and knife are this floor's guns.
-export const L5_WEIGHTS = [["almond", 26], ["ammo", 18], ["meat", 22], ["ration", 6], ["bandage", 6], ["battery", 5], ["bobbypin", 8], ["weapon", 6], ["book", 2], ["cloth", 6], ["royal_ration", 1]];
+export const L5_WEIGHTS = [["almond", 26], ["ammo", 18], ["meat", 22], ["ration", 6], ["bandage", 6], ["battery", 5], ["bobbypin", 8], ["weapon", 6], ["book", 2], ["cloth", 6], ["royal_ration", 1], ["nvg", 1.5]];
 export const MEAT5 = [["steak", 3], ["fish", 4], ["chicken", 6], ["spam", 8], ["sardines", 8], ["rat", 6]];
 export function rollMeat(ctx) { const t = MEAT5.reduce((a, [, w]) => a + w, 0); let r = ctx.random() * t; for (const [k, w] of MEAT5) { r -= w; if (r <= 0) return "meat:" + k; } return "meat:rat"; }
 export function rollWeaponL5(ctx) { const q = ctx.random(); return q < 0.3 ? rollVariant(ctx, "smg") : q < 0.65 ? rollVariant(ctx, "knife") : rollWeapon(ctx, "l5"); }

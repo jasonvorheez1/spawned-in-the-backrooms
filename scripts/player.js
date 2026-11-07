@@ -202,6 +202,10 @@ function takeToken0(ctx, token) {
     sound(ctx, 'pickup-ammo', 0.6, true)
     return { ok: true }
   }
+  if (token === 'nvg') { // night vision goggles: they make no light, so Level 6's dark can't eat them (Savi's pick, Shelly asked for a way to see)
+    s.nvg = true; s.pickedAt = now; s.notice = { text: 'Night vision goggles · press F in the dark of Level 6 · they eat batteries', at: now }
+    sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true }
+  }
   if (token === 'compass') { // an old compass: a few reads left in it (G uses it)
     s.compass = (s.compass ?? 0) + COMPASS.charges; s.pickedAt = now
     s.notice = { text: `Old compass · ${s.compass} reads · press G`, at: now }
@@ -627,7 +631,12 @@ function splash(ctx) {
 function toggleLight(ctx) {
   const w = walkOf(ctx), s = ctx.self.state
   if (w.light) { ctx.destroy(w.light); w.light = null }
-  else if (ctx.self.place === 'level6') { /* Level 6: no light works. the switch clicks, nothing comes */ }
+  else if (ctx.self.place === 'level6') { /* Level 6: no light works. the switch clicks, nothing comes; goggles see without light */
+    if (w.nvg) { ctx.destroy(w.nvg); w.nvg = null }
+    else if (s.nvg && (w.battery ?? s.battery) > 1) w.nvg = ctx.spawn({ feetPosition: { attach: 'camera', x: 0, y: 0, depth: 0 }, light: { kind: 'point', color: 'oklch(0.85 0.2 145)', intensity: 2.6, distance: 9 }, audience: 'local', scope: 'session' })
+    else if (!s.nvg) s.notice = { text: 'Nothing. The dark eats light here.', at: ctx.now() }
+    s.nvgOn = !!w.nvg; sound(ctx, w.nvg ? 'flashlight-switch-click' : 'flashlight-switch-click', 0.65, true); return
+  }
   else if ((w.battery ?? s.battery) > 1) {
     w.light = ctx.spawn({
       feetPosition: { attach: 'camera', x: 0.22, y: -0.25, depth: 0.1 },
@@ -860,6 +869,8 @@ function tickStats(ctx, t, moving) {
   }
   // flashlight battery
   if (w.light) { w.battery -= L.batteryDrain * t; if (w.battery <= 0) { w.battery = 0; toggleLight(ctx) } }
+  if (w.nvg) { w.battery -= L.batteryDrain * 1.5 * t; if (w.battery <= 0 || ctx.self.place !== 'level6') { w.battery = Math.max(0, w.battery); ctx.destroy(w.nvg); w.nvg = null; s.nvgOn = false } } // goggles drink faster than a torch
+  else if (s.nvgOn) s.nvgOn = false
   const st = Math.round(w.stamina), bt = Math.round(w.battery)
   if (st !== s.stamina) s.stamina = st
   if (bt !== s.battery) s.battery = bt
