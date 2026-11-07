@@ -75,6 +75,12 @@ export const SPECIES = {
   panda:   { fur: "#f7f3ee", belly: "#ffffff", ears: "round", earS: 1.0, earCol: "#2b2530", tail: "stub", nose: "#1c1a20", muzzle: true, dark: "#2b2530", patch: "#2b2530", chunky: true },
   pig:     { fur: "#ffb3c1", belly: "#ffd9e0", ears: "point", earS: 0.7, tail: "curly", nose: "#ff97aa", snout: true },
   sheep:   { fur: "#f6f1e7", belly: "#ffffff", headFur: "#5d5560", ears: "flop", earS: 0.6, ear2: "#5d5560", tail: "puff", nose: "#2a1c18", muzzle: true, wool: true, socks: "#5d5560" },
+  tiger:   { fangs: true, fur: "#f08a24", belly: "#fff6ea", ears: "round", earS: 0.95, tail: "cat", nose: "#ff8fa3", whisk: true, cheeks: true, muzzle: true },
+  redpanda:{ fangs: true, fur: "#c4532a", belly: "#3a2018", ears: "point", earS: 0.95, earCol: "#f4ece2", tail: "ringed", tip: "#7a2e16", nose: "#1c1a20", muzzle: true, socks: "#2b1a14", cheeks: true },
+  skunk:   { fur: "#2e2c36", belly: "#f4f1ea", ears: "round", earS: 0.9, tail: "fox", tip: "#f4f1ea", nose: "#1c1a20", muzzle: true, cheeks: true },
+  hamster: { fur: "#e8b77a", belly: "#fff4e0", ears: "round", earS: 1.25, tail: "stub", nose: "#ff8fa3", whisk: true, chunky: true, buck: true, cheeks: true },
+  otter:   { fur: "#7a5236", belly: "#e8d2b4", ears: "round", earS: 0.6, tail: "thin", nose: "#2a1c18", muzzle: true, whisk: true },
+  koala:   { fur: "#9a9aa4", belly: "#ececf0", ears: "round", earS: 1.6, tail: "stub", nose: "#2a2830", chunky: true, cheeks: true },
   lion:    { fur: "#ebb04e", belly: "#fbe3b0", ears: "round", earS: 0.95, tail: "lion", nose: "#8a4a2a", muzzle: true, mane: "#a3592a", fangs: true, tailTuft: "#a3592a" },
 };
 
@@ -109,6 +115,9 @@ export function geometry(ctx) {
     raccoon: { len: 0.12, w: 0.11, h: 0.085, y: -0.105, p: 1.8 }, panda: { len: 0.09, w: 0.13, h: 0.09, y: -0.105, p: 2.4 },
     pig: { len: 0.08, w: 0.12, h: 0.09, y: -0.1, p: 2.4 }, sheep: { len: 0.1, w: 0.11, h: 0.095, y: -0.1, p: 2.2 },
     lion: { len: 0.11, w: 0.13, h: 0.095, y: -0.105, p: 2.2 },
+    tiger: { len: 0.09, w: 0.13, h: 0.09, y: -0.1, p: 2.2 }, redpanda: { len: 0.1, w: 0.11, h: 0.085, y: -0.1, p: 1.9 },
+    skunk: { len: 0.11, w: 0.1, h: 0.08, y: -0.1, p: 1.8 }, hamster: { len: 0.05, w: 0.12, h: 0.08, y: -0.095, p: 2.4 },
+    otter: { len: 0.08, w: 0.13, h: 0.085, y: -0.1, p: 2.4 }, koala: { len: 0.07, w: 0.1, h: 0.1, y: -0.08, p: 2.2 },
   };
   const SN0 = SNOUTS[P.species] || SNOUTS.cat;
   const SZ = (k, lo, hi) => Math.min(hi, Math.max(lo, Number(P[k]) || 1)); // creator sliders, 1 = the animal's own
@@ -444,7 +453,7 @@ export function geometry(ctx) {
       [s * 0.52, 0.965, 0.002]
     ];
     loft(armPath, (t) => {
-      const r = lerp(fem ? 0.033 : 0.036, 0.028, t); // noodle arms, base proportions
+      const r = lerp(fem ? 0.042 : 0.046, 0.033, t); // plush kemono arms
       return [r, r];
     }, [0, 1, 0], null, hi ? 12 : 8);
 
@@ -535,9 +544,13 @@ export function geometry(ctx) {
   }
 
   // Layered fluffy cheek tufts for species with cheek fur
-  if (sp.cheeks && mid) {
+  if (!sp.wool && !sp.mane && mid) { // kemono cheek fluff: three soft points at each jaw
     wOverride = { Head: 1 };
-
+    ctx.color(sp.cheeks ? BELLY : (sp.headFur || FUR));
+    for (const sd of [-1, 1]) for (const [v, dx, dy, r] of [[-0.02, 0.09, 0.01, 0.034], [-0.09, 0.1, -0.03, 0.04], [-0.16, 0.07, -0.06, 0.03]]) {
+      const b = onHead(sd * 0.32, v, 0); b[0] -= sd * 0.03; b[2] += 0.02;
+      limb(b, [b[0] + sd * dx, b[1] + dy, b[2] + 0.02], r, 0.004, hi ? 10 : 6);
+    }
     wOverride = null;
   }
 
@@ -936,6 +949,10 @@ export function geometry(ctx) {
       case "lidded":    Object.assign(t, { lid: 0.42, mouth: "smile_small" }); break;
       case "sideeye":   Object.assign(t, { lid: 0.46, look: 1.4, mouth: "flat" }); break;
       case "unimpressed": Object.assign(t, { lid: 0.5, lidTilt: -0.04, brow: 0.16, mouth: "pout", pupil: 0.92 }); break;
+      case "beam":      Object.assign(t, { eye: "closed", mouth: "laugh", blush: true, browY: 0.04, brow: -0.15 }); break;
+      case "shock":     Object.assign(t, { pupil: 0.38, browY: 0.05, brow: -0.3, mouth: "o", sweat: true }); break;
+      case "teary":     Object.assign(t, { brow: -0.55, lid: 0.06, mouth: "wavy", tear: "stream", pupil: 1.2, blush: true }); break;
+      case "fang":      Object.assign(t, { lid: 0.18, brow: 0.28, mouth: "grin", pupil: 0.9 }); break;
       case "cocky":     Object.assign(t, { lid: 0.12, brow: 0.32, mouth: "gritted", pupil: 1.05 }); break;
     }
     return t;
@@ -1166,8 +1183,8 @@ export function geometry(ctx) {
   const MO = E.mouth;
 
   if (MO === "grin" || MO === "laugh" || MO === "tongue" || MO === "gritted") {
-    const w = MO === "gritted" ? 0.06 : MO === "laugh" ? 0.082 : E.wide ? 0.085 : 0.07; // small dandy mouths
-    const D = MO === "laugh" ? 0.08 : E.wide ? 0.066 : 0.056;
+    const w = MO === "gritted" ? 0.07 : MO === "laugh" ? 0.1 : E.wide ? 0.1 : 0.085; // rubberhose mouths: wide and open
+    const D = MO === "laugh" ? 0.1 : E.wide ? 0.075 : 0.066;
     const cv = MO === "laugh" ? 2.4 : 2.2;
     const up = (t) => { const u = (t - 0.5) * 2 * w; return [u, MY + 0.03 + cv * u * u]; };
     const lo = (t) => {
