@@ -3871,7 +3871,7 @@ l5-tobias/object/x595cd23e2238773d/2:
 l5-vanderholt:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
   children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.912806c11c0383f0abee4647d5fd0f29d67c59af03b26f81f114c47260339e75.glb, materials: {belly: {color: "#e9bf95"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#d8822e"}, mark: {color: "#e9bf95"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e9bf95"}}}, morph: {Half: 0.5, Smile: 0.7}}]
-  feetPosition: {x: 5, y: 0, z: -22.2}
+  feetPosition: {x: 3, y: 0.02, z: -20}
   id: l5-vanderholt
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
   material: {outline: {color: "#1d1420", width: 2.4}}
@@ -3879,7 +3879,7 @@ l5-vanderholt:
   physics: character
   rotation: {yaw: 0}
   scale: {x: 1.24, y: 0.98, z: 1.24}
-  state: {attr: "7,5,5,8,7,7,5", faction5: orig, factionName: "The Originals (eccentrics who wandered in between 1300 and 1940; they gossip, play cards, keep Samantha the cat fed, and refuse membership to anyone modern)", fresh: {}, home: {x: 5, z: -22.2}, hp: 192, maxHp: 192, mode: day, name: "Cornelius Vanderholt · Railway Baron (1889)", offers: [["o:member", Ask to join the salon], ["o:lore", Ask about the hotel]], outfit: longsleeve/pants/#262028, picked: {}, ri: 0, role: trader, rounds: [{act: cdn/clip-sit-loop.glb, dwell: 70, look: {x: 5, z: -19}, x: 5, y: 0, z: -22.2}, {act: null, dwell: 15, look: {x: -2, z: -18}, x: 0, y: 0, z: -15}, {act: cdn/clip-talk-loop.glb, dwell: 40, look: {x: 5, z: -19}, x: 5, y: 0, z: -22.2}], species: tiger, title: "", trespass: {}, voice: vanderholt, warned: {}}
+  state: {attr: "7,5,5,8,7,7,5", dead: false, faction5: orig, factionName: "The Originals (eccentrics who wandered in between 1300 and 1940; they gossip, play cards, keep Samantha the cat fed, and refuse membership to anyone modern)", fresh: {}, home: {x: 5, z: -22.2}, hp: 192, maxHp: 192, mode: day, name: "Cornelius Vanderholt · Railway Baron (1889)", offers: [["o:member", Ask to join the salon], ["o:lore", Ask about the hotel]], outfit: longsleeve/pants/#262028, picked: {}, ri: 0, role: trader, rounds: [{act: cdn/clip-sit-loop.glb, dwell: 70, look: {x: 5, z: -19}, x: 5, y: 0, z: -22.2}, {act: null, dwell: 15, look: {x: -2, z: -18}, x: 0, y: 0, z: -15}, {act: cdn/clip-talk-loop.glb, dwell: 40, look: {x: 5, z: -19}, x: 5, y: 0, z: -22.2}], species: tiger, title: "", trespass: {}, voice: vanderholt, warned: {}}
   tags: [npc, l5res, l5-orig]
 l5-vesna:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
