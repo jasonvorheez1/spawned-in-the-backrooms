@@ -86,6 +86,7 @@ function layLayout(ctx) {
 
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
+  if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(false)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   if (s.seeded && s.gammaExtV !== 1) layGammaExterior(ctx);
   if (s.furnitureSeeded !== 2) { // loot moved from crates into fuse cabinets, toolboxes, lockers and satchels: clear the old crates once
     for (const o of ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.tags?.includes("container")) ctx.destroy(o.id);
@@ -140,7 +141,6 @@ export function tick(ctx) {
     // supplies: crates in dead ends and rooms, almond water, the odd weapon on the floor
     seedFurniture3(ctx);
     const open = (cx, cz) => zoneOf(cx, cz) !== "vault" && zoneOf(cx, cz) !== "gamma";
-    for (let i = 0, n = 0; n < L.almonds && i < 400; i++) { const cx = 4 + Math.floor(ctx.random() * (N - 4)), cz = Math.floor(ctx.random() * N); if (!open(cx, cz)) continue; const c = cellCenter(cx, cz); spawnAlmond(ctx, { x: c.x + 0.6, z: c.z - 0.5 }); n++; }
     for (let i = 0, n = 0; n < L.floorWeapons && i < 400; i++) { const cx = 6 + Math.floor(ctx.random() * (N - 6)), cz = Math.floor(ctx.random() * N); if (!open(cx, cz)) continue; const c = cellCenter(cx, cz); spawnWeapon(ctx, { x: c.x - 0.6, z: c.z + 0.4 }, rollWeaponL3(ctx)); n++; }
     s.gen = {}; s.line = {}; s.gone = {};
   }

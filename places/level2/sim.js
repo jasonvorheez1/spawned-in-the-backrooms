@@ -26,6 +26,7 @@ const lit = (cx, cz) => zoneOf(cx, cz) !== "dark";
 
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
+  if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(false)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   tickChatter(ctx, CHATTER.level2, {"surv-wren": "wren", "surv-hollis": "hollis", "surv-mags": "mags"}); // the camp talks among itself while someone's near
   if (!s.seeded) {
     s.seeded = true;
@@ -69,7 +70,6 @@ export function tick(ctx) {
       if (hash(cx, cz, 301) > chance) continue;
       const c = cellCenter(cx, cz); spawnCrateL2(ctx, { x: c.x + (hash(cx, cz, 303) - 0.5) * 1.6, z: c.z + (hash(cx, cz, 305) - 0.5) * 1.6 }); crates++;
     }
-    for (let i = 0; i < L.almonds; i++) { const c = cellCenter(3 + Math.floor(ctx.random() * (N - 3)), Math.floor(ctx.random() * N)); spawnAlmond(ctx, { x: c.x + 0.8, z: c.z - 0.6 }); }
     for (let i = 0; i < L.floorWeapons; i++) { const c = cellCenter(3 + Math.floor(ctx.random() * (N - 3)), Math.floor(ctx.random() * N)); spawnWeapon(ctx, { x: c.x - 0.7, z: c.z + 0.5 }, rollWeaponL2(ctx)); }
     for (const id of Object.keys(SURV)) survivor(ctx, id);
     s.gone = {};

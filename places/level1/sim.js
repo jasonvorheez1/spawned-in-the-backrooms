@@ -30,6 +30,7 @@ pop glow n=1 r=light(<1,.55,.24>,fire()*6,7)`;
 
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
+  if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(Math.hypot(p.x - cellCenter(ARRIVE.cx, ARRIVE.cz).x - 2.4, p.z - cellCenter(ARRIVE.cx, ARRIVE.cz).z + 2.4) < 3)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   tickChatter(ctx, CHATTER.level1, {"meg-ale": "ale", "meg-ortiz": "ortiz", "meg-callum": "callum"}); // the camp talks among itself while someone's near
   if (!s.seeded) {
     s.seeded = true;
@@ -51,11 +52,6 @@ export function tick(ctx) {
     }
     // supplies: crates on the racks first, then loose ones; almond water; M.E.G. landmarks near arrival
     seedFurniture(ctx, L.crates);
-    for (let i = 0; i < L.almonds; i++) {
-      const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N);
-      if (zoneOf(cx, cz) === "corridors" && ctx.random() < 0.7) continue;
-      spawnAlmond(ctx, cellCenter(cx, cz));
-    }
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz);
     for (let i = 0; i < 3; i++) spawnAlmond(ctx, { x: a.x + 2 + i * 0.4, z: a.z - 2 });
     ctx.spawn({ id: "meg-cloth", feetPosition: { x: a.x + 2.4, y: 0, z: a.z - 2.6 }, primitive: { kind: "box", width: 1.4, height: 0.02, depth: 0.9 }, material: { color: "oklch(0.85 0.2 125)" },

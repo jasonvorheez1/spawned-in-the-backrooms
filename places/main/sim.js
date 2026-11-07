@@ -73,6 +73,7 @@ function shift(ctx, s, now) {
 
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
+  if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(false)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   if (!s.stairsSeeded) {
     s.stairsSeeded = true;
     let n = 0;
