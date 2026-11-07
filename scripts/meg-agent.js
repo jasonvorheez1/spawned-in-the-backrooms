@@ -73,6 +73,7 @@ const HOSTILE = ["hound", "stealer", "smiler", "lurker", "moths"];
 const CROUCH = "cdn/clip-crouch-idle-loop.glb";
 const DEAD = (o) => !o || o.state?.dead || (o.state?.hp ?? 1) <= 0;
 const corpseOf = (o) => !!o && DEAD(o) && !o.tags?.includes?.("l5staff") && HOSTILE.some((g) => o.tags?.includes?.(g));
+const VERMIN = (o) => o?.tags?.includes?.("l5rat") || o?.state?.kind === "rat"; // a dead rat is not worth a crowd: nobody walks over to study one
 
 export function onSpawn(ctx) {
   const me = ctx.self;
@@ -105,13 +106,24 @@ function dress(ctx, me) {
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 const chest = (p) => ({ x: p.x, y: p.y + 1.1, z: p.z });
 
+// sight on a creature, read twice a second per creature: seen now, or seen in the last 5 s (it ducked round a corner); one that stays unreachable is dropped for 20 s
+function inView(ctx, me, m, f, d) {
+  const now = ctx.now(); m.vis ??= {}; m.ign ??= {};
+  if ((m.ign[f.id] ?? 0) > now) return false;
+  const v = m.vis[f.id] ??= { at: 0, saw: 0, near: d, since: now };
+  if (now - v.at > 500) { v.at = now; if (d < 1.2 || seesIt(ctx, me, f)) v.saw = now; }
+  if (d < v.near - 1) { v.near = d; v.since = now; } // getting closer: the chase is working
+  if (now - v.since > 6000 && d > 1.6) { m.ign[f.id] = now + 20000; delete m.vis[f.id]; return false; } // six seconds without gaining: it can't be reached
+  return now - v.saw < 5000;
+}
 function pickTarget(ctx, me, m) {
   const p = me.feetPosition;
   let best = null, bd = G.sight;
   const fighter = (!me.state.faction5 || me.state.faction5 === "hk" || me.state.follow) && !me.state.mjguest; // hotel guests are no fighters: a hound is something to run from, but anything on top of them gets the weapon
   if (!me.state.mjguest) for (const tag of HOSTILE) for (const f of ctx.query({ tags: [tag], radius: fighter ? G.sight : 5 })) {
     if (DEAD(f) || f.tags?.includes?.("l5staff")) continue;
-    const d = flat(f.feetPosition, p); if (d < bd) { bd = d; best = f; }
+    const d = flat(f.feetPosition, p); if (d >= bd || !inView(ctx, me, m, f, d)) continue; // a creature behind (or stuck in) a wall is not a target
+    bd = d; best = f;
   }
   if (me.state.nerve === "frenzied" && !me.state.mjguest) { // anyone close enough: npc or player
     for (const n of ctx.query({ tags: ["npc"], radius: 12 })) { if (n.state?.dead || (n.state?.hp ?? 1) <= 0) continue; const d = flat(n.feetPosition, p); if (d < bd) { bd = d; best = n; } }
@@ -241,7 +253,7 @@ function inspect(ctx, me, m, now, dt) {
   if (I.phase === "walk") {
     holster(ctx, me, m, !!I.hostile); work(me, m, null); aim(me, m, null);
     if (d > 1.5) { gait(me, m, d > 8 ? "run" : "walk"); moveAlong(ctx, me, m, { x: px, y: me.feetPosition.y, z: pz }, d > 8 ? G.run : G.walk * 1.15, dt); return true; }
-    I.phase = "look"; I.until = now + 4500 + ctx.random() * 2500; bark(ctx, me, "inspect", true);
+    I.phase = "look"; I.until = now + 2200 + ctx.random() * 1200; bark(ctx, me, "inspect", true);
   }
   stop(me, dt); gait(me, m, "idle"); aim(me, m, null); work(me, m, CROUCH); face(me, px - me.feetPosition.x, pz - me.feetPosition.z, dt);
   if (now > I.until) { m.inspect = null; work(me, m, null); holster(ctx, me, m, false); bark(ctx, me, "inspected", true); if (o?.state) o.state.inspectUntil = now; return false; } // the body can go now
@@ -264,7 +276,7 @@ export function bark(ctx, o, kind, force) {
   const t = pool[Math.floor(ctx.random() * pool.length)], d = 1300 + t.length * 55, who = st.voice ?? VOICES[o.id] ?? `${String(o.id).split('/').pop()}#${(o.state?.wear?.sex ?? o.state?.look?.sex) === 'f' ? 'f' : 'm'}`;
   st.line = { t, at: now, d };
   const p = o.feetPosition;
-  heard(ctx, { clip: BVO(who, t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 1, refDistance: 4, maxDistance: 30 }, { audience: { nearby: p, radius: 32 } });
+  heard(ctx, { clip: BVO(who, t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 1, refDistance: 3, maxDistance: 18 }, { audience: { nearby: p, radius: 18 } });
 }
 // Savi's picks: [clip, how long it holds (ms), weight, upper body only]
 const GEST = {
@@ -386,7 +398,7 @@ export function update(ctx, dt) {
   const tid = t && flat(t.feetPosition, home) < G.leash ? t.id : null;
   if (tid !== (m.barkT ?? null)) {
     const prev = m.barkT ? ctx.getObject(m.barkT) : null, prevDead = prev && (prev.state?.dead || (prev.state?.hp ?? 1) <= 0);
-    if (prevDead && corpseOf(prev) && !m.inspect && !s.follow) { m.inspect = { id: prev.id, x: prev.feetPosition.x, z: prev.feetPosition.z, at: now, phase: "walk", hostile: true }; prev.state.inspectUntil = now + 16000; } // what they killed: go and see it's dead
+    if (prevDead && corpseOf(prev) && !VERMIN(prev) && !m.inspect && !s.follow) { m.inspect = { id: prev.id, x: prev.feetPosition.x, z: prev.feetPosition.z, at: now, phase: "walk", hostile: true }; prev.state.inspectUntil = now + 16000; } // what they killed: go and see it's dead
     if (tid) bark(ctx, me, t.tags?.includes?.("player") || ctx.place.players.some((p) => p.id === tid) ? "hostile" : (prevDead ? "kill" : "spot"), !!prevDead);
     else if (m.barkT) { bark(ctx, me, prevDead || !prev ? "kill" : "clear", true); m.clearAt = now + 2600; }
     m.barkT = tid;
@@ -395,7 +407,7 @@ export function update(ctx, dt) {
   const fighting = !!(t && flat(t.feetPosition, home) < G.leash);
   if (!fighting && !m.inspect && !lead && !s.mjguest && now > (m.corpseAt ?? 0)) { // no one to fight: notice a dead creature close by that nobody has checked, and go and see
     m.corpseAt = now + 2000; m.seen ??= {};
-    for (const tag of HOSTILE) { const o = ctx.query({ tags: [tag], radius: 14 }).find((c) => corpseOf(c) && !m.seen[c.id] && seesIt(ctx, me, c)); if (o) { m.seen[o.id] = true; o.state.inspectUntil = now + 16000; m.inspect = { id: o.id, x: o.feetPosition.x, z: o.feetPosition.z, at: now, phase: "walk", hostile: false }; bark(ctx, me, "found", true); break; } }
+    for (const tag of HOSTILE) { const o = ctx.query({ tags: [tag], radius: 14 }).find((c) => corpseOf(c) && !VERMIN(c) && !m.seen[c.id] && !c.state?.inspectUntil && seesIt(ctx, me, c)); /* one looker per body, once checked it stays checked */ if (o) { m.seen[o.id] = true; o.state.inspectUntil = now + 16000; m.inspect = { id: o.id, x: o.feetPosition.x, z: o.feetPosition.z, at: now, phase: "walk", hostile: false }; bark(ctx, me, "found", true); break; } }
   }
   if (!fighting && m.inspect && inspect(ctx, me, m, now, dt)) return;
   holster(ctx, me, m, fighting);

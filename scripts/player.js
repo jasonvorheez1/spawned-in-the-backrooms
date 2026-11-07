@@ -57,7 +57,7 @@ export const weaponOf = (s) => W[s.equipped] ?? W.fists
 
 const DOWN_MS = 3200 // how long you watch yourself lie there (Savi's pick); camera.js and the creatures read the same window
 // checkpoints: each place's safe spawn plus every doorway's arrival marker; you wake at the nearest one
-const CHECKS = { main: ['main-from-l1'], level1: ['l1-from-main', 'l1-from-l2'], level2: ['l2-from-l1', 'l2-from-l3'], level3: ['l3-from-l2', 'l3-gamma-door', 'l3-lift-arrive', 'l3-from-l5'], level4: ['l4-lift-arrive', 'l4-from-l5'], level5: ['l5-from-l3', 'l5-from-l4', 'l5-lobby'], gamma: [] }
+const CHECKS = { main: ['main-from-l1'], level1: ['l1-from-main', 'l1-from-l2'], level2: ['l2-from-l1', 'l2-from-l3'], level3: ['l3-from-l2', 'l3-gamma-door', 'l3-lift-arrive', 'l3-from-l5'], level4: ['l4-lift-arrive', 'l4-from-l5'], level5: ['l5-from-l3', 'l5-from-l4', 'l5-from-l6', 'l5-lobby'], level6: ['l6-from-l5'], gamma: [] }
 function nearestCheckpoint(ctx, at) {
   const sp = ctx.place.defaultSpawnPoint ?? {}, yaw0 = ctx.place.defaultSpawnRotation?.yaw
   let best = { pos: { x: sp.x ?? 0, y: 0.1, z: sp.z ?? 0 }, rot: yaw0 }, bd = Math.hypot(best.pos.x - at.x, best.pos.z - at.z)
@@ -202,6 +202,10 @@ function takeToken0(ctx, token) {
     s.notice = { text: `${token === 'fuse' ? 'Fuse' : token === 'valve' ? 'Valve wheel' : 'Keycard'} (${s[f]} carried)`, at: now }
     sound(ctx, 'pickup-ammo', 0.6, true)
     return { ok: true }
+  }
+  if (token === 'nvg') { // night vision goggles: they make no light, so Level 6's dark can't eat them (Savi's pick, Shelly asked for a way to see)
+    s.nvg = true; s.pickedAt = now; s.notice = { text: 'Night vision goggles · press F in the dark of Level 6 · they eat batteries', at: now }
+    sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true }
   }
   if (token === 'compass') { // an old compass: a few reads left in it (G uses it)
     s.compass = (s.compass ?? 0) + COMPASS.charges; s.pickedAt = now
@@ -631,6 +635,12 @@ function splash(ctx) {
 function toggleLight(ctx) {
   const w = walkOf(ctx), s = ctx.self.state
   if (w.light) { ctx.destroy(w.light); w.light = null }
+  else if (ctx.self.place === 'level6') { /* Level 6: no light works. the switch clicks, nothing comes; goggles see without light */
+    if (w.nvg) { ctx.destroy(w.nvg); w.nvg = null }
+    else if (s.nvg && (w.battery ?? s.battery) > 1) w.nvg = ctx.spawn({ feetPosition: { attach: 'camera', x: 0, y: 0, depth: 0 }, light: { kind: 'point', color: 'oklch(0.85 0.2 145)', intensity: 2.6, distance: 9 }, audience: 'local', scope: 'session' })
+    else if (!s.nvg) s.notice = { text: 'Nothing. The dark eats light here.', at: ctx.now() }
+    s.nvgOn = !!w.nvg; sound(ctx, w.nvg ? 'flashlight-switch-click' : 'flashlight-switch-click', 0.65, true); return
+  }
   else if ((w.battery ?? s.battery) > 1) {
     w.light = ctx.spawn({
       feetPosition: { attach: 'camera', x: 0.22, y: -0.25, depth: 0.1 },
@@ -719,7 +729,13 @@ export function update(ctx, dt) {
   if (ctx.self.parent) return
   const w = walkOf(ctx), s = ctx.self.state
   w.stamina ??= s.stamina; w.battery ??= s.battery
-  const dir = w.dir ?? { x: 0, z: 0 }, moving = dir.x !== 0 || dir.z !== 0
+  const dir = w.dir ?? { x: 0, z: 0 }, pressing = dir.x !== 0 || dir.z !== 0
+  { // pressed into a wall: the keys say go, the feet stay put. after a beat you stop running (no drain, no steps, no bob)
+    const f = ctx.self.feetPosition, lf = w.lastFp, mv = lf && dt > 0 ? Math.hypot(f.x - lf.x, f.z - lf.z) / dt : 9
+    w.lastFp = { x: f.x, z: f.z }
+    w.stuckT = pressing && mv < 0.5 ? (w.stuckT ?? 0) + dt : 0
+  }
+  const moving = pressing && w.stuckT < 0.2
   const crouched = !!s.crouch
   if (w.stamina <= 1) w.winded = true; else if (w.winded && w.stamina >= (L.windedAt ?? 30)) w.winded = false // ran dry: no sprint till you catch your breath
   if (!!w.winded !== !!s.winded) s.winded = !!w.winded
@@ -736,7 +752,7 @@ export function update(ctx, dt) {
   const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
   const speed = (w.walkMode && !sprinting ? 0.5 : 1) * (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (s.carryMul ?? 1) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * dv.speed * (w.bur ??= burden(s))
-  const intent = { x: dir.x * speed, z: dir.z * speed }
+  const intent = { x: dir.x * speed * (moving || !pressing ? 1 : 0.35), z: dir.z * speed * (moving || !pressing ? 1 : 0.35) } // stuck on a wall: a gentle lean, still enough to slide off a corner
   viewmodel(ctx, moving, sprinting)
   const v = ctx.self.velocity
   const along = intent.x * v.x + intent.z * v.z > 0 || (v.x === 0 && v.z === 0 && moving)
@@ -795,7 +811,7 @@ function tickStats(ctx, t, moving) {
   const det = s.crouch ? detection(ctx, p, w) : null
   if ((s.detect ?? null) !== det) s.detect = det
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
-  let drain = (ctx.self.place === 'level4' ? DRAIN4[zone.slice(3)] : ctx.self.place === 'level5' ? (DRAIN5[zone.slice(3)] ?? 0.8) / 60 * 4 : ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : (ctx.self.place === 'level3' || ctx.self.place === 'gamma') ? L3.sanityDrain[zone.slice(3)] : L.sanityDrain[zone]) ?? 0.12
+  let drain = (ctx.self.place === 'level6' ? 0.3 : ctx.self.place === 'level4' ? DRAIN4[zone.slice(3)] : ctx.self.place === 'level5' ? (DRAIN5[zone.slice(3)] ?? 0.8) / 60 * 4 : ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : (ctx.self.place === 'level3' || ctx.self.place === 'gamma') ? L3.sanityDrain[zone.slice(3)] : L.sanityDrain[zone]) ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4
   if (ctx.self.place === 'level5' && s.l5room && zone.slice(3) === s.l5room && ctx.now() < (s.l5until ?? 0)) drain = -0.6 // a rented Homely Hotel suite: your own room, the hotel can't reach you (scripts/l5-resident.js)
   if (drain > 0 && ctx.now() < (s.blueUntil ?? 0)) drain = 0 // blue almond water: the halls can't get in
@@ -863,11 +879,14 @@ function tickStats(ctx, t, moving) {
   }
   // flashlight battery
   if (w.light) { w.battery -= L.batteryDrain * t; if (w.battery <= 0) { w.battery = 0; toggleLight(ctx) } }
+  if (w.nvg) { w.battery -= L.batteryDrain * 1.5 * t; if (w.battery <= 0 || ctx.self.place !== 'level6') { w.battery = Math.max(0, w.battery); ctx.destroy(w.nvg); w.nvg = null; s.nvgOn = false } } // goggles drink faster than a torch
+  else if (s.nvgOn) s.nvgOn = false
   const st = Math.round(w.stamina), bt = Math.round(w.battery)
   if (st !== s.stamina) s.stamina = st
   if (bt !== s.battery) s.battery = bt
   // a new level: the transition card fades off the black (scripts/ui.js reads s.xfer)
   if (w.lastPlace && w.lastPlace !== ctx.self.place) s.xfer = { at: now, to: ctx.self.place }
+  if (ctx.self.place === 'level6' && w.light) { ctx.destroy(w.light); w.light = null; s.light = false } // the dark swallows it
   w.lastPlace = ctx.self.place
   // down: the body lies where it fell (third person, scripts/camera.js), then you wake at the nearest checkpoint
   if (w.respawnAt) {

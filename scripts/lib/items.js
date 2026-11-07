@@ -15,7 +15,7 @@ export const tokenOf = (tag, o) => (tag === 'weapon' ? 'weapon:' + (o?.state?.ki
 // what a token is called and what it does, for the prompt and the loot menu
 export function describe(token) {
   const d = describe0(token)
-  const kg = token.startsWith('cash:') ? 0 : token.startsWith('meat:') ? 0.3 : ['ration', 'bandage', 'battery', 'kit', 'bobbypin', 'compass', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('book:') || token.startsWith('page:') ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
+  const kg = token.startsWith('cash:') ? 0 : token.startsWith('meat:') ? 0.3 : ['ration', 'bandage', 'battery', 'kit', 'bobbypin', 'compass', 'nvg', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('book:') || token.startsWith('page:') ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
   return kg ? { ...d, info: d.info + ` · ${kg.toFixed(1)} kg` } : d
 }
 // Level 2's finds: eaten, wrapped or taped on the spot, or keys you carry (fuse, valve wheel, keycard) that open its doors
@@ -55,6 +55,7 @@ function describe0(token) {
   if (token === 'royal_ration') return { name: 'Royal ration', info: `Full HP · +${L3I.royal_ration.sanity} sanity · rare`, color: '#ffd36a' }
   if (token === 'firesalt') return { name: 'Firesalt', info: `Rub on a melee weapon: x${L3I.firesalt.damage} damage for ${L3I.firesalt.seconds}s`, color: '#ff8a3a' }
   if (token.startsWith('page:')) return { name: `Torn notebook page (${token.slice(5)})`, info: 'Someone wrote this in a hurry', color: '#e8dcc0' }
+  if (token === 'nvg') return { name: 'Night vision goggles', info: 'See in the dark of Level 6 · F · drains battery', color: '#7cf08a' }
   if (token === 'compass') return { name: 'Old compass', info: 'Senses what is near · wears out', color: '#d8b56a' }
   if (token === 'almond') return { name: 'Almond water', info: `+${L.almondHp} HP · +${L.almondSanity} sanity`, color: '#f3e7b0' }
   if (token === 'ammo') return { name: 'Pistol rounds', info: `x${W.ammo.perPickup}`, color: '#e9c46a' }

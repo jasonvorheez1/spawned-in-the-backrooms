@@ -1203,6 +1203,10 @@ l5-from-l4:
   feetPosition: {x: -8, y: 0.1, z: -17.5}
   id: l5-from-l4
   rotation: {yaw: 180}
+l5-from-l6:
+  feetPosition: {x: 43.599999999999994, y: 0.1, z: 6}
+  id: l5-from-l6
+  rotation: {yaw: 90}
 l5-gate-84:
   behavior: scripts/l5-door.js
   feetPosition: {x: -1, y: 0, z: 11.72}
@@ -3357,6 +3361,45 @@ l5-imani/object/x595cd23e2238773d/3:
   id: l5-imani/object/x595cd23e2238773d/3
   parent: l5-imani
   primitive: {kind: scripted, params: {kind: smg}, script: scripts/weapon-geo.js}
+l5-l6-bulb:
+  feetPosition: {x: 45.2, y: 2.75, z: 6}
+  id: l5-l6-bulb
+  light: {color: oklch(0.85 0.06 85), distance: 5, intensity: 1.6, kind: point}
+  material: {color: "#fff3cc", emissive: "#ffe9b0", emissiveIntensity: 3}
+  primitive: {kind: sphere, radius: 0.06}
+l5-l6-door:
+  feetPosition: {x: 45.75, y: 0, z: 6}
+  id: l5-l6-door
+  material: {color: oklch(0.3 0.01 240), metalness: 0.75, roughness: 0.55}
+  physics: static
+  primitive: {depth: 0.1, height: 2.1, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+l5-l6-frame:
+  feetPosition: {x: 45.769999999999996, y: 0, z: 6}
+  id: l5-l6-frame
+  material: {color: oklch(0.18 0.005 240), roughness: 0.8}
+  primitive: {depth: 0.06, height: 2.3, kind: box, width: 1.35}
+  rotation: {yaw: 90}
+l5-l6-locker:
+  feetPosition: {x: 45.1, y: 0.01, z: 4.3}
+  id: l5-l6-locker
+  physics: static
+  primitive: {kind: scripted, params: {kind: crate}, script: scripts/loot-geo.js}
+  rotation: {yaw: -90}
+  state: {hp: 60, items: "nvg,battery,battery,almond", mat: wood, maxHp: 60, name: Explorer's drop box}
+  tags: [container, breakable]
+l5-l6-note:
+  feetPosition: {x: 45.699999999999996, y: 1, z: 7.05}
+  id: l5-l6-note
+  rotation: {yaw: 90}
+  vector: "<svg viewBox='0 0 200 120' width='0.45m'><rect width='200' height='120' fill='#e8e0c8'/><text x='100' y='40' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>your light won't work</text><text x='100' y='65' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>feel the left wall</text><text x='100' y='90' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>listen for waves</text></svg>"
+l5-l6-plate:
+  feetPosition: {x: 45.68, y: 2.3, z: 6}
+  id: l5-l6-plate
+  material: {color: oklch(0.15 0.01 240)}
+  primitive: {depth: 0.03, height: 0.36, kind: box, width: 1.2}
+  rotation: {yaw: 90}
+  ui: "<div face=\"front\" width=\"1.2m\" style=\"font-family:serif;text-align:center;color:#c9c4b8;background:#121418;border:14px solid #3a3e44;padding:18px 10px;line-height:1.05\"><div style=\"font-size:130px;font-weight:900;letter-spacing:10px\">LEVEL 6</div><div style=\"font-size:64px;font-style:italic;opacity:.85\">▼ lights out</div></div>"
 l5-lift3:
   behavior: scripts/level-door.js
   feetPosition: {x: -44.800000000000004, y: 0, z: -2.4492935982947065e-17}
@@ -3978,6 +4021,16 @@ l5-stairs-up-plate:
   primitive: {depth: 0.03, height: 0.36, kind: box, width: 1.2}
   rotation: {yaw: 180}
   ui: "<div face=\"front\" width=\"1.2m\" style=\"font-family:serif;text-align:center;color:#e8c983;background:#2a1c12;border:14px solid #8a6a2a;padding:18px 10px;line-height:1.05\"><div style=\"font-size:130px;font-weight:900;letter-spacing:10px\">LEVEL 4</div><div style=\"font-size:64px;font-style:italic;opacity:.85\">▲ abandoned office</div></div>"
+l5-to-l6:
+  behavior: scripts/level-door.js
+  feetPosition: {x: 45.349999999999994, y: 0, z: 6}
+  id: l5-to-l6
+  physics: {body: static, trigger: true}
+  primitive: {depth: 0.5, height: 2.2, kind: box, width: 1.2}
+  rotation: {yaw: 90}
+  state: {to: level6#l6-from-l5}
+  tags: [door]
+  visible: false
 l5-tobias:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
   children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.43c1427f34c45c4356a682d359e3c1d9009830432ed20ba8f7a0d0332015d2a6.glb, materials: {belly: {color: "#e8e2da"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#7a7470"}, mark: {color: "#5c5451"}, nose: {color: "#1c1a20"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#554d4a"}}}, morph: {Frown: 0.3, Half: 0.5}}]
