@@ -89,7 +89,7 @@ export function update(ctx, dt) {
       if (st.dead || (st.hp ?? 1) <= 0) {
         if (!m.deadAt) { m.deadAt = now; setGait(r, m, "still"); becomeCorpse(ctx, r, "Death Rat", ["meat:rat"], killerOf(ctx, pos)?.feetPosition); ctx.emit("playSound", { clip: SND("rat-death-squeal"), position: pos, volume: 0.8 }); ctx.emit("fx", { position: { ...pos, y: 0.15 }, script: BLOOD });
           const k = killerOf(ctx, pos); if (k) { k.state.l5rats ??= 0; k.state.l5rats += 1; } }
-        if (now - m.deadAt > 150000 || (now - m.deadAt > 3000 && !(r.state.items ?? "").length)) { ctx.destroy(r.id); delete mem[r.id]; }
+        if (now - m.deadAt > 3600000 || (now - m.deadAt > 3000 && !(r.state.items ?? "").length)) { ctx.destroy(r.id); delete mem[r.id]; }
         continue;
       }
       let goal = null, sp = 0, target = null;
