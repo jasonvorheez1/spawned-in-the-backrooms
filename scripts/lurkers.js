@@ -94,6 +94,7 @@ export function update(ctx, dt) {
       }
       if (best && !m.prey) ctx.emit("playSound", { clip: SND("bone-crack-twist"), position: pos, volume: 0.8, maxDistance: 24 });
       m.prey = best?.id ?? null;
+      if (st.horde && players.some((p) => p.id === st.horde)) m.prey = st.horde; // a blackout horde hunts its player wherever they are
       if (watched && !m.watched) { let k; do k = POSES[Math.floor(ctx.random() * POSES.length)]; while (k === m.pose && POSES.length > 1); m.pose = k; }
       m.watched = !!watched;
       if (watched) watched.state.sanity = Math.max(0, watched.state.sanity - L.lurkerGaze * 0.2);

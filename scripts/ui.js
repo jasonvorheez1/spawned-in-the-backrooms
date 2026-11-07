@@ -11,6 +11,7 @@ import { talkUi } from './talk-ui.js'
 import { buildUi } from './build-ui.js'
 import { statsUi } from './stats-ui.js'
 import { craftUi } from './craft-ui.js'
+import { hordeUi } from './horde-ui.js'
 import { derived as _dv, carried as _kg } from './lib/stats.js'
 import { derived } from './lib/stats.js'
 import { noclipUi } from './noclip-ui.js'
@@ -228,5 +229,5 @@ export default function render(ctx, player) {
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('wardrobe', 'C')}</kbd> wardrobe · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>
 
-</div>${wardrobe(ctx, player)}${lootUi(ctx, player)}${talkUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${noclipUi(ctx, player)}${modelingStudio.render(ctx, player)}`
+</div>${wardrobe(ctx, player)}${lootUi(ctx, player)}${talkUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}${modelingStudio.render(ctx, player)}`
 }

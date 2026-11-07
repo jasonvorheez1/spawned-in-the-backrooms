@@ -1,0 +1,25 @@
+# Blackout (horde night): every tuned number. The 7 Days to Die clock: a countdown you can see, then the lights go and a horde
+# comes for you and the base you built. Per player (scripts/horde.js).
+firstAt: 420            # seconds of play before the first warning
+every: [600, 780]       # seconds between blackouts after that
+warn: 60                # the countdown the HUD shows before the lights go
+night: 170              # a blackout ends after this long whatever happens
+postpone: 45            # in a safe room when it was due: try again after this many seconds
+base: 5                 # horde size at level 1
+perLevel: 0.55          # more per level
+cap: 20
+waves: 3                # the horde arrives in this many bursts
+waveGap: 24             # seconds between bursts
+ring: [14, 26]          # how far from you they appear (metres)
+hpPerLevel: 0.03        # extra hp per level on horde creatures
+buildHit: 16            # hp a second a horde creature tears off a built piece it is pressed against
+buildReach: 2.4
+sanityDrain: 0.25       # per second while the lights are out
+# the survivor's reward
+reward: { xp: 120, xpPerLevel: 25, rolls: 3, scrap: { scrap_metal: 3, nails: 4, bolts: 2, wire: 2 } }
+# who comes, by place: the kinds are cloned from a living one of that kind in the place
+kinds:
+  main: [smiler, smiler, lurker]
+  level1: [hound]
+  level2: [hound]
+  level3: [hound]

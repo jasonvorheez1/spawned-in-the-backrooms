@@ -64,6 +64,7 @@ export function update(ctx, dt) {
       }
       if (best && !m.prey) ctx.emit("playSound", { clip: SND("smiler-wet-giggle-hiss-stalking"), position: pos, volume: 1, maxDistance: 30 });
       m.prey = best?.id ?? null;
+      if (st.horde && players.some((p) => p.id === st.horde)) m.prey = st.horde; // a blackout horde hunts its player wherever they are
       if (best) m.last = { x: best.feetPosition.x, z: best.feetPosition.z, at: now };
     }
     const prey = m.prey ? players.find((p) => p.id === m.prey) : null;
