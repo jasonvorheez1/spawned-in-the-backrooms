@@ -9,6 +9,6 @@ export const ears = {
     let dx = p.x - me.x, dz = p.z - me.z; const d = Math.hypot(dx, dz) || 1; dx /= d; dz /= d;
     who.state.l5Shove = { x: p.x + dx * 1.5, z: p.z + dz * 1.5, at: ctx.now() };
     ctx.emit("impulse", { target: by, impulse: { x: dx * 420, y: 60, z: dz * 420 } });
-    ctx.emit("playSound", { clip: SND, position: { x: me.x, y: 1, z: me.z }, volume: 0.6 });
+    ctx.emit("playSound", { maxDistance: 22, refDistance: 3, clip: SND, position: { x: me.x, y: 1, z: me.z }, volume: 0.6 });
   },
 };

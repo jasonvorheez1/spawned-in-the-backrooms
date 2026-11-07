@@ -50,7 +50,7 @@ export function update(ctx, dt) {
     if (!o) { if (now >= (mem["re" + f.id] ?? 0)) { mem["re" + f.id] = now + 240000; if (mem["re" + f.id + "x"]) place(ctx, f); mem["re" + f.id + "x"] = true; } continue; }
     const m = (mem[f.id] ??= {}), pos = o.feetPosition, st = o.state, vy = (o.velocity?.y ?? 0) - 18 * dt;
     if (st.dead || (st.hp ?? 1) <= 0) {
-      if (!m.deadAt) { m.deadAt = now; becomeCorpse(ctx, o, `${f.name}'s body`, ["bobbypin", "battery", ctx.random() < 0.5 ? "kit" : "tape"], killerOf(ctx, pos)?.feetPosition); ctx.emit("playSound", { clip: SND("hollow-sigh-fading-whisper-thank-you-for-staying"), position: pos, volume: 0.9 }); }
+      if (!m.deadAt) { m.deadAt = now; becomeCorpse(ctx, o, `${f.name}'s body`, ["bobbypin", "battery", ctx.random() < 0.5 ? "kit" : "tape"], killerOf(ctx, pos)?.feetPosition); ctx.emit("playSound", { maxDistance: 22, refDistance: 3, clip: SND("hollow-sigh-fading-whisper-thank-you-for-staying"), position: pos, volume: 0.9 }); }
       if (now - m.deadAt > 3600000 || (now - m.deadAt > 3000 && !(o.state.items ?? "").length)) { ctx.destroy(f.id); delete mem[f.id]; mem["re" + f.id] = now + 240000; }
       continue;
     }
@@ -76,7 +76,7 @@ export function update(ctx, dt) {
       m.strike = now + T.strikeEvery; mode = "strike";
       const at = hit(ctx, target, T.strike, "#ff2a2a");
       o.anim.move = { clip: "cdn/clip-attack.glb" }; m.anim = "strike";
-      ctx.emit("playSound", { clip: SND("heavy-blunt-body-blow-thud"), position: at, volume: 1 });
+      ctx.emit("playSound", { maxDistance: 20, refDistance: 3, clip: SND("heavy-blunt-body-blow-thud"), position: at, volume: 1 });
       ctx.emit("screenShake", { intensity: 0.55, duration: 0.3 }, { audience: { player: target.id } });
       ctx.emit("cameraPunch", { direction: { x: target.feetPosition.x - pos.x, y: 0, z: target.feetPosition.z - pos.z }, intensity: 0.7 }, { audience: { player: target.id } });
       ctx.emit("screenFlash", { color: "#300000", duration: 0.25, intensity: 0.5 }, { audience: { player: target.id } });

@@ -11,6 +11,6 @@ export function onTriggerEnter(ctx, other) {
   if (!other?.state || other.state.level == null || !ctx.self.state.to) return;
   const key = String(ctx.self.id).split("/").pop();
   ctx.emit("screenFlash", { color: "#000000", duration: 0.9, intensity: 1 }, { audience: { player: other.id } });
-  ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-static-burst-glitch-threshold.mp3", position: other.feetPosition, volume: 0.8 }, { audience: { player: other.id } });
+  ctx.emit("playSound", { maxDistance: 22, refDistance: 3, clip: "/cdn/moodboard-realistic-gritty/sfx-static-burst-glitch-threshold.mp3", position: other.feetPosition, volume: 0.8 }, { audience: { player: other.id } });
   ctx.cross(other, PAIR[key] ?? ctx.self.state.to);
 }

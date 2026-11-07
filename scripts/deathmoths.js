@@ -40,7 +40,7 @@ export function update(ctx, dt) {
       if (!m.deadAt) {
         m.deadAt = now; m.y0 = pos.y; if (!st.dead) s.state.dead = true; s.fx = null; s.audio = null; clip(ctx, s, m, "Death", { clampWhenFinished: true });
         ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.4, z: pos.z }, script: DEATH });
-        ctx.emit("playSound", { clip: SND("dusty-paper-moths-crumble-burst"), position: pos, volume: 0.8 });
+        ctx.emit("playSound", { maxDistance: 14, refDistance: 2, clip: SND("dusty-paper-moths-crumble-burst"), position: pos, volume: 0.8 });
       } else if (now - m.deadAt < 1600) { const k = (now - m.deadAt) / 1600; m.spin += D.spinFast * (1 - k) * dt; s.feetPosition = { x: pos.x, y: Math.max(0.05, m.y0 * (1 - k * k)), z: pos.z }; s.rotation = { yaw: m.spin }; }
       else if (now - m.deadAt > 2600 && !m.gone) { m.gone = true; ctx.destroy(s.id); }
       continue;

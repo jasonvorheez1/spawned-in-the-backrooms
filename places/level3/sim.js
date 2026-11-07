@@ -193,7 +193,7 @@ export function tick(ctx) {
       const ps = p.state; if (!ps || ps.hp == null || ps.hp <= 0) continue;
       const f = p.feetPosition, dt = 0.25;
       // sludge: it burns through boots and the fumes get in your head
-      for (const h of SLUDGE) if (Math.hypot(f.x - h.x, f.z - h.z) < 1.05 && f.y < 0.3) { ps.hp -= dmgAfterArmor(ps.look, L.sludgeHurt * dt); ps.sanity = Math.max(0, (ps.sanity ?? 0) - L.sludgeSanity * dt); if (!p.session?.sl || now - (ps.slAt ?? 0) > 1500) { ps.slAt = now; ctx.emit("playSound", { clip: GRIT("acid-sizzle-hiss"), position: f, volume: 0.5 }, { audience: { player: p.id } }); ctx.emit("screenFlash", { color: "#201028", duration: 0.3, intensity: 0.35 }, { audience: { player: p.id } }); } break; }
+      for (const h of SLUDGE) if (Math.hypot(f.x - h.x, f.z - h.z) < 1.05 && f.y < 0.3) { ps.hp -= dmgAfterArmor(ps.look, L.sludgeHurt * dt); ps.sanity = Math.max(0, (ps.sanity ?? 0) - L.sludgeSanity * dt); if (!p.session?.sl || now - (ps.slAt ?? 0) > 1500) { ps.slAt = now; ctx.emit("playSound", { maxDistance: 24, refDistance: 4, clip: GRIT("acid-sizzle-hiss"), position: f, volume: 0.5 }, { audience: { player: p.id } }); ctx.emit("screenFlash", { color: "#201028", duration: 0.3, intensity: 0.35 }, { audience: { player: p.id } }); } break; }
       // live boxes arc into whoever brushes past
       for (const h of SPARKS) {
         const [nx, nz] = D4[h.d], bx = h.wx - nx * 0.1, bz = h.wz - nz * 0.1;
@@ -201,7 +201,7 @@ export function tick(ctx) {
           ps.zapAt = now; ps.hp -= dmgAfterArmor(ps.look, L.sparkHurt);
           const at = { x: f.x, y: f.y + 1.1, z: f.z };
           ctx.emit("fx", { position: at, script: BLOW.replace("burst=120", "burst=40").replace("size=3", "size=1.2").replace(/pop smoke[^\n]*\n/, "") });
-          ctx.emit("playSound", { clip: GRIT("electric-zap-shock"), position: at, volume: 0.9 });
+          ctx.emit("playSound", { maxDistance: 32, refDistance: 5, clip: GRIT("electric-zap-shock"), position: at, volume: 0.9 });
           ctx.emit("damageNumber", { position: at, value: L.sparkHurt, color: "#9cc8ff" });
           ctx.emit("screenShake", { intensity: 0.4, duration: 0.25 }, { audience: { player: p.id } });
           ctx.emit("screenFlash", { color: "#b8d8ff", duration: 0.25, intensity: 0.6 }, { audience: { player: p.id } });

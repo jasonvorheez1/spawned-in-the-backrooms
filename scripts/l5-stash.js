@@ -8,8 +8,8 @@ export const ears = {
     const me = ctx.self, s = me.state, now = ctx.now(), uid = p.userId ?? p.id;
     const tr = s.kind === "trunk" ? me : ctx.getObject(`l5-people-trunk-${s.suite}`);
     const book = ctx.place.state.l5rent?.[s.suite];
-    if (!tr || tr.state.renter !== uid || !book || book.uid !== uid || book.until < now) { p.state.notice = { text: "Locked. This isn't your suite's trunk.", at: now }; ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-locked-trunk-latch-rattle.mp3", position: me.feetPosition, volume: 0.6 }, { audience: { nearby: me.feetPosition, radius: 12 } }); return; }
-    if (s.kind === "trunk") { p.state.lootOpen = me.id; p.state.lootName = "Steamer trunk"; p.state.lootList = s.items ?? ""; p.state.focus = null; ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-old-steamer-trunk-lid-creak-open.mp3", position: me.feetPosition, volume: 0.6 }, { audience: { nearby: me.feetPosition, radius: 12 } }); return; }
+    if (!tr || tr.state.renter !== uid || !book || book.uid !== uid || book.until < now) { p.state.notice = { text: "Locked. This isn't your suite's trunk.", at: now }; ctx.emit("playSound", { maxDistance: 8, refDistance: 1.5, clip: "/cdn/moodboard-realistic-gritty/sfx-locked-trunk-latch-rattle.mp3", position: me.feetPosition, volume: 0.6 }, { audience: { nearby: me.feetPosition, radius: 12 } }); return; }
+    if (s.kind === "trunk") { p.state.lootOpen = me.id; p.state.lootName = "Steamer trunk"; p.state.lootList = s.items ?? ""; p.state.focus = null; ctx.emit("playSound", { maxDistance: 8, refDistance: 1.5, clip: "/cdn/moodboard-realistic-gritty/sfx-old-steamer-trunk-lid-creak-open.mp3", position: me.feetPosition, volume: 0.6 }, { audience: { nearby: me.feetPosition, radius: 12 } }); return; }
     const add = [], ps = p.state;
     for (let i = 0; i < (ps.almonds ?? 0); i++) add.push("almond:grey"); ps.almonds = 0;
     for (let i = 0; i < (ps.bobbypins ?? 0); i++) add.push("bobbypin"); ps.bobbypins = 0;

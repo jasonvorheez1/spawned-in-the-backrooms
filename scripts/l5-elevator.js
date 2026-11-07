@@ -108,7 +108,7 @@ function cabUpdate(ctx) {
 function cab(ctx) { return ctx.getObject(ctx.self.state.cab); }
 function pick(ctx, floor, by) {
   const p = ctx.self, c = cab(ctx); if (!c || p.state.closed) return;
-  ctx.emit("playSound", { clip: E.sfx.button, position: p.worldFeetPosition, volume: 0.5 });
+  ctx.emit("playSound", { maxDistance: 8, refDistance: 1.5, clip: E.sfx.button, position: p.worldFeetPosition, volume: 0.5 });
   p.state.lastBy = by; p.state.lastPress = floor;
   if (DEADLY.has(floor)) { p.state.pending = floor; p.state.noconfirm = false; p.state.shut = true; return; }
   c.state.req = { floor, by };
@@ -117,7 +117,7 @@ export const ears = {
   press: (ctx, { by }) => {
     if (ctx.self.state.role !== "panel") return;
     const p = ctx.self.state; p.closed = false; p.ready = true; p.shut = false; p.noconfirm = true; p.pending = null; p.openAt = ctx.now();
-    ctx.emit("playSound", { clip: E.sfx.button, position: ctx.self.worldFeetPosition, volume: 0.4, pitch: 0.8 });
+    ctx.emit("playSound", { maxDistance: 8, refDistance: 1.5, clip: E.sfx.button, position: ctx.self.worldFeetPosition, volume: 0.4, pitch: 0.8 });
   },
   "ui:yes": (ctx, { by }) => { const p = ctx.self.state, c = cab(ctx); if (!p.pending || !c) return; c.state.req = { floor: p.pending, by }; p.pending = null; p.noconfirm = true; },
   "ui:no": (ctx) => { const p = ctx.self.state; p.pending = null; p.noconfirm = true; p.shut = false; },

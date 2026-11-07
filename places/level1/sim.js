@@ -136,7 +136,7 @@ export function tick(ctx) {
   // the Flickering: a stutter, then black, then the lights come back
   const lamps = () => ctx.query({ tags: ["l1lamp"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   const set = (on) => { for (const r of lamps()) { const o = ctx.place.objects[r.id]; if (!o) continue; o.light = { ...o.light, intensity: on ? (o.light?.distance > 10 ? LAMP_ON : 2.5) : 0 }; o.material = { ...o.material, emissiveIntensity: on ? 2.2 : 0 }; } };
-  if (!s.flicker && now >= s.nextFlicker) { s.flicker = "warn"; s.flickerAt = now; ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-fluorescent-light-flicker-buzz.mp3", volume: 0.5 }, { audience: { place: ctx.place.id } }); }
+  if (!s.flicker && now >= s.nextFlicker) { s.flicker = "warn"; s.flickerAt = now; ctx.emit("playSound", { maxDistance: 32, refDistance: 5, clip: "/cdn/moodboard-realistic-gritty/sfx-fluorescent-light-flicker-buzz.mp3", volume: 0.5 }, { audience: { place: ctx.place.id } }); }
   if (s.flicker === "warn") { const t = (now - s.flickerAt) / 1000; set(Math.floor(t * 6) % 3 !== 0); if (t > L.flickerWarn) { s.flicker = "dark"; s.flickerAt = now; s.darkFor = (L.flickerLength[0] + ctx.random() * (L.flickerLength[1] - L.flickerLength[0])) * 1000; set(false); } }
   else if (s.flicker === "dark" && now - s.flickerAt > s.darkFor) { s.flicker = null; set(true); afterFlicker(ctx); s.nextFlicker = now + (L.flickerEvery[0] + ctx.random() * (L.flickerEvery[1] - L.flickerEvery[0])) * 1000; }
 }

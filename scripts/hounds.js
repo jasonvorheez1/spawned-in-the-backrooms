@@ -43,7 +43,7 @@ export function update(ctx, dt) {
       else m.bleed = null;
     }
     if (st.dead || (st.hp ?? 1) <= 0) {
-      if (!m.deadAt) { m.deadAt = now; anim(h, m, "death", false); h.velocity = { x: 0, y: -2, z: 0 }; ctx.emit("playSound", { clip: SND("hound-death-yelp"), position: pos, volume: 0.8 }); }
+      if (!m.deadAt) { m.deadAt = now; anim(h, m, "death", false); h.velocity = { x: 0, y: -2, z: 0 }; ctx.emit("playSound", { maxDistance: 32, refDistance: 5, clip: SND("hound-death-yelp"), position: pos, volume: 0.8 }); }
       else if (!m.gone && now - m.deadAt > T.deathMs) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.4, z: pos.z }, script: POOF }); ctx.destroy(h.id); }
       continue;
     }
@@ -57,7 +57,7 @@ export function update(ctx, dt) {
         const kx = v.feetPosition.x - pos.x, kz = v.feetPosition.z - pos.z, kd = Math.hypot(kx, kz) || 1;
         ctx.emit("impulse", { target: v.id, impulse: { x: kx / kd * T.knock * 70, y: 220, z: kz / kd * T.knock * 70 } });
         v.state.stunUntil = now + T.playerStunMs;
-        ctx.emit("playSound", { clip: SND("hound-bite-snap"), position: at, volume: 1 });
+        ctx.emit("playSound", { maxDistance: 20, refDistance: 3, clip: SND("hound-bite-snap"), position: at, volume: 1 });
         ctx.emit("screenShake", { intensity: 0.6, duration: 0.35 }, { audience: { player: v.id } });
         ctx.emit("cameraPunch", { direction: { x: kx / kd, y: 0.3, z: kz / kd }, intensity: 0.8 }, { audience: { player: v.id } });
         ctx.emit("hitstop", { duration: 0.04 }, { audience: { player: v.id } });
@@ -121,7 +121,7 @@ export function update(ctx, dt) {
       const px = prey.feetPosition.x - pos.x, pz = prey.feetPosition.z - pos.z, pd = Math.hypot(px, pz) || 1;
       m.pounceAt = now; m.pounceOn = prey.id; m.pounceHit = false; m.nextPounce = now + T.pounceCd; anim(h, m, "pounce", false);
       h.velocity = { x: px / pd * T.pounceSpeed, y: T.pounceLift, z: pz / pd * T.pounceSpeed }; h.rotation = { yaw: Math.atan2(-px, -pz) * 57.2958 };
-      ctx.emit("playSound", { clip: SND("hound-snarl-growl"), position: pos, volume: 1, pitch: 1.3 });
+      ctx.emit("playSound", { maxDistance: 24, refDistance: 4, clip: SND("hound-snarl-growl"), position: pos, volume: 1, pitch: 1.3 });
       continue;
     }
     const mauling = now < (m.maulUntil ?? 0);
@@ -133,7 +133,7 @@ export function update(ctx, dt) {
       m.next = now + L.houndCooldown * 1000; const at = hitPrey(ctx, h, prey, Math.round(L.houndBite * mu.dmg), now);
       m.maulUntil = now + T.maulMs; m.clip = null; m.bleed = { id: prey.id, until: now + T.bleedMs, next: now + 1000 }; // the thrash opens a wound
       ctx.emit("fx", { position: at, script: BLOOD });
-      ctx.emit("playSound", { clip: SND("hound-bite-snap"), position: at, volume: 0.9 });
+      ctx.emit("playSound", { maxDistance: 20, refDistance: 3, clip: SND("hound-bite-snap"), position: at, volume: 0.9 });
       ctx.emit("screenShake", { intensity: 0.3, duration: 0.2 }, { audience: { player: prey.id } });
     }
   }

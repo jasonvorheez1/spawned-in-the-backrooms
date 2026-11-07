@@ -4,7 +4,7 @@ const NEAR = 1.6, SHUT_AFTER = 9000, RATE = 220;
 export const ears = {
   press: (ctx) => { const s = ctx.self.state; s.open = !s.open; s.held = s.open ? ctx.now() : 0; sound(ctx, s.open); },
 };
-function sound(ctx, open) { ctx.emit("playSound", { clip: open ? "/cdn/moodboard-realistic-gritty/sfx-old-wooden-hotel-door-creak-open.mp3" : "/cdn/moodboard-realistic-gritty/sfx-wooden-door-close-latch-click.mp3", position: ctx.self.worldFeetPosition, volume: 0.45 }); }
+function sound(ctx, open) { ctx.emit("playSound", { maxDistance: 18, refDistance: 3, clip: open ? "/cdn/moodboard-realistic-gritty/sfx-old-wooden-hotel-door-creak-open.mp3" : "/cdn/moodboard-realistic-gritty/sfx-wooden-door-close-latch-click.mp3", position: ctx.self.worldFeetPosition, volume: 0.45 }); }
 export function update(ctx, dt) {
   const s = ctx.self.state, me = ctx.self.feetPosition, base = s.baseYaw ?? 0;
   let near = false; for (const p of ctx.place.players) { const f = p.feetPosition; if (f && Math.hypot(f.x - me.x, f.z - me.z) < NEAR) { near = true; break; } }

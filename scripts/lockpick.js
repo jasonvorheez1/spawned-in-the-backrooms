@@ -6,7 +6,7 @@ import { skillsOf, attrsOf } from './lib/stats.js'
 import { gain } from './player.js'
 
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
-const snd = (ctx, n, v = 0.6) => ctx.emit('playSound', { clip: SND(n), position: ctx.self.feetPosition, volume: v }, { audience: { player: ctx.self.id } })
+const snd = (ctx, n, v = 0.6) => ctx.emit('playSound', { maxDistance: 22, refDistance: 3, clip: SND(n), position: ctx.self.feetPosition, volume: v }, { audience: { player: ctx.self.id } })
 const note = (ctx, text) => { ctx.self.state.notice = { text, at: ctx.now() } }
 
 // Savi's picks: half-width of the sweet spot grows with skill over the lock's level; partial turn out to +40°

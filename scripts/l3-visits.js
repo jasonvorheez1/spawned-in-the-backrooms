@@ -72,7 +72,7 @@ function ratsStep(ctx, dt, now, S) {
   for (const r of all) {
     const m = (mem[r.id] ??= {}), pos = r.feetPosition, st = r.state ?? {}, vy = (r.velocity?.y ?? 0) - 18 * dt;
     if (st.corpseAt || st.dead || (st.hp ?? 1) <= 0) {
-      if (!m.deadAt) { m.deadAt = now; setGait(r, m, "still"); if (!st.corpseAt) { const k = killerOf(ctx, pos); becomeCorpse(ctx, r, "Death Rat", ["meat:rat"], k?.feetPosition); r.fx = null; ctx.emit("playSound", { clip: SND("rat-death-squeal"), position: pos, volume: 0.8 }); if (k) { k.state.l5rats ??= 0; k.state.l5rats += 1; } } }
+      if (!m.deadAt) { m.deadAt = now; setGait(r, m, "still"); if (!st.corpseAt) { const k = killerOf(ctx, pos); becomeCorpse(ctx, r, "Death Rat", ["meat:rat"], k?.feetPosition); r.fx = null; ctx.emit("playSound", { maxDistance: 32, refDistance: 5, clip: SND("rat-death-squeal"), position: pos, volume: 0.8 }); if (k) { k.state.l5rats ??= 0; k.state.l5rats += 1; } } }
       if (now - m.deadAt > 3600000 || (now - m.deadAt > 3000 && !(r.state.items ?? "").length)) { ctx.destroy(r.id); delete mem[r.id]; }
       continue;
     }
@@ -96,7 +96,7 @@ function ratsStep(ctx, dt, now, S) {
         if (flat(t.feetPosition, pos) < R.reach && now >= (m.bite ?? 0)) {
           m.bite = now + rr(ctx, R.biteEvery);
           const at = hit(ctx, t, Math.round(rr(ctx, [R.bite[0], R.bite[1] + 0.99]) - 0.49));
-          ctx.emit("playSound", { clip: SND("small-rat-bite-squeak"), position: at, volume: 0.7, pitch: 0.9 + ctx.random() * 0.3 });
+          ctx.emit("playSound", { maxDistance: 14, refDistance: 2, clip: SND("small-rat-bite-squeak"), position: at, volume: 0.7, pitch: 0.9 + ctx.random() * 0.3 });
           ctx.emit("fx", { position: { ...at, y: 0.4 }, script: BLOOD });
         }
       } else {

@@ -172,7 +172,7 @@ export function damageEntity(ctx, o, dmg, at, normal, kind) {
     const rare = rollDrops(ctx, mat, kind), items = [...rare, ...(o.state.items ? String(o.state.items).split(',').filter(Boolean) : [])]
     spawnRubble(ctx, { x: fp.x, y: fp.y + 0.02, z: fp.z }, items, o.state.items ? (o.state.name ?? 'Wreck') : mat === 'machine' ? `${o.state.name ?? 'Machine'} parts` : 'Rubble')
     const good = rare.filter((t) => !['scrap_metal', 'scrap_wood', 'drywall', 'nails', 'wire', 'rubble', 'rust_flakes', 'mortar_dust', 'bricks', 'cinder', 'tile_shard'].includes(t))
-    if (good.length) { ctx.emit('damageNumber', { position: { x: fp.x, y: fp.y + 1.4, z: fp.z }, text: `+${good.length} parts`, color: '#7fd1a0', size: 1 }); ctx.emit('playSound', { clip: SND('mechanical-parts-salvage-clink'), position: fp, volume: 0.8 }) }
+    if (good.length) { ctx.emit('damageNumber', { position: { x: fp.x, y: fp.y + 1.4, z: fp.z }, text: `+${good.length} parts`, color: '#7fd1a0', size: 1 }); ctx.emit('playSound', { maxDistance: 8, refDistance: 1.5, clip: SND('mechanical-parts-salvage-clink'), position: fp, volume: 0.8 }) }
     ctx.destroy(o.id)
   }
   return true
