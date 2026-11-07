@@ -5,17 +5,17 @@ import { SPARKS, N, S, H, TH, HALF, isOpen, isBars, isGate, openings, zoneOf, bl
 import { vault } from "./lib/level3-arch.js";
 import { slab, tube } from "./lib/shapes.js";
 
-const BRICK = "cdn/texture-aged-red-brick-wall-soot.png", FLOOR = "cdn/texture-dusty-cracked-concrete-floor.png", CEIL = "cdn/texture-dirty-concrete-ceiling-slab.png", STEEL = "cdn/texture-scratched-worn-steel.png";
+const BRICK = "cdn/texture-photoreal-weathered-orange-clay-brick-wall-thin-grey-mortar-soot-stains.png", FLOOR = "cdn/texture-dusty-cracked-concrete-floor.png", CEIL = "cdn/texture-dirty-concrete-ceiling-slab.png", STEEL = "cdn/texture-scratched-worn-steel.png";
 const T = 0.3;
 // wall skins by sector (3 x 3 cell patches, never per wall): orange-red brick, large grey brick, glazed tan tile; brown brick in the blind halls
 const SKIN = {
-  orange: { tex: "cdn/texture-bright-orange-red-brick-wall-dark-soot-streaks.png", col: "oklch(0.95 0.03 45)", rough: 0.85, base: "oklch(0.55 0.05 35)" },
+  orange: { tex: "cdn/texture-photoreal-weathered-orange-clay-brick-wall-thin-grey-mortar-soot-stains.png", col: "oklch(0.97 0.015 60)", rough: 0.85, base: "oklch(0.55 0.05 35)" },
   grey: { tex: "cdn/texture-large-grey-brick-wall-dusty-mortar.png", col: "oklch(0.9 0.01 80)", rough: 0.9, base: "oklch(0.45 0.01 80)" },
-  tile: { tex: "cdn/texture-glossy-tan-brown-glazed-ceramic-wall-tiles.png", col: "oklch(0.93 0.03 70)", rough: 0.3, base: "oklch(0.2 0.02 50)" },
+  tile: { tex: "cdn/texture-photoreal-glazed-tan-brown-ceramic-wall-tile-grimy-grout-institutional.png", col: "oklch(0.99 0.04 85)", rough: 0.3, base: "oklch(0.2 0.02 50)" },
   brown: { tex: "cdn/texture-dark-brown-brick-wall-grimy-mortar.png", col: "oklch(0.88 0.03 55)", rough: 0.9, base: "oklch(0.35 0.03 50)" },
 };
 export const skinOf = (cx, cz) => { const z = zoneOf(Math.max(0, Math.min(N - 1, cx)), Math.max(0, Math.min(N - 1, cz))); if (z === "dark") return "brown"; const r = hash(Math.floor(Math.max(cx, 0) / 3), Math.floor(Math.max(cz, 0) / 3), 21); return r < 0.4 ? "orange" : r < 0.65 ? "grey" : "tile"; };
-const TERRAZZO = "cdn/texture-grey-terrazzo-floor-tiles-dusty.png", PEEL = "cdn/texture-peeling-flaking-paint-dark-concrete-ceiling.png";
+const TERRAZZO = "cdn/texture-grey-terrazzo-floor-tiles-dusty.png", PEEL = "cdn/texture-photoreal-off-white-painted-concrete-ceiling-peeling-paint-water-stains.png";
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [Math.abs(x1 - x0) / 2, Math.abs(y1 - y0) / 2, Math.abs(z1 - z0) / 2]);
 const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]];
 const solid = (cx, cz, d) => !isOpen(cx, cz, d) && !isBars(cx, cz, d);
@@ -43,10 +43,10 @@ export function geometry(ctx) {
   // ceiling: dark paint peeling off the slab in the tall halls, bare concrete over the crawls
   ctx.roughness(0.95);
   for (const peel of [true, false]) {
-    ctx.albedo(peel ? PEEL : CEIL); ctx.color(peel ? "oklch(0.85 0.01 70)" : "oklch(0.5 0.01 70)");
+    ctx.albedo(peel ? PEEL : CEIL); ctx.color(peel ? "oklch(0.86 0.01 80)" : "oklch(0.62 0.01 70)");
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) { if ((ceilingAt(cx, cz) === H) !== peel) continue; const x0 = cx * S - HALF, z0 = cz * S - HALF, y = ceilingAt(cx, cz); ctx.quad(x0, y, z0, x0 + S, y, z0, x0 + S, y, z0 + S, x0, y, z0 + S); }
   }
-  ctx.albedo(BRICK); ctx.color("oklch(0.72 0.06 40)");
+  ctx.albedo(BRICK); ctx.color("oklch(0.9 0.02 55)");
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) for (const d of [0, 1]) {
     const nx = cx + D4[d][0], nz = cz + D4[d][1]; if (nx >= N || nz >= N || solid(cx, cz, d)) continue;
     if (ceilingAt(cx, cz) === ceilingAt(nx, nz)) continue;
@@ -68,7 +68,7 @@ export function geometry(ctx) {
   }
   ctx.albedo(BRICK); ctx.roughness(0.9);
   // crawl halls: thick brick liners squeeze the passage to a 1 m culvert (a 0.7 m body, 0.15 m each side), a barrel vault overhead
-  ctx.color("oklch(0.6 0.06 38)");
+  ctx.color("oklch(0.78 0.03 50)");
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     if (zoneOf(cx, cz) !== "tight") continue; const c = cellCenter(cx, cz), h = S / 2, arms = tightArms(cx, cz);
     for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) box(ctx, c.x + sx * TW, c.x + sx * h, 0, TH, c.z + sz * TW, c.z + sz * h); // corners always
@@ -105,19 +105,20 @@ export function geometry(ctx) {
     const c = cellCenter(cx, cz), top = ceilingAt(cx, cz);
     for (const d of [0, 1, 2, 3]) {
       const h = live.get(`${cx},${cz},${d}`);
-      if (!solid(cx, cz, d) || (!h && hash(cx * 4 + d, cz, 31) > 0.3)) continue;
+      if (!solid(cx, cz, d) || (!h && hash(cx * 4 + d, cz, 31) > 0.62)) continue;
       const [nx, nz] = D4[d], tx = -nz, tz = nx, w = S / 2 - T - 0.05;
-      const k = 3 + (h && hash(cx, cz, 33 + d) < 0.45 ? 1 : 0), y = top - 0.07;
+      const k = 3 + (h || hash(cx, cz, 33 + d) < 0.45 ? 1 : 0), y = top - 0.16;
       const P = (off, along, yy) => [c.x + nx * off + tx * along, yy, c.z + nz * off + tz * along];
       const drop = h ? { a: (h.wx - c.x) * tx + (h.wz - c.z) * tz, by: 1.62, glb: true } : hash(cx * 4 + d, cz, 37) < 0.22 ? { a: (hash(cx, cz, 39) - 0.5) * 1.8, by: 0.9 + hash(cx, cz, 41) * 0.3 } : null;
       for (let i = 0; i < k; i++) {
-        const off = w - i * 0.085, r = 0.024 + (i === 0 ? 0.008 : 0);
+        const off = w - i * 0.095, r = 0.03 + (i === 0 ? 0.01 : 0);
         rod(ctx, P(off, -S / 2, y), P(off, S / 2, y), r, 4);
         if (drop) { // the bundle turns down the wall, fanning in to sit side by side over the box
           const sx = drop.a + (i - (k - 1) / 2) * (drop.glb ? 0.16 : 0.055), lo = drop.glb ? drop.by : drop.by + 0.6;
           tube(ctx, [P(off, sx, y), P(off - 0.02, sx, y - 0.12), P((off + w) / 2, sx, y - 0.32), P(w, sx, y - 0.55), P(w, sx, lo + 0.08)], [r, r, r, r, r], 4, [1, 1], 0, 1, 1);
         }
       }
+      for (let j = -1; j <= 1; j++) { const sa = j * 1.3; const p0 = P(w - (k - 1) * 0.095 - 0.05, sa - 0.025, y - 0.05), p1 = P(w + 0.02, sa + 0.025, y + 0.05); box(ctx, Math.min(p0[0], p1[0]), Math.max(p0[0], p1[0]), y + 0.04, top, Math.min(p0[2], p1[2]), Math.max(p0[2], p1[2])); }
       if (drop && !drop.glb) boxes.push({ ...P(w - 0.045, drop.a, 0), nx, nz, by: drop.by });
       if (hash(cx * 4 + d, cz, 43) < 0.25) cables.push({ P, w, y });
     }
