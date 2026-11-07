@@ -1,6 +1,6 @@
 # Melee weapons. Fists are what you start with: weak on purpose. Found weapons need a level to wield.
 # damage: base hit. levelScale: share of the per-level damage bonus it gets. cooldown: seconds. reach: metres. stamina: cost per swing.
-order: [fists, table_leg, pipe_scrap, crowbar, bat, hatchet, fire_axe, pistol, shotgun, rebar, wrench, screwdriver, sledgehammer, stun_baton, lineman_machete]
+order: [fists, table_leg, pipe_scrap, crowbar, bat, hatchet, fire_axe, pistol, shotgun, rebar, wrench, screwdriver, sledgehammer, stun_baton, lineman_machete, knife, smg]
 # rarity: common < uncommon < rare. weight: how often it is rolled for floor spawns and smiler drops. xp: reward for picking one up.
 rarities:
   common:   { label: COMMON,   color: '#c9c2a0' }
@@ -39,6 +39,11 @@ sledgehammer: { name: Sledgehammer, damage: 64, levelScale: 1.3, cooldown: 1.35,
 # Level 3 finds (Electrical Station crates only; level3: true keeps them out of the other levels' rolls). Savi's picks.
 stun_baton:      { name: Stun baton,        damage: 30, levelScale: 1,   cooldown: 0.55, reach: 2.4, stamina: 11, minLevel: 7, rarity: rare, weight: 2, xp: 40, level3: true, color: "oklch(0.25 0.01 260)", length: 0.6 }
 lineman_machete: { name: "Lineman's machete", damage: 44, levelScale: 1.15, cooldown: 0.7, reach: 2.7, stamina: 15, minLevel: 8, rarity: rare, weight: 2, xp: 50, level3: true, color: "oklch(0.3 0.01 250)", length: 0.72 }
+# Level 5 finds (also rare in Level 3 crates; level3: true keeps them out of Level 0's rolls).
+# knife: fast, quiet (no thud the halls hear), sneak: damage multiplier on a target that is not onto you (from behind or crouched).
+knife:           { name: Combat knife,      damage: 9,  levelScale: 0.7, cooldown: 0.32, reach: 1.9, stamina: 4, minLevel: 2, sneak: 3, quiet: true, ap: 12, rarity: uncommon, weight: 3, xp: 15, level3: true, color: "oklch(0.75 0.01 250)", length: 0.31, kg: 0.4 }
+# smg: a 1930s drum-or-stick Thompson. auto: fires while held. ap: Fallout AP per 10-round burst. spread: radians the cone opens at full heat; heatPer: heat per shot (0..1). wear: share of the usual per-shot wear.
+smg:             { name: Thompson SMG,      damage: 9,  levelScale: 0.5, cooldown: 0.09, reach: 2, range: 24, ranged: true, auto: true, magSize: 30, reloadTime: 2.3, cone: 0.988, adsCone: 0.995, spread: 0.13, heatPer: 0.09, wear: 0.2, ap: 30, sound: smg-tommy-gun-loud-rattle-shot, fovAds: 50, ads: [0, -0.07, 0.46], muzzle: [0, 0.03, -0.49], recoil: { up: 70, back: 0.6, lift: 0.12, side: 30, twist: 20 }, stamina: 0.3, minLevel: 9, rarity: rare, weight: 1, xp: 60, level3: true, color: "oklch(0.3 0.02 260)", length: 0.85, kg: 4.9 }
 # Variants (my picks): a found weapon may roll one. The key is "<kind>~<variant>" (crowbar~taped), everywhere a kind goes.
 # for: which kinds can roll it (melee, ranged, blunt, blade, or a kind's name). chance: weight against `plain` (no variant).
 # Each number multiplies the base stat; rarity steps the rarity up or down; cnd: the condition it is found at.
@@ -53,4 +58,6 @@ variants:
   honed:    { name: Honed,        for: [blade], chance: 8, damage: 1.22, cooldown: 0.94, rarity: 1, xp: 1.6, look: edge }
   extended: { name: Extended-mag, for: [pistol], chance: 10, magSize: 1.5, reloadTime: 1.15, rarity: 1, xp: 1.5, look: mag }
   sawn:     { name: Sawed-off,    for: [shotgun], chance: 10, damage: 1.15, range: 0.65, cone: 0.6, pellets: 1.25, cooldown: 0.9, rarity: 1, xp: 1.5, look: sawn, short: 0.72 }
+  drum:     { name: Drum-fed,     for: [smg], chance: 10, magSize: 1.67, reloadTime: 1.3, rarity: 1, xp: 1.5 }
+  serrated: { name: Serrated,     for: [knife], chance: 10, damage: 1.25, rarity: 1, xp: 1.4 }
   meg:      { name: M.E.G.-issue, for: [melee, ranged], chance: 4, damage: 1.12, cooldown: 0.92, cone: 0.7, rarity: 2, xp: 2.2, cnd: 100, look: meg }

@@ -103,7 +103,7 @@ export function derived(s) {
 
 // ---- carry weight, in kilograms
 const FIXED = { almond: 0.5, ammo: 0.4, shells: 0.5, ration: 0.4, bandage: 0.1, battery: 0.3, kit: 1.0, book: 0.3, firesalt: 0.3 }
-export function weaponWeight(k) { const w = W[k]; return w ? (w.weight ?? (w.ranged ? 2.8 : w.damage > 30 ? 3.2 : 1.6)) : 0 }
+export function weaponWeight(k) { const w = W[k]; return w ? (w.kg ?? w.weight ?? (w.ranged ? 2.8 : w.damage > 30 ? 3.2 : 1.6)) : 0 }
 import BRK from './data/breakables.yml'
 export function tokenWeight(token) {
   if (BRK.scrap[token]) return BRK.scrap[token].kg
