@@ -49,25 +49,6 @@ function flairClip(face) {
 }
 function flair(obj, face) { obj.anim.flair = { clip: flairClip(face), loop: 'loop', weight: 1, blendIn: 0.3 } }
 
-// Tail and ears act out the mood on their own channel (the gait clips never touch these bones, so both play at once):
-// happy wags quick and perky, sad droops slow, scared tucks the tail and flattens the ears, angry lashes. Degrees.
-const FLAIR = {
-  happy:  { d: 0.7, tail: { yaw: [-28, 28, -28], pitch: [20, 26, 20] }, ear: { roll: [0, 8, 0, -4, 0] } },
-  calm:   { d: 2.4, tail: { yaw: [-12, 12, -12], pitch: [8, 12, 8] }, ear: { roll: [0, 0, 14, 0, 0] } },
-  sad:    { d: 3.2, tail: { yaw: [-5, 5, -5], pitch: [-35, -32, -35] }, ear: { roll: [-32, -28, -32] } },
-  scared: { d: 0.25, tail: { yaw: [-4, 4, -4], pitch: [-55, -55, -55] }, ear: { roll: [-50, -46, -50] } },
-  angry:  { d: 0.9, tail: { yaw: [-40, 10, 40, -10, -40], pitch: [25, 30, 25] }, ear: { roll: [-22, -22, -22] } },
-}
-const MOOD = { grin: 'happy', joy: 'happy', love: 'happy', wink: 'happy', smug: 'calm', smile: 'calm', sleepy: 'sad', sad: 'sad', scared: 'scared', surprised: 'scared', angry: 'angry' }
-function flairClip(face) {
-  const f = FLAIR[MOOD[face] || 'calm'], half = (a) => a.map((v) => v * 0.5)
-  return { duration: f.d, tracks: {
-    Tail: { yaw: f.tail.yaw, pitch: f.tail.pitch }, Tail1: { yaw: half(f.tail.yaw), pitch: half(f.tail.pitch) },
-    EarL: { roll: f.ear.roll.map((v) => -v) }, EarR: { roll: f.ear.roll },
-  } }
-}
-function flair(obj, face) { obj.anim.flair = { clip: flairClip(face), loop: 'loop', weight: 1, blendIn: 0.3 } }
-
 function lookOf(ctx) { return { ...C.default, ...(ctx.self.state.look || {}) } }
 
 export function onInput(ctx, input) {
@@ -104,7 +85,6 @@ function moodFace(ctx, l) {
 export function update(ctx) {
   const l = lookOf(ctx), face = moodFace(ctx, l), ses = ctx.self.session
   ses.face = face
-  if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
   if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
   life(ctx, face)
   const params = { species: l.species, sex: l.sex, eye: l.eye, outfit: l.outfit, top: l.top, bottom: l.bottom, acc: l.acc, expr: face, eyes: l.eyes, marks: l.marks }
