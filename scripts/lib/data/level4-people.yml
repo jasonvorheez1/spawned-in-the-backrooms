@@ -11,7 +11,7 @@ people:
   omega-rhea: { faction: omega, role: medic, voice: ito, gun: wrench, name: "Rhea · Omega Medic" }
   omega-dace:
     { faction: omega, role: quarter, voice: dace, gun: pistol, name: "Dace · Omega Quartermaster",
-      build: { h: 1.12, w: 1.18 }, look: { species: panda, sex: m, topw: longsleeve, top: "#3d5a98", botw: pants, bottom: "#3a3a32", shoes: boots, shoec: "#22201c", hat: cap, hatc: "#4a5a2a", expr: smile, eyew: none, neck: bandana, neckc: "#4a5a2a", fur: "#efeae0" } }
+      build: { h: 1.12, w: 1.18 }, look: { species: panda, sex: m, topw: longsleeve, top: "#3d5a98", botw: pants, bottom: "#3a3a32", shoes: boots, shoec: "#22201c", hat: cap, hatc: "#4a5a2a", expr: smile, eyew: none, neck: bowtie, neckc: "#c9a227", fur: "#efeae0" } }
   omega-lin:
     { faction: omega, role: scout, voice: lin, gun: pistol, name: "Lin · Omega Patrol", night: guard,
       build: { h: 1.08, w: 0.92 }, look: { species: wolf, sex: f, topw: jacket, top: "#b8d040", botw: pants, bottom: "#2a3040", shoes: boots, shoec: "#2a2420", expr: smile, eyew: shades, fur: "#8a8f99" } }
