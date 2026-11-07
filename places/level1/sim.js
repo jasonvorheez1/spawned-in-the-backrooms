@@ -53,6 +53,20 @@ export function tick(ctx) {
       break;
     }
   }
+  // the skin-stealers: a manager, and a few kept walking the halls
+  if (!s.stealMgr) s.stealMgr = ctx.spawn({ behavior: "scripts/stealers.js" });
+  const stealers = ctx.query({ tags: ["stealer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((h) => !h.state?.dead).length;
+  if (stealers < L.stealers && now >= (s.nextStealer ?? 0)) {
+    s.nextStealer = now + (s.stealersSeeded ? L.entityRespawn * 1000 : 0);
+    for (let tries = 0; tries < 20; tries++) {
+      const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N);
+      if (zoneOf(cx, cz) !== "halls" || Math.abs(cx - ARRIVE.cx) + Math.abs(cz - ARRIVE.cz) < 5) continue;
+      const c = cellCenter(cx, cz);
+      ctx.spawn({ tags: ["stealer"], feetPosition: { x: c.x, y: 0.05, z: c.z }, physics: { body: "character" }, primitive: { kind: "scripted", script: "scripts/stealer-geo.js", params: { revealed: false } }, state: { hp: L.stealerHp, xp: L.xpStealer } });
+      break;
+    }
+    if (stealers + 1 >= L.stealers) s.stealersSeeded = true;
+  }
   // the Flickering: a stutter, then black, then the lights come back
   const lamps = () => ctx.query({ tags: ["l1lamp"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   const set = (on) => { for (const r of lamps()) { const o = ctx.place.objects[r.id]; if (!o) continue; o.light = { ...o.light, intensity: on ? (o.light?.distance > 10 ? LAMP_ON : 2.5) : 0 }; o.material = { ...o.material, emissiveIntensity: on ? 2.2 : 0 }; } };
