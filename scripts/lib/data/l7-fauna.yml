@@ -10,14 +10,14 @@ crawler:
   run: 3.6
   xp: 30
   sites:           # home spots on the shore (x, z); the entrance rock stays clear
-    - [30, -104]
-    - [62, -98]
-    - [70, -132]
-    - [24, -134]
-    - [-58, -196]
-    - [-140, -214]
-    - [-120, -270]
-    - [-70, -268]
+    - [55, -116]
+    - [38, -113]
+    - [43, -130]
+    - [55, -127]
+    - [-74, -224]
+    - [-110, -210]
+    - [-116, -243]
+    - [-82, -250]
 deep:
   openFrom: 9      # metres past an island's rim before the Deep notices a swimmer
   noticeS: 5       # seconds in open water before it circles under you

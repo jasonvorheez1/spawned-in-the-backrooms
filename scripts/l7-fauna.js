@@ -25,7 +25,6 @@ pop foam burst=24 life=1.5..2.5 on=disc(3) v=sdir()*(.3..1) size=.8..1.6 acc=dra
 const CHIPS = `fx
 pop chip burst=10..14 life=.5..0.9 v=sdir()*(1.5..3)+up(1.5) size=.03..0.06 acc=grav()*.9 col=<.45,.5,.42> a=1>0 sz=$size spin=-8..8 rot=$age*$spin floor=stick r=sprite(soft-disc,alpha)`;
 const isle = (x, z) => ISLES.some((s) => Math.hypot(x - s.x, z - s.z) < s.r + D.openFrom);
-const hp0 = (p) => (p.state?.hp ?? 1) > 0 && !p.state?.dead && !(p.state?.downAt && Date.now && 0);
 const anim = (o, m, clip, loop = true, speed = 1) => { if (m.clip === clip) return; m.clip = clip; o.anim.main = { clip, loop, speed, clampWhenFinished: !loop, weight: 1 }; };
 const yawTo = (a, b) => (Math.atan2(-(b.x - a.x), -(b.z - a.z)) * 180) / Math.PI; // front is -Z
 function hurt(ctx, p, dmg, color = "#ff5040") {
@@ -112,7 +111,7 @@ export function update(ctx, dt) {
     }
     if (goal) {
       const dx = goal.x - pos.x, dz = goal.z - pos.z, d = Math.hypot(dx, dz);
-      if (d > 0.4 && shoreY(ctx, pos.x + dx / d, pos.z + dz / d) > -0.2) {
+      if (d > 0.4 && (ctx.place.terrain.heightAt(pos.x + dx / d, pos.z + dz / d) ?? -9) > 0.15) {
         o.velocity = { x: (dx / d) * speed, y: fall, z: (dz / d) * speed }; o.rotation = { yaw: yawTo(pos, goal) };
         anim(o, m, speed > 2 ? "scuttle" : "walk");
         if (speed > 2 && now >= (m.clickAt ?? 0)) { m.clickAt = now + 900; heard(ctx, { clip: CLICK, position: pos, volume: 0.45, refDistance: 3, maxDistance: 18 }); }
