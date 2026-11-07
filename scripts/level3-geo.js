@@ -76,7 +76,7 @@ export function geometry(ctx) {
     if (!arms.includes(2)) box(ctx, c.x - h, c.x - TW, 0, TH, c.z - TW, c.z + TW);
     if (!arms.includes(1)) box(ctx, c.x - TW, c.x + TW, 0, TH, c.z + TW, c.z + h);
     if (!arms.includes(3)) box(ctx, c.x - TW, c.x + TW, 0, TH, c.z - h, c.z - TW);
-    ctx.smooth(); for (const sp of tightSpans(cx, cz)) vault(ctx, cx, cz, sp, 0, hi ? 6 : 4); ctx.flat();
+    ctx.smooth(); for (const sp of tightSpans(cx, cz)) vault(ctx, cx, cz, sp, 0, hi ? 5 : 3); ctx.flat();
   }
   // bars: across the barred edges, floor to ceiling, never a gate
   ctx.albedo(STEEL); ctx.color("oklch(0.84 0.014 90)"); ctx.metalness(0.25); ctx.roughness(0.8);
@@ -105,9 +105,9 @@ export function geometry(ctx) {
     const c = cellCenter(cx, cz), top = ceilingAt(cx, cz);
     for (const d of [0, 1, 2, 3]) {
       const h = live.get(`${cx},${cz},${d}`);
-      if (!solid(cx, cz, d) || (!h && hash(cx * 4 + d, cz, 31) > 0.55)) continue;
+      if (!solid(cx, cz, d) || (!h && hash(cx * 4 + d, cz, 31) > 0.42)) continue;
       const [nx, nz] = D4[d], tx = -nz, tz = nx, w = S / 2 - T - 0.05;
-      const k = 3 + (hash(cx, cz, 33 + d) < 0.45 ? 1 : 0), y = top - 0.07;
+      const k = 3 + (h && hash(cx, cz, 33 + d) < 0.45 ? 1 : 0), y = top - 0.07;
       const P = (off, along, yy) => [c.x + nx * off + tx * along, yy, c.z + nz * off + tz * along];
       const drop = h ? { a: (h.wx - c.x) * tx + (h.wz - c.z) * tz, by: 1.62, glb: true } : hash(cx * 4 + d, cz, 37) < 0.22 ? { a: (hash(cx, cz, 39) - 0.5) * 1.8, by: 0.9 + hash(cx, cz, 41) * 0.3 } : null;
       for (let i = 0; i < k; i++) {
@@ -126,7 +126,7 @@ export function geometry(ctx) {
   ctx.color("oklch(0.78 0.01 240)"); ctx.metalness(0.7); ctx.roughness(0.35); ctx.smooth();
   for (const b of boxes) {
     const x = b[0], z = b[2], sq = b.nx ? [1, 0.36] : [0.36, 1];
-    tube(ctx, [[x, b.by - 0.62, z], [x, b.by - 0.58, z], [x, b.by - 0.45, z], [x, b.by + 0.55, z], [x, b.by + 0.6, z], [x, b.by + 0.62, z]], [0.03, 0.1, 0.125, 0.125, 0.11, 0.06], hi ? 8 : 6, sq, 0, 1, 1);
+    tube(ctx, [[x, b.by - 0.62, z], [x, b.by - 0.58, z], [x, b.by - 0.45, z], [x, b.by + 0.55, z], [x, b.by + 0.6, z], [x, b.by + 0.62, z]], [0.03, 0.1, 0.125, 0.125, 0.11, 0.06], 6, sq, 0, 1, 1);
   }
   ctx.flat();
   // black corrugated cable sagging between hangers along the beam

@@ -51,11 +51,7 @@ export function geometry(ctx) {
     // soot-dark brick ribs every metre down a crawl hall, like the round brick culvert: flush bands on the walls, a ring under the vault
     if (zone === "tight" && hi) {
       ctx.color("oklch(0.42 0.07 35)");
-      for (const sp of tightSpans(cx, cz)) for (let a = sp.a0 + 0.35; a < sp.a1 - 0.1; a += 1.0) {
-        vault(ctx, cx, cz, sp, 0.035, 8, a, a + 0.12, true);
-        const across = sp.ax === "x" ? c.z : c.x;
-        for (const s2 of [-1, 1]) { const u0 = across + s2 * TW, u1 = across + s2 * (TW - 0.012); if (sp.ax === "x") box(ctx, a, a + 0.12, 0, TSP, Math.min(u0, u1), Math.max(u0, u1)); else box(ctx, Math.min(u0, u1), Math.max(u0, u1), 0, TSP, a, a + 0.12); }
-      }
+      for (const sp of tightSpans(cx, cz)) for (let a = sp.a0 + 0.5; a < sp.a1 - 0.1; a += 1.4) vault(ctx, cx, cz, sp, 0.035, 4, a, a + 0.12, false);
     }
     // notebook pages scattered at a dead end
     if (openings(cx, cz).length === 1 && hash(cx, cz, 411) < 0.4) {
