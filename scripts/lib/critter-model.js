@@ -1,6 +1,7 @@
 // The Blender critter as a spec: the body GLB for the look's sex (garments shown by name, tinted by the look's hex)
 // and the species head (head, face, ears, tail) as a skinned child riding the same rig. Data: scripts/lib/data/critter-models.yml.
 import M from './data/critter-models.yml'
+import FACES from './data/faces.yml'
 export const HEAD_ID = 'critter-head'
 export const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 const CLOTH = { topw: ['cloth_top', 'top'], botw: ['cloth_bottom', 'bottom'], shoes: ['cloth_shoes', 'shoec'], hat: ['cloth_hat', 'hatc'], neck: ['cloth_neck', 'neckc'] }
@@ -45,8 +46,8 @@ export function bodyModel(l) {
   for (const [slot, [mat, key]] of Object.entries(CLOTH)) if (l[key]) materials[mat] = { color: l[key], roughness: 0.75, metalness: 0 }
   return { id: M.body[l.sex === 'f' ? 'f' : 'm'], materials: only(materials, M.bodyMats), parts }
 }
-export function headModel(l) {
-  const sp = M.species[speciesOf(l)];
+export function headModel(l0) {
+  const l = faceFill(l0), sp = M.species[speciesOf(l)];
   const isFemale = l?.sex === 'f';
   const eyeCol = l?.eye && l.eye !== '#2b2233' && l.eye !== '#000000' ? l.eye : null;
   const blushCol = l?.blush || '#ff6285';
@@ -69,8 +70,24 @@ export function headModel(l) {
     }, sp.mats)
   }
 }
-export function faceMorph(expr, blink, isFemale) {
+// face variety (data/faces.yml): a look with no trait of its own (an NPC) rolls one, an eye colour, cheeks and a nose from its seed (l.fseed, set from the NPC's id by
+// clothes.js npcLook, else from the look itself); anything the look already says is kept. A player's look always carries its trait, so it is never rolled.
+function rngOf(l) { let h = 2166136261; for (const c of String(l.fseed ?? `${l.species}|${l.sex}|${l.fur}|${l.top}|${l.bottom}`)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 100000) / 100000 } }
+const pickOf = (a, u) => a[Math.floor(u() * a.length)]
+export function faceFill(l) {
+  if (!l || l.trait || l.vary === false) return l
+  const u = rngOf(l), names = Object.keys(FACES.traits), tot = names.reduce((a, k) => a + (FACES.traits[k].w ?? 1), 0)
+  let r = u() * tot, trait = names[0]; for (const k of names) { r -= FACES.traits[k].w ?? 1; if (r <= 0) { trait = k; break } }
+  const o = { ...l, trait }
+  if (!l.eye || l.eye === '#2b2233') o.eye = pickOf(FACES.eye, u)
+  if (!l.blush) o.blush = pickOf(FACES.blush, u)
+  if (!l.nose) { const n = pickOf(FACES.nose, u); if (n) o.nose = n }
+  return o
+}
+export function faceMorph(expr, blink, isFemale, look) {
   const f = { ...(M.faces[expr] || M.faces.smile) }
+  const tr = look ? FACES.traits[faceFill(look)?.trait] : null
+  if (tr) for (const [k, v] of Object.entries(tr)) if (k !== 'w') f[k] = Math.min(1, (f[k] ?? 0) + v)
   if (isFemale && f.Blush == null) f.Blush = 0.28
   if (blink) f.Blink = 1
   return f
@@ -86,7 +103,7 @@ export function critterSpec(l) {
       id: HEAD_ID,
       attachment: { skin: true },
       model: headModel(l),
-      morph: faceMorph(l.expr, false, l?.sex === 'f'),
+      morph: faceMorph(l.expr, false, l?.sex === 'f', l),
       jiggle: { bones: ['EarL', 'EarR'], amount: 0.55, bounce: 0.7 }
     }],
     material: { outline: { color: '#1d1420', width: 2.4 } },

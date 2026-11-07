@@ -17,7 +17,7 @@ export const updateSchedule = { every: { seconds: 0.1 } } // 10 Hz: the hands fo
 const EYES_SHUT = ['joy', 'laugh', 'kiss', 'dizzy']
 function applyBones(ctx) {
   const ses = ctx.self.session, b = {}
-  if (MESH) { const h = ctx.getObject(ctx.self.id + '/' + HEAD_ID); if (h && ses.face) h.morph = faceMorph(ses.face, ses.lids) } // the blink is the head's Blink key
+  if (MESH) { const h = ctx.getObject(ctx.self.id + '/' + HEAD_ID); if (h && ses.face) h.morph = faceMorph(ses.face, ses.lids, undefined, lookOf(ctx)) } // the blink is the head's Blink key
   else if (ses.lids) { b.LidL = { scale: LID_SCALE }; b.LidR = { scale: LID_SCALE } }
   if (ses.twitch) b[ses.twitch] = { rotate: [0, 0, ses.twitchDir * 24] }
   if (ses.headS && ses.headS !== 1) b.Head = { scale: ses.headS }
@@ -88,7 +88,7 @@ function randomLook(ctx, cur, scope) {
   const l = plainLook(ctx, cur)
   if (scope === 'all') {
     l.species = pick(ctx, C.species); l.sex = pick(ctx, C.sex); l.fur = ctx.random() < 0.5 ? '' : pick(ctx, C.fur)
-    l.eye = pick(ctx, C.eye); l.eyes = pick(ctx, C.eyes); l.marks = ctx.random() < 0.5 ? 'none' : pick(ctx, C.marks)
+    l.eye = pick(ctx, C.eye); l.trait = pick(ctx, C.trait); l.blush = pick(ctx, C.blush); l.nose = pick(ctx, C.nose); l.eyes = pick(ctx, C.eyes); l.marks = ctx.random() < 0.5 ? 'none' : pick(ctx, C.marks)
     l.expr = pick(ctx, ['grin', 'smile', 'joy', 'sparkle', 'smug', 'wink', 'blep'])
   }
   return l
@@ -174,7 +174,7 @@ export function update(ctx) {
     if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
     life(ctx, face)
   }
-  const params = { species: l.species, sex: l.sex, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks }
+  const params = { species: l.species, sex: l.sex, trait: l.trait || 'placid', blush: l.blush, nose: l.nose || undefined, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks }
   if (l.fur) params.fur = l.fur
   const worn = l.modelUrl ? { url: l.modelUrl } : l.model && C.models?.[l.model] // an imported model worn instead of the critter
   for (const [k] of C.sliders) if (k !== 'headS' && k !== 'tailS' && Number(l[k]) && Number(l[k]) !== 1) params[k] = Number(l[k])
@@ -219,7 +219,7 @@ export function update(ctx) {
     const look = worn ? { model: worn.url } : MESH ? { model: bodyModel(params), children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel({ ...params, vary: false }), morph: faceMorph(face), audience: 'local' }] } : { primitive: { kind: 'scripted', script: SCRIPT, params } }
     if (!mirror) { ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, ...look, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } }); const m = ctx.getObject(ses.mirror); if (m) { m.anim.idle = { clip: worn || MESH ? GAIT_LIB.idle : 'Idle', loop: 'loop', weight: 1 }; if (!worn) flair(m, face) } }
     else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { if (worn) { mirror.primitive = null; mirror.model = worn.url; mirror.anim.flair = null; mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else if (MESH) { mirror.primitive = null; mirror.model = bodyModel(params); wearHead(ctx, mirror, params); flair(mirror, face) } else { mirror.model = null; mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
-      if (MESH && !worn) { const mh = ctx.getObject(mirror.id + '/' + HEAD_ID); if (mh) mh.morph = faceMorph(face) }
+      if (MESH && !worn) { const mh = ctx.getObject(mirror.id + '/' + HEAD_ID); if (mh) mh.morph = faceMorph(face, false, false, params) }
       mirror.bones = { ...(hs !== 1 ? { Head: { scale: hs } } : {}), ...(ts !== 1 ? { Tail: { scale: ts } } : {}) } }
     ses.mirrorKey = key
     if (ses.mirror) {
@@ -249,6 +249,6 @@ function dropHead(ctx, o) { if (ctx.getObject(o.id + '/' + HEAD_ID)) ctx.destroy
 // the species head (face, ears, tail) rides the body's rig as a skinned child; restyled when the look changes
 function wearHead(ctx, o, l) {
   const h = ctx.getObject(o.id + '/' + HEAD_ID), model = headModel({ ...l, vary: false })
-  if (h) { h.model = model; h.visible = true; h.morph = faceMorph(l.expr) }
-  else ctx.spawn({ parent: o.id, id: HEAD_ID, attachment: { skin: true }, model, morph: faceMorph(l.expr), ...(o.audience === 'local' ? { audience: 'local' } : {}) })
+  if (h) { h.model = model; h.visible = true; h.morph = faceMorph(l.expr, false, false, l) }
+  else ctx.spawn({ parent: o.id, id: HEAD_ID, attachment: { skin: true }, model, morph: faceMorph(l.expr, false, false, l), ...(o.audience === 'local' ? { audience: 'local' } : {}) })
 }

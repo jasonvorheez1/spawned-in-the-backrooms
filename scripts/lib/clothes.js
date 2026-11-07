@@ -115,6 +115,7 @@ export function rollCloth(ctx, regular = false, level) {
 export function npcLook(id, look, faction, level) {
   const F = CL.leveled.factions[faction] ?? CL.leveled.factions.wanderer
   let h = 2166136261; for (const c of String(id)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) }
+  const h0 = h >>> 0
   const u = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 100000) / 100000 }
   const base = fullLook(look), l = { ...base }
   const keepTop = rowOf('topw', base.topw, base.top)?.rarity === 'agency'
@@ -128,6 +129,8 @@ export function npcLook(id, look, faction, level) {
     l[slot] = row.kind; if (CL.colourKey[slot]) l[CL.colourKey[slot]] = '#' + row.colours[Math.floor(u() * row.colours.length)]
   }
   if (l.topw === 'dress') l.botw = 'none'
+  l.fseed = h0 // the face (scripts/lib/critter-model.js faceFill) rolls from the id, so it never changes with the clothes
+  if (!look?.trait) l.trait = '' // fullLook gave the player default; an NPC rolls its own
   return l
 }
 // a fresh critter's plain clothes: a regular top, bottom and shoes, nothing else

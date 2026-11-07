@@ -1,5 +1,5 @@
 # Custom critter options: what the creator offers and what a new player wears (her picks)
-default: { species: cat, sex: m, fur: "", eye: "#2b2233", eyes: round, marks: none, expr: grin, topw: tee, botw: pants, shoes: sneakers, hat: none, eyew: none, neck: none, top: "#e85d75", bottom: "#3d5a98", shoec: "#f4f1ea", hatc: "#e85d75", neckc: "#f3c64a", model: "", headS: 1, earS: 1, snoutS: 1, waistS: 1, hipS: 1, bustS: 1, tailS: 1, heightS: 1, buildS: 1 }
+default: { species: cat, sex: m, fur: "", eye: "#2b2233", eyes: round, marks: none, trait: placid, blush: "#ff6285", nose: "", expr: grin, topw: tee, botw: pants, shoes: sneakers, hat: none, eyew: none, neck: none, top: "#e85d75", bottom: "#3d5a98", shoec: "#f4f1ea", hatc: "#e85d75", neckc: "#f3c64a", model: "", headS: 1, earS: 1, snoutS: 1, waistS: 1, hipS: 1, bustS: 1, tailS: 1, heightS: 1, buildS: 1 }
 species: [cat, dog, fox, bunny, bear, deer, mouse, wolf, raccoon, panda, pig, sheep, lion, tiger, redpanda, skunk, hamster, otter, koala]
 sex: [m, f]
 # clothing slots: each is worn on its own, each has its own colour
@@ -13,7 +13,10 @@ expr: [grin, smile, beam, fang, shock, teary, joy, laugh, wink, blep, love, spar
 eyes: [round, tall, wide]
 marks: [none, freckles, stripes, patch, heart]
 fur: ["", "#f2a65a", "#c98b55", "#9a6440", "#f07a2e", "#f4efe9", "#b9b3c2", "#6f7d93", "#3b3440", "#ffb3cf", "#9fd3ff", "#b8e986", "#c9a0ff", "#ffe066"]
-eye: ["#2b2233", "#3f7fd9", "#2fa36b", "#9b5de5", "#e04f5f", "#c98b2b"]
+eye: ["#2b2233", "#3a2418", "#8a6a2a", "#d4902a", "#2f9a5a", "#2aa0a0", "#3f7fd9", "#7ab8e8", "#8a4fd8", "#d4547a", "#d03a3a", "#e0b838", "#8a909a", "#6a8a2a"]
+trait: [placid, stern, sleepy, wideeyed, sly, gentle, grumpy, dreamy, cheeky, anxious, haughty, bubbly, tired, focused, wry, soft]
+blush: ["#ff6285", "#ff8a9a", "#ff9f6a", "#e870b0", "#c86aa8", "#ffb0a0"]
+nose: ["", "#231816", "#3a2a28", "#ff8fa3", "#c86a6a", "#e0a090", "#6a4a3a"]
 cloth: ["#e85d75", "#ff9f43", "#ffd93d", "#6bcb77", "#4d96ff", "#3d5a98", "#9b5de5", "#ff8fc7", "#ffffff", "#f4f1ea", "#2b2b33", "#8b5a3c", "#5ec7c7", "#c0392b"]
 outfitSlots: 3
 # reactions: how long a pressed face holds before the game's moods take it back (s)

@@ -1,0 +1,23 @@
+# Face variety: a trait is a resting face on top of any expression (shape-key weights added to the head's Blink Happy Sad Angry Wide Half Smile Open Frown O Blep Blush), so
+# two critters of one species no longer read alike. NPCs roll a trait, eye colour, cheek colour and nose from their own id (scripts/lib/clothes.js npcLook);
+# the critter creator's face tab offers the same lists (critter.yml: trait, eye, blush, nose).
+traits:
+  placid:   { w: 3 }
+  stern:    { w: 1, Angry: 0.18, Half: 0.1 }
+  sleepy:   { w: 1, Half: 0.35 }
+  wideeyed: { w: 1, Wide: 0.28 }
+  sly:      { w: 1, Half: 0.25, Smile: 0.2 }
+  gentle:   { w: 1, Sad: 0.12, Smile: 0.12, Blush: 0.1 }
+  grumpy:   { w: 1, Frown: 0.3, Half: 0.15 }
+  dreamy:   { w: 1, Half: 0.2, Happy: 0.12, Blush: 0.15 }
+  cheeky:   { w: 1, Smile: 0.25, Blep: 0.1 }
+  anxious:  { w: 1, Sad: 0.2, Wide: 0.15, Frown: 0.1 }
+  haughty:  { w: 1, Half: 0.3, Frown: 0.15 }
+  bubbly:   { w: 1, Smile: 0.3, Blush: 0.2, Wide: 0.1 }
+  tired:    { w: 1, Half: 0.45, Sad: 0.1 }
+  focused:  { w: 1, Angry: 0.1, Wide: 0.1 }
+  wry:      { w: 1, Smile: 0.15, Half: 0.2, Frown: 0.1 }
+  soft:     { w: 1, Blush: 0.3, Smile: 0.1 }
+eye: ["#15121a", "#3a2418", "#8a6a2a", "#d4902a", "#2f9a5a", "#2aa0a0", "#3f7fd9", "#7ab8e8", "#8a4fd8", "#d4547a", "#d03a3a", "#e0b838", "#8a909a", "#6a8a2a"]
+blush: ["#ff6285", "#ff8a9a", "#ff9f6a", "#e870b0", "#c86aa8", "#ffb0a0"]
+nose: ["", "#231816", "#3a2a28", "#ff8fa3", "#c86a6a", "#e0a090", "#6a4a3a"]

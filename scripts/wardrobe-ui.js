@@ -85,6 +85,9 @@ export function wardrobe(ctx, player) {
   else if (tab === 'face') body = `
     <div class="sec"><span>EYE SHAPE</span></div>${grid('eyes', C.eyes)}
     <div class="sec"><span>EYE COLOUR</span></div>${sws('eye', C.eye)}
+    <div class="sec"><span>FACE TYPE</span><span>${NAMES[l.trait] || l.trait || 'placid'}</span></div>${grid('trait', C.trait)}
+    <div class="sec"><span>CHEEKS</span></div>${sws('blush', C.blush)}
+    <div class="sec"><span>NOSE</span><span>${l.nose ? '' : 'the animal's own'}</span></div>${sws('nose', C.nose)}
     <div class="sec"><span>RESTING FACE</span><span>${l.expr}</span></div>${grid('expr', C.expr, {})}
     <div class="hint">T cycles faces while you play. getting hit, low hp and low sanity show on your face on their own.</div>`
   else if (tab === 'clothes') body = `

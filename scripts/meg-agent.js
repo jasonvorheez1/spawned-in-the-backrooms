@@ -395,7 +395,7 @@ export function update(ctx, dt) {
     else if (now - (m.wavedAt ?? 0) < 2200) curExpr = "catmouth"; // :3 on hello
     else if (talking) curExpr = Math.floor(now / 220) % 2 === 0 ? "beam" : "smile";
     else if (m.aimAt) curExpr = "cocky";
-    headObj.morph = faceMorph(curExpr, isBlinking, isFem);
+    headObj.morph = faceMorph(curExpr, isBlinking, isFem, s.wear ?? s.look);
   }
   // held in conversation: while a player's dialogue is open on this one (player.state.talkWith), it stops where it stands and faces them; a threat or a hit still breaks it
   const listener = !s.dead && !m.aimAt && now - (m.hitAt ?? 0) > 3000 ? ctx.place.players.find((p) => p.state?.talkWith === me.id && Math.hypot(p.feetPosition.x - me.feetPosition.x, p.feetPosition.z - me.feetPosition.z) < 7) : null;
