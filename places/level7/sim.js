@@ -41,6 +41,7 @@ const WOOD = {
   repeat: [1, 1],
   wrap: "repeat",
 };
+const PAPER = { color: "oklch(0.62 0.05 85)", roughness: 0.95, texture: "cdn/texture-faded-water-stained-vintage-floral-wallpaper.png", repeat: [1, 1], wrap: "repeat" };
 const RUST = { color: "oklch(0.38 0.06 45)", metalness: 0.6, roughness: 0.8 };
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const FY = 4.0; // The landing room floor elevation atop the basalt rock
@@ -67,28 +68,28 @@ function lay(ctx) {
   box(ctx, "l7-ceil", 0, FY + 2.7, 0, 6.4, 0.25, 6.4, { ...CONCRETE, color: "oklch(0.36 0.008 240)" });
 
   // Walls with North doorway opening out to the ocean
-  box(ctx, "l7-wall-e", 3.05, FY, 0, 0.3, 2.7, 6.4, CONCRETE);
-  box(ctx, "l7-wall-w", -3.05, FY, 0, 0.3, 2.7, 6.4, CONCRETE);
-  box(ctx, "l7-wall-n1", -2.0, FY, -3.05, 2.4, 2.7, 0.3, CONCRETE);
-  box(ctx, "l7-wall-n2", 2.0, FY, -3.05, 2.4, 2.7, 0.3, CONCRETE);
+  box(ctx, "l7-wall-e", 3.05, FY, 0, 0.3, 2.7, 6.4, PAPER);
+  box(ctx, "l7-wall-w", -3.05, FY, 0, 0.3, 2.7, 6.4, PAPER);
+  box(ctx, "l7-wall-n1", -2.0, FY, -3.05, 2.4, 2.7, 0.3, PAPER);
+  box(ctx, "l7-wall-n2", 2.0, FY, -3.05, 2.4, 2.7, 0.3, PAPER);
   box(ctx, "l7-wall-n3", 0, FY + 2.1, -3.05, 1.6, 0.6, 0.3, CONCRETE); // Door lintel North
-  box(ctx, "l7-wall-s1", -1.9, FY, 3.05, 2.6, 2.7, 0.3, CONCRETE);
-  box(ctx, "l7-wall-s2", 1.9, FY, 3.05, 2.6, 2.7, 0.3, CONCRETE);
+  box(ctx, "l7-wall-s1", -1.9, FY, 3.05, 2.6, 2.7, 0.3, PAPER);
+  box(ctx, "l7-wall-s2", 1.9, FY, 3.05, 2.6, 2.7, 0.3, PAPER);
   box(ctx, "l7-wall-s3", 0, FY + 2.2, 3.05, 1.2, 0.5, 0.3, CONCRETE); // Door lintel South
 
   // Ankle-deep seawater puddle on the room floor with rippling water shader
   ctx.spawn("l7-puddle", {
     feetPosition: { x: 0, y: FY + 0.03, z: 0 },
     primitive: { kind: "box", width: 5.8, height: 0.025, depth: 5.8 },
-    material: { kind: "water", color: "oklch(0.32 0.04 220)", opacity: 0.78, waveIntensity: 0.2 },
+    material: { kind: "water", color: "oklch(0.3 0.045 80)", opacity: 0.88, waveIntensity: 0.12 },
   });
 
   // Green sea-moss and high-tide watermark line on walls
-  for (const [id, x, z, w, d] of [["e", 2.88, 0, 0.02, 5.8], ["w", -2.88, 0, 0.02, 5.8], ["s", 0, 2.88, 5.8, 0.02]]) {
+  for (const [id, x, z, w, d] of [["e", 2.89, 0, 0.01, 6.0], ["w", -2.89, 0, 0.01, 6.0], ["s1", -1.9, 2.89, 2.4, 0.01], ["s2", 1.9, 2.89, 2.4, 0.01], ["n1", -2.0, -2.89, 2.2, 0.01], ["n2", 2.0, -2.89, 2.2, 0.01]]) {
     ctx.spawn(`l7-tide-${id}`, {
-      feetPosition: { x, y: FY + 0.32, z },
-      primitive: { kind: "box", width: w, height: 0.14, depth: d },
-      material: { color: "oklch(0.28 0.03 145)", roughness: 1.0 },
+      feetPosition: { x, y: FY + 0.05, z },
+      primitive: { kind: "box", width: w, height: 0.75, depth: d },
+      material: { color: "oklch(0.32 0.05 65 / 0.55)", transparent: true, roughness: 1.0 },
     });
   }
 
@@ -269,7 +270,7 @@ function lay(ctx) {
   // =========================================================================
   for (const [id, spec] of Object.entries(breakables(FY, PY))) ctx.spawn(id, spec);
   ctx.spawn("l7-troffer", { feetPosition: { x: 0, y: FY + 2.6, z: 0 }, primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "troffer" } },
-    children: [{ feetPosition: { x: 0, y: -0.15, z: 0 }, light: { kind: "point", color: "oklch(0.93 0.06 95)", intensity: 4.5, distance: 11 } }],
+    children: [{ feetPosition: { x: 0, y: -0.15, z: 0 }, light: { kind: "point", color: "oklch(0.9 0.09 85)", intensity: 3.6, distance: 10 } }],
     audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-single-fluorescent-tube-buzzing-hum-loop.mp3", loop: true, gain: 0.12, spatial: true, maxDistance: 9 } });
   // a caged work lamp over the sea door, so the room is a light seen from the water
   ctx.spawn("l7-door-lamp", { feetPosition: { x: 0, y: FY + 2.5, z: -3.32 }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.11, height: 0.18 }, material: { color: "#ffffff", emissive: "oklch(0.88 0.1 80)", emissiveIntensity: 3 },
