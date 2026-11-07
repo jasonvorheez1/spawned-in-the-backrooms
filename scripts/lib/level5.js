@@ -44,7 +44,7 @@ export const OPENINGS = [
   // gallery ↔ cross halls ↔ corridors
   { ax: "z", at: -3, a0: -18.8, a1: -16.2, h: 3.2, kind: "arch" }, { ax: "z", at: -10, a0: -18.8, a1: -16.2, h: 3.2, kind: "arch" },
   { ax: "z", at: 3, a0: -18.8, a1: -16.2, h: 3.2, kind: "arch" }, { ax: "z", at: 10, a0: -18.8, a1: -16.2, h: 3.2, kind: "arch" },
-  // the corridors end in the Beverly Room's west wall? no: they dead-end in a window bay; the gallery opens east into the ballroom
+  // the corridors dead-end at the Beverly Room's west wall (an elevator waits at corrS's end); the gallery opens east into the ballroom
   { ax: "x", at: -6, a0: -1.6, a1: 1.6, h: 3.4, kind: "double", placard: "The Beverly Room" },
   // guest doors (single, gold placards); the library's and kitchen's are doubles
   { ax: "z", at: -13, a0: -27, a1: -25, h: DOORH, kind: "double", room: "library" },
@@ -63,12 +63,12 @@ export const OPENINGS = [
 export const EXITS = [
   // the elevator from Level 3 arrives in the lobby's west wall; the old stairway climbs to Level 4
   { id: "l5-lift3", at: { x: -45.2, z: 0 }, yaw: -90, to: "level3#l3-from-l5", label: "LEVEL 3", kind: "lift" },
-  { id: "l5-stairs-up", at: { x: -8, z: -20.2 }, yaw: 0, to: "level4#l4-from-l5", label: "LEVEL 4", kind: "stairs" },
+  { id: "l5-stairs-up", at: { x: -8, z: -20.8 }, yaw: 180, to: "level4#l4-from-l5", label: "LEVEL 4", kind: "stairs" },
   // the lore's other doors, sealed for now (pressing one says why)
   { id: "l5-door-9", at: { x: -38, z: -12.8 }, yaw: 180, sealed: "LEVEL 9 · A dark wooden door. Cold air under it. It won't give.", kind: "door" },
-  { id: "l5-door-98", at: { x: -29.8, z: 7 }, yaw: 90, sealed: "LEVEL 98 · A metal door, warm to the touch. Bolted from the other side.", kind: "door" },
+  { id: "l5-door-98", at: { x: -30.2, z: 6.5 }, yaw: 90, sealed: "LEVEL 98 · A metal door, warm to the touch. Bolted from the other side.", kind: "door" },
   { id: "l5-door-63", at: { x: 17.8, z: -8 }, yaw: 90, sealed: "LEVEL 63 · Birdsong behind this one. Leaves under the door. Locked fast.", kind: "door" },
-  { id: "l5-gate-84", at: { x: 6, z: 11.8 }, yaw: 180, sealed: "LEVEL 84 · A tall wooden gate. Barred. It hasn't opened in years.", kind: "gate" },
+  { id: "l5-gate-84", at: { x: -1, z: 11.8 }, yaw: 0, sealed: "LEVEL 84 · A tall wooden gate. Barred. It hasn't opened in years.", kind: "gate" },
   { id: "l5-door-6", at: { x: 45.8, z: 20 }, yaw: 90, sealed: "LEVEL 6 · The handle burns your palm. The heat behind it is unbearable.", kind: "metal" },
   { id: "l5-door-78", at: { x: 45.8, z: -20 }, yaw: 90, sealed: "LEVEL 78 · An airlock. The wheel won't turn without pressure.", kind: "airlock" },
 ];
@@ -82,7 +82,7 @@ export const ARRIVALS = {
 export const ELEVATORS = [
   { id: "l5-elev-lobby-n", at: { x: -45.2, z: -7 }, yaw: -90, style: "copper", name: "Lobby (copper cage)" },
   { id: "l5-elev-lobby-s", at: { x: -45.2, z: 7 }, yaw: -90, style: "modern", name: "Lobby" },
-  { id: "l5-elev-corrS", at: { x: -29.8, z: 11.5 }, yaw: 90, style: "modern", name: "Guest Wing South", face: "west" },
+  { id: "l5-elev-corrS", at: { x: -6.2, z: 11.5 }, yaw: 90, style: "modern", name: "Guest Wing South" },
   { id: "l5-elev-salon", at: { x: 13.8, z: -18 }, yaw: 90, style: "copper", name: "The Salon" },
   { id: "l5-elev-maint", at: { x: 45.8, z: 0 }, yaw: 90, style: "freight", name: "Boiler Room (maintenance)" },
 ];
@@ -100,3 +100,29 @@ export const ZONE_NAMES = Object.fromEntries(ZONES.map((r) => [r.id, r.name ?? (
 // a guest room's gold placard: numbers that follow no pattern (stable per room)
 export const PLACARDS = { "room-n3": "217", "room-n4": "1408", "room-n5": "9", "room-s1": "313", "room-s2": "66", "room-s3": "1932", "room-s4": "4½", "suite-nw": "800", "suite-ne": "12A", "suite-sw": "237", "suite-se": "0" };
 export const HOT = ZONES.filter((r) => r.hot).map((r) => r.id);
+// every lamp the sim lights; dressing lanes hang the fixture mesh at the same point (kind says which)
+export const LIGHTS = (() => {
+  const L = [], warm = "oklch(0.86 0.09 75)", add = (x, y, z, kind, intensity, distance, color = warm) => L.push({ x, y, z, kind, intensity, distance, color });
+  add(-38, 6.6, -6, "chandelier", 9, 22); add(-38, 6.6, 6, "chandelier", 9, 22); // lobby: two crystal chandeliers
+  for (let x = -27; x <= -9; x += 6) add(x, 4.4, 0, "pendant", 5, 12); // gallery pendants
+  for (let x = -27; x <= -9; x += 6) { add(x, 2.3, -10.2, "sconce", 1.6, 6); add(x, 2.3, 12.8, "sconce", 1.6, 6); } // corridor sconces (one per stretch, the other wall dark)
+  add(-17.5, 3.3, -6.5, "flush", 2, 7); add(-17.5, 3.3, 6.5, "flush", 2, 7);
+  for (const r of ZONES) if (r.kind === "guest" || r.kind === "suite") add((r.x0 + r.x1) / 2, r.h - 0.5, (r.z0 + r.z1) / 2, "lamp", 1.4, 7, "oklch(0.8 0.1 65)");
+  add(-26, 3.2, -17, "lamp", 2.4, 9, "oklch(0.82 0.1 70)"); add(-10, 3.3, 17, "flush", 3, 10, "oklch(0.92 0.05 90)"); add(-8, 3.2, -17, "bulb", 1.2, 6, "oklch(0.75 0.12 55)");
+  for (const [x, z] of [[0, -6], [12, -6], [0, 6], [12, 6], [6, 0]]) add(x, 7.8, z, "chandelier", x === 6 ? 14 : 8, 20); // the Beverly Room
+  add(6, 4, -18, "chandelier", 6, 14, "oklch(0.78 0.11 60)"); // the salon: low and red-gold
+  for (const x of [-2, 6, 14]) add(x, 3.3, 18, "tube", 3, 10, "oklch(0.93 0.03 120)"); // Housekeeping: work lights
+  for (let x = 22; x <= 44; x += 8) for (let z = -22; z <= 22; z += 11) add(x, 5.2, z, "cage", 2.6, 11, "oklch(0.68 0.17 45)"); // the Boiler Room: caged bulbs, orange
+  return L;
+})();
+// radios playing the polonaise (the creator's track): one per lived-in space; E turns one off and on (scripts/l5-radio.js)
+export const POLONAISE = "/cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3";
+export const RADIOS = [
+  { id: "l5-radio-desk", x: -42.6, y: 1.12, z: 3.2, yaw: -90, where: "the front desk" },
+  { id: "l5-radio-ball", x: 15.5, y: 0.95, z: -10.6, yaw: 0, where: "the Beverly Room's bandstand" },
+  { id: "l5-radio-salon", x: 0.2, y: 0.8, z: -22.6, yaw: 0, where: "the Originals' salon" },
+  { id: "l5-radio-kitchen", x: -7, y: 1.0, z: 20.4, yaw: 180, where: "Homely Hotel's dining room" },
+  { id: "l5-radio-hk", x: 16.8, y: 0.95, z: 22.8, yaw: 180, where: "Housekeeping" },
+  { id: "l5-radio-room", x: -15, y: 0.7, z: -20.4, yaw: 0, where: "Room 1408" },
+  { id: "l5-radio-boiler", x: 20, y: 1.2, z: 23.5, yaw: -90, where: "the Boiler Room's foreman's desk" },
+];
