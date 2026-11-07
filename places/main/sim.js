@@ -1,4 +1,5 @@
 import { npcState } from "../../scripts/lib/stats.js";
+import { LURKER_MODEL } from "../../scripts/lurkers.js";
 // Level 0's referee: keeps almond water on the floor and smilers in the dark.
 import L from "../../scripts/lib/data/level0.yml";
 const MID = (L.hub[0] + L.hub[1]) / 2; // the safe room's centre cell
@@ -141,7 +142,7 @@ export function tick(ctx) {
     const fill = s.lurkersSeeded ? 1 : L.lurkers - lurkers;
     for (let i = 0; i < fill; i++) {
       const c = cell(ctx, ["halls", "arches", "holes", "offices"]);
-      if (c) ctx.spawn({ tags: ["lurker"], feetPosition: { x: c.x, y: 0.05, z: c.z }, primitive: { kind: "scripted", script: "scripts/lurker-geo.js" }, physics: { body: "character" }, state: npcState(ctx, "lurker", L.lurkerHp, { kind: "lurker" }) });
+      if (c) ctx.spawn({ tags: ["lurker"], feetPosition: { x: c.x, y: 0.05, z: c.z }, model: LURKER_MODEL, scale: 1.08, physics: { body: "character" }, state: { ...npcState(ctx, "lurker", L.lurkerHp, { kind: "lurker" }), mesh: 1 } });
     }
     s.lurkersSeeded = true;
     s.nextLurker = now + L.lurkerRespawn * 1000;
