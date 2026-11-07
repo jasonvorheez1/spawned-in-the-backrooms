@@ -13,6 +13,8 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
   pistol:     ["/cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb", -0.064, 0, "tripo_material_b831ab79-8033-43a9-83a4-7a26d07345fd"],
   shotgun:    ["/cdn/value.5a2a421d33cd848a6df5ae7bf263814fc33ed17392a1dca306d6006fc6b33c34.glb", -0.032, 0, "tripo_material_7b83893e-ced9-4331-b685-1a4a787052e6"],
 };
+// each mesh's box centre in the scripted frame (x, z), from art/weapons/fit.json
+const CENTER = { table_leg: [0, 0.3325], pipe_scrap: [0, 0.415], crowbar: [0, 0.4425], bat: [0, 0.4895], hatchet: [0.07, 0.417], fire_axe: [0.0175, 0.5395], pistol: [0, 0.114], shotgun: [0.002, 0.452] }
 export function weaponBody(kind) {
   const base = baseOf(kind), w = W[kind] ?? {}, m = MESH[base], look = w.look, short = look === 'sawn' ? 0.72 : 1
   const body = m
@@ -20,7 +22,9 @@ export function weaponBody(kind) {
     : { primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: base } }, ...(w.tint ? { material: { color: w.tint } } : {}) }
   const sc = m?.[2] || 1
   if (sc !== 1 || short !== 1) body.scale = { x: sc, y: sc, z: sc * short }
-  // the look rides as a child in the weapon's own fitted frame, scaled with it
-  if (look) body.children = [{ primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: base, look } }, castShadow: false }]
+  // the look rides as a child. A mesh stands centred on its feet and faces the other way from the scripted frame
+  // (handle toward +Z), so the look turns half round and sits at the mesh's centre (art/weapons/fit.json)
+  if (look) { const c = CENTER[base]; body.children = [{ primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: base, look } }, castShadow: false,
+    ...(m && c ? { feetPosition: { x: c[0], y: 0, z: c[1] }, rotation: 180 } : {}) }] }
   return body
 }
