@@ -128,7 +128,7 @@ export function tick(ctx) {
     for (const o of ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.tags?.includes("container")) ctx.destroy(o.id);
     s.furnitureSeeded = true; s.cratesSeeded = false; s.nextCrate = 0;
   }
-  const crates = ctx.query({ tags: ["furniture"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).length;
+  const crates = ctx.query({ tags: ["lootfurn"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).length;
   if (crates < W.crates.count && now >= (s.nextCrate ?? 0)) {
     const fill = s.cratesSeeded ? 1 : W.crates.count - crates;
     for (let i = 0; i < fill; i++) for (let k = 0; k < 8; k++) {

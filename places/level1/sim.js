@@ -142,7 +142,7 @@ export function tick(ctx) {
 function afterFlicker(ctx) {
   const hounds = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((h) => !h.state?.dead);
   for (const h of hounds.slice(L.hounds)) ctx.destroy(h.id);
-  const have = ctx.query({ tags: ["furniture"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).length;
+  const have = ctx.query({ tags: ["lootfurn"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).length;
   seedFurniture(ctx, Math.min(8, L.crates - have));
 }
 
