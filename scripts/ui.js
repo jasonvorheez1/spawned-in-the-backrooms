@@ -79,8 +79,6 @@ export default function render(ctx, player) {
   const sanWord = sanF > 0.75 ? 'steady' : sanF > 0.5 ? 'uneasy' : sanF > 0.25 ? 'fraying' : 'breaking'
   const rar = wp.rarity ? W.rarities?.[wp.rarity] : null
 
-  const have = ['fists', ...(s.weapons ? s.weapons.split(',') : [])].filter((k) => W[k])
-  const invHtml = have.length > 1 ? have.map((k) => `<span style="opacity:${k === s.equipped ? 1 : 0.4};margin-left:6px">${W[k].name}</span>`).join('') : ''
 
   return `${THEME}
 <div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
