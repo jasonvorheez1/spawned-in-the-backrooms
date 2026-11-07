@@ -64,7 +64,9 @@ function toss(ctx, o, h) {
   const ses = ctx.self.session, s = ctx.self.state, d = ses.dir ?? { x: 0, y: 0, z: -1 };
   const over = ses.kg / power(ctx), speed = over > 1 ? Math.max(1.5, 4 - over) : Math.max(3, Math.min(20, 3 + (power(ctx) / ses.kg) * 2.2)); // light things fly; past your strength it tips a few feet away
   ctx.self.anim.grab = { clip: "cdn/clip-throw.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 }; ctx.self.session.grabAnimEnd = ctx.now() + 1000;
-  o.physics = { body: "dynamic", collider: "box", mass: ses.kg, friction: 0.7 };
+  // weight over its size is its density: under water's 1000 kg/m³ it bobs back up, over it sinks (the engine floats a dynamic body by density in a sea, lake or river)
+  const bs = o.bounds?.size, vol = bs ? Math.max(0.001, bs.x * bs.y * bs.z * 0.6) : null; // 0.6: a chair or a crate is mostly air inside its box
+  o.physics = vol ? { body: "dynamic", collider: "box", density: Math.max(60, Math.min(8000, ses.kg / vol)), friction: 0.7 } : { body: "dynamic", collider: "box", mass: ses.kg, friction: 0.7 };
   o.velocity = { x: d.x * speed, y: d.y * speed + 2, z: d.z * speed };
   ses.flying = { id: o.id, at: ctx.now(), speed, kg: ses.kg, hit: {} };
   ses.held = null; s.carry = null; s.carryMul = 1;
@@ -110,7 +112,7 @@ function spill(ctx, o) {
   const fall = (it) => { if (!it || it.id === o.id) return; const tg = it.tags ?? []; if (tg.includes("npc") || tg.includes("wall") || tg.includes("door") || it.id.startsWith("player")) return;
     const s = it.bounds?.size; if (!s || s.x * s.y * s.z > 0.6) return;
     if (it.parent) it.parent = null;
-    it.physics = { body: "dynamic", collider: "box", density: 400, friction: 0.6, restitution: 0.15 };
+    it.physics = { body: "dynamic", collider: "box", density: 400, friction: 0.6, restitution: 0.15 }; // light as wood: it floats
     ctx.emit("impulse", { target: it.id, impulse: { x: (ctx.random() - 0.5) * 0.6, y: 0.4, z: (ctx.random() - 0.5) * 0.6 } }); };
   for (const c of o.children ?? []) fall(ctx.getObject(c.id ?? c));
   const r = Math.max(b.size.x, b.size.z) * 0.75 + 0.3;
