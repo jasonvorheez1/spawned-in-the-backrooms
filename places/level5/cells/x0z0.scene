@@ -1205,7 +1205,7 @@ l5-geo:
   primitive: {kind: scripted, script: scripts/level5-geo.js}
   receiveShadow: true
 l5-hall-cart:
-  feetPosition: {x: -10.3, y: 0, z: 11.4}
+  feetPosition: {x: -7.3, y: 0, z: 11.4}
   id: l5-hall-cart
   physics: static
   primitive: {kind: scripted, params: {kind: cart}, script: scripts/l5-hall-geo.js}
@@ -1638,16 +1638,16 @@ l5-hall-gal-sofa0:
   physics: static
   primitive: {kind: scripted, params: {kind: sofa, up: leather, w: 2.1}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 3}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-gal-sofa1:
   feetPosition: {x: -12.4, y: 0, z: 2.475}
   id: l5-hall-gal-sofa1
   physics: static
   primitive: {kind: scripted, params: {kind: sofa, up: leather, w: 2.1}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 3}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-gclock:
   feetPosition: {x: -42, y: 0, z: -12.72}
   id: l5-hall-gclock
@@ -1657,7 +1657,7 @@ l5-hall-gclock:
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
 l5-hall-hatstand:
-  feetPosition: {x: -43.6, y: 0, z: 3.5999999999999996}
+  feetPosition: {x: -43.6, y: 0, z: 6.6}
   id: l5-hall-hatstand
   physics: static
   primitive: {kind: scripted, params: {kind: hatstand}, script: scripts/l5-hall-geo.js}
@@ -1670,64 +1670,64 @@ l5-hall-k-chair00:
   physics: static
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-k-chair01:
   feetPosition: {x: -10.95, y: 0, z: 15.65}
   id: l5-hall-k-chair01
   physics: static
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-k-chair02:
   feetPosition: {x: -11.85, y: 0, z: 17.15}
   id: l5-hall-k-chair02
   physics: static
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-k-chair03:
   feetPosition: {x: -10.95, y: 0, z: 17.15}
   id: l5-hall-k-chair03
   physics: static
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-k-chair10:
   feetPosition: {x: -8.35, y: 0, z: 15.65}
   id: l5-hall-k-chair10
   physics: static
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-k-chair11:
   feetPosition: {x: -7.45, y: 0, z: 15.65}
   id: l5-hall-k-chair11
   physics: static
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-k-chair12:
   feetPosition: {x: -8.35, y: 0, z: 17.15}
   id: l5-hall-k-chair12
   physics: static
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-k-chair13:
   feetPosition: {x: -7.45, y: 0, z: 17.15}
   id: l5-hall-k-chair13
   physics: static
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-k-counterL:
   feetPosition: {x: -12.95, y: 0, z: 20.59}
   id: l5-hall-k-counterL
@@ -1784,14 +1784,124 @@ l5-hall-k-table1:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+l5-hall-leaf-room-n3:
+  behavior: scripts/l5-hall-door.js
+  feetPosition: {x: -20, y: 0, z: -13.09}
+  id: l5-hall-leaf-room-n3
+  physics: kinematic
+  pivot: [0, 0.5, 0.5]
+  primitive: {kind: scripted, params: {h: 2.2, kind: leaf, w: 1.0600000000000014}, script: scripts/l5-hall-fix.js}
+  rotation: {yaw: 0}
+  state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 217, open: false, openYaw: 90, verb: Open}
+  tags: [l5-hall, usable, l5-hall-door]
+l5-hall-leaf-room-n4:
+  behavior: scripts/l5-hall-door.js
+  feetPosition: {x: -16, y: 0, z: -13.09}
+  id: l5-hall-leaf-room-n4
+  physics: kinematic
+  pivot: [0, 0.5, 0.5]
+  primitive: {kind: scripted, params: {h: 2.2, kind: leaf, w: 1.0600000000000014}, script: scripts/l5-hall-fix.js}
+  rotation: {yaw: 0}
+  state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 1408, open: false, openYaw: 90, verb: Open}
+  tags: [l5-hall, usable, l5-hall-door]
+l5-hall-leaf-room-n5:
+  behavior: scripts/l5-hall-door.js
+  feetPosition: {x: -12, y: 0, z: -13.09}
+  id: l5-hall-leaf-room-n5
+  physics: kinematic
+  pivot: [0, 0.5, 0.5]
+  primitive: {kind: scripted, params: {h: 2.2, kind: leaf, w: 1.0600000000000014}, script: scripts/l5-hall-fix.js}
+  rotation: {yaw: 0}
+  state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 9, open: false, openYaw: 90, verb: Open}
+  tags: [l5-hall, usable, l5-hall-door]
+l5-hall-leaf-room-s1:
+  behavior: scripts/l5-hall-door.js
+  feetPosition: {x: -28, y: 0, z: 13.09}
+  id: l5-hall-leaf-room-s1
+  physics: kinematic
+  pivot: [0, 0.5, 0.5]
+  primitive: {kind: scripted, params: {h: 2.2, kind: leaf, w: 1.0600000000000014}, script: scripts/l5-hall-fix.js}
+  rotation: {yaw: 0}
+  state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 313, open: false, openYaw: -90, verb: Open}
+  tags: [l5-hall, usable, l5-hall-door]
+l5-hall-leaf-room-s2:
+  behavior: scripts/l5-hall-door.js
+  feetPosition: {x: -24, y: 0, z: 13.09}
+  id: l5-hall-leaf-room-s2
+  physics: kinematic
+  pivot: [0, 0.5, 0.5]
+  primitive: {kind: scripted, params: {h: 2.2, kind: leaf, w: 1.0600000000000014}, script: scripts/l5-hall-fix.js}
+  rotation: {yaw: 0}
+  state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 66, open: false, openYaw: -90, verb: Open}
+  tags: [l5-hall, usable, l5-hall-door]
+l5-hall-leaf-room-s3:
+  behavior: scripts/l5-hall-door.js
+  feetPosition: {x: -20, y: 0, z: 13.09}
+  id: l5-hall-leaf-room-s3
+  physics: kinematic
+  pivot: [0, 0.5, 0.5]
+  primitive: {kind: scripted, params: {h: 2.2, kind: leaf, w: 1.0600000000000014}, script: scripts/l5-hall-fix.js}
+  rotation: {yaw: 0}
+  state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 1932, open: false, openYaw: -90, verb: Open}
+  tags: [l5-hall, usable, l5-hall-door]
+l5-hall-leaf-room-s4:
+  behavior: scripts/l5-hall-door.js
+  feetPosition: {x: -16, y: 0, z: 13.09}
+  id: l5-hall-leaf-room-s4
+  physics: kinematic
+  pivot: [0, 0.5, 0.5]
+  primitive: {kind: scripted, params: {h: 2.2, kind: leaf, w: 1.0600000000000014}, script: scripts/l5-hall-fix.js}
+  rotation: {yaw: 0}
+  state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: "Room 4½", open: false, openYaw: -90, verb: Open}
+  tags: [l5-hall, usable, l5-hall-door]
+l5-hall-leaf-suite-ne:
+  behavior: scripts/l5-hall-door.js
+  feetPosition: {x: -11, y: 0, z: -9.91}
+  id: l5-hall-leaf-suite-ne
+  physics: kinematic
+  pivot: [0, 0.5, 0.5]
+  primitive: {kind: scripted, params: {h: 2.2, kind: leaf, w: 1.0600000000000014}, script: scripts/l5-hall-fix.js}
+  rotation: {yaw: 0}
+  state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 12A, open: false, openYaw: -90, verb: Open}
+  tags: [l5-hall, usable, l5-hall-door]
+l5-hall-leaf-suite-nw:
+  behavior: scripts/l5-hall-door.js
+  feetPosition: {x: -25, y: 0, z: -9.91}
+  id: l5-hall-leaf-suite-nw
+  physics: kinematic
+  pivot: [0, 0.5, 0.5]
+  primitive: {kind: scripted, params: {h: 2.2, kind: leaf, w: 1.0600000000000014}, script: scripts/l5-hall-fix.js}
+  rotation: {yaw: 0}
+  state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 800, open: false, openYaw: -90, verb: Open}
+  tags: [l5-hall, usable, l5-hall-door]
+l5-hall-leaf-suite-se:
+  behavior: scripts/l5-hall-door.js
+  feetPosition: {x: -11, y: 0, z: 9.91}
+  id: l5-hall-leaf-suite-se
+  physics: kinematic
+  pivot: [0, 0.5, 0.5]
+  primitive: {kind: scripted, params: {h: 2.2, kind: leaf, w: 1.0600000000000014}, script: scripts/l5-hall-fix.js}
+  rotation: {yaw: 0}
+  state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 0, open: false, openYaw: 90, verb: Open}
+  tags: [l5-hall, usable, l5-hall-door]
+l5-hall-leaf-suite-sw:
+  behavior: scripts/l5-hall-door.js
+  feetPosition: {x: -25, y: 0, z: 9.91}
+  id: l5-hall-leaf-suite-sw
+  physics: kinematic
+  pivot: [0, 0.5, 0.5]
+  primitive: {kind: scripted, params: {h: 2.2, kind: leaf, w: 1.0600000000000014}, script: scripts/l5-hall-fix.js}
+  rotation: {yaw: 0}
+  state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 237, open: false, openYaw: 90, verb: Open}
+  tags: [l5-hall, usable, l5-hall-door]
 l5-hall-lib-arm:
   feetPosition: {x: -28.8, y: 0, z: -14.4}
   id: l5-hall-lib-arm
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.45 0.08 30), kind: sofa, up: leather, w: 1}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -135}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 2}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-lib-desk:
   feetPosition: {x: -23.2, y: 0, z: -19.2}
   id: l5-hall-lib-desk
@@ -1909,16 +2019,16 @@ l5-hall-lobby-arm0:
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.6 0.12 25), kind: sofa, up: velvet, w: 1}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -90}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 2}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-lobby-arm1:
   feetPosition: {x: -39.9, y: 0, z: 7.6}
   id: l5-hall-lobby-arm1
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.6 0.12 25), kind: sofa, up: velvet, w: 1}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -90}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 2}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-lobby-cab:
   feetPosition: {x: -33.5, y: 0, z: 12.69}
   id: l5-hall-lobby-cab
@@ -1972,32 +2082,32 @@ l5-hall-lobby-sofa0a:
   physics: static
   primitive: {kind: scripted, params: {kind: sofa, up: leather, w: 2.2}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 3}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-lobby-sofa0b:
   feetPosition: {x: -37, y: 0, z: -9.3}
   id: l5-hall-lobby-sofa0b
   physics: static
   primitive: {kind: scripted, params: {kind: sofa, up: leather, w: 2.2}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 3}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-lobby-sofa1a:
   feetPosition: {x: -37, y: 0, z: 5.9}
   id: l5-hall-lobby-sofa1a
   physics: static
   primitive: {kind: scripted, params: {kind: sofa, up: leather, w: 2.2}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 3}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-lobby-sofa1b:
   feetPosition: {x: -37, y: 0, z: 9.3}
   id: l5-hall-lobby-sofa1b
   physics: static
   primitive: {kind: scripted, params: {kind: sofa, up: leather, w: 2.2}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 3}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-lobby-table:
   feetPosition: {x: -37, y: 0, z: 0}
   id: l5-hall-lobby-table
@@ -2010,7 +2120,7 @@ l5-hall-mgr:
   behavior: scripts/l5-hall-lay.js
   feetPosition: {x: -38, y: -3, z: 0}
   id: l5-hall-mgr
-  state: {v: 3}
+  state: {v: 4}
   tags: [l5-hall-mgr]
   visible: false
 l5-hall-palm0:
@@ -2191,8 +2301,8 @@ l5-hall-room-n3-chair:
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.82 0.08 20), kind: sofa, up: leather, w: 1}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -65}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 2}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-room-n3-dresser:
   feetPosition: {x: -18.335, y: 0, z: -16}
   id: l5-hall-room-n3-dresser
@@ -2260,8 +2370,8 @@ l5-hall-room-n4-chair:
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.75 0.06 150), kind: sofa, up: leather, w: 1}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -65}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 2}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-room-n4-dresser:
   feetPosition: {x: -14.335, y: 0, z: -16}
   id: l5-hall-room-n4-dresser
@@ -2337,8 +2447,8 @@ l5-hall-room-n5-chair:
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.86 0.04 240), kind: sofa, up: leather, w: 1}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -65}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 2}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-room-n5-dresser:
   feetPosition: {x: -10.335, y: 0, z: -16}
   id: l5-hall-room-n5-dresser
@@ -2420,8 +2530,8 @@ l5-hall-room-s1-chair:
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.88 0.05 85), kind: sofa, up: leather, w: 1}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -65}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 2}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-room-s1-dresser:
   feetPosition: {x: -26.335, y: 0, z: 16}
   id: l5-hall-room-s1-dresser
@@ -2489,8 +2599,8 @@ l5-hall-room-s2-chair:
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.7 0.09 330), kind: sofa, up: velvet, w: 1}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -65}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 2}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-room-s2-dresser:
   feetPosition: {x: -22.335, y: 0, z: 16}
   id: l5-hall-room-s2-dresser
@@ -2566,8 +2676,8 @@ l5-hall-room-s3-chair:
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.8 0.06 200), kind: sofa, up: leather, w: 1}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -65}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 2}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-room-s3-dresser:
   feetPosition: {x: -18.335, y: 0, z: 16}
   id: l5-hall-room-s3-dresser
@@ -2657,8 +2767,8 @@ l5-hall-room-s4-chair:
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.9 0.02 90), kind: sofa, up: leather, w: 1}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -65}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 2}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-room-s4-dresser:
   feetPosition: {x: -14.335, y: 0, z: 16}
   id: l5-hall-room-s4-dresser
@@ -2764,8 +2874,8 @@ l5-hall-suite-ne-deskchair:
   physics: static
   primitive: {kind: scripted, params: {kind: chair, wood: mahog}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-suite-ne-night1:
   feetPosition: {x: -15.625, y: 0, z: -3.315}
   id: l5-hall-suite-ne-night1
@@ -2803,16 +2913,16 @@ l5-hall-suite-ne-sofa:
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.72 0.07 160), kind: sofa, up: velvet, w: 2}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -90}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 3}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-suite-ne-stool:
   feetPosition: {x: -6.925, y: 0, z: -6.4}
   id: l5-hall-suite-ne-stool
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.72 0.07 160), kind: stool}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 90}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Stool, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Stool, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-suite-ne-vanity:
   feetPosition: {x: -6.325, y: 0, z: -6.4}
   id: l5-hall-suite-ne-vanity
@@ -2881,8 +2991,8 @@ l5-hall-suite-nw-deskchair:
   physics: static
   primitive: {kind: scripted, params: {kind: chair, wood: walnut}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-suite-nw-night1:
   feetPosition: {x: -29.625, y: 0, z: -3.315}
   id: l5-hall-suite-nw-night1
@@ -2920,16 +3030,16 @@ l5-hall-suite-nw-sofa:
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.78 0.08 30), kind: sofa, up: velvet, w: 2}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -90}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 3}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-suite-nw-stool:
   feetPosition: {x: -19.925, y: 0, z: -6.4}
   id: l5-hall-suite-nw-stool
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.78 0.08 30), kind: stool}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 90}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Stool, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Stool, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-suite-nw-vanity:
   feetPosition: {x: -19.325, y: 0, z: -6.4}
   id: l5-hall-suite-nw-vanity
@@ -2998,8 +3108,8 @@ l5-hall-suite-se-deskchair:
   physics: static
   primitive: {kind: scripted, params: {kind: chair, wood: walnut}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 360}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-suite-se-night1:
   feetPosition: {x: -15.625, y: 0, z: 3.315}
   id: l5-hall-suite-se-night1
@@ -3037,16 +3147,16 @@ l5-hall-suite-se-sofa:
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.7 0.1 350), kind: sofa, up: velvet, w: 2}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -90}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 3}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-suite-se-stool:
   feetPosition: {x: -6.925, y: 0, z: 6.4}
   id: l5-hall-suite-se-stool
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.7 0.1 350), kind: stool}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 90}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Stool, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Stool, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-suite-se-vanity:
   feetPosition: {x: -6.325, y: 0, z: 6.4}
   id: l5-hall-suite-se-vanity
@@ -3115,8 +3225,8 @@ l5-hall-suite-sw-deskchair:
   physics: static
   primitive: {kind: scripted, params: {kind: chair, wood: oak}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 360}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-suite-sw-night1:
   feetPosition: {x: -29.625, y: 0, z: 3.315}
   id: l5-hall-suite-sw-night1
@@ -3154,16 +3264,16 @@ l5-hall-suite-sw-sofa:
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.82 0.06 260), kind: sofa, up: velvet, w: 2}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -90}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Sofa, seat: {d: 0.08, gap: 0.65, w: 3}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-suite-sw-stool:
   feetPosition: {x: -19.925, y: 0, z: 6.4}
   id: l5-hall-suite-sw-stool
   physics: static
   primitive: {kind: scripted, params: {col: oklch(0.82 0.06 260), kind: stool}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 90}
-  state: {hp: 60, mat: wood, maxHp: 60, name: Stool, seat: {d: 0.02, gap: 0.65, w: 1}}
-  tags: [l5-hall, furniture, breakable, seat]
+  state: {hp: 60, mat: wood, maxHp: 60, name: Stool, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
+  tags: [l5-hall, furniture, breakable, seat, usable]
 l5-hall-suite-sw-vanity:
   feetPosition: {x: -19.325, y: 0, z: 6.4}
   id: l5-hall-suite-sw-vanity
