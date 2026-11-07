@@ -36,3 +36,29 @@ export function critterSpec(l) {
   return { model: bodyModel(l), children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel(l), morph: faceMorph(l.expr) }],
     material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.6, bounce: 0.6 } }
 }
+// a mesh critter's look read back off its own model (the bodies laid before state.wear existed): parts shown = garments, cloth_* = their colours, head GLB = species and sex
+const CLOTH_KEY = { topw: 'top', botw: 'bottom', shoes: 'shoec', hat: 'hatc', neck: 'neckc' }
+export function lookFromModel(model, headId) {
+  if (!model || typeof model !== 'object') return null
+  const l = { sex: model.id === M.body.f ? 'f' : 'm' }
+  for (const [slot, pre] of Object.entries(M.slots)) { l[slot] = 'none'; for (const [n, v] of Object.entries(model.parts || {})) if (v?.visible && n.startsWith(pre + '_')) l[slot] = n.slice(pre.length + 1) }
+  const mats = model.materials || {}
+  for (const [slot, [mat]] of Object.entries(CLOTH)) if (mats[mat]?.color) l[CLOTH_KEY[slot]] = mats[mat].color
+  if (mats.fur?.color) l.fur = mats.fur.color
+  for (const [sp, row] of Object.entries(M.species)) if ([row.head, row.headM, row.headF].includes(headId)) { l.species = sp; break }
+  return l
+}
+// dress a living or fallen critter body in a look, whichever body it wears (scripted primitive or Blender mesh)
+export function rewear(ctx, obj, look) {
+  if (!obj || !look) return
+  if (obj.primitive?.params) { obj.primitive = { ...obj.primitive, params: { ...obj.primitive.params, ...look } }; return }
+  if (obj.model) obj.model = bodyModel(look)
+}
+// a scripted critter swapped onto the Blender critter in place: body model, skinned head child, outline and jiggle; returns the look it wore
+export function toMesh(ctx, obj) {
+  if (!MESH || obj?.primitive?.script !== 'scripts/critter2-geo.js') return null
+  const l = { ...obj.primitive.params }, spec = critterSpec(l)
+  obj.primitive = null; obj.model = spec.model; obj.material = spec.material; obj.jiggle = spec.jiggle
+  if (!ctx.getObject(obj.id + '/' + HEAD_ID)) ctx.spawn(HEAD_ID, { parent: obj.id, ...spec.children[0] })
+  return l
+}
