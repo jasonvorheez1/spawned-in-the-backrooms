@@ -1,0 +1,21 @@
+# spawn-scene v2 yaml x0z-1
+l7-boat-to-fort:
+  behavior: scripts/l7-dory.js
+  feetPosition: {x: 40.4, y: -0.4, z: -92.5}
+  id: l7-boat-to-fort
+  layout: {box: {max: {x: 1.9, y: 1.2, z: 1.9}, min: {x: -1.9, y: 0, z: -1.9}}}
+  model: {forward: "+x", id: /cdn/value.a8149ca591b3615ade17735a3a0a1e972028c35be8f1351899565924f9d32a16.glb}
+  physics: {body: kinematic, collider: box}
+  rotation: {roll: 3, yaw: 145}
+  state: {boat: true, home: {x: 40.4, yaw: 145, z: -92.5}, name: Deep-water outrigger dory, seat: {d: 0.35, y: 0.3}, verb: Get in}
+  tags: [seat, boat]
+l7-boat-to-pier:
+  behavior: scripts/l7-dory.js
+  feetPosition: {x: 35.6, y: -0.4, z: -91.5}
+  id: l7-boat-to-pier
+  layout: {box: {max: {x: 1.9, y: 1.2, z: 1.9}, min: {x: -1.9, y: 0, z: -1.9}}}
+  model: {forward: "+x", id: /cdn/value.a8149ca591b3615ade17735a3a0a1e972028c35be8f1351899565924f9d32a16.glb}
+  physics: {body: kinematic, collider: box}
+  rotation: {roll: -2, yaw: -12}
+  state: {boat: true, home: {x: 35.6, yaw: -12, z: -91.5}, name: Seawatch dory, seat: {d: 0.35, y: 0.3}, verb: Get in}
+  tags: [seat, boat]
