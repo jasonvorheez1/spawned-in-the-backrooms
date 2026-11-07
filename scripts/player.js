@@ -8,6 +8,8 @@ import { raycast } from 'builtin/physics'
 import { dropLoot, spawnWeapon } from './lib/loot.js'
 import { weaponBody } from './lib/weapon-look.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
+import { zoneAt as zoneAt1 } from './lib/level1.js'
+const zoneHere = (ctx, x, z) => ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : zoneAt(x, z)
 
 import SOUNDS from './lib/data/sounds.yml'
 const sndTurn = {}
@@ -348,7 +350,7 @@ export function update(ctx, dt) {
   const dir = w.dir ?? { x: 0, z: 0 }, moving = dir.x !== 0 || dir.z !== 0
   const sprinting = w.sprint && moving && w.stamina > 1 && !s.ads
   w.stamina = Math.max(0, Math.min(L.stamina, w.stamina + (sprinting ? -L.staminaDrain : L.staminaRegen * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
-  const fp = ctx.self.feetPosition, inArch = zoneAt(fp.x, fp.z) === 'arches'
+  const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
   const speed = (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1)
   const intent = { x: dir.x * speed, z: dir.z * speed }
@@ -382,7 +384,7 @@ function tickStats(ctx, t, moving) {
   const af = w.fwd ?? { x: 0, z: -1 }, ax = Math.round(af.x * 20) / 20, az = Math.round(af.z * 20) / 20
   if (s.aimX !== ax) s.aimX = ax
   if (s.aimZ !== az) s.aimZ = az
-  const zone = zoneAt(p.x, p.z)
+  const zone = zoneHere(ctx, p.x, p.z)
   if (zone !== s.zone) s.zone = zone
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
   let drain = L.sanityDrain[zone] ?? 0.12
@@ -462,12 +464,12 @@ function tickStats(ctx, t, moving) {
   // (items are taken with E on what you look at: takeToken above, called from scripts/interact.js)
   // the flickering wall: the way out
   const ex = cellCenter(EXIT.cx, EXIT.cz)
-  if (p.x < -HALF + 1.3 && Math.abs(p.z - ex.z) < 1.8) {
+  if (ctx.self.place === 'main' && p.x < -HALF + 1.3 && Math.abs(p.z - ex.z) < 1.8) {
     s.escapes += 1; s.exitAt = now
     gain(ctx, L.xpExit)
     sound(ctx, 'static-burst-glitch', 0.95, true)
     ctx.emit('screenFlash', { color: '#fff6c8', duration: 0.6, intensity: 0.8 }, { audience: { player: ctx.self.id } })
-    ctx.self.feetPosition = { x: (ctx.random() - 0.5) * 6, y: 0.1, z: (ctx.random() - 0.5) * 6 }
+    ctx.cross(ctx.self, 'level1') // through the flickering wall: Level 1
     return
   }
   // taken
