@@ -52,9 +52,9 @@ export function update(ctx, dt) {
     }
     const was = s.heat ?? 0, heat = Math.max(0, Math.min(100, was + rate * step)), r = Math.round(heat * 10) / 10;
     if (r !== was && !(was === 0 && r === 0)) s.heat = r;
-    if (heat > HEAT.hurtAt && (s.hp ?? 0) > 1) {
+    if (heat > HEAT.hurtAt && (s.hp ?? 0) > 0) {
       const k = (ss.hurt[p.id] ?? 0) + step;
-      if (k >= HEAT.hurtEvery) { ss.hurt[p.id] = 0; s.hp = Math.max(1, s.hp - HEAT.hurt * (heat > 90 ? 2 : 1)); } else ss.hurt[p.id] = k;
+      if (k >= HEAT.hurtEvery) { ss.hurt[p.id] = 0; s.hp = s.hp - HEAT.hurt * (heat > 90 ? 2 : 1); } else ss.hurt[p.id] = k;
       if (!ss.warned?.[p.id] ) { (ss.warned ??= {})[p.id] = true; s.notice = { text: "The heat is cooking you. Find a leak, or get out.", at: ctx.now() }; }
     } else if (heat < 50 && ss.warned?.[p.id]) delete ss.warned[p.id];
   }

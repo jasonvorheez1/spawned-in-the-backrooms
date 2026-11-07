@@ -108,7 +108,7 @@ export const ears = {
     ctx.emit("playSound", { clip: SND_HISS, position: me, volume: 0.9, maxDistance: 24 });
     ctx.emit("screenFlash", { color: "#8a2be2", duration: 0.4, intensity: 0.6 }, { audience: { player: by } });
 
-    who.state.hp = Math.max(1, (who.state.hp ?? 100) - 15);
+    who.state.hp = (who.state.hp ?? 100) - 15;
     who.state.notice = {
       text: "Samantha's golden eyes blaze purple! A psychic shockwave violently hurls you backward: 'Insolent wanderer! You do not strike a queen of the Beverly Room!'",
       at: ctx.now(),
