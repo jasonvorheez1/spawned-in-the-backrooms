@@ -11,7 +11,7 @@ const Y = 0.04;
 function rod(ctx, pts, rads, M, sq) {
   const a = pts[0], b = pts[1], n = pts.length, y = pts[n - 1], z = pts[n - 2];
   const s = (p, q, t) => p.map((v, i) => v + (q[i] - v) * t);
-  tube(ctx, [s(a, b, -0.02), a, ...pts.slice(1, -1), y, s(y, z, -0.02)], [rads[0] * 0.6, rads[0], ...rads.slice(1, -1), rads[n - 1], rads[n - 1] * 0.6], M, sq, 0, 1, 1);
+  tube(ctx, [s(a, b, -0.03), s(a, b, -0.02), a, ...pts.slice(1, -1), y, s(y, z, -0.02), s(y, z, -0.03)], [1e-4, rads[0] * 0.7, rads[0], ...rads.slice(1, -1), rads[n - 1], rads[n - 1] * 0.7, 1e-4], M, sq, 0, 1, 1);
 }
 // a rounded-corner bar along Z: w, h half-sizes, r corner radius, capped
 function bar(ctx, x, y, w, h, z0, z1, r = 0.004, C = 3) {
