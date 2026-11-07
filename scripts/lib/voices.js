@@ -36,8 +36,12 @@ const POOL = [
   'raspy-middle-aged-man-weary', 'bright-young-woman-curious', 'deep-slow-old-man-calm', 'quick-anxious-young-man',
   'husky-woman-dry-humor', 'soft-elderly-woman-kind', 'gruff-man-scottish-accent', 'crisp-woman-australian-accent',
   'nasal-man-new-york-accent', 'mellow-woman-southern-accent', 'booming-man-cheerful', 'breathy-young-woman-shy',
+  'smoky-low-woman-tired-sardonic', 'warm-middle-aged-woman-motherly', 'sharp-young-woman-fast-talker', 'hoarse-old-woman-gravelly',
+  'soft-spoken-young-man-gentle', 'reedy-old-man-nervous', 'smooth-man-french-accent', 'clipped-man-german-accent',
 ]
 const hash = (s) => { let h = 7; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h }
-export const throatOf = (who) => T[who] ?? POOL[hash(who) % POOL.length]
+const MEN = POOL.filter((v) => /-man-|-man$|old-man/.test(v)), WOMEN = POOL.filter((v) => /woman/.test(v))
+// a key 'npc-id' or 'npc-id#f' / '#m': a cast voice by name, else one from the pool by id, the right sex when known
+export const throatOf = (who) => { const [k, sx] = String(who).split('#'); return T[k] ?? (sx === 'f' ? WOMEN : sx === 'm' ? MEN : POOL)[hash(k) % (sx === 'f' ? WOMEN : sx === 'm' ? MEN : POOL).length] }
 const slug = (line, n = 180) => String(line ?? '').slice(0, n).replace(/[^a-z ]/gi, '').trim().toLowerCase().replace(/ +/g, '-')
 export const vo = (who, line, n) => `/cdn/voice-${throatOf(who)}-saying-${slug(line, n)}.mp3`
