@@ -104,6 +104,14 @@ function layOffice(ctx) {
 export function tick(ctx) {
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; lay(ctx); }
+  // Level 4's people (scripts/lib/l4-people.js): homes, the floor's day and night, meetups, phones, greetings, the mold room
+  if (s.peopleV !== 1) { s.peopleV = 1; settle(ctx, (id, g, rounds) => {
+    const home = rounds[0] ?? { x: 0, z: 0 };
+    ctx.spawn(id, { tags: ["npc", "l4-person", g.faction], feetPosition: { x: home.x, y: 0, z: home.z }, physics: "character", ...critterSpec(fullLook(g.look)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
+      state: { name: g.name, role: g.role, voice: g.voice, rounds, ...npcState(ctx, "agent", MEG.hp) } });
+    ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
+  }); }
+  tickPeople(ctx);
   if (!s.officeV) { s.officeV = 1; layOffice(ctx); }
   if (s.officeV < 2) { // the shift board: a corkboard on legs by the north desks, handing out office tasks (scripts/l4-office.js)
     s.officeV = 2;
