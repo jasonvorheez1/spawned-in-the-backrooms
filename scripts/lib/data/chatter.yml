@@ -41,4 +41,8 @@ barks:
   clear: ["okay. okay, i think that's it.", "clear. everybody breathe.", "that's all of 'em. i hope.", "quiet again. i hate the quiet."]
   allyDown: ["no! they're down!", "man down! man down!", "oh god, no.", "they got them! push it back!"]
   death: ["ugh-", "ah...", "not like this..."]
+  cover: ["taking cover!", "get down, get down!", "pinned! moving!", "behind the wall, now!", "i need a second, covering!"]
+  found: ["wait. that's a body.", "something died here.", "hold on, what's on the floor?", "that thing's dead. who did that?"]
+  inspect: ["is it dead? poking it. yep.", "ugly thing. what even are you.", "huh. it's really dead.", "don't get up. don't you dare get up.", "look at the teeth on that."]
+  inspected: ["yep. dead.", "okay. it's not getting up.", "good. stay down.", "right. moving on."]
   hostile: ["hey! put it down!", "you wanna do this? fine.", "big mistake, friend.", "that's it, you're done."]

@@ -59,7 +59,7 @@ export function update(ctx, dt) {
     if (st.dead || (st.hp ?? 1) <= 0) {
       if (!m.deadAt) { m.deadAt = now; if (!st.dead) o.state.dead = true; e.velocity = { x: 0, y: -2, z: 0 }; play(e, m, "base", null); play(e, m, "act", "Death", { clampWhenFinished: true });
         heard(ctx, { maxDistance: 32, refDistance: 5, clip: SND("flesh-tear-wet-shriek"), position: pos, volume: 0.8, pitch: 0.7 }); }
-      else if (now - m.deadAt > 2600 && !m.gone) { m.gone = true; ctx.emit("fx", { position: pos, script: POOF }); heard(ctx, { maxDistance: 24, refDistance: 4, clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.9 }); ctx.destroy(e.id); }
+      else if (now - m.deadAt > 2600 && !m.gone && now > (st.inspectUntil ?? 0)) { m.gone = true; ctx.emit("fx", { position: pos, script: POOF }); heard(ctx, { maxDistance: 24, refDistance: 4, clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.9 }); ctx.destroy(e.id); }
       continue;
     }
     if ((st.splashedAt ?? 0) > (m.splash ?? 0)) { // almond water: it burns. a disguise splits, then it reels

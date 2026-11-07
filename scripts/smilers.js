@@ -49,7 +49,7 @@ export function update(ctx, dt) {
         m.dieAt = now; w.velocity = { x: 0, y: 0, z: 0 }; w.anim.body = null;
         act(w, "death", { clampWhenFinished: true });
         heard(ctx, { clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.9, maxDistance: 35 });
-      } else if (!m.gone && now - m.dieAt > 1700) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.3, z: pos.z }, script: POOF }); ctx.destroy(w.id); }
+      } else if (!m.gone && now - m.dieAt > 1700 && now > (st.inspectUntil ?? 0)) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.3, z: pos.z }, script: POOF }); ctx.destroy(w.id); }
       continue;
     }
     if (now >= (m.look ?? 0)) {

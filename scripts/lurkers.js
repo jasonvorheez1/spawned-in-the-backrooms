@@ -78,7 +78,7 @@ export function update(ctx, dt) {
     const play = (clip, loop = true) => { if (m.clip !== clip) { m.clip = clip; w.anim.body = { clip: CLIP[clip] ?? clip, loop, clampWhenFinished: !loop }; } };
     if (st.dead) {
       if (!m.dying) { m.dying = now; play("Death", false); w.velocity = { x: 0, y: -2, z: 0 }; heard(ctx, { clip: SND("bone-crack-twist"), position: pos, volume: 0.9, maxDistance: 24 }); }
-      if (now - m.dying > 3200 && !m.gone) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1, z: pos.z }, script: POOF }); heard(ctx, { clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.8, maxDistance: 30 }); ctx.destroy(w.id); }
+      if (now - m.dying > 3200 && !m.gone && now > (st.inspectUntil ?? 0)) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1, z: pos.z }, script: POOF }); heard(ctx, { clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.8, maxDistance: 30 }); ctx.destroy(w.id); }
       continue;
     }
     const eye = { x: pos.x, y: pos.y + 1.6, z: pos.z };

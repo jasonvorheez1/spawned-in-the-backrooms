@@ -53,7 +53,7 @@ export function update(ctx, dt) {
     }
     if (st.dead || (st.hp ?? 1) <= 0) {
       if (!m.deadAt) { m.deadAt = now; anim(h, m, "death", false); h.velocity = { x: 0, y: -2, z: 0 }; heard(ctx, { maxDistance: 32, refDistance: 5, clip: SND("hound-death-yelp"), position: pos, volume: 0.8 }); }
-      else if (!m.gone && now - m.deadAt > T.deathMs) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.4, z: pos.z }, script: POOF }); ctx.destroy(h.id); }
+      else if (!m.gone && now - m.deadAt > T.deathMs && now > (st.inspectUntil ?? 0)) { m.gone = true; ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.4, z: pos.z }, script: POOF }); ctx.destroy(h.id); }
       continue;
     }
     if (now < (st.stunUntil ?? 0)) { // the baton: it reels, no step and no bite until it clears

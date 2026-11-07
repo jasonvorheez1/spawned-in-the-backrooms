@@ -28,7 +28,7 @@ const heldOf = (ctx, me) => (me.children ?? []).map((c) => (typeof c === "string
 // nerve (Shelly's confidence system): brave hold their ground, steady fight until hurt, cowards run, frenzied (rare) go for anyone. Savi's odds: 24/50/23/3
 const hashN = (id, salt) => { let h = 2166136261 ^ salt; for (const c of String(id)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return ((h >>> 0) % 1000) / 1000; };
 export const nerveOf = (id) => { const r = hashN(id, 77); return r < 0.24 ? "brave" : r < 0.74 ? "steady" : r < 0.97 ? "coward" : "frenzied"; };
-const UNARMED = { brave: 0.08, steady: 0.3, coward: 0.7, frenzied: 0 }; // chance they carry nothing at all
+const UNARMED = { brave: 0, steady: 0.1, coward: 0.25, frenzied: 0 }; // chance they carry nothing at all (most people in the halls are armed and fight back)
 const FLEE = { coward: ["nope. nope nope nope.", "not my fight!", "somebody else do it!", "i'm out, i'm out!"], steady: ["fall back! fall back!", "i'm hit, i'm getting out!", "can't hold it!"], brave: ["just a scratch... ugh, back!", "regroup! i'll be back!"] };
 function arm(ctx, me, m) {
   const s = me.state; s.nerve ??= nerveOf(me.id); if (s.mjguest) { m.armed = true; return; }
@@ -68,6 +68,11 @@ pop light burst=1 life=.07 r=light(<1,.7,.35>,14,5)`;
 const HIT = `fx
 pop blood burst=10 life=.4..0.7 v=sdir()*(1..2.4)+up(.6) size=.04..0.08 acc=grav() col=<.35,.05,.04> a=1>0 floor=stick r=sprite(soft-disc,alpha)`;
 const FOES = ["hound", "stealer"];
+// what a fighter takes on: every creature of the halls (the hotel's own staff, l5staff, are not for shooting). A civilian only fights what is on top of them.
+const HOSTILE = ["hound", "stealer", "smiler", "lurker", "moths"];
+const CROUCH = "cdn/clip-crouch-idle-loop.glb";
+const DEAD = (o) => !o || o.state?.dead || (o.state?.hp ?? 1) <= 0;
+const corpseOf = (o) => !!o && DEAD(o) && !o.tags?.includes?.("l5staff") && HOSTILE.some((g) => o.tags?.includes?.(g));
 
 export function onSpawn(ctx) {
   const me = ctx.self;
@@ -103,8 +108,9 @@ const chest = (p) => ({ x: p.x, y: p.y + 1.1, z: p.z });
 function pickTarget(ctx, me, m) {
   const p = me.feetPosition;
   let best = null, bd = G.sight;
-  if ((!me.state.faction5 || me.state.follow) && !me.state.mjguest) for (const tag of FOES) for (const f of ctx.query({ tags: [tag], radius: G.sight })) { // hotel guests are no fighters: a hound is something to run from, not at
-    if (f.state?.dead || (f.state?.hp ?? 1) <= 0) continue;
+  const fighter = (!me.state.faction5 || me.state.faction5 === "hk" || me.state.follow) && !me.state.mjguest; // hotel guests are no fighters: a hound is something to run from, but anything on top of them gets the weapon
+  if (!me.state.mjguest) for (const tag of HOSTILE) for (const f of ctx.query({ tags: [tag], radius: fighter ? G.sight : 5 })) {
+    if (DEAD(f) || f.tags?.includes?.("l5staff")) continue;
     const d = flat(f.feetPosition, p); if (d < bd) { bd = d; best = f; }
   }
   if (me.state.nerve === "frenzied" && !me.state.mjguest) { // anyone close enough: npc or player
@@ -210,6 +216,36 @@ function holster(ctx, me, m, drawn) {
   gun.feetPosition = drawn ? { x: 0, y: 0, z: 0 } : { x: 0, y: 0.05, z: -0.17 };
   gun.rotation = drawn ? { yaw: 0, pitch: 0, roll: 0 } : { yaw: 0, pitch: -90, roll: 35 };
   if (ranged || drawn) heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-gun-holster-leather.mp3", position: me.feetPosition, volume: 0.5, maxDistance: 15 });
+}
+// a straight walk to a spot within 6 m that the threat has no line of sight to: cover. null when there is none.
+function findCover(ctx, me, t) {
+  const p = me.feetPosition, tc = chest(t.feetPosition); let best = null, bs = 1e9;
+  for (let i = 0; i < 8; i++) {
+    const a = i * Math.PI / 4;
+    for (const r of [3, 5.5]) {
+      const c = { x: p.x + Math.cos(a) * r, y: p.y, z: p.z + Math.sin(a) * r };
+      if (!clearLine(ctx, me, p, c)) continue; // an unblocked walk there
+      const cc = chest(c), dx = cc.x - tc.x, dy = cc.y - tc.y, dz = cc.z - tc.z, l = Math.hypot(dx, dy, dz) || 1;
+      if (!raycast(ctx, tc, { x: dx / l, y: dy / l, z: dz / l }, { distance: l - 0.2, physicsOnly: true, bodies: "static", ignoreEntities: [me.id, t.id] })) continue; // the threat can see it: not cover
+      const cost = r + (flat(c, t.feetPosition) < flat(p, t.feetPosition) - 1 ? 4 : 0); // behind something, and not toward the threat
+      if (cost < bs) { bs = cost; best = c; }
+    }
+  }
+  return best;
+}
+// going to look at a dead creature (the one they killed, or one they came upon): weapon up on the way, a crouch over it, a word, then it is let go
+function inspect(ctx, me, m, now, dt) {
+  const I = m.inspect, o = ctx.getObject(I.id);
+  if (now - I.at > 30000) { m.inspect = null; work(me, m, null); return false; }
+  const px = o ? o.feetPosition.x : I.x, pz = o ? o.feetPosition.z : I.z, d = flat({ x: px, z: pz }, me.feetPosition);
+  if (I.phase === "walk") {
+    holster(ctx, me, m, !!I.hostile); work(me, m, null); aim(me, m, null);
+    if (d > 1.5) { gait(me, m, d > 8 ? "run" : "walk"); moveAlong(ctx, me, m, { x: px, y: me.feetPosition.y, z: pz }, d > 8 ? G.run : G.walk * 1.15, dt); return true; }
+    I.phase = "look"; I.until = now + 4500 + ctx.random() * 2500; bark(ctx, me, "inspect", true);
+  }
+  stop(me, dt); gait(me, m, "idle"); aim(me, m, null); work(me, m, CROUCH); face(me, px - me.feetPosition.x, pz - me.feetPosition.z, dt);
+  if (now > I.until) { m.inspect = null; work(me, m, null); holster(ctx, me, m, false); bark(ctx, me, "inspected", true); if (o?.state) o.state.inspectUntil = now; return false; } // the body can go now
+  return true;
 }
 function aim(me, m, t) {
   const id = t?.id ?? null;
@@ -350,17 +386,27 @@ export function update(ctx, dt) {
   const tid = t && flat(t.feetPosition, home) < G.leash ? t.id : null;
   if (tid !== (m.barkT ?? null)) {
     const prev = m.barkT ? ctx.getObject(m.barkT) : null, prevDead = prev && (prev.state?.dead || (prev.state?.hp ?? 1) <= 0);
+    if (prevDead && corpseOf(prev) && !m.inspect && !s.follow) { m.inspect = { id: prev.id, x: prev.feetPosition.x, z: prev.feetPosition.z, at: now, phase: "walk", hostile: true }; prev.state.inspectUntil = now + 16000; } // what they killed: go and see it's dead
     if (tid) bark(ctx, me, t.tags?.includes?.("player") || ctx.place.players.some((p) => p.id === tid) ? "hostile" : (prevDead ? "kill" : "spot"), !!prevDead);
     else if (m.barkT) { bark(ctx, me, prevDead || !prev ? "kill" : "clear", true); m.clearAt = now + 2600; }
     m.barkT = tid;
   }
   if (m.clearAt && now > m.clearAt) { m.clearAt = 0; if (!tid) bark(ctx, me, "clear", true); }
-  holster(ctx, me, m, !!(t && flat(t.feetPosition, home) < G.leash));
-  if (t && flat(t.feetPosition, home) < G.leash) {
-    work(me, m, null);
-    // nerve: break and run when it fails them; cornered (arm's length) they lash out anyway
+  const fighting = !!(t && flat(t.feetPosition, home) < G.leash);
+  if (!fighting && !m.inspect && !lead && !s.mjguest && now > (m.corpseAt ?? 0)) { // no one to fight: notice a dead creature close by that nobody has checked, and go and see
+    m.corpseAt = now + 2000; m.seen ??= {};
+    for (const tag of HOSTILE) { const o = ctx.query({ tags: [tag], radius: 14 }).find((c) => corpseOf(c) && !m.seen[c.id] && seesIt(ctx, me, c)); if (o) { m.seen[o.id] = true; o.state.inspectUntil = now + 16000; m.inspect = { id: o.id, x: o.feetPosition.x, z: o.feetPosition.z, at: now, phase: "walk", hostile: false }; bark(ctx, me, "found", true); break; } }
+  }
+  if (!fighting && m.inspect && inspect(ctx, me, m, now, dt)) return;
+  holster(ctx, me, m, fighting);
+  if (fighting) {
+    work(me, m, m.cover && now < m.cover.until && flat(m.cover, me.feetPosition) < 0.9 ? CROUCH : null);
+    // nerve: break and run when it fails them; cornered (arm's length) they lash out anyway. Armed people stand and fight: a lone coward still runs,
+    // but one with a friend near holds until it is badly hurt; the unarmed (fists) run unless brave.
     const nv = s.nerve ?? "steady", hpF = (s.hp ?? 1) / (s.maxHp ?? 100), dT = flat(t.feetPosition, me.feetPosition);
-    const breaks = nv === "frenzied" ? false : nv === "coward" ? true : nv === "brave" ? hpF < 0.15 : hpF < 0.45 || s.arm === "fists";
+    if (now > (m.allyAt ?? 0)) { m.allyAt = now + 1000; m.ally = ctx.query({ tags: ["npc"], radius: 14 }).some((n) => n.id !== me.id && !DEAD(n) && !n.tags?.includes?.("l5staff") && !n.state?.mjguest && n.state?.arm && n.state.arm !== "fists"); }
+    const hpBreak = nv === "brave" ? 0.15 : nv === "steady" ? 0.3 : 0.6;
+    const breaks = nv === "frenzied" ? false : s.arm === "fists" ? nv !== "brave" : hpF < hpBreak || (nv === "coward" && !m.ally);
     if (breaks && dT > 1.6) {
       holster(ctx, me, m, false); aim(me, m, null); gait(me, m, "run");
       const dx = me.feetPosition.x - t.feetPosition.x, dz = me.feetPosition.z - t.feetPosition.z, l = Math.hypot(dx, dz) || 1;
@@ -370,6 +416,16 @@ export function update(ctx, dt) {
     }
     const d = flat(t.feetPosition, me.feetPosition), see = seesIt(ctx, me, t), reloading = now < (m.reloadUntil ?? 0);
     const A = WP[s.arm] ?? WP.pistol, ranged = !!A.ranged, range = ranged ? (s.arm === "shotgun" ? 9 : G.range) : 1.4 + (A.reach ?? 2.4) * 0.2; // melee closes to arm's length
+    // cover: a gun reloading, or one that was just hit or is hurt, ducks behind the nearest thing the target cannot see through, crouches, then comes back out
+    const wantCover = ranged && dT > 2.2 && (reloading || now - (m.hitAt ?? 0) < 2500 || (hpF < 0.6 && nv !== "brave"));
+    if (wantCover) {
+      if ((!m.cover || now >= m.cover.until) && now > (m.coverTry ?? 0)) { m.coverTry = now + 1200; const c = findCover(ctx, me, t); if (c) { m.cover = { ...c, until: now + Math.max(2200, (m.reloadUntil ?? 0) - now + 700) }; if (now - (m.coverSaid ?? 0) > 8000) { m.coverSaid = now; bark(ctx, me, "cover", true); } } }
+      if (m.cover && now < m.cover.until) {
+        if (flat(m.cover, me.feetPosition) > 0.7) { gait(me, m, "run"); aim(me, m, null); moveAlong(ctx, me, m, m.cover, G.run, dt); }
+        else { gait(me, m, "idle"); stop(me, dt); aim(me, m, null); face(me, t.feetPosition.x - me.feetPosition.x, t.feetPosition.z - me.feetPosition.z, dt); }
+        return;
+      }
+    } else if (m.cover) m.cover = null;
     if (d > range || !see) { gait(me, m, "run"); aim(me, m, null); moveAlong(ctx, me, m, t.feetPosition, d > range + 8 ? (G.sprint ?? 7) : G.run * (ranged ? 1 : 1.12), dt); } // a long gap is sprinted
     else { gait(me, m, "idle"); stop(me, dt); aim(me, m, reloading || !ranged ? null : t); face(me, t.feetPosition.x - me.feetPosition.x, t.feetPosition.z - me.feetPosition.z, dt); }
     if (!ranged && see && d <= range && now >= m.next) { m.next = now + Math.max(700, (A.cooldown ?? 0.7) * 1700) * (0.85 + ctx.random() * 0.3); swing(ctx, me, t, A); }

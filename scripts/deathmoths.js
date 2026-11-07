@@ -43,7 +43,7 @@ export function update(ctx, dt) {
         ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.4, z: pos.z }, script: DEATH });
         heard(ctx, { maxDistance: 14, refDistance: 2, clip: SND("dusty-paper-moths-crumble-burst"), position: pos, volume: 0.8 });
       } else if (now - m.deadAt < 1600) { const k = (now - m.deadAt) / 1600; m.spin += D.spinFast * (1 - k) * dt; s.feetPosition = { x: pos.x, y: Math.max(0.05, m.y0 * (1 - k * k)), z: pos.z }; s.rotation = { yaw: m.spin }; }
-      else if (now - m.deadAt > 2600 && !m.gone) { m.gone = true; ctx.destroy(s.id); }
+      else if (now - m.deadAt > 2600 && !m.gone && now > (st.inspectUntil ?? 0)) { m.gone = true; ctx.destroy(s.id); }
       continue;
     }
     const home = st.home ?? (s.state.home = { x: pos.x, z: pos.z });
