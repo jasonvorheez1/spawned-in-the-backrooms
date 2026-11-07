@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 791,
-  "updatedAt": "2026-11-07T17:00:24.849Z",
-  "summary": "The Backrooms is a multiplayer survival game spanning Level 0, Levels 1–5 and M.E.G. Base Gamma, with place-local simulations assembling spaces, actors and encounters around shared layout, loot, creature and NPC systems. The ordered player behavior chain connects movement, combat, interaction, progression and HUD; Fallout-style skills, lockpicking and checkpointed level transitions support exploration between levels.",
+  "basedOnSpecVersion": 793,
+  "updatedAt": "2026-11-07T17:02:41.766Z",
+  "summary": "The Backrooms is a multiplayer survival game spanning Level 0, Levels 1–5 and M.E.G. Base Gamma, with place-local simulations assembling spaces, actors and encounters around shared layout, loot, creature and NPC systems. The ordered player behavior chain connects movement, combat, interaction, progression and HUD; the Level 5 Boiler Room plan supplies cell-based machine and hazard placement alongside exploration, skills and checkpointed level transitions.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0's generated yellow maze and safe-room hub; authored cells, loot, shifting walls, seeded moments and smilers/lurkers.",
@@ -11,7 +11,7 @@
     "places/level3 (3D) - Electrical Station; maze zones/crawl halls, hazards, loot, creature brigades and Gamma checkpoint; breakable walls and powered lifts lead to Levels 4 and 5.",
     "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards and residents; sim adds the locked Database computer.",
     "places/level4 (3D) - Abandoned Office, a 64×64 m floor with perimeter/corner offices, fountains, break-room vending, Level 3 lift, stairs down to Level 5 and Base Omega; sim adds residents, offices and tasks.",
-    "places/level5 (3D) - Terror Hotel, a 96×60 m 1930s hotel floor; authored cells plus sim-built shell, lamps, radios, sound beds, exits and sealed lore doors; default spawn is in the lobby.",
+    "places/level5 (3D) - Terror Hotel, a 96×60 m 1930s hotel floor; authored cells plus sim-built shell, lamps, radios, exits and Boiler Room hazards; default spawn is in the lobby.",
     "places/debug (3D) - isolated combat and loot test room; authored cells hold weapon/item stations, enemy pens and test stands."
   ],
   "roots": [
@@ -29,9 +29,9 @@
     "scripts/lib/level3.js + scripts/lib/data/level3.yml + scripts/lib/maze3path.js - Electrical Station grid, zones, openings and routes for geometry, sim and creatures.",
     "scripts/lib/level4.js - office room/wall plan, zones, sanity rates and names read by Level 4 geometry, resident/office systems and player.js.",
     "scripts/lib/level5.js - the 96×60 m hotel plan, zones, openings, exits, arrivals, elevator/boiler layout and sanity rates shared by Level 5 geometry/sim and player.js.",
+    "scripts/lib/l5-boiler-plan.js - Level 5 Boiler Room's 3 m cell coordinates for machine footprints, furnace mouths, pipe runs, leaks, steam vents and heat parameters; imports BOILER from level5.js, with geometry/vent/heat consumers identified in its header.",
     "scripts/lib/l4-people.js + scripts/lib/data/level4-people.yml - Level 4 resident homes, routines, meetups, greetings and phone errands; sim spawns their shared NPC agents.",
-    "scripts/lib/os.js + scripts/lib/data/os.yml - host profiles, mail/files/Database/forum/Recycle Bin/System Properties and terminal commands for os.js and os-ui.js.",
-    "scripts/lib/clothes.js + scripts/lib/data/clothes.yml - garment definitions, fitting and leveled loot/NPC wardrobe rolls reused by loot systems, player clothing and place NPC spawners."
+    "scripts/lib/os.js + scripts/lib/data/os.yml; scripts/lib/clothes.js + scripts/lib/data/clothes.yml - OS host/content data reused by os.js and os-ui.js; garment fitting and leveled wardrobe rolls reused by loot, player and NPC spawners."
   ],
   "notableExports": [
     "places/*/sim.js - cadence and tick; Level 4 and Level 5 sims also export lay; places/gamma/sim.js also exports PEOPLE.",
@@ -41,10 +41,10 @@
     "scripts/lib/os.js - PROFILE, mailsOf, filesOf, entriesOf, entryById, binOf, forumOf, passwordOf, runCmd; scripts/os.js - onInput, update; scripts/os-ui.js - osUi.",
     "scripts/lib/clothes.js - fullLook, rollLevel, leveledRows, rollCloth, npcLook and clothing helpers; scripts/lib/breakables.js - wall/prop damage, sync and sweep helpers.",
     "scripts/lib/critter-model.js - shared critter model/look/morph helpers; scripts/lib/stats.js - attribute/skill helpers; scripts/lockpick.js - onInput, update, startPick; scripts/lockpick-ui.js - pickUi.",
-    "scripts/l5-door.js - ears; scripts/level5-geo.js - geometry, collider; scripts/build.js - onInput, update; scripts/build-ui.js - buildUi; scripts/lib/craft.js - recipeStatus; scripts/craft.js - onInput, update; scripts/horde.js - update."
+    "scripts/lib/l5-boiler-plan.js - cellC, MARGIN, MACHINES, FURNACES, RUNS_X, RUNS_Z, LEAKS, VENTS, VENT, HEAT; scripts/l5-door.js - ears; scripts/level5-geo.js - geometry, collider; scripts/build.js - onInput, update; scripts/build-ui.js - buildUi; scripts/lib/craft.js - recipeStatus; scripts/craft.js - onInput, update; scripts/horde.js - update."
   ],
   "ownership": [
-    "scripts/player.js - player.state owns level/XP, health/sanity, visited cells/zones, kills/deaths, equipment/inventory/ammo/condition, clothes, compass, crouch and colored almond-water counts/timers; player-local session holds transient movement/transit state.",
+    "scripts/player.js - player.state owns level/XP, health/sanity, visited cells/zones, kills/deaths, equipment/inventory/ammo/condition, clothes, compass, crouch and colored almond-water counts/timers; player-local session holds transient movement/combat state.",
     "scripts/stats.js - player.state owns HALOGEN attributes, skills, points, tags, schema version, sheetOpen and target; initializes/migrates the sheet and spends points.",
     "scripts/craft.js - player.state hunger/thirst, craftOpen/craftBench and payout redemption; needs drain and starvation reduces hp but floors it at 1; crafts validate recipe/skill/materials.",
     "scripts/horde.js - player.state horde phase/countdown/alive/result; session holds wave timing; spawned creature state carries the owning player's horde id.",
@@ -61,7 +61,7 @@
     "scripts/player.js writes player.state.xfer on place change → scripts/ui.js draws the named level transition card, including LEVEL 5 · TERROR HOTEL; level-door.js crossing uses the black transition.",
     "interact.js focus/E on living NPC → player.state.talkWith; talk-ui.js sends typed text/actions through talk/talkdo/shop inputs to talk.js; talk.js submits llm:chat and heard validates replies/checks before rapport changes.",
     "talk.js writes NPC state.line and player subtitle → talk-ui.js / ui.js; nearby NPC voice is emitted; shop actions update almond water, inventory and NPC stock; Level 3 Gamma agents use chatter data for nearby conversations.",
-    "interact.js E → door/container/bench or usable-specific press event; usable computers boot player-local Back OS; Level 4 l4-home.js ears.press handles home/utility interactions; Level 5 scripts/l5-door.js ears handles radio toggles and sealed-door lore text.",
+    "interact.js E → door/container/bench or usable-specific press event; usable computers boot player-local Back OS; Level 4 l4-home.js ears.press handles home/utility interactions; Level 5 scripts/l5-door.js ears handles radio toggles and sealed doors.",
     "E on lockpick-locked door/container → interact.js shows Pick Lock and calls lockpick.js startPick; lockpick.js reads A/D/W/S and target, consumes a bobby pin on snap and clears the lock on success; lockpick-ui.js renders the attempt.",
     "E on usable computer → scripts/interact.js creates player.state.os from entity host/lock; scripts/os.js handles OS action keys and lock/password/Science/admin state via lib/os.js + os.yml; os-ui.js renders the app in scripts/ui.js.",
     "Level 4 phone/printer/shift board → l4-office.js tasks and player.state.l4task; completion writes player.state.payout, which craft.js redeems as XP/items and craft-ui.js displays task progress.",
@@ -82,11 +82,11 @@
     "scripts/flower.js, scripts/grass.js, scripts/grass-look.js and scripts/reed.js - no active terrain layers or placed references are visible; terrain is off."
   ],
   "migrationNotes": [
-    "Grid contracts differ: Level 0 is 56×56 at 4 m with hub cells 26–29; Level 1 is 30×30 at 8 m; Level 2 is 24×24 at 5 m; Level 3 is 26×26 at 4 m; Level 4's plan is 64×64 m with 8 m-wide, 6 m-deep offices; Level 5's plan is 96×60 m, x ±48/z ±30. Keep geometry/zones/exits aligned to each plan.",
+    "Grid contracts differ: Level 0 is 56×56 at 4 m with hub cells 26–29; Level 1 is 30×30 at 8 m; Level 2 is 24×24 at 5 m; Level 3 is 26×26 at 4 m; Level 4's plan is 64×64 m with 8 m-wide, 6 m-deep offices; Level 5's plan is 96×60 m, x ±48/z ±30; Boiler Room plan cellC derives positions from BOILER cell and uses 3 m cells.",
     "Level 4 base l4-geo is the structural mesh/collider; l4-detail-geo draws ceiling, carpet and wall wear without a collider; l4-prop-geo and l4-office-geo supply repeated placed detail. Scene entries or sim-spawned bodies provide collision.",
     "Level 3 tight cells are 1 m clear width (tightHalf 0.5), 1.6 m springline and 2.15 m crown; tightArms/tightSpans drive structural/detail vaults, and gates/furniture are excluded from crawl halls.",
     "Player behavior order is intentional: humanoid-locomotion.js before player.js, then interact.js, talk.js, build.js, noclip.js, stats.js, craft.js, os.js, lockpick.js, horde.js and critter.js; NPC arrays likewise put locomotion before M.E.G. controllers.",
-    "Door transition IDs are coupled across scripts/level-door.js PAIR, place sims' arrival markers and player.js CHECKS; Level 5 routes are l3-lift5 ↔ l5-from-l3, l4-stairs-down ↔ l5-from-l4, and l5-lift3/l5-stairs-up return to l3-from-l5/l4-from-l5. Keep arrival rotations and checkpoint positions aligned.",
+    "Door transition IDs are coupled across scripts/level-door.js PAIR, place sims' arrival markers and player.js CHECKS; Level 5 routes are l3-lift5 ↔ l5-from-l3, l4-stairs-down ↔ l5-from-l4, and l5-lift3/l5-stairs-up return to l3-from-l5/l4-from-l5.",
     "Lock contracts: entity.state.lock is 'lockpick:<level>' or 'science:<level>'; lockpick attempts need player.state.bobbypins. A/D sweep pin angle in degrees, W turns the cylinder and S exits; snapped pins are consumed, while a successful pick clears the lock."
   ]
 }
