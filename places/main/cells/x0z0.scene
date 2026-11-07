@@ -1056,6 +1056,11 @@ level0-lights/l9_7:
   id: level0-lights/l9_7
   light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+modeling-studio:
+  overrides:
+    feetPosition: {x: 1.2, y: 0, z: -5.4}
+    rotation: 0
+  template: mods/modeling-studio/templates/studio.js#studio
 smiler-pack:
   behavior: scripts/smilers.js
   feetPosition: {x: 0, y: 0, z: 0}
