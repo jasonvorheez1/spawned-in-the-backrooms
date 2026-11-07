@@ -267,7 +267,7 @@ export function onInput(ctx, input) {
     const sv = ctx.self.state, aw = weaponOf(sv), P = W.power
     if (sv.invOpen || sv.lootOpen) { if (sv.chargeAt) sv.chargeAt = 0 } // a click on a menu is no swing
     else if (ctx.self.state.building) { if (sv.chargeAt) sv.chargeAt = 0 }
-    else if (ctx.self.state.sheathed) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) { sv.sheathed = false; w0vm(ctx); if (sv.holstered && owned(sv).includes(sv.holstered) && usable(sv, sv.holstered)) sv.equipped = sv.holstered; walkOf(ctx).nextSwing = ctx.now() + 450 } } // holstered: a click draws (fallout), it never hits
+    else if (ctx.self.state.sheathed) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) { toggleHolster(ctx); walkOf(ctx).nextSwing = ctx.now() + 450 } } // holstered: a click draws (fallout), it never hits
     else if (aw.ranged) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack || (aw.auto && input.held.attack)) swing(ctx) }
     else {
       if (input.pressed.attack && !sv.chargeAt && ctx.now() >= (walkOf(ctx).nextSwing ?? 0)) { sv.chargeAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.3, true) }
@@ -283,13 +283,13 @@ export function onInput(ctx, input) {
   if (input.pressed.splash) splash(ctx)
   if (input.pressed.compass) useCompass(ctx)
   if (input.pressed.cycleWeapon && !ctx.self.state.building) cycleWeapon(ctx)
-  if (input.pressed.holster) { // H: put it away, H again: draw the last one
-    const s = ctx.self.state; cancelReload(ctx); s.ads = false
-    if (!s.sheathed) { if (s.equipped !== 'fists') s.holstered = s.equipped; s.equipped = 'fists'; s.sheathed = true; s.sheathAt = ctx.now() } // hands away: nothing in view
-    else { s.sheathed = false; w0vm(ctx); if (s.holstered && owned(s).includes(s.holstered) && usable(s, s.holstered)) s.equipped = s.holstered }
-    s.equipAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.45, true)
+  if (input.pressed.holster) toggleHolster(ctx) // H: put it away, H again: draw the last one
+  { // R: a tap reloads, a hold (0.45 s) holsters or draws (Fallout)
+    const w = walkOf(ctx), bld = ctx.self.state.building
+    if (input.pressed.reload && !bld) { w.rDown = ctx.now(); w.rHeld = false }
+    if (w.rDown && input.held.reload && !w.rHeld && ctx.now() - w.rDown >= 450) { w.rHeld = true; toggleHolster(ctx) }
+    if (input.released.reload || (w.rDown && !input.held.reload)) { if (w.rDown && !w.rHeld && !bld) startReload(ctx); w.rDown = 0; w.rHeld = false } // R turns the piece in build mode
   }
-  if (input.pressed.reload && !ctx.self.state.building) startReload(ctx) // R turns the piece in build mode
   {
     // aiming down the sights: a ranged weapon, button held, not mid-reload, not downed
     const sv = ctx.self.state, aw = W[sv.equipped]
@@ -621,6 +621,12 @@ const Q_GUN = { x: 0, y: 1, z: 0, w: 0 } // yaw 180: lays the mesh's +Z barrel f
 // Inside the Q_GUN frame (yaw 180), a child pitch of 35 levels it to point straight forward (-Z).
 // `at` = { x: 0, y: 0.255, z: -0.224 } translates the trigger to (0, 0, 0) so it lands in the fist.
 const GUN_FIX = { shotgun: { yaw: 0, pitch: 35, at: { x: 0, y: 0.255, z: -0.224 } } }
+function toggleHolster(ctx) {
+  const s = ctx.self.state; cancelReload(ctx); s.ads = false
+  if (!s.sheathed) { if (s.equipped !== 'fists') s.holstered = s.equipped; s.equipped = 'fists'; s.sheathed = true; s.sheathAt = ctx.now() } // hands away: nothing in view
+  else { s.sheathed = false; w0vm(ctx); if (s.holstered && owned(s).includes(s.holstered) && usable(s, s.holstered)) s.equipped = s.holstered }
+  s.equipAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.45, true)
+}
 function w0vm(ctx) { const w = walkOf(ctx); w.vmCheck = true } // a draw rebuilds the viewmodel, which rises from below
 function viewmodel(ctx, moving, sprinting) {
   if (!ctx.self.isLocal) return
