@@ -373,7 +373,10 @@ const HOLD = { // how each weapon sits in the fist: offset of its grip from its 
 }
 const Q_MELEE = { x: -0.5, y: 0.5, z: 0.5, w: 0.5 } // its length up, its blade forward
 const Q_GUN = { x: -0.7071, y: 0, z: 0, w: 0.7071 } // seen in play: this lays the mesh's +Z barrel forward in the fist
-const GUN_FIX = { shotgun: { yaw: 0, pitch: 37, at: { x: 0, y: 0.262, z: -0.216 } } } // positive pitch tips +Z up here; trigger at mesh (0,-0.08,0.33)
+// The shotgun mesh lies tilted ~35 deg muzzle-up (butt at its origin, trigger at mesh (0,-0.08,0.33)). Inside the Q_GUN frame a child pitch p points the
+// barrel at angle (35 - p) off 'up', so p = -55 levels it and points it forward (p = 37 stood it straight up beside the hand). `at` = minus the trigger
+// after that pitch, so the trigger lands in the fist.
+const GUN_FIX = { shotgun: { yaw: 0, pitch: -55, at: { x: 0, y: -0.224, z: -0.255 } } }
 function viewmodel(ctx, moving, sprinting) {
   if (!ctx.self.isLocal) return
   const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists', l = s.look ?? {}
@@ -388,7 +391,7 @@ function viewmodel(ctx, moving, sprinting) {
         // the Tripo shotgun mesh lies tilted ~35 deg muzzle-up with its butt at the origin: level it and put its trigger in the fist
         ? { feetPosition: { x: 0, y: 0.03, z: 0.04 }, rotation: s.vmTune?.rot ?? Q_GUN, audience: 'local', children: [{ feetPosition: s.vmTune?.at ?? GUN_FIX[kind].at, rotation: { yaw: GUN_FIX[kind].yaw, pitch: s.vmTune?.pitch ?? GUN_FIX[kind].pitch }, castShadow: false, ...weaponBody(kind), audience: 'local' }] }
         : { feetPosition: s.vmTune?.at ?? { x: 0, y: kind === 'pistol' ? 0.03 : -0.04, z: kind === 'pistol' ? 0.04 : 0.14 }, rotation: s.vmTune?.rot ?? Q_GUN, castShadow: false, ...weaponBody(kind), audience: 'local' })
-      : { feetPosition: { x: 0, y: -g, z: 0 }, rotation: Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
+      : { feetPosition: s.vmTune?.mat ?? { x: 0.1, y: -g, z: 0 }, rotation: s.vmTune?.mrot ?? Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
     if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: 0.02, y: -1.62, z: 0.62 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
     w.vm = ctx.spawn({ feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
