@@ -646,7 +646,7 @@ const Q_GUN = { x: 0, y: 1, z: 0, w: 0 } // yaw 180: lays the mesh's +Z barrel f
 // The Tripo shotgun mesh lies tilted ~35 deg muzzle-up (butt at its origin, trigger at mesh (0,-0.08,0.33)).
 // Inside the Q_GUN frame (yaw 180), a child pitch of 35 levels it to point straight forward (-Z).
 // `at` = { x: 0, y: 0.255, z: -0.224 } translates the trigger to (0, 0, 0) so it lands in the fist.
-const GUN_FIX = { shotgun: { yaw: 0, pitch: 35, at: { x: 0, y: -0.245, z: -0.03 } } } // measured on a render: the engine centres the mesh on its box, so the trigger sat ~0.5 m above the fist
+const GUN_FIX = { shotgun: { yaw: -24, pitch: 31, at: { x: 0, y: -0.245, z: -0.03 } } } // measured on a render: the engine centres the mesh on its box, so the trigger sat ~0.5 m above the fist
 function toggleHolster(ctx) {
   const s = ctx.self.state; cancelReload(ctx); s.ads = false
   if (!s.sheathed) { if (s.equipped !== 'fists') s.holstered = s.equipped; s.equipped = 'fists'; s.sheathed = true; s.sheathAt = ctx.now() } // hands away: nothing in view
