@@ -8,7 +8,8 @@ import W, { baseOf } from './lib/weapons.js'
 import { raycast } from 'builtin/physics'
 import BRK from './lib/data/breakables.yml'
 import { strike } from './lib/breakables.js'
-import { dropLoot, spawnWeapon } from './lib/loot.js'
+import { dropLoot, rollLoot, spawnWeapon } from './lib/loot.js'
+import { becomeCorpse } from './lib/l5-hostile.js'
 import { markKill } from './lib/witness.js'
 import { derived, canCarry, burden, npcMul, START, dmgMul, skillsOf, spentOf, SKILLS, SKILL_MAX, dmgAfterArmor, lookOfNpc } from './lib/stats.js'
 import { parseCloth, wear, takeOff } from './lib/clothes.js'
@@ -312,7 +313,9 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
     { const seen = markKill(ctx, m, ctx.self); if (!seen.length && s.crouch) s.notice = { text: 'Nobody saw that', at: ctx.now() } } // witnesses: scripts/lib/witness.js
     s.kills += 1
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
-    if (!npc && !(m.tags ?? []).some((g) => g === 'l5staff' || g === 'l5rat')) dropLoot(ctx, m.feetPosition, m.state?.kind === 'lurker' ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot, derived(s).clothFind) // an agent's own body is searched (scripts/meg-agent.js)
+    const tg = m.tags ?? [], ent = tg.includes('smiler') || tg.includes('lurker')
+    if (ent) dropLoot(ctx, m.feetPosition, tg.includes('lurker') ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot, derived(s).clothFind) // only smilers and lurkers leave smiler/lurker remains
+    else if (!npc && !tg.some((g) => g === 'l5staff' || g === 'l5rat' || g === 'remains')) becomeCorpse(ctx, m, (m.state?.name ?? 'Body').split(' ·')[0] + "'s body", rollLoot(ctx, npcMul(m.state).loot, derived(s).clothFind), ctx.self.feetPosition) // anything else stays its own body, limp and searchable // an agent's own body is searched (scripts/meg-agent.js)
   }
 }
 
