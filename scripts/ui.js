@@ -88,6 +88,13 @@ function compass(yaw) {
 
 
 // camp chatter: the line an npc is saying floats over its head while it lasts (chatter.js writes state.line)
+// the doorway transition: black that fades off the new level, its name in the middle
+const LEVEL_NAMES = { main: ['LEVEL 0', 'THE LOBBY'], level1: ['LEVEL 1', 'HABITABLE ZONE'], level2: ['LEVEL 2', 'PIPE DREAMS'], level3: ['LEVEL 3', 'ELECTRICAL STATION'], level4: ['LEVEL 4', 'ABANDONED OFFICE'], gamma: ['M.E.G.', 'BASE GAMMA'] }
+function xferCard(s, now) {
+  const x = s.xfer; if (!x || now - x.at > 2600) return ''
+  const [a, b] = LEVEL_NAMES[x.to] ?? [String(x.to).toUpperCase(), '']
+  return `<style>@keyframes xferOut{0%,45%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="xfer${x.at}" style="position:absolute;inset:0;background:#050403;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:xferOut 2.4s forwards;color:#f2c14e;text-shadow:2px 2px #000"><div style="font-size:44px;letter-spacing:.2em">${a}</div><div style="font-size:18px;letter-spacing:.3em;opacity:.75;margin-top:6px">${b}</div></div>`
+}
 const TALKERS = ['meg-ale', 'meg-ortiz', 'meg-callum', 'surv-wren', 'surv-hollis', 'surv-mags']
 function chatBubbles(ctx, now) {
   const objs = ctx.place?.objects
@@ -156,6 +163,7 @@ export default function render(ctx, player) {
   return `${THEME}
 <div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
 
+  ${xferCard(s, now)}
   ${chatBubbles(ctx, now)}
   <!-- Unobtrusive Center Point -->
   <div class="dot-crosshair"></div>${s.crouch ? `<div class="sneak sneak-${s.detect ?? 'hidden'}" id="sn-${s.detect ?? 'hidden'}">[${(s.detect ?? 'hidden').toUpperCase()}]</div>` : ''}
