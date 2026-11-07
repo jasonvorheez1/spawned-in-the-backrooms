@@ -8,7 +8,7 @@ const SHOT = "/cdn/moodboard-realistic-gritty/sfx-pistol-gunshot-concrete-echo.m
 const FLASH = `fx
 pop flash burst=1 life=.06 size=.35 col=hdr(5,3.4,1.4) a=1>0 sz=$size r=sprite(soft-disc,add)
 pop sparks burst=6 life=.1..0.2 v=sdir()*(2..4) size=.02 col=hdr(4,2.4,.8) a=1>0 r=sprite(ember,add,velocity,.03)
-pop light n=1 life=.07 r=light(<1,.7,.35>,40,6)`;
+pop light n=1 life=.07 r=light(<1,.7,.35>,14,5)`;
 const HIT = `fx
 pop blood burst=10 life=.4..0.7 v=sdir()*(1..2.4)+up(.6) size=.04..0.08 acc=grav() col=<.35,.05,.04> a=1>0 floor=stick r=sprite(soft-disc,alpha)`;
 const FOES = ["hound", "stealer"];
