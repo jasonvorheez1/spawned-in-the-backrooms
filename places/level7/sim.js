@@ -282,8 +282,6 @@ function lay(ctx) {
   // =========================================================================
   // 9. THE ROCK: slumped basalt, tar seeping where the wiki says the deep is made of it
   // =========================================================================
-  [[-9, -6, 1.3, 1], [-12, 4, 1.8, 2], [8, -7, 1.1, 3], [13, 2, 2.2, 4], [-6, 12, 1.5, 5], [10, 11, 1.2, 6], [-17, -3, 2.6, 7], [17, -9, 2, 8], [3, -11, 0.8, 9], [-4, -9, 0.7, 10]].forEach(([x, z, sc, seed], i) =>
-    ctx.spawn(`l7-boulder-${i}`, { feetPosition: { x, z, y: { terrain: 0 } }, rotation: { yaw: seed * 47 }, scale: sc, physics: "static", primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "boulder", seed } } }));
   [[-7, -9, 1.4], [6, 8, 1], [-14, 8, 1.8], [12, -4, 0.9]].forEach(([x, z, r], i) =>
     ctx.spawn(`l7-tar-${i}`, { feetPosition: { x, z, y: { terrain: 0.02 } }, primitive: { kind: "cylinder", radiusTop: r, radiusBottom: r * 1.05, height: 0.04 }, scale: { x: 1, y: 1, z: 0.65 }, material: { color: "oklch(0.1 0.01 60)", roughness: 0.08, metalness: 0.2 } }));
 
