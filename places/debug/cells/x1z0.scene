@@ -1,0 +1,339 @@
+# spawn-scene v2 yaml x1z0
+dbg/alabel0:
+  feetPosition: {x: 110.4, y: 1.25, z: -4}
+  id: dbg/alabel0
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#d4b96a'>ALMOND WATER</text></svg>"
+dbg/alabel1:
+  feetPosition: {x: 110.4, y: 1.25, z: -2}
+  id: dbg/alabel1
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#d4b96a'>ALMOND WATER</text></svg>"
+dbg/alabel2:
+  feetPosition: {x: 110.4, y: 1.25, z: 0}
+  id: dbg/alabel2
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#d4b96a'>ALMOND WATER</text></svg>"
+dbg/alabel3:
+  feetPosition: {x: 110.4, y: 1.25, z: 2}
+  id: dbg/alabel3
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#d4b96a'>ALMOND WATER</text></svg>"
+dbg/almond-model:
+  feetPosition: {x: 108.6, y: 0.9, z: -6.5}
+  id: dbg/almond-model
+  layout: {box: {max: {x: 0.15, y: 0.45, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+dbg/ceiling:
+  feetPosition: {x: 100, y: 3, z: 0}
+  id: dbg/ceiling
+  material: {repeat: [0.5, 0.5], texture: cdn/texture-white-acoustic-drop-ceiling-tile-grid.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 20.4, height: 0.1, kind: box, width: 24.4}
+dbg/floor:
+  feetPosition: {x: 100, y: -0.1, z: 0}
+  id: dbg/floor
+  material: {repeat: [0.5, 0.5], roughness: 1, texture: cdn/texture-damp-beige-berber-office-carpet.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 20.4, height: 0.1, kind: box, width: 24.4}
+dbg/hum:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-fluorescent-light-buzz-hum-loop.mp3, gain: 0.15, loop: true, spatial: false}
+  feetPosition: {x: 100, y: 2.5, z: 0}
+  id: dbg/hum
+dbg/lamp0:
+  feetPosition: {x: 94, y: 2.7, z: -8}
+  id: dbg/lamp0
+  light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+dbg/lamp1:
+  feetPosition: {x: 106, y: 2.7, z: -8}
+  id: dbg/lamp1
+  light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+dbg/lamp2:
+  feetPosition: {x: 94, y: 2.7, z: -2}
+  id: dbg/lamp2
+  light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+dbg/lamp3:
+  feetPosition: {x: 106, y: 2.7, z: -2}
+  id: dbg/lamp3
+  light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+dbg/lamp4:
+  feetPosition: {x: 100, y: 2.7, z: 0}
+  id: dbg/lamp4
+  light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+dbg/lamp5:
+  feetPosition: {x: 94, y: 2.7, z: 5}
+  id: dbg/lamp5
+  light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+dbg/lamp6:
+  feetPosition: {x: 106, y: 2.7, z: 5}
+  id: dbg/lamp6
+  light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+dbg/lamp7:
+  feetPosition: {x: 90, y: 2.7, z: 0}
+  id: dbg/lamp7
+  light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+dbg/lamp8:
+  feetPosition: {x: 110, y: 2.7, z: 0}
+  id: dbg/lamp8
+  light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+dbg/lurker-label:
+  feetPosition: {x: 106, y: 2.55, z: -5.35}
+  id: dbg/lurker-label
+  vector: "<svg viewBox='0 0 300 50' width='2.2m'><text x='150' y='36' text-anchor='middle' font-family='display' font-size='36' fill='#3b2a12'>LURKER</text></svg>"
+dbg/lurker-pack:
+  behavior: scripts/lurkers.js
+  feetPosition: {x: 100, y: 0, z: 0}
+  id: dbg/lurker-pack
+dbg/lurker-pen-e:
+  feetPosition: {x: 109, y: 0, z: -7.75}
+  id: dbg/lurker-pen-e
+  material: {repeat: [0.5, 0.5], roughness: 0.9, texture: cdn/texture-yellow-chevron-damask-wallpaper-aged.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 4.5, height: 3, kind: box, width: 0.2}
+dbg/lurker-pen-fl:
+  feetPosition: {x: 104.15, y: 0, z: -5.5}
+  id: dbg/lurker-pen-fl
+  material: {repeat: [0.5, 0.5], roughness: 0.9, texture: cdn/texture-yellow-chevron-damask-wallpaper-aged.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 0.2, height: 3, kind: box, width: 2.3}
+dbg/lurker-pen-fr:
+  feetPosition: {x: 107.85, y: 0, z: -5.5}
+  id: dbg/lurker-pen-fr
+  material: {repeat: [0.5, 0.5], roughness: 0.9, texture: cdn/texture-yellow-chevron-damask-wallpaper-aged.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 0.2, height: 3, kind: box, width: 2.3}
+dbg/lurker-pen-w:
+  feetPosition: {x: 103, y: 0, z: -7.75}
+  id: dbg/lurker-pen-w
+  material: {repeat: [0.5, 0.5], roughness: 0.9, texture: cdn/texture-yellow-chevron-damask-wallpaper-aged.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 4.5, height: 3, kind: box, width: 0.2}
+dbg/mlabel0:
+  feetPosition: {x: 110.4, y: 1.25, z: 5}
+  id: dbg/mlabel0
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#d4b96a'>AMMO</text></svg>"
+dbg/mlabel1:
+  feetPosition: {x: 110.4, y: 1.25, z: 7}
+  id: dbg/mlabel1
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#d4b96a'>AMMO</text></svg>"
+dbg/model-label:
+  feetPosition: {x: 108.6, y: 1.75, z: -6.5}
+  id: dbg/model-label
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='20' fill='#d4b96a'>NEW BOTTLE MODEL</text></svg>"
+dbg/pad-exit:
+  feetPosition: {x: 93, y: 0, z: 8.4}
+  id: dbg/pad-exit
+  material: {color: oklch(0.75 0.15 85), emissive: oklch(0.75 0.15 85), emissiveIntensity: 0.8}
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.85, radiusTop: 0.8}
+dbg/pad-exit-label:
+  feetPosition: {x: 93, y: 1.25, z: 9.6}
+  id: dbg/pad-exit-label
+  vector: "<svg viewBox='0 0 300 60' width='1.8m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='20' fill='#d4b96a'>BACK TO LEVEL 0</text></svg>"
+dbg/pad-exit-trigger:
+  behavior: scripts/debug-pad.js
+  feetPosition: {x: 93, y: 0, z: 8.4}
+  id: dbg/pad-exit-trigger
+  physics: {body: static, trigger: true}
+  primitive: {height: 1.2, kind: cylinder, radiusBottom: 0.7, radiusTop: 0.7}
+  state: {act: exit}
+  visible: false
+dbg/pad-heal:
+  feetPosition: {x: 107, y: 0, z: 8.4}
+  id: dbg/pad-heal
+  material: {color: oklch(0.65 0.16 25), emissive: oklch(0.65 0.16 25), emissiveIntensity: 0.8}
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.85, radiusTop: 0.8}
+dbg/pad-heal-label:
+  feetPosition: {x: 107, y: 1.25, z: 9.6}
+  id: dbg/pad-heal-label
+  vector: "<svg viewBox='0 0 300 60' width='1.8m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='20' fill='#d4b96a'>FULL HEAL + ALMONDS</text></svg>"
+dbg/pad-heal-trigger:
+  behavior: scripts/debug-pad.js
+  feetPosition: {x: 107, y: 0, z: 8.4}
+  id: dbg/pad-heal-trigger
+  physics: {body: static, trigger: true}
+  primitive: {height: 1.2, kind: cylinder, radiusBottom: 0.7, radiusTop: 0.7}
+  state: {act: heal}
+  visible: false
+dbg/pad-lv1:
+  feetPosition: {x: 102, y: 0, z: 8.4}
+  id: dbg/pad-lv1
+  material: {color: oklch(0.65 0.12 240), emissive: oklch(0.65 0.12 240), emissiveIntensity: 0.8}
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.85, radiusTop: 0.8}
+dbg/pad-lv1-label:
+  feetPosition: {x: 102, y: 1.25, z: 9.6}
+  id: dbg/pad-lv1-label
+  vector: "<svg viewBox='0 0 300 60' width='1.8m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='20' fill='#d4b96a'>SET LEVEL 1</text></svg>"
+dbg/pad-lv1-trigger:
+  behavior: scripts/debug-pad.js
+  feetPosition: {x: 102, y: 0, z: 8.4}
+  id: dbg/pad-lv1-trigger
+  physics: {body: static, trigger: true}
+  primitive: {height: 1.2, kind: cylinder, radiusBottom: 0.7, radiusTop: 0.7}
+  state: {act: lv1}
+  visible: false
+dbg/pad-lv10:
+  feetPosition: {x: 98, y: 0, z: 8.4}
+  id: dbg/pad-lv10
+  material: {color: oklch(0.7 0.14 150), emissive: oklch(0.7 0.14 150), emissiveIntensity: 0.8}
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.85, radiusTop: 0.8}
+dbg/pad-lv10-label:
+  feetPosition: {x: 98, y: 1.25, z: 9.6}
+  id: dbg/pad-lv10-label
+  vector: "<svg viewBox='0 0 300 60' width='1.8m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='20' fill='#d4b96a'>SET LEVEL 10</text></svg>"
+dbg/pad-lv10-trigger:
+  behavior: scripts/debug-pad.js
+  feetPosition: {x: 98, y: 0, z: 8.4}
+  id: dbg/pad-lv10-trigger
+  physics: {body: static, trigger: true}
+  primitive: {height: 1.2, kind: cylinder, radiusBottom: 0.7, radiusTop: 0.7}
+  state: {act: lv10}
+  visible: false
+dbg/panel0:
+  castShadow: false
+  feetPosition: {x: 94, y: 2.94, z: -8}
+  id: dbg/panel0
+  material: {color: "#fffaf0", emissive: "#fff4d6", emissiveIntensity: 2.4}
+  physics: none
+  primitive: {depth: 0.6, height: 0.05, kind: box, width: 1.2}
+dbg/panel1:
+  castShadow: false
+  feetPosition: {x: 106, y: 2.94, z: -8}
+  id: dbg/panel1
+  material: {color: "#fffaf0", emissive: "#fff4d6", emissiveIntensity: 2.4}
+  physics: none
+  primitive: {depth: 0.6, height: 0.05, kind: box, width: 1.2}
+dbg/panel2:
+  castShadow: false
+  feetPosition: {x: 94, y: 2.94, z: -2}
+  id: dbg/panel2
+  material: {color: "#fffaf0", emissive: "#fff4d6", emissiveIntensity: 2.4}
+  physics: none
+  primitive: {depth: 0.6, height: 0.05, kind: box, width: 1.2}
+dbg/panel3:
+  castShadow: false
+  feetPosition: {x: 106, y: 2.94, z: -2}
+  id: dbg/panel3
+  material: {color: "#fffaf0", emissive: "#fff4d6", emissiveIntensity: 2.4}
+  physics: none
+  primitive: {depth: 0.6, height: 0.05, kind: box, width: 1.2}
+dbg/panel4:
+  castShadow: false
+  feetPosition: {x: 100, y: 2.94, z: 0}
+  id: dbg/panel4
+  material: {color: "#fffaf0", emissive: "#fff4d6", emissiveIntensity: 2.4}
+  physics: none
+  primitive: {depth: 0.6, height: 0.05, kind: box, width: 1.2}
+dbg/panel5:
+  castShadow: false
+  feetPosition: {x: 94, y: 2.94, z: 5}
+  id: dbg/panel5
+  material: {color: "#fffaf0", emissive: "#fff4d6", emissiveIntensity: 2.4}
+  physics: none
+  primitive: {depth: 0.6, height: 0.05, kind: box, width: 1.2}
+dbg/panel6:
+  castShadow: false
+  feetPosition: {x: 106, y: 2.94, z: 5}
+  id: dbg/panel6
+  material: {color: "#fffaf0", emissive: "#fff4d6", emissiveIntensity: 2.4}
+  physics: none
+  primitive: {depth: 0.6, height: 0.05, kind: box, width: 1.2}
+dbg/panel7:
+  castShadow: false
+  feetPosition: {x: 90, y: 2.94, z: 0}
+  id: dbg/panel7
+  material: {color: "#fffaf0", emissive: "#fff4d6", emissiveIntensity: 2.4}
+  physics: none
+  primitive: {depth: 0.6, height: 0.05, kind: box, width: 1.2}
+dbg/panel8:
+  castShadow: false
+  feetPosition: {x: 110, y: 2.94, z: 0}
+  id: dbg/panel8
+  material: {color: "#fffaf0", emissive: "#fff4d6", emissiveIntensity: 2.4}
+  physics: none
+  primitive: {depth: 0.6, height: 0.05, kind: box, width: 1.2}
+dbg/pedestal:
+  feetPosition: {x: 108.6, y: 0, z: -6.5}
+  id: dbg/pedestal
+  material: {color: oklch(0.35 0.03 80), roughness: 0.6}
+  physics: static
+  primitive: {depth: 0.6, height: 0.9, kind: box, width: 0.6}
+dbg/smiler-label:
+  feetPosition: {x: 94, y: 2.55, z: -5.35}
+  id: dbg/smiler-label
+  vector: "<svg viewBox='0 0 300 50' width='2.2m'><text x='150' y='36' text-anchor='middle' font-family='display' font-size='36' fill='#3b2a12'>SMILER</text></svg>"
+dbg/smiler-pack:
+  behavior: scripts/smilers.js
+  feetPosition: {x: 100, y: 0, z: 0}
+  id: dbg/smiler-pack
+dbg/smiler-pen-e:
+  feetPosition: {x: 97, y: 0, z: -7.75}
+  id: dbg/smiler-pen-e
+  material: {repeat: [0.5, 0.5], roughness: 0.9, texture: cdn/texture-yellow-chevron-damask-wallpaper-aged.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 4.5, height: 3, kind: box, width: 0.2}
+dbg/smiler-pen-fl:
+  feetPosition: {x: 92.15, y: 0, z: -5.5}
+  id: dbg/smiler-pen-fl
+  material: {repeat: [0.5, 0.5], roughness: 0.9, texture: cdn/texture-yellow-chevron-damask-wallpaper-aged.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 0.2, height: 3, kind: box, width: 2.3}
+dbg/smiler-pen-fr:
+  feetPosition: {x: 95.85, y: 0, z: -5.5}
+  id: dbg/smiler-pen-fr
+  material: {repeat: [0.5, 0.5], roughness: 0.9, texture: cdn/texture-yellow-chevron-damask-wallpaper-aged.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 0.2, height: 3, kind: box, width: 2.3}
+dbg/smiler-pen-w:
+  feetPosition: {x: 91, y: 0, z: -7.75}
+  id: dbg/smiler-pen-w
+  material: {repeat: [0.5, 0.5], roughness: 0.9, texture: cdn/texture-yellow-chevron-damask-wallpaper-aged.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 4.5, height: 3, kind: box, width: 0.2}
+dbg/wall-e:
+  feetPosition: {x: 112.1, y: 0, z: 0}
+  id: dbg/wall-e
+  material: {repeat: [0.5, 0.5], roughness: 0.9, texture: cdn/texture-yellow-chevron-damask-wallpaper-aged.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 20.4, height: 3, kind: box, width: 0.2}
+dbg/wall-n:
+  feetPosition: {x: 100, y: 0, z: -10.1}
+  id: dbg/wall-n
+  material: {repeat: [0.5, 0.5], roughness: 0.9, texture: cdn/texture-yellow-chevron-damask-wallpaper-aged.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 0.2, height: 3, kind: box, width: 24.4}
+dbg/wall-s:
+  feetPosition: {x: 100, y: 0, z: 10.1}
+  id: dbg/wall-s
+  material: {repeat: [0.5, 0.5], roughness: 0.9, texture: cdn/texture-yellow-chevron-damask-wallpaper-aged.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 0.2, height: 3, kind: box, width: 24.4}
+dbg/wall-w:
+  feetPosition: {x: 87.9, y: 0, z: 0}
+  id: dbg/wall-w
+  material: {repeat: [0.5, 0.5], roughness: 0.9, texture: cdn/texture-yellow-chevron-damask-wallpaper-aged.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 20.4, height: 3, kind: box, width: 0.2}
+dbg/wlabel-bat:
+  feetPosition: {x: 89.6, y: 1.25, z: 0}
+  id: dbg/wlabel-bat
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#d4b96a'>BAT · LV4</text></svg>"
+dbg/wlabel-crowbar:
+  feetPosition: {x: 89.6, y: 1.25, z: -2}
+  id: dbg/wlabel-crowbar
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#d4b96a'>CROWBAR · LV3</text></svg>"
+dbg/wlabel-fire_axe:
+  feetPosition: {x: 89.6, y: 1.25, z: 4}
+  id: dbg/wlabel-fire_axe
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#d4b96a'>FIRE AXE · LV8</text></svg>"
+dbg/wlabel-hatchet:
+  feetPosition: {x: 89.6, y: 1.25, z: 2}
+  id: dbg/wlabel-hatchet
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#d4b96a'>HATCHET · LV6</text></svg>"
+dbg/wlabel-pipe_scrap:
+  feetPosition: {x: 89.6, y: 1.25, z: -4}
+  id: dbg/wlabel-pipe_scrap
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#d4b96a'>PIPE · LV2</text></svg>"
+dbg/wlabel-pistol:
+  feetPosition: {x: 89.6, y: 1.25, z: 6}
+  id: dbg/wlabel-pistol
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#d4b96a'>PISTOL · LV5</text></svg>"
+dbg/wlabel-table_leg:
+  feetPosition: {x: 89.6, y: 1.25, z: -6}
+  id: dbg/wlabel-table_leg
+  vector: "<svg viewBox='0 0 300 60' width='1.6m' billboard='yaw'><rect x='0' y='8' width='300' height='44' fill='#16140e' opacity='0.75'/><text x='150' y='40' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#d4b96a'>TABLE LEG · LV1</text></svg>"
