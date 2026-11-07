@@ -1,36 +1,37 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1313,
-  "updatedAt": "2026-11-07T23:39:22.770Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, Levels 1–7, Base Gamma and a debug room. Authored cells and place simulations assemble the maze and outposts; shared player, creature, NPC, loot, clothing, crafting and UI systems support individual progression, combat and scavenging. Playable critters and NPCs use identity-aware appearance data, with the enabled sculpted critter meshes now refreshed for paw hands, three-toe feet and curvy female bodies.",
+  "basedOnSpecVersion": 1315,
+  "updatedAt": "2026-11-07T23:45:11.084Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, Levels 1–7, Base Gamma and a debug room. Authored cells and place simulations assemble maze, outposts and hazards; shared player, creature, NPC, loot, clothing, crafting and UI systems support individual progression and scavenging. Level 7's island camps, ocean entities and new lore-specific fort, formation and skeleton models are assembled by its place simulation.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, containers, breakable furniture, shifting walls and hunters.",
     "places/level1 (3D) - Habitable Zone and M.E.G. camp; car-park cells, agents, role-dressed NPCs, loot, hounds and skin-stealers.",
     "places/level2 + places/level3 (3D) - Utility Halls and Electrical Station: seeded halls, camps, hazards, creatures, Gamma checkpoint, generators and lifts.",
-    "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, role-dressed traders, guards, residents and Database terminal.",
+    "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards, residents and Database terminal.",
     "places/level4 (3D) - Abandoned Office; offices, fountains, break-room vending, lift/stairs and Base Omega; sim lays residents and office systems.",
     "places/level5 (3D) - Terror Hotel; Main Hall, guest rooms, Beverly Room and Boiler Room; residents, rentals, mahjong, rat packs, Level 6 portal and Ines's goggles quest.",
-    "places/level6 (3D) - Lights Out: seeded dark concrete labyrinth, survivor notes/props, shifting wall, auditory hazards, hounds and a Smiler; stairs return to 5 or descend to 7.",
-    "places/level7 (3D) - Thalassophobia: Drowned Parlor and Entrance Pier lead by rowed dory to Outpost Seawatch and Fort Surrender; Tidecrawlers hold island shores, the Deep threatens swimmers in open water, and boats get shadow passes."
+    "places/level6 (3D) - Lights Out: seeded dark concrete labyrinth, survivor notes/props, shifting wall, auditory hazards, hounds and Smiler; stairs link Levels 5 and 7.",
+    "places/level7 (3D) - Thalassophobia: Entrance Room/Pier, Seawatch on (46,-120), and Fort Surrender on nearer island (-70,-95); diving-bell Level 8 route, circular formation at about (-150,0), sea-floor skeletons and two patrolling titans.",
+    "places/debug (3D) - modeling/placement test room, with authored studio cells."
   ],
   "roots": [
     "world.config.yaml - multiplayer entry at main; declares camera, player actions, player template and HUD renderer; Backspace opens the main menu.",
     "templates/player.js - ordered player behavior chain; locomotion precedes movement and gameplay handlers run before critter, main-menu and view3.",
-    "templates/camera.js + scripts/camera.js - camera entry; owns presented view and eye position, including seated/talk views and collision-limited third person; scripts/view3.js toggles player.state.tp for the shoulder camera.",
+    "templates/camera.js + scripts/camera.js - camera entry; owns presented view and eye position, including seated/talk views and collision-limited third person; scripts/view3.js toggles player.state.tp.",
     "places/<place>/sim.js + config.yaml/cells - place setup and authored placements; sims build local layouts, manage respawns/regrowth and tick local behavior.",
     "scripts/ui.js and *-ui.js renderers - HUD and overlays, including main menu, wardrobe, mahjong, loot, talk/trade, build, stats, craft and OS panels.",
-    "scripts/main-menu.js + scripts/main-menu-ui.js - local player menu and Continue/Character actions; fresh profiles enter the critter creator, returning profiles the menu; menu tick supplies a slowly panning hidden-player camera backdrop.",
-    "places/level7/config.yaml atmosphere.look → scripts/look-level7.js; terrain7.js supplies sea/island heightmap, and level7/sim.js plus its cells lay/tick the world and camp chatter.",
-    "places/level7/sim.js spawns scripts/l7-fauna.js once - Level 7 fauna manager places and updates shore crawlers and the Deep."
+    "scripts/main-menu.js + scripts/main-menu-ui.js - local player menu and Continue/Character actions; fresh profiles enter the critter creator, returning profiles the menu; menu tick supplies panning hidden-player camera backdrop.",
+    "places/level7/config.yaml atmosphere.look → scripts/look-level7.js; scripts/terrain7.js supplies ocean/island height and material; level7/sim.js lays and ticks the camps, formation, skeletons and entities.",
+    "art/level7/build.py - Blender model generator for fort_surrender.glb, circular_formation.glb and skeleton.glb; level7/sim.js places their published GLB assets."
   ],
   "shared": [
     "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait/heading; player and M.E.G. NPC chains run it before their controllers; scripts/lib/body3.js supplies body weapon animation and rowing IK.",
     "scripts/lib/maze.js and scripts/lib/level1.js/level2.js with data - per-level grids/layouts reused by sims, geometry and gameplay; maze.js also names Level 7 room, pier, island and ocean zones.",
     "scripts/lib/level3.js + Level 3 data + scripts/lib/maze3path.js - Electrical Station grid, zones, openings and routes for geometry, sim, creatures and visits.",
     "scripts/lib/level4.js, level5.js and level6.js - office/hotel plans and sanity data plus Level 6 seeded hall grid shared by geometry, simulation and player place behavior.",
-    "scripts/lib/level-kit.js + scripts/lib/npc-respawn.js - named-person management and throttling for place sims, with shared one-hour NPC return timing; l7-fauna.js uses RESPAWN_MS for crawler returns.",
-    "scripts/lib/clothes.js + data/clothes.yml and scripts/lib/critter-model.js + data/faces.yml/critter-models.yml - identity-seeded NPC looks and rendered critter bodies/heads; the enabled sex-specific sculpted body meshes carry paw hands, toe feet and clothing slots, while data selects mesh/material variants.",
+    "scripts/lib/level-kit.js + scripts/lib/npc-respawn.js - named-person management and throttling for place sims, with shared NPC return timing; l7-fauna.js uses RESPAWN_MS for crawler returns.",
+    "scripts/lib/clothes.js + data/clothes.yml and scripts/lib/critter-model.js + data/faces.yml/critter-models.yml - identity-seeded NPC looks and rendered critter bodies/heads; scripts/mat-cloth.js renders garment patterns.",
     "scripts/lib/craft.js + data/craft.yml - recipe readiness, batch capacity and category list shared by craft.js and craft-ui.js.",
     "scripts/lib/chatter.js + data/chatter.yml - shared proximity-gated camp conversation director and combat-bark content, used by Level 1–3 and Level 7 sims."
   ],
@@ -39,10 +40,10 @@
     "scripts/main-menu-ui.js - mainMenu(ctx, player); scripts/main-menu.js - update, onInput; scripts/player.js - fishCatch(ctx, d), maxHp, maxSan, xpNeed and weaponOf.",
     "scripts/lib/level-kit.js - keepPeople, every, RESPAWN_MS; scripts/lib/npc-respawn.js - RESPAWN_MS, mayReturn, firstLay.",
     "scripts/lib/level3.js - grid/constants, cell/zone queries, openings, blocks/hazards, crawl spans and exits; maze3path.js - stepToward, cellNear.",
-    "scripts/lib/level2.js - grid/layout queries and sludge sites; scripts/lib/level4.js, level5.js, level6.js - plan constants and queries.",
-    "scripts/lib/level6path.js - cellAt, cellCenter, isWalkable, stepToward6; scripts/terrain7.js - ISLES, heightAt, materialAt; scripts/lib/critter-model.js - faceFill, faceMorph, rewear, toMesh and model helpers.",
+    "scripts/lib/level2.js, level4.js, level5.js, level6.js - plan/grid constants and queries; scripts/lib/level6path.js - cellAt, cellCenter, isWalkable, stepToward6.",
+    "scripts/terrain7.js - ISLES, heightAt, materialAt; scripts/lib/critter-model.js - faceFill, faceMorph, rewear, toMesh and model helpers.",
     "scripts/lib/maze0path.js, maze1path.js, maze2path.js, boilerpath.js - cell/door passage and stepToward routes; maze1path/2path also export cellNear.",
-    "scripts/lib/chatter.js - tickChatter(ctx, list, voices), CHATTER; scripts/lib/l5-people.js - PEOPLE5, roundsOf, speak, spawnResident, tickPeople; scripts/l7-dory.js - ears, onControlBegin/onControlEnd, onInput, update; scripts/l7-fauna.js manages Tidecrawler and Deep fauna."
+    "scripts/lib/chatter.js - tickChatter, CHATTER; scripts/lib/l5-people.js - PEOPLE5, roundsOf, speak, spawnResident, tickPeople; scripts/l7-dory.js - ears, input/control and update handlers."
   ],
   "ownership": [
     "scripts/player.js - player.state progression, health/sanity, inventory/equipment/ammo/weapon condition, hunger/thirst, cents, visits, kills/deaths, heat, combat and fishing rewards; owns persistent player look/clothing data.",
@@ -52,39 +53,39 @@
     "scripts/build.js + player.js - player scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
     "scripts/interact.js + scripts/lib/seat.js - focus/loot/interaction and player sit state; scripts/lockpick.js owns pick state, pins and boiler-pick timestamp; seats own occupancy.",
     "scripts/talk.js + scripts/meg-agent.js - dialogue/social memory, shop tab/trades and NPC follow; meg-agent owns routines, nerve, loadout, combat, fear/want, cover, worn look and corpse inspections.",
-    "scripts/main-menu.js + scripts/critter.js - menuOpen/madeChar, wardrobe editing state/look, and session.mmCam camera backdrop; critter owns appearance actions. places/level7/sim.js owns fauna-manager presence; l7-fauna.js owns crawler respawn/laid bookkeeping and fauna state."
+    "scripts/main-menu.js + scripts/critter.js - menuOpen/madeChar, wardrobe editing state/look and session.mmCam; places/level7/sim.js owns Level 7 placements and titan patrol transforms; l7-fauna.js manages fauna."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered handlers: locomotion before movement; interact, grab, rest, mahjong, talk, build, noclip, stats, craft, OS, lockpick and horde before critter, main-menu and view3.",
     "world.config.yaml camera → scripts/camera.js owns presented yaw/pitch and eye position; view3.js writes player.state.tp → shoulder camera; camera writes player.state.aimPt in third person → player.js crosshair-aligned shots.",
-    "scripts/main-menu.js first local session → session.menuMark and player.state.madeChar/menuOpen/wardrobeOpen/wrMenu; legacy played saves are recognized by progress, fresh saves open body/face creator, and returning saves open menu.",
+    "scripts/main-menu.js first local session → session.menuMark and player.state.madeChar/menuOpen/wardrobeOpen/wrMenu; legacy played saves are recognized by progress, fresh saves open body/face creator, returning saves open menu.",
     "world.config.yaml Backspace mainmenu action → scripts/main-menu.js toggles menu; mmenu play closes it, char opens creator; scripts/ui.js renders mainMenu or wardrobe, whose close returns to menu when wrMenu is set.",
-    "While menuOpen, scripts/main-menu.js hides the local player, saves its starting position/time in session.mmCam and writes a gently panning ctx.view.camera; closing clears the override and restores visibility.",
-    "wrMenu → wardrobe-ui.js exposes only body/face; scripts/critter.js rejects clothes/outfit actions and preserves existing clothing on random/reset; ordinary wardrobe hotkey remains disabled.",
+    "While menuOpen, scripts/main-menu.js hides the local player, saves starting position/time in session.mmCam and writes ctx.view.camera; closing clears override and restores visibility.",
+    "wrMenu → wardrobe-ui.js exposes body/face; scripts/critter.js rejects clothes/outfit actions and preserves clothing on random/reset; ordinary wardrobe hotkey remains disabled.",
     "Level 0 exit in scripts/player.js → Level 1; paired thresholds connect Levels 1–3; lifts/stairs connect Levels 3–5; Level 5 portal → Level 6 → Level 7; Level 6/7 stair markers remain paired.",
     "scripts/level-door.js trigger → paired arrival marker IDs or state.to fallback; place sims add inbound markers and player.js selects safe spawn/checkpoints after death.",
     "scripts/player.js writes state.xfer → scripts/ui.js transition card; player.js gain() writes xpPop → UI aggregates XP; lvlPrompt prompts K and stats.js clears it when opening the sheet.",
-    "interact.js E on living NPC → player.state.talkWith; talk-ui.js submits choices/text/trade → talk.js/NPC ears; parsed join intent writes NPC state.follow → meg-agent.js pursuit/return and companion recovery; armed agents fight and inspect corpses.",
-    "talk-ui.js buy/sell tab and goods actions → talk.js; shops.yml sets Backdollar base prices, talk.js debits/credits player.state.cents and mutates trader stock; almond water is sellable but is not currency.",
-    "Level 7 sim spawns l7-fauna.js → update lays eight terrain-positioned Tidecrawlers and the Deep; crawler attacks damage players, kills turn a crawler into searchable meat:crab remains and award l7crawlers, while gone/laid ledger respawns individuals."
+    "interact.js E on living NPC → player.state.talkWith; talk-ui.js submits choices/text/trade → talk.js/NPC ears; join intent writes NPC state.follow → meg-agent.js pursuit/return and companion recovery.",
+    "talk-ui.js buy/sell → talk.js; shops.yml sets Backdollar base prices, talk.js debits/credits player.state.cents and mutates trader stock; scripts/lib/data/talk.yml and npc-lore.yml supply persona and faction lore.",
+    "Level 7 sim + terrain7.js → island and sea-floor placements; sim ticks both titan transforms and l7-fauna.js updates crawlers/Deep; player.js classifies zone at island centers (-70,-95) and (46,-120) → ui.js zone banner; sim's NPC definitions → meg-agent behavior and shared chatter."
   ],
   "behaviorFamilies": [
-    "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; Level 5 cells hold the hotel portal and quest props.",
+    "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; Level 5 cells hold hotel portal and quest props.",
     "places/level4/cells/x0z0.scene + level4-geo.js, level4-detail-geo.js, l4-prop-geo.js and look-level4.js - office structure, non-colliding detail, varied props and post-processing share the Level 4 plan; Level 7 has dedicated room/ocean geo.",
     "scripts/l4-office.js + l4-office-geo.js - repeated cubicle islands, phones and printers vary by placement; manager schedules rings, ambience, tasks and rewards.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - rounds, talk, faction, role, voice, looks and routines vary by NPC; meg-agent.js adds shared nerve, loadout and combat behavior.",
     "scripts/lib/craft.js + data/craft.yml - crafting actions/menu reuse category and recipe checks; category, scrap costs, skills, bench requirement, output batches and item families vary by recipe.",
     "scripts/lib/npc-talk.js + shops.yml/talk.yml - shared NPC dialogue and trader interfaces vary by persona, stock, barter, discount and item section; buy/sell uses Backdollars.",
-    "scripts/lib/clothes.js, critter-model.js + data/faces.yml/critter-models.yml and mat-cloth.js - identity-seeded looks vary facial traits, colors, fur/markings, body proportions and garment dyes/patterns; critter-models.yml selects sculpted male/female body GLBs, including new paw hands, toe feet and curvy female forms, and scene placements apply per-character materials/parts.",
-    "scripts/lib/chatter.js + data/chatter.yml - Level 1–3 camps and Level 7 crews reuse timed multi-NPC exchanges, with dialogue and voice maps varying by site; scripts/l7-fauna.js separately reuses terrain and hostility rules across crawler spawns."
+    "scripts/lib/clothes.js, critter-model.js + data/faces.yml/critter-models.yml and scripts/mat-cloth.js - identity-seeded looks vary facial traits, colors, fur/markings, body proportions and garment dyes/patterns.",
+    "scripts/lib/chatter.js + data/chatter.yml - Level 1–3 camps and Level 7 crews reuse timed exchanges with site-specific dialogue/voices; art/level7/build.py generates the three fort/circle/skeleton meshes placed by level7/sim.js, with the skeleton mesh reused at twelve positions/scales."
   ],
   "probableOrphans": [],
   "migrationNotes": [
     "Grid contracts differ: Level 0 is 56×56 at 4 m; Level 1 30×30 at 8 m; Level 2 24×24 at 5 m; Level 3 26×26 at 4 m; Level 4 is 64×64 m with 8 m offices; Level 5 is 96×60 m; Level 6 is 27×41 cells at 1.8 m and 2.4 m high.",
     "Level 6 builtV is versioned to 3: moving trigger/prop sites requires keeping endpoint coordinates aligned to scripts/lib/level6.js plan(); its shift wall toggles only outside a 7 m player radius.",
-    "Level 6 has no working flashlight: player.js suppresses the toggle and destroys any carried torch on arrival; NVG F uses a local camera-attached green light and spare goggles replenish the shared battery.",
-    "Level 5 Ines quest progress is per-player state.nvgQ (1 asked, 2 case, 3 goggles, 4 complete); its north portal leads to Level 6, while the separately listed Level 6 auxiliary bulkhead remains welded shut.",
-    "Level 6 stair entry E(1) connects to Level 7; marker IDs l6-from-l7/l7-from-l6 must remain paired. Level 7 FY=4.0 room floor, PY=1.1 pier deck extending north (-Z); island summits are y=7 and y=11; crawler placement uses terrain height.",
-    "Level 7 corpse item `meat:crab` is registered in scripts/lib/items.js as good food; crawler remains must keep container/remains tags (player.js deliberately does not turn l7beast into ordinary player corpses), and respawn timing uses shared RESPAWN_MS."
+    "Level 6 suppresses the flashlight and destroys any carried torch on arrival; NVG F uses a local camera-attached green light and spare goggles replenish the shared battery.",
+    "Level 5 Ines quest progress is per-player state.nvgQ (1 asked, 2 case, 3 goggles, 4 complete); its north portal leads to Level 6; the Level 6 auxiliary bulkhead remains welded shut.",
+    "Level 6/7 stair marker IDs l6-from-l7/l7-from-l6 must remain paired. Level 7 terrain islands are centered at (0,0), (46,-120) top 7 and (-70,-95) top 11; heightAt blends shoreline shaping below 3 m and preserves higher land. Fort site, scripts/player.js zone center and terrain7.js island center are coupled.",
+    "Level 7 sim places circle at x=-150,z=0 and skeletons with terrain-relative y; it also patrols l7-tiny on a distinct hard-coded arc, while generated GLBs must keep their static asset references synchronized with sim.js."
   ]
 }
