@@ -7,8 +7,13 @@ boot:
   - "mounting BACKDRIVE ................. OK"
   - "syncing the database ............... 1 of 3 servers reachable"
   - "you are now blinking manually"
-  - "welcome."
-profiles:
+  - "keyboard ......................... found (sticky)"
+  - "last session ended: improperly"
+  - "welcome back."
+pro  - { title: "what is Back OS actually", by: "curious_temp", replies: ["it is an operating system", "who installs it", "nobody. it is on every hard drive you find", "i formatted one. it booted Back OS anyway", "thread locked by: (no moderator)"] }
+  - { title: "the clock says 15:40", by: "timekeeper", replies: ["every machine says 15:40", "mine said 15:41 once", "what happened", "i would rather not say"] }
+  - { title: "TBD will trade for your weirdest stuff", by: "quill", replies: ["they gave me two almond waters for a single left shoe", "they asked if i had a spoon that was not a spoon", "i did"] }
+files:
   office:  { owner: "Facilities", motd: "Quarterly review postponed indefinitely." }
   omega:   { owner: "Base Omega · Overseer desk", motd: "Authorised M.E.G. personnel. Everyone else: hi." }
   gamma:   { owner: "Base Gamma · Administration", motd: "The Database. Handle with care." }
@@ -47,6 +52,11 @@ mails:
   - { where: gamma, from: "Cmdr. Moss", subj: "Brigades", body: "Third brigade this week. The hoses held. Reminder: the Database servers stay on the top floor, never in the tunnels. Minerva has the only key, and her password is in my head.", tip: "" }
   - { where: gamma, from: "Archivist", subj: "new entries", body: "Added the stealer's habits and what the hounds do in dead ends. Restricted view shows the weak points. Please do not print those.", tip: "xp" }
   - { where: gamma, from: "Base Leader", subj: "Re: security", body: "Yes the Administration door is open during the day. No, I do not want it locked. People should be able to find us.", tip: "" }
+  - { where: office, from: "Dana in Accounts", subj: "Re: Re: Lunch?", body: "Never mind. Marcus did not come back from the break room. The phone rang three times this time. I am taking my lunch at my desk from now on.", tip: "" }
+  - { where: office, from: "Facilities", subj: "Ceiling tiles", body: "Some of you have reported ceiling tiles that are missing. Please do not look up into the gaps to check if anything is up there. Nothing is up there. Please do not check.", tip: "" }
+  - { where: office, from: "temp04", subj: "is anyone reading these", body: "my badge says temp04. i do not remember signing anything. if you are reading this at OFC4 something, i sat here too. the chair remembers. reply if you can", tip: "" }
+  - { where: office, from: "IT Helpdesk", subj: "Ticket #0000001 closed", body: "Issue: computer turns on by itself. Resolution: working as intended.", tip: "" }
+  - { where: omega, from: "Sgt. Okafor", subj: "night watch", body: "Two more wanderers came up from the lift last night. One of them said hello from too far away. We did not let that one in. Good work, everyone.", tip: "" }
   - { where: any, from: "Backmail", subj: "Welcome", body: "Your mailbox is empty except for this message. This message was empty too.", tip: "" }
 forum:
   - { title: "Anyone else hear the phone in 4-09?", by: "late_shift", replies: ["yes. do not answer it twice", "I answered it once. nothing happened. that is the worst part", "it knew my name"] }
@@ -54,9 +64,40 @@ forum:
   - { title: "[Level 3] are the bars really impossible", by: "bolt_cutter_dave", replies: ["we tried acid", "we tried the lava squirt gun", "dave please", "dave stop"] }
   - { title: "Is it safe to claim an office?", by: "new_arrival", replies: ["yes, the cooler refills", "the cot is surprisingly OK", "the plate on the door does not lie about whose it is"] }
   - { title: "Hounds howl before they jump", by: "field_note", replies: ["pinned. standard advice, kill the one that howls first", "or walk away from the one that howls first. none of us did"] }
+  - { title: "what is Back OS actually", by: "curious_temp", replies: ["it is an operating system", "who installs it", "nobody. it is on every hard drive you find", "i formatted one. it booted Back OS anyway", "thread locked by: (no moderator)"] }
+  - { title: "the clock says 15:40", by: "timekeeper", replies: ["every machine says 15:40", "mine said 15:41 once", "what happened", "i would rather not say"] }
+  - { title: "TBD will trade for your weirdest stuff", by: "quill", replies: ["they gave me two almond waters for a single left shoe", "they asked if i had a spoon that was not a spoon", "i did"] }
 files:
   - { where: any, name: "readme.txt", text: "Back OS(tm). BACKDRIVE. Files here belong to whoever sat here last. They have not come back to claim them." }
   - { where: office, name: "todo.txt", text: "- water the plant (dead)\n- ask facilities about the windows\n- do not look at the windows\n- finish report on the stairwell" }
   - { where: office, name: "map_l4.txt", text: "LEVEL 4 (office floor, 64 x 64 m)\nNW corner: Base Omega.   NE corner: lift to Level 3.\nSW corner: stairwell down to Level 5 (chained).   SE corner: break room, vending.\nFour water fountains on the open floor. Offices run along every wall." }
+  - { where: office, name: "phone_log.txt", text: "09:12  ring. answered. breathing.\n09:40  ring. answered. my own voice, saying 09:40.\n15:40  ring.\n15:40  ring.\n15:40  ring." }
+  - { where: office, name: "quarterly_report_v9.doc", text: "Q3 SUMMARY\nRevenue: n/a\nHeadcount: decreasing\nOffice count: increasing\nRecommendation: do not count the offices" }
   - { where: omega, name: "safe.txt", text: "The spare keycard opens a fused door on Level 2. The fuse you will have to find yourself." }
   - { where: gamma, name: "database_stats.txt", text: "Entries: levels 0-4, six entities, three objects, four groups. Reading the entity pages gives you an edge. Reading them twice does not." }
+
+# System Properties (the About page): what this machine says about itself. Written in-world, by whoever had it last.
+about:
+  registered: "the field was filled in once. the ink is gone."
+  cpu: "Pentium-class. A sticker on the case says DO NOT OPEN in four different handwritings."
+  ram: "640 KB. It has always been enough. It has never been enough."
+  disk: "BACKDRIVE (C:) · 2.1 GB · 0 bytes free · 0 bytes used"
+  origin: "This copy of Back OS was not installed. It was here when the desk was."
+  users: ["guest", "dana.acct", "marcus.h", "facilities", "temp04", "you"]
+  notes:
+    - "95.0  first boot. nobody remembers pressing the button."
+    - "95.1  fixed: the clock no longer runs. nobody asked for this."
+    - "95.2  Backmail now delivers to people who have left. (reverted) (not reverted)"
+    - "95.3  removed the colours. kept the yellow. the yellow would not go."
+    - "95.4  Terminal learned three new words. it will not say which."
+    - "95.5  the screensaver is disabled because it kept showing the hallway behind you."
+    - "95.6  stability fixes. the machine is stable. you are welcome."
+  footer: "If this machine was useful to you, leave it on. If it was not, leave it on anyway."
+# Recycle Bin: what the last people here deleted and did not empty
+bin:
+  - { name: "resignation_FINAL.doc", text: "To whom it may concern,\n\nI would like to resign. I have tried to leave through the front door four times. The front door is a wall. I am resigning anyway.\n\nRegards" }
+  - { name: "IMG_0412.bmp", text: "[the file opens to a photo of this exact desk, taken from the chair you are sitting in. the timestamp is tomorrow.]" }
+  - { name: "shift_rota.xls", text: "MON  dana   marcus\nTUE  dana   marcus\nWED  dana\nTHU  dana\nFRI\nSAT\nSUN  (whoever is reading this)" }
+  - { name: "dont_forget.txt", text: "the cooler in the middle is clean\nthe cooler by the window is NOT a cooler\ncount the doors when you leave your office. if there is one more, wait" }
+  - { name: "letter_home.txt", text: "Mum, there is plenty of water here, it tastes like almonds, I am eating fine. There are other people. Some of them are people. I will be home when I find the" }
+  - { name: "~$untitled.tmp", text: "hello again\nhello again\nhello again" }

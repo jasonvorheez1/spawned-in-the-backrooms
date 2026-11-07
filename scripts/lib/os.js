@@ -16,6 +16,7 @@ export function mailsOf(host, admin) {
 export const filesOf = (host) => [...O.files.filter((f) => f.where === PROFILE(host) || f.where === 'any')]
 export const entriesOf = (admin) => O.entries.filter((e) => admin || !e.restricted)
 export const entryById = (id) => O.entries.find((e) => e.id === id)
+export const binOf = () => O.bin ?? []
 export const forumOf = (host) => pickN(O.forum, host, 4, 'f')
 export const passwordOf = (host) => O.passwords[PROFILE(host)] ?? null
 
@@ -25,13 +26,17 @@ export function runCmd(os, line, who) {
   const files = filesOf(os.host)
   const out = (...l) => ({ out: l })
   if (!c) return out()
-  if (c === 'help') return out('help  ls  cat <file>  ver  whoami  hostname  level  entities  db <word>  mail  forum  login <password>  hack  logout  clear', 'also: date  ping  almond  blink  sudo')
+  if (c === 'help') return out('help  ls  cat <file>  ver  whoami  hostname  level  entities  db <word>  mail  forum  login <password>  hack  logout  clear', 'also: date  ping  almond  blink  sudo  uptime  who  last  shutdown')
   if (c === 'clear') return { out: [], act: 'clear' }
   if (c === 'ls' || c === 'dir') return out(...files.map((f) => f.name), admin ? 'restricted/' : '')
   if (c === 'cat' || c === 'type') { const f = files.find((x) => x.name === arg); return f ? out(...f.text.split('\n')) : out(`cat: ${arg || '?'}: no such file`) }
   if (c === 'whoami') return out(admin ? 'admin' : 'guest')
   if (c === 'hostname') return out(os.host)
-  if (c === 'ver' || c === 'about') return out('Back OS(tm) 95. identical to its ancestor except that only the yellow is used.', 'Who knows...')
+  if (c === 'ver' || c === 'about') return out(O.version, O.about.origin)
+  if (c === 'uptime') return out('up 11,402 days, 15:40. load average: you')
+  if (c === 'who') return out(admin ? 'admin    tty0   15:40' : 'guest    tty0   15:40', 'temp04   tty1   15:40   (idle 4 years)')
+  if (c === 'last') return out(...O.about.users.map((u, i) => `${u.padEnd(12)} ${os.host}   15:40   ${i === O.about.users.length - 1 ? 'still logged in' : 'gone'}`))
+  if (c === 'shutdown' || c === 'halt' || c === 'poweroff') return { out: ['shutting down...'], act: 'logout' }
   if (c === 'level') return out(`${PROFILE(os.host) === 'omega' ? 'Level 4 · Base Omega' : PROFILE(os.host) === 'gamma' ? 'Level 3 · Base Gamma' : 'a desk somewhere'}`)
   if (c === 'entities') return out(...entriesOf(admin).filter((e) => e.cat === 'Entities').map((e) => `${e.title.padEnd(14)} ${e.sc}`))
   if (c === 'db' || c === 'search') { const q = arg.toLowerCase(); const hits = entriesOf(admin).filter((e) => !q || e.title.toLowerCase().includes(q) || e.text.toLowerCase().includes(q)); return hits.length ? out(...hits.map((e) => `${e.cat}/${e.title}`), '(open the Database to read)') : out('no entries') }

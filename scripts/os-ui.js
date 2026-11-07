@@ -1,11 +1,12 @@
 // Back OS(tm): the screen. A Windows 95 look with only the yellow left (the Object-94 logo): gray bevelled windows, gold title bars, a taskbar with
 // a Start button. Drawn from player.state.os (scripts/os.js). Buttons send the 'os' action.
 import O from './lib/data/os.yml'
-import { mailsOf, filesOf, entriesOf, entryById, forumOf } from './lib/os.js'
+import { mailsOf, filesOf, entriesOf, entryById, forumOf, binOf } from './lib/os.js'
 
 const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 const A = (o) => `sendAction('os',${JSON.stringify(o).replace(/"/g, "'")})`
 const LOGO = (n = 1) => `<svg width="${46 * n}" height="${40 * n}" viewBox="0 0 46 40"><g stroke="#000" stroke-width="1.4"><path d="M12 6 L24 8 L23 20 L11 18Z" fill="#f2c200"/><path d="M26 8.5 L40 10 L38 23 L25 21Z" fill="#f2c200"/><path d="M10.5 21 L22.5 23 L21.5 35 L9.5 33Z" fill="#f2c200"/><path d="M24.5 23.5 L37.5 25.5 L36 38 L23.5 36Z" fill="#f2c200"/></g><g fill="#c98a00"><rect x="1" y="9" width="3" height="3"/><rect x="5" y="12" width="3" height="3"/><rect x="2" y="17" width="3" height="3"/><rect x="6" y="22" width="3" height="3"/><rect x="2" y="27" width="3" height="3"/></g><g fill="#000"><rect x="4" y="5" width="3" height="3"/><rect x="8" y="9" width="2" height="2"/><rect x="1" y="21" width="3" height="3"/><rect x="5" y="30" width="3" height="3"/></g></svg>`
+const hashN = (t) => { let h = 7; for (const c of String(t)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h }
 const CSS = `<style>
 #os{position:fixed;inset:0;z-index:70;background:#0a0800;display:flex;align-items:center;justify-content:center;font-family:'MS Sans Serif',Tahoma,Arial,sans-serif;color:#000;pointer-events:auto}
 #os .scr{width:min(860px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 12px)));height:min(600px,calc(100vh - 24px));background:#5a4a00;border:6px solid #2a2a26;box-shadow:0 0 0 2px #000,0 0 60px #f2c20033 inset;display:flex;flex-direction:column;position:relative;overflow:hidden}
@@ -52,13 +53,28 @@ const CSS = `<style>
 #os .login{flex:1;display:flex;align-items:center;justify-content:center;background:#6b5a00}
 #os .login .win{position:static;width:380px;inset:auto}
 #os .login input{width:100%;padding:4px;font:13px monospace;box-sizing:border-box;border:2px inset #fff}
+#os .smenu{position:absolute;left:4px;bottom:32px;width:230px;background:#c0c0c0;border:2px outset #fff;box-shadow:2px 2px 0 #000;display:flex;z-index:3}
+#os .smenu .side{width:24px;background:linear-gradient(0deg,#8a6a00,#f2c200);color:#000;font:700 13px Tahoma;writing-mode:vertical-rl;transform:rotate(180deg);padding:6px 3px;letter-spacing:.06em}
+#os .smenu .items{flex:1;display:flex;flex-direction:column;padding:2px}
+#os .smenu button{display:flex;gap:8px;align-items:center;text-align:left;font:12px Tahoma,Arial;padding:6px 8px;border:0;background:none;cursor:pointer;color:#000}
+#os .smenu button:hover{background:#8a6a00;color:#fff}
+#os .smenu hr{border:0;border-top:1px solid #808080;border-bottom:1px solid #fff;margin:3px 2px}
+#os .off{flex:1;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font:600 22px Tahoma,Arial;color:#f2c200;text-align:center}
+#os .off .a{animation:osfade .4s forwards}#os .off .b{opacity:0;animation:osfade .3s 1.1s forwards}
+@keyframes osfade{from{opacity:0}to{opacity:1}}
+#os .scr.dying::before{content:'';position:absolute;inset:0;background:#000;z-index:5;animation:oscrt 2.2s ease-in forwards;pointer-events:none}
+@keyframes oscrt{0%,70%{opacity:0;transform:scaleY(1)}85%{opacity:1;transform:scaleY(1)}100%{opacity:1;transform:scaleY(.004)}}
+#os .props{display:grid;grid-template-columns:110px 1fr;gap:4px 12px;font-size:12px;margin:8px 0}
+#os .props b{font-weight:400;color:#444}
+#os .chg{font:12px/1.5 monospace;background:#fffbe6;border:1px solid #b89a00;padding:8px;margin-top:8px}
+#os textarea{flex:1;border:0;outline:0;resize:none;font:13px/1.45 'Courier New',monospace;padding:10px;background:#fff;color:#000}
 </style>`
 
-const ICONS = [['mail', '✉', 'Backmail'], ['db', '📚', 'The Database'], ['files', '🗂', 'BACKDRIVE'], ['forum', '💬', 'Backdoor'], ['term', '⌨', 'Terminal'], ['about', '💾', 'About Back OS']]
-const TITLE = { mail: 'Backmail', db: 'The Database', files: 'BACKDRIVE', forum: 'Backdoor Forum', term: 'Terminal', about: 'About Back OS(tm)' }
+const ICONS = [['mail', '✉', 'Backmail'], ['db', '📚', 'The Database'], ['files', '🗂', 'BACKDRIVE'], ['forum', '💬', 'Backdoor'], ['term', '⌨', 'Terminal'], ['notes', '📝', 'Notepad'], ['bin', '🗑', 'Recycle Bin'], ['about', '💾', 'This Computer']]
+const TITLE = { mail: 'Backmail', db: 'The Database', files: 'BACKDRIVE', forum: 'Backdoor Forum', term: 'Terminal', about: 'System Properties', notes: 'Notepad', bin: 'Recycle Bin' }
 
 function chrome(title, inner) {
-  return `<div class="win"><div class="tb">${LOGO(0.4)}<span>${esc(title)}</span><button onclick="${A({ k: 'app', v: 'desktop' })}">_</button><button onclick="${A({ k: 'close' })}">x</button></div>${inner}</div>`
+  return `<div class="win"><div class="tb">${LOGO(0.4)}<span>${esc(title)}</span><button onclick="${A({ k: 'app', v: 'desktop' })}">_</button><button onclick="${A({ k: 'app', v: 'desktop' })}">x</button></div>${inner}</div>`
 }
 function list(items, sel, key, fn) { return `<div class="lst">${items.map((it) => `<button class="${fn.id(it) === sel ? 'on' : ''}" onclick="${A({ k: key, [key === 'file' ? 'v' : 'id']: fn.id(it) })}">${fn.html(it)}</button>`).join('')}</div>` }
 
@@ -67,6 +83,10 @@ export function osUi(ctx, player) {
   if (!os) return ''
   const admin = os.user === 'admin', now = ctx.now()
   let body = ''
+  if (os.app === 'off') {
+    body = `<div class="off"><div class="a">Back OS is shutting down...</div><div class="b" style="font-size:16px">It is now safe to stand up.</div></div>`
+    return CSS + `<div id="os" data-modal><div class="scr dying">${body}</div></div>`
+  }
   if (os.app === 'boot') {
     const t = Math.max(0, (now - os.at) / 1000)
     const lines = O.boot.map((l, i) => `<div class="ln" style="animation-delay:${(i * 0.45 - t).toFixed(2)}s">${esc(l)}</div>`).join('')
@@ -93,11 +113,21 @@ export function osUi(ctx, player) {
       const lines = (os.term?.length ? os.term : [`${O.version}`, `${esc(os.host)} · type help`]).map((l) => `<div>${esc(l)}</div>`).join('')
       win = chrome(`Terminal · ${os.host}${admin ? ' · admin' : ''}`, `<div class="body" style="flex-direction:column;background:#000"><div class="term">${lines}</div><div class="q">${['help', 'ls', 'whoami', 'entities', 'hack', 'blink'].map((c) => `<button onclick="${A({ k: 'cmd', v: c })}">${c}</button>`).join('')}</div><div class="cmd"><span style="color:#f2c200;padding:6px 0 6px 10px;font:13px monospace">&gt;</span><input id="tin" autofocus onkeydown="if(event.key==='Enter'){${A({ k: 'cmd', v: '__V__' }).replace("'__V__'", 'this.value')};this.value=''}"></div></div>`)
     } else if (os.app === 'about') {
-      win = chrome('About Back OS(tm)', `<div class="body"><div class="rd" style="display:flex;gap:18px;align-items:flex-start">${LOGO(1.6)}<div><h3>${esc(O.version)}</h3>The Back OS logo is identical to that of a very old Frontrooms system, except that only the yellow colour is used. Maybe it is the work of one of us. Maybe some kind of entity. Or maybe the OS itself. Who knows...<div class="meta" style="margin-top:10px">Found as Object-94-A (flash drive) and Object-94-B (hard drive).<br>You are logged in as ${admin ? 'admin' : 'guest'} on ${esc(os.host)}.</div></div></div></div>`)
+      const A0 = O.about, days = 11402 + Math.floor(now / 86400000), seat = A0.users[hashN(os.host) % (A0.users.length - 1)]
+      win = chrome('System Properties', `<div class="body"><div class="rd"><div style="display:flex;gap:18px;align-items:flex-start">${LOGO(1.6)}<div style="flex:1"><h3>${esc(O.version)}</h3><div class="meta">${esc(A0.origin)}</div>
+        <div class="props"><b>Registered to</b><span>${esc(A0.registered)}</span><b>Computer</b><span>${esc(os.host)}</span><b>Processor</b><span>${esc(A0.cpu)}</span><b>Memory</b><span>${esc(A0.ram)}</span><b>Drive</b><span>${esc(A0.disk)}</span>
+        <b>Uptime</b><span>${days.toLocaleString('en')} days. The clock says 15:40.</span><b>Last user</b><span>${esc(seat)} (logged out improperly)</span><b>You</b><span>${admin ? 'admin. the machine seems relieved.' : 'guest. the machine is polite about it.'}</span></div></div></div>
+        <div class="chg">${A0.notes.map((n) => `<div>${esc(n)}</div>`).join('')}</div><div class="meta" style="margin-top:10px">${esc(A0.footer)}</div></div></div>`)
+    } else if (os.app === 'notes') {
+      win = chrome('Notepad · untitled.txt', `<div class="body" style="flex-direction:column"><textarea id="osnp" data-interactive maxlength="800" placeholder="Your own notes. They stay with you, not the desk.">${esc(s.osNote ?? '')}</textarea><div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;padding:6px;background:#c0c0c0">${os.saved && now - os.saved < 2500 ? '<span style="font-size:12px">Saved.</span>' : ''}<button class="btn" onclick="sendAction('os',{k:'note',v:document.getElementById('osnp').value})">Save</button></div></div>`)
+    } else if (os.app === 'bin') {
+      const bs = binOf(), f = bs.find((x) => x.name === os.sel) ?? null
+      win = chrome('Recycle Bin', `<div class="body">${list(bs, os.sel, 'bin', { id: (x) => x.name, html: (x) => `🗑 ${esc(x.name)}` })}<div class="rd">${f ? `<h3>${esc(f.name)}</h3><div class="meta">Deleted by: (unknown) · Not emptied</div><div style="white-space:pre-wrap;font-family:monospace">${esc(f.text)}</div>` : `<div class="meta">${bs.length} items. Nobody has emptied it. Emptying is disabled.</div>`}</div></div>`)
     }
     const apps = ICONS.map(([k, g, n]) => `<button class="ic" onclick="${A({ k: 'app', v: k })}"><span class="g">${g}</span>${esc(n)}</button>`).join('')
     const tw = os.app !== 'desktop' ? `<div class="tw">${esc(TITLE[os.app] ?? '')}</div>` : ''
-    body = `<div class="desk"><div class="area">${win || `<div class="icons">${apps}</div>`}</div><div class="task"><div class="st" onclick="${A({ k: 'app', v: 'desktop' })}">${LOGO(0.34)} Start</div>${tw}<div class="clk">15:40</div></div></div>`
+    const menu = os.menu ? `<div class="smenu"><div class="side">Back OS 95</div><div class="items">${ICONS.map(([k, g, n]) => `<button onclick="${A({ k: 'app', v: k })}">${g} ${esc(n)}</button>`).join('')}<hr><button onclick="${A({ k: 'off' })}">⏻ Shut Down...</button></div></div>` : ''
+    body = `<div class="desk">${menu}<div class="area">${win || `<div class="icons">${apps}</div>`}</div><div class="task"><div class="st" onclick="${A({ k: 'menu' })}" style="${os.menu ? 'border-style:inset' : ''}">${LOGO(0.34)} Start</div>${tw}<div class="clk">15:40</div></div></div>`
   }
   return CSS + `<div id="os" data-modal><div class="scr">${body}</div></div>`
 }

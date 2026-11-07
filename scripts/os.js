@@ -7,11 +7,14 @@ import { ROOMS } from './lib/level4.js'
 import { runCmd, mailsOf, entryById } from './lib/os.js'
 
 const BOOT_MS = 3200
-const APPS = ['desktop', 'mail', 'db', 'files', 'forum', 'term', 'about']
+const APPS = ['desktop', 'mail', 'db', 'files', 'forum', 'term', 'about', 'notes', 'bin']
+const OFF_MS = 2200 // the shut-down screen, then you stand
 const seen = (s, key, id) => String(s[key] ?? '').split(',').includes(id)
 const mark = (s, key, id) => { s[key] = [s[key], id].filter(Boolean).join(',') }
 const note = (ctx, s, text) => { s.notice = { text, at: ctx.now() } }
 const close = (ctx, s) => { s.os = null; s.osClosedAt = ctx.now() }
+// leaving is in-world: Start > Shut Down (or E, or the terminal's shutdown) plays the power-off, then you stand up
+const shutdown = (ctx, s) => { if (s.os && s.os.app !== 'off') s.os = { ...s.os, app: 'off', menu: false, at: ctx.now() } }
 
 function unlock(ctx, s) {
   const c = ctx.getObject(s.os.id); if (c) c.state.unlocked = true
@@ -21,9 +24,11 @@ function unlock(ctx, s) {
 
 function act(ctx, s, d) {
   let os = s.os; if (!os) return
-  if (d.k === 'close') return close(ctx, s)
+  if (d.k === 'close' || d.k === 'off') return shutdown(ctx, s)
+  if (os.app === 'off') return
+  if (d.k === 'menu') { s.os = { ...os, menu: !os.menu }; return }
   if (os.app === 'boot') return
-  if (d.k === 'app' && APPS.includes(d.v) && os.app !== 'login') { s.os = { ...os, app: d.v, sel: '', q: '' }; return }
+  if (d.k === 'app' && APPS.includes(d.v) && os.app !== 'login') { s.os = { ...os, app: d.v, sel: '', q: '', menu: false }; return }
   if (d.k === 'cat') { s.os = { ...os, cat: String(d.v || ''), sel: '' }; return }
   if (d.k === 'pw' || d.k === 'login') { // the login screen: guest, or a password
     if (d.k === 'login' || !d.v) { s.os = { ...os, app: 'desktop' }; return }
@@ -57,6 +62,8 @@ function act(ctx, s, d) {
     return
   }
   if (d.k === 'file') { s.os = { ...os, sel: String(d.v || '') }; return }
+  if (d.k === 'bin') { s.os = { ...os, sel: String(d.id || '') }; return }
+  if (d.k === 'note') { s.osNote = String(d.v ?? '').slice(0, 800); s.os = { ...os, saved: ctx.now() }; return }
   if (d.k === 'cmd') {
     const line = String(d.v || '').slice(0, 80), r = runCmd(os, line, ctx.self)
     let term = [...(os.term ?? []), '> ' + line, ...r.out.filter((x) => x !== '')]
@@ -64,7 +71,7 @@ function act(ctx, s, d) {
     term = term.slice(-40)
     s.os = { ...os, term }
     if (r.act === 'unlock') unlock(ctx, s)
-    else if (r.act === 'logout') close(ctx, s)
+    else if (r.act === 'logout') shutdown(ctx, s)
     else if (r.act?.startsWith('open:')) s.os = { ...s.os, app: r.act.slice(5), sel: '' }
   }
 }
@@ -72,7 +79,7 @@ function act(ctx, s, d) {
 export function onInput(ctx, input) {
   const s = ctx.self.state
   if (!s.os) return
-  if (input.pressed?.interact && ctx.now() - (s.os.at ?? 0) > 400) return close(ctx, s) // E closes it (not the same press that opened it)
+  if (input.pressed?.interact && s.os.app !== 'off' && ctx.now() - (s.os.at ?? 0) > 400) return shutdown(ctx, s) // E shuts it down (not the same press that opened it)
   const d = input.actionData?.os
   if (input.pressed?.os && d && typeof d.k === 'string') act(ctx, s, d)
 }
@@ -84,6 +91,7 @@ export function update(ctx, dt) {
   if (sit) { const c = ctx.getObject(s.os.id); if (c) { const p = ctx.self.feetPosition; ctx.self.rotation = { yaw: Math.atan2(-(c.feetPosition.x - p.x), -(c.feetPosition.z - p.z)) * 180 / Math.PI }; const v = ctx.self.velocity; ctx.self.velocity = { x: 0, y: v.y, z: 0 } } }
   if (!s.os) return
   const os = s.os, now = ctx.now()
+  if (os.app === 'off') { if (now - os.at > OFF_MS) close(ctx, s); return }
   if (os.app === 'boot' && now - os.at > BOOT_MS) s.os = { ...os, app: os.lock && os.user !== 'admin' ? 'login' : 'desktop' }
   const c = ctx.getObject(os.id), p = ctx.self.feetPosition // walk away and it logs out
   if (!c || Math.hypot(c.feetPosition.x - p.x, c.feetPosition.z - p.z) > 4) close(ctx, s)
