@@ -51,6 +51,13 @@ export function update(ctx) {
       if (o.state.mjSat) { const r = (e.yaw * Math.PI) / 180; o.anim.sit = null; o.feetPosition = { x: e.x + Math.sin(r) * 0.55, y: 0, z: e.z + Math.cos(r) * 0.55 }; } // up off the stool, a step back from the table
       goTo(o, want, e);
     }
+    // a guest who stalls (a snag, a crowd) for 4 s takes a stride straight at the stool; past 30 s they are simply seated
+    if (want === "in" && !o.state.mjSat) {
+      const d = Math.hypot(f.x - e.x, f.z - e.z), ss = (o.session.mjWalk ??= { d, at: now, since: now });
+      if (d < ss.d - 0.5) { ss.d = d; ss.at = now; }
+      else if (now - ss.at > 4000) { const k = Math.min(1.5, d - 0.5) / d; o.feetPosition = { x: f.x + (e.x - f.x) * k, y: f.y, z: f.z + (e.z - f.z) * k }; ss.d = d - 1.5; ss.at = now; }
+      if (now - ss.since > 30000) o.feetPosition = { x: e.x, y: e.y, z: e.z };
+    }
     // the stool: the agent stops a stride short, so the last step is made here (the sit clip carries the stool's height)
     if (want === "in" && !o.state.mjSat && Math.hypot(f.x - e.x, f.z - e.z) < 1.3) {
       o.feetPosition = { x: e.x, y: e.y - 0.1, z: e.z }; o.rotation = { yaw: e.yaw }; o.velocity = { x: 0, y: 0, z: 0 };
