@@ -64,6 +64,7 @@ export function wallSpot1(cx, cz, kind, r1, r2) {
 
 // Level 3: a closed side (no opening, no bars) of cell (cx, cz)
 export function wallSpot3(cx, cz, kind, r1, r2) {
+  if (M3.zoneOf(cx, cz) === "tight") return null; // a crawl hall's walls stand 0.5 m from its centre: nothing fits against them
   const T = 0.3, [w] = sizeOf(kind), sides = [0, 1, 2, 3].filter((d) => !M3.isOpen(cx, cz, d) && !M3.isBars(cx, cz, d));
   if (!sides.length) return null;
   return face(M3.cellCenter(cx, cz), M3.S, T, sides[Math.floor(r1 * sides.length)], slide(M3.S, T, w, r2));
