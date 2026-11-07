@@ -251,7 +251,7 @@ function viewmodel(ctx, moving, sprinting) {
     if (w.vm) ctx.destroy(w.vm)
     const g = HOLD[kind], wp = W[kind] ?? {}, gun = !!wp.ranged
     const child = g == null ? [] : [gun
-      ? { feetPosition: { x: 0, y: kind === 'pistol' ? 0.03 : 0.0, z: -0.0 + (kind === 'pistol' ? -0.03 : 0.0) }, rotation: Q_GUN, castShadow: false, primitive: { kind: 'scripted', script: 'scripts/weapon-geo.js', params: { kind } }, audience: 'local' }
+      ? { feetPosition: { x: 0, y: kind === 'pistol' ? 0.03 : -0.04, z: kind === 'pistol' ? 0.04 : 0.14 }, rotation: Q_GUN, castShadow: false, primitive: { kind: 'scripted', script: 'scripts/weapon-geo.js', params: { kind } }, audience: 'local' }
       : { feetPosition: { x: 0, y: -g, z: 0 }, rotation: Q_MELEE, castShadow: false, primitive: { kind: 'scripted', script: 'scripts/weapon-geo.js', params: { kind } }, audience: 'local' }]
     w.vm = ctx.spawn({ feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
       primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', ...(wp.muzzle ? { sockets: { muzzle: wp.muzzle } } : {}) }, children: child })

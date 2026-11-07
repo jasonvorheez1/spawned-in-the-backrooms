@@ -8,7 +8,7 @@
 import W from './data/weapons.yml'
 
 export const VM_FOV = 55
-const REST = [0.2, -0.2, 0.42]
+const REST = [0.19, -0.17, 0.44]
 const TAU = Math.PI * 2
 
 const wrap = (a) => ((a + Math.PI) % TAU + TAU) % TAU - Math.PI
