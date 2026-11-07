@@ -551,7 +551,7 @@ object/x955101e2a6d7f07b/43:
 temp-hound:
   feetPosition: {x: 106, y: 0.05, z: 16}
   id: temp-hound
+  model: {id: /cdn/value.180d1072a97d34551e1394960b70202777c9d0b51fb0ca67779a59e429ef6fa7.glb}
   physics: {body: character}
-  primitive: {kind: scripted, script: scripts/hound-geo.js}
   state: {hp: 60, maxHp: 60}
   tags: [hound, temp]
