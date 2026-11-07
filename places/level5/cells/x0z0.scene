@@ -167,6 +167,13 @@ l5-ball-mahjong:
   primitive: {kind: scripted, params: {part: mahjong}, script: scripts/l5-ball-geo.js}
   state: {info: Somebody left mid-turn. Their hand is still fanned open., kind: mahjong, name: Mahjong table, tint: "#9fd8b0", verb: Touch}
   tags: [usable, l5-ball]
+l5-ball-mirror:
+  feetPosition: {x: 6, y: 2.275, z: -23.74}
+  id: l5-ball-mirror
+  material: {color: "#1a1712", metalness: 0.6, roughness: 0.05, view: {camera: mirror}}
+  primitive: {height: 1.19, kind: plane, width: 1.9}
+  rotation: 0
+  tags: [l5-ball]
 l5-ball-placard-n:
   feetPosition: {x: 6, y: 3.73, z: -11.84}
   id: l5-ball-placard-n
