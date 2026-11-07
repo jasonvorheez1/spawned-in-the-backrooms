@@ -22,12 +22,13 @@ for (const k of Y.order.slice(1)) {
       ...(w.ranged ? {
         magSize: Math.max(1, Math.round(m('magSize'))), range: +(m('range')).toFixed(1), pellets: w.pellets ? Math.round(m('pellets')) : undefined,
         reloadTime: w.reloadTime ? +(m('reloadTime')).toFixed(2) : undefined,
-        cone: v.cone != null ? 1 - (1 - w.cone) / v.cone ** -1 * 1 : w.cone, // cone < 1 tightens the spread, > 1 widens it
-        adsCone: v.cone != null ? 1 - (1 - w.adsCone) * v.cone : w.adsCone,
+        cone: w.cone,
+        adsCone: v.cone != null ? +(1 - (1 - w.adsCone) * (v.look === 'sawn' ? 1 / v.cone : v.cone)).toFixed(4) : w.adsCone,
         muzzle: v.short && w.muzzle ? [w.muzzle[0], w.muzzle[1], +(w.muzzle[2] * v.short).toFixed(3)] : w.muzzle,
       } : {}),
     }
-    if (W[k + '~' + vk].cone != null && v.cone != null) W[k + '~' + vk].cone = +(1 - (1 - w.cone) * (v.look === 'sawn' ? 1 / v.cone : v.cone)).toFixed(4)
+    // cone: the spread multiplier (0.7 = 30% tighter); a sawed-off widens by its inverse
+    if (w.ranged && v.cone != null) W[k + '~' + vk].cone = +(1 - (1 - w.cone) * (v.look === 'sawn' ? 1 / v.cone : v.cone)).toFixed(4)
   }
 }
 // the variants a kind can roll, with their weights
