@@ -24,7 +24,7 @@ export function spawnShells(ctx, c) {
 
 // Weighted pick over every found weapon; rarer ones carry a smaller weight in weapons.yml.
 export function rollWeapon(ctx) {
-  const kinds = W.order.slice(1), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
+  const kinds = W.order.slice(1).filter((k) => !W[k].level1), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
   let r = ctx.random() * total;
   for (const k of kinds) { r -= W[k].weight ?? 1; if (r <= 0) return k; }
   return kinds[0];
@@ -64,7 +64,7 @@ const L1_WEIGHTS = [["ration", 5], ["almond", 4], ["bandage", 3], ["battery", 3]
 export function rollItemL1(ctx) {
   const total = L1_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
-  for (const [k, w] of L1_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeapon(ctx) : k; }
+  for (const [k, w] of L1_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + (ctx.random() < 0.6 ? (ctx.random() < 0.55 ? "rebar" : "wrench") : rollWeapon(ctx)) : k; }
   return "ration";
 }
 export function spawnCrateL1(ctx, p) {
