@@ -109,16 +109,13 @@ export function talkUi(ctx, player) {
     const tagCls = low.includes('speech') ? 'speech' : low.includes('barter') ? 'barter' : low.includes('lore') ? 'lore' : low.includes('med') ? 'med' : low.includes('surv') ? 'surv' : 'gen'
     return `<button class="ch" data-interactive onclick="sendAction('talk',{id:'${q(it.id)}',text:'${q(txt)}'})"><b class="n">${i + 1}.</b>${tag ? `<span class="tag ${tagCls}">[${esc(tag)}]</span>` : ''}<span class="txt">${esc(txt)}</span></button>`
   }).join('')
-  const n0 = choices.length
-  const sysItems = sys.map(([k, tag, tx], i) => `<button class="ch sys" data-interactive onclick="sendAction('talkdo',{k:'${q(k)}'})"><b class="n">${n0 + i + 1}.</b>${tag ? `<span class="tag">${esc(tag)}</span>` : ''}<span class="txt">${esc(tx)}</span></button>`).join('')
-  const choicesHtml = `<div class="choices">${chItems}${sysItems}</div>`
-  const ph = choices.length ? `Speak freely with ${who} or pick an option above…` : `Speak with ${who}…`
+  // the strip: their line, up to four replies, then one small row: type a line, the side asks, bye
+  const top = chItems.split('</button>').filter(Boolean).slice(0, 4).map((b) => b + '</button>').join('')
+  const small = sys.map(([k, tag, tx]) => `<button data-interactive onclick="sendAction('talkdo',{k:'${q(k)}'})">${esc(k === 'leave' ? 'Bye' : k === 'trade' ? 'Trade' : k === 'svc' ? (SVC[role] ?? 'Ask') : tx.slice(0, 22))}</button>`).join('')
   const kd = `if(event.key==='Escape'){sendAction('talkdo',{k:'leave'})}else if(event.target.id!=='tkin'&&event.key>='1'&&event.key<='9'){const c=document.querySelectorAll('.tc .ch');const b=c[parseInt(event.key)-1];if(b)b.click()}`
-  return `${CINE}<div class="tc" data-modal tabindex="0" onkeydown="${kd}"><div class="bar bt"></div><div class="bar bb"></div>
-    <div class="who"><b>${who}</b><span>${esc(it.state?.faction ?? faction(it, player.place))} · ${esc(role ?? 'drifter')}${it.state?.follow === player.id ? ' · with you' : ''}</span></div>
-    <div class="low ${s.talkBusy ? 'busy' : ''}"><div class="sub">${old}${now}</div>
-      ${choicesHtml}
-      <form data-interactive onsubmit="event.preventDefault();${send}"><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" placeholder="${esc(ph)}"/></form>
-      <div class="opts">${opts}<span class="feel" style="color:${col}">${feel(r)}</span></div>
+  return `${CINE}<div class="tc" data-modal tabindex="0" onkeydown="${kd}">
+    <div class="low ${s.talkBusy ? 'busy' : ''}"><div class="sub">${now}</div>
+      <div class="choices">${top}</div>
+      <form class="row" data-interactive onsubmit="event.preventDefault();${send}"><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" placeholder="say something…"/>${small}<span class="feel" style="color:${col}">${feel(r)}</span></form>
     </div></div>`
 }
