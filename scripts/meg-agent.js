@@ -103,7 +103,7 @@ const chest = (p) => ({ x: p.x, y: p.y + 1.1, z: p.z });
 function pickTarget(ctx, me, m) {
   const p = me.feetPosition;
   let best = null, bd = G.sight;
-  if (!me.state.faction5 && !me.state.mjguest) for (const tag of FOES) for (const f of ctx.query({ tags: [tag], radius: G.sight })) { // hotel guests are no fighters: a hound is something to run from, not at
+  if ((!me.state.faction5 || me.state.follow) && !me.state.mjguest) for (const tag of FOES) for (const f of ctx.query({ tags: [tag], radius: G.sight })) { // hotel guests are no fighters: a hound is something to run from, not at
     if (f.state?.dead || (f.state?.hp ?? 1) <= 0) continue;
     const d = flat(f.feetPosition, p); if (d < bd) { bd = d; best = f; }
   }
