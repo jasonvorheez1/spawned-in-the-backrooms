@@ -30,6 +30,7 @@ function barRow(ctx, x0, z0, x1, z1, h, M, gap = 0.26) {
 }
 
 export function geometry(ctx) {
+  const CUT = new Set(ctx.params?.cut ?? []); // broken walls (lib/breakables.js): scripts/wallpatch-geo.js draws what is left
   const hi = ctx.lod <= 2, M = 4;
   // floor: terrazzo tile in the kept halls, dusty cracked concrete in the crawls and blind halls
   for (const terr of [true, false]) {
@@ -61,8 +62,8 @@ export function geometry(ctx) {
     for (let cx = -1; cx < N; cx++) for (let cz = -1; cz < N; cz++) {
       if (skinOf(cx, cz) !== k) continue;
       const xe = (cx + 1) * S - HALF, ze = (cz + 1) * S - HALF;
-      if (cz >= 0 && (cx < 0 || cx === N - 1 || solid(cx, cz, 0))) { box(ctx, xe - T, xe + T, 0, H, cz * S - HALF - T, cz * S - HALF + S + T); plinth.push([xe - T - 0.02, xe + T + 0.02, cz * S - HALF - T + 0.02, cz * S - HALF + S + T - 0.02]); }
-      if (cx >= 0 && (cz < 0 || cz === N - 1 || solid(cx, cz, 1))) { box(ctx, cx * S - HALF - T + 0.02, cx * S - HALF + S + T - 0.02, 0, H, ze - T, ze + T); plinth.push([cx * S - HALF - T + 0.02, cx * S - HALF + S + T - 0.02, ze - T - 0.02, ze + T + 0.02]); }
+      if (cz >= 0 && (cx < 0 || cx === N - 1 || solid(cx, cz, 0)) && !CUT.has(`x:${cx}:${cz}`)) { box(ctx, xe - T, xe + T, 0, H, cz * S - HALF - T, cz * S - HALF + S + T); plinth.push([xe - T - 0.02, xe + T + 0.02, cz * S - HALF - T + 0.02, cz * S - HALF + S + T - 0.02]); }
+      if (cx >= 0 && (cz < 0 || cz === N - 1 || solid(cx, cz, 1)) && !CUT.has(`z:${cx}:${cz}`)) { box(ctx, cx * S - HALF - T + 0.02, cx * S - HALF + S + T - 0.02, 0, H, ze - T, ze + T); plinth.push([cx * S - HALF - T + 0.02, cx * S - HALF + S + T - 0.02, ze - T - 0.02, ze + T + 0.02]); }
     }
     ctx.color(K.base); if (k === "tile") { ctx.albedo(null); ctx.roughness(0.4); }
     for (const [x0, x1, z0, z1] of plinth) box(ctx, x0, x1, 0, k === "tile" ? 0.16 : 0.32, z0, z1);
