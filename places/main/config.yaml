@@ -2,10 +2,10 @@ atmosphere:
   clouds:
     enabled: false
   fog:
-    far: 42
+    far: 54
     kind: linear
-    near: 5
-    color: oklch(0.56 0.075 92)
+    near: 12
+    color: oklch(0.52 0.06 90)
   look:
     script: scripts/look-default.js
     params:
@@ -16,7 +16,7 @@ atmosphere:
     enabled: false
   sky:
     kind: color
-    color: oklch(0.1 0.02 85)
+    color: oklch(0.08 0.02 85)
   stars:
     enabled: false
   timeOfDay: 0
@@ -24,10 +24,10 @@ atmosphere:
     direction: 0
     speed: 0
   ambient:
-    light: {color: oklch(0.85 0.075 95), intensity: 0.58}
+    light: {color: oklch(0.85 0.07 95), intensity: 0.55}
   hemisphere:
     groundColor: oklch(0.48 0.06 75)
-    intensity: 0.38
+    intensity: 0.35
     skyColor: oklch(0.88 0.07 95)
 defaultSpawnPoint:
   x: 0

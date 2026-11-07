@@ -1,41 +1,34 @@
-// Level 0 "The Lobby" Look:
-// Authentic Found-Footage / Analog Camcorder & Liminal Atmosphere.
-// Captures the classic Wikidot Level 0 visual hallmarks:
-// - Subtle chromatic aberration and scanlines simulating a wanderer's recording device.
-// - Tactile film/sensor grain bringing depth to flat beige surfaces.
-// - Sickly institutional mono-yellow color grade with fluorescent green-amber undertones.
-// - Peripheral vignette and atmospheric bloom from overhead fluorescent fixtures.
-import { grade, vignette, grain, film, scanlines, chromaticAberration, bloom } from 'builtin/postfx';
+// Clean, cinematic liminal look for Level 0:
+// Recreates the authentic sickly-fluorescent lighting of the original Backrooms photograph.
+// Avoids heavy shader gimmicks (no artificial CRT scanlines or harsh aberration).
+import { grade, vignette, grain, bloom } from 'builtin/postfx';
 
 export function look(ctx) {
   let c = ctx.scene;
 
-  // Subtle analog lens fringing at the periphery
-  c = chromaticAberration(c, 0.0025);
-
-  // Fine CRT / tape raster scanlines and sensor noise
-  c = scanlines(c, 0.02, 720);
-  c = film(c, 0.035);
-  c = grain(c, 0.025);
-
-  // Iconic Wikidot Level 0 mono-yellow grade:
-  // Slight desaturation avoids garish cartoon yellow, while warm/greenish temperature replicates fluorescent lighting.
+  // Natural color grade:
+  // - Slightly muted saturation to capture the drab, clinical monotony of empty office space.
+  // - Subtle warm-green fluorescent temperature shift in midtones.
+  // - Controlled contrast with clean shadow depth.
   c = grade(c, {
-    exposure: 1.04,
-    saturation: 0.86,
-    contrast: 1.08,
-    temperature: 0.055,
-    lift: 0.012,
+    exposure: 1.02,
+    saturation: 0.9,
+    contrast: 1.06,
+    temperature: 0.04,
+    lift: 0.008,
   });
 
-  // Vignette framing to enhance claustrophobia and corridor depth
-  c = vignette(c, ctx.param('vignette', 0.36), {
-    color: [0.02, 0.018, 0.01],
-    roundness: 1.7,
-    feather: 0.48,
+  // Soft natural lens falloff focusing attention forward
+  c = vignette(c, ctx.param('vignette', 0.24), {
+    color: [0.015, 0.015, 0.01],
+    roundness: 1.8,
+    feather: 0.5,
   });
 
-  // Emissive bloom for fluorescent light tubes and smiler grins
+  // Very subtle fine grain to soften flat surfaces and avoid digital banding
+  c = grain(c, 0.02);
+
+  // Soft bloom for overhead fluorescent tubes and reflections
   c = bloom(c);
 
   return c;

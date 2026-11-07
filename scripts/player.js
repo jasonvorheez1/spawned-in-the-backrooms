@@ -107,10 +107,6 @@ function cycleWeapon(ctx) {
   sound(ctx, 'flashlight-switch-click', 0.5, true)
 }
 
-export function drinkExhale(ctx) {
-  sound(ctx, 'deep-breath-relief-exhale', 0.5, true)
-}
-
 function drink(ctx) {
   const s = ctx.self.state
   if (s.almonds <= 0) return
@@ -120,8 +116,7 @@ function drink(ctx) {
   s.hp = Math.min(mh, s.hp + L.almondHp)
   s.sanity = Math.min(ms, s.sanity + L.almondSanity)
   s.drankAt = ctx.now()
-  sound(ctx, 'gulping-water-from-plastic-bottle', 0.8)
-  ctx.after(0.75, 'drinkExhale', {})
+  sound(ctx, 'gulping-water-from-plastic-bottle', 0.65)
 }
 
 function toggleLight(ctx) {
@@ -154,14 +149,14 @@ export function update(ctx, dt) {
   const dx = intent.x - v.x, dz = intent.z - v.z, gap = Math.hypot(dx, dz), k = gap > step ? step / gap : 1
   ctx.self.velocity = { x: v.x + dx * k, y: v.y + ctx.place.gravity.y * dt, z: v.z + dz * k }
 
-  // Sound Design: Damp carpet footsteps while walking or sprinting
+  // Footsteps on carpet: soft, muted, non-intrusive
   if (moving && ctx.self.grounded) {
     w.stepClock = (w.stepClock ?? 0) + dt
-    const interval = sprinting ? 0.32 : 0.46
+    const interval = sprinting ? 0.32 : 0.48
     if (w.stepClock >= interval) {
       w.stepClock = 0
       const clip = sprinting ? 'footstep-damp-carpet-run' : 'footstep-damp-carpet-squelch-soft'
-      sound(ctx, clip, sprinting ? 0.42 : 0.32, true)
+      sound(ctx, clip, sprinting ? 0.28 : 0.2, true)
     }
   } else {
     w.stepClock = 0.22
@@ -186,32 +181,13 @@ function tickStats(ctx, t, moving) {
   if (zone === 'hub') { s.hp = Math.min(mh, s.hp + 3 * t); w.battery = Math.min(L.battery, w.battery + 15 * t) }
   if (s.hp > mh) s.hp = mh
 
-  // Sound Design: Auditory Hallucinations at low sanity (Wikidot Level 0 lore)
-  if (s.sanity < 35 && zone !== 'hub') {
+  // Rare, subtle auditory hallucination only under deep psychological decay
+  if (s.sanity < 25 && zone !== 'hub') {
     w.hallucinationClock = (w.hallucinationClock ?? 0) + t
-    if (w.hallucinationClock >= (w.nextHallucination ?? 14)) {
+    if (w.hallucinationClock >= (w.nextHallucination ?? 45)) {
       w.hallucinationClock = 0
-      w.nextHallucination = 14 + ctx.random() * 14
-      const whisper = ctx.random() < 0.6 ? 'eerie-distant-whisper-hallucination' : 'distant-metal-creak-drone'
-      sound(ctx, whisper, 0.45, true)
-    }
-  }
-
-  // Sound Design: Heavy panting when stamina is near zero
-  if (w.stamina < 15 && moving) {
-    w.breathClock = (w.breathClock ?? 0) + t
-    if (w.breathClock >= 2.4) {
-      w.breathClock = 0
-      sound(ctx, 'heavy-panting-breath', 0.4, true)
-    }
-  }
-
-  // Sound Design: Critical health cardiac heartbeat
-  if (s.hp < mh * 0.3) {
-    w.heartClock = (w.heartClock ?? 0) + t
-    if (w.heartClock >= 1.6) {
-      w.heartClock = 0
-      sound(ctx, 'heartbeat-thump-tense-loop', 0.55, true)
+      w.nextHallucination = 40 + ctx.random() * 30
+      sound(ctx, 'distant-metal-creak-drone', 0.25, true)
     }
   }
 
