@@ -59,12 +59,16 @@ export function spawnRemains(ctx, pos, items, name = "Remains") {
 }
 
 // What a dead smiler or lurker leaves: a body to search, if it was carrying anything.
-export function dropLoot(ctx, pos, name = "Remains", luck = 1) {
+export function rollLoot(ctx, luck = 1) {
   const items = [];
   if (ctx.random() < W.dropChance.almond * luck) items.push("almond");
   if (ctx.random() < W.dropChance.ammo * luck) items.push("ammo");
   if (ctx.random() < W.dropChance.shells * luck) items.push("shells");
   if (ctx.random() < W.dropChance.weapon * luck) items.push("weapon:" + rollWeapon(ctx));
+  return items;
+}
+export function dropLoot(ctx, pos, name = "Remains", luck = 1) {
+  const items = rollLoot(ctx, luck);
   if (items.length) spawnRemains(ctx, pos, items, name);
 }
 

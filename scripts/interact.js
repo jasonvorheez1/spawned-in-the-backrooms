@@ -136,7 +136,7 @@ function press(ctx) {
   if (!f) return
   const it = ctx.getObject(f.id)
   if (!it || it.state?.taken) return
-  if (f.tag === 'npc') { talk(ctx, it); return }
+  if (f.tag === 'npc') { if (it.state?.dead) { if (it.state.items !== undefined) openLoot(ctx, it) } else talk(ctx, it); return }
   if (f.tag === 'container') { openLoot(ctx, it); return }
   const r = takeToken(ctx, tokenOf(f.tag, it))
   if (r.ok) { it.state.taken = true; ctx.destroy(f.id); s.focus = null; m.key = ''; m.focus = null } else if (r.msg) { note(ctx, r.msg); snd(ctx, 'ui-denied-click', 0.35) }

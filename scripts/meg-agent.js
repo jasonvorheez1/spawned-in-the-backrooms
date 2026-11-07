@@ -1,3 +1,4 @@
+import { rollLoot } from "./lib/loot.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
@@ -118,7 +119,15 @@ function aim(me, m, t) {
 export function update(ctx, dt) {
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
   if (s.dead || (s.hp ?? 1) <= 0) {
-    if (!m.down) { m.down = true; stop(me, dt); aim(me, m, null); me.anim.talk = null; me.anim.idle = { clip: "cdn/clip-die.glb", loop: "once", weight: 1, blendIn: 0.1, clampWhenFinished: true }; ctx.after(6, "vanish", {}); }
+    if (!m.down) {
+      m.down = true; stop(me, dt); aim(me, m, null); me.anim.talk = null; me.anim.hit = null; me.anim.wave = null; me.bones = null;
+      // a ragdoll: the body drops where it was hit, in its own fur and jacket, knocked back off its feet
+      const yaw = ((typeof me.rotation === "number" ? me.rotation : me.rotation?.yaw) ?? 0) * Math.PI / 180;
+      me.ragdoll = { impulse: { x: Math.sin(yaw) * 60, y: 25, z: Math.cos(yaw) * 60 }, settleSeconds: 2 };
+      if (s.items === undefined) s.items = ["ammo", ...rollLoot(ctx, 1.4)].join(","); // what they carried: always a box of rounds
+      s.name = (s.name ?? "Agent") + "'s body";
+      ctx.after(90, "vanish", {});
+    }
     return;
   }
   // a flinch every time something takes hp off them
