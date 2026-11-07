@@ -113,9 +113,5 @@ export function geometry(ctx) {
 
   // M.E.G. cameras round the checkpoint
   ctx.color("oklch(0.3 0.01 250)"); ctx.metalness(0.4);
-  for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
-    if (true || !inGamma(cx, cz) || (cx + cz) % 3) continue; // art/level3/camera.glb now const c = cellCenter(cx, cz);
-    box(ctx, c.x - 0.1, c.x + 0.1, H - 0.25, H - 0.12, c.z - 0.18, c.z + 0.18); ctx.color("oklch(0.7 0.2 25)"); ctx.emissive("oklch(0.6 0.22 25)"); box(ctx, c.x - 0.02, c.x + 0.02, H - 0.2, H - 0.17, c.z + 0.18, c.z + 0.2); ctx.emissive(null); ctx.color("oklch(0.3 0.01 250)");
-  }
   ctx.metalness(0); ctx.color(null); ctx.roughness(null);
 }
