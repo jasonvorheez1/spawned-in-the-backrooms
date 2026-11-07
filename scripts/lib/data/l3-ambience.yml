@@ -1,0 +1,10 @@
+# Level 3's sound of the halls: distant machinery and, rarely, voices from the dark sectors (scripts/l3-ambience.js)
+every: 5            # seconds between rolls per player
+clank: { chance: 0.3, near: 14, far: 26, volume: 0.32 }
+voice: { chance: 0.06, reach: 26, volume: 0.22, cooldown: 45 }
+clanks: [distant-metal-machinery-clank-echo, distant-pipe-knock-echo, far-heavy-relay-thunk-echo]
+voices:
+  - /cdn/moodboard-realistic-gritty/sfx-faint-distant-woman-crying-echo.mp3
+  - /cdn/moodboard-realistic-gritty/sfx-faint-indistinct-whispering-echo.mp3
+  - /cdn/voice-faint-distant-lost-man-saying-help.mp3
+  - /cdn/voice-faint-distant-lost-man-saying-is-someone-there.mp3
