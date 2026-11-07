@@ -27,6 +27,7 @@ import { useCompass, COMPASS } from './lib/compass.js'
 import L3I from './lib/data/l3items.yml'
 import CR from './lib/data/craft.yml'
 import AW from './lib/data/almond.yml'
+import { MEAT } from './lib/items.js'
 const sndTurn = {}
 const SND = (n) => { const takes = SOUNDS[n]; if (!takes?.length) return `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`; sndTurn[n] = ((sndTurn[n] ?? -1) + 1 + (takes.length > 2 ? Math.floor(takes.length / 2) : 0)) % takes.length; return takes[sndTurn[n]] }
 const ZAP = `fx
@@ -117,6 +118,12 @@ function takeToken0(ctx, token) {
     const key = AW_KEY[c]; s[key] = (s[key] ?? 0) + 1; gain(ctx, L.xpAlmond); s.pickedAt = now
     if (c !== 'grey') s.notice = { text: `${AW[c].name}`, at: now }
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.75, true)
+    return { ok: true }
+  }
+  if (token.startsWith('meat:')) { // meat: counted per cut in player.state.meat (Samantha trades readings for it); I > Aid eats one
+    const c = token.slice(5); if (!MEAT[c]) return { ok: false, msg: 'Spoiled' }
+    s.meat = { ...(s.meat ?? {}), [c]: (s.meat?.[c] ?? 0) + 1 }; s.pickedAt = now
+    sound(ctx, 'wrapped-meat-pickup-squish', 0.5, true)
     return { ok: true }
   }
   if (token === 'ammo') {
@@ -242,7 +249,7 @@ export function onInput(ctx, input) {
     const sv = ctx.self.state, aw = weaponOf(sv), P = W.power
     if (sv.invOpen || sv.lootOpen) { if (sv.chargeAt) sv.chargeAt = 0 } // a click on a menu is no swing
     else if (ctx.self.state.building) { if (sv.chargeAt) sv.chargeAt = 0 }
-    else if (aw.ranged) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) swing(ctx) }
+    else if (aw.ranged) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack || (aw.auto && input.held.attack)) swing(ctx) }
     else {
       if (input.pressed.attack && !sv.chargeAt && ctx.now() >= (walkOf(ctx).nextSwing ?? 0)) { sv.chargeAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.3, true) }
       if (input.released.attack && sv.chargeAt) {
@@ -328,8 +335,12 @@ function swing(ctx, power = 0) {
       return
     }
     s[loadedKey] -= 1
-    sound(ctx, wp.pellets ? 'shotgun-blast-boom' : 'pistol-gunshot-echo', 0.95)
-    ctx.emit('screenFlash', { color: '#fff1c8', duration: 0.08, intensity: wp.pellets ? 0.45 : 0.25 }, { audience: { player: ctx.self.id } })
+    sound(ctx, wp.sound ?? (wp.pellets ? 'shotgun-blast-boom' : 'pistol-gunshot-echo'), 0.95)
+    ctx.emit('screenFlash', { color: '#fff1c8', duration: 0.06, intensity: wp.pellets ? 0.45 : wp.auto ? 0.12 : 0.25 }, { audience: { player: ctx.self.id } })
+    if (wp.spread) { // full auto: the barrel climbs and the cone opens the longer the trigger stays down; heat bleeds off between bursts
+      w.heat = Math.min(1, (w.heat ?? 0) * Math.exp(-Math.max(0, now - (w.heatAt ?? 0)) / 350) + (wp.heatPer ?? 0.1)); w.heatAt = now
+      ctx.emit('cameraPunch', { direction: { x: (ctx.random() - 0.5) * 0.4, y: 1, z: -0.3 }, intensity: 0.12 + w.heat * 0.18 }, { audience: { player: ctx.self.id } })
+    }
     if (wp.pellets) {
       ctx.emit('screenShake', { intensity: 0.35, duration: 0.2 }, { audience: { player: ctx.self.id } })
       ctx.after(0.55, 'pumpRack', {})
@@ -339,9 +350,11 @@ function swing(ctx, power = 0) {
   w.nextSwing = now + wp.cooldown * 1000 * (power ? P.cooldown : 1) * derived(s).swing
   s.swingHeavy = Math.round(power * 100) / 100
   s.swingAt = now
-  if (s.equipped !== 'fists') s['cnd_' + s.equipped] = Math.max(0, (s['cnd_' + s.equipped] ?? 100) - (wp.ranged ? 0.3 : 0.6) * derived(s).wear) // weapons wear with use; Repair slows it
+  if (s.equipped !== 'fists') s['cnd_' + s.equipped] = Math.max(0, (s['cnd_' + s.equipped] ?? 100) - (wp.ranged ? 0.3 : 0.6) * (wp.wear ?? 1) * derived(s).wear) // weapons wear with use; Repair slows it
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
-  const cone = (s.ads && wp.adsCone) || wp.cone || (wp.ranged ? 0.985 : 0.4), radius = wp.ranged ? wp.range : wp.reach + 0.6 + power * P.reach
+  let cone = (s.ads && wp.adsCone) || wp.cone || (wp.ranged ? 0.985 : 0.4); if (wp.spread) cone = Math.cos(Math.acos(cone) + (w.heat ?? 0) * wp.spread * (s.ads ? 0.6 : 1))
+  if (wp.auto) tracer(ctx, p, f, wp.range)
+  const radius = wp.ranged ? wp.range : wp.reach + 0.6 + power * P.reach
   const found = []
   for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius }), ...ctx.query({ tags: ['hound'], radius }), ...ctx.query({ tags: ['stealer'], radius }), ...ctx.query({ tags: ['moths'], radius }), ...ctx.query({ tags: ['npc'], radius })]) {
     if (m.state?.dead) continue
@@ -353,7 +366,7 @@ function swing(ctx, power = 0) {
     }
     found.push({ m, d })
   }
-  if (!wp.ranged) sound(ctx, 'pipe-whoosh-swing', power ? 0.9 : 0.55)
+  if (!wp.ranged) sound(ctx, 'pipe-whoosh-swing', wp.quiet ? 0.3 : power ? 0.9 : 0.55)
   if (!found.length) { // nothing alive in reach: the swing or shot lands on the world (walls, furniture, crates, what was built)
     let pc = ctx.self.camera?.rotation?.pitch ?? 0; if (Math.abs(pc) > 1.6) pc = pc * Math.PI / 180
     const sb = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100)
@@ -361,6 +374,11 @@ function swing(ctx, power = 0) {
     return
   }
   const dv = derived(s), crit = ctx.random() < dv.crit
+  if (wp.sneak && !wp.ranged) { found.sort((x, y) => x.d - y.d); if (unaware(ctx, s, found[0].m)) { // a blade in the back: x3, and the halls don't hear it
+    const m = found[0].m, dmg = Math.round((wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100) * wp.sneak)
+    ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: `SNEAK CRIT x${wp.sneak}`, color: '#ff3a3a', size: 1.3 })
+    ctx.emit('hitstop', { duration: 0.04 }, { audience: { player: ctx.self.id } }); s.lastSneak = { id: m.id, dmg, at: now }
+    sound(ctx, 'knife-stab-flesh-quiet', 0.6, true); hitTarget(ctx, s, m, dmg, f, false); return } }
   const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * dmgMul(s, wp) * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100) * (crit ? 1.75 : 1) * (!wp.ranged && (s.firesaltUntil ?? 0) > ctx.now() ? L3I.firesalt.damage : 1)
   if (crit) ctx.emit('damageNumber', { position: { x: found[0].m.feetPosition.x, y: found[0].m.feetPosition.y + 2, z: found[0].m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
   if (wp.pellets) {
@@ -369,8 +387,28 @@ function swing(ctx, power = 0) {
     return
   }
   found.sort((x, y) => x.d - y.d)
-  hitTarget(ctx, s, found[0].m, Math.round(base), f, true, power)
+  hitTarget(ctx, s, found[0].m, Math.round(base), f, !wp.quiet, power)
   if (power) { const m = found[0].m, d = found[0].d || 1; ctx.emit('impulse', { target: m.id, impulse: { x: f.x * 260 * power, y: 60 * power, z: f.z * 260 * power } }) } // a heavy shoves them back
+}
+
+// not onto you: no grudge, not hunting you, and you are behind it or crouched in the dark
+function unaware(ctx, s, m) {
+  const st = m.state ?? {}, me = ctx.self.id
+  if (st.angry?.[me] || st.fresh?.[me] || st.target === me || st.hunting || st.chase || st.aggro || st.alert) return false
+  if (s.crouch) return true
+  const r = ctx.getObject(m.id)?.rotation, p = ctx.self.feetPosition
+  let yaw = typeof r === 'number' ? r : r && r.yaw != null ? r.yaw : r && r.w != null ? Math.atan2(2 * (r.w * r.y + r.x * r.z), 1 - 2 * (r.y * r.y + r.x * r.x)) * 180 / Math.PI : null
+  if (yaw == null) return false
+  const a = yaw * Math.PI / 180, fx = -Math.sin(a), fz = -Math.cos(a), dx = p.x - m.feetPosition.x, dz = p.z - m.feetPosition.z, d = Math.hypot(dx, dz) || 1
+  return (fx * dx + fz * dz) / d < 0.1 // outside its forward half
+}
+// a tracer: one hot streak flying down the look from the muzzle
+const TRACER = `fx
+pop t burst=1 life=.09 v=<%dx|0,%dy|0,%dz|-1>*200 size=.035 col=hdr(6,4,1.6) a=1>0 sz=$size r=sprite(ember,add,velocity,.08)`
+function tracer(ctx, p, f, range) {
+  let pc = ctx.self.camera?.rotation?.pitch ?? 0; if (Math.abs(pc) > 1.6) pc = pc * Math.PI / 180
+  const c = Math.cos(pc), d = { dx: f.x * c, dy: Math.sin(pc), dz: f.z * c }
+  ctx.emit('fx', { position: { x: p.x + f.x * 0.7, y: p.y + 1.42, z: p.z + f.z * 0.7 }, script: TRACER, params: d })
 }
 
 // ---- reloading: a magazine gun swaps its magazine; a shotgun loads one shell at a time and can be fired mid-reload.
@@ -436,6 +474,9 @@ function invAction(ctx, d) {
   const s = ctx.self.state
   if (d.k === 'close') { s.invOpen = false; return }
   if (d.k === 'drink') { drink(ctx, d.c); return }
+  if (d.k === 'eat') { const c = d.c, n = s.meat?.[c] ?? 0; if (!MEAT[c] || n <= 0) return
+    s.meat = { ...s.meat, [c]: n - 1 }; s.hp = Math.min(maxHp(s.level, s), (s.hp ?? 0) + MEAT[c].hp); s.hunger = Math.min(100, (s.hunger ?? 100) + MEAT[c].food)
+    s.notice = { text: `You eat the ${MEAT[c].name.toLowerCase()} · +${MEAT[c].hp} HP`, at: ctx.now() }; sound(ctx, 'eating-chewing-food', 0.6, true); return }
   if (d.k === 'splash') { s.invOpen = false; splash(ctx); return }
   if (d.k === 'firesalt') { // rub a pinch on the blade or head: melee hits burn harder for a while
     if ((s.firesalt ?? 0) <= 0 || W[s.equipped]?.ranged || s.equipped === 'fists') { s.notice = { text: 'Hold a melee weapon to rub firesalt on it', at: ctx.now() }; return }
