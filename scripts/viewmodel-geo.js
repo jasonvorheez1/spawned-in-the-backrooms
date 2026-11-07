@@ -51,7 +51,7 @@ export function geometry(ctx) {
 
   // ---- four fingers curled round the grip, each a three-jointed arc with swelling knuckles and a rounded tip
   for (let k = 0; k < 4; k++) {
-    const y = 0.034 - k * 0.0225, r = 0.0118 - k * 0.0007
+    const y = 0.034 - k * 0.0225, r = (0.0118 - k * 0.0007) * (sp ? 1.3 : 1)
     const R = 0.034 - k * 0.0009, sweep = 218 - k * 9 // the little finger curls a touch less and tighter
     const pts = [], rad = []
     const steps = 7
@@ -60,11 +60,11 @@ export function geometry(ctx) {
       pts.push([R * Math.cos(a) + 0.01 * (1 - t), y + Math.sin(t * Math.PI) * 0.0012, -R * Math.sin(a) + 0.02 * (1 - t)])
       // swell at the knuckle (t~0.12), the first joint (t~0.4) and the second (t~0.7); narrow to the tip
       const bump = 0.1 * Math.exp(-Math.pow((t - 0.12) / 0.1, 2)) + 0.06 * Math.exp(-Math.pow((t - 0.42) / 0.07, 2)) + 0.05 * Math.exp(-Math.pow((t - 0.72) / 0.07, 2))
-      rad.push(r * (1.02 + bump) * (1 - 0.34 * t * t))
+      rad.push(r * (1.02 + (sp ? bump * 0.25 : bump)) * (1 - (sp ? 0.12 : 0.34) * t * t)) // a paw's fingers stay round to the tip
     }
     rod(ctx, pts, rad, ctx.lod <= 2 ? 10 : 6)
     ctx.color(TIP) // a nail, or on a critter a soft toe bean, at each tip
-    const e = pts[steps]; ball(ctx, [e[0] * 1.03, e[1] + r * 0.2, e[2] * 1.03], r * (sp ? 0.8 : 0.62), 6, sp ? [1, 0.8, 1] : [1, 0.5, 1])
+    const e = pts[steps]; if (sp) { const q = pts[steps - 1]; ball(ctx, [e[0] * 0.92 + q[0] * 0.08, e[1], e[2] * 0.92 + q[2] * 0.08], r * 0.55, 6, [1, 0.7, 1]) } else ball(ctx, [e[0] * 1.03, e[1] + r * 0.2, e[2] * 1.03], r * 0.62, 6, [1, 0.5, 1])
     ctx.color(SKIN)
   }
 

@@ -448,28 +448,22 @@ export function geometry(ctx) {
       return [r, r];
     }, [0, 1, 0], null, hi ? 12 : 8);
 
-    // Rolled wrist cuff
-    ctx.color(sp.dark || sp.socks || FUR);
-    ell([s * 0.548, 0.965, 0], [0.026, 0.04, 0.04], null, { seg: hi ? 14 : 9 });
-
-    // Cute paddle mitten paw
-    const pawCenter = [s * 0.63, 0.965, 0];
-    ell(pawCenter, [0.098, 0.052, 0.078], null, { seg: hi ? 18 : 10 });
-
-    // Thumb nub
-    ell([s * 0.588, 0.96, -0.07], [0.032, 0.024, 0.036], null, { seg: hi ? 12 : 8 });
-
-    // Cute paw bean pads (toe beans!) on underside (-Y)
+    // the paw: the arm's own fur (no sock or glove colour), a soft palm, four short rounded fingers and a thumb
+    const PAWC = sp.dark || FUR;
+    ctx.color(PAWC);
+    ell([s * 0.548, 0.965, 0], [0.03, 0.034, 0.034], null, { seg: hi ? 14 : 9 }); // wrist, flowing into the palm
+    ell([s * 0.596, 0.962, 0], [0.05, 0.04, 0.046], null, { seg: hi ? 16 : 10 }); // palm
+    for (let f = 0; f < 4; f++) { // fingers fan a little, outer ones shorter
+      const z = -0.03 + f * 0.02, len = f === 0 || f === 3 ? 0.03 : 0.036;
+      ell([s * (0.636 + len * 0.5), 0.958 - Math.abs(z) * 0.1, z * 1.1], [len * 0.62, 0.02, 0.0125], null, { seg: hi ? 10 : 7 });
+    }
+    ell([s * 0.59, 0.958, -0.05], [0.026, 0.019, 0.017], null, { seg: hi ? 10 : 7 }); // thumb, angled forward
+    // toe beans on the underside (-Y): a palm pad and one bean under each fingertip
     if (mid) {
       const beanCol = sp.nose === "#2a1c18" || sp.dark ? "#e0b094" : "#ff9fb4";
       ctx.color(beanCol);
-      // Main heart/oval palm bean
-      ell([s * 0.625, 0.942, 0.002], [0.028, 0.006, 0.026], null, { seg: 10 });
-      // 3 toe bean dots
-      for (let b = 0; b < 3; b++) {
-        const ang = (b - 1) * 0.45;
-        ell([s * (0.675 + 0.01 * Math.cos(ang)), 0.944, Math.sin(ang) * 0.024], [0.01, 0.005, 0.01], null, { seg: 8 });
-      }
+      ell([s * 0.6, 0.926, 0.002], [0.026, 0.006, 0.026], null, { seg: 10 });
+      for (let f = 0; f < 4; f++) { const z = -0.03 + f * 0.02, len = f === 0 || f === 3 ? 0.03 : 0.036; ell([s * (0.645 + len * 0.7), 0.94, z * 1.1], [0.009, 0.004, 0.008], null, { seg: 8 }); }
     }
   }
 
