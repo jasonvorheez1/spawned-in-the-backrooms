@@ -16,8 +16,12 @@ function tuneLamps(ctx) {
     const z = zoneOf(k.cx, k.cz), h = hash(k.cx, k.cz, 911);
     if (z !== "gamma" && h < 0.12) { o.light = null; o.material = { ...o.material, emissive: "oklch(0.2 0.01 60)", emissiveIntensity: 0.2 }; }
     else if (z !== "gamma" && h < 0.3) { o.light = null; o.fx = { script: FLK }; }
+    else if (o.light) { o.light = { ...o.light, intensity: 3 }; o.material = { ...o.material, emissiveIntensity: 1.6 }; }
     if (hash(k.cx, k.cz, 913) < 0.18 && hum++ < 26) o.audio = { clip: GRIT("fluorescent-light-buzz-loop"), gain: 0.12, loop: true, spatial: true, maxDistance: 9 };
     o.state = { ...(o.state ?? {}), t: 1 };
+  }
+  for (const r of ctx.query({ tags: ["live-box"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { // an arc's flash once whited out the hall
+    const o = ctx.getObject(r.id), f = o?.fx?.script; if (f && f.includes("*18,6)")) o.fx = { ...o.fx, script: f.replace("*18,6)", "*6,5)") };
   }
 }
 export function update(ctx) {
