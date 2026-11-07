@@ -1,44 +1,66 @@
 // The critter creator (C): tabs for body, face, clothes and saved outfits. Every button sends one 'dress' action.
 import C from './lib/data/critter.yml'
 const NAMES = { m: 'boy', f: 'girl', none: 'none', tee: 't-shirt', tank: 'tank top', longsleeve: 'long sleeve', hoodie: 'hoodie', sweater: 'sweater', jacket: 'jacket', pajamas: 'pyjama top', apron: 'apron', dress: 'dress', pants: 'pants', shorts: 'shorts', pjpants: 'pyjama pants', overalls: 'overalls', skirt: 'skirt', longskirt: 'long skirt', sneakers: 'sneakers', boots: 'boots', slippers: 'slippers', bow: 'bow', flower: 'flower', cap: 'cap', beanie: 'beanie', tophat: 'top hat', crown: 'crown', headphones: 'headphones', partyhat: 'party hat', tuft: 'hair tuft', glasses: 'glasses', shades: 'sunglasses', scarf: 'scarf', bowtie: 'bow tie', bell: 'bell collar', cape: 'cape', round: 'round', tall: 'tall', wide: 'wide', freckles: 'freckles', stripes: 'stripes', patch: 'eye patch', heart: 'heart' }
-const TABS = [['body', 'BODY'], ['face', 'FACE'], ['clothes', 'CLOTHES'], ['outfits', 'OUTFITS']]
+const TABS = [['body', 'BODY', '01'], ['face', 'FACE', '02'], ['clothes', 'CLOTHES', '03'], ['outfits', 'OUTFITS', '04']]
 const CSS = `<style>
 @media (max-width:700px){#hud{visibility:hidden}}
-#cc{position:absolute;left:20px;top:20px;bottom:20px;width:min(440px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 20px)));display:flex;flex-direction:column;background:linear-gradient(180deg,oklch(0.2 0.03 80 / .96),oklch(0.16 0.025 75 / .96));border:2px solid #ffb347;box-shadow:0 0 0 1px #000,6px 6px 0 #000a,0 0 24px rgba(255,170,40,.18);color:#ffcf87;pointer-events:auto;font-family:ui-monospace,Menlo,Consolas,monospace}
-#cc .hd{padding:12px 14px 8px;border-bottom:1px solid #ffb34755;display:flex;align-items:center;gap:8px}
-#cc h2{font-size:19px;margin:0;letter-spacing:.14em;color:#ffb347;text-shadow:0 0 6px rgba(255,170,40,.6);flex:1}
-#cc .tabs{display:flex;border-bottom:1px solid #ffb34755}
-#cc .tabs button{flex:1;border:0;border-right:1px solid #ffb34733;background:none;padding:9px 0;font-size:12px;letter-spacing:.12em}
-#cc .tabs button.on{background:#ffb347;color:#16140e;text-shadow:none}
-#cc .bd{flex:1;overflow:auto;padding:4px 14px 12px}
-#cc .sec{font-size:10.5px;letter-spacing:.18em;color:#ffb347;opacity:.8;margin:14px 0 6px;display:flex;justify-content:space-between}
-#cc .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:5px}
-#cc button{font:inherit;font-size:12.5px;color:#ffcf87;background:oklch(0.26 0.03 78);border:1px solid #ffb34755;padding:7px 6px;cursor:pointer;text-transform:lowercase}
-#cc button:hover{border-color:#ffb347;background:oklch(0.31 0.04 78)}
-#cc button.on{background:#ffb347;color:#16140e;border-color:#fff3d6;box-shadow:0 0 8px rgba(255,170,40,.5)}
-#cc .sws{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-#cc button.sw{width:22px;height:22px;padding:0;border:2px solid #0008;box-shadow:none}
-#cc button.sw.on{border:2px solid #fff;outline:2px solid #ffb347}
-#cc .slot{border:1px solid #ffb34730;padding:6px 8px 8px;margin-top:8px;background:oklch(0.19 0.02 78 / .6)}
-#cc .ft{display:flex;gap:6px;padding:10px 14px;border-top:1px solid #ffb34755;flex-wrap:wrap}
-#cc .ft button{flex:1;min-width:70px;letter-spacing:.08em}
-#cc .ft .go{background:#ffb347;color:#16140e}
-#cc .hint{font-size:11px;opacity:.55;margin-top:12px;line-height:1.4}
+@keyframes ccIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+@keyframes ccScan{from{background-position:0 0}to{background-position:0 6px}}
+#cc{--a:#ffb347;--a2:#ffcf87;--ink:#16140e;--bg:oklch(0.17 0.025 75 / .97);position:absolute;left:24px;top:24px;bottom:24px;width:min(560px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px)));display:flex;flex-direction:column;background:var(--bg);border:2px solid var(--a);box-shadow:6px 6px 0 #000a,0 0 24px rgba(255,170,40,.18) inset;color:var(--a2);font-family:'Geist Pixel Square',ui-monospace,monospace;animation:ccIn .18s ease-out;overflow:hidden}
+#cc:before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 3px,#0003 3px 6px);animation:ccScan 1.2s linear infinite;opacity:.35}
+#cc .hd{display:flex;align-items:stretch;border-bottom:2px solid var(--a)}
+#cc .hd .ttl{flex:1;padding:12px 16px 10px}
+#cc h2{font-size:22px;margin:0;letter-spacing:.18em;color:var(--a);text-shadow:0 0 8px rgba(255,170,40,.55)}
+#cc .sub{font-size:10.5px;letter-spacing:.2em;opacity:.6;margin-top:3px;text-transform:uppercase}
+#cc .hd .x{width:52px;border:0;border-left:2px solid var(--a);background:none;font-size:18px}
+#cc .main{flex:1;display:flex;min-height:0}
+#cc .tabs{display:flex;flex-direction:column;width:92px;border-right:2px solid var(--a)}
+#cc .tabs button{border:0;border-bottom:1px solid #ffb34740;background:none;padding:14px 0;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;text-align:center}
+#cc .tabs button .n{display:block;font-size:20px;line-height:1;margin-bottom:4px;opacity:.75}
+#cc .tabs button.on{background:var(--a);color:var(--ink);text-shadow:none}
+#cc .tabs button.on .n{opacity:1}
+#cc .bd{flex:1;overflow:auto;padding:6px 16px 14px;scrollbar-color:var(--a) transparent}
+#cc .sec{font-size:10.5px;letter-spacing:.2em;color:var(--a);margin:16px 0 7px;display:flex;justify-content:space-between;align-items:center;gap:8px;text-transform:uppercase}
+#cc .sec:after{content:'';flex:1;height:1px;background:#ffb34755;order:1}
+#cc .sec span:last-child{order:2;color:var(--a2);opacity:.85;letter-spacing:.08em;text-transform:lowercase}
+#cc .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:5px}
+#cc button{font:inherit;font-size:12.5px;color:var(--a2);background:oklch(0.24 0.03 78);border:1px solid #ffb34766;padding:8px 6px;cursor:pointer;text-transform:lowercase;transition:background .1s,transform .08s}
+#cc button:hover{border-color:var(--a);background:oklch(0.3 0.045 78)}
+#cc button:active{transform:translateY(1px)}
+#cc button.on{background:var(--a);color:var(--ink);border-color:#fff3d6;box-shadow:0 0 10px rgba(255,170,40,.45)}
+#cc .sws{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+#cc button.sw{width:26px;height:26px;padding:0;border:2px solid #000a;box-shadow:none}
+#cc button.sw.on{border:2px solid #fff;outline:2px solid var(--a);outline-offset:1px}
+#cc .slot{border:1px solid #ffb34740;border-left:3px solid var(--a);padding:6px 10px 10px;margin-top:10px;background:oklch(0.2 0.02 78 / .7)}
+#cc .ft{display:flex;gap:6px;padding:10px 14px;border-top:2px solid var(--a);flex-wrap:wrap;background:oklch(0.14 0.02 75)}
+#cc .ft button{flex:1;min-width:76px;letter-spacing:.1em;text-transform:uppercase;font-size:11.5px}
+#cc .ft .go{background:var(--a);color:var(--ink);font-weight:bold}
+#cc .hint{font-size:11px;opacity:.55;margin-top:14px;line-height:1.5;border-top:1px dashed #ffb34740;padding-top:8px}
 #cc .fit{display:flex;gap:6px;align-items:center;margin-top:8px}
-#cc .fit .nm{flex:1;font-size:12px;opacity:.85}
-#cc .sl{display:flex;align-items:center;gap:6px;margin-top:5px}
-#cc .sl .nm{width:52px;font-size:12px}
-#cc .sl input{flex:1;accent-color:#ffb347}
-#cc .sl button{width:26px;padding:3px 0}
-#cc .sl .v{width:38px;text-align:right;font-size:11px;opacity:.75}
+#cc .fit .nm{flex:1;font-size:12px;opacity:.9}
+#cc .sl{display:grid;grid-template-columns:62px 28px 1fr 28px 44px;align-items:center;gap:6px;margin-top:6px}
+#cc .sl .nm{font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+#cc .sl .bar{position:relative;height:10px;border:1px solid #ffb34780;background:#0006}
+#cc .sl .bar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#c97a1e,var(--a))}
+#cc .sl .bar b{position:absolute;top:-3px;bottom:-3px;width:2px;background:#fff3d6;left:var(--mid)}
+#cc .sl button{width:28px;padding:3px 0}
+#cc .sl .v{text-align:right;font-size:11.5px}
+#cc .big .sl{grid-template-columns:62px 32px 1fr 32px 48px}
+#cc .big .sl .bar{height:14px}
 </style>`
 const act = (k, v = '') => `sendAction('dress',{k:'${k}',v:'${v}'})`
 const tile = (k, v, on, label) => `<button class="${on ? 'on' : ''}" onclick="${act(k, v)}">${label}</button>`
 const sw = (k, v, on) => `<button class="sw ${on ? 'on' : ''}" style="background:${v || 'conic-gradient(#f2a65a,#9a6440,#f4efe9,#6f7d93,#f2a65a)'}" title="${v || 'natural'}" onclick="${act(k, v)}"></button>`
+function sliderRows(rows, l) {
+  return rows.map(([k, nm, lo, hi]) => { const v = Number(SL_LOOK[k]) || 1, pct = Math.round((v - lo) / (hi - lo) * 100), mid = Math.round((1 - lo) / (hi - lo) * 100)
+    return `<div class="sl"><span class="nm">${nm}</span><button onclick="${act('sz', k + ':-')}">−</button><div class="bar" style="--mid:${mid}%"><i style="width:${pct}%"></i><b></b></div><button onclick="${act('sz', k + ':+')}">+</button><span class="v">${Math.round(v * 100)}%</span></div>` }).join('')
+}
+let SL_LOOK = {}
 export function wardrobe(ctx, player) {
   const st = player.state
   if (!st.wardrobeOpen) return ''
   const l = { ...C.default, ...(st.look || {}) }
+  SL_LOOK = l
   const tab = st.wrTab || 'body'
   const grid = (k, list, names = NAMES) => `<div class="grid">${list.map((v) => tile(k, v, l[k] === v, names[v] || v)).join('')}</div>`
   const sws = (k, list) => `<div class="sws">${list.map((v) => sw(k, v, l[k] === v)).join('')}</div>`
@@ -47,9 +69,10 @@ export function wardrobe(ctx, player) {
   if (tab === 'body') body = `
     <div class="sec"><span>ANIMAL</span><span>${l.species}</span></div>${grid('species', C.species)}
     <div class="sec"><span>BODY</span></div>${grid('sex', C.sex)}
+    <div class="sec"><span>STATURE</span><span>${Math.round(170 * (Number(l.heightS) || 1))} cm</span></div><div class="big">${sliderRows(C.sliders.filter((r) => ['heightS', 'buildS'].includes(r[0])))}</div>
     <div class="sec"><span>FUR</span></div>${sws('fur', C.fur)}
     <div class="sec"><span>MARKINGS</span></div>${grid('marks', C.marks)}
-    <div class="sec"><span>SHAPE</span><span>${l.model || l.modelUrl ? 'critter only' : ''}</span></div>${C.sliders.map(([k, nm, lo, hi]) => { const v = Number(l[k]) || 1; return `<div class="sl"><span class="nm">${nm}</span><button onclick="${act('sz', k + ':-')}">−</button><input type="range" min="${lo}" max="${hi}" step="${C.sliderStep}" value="${v}" onchange="sendAction('dress',{k:'sz',v:'${k}:'+this.value})"><button onclick="${act('sz', k + ':+')}">+</button><span class="v">${Math.round(v * 100)}%</span></div>` }).join('')}
+    <div class="sec"><span>PROPORTIONS</span><span>${l.model || l.modelUrl ? 'critter only' : ''}</span></div>${sliderRows(C.sliders.filter((r) => !['heightS', 'buildS'].includes(r[0])))}
     <div class="sec"><span>IMPORTED MODELS</span><span>${l.modelUrl ? 'your upload' : l.model ? C.models[l.model]?.name || '' : 'critter'}</span></div><div class="grid">${tile('model', '', !l.model && !l.modelUrl, 'critter')}${Object.entries(C.models || {}).map(([k, m]) => tile('model', k, l.model === k, m.name)).join('')}</div>
     <div class="sl"><button style="flex:1;width:auto;padding:6px 0" onclick="this.nextElementSibling.click()">⬆ upload .plymodel</button><input type="file" accept=".plymodel" style="display:none" onchange="plyUpload(this)"></div><div id="ply-st" style="font-size:11px;opacity:.75;margin-top:4px">${l.modelUrl ? 'wearing your upload' : 'any tower unite .plymodel, worn as your body'}</div>`
   else if (tab === 'face') body = `
@@ -70,9 +93,9 @@ export function wardrobe(ctx, player) {
     }).join('') + `<div class="hint">saving keeps your whole look: animal, colours, face and clothes. wear it again in one click.</div>`
   }
   return `${CSS}<div id="cc" data-modal>
-  <div class="hd"><h2>CRITTER CREATOR</h2><button onclick="${act('close')}">✕</button></div>
-  <div class="tabs">${TABS.map(([k, n]) => `<button class="${tab === k ? 'on' : ''}" onclick="${act('tab', k)}">${n}</button>`).join('')}</div>
-  <div class="bd">${body}</div>
+  <div class="hd"><div class="ttl"><h2>CRITTER CREATOR</h2><div class="sub">${l.species} · ${NAMES[l.sex] || l.sex} · ${Math.round(170 * (Number(l.heightS) || 1))} cm · M.E.G. intake form 7-B</div></div><button class="x" onclick="${act('close')}">✕</button></div>
+  <div class="main"><div class="tabs">${TABS.map(([k, n, i]) => `<button class="${tab === k ? 'on' : ''}" onclick="${act('tab', k)}"><span class="n">${i}</span>${n}</button>`).join('')}</div>
+  <div class="bd">${body}</div></div>
   <div class="ft"><button onclick="${act('spin', -45)}">◀ turn</button><button onclick="${act('spin', 45)}">turn ▶</button><button onclick="${act('random', 'all')}">randomize</button><button onclick="${act('reset')}">reset</button><button class="go" onclick="${act('close')}">done</button></div>
 </div>`
 }
