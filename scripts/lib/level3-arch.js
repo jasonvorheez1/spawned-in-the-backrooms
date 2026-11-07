@@ -3,15 +3,13 @@
 // The profile keeps >= 0.47 m half width from 0.35 m up, so a 0.35 m capsule walks it; the floor channel is the flat strip between.
 import { TW, TH, cellCenter } from "./level3.js";
 import { face } from "./shapes.js";
-export function profile(segs, inset = 0) { // [u, y] from the floor on one side, over the crown, down to the floor on the other
-  const c = TH / 2, r = TH / 2 - inset, hw = TW - inset, out = [];
-  for (let i = 0; i <= segs; i++) {
-    const t = -Math.PI / 2 + (i / segs) * Math.PI, s = Math.sin(t), y = c + r * s;            // y climbs then the far side mirrors
-    const u = hw * Math.pow(Math.max(0, 1 - Math.pow(Math.abs(s), 4)), 0.25);
-    out.push([u, Math.max(inset * 0.5, y)]);
+export function profile(segs, inset = 0) { // [u, y]: up the right wall from the floor channel, over the crown, down the left
+  const c = TH / 2, r = TH / 2 - inset, hw = TW - inset, d = 0.2, n = segs * 2, out = [];
+  for (let i = 0; i <= n; i++) {
+    const f = -Math.PI / 2 + d + (i / n) * (2 * Math.PI - 2 * d), s = Math.sin(f);
+    out.push([Math.sign(Math.cos(f)) * hw * Math.pow(Math.max(0, 1 - s ** 4), 0.25), Math.max(0.005, c + r * s)]);
   }
-  return [...out.map(([u, y]) => [-u, y]), ...out.slice(0, -1).reverse().map(([u, y]) => [u, y])].map((p, i, a) => p) // left side bottom→top
-    .slice(0, segs + 1).concat(out.slice(0, segs).reverse().map(([u, y]) => [u, y]));
+  return out;
 }
 export function vault(ctx, cx, cz, span, inset = 0, segs = 8, a0 = span.a0, a1 = span.a1, ends = true) {
   const c = cellCenter(cx, cz), across = span.ax === "x" ? c.z : c.x, hw = TW - inset;
