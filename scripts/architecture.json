@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "basedOnSpecVersion": 15,
+  "updatedAt": "2026-11-07T00:31:24.750Z",
+  "summary": "The Backrooms: Level 0 is a multiplayer first-person survival game in one procedurally laid out maze, with a safe hub, smilers, almond-water pickups, sanity and leveling. The world config wires the player, camera, HUD, lighting and arrival behavior; the main place holds the authored scene and its place referee, while shared maze/data helpers keep geometry and gameplay aligned.",
+  "scriptPaths": [],
+  "places": [
+    "places/main (default place, 3D; foggy Level 0 maze with terrain off, spawn at the hub) - its 3x3 cell files place the large Level 0 mesh, hub props, and lights; x0z0 also contains the smiler-pack behavior."
+  ],
+  "roots": [
+    "world.config.yaml - multiplayer game entry: selects main, camera/player templates, lighting, arrival behavior, controls, HUD and nametags.",
+    "templates/player.js - player body template; runs humanoid-locomotion.js before player.js, with character physics and player tag.",
+    "templates/camera.js - custom first-person camera template; scripts/camera.js implements its look-oriented yaw/pitch rig.",
+    "places/main/config.yaml - 3D place setup: fog and ambient lighting, default spawn at origin, gravity -24; terrain is off.",
+    "places/main/cells/x0z0.scene - main authored scene: hub/cot/lamp/table/sign, level0 mesh, almond props, light group and smiler-pack.",
+    "places/main/cells/x-1z-1.scene, x-1z0.scene, x-1z1.scene, x0z-1.scene, x0z1.scene, x1z-1.scene, x1z0.scene, x1z1.scene - surrounding light placements completing the cell-partitioned place.",
+    "sim.js - world-level cadence/tick entry, currently an empty referee; places/main/sim.js has the active Level 0 replenishment logic."
+  ],
+  "shared": [
+    "scripts/lib/maze.js - canonical seeded 36x36, 4m-cell layout: zones, cell/world coordinates, walls, arches, pits, pillars and exit; used by level mesh, player and place sim, and imported by smilers.",
+    "scripts/lib/data/level0.yml - central Level 0 tuning for maze dimensions, survival stats, XP, combat and spawn counts/timers; consumed by maze, player, smilers and place sim.",
+    "scripts/lib/data/player.yml and scripts/lib/data/camera.yml - shared humanoid movement/turn defaults and first-person eye height, consumed by locomotion and camera scripts.",
+    "scripts/lib/shapes.js - face/tube/sphere mesh helpers reused by scripted creature and prop geometry."
+  ],
+  "notableExports": [
+    "places/main/sim.js - exports cadence, tick",
+    "scripts/lib/maze.js - exports N, hash, inHub, zoneOf, cellCenter, cellAt, zoneAt, wallX, wallZ, isArchWall, hasPit, hasPillar (also hasLight, EXIT, ZONE_NAMES)",
+    "scripts/player.js - exports maxHp, maxSan, xpNeed, onInput, update",
+    "scripts/smilers.js - exports update",
+    "scripts/humanoid-locomotion.js - exports sit, onInput, update",
+    "scripts/camera.js - exports finiteNumber, update; scripts/level0-geo.js - exports geometry",
+    "scripts/almond-geo.js - exports geometry, collider; scripts/smiler-geo.js - exports geometry, collider",
+    "scripts/ui.js and ui/nametag.js - each exports default renderer; scripts/lighting.js exports lighting; scripts/arrival.js exports onArrive, onLeave"
+  ],
+  "ownership": [
+    "scripts/player.js - each player body's state owns level, XP, HP, sanity, stamina, battery, almond count, visited-cell/zone tracking, kills and transient HUD timestamps; its session holds local movement, flashlight and cooldown scratch.",
+    "scripts/smilers.js - each smiler's state carries HP/dead; per-smiler session memory tracks prey, path/stalk and bite timing; the manager handles movement and destroys dead smilers.",
+    "places/main/sim.js - place.state owns almond/smiler seeded flags and next-refill times; it queries live tagged entities and spawns replacements.",
+    "scripts/camera.js - camera state owns yaw and pitch; templates/camera.js initializes both to zero.",
+    "scripts/humanoid-locomotion.js - body state provides shared turn/seat fields; its gait smoothing, clip and measured-pace scratch is namespaced in body session.",
+    "scripts/ui.js - owns no gameplay state; renders from player.state and world input labels."
+  ],
+  "flows": [
+    "world.config.yaml inputs (moveX/moveZ, jump, sprint, attack, drink, flashlight) → templates/player.js behavior chain → humanoid-locomotion.js turns/animates the body, then scripts/player.js handles movement and survival/combat.",
+    "world.config.yaml camera template → scripts/camera.js consumes look orientation and writes camera yaw/pitch; player input uses aim yaw axes to set its movement direction.",
+    "scripts/player.js changes player.state survival/level/zone values → scripts/ui.js reads player.state (and world inputs) to render the HUD.",
+    "scripts/player.js attack → tagged smiler.state.hp/dead; scripts/smilers.js reads those fields and removes dead entities with effects.",
+    "scripts/smilers.js selects players from ctx.place.players and writes prey HP/sanity → player.state read by scripts/ui.js; per-player damage effects are emitted to that player's audience.",
+    "places/main/sim.js (cadence 1s) queries almond/smiler tags and reads scripts/lib/data/level0.yml → spawns scripts/almond-geo.js and scripts/smiler-geo.js entities, keeping counts through place.state timers.",
+    "scripts/player.js reads scripts/lib/maze.js zone/cell/exit helpers for survival, XP and exit behavior; scripts/smilers.js uses the same maze layout for movement/targeting.",
+    "scripts/level0-geo.js reads scripts/lib/maze.js → one placed scripted mesh whose walls, arches, pits and pillars match the gameplay layout; cell scenes place the companion level0-lights group.",
+    "world.config.yaml engine.behaviors → scripts/arrival.js onArrive/onLeave; both handlers are currently empty.",
+    "world.config.yaml ui.render → scripts/ui.js for the player's HUD; world.config.yaml nametag → ui/nametag.js for other-player labels.",
+    "world.config.yaml lighting → scripts/lighting.js shades lit surfaces from the engine-provided lighting; places/main atmosphere.look → scripts/look-default.js.",
+    "scripts/almond-geo.js and scripts/smiler-geo.js → scripts/lib/shapes.js helpers for scripted meshes; almond geometry is used both by the hub's authored props and place-sim spawns."
+  ],
+  "behaviorFamilies": [
+    "places/main/cells/* level0-lights/l* - many authored light placements across all nine cells; ordinary warm panels vary from red-zone lights, with coordinates corresponding to maze cells.",
+    "scripts/almond-geo.js and scripts/smiler-geo.js - scripted prop/creature meshes share scripts/lib/shapes.js primitives; their placement differs between fixed hub water and dynamically spawned pickups/enemies.",
+    "templates/player.js behavior chain - humanoid-locomotion.js is deliberately before player.js so gait reads the body's prior movement; player.js then writes the walker's velocity and survival behavior."
+  ],
+  "probableOrphans": [
+    "scripts/flat-starter-terrain.js - no current place references it; main terrain is explicitly off.",
+    "scripts/flower.js, scripts/grass.js, scripts/grass-look.js, scripts/reed.js - vegetation/layer scripts have no active terrain layer in places/main/config.yaml (terrain is off) and no current placement references."
+  ],
+  "migrationNotes": [
+    "scripts/lib/maze.js and scripts/lib/data/level0.yml are a coupled layout contract: keep the seeded cell/zone rules consistent wherever mesh, lamps, player location logic, smiler paths or spawning are changed.",
+    "Maze coordinates use 36 cells at 4 metres each; world positions are derived by cellCenter/cellAt around HALF, and maze wall height is 3 metres.",
+    "The hub spans indices 16–19 on both axes and is the safe room; the mesh doorway, zone logic and smiler restrictions depend on this shared definition.",
+    "The player template order is intentional: humanoid-locomotion.js precedes player.js; reversing it changes which velocity locomotion animation reads.",
+    "Player HUD fields belong to player.state, but local control scratch belongs under the script's own key in player.session; smiler AI scratch is likewise session data, not shared state.",
+    "places/main is configured with terrain off despite the present vegetation/starter-terrain scripts; adding terrain layers requires wiring them into the place config rather than assuming they are active."
+  ]
+}
