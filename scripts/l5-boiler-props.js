@@ -23,7 +23,7 @@ function run(ctx, a, b, r, lag, leakAt = []) {
   // hangers up to the ceiling every ~3 m
   for (let s = 1.5; s < L; s += 3.1) { const p = [a[0] + d[0] * s, a[1] + d[1] * s, a[2] + d[2] * s]; if (p[1] < 5.85) { cyl(ctx, [p[0], p[1] + r, p[2]], [p[0], 6, p[2]], 0.015, 3, false); if (ctx.lod <= 1) torus(ctx, p, d, r + 0.03, 0.012, 8, 2); } }
   // exhaust valves: a stub up with a wheel and a flared mouth, a brass tag
-  for (let s = 2.9; s < L - 1; s += 6.3) {
+  for (let s = 2.9; ctx.lod <= 2 && s < L - 1; s += 6.3) {
     const p = [a[0] + d[0] * s, a[1] + d[1] * s, a[2] + d[2] * s], up = Math.min(0.45, 5.9 - p[1] - 0.1);
     if (up < 0.2) continue;
     cyl(ctx, p, [p[0], p[1] + up * 0.5, p[2]], r * 0.5, 8); bbox(ctx, [p[0], p[1] + up * 0.5, p[2]], [r * 0.7, 0.06, r * 0.7], 0.015);
