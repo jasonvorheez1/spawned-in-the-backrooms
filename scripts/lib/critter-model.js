@@ -67,7 +67,11 @@ export function toMesh(ctx, obj) {
 }
 // the head rides the body's skin, at its origin: an old scripted head (hung on Hips) is re-seated, a missing one spawned
 export function seatHead(ctx, obj, l) {
-  const want = critterSpec(l).children[0], h = ctx.getObject(obj.id + '/' + HEAD_ID)
+  const want = critterSpec(l).children[0]; let h = ctx.getObject(obj.id + '/' + HEAD_ID)
+  // a head skinned to the body's old model loses its skin when the body swaps: re-spawn it on the new one
+  const body = obj.model?.id ?? obj.model
+  if (h && obj.state && obj.state.headBody !== body) { ctx.destroy(h.id ?? obj.id + '/' + HEAD_ID); h = null }
+  if (obj.state && obj.state.headBody !== body) obj.state.headBody = body
   if (!h) { ctx.spawn(HEAD_ID, { parent: obj.id, ...want }); return }
   if (!h.attachment?.skin) { h.primitive = null; h.attachment = { skin: true }; h.feetPosition = { x: 0, y: 0, z: 0 }; h.rotation = 0; h.model = want.model; h.morph = want.morph }
   else if ((h.model?.id ?? h.model) !== want.model.id) { h.model = want.model; h.morph = want.morph } // an old-pass head swaps to the current one
