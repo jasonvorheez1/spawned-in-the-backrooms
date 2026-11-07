@@ -41,6 +41,7 @@ export const MEAT = {
   chicken:  { name: 'Chicken thigh',    tier: 'good',    hp: 12, food: 22, color: '#f0c49a' },
   spam:     { name: 'Tin of spam',      tier: 'good',    hp: 9,  food: 18, color: '#d98aa0' },
   sardines: { name: 'Tin of sardines',  tier: 'poor',    hp: 7,  food: 14, color: '#b8c4c8' },
+  crab:     { name: 'Crawler leg meat', tier: 'good',    hp: 10, food: 20, color: '#e8a08a' },
   rat:      { name: 'Dead rat',         tier: 'poor',    hp: 3,  food: 8,  color: '#8a7a6a' },
 }
 const TIER = { premium: 'PREMIUM', good: 'GOOD', poor: 'POOR' }
