@@ -15,7 +15,7 @@ function shaftAt(z, p) {
 const ez = (mp, z) => mp.flip ? z - mp.c[1] : mp.c[1] - z, ex = (mp, x) => mp.flip ? x - mp.c[0] : mp.c[0] - x
 function ring(mp, oy, z0, z1, k, color, rough = 0.6, metal = 0) {
   const [x, y, r] = shaftAt((z0 + z1) / 2, mp.p), h = Math.abs(z1 - z0), R = r * k
-  return { primitive: { kind: "cylinder", radiusTop: R, radiusBottom: R, height: h, radialSegments: 12 }, rotation: { pitch: 90 }, pivot: "center",
+  return { primitive: { kind: "cylinder", radiusTop: R, radiusBottom: R, height: h, radialSegments: 16 }, rotation: { pitch: 90 }, pivot: "center",
     feetPosition: { x: ex(mp, x), y: y + oy - h / 2, z: ez(mp, (z0 + z1) / 2) }, material: { color, roughness: rough, metalness: metal }, castShadow: false }
 }
 function meshLook(base, look, oy) {
@@ -25,12 +25,12 @@ function meshLook(base, look, oy) {
   const mp = MESHPROF[base]; if (!mp) return [] // the fire axe and shotgun lie on a slant: their name and stats carry the variant
   const [g0, g1] = mp.grip, [h0, h1] = mp.head, out = []
   if (look === 'rust') for (const t of [0.15, 0.45, 0.8]) { const z = g1 + (h1 - g1) * t; out.push(ring(mp, oy, z, z + 0.025, 1.06, RUST, 1, 0.1)) }
-  else if (look === 'tape') { out.push(ring(mp, oy, g0, g1, 1.1, DUCT, 0.55)); for (const t of [0.2, 0.55, 0.85]) { const z = g0 + (g1 - g0) * t; out.push(ring(mp, oy, z, z + 0.006, 1.16, "oklch(0.5 0.01 250)", 0.6)) } }
+  else if (look === 'tape') { out.push(ring(mp, oy, g0, g1, 1.05, DUCT, 0.55)); for (const t of [0.2, 0.55, 0.85]) { const z = g0 + (g1 - g0) * t; out.push(ring(mp, oy, z, z + 0.006, 1.16, "oklch(0.5 0.01 250)", 0.6)) } }
   else if (look === 'edge') out.push(ring(mp, oy, g0, g1, 1.08, LEATHER, 0.8))
   else if (look === 'meg') { out.push(ring(mp, oy, g1, g1 + 0.02, 1.1, LIME, 0.45)); out.push(ring(mp, oy, (h0 + h1) / 2, (h0 + h1) / 2 + 0.015, 1.06, LIME, 0.45)) }
   else if (look === 'nails') {
     out.push(ring(mp, oy, h0 + (h1 - h0) * 0.3, h0 + (h1 - h0) * 0.6, 1.02, STAIN, 0.7))
-    for (let k = 0; k < 6; k++) { const z = h0 + ((k + 0.5) / 6) * (h1 - h0), [x, y, r] = shaftAt(z, mp.p), a = k * 2.4 + 0.5, L = 0.06, d = r + L / 2 - 0.012
+    for (let k = 0; k < 6; k++) { const z = h0 + ((k + 0.5) / 6) * (h1 - h0), [x, y, r] = shaftAt(z, mp.p), a = k * 2.4 + 0.5, L = 0.07, d = r * 1.1 + L / 2 - 0.006
       out.push({ primitive: { kind: "cylinder", radiusTop: 0.0018, radiusBottom: 0.003, height: L, radialSegments: 5 }, pivot: "center", rotation: { roll: a * 57.3 - 90 },
         feetPosition: { x: ex(mp, x + Math.cos(a) * d), y: y + Math.sin(a) * d + oy - L / 2, z: ez(mp, z) }, material: { color: NAIL, roughness: 0.4, metalness: 0.8 }, castShadow: false }) }
   }
