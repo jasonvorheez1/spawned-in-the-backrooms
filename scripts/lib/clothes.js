@@ -92,9 +92,8 @@ export function honest(cur, next) {
 
 // the level a roll is for: a player's own level, else the place's tier (a drop with nobody behind it)
 export function rollLevel(ctx) {
-  const lv = ctx?.self?.state?.level
-  if (typeof lv === 'number' && ctx.self?.isLocal !== undefined) return lv
-  return CL.leveled.placeTier[ctx?.self?.place ?? ctx?.place?.id] ?? lv ?? 1
+  const lv = Number(ctx?.self?.state?.level) || 0, tier = CL.leveled.placeTier[ctx?.self?.place] ?? 1
+  return Math.max(lv, tier)
 }
 const rowLevel = (r) => Math.max(r.level ?? 1, CL.leveled.rarityAt[r.rarity] ?? 1)
 // the leveled list at a level: every row it can roll, each with its weight
