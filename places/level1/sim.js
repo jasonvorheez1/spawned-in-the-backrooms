@@ -1,7 +1,7 @@
 // Level 1's referee: lays the lamps, crates, supplies and thresholds once, then runs the Flickering.
 import L from "../../scripts/lib/data/level1.yml";
 import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ARRIVE, hash } from "../../scripts/lib/level1.js";
-import { spawnAlmond, spawnCrate } from "../../scripts/lib/loot.js";
+import { spawnAlmond, spawnCrateL1 } from "../../scripts/lib/loot.js";
 export const cadence = "250ms";
 const LAMP_ON = 9;
 
@@ -22,7 +22,7 @@ export function tick(ctx) {
     for (let cx = 0; cx < N && crates < L.crates; cx++) for (let cz = 0; cz < N && crates < L.crates; cz++) {
       const slots = shelfSlots(cx, cz); if (!slots.length || hash(cx, cz, 91) > 0.7) continue;
       const p = slots[Math.floor(hash(cx, cz, 93) * slots.length)];
-      spawnCrate(ctx, { x: p.x, z: p.z }); crates++;
+      spawnCrateL1(ctx, p); crates++;
     }
     for (let i = 0; i < L.almonds; i++) {
       const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N);

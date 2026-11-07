@@ -9,6 +9,7 @@ import { dropLoot, spawnWeapon } from './lib/loot.js'
 import { weaponBody } from './lib/weapon-look.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
 import { zoneAt as zoneAt1 } from './lib/level1.js'
+import L1 from './lib/data/level1.yml'
 const zoneHere = (ctx, x, z) => ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : zoneAt(x, z)
 
 import SOUNDS from './lib/data/sounds.yml'
@@ -69,6 +70,19 @@ export function takeToken(ctx, token) {
   if (token === 'shells') {
     s.shells = (s.shells ?? 0) + W.shells.perPickup; s.pickedAt = now
     sound(ctx, 'pickup-ammo', 0.7, true)
+    return { ok: true }
+  }
+  if (token === 'ration' || token === 'bandage') { // eaten or wrapped on the spot
+    const mh = maxHp(s.level), ms = maxSan(s.level)
+    s.hp = Math.min(mh, (s.hp ?? mh) + (token === 'ration' ? L1.rationHp : L1.bandageHp))
+    if (token === 'ration') s.sanity = Math.min(ms, (s.sanity ?? ms) + L1.rationSanity)
+    s.pickedAt = now; gain(ctx, L.xpAlmond)
+    sound(ctx, token === 'ration' ? 'plastic-bottle-pickup-rattle' : 'pickup-ammo', 0.7, true)
+    return { ok: true }
+  }
+  if (token === 'battery') {
+    const w = walkOf(ctx); w.battery = Math.min(100, (w.battery ?? s.battery ?? 0) + L1.batteryCharge); s.battery = Math.round(w.battery)
+    s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.7, true)
     return { ok: true }
   }
   if (token.startsWith('weapon:')) {
