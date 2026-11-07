@@ -5,6 +5,7 @@ import { zoneAt, safeZone, cellCenter, N } from "./lib/level1.js";
 import { zoneAt as zoneAt2 } from "./lib/level2.js";
 import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
 import { zoneAt as zoneAt3, cellAt as cellAt3, cellCenter as cellCenter3, openings as openings3 } from "./lib/level3.js";
+import { zoneAt as zoneAt5 } from "./lib/level5.js";
 import { stepToward, cellNear } from "./lib/maze3path.js";
 import C from "./lib/data/creatures3.yml";
 const H3 = C.hounds3;
@@ -28,7 +29,7 @@ const BLOOD = `fx
 pop drip burst=6..9 life=.4..0.7 v=sdir()*(.6..1.4)+up(.3) size=.03..0.06 acc=grav()*.8 col=<.35,.02,.03> a=1>0 sz=$size floor=die r=sprite(soft-disc,alpha)`;
 export function update(ctx, dt) {
   const L3 = ctx.self.place === "level3";
-  const safeAt = L3 ? (x, z) => zoneAt3(x, z) === "gamma" : ctx.self.place === "level2" ? (x, z) => zoneAt2(x, z) === "camp" : (x, z) => safeZone(zoneAt(x, z));
+  const safeAt = L3 ? (x, z) => zoneAt3(x, z) === "gamma" : ctx.self.place === "level2" ? (x, z) => zoneAt2(x, z) === "camp" : ctx.self.place === "level5" ? (x, z) => zoneAt5(x, z)?.id === "housekeeping" : (x, z) => safeZone(zoneAt(x, z));
   const now = ctx.now(), dark = ctx.place.state.flicker === "dark", mem = (ctx.self.session.m ??= {});
   const players = ctx.place.players.filter((p) => !safeAt(p.feetPosition.x, p.feetPosition.z) && !(p.state?.downAt && now - p.state.downAt < 4500));
   const byId = (id) => players.find((p) => p.id === id) ?? ctx.place.players.find((p) => p.id === id) ?? ctx.query({ tags: ["npc"], radius: 80, center: { x: 0, y: 0, z: 0 } }).find((n) => n.id === id) ?? null;

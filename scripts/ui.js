@@ -93,7 +93,7 @@ function xferCard(s, now) {
   const [a, b] = LEVEL_NAMES[x.to] ?? [String(x.to).toUpperCase(), '']
   return `<style>@keyframes xferOut{0%,45%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="xfer${x.at}" style="position:absolute;inset:0;background:#050403;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:xferOut 2.4s forwards;color:#f2c14e;text-shadow:2px 2px #000"><div style="font-size:44px;letter-spacing:.2em">${a}</div><div style="font-size:18px;letter-spacing:.3em;opacity:.75;margin-top:6px">${b}</div></div>`
 }
-const TALKERS = ['meg-ale', 'meg-ortiz', 'meg-callum', 'surv-wren', 'surv-hollis', 'surv-mags']
+const TALKERS = ['meg-ale', 'meg-ortiz', 'meg-callum', 'surv-wren', 'surv-hollis', 'surv-mags', 'hk-constance', 'hk-vance', 'homely-barnaby', 'homely-auguste']
 function chatBubbles(ctx, now) {
   const objs = ctx.place?.objects
   if (!objs) return ''
@@ -198,7 +198,7 @@ export default function render(ctx, player) {
   <div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:100px;animation:hud-fade 3.5s forwards;pointer-events:none">
     <div style="font-size:22px;letter-spacing:0.12em">${ZONE_NAMES[zone] ?? 'The Lobby'}</div>
     <div class="muted" style="font-size:12px;margin-top:2px">
-      ${zone === 'hub' ? 'Sanity stabilizes here. Nothing follows.' : zone === 'dark' ? 'Total blackout. Watch the corners.' : zone === 'red' ? 'Severe sanity decay.' : ''}
+      ${zone === 'hub' ? 'Sanity stabilizes here. Nothing follows.' : zone === 'dark' ? 'Total blackout. Watch the corners.' : zone === 'red' ? 'Severe sanity decay.' : zone === 'l5_housekeeping' ? 'M.E.G. Outpost Housekeeping. Sanity and health recover here.' : zone === 'l5_boiler' ? 'The Boiler Room. Extreme heat and heavy sanity drain.' : zone === 'l5_beverly' ? 'The Beverly Room. Hypnotic ballroom music echoes.' : ''}
     </div>
   </div>
 
