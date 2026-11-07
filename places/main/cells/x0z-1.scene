@@ -689,3 +689,11 @@ level0-lights/l43_9:
   id: level0-lights/l43_9
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+object/x05249135d8ba8922/20:
+  feetPosition: {x: -26.727722256770356, y: 0.01, z: -111.53500000000001}
+  id: object/x05249135d8ba8922/20
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: desk, seed: 46}, script: scripts/l2-props-geo.js}
+  rotation: {yaw: 180}
+  state: {hp: 35, items: "almond,almond,almond", kind: desk, mat: wood, maxHp: 35, name: Desk drawers}
+  tags: [container, furniture, lootfurn, breakable]

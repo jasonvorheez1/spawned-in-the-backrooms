@@ -644,3 +644,27 @@ level0-lights/l9_41:
   id: level0-lights/l9_41
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+object/x05249135d8ba8922/11:
+  feetPosition: {x: -75.53500000000001, y: 0.01, z: -25.07433602011297}
+  id: object/x05249135d8ba8922/11
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: desk, seed: 579}, script: scripts/l2-props-geo.js}
+  rotation: {yaw: -90}
+  state: {hp: 35, items: "shells,kit", kind: desk, mat: wood, maxHp: 35, name: Desk drawers}
+  tags: [container, furniture, lootfurn, breakable]
+object/x05249135d8ba8922/23:
+  feetPosition: {x: -111.67500000000001, y: 0.01, z: 18.052111541479825}
+  id: object/x05249135d8ba8922/23
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: cabinet, seed: 341}, script: scripts/l2-props-geo.js}
+  rotation: {yaw: -90}
+  state: {hp: 80, items: "almond,almond,almond", kind: cabinet, lock: "lockpick:50", mat: metal, maxHp: 80, name: Office supply cabinet (locked)}
+  tags: [container, furniture, lootfurn, breakable]
+object/x05249135d8ba8922/5:
+  feetPosition: {x: -109.96348024394828, y: 0.01, z: -28.465}
+  id: object/x05249135d8ba8922/5
+  physics: {body: static, collider: box}
+  primitive: {kind: scripted, params: {kind: desk, seed: 872}, script: scripts/l2-props-geo.js}
+  rotation: {yaw: 0}
+  state: {hp: 35, items: "almond,ammo,almond", kind: desk, mat: wood, maxHp: 35, name: Desk drawers}
+  tags: [container, furniture, lootfurn, breakable]
