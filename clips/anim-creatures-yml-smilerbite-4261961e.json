@@ -1,0 +1,4 @@
+{"contentHash":"246:adfa3129","duration":0.35,"fps":30,"identity":"anim/creatures.yml#smilerBite","tracks":[
+{"bone":"head","prop":"rotation","times":[0,0.175,0.35],"values":[0,0,0,1,-0.12187,0,0,0.99255,0,0,0,1]},
+{"bone":"jaw","prop":"rotation","times":[0,0.175,0.35],"values":[0,0,0,1,-0.32557,0,0,0.94552,0,0,0,1]}
+]}
