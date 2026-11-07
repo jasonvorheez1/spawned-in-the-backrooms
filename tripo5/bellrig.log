@@ -1,0 +1,9 @@
+task 8e57836d-8da6-4dda-9d62-30055c58d15a · animate_rig
+files: bell-rig.glb (model/gltf-binary)
+each file lands in your folder under its name, and its `fetched:` line names its /cdn/ address, the one the world uses. With no `fetched:` line below, `spawn tripo status 8e57836d-8da6-4dda-9d62-30055c58d15a --out bell-rig.glb` lands them.
+output: {"normalize_scale":0.555555533479762,"normalize_translation":[0,0,0]}
+image: https://studio-chat-prod.jacob-a34.workers.dev/room/app%3A%3Aade97716-37cc-4643-8a28-e6a99776abbd%3A%3Aplayer%3A%3Ad42e24ab-0efe-40f9-8c22-a4b9ed31a731/images/ade97716-37cc-4643-8a28-e6a99776abbd/43f8c482-858d-4565-8c73-9be69e5e4078.png (image/png, preview): shown in this result
+fetched: /workspace/tripo5/bell-rig.glb (2.7MB) · in the world: /cdn/value.68efc4b4f1c2b0343cd4070c6d5f42de06eae57ae2eeefeff765ba74347509f8.glb (named bell-rig) (an asset's bytes live in the workshop, never in the world's tree, which carries its /cdn/ name)
+raw: /cdn/value.68efc4b4f1c2b0343cd4070c6d5f42de06eae57ae2eeefeff765ba74347509f8.glb?raw, the model with its 3 png pictures as they went up, for Blender and other tools; the address above is the game's copy, packed for loading once the store has cooked it
+facing: the rig faces +X (read from its toes); forward: "+x" stands it facing that way; with no forward it stands side-on
+limbs: how far the centre of each limb's skin sits off its bone at rest (0 is on the bone; this is not thickness): upper arm 2.2 cm (18 % of the bone's length), forearm 1.6 cm (14 %), thigh 1.6 cm (5 %), shin 1.8 cm (6 %); a sound human rig reads up to 6 cm on its arms, 7 on its legs

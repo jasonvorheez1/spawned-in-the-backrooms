@@ -1,0 +1,9 @@
+task 22aa5c3f-bcd8-4317-b6da-fb28723bdd52 · animate_rig
+files: maid-rig.glb (model/gltf-binary)
+each file lands in your folder under its name, and its `fetched:` line names its /cdn/ address, the one the world uses. With no `fetched:` line below, `spawn tripo status 22aa5c3f-bcd8-4317-b6da-fb28723bdd52 --out maid-rig.glb` lands them.
+output: {"normalize_scale":0.5714285714285714,"normalize_translation":[0,0,0]}
+image: https://studio-chat-prod.jacob-a34.workers.dev/room/app%3A%3Aade97716-37cc-4643-8a28-e6a99776abbd%3A%3Aplayer%3A%3Ad42e24ab-0efe-40f9-8c22-a4b9ed31a731/images/ade97716-37cc-4643-8a28-e6a99776abbd/23d75013-ee09-4759-be9e-54f80b31d20e.png (image/png, preview): shown in this result
+fetched: /workspace/tripo5/maid-rig.glb (2.3MB) · in the world: /cdn/value.8928d9e0ff2b49e170c357c1164b0b0cfb3458f320b9d237630ba53ec337d87e.glb (named maid-rig) (an asset's bytes live in the workshop, never in the world's tree, which carries its /cdn/ name)
+raw: /cdn/value.8928d9e0ff2b49e170c357c1164b0b0cfb3458f320b9d237630ba53ec337d87e.glb?raw, the model with its 3 png pictures as they went up, for Blender and other tools; the address above is the game's copy, packed for loading once the store has cooked it
+facing: the rig faces +X (read from its toes); forward: "+x" stands it facing that way; with no forward it stands side-on
+limbs: how far the centre of each limb's skin sits off its bone at rest (0 is on the bone; this is not thickness): upper arm 2.0 cm (13 % of the bone's length), forearm 1.7 cm (13 %), thigh 2.5 cm (8 %), shin 2.6 cm (10 %); a sound human rig reads up to 6 cm on its arms, 7 on its legs

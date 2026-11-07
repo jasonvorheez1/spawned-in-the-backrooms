@@ -1,0 +1,8 @@
+task 23cdb033-927e-46f0-9f35-d1db0e28d11f · animate_rig
+files: rat-rig.glb (model/gltf-binary)
+each file lands in your folder under its name, and its `fetched:` line names its /cdn/ address, the one the world uses. With no `fetched:` line below, `spawn tripo status 23cdb033-927e-46f0-9f35-d1db0e28d11f --out rat-rig.glb` lands them.
+output: {"normalize_scale":1.1265265692204969,"normalize_translation":[0,0,-1.6786554368763973e-8]}
+image: https://studio-chat-prod.jacob-a34.workers.dev/room/app%3A%3Aade97716-37cc-4643-8a28-e6a99776abbd%3A%3Aplayer%3A%3Ad42e24ab-0efe-40f9-8c22-a4b9ed31a731/images/ade97716-37cc-4643-8a28-e6a99776abbd/964eb339-6977-4ee9-98f2-ef3ca1241d2a.png (image/png, preview): shown in this result
+fetched: /workspace/tripo5/rat-rig.glb (4.0MB) · in the world: /cdn/value.cb60d1de7936f6abca692c59905428783f74afafbec298c40e9a7f9833ec1007.glb (named rat-rig) (an asset's bytes live in the workshop, never in the world's tree, which carries its /cdn/ name)
+raw: /cdn/value.cb60d1de7936f6abca692c59905428783f74afafbec298c40e9a7f9833ec1007.glb?raw, the model with its 3 png pictures as they went up, for Blender and other tools; the address above is the game's copy, packed for loading once the store has cooked it
+facing: not read (its rig has no toes this read knows); with no forward, the file's −Z is its front
