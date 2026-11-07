@@ -17,6 +17,17 @@ function walls(ctx, a, b) {
   }
   return n;
 }
+// voice gate: a tab coming back from the background replays a backlog of NPC lines at once. Each listener hears one
+// voice line at a time (a gap of VOICE_GAP ms), and the same line twice inside VOICE_REPEAT ms is dropped. Savi's picks.
+const VOICE_GAP = 1800, VOICE_REPEAT = 20000, lastVoice = new Map();
+function voiceOk(ctx, pid, clip) {
+  if (!clip || !String(clip).includes("/voice-")) return true;
+  const now = ctx.now(), v = lastVoice.get(pid);
+  if (v && (now - v.at < VOICE_GAP || (v.clip === clip && now - v.at < VOICE_REPEAT))) return false;
+  lastVoice.set(pid, { at: now, clip });
+  if (lastVoice.size > 200) lastVoice.clear();
+  return true;
+}
 export function heard(ctx, p, opts) {
   const pos = p?.position;
   if (!pos || !ctx.place?.players) return ctx.emit("playSound", p, opts);
@@ -33,6 +44,7 @@ export function heard(ctx, p, opts) {
     if (w >= MAX_WALLS) continue;
     const k = Math.pow(PER_WALL, w), reach = max * Math.pow(REACH_PER_WALL, w);
     if (d > reach) continue;
+    if (!voiceOk(ctx, pl.id, p.clip)) continue;
     id = ctx.emit("playSound", w ? { ...p, volume: (p.volume ?? 1) * k, maxDistance: reach, refDistance: Math.min(p.refDistance ?? reach / 6, reach / 3) } : p, { ...(opts ?? {}), audience: { player: pl.id } });
   }
   return id;
