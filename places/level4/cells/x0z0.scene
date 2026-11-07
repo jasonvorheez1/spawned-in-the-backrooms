@@ -476,7 +476,8 @@ l4-prop-0:
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 35}
-  tags: [l4-prop]
+  state: {hp: 64, mat: metal, maxHp: 64}
+  tags: [l4-prop, breakable]
 l4-prop-1:
   castShadow: true
   feetPosition: {x: 5.4, y: 0, z: -12.6}
@@ -485,7 +486,8 @@ l4-prop-1:
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 200}
-  tags: [l4-prop]
+  state: {hp: 64, mat: metal, maxHp: 64}
+  tags: [l4-prop, breakable]
 l4-prop-10:
   castShadow: true
   feetPosition: {x: -5.2, y: 0, z: 13.6}
@@ -494,7 +496,8 @@ l4-prop-10:
   primitive: {kind: scripted, params: {kind: box}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 80}
-  tags: [l4-prop]
+  state: {hp: 35, mat: wood, maxHp: 35}
+  tags: [l4-prop, breakable]
 l4-prop-11:
   castShadow: true
   feetPosition: {x: 12.6, y: 0, z: -21.8}
@@ -503,7 +506,8 @@ l4-prop-11:
   primitive: {kind: scripted, params: {kind: boxes}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 5}
-  tags: [l4-prop]
+  state: {hp: 56, mat: wood, maxHp: 56}
+  tags: [l4-prop, breakable]
 l4-prop-12:
   castShadow: true
   feetPosition: {x: -23.6, y: 0, z: 23.6}
@@ -512,7 +516,8 @@ l4-prop-12:
   primitive: {kind: scripted, params: {kind: plant}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 0}
-  tags: [l4-prop]
+  state: {hp: 28, mat: wood, maxHp: 28}
+  tags: [l4-prop, breakable]
 l4-prop-13:
   castShadow: true
   feetPosition: {x: 23.4, y: 0, z: -23.4}
@@ -521,7 +526,8 @@ l4-prop-13:
   primitive: {kind: scripted, params: {kind: plant}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 40}
-  tags: [l4-prop]
+  state: {hp: 28, mat: wood, maxHp: 28}
+  tags: [l4-prop, breakable]
 l4-prop-14:
   castShadow: true
   feetPosition: {x: 1.6, y: 0, z: -24.2}
@@ -530,7 +536,8 @@ l4-prop-14:
   primitive: {kind: scripted, params: {kind: plant}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 90}
-  tags: [l4-prop]
+  state: {hp: 28, mat: wood, maxHp: 28}
+  tags: [l4-prop, breakable]
 l4-prop-15:
   castShadow: true
   feetPosition: {x: -14.5, y: 0, z: 13}
@@ -539,7 +546,8 @@ l4-prop-15:
   primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 20}
-  tags: [l4-prop]
+  state: {hp: 63, mat: wood, maxHp: 63}
+  tags: [l4-prop, breakable]
 l4-prop-16:
   castShadow: true
   feetPosition: {x: 15.5, y: 0, z: 4.6}
@@ -548,7 +556,8 @@ l4-prop-16:
   primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 95}
-  tags: [l4-prop]
+  state: {hp: 63, mat: wood, maxHp: 63}
+  tags: [l4-prop, breakable]
 l4-prop-17:
   castShadow: true
   feetPosition: {x: -2.5, y: 0, z: -16}
@@ -557,7 +566,8 @@ l4-prop-17:
   primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 170}
-  tags: [l4-prop]
+  state: {hp: 63, mat: wood, maxHp: 63}
+  tags: [l4-prop, breakable]
 l4-prop-18:
   castShadow: true
   feetPosition: {x: 6.8, y: 0, z: 15.2}
@@ -566,7 +576,8 @@ l4-prop-18:
   primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 60}
-  tags: [l4-prop]
+  state: {hp: 63, mat: wood, maxHp: 63}
+  tags: [l4-prop, breakable]
 l4-prop-19:
   castShadow: true
   feetPosition: {x: 25.2, y: 0, z: 9.6}
@@ -575,7 +586,8 @@ l4-prop-19:
   primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 90}
-  tags: [l4-prop]
+  state: {hp: 120, mat: sheet_steel, maxHp: 120}
+  tags: [l4-prop, breakable]
 l4-prop-2:
   castShadow: true
   feetPosition: {x: 13.8, y: 0, z: 11.2}
@@ -584,7 +596,8 @@ l4-prop-2:
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 110}
-  tags: [l4-prop]
+  state: {hp: 64, mat: metal, maxHp: 64}
+  tags: [l4-prop, breakable]
 l4-prop-20:
   castShadow: true
   feetPosition: {x: -25.2, y: 0, z: -10.4}
@@ -593,7 +606,8 @@ l4-prop-20:
   primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: -90}
-  tags: [l4-prop]
+  state: {hp: 120, mat: sheet_steel, maxHp: 120}
+  tags: [l4-prop, breakable]
 l4-prop-21:
   castShadow: true
   feetPosition: {x: -9.6, y: 0, z: 25.2}
@@ -602,7 +616,8 @@ l4-prop-21:
   primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 180}
-  tags: [l4-prop]
+  state: {hp: 120, mat: sheet_steel, maxHp: 120}
+  tags: [l4-prop, breakable]
 l4-prop-22:
   castShadow: true
   feetPosition: {x: 10.4, y: 0, z: -25.2}
@@ -611,7 +626,8 @@ l4-prop-22:
   primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 0}
-  tags: [l4-prop]
+  state: {hp: 120, mat: sheet_steel, maxHp: 120}
+  tags: [l4-prop, breakable]
 l4-prop-3:
   castShadow: true
   feetPosition: {x: -3.1, y: 0, z: 21.5}
@@ -620,7 +636,8 @@ l4-prop-3:
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 290}
-  tags: [l4-prop]
+  state: {hp: 64, mat: metal, maxHp: 64}
+  tags: [l4-prop, breakable]
 l4-prop-4:
   castShadow: true
   feetPosition: {x: 22.5, y: 0, z: -2.2}
@@ -629,7 +646,8 @@ l4-prop-4:
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 160}
-  tags: [l4-prop]
+  state: {hp: 64, mat: metal, maxHp: 64}
+  tags: [l4-prop, breakable]
 l4-prop-5:
   castShadow: true
   feetPosition: {x: -21.6, y: 0, z: -12.4}
@@ -638,7 +656,8 @@ l4-prop-5:
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 60}
-  tags: [l4-prop]
+  state: {hp: 64, mat: metal, maxHp: 64}
+  tags: [l4-prop, breakable]
 l4-prop-6:
   castShadow: true
   feetPosition: {x: -13.2, y: 0, z: -21.5}
@@ -647,7 +666,8 @@ l4-prop-6:
   primitive: {kind: scripted, params: {kind: boxes}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 12}
-  tags: [l4-prop]
+  state: {hp: 56, mat: wood, maxHp: 56}
+  tags: [l4-prop, breakable]
 l4-prop-7:
   castShadow: true
   feetPosition: {x: -12.4, y: 0, z: -20.9}
@@ -656,7 +676,8 @@ l4-prop-7:
   primitive: {kind: scripted, params: {kind: box}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 70}
-  tags: [l4-prop]
+  state: {hp: 35, mat: wood, maxHp: 35}
+  tags: [l4-prop, breakable]
 l4-prop-8:
   castShadow: true
   feetPosition: {x: 21.2, y: 0, z: 13.4}
@@ -665,7 +686,8 @@ l4-prop-8:
   primitive: {kind: scripted, params: {kind: boxes}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: -20}
-  tags: [l4-prop]
+  state: {hp: 56, mat: wood, maxHp: 56}
+  tags: [l4-prop, breakable]
 l4-prop-9:
   castShadow: true
   feetPosition: {x: 3.6, y: 0, z: 4.1}
@@ -674,7 +696,8 @@ l4-prop-9:
   primitive: {kind: scripted, params: {kind: box}, script: scripts/l4-prop-geo.js}
   receiveShadow: true
   rotation: {yaw: 33}
-  tags: [l4-prop]
+  state: {hp: 35, mat: wood, maxHp: 35}
+  tags: [l4-prop, breakable]
 object/xad4c834675863151/0:
   feetPosition: {x: -24, y: 2.85, z: -24}
   id: object/xad4c834675863151/0
