@@ -116,7 +116,7 @@ H = P["head"] + V((0, -0.14, 0.01))
 def ellipsoid(name, c, s, segs=24, rings=14):
     bpy.ops.mesh.primitive_uv_sphere_add(segments=segs, ring_count=rings, location=c)
     o = bpy.context.active_object; o.name = name; o.scale = s; bpy.ops.object.transform_apply(scale=True); bpy.ops.object.shade_smooth(); return o
-skull = ellipsoid("Skull", H + V((0, 0.03, 0.03)), (0.19, 0.17, 0.12))
+skull = ellipsoid("Skull", H + V((0, 0.02, 0.03)), (0.215, 0.185, 0.13))
 # cut the skull's lower front away so the grin sits in a wide gash
 bm = bmesh.new(); bm.from_mesh(skull.data)
 for v in bm.verts:
@@ -125,7 +125,7 @@ for v in bm.verts:
     # brow ridge pushes forward over the eyes; cranium elongated back
     if v.co.z > H.z + 0.05: v.co.y += 0.03
 bm.to_mesh(skull.data); bm.free()
-jaw = ellipsoid("Jaw", H + V((0, 0.01, -0.035)), (0.18, 0.16, 0.06))
+jaw = ellipsoid("Jaw", H + V((0, 0.0, -0.035)), (0.2, 0.175, 0.065))
 bm = bmesh.new(); bm.from_mesh(jaw.data)
 for v in bm.verts:
     if v.co.z > H.z - 0.035: v.co.z = H.z - 0.035 + (v.co.z - (H.z - 0.035)) * 0.25
@@ -135,7 +135,7 @@ throat = ellipsoid("Throat", H + V((0, 0.02, -0.02)), (0.15, 0.12, 0.06), 16, 8)
 eyes = [ellipsoid("Eye" + s, H + V((sx * 0.09, -0.13, 0.075)), (0.046, 0.022, 0.03), 14, 8) for s, sx in (("L", 1), ("R", -1))]
 
 for e, sx in zip(eyes, (1, -1)):
-    e.rotation_euler = (0, -sx * 0.45, 0); bpy.context.view_layer.objects.active = e; bpy.ops.object.select_all(action='DESELECT'); e.select_set(True); bpy.ops.object.transform_apply(rotation=True)
+    e.data.transform(Matrix.Rotation(-sx * 0.45, 4, 'Y'))
 def needle(bmx, base, tip, r):
     up = (tip - base).normalized(); a = up.orthogonal().normalized(); b = up.cross(a)
     ring = [bmx.verts.new(base + (a * math.cos(k * 2.094) + b * math.sin(k * 2.094)) * r) for k in range(3)]
@@ -361,7 +361,7 @@ scene.render.resolution_x = scene.render.resolution_y = 656; scene.cycles.sample
 def cam(name, loc, tgt):
     c = bpy.data.objects.new(name, bpy.data.cameras.new(name)); scene.collection.objects.link(c); c.location = loc
     d = V(tgt) - V(loc); c.rotation_euler = d.to_track_quat("-Z", "Y").to_euler(); return c
-cams = [cam("A", (1.8, -2.6, 1.6), (0, -0.1, 0.65)), cam("B", (0.3, -2.0, 1.2), (0, -0.78, 1.0)), cam("C", (2.8, 0.2, 1.0), (0, 0, 0.6))]
+cams = [cam("A", (1.8, -2.6, 1.6), (0, -0.1, 0.65)), cam("B", (-0.7, -2.1, 0.8), (0, -0.8, 0.95)), cam("C", (2.8, 0.2, 1.0), (0, 0, 0.6))]
 poses = [("idle", 20), ("lunge-bite", 10), ("skitter", 4)]
 for c, (an, fr) in zip(cams, poses):
     rig.animation_data.action = bpy.data.actions[an]; scene.frame_set(fr)
