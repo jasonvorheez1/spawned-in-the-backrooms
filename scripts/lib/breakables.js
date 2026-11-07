@@ -2,7 +2,7 @@
 // An entity is breakable by tag "breakable" + state { mat, hp, maxHp }. Level 0's generated walls are one mesh ("level0"):
 // a wall is keyed "x:cx:cz" / "z:cx:cz", its hp in place.state.wallHp, broken ones in place.state.broken { key: at } (the sim regrows them).
 import B from './data/breakables.yml'
-import { attrsOf } from './stats.js'
+import { attrsOf, skillsOf } from './stats.js'
 import { baseOf } from './weapons.js'
 import { raycast } from 'builtin/physics'
 import { N, S, H, HALF, wallX, wallZ, isArchWall, inHub, EXIT } from './maze.js'
@@ -90,10 +90,10 @@ export function syncWalls(ctx, gname) {
 }
 // the sims call this: broken walls grow back after regrowMinutes (never with someone in the gap), then the mesh follows
 // props the levels lay without a material (containers, Level 2 boxes, Level 3 live junction boxes) join the breakables here
-const PROP_MAT = { 'live-box': 'junction', l2box: 'sheet_steel', container: 'wood' }
+const PROP_MAT = { 'live-box': 'junction', l2box: 'sheet_steel', container: 'wood', ...(B.props ?? {}) }
 const L2_MAT = { toolbox: 'sheet_steel', locker: 'sheet_steel', vending: 'sheet_steel', cabinet: 'sheet_steel', valvebox: 'pipe', pipebox: 'pipe', crate: 'wood', pallet: 'wood', desk: 'wood' }
 export function sweepProps(ctx) {
-  for (const t of ['live-box', 'l2box', 'container']) for (const o of ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+  for (const t of Object.keys(PROP_MAT)) for (const o of ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
     const st = o.state ?? {}
     if (o.tags?.includes('breakable') && st.mat && st.hp != null && !(t === 'live-box' && st.mat === 'machine')) continue
     const h = ctx.getObject(o.id); if (!h) continue
@@ -244,7 +244,11 @@ export function strike(ctx, s, wp, kind, base, fwd, pitch = 0) {
   }
   if (!hit?.id) return false
   const mul = (B.materials.drywall.mul[cls] ?? 1)
-  const fac = (wp.ranged ? 1 : strFactor(s)) * (kind === 'fists' ? B.fistsMul : 1)
+  // skill: the weapon's own skill (guns, melee, unarmed) adds up to +40% at 100; luck: a crit lands at LCK x 1.5 %, for x1.8
+  const sk = skillsOf(s)[wp.ranged ? 'guns' : kind === 'fists' ? 'unarmed' : 'melee'] ?? 0, a = attrsOf(s)
+  const crit = ctx.random() < (a.l ?? 5) * B.critPer
+  const fac = (wp.ranged ? 1 : strFactor(s)) * (kind === 'fists' ? B.fistsMul : 1) * (1 + sk / 250) * (crit ? B.critMul : 1)
+  if (crit) ctx.emit('damageNumber', { position: { x: p.x + fwd.x * 1.2, y: p.y + 1.6, z: p.z + fwd.z * 1.2 }, text: 'CRITICAL', color: '#ffb347', size: 0.8 }, { audience: { player: ctx.self.id } })
   if (hit.id === 'level0') {
     const w = wallKeyAt(hit.position, hit.normal); if (!w) return false
     return damageWall(ctx, w, base * mul * fac, hit.position, hit.normal, kind)

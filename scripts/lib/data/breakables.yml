@@ -2,7 +2,11 @@
 # Damage to a structure = weapon damage x heavy swing x condition x material mul[class] x strength factor.
 # Strength factor (melee and fists only) = base + per x Hardiness (1..10): HAR 1 = 0.8, HAR 5 = 1.2, HAR 10 = 1.7. Guns ignore it.
 strength: { base: 0.7, per: 0.1 }
-fistsMul: 0.35            # bare hands barely scratch a wall
+fistsMul: 0.35
+critPer: 0.015          # crit chance per Luck point (my pick: LCK 5 = 7.5%)
+critMul: 1.8
+# more things that break: tag -> material (hp is half the material's). usable machines that run minigames stay whole
+props: { l4-vend: machine, l4-bed: wood, l4-prop: wood, gamma-sign: metal, gamma-cam: fixture, gamma-bed: wood, l3lamp: fixture, l3farbulb: fixture, l1lamp: fixture, l2lamp: fixture, crate: wood, lootfurn: wood }            # bare hands barely scratch a wall
 regrowMinutes: 25        # a broken Level 0 wall grows back after this long, so the maze stays a maze
 wallHpMul: 1.5           # a Level 0 wall is a double sheet of drywall: 180 hp
 materials:
