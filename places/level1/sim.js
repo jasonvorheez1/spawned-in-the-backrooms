@@ -14,9 +14,9 @@ export const cadence = "250ms";
 const LAMP_ON = 9;
 // the M.E.G. agents are critters like the players: lime hi-vis jackets, the agency's look
 const AGENT = {
-  "meg-ale": { name: "Ale · M.E.G. Scout", role: "scout", look: { species: "fox", sex: "f", topw: "jacket", top: "#b6e04a", botw: "pants", bottom: "#4a5a3a", shoes: "boots", shoec: "#2a2420", hat: "cap", hatc: "#b6e04a", expr: "smile" } },
-  "meg-ortiz": { name: "Dr. Ortiz · M.E.G. Medic", role: "medic", look: { species: "bunny", sex: "f", topw: "jacket", top: "#eef2f0", botw: "pants", bottom: "#4a5a3a", shoes: "boots", shoec: "#2a2420", neck: "scarf", neckc: "#b6e04a", expr: "smile" } },
-  "meg-callum": { name: "Callum · Quartermaster", role: "quarter", look: { species: "bear", sex: "m", topw: "jacket", top: "#b6e04a", botw: "pants", bottom: "#4a5a3a", shoes: "boots", shoec: "#2a2420", hat: "beanie", hatc: "#7a3a2a", expr: "grin" } },
+  "meg-ale": { name: "Ale · M.E.G. Scout", role: "scout", look: { species: "fox", sex: "f", eye: "#28a46e", belly: "#ffffff", tip: "#ffffff", nose: "#241814", topw: "jacket", top: "#b6e04a", botw: "pants", bottom: "#4a5a3a", shoes: "boots", shoec: "#2a2420", hat: "cap", hatc: "#b6e04a", expr: "beam" } },
+  "meg-ortiz": { name: "Dr. Ortiz · M.E.G. Medic", role: "medic", look: { species: "bunny", sex: "f", eye: "#684878", belly: "#ffffff", nose: "#ff9eb2", inner: "#ffc2d1", topw: "jacket", top: "#eef2f0", botw: "pants", bottom: "#4a5a3a", shoes: "boots", shoec: "#2a2420", neck: "scarf", neckc: "#b6e04a", expr: "smile" } },
+  "meg-callum": { name: "Callum · Quartermaster", role: "quarter", look: { species: "bear", sex: "m", eye: "#8a582c", belly: "#e8c89e", nose: "#221814", topw: "jacket", top: "#b6e04a", botw: "pants", bottom: "#4a5a3a", shoes: "boots", shoec: "#2a2420", hat: "beanie", hatc: "#7a3a2a", expr: "grin" } },
 };
 const AGENTS = [["meg-ale", 2.6, -0.6], ["meg-ortiz", 11.5, -3.6], ["meg-callum", 7.9, -1.6]];
 export function agentSpec(a, id, dx, dz) {

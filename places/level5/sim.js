@@ -24,7 +24,7 @@ const RESIDENTS = {
     at: [0, 18],
     yaw: 0,
     faction: "meg",
-    look: { species: "cat", sex: "f", topw: "jacket", top: "#e0e4e8", botw: "skirt", bottom: "#2b2e38", shoes: "boots", shoec: "#1f1d1a", hat: "beret", hatc: "#3e4856", expr: "smile" },
+    look: { species: "cat", sex: "f", fur: "#e69c64", belly: "#fff8f0", tip: "#fff8f0", eye: "#2ab890", nose: "#ff9eb2", topw: "jacket", top: "#e0e4e8", botw: "skirt", bottom: "#2b2e38", shoes: "boots", shoec: "#1f1d1a", hat: "beret", hatc: "#3e4856", expr: "beam" },
   },
   "hk-vance": {
     name: "Vance · Boiler Room Scout",
@@ -34,7 +34,7 @@ const RESIDENTS = {
     at: [10, 18.5],
     yaw: -90,
     faction: "meg",
-    look: { species: "dog", sex: "m", topw: "vest", top: "#b87030", botw: "pants", bottom: "#323028", shoes: "boots", shoec: "#1c1b18", hat: "cap", hatc: "#42382c", expr: "frown" },
+    look: { species: "dog", sex: "m", fur: "#b87c48", belly: "#fbe8d0", eye: "#9a6226", nose: "#2a1c18", topw: "vest", top: "#b87030", botw: "pants", bottom: "#323028", shoes: "boots", shoec: "#1c1b18", hat: "cap", hatc: "#42382c", expr: "smug" },
   },
   "homely-barnaby": {
     name: "Barnaby · Hotel Concierge",
@@ -44,7 +44,7 @@ const RESIDENTS = {
     at: [-43.6, 0.4],
     yaw: 90,
     faction: "homely",
-    look: { species: "dog", sex: "m", topw: "vest", top: "#6a1b24", botw: "pants", bottom: "#22201d", shoes: "boots", shoec: "#151515", hat: "cap", hatc: "#6a1b24", expr: "smile" },
+    look: { species: "dog", sex: "m", fur: "#cca062", belly: "#fef0db", eye: "#a87232", nose: "#2a1c18", topw: "vest", top: "#6a1b24", botw: "pants", bottom: "#22201d", shoes: "boots", shoec: "#151515", hat: "cap", hatc: "#6a1b24", expr: "smile" },
   },
   "homely-auguste": {
     name: "Auguste · Dining Room Chef",
@@ -54,7 +54,7 @@ const RESIDENTS = {
     at: [-10, 18.5],
     yaw: 0,
     faction: "homely",
-    look: { species: "bear", sex: "m", topw: "jacket", top: "#f4f4f0", botw: "pants", bottom: "#2e2e2e", shoes: "boots", shoec: "#22201c", expr: "smile" },
+    look: { species: "bear", sex: "m", fur: "#8c502c", belly: "#f4dac0", eye: "#683e1e", nose: "#221814", topw: "jacket", top: "#f4f4f0", botw: "pants", bottom: "#2e2e2e", shoes: "boots", shoec: "#22201c", expr: "grin" },
   },
 };
 
@@ -111,20 +111,22 @@ export function lay(ctx) {
     if (!ctx.getObject(bid)) ctx.spawn(bid, { feetPosition: { x, y: 2, z }, audio: { clip: G("industrial-boiler-roar-steam-hiss-loop"), gain: 0.5, loop: true, spatial: true, refDistance: 4, maxDistance: 22 } });
   }
 
-  // Samantha: The Beverly Room Psychic Cat
+  // Samantha: The Beverly Room Psychic Cat (Entity 26)
   if (!ctx.getObject("l5-samantha")) {
     ctx.spawn("l5-samantha", {
       tags: ["npc", "samantha", "usable"],
       feetPosition: { x: 6, y: 0.42, z: 2 },
       rotation: { yaw: -130 },
       physics: "character",
+      scale: { x: 0.9, y: 0.9, z: 0.9 },
       ...critterSpec({
         species: "cat",
         sex: "f",
-        fur: "#141418",
-        belly: "#101014",
-        tip: "#141418",
-        eye: "#ffd700",
+        fur: "#181820",
+        belly: "#fffdf8",
+        tip: "#fffdf8",
+        eye: "#ffb400",
+        nose: "#ff9eb2",
         expr: "smug",
       }),
       anim: { main: { clip: "cdn/clip-sit-loop.glb", loop: true } },

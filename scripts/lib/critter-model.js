@@ -21,11 +21,17 @@ function furMats(l) {
     tip = u() < 0.5 ? belly : mix(fur, ink, 0.35 + u() * 0.4)
     mark = mix(fur, u() < 0.3 ? cream : ink, 0.3 + u() * 0.45)
   }
-  const m = { fur: { color: fur }, limb: { color: l.fur ? (sp.limb && !l.fur ? sp.limb : fur) : sp.limb || fur }, belly: { color: l.belly || belly }, tip: { color: l.tip || tip } }
-  if (sp.nose) m.nose = { color: l.nose || sp.nose }
-  if (mark) m.mark = { color: l.mark || mark }
-  if (sp.inner) m.inner = { color: sp.inner }
-  if (sp.antler) m.antler = { color: sp.antler }
+  const innerCol = l.inner || sp.inner || mix(fur, '#ffb8c6', 0.65)
+  const m = {
+    fur: { color: fur, roughness: 0.82, metalness: 0 },
+    limb: { color: l.limb || (l.fur ? (sp.limb && !l.fur ? sp.limb : fur) : sp.limb || fur), roughness: 0.82, metalness: 0 },
+    belly: { color: l.belly || belly, roughness: 0.88, metalness: 0 },
+    tip: { color: l.tip || tip, roughness: 0.82, metalness: 0 },
+    inner: { color: innerCol, roughness: 0.9, metalness: 0 },
+    nose: { color: l.nose || sp.nose || '#231816', roughness: 0.35, metalness: 0.05 }
+  }
+  if (mark || l.mark) m.mark = { color: l.mark || mark, roughness: 0.82, metalness: 0 }
+  if (sp.antler || l.antler) m.antler = { color: l.antler || sp.antler, roughness: 0.65, metalness: 0.05 }
   return m
 }
 const only = (m, keys) => { const o = {}; for (const k of keys || []) if (m[k]) o[k] = m[k]; return o }
@@ -35,13 +41,37 @@ export function bodyModel(l) {
   const parts = {}
   for (const p of M.parts) parts[p] = { visible: false }
   for (const [slot, pre] of Object.entries(M.slots)) { const k = MESH_SWAP[slot]?.[l[slot]] ?? l[slot]; if (k && k !== 'none' && parts[pre + '_' + k]) parts[pre + '_' + k].visible = true }
-  const materials = { ...furMats(l), pad: { color: M.pad } }
-  for (const [slot, [mat, key]] of Object.entries(CLOTH)) if (l[key]) materials[mat] = { color: l[key] }
+  const materials = { ...furMats(l), pad: { color: M.pad || '#ff9fb4', roughness: 0.6, metalness: 0 } }
+  for (const [slot, [mat, key]] of Object.entries(CLOTH)) if (l[key]) materials[mat] = { color: l[key], roughness: 0.75, metalness: 0 }
   return { id: M.body[l.sex === 'f' ? 'f' : 'm'], materials: only(materials, M.bodyMats), parts }
 }
-export function headModel(l) { const sp = M.species[speciesOf(l)]; return { id: (l?.sex === 'f' ? sp.headF : sp.headM) || sp.head, materials: only({ ...furMats(l), pupil: { color: '#000000', roughness: 1, metalness: 0 }, iris: { color: l.eye && l.eye !== '#2b2233' ? l.eye : '#8a5a2e', roughness: 0.9 }, eyewhite: { color: '#fffaf2', roughness: 0.9 } }, sp.mats) } }
-export function faceMorph(expr, blink) {
+export function headModel(l) {
+  const sp = M.species[speciesOf(l)];
+  const isFemale = l?.sex === 'f';
+  const eyeCol = l?.eye && l.eye !== '#2b2233' && l.eye !== '#000000' ? l.eye : null;
+  const blushCol = l?.blush || '#ff6285';
+  return {
+    id: (isFemale ? sp.headF : sp.headM) || sp.head,
+    materials: only({
+      ...furMats(l),
+      eyewhite: { color: '#fffdfa', roughness: 0.4 },
+      eyeink: { color: '#161214', roughness: 0.85 },
+      pupil: {
+        color: eyeCol || '#121014',
+        roughness: 0.22,
+        metalness: 0.05,
+        ...(eyeCol && (l?.glowEye || l?.species === 'samantha') ? { emissive: eyeCol, emissiveIntensity: 0.4 } : {})
+      },
+      iris: { color: eyeCol || '#8a5a2e', roughness: 0.25 },
+      blush: { color: blushCol, roughness: 0.85, emissive: '#ff4065', emissiveIntensity: isFemale ? 0.22 : 0.15 },
+      mouth: { color: '#661625', roughness: 0.9 },
+      tongue: { color: '#ff7b95', roughness: 0.6 }
+    }, sp.mats)
+  }
+}
+export function faceMorph(expr, blink, isFemale) {
   const f = { ...(M.faces[expr] || M.faces.smile) }
+  if (isFemale && f.Blush == null) f.Blush = 0.28
   if (blink) f.Blink = 1
   return f
 }
@@ -49,8 +79,19 @@ export function faceMorph(expr, blink) {
 export const MESH = M.mesh === true
 export function critterSpec(l) {
   if (!MESH) return { primitive: { kind: 'scripted', script: 'scripts/critter2-geo.js', params: l }, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 } }
-  return { model: bodyModel(l), morph: bustMorph(l) ?? undefined, children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel(l), morph: faceMorph(l.expr) }],
-    material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.6, bounce: 0.6 } }
+  return {
+    model: bodyModel(l),
+    morph: bustMorph(l) ?? undefined,
+    children: [{
+      id: HEAD_ID,
+      attachment: { skin: true },
+      model: headModel(l),
+      morph: faceMorph(l.expr, false, l?.sex === 'f'),
+      jiggle: { bones: ['EarL', 'EarR'], amount: 0.55, bounce: 0.7 }
+    }],
+    material: { outline: { color: '#1d1420', width: 2.4 } },
+    jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.65, bounce: 0.7 }
+  }
 }
 // a mesh critter's look read back off its own model (the bodies laid before state.wear existed): parts shown = garments, cloth_* = their colours, head GLB = species and sex
 const CLOTH_KEY = { topw: 'top', botw: 'bottom', shoes: 'shoec', hat: 'hatc', neck: 'neckc' }
@@ -69,7 +110,12 @@ export function lookFromModel(model, headId) {
 export function rewear(ctx, obj, look) {
   if (!obj || !look) return
   if (obj.primitive?.params) { obj.primitive = { ...obj.primitive, params: { ...obj.primitive.params, ...look } }; return }
-  if (obj.model) { obj.model = bodyModel(look); const bm = bustMorph(look); if (bm) obj.morph = { ...(obj.morph ?? {}), ...bm } }
+  if (obj.model) {
+    obj.model = bodyModel(look)
+    const bm = bustMorph(look)
+    if (bm) obj.morph = { ...(obj.morph ?? {}), ...bm }
+    seatHead(ctx, obj, look)
+  }
 }
 // a scripted critter swapped onto the Blender critter in place: body model, skinned head child, outline and jiggle; returns the look it wore
 export function toMesh(ctx, obj) {
@@ -87,8 +133,14 @@ export function seatHead(ctx, obj, l) {
   if (h && obj.state && obj.state.headBody !== body) { ctx.destroy(h.id ?? obj.id + '/' + HEAD_ID); h = null }
   if (obj.state && obj.state.headBody !== body) obj.state.headBody = body
   if (!h) { ctx.spawn(HEAD_ID, { parent: obj.id, ...want }); return }
-  if (!h.attachment?.skin) { h.primitive = null; h.attachment = { skin: true }; h.feetPosition = { x: 0, y: 0, z: 0 }; h.rotation = 0; h.model = want.model; h.morph = want.morph }
-  else if ((h.model?.id ?? h.model) !== want.model.id) { h.model = want.model; h.morph = want.morph } // an old-pass head swaps to the current one
+  if (!h.attachment?.skin) {
+    h.primitive = null; h.attachment = { skin: true }; h.feetPosition = { x: 0, y: 0, z: 0 }; h.rotation = 0;
+    h.model = want.model; h.morph = want.morph; h.jiggle = want.jiggle
+  } else {
+    h.model = want.model
+    if (want.morph) h.morph = want.morph
+    if (want.jiggle && !h.jiggle) h.jiggle = want.jiggle
+  }
 }
 
 // a body from an older Blender pass (not one of M.body) is out of date
