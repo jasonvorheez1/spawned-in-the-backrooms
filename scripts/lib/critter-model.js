@@ -23,7 +23,7 @@ export function bodyModel(l) {
   for (const [slot, [mat, key]] of Object.entries(CLOTH)) if (l[key]) materials[mat] = { color: l[key] }
   return { id: M.body[l.sex === 'f' ? 'f' : 'm'], materials: only(materials, M.bodyMats), parts }
 }
-export function headModel(l) { const sp = M.species[speciesOf(l)]; return { id: sp.head, materials: only({ ...furMats(l), pupil: { color: '#000000', roughness: 1, metalness: 0 } }, sp.mats) } }
+export function headModel(l) { const sp = M.species[speciesOf(l)]; return { id: sp.head, materials: only({ ...furMats(l), pupil: { color: '#000000', roughness: 1, metalness: 0 }, iris: { color: l.eye && l.eye !== '#2b2233' ? l.eye : '#8a5a2e', roughness: 0.9 }, eyewhite: { color: '#fffaf2', roughness: 0.9 } }, sp.mats) } }
 export function faceMorph(expr, blink) {
   const f = { ...(M.faces[expr] || M.faces.smile) }
   if (blink) f.Blink = 1
