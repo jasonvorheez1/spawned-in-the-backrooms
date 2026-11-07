@@ -291,7 +291,11 @@ export function geometry(ctx) {
     const k = Math.max(0.0004, 1 - (u / (HR[0] + 0.03)) ** 2 - (v / HR[1]) ** 2);
     const zBase = -HR[2] * Math.sqrt(k);
     const muz = snoutAt(u, v) * Math.min(1, Math.sqrt(k) * 1.6);
-    return [HC[0] + u * (1 + e), HC[1] + v * (1 + e), HC[2] + (zBase - muz) * (1 + e)];
+    if (!e) return [HC[0] + u, HC[1] + v, HC[2] + zBase - muz];
+    // a mark's layer lifts off the skin along its facing, never sideways, so stacked layers stay registered on the snout
+    const n = norm3([u, v, zBase - muz * 2.2]);
+    const d = e * 0.36;
+    return [HC[0] + u + n[0] * d, HC[1] + v + n[1] * d, HC[2] + zBase - muz + n[2] * d];
   };
 
   const fill = (poly, e, rings = hi ? 3 : 2) => {
@@ -1138,14 +1142,14 @@ export function geometry(ctx) {
   }
 
   // Mouth & Expressions
-  const MY = -0.135;
+  const MY = SN.y - 0.03; // the mouth tucks under the nose, on the snout
   ctx.flat();
   ctx.color(INK);
   const MO = E.mouth;
 
   if (MO === "grin" || MO === "laugh" || MO === "tongue" || MO === "gritted") {
-    const w = MO === "gritted" ? 0.068 : MO === "laugh" ? 0.095 : E.wide ? 0.1 : 0.082; // small dandy mouths
-    const D = MO === "laugh" ? 0.095 : E.wide ? 0.078 : 0.068;
+    const w = MO === "gritted" ? 0.06 : MO === "laugh" ? 0.082 : E.wide ? 0.085 : 0.07; // small dandy mouths
+    const D = MO === "laugh" ? 0.08 : E.wide ? 0.066 : 0.056;
     const cv = MO === "laugh" ? 2.4 : 2.2;
     const up = (t) => { const u = (t - 0.5) * 2 * w; return [u, MY + 0.03 + cv * u * u]; };
     const lo = (t) => {
