@@ -41,26 +41,28 @@ function lobby(ctx, s) {
   const closed = (msg) => { s.mj = { open: true, msg }; };
   if ((s.cents ?? 0) < STAKE) return closed("You need $1.00 to sit in.");
   const g = tb?.state?.mjGuests;
-  if (g && !g.leaving && g.host !== me.id && now - (g.beat ?? 0) < 20000) return closed("Someone is already playing at this table. The stools are warm.");
+  const rejoin = g && g.solo && !g.leaving;
+  if (g && !g.leaving && !g.solo && g.host !== me.id && now - (g.beat ?? 0) < 20000) return closed("Someone is already playing at this table. The stools are warm.");
   if (!tb) return closed("The table is not here.");
   // the nearest free stool is yours, the others go round it
   let k = -1, bd = 1e9; const p = me.feetPosition;
   MJ.stools.forEach((id, i) => { const o = ctx.getObject(id), sp = o && spotsOf(o)[0]; if (!sp || (o.state.by?.[0] && o.state.by[0] !== me.id)) return; const d = Math.hypot(sp.x - p.x, sp.z - p.z); if (d < bd) { bd = d; k = i; } });
+  if (rejoin) { const used = new Set(g.list.map((e) => e.stool)), fk = MJ.stools.findIndex((id) => !used.has(id)); if (fk >= 0) k = fk; }
   if (k < 0) return closed("There is nowhere to sit.");
   if (!s.sit && !sitDown(ctx, ctx.getObject(MJ.stools[k]))) return closed("You can't sit there.");
-  const names = shuffle(ctx, Object.keys(MJ.visitors)).slice(0, 3), seats = [{ you: true, name: "You" }], list = [];
+  const names = rejoin ? MJ.stools.map((_, j) => g.list.find((e) => e.stool === MJ.stools[(k + j + 1) % 4])?.v).slice(0, 3).filter(Boolean) : shuffle(ctx, Object.keys(MJ.visitors)).slice(0, 3), seats = [{ you: true, name: "You" }], list = [];
   names.forEach((v, j) => { const stool = MJ.stools[(k + j + 1) % 4], sp = spotOf(ctx, stool), V = MJ.visitors[v];
     seats.push({ v, gid: `mj-guest-${v}`, name: V.name, role: V.role, sp: V.species, here: false, sx: sp.x, sz: sp.z });
     list.push({ id: `mj-guest-${v}`, v, stool, x: sp.x, y: sp.y + 0.1, z: sp.z, yaw: sp.yaw }); });
-  tb.state.mjGuests = { host: me.id, at: now, beat: now, list, leaving: false };
+  tb.state.mjGuests = { host: me.id, at: rejoin ? g.at : now, beat: now, list, leaving: false };
   ctx.self.session.mjLive = true;
   s.mj = { open: true, phase: "intro", at: now, next: now + 400, k, seats, seq: 0, hands: 0, log: [], pot: 0, msg: "Waiting for players..." };
 }
 function leave(ctx, s, quiet) {
   const m = s.mj, tb = table(ctx);
   if (m?.phase && m.phase !== "over" && m.phase !== "intro" && !quiet) s.notice = { text: "You push back from the table. Your dollar stays in the pot.", at: ctx.now() };
-  if (m?.seats) say(ctx, m, 1 + Math.floor(ctx.random() * 3), "bye", true);
-  if (tb?.state?.mjGuests) tb.state.mjGuests = { ...tb.state.mjGuests, leaving: true, leaveAt: ctx.now() };
+  if (m?.seats) say(ctx, m, 1 + Math.floor(ctx.random() * 3), "left", true);
+  if (tb?.state?.mjGuests && !tb.state.mjGuests.leaving) tb.state.mjGuests = { ...tb.state.mjGuests, host: null, solo: true, soloAt: ctx.now(), talked: true }; // the table goes on without you (scripts/l5-ball.js)
   if (s.sit && s.sit.phase !== "up") standUp(ctx);
   s.mj = null; ctx.self.session.mjLive = false;
 }

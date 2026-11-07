@@ -111,5 +111,7 @@ visitors:
       near: ["one more tile and she lights."]
       bye: ["the lamps want me. always the lamps."]
 common:
+  left: ["and there goes our fourth. deal them out.", "leaving with the pot still warm? rude.", "they'll be back. they always come back.", "more tiles for us, then.", "huh. was it something i said?", "fine. three-handed it is."]
+  solo: ["your turn, love.", "pung. sorry, not sorry.", "i swear these tiles move on their own.", "who keeps stacking the winds?", "one more hand, then bed.", "don't look at my tiles."]
   watch: ["...", "hm.", "hmm.", "bold.", "interesting."]
   slow: ["any day now.", "we're not getting younger. well, you're not.", "tick, tick."]

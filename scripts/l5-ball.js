@@ -3,6 +3,34 @@
 // state.mjGuests = { host, at, beat, list: [{ id, v, stool, x, y, z, yaw }], leaving } is written by the game; here they walk in
 // from the ballroom doors, sit on their stools, and walk out again when the host stands up or goes quiet.
 import { heard } from "./lib/hear.js";
+import { vo } from "./lib/voices.js";
+const SOLO_MS = 300000; // Savi's pick: they play on about five minutes after you go, then drift out
+const CLACK = "/cdn/moodboard-realistic-gritty/sfx-mahjong-tile-clack-on-felt-table.mp3", SHUFFLE = "/cdn/moodboard-realistic-gritty/sfx-mahjong-tiles-shuffling-washing-on-table.mp3";
+const pick = (ctx, a) => a[Math.floor(ctx.random() * a.length)];
+function line(ctx, o, v, kind) {
+  const V = MJ.visitors[v], t = pick(ctx, V?.lines?.[kind] ?? MJ.common[kind] ?? ["..."]), now = ctx.now(), f = o.feetPosition;
+  o.state.line = { t, at: now, d: 1400 + t.length * 60 }; o.state.talkAt = now;
+  heard(ctx, { clip: vo(v, t), position: { x: f.x, y: f.y + 1.4, z: f.z }, volume: 0.85, refDistance: 3, maxDistance: 18 }, { audience: { nearby: f, radius: 20 } });
+}
+// with no host the three play their own hands: a discard every few seconds, table talk, a win now and then, a fresh wash of tiles
+function playOn(ctx, g, now) {
+  const W = (ctx.self.session.mjSolo ??= { next: now + 3000, hand: now }), seated = g.list.map((e) => [e, ctx.getObject(e.id)]).filter(([, o]) => o?.state?.mjSat);
+  if (!g.talked && seated.length) { const [e, o] = pick(ctx, seated); line(ctx, o, e.v, "left"); ctx.self.state.mjGuests = { ...g, talked: true }; return; }
+  if (now < W.next || seated.length < 2) return;
+  W.next = now + 2200 + ctx.random() * 3000;
+  const at = { x: MJ.table[0], y: 0.9, z: MJ.table[1] }, aud = { audience: { nearby: at, radius: 14 } };
+  const [e, o] = pick(ctx, seated);
+  if (now - W.hand > 55000 + ctx.random() * 40000) {
+    W.hand = now; W.next = now + 7000; line(ctx, o, e.v, ctx.random() < 0.5 ? "tsumo" : "win");
+    const other = seated.find(([x]) => x !== e); if (other && ctx.random() < 0.7) setTimeoutLess(ctx, other);
+    heard(ctx, { clip: SHUFFLE, position: at, volume: 0.55, maxDistance: 12 }, aud); return;
+  }
+  heard(ctx, { clip: CLACK, position: at, volume: 0.5, pitch: 0.9 + ctx.random() * 0.2, maxDistance: 10 }, aud);
+  
+  if (ctx.random() < 0.22) line(ctx, o, e.v, ctx.random() < 0.6 ? "disc" : "solo");
+}
+function setTimeoutLess(ctx, [e, o]) { ctx.self.session.mjSolo.lose = { v: e.v, id: o.id, at: ctx.now() + 2600 }; }
+function loseLine(ctx, now) { const L = ctx.self.session.mjSolo?.lose; if (!L || now < L.at) return; ctx.self.session.mjSolo.lose = null; const o = ctx.getObject(L.id); if (o) line(ctx, o, L.v, "lose"); }
 import { critterSpec } from "./lib/critter-model.js";
 import { npcLook } from "./lib/clothes.js";
 import { npcState } from "./lib/stats.js";
@@ -41,7 +69,10 @@ export function update(ctx) {
   const s = ctx.self.state, g = s.mjGuests, now = ctx.now();
   const have = ctx.query({ tags: ["mjguest"] });
   if (!g) { for (const o of have) ctx.destroy(o.id); return; }
-  const leaving = g.leaving || now - (g.beat ?? 0) > 20000, ids = new Set(g.list.map((e) => e.id));
+  if (!g.solo && !g.leaving && now - (g.beat ?? 0) > 20000) { s.mjGuests = { ...g, host: null, solo: true, soloAt: now, talked: false }; return; } // the host went quiet (gone, dropped): the game goes on
+  if (g.solo && !g.leaving && now - (g.soloAt ?? now) > SOLO_MS) { s.mjGuests = { ...g, leaving: true, leaveAt: now }; return; }
+  const leaving = g.leaving, ids = new Set(g.list.map((e) => e.id));
+  if (g.solo && !leaving) { playOn(ctx, g, now); loseLine(ctx, now); }
   if (leaving && !g.leaveAt) { s.mjGuests = { ...g, leaving: true, leaveAt: now }; return; }
   g.list.forEach((e, i) => {
     let o = ctx.getObject(e.id);
