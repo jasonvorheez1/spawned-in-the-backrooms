@@ -41,7 +41,7 @@ function findFocus(ctx, ray) {
       const ang = Math.acos(Math.max(-1, Math.min(1, (vx * d.x + vy * d.y + vz * d.z) / dist)))
       if (ang > Math.max(0.075, Math.atan((big ? 0.55 : 0.3) / dist)) || ang >= bestAng) continue
       const wall = raycast(ctx, o, { x: vx / dist, y: vy / dist, z: vz / dist }, { distance: dist - 0.05, physicsOnly: true, ignoreEntities: [it.id, ctx.self.id], bodies: 'static' })
-      if (wall && ((tag !== 'usable' && tag !== 'seat') || dist - wall.distance > 0.6)) continue // a usable set into furniture (a desk's computer) is reached through its own desk's shell
+      if (wall && ((tag !== 'usable' && tag !== 'seat' && tag !== 'door') || dist - wall.distance > 0.6)) continue // a usable set into furniture (a desk's computer) is reached through its own desk's shell
       best = { id: it.id, tag }; bestAng = ang
     }
   }
