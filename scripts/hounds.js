@@ -45,7 +45,7 @@ function sees(ctx, h, p) {
   const a = { x: h.feetPosition.x, y: h.feetPosition.y + 0.7, z: h.feetPosition.z }, b = { x: p.feetPosition.x, y: p.feetPosition.y + 1, z: p.feetPosition.z };
   const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z, d = Math.hypot(dx, dy, dz);
   if (d < 0.8) return true;
-  return !raycast(ctx, a, { x: dx / d, y: dy / d, z: dz / d }, { distance: d - 0.4, bodies: "static", physicsOnly: true, ignoreEntities: [h.id, p.id] });
+  return !raycast(ctx, a, { x: dx / d, y: dy / d, z: dz / d }, { distance: d - 0.4, bodies: "all", physicsOnly: true, excludeTags: ["hound", "npc", "player"], ignoreEntities: [h.id, p.id] }); // doors are kinematic: "all" sees them
 }
 export function update(ctx, dt) {
   const place = ctx.self.place;
@@ -91,7 +91,7 @@ export function update(ctx, dt) {
     if (now < (m.howlUntil ?? 0)) { h.velocity = { x: 0, y: (h.velocity?.y ?? 0) - 20 * dt, z: 0 }; continue; } // rearing back, jaw open
     const sight = L.houndSight * mu.sight * (dark ? L.houndSightFlicker : 1);
     let prey = null, best = Infinity;
-    for (const p of [...players, ...ctx.query({ tags: ["npc"], radius: sight, center: pos }).filter((n) => !n.state?.dead)]) { // agents are meat too
+    for (const p of [...players, ...ctx.query({ tags: ["npc"], radius: sight, center: pos }).filter((n) => !n.state?.dead && !safeAt(n.feetPosition.x, n.feetPosition.z))]) { // an npc past a door, in a safe zone, is out of reach // agents are meat too
       const d = Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z);
       const loud = (p.state?.sprinting ? L.houndHear : 0) || (dark && p.state?.light ? L.houndHearLight : 0);
       if (!(d < Math.max(sight, loud) * sn(p) && d < best)) continue;
@@ -180,7 +180,7 @@ export function update(ctx, dt) {
     if (mauling) h.velocity = { x: 0, y: h.velocity.y, z: 0 };
     if (prey && !m.hunting) { m.hunting = true; heard(ctx, { clip: SND("hound-snarl-growl"), position: pos, volume: 0.9, maxDistance: 35 }); }
     if (!prey && m.hunting) { m.hunting = false; m.howled = false; }
-    if (prey && best < 1.6 && now >= (m.next ?? 0)) {
+    if (prey && best < 1.6 && now >= (m.next ?? 0) && !safeAt(prey.feetPosition.x, prey.feetPosition.z) && sees(ctx, h, prey)) { // no bite through a door or a wall
       m.next = now + L.houndCooldown * 1000; const at = hitPrey(ctx, h, prey, Math.round(L.houndBite * mu.dmg), now);
       m.maulUntil = now + T.maulMs; m.clip = null; m.bleed = { id: prey.id, until: now + T.bleedMs, next: now + 1000 }; // the thrash opens a wound
       ctx.emit("fx", { position: at, script: BLOOD });
