@@ -106,7 +106,7 @@ def render(name):
 # ---------------------------------------------------------------- purpified: a dead body sunk into the brick, the wall stained violet
 def purp():
     reset()
-    skin = mat("body", (0.025, 0.018, 0.03), 0.55, emit=(0.08, 0.0, 0.14), es=0.6)
+    skin = mat("body", (0.012, 0.01, 0.014), 0.8, emit=(0.05, 0.0, 0.09), es=0.12)
     stain = mat("stain", (0.07, 0.015, 0.1), 0.6, emit=(0.18, 0.02, 0.35), es=0.8)
     vein = mat("vein", (0.5, 0.15, 0.9), 0.4, emit=(0.55, 0.12, 1.0), es=3.5)
     brick = mat("pbrick", (0.32, 0.08, 0.45), 0.5, emit=(0.35, 0.05, 0.6), es=1.6)
