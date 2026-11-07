@@ -305,7 +305,7 @@ def build_head(name, p):
     else:
         ell(mb, (0, .19 + sn * .5, 1.235), .1 + sn * .15, .06 + sn * .55, .068)
     o = to_mesh(bpy.data.objects[name], .007, 2); o.name = name
-    decimate(o, 1900)
+    decimate(o, 4200)
     # nose
     bvh = BVHTree.FromObject(o, bpy.context.evaluated_depsgraph_get())
     hit = bvh.ray_cast(V(0, 1, 1.275 if not p.get("pig") else 1.24), V(0, -1, 0))[0]
@@ -738,3 +738,87 @@ def necks():
     cl = lathe("cl", [(.078, .985), (.082, 1.0)], "cloth_neck", segs=24, cy=.0)
     out["cape"] = join([cp, cl], "Neck_cape"); smooth_shade(out["cape"])
     return out
+
+# ================= assemble =================
+import time; T0 = time.time()
+def log(*a): print(f"[{time.time() - T0:6.1f}s]", *a, flush=True)
+body = build_body(); decimate(body, 9000); body.name = body.data.name = "Body"
+def body_zone(c, n):
+    ax = abs(c.x)
+    if c.z < .012 or (ax > WR + .06 and n.z < -.55) or (WR + .015 < ax < WR + .075 and n.z < -.7 and abs(c.y) < .03): return "pad"
+    if c.y > .04 and .64 < c.z < .97 and ax < .1 - (.02 if c.z < .72 else 0) and n.y > .25: return "belly"
+    return "fur"
+assign(body, body_zone, ["fur", "belly", "pad"]); smooth_shade(body)
+rig = build_rig(); auto_weights(body, rig); log("body", tris(body))
+garments = {}
+for grp, fn in (("tops", tops), ("bottoms", bottoms), ("shoes", shoes)):
+    for k, g in fn(body).items():
+        decimate(g, 2600); copy_weights(g, body, blend_hips=.35 if k in ("skirt", "longskirt", "dress") else 0.0)
+        if k in ("skirt", "longskirt", "dress"):   # skirts hang from the hips more than they follow the knees
+            pass
+        garments[g.name] = g
+for fn in (hats, eyewear, necks):
+    for k, g in fn().items():
+        decimate(g, 2400)
+        if k == "cape": rigid(g, "Spine01")
+        garments[g.name] = g
+log("garments", {k: tris(v) for k, v in garments.items()})
+fl = chest_fluff(); set_mats(fl, ["belly"]); rigid(fl, "Spine02"); fl.name = fl.data.name = "ChestFluff"
+species = {}
+for sp, p in SP.items():
+    head = build_head("Head_" + sp, p)
+    face = build_face(head, p); rigid(face, "Head")
+    rigid(head, "Head")
+    kind, esc = p["ears"]; ears = []
+    for side, bone in ((-1, "EarL"), (1, "EarR")):
+        e = build_ear(kind, side); rigid(e, bone); ears.append(e)
+    tl = build_tail(p["tail"]); decimate(tl, 1200)
+    # tail weights: blend Tail -> Tail1 along its length
+    tl.vertex_groups.clear(); g0 = tl.vertex_groups.new(name="Tail"); g1 = tl.vertex_groups.new(name="Tail1"); g2 = tl.vertex_groups.new(name="Hips")
+    for v in tl.data.vertices:
+        t = max(0, min(1, (-v.co.y - .06) / .3)); g2.add([v.index], max(0, 1 - t * 4) * .5, 'REPLACE'); g0.add([v.index], 1 - t, 'REPLACE'); g1.add([v.index], t, 'REPLACE')
+    exs = [build_extra(x) for x in p["ex"]]
+    o = join([face, head] + ears + exs + [tl], "Species_" + sp)
+    for m in ("fur", "belly", "mark", "tip", "inner", "nose", "antler", "pad"):
+        pass
+    species[sp] = o; log("species", sp, tris(o))
+# parent everything to the rig
+for o in [body, fl] + list(garments.values()) + list(species.values()):
+    o.parent = rig; md = o.modifiers.new("Armature", "ARMATURE"); md.object = rig
+    uv_unwrap(o, 2.0) if not o.data.uv_layers else None
+log("tris body", tris(body) + tris(fl))
+
+# ---- proof: a front/3-4/back turnaround of two dressed critters ----
+def show(sp, worn):
+    for o in [body, fl] + list(garments.values()) + list(species.values()):
+        vis = o in (body, fl) or o.name == "Species_" + sp or o.name in worn
+        o.hide_render = not vis
+if STAGE in ("all", "proof"):
+    scene.render.engine = "CYCLES"; scene.cycles.samples = 16; scene.render.resolution_x = scene.render.resolution_y = 656
+    scene.world = bpy.data.worlds.new("w"); scene.world.use_nodes = True; scene.world.node_tree.nodes["Background"].inputs[0].default_value = (.55, .5, .42, 1); scene.world.node_tree.nodes["Background"].inputs[1].default_value = 1.0
+    cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); scene.collection.objects.link(cam); scene.camera = cam; cam.data.lens = 50
+    for nm_, loc, en in (("k", (1.5, 3, 3), 600), ("f", (-2, 2, 2), 250), ("b", (0, -3, 2.5), 300)):
+        L = bpy.data.objects.new(nm_, bpy.data.lights.new(nm_, "AREA")); L.data.energy = en; L.data.size = 2; L.location = loc; scene.collection.objects.link(L)
+        L.rotation_euler = (V(0, 0, .9) - V(*loc)).to_track_quat('-Z', 'Y').to_euler()
+    looks = [(list(SP)[0], ["Top_tee", "Bot_skirt" if FEM else "Bot_shorts", "Shoes_sneakers", "Hat_bow" if FEM else "Neck_scarf"]),
+             (list(SP)[min(1, len(SP) - 1)], ["Top_hoodie", "Bot_pants", "Shoes_boots"])]
+    shots = []
+    for li, (sp, worn) in enumerate(looks):
+        show(sp, worn)
+        for vi, (ang, dist) in enumerate(((0, 3.4), (35, 3.4), (180, 3.4))):
+            a = math.radians(ang); cam.location = (math.sin(a) * dist, math.cos(a) * dist, 1.0)
+            cam.rotation_euler = (V(0, 0, .88) - cam.location).to_track_quat('-Z', 'Y').to_euler()
+            f = f"{PROOF}/p{li}{vi}.png"; scene.render.filepath = f; bpy.ops.render.render(write_still=True); shots.append(f)
+    face_cam = (V(0, 1.3, 1.33), V(0, 0, 1.3))
+    cam.location = face_cam[0]; cam.rotation_euler = (face_cam[1] - face_cam[0]).to_track_quat('-Z', 'Y').to_euler()
+    for li, (sp, worn) in enumerate(looks):
+        show(sp, worn); f = f"{PROOF}/face{li}.png"; scene.render.filepath = f; bpy.ops.render.render(write_still=True)
+    log("proofs")
+if STAGE in ("all", "export"):
+    for o in scene.objects: o.hide_render = False
+    for o in list(scene.objects):
+        if o.type not in ("MESH", "ARMATURE"): bpy.data.objects.remove(o)
+    sel(*([rig] + [o for o in scene.objects if o.type == "MESH"]), active=rig)
+    bpy.ops.export_scene.gltf(filepath=f"{OUT}/critter-{SEX}.glb", export_apply=False, use_selection=True, export_morph=True, export_skins=True,
+                              export_animations=False, export_yup=True)
+    log("export", os.path.getsize(f"{OUT}/critter-{SEX}.glb") // 1024, "KB")
