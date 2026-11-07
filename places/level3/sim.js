@@ -3,7 +3,7 @@
 // assembly lines that keep turning out goods, hounds in brigades and deathmoth swarms drawn to light.
 import L from "../../scripts/lib/data/level3.yml";
 import MEG from "../../scripts/lib/data/meg.yml";
-import { N, H, TH, S, HALF, zoneOf, zoneAt, cellCenter, cellAt, openings, hash, ARRIVE, BACK, LIFT, SLUDGE, SPARKS, GENS, LINES, ceilingAt } from "../../scripts/lib/level3.js";
+import { N, H, TH, S, HALF, zoneOf, zoneAt, cellCenter, cellAt, openings, hash, ARRIVE, BACK, LIFT, SLUDGE, SPARKS, GENS, LINES, ceilingAt, OOB } from "../../scripts/lib/level3.js";
 import { spawnAlmond, spawnWeapon } from "../../scripts/lib/loot.js";
 import { rollWeaponL3 } from "../../scripts/lib/loot3.js";
 import { spawnFurniture, pickKind, wallSpot3 } from "../../scripts/lib/furniture.js";
