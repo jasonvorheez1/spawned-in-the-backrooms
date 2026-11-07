@@ -50,6 +50,49 @@ const wood = (ctx, c = WOOD) => { ctx.albedo(WOODTEX); ctx.color(c); ctx.metalne
 const plain = (ctx, c, rough = 0.7, metal = 0) => { ctx.albedo(null); ctx.color(c); ctx.metalness(metal); ctx.roughness(rough); };
 
 const builders = {
+  smg(ctx, M, hi) { // a 1930s Thompson: walnut stock, finned barrel, Cutts compensator, stick magazine, vertical foregrip; grip at z 0.14
+    const B = Y + 0.03; // the bore line
+    wood(ctx, "oklch(0.8 0.07 50)");
+    for (let k = 0; k < 7; k++) { const t0 = k / 7, t1 = (k + 1) / 7, z0 = 0.06 - t0 * 0.28, z1 = 0.06 - t1 * 0.28, h = 0.016 + t1 * 0.03; bar(ctx, 0, B - 0.006 - t1 * 0.03, 0.016, h, z1, z0 + 0.002, 0.008); } // stock, deepening to the butt
+    steel(ctx, "oklch(0.35 0.01 260)", 0.4);
+    bar(ctx, 0, B - 0.036, 0.0175, 0.048, -0.232, -0.218, 0.006); // butt plate
+    plain(ctx, "oklch(0.26 0.01 260)", 0.45, 0.85);
+    bar(ctx, 0, B, 0.019, 0.021, 0.055, 0.36, 0.006); // receiver
+    bar(ctx, 0, B - 0.026, 0.015, 0.009, 0.1, 0.32, 0.004); // lower frame
+    if (hi) { plain(ctx, "oklch(0.18 0.01 260)", 0.5, 0.8); bar(ctx, 0.0192, B + 0.004, 0.0012, 0.006, 0.2, 0.3, 0.001, 1); } // ejection port
+    steel(ctx, "oklch(0.6 0.01 250)", 0.3);
+    rod(ctx, [[0, B + 0.021, 0.27], [0, B + 0.034, 0.27]], [0.004, 0.006], 8); // cocking knob
+    plain(ctx, "oklch(0.22 0.01 260)", 0.45, 0.85);
+    bar(ctx, 0, B + 0.028, 0.008, 0.008, 0.08, 0.1, 0.002, 1); // rear sight
+    steel(ctx, "oklch(0.4 0.01 260)", 0.35);
+    rod(ctx, [[0, B, 0.36], [0, B, 0.585]], [0.0105, 0.0105], M); // barrel
+    if (hi) for (let z = 0.372; z < 0.5; z += 0.011) rod(ctx, [[0, B, z], [0, B, z + 0.004]], [0.0165, 0.0165], M); // cooling fins
+    plain(ctx, "oklch(0.24 0.01 260)", 0.4, 0.85);
+    rod(ctx, [[0, B, 0.578], [0, B, 0.636]], [0.0155, 0.0155], M); // Cutts compensator
+    if (hi) { plain(ctx, "oklch(0.06 0 0)", 1); for (let k = 0; k < 4; k++) bar(ctx, 0, B + 0.0145, 0.006, 0.0015, 0.59 + k * 0.011, 0.595 + k * 0.011, 0.001, 1); rod(ctx, [[0, B, 0.636], [0, B, 0.637]], [0.007, 0.007], 10); } // ports and bore
+    plain(ctx, "oklch(0.22 0.01 260)", 0.45, 0.85);
+    bar(ctx, 0, B + 0.02, 0.0015, 0.006, 0.625, 0.632, 0.001, 1); // front blade
+    rod(ctx, [[0, B - 0.03, 0.2], [0, B - 0.05, 0.198], [0, B - 0.056, 0.175], [0, B - 0.05, 0.15], [0, B - 0.03, 0.148]], [0.0032, 0.0032, 0.0032, 0.0032, 0.0032], 6); // trigger guard
+    rod(ctx, [[0, B - 0.034, 0.182], [0, B - 0.046, 0.178], [0, B - 0.05, 0.172]], [0.0026, 0.0026, 0.002], 5); // trigger
+    for (let k = 0; k < 8; k++) { const y0 = B - 0.04 - k * 0.012; bar(ctx, 0, y0, 0.011, 0.0065, 0.243 + k * 0.0015, 0.272 + k * 0.0015, 0.003); } // 30-round stick magazine
+    plain(ctx, "oklch(0.2 0.01 260)", 0.4, 0.85); bar(ctx, 0, B - 0.138, 0.0125, 0.004, 0.252, 0.287, 0.002); // floor plate
+    wood(ctx, "oklch(0.78 0.08 48)");
+    const g = (t) => [0.145 - t * 0.035, B - 0.03 - t * 0.095]; // pistol grip, raked back
+    for (let k = 0; k < 6; k++) { const [z, y] = g(k / 6), [, y2] = g((k + 1) / 6); bar(ctx, 0, (y + y2) / 2, 0.0145, (y - y2) / 2 + 0.002, z - 0.036, z + 0.004, 0.006); }
+    for (let k = 0; k < 7; k++) { const t = k / 7, w = 0.016 + (k % 2 ? -0.002 : 0.001); bar(ctx, 0, B - 0.03 - t * 0.085 - 0.006, w, 0.0075, 0.4 - t * 0.008, 0.438 - t * 0.008, 0.007); } // vertical foregrip, finger grooves
+    plain(ctx, "oklch(0.3 0.01 260)", 0.4, 0.85); bar(ctx, 0, B - 0.017, 0.011, 0.006, 0.395, 0.445, 0.003); // foregrip clamp
+  },
+  knife(ctx, M, hi) { // a combat knife lying flat: ridged black grip, steel pommel and guard, clip-point blade with a fuller; grip at z 0.05
+    plain(ctx, "oklch(0.2 0.01 60)", 0.85, 0);
+    const zs = [], rs = []; for (let k = 0; k <= 10; k++) { zs.push([0, Y, 0.012 + k * 0.0105]); rs.push(0.0115 + (hi && k % 2 ? 0.0016 : 0) + Math.sin(k / 10 * Math.PI) * 0.0015); }
+    rod(ctx, zs, rs, M, true); // grip, ringed
+    steel(ctx, "oklch(0.72 0.01 250)", 0.3);
+    rod(ctx, [[0, Y, -0.004], [0, Y, 0.013]], [0.0125, 0.0105], M); // pommel
+    bar(ctx, 0, Y, 0.032, 0.006, 0.12, 0.13, 0.004); // crossguard
+    steel(ctx, "oklch(0.88 0.005 250)", 0.22);
+    blade(ctx, [[0.011, 0.13], [0.011, 0.2], [0.0105, 0.25], [0.006, 0.28], [0.0005, 0.315]], [[-0.016, 0.13], [-0.018, 0.2], [-0.015, 0.26], [-0.008, 0.295], [-0.0005, 0.315]], 0.0032);
+    if (hi) { plain(ctx, "oklch(0.55 0.01 250)", 0.3, 0.9); bar(ctx, 0.002, Y + 0.0033, 0.0022, 0.0003, 0.14, 0.235, 0.0002, 1); bar(ctx, 0.002, Y - 0.0033, 0.0022, 0.0003, 0.14, 0.235, 0.0002, 1); } // fuller, both faces
+  },
   table_leg(ctx, M, hi) {
     wood(ctx, DARKWOOD);
     // turned leg: a bead, a taper, a foot
