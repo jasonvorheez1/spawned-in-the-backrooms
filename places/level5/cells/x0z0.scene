@@ -3921,6 +3921,39 @@ l5-millie:
   scale: {x: 0.96, y: 1.04, z: 0.96}
   state: {attr: "6,8,3,9,5,4,7", faction5: orig, factionName: "The Originals (eccentrics who wandered in between 1300 and 1940; they gossip, play cards, keep Samantha the cat fed, and refuse membership to anyone modern)", fresh: {}, home: {x: 3, z: -20.4}, hp: 176, maxHp: 176, mode: day, name: "Millie Lockheart · Aviatrix (1937)", offers: [["o:member", Ask to join the salon], ["o:lore", Ask about the hotel]], outfit: jacket/pants/#5c3a22, picked: {}, ri: 0, role: trader, rounds: [{act: cdn/clip-sit-loop.glb, dwell: 60, look: {x: 5, z: -19}, x: 3, y: 0, z: -20.4}, {act: null, dwell: 15, look: {x: 6, z: -12}, x: 8, y: 0, z: -14.5}, {act: cdn/clip-talk-loop.glb, dwell: 40, look: {x: 5, z: -19}, x: 3, y: 0, z: -20.4}], species: redpanda, title: Swift, trespass: {}, voice: millie, warned: {}}
   tags: [npc, l5res, l5-orig]
+l5-nvg-case:
+  behavior: scripts/l5-goggles.js
+  children: [{feetPosition: {x: 0, y: 0.22, z: 0}, material: {color: oklch(0.2 0 0), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.05, height: 0.04, kind: box, width: 0.2}}, {feetPosition: {x: 0, y: 0.3, z: 0}, light: {color: oklch(0.8 0.15 145), distance: 2.5, intensity: 0.25, kind: point}}]
+  feetPosition: {x: 31.5, y: 0, z: 23.4}
+  id: l5-nvg-case
+  material: {color: oklch(0.45 0.09 75), metalness: 0.6, roughness: 0.55}
+  physics: static
+  primitive: {depth: 0.36, height: 0.22, kind: box, width: 0.55}
+  rotation: {yaw: 25}
+  state: {info: "INES · M.E.G. MAINT.", kind: case, name: Dented goggle case, verb: Take}
+  tags: [usable]
+l5-nvg-drop:
+  behavior: scripts/l5-goggles.js
+  children: [{feetPosition: {x: 0, y: 0.85, z: -0.255}, material: {color: oklch(0.15 0 0), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.02, height: 0.05, kind: box, width: 0.45}}, {feetPosition: {x: 0, y: 0.55, z: -0.256}, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 80' width='0.5m'><rect width='200' height='80' fill='#f0f0e8'/><text x='100' y='34' text-anchor='middle' font-family='sans-serif' font-size='26' fill='#1a3a7a'>M.E.G.</text><text x='100' y='62' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>RETURNS · DROP HERE</text></svg>"}]
+  feetPosition: {x: 45.2, y: 0, z: -19.6}
+  id: l5-nvg-drop
+  material: {color: oklch(0.4 0.06 240), metalness: 0.6, roughness: 0.55}
+  physics: static
+  primitive: {depth: 0.5, height: 1.1, kind: box, width: 0.7}
+  rotation: {yaw: -90}
+  state: {info: Maintenance returns, kind: drop, name: M.E.G. drop box, verb: Hand in}
+  tags: [usable]
+l5-nvg-radio:
+  behavior: scripts/l5-goggles.js
+  children: [{feetPosition: {x: 0, y: 0.9, z: 0}, material: {color: oklch(0.3 0.04 130), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.22, height: 0.26, kind: box, width: 0.42}}, {feetPosition: {x: 0.14, y: 1.16, z: 0}, material: {color: oklch(0.25 0 0), metalness: 0.6, roughness: 0.55}, primitive: {height: 0.5, kind: cylinder, radiusBottom: 0.008, radiusTop: 0.008}}, {feetPosition: {x: -0.1, y: 1, z: -0.115}, light: {color: oklch(0.75 0.15 40), distance: 2, intensity: 0.4, kind: point}, material: {color: oklch(0.7 0.2 30), emissive: oklch(0.7 0.22 30), emissiveIntensity: 3}, primitive: {kind: sphere, radius: 0.02}}, {feetPosition: {x: 0, y: 1, z: -0.112}, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 60' width='0.36m'><rect x='0' y='0' width='200' height='60' fill='#e8d78a'/><text x='100' y='26' text-anchor='middle' font-family='sans-serif' font-size='20' fill='#222'>BOILER CH.2</text><text x='100' y='50' text-anchor='middle' font-family='sans-serif' font-size='14' fill='#222'>ask for Ines</text></svg>"}]
+  feetPosition: {x: 16.6, y: 0, z: 15.4}
+  id: l5-nvg-radio
+  material: {color: oklch(0.35 0.03 140), metalness: 0.6, roughness: 0.55}
+  physics: static
+  primitive: {depth: 0.4, height: 0.9, kind: box, width: 0.5}
+  rotation: {yaw: 90}
+  state: {info: "Ines · Boiler Tech", kind: radio, name: M.E.G. field radio, verb: Listen}
+  tags: [usable]
 l5-odette:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
   children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.d206916575ccbe6d031f0934134d27d2acea05a26d027868fc5ec32e3031a56b.glb, materials: {belly: {color: "#f7e8d4"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f1ece2"}, inner: {color: "#8a7f8c"}, mark: {color: "#6e6259"}, nose: {color: "#2a1c18"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#9b9188"}}}, morph: {Half: 0.7, Smile: 0.3}}]
