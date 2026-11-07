@@ -150,6 +150,7 @@ export function npcLook(id, look, faction, level, role) {
     const row = CL.rows.find((r) => r.id === ['scarf', 'cape', 'cape', 'bowtie', 'bell', 'cape'][Math.floor(u() * 6)])
     if (row) { l.neck = row.kind; l.neckc = '#' + row.colours[Math.floor(u() * row.colours.length)] }
   }
+  if (!look?.bodyOwn) bodyRoll(id, l) // a fresh body per NPC: fur, markings, height, build, proportions (species and sex stay: their stories name them)
   l.fseed = h0 // the face (scripts/lib/critter-model.js faceFill) rolls from the id, so it never changes with the clothes
   if (!look?.trait) l.trait = '' // fullLook gave the player default; an NPC rolls its own
   return l
@@ -165,3 +166,23 @@ export function plainLook(ctx, cur) {
   return l
 }
 export const CLOTHES = CL
+
+// an NPC's body from its id alone, so it is the same every spawn and nobody shares one. Savi's picks: mostly natural coats, now and then a pastel one
+const NATURAL = { cat: ['f2a65a', 'c98b55', '3b3440', 'f4efe9', 'b9b3c2', '9a6440'], dog: ['c98b55', '9a6440', 'f4efe9', '3b3440', 'e0c090'], fox: ['f07a2e', 'd8602a', 'b9b3c2', 'f4efe9'], bunny: ['f4efe9', 'b9b3c2', 'c98b55', 'e8d8c8', '9a8478'],
+  bear: ['9a6440', '6a4630', '3b3440', 'c98b55'], deer: ['c98b55', 'b07a4a', '9a6440'], mouse: ['b9b3c2', '9a8478', 'f4efe9', 'c98b55'], wolf: ['6f7d93', 'b9b3c2', '3b3440', '8a8278'], raccoon: ['6f7d93', '8a8278', 'b9b3c2'],
+  panda: ['f4efe9'], pig: ['ffb3cf', 'f0a0a8', 'e8c0b0'], sheep: ['f4efe9', 'e8e0d0', '3b3440'], lion: ['e0a850', 'c98b55'], tiger: ['f07a2e', 'f4efe9'], redpanda: ['c8502a', 'b04a2a'], skunk: ['3b3440', '2b2633'],
+  hamster: ['f2a65a', 'e8c090', 'f4efe9'], otter: ['7a5236', '9a6440', '6a4630'], koala: ['8a909a', 'b9b3c2'] }
+const PASTEL = ['ffb3cf', '9fd3ff', 'b8e986', 'c9a0ff', 'ffe066']
+function bodyRoll(id, l) {
+  let h = 2166136261; for (const c of String(id) + '|body') { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) }
+  const u = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 100000) / 100000 }, pick = (a) => a[Math.floor(u() * a.length)], r = (a, b) => Math.round((a + u() * (b - a)) * 100) / 100
+  const nat = NATURAL[l.species] ?? NATURAL.cat
+  l.fur = '#' + (u() < 0.12 ? pick(PASTEL) : pick(nat))
+  l.marks = pick(['none', 'none', 'none', 'freckles', 'stripes', 'patch', 'heart'])
+  const f = l.sex === 'f'
+  l.heightS = r(0.88, 1.12); l.buildS = r(f ? 0.86 : 0.9, f ? 1.1 : 1.18)
+  l.headS = r(0.88, 1.15); l.earS = r(0.7, 1.4); l.snoutS = r(0.6, 1.5); l.tailS = r(0.7, 1.4)
+  l.waistS = r(f ? 0.78 : 0.9, f ? 1.1 : 1.25); l.hipS = r(f ? 0.95 : 0.8, f ? 1.3 : 1.05)
+  if (f) l.bustS = r(0.7, 1.3) // more random (Shelly)
+  return l
+}

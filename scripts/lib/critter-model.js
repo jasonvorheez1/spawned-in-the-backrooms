@@ -127,7 +127,8 @@ export function critterSpec(l) {
       jiggle: { bones: ['EarL', 'EarR'], amount: 0.55, bounce: 0.7 }
     }],
     material: { outline: { color: '#1d1420', width: 2.4 } },
-    jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.65, bounce: 0.7 }
+    jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.65, bounce: 0.7 },
+    ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {})
   }
 }
 // a mesh critter's look read back off its own model (the bodies laid before state.wear existed): parts shown = garments, cloth_* = their colours, head GLB = species and sex
