@@ -68,3 +68,6 @@ figureSeen: 1.4            # seconds one stands before it is gone
 # arch rooms (wiki: deep wet carpet, archways wide enough to rest on). her picks
 wetCarpetSpeed: 0.65       # walking speed multiplier on the soaked arch-room floor
 ledgeRest: { stamina: 3, sanity: 1.2 }   # on an arch sill: stamina regen x3, sanity back per second
+stairsCount: 9            # stairs that go nowhere, seeded through the halls (her pick)
+shiftEvery: 25             # seconds between wall shifts behind each wanderer (her pick)
+shiftLife: 90              # seconds a shifted wall stands before it moves on

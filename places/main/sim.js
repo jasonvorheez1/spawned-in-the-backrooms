@@ -2,7 +2,8 @@
 import L from "../../scripts/lib/data/level0.yml";
 import W from "../../scripts/lib/data/weapons.yml";
 import { spawnAlmond, spawnAmmo, spawnWeapon, rollWeapon } from "../../scripts/lib/loot.js";
-import { N, zoneOf, inHub, hasPit, cellCenter } from "../../scripts/lib/maze.js";
+import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ } from "../../scripts/lib/maze.js";
+const PAPER = { texture: "cdn/texture-yellow-chevron-damask-wallpaper-aged.png", color: "oklch(0.98 0.01 90)", repeat: [1, 1] };
 export const cadence = "1s";
 
 function cell(ctx, zones) {
@@ -16,8 +17,42 @@ function cell(ctx, zones) {
   return null;
 }
 
+function shift(ctx, s, now) {
+  for (const p of ctx.place.players) {
+    const k = "shift_" + p.id;
+    if (now < (s[k] ?? 0)) continue;
+    s[k] = now + L.shiftEvery * 1000 * (0.7 + ctx.random() * 0.6);
+    const ax = p.state?.aimX ?? 0, az = p.state?.aimZ ?? -1, back = 2 + Math.floor(ctx.random() * 2);
+    const { cx, cz } = cellAt(p.feetPosition.x - ax * back * S, p.feetPosition.z - az * back * S);
+    if (cx < 1 || cz < 1 || cx >= N - 1 || cz >= N - 1) continue;
+    const z0 = zoneOf(cx, cz);
+    if (z0 === "hub" || z0 === "arches") continue; // arch rooms never shift
+    const edges = [];
+    if (!wallX(cx, cz) && !["hub", "arches"].includes(zoneOf(cx + 1, cz))) edges.push("x");
+    if (!wallZ(cx, cz) && !["hub", "arches"].includes(zoneOf(cx, cz + 1))) edges.push("z");
+    if (!edges.length) continue;
+    const e = edges[Math.floor(ctx.random() * edges.length)], c = cellCenter(cx, cz);
+    const pos = e === "x" ? { x: (cx + 1) * S - HALF, y: 0, z: c.z } : { x: c.x, y: 0, z: (cz + 1) * S - HALF };
+    if (ctx.query({ tags: ["shifted"], center: pos, radius: 0.5 }).length) continue;
+    ctx.spawn({ tags: ["shifted"], lifetime: L.shiftLife, feetPosition: pos, primitive: { kind: "box", width: e === "x" ? 0.2 : S, height: H, depth: e === "x" ? S : 0.2 }, material: PAPER, physics: "static" });
+  }
+}
+
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
+  if (!s.stairsSeeded) {
+    s.stairsSeeded = true;
+    let n = 0;
+    for (let k = 0; k < 400 && n < L.stairsCount; k++) {
+      const cx = 1 + Math.floor(ctx.random() * (N - 2)), cz = 1 + Math.floor(ctx.random() * (N - 2));
+      if (zoneOf(cx, cz) !== "halls" || inHub(cx, cz) || hasPillar(cx, cz) || hasPit(cx, cz)) continue;
+      if (Math.abs(cx - 17.5) < 5 && Math.abs(cz - 17.5) < 5) continue;
+      const c = cellCenter(cx, cz);
+      ctx.spawn({ tags: ["stairs"], feetPosition: { x: c.x + (ctx.random() < 0.5 ? -1 : 1), y: 0, z: c.z }, primitive: { kind: "scripted", script: "scripts/stairs-geo.js" }, physics: { body: "static", collider: "mesh" } });
+      n++;
+    }
+  }
+  shift(ctx, s, now);
   const almonds = ctx.query({ tags: ["almond"] }).length;
   if (almonds < L.almonds && now >= (s.nextAlmond ?? 0)) {
     const fill = s.almondsSeeded ? 1 : L.almonds - almonds;
