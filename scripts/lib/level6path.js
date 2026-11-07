@@ -95,3 +95,4 @@ export function stepToward6(x, z, tx, tz, maxCells = 35) {
   }
   return { cells: steps + 1, next: cellCenter(curr % W, (curr / W) | 0) };
 }
+

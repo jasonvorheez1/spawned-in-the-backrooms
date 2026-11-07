@@ -4,23 +4,25 @@ terrain:
   seed: 7077
   generator: scripts/terrain7.js
   materials:
-    - { id: rock, albedo: cdn/texture-terrain-wet-dark-basalt-rock.png, tint: "oklch(0.42 0.01 240)", textureScale: 3 }
-    - { id: sand, albedo: cdn/texture-terrain-cold-grey-wet-beach-sand.png, tint: "oklch(0.6 0.015 230)", textureScale: 2.5 }
+    - { id: rock, albedo: cdn/texture-terrain-wet-dark-basalt-rock.png, tint: "oklch(0.38 0.015 240)", textureScale: 3 }
+    - { id: sand, albedo: cdn/texture-terrain-cold-grey-wet-beach-sand.png, tint: "oklch(0.55 0.02 230)", textureScale: 2.5 }
   marks:
     sea: { kind: sea, level: 0, floorMaterial: sand }
 gravity: { x: 0, y: -24, z: 0 }
-defaultSpawnPoint: { x: 0, y: 4.2, z: 1.5 }
+defaultSpawnPoint: { x: 0, y: 4.2, z: 1.4 }
 defaultSpawnRotation: { yaw: 180 }
 worldBounds: { bottom: -40 }
+look: { script: scripts/look-level7.js, params: { vignette: 0.38, bloom: 0.65 } }
 atmosphere:
   timeOfDay: 17.6
   cycle: { frozen: 17.6 }
-  clouds: { enabled: true, density: 0.9, speed: 0.4 }
-  sky: { kind: color, color: oklch(0.42 0.015 235) }
-  fog: { kind: linear, near: 18, far: 190, color: oklch(0.46 0.015 235) }
-  sun: { light: { intensity: 0.35, color: oklch(0.85 0.02 230) } }
+  clouds: { enabled: true, density: 0.85, speed: 0.3 }
+  sky: { kind: color, color: oklch(0.24 0.02 235) }
+  fog: { kind: linear, near: 14, far: 175, color: oklch(0.26 0.025 235) }
+  sun: { light: { intensity: 0.38, color: oklch(0.82 0.03 225) } }
   moon: { enabled: false }
   stars: { enabled: false }
-  ambient: { light: { color: oklch(0.75 0.02 235), intensity: 0.35 } }
-  hemisphere: { skyColor: oklch(0.7 0.02 235), groundColor: oklch(0.2 0.01 240), intensity: 0.4 }
-  wind: { direction: 200, speed: 7 }
+  ambient: { light: { color: oklch(0.58 0.04 225), intensity: 0.36 } }
+  hemisphere: { skyColor: oklch(0.52 0.05 225), groundColor: oklch(0.16 0.02 240), intensity: 0.32 }
+  wind: { direction: 200, speed: 6.5 }
+acoustics: { reverb: 0.35 }

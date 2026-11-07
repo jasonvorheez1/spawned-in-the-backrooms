@@ -179,3 +179,4 @@ export function update(ctx, dt) {
     w.rotation = { yaw: Math.atan2(-ux, -uz) * 57.2958 };
   }
 }
+

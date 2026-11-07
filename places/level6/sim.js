@@ -41,6 +41,19 @@ function lay(ctx) {
   const s = ends[1];
   ctx.spawn("l6-stair", { feetPosition: { x: cx(s.i), y: 0, z: cz(s.j) }, tags: ["l6-stair"], audio: { clip: G("faint-distant-ocean-waves-echoing-up-concrete-stairwell-loop"), loop: true, gain: 0.35, spatial: true, maxDistance: 26 },
     children: [0, 1, 2, 3].map((k) => ({ feetPosition: { x: 0, y: -0.2 - k * 0.2, z: -0.3 * k * (s.dz ? -s.dz : 0) }, primitive: { kind: "box", width: C * 0.9, height: 0.05, depth: 0.32 }, material: { ...CONCRETE, color: "oklch(0.3 0.005 250)" } })) });
+  ctx.spawn("l6-to-l7", {
+    tags: ["door"],
+    feetPosition: { x: cx(s.i), y: -0.6, z: cz(s.j) - 0.8 * (s.dz || 1) },
+    physics: { body: "static", trigger: true },
+    primitive: { kind: "box", width: 1.5, height: 2.2, depth: 1.2 },
+    visible: false,
+    behavior: "scripts/level-door.js",
+    state: { to: "level7#l7-from-l6" },
+  });
+  ctx.spawn("l6-from-l7", {
+    feetPosition: { x: cx(s.i), y: 0.1, z: cz(s.j) },
+    rotation: { yaw: s.dz > 0 ? 0 : 180 },
+  });
   ctx.spawn("l6-stair-note", { feetPosition: { x: cx(s.i) - s.dx * (C / 2 - 0.02), y: 1.45, z: cz(s.j) - s.dz * (C / 2 - 0.02) }, rotation: { lookAt: { x: cx(s.i) + s.dx * C, y: 1.45, z: cz(s.j) + s.dz * C } }, vector: chalk("follow the waves. 7 is down here") });
 }
 
