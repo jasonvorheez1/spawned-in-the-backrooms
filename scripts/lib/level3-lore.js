@@ -4,7 +4,7 @@
 import { N, S, cellCenter, openings, isOpen, isBars, zoneOf, hash, ARRIVE, SLUDGE, SPARKS, GENS, BLOCKS, inGamma } from "./level3.js";
 
 const LM = {
-  purp: { id: "/cdn/value.c79af26415e4e581adf3fb9199d988fe664a279c47f868e120f68b581ff71728.glb", offset: [0.299, 0.02, -0.12] },
+  purp: { id: "/cdn/value.1394eef313a56a2544202697e05a7132f579cbdf1e2f1e2429af5b1c28cd0cf4.glb", offset: [0.004, 0.01, -0.491] },
   moths: { id: "/cdn/value.d6ac0dfdcabc8a82f53c1d1f0d1aa228ad6ad3fbc324e30368d757d259555d72.glb", offset: [-0.016, 0.247, -0.009] },
   kegs: { id: "/cdn/value.b8c96422bfc9190416d479cbaea370c1b8a48002cc3dcddc469711d8d8746632.glb", offset: [0.95, -0.025, -0.761] },
   boiler: { id: "/cdn/value.3b362439083eaf08b29b479da7bcf9611f127d27dd9a63a31aada7673c2b3ee4.glb", offset: [0.028, 0, -0.58] },
