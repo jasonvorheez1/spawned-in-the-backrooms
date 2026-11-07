@@ -1,0 +1,544 @@
+# spawn-scene v2 yaml x0z0
+l5-bed-ball:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-distant-party-crowd-murmur-glasses-clink-loop.mp3, gain: 0.35, loop: true, maxDistance: 20, refDistance: 6, spatial: true}
+  feetPosition: {x: 6, y: 2, z: 0}
+  id: l5-bed-ball
+l5-bed-boiler-26--14:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-industrial-boiler-roar-steam-hiss-loop.mp3, gain: 0.5, loop: true, maxDistance: 22, refDistance: 4, spatial: true}
+  feetPosition: {x: 26, y: 2, z: -14}
+  id: l5-bed-boiler-26--14
+l5-bed-boiler-26-14:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-industrial-boiler-roar-steam-hiss-loop.mp3, gain: 0.5, loop: true, maxDistance: 22, refDistance: 4, spatial: true}
+  feetPosition: {x: 26, y: 2, z: 14}
+  id: l5-bed-boiler-26-14
+l5-bed-boiler-38-0:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-industrial-boiler-roar-steam-hiss-loop.mp3, gain: 0.5, loop: true, maxDistance: 22, refDistance: 4, spatial: true}
+  feetPosition: {x: 38, y: 2, z: 0}
+  id: l5-bed-boiler-38-0
+l5-bed-hum:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-old-building-electrical-hum-room-tone-loop.mp3, gain: 0.12, loop: true, spatial: false}
+  feetPosition: {x: -20, y: 2, z: 0}
+  id: l5-bed-hum
+l5-door-6:
+  behavior: scripts/l5-door.js
+  feetPosition: {x: 45.72, y: 0, z: 20}
+  id: l5-door-6
+  material: {color: oklch(0.5 0.03 40), metalness: 0.6, roughness: 0.55, texture: cdn/texture-peeling-white-paint-rusty-steel.png}
+  physics: static
+  primitive: {depth: 0.12, height: 2.3, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+  state: {info: It won't open, kind: sealed, name: LEVEL 6, sound: null, text: "LEVEL 6 · The handle burns your palm. The heat behind it is unbearable.", tint: "#b89b6a", verb: Try the door}
+  tags: [usable, l5-sealed]
+l5-door-63:
+  behavior: scripts/l5-door.js
+  feetPosition: {x: 17.720000000000002, y: 0, z: -8}
+  id: l5-door-63
+  material: {color: oklch(0.5 0.06 45), roughness: 0.55, texture: cdn/texture-worn-hardwood-grain.png}
+  physics: static
+  primitive: {depth: 0.12, height: 2.3, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+  state: {info: It won't open, kind: sealed, name: LEVEL 63, sound: null, text: "LEVEL 63 · Birdsong behind this one. Leaves under the door. Locked fast.", tint: "#b89b6a", verb: Try the door}
+  tags: [usable, l5-sealed]
+l5-door-78:
+  behavior: scripts/l5-door.js
+  feetPosition: {x: 45.72, y: 0, z: -20}
+  id: l5-door-78
+  material: {color: oklch(0.5 0.03 40), metalness: 0.6, roughness: 0.55, texture: cdn/texture-peeling-white-paint-rusty-steel.png}
+  physics: static
+  primitive: {depth: 0.12, height: 2.3, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+  state: {info: It won't open, kind: sealed, name: LEVEL 78, sound: metal-valve-wheel-creak, text: "LEVEL 78 · An airlock. The wheel won't turn without pressure.", tint: "#b89b6a", verb: Try the door}
+  tags: [usable, l5-sealed]
+l5-door-9:
+  behavior: scripts/l5-door.js
+  feetPosition: {x: -38, y: 0, z: -12.72}
+  id: l5-door-9
+  material: {color: oklch(0.5 0.06 45), roughness: 0.55, texture: cdn/texture-worn-hardwood-grain.png}
+  physics: static
+  primitive: {depth: 0.12, height: 2.3, kind: box, width: 1.1}
+  rotation: {yaw: 180}
+  state: {info: It won't open, kind: sealed, name: LEVEL 9, sound: null, text: "LEVEL 9 · A dark wooden door. Cold air under it. It won't give.", tint: "#b89b6a", verb: Try the door}
+  tags: [usable, l5-sealed]
+l5-door-98:
+  behavior: scripts/l5-door.js
+  feetPosition: {x: -30.279999999999998, y: 0, z: 6.5}
+  id: l5-door-98
+  material: {color: oklch(0.5 0.06 45), roughness: 0.55, texture: cdn/texture-worn-hardwood-grain.png}
+  physics: static
+  primitive: {depth: 0.12, height: 2.3, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+  state: {info: It won't open, kind: sealed, name: LEVEL 98, sound: null, text: "LEVEL 98 · A metal door, warm to the touch. Bolted from the other side.", tint: "#b89b6a", verb: Try the door}
+  tags: [usable, l5-sealed]
+l5-from-l3:
+  feetPosition: {x: -42.5, y: 0.1, z: 0}
+  id: l5-from-l3
+  rotation: {yaw: 90}
+l5-from-l4:
+  feetPosition: {x: -8, y: 0.1, z: -17.5}
+  id: l5-from-l4
+  rotation: {yaw: 180}
+l5-gate-84:
+  behavior: scripts/l5-door.js
+  feetPosition: {x: -1, y: 0, z: 11.72}
+  id: l5-gate-84
+  material: {color: oklch(0.5 0.06 45), roughness: 0.55, texture: cdn/texture-worn-hardwood-grain.png}
+  physics: static
+  primitive: {depth: 0.12, height: 2.8, kind: box, width: 2.2}
+  rotation: {yaw: 0}
+  state: {info: It won't open, kind: sealed, name: LEVEL 84, sound: null, text: "LEVEL 84 · A tall wooden gate. Barred. It hasn't opened in years.", tint: "#b89b6a", verb: Try the door}
+  tags: [usable, l5-sealed]
+l5-geo:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l5-geo
+  material: {roughness: 0.85}
+  physics: {body: static, collider: mesh}
+  primitive: {kind: scripted, script: scripts/level5-geo.js}
+  receiveShadow: true
+l5-lift3:
+  behavior: scripts/level-door.js
+  feetPosition: {x: -44.800000000000004, y: 0, z: -2.4492935982947065e-17}
+  id: l5-lift3
+  physics: {body: static, trigger: true}
+  primitive: {depth: 0.6, height: 2.4, kind: box, width: 1.4}
+  rotation: {yaw: -90}
+  state: {to: level3#l3-from-l5}
+  tags: [door]
+  visible: false
+l5-lift3-lamp:
+  feetPosition: {x: -44.400000000000006, y: 2.9, z: -4.898587196589413e-17}
+  id: l5-lift3-lamp
+  light: {color: oklch(0.82 0.1 70), distance: 6, intensity: 2.2, kind: point}
+l5-lift3-plate:
+  feetPosition: {x: -45.14, y: 2.55, z: -3.673940397442059e-18}
+  id: l5-lift3-plate
+  material: {color: oklch(0.25 0.04 50)}
+  primitive: {depth: 0.03, height: 0.36, kind: box, width: 1.2}
+  rotation: {yaw: -90}
+  ui: "<div face=\"front\" width=\"1.2m\" style=\"font-family:serif;text-align:center;color:#e8c983;background:#2a1c12;border:14px solid #8a6a2a;padding:18px 10px;line-height:1.05\"><div style=\"font-size:130px;font-weight:900;letter-spacing:10px\">LEVEL 3</div><div style=\"font-size:64px;font-style:italic;opacity:.85\">▼ electrical station</div></div>"
+l5-light-0:
+  feetPosition: {x: -38, y: 6.6, z: -6}
+  id: l5-light-0
+  light: {color: oklch(0.86 0.09 75), distance: 22, intensity: 9, kind: point, shadow: {enabled: false}}
+  state: {kind: chandelier}
+  tags: [l5-light, l5-fix-chandelier]
+l5-light-1:
+  feetPosition: {x: -38, y: 6.6, z: 6}
+  id: l5-light-1
+  light: {color: oklch(0.86 0.09 75), distance: 22, intensity: 9, kind: point, shadow: {enabled: false}}
+  state: {kind: chandelier}
+  tags: [l5-light, l5-fix-chandelier]
+l5-light-10:
+  feetPosition: {x: -15, y: 2.3, z: -10.2}
+  id: l5-light-10
+  light: {color: oklch(0.86 0.09 75), distance: 6, intensity: 1.6, kind: point, shadow: {enabled: false}}
+  state: {kind: sconce}
+  tags: [l5-light, l5-fix-sconce]
+l5-light-11:
+  feetPosition: {x: -15, y: 2.3, z: 12.8}
+  id: l5-light-11
+  light: {color: oklch(0.86 0.09 75), distance: 6, intensity: 1.6, kind: point, shadow: {enabled: false}}
+  state: {kind: sconce}
+  tags: [l5-light, l5-fix-sconce]
+l5-light-12:
+  feetPosition: {x: -9, y: 2.3, z: -10.2}
+  id: l5-light-12
+  light: {color: oklch(0.86 0.09 75), distance: 6, intensity: 1.6, kind: point, shadow: {enabled: false}}
+  state: {kind: sconce}
+  tags: [l5-light, l5-fix-sconce]
+l5-light-13:
+  feetPosition: {x: -9, y: 2.3, z: 12.8}
+  id: l5-light-13
+  light: {color: oklch(0.86 0.09 75), distance: 6, intensity: 1.6, kind: point, shadow: {enabled: false}}
+  state: {kind: sconce}
+  tags: [l5-light, l5-fix-sconce]
+l5-light-14:
+  feetPosition: {x: -17.5, y: 3.3, z: -6.5}
+  id: l5-light-14
+  light: {color: oklch(0.86 0.09 75), distance: 7, intensity: 2, kind: point, shadow: {enabled: false}}
+  state: {kind: flush}
+  tags: [l5-light, l5-fix-flush]
+l5-light-15:
+  feetPosition: {x: -17.5, y: 3.3, z: 6.5}
+  id: l5-light-15
+  light: {color: oklch(0.86 0.09 75), distance: 7, intensity: 2, kind: point, shadow: {enabled: false}}
+  state: {kind: flush}
+  tags: [l5-light, l5-fix-flush]
+l5-light-16:
+  feetPosition: {x: -20, y: 2.7, z: -17}
+  id: l5-light-16
+  light: {color: oklch(0.8 0.1 65), distance: 7, intensity: 1.4, kind: point, shadow: {enabled: false}}
+  state: {kind: lamp}
+  tags: [l5-light, l5-fix-lamp]
+l5-light-17:
+  feetPosition: {x: -16, y: 2.7, z: -17}
+  id: l5-light-17
+  light: {color: oklch(0.8 0.1 65), distance: 7, intensity: 1.4, kind: point, shadow: {enabled: false}}
+  state: {kind: lamp}
+  tags: [l5-light, l5-fix-lamp]
+l5-light-18:
+  feetPosition: {x: -12, y: 2.7, z: -17}
+  id: l5-light-18
+  light: {color: oklch(0.8 0.1 65), distance: 7, intensity: 1.4, kind: point, shadow: {enabled: false}}
+  state: {kind: lamp}
+  tags: [l5-light, l5-fix-lamp]
+l5-light-19:
+  feetPosition: {x: -28, y: 2.7, z: 17}
+  id: l5-light-19
+  light: {color: oklch(0.8 0.1 65), distance: 7, intensity: 1.4, kind: point, shadow: {enabled: false}}
+  state: {kind: lamp}
+  tags: [l5-light, l5-fix-lamp]
+l5-light-2:
+  feetPosition: {x: -27, y: 4.4, z: 0}
+  id: l5-light-2
+  light: {color: oklch(0.86 0.09 75), distance: 12, intensity: 5, kind: point, shadow: {enabled: false}}
+  state: {kind: pendant}
+  tags: [l5-light, l5-fix-pendant]
+l5-light-20:
+  feetPosition: {x: -24, y: 2.7, z: 17}
+  id: l5-light-20
+  light: {color: oklch(0.8 0.1 65), distance: 7, intensity: 1.4, kind: point, shadow: {enabled: false}}
+  state: {kind: lamp}
+  tags: [l5-light, l5-fix-lamp]
+l5-light-21:
+  feetPosition: {x: -20, y: 2.7, z: 17}
+  id: l5-light-21
+  light: {color: oklch(0.8 0.1 65), distance: 7, intensity: 1.4, kind: point, shadow: {enabled: false}}
+  state: {kind: lamp}
+  tags: [l5-light, l5-fix-lamp]
+l5-light-22:
+  feetPosition: {x: -16, y: 2.7, z: 17}
+  id: l5-light-22
+  light: {color: oklch(0.8 0.1 65), distance: 7, intensity: 1.4, kind: point, shadow: {enabled: false}}
+  state: {kind: lamp}
+  tags: [l5-light, l5-fix-lamp]
+l5-light-23:
+  feetPosition: {x: -24.5, y: 2.9, z: -6.5}
+  id: l5-light-23
+  light: {color: oklch(0.8 0.1 65), distance: 7, intensity: 1.4, kind: point, shadow: {enabled: false}}
+  state: {kind: lamp}
+  tags: [l5-light, l5-fix-lamp]
+l5-light-24:
+  feetPosition: {x: -11, y: 2.9, z: -6.5}
+  id: l5-light-24
+  light: {color: oklch(0.8 0.1 65), distance: 7, intensity: 1.4, kind: point, shadow: {enabled: false}}
+  state: {kind: lamp}
+  tags: [l5-light, l5-fix-lamp]
+l5-light-25:
+  feetPosition: {x: -24.5, y: 2.9, z: 6.5}
+  id: l5-light-25
+  light: {color: oklch(0.8 0.1 65), distance: 7, intensity: 1.4, kind: point, shadow: {enabled: false}}
+  state: {kind: lamp}
+  tags: [l5-light, l5-fix-lamp]
+l5-light-26:
+  feetPosition: {x: -11, y: 2.9, z: 6.5}
+  id: l5-light-26
+  light: {color: oklch(0.8 0.1 65), distance: 7, intensity: 1.4, kind: point, shadow: {enabled: false}}
+  state: {kind: lamp}
+  tags: [l5-light, l5-fix-lamp]
+l5-light-27:
+  feetPosition: {x: -26, y: 3.2, z: -17}
+  id: l5-light-27
+  light: {color: oklch(0.82 0.1 70), distance: 9, intensity: 2.4, kind: point, shadow: {enabled: false}}
+  state: {kind: lamp}
+  tags: [l5-light, l5-fix-lamp]
+l5-light-28:
+  feetPosition: {x: -10, y: 3.3, z: 17}
+  id: l5-light-28
+  light: {color: oklch(0.92 0.05 90), distance: 10, intensity: 3, kind: point, shadow: {enabled: false}}
+  state: {kind: flush}
+  tags: [l5-light, l5-fix-flush]
+l5-light-29:
+  feetPosition: {x: -8, y: 3.2, z: -17}
+  id: l5-light-29
+  light: {color: oklch(0.75 0.12 55), distance: 6, intensity: 1.2, kind: point, shadow: {enabled: false}}
+  state: {kind: bulb}
+  tags: [l5-light, l5-fix-bulb]
+l5-light-3:
+  feetPosition: {x: -21, y: 4.4, z: 0}
+  id: l5-light-3
+  light: {color: oklch(0.86 0.09 75), distance: 12, intensity: 5, kind: point, shadow: {enabled: false}}
+  state: {kind: pendant}
+  tags: [l5-light, l5-fix-pendant]
+l5-light-30:
+  feetPosition: {x: 0, y: 7.8, z: -6}
+  id: l5-light-30
+  light: {color: oklch(0.86 0.09 75), distance: 20, intensity: 8, kind: point, shadow: {enabled: false}}
+  state: {kind: chandelier}
+  tags: [l5-light, l5-fix-chandelier]
+l5-light-31:
+  feetPosition: {x: 12, y: 7.8, z: -6}
+  id: l5-light-31
+  light: {color: oklch(0.86 0.09 75), distance: 20, intensity: 8, kind: point, shadow: {enabled: false}}
+  state: {kind: chandelier}
+  tags: [l5-light, l5-fix-chandelier]
+l5-light-32:
+  feetPosition: {x: 0, y: 7.8, z: 6}
+  id: l5-light-32
+  light: {color: oklch(0.86 0.09 75), distance: 20, intensity: 8, kind: point, shadow: {enabled: false}}
+  state: {kind: chandelier}
+  tags: [l5-light, l5-fix-chandelier]
+l5-light-33:
+  feetPosition: {x: 12, y: 7.8, z: 6}
+  id: l5-light-33
+  light: {color: oklch(0.86 0.09 75), distance: 20, intensity: 8, kind: point, shadow: {enabled: false}}
+  state: {kind: chandelier}
+  tags: [l5-light, l5-fix-chandelier]
+l5-light-34:
+  feetPosition: {x: 6, y: 7.8, z: 0}
+  id: l5-light-34
+  light: {color: oklch(0.86 0.09 75), distance: 20, intensity: 14, kind: point, shadow: {enabled: true}}
+  state: {kind: chandelier}
+  tags: [l5-light, l5-fix-chandelier]
+l5-light-35:
+  feetPosition: {x: 6, y: 4, z: -18}
+  id: l5-light-35
+  light: {color: oklch(0.78 0.11 60), distance: 14, intensity: 6, kind: point, shadow: {enabled: false}}
+  state: {kind: chandelier}
+  tags: [l5-light, l5-fix-chandelier]
+l5-light-36:
+  feetPosition: {x: -2, y: 3.3, z: 18}
+  id: l5-light-36
+  light: {color: oklch(0.93 0.03 120), distance: 10, intensity: 3, kind: point, shadow: {enabled: false}}
+  state: {kind: tube}
+  tags: [l5-light, l5-fix-tube]
+l5-light-37:
+  feetPosition: {x: 6, y: 3.3, z: 18}
+  id: l5-light-37
+  light: {color: oklch(0.93 0.03 120), distance: 10, intensity: 3, kind: point, shadow: {enabled: false}}
+  state: {kind: tube}
+  tags: [l5-light, l5-fix-tube]
+l5-light-38:
+  feetPosition: {x: 14, y: 3.3, z: 18}
+  id: l5-light-38
+  light: {color: oklch(0.93 0.03 120), distance: 10, intensity: 3, kind: point, shadow: {enabled: false}}
+  state: {kind: tube}
+  tags: [l5-light, l5-fix-tube]
+l5-light-39:
+  feetPosition: {x: 22, y: 5.2, z: -22}
+  id: l5-light-39
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-4:
+  feetPosition: {x: -15, y: 4.4, z: 0}
+  id: l5-light-4
+  light: {color: oklch(0.86 0.09 75), distance: 12, intensity: 5, kind: point, shadow: {enabled: false}}
+  state: {kind: pendant}
+  tags: [l5-light, l5-fix-pendant]
+l5-light-40:
+  feetPosition: {x: 22, y: 5.2, z: -11}
+  id: l5-light-40
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-41:
+  feetPosition: {x: 22, y: 5.2, z: 0}
+  id: l5-light-41
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-42:
+  feetPosition: {x: 22, y: 5.2, z: 11}
+  id: l5-light-42
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-43:
+  feetPosition: {x: 22, y: 5.2, z: 22}
+  id: l5-light-43
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-44:
+  feetPosition: {x: 30, y: 5.2, z: -22}
+  id: l5-light-44
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-45:
+  feetPosition: {x: 30, y: 5.2, z: -11}
+  id: l5-light-45
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-46:
+  feetPosition: {x: 30, y: 5.2, z: 0}
+  id: l5-light-46
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-47:
+  feetPosition: {x: 30, y: 5.2, z: 11}
+  id: l5-light-47
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-48:
+  feetPosition: {x: 30, y: 5.2, z: 22}
+  id: l5-light-48
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-49:
+  feetPosition: {x: 38, y: 5.2, z: -22}
+  id: l5-light-49
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-5:
+  feetPosition: {x: -9, y: 4.4, z: 0}
+  id: l5-light-5
+  light: {color: oklch(0.86 0.09 75), distance: 12, intensity: 5, kind: point, shadow: {enabled: false}}
+  state: {kind: pendant}
+  tags: [l5-light, l5-fix-pendant]
+l5-light-50:
+  feetPosition: {x: 38, y: 5.2, z: -11}
+  id: l5-light-50
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-51:
+  feetPosition: {x: 38, y: 5.2, z: 0}
+  id: l5-light-51
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-52:
+  feetPosition: {x: 38, y: 5.2, z: 11}
+  id: l5-light-52
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-53:
+  feetPosition: {x: 38, y: 5.2, z: 22}
+  id: l5-light-53
+  light: {color: oklch(0.68 0.17 45), distance: 11, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  state: {kind: cage}
+  tags: [l5-light, l5-fix-cage]
+l5-light-6:
+  feetPosition: {x: -27, y: 2.3, z: -10.2}
+  id: l5-light-6
+  light: {color: oklch(0.86 0.09 75), distance: 6, intensity: 1.6, kind: point, shadow: {enabled: false}}
+  state: {kind: sconce}
+  tags: [l5-light, l5-fix-sconce]
+l5-light-7:
+  feetPosition: {x: -27, y: 2.3, z: 12.8}
+  id: l5-light-7
+  light: {color: oklch(0.86 0.09 75), distance: 6, intensity: 1.6, kind: point, shadow: {enabled: false}}
+  state: {kind: sconce}
+  tags: [l5-light, l5-fix-sconce]
+l5-light-8:
+  feetPosition: {x: -21, y: 2.3, z: -10.2}
+  id: l5-light-8
+  light: {color: oklch(0.86 0.09 75), distance: 6, intensity: 1.6, kind: point, shadow: {enabled: false}}
+  state: {kind: sconce}
+  tags: [l5-light, l5-fix-sconce]
+l5-light-9:
+  feetPosition: {x: -21, y: 2.3, z: 12.8}
+  id: l5-light-9
+  light: {color: oklch(0.86 0.09 75), distance: 6, intensity: 1.6, kind: point, shadow: {enabled: false}}
+  state: {kind: sconce}
+  tags: [l5-light, l5-fix-sconce]
+l5-lobby:
+  feetPosition: {x: -38, y: 0.1, z: 0}
+  id: l5-lobby
+  rotation: {yaw: 90}
+l5-radio-ball:
+  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
+  behavior: scripts/l5-door.js
+  feetPosition: {x: 15.5, y: 0.95, z: -10.6}
+  id: l5-radio-ball
+  material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
+  physics: static
+  primitive: {depth: 0.24, height: 0.34, kind: box, width: 0.46}
+  rotation: {yaw: 0}
+  state: {info: "A polonaise, from the Beverly Room's bandstand. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  tags: [usable, l5-radio]
+l5-radio-boiler:
+  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
+  behavior: scripts/l5-door.js
+  feetPosition: {x: 20, y: 1.2, z: 23.5}
+  id: l5-radio-boiler
+  material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
+  physics: static
+  primitive: {depth: 0.24, height: 0.34, kind: box, width: 0.46}
+  rotation: {yaw: -90}
+  state: {info: "A polonaise, from the Boiler Room's foreman's desk. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  tags: [usable, l5-radio]
+l5-radio-desk:
+  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
+  behavior: scripts/l5-door.js
+  feetPosition: {x: -42.6, y: 1.12, z: 3.2}
+  id: l5-radio-desk
+  material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
+  physics: static
+  primitive: {depth: 0.24, height: 0.34, kind: box, width: 0.46}
+  rotation: {yaw: -90}
+  state: {info: "A polonaise, from the front desk. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  tags: [usable, l5-radio]
+l5-radio-hk:
+  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
+  behavior: scripts/l5-door.js
+  feetPosition: {x: 16.8, y: 0.95, z: 22.8}
+  id: l5-radio-hk
+  material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
+  physics: static
+  primitive: {depth: 0.24, height: 0.34, kind: box, width: 0.46}
+  rotation: {yaw: 180}
+  state: {info: "A polonaise, from Housekeeping. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  tags: [usable, l5-radio]
+l5-radio-kitchen:
+  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
+  behavior: scripts/l5-door.js
+  feetPosition: {x: -7, y: 1, z: 20.4}
+  id: l5-radio-kitchen
+  material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
+  physics: static
+  primitive: {depth: 0.24, height: 0.34, kind: box, width: 0.46}
+  rotation: {yaw: 180}
+  state: {info: "A polonaise, from Homely Hotel's dining room. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  tags: [usable, l5-radio]
+l5-radio-room:
+  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
+  behavior: scripts/l5-door.js
+  feetPosition: {x: -15, y: 0.7, z: -20.4}
+  id: l5-radio-room
+  material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
+  physics: static
+  primitive: {depth: 0.24, height: 0.34, kind: box, width: 0.46}
+  rotation: {yaw: 0}
+  state: {info: "A polonaise, from Room 1408. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  tags: [usable, l5-radio]
+l5-radio-salon:
+  audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
+  behavior: scripts/l5-door.js
+  feetPosition: {x: 0.2, y: 0.8, z: -22.6}
+  id: l5-radio-salon
+  material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
+  physics: static
+  primitive: {depth: 0.24, height: 0.34, kind: box, width: 0.46}
+  rotation: {yaw: 0}
+  state: {info: "A polonaise, from the Originals' salon. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
+  tags: [usable, l5-radio]
+l5-stairs-up:
+  behavior: scripts/level-door.js
+  feetPosition: {x: -8, y: 0, z: -20.400000000000002}
+  id: l5-stairs-up
+  physics: {body: static, trigger: true}
+  primitive: {depth: 0.6, height: 2.4, kind: box, width: 1.4}
+  rotation: {yaw: 180}
+  state: {to: level4#l4-from-l5}
+  tags: [door]
+  visible: false
+l5-stairs-up-lamp:
+  feetPosition: {x: -8, y: 2.9, z: -20}
+  id: l5-stairs-up-lamp
+  light: {color: oklch(0.82 0.1 70), distance: 6, intensity: 2.2, kind: point}
+l5-stairs-up-plate:
+  feetPosition: {x: -8, y: 2.55, z: -20.740000000000002}
+  id: l5-stairs-up-plate
+  material: {color: oklch(0.25 0.04 50)}
+  primitive: {depth: 0.03, height: 0.36, kind: box, width: 1.2}
+  rotation: {yaw: 180}
+  ui: "<div face=\"front\" width=\"1.2m\" style=\"font-family:serif;text-align:center;color:#e8c983;background:#2a1c12;border:14px solid #8a6a2a;padding:18px 10px;line-height:1.05\"><div style=\"font-size:130px;font-weight:900;letter-spacing:10px\">LEVEL 4</div><div style=\"font-size:64px;font-style:italic;opacity:.85\">▲ abandoned office</div></div>"
