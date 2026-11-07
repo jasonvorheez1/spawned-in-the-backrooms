@@ -122,14 +122,14 @@ function pounce(ctx, dt, now) {
 // ---- readings ----
 function facts(ctx, p) {
   const s = p.state ?? {}, at = p.feetPosition, f = []
-  f.push(`They stand in ${zn(ctx, at.x, at.z)} on Level 5, the Terror Hotel.`)
+  f.push(`They stand in ${zn(ctx, at.x, at.z)} on ${AWAYOF(ctx) ? 'Level 3, the Electrical Station, by the brass lift to my hotel' : 'Level 5, the Terror Hotel'}.`)
   f.push(`Health ${Math.round(s.hp ?? 100)}, sanity ${Math.round(s.sanity ?? 100)}, level ${s.level ?? 1}, hunger ${Math.round(s.hunger ?? 100)}, thirst ${Math.round(s.thirst ?? 100)} (out of 100; low is bad).`)
   const cons = ctx.query({ tags: ['container'], center: at, radius: 140 })
   const lock = cons.find((c) => String(c.state?.lock ?? '').startsWith('lockpick'))
   if (lock) f.push(`The nearest locked container: the ${lock.state.name ?? lock.state.kind ?? 'cabinet'} in ${zn(ctx, lock.feetPosition.x, lock.feetPosition.z)}, lock difficulty ${String(lock.state.lock).split(':')[1]}; inside: ${itemsOf(lock)}.`)
   const full = cons.filter((c) => !c.state?.lock && String(c.state?.items ?? '').trim()).slice(0, 2)
   for (const c of full) f.push(`Unsearched: the ${c.state.name ?? c.state.kind ?? 'drawer'} in ${zn(ctx, c.feetPosition.x, c.feetPosition.z)} holds ${itemsOf(c)}.`)
-  const ex = EXITS.filter((e) => e.to && !e.sealed).map((e) => `${e.label} by ${zn(ctx, e.at.x, e.at.z)}`)
+  const ex = EXITS.filter((e) => !AWAYOF(ctx) && e.to && !e.sealed).map((e) => `${e.label} by ${zn(ctx, e.at.x, e.at.z)}`)
   f.push(`Ways out: ${ex.join('; ')}. Sealed doors hint at other levels but do not open.`)
   const foe = ctx.query({ anyTags: HOST, center: at, radius: 90 }).find((o) => !o.state?.dead)
   if (foe) f.push(`A danger nearby: a ${foe.tags.find((t) => HOST.includes(t)) ?? 'thing'} in ${zn(ctx, foe.feetPosition.x, foe.feetPosition.z)}.`)
