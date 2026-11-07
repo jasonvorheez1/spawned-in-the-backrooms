@@ -1,0 +1,1132 @@
+# spawn-scene v2 yaml x0z0
+l4-geo:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l4-geo
+  material: {roughness: 0.9}
+  physics: {body: static, collider: mesh}
+  primitive: {kind: scripted, script: scripts/level4-geo.js}
+  receiveShadow: true
+l4-lift-arrive:
+  feetPosition: {x: 28.7, y: 0.1, z: -27}
+  id: l4-lift-arrive
+  rotation: {yaw: 180}
+l4-lift-door:
+  behavior: scripts/level-door.js
+  feetPosition: {x: 31.299999999999997, y: 0, z: -28}
+  id: l4-lift-door
+  physics: {body: static, trigger: true}
+  primitive: {depth: 1.6, height: 2.3, kind: box, width: 0.6}
+  state: {to: level3#l3-lift-arrive}
+  tags: [door]
+  visible: false
+l4-office-1-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: -16.6, y: 0, z: -26.55}
+  id: l4-office-1-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 360}
+  state: {c: {x: -16.6, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-1-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-1-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: -20.95, y: 1.35, z: -25.87}
+  id: l4-office-1-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 180}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-01", label2: vacant, name: Office 4-01, room: {id: l4-office-1, kit: {cot: {x: -18.4, y: 0, z: -30.6}, desk: {x: -22.4, y: 0, z: -30.9}, yaw: 360}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-01</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-10-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: 0.6, y: 0, z: 26.55}
+  id: l4-office-10-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 180}
+  state: {c: {x: 0.6, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-10-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-10-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: 7.05, y: 1.35, z: 25.87}
+  id: l4-office-10-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 0}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-10", label2: vacant, name: Office 4-10, room: {id: l4-office-10, kit: {cot: {x: 2.4, y: 0, z: 30.6}, desk: {x: 6.4, y: 0, z: 30.9}, yaw: 180}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-10</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-11-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: 15.4, y: 0, z: 26.55}
+  id: l4-office-11-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 180}
+  state: {c: {x: 15.4, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-11-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-11-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: 11.05, y: 1.35, z: 25.87}
+  id: l4-office-11-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 0}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-11", label2: vacant, name: Office 4-11, room: {id: l4-office-11, kit: {cot: {x: 13.6, y: 0, z: 30.6}, desk: {x: 9.6, y: 0, z: 30.9}, yaw: 180}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-11</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-12-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: 16.6, y: 0, z: 26.55}
+  id: l4-office-12-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 180}
+  state: {c: {x: 16.6, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-12-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-12-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: 23.05, y: 1.35, z: 25.87}
+  id: l4-office-12-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 0}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-12", label2: vacant, name: Office 4-12, room: {id: l4-office-12, kit: {cot: {x: 18.4, y: 0, z: 30.6}, desk: {x: 22.4, y: 0, z: 30.9}, yaw: 180}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-12</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-13-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: -26.55, y: 0, z: -16.6}
+  id: l4-office-13-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 90}
+  state: {c: {x: -26.55, y: 1.1, z: -16.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-13-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-13-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: -25.87, y: 1.35, z: -20.95}
+  id: l4-office-13-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: -90}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-13", label2: vacant, name: Office 4-13, room: {id: l4-office-13, kit: {cot: {x: -30.6, y: 0, z: -18.4}, desk: {x: -30.9, y: 0, z: -22.4}, yaw: 90}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-13</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-15-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: -26.55, y: 0, z: -0.6}
+  id: l4-office-15-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 90}
+  state: {c: {x: -26.55, y: 1.1, z: -0.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-15-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-15-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: -25.87, y: 1.35, z: -4.95}
+  id: l4-office-15-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: -90}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-15", label2: vacant, name: Office 4-15, room: {id: l4-office-15, kit: {cot: {x: -30.6, y: 0, z: -2.4}, desk: {x: -30.9, y: 0, z: -6.4}, yaw: 90}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-15</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-16-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: -26.55, y: 0, z: 0.6}
+  id: l4-office-16-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 90}
+  state: {c: {x: -26.55, y: 1.1, z: 0.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-16-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-16-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: -25.87, y: 1.35, z: 7.05}
+  id: l4-office-16-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: -90}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-16", label2: vacant, name: Office 4-16, room: {id: l4-office-16, kit: {cot: {x: -30.6, y: 0, z: 2.4}, desk: {x: -30.9, y: 0, z: 6.4}, yaw: 90}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-16</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-17-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: -26.55, y: 0, z: 15.4}
+  id: l4-office-17-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 90}
+  state: {c: {x: -26.55, y: 1.1, z: 15.4}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-17-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-17-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: -25.87, y: 1.35, z: 11.05}
+  id: l4-office-17-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: -90}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-17", label2: vacant, name: Office 4-17, room: {id: l4-office-17, kit: {cot: {x: -30.6, y: 0, z: 13.6}, desk: {x: -30.9, y: 0, z: 9.6}, yaw: 90}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-17</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-18-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: -26.55, y: 0, z: 16.6}
+  id: l4-office-18-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 90}
+  state: {c: {x: -26.55, y: 1.1, z: 16.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-18-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-18-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: -25.87, y: 1.35, z: 23.05}
+  id: l4-office-18-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: -90}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-18", label2: vacant, name: Office 4-18, room: {id: l4-office-18, kit: {cot: {x: -30.6, y: 0, z: 18.4}, desk: {x: -30.9, y: 0, z: 22.4}, yaw: 90}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-18</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-19-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: 26.55, y: 0, z: -16.6}
+  id: l4-office-19-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 270}
+  state: {c: {x: 26.55, y: 1.1, z: -16.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-19-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-19-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: 25.87, y: 1.35, z: -20.95}
+  id: l4-office-19-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 90}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-19", label2: vacant, name: Office 4-19, room: {id: l4-office-19, kit: {cot: {x: 30.6, y: 0, z: -18.4}, desk: {x: 30.9, y: 0, z: -22.4}, yaw: 270}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-19</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-2-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: -15.4, y: 0, z: -26.55}
+  id: l4-office-2-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 360}
+  state: {c: {x: -15.4, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-2-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-2-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: -8.95, y: 1.35, z: -25.87}
+  id: l4-office-2-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 180}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-02", label2: vacant, name: Office 4-02, room: {id: l4-office-2, kit: {cot: {x: -13.6, y: 0, z: -30.6}, desk: {x: -9.6, y: 0, z: -30.9}, yaw: 360}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-02</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-20-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: 26.55, y: 0, z: -15.4}
+  id: l4-office-20-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 270}
+  state: {c: {x: 26.55, y: 1.1, z: -15.4}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-20-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-20-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: 25.87, y: 1.35, z: -8.95}
+  id: l4-office-20-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 90}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-20", label2: vacant, name: Office 4-20, room: {id: l4-office-20, kit: {cot: {x: 30.6, y: 0, z: -13.6}, desk: {x: 30.9, y: 0, z: -9.6}, yaw: 270}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-20</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-22-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: 26.55, y: 0, z: 0.6}
+  id: l4-office-22-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 270}
+  state: {c: {x: 26.55, y: 1.1, z: 0.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-22-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-22-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: 25.87, y: 1.35, z: 7.05}
+  id: l4-office-22-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 90}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-22", label2: vacant, name: Office 4-22, room: {id: l4-office-22, kit: {cot: {x: 30.6, y: 0, z: 2.4}, desk: {x: 30.9, y: 0, z: 6.4}, yaw: 270}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-22</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-23-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: 26.55, y: 0, z: 15.4}
+  id: l4-office-23-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 270}
+  state: {c: {x: 26.55, y: 1.1, z: 15.4}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-23-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-23-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: 25.87, y: 1.35, z: 11.05}
+  id: l4-office-23-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 90}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-23", label2: vacant, name: Office 4-23, room: {id: l4-office-23, kit: {cot: {x: 30.6, y: 0, z: 13.6}, desk: {x: 30.9, y: 0, z: 9.6}, yaw: 270}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-23</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-24-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: 26.55, y: 0, z: 16.6}
+  id: l4-office-24-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 270}
+  state: {c: {x: 26.55, y: 1.1, z: 16.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-24-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-24-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: 25.87, y: 1.35, z: 23.05}
+  id: l4-office-24-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 90}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-24", label2: vacant, name: Office 4-24, room: {id: l4-office-24, kit: {cot: {x: 30.6, y: 0, z: 18.4}, desk: {x: 30.9, y: 0, z: 22.4}, yaw: 270}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-24</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-3-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: -0.6, y: 0, z: -26.55}
+  id: l4-office-3-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 360}
+  state: {c: {x: -0.6, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-3-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-3-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: -4.95, y: 1.35, z: -25.87}
+  id: l4-office-3-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 180}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-03", label2: vacant, name: Office 4-03, room: {id: l4-office-3, kit: {cot: {x: -2.4, y: 0, z: -30.6}, desk: {x: -6.4, y: 0, z: -30.9}, yaw: 360}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-03</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-4-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: 0.6, y: 0, z: -26.55}
+  id: l4-office-4-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 360}
+  state: {c: {x: 0.6, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-4-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-4-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: 7.05, y: 1.35, z: -25.87}
+  id: l4-office-4-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 180}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-04", label2: vacant, name: Office 4-04, room: {id: l4-office-4, kit: {cot: {x: 2.4, y: 0, z: -30.6}, desk: {x: 6.4, y: 0, z: -30.9}, yaw: 360}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-04</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-6-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: 16.6, y: 0, z: -26.55}
+  id: l4-office-6-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 360}
+  state: {c: {x: 16.6, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-6-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-6-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: 23.05, y: 1.35, z: -25.87}
+  id: l4-office-6-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 180}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-06", label2: vacant, name: Office 4-06, room: {id: l4-office-6, kit: {cot: {x: 18.4, y: 0, z: -30.6}, desk: {x: 22.4, y: 0, z: -30.9}, yaw: 360}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-06</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-7-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: -16.6, y: 0, z: 26.55}
+  id: l4-office-7-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 180}
+  state: {c: {x: -16.6, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-7-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-7-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: -20.95, y: 1.35, z: 25.87}
+  id: l4-office-7-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 0}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-07", label2: vacant, name: Office 4-07, room: {id: l4-office-7, kit: {cot: {x: -18.4, y: 0, z: 30.6}, desk: {x: -22.4, y: 0, z: 30.9}, yaw: 180}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-07</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-8-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: -15.4, y: 0, z: 26.55}
+  id: l4-office-8-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 180}
+  state: {c: {x: -15.4, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-8-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-8-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: -8.95, y: 1.35, z: 25.87}
+  id: l4-office-8-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 0}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-08", label2: vacant, name: Office 4-08, room: {id: l4-office-8, kit: {cot: {x: -13.6, y: 0, z: 30.6}, desk: {x: -9.6, y: 0, z: 30.9}, yaw: 180}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-08</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+l4-office-9-cooler:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.95, z: 0}, material: {color: oklch(0.8 0.08 230 / 0.55), roughness: 0.1, transparent: true}, primitive: {height: 0.42, kind: cylinder, radiusBottom: 0.16, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 1.45, z: 0}, primitive: {depth: 0.01, height: 0.01, kind: box, width: 0.01}, ui: "<div face=\"front\" facing=\"player\" width=\"0.42m\" style=\"font-family:monospace;color:#cfeeff;background:#0e1a22;padding:14px;font-size:44px;line-height:1.2\">JUGS {{ state.jugs | default 3 }}/3<div style=\"margin-top:8px;height:40px;background:#223;position:relative\"><div style=\"position:absolute;left:82%;width:14%;top:0;bottom:0;background:#2f6a3a\"></div><div style=\"position:absolute;left:0;top:8px;bottom:8px;width:{{ state.fill | round }}%;background:#7fd6ff\"></div></div>FILL {{ state.fill | round | default 0 }}%</div>", visible: true}]
+  feetPosition: {x: -0.6, y: 0, z: 26.55}
+  id: l4-office-9-cooler
+  material: {color: oklch(0.93 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {depth: 0.36, height: 0.95, kind: box, width: 0.36}
+  rotation: {yaw: 180}
+  state: {c: {x: -0.6, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-9-plate, tint: "#7fd6ff", verb: Fill a bottle}
+  tags: [usable, l4-cooler]
+l4-office-9-plate:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: -4.95, y: 1.35, z: 25.87}
+  id: l4-office-9-plate
+  material: {color: oklch(0.86 0.03 85), roughness: 0.5}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 0}
+  state: {info: "Vacant office · make it your home", kind: claim, label: "4-09", label2: vacant, name: Office 4-09, room: {id: l4-office-9, kit: {cot: {x: -2.4, y: 0, z: 30.6}, desk: {x: -6.4, y: 0, z: 30.9}, yaw: 180}}, tint: "#f2c14e", verb: Claim}
+  tags: [usable, l4-plate]
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-09</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
+object/xad4c834675863151/0:
+  feetPosition: {x: -24, y: 2.85, z: -24}
+  id: object/xad4c834675863151/0
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/1:
+  feetPosition: {x: -24, y: 2.85, z: -16}
+  id: object/xad4c834675863151/1
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/10:
+  feetPosition: {x: -16, y: 2.85, z: 0}
+  id: object/xad4c834675863151/10
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/100:
+  feetPosition: {x: -28, y: 1.25, z: 31.58}
+  id: object/xad4c834675863151/100
+  material: {color: oklch(0.4 0.02 60), metalness: 0.8, roughness: 0.4}
+  primitive: {depth: 0.04, height: 0.05, kind: box, width: 1.05}
+  rotation: {roll: -18, yaw: 0}
+object/xad4c834675863151/101:
+  feetPosition: {x: -27.5, y: 2.45, z: -23.869999999999997}
+  id: object/xad4c834675863151/101
+  material: {color: oklch(0.25 0.04 140)}
+  primitive: {depth: 0.04, height: 0.5, kind: box, width: 2.6}
+  rotation: {yaw: 180}
+  ui: "<div face=\"front\" width=\"2.6m\" style=\"font-size:150px;font-weight:900;color:#d8f0a0;text-align:center;line-height:1\">M.E.G. BASE OMEGA<div style=\"font-size:70px;color:#b8d080\">wanderers welcome · weapons lowered</div></div>"
+object/xad4c834675863151/102:
+  feetPosition: {x: -23.3, y: 0, z: -23.2}
+  id: object/xad4c834675863151/102
+  material: {color: oklch(0.6 0.05 85), roughness: 1}
+  physics: static
+  primitive: {halfHeight: 0.3, kind: capsule, radius: 0.16}
+  rotation: {roll: 90, yaw: 90}
+object/xad4c834675863151/103:
+  feetPosition: {x: -23.3, y: 0.32, z: -23.2}
+  id: object/xad4c834675863151/103
+  material: {color: oklch(0.6 0.05 85), roughness: 1}
+  physics: static
+  primitive: {halfHeight: 0.3, kind: capsule, radius: 0.16}
+  rotation: {roll: 90, yaw: 90}
+object/xad4c834675863151/104:
+  feetPosition: {x: -23.3, y: 0, z: -22.599999999999998}
+  id: object/xad4c834675863151/104
+  material: {color: oklch(0.6 0.05 85), roughness: 1}
+  physics: static
+  primitive: {halfHeight: 0.3, kind: capsule, radius: 0.16}
+  rotation: {roll: 90, yaw: 90}
+object/xad4c834675863151/105:
+  feetPosition: {x: -23.3, y: 0.32, z: -22.599999999999998}
+  id: object/xad4c834675863151/105
+  material: {color: oklch(0.6 0.05 85), roughness: 1}
+  physics: static
+  primitive: {halfHeight: 0.3, kind: capsule, radius: 0.16}
+  rotation: {roll: 90, yaw: 90}
+object/xad4c834675863151/108:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-fluorescent-light-buzz-loop.mp3, gain: 0.08, loop: true, maxDistance: 18, spatial: true}
+  feetPosition: {x: -12, y: 2.6, z: -12}
+  id: object/xad4c834675863151/108
+  tags: [l4-bed]
+object/xad4c834675863151/109:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-fluorescent-light-buzz-loop.mp3, gain: 0.08, loop: true, maxDistance: 18, spatial: true}
+  feetPosition: {x: 12, y: 2.6, z: 12}
+  id: object/xad4c834675863151/109
+  tags: [l4-bed]
+object/xad4c834675863151/11:
+  feetPosition: {x: -16, y: 2.85, z: 8}
+  id: object/xad4c834675863151/11
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/110:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-fluorescent-light-buzz-loop.mp3, gain: 0.08, loop: true, maxDistance: 18, spatial: true}
+  feetPosition: {x: -12, y: 2.6, z: 12}
+  id: object/xad4c834675863151/110
+  tags: [l4-bed]
+object/xad4c834675863151/111:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-fluorescent-light-buzz-loop.mp3, gain: 0.08, loop: true, maxDistance: 18, spatial: true}
+  feetPosition: {x: 12, y: 2.6, z: -12}
+  id: object/xad4c834675863151/111
+  tags: [l4-bed]
+object/xad4c834675863151/112:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-distant-hvac-hum-room-tone-loop.mp3, gain: 0.14, loop: true, maxDistance: 45, spatial: true}
+  feetPosition: {x: 0, y: 2.6, z: 0}
+  id: object/xad4c834675863151/112
+  tags: [l4-bed]
+object/xad4c834675863151/113:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-old-refrigerator-hum-loop.mp3, gain: 0.12, loop: true, maxDistance: 9, spatial: true}
+  feetPosition: {x: 28, y: 2.6, z: 28}
+  id: object/xad4c834675863151/113
+  tags: [l4-bed]
+object/xad4c834675863151/12:
+  feetPosition: {x: -16, y: 2.85, z: 16}
+  id: object/xad4c834675863151/12
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/13:
+  feetPosition: {x: -16, y: 2.85, z: 24}
+  id: object/xad4c834675863151/13
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/14:
+  feetPosition: {x: -8, y: 2.85, z: -24}
+  id: object/xad4c834675863151/14
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/15:
+  feetPosition: {x: -8, y: 2.85, z: -16}
+  id: object/xad4c834675863151/15
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/16:
+  feetPosition: {x: -8, y: 2.85, z: -8}
+  id: object/xad4c834675863151/16
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/17:
+  feetPosition: {x: -8, y: 2.85, z: 0}
+  id: object/xad4c834675863151/17
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/18:
+  feetPosition: {x: -8, y: 2.85, z: 8}
+  id: object/xad4c834675863151/18
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/19:
+  feetPosition: {x: -8, y: 2.85, z: 16}
+  id: object/xad4c834675863151/19
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/2:
+  feetPosition: {x: -24, y: 2.85, z: -8}
+  id: object/xad4c834675863151/2
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/20:
+  feetPosition: {x: -8, y: 2.85, z: 24}
+  id: object/xad4c834675863151/20
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/21:
+  feetPosition: {x: 0, y: 2.85, z: -24}
+  id: object/xad4c834675863151/21
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/22:
+  feetPosition: {x: 0, y: 2.85, z: -16}
+  id: object/xad4c834675863151/22
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/23:
+  feetPosition: {x: 0, y: 2.85, z: -8}
+  id: object/xad4c834675863151/23
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/24:
+  feetPosition: {x: 0, y: 2.85, z: 0}
+  id: object/xad4c834675863151/24
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/25:
+  feetPosition: {x: 0, y: 2.85, z: 8}
+  id: object/xad4c834675863151/25
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/26:
+  feetPosition: {x: 0, y: 2.85, z: 16}
+  id: object/xad4c834675863151/26
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/27:
+  feetPosition: {x: 0, y: 2.85, z: 24}
+  id: object/xad4c834675863151/27
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/28:
+  feetPosition: {x: 8, y: 2.85, z: -24}
+  id: object/xad4c834675863151/28
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/29:
+  feetPosition: {x: 8, y: 2.85, z: -16}
+  id: object/xad4c834675863151/29
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/3:
+  feetPosition: {x: -24, y: 2.85, z: 0}
+  id: object/xad4c834675863151/3
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/30:
+  feetPosition: {x: 8, y: 2.85, z: -8}
+  id: object/xad4c834675863151/30
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/31:
+  feetPosition: {x: 8, y: 2.85, z: 0}
+  id: object/xad4c834675863151/31
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/32:
+  feetPosition: {x: 8, y: 2.85, z: 8}
+  id: object/xad4c834675863151/32
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/33:
+  feetPosition: {x: 8, y: 2.85, z: 16}
+  id: object/xad4c834675863151/33
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/34:
+  feetPosition: {x: 8, y: 2.85, z: 24}
+  id: object/xad4c834675863151/34
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/35:
+  feetPosition: {x: 16, y: 2.85, z: -24}
+  id: object/xad4c834675863151/35
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/36:
+  feetPosition: {x: 16, y: 2.85, z: -16}
+  id: object/xad4c834675863151/36
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/37:
+  feetPosition: {x: 16, y: 2.85, z: -8}
+  id: object/xad4c834675863151/37
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/38:
+  feetPosition: {x: 16, y: 2.85, z: 0}
+  id: object/xad4c834675863151/38
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/39:
+  feetPosition: {x: 16, y: 2.85, z: 8}
+  id: object/xad4c834675863151/39
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/4:
+  feetPosition: {x: -24, y: 2.85, z: 8}
+  id: object/xad4c834675863151/4
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/40:
+  feetPosition: {x: 16, y: 2.85, z: 16}
+  id: object/xad4c834675863151/40
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/41:
+  feetPosition: {x: 16, y: 2.85, z: 24}
+  id: object/xad4c834675863151/41
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/42:
+  feetPosition: {x: 24, y: 2.85, z: -24}
+  id: object/xad4c834675863151/42
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/43:
+  feetPosition: {x: 24, y: 2.85, z: -16}
+  id: object/xad4c834675863151/43
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/44:
+  feetPosition: {x: 24, y: 2.85, z: -8}
+  id: object/xad4c834675863151/44
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/45:
+  feetPosition: {x: 24, y: 2.85, z: 0}
+  id: object/xad4c834675863151/45
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/46:
+  feetPosition: {x: 24, y: 2.85, z: 8}
+  id: object/xad4c834675863151/46
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/47:
+  feetPosition: {x: 24, y: 2.85, z: 16}
+  id: object/xad4c834675863151/47
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/48:
+  feetPosition: {x: 24, y: 2.85, z: 24}
+  id: object/xad4c834675863151/48
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/49:
+  feetPosition: {x: -20, y: 2.85, z: -29}
+  id: object/xad4c834675863151/49
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/5:
+  feetPosition: {x: -24, y: 2.85, z: 16}
+  id: object/xad4c834675863151/5
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/50:
+  feetPosition: {x: -12, y: 2.85, z: -29}
+  id: object/xad4c834675863151/50
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/51:
+  feetPosition: {x: -4, y: 2.85, z: -29}
+  id: object/xad4c834675863151/51
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/52:
+  feetPosition: {x: 4, y: 2.85, z: -29}
+  id: object/xad4c834675863151/52
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/53:
+  feetPosition: {x: 12, y: 2.85, z: -29}
+  id: object/xad4c834675863151/53
+  light: {color: oklch(0.9 0.05 220), distance: 9, intensity: 5, kind: point}
+  tags: [l4-light]
+object/xad4c834675863151/54:
+  feetPosition: {x: 20, y: 2.85, z: -29}
+  id: object/xad4c834675863151/54
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/55:
+  feetPosition: {x: -20, y: 2.85, z: 29}
+  id: object/xad4c834675863151/55
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/56:
+  feetPosition: {x: -12, y: 2.85, z: 29}
+  id: object/xad4c834675863151/56
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/57:
+  feetPosition: {x: -4, y: 2.85, z: 29}
+  id: object/xad4c834675863151/57
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/58:
+  feetPosition: {x: 4, y: 2.85, z: 29}
+  id: object/xad4c834675863151/58
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/59:
+  feetPosition: {x: 12, y: 2.85, z: 29}
+  id: object/xad4c834675863151/59
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/6:
+  feetPosition: {x: -24, y: 2.85, z: 24}
+  id: object/xad4c834675863151/6
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/60:
+  feetPosition: {x: 20, y: 2.85, z: 29}
+  id: object/xad4c834675863151/60
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/61:
+  feetPosition: {x: -29, y: 2.85, z: -20}
+  id: object/xad4c834675863151/61
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/62:
+  feetPosition: {x: -29, y: 2.85, z: -12}
+  id: object/xad4c834675863151/62
+  light: {color: oklch(0.9 0.05 220), distance: 9, intensity: 5, kind: point}
+  tags: [l4-light]
+object/xad4c834675863151/63:
+  feetPosition: {x: -29, y: 2.85, z: -4}
+  id: object/xad4c834675863151/63
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/64:
+  feetPosition: {x: -29, y: 2.85, z: 4}
+  id: object/xad4c834675863151/64
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/65:
+  feetPosition: {x: -29, y: 2.85, z: 12}
+  id: object/xad4c834675863151/65
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/66:
+  feetPosition: {x: -29, y: 2.85, z: 20}
+  id: object/xad4c834675863151/66
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/67:
+  feetPosition: {x: 29, y: 2.85, z: -20}
+  id: object/xad4c834675863151/67
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/68:
+  feetPosition: {x: 29, y: 2.85, z: -12}
+  id: object/xad4c834675863151/68
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/69:
+  feetPosition: {x: 29, y: 2.85, z: -4}
+  id: object/xad4c834675863151/69
+  light: {color: oklch(0.9 0.05 220), distance: 9, intensity: 5, kind: point}
+  tags: [l4-light]
+object/xad4c834675863151/7:
+  feetPosition: {x: -16, y: 2.85, z: -24}
+  id: object/xad4c834675863151/7
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/70:
+  feetPosition: {x: 29, y: 2.85, z: 4}
+  id: object/xad4c834675863151/70
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/71:
+  feetPosition: {x: 29, y: 2.85, z: 12}
+  id: object/xad4c834675863151/71
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/72:
+  feetPosition: {x: 29, y: 2.85, z: 20}
+  id: object/xad4c834675863151/72
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/73:
+  feetPosition: {x: -28, y: 2.85, z: -28}
+  id: object/xad4c834675863151/73
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/74:
+  feetPosition: {x: 28, y: 2.85, z: -28}
+  id: object/xad4c834675863151/74
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/75:
+  feetPosition: {x: -28, y: 2.85, z: 28}
+  id: object/xad4c834675863151/75
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/76:
+  feetPosition: {x: 28, y: 2.85, z: 28}
+  id: object/xad4c834675863151/76
+  light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/77:
+  feetPosition: {x: 11.05, y: 1.35, z: -25.87}
+  id: object/xad4c834675863151/77
+  material: {color: oklch(0.86 0.03 85)}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 180}
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-05</div><div style=\"font-size:62px\">DO NOT LOOK OUT</div></div>"
+object/xad4c834675863151/78:
+  feetPosition: {x: 10, y: 0.9, z: -25.85}
+  id: object/xad4c834675863151/78
+  material: {color: oklch(0.85 0.17 95), emissive: oklch(0.4 0.1 95)}
+  primitive: {depth: 0.005, height: 0.07, kind: box, width: 1.25}
+  rotation: {roll: -3, yaw: 180}
+object/xad4c834675863151/79:
+  feetPosition: {x: 10, y: 1.4, z: -25.85}
+  id: object/xad4c834675863151/79
+  material: {color: oklch(0.85 0.17 95), emissive: oklch(0.4 0.1 95)}
+  primitive: {depth: 0.005, height: 0.07, kind: box, width: 1.25}
+  rotation: {roll: 4, yaw: 180}
+object/xad4c834675863151/8:
+  feetPosition: {x: -16, y: 2.85, z: -16}
+  id: object/xad4c834675863151/8
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/80:
+  feetPosition: {x: -25.87, y: 1.35, z: -8.95}
+  id: object/xad4c834675863151/80
+  material: {color: oklch(0.86 0.03 85)}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: -90}
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-14</div><div style=\"font-size:62px\">DO NOT LOOK OUT</div></div>"
+object/xad4c834675863151/81:
+  feetPosition: {x: -25.85, y: 0.9, z: -10}
+  id: object/xad4c834675863151/81
+  material: {color: oklch(0.85 0.17 95), emissive: oklch(0.4 0.1 95)}
+  primitive: {depth: 0.005, height: 0.07, kind: box, width: 1.25}
+  rotation: {roll: -3, yaw: -90}
+object/xad4c834675863151/82:
+  feetPosition: {x: -25.85, y: 1.4, z: -10}
+  id: object/xad4c834675863151/82
+  material: {color: oklch(0.85 0.17 95), emissive: oklch(0.4 0.1 95)}
+  primitive: {depth: 0.005, height: 0.07, kind: box, width: 1.25}
+  rotation: {roll: 4, yaw: -90}
+object/xad4c834675863151/83:
+  feetPosition: {x: 25.87, y: 1.35, z: -4.95}
+  id: object/xad4c834675863151/83
+  material: {color: oklch(0.86 0.03 85)}
+  primitive: {depth: 0.03, height: 0.32, kind: box, width: 0.5}
+  rotation: {yaw: 90}
+  ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-21</div><div style=\"font-size:62px\">DO NOT LOOK OUT</div></div>"
+object/xad4c834675863151/84:
+  feetPosition: {x: 25.85, y: 0.9, z: -6}
+  id: object/xad4c834675863151/84
+  material: {color: oklch(0.85 0.17 95), emissive: oklch(0.4 0.1 95)}
+  primitive: {depth: 0.005, height: 0.07, kind: box, width: 1.25}
+  rotation: {roll: -3, yaw: 90}
+object/xad4c834675863151/85:
+  feetPosition: {x: 25.85, y: 1.4, z: -6}
+  id: object/xad4c834675863151/85
+  material: {color: oklch(0.85 0.17 95), emissive: oklch(0.4 0.1 95)}
+  primitive: {depth: 0.005, height: 0.07, kind: box, width: 1.25}
+  rotation: {roll: 4, yaw: 90}
+object/xad4c834675863151/86:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.9, z: 0}, material: {color: oklch(0.85 0.01 250), metalness: 0.8, roughness: 0.2}, primitive: {depth: 0.36, height: 0.06, kind: box, width: 0.46}}]
+  feetPosition: {x: -4, y: 0, z: -20.55}
+  id: object/xad4c834675863151/86
+  material: {color: oklch(0.75 0.01 250), metalness: 0.7, roughness: 0.3, texture: cdn/texture-scratched-worn-steel.png}
+  physics: static
+  primitive: {depth: 0.4, height: 0.9, kind: box, width: 0.5}
+  rotation: {yaw: 0}
+  state: {info: "Almond water, cold", kind: fountain, name: Drinking fountain, tint: "#7fd6ff", verb: Drink}
+  tags: [usable, l4-fountain]
+object/xad4c834675863151/87:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.9, z: 0}, material: {color: oklch(0.85 0.01 250), metalness: 0.8, roughness: 0.2}, primitive: {depth: 0.36, height: 0.06, kind: box, width: 0.46}}]
+  feetPosition: {x: 4, y: 0, z: 20.55}
+  id: object/xad4c834675863151/87
+  material: {color: oklch(0.75 0.01 250), metalness: 0.7, roughness: 0.3, texture: cdn/texture-scratched-worn-steel.png}
+  physics: static
+  primitive: {depth: 0.4, height: 0.9, kind: box, width: 0.5}
+  rotation: {yaw: 180}
+  state: {info: "Almond water, cold", kind: fountain, name: Drinking fountain, tint: "#7fd6ff", verb: Drink}
+  tags: [usable, l4-fountain]
+object/xad4c834675863151/88:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.9, z: 0}, material: {color: oklch(0.85 0.01 250), metalness: 0.8, roughness: 0.2}, primitive: {depth: 0.36, height: 0.06, kind: box, width: 0.46}}]
+  feetPosition: {x: -19.45, y: 0, z: 4}
+  id: object/xad4c834675863151/88
+  material: {color: oklch(0.75 0.01 250), metalness: 0.7, roughness: 0.3, texture: cdn/texture-scratched-worn-steel.png}
+  physics: static
+  primitive: {depth: 0.4, height: 0.9, kind: box, width: 0.5}
+  rotation: {yaw: -90}
+  state: {info: "Almond water, cold", kind: fountain, name: Drinking fountain, tint: "#7fd6ff", verb: Drink}
+  tags: [usable, l4-fountain]
+object/xad4c834675863151/89:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: 0, y: 0.9, z: 0}, material: {color: oklch(0.85 0.01 250), metalness: 0.8, roughness: 0.2}, primitive: {depth: 0.36, height: 0.06, kind: box, width: 0.46}}]
+  feetPosition: {x: 19.45, y: 0, z: -4}
+  id: object/xad4c834675863151/89
+  material: {color: oklch(0.75 0.01 250), metalness: 0.7, roughness: 0.3, texture: cdn/texture-scratched-worn-steel.png}
+  physics: static
+  primitive: {depth: 0.4, height: 0.9, kind: box, width: 0.5}
+  rotation: {yaw: 90}
+  state: {info: "Almond water, cold", kind: fountain, name: Drinking fountain, tint: "#7fd6ff", verb: Drink}
+  tags: [usable, l4-fountain]
+object/xad4c834675863151/9:
+  feetPosition: {x: -16, y: 2.85, z: -8}
+  id: object/xad4c834675863151/9
+  light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
+  tags: [l4-light]
+object/xad4c834675863151/90:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: -0.12, y: 0.55, z: -0.405}, material: {color: oklch(0.85 0.04 90), emissive: oklch(0.8 0.05 90), emissiveIntensity: 0.9}, primitive: {depth: 0.01, height: 1.1, kind: box, width: 0.62}}, {feetPosition: {x: 0, y: 0.6, z: -0.6}, light: {color: oklch(0.9 0.05 90), distance: 3.5, intensity: 1.2, kind: point}}]
+  feetPosition: {x: 25, y: 0, z: 31.25}
+  id: object/xad4c834675863151/90
+  material: {color: oklch(0.45 0.15 25), metalness: 0.3, roughness: 0.4}
+  physics: static
+  primitive: {depth: 0.8, height: 1.85, kind: box, width: 1}
+  rotation: {yaw: 0}
+  state: {info: Restocks itself. Nobody knows how., kind: vend, name: Vending machine, tint: "#f2c14e", verb: Push the button}
+  tags: [usable, l4-vend]
+object/xad4c834675863151/91:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: -0.12, y: 0.55, z: -0.405}, material: {color: oklch(0.85 0.04 90), emissive: oklch(0.8 0.05 90), emissiveIntensity: 0.9}, primitive: {depth: 0.01, height: 1.1, kind: box, width: 0.62}}, {feetPosition: {x: 0, y: 0.6, z: -0.6}, light: {color: oklch(0.9 0.05 90), distance: 3.5, intensity: 1.2, kind: point}}]
+  feetPosition: {x: 26.3, y: 0, z: 31.25}
+  id: object/xad4c834675863151/91
+  material: {color: oklch(0.4 0.1 250), metalness: 0.3, roughness: 0.4}
+  physics: static
+  primitive: {depth: 0.8, height: 1.85, kind: box, width: 1}
+  rotation: {yaw: 0}
+  state: {info: Restocks itself. Nobody knows how., kind: vend, name: Vending machine, tint: "#f2c14e", verb: Push the button}
+  tags: [usable, l4-vend]
+object/xad4c834675863151/92:
+  behavior: scripts/l4-home.js
+  children: [{feetPosition: {x: -0.12, y: 0.55, z: -0.405}, material: {color: oklch(0.85 0.04 90), emissive: oklch(0.8 0.05 90), emissiveIntensity: 0.9}, primitive: {depth: 0.01, height: 1.1, kind: box, width: 0.62}}, {feetPosition: {x: 0, y: 0.6, z: -0.6}, light: {color: oklch(0.9 0.05 90), distance: 3.5, intensity: 1.2, kind: point}}]
+  feetPosition: {x: 27.6, y: 0, z: 31.25}
+  id: object/xad4c834675863151/92
+  material: {color: oklch(0.55 0.13 140), metalness: 0.3, roughness: 0.4}
+  physics: static
+  primitive: {depth: 0.8, height: 1.85, kind: box, width: 1}
+  rotation: {yaw: 0}
+  state: {info: Restocks itself. Nobody knows how., kind: vend, name: Vending machine, tint: "#f2c14e", verb: Push the button}
+  tags: [usable, l4-vend]
+object/xad4c834675863151/93:
+  feetPosition: {x: 28, y: 0, z: 27.5}
+  id: object/xad4c834675863151/93
+  material: {color: oklch(0.85 0.01 90), roughness: 0.5}
+  physics: static
+  primitive: {height: 0.74, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.6}
+object/xad4c834675863151/94:
+  feetPosition: {x: 31.63, y: 2.55, z: -28}
+  id: object/xad4c834675863151/94
+  material: {color: oklch(0.2 0.01 250)}
+  primitive: {depth: 0.02, height: 0.3, kind: box, width: 1.4}
+  rotation: {yaw: 90}
+  ui: "<div face=\"front\" width=\"1.4m\" style=\"font-size:150px;font-weight:900;color:#ffd890;text-align:center\">▼ LEVEL 3</div>"
+object/xad4c834675863151/95:
+  feetPosition: {x: 31.639999999999997, y: 1.25, z: -26.73}
+  id: object/xad4c834675863151/95
+  material: {color: "#ffb040", emissive: "#ffb040", emissiveIntensity: 3}
+  primitive: {kind: sphere, radius: 0.035}
+object/xad4c834675863151/96:
+  behavior: scripts/l4-home.js
+  feetPosition: {x: -28, y: 0.9, z: 31.549999999999997}
+  id: object/xad4c834675863151/96
+  primitive: {depth: 0.05, height: 0.3, kind: box, width: 0.9}
+  state: {info: Level 5, kind: stairs, name: Stairwell, tint: "#ff8060", verb: Push}
+  tags: [usable]
+  visible: false
+object/xad4c834675863151/97:
+  feetPosition: {x: -28, y: 2.3, z: 31.66}
+  id: object/xad4c834675863151/97
+  light: {color: oklch(0.6 0.2 25), distance: 4, intensity: 1.2, kind: point}
+  material: {color: oklch(0.25 0.01 30)}
+  primitive: {depth: 0.06, height: 0.25, kind: box, width: 0.7}
+  ui: "<div face=\"front\" width=\"0.7m\" style=\"font-size:160px;font-weight:900;color:#ff5040;text-align:center\">EXIT</div>"
+object/xad4c834675863151/98:
+  feetPosition: {x: -28, y: 1.7, z: 31.65}
+  id: object/xad4c834675863151/98
+  material: {color: oklch(0.88 0.02 90)}
+  primitive: {depth: 0.01, height: 0.25, kind: box, width: 0.9}
+  ui: "<div face=\"front\" width=\"0.9m\" style=\"font-size:90px;font-weight:800;color:#222;text-align:center\">LEVEL 5 · STAIRS</div>"
+object/xad4c834675863151/99:
+  feetPosition: {x: -28, y: 1.2, z: 31.58}
+  id: object/xad4c834675863151/99
+  material: {color: oklch(0.4 0.02 60), metalness: 0.8, roughness: 0.4}
+  primitive: {depth: 0.04, height: 0.05, kind: box, width: 1.05}
+  rotation: {roll: 18, yaw: 0}
+omega-okafor:
+  behavior: scripts/meg-agent.js
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.496ed1318603080d4fcbb7455baf9897f459ceea16ee9bc824dedb190bf9e6aa.glb, materials: {belly: {color: "#e8c79e"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#9a6440"}, mark: {color: "#6e4329"}, nose: {color: "#2a1c18"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e8c79e"}}}, morph: {Half: 0.9}}]
+  feetPosition: {x: -25.5, y: 0, z: -22.6}
+  id: omega-okafor
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.c2d2cf30258e5a9dffe20340b842637fe5106a6def1e54dc7db9d2ef462e0cdf.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: true}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: true}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#e8c79e"}, cloth_bottom: {color: "#3a3a32"}, cloth_hat: {color: "#4a5a2a"}, cloth_neck: {color: "#f3c64a"}, cloth_shoes: {color: "#22201c"}, cloth_top: {color: "#b8d040"}, fur: {color: "#9a6440"}, limb: {color: "#9a6440"}}}
+  physics: character
+  rotation: {yaw: 180}
+  state: {attr: "6,8,6,6,7,7,8", hp: 176, maxHp: 176, name: "Sgt. Okafor · M.E.G. Base Omega", role: scout, title: Quick, voice: reyes}
+  tags: [npc, omega]
+omega-okafor/object/xad4c834675863151/106:
+  attachment: {bone: RightHand}
+  id: omega-okafor/object/xad4c834675863151/106
+  model: {id: /cdn/value.5a2a421d33cd848a6df5ae7bf263814fc33ed17392a1dca306d6006fc6b33c34.glb, offset: [0, -0.032, 0]}
+  parent: omega-okafor
+omega-rhea:
+  behavior: scripts/meg-agent.js
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.58f56d191ddcc7f2a2ba6b9d7fc685d73710240c589ff13158d7acfb20f5dcdb.glb, materials: {belly: {color: "#ffffff"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f07a2e"}, mark: {color: "#2c1c18"}, nose: {color: "#231816"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#ffffff"}}}, morph: {Smile: 0.8}}]
+  feetPosition: {x: -28, y: 0, z: -28.5}
+  id: omega-rhea
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.bd12a1793850c4e86cf97d2f4db7619846845a6f8fdc62dad5ebea221359d49d.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: false}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: true}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: true}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, belly: {color: "#ffffff"}, cloth_bottom: {color: "#2a3040"}, cloth_hat: {color: "#e8e8e0"}, cloth_neck: {color: "#f3c64a"}, cloth_shoes: {color: "#2a2420"}, cloth_top: {color: "#e8e8e0"}, fur: {color: "#f07a2e"}, limb: {color: "#f07a2e"}}}
+  physics: character
+  rotation: {yaw: 0}
+  state: {attr: "6,6,5,6,6,7,5", hp: 176, maxHp: 176, name: "Rhea · Omega Medic", role: medic, title: "", voice: ito}
+  tags: [npc, omega]
+omega-rhea/object/xad4c834675863151/107:
+  attachment: {bone: RightHand}
+  id: omega-rhea/object/xad4c834675863151/107
+  parent: omega-rhea
+  primitive: {kind: scripted, params: {kind: wrench}, script: scripts/weapon-geo.js}
