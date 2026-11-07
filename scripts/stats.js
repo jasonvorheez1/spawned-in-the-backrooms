@@ -4,6 +4,11 @@
 // stamina, reload, carry weight), the creatures' scripts (their own attributes) and scripts/interact.js (Scavenge).
 import { getInputRay, raycast } from 'builtin/physics'
 import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, START, attrsOf, spentOf, derived, packAttrs, npcMul } from './lib/stats.js'
+import L0 from './lib/data/level0.yml'
+import L1 from './lib/data/level1.yml'
+import G from './lib/data/meg.yml'
+// what one hit from each kind takes off you, before its own Hardiness: shown as a plain DAM number
+const HIT = { smiler: L0.biteDamage, lurker: L0.lurkerBite, hound: L1.houndBite, stealer: L1.stealerHit, npc: G.playerShot }
 
 const FOES = [['smiler', 'Smiler'], ['lurker', 'Lurker'], ['hound', 'Hound'], ['stealer', 'Stranger'], ['npc', 'M.E.G. agent']]
 const mem = (ctx) => (ctx.self.session.stats ??= { ray: null, acc: 0, key: '' })
@@ -42,7 +47,7 @@ function look(ctx, ray) {
     const ang = Math.acos(Math.max(-1, Math.min(1, (vx * dir.x + vy * dir.y + vz * dir.z) / dist)))
     if (ang > Math.max(0.05, Math.atan(0.7 / dist)) || ang >= bestAng) continue
     if (raycast(ctx, o, { x: vx / dist, y: vy / dist, z: vz / dist }, { distance: dist - 0.3, physicsOnly: true, ignoreEntities: [c.id, ctx.self.id], bodies: 'static' })) continue
-    best = { c, label }; bestAng = ang
+    best = { c, label, tag }; bestAng = ang
   }
   return best
 }
@@ -68,7 +73,7 @@ export function update(ctx, dt) {
     if (f) {
       const st = f.c.state ?? {}, ob = attrsOf(s).o, mu = npcMul(st)
       const hp = Math.max(0, Math.round(st.hp ?? 0)), mx = st.maxHp ?? hp
-      tgt = { id: f.c.id, name: st.name ?? f.label, title: st.title ?? '', hp, mx, attr: ob >= 7 && st.attr ? st.attr : '', info: ob >= 5 ? `x${mu.dmg.toFixed(1)} damage` : '' }
+      tgt = { id: f.c.id, name: st.name ?? f.label, title: st.title ?? '', hp, mx, attr: ob >= 7 && st.attr ? st.attr : '', info: ob >= 5 && HIT[f.tag] ? `DAM ${Math.round(HIT[f.tag] * mu.dmg)}` : '' }
       if (ob < 3) { tgt.hp = -1 } // too unobservant to judge its health
     }
   }

@@ -1,6 +1,7 @@
 // The character sheet (K), the carry-weight chip and the creature read-out. All from player.state
 // (written by scripts/stats.js): attr, skl, apts, spts, sheetOpen, target. Buttons send the 'stat' action.
 import L from './lib/data/level0.yml'
+import W from './lib/data/weapons.yml'
 import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, attrsOf, skillsOf, spentOf, derived, carried, burden } from './lib/stats.js'
 
 const CSS = `<style>
@@ -38,7 +39,6 @@ const CSS = `<style>
 @media (max-width:640px){#sh .cols{grid-template-columns:1fr}#sh .col+.col{border-left:0;border-top:1px solid #ffb34744}}
 </style>`
 
-const pct = (v) => `${v >= 1 ? '+' : ''}${Math.round((v - 1) * 100)}%`
 
 export function statsUi(ctx, player) {
   const s = player.state ?? {}
@@ -55,16 +55,17 @@ export function statsUi(ctx, player) {
   const attrRows = ATTRS.map((a, i) => `<div class="row"><div class="n">${a.name}<small>${a.info}</small></div><div class="pips">${Array.from({ length: ATTR_MAX }, (_, q) => `<i class="${q < at[a.k] ? 'on' : ''}"></i>`).join('')}</div><div class="v">${at[a.k]}</div><button ${apts > 0 && at[a.k] < ATTR_MAX ? '' : 'disabled'} onclick="sendAction('stat',{k:'attr',i:${i}})">+</button></div>`).join('')
   const skillRows = SKILLS.map((k, i) => `<div class="row"><div class="n">${k.name}<small>${k.info}</small></div><div class="v">${sk[k.k]}</div><button ${spts > 0 && sp[i] < SKILL_MAX ? '' : 'disabled'} onclick="sendAction('stat',{k:'skill',i:${i}})">+</button></div>`).join('')
   const slow = burden(s) < 1
+  const wp = W[s.equipped] ?? W.fists
+  const dam = (w) => Math.round((w.damage + (s.level - 1) * L.perLevel.damage * (w.levelScale ?? 1)) * (w.ranged ? d.gun : d.melee))
   out += `<div id="sh" data-modal>
     <div class="hd"><h2>HALOGEN · LEVEL ${s.level}</h2><div class="pt">ATTRIBUTE POINTS <b>${apts}</b></div><div class="pt">SKILL POINTS <b>${spts}</b></div></div>
     <div class="cols"><div class="col"><div class="sec">ATTRIBUTES</div>${attrRows}</div><div class="col"><div class="sec">SKILLS</div>${skillRows}</div></div>
     <div class="dv">
       <span>Max HP <b>${L.hp + (s.level - 1) * L.perLevel.hp + d.hpBonus}</b></span><span>Max sanity <b>${L.sanity + (s.level - 1) * L.perLevel.sanity + d.sanBonus}</b></span>
       <span>Carry weight <b>${kg.toFixed(1)} / ${cap} kg${slow ? ' (slowed)' : ''}</b></span><span>Stamina <b>${Math.round(d.staMax)}</b></span>
-      <span>Move speed <b>${pct(d.speed)}</b></span><span>Critical chance <b>${Math.round(d.crit * 100)}%</b></span>
-      <span>Melee damage <b>${pct(d.melee)}</b></span><span>Gun damage <b>${pct(d.gun)}</b></span>
-      <span>Reload time <b>${pct(d.reload)}</b></span><span>Extra find chance <b>${Math.round(d.scav * 100)}%</b></span>
-      <span>Seen from <b>${Math.round(d.sneak * 100)}% as far</b></span><span>XP gained <b>${pct(d.xp)}</b></span>
+      <span>${wp.name} DAM <b>${dam(wp)}</b></span><span>DPS <b>${Math.round(dam(wp) * (wp.pellets ? 1 : 1) / (wp.cooldown * (wp.ranged ? 1 : d.swing)))}</b></span>
+      <span>Unarmed DAM <b>${dam(W.fists)}</b></span><span>Crit chance <b>${Math.round(d.crit * 100)}%</b></span>
+      ${wp.ranged ? `<span>Reload <b>${(wp.reloadTime ?? (wp.reloadStart + wp.reloadShell * wp.magSize)).toFixed(1) * 1 && ((wp.reloadTime ?? (wp.reloadStart + wp.reloadShell * wp.magSize)) * d.reload).toFixed(1)} s</b></span>` : `<span>Swing <b>${(wp.cooldown * d.swing).toFixed(2)} s</b></span>`}<span>Find chance <b>${Math.round(d.scav * 100)}%</b></span>
     </div>
     <div class="ft"><button style="color:#16140e" onclick="sendAction('stat',{k:'close'})">CLOSE (K)</button></div>
   </div>`
