@@ -356,6 +356,13 @@ export function update(ctx, dt) {
   ctx.self.anim.run = { clip: runClip, loop: 'loop', weight: rung === 'run' ? 1 : 0.001, speed: runRate, blendIn: 0.15 }
   if (hasSprint) ctx.self.anim.sprint = { clip: sprintClip, loop: 'loop', weight: rung === 'sprint' ? 1 : 0.001, speed: sprintRate, blendIn: 0.15 }
   else if (ctx.self.anim.sprint) ctx.self.anim.sprint = null
+  if (ctx.self.state?.crouch) { // crouched: the crouch pair takes the body; the walk's share is the crouch-walk's
+    const go = Math.min(1, Math.max(0.001, 1 - idleWeight))
+    ctx.self.anim.idle = { clip: 'cdn/clip-crouch-idle-loop.glb', loop: 'loop', weight: Math.max(0.001, 1 - go), blendIn: 0.2 }
+    ctx.self.anim.walk = { clip: 'cdn/clip-crouch-walk-loop.glb', loop: 'loop', weight: go, speed: Math.max(0.5, walkRate * 1.3), blendIn: 0.2 }
+    ctx.self.anim.run = { clip: runClip, loop: 'loop', weight: 0.001, blendIn: 0.2 }
+    if (ctx.self.anim.sprint) ctx.self.anim.sprint = { ...ctx.self.anim.sprint, weight: 0.001 }
+  }
   // Standing, facing where it was told to: the clips hold their weights until the body moves or onInput
   // writes a new heading, either wakes this update.
   if (speed === 0 && (typeof targetYaw !== 'number' || gait.bodyYaw === targetYaw)) ctx.sleep()

@@ -199,6 +199,8 @@ export function onInput(ctx, input) {
   w.dir = { x: cos * nx - sin * nz, z: -(sin * nx + cos * nz) }
   // on a phone, pushing the stick all the way runs: no sprint button to hold beside it
   w.sprint = !!input.held.sprint || (input.axes.touchActive === 1 && Math.hypot(input.axes.moveX ?? 0, input.axes.moveZ ?? 0) > 0.95)
+  if (input.pressed.crouch) ctx.self.state.crouch = !ctx.self.state.crouch // ctrl toggles a crouch: slow, quiet, low
+  if (ctx.self.state.crouch && (input.pressed.jump || (w.sprint && Math.hypot(mx, mz) > 0.1))) ctx.self.state.crouch = false // jumping or running stands you up
   if (input.pressed.jump && ctx.self.grounded && !ctx.self.parent) {
     const v = ctx.self.velocity
     ctx.self.velocity = { x: v.x, y: PLAYER.jumpSpeed, z: v.z }
@@ -534,12 +536,13 @@ export function update(ctx, dt) {
   const w = walkOf(ctx), s = ctx.self.state
   w.stamina ??= s.stamina; w.battery ??= s.battery
   const dir = w.dir ?? { x: 0, z: 0 }, moving = dir.x !== 0 || dir.z !== 0
-  const sprinting = w.sprint && moving && w.stamina > 1 && !s.ads
+  const crouched = !!s.crouch
+  const sprinting = w.sprint && moving && w.stamina > 1 && !s.ads && !crouched
   const dv = w.dv ??= derived(s) // the sheet's numbers, re-derived 4x a second in the stats beat, not three times a tick
   w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain : L.staminaRegen * dv.staRegen * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
   const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
-  const speed = (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * dv.speed * (w.bur ??= burden(s))
+  const speed = (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * dv.speed * (w.bur ??= burden(s))
   const intent = { x: dir.x * speed, z: dir.z * speed }
   viewmodel(ctx, moving, sprinting)
   const v = ctx.self.velocity
@@ -551,11 +554,11 @@ export function update(ctx, dt) {
   // Footsteps on carpet: soft, muted, non-intrusive
   if (moving && ctx.self.grounded) {
     w.stepClock = (w.stepClock ?? 0) + dt
-    const interval = sprinting ? 0.32 : 0.48
+    const interval = sprinting ? 0.32 : crouched ? 0.7 : 0.48
     if (w.stepClock >= interval) {
       w.stepClock = 0
       const clip = w.wet ? 'footstep-soaked-carpet-deep-squelch' : sprinting ? 'footstep-damp-carpet-run' : 'footstep-damp-carpet-squelch-soft'
-      sound(ctx, clip, w.wet ? 0.4 : sprinting ? 0.28 : 0.2, true)
+      sound(ctx, clip, (w.wet ? 0.4 : sprinting ? 0.28 : 0.2) * (crouched ? 0.3 : 1), true)
     }
   } else {
     w.stepClock = 0.22

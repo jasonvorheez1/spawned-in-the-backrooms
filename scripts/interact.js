@@ -61,6 +61,8 @@ function refocus(ctx, force = false) {
         else if (lk) { const [sk, lv] = lk.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = ok ? 'Unlock' : 'Locked:'; info.color = ok ? '#f2c14e' : '#e0644f' }
       } else if (f.tag === 'npc') {
         info = { id: f.id, name: it.state?.name ?? 'Stranger', info: 'M.E.G.', verb: 'Talk', color: '#c6f060' }
+        const pc = pickChance(ctx, it)
+        if (pc != null) info = { id: f.id, name: it.state?.name ?? 'Stranger', info: `${Math.round(pc * 100)}% · Sneak`, verb: 'Pickpocket', color: pc >= 0.6 ? '#c6f060' : pc >= 0.35 ? '#f2c14e' : '#e0644f' }
       } else if (f.tag === 'container') {
         const n = itemsOf(it.state?.items).length
         info = { id: f.id, name: it.state?.name ?? 'Container', info: n ? `${n} item${n > 1 ? 's' : ''}` : 'empty', verb: 'Search', color: '#d9d3b8' }
@@ -165,6 +167,61 @@ function useDoor(ctx, it) {
   loud(it.state.open ? 'heavy-metal-door-creak-open' : 'heavy-metal-door-slam-shut', 0.7)
 }
 
+// Pickpocketing: crouched, unseen (they face away), alive and not already after you. The roll is Sneak plus Agility,
+// better the more squarely behind them you are, worse each time you have lifted from them. Caught = they turn on you.
+function facingAway(ctx, it) {
+  const r = it.rotation, yaw = ((typeof r === 'number' ? r : r?.yaw) ?? 0) * Math.PI / 180
+  const fx = -Math.sin(yaw), fz = -Math.cos(yaw), p = ctx.self.feetPosition, q = it.feetPosition
+  const dx = p.x - q.x, dz = p.z - q.z, d = Math.hypot(dx, dz) || 1
+  return (fx * dx + fz * dz) / d // 1 = right in front of their eyes, -1 = square behind them
+}
+function pickChance(ctx, it) {
+  const s = ctx.self.state, st = it.state ?? {}
+  if (!s.crouch || st.dead || st.angry?.[ctx.self.id] || st.follow === ctx.self.id || s.talkWith) return null
+  const f = facingAway(ctx, it); if (f > 0.35) return null // they can see you
+  const sk = skillsOf(s).sneak ?? 0, agi = Number(String(s.attr ?? '5,5,5,5,5,5,5').split(',')[5]) || 5
+  const lifted = st.picked?.[ctx.self.id] ?? 0
+  return Math.max(0.05, Math.min(0.95, 0.3 + sk / 160 + (agi - 5) * 0.03 + (0.35 - f) * 0.2 - lifted * 0.12))
+}
+function pocketsOf(ctx, it) {
+  if (it.state.pockets === undefined) {
+    const roll = () => (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : ctx.self.place === 'level3' ? rollItemL3(ctx) : rollItem(ctx))
+    const n = 1 + Math.floor(ctx.random() * 3), got = ['almond']
+    for (let i = 0; i < n; i++) got.push(roll())
+    if (ctx.random() < 0.5) got.push('ammo')
+    it.state.pockets = got.filter(Boolean).join(',')
+  }
+  return itemsOf(it.state.pockets)
+}
+const CAUGHT = ['hands off!', "that doesn't belong to you.", 'hey! give it back!', 'you little thief!']
+function pickpocket(ctx, it) {
+  const s = ctx.self.state, now = ctx.now(), m = mem(ctx)
+  if (now - (m.pickAt ?? -1e9) < 900) return
+  m.pickAt = now
+  const chance = pickChance(ctx, it), items = pocketsOf(ctx, it), who = (it.state.name ?? 'Stranger').split(' ·')[0]
+  it.state.picked = { ...(it.state.picked ?? {}), [ctx.self.id]: (it.state.picked?.[ctx.self.id] ?? 0) + 1 }
+  if (ctx.random() < chance) {
+    if (!items.length) { note(ctx, `${who}'s pockets are empty.`); return }
+    const i = Math.floor(ctx.random() * items.length), t = items[i], r = takeToken(ctx, t)
+    if (!r.ok) { note(ctx, r.msg || "You can't carry that."); return }
+    items.splice(i, 1); it.state.pockets = items.join(',')
+    note(ctx, `Lifted ${describe(t).name} from ${who}`)
+    snd(ctx, 'loot-take-all-rustle', 0.25)
+    s.xp = (s.xp ?? 0) + 8
+    return
+  }
+  // caught: they spin round, shout, and turn on you
+  const p = ctx.self.feetPosition, q = it.feetPosition
+  it.rotation = { yaw: Math.atan2(-(p.x - q.x), -(p.z - q.z)) * 57.2958 }
+  it.state.angry = { ...(it.state.angry ?? {}), [ctx.self.id]: true }
+  s.crouch = false
+  const line = CAUGHT[Math.floor(ctx.random() * CAUGHT.length)]
+  speak(ctx, it, it.state.voice ?? 'callum', line)
+  note(ctx, `Caught! ${who} saw you.`)
+  ctx.emit('screenShake', { intensity: 0.25, duration: 0.25 }, { audience: { player: ctx.self.id } })
+  snd(ctx, 'ui-denied-click', 0.5)
+}
+
 function press(ctx) {
   const m = mem(ctx), s = ctx.self.state
   if (s.lootOpen) { closeLoot(ctx); return }
@@ -172,6 +229,7 @@ function press(ctx) {
   if (!f) return
   const it = ctx.getObject(f.id)
   if (!it || it.state?.taken) return
+  if (f.tag === 'npc' && pickChance(ctx, it) != null) { pickpocket(ctx, it); m.key = ''; refocus(ctx, true); return }
   if (f.tag === 'npc') { if (it.state?.dead) { if (it.state.items !== undefined) openLoot(ctx, it) } else if (it.state?.angry?.[ctx.self.id]) talk(ctx, it); else { ctx.self.state.talkWith = it.id; ctx.self.state.shopOpen = null; it.state.talkAt = ctx.now(); it.state.talkTo = ctx.self.id } return } // the conversation card (scripts/talk.js); the old services sit on its buttons
   if (f.tag === 'container') { openLoot(ctx, it); return }
   if (f.tag === 'door') { useDoor(ctx, it); m.key = ''; refocus(ctx, true); return }

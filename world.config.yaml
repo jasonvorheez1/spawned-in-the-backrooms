@@ -20,6 +20,11 @@ inputs:
     sprint:
       keys:
         - shift
+    crouch:
+      keys:
+        - control
+      touch:
+        label: Crouch
     attack:
       mouse: left
     aim:

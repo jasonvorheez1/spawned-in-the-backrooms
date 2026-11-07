@@ -55,8 +55,11 @@ export function update(ctx, dt) {
   // you drive and do not sit on keeps its scale.
   const height = body.id === ctx.player?.id ? 2 * body.bounds?.obb.halfExtents.y : undefined
   const eyeHeight = finiteNumber(CAMERA.eyeHeight, 1.6) * (height > 0 ? height / BODY_HEIGHT : finiteNumber(body.effectiveScale?.y, 1))
+  const crouchWant = !seated && body.id === ctx.player?.id && body.state?.crouch ? 0.62 : 1
+  const ck = (ctx.self.session.crouchK ??= 1), crouchK = ck + (crouchWant - ck) * Math.min(1, dt * 10)
+  ctx.self.session.crouchK = crouchK
   const pos = seated ? seated.worldFeetPosition : target.feetPosition
-  ctx.self.feetPosition = { x: pos.x, y: pos.y + eyeHeight, z: pos.z }
+  ctx.self.feetPosition = { x: pos.x, y: pos.y + eyeHeight * crouchK, z: pos.z }
 
   // The presented facing (radians) as the one rotation grammar (degrees): undefined before the first frame.
   const view = ctx.self.view
