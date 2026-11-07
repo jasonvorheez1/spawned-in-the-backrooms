@@ -94,7 +94,7 @@ export function rollItemL2(ctx) {
   for (const [k, w] of L2_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL2(ctx) : k === "book" ? bookOf(ctx) : k; }
   return "battery";
 }
-export function rollWeaponL2(ctx) { const r = ctx.random(); return r < 0.4 ? "screwdriver" : r < 0.55 ? "sledgehammer" : r < 0.75 ? "wrench" : rollWeapon(ctx); }
+export function rollWeaponL2(ctx) { const r = ctx.random(); return r < 0.4 ? rollVariant(ctx, "screwdriver") : r < 0.55 ? rollVariant(ctx, "sledgehammer") : r < 0.75 ? rollVariant(ctx, "wrench") : rollWeapon(ctx); }
 export function spawnCrateL2(ctx, p) {
   const n = 2 + Math.floor(ctx.random() * 3), items = [];
   for (let i = 0; i < n; i++) items.push(rollItemL2(ctx));
