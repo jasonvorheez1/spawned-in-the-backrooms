@@ -188,7 +188,17 @@ export function geometry(ctx) {
     ctx.tri(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]);
     pushW(a); pushW(b); pushW(c);
   };
-  const quad = (a, b, c, d) => { tri(a, b, c); tri(a, c, d); };
+  let CLOTH = null; // { col, rib }: fabric on — every quad takes a woven shade of col
+  const quad = (a, b, c, d) => {
+    if (CLOTH) {
+      const m = [(a[0] + c[0]) / 2, (a[1] + c[1]) / 2, (a[2] + c[2]) / 2];
+      const h = Math.sin(m[0] * 127.1 + m[1] * 311.7 + m[2] * 74.7) * 43758.5453, n = h - Math.floor(h);
+      const rib = CLOTH.rib ? 0.5 + 0.5 * Math.sin(m[1] * CLOTH.rib) : 0.5;
+      const f = n * 0.07 + rib * 0.06 + (CLOTH.hem ? CLOTH.hem(m) : 0);
+      ctx.color(f > 0 ? mixc(CLOTH.col, "#120c10", Math.min(0.45, f)) : mixc(CLOTH.col, "#ffffff", Math.min(0.2, -f)));
+    }
+    tri(a, b, c); tri(a, c, d);
+  };
 
   // Ellipsoid generator with optional clipping and face coloring
   function ell(c, r, colorAt, opts = {}) {
@@ -718,9 +728,11 @@ export function geometry(ctx) {
   // ---------- Clothes: Tailored shells smoothly wrapping the new body curves ----------
   const sleeve = (len, col, r0 = 0.054) => {
     ctx.color(col);
+    CLOTH = { col, rib: 260, hem: (m) => (Math.abs(m[0]) > 0.15 + len - 0.03 ? 0.15 : 0) };
     for (const s of [-1, 1]) {
       limb([s * 0.1, 0.965, 0], [s * (0.15 + len), 0.965, 0], r0, r0 - 0.004, hi ? 12 : 8);
     }
+    CLOTH = null; ctx.color(col);
   };
 
   const shirtR = (y) => { // a top's radius at y: body + ease, held out over the hips and the pants' waistband
@@ -733,6 +745,7 @@ export function geometry(ctx) {
 
   const shirt = (col, low = 0.6) => {
     ctx.color(col);
+    CLOTH = { col, rib: 260, hem: (m) => (m[1] < low + 0.035 ? 0.16 : m[1] > 0.945 ? 0.12 : -0.03 * Math.max(0, -m[2]) * 10) };
     const N = 12, path = [];
     for (let i = 0; i <= N; i++) path.push([0, lerp(low, 0.97, i / N), 0]);
     loft(path, (t) => shirtR(lerp(low, 0.97, t)), [0, 0, -1], null, hi ? 24 : 14);
@@ -740,10 +753,12 @@ export function geometry(ctx) {
       for (const sd of [-1, 1]) ell([sd * BUST.x, BUST.y - 0.004, BUST.z + 0.004], [BUST.r[0] + 0.024, BUST.r[1] + 0.022, BUST.r[2] + 0.018], null, { seg: hi ? 18 : 10 });
       ell([0, BUST.y - 0.01, BUST.z + 0.006], [0.09, BUST.r[1] + 0.016, BUST.r[2] + 0.012], null, { seg: hi ? 16 : 10 });
     }
+    CLOTH = null; ctx.color(col);
   };
 
   const pants = (col, knee = 0.12, shorts = false) => {
     ctx.color(col);
+    CLOTH = { col, rib: 0, hem: (m) => 0.05 * (0.5 + 0.5 * Math.sin((m[1] + m[0]) * 300)) + (m[1] < (shorts ? 0.41 : knee + 0.035) ? 0.14 : 0) + (Math.abs(m[1] - 0.3) < 0.05 && m[2] < 0 && !shorts ? -0.09 : 0) + (m[1] > 0.7 ? 0.1 : 0) };
     ell([0, 0.66, 0.005], [HIP_R[0] + 0.016, 0.115, HIP_R[1] + 0.016], null, { clip: (p) => p[1] > 0.72 });
     for (const s of [-1, 1]) {
       const x = s * 0.085;
