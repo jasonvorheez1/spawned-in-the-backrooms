@@ -638,8 +638,8 @@ function toggleLight(ctx) {
   if (w.light) { ctx.destroy(w.light); w.light = null }
   else if (ctx.self.place === 'level6') { /* Level 6: no light works. the switch clicks, nothing comes; goggles see without light */
     if (w.nvg) { ctx.destroy(w.nvg); w.nvg = null }
-    else if (s.nvg && (w.battery ?? s.battery) <= 1 && (s.nvgSpare ?? 0) > 0) { s.nvgSpare -= 1; w.battery = 100; s.battery = 100; s.notice = { text: `Swapped in a spare pair · ${s.nvgSpare} left`, at: ctx.now() } }
-    if (!w.nvg && s.nvg && (w.battery ?? s.battery) > 1) w.nvg = ctx.spawn({ feetPosition: { attach: 'camera', x: 0, y: 0, depth: 0 }, light: { kind: 'point', color: 'oklch(0.85 0.2 145)', intensity: 2.6, distance: 9 }, audience: 'local', scope: 'session' })
+    else if (s.nvg && (w.battery ?? s.battery) <= 1 && (s.nvgSpare ?? 0) > 0) { s.nvgSpare -= 1; w.battery = 100; s.battery = 100; w.nvg = ctx.spawn({ feetPosition: { attach: 'camera', x: 0, y: 0, depth: 0 }, light: { kind: 'point', color: 'oklch(0.85 0.2 145)', intensity: 2.6, distance: 9 }, audience: 'local' }); s.notice = { text: `Swapped in a spare pair · ${s.nvgSpare} left`, at: ctx.now() } }
+    else if (s.nvg && (w.battery ?? s.battery) > 1) w.nvg = ctx.spawn({ feetPosition: { attach: 'camera', x: 0, y: 0, depth: 0 }, light: { kind: 'point', color: 'oklch(0.85 0.2 145)', intensity: 2.6, distance: 9 }, audience: 'local', scope: 'session' })
     else if (!s.nvg) s.notice = { text: 'Nothing. The dark eats light here.', at: ctx.now() }
     s.nvgOn = !!w.nvg; sound(ctx, w.nvg ? 'flashlight-switch-click' : 'flashlight-switch-click', 0.65, true); return
   }
