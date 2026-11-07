@@ -61,7 +61,7 @@ hub/table:
   physics: static
   rotation: 12
 hum-bed:
-  audio: {bus: Ambience, clip: /cdn/value.a8a58686421e9dd3d00a1bfa5ce6988f01e97e775c7e22cb27ce343c6f2ed48b.mp3, gain: 0.25, loop: true, spatial: false}
+  audio: {bus: Ambience, clip: /cdn/value.4f2ca6969e3919a947a1bb8c8c957185a3a208f8fdd1d35ecd8daa87bd5495ce.mp3, gain: 0.25, loop: true, spatial: false}
   feetPosition: {x: 0, y: 1, z: 0}
   id: hum-bed
 level0:
