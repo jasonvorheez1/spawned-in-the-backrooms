@@ -72,6 +72,9 @@ inputs:
       keys:
         - e
     loot: {}
+    grab:
+      keys:
+        - z
     inventory:
       keys:
         - i
@@ -87,7 +90,7 @@ inputs:
     os: {}
     wardrobe:
       keys:
-        - c
+        - o
       touch:
         button: false
     emote:
