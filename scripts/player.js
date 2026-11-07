@@ -230,6 +230,21 @@ function tickStats(ctx, t, moving) {
       ctx.emit('playSound', { clip: SND(clip), position: at, volume: 0.55, refDistance: 1.5, maxDistance: 12 }, { audience: { player: ctx.self.id } })
     }
   }
+  // a dark figure at the far end of the hall you face: only you see it, and it is gone in a breath
+  if (zone !== 'hub') {
+    const [e, f] = L.figureEvery
+    w.nextFigure ??= now + (e + ctx.random() * (f - e)) * 1000
+    if (now >= w.nextFigure) {
+      const dist = 9 + ctx.random() * 8, eye = { x: p.x, y: p.y + 1.6, z: p.z }
+      const hit = raycast(ctx, eye, { x: af.x, y: 0, z: af.z }, { distance: dist, physicsOnly: true, ignoreEntities: [ctx.self.id], bodies: 'static' })
+      const d = hit ? hit.distance - 0.8 : dist
+      w.nextFigure = now + (d > 7 ? (e + ctx.random() * (f - e)) * 1000 : 4000) // no long sightline: look again soon
+      if (d > 7) {
+        ctx.spawn({ audience: 'local', lifetime: L.figureSeen, feetPosition: { x: p.x + af.x * d, y: p.y, z: p.z + af.z * d }, rotation: { lookAt: { x: p.x, y: p.y, z: p.z } }, primitive: { kind: 'scripted', script: 'scripts/figure-geo.js' } })
+        if (s.sanity > 0) s.sanity -= 3
+      }
+    }
+  }
   // flashlight battery
   if (w.light) { w.battery -= L.batteryDrain * t; if (w.battery <= 0) { w.battery = 0; toggleLight(ctx) } }
   const st = Math.round(w.stamina), bt = Math.round(w.battery)

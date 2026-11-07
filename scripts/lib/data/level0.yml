@@ -63,3 +63,5 @@ humSpikeEvery: [70, 140]   # seconds between spikes
 humSpikeLength: 6          # seconds a spike lasts
 humSpikeSanity: 2.5        # sanity per second lost standing still in a spike (moving takes a fifth)
 wallNoiseEvery: [25, 55]   # seconds between whispers / scratching
+figureEvery: [40, 90]      # seconds between dark-figure sightings (her pick)
+figureSeen: 1.4            # seconds one stands before it is gone
