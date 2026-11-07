@@ -4,7 +4,7 @@
 // Rarely the pack screams and bolts after something nobody sees, and the lamps round them stutter, then come back.
 // Kill one: Death Rat remains with meat:rat, and player.state.l5rats += 1 (Housekeeping's job).
 import { ZONES } from "./lib/level5.js";
-import { E, SND, isSafe, zoneId, flat, yawTo, maxHpOf, prey, aloneOf, hit, claimRemains, killerOf } from "./lib/l5-hostile.js";
+import { E, SND, isSafe, zoneId, flat, yawTo, maxHpOf, prey, aloneOf, hit, claimRemains, killerOf, becomeCorpse } from "./lib/l5-hostile.js";
 import { npcState } from "./lib/stats.js";
 const R = E.rat, Z = Object.fromEntries(ZONES.map((z) => [z.id, z]));
 const rnd = (ctx, [a, b]) => a + ctx.random() * (b - a);
@@ -87,10 +87,9 @@ export function update(ctx, dt) {
     for (const r of mine) {
       const m = (mem[r.id] ??= {}), pos = r.feetPosition, st = r.state ?? {}, vy = (r.velocity?.y ?? 0) - 18 * dt;
       if (st.dead || (st.hp ?? 1) <= 0) {
-        if (!m.deadAt) { m.deadAt = now; setGait(r, m, "still"); r.velocity = { x: 0, y: vy, z: 0 }; ctx.emit("playSound", { clip: SND("rat-death-squeal"), position: pos, volume: 0.8 }); ctx.emit("fx", { position: { ...pos, y: 0.15 }, script: BLOOD });
+        if (!m.deadAt) { m.deadAt = now; setGait(r, m, "still"); becomeCorpse(ctx, r, "Death Rat", ["meat:rat"], killerOf(ctx, pos)?.feetPosition); ctx.emit("playSound", { clip: SND("rat-death-squeal"), position: pos, volume: 0.8 }); ctx.emit("fx", { position: { ...pos, y: 0.15 }, script: BLOOD });
           const k = killerOf(ctx, pos); if (k) { k.state.l5rats ??= 0; k.state.l5rats += 1; } }
-        if (!m.claimed) m.claimed = claimRemains(ctx, pos, "Death Rat remains", ["meat:rat"], m.deadAt, now);
-        if (m.claimed && now - m.deadAt > 2500) { ctx.destroy(r.id); delete mem[r.id]; }
+        if (now - m.deadAt > 150000 || (now - m.deadAt > 3000 && !(r.state.items ?? "").length)) { ctx.destroy(r.id); delete mem[r.id]; }
         continue;
       }
       let goal = null, sp = 0, target = null;

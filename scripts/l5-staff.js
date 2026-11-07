@@ -39,9 +39,8 @@ export function update(ctx, dt) {
     if (!o) { if (now >= (mem["re" + f.id] ?? 0)) { mem["re" + f.id] = now + 240000; if (mem["re" + f.id + "x"]) place(ctx, f); mem["re" + f.id + "x"] = true; } continue; }
     const m = (mem[f.id] ??= {}), pos = o.feetPosition, st = o.state, vy = (o.velocity?.y ?? 0) - 18 * dt;
     if (st.dead || (st.hp ?? 1) <= 0) {
-      if (!m.deadAt) { m.deadAt = now; o.anim.move = { clip: "cdn/clip-die.glb", clampWhenFinished: true }; o.velocity = { x: 0, y: vy, z: 0 }; ctx.emit("playSound", { clip: SND("hollow-sigh-fading-whisper-thank-you-for-staying"), position: pos, volume: 0.9 }); }
-      if (!m.claimed) m.claimed = claimRemains(ctx, pos, `${f.name}'s uniform`, ["bobbypin", "battery", ctx.random() < 0.5 ? "kit" : "tape"], m.deadAt, now);
-      if (m.claimed && now - m.deadAt > 4000) { ctx.destroy(f.id); delete mem[f.id]; mem["re" + f.id] = now + 240000; }
+      if (!m.deadAt) { m.deadAt = now; becomeCorpse(ctx, o, `${f.name}'s body`, ["bobbypin", "battery", ctx.random() < 0.5 ? "kit" : "tape"], killerOf(ctx, pos)?.feetPosition); ctx.emit("playSound", { clip: SND("hollow-sigh-fading-whisper-thank-you-for-staying"), position: pos, volume: 0.9 }); }
+      if (now - m.deadAt > 150000 || (now - m.deadAt > 3000 && !(o.state.items ?? "").length)) { ctx.destroy(f.id); delete mem[f.id]; mem["re" + f.id] = now + 240000; }
       continue;
     }
     let mode = "post", goal = null, sp = 0;
