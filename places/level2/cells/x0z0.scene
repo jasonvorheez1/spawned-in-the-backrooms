@@ -1,0 +1,12 @@
+# spawn-scene v2 yaml x0z0
+wp-z_4_4:
+  castShadow: false
+  feetPosition: {x: -37.5, y: 0, z: -35}
+  id: wp-z_4_4
+  material: {roughness: 0.9}
+  physics: {body: static, collider: mesh}
+  primitive: {kind: scripted, params: {H: 3, T: 0.4, broken: ["1:0", "1:1", "2:0", "2:1"], col: oklch(0.78 0.012 85), cols: 4, len: 5.8, rebar: false, rough: 0.9, rows: 3, seed: 95, tex: cdn/texture-chalky-stained-concrete-wall.png}, script: scripts/wallpatch-geo.js}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  state: {wall: "z:4:4"}
+  tags: [wallpatch]
