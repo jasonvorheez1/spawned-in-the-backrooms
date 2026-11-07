@@ -1,1 +1,5 @@
 # spawn-scene v2 yaml objects
+l3-visits:
+  behavior: scripts/l3-visits.js
+  id: l3-visits
+  state: {force: samantha}
