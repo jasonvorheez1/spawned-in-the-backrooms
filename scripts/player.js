@@ -25,7 +25,7 @@ import { zoneAt as zoneAt3 } from './lib/level3.js'
 import { zoneAt as zoneAt4, DRAIN4 } from './lib/level4.js'
 import { zoneAt as zoneAt5, DRAIN5 } from './lib/level5.js'
 import L3 from './lib/data/level3.yml'
-const zoneHere = (ctx, x, z) => ctx.self.place === 'level7' ? (z > -4 ? 'l7_room1' : z > -36 ? 'l7_pier' : 'l7_sea') : ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : ctx.self.place === 'level4' ? 'l4_' + zoneAt4(x, z, ctx.self.state.home) : ctx.self.place === 'level5' ? 'l5_' + (zoneAt5(x, z)?.id ?? 'lobby') : ctx.self.place === 'level6' ? 'l6_halls' : zoneAt(x, z)
+const zoneHere = (ctx, x, z) => ctx.self.place === 'level7' ? (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 95, z + 230) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea') : ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : ctx.self.place === 'level4' ? 'l4_' + zoneAt4(x, z, ctx.self.state.home) : ctx.self.place === 'level5' ? 'l5_' + (zoneAt5(x, z)?.id ?? 'lobby') : ctx.self.place === 'level6' ? 'l6_halls' : zoneAt(x, z)
 
 import SOUNDS from './lib/data/sounds.yml'
 import { useCompass, COMPASS } from './lib/compass.js'
@@ -57,7 +57,7 @@ export const weaponOf = (s) => W[s.equipped] ?? W.fists
 
 const DOWN_MS = 3200 // how long you watch yourself lie there (Savi's pick); camera.js and the creatures read the same window
 // checkpoints: each place's safe spawn plus every doorway's arrival marker; you wake at the nearest one
-const CHECKS = { main: ['main-from-l1'], level1: ['l1-from-main', 'l1-from-l2'], level2: ['l2-from-l1', 'l2-from-l3'], level3: ['l3-from-l2', 'l3-gamma-door', 'l3-lift-arrive', 'l3-from-l5'], level4: ['l4-lift-arrive', 'l4-from-l5'], level5: ['l5-from-l3', 'l5-from-l4', 'l5-from-l6', 'l5-lobby'], level6: ['l6-from-l5', 'l6-from-l7'], level7: ['l7-from-l6'], gamma: [] }
+const CHECKS = { main: ['main-from-l1'], level1: ['l1-from-main', 'l1-from-l2'], level2: ['l2-from-l1', 'l2-from-l3'], level3: ['l3-from-l2', 'l3-gamma-door', 'l3-lift-arrive', 'l3-from-l5'], level4: ['l4-lift-arrive', 'l4-from-l5'], level5: ['l5-from-l3', 'l5-from-l4', 'l5-from-l6', 'l5-lobby'], level6: ['l6-from-l5', 'l6-from-l7'], level7: ['l7-from-l6', 'l7-seawatch-spawn', 'l7-fort-spawn'], gamma: [] }
 function nearestCheckpoint(ctx, at) {
   const sp = ctx.place.defaultSpawnPoint ?? {}, yaw0 = ctx.place.defaultSpawnRotation?.yaw
   let best = { pos: { x: sp.x ?? 0, y: 0.1, z: sp.z ?? 0 }, rot: yaw0 }, bd = Math.hypot(best.pos.x - at.x, best.pos.z - at.z)

@@ -7,12 +7,15 @@ levels:
   gamma: "M.E.G. Base Gamma. The biggest safe settlement anyone knows: a security hall, a mall, a fake little town. Order, rations, guards, rules. The Database terminal is locked to agents."
   level4: "Level 4, the Abandoned Office. Empty cubicles, water fountains that run with almond water, phones that ring for no one. Quiet and mostly safe. Base Omega sits here. The stairs go down to the hotel."
   level5: "Level 5, the Terror Hotel. A 1930s grand hotel that never ends: the Main Hall, the Beverly Room ballroom where the polonaise always plays, the Boiler Room's heat. Housekeeping, the Homely Hotel staff and The Originals run it. Some staff are facelings wearing a smile. Samantha the cat wants good meat. Never stay in the Boiler Room alone."
+  level6: "Level 6, Lights Out. Pitch-black concrete labyrinth where flashlights die and only night-vision goggles work. Whispers mimic voices in the dark, walls shift when unwatched, and the concrete stairs descend to the flooded room of Level 7."
+  level7: "Level 7, Thalassophobia. A vast freezing ocean under an endless concrete ceiling. Wanderers arrive through the flooded Entrance Room (the Floating House) atop a basalt rock, with a wooden pier and rowboats leading out to M.E.G. Outpost Seawatch on the near island and Fort Surrender on the far island. Beneath the Daylight, Twilight and Midnight zones prowl two gargantuan leviathans: Entity 20 ('The Thing on Level 7') and 'Tiny'. The abyssal seafloor is carpeted in tar and bones, where underwater tar caves lead down to Level 8."
 factions:
   hotel: "Homely Hotel staff: polite to a fault, loyal to the hotel more than to guests."
   hk: "M.E.G. Outpost Housekeeping: agents posing as cleaners, watching the hotel."
   orig: "The Originals: the oldest residents, who claim they checked in before the Backrooms swallowed the hotel."
   meg: "M.E.G., the Major Explorer Group: the closest thing to a government down here."
   survivor: "Survivors: loners and small crews who trust nobody official."
+  surrender: "Fort Surrender (The Society of the Pushing): survivors on Level 7's far island who built a fortress of lashed-together furniture and driftwood, surrendered to Thalassophobia, and revere Entity 20 ('The Thing on Level 7')."
 # a backstory for anyone without one written, rolled stable from their id
 origins: ["a night janitor who walked through a wall on shift", "a teenager who fell asleep in a mall", "a nurse who took the wrong stairwell", "a trucker who stopped for gas and never left the station", "a grad student who found a door that shouldn't open", "a soldier from an expedition nobody remembers sending", "someone who woke up here and remembers nothing before", "a contractor who clipped through a half-built office", "a hotel guest from long before the war", "a kid who grew up down here and never saw the sky"]
 years: ["three weeks", "four months", "almost a year", "two years", "five years, maybe more", "so long they stopped counting"]

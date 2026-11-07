@@ -493,10 +493,53 @@ export const STARTERS = {
       { text: "Any recommendations for treating Samantha the cat?", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
     ],
   },
+
+  // ---- Level 7 (Thalassophobia: M.E.G. Seawatch & Fort Surrender) ----
+  'l7-vance': {
+    greeting: "Easy on the jetty planks—they're slick with sea spray. Welcome to M.E.G. Outpost Seawatch. If you swam here instead of taking the skiff, you're luckier than the last three runners.",
+    mood: 'calm',
+    returning: "Back on dry basalt, runner? Keep an eye on the sonar trace—Entity 20 just circled the trench.",
+    friendly: "Good to see you breathing, friend. Warm your hands by the brazier and check the workbench if your gear's rusted.",
+    cold: "Don't touch the hydrophone array unless you know how to read an acoustic sweep.",
+    choices: [
+      { text: "What are the ocean depth zones and what's lurking down there?", tag: "Lore" },
+      { text: "How do I read the sonar pings for Entity 20 and 'Tiny'?", tag: "Survival 35", check: { skill: 'survival', difficulty: 35 } },
+      { text: "Let's trade salvage and ammo. I need marine supplies.", tag: "Barter 35", check: { skill: 'barter', difficulty: 35 } },
+      { text: "Who are the people living out on the far island at Fort Surrender?", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+    ],
+  },
+  'l7-jude': {
+    greeting: "Cease your rowing, wanderer. Listen to the slow breath beneath the waves. You have reached Fort Surrender—where the fear of the deep becomes our sanctuary.",
+    mood: 'calm',
+    returning: "You return to the rock. Have you heard the Leviathan's song beneath the tar?",
+    friendly: "Peace of the Abyss upon you, sibling. Sit by the Leviathan ribs and let the tide quiet your mind.",
+    cold: "Do not mock the Thing Below while you stand upon a pebble in Its ocean.",
+    choices: [
+      { text: "Why does the Society of the Pushing worship the Thing on Level 7?", tag: "Lore" },
+      { text: "What lies below the Midnight Zone in the underwater tar caves?", tag: "Survival 40", check: { skill: 'survival', difficulty: 40 } },
+      { text: "There's a second gargantuan creature out there—what is 'Tiny'?", tag: "Lore" },
+      { text: "Your people built a fortress out of drifting furniture. Share your wisdom with me.", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
+    ],
+  },
+  'l7-mara': {
+    greeting: "Brother Jude feeds the soul, I keep the walls lashed and the condenser boiling. You want fresh almond water or deep-sea salvage, let's see what you brought.",
+    mood: 'calm',
+    returning: "Back from the swells? The tide washed in more furniture and crates if you've got the arm to smash them.",
+    friendly: "Hey there, dry-lander! Saved some smoked fish and clean bandages from the last haul for you.",
+    cold: "Everything on this rock was hauled out of freezing water. Pay fair or start swimming.",
+    choices: [
+      { text: "Show me your stock. I've got almond water to trade.", tag: "Barter 35", check: { skill: 'barter', difficulty: 35 } },
+      { text: "How does your copper still turn Level 7 seawater into Almond Water?", tag: "Survival 35", check: { skill: 'survival', difficulty: 35 } },
+      { text: "What's down inside that rusted Diving Bell on the north cliff?", tag: "Lore" },
+      { text: "It takes grit to hold this island together. Cut me a friendly deal?", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
+    ],
+  },
 }
 
 // Fallback starters for generic / unlisted NPCs by faction & role
 export const GENERIC_STARTERS = {
+  'surrender:trader': { greeting: "Fort Surrender salvage post. Everything here drifted in on the tide. Looking to trade?", mood: 'calm' },
+  'surrender:default': { greeting: "Stop fighting the current, wanderer. The Deep holds us all.", mood: 'calm' },
   'meg:scout': { greeting: "M.E.G. scout on patrol. Halls are hot today. Keep your light down and watch your rear.", mood: 'calm' },
   'meg:medic': { greeting: "M.E.G. medical station. You bleeding, infected, or just exhausted? Take a seat.", mood: 'calm' },
   'meg:quarter': { greeting: "M.E.G. requisition post. All trades logged by weight. What supplies are you after?", mood: 'calm' },
