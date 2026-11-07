@@ -356,7 +356,7 @@ function viewmodel(ctx, moving, sprinting) {
   if (!ctx.self.isLocal) return
   const w = walkOf(ctx), s = ctx.self.state, kind = s.equipped ?? 'fists', l = s.look ?? {}
   const ply = l.modelUrl || '' // a worn .plymodel: its own arm holds the weapon instead of the critter paw
-  const arm = ply ? { hidden: true } : { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply
+  const arm = ply ? { hidden: true } : { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v2'
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     w.plyRig = null
@@ -365,7 +365,7 @@ function viewmodel(ctx, moving, sprinting) {
       ? { feetPosition: { x: 0, y: kind === 'pistol' ? 0.03 : -0.04, z: kind === 'pistol' ? 0.04 : 0.14 }, rotation: Q_GUN, castShadow: false, ...weaponBody(kind), audience: 'local' }
       : { feetPosition: { x: 0, y: -g, z: 0 }, rotation: Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
-    if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: -0.22, y: -1.5, z: 0.55 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
+    if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: 0.02, y: -1.62, z: 0.62 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
     w.vm = ctx.spawn({ feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
       primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: arm, ...(wp.muzzle ? { sockets: { muzzle: wp.muzzle } } : {}) }, children: child })
     w.vmKind = armKey
