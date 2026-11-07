@@ -61,3 +61,5 @@ Take the mechanics, not the assets: a block world you can dig and build in, scav
 - 2026-11-07 noclip overhaul: first arrival plays a 7.4 s fall (static, glitch title, plunge through wallpaper, impact, title card) and the exit wall plays a 5.2 s tear that opens like a door. Both are drawn from timestamps (`noclipIn`, `exitAt`) by `scripts/noclip-ui.js`; `scripts/noclip.js` sets the first and plays the sounds.
 
 - 2026-11-07 level 1 pass: clutter (oil drums, pallets of boxes, fallen concrete), ceiling ducts and cables, a painted yellow guide line from the camp to the way home, and a fuller M.E.G. camp (tents, cots, table, map board, three lanterns) from `scripts/level1-props-geo.js`; the exit card now names Level 1.
+
+- 2026-11-07 level 1 graphics: cold damp car-park look (`scripts/look-garage.js`, darker fog and ambient), downstand ceiling beams, red sprinkler pipes with heads, orange cable trays, white ducts, wet stains and tyre tracks, wall strip lights, hose-reel cabinets, cement bags, rebar, cables and grid letters on pillars (`scripts/level1-details-geo.js`).

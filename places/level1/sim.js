@@ -2,7 +2,7 @@ import MEG from "../../scripts/lib/data/meg.yml";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 // Level 1's referee: lays the lamps, crates, supplies and thresholds once, then runs the Flickering.
 import L from "../../scripts/lib/data/level1.yml";
-import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ARRIVE, hash } from "../../scripts/lib/level1.js";
+import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ARRIVE, hash, S, HALF, hasPillar } from "../../scripts/lib/level1.js";
 import { spawnAlmond, spawnCrateL1 } from "../../scripts/lib/loot.js";
 export const cadence = "250ms";
 const LAMP_ON = 9;
@@ -38,6 +38,12 @@ export function tick(ctx) {
     }
     ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level1-props-geo.js" }, material: { roughness: 0.85 } }); // clutter, camp and guide line
     { const c = cellCenter(ARRIVE.cx, ARRIVE.cz); for (const [dx, dz, col] of [[3.4, 3.4, "oklch(0.85 0.14 70)"], [-5, 0, "oklch(0.85 0.12 80)"], [1, 8.2, "oklch(0.9 0.08 90)"]]) ctx.spawn({ feetPosition: { x: c.x + dx, y: 0.9, z: c.z + dz }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: col, emissive: col, emissiveIntensity: 2 }, light: { kind: "point", color: col, intensity: 4, distance: 11, shadow: { enabled: false } } }); } // camp lanterns
+    ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level1-details-geo.js" }, material: { roughness: 0.85 } }); // beams, sprinkler pipes, wet stains, strip lights
+    for (let i = 2; i < N; i += 2) for (let j = 2; j < N; j += 2) { // stencilled grid letters and numbers on the pillars, as in a real car park
+      if (!hasPillar(i, j) || hash(i, j, 401) > 0.55) continue;
+      const x = i * S - HALF, z = j * S - HALF, letter = String.fromCharCode(65 + ((i / 2 - 1) % 15)) + (j / 2);
+      ctx.spawn({ feetPosition: { x, y: 0.5, z: z + 0.465 }, rotation: { yaw: 0 }, primitive: { kind: "box", width: 0.01, height: 0.01, depth: 0.01 }, ui: '<div face="front" width="0.6m" style="font-size:220px;font-weight:800;color:#3a4048;text-align:center;opacity:.8">' + letter + '</div>' });
+    }
     // supplies: crates on the racks first, then loose ones; almond water; M.E.G. landmarks near arrival
     let crates = 0;
     for (let cx = 0; cx < N && crates < L.crates; cx++) for (let cz = 0; cz < N && crates < L.crates; cz++) {
