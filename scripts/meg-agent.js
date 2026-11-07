@@ -3,6 +3,7 @@ import { heard } from "./lib/hear.js";
 import { seatFor } from "./lib/seat.js";
 import { rollLoot, garmentsOf } from "./lib/loot.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
+import { lifeOf, FEAR_TAGS, FEAR_LINES, WANT_LINES } from "./lib/npc-life.js";
 import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec, faceMorph, baseBones } from "./lib/critter-model.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
@@ -183,6 +184,23 @@ const GEST = {
   talk: [["cdn/clip-nod-yes.glb", 1400, 0.7, true], ["cdn/clip-shake-no.glb", 1400, 0.6, true], ["cdn/clip-shrug.glb", 1700, 0.8, true], ["cdn/clip-point.glb", 1700, 0.7, true], ["cdn/clip-laugh-loop.glb", 1800, 0.6, true]],
   cross: [["cdn/clip-angry.glb", 2200, 1, true], ["cdn/clip-shake-no.glb", 1500, 0.9, true]],
 };
+// their own life, every 1.5 s: a feared thing close makes them show it and back away; a player near hears what they want, now and then
+function life(ctx, me, m, now) {
+  if (now < (m.lifeAt ?? 0)) return; m.lifeAt = now + 1500
+  const L = (m.L ??= lifeOf(me.id)), tags = FEAR_TAGS[L.fear], p = me.feetPosition
+  if (tags && !me.state.follow) {
+    const t = ctx.query({ anyTags: tags, radius: 10 })[0]
+    if (t && !t.state?.dead) {
+      m.fearAt = now; const dx = p.x - t.feetPosition.x, dz = p.z - t.feetPosition.z, d = Math.hypot(dx, dz) || 1
+      me.velocity = { x: dx / d * 2.6, y: me.velocity?.y ?? 0, z: dz / d * 2.6 }
+      if (now - (m.fearSaid ?? 0) > 12000) { m.fearSaid = now; me.state.line = { t: FEAR_LINES[Math.floor(ctx.random() * FEAR_LINES.length)], at: now, d: 2200 } }
+      return
+    }
+  }
+  if (now - (m.wantSaid ?? 0) > 90000 && now - (me.state.line?.at ?? 0) > 20000 && ctx.random() < 0.08 && ctx.place.players.some((q) => Math.hypot(q.feetPosition.x - p.x, q.feetPosition.z - p.z) < 6)) {
+    m.wantSaid = now; const W = WANT_LINES(L.want); me.state.line = { t: W[Math.floor(ctx.random() * W.length)], at: now, d: 3000 }
+  }
+}
 export function update(ctx, dt) {
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
   if (m.dressed !== 4) { m.dressed = 4; if (!s.dead) dress(ctx, me); }
@@ -207,6 +225,7 @@ export function update(ctx, dt) {
     }
     return;
   }
+  life(ctx, me, m, now);
   // a flinch every time something takes hp off them
   if (m.lastHp != null && (s.hp ?? 0) < m.lastHp - 0.5) {
     m.hitAt = now;

@@ -1,3 +1,4 @@
+import { lifeOf } from './npc-life.js'
 import LORE from './data/npc-lore.yml'
 import { vo } from './voices.js';
 // Free talk with NPCs: who they are, what the model is told, how its answer is read, the skill roll,
@@ -23,11 +24,7 @@ export const VO = (who, line) => vo(who, line)
 const feel = (r) => (r <= -60 ? 'you hate them' : r <= -25 ? 'you dislike them' : r < 10 ? 'neutral, you barely know them' : r < 40 ? 'you like them okay' : r < 70 ? 'you like them' : 'you trust them a lot')
 
 // a stable life story for anyone without a written persona: origin, time down here, a want, a fear, a habit
-const pick = (a, h, k) => a[(h >>> k) % a.length]
-function backstory(id) {
-  let h = 2166136261; for (const c of String(id)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } h >>>= 0
-  return `${pick(LORE.origins, h, 0)}. Been in the Backrooms ${pick(LORE.years, h, 3)}. Wants ${pick(LORE.wants, h, 7)}. Scared of ${pick(LORE.fears, h, 11)}. ${pick(LORE.quirks, h, 15)}.`
-}
+function backstory(id) { const L = lifeOf(id); return `${L.origin}. Been in the Backrooms ${L.years}. Wants ${L.want}. Scared of ${L.fear}. ${L.quirk}.` }
 export function systemPrompt({ it, place, pl, rapport, following }) {
   const sk = skillsOf(pl.state ?? {}), id = String(it.id).split('/').pop()
   const persona = T.personas[id] ?? backstory(id)
