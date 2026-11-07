@@ -2,7 +2,7 @@
 // left, the hovered item's numbers on the right (the equipped weapon / first item when nothing is hovered).
 // player.state: focus, lootOpen, lootName, lootList, notice (scripts/interact.js); invOpen, weapons, equipped,
 // almonds, ammo, shells (scripts/player.js). Loot buttons send 'loot' {k:'take',i}|{k:'all'}|{k:'close'};
-// inventory buttons send 'inv' {k:'equip',w}|{k:'drop',w}|{k:'drink'}|{k:'close'}.
+// inventory buttons send 'inv' {k:'equip',w}|{k:'drop',w}|{k:'drink'}|{k:'close'}|{k:'wear',w:cloth token}|{k:'unwear',w:slot}.
 import { describe, itemsOf } from './lib/items.js'
 import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
@@ -59,6 +59,8 @@ button.it{cursor:pointer}
 
 const owned = (s) => ['fists', ...(s.weapons ? s.weapons.split(',').filter(Boolean) : [])]
 import { derived as dv } from './lib/stats.js'
+import { parseCloth, wornTokens, wornDR, fullLook, SLOTS, SLOT_NAME, rowOf, CLOTHES } from './lib/clothes.js'
+const worn = (s, slot) => { const l = fullLook(s.look), c = CLOTHES.colourKey[slot]; return rowOf(slot, l[slot], c ? l[c] : '') }
 const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? dv(s).hpBonus : 0)
 const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + (s?.attr ? dv(s).sanBonus : 0)
 const cell = (k, v, wide) => `<div${wide ? ' class="w"' : ''}><span>${k}</span>${v}</div>`
@@ -77,6 +79,14 @@ function detail(t, s, def) {
       ${cell(w.ranged ? 'RNG' : 'REACH', `${w.ranged ? w.range : w.reach}M`)}${cell('AP', w.stamina)}
       ${w.ranged ? cell('MAG', `${s['loaded_' + k] ?? 0}/${w.magSize}`) + cell(w.ammoType === 'shells' ? 'SHELLS' : 'ROUNDS', s[w.ammoType ?? 'ammo'] ?? 0) : ''}
       ${cell('REQ', `<span style="color:${lvOk ? 'inherit' : '#e07a5a'}">LV ${w.minLevel ?? 1}</span>`, true)}</div></div>`
+  }
+  if (t.startsWith('cloth:')) { // a garment: its DR against what's worn in that slot now
+    const p = parseCloth(t); if (!p) return ''
+    const r = CLOTHES.rarity[p.row.rarity] ?? {}, cur = worn(s, p.slot), d = p.row.dr - (cur?.dr ?? 0)
+    const cmp = d ? ` <i class="${d > 0 ? 'up' : 'dn'}" style="font-style:normal">${d > 0 ? '▲' : '▼'}${Math.abs(d)}</i>` : ''
+    return `<div class="${cls}"><h4>${p.row.name}</h4><div class="r" style="color:${r.color ?? 'var(--ad)'}">${(r.label ?? '').toUpperCase()} · APPAREL</div><div class="g">
+      ${cell('DR', `${p.row.dr}${cmp}`)}${cell('SLOT', SLOT_NAME[p.slot].toUpperCase())}${cell('WG', `${p.row.kg}KG`)}${cell('COLOR', `<span style="display:inline-block;width:12px;height:12px;background:#${p.colour};border:1px solid var(--ad)"></span>`)}
+      ${cell('WORN', cur ? `${cur.name} · DR ${cur.dr}` : 'NOTHING', true)}</div></div>`
   }
   if (t === 'almond') return `<div class="${cls}"><h4>Almond water</h4><div class="r" style="color:var(--ad)">AID</div><div class="g">${cell('HP', `+${L.almondHp}`)}${cell('SAN', `+${L.almondSanity}`)}${cell('CARRIED', s.almonds ?? 0, true)}</div></div>`
   if (t === 'ammo' || t === 'shells') {
@@ -97,11 +107,15 @@ function inventory(s) {
   const a = s.almonds ?? 0
   const aid = a ? `<button class="it" onclick="sendAction('inv',{k:'drink'})"><span class="eq"></span><span class="nm">Almond water</span><span class="n">${a}</span>${detail('almond', s, false)}</button>` : '<div class="em">None.</div>'
   const ammo = ['ammo', 'shells'].filter((t) => s[t]).map((t) => `<div class="it"><span class="eq"></span><span class="nm">${t === 'ammo' ? 'Pistol rounds' : 'Shotgun shells'}</span><span class="n">${s[t]}</span>${detail(t, s, false)}</div>`).join('') || '<div class="em">None.</div>'
+  const on = wornTokens(s.look), bag = (s.clothes ? s.clothes.split(',').filter(Boolean) : [])
+  const app = on.map((t) => { const p = parseCloth(t); return `<button class="it on" onclick="sendAction('inv',{k:'unwear',w:'${p.slot}'})"><span class="eq"></span><span class="nm">${p.row.name}</span><span class="n">DR ${p.row.dr}</span>${detail(t, s, false)}</button>` }).join('')
+    + [...new Set(bag)].map((t) => { const p = parseCloth(t); if (!p) return ''; const n = bag.filter((x) => x === t).length
+      return `<button class="it" onclick="sendAction('inv',{k:'wear',w:'${t}'})"><span class="eq"></span><span class="nm">${p.row.name}${n > 1 ? ` ×${n}` : ''}</span><span class="n">DR ${p.row.dr}</span>${detail(t, s, false)}</button>` }).join('') || '<div class="em">Nothing on.</div>'
   const eq = W[eqKey] ?? W.fists
   const drop = eqKey !== 'fists' ? `<button onclick="sendAction('inv',{k:'drop',w:'${eqKey}'})">Drop ${eq.name}</button>` : ''
   return `<div class="pbw pb"><div class="pbp" data-modal>
-    <div class="hd"><h2>Items</h2><div class="st"><span><b>LVL</b>${lv}</span><span><b>HP</b>${Math.round(s.hp ?? 0)}/${maxHp(lv, s)}</span><span><b>SAN</b>${Math.round(s.sanity ?? 0)}/${maxSan(lv, s)}</span><span><b>XP</b>${s.xp ?? 0}/${L.xpBase * lv}</span></div></div>
-    <div class="bd"><div class="ls"><div class="sec">Weapons</div>${weapons}<div class="sec">Aid</div>${aid}<div class="sec">Ammo</div>${ammo}</div>${detail(eqKey, s, true)}</div>
+    <div class="hd"><h2>Items</h2><div class="st"><span><b>LVL</b>${lv}</span><span><b>HP</b>${Math.round(s.hp ?? 0)}/${maxHp(lv, s)}</span><span><b>SAN</b>${Math.round(s.sanity ?? 0)}/${maxSan(lv, s)}</span><span><b>XP</b>${s.xp ?? 0}/${L.xpBase * lv}</span><span><b>DR</b>${wornDR(s.look)}</span></div></div>
+    <div class="bd"><div class="ls"><div class="sec">Weapons</div>${weapons}<div class="sec">Aid</div>${aid}<div class="sec">Ammo</div>${ammo}<div class="sec">Apparel</div>${app}</div>${detail(eqKey, s, true)}</div>
     <div class="ft"><span class="c">${s.kills ?? 0} kills</span>${drop}<button onclick="sendAction('inv',{k:'close'})"><kbd>I</kbd>Close</button></div>
   </div></div>`
 }
