@@ -14,6 +14,29 @@ const getStartersLib = (ctx) => ((ctx.session ??= {}).startersP ??= import('./li
 
 const short = (it) => String(it.id).split('/').pop()
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z)
+const BYE = ["oh. okay then.", "rude.", "...guess we're done.", "fine, go.", "hey, i wasn't finished."]
+const HI = (n, mood) => mood < -20 ? [`you again.`, `${n}. keep walking.`] : mood > 40 ? [`${n}! you're back.`, `hey ${n}, good to see you breathing.`, `${n}! over here.`] : [`oh, ${n}.`, `${n}. still alive, huh.`, `hey, ${n}.`]
+// once a second: someone who knows you looks up when you come close (once every 3 min each); people who know you tell the ones beside them
+function social(ctx, ses) {
+  const now = ctx.now(); if (now < (ses.socAt ?? 0)) return; ses.socAt = now + 1000
+  const me = ctx.self, k = keyOf(me), name = me.displayName ?? 'you', hi = (ses.hiAt ??= {})
+  const near = ctx.query({ tags: ['npc'], radius: 8 })
+  for (const row of near) {
+    const o = ctx.getObject(row.id); if (!o || o.state?.dead) continue
+    const mem = o.state.mem?.[k]
+    if (mem && !ctx.self.state.talkWith && flat(o.feetPosition, me.feetPosition) < 3.5 && now - (hi[o.id] ?? -1e9) > 180000 && now - (o.state.line?.at ?? 0) > 4000) {
+      hi[o.id] = now; const r = o.state.rapport?.[k] ?? 0, lines = HI(name, r)
+      o.state.talkTo = me.id; o.state.talkAt = now; say(ctx, o, lines[Math.floor(ctx.random() * lines.length)], r < -20 ? 'annoyed' : 'happy')
+    }
+    if (mem?.notes?.length && ctx.random() < 0.02) for (const r2 of near) { // gossip: one thing they know about you, passed on as hearsay
+      if (r2.id === o.id || flat(r2.feetPosition, o.feetPosition) > 4) continue
+      const b = ctx.getObject(r2.id); if (!b || b.state?.dead) continue
+      const n = mem.notes[Math.floor(ctx.random() * mem.notes.length)].replace(/^heard: /, ''), bm = b.state.mem?.[k] ?? { met: 0, notes: [] }
+      if (bm.notes?.some((x) => x.endsWith(n))) continue
+      b.state.mem = { ...(b.state.mem ?? {}), [k]: { ...bm, notes: [...(bm.notes ?? []), `heard: ${n}`].slice(-6) } }; break
+    }
+  }
+}
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v))
 const note = (ctx, text) => { ctx.self.state.notice = { text, at: ctx.now() } }
 const skn = (k) => SKILLS.find((x) => x.k === k)?.name ?? (k[0].toUpperCase() + k.slice(1))
@@ -211,9 +234,15 @@ export function update(ctx, dt) {
     ses.talkingTo = null
     s.talkChoices = null
   }
+  social(ctx, ses)
   if (!s.talkWith && !s.shopOpen) return
   m.acc += dt; if (m.acc < 0.3) return; m.acc = 0
   const it = live(ctx, s.talkWith ?? s.shopOpen)
+  if (it && !it.state?.angry?.[ctx.self.id] && flat(it.feetPosition, ctx.self.feetPosition) > T.range && s.talkWith) { // walked off mid-talk: they say so, and remember it
+    const k = keyOf(ctx.self), m0 = it.state.mem?.[k] ?? { met: 1, notes: [] }
+    it.state.mem = { ...(it.state.mem ?? {}), [k]: { ...m0, notes: [...(m0.notes ?? []).filter((n) => n !== 'walked off mid-conversation'), 'walked off mid-conversation'].slice(-6) } }
+    say(ctx, it, BYE[Math.floor(ctx.random() * BYE.length)], 'annoyed')
+  }
   if (!it || flat(it.feetPosition, ctx.self.feetPosition) > T.range || it.state?.angry?.[ctx.self.id]) close(ctx) // walk off and it closes
   else if (combat(ctx, it, ses)) { close(ctx); s.notice = { text: 'Combat! The conversation ends.', at: ctx.now() } }
   if (s.talkBusy && ctx.now() - s.talkBusy > 15000) s.talkBusy = 0
