@@ -221,7 +221,7 @@ export function onInput(ctx, input) {
 export function update(ctx, dt) {
   if (ctx.self.sprite) return // sprites animate via the 2D mixer, never these GLB clips
 
-  const clips = PLAYER.clips || {}
+  const clips = ctx.self.state.gaitClips || PLAYER.clips || {} // a body wearing an imported rig names its gait clips (scripts/critter.js)
   // Seated: attached to a hull, a mount, a chair, or a sit someone else wrote on the sit channel
   // (mixer and anim read one table, so the script remembers whether the sit is its own). The seat
   // carries the body; this script holds the sit and sleeps until a row of this body lands from outside it

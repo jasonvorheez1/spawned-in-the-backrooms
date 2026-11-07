@@ -3,6 +3,7 @@
 // game's moods show on the face: a hit makes you wince, low hp is sad, low sanity is scared.
 import C from './lib/data/critter.yml'
 const SCRIPT = 'scripts/critter-geo.js'
+const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 export const updateSchedule = { every: { seconds: 0.2 } }
 
 // ---- life: blinking and ear twitches, as brief bone changes the whole room sees (two small writes each)
@@ -16,9 +17,9 @@ function applyBones(ctx) {
   if (ses.tailS && ses.tailS !== 1) b.Tail = { scale: ses.tailS }
   ctx.self.bones = b
 }
-export function blinkEnd(ctx) { ctx.self.session.lids = false; applyBones(ctx) }
-export function blinkNow(ctx) { ctx.self.session.lids = true; applyBones(ctx); ctx.after(0.12, 'blinkEnd', {}) }
-export function twitchEnd(ctx) { ctx.self.session.twitch = null; applyBones(ctx) }
+export function blinkEnd(ctx) { if (ctx.self.state.gaitClips) return; ctx.self.session.lids = false; applyBones(ctx) }
+export function blinkNow(ctx) { if (ctx.self.state.gaitClips) return; ctx.self.session.lids = true; applyBones(ctx); ctx.after(0.12, 'blinkEnd', {}) }
+export function twitchEnd(ctx) { if (ctx.self.state.gaitClips) return; ctx.self.session.twitch = null; applyBones(ctx) }
 function life(ctx, face) {
   const ses = ctx.self.session, now = ctx.now()
   if (ses.nextBlink == null) { ses.nextBlink = now + 1500 + ctx.random() * 2500; ses.nextTwitch = now + 4000 + ctx.random() * 6000 }
@@ -135,8 +136,16 @@ function moodFace(ctx, l) {
 export function update(ctx) {
   const l = lookOf(ctx), face = moodFace(ctx, l), ses = ctx.self.session
   ses.face = face
-  if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
-  life(ctx, face)
+  const wornNow = !!(l.modelUrl || (l.model && C.models?.[l.model]))
+  if (wornNow) {
+    // an imported body has its own skeleton (pelvis, spine_01 …): no tail, ears or lids to act on, and the gait plays library clips on its bones
+    if (ses.flair !== 'worn') { ses.flair = 'worn'; ctx.self.anim.flair = null; ctx.self.bones = {}; ses.lids = false; ses.twitch = null }
+    if (!ctx.self.state.gaitClips) ctx.self.state.gaitClips = GAIT_LIB
+  } else {
+    if (ctx.self.state.gaitClips) delete ctx.self.state.gaitClips
+    if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
+    life(ctx, face)
+  }
   const params = { species: l.species, sex: l.sex, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks }
   if (l.fur) params.fur = l.fur
   for (const [k] of C.sliders) if (k !== 'headS' && k !== 'tailS' && Number(l[k]) && Number(l[k]) !== 1) params[k] = Number(l[k])
