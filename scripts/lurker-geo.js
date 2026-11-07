@@ -27,15 +27,16 @@ export function geometry(ctx) {
     ctx.bone("shin" + L); tube(ctx, [[x, 0.5, 0.01], [x, 0.25, 0.03], [x, 0.06, 0.02]], [0.055, 0.045, 0.035], LM);
     tube(ctx, [[x, 0.05, 0.05], [x, 0.03, -0.06], [x * 1.1, 0.015, -0.17]], [0.04, 0.035, 0.018], LM, [1, 0.55]); // long foot
   }
-  ctx.bone("hips"); tube(ctx, [[0, 0.88, 0], [0, 1.02, 0], [0, 1.12, -0.01]], [0.12, 0.15, 0.14], M, [1, 0.7]);
+  ctx.bone("hips"); sphere(ctx, [0, 0.92, 0], 0.13, M, [1, 0.75, 0.75]); tube(ctx, [[0, 0.88, 0], [0, 1.02, 0], [0, 1.12, -0.01]], [0.12, 0.15, 0.14], M, [1, 0.7]);
   ctx.bone("spine");
   tube(ctx, [[0, 1.1, -0.01], [0, 1.35, -0.04], [0, 1.6, -0.1], [0, 1.74, -0.14]], [0.13, 0.17, 0.2, 0.14], M, [1, 0.62]);
   if (hi) { ctx.color(SHADE); for (let r = 0; r < 5; r++) { const y = 1.36 + r * 0.06; tube(ctx, [[-0.15, y, -0.05 - r * 0.01], [0, y + 0.03, -0.15 - r * 0.012], [0.15, y, -0.05 - r * 0.01]], [0.012, 0.015, 0.012], 6); } ctx.color(SKIN); } // ribs
   for (const s of [-1, 1]) sphere(ctx, [s * 0.19, 1.69, -0.11], 0.065, LM); // shoulders
+  sphere(ctx, [0, 1.72, -0.13], 0.1, M, [1.25, 0.45, 0.8]); // collar caps the torso
   ctx.bone("neck"); tube(ctx, [[0, 1.72, -0.13], [0, 1.82, -0.18], [0, 1.9, -0.22]], [0.05, 0.045, 0.05], LM);
   ctx.bone("head");
   sphere(ctx, [0, 2.0, -0.28], 0.16, M, [0.82, 1.2, 0.95]);
-  if (ctx.lod <= 3) { ctx.color("oklch(0.25 0.02 60)"); ctx.roughness(1); for (const s of [-1, 1]) sphere(ctx, [s * 0.055, 2.03, -0.415], 0.032, hi ? 10 : 6, [1.2, 0.8, 0.4]); ctx.color(SKIN); ctx.roughness(0.7); } // eye hollows
+  if (ctx.lod <= 3) { ctx.color("oklch(0.25 0.02 60)"); ctx.roughness(1); for (const s of [-1, 1]) sphere(ctx, [s * 0.055, 2.03, -0.418], 0.03, hi ? 10 : 6, [1.3, 0.75, 0.22]); ctx.color(SKIN); ctx.roughness(0.7); } // eye hollows
   for (const s of [-1, 1]) {
     const L = s < 0 ? "L" : "R";
     ctx.bone("arm" + L); tube(ctx, [[s * 0.21, 1.7, -0.11], [s * 0.27, 1.45, -0.11], [s * 0.3, 1.18, -0.1]], [0.05, 0.042, 0.036], LM);

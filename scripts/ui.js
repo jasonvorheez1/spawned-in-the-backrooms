@@ -122,6 +122,10 @@ export default function render(ctx, player) {
     </div>
   </div>
 
+  ${s.humAt && now - s.humAt < L.humSpikeLength * 1000 ? `
+  <div style="position:absolute;left:0;right:0;top:14%;display:flex;justify-content:center;pointer-events:none">
+    <div class="hud-card" style="padding:6px 16px;letter-spacing:.2em;font-size:13px;color:oklch(0.85 0.15 85);border-color:oklch(0.85 0.15 85)">HUM SPIKE · KEEP MOVING</div>
+  </div>` : ''}
   <!-- Taken / Death Screen -->
   ${down ? `
   <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(6,5,4,0.85);backdrop-filter:blur(8px);animation:hud-fade 3.2s forwards">

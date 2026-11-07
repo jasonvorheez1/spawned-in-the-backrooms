@@ -2,7 +2,7 @@
 smilerIdle:
   duration: 4.2
   tracks:
-    head: { yaw: [0, 6, -4, 0], roll: [0, -5, 4, 0], y: [0, 2, -1, 0] }
+    head: { yaw: [0, 6, -4, 0], roll: [0, -5, 4, 0], y: [0, 0.02, -0.01, 0] }
     eyeL: { scale: [1, 1, 1, 0.15, 1, 1, 1, 1, 1, 1] }
     eyeR: { scale: [1, 1, 1, 0.15, 1, 1, 1, 1, 1, 1] }
 smilerHunt:
@@ -35,7 +35,7 @@ lurkerWalk:
     foreR: { pitch: [22, 10, 22] }
     spine: { yaw: [-6, 6, -6], pitch: [-6, -10, -6] }
     head: { roll: [10, -10, 10] }
-    hips: { y: [0, 2, 0, 2, 0] }
+    hips: { y: [0, 0.025, 0, 0.025, 0] }
 lurkerFrozen:
   duration: 2
   tracks:

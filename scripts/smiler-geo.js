@@ -46,7 +46,11 @@ export function geometry(ctx) {
   ctx.bone("head"); ctx.emissive(null); ctx.color("#050304");
   for (let i = 0; i < T; i++) {
     const x0 = -W + (2 * W * i) / T, x1 = -W + (2 * W * (i + 1)) / T;
-    quad(ctx, lip(x1, up, 0, 0.03), lip(x0, up, 0, 0.03), [x0, Y - 0.24 + 2.2 * x0 * x0, zOf(x0, up(x0)) + 0.03], [x1, Y - 0.24 + 2.2 * x1 * x1, zOf(x1, up(x1)) + 0.03]);
+    // a slit on the head between the lips, and one on the jaw that follows it open
+    ctx.bone("head");
+    quad(ctx, lip(x1, up, 0, 0.03), lip(x0, up, 0, 0.03), lip(x0, lo, 0, 0.03), lip(x1, lo, 0, 0.03));
+    ctx.bone("jaw");
+    quad(ctx, lip(x1, up, 0, 0.032), lip(x0, up, 0, 0.032), lip(x0, lo, 0, 0.032), lip(x1, lo, 0, 0.032));
   }
   ctx.emissive("oklch(0.97 0.03 95)"); ctx.color("#fffaea");
   for (let i = 0; i < T; i++) {

@@ -72,6 +72,8 @@ export function update(ctx, dt) {
     if (inHub(ahead.cx, ahead.cz)) { vx = 0; vz = 0; m.next = null; m.last = null; m.prey = null; }
     const v = w.velocity ?? { y: 0 };
     w.velocity = { x: vx, y: (v.y ?? 0) + ctx.place.gravity.y * dt, z: vz };
+    const lmode = m.watched ? "Frozen" : (vx || vz) ? "Walk" : "Idle";
+    if (m.mode !== lmode) { m.mode = lmode; w.anim.body = { clip: "anim/creatures.yml#lurker" + lmode, loop: "loop", speed: lmode === "Walk" ? Math.max(0.6, Math.hypot(vx, vz) / 1.4) : 1 }; }
     const face = prey ? { x: prey.feetPosition.x - pos.x, z: prey.feetPosition.z - pos.z } : { x: vx, z: vz };
     if (!m.watched && (face.x || face.z)) { const yaw = (Math.atan2(-face.x, -face.z) * 180) / Math.PI; if (Math.abs(((yaw - (m.yaw ?? 999) + 540) % 360) - 180) > 6) { m.yaw = yaw; w.rotation = yaw; } }
     if (prey && !m.watched && Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z) < 1.6 && now >= (m.bite ?? 0)) {
