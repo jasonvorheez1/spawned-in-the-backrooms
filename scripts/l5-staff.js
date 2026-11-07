@@ -4,7 +4,7 @@
 import { E, SND, isSafe, flat, yawTo, prey, aloneOf, hit, claimRemains } from "./lib/l5-hostile.js";
 import { npcState } from "./lib/stats.js";
 import { findPath } from "builtin/nav";
-import { zoneId } from "./lib/l5-hostile.js";
+import { zoneId, becomeCorpse, killerOf } from "./lib/l5-hostile.js";
 
 import { critterSpec } from "./lib/critter-model.js";
 import { npcLook } from "./lib/clothes.js";
