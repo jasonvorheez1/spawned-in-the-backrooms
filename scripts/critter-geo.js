@@ -721,7 +721,10 @@ export function geometry(ctx) {
     const N = 12, path = [];
     for (let i = 0; i <= N; i++) path.push([0, lerp(low, 0.97, i / N), 0]);
     loft(path, (t) => shirtR(lerp(low, 0.97, t)), [0, 0, -1], null, hi ? 24 : 14);
-    if (fem) for (const sd of [-1, 1]) ell([sd * BUST.x, BUST.y, BUST.z], [BUST.r[0] + 0.02, BUST.r[1] + 0.02, BUST.r[2] + 0.022], null, { seg: hi ? 18 : 10 }); // the top drapes her bust
+    if (fem) { // the top drapes her bust as one soft curve
+      for (const sd of [-1, 1]) ell([sd * BUST.x, BUST.y - 0.004, BUST.z + 0.004], [BUST.r[0] + 0.024, BUST.r[1] + 0.022, BUST.r[2] + 0.018], null, { seg: hi ? 18 : 10 });
+      ell([0, BUST.y - 0.01, BUST.z + 0.006], [0.09, BUST.r[1] + 0.016, BUST.r[2] + 0.012], null, { seg: hi ? 16 : 10 });
+    }
   };
 
   const pants = (col, knee = 0.12, shorts = false) => {
@@ -770,7 +773,7 @@ export function geometry(ctx) {
     ctx.color(mixc(TOP, "#000000", 0.1));
     ell([0, 0.98, 0.13], [0.155, 0.08, 0.09], null, { seg: 12 });
     ctx.color(mixc(TOP, "#ffffff", 0.06));
-    ell([0, 0.68, frontZ(0.68) + 0.008], [0.085, 0.05, 0.02], null, { seg: 10 });
+    ell([0, 0.68, frontZ(0.68) + 0.006], [0.085, 0.05, 0.01], null, { seg: 10 });
     for (const sd of [-1, 1]) {
       ctx.color("#ffffff"); limb([sd * 0.035, 0.95, frontZ(0.95)], [sd * 0.035, 0.82, frontZ(0.82)], 0.004, 0.004, 6);
       ctx.color("#e0e0e0"); ell([sd * 0.035, 0.816, frontZ(0.816)], [0.006, 0.008, 0.006], null, { seg: 6 });
