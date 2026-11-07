@@ -52,25 +52,40 @@ const CINE = `<style>
 @keyframes tkdot{0%,100%{opacity:.2}50%{opacity:1}}
 .tc{position:fixed;inset:0;pointer-events:none;font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;color:#f3e7c6}
 .tc .bar{position:absolute;left:0;right:0;height:11vh;background:#000;animation:tkbar .45s ease-out both}
-.tc .bt{top:0;transform-origin:top}.tc .bb{bottom:0;height:23vh;transform-origin:bottom}
+.tc .bt{top:0;transform-origin:top}
+.tc .bb{bottom:0;min-height:220px;height:min(34vh,310px);transform-origin:bottom;background:#000}
 .tc .who{position:absolute;top:calc(11vh + 18px);left:6vw;text-transform:uppercase;letter-spacing:.14em;text-shadow:0 2px 6px #000;animation:tkin .6s .2s both}
 .tc .who b{display:block;font-size:30px;font-weight:400;color:#ffcf7a;letter-spacing:.08em}
 .tc .who span{font-size:12px;opacity:.7}
-.tc .sub{position:absolute;left:0;right:0;bottom:calc(23vh + 18px);display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px)}
+.tc .sub{position:absolute;left:0;right:0;bottom:calc(max(min(34vh,310px),220px) + 16px);display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px)}
 .tc .old{font-size:15px;opacity:.38;max-width:900px;text-align:center;text-shadow:0 2px 4px #000}
 .tc .now{font-size:24px;line-height:1.35;max-width:1000px;text-align:center;text-shadow:0 2px 6px #000,0 0 18px #000;animation:tkin .5s ease-out both}
 .tc .now i{color:#ffcf7a;font-style:normal;margin-right:10px;font-size:15px;letter-spacing:.12em;vertical-align:3px}
 .tc .chk{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#c6f060;text-shadow:0 1px 3px #000;animation:tkin .4s both}
 .tc .dots span{animation:tkdot 1s infinite}.tc .dots span:nth-child(2){animation-delay:.2s}.tc .dots span:nth-child(3){animation-delay:.4s}
-.tc .low{position:absolute;left:6vw;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px);bottom:0;height:23vh;display:flex;flex-direction:column;justify-content:center;gap:10px;pointer-events:auto}
-.tc form{display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,207,122,.35);padding:4px 0}
+.tc .low{position:absolute;left:6vw;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px);bottom:12px;height:calc(max(min(34vh,310px),220px) - 24px);display:flex;flex-direction:column;justify-content:flex-end;gap:8px;pointer-events:auto}
+.tc .choices{display:flex;flex-direction:column;gap:5px;max-height:140px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,182,66,.4) transparent}
+.tc .ch{background:rgba(20,15,6,.85);border:1px solid rgba(255,182,66,.3);border-left:3px solid #ffb642;border-radius:3px;color:#f3e7c6;font:inherit;font-size:14px;padding:4px 10px;cursor:pointer;display:flex;align-items:center;gap:8px;text-align:left;transition:all .15s ease;text-shadow:0 1px 2px #000}
+.tc .ch:hover{background:rgba(255,182,66,.25);border-color:#ffcf7a;border-left-color:#fff;color:#fff;transform:translateX(3px)}
+.tc .ch b.n{color:#ffcf7a;font-weight:700;font-size:12px;min-width:14px}
+.tc .ch span.tag{font-size:11px;padding:1px 6px;border-radius:2px;text-transform:uppercase;letter-spacing:.05em;font-weight:600;white-space:nowrap}
+.tc .ch span.tag.speech{background:rgba(255,182,66,.2);border:1px solid rgba(255,182,66,.6);color:#ffc966}
+.tc .ch span.tag.barter{background:rgba(242,193,78,.2);border:1px solid rgba(242,193,78,.6);color:#f2c14e}
+.tc .ch span.tag.lore{background:rgba(159,200,255,.2);border:1px solid rgba(159,200,255,.6);color:#9fc8ff}
+.tc .ch span.tag.med{background:rgba(198,240,96,.2);border:1px solid rgba(198,240,96,.6);color:#c6f060}
+.tc .ch span.tag.surv{background:rgba(240,160,96,.2);border:1px solid rgba(240,160,96,.6);color:#f0a060}
+.tc .ch span.tag.gen{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#e9dfc4}
+.tc .ch span.txt{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc .busy .choices{opacity:.35;pointer-events:none}
+.tc .busy form{opacity:.35;pointer-events:none}
+.tc form{display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,207,122,.35);padding:3px 0}
 .tc form em{color:#ffcf7a;font-style:normal}
-.tc input{flex:1;background:none;border:0;outline:0;color:#f3e7c6;font:inherit;font-size:19px}
+.tc input{flex:1;background:none;border:0;outline:0;color:#f3e7c6;font:inherit;font-size:16px}
 .tc input::placeholder{color:rgba(243,231,198,.35)}
-.tc .opts{display:flex;gap:22px;flex-wrap:wrap;font-size:14px}
+.tc .opts{display:flex;gap:18px;flex-wrap:wrap;font-size:13px}
 .tc .opts button{background:none;border:0;color:rgba(243,231,198,.6);font:inherit;cursor:pointer;padding:0;letter-spacing:.06em}
 .tc .opts button:hover{color:#ffcf7a}
-.tc .opts button b{color:#ffcf7a;font-weight:400;margin-right:6px}
+.tc .opts button b{color:#ffcf7a;font-weight:400;margin-right:4px}
 .tc .feel{margin-left:auto;font-size:12px;letter-spacing:.14em}
 </style>`
 export function talkUi(ctx, player) {
@@ -91,11 +106,23 @@ export function talkUi(ctx, player) {
   const opts = [SVC[role] ? ['svc', SVC[role]] : null, isTrader(it) ? ['trade', 'Trade'] : null, ...(it.state?.offers ?? []), ['leave', 'Leave']].filter(Boolean)
     .map(([k, t], i) => `<button onclick="sendAction('talkdo',{k:'${k}'})"><b>${i + 1}</b>${t}</button>`).join('')
   const send = `const i=document.getElementById('tkin');if(i&&i.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:i.value});i.value=''}`
-  return `${CINE}<div class="tc" data-modal><div class="bar bt"></div><div class="bar bb"></div>
+  const choices = Array.isArray(s.talkChoices) ? s.talkChoices : []
+  const chItems = choices.map((c, i) => {
+    const txt = typeof c === 'string' ? c : c.text
+    const tag = typeof c === 'object' && c.tag ? c.tag : ''
+    const low = tag.toLowerCase()
+    const tagCls = low.includes('speech') ? 'speech' : low.includes('barter') ? 'barter' : low.includes('lore') ? 'lore' : low.includes('med') ? 'med' : low.includes('surv') ? 'surv' : 'gen'
+    return `<button class="ch" data-interactive onclick="sendAction('talk',{id:'${q(it.id)}',text:'${q(txt)}'})"><b class="n">${i + 1}</b>${tag ? `<span class="tag ${tagCls}">[${esc(tag)}]</span>` : ''}<span class="txt">&ldquo;${esc(txt)}&rdquo;</span></button>`
+  }).join('')
+  const choicesHtml = chItems ? `<div class="choices">${chItems}</div>` : ''
+  const ph = choices.length ? `Speak freely with ${who} or pick an option above…` : `Speak with ${who}…`
+  const kd = `if(event.key==='Escape'){sendAction('talkdo',{k:'leave'})}else if(event.target.id!=='tkin'&&event.key>='1'&&event.key<='4'){const c=document.querySelectorAll('.tc .ch');const b=c[parseInt(event.key)-1];if(b)b.click()}`
+  return `${CINE}<div class="tc" data-modal tabindex="0" onkeydown="${kd}"><div class="bar bt"></div><div class="bar bb"></div>
     <div class="who"><b>${who}</b><span>${esc(it.state?.faction ?? faction(it, player.place))} · ${esc(role ?? 'drifter')}${it.state?.follow === player.id ? ' · with you' : ''}</span></div>
     <div class="sub">${old}${now}</div>
-    <div class="low">
-      <form data-interactive onsubmit="event.preventDefault();${send}"><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" autofocus placeholder="Speak with ${who}…"/></form>
+    <div class="low ${s.talkBusy ? 'busy' : ''}">
+      ${choicesHtml}
+      <form data-interactive onsubmit="event.preventDefault();${send}"><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" placeholder="${esc(ph)}"/></form>
       <div class="opts">${opts}<span class="feel" style="color:${col}">${feel(r)}</span></div>
     </div></div>`
 }

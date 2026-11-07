@@ -2,6 +2,7 @@ import { heard } from "./lib/hear.js";
 import { sitDown, standUp, seatTick, spotsOf } from './lib/seat.js'
 import { rollItemL3 } from './lib/loot3.js'
 import { startPick } from './lockpick.js'
+import { openDialogue } from './talk.js'
 // Fallout-style looting. Nothing is picked up by walking over it any more: look at an item and the HUD
 // names it ("[E] Take  Pipe scrap"), press E to take it. Crates and the remains of what you kill are
 // containers: look at one, press E, and a loot menu lists what is inside (take one thing, take all,
@@ -275,7 +276,7 @@ function press(ctx) {
   const it = ctx.getObject(f.id)
   if (!it || it.state?.taken) return
   if (f.tag === 'npc' && pickChance(ctx, it) != null) { pickpocket(ctx, it); m.key = ''; refocus(ctx, true); return }
-  if (f.tag === 'npc') { if (it.state?.dead) { if (it.state.items !== undefined) openLoot(ctx, it) } else if (it.state?.angry?.[ctx.self.id]) talk(ctx, it); else { ctx.self.state.talkWith = it.id; ctx.self.state.shopOpen = null; it.state.talkAt = ctx.now(); it.state.talkTo = ctx.self.id } return } // the conversation card (scripts/talk.js); the old services sit on its buttons
+  if (f.tag === 'npc') { if (it.state?.dead) { if (it.state.items !== undefined) openLoot(ctx, it) } else if (it.state?.angry?.[ctx.self.id]) talk(ctx, it); else { openDialogue(ctx, it) } return } // the conversation card (scripts/talk.js); the old services sit on its buttons
   if (f.tag === 'usable' && it.state?.kind === 'computer') { // Back OS boots on the presser's own machine: their state, their screen
     const c = it.state, now = ctx.now()
     if (!s.os && now - (s.osClosedAt ?? 0) > 600) {

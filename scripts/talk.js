@@ -5,6 +5,7 @@
 import { heard as hearAt } from "./lib/hear.js";
 import T from './lib/data/talk.yml'
 import { nameOf, keyOf, isTrader, voiceOf, VO, systemPrompt, userMessage, parseReply, rollCheck, freshStock, buyPrice, sellPrice, sellables, removeOne, SHOPS } from './lib/npc-talk.js'
+import { getStarter, getChoices } from './lib/npc-starters.js'
 import { takeToken } from './player.js'
 import { talk as service } from './interact.js'
 import { skillsOf, SKILLS } from './lib/stats.js'
@@ -31,7 +32,30 @@ function say(ctx, it, line, mood) {
   if (mood) ctx.self.state.talkMood = mood
   hearAt(ctx, { clip: VO(voiceOf(it), line), position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.9, maxDistance: 14 }, { audience: { nearby: p, radius: 16 } })
 }
-function close(ctx) { const s = ctx.self.state; s.talkWith = null; s.shopOpen = null; s.talkBusy = 0 }
+function close(ctx) { const s = ctx.self.state; s.talkWith = null; s.shopOpen = null; s.talkBusy = 0; s.talkChoices = null; ctx.self.session.talkingTo = null }
+
+export function openDialogue(ctx, it) {
+  const s = ctx.self.state, ses = ctx.self.session, now = ctx.now()
+  if (!it || it.state?.dead || (it.state?.hp ?? 1) <= 0) return
+  s.talkWith = it.id
+  s.shopOpen = null
+  ses.talkingTo = it.id
+  it.state.talkAt = now
+  it.state.talkTo = ctx.self.id
+
+  const hist = s.talks?.[short(it)] ?? []
+  const lastLine = hist[hist.length - 1]
+  const recent = lastLine && now - (ses.lastGreetAt ?? -1e9) < 60000
+
+  const starter = getStarter(ctx, it, s)
+  if (starter && (!hist.length || !recent)) {
+    ses.lastGreetAt = now
+    say(ctx, it, starter.text, starter.mood)
+    logLine(ctx, it, 'n', starter.text)
+  }
+
+  s.talkChoices = getChoices(ctx, it, s, starter?.text)
+}
 
 function send(ctx, d) {
   const s = ctx.self.state, it = live(ctx, s.talkWith), now = ctx.now(), ses = ctx.self.session
@@ -56,7 +80,7 @@ export function heard(ctx, r, pay) {
   const it = live(ctx, pay?.id); if (!it) return
   const text = r?.data?.text ?? r?.text ?? (typeof r?.data === 'string' ? r.data : null)
   const o = r?.ok === false ? null : parseReply(text)
-  if (!o) { const line = T.fallback[Math.floor(ctx.random() * T.fallback.length)]; say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); return }
+  if (!o) { const line = T.fallback[Math.floor(ctx.random() * T.fallback.length)]; say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); s.talkChoices = getChoices(ctx, it, s, line, null); return }
   let { reply: line, rapportDelta: delta, intent } = o, passed = false
   if (o.check) {
     const c = rollCheck(ctx, s, o.check); passed = c.ok
@@ -88,11 +112,13 @@ export function heard(ctx, r, pay) {
   }
   if (r1 < 0 && it.state.follow === ctx.self.id) { it.state.follow = null; logLine(ctx, it, 'x', `${who} stopped following you`) }
   say(ctx, it, line, o.mood); logLine(ctx, it, 'n', line)
+  s.talkChoices = getChoices(ctx, it, s, line, o)
 }
 
 function act(ctx, d) {
   const s = ctx.self.state, it = live(ctx, s.talkWith)
   if (d.k === 'leave' || !it) { close(ctx); return }
+  if (d.k === 'choice' && d.text) { send(ctx, { id: it.id, text: d.text }); return }
   if (String(d.k).startsWith('o:')) { ctx.emit('talkopt', { by: ctx.self.id, k: String(d.k).slice(2) }, { to: it.id }); return } // an npc's own card buttons (state.offers) ring its ears.talkopt
   if (d.k === 'svc') { const before = s.sub?.at; service(ctx, it); if (s.sub?.at !== before) logLine(ctx, it, 'n', s.sub.t); return }
   if (d.k === 'trade' && isTrader(it)) { restock(ctx, it); s.shopOpen = it.id; return }
@@ -152,8 +178,15 @@ function cine(ctx, s) {
 }
 
 export function update(ctx, dt) {
-  const s = ctx.self.state, m = (ctx.self.session.tk ??= { acc: 0 })
+  const s = ctx.self.state, m = (ctx.self.session.tk ??= { acc: 0 }), ses = ctx.self.session
   cine(ctx, s)
+  if (s.talkWith && ses.talkingTo !== s.talkWith) {
+    const it = live(ctx, s.talkWith)
+    if (it) openDialogue(ctx, it)
+  } else if (!s.talkWith && ses.talkingTo) {
+    ses.talkingTo = null
+    s.talkChoices = null
+  }
   if (!s.talkWith && !s.shopOpen) return
   m.acc += dt; if (m.acc < 0.3) return; m.acc = 0
   const it = live(ctx, s.talkWith ?? s.shopOpen)

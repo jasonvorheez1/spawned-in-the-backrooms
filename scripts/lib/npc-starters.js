@@ -1,0 +1,679 @@
+// Conversation starters and dynamic choice generation for all NPCs.
+// Starters are delivered when dialogue opens; choices give the player contextual,
+// clickable RPG dialogue prompts (with Speech, Barter, Survival, Medicine checks).
+import { skillsOf } from './stats.js'
+import { nameOf, keyOf, isTrader, faction } from './npc-talk.js'
+
+export const STARTERS = {
+  // ---- Level 1 (M.E.G. Outpost) ----
+  'meg-ale': {
+    greeting: "Still breathing? Good. Keep your boots quiet and don't touch the dark puddles near the exit.",
+    mood: 'calm',
+    returning: "Back again, wanderer? Watch your corners—the halls don't stay empty for long.",
+    friendly: "Hey! Good to see you still in one piece. What's the plan?",
+    cold: "Make it quick. I've got a patrol sweep in five minutes.",
+    choices: [
+      { text: "What's the safest way to navigate Level 1?", tag: "Survival 25", check: { skill: 'survival', difficulty: 25 } },
+      { text: "What are those lone voices calling hello in the halls?", tag: "Lore" },
+      { text: "You know these corridors better than anyone. Mind if I tag along?", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+      { text: "Where can I find almond water and supplies nearby?", tag: "Help" },
+    ],
+  },
+  'meg-ortiz': {
+    greeting: "Sit down before you fall down. Let me see where it hurts—and don't tell me you're fine.",
+    mood: 'calm',
+    returning: "Still walking? Let me know the moment you feel a fever or see shadows twitching.",
+    friendly: "Ah, good to see you, wanderer. Take a breath. How is your condition holding up?",
+    cold: "I treat injuries, not bad attitudes. What hurts?",
+    choices: [
+      { text: "Can you patch up my injuries and check my sanity?", tag: "Help" },
+      { text: "What causes people to turn into Wretches down here?", tag: "Medicine 30", check: { skill: 'medicine', difficulty: 30 } },
+      { text: "How do you stay calm surrounded by concrete and screaming pipes?", tag: "Lore" },
+      { text: "You've saved a lot of people here, Dr. Ortiz. Thank you.", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+    ],
+  },
+  'meg-callum': {
+    greeting: "Keep your hands where I can see them. We count every can twice here. You looking for supplies or just staring?",
+    mood: 'calm',
+    returning: "Back at the supply counter? Make it quick, I've got three inventories to tally.",
+    friendly: "Well look who's back. Need another ration pack, or did you find something to trade?",
+    cold: "Don't touch the crates. State your business or move along.",
+    choices: [
+      { text: "What provisions and rations can you spare for a runner?", tag: "Help" },
+      { text: "Let's talk trade. I've got scrap and items to barter.", tag: "Barter 35", check: { skill: 'barter', difficulty: 35 } },
+      { text: "How does M.E.G. keep Base Alpha supplied in Level 1?", tag: "Lore" },
+      { text: "I'm heading deeper into the levels. Any gear recommendations?", tag: "Survival 30", check: { skill: 'survival', difficulty: 30 } },
+    ],
+  },
+
+  // ---- Level 2 (Survivor Camp in Pipe Dreams) ----
+  'surv-wren': {
+    greeting: "Whoa—stay back! ...Oh. You're not a Hound. Sorry! My nerves are completely shot today.",
+    mood: 'scared',
+    returning: "Oh, it's you! Did you hear that banging in the steam pipes? It's getting louder...",
+    friendly: "Hey! Honestly, it's a huge relief seeing you. Don't leave me alone too long, okay?",
+    cold: "Don't sneak up on me! What do you want?",
+    choices: [
+      { text: "What makes Level 2 so much more dangerous than Level 1?", tag: "Lore" },
+      { text: "How do you avoid Hounds when the lights flicker out?", tag: "Survival 35", check: { skill: 'survival', difficulty: 35 } },
+      { text: "You don't have to face the dark alone. Let's stick together.", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+      { text: "Which way leads to the next level down?", tag: "Help" },
+    ],
+  },
+  'surv-hollis': {
+    greeting: "*taps a hissing radio* Static again... Hey, wanderer. You look rough around the edges. Rest by the stove a minute.",
+    mood: 'calm',
+    returning: "Still with us? Good. Grab some warm water, the pipes are running hot.",
+    friendly: "Come on in, friend. The radio's quiet, but you're always welcome at our fire.",
+    cold: "Keep your distance from the radio equipment.",
+    choices: [
+      { text: "Can you treat my burns and injuries?", tag: "Help" },
+      { text: "Is that radio picking up any signals from other survivor camps?", tag: "Lore" },
+      { text: "How do you treat heat exhaustion from these steam pipes?", tag: "Medicine 35", check: { skill: 'medicine', difficulty: 35 } },
+      { text: "What kind of entities nest in these maintenance shafts?", tag: "Survival 30", check: { skill: 'survival', difficulty: 30 } },
+    ],
+  },
+  'surv-mags': {
+    greeting: "Well look what the pipes washed in! Come closer honey, let's see what shine you've got in your pockets.",
+    mood: 'happy',
+    returning: "Back for more, honey? My shelves don't stay stocked for long, so let's deal.",
+    friendly: "There's my favorite wanderer! I've set aside a special deal just for you.",
+    cold: "No free handouts here, sweetie. You got almond water or not?",
+    choices: [
+      { text: "Cut me a fair deal on ammo and almond water.", tag: "Barter 40", check: { skill: 'barter', difficulty: 40 } },
+      { text: "How do survivors get by down here without M.E.G. support?", tag: "Lore" },
+      { text: "Got any tools or keys to get through the locked doors?", tag: "Help" },
+      { text: "You've got a sharp eye for profit, Mags. Business going well?", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+    ],
+  },
+
+  // ---- Level 3 (Base Gamma & Electrical Station) ----
+  'gamma-reyes': {
+    greeting: "Halt. Identify yourself. The generators are surging and the hounds are restless in the crawl tubes.",
+    mood: 'calm',
+    returning: "Back on the catwalk. Keep your weapon ready and your light pointed down.",
+    friendly: "Good to see you, runner. You've got steady nerves. Base Gamma can use people like you.",
+    cold: "Don't linger by the checkpoint unless you want a guard escort.",
+    choices: [
+      { text: "What's the safest route through the electrical corridors?", tag: "Survival 35", check: { skill: 'survival', difficulty: 35 } },
+      { text: "How do your patrol squads deal with hound packs in the dark?", tag: "Guns 40", check: { skill: 'guns', difficulty: 40 } },
+      { text: "How does Base Gamma survive deep inside Level 3?", tag: "Lore" },
+      { text: "I'm ready for duty. What sector needs reconnaissance?", tag: "Speech 45", check: { skill: 'speech', difficulty: 45 } },
+    ],
+  },
+  'gamma-pell': {
+    greeting: "Wipe your feet. Copper wire, batteries, almond water—everything has an inventory line. What's your business?",
+    mood: 'calm',
+    returning: "Ledger's open. Got supplies to declare, or just browsing the requisition bins?",
+    friendly: "Ah, the reliable wanderer. Your credit is good with Base Gamma. Let's talk supplies.",
+    cold: "Step away from the ledger. State your requisition.",
+    choices: [
+      { text: "Show me what supplies and munitions you have in stock.", tag: "Help" },
+      { text: "I have salvaged parts and scrap. Let's arrange a trade.", tag: "Barter 45", check: { skill: 'barter', difficulty: 45 } },
+      { text: "How do you keep this fortress powered in the Electrical Station?", tag: "Lore" },
+      { text: "I hear there's a brass elevator leading deeper from here.", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
+    ],
+  },
+  'gamma-ito': {
+    greeting: "Drink some tea. The constant electrical hum does terrible things to your nerves if you don't ground yourself.",
+    mood: 'calm',
+    returning: "Welcome back. Still feeling the vibrations in your teeth? Sit by the kettle.",
+    friendly: "It's so good to see you uninjured. Please, rest as long as you need.",
+    cold: "Quiet down, please. There are patients trying to rest.",
+    choices: [
+      { text: "Can you tend to my wounds and help restore my sanity?", tag: "Help" },
+      { text: "How do you treat the psychological strain of the generator hum?", tag: "Medicine 40", check: { skill: 'medicine', difficulty: 40 } },
+      { text: "Have you treated survivors coming back from Level 4 or Level 5?", tag: "Lore" },
+      { text: "Your calm presence makes this place feel almost human.", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+    ],
+  },
+  'gamma-hask': {
+    greeting: "Cpl. Hask here. Watch your step by the perimeter—the liquid pain hoses are pressurized.",
+    mood: 'calm',
+    returning: "Back through the gates. Keep moving toward the public sector.",
+    choices: [
+      { text: "What's the protocol for entering Base Gamma?", tag: "Lore" },
+      { text: "How effective is the liquid pain defense against entities?", tag: "Survival 35", check: { skill: 'survival', difficulty: 35 } },
+      { text: "Seen any hostiles probing the gate recently?", tag: "Guns 35", check: { skill: 'guns', difficulty: 35 } },
+    ],
+  },
+  'gamma-marlo': {
+    greeting: "Looking for firepower? Marlo's the name. Shotguns, pistols, modifications—almond water talks.",
+    mood: 'happy',
+    choices: [
+      { text: "Show me what weapons and ammo you've got.", tag: "Help" },
+      { text: "Cut me a discount on firearm repairs and shells.", tag: "Barter 45", check: { skill: 'barter', difficulty: 45 } },
+      { text: "What modifications work best against Hounds?", tag: "Guns 40", check: { skill: 'guns', difficulty: 40 } },
+    ],
+  },
+  'gamma-june': {
+    greeting: "Pull up a stool! Fresh almond water, warm fruit stew, and zero generator shocks. What'll it be?",
+    mood: 'happy',
+    choices: [
+      { text: "Pour me a cup of almond water and a warm ration.", tag: "Help" },
+      { text: "Heard any interesting tales from the runners arriving from Level 2?", tag: "Lore" },
+      { text: "You run a lively counter in the middle of a warzone.", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+    ],
+  },
+  'gamma-moss': {
+    greeting: "Welcome to Base Gamma. I am Commander Moss. As long as you respect our laws, you have safe harbor here.",
+    mood: 'calm',
+    choices: [
+      { text: "What is Base Gamma's objective in Level 3?", tag: "Lore" },
+      { text: "I have skills that could benefit your garrison.", tag: "Speech 50", check: { skill: 'speech', difficulty: 50 } },
+      { text: "How do you coordinate with Base Omega on Level 4?", tag: "Help" },
+    ],
+  },
+
+  // ---- Level 4 (Abandoned Offices) ----
+  'omega-dace': {
+    greeting: "Take a sip of water, friend. The office halls are endless and the water coolers don't fill themselves.",
+    mood: 'calm',
+    returning: "Back for another bottle? Water's free, but bullets will cost you.",
+    friendly: "Good to see you on your feet! Take what you need from the cooler.",
+    cold: "Don't touch the supply ledgers. You need something or not?",
+    choices: [
+      { text: "What supplies does Base Omega carry for wanderers?", tag: "Help" },
+      { text: "Who was the last squad sent down toward Level 5?", tag: "Lore" },
+      { text: "I need ammunition and almond water for the next run.", tag: "Barter 40", check: { skill: 'barter', difficulty: 40 } },
+      { text: "How does Base Omega maintain order on this floor?", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
+    ],
+  },
+  'omega-lin': {
+    greeting: "Floor check in progress. Fountains are running, windows are taped. Keep moving and stay out of empty cubicles.",
+    mood: 'calm',
+    returning: "Still circling? Stick to the main corridors—the side offices are easy to get turned around in.",
+    friendly: "Hey. Glad to see you're not seeing things yet. Want a patrol tip?",
+    choices: [
+      { text: "Why are all the office windows taped over?", tag: "Lore" },
+      { text: "Have you heard anything moving behind the locked office doors?", tag: "Survival 40", check: { skill: 'survival', difficulty: 40 } },
+      { text: "You walk this floor every day. Seen any strange entities lately?", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
+      { text: "Where are the emergency stairwells and elevators located?", tag: "Help" },
+    ],
+  },
+  'omega-okafor': {
+    greeting: "Sgt. Okafor. State your business on Level 4. Base Omega maintains order here—no looting claimed offices.",
+    mood: 'calm',
+    choices: [
+      { text: "What are the rules regarding office claims?", tag: "Lore" },
+      { text: "I'm looking for the stairs to Level 5.", tag: "Help" },
+      { text: "I can assist with perimeter security.", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
+    ],
+  },
+  'omega-rhea': {
+    greeting: "Need your vitals checked? Take a seat. And please don't drink from the fountains without filtering.",
+    mood: 'calm',
+    choices: [
+      { text: "Can you treat my injuries and check my sanity?", tag: "Help" },
+      { text: "Is the water in the office coolers actually safe?", tag: "Medicine 35", check: { skill: 'medicine', difficulty: 35 } },
+      { text: "What happens to people who stare out the untaped windows?", tag: "Lore" },
+    ],
+  },
+  'l4-moss': {
+    greeting: "Oh! Hello there. Did you hear that desk phone ringing a minute ago? Nobody ever answers on the other end...",
+    mood: 'calm',
+    returning: "You're back! The phones have been ringing on and off all morning.",
+    friendly: "It's so wonderful having someone to talk to! Come in, take a seat on the cot.",
+    choices: [
+      { text: "What happens if someone answers the ringing office phones?", tag: "Lore" },
+      { text: "How long have you been living in this office suite?", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+      { text: "How do you survive here without joining M.E.G.?", tag: "Survival 35", check: { skill: 'survival', difficulty: 35 } },
+      { text: "Have you collected any stories about the deeper levels?", tag: "Help" },
+    ],
+  },
+  'l4-gus': {
+    greeting: "Hey pal! You made it! Want to hear which vending machine on the north corridor gives double chocolate bars?",
+    mood: 'happy',
+    returning: "Hey buddy! Did you try that vending machine yet? Two bars for the price of one!",
+    choices: [
+      { text: "Are the vending machines on Level 4 safe to eat from?", tag: "Lore" },
+      { text: "You seem in surprisingly high spirits for being trapped here.", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+      { text: "Are the window rooms really that dangerous?", tag: "Survival 30", check: { skill: 'survival', difficulty: 30 } },
+      { text: "Want to travel together for a while, Gus?", tag: "Help" },
+    ],
+  },
+  'l4-penny': {
+    greeting: "*yawns softly and rubs eyes* Oh... hi. I was just about to take another nap. Did you find where the morning comes from?",
+    mood: 'calm',
+    returning: "Hi again... I was having the sweetest dream about real sunshine.",
+    choices: [
+      { text: "How long have you been wearing those pajamas, Penny?", tag: "Speech 30", check: { skill: 'speech', difficulty: 30 } },
+      { text: "Do you need any almond water or food rations?", tag: "Help" },
+      { text: "Do you remember the world before you fell into the Backrooms?", tag: "Lore" },
+      { text: "Make sure you stay close to the safe offices when lights go out.", tag: "Survival 35", check: { skill: 'survival', difficulty: 35 } },
+    ],
+  },
+  'l4-bram': {
+    greeting: "Keep your voice down. The acoustics in these drop ceilings carry every whisper. You got almond water on you?",
+    mood: 'calm',
+    returning: "Back again. Check your seals. Level 5 is no joke, wanderer.",
+    choices: [
+      { text: "You're planning an expedition to Level 5? How dangerous is it?", tag: "Survival 45", check: { skill: 'survival', difficulty: 45 } },
+      { text: "What makes the hotel on Level 5 so feared?", tag: "Lore" },
+      { text: "I'll trade supplies for your trail knowledge and maps.", tag: "Barter 40", check: { skill: 'barter', difficulty: 40 } },
+      { text: "Two experienced runners have better odds. Let's team up.", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
+    ],
+  },
+  'tbd-quill': {
+    greeting: "Show me oddities. Strange coins, keys to nowhere, broken dials... Ordinary junk bores me. What've you got?",
+    mood: 'happy',
+    returning: "Found anything strange yet? Don't waste my time with ordinary scrap.",
+    choices: [
+      { text: "I have some peculiar trinkets. What will you offer for them?", tag: "Barter 45", check: { skill: 'barter', difficulty: 45 } },
+      { text: "What does T.B.D. do with all these useless, bizarre objects?", tag: "Lore" },
+      { text: "Where did you find the strangest item in your collection?", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
+      { text: "Can you point me toward any unsearched office wings?", tag: "Help" },
+    ],
+  },
+  'tbd-nib': {
+    greeting: "*giggles twitchily* Shiny! Everything shines if you turn the desk lamp right! Don't touch my shiny piles!",
+    mood: 'happy',
+    choices: [
+      { text: "How do you slip past the M.E.G. patrols to scavenge shiny things?", tag: "Sneak 35", check: { skill: 'sneak', difficulty: 35 } },
+      { text: "Why is your faction called T.B.D.?", tag: "Lore" },
+      { text: "Did you find any spare ammo or tools in the executive suites?", tag: "Help" },
+      { text: "That's quite a sparkling collection you've gathered, Nib.", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+    ],
+  },
+  'amor-vell': {
+    greeting: "Breathe gently. The velvet bloom of the mold purifies the poisoned air of this endless tomb. Are you reverent?",
+    mood: 'calm',
+    cold: "Trample one spore and the growth will feast on your bones.",
+    choices: [
+      { text: "What is the holy purpose of this mold garden?", tag: "Lore" },
+      { text: "Isn't breathing these spores hazardous to human lungs?", tag: "Medicine 45", check: { skill: 'medicine', difficulty: 45 } },
+      { text: "I come in peace and respect for your sanctuary.", tag: "Speech 45", check: { skill: 'speech', difficulty: 45 } },
+      { text: "Does Amor Incrementum trade remedies with outsiders?", tag: "Barter 40", check: { skill: 'barter', difficulty: 40 } },
+    ],
+  },
+  'amor-hask': {
+    greeting: "Wanderer! Listen to the spores! The concrete was man's mistake, but the growth will reclaim it all! Join our flock!",
+    mood: 'happy',
+    choices: [
+      { text: "That's a dramatic sermon. How many converts have you gathered?", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
+      { text: "Why do you believe the mold is the salvation of the Backrooms?", tag: "Lore" },
+      { text: "How do your people defend against entity attacks?", tag: "Survival 35", check: { skill: 'survival', difficulty: 35 } },
+      { text: "I'll pass on the mold gospel, but stay safe out here.", tag: "Help" },
+    ],
+  },
+
+  // ---- Level 5 (Terror Hotel) ----
+  'l5-ambrose': {
+    greeting: "Good evening, honored guest. Welcome to the Homely Hotel. The registers are always open, though no one ever seems to check out.",
+    mood: 'calm',
+    returning: "A pleasure to see you again in our grand foyer. May I attend to your accommodations?",
+    friendly: "Our most valued guest returns! The hotel hums with delight at your presence.",
+    cold: "The hotel expects decorum from all guests. Do not disturb the quiet hours.",
+    choices: [
+      { text: "Can you tell me about the history of the Homely Hotel?", tag: "Lore" },
+      { text: "I would like to inquire about booking a room or suite.", tag: "Help" },
+      { text: "Why do the staff in the hallways freeze when watched?", tag: "Speech 45", check: { skill: 'speech', difficulty: 45 } },
+      { text: "What happens if someone enters the Beverly Room during the ball?", tag: "Survival 50", check: { skill: 'survival', difficulty: 50 } },
+    ],
+  },
+  'l5-dolores': {
+    greeting: "Wipe your hooves at the door! The kitchen is running hot and the salon snobs already sent two roasts back. Hungry or complaining?",
+    mood: 'annoyed',
+    returning: "Back in my kitchen? The steaks are sizzling. You eating or wasting my time?",
+    friendly: "Ah, someone who actually appreciates real cooking! Sit down, honey, I've got fresh stew for you.",
+    choices: [
+      { text: "What fresh dishes or cuts of meat do you have on the menu?", tag: "Help" },
+      { text: "I have almond water. Can I buy some steak or stew?", tag: "Barter 40", check: { skill: 'barter', difficulty: 40 } },
+      { text: "What do the Originals in the salon have against your cooking?", tag: "Lore" },
+      { text: "How do you source and preserve fresh food in this hotel?", tag: "Medicine 35", check: { skill: 'medicine', difficulty: 35 } },
+    ],
+  },
+  'l5-pip': {
+    greeting: "Eep! O-oh, a guest! Can I carry your luggage, sir or madam? Just... please don't make me take the service elevator...",
+    mood: 'scared',
+    returning: "Oh! Hello again, guest! Any bags? Any messages to deliver?",
+    choices: [
+      { text: "What's wrong with the service elevator, Pip?", tag: "Lore" },
+      { text: "Have you noticed any room numbers that shouldn't exist?", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+      { text: "What is Mr. Ambrose really like to work for?", tag: "Help" },
+      { text: "Relax, Pip. You're doing a fine job.", tag: "Speech 30", check: { skill: 'speech', difficulty: 30 } },
+    ],
+  },
+  'l5-odette': {
+    greeting: "*sighs heavily with a feather duster* If one more guest leaves ash on the Persian rug, I'm locking the broom closet. What do you want?",
+    mood: 'annoyed',
+    returning: "Still here? Don't make a mess in the halls. It takes hours to get blood out of damask.",
+    choices: [
+      { text: "Heard any juicy rumors around the hotel wings?", tag: "Lore" },
+      { text: "Why do you refuse to clean the ballroom?", tag: "Survival 45", check: { skill: 'survival', difficulty: 45 } },
+      { text: "Have you found anything interesting in the locked suites?", tag: "Sneak 40", check: { skill: 'sneak', difficulty: 40 } },
+      { text: "It must be thankless work cleaning an infinite hotel.", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
+    ],
+  },
+  'l5-harlan': {
+    greeting: "Step into the post. Keep your weapon holstered unless you're shooting rats. M.E.G. Housekeeping keeps this hotel somewhat civilized.",
+    mood: 'calm',
+    returning: "Back at Housekeeping. Count your rounds. What do you need?",
+    friendly: "Good to see you, soldier. You've earned your keep around here. Let's talk armory.",
+    choices: [
+      { text: "What munitions and survival supplies does Housekeeping trade?", tag: "Help" },
+      { text: "How bad is the Beast prowling the Boiler Room?", tag: "Guns 45", check: { skill: 'guns', difficulty: 45 } },
+      { text: "What's your going rate for submachine gun ammo?", tag: "Barter 45", check: { skill: 'barter', difficulty: 45 } },
+      { text: "How does Housekeeping maintain relations with the hotel staff?", tag: "Lore" },
+    ],
+  },
+  'l5-vesna': {
+    greeting: "I escort to the Boiler Room threshold and not one step beyond. The heat melts your boots and the sounds will test your nerve.",
+    mood: 'calm',
+    returning: "Ready for another run to the threshold? Mind your canteen.",
+    choices: [
+      { text: "Can you escort me safely to the Boiler Room door?", tag: "Help" },
+      { text: "What precautions should I take against the boiler heat?", tag: "Survival 50", check: { skill: 'survival', difficulty: 50 } },
+      { text: "Have you ever caught a glimpse of the Boiler Room Beast?", tag: "Lore" },
+      { text: "You have a dangerous post, Vesna. What keeps you doing it?", tag: "Speech 45", check: { skill: 'speech', difficulty: 45 } },
+    ],
+  },
+  'l5-tobias': {
+    greeting: "Ah, another exterminator? The Death Rats are breeding behind the hot pipes again. Ten almond water per pelt—interested?",
+    mood: 'calm',
+    returning: "Got any rat pelts for the bounty board? The boiler crew is begging for relief.",
+    choices: [
+      { text: "Tell me about the rat bounty contract.", tag: "Help" },
+      { text: "What's the best tactic when a swarm of Death Rats attacks?", tag: "Melee 40", check: { skill: 'melee', difficulty: 40 } },
+      { text: "Do you believe the rumors that the hotel itself is alive?", tag: "Lore" },
+      { text: "Are there any bounties available besides the rats?", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
+    ],
+  },
+  'l5-imani': {
+    greeting: "Stay alert. The faceless staff are harmless until provoked, but shadows in the east wing have been shifting against the light.",
+    mood: 'calm',
+    choices: [
+      { text: "What should wanderers know about the Facelings here?", tag: "Lore" },
+      { text: "Have you spotted anything hostile stalking the guest wings?", tag: "Survival 45", check: { skill: 'survival', difficulty: 45 } },
+      { text: "How do you tolerate the snooty Originals in the card salon?", tag: "Speech 45", check: { skill: 'speech', difficulty: 45 } },
+      { text: "Any advice for someone navigating Level 5 for the first time?", tag: "Help" },
+    ],
+  },
+  'l5-millie': {
+    greeting: "Check your compass, flyboy. Lost my Lockheed Electra over the Pacific and ended up in this gilded birdcage. Got anything worth betting?",
+    mood: 'happy',
+    choices: [
+      { text: "How did an airplane from 1937 end up in Level 5?", tag: "Lore" },
+      { text: "Care to trade vintage heirlooms for fresh supplies?", tag: "Barter 45", check: { skill: 'barter', difficulty: 45 } },
+      { text: "What does it take to get invited into the Originals' card salon?", tag: "Speech 45", check: { skill: 'speech', difficulty: 45 } },
+      { text: "Have you fed Samantha the cat her meat today?", tag: "Help" },
+    ],
+  },
+  'l5-whitlock': {
+    greeting: "Stand straight, traveller. RMS Oceanic went down beneath the grey waves, but etiquette endures even in this bizarre hotel. State your purpose.",
+    mood: 'calm',
+    choices: [
+      { text: "Captain, what happened to your ship in 1912?", tag: "Lore" },
+      { text: "A man of your dignity commands respect, Captain.", tag: "Speech 50", check: { skill: 'speech', difficulty: 50 } },
+      { text: "What can you tell me about the ballroom across the hall?", tag: "Survival 45", check: { skill: 'survival', difficulty: 45 } },
+      { text: "Have you ever attempted to find a way back home?", tag: "Help" },
+    ],
+  },
+  'l5-vanderholt': {
+    greeting: "*polishes gold monocle* Hm? A newcomer in modern rags. If you've come begging for a railway loan, my terms are twenty percent compound interest.",
+    mood: 'annoyed',
+    choices: [
+      { text: "What was your railway empire like before you no-clipped?", tag: "Lore" },
+      { text: "Even gilded-age barons need almond water in the Backrooms.", tag: "Barter 55", check: { skill: 'barter', difficulty: 55 } },
+      { text: "What do the Originals do all day besides play cards?", tag: "Speech 45", check: { skill: 'speech', difficulty: 45 } },
+      { text: "Have you ever attempted checking out of the hotel?", tag: "Help" },
+    ],
+  },
+  'l5-zelda': {
+    greeting: "Well don't just stand there like a flat tire, darling! Isn't this hotel simply the bee's knees? Pour some gin and tell me the gossip!",
+    mood: 'happy',
+    choices: [
+      { text: "What year do you think it is in the real world, Zelda?", tag: "Lore" },
+      { text: "Heard any juicy secrets about what's behind Room 13?", tag: "Speech 45", check: { skill: 'speech', difficulty: 45 } },
+      { text: "Why do the Originals refuse to let new people join?", tag: "Help" },
+      { text: "How do you spend your evenings when the music starts playing?", tag: "Survival 40", check: { skill: 'survival', difficulty: 40 } },
+    ],
+  },
+  'l5-wat': {
+    greeting: "*crosses himself frantically* Sancta Maria... Traveler, pray tell me: is this the purgatory of souls, or have the Black Death fevers finally taken my mind?",
+    mood: 'scared',
+    choices: [
+      { text: "This isn't purgatory, Brother Wat. You've fallen into the Backrooms.", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
+      { text: "You're safe from the plague here. Breathe easy, brother.", tag: "Medicine 40", check: { skill: 'medicine', difficulty: 40 } },
+      { text: "Who was the Abbot you keep searching for?", tag: "Lore" },
+      { text: "Are the other salon guests treating you well?", tag: "Help" },
+    ],
+  },
+  'l5-samantha': {
+    greeting: "*purrs softly, psychic eyes glowing* Welcome to my parlor, wanderer. The threads of your past and future hum like plucked harp strings. Do you bring tribute, or just idle words?",
+    mood: 'calm',
+    returning: "You return to Samantha's presence. Do your hands bear savory meat, or only empty promises?",
+    friendly: "Ah, mon cher! The stars sing around you. Have you brought another feast for my reading?",
+    cold: "Idle chatter bores me, wanderer. Meat first, or face my claws.",
+    choices: [
+      { text: "I'd like to offer you meat in exchange for a psychic reading.", tag: "Help" },
+      { text: "What do the spirits in the hotel walls whisper to you?", tag: "Lore" },
+      { text: "Are those serrated teeth natural for a feline entity?", tag: "Medicine 45", check: { skill: 'medicine', difficulty: 45 } },
+      { text: "What is truly lurking in the dark of the Boiler Room?", tag: "Survival 50", check: { skill: 'survival', difficulty: 50 } },
+    ],
+  },
+  'hk-constance': {
+    greeting: "Bonsoir. Keep your boots on the runner rug. Housekeeping trades clean linen and field rations. What does your pack lack?",
+    mood: 'calm',
+    choices: [
+      { text: "Show me what supplies Outpost Housekeeping has for trade.", tag: "Help" },
+      { text: "Let's negotiate prices on survival gear and rations.", tag: "Barter 45", check: { skill: 'barter', difficulty: 45 } },
+      { text: "Why does the orchestral music from the ballroom never stop?", tag: "Lore" },
+      { text: "What's your advice for surviving the Boiler Room heat?", tag: "Survival 45", check: { skill: 'survival', difficulty: 45 } },
+    ],
+  },
+  'hk-vance': {
+    greeting: "*wipes soot from his brow* Boiler pressure is running red hot today. Keep your distance from the steam vents unless you want your fur scorched.",
+    mood: 'calm',
+    choices: [
+      { text: "What's the safest route through the Boiler Room?", tag: "Survival 45", check: { skill: 'survival', difficulty: 45 } },
+      { text: "What kind of scrap weapon works best against Death Rats?", tag: "Melee 40", check: { skill: 'melee', difficulty: 40 } },
+      { text: "Have you ever caught a glimpse of the Boiler Room Beast?", tag: "Lore" },
+      { text: "Need any assistance with maintenance down there?", tag: "Help" },
+    ],
+  },
+  'homely-barnaby': {
+    greeting: "A very cordial welcome to the Homely Hotel, honored guest. May I assist you with reservations or suite accommodations today?",
+    mood: 'happy',
+    choices: [
+      { text: "I'd like to inquire about booking a room.", tag: "Help" },
+      { text: "What amenities does the hotel provide for wanderers?", tag: "Lore" },
+      { text: "It must take extraordinary dedication to keep this place running.", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
+      { text: "Have you ever seen the manager of this establishment?", tag: "Survival 45", check: { skill: 'survival', difficulty: 45 } },
+    ],
+  },
+  'homely-auguste': {
+    greeting: "Ah, bon appétit! Enter the dining room! A wanderer cannot face the boiler halls on an empty stomach! What can I cook for you?",
+    mood: 'happy',
+    choices: [
+      { text: "What fresh dishes or cuts of meat do you have available?", tag: "Help" },
+      { text: "I have almond water. Let's trade for some warm rations.", tag: "Barter 40", check: { skill: 'barter', difficulty: 40 } },
+      { text: "Where does the hotel kitchen source its supplies?", tag: "Lore" },
+      { text: "Any recommendations for treating Samantha the cat?", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+    ],
+  },
+}
+
+// Fallback starters for generic / unlisted NPCs by faction & role
+export const GENERIC_STARTERS = {
+  'meg:scout': { greeting: "M.E.G. scout on patrol. Halls are hot today. Keep your light down and watch your rear.", mood: 'calm' },
+  'meg:medic': { greeting: "M.E.G. medical station. You bleeding, infected, or just exhausted? Take a seat.", mood: 'calm' },
+  'meg:quarter': { greeting: "M.E.G. requisition post. All trades logged by weight. What supplies are you after?", mood: 'calm' },
+  'meg:default': { greeting: "Status report, wanderer. Keep your weapon lowered while in M.E.G. territory.", mood: 'calm' },
+  'survivor:trader': { greeting: "Almond water talks, everything else walks. What are you looking to buy or sell?", mood: 'happy' },
+  'survivor:scout': { greeting: "Stay alert. The pipes groaned five minutes ago, which means something big is moving.", mood: 'calm' },
+  'survivor:medic': { greeting: "Rest your legs. We've got clean bandages and boiled water. How are you feeling?", mood: 'calm' },
+  'survivor:default': { greeting: "Hey... wanderer. Keep your distance until I know you're not an entity.", mood: 'calm' },
+  'tbd:trader': { greeting: "T.B.D. deals exclusively in the useless and inexplicable. What oddities did you bring?", mood: 'calm' },
+  'tbd:default': { greeting: "Everything has value if you don't know what it does. Looking to trade oddities?", mood: 'calm' },
+  'amor:default': { greeting: "Walk gently among the bloom. The spores nourish those who respect the growth.", mood: 'calm' },
+  'hotel:default': { greeting: "Welcome to the Homely Hotel. The service is eternal, and the doors are always unlocked.", mood: 'calm' },
+  'hk:default': { greeting: "Housekeeping outpost. Watch the boiler thresholds and keep your flashlight charged.", mood: 'calm' },
+  'orig:default': { greeting: "Another modern soul washed ashore. Have you no sense of etiquette in our salon?", mood: 'annoyed' },
+  'default': { greeting: "Watch your step out there. The corridors play tricks on your eyes when you're tired.", mood: 'calm' },
+}
+
+const short = (it) => String(it?.id ?? '').split('/').pop()
+
+export function getStarter(ctx, it, s) {
+  if (!it) return null
+  const id = short(it), key = keyOf(ctx.self), r = it.state?.rapport?.[key] ?? 0
+  const following = it.state?.follow === ctx.self.id
+  const hist = s.talks?.[id] ?? []
+  const entry = STARTERS[id]
+
+  if (following) {
+    return { text: "Right behind you. Lead the way through the corridors.", mood: 'happy' }
+  }
+
+  if (entry) {
+    if (hist.length > 0) {
+      if (r >= 35 && entry.friendly) return { text: entry.friendly, mood: 'happy' }
+      if (r <= -25 && entry.cold) return { text: entry.cold, mood: 'annoyed' }
+      if (entry.returning) return { text: entry.returning, mood: entry.mood ?? 'calm' }
+    }
+    return { text: entry.greeting, mood: entry.mood ?? 'calm' }
+  }
+
+  // Generic fallback based on faction & role
+  const fac = String(it.state?.faction5 ?? it.state?.faction4 ?? it.state?.faction ?? faction(it, ctx.self?.place ?? '')).toLowerCase()
+  const role = String(it.state?.role ?? 'default').toLowerCase()
+  const fkey = fac.includes('meg') || fac.includes('gamma') || fac.includes('omega') ? 'meg'
+    : fac.includes('surv') ? 'survivor'
+    : fac.includes('tbd') ? 'tbd'
+    : fac.includes('amor') ? 'amor'
+    : fac.includes('hotel') ? 'hotel'
+    : fac.includes('hk') ? 'hk'
+    : fac.includes('orig') ? 'orig'
+    : 'default'
+
+  const gen = GENERIC_STARTERS[`${fkey}:${role}`] ?? GENERIC_STARTERS[fkey] ?? GENERIC_STARTERS.default
+  return { text: gen.greeting, mood: gen.mood ?? 'calm' }
+}
+
+export function getChoices(ctx, it, s, lastNpcReply, replyObj) {
+  if (!it) return []
+  const id = short(it)
+  const sk = skillsOf(s ?? {})
+  const entry = STARTERS[id]
+
+  // If the model provided choices in JSON, validate and prioritize them
+  if (Array.isArray(replyObj?.choices) && replyObj.choices.length >= 2) {
+    return replyObj.choices.slice(0, 4).map((c, i) => {
+      const txt = String(c).trim()
+      let tag = 'Reply'
+      if (txt.toLowerCase().includes('speech') || txt.toLowerCase().includes('persuade')) tag = `Speech ${sk.speech}`
+      else if (txt.toLowerCase().includes('trade') || txt.toLowerCase().includes('buy') || txt.toLowerCase().includes('sell') || txt.toLowerCase().includes('discount')) tag = `Barter ${sk.barter}`
+      else if (txt.toLowerCase().includes('hurt') || txt.toLowerCase().includes('heal') || txt.toLowerCase().includes('wound')) tag = `Medicine ${sk.medicine}`
+      else if (txt.toLowerCase().includes('entity') || txt.toLowerCase().includes('danger') || txt.toLowerCase().includes('navigate')) tag = `Survival ${sk.survival}`
+      return { text: txt.replace(/^\[.*?\]\s*/, ''), tag }
+    })
+  }
+
+  // If there's an active follow-up turn (the NPC just replied to something):
+  if (lastNpcReply && typeof lastNpcReply === 'string') {
+    return generateFollowUpChoices(ctx, it, s, lastNpcReply, entry, sk)
+  }
+
+  // Initial dialogue encounter: use curated starter choices
+  if (entry?.choices?.length) {
+    return entry.choices.map((c) => {
+      const check = c.check
+      const skillName = check?.skill ?? ''
+      const diff = check?.difficulty ?? 35
+      const tag = skillName ? `${skillName[0].toUpperCase() + skillName.slice(1)} ${diff}` : c.tag ?? 'Inquire'
+      return { text: c.text, tag, check }
+    })
+  }
+
+  // Generic initial choices
+  return generateGenericChoices(it, s, sk)
+}
+
+function generateFollowUpChoices(ctx, it, s, line, entry, sk) {
+  const t = line.toLowerCase()
+  const out = []
+
+  // Contextual question based on keywords in what the NPC just said
+  if (t.includes('boiler') || t.includes('steam') || t.includes('heat')) {
+    out.push({ text: "How intense does the steam heat get further down?", tag: `Survival ${sk.survival}` })
+  } else if (t.includes('rat') || t.includes('beast') || t.includes('hound') || t.includes('entity') || t.includes('faceling') || t.includes('smiler')) {
+    out.push({ text: "What's the best weapon or tactic against them?", tag: `Survival ${sk.survival}` })
+  } else if (t.includes('hotel') || t.includes('room') || t.includes('suite') || t.includes('corridor')) {
+    out.push({ text: "Are there any rooms wanderers should strictly avoid?", tag: "Lore" })
+  } else if (t.includes('ballroom') || t.includes('waltz') || t.includes('music')) {
+    out.push({ text: "Who is playing the music in the ballroom?", tag: "Lore" })
+  } else if (t.includes('samantha') || t.includes('cat') || t.includes('reading')) {
+    out.push({ text: "Does Samantha ever lie in her psychic readings?", tag: "Lore" })
+  } else if (t.includes('almond') || t.includes('water') || t.includes('ration') || t.includes('stock')) {
+    out.push({ text: "Could you spare a little extra for a traveler in need?", tag: `Barter ${sk.barter}`, check: { skill: 'barter', difficulty: 40 } })
+  } else if (t.includes('mold') || t.includes('spore')) {
+    out.push({ text: "Has anyone ever survived breathing the spores unprotected?", tag: `Medicine ${sk.medicine}` })
+  } else if (t.includes('phone') || t.includes('call') || t.includes('ring')) {
+    out.push({ text: "Has anyone ever heard a human voice on those desk phones?", tag: "Lore" })
+  }
+
+  // High Speech skill check choice
+  if (sk.speech >= 25 && out.length < 3) {
+    out.push({
+      text: "You can count on me out here. Let's look out for each other.",
+      tag: `Speech ${Math.max(30, Math.min(80, sk.speech + 5))}`,
+      check: { skill: 'speech', difficulty: Math.max(30, Math.min(80, sk.speech + 5)) },
+    })
+  }
+
+  // Trader/Barter choice
+  if (isTrader(it) && out.length < 3) {
+    out.push({
+      text: "Cut me a small discount and I'll make sure to bring you salvage.",
+      tag: `Barter ${Math.max(30, Math.min(80, sk.barter + 5))}`,
+      check: { skill: 'barter', difficulty: Math.max(30, Math.min(80, sk.barter + 5)) },
+    })
+  }
+
+  // Lore / persona inquiry from the entry table if not yet added
+  if (entry?.choices) {
+    for (const ec of entry.choices) {
+      if (out.length >= 3) break
+      if (!out.some((o) => o.text === ec.text)) {
+        out.push(ec)
+      }
+    }
+  }
+
+  // Polite wrap-up option
+  if (out.length < 4) {
+    out.push({ text: "Understood. I'll keep that in mind out there.", tag: "Acknowledge" })
+  }
+
+  return out.slice(0, 4)
+}
+
+function generateGenericChoices(it, s, sk) {
+  const role = it.state?.role
+  const out = []
+
+  if (isTrader(it)) {
+    out.push({ text: "What supplies do you have available for trade?", tag: "Help" })
+    out.push({ text: "I have salvage and parts. Let's negotiate prices.", tag: `Barter ${sk.barter}`, check: { skill: 'barter', difficulty: 35 } })
+  } else if (role === 'medic') {
+    out.push({ text: "Can you tend to my wounds and patch me up?", tag: "Help" })
+    out.push({ text: "What's the best way to keep infection and sanity loss away?", tag: `Medicine ${sk.medicine}` })
+  } else if (role === 'scout') {
+    out.push({ text: "What entities have been active in this area lately?", tag: `Survival ${sk.survival}` })
+    out.push({ text: "Which direction leads forward to the next sector?", tag: "Help" })
+  } else {
+    out.push({ text: "How long have you survived in this level?", tag: "Lore" })
+    out.push({ text: "What's the most important rule for staying alive here?", tag: `Survival ${sk.survival}` })
+  }
+
+  out.push({
+    text: "You look like someone who knows their way around. Let's cooperate.",
+    tag: `Speech ${sk.speech}`,
+    check: { skill: 'speech', difficulty: 40 },
+  })
+
+  out.push({ text: "Stay safe out there in the corridors.", tag: "Farewell" })
+
+  return out.slice(0, 4)
+}

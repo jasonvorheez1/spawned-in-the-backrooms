@@ -32,7 +32,7 @@ export function systemPrompt({ it, place, pl, rapport, following }) {
     `What you can do, as intent: join (agree to travel with them; only if they really earned it), leave (stop travelling with them), trade_discount (agree to better prices), gift (hand them some small supply), hostile (you are done and will fight them; only after real threats or cruelty), none.`,
     `If they try to persuade, haggle, intimidate, lie or charm you about something that matters, add check: { skill (one of ${CHECKS.join(', ')}), difficulty 20-95 } plus failReply, what you say if they blow it. The game rolls their skill + d20 against the difficulty; your reply is what you say if they pass.`,
     `Talk like a real tired person, not a narrator: 1-3 short sentences, plain words, contractions, lowercase is fine, a little rough. No speeches, no lists, no "I understand", no asking how you can help. Never mention games, numbers, rapport, skills or rolls.`,
-    `Answer with JSON only: {"reply":"...","mood":"calm|happy|annoyed|angry|scared","rapportDelta":-30..30,"intent":"none|join|leave|trade_discount|gift|hostile","check":{"skill":"speech","difficulty":50},"failReply":"..."} (check and failReply only when needed).`,
+    `Answer with JSON only: {"reply":"...","mood":"calm|happy|annoyed|angry|scared","rapportDelta":-30..30,"intent":"none|join|leave|trade_discount|gift|hostile","check":{"skill":"speech","difficulty":50},"failReply":"...","choices":["brief follow-up player prompt 1","brief follow-up player prompt 2","brief follow-up player prompt 3"]} (check, failReply and choices only when appropriate).`,
   ].join('\n')
 }
 
@@ -50,10 +50,12 @@ export function parseReply(text) {
   if (!o || typeof o.reply !== 'string' || !o.reply.trim()) return null
   const d = Math.max(-T.deltaCap, Math.min(T.deltaCap, Math.round(Number(o.rapportDelta) || 0)))
   const c = o.check && CHECKS.includes(String(o.check.skill).toLowerCase()) ? { skill: String(o.check.skill).toLowerCase(), difficulty: Math.max(10, Math.min(110, Math.round(Number(o.check.difficulty) || 50))) } : null
+  const choices = Array.isArray(o.choices) ? o.choices.filter((x) => typeof x === 'string' && x.trim()).map((x) => clean(x)).slice(0, 4) : null
   return {
     reply: clean(o.reply), failReply: c ? clean(o.failReply) || null : null,
     mood: MOODS.includes(o.mood) ? o.mood : 'calm', rapportDelta: d,
     intent: INTENTS.includes(o.intent) ? o.intent : 'none', check: c,
+    choices,
   }
 }
 

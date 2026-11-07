@@ -137,6 +137,7 @@ export function lay(ctx) {
         verb: "Speak to Samantha",
         info: "The Beverly Room Cat · Demands meat",
         tint: "#ffd700",
+        offers: [["o:feed", "Offer meat"], ["o:refuse", "Refuse"]],
       },
     });
   }

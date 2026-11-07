@@ -138,6 +138,20 @@ export const ears = {
     };
   },
 
+  talkopt: (ctx, { by, k }) => {
+    if (k === 'feed') {
+      ears.press(ctx, { by });
+    } else if (k === 'refuse') {
+      const who = ctx.getObject(by);
+      if (who?.state) {
+        who.state.notice = {
+          text: "Samantha flickers her tail coldly: 'A pity. The spirits shall keep their counsel, and you shall wander blind.'",
+          at: ctx.now(),
+        };
+      }
+    }
+  },
+
   hit: (ctx, { by, damage }) => {
     const who = ctx.getObject(by);
     if (!who) return;
