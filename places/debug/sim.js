@@ -27,10 +27,10 @@ export function tick(ctx) {
     ctx.spawn({ tags: ["ammo"], feetPosition: { x: a.x, y: 0.02, z: a.z }, primitive: { kind: "box", width: 0.14, height: 0.07, depth: 0.09 }, material: { color: "oklch(0.72 0.12 85)", metalness: 0.7, roughness: 0.4, emissive: "oklch(0.6 0.1 85)", emissiveIntensity: 0.5 } });
   });
   const smilers = ctx.query({ tags: ["smiler"] }).filter((m) => !m.state?.dead).length;
-  if (!smilers && (!s.seeded || due(s, "smiler", now)))
+  if (!smilers && s.want_smiler && !(s.want_smiler = false))
     ctx.spawn({ tags: ["smiler"], feetPosition: { x: SMILER_PEN.x, y: 0.05, z: SMILER_PEN.z }, primitive: { kind: "scripted", script: "scripts/smiler-geo.js" }, physics: { body: "character" }, material: { emissiveIntensity: 3.5 }, state: { hp: L.smilerHp } });
   const lurkers = ctx.query({ tags: ["lurker"] }).filter((m) => !m.state?.dead).length;
-  if (!lurkers && (!s.seeded || due(s, "lurker", now)))
+  if (!lurkers && s.want_lurker && !(s.want_lurker = false))
     ctx.spawn({ tags: ["lurker"], feetPosition: { x: LURKER_PEN.x, y: 0.05, z: LURKER_PEN.z }, primitive: { kind: "scripted", script: "scripts/lurker-geo.js" }, physics: { body: "character" }, state: { hp: L.lurkerHp, kind: "lurker" } });
   s.seeded = true;
 }
