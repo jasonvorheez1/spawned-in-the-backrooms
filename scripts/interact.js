@@ -182,7 +182,7 @@ function pickChance(ctx, it) {
   const f = facingAway(ctx, it) // seen or not, you can try; being watched just makes it much harder
   const sk = skillsOf(s).sneak ?? 0, agi = Number(String(s.attr ?? '5,5,5,5,5,5,5').split(',')[5]) || 5
   const lifted = st.picked?.[ctx.self.id] ?? 0
-  return Math.max(0.05, Math.min(0.95, 0.3 + sk / 160 + (agi - 5) * 0.03 + (0.35 - f) * 0.2 - (f > 0.35 ? 0.2 : 0) - (s.detect === 'DANGER' ? 0.1 : 0) - lifted * 0.12))
+  return Math.max(0.05, Math.min(0.95, 0.3 + sk / 160 + (agi - 5) * 0.03 + (0.35 - f) * 0.2 - (f > 0.35 ? 0.2 : 0) - (s.detect === 'danger' ? 0.1 : 0) - lifted * 0.12))
 }
 function pocketsOf(ctx, it) {
   if (it.state.pockets === undefined) {
