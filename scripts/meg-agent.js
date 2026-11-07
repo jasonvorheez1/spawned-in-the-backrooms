@@ -73,6 +73,7 @@ const HOSTILE = ["hound", "stealer", "smiler", "lurker", "moths"];
 const CROUCH = "cdn/clip-crouch-idle-loop.glb";
 const DEAD = (o) => !o || o.state?.dead || (o.state?.hp ?? 1) <= 0;
 const corpseOf = (o) => !!o && DEAD(o) && !o.tags?.includes?.("l5staff") && HOSTILE.some((g) => o.tags?.includes?.(g));
+const VERMIN = (o) => o?.tags?.includes?.("l5rat") || o?.state?.kind === "rat"; // a dead rat is not worth a crowd: nobody walks over to study one
 
 export function onSpawn(ctx) {
   const me = ctx.self;
@@ -241,7 +242,7 @@ function inspect(ctx, me, m, now, dt) {
   if (I.phase === "walk") {
     holster(ctx, me, m, !!I.hostile); work(me, m, null); aim(me, m, null);
     if (d > 1.5) { gait(me, m, d > 8 ? "run" : "walk"); moveAlong(ctx, me, m, { x: px, y: me.feetPosition.y, z: pz }, d > 8 ? G.run : G.walk * 1.15, dt); return true; }
-    I.phase = "look"; I.until = now + 4500 + ctx.random() * 2500; bark(ctx, me, "inspect", true);
+    I.phase = "look"; I.until = now + 2200 + ctx.random() * 1200; bark(ctx, me, "inspect", true);
   }
   stop(me, dt); gait(me, m, "idle"); aim(me, m, null); work(me, m, CROUCH); face(me, px - me.feetPosition.x, pz - me.feetPosition.z, dt);
   if (now > I.until) { m.inspect = null; work(me, m, null); holster(ctx, me, m, false); bark(ctx, me, "inspected", true); if (o?.state) o.state.inspectUntil = now; return false; } // the body can go now
@@ -386,7 +387,7 @@ export function update(ctx, dt) {
   const tid = t && flat(t.feetPosition, home) < G.leash ? t.id : null;
   if (tid !== (m.barkT ?? null)) {
     const prev = m.barkT ? ctx.getObject(m.barkT) : null, prevDead = prev && (prev.state?.dead || (prev.state?.hp ?? 1) <= 0);
-    if (prevDead && corpseOf(prev) && !m.inspect && !s.follow) { m.inspect = { id: prev.id, x: prev.feetPosition.x, z: prev.feetPosition.z, at: now, phase: "walk", hostile: true }; prev.state.inspectUntil = now + 16000; } // what they killed: go and see it's dead
+    if (prevDead && corpseOf(prev) && !VERMIN(prev) && !m.inspect && !s.follow) { m.inspect = { id: prev.id, x: prev.feetPosition.x, z: prev.feetPosition.z, at: now, phase: "walk", hostile: true }; prev.state.inspectUntil = now + 16000; } // what they killed: go and see it's dead
     if (tid) bark(ctx, me, t.tags?.includes?.("player") || ctx.place.players.some((p) => p.id === tid) ? "hostile" : (prevDead ? "kill" : "spot"), !!prevDead);
     else if (m.barkT) { bark(ctx, me, prevDead || !prev ? "kill" : "clear", true); m.clearAt = now + 2600; }
     m.barkT = tid;
@@ -395,7 +396,7 @@ export function update(ctx, dt) {
   const fighting = !!(t && flat(t.feetPosition, home) < G.leash);
   if (!fighting && !m.inspect && !lead && !s.mjguest && now > (m.corpseAt ?? 0)) { // no one to fight: notice a dead creature close by that nobody has checked, and go and see
     m.corpseAt = now + 2000; m.seen ??= {};
-    for (const tag of HOSTILE) { const o = ctx.query({ tags: [tag], radius: 14 }).find((c) => corpseOf(c) && !m.seen[c.id] && seesIt(ctx, me, c)); if (o) { m.seen[o.id] = true; o.state.inspectUntil = now + 16000; m.inspect = { id: o.id, x: o.feetPosition.x, z: o.feetPosition.z, at: now, phase: "walk", hostile: false }; bark(ctx, me, "found", true); break; } }
+    for (const tag of HOSTILE) { const o = ctx.query({ tags: [tag], radius: 14 }).find((c) => corpseOf(c) && !VERMIN(c) && !m.seen[c.id] && !c.state?.inspectUntil && seesIt(ctx, me, c)); // one looker per body, and once checked it stays checked if (o) { m.seen[o.id] = true; o.state.inspectUntil = now + 16000; m.inspect = { id: o.id, x: o.feetPosition.x, z: o.feetPosition.z, at: now, phase: "walk", hostile: false }; bark(ctx, me, "found", true); break; } }
   }
   if (!fighting && m.inspect && inspect(ctx, me, m, now, dt)) return;
   holster(ctx, me, m, fighting);
