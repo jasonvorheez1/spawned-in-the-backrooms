@@ -177,7 +177,7 @@ def solid(name, color, rough=0.5):
     m = bpy.data.materials.new(name); m.use_nodes = True
     b = m.node_tree.nodes["Principled BSDF"]; b.inputs["Base Color"].default_value = color; b.inputs["Roughness"].default_value = rough
     return m
-mouth_m = solid("mouth", (0.09, 0.012, 0.01, 1), 0.25); teeth_m = solid("teeth", (0.62, 0.56, 0.4, 1), 0.35)
+mouth_m = solid("mouth", (0.03, 0.004, 0.003, 1), 0.7); teeth_m = solid("teeth", (0.62, 0.56, 0.4, 1), 0.35)
 bpy.ops.mesh.primitive_uv_sphere_add(segments=16, ring_count=10, radius=1, location=(0, -0.035, MZ - 0.005))
 cav = bpy.context.object; cav.scale = (0.055, 0.06, 0.05); cav.data.materials.append(mouth_m)
 bpy.ops.object.transform_apply(scale=True)
