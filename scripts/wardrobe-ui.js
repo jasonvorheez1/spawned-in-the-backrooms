@@ -6,18 +6,19 @@ const CSS = `<style>
 @media (max-width:700px){#hud{visibility:hidden}}
 @keyframes ccIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
 @keyframes ccScan{from{background-position:0 0}to{background-position:0 6px}}
-#cc{--a:#ffb347;--a2:#ffcf87;--ink:#16140e;--bg:oklch(0.17 0.025 75 / .97);position:absolute;left:24px;top:24px;bottom:24px;width:min(560px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px)));display:flex;flex-direction:column;background:var(--bg);border:2px solid var(--a);box-shadow:6px 6px 0 #000a,0 0 24px rgba(255,170,40,.18) inset;color:var(--a2);font-family:'Geist Pixel Square',ui-monospace,monospace;animation:ccIn .18s ease-out;overflow:hidden}
+#cc{--a:#ffb347;--a2:#ffcf87;--ink:#16140e;--bg:oklch(0.17 0.025 75 / .97);position:absolute;left:24px;top:24px;bottom:24px;width:min(560px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px)));display:flex;flex-direction:column;background:var(--bg);border:2px solid var(--a);box-shadow:8px 8px 0 rgba(0,0,0,0.7),0 0 30px rgba(255,170,40,.18) inset,0 0 0 1px rgba(255,179,71,.25);color:var(--a2);font-family:'Geist Pixel Square',ui-monospace,monospace;animation:ccIn .18s ease-out;overflow:hidden}
 #cc:before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 3px,#0003 3px 6px);animation:ccScan 1.2s linear infinite;opacity:.35}
-#cc .hd{display:flex;align-items:stretch;border-bottom:2px solid var(--a)}
+#cc .hd{display:flex;align-items:stretch;border-bottom:2px solid var(--a);background:oklch(0.14 0.025 75)}
 #cc .hd .ttl{flex:1;padding:12px 16px 10px}
 #cc h2{font-size:22px;margin:0;letter-spacing:.18em;color:var(--a);text-shadow:0 0 8px rgba(255,170,40,.55)}
-#cc .sub{font-size:10.5px;letter-spacing:.2em;opacity:.6;margin-top:3px;text-transform:uppercase}
-#cc .hd .x{width:52px;border:0;border-left:2px solid var(--a);background:none;font-size:18px}
+#cc .sub{font-size:10.5px;letter-spacing:.2em;opacity:.75;margin-top:3px;text-transform:uppercase}
+#cc .hd .x{width:52px;border:0;border-left:2px solid var(--a);background:none;font-size:18px;color:var(--a);cursor:pointer}
+#cc .hd .x:hover{background:rgba(255,179,71,.2)}
 #cc .main{flex:1;display:flex;min-height:0}
-#cc .tabs{display:flex;flex-direction:column;width:92px;border-right:2px solid var(--a)}
-#cc .tabs button{border:0;border-bottom:1px solid #ffb34740;background:none;padding:14px 0;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;text-align:center}
+#cc .tabs{display:flex;flex-direction:column;width:92px;border-right:2px solid var(--a);background:oklch(0.15 0.02 75)}
+#cc .tabs button{border:0;border-bottom:1px solid #ffb34740;background:none;padding:14px 0;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;text-align:center;color:var(--a2);cursor:pointer}
 #cc .tabs button .n{display:block;font-size:20px;line-height:1;margin-bottom:4px;opacity:.75}
-#cc .tabs button.on{background:var(--a);color:var(--ink);text-shadow:none}
+#cc .tabs button.on{background:var(--a);color:var(--ink);text-shadow:none;font-weight:bold;box-shadow:inset 3px 0 0 #fff}
 #cc .tabs button.on .n{opacity:1}
 #cc .bd{flex:1;overflow:auto;padding:6px 16px 14px;scrollbar-color:var(--a) transparent}
 #cc .sec{font-size:10.5px;letter-spacing:.2em;color:var(--a);margin:16px 0 7px;display:flex;justify-content:space-between;align-items:center;gap:8px;text-transform:uppercase}
@@ -27,33 +28,39 @@ const CSS = `<style>
 #cc button{font:inherit;font-size:12.5px;color:var(--a2);background:oklch(0.24 0.03 78);border:1px solid #ffb34766;padding:8px 6px;cursor:pointer;text-transform:lowercase;transition:background .1s,transform .08s}
 #cc button:hover{border-color:var(--a);background:oklch(0.3 0.045 78)}
 #cc button:active{transform:translateY(1px)}
-#cc button.on{background:var(--a);color:var(--ink);border-color:#fff3d6;box-shadow:0 0 10px rgba(255,170,40,.45)}
-#cc .sws{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-#cc button.sw{width:26px;height:26px;padding:0;border:2px solid #000a;box-shadow:none}
-#cc button.sw.on{border:2px solid #fff;outline:2px solid var(--a);outline-offset:1px}
+#cc button.on{background:var(--a);color:var(--ink);border-color:#fff3d6;box-shadow:0 0 10px rgba(255,170,40,.45);font-weight:600}
+#cc .sws{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+#cc button.sw{width:26px;height:26px;padding:0;border:2px solid #000a;box-shadow:0 1px 3px rgba(0,0,0,.5);border-radius:3px;transition:transform .1s}
+#cc button.sw:hover{transform:scale(1.15);z-index:2}
+#cc button.sw.on{border:2px solid #fff;outline:2px solid var(--a);outline-offset:1px;transform:scale(1.08)}
 #cc .slot{border:1px solid #ffb34740;border-left:3px solid var(--a);padding:6px 10px 10px;margin-top:10px;background:oklch(0.2 0.02 78 / .7)}
 #cc .ft{display:flex;gap:6px;padding:10px 14px;border-top:2px solid var(--a);flex-wrap:wrap;background:oklch(0.14 0.02 75)}
 #cc .ft button{flex:1;min-width:76px;letter-spacing:.1em;text-transform:uppercase;font-size:11.5px}
 #cc .ft .go{background:var(--a);color:var(--ink);font-weight:bold}
-#cc .hint{font-size:11px;opacity:.55;margin-top:14px;line-height:1.5;border-top:1px dashed #ffb34740;padding-top:8px}
+#cc .hint{font-size:11px;opacity:.65;margin-top:14px;line-height:1.5;border-top:1px dashed #ffb34740;padding-top:8px}
 #cc .fit{display:flex;gap:6px;align-items:center;margin-top:8px}
 #cc .fit .nm{flex:1;font-size:12px;opacity:.9}
 #cc .sl{display:grid;grid-template-columns:62px 28px 1fr 28px 44px;align-items:center;gap:6px;margin-top:6px}
 #cc .sl .nm{font-size:12px;text-transform:uppercase;letter-spacing:.08em}
-#cc .sl .bar{position:relative;height:10px;border:1px solid #ffb34780;background:#0006}
-#cc .sl .bar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#c97a1e,var(--a))}
-#cc .sl .bar b{position:absolute;top:-3px;bottom:-3px;width:2px;background:#fff3d6;left:var(--mid)}
+#cc .sl .bar{position:relative;height:10px;border:1px solid #ffb34780;background:rgba(0,0,0,0.45);box-shadow:inset 0 1px 3px rgba(0,0,0,0.6);border-radius:2px;overflow:visible}
+#cc .sl .bar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#b36814,var(--a));border-radius:1px}
+#cc .sl .bar b{position:absolute;top:-3px;bottom:-3px;width:2px;background:#fff3d6;left:var(--mid);opacity:0.85;box-shadow:0 0 2px #000;pointer-events:none}
+#cc .sl .bar .th{position:absolute;top:50%;width:8px;height:14px;background:#fff5db;border:1px solid #945308;transform:translate(-50%,-50%);border-radius:1px;box-shadow:0 0 4px rgba(255,170,40,0.8);pointer-events:none}
 #cc .sl button{width:28px;padding:3px 0}
 #cc .sl .v{text-align:right;font-size:11.5px}
 #cc .big .sl{grid-template-columns:62px 32px 1fr 32px 48px}
 #cc .big .sl .bar{height:14px}
+#cc .big .sl .bar .th{width:10px;height:18px}
 </style>`
 const act = (k, v = '') => `sendAction('dress',{k:'${k}',v:'${v}'})`
 const tile = (k, v, on, label) => `<button class="${on ? 'on' : ''}" onclick="${act(k, v)}">${label}</button>`
 const sw = (k, v, on) => `<button class="sw ${on ? 'on' : ''}" style="background:${v || 'conic-gradient(#f2a65a,#9a6440,#f4efe9,#6f7d93,#f2a65a)'}" title="${v || 'natural'}" onclick="${act(k, v)}"></button>`
 function sliderRows(rows, l) {
-  return rows.map(([k, nm, lo, hi]) => { const v = Number(SL_LOOK[k]) || 1, pct = Math.round((v - lo) / (hi - lo) * 100), mid = Math.round((1 - lo) / (hi - lo) * 100)
-    return `<div class="sl"><span class="nm">${nm}</span><button onclick="${act('sz', k + ':-')}">−</button><div class="bar" style="--mid:${mid}%"><i style="width:${pct}%"></i><b></b></div><button onclick="${act('sz', k + ':+')}">+</button><span class="v">${Math.round(v * 100)}%</span></div>` }).join('')
+  return rows.map(([k, nm, lo, hi]) => {
+    const v = Number(SL_LOOK[k]) || 1, pct = Math.max(0, Math.min(100, Math.round((v - lo) / (hi - lo) * 100))), mid = Math.max(0, Math.min(100, Math.round((1 - lo) / (hi - lo) * 100)))
+    const clickBar = `(function(el,ev){const r=el.getBoundingClientRect(),p=Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width)),val=(${lo}+p*(${hi-lo})).toFixed(2);sendAction('dress',{k:'sz',v:'${k}:'+val})})(this,event)`
+    return `<div class="sl"><span class="nm">${nm}</span><button onclick="${act('sz', k + ':-')}" title="Decrease">−</button><div class="bar" style="--mid:${mid}%;cursor:pointer" onclick="${clickBar}" title="Click to set ${nm}"><i style="width:${pct}%"></i><b></b><span class="th" style="left:${pct}%"></span></div><button onclick="${act('sz', k + ':+')}" title="Increase">+</button><span class="v">${Math.round(v * 100)}%</span></div>`
+  }).join('')
 }
 let SL_LOOK = {}
 export function wardrobe(ctx, player) {

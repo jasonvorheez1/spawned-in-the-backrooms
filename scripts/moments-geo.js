@@ -81,10 +81,12 @@ function vending() { // a drinks machine standing dark: cord coiled loose on the
   C.color("oklch(0.12 0.01 260)"); C.metalness(0.1); box(-W + 0.05, 0.62, -D - 0.004, 0.14, Hh - 0.27, -D + 0.02); // dark interior behind glass
   const cans = ["oklch(0.5 0.17 25)", "oklch(0.55 0.13 250)", "oklch(0.75 0.14 95)", "oklch(0.55 0.15 145)", "oklch(0.85 0.02 90)", "oklch(0.45 0.12 300)"];
   for (let r = 0; r < 5; r++) { C.color("oklch(0.35 0.01 260)"); box(-W + 0.06, 0.66 + r * 0.19, -D + 0.01, 0.13, 0.675 + r * 0.19, -D + 0.12);
+    C.color("oklch(0.92 0.02 90)"); for (let i = 0; i < 6; i++) box(-W + 0.09 + i * 0.1, 0.662 + r * 0.19, -D - 0.003, -W + 0.13 + i * 0.1, 0.672 + r * 0.19, -D + 0.004);
     for (let i = 0; i < 6; i++) { if (rnd(r * 7 + i, 3) < 0.28) continue; C.color(cans[(r * 2 + i) % 6]); push(); at(-W + 0.12 + i * 0.1, 0.675 + r * 0.19, -D + 0.06); cyl(0.032, 0.12, 7); pop(); } }
   C.color("oklch(0.25 0.03 220)", 0.32); C.roughness(0.05); C.metalness(0.2); box(-W + 0.04, 0.6, -D - 0.012, 0.15, Hh - 0.26, -D - 0.006); // glass
   C.roughness(0.4); C.metalness(0.6); C.color("oklch(0.3 0.01 260)"); box(0.18, 0.62, -D - 0.012, W - 0.04, Hh - 0.28, -D); // selector panel
   C.color("oklch(0.08 0.01 140)"); box(0.22, 1.36, -D - 0.016, W - 0.08, 1.44, -D - 0.01); // dead display
+  C.color("oklch(0.55 0.2 25)"); box(0.33, 1.28, -D - 0.02, 0.37, 1.31, -D - 0.01); // red coin release
   C.color("oklch(0.7 0.01 260)"); for (let r = 0; r < 4; r++) for (let c = 0; c < 3; c++) box(0.22 + c * 0.055, 1.08 + r * 0.06, -D - 0.018, 0.255 + c * 0.055, 1.115 + r * 0.06, -D - 0.01);
   C.color("oklch(0.1 0.01 260)"); box(0.36, 1.2, -D - 0.018, 0.37, 1.26, -D - 0.01); box(0.24, 0.92, -D - 0.018, 0.38, 0.94, -D - 0.01);
   C.color("oklch(0.15 0.01 260)"); box(-W + 0.08, 0.2, -D - 0.01, 0.1, 0.42, -D + 0.02); C.color("oklch(0.4 0.01 260)"); box(-W + 0.06, 0.18, -D - 0.02, 0.12, 0.2, -D); box(-W + 0.06, 0.42, -D - 0.02, 0.12, 0.44, -D);
@@ -99,11 +101,13 @@ function payphone() { // a steel payphone under a little hood, handset on its ho
   box(-0.24, 0.95, -0.03, 0.24, 2.02, 0); // back plate
   for (const s of [-1, 1]) box(s * 0.24 - 0.012, 1.0, -0.36, s * 0.24 + 0.012, 1.98, 0); // hood cheeks
   box(-0.252, 1.97, -0.36, 0.252, 2.02, 0); C.color("oklch(0.45 0.12 255)"); C.metalness(0.2); box(-0.252, 1.9, -0.37, 0.252, 1.97, -0.345); // blue header strip
+  C.color("oklch(0.95 0.01 90)"); box(-0.06, 1.92, -0.372, 0.06, 1.95, -0.368); box(-0.02, 1.95, -0.372, 0.02, 1.962, -0.368); // phone icon
   C.color("oklch(0.32 0.01 250)"); C.metalness(0.7); box(-0.12, 1.18, -0.16, 0.12, 1.72, -0.03); // the phone body
   C.color("oklch(0.55 0.01 250)"); box(-0.105, 1.5, -0.165, 0.105, 1.69, -0.155);
   C.color("oklch(0.8 0.01 250)"); for (let r = 0; r < 4; r++) for (let c = 0; c < 3; c++) box(-0.06 + c * 0.045 - 0.016, 1.3 + r * 0.045 - 0.014, -0.172, -0.06 + c * 0.045 + 0.016, 1.3 + r * 0.045 + 0.014, -0.16);
   C.color("oklch(0.1 0.01 250)"); box(0.06, 1.62, -0.17, 0.09, 1.66, -0.16); box(-0.08, 1.22, -0.168, 0.08, 1.25, -0.16); // coin slot + return
   C.color("oklch(0.85 0.03 90)"); C.metalness(0); box(-0.09, 1.53, -0.168, 0.04, 1.67, -0.164); // card with dead numbers
+  C.color("oklch(0.25 0.01 250)"); for (let i = 0; i < 4; i++) box(-0.08, 1.55 + i * 0.028, -0.169, 0.03, 1.556 + i * 0.028, -0.166); // instruction lines
   C.color("oklch(0.2 0.01 250)"); C.metalness(0.3); C.roughness(0.6); // handset on the left hook
   box(-0.17, 1.3, -0.14, -0.13, 1.66, -0.1); cbox(-0.15, 1.645, -0.13, 0.07, 0.06, 0.08); cbox(-0.15, 1.315, -0.13, 0.07, 0.06, 0.08);
   C.color("oklch(0.45 0.01 250)"); C.metalness(0.8); box(-0.13, 1.56, -0.13, -0.12, 1.6, -0.06); // hook
@@ -150,7 +154,10 @@ function camp() { // an old wanderer's corner: walls at local z = 0 and x = 0, r
   const bt = [[1.3, -0.9, 0, 0], [1.42, -0.98, 0, 0], [0.95, -2.1, 1, 30], [1.4, -1.6, 1, 110], [1.7, -0.4, 1, 70], [0.15, -2.2, 0, 0]]; // empty almond water
   for (const [x, z, ly, yw] of bt) { push(); at(x, 0, z); yaw(yw); bottle(ly); pop(); }
   C.roughness(0.95); C.color("oklch(0.95 0.015 90)"); push(); at(1.05, 0.004, -1.05); yaw(18); box(-0.1, 0, -0.14, 0.1, 0.002, 0.14); C.color("oklch(0.4 0.03 260)"); for (let i = 0; i < 9; i++) box(-0.08, 0.002, -0.11 + i * 0.026, -0.08 + 0.1 + rnd(i, 5) * 0.06, 0.0028, -0.105 + i * 0.026); pop(); // the note
-  C.color("oklch(0.85 0.04 90)"); push(); at(0.95, 0, -1.2); cyl(0.022, 0.03, 8); pop(); // candle stub
+  C.color("oklch(0.82 0.04 90)"); push(); at(0.95, 0, -1.2); lathe([[0.048, 0], [0.036, 0.005], [0.024, 0.015], [0.022, 0.034]], 10);
+  C.color("oklch(0.12 0 0)"); push(); at(0, 0.034, 0); cyl(0.003, 0.012, 4); pop(); pop(); // candle stub with melted wax puddle & charred wick
+  C.color("oklch(0.7 0.07 75)"); box(0.88, 0.002, -1.14, 0.94, 0.006, -1.135); // matchstick
+  C.color("oklch(0.15 0 0)"); box(0.932, 0.002, -1.142, 0.944, 0.007, -1.133); // burnt head
   C.color("oklch(0.6 0.12 30)"); push(); at(1.6, 0.003, -1.1); yaw(40); box(-0.06, 0, -0.03, 0.06, 0.006, 0.03); pop(); // a wrapper
   C.roughness(null);
 }

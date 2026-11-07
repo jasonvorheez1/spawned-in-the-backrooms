@@ -59,9 +59,14 @@ function build(ctx, vis) {
   // the lift: brushed steel doors in the lobby's east wall, a call panel
   paint(ctx, "oklch(0.7 0.01 250)", "steel", 0.3, 0.85); box(ctx, LIFT.x - 0.24, LIFT.x - 0.2, 0, 2.3, LIFT.z - 0.9, LIFT.z + 0.9);
   paint(ctx, "oklch(0.3 0.01 250)", null, 0.4, 0.6); box(ctx, LIFT.x - 0.25, LIFT.x - 0.2, 0, 2.3, LIFT.z - 0.01, LIFT.z + 0.01); box(ctx, LIFT.x - 0.26, LIFT.x - 0.2, 2.3, 2.45, LIFT.z - 1, LIFT.z + 1);
-  box(ctx, LIFT.x - 0.25, LIFT.x - 0.2, 1.1, 1.4, LIFT.z + 1.2, LIFT.z + 1.35);
+  paint(ctx, "oklch(0.18 0.01 250)", null, 0.5); box(ctx, LIFT.x - 0.265, LIFT.x - 0.2, 2.33, 2.42, LIFT.z - 0.14, LIFT.z + 0.14);
+  paint(ctx, "oklch(0.85 0.16 85)", null, 0.2, 0, "oklch(0.85 0.16 85)"); box(ctx, LIFT.x - 0.268, LIFT.x - 0.2, 2.35, 2.4, LIFT.z - 0.04, LIFT.z + 0.04); // floor indicator
+  paint(ctx, "oklch(0.3 0.01 250)", null, 0.4, 0.6); box(ctx, LIFT.x - 0.25, LIFT.x - 0.2, 1.1, 1.4, LIFT.z + 1.2, LIFT.z + 1.35);
+  paint(ctx, "oklch(0.85 0.18 55)", null, 0.2, 0, "oklch(0.85 0.18 55)"); box(ctx, LIFT.x - 0.255, LIFT.x - 0.2, 1.22, 1.27, LIFT.z + 1.26, LIFT.z + 1.29); // call button
   // the stairwell door: grey steel, push bar
   paint(ctx, "oklch(0.5 0.02 240)", "steel", 0.5, 0.5); box(ctx, STAIRS.x - 0.5, STAIRS.x + 0.5, 0, 2.1, STAIRS.z - 0.24, STAIRS.z - 0.2);
+  paint(ctx, "oklch(0.48 0.18 25)", null, 0.4); box(ctx, STAIRS.x - 0.2, STAIRS.x + 0.2, 1.55, 1.7, STAIRS.z - 0.245, STAIRS.z - 0.2); // exit sign
+  paint(ctx, "oklch(0.95 0.01 90)", null, 0.3); box(ctx, STAIRS.x - 0.16, STAIRS.x + 0.16, 1.61, 1.64, STAIRS.z - 0.248, STAIRS.z - 0.2);
   paint(ctx, "oklch(0.75 0.01 250)", null, 0.3, 0.8); box(ctx, STAIRS.x - 0.4, STAIRS.x + 0.4, 1, 1.06, STAIRS.z - 0.3, STAIRS.z - 0.24);
 }
 export function geometry(ctx) { build(ctx, true); }

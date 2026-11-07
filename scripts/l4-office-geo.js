@@ -15,10 +15,19 @@ function desk(ctx, cx, cz, face, hi, seed) { // face: +1 = the desk's user sits 
   // CRT monitor, pushed to the back of the desk
   const mz = cz - face * 0.12;
   ctx.color("oklch(0.82 0.03 85)"); ctx.roughness(0.5); box(ctx, cx - 0.22, cx + 0.22, 0.76, 1.12, mz - 0.17, mz + 0.17); box(ctx, cx - 0.15, cx + 0.15, 0.75, 0.79, mz - 0.12, mz + 0.12);
-  ctx.color("oklch(0.18 0.03 160)"); ctx.emissive("oklch(0.35 0.08 155)"); box(ctx, cx - 0.17, cx + 0.17, 0.82, 1.08, mz + face * 0.17, mz + face * 0.175); ctx.emissive(null);
-  if (hi) { ctx.color("oklch(0.75 0.15 150)"); ctx.emissive("oklch(0.7 0.16 150)"); for (let i = 0; i < 4; i++) box(ctx, cx - 0.14, cx - 0.14 + 0.08 + ((seed * 7 + i * 3) % 5) * 0.035, 1.03 - i * 0.04, 1.045 - i * 0.04, mz + face * 0.176, mz + face * 0.178); ctx.emissive(null); }
-  // keyboard, papers, a mug
+  ctx.color("oklch(0.7 0.18 145)"); ctx.emissive("oklch(0.8 0.2 145)"); box(ctx, cx + 0.15, cx + 0.17, 0.77, 0.785, mz + face * 0.17, mz + face * 0.173); ctx.emissive(null); // power led
+  ctx.color("oklch(0.24 0.05 80)"); ctx.emissive("oklch(0.42 0.1 82)"); box(ctx, cx - 0.17, cx + 0.17, 0.82, 1.08, mz + face * 0.17, mz + face * 0.175); ctx.emissive(null);
+  if (hi) { ctx.color("oklch(0.85 0.15 85)"); ctx.emissive("oklch(0.75 0.16 85)"); for (let i = 0; i < 4; i++) box(ctx, cx - 0.14, cx - 0.14 + 0.08 + ((seed * 7 + i * 3) % 5) * 0.035, 1.03 - i * 0.04, 1.045 - i * 0.04, mz + face * 0.176, mz + face * 0.178); ctx.emissive(null); }
+  // keyboard, mousepad & mouse
   ctx.color("oklch(0.78 0.02 85)"); box(ctx, cx - 0.2, cx + 0.2, 0.75, 0.775, cz + face * 0.14, cz + face * 0.28);
+  ctx.color("oklch(0.25 0.02 240)"); box(ctx, cx + 0.24, cx + 0.42, 0.75, 0.754, cz + face * 0.13, cz + face * 0.29);
+  ctx.color("oklch(0.82 0.025 85)"); box(ctx, cx + 0.3, cx + 0.36, 0.754, 0.782, cz + face * 0.18, cz + face * 0.25);
+  // PC tower beside desk pedestal
+  ctx.color("oklch(0.8 0.02 85)"); box(ctx, cx - 0.68, cx - 0.46, 0.1, 0.65, cz - 0.24, cz + 0.24);
+  ctx.color("oklch(0.2 0.01 250)"); box(ctx, cx - 0.66, cx - 0.48, 0.52, 0.55, cz + face * 0.23, cz + face * 0.245); // 3.5 floppy slot
+  ctx.color("oklch(0.45 0.01 250)"); box(ctx, cx - 0.66, cx - 0.48, 0.42, 0.46, cz + face * 0.23, cz + face * 0.245); // CD drive
+  ctx.color("oklch(0.7 0.18 145)"); ctx.emissive("oklch(0.8 0.2 145)"); box(ctx, cx - 0.52, cx - 0.5, 0.22, 0.235, cz + face * 0.24, cz + face * 0.245); ctx.emissive(null);
+  // papers, a mug
   ctx.color("oklch(0.95 0.01 90)"); box(ctx, cx - 0.62, cx - 0.36, 0.75, 0.758, cz + face * 0.02, cz + face * 0.3); box(ctx, cx - 0.6, cx - 0.4, 0.758, 0.762, cz + face * 0.06, cz + face * 0.26);
   ctx.color(["oklch(0.6 0.15 25)", "oklch(0.6 0.1 250)", "oklch(0.85 0.05 90)"][seed % 3]); box(ctx, cx + 0.5, cx + 0.58, 0.75, 0.85, cz + face * 0.18, cz + face * 0.26);
 }
