@@ -1,3 +1,4 @@
+import { weaponBody } from "../../scripts/lib/weapon-look.js";
 // The debug room's referee: puts every test item back a few seconds after it is taken or killed.
 import L from "../../scripts/lib/data/level0.yml";
 import W from "../../scripts/lib/data/weapons.yml";
@@ -14,7 +15,7 @@ export function tick(ctx) {
   for (const w of WEAPON_SLOTS) {
     if (near(weapons, w)) { delete s["w" + w.kind]; continue; }
     if (s.seeded && !due(s, "w" + w.kind, now)) continue;
-    ctx.spawn({ tags: ["weapon"], state: { kind: w.kind }, feetPosition: { x: w.x, y: 0.02, z: w.z }, rotation: 90, primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: w.kind } } });
+    ctx.spawn({ tags: ["weapon"], state: { kind: w.kind }, feetPosition: { x: w.x, y: 0.02, z: w.z }, rotation: 90, ...weaponBody(w.kind) });
   }
   ALMOND_SLOTS.forEach((a, i) => {
     if (near(almonds, a)) { delete s["a" + i]; return; }

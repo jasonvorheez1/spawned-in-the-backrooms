@@ -4,7 +4,7 @@ import bpy, json, sys, os, math
 from mathutils import Matrix, Vector
 D = os.path.dirname(os.path.abspath(__file__))
 CFG = json.load(open(os.path.join(D, "fit.json")))
-SRC = "/workspace/world/tripo"; OUT = "/tmp/weapons"; os.makedirs(OUT, exist_ok=True)
+SRC = "/workspace/tripo"; OUT = "/tmp/weapons"; os.makedirs(OUT, exist_ok=True)
 only = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else list(CFG)
 # glTF (x,y,z) -> Blender (x,-z,y)
 def g2b(v): return Vector((v[0], -v[2], v[1]))

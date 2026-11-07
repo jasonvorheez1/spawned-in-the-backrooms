@@ -2,6 +2,7 @@
 // floor spawner (places/main/sim.js) or from a smiler that just died (scripts/player.js).
 import L from "./data/level0.yml";
 import W from "./data/weapons.yml";
+import { weaponBody } from "./weapon-look.js";
 
 const scatter = (ctx, c) => ({ x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 });
 
@@ -10,7 +11,7 @@ export function spawnAlmond(ctx, c) {
 }
 
 export function spawnWeapon(ctx, c, kind) {
-  ctx.spawn({ tags: ["weapon"], state: { kind }, feetPosition: scatter(ctx, c), rotation: ctx.random() * 360, primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind } } });
+  ctx.spawn({ tags: ["weapon"], state: { kind }, feetPosition: scatter(ctx, c), rotation: ctx.random() * 360, ...weaponBody(kind) });
 }
 
 export function spawnAmmo(ctx, c) {

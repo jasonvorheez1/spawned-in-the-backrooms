@@ -6,6 +6,7 @@ import L from './lib/data/level0.yml'
 import W from './lib/data/weapons.yml'
 import { raycast } from 'builtin/physics'
 import { dropLoot, spawnWeapon } from './lib/loot.js'
+import { weaponBody } from './lib/weapon-look.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
 
 import SOUNDS from './lib/data/sounds.yml'
@@ -330,8 +331,8 @@ function viewmodel(ctx, moving, sprinting) {
     if (w.vm) ctx.destroy(w.vm)
     const g = HOLD[kind], wp = W[kind] ?? {}, gun = !!wp.ranged
     const child = g == null ? [] : [gun
-      ? { feetPosition: { x: 0, y: kind === 'pistol' ? 0.03 : -0.04, z: kind === 'pistol' ? 0.04 : 0.14 }, rotation: Q_GUN, castShadow: false, primitive: { kind: 'scripted', script: 'scripts/weapon-geo.js', params: { kind } }, audience: 'local' }
-      : { feetPosition: { x: 0, y: -g, z: 0 }, rotation: Q_MELEE, castShadow: false, primitive: { kind: 'scripted', script: 'scripts/weapon-geo.js', params: { kind } }, audience: 'local' }]
+      ? { feetPosition: { x: 0, y: kind === 'pistol' ? 0.03 : -0.04, z: kind === 'pistol' ? 0.04 : 0.14 }, rotation: Q_GUN, castShadow: false, ...weaponBody(kind), audience: 'local' }
+      : { feetPosition: { x: 0, y: -g, z: 0 }, rotation: Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
     w.vm = ctx.spawn({ feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
       primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', ...(wp.muzzle ? { sockets: { muzzle: wp.muzzle } } : {}) }, children: child })
     w.vmKind = kind
