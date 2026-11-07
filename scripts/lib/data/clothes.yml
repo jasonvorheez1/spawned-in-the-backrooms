@@ -28,6 +28,7 @@ leveled:
     wanderer: { rows: [tee, hoodie, sweater, officeshirt, pajamas, pants, shorts, skirt, slacks, sneakers, slippers, beanie, bow, headphones, glasses, scarf, carpetponcho], extra: { hat: 0.35, eyew: 0.25, neck: 0.25 } }
     office:   { rows: [officeshirt, longsleeve, dress, slacks, longskirt, sneakers, boots, glasses, bowtie], extra: { hat: 0.05, eyew: 0.5, neck: 0.4 } }
     tbd:      { rows: [hoodie, wirehood, jacket, cargo, pants, boots, headphones, tophat, crown, partyhat, shades, bell, cape], extra: { hat: 0.7, eyew: 0.4, neck: 0.4 } }
+    l5:       { rows: [] }   # Level 5's hand-cast residents keep their own clothes (scripts/lib/l5-people.js)
     amor:     { rows: [dress, sweater, apron, longskirt, pants, boots, flower, cape, scarf], extra: { hat: 0.3, eyew: 0.05, neck: 0.6 } }
 rows:
   # slot   kind         name                  dr  kg    rarity    colours                                         (dr, kg, rarity: Savi's picks)

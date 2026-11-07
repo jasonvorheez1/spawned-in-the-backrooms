@@ -723,6 +723,7 @@ function tickStats(ctx, t, moving) {
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
   let drain = (ctx.self.place === 'level4' ? DRAIN4[zone.slice(3)] : ctx.self.place === 'level5' ? (DRAIN5[zone.slice(3)] ?? 0.8) / 60 * 4 : ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : (ctx.self.place === 'level3' || ctx.self.place === 'gamma') ? L3.sanityDrain[zone.slice(3)] : L.sanityDrain[zone]) ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4
+  if (ctx.self.place === 'level5' && s.l5room && zone.slice(3) === s.l5room && ctx.now() < (s.l5until ?? 0)) drain = -0.6 // a rented Homely Hotel suite: your own room, the hotel can't reach you (scripts/l5-resident.js)
   if (drain > 0 && ctx.now() < (s.blueUntil ?? 0)) drain = 0 // blue almond water: the halls can't get in
   s.sanity -= drain * (drain > 0 ? derived(s).drain : 1) * t
   if (w.ledge) s.sanity += L.ledgeRest.sanity * t
