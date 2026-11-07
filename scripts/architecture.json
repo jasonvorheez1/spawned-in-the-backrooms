@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1107,
-  "updatedAt": "2026-11-07T19:09:59.376Z",
+  "basedOnSpecVersion": 1111,
+  "updatedAt": "2026-11-07T19:12:01.871Z",
   "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, Levels 1–5 and M.E.G. Base Gamma, assembled from authored place cells, per-place simulations and shared player, creature and NPC systems. Players scavenge, fight, build and talk; Level 5's hotel includes resident services and a Beverly Room mahjong table with guest lifecycle managed by the table and place systems.",
   "scriptPaths": [],
   "places": [
@@ -62,17 +62,17 @@
     "scripts/level-door.js trigger → paired arrival marker IDs (PAIR) or state.to fallback; place sims place inbound markers and player.js selects safe spawn/door checkpoints after death.",
     "scripts/player.js writes state.xfer → scripts/ui.js draws named transition card; player.js gain() writes xpPop → UI renders aggregated XP; lvlPrompt prompts K and stats.js clears it when opening the sheet.",
     "interact.js E on living NPC → player.state.talkWith; talk-ui.js submits choices/text/trade → talk.js/NPC ears; talk.js parses join intent and escort-like spoken promises into NPC state.follow; npc-talk.js builds lore/memory-informed prompts and replies update rapport; resident/agent speech uses voices.js + hear.js.",
-    "Harlan's resident card option → scripts/l5-resident.js checks Speech 25 and writes player.state.l5boilerKey; a following Harlan within 8 m lets scripts/l5-door.js grant that key and unbolt the outer door; otherwise Lockpick 25 success sets l5boilerPick, and the door also opens from the boiler side.",
+    "Harlan's resident card option → scripts/l5-resident.js checks Speech 25 and writes player.state.l5boilerKey; scripts/interact.js targets the parented boiler panel at its world position and routes E to press, while Lockpick 25 can start the boiler pick; l5-door.js grants the key and opens when a following, living Harlan is within 60 m (or the player already has the key), and the door also opens from the boiler side.",
     "scripts/player.js writes state.loud on swings/shots → scripts/lib/hunt.js hearOf uses recent fight/gunshot radius as well as movement noise; crouching suppresses movement but not fighting noise.",
     "smilers/lurkers spot a player → hunt.raise writes place.state.l0alert → nearby hunters read alertFor and pursue; hunt.litMul and player dark state adjust detection.",
     "places/main/sim.js seeds modeled breakable/sunken furniture and containers; scripts/grab.js can pull sunken props with Z and combat can break them; loot.js supplies container contents.",
-    "E at l5-ball-mahjong → scripts/mahjong.js sits player and writes table.state.mjGuests → l5-ball.js spawns/moves/sits guests; after host departure/timeout guests continue solo play then walk out/despawn; mahjong.js writes player.state.mj phase and cents."
+    "E at l5-ball-mahjong → scripts/mahjong.js sits player and writes table.state.mjGuests → l5-ball.js spawns/moves/sits guests; after host departure/timeout guests continue solo play then walk out/despawn; mahjong.js writes player.state.mj phase/results."
   ],
   "behaviorFamilies": [
     "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; Level 5 x0z0 groups hotel detail by room tags.",
     "places/level4/cells/x0z0.scene + level4-geo.js, level4-detail-geo.js, l4-prop-geo.js and look-level4.js - office structure, non-colliding detail, varied props and post-processing share the Level 4 plan.",
     "scripts/l4-office.js + l4-office-geo.js - repeated open-floor cubicle islands, phones and printers vary by placement; manager schedules rings, ambience, tasks and rewards.",
-    "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - agent/resident rounds and talk vary by faction, role, voice, look/build and routine; meg-agent.js adds deterministic nerve, arm loadout and fleeing.",
+    "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - agent/resident rounds and talk vary by faction, role, voice, look/build and routine; meg-agent.js adds deterministic nerve, arm loadout and flee behavior.",
     "scripts/smilers.js and lurkers.js use lib/hunt.js hearing and lost-trail prediction, but retain different light/gaze, pursuit and attack rules; hounds, stealers and deathmoths have distinct pursuit.",
     "scripts/mahjong.js + mahjong.yml + mahjong-looks.yml - shared game lifecycle and rules vary among six guests by persona, suit preference, species/look, dialogue and call/sloppiness; l5-ball.js handles solo continuation and guest cleanup.",
     "scripts/l5-hall-lay.js + l5-hall-geo.js/l5-hall-fix.js - Main Hall furnishings/fixtures derive from layout rows; hotel elevator banks vary geometry; grab.js shares lift/throw/break behavior across eligible props.",
@@ -80,7 +80,7 @@
   ],
   "probableOrphans": [],
   "migrationNotes": [
-    "Grid contracts differ: Level 0 is 56×56 at 4 m (hub cells 26–29); Level 1 30×30 at 8 m; Level 2 24×24 at 5 m; Level 3 26×26 at 4 m; Level 4 64×64 m with 8 m offices; Level 5 96×60 m, x ±48/z ±30. Level 0 creature recovery uses positions relative to its grid.",
+    "Grid contracts differ: Level 0 is 56×56 at 4 m (hub cells 26–29); Level 1 30×30 at 8 m; Level 2 24×24 at 5 m; Level 3 26×26 at 4 m; Level 4 64×64 m with 8 m offices; Level 5 96×60 m, x ±48/z ±30. Level 0 creature recovery uses positions relative to its maze.",
     "Level 0 weapons no longer replenish as loose pickups; find weapons in desks, cabinets, backpacks or containers. Lobby Wafers use token lobby_wafer; food tokens are applied in player.js and configured through item/loot and level data.",
     "NPC held weapon props need state.kind; meg-agent.js preserves non-pistol spawner arms, can use explicit state.arm: fists, otherwise rolls by role/faction and nerve, then controls hand/back visibility and ranged/melee attacks.",
     "Mahjong uses cents (100-cent stake per seat) and tile IDs d/b/c + 1–9, w1–w4 winds and r1–r3 dragons; table guest IDs/state must stay aligned with MJ visitor keys, stools and l5-ball cleanup/solo lifecycle.",
