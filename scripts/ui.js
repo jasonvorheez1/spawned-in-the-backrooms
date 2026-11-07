@@ -223,7 +223,7 @@ export default function render(ctx, player) {
   ${zone === 'l7_sea' || zone === 'l7_ocean' || zone === 'l7_pier' || zone === 'l7_room1' || zone === 'l7_seawatch' || zone === 'l7_fort' ? `<div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:90px;animation:hud-fade 6s forwards;pointer-events:none;color:#58d5e0;text-shadow:3px 3px #02111b">
     <div style="font-size:14px;letter-spacing:.6em;opacity:.7">LEVEL 7</div>
     <div style="font-size:clamp(22px,6vw,52px);letter-spacing:.22em;line-height:1.1;margin:4px 0;white-space:nowrap">${zone === 'l7_fort' ? 'FORT SURRENDER' : zone === 'l7_seawatch' ? 'OUTPOST SEAWATCH' : 'THALASSOPHOBIA'}</div>
-    <div style="font-size:13px;letter-spacing:.18em;opacity:.8">${zone === 'l7_fort' ? 'SOCIETY OF THE PUSHING · EMBRACE THE DEEP' : zone === 'l7_seawatch' ? 'M.E.G. MARINE SALVAGE & HYDROPHONE STATION' : 'THE SEA HAS NO FLOOR YOU WILL EVER TOUCH'}</div>
+    <div style="font-size:13px;letter-spacing:.18em;opacity:.8">${zone === 'l7_fort' ? 'BROKEN FURNITURE · HELD TOGETHER BY TAR · THEY WORSHIP THE THING' : zone === 'l7_seawatch' ? 'M.E.G. MARINE SALVAGE & HYDROPHONE STATION' : 'THE SEA HAS NO FLOOR YOU WILL EVER TOUCH'}</div>
   </div>` : zone === 'l6_halls' ? `<div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:90px;animation:hud-fade 6s forwards;pointer-events:none;color:#f2c14e;text-shadow:3px 3px #000">
     <div style="font-size:14px;letter-spacing:.6em;opacity:.7">LEVEL 6</div>
     <div style="font-size:clamp(26px,7vw,56px);letter-spacing:.28em;line-height:1.1;margin:4px 0;white-space:nowrap">LIGHTS OUT</div>

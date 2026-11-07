@@ -6,7 +6,7 @@ const ss = (t) => t * t * (3 - 2 * t);
 export const ISLES = [
   { x: 0, z: 0, r: 26, top: 4, flat: 0.38 },      // the entrance rock
   { x: 46, z: -120, r: 34, top: 7, flat: 0.25 },  // the near island
-  { x: -95, z: -230, r: 55, top: 11, flat: 0.3 }, // the far island (Savi's pick: where Fort Surrender will stand)
+  { x: -70, z: -95, r: 55, top: 11, flat: 0.3 }, // the nearest island to the entrance (the wiki: Fort Surrender stands on it)
 ];
 export function heightAt(ctx) {
   const { x, z, noise, seedOffset } = ctx;
@@ -19,7 +19,10 @@ export function heightAt(ctx) {
     const top = s.top + (d > s.flat * 0.7 ? bumpN : 0);
     h = Math.max(h, top + (-22 - top) * t);
   }
-  return shore(h, 0);
+  // shore() beaches the waterline but flattens every height above it (a 7 m island came out under 1 m, so the camps built on the tops hovered); keep the
+  // beach where the land meets the sea and the island's own height from 3 m up, blended between
+  const w = clamp01((h - 0.5) / 2.5);
+  return shore(h, 0) * (1 - w) + (h - 0.1) * w;
 }
 export function materialAt(ctx) {
   const { worldHeight, slope, noise, x, z, seedOffset } = ctx;

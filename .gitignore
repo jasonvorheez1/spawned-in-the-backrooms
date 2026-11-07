@@ -6,3 +6,5 @@ node_modules/
 art/level3/*.glb
 art/critter-cute/out/
 art/critter-cute/proof/
+art/level7/*.glb
+art/level7/preview_*.png

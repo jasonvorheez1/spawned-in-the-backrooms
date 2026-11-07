@@ -15,7 +15,7 @@ factions:
   orig: "The Originals: the oldest residents, who claim they checked in before the Backrooms swallowed the hotel."
   meg: "M.E.G., the Major Explorer Group: the closest thing to a government down here."
   survivor: "Survivors: loners and small crews who trust nobody official."
-  surrender: "Fort Surrender (The Society of the Pushing): survivors on Level 7's far island who built a fortress of lashed-together furniture and driftwood, surrendered to Thalassophobia, and revere Entity 20 ('The Thing on Level 7')."
+  surrender: "Fort Surrender: a haphazard shelter of broken furniture held together with tar on the nearest island to Level 7's entrance. A handful of survivors, four to nine, who worship The Thing on Level 7 and are rumoured to be hostile to outsiders."
 # a backstory for anyone without one written, rolled stable from their id
 origins: ["a night janitor who walked through a wall on shift", "a teenager who fell asleep in a mall", "a nurse who took the wrong stairwell", "a trucker who stopped for gas and never left the station", "a grad student who found a door that shouldn't open", "a soldier from an expedition nobody remembers sending", "someone who woke up here and remembers nothing before", "a contractor who clipped through a half-built office", "a hotel guest from long before the war", "a kid who grew up down here and never saw the sky"]
 years: ["three weeks", "four months", "almost a year", "two years", "five years, maybe more", "so long they stopped counting"]

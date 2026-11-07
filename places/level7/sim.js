@@ -5,7 +5,7 @@
 // - Stilted Timber Pier, Ferry Rowboats & Drifting Furniture Flotsam Rafts across the Daylight Zone.
 // - Near Island (x: 46, z: -120): M.E.G. Outpost "Seawatch" with Salvage Workbench, Deep-Trench Sonar Console,
 //   Warming Brazier, Locked Dive Locker, and Specialist Diver Vance.
-// - Far Island (x: -95, z: -230): "Fort Surrender" (Society of the Pushing) with Lashed-Furniture Palisades,
+// - Nearest island (x: -70, z: -95): "Fort Surrender", a haphazard shelter of broken furniture held together with tar (art/level7 fort_surrender.glb), 4 to 9 worshippers of the Thing,
 //   Leviathan Ribcage Tar Altar, Seawater Distillation Still, Brother Jude & Sister Mara (Trader),
 //   and the Submersible Diving Bell over the Underwater Tar Cavern toward Level 8 ("Cave System").
 // - Dual Abyssal Titans: Entity 20 ("The Thing on Level 7") and "Tiny" prowling the Twilight & Midnight Zones.
@@ -16,6 +16,7 @@ export const cadence = "2s";
 
 // Tripo models for the props (Savi, Nov 7): each fits a layout box; breakables take tag + { mat, hp, maxHp } (lib/breakables.js)
 const GLB = {
+  fort: "/cdn/value.93d4854ba6746ab4ed61d44496894c9b50026989d30f6b6c0ced8a51c8b81403.glb", circle: "/cdn/value.4de05de0a92bd78ed14fe0b2955f6b4fe0ecd0ec4e7c9d870956ee666aec2edd.glb", skeleton: "/cdn/value.2de5857513c7f3b7e1c18aae534bd2f525f58f06ca035b9e09fdf46a98695635.glb", // art/level7/build.py
   dresser: "/cdn/value.6b73846286fe58c95018a876f85d847e8af3c7a0187d06a8838072345f9ca49e.glb",
   sideboard: "/cdn/value.4594d9a21e6d7e2e5f94a71011243747c652c77035a1fc981fbcf4bee983324f.glb",
   floorlamp: "/cdn/value.0871d1626b929961d73cb28c05f82070ad822c5cc2e6b8deec5046248fb4086d.glb",
@@ -71,16 +72,16 @@ export function breakables(FY, PY) {
     "l7-seawatch-boxes": { tags: ["container", "breakable"], feetPosition: { x: 48.2, y: 7.0, z: -116.5 }, rotation: { yaw: -15 }, model: GLB.boxes, layout: fit(0.8, 1.0, 0.8), physics: { body: "static", collider: "box" }, state: { name: "Seawatch supply cartons", items: "almond,tape,fuse,ration", ...brk("wood", 30) } },
 
     // ---- Far Island (Fort Surrender, y = 11.0) ----
-    "l7-cult-chest": { tags: ["container", "breakable"], feetPosition: { x: -91.5, y: 11.0, z: -232.0 }, rotation: { yaw: -60 }, model: GLB.sideboard, layout: fit(1.1, 1.15, 1.1), physics: { body: "static", collider: "box" }, state: { name: "Fort Surrender Reliquary Chest", lock: "lockpick:45", items: "weapon:carbine,cloth:topw:apron:1c282e,cloth:neck:cape:c85a28,ammo,shells,royal_ration,firesalt,firstaid", ...brk("wood", 110) } },
-    "l7-fort-dresser": { tags: ["container", "breakable"], feetPosition: { x: -98.5, y: 11.0, z: -226.5 }, rotation: { yaw: 15 }, model: GLB.dresser, layout: fit(1.0, 1.1, 1.0), physics: { body: "static", collider: "box" }, state: { name: "Lashed drift-furniture cabinet", items: "almond,bandage,bobbypin,cloth:hat:cap:b88838", ...brk("wood", 65) } },
-    "l7-fort-crate": { tags: ["container", "breakable"], feetPosition: { x: -93.0, y: 11.0, z: -224.0 }, rotation: { yaw: 110 }, model: GLB.crate, layout: fit(0.8, 0.8, 0.8), physics: { body: "static", collider: "box" }, state: { name: "Tar-caulked provision crate", items: "meat:fish,ration,almond,battery", ...brk("wood", 50) } },
+    "l7-cult-chest": { tags: ["container", "breakable"], feetPosition: { x: -66.5, y: 11.0, z: -97.0 }, rotation: { yaw: -60 }, model: GLB.sideboard, layout: fit(1.1, 1.15, 1.1), physics: { body: "static", collider: "box" }, state: { name: "Fort Surrender Reliquary Chest", lock: "lockpick:45", items: "weapon:carbine,cloth:topw:apron:1c282e,cloth:neck:cape:c85a28,ammo,shells,royal_ration,firesalt,firstaid", ...brk("wood", 110) } },
+    "l7-fort-dresser": { tags: ["container", "breakable"], feetPosition: { x: -73.5, y: 11.0, z: -91.5 }, rotation: { yaw: 15 }, model: GLB.dresser, layout: fit(1.0, 1.1, 1.0), physics: { body: "static", collider: "box" }, state: { name: "Lashed drift-furniture cabinet", items: "almond,bandage,bobbypin,cloth:hat:cap:b88838", ...brk("wood", 65) } },
+    "l7-fort-crate": { tags: ["container", "breakable"], feetPosition: { x: -68.0, y: 11.0, z: -89.0 }, rotation: { yaw: 110 }, model: GLB.crate, layout: fit(0.8, 0.8, 0.8), physics: { body: "static", collider: "box" }, state: { name: "Tar-caulked provision crate", items: "meat:fish,ration,almond,battery", ...brk("wood", 50) } },
   };
 
   // Basalt boulders across the Entrance Rock, Seawatch Island, and Fort Surrender for 7DTD stone/concrete harvesting
   [
     [-9, -6, 1.3, 1], [-12, 4, 1.8, 2], [8, -7, 1.1, 3], [13, 2, 2.2, 4], [-6, 12, 1.5, 5],
     [10, 11, 1.2, 6], [-17, -3, 2.6, 7], [17, -9, 2, 8], [3, -11, 0.8, 9], [-4, -9, 0.7, 10],
-    [36, -126, 1.6, 11], [55, -114, 1.9, 12], [-82, -238, 2.1, 13], [-106, -220, 1.8, 14],
+    [36, -126, 1.6, 11], [55, -114, 1.9, 12], [-57, -103, 2.1, 13], [-81, -85, 1.8, 14],
   ].forEach(([x, z, sc, seed], i) => {
     R[`l7-boulder-${i}`] = { tags: ["breakable"], feetPosition: { x, z, y: { terrain: -0.15 * sc } }, rotation: { yaw: seed * 47 }, model: GLB.boulder, layout: fit(1.9 * sc, 1.9 * sc, 1.9 * sc), physics: { body: "static", collider: "auto" }, state: brk("concrete", Math.round(140 * sc)) };
   });
@@ -146,29 +147,78 @@ const L7_NPCS = {
     role: "scout",
     voice: "hollis",
     faction: "surrender",
-    factionName: "Fort Surrender (The Society of the Pushing, who surrendered to Thalassophobia and revere The Thing on Level 7)",
+    factionName: "Fort Surrender (broken furniture held together with tar; they worship The Thing on Level 7 and are hostile to outsiders)",
     gun: "wrench",
-    at: [-95.0, 11.0, -232.5],
+    at: [-70.0, 11.0, -97.5],
     yaw: 0,
     rounds: [
-      { x: -95.0, y: 11.0, z: -232.5, dwell: 24, act: null, look: { x: -95.0, z: -236.0 } },
-      { x: -92.5, y: 11.0, z: -227.5, dwell: 15, act: null, look: { x: -85.0, z: -215.0 } },
-      { x: -97.5, y: 11.0, z: -230.0, dwell: 18, act: null, look: { x: -108.0, z: -250.0 } },
+      { x: -70.0, y: 11.0, z: -97.5, dwell: 24, act: null, look: { x: -70.0, z: -101.0 } },
+      { x: -67.5, y: 11.0, z: -92.5, dwell: 15, act: null, look: { x: -60.0, z: -80.0 } },
+      { x: -72.5, y: 11.0, z: -95.0, dwell: 18, act: null, look: { x: -83.0, z: -115.0 } },
     ],
     look: { species: "deer", sex: "m", eye: "#5ae0d0", belly: "#d8cbb8", nose: "#1e1816", topw: "apron", top: "#1c282e", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#141618", neck: "cape", neckc: "#3a4e54", expr: "calm" },
+  },
+  "l7-ezra": {
+    name: "Ezra · Fort Surrender Watch",
+    role: "scout",
+    voice: "hollis",
+    faction: "surrender",
+    factionName: "Fort Surrender (broken furniture held together with tar; they worship The Thing on Level 7 and are hostile to outsiders)",
+    gun: "hatchet",
+    at: [-66.0, 11.0, -86.0],
+    yaw: 0,
+    nerve: "frenzied",
+    rounds: [
+      { x: -66.0, y: 11.0, z: -86.0, dwell: 20, act: null, look: { x: -70.0, z: -93.0 } },
+      { x: -72.0, y: 11.0, z: -86.0, dwell: 20, act: null, look: { x: -70.0, z: -93.0 } },
+      { x: -70.0, y: 11.0, z: -84.0, dwell: 14, act: null, look: { x: -70.0, z: -93.0 } },
+    ],
+    look: { species: "wolf", sex: "m", eye: "#d84a4a", belly: "#d8cbb8", nose: "#1e1816", topw: "apron", top: "#1c282e", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#141618", neck: "scarf", neckc: "#0a0a0c" },
+  },
+  "l7-ines": {
+    name: "Sister Ines · Fort Surrender Tar-Bearer",
+    role: "scout",
+    voice: "mags",
+    faction: "surrender",
+    factionName: "Fort Surrender (broken furniture held together with tar; they worship The Thing on Level 7 and are hostile to outsiders)",
+    gun: "knife",
+    at: [-75.0, 11.0, -97.0],
+    yaw: 0,
+    nerve: "steady",
+    rounds: [
+      { x: -75.0, y: 11.0, z: -97.0, dwell: 25, act: null, look: { x: -70.0, z: -93.0 } },
+      { x: -73.0, y: 11.0, z: -92.0, dwell: 18, act: null, look: { x: -70.0, z: -93.0 } },
+    ],
+    look: { species: "sheep", sex: "f", eye: "#e0d048", belly: "#d8cbb8", nose: "#1e1816", topw: "apron", top: "#1c282e", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#141618", neck: "scarf", neckc: "#0a0a0c" },
+  },
+  "l7-tobit": {
+    name: "Tobit · Fort Surrender Watch",
+    role: "scout",
+    voice: "reyes",
+    faction: "surrender",
+    factionName: "Fort Surrender (broken furniture held together with tar; they worship The Thing on Level 7 and are hostile to outsiders)",
+    gun: "wrench",
+    at: [-64.0, 11.0, -98.0],
+    yaw: 0,
+    nerve: "frenzied",
+    rounds: [
+      { x: -64.0, y: 11.0, z: -98.0, dwell: 22, act: null, look: { x: -70.0, z: -93.0 } },
+      { x: -67.0, y: 11.0, z: -102.0, dwell: 16, act: null, look: { x: -70.0, z: -93.0 } },
+    ],
+    look: { species: "bear", sex: "m", eye: "#d84a4a", belly: "#d8cbb8", nose: "#1e1816", topw: "apron", top: "#1c282e", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#141618", neck: "scarf", neckc: "#0a0a0c" },
   },
   "l7-mara": {
     name: "Sister Mara · Fort Surrender Trader",
     role: "trader",
     voice: "mags",
     faction: "surrender",
-    factionName: "Fort Surrender (The Society of the Pushing, quartermaster and salvager on Level 7)",
+    factionName: "Fort Surrender (a worshipper of the Thing who salvages and trades with those they tolerate)",
     gun: "knife",
-    at: [-92.0, 11.0, -227.0],
+    at: [-67.0, 11.0, -92.0],
     yaw: -45,
     rounds: [
-      { x: -92.0, y: 11.0, z: -227.0, dwell: 28, act: null, look: { x: -95.0, z: -229.0 } },
-      { x: -96.5, y: 11.0, z: -227.5, dwell: 16, act: null, look: { x: -98.0, z: -226.5 } },
+      { x: -67.0, y: 11.0, z: -92.0, dwell: 28, act: null, look: { x: -70.0, z: -94.0 } },
+      { x: -71.5, y: 11.0, z: -92.5, dwell: 16, act: null, look: { x: -73.0, z: -91.5 } },
     ],
     look: { species: "raccoon", sex: "f", eye: "#e0a838", belly: "#dcd8d0", nose: "#1c1816", topw: "hoodie", top: "#3a4842", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#1c1e22", hat: "beanie", hatc: "#24343e", expr: "smirk" },
   },
@@ -197,6 +247,7 @@ function spawnL7People(ctx) {
           faction: g.faction,
           factionName: g.factionName,
           rounds: g.rounds,
+          ...(g.nerve ? { nerve: g.nerve } : {}), // the fort's watch are hostile to outsiders (scripts/meg-agent.js)
           ri: 0,
           home: { x: g.at[0], z: g.at[2] },
           ...npcState(ctx, "agent", 140),
@@ -564,20 +615,20 @@ function lay(ctx) {
   });
 
   // =========================================================================
-  // 3D. FAR ISLAND (x: -95, z: -230, y = 11.0): FORT SURRENDER (WIKIDOT FACTION)
+  // 3D. FAR ISLAND (x: -70, z: -95, y = 11.0): FORT SURRENDER (WIKIDOT FACTION)
   // =========================================================================
-  // Fort Surrender Southeast Wharf (x: -72, y: 1.1, z: -193)
+  // Fort Surrender Southeast Wharf (x: -47, y: 1.1, z: -58)
   ctx.spawn("l7-fort-pier-0", {
-    feetPosition: { x: -72, y: PY, z: -192 },
+    feetPosition: { x: -47, y: PY, z: -57 },
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "pier" } },
   });
   ctx.spawn("l7-fort-pier-1", {
-    feetPosition: { x: -72, y: PY, z: -198 },
+    feetPosition: { x: -47, y: PY, z: -63 },
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "pier" } },
   });
-  box(ctx, "l7-fort-pier-col", -72, PY - 0.1, -195, 3.4, 0.2, 13, {}, { visible: false });
+  box(ctx, "l7-fort-pier-col", -47, PY - 0.1, -60, 3.4, 0.2, 13, {}, { visible: false });
   ctx.spawn("l7-fort-lantern", {
-    feetPosition: { x: -70.6, y: PY + 0.88, z: -190 },
+    feetPosition: { x: -45.6, y: PY + 0.88, z: -55 },
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "lantern" } },
     children: [{ feetPosition: { x: 0, y: 0.22, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.16 75)", intensity: 2.5, distance: 16 } }],
   });
@@ -586,50 +637,41 @@ function lay(ctx) {
   ctx.spawn("l7-boat-from-fort", { // rowed by hand like the pier dory (Shelly: "why is it just fast travel now")
     tags: ["seat", "boat"],
     physics: { body: "kinematic", collider: "box" },
-    feetPosition: { x: -69.5, y: -0.4, z: -192.5 },
+    feetPosition: { x: -44.5, y: -0.4, z: -57.5 },
     rotation: { yaw: -35, roll: 2 },
     model: { id: GLB.rowboat, forward: "+x" },
     layout: fit(3.8, 1.2, 3.8),
     behavior: "scripts/l7-dory.js",
-    state: { name: "Fort Surrender dory", verb: "Get in", seat: { d: 0.35, y: 0.3 }, boat: true, home: { x: -69.5, z: -192.5, yaw: -35 } },
+    state: { name: "Fort Surrender dory", verb: "Get in", seat: { d: 0.35, y: 0.3 }, boat: true, home: { x: -44.5, z: -57.5, yaw: -35 } },
   });
 
   // Winding stone steps from Fort Surrender Wharf (y = 1.1) up to Summit Compound (y = 11.0)
   for (let k = 0; k < 14; k++) {
-    box(ctx, `l7-ft-step-${k}`, -73.5 - k * 1.35, PY + 0.45 + k * 0.7, -201.5 - k * 1.65, 2.4, 0.72, 1.7, {
+    box(ctx, `l7-ft-step-${k}`, -48.5 - k * 1.35, PY + 0.45 + k * 0.7, -66.5 - k * 1.65, 2.4, 0.72, 1.7, {
       ...CONCRETE,
       color: "oklch(0.32 0.015 240)",
     });
   }
 
-  // Fort Surrender Summit Checkpoint & Lashed-Furniture Palisades (x: -95, y: 11.0, z: -230)
-  ctx.spawn("l7-fort-spawn", { feetPosition: { x: -93.0, y: 11.1, z: -224.0 }, rotation: { yaw: 180 } });
-  [
-    ["l7-palisade-0", -90.5, -222.5, 25],
-    ["l7-palisade-1", -99.5, -223.5, -20],
-    ["l7-palisade-2", -101.5, -231.0, -75],
-    ["l7-palisade-3", -88.5, -231.0, 75],
-  ].forEach(([id, px, pz, yaw]) => {
-    ctx.spawn(id, {
-      feetPosition: { x: px, y: 11.0, z: pz },
-      rotation: { yaw },
-      physics: "static",
-      primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "palisade" } },
-    });
-  });
+  // Fort Surrender Summit Checkpoint & Lashed-Furniture Palisades (x: -70, y: 11.0, z: -95)
+  ctx.spawn("l7-fort-spawn", { feetPosition: { x: -68.0, y: 11.1, z: -89.0 }, rotation: { yaw: 180 } });
+  // the fort itself: two rows of wardrobes, dressers, beds and doors stacked and tarred, lean-to shanties inside, a watchtower of lashed wardrobes; the gate faces the wharf (south)
+  ctx.spawn("l7-fort", { feetPosition: { x: -70.0, y: 10.95, z: -93.0 }, rotation: { yaw: 0 }, physics: { body: "static", collider: "mesh" }, model: { id: GLB.fort }, receiveShadow: true });
+  // the Thing's worshippers keep tar lamps along the wall: the only light here, low and red-black
+  [[-6, -7], [6, -7], [-8, 1], [8, 1], [0, -9]].forEach(([dx, dz], i) => ctx.spawn(`l7-fort-lamp-${i}`, { feetPosition: { x: -70 + dx, y: 12.4, z: -93 + dz }, light: { kind: "point", color: "oklch(0.7 0.16 45)", intensity: 1.6, distance: 11 } }));
 
   ctx.spawn("l7-fort-sign", {
-    feetPosition: { x: -95.0, y: 13.4, z: -222.5 },
+    feetPosition: { x: -70.0, y: 15.1, z: -83.55 },
     rotation: { yaw: 0 },
     primitive: { kind: "box", width: 3.2, height: 0.6, depth: 0.06 },
     material: { color: "oklch(0.18 0.02 55)" },
-    ui: '<div face="front" width="3.2m" style="font-size:135px;font-weight:900;color:#f2d184;text-align:center;line-height:1.05">FORT SURRENDER<div style="font-size:64px;color:#d8c8a8">SOCIETY OF THE PUSHING · CEASE SWIMMING, EMBRACE THE DEEP</div></div>',
+    ui: '<div face="front" width="3.2m" style="font-size:135px;font-weight:900;color:#f2d184;text-align:center;line-height:1.05">FORT SURRENDER<div style="font-size:64px;color:#d8c8a8">BROKEN FURNITURE · HELD WITH TAR · NOT FOR VISITORS</div></div>',
   });
 
   // Fort Surrender Warming Brazier
   ctx.spawn("l7-brazier-fort", {
     tags: ["usable"],
-    feetPosition: { x: -95.0, y: 11.0, z: -228.5 },
+    feetPosition: { x: -70.0, y: 11.0, z: -93.5 },
     physics: "static",
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "brazier" } },
     behavior: "scripts/l7-use.js",
@@ -639,7 +681,7 @@ function lay(ctx) {
       verb: "Warm hands & rest",
       info: "Restores health, sanity & warmth",
       tint: "#ff9e58",
-      c: { x: -95.0, y: 11.6, z: -228.5 },
+      c: { x: -70.0, y: 11.6, z: -93.5 },
     },
     children: [
       { feetPosition: { x: 0, y: 1.1, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.18 50)", intensity: 3.5, distance: 16 } },
@@ -649,7 +691,7 @@ function lay(ctx) {
   // Copper Seawater Distillation Still (produces Almond Water)
   ctx.spawn("l7-still", {
     tags: ["usable"],
-    feetPosition: { x: -90.2, y: 11.0, z: -227.5 },
+    feetPosition: { x: -65.2, y: 11.0, z: -92.5 },
     physics: "static",
     primitive: { kind: "cylinder", radiusTop: 0.35, radiusBottom: 0.42, height: 1.25 },
     material: { color: "oklch(0.58 0.12 60)", metalness: 0.75, roughness: 0.35 },
@@ -660,14 +702,14 @@ function lay(ctx) {
       verb: "Draw distilled Almond Water",
       info: "Boils Level 7 brine into pure Almond Water",
       tint: "#7fd6ff",
-      c: { x: -90.2, y: 11.7, z: -227.5 },
+      c: { x: -65.2, y: 11.7, z: -92.5 },
     },
   });
 
   // Leviathan Ribcage Shrine & Abyssal Tar Altar at Fort Surrender Summit
   ctx.spawn("l7-shrine", {
     tags: ["usable"],
-    feetPosition: { x: -95.0, y: 11.0, z: -236.0 },
+    feetPosition: { x: -70.0, y: 11.0, z: -101.0 },
     physics: "static",
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "shrine" } },
     behavior: "scripts/l7-use.js",
@@ -677,17 +719,17 @@ function lay(ctx) {
       verb: "Commune with the Abyss",
       info: "Leviathan ribcage & bubbling abyssal tar [Survival / Speech 35]",
       tint: "#58f2e0",
-      c: { x: -95.0, y: 11.8, z: -236.0 },
+      c: { x: -70.0, y: 11.8, z: -101.0 },
     },
     children: [
       { feetPosition: { x: 0, y: 1.4, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.19 180)", intensity: 2.8, distance: 12 } },
     ],
   });
 
-  // Rusted Submersible Diving Bell & Level 8 Tar Cavern Winch on the North Cliff (x: -106, y: 4.2, z: -248)
+  // Rusted Submersible Diving Bell & Level 8 Tar Cavern Winch on the North Cliff (x: -81, y: 4.2, z: -113)
   ctx.spawn("l7-diving-bell", {
     tags: ["usable"],
-    feetPosition: { x: -106.0, y: 4.2, z: -248.0 },
+    feetPosition: { x: -81.0, y: 4.2, z: -113.0 },
     rotation: { yaw: 160 },
     physics: "static",
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "divingbell" } },
@@ -698,7 +740,7 @@ function lay(ctx) {
       verb: "Haul Abyssal Winch Cable",
       info: "Hangs over the skeletal tar cave mouth to Level 8",
       tint: "#58f2c8",
-      c: { x: -106.0, y: 5.2, z: -248.0 },
+      c: { x: -81.0, y: 5.2, z: -113.0 },
     },
     children: [
       { feetPosition: { x: 0, y: 1.5, z: 0 }, light: { kind: "point", color: "oklch(0.8 0.18 175)", intensity: 2.5, distance: 12 } },
@@ -729,11 +771,22 @@ function lay(ctx) {
   });
 
   // =========================================================================
+  // 4B. THE CIRCULAR FORMATION (about 150 m west of the entrance) and the dead of the deep
+  // =========================================================================
+  // pipes and cut stone pillars round a circular stone platform on the sea floor, a wooden door in its floor (to Level 9); Tiny's lair
+  ctx.spawn("l7-circle", { feetPosition: { x: -150, y: { terrain: -0.3 }, z: 0 }, physics: { body: "static", collider: "mesh" }, model: { id: GLB.circle } });
+  ctx.spawn("l7-circle-glow", { feetPosition: { x: -150, y: -20.6, z: 0 }, light: { kind: "point", color: "oklch(0.7 0.1 175)", intensity: 1.2, distance: 14 } });
+  // skeletons on the sea floor and washed up on the shore: humanoid, large jaws, flipper-like legs (they thicken toward the Twilight zone, the first full ones)
+  [[-60, 40, 0], [-110, -50, 1], [-30, -30, 2], [20, 60, 3], [70, -60, 4], [-180, -30, 5], [-125, 28, 6], [-165, 22, 7], [-40, -150, 8], [90, -30, 9], [-95, 75, 10], [5, -88, 11]].forEach(([x, z, k]) => {
+    ctx.spawn(`l7-skeleton-${k}`, { feetPosition: { x, z, y: { terrain: 0.02 } }, rotation: { yaw: k * 61 }, scale: 1.0 + (k % 3) * 0.12, model: { id: GLB.skeleton } });
+  });
+
+  // =========================================================================
   // 5. DUAL ABYSSAL TITANS: ENTITY 20 ("THE THING ON LEVEL 7") & "TINY"
   // =========================================================================
   // 1) Entity 20 ("The Thing on Level 7"): Colossal aquatic titan patrolling the bay
   ctx.spawn("l7-leviathan", {
-    feetPosition: { x: 30, y: -6.0, z: -75 },
+    feetPosition: { x: 30, y: -15.0, z: -75 }, // the Thing keeps to the Midnight Zone and the upper Abyss: far down, its light the only sign
     rotation: { yaw: 70 },
     scale: { x: 6.8, y: 6.8, z: 6.8 },
     model: { id: GLB.thing },
@@ -744,9 +797,9 @@ function lay(ctx) {
     ],
   });
 
-  // 2) "Tiny" (The Second Leviathan from Wikidot Lore): Prowling the Midnight Trench off Fort Surrender
+  // 2) "Tiny" (Entity 720): stays in the Daylight and Twilight zones, near its lair at the circular formation west of the entrance (wiki: ~150 m west)
   ctx.spawn("l7-tiny", {
-    feetPosition: { x: -135, y: -7.2, z: -255 },
+    feetPosition: { x: -138, y: -8.2, z: 14 },
     rotation: { yaw: -40 },
     scale: { x: 5.8, y: 5.8, z: 5.8 },
     model: { id: GLB.thing },
