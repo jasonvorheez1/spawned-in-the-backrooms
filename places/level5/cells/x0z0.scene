@@ -3347,6 +3347,70 @@ l5-samantha:
   rotation: {yaw: -130}
   state: {faction: The Beverly Room, hp: 1000, info: A very small cat. She is looking at you., maxHp: 1000, name: Samantha, offers: [["o:feed", Offer meat], ["o:refuse", Refuse]], role: psychic, tint: "#7dff9a", verb: Talk}
   tags: [npc, samantha, usable, entity26]
+l5-seat-card0:
+  feetPosition: {x: 2.2750079443027404, y: 0, z: -14.630052574806783}
+  id: l5-seat-card0
+  primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
+  rotation: {yaw: 67.08168819476708}
+  state: {name: Gilt chair, seat: {d: 0, w: 1}}
+  tags: [seat]
+  visible: false
+l5-seat-card1:
+  feetPosition: {x: 0.8937517567824427, y: 0, z: -13.802622567341803}
+  id: l5-seat-card1
+  primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
+  rotation: {yaw: -57.295989972232036}
+  state: {name: Gilt chair, seat: {d: 0, w: 1}}
+  tags: [seat]
+  visible: false
+l5-seat-card2:
+  feetPosition: {x: 0.5249947735064114, y: 0, z: -15.369953853350529}
+  id: l5-seat-card2
+  primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
+  rotation: {yaw: -112.91873272353233}
+  state: {name: Gilt chair, seat: {d: 0, w: 1}}
+  tags: [seat]
+  visible: false
+l5-seat-card3:
+  feetPosition: {x: 1.7699570674216956, y: 0, z: -15.875003867571303}
+  id: l5-seat-card3
+  primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
+  rotation: {yaw: 157.08105681731791}
+  state: {name: Gilt chair, seat: {d: 0, w: 1}}
+  tags: [seat]
+  visible: false
+l5-seat-mahjong0:
+  feetPosition: {x: 5.999997428756427, y: 0, z: -0.6999999999952776}
+  id: l5-seat-mahjong0
+  primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
+  rotation: {yaw: -179.9997895408503}
+  state: {name: Gilt stool, seat: {d: 0, w: 1}}
+  tags: [seat]
+  visible: false
+l5-seat-mahjong1:
+  feetPosition: {x: 6.7, y: 0, z: 0}
+  id: l5-seat-mahjong1
+  primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
+  rotation: {yaw: 90}
+  state: {name: Gilt stool, seat: {d: 0, w: 1}}
+  tags: [seat]
+  visible: false
+l5-seat-mahjong2:
+  feetPosition: {x: 5.999996510455152, y: 0, z: 0.949999999993591}
+  id: l5-seat-mahjong2
+  primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
+  rotation: {yaw: -28.648100215690867}
+  state: {name: Gilt stool, seat: {d: 0, w: 1}}
+  tags: [seat]
+  visible: false
+l5-seat-mahjong3:
+  feetPosition: {x: 5.30000000001889, y: 0, z: -0.000005142487144339649}
+  id: l5-seat-mahjong3
+  primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
+  rotation: {yaw: -90.00042091829938}
+  state: {name: Gilt stool, seat: {d: 0, w: 1}}
+  tags: [seat]
+  visible: false
 l5-staff:
   behavior: scripts/l5-staff.js
   feetPosition: {x: -18, y: 0, z: 0}
