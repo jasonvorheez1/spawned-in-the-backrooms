@@ -92,6 +92,7 @@ export function heard(ctx, r, pay) {
 function act(ctx, d) {
   const s = ctx.self.state, it = live(ctx, s.talkWith)
   if (d.k === 'leave' || !it) { close(ctx); return }
+  if (String(d.k).startsWith('o:')) { ctx.emit('talkopt', { by: ctx.self.id, k: String(d.k).slice(2) }, { to: it.id }); return } // an npc's own card buttons (state.offers) ring its ears.talkopt
   if (d.k === 'svc') { const before = s.sub?.at; service(ctx, it); if (s.sub?.at !== before) logLine(ctx, it, 'n', s.sub.t); return }
   if (d.k === 'trade' && isTrader(it)) { restock(ctx, it); s.shopOpen = it.id; return }
   if (d.k === 'back') s.shopOpen = null

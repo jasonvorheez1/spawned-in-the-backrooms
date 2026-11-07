@@ -1,0 +1,46 @@
+# Samantha (Entity 26), scripts/samantha.js. Every tuned number and line.
+scale: 1.1
+walk: 0.55          # m/s, a slow amble
+run: 7.5            # m/s when she goes for you
+reach: 0.85         # m: close enough to bite
+hit: [6, 10]        # hp per scratch or bite; the victim never drops below 1
+gap: [450, 850]     # ms between pounces
+hits: [4, 7]        # attacks before she blinks away
+rageMs: 14000
+warnMs: 8000        # "Nothing? How very rude." then this long before the claws
+awayMs: [40000, 60000]   # gone after a fight, then back calm at home
+blinkHp: 60         # struck below this, she is simply elsewhere
+blinkEvery: [120000, 240000]  # a psychic hop between rooms now and then
+sit: [6000, 14000]
+groom: [3000, 6000]
+perchTop: 1.4       # furniture lower than this she will sit on
+home: { x: 4.9, z: 1.2 }
+spots:              # the slow round: Beverly Room, Main Hall gallery, lobby
+  - { x: 4.9, z: 1.2 }
+  - { x: 2.2, z: -3.0 }
+  - { x: 9.8, z: 4.2 }
+  - { x: -9.5, z: 1.6 }
+  - { x: -15.0, z: -1.6 }
+  - { x: -24.0, z: 1.8 }
+  - { x: -34.5, z: 5.0 }
+  - { x: -36.0, z: -6.0 }
+  - { x: -40.0, z: 9.0 }
+perchZones: [beverly, gallery, lobby]
+order: [steak, fish, chicken, spam, sardines, rat]
+premium: [steak, fish, chicken]
+lines:
+  meat: "Ah. You smell of supper. Set it down, mon cher, and I will tell you what is coming."
+  none: "Nothing? How very rude."
+  refuse: "Nothing? How very rude."
+  back: "Allora. Shall we try that again, politely?"
+  rage: "I did warn you."
+  premium: "Bene. Sit. Let me look at you."
+  poor: "This? You bring me this?"
+  return: "Where was I? Ah yes. Everywhere."
+poorReadings:
+  - "I see... a door. Possibly several. You will walk through one of them, eventually, badly."
+  - "Your future smells like this tin. Cheap, salty, and over too quickly. Merci for nothing."
+  - "Something is behind you. It is always behind you. Bring me steak and I might say what."
+  - "You will be hungry soon. So am I. Funny how that works, cara."
+  - "The cards say you are disappointing. The cards are rarely wrong, but I am never wrong."
+  - "Rat. Truly. I see a long life of poor decisions ahead, and I see it clearly."

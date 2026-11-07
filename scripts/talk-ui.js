@@ -88,11 +88,11 @@ export function talkUi(ctx, player) {
   const now = s.talkBusy ? `<div class="now dots" style="color:${col}"><i>${who.toUpperCase()}</i><span>.</span><span>.</span><span>.</span></div>`
     : shown ? (shown[0] === 'x' ? `<div class="chk" id="c${lastN}">${esc(shown[1])}</div>` : `<div class="now" id="n${lastN}-${log.length}" style="color:${col}"><i>${who.toUpperCase()}</i>${esc(shown[1])}</div>`)
     : `<div class="now" style="opacity:.6"><i>${who.toUpperCase()}</i>…</div>`
-  const opts = [SVC[role] ? ['svc', SVC[role]] : null, isTrader(it) ? ['trade', 'Trade'] : null, ['leave', 'Leave']].filter(Boolean)
+  const opts = [SVC[role] ? ['svc', SVC[role]] : null, isTrader(it) ? ['trade', 'Trade'] : null, ...(it.state?.offers ?? []), ['leave', 'Leave']].filter(Boolean)
     .map(([k, t], i) => `<button onclick="sendAction('talkdo',{k:'${k}'})"><b>${i + 1}</b>${t}</button>`).join('')
   const send = `const i=document.getElementById('tkin');if(i&&i.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:i.value});i.value=''}`
   return `${CINE}<div class="tc" data-modal><div class="bar bt"></div><div class="bar bb"></div>
-    <div class="who"><b>${who}</b><span>${faction(it, player.place)} · ${esc(role ?? 'drifter')}${it.state?.follow === player.id ? ' · with you' : ''}</span></div>
+    <div class="who"><b>${who}</b><span>${esc(it.state?.faction ?? faction(it, player.place))} · ${esc(role ?? 'drifter')}${it.state?.follow === player.id ? ' · with you' : ''}</span></div>
     <div class="sub">${old}${now}</div>
     <div class="low">
       <form data-interactive onsubmit="event.preventDefault();${send}"><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" autofocus placeholder="Speak with ${who}…"/></form>
