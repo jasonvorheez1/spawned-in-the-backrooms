@@ -50,7 +50,12 @@ export const ears = {
       s.loud = { at: now, gun: true }; // the pack hears it (lib/hunt.js, hounds.js)
       heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-hound-bark-howl-call.mp3", position: at, volume: 1, maxDistance: 60, refDistance: 6 });
       ctx.emit("screenShake", { intensity: 0.25, duration: 0.3 }, { audience: { player: p.id } });
-      const g = me.children?.find?.((c) => String(c.id ?? c).endsWith("glint")); if (g) ctx.getObject(g.id ?? g).visible = false;
+      const g = me.children?.find?.((c) => String(c.id ?? c).endsWith("glint"));
+      if (g) {
+        g.visible = false;
+        const o = ctx.getObject(g.id ?? g);
+        if (o) o.visible = false;
+      }
       say(ctx, p, "got", at);
       return;
     }
@@ -58,8 +63,13 @@ export const ears = {
       if (q >= 4) { s.notice = { text: "The drop box is empty.", at: now }; return; }
       if (q !== 3) { s.notice = { text: "M.E.G. drop box. Nothing to hand in.", at: now }; return; }
       if ((s.battery ?? 0) < 25) return say(ctx, p, "nocell", at); // a cell's worth of charge from the torch pool
-      s.batteryTake = 25; s.nvgCell = true;
-      step(ctx, s, 4); s.nvg = true; s.cents = (s.cents ?? 0) + 25; s.pickedAt = now;
+      s.battery = Math.max(0, (s.battery ?? 100) - 25);
+      s.nvgCell = true;
+      step(ctx, s, 4);
+      if (s.nvg) s.nvgSpare = (s.nvgSpare ?? 0) + 1;
+      else s.nvg = true;
+      s.cents = (s.cents ?? 0) + 25;
+      s.pickedAt = now;
       ctx.emit("milestone", { step: 1, name: "ines-goggles" }, { audience: { player: p.id } });
       say(ctx, p, "done", at);
       ctx.after(0.2, "reward", { id: p.id });
@@ -68,6 +78,6 @@ export const ears = {
 };
 export function reward(ctx, { id }) {
   const p = ctx.getObject(id); if (!p?.state) return;
-  p.state.notice = { text: "Night vision goggles · $25 · press F in the dark of Level 6 · they eat batteries", at: ctx.now() };
+  p.state.notice = { text: "Night vision goggles · $25 · Press F to activate · Essential in Level 6", at: ctx.now() };
   p.state.xpPop = { amount: 75, at: ctx.now() };
 }

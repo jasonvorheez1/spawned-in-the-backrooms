@@ -2,7 +2,7 @@
 // No light works here (scripts/player.js kills the flashlight on this place). Plan: scripts/lib/level6.js.
 import { W, H, C, HT, START, cx, cz, plan, wallRuns, NOTES } from "../../scripts/lib/level6.js";
 export const cadence = "1s";
-const V = 2;
+const V = 3;
 const CONCRETE = { color: "oklch(0.55 0.005 250)", roughness: 0.95, texture: "cdn/texture-smooth-cold-poured-concrete-wall.png", repeat: [1, 1], wrap: "repeat" };
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const WHISPERS = [G("faint-skittering-claws-on-concrete-in-dark"), G("slow-close-breathing-in-pitch-dark"), G("unintelligible-whisper-behind-ear"), G("bare-footsteps-stop-on-concrete")];
@@ -74,7 +74,7 @@ function lay2(ctx) {
   // 9 · this changed overnight?: a wall that is there, and then isn't (the sim moves it when nobody watches)
   if (E(9)) { const e = E(9); ctx.spawn("l6-shift", { feetPosition: { x: cx(e.i) + e.dx * C, y: 0, z: cz(e.j) + e.dz * C }, physics: "static", primitive: { kind: "box", width: C, height: HT, depth: C }, material: CONCRETE, state: { up: true } }); }
   // 10 · lost Kacey here: her hair tie, a pack with a name inked on it, and a voice that keeps calling for her
-  if (E(10)) { pack(ctx, "l6-p-kacey", "backpack", at(E(10), 0.3), 140, "Pack marked 'KACEY'", "almond,ration,bandage,nvg");
+  if (E(10)) { pack(ctx, "l6-p-kacey", "backpack", at(E(10), 0.3), 140, "Pack marked 'KACEY'", "almond,almond,battery,battery,ration,bandage,tape");
     spot(ctx, "l6-s-kacey", at(E(10), -1), { text: "A voice behind you calls a name. It's not yours. Not yet.", san: 6, clip: VO(MIMIC, MIMIC_LINES[0]), vol: 0.7, from: { x: 2.5, z: 2.5 }, every: 150 }); }
   // the way the last ones marked: chalk arrows back toward 5, a tally of days near the stairs
   const marks = [["l6-arrow-0", 37, "← 5"], ["l6-arrow-1", 33, "5 ↓ keep left"], ["l6-tally", 38, "IIII IIII IIII II · days?"]];
@@ -82,10 +82,95 @@ function lay2(ctx) {
     ctx.spawn(id, { feetPosition: { x: cx(i) + side * (C / 2 - 0.02), y: 1.3, z: cz(j) }, rotation: { yaw: side > 0 ? -90 : 90 }, vector: chalk(t) }); });
 }
 
+function lay3(ctx) {
+  const { ends } = plan(), E = (n) => ends[n];
+  // Puddles of dark anomalous condensation in corridor intersections
+  const puddleSpots = [
+    { x: cx(START.i), z: cz(START.j - 4) },
+    { x: cx(START.i + 2), z: cz(START.j - 8) },
+    { x: cx(START.i - 2), z: cz(START.j - 14) },
+    at(E(1), 3),
+    at(E(3), 2),
+    at(E(8), 2.5),
+  ];
+  puddleSpots.forEach((p, idx) => {
+    prop(ctx, `l6-puddle-${idx}`, "puddle", p, idx * 60);
+  });
+
+  // Ceiling and wall pipe clusters
+  const pipeSpots = [
+    { p: { x: cx(START.i) + 0.8, z: cz(START.j - 2) }, yaw: 0 },
+    { p: { x: cx(START.i) - 0.8, z: cz(START.j - 6) }, yaw: 0 },
+    { p: at(E(2), 1.5), yaw: 90 },
+    { p: at(E(4), 1.5), yaw: 0 },
+    { p: at(E(7), 1.5), yaw: 90 },
+  ];
+  pipeSpots.forEach((ps, idx) => {
+    ctx.spawn(`l6-pipe-${idx}`, {
+      feetPosition: { x: ps.p.x, y: 2.1, z: ps.p.z },
+      rotation: { yaw: ps.yaw },
+      primitive: { kind: "scripted", script: "scripts/l6-props-geo.js", params: { kind: "pipe" } },
+      physics: "static",
+    });
+  });
+
+  // Stairwell to Level 7: smell of brine and booming ocean waves
+  if (E(1)) {
+    spot(ctx, "l6-s-stair", at(E(1), 0), {
+      text: "Bitter cold air and the smell of saltwater ocean spray hits your face. Waves roar in the abyss below.",
+      san: -5,
+      every: 120,
+    });
+  }
+
+  // Smiler pack manager & Smiler entity in the dark halls
+  if (!ctx.getObject("l6-smiler-mgr")) {
+    ctx.spawn("l6-smiler-mgr", { behavior: "scripts/l6-smiler.js" });
+  }
+  if (!ctx.getObject("l6-smiler-1") && E(6)) {
+    const smPos = at(E(6), 1.2);
+    ctx.spawn("l6-smiler-1", {
+      tags: ["smiler", "l6-smiler", "hostile"],
+      feetPosition: { x: smPos.x, y: 0.05, z: smPos.z },
+      model: { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" },
+      scale: 1.6,
+      physics: { body: "character" },
+      state: { hp: 120, maxHp: 120, name: "Smiler", mdl: 2 },
+      children: [
+        {
+          feetPosition: { x: 0, y: 1.1, z: 0.35 },
+          light: { kind: "point", color: "#ffffff", intensity: 1.2, distance: 3.5 },
+        },
+        {
+          feetPosition: { x: 0, y: 1.1, z: 0.4 },
+          rotation: { yaw: 0 },
+          vector: "<svg viewBox='0 0 100 60' width='0.4m'><ellipse cx='30' cy='18' rx='4' ry='6' fill='#ffffff'/><ellipse cx='70' cy='18' rx='4' ry='6' fill='#ffffff'/><path d='M 18 32 Q 50 56 82 32 Q 50 42 18 32 Z' fill='#ffffff'/></svg>",
+        },
+      ],
+    });
+  }
+
+  // Hound pack manager & Hound entity prowling the deep corridors
+  if (!ctx.getObject("l6-hound-mgr")) {
+    ctx.spawn("l6-hound-mgr", { behavior: "scripts/hounds.js" });
+  }
+  if (!ctx.getObject("l6-hound-1") && E(8)) {
+    const hPos = at(E(8), 0.8);
+    ctx.spawn("l6-hound-1", {
+      tags: ["hound", "hostile"],
+      feetPosition: { x: hPos.x, y: 0.05, z: hPos.z },
+      model: { id: "/cdn/value.180d1072a97d34551e1394960b70202777c9d0b51fb0ca67779a59e429ef6fa7.glb" },
+      physics: { body: "character" },
+      state: { hp: 90, maxHp: 90, name: "Hound" },
+    });
+  }
+}
+
 export function tick(ctx) {
   const st = ctx.place.state;
   if ((st.builtV ?? 0) < 1) lay(ctx);
-  if ((st.builtV ?? 0) < 2) { lay2(ctx); st.builtV = V; }
+  if ((st.builtV ?? 0) < 2) lay2(ctx);
+  if ((st.builtV ?? 0) < 3) { lay3(ctx); st.builtV = V; }
   // "this changed overnight?": the wall moves only while nobody stands near enough to see it go
   const w = ctx.place.objects["l6-shift"];
   if (w && ctx.now() > (st.shiftAt ?? 0)) {

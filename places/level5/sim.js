@@ -308,7 +308,8 @@ export function lay(ctx) {
         material: { color: "oklch(0.32 0.05 35)", roughness: 0.5 },
         state: {
           name: "Room 1408 Wardrobe Trunk",
-          items: "royal_ration,firesalt,cloth:topw:jacket:5a4a3a,bobbypin,bobbypin,almond",
+          lock: "lockpick:25",
+          items: "nvg,battery,battery,royal_ration,firesalt,cloth:topw:jacket:5a4a3a,bobbypin,almond",
         },
       });
     }

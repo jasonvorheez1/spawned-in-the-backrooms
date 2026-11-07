@@ -898,7 +898,7 @@ l5-door-6:
   physics: static
   primitive: {kind: scripted, params: {kind: sealed, seed: 9}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 90}
-  state: {info: It won't open, kind: sealed, name: LEVEL 6, sound: null, text: "LEVEL 6 · The handle burns your palm. The heat behind it is unbearable.", tint: "#b89b6a", verb: Try the door}
+  state: {info: It won't open, kind: sealed, name: LEVEL 6, sound: null, text: "LEVEL 6 (Auxiliary Bulkhead) · Welded shut by boiler steam. Scratched into the rust: 'Use the main north portal at z:6 — and don't go in without night vision!'", tint: "#b89b6a", verb: Try the door}
   tags: [usable, l5-sealed]
 l5-door-63:
   behavior: scripts/l5-door.js
@@ -1206,7 +1206,7 @@ l5-from-l4:
 l5-from-l6:
   feetPosition: {x: 43.599999999999994, y: 0.1, z: 6}
   id: l5-from-l6
-  rotation: {yaw: 90}
+  rotation: {yaw: -90}
 l5-gate-84:
   behavior: scripts/l5-door.js
   feetPosition: {x: -1, y: 0, z: 11.72}
@@ -3386,7 +3386,7 @@ l5-l6-locker:
   physics: static
   primitive: {kind: scripted, params: {kind: crate}, script: scripts/loot-geo.js}
   rotation: {yaw: -90}
-  state: {hp: 60, items: "nvg,battery,battery,almond", mat: wood, maxHp: 60, name: Explorer's drop box}
+  state: {hp: 60, items: "battery,battery,almond,almond,ration,bobbypin", lock: "lockpick:35", mat: wood, maxHp: 60, name: Explorer's drop box}
   tags: [container, breakable]
 l5-l6-note:
   feetPosition: {x: 45.699999999999996, y: 1, z: 7.05}
