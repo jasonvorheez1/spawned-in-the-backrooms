@@ -16,7 +16,10 @@ const SND = (w) => `/cdn/moodboard-realistic-gritty/sfx-${w}.mp3`
 const VOX = (line) => `/cdn/voice-samantha-saying-${String(line).toLowerCase().replace(/[^a-z ]/g, '').trim().replace(/ +/g, '-').slice(0, 160)}.mp3`
 const HOST = ['smiler', 'lurker', 'hound', 'stealer', 'deathmoth', 'moth', 'entity', 'hostile']
 const rr = (a, ctx) => a[0] + ctx.random() * (a[1] - a[0])
-const zn = (x, z) => { const r = zoneAt(x, z); return r ? ZONE_NAMES[r.id] ?? r.id : 'the dark between rooms' }
+// a visit off her own floor (Level 3's lift: scripts/l3-samantha.js) hands her state.home and state.spots; no perches there
+let AWAY = false
+const HOME = (ctx) => ctx.self.state.home ?? HOME(ctx), SPOTS = (ctx) => ctx.self.state.spots ?? S.spots
+const zn = (x, z) => { if (AWAY) return 'the station halls'; const r = zoneAt(x, z); return r ? ZONE_NAMES[r.id] ?? r.id : 'the dark between rooms' }
 const yawTo = (dx, dz) => Math.atan2(-dx, -dz) * 180 / Math.PI
 const BLINK = `fx
 pop mist burst=24..32 life=.7..1.3 on=sphere(.3).c(.25) v=sdir()*(.3..0.9)+up(.4) size=.18..0.34 acc=buoy(.4)+curl(.6)+drag(1.4) col=<.35,.8,.45> a=0>.3:.3>0 sz=$size*(.5>1.7) rot=spin(.3) r=sprite(smoke-puff,add)
@@ -54,13 +57,13 @@ function perches(ctx) {
 }
 function plan(ctx, now) {
   const ses = ctx.self.session, me = ctx.self, at = me.feetPosition
-  const ps = ses.perchList ??= perches(ctx)
+  const ps = ses.perchList ??= (AWAY ? [] : perches(ctx))
   let goal, perch = null
   if (ps.length && ctx.random() < 0.35) {
     perch = ps[Math.floor(ctx.random() * ps.length)]
     const dx = at.x - perch.x, dz = at.z - perch.z, d = Math.hypot(dx, dz) || 1
     goal = { x: perch.x + dx / d * (perch.r + 0.4), y: 0, z: perch.z + dz / d * (perch.r + 0.4) }
-  } else { const s = S.spots[Math.floor(ctx.random() * S.spots.length)]; goal = { x: s.x, y: 0, z: s.z } }
+  } else { const s = SPOTS(ctx)[Math.floor(ctx.random() * SPOTS(ctx).length)]; goal = { x: s.x, y: 0, z: s.z } }
   ses.goal = goal; ses.perch = perch; ses.path = null; ses.pi = 0; ses.mode = 'walk'; ses.until = now + 90000
 }
 function teleport(ctx, to, y = 0) {
@@ -88,7 +91,7 @@ function vanish(ctx, now) {
   const me = ctx.self, ses = me.session, a = me.feetPosition
   ctx.emit('fx', { position: { x: a.x, y: a.y + 0.2, z: a.z }, script: BLINK })
   ctx.emit('playSound', { clip: SND('soft-magical-whoosh-shimmer'), position: a, volume: 0.5, maxDistance: 14 })
-  me.feetPosition = { x: S.home.x, y: -4, z: S.home.z }; me.visible = false; me.state.target = null; me.state.away = now
+  me.feetPosition = { x: HOME(ctx).x, y: -4, z: HOME(ctx).z }; me.visible = false; me.state.target = null; me.state.away = now
   ses.mode = 'gone'; ses.until = now + rr(S.awayMs, ctx); ses.rage = null; ses.y = 0
   for (const p of ctx.place.players) if (p.state?.talkWith === me.id) p.state.talkWith = null
 }
@@ -183,6 +186,7 @@ export function onSpawn(ctx) { ctx.self.session.mode = null }
 
 export function update(ctx, dt) {
   const me = ctx.self, st = me.state, ses = me.session, now = ctx.now()
+  AWAY = !!st.spots
   if (!ses.mode) { ses.y = me.feetPosition.y > 0.05 ? me.feetPosition.y : 0; rest(ctx, now, 'sit'); ses.blinkAt = now + rr(S.blinkEvery, ctx); ses.talkers = {} }
   // struck or crossed in words: whoever it was, she remembers in claws
   const ang = st.angry && Object.keys(st.angry).find((k) => st.angry[k])
@@ -191,8 +195,8 @@ export function update(ctx, dt) {
   if ((st.hp ?? 1000) < 1000 - S.blinkHp) { st.hp = 1000; if (ses.mode !== 'gone') vanish(ctx, now) }
   if (ses.mode === 'gone') {
     if (now < ses.until) return
-    ses.mode = null; teleport(ctx, S.home); clip(ctx, 'Idle'); ses.mode = 'sit'; ses.until = now + 8000; st.away = 0
-    for (const p of ctx.place.players) if (Math.hypot(p.feetPosition.x - S.home.x, p.feetPosition.z - S.home.z) < 8) { say(ctx, null, S.lines.return); break }
+    ses.mode = null; teleport(ctx, HOME(ctx)); clip(ctx, 'Idle'); ses.mode = 'sit'; ses.until = now + 8000; st.away = 0
+    for (const p of ctx.place.players) if (Math.hypot(p.feetPosition.x - HOME(ctx).x, p.feetPosition.z - HOME(ctx).z) < 8) { say(ctx, null, S.lines.return); break }
     return
   }
   if (ses.mode === 'rage') { pounce(ctx, dt, now); return }
@@ -219,7 +223,7 @@ export function update(ctx, dt) {
   // a psychic hop, now and then, when nobody is looking at her closely
   if (now > ses.blinkAt && ses.mode !== 'walk') {
     ses.blinkAt = now + rr(S.blinkEvery, ctx)
-    const s = S.spots[Math.floor(ctx.random() * S.spots.length)]; teleport(ctx, s); rest(ctx, now, 'sit'); return
+    const s = SPOTS(ctx)[Math.floor(ctx.random() * SPOTS(ctx).length)]; teleport(ctx, s); rest(ctx, now, 'sit'); return
   }
   if (ses.mode === 'sit' || ses.mode === 'groom' || ses.mode === 'perched') {
     if (now < ses.until) return
