@@ -8,6 +8,7 @@ import * as modelingStudio from '../mods/modeling-studio/hud.js'
 import { wardrobe } from './wardrobe-ui.js'
 import { lootUi } from './loot-ui.js'
 import { statsUi } from './stats-ui.js'
+import { derived as _dv, carried as _kg } from './lib/stats.js'
 import { derived } from './lib/stats.js'
 import { noclipUi } from './noclip-ui.js'
 export { plyUpload } from './lib/plyimport.js'
@@ -110,6 +111,7 @@ export default function render(ctx, player) {
     <div class="row" style="margin-top:6px;justify-content:flex-end;gap:8px">
       <span>ALMOND</span><span style="font-size:15px">${s.almonds ?? 0}</span>
     </div>
+    ${s.attr != null ? (() => { const cap = _dv(s).carry, kg = _kg(s); return `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px;${kg > cap ? 'color:oklch(0.68 0.2 35)' : ''}"><span>WG</span><span>${kg.toFixed(1)}/${cap}</span></div>` })() : ''}
     <div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px">
       <span>LIGHT</span><span style="${s.light ? '' : 'opacity:.45'}">${s.light ? Math.round(s.battery) + '%' : 'OFF'}</span>
       
