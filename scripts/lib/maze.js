@@ -13,16 +13,20 @@ export function hash(x, z, s = 0) {
 
 export const inHub = (cx, cz) => cx >= L.hub[0] && cx <= L.hub[1] && cz >= L.hub[0] && cz <= L.hub[1];
 
+export const MID = (L.hub[0] + L.hub[1]) / 2; // the safe room's centre cell
+const B = L.zoneBlock ?? 6;
 export function zoneOf(cx, cz) {
   if (inHub(cx, cz)) return "hub";
-  const rx = Math.floor(cx / 6), rz = Math.floor(cz / 6);
-  if (rx >= 2 && rx <= 3 && rz >= 2 && rz <= 3) return "halls"; // the halls round the safe room stay plain
+  const rx = Math.floor(cx / B), rz = Math.floor(cz / B), hb = Math.floor(MID / B);
+  if (Math.abs(rx - hb) <= 0 && Math.abs(rz - hb) <= 0) return "halls"; // the block round the safe room stays plain
   const r = hash(rx, rz, 7);
-  if (r < 0.13) return "red";
-  if (r < 0.3) return "dark";
-  if (r < 0.45) return "pillars";
-  if (r < 0.6) return "arches";
-  if (r < 0.72) return "holes";
+  if (r < 0.1) return "red";
+  if (r < 0.22) return "dark";
+  if (r < 0.32) return "pillars";
+  if (r < 0.43) return "arches";
+  if (r < 0.52) return "holes";
+  if (r < 0.7) return "expanse";
+  if (r < 0.8) return "offices";
   return "halls";
 }
 
@@ -36,30 +40,32 @@ const hubEdge = (a, b) => (a === L.hub[0] - 1 && b === L.hub[0]) || (a === L.hub
 // wall on the +x side of cell (cx,cz)
 export function wallX(cx, cz) {
   if (cx < 0 || cx >= N - 1) return true;
-  if (cz >= L.hub[0] && cz <= L.hub[1] && hubEdge(cx, cx + 1)) return cz !== 17 && cz !== 18; // two-cell doorway
+  if (cz >= L.hub[0] && cz <= L.hub[1] && hubEdge(cx, cx + 1)) return cz !== L.hub[0] + 1 && cz !== L.hub[0] + 2; // two-cell doorway
   if (inHub(cx, cz) && inHub(cx + 1, cz)) return false;
   const z1 = zoneOf(cx, cz), z2 = zoneOf(cx + 1, cz);
   const p = Math.min(L.wallChance[z1] ?? 0.38, L.wallChance[z2] ?? 0.38);
-  return hash(cx, cz, 11) < p;
+  if (z1 === "offices" && z2 === "offices") return (cz % 3 !== 1) && hash(cx, cz, 11) < 0.85 && cx % 2 === 1; // partition rows with doorways
+  return hash(cx, cz, 11) < p || (z1 === "halls" && z2 === "halls" && hash(cx, cz >> 2, 51) < 0.12 && cz % 4 !== 0);
 }
 // wall on the +z side of cell (cx,cz)
 export function wallZ(cx, cz) {
   if (cz < 0 || cz >= N - 1) return true;
-  if (cx >= L.hub[0] && cx <= L.hub[1] && hubEdge(cz, cz + 1)) return cx !== 17 && cx !== 18;
+  if (cx >= L.hub[0] && cx <= L.hub[1] && hubEdge(cz, cz + 1)) return cx !== L.hub[0] + 1 && cx !== L.hub[0] + 2;
   if (inHub(cx, cz) && inHub(cx, cz + 1)) return false;
   const z1 = zoneOf(cx, cz), z2 = zoneOf(cx, cz + 1);
   const p = Math.min(L.wallChance[z1] ?? 0.38, L.wallChance[z2] ?? 0.38);
-  return hash(cx, cz, 13) < p;
+  if (z1 === "offices" && z2 === "offices") return (cx % 3 !== 1) && hash(cx, cz, 13) < 0.85 && cz % 2 === 1;
+  return hash(cx, cz, 13) < p || (z1 === "halls" && z2 === "halls" && hash(cx >> 2, cz, 53) < 0.12 && cx % 4 !== 0);
 }
 export const isArchWall = (cx, cz, dir) => zoneOf(cx, cz) === "arches" || (dir === "x" ? zoneOf(cx + 1, cz) : zoneOf(cx, cz + 1)) === "arches";
 export const hasPit = (cx, cz) => zoneOf(cx, cz) === "holes" && hash(cx, cz, 17) < 0.6;
-export const hasPillar = (cx, cz) => zoneOf(cx, cz) === "pillars" || (zoneOf(cx, cz) === "halls" && !inHub(cx, cz) && hash(cx, cz, 19) < 0.12);
-export const hasLight = (cx, cz) => zoneOf(cx, cz) !== "dark" && (inHub(cx, cz) || hash(cx, cz, 23) < 0.7);
+export const hasPillar = (cx, cz) => { const z = zoneOf(cx, cz); return z === "pillars" || (z === "expanse" && cx % 3 === 1 && cz % 3 === 1 && hash(cx, cz, 21) < 0.85) || (z === "halls" && !inHub(cx, cz) && hash(cx, cz, 19) < 0.1); };
+export const hasLight = (cx, cz) => zoneOf(cx, cz) !== "dark" && (inHub(cx, cz) || hash(cx, cz, 23) < (zoneOf(cx, cz) === "expanse" ? 0.85 : 0.7));
 
 // the way down: a flickering wall far from the safe room
-export const EXIT = { cx: 0, cz: 33 }; // against the west outer wall
+export const EXIT = { cx: 0, cz: N - 3 }; // against the west outer wall
 
 export const ZONE_NAMES = {
   hub: "The Safe Room", halls: "The Yellow Halls", arches: "Arch Rooms", pillars: "Pillar Field",
-  holes: "The Pits", red: "Red Room", dark: "Blackout Zone",
+  holes: "The Pits", red: "Red Room", dark: "Blackout Zone", expanse: "The Expanse", offices: "Abandoned Offices",
 };
