@@ -70,7 +70,7 @@ export function poseViewmodel(ctx, dt) {
     lastSwing: 0, lastReload: 0, lastPump: 0, lastEquip: 0, lastDry: 0, equipT: 1, pumpT: 1,
     relT: 0, relOn: false, relKind: null, eject: false, lastYaw: null, lastPitch: 0, bob: 0, vy: 0,
   })
-  if (m.id !== ps.vmId) { m.id = ps.vmId; try { vm.interpolation = null } catch (e) { /* the engine keeps its default smoothing */ } }
+  if (m.id !== ps.vmId) { m.id = ps.vmId; m.lastEquip = ps.equipAt ?? 0; m.lastSwing = ps.swingAt ?? 0; m.lastPump = ps.pumpAt ?? 0; m.lastReload = ps.reloadN ?? 0; m.lastDry = ps.dryAt ?? 0; try { vm.interpolation = null } catch (e) { /* the engine keeps its default smoothing */ } }
 
   const kind = ps.equipped ?? 'fists', wp = W[kind] ?? W.fists, gun = !!wp.ranged
   const rc = wp.recoil ?? {}, aimDamp = 1 - 0.55 * m.ads
@@ -184,7 +184,8 @@ export function poseViewmodel(ctx, dt) {
 
   // raising a freshly equipped weapon: up from below the frame, a little past, and settle
   const up = backOut(m.equipT), lo = 1 - up
-  y -= lo * 0.3; pitch -= lo * 35; roll += lo * 18; x += lo * 0.04
+  y -= lo * 0.3
+  if (gun) { pitch -= lo * 35; roll += lo * 18; x += lo * 0.04 } else { roll += lo * 10 }
 
   vm.feetPosition = { attach: 'camera', x, y, depth: d, fov: VM_FOV }
   vm.rotation = { yaw, pitch, roll }
