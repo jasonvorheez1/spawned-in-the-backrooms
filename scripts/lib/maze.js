@@ -70,7 +70,7 @@ import { L4_NAMES } from './level4.js'
 import { L5_NAMES } from './level5.js'
 export const ZONE_NAMES = {
   ...L3_NAMES, ...L4_NAMES, ...L5_NAMES,
-  l6_halls: "Level 6 · Lights Out", hub: "The Safe Room", halls: "The Yellow Halls", arches: "Arch Rooms", pillars: "Pillar Field",
+  l6_halls: "Level 6 · Lights Out", l7_sea: "Level 7 · Thalassophobia", hub: "The Safe Room", halls: "The Yellow Halls", arches: "Arch Rooms", pillars: "Pillar Field",
   holes: "The Pits", red: "Red Room", dark: "Blackout Zone", expanse: "The Expanse", offices: "Abandoned Offices",
   l1_halls: "Level 1 · The Halls", l1_storage: "Level 1 · Storage Racks", l1_corridors: "Level 1 · The Corridors", l1_camp: "Level 1 · M.E.G. Waypoint", l1_pipes: "Level 1 · The Pipeworks", l1_void: "Level 1 · The Halls",
 };

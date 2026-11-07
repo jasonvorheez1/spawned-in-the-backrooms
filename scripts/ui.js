@@ -87,7 +87,7 @@ function compass(yaw) {
 
 // camp chatter: the line an npc is saying floats over its head while it lasts (chatter.js writes state.line)
 // the doorway transition: black that fades off the new level, its name in the middle
-const LEVEL_NAMES = { main: ['LEVEL 0', 'THE LOBBY'], level1: ['LEVEL 1', 'HABITABLE ZONE'], level2: ['LEVEL 2', 'PIPE DREAMS'], level3: ['LEVEL 3', 'ELECTRICAL STATION'], level4: ['LEVEL 4', 'ABANDONED OFFICE'], level5: ['LEVEL 5', 'TERROR HOTEL'], level6: ['LEVEL 6', 'LIGHTS OUT'], gamma: ['M.E.G.', 'BASE GAMMA'] }
+const LEVEL_NAMES = { main: ['LEVEL 0', 'THE LOBBY'], level1: ['LEVEL 1', 'HABITABLE ZONE'], level2: ['LEVEL 2', 'PIPE DREAMS'], level3: ['LEVEL 3', 'ELECTRICAL STATION'], level4: ['LEVEL 4', 'ABANDONED OFFICE'], level5: ['LEVEL 5', 'TERROR HOTEL'], level6: ['LEVEL 6', 'LIGHTS OUT'], level7: ['LEVEL 7', 'THALASSOPHOBIA'], gamma: ['M.E.G.', 'BASE GAMMA'] }
 function xferCard(s, now) {
   const x = s.xfer; if (!x || now - x.at > 2600) return ''
   const [a, b] = LEVEL_NAMES[x.to] ?? [String(x.to).toUpperCase(), '']
@@ -217,7 +217,11 @@ export default function render(ctx, player) {
   </div>
 
   <!-- CENTER: Minimal Zone Header -->
-  ${zone === 'l6_halls' ? `<div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:90px;animation:hud-fade 6s forwards;pointer-events:none;color:#f2c14e;text-shadow:3px 3px #000">
+  ${zone === 'l7_sea' ? `<div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:90px;animation:hud-fade 6s forwards;pointer-events:none;color:#cfe3ee;text-shadow:3px 3px #000">
+    <div style="font-size:14px;letter-spacing:.6em;opacity:.7">LEVEL 7</div>
+    <div style="font-size:clamp(22px,6vw,52px);letter-spacing:.22em;line-height:1.1;margin:4px 0;white-space:nowrap">THALASSOPHOBIA</div>
+    <div style="font-size:13px;letter-spacing:.18em;opacity:.75">THE SEA HAS NO FLOOR YOU WILL EVER TOUCH</div>
+  </div>` : ${zone === 'l6_halls' ? `<div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:90px;animation:hud-fade 6s forwards;pointer-events:none;color:#f2c14e;text-shadow:3px 3px #000">
     <div style="font-size:14px;letter-spacing:.6em;opacity:.7">LEVEL 6</div>
     <div style="font-size:clamp(26px,7vw,56px);letter-spacing:.28em;line-height:1.1;margin:4px 0;white-space:nowrap">LIGHTS OUT</div>
     <div style="font-size:13px;letter-spacing:.18em;opacity:.75">THE DARK HERE IS OLDER THAN YOU</div>
