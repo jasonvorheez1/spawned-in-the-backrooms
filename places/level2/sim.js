@@ -9,7 +9,7 @@ export const cadence = "250ms";
 // the Survivors: critters in work clothes, the old Aiding Stragglers' heirs
 const SURV = {
   "surv-wren": { name: "Wren · Survivor", role: "scout", voice: "wren", look: { species: "cat", sex: "f", topw: "hoodie", top: "#8a6a4a", botw: "pants", bottom: "#3a3a40", shoes: "boots", shoec: "#2a2420", expr: "smile" }, at: [3.5, 1.5], gun: "pistol" },
-  "surv-hollis": { name: "Hollis · Survivor Medic", role: "medic", voice: "hollis", look: { species: "dog", sex: "m", topw: "shirt", top: "#d8d0c0", botw: "pants", bottom: "#4a4038", shoes: "boots", shoec: "#2a2420", expr: "smile" }, at: [5.5, 4.0], gun: "wrench" },
+  "surv-hollis": { name: "Hollis · Survivor Medic", role: "medic", voice: "hollis", look: { species: "dog", sex: "m", topw: "longsleeve", top: "#d8d0c0", botw: "pants", bottom: "#4a4038", shoes: "boots", shoec: "#2a2420", expr: "smile" }, at: [5.5, 4.0], gun: "wrench" },
   "surv-mags": { name: "Mags · Survivor Trader", role: "quarter", voice: "mags", look: { species: "raccoon", sex: "f", topw: "jacket", top: "#c27a2a", botw: "pants", bottom: "#3a3a3a", shoes: "boots", shoec: "#2a2420", hat: "beanie", hatc: "#5a2a2a", expr: "grin" }, at: [5.0, -3.6], gun: "shotgun" },
 };
 function survivor(ctx, id) {

@@ -1,6 +1,7 @@
 // The player's critter body: wears player.state.look as the scripted critter, swaps the face on T,
 // opens the wardrobe on C (a turning preview of you stands in front while it's open), and lets the
 // game's moods show on the face: a hit makes you wince, low hp is sad, low sanity is scared.
+import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
 const SCRIPT = 'scripts/critter-geo.js'
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
@@ -64,15 +65,18 @@ function lookOf(ctx) {
   delete l.outfit; delete l.acc
   return l
 }
+// every wardrobe change goes through here: it can restyle the plain set freely, never conjure armor,
+// and any found garment it takes off goes back into the bag (player.state.clothes) instead of vanishing
+function dress(st, cur, next) {
+  const out = honest(cur, next), keep = wornTokens(out), bag = st.clothes ? st.clothes.split(',').filter(Boolean) : []
+  for (const t of wornTokens(cur)) { const i = keep.indexOf(t); if (i >= 0) keep.splice(i, 1); else if (!parseCloth(t)?.row.regular) bag.push(t) }
+  st.clothes = bag.join(',')
+  st.look = out
+}
 const pick = (ctx, list) => list[Math.floor(ctx.random() * list.length)]
+// a rolled look wears only the regular set (tee/tank/longsleeve, pants/shorts, plain shoes): armor is found, never rolled
 function randomLook(ctx, cur, scope) {
-  const l = { ...cur }
-  for (const k of ['topw', 'botw', 'shoes']) l[k] = pick(ctx, C[k].filter((v) => v !== 'none'))
-  l.hat = ctx.random() < 0.55 ? pick(ctx, C.hat) : 'none'
-  l.eyew = ctx.random() < 0.25 ? pick(ctx, C.eyew) : 'none'
-  l.neck = ctx.random() < 0.4 ? pick(ctx, C.neck) : 'none'
-  if (l.topw === 'dress') l.botw = 'none'
-  for (const k of ['top', 'bottom', 'shoec', 'hatc', 'neckc']) l[k] = pick(ctx, C.cloth)
+  const l = plainLook(ctx, cur)
   if (scope === 'all') {
     l.species = pick(ctx, C.species); l.sex = pick(ctx, C.sex); l.fur = ctx.random() < 0.5 ? '' : pick(ctx, C.fur)
     l.eye = pick(ctx, C.eye); l.eyes = pick(ctx, C.eyes); l.marks = ctx.random() < 0.5 ? 'none' : pick(ctx, C.marks)
@@ -95,12 +99,12 @@ export function onInput(ctx, input) {
     if (d.k === 'face') { st.face = { expr: d.v, until: ctx.now() + C.holdFace * 1000 }; return }
     if (d.k === 'tab') { if (['body', 'face', 'clothes', 'outfits'].includes(d.v)) st.wrTab = d.v; return }
     if (d.k === 'spin') { st.wrSpin = ((st.wrSpin || 0) + (Number(d.v) || 0)) % 360; return }
-    if (d.k === 'random') { st.look = randomLook(ctx, lookOf(ctx), d.v === 'all' ? 'all' : 'clothes'); st.face = null; return }
-    if (d.k === 'reset') { st.look = { ...C.default }; st.face = null; return }
-    if (d.k === 'strip') { st.look = { ...lookOf(ctx), topw: 'none', botw: 'none', shoes: 'none', hat: 'none', eyew: 'none', neck: 'none' }; return }
+    if (d.k === 'random') { dress(st, lookOf(ctx), randomLook(ctx, lookOf(ctx), d.v === 'all' ? 'all' : 'clothes')); st.face = null; return }
+    if (d.k === 'reset') { dress(st, lookOf(ctx), { ...C.default }); st.face = null; return }
+    if (d.k === 'strip') { dress(st, lookOf(ctx), { ...lookOf(ctx), topw: 'none', botw: 'none', shoes: 'none', hat: 'none', eyew: 'none', neck: 'none' }); return }
     const slotN = Number(d.v)
     if (d.k === 'save' && slotN >= 0 && slotN < C.outfitSlots) { const o = [...(st.outfits || [])]; while (o.length < C.outfitSlots) o.push(null); o[slotN] = lookOf(ctx); st.outfits = o; return }
-    if (d.k === 'wear' && st.outfits?.[slotN]) { st.look = { ...st.outfits[slotN] }; st.face = null; return }
+    if (d.k === 'wear' && st.outfits?.[slotN]) { dress(st, lookOf(ctx), { ...st.outfits[slotN] }); st.face = null; return }
     if (d.k === 'sz') { // a body slider: v = "<key>:<value>"
       const [key, raw] = String(d.v).split(':'), row = C.sliders.find((r) => r[0] === key)
       if (!row) return
@@ -115,7 +119,7 @@ export function onInput(ctx, input) {
     if (!(d.k in C.default)) return
     const list = C[d.k === 'top' || d.k === 'bottom' || d.k === 'shoec' || d.k === 'hatc' || d.k === 'neckc' ? 'cloth' : d.k]
     if (Array.isArray(list) && !list.includes(d.v)) return
-    st.look = { ...lookOf(ctx), [d.k]: d.v }
+    dress(st, lookOf(ctx), { ...lookOf(ctx), [d.k]: d.v })
     if (d.k === 'expr') st.face = null
   }
 }
@@ -134,6 +138,7 @@ function moodFace(ctx, l) {
 }
 
 export function update(ctx) {
+  if (!ctx.self.state.look) ctx.self.state.look = randomLook(ctx, { ...C.default }, 'all') // a new critter: random body, regular clothes only (saved looks are never touched)
   const l = lookOf(ctx), face = moodFace(ctx, l), ses = ctx.self.session
   ses.face = face
   const wornNow = !!(l.modelUrl || (l.model && C.models?.[l.model]))
