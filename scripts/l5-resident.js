@@ -19,10 +19,10 @@ function rent(ctx, p) {
   const R = P.rent, now = ctx.now(), uid = p.userId ?? p.id, book = { ...(ctx.place.state.l5rent ?? {}) };
   const mine = Object.keys(book).find((k) => book[k].uid === uid && book[k].until > now);
   if (mine) { book[mine] = { uid, until: now + R.hours * 3600e3 }; ctx.place.state.l5rent = book; p.state.l5until = book[mine].until; return say(ctx, p, `You already hold the ${mine.slice(6).toUpperCase()} suite. I have extended your stay, with the hotel's compliments.`); }
-  if ((p.state.almonds ?? 0) < R.price) return say(ctx, p, `A suite is ${R.price} bottles of almond water. Do come back when your purse agrees with you.`);
+  if ((p.state.cash ?? 0) < R.price * 100) return say(ctx, p, `A suite is ${R.price} backdollars a night. Do come back when your purse agrees with you.`);
   const sid = Object.keys(P.suites).find((k) => !book[k] || book[k].until < now);
   if (!sid) return say(ctx, p, "Every suite is occupied tonight. How unusual. How very unusual.");
-  p.state.almonds -= R.price; book[sid] = { uid, until: now + R.hours * 3600e3 }; ctx.place.state.l5rent = book;
+  p.state.cash = (p.state.cash ?? 0) - R.price * 100; p.state.notice2 = { text: `-$${R.price}.00`, at: now }; book[sid] = { uid, until: now + R.hours * 3600e3 }; ctx.place.state.l5rent = book;
   p.state.l5room = sid; p.state.l5until = book[sid].until; p.state.l5key = sid; p.state.notice = { text: `Key: Suite ${sid.slice(6).toUpperCase()}`, at: now };
   const tr = ctx.getObject(`l5-people-trunk-${sid}`);
   if (tr && tr.state.renter !== uid) { const st = { ...(tr.state.stash ?? {}) }; if (tr.state.renter) st[tr.state.renter] = tr.state.items ?? ""; tr.state.items = st[uid] ?? ""; delete st[uid]; tr.state.stash = st; tr.state.renter = uid; }
@@ -33,10 +33,10 @@ function book(ctx, p) {
   const R = P.room, now = ctx.now(), uid = p.userId ?? p.id, bk = { ...(ctx.place.state.l5rent ?? {}) };
   const mine = Object.keys(bk).find((k) => bk[k].uid === uid && bk[k].until > now);
   if (mine) return say(ctx, p, `You already hold ${mine.startsWith("suite") ? "the " + mine.slice(6).toUpperCase() + " suite" : "Room " + mine.slice(5).toUpperCase()}. One key per guest.`);
-  if ((p.state.almonds ?? 0) < R.price) return say(ctx, p, `A room is ${R.price} bottles of almond water. Modest, but the walls mostly stay put.`);
+  if ((p.state.cash ?? 0) < R.price * 100) return say(ctx, p, `A room is ${R.price} backdollars. Modest, but the walls mostly stay put.`);
   const rid = Object.keys(P.rooms).find((k) => !bk[k] || bk[k].until < now);
   if (!rid) return say(ctx, p, "No rooms free. Perhaps a suite? They are... roomier.");
-  p.state.almonds -= R.price; bk[rid] = { uid, until: now + R.hours * 3600e3 }; ctx.place.state.l5rent = bk;
+  p.state.cash = (p.state.cash ?? 0) - R.price * 100; p.state.notice2 = { text: `-$${R.price}.00`, at: now }; bk[rid] = { uid, until: now + R.hours * 3600e3 }; ctx.place.state.l5rent = bk;
   p.state.l5room = rid; p.state.l5until = bk[rid].until; p.state.l5key = rid; p.state.notice = { text: `Key: Room ${rid.slice(5).toUpperCase()}`, at: now };
   const tr = ctx.getObject(`l5-people-trunk-${rid}`);
   if (tr && tr.state.renter !== uid) { const st = { ...(tr.state.stash ?? {}) }; if (tr.state.renter) st[tr.state.renter] = tr.state.items ?? ""; tr.state.items = st[uid] ?? ""; delete st[uid]; tr.state.stash = st; tr.state.renter = uid; }

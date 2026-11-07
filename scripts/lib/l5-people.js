@@ -16,7 +16,7 @@ export const PEOPLE5 = P;
 const ACT = { idle: null, talk: "cdn/clip-talk-loop.glb", sit: "cdn/clip-sit-loop.glb", crouch: "cdn/clip-crouch-idle-loop.glb", sleep: "cdn/clip-sleep-loop.glb", pickup: "cdn/clip-pickup.glb", wave: "cdn/clip-waving-single-hand-loop.glb" };
 const FNAME = { hotel: "Homely Hotel (the staff of this endless hotel: polite, proprietary, they dislike the Originals in the salon and lean on Housekeeping)", hk: "Housekeeping, a M.E.G. outpost on Level 5 (grey uniforms, practical, they back the Homely Hotel staff and keep the Boiler Room rats down)", orig: "The Originals (eccentrics who wandered in between 1300 and 1940; they gossip, play cards, keep Samantha the cat fed, and refuse membership to anyone modern)" };
 const OFFERS = {
-  concierge: [["o:room", `Book a guest room (${P.room.price} almond water)`], ["o:rent", `Rent a suite (${P.rent.price} almond water)`], ["o:checkout", "Return the key"]],
+  concierge: [["o:room", `Book a guest room ($${P.room.price})`], ["o:rent", `Rent a suite ($${P.rent.price})`], ["o:checkout", "Return the key"]],
   guide: [["o:escort", "Escort me to the Boiler Room"]],
   clerk: [["o:job", "The rat job"]],
   maid: [["o:gossip", "Heard anything?"]], bellhop: [["o:gossip", "Heard anything?"]], agent: [["o:gossip", "Anything moving?"]],
