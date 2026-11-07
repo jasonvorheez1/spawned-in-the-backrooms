@@ -361,9 +361,9 @@ export function geometry(ctx) {
   ctx.metalness(0);
 
   // ---------- Body: continuous lofted pear/chibi torso ----------
-  const HIP_R = (fem ? [0.18, 0.145] : [0.14, 0.128]).map((v) => v * SZ('hipS', 0.75, 1.3));
-  const WAIST_R = (fem ? [0.132, 0.122] : (sp.chunky ? [0.165, 0.15] : [0.148, 0.138])).map((v) => v * SZ('waistS', 0.75, 1.35));
-  const CHEST_R = fem ? [0.155, 0.146] : [0.15, 0.132];
+  const HIP_R = (fem ? [0.215, 0.165] : [0.14, 0.128]).map((v) => v * SZ('hipS', 0.75, 1.3));
+  const WAIST_R = (fem ? [0.116, 0.108] : (sp.chunky ? [0.165, 0.15] : [0.148, 0.138])).map((v) => v * SZ('waistS', 0.75, 1.35));
+  const CHEST_R = fem ? [0.16, 0.15] : [0.15, 0.132];
   const torsoRadius = (t) => {
     if (t < 0.2) return [lerp(0.12, HIP_R[0], t / 0.2), lerp(0.1, HIP_R[1], t / 0.2)];
     if (t < 0.45) { const f = (t - 0.2) / 0.25; return [lerp(HIP_R[0], WAIST_R[0], f), lerp(HIP_R[1], WAIST_R[1], f)]; }
@@ -376,8 +376,8 @@ export function geometry(ctx) {
     for (let i = 0; i < TORSO_Y.length - 1; i++) if (y <= TORSO_Y[i + 1]) return torsoRadius((i + (y - TORSO_Y[i]) / (TORSO_Y[i + 1] - TORSO_Y[i])) / (TORSO_Y.length - 1));
     return torsoRadius(1);
   };
-  const bS = SZ('bustS', 0.6, 1.3); // capped: cute and modest
-  const BUST = { y: 0.868, x: 0.05, z: -0.095 + (1 - bS) * 0.03, r: [0.075 * bS, 0.064 * bS, 0.07 * bS] }; // modest, under every top
+  const bS = SZ('bustS', 0.6, 1.5); // grown women: a real bust
+  const BUST = { y: 0.868, x: 0.05, z: -0.095 + (1 - bS) * 0.03, r: [0.088 * bS, 0.078 * bS, 0.085 * bS] }; // modest, under every top
 
   // Lofted torso sections from hips to neck
   {
@@ -992,7 +992,7 @@ export function geometry(ctx) {
 
     // Eye ink border and white sclera
     ctx.color(INK);
-    fill(ellipse(cu, EY, ERU + 0.014, ERV + 0.014), 0.006);
+    fill(ellipse(cu, EY, ERU + 0.02, ERV + 0.02), 0.006);
     ctx.color("#ffffff");
     fill(ellipse(cu, EY, ERU, ERV), 0.009);
 
@@ -1015,7 +1015,7 @@ export function geometry(ctx) {
     } else {
       // dandy eye: a huge dark pupil filling the white, the chosen colour as its rim
       ctx.color("#050407"); // a solid black pupil, no shine (Shelly's call)
-      fill(ellipse(pu, pv - 0.004, 0.08 * pr * ESH[0], 0.096 * pr * ESH[1]), 0.012);
+      fill(ellipse(pu, pv - 0.004, 0.056 * pr * ESH[0], 0.074 * pr * ESH[1]), 0.012); // rubberhose: a black bean in a big white eye
 
       if (E.eye === "star") {
         ctx.color("#ffffff");
