@@ -67,6 +67,29 @@ shops:
     - [firesalt, 2, 5]
     - [tape, 3, 3]
     - [weapon:screwdriver, 1, 5]
+  l5-dolores:
+    - [meat:steak, 3, 4]
+    - [meat:chicken, 4, 3]
+    - [meat:fish, 3, 3]
+    - [beans, 4, 2]
+    - [ration, 4, 2]
+    - [bar, 3, 2]
+  l5-harlan:
+    - [ammo, 8, 4]
+    - [bandage, 6, 3]
+    - [weapon:smg, 1, 45]
+    - [shells, 4, 6]
+    - [firstaid, 2, 8]
+  l5-millie:
+    - [battery, 3, 3]
+    - [tape, 3, 3]
+    - [kit, 1, 9]
+    - [weapon:knife, 1, 10]
+  l5-vanderholt:
+    - [royal_ration, 2, 12]
+    - [firesalt, 2, 6]
+    - [bobbypin, 6, 1]
+    - [firstaid, 1, 9]
   hk-constance:
     - [ammo, 6, 4]
     - [shells, 4, 6]
