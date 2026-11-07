@@ -2,7 +2,7 @@
 // holds it still (and pays sanity for it); look away, or break the line of sight, and it closes the gap fast.
 // They wander the halls like smilers, but never cross into the safe room. Dead lurkers are cleared here.
 import { heard } from "./lib/hear.js";
-import { hearOf, sighting, leadOf } from "./lib/hunt.js";
+import { hearOf, sighting, leadOf, raise, alertFor } from "./lib/hunt.js";
 import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
 import { raycast } from "builtin/physics";
@@ -103,8 +103,8 @@ export function update(ctx, dt) {
       if (watched && !m.watched) { let k; do k = POSES[Math.floor(ctx.random() * POSES.length)]; while (k === m.pose && POSES.length > 1); m.pose = k; }
       m.watched = !!watched;
       if (watched) watched.state.sanity = Math.max(0, watched.state.sanity - L.lurkerGaze * 0.2);
-      if (!best && !m.prey) { const h = hearOf(pos, players, (p) => { const c = cellAt(p.feetPosition.x, p.feetPosition.z); return inHub(c.cx, c.cz); }); if (h) { m.last = sighting(h, now); m.heard = true; } } // heard, not seen: it comes to look
-      if (best) { m.last = sighting(best, now); m.heard = false; m.lead = null; }
+      if (!best && !m.prey) { const h = hearOf(pos, players, (p) => { const c = cellAt(p.feetPosition.x, p.feetPosition.z); return inHub(c.cx, c.cz); }, ctx); if (h) { m.last = sighting(h, now); m.heard = true; } else { const a = alertFor(ctx, pos); if (a && (!m.last || m.last.at < a.at)) { m.last = { ...a }; m.heard = false; m.lead = null; } } } // heard, not seen: it comes to look
+      if (best) { if (!m.called || now - m.called > 6000) { m.called = now; raise(ctx, best); } m.last = sighting(best, now); m.heard = false; m.lead = null; }
     }
     const prey = m.prey ? players.find((p) => p.id === m.prey) : null;
     let goal, speed;

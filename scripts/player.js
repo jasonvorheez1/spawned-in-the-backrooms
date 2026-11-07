@@ -344,6 +344,7 @@ function swing(ctx, power = 0) {
   if (wp.ranged) power = 0
   if (power && (w.stamina ?? s.stamina) < wp.stamina * P.stamina) power = 0 // too tired to put weight behind it: a light swing
   if ((w.stamina ?? s.stamina) < wp.stamina) return
+  s.loud = { at: now, gun: !!wp.ranged } // hunters hear it (lib/hunt.js)
   const heavyMul = power ? 1 + power * (P.damage - 1) : 1
   const ammoKey = wp.ammoType ?? 'ammo', loadedKey = 'loaded_' + s.equipped
   if (wp.ranged) {

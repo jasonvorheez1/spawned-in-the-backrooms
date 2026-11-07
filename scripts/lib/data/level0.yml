@@ -54,6 +54,10 @@ lurkers: 6
 lurkerHp: 35
 lurkerSpeed: 6.6   # lurch speed; with the stop-motion hold it averages ~6.2 m/s
 hearSprint: 16     # her pick: m a sprinting wanderer is heard through walls
+hearFight: 14      # her pick: m a swing or a smash carries
+hearGun: 34        # her pick: m a gunshot carries
+callRange: 24      # her pick: m a hunter that spots you calls the others within this
+smilerGlimpse: 6   # her pick: m a moving wanderer is noticed even in the dark
 hearWalk: 6        # m a walking one is heard (crouching is silent)
 chaseMemory: 12    # s a hunter keeps after losing sight, heading where you were going
 leadSeconds: 1.6   # how far ahead along your path it guesses

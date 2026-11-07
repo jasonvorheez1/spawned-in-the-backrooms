@@ -3,7 +3,7 @@
 // Body: a Blender crawler (art/smiler/build.py) with baked clips idle, skitter, freeze, lunge-bite, recoil, death.
 // A flashlight held on one makes it flinch (recoil) and lock rigid (freeze) until the beam leaves it.
 import { heard } from "./lib/hear.js";
-import { hearOf, sighting, leadOf } from "./lib/hunt.js";
+import { hearOf, sighting, leadOf, raise, alertFor } from "./lib/hunt.js";
 import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
 import { raycast } from "builtin/physics";
@@ -60,7 +60,7 @@ export function update(ctx, dt) {
         if (inHub(c.cx, c.cz)) continue;
         const dx = pp.x - pos.x, dz = pp.z - pos.z, dy = pp.y + 1.3 - (pos.y + EYE), d = Math.hypot(dx, dz);
         // drawn to light: a lit flashlight is seen from far off, a dark wanderer only up close (prey already found keeps the normal range)
-        const reach = L.smilerSight * mu.sight * sn(p) * (p.state?.light ? L.smilerSightLit : m.prey === p.id ? 1 : L.smilerSightDark);
+        const reach = L.smilerSight * mu.sight * sn(p) * (p.state?.light ? L.smilerSightLit : m.prey === p.id ? 1 : Math.max(L.smilerSightDark, Math.hypot(p.velocity?.x ?? 0, p.velocity?.z ?? 0) > 1 ? (L.smilerGlimpse ?? 6) / L.smilerSight : 0));
         if (d >= reach || d >= bd) continue;
         const L3 = Math.hypot(dx, dy, dz) || 1;
         const hit = raycast(ctx, { x: pos.x, y: pos.y + EYE, z: pos.z }, { x: dx / L3, y: dy / L3, z: dz / L3 }, { distance: L3, physicsOnly: true, ignoreEntities: [w.id, p.id], bodies: "static" });
@@ -70,8 +70,8 @@ export function update(ctx, dt) {
       if (best && !m.prey) heard(ctx, { clip: SND("smiler-wet-giggle-hiss-stalking"), position: pos, volume: 1, maxDistance: 30 });
       m.prey = best?.id ?? null;
       if (st.horde && players.some((p) => p.id === st.horde)) m.prey = st.horde; // a blackout horde hunts its player wherever they are
-      if (!best && !m.prey) { const h = hearOf(pos, players, (p) => { const c = cellAt(p.feetPosition.x, p.feetPosition.z); return inHub(c.cx, c.cz); }); if (h) { m.last = sighting(h, now); m.heard = true; } } // heard, not seen: it comes to look
-      if (best) { m.last = sighting(best, now); m.heard = false; m.lead = null; }
+      if (!best && !m.prey) { const h = hearOf(pos, players, (p) => { const c = cellAt(p.feetPosition.x, p.feetPosition.z); return inHub(c.cx, c.cz); }, ctx); if (h) { m.last = sighting(h, now); m.heard = true; } else { const a = alertFor(ctx, pos); if (a && (!m.last || m.last.at < a.at)) { m.last = { ...a }; m.heard = false; m.lead = null; } } } // heard, not seen: it comes to look
+      if (best) { if (!m.called || now - m.called > 6000) { m.called = now; raise(ctx, best); } m.last = sighting(best, now); m.heard = false; m.lead = null; }
     }
     const prey = m.prey ? players.find((p) => p.id === m.prey) : null;
     let goal, speed, lit = false;
