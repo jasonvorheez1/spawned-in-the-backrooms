@@ -2,6 +2,8 @@
 // and the species head (head, face, ears, tail) as a skinned child riding the same rig. Data: scripts/lib/data/critter-models.yml.
 import M from './data/critter-models.yml'
 import FACES from './data/faces.yml'
+import CL from './data/clothes.yml'
+import { rowOf, patOk } from './clothes.js'
 export const HEAD_ID = 'critter-head'
 export const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 const CLOTH = { topw: ['cloth_top', 'top'], botw: ['cloth_bottom', 'bottom'], shoes: ['cloth_shoes', 'shoec'], hat: ['cloth_hat', 'hatc'], neck: ['cloth_neck', 'neckc'] }
@@ -43,7 +45,10 @@ export function bodyModel(l) {
   for (const p of M.parts) parts[p] = { visible: false }
   for (const [slot, pre] of Object.entries(M.slots)) { const k = MESH_SWAP[slot]?.[l[slot]] ?? l[slot]; if (k && k !== 'none' && parts[pre + '_' + k]) parts[pre + '_' + k].visible = true }
   const materials = { ...furMats(l), pad: { color: M.pad || '#ff9fb4', roughness: 0.6, metalness: 0 } }
-  for (const [slot, [mat, key]] of Object.entries(CLOTH)) if (l[key]) materials[mat] = { color: l[key], roughness: 0.75, metalness: 0 }
+  for (const [slot, [mat, key]] of Object.entries(CLOTH)) if (l[key]) {
+    const row = l[slot] && l[slot] !== 'none' ? rowOf(slot, l[slot], l[key]) : null, pat = row ? patOk(row, l[CL.patKey[slot]]) : null
+    materials[mat] = pat ? { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[key], roughness: 0.8, metalness: 0, params: { pat, s: 1 } } : { color: l[key], roughness: 0.75, metalness: 0 } // fabric patterns: scripts/mat-cloth.js
+  }
   return { id: M.body[l.sex === 'f' ? 'f' : 'm'], materials: only(materials, M.bodyMats), parts }
 }
 export function headModel(l0) {
