@@ -18,7 +18,7 @@ regularColours: ["e85d75", "ff9f43", "ffd93d", "6bcb77", "4d96ff", "3d5a98", "9b
 # Leveled lists (Fallout/Skyrim style). A row's `level` is the lowest level it can turn up at (missing = 1).
 # Loot reads the finder's level (or the place's tier for a drop with no finder); NPCs read their own level.
 leveled:
-  placeTier: { main: 1, level1: 4, level2: 8, level3: 12, level4: 10, gamma: 12, level5: 14, debug: 20 }   # Savi's picks
+  placeTier: { main: 1, level1: 4, level2: 8, level3: 12, level4: 10, gamma: 12, level5: 14, level6: 15, level7: 16, debug: 20 }   # Savi's picks
   rarityAt: { common: 1, uncommon: 4, rare: 10, agency: 14 }   # a rarity never rolls below this level
   lift: 0.04          # per level past a row's own: rarer rows get this much heavier (a level 20 finder sees more rare cloth)
   # NPC wardrobes by faction: the rows a faction dresses from (ids below), and how often each optional slot is filled
@@ -29,6 +29,7 @@ leveled:
     office:   { rows: [officeshirt, longsleeve, dress, slacks, longskirt, sneakers, boots, glasses, bowtie], extra: { hat: 0.05, eyew: 0.5, neck: 0.4 } }
     tbd:      { rows: [hoodie, wirehood, jacket, cargo, pants, boots, headphones, tophat, crown, partyhat, shades, bell, cape], extra: { hat: 0.7, eyew: 0.4, neck: 0.4 } }
     l5:       { rows: [] }   # Level 5's hand-cast residents keep their own clothes (scripts/lib/l5-people.js)
+    l7:       { rows: [] }   # Level 7's Seawatch & Fort Surrender residents keep their bespoke maritime/abyssal armor
     homely:   { rows: [] }   # Homely Hotel staff keep their bespoke uniforms
     orig:     { rows: [] }   # The Originals keep their vintage period clothing
     amor:     { rows: [dress, sweater, apron, longskirt, pants, boots, flower, cape, scarf], extra: { hat: 0.3, eyew: 0.05, neck: 0.6 } }
@@ -89,3 +90,12 @@ rows:
   - { id: hotelslip,   slot: shoes, kind: slippers,  name: Hotel slippers,     dr: 0, kg: 0.2, rarity: common,   places: [level5], strict: true, colours: [f4f1ea] }
   - { id: balltie,     slot: neck, kind: bowtie,     name: Ballroom bow tie,   dr: 0, kg: 0.05,rarity: common,   places: [level5], strict: true, colours: [1a1a22, b0302a] }
   - { id: opera,       slot: hat,  kind: tophat,     name: Opera hat,          dr: 1, kg: 0.4, rarity: uncommon, places: [level5], strict: true, colours: [1a1a22, 7a1f3d] }
+  # Level 7's Thalassophobia maritime & abyssal armor: M.E.G. Seawatch diving gear, storm oilskins, and Fort Surrender tar-scale armor
+  - { id: seawatchsuit,slot: topw, kind: jacket,     name: "M.E.G. Seawatch dive coat", dr: 7, kg: 2.2, rarity: agency, places: [level7], strict: true, colours: [2b4c5e, 1e3b4b] }
+  - { id: oilskin,     slot: topw, kind: hoodie,     name: "Storm oilskin foulie",  dr: 6, kg: 1.9, rarity: uncommon, places: [level7], strict: true, colours: [d49b27, 3a4842] }
+  - { id: abysshauberk,slot: topw, kind: apron,      name: "Abyssal tar-scale hauberk", dr: 8, kg: 2.8, rarity: rare, places: [level7], strict: true, colours: [1c282e, 142024] }
+  - { id: tarwaders,   slot: botw, kind: overalls,   name: "Tar-caulked deck waders", dr: 5, kg: 1.8, rarity: uncommon, places: [level7], strict: true, colours: [28322c, 2b3036] }
+  - { id: ballastboots,slot: shoes, kind: boots,     name: "Lead-ballast diving boots", dr: 5, kg: 2.4, rarity: rare, places: [level7], strict: true, colours: [1c1e22, 141618] }
+  - { id: souwester,   slot: hat,  kind: beanie,     name: "Sou'wester storm watch cap", dr: 4, kg: 0.4, rarity: uncommon, places: [level7], strict: true, colours: [d46a28, 24343e] }
+  - { id: divehelm,    slot: hat,  kind: cap,        name: "Brass-rimmed dive hood", dr: 5, kg: 0.9, rarity: rare,    places: [level7], strict: true, colours: [b88838, 1e3b4b] }
+  - { id: lifemantle,  slot: neck, kind: cape,       name: "Cork lifebelt mantle",  dr: 4, kg: 1.1, rarity: rare, places: [level7], strict: true, colours: [c85a28, 3a4e54] }

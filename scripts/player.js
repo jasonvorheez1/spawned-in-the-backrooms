@@ -245,6 +245,7 @@ function takeToken0(ctx, token) {
     if (W[k].cnd != null && !owned(s).slice(0, -1).includes(k)) s['cnd_' + k] = W[k].cnd // a rusty find comes worn, an M.E.G. one pristine
     if (usable(s, k) && W[k].damage > weaponOf(s).damage) s.equipped = k
     s.pickedAt = now; s.gotWeapon = W[k].name
+    if (baseOf(k) === 'fishing_rod') s.notice = { text: 'Salvaged fishing rod · Hold it and swing (attack) at water to cast your line and fish!', at: now }
     gain(ctx, W[k].xp ?? L.xpAlmond)
     sound(ctx, 'pickup-weapon', 0.7, true)
     return { ok: true }
@@ -428,6 +429,7 @@ function swing(ctx, power = 0) {
   if (!wp.ranged) sound(ctx, 'pipe-whoosh-swing', wp.quiet ? 0.3 : power ? 0.9 : 0.55)
   if (!found.length) { // nothing alive in reach: the swing or shot lands on the world (walls, furniture, crates, what was built)
     let pc = ctx.self.camera?.rotation?.pitch ?? 0; if (Math.abs(pc) > 1.6) pc = pc * Math.PI / 180
+    if (baseOf(s.equipped) === 'fishing_rod' && tryFish(ctx, s, w, p, f, pc, power)) return
     const sb = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100)
     strike(ctx, s, wp, s.equipped, sb, f, pc)
     return
@@ -448,6 +450,106 @@ function swing(ctx, power = 0) {
   found.sort((x, y) => x.d - y.d)
   hitTarget(ctx, s, found[0].m, Math.round(base), f, !wp.quiet, power)
   if (power) { const m = found[0].m, d = found[0].d || 1; ctx.emit('impulse', { target: m.id, impulse: { x: f.x * 260 * power, y: 60 * power, z: f.z * 260 * power } }) } // a heavy shoves them back
+}
+
+const FISH_SPLASH = `fx
+pop drops burst=28..40 life=.35..0.65 v=up(1.8..3.4)+sdir()*(0.8..2.0) size=.025..0.055 acc=grav()+drag(.5) col=<.78,.9,.96> a=.85>0 floor=die r=sprite(soft-disc,alpha,velocity,.02)
+pop foam burst=8..12 on=disc(.35) life=.4..0.75 v=sdir()*(.4..0.9) size=.18..0.32 acc=drag(2.2) col=<.88,.95,.98> a=0>.4:.3>0 sz=$size*(.7>1.6) r=sprite(smoke-puff,alpha)`
+
+const L7_FISH_ARMOR = [
+  ['cloth:topw:hoodie:d49b27', 'Storm oilskin foulie'],
+  ['cloth:botw:overalls:28322c', 'Tar-caulked deck waders'],
+  ['cloth:shoes:boots:1c1e22', 'Lead-ballast diving boots'],
+  ['cloth:hat:beanie:d46a28', "Sou'wester storm watch cap"],
+  ['cloth:hat:cap:b88838', 'Brass-rimmed dive hood'],
+  ['cloth:neck:cape:c85a28', 'Cork lifebelt mantle'],
+  ['cloth:topw:apron:1c282e', 'Abyssal tar-scale hauberk'],
+]
+
+function tryFish(ctx, s, w, p, f, pc, power = 0) {
+  const inL7 = ctx.self.place === 'level7'
+  if (!inL7 && !w.wet) return false
+  // If aiming directly at a close wall/crate within 2.0m inside Room 1, let strike() hit it unless looking downward at floodwater
+  const eye = { x: p.x, y: p.y + (s.crouch ? 1.0 : 1.45), z: p.z }
+  const cp = Math.cos(pc), dir = { x: f.x * cp, y: Math.sin(pc), z: f.z * cp }
+  const closeHit = raycast(ctx, eye, dir, { distance: 2.1, physicsOnly: true, ignoreEntities: [ctx.self.id], bodies: 'static' })
+  if (closeHit && dir.y > -0.25 && (!inL7 || Math.hypot(p.x, p.z) < 3.1)) return false
+  const now = ctx.now()
+  if (now < (w.fishingUntil ?? 0)) {
+    s.notice = { text: 'Your bobber is still in the water — wait for the bite!', at: now }
+    return true
+  }
+  const dist = 3.5 + power * 2.8
+  const bx = p.x + f.x * dist, bz = p.z + f.z * dist
+  const inParlor = inL7 && Math.hypot(p.x, p.z) < 3.3 && p.y > 3.5
+  const by = inParlor ? 4.18 : inL7 ? 0.08 : p.y + 0.05
+  w.fishingUntil = now + 1250
+  ctx.emit('fx', { position: { x: bx, y: by, z: bz }, script: FISH_SPLASH })
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-water-pour-splash-short.mp3', position: { x: bx, y: by, z: bz }, volume: 0.7, maxDistance: 18 })
+  s.notice = { text: power ? 'You hurl a long deep-water cast into the swells...' : 'You cast your line into the dark water...', at: now }
+  ctx.after(1.1, 'fishCatch', { x: bx, y: by, z: bz, power: power || 0, deep: inL7 && bz < -22 })
+  return true
+}
+
+export function fishCatch(ctx, d) {
+  const s = ctx.self.state, now = ctx.now()
+  if (!s || s.dead) return
+  const pos = { x: d?.x ?? ctx.self.feetPosition.x, y: d?.y ?? 0.08, z: d?.z ?? ctx.self.feetPosition.z }
+  ctx.emit('fx', { position: pos, script: FISH_SPLASH })
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-water-splash-thrown-from-bottle.mp3', position: pos, volume: 0.75, maxDistance: 18 })
+  const surv = skillsOf(s).survival ?? 0
+  const bonus = surv * 0.003 + (d?.power ?? 0) * 0.09 + (d?.deep ? 0.07 : 0) + (derived(s).scav ?? 0) * 0.15
+  const raw = ctx.random(), r = raw + bonus
+
+  // Rare Abyssal Leviathan tug in Level 7's deep water (~6% chance)
+  if (d?.deep && raw < 0.06) {
+    ctx.emit('screenShake', { intensity: 0.22, duration: 0.9 }, { audience: { player: ctx.self.id } })
+    ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-deep-whale-like-groan-from-far-under-dark-water.mp3', position: pos, volume: 0.75, refDistance: 40, maxDistance: 200 }, { audience: { player: ctx.self.id } })
+    takeToken(ctx, 'meat:fish')
+    gain(ctx, 25)
+    s.notice = { text: 'Something colossal brushes your line from the Midnight Zone! You reel back a mangled Pale Trench-Fish before the line snaps! (+Fresh fish, +25 XP)', at: now }
+    return
+  }
+
+  let tok = 'meat:fish', label = 'a Pale Abyssal Fish (+14 HP, +25 Food)', xp = 16
+  if (r > 1.02) {
+    const pick = L7_FISH_ARMOR[Math.floor(ctx.random() * L7_FISH_ARMOR.length)]
+    tok = pick[0]; label = `sunken ${pick[1]} (Level 7 Armor!)`; xp = 35
+  } else if (r > 0.86) {
+    const pool = [
+      ['almond:blue', 'a drifting bottle of Blue Almond Water'],
+      ['firesalt', 'a crystallized cluster of Abyssal Fire Salt'],
+      ['battery', 'a wax-sealed waterproof Battery'],
+      ['shells', 'an oiled pouch of Shotgun Shells'],
+      ['ammo', 'a salvaged tin of Pistol Rounds'],
+    ]
+    const pick = pool[Math.floor(ctx.random() * pool.length)]
+    tok = pick[0]; label = pick[1]; xp = 22
+  } else if (r > 0.42) {
+    if (ctx.random() < 0.72) {
+      tok = 'meat:fish'; label = 'a Blind Cave-Carp (+14 HP, +25 Food)'; xp = 16
+    } else {
+      tok = 'almond'; label = 'a barnacled bottle of Almond Water'; xp = 15
+    }
+  } else {
+    const pool = [
+      ['meat:sardines', 'a sealed tin of Drowned Sardines (+7 HP, +14 Food)'],
+      ['meat:fish', 'a silver Trench-Smelt (+14 HP, +25 Food)'],
+      ['bobbypin', 'a tangled bundle of Bobby Pins'],
+    ]
+    const pick = pool[Math.floor(ctx.random() * pool.length)]
+    tok = pick[0]; label = pick[1]; xp = 12
+  }
+
+  const res = takeToken(ctx, tok)
+  gain(ctx, xp)
+  const tag = surv >= 25 ? `[Survival ${Math.floor(surv)}] ` : ''
+  s.notice = {
+    text: res.ok
+      ? `${tag}Caught ${label}! (+${xp} XP)`
+      : `${tag}Hooked ${label}, but your pack is full! (+${xp} XP)`,
+    at: now,
+  }
 }
 
 // not onto you: no grudge, not hunting you, and you are behind it or crouched in the dark
