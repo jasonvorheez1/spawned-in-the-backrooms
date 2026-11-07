@@ -917,6 +917,13 @@ l5-geo:
   physics: {body: static, collider: mesh}
   primitive: {kind: scripted, script: scripts/level5-geo.js}
   receiveShadow: true
+l5-hall-mgr:
+  behavior: scripts/l5-hall-lay.js
+  feetPosition: {x: -38, y: -3, z: 0}
+  id: l5-hall-mgr
+  state: {}
+  tags: [l5-hall-mgr]
+  visible: false
 l5-heat:
   audience: all
   behavior: scripts/l5-heat.js
