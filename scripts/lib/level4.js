@@ -5,13 +5,12 @@ export const HALF = 32, H = 3, DEEP = 6, W = 8, DOOR = 1.2, DOORH = 2.1, T = 0.1
 export const TRAPS = [5, 14, 21]; // offices whose window was never blacked out: don't go near it
 export const ROOMS = [];
 const SIDES = { n: { ax: "z", at: -HALF, inward: 1 }, s: { ax: "z", at: HALF, inward: -1 }, w: { ax: "x", at: -HALF, inward: 1 }, e: { ax: "x", at: HALF, inward: -1 } };
-let no = 1;
 for (const [side, sd] of Object.entries(SIDES)) for (let i = 1; i <= 6; i++) {
+  const no = ROOMS.length + 1;
   const a0 = -HALF + i * W, a1 = a0 + W, d0 = sd.at, d1 = sd.at + sd.inward * DEEP, lo = Math.min(d0, d1), hi = Math.max(d0, d1);
   const r = sd.ax === "z" ? { x0: a0, x1: a1, z0: lo, z1: hi } : { x0: lo, x1: hi, z0: a0, z1: a1 };
   ROOMS.push({ id: `l4-office-${no}`, no, label: `4-${String(no).padStart(2, "0")}`, side, kind: TRAPS.includes(no) ? "trap" : "office", ...r,
     door: { ax: sd.ax, at: d1, c: (a0 + a1) / 2 + (i % 2 ? -2 : 2) }, outer: { ax: sd.ax, at: sd.at }, inward: sd.inward, mid: (a0 + a1) / 2 });
-  no++;
 }
 const corner = (id, kind, x0, z0, doorZ, doorX, w = DOOR) => ROOMS.push({ id, kind, x0, x1: x0 + 8, z0, z1: z0 + 8, door: { ax: "z", at: doorZ, c: doorX, w } });
 corner("l4-omega", "omega", -HALF, -HALF, -HALF + 8, -25);
