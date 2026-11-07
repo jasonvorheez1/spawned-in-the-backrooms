@@ -1,4 +1,4 @@
-// the main menu (Shelly, Nov 7): opens on each fresh visit and on M; the world stays live behind it.
+// the main menu (Shelly, Nov 7): opens on each fresh visit and on Backspace (Shelly); the world stays live behind it.
 // CONTINUE closes it; CHARACTER opens the critter creator, whose "done" comes back here.
 export function update(ctx) {
   if (!ctx.self.isLocal && ctx.self.isLocal !== undefined) return ctx.sleep()
