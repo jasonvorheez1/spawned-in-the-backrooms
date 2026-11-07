@@ -20,8 +20,7 @@ export function weaponBody(kind) {
     : { primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: base } }, ...(w.tint ? { material: { color: w.tint } } : {}) }
   const sc = m?.[2] || 1
   if (sc !== 1 || short !== 1) body.scale = { x: sc, y: sc, z: sc * short }
-  // the look rides as a child in the weapon's own frame; a scaled mesh's child is drawn in its unscaled frame, so undo the scale
-  if (look) body.children = [{ primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: base, look } }, castShadow: false,
-    ...(sc !== 1 || short !== 1 ? { scale: { x: 1 / sc, y: 1 / sc, z: 1 / (sc * short) } } : {}) }]
+  // the look rides as a child in the weapon's own fitted frame, scaled with it
+  if (look) body.children = [{ primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: base, look } }, castShadow: false }]
   return body
 }
