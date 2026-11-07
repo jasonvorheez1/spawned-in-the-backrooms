@@ -203,7 +203,7 @@ export function geometry(ctx) {
   C = ctx; M = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0]; STACK.length = 0;
   const p = ctx.params ?? {}, k = p.kind ?? "outlet";
   const far = (ctx.lod ?? 1) >= 3 && ["outlet", "papers", "stain", "holetile", "troffer"].includes(k); // small things shrink to a speck far away
-  if (far) { ctx.box?.(0.01, 0.01, 0.01); if (!ctx.box) C.quad(0, H - 0.001, 0, 0.01, H - 0.001, 0, 0.01, H - 0.001, 0.01, 0, H - 0.001, 0.01); return; }
+  if (far) { C.quad(0, H - 0.001, 0, 0.01, H - 0.001, 0, 0.01, H - 0.001, 0.01, 0, H - 0.001, 0.01); return; }
   if (k === "outlet") outlet(); else if (k === "falsedoor") falsedoor(); else if (k === "chair") chair(); else if (k === "vending") vending();
   else if (k === "payphone") payphone(); else if (k === "holetile") holetile(); else if (k === "stain") stain(p.seed ?? 1); else if (k === "camp") camp();
   else if (k === "papers") papers(p.seed ?? 1); else if (k === "troffer") troffer(p.lit !== false); else if (k === "manila") manila(p); else if (k === "forest") forest(p);
