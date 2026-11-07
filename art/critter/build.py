@@ -467,3 +467,113 @@ def build_extra(kind):
         ball(mb, (0, .03, 1.6), .07)
         o = to_mesh(bpy.data.objects["Wool"], .008, 2); decimate(o, 1200); o.name = "Extra_wool"; set_mats(o, ["belly"])
     smooth_shade(o); rigid(o, "Head"); return o
+
+# ================= face: projected layers + shape keys =================
+def disc2d(rx, rz, S=22, R=3):
+    pts = [(0.0, 0.0)]; faces = []
+    for r in range(1, R + 1):
+        for j in range(S): a = j / S * math.tau; pts.append((math.cos(a) * rx * r / R, math.sin(a) * rz * r / R))
+    for j in range(S): faces.append((0, 1 + j, 1 + (j + 1) % S))
+    for r in range(1, R):
+        b0, b1 = 1 + (r - 1) * S, 1 + r * S
+        for j in range(S): faces.append((b0 + j, b1 + j, b1 + (j + 1) % S, b0 + (j + 1) % S))
+    return pts, faces
+def strip2d(path, w):
+    pts, faces = [], []
+    for i, (x, z) in enumerate(path):
+        a = path[max(0, i - 1)]; b = path[min(len(path) - 1, i + 1)]; tx, tz = b[0] - a[0], b[1] - a[1]; L = math.hypot(tx, tz) or 1
+        nx, nz = -tz / L, tx / L; ww = w * (0.55 + 0.45 * math.sin(math.pi * i / (len(path) - 1)))
+        pts += [(x + nx * ww / 2, z + nz * ww / 2), (x - nx * ww / 2, z - nz * ww / 2)]
+    for i in range(len(path) - 1): faces.append((2 * i, 2 * i + 1, 2 * i + 3, 2 * i + 2))
+    return pts, faces
+def eye_mod(key, x, z, xo, rx):
+    if key == "Blink": return x, -.014 + z * .05
+    if key == "Happy": u = max(-1, min(1, x / rx)); return x, .022 * (1 - u * u) - .008 + z * .1
+    if key == "Wide": return x * 1.16, z * 1.16
+    if key == "Angry": return x, z - max(0, z) * .55 * (.5 - .5 * xo / rx)
+    if key == "Sad": return x, z - max(0, z) * .55 * (.5 + .5 * xo / rx)
+    if key == "Half": return x, z - max(0, z) * .55
+    if key == "Tall": return x * .9, z * 1.14
+    if key == "Broad": return x * 1.14, z * .9
+    return x, z
+EYE_KEYS = ["Blink", "Happy", "Wide", "Angry", "Sad", "Half", "Tall", "Broad"]
+MOUTH_KEYS = ["Smile", "Frown", "Open", "O", "Blep", "Blush"]
+def build_face(head, p):
+    bvh = BVHTree.FromObject(head, bpy.context.evaluated_depsgraph_get())
+    def proj(x, z, off):
+        h = bvh.ray_cast(V(x, 1.0, z), V(0, -1, 0))
+        return (h[0] + h[1] * off) if h[0] else V(x, .2, z)
+    zm = 1.2 - p["sn"] * .12
+    layers = []   # (name, mat, pts2d, faces, fn(key, x, z)->(x, z, off) )
+    for s in (-1, 1):
+        cx, cz = EYE_C * s * p.get("wide", 1.0), EYE_Z
+        for nm_, mt, rx, rz, off in (("white", "eyewhite", .062, .075, .0015), ("iris", "iris", .047, .06, .0028), ("pupil", "pupil", .039, .051, .004)):
+            pts, fc = disc2d(rx, rz)
+            pts = [(cx + x + (-.004 * s if mt != "eyewhite" else 0), cz + z - (.004 if mt != "eyewhite" else 0)) for x, z in pts]
+            def fn(key, X, Z, cx=cx, cz=cz, off=off, s=s, rxx=.062):
+                x, z = X - cx, Z - cz; x, z = eye_mod(key, x, z, x * s, rxx); return cx + x, cz + z, off
+            layers.append(("eye", mt, pts, fc, fn))
+        arc = [(cx + math.cos(a) * .066, cz + math.sin(a) * .079) for a in [math.radians(15 + 150 * i / 14) for i in range(15)]]
+        if s < 0: arc = [(2 * cx - x, z) for x, z in arc]
+        if FEM:   # lashes: flicks off the outer corner
+            o = arc[0] if s > 0 else arc[0]
+            arc = [(o[0] + .03 * s * (1 if s > 0 else -1) * 0 + .028 * s, o[1] + .012)] + arc
+        pts, fc = strip2d(arc, .013)
+        def fl(key, X, Z, cx=cx, cz=cz, s=s):
+            x, z = X - cx, Z - cz; x, z = eye_mod(key, x, z, x * s, .062); return cx + x, cz + z, .005
+        layers.append(("lash", "eyeink", pts, fc, fl))
+    # mouth: philtrum + omega
+    w = .036
+    path = [(-w + 2 * w * i / 20, 0) for i in range(21)]
+    path = [(x, zm - .012 * abs(math.sin(math.pi * x / w))) for x, _ in path]
+    pts, fc = strip2d(path, .008)
+    def fm(key, X, Z):
+        u = X / w
+        if key == "Smile": return X * 1.08, Z + .014 * u * u - .002, .004
+        if key == "Frown": return X, Z - .018 * u * u + .006, .004
+        if key == "O": return X * .5, Z + .004, .004
+        return X, Z, .004
+    layers.append(("mouth", "eyeink", pts, fc, fm))
+    pts, fc = strip2d([(0, zm - .002), (0, zm + .018), (0, zm + .03)], .007)
+    layers.append(("mouth", "eyeink", pts, fc, lambda k, X, Z: (X, Z, .004)))
+    for nm_, mt, cxz, rr, open_, blep in (("in", "mouth", (0, zm - .02), (.03, .022), True, False), ("tongue", "tongue", (0, zm - .03), (.018, .012), True, True)):
+        pts, fc = disc2d(*rr)
+        pts = [(cxz[0] + x, cxz[1] + z) for x, z in pts]
+        def fo(key, X, Z, c=cxz, nm_=nm_, rr=rr):
+            x, z = X - c[0], Z - c[1]
+            if key == "Open": return c[0] + x, c[1] + z, .002 if nm_ == "in" else .003
+            if key == "O": return c[0] + x * .55, c[1] + .005 + z * 1.1, .002 if nm_ == "in" else -.01
+            if key == "Blep" and nm_ == "tongue": return c[0] + .008 + x * .9, c[1] + .006 + z * 1.4, .0042
+            return c[0] + x * .3, c[1] + z * .2, -.012
+        layers.append(("mouth", mt, pts, fc, fo))
+    for s in (-1, 1):
+        c = (.19 * s * p.get("wide", 1.0), 1.275); pts, fc = disc2d(.042, .022)
+        pts = [(c[0] + x, c[1] + z) for x, z in pts]
+        def fb(key, X, Z, c=c):
+            x, z = X - c[0], Z - c[1]
+            if key == "Blush": return X, Z, .002
+            return c[0] + x * .3, c[1] + z * .3, -.012
+        layers.append(("blush", "blush", pts, fc, fb))
+    # build
+    names = ["eyewhite", "iris", "pupil", "eyeink", "mouth", "tongue", "blush"]
+    verts, faces, fmat, base2d = [], [], [], []
+    for (_, mt, pts, fc, fn) in layers:
+        o0 = len(verts)
+        for (x, z) in pts:
+            X, Z, off = fn("Basis", x, z); verts.append(proj(X, Z, off)); base2d.append((x, z, fn))
+        for f in fc: faces.append(tuple(o0 + i for i in f)); fmat.append(names.index(mt))
+    o = mesh_from("Face", verts, faces); set_mats(o, names)
+    for pl, mi in zip(o.data.polygons, fmat): pl.material_index = mi
+    for pl in o.data.polygons:   # wind toward +Y-ish (outward)
+        pass
+    o.shape_key_add(name="Basis")
+    for key in EYE_KEYS + MOUTH_KEYS:
+        sk = o.shape_key_add(name=key)
+        for i, (x, z, fn) in enumerate(base2d):
+            X, Z, off = fn(key, x, z); sk.data[i].co = proj(X, Z, off)
+    smooth_shade(o)
+    # outward normals
+    me = o.data
+    flip = sum(1 for pl in me.polygons if pl.normal.y < 0) > len(me.polygons) / 2
+    if flip: me.flip_normals()
+    return o
