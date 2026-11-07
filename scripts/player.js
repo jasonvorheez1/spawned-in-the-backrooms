@@ -260,6 +260,7 @@ function tickStats(ctx, t, moving) {
     s.hp = mh; s.sanity = Math.round(ms * 0.6)
     sound(ctx, 'static-burst-glitch', 0.95, true)
     ctx.emit('screenFlash', { color: '#000000', duration: 0.8, intensity: 1 }, { audience: { player: ctx.self.id } })
-    ctx.self.feetPosition = { x: (ctx.random() - 0.5) * 6, y: 0.1, z: (ctx.random() - 0.5) * 6 }
+    const sp = ctx.place.defaultSpawnPoint ?? {}
+    ctx.self.feetPosition = { x: (sp.x ?? 0) + (ctx.random() - 0.5) * 6, y: 0.1, z: (sp.z ?? 0) + (ctx.random() - 0.5) * 6 }
   }
 }
