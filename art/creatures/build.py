@@ -3,7 +3,8 @@ import bpy, numpy as np, sys, os
 def run(src, dst, ratio, glow):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=src)
-    for o in bpy.context.scene.objects:
+    for o in list(bpy.context.scene.objects):
+        if o.type == "MESH" and o.name.startswith("Icosphere"): bpy.data.objects.remove(o); continue
         if o.type == "MESH":
             m = o.modifiers.new("dec", "DECIMATE"); m.ratio = ratio
             bpy.context.view_layer.objects.active = o
