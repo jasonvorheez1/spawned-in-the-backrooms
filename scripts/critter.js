@@ -96,7 +96,8 @@ function randomLook(ctx, cur, scope) {
 
 export function onInput(ctx, input) {
   const st = ctx.self.state
-  if (WARDROBE_OFF) { if (st.wardrobeOpen && !st.wrMenu) st.wardrobeOpen = false; } // the O key stays off; the main menu's CHARACTER opens it else if (input.pressed?.wardrobe) st.wardrobeOpen = !st.wardrobeOpen
+  // the O key stays off; the main menu's CHARACTER opens it
+  if (WARDROBE_OFF) { if (st.wardrobeOpen && !st.wrMenu) st.wardrobeOpen = false; } else if (input.pressed?.wardrobe) st.wardrobeOpen = !st.wardrobeOpen
   if (input.pressed?.emote) {
     const l = lookOf(ctx), cur = ctx.self.session.face || l.expr
     const next = C.expr[(C.expr.indexOf(cur) + 1) % C.expr.length]

@@ -111,6 +111,12 @@ inputs:
       touch:
         button: false
     dress: {}
+    mmenu: {}
+    mainmenu:
+      keys:
+        - m
+      touch:
+        button: false
     talk: {}
     talkdo: {}
     shop: {}
