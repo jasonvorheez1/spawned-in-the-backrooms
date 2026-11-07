@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1253,
-  "updatedAt": "2026-11-07T22:30:22.387Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, Levels 1–7, Base Gamma and a debug room. Authored cells and place simulations assemble the maze and outposts; shared player, creature, NPC, loot, crafting, clothing and UI systems support individual progression, combat and scavenging. A local-player main menu opens the game and routes into the character creator while the world continues live behind it.",
+  "basedOnSpecVersion": 1266,
+  "updatedAt": "2026-11-07T22:43:37.661Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, Levels 1–7, Base Gamma and a debug room. Authored cells and place simulations assemble the maze and outposts; shared player, creature, NPC, loot, clothing, crafting and UI systems support individual progression, combat and scavenging. NPC wardrobes are seeded by identity and role, while Level 7's island skiffs are player-rowed dories.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, containers, breakable furniture, shifting walls and hunters.",
-    "places/level1 (3D) - Habitable Zone and M.E.G. camp; car-park cells, agents, loot, hounds and skin-stealers.",
+    "places/level1 (3D) - Habitable Zone and M.E.G. camp; car-park cells, agents, role-dressed NPCs, loot, hounds and skin-stealers.",
     "places/level2 + places/level3 (3D) - Utility Halls and Electrical Station: seeded halls, camps, hazards, creatures, Gamma checkpoint, generators and lifts.",
-    "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, traders, guards, residents and Database terminal.",
+    "places/gamma (3D) - M.E.G. Base Gamma interior; security hall, atrium/mall, faux town, role-dressed traders, guards, residents and Database terminal.",
     "places/level4 (3D) - Abandoned Office; offices, fountains, break-room vending, lift/stairs and Base Omega; sim lays residents and office systems.",
     "places/level5 (3D) - Terror Hotel; Main Hall, guest rooms, Beverly Room and Boiler Room; residents, rentals, mahjong, rat packs, Level 6 portal and Ines's goggles quest.",
     "places/level6 (3D) - Lights Out; seeded dark concrete labyrinth, survivor notes/props, shifting wall, auditory hazards, hounds and a Smiler; stairs return to 5 or descend to 7.",
-    "places/level7 (3D) - Thalassophobia: Drowned Parlor and Entrance Pier lead by player-rowed dory to M.E.G. Outpost Seawatch and Fort Surrender; maritime armor, fishing rods, salvage and leviathans inhabit islands and ocean."
+    "places/level7 (3D) - Thalassophobia: Drowned Parlor and Entrance Pier lead by rowed dory to Outpost Seawatch and Fort Surrender; island skiffs are seat-controlled boats that return to individual moorings."
   ],
   "roots": [
     "world.config.yaml - multiplayer entry at main; declares camera, player actions, player template and HUD renderer; M opens the main menu.",
@@ -22,7 +22,7 @@
     "scripts/ui.js and *-ui.js renderers - HUD and overlays; mainMenu UI precedes wardrobe, mahjong, loot, talk/trade, build, stats, craft, OS and other panels.",
     "scripts/main-menu.js + scripts/main-menu-ui.js - local player menu behavior and Continue/Character panel; menu session mark opens it on a fresh visit, M toggles it.",
     "scripts/view3.js - middle-mouse toggle writes player.state.tp; scripts/camera.js consumes it for the over-shoulder camera.",
-    "places/level7/config.yaml atmosphere.look → scripts/look-level7.js; scripts/terrain7.js supplies sea/island heightmap, while level7/sim.js lays and ticks local world including dory and fishing rods."
+    "places/level7/config.yaml atmosphere.look → scripts/look-level7.js; terrain7.js supplies sea/island heightmap, and level7/sim.js plus its cells lay/tick the world and dories."
   ],
   "shared": [
     "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait/heading; player and M.E.G. NPC chains run it before their controllers; scripts/lib/body3.js supplies body weapon animation and rowing IK.",
@@ -31,7 +31,7 @@
     "scripts/lib/level4.js, level5.js and level6.js - office/hotel plans and sanity data plus Level 6 seeded hall grid shared by geometry, simulation and player place behavior.",
     "scripts/lib/level-kit.js - shared keepPeople(ctx, ids, spawn) and every(ctx, key, ms) helpers used by place sims to manage named NPCs and throttle work.",
     "scripts/lib/npc-respawn.js + scripts/lib/data/meg.yml - common one-hour NPC return timing/helper used by level-kit and Level 4/5 resident managers.",
-    "scripts/lib/clothes.js + data/clothes.yml - clothing tokens, leveled/faction wardrobe rolls, NPC looks and armor resistance; reused by player, NPC, loot and critter systems; scripts/lib/critter-model.js + data/faces.yml supplies stable ID-derived face traits and palettes.",
+    "scripts/lib/clothes.js + data/clothes.yml - clothing tokens, patterns, leveled/faction/job wardrobe rolls and armor resistance; player, NPC, loot and critter systems reuse it; critter-model.js renders fabric via mat-cloth.js and stable faces via faces.yml.",
     "scripts/lib/craft.js + data/craft.yml - recipe readiness, batch capacity and category list shared by craft.js actions and craft-ui.js; scripts/lib/npc-talk.js supplies shop prices/sections to talk.js and talk-ui.js."
   ],
   "notableExports": [
@@ -42,17 +42,17 @@
     "scripts/lib/level2.js - grid/layout queries and sludge sites; scripts/lib/level4.js, level5.js, level6.js - plan constants and queries.",
     "scripts/lib/level6path.js - cellAt, cellCenter, isWalkable, stepToward6; scripts/terrain7.js - ISLES, heightAt, materialAt.",
     "scripts/lib/maze0path.js, maze1path.js, maze2path.js, boilerpath.js - cell/door passage and stepToward routes; maze1path/2path also export cellNear.",
-    "scripts/lib/l5-people.js - PEOPLE5, roundsOf, speak, spawnResident, tickPeople; scripts/l7-dory.js - ears, onControlBegin/onControlEnd, onInput, update; lib/craft.js and lib/npc-talk.js export recipe/shop helpers."
+    "scripts/lib/l5-people.js - PEOPLE5, roundsOf, speak, spawnResident, tickPeople; scripts/l7-dory.js - ears, onControlBegin/onControlEnd, onInput, update; clothes.js - patsOf, patOk and garment/token helpers."
   ],
   "ownership": [
-    "scripts/player.js - player.state progression, health/sanity, inventory/equipment/ammo/weapon condition, hunger/thirst, cents, visits, kills/deaths, combat, fishing catches and fish rewards; player.state.look/clothes is equipped and carried apparel.",
+    "scripts/player.js - player.state progression, health/sanity, inventory/equipment/ammo/weapon condition, hunger/thirst, cents, visits, kills/deaths, combat and fishing rewards; player.state.look/clothes includes worn garments and fabric pattern keys.",
     "scripts/stats.js - HALOGEN attributes, skills, points, tags, schema version, sheetOpen and target; initializes/migrates sheet and spends points.",
     "scripts/craft.js - craftOpen/craftTab/craftBench, recipe actions, payout redemption and hunger/thirst drain; validates recipes through shared recipeStatus/maxMakes.",
     "scripts/horde.js - player horde phase/countdown/alive/result; session holds wave timing and spawned creatures carry owner horde id.",
     "scripts/build.js + player.js - player scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
     "scripts/interact.js + scripts/lib/seat.js - focus/loot/interaction and player sit state; scripts/lockpick.js owns pick state, pins and boiler-pick timestamp; seats own occupancy.",
     "scripts/talk.js + scripts/meg-agent.js - dialogue/social memory, shop tab/trades and NPC follow; meg-agent owns routines, nerve, loadout, combat, fear/want, cover, worn look and corpse inspections.",
-    "scripts/main-menu.js + scripts/critter.js - player.state.menuOpen and wardrobeOpen/wrMenu/wrTab/look editing; place sims and level-kit own npcGone/respawns, Level 7 sim owns builtV/smashed regrowth, l7-dory.js owns boat/oars/rower and motion session."
+    "scripts/main-menu.js + scripts/critter.js own menu/wardrobe editing; place sims own NPC respawn/regrowth; l7-dory.js owns each boat's controller, rower and oars, with motion in session and mooring in boat state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered handlers: locomotion before movement; interact, grab, rest, mahjong, talk, build, noclip, stats, craft, OS, lockpick and horde before critter, main-menu and view3.",
@@ -66,7 +66,7 @@
     "NPC state.follow → meg-agent.js pursuit/return and companion recovery; NPC threat response uses visible danger, while armed agents fight, inspect eligible corpses and seek cover.",
     "player.js ranged attack → lib/ballistics.js traces from eye and returns target/world impact; player.js applies damage and show() emits tracer/impact FX; weapons.yml supplies projectile parameters.",
     "scripts/lib/loot.js place pools/item rolls → interact.js containers and player.js kill drops; Level 3 has special rolls, Level 5 Ines quest makes NVG available, and Level 7 l7 pool includes fishing rod.",
-    "Level 7 rod pickup → player.js weapon selection; attack swing at water → tryFish schedules fishCatch → player inventory/rewards and notice; Survival, cast power and deep-water location modify catch odds/rewards."
+    "Level 7 E/seat control → l7-dory.js rows each boat and writes player.state.rowHands → scripts/lib/body3.js IK; idle boats return to state.home, while rod swings at water → player.js tryFish/catch/rewards."
   ],
   "behaviorFamilies": [
     "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; Level 5 cells hold the hotel portal and quest props.",
@@ -75,8 +75,8 @@
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - rounds, talk, faction, role, voice, looks and routines vary by NPC; meg-agent.js adds shared nerve, loadout and combat behavior.",
     "scripts/lib/craft.js + data/craft.yml - crafting actions/menu reuse category and recipe checks; category, scrap costs, skills, bench requirement, output batches and item families vary by recipe.",
     "scripts/lib/npc-talk.js + shops.yml/talk.yml - shared NPC dialogue and trader interfaces vary by persona, stock, barter, discount and item section; buy/sell uses Backdollars.",
-    "scripts/lib/clothes.js + clothes.yml and critter-model.js + faces.yml - apparel tokens/DR and NPC clothing rolls vary by level/faction; NPC face traits and eye/cheek/nose colours are stable per id, with look edits preserving face choices.",
-    "places/level7/sim.js breakables(FY, PY) and l7-ocean-geo.js/l7-room-geo.js - model-backed breakables and scripted geometry vary across parlor, pier, islands and stations; l7-use.js handles ferry/stations, l7-dory.js rowing, and player.js fishing."
+    "scripts/lib/clothes.js + clothes.yml, critter-model.js + faces.yml and mat-cloth.js - wardrobe rows vary by faction/job/place and carry fabric pattern variants in looks/tokens; NPC pattern/face choices are stable by id and patterns shade garment geometry without UVs.",
+    "places/level7/sim.js breakables(FY, PY) and l7-ocean-geo.js/l7-room-geo.js - model-backed props and scripted geometry vary across parlor, pier, islands and stations; l7-use.js handles stations, l7-dory.js provides rowed boats, player.js handles fishing."
   ],
   "probableOrphans": [],
   "migrationNotes": [
@@ -85,6 +85,6 @@
     "Level 6 has no working flashlight: player.js suppresses the toggle and destroys any carried torch on arrival; NVG F uses a local camera-attached green light and spare goggles replenish the shared battery.",
     "Level 5 Ines quest progress is per-player state.nvgQ (1 asked, 2 case, 3 goggles, 4 complete); its north portal leads to Level 6, while the separately listed Level 6 auxiliary bulkhead remains welded shut.",
     "Level 6 stair entry E(1) connects to Level 7; marker IDs l6-from-l7/l7-from-l6 must remain paired. Level 7 FY=4.0 room floor, PY=1.1 pier deck extending north (-Z); island summits are y=7 and y=11.",
-    "Level 7 sim builtV=11; breakables(FY, PY) supplies initial/respawn specs and smashed props regrow on their timer only with an 8 m clear radius. Fishing rod uses the l7 weapon pool; cast direction/deep-water check uses -Z and water height, and reward garments must match clothes.yml token colours."
+    "Level 7 sim builtV=11; breakables(FY, PY) supplies initial/respawn specs and smashed props regrow on a timer with an 8 m clear radius. Each dory has its own state.home/oar IDs; return waits 3 minutes and a 30 m player-clear radius; rowing hand targets feed body3 IK."
   ]
 }
