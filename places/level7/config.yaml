@@ -18,7 +18,7 @@ atmosphere:
   clouds: { enabled: true, density: 0.9, speed: 0.4 }
   sky: { kind: color, color: oklch(0.42 0.015 235) }
   fog: { kind: linear, near: 18, far: 190, color: oklch(0.46 0.015 235) }
-  sun: { intensity: 0.35, color: oklch(0.85 0.02 230) }
+  sun: { light: { intensity: 0.35, color: oklch(0.85 0.02 230) } }
   moon: { enabled: false }
   stars: { enabled: false }
   ambient: { light: { color: oklch(0.75 0.02 235), intensity: 0.35 } }

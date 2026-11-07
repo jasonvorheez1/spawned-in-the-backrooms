@@ -221,7 +221,7 @@ export default function render(ctx, player) {
     <div style="font-size:14px;letter-spacing:.6em;opacity:.7">LEVEL 7</div>
     <div style="font-size:clamp(22px,6vw,52px);letter-spacing:.22em;line-height:1.1;margin:4px 0;white-space:nowrap">THALASSOPHOBIA</div>
     <div style="font-size:13px;letter-spacing:.18em;opacity:.75">THE SEA HAS NO FLOOR YOU WILL EVER TOUCH</div>
-  </div>` : ${zone === 'l6_halls' ? `<div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:90px;animation:hud-fade 6s forwards;pointer-events:none;color:#f2c14e;text-shadow:3px 3px #000">
+  </div>` : zone === 'l6_halls' ? `<div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:90px;animation:hud-fade 6s forwards;pointer-events:none;color:#f2c14e;text-shadow:3px 3px #000">
     <div style="font-size:14px;letter-spacing:.6em;opacity:.7">LEVEL 6</div>
     <div style="font-size:clamp(26px,7vw,56px);letter-spacing:.28em;line-height:1.1;margin:4px 0;white-space:nowrap">LIGHTS OUT</div>
     <div style="font-size:13px;letter-spacing:.18em;opacity:.75">THE DARK HERE IS OLDER THAN YOU</div>
