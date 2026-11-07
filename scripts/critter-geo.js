@@ -493,6 +493,11 @@ export function geometry(ctx) {
 
   // ---------- Sculpted Head with squishy cheeks and soft 3D muzzle ----------
   sculptedHead({ seg: hi ? 36 : SEG });
+  if (!sp.patch && !sp.wool) { // the muzzle: the snout's lighter fur as one smooth oval, under every other face mark
+    wOverride = { Head: 1 }; ctx.color(BELLY);
+    fill(ellipse(0, SN.y - 0.004, SN.w * 1.08, SN.h * 1.12, hi ? 32 : 18), 0.004, hi ? 4 : 2);
+    wOverride = null;
+  }
 
   // Sheep wool puffs framing the head
   if (sp.wool) {
