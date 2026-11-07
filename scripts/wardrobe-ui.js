@@ -26,6 +26,11 @@ const CSS = `<style>
 #cc .hint{font-size:11px;opacity:.55;margin-top:12px;line-height:1.4}
 #cc .fit{display:flex;gap:6px;align-items:center;margin-top:8px}
 #cc .fit .nm{flex:1;font-size:12px;opacity:.85}
+#cc .sl{display:flex;align-items:center;gap:6px;margin-top:5px}
+#cc .sl .nm{width:52px;font-size:12px}
+#cc .sl input{flex:1;accent-color:#ffb347}
+#cc .sl button{width:26px;padding:3px 0}
+#cc .sl .v{width:38px;text-align:right;font-size:11px;opacity:.75}
 </style>`
 const act = (k, v = '') => `sendAction('dress',{k:'${k}',v:'${v}'})`
 const tile = (k, v, on, label) => `<button class="${on ? 'on' : ''}" onclick="${act(k, v)}">${label}</button>`
@@ -43,7 +48,10 @@ export function wardrobe(ctx, player) {
     <div class="sec"><span>ANIMAL</span><span>${l.species}</span></div>${grid('species', C.species)}
     <div class="sec"><span>BODY</span></div>${grid('sex', C.sex)}
     <div class="sec"><span>FUR</span></div>${sws('fur', C.fur)}
-    <div class="sec"><span>MARKINGS</span></div>${grid('marks', C.marks)}`
+    <div class="sec"><span>MARKINGS</span></div>${grid('marks', C.marks)}
+    <div class="sec"><span>SHAPE</span><span>${l.model ? 'critter only' : ''}</span></div>${C.sliders.map(([k, nm, lo, hi]) => { const v = Number(l[k]) || 1; return `<div class="sl"><span class="nm">${nm}</span><button onclick="${act('sz', k + ':-')}">−</button><input type="range" min="${lo}" max="${hi}" step="${C.sliderStep}" value="${v}" onchange="sendAction('dress',{k:'sz',v:'${k}:'+this.value})"><button onclick="${act('sz', k + ':+')}">+</button><span class="v">${Math.round(v * 100)}%</span></div>` }).join('')}
+    <div class="ft" style="padding:8px 0 0;border:0"><button onclick="${C.sliders.map(() => '').join('')}${act('sz', 'reset:1')}" style="display:none"></button></div>
+    <div class="sec"><span>IMPORTED MODELS</span><span>${l.model ? C.models[l.model]?.name || '' : 'critter'}</span></div><div class="grid">${tile('model', '', !l.model, 'critter')}${Object.entries(C.models || {}).map(([k, m]) => tile('model', k, l.model === k, m.name)).join('')}</div>`
   else if (tab === 'face') body = `
     <div class="sec"><span>EYE SHAPE</span></div>${grid('eyes', C.eyes)}
     <div class="sec"><span>EYE COLOUR</span></div>${sws('eye', C.eye)}

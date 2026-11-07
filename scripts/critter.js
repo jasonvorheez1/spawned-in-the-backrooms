@@ -12,6 +12,8 @@ function applyBones(ctx) {
   const ses = ctx.self.session, b = {}
   if (ses.lids) { b.LidL = { scale: LID_SCALE }; b.LidR = { scale: LID_SCALE } }
   if (ses.twitch) b[ses.twitch] = { rotate: [0, 0, ses.twitchDir * 24] }
+  if (ses.headS && ses.headS !== 1) b.Head = { scale: ses.headS }
+  if (ses.tailS && ses.tailS !== 1) b.Tail = { scale: ses.tailS }
   ctx.self.bones = b
 }
 export function blinkEnd(ctx) { ctx.self.session.lids = false; applyBones(ctx) }
@@ -98,6 +100,16 @@ export function onInput(ctx, input) {
     const slotN = Number(d.v)
     if (d.k === 'save' && slotN >= 0 && slotN < C.outfitSlots) { const o = [...(st.outfits || [])]; while (o.length < C.outfitSlots) o.push(null); o[slotN] = lookOf(ctx); st.outfits = o; return }
     if (d.k === 'wear' && st.outfits?.[slotN]) { st.look = { ...st.outfits[slotN] }; st.face = null; return }
+    if (d.k === 'sz') { // a body slider: v = "<key>:<value>"
+      const [key, raw] = String(d.v).split(':'), row = C.sliders.find((r) => r[0] === key)
+      if (!row) return
+      const cur = Number(lookOf(ctx)[key]) || 1
+      const v = raw === '+' ? cur + C.sliderStep : raw === '-' ? cur - C.sliderStep : Number(raw)
+      if (!Number.isFinite(v)) return
+      st.look = { ...lookOf(ctx), [key]: Math.round(Math.min(row[3], Math.max(row[2], v)) * 100) / 100 }
+      return
+    }
+    if (d.k === 'model') { if (d.v && !C.models?.[d.v]) return; st.look = { ...lookOf(ctx), model: d.v || '' }; return }
     if (!(d.k in C.default)) return
     const list = C[d.k === 'top' || d.k === 'bottom' || d.k === 'shoec' || d.k === 'hatc' || d.k === 'neckc' ? 'cloth' : d.k]
     if (Array.isArray(list) && !list.includes(d.v)) return
@@ -126,8 +138,16 @@ export function update(ctx) {
   life(ctx, face)
   const params = { species: l.species, sex: l.sex, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks }
   if (l.fur) params.fur = l.fur
-  const key = JSON.stringify(params)
-  if (key !== ses.key) { ses.key = key; ctx.self.primitive = { kind: 'scripted', script: SCRIPT, params } }
+  for (const [k] of C.sliders) if (k !== 'headS' && k !== 'tailS' && Number(l[k]) && Number(l[k]) !== 1) params[k] = Number(l[k])
+  const worn = l.model && C.models?.[l.model] // an imported model worn instead of the critter
+  const key = JSON.stringify(params) + (worn ? '|' + worn.url : '')
+  if (key !== ses.key) {
+    ses.key = key
+    if (worn) { ctx.self.primitive = null; ctx.self.model = worn.url }
+    else { ctx.self.model = null; ctx.self.primitive = { kind: 'scripted', script: SCRIPT, params } }
+  }
+  const hs = Number(l.headS) || 1, ts = Number(l.tailS) || 1
+  if (!worn && (hs !== (ses.headS || 1) || ts !== (ses.tailS || 1))) { ses.headS = hs; ses.tailS = ts; applyBones(ctx) }
   // the wardrobe mirror: only on this player's own screen
   const me = ctx.place.players.find((p) => p.id === ctx.self.id)
   if (!me?.isLocal) return
@@ -138,8 +158,9 @@ export function update(ctx) {
     const pos = { x: f.x + fx * 2.1 + rx * 0.6, y: f.y, z: f.z + fz * 2.1 + rz * 0.6 }
     const rot = { yaw: (yaw * 180) / Math.PI + 180 + (ctx.self.state.wrSpin || 0) + Math.sin(ctx.now() / 1600) * 18 }
     const mirror = ses.mirror && ctx.getObject(ses.mirror)
-    if (!mirror) { ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, primitive: { kind: 'scripted', script: SCRIPT, params }, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } }); const m = ctx.getObject(ses.mirror); if (m) { m.anim.idle = { clip: 'Idle', loop: 'loop', weight: 1 }; flair(m, face) } }
-    else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
+    if (!mirror) { ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, ...(worn ? { model: worn.url } : { primitive: { kind: 'scripted', script: SCRIPT, params } }), material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } }); const m = ctx.getObject(ses.mirror); if (m) { m.anim.idle = { clip: 'Idle', loop: 'loop', weight: 1 }; flair(m, face) } }
+    else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { if (worn) { mirror.primitive = null; mirror.model = worn.url } else { mirror.model = null; mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
+      mirror.bones = { ...(hs !== 1 ? { Head: { scale: hs } } : {}), ...(ts !== 1 ? { Tail: { scale: ts } } : {}) } }
     ses.mirrorKey = key
   } else if (ses.mirror) { ctx.destroy(ses.mirror); ses.mirror = null; ses.mirrorKey = null }
 }

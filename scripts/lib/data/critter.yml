@@ -1,5 +1,5 @@
 # Custom critter options: what the creator offers and what a new player wears (her picks)
-default: { species: cat, sex: m, fur: "", eye: "#2b2233", eyes: round, marks: none, expr: grin, topw: tee, botw: pants, shoes: sneakers, hat: none, eyew: none, neck: none, top: "#e85d75", bottom: "#3d5a98", shoec: "#f4f1ea", hatc: "#e85d75", neckc: "#f3c64a" }
+default: { species: cat, sex: m, fur: "", eye: "#2b2233", eyes: round, marks: none, expr: grin, topw: tee, botw: pants, shoes: sneakers, hat: none, eyew: none, neck: none, top: "#e85d75", bottom: "#3d5a98", shoec: "#f4f1ea", hatc: "#e85d75", neckc: "#f3c64a", model: "", headS: 1, earS: 1, snoutS: 1, waistS: 1, hipS: 1, bustS: 1, tailS: 1 }
 species: [cat, dog, fox, bunny, bear, deer, mouse, wolf, raccoon, panda, pig, sheep, lion]
 sex: [m, f]
 # clothing slots: each is worn on its own, each has its own colour
@@ -19,3 +19,9 @@ outfitSlots: 3
 # reactions: how long a pressed face holds before the game's moods take it back (s)
 holdFace: 6
 hurtFace: 1.6
+# body sliders: key, label, min, max (1 = the animal's own); bust is capped low on purpose (cute and modest)
+sliders: [[headS, head, 0.8, 1.25], [earS, ears, 0.5, 1.6], [snoutS, snout, 0.3, 1.8], [waistS, waist, 0.75, 1.35], [hipS, hips, 0.75, 1.3], [bustS, bust, 0.6, 1.3], [tailS, tail, 0.5, 1.6]]
+sliderStep: 0.05
+# imported models (a .plymodel converts with tools/plymodel2glb.py, then uploads): wearable from the body tab
+models:
+  maxpayne: { name: "max payne", url: "/cdn/value.3f48f17a2e8635f4cd9eda27507ce79f85213a14d832fe69dabbfa6fba72b2ef.glb" }
