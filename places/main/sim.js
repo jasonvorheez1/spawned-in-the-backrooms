@@ -6,7 +6,34 @@ import W from "../../scripts/lib/weapons.js";
 import { spawnAlmond, spawnAmmo, spawnShells, spawnWeapon, spawnCrate, rollWeapon } from "../../scripts/lib/loot.js";
 import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ } from "../../scripts/lib/maze.js";
 const PAPER = { texture: "cdn/texture-yellow-chevron-damask-wallpaper-aged.png", color: "oklch(0.98 0.01 90)", repeat: [1, 1] };
+import B from "../../scripts/lib/data/breakables.yml";
+import { syncLevel0 } from "../../scripts/lib/breakables.js";
 export const cadence = "1s";
+// office furniture: breakable props scattered through the halls (desk, chair, shelf: [mat, hp])
+const FURN = { desk: ["wood", 80], chair: ["metal", 45], shelf: ["metal", 110] };
+function furnish(ctx) {
+  let n = 0;
+  for (let k = 0; k < 900 && n < (L.furniture ?? 140); k++) {
+    const cx = 1 + Math.floor(ctx.random() * (N - 2)), cz = 1 + Math.floor(ctx.random() * (N - 2));
+    if (inHub(cx, cz) || hasPit(cx, cz) || hasPillar(cx, cz) || !["halls", "expanse", "dark", "red"].includes(zoneOf(cx, cz))) continue;
+    const c = cellCenter(cx, cz), r = ctx.random(), kind = r < 0.45 ? "desk" : r < 0.75 ? "chair" : "shelf", [mat, hp] = FURN[kind];
+    const along = ctx.random() < 0.5, side = ctx.random() < 0.5 ? -1 : 1, off = kind === "shelf" ? S / 2 - 0.35 : (ctx.random() - 0.5) * 1.6;
+    const pos = along ? { x: c.x + side * off, y: 0, z: c.z + (ctx.random() - 0.5) } : { x: c.x + (ctx.random() - 0.5), y: 0, z: c.z + side * off };
+    const yaw = kind === "chair" ? ctx.random() * 360 : (along ? 90 : 0) + (side < 0 ? 180 : 0);
+    ctx.spawn({ tags: ["breakable", "furniture", kind], feetPosition: pos, rotation: yaw, physics: { body: "static", collider: "box" }, primitive: { kind: "scripted", script: "scripts/build-geo.js", params: { kind } }, state: { mat, hp, maxHp: hp, name: kind[0].toUpperCase() + kind.slice(1) } });
+    n++;
+  }
+}
+// broken walls stay broken for this room, then grow back (never while someone stands in the gap)
+function regrow(ctx, s, now) {
+  const br = s.broken; if (!br) return;
+  for (const [k, at] of Object.entries(br)) {
+    if (now - at < B.regrowMinutes * 60000) continue;
+    const [ax, cx, cz] = k.split(":"), c = cellCenter(+cx, +cz), w = ax === "x" ? { x: c.x + S / 2, z: c.z } : { x: c.x, z: c.z + S / 2 };
+    if (ctx.place.players.some((p) => Math.abs(p.feetPosition.x - w.x) < 1.2 && Math.abs(p.feetPosition.z - w.z) < 1.2)) continue;
+    delete br[k];
+  }
+}
 
 function cell(ctx, zones) {
   for (let k = 0; k < 60; k++) {
@@ -55,6 +82,9 @@ export function tick(ctx) {
     }
   }
   shift(ctx, s, now);
+  if (!s.furnished) { s.furnished = true; furnish(ctx); }
+  regrow(ctx, s, now);
+  syncLevel0(ctx);
   const almonds = ctx.query({ tags: ["almond"] }).length;
   if (almonds < L.almonds && now >= (s.nextAlmond ?? 0)) {
     const fill = s.almondsSeeded ? 1 : L.almonds - almonds;

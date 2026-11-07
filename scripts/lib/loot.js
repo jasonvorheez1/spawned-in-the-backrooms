@@ -52,7 +52,7 @@ export function spawnCrate(ctx, c) {
   const n = 1 + Math.floor(ctx.random() * 3), items = [];
   for (let i = 0; i < n; i++) items.push(rollItem(ctx));
   const lk = rollLock(ctx); if (lk) for (let i = 0; i < lk.bonus; i++) items.push(rollItem(ctx));
-  ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 }, rotation: ctx.random() * 360, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name: lk ? lk.name : "Supply crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
+  ctx.spawn({ tags: ["container", "crate", "breakable"], feetPosition: { x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 }, rotation: ctx.random() * 360, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { mat: "wood", hp: 60, maxHp: 60, name: lk ? lk.name : "Supply crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }
 
 export function spawnRemains(ctx, pos, items, name = "Remains") {
@@ -92,7 +92,7 @@ export function spawnCrateL1(ctx, p) {
   const n = 2 + Math.floor(ctx.random() * 3), items = [];
   for (let i = 0; i < n; i++) items.push(rollItemL1(ctx));
   const lk = rollLock(ctx); if (lk) for (let i = 0; i < lk.bonus; i++) items.push(rollItemL1(ctx));
-  ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name: lk ? lk.name : ctx.random() < 0.25 ? "Rations crate" : "Wooden crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
+  ctx.spawn({ tags: ["container", "crate", "breakable"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { mat: "wood", hp: 60, maxHp: 60, name: lk ? lk.name : ctx.random() < 0.25 ? "Rations crate" : "Wooden crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }
 // Level 2: a tool depot. More batteries and ammo, fewer rations; its own tools.
 const L2_WEIGHTS = [["almond", 14], ["ammo", 18], ["shells", 9], ["battery", 14], ["bandage", 10], ["ration", 6], ["weapon", 20], ["kit", 5], ["book", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2]]; // cloth: Savi's pick; the rest are Level 2's own finds
@@ -108,7 +108,7 @@ export function spawnCrateL2(ctx, p) {
   for (let i = 0; i < n; i++) items.push(rollItemL2(ctx));
   const lk = rollLock(ctx); if (lk) for (let i = 0; i < lk.bonus; i++) items.push(rollItemL2(ctx));
   const name = lk ? lk.name : ["Toolbox", "Metal crate", "Parts bin", "Wooden crate"][Math.floor(ctx.random() * 4)];
-  ctx.spawn({ tags: ["container", "crate"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name, items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
+  ctx.spawn({ tags: ["container", "crate", "breakable"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name, items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }
 
 // Level 2 side-room containers: a kind from level2.yml containers (locker, toolbox, vending …), rolled from its own loot table
