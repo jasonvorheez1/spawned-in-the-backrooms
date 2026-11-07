@@ -104,6 +104,31 @@ export function geometry(ctx) {
     ctx.albedo(null); ctx.color("oklch(0.35 0.01 250)"); for (const x of [-0.95, 0.95]) box(ctx, x, 0, 0.1, 0.1, 1.3, 0.3);
     ctx.color("oklch(0.75 0.1 85)"); for (let i = 0; i < 6; i++) box(ctx, -0.8 + i * 0.32, 1.0, -0.05, 0.05, 0.05, 0.02);
     cracks(ctx, dmg, 2, 1.3, 0.08, 9);
+  } else if (kind === "brick_wall") { // running-bond red brick, mortar showing in the joints, a concrete cap
+    ctx.albedo(null); ctx.color("oklch(0.78 0.02 85)"); box(ctx, 0, 0, 0, 1.98, 2.3, 0.2);
+    ctx.albedo("cdn/texture-old-red-brick-wall.png");
+    for (let r = 0; r < (hi ? 30 : 10); r++) {
+      const rows = hi ? 30 : 10, h = 2.3 / rows, off = r % 2 ? 0.125 : 0, n = hi ? 8 : 3, bw = 2 / n;
+      for (let i = -1; i < n; i++) {
+        const x0 = Math.max(-1, -1 + off + i * bw + 0.006), x1 = Math.min(1, -1 + off + (i + 1) * bw - 0.006); if (x1 - x0 < 0.03) continue;
+        ctx.color(`oklch(${0.8 + ((r * 7 + i * 13) % 5) * 0.03} 0.03 40)`); slab(ctx, x0, r * h + 0.006, -0.12, x1, (r + 1) * h - 0.006, 0.12);
+      }
+    }
+    ctx.albedo("cdn/texture-rough-concrete.png"); ctx.color("oklch(0.9 0.01 90)"); box(ctx, 0, 2.3, 0, 2.04, 0.1, 0.28);
+    cracks(ctx, dmg, 2, 2.4, 0.24, 11);
+  } else if (kind === "rebar_barricade") { // poured concrete jersey block, rebar stubs bristling from its top
+    ctx.albedo("cdn/texture-rough-concrete.png"); ctx.color("oklch(0.92 0.005 90)");
+    box(ctx, 0, 0, 0, 2, 0.25, 0.6); box(ctx, 0, 0.25, 0, 2, 0.35, 0.42); box(ctx, 0, 0.6, 0, 2, 0.6, 0.24);
+    ctx.albedo(null); ctx.color("oklch(0.42 0.07 45)");
+    for (let i = 0; i < 6; i++) { const x = -0.85 + i * 0.34; box(ctx, x, 1.2, (i % 2 ? 0.05 : -0.05), 0.025, 0.18 + (i % 3) * 0.08, 0.025); }
+    for (const z of [0.125, -0.125]) box(ctx, 0, 0.85, z, 1.9, 0.02, 0.01);
+    cracks(ctx, dmg, 2, 1.2, 0.24, 13);
+  } else if (kind === "pipe_grate") { // welded steel pipe uprights, two rails, a valve wheel
+    ctx.albedo(METAL); ctx.color("oklch(0.62 0.02 240)");
+    for (let i = 0; i < 9; i++) box(ctx, -0.9 + i * 0.225, 0, 0, 0.06, 2.2, 0.06);
+    for (const y of [0.3, 1.9]) box(ctx, 0, y, 0, 2, 0.08, 0.08);
+    ctx.albedo(null); ctx.color("oklch(0.72 0.12 80)"); box(ctx, 0.45, 1.05, 0.06, 0.24, 0.24, 0.03);
+    cracks(ctx, dmg, 2, 2.2, 0.06, 15);
   } else { // rubble: a low heap of chunks and splinters
     ctx.albedo(null);
     let r = 7; const rnd = () => ((r = (r * 9301 + 49297) % 233280) / 233280);
