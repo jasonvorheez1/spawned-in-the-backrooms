@@ -2,7 +2,7 @@
 // (written by scripts/stats.js): attr, skl, apts, spts, sheetOpen, target. Buttons send the 'stat' action.
 import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
-import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, attrsOf, skillsOf, spentOf, tagsOf, dmgMul, derived, carried, burden } from './lib/stats.js'
+import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, attrsOf, skillsOf, spentOf, tagsOf, dmgMul, derived, carried, burden, handling, reqText } from './lib/stats.js'
 
 const CSS = `<style>
 #wt{position:fixed;left:22px;bottom:128px;font-size:11px;letter-spacing:.14em;color:#ffcf87;text-shadow:0 1px 3px #000;pointer-events:none;opacity:.85}
@@ -74,6 +74,7 @@ export function statsUi(ctx, player) {
       <span>Carry weight <b>${kg.toFixed(1)} / ${cap} kg${slow ? ' (slowed)' : ''}</b></span><span>Stamina <b>${Math.round(d.staMax)}</b></span>
       <span>Damage resist <b>DR ${d.dr}</b></span><span>Clothes find <b>×${d.clothFind.toFixed(2)}</b></span>
       <span>${wp.name} DAM <b>${dam(wp)}</b></span><span>DPS <b>${Math.round(dam(wp) * (wp.pellets ? 1 : 1) / (wp.cooldown * (wp.ranged ? 1 : d.swing)))}</b></span>
+      ${wp.req ? `<span>${wp.name} needs <b>${reqText(wp)}</b></span><span>${handling(s, wp).notes.length ? `<b style="color:#ff9a8a">${handling(s, wp).notes.join(' · ')}</b>` : 'You can handle it'}${wp.ranged ? ` · spread ×${handling(s, wp).spread.toFixed(2)} · kick ×${handling(s, wp).recoil.toFixed(2)}` : ''}</span>` : ''}
       <span>Unarmed DAM <b>${dam(W.fists)}</b></span><span>Crit chance <b>${Math.round(d.crit * 100)}%</b></span>
       ${wp.ranged ? `<span>Reload <b>${(wp.reloadTime ?? (wp.reloadStart + wp.reloadShell * wp.magSize)).toFixed(1) * 1 && ((wp.reloadTime ?? (wp.reloadStart + wp.reloadShell * wp.magSize)) * d.reload).toFixed(1)} s</b></span>` : `<span>Swing <b>${(wp.cooldown * d.swing).toFixed(2)} s</b></span>`}<span>Find chance <b>${Math.round(d.scav * 100)}%</b></span><span>${wp.name} condition <b>${Math.round(s['cnd_' + s.equipped] ?? 100)}%</b></span>
     </div>

@@ -67,9 +67,32 @@ export const wclass = (w) => (w?.ranged ? 'guns' : w && w.name !== 'Fists' ? 'me
 const skillMul = (v) => 0.94 + v / 250 // 15 is about the old balance, 100 is +30%
 // the damage multiplier for a weapon: its skill and the attribute behind it
 export function dmgMul(s, w) {
-  const a = attrsOf(s), k = skillsOf(s), c = wclass(w)
-  return c === 'guns' ? (1 + (a.o - 5) * 0.04) * skillMul(k.guns) : c === 'melee' ? (1 + (a.h - 5) * 0.06) * skillMul(k.melee) : (1 + (a.h - 5) * 0.05) * skillMul(k.unarmed)
+  const a = attrsOf(s), k = skillsOf(s), c = wclass(w), hd = handling(s, w).dmg
+  return hd * (c === 'guns' ? (1 + (a.o - 5) * 0.04) * skillMul(k.guns) : c === 'melee' ? (1 + (a.h - 5) * 0.06) * skillMul(k.melee) : (1 + (a.h - 5) * 0.05) * skillMul(k.unarmed))
 }
+// What a weapon asks of the one holding it (weapons.yml req: { h: Hardiness, guns | melee: skill }) and what falling short costs; being
+// stronger than it asks steadies it a little. A heavy gun in weak arms: a wider spread, more kick, a wandering aim, slower to bring up;
+// a heavy melee weapon: less damage, more stamina, a slower swing. { str, skill } are the points you are short (negative: to spare).
+export function handling(s, w) {
+  const o = { str: 0, skill: 0, spread: 1, recoil: 1, sway: 0, dmg: 1, stam: 1, swing: 1, raise: 1, hold: 0, notes: [] }
+  const r = w?.req; if (!r) return o
+  const a = attrsOf(s), k = skillsOf(s), cls = w.ranged ? 'guns' : 'melee'
+  const ds = (r.h ?? 0) - a.h, dk = r[cls] ? r[cls] - (k[cls] ?? 0) : 0
+  o.str = ds; o.skill = dk
+  const sh = Math.max(0, ds), sp = Math.max(0, -ds), kh = Math.max(0, dk), kp = Math.max(0, -dk)
+  o.hold = Math.min(1, sh / 4) // how badly it sags in your arms (scripts/lib/vmpose.js)
+  o.dmg = Math.max(0.4, 1 - 0.04 * sh - 0.003 * kh)
+  o.raise = Math.max(0.4, 1 - 0.08 * sh)
+  if (w.ranged) {
+    o.spread = (1 + 0.17 * sh) * (1 - 0.03 * Math.min(sp, 4)) * (1 + 0.012 * kh) * (1 - 0.002 * Math.min(kp, 40))
+    o.recoil = (1 + 0.14 * sh) * (1 - 0.04 * Math.min(sp, 4))
+    o.sway = 0.25 * sh + 0.01 * kh // degrees the aim wanders
+  } else { o.stam = 1 + 0.09 * sh; o.swing = 1 + 0.06 * sh }
+  if (sh > 0) o.notes.push(`Too heavy: needs HAR ${r.h} (you have ${a.h})`)
+  if (kh > 0) o.notes.push(`Needs ${cls === 'guns' ? 'Guns' : 'Melee'} ${r[cls]} (you have ${k[cls]})`)
+  return o
+}
+export const reqText = (w) => (w?.req ? [w.req.h ? `HAR ${w.req.h}` : '', w.req.guns ? `GUNS ${w.req.guns}` : '', w.req.melee ? `MELEE ${w.req.melee}` : ''].filter(Boolean).join(' · ') : '')
 
 // what the attributes and skills do, as plain numbers (5 in everything and no points is about the old balance)
 export function derived(s) {

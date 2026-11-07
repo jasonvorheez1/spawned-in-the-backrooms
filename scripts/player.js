@@ -8,10 +8,11 @@ import W, { baseOf } from './lib/weapons.js'
 import { raycast } from 'builtin/physics'
 import BRK from './lib/data/breakables.yml'
 import { strike } from './lib/breakables.js'
-import { dropLoot, rollLoot, spawnWeapon } from './lib/loot.js'
+import { fire as fireBullets, show as showBullets } from './lib/ballistics.js'
+import { dropLoot, rollLoot, spawnWeapon, poolOf } from './lib/loot.js'
 import { becomeCorpse } from './lib/l5-hostile.js'
 import { markKill } from './lib/witness.js'
-import { derived, canCarry, burden, npcMul, START, dmgMul, skillsOf, spentOf, SKILLS, SKILL_MAX, dmgAfterArmor, lookOfNpc } from './lib/stats.js'
+import { derived, canCarry, burden, npcMul, START, dmgMul, handling, skillsOf, spentOf, SKILLS, SKILL_MAX, dmgAfterArmor, lookOfNpc } from './lib/stats.js'
 import { parseCloth, wear, takeOff } from './lib/clothes.js'
 import { weaponBody, HOLD, MESHGRIP } from './lib/weapon-look.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
@@ -330,8 +331,8 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
     s.kills += 1
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
     const tg = m.tags ?? [], ent = tg.includes('smiler') || tg.includes('lurker')
-    if (ent) dropLoot(ctx, m.feetPosition, tg.includes('lurker') ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot, derived(s).clothFind) // only smilers and lurkers leave smiler/lurker remains
-    else if (!npc && !tg.some((g) => g === 'l5staff' || g === 'l5rat' || g === 'remains')) becomeCorpse(ctx, m, (m.state?.name ?? 'Body').split(' ·')[0] + "'s body", rollLoot(ctx, npcMul(m.state).loot, derived(s).clothFind), ctx.self.feetPosition) // anything else stays its own body, limp and searchable // an agent's own body is searched (scripts/meg-agent.js)
+    if (ent) dropLoot(ctx, m.feetPosition, tg.includes('lurker') ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)) // only smilers and lurkers leave smiler/lurker remains
+    else if (!npc && !tg.some((g) => g === 'l5staff' || g === 'l5rat' || g === 'remains')) becomeCorpse(ctx, m, (m.state?.name ?? 'Body').split(' ·')[0] + "'s body", rollLoot(ctx, npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)), ctx.self.feetPosition) // anything else stays its own body, limp and searchable // an agent's own body is searched (scripts/meg-agent.js)
   }
 }
 
@@ -342,15 +343,16 @@ function swing(ctx, power = 0) {
   if (now < (w.nextSwing ?? 0) || (s.downAt && now - s.downAt < 1200)) return
   const wp = weaponOf(s)
   if (wp.ranged) power = 0
-  if (power && (w.stamina ?? s.stamina) < wp.stamina * P.stamina) power = 0 // too tired to put weight behind it: a light swing
-  if ((w.stamina ?? s.stamina) < wp.stamina) return
+  const Hd = handling(s, wp) // what the weapon asks of you: too heavy for your Hardiness costs stamina and swing speed (scripts/lib/stats.js)
+  if (power && (w.stamina ?? s.stamina) < wp.stamina * Hd.stam * P.stamina) power = 0 // too tired to put weight behind it: a light swing
+  if ((w.stamina ?? s.stamina) < wp.stamina * Hd.stam) return
   s.loud = { at: now, gun: !!wp.ranged } // hunters hear it (lib/hunt.js)
   const heavyMul = power ? 1 + power * (P.damage - 1) : 1
   const ammoKey = wp.ammoType ?? 'ammo', loadedKey = 'loaded_' + s.equipped
   if (wp.ranged) {
     if (s.reloading) {
       // a shotgun can be fired mid-reload (the reload stops); a magazine gun has to finish
-      if (wp.pellets && (s[loadedKey] ?? 0) > 0) cancelReload(ctx)
+      if ((wp.pellets || wp.tube) && (s[loadedKey] ?? 0) > 0) cancelReload(ctx)
       else return
     }
     if ((s[loadedKey] ?? 0) <= 0) {
@@ -366,19 +368,38 @@ function swing(ctx, power = 0) {
       w.heat = Math.min(1, (w.heat ?? 0) * Math.exp(-Math.max(0, now - (w.heatAt ?? 0)) / 350) + (wp.heatPer ?? 0.1)); w.heatAt = now
       ctx.emit('cameraPunch', { direction: { x: (ctx.random() - 0.5) * 0.4, y: 1, z: -0.3 }, intensity: 0.12 + w.heat * 0.18 }, { audience: { player: ctx.self.id } })
     }
-    if (wp.pellets) {
-      ctx.emit('screenShake', { intensity: 0.35, duration: 0.2 }, { audience: { player: ctx.self.id } })
-      ctx.after(0.55, 'pumpRack', {})
+    if (wp.pellets || wp.tube) {
+      if (wp.pellets) ctx.emit('screenShake', { intensity: 0.35, duration: 0.2 }, { audience: { player: ctx.self.id } })
+      ctx.after(wp.pump ?? 0.55, 'pumpRack', {})
     }
   }
-  w.stamina = (w.stamina ?? s.stamina) - wp.stamina * (power ? P.stamina : 1)
-  w.nextSwing = now + wp.cooldown * 1000 * (power ? P.cooldown : 1) * derived(s).swing
+  w.stamina = (w.stamina ?? s.stamina) - wp.stamina * Hd.stam * (power ? P.stamina : 1)
+  w.nextSwing = now + wp.cooldown * 1000 * (power ? P.cooldown : 1) * derived(s).swing * Hd.swing
   s.swingHeavy = Math.round(power * 100) / 100
   s.swingAt = now
   if (s.equipped !== 'fists') s['cnd_' + s.equipped] = Math.max(0, (s['cnd_' + s.equipped] ?? 100) - (wp.ranged ? 0.3 : 0.6) * (wp.wear ?? 1) * derived(s).wear) // weapons wear with use; Repair slows it
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
-  let cone = (s.ads && wp.adsCone) || wp.cone || (wp.ranged ? 0.985 : 0.4); if (wp.spread) cone = Math.cos(Math.acos(cone) + (w.heat ?? 0) * wp.spread * (s.ads ? 0.6 : 1))
-  if (wp.auto) tracer(ctx, p, f, wp.range)
+  if (wp.ranged) { // real bullets: spread, drop and drag down each pellet's path (scripts/lib/ballistics.js)
+    let pc = ctx.self.camera?.rotation?.pitch ?? 0; if (Math.abs(pc) > 1.6) pc = pc * Math.PI / 180
+    const eye = { x: p.x, y: p.y + (s.crouch ? 1.0 : 1.45), z: p.z }, crit = ctx.random() < derived(s).crit
+    const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100) * (crit ? 1.75 : 1)
+    const res = fireBullets(ctx, s, wp, w, eye, f, pc, base)
+    const cp = Math.cos(pc), mz = { x: eye.x + f.x * cp * 0.8 - f.z * 0.12, y: eye.y + Math.sin(pc) * 0.8 - 0.14, z: eye.z + f.z * cp * 0.8 + f.x * 0.12 }
+    showBullets(ctx, res, wp, mz)
+    s.kick = Hd.recoil; s.spreadNow = Math.round(res.spread * 10) / 10 // vmpose scales the kick; the HUD can show the cone
+    for (const t of res.targets) {
+      const m = t.m
+      if (t.head) ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: 'HEADSHOT', color: '#ffd23a', size: 1.2 })
+      else if (crit) ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2, z: m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
+      hitTarget(ctx, s, m, Math.max(1, Math.round(t.dmg)), f, !wp.quiet)
+    }
+    if (!res.targets.length && res.world) {
+      const d = res.world.dir, h = Math.hypot(d.x, d.z) || 1
+      strike(ctx, s, wp, s.equipped, base, { x: d.x / h, z: d.z / h }, Math.asin(Math.max(-1, Math.min(1, d.y))))
+    }
+    return
+  }
+  let cone = wp.cone || 0.4
   const radius = wp.ranged ? wp.range : wp.reach + 0.6 + power * P.reach
   const found = []
   for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius }), ...ctx.query({ tags: ['hound'], radius }), ...ctx.query({ tags: ['stealer'], radius }), ...ctx.query({ tags: ['moths'], radius }), ...ctx.query({ tags: ['npc'], radius })]) {
@@ -446,7 +467,7 @@ function startReload(ctx) {
   if ((s['loaded_' + k] ?? 0) >= wp.magSize || (s[wp.ammoType ?? 'ammo'] ?? 0) <= 0) return
   w.reloadTok = (w.reloadTok ?? 0) + 1
   s.reloading = k; s.ads = false
-  if (wp.pellets) ctx.after(wp.reloadStart ?? 0.4, 'reloadStep', { k, tok: w.reloadTok })
+  if (wp.pellets || wp.tube) ctx.after(wp.reloadStart ?? 0.4, 'reloadStep', { k, tok: w.reloadTok }) // a shell, or a cartridge into a tube or box magazine, one at a time
   else {
     sound(ctx, 'pistol-magazine-eject-click', 0.6, true)
     ctx.after(wp.reloadTime * derived(s).reload * 0.55, 'reloadMagIn', { k, tok: w.reloadTok })
@@ -637,7 +658,7 @@ function viewmodel(ctx, moving, sprinting) {
   if (w.vm && w.vmEq === kind && !w.vmCheck) { if (w.plyWant && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 500; plyArm(ctx, w) } return }
   w.vmEq = kind; w.vmCheck = false
   const ply = l.modelUrl || '' // a worn .plymodel: its own arm holds the weapon instead of the critter paw
-  const arm = ply ? { hidden: true } : { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v9' + JSON.stringify(s.vmTune ?? null)
+  const arm = ply ? { hidden: true } : { species: l.species, fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v10' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     w.plyRig = null
@@ -650,6 +671,8 @@ function viewmodel(ctx, moving, sprinting) {
       : MESHGRIP[bk]
         ? { feetPosition: s.vmTune?.mat ?? { x: MESHGRIP[bk].at[0], y: MESHGRIP[bk].at[1], z: MESHGRIP[bk].at[2] }, rotation: s.vmTune?.mrot ?? { x: MESHGRIP[bk].q[0], y: MESHGRIP[bk].q[1], z: MESHGRIP[bk].q[2], w: MESHGRIP[bk].q[3] }, castShadow: false, ...weaponBody(kind), audience: 'local' }
         : { feetPosition: s.vmTune?.mat ?? { x: 0, y: -g, z: 0 }, rotation: s.vmTune?.mrot ?? Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
+    // a two-handed weapon: the off hand rides the viewmodel too, on the fore-end (guns, ahead of the trigger hand) or up the haft (melee), at weapons.yml two: [up, forward-is-negative, radius]
+    if (wp.two && !ply) child.push({ feetPosition: { x: 0, y: wp.two[0], z: wp.two[1] }, castShadow: false, audience: 'local', primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: { ...arm, support: { axis: gun ? 'z' : 'y', r: wp.two[2] } } } })
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
     if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: 0.02, y: -1.62, z: 0.62 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
     w.vm = ctx.spawn({ feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,

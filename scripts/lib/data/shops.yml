@@ -38,6 +38,8 @@ shops:
     - [kit, 2, 9]
     - [weapon:crowbar, 1, 8]
     - [weapon:pistol, 1, 24]
+    - [weapon:revolver, 1, 36]
+    - [weapon:carbine, 1, 95]
     - [weapon:shotgun, 1, 34]
   gamma-june:
     - [ration, 6, 2]

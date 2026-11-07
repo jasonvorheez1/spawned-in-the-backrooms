@@ -16,7 +16,7 @@ import { tokenOf, describe, itemsOf } from './lib/items.js'
 import { takeToken, maxHp, maxSan } from './player.js'
 import { derived, skillsOf, SKILLS } from './lib/stats.js'
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
-import { rollItem, rollItemL1, rollItemL2, spotCloth } from './lib/loot.js'
+import { rollItem, rollItemL1, rollItemL2, spotCloth, poolOf } from './lib/loot.js'
 
 const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc', 'door', 'bench', 'usable', 'seat'] // usable: anything with its own press ear (state.name/verb/info) // what can be looked at and used
 const REACH = 3.0 // metres from the eye
@@ -113,7 +113,7 @@ export function openLoot(ctx, c) {
   }
   if (!c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per container
     c.state.scavved = true
-    if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : ctx.self.place === 'level3' ? rollItemL3(ctx) : rollItem(ctx))].filter(Boolean).join(',')
+    if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : ctx.self.place === 'level3' ? rollItemL3(ctx) : rollItem(ctx, poolOf(ctx.self.place)))].filter(Boolean).join(',')
     const cl = spotCloth(ctx, derived(s).clothFind) // Observation (Perception) spots a wearable tucked in the junk
     if (cl) c.state.items = [c.state.items, cl].filter(Boolean).join(',')
   }
@@ -204,7 +204,7 @@ function pickChance(ctx, it) {
 }
 function pocketsOf(ctx, it) {
   if (it.state.pockets === undefined) {
-    const roll = () => (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : ctx.self.place === 'level3' ? rollItemL3(ctx) : rollItem(ctx))
+    const roll = () => (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : ctx.self.place === 'level3' ? rollItemL3(ctx) : rollItem(ctx, poolOf(ctx.self.place)))
     const n = 1 + Math.floor(ctx.random() * 3), got = ['almond']
     for (let i = 0; i < n; i++) got.push(roll())
     if (ctx.random() < 0.5) got.push('ammo')

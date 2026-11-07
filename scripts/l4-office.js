@@ -117,7 +117,7 @@ export const ears = {
       let line = pick(ctx, LINES)
       if (ctx.random() < 0.35) { // a tip: a supply crate turns up in an office nobody owns
         const free = ROOMS.filter((r) => r.kind === "office");
-        const r = pick(ctx, free); spawnCrate(ctx, { x: (r.x0 + r.x1) / 2, z: (r.z0 + r.z1) / 2 });
+        const r = pick(ctx, free); spawnCrate(ctx, { x: (r.x0 + r.x1) / 2, z: (r.z0 + r.z1) / 2 }, "l4");
         line = `Listen. There's a supply box in office ${r.label}. Under the desk. Go now.`;
       }
       sub(who, line, ctx, "Voice on the line");

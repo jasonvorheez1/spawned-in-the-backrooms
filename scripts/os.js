@@ -48,7 +48,7 @@ function act(ctx, s, d) {
       mark(s, 'osTips', m.id)
       if (m.tip === 'xp') { gain(ctx, 40); note(ctx, s, 'Something about that message stays with you. +40 XP') }
       if (m.tip === 'key') { takeToken(ctx, 'keycard'); note(ctx, s, 'The safe is in the corner. You take the keycard.') }
-      if (m.tip === 'crate' && ctx.self.place === 'level4') { const r = ROOMS.filter((q) => q.kind === 'office')[Math.floor(ctx.random() * 24)]; spawnCrate(ctx, { x: (r.x0 + r.x1) / 2, z: (r.z0 + r.z1) / 2 }); note(ctx, s, `A box under the desk in ${r.label}. Marked on your memory.`) }
+      if (m.tip === 'crate' && ctx.self.place === 'level4') { const r = ROOMS.filter((q) => q.kind === 'office')[Math.floor(ctx.random() * 24)]; spawnCrate(ctx, { x: (r.x0 + r.x1) / 2, z: (r.z0 + r.z1) / 2 }, 'l4'); note(ctx, s, `A box under the desk in ${r.label}. Marked on your memory.`) }
     }
     return
   }

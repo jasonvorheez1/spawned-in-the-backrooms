@@ -278,6 +278,130 @@ const builders = {
       [[0.0265, 0.2], [0.0325, 0.4], [0.0455, 0.6], [0.0415, 0.66], [0.0235, 0.705]], 0.0013, 0.0009); // ground edge, bright
     if (hi) { ctx.color(RUST); ctx.roughness(1); ctx.metalness(0.1); ctx.albedo(null); rod(ctx, [[-0.002, Y + 0.0028, 0.3], [0.004, Y + 0.0028, 0.33]], [0.004, 0.003], 5); } // a rust freckle
   },
+  // ---- real-world weapons added with the split loot pools (weapons.yml: pools). Guns: grip at z 0.14, bore line B = Y + 0.03, barrel toward +Z.
+  golf_club(ctx, M, hi) { // a 7-iron: rubber grip, thin steel shaft, a flat-faced head turned out at the hosel
+    plain(ctx, "oklch(0.2 0.01 60)", 0.9); rod(ctx, [[0, Y, -0.01], [0, Y, 0.02], [0, Y, 0.27], [0, Y, 0.3]], [0.013, 0.0145, 0.0125, 0.01], M); // grip
+    steel(ctx, "oklch(0.85 0.005 250)", 0.25); rod(ctx, [[0, Y, 0.3], [0, Y, 0.6], [0, Y, 0.86]], [0.0055, 0.0048, 0.0055], M); // shaft
+    steel(ctx, "oklch(0.82 0.008 250)", 0.3);
+    rod(ctx, [[0, Y, 0.86], [0.012, Y, 0.9]], [0.008, 0.011], M); // hosel
+    bar(ctx, 0.038, Y, 0.03, 0.019, 0.9, 0.94, 0.004); // the head, face to +x
+    if (hi) { plain(ctx, "oklch(0.3 0.01 250)", 0.5, 0.9); for (let k = 0; k < 5; k++) bar(ctx, 0.038, Y, 0.026, 0.0008, 0.902 + k * 0.007, 0.904 + k * 0.007, 0.0004, 1); } // grooves
+  },
+  tire_iron(ctx, M, hi) { // an L-shaped lug wrench: a socket at the short end, a flat pry blade at the long end
+    steel(ctx, "oklch(0.55 0.01 250)", 0.5);
+    rod(ctx, [[0, Y, 0.02], [0, Y, 0.3], [0, Y, 0.52]], [0.0105, 0.0105, 0.0105], M); // the long arm
+    rod(ctx, [[-0.015, Y, 0.0], [0.17, Y, 0.0]], [0.0105, 0.0105], M); // the short arm, across the base
+    steel(ctx, "oklch(0.5 0.01 250)", 0.45); rod(ctx, [[0.16, Y, -0.02], [0.16, Y, 0.035]], [0.019, 0.019], M); // the socket
+    bar(ctx, 0, Y, 0.02, 0.006, 0.5, 0.6, 0.003); // pry blade, flattened
+    if (hi) { plain(ctx, "oklch(0.3 0.02 60)", 0.8); rod(ctx, [[0.14, Y, -0.012], [0.14, Y, 0.012]], [0.0118, 0.0118], M); }
+  },
+  pickaxe(ctx, M, hi) { // a hickory haft and a long curved steel head, pointed both ends
+    wood(ctx, "oklch(0.88 0.05 65)"); rod(ctx, [[0, Y, -0.01], [0, Y, 0.03], [0, Y, 0.4], [0, Y, 0.8], [0, Y, 0.86]], [0.026, 0.026, 0.02, 0.022, 0.024], M, [1.2, 1]);
+    steel(ctx, "oklch(0.5 0.01 250)", 0.5);
+    rod(ctx, [[-0.3, Y, 0.82], [-0.16, Y, 0.865], [-0.05, Y, 0.88], [0.05, Y, 0.88], [0.16, Y, 0.865], [0.3, Y, 0.82]], [0.002, 0.011, 0.02, 0.02, 0.011, 0.002], M); // the head
+    plain(ctx, "oklch(0.3 0.04 50)", 0.9); bar(ctx, 0, Y, 0.028, 0.028, 0.865, 0.895, 0.008); // the eye collar
+    if (hi) { ctx.color(RUST); ctx.roughness(1); rod(ctx, [[-0.22, Y, 0.835], [-0.18, Y, 0.846]], [0.008, 0.009], 6); }
+  },
+  baton(ctx, M, hi) { // a side-handle police baton (PR-24): a black polycarbonate shaft, a rubber grip, the handle at right angles
+    plain(ctx, "oklch(0.2 0.01 260)", 0.5, 0.1);
+    rod(ctx, [[0, Y, -0.01], [0, Y, 0.02], [0, Y, 0.3], [0, Y, 0.56], [0, Y, 0.6]], [0.012, 0.0145, 0.0135, 0.0145, 0.011], M); // shaft
+    plain(ctx, "oklch(0.15 0.01 260)", 0.9); for (let z = 0.025; z < 0.17; z += 0.014) rod(ctx, [[0, Y, z], [0, Y, z + 0.011]], [0.0172, 0.0174], M); // ribbed grip
+    plain(ctx, "oklch(0.2 0.01 260)", 0.5, 0.1); rod(ctx, [[0.0, Y, 0.21], [0.05, Y, 0.21], [0.055, Y, 0.13], [0.05, Y, 0.1]], [0.0095, 0.0095, 0.0095, 0.0095], M); // the side handle
+    steel(ctx, "oklch(0.7 0.01 250)", 0.3); rod(ctx, [[0, Y, 0.595], [0, Y, 0.605]], [0.012, 0.012], M);
+  },
+  cleaver(ctx, M, hi) { // a rectangular butcher's cleaver: a wooden handle riveted to a broad blade with a hang hole
+    wood(ctx, "oklch(0.78 0.06 50)"); rod(ctx, [[0, Y, -0.005], [0, Y, 0.02], [0, Y, 0.11], [0, Y, 0.13]], [0.013, 0.0155, 0.0155, 0.012], M, [1.15, 1]);
+    steel(ctx, "oklch(0.6 0.01 250)", 0.4); for (const z of [0.045, 0.095]) rod(ctx, [[0, Y - 0.012, z], [0, Y + 0.012, z]], [0.003, 0.003], 6); // rivets
+    steel(ctx, "oklch(0.8 0.008 250)", 0.25);
+    blade(ctx, [[-0.008, 0.13], [-0.008, 0.25], [-0.008, 0.33]], [[0.092, 0.13], [0.1, 0.25], [0.094, 0.34]], 0.0032, 0.001);
+    plain(ctx, "oklch(0.2 0.01 260)", 0.8); rod(ctx, [[0.03, Y + 0.004, 0.31], [0.03, Y - 0.004, 0.31]], [0.009, 0.009], 8); // the hang hole, dark
+    if (hi) { plain(ctx, "oklch(0.3 0.1 25)", 0.7); bar(ctx, 0.05, Y, 0.02, 0.0042, 0.15, 0.22, 0.001, 1); }
+  },
+  revolver(ctx, M, hi) { // a .38 service revolver: 4" barrel and rib, a fluted cylinder, ejector rod, hammer, walnut grips
+    const B = Y + 0.03;
+    plain(ctx, "oklch(0.24 0.012 255)", 0.35, 0.9);
+    bar(ctx, 0, B - 0.004, 0.013, 0.027, 0.09, 0.205, 0.004); // frame
+    rod(ctx, [[0, B + 0.002, 0.205], [0, B + 0.002, 0.3]], [0.0295, 0.0295], M); // cylinder
+    if (hi) { plain(ctx, "oklch(0.12 0.01 255)", 0.6, 0.8); for (let k = 0; k < 6; k++) { const a = k * Math.PI / 3; rod(ctx, [[Math.cos(a) * 0.026, B + 0.002 + Math.sin(a) * 0.026, 0.21], [Math.cos(a) * 0.026, B + 0.002 + Math.sin(a) * 0.026, 0.295]], [0.0045, 0.0045], 5); } } // flutes
+    plain(ctx, "oklch(0.24 0.012 255)", 0.35, 0.9);
+    rod(ctx, [[0, B + 0.016, 0.3], [0, B + 0.016, 0.52]], [0.0105, 0.0105], M); // barrel
+    bar(ctx, 0, B + 0.029, 0.0035, 0.0025, 0.31, 0.52, 0.001, 1); // top rib
+    rod(ctx, [[0, B - 0.012, 0.3], [0, B - 0.012, 0.47]], [0.0048, 0.0048], 7); // ejector rod
+    rod(ctx, [[0, B + 0.03, 0.11], [0, B + 0.045, 0.098]], [0.006, 0.0065], 6); // hammer
+    bar(ctx, 0, B + 0.03, 0.002, 0.0025, 0.5, 0.52, 0.001, 1); // front sight
+    rod(ctx, [[0, B - 0.03, 0.2], [0, B - 0.055, 0.17], [0, B - 0.05, 0.13], [0, B - 0.03, 0.115]], [0.0028, 0.0028, 0.0028, 0.0028], 6); // trigger guard
+    rod(ctx, [[0, B - 0.028, 0.16], [0, B - 0.044, 0.156]], [0.0024, 0.0018], 5); // trigger
+    wood(ctx, "oklch(0.7 0.08 50)"); const g = (t) => [0.135 - t * 0.04, B - 0.03 - t * 0.095];
+    for (let k = 0; k < 6; k++) { const [z, y] = g(k / 6), [, y2] = g((k + 1) / 6); bar(ctx, 0, (y + y2) / 2, 0.0145, (y - y2) / 2 + 0.002, z - 0.034, z + 0.006, 0.006); }
+  },
+  coach_gun(ctx, M, hi) { // a double-barrel coach gun: two barrels side by side, hammers, a wooden stock and fore-end; wrist at z 0.1
+    const B = Y + 0.03;
+    steel(ctx, "oklch(0.36 0.01 260)", 0.4);
+    for (const sx of [-1, 1]) rod(ctx, [[sx * 0.0125, B, 0.2], [sx * 0.0125, B, 0.66]], [0.0135, 0.0135], M); // barrels
+    bar(ctx, 0, B + 0.012, 0.004, 0.003, 0.2, 0.66, 0.001, 1); // rib between them
+    if (hi) { plain(ctx, "oklch(0.06 0 0)", 1); for (const sx of [-1, 1]) rod(ctx, [[sx * 0.0125, B, 0.659], [sx * 0.0125, B, 0.661]], [0.0105, 0.0105], 8); }
+    plain(ctx, "oklch(0.3 0.015 260)", 0.4, 0.85);
+    bar(ctx, 0, B - 0.002, 0.021, 0.03, 0.06, 0.22, 0.006); // receiver
+    for (const sx of [-1, 1]) rod(ctx, [[sx * 0.026, B + 0.026, 0.088], [sx * 0.03, B + 0.044, 0.07]], [0.0055, 0.006], 6); // two hammers
+    rod(ctx, [[0, B - 0.03, 0.17], [0, B - 0.058, 0.16], [0, B - 0.058, 0.11], [0, B - 0.03, 0.095]], [0.0028, 0.0028, 0.0028, 0.0028], 6); // trigger guard
+    wood(ctx, "oklch(0.78 0.07 55)");
+    for (let k = 0; k < 6; k++) { const z = 0.07 - k * 0.04, top = B + 0.028 - k * 0.0015, bot = B - 0.026 - k * 0.011; bar(ctx, 0, (top + bot) / 2, 0.019 + k * 0.0008, (top - bot) / 2, z - 0.04, z, 0.008); } // stock
+    bar(ctx, 0, B - 0.014, 0.024, 0.018, 0.3, 0.48, 0.008); // fore-end
+    plain(ctx, "oklch(0.15 0.01 60)", 0.95); bar(ctx, 0, B - 0.04, 0.02, 0.05, -0.2, -0.18, 0.006); // butt pad
+  },
+  lever_rifle(ctx, M, hi) { // a lever-action .30-30 carbine: slim barrel, tube magazine, brass-toned receiver, the loop lever, straight walnut stock
+    const B = Y + 0.03;
+    steel(ctx, "oklch(0.34 0.01 260)", 0.4);
+    rod(ctx, [[0, B + 0.012, 0.28], [0, B + 0.012, 0.64]], [0.0105, 0.0105], M); // barrel
+    rod(ctx, [[0, B - 0.01, 0.28], [0, B - 0.01, 0.58]], [0.0082, 0.0082], M); // tube magazine
+    rod(ctx, [[0, B - 0.0005, 0.56], [0, B - 0.0005, 0.575]], [0.016, 0.016], M); // barrel band
+    plain(ctx, "oklch(0.48 0.05 80)", 0.4, 0.9);
+    bar(ctx, 0, B + 0.002, 0.0145, 0.028, 0.06, 0.3, 0.005); // receiver
+    plain(ctx, "oklch(0.2 0.01 260)", 0.45, 0.85);
+    bar(ctx, 0, B + 0.04, 0.002, 0.003, 0.62, 0.64, 0.001, 1); bar(ctx, 0, B + 0.04, 0.007, 0.003, 0.255, 0.275, 0.001, 1); // sights
+    steel(ctx, "oklch(0.4 0.01 260)", 0.4); rod(ctx, [[0, B - 0.03, 0.22], [0, B - 0.075, 0.215], [0, B - 0.08, 0.1], [0, B - 0.05, 0.065], [0, B - 0.03, 0.09]], [0.0035, 0.0035, 0.0035, 0.0035, 0.0035], 6); // the lever loop
+    wood(ctx, "oklch(0.76 0.08 52)");
+    for (let k = 0; k < 7; k++) { const z = 0.1 - k * 0.04, top = B + 0.026 - k * 0.002, bot = B - 0.022 - k * 0.012; bar(ctx, 0, (top + bot) / 2, 0.017 + k * 0.0009, (top - bot) / 2, z - 0.04, z, 0.007); } // stock
+    bar(ctx, 0, B - 0.02, 0.019, 0.016, 0.3, 0.5, 0.007); // fore-end
+    plain(ctx, "oklch(0.18 0.01 60)", 0.9); bar(ctx, 0, B - 0.052, 0.018, 0.04, -0.2, -0.185, 0.005); // butt plate
+  },
+  hunting_rifle(ctx, M, hi) { // a bolt-action .308 with a scope: long barrel, bolt handle, five-round box, walnut stock
+    const B = Y + 0.03;
+    steel(ctx, "oklch(0.3 0.01 260)", 0.4);
+    rod(ctx, [[0, B + 0.008, 0.26], [0, B + 0.008, 0.52], [0, B + 0.008, 0.78]], [0.0125, 0.0105, 0.0098], M); // barrel
+    plain(ctx, "oklch(0.24 0.012 260)", 0.4, 0.85);
+    bar(ctx, 0, B + 0.004, 0.016, 0.022, 0.06, 0.28, 0.005); // receiver
+    rod(ctx, [[0.016, B + 0.012, 0.11], [0.05, B - 0.004, 0.1]], [0.0042, 0.0042], 6); rod(ctx, [[0.05, B - 0.004, 0.1], [0.056, B - 0.008, 0.1]], [0.0095, 0.0095], 8); // bolt handle and knob
+    bar(ctx, 0, B - 0.026, 0.0135, 0.014, 0.1, 0.2, 0.004); // magazine box
+    plain(ctx, "oklch(0.2 0.01 260)", 0.4, 0.8); // scope: mounts, tube, bells
+    for (const z of [0.1, 0.24]) bar(ctx, 0, B + 0.034, 0.008, 0.012, z - 0.012, z + 0.012, 0.003);
+    rod(ctx, [[0, B + 0.058, 0.07], [0, B + 0.058, 0.17], [0, B + 0.058, 0.26], [0, B + 0.058, 0.3]], [0.0165, 0.0125, 0.0125, 0.0165], M);
+    if (hi) { plain(ctx, "oklch(0.55 0.1 250)", 0.1, 0.5); rod(ctx, [[0, B + 0.058, 0.298], [0, B + 0.058, 0.3]], [0.0145, 0.0145], M); }
+    rod(ctx, [[0, B - 0.03, 0.2], [0, B - 0.056, 0.185], [0, B - 0.056, 0.14], [0, B - 0.03, 0.125]], [0.0028, 0.0028, 0.0028, 0.0028], 6); // trigger guard
+    wood(ctx, "oklch(0.74 0.07 55)");
+    for (let k = 0; k < 7; k++) { const z = 0.1 - k * 0.042, top = B + 0.02 - k * 0.002, bot = B - 0.025 - k * 0.012; bar(ctx, 0, (top + bot) / 2, 0.0165 + k * 0.001, (top - bot) / 2, z - 0.042, z, 0.007); } // stock
+    bar(ctx, 0, B - 0.014, 0.0185, 0.014, 0.28, 0.52, 0.007); // fore-end
+    plain(ctx, "oklch(0.15 0.01 60)", 0.95); bar(ctx, 0, B - 0.05, 0.019, 0.045, -0.215, -0.2, 0.005);
+  },
+  carbine(ctx, M, hi) { // an AR-15 style carbine: flat-top upper, round handguard, a flash hider, a collapsible stock, a curved 30-round magazine
+    const B = Y + 0.03;
+    plain(ctx, "oklch(0.22 0.01 260)", 0.5, 0.8);
+    bar(ctx, 0, B + 0.004, 0.0165, 0.024, 0.04, 0.3, 0.005); // upper receiver
+    bar(ctx, 0, B + 0.03, 0.01, 0.004, 0.04, 0.3, 0.002); // flat-top rail
+    rod(ctx, [[0, B + 0.006, 0.28], [0, B + 0.006, 0.4], [0, B + 0.006, 0.5]], [0.0215, 0.021, 0.021], M); // handguard
+    if (hi) { plain(ctx, "oklch(0.14 0.01 260)", 0.6, 0.8); for (let z = 0.3; z < 0.48; z += 0.03) rod(ctx, [[0, B + 0.006, z], [0, B + 0.006, z + 0.008]], [0.0222, 0.0222], M); }
+    plain(ctx, "oklch(0.22 0.01 260)", 0.5, 0.8);
+    rod(ctx, [[0, B + 0.012, 0.5], [0, B + 0.012, 0.56]], [0.0095, 0.0095], M); // flash hider
+    bar(ctx, 0, B + 0.032, 0.0025, 0.01, 0.46, 0.48, 0.001, 1); // front sight post
+    bar(ctx, 0, B - 0.02, 0.0165, 0.018, -0.02, 0.1, 0.005); // lower receiver
+    rod(ctx, [[0, B - 0.03, 0.16], [0, B - 0.052, 0.14], [0, B - 0.052, 0.1], [0, B - 0.03, 0.085]], [0.0028, 0.0028, 0.0028, 0.0028], 6); // trigger guard
+    plain(ctx, "oklch(0.2 0.01 260)", 0.8);
+    const g = (t) => [0.07 - t * 0.03, B - 0.04 - t * 0.09]; for (let k = 0; k < 5; k++) { const [z, y] = g(k / 5), [, y2] = g((k + 1) / 5); bar(ctx, 0, (y + y2) / 2, 0.0135, (y - y2) / 2 + 0.002, z - 0.03, z + 0.004, 0.005); } // pistol grip
+    for (let k = 0; k < 6; k++) bar(ctx, 0, B - 0.045 - k * 0.012, 0.0115, 0.0065, 0.15 + k * 0.004, 0.19 + k * 0.004, 0.003); // curved magazine
+    rod(ctx, [[0, B + 0.0, -0.02], [0, B + 0.0, -0.17]], [0.0165, 0.0175], M); // the stock's buffer tube
+    bar(ctx, 0, B - 0.014, 0.0145, 0.03, -0.17, -0.1, 0.005); // the stock, adjustable
+    plain(ctx, "oklch(0.14 0.01 60)", 0.95); bar(ctx, 0, B - 0.014, 0.0155, 0.036, -0.175, -0.165, 0.004); // butt pad
+  },
 };
 
 // Tripo meshes, sampled along their length in their own file frame: rows [z, x, y, r] (r: the thinner half-width there).
@@ -290,6 +414,12 @@ const SCRIPTED = { // grip and head along +Z, and the radius there, for the kind
   rebar: { grip: [0.05, 0.26, 0.018], head: [0.4, 0.8, 0.013] }, wrench: { grip: [0.04, 0.32, 0.019], head: [0.3, 0.4, 0.019] },
   screwdriver: { grip: [0.0, 0.11, 0.021], head: [0.14, 0.26, 0.006] }, sledgehammer: { grip: [0.0, 0.24, 0.022], head: [0.6, 0.82, 0.018] },
   stun_baton: { grip: [0.0, 0.19, 0.02], head: [0.4, 0.54, 0.012] }, lineman_machete: { grip: [0.01, 0.17, 0.017], head: [0.4, 0.66, 0.004] },
+  golf_club: { grip: [0.0, 0.3, 0.014], head: [0.86, 0.94, 0.02] }, tire_iron: { grip: [0.0, 0.3, 0.0105], head: [0.5, 0.6, 0.012] },
+  pickaxe: { grip: [0.0, 0.3, 0.022], head: [0.8, 0.9, 0.02] }, baton: { grip: [0.02, 0.17, 0.0165], head: [0.4, 0.6, 0.0145] },
+  cleaver: { grip: [0.0, 0.13, 0.0155], head: [0.14, 0.33, 0.01] },
+  revolver: { grip: [0.02, 0.1, 0.016], head: [0.2, 0.3, 0.03], mag: [0.2, 0.3, -0.03] }, coach_gun: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.6, 0.0135] },
+  lever_rifle: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.6, 0.011] }, hunting_rifle: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.7, 0.012] },
+  carbine: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.5, 0.021] },
   pistol: { grip: [0.02, 0.06, 0.016], head: [0.08, 0.2, 0.016], mag: [0.018, 0.05, -0.085] }, shotgun: { grip: [0.44, 0.6, 0.03], head: [0.62, 0.8, 0.02] },
 };
 // where the shaft is at z: [x, y, r]

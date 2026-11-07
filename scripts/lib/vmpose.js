@@ -7,6 +7,7 @@
 // breathing at rest, a dip on landing, a lowered carry when sprinting, a raise with overshoot on equip.
 // Springs and timelines run on real frame time; the object is posed with interpolation off.
 import W, { baseOf } from './weapons.js'
+import { handling } from './stats.js'
 
 export const VM_FOV = 55
 const REST = [0.19, -0.17, 0.44]
@@ -122,7 +123,7 @@ export function poseViewmodel(ctx, dt) {
   if (m.id !== ps.vmId) { m.id = ps.vmId; if (!m.seeded) { m.lastEquip = ps.equipAt ?? 0; m.seeded = true } /* a draw rebuilds the viewmodel: keep the old equip stamp so the new one still rises */ m.lastSwing = ps.swingAt ?? 0; m.lastPump = ps.pumpAt ?? 0; m.lastReload = ps.reloadN ?? 0; m.lastDry = ps.dryAt ?? 0; try { vm.interpolation = null } catch (e) { /* the engine keeps its default smoothing */ } }
 
   const kind = ps.equipped ?? 'fists', wp = W[kind] ?? W.fists, gun = !!wp.ranged
-  const rc = wp.recoil ?? {}, aimDamp = 1 - 0.55 * m.ads
+  const rc = wp.recoil ?? {}, hd = handling(ps, wp), aimDamp = (1 - 0.55 * m.ads) * hd.recoil // a heavy gun in weak arms kicks harder
   const view = ctx.self.view
 
   // ---- events written by player.js
@@ -137,13 +138,13 @@ export function poseViewmodel(ctx, dt) {
       m.sv[5] += (rc.twist ?? 70) * rnd(-0.4, 1) * aimDamp
       const muzzle = ctx.getObjectSocket(ps.vmId, 'muzzle')
       if (muzzle && muzzle.position) ctx.emit('fx', { position: muzzle.position, attachTo: ps.vmId, script: wp.pellets ? FLASH_BIG : FLASH })
-      if (wp.pellets) m.eject = true
+      if (wp.pellets || wp.tube) m.eject = true // the pump or lever throws the spent case
       else if (muzzle && muzzle.position && view) emitCasing(ctx, muzzle.position, view.yaw, false)
     }
   }
   if ((ps.reloadN ?? 0) !== m.lastReload) {
     m.lastReload = ps.reloadN ?? 0
-    if (wp.pellets && ps.reloading) { m.sv[1] += 0.55; m.sv[2] += 0.5; m.sv[3] -= 90; m.sv[5] += 40 } // thumb a shell in
+    if ((wp.pellets || wp.tube) && ps.reloading) { m.sv[1] += 0.55; m.sv[2] += 0.5; m.sv[3] -= 90; m.sv[5] += 40 } // thumb a shell in
   }
   if (ps.pumpAt && ps.pumpAt !== m.lastPump) { m.lastPump = ps.pumpAt; m.pumpT = 0; m.pumpEjected = false }
   if (ps.equipAt && ps.equipAt !== m.lastEquip) { m.lastEquip = ps.equipAt; m.equipT = 0 }
@@ -180,7 +181,7 @@ export function poseViewmodel(ctx, dt) {
   m.pumpT = Math.min(1, m.pumpT + dt / 0.42)
   if (m.pumpT > 0.38 && !m.pumpEjected) {
     m.pumpEjected = true
-    if (m.eject) { m.eject = false; const mz = ctx.getObjectSocket(ps.vmId, 'muzzle'); if (mz?.position && view) emitCasing(ctx, mz.position, view.yaw, true) }
+    if (m.eject) { m.eject = false; const mz = ctx.getObjectSocket(ps.vmId, 'muzzle'); if (mz?.position && view) emitCasing(ctx, mz.position, view.yaw, !!wp.pellets) }
   }
   if (ps.swingAt !== m.heavyFor) { m.heavyFor = ps.swingAt; m.heavy = ps.swingHeavy ?? 0 }
   const style = SWING[STYLE[baseOf(kind)]] ?? SWING.club
@@ -188,13 +189,13 @@ export function poseViewmodel(ctx, dt) {
   // the wind-up: how far into a held power attack, 0..1, eased in the pose below
   const wind = !gun && ps.chargeAt ? Math.min(1, (ctx.now() - ps.chargeAt) / ((W.power?.charge ?? 0.9) * 1000)) : 0
   m.wind = (m.wind ?? 0) + (wind - (m.wind ?? 0)) * Math.min(1, dt * (wind ? 14 : 30))
-  m.ads += ((ps.ads ? 1 : 0) - m.ads) * Math.min(1, dt * 12)
+  m.ads += ((ps.ads ? 1 : 0) - m.ads) * Math.min(1, dt * 12 * hd.raise) // and comes up to the eye slower
   m.breath += dt
 
   // reload pose target: the pistol plays its timeline, the shotgun holds the loading roll
   let target = [0, 0, 0, 0, 0, 0], rate = 10
   if (m.relOn && m.relKind === kind) {
-    if (wp.pellets) {
+    if (wp.pellets || wp.tube) {
       const start = wp.reloadStart ?? 0.4, per = wp.reloadShell ?? 0.55, ph = (m.relT - start) / per
       if (ph < 0) { const k = ease(Math.max(0, m.relT / start)); target = SHOTGUN_LOAD.map((v) => v * k); rate = 14 }
       else { const c = sample(SHELL_CYCLE, ph - Math.floor(ph)); target = SHOTGUN_LOAD.map((v, i) => v + c[i]); rate = 22 }
@@ -203,7 +204,7 @@ export function poseViewmodel(ctx, dt) {
   }
   const fr = Math.min(1, dt * rate)
   for (let i = 0; i < 6; i++) m.off[i] += (target[i] - m.off[i]) * fr
-  const pump = wp.pellets ? sample(PUMP, m.pumpT) : [0, 0, 0, 0, 0, 0]
+  const pump = (wp.pellets || wp.tube) ? sample(PUMP, m.pumpT) : [0, 0, 0, 0, 0, 0]
 
   // ---- walking bob (almost none while aiming), strafe lean, breathing, sprint carry
   const speed = Math.hypot(vel.x, vel.z)
@@ -223,7 +224,8 @@ export function poseViewmodel(ctx, dt) {
   // ---- compose: position
   const ads = wp.ads ?? REST, a = ease(m.ads), sway = 1 - 0.7 * m.ads
   let x = REST[0] + (ads[0] - REST[0]) * a, y = REST[1] + (ads[1] - REST[1]) * a, d = REST[2] + (ads[2] - REST[2]) * a
-  if (!gun && kind !== 'fists') { x += 0.1; y -= 0.1; d += 0.3 } // a melee weapon rides out at the right edge, the fist low
+  if (!gun && kind !== 'fists') { x += wp.two ? 0.03 : 0.1; y -= 0.1; d += 0.3 } // a melee weapon rides out at the right edge, the fist low; two hands bring it to the middle
+  else if (gun && wp.two) { x -= 0.07 * (1 - m.ads); y += 0.015 } // a long gun is held in both hands, nearer the centre of the screen
   x += m.swayX * sway + bobX + m.sp[0] + m.off[0] + pump[0]
   y += m.swayY * sway + bobY + brY + m.sp[1] + m.off[1] + pump[1]
   d += -m.sp[2] + m.off[2] + pump[2]
@@ -232,6 +234,8 @@ export function poseViewmodel(ctx, dt) {
   let yaw = (gun ? 0 : -6) - m.swayX * 140 * sway + m.sp[4] + brYaw + m.off[4] + pump[4]
   let roll = (gun ? 0 : -14) - m.swayX * 70 * sway + m.sp[5] - m.lean * 1.4 * sway + m.off[5] + pump[5]
 
+  // too heavy for your Hardiness: the gun sags and the muzzle wanders in your hands
+  if (hd.hold > 0 && (gun || kind !== 'fists')) { const wob = Math.sin(m.breath * 1.3) * Math.cos(m.breath * 0.8); y -= hd.hold * 0.035 * (1 - 0.5 * m.ads); pitch -= hd.hold * 5; yaw += wob * hd.hold * 2.2; roll += Math.sin(m.breath * 1.9) * hd.hold * 2 }
   // sprinting: lower it and turn it away
   y -= run * 0.07; pitch -= run * 18; yaw += run * 14; x -= run * 0.03
 

@@ -64,7 +64,7 @@ function end(ctx, s, m, won) {
     for (const [k, n] of Object.entries(R.scrap)) sc[k] = (sc[k] ?? 0) + n
     s.scrap = sc
     gain(ctx, R.xp + R.xpPerLevel * s.level)
-    for (let i = 0; i < R.rolls; i++) takeToken(ctx, rollItem(ctx))
+    for (let i = 0; i < R.rolls; i++) takeToken(ctx, rollItem(ctx, 'l3'))
     s.hordeResult = { text: 'You held out. The lights come back.', sub: `+${R.xp + R.xpPerLevel * s.level} XP · scrap and supplies`, at: ctx.now() }
     say(ctx, 'power-restored-lights-hum-on', 0.8)
   } else s.hordeResult = { text: 'The blackout passes.', sub: '', at: ctx.now() }
