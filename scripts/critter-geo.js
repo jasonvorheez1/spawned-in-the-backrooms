@@ -52,6 +52,10 @@ const SPECIES = {
   deer:    { fur: "#b9804e", belly: "#fff3e2", ears: "leaf", tail: "stub", nose: "#3a1f1a", muzzle: true, antlers: true, spots: true },
   mouse:   { fur: "#b9b3c2", belly: "#f6eef4", ears: "round", earS: 1.7, tail: "thin", nose: "#ff8fa3", whisk: true },
   wolf:    { fangs: true, fur: "#6f7d93", belly: "#e3e8f0", ears: "point", earS: 1.2, tail: "bushy", tip: "#e3e8f0", nose: "#1c1a20", muzzle: true, cheeks: true },
+  panda:   { fur: "#f7f3ee", belly: "#ffffff", ears: "round", earS: 1.0, earCol: "#2b2530", tail: "stub", nose: "#1c1a20", muzzle: true, dark: "#2b2530", patch: "#2b2530" },
+  pig:     { fur: "#ffb3c1", belly: "#ffd9e0", ears: "point", earS: 0.62, tail: "stub", nose: "#ff97aa", snout: true },
+  sheep:   { fur: "#f6f1e7", belly: "#ffffff", headFur: "#5d5560", ears: "flop", earS: 0.5, ear2: "#5d5560", tail: "puff", nose: "#2a1c18", muzzle: true, wool: true, socks: "#5d5560" },
+  lion:    { fur: "#ebb04e", belly: "#fbe3b0", ears: "round", earS: 0.9, tail: "thin", nose: "#8a4a2a", muzzle: true, mane: "#a3592a", fangs: true, tailTuft: "#a3592a" },
   raccoon: { fur: "#8b8a92", belly: "#e9e6ea", ears: "round", earS: 1.0, tail: "ringed", tip: "#3a3840", nose: "#1c1a20", muzzle: true, mask: "#3a3840" },
 };
 
@@ -211,21 +215,23 @@ export function geometry(ctx) {
     col(FUR); LB([0, 0.94, 0], [0, 1.06, 0], 0.065, 0.07, hi ? 12 : 8);
     // arms (T-pose), mitten hands with a thumb
     for (const s of [-1, 1]) {
-      col(FUR); LB([s * 0.1, 0.965, 0], [s * 0.56, 0.965, 0], fem ? 0.04 : 0.044, 0.034, hi ? 12 : 8);
-      col(sp.socks || FUR);
+      col(sp.dark || FUR); LB([s * 0.1, 0.965, 0], [s * 0.56, 0.965, 0], fem ? 0.04 : 0.044, 0.034, hi ? 12 : 8);
+      col(sp.dark || sp.socks || FUR);
       EL([s * 0.6, 0.965, 0], [0.075, 0.058, 0.052], null, { seg: hi ? 16 : 10 });
       EL([s * 0.565, 0.975, -0.052], [0.026, 0.024, 0.034], null, { seg: hi ? 10 : 6 });
     }
     // legs, round feet
     for (const s of [-1, 1]) {
       const x = s * 0.085;
-      col(FUR); LB([x, 0.64, 0], [x, sp.socks ? 0.3 : 0.06, 0], fem ? 0.068 : 0.06, 0.045, hi ? 12 : 8);
+      col(sp.dark || FUR); LB([x, 0.64, 0], [x, sp.socks ? 0.3 : 0.06, 0], fem ? 0.068 : 0.06, 0.045, hi ? 12 : 8);
       if (sp.socks) { col(sp.socks); LB([x, 0.34, 0], [x, 0.06, 0], 0.049, 0.045, hi ? 12 : 8); }
       EL([x, 0.055, -0.035], [0.072, 0.058, 0.115], null, { seg: hi ? 16 : 10 });
     }
     // head
-    col(FUR);
-    EL(HC, HR, (p, n) => ctx.color(sp.cheeks && n[2] < -0.2 && p[1] < 1.24 && Math.abs(p[0]) > 0.17 ? BELLY : FUR), { seg: hi ? 36 : SEG });
+    col(sp.headFur || FUR);
+    EL(HC, HR, (p, n) => ctx.color(sp.cheeks && n[2] < -0.2 && p[1] < 1.24 && Math.abs(p[0]) > 0.17 ? BELLY : (sp.headFur || FUR)), { seg: hi ? 36 : SEG });
+    if (sp.wool) { col(FUR); for (const [x, y, z, r] of [[0, 1.62, -0.03, 0.1], [-0.14, 1.6, -0.05, 0.088], [0.14, 1.6, -0.05, 0.088], [-0.25, 1.5, -0.02, 0.078], [0.25, 1.5, -0.02, 0.078], [0, 1.64, 0.07, 0.092]]) EL([x, y, z], [r, r, r], null, { seg: hi ? 14 : 9 }); }
+    if (sp.mane) { col(sp.mane); EL([0, 1.3, 0.1], [0.47, 0.41, 0.27], null, { seg: hi ? 24 : SEG }); }
     if (!inkPass && sp.cheeks && mid) for (const s of [-1, 1]) { // fluffy cheek tufts
       ctx.color(BELLY);
       for (let n = 0; n < 3; n++) { const a = -0.35 + n * 0.35; tri([s * 0.3, 1.22 + a * 0.12, -0.12], [s * (0.43 + 0.03 * (n === 1)), 1.18 + a * 0.15, -0.05], [s * 0.31, 1.15 + a * 0.12, -0.02]); }
@@ -251,15 +257,15 @@ export function geometry(ctx) {
         }
       } else if (ear === "round") {
         const c = [s * 0.24, 1.58, 0.02], r = 0.085 * eS;
-        col(FUR); EL(c, [r, r, 0.035], null, { seg: hi ? 16 : 10 });
-        if (!inkPass) { ctx.color(P.species === "mouse" ? "#ffb3c6" : BELLY); ell([c[0], c[1] - 0.005, c[2] - 0.028], [r * 0.62, r * 0.62, 0.012], null, { seg: hi ? 14 : 8 }); }
+        col(sp.earCol || FUR); EL(c, [r, r, 0.035], null, { seg: hi ? 16 : 10 });
+        if (!inkPass && !sp.earCol) { ctx.color(P.species === "mouse" ? "#ffb3c6" : BELLY); ell([c[0], c[1] - 0.005, c[2] - 0.028], [r * 0.62, r * 0.62, 0.012], null, { seg: hi ? 14 : 8 }); }
       } else if (ear === "long") {
         const path = []; for (let i = 0; i <= 10; i++) { const t = i / 10; path.push([s * (0.12 + 0.07 * t + 0.05 * t * t), 1.55 + 0.42 * t, 0.03 + 0.06 * t * t]); }
         col(FUR); LF(path, (t) => [0.055 * Math.sin(Math.PI * (0.15 + 0.8 * t)) + 0.012, 0.022], [0, 0, -1], null);
         if (!inkPass) { ctx.color("#ffb3c6"); loft(path.map((p) => [p[0], p[1], p[2] - 0.016]), (t) => [0.034 * Math.sin(Math.PI * (0.2 + 0.7 * t)) + 0.004, 0.01], [0, 0, -1], null, 8); }
       } else if (ear === "flop") {
-        const path = []; for (let i = 0; i <= 10; i++) { const t = i / 10; path.push([s * (0.3 + 0.08 * Math.sin(t * 2.4)), 1.5 - 0.3 * t, 0.02 - 0.02 * t]); }
-        col(P.ear2 || "#7a4f32"); LF(path, (t) => [0.03, 0.075 * Math.sin(Math.PI * (0.2 + 0.75 * t)) + 0.02], [1, 0, 0], null);
+        const path = []; for (let i = 0; i <= 10; i++) { const t = i / 10; path.push([s * (0.3 + 0.08 * Math.sin(t * 2.4) * eS), 1.5 - 0.3 * eS * t, 0.02 - 0.02 * t]); }
+        col(P.ear2 || sp.ear2 || "#7a4f32"); LF(path, (t) => [0.03, (0.075 * Math.sin(Math.PI * (0.2 + 0.75 * t)) + 0.02) * (0.6 + 0.4 * eS)], [1, 0, 0], null);
       }
       wOverride = null;
     }
@@ -279,7 +285,7 @@ export function geometry(ctx) {
       wOverride = { Tail: 0.35, Tail1: 0.65 };
       const T = sp.tail, path = [];
       const pathOf = (n, f) => { for (let i = 0; i <= n; i++) path.push(f(i / n)); };
-      if (T === "thin") { pathOf(12, (t) => [0.06 * Math.sin(t * 3), 0.6 + 0.38 * t, 0.13 + 0.22 * Math.sin(t * 1.6)]); col(FUR); LF(path, (t) => [0.028 * (1 - t * 0.4), 0.028 * (1 - t * 0.4)], [1, 0, 0], null, 8); }
+      if (T === "thin") { pathOf(12, (t) => [0.06 * Math.sin(t * 3), 0.6 + 0.38 * t, 0.13 + 0.22 * Math.sin(t * 1.6)]); col(FUR); LF(path, (t) => [0.028 * (1 - t * 0.4), 0.028 * (1 - t * 0.4)], [1, 0, 0], null, 8); if (sp.tailTuft) { col(sp.tailTuft); EL([0.0085, 0.99, 0.35], [0.042, 0.062, 0.042], null, { seg: hi ? 12 : 8 }); } }
       else if (T === "bushy" || T === "ringed") {
         pathOf(12, (t) => [0.05 * Math.sin(t * 2.5), 0.58 + 0.32 * Math.sin(t * 1.4), 0.12 + 0.34 * t]);
         LF(path, (t) => { const r = (T === "bushy" ? 0.105 : 0.075) * Math.sin(Math.PI * (0.12 + 0.82 * t)) + 0.02; return [r, r]; }, [1, 0, 0],
@@ -331,6 +337,22 @@ export function geometry(ctx) {
   }
   else if (outfit === "sweater") { shirt(TOP, 0.56); sleeve(0.38, TOP, 0.056); pants(BOT, 0.13, true); ctx.color("#ffffff"); for (let k = 0; k < 2; k++) ell([0, 0.8 + k * 0.07, 0], [tw + 0.016, 0.009, 0.141], null, { clip: (p) => p[2] > 0 }); }
 
+  else if (outfit === "jacket") {
+    shirt(TOP, 0.56); sleeve(0.38, TOP, 0.056); pants(BOT, 0.13);
+    ctx.color(INK); limb([0, 0.97, -0.13], [0, 0.6, -0.135], 0.006, 0.006, 6); // zip
+    ctx.color(TOP); ell([0, 0.99, 0.0], [0.1, 0.03, 0.09], null, { seg: hi ? 16 : 10 }); // collar
+  }
+  else if (outfit === "apron") { // a half apron from the waist down, so nothing sits on the chest
+    shirt(TOP); sleeve(0.09, TOP); pants(BOT, 0.13);
+    ctx.color("#fdf6e3"); ell([0, 0.58, -0.125], [0.15, 0.13, 0.04], null, { seg: hi ? 16 : 10 });
+    ctx.color("#e8d9b5"); ell([0, 0.73, 0], [0.172, 0.018, 0.15], null, { seg: hi ? 20 : 12 }); // waistband
+    ctx.color(TOP); ell([0, 0.55, -0.16], [0.05, 0.04, 0.012], null, { seg: 10 }); // pocket
+  }
+  else if (outfit === "pajamas") {
+    shirt(TOP, 0.56); sleeve(0.38, TOP, 0.056); pants(BOT, 0.07);
+    ctx.color("#ffffff"); for (let k = 0; k < 3; k++) ell([0, 0.93 - k * 0.07, -0.138], [0.012, 0.012, 0.006], null, { seg: 8 });
+  }
+
   // accessories (body side)
   if (acc === "scarf") { ctx.color(TOP === "#e85d75" ? "#f3c64a" : TOP); wOverride = { Spine2: 0.5, Neck: 0.5 }; ell([0, 1.0, 0], [0.105, 0.04, 0.1], null); limb([0.05, 0.98, -0.09], [0.07, 0.8, -0.13], 0.03, 0.026, 8); wOverride = null; }
 
@@ -379,6 +401,7 @@ export function geometry(ctx) {
     const by = EY + ERV + 0.036 + E.browY;
     stroke((t) => { const u = cu + (t - 0.5) * 0.14; return [u, Math.min(by - E.brow * (u - cu) * s * -0.5 + 0.014 * Math.sin(Math.PI * t), vmax(u))]; }, 0.024, 0.008, 8);
   };
+  if (sp.patch) { ctx.color(sp.patch); for (const s of [-1, 1]) fill(ellipse(s * EX, EY - 0.012, ERU + 0.05, ERV + 0.045, hi ? 28 : 16, s * 0.45), 0.004); }
   for (const s of [-1, 1]) {
     const cu = s * EX, closed = E.eye === "closed" || (E.eye === "wink" && s > 0);
     if (closed) { // a happy ^ arc, thick and round
@@ -433,8 +456,13 @@ export function geometry(ctx) {
   if (E.sweat) { ctx.color("#8fd3ff"); fill(ellipse(0.245, 0.17, 0.02, 0.034), 0.02); }
 
   // nose
-  ctx.color(sp.nose);
-  fill([[-0.034, -0.035], [0.034, -0.035], [0.02, -0.06], [0, -0.068], [-0.02, -0.06]], 0.012);
+  if (sp.snout) { // a round pig snout with two nostrils
+    ctx.color(sp.nose); fill(ellipse(0, -0.062, 0.064, 0.046), 0.012);
+    ctx.color(INK); for (const s of [-1, 1]) fill(ellipse(s * 0.022, -0.062, 0.009, 0.015, 8), 0.016);
+  } else {
+    ctx.color(sp.nose);
+    fill([[-0.034, -0.035], [0.034, -0.035], [0.02, -0.06], [0, -0.068], [-0.02, -0.06]], 0.012);
+  }
   if (sp.whisk && mid) { ctx.color(INK); for (const s of [-1, 1]) for (let n = 0; n < 2; n++) stroke((t) => [s * (0.17 + t * 0.14), -0.1 + n * 0.03 + t * (0.01 - n * 0.03)], 0.007, 0.008, 4); }
 
   // markings (a wardrobe choice)
@@ -534,6 +562,25 @@ export function geometry(ctx) {
     for (const s of [-1, 1]) { const cu = s * EX; band((t) => { const a = t * Math.PI * 2; return [cu + Math.cos(a) * (ERU + 0.03), EY + Math.sin(a) * (ERU + 0.03)]; }, (t) => { const a = t * Math.PI * 2; return [cu + Math.cos(a) * (ERU + 0.012), EY + Math.sin(a) * (ERU + 0.012)]; }, 0.03, hi ? 28 : 14); }
     stroke((t) => [(t - 0.5) * 0.05, EY + 0.02], 0.012, 0.03, 3);
     ctx.metalness(null);
+  } else if (acc === "beanie") {
+    ctx.color(TOP); ell([0, 1.47, 0], [0.352, 0.2, 0.332], null, { clip: (p) => p[1] < 1.47 });
+    ctx.color(TOP === "#ffffff" ? "#dddddd" : "#ffffff"); { const ring = []; for (let i = 0; i <= 28; i++) { const a = (i / 28) * Math.PI * 2; ring.push([Math.cos(a) * 0.345, 1.46, Math.sin(a) * 0.325]); } loft(ring, () => [0.03, 0.03], [0, 1, 0], null, 8); }
+    ctx.color("#ffffff"); ell([0, 1.69, 0], [0.055, 0.055, 0.055], null, { seg: 12 });
+  } else if (acc === "crown") {
+    ctx.color("#ffd23f"); { const ring = []; for (let i = 0; i <= 24; i++) { const a = (i / 24) * Math.PI * 2; ring.push([Math.cos(a) * 0.2, 1.64, Math.sin(a) * 0.2]); } loft(ring, () => [0.022, 0.03], [0, 1, 0], null, 8); }
+    for (let i = 0; i < 5; i++) { const a = (i / 5) * Math.PI * 2 + 0.3, x = Math.cos(a) * 0.2, z = Math.sin(a) * 0.2; loft([[x, 1.64, z], [x, 1.76, z]], (t) => [0.034 * (1 - t) + 0.006, 0.034 * (1 - t) + 0.006], [0, 0, 1], null, 8); }
+    ctx.color("#ff5d8f"); ell([0, 1.66, -0.2], [0.02, 0.02, 0.012], null, { seg: 8 });
+  } else if (acc === "headphones") {
+    ctx.color("#2b2b33"); { const arc = []; for (let i = 0; i <= 20; i++) { const a = Math.PI - (i / 20) * Math.PI; arc.push([Math.cos(a) * 0.375, 1.3 + Math.sin(a) * 0.39, 0]); } loft(arc, () => [0.02, 0.02], [0, 0, 1], null, 8); }
+    ctx.color(TOP); for (const s of [-1, 1]) ell([s * 0.375, 1.3, 0], [0.065, 0.1, 0.1], null, { seg: 14 });
+  } else if (acc === "partyhat") {
+    ctx.color(TOP); loft([[0.04, 1.58, 0.0], [0.07, 1.82, 0.02]], (t) => [0.12 * (1 - t) + 0.006, 0.12 * (1 - t) + 0.006], [0, 0, 1], null, 14);
+    ctx.color("#ffffff"); ell([0.07, 1.83, 0.02], [0.03, 0.03, 0.03], null, { seg: 10 });
+    ctx.color("#ffd23f"); for (const [x, y] of [[0.02, 1.64], [0.06, 1.7], [0.04, 1.76]]) ell([x, y, -0.085], [0.014, 0.014, 0.008], null, { seg: 8 });
+  } else if (acc === "shades") {
+    ctx.flat(); ctx.color(INK);
+    for (const s of [-1, 1]) fill(ellipse(s * EX, EY, ERU + 0.04, ERV * 0.78 + 0.03, hi ? 28 : 14), 0.03);
+    stroke((t) => [(t - 0.5) * 0.06, EY + 0.02], 0.014, 0.03, 3);
   }
   wOverride = null;
 

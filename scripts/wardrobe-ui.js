@@ -1,6 +1,6 @@
 // The wardrobe panel (C): pick your critter. Every button sends one 'dress' action.
 import C from './lib/data/critter.yml'
-const NAMES = { m: 'boy', f: 'girl', none: 'none', tee: 'tee', hoodie: 'hoodie', sweater: 'sweater', overalls: 'overalls', skirt: 'skirt', dress: 'dress', bow: 'bow', flower: 'flower', cap: 'cap', glasses: 'glasses', scarf: 'scarf', tuft: 'tuft', round: 'round', tall: 'big & tall', wide: 'wide', freckles: 'freckles', stripes: 'stripes', patch: 'eye patch', heart: 'heart' }
+const NAMES = { m: 'boy', f: 'girl', none: 'none', tee: 'tee', hoodie: 'hoodie', sweater: 'sweater', overalls: 'overalls', skirt: 'skirt', dress: 'dress', bow: 'bow', flower: 'flower', cap: 'cap', glasses: 'glasses', scarf: 'scarf', tuft: 'tuft', jacket: 'jacket', apron: 'apron', pajamas: 'pyjamas', beanie: 'beanie', crown: 'crown', headphones: 'headphones', partyhat: 'party hat', shades: 'sunglasses', round: 'round', tall: 'big & tall', wide: 'wide', freckles: 'freckles', stripes: 'stripes', patch: 'eye patch', heart: 'heart' }
 const CSS = `<style>
 #wr{position:absolute;left:24px;top:24px;bottom:24px;width:min(420px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px)));overflow:auto;background:oklch(0.22 0.03 80 / .94);border:2px solid oklch(0.8 0.12 85);box-shadow:5px 5px 0 #000;padding:14px 16px;color:oklch(0.95 0.03 90);pointer-events:auto}
 #wr h2{font-size:22px;margin:0 0 4px;color:oklch(0.88 0.14 85);letter-spacing:.06em}
