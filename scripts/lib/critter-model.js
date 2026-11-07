@@ -5,11 +5,25 @@ export const HEAD_ID = 'critter-head'
 export const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 const CLOTH = { topw: ['cloth_top', 'top'], botw: ['cloth_bottom', 'bottom'], shoes: ['cloth_shoes', 'shoec'], hat: ['cloth_hat', 'hatc'], neck: ['cloth_neck', 'neckc'] }
 export const speciesOf = (l) => M.species[l?.species] ? l.species : 'cat'
+// a look's own fur re-tones its face: belly, tip and markings mix from that fur (cream-lit, shadow-dark) by a seed of the look, so two of one species never share a face
+const hx = (c) => { const n = parseInt(String(c).slice(1, 7), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255] }
+const toHex = (a) => '#' + a.map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('')
+const mix = (a, b, t) => toHex(hx(a).map((v, i) => v + (hx(b)[i] - v) * t))
+function seedOf(l) { let h = 2166136261; for (const c of `${l.fur}|${l.species}|${l.sex}|${l.top}|${l.bottom}|${l.eye}`) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 10000) / 10000 } }
+const CREAMS = ['#fff4e2', '#f6efe6', '#fbe6cc', '#efe6dc', '#fff9f0', '#e9dccb']
+const INKS = ['#1e1a1c', '#2c2220', '#3a2a22', '#24242c', '#40302a']
 function furMats(l) {
   const sp = M.species[speciesOf(l)], fur = l.fur || sp.fur
-  const m = { fur: { color: fur }, limb: { color: l.fur ? fur : sp.limb || fur }, belly: { color: sp.belly }, tip: { color: sp.tip || sp.belly } }
-  if (sp.nose) m.nose = { color: sp.nose }
-  if (sp.mark) m.mark = { color: sp.mark }
+  let belly = sp.belly, tip = sp.tip || sp.belly, mark = sp.mark
+  if (l.fur) {
+    const u = seedOf(l), cream = CREAMS[Math.floor(u() * CREAMS.length)], ink = INKS[Math.floor(u() * INKS.length)]
+    belly = mix(fur, cream, 0.45 + u() * 0.45)
+    tip = u() < 0.5 ? belly : mix(fur, ink, 0.35 + u() * 0.4)
+    mark = mix(fur, u() < 0.3 ? cream : ink, 0.3 + u() * 0.45)
+  }
+  const m = { fur: { color: fur }, limb: { color: l.fur ? (sp.limb && !l.fur ? sp.limb : fur) : sp.limb || fur }, belly: { color: l.belly || belly }, tip: { color: l.tip || tip } }
+  if (sp.nose) m.nose = { color: l.nose || sp.nose }
+  if (mark) m.mark = { color: l.mark || mark }
   if (sp.inner) m.inner = { color: sp.inner }
   if (sp.antler) m.antler = { color: sp.antler }
   return m
