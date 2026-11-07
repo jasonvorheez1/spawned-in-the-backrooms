@@ -181,7 +181,6 @@ export default function render(ctx, player) {
     ${s.attr != null ? (() => { const cap = _dv(s).carry, kg = _kg(s); return `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px;${kg > cap ? 'color:oklch(0.68 0.2 35)' : ''}"><span>WG</span><span>${kg.toFixed(1)}/${cap}</span></div>` })() : ''}
     <div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px">
       <span>LIGHT</span><span style="${s.light ? '' : 'opacity:.45'}">${s.light ? Math.round(s.battery) + '%' : 'OFF'}</span>
-      
     </div>
   </div>
 

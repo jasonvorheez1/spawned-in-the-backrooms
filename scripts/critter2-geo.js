@@ -354,21 +354,31 @@ export function geometry(ctx) {
       col(WHITE); fill(ellipse(cu, EY, ERU * sq, ERV * sq, hi ? 30 : 16), 0.007);
       col(INK);
       let px = cu - s * 0.012, py = EY - 0.012, pr = [ERU * 0.62, ERV * 0.66];
-      if (E.e === "wide") pr = [ERU * 0.3, ERV * 0.32];
+      if (E.e === "wide") pr = [ERU * 0.32, ERV * 0.34];
       if (E.e === "side") px = cu + 0.035;
       if (E.e === "down") py = EY - 0.035;
       if (E.e === "heart") fill(heartPts(px, py + 0.01, 0.07), 0.01);
       else if (E.e === "star") fill(starPts(px, py, 0.075, 4), 0.01, 1);
       else if (E.e === "spiral") stroke(curve((t) => [cu + Math.cos(t * 16 * s) * 0.075 * (1 - t * 0.9), EY + Math.sin(t * 16 * s) * 0.085 * (1 - t * 0.9)], hi ? 40 : 20), 0.011, 0.01);
       else {
-        if (EYEC !== "#2b2233" && hi) { col(EYEC); fill(ellipse(px, py, pr[0] + 0.012, pr[1] + 0.012, 20), 0.0085); col(INK); }
-        fill(ellipse(px, py, pr[0], pr[1], hi ? 22 : 12), 0.01);
+        const irisBase = EYEC && EYEC !== "#2b2233" ? EYEC : "#302636";
+        const irisGlow = mixc(irisBase, "#ffffff", 0.35);
+        col(irisBase); fill(ellipse(px, py, pr[0] + 0.008, pr[1] + 0.008, hi ? 24 : 14), 0.0085);
+        if (hi) { col(irisGlow); fill(ellipse(px, py - pr[1] * 0.16, pr[0] * 0.78, pr[1] * 0.46, 18), 0.009); }
+        col(INK); fill(ellipse(px, py + pr[1] * 0.03, pr[0] * 0.62, pr[1] * 0.65, hi ? 22 : 12), 0.0095);
+        // Glossy catchlight specular highlights: sparkling anime eyes
+        col(WHITE);
+        fill(ellipse(px - s * pr[0] * 0.32, py + pr[1] * 0.32, pr[0] * 0.3, pr[1] * 0.3, hi ? 14 : 8), 0.011);
+        if (hi) fill(ellipse(px + s * pr[0] * 0.28, py - pr[1] * 0.28, pr[0] * 0.14, pr[1] * 0.14, 10), 0.011);
       }
       if (E.e === "half") lid(s, E.uneven && s > 0 ? 0.0 : 0.025, E.uneven && s > 0 ? -0.1 : 0.05);
       if (E.e === "heavy" || E.e === "side") lid(s, -0.005, 0.0);
       if (E.e === "angry") lid(s, 0.035, -0.55);
       if (E.e === "sad") lid(s, 0.05, 0.45);
-      if (fem) { col(INK); for (let k = 0; k < 3; k++) { const a = 0.55 + k * 0.32, b = [cu + s * Math.cos(a) * (ERU + 0.012), EY + Math.sin(a) * (ERV + 0.012)]; stroke([b, [b[0] + s * (0.026 + 0.004 * k) * Math.cos(a + 0.25), b[1] + 0.03 * Math.sin(a + 0.3)]], [0.012, 0.004], 0.005); } }
+      // Eyeliner flick and lashes
+      col(INK);
+      stroke(curve((t) => [cu + s * (ERU * 0.7 + t * 0.038), EY + ERV * (0.62 + t * 0.32)], 6), [0.014, 0.004], 0.008);
+      if (fem) { for (let k = 0; k < 3; k++) { const a = 0.55 + k * 0.32, b = [cu + s * Math.cos(a) * (ERU + 0.012), EY + Math.sin(a) * (ERV + 0.012)]; stroke([b, [b[0] + s * (0.026 + 0.004 * k) * Math.cos(a + 0.25), b[1] + 0.03 * Math.sin(a + 0.3)]], [0.012, 0.004], 0.005); } }
       // blink lid, modelled 1/1000 size about its bone pivot
       if (!low) {
         WO = { [s < 0 ? "LidL" : "LidR"]: 1 }; SH = { c: [cu, EY, LIDZ], k: 1 / 1000 };
@@ -390,7 +400,10 @@ export function geometry(ctx) {
       stroke(curve((t) => [cu + (t - 0.5) * 0.09, by + up + (t - 0.5) * s * -tilt * 2 * (E.e === "sad" || E.m === "wobble" || E.m === "frown" || E.m === "wail" || E.m === "scream" || E.e === "down" ? -1 : 1) + 0.01 * Math.sin(Math.PI * t)], 6), [0.024, 0.012], 0.006);
     }
     if (E.tear && !low) { col("#8fd3ff"); if (E.tear === 1) fill(ellipse(cu + s * 0.06, EY - ERV - 0.01, 0.018, 0.028, 12), 0.016); else { stroke(curve((t) => [cu + s * 0.02 + s * 0.01 * Math.sin(t * 5), EY - 0.03 - t * 0.2], 8), 0.035, 0.016); } }
-    if (E.blush && !low) { col(BLUSH); fill(ellipse(s * 0.25, EY - 0.115, 0.055, 0.03, 14), 0.008); col(mixc(BLUSH, "#a0304a", 0.5)); for (let k = -1; k <= 1; k++) stroke([[s * 0.25 + k * 0.022 - 0.008, EY - 0.135], [s * 0.25 + k * 0.022 + 0.008, EY - 0.095]], 0.007, 0.01); }
+    if (!low) {
+      col(BLUSH); fill(ellipse(s * 0.24, EY - 0.115, 0.046, 0.026, hi ? 14 : 8), 0.004);
+    }
+    if (E.blush && !low) { col(BLUSH); fill(ellipse(s * 0.25, EY - 0.115, 0.058, 0.032, 14), 0.008); col(mixc(BLUSH, "#a0304a", 0.5)); for (let k = -1; k <= 1; k++) stroke([[s * 0.25 + k * 0.022 - 0.008, EY - 0.135], [s * 0.25 + k * 0.022 + 0.008, EY - 0.095]], 0.007, 0.01); }
   }
   if (E.sweat && !low) { col("#8fd3ff"); fill([...ellipse(0.29, EY + 0.12, 0.025, 0.03, 12).filter((p) => p[1] <= EY + 0.12), [0.29, EY + 0.19]], 0.008); }
   if (E.hearts && !low) { col("#ff5d84"); fill(heartPts(0.3, EY + 0.2, 0.04), 0.01); fill(heartPts(-0.33, EY + 0.13, 0.03), 0.01); }
@@ -549,18 +562,31 @@ export function geometry(ctx) {
     const hc = s * 0.555, hy = 0.962, hcol = sp.paw || LIMB;
     col(hcol); blob([hc, hy, 0], [0.05 * armR, 0.034 * armR, 0.054 * armR], null, { seg: hi ? 14 : 8 });
     const fz = [-0.036, -0.012, 0.012, 0.036];
+    const BEAN = sp.bean || "#ffaec0";
     if (!low) {
-      for (let f = 0; f < 4; f++) { const z = fz[f] * armR, l = (f === 1 || f === 2 ? 0.07 : 0.058) * armR; const a = [hc + s * 0.03, hy - 0.002, z], b = [hc + s * (0.03 + l), hy - 0.008, z * 1.25]; col(hcol); tube(path([[a, 0.0175 * armR], [lerp3(a, b, 0.6), 0.016 * armR], [b, 0.0155 * armR]], hi ? 2 : 1), { m: hi ? 8 : 6, domeA: true, domeB: true }); if (hi) { col("#ffb3c1"); blob([b[0] - s * 0.004, hy - 0.022, b[2]], [0.009, 0.004, 0.009], null, { seg: 6 }); } }
+      for (let f = 0; f < 4; f++) {
+        const z = fz[f] * armR, l = (f === 1 || f === 2 ? 0.07 : 0.058) * armR;
+        const a = [hc + s * 0.03, hy - 0.002, z], b = [hc + s * (0.03 + l), hy - 0.008, z * 1.25];
+        col(hcol); tube(path([[a, 0.0175 * armR], [lerp3(a, b, 0.6), 0.016 * armR], [b, 0.0155 * armR]], hi ? 2 : 1), { m: hi ? 8 : 6, domeA: true, domeB: true });
+        col(BEAN); blob([b[0] - s * 0.004, hy - 0.022, b[2]], [0.009 * armR, 0.004, 0.009 * armR], null, { seg: 6 });
+      }
       const ta = [hc - s * 0.005, hy - 0.008, -0.04 * armR], tb = [hc + s * 0.02, hy - 0.018, -0.082 * armR];
       col(hcol); tube(path([[ta, 0.019 * armR], [tb, 0.016 * armR]], hi ? 2 : 1), { m: hi ? 8 : 6, domeA: true, domeB: true });
-      if (hi) { col("#ffb3c1"); blob([hc + s * 0.004, hy - 0.034, 0], [0.026, 0.005, 0.03], null, { seg: 8 }); }
+      col(BEAN); blob([tb[0], hy - 0.024, tb[2]], [0.009 * armR, 0.004, 0.009 * armR], null, { seg: 6 });
+      col(BEAN); blob([hc + s * 0.004, hy - 0.034, 0], [0.026 * armR, 0.005, 0.03 * armR], null, { seg: 8 });
     }
     // leg + paw foot
     const L = legPath(s);
     tube(L, { m: M + 2, colFn: (t, k, p) => col(sp.limbs ? LIMB : sp.paw && p[1] < 0.15 ? sp.paw : bodyCol(p)), up: [0, 0, -1] });
     const fx = s * 0.088, fcol = sp.paw || LIMB;
     col(fcol); blob([fx, 0.06, -0.035], [0.068 * legR, 0.06, 0.108], null, { floor: 0.0, seg: hi ? 16 : 9 });
-    if (!shoeOn && !low) { for (const dx of [-0.038, -0.013, 0.013, 0.038]) blob([fx + dx * legR, 0.03, -0.128], [0.02 * legR, 0.026, 0.026], null, { floor: 0, seg: 8 }); if (hi) { col("#ffb3c1"); blob([fx, 0.002, -0.03], [0.04, 0.003, 0.05], null, { seg: 8 }); } }
+    if (!shoeOn && !low) {
+      for (const dx of [-0.038, -0.013, 0.013, 0.038]) {
+        col(fcol); blob([fx + dx * legR, 0.03, -0.128], [0.02 * legR, 0.026, 0.026], null, { floor: 0, seg: 8 });
+        col(BEAN); blob([fx + dx * legR, 0.004, -0.125], [0.013 * legR, 0.004, 0.013], null, { floor: 0, seg: 6 });
+      }
+      col(BEAN); blob([fx, 0.002, -0.03], [0.038 * legR, 0.003, 0.048], null, { seg: 8 });
+    }
   }
   // tail: bushy and two-toned
   {
