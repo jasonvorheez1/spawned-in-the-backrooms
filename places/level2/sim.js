@@ -1,6 +1,6 @@
 import { tickWalls } from "../../scripts/lib/breakables.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
-import { fullLook } from "../../scripts/lib/clothes.js";
+import { fullLook, npcLook } from "../../scripts/lib/clothes.js";
 import { raycast } from "builtin/physics";
 // Level 2's referee: lays the halls, lights, camp and supplies once, then keeps the hounds and survivors topped up.
 import L from "../../scripts/lib/data/level2.yml";
@@ -20,7 +20,7 @@ const SURV = {
 function survivor(ctx, id) {
   const g = SURV[id], a = cellCenter(1, ARRIVE.cz);
   ctx.spawn(id, { tags: ["npc"], feetPosition: { x: a.x + g.at[0], y: 0, z: a.z + g.at[1] }, rotation: { yaw: -90 }, physics: "character",
-    ...critterSpec(fullLook(g.look)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"], state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
+    ...critterSpec(npcLook(id, g.look, g.faction ?? "survivor", g.level ?? 8)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"], state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
   ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
 }
 const lit = (cx, cz) => zoneOf(cx, cz) !== "dark";

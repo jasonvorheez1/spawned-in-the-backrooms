@@ -1,6 +1,6 @@
 import { tickWalls } from "../../scripts/lib/breakables.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
-import { fullLook } from "../../scripts/lib/clothes.js";
+import { fullLook, npcLook } from "../../scripts/lib/clothes.js";
 // Level 3's referee, "Electrical Station": lays the halls, lamps, hazards and Base Gamma's checkpoint once,
 // then runs the station: live boxes that arc, black sludge that burns, generators that overload and blow,
 // assembly lines that keep turning out goods, hounds in brigades and deathmoth swarms drawn to light.
@@ -36,7 +36,7 @@ const VOICES3 = { "gamma-reyes": "reyes", "gamma-pell": "pell", "gamma-ito": "it
 function agent(ctx, id) {
   const g = GAMMA[id], a = cellCenter(0, ARRIVE.cz);
   ctx.spawn(id, { tags: ["npc"], feetPosition: { x: a.x + g.at[0], y: 0, z: a.z + g.at[1] }, rotation: { yaw: -90 }, physics: "character",
-    ...critterSpec(fullLook(g.look)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"], state: { name: g.name, role: g.role, voice: g.voice, rounds: roundsOf(id), ...npcState(ctx, "agent", MEG.hp) } });
+    ...critterSpec(npcLook(id, g.look, g.faction ?? "meg", g.level ?? 12)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"], state: { name: g.name, role: g.role, voice: g.voice, rounds: roundsOf(id), ...npcState(ctx, "agent", MEG.hp) } });
   ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
 }
 

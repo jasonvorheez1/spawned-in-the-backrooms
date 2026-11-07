@@ -90,12 +90,44 @@ export function honest(cur, next) {
   return b
 }
 
-// a random garment, weighted by rarity (a find in a crate or on remains); regular: true rolls only the plain set
-export function rollCloth(ctx, regular = false) {
-  const rows = CL.rows.filter((r) => (regular ? r.regular : true)), w = (r) => CL.rarity[r.rarity]?.weight ?? 1
-  let x = ctx.random() * rows.reduce((a, r) => a + w(r), 0), row = rows[0]
-  for (const r of rows) { x -= w(r); if (x <= 0) { row = r; break } }
+// the level a roll is for: a player's own level, else the place's tier (a drop with nobody behind it)
+export function rollLevel(ctx) {
+  const lv = ctx?.self?.state?.level
+  if (typeof lv === 'number' && ctx.self?.isLocal !== undefined) return lv
+  return CL.leveled.placeTier[ctx?.self?.place ?? ctx?.place?.id] ?? lv ?? 1
+}
+const rowLevel = (r) => Math.max(r.level ?? 1, CL.leveled.rarityAt[r.rarity] ?? 1)
+// the leveled list at a level: every row it can roll, each with its weight
+export function leveledRows(level, filter = () => true) {
+  return CL.rows.filter((r) => filter(r) && rowLevel(r) <= level).map((r) => [r, (CL.rarity[r.rarity]?.weight ?? 1) * (r.rarity === 'common' ? 1 : 1 + CL.leveled.lift * (level - rowLevel(r)))])
+}
+const pickW = (list, u) => { let x = u * list.reduce((a, [, w]) => a + w, 0); for (const [r, w] of list) { x -= w; if (x <= 0) return r } return list[list.length - 1]?.[0] }
+// a random garment off the leveled list (a find in a crate or on remains); regular: true rolls only the plain set
+export function rollCloth(ctx, regular = false, level) {
+  const lv = level ?? rollLevel(ctx)
+  const list = leveledRows(regular ? 1 : lv, (r) => (regular ? r.regular : true))
+  const row = pickW(list, ctx.random()) ?? CL.rows[0]
   return clothToken(row.slot, row.kind, row.colours[Math.floor(ctx.random() * row.colours.length)])
+}
+// an NPC dressed from its faction's leveled list, the same every time for the same id: species, fur, face and a signature
+// agency top (the M.E.G. lime) stay; everything else is rolled from what that faction wears at that level
+export function npcLook(id, look, faction, level) {
+  const F = CL.leveled.factions[faction] ?? CL.leveled.factions.wanderer
+  let h = 2166136261; for (const c of String(id)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) }
+  const u = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 100000) / 100000 }
+  const base = fullLook(look), l = { ...base }
+  const keepTop = rowOf('topw', base.topw, base.top)?.rarity === 'agency'
+  for (const slot of SLOTS) {
+    if (slot === 'topw' && keepTop) continue
+    const extra = F.extra?.[slot]
+    if (extra !== undefined && u() > extra) { l[slot] = 'none'; continue }
+    const list = leveledRows(level, (r) => r.slot === slot && F.rows.includes(r.id))
+    if (!list.length) continue
+    const row = pickW(list, u())
+    l[slot] = row.kind; if (CL.colourKey[slot]) l[CL.colourKey[slot]] = '#' + row.colours[Math.floor(u() * row.colours.length)]
+  }
+  if (l.topw === 'dress') l.botw = 'none'
+  return l
 }
 // a fresh critter's plain clothes: a regular top, bottom and shoes, nothing else
 export function plainLook(ctx, cur) {

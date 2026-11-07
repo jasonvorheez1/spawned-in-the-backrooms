@@ -27,3 +27,10 @@ recipes:
   bandage:    { name: Bandage,         in: { drywall: 2, wire: 1 },                          out: [bandage],          skill: [medicine, 15], desc: "Heals on the spot" }
   firstaid:   { name: First aid kit,   in: { drywall: 3, wire: 2, copper_coil: 1 },          out: [firstaid],         skill: [medicine, 40], bench: true, desc: "A proper kit: a big heal" }
   kit2:       { name: Field repair set, in: { scrap_metal: 4, gears: 1, springs: 1, bolts: 3 }, out: [kit, kit],      skill: [repair, 50],   bench: true, desc: "Two kits at once" }
+  # outfits (Savi's picks): improvised armor from what the levels break into. Each lands as a garment you can wear (I menu).
+  poncho:     { name: Carpet poncho,      in: { wire: 2, drywall: 1 },                          out: ["cloth:neck:cape:b39a4e"],      skill: [repair, 5],    desc: "Neck · DR 3 · cut from Level 0 carpet" }
+  padbeanie:  { name: Padded beanie,      in: { wire: 1, drywall: 2 },                          out: ["cloth:hat:beanie:4a5a3a"],     skill: [repair, 10],   desc: "Hat · DR 3" }
+  padjacket:  { name: Padded jacket,      in: { drywall: 3, wire: 2, nails: 2 },                out: ["cloth:topw:jacket:5a4a3a"],    skill: [repair, 25],   bench: true, desc: "Top · DR 5" }
+  steeltoe:   { name: Steel-toe boots,    in: { sheet_steel: 1, scrap_metal: 2, bolts: 2 },     out: ["cloth:shoes:boots:3a3a30"],    skill: [repair, 30],   bench: true, desc: "Shoes · DR 4" }
+  wirehood:   { name: Wire-mesh hoodie,   in: { copper_wire: 4, wire: 3, springs: 1 },          out: ["cloth:topw:hoodie:6e6e64"],    skill: [repair, 45],   bench: true, desc: "Top · DR 6 · Level 3 copper woven through" }
+  platevest:  { name: Drywall plate vest, in: { drywall: 4, sheet_steel: 2, bolts: 4, wire: 2 }, out: ["cloth:topw:apron:cfc8b8"],    skill: [repair, 60],   bench: true, desc: "Top · DR 7 · heavy" }

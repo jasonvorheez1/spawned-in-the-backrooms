@@ -1,7 +1,7 @@
 // Base Gamma's inside: the M.E.G.'s fortress at the end of Level 3. Lays the shell, the dressing, lights, signs, doors,
 // sound beds, guards, traders and residents once (place.state.builtV); the agents run themselves (scripts/meg-agent.js).
 import { critterSpec } from "../../scripts/lib/critter-model.js";
-import { fullLook } from "../../scripts/lib/clothes.js";
+import { fullLook, npcLook } from "../../scripts/lib/clothes.js";
 import MEG from "../../scripts/lib/data/meg.yml";
 import { npcState } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
@@ -30,7 +30,7 @@ export const PEOPLE = {
 function person(ctx, id) {
   const g = PEOPLE[id];
   ctx.spawn(id, { tags: ["npc", "gamma"], feetPosition: { x: g.at[0], y: 0, z: g.at[1] }, rotation: { yaw: g.yaw ?? 0 }, physics: "character",
-    ...critterSpec(fullLook(g.look)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"], state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
+    ...critterSpec(npcLook(id, g.look, g.faction ?? (String(g.look?.top).toLowerCase() === "#b6e04a" ? "meg" : "survivor"), g.level ?? (g.role === "guard" ? 16 : 12))), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"], state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
   ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
 }
 // a framed plate: dark steel face, big words, a warm light over it
