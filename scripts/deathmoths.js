@@ -32,7 +32,8 @@ export function update(ctx, dt) {
   const now = ctx.now(), mem = (ctx.self.session.m ??= {}), blur = (ctx.self.session.blur ??= {}), rnd = () => ctx.random();
   for (const pid in blur) if (now > blur[pid]) { const p = ctx.place.players.find((q) => q.id === pid); if (p) p.vignette = 0; delete blur[pid]; }
   const players = ctx.place.players.filter((p) => zoneAt(p.feetPosition.x, p.feetPosition.z) !== "gamma" && (p.state?.hp ?? 1) > 0);
-  for (const s of ctx.query({ tags: ["moths"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+  const allSwarms = ctx.query({ tags: ["moths"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+  for (const s of allSwarms) {
     const m = (mem[s.id] ??= { bob: rnd() * 6, spin: rnd() * 360, mode: "cruise" }), pos = s.feetPosition, st = s.state ?? {};
     if (st.hp == null && !st.dead) { Object.assign(s.state, npcState(ctx, "moths", M.hp, { xp: M.xp })); continue; }
     if (!m.kids) { m.kids = true; if (!kids(ctx, s.id).length) [0, 120, 240].forEach((a, i) => ctx.spawn({ id: `m${i}`, parent: s.id, model: { id: MOTH_GLB, forward: "+z" }, castShadow: false, feetPosition: { x: Math.cos(a * Math.PI / 180) * 0.75, y: [-0.1, 0.25, 0.05][i], z: Math.sin(a * Math.PI / 180) * 0.75 }, rotation: { yaw: -a, roll: [-14, 10, -6][i] }, scale: [1, 0.85, 0.92][i] })); }
@@ -103,7 +104,17 @@ export function update(ctx, dt) {
         if (!m.plan) { prey = null; m.wander = null; }
       }
       const tgt = m.plan ? (m.plan.cells === 0 ? goal : m.plan.next) : null;
-      if (tgt) { const dx = tgt.x - pos.x, dz = tgt.z - pos.z, d = Math.hypot(dx, dz); if (d > 0.15) { const k = Math.min(d - 0.15, sp * dt) / d; nx += dx * k; nz += dz * k; } }
+      if (tgt) {
+        const dx = tgt.x - pos.x, dz = tgt.z - pos.z, d = Math.hypot(dx, dz);
+        if (d > 0.15) { const k = Math.min(d, sp * dt) / (d || 1); nx += dx * k; nz += dz * k; }
+        if (d < 0.4 && m.plan.cells > 0) m.planAt = 0; // reached corner, advance immediately
+      }
+      // swarm separation: avoid clustering
+      for (const other of allSwarms) {
+        if (other.id === s.id) continue;
+        const ox = pos.x - other.feetPosition.x, oz = pos.z - other.feetPosition.z, od = Math.hypot(ox, oz) || 0.01;
+        if (od < 2.2) { nx += ox / od * (2.2 - od) * dt * 1.5; nz += oz / od * (2.2 - od) * dt * 1.5; }
+      }
       ny = pos.y + (ny - pos.y) * Math.min(1, dt * 3);
     }
     if (zoneAt(nx, nz) === "gamma") { nx = pos.x; nz = pos.z; } // Base Gamma is not theirs

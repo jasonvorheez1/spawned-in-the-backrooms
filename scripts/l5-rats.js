@@ -7,6 +7,7 @@ import { heard } from "./lib/hear.js";
 import { ZONES } from "./lib/level5.js";
 import { E, SND, isSafe, zoneId, flat, yawTo, maxHpOf, prey, aloneOf, hit, claimRemains, killerOf, becomeCorpse } from "./lib/l5-hostile.js";
 import { npcState } from "./lib/stats.js";
+import { stepToward as stepTowardBoiler } from "./lib/boilerpath.js";
 const R = E.rat, Z = Object.fromEntries(ZONES.map((z) => [z.id, z]));
 const rnd = (ctx, [a, b]) => a + ctx.random() * (b - a);
 const VENT_FX = `fx
@@ -130,8 +131,32 @@ export function update(ctx, dt) {
           goal = m.roam; sp = m.rest ? 0 : R.walk;
         }
       }
-      let dx = goal.x - pos.x, dz = goal.z - pos.z; const d = Math.hypot(dx, dz);
+      let tgt = goal;
+      if (P.phase === "nest" && goal) {
+        const way = stepTowardBoiler(pos.x, pos.z, goal.x, goal.z, 20);
+        if (way && way.cells > 0) tgt = way.next;
+      }
+      let dx = tgt.x - pos.x, dz = tgt.z - pos.z; const d = Math.hypot(dx, dz);
       if (d < 0.2) sp = 0; else { dx /= d; dz /= d; }
+      // stuck detection: if running but blocked by collider, sidestep & repath
+      m.sk ??= { x: pos.x, z: pos.z, at: now };
+      if (now - m.sk.at > 800) {
+        const moved = Math.hypot(pos.x - m.sk.x, pos.z - m.sk.z);
+        if (sp > 0.5 && moved < 0.2) { m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 500 }; m.roam = null; }
+        m.sk = { x: pos.x, z: pos.z, at: now };
+      }
+      if (m.side && now < m.side.until) {
+        const s = m.side.s;
+        dx = dx * 0.4 + -dz * s * 0.9;
+        dz = dz * 0.4 + (tgt.x - pos.x) / (d || 1) * s * 0.9;
+      }
+      // rat separation: avoid clumping
+      for (const o of live) {
+        if (o.id === r.id) continue;
+        const ox = pos.x - o.feetPosition.x, oz = pos.z - o.feetPosition.z, od = Math.hypot(ox, oz) || 0.01;
+        if (od < 0.45) { dx += ox / od * (0.45 - od) * 1.5; dz += oz / od * (0.45 - od) * 1.5; }
+      }
+      const dl = Math.hypot(dx, dz) || 1; dx /= dl; dz /= dl;
       // never onto safe ground, never out of the halls once up
       const nx = pos.x + dx * sp * 0.3, nz = pos.z + dz * sp * 0.3;
       if (sp && (isSafe(nx, nz) || (P.phase === "out" && !screaming && !returning && m.mode !== "swarm" && zoneId(nx, nz) !== home.id))) { sp = 0; m.roam = null; }

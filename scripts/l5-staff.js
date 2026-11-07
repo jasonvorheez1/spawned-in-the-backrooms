@@ -5,7 +5,15 @@ import { heard } from "./lib/hear.js";
 import { E, SND, isSafe, flat, yawTo, prey, aloneOf, hit, claimRemains } from "./lib/l5-hostile.js";
 import { npcState } from "./lib/stats.js";
 import { findPath } from "builtin/nav";
+import { raycast } from "builtin/physics";
 import { zoneId, becomeCorpse, killerOf } from "./lib/l5-hostile.js";
+
+const clearLine = (ctx, meId, a, b) => {
+  const dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz);
+  if (d < 0.3) return true;
+  const h = raycast(ctx, { x: a.x, y: (a.y ?? 0) + 0.8, z: a.z }, { x: dx / d, y: 0, z: dz / d }, { distance: d, radius: 0.25, ignoreEntities: [meId], bodies: "static", physicsOnly: true });
+  return !h;
+};
 
 import { critterSpec } from "./lib/critter-model.js";
 import { npcLook } from "./lib/clothes.js";
@@ -94,11 +102,41 @@ export function update(ctx, dt) {
     if (mode === "strike" || now < (m.strike ?? 0) - T.strikeEvery + 900) { sp = 0; }
     let dx = 0, dz = 0;
     if (goal && sp) {
-      // walk the hotel's halls, not through its walls: a path re-asked each second, its next corner the heading
-      if (!m.path || now - (m.pathAt ?? 0) > 1000 || flat(m.pathGoal ?? goal, goal) > 1.5) { const r = findPath(ctx, { x: pos.x, y: pos.y ?? 0, z: pos.z }, { x: goal.x, y: goal.y ?? pos.y ?? 0, z: goal.z }); if (!r.partial) { m.path = r.points?.length ? r.points : null; m.pathAt = now; m.pathGoal = { ...goal }; } }
-      let aim = goal; if (m.path) { while (m.path.length > 1 && flat(pos, m.path[0]) < 0.6) m.path.shift(); aim = m.path[0] ?? goal; }
+      // walk the hotel's halls, not through its walls: a path from navmesh, smoothed & re-evaluated
+      if (!m.path || now - (m.pathAt ?? 0) > (m.repathMs ?? 1000) || flat(m.pathGoal ?? goal, goal) > 1.5) {
+        const r = findPath(ctx, { x: pos.x, y: pos.y ?? 0, z: pos.z }, { x: goal.x, y: goal.y ?? pos.y ?? 0, z: goal.z });
+        if (r?.points?.length) {
+          m.path = r.points;
+          m.pathAt = now;
+          m.pathGoal = { ...goal };
+          m.repathMs = r.partial ? 350 : 1200;
+        } else {
+          m.path = null;
+          m.repathMs = 500;
+        }
+      }
+      let aim = goal;
+      if (m.path) {
+        while (m.path.length > 1 && flat(pos, m.path[0]) < 0.7) m.path.shift();
+        if (m.path.length > 1 && clearLine(ctx, o.id, pos, m.path[1])) m.path.shift();
+        aim = m.path[0] ?? goal;
+      }
       dx = aim.x - pos.x; dz = aim.z - pos.z; const d = Math.hypot(dx, dz) || 1; dx /= d; dz /= d;
-      const nx = pos.x + dx * 0.6, nz = pos.z + dz * 0.6; if (isSafe(nx, nz) || (mode === "creep" && AVOID.has(zoneId(nx, nz)))) sp = 0;
+      // stuck detection: if moving but trapped against furniture/wall, sidestep
+      m.sk ??= { x: pos.x, z: pos.z, at: now };
+      if (now - m.sk.at > 800) {
+        const moved = Math.hypot(pos.x - m.sk.x, pos.z - m.sk.z);
+        if (sp > 0.3 && moved < 0.2) { m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 500 }; m.path = null; }
+        m.sk = { x: pos.x, z: pos.z, at: now };
+      }
+      if (m.side && now < m.side.until) {
+        const s = m.side.s;
+        dx = dx * 0.4 + -dz * s * 0.9;
+        dz = dz * 0.4 + (aim.x - pos.x) / d * s * 0.9;
+        const dl = Math.hypot(dx, dz) || 1; dx /= dl; dz /= dl;
+      }
+      const nx = pos.x + dx * 0.6, nz = pos.z + dz * 0.6;
+      if (isSafe(nx, nz) || (mode === "creep" && AVOID.has(zoneId(nx, nz)))) sp = 0;
     } else m.path = null;
     // never two in one spot: each steps off the others
     for (const g of T.figures) { if (g.id === f.id) continue; const q = ctx.getObject(g.id)?.feetPosition; if (!q) continue; const ex = pos.x - q.x, ez = pos.z - q.z, e = Math.hypot(ex, ez); if (e < (T.spread ?? 1.6) && e > 0.001) { const k = ((T.spread ?? 1.6) - e) / (T.spread ?? 1.6); dx += (ex / e) * k; dz += (ez / e) * k; if (!sp && mode !== "frozen") sp = 0.8; } }

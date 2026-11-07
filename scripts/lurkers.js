@@ -5,6 +5,7 @@ import { heard } from "./lib/hear.js";
 import { hearOf, sighting, leadOf, raise, alertFor } from "./lib/hunt.js";
 import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
+import { stepToward as stepToward0 } from "./lib/maze0path.js";
 import { raycast } from "builtin/physics";
 import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
 const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
@@ -72,7 +73,8 @@ export function update(ctx, dt) {
   const now = ctx.now();
   const players = ctx.place.players.filter((p) => !(p.state?.downAt && now - p.state.downAt < 4500));
   const mem = (ctx.self.session.m ??= {});
-  for (const w of ctx.query({ tags: ["lurker"] })) {
+  const allLurkers = ctx.query({ tags: ["lurker"] });
+  for (const w of allLurkers) {
     const m = (mem[w.id] ??= {}), st = w.state ?? {}, pos = w.feetPosition, mu = npcMul(st);
     if (st.mesh !== 3) { w.primitive = null; w.model = LURKER_MODEL; w.scale = LURKER_SCALE; st.mesh = 3; m.clip = null; }
     const play = (clip, loop = true) => { if (m.clip !== clip) { m.clip = clip; w.anim.body = { clip: CLIP[clip] ?? clip, loop, clampWhenFinished: !loop }; } };
@@ -111,9 +113,48 @@ export function update(ctx, dt) {
     if (prey) { goal = prey.feetPosition; speed = L.lurkerSpeed; }
     else if (m.last && now - m.last.at < (L.chaseMemory ?? 12) * 1000) { m.lead ??= leadOf(m.last); goal = m.heard ? m.last : m.lead; speed = m.heard ? L.lurkerSpeed * 0.6 : (L.chaseMemory ? L.lurkerSpeed * 0.6 * 1.25 : L.lurkerSpeed * 0.6); if (Math.hypot(goal.x - pos.x, goal.z - pos.z) < 0.8) { if (!m.heard && m.lead && goal === m.lead) { m.lead = null; m.last = { ...m.last, x: goal.x, z: goal.z }; } else { m.last = null; m.lead = null; } } }
     else { if (!m.next || Math.hypot(m.next.x - pos.x, m.next.z - pos.z) < 0.5 || now > (m.nextBy ?? 0)) { m.next = neighbor(ctx, pos); m.nextBy = now + 7000; } goal = m.next; speed = 1.0; }
+    const sight = prey && clear(ctx, eye, { x: prey.feetPosition.x, y: prey.feetPosition.y + 1.5, z: prey.feetPosition.z }, [w.id, prey.id]);
+    let way = null;
+    if ((prey || m.last) && !sight) {
+      way = stepToward0(pos.x, pos.z, goal.x, goal.z, 25);
+    }
+    const tgt = way && way.cells > 0 ? way.next : goal;
+    const dx = tgt.x - pos.x, dz = tgt.z - pos.z, d = Math.hypot(dx, dz) || 1;
+    let ux = dx / d, uz = dz / d;
+
+    // stuck detection: if moving but trapped against a partition wall, sidestep & repath
+    m.sk ??= { x: pos.x, z: pos.z, at: now };
+    if (now - m.sk.at > 700) {
+      const moved = Math.hypot(pos.x - m.sk.x, pos.z - m.sk.z);
+      if (!m.watched && speed > 1 && moved < 0.2) {
+        m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 500 };
+        m.next = null;
+      }
+      m.sk = { x: pos.x, z: pos.z, at: now };
+    }
+    if (m.side && now < m.side.until) {
+      const s = m.side.s;
+      ux = ux * 0.4 + -uz * s * 0.9;
+      uz = uz * 0.4 + (dx / d) * s * 0.9;
+    }
+
+    // separation: push away from nearby lurkers
+    if (now >= (m.sepAt ?? 0)) {
+      m.sepAt = now + 250;
+      let sx = 0, sz = 0;
+      for (const o of allLurkers) {
+        if (o.id === w.id) continue;
+        const ox = pos.x - o.feetPosition.x, oz = pos.z - o.feetPosition.z, od = Math.hypot(ox, oz) || 0.01;
+        if (od < 1.4) { sx += ox / od * (1.4 - od); sz += oz / od * (1.4 - od); }
+      }
+      m.sep = { x: sx, z: sz };
+    }
+    if (m.sep) { ux += m.sep.x * 1.1; uz += m.sep.z * 1.1; }
+    const ul = Math.hypot(ux, uz) || 1; ux /= ul; uz /= ul;
+
     let vx = 0, vz = 0;
-    const dx = goal.x - pos.x, dz = goal.z - pos.z, d = Math.hypot(dx, dz);
-    if (d > (prey ? 1.1 : 0.3)) { vx = (dx / d) * speed * mu.speed; vz = (dz / d) * speed * mu.speed; }
+    const near = (way && way.cells > 0) ? 0.35 : (prey ? 1.1 : 0.3);
+    if (d > near) { vx = ux * speed * mu.speed; vz = uz * speed * mu.speed; }
     if (m.watched || m.grab || now < (m.screamEnd ?? 0)) { vx = 0; vz = 0; } // frozen under a gaze, or busy with a catch
     else if ((vx || vz) && Math.floor(now / 170) % 3 === 2) { vx = 0; vz = 0; } // stop-motion: lurch, lurch, hold
     else { vx *= 1.4; vz *= 1.4; }

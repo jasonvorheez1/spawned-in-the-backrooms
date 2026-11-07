@@ -243,14 +243,25 @@ export function update(ctx, dt) {
   if (ses.mode === 'walk') {
     if (!ses.path) {
       const r = findPath(ctx, me.feetPosition, ses.goal, { radius: 0.2 })
-      if (r?.partial) return
-      ses.path = r?.points?.length ? r.points : [ses.goal]; ses.pi = 0
+      if (r?.points?.length) {
+        ses.path = r.points; ses.pi = 0
+      } else if (!r?.partial) {
+        ses.path = [ses.goal]; ses.pi = 0
+      } else {
+        rest(ctx, now, 'sit'); return
+      }
     }
     const pt = ses.path[ses.pi] ?? ses.goal, a = me.feetPosition, dx = pt.x - a.x, dz = pt.z - a.z, d = Math.hypot(dx, dz)
-    if (d < 0.12) {
+    ses.sk ??= { x: a.x, z: a.z, at: now }
+    if (now - ses.sk.at > 1200) {
+      const moved = Math.hypot(a.x - ses.sk.x, a.z - ses.sk.z)
+      if (moved < 0.15) { rest(ctx, now, 'sit'); return }
+      ses.sk = { x: a.x, z: a.z, at: now }
+    }
+    if (d < 0.15) {
       if (++ses.pi < ses.path.length) return
       const pc = ses.perch
-      if (pc) { ses.offX = a.x - pc.x; ses.offZ = a.z - pc.z; me.feetPosition = { x: pc.x, y: pc.y, z: pc.z }; ses.y = pc.y; rest(ctx, now, 'sit'); ses.mode = 'perched'; ses.perch = null; heard(ctx, { clip: SND('soft-cat-jump-landing-thump'), position: me.feetPosition, volume: 0.35, maxDistance: 8 }) }
+      if (pc && Math.hypot(a.x - pc.x, a.z - pc.z) < 1.8) { ses.offX = a.x - pc.x; ses.offZ = a.z - pc.z; me.feetPosition = { x: pc.x, y: pc.y, z: pc.z }; ses.y = pc.y; rest(ctx, now, 'sit'); ses.mode = 'perched'; ses.perch = null; heard(ctx, { clip: SND('soft-cat-jump-landing-thump'), position: me.feetPosition, volume: 0.35, maxDistance: 8 }) }
       else rest(ctx, now, ctx.random() < 0.25 ? 'groom' : 'sit')
       return
     }

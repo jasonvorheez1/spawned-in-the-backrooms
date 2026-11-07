@@ -8,11 +8,23 @@ import { zoneAt as zoneAt2 } from "./lib/level2.js";
 import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
 import { zoneAt as zoneAt3, cellAt as cellAt3, cellCenter as cellCenter3, openings as openings3 } from "./lib/level3.js";
 import { zoneAt as zoneAt5 } from "./lib/level5.js";
-import { stepToward, cellNear } from "./lib/maze3path.js";
+import { stepToward as stepToward1 } from "./lib/maze1path.js";
+import { stepToward as stepToward2 } from "./lib/maze2path.js";
+import { stepToward as stepToward3, cellNear } from "./lib/maze3path.js";
+import { stepToward as stepTowardBoiler } from "./lib/boilerpath.js";
+import { raycast } from "builtin/physics";
 import C from "./lib/data/creatures3.yml";
 const H3 = C.hounds3;
 const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
+
+function hasClearSight(ctx, a, b, ignoreId, targetId) {
+  const dx = b.x - a.x, dy = (b.y ?? 0) - (a.y ?? 0), dz = b.z - a.z, d = Math.hypot(dx, dz);
+  if (d > 14) return false;
+  const l = Math.hypot(dx, dy, dz) || 1;
+  const hit = raycast(ctx, { x: a.x, y: (a.y ?? 0) + 0.6, z: a.z }, { x: dx / l, y: dy / l, z: dz / l }, { distance: l, physicsOnly: true, bodies: "static", ignoreEntities: [ignoreId, targetId] });
+  return !hit;
+}
 // The body: a rigged Blender mesh (art/hound/build.py) with its own clips; every row the sims spawn wears it.
 const MODEL = "/cdn/value.180d1072a97d34551e1394960b70202777c9d0b51fb0ca67779a59e429ef6fa7.glb";
 // The hunt, every level: howl once on sight (calls hounds within callRadius), pounce from pounceRange, maul, bleed.
@@ -37,12 +49,14 @@ function sees(ctx, h, p) {
   return !raycast(ctx, a, { x: dx / d, y: dy / d, z: dz / d }, { distance: d - 0.4, bodies: "static", physicsOnly: true, ignoreEntities: [h.id, p.id] });
 }
 export function update(ctx, dt) {
-  const L3 = ctx.self.place === "level3";
-  const safeAt = L3 ? (x, z) => zoneAt3(x, z) === "gamma" : ctx.self.place === "level2" ? (x, z) => zoneAt2(x, z) === "camp" : ctx.self.place === "level5" ? (x, z) => zoneAt5(x, z)?.id !== "boiler" : (x, z) => safeZone(zoneAt(x, z));
+  const place = ctx.self.place;
+  const L3 = place === "level3", L2 = place === "level2", L5 = place === "level5", L1 = !L2 && !L3 && !L5;
+  const safeAt = L3 ? (x, z) => zoneAt3(x, z) === "gamma" : L2 ? (x, z) => zoneAt2(x, z) === "camp" : L5 ? (x, z) => zoneAt5(x, z)?.id !== "boiler" : (x, z) => safeZone(zoneAt(x, z));
   const now = ctx.now(), dark = ctx.place.state.flicker === "dark", mem = (ctx.self.session.m ??= {});
   const players = ctx.place.players.filter((p) => !safeAt(p.feetPosition.x, p.feetPosition.z) && !(p.state?.downAt && now - p.state.downAt < 4500));
   const byId = (id) => players.find((p) => p.id === id) ?? ctx.place.players.find((p) => p.id === id) ?? ctx.query({ tags: ["npc"], radius: 80, center: { x: 0, y: 0, z: 0 } }).find((n) => n.id === id) ?? null;
-  for (const h of ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+  const allHounds = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+  for (const h of allHounds) {
     const m = (mem[h.id] ??= {}), pos = h.feetPosition, st = h.state ?? {}, mu = npcMul(st);
     if (ctx.self.place === "level5" && !st.dead && zoneAt5(pos.x, pos.z)?.id !== "boiler") { h.feetPosition = { x: [37.5, 28.5, 40.5][Math.floor(ctx.random() * 3)], y: 0.05, z: [2.5, -0.5, -9.5][Math.floor(ctx.random() * 3)] }; m.roam = null; continue; } // level 5: the pack lives in the Boiler Room alone
     if (now >= (m.meshChk ?? 0)) { m.meshChk = now + 2000; const o = ctx.getObject(h.id); if (o && !String(o.model?.id ?? o.model ?? "").includes(MODEL.slice(5))) { o.primitive = null; o.model = { id: MODEL }; } } // the old coded body gives way to the mesh
@@ -118,19 +132,43 @@ export function update(ctx, dt) {
     else if (L3 && m.lurkAt) goal = m.lurkAt;
     else if (m.lastSeen && now - (m.lastSeen.at ?? now) < 5000 && Math.hypot(m.lastSeen.x - pos.x, m.lastSeen.z - pos.z) > 1) goal = m.lastSeen; // sniff where it last saw them
     else { m.lastSeen = null; if (!m.roam || now > m.until) { const a = ctx.random() * 6.283; m.roam = { x: pos.x + Math.cos(a) * 14, z: pos.z + Math.sin(a) * 14 }; m.until = now + 4000; } goal = m.roam; }
-    const way = L3 ? stepToward(pos.x, pos.z, goal.x, goal.z, 30) : null; // level 3: follow the halls cell by cell
-    if (L3 && !way && !prey) m.roam = null;
+    const sight = prey && hasClearSight(ctx, pos, prey.feetPosition, h.id, prey.id);
+    let way = null;
+    if (!sight) {
+      if (L3) way = stepToward3(pos.x, pos.z, goal.x, goal.z, 30);
+      else if (L2) way = stepToward2(pos.x, pos.z, goal.x, goal.z, 30);
+      else if (L5) way = stepTowardBoiler(pos.x, pos.z, goal.x, goal.z, 30);
+      else way = stepToward1(pos.x, pos.z, goal.x, goal.z, 30);
+    }
+    if (!way && !prey && !sight && !m.lastSeen) m.roam = null;
     const tgt = way && way.cells > 0 ? way.next : goal;
     const dx = tgt.x - pos.x, dz = tgt.z - pos.z, d = Math.hypot(dx, dz) || 1;
+    let ux = dx / d, uz = dz / d;
     let sp = prey ? mu.speed * L.houndSpeed * (dark ? 1.15 : 1) : 2;
     if (L3 && prey && now < (m.pounceUntil ?? 0)) sp *= H3.pounceBoost;
     if (L3 && st.lurk) sp = 0;
     if (now < (st.stunUntil ?? 0)) sp *= H3.stunSpeed; // stunned, every level
-    const nx = pos.x + dx / d * sp * dt, nz = pos.z + dz / d * sp * dt;
+    // stuck detection: if moving but trapped against a collider, sidestep & repath
+    m.sk ??= { x: pos.x, z: pos.z, at: now };
+    if (now - m.sk.at > 800) {
+      const moved = Math.hypot(pos.x - m.sk.x, pos.z - m.sk.z);
+      if (sp > 1 && moved < 0.25) { m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 500 }; m.roam = null; }
+      m.sk = { x: pos.x, z: pos.z, at: now };
+    }
+    if (m.side && now < m.side.until) { const s = m.side.s; ux = ux * 0.4 + -uz * s * 0.9; uz = uz * 0.4 + (dx / d) * s * 0.9; }
+    // pack separation: push away from nearby hounds so pack flanks rather than collapsing
+    if (now >= (m.sepAt ?? 0)) {
+      m.sepAt = now + 250; let sx = 0, sz = 0;
+      for (const o of allHounds) { if (o.id === h.id) continue; const ox = pos.x - o.feetPosition.x, oz = pos.z - o.feetPosition.z, od = Math.hypot(ox, oz) || 0.01; if (od < 1.2) { sx += ox / od * (1.2 - od); sz += oz / od * (1.2 - od); } }
+      m.sep = { x: sx, z: sz };
+    }
+    if (m.sep) { ux += m.sep.x * 1.1; uz += m.sep.z * 1.1; }
+    const ul = Math.hypot(ux, uz) || 1; ux /= ul; uz /= ul;
+    const nx = pos.x + ux * sp * dt, nz = pos.z + uz * sp * dt;
     if (safeAt(nx, nz)) sp = 0; // the corridors turn them back
-    const near = way && way.cells > 0 ? 0.3 : 1.2;
-    h.velocity = { x: d > near ? dx / d * sp : 0, y: (h.velocity?.y ?? 0) - 20 * dt, z: d > near ? dz / d * sp : 0 };
-    if (sp > 0) h.rotation = { yaw: Math.atan2(-dx, -dz) * 57.2958 };
+    const near = way && way.cells > 0 ? 0.35 : 1.2;
+    h.velocity = { x: d > near ? ux * sp : 0, y: (h.velocity?.y ?? 0) - 20 * dt, z: d > near ? uz * sp : 0 };
+    if (sp > 0) h.rotation = { yaw: Math.atan2(-ux, -uz) * 57.2958 };
     if (prey && sp > 0 && best < T.pounceRange && best > T.pounceMin && now >= (m.nextPounce ?? 0)) { // the leap
       const px = prey.feetPosition.x - pos.x, pz = prey.feetPosition.z - pos.z, pd = Math.hypot(px, pz) || 1;
       m.pounceAt = now; m.pounceOn = prey.id; m.pounceHit = false; m.nextPounce = now + T.pounceCd; anim(h, m, "pounce", false);

@@ -6,9 +6,18 @@ import { heard } from "./lib/hear.js";
 import { hearOf, sighting, leadOf, raise, alertFor } from "./lib/hunt.js";
 import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
+import { stepToward as stepToward0 } from "./lib/maze0path.js";
 import { raycast } from "builtin/physics";
 import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
 const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
+
+function hasClearSight(ctx, a, b, ignoreId, targetId) {
+  const dx = b.x - a.x, dy = (b.y ?? 0) - (a.y ?? 0), dz = b.z - a.z, d = Math.hypot(dx, dz);
+  if (d > 14) return false;
+  const l = Math.hypot(dx, dy, dz) || 1;
+  const hit = raycast(ctx, { x: a.x, y: (a.y ?? 0) + EYE, z: a.z }, { x: dx / l, y: dy / l, z: dz / l }, { distance: l, physicsOnly: true, bodies: "static", ignoreEntities: [ignoreId, targetId] });
+  return !hit;
+}
 
 export const MODEL = { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" }; // Tripo shadow crawler, mixamo rig (art/creatures/build.py)
 export const SCALE = 1.6; // 1.2 m file -> ~1.9 m hunched
@@ -40,7 +49,8 @@ export function update(ctx, dt) {
   const now = ctx.now();
   const players = ctx.place.players.filter((p) => !(p.state?.downAt && now - p.state.downAt < 4500));
   const mem = (ctx.self.session.m ??= {});
-  for (const w of ctx.query({ tags: ["smiler"] })) {
+  const allSmilers = ctx.query({ tags: ["smiler"] });
+  for (const w of allSmilers) {
     const m = (mem[w.id] ??= {}), st = w.state ?? {}, pos = w.feetPosition, mu = npcMul(st);
     if (st.mdl !== MDL) { w.primitive = null; w.material = null; w.model = MODEL; w.scale = SCALE; w.state.mdl = MDL; m.mode = null; }
     if (st.dead) {
@@ -95,9 +105,48 @@ export function update(ctx, dt) {
       m.lit = lit;
       if (lit) { act(w, "recoil"); heard(ctx, { clip: SND("smiler-light-flinch-shriek"), position: pos, volume: 0.8, maxDistance: 22 }); }
     }
+    const sight = prey && hasClearSight(ctx, pos, prey.feetPosition, w.id, prey.id);
+    let way = null;
+    if ((prey || m.last) && !sight) {
+      way = stepToward0(pos.x, pos.z, goal.x, goal.z, 25);
+    }
+    const tgt = way && way.cells > 0 ? way.next : goal;
+    const dx = tgt.x - pos.x, dz = tgt.z - pos.z, d = Math.hypot(dx, dz) || 1;
+    let ux = dx / d, uz = dz / d;
+
+    // stuck detection: if moving but trapped against a partition wall, sidestep & repath
+    m.sk ??= { x: pos.x, z: pos.z, at: now };
+    if (now - m.sk.at > 700) {
+      const moved = Math.hypot(pos.x - m.sk.x, pos.z - m.sk.z);
+      if (!lit && speed > 1 && moved < 0.2) {
+        m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 500 };
+        m.next = null;
+      }
+      m.sk = { x: pos.x, z: pos.z, at: now };
+    }
+    if (m.side && now < m.side.until) {
+      const s = m.side.s;
+      ux = ux * 0.4 + -uz * s * 0.9;
+      uz = uz * 0.4 + (dx / d) * s * 0.9;
+    }
+
+    // separation: push away from nearby smilers
+    if (now >= (m.sepAt ?? 0)) {
+      m.sepAt = now + 250;
+      let sx = 0, sz = 0;
+      for (const o of allSmilers) {
+        if (o.id === w.id) continue;
+        const ox = pos.x - o.feetPosition.x, oz = pos.z - o.feetPosition.z, od = Math.hypot(ox, oz) || 0.01;
+        if (od < 1.4) { sx += ox / od * (1.4 - od); sz += oz / od * (1.4 - od); }
+      }
+      m.sep = { x: sx, z: sz };
+    }
+    if (m.sep) { ux += m.sep.x * 1.1; uz += m.sep.z * 1.1; }
+    const ul = Math.hypot(ux, uz) || 1; ux /= ul; uz /= ul;
+
     let vx = 0, vz = 0;
-    const dx = goal.x - pos.x, dz = goal.z - pos.z, d = Math.hypot(dx, dz);
-    if (!lit && d > (prey ? 1.1 : 0.3)) { vx = (dx / d) * speed * mu.speed; vz = (dz / d) * speed * mu.speed; }
+    const near = (way && way.cells > 0) ? 0.35 : (prey ? 1.1 : 0.3);
+    if (!lit && d > near) { vx = ux * speed * mu.speed; vz = uz * speed * mu.speed; }
     // the lunge: one burst from up to 4 m, jaw unhinged; a hit drags the wanderer in
     if (prey && !lit && !m.lunge && pd <= LUNGE.range && now >= (m.bite ?? 0)) {
       m.lunge = { until: now + LUNGE.ms, x: (prey.feetPosition.x - pos.x) / (pd || 1), z: (prey.feetPosition.z - pos.z) / (pd || 1) };

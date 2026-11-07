@@ -10,6 +10,16 @@ import { zoneAt, safeZone } from "./lib/level1.js";
 import { npcMul, dmgAfterArmor } from "./lib/stats.js";
 import { critterSpec, GAIT_LIB } from "./lib/critter-model.js";
 import { npcLook } from "./lib/clothes.js";
+import { stepToward as stepToward1 } from "./lib/maze1path.js";
+import { raycast } from "builtin/physics";
+
+function hasClearSight(ctx, a, b, ignoreId, targetId) {
+  const dx = b.x - a.x, dy = (b.y ?? 0) - (a.y ?? 0), dz = b.z - a.z, d = Math.hypot(dx, dz);
+  if (d > 14) return false;
+  const l = Math.hypot(dx, dy, dz) || 1;
+  const hit = raycast(ctx, { x: a.x, y: (a.y ?? 0) + 0.6, z: a.z }, { x: dx / l, y: dy / l, z: dz / l }, { distance: l, physicsOnly: true, bodies: "static", ignoreEntities: [ignoreId, targetId] });
+  return !hit;
+}
 const GLB = "/cdn/value.6cc392a43a5cb12b4557b1fb35e23d329ad01c9d707b4267d923bdc14abcde2d.glb"; // art/stealer/build.py
 const MODEL = (rev) => ({ id: GLB, forward: "+z", parts: { disguise: { visible: false }, creature: { visible: rev }, shed: { visible: false } } }); // the old human disguise never shows: the skin is a critter child (wearSkin)
 const SPECIES = ["cat", "dog", "fox", "bunny", "bear", "deer", "mouse", "wolf", "raccoon", "panda", "pig"];
@@ -50,7 +60,8 @@ export function update(ctx, dt) {
       const at = { x: p.feetPosition.x, y: p.feetPosition.y + 1.1, z: p.feetPosition.z };
       ctx.emit("damageNumber", { position: at, value: T.bleed, color: "#a01010", size: 0.7 }); ctx.emit("fx", { position: at, script: DRIP }); }
   }
-  for (const e of ctx.query({ tags: ["stealer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+  const allStealers = ctx.query({ tags: ["stealer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+  for (const e of allStealers) {
     const m = (mem[e.id] ??= { ph: "skin" }), pos = e.feetPosition, st = e.state ?? {}, mu = npcMul(st), o = ctx.place.objects[e.id];
     if (!o) continue;
     if (!st.mesh || st.mesh < 2) { o.primitive = null; o.model = MODEL(!!st.revealed); o.state.mesh = 2; if (st.revealed) m.ph = "hunt"; }
@@ -113,18 +124,46 @@ export function update(ctx, dt) {
       }
       if (t > T.comboFor) { m.hunger = Math.max(0, (m.hunger ?? 0) - 0.35); go("hunt"); m.cool = now + L.stealerCooldown * 1000; play(e, m, "act", null); }
     }
-    // moving
+    // moving: navigate warehouse aisles & doorways via Level 1 path grid
     let goal;
     if (prey && m.ph === "skin" && !hungry) { const pd = Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z); goal = pd > 4.5 ? prey.feetPosition : pos; if (pd <= 4.5) e.rotation = { yaw: Math.atan2(-(prey.feetPosition.x - pos.x), -(prey.feetPosition.z - pos.z)) * 57.2958 }; }
     else if (prey) goal = prey.feetPosition;
     else { if (!m.roam || now > m.until) { const a = ctx.random() * 6.283; m.roam = { x: pos.x + Math.cos(a) * 8, z: pos.z + Math.sin(a) * 8 }; m.until = now + 6000; } goal = m.roam; }
-    const dx = goal.x - pos.x, dz = goal.z - pos.z, d = Math.hypot(dx, dz) || 1;
+
+    const sight = prey && hasClearSight(ctx, pos, prey.feetPosition, e.id, prey.id);
+    let way = null;
+    if (!sight) way = stepToward1(pos.x, pos.z, goal.x, goal.z, 30);
+    if (!way && !prey && !sight) m.roam = null;
+    const tgt = way && way.cells > 0 ? way.next : goal;
+    const dx = tgt.x - pos.x, dz = tgt.z - pos.z, d = Math.hypot(dx, dz) || 1;
+    let ux = dx / d, uz = dz / d;
+
     const rev = m.ph !== "skin";
     let sp = (m.ph === "lunge" ? T.lungeSpeed : m.ph === "reveal" ? 0 : m.ph === "combo" ? 0.6 : rev ? L.stealerLunge * 0.55 : L.stealerWalk) * mu.speed;
-    if (safeZone(zoneAt(pos.x + dx / d * sp * dt * 4, pos.z + dz / d * sp * dt * 4))) sp = 0;
-    const moving = d > 1.1 && sp > 0;
-    e.velocity = { x: moving ? dx / d * sp : 0, y: (e.velocity?.y ?? 0) - 20 * dt, z: moving ? dz / d * sp : 0 };
-    if (moving || prey) e.rotation = { yaw: Math.atan2(-dx, -dz) * 57.2958 };
+
+    // stuck detection: if moving but trapped against a collider, sidestep & repath
+    m.sk ??= { x: pos.x, z: pos.z, at: now };
+    if (now - m.sk.at > 800) {
+      const moved = Math.hypot(pos.x - m.sk.x, pos.z - m.sk.z);
+      if (sp > 0.8 && moved < 0.2) { m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 500 }; m.roam = null; }
+      m.sk = { x: pos.x, z: pos.z, at: now };
+    }
+    if (m.side && now < m.side.until) { const s = m.side.s; ux = ux * 0.4 + -uz * s * 0.9; uz = uz * 0.4 + (dx / d) * s * 0.9; }
+
+    // separation: push away from nearby stealers
+    if (now >= (m.sepAt ?? 0)) {
+      m.sepAt = now + 250; let sx = 0, sz = 0;
+      for (const o of allStealers) { if (o.id === e.id) continue; const ox = pos.x - o.feetPosition.x, oz = pos.z - o.feetPosition.z, od = Math.hypot(ox, oz) || 0.01; if (od < 1.3) { sx += ox / od * (1.3 - od); sz += oz / od * (1.3 - od); } }
+      m.sep = { x: sx, z: sz };
+    }
+    if (m.sep) { ux += m.sep.x * 1.1; uz += m.sep.z * 1.1; }
+    const ul = Math.hypot(ux, uz) || 1; ux /= ul; uz /= ul;
+
+    if (safeZone(zoneAt(pos.x + ux * sp * dt * 4, pos.z + uz * sp * dt * 4))) sp = 0;
+    const near = way && way.cells > 0 ? 0.35 : 1.1;
+    const moving = d > near && sp > 0;
+    e.velocity = { x: moving ? ux * sp : 0, y: (e.velocity?.y ?? 0) - 20 * dt, z: moving ? uz * sp : 0 };
+    if (moving || prey) e.rotation = { yaw: Math.atan2(-ux, -uz) * 57.2958 };
     play(e, m, "base", rev ? (moving ? "Run" : "Hunt") : moving ? "Walk" : "Idle", { loop: true });
     if (!rev && m.gait !== moving) { m.gait = moving; const sk = ctx.getObject(e.id + "/skin"); if (sk) sk.anim.base = { clip: moving ? GAIT_LIB.walk : GAIT_LIB.idle, loop: true, timeScale: moving ? 0.75 : 0.4 }; } // stiff: too slow for its stride
   }
