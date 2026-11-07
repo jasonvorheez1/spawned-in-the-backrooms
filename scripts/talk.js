@@ -33,7 +33,7 @@ function say(ctx, it, line, mood) {
   if (mood) ctx.self.state.talkMood = mood
   hearAt(ctx, { clip: VO(voiceOf(it), line), position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.9, maxDistance: 14 }, { audience: { nearby: p, radius: 16 } })
 }
-function close(ctx) { const s = ctx.self.state; s.talkWith = null; s.shopOpen = null; s.talkBusy = 0; s.talkChoices = null; ctx.self.session.talkingTo = null }
+function close(ctx) { const s = ctx.self.state; ctx.self.session.tkHp = null; ctx.self.session.tkIhp = null; s.talkWith = null; s.shopOpen = null; s.talkBusy = 0; s.talkChoices = null; ctx.self.session.talkingTo = null }
 
 export function openDialogue(ctx, it) {
   const s = ctx.self.state, ses = ctx.self.session, now = ctx.now()
@@ -180,6 +180,19 @@ function cine(ctx, s) {
   }
 }
 
+// combat breaks a conversation (like New Vegas): you get hurt, the one you talk to is fighting or hurt, or a hostile closes in
+const FOES = ['hound', 'stealer', 'smiler', 'lurker', 'l5rat', 'l3rat', 'l5staff', 'hostile', 'moth']
+function combat(ctx, it, ses) {
+  const s = ctx.self.state, hp = s.hp ?? 0, ihp = it.state?.hp ?? 0
+  const hurt = ses.tkHp != null && hp < ses.tkHp - 0.5, ihurt = ses.tkIt === it.id && ses.tkIhp != null && ihp < ses.tkIhp - 0.5
+  ses.tkHp = hp; ses.tkIhp = ihp; ses.tkIt = it.id
+  if (hurt || ihurt || it.state?.target) return true
+  for (const f of ctx.query({ anyTags: FOES, radius: 9 })) {
+    if (f.state?.dead || (f.state?.hp ?? 1) <= 0 || f.state?.disguised || f.state?.corpseAt) continue
+    return true
+  }
+  return false
+}
 export function update(ctx, dt) {
   const s = ctx.self.state, m = (ctx.self.session.tk ??= { acc: 0 }), ses = ctx.self.session
   cine(ctx, s)
@@ -194,5 +207,6 @@ export function update(ctx, dt) {
   m.acc += dt; if (m.acc < 0.3) return; m.acc = 0
   const it = live(ctx, s.talkWith ?? s.shopOpen)
   if (!it || flat(it.feetPosition, ctx.self.feetPosition) > T.range || it.state?.angry?.[ctx.self.id]) close(ctx) // walk off and it closes
+  else if (combat(ctx, it, ses)) { close(ctx); s.notice = { text: 'Combat! The conversation ends.', at: ctx.now() } }
   if (s.talkBusy && ctx.now() - s.talkBusy > 15000) s.talkBusy = 0
 }
