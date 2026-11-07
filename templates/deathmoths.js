@@ -1,8 +1,8 @@
 // A deathmoth swarm: a loose ball of grey-brown moths around an invisible body. One manager
 // (scripts/deathmoths.js) steps every swarm; this row is only the look, the sound and the body.
 export const SWARM_FX = `fx
-pop moths n=?mobile:40|60 local on=sphere(.45) life=1.2..2.6 v=sdir()*(.4..1.1) size=.03..0.06 tint=oklch(.42 .03 70)..oklch(.62 .035 80)
-  acc=curl(1.6)*3.2+attract(3)+drag(.8) sz=$size*flick(16,.7) col=$tint a=(0>.1:1>.85:1>0)*.95 rot=spin(2) r=sprite(petal,alpha)
+pop moths n=?mobile:40|60 local on=sphere(.4) life=1.4..2.8 v=sdir()*(.5..1.2) size=.035..0.06 tint=oklch(.34 .025 65)..oklch(.56 .03 78)
+  acc=curl(1.2)*2.4+attract(7)+drag(1.1) sz=$size*flick(14,.5) asp=1.7*flick(18,.65) col=$tint a=(0>.1:1>.85:1>0) rot=spin(1.5) r=sprite(petal,alpha)
 pop dust rate=3 local on=sphere(.4) life=1..1.8 v=sdir()*.15 size=.015..0.03 acc=grav()*.15+drag(1) col=<.55,.5,.42> a=0>.2:.5>0 r=sprite(mote,alpha)`;
 export const swarm = {
   tags: ["moths"],
