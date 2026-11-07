@@ -725,7 +725,13 @@ export function update(ctx, dt) {
   if (ctx.self.parent) return
   const w = walkOf(ctx), s = ctx.self.state
   w.stamina ??= s.stamina; w.battery ??= s.battery
-  const dir = w.dir ?? { x: 0, z: 0 }, moving = dir.x !== 0 || dir.z !== 0
+  const dir = w.dir ?? { x: 0, z: 0 }, pressing = dir.x !== 0 || dir.z !== 0
+  { // pressed into a wall: the keys say go, the feet stay put. after a beat you stop running (no drain, no steps, no bob)
+    const f = ctx.self.feetPosition, lf = w.lastFp, mv = lf && dt > 0 ? Math.hypot(f.x - lf.x, f.z - lf.z) / dt : 9
+    w.lastFp = { x: f.x, z: f.z }
+    w.stuckT = pressing && mv < 0.5 ? (w.stuckT ?? 0) + dt : 0
+  }
+  const moving = pressing && w.stuckT < 0.2
   const crouched = !!s.crouch
   if (w.stamina <= 1) w.winded = true; else if (w.winded && w.stamina >= (L.windedAt ?? 30)) w.winded = false // ran dry: no sprint till you catch your breath
   if (!!w.winded !== !!s.winded) s.winded = !!w.winded
@@ -742,7 +748,7 @@ export function update(ctx, dt) {
   const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
   const speed = (w.walkMode && !sprinting ? 0.5 : 1) * (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (s.carryMul ?? 1) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * dv.speed * (w.bur ??= burden(s))
-  const intent = { x: dir.x * speed, z: dir.z * speed }
+  const intent = { x: dir.x * speed * (moving || !pressing ? 1 : 0.35), z: dir.z * speed * (moving || !pressing ? 1 : 0.35) } // stuck on a wall: a gentle lean, still enough to slide off a corner
   viewmodel(ctx, moving, sprinting)
   const v = ctx.self.velocity
   const along = intent.x * v.x + intent.z * v.z > 0 || (v.x === 0 && v.z === 0 && moving)
