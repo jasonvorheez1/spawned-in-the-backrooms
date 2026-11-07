@@ -1,5 +1,5 @@
 // Base Gamma's mesh kit: textures by name and a few solid forms shared by the gamma geometries.
-import { slab, tube, prism, face } from "./shapes.js";
+import { slab, tube, prism, face, sphere } from "./shapes.js";
 export const TX = {
   terrazzo: "cdn/texture-grey-terrazzo-floor-tiles-dusty.png", tile: "cdn/texture-glossy-tan-brown-glazed-ceramic-wall-tiles.png",
   cinder: "cdn/texture-painted-cinder-block-wall-clean.png", brick: "cdn/texture-dark-brown-brick-wall-grimy-mortar.png",
@@ -48,4 +48,4 @@ export function wire(ctx, a, b, r = 0.3, turnsPerM = 2.2) {
     pts.push([0, 1, 2].map((k) => a[k] + d[k] * t * L + u[k] * Math.cos(th) * s + v[k] * Math.sin(th) * s)); rads.push(0.008); }
   tube(ctx, pts, rads, 3, [1, 1], 0, 1, 1);
 }
-export { slab, tube, prism, face };
+export { slab, tube, prism, face, sphere };
