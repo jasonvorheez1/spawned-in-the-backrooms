@@ -24,6 +24,8 @@ function hitPrey(ctx, h, prey, dmg, now, color = "#ff5040") {
 }
 const POOF = `fx
 pop dust burst=16 life=.6..1 on=box(.5,.5,.8).c(.5) v=sdir()*(.4..1)+up(.4) size=.2..0.4 acc=drag(1.4) col=<.4,.38,.36> a=0>.4:.5>0 sz=$size*(.6>1.5) r=sprite(smoke-puff,alpha)`;
+const BLOOD = `fx
+pop drip burst=6..9 life=.4..0.7 v=sdir()*(.6..1.4)+up(.3) size=.03..0.06 acc=grav()*.8 col=<.35,.02,.03> a=1>0 sz=$size floor=die r=sprite(soft-disc,alpha)`;
 export function update(ctx, dt) {
   const L3 = ctx.self.place === "level3";
   const safeAt = L3 ? (x, z) => zoneAt3(x, z) === "gamma" : ctx.self.place === "level2" ? (x, z) => zoneAt2(x, z) === "camp" : (x, z) => safeZone(zoneAt(x, z));
@@ -113,12 +115,22 @@ export function update(ctx, dt) {
     const near = way && way.cells > 0 ? 0.3 : 1.2;
     h.velocity = { x: d > near ? dx / d * sp : 0, y: (h.velocity?.y ?? 0) - 20 * dt, z: d > near ? dz / d * sp : 0 };
     if (sp > 0) h.rotation = { yaw: Math.atan2(-dx, -dz) * 57.2958 };
+    if (prey && sp > 0 && best < T.pounceRange && best > T.pounceMin && now >= (m.nextPounce ?? 0)) { // the leap
+      const px = prey.feetPosition.x - pos.x, pz = prey.feetPosition.z - pos.z, pd = Math.hypot(px, pz) || 1;
+      m.pounceAt = now; m.pounceOn = prey.id; m.pounceHit = false; m.nextPounce = now + T.pounceCd; anim(h, m, "pounce", false);
+      h.velocity = { x: px / pd * T.pounceSpeed, y: T.pounceLift, z: pz / pd * T.pounceSpeed }; h.rotation = { yaw: Math.atan2(-px, -pz) * 57.2958 };
+      ctx.emit("playSound", { clip: SND("hound-snarl-growl"), position: pos, volume: 1, pitch: 1.3 });
+      continue;
+    }
+    const mauling = now < (m.maulUntil ?? 0);
+    anim(h, m, mauling ? "maul" : sp <= 0.1 ? "idle" : sp > 3.5 ? "sprint" : "prowl", true);
+    if (mauling) h.velocity = { x: 0, y: h.velocity.y, z: 0 };
     if (prey && !m.hunting) { m.hunting = true; ctx.emit("playSound", { clip: SND("hound-snarl-growl"), position: pos, volume: 0.9, maxDistance: 35 }); }
-    if (!prey) m.hunting = false;
+    if (!prey && m.hunting) { m.hunting = false; m.howled = false; }
     if (prey && best < 1.6 && now >= (m.next ?? 0)) {
-      m.next = now + L.houndCooldown * 1000; prey.state.hp -= dmgAfterArmor(prey.state.look, Math.round(L.houndBite * mu.dmg)); // worn clothes soak the hit (lib/clothes.yml DR)
-      const at = { x: prey.feetPosition.x, y: prey.feetPosition.y + 1, z: prey.feetPosition.z };
-      ctx.emit("damageNumber", { position: at, value: Math.round(L.houndBite * mu.dmg), color: "#ff5040" });
+      m.next = now + L.houndCooldown * 1000; const at = hitPrey(ctx, h, prey, Math.round(L.houndBite * mu.dmg), now);
+      m.maulUntil = now + T.maulMs; m.clip = null; m.bleed = { id: prey.id, until: now + T.bleedMs, next: now + 1000 }; // the thrash opens a wound
+      ctx.emit("fx", { position: at, script: BLOOD });
       ctx.emit("playSound", { clip: SND("hound-bite-snap"), position: at, volume: 0.9 });
       ctx.emit("screenShake", { intensity: 0.3, duration: 0.2 }, { audience: { player: prey.id } });
     }
