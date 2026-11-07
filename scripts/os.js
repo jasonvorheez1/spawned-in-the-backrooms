@@ -72,7 +72,7 @@ function act(ctx, s, d) {
 export function onInput(ctx, input) {
   const s = ctx.self.state
   if (!s.os) return
-  if (input.pressed?.interact) return close(ctx, s) // E closes it
+  if (input.pressed?.interact && ctx.now() - (s.os.at ?? 0) > 400) return close(ctx, s) // E closes it (not the same press that opened it)
   const d = input.actionData?.os
   if (input.pressed?.os && d && typeof d.k === 'string') act(ctx, s, d)
 }
