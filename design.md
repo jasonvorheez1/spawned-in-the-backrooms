@@ -57,3 +57,5 @@ Take the mechanics, not the assets: a block world you can dig and build in, scav
 - 2026-11-07: carry limits removed. Was almond water 5, pistol rounds 36, shells 10; now no limit on any item. Shelly: "i should be able to carry as much almond water as i can there should be no limit per item".
 
 - 2026-11-07 loot polish: crates are wooden boxes with metal straps and a latch, kill remains are slumped bodies (pale lurker, dark smiler) from `scripts/loot-geo.js`, and closing a container, taking everything or a refused take each play a sound.
+
+- 2026-11-07 noclip overhaul: first arrival plays a 7.4 s fall (static, glitch title, plunge through wallpaper, impact, title card) and the exit wall plays a 5.2 s tear that opens like a door. Both are drawn from timestamps (`noclipIn`, `exitAt`) by `scripts/noclip-ui.js`; `scripts/noclip.js` sets the first and plays the sounds.

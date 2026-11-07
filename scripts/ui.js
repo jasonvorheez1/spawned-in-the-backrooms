@@ -7,6 +7,7 @@ import { ZONE_NAMES } from './lib/maze.js'
 import * as modelingStudio from '../mods/modeling-studio/hud.js'
 import { wardrobe } from './wardrobe-ui.js'
 import { lootUi } from './loot-ui.js'
+import { noclipUi } from './noclip-ui.js'
 export { plyUpload } from './lib/plyimport.js'
 export { m3dPvDown, m3dPvWheel, m3dPvReset, m3dPvTool, m3dPvDraft, m3dPvEdit, m3dPvClear, m3dTkMeasure, m3dTkDown, m3dTkWheel, m3dTkReset, m3dMpvMove, m3dMpvSize, m3dDraft, m3dPose, m3dPick, m3dPreview, m3dUpload, m3dAsk, m3dClearRefs, m3dGuide } from '../mods/modeling-studio/hud.js'
 
@@ -70,7 +71,6 @@ export default function render(ctx, player) {
   const acts = ctx.world.inputs?.actions ?? {}
   const lab = (n, d) => acts[n]?.label ?? d
   const down = s.downAt && now - s.downAt < 3500
-  const out = s.exitAt && now - s.exitAt < 4200
   const lvl = s.leveledAt && now - s.leveledAt < 3000
 
   const wp = W[s.equipped] ?? W.fists
@@ -135,15 +135,6 @@ export default function render(ctx, player) {
     </div>
   </div>` : ''}
 
-  <!-- Exit Screen -->
-  ${out ? `
-  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(250,248,235,0.85);animation:hud-fade 4s forwards">
-    <div class="hud-card" style="text-align:center;padding:18px 28px;background:rgba(12,11,9,0.9)">
-      <div style="font-size:24px;font-weight:600;margin-bottom:4px">You found the way out.</div>
-      <div class="muted">+${L.xpExit} XP · Noclipping to Level 1...</div>
-    </div>
-  </div>` : ''}
-
   <!-- Level Up Banner -->
   ${lvl ? `
   <div style="position:absolute;left:0;right:0;display:flex;justify-content:center;top:20%;animation:hud-fade 2.8s forwards">
@@ -157,5 +148,5 @@ export default function render(ctx, player) {
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('wardrobe', 'C')}</kbd> wardrobe · <kbd>${lab('emote', 'T')}</kbd> face
   </div>
 
-</div>${wardrobe(ctx, player)}${lootUi(ctx, player)}${modelingStudio.render(ctx, player)}`
+</div>${wardrobe(ctx, player)}${lootUi(ctx, player)}${noclipUi(ctx, player)}${modelingStudio.render(ctx, player)}`
 }
