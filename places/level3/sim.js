@@ -1,3 +1,5 @@
+import { critterSpec } from "../../scripts/lib/critter-model.js";
+import { fullLook } from "../../scripts/lib/clothes.js";
 // Level 3's referee, "Electrical Station": lays the halls, lamps, hazards and Base Gamma's checkpoint once,
 // then runs the station: live boxes that arc, black sludge that burns, generators that overload and blow,
 // assembly lines that keep turning out goods, hounds in brigades and deathmoth swarms drawn to light.
@@ -22,8 +24,7 @@ const GAMMA = {
 function agent(ctx, id) {
   const g = GAMMA[id], a = cellCenter(0, ARRIVE.cz);
   ctx.spawn(id, { tags: ["npc"], feetPosition: { x: a.x + g.at[0], y: 0, z: a.z + g.at[1] }, rotation: { yaw: -90 }, physics: "character",
-    primitive: { kind: "scripted", script: "scripts/critter2-geo.js", params: g.look }, material: { outline: { color: "#1d1420", width: 2.4 } },
-    jiggle: { bones: ["Tail*", "Ear*"], amount: 0.6, bounce: 0.6 }, behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
+    ...critterSpec(fullLook(g.look)), behavior: "scripts/meg-agent.js", state: { name: g.name, role: g.role, voice: g.voice, ...npcState(ctx, "agent", MEG.hp) } });
   ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody(g.gun) });
 }
 
