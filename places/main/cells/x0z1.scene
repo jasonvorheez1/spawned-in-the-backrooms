@@ -1,51 +1,581 @@
 # spawn-scene v2 yaml x0z1
-level0-lights/l10_35:
-  feetPosition: {x: -30, y: 2.7, z: 70}
-  id: level0-lights/l10_35
-  light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
-  parent: level0-lights
-level0-lights/l12_34:
-  feetPosition: {x: -22, y: 2.7, z: 66}
-  id: level0-lights/l12_34
-  light: {color: oklch(0.62 0.24 28), distance: 11, intensity: 7, kind: point, shadow: {enabled: false}}
-  parent: level0-lights
-level0-lights/l14_34:
-  feetPosition: {x: -14, y: 2.7, z: 66}
-  id: level0-lights/l14_34
-  light: {color: oklch(0.62 0.24 28), distance: 11, intensity: 7, kind: point, shadow: {enabled: false}}
-  parent: level0-lights
-level0-lights/l16_34:
-  feetPosition: {x: -6, y: 2.7, z: 66}
-  id: level0-lights/l16_34
-  light: {color: oklch(0.62 0.24 28), distance: 11, intensity: 7, kind: point, shadow: {enabled: false}}
-  parent: level0-lights
-level0-lights/l2_34:
+level0-lights/l12_44:
   feetPosition: {x: -62, y: 2.7, z: 66}
-  id: level0-lights/l2_34
-  light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
+  id: level0-lights/l12_44
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
-level0-lights/l30_34:
-  feetPosition: {x: 50, y: 2.7, z: 66}
-  id: level0-lights/l30_34
-  light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
+level0-lights/l12_48:
+  feetPosition: {x: -62, y: 2.7, z: 82}
+  id: level0-lights/l12_48
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
-level0-lights/l32_34:
-  feetPosition: {x: 58, y: 2.7, z: 66}
-  id: level0-lights/l32_34
-  light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
+level0-lights/l12_50:
+  feetPosition: {x: -62, y: 2.7, z: 90}
+  id: level0-lights/l12_50
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
-level0-lights/l4_34:
+level0-lights/l12_52:
+  feetPosition: {x: -62, y: 2.7, z: 98}
+  id: level0-lights/l12_52
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l12_54:
+  feetPosition: {x: -62, y: 2.7, z: 106}
+  id: level0-lights/l12_54
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l13_47:
+  feetPosition: {x: -58, y: 2.7, z: 78}
+  id: level0-lights/l13_47
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l13_49:
+  feetPosition: {x: -58, y: 2.7, z: 86}
+  id: level0-lights/l13_49
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l13_53:
+  feetPosition: {x: -58, y: 2.7, z: 102}
+  id: level0-lights/l13_53
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l13_55:
+  feetPosition: {x: -58, y: 2.7, z: 110}
+  id: level0-lights/l13_55
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l14_44:
   feetPosition: {x: -54, y: 2.7, z: 66}
-  id: level0-lights/l4_34
-  light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
+  id: level0-lights/l14_44
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
-level0-lights/l7_35:
+level0-lights/l14_46:
+  feetPosition: {x: -54, y: 2.7, z: 74}
+  id: level0-lights/l14_46
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l14_48:
+  feetPosition: {x: -54, y: 2.7, z: 82}
+  id: level0-lights/l14_48
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l15_45:
+  feetPosition: {x: -50, y: 2.7, z: 70}
+  id: level0-lights/l15_45
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l15_47:
+  feetPosition: {x: -50, y: 2.7, z: 78}
+  id: level0-lights/l15_47
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l15_49:
+  feetPosition: {x: -50, y: 2.7, z: 86}
+  id: level0-lights/l15_49
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l15_51:
+  feetPosition: {x: -50, y: 2.7, z: 94}
+  id: level0-lights/l15_51
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l15_55:
+  feetPosition: {x: -50, y: 2.7, z: 110}
+  id: level0-lights/l15_55
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l16_44:
+  feetPosition: {x: -46, y: 2.7, z: 66}
+  id: level0-lights/l16_44
+  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l16_46:
+  feetPosition: {x: -46, y: 2.7, z: 74}
+  id: level0-lights/l16_46
+  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l16_48:
+  feetPosition: {x: -46, y: 2.7, z: 82}
+  id: level0-lights/l16_48
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l16_50:
+  feetPosition: {x: -46, y: 2.7, z: 90}
+  id: level0-lights/l16_50
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l16_54:
+  feetPosition: {x: -46, y: 2.7, z: 106}
+  id: level0-lights/l16_54
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l17_45:
   feetPosition: {x: -42, y: 2.7, z: 70}
-  id: level0-lights/l7_35
-  light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
+  id: level0-lights/l17_45
+  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
-level0-lights/l8_34:
-  feetPosition: {x: -38, y: 2.7, z: 66}
-  id: level0-lights/l8_34
-  light: {color: oklch(0.95 0.06 95), distance: 11, intensity: 5, kind: point, shadow: {enabled: false}}
+level0-lights/l17_47:
+  feetPosition: {x: -42, y: 2.7, z: 78}
+  id: level0-lights/l17_47
+  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l17_49:
+  feetPosition: {x: -42, y: 2.7, z: 86}
+  id: level0-lights/l17_49
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l17_53:
+  feetPosition: {x: -42, y: 2.7, z: 102}
+  id: level0-lights/l17_53
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l17_55:
+  feetPosition: {x: -42, y: 2.7, z: 110}
+  id: level0-lights/l17_55
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l18_46:
+  feetPosition: {x: -38, y: 2.7, z: 74}
+  id: level0-lights/l18_46
+  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l18_48:
+  feetPosition: {x: -38, y: 2.7, z: 82}
+  id: level0-lights/l18_48
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l18_52:
+  feetPosition: {x: -38, y: 2.7, z: 98}
+  id: level0-lights/l18_52
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l18_54:
+  feetPosition: {x: -38, y: 2.7, z: 106}
+  id: level0-lights/l18_54
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l19_45:
+  feetPosition: {x: -34, y: 2.7, z: 70}
+  id: level0-lights/l19_45
+  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l19_49:
+  feetPosition: {x: -34, y: 2.7, z: 86}
+  id: level0-lights/l19_49
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l19_53:
+  feetPosition: {x: -34, y: 2.7, z: 102}
+  id: level0-lights/l19_53
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l19_55:
+  feetPosition: {x: -34, y: 2.7, z: 110}
+  id: level0-lights/l19_55
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l20_46:
+  feetPosition: {x: -30, y: 2.7, z: 74}
+  id: level0-lights/l20_46
+  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l20_50:
+  feetPosition: {x: -30, y: 2.7, z: 90}
+  id: level0-lights/l20_50
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l20_52:
+  feetPosition: {x: -30, y: 2.7, z: 98}
+  id: level0-lights/l20_52
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l20_54:
+  feetPosition: {x: -30, y: 2.7, z: 106}
+  id: level0-lights/l20_54
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l21_45:
+  feetPosition: {x: -26, y: 2.7, z: 70}
+  id: level0-lights/l21_45
+  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l21_47:
+  feetPosition: {x: -26, y: 2.7, z: 78}
+  id: level0-lights/l21_47
+  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l21_49:
+  feetPosition: {x: -26, y: 2.7, z: 86}
+  id: level0-lights/l21_49
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l21_51:
+  feetPosition: {x: -26, y: 2.7, z: 94}
+  id: level0-lights/l21_51
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l21_53:
+  feetPosition: {x: -26, y: 2.7, z: 102}
+  id: level0-lights/l21_53
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l21_55:
+  feetPosition: {x: -26, y: 2.7, z: 110}
+  id: level0-lights/l21_55
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l22_46:
+  feetPosition: {x: -22, y: 2.7, z: 74}
+  id: level0-lights/l22_46
+  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l22_48:
+  feetPosition: {x: -22, y: 2.7, z: 82}
+  id: level0-lights/l22_48
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l22_50:
+  feetPosition: {x: -22, y: 2.7, z: 90}
+  id: level0-lights/l22_50
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l22_54:
+  feetPosition: {x: -22, y: 2.7, z: 106}
+  id: level0-lights/l22_54
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l23_45:
+  feetPosition: {x: -18, y: 2.7, z: 70}
+  id: level0-lights/l23_45
+  light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l23_55:
+  feetPosition: {x: -18, y: 2.7, z: 110}
+  id: level0-lights/l23_55
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l24_50:
+  feetPosition: {x: -14, y: 2.7, z: 90}
+  id: level0-lights/l24_50
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l24_52:
+  feetPosition: {x: -14, y: 2.7, z: 98}
+  id: level0-lights/l24_52
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l25_49:
+  feetPosition: {x: -10, y: 2.7, z: 86}
+  id: level0-lights/l25_49
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l25_51:
+  feetPosition: {x: -10, y: 2.7, z: 94}
+  id: level0-lights/l25_51
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l25_53:
+  feetPosition: {x: -10, y: 2.7, z: 102}
+  id: level0-lights/l25_53
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l25_55:
+  feetPosition: {x: -10, y: 2.7, z: 110}
+  id: level0-lights/l25_55
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l26_48:
+  feetPosition: {x: -6, y: 2.7, z: 82}
+  id: level0-lights/l26_48
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l26_50:
+  feetPosition: {x: -6, y: 2.7, z: 90}
+  id: level0-lights/l26_50
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l26_52:
+  feetPosition: {x: -6, y: 2.7, z: 98}
+  id: level0-lights/l26_52
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l26_54:
+  feetPosition: {x: -6, y: 2.7, z: 106}
+  id: level0-lights/l26_54
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l27_55:
+  feetPosition: {x: -2, y: 2.7, z: 110}
+  id: level0-lights/l27_55
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l28_48:
+  feetPosition: {x: 2, y: 2.7, z: 82}
+  id: level0-lights/l28_48
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l28_50:
+  feetPosition: {x: 2, y: 2.7, z: 90}
+  id: level0-lights/l28_50
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l28_54:
+  feetPosition: {x: 2, y: 2.7, z: 106}
+  id: level0-lights/l28_54
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l29_49:
+  feetPosition: {x: 6, y: 2.7, z: 86}
+  id: level0-lights/l29_49
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l29_51:
+  feetPosition: {x: 6, y: 2.7, z: 94}
+  id: level0-lights/l29_51
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l29_55:
+  feetPosition: {x: 6, y: 2.7, z: 110}
+  id: level0-lights/l29_55
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l30_48:
+  feetPosition: {x: 10, y: 2.7, z: 82}
+  id: level0-lights/l30_48
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l30_50:
+  feetPosition: {x: 10, y: 2.7, z: 90}
+  id: level0-lights/l30_50
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l30_52:
+  feetPosition: {x: 10, y: 2.7, z: 98}
+  id: level0-lights/l30_52
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l30_54:
+  feetPosition: {x: 10, y: 2.7, z: 106}
+  id: level0-lights/l30_54
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l31_49:
+  feetPosition: {x: 14, y: 2.7, z: 86}
+  id: level0-lights/l31_49
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l31_51:
+  feetPosition: {x: 14, y: 2.7, z: 94}
+  id: level0-lights/l31_51
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l31_55:
+  feetPosition: {x: 14, y: 2.7, z: 110}
+  id: level0-lights/l31_55
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l32_48:
+  feetPosition: {x: 18, y: 2.7, z: 82}
+  id: level0-lights/l32_48
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l32_54:
+  feetPosition: {x: 18, y: 2.7, z: 106}
+  id: level0-lights/l32_54
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l33_49:
+  feetPosition: {x: 22, y: 2.7, z: 86}
+  id: level0-lights/l33_49
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l33_51:
+  feetPosition: {x: 22, y: 2.7, z: 94}
+  id: level0-lights/l33_51
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l33_53:
+  feetPosition: {x: 22, y: 2.7, z: 102}
+  id: level0-lights/l33_53
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l34_48:
+  feetPosition: {x: 26, y: 2.7, z: 82}
+  id: level0-lights/l34_48
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l34_50:
+  feetPosition: {x: 26, y: 2.7, z: 90}
+  id: level0-lights/l34_50
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l34_52:
+  feetPosition: {x: 26, y: 2.7, z: 98}
+  id: level0-lights/l34_52
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l34_54:
+  feetPosition: {x: 26, y: 2.7, z: 106}
+  id: level0-lights/l34_54
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l35_49:
+  feetPosition: {x: 30, y: 2.7, z: 86}
+  id: level0-lights/l35_49
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l35_51:
+  feetPosition: {x: 30, y: 2.7, z: 94}
+  id: level0-lights/l35_51
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l35_53:
+  feetPosition: {x: 30, y: 2.7, z: 102}
+  id: level0-lights/l35_53
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l35_55:
+  feetPosition: {x: 30, y: 2.7, z: 110}
+  id: level0-lights/l35_55
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l36_48:
+  feetPosition: {x: 34, y: 2.7, z: 82}
+  id: level0-lights/l36_48
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l36_50:
+  feetPosition: {x: 34, y: 2.7, z: 90}
+  id: level0-lights/l36_50
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l36_52:
+  feetPosition: {x: 34, y: 2.7, z: 98}
+  id: level0-lights/l36_52
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l36_54:
+  feetPosition: {x: 34, y: 2.7, z: 106}
+  id: level0-lights/l36_54
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l37_49:
+  feetPosition: {x: 38, y: 2.7, z: 86}
+  id: level0-lights/l37_49
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l37_55:
+  feetPosition: {x: 38, y: 2.7, z: 110}
+  id: level0-lights/l37_55
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l38_48:
+  feetPosition: {x: 42, y: 2.7, z: 82}
+  id: level0-lights/l38_48
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l38_50:
+  feetPosition: {x: 42, y: 2.7, z: 90}
+  id: level0-lights/l38_50
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l38_52:
+  feetPosition: {x: 42, y: 2.7, z: 98}
+  id: level0-lights/l38_52
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l38_54:
+  feetPosition: {x: 42, y: 2.7, z: 106}
+  id: level0-lights/l38_54
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l39_51:
+  feetPosition: {x: 46, y: 2.7, z: 94}
+  id: level0-lights/l39_51
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l39_55:
+  feetPosition: {x: 46, y: 2.7, z: 110}
+  id: level0-lights/l39_55
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l40_44:
+  feetPosition: {x: 50, y: 2.7, z: 66}
+  id: level0-lights/l40_44
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l41_45:
+  feetPosition: {x: 54, y: 2.7, z: 70}
+  id: level0-lights/l41_45
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l41_47:
+  feetPosition: {x: 54, y: 2.7, z: 78}
+  id: level0-lights/l41_47
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l41_49:
+  feetPosition: {x: 54, y: 2.7, z: 86}
+  id: level0-lights/l41_49
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l41_51:
+  feetPosition: {x: 54, y: 2.7, z: 94}
+  id: level0-lights/l41_51
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l41_53:
+  feetPosition: {x: 54, y: 2.7, z: 102}
+  id: level0-lights/l41_53
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l42_44:
+  feetPosition: {x: 58, y: 2.7, z: 66}
+  id: level0-lights/l42_44
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l42_46:
+  feetPosition: {x: 58, y: 2.7, z: 74}
+  id: level0-lights/l42_46
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l42_48:
+  feetPosition: {x: 58, y: 2.7, z: 82}
+  id: level0-lights/l42_48
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l42_52:
+  feetPosition: {x: 58, y: 2.7, z: 98}
+  id: level0-lights/l42_52
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l42_54:
+  feetPosition: {x: 58, y: 2.7, z: 106}
+  id: level0-lights/l42_54
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l43_45:
+  feetPosition: {x: 62, y: 2.7, z: 70}
+  id: level0-lights/l43_45
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l43_47:
+  feetPosition: {x: 62, y: 2.7, z: 78}
+  id: level0-lights/l43_47
+  light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l43_49:
+  feetPosition: {x: 62, y: 2.7, z: 86}
+  id: level0-lights/l43_49
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l43_51:
+  feetPosition: {x: 62, y: 2.7, z: 94}
+  id: level0-lights/l43_51
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
+  parent: level0-lights
+level0-lights/l43_55:
+  feetPosition: {x: 62, y: 2.7, z: 110}
+  id: level0-lights/l43_55
+  light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
