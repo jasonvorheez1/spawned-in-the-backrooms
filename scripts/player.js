@@ -40,7 +40,7 @@ function gain(ctx, n) {
   while (s.xp >= xpNeed(s.level)) {
     s.xp -= xpNeed(s.level); s.level += 1
     s.hp = maxHp(s.level); s.sanity = maxSan(s.level); s.leveledAt = ctx.now()
-    sound(ctx, 'eerie-low-chime-level-up', 0.8, true)
+    sound(ctx, 'eerie-low-chime-level-up', 0.85, true)
     ctx.emit('milestone', { step: s.level, name: `level ${s.level}` }, { audience: { player: ctx.self.id } })
   }
 }
@@ -56,6 +56,7 @@ export function onInput(ctx, input) {
   if (input.pressed.jump && ctx.self.grounded && !ctx.self.parent) {
     const v = ctx.self.velocity
     ctx.self.velocity = { x: v.x, y: PLAYER.jumpSpeed, z: v.z }
+    sound(ctx, 'footstep-damp-carpet-squelch-soft', 0.4, true)
   }
   if (input.pressed.attack) swing(ctx)
   if (input.pressed.drink) drink(ctx)
@@ -79,11 +80,11 @@ function swing(ctx) {
     if (d > 0.3 && (dx * f.x + dz * f.z) / d < 0.4) continue
     if (d < bd) { bd = d; best = m }
   }
-  if (!best) { sound(ctx, 'pipe-whoosh-swing', 0.5); return }
+  if (!best) { sound(ctx, 'pipe-whoosh-swing', 0.55); return }
   const dmg = Math.round(wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale)
   best.state.hp -= dmg
   const hit = { x: best.feetPosition.x, y: best.feetPosition.y + 1.5, z: best.feetPosition.z }
-  sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.9)
+  sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)
   ctx.emit('damageNumber', { position: hit, value: dmg, color: '#f7d98b' })
   ctx.emit('fx', { position: hit, script: ICHOR })
   ctx.emit('squash', { target: best.id, axis: 'y', intensity: 0.25, duration: 0.18 })
@@ -101,7 +102,12 @@ function cycleWeapon(ctx) {
   const s = ctx.self.state, list = W.order.filter((k) => owned(s).includes(k) && usable(s, k))
   s.equipped = list[(list.indexOf(s.equipped) + 1) % list.length] ?? 'fists'
   s.equipAt = ctx.now()
-  sound(ctx, 'flashlight-switch-click', 0.4, true)
+  sound(ctx, 'flashlight-switch-click', 0.5, true)
+}
+
+export function drinkExhale(ctx) {
+  sound(ctx, 'deep-breath-relief-exhale', 0.5, true)
+}
 }
 
 function drink(ctx) {
@@ -113,7 +119,8 @@ function drink(ctx) {
   s.hp = Math.min(mh, s.hp + L.almondHp)
   s.sanity = Math.min(ms, s.sanity + L.almondSanity)
   s.drankAt = ctx.now()
-  sound(ctx, 'gulping-water-from-plastic-bottle', 0.7)
+  sound(ctx, 'gulping-water-from-plastic-bottle', 0.8)
+  ctx.after(0.75, 'drinkExhale', {})
 }
 
 function toggleLight(ctx) {
@@ -127,7 +134,7 @@ function toggleLight(ctx) {
     })
   }
   s.light = !!w.light
-  sound(ctx, 'flashlight-switch-click', 0.5, true)
+  sound(ctx, 'flashlight-switch-click', 0.65, true)
 }
 
 export function update(ctx, dt) {
@@ -145,11 +152,25 @@ export function update(ctx, dt) {
   const step = (along ? PLAYER.acceleration : PLAYER.deceleration) * dt
   const dx = intent.x - v.x, dz = intent.z - v.z, gap = Math.hypot(dx, dz), k = gap > step ? step / gap : 1
   ctx.self.velocity = { x: v.x + dx * k, y: v.y + ctx.place.gravity.y * dt, z: v.z + dz * k }
+
+  // Sound Design: Damp carpet footsteps while walking or sprinting
+  if (moving && ctx.self.grounded) {
+    w.stepClock = (w.stepClock ?? 0) + dt
+    const interval = sprinting ? 0.32 : 0.46
+    if (w.stepClock >= interval) {
+      w.stepClock = 0
+      const clip = sprinting ? 'footstep-damp-carpet-run' : 'footstep-damp-carpet-squelch-soft'
+      sound(ctx, clip, sprinting ? 0.42 : 0.32, true)
+    }
+  } else {
+    w.stepClock = 0.22
+  }
+
   w.acc = (w.acc ?? 0) + dt
-  if (w.acc >= 0.25) { tickStats(ctx, w.acc); w.acc = 0 }
+  if (w.acc >= 0.25) { tickStats(ctx, w.acc, moving); w.acc = 0 }
 }
 
-function tickStats(ctx, t) {
+function tickStats(ctx, t, moving) {
   const s = ctx.self.state, w = walkOf(ctx), p = ctx.self.feetPosition, now = ctx.now()
   const mh = maxHp(s.level), ms = maxSan(s.level)
   const zone = zoneAt(p.x, p.z)
@@ -163,6 +184,36 @@ function tickStats(ctx, t) {
   if (s.sanity <= 0) s.hp -= L.insanityHurt * t
   if (zone === 'hub') { s.hp = Math.min(mh, s.hp + 3 * t); w.battery = Math.min(L.battery, w.battery + 15 * t) }
   if (s.hp > mh) s.hp = mh
+
+  // Sound Design: Auditory Hallucinations at low sanity (Wikidot Level 0 lore)
+  if (s.sanity < 35 && zone !== 'hub') {
+    w.hallucinationClock = (w.hallucinationClock ?? 0) + t
+    if (w.hallucinationClock >= (w.nextHallucination ?? 14)) {
+      w.hallucinationClock = 0
+      w.nextHallucination = 14 + ctx.random() * 14
+      const whisper = ctx.random() < 0.6 ? 'eerie-distant-whisper-hallucination' : 'distant-metal-creak-drone'
+      sound(ctx, whisper, 0.45, true)
+    }
+  }
+
+  // Sound Design: Heavy panting when stamina is near zero
+  if (w.stamina < 15 && moving) {
+    w.breathClock = (w.breathClock ?? 0) + t
+    if (w.breathClock >= 2.4) {
+      w.breathClock = 0
+      sound(ctx, 'heavy-panting-breath', 0.4, true)
+    }
+  }
+
+  // Sound Design: Critical health cardiac heartbeat
+  if (s.hp < mh * 0.3) {
+    w.heartClock = (w.heartClock ?? 0) + t
+    if (w.heartClock >= 1.6) {
+      w.heartClock = 0
+      sound(ctx, 'heartbeat-thump-tense-loop', 0.55, true)
+    }
+  }
+
   // flashlight battery
   if (w.light) { w.battery -= L.batteryDrain * t; if (w.battery <= 0) { w.battery = 0; toggleLight(ctx) } }
   const st = Math.round(w.stamina), bt = Math.round(w.battery)
@@ -181,7 +232,7 @@ function tickStats(ctx, t) {
     s.almonds += 1
     gain(ctx, L.xpAlmond)
     s.pickedAt = now
-    sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
+    sound(ctx, 'plastic-bottle-pickup-rattle', 0.75, true)
   }
   // weapons on the floor: new ones are kept; the best one you can wield is equipped
   for (const g of ctx.query({ tags: ['weapon'], radius: 1.5 })) {
@@ -199,7 +250,7 @@ function tickStats(ctx, t) {
   if (p.x < -HALF + 1.3 && Math.abs(p.z - ex.z) < 1.8) {
     s.escapes += 1; s.exitAt = now
     gain(ctx, L.xpExit)
-    sound(ctx, 'static-burst-glitch', 0.9, true)
+    sound(ctx, 'static-burst-glitch', 0.95, true)
     ctx.emit('screenFlash', { color: '#fff6c8', duration: 0.6, intensity: 0.8 }, { audience: { player: ctx.self.id } })
     ctx.self.feetPosition = { x: (ctx.random() - 0.5) * 6, y: 0.1, z: (ctx.random() - 0.5) * 6 }
     return
@@ -208,7 +259,7 @@ function tickStats(ctx, t) {
   if (s.hp <= 0) {
     s.deaths += 1; s.downAt = now
     s.hp = mh; s.sanity = Math.round(ms * 0.6)
-    sound(ctx, 'static-burst-glitch', 0.9, true)
+    sound(ctx, 'static-burst-glitch', 0.95, true)
     ctx.emit('screenFlash', { color: '#000000', duration: 0.8, intensity: 1 }, { audience: { player: ctx.self.id } })
     ctx.self.feetPosition = { x: (ctx.random() - 0.5) * 6, y: 0.1, z: (ctx.random() - 0.5) * 6 }
   }

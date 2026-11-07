@@ -60,6 +60,6 @@ export const hasLight = (cx, cz) => zoneOf(cx, cz) !== "dark" && (inHub(cx, cz) 
 export const EXIT = { cx: 0, cz: 33 }; // against the west outer wall
 
 export const ZONE_NAMES = {
-  hub: "THE SAFE ROOM", halls: "THE HALLS", arches: "ARCH ROOMS", pillars: "PILLAR FIELD",
-  holes: "THE PITS", red: "RED ROOM", dark: "BLACKOUT ZONE",
+  hub: "M.E.G. SAFE OUTPOST", halls: "THE MONO-YELLOW HALLS", arches: "ARCHED CORRIDORS", pillars: "THE PILLAR FIELDS",
+  holes: "DECAYED PIT ROOMS", red: "ANOMALOUS RED ROOM", dark: "BLACKOUT SECTOR",
 };

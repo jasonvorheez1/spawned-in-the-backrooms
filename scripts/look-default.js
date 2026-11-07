@@ -1,26 +1,42 @@
-// This is your game's look: the whole-screen pass between the rendered world and the
-// player's eyes. Out of the box it changes nothing, so the frame shows the place's tone map:
-// ACES filmic unless `toneMapping` beside this script in the place's look says "neutral",
-// or "none" for art in its exact painted colours.
-// Edit a number here and the game updates live.
-// The pass is mode-agnostic: a game converted to 2D keeps this script working unchanged.
-//
-// The whole vocabulary: color grades, vignettes, film grain, retro pixelation, depth of
-// field, scanlines: lives in the "looks" skill. Start by uncommenting a line below.
-import { grade, vignette, grain } from 'builtin/postfx';
+// Level 0 "The Lobby" Look:
+// Authentic Found-Footage / Analog Camcorder & Liminal Atmosphere.
+// Captures the classic Wikidot Level 0 visual hallmarks:
+// - Subtle chromatic aberration and scanlines simulating a wanderer's recording device.
+// - Tactile film/sensor grain bringing depth to flat beige surfaces.
+// - Sickly institutional mono-yellow color grade with fluorescent green-amber undertones.
+// - Peripheral vignette and atmospheric bloom from overhead fluorescent fixtures.
+import { grade, vignette, grain, film, scanlines, chromaticAberration, bloom } from 'builtin/postfx';
 
 export function look(ctx) {
-  // Bloom is the engine's: with nothing written, emissive things get a faint halo. Bloom stays
-  // unwritten until the creator asks for glow. An asked glow is bloomStrength 0.4–0.8 in the
-  // place's look.params.
   let c = ctx.scene;
-  // Uncomment to start grading: a touch warmer, a little more contrast:
-  c = grade(c, { exposure: 1.02, saturation: 0.82, contrast: 1.05, temperature: 0.04, lift: 0.01 });
-  c = vignette(c, ctx.param('vignette', 0.3), { color: [0.03, 0.025, 0.01] });
-  c = grain(c, 0.05);
-  // Uncomment to darken the edges of the frame:
-  // c = vignette(c, ctx.param('vignette', 0.2), { color: [0.02, 0.02, 0.05] });
-  // Uncomment for a faint film grain:
-  // c = grain(c, 0.04);
+
+  // Subtle analog lens fringing at the periphery
+  c = chromaticAberration(c, 0.0025);
+
+  // Fine CRT / tape raster scanlines and sensor noise
+  c = scanlines(c, 0.02, 720);
+  c = film(c, 0.035);
+  c = grain(c, 0.025);
+
+  // Iconic Wikidot Level 0 mono-yellow grade:
+  // Slight desaturation avoids garish cartoon yellow, while warm/greenish temperature replicates fluorescent lighting.
+  c = grade(c, {
+    exposure: 1.04,
+    saturation: 0.86,
+    contrast: 1.08,
+    temperature: 0.055,
+    lift: 0.012,
+  });
+
+  // Vignette framing to enhance claustrophobia and corridor depth
+  c = vignette(c, ctx.param('vignette', 0.36), {
+    color: [0.02, 0.018, 0.01],
+    roundness: 1.7,
+    feather: 0.48,
+  });
+
+  // Emissive bloom for fluorescent light tubes and smiler grins
+  c = bloom(c);
+
   return c;
 }

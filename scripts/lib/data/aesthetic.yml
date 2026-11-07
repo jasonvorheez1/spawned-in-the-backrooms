@@ -1,16 +1,14 @@
-# The art direction of this world, how everything built here LOOKS: its light, palette, material
-# finishes, air and grade. What is built is the creator's ask; this file adds, removes and replaces
-# nothing. It stands until an ask names a theme; then the theme wins: replace this look with one that
-# fits and tune the place's light and grade to it. This file holds the look and nothing else; a note on
-# a build or a decision belongs in memory/game/ or design.md. A script may import it.
-name: honey-gold
-palette: ["#4a2f1a", "#a8642a", "#e9a24a", "#f7d98b", "#fff4dc"]
-finish: ["sun-warmed brick", "brass catching light", "dry straw", "gold dust"]
-era: "the last hour of a summer afternoon"
-mood: "golden hour, everything backlit, long shadows, warm dust in the air"
-hour: 17.2
-clouds: { density: 0.2, opacity: 0.7 }
-fog: { near: 350, far: 900 }
-ground: oklch(0.68 0.10 95)
-grade: { exposure: 1.06, saturation: 1.1, contrast: 1, temperature: 0.12 }
-reference: "Everything backlit gold in the last hour of the sun."
+# The art direction of Level 0 "The Lobby" (Wikidot Backrooms lore):
+# Infinite maze of randomly segmented empty office rooms, sickly mono-yellow damask wallpaper,
+# damp mildewed office carpet, unrelenting fluorescent light buzz, and eerie disorienting liminal solitude.
+name: mono-yellow-liminal
+palette: ["#16140e", "#5a503d", "#a8924b", "#d4b96a", "#fffde8"]
+finish: ["aged yellow chevron wallpaper", "damp fibrous office carpet", "acoustic drop-ceiling grid", "buzzing fluorescent light troffers"]
+era: "timeless 1990s institutional liminal purgatory"
+mood: "oppressive mono-yellow, damp carpet mildew, unrelenting fluorescent hum-buzz, disorienting endless corridors"
+hour: 12.0
+clouds: { enabled: false, density: 0, opacity: 0 }
+fog: { near: 5, far: 42, color: "oklch(0.58 0.07 92)" }
+ground: oklch(0.48 0.06 75)
+grade: { exposure: 1.04, saturation: 0.86, contrast: 1.08, temperature: 0.055, lift: 0.012 }
+reference: "Unending expanse of mono-yellow wallpaper, damp carpet, and fluorescent lights humming at maximum volume."

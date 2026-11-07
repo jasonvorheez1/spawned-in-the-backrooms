@@ -2,18 +2,21 @@ atmosphere:
   clouds:
     enabled: false
   fog:
-    far: 46
+    far: 42
     kind: linear
-    near: 6
-    color: oklch(0.55 0.07 92)
+    near: 5
+    color: oklch(0.56 0.075 92)
   look:
     script: scripts/look-default.js
+    params:
+      bloomStrength: 0.55
+      bloomThreshold: 0.72
   moon:
     intensity: 0
     enabled: false
   sky:
-    kind: realistic
-    model: hosek
+    kind: color
+    color: oklch(0.1 0.02 85)
   stars:
     enabled: false
   timeOfDay: 0
@@ -21,11 +24,11 @@ atmosphere:
     direction: 0
     speed: 0
   ambient:
-    light: {color: oklch(0.86 0.08 95), intensity: 0.55}
+    light: {color: oklch(0.85 0.075 95), intensity: 0.58}
   hemisphere:
-    groundColor: oklch(0.5 0.06 80)
-    intensity: 0.35
-    skyColor: oklch(0.9 0.07 95)
+    groundColor: oklch(0.48 0.06 75)
+    intensity: 0.38
+    skyColor: oklch(0.88 0.07 95)
 defaultSpawnPoint:
   x: 0
   y:
@@ -35,7 +38,6 @@ gravity:
   x: 0
   y: -24
   z: 0
-# 3d: the engine draws this place, so it needs 3D graphics to open. A game that is only its HTML screen is mode ui.
 mode: 3d
 terrain:
   kind: "off"
