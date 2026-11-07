@@ -254,7 +254,7 @@ function caught(ctx, it, who) {
     const dx = p.x - q.x, dz = p.z - q.z, d = Math.hypot(dx, dz) || 1
     ctx.self.velocity = { x: dx / d * 7, y: 2.5, z: dz / d * 7 } // the shove
     ctx.emit('cameraPunch', { direction: { x: dx / d, y: 0, z: dz / d }, intensity: 0.5 }, { audience: { player: ctx.self.id } })
-    speak(ctx, it, it.state.voice ?? 'callum', WARN[Math.floor(ctx.random() * WARN.length)])
+    speak(ctx, it, it.state.voice ?? `${String(it.id).split('/').pop()}#${(it.state?.wear?.sex ?? it.state?.look?.sex) === 'f' ? 'f' : 'm'}`, WARN[Math.floor(ctx.random() * WARN.length)])
     note(ctx, `${who} caught you. Next time they fight.`)
     ctx.emit('screenShake', { intensity: 0.3, duration: 0.25 }, { audience: { player: ctx.self.id } })
     snd(ctx, 'ui-denied-click', 0.5)
@@ -262,7 +262,7 @@ function caught(ctx, it, who) {
   }
   it.state.angry = { ...(it.state.angry ?? {}), [ctx.self.id]: true }
   const line = CAUGHT[Math.floor(ctx.random() * CAUGHT.length)]
-  speak(ctx, it, it.state.voice ?? 'callum', line)
+  speak(ctx, it, it.state.voice ?? `${String(it.id).split('/').pop()}#${(it.state?.wear?.sex ?? it.state?.look?.sex) === 'f' ? 'f' : 'm'}`, line)
   note(ctx, `Caught again! ${who} turns on you.`)
   ctx.emit('screenShake', { intensity: 0.25, duration: 0.25 }, { audience: { player: ctx.self.id } })
   snd(ctx, 'ui-denied-click', 0.5)

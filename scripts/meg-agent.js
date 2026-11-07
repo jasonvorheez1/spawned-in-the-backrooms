@@ -173,7 +173,7 @@ export function bark(ctx, o, kind, force) {
   const pool = CHAT.barks?.[kind], now = ctx.now(), st = o?.state;
   if (!pool?.length || !st) return;
   if (!force && now - (st.line?.at ?? -1e9) < 3500) return;
-  const t = pool[Math.floor(ctx.random() * pool.length)], d = 1300 + t.length * 55, who = st.voice ?? VOICES[o.id] ?? "ale";
+  const t = pool[Math.floor(ctx.random() * pool.length)], d = 1300 + t.length * 55, who = st.voice ?? VOICES[o.id] ?? `${String(o.id).split('/').pop()}#${(o.state?.wear?.sex ?? o.state?.look?.sex) === 'f' ? 'f' : 'm'}`;
   st.line = { t, at: now, d };
   const p = o.feetPosition;
   heard(ctx, { clip: BVO(who, t), position: { x: p.x, y: p.y + 1.4, z: p.z }, volume: 1, refDistance: 4, maxDistance: 30 }, { audience: { nearby: p, radius: 32 } });
