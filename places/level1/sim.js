@@ -38,6 +38,16 @@ export function tick(ctx) {
     ctx.spawn({ feetPosition: { x: BACK.x + 0.4, y: 0, z: BACK.z }, light: { kind: "point", color: "oklch(0.85 0.12 92)", intensity: 3, distance: 6 } });
     s.nextFlicker = now + 60000;
   }
+  if (!s.puddles) { s.puddles = true;
+    for (let i = 0; i < 70; i++) { const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N); if (zoneOf(cx, cz) !== "halls" && zoneOf(cx, cz) !== "storage") continue;
+      const c = cellCenter(cx, cz), r = 0.6 + ctx.random() * 1.4;
+      ctx.spawn({ tags: ["puddle"], feetPosition: { x: c.x + (ctx.random() - 0.5) * 5, y: 0.012, z: c.z + (ctx.random() - 0.5) * 5 }, rotation: { yaw: ctx.random() * 360, pitch: -90 }, scale: { x: 1, y: 0.5 + ctx.random() * 0.5, z: 1 }, primitive: { kind: "circle", radius: r, segments: 20 }, material: { color: "oklch(0.18 0.01 240 / 0.75)", roughness: 0.05, metalness: 0.3, transparent: true } });
+    }
+  }
+  if (now >= (s.nextClang ?? 0)) { s.nextClang = now + 9000 + ctx.random() * 14000;
+    for (const p of ctx.place.players) { const a = ctx.random() * 6.283;
+      ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-distant-metal-pipe-clang-echo.mp3", position: { x: p.feetPosition.x + Math.cos(a) * 14, y: H - 0.3, z: p.feetPosition.z + Math.sin(a) * 14 }, volume: 0.5, maxDistance: 40 }, { audience: { player: p.id } }); }
+  }
   // the pack: a manager, and hounds kept topped up (more while the lights are out)
   if (!s.packMgr) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
   const want = L.hounds + (s.flicker === "dark" ? L.flickerHounds : 0);
@@ -72,5 +82,18 @@ export function tick(ctx) {
   const set = (on) => { for (const r of lamps()) { const o = ctx.place.objects[r.id]; if (!o) continue; o.light = { ...o.light, intensity: on ? (o.light?.distance > 10 ? LAMP_ON : 2.5) : 0 }; o.material = { ...o.material, emissiveIntensity: on ? 2.2 : 0 }; } };
   if (!s.flicker && now >= s.nextFlicker) { s.flicker = "warn"; s.flickerAt = now; ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-fluorescent-light-flicker-buzz.mp3", volume: 0.5 }, { audience: { place: ctx.place.id } }); }
   if (s.flicker === "warn") { const t = (now - s.flickerAt) / 1000; set(Math.floor(t * 6) % 3 !== 0); if (t > L.flickerWarn) { s.flicker = "dark"; s.flickerAt = now; s.darkFor = (L.flickerLength[0] + ctx.random() * (L.flickerLength[1] - L.flickerLength[0])) * 1000; set(false); } }
-  else if (s.flicker === "dark" && now - s.flickerAt > s.darkFor) { s.flicker = null; set(true); s.nextFlicker = now + (L.flickerEvery[0] + ctx.random() * (L.flickerEvery[1] - L.flickerEvery[0])) * 1000; }
+  else if (s.flicker === "dark" && now - s.flickerAt > s.darkFor) { s.flicker = null; set(true); afterFlicker(ctx); s.nextFlicker = now + (L.flickerEvery[0] + ctx.random() * (L.flickerEvery[1] - L.flickerEvery[0])) * 1000; }
+}
+
+// when the lights come back: the extra hunters slink off, and fresh crates have appeared on the racks (the wiki's "after a Flickering")
+function afterFlicker(ctx) {
+  const hounds = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((h) => !h.state?.dead);
+  for (const h of hounds.slice(L.hounds)) ctx.destroy(h.id);
+  const have = ctx.query({ tags: ["crate"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).length;
+  let add = Math.min(8, L.crates - have);
+  for (let tries = 0; add > 0 && tries < 200; tries++) {
+    const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N), slots = shelfSlots(cx, cz);
+    if (!slots.length) continue;
+    spawnCrateL1(ctx, slots[Math.floor(ctx.random() * slots.length)]); add--;
+  }
 }
