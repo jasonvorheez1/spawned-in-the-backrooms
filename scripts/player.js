@@ -17,6 +17,7 @@ import L2 from './lib/data/level2.yml'
 const zoneHere = (ctx, x, z) => ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : zoneAt(x, z)
 
 import SOUNDS from './lib/data/sounds.yml'
+import { useCompass, COMPASS } from './lib/compass.js'
 const sndTurn = {}
 const SND = (n) => { const takes = SOUNDS[n]; if (!takes?.length) return `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`; sndTurn[n] = ((sndTurn[n] ?? -1) + 1 + (takes.length > 2 ? Math.floor(takes.length / 2) : 0)) % takes.length; return takes[sndTurn[n]] }
 const ICHOR = `fx
@@ -116,6 +117,12 @@ export function takeToken(ctx, token) {
     sound(ctx, 'pickup-ammo', 0.6, true)
     return { ok: true }
   }
+  if (token === 'compass') { // an old compass: a few reads left in it (G uses it)
+    s.compass = (s.compass ?? 0) + COMPASS.charges; s.pickedAt = now
+    s.notice = { text: `Old compass · ${s.compass} reads · press G`, at: now }
+    sound(ctx, 'pickup-ammo', 0.5, true)
+    return { ok: true }
+  }
   if (token === 'battery') {
     const w = walkOf(ctx); w.battery = Math.min(100, (w.battery ?? s.battery ?? 0) + L1.batteryCharge); s.battery = Math.round(w.battery)
     s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.7, true)
@@ -184,6 +191,7 @@ export function onInput(ctx, input) {
   if (input.pressed.inventory) { const sv = ctx.self.state; sv.invOpen = !sv.invOpen && !sv.lootOpen; sound(ctx, 'flashlight-switch-click', 0.35, true) }
   if (input.pressed.inv && input.actionData?.inv) invAction(ctx, input.actionData.inv)
   if (input.pressed.drink) drink(ctx)
+  if (input.pressed.compass) useCompass(ctx)
   if (input.pressed.cycleWeapon) cycleWeapon(ctx)
   if (input.pressed.holster) { // H: put it away, H again: draw the last one
     const s = ctx.self.state; cancelReload(ctx); s.ads = false
@@ -351,6 +359,7 @@ function invAction(ctx, d) {
   const s = ctx.self.state
   if (d.k === 'close') { s.invOpen = false; return }
   if (d.k === 'drink') { drink(ctx); return }
+  if (d.k === 'compass') { s.invOpen = false; useCompass(ctx); return }
   const k = String(d.w || '')
   if (d.k === 'wear' || d.k === 'unwear') { // clothes: wearing one swaps out what was in that slot (back into the bag); unwear strips it
     const bag = s.clothes ? s.clothes.split(',').filter(Boolean) : []

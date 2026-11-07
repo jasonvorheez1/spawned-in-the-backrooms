@@ -103,6 +103,25 @@ function subtitles(ctx, player, now) {
   rows.sort((a, b) => a[0] - b[0])
   return `<div style="position:absolute;left:0;right:0;bottom:120px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px)">${rows.slice(-2).map(([at, who, t]) => `<div id="sub${at}" style="max-width:720px;padding:5px 12px;background:oklch(0.1 0.01 80 / .78);color:oklch(0.95 0.02 90);font-size:17px;line-height:1.35;text-align:center;animation:hud-pop .15s ease-out"><span style="color:oklch(0.8 0.13 85)">${who}:</span> ${t}</div>`).join('')}</div>`
 }
+
+// the old compass read (scripts/lib/compass.js): a brass dial whose needles turn with your view, and the vague words
+function compassRead(s, yaw, now) {
+  const r = s.compassRead
+  if (!r || now - r.at > 8000) return ''
+  const needles = r.spun ? `<div style="position:absolute;inset:0;animation:cspin .5s linear infinite"><i style="position:absolute;left:50%;top:10px;width:4px;height:42px;margin-left:-2px;background:oklch(0.62 0.2 28)"></i></div>`
+    : r.hints.map((h, i) => `<div style="position:absolute;inset:0;transform:rotate(${h.h - yaw}deg);transition:transform .25s"><i style="position:absolute;left:50%;top:${10 + i * 8}px;width:${i ? 3 : 4}px;height:${42 - i * 8}px;margin-left:-2px;background:${i ? 'oklch(0.8 0.08 85)' : 'oklch(0.62 0.2 28)'};animation:cwob 1.3s ease-in-out infinite alternate"></i></div>`).join('')
+  const words = r.spun ? 'the needle spins and will not settle.' : r.hints.map((h) => h.t).join('<br>')
+  return `<style>@keyframes cspin{to{transform:rotate(360deg)}}@keyframes cwob{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}</style>
+  <div id="cmpr${r.at}" style="position:absolute;left:0;right:0;top:22%;display:flex;justify-content:center;animation:hud-pop .2s ease-out, hud-fade 8s forwards">
+    <div class="hud-card" style="display:flex;gap:14px;align-items:center;padding:10px 16px">
+      <div style="position:relative;width:104px;height:104px;border-radius:50%;background:radial-gradient(oklch(0.93 0.04 90),oklch(0.78 0.06 85));box-shadow:0 0 0 5px oklch(0.55 0.09 70),0 0 0 7px oklch(0.25 0.04 60)">
+        <span style="position:absolute;left:0;right:0;top:3px;text-align:center;font-size:11px;color:oklch(0.3 0.05 60)">▲</span>${needles}
+        <b style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px;border-radius:50%;background:oklch(0.35 0.05 60)"></b>
+      </div>
+      <div style="max-width:260px;font-size:14px;line-height:1.45"><div style="font-size:11px;opacity:.7;letter-spacing:.08em">OLD COMPASS · ${r.left} LEFT</div>${words}</div>
+    </div>
+  </div>`
+}
 export default function render(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
@@ -187,6 +206,7 @@ export default function render(ctx, player) {
   </div>` : ''}
 
   ${subtitles(ctx, player, now)}
+  ${compassRead(s, ((player.camera?.rotation?.yaw ?? 0) % 360 + 360) % 360, now)}
   <!-- Subdued Initial Hint -->
   <div id="hint" style="position:absolute;left:0;right:0;text-align:center;bottom:180px;font-size:12px;color:rgba(232,228,216,0.45);animation:hud-fade 7s 1s forwards;opacity:0">
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('wardrobe', 'C')}</kbd> wardrobe · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face

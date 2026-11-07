@@ -115,7 +115,7 @@ function inventory(s) {
   const drop = eqKey !== 'fists' ? `<button onclick="sendAction('inv',{k:'drop',w:'${eqKey}'})">Drop ${eq.name}</button>` : ''
   return `<div class="pbw pb"><div class="pbp" data-modal>
     <div class="hd"><h2>Items</h2><div class="st"><span><b>LVL</b>${lv}</span><span><b>HP</b>${Math.round(s.hp ?? 0)}/${maxHp(lv, s)}</span><span><b>SAN</b>${Math.round(s.sanity ?? 0)}/${maxSan(lv, s)}</span><span><b>XP</b>${s.xp ?? 0}/${L.xpBase * lv}</span><span><b>DR</b>${wornDR(s.look)}</span></div></div>
-    <div class="bd"><div class="ls"><div class="sec">Weapons</div>${weapons}<div class="sec">Aid</div>${aid}<div class="sec">Ammo</div>${ammo}<div class="sec">Apparel</div>${app}</div>${detail(eqKey, s, true)}</div>
+    <div class="bd"><div class="ls"><div class="sec">Weapons</div>${weapons}<div class="sec">Aid</div>${aid}${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="eq"></span><span class="nm" style="color:#d8b56a">Old compass</span><span class="n">${s.compass} reads</span></button>` : ''}<div class="sec">Ammo</div>${ammo}<div class="sec">Apparel</div>${app}</div>${detail(eqKey, s, true)}</div>
     <div class="ft"><span class="c">${s.kills ?? 0} kills</span>${drop}<button onclick="sendAction('inv',{k:'close'})"><kbd>I</kbd>Close</button></div>
   </div></div>`
 }
