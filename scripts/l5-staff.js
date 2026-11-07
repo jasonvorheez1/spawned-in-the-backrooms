@@ -34,11 +34,20 @@ function place(ctx, f) {
     state: { ...npcState(ctx, "staff", T.hp, { xp: 80 }), kind: "staff", name: f.name, verb: "Look", info: "One of the hotel staff. Polite. Very still.", mode: "post", disguised: true },
   });
 }
-// a player looks at it: the camera's forward within the cone toward it
+// a player looks at it: the camera's forward within the cone toward it. The simulating machine may only hold the camera as a
+// quaternion, so the player's own synced aim (state.aimX/aimZ, written by player.js) comes first, then the quaternion, then a yaw
+function lookOf(p) {
+  const ax = p.state?.aimX, az = p.state?.aimZ;
+  if (typeof ax === "number" && typeof az === "number" && (ax || az)) { const l = Math.hypot(ax, az); return [ax / l, az / l]; }
+  const r = p.camera?.rotation;
+  if (r && typeof r.yaw === "number") { const y = (r.yaw * Math.PI) / 180; return [-Math.sin(y), -Math.cos(y)]; }
+  if (r && typeof r.w === "number") { const fx = -2 * (r.x * r.z + r.w * r.y), fz = -(1 - 2 * (r.x * r.x + r.y * r.y)), l = Math.hypot(fx, fz) || 1; return [fx / l, fz / l]; }
+  const y = ((p.rotation?.yaw ?? 0) * Math.PI) / 180; return [-Math.sin(y), -Math.cos(y)];
+}
 function watched(ctx, me, players) {
   for (const p of players) {
     const d = flat(p.feetPosition, me); if (d > 30) continue;
-    const yaw = ((p.camera?.rotation?.yaw ?? p.rotation?.yaw ?? 0) * Math.PI) / 180, fx = -Math.sin(yaw), fz = -Math.cos(yaw);
+    const [fx, fz] = lookOf(p);
     if ((fx * (me.x - p.feetPosition.x) + fz * (me.z - p.feetPosition.z)) / (d || 1) > COS) return p;
   }
   return null;
@@ -91,7 +100,7 @@ export function update(ctx, dt) {
       const nx = pos.x + dx * 0.6, nz = pos.z + dz * 0.6; if (isSafe(nx, nz) || (mode === "creep" && AVOID.has(zoneId(nx, nz)))) sp = 0;
     } else m.path = null;
     // never two in one spot: each steps off the others
-    for (const g of T.figures) { if (g.id === f.id) continue; const q = ctx.getObject(g.id)?.feetPosition; if (!q) continue; const ex = pos.x - q.x, ez = pos.z - q.z, e = Math.hypot(ex, ez); if (e < (T.spread ?? 1.6) && e > 0.001) { const k = ((T.spread ?? 1.6) - e) / (T.spread ?? 1.6); dx += (ex / e) * k; dz += (ez / e) * k; if (!sp) sp = 0.8; } }
+    for (const g of T.figures) { if (g.id === f.id) continue; const q = ctx.getObject(g.id)?.feetPosition; if (!q) continue; const ex = pos.x - q.x, ez = pos.z - q.z, e = Math.hypot(ex, ez); if (e < (T.spread ?? 1.6) && e > 0.001) { const k = ((T.spread ?? 1.6) - e) / (T.spread ?? 1.6); dx += (ex / e) * k; dz += (ez / e) * k; if (!sp && mode !== "frozen") sp = 0.8; } }
     o.velocity = { x: dx * sp, y: vy, z: dz * sp };
     if (mode === "creep" && sp) o.rotation = yawTo(dx, dz);
     else if (mode === "return" && sp) o.rotation = yawTo(dx, dz);
