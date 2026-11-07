@@ -95,6 +95,11 @@ export function heard(ctx, r, pay) {
   }
   const r1 = clamp(rapportOf(ctx, it) + delta, -100, 100); setRapport(ctx, it, r1)
   const key = keyOf(ctx.self), who = nameOf(it), now = ctx.now()
+  // memory: meetings counted once per conversation, a short fact kept per exchange (newest 6), on the npc so every player's talk with them builds the same person
+  { const m0 = it.state.mem?.[key] ?? { met: 0, notes: [] }, ses2 = ctx.self.session, fresh = ses2.memWith !== it.id
+    if (fresh) ses2.memWith = it.id
+    const notes = o.remember ? [...(m0.notes ?? []).filter((n) => n !== o.remember), o.remember].slice(-6) : (m0.notes ?? [])
+    it.state.mem = { ...(it.state.mem ?? {}), [key]: { met: m0.met + (fresh ? 1 : 0), notes, at: now } } }
   if (intent === 'join' && it.state.follow !== ctx.self.id) {
     const mine = ctx.query({ tags: ['npc'] }).filter((q) => q.state?.follow === ctx.self.id).length
     if (r1 < T.join.rapport && !passed) {}

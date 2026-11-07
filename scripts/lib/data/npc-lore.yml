@@ -1,0 +1,21 @@
+# What each npc knows of where they stand (Wikidot Backrooms, with the game's own liberties). Savi's writing.
+levels:
+  main: "Level 0, the Lobby. Endless yellow rooms, damp carpet, the hum that never stops. Smilers in the dark parts, things that walk behind walls. People noclip in here from the real world and most never leave it. The way down to Level 1 is somewhere past the red zones."
+  level1: "Level 1, the Habitable Zone. Concrete car-park halls, fog, crates of supplies that appear from nowhere, lights that go out. M.E.G. keeps a camp here. Hounds hunt in packs and skin-stealers wear faces. Almond water is the currency of trust."
+  level2: "Level 2, Pipe Dreams. Hot, cramped utility halls full of pipes, steam and oil. The Survivor camp holds a few rooms. Doors open on odd rooms nobody built. The way to Level 3 is through the hot end."
+  level3: "Level 3, the Electrical Station. Brick halls and crawlways, humming machines, sparks, dead ends. Hostile and fast. M.E.G. Base Gamma is reachable from here. Lifts go up to Levels 4 and 5 if you know which."
+  gamma: "M.E.G. Base Gamma. The biggest safe settlement anyone knows: a security hall, a mall, a fake little town. Order, rations, guards, rules. The Database terminal is locked to agents."
+  level4: "Level 4, the Abandoned Office. Empty cubicles, water fountains that run with almond water, phones that ring for no one. Quiet and mostly safe. Base Omega sits here. The stairs go down to the hotel."
+  level5: "Level 5, the Terror Hotel. A 1930s grand hotel that never ends: the Main Hall, the Beverly Room ballroom where the polonaise always plays, the Boiler Room's heat. Housekeeping, the Homely Hotel staff and The Originals run it. Some staff are facelings wearing a smile. Samantha the cat wants good meat. Never stay in the Boiler Room alone."
+factions:
+  hotel: "Homely Hotel staff: polite to a fault, loyal to the hotel more than to guests."
+  hk: "M.E.G. Outpost Housekeeping: agents posing as cleaners, watching the hotel."
+  orig: "The Originals: the oldest residents, who claim they checked in before the Backrooms swallowed the hotel."
+  meg: "M.E.G., the Major Explorer Group: the closest thing to a government down here."
+  survivor: "Survivors: loners and small crews who trust nobody official."
+# a backstory for anyone without one written, rolled stable from their id
+origins: ["a night janitor who walked through a wall on shift", "a teenager who fell asleep in a mall", "a nurse who took the wrong stairwell", "a trucker who stopped for gas and never left the station", "a grad student who found a door that shouldn't open", "a soldier from an expedition nobody remembers sending", "someone who woke up here and remembers nothing before", "a contractor who clipped through a half-built office", "a hotel guest from long before the war", "a kid who grew up down here and never saw the sky"]
+years: ["three weeks", "four months", "almost a year", "two years", "five years, maybe more", "so long they stopped counting"]
+wants: ["a way back up", "enough almond water to stop worrying", "to find someone they lost on Level 2", "to be left alone", "to map one level properly", "a real bed and one quiet night", "to get into Base Gamma", "revenge on whatever took their crew"]
+fears: ["hounds", "the dark when the lights die", "facelings", "being forgotten", "the Boiler Room", "smilers", "the sound behind the walls", "running out of water"]
+quirks: ["counts things under their breath", "hums the polonaise without meaning to", "never sits with their back to a door", "keeps a notebook of every face they meet", "laughs at bad moments", "talks to the lights", "always offers food first", "asks everyone where they came in"]

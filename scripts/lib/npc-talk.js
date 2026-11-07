@@ -1,3 +1,4 @@
+import LORE from './data/npc-lore.yml'
 import { vo } from './voices.js';
 // Free talk with NPCs: who they are, what the model is told, how its answer is read, the skill roll,
 // and the trader's prices. Pure helpers: scripts/talk.js (on the player) does the calling and the writes.
@@ -21,19 +22,30 @@ export const voiceOf = (it) => it?.state?.voice ?? DEFV[it?.state?.role] ?? 'ale
 export const VO = (who, line) => vo(who, line)
 const feel = (r) => (r <= -60 ? 'you hate them' : r <= -25 ? 'you dislike them' : r < 10 ? 'neutral, you barely know them' : r < 40 ? 'you like them okay' : r < 70 ? 'you like them' : 'you trust them a lot')
 
+// a stable life story for anyone without a written persona: origin, time down here, a want, a fear, a habit
+const pick = (a, h, k) => a[(h >>> k) % a.length]
+function backstory(id) {
+  let h = 2166136261; for (const c of String(id)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } h >>>= 0
+  return `${pick(LORE.origins, h, 0)}. Been in the Backrooms ${pick(LORE.years, h, 3)}. Wants ${pick(LORE.wants, h, 7)}. Scared of ${pick(LORE.fears, h, 11)}. ${pick(LORE.quirks, h, 15)}.`
+}
 export function systemPrompt({ it, place, pl, rapport, following }) {
   const sk = skillsOf(pl.state ?? {}), id = String(it.id).split('/').pop()
-  const persona = T.personas[id] ?? T.personas.default
+  const persona = T.personas[id] ?? backstory(id)
+  const lv = LORE.levels[place] ?? '', fac = LORE.factions[it.state?.faction] ?? ''
+  const mem = it.state?.mem?.[keyOf(pl)] ?? null, now = Date.now()
+  const memLine = mem ? `You have met ${pl.displayName ?? 'them'} ${mem.met} time${mem.met === 1 ? '' : 's'} before.${mem.notes?.length ? ' What you remember about them: ' + mem.notes.join('; ') + '.' : ''}` : `You have never met ${pl.displayName ?? 'them'} before. Treat them as a stranger.`
+  const seen = (it.state?.sawKill ? `You saw a killing recently${it.state.sawKill.by === pl.id ? ', and it was THIS person who did it' : ''}. ` : '') + (it.state?.angry?.[pl.id] ? 'They wronged you before. ' : '')
   return [
     `You are voicing one character in a grim multiplayer survival game set in the Backrooms. Never break character.`,
     `Who you are: ${persona}`,
+    `What you know of this place: ${lv}`, fac ? `Your people: ${fac}` : '', `Memory: ${memLine} ${seen}Bring up what you remember when it fits, the way a person would.`,
     `Faction: ${faction(it, place)}. Job: ${it.state?.role ?? 'none'}. Where you are: ${T.places[place] ?? place}.`,
     `Talking to you: ${pl.displayName ?? 'a wanderer'}, a wanderer, level ${pl.state?.level ?? 1}. How good they are (0-100): speech ${sk.speech}, barter ${sk.barter}, melee ${sk.melee}, medicine ${sk.medicine}. A low number means clumsy, a high one means smooth.`,
     `How you feel about them: ${rapport} on a -100..100 scale (${feel(rapport)}).${following ? ' They talked you into travelling with them and you are with them now.' : ''}`,
     `What you can do, as intent: join (agree to travel with them; only if they really earned it), leave (stop travelling with them), trade_discount (agree to better prices), gift (hand them some small supply), hostile (you are done and will fight them; only after real threats or cruelty), none.`,
     `If they try to persuade, haggle, intimidate, lie or charm you about something that matters, add check: { skill (one of ${CHECKS.join(', ')}), difficulty 20-95 } plus failReply, what you say if they blow it. The game rolls their skill + d20 against the difficulty; your reply is what you say if they pass.`,
     `Talk like a real tired person, not a narrator: 1-3 short sentences, plain words, contractions, lowercase is fine, a little rough. No speeches, no lists, no "I understand", no asking how you can help. Never mention games, numbers, rapport, skills or rolls.`,
-    `Answer with JSON only: {"reply":"...","mood":"calm|happy|annoyed|angry|scared","rapportDelta":-30..30,"intent":"none|join|leave|trade_discount|gift|hostile","check":{"skill":"speech","difficulty":50},"failReply":"...","choices":["brief follow-up player prompt 1","brief follow-up player prompt 2","brief follow-up player prompt 3"]} (check, failReply and choices only when appropriate).`,
+    `Answer with JSON only: {"reply":"...","mood":"calm|happy|annoyed|angry|scared","rapportDelta":-30..30,"intent":"none|join|leave|trade_discount|gift|hostile","check":{"skill":"speech","difficulty":50},"failReply":"...","remember":"one short fact worth keeping about them from this exchange, or empty","choices":["brief follow-up player prompt 1","brief follow-up player prompt 2","brief follow-up player prompt 3"]} (check, failReply and choices only when appropriate).`,
   ].join('\n')
 }
 
@@ -51,12 +63,13 @@ export function parseReply(text) {
   if (!o || typeof o.reply !== 'string' || !o.reply.trim()) return null
   const d = Math.max(-T.deltaCap, Math.min(T.deltaCap, Math.round(Number(o.rapportDelta) || 0)))
   const c = o.check && CHECKS.includes(String(o.check.skill).toLowerCase()) ? { skill: String(o.check.skill).toLowerCase(), difficulty: Math.max(10, Math.min(110, Math.round(Number(o.check.difficulty) || 50))) } : null
+  const remember = typeof o.remember === 'string' ? clean(o.remember).slice(0, 90) : ''
   const choices = Array.isArray(o.choices) ? o.choices.filter((x) => typeof x === 'string' && x.trim()).map((x) => clean(x)).slice(0, 4) : null
   return {
     reply: clean(o.reply), failReply: c ? clean(o.failReply) || null : null,
     mood: MOODS.includes(o.mood) ? o.mood : 'calm', rapportDelta: d,
     intent: INTENTS.includes(o.intent) ? o.intent : 'none', check: c,
-    choices,
+    choices, remember,
   }
 }
 
