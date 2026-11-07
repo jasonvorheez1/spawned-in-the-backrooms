@@ -165,9 +165,9 @@ function papers(seed) { // a drift of office paper across the carpet, a few ball
   }
   C.roughness(null);
 }
-function troffer() { // the one fixture still alive in the dark sector: dented, one tube dark, the diffuser cracked (the light itself is the object's fx)
+function troffer(lit) { // the one fixture still alive in the dark sector: dented, one tube dark, the diffuser cracked (the light itself is the object's fx)
   C.color("oklch(0.82 0.01 90)"); box(-0.66, H - 0.06, -0.36, 0.66, H - 0.005, 0.36, "t");
-  C.color("oklch(0.95 0.02 95)"); C.emissive([1.2, 1.1, 0.85]); box(-0.6, H - 0.075, -0.25, 0.6, H - 0.06, -0.21); C.emissive(null);
+  if (lit) { C.color("oklch(0.95 0.02 95)"); C.emissive([1.2, 1.1, 0.85]); } else C.color("oklch(0.5 0.01 90)"); box(-0.6, H - 0.075, -0.25, 0.6, H - 0.06, -0.21); C.emissive(null);
   C.color("oklch(0.45 0.01 90)"); box(-0.6, H - 0.075, 0.21, 0.6, H - 0.06, 0.25);
   C.color("oklch(0.9 0.01 90)", 0.4); box(-0.62, H - 0.064, -0.33, 0.62, H - 0.062, 0.33);
 }
@@ -202,9 +202,10 @@ export function PILLARS(p) { const out = [], lo = (c) => c * S - HALF; for (let 
 export function geometry(ctx) {
   C = ctx; M = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0]; STACK.length = 0;
   const p = ctx.params ?? {}, k = p.kind;
+  if ((ctx.lod ?? 1) >= 3 && ["outlet", "papers", "stain", "holetile", "troffer"].includes(k)) return; // small things drop out far away
   if (k === "outlet") outlet(); else if (k === "falsedoor") falsedoor(); else if (k === "chair") chair(); else if (k === "vending") vending();
   else if (k === "payphone") payphone(); else if (k === "holetile") holetile(); else if (k === "stain") stain(p.seed ?? 1); else if (k === "camp") camp();
-  else if (k === "papers") papers(p.seed ?? 1); else if (k === "troffer") troffer(); else if (k === "manila") manila(p); else if (k === "forest") forest(p);
+  else if (k === "papers") papers(p.seed ?? 1); else if (k === "troffer") troffer(p.lit !== false); else if (k === "manila") manila(p); else if (k === "forest") forest(p);
   ctx.color(null); ctx.emissive(null); ctx.roughness(null); ctx.metalness(null); ctx.albedo(null);
 }
 export function collider(ctx) {
