@@ -47,10 +47,10 @@ l3-gate-photo/object/x4f6bec14938f21a7/5:
   parent: l3-gate-photo
   primitive: {depth: 1.1, height: 0.06, kind: box, width: 0.25}
 l3-gate-photo/object/x4f6bec14938f21a7/6:
-  children: [{feetPosition: {x: 0, y: 1.3, z: -1}, light: {color: oklch(0.85 0.12 70), distance: 10, intensity: 1.6, kind: point}}]
-  feetPosition: {x: 0, y: 0.3, z: 27.66}
+  children: [{feetPosition: {x: 0, y: 1.3, z: -1}, light: {color: oklch(0.85 0.12 70), distance: 12, intensity: 3, kind: point}}]
+  feetPosition: {x: 0, y: 0, z: 23.85}
   id: l3-gate-photo/object/x4f6bec14938f21a7/6
-  material: {color: oklch(0.85 0.12 75), emissive: oklch(0.8 0.13 70), emissiveIntensity: 1.3}
+  material: {color: oklch(0.85 0.12 75), emissive: oklch(0.8 0.13 70), emissiveIntensity: 4}
   parent: l3-gate-photo
   primitive: {depth: 0.04, height: 2.1, kind: box, width: 1.1}
 object/xd97c3a78408835bb/0:

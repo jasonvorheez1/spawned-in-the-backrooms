@@ -91,13 +91,13 @@ export function geometry(ctx) {
   // blocks: almond water by the lines and generators, a statue in its vault, violet bricks
   for (const b of BLOCKS) {
     const c0 = cellCenter(b.x0, b.z0), x0 = c0.x - S / 2, z0 = c0.z - S / 2, W = b.w * S, D = b.d * S;
-    if (b.type === "gen" || b.type === "line") {
+    if (false) { // bottles are art/level3/bottles.glb now
       ctx.roughness(0.4); ctx.metalness(0);
       for (let k = 0; k < 14; k++) { const bx = x0 + 0.6 + hash(b.i, k, 431) * (W - 1.2), bz = z0 + D - 0.5 - hash(b.i, k, 433) * 1.2; ctx.color(BOTTLES[Math.floor(hash(b.i, k, 435) * BOTTLES.length)]); tube(ctx, [[bx, 0, bz], [bx, 0.22, bz]], [0.05, 0.05], 5, [1, 1], 0, 1, 1); }
     }
     if (b.type !== "vault") continue;
     const vx = x0 + W / 2, vz = z0 + D / 2;
-    if (b.content === "statue") { // the worn marble woman on her stone plinth, an arm gone, her theatre mask at her thigh
+    if (false) { // the marble woman is art/level3/statue.glb now; the worn marble woman on her stone plinth, an arm gone, her theatre mask at her thigh
       ctx.albedo(null); ctx.roughness(0.7); ctx.color("oklch(0.5 0.03 190)"); box(ctx, vx - 0.75, vx + 0.75, 0, 0.55, vz - 0.75, vz + 0.75); ctx.color("oklch(0.58 0.03 190)"); box(ctx, vx - 0.6, vx + 0.6, 0.55, 0.78, vz - 0.6, vz + 0.6);
       ctx.color("oklch(0.88 0.02 88)");
       tube(ctx, [[vx, 0.78, vz], [vx, 1.15, vz], [vx, 1.6, vz], [vx, 2.0, vz], [vx, 2.2, vz]], [0.34, 0.28, 0.25, 0.22, 0.1], 12, [1, 0.8], 0.03, 3, 3); // drapery body
@@ -118,7 +118,7 @@ export function geometry(ctx) {
   // M.E.G. cameras round the checkpoint
   ctx.color("oklch(0.3 0.01 250)"); ctx.metalness(0.4);
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
-    if (!inGamma(cx, cz) || (cx + cz) % 3) continue; const c = cellCenter(cx, cz);
+    if (true || !inGamma(cx, cz) || (cx + cz) % 3) continue; // art/level3/camera.glb now const c = cellCenter(cx, cz);
     box(ctx, c.x - 0.1, c.x + 0.1, H - 0.25, H - 0.12, c.z - 0.18, c.z + 0.18); ctx.color("oklch(0.7 0.2 25)"); ctx.emissive("oklch(0.6 0.22 25)"); box(ctx, c.x - 0.02, c.x + 0.02, H - 0.2, H - 0.17, c.z + 0.18, c.z + 0.2); ctx.emissive(null); ctx.color("oklch(0.3 0.01 250)");
   }
   ctx.metalness(0); ctx.color(null); ctx.roughness(null);

@@ -105,7 +105,7 @@ export function geometry(ctx) {
   // generator rooms: three big humming generator housings with stacks of cable, a catwalk rail around the middle one
   for (const b of BLOCKS) {
     const c0 = cellCenter(b.x0, b.z0), x0 = c0.x - S / 2, z0 = c0.z - S / 2, W = b.w * S, D = b.d * S;
-    if (b.type === "gen") {
+    if (b.type === "gen" && false) { // the generator is art/level3/generator.glb now (places/level3/sim.js)
       ctx.albedo(STEEL); ctx.metalness(0.5); ctx.roughness(0.55);
       const gx = x0 + W / 2, gz = z0 + D / 2;
       ctx.color("oklch(0.45 0.06 150)"); box(ctx, gx - 2.2, gx + 2.2, 0, 2.2, gz - 1.1, gz + 1.1); // main housing, dull green
@@ -119,7 +119,7 @@ export function geometry(ctx) {
       }
       ctx.color("oklch(0.2 0.01 250)"); ctx.metalness(0.1); ctx.roughness(0.9); // fat black cables snaking across the floor
       for (let k = 0; k < 4; k++) { const a = hash(b.i, k, 51) * 6.28; tube(ctx, [[gx - 2.2, 0.06, gz - 0.5 + k * 0.3], [gx - 3.5, 0.06, gz - 0.6 + k * 0.35 + Math.sin(a) * 0.4], [gx - W / 2 + 0.7, 0.06, gz + D / 2 - 1.2 + k * 0.1], [gx - W / 2 + 0.7, 1.2, gz + D / 2 - 0.9]], [0.05, 0.05, 0.05, 0.05], M, [1, 1], 0, 1, 1); }
-    } else if (b.type === "line") {
+    } else if (b.type === "line" && false) { // art/level3/line.glb
       // an assembly line: a long conveyor on legs, rollers, a hopper at the start, a press halfway, a bin at the end
       ctx.albedo(STEEL); ctx.metalness(0.6); ctx.roughness(0.5);
       const zc = z0 + D / 2 - 0.25, xa = x0 + 1.2, xb = x0 + W - 1.2;

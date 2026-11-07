@@ -3,7 +3,7 @@
 // assembly lines that keep turning out goods, hounds in brigades and deathmoth swarms drawn to light.
 import L from "../../scripts/lib/data/level3.yml";
 import MEG from "../../scripts/lib/data/meg.yml";
-import { N, H, TH, S, HALF, zoneOf, zoneAt, cellCenter, cellAt, openings, hash, ARRIVE, BACK, LIFT, SLUDGE, SPARKS, GENS, LINES, ceilingAt, OOB } from "../../scripts/lib/level3.js";
+import { N, H, TH, S, HALF, zoneOf, zoneAt, cellCenter, cellAt, openings, hash, ARRIVE, BACK, LIFT, SLUDGE, SPARKS, GENS, LINES, ceilingAt, OOB, BLOCKS, inGamma } from "../../scripts/lib/level3.js";
 import { spawnAlmond, spawnWeapon } from "../../scripts/lib/loot.js";
 import { rollWeaponL3 } from "../../scripts/lib/loot3.js";
 import { spawnFurniture, pickKind, wallSpot3 } from "../../scripts/lib/furniture.js";
@@ -112,6 +112,16 @@ export function tick(ctx) {
     // generators hum
     for (const g of GENS) ctx.spawn(`l3-gen-${g.i}`, { feetPosition: { x: g.x, y: 1.2, z: g.z }, audio: { clip: GRIT("generator-heavy-hum-loop"), gain: 0.35, loop: true, spatial: true, maxDistance: 16 } });
     ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level3-details-geo.js" }, material: { roughness: 0.85 } }); // tile wainscot, signs, sludge pools, the statue, violet bricks, almond piles
+    // the Blender-built models (art/level3/build.py): generators, assembly lines, the marble statue, wall boxes, bottle piles, cameras
+    const L3M = { bottles: "/cdn/value.fd97d841d450a844d49368f6140950f0c48b8c6b50ba3cda61291a7d82fbec96.glb", camera: "/cdn/value.9a228d2a44ac47cc422ab5bcdbbaa10b84f595f45d7cb1acd62d496a80a648bc.glb", generator: "/cdn/value.f2cc96cb814887e44442e010f610a0890537af8e6f7f6965290304f2f4b81c85.glb", line: "/cdn/value.1bc56a08754ad99605d9605af31ac68640ddc6126fd6cea17b05fd46cc96bc52.glb", statue: "/cdn/value.17d71ddd03bd0c0f26442d38dda850d8d8eb3e49d1e3c8b09ad1cec98ca90a95.glb", wallbox: "/cdn/value.ba5136c85ccb173e33e96f5633746c6ea83673f487d82fd34c0b727875111c93.glb" }; // uploaded from art/level3 (art/level3/build.py makes them)
+    const M3 = (name, x, y, z, o = {}) => ctx.spawn({ feetPosition: { x, y, z }, model: L3M[name], castShadow: false, ...o });
+    const SOLID = { physics: { body: "static", collider: "mesh" } };
+    for (const g of GENS) M3("generator", g.x, 0, g.z, { scale: { x: 0.9, y: 0.9, z: 0.9 }, ...SOLID });
+    for (const l of LINES) { M3("line", (l.x0 + l.x1) / 2, 0, l.z, SOLID); M3("bottles", l.x1 - 0.2, 0, l.z + 1.4, { rotation: { yaw: 40 } }); }
+    for (const g of GENS) M3("bottles", g.x - 3.2, 0, g.z + 1.9, { rotation: { yaw: 110 } });
+    for (const b of BLOCKS) if (b.type === "vault" && b.content === "statue") { const c0 = cellCenter(b.x0, b.z0); M3("statue", c0.x + S / 2, 0, c0.z + S / 2, { rotation: { yaw: 90 }, ...SOLID }); }
+    for (const sp of SPARKS) { const [nx, nz] = D4[sp.d]; M3("wallbox", sp.wx + nx * 0.09, 0, sp.wz + nz * 0.09, { rotation: { yaw: Math.atan2(nx, nz) * 57.2958 } }); }
+    for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) if (inGamma(cx, cz) && (cx + cz) % 3 === 0) { const c = cellCenter(cx, cz); M3("camera", c.x, H, c.z, { rotation: { yaw: 90, roll: 180 } }); }
     for (const l of LINES) ctx.spawn({ feetPosition: { x: (l.x0 + l.x1) / 2, y: 1.2, z: l.z }, audio: { clip: GRIT("factory-conveyor-clank-loop"), gain: 0.3, loop: true, spatial: true, maxDistance: 14 } });
     // supplies: crates in dead ends and rooms, almond water, the odd weapon on the floor
     seedFurniture3(ctx);
