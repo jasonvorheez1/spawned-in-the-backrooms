@@ -103,6 +103,15 @@ place:
   level8:
     - { text: "Where's the road actually lead?", tag: Lore }
     - { text: "Is the lake safe to swim?", tag: Help }
+    - { text: "Who are the Lightless living in the cave dens?", tag: Lore }
+    - { text: "What's that boiling tar pit down the 9th Road?", tag: Lore }
+  level10:
+    - { text: "How does wheat grow out here without a ceiling or sun lamps?", tag: Lore }
+    - { text: "Why do the scarecrows face toward the house when nobody's watching?", tag: Lore }
+    - { text: "How deep does that old stone water well go?", tag: Lore }
+    - { text: "Are those giant worms near the lake hostile?", tag: Help }
+    - { text: "Where can I get a loaf of fresh sourdough bread?", tag: Help }
+    - { text: "Which road leads into the city of Level 11?", tag: Help }
   level11:
     - { text: "What exactly is the 'Level 11 Effect' that calms entities down?", tag: Lore }
     - { text: "Is it true there are 45,000 survivors living across the Capital?", tag: Lore }
@@ -112,6 +121,11 @@ place:
     - { text: "Is the tap water in the apartments safe to drink?", tag: Help }
     - { text: "Where can I find the B.N.T.G. market stalls for fresh produce?", tag: Help }
     - { text: "How do I safely reach M.E.G. Base Beta from here?", tag: Help }
+  level21:
+    - { text: "How many cartons of Saltines are actually in this place?", tag: Lore }
+    - { text: "What happened to Base Alef back in July 2020?", tag: Lore }
+    - { text: "How far into the dark do The Edges go?", tag: Survival }
+    - { text: "How do you handle Smilers in the freezer corridors?", tag: Help }
 closers:
   - { text: "Alright. Take care of yourself.", tag: Farewell }
   - { text: "I'll leave you to it.", tag: Farewell }

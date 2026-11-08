@@ -44,14 +44,27 @@ const PEOPLE = {
 function person(ctx, id) {
   const g = PEOPLE[id], r = rm("fridges")[0], c = center(r);
   const look = { species: g.sp, sex: g.sex, eye: g.eye, topw: "jacket", top: g.top, botw: "pants", bottom: "#33332a", shoes: "boots", shoec: "#2a2018" };
-  const x = c.x + g.at[0], z = c.z + g.at[1];
   const shortName = g.name.split(" ")[0];
+  const roundsNed = [
+    { x: edgeOf(r, 2) + 0.85, y: 0.05, z: c.z + 1.4, dwell: 30, act: null, look: { x: edgeOf(r, 2) + 0.65, z: c.z + 1.4 } },
+    { x: edgeOf(r, 2) + 0.85, y: 0.05, z: c.z - 1.5, dwell: 20, act: "cdn/clip-crouch-idle-loop.glb", look: { x: edgeOf(r, 2) + 0.65, z: c.z - 2.2 } },
+    { x: edgeOf(r, 2) + 1.1, y: 0.05, z: c.z - 0.5, dwell: 22, act: null, look: { x: edgeOf(r, 2) + 0.12, z: c.z - 0.5 } },
+    { x: c.x - 0.6, y: 0.05, z: c.z + 0.8, dwell: 25, act: "cdn/clip-pickup.glb", look: { x: c.x - 0.6, z: c.z } },
+  ];
+  const roundsGoknar = [
+    { x: edgeOf(r, 0) - 1.2, y: 0.05, z: c.z, dwell: 35, act: null, look: { x: edgeOf(r, 0) + 3, z: c.z } },
+    { x: c.x - 2.5, y: 0.05, z: edgeOf(r, 3) + 1.4, dwell: 22, act: null, look: { x: c.x - 2.5, z: edgeOf(r, 3) } },
+    { x: c.x + 1.2, y: 0.05, z: c.z, dwell: 28, act: null, look: { x: c.x - 0.6, z: c.z } },
+    { x: edgeOf(r, 2) + 1.4, y: 0.05, z: c.z - 2.0, dwell: 18, act: null, look: { x: edgeOf(r, 2) + 0.65, z: c.z - 2.2 } },
+  ];
+  const rounds = id === "l21-ned" ? roundsNed : roundsGoknar;
+  const p0 = rounds[0];
   ctx.spawn(id, {
-    tags: ["npc", "l21-npc", "usable"], feetPosition: { x, y: 0.05, z }, rotation: { yaw: 0 }, physics: "character", ...critterSpec(npcLook(id, look, "survivor", 8)),
+    tags: ["npc", "l21-npc", "usable"], feetPosition: { x: p0.x, y: 0.05, z: p0.z }, rotation: { yaw: 0 }, physics: "character", ...critterSpec(npcLook(id, look, "survivor", 8)),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js", "scripts/l21-use.js"],
     state: {
       name: g.name, role: "survivor", voice: g.voice, faction: "alef", factionName: "the Base Alef survivors of Level 2.1, locked out since July 2020",
-      rounds: [{ x, y: 0.05, z, dwell: 40, act: null, look: { x: c.x, z: c.z } }], ri: 0, nerve: "steady", home: { x, z }, ...npcState(ctx, "agent", 80),
+      rounds, ri: 0, nerve: "steady", home: { x: p0.x, z: p0.z }, ...npcState(ctx, "agent", 80),
       kind: id === "l21-ned" ? "ned" : "goknar", verb: `Talk to ${shortName}`, info: `A survivor in Refrigerator Paradise.`, tint: id === "l21-ned" ? "#e8c070" : "#7aff9a"
     }
   });

@@ -591,16 +591,44 @@ const CAMP = {
   "l8-marit": { name: "Marit · 9th Road Camp", voice: "wren", gun: "bat", sp: "sheep", sex: "f", eye: "#8a4fd8", at: [-3.2, -2.6], top: "#4a4a6a" },
   "l8-carla-kid": { name: "Carla", voice: "penny", gun: null, sp: "bunny", sex: "f", eye: "#2a1c14", at: [1.2, -1.2], top: "#c9b88a", child: true },
 };
+const CAMP_ROUNDS = {
+  "l8-hobb": (cf) => [
+    { x: cf.x - 2.4, y: cf.y + 0.3, z: cf.z, dwell: 35, act: null, look: { x: cf.x, z: cf.z } },
+    { x: cf.x - 3.8, y: cf.y + 0.3, z: cf.z + 3.2, dwell: 25, act: null, look: { x: cf.x - 6, z: cf.z + 6 } },
+    { x: cf.x - 1.2, y: cf.y + 0.3, z: cf.z - 4.2, dwell: 28, act: null, look: { x: cf.x - 2, z: cf.z - 10 } },
+    { x: cf.x + 1.2, y: cf.y + 0.3, z: cf.z - 1.8, dwell: 22, act: null, look: { x: cf.x, z: cf.z } },
+  ],
+  "l8-wen": (cf) => [
+    { x: cf.x + 2.8, y: cf.y + 0.3, z: cf.z + 1.2, dwell: 30, act: null, look: { x: cf.x + 1.45, z: cf.z + 0.08 } },
+    { x: cf.x + 3.6, y: cf.y + 0.3, z: cf.z + 4.2, dwell: 24, act: "cdn/clip-pickup.glb", look: { x: cf.x + 5.4, z: cf.z + 6 } },
+    { x: cf.x + 1.5, y: cf.y + 0.3, z: cf.z - 2.5, dwell: 26, act: null, look: { x: cf.x, z: cf.z } },
+  ],
+  "l8-ivo": (cf, radP) => [
+    { x: radP.x - 0.9, y: cf.y + 0.3, z: radP.z, dwell: 35, act: null, look: { x: radP.x, z: radP.z } },
+    { x: cf.x + 0.5, y: cf.y + 0.3, z: cf.z + 3.5, dwell: 25, act: null, look: { x: cf.x, z: cf.z } },
+    { x: cf.x + 2.2, y: cf.y + 0.3, z: cf.z + 5.8, dwell: 22, act: null, look: { x: cf.x + 6, z: cf.z + 12 } },
+  ],
+  "l8-marit": (cf) => [
+    { x: cf.x - 3.2, y: cf.y + 0.3, z: cf.z - 2.6, dwell: 30, act: "cdn/clip-crouch-idle-loop.glb", look: { x: cf.x - 5.4, z: cf.z - 6 } },
+    { x: cf.x - 0.9, y: cf.y + 0.3, z: cf.z - 1.8, dwell: 25, act: null, look: { x: cf.x + 1.2, z: cf.z - 1.2 } },
+    { x: cf.x - 2.8, y: cf.y + 0.3, z: cf.z - 4.5, dwell: 22, act: null, look: { x: cf.x - 6, z: cf.z - 10 } },
+  ],
+  "l8-carla-kid": (cf) => [
+    { x: cf.x + 1.2, y: cf.y + 0.3, z: cf.z - 1.2, dwell: 50, act: null, look: { x: cf.x, z: cf.z } },
+  ],
+};
 function spawnCamp(ctx) {
   Promise.all([import("../../scripts/lib/critter-model.js"), import("../../scripts/lib/clothes.js"), import("../../scripts/lib/stats.js"), import("../../scripts/lib/weapon-look.js")]).then(([{ critterSpec }, { npcLook }, { npcState }, { weaponBody }]) => {
-    const cf = P(436, 0, 0.1);
+    const cf = P(436, 0, 0.1), radP = P(442, 5.2, 0.05);
     for (const [id, g] of Object.entries(CAMP)) {
       if (ctx.place.objects[id]) continue;
       const isCarla = id === "l8-carla-kid";
-      const x = cf.x + g.at[0], z = cf.z + g.at[1], look = { species: g.sp, sex: g.sex, eye: g.eye, topw: "sweater", top: g.top, botw: g.child ? "overalls" : "pants", bottom: "#33332a", shoes: "boots", shoec: "#2a2018" };
+      const rounds = CAMP_ROUNDS[id] ? CAMP_ROUNDS[id](cf, radP) : [{ x: cf.x + g.at[0], y: cf.y + 0.3, z: cf.z + g.at[1], dwell: 40, act: null, look: { x: cf.x, z: cf.z } }];
+      const p0 = rounds[0] ?? { x: cf.x + g.at[0], y: cf.y + 0.3, z: cf.z + g.at[1] };
+      const look = { species: g.sp, sex: g.sex, eye: g.eye, topw: "sweater", top: g.top, botw: g.child ? "overalls" : "pants", bottom: "#33332a", shoes: "boots", shoec: "#2a2018" };
       ctx.spawn(id, {
         tags: ["npc", "l8-npc", ...(isCarla ? ["usable"] : [])],
-        feetPosition: { x, y: cf.y + 0.3, z },
+        feetPosition: { x: p0.x, y: p0.y, z: p0.z },
         rotation: { yaw: 0 },
         physics: "character",
         ...critterSpec(npcLook(id, look, "survivor", 8)),
@@ -614,10 +642,10 @@ function spawnCamp(ctx) {
           voice: g.voice,
           faction: "camp",
           factionName: "the 9th Road camp: M.E.G. operatives, B.N.T.G. traders and the Harmouth Speleological Society",
-          rounds: [{ x, y: cf.y + 0.3, z, dwell: 40, act: null, look: { x: cf.x, z: cf.z } }],
+          rounds,
           ri: 0,
           nerve: g.child ? "coward" : "steady",
-          home: { x, z },
+          home: { x: p0.x, z: p0.z },
           ...npcState(ctx, "agent", 90),
           ...(isCarla ? { kind: "carla", verb: "Talk to Carla", info: "A survivor child huddled by the fire.", tint: "#ffe0b0" } : {})
         },
