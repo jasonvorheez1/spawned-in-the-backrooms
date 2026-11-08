@@ -2707,6 +2707,12 @@ l26x-boombox-1:
   rotation: {roll: 90, yaw: -60}
   scale: 0.5
   tags: [l26x]
+l26x-fogwisps:
+  audience: all
+  feetPosition: {x: 0, y: 0, z: 0}
+  fx: {script: "fx follow=player\npop wisp n=?mobile:10|low:8|26 on=box(18,1.2,18).c(1) wrap=18;3;18 v=<.35,0,.12>*(.6..1.2) size=3..6 acc=curl(.08)*.3 sz=$size col=<.55,.68,.52> a=.10..0.18 rot=spin(.02) r=sprite(smoke-puff,alpha)"}
+  id: l26x-fogwisps
+  tags: [l26x, fx]
 l26x-lit-0:
   feetPosition: {x: 0.26251997011858164, y: 3.44, z: -5.498943061563837}
   id: l26x-lit-0
