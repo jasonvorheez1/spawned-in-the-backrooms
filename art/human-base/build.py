@@ -137,6 +137,14 @@ def rig(head, body, wide):
     arm0 = Vector((A["arm"][0] * (1 + wide), 0.075, A["arm"][1]))
     d = tip - arm0
     wrist = arm0 + d * 0.80; elbow = arm0 + (wrist - arm0) * 0.5 + Vector((0, 0.012, 0))
+    # each arm joint sits at the centre of the arm's own cross-section there (bone heat skins a centred bone cleanly)
+    def centre(g):
+        u = (tip - arm0).normalized()
+        near = [v for v in vs if abs((v - g).dot(u)) < 0.012 and ((v - g) - u * (v - g).dot(u)).length < 0.07]
+        if len(near) < 6: return g
+        c = sum(near, Vector()) / len(near); return Vector((g.x, c.y, c.z))
+    arm0, elbow, wrist = centre(arm0), centre(elbow), centre(wrist)
+    print("arm joints", [tuple(round(x, 3) for x in p) for p in (arm0, elbow, wrist)])
     bpy.ops.object.armature_add(location=(0, 0, 0)); r = bpy.context.object; r.name = "Armature"
     bpy.ops.object.mode_set(mode="EDIT"); eb = r.data.edit_bones; eb.remove(eb[0])
     def B(n, h, t, p=None):
