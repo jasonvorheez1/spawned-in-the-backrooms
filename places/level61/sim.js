@@ -115,7 +115,7 @@ function lay(ctx) {
   });
 
   // Curved 1980s diner booth with red leather banquettes, formica table with chrome edging, and condiments
-  const BOOTH_GLB = "/cdn/value.bc27142d58376e6d19cb25699d0a58a713302c81a9fc7f60a167c89f32831d20.glb" // tripo: red vinyl tufted booth, wood base
+  const BOOTH_GLB = "/cdn/value.0cd96277bf795ecca2ae17aaf43359420b049216cb89c298eae1c4202ab9a1ad.glb" // art/l61-booth/build.py: tripo booth, table pulled off the benches
   const spawnBooth = (id, x, z, yaw) => sp(id, {
     feetPosition: { x, y: 0, z },
     rotation: { yaw },
