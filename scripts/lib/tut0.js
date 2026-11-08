@@ -39,7 +39,7 @@ export const ENC = { from: { x: 9, z: -28 }, corner: { x: -3.0, z: -30.0 }, desk
 // the HALOGEN issue machine, Backrooms Robotics, against room D's east wall facing the room
 export const HALO = { x: 47.35, z: -27.5, yaw: -90, stand: { x: 46.3, z: -27.5 } }
 // the drawings someone taped up in corridor E and room F: [n, x, z, yaw, size]; they point at the wet spot
-export const DRAWINGS = [[2, 42.53, -19.5, 90, 0.8], [1, 45.47, -16.2, -90, 0.8], [3, 42.53, -12.4, 90, 0.8], [4, 45, 3.97, 180, 1.1]]
+export const DRAWINGS = [[2, 42.78, -19.5, 90, 0.8], [1, 45.22, -16.2, -90, 0.8], [3, 42.78, -12.4, 90, 0.8], [4, 45, 3.72, 180, 1.1]]
 // beats, in order: where each one starts (a box the player walks into)
 export const BEATS = [
   { id: "encounter", box: [-1.5, 1.5, -27.2, -25.2] },

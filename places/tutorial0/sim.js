@@ -9,10 +9,10 @@ const FM = { desk: "/cdn/value.dc2f7ac92df4c08964be1ea4af5e520bbf4c12d50609157f8
 const PROPS = [["chair", 3.6, -3.4, 200], ["shelf", -4.6, 2.5, 90], ["desk", DESK.x, DESK.z, 90], ["chair", -3.1, -15.2, 250], ["copier", 3.3, -30.4, 0], ["chair", 22, -27.3, 30], ["shelf", 47.4, -32.2, 270], ["desk", 50.6, 2.6, 270], ["chair", 39.5, -6.4, 140]]
 export function tick(ctx) {
   const s = ctx.place.state
-  if (s.built === 2) return
+  if (s.built === 3) return
   if (s.built) for (const o of ctx.query({ anyTags: ["t0prop", "furniture", "halogen-unit", "almond"] })) ctx.destroy(o.id) // an older layout, laid again whole
   for (let i = 0; i < LIGHTS.length; i++) if (ctx.getObject(`t0-light-${i}`)) ctx.destroy(`t0-light-${i}`)
-  s.built = 2
+  s.built = 3
   LIGHTS.forEach(([x, z, hall], i) => hall !== 2 && ctx.spawn({ id: `t0-light-${i}`, tags: hall ? ["t0hall"] : ["t0light"], feetPosition: { x, y: H - 0.3, z }, visibleRange: { max: 42 }, light: { kind: "point", color: "oklch(0.95 0.06 95)", intensity: 5, distance: 10, shadow: { enabled: false } } }))
   for (const [k, x, z, yaw] of PROPS) ctx.spawn({ tags: ["furniture", "t0prop", k], feetPosition: { x, y: 0, z }, rotation: yaw, physics: { body: "static", collider: "box" }, model: { id: FM[k], forward: "+z" } })
   // room B: the desk that gave out, one leg already off it, where they'll be cornered
