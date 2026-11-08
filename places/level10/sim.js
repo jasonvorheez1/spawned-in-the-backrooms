@@ -3,7 +3,7 @@
 //  - following the track far enough leads to Level 11 (l10-road-north at its far end, l10-road-south behind the spawn)
 //  - swimming down into the lake leads to an aquatic level: Level 7 (l10-lake-deep)
 export const cadence = "1s";
-const V = 1;
+const V = 2;
 const BRK = (mat, hp) => ({ mat, hp, maxHp: hp });
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BARN = (w, d, h, ridge, wall, door) => ({ primitive: { kind: "scripted", script: "scripts/barn10.js", params: { w, d, h, ridge, wall, door } }, physics: "static" });
@@ -28,8 +28,7 @@ function lay(ctx) {
   sp("l10-shed-b", { ...BARN(4.5, 3.6, 2.5, 3.6, "plank", 1.6), feetPosition: T(95, -60, 0), rotation: { yaw: 200 } });
   // what's inside: wood, nails and the odd thing someone left (the wiki: the barns hold building stock)
   const crate = (id, x, z, name, items, yaw = 0) => sp(id, { tags: ["container", "breakable"], feetPosition: T(x, z, 0.06), rotation: { yaw },
-    model: "/cdn/value.9a1b3f6f5f0b2c4e8d7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e.glb", primitive: { kind: "box", width: 0.9, height: 0.7, depth: 0.7 },
-    material: { texture: "cdn/texture-weathered-grey-barn-wood-vertical-planks.png", color: "oklch(0.7 0.03 70)" }, physics: { body: "static", collider: "box" }, state: { name, items, ...BRK("wood", 40) } });
+    model: "/cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb", layout: { box: { min: { x: -0.45, y: 0, z: -0.35 }, max: { x: 0.45, y: 0.7, z: 0.35 } } }, physics: { body: "static", collider: "box" }, state: { name, items, ...BRK("wood", 40) } });
   crate("l10-barn-bin", -36, -42, "Feed bin", "tape,wire,ration,almond", 10);
   crate("l10-barn-chest", -24, -37, "Tool chest", "weapon:crowbar,tape,battery", -8);
   crate("l10-stable-bin", -58, -103, "Tack box", "bandage,ration,cloth:topw:jacket:5a4630", 90);
