@@ -91,62 +91,6 @@ l26-bar:
   rotation: {yaw: 180}
   scale: 2.6
   tags: [l26x]
-l26-blood-0:
-  feetPosition: {x: 2, y: 0.005, z: 29}
-  id: l26-blood-0
-  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
-  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 1.4, radiusTop: 1.4}
-  scale: {x: 1, y: 1, z: 0.55}
-  visible: false
-l26-blood-1:
-  feetPosition: {x: -3.5, y: 0.005, z: 26}
-  id: l26-blood-1
-  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
-  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 0.9, radiusTop: 0.9}
-  scale: {x: 1, y: 1, z: 0.75}
-  visible: false
-l26-blood-2:
-  feetPosition: {x: 6.3, y: 0.005, z: 33}
-  id: l26-blood-2
-  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
-  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 1.1, radiusTop: 1.1}
-  scale: {x: 1, y: 1, z: 0.9500000000000001}
-  visible: false
-l26-blood-3:
-  feetPosition: {x: -7, y: 0.005, z: 40}
-  id: l26-blood-3
-  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
-  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 0.8, radiusTop: 0.8}
-  scale: {x: 1, y: 1, z: 0.55}
-  visible: false
-l26-blood-4:
-  feetPosition: {x: 1, y: 0.005, z: 22}
-  id: l26-blood-4
-  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
-  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 0.6, radiusTop: 0.6}
-  scale: {x: 1, y: 1, z: 0.75}
-  visible: false
-l26-blood-5:
-  feetPosition: {x: -8.5, y: 0.005, z: -10}
-  id: l26-blood-5
-  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
-  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 1.2, radiusTop: 1.2}
-  scale: {x: 1, y: 1, z: 0.9500000000000001}
-  visible: false
-l26-blood-6:
-  feetPosition: {x: 8, y: 0.005, z: -25}
-  id: l26-blood-6
-  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
-  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 0.7, radiusTop: 0.7}
-  scale: {x: 1, y: 1, z: 0.55}
-  visible: false
-l26-blood-7:
-  feetPosition: {x: -2, y: 0.005, z: -34}
-  id: l26-blood-7
-  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
-  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 1, radiusTop: 1}
-  scale: {x: 1, y: 1, z: 0.75}
-  visible: false
 l26-bridge:
   feetPosition: {x: 0, y: 3.4, z: 3}
   id: l26-bridge
@@ -780,7 +724,7 @@ l26-pool-w:
 l26-pool-water:
   feetPosition: {x: 0, y: 0.5, z: 36.5}
   id: l26-pool-water
-  material: {color: oklch(0.28 0.16 24), kind: water, opacity: 1, waveIntensity: 0.06}
+  material: {color: oklch(0.42 0.05 135), kind: water, opacity: 0.93, waveIntensity: 0.12}
   primitive: {height: 10.6, kind: plane, width: 10}
   rotation: {pitch: -90}
 l26-pop-1:
@@ -2749,46 +2693,6 @@ l26x-bar-stool-3:
   rotation: {yaw: 95}
   scale: 0.75
   tags: [l26x]
-l26x-blood-pool-0:
-  castShadow: false
-  feetPosition: {x: -5.9, y: 0.012, z: 33.2}
-  id: l26x-blood-pool-0
-  material: {color: oklch(0.62 0.05 30), depthWrite: false, roughness: 0.3, texture: /cdn/value.f6f110264a75cad3318ccfc112fce7a42d502fa821b53b74035c6e6ac5ec86d9.png, transparent: true}
-  primitive: {height: 1.2, kind: plane, width: 1.8}
-  rotation: {pitch: -90, yaw: 80}
-  tags: [l26x, decal]
-l26x-blood-pool-1:
-  castShadow: false
-  feetPosition: {x: 3.1, y: 0.012, z: 30.2}
-  id: l26x-blood-pool-1
-  material: {color: oklch(0.62 0.05 30), depthWrite: false, roughness: 0.3, texture: /cdn/value.f8c9c480a1631a3993011cf27c1f70024fb83041d76113ce8b5df7fe8760f2cf.png, transparent: true}
-  primitive: {height: 1.4, kind: plane, width: 1.4}
-  rotation: {pitch: -90, yaw: 20}
-  tags: [l26x, decal]
-l26x-blood-pool-2:
-  castShadow: false
-  feetPosition: {x: 7.9, y: 0.012, z: 40.6}
-  id: l26x-blood-pool-2
-  material: {color: oklch(0.62 0.05 30), depthWrite: false, roughness: 0.3, texture: /cdn/value.39e95f64d0cde4ee6d5a37c7dc615c9af3e71d75227af2a7b0fb082331f093a4.png, transparent: true}
-  primitive: {height: 4.2, kind: plane, width: 0.9}
-  rotation: {pitch: -90, yaw: 90}
-  tags: [l26x, decal]
-l26x-blood-pool-3:
-  castShadow: false
-  feetPosition: {x: 5.9, y: 0.66, z: 40.3}
-  id: l26x-blood-pool-3
-  material: {color: oklch(0.62 0.05 30), depthWrite: false, roughness: 0.3, texture: /cdn/value.f8c9c480a1631a3993011cf27c1f70024fb83041d76113ce8b5df7fe8760f2cf.png, transparent: true}
-  primitive: {height: 1.1, kind: plane, width: 1.1}
-  rotation: {pitch: -90, yaw: 140}
-  tags: [l26x, decal]
-l26x-blood-pool-4:
-  castShadow: false
-  feetPosition: {x: -1.2, y: 0.66, z: 42.25}
-  id: l26x-blood-pool-4
-  material: {color: oklch(0.62 0.05 30), depthWrite: false, roughness: 0.3, texture: /cdn/value.f6f110264a75cad3318ccfc112fce7a42d502fa821b53b74035c6e6ac5ec86d9.png, transparent: true}
-  primitive: {height: 0.9, kind: plane, width: 1.4}
-  rotation: {pitch: -90, yaw: 0}
-  tags: [l26x, decal]
 l26x-boombox-0:
   feetPosition: {x: -5.6, y: 3.4, z: -3.6}
   id: l26x-boombox-0
@@ -3340,7 +3244,7 @@ l26x-pool-float:
 l26x-pool-glow:
   feetPosition: {x: 0, y: 0.15, z: 36.5}
   id: l26x-pool-glow
-  light: {color: oklch(0.55 0.2 25), distance: 10, intensity: 4, kind: point}
+  light: {color: oklch(0.75 0.12 120), distance: 10, intensity: 4, kind: point}
   tags: [l26x]
 l26x-pool-hat:
   feetPosition: {x: -0.6, y: 0.46, z: 40.2}
@@ -3567,38 +3471,6 @@ l26x-rest-frosting:
   material: {color: oklch(0.9 0.08 350), depthWrite: false, texture: /cdn/value.f8c9c480a1631a3993011cf27c1f70024fb83041d76113ce8b5df7fe8760f2cf.png, transparent: true}
   primitive: {height: 0.9, kind: plane, width: 1.4}
   rotation: {pitch: -90, yaw: 30}
-  tags: [l26x, decal]
-l26x-rest-stain-0:
-  castShadow: false
-  feetPosition: {x: -3.45, y: 0.016, z: -28.55}
-  id: l26x-rest-stain-0
-  material: {color: oklch(0.6 0.06 30), depthWrite: false, texture: /cdn/value.f6f110264a75cad3318ccfc112fce7a42d502fa821b53b74035c6e6ac5ec86d9.png, transparent: true}
-  primitive: {height: 0.7, kind: plane, width: 0.9}
-  rotation: {pitch: -90, yaw: 60}
-  tags: [l26x, decal]
-l26x-rest-stain-1:
-  castShadow: false
-  feetPosition: {x: 2.35, y: 0.017, z: -30.05}
-  id: l26x-rest-stain-1
-  material: {color: oklch(0.6 0.06 30), depthWrite: false, texture: /cdn/value.f8c9c480a1631a3993011cf27c1f70024fb83041d76113ce8b5df7fe8760f2cf.png, transparent: true}
-  primitive: {height: 0.7, kind: plane, width: 0.9}
-  rotation: {pitch: -90, yaw: 100}
-  tags: [l26x, decal]
-l26x-rest-stain-2:
-  castShadow: false
-  feetPosition: {x: 5.55, y: 0.018000000000000002, z: -24.05}
-  id: l26x-rest-stain-2
-  material: {color: oklch(0.6 0.06 30), depthWrite: false, texture: /cdn/value.f6f110264a75cad3318ccfc112fce7a42d502fa821b53b74035c6e6ac5ec86d9.png, transparent: true}
-  primitive: {height: 0.7, kind: plane, width: 0.9}
-  rotation: {pitch: -90, yaw: 70}
-  tags: [l26x, decal]
-l26x-rest-stain-3:
-  castShadow: false
-  feetPosition: {x: -1.05, y: 0.019, z: -22.75}
-  id: l26x-rest-stain-3
-  material: {color: oklch(0.6 0.06 30), depthWrite: false, texture: /cdn/value.f8c9c480a1631a3993011cf27c1f70024fb83041d76113ce8b5df7fe8760f2cf.png, transparent: true}
-  primitive: {height: 0.7, kind: plane, width: 0.9}
-  rotation: {pitch: -90, yaw: 60}
   tags: [l26x, decal]
 l26x-rest-table-0:
   feetPosition: {x: -4.2, y: 0, z: -29}
