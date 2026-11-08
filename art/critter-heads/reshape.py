@@ -9,10 +9,10 @@ a = sys.argv[sys.argv.index("--") + 1:]
 SRC, SPN, OUT, PROOF = a[0], a[1], a[2], a[3]
 
 # warp bumps: (dir x,y,z (y = front, z = up), amplitude, sigma) in head-radius units; top = crown flatten
-G = dict(brow=[((0.36, 0.80, 0.34), 0.035, 0.22)], back=[((0, -0.9, 0.2), 0.05, 0.6)])
+G = dict(brow=[((0.36, 0.80, 0.34), 0.06, 0.20)], back=[((0, -0.9, 0.2), 0.05, 0.6)])
 SP = {
  "cat":     dict(top=0.10, cheek=0.11, cheekD=(0.70, 0.45, -0.35), cheekS=0.30, muz=0.07, muzS=0.26, chin=0.05, wide=1.05,
-                 ear=dict(h=1.05, w=0.62, a=1.0, b=1.35, T=0.22, D=0.36, bend=0.0, flare=0.30)),
+                 ear=dict(h=0.92, w=0.92, a=1.3, b=1.0, T=0.26, D=0.40, bend=0.0, flare=0.30, tipr=0.14)),
  "dog":     dict(top=0.12, cheek=0.07, cheekD=(0.70, 0.45, -0.40), cheekS=0.32, muz=0.30, muzS=0.23, chin=0.08, wide=1.08,
                  ear=dict(h=1.0, w=0.62, a=2.0, b=1.6, T=0.20, D=0.30, bend=0.10, flare=0.25)),
  "fox":     dict(top=0.10, cheek=0.06, cheekD=(0.78, 0.30, -0.40), cheekS=0.30, muz=0.34, muzS=0.21, chin=0.04, wide=1.0,
@@ -28,6 +28,9 @@ SP = {
  "raccoon": dict(top=0.10, cheek=0.10, cheekD=(0.80, 0.25, -0.35), cheekS=0.26, muz=0.30, muzS=0.21, chin=0.04, wide=1.04,
                  ear=dict(h=1.0, w=0.62, a=1.4, b=1.5, T=0.20, D=0.32, bend=0.0, flare=0.28)),
 }[SPN]
+K = float(os.environ.get("K", "1.8"))
+for _k in ("top", "cheek", "muz", "chin"): SP[_k] *= K
+SP["wide"] = 1 + (SP["wide"] - 1) * K
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=SRC)
@@ -144,7 +147,7 @@ def build_ear(side, isls):
         u = iu / (NU - 1) * 0.985
         prof = (1 - u ** E["a"]) ** (1 / E["b"])
         if E["a"] < 1.5: prof *= 1 + 0.18 * math.sin(math.pi * u)
-        w = w0 * max(prof, 0.04)
+        w = w0 * max(prof, E.get("tipr", 0.04))
         if u < 0.22: w *= 1 + E["flare"] * (1 - u / 0.22) ** 2
         T = hgt * E["T"] * 0.5 * (1 - 0.55 * u) * (w / w0) ** 0.3
         Df = w * E["D"] * 1.25
