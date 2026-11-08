@@ -68,10 +68,6 @@
       "exportData": {},
       "importFile": {},
       "importMode": {},
-      "primerBack": {},
-      "primerFold": {},
-      "primerNext": {},
-      "primerSkip": {},
       "searchBack": {},
       "uiMenuItem": {},
       "arrangement": {},
@@ -131,12 +127,6 @@
         "kind": "god"
       },
       "behavior": "coop.js"
-    },
-    {
-      "target": {
-        "kind": "god"
-      },
-      "behavior": "tutorial-primer.js"
     },
     {
       "target": {

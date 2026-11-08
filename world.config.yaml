@@ -145,3 +145,5 @@ routing:
   maxPlayers: 8
 audio:
   gains: { Footsteps: 0.6 }   # Nov 8: Shelly, "make footsteps quiet"
+godMode:
+  behavior: []
