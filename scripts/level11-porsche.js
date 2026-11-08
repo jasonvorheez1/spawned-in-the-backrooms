@@ -53,7 +53,6 @@ export const ears = {
     if (ctx.self.controller) return; // one driver
     ctx.self.controller = by;
     ctx.self.state.driver = by;
-    seat(ctx, by);
     const pos = ctx.self.feetPosition;
     heard(ctx, { clip: SFX.door, position: pos, volume: 0.85, maxDistance: 20 });
     ctx.after(0.55, "ignite", {});
@@ -69,15 +68,14 @@ export function ignite(ctx) {
 export function onControlBegin(ctx, player) { return true; }
 export function onControlEnd(ctx, player) {
   const s = m(ctx); s.gas = 0; s.steerIn = 0; s.hand = false;
-  const id = ctx.self.state.driver ?? player?.id;
-  if (id) { const p = ctx.getObject(id); if (p?.parent?.id === ctx.self.id) stepOut(ctx, id); }
+  heard(ctx, { clip: SFX.doorOut, position: ctx.self.feetPosition, volume: 0.8, maxDistance: 20 }); // the rider steps itself out (scripts/interact.js)
   ctx.self.state.driver = null; ctx.self.state.kmh = 0;
   ctx.self.audio = null;
 }
 
 export function onInput(ctx, input) {
   const s = m(ctx);
-  s.gas = -(input.axes?.moveZ ?? 0); // W is moveZ -1
+  s.gas = input.axes?.moveZ ?? 0; // W is moveZ +1
   s.steerIn = -(input.axes?.moveX ?? 0); // yaw is +left
   s.hand = !!input.held?.jump;
   if (input.pressed?.attack && ctx.now() - s.hornAt > 400) {
@@ -85,9 +83,7 @@ export function onInput(ctx, input) {
     heard(ctx, { clip: SFX.horn, position: ctx.self.feetPosition, volume: 1, maxDistance: 70 });
   }
   if (input.pressed?.interact) {
-    const id = ctx.self.controller;
-    ctx.self.controller = null; // onControlEnd steps them out
-    if (id) stepOut(ctx, id);
+    ctx.self.controller = null; // onControlEnd; the rider's own script steps it out
   }
 }
 

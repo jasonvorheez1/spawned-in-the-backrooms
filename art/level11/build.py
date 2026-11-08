@@ -111,6 +111,8 @@ def face_windows(M, rnd, face, w, d, z0, floors, fh, bay, ww, wh, sill, mat_pane
             M.box("trim", (c[0] + off[0], c[1] + off[1], c[2] - wh / 2 - 0.1), (sx, sy, 0.14))
             if lintel: M.box("trim", (c[0] + off[0] * 0.8, c[1] + off[1] * 0.8, c[2] + wh / 2 + 0.12), (sx - 0.1 if face in ("+y", "-y") else 0.26, 0.26 if face in ("+y", "-y") else sy - 0.1, 0.18))
 
+def pane(M, m, pts):
+    bm = M.bm(m); vs = [bm.verts.new(p) for p in pts]; bm.faces.new(vs)
 def curtain(M, rnd, w, d, z0, z1, fh, bay, mat="glassBlue", lit=0.18):
     """a glass curtain wall on all four faces of a w x d block from z0 to z1: panes, vertical mullions, a spandrel band per floor"""
     floors = int((z1 - z0) // fh)
@@ -120,10 +122,11 @@ def curtain(M, rnd, w, d, z0, z1, fh, bay, mat="glassBlue", lit=0.18):
             for i in range(n):
                 u = -span / 2 + step * (i + 0.5); z = z0 + fl * fh + fh * 0.55
                 m = "glassLit" if rnd.random() < lit else mat
-                if face == "+y": M.box(m, (u, d / 2 + 0.05, z), (step - 0.18, 0.1, fh * 0.62))
-                elif face == "-y": M.box(m, (u, -d / 2 - 0.05, z), (step - 0.18, 0.1, fh * 0.62))
-                elif face == "+x": M.box(m, (w / 2 + 0.05, u, z), (0.1, step - 0.18, fh * 0.62))
-                else: M.box(m, (-w / 2 - 0.05, u, z), (0.1, step - 0.18, fh * 0.62))
+                pw, ph = (step - 0.18) / 2, fh * 0.31   # one outward quad per pane (perf, lagscope #109-113: a box was 12 triangles, 10 never seen)
+                if face == "+y": pane(M, m, [(u - pw, d / 2 + 0.06, z - ph), (u + pw, d / 2 + 0.06, z - ph), (u + pw, d / 2 + 0.06, z + ph), (u - pw, d / 2 + 0.06, z + ph)])
+                elif face == "-y": pane(M, m, [(u + pw, -d / 2 - 0.06, z - ph), (u - pw, -d / 2 - 0.06, z - ph), (u - pw, -d / 2 - 0.06, z + ph), (u + pw, -d / 2 - 0.06, z + ph)])
+                elif face == "+x": pane(M, m, [(w / 2 + 0.06, u + pw, z - ph), (w / 2 + 0.06, u - pw, z - ph), (w / 2 + 0.06, u - pw, z + ph), (w / 2 + 0.06, u + pw, z + ph)])
+                else: pane(M, m, [(-w / 2 - 0.06, u - pw, z - ph), (-w / 2 - 0.06, u + pw, z - ph), (-w / 2 - 0.06, u + pw, z + ph), (-w / 2 - 0.06, u - pw, z + ph)])
             zb = z0 + fl * fh + fh * 0.04
             if face == "+y": M.box("concrete", (0, d / 2 + 0.07, zb + 0.12), (w + 0.3, 0.16, 0.34))
             elif face == "-y": M.box("concrete", (0, -d / 2 - 0.07, zb + 0.12), (w + 0.3, 0.16, 0.34))
