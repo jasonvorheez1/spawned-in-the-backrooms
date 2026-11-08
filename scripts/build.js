@@ -7,14 +7,16 @@
 import { heard } from './lib/hear.js'
 import B from './lib/data/breakables.yml'
 import { raycast, overlapPoint, getInputRay } from 'builtin/physics'
-import { builtSpec } from './lib/build-piece.js'
+import { builtSpec, pieceOf, furnOrder, furnModel } from './lib/build-piece.js'
 
-const TABS = B.tabs, FLAT = TABS.flatMap((t) => t.pieces), REACH = B.buildReach ?? 7, CAP = B.buildCap ?? 250
+const BASE = B.tabs, REACH = B.buildReach ?? 7, CAP = B.buildCap ?? 250
 const isTool = (k) => !!B.tools?.[k]
-const valid = (k) => !!(B.pieces[k] || isTool(k))
-const tabOf = (k) => Math.max(0, TABS.findIndex((t) => t.pieces.includes(k)))
+// the tabs this player sees: the scrap tabs, then Furniture holding what they own from the mall
+export function tabsFor(s) { const own = furnOrder().filter((k) => (s.furn?.[k] ?? 0) > 0).map((k) => 'furn_' + k); return own.length ? [...BASE, { name: 'Furniture', pieces: own }] : BASE }
+const valid = (k) => !!(pieceOf(k) || isTool(k))
+const tabOf = (s, k) => Math.max(0, tabsFor(s).findIndex((t) => t.pieces.includes(k)))
 const has = (s, k) => s.scrap?.[k] ?? 0
-const canPay = (s, cost) => Object.entries(cost).every(([k, n]) => has(s, k) >= n)
+const canPay = (s, cost, pc) => pc?.furn ? (s.furn?.[pc.furn] ?? 0) >= 1 : Object.entries(cost).every(([k, n]) => has(s, k) >= n)
 const needText = (cost) => Object.entries(cost).map(([k, n]) => n + ' ' + (B.scrap[k]?.name ?? k)).join(', ')
 const say = (ctx, s, t) => { s.notice = t; s.noticeAt = ctx.now() }
 const D = Math.PI / 180
@@ -41,7 +43,7 @@ function hit(ctx) {
 
 // the snapped slot for a piece: { x, y, z, rot, ok, why }
 function slot(ctx, s, kind) {
-  const pc = B.pieces[kind], me = ctx.self.feetPosition, { L, h } = hit(ctx), f = L.f
+  const pc = pieceOf(kind), me = ctx.self.feetPosition, { L, h } = hit(ctx), f = L.f
   let p, up = false
   if (h) { p = h.position; up = (h.normal?.y ?? 0) > 0.6 } else p = { x: L.o.x + L.d.x * 5, y: L.o.y + L.d.y * 5, z: L.o.z + L.d.z * 5 }
   if (!up) { // a wall face or thin air: drop to what is underneath, just this side of it
@@ -113,15 +115,16 @@ function spawnPiece(ctx, s, kind, at) {
 }
 
 function place(ctx, s) {
-  const kind = s.building, pc = B.pieces[kind], at = slot(ctx, s, kind)
+  const kind = s.building, pc = pieceOf(kind), at = slot(ctx, s, kind)
   if (!at.ok) { say(ctx, s, at.why); return }
-  if (!canPay(s, pc.cost)) { say(ctx, s, 'Need ' + needText(pc.cost)); return }
+  if (!canPay(s, pc.cost, pc)) { say(ctx, s, pc.furn ? 'None left to place' : 'Need ' + needText(pc.cost)); return }
   if (!atHome(ctx, s)) {
     const n = ctx.query({ tags: ['built'], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((o) => o.state?.byUser === ctx.self.userId).length
     if (n >= CAP) { say(ctx, s, `You have ${CAP} pieces standing here. Demolish some first.`); return }
   }
   if (!spawnPiece(ctx, s, kind, at)) return
-  pay(s, pc.cost)
+  if (pc.furn) s.furn = { ...(s.furn ?? {}), [pc.furn]: (s.furn?.[pc.furn] ?? 1) - 1 }; else pay(s, pc.cost)
+  if (pc.furn && !(s.furn[pc.furn] > 0)) { s.building = BASE[0].pieces[0]; s.buildLast = s.building }
   say(ctx, s, pc.name + (atHome(ctx, s) ? ' built · saved to your home' : ' built'))
   thunk(ctx, pc.mat, at); dust(ctx, at, pc.size[0] * pc.size[2] > 2)
 }
@@ -129,8 +132,9 @@ function place(ctx, s) {
 function useTool(ctx, s) {
   const o = target(ctx)
   if (!o) { say(ctx, s, 'Aim at something you built'); return }
-  const kind = o.state.buildKind, pc = B.pieces[kind]; if (!pc) return
+  const kind = o.state.buildKind, pc = pieceOf(kind); if (!pc) return
   const at = slotOf(o)
+  if (pc.furn && s.building !== 'tool_demolish') { say(ctx, s, pc.name + ' is furniture. Demolish picks it up.'); return }
   if (s.building === 'tool_repair') {
     const max = o.state.maxHp ?? pc.hp, miss = 1 - Math.max(0, o.state.hp ?? max) / max
     if (miss < 0.01) { say(ctx, s, pc.name + ' is already sound'); return }
@@ -155,6 +159,7 @@ function useTool(ctx, s) {
   } else if (s.building === 'tool_demolish') {
     if (!mine(ctx, s, o)) { say(ctx, s, 'Not yours to take down'); return }
     if (o.tags?.includes('storage') && String(o.state.items ?? '')) { say(ctx, s, 'Empty the locker first'); return }
+    if (pc.furn) { s.furn = { ...(s.furn ?? {}), [pc.furn]: (s.furn?.[pc.furn] ?? 0) + 1 }; if (atHome(ctx, s) && String(o.id).startsWith('hb-')) keepSet(s, o.id, null); ctx.destroy(o.id); say(ctx, s, pc.name + ' picked up'); dust(ctx, at, false); return }
     const back = Object.fromEntries(Object.entries(pc.cost).map(([k, n]) => [k, Math.floor(n * 0.5)]).filter(([, n]) => n > 0))
     pay(s, back, +1)
     if (atHome(ctx, s) && String(o.id).startsWith('hb-')) keepSet(s, o.id, null)
@@ -166,7 +171,7 @@ function useTool(ctx, s) {
 
 function dropGhost(ctx) { const g = ctx.self.session.ghost; if (g) { ctx.destroy(g); ctx.self.session.ghost = null; ctx.self.session.gk = null } }
 function clearHl(ctx) { const m = ctx.self.session; if (m.hl) { ctx.emit('highlightClear', { target: m.hl }, { audience: { player: ctx.self.id } }); m.hl = null } }
-function pick(s, k) { s.building = k; s.buildLast = k; s.buildTab = tabOf(k) }
+function pick(s, k) { s.building = k; s.buildLast = k; s.buildTab = tabOf(s, k) }
 
 export function onInput(ctx, input) {
   const s = ctx.self.state
@@ -175,10 +180,11 @@ export function onInput(ctx, input) {
   const ray = getInputRay(ctx, input); if (ray) ctx.self.session.bray = ray
   if (input.pressed.build) {
     if (valid(s.building)) { s.building = null; dropGhost(ctx); clearHl(ctx) }
-    else { pick(s, valid(s.buildLast) ? s.buildLast : FLAT[0]); s.buildRot ??= 0; s.invOpen = false }
+    else { pick(s, valid(s.buildLast) ? s.buildLast : BASE[0].pieces[0]); s.buildRot ??= 0; s.invOpen = false }
     return
   }
   if (!valid(s.building)) return
+  const TABS = tabsFor(s), FLAT = TABS.flatMap((t) => t.pieces)
   for (let i = 0; i < TABS.length; i++) if (input.pressed['bc' + (i + 1)]) { const t = TABS[i], mem = s.buildPick?.[i]; pick(s, t.pieces.includes(mem) ? mem : t.pieces[0]); return }
   if (input.pressed.reload) s.buildRot = ((s.buildRot ?? 0) + 1) % 4
   const step = input.pressed.cycleWeapon ? 1 : input.pressed.buildPrev ? -1 : 0
@@ -196,20 +202,20 @@ export function update(ctx) {
     const o = target(ctx), id = o?.id ?? null
     if (id !== m.hl) { clearHl(ctx); if (id) { ctx.emit('highlightSet', { target: id, color: s.building === 'tool_demolish' ? '#ff6a4a' : '#7dffb0', style: 'outline', width: 2 }, { audience: { player: ctx.self.id } }); m.hl = id } }
     let t = null
-    if (o) { const pc = B.pieces[o.state.buildKind]; t = { name: pc?.name ?? o.state.name, hp: Math.max(0, Math.round(o.state.hp ?? 0)), max: o.state.maxHp ?? pc?.hp ?? 0, up: pc?.up ? B.pieces[pc.up]?.name : null, mine: mine(ctx, s, o) } }
+    if (o) { const pc = pieceOf(o.state.buildKind); t = { name: pc?.name ?? o.state.name, hp: Math.max(0, Math.round(o.state.hp ?? 0)), max: o.state.maxHp ?? pc?.hp ?? 0, up: pc?.up ? pieceOf(pc.up)?.name : null, mine: mine(ctx, s, o) } }
     const key = JSON.stringify(t); if (m.tkey !== key) { m.tkey = key; s.buildTarget = t }
     return
   }
   clearHl(ctx); if (s.buildTarget) { s.buildTarget = null; m.tkey = 'null' }
-  const pc = B.pieces[s.building], at = slot(ctx, s, s.building), pays = canPay(s, pc.cost), good = at.ok && pays
+  const pc = pieceOf(s.building), at = slot(ctx, s, s.building), pays = canPay(s, pc.cost, pc), good = at.ok && pays
   const why = at.ok ? (pays ? '' : 'Not enough scrap') : at.why
   if (s.buildWhy !== why) s.buildWhy = why
   const key = s.building + (good ? 1 : 0)
   const feet = pc.door ? (() => { const o = turn(-0.5, 0, at.rot); return { x: at.x + o.x, y: at.y, z: at.z + o.z } })() : { x: at.x, y: at.y, z: at.z }
   if (m.gk !== key) {
     dropGhost(ctx)
-    m.ghost = ctx.spawn({ audience: 'local', scope: 'session', tags: ['ghost'], castShadow: false, feetPosition: feet, rotation: { yaw: at.rot },
-      primitive: { kind: 'scripted', script: 'scripts/build-geo.js', params: { kind: s.building, dmg: 0 } },
+    const look = pc.furn ? furnModel(pc) : { primitive: { kind: 'scripted', script: 'scripts/build-geo.js', params: { kind: s.building, dmg: 0 } } }
+    m.ghost = ctx.spawn({ audience: 'local', scope: 'session', tags: ['ghost'], castShadow: false, feetPosition: feet, rotation: { yaw: at.rot }, ...look,
       material: { color: good ? '#7dffb0' : '#ff6a4a', emissive: good ? '#2f9a5a' : '#9a2a1a', transparent: true, opacity: 0.42, depthWrite: false } })
     m.gk = key
   }

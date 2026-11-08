@@ -159,6 +159,11 @@ inputs:
         - "7"
       touch:
         button: false
+    bc8:
+      keys:
+        - "8"
+      touch:
+        button: false
     buildPrev:
       mouse: wheelUp
       touch:
