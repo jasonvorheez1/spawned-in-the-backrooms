@@ -1,3 +1,4 @@
+import { overlapPoint } from "builtin/physics";
 import { npcState } from "../../scripts/lib/stats.js";
 import { LURKER_MODEL, LURKER_SCALE } from "../../scripts/lurkers.js";
 import { MODEL as SMILER_MODEL, SCALE as SMILER_SCALE } from "../../scripts/smilers.js";
@@ -83,6 +84,20 @@ function cell(ctx, zones) {
   return null;
 }
 
+const CREATURES = ["smiler", "lurker", "hound", "stealer", "npc"];
+// a creature found inside a wall (a shifted wall, a lunge through a corner) is set back in the middle of the nearest open cell
+function unstick(ctx, s, now) {
+  if (now < (s.unstickAt ?? 0)) return; s.unstickAt = now + 1500;
+  for (const c of ctx.query({ anyTags: CREATURES, radius: 60, center: ctx.place.players[0].feetPosition })) {
+    if (c.state?.dead) continue;
+    const f = c.feetPosition, hit = overlapPoint(ctx, { x: f.x, y: f.y + 0.9, z: f.z });
+    const inWall = (hit?.objects ?? []).some((o) => (o.id ?? o) !== c.id && !String(o.id ?? o).startsWith(c.id + "/"));
+    if (!inWall) continue;
+    const { cx, cz } = cellAt(f.x, f.z), m = cellCenter(cx, cz);
+    const o = ctx.place.objects[c.id]; if (!o) continue;
+    o.feetPosition = { x: m.x, y: Math.max(0.02, f.y), z: m.z }; o.velocity = { x: 0, y: 0, z: 0 };
+  }
+}
 function shift(ctx, s, now) {
   for (const p of ctx.place.players) {
     const k = "shift_" + p.id;
@@ -100,6 +115,7 @@ function shift(ctx, s, now) {
     const e = edges[Math.floor(ctx.random() * edges.length)], c = cellCenter(cx, cz);
     const pos = e === "x" ? { x: (cx + 1) * S - HALF, y: 0, z: c.z } : { x: c.x, y: 0, z: (cz + 1) * S - HALF };
     if (ctx.query({ tags: ["shifted"], center: pos, radius: 0.5 }).length) continue;
+    if (ctx.query({ anyTags: CREATURES, center: pos, radius: S / 2 + 0.8 }).length) continue; // never close a wall on a creature
     ctx.spawn({ tags: ["shifted"], lifetime: L.shiftLife, feetPosition: pos, primitive: { kind: "box", width: e === "x" ? 0.2 : S, height: H, depth: e === "x" ? S : 0.2 }, material: PAPER, physics: "static" });
   }
 }
@@ -129,6 +145,7 @@ export function tick(ctx) {
     s.moments = layMoments(ctx);
   }
   shift(ctx, s, now);
+  unstick(ctx, s, now);
   if (!s.furnished) { s.furnished = true; furnish(ctx); }
   if (s.tableAlmondV !== 1) { // the four bottles on the safe room table were set dressing; now they're real almond water you can take
     const MODEL = "/cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb";
