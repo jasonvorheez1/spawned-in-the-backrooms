@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2266,
-  "updatedAt": "2026-11-08T20:29:11.463Z",
+  "basedOnSpecVersion": 2267,
+  "updatedAt": "2026-11-08T20:29:55.124Z",
   "summary": "The Backrooms is a shared survival RPG with persistent player progression across authored and simulation-built levels. Shared player, NPC, combat, appearance and presentation systems serve the world; first-time players create a character, follow a locally staged Level 0 tutorial route, then enter Level 1, while later intro arrivals land in the main Level 0 hub.",
   "scriptPaths": [],
   "places": [
@@ -28,7 +28,7 @@
     "scripts/lib/screen.js - read-only current-screen classifier and wrist-panel gate/replacer shared by player, stats, craft, rest and main-menu input handling.",
     "scripts/lib/maze.js, level1.js, level2.js, level21.js through level7.js + data - per-level grids, zones, layouts and paths reused by sims, geometry, labels and navigation.",
     "scripts/lib/level-kit.js + scripts/lib/npc-respawn.js - named-person management, throttling and shared NPC return timing for place sims.",
-    "scripts/lib/clothes.js + clothes.yml and scripts/lib/critter-model.js + scripts/lib/data/critter-models.yml + critter/clothes/faces data - shared garment/body/species/head construction for players/NPCs; species data selects head GLBs and palettes, with sex-specific headM/headF assets where defined.",
+    "scripts/lib/clothes.js + clothes.yml and scripts/lib/critter-model.js + scripts/lib/data/critter-models.yml + critter/clothes/faces data - shared garment/body/species/head construction for players/NPCs; species data selects head GLBs and palettes.",
     "scripts/lib/loot.js + scripts/lib/items.js + level data - shared item pools, rolls, remains, parsing and container helpers.",
     "scripts/lib/combat.js + combat.yml + scripts/lib/ballistics.js - shared hit/armor and firearm accuracy/projectile rules for player and NPC combat.",
     "scripts/lib/nav.js + builtin/nav; scripts/lib/footsteps.js + footsteps.yml; scripts/lib/photo2006.js - shared NPC path search, surface sound selection and photographic finishing.",
@@ -66,7 +66,7 @@
     "scripts/lib/tut0-cut.js → scripts/lib/phoebe.js creates/destroys a local, unsaved critter for a timed watcher beat; Phoebe appearance is built through shared critter-model.js.",
     "Spawn room selection → scripts/routing.js pickRoom preserves accepted requestedRoomId or derives solo room from user identity; engine out-of-bounds → sim.js handles respawn/return/destruction.",
     "Level threshold trigger → scripts/level-door.js maps paired IDs and writes arrival clipKind/calls companion.bring → followers cross; player.js consumes clipKind to xfer.kind and noclip-ui renders transition.",
-    "scripts/lib/screen.js derives panel priority from state flags; canOpen/openWrist gate and replace sheet/inventory/craft/rest → their owning input handlers update flags, while scripts/ui.js renders the corresponding panels. main-menu.js uses screen classification to gate pause input."
+    "scripts/lib/screen.js derives named screen priority (cutscene > menu > wardrobe > mahjong > talk > loot > wrist panels > play); canOpen/openWrist gate and replace sheet/inventory/craft/rest → owning input handlers update flags, while scripts/ui.js renders panels; pause does not overlay cutscene, talk or mahjong."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and red-zone variants; Level 5 has portal/quest props and scripts/l5-rats.js Boiler Room Death Rat packs.",
@@ -84,7 +84,7 @@
     "Tutorial beats and cameras run on the local player's main-menu behavior, not the place referee; places/tutorial0/sim.js lays its fixtures once. Keep t0Tick naming, t0cut state and HUD dispatch aligned.",
     "scripts/lib/tut0.js is the shared coordinate source for the hand-laid path, dimensions and beat trigger boxes; keep tut0 geometry, placements and beat positions together when changing the route.",
     "HALOGEN stat creation uses state.creating and state.sheetOpen; points and three skill tags must be allocated before DONE/close succeeds, and the halogen beat waits for sheet closure.",
-    "scripts/lib/screen.js is derived, read-only state: priority is cutscene, menu, wardrobe, mahjong, talk, loot, wrist sheet/inventory/craft/rest, then play. Only wrist panels can replace another wrist panel; closing remains available, and the tutorial t0cut exception while sheetOpen lets HALOGEN character creation show its sheet.",
+    "scripts/lib/screen.js is derived, read-only state: priority is cutscene, menu, wardrobe, mahjong, talk, loot, wrist sheet/inventory/craft/rest, then play. Only wrist panels can replace another wrist panel; closing remains available, and the pause menu cannot overlay talk, mahjong or cutscene.",
     "Phoebe is a local unsaved timed appearance rendered via critter-model.js, not a persistent NPC; tutorial beat cleanup owns its removal."
   ]
 }
