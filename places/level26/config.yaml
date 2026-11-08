@@ -6,7 +6,7 @@ terrain:
 gravity: { x: 0, y: -24, z: 0 }
 defaultSpawnPoint: { x: 0, y: 0.2, z: 30 }
 defaultSpawnRotation: { yaw: 0 }
-worldBounds: { bottom: -30 }
+worldBounds: { bottom: -110 }  # lower decks sit at y -80 (lift target); -30 sent everyone below deck back to the spawn
 atmosphere:
   look: { script: scripts/look-photo.js }
   clouds: { enabled: false }
