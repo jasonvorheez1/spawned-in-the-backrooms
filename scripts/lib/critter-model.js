@@ -44,7 +44,16 @@ export function bodyModel(l) {
   const parts = {}
   for (const p of M.parts) parts[p] = { visible: false }
   for (const [slot, pre] of Object.entries(M.slots)) { const k = MESH_SWAP[slot]?.[l[slot]] ?? l[slot]; if (k && k !== 'none' && parts[pre + '_' + k]) parts[pre + '_' + k].visible = true }
-  const materials = { ...furMats(l), pad: { color: M.pad || '#ff9fb4', roughness: 0.6, metalness: 0 } }
+  const sp = M.species[speciesOf(l)]
+  const materials = {
+    ...furMats(l),
+    pad: { color: l?.pad || sp?.pad || M.pad || '#ff9fb4', roughness: 0.52, metalness: 0 },
+    sole: { color: '#2a2430', roughness: 0.85, metalness: 0 },
+    button: { color: '#f5f3ec', roughness: 0.4, metalness: 0.05 },
+    metal: { color: '#c8cbd0', roughness: 0.3, metalness: 0.85 },
+    gold: { color: '#e8c35a', roughness: 0.3, metalness: 0.9 },
+    lens: { color: '#1a1824', roughness: 0.1, metalness: 0.9, opacity: 0.75, transparent: true },
+  }
   for (const [slot, [mat, key]] of Object.entries(CLOTH)) if (l[key]) {
     const row = l[slot] && l[slot] !== 'none' ? rowOf(slot, l[slot], l[key]) : null, pat = row ? patOk(row, l[CL.patKey[slot]]) : null
     materials[mat] = pat ? { kind: 'scripted', script: 'scripts/mat-cloth.js', color: l[key], roughness: 0.8, metalness: 0, params: { pat, s: 1 } } : { color: l[key], roughness: 0.75, metalness: 0 } // fabric patterns: scripts/mat-cloth.js
@@ -55,23 +64,24 @@ export function headModel(l0) {
   const l = faceFill(l0), sp = M.species[speciesOf(l)];
   const isFemale = l?.sex === 'f';
   const eyeCol = l?.eye && l.eye !== '#2b2233' && l.eye !== '#000000' ? l.eye : null;
-  const blushCol = l?.blush || '#ff6285';
+  const blushCol = l?.blush || (isFemale ? '#ff6588' : '#ff7b94');
   return {
     id: (isFemale ? sp.headF : sp.headM) || sp.head,
     materials: only({
       ...furMats(l),
-      eyewhite: { color: '#fffaf2', roughness: 0.9, metalness: 0 },
-      eyeink: { color: '#1d1420', roughness: 1, metalness: 0 },
+      eyewhite: { color: '#fffdf8', roughness: 0.82, metalness: 0 },
+      eyeink: { color: '#16101c', roughness: 0.95, metalness: 0 },
       pupil: {
-        color: eyeCol && (l?.glowEye || l?.species === 'samantha') ? eyeCol : '#000000', // pupils all black, no shine (Shelly); colour rides the iris
+        color: eyeCol && (l?.glowEye || l?.species === 'samantha') ? eyeCol : '#000000', // STRICT: pupils all matte black, no shines; colour rides iris
         roughness: 1,
         metalness: 0,
         ...(eyeCol && (l?.glowEye || l?.species === 'samantha') ? { emissive: eyeCol, emissiveIntensity: 0.4 } : {})
       },
-      iris: { color: eyeCol || '#8a5a2e', roughness: 0.9, metalness: 0 },
-      blush: speciesOf(l) === 'fox' ? { color: l?.tip || l?.belly || sp.tip || '#ffffff', visible: false, transparent: true, opacity: 0, depthWrite: false } : { color: blushCol, roughness: 0.85 }, // foxes wear no cheek blush (Shelly)
-      mouth: { color: '#4a1622', roughness: 0.9 },
-      tongue: { color: '#ff7f93', roughness: 0.7 }
+      iris: { color: eyeCol || '#8a5a2e', roughness: 0.75, metalness: 0 },
+      blush: speciesOf(l) === 'fox' ? { color: l?.tip || l?.belly || sp.tip || '#ffffff', visible: false, transparent: true, opacity: 0, depthWrite: false } : { color: blushCol, roughness: 0.9 }, // foxes wear no cheek blush
+      mouth: { color: '#44141e', roughness: 0.85 },
+      tongue: { color: '#ff758c', roughness: 0.65 },
+      nose: { color: l?.nose || sp.nose || '#221614', roughness: 0.32, metalness: 0.05 }
     }, sp.mats)
   }
 }
@@ -103,7 +113,8 @@ export function faceMorph(expr, blink, isFemale, look) {
   if (tr) for (const [k, v] of Object.entries(tr)) if (k !== 'w') f[k] = Math.min(1, (f[k] ?? 0) + v * ts)
   const fty = ff ? FACES.types[ff.ftype] : null, fs = ff?.ftstr ?? 1 // the head's own shape: FT_ keys
   if (fty) for (const [k, v] of Object.entries(fty)) if (k !== 'w') f[k] = Math.min(1, v * fs)
-  if (isFemale && f.Blush == null) f.Blush = 0.28
+  if (isFemale && f.Blush == null) f.Blush = 0.32
+  if (isFemale && f.Smile == null && !['sad', 'angry', 'cry', 'scared', 'pout'].includes(expr)) f.Smile = 0.22
   if (blink) f.Blink = 1
   return eyeClean(f, ff?.eyes ?? look?.eyes)
 }
@@ -122,7 +133,8 @@ function eyeClean(f, eyes) {
 // a whole critter for a spawn (place sims): body, head child, gait clips on the library
 export const MESH = M.mesh === true
 export function critterSpec(l) {
-  if (!MESH) return { primitive: { kind: 'scripted', script: 'scripts/critter2-geo.js', params: l }, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 } }
+  if (!MESH) return { primitive: { kind: 'scripted', script: 'scripts/critter2-geo.js', params: l }, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.65, bounce: 0.72 } }
+  const isF = l?.sex === 'f'
   return {
     model: bodyModel(l),
     morph: bustMorph(l) ?? undefined,
@@ -130,11 +142,11 @@ export function critterSpec(l) {
       id: HEAD_ID,
       attachment: { skin: true },
       model: headModel(l),
-      morph: faceMorph(l.expr, false, l?.sex === 'f', l),
-      jiggle: { bones: ['EarL', 'EarR'], amount: 0.55, bounce: 0.7 }
+      morph: faceMorph(l?.expr, false, isF, l),
+      jiggle: { bones: ['EarL', 'EarR'], amount: 0.58, bounce: 0.72 }
     }],
     material: { outline: { color: '#1d1420', width: 2.4 } },
-    jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.65, bounce: 0.7 },
+    jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.68, bounce: 0.72 },
     ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {})
   }
 }
@@ -198,8 +210,8 @@ export function buildFor(id, sex) {
   const a = (hashOf(id + ':h') % 1000) / 1000, b = (hashOf(id + ':w') % 1000) / 1000
   const h = +(0.86 + a * 0.28 - (sex === 'f' ? 0.03 : 0)).toFixed(3), w = +(0.88 + b * 0.28).toFixed(3)
   const c = (hashOf(id + ':b') % 1000) / 1000, d = (hashOf(id + ':hd') % 1000) / 1000, e = (hashOf(id + ':tl') % 1000) / 1000
-  // Savi's picks: bust spans flat to full (-0.5..1.0, a curve so both ends show up); head 0.92..1.1, narrow on purpose; tail curl 0.7..1.3
-  const bust = +(-0.5 + Math.pow(c, 0.85) * 1.5).toFixed(2), head = +(0.92 + d * 0.18).toFixed(3), curl = +(0.7 + e * 0.6).toFixed(2)
+  // female critters have curvy bodies with breasts: 0.25..0.95; head 0.92..1.1; tail curl 0.7..1.3
+  const bust = +(0.25 + Math.pow(c, 0.85) * 0.70).toFixed(2), head = +(0.92 + d * 0.18).toFixed(3), curl = +(0.7 + e * 0.6).toFixed(2)
   return sex === 'f' ? { v: 2, h, w, bust, head, curl } : { v: 2, h, w, head, curl } // stable per npc
 }
 // the resting pose every npc keeps under its other bone writes: its head size and an S-curve in the tail (up off the hips, tip curling back)
@@ -207,6 +219,12 @@ export function baseBones(b) {
   const k = b?.curl ?? 1, hs = b?.head ?? 1
   return { Head: { scale: hs }, Tail: { rotate: [-28 * k, 0, 0] }, Tail1: { rotate: [34 * k, 0, 0] } }
 }
-// the body's Bust morph from a creator slider (bustS 0.6..1.3, 1 = as built)
+// the body's Bust morph: female critters have natural curvy breasts (base 0.38), modulated by bust / bustS
 export function bustMorph(l) { return _bust(l) }
-const _bust = (l) => l?.sex === 'f' ? { Bust: Math.max(-0.6, Math.min(0.9, ((Number(l.bustS) || 1) - 1) * 3)) } : null
+const _bust = (l) => {
+  if (l?.sex !== 'f') return null
+  let val = 0.38
+  if (l.bust != null) val = Math.max(0.15, Math.min(1.0, Number(l.bust)))
+  else if (l.bustS != null) val = Math.max(0.15, Math.min(1.0, 0.38 + (Number(l.bustS) - 1) * 2.0))
+  return { Bust: Math.round(val * 100) / 100 }
+}

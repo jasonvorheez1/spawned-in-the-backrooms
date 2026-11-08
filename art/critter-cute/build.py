@@ -214,15 +214,15 @@ def torso_shapes(mb, F, inflate=0.0, lo=0.0, hi=9.0, sleeves=None, legs=None, bu
     i = inflate
     if lo <= .65 <= hi:
         if F:
-            ell(mb, (0, -.006, .668), .136 + i, .092 + i, .082 + i)                                           # smooth high-hip flare from waist
-            ell(mb, (0, -.008, .622), .154 + i, .104 + i, .092 + i)                                           # wide curvy female hips & pelvis
-            ell(mb, (0, .016, .662), .092 + i, .076 + i, .072 + i)                                            # soft lower tummy curve
-            for s in (-1, 1): ell(mb, (.054 * s, -.058, .606), .074 + i, .074 + i, .080 + i)                  # twin sculpted rounded glutes/seat
+            ell(mb, (0, -.006, .668), .140 + i, .095 + i, .084 + i)                                           # smooth high-hip flare from waist
+            ell(mb, (0, -.008, .622), .156 + i, .106 + i, .094 + i)                                           # wide curvy female hips & pelvis
+            ell(mb, (0, .016, .662), .094 + i, .078 + i, .074 + i)                                            # soft lower tummy curve
+            for s in (-1, 1): ell(mb, (.054 * s, -.058, .606), .076 + i, .076 + i, .082 + i)                  # twin sculpted rounded glutes/seat
         else:
             ell(mb, (0, -.006, .645), .114 + i, .090 + i, .088 + i)                                           # sturdy male pelvis
             for s in (-1, 1): ell(mb, (.046 * s, -.044, .612), .058 + i, .056 + i, .068 + i)                  # male seat
     if lo <= .77 <= hi:
-        if F: ell(mb, (0, -.005, .768), .074 + i, .063 + i, .078 + i)                                         # pinched hourglass female waist
+        if F: ell(mb, (0, -.005, .768), .096 + i, .074 + i, .080 + i)                                         # smooth curvy hourglass female waist
         else: ell(mb, (0, 0, .768), .104 + i, .082 + i, .088 + i)                                             # tapered male waist
     if lo <= .88 <= hi:
         if F:
@@ -232,11 +232,11 @@ def torso_shapes(mb, F, inflate=0.0, lo=0.0, hi=9.0, sleeves=None, legs=None, bu
             ell(mb, (0, .004, .878), .126 + i, .090 + i, .088 + i)                                            # broad male chest
             for s in (-1, 1): ell(mb, (.052 * s, .032, .882), .062 + i, .052 + i, .056 + i)                   # subtle masculine pec contour
     if F and bust and lo <= .87 <= hi:
-        ell(mb, (0, .048 + i * .25, .856), .052 + i, .052 + i, .052 + i)                                   # smooth sternum bridge
+        ell(mb, (0, .046 + i * .25, .856), .050 + i, .050 + i, .050 + i)                                   # smooth sternum bridge
         for s in (-1, 1):
-            ell(mb, (.054 * s, .078 + i * .35, .858), .063 + i, .072 + i, .059 + i, rot=(math.radians(-6), 0, math.radians(-10 * s))) # full curvy breasts
-            ell(mb, (.048 * s, .052 + i * .25, .890), .050 + i, .050 + i, .046 + i)                           # natural upper-bust teardrop slope
-            ell(mb, (.050 * s, .052 + i * .30, .830), .054 + i, .052 + i, .048 + i)                           # smooth underbust-to-ribcage transition
+            ell(mb, (.054 * s, .082 + i * .35, .858), .066 + i, .076 + i, .062 + i, rot=(math.radians(-6), 0, math.radians(-10 * s))) # full curvy breasts
+            ell(mb, (.048 * s, .056 + i * .25, .890), .052 + i, .052 + i, .048 + i)                           # natural upper-bust teardrop slope
+            ell(mb, (.050 * s, .056 + i * .30, .830), .056 + i, .054 + i, .050 + i)                           # smooth underbust-to-ribcage transition
     if lo <= .94 <= hi:
         for s in (-1, 1):
             ell(mb, ((.098 if F else .114) * s, -.004, .942), (.044 if F else .052) + i, (.040 if F else .048) + i, (.042 if F else .048) + i)
@@ -284,26 +284,26 @@ def build_body(F):
     cap(mb, (0, 0, .93), (0, 0, 1.12), .046)                                                               # neck, buried in the head
     digits = []
     for s in (-1, 1):
-        # sculpted plush paw-palm cushion at the wrist (fuller in Z & Y with a smooth coplanar thumb-web blend)
-        ell(mb, (.542 * s, .002, .955), .046, .045, .032)
-        ell(mb, (.534 * s, .024, .955), .028, .024, .022)                                                   # smooth thumb-web transition
-        # 4 plump, sculpted paw-hand digits (opposable Thumb + 3 rounded finger digits)
-        th_pts = [(.524 * s, .022, .955), (.546 * s, .046, .955), (.565 * s, .060, .955)]
-        th, _ = tube(f"Thumb_{s}", th_pts, [.0180, .0165, .0150], 12); digits.append(th)
+        # sculpted plush paw-palm cushion at the wrist
+        ell(mb, (.544 * s, .004, .955), .050, .048, .040)
+        ell(mb, (.536 * s, .024, .952), .030, .026, .026)                                                   # smooth thumb-web transition
+        # 4 plump, sculpted paw-hand digits (opposable Thumb + 3 rounded finger digits with natural 3D curve)
+        th_pts = [(.526 * s, .024, .952), (.550 * s, .050, .946), (.570 * s, .064, .938)]
+        th, _ = tube(f"Thumb_{s}", th_pts, [.020, .018, .016], 12); digits.append(th)
         for fnm, y0, y1, y2, z0, z1, z2, x1, x2, r0 in (
-            ("Idx",  .024,  .031,  .036, .955, .955, .955, .586, .610, .0165),
-            ("Mid",  .000,  .000,  .000, .955, .955, .955, .592, .618, .0174),
-            ("Rng", -.024, -.031, -.036, .955, .955, .955, .584, .606, .0160),
+            ("Idx",  .024,  .028,  .032, .954, .948, .942, .588, .612, .0185),
+            ("Mid",  .000,  .000,  .000, .955, .950, .944, .594, .620, .0192),
+            ("Rng", -.024, -.028, -.032, .954, .948, .942, .586, .608, .0180),
         ):
             fpts = [(.558 * s, y0, z0), (x1 * s, y1, z1), (x2 * s, y2, z2)]
-            fg, _ = tube(f"Fing_{fnm}_{s}", fpts, [r0, r0 * .95, r0 * .88], 12); digits.append(fg)
+            fg, _ = tube(f"Fing_{fnm}_{s}", fpts, [r0, r0 * .96, r0 * .90], 12); digits.append(fg)
         # sculpted paw-feet with 3 distinct rounded toes
-        ell(mb, (.090 * s, .026, .046), .053, .080, .045)
+        ell(mb, (.090 * s, .028, .048), .056, .084, .048)
         for ti in (-1, 0, 1):
             tx = (.090 + .027 * ti * s) * s
-            ty0, ty1 = .072 - .005 * abs(ti), .104 - .006 * abs(ti)
-            tpts = [(tx, ty0, .040), (tx, (ty0 + ty1) * .5, .038), (tx, ty1, .034)]
-            to, _ = tube(f"Toe_{ti}_{s}", tpts, [.0195, .0190, .0172], 12); digits.append(to)
+            ty0, ty1 = .072 - .005 * abs(ti), .106 - .006 * abs(ti)
+            tpts = [(tx, ty0, .042), (tx, (ty0 + ty1) * .5, .040), (tx, ty1, .036)]
+            to, _ = tube(f"Toe_{ti}_{s}", tpts, [.021, .020, .018], 12); digits.append(to)
     sel(o); bpy.ops.object.convert(target='MESH'); base = bpy.context.active_object
     raw = join([base] + digits, "BodyRaw")
     r = raw.modifiers.new("vox", "REMESH"); r.mode = 'VOXEL'; r.voxel_size = 0.0038; sel(raw); bpy.ops.object.modifier_apply(modifier="vox")
@@ -320,14 +320,14 @@ def build_body(F):
     body.data.materials.append(mat("belly", "#fff1dc"))
     for p in body.data.polygons:
         c = p.center; n = p.normal; ax = abs(c.x)
-        palm_pad = (.522 < ax < .564 and abs(c.y - .002) < .024 and c.z < .944 and n.z < -.45)
-        ftip_pad = (ax > .558 and c.z < .946 and n.z < -.40 and (
-            ((ax - .600) / .013) ** 2 + ((c.y - .033) / .011) ** 2 < 1.0 or
-            ((ax - .608) / .013) ** 2 + (c.y / .011) ** 2 < 1.0 or
-            ((ax - .596) / .013) ** 2 + ((c.y + .033) / .011) ** 2 < 1.0 or
-            ((ax - .558) / .012) ** 2 + ((c.y - .056) / .012) ** 2 < 1.0
+        palm_pad = (.518 < ax < .570 and abs(c.y - .004) < .030 and c.z < .952 and n.z < -.32)
+        ftip_pad = (ax > .548 and c.z < .954 and n.z < -.28 and (
+            ((ax - .604) / .016) ** 2 + ((c.y - .030) / .014) ** 2 < 1.0 or
+            ((ax - .612) / .016) ** 2 + (c.y / .014) ** 2 < 1.0 or
+            ((ax - .600) / .016) ** 2 + ((c.y + .030) / .014) ** 2 < 1.0 or
+            ((ax - .564) / .015) ** 2 + ((c.y - .058) / .015) ** 2 < 1.0
         ))
-        sole_pad = (c.z < .014 and ax > .04 and -.01 < c.y < .075 and n.z < -.45)
+        sole_pad = (c.z < .018 and ax > .036 and -.012 < c.y < .085 and n.z < -.38)
         if palm_pad or ftip_pad or sole_pad:
             p.material_index = 2; continue
         limb = ax > .15 or c.z < .555
@@ -1177,17 +1177,21 @@ def spike(H, base, d1, d2, r, matname, bone="Head"):
 
 def build_tufts(H, sp):
     if "mane" not in sp["ex"] and "wool" not in sp["ex"]:
-        # Crown fur tufts placed high on the crown (v=1.32) arching up so they never poke through the forehead
-        for k, (u, h, dx) in enumerate(((-.20, .062, -.025), (0, .082, 0.0), (.20, .058, .025))):
-            b = head_pt(head_dir(u, 1.32), -.016); n = (b - HC).normalized(); f = V(0, .35, .94).normalized()
-            spike(H, b, n * h * .58 + f * .018 + V(dx * .4, 0, 0), n * h * .42 + f * .028 + V(dx * .7, 0, .01), .028, "fur")
+        # Soft kemono crown fluff: gentle curved tuft on the crown
+        b = head_pt(head_dir(0, 1.30), -.014)
+        n = (b - HC).normalized(); f = V(0, .28, .96).normalized()
+        spike(H, b, n * .052 + f * .022, n * .040 + f * .035, .030, "fur")
+        for s in (-1, 1):
+            b2 = head_pt(head_dir(s * .14, 1.28), -.014)
+            n2 = (b2 - HC).normalized()
+            spike(H, b2, n2 * .038 + f * .016 + V(s * .012, 0, 0), n2 * .028 + f * .024 + V(s * .018, 0, 0), .022, "fur")
     if sp.get("fluff"):
-        # Sculpted 3D layered cheek ruff tufts flaring out from the plush lower cheeks
+        # Sculpted 3D layered cheek ruff tufts flaring out naturally from the plush lower cheeks
         c_mat = "belly" if ("cheekbelly" in sp["ex"] or "cheeks" in sp["ex"]) else "fur"
         for s in (-1, 1):
-            for v_, ln, r0, dz in ((-.08, .068, .030, -.006), (-.20, .082, .034, -.016), (-.33, .064, .028, -.024)):
-                b = head_pt(head_dir(s * 1.32, v_), -.022)
-                d_out = Vector((s * .92, -.18, -.22)).normalized()
+            for v_, ln, r0, dz in ((-.09, .064, .028, -.008), (-.21, .078, .032, -.018), (-.33, .060, .026, -.026)):
+                b = head_pt(head_dir(s * 1.30, v_), -.020)
+                d_out = Vector((s * .92, -.18, -.20)).normalized()
                 spike(H, b, d_out * (ln * .55) + V(0, 0, dz * .5), d_out * (ln * .48) + V(s * .01, -.01, dz), r0, c_mat)
 
 def build_head(name, sp, rig, F):
