@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 17;
+const V = 18;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb";
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -82,15 +82,17 @@ function lay(ctx) {
     ui: `<div face="front" width="${w}m" style="width:${w * 1000}px;height:${h * 1000}px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Arial,sans-serif;font-weight:900;line-height:1.05">${html}</div>`,
   });
 
+  const M_SNACK_TRIPO = "/cdn/value.648e4a264f4f3baf49c0daa926edded37545119b09d317be038c0d0261d8bc8b.glb"; // tripo snack machine, −Z front, 0.9 m under origin
   const vend = (id, x, z, yaw, soda, extra = {}) => sp(id, {
     feetPosition: { x, y: extra.y ?? 0, z },
     rotation: { yaw, ...(extra.rot ?? {}) },
     physics: { body: "static", collider: "box" },
-    model: { id: M_VEND, forward: "+z", materials: { cabinet: { color: soda ? "oklch(0.5 0.2 27)" : "oklch(0.16 0.005 250)", roughness: 0.4, metalness: 0.35 } } },
+    model: soda ? { id: M_VEND, forward: "+z", materials: { cabinet: { color: "oklch(0.5 0.2 27)", roughness: 0.4, metalness: 0.35 } } } : { id: M_SNACK_TRIPO, offset: [0, -0.9, 0] },
+    ...(soda ? {} : { scale: 1.0 }),
     tags: extra.dead ? [] : ["usable"],
     behavior: extra.dead ? undefined : "scripts/l61-use.js",
     state: extra.dead ? {} : { kind: "vend", sells: soda ? "soda" : "snack", name: soda ? "Soda machine" : "Snack machine", verb: "Press a button", info: soda ? "Chilled soda machine." : "Packaged snack machine." },
-    children: [{ feetPosition: { x: 0.1, y: 0.38, z: -0.447 }, primitive: { kind: "box", width: 0.72, height: 1.32, depth: 0.01 }, material: { texture: soda ? SODA : SNACK, roughness: 0.15, emissive: "oklch(0.35 0 0)", emissiveIntensity: 0.4 } }],
+    children: soda ? [{ feetPosition: { x: 0.1, y: 0.38, z: -0.447 }, primitive: { kind: "box", width: 0.72, height: 1.32, depth: 0.01 }, material: { texture: soda ? SODA : SNACK, roughness: 0.15, emissive: "oklch(0.35 0 0)", emissiveIntensity: 0.4 } }] : [],
   });
 
   const tableSet = (id, x, z, yaw) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", collider: "mesh" }, model: { id: M_TABLE, forward: "+z" } });
