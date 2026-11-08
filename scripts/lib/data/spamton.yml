@@ -1,0 +1,23 @@
+# Spamton's dumpster battle. Every number is Savi's pick: "a bit difficult" = about 3 clean hits a fight lose you a third of the soul.
+soulHp: 100
+hit: 11          # one bullet
+maxHit: 18       # the client can't claim more per hit
+iframes: 0.9     # seconds the SOUL blinks after a hit
+attackSeconds: 9
+introSeconds: 2.6
+neoFromStep: 3   # the last half of the deal he goes NEO
+losePenaltyHp: 20
+soulSpeed: 150   # px/s inside a 220 px box
+attacks:
+  base: [words, minitons, vacuum]
+  neo: [heads, heart, pipis, words]
+intro: "HEY EVERY       !! IT'S ME, SPAMTON G. SPAMTON! WHAT'S A [[Little Sponge]] LIKE YOU DOING IN MY [[Luxury Apartment]]?"
+winLine: "[[DEAL]]!!! I'M ALL YOURS, KID! [[Pocket-Sized]] AND [[Weightless]]! I'LL MAKE YOU [[Rich]]!"
+loseLine: "WHAT'S THE MATTER? CAN'T AFFORD MY [[Specil Deal]]?"
+deal:
+  - { yes: "TELL ME MORE", no: "WALK AWAY", line: "YOU WANNA BE A [[BIG SHOT]]? I'VE GOT A [[Once in a Lifetime]] OFFER!", ok: "NOW THAT'S A [[Customer]]! LISTEN UP!", bad: "WALK AWAY?? FROM [[Hyperlink Blocked]]?!" }
+  - { yes: "DON'T GIVE", no: "GIVE MONEY", line: "ALL I NEED IS YOUR [[Wallet]]! JUST A [[Small Deposit]]!", ok: "HEH... SMART [[Kid]]. TOO SMART.", bad: "THANK YOU FOR YOUR [[Donation]]!! NOW HOLD STILL!" }
+  - { yes: "TAKE DEAL", no: "HANG UP", line: "OK OK!! [[No Money Down]]! JUST TAKE THE [[DEAL]]!", ok: "[[DEAL]]!! WAIT, DID I JUST [[Give Away]]...", bad: "[[Hanging Up]] ON ME?? NOBODY HANGS UP ON SPAMTON!" }
+  - { yes: "DON'T BUY", no: "BUY", line: "BUT FIRST... A [[Limited Time]] UPGRADE! ONLY $$49.998!", ok: "NO?? NO [[Upsell]]?? YOU'RE KILLING ME, KID!", bad: "SOLD!!! [[Non-Refundable]]!!" }
+  - { yes: "REFUSE", no: "ACCEPT", line: "SIGN HERE, HERE AND [[Here]]. IT SAYS YOU OWE ME [[Everything]].", ok: "FINE!! FINE! NO [[Fine Print]]!", bad: "HAHAHA! READ THE [[Fine Print]] NEXT TIME!" }
+  - { yes: "YES DEAL", no: "NO DEAL", repeat: true, line: "LAST CHANCE!! ME, IN YOUR POCKET, FOR [[Free]]! DEAL??", ok: "", bad: "NO DEAL?? I'LL ASK AGAIN! DEAL??" }
