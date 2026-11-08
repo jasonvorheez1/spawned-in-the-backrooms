@@ -900,7 +900,7 @@ export function tick(ctx) {
       if (pr && pr.kind !== "scripted") return Math.max(pr.width ?? 0, pr.height ?? 0, pr.depth ?? 0, (pr.radius ?? pr.radiusTop ?? 0) * 2) < 1.2; return false; };
     try { ctx.spawn = (a, b) => { const id = typeof a === "string" ? a : a?.id ?? "", sp = typeof a === "string" ? b : a;
       if (sp && (sp.model || sp.primitive) && !KEEP.test(id)) { sp.visibleRange ??= { max: 90 }; if (small(sp)) sp.castShadow = false; }
-      return b === undefined ? real(a) : real(a, b); }; } catch (e) {}
+      return b === undefined ? real.call(ctx, a) : real.call(ctx, a, b); }; } catch (e) {}
     try { lay(ctx); } finally { try { ctx.spawn = real; } catch (e) {} }
     s.builtV = V;
   }
