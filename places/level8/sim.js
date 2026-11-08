@@ -5,7 +5,7 @@
 // a pool of boiling tar with a B.N.T.G. dredge winch and reaching hands, a survivor camp round a fire with Carla, and the asphalt road to Level 9. Life: scripts/l8-life.js; use: scripts/l8-use.js.
 import L8 from "../../scripts/lib/data/level8.yml";
 export const cadence = "1s";
-const V = 14;
+const V = 15;
 const GLB = {
   cave: "/cdn/value.6ae7c035c9583dda020bc92a7e80e75e9d3d462632234677d4a5f5a717fe311b.glb",
   spider: "/cdn/value.f2baeaec87cf017372e92e66ec42fae95179b52161e15051d3253036b89b9323.glb",
@@ -145,7 +145,7 @@ function lay(ctx) {
 
   // ---- Station 1: the entrance lake and the M.E.G. diving bell that brought you down from Level 7's abyss
   const lake = P(12, 0, 0);
-  sp("l8-lake", { ...at({ ...lake, y: -2.65 }), primitive: { kind: "box", width: 26, height: 2.5, depth: 38 }, material: { kind: "water", color: "oklch(0.22 0.04 230)", opacity: 0.88, waveIntensity: 0.05 } });
+  sp("l8-lake", { tags: ["swimwater"], ...at({ ...lake, y: -2.65 }), primitive: { kind: "box", width: 26, height: 2.5, depth: 38 }, material: { kind: "water", color: "oklch(0.22 0.04 230)", opacity: 0.88, waveIntensity: 0.05 } });
   sp("l8-lake-back", { ...at({ ...P(10, 0, 0), y: -1.2 }), physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 26, height: 2.4, depth: 30 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level7#l7-from-l8" } });
   sp("l8-from-l7", at(P(31, 0, 0.1)));
   // Submerged M.E.G. Diving Bell & hoist cable rising into the flooded ceiling shaft
@@ -209,7 +209,7 @@ function lay(ctx) {
 
   // ---- Station 4: the flooded cavern: rising tide (scripts/l8-life.js), parkour stepping stones, tide gauge, and the Dead Caver on the high ledge
   const fl = P(176, 0, 0);
-  sp("l8-flood", { ...at({ ...fl, y: P(176).y - 0.5 }), primitive: { kind: "box", width: 30, height: 4.5, depth: 30 }, material: { kind: "water", color: "oklch(0.2 0.04 225)", opacity: 0.86, waveIntensity: 0.04 } });
+  sp("l8-flood", { tags: ["swimwater"], ...at({ ...fl, y: P(176).y - 0.5 }), primitive: { kind: "box", width: 30, height: 4.5, depth: 30 }, material: { kind: "water", color: "oklch(0.2 0.04 225)", opacity: 0.86, waveIntensity: 0.04 } });
   // Parkour stepping pillars & scramble ledges leading up out of the floodwaters to the Dead Caver's ledge
   [[166, -3.4, 0.6, 1.8], [171, -4.8, 1.15, 2.0], [177, -5.8, 1.7, 2.2], [183, -6.2, 2.2, 2.3], [189, -6.4, 2.6, 2.4]].forEach(([s, side, h, w], k) => {
     const sp0 = P(s, side, 0);

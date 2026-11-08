@@ -59,7 +59,7 @@ export function update(ctx, dt) {
       const f = p.feetPosition, inside = Math.abs(f.x - fp.x) < 15 && Math.abs(f.z - fp.z) < 15 && f.y < F + 4;
       const head = f.y + 1.7 < surf;
       m.drown[p.id] = inside && head ? (m.drown[p.id] ?? 0) + dt : 0;
-      if (m.drown[p.id] > 12) { p.state.hp -= 7 * dt; if (!m.drowned?.[p.id] || now - m.drowned[p.id] > 4000) { (m.drowned ??= {})[p.id] = now; p.state.notice = { text: "The waters are over your head. You must swim or scramble onto the left ledges. Your chest burns.", at: now }; } }
+      if (m.drown[p.id] > 12) { if (!m.drowned?.[p.id] || now - m.drowned[p.id] > 4000) { (m.drowned ??= {})[p.id] = now; p.state.notice = { text: "The waters are over your head. You must swim or scramble onto the left ledges. Your chest burns.", at: now }; } }
       if (inside && f.y + 0.4 < surf && !(m.wet?.[p.id] > now - 60000)) { (m.wet ??= {})[p.id] = now; p.state.notice = { text: surf - f.y > 1.6 ? "The waters are at your chin." : "The water has risen past your ankles. The stepping ledges on the left wall climb above the tide.", at: now }; }
     }
   }
