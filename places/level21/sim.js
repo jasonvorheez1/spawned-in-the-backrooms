@@ -14,7 +14,7 @@ import { fan, fanHousing, cable, DRIP, DUST, MIST } from "../../scripts/lib/ambi
 import { terminalSpec } from "../../scripts/lib/terminal.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "500ms";
-const V = 13; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist
+const V = 14; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist; 14: survey road flares, freezer frost, blast sparks, sandbags, show-don't-tell
 const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
 const rm = (type) => ROOMS.filter((r) => r.type === type);
 const center = (r) => cellCenter(r.x0 + (r.w - 1) / 2, r.z0 + (r.d - 1) / 2); // the middle of a room block
@@ -28,6 +28,13 @@ const STEAM_FX = `fx
 pop mist rate=8 life=1.0..1.8 on=disc(.18) v=up(-.35..-0.75)+sdir()*.18 size=.14..0.28 col=<.88,.9,.92> a=.25>0 sz=$size*(1>2) r=sprite(soft-disc)`;
 const CAVE_MIST_FX = `fx
 pop breath rate=12 life=1.6..2.8 on=box(.8,1.8,2.2) v=sdir()*.25 size=.32..0.65 col=rgb(.65,.78,.85) a=.22>0 sz=$size*(1>1.6) r=sprite(soft-disc)`;
+const FLARE_FX = `fx
+pop spark rate=22 life=.2..0.55 v=up(1.4..2.4)+sdir()*.65 size=.015..0.04 col=<1,.25,.08> a=.95>0 floor=die sz=$size*(1>.3) r=sprite(spark,alpha)
+pop smoke rate=10 life=.9..1.8 on=disc(.06) v=up(.7..1.3)+sdir()*.22 size=.1..0.24 col=<.25,.18,.2> a=.4>0 sz=$size*(1>2.2) r=sprite(smoke-puff,alpha)`;
+const CRATER_SPARK_FX = `fx
+pop spark burst=14..24 rate=1.2 life=.15..0.4 v=sdir()*(1.2..2.8)+up(-.8) size=.01..0.035 col=<.9,.95,1> a=1>0 floor=die sz=$size*(1>.2) r=sprite(spark,alpha)`;
+const FROST_FX = `fx
+pop chill rate=8 life=1.6..2.8 on=box(5,.15,.8) v=up(-.06..-.18)+sdir()*.12 size=.22..0.48 col=<.82,.92,.98> a=.28>0 sz=$size*(1>1.5) r=sprite(soft-disc)`;
 
 // the people who made it to Refrigerator Paradise and stayed
 const PEOPLE = {
@@ -91,6 +98,9 @@ function lay(ctx) {
   // ---- signs: Base Alef, the exploration wing, Refrigerator Paradise, the edge of the maps
   const L1 = rm("base")[0], bc = center(L1);
   sp("l21-sign-alef", { feetPosition: { x: cellCenter(2, ARRIVE.cz).x - 1.6, y: 2.3, z: DOWN.z }, rotation: { yaw: -90 }, ...sign(2.6, 0.9, `${MEG(2.6)}<div style="font-size:84px">M.E.G. BASE ALEF</div><div style="font-size:40px;color:#e8e0c0">sublevel storage &amp; quarters · 53 staff</div><div style="font-size:34px;color:#e8a098">COMMS DOWN · ACCESS SUSPENDED</div></div>`) });
+  // Sandbag redoubts defending Base Alef perimeter (Fallout / 7DTD survival outpost fortification)
+  sp("l21-sandbags-0", { feetPosition: { x: cellCenter(2, ARRIVE.cz).x - 0.8, y: 0, z: DOWN.z + 1.6 }, primitive: { kind: "box", width: 1.4, height: 0.75, depth: 0.45 }, material: { color: "oklch(0.55 0.08 75)", roughness: 0.95 }, physics: "static" });
+  sp("l21-sandbags-1", { feetPosition: { x: cellCenter(2, ARRIVE.cz).x - 0.8, y: 0, z: DOWN.z - 1.6 }, primitive: { kind: "box", width: 1.4, height: 0.75, depth: 0.45 }, material: { color: "oklch(0.52 0.08 72)", roughness: 0.95 }, physics: "static" });
   const ex = rm("explo")[0]; sp("l21-sign-explo", { feetPosition: { x: edgeOf(ex, 2) + 0.25, y: 2.3, z: center(ex).z }, rotation: { yaw: -90 }, ...sign(1.8, 0.5, `${MEG(1.8)}<div style="font-size:66px">EXPLORATION WING</div><div style="font-size:34px;color:#c8d8b8">team gear · sign out all equipment</div></div>`) });
   const fr = rm("fridges")[0], fc = center(fr); sp("l21-sign-fridge", { feetPosition: { x: fc.x, y: 2.4, z: edgeOf(fr, 3) + 0.2 }, rotation: { yaw: 0 }, ...sign(2.6, 0.7, `<div face="front" width="2.6m" style="font-family:Arial,sans-serif;font-weight:900;color:#f0f4f8;text-align:center;line-height:1.05"><div style="font-size:84px">REFRIGERATOR PARADISE</div><div style="font-size:36px;color:#a8d8c8">saltines · enough for the rest of our lives</div></div>`, "oklch(0.3 0.04 200)") });
   sp("l21-sign-edges", { feetPosition: { x: cellCenter(EDGE_X - 1, LANE.z0 + 1).x + 1.6, y: 2.3, z: cellCenter(0, LANE.z0 + 1).z }, rotation: { yaw: -90 }, ...sign(2.0, 0.7, `${MEG(2.0)}<div style="font-size:80px">THE EDGES</div><div style="font-size:36px;color:#e8a098">edge of the survey · no light beyond · smilers reported</div></div>`) });
@@ -126,6 +136,7 @@ function lay(ctx) {
       { feetPosition: { x: 0, y: 1.25, z: 0 }, light: { kind: "point", color: "oklch(0.62 0.22 20)", intensity: 1.1, distance: 5 } },
     ],
   });
+  sp("l21-berries-ring", { feetPosition: { x: exc.x, y: 0.005, z: exc.z - 0.6 }, primitive: { kind: "torus", radius: 0.85, tube: 0.035 }, rotation: { pitch: 90 }, material: { color: "#e6a100", roughness: 0.4 } });
 
   // ---- quarters, the offices, the locker room (checkered tile, grey and brown lockers), restrooms, break room, storage rooms
   const bk = rm("bunks")[0], kc = center(bk);
@@ -163,6 +174,8 @@ function lay(ctx) {
       { feetPosition: { x: -0.16, y: 1.15, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.014, radiusBottom: 0.014, height: 0.95 }, rotation: { pitch: 18 }, material: { color: "#b87333", metalness: 0.85, roughness: 0.3 } },
     ],
   });
+  sp("l21-cooler-puddle", { feetPosition: { x: edgeOf(fr, 2) + 0.65, y: 0.005, z: fc.z - 2.2 }, primitive: { kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.48, height: 0.01 }, material: { color: "#0e1a22", roughness: 0.08, metalness: 0.1 } });
+  sp("l21-fridge-frost", { feetPosition: { x: fc.x - 1.5, y: 0.1, z: edgeOf(fr, 3) + 0.6 }, fx: { script: FROST_FX } });
   // Refrigerator Paradise Workbench
   sp("l21-bench", {
     feetPosition: { x: edgeOf(fr, 2) + 0.65, y: 0.0, z: fc.z + 1.4 }, rotation: { yaw: 0 }, tags: ["bench"], physics: "static",
@@ -199,6 +212,7 @@ function lay(ctx) {
   sp("l21-blast-crater", {
     feetPosition: { x: jbX + 0.45, y: 3.2, z: jbZ + 0.55 },
     primitive: { kind: "cylinder", radiusTop: 1.15, radiusBottom: 1.25, height: 0.14 }, material: { color: "#141414", roughness: 0.96 },
+    fx: { script: CRATER_SPARK_FX },
     children: [
       { feetPosition: { x: 0, y: -0.85, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.008, radiusBottom: 0.008, height: 1.7 }, material: { color: "#d04020" } },
       { feetPosition: { x: 0.12, y: -0.65, z: 0.08 }, primitive: { kind: "cylinder", radiusTop: 0.008, radiusBottom: 0.008, height: 1.3 }, material: { color: "#202020" } },
@@ -213,6 +227,26 @@ function lay(ctx) {
       { feetPosition: { x: 0, y: 0.74, z: 0 }, primitive: { kind: "box", width: 0.28, height: 0.045, depth: 0.045 }, material: WOOD }, // T-handle
       { feetPosition: { x: 0.45, y: 0.0, z: 0.1 }, primitive: { kind: "box", width: 0.36, height: 0.24, depth: 0.28 }, material: { color: "oklch(0.52 0.2 28)", roughness: 0.7 } }, // dynamite box
     ],
+  });
+  // Emergency chemical road flares marking the survey trail into the pitch darkness of The Edges
+  [
+    [EDGE_X + 2, -0.6],
+    [EDGE_X + 5, 0.5],
+    [N - 3, -0.4],
+  ].forEach(([cx, dz], i) => {
+    const c = cellCenter(cx, LANE.z0 + 1);
+    sp(`l21-flare-${i}`, {
+      feetPosition: { x: c.x, y: 0.0, z: c.z + dz },
+      rotation: { pitch: 24, yaw: 45 * i },
+      primitive: { kind: "cylinder", radiusTop: 0.022, radiusBottom: 0.022, height: 0.28 },
+      material: { color: "#d82820", roughness: 0.6 },
+      fx: { script: FLARE_FX },
+      children: [
+        { feetPosition: { x: 0, y: 0.18, z: 0 }, light: { kind: "point", color: "oklch(0.68 0.28 25)", intensity: 5.8, distance: 14 } },
+        { feetPosition: { x: 0, y: 0.14, z: 0 }, primitive: { kind: "sphere", radius: 0.032 }, material: { color: "#ffeedd", emissive: "oklch(0.85 0.25 40)", emissiveIntensity: 5.0 } },
+      ],
+      audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-single-fluorescent-tube-buzzing-hum-loop.mp3", loop: true, gain: 0.12, spatial: true, maxDistance: 7 },
+    });
   });
   const eb = cellCenter(25, LANE.z0), suitMat = { color: "oklch(0.42 0.06 140)", roughness: 0.85 };
   sp("l21-edge-body", {

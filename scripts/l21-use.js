@@ -12,7 +12,6 @@ export const updateSchedule = { every: { seconds: 0.1 } };
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const H = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
-const say = (who, text, ctx) => { if (who?.state) who.state.notice = { text, at: ctx.now() }; };
 
 const GOKNAR = [
   "Stay alert. The hounds keep testing the perimeter doors.",
@@ -158,7 +157,10 @@ export const ears = {
       const have = need ? Object.entries(need).every(([k, n]) => (sc[k] ?? 0) >= n) : (w.l21Scouted ?? 0) >= 1;
       if (!have) {
         const list = need ? Object.entries(need).map(([k, n]) => `${sc[k] ?? 0}/${n} ${NAME[k]}`).join(", ") : "explore further east";
-        return say(who, `ERRAND: ${q.name} (${list})`, ctx);
+        ctx.self.ui = `<div face="front" width="1.4m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;line-height:1.15;background:#181814;padding:8px;border:2px solid #8b7355"><div style="font-size:46px;color:#f2d870;border-bottom:1px solid #8b7355;margin-bottom:6px">ERRAND: ${q.name.toUpperCase()}</div><div style="font-size:32px;color:#ffffff;margin-bottom:4px">REQUIRED: ${list.toUpperCase()}</div><div style="font-size:24px;color:#a8d8c8">SEE NED IN REFRIGERATOR PARADISE</div></div>`;
+        snd("container-open-rustle", 0.5);
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: `ERRAND: ${q.name.toUpperCase()} (${list.toUpperCase()})`, color: "#f2d870", size: 1.15 }, { audience: { player: who.id } });
+        return;
       }
       if (need) { const left = { ...sc }; for (const [k, n] of Object.entries(need)) left[k] = (left[k] ?? 0) - n; w.scrap = left; }
       w.l21q = (w.l21q ?? 0) + 1; snd("pickup-ammo", 0.65);
@@ -166,6 +168,7 @@ export const ears = {
       w.payout = { xp, items: q.items };
       const line = "Good work on that salvage. That keeps the freezers running.";
       heard(ctx, { clip: vo("hollis", line), position: pos, volume: 0.9, maxDistance: 16 });
+      ctx.self.ui = `<div face="front" width="1.4m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;line-height:1.15;background:#181814;padding:8px;border:2px solid #3fa860"><div style="font-size:46px;color:#7aff9a;border-bottom:1px solid #3fa860;margin-bottom:6px">ERRAND COMPLETED!</div><div style="font-size:32px;color:#ffffff;margin-bottom:4px">${q.name.toUpperCase()} (+${xp} XP)</div><div style="font-size:24px;color:#a8d8c8">BOUNTY PAID IN CASH &amp; SUPPLIES</div></div>`;
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.5, z: pos.z }, text: `+${xp} XP`, color: "#ffd700", size: 1.3 }, { audience: { player: who.id } });
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: `ERRAND DONE: ${q.name.toUpperCase()}`, color: "#80ffaa", size: 1.0 }, { audience: { player: who.id } });
       return;
@@ -175,14 +178,16 @@ export const ears = {
       const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
       const line = GOKNAR[n % GOKNAR.length];
       heard(ctx, { clip: vo("reyes", line), position: pos, volume: 1.0, maxDistance: 14 });
-      return say(who, `Goknar: "${line}"`, ctx);
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.9, z: pos.z }, text: `"${line}"`, color: "#7aff9a", size: 1.05 });
+      return;
     }
 
     if (s.kind === "ned") {
       const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
       const line = NED[n % NED.length];
       heard(ctx, { clip: vo("hollis", line), position: pos, volume: 1.0, maxDistance: 14 });
-      return say(who, `Ned: "${line}"`, ctx);
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.9, z: pos.z }, text: `"${line}"`, color: "#ffd460", size: 1.05 });
+      return;
     }
   },
 };
@@ -241,6 +246,101 @@ export function update(ctx, dt) {
       ctx.emit("damageNumber", { position: { x: p.feetPosition.x, y: p.feetPosition.y + 1.8, z: p.feetPosition.z }, text: "THE EDGES: SCOUTED (+140 XP)", color: "#ffd700", size: 1.3 }, { audience: { player: p.id } });
     }
   }
+
+  // Keep L.smilers active inside The Edges (cx >= EDGE_X)
+  const all = ctx.query({ tags: ["l21-smiler"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+  const live = all.filter((w) => !w.state?.dead && (w.state?.hp ?? 1) > 0);
+  if (now > mem.respawnAt && live.length < (L.smilers ?? 3)) {
+    mem.respawnAt = now + 45000;
+    for (let i = live.length; i < (L.smilers ?? 3); i++) spawnEdgeSmiler(ctx, i);
+  }
+
+  for (const w of all) {
+    const m = (mem[w.id] ??= {}), st = w.state ?? {}, pos = w.feetPosition, mu = npcMul(st);
+    if (st.dead || (st.hp ?? 1) <= 0) {
+      if (!m.dieAt) {
+        m.dieAt = now; w.velocity = { x: 0, y: -1, z: 0 };
+        w.anim.act = { clip: CLIP.death, loop: "once", blend: "override", weight: 4, clampWhenFinished: true };
+        heard(ctx, { clip: H("shadow-creature-dissolve-hiss"), position: pos, volume: 0.9, maxDistance: 30 });
+      } else if (!m.gone && now - m.dieAt > 1700) {
+        m.gone = true;
+        ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.3, z: pos.z }, script: POOF });
+        ctx.destroy(w.id);
+      }
+      continue;
+    }
+
+    // Acquire target in The Edges (or players holding a flashlight near The Edges)
+    if (now >= (m.look ?? 0)) {
+      m.look = now + 350 + ctx.random() * 200;
+      let best = null, bd = Infinity;
+      for (const p of players) {
+        const pp = p.feetPosition, pc = cellAt(pp.x, pp.z);
+        if (pc.cx < EDGE_X - 2) continue; // Smilers stay in and around The Edges
+        const d = Math.hypot(pp.x - pos.x, pp.z - pos.z);
+        const range = p.state?.light ? 16 : 11;
+        if (d < range && d < bd && hasSight(ctx, pos, pp, w.id, p.id)) { best = p; bd = d; }
+      }
+      if (best && !m.prey) heard(ctx, { clip: H("smiler-wet-giggle-hiss-stalking"), position: pos, volume: 0.9, maxDistance: 28 });
+      m.prey = best?.id ?? null;
+    }
+
+    const prey = m.prey ? players.find((p) => p.id === m.prey) : null;
+    let goal = null, speed = 1.35, frozen = false;
+    if (prey) {
+      goal = prey.feetPosition;
+      const pd = Math.hypot(goal.x - pos.x, goal.z - pos.z);
+      const yaw = prey.camera?.rotation?.yaw;
+      if (yaw != null) {
+        const r = (yaw * Math.PI) / 180, fx = -Math.sin(r), fz = -Math.cos(r);
+        const tx = pos.x - goal.x, tz = pos.z - goal.z, tl = Math.hypot(tx, tz) || 1;
+        const staring = (fx * tx + fz * tz) / tl > 0.82;
+        if (staring && prey.state?.light && pd < 13) {
+          frozen = true; speed = 0;
+          if (!m.lit) { m.lit = true; w.anim.act = { clip: CLIP.recoil, loop: "once", blend: "override", weight: 4 }; heard(ctx, { clip: H("smiler-light-flinch-shriek"), position: pos, volume: 0.8, maxDistance: 22 }); }
+        } else {
+          m.lit = false;
+          speed = staring ? 1.6 : pd < 9 ? 5.6 : 3.6;
+        }
+      }
+      if (!frozen && pd < 1.65 && now > (m.biteAt ?? 0)) {
+        m.biteAt = now + 1700;
+        w.anim.act = { clip: CLIP["lunge-bite"], loop: "once", blend: "override", weight: 4 };
+        heard(ctx, { clip: H("smiler-lunge-snap-shriek"), position: pos, volume: 1, maxDistance: 25 });
+        const dmg = Math.max(1, Math.round(dmgAfterArmor(prey.state.look, 20 * mu.dmg)));
+        prey.state.hp -= dmg;
+        prey.state.sanity = Math.max(0, (prey.state.sanity ?? 80) - 9);
+        ctx.emit("damageNumber", { position: { x: goal.x, y: goal.y + 1.3, z: goal.z }, value: dmg, color: "#ff3830" });
+        ctx.emit("screenShake", { intensity: 0.45, duration: 0.28 }, { audience: { player: prey.id } });
+      }
+    } else {
+      if (!m.roam || now > (m.roamUntil ?? 0) || Math.hypot(pos.x - m.roam.x, pos.z - m.roam.z) < 0.6) {
+        const rx = EDGE_X + Math.floor(ctx.random() * (N - EDGE_X));
+        const rz = Math.floor(ctx.random() * N);
+        m.roam = cellCenter(rx, rz);
+        m.roamUntil = now + 6000;
+      }
+      goal = m.roam;
+    }
+
+    if (frozen) {
+      if (m.mode !== "freeze") { m.mode = "freeze"; w.anim.body = { clip: CLIP.freeze, loop: "loop", speed: 0.6 }; }
+      w.velocity = { x: 0, y: (w.velocity?.y ?? 0) - 20 * dt, z: 0 };
+      continue;
+    }
+
+    const sight = prey && hasSight(ctx, pos, prey.feetPosition, w.id, prey.id);
+    const way = !sight && goal ? stepToward(pos.x, pos.z, goal.x, goal.z, 25) : null;
+    const tgt = way && way.cells > 0 ? way.next : goal;
+    const dx = tgt.x - pos.x, dz = tgt.z - pos.z, d = Math.hypot(dx, dz) || 1;
+    let vx = (dx / d) * speed, vz = (dz / d) * speed;
+    if (cellAt(pos.x + vx * 0.4, pos.z + vz * 0.4).cx < EDGE_X - 1) { vx = 0; vz = 0; m.roam = null; } // keep within The Edges
+    w.velocity = { x: vx, y: (w.velocity?.y ?? 0) - 20 * dt, z: vz };
+    if (vx || vz) w.rotation = { yaw: (Math.atan2(-vx, -vz) * 180) / Math.PI };
+    const mode = Math.hypot(vx, vz) > 0.1 ? "skitter" : "idle";
+    if (m.mode !== mode) { m.mode = mode; w.anim.body = { clip: CLIP[mode], loop: "loop", speed: speed > 3 ? 1.5 : 1 }; }
+  }
+}
 
   // Keep L.smilers active inside The Edges (cx >= EDGE_X)
   const all = ctx.query({ tags: ["l21-smiler"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
