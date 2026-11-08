@@ -49,7 +49,7 @@ export function update(ctx, dt) {
     const a = ctx.random() * 6.283, x = p.feetPosition.x + Math.cos(a) * S.start, z = p.feetPosition.z + Math.sin(a) * S.start;
     ctx.spawn({
       tags: ["l10worm", "moths"], feetPosition: { x, y: gy(x, z) - 2.4, z }, rotation: ctx.random() * 360,
-      model: { id: MODEL, offset: [0, -0.25, 0] }, layout: { box: { min: { x: -1.2, y: 0, z: -1.2 }, max: { x: 1.2, y: 1.5, z: 1.2 } } },
+      model: { id: MODEL, offset: [0, -0.25, 0] }, layout: { box: { min: { x: -1.8, y: 0, z: -1.8 }, max: { x: 1.8, y: 2.6, z: 1.8 } } }, // rears clear over the 1.2 m wheat
       physics: { body: "kinematic", collider: "capsule" }, visible: false, fx: { script: RIPPLE },
       state: { kind: "worm", name: "Field Worm", hp: S.hp, maxHp: S.hp, level: 3, phase: "stalk", prey: p.id, heardAt: now },
     });
