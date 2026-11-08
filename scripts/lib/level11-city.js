@@ -124,7 +124,14 @@ export function layStreet(ctx, h) {
   SLOTS.forEach(([x, z], i) => {
     if (hs(i, 4, 9) < 0.5) return;
     const kind = hs(i, 5, 2) < 0.22 ? "van" : "sedan", yaw = x < 0 ? (hs(i, 6, 3) < 0.5 ? 0 : 180) : (hs(i, 6, 3) < 0.5 ? 0 : 180), col = PAINT[Math.floor(hs(i, 7, 4) * PAINT.length)];
-    put(`l11-car-${i}`, kind, x, z + (hs(i, 8, 5) - 0.5) * 1.6, yaw, { materials: { paint: { color: col, roughness: 0.35, metalness: 0.2 } }, spec: { tags: ["l11car"] } }); cars.push(`l11-car-${i}`);
+    put(`l11-car-${i}`, kind, x, z + (hs(i, 8, 5) - 0.5) * 1.6, yaw, {
+      materials: { paint: { color: col, roughness: 0.35, metalness: 0.2 } },
+      spec: {
+        tags: ["usable", "l11car"],
+        behavior: "scripts/level11-use.js",
+        state: { kind: "parked-car", name: `Parked ${kind === "van" ? "Municipal Van" : "Sedan"}`, verb: "Disengage Parking Brake" },
+      },
+    }); cars.push(`l11-car-${i}`);
   });
   // manholes that steam, and a subway stair going down
   const STEAM = `fx

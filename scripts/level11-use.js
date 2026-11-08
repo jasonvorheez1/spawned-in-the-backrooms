@@ -379,5 +379,170 @@ export const ears = {
       }
       return;
     }
+
+    // 15. Parked Level 11 Vehicle (Disengage Handbrake & Scavenge Parts)
+    if (s.kind === "parked-car") {
+      const isBraked = s.braked !== false;
+      if (isBraked) {
+        s.braked = false;
+        heard(ctx, { clip: BUTTON_CLICK, position: pos, volume: 0.85, pitch: 0.9, maxDistance: 12 });
+        heard(ctx, { clip: OVEN_SCRAPE, position: pos, volume: 0.7, pitch: 1.1, maxDistance: 16 });
+
+        // Roll car forward 2.5m along its orientation
+        const yawRad = ((ctx.self.rotation?.yaw ?? 0) * Math.PI) / 180;
+        const forwardZ = -Math.cos(yawRad);
+        const forwardX = -Math.sin(yawRad);
+        ctx.self.feetPosition = {
+          x: pos.x + forwardX * 2.5,
+          y: pos.y,
+          z: pos.z + forwardZ * 2.5,
+        };
+        s.verb = "Search Glovebox & Engine";
+
+        ctx.emit("damageNumber", {
+          position: { x: pos.x, y: pos.y + 1.4, z: pos.z },
+          text: "HANDBRAKE DISENGAGED · CAR ROLLED 2.5M",
+          color: "#ffc048",
+          size: 1.05,
+        }, { audience: { player: who.id } });
+
+        if (w) w.notice = { text: "Level 11 Vehicle: Parking brake disengaged. As noted by early explorers, cars have no fuel and must be moved by hand.", at: now };
+        return;
+      }
+
+      if (!s.searched) {
+        s.searched = true;
+        heard(ctx, { clip: G("container-open-rustle"), position: pos, volume: 0.8, maxDistance: 12 });
+        w.payout = {
+          xp: 25,
+          items: ["almond"],
+        };
+        ctx.emit("damageNumber", {
+          position: { x: pos.x, y: pos.y + 1.4, z: pos.z },
+          text: "+SCAVENGED: ALMOND WATER & 1974 ROAD ATLAS",
+          color: "#45b649",
+          size: 1.05,
+        }, { audience: { player: who.id } });
+        if (w) w.notice = { text: "Glovebox: Found 1x Almond Water and an explorer's manual detailing fuel pump replacements.", at: now };
+        return;
+      }
+
+      if (w) w.notice = { text: "Vehicle already searched. Fuel tank is dry; fuel pump and injectors missing.", at: now };
+      return;
+    }
+
+    // 16. Entity 14: Lucky Crane (Docile Origami Paper Bird)
+    if (s.kind === "lucky-crane") {
+      heard(ctx, { clip: "cdn/sfx-soft-bright-two-note-success-chime.mp3", position: pos, volume: 0.85, maxDistance: 12 });
+      w.sanity = Math.min(100, (w.sanity ?? 80) + 25);
+      w.payout = { xp: 20 };
+
+      ctx.emit("sparkle", {
+        position: { x: pos.x, y: pos.y + 0.4, z: pos.z },
+        color: "#ffffff",
+        count: 12,
+      }, { audience: { player: who.id } });
+
+      ctx.emit("damageNumber", {
+        position: { x: pos.x, y: pos.y + 0.8, z: pos.z },
+        text: "+25 SANITY (LUCKY CRANE'S BLESSING)",
+        color: "#4ecdc4",
+        size: 1.1,
+      }, { audience: { player: who.id } });
+
+      if (w) w.notice = { text: "Entity 14 (Lucky Crane): The folded paper crane flutters its delicate wings peacefully under the Level 11 Effect.", at: now };
+      return;
+    }
+
+    // 17. Capital Citizen Pamphlet: "A Different Kind of Urban"
+    if (s.kind === "capital-guide") {
+      heard(ctx, { clip: G("container-open-rustle"), position: pos, volume: 0.7, maxDistance: 10 });
+      const GUIDE_TEXT = "=== A DIFFERENT KIND OF URBAN (1974) ===\nPublished by the Capital Interim Council for New Residents:\n\n• HOUSING: Small apartments are free to all employed citizens.\n• SUPPLIES: Automated factories perpetually noclip goods into shops and homes when unobserved.\n• ENTITIES: The 'Level 11 Effect' pacifies Hounds and Facelings unless provoked. Treat them with respect.\n• VEHICLES: All cars lack fuel; do not attempt to start them without imported fuel pumps.\n• TRAVEL: Barricades mark areas with high concentrations of unmapped one-way exits. Do not cross them.";
+      if (w) {
+        w.sub = {
+          who: "A DIFFERENT KIND OF URBAN (CAPITAL COUNCIL)",
+          t: GUIDE_TEXT,
+          at: now,
+          d: 8000,
+        };
+      }
+      return;
+    }
+
+    // 18. Capital Market Produce Crate (Perpetually Noclipping Supplies)
+    if (s.kind === "market-produce") {
+      heard(ctx, { clip: G("container-open-rustle"), position: pos, volume: 0.8, maxDistance: 10 });
+      w.hunger = Math.min(100, (w.hunger ?? 70) + 30);
+      w.sanity = Math.min(100, (w.sanity ?? 80) + 15);
+      w.payout = { xp: 15 };
+
+      ctx.emit("damageNumber", {
+        position: { x: pos.x, y: pos.y + 1.0, z: pos.z },
+        text: "+FRESH CAPITAL BREAD & APPLE (+30 HUNGER, +15 SANITY)",
+        color: "#f39c12",
+        size: 1.05,
+      }, { audience: { player: who.id } });
+
+      if (w) w.notice = { text: "Capital Market: Free citizen rations taken. Refineries perpetually restock the crate via noclip when unobserved.", at: now };
+      return;
+    }
+
+    // 19. Simulated Roadworks Pneumatic Drill & Generator
+    if (s.kind === "roadwork-drill" || s.kind === "roadwork-gen") {
+      heard(ctx, { clip: MOTOR_WHIR, position: pos, volume: 0.85, maxDistance: 16 });
+      ctx.emit("damageNumber", {
+        position: { x: pos.x, y: pos.y + 1.2, z: pos.z },
+        text: "*RATTLE* SIMULATED INFRASTRUCTURE DRILL",
+        color: "#e67e22",
+        size: 1.0,
+      }, { audience: { player: who.id } });
+      if (w) w.notice = { text: "Roadworks Site: B.R.C. permit #74-ROADS. As ambassadors noted in 1977, city maintenance appears spontaneously.", at: now };
+      return;
+    }
+
+    // 20. Capital Apartment Kitchen Sink (Pure Municipal Almond Water)
+    if (s.kind === "apt-tap") {
+      heard(ctx, { clip: DRINK_WATER, position: pos, volume: 0.85, maxDistance: 12 });
+      w.thirst = Math.min(100, (w.thirst ?? 60) + 40);
+      w.sanity = Math.min(100, (w.sanity ?? 80) + 15);
+
+      ctx.emit("damageNumber", {
+        position: { x: pos.x, y: pos.y + 1.0, z: pos.z },
+        text: "+PURE ALMOND TAP WATER (+40 THIRST, +15 SANITY)",
+        color: "#00d2d3",
+        size: 1.05,
+      }, { audience: { player: who.id } });
+
+      if (w) w.notice = { text: "Apartment Sink: All municipal tap water in the Capital is tested pure Almond Water.", at: now };
+      return;
+    }
+
+    // 21. Capital Apartment Steam Radiator
+    if (s.kind === "apt-radiator") {
+      heard(ctx, { clip: MOTOR_WHIR, position: pos, volume: 0.65, maxDistance: 10 });
+      w.sanity = Math.min(100, (w.sanity ?? 80) + 10);
+      ctx.emit("damageNumber", {
+        position: { x: pos.x, y: pos.y + 1.0, z: pos.z },
+        text: "+STEAM RADIATOR WARMTH (+10 SANITY)",
+        color: "#ff7675",
+        size: 1.0,
+      }, { audience: { player: who.id } });
+      if (w) w.notice = { text: "Cast Iron Radiator: Radiating gentle steam warmth generated by Level 11's autonomous utilities.", at: now };
+      return;
+    }
+
+    // 22. Capital Apartment Vintage Tube Radio
+    if (s.kind === "apt-radio") {
+      heard(ctx, { clip: PAYPHONE_STATIC, position: pos, volume: 0.7, maxDistance: 12 });
+      heard(ctx, { clip: "cdn/sfx-soft-bright-two-note-success-chime.mp3", position: pos, volume: 0.6, pitch: 0.8, maxDistance: 12 });
+      const STATIONS = [
+        "104.2 Capital FM: Playing gentle 1940s brass jazz. The city hums outside.",
+        "88.7 Municipal Radio: 'Weather today: Clear, 72°F. Noclipping shipments on schedule.'",
+        "Backrooms Shortwave: '...M.E.G. Base Beta reporting all gates secure on 11th Avenue...'",
+      ];
+      s.stationIdx = ((s.stationIdx ?? -1) + 1) % STATIONS.length;
+      if (w) w.notice = { text: STATIONS[s.stationIdx], at: now };
+      return;
+    }
   },
 };

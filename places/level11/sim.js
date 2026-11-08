@@ -18,7 +18,7 @@ import { layVaults } from "../../scripts/lib/level11-vaults.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 26; // bump to rebuild the city in rooms that are already open
+const V = 27; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1080,6 +1080,342 @@ function lay(ctx) {
       ...npcState(ctx, "faceling", 90),
     },
   });
+
+  // ==========================================
+  // 17. SCENE: SPONTANEOUS SIMULATED ROADWORKS (Wikidot Image 2 & Section "Further Fluidity")
+  // ==========================================
+  // "A handful of cars and a simulated roadworks site."
+  // "Roadworks and city maintenance appear spontaneously, alongside scaffolding, graffiti, waste bins, etc."
+  const RW_X = -4.5;
+  const RW_Z = 52.0;
+
+  // Steel trench excavation plate over asphalt cut
+  bx("l11-roadwork-plate", RW_X, 0.08, RW_Z, 2.2, 0.05, 3.4, STEEL, { rotation: { yaw: 2 } });
+  // Trench Steam Seep
+  sp("l11-roadwork-steam", {
+    feetPosition: { x: RW_X + 0.9, y: 0.12, z: RW_Z },
+    fx: { script: `fx
+pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 size=0.15..0.35 acc=drag(1.1)+buoy(0.2) col=<0.95,0.95,0.98> a=0.35>0 sz=$size*(1>2.4) r=sprite(smoke-puff,alpha)` },
+  });
+
+  // A-Frame Striped Orange/White Road Barricades
+  [-1.8, 1.8].forEach((dz, k) => {
+    bx(`l11-roadwork-barricade-${k}`, RW_X, 0.1, RW_Z + dz, 2.2, 0.9, 0.15, { color: "#ff6600", roughness: 0.7 }, {
+      children: [
+        { feetPosition: { x: 0, y: 0.65, z: 0.08 }, primitive: { kind: "box", width: 2.1, height: 0.2, depth: 0.02 }, material: { color: "#ffffff", roughness: 0.5 } },
+        { feetPosition: { x: 0, y: 0.35, z: 0.08 }, primitive: { kind: "box", width: 2.1, height: 0.2, depth: 0.02 }, material: { color: "#ffffff", roughness: 0.5 } },
+        { feetPosition: { x: 0.8, y: 0.95, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.08, height: 0.18 }, material: { color: "#ff9900", emissive: "#ff9900", emissiveIntensity: 2.5 } },
+      ],
+    });
+  });
+
+  // Orange Rubber Traffic Cones
+  [-1.2, -0.4, 0.4, 1.2].forEach((dz, k) => {
+    cyl(`l11-roadwork-cone-${k}`, RW_X + 1.3, 0.1, RW_Z + dz, 0.04, 0.18, 0.7, { color: "#ff5500", roughness: 0.6 }, {
+      children: [
+        { feetPosition: { x: 0, y: 0.35, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.11, radiusBottom: 0.13, height: 0.16 }, material: { color: "#ffffff", roughness: 0.4 } },
+      ],
+    });
+  });
+
+  // Diesel Air Compressor & Generator
+  sp("l11-roadwork-gen", {
+    tags: ["usable"],
+    feetPosition: { x: RW_X - 1.2, y: 0.1, z: RW_Z - 0.6 },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 1.1, height: 0.9, depth: 1.6 },
+    material: { color: "oklch(0.78 0.18 85)", metalness: 0.7, roughness: 0.35 },
+    behavior: "scripts/level11-use.js",
+    state: { kind: "roadwork-gen", name: "B.R.C. Infrastructure Diesel Compressor", verb: "Inspect Compressor" },
+    children: [
+      { feetPosition: { x: 0, y: 0.95, z: 0.4 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.04, height: 0.45 }, material: STEEL_BRUSHED },
+      { feetPosition: { x: 0.56, y: 0.55, z: -0.3 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.04 }, rotation: { pitch: 90 }, material: STEEL_BRUSHED },
+    ],
+  });
+
+  // Pneumatic Jackhammer Tool
+  sp("l11-roadwork-drill", {
+    tags: ["usable"],
+    feetPosition: { x: RW_X - 0.4, y: 0.1, z: RW_Z + 0.8 },
+    rotation: { pitch: 18, yaw: 45 },
+    primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.05, height: 1.1 },
+    material: STEEL_BRUSHED,
+    behavior: "scripts/level11-use.js",
+    state: { kind: "roadwork-drill", name: "Heavy Pneumatic Pavement Drill", verb: "Inspect Drill" },
+    children: [
+      { feetPosition: { x: 0, y: 0.95, z: 0 }, primitive: { kind: "box", width: 0.32, height: 0.06, depth: 0.08 }, material: { color: "#111" } },
+      { feetPosition: { x: 0, y: -0.1, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.01, height: 0.35 }, material: STEEL_BRUSHED },
+    ],
+  });
+
+  // B.R.C. Roadwork Sign
+  sp("l11-roadwork-sign", {
+    feetPosition: { x: RW_X, y: 0.1, z: RW_Z - 2.8 },
+    rotation: { yaw: 180 },
+    primitive: { kind: "box", width: 1.8, height: 1.1, depth: 0.05 },
+    material: { color: "#ff6600" },
+    ui: `<div face="front" width="1.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#ff6600;color:#000000;font-family:Arial Black,sans-serif;font-weight:900;text-align:center;border:4px solid #000;box-sizing:border-box;padding:8px">
+      <div style="font-size:52px;letter-spacing:1px">ROAD WORK AHEAD</div>
+      <div style="font-size:24px;margin-top:6px;font-family:monospace">B.R.C. PERMIT #74-ROADS</div>
+      <div style="font-size:18px;color:#111">SPONTANEOUS INFRASTRUCTURE WORK</div>
+    </div>`,
+  });
+
+  // ==========================================
+  // 18. SCENE: BUILDING SCAFFOLDING & STREET GRAFFITI (Wikidot Lore)
+  // ==========================================
+  const SCAF_X = 22.0;
+  const SCAF_Z = 31.0;
+
+  // Tubular steel uprights
+  [-1.6, 1.6].forEach((dx) => {
+    [-2.2, 2.2].forEach((dz) => {
+      cyl(`l11-scaf-post-${dx}-${dz}`, SCAF_X + dx, 0.1, SCAF_Z + dz, 0.04, 0.04, 5.6, STEEL_BRUSHED);
+    });
+  });
+
+  // Walkway decks (Tier 1 at y: 2.4, Tier 2 at y: 4.8)
+  bx("l11-scaf-deck1", SCAF_X, 2.4, SCAF_Z, 3.4, 0.08, 4.6, WOOD);
+  bx("l11-scaf-deck2", SCAF_X, 4.8, SCAF_Z, 3.4, 0.08, 4.6, WOOD);
+
+  // Outer guardrails
+  bx("l11-scaf-rail1", SCAF_X - 1.6, 3.3, SCAF_Z, 0.06, 0.06, 4.4, STEEL_BRUSHED);
+  bx("l11-scaf-rail2", SCAF_X - 1.6, 5.7, SCAF_Z, 0.06, 0.06, 4.4, STEEL_BRUSHED);
+
+  // Green safety mesh debris netting
+  bx("l11-scaf-mesh", SCAF_X - 1.65, 0.1, SCAF_Z, 0.02, 5.2, 4.2, { color: "oklch(0.35 0.12 150)", opacity: 0.65, transparent: true, roughness: 0.95 }, { physics: undefined });
+
+  // Climbable scaffold ladder
+  sp("l11-scaf-ladder", {
+    tags: ["usable"],
+    feetPosition: { x: SCAF_X - 1.5, y: 0.1, z: SCAF_Z + 1.8 },
+    primitive: { kind: "box", width: 0.55, height: 4.8, depth: 0.2 },
+    material: STEEL_BRUSHED,
+    behavior: "scripts/level11-use.js",
+    state: { kind: "ladder", name: "Construction Scaffold Ladder", verb: "Climb Scaffolding" },
+    children: [
+      ...[0.8, 1.6, 2.4, 3.2, 4.0].map((ry) => ({
+        feetPosition: { x: 0, y: ry, z: 0 },
+        primitive: { kind: "box", width: 0.48, height: 0.04, depth: 0.08 },
+        material: STEEL_BRUSHED,
+      })),
+    ],
+  });
+
+  // Street Graffiti on Wall Behind Scaffold
+  sp("l11-street-graffiti", {
+    feetPosition: { x: SCAF_X + 1.55, y: 1.8, z: SCAF_Z },
+    rotation: { yaw: -90 },
+    primitive: { kind: "box", width: 3.8, height: 1.6, depth: 0.02 },
+    material: { color: "oklch(0.2 0.01 250)", transparent: true, opacity: 0.0 },
+    ui: `<div face="front" width="3.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Courier New',monospace;font-weight:900;text-align:center;line-height:1.2">
+      <div style="font-size:60px;color:#e74c3c;letter-spacing:4px">THE CITY NEVER SLEEPS</div>
+      <div style="font-size:36px;color:#f1c40f">BRC RENOVATIONS · 1974</div>
+      <div style="font-size:26px;color:#3498db">DON'T PROVOKE THE HOUNDS</div>
+    </div>`,
+  });
+
+  // ==========================================
+  // 19. SCENE: THE CAPITAL CENTRAL MARKET (Wikidot Image 1)
+  // ==========================================
+  // "A high density city street jam packed with people and stalls for various foodstuffs."
+  // "The Capital is the main residential hub for the entirety of Level 11."
+  const MKT_X = -13.8;
+  const MKT_Z = 36.0;
+
+  // Timber market stall frame
+  bx("l11-market-frame-l", MKT_X, 0.1, MKT_Z - 2.2, 0.12, 2.7, 0.12, WOOD);
+  bx("l11-market-frame-r", MKT_X, 0.1, MKT_Z + 2.2, 0.12, 2.7, 0.12, WOOD);
+  bx("l11-market-frame-back-l", MKT_X - 1.8, 0.1, MKT_Z - 2.2, 0.12, 3.1, 0.12, WOOD);
+  bx("l11-market-frame-back-r", MKT_X - 1.8, 0.1, MKT_Z + 2.2, 0.12, 3.1, 0.12, WOOD);
+
+  // Red & Cream striped fabric canvas canopy
+  bx("l11-market-awning", MKT_X - 0.9, 2.9, MKT_Z, 2.2, 0.08, 4.6, { color: "#b02a2a", roughness: 0.85 }, {
+    rotation: { roll: 10 },
+  });
+
+  // Market Counter Table
+  bx("l11-market-counter", MKT_X - 0.2, 0.1, MKT_Z, 0.9, 0.95, 4.2, { ...T("worn-hardwood-grain", 1), color: "oklch(0.55 0.05 60)" });
+
+  // Sign: B.N.T.G. Provisions Stall
+  sp("l11-market-sign", {
+    feetPosition: { x: MKT_X + 0.1, y: 2.5, z: MKT_Z },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 3.6, height: 0.65, depth: 0.04 },
+    material: { color: "#111" },
+    ui: `<div face="front" width="3.6m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a252f;border:2px solid #f39c12;box-sizing:border-box;color:#ffffff;font-family:Georgia,serif;text-align:center">
+      <div style="font-size:52px;font-weight:bold;color:#f39c12">B.N.T.G. PROVISIONS & RATIONS</div>
+      <div style="font-size:24px;letter-spacing:3px;color:#ecf0f1">CAPITAL CENTRAL MARKET · POST #11</div>
+    </div>`,
+  });
+
+  // Produce Crate: Free Citizen Food Rations (Noclipping Goods)
+  sp("l11-market-produce-crate", {
+    tags: ["usable"],
+    feetPosition: { x: MKT_X - 0.2, y: 1.05, z: MKT_Z - 1.1 },
+    primitive: { kind: "box", width: 0.7, height: 0.35, depth: 0.9 },
+    material: WOOD,
+    behavior: "scripts/level11-use.js",
+    state: { kind: "market-produce", name: "Crate of Capital Apples & Fresh Bread", verb: "Take Free Citizen Ration" },
+    children: [
+      { feetPosition: { x: -0.15, y: 0.22, z: 0 }, primitive: { kind: "sphere", radius: 0.1 }, material: { color: "#e74c3c", roughness: 0.3 } },
+      { feetPosition: { x: 0.15, y: 0.22, z: 0 }, primitive: { kind: "sphere", radius: 0.1 }, material: { color: "#c0392b", roughness: 0.3 } },
+      { feetPosition: { x: 0, y: 0.24, z: 0.2 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.09, height: 0.3 }, rotation: { roll: 90 }, material: { color: "#d35400", roughness: 0.9 } },
+    ],
+  });
+
+  // Pamphlet Display Stand: "A Different Kind of Urban" (Wikidot Lore)
+  sp("l11-market-guide", {
+    tags: ["usable"],
+    feetPosition: { x: MKT_X - 0.2, y: 1.05, z: MKT_Z + 1.1 },
+    primitive: { kind: "box", width: 0.35, height: 0.05, depth: 0.45 },
+    material: { color: "#2980b9" },
+    behavior: "scripts/level11-use.js",
+    state: { kind: "capital-guide", name: "'A Different Kind of Urban' Booklet", verb: "Read Capital Guide (1974)" },
+    children: [
+      { feetPosition: { x: 0, y: 0.04, z: 0 }, primitive: { kind: "box", width: 0.32, height: 0.02, depth: 0.42 }, material: { color: "#ecf0f1" } },
+    ],
+  });
+
+  // B.N.T.G. Merchant NPC: Trader Kael
+  sp("l11-trader-kael", {
+    tags: ["npc", "bntg"],
+    feetPosition: { x: MKT_X - 1.1, y: 0.1, z: MKT_Z },
+    rotation: { yaw: 90 },
+    physics: "character",
+    ...critterSpec(npcLook("l11-kael", { species: "fox", sex: "m", topw: "vest", top: "#8e44ad", botw: "pants", bottom: "#2c3e50", shoes: "boots" }, "trader", 11)),
+    behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
+    state: {
+      name: "Trader Kael · B.N.T.G. Merchant",
+      role: "merchant",
+      voice: "reyes",
+      faction: "bntg",
+      factionName: "Backrooms Non-Commercial Traders Guild",
+      home: { x: MKT_X - 1.1, z: MKT_Z },
+      line: "Greetings, citizen! Fresh bread and apples just noclipped into our crates this morning. The Capital always keeps its people fed.",
+      ...npcState(ctx, "trader", 100),
+    },
+  });
+
+  // ==========================================
+  // 20. ENTITY 14: LUCKY CRANE (Wikidot Lore Docile Entity)
+  // ==========================================
+  // "Common creatures, like Facelings and Hounds, are the most numerous entities on Level 11, and rarer ones like Lucky Cranes appear less often."
+  // Entity 14 (Lucky Cranes) are gentle origami paper birds that flock to peaceful hubs.
+  const CRANE_X = -6.5;
+  const CRANE_Z = CANAL_Z + 10.5;
+
+  sp("l11-lucky-crane", {
+    tags: ["usable", "pet"],
+    feetPosition: { x: CRANE_X, y: 0.35, z: CRANE_Z },
+    rotation: { yaw: -45 },
+    primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.12, height: 0.22 },
+    material: { color: "#ffffff", emissive: "#ffffff", emissiveIntensity: 0.35, roughness: 0.8 },
+    behavior: "scripts/level11-use.js",
+    state: {
+      kind: "lucky-crane",
+      name: "Entity 14 · Docile Lucky Crane",
+      verb: "Pet Paper Crane",
+      info: "A sentient origami paper crane resting on the canal wall. Completely docile under the Level 11 Effect.",
+    },
+    children: [
+      // Left Wing
+      { feetPosition: { x: -0.16, y: 0.14, z: 0 }, rotation: { roll: 25 }, primitive: { kind: "box", width: 0.26, height: 0.02, depth: 0.16 }, material: { color: "#ffffff", roughness: 0.8 } },
+      // Right Wing
+      { feetPosition: { x: 0.16, y: 0.14, z: 0 }, rotation: { roll: -25 }, primitive: { kind: "box", width: 0.26, height: 0.02, depth: 0.16 }, material: { color: "#ffffff", roughness: 0.8 } },
+      // Slender Origami Neck & Beak
+      { feetPosition: { x: 0, y: 0.24, z: -0.1 }, rotation: { pitch: -35 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.04, height: 0.2 }, material: { color: "#ffffff", roughness: 0.8 } },
+      // Folded Tail
+      { feetPosition: { x: 0, y: 0.18, z: 0.12 }, rotation: { pitch: 45 }, primitive: { kind: "cylinder", radiusTop: 0.01, radiusBottom: 0.03, height: 0.16 }, material: { color: "#ffffff", roughness: 0.8 } },
+    ],
+  });
+
+  // ==========================================
+  // 21. SCENE: ENTERABLE CAPITAL CITIZEN APARTMENT (Wikidot Lore)
+  // ==========================================
+  // "45,000 people who predominantly live in small apartments."
+  // "Appliances are fully operational, which at minimum encompasses lighting, heating, and taps."
+  const APT_X = -27.0;
+  const APT_Z = 58.0;
+  const APT_W = 10.0;
+  const APT_D = 8.0;
+  const APT_H = 3.6;
+
+  // Exterior Stoop & Steps
+  bx("l11-apt-stoop", APT_X + APT_W / 2 + 1.2, -0.04, APT_Z, 2.4, 0.45, 2.2, SIDEWALK);
+  for (const s of [-1, 1]) {
+    bx(`l11-apt-stoop-rail-${s}`, APT_X + APT_W / 2 + 1.2, 0.45, APT_Z + s * 1.0, 2.2, 0.85, 0.06, IRON_RAIL);
+  }
+
+  // Apartment Shell & Walls
+  bx("l11-apt-floor", APT_X, 0.22, APT_Z, APT_W - 0.4, 0.1, APT_D - 0.4, { ...T("worn-hardwood-grain", 2), color: "oklch(0.62 0.06 65)", roughness: 0.65 });
+  bx("l11-apt-rug", APT_X - 1.5, 0.28, APT_Z, 4.5, 0.02, 3.8, { ...T("worn-canvas-fabric", 2), color: "oklch(0.48 0.14 30)", roughness: 0.9 }, { physics: undefined });
+
+  // Plaster walls with cream paint
+  bx("l11-apt-wall-w", APT_X - APT_W / 2, 0.22, APT_Z, 0.2, APT_H, APT_D, STUCCO_MALL);
+  bx("l11-apt-wall-n", APT_X, 0.22, APT_Z + APT_D / 2, APT_W, APT_H, 0.2, STUCCO_MALL);
+  bx("l11-apt-wall-s", APT_X, 0.22, APT_Z - APT_D / 2, APT_W, APT_H, 0.2, STUCCO_MALL);
+  // Front wall with doorway
+  bx("l11-apt-wall-e1", APT_X + APT_W / 2, 0.22, APT_Z - 2.4, 0.2, APT_H, 3.2, BRICK_BLDG);
+  bx("l11-apt-wall-e2", APT_X + APT_W / 2, 0.22, APT_Z + 2.4, 0.2, APT_H, 3.2, BRICK_BLDG);
+  bx("l11-apt-wall-etop", APT_X + APT_W / 2, 2.62, APT_Z, 0.2, 1.2, 1.6, BRICK_BLDG);
+  bx("l11-apt-ceil", APT_X, APT_H + 0.1, APT_Z, APT_W, 0.2, APT_D, { color: "oklch(0.85 0.01 250)" });
+
+  // Warm Living Room Armchair & Table
+  bx("l11-apt-chair", APT_X - 2.4, 0.26, APT_Z, 1.0, 0.85, 1.0, { color: "oklch(0.38 0.08 140)", roughness: 0.85 });
+  cyl("l11-apt-table", APT_X - 0.8, 0.26, APT_Z, 0.5, 0.5, 0.65, WOOD);
+
+  // Tabletop Vacuum-Tube Radio
+  sp("l11-apt-radio", {
+    tags: ["usable"],
+    feetPosition: { x: APT_X - 0.8, y: 0.91, z: APT_Z },
+    primitive: { kind: "box", width: 0.42, height: 0.28, depth: 0.25 },
+    material: { ...T("worn-hardwood-grain", 1), color: "oklch(0.45 0.08 55)" },
+    behavior: "scripts/level11-use.js",
+    state: { kind: "apt-radio", name: "Capital Vacuum-Tube Radio", verb: "Tune Radio" },
+    children: [
+      { feetPosition: { x: 0, y: 0.14, z: 0.13 }, primitive: { kind: "box", width: 0.24, height: 0.12, depth: 0.02 }, material: { color: "#ffb142", emissive: "#ff9f1a", emissiveIntensity: 2.2 } },
+    ],
+  });
+
+  // Working Cast Iron Steam Radiator (Autonomous Utilities)
+  sp("l11-apt-radiator", {
+    tags: ["usable"],
+    feetPosition: { x: APT_X - APT_W / 2 + 0.6, y: 0.26, z: APT_Z - 2.8 },
+    primitive: { kind: "box", width: 0.35, height: 0.85, depth: 1.4 },
+    material: { color: "oklch(0.7 0.02 85)", metalness: 0.8, roughness: 0.4 },
+    behavior: "scripts/level11-use.js",
+    state: { kind: "apt-radiator", name: "Autonomous Steam Radiator", verb: "Warm Hands at Radiator" },
+    children: [
+      ...[-0.5, -0.25, 0, 0.25, 0.5].map((rz) => ({
+        feetPosition: { x: 0, y: 0.42, z: rz },
+        primitive: { kind: "box", width: 0.32, height: 0.75, depth: 0.14 },
+        material: { color: "oklch(0.7 0.02 85)", metalness: 0.8, roughness: 0.4 },
+      })),
+    ],
+  });
+
+  // Kitchenette Counter & Working Sink Tap (Pure Municipal Almond Water)
+  bx("l11-apt-counter", APT_X + 2.2, 0.26, APT_Z + 2.4, 2.6, 0.95, 1.1, { ...T("cream-painted-plaster-wall", 1), color: "oklch(0.9 0.02 85)" });
+  sp("l11-apt-sink", {
+    tags: ["usable"],
+    feetPosition: { x: APT_X + 2.2, y: 1.21, z: APT_Z + 2.4 },
+    primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.02, height: 0.28 },
+    material: STEEL_BRUSHED,
+    behavior: "scripts/level11-use.js",
+    state: { kind: "apt-tap", name: "Kitchen Tap (Pure Almond Water)", verb: "Drink Municipal Tap Water" },
+    children: [
+      { feetPosition: { x: 0, y: 0.26, z: -0.08 }, rotation: { pitch: -60 }, primitive: { kind: "cylinder", radiusTop: 0.015, radiusBottom: 0.015, height: 0.16 }, material: STEEL_BRUSHED },
+    ],
+  });
+
+  // Cozy Ceiling Pendant Light
+  sp("l11-apt-light", {
+    feetPosition: { x: APT_X, y: APT_H - 0.2, z: APT_Z },
+    primitive: { kind: "sphere", radius: 0.15 },
+    material: { color: "#fff2cc", emissive: "#ffeaa7", emissiveIntensity: 2.8 },
+    light: { kind: "point", color: "oklch(0.95 0.1 85)", intensity: 4.8, distance: 12 },
+  });
 }
 
 
@@ -1173,6 +1509,15 @@ export function tick(ctx) {
           : `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ff4400;font-family:Arial,sans-serif;font-weight:900;font-size:90px;text-align:center">WAIT</div>`;
       }
     });
+
+    if (isGreen) {
+      heard(ctx, {
+        clip: "cdn/sfx-soft-bright-two-note-success-chime.mp3",
+        position: { x: 0, y: 3.2, z: 12 },
+        volume: 0.65,
+        maxDistance: 45,
+      });
+    }
   }
 
   // Periodic distant phone ring
