@@ -255,7 +255,7 @@ bc-fstatue:
   feetPosition: {x: 0, y: 0.83, z: 12}
   id: bc-fstatue
   layout: {box: {max: {x: 0.65, y: 2.5, z: 0.65}, min: {x: -0.65, y: 0, z: -0.65}}}
-  model: {id: /cdn/value.89254d4309b27215e869ad6ba9abdd2b9cdf1cf139c9e3ca2a3a7818fc5c36a7.glb}
+  model: {id: /cdn/value.eb4351da807a7988461aec04b376d7da9e1cfbe1635928e0fc1de5766472458f.glb}
   rotation: {yaw: 180}
 bc-gallery-sign:
   feetPosition: {x: 9.7, y: 9.6, z: -13}
@@ -344,43 +344,43 @@ bc-palm-6:
 bc-planter-1:
   feetPosition: {x: -4.5, y: 0, z: 22}
   id: bc-planter-1
-  layout: {box: {max: {x: 1.1, y: 1.6, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.ae6b57a4fa824584931cd189f8f5ccf78a17abd3d69dcb8c9666751daf801d45.glb}
+  layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.ce0f1ed9a8452220c62523c8962435fe4db30c8633edd8e6197beb756c6d82dc.glb}
   physics: {body: static, collider: box}
   tags: [bonus-court]
 bc-planter-2:
   feetPosition: {x: 4.5, y: 0, z: 22}
   id: bc-planter-2
-  layout: {box: {max: {x: 1.1, y: 1.6, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.ae6b57a4fa824584931cd189f8f5ccf78a17abd3d69dcb8c9666751daf801d45.glb}
+  layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.ce0f1ed9a8452220c62523c8962435fe4db30c8633edd8e6197beb756c6d82dc.glb}
   physics: {body: static, collider: box}
   tags: [bonus-court]
 bc-planter-3:
   feetPosition: {x: -4.5, y: 0, z: 4}
   id: bc-planter-3
-  layout: {box: {max: {x: 1.1, y: 1.6, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.ae6b57a4fa824584931cd189f8f5ccf78a17abd3d69dcb8c9666751daf801d45.glb}
+  layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.ce0f1ed9a8452220c62523c8962435fe4db30c8633edd8e6197beb756c6d82dc.glb}
   physics: {body: static, collider: box}
   tags: [bonus-court]
 bc-planter-4:
   feetPosition: {x: 4.5, y: 0, z: 4}
   id: bc-planter-4
-  layout: {box: {max: {x: 1.1, y: 1.6, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.ae6b57a4fa824584931cd189f8f5ccf78a17abd3d69dcb8c9666751daf801d45.glb}
+  layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.ce0f1ed9a8452220c62523c8962435fe4db30c8633edd8e6197beb756c6d82dc.glb}
   physics: {body: static, collider: box}
   tags: [bonus-court]
 bc-planter-5:
   feetPosition: {x: -4.5, y: 0, z: -24}
   id: bc-planter-5
-  layout: {box: {max: {x: 1.1, y: 1.6, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.ae6b57a4fa824584931cd189f8f5ccf78a17abd3d69dcb8c9666751daf801d45.glb}
+  layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.ce0f1ed9a8452220c62523c8962435fe4db30c8633edd8e6197beb756c6d82dc.glb}
   physics: {body: static, collider: box}
   tags: [bonus-court]
 bc-planter-6:
   feetPosition: {x: 4.5, y: 0, z: -24}
   id: bc-planter-6
-  layout: {box: {max: {x: 1.1, y: 1.6, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.ae6b57a4fa824584931cd189f8f5ccf78a17abd3d69dcb8c9666751daf801d45.glb}
+  layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.ce0f1ed9a8452220c62523c8962435fe4db30c8633edd8e6197beb756c6d82dc.glb}
   physics: {body: static, collider: box}
   tags: [bonus-court]
 bc-plaque-1:
