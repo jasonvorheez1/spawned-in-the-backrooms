@@ -30,6 +30,7 @@ l5-ball-barcart:
   tags: [container, furniture, lootfurn, breakable, l5-ball]
   visibleRange: {max: 40, min: 0}
 l5-ball-boilersign:
+  castShadow: false
   feetPosition: {x: 17.82, y: 1.9, z: 16.25}
   id: l5-ball-boilersign
   rotation: {yaw: -90}
@@ -574,6 +575,7 @@ l5-boil-m0:
   rotation: {yaw: 180}
   state: {hp: 300, mat: machine, maxHp: 300, name: Pressure tank}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m1:
   castShadow: true
   feetPosition: {x: 27, y: 0, z: -23}
@@ -585,6 +587,7 @@ l5-boil-m1:
   rotation: {yaw: 90}
   state: {hp: 420, mat: machine, maxHp: 420, name: Riveted boiler}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m10:
   castShadow: true
   feetPosition: {x: 40.5, y: 0, z: -6.5}
@@ -596,6 +599,7 @@ l5-boil-m10:
   rotation: {yaw: 90}
   state: {hp: 200, mat: machine, maxHp: 200, name: Feed pump}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m11:
   castShadow: true
   feetPosition: {x: 42, y: 0, z: -3.5}
@@ -607,6 +611,7 @@ l5-boil-m11:
   rotation: {yaw: 0}
   state: {hp: 260, mat: machine, maxHp: 260, name: Condenser}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m12:
   castShadow: true
   feetPosition: {x: 34.5, y: 0, z: 1}
@@ -618,6 +623,7 @@ l5-boil-m12:
   rotation: {yaw: 90}
   state: {hp: 140, mat: machine, maxHp: 140, name: Gauge panel}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m13:
   castShadow: true
   feetPosition: {x: 21, y: 0, z: 7}
@@ -629,6 +635,7 @@ l5-boil-m13:
   rotation: {yaw: 180}
   state: {hp: 420, mat: machine, maxHp: 420, name: Riveted boiler}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m14:
   castShadow: true
   feetPosition: {x: 28.5, y: 0, z: 7}
@@ -640,6 +647,7 @@ l5-boil-m14:
   rotation: {yaw: 90}
   state: {hp: 260, mat: machine, maxHp: 260, name: Condenser}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m15:
   castShadow: true
   feetPosition: {x: 28.5, y: 0, z: 11.5}
@@ -651,6 +659,7 @@ l5-boil-m15:
   rotation: {yaw: 90}
   state: {hp: 300, mat: machine, maxHp: 300, name: Pressure tank}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m16:
   castShadow: true
   feetPosition: {x: 42, y: 0, z: 5.5}
@@ -662,6 +671,7 @@ l5-boil-m16:
   rotation: {yaw: 0}
   state: {hp: 360, mat: machine, maxHp: 360, name: Steam turbine}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m17:
   castShadow: true
   feetPosition: {x: 36, y: 0, z: 10}
@@ -673,6 +683,7 @@ l5-boil-m17:
   rotation: {yaw: 0}
   state: {hp: 520, mat: machine, maxHp: 520, name: Coal furnace}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m18:
   castShadow: true
   feetPosition: {x: 43.5, y: 0, z: 11.5}
@@ -684,6 +695,7 @@ l5-boil-m18:
   rotation: {yaw: 90}
   state: {hp: 200, mat: machine, maxHp: 200, name: Feed pump}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m19:
   castShadow: true
   feetPosition: {x: 22.5, y: 0, z: 16}
@@ -707,6 +719,7 @@ l5-boil-m2:
   rotation: {yaw: 180}
   state: {hp: 360, mat: machine, maxHp: 360, name: Steam turbine}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m20:
   castShadow: true
   feetPosition: {x: 43.5, y: 0, z: 14.5}
@@ -718,6 +731,7 @@ l5-boil-m20:
   rotation: {yaw: 90}
   state: {hp: 300, mat: machine, maxHp: 300, name: Pressure tank}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m21:
   castShadow: true
   feetPosition: {x: 30, y: 0, z: 19}
@@ -729,6 +743,7 @@ l5-boil-m21:
   rotation: {yaw: 0}
   state: {hp: 420, mat: machine, maxHp: 420, name: Riveted boiler}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m22:
   castShadow: true
   feetPosition: {x: 39, y: 0, z: 17.5}
@@ -740,6 +755,7 @@ l5-boil-m22:
   rotation: {yaw: 180}
   state: {hp: 140, mat: machine, maxHp: 140, name: Gauge panel}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m23:
   castShadow: true
   feetPosition: {x: 27, y: 0, z: 23.5}
@@ -751,6 +767,7 @@ l5-boil-m23:
   rotation: {yaw: 0}
   state: {hp: 240, mat: machine, maxHp: 240, name: Compressor}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m24:
   castShadow: true
   feetPosition: {x: 39, y: 0, z: 23.5}
@@ -774,6 +791,7 @@ l5-boil-m3:
   rotation: {yaw: -90}
   state: {hp: 200, mat: machine, maxHp: 200, name: Feed pump}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m4:
   castShadow: true
   feetPosition: {x: 34.5, y: 0, z: -17}
@@ -785,6 +803,7 @@ l5-boil-m4:
   rotation: {yaw: 90}
   state: {hp: 140, mat: machine, maxHp: 140, name: Gauge panel}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m5:
   castShadow: true
   feetPosition: {x: 27, y: 0, z: -14}
@@ -796,6 +815,7 @@ l5-boil-m5:
   rotation: {yaw: 0}
   state: {hp: 520, mat: machine, maxHp: 520, name: Coal furnace}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m6:
   castShadow: true
   feetPosition: {x: 19.5, y: 0, z: -14}
@@ -819,6 +839,7 @@ l5-boil-m7:
   rotation: {yaw: 90}
   state: {hp: 420, mat: machine, maxHp: 420, name: Riveted boiler}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m8:
   castShadow: true
   feetPosition: {x: 33, y: 0, z: -8}
@@ -830,6 +851,7 @@ l5-boil-m8:
   rotation: {yaw: 90}
   state: {hp: 520, mat: machine, maxHp: 520, name: Coal furnace}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-m9:
   castShadow: true
   feetPosition: {x: 24, y: 0, z: -5}
@@ -841,6 +863,7 @@ l5-boil-m9:
   rotation: {yaw: 0}
   state: {hp: 360, mat: machine, maxHp: 360, name: Steam turbine}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80}
 l5-boil-pipes:
   castShadow: false
   feetPosition: {x: 0, y: 0, z: 0}
@@ -1066,6 +1089,7 @@ l5-elev-lobby-n:
   rotation: {yaw: -90}
   state: {cx: -44.85, cz: -7, floor: "1", home: "1", idx: 0, kids: {ind: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/3, lamp: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/4, leafL: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/0, leafR: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/1, panel: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/2}, lampI: 3, open: false, phase: idle, role: cab, style: copper, yaw: -90}
   tags: [l5-elev]
+  visibleRange: {max: 80}
 l5-elev-lobby-n/object/xe5bfa1adb29c7d30/0:
   feetPosition: {x: -0.29, y: 0.02, z: -1}
   id: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/0
@@ -1121,6 +1145,7 @@ l5-elev-lobby-s:
   rotation: {yaw: -90}
   state: {cx: -44.85, cz: 7, floor: "2", home: "2", idx: 1, kids: {ind: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/8, lamp: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/9, leafL: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/5, leafR: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/6, panel: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/7}, lampI: 3, open: false, phase: idle, role: cab, style: modern, yaw: -90}
   tags: [l5-elev]
+  visibleRange: {max: 80}
 l5-elev-lobby-s/object/xe5bfa1adb29c7d30/5:
   feetPosition: {x: -0.29, y: 0.02, z: -1.02}
   id: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/5
@@ -3861,6 +3886,7 @@ l5-l6-locker:
   tags: [container, breakable]
   visibleRange: {max: 40, min: 0}
 l5-l6-note:
+  castShadow: false
   feetPosition: {x: 45.699999999999996, y: 1, z: 7.05}
   id: l5-l6-note
   rotation: {yaw: 90}
@@ -4302,7 +4328,7 @@ l5-nvg-drag-3:
 l5-nvg-drop:
   behavior: scripts/l5-goggles.js
   castShadow: false
-  children: [{castShadow: false, feetPosition: {x: 0, y: 0.85, z: -0.255}, material: {color: oklch(0.15 0 0), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.02, height: 0.05, kind: box, width: 0.45}, visibleRange: {max: 40, min: 0}}, {feetPosition: {x: 0, y: 0.55, z: -0.256}, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 80' width='0.5m'><rect width='200' height='80' fill='#f0f0e8'/><text x='100' y='34' text-anchor='middle' font-family='sans-serif' font-size='26' fill='#1a3a7a'>M.E.G.</text><text x='100' y='62' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>RETURNS · DROP HERE</text></svg>"}]
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.85, z: -0.255}, material: {color: oklch(0.15 0 0), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.02, height: 0.05, kind: box, width: 0.45}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: 0, y: 0.55, z: -0.256}, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 80' width='0.5m'><rect width='200' height='80' fill='#f0f0e8'/><text x='100' y='34' text-anchor='middle' font-family='sans-serif' font-size='26' fill='#1a3a7a'>M.E.G.</text><text x='100' y='62' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>RETURNS · DROP HERE</text></svg>"}]
   feetPosition: {x: 45.2, y: 0, z: -19.6}
   id: l5-nvg-drop
   material: {color: oklch(0.4 0.06 240), metalness: 0.6, roughness: 0.55}
@@ -4315,7 +4341,7 @@ l5-nvg-drop:
 l5-nvg-radio:
   behavior: scripts/l5-goggles.js
   castShadow: false
-  children: [{castShadow: false, feetPosition: {x: 0, y: 0.9, z: 0}, material: {color: oklch(0.3 0.04 130), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.22, height: 0.26, kind: box, width: 0.42}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: 0.14, y: 1.16, z: 0}, material: {color: oklch(0.25 0 0), metalness: 0.6, roughness: 0.55}, primitive: {height: 0.5, kind: cylinder, radiusBottom: 0.008, radiusTop: 0.008}, visibleRange: {max: 40, min: 0}}, {feetPosition: {x: -0.1, y: 1, z: -0.115}, light: {color: oklch(0.75 0.15 40), distance: 2, intensity: 0.4, kind: point}, material: {color: oklch(0.7 0.2 30), emissive: oklch(0.7 0.22 30), emissiveIntensity: 3}, primitive: {kind: sphere, radius: 0.02}}, {feetPosition: {x: 0, y: 1, z: -0.112}, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 60' width='0.36m'><rect x='0' y='0' width='200' height='60' fill='#e8d78a'/><text x='100' y='26' text-anchor='middle' font-family='sans-serif' font-size='20' fill='#222'>BOILER CH.2</text><text x='100' y='50' text-anchor='middle' font-family='sans-serif' font-size='14' fill='#222'>ask for Ines</text></svg>"}]
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.9, z: 0}, material: {color: oklch(0.3 0.04 130), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.22, height: 0.26, kind: box, width: 0.42}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: 0.14, y: 1.16, z: 0}, material: {color: oklch(0.25 0 0), metalness: 0.6, roughness: 0.55}, primitive: {height: 0.5, kind: cylinder, radiusBottom: 0.008, radiusTop: 0.008}, visibleRange: {max: 40, min: 0}}, {feetPosition: {x: -0.1, y: 1, z: -0.115}, light: {color: oklch(0.75 0.15 40), distance: 2, intensity: 0.4, kind: point}, material: {color: oklch(0.7 0.2 30), emissive: oklch(0.7 0.22 30), emissiveIntensity: 3}, primitive: {kind: sphere, radius: 0.02}}, {castShadow: false, feetPosition: {x: 0, y: 1, z: -0.112}, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 60' width='0.36m'><rect x='0' y='0' width='200' height='60' fill='#e8d78a'/><text x='100' y='26' text-anchor='middle' font-family='sans-serif' font-size='20' fill='#222'>BOILER CH.2</text><text x='100' y='50' text-anchor='middle' font-family='sans-serif' font-size='14' fill='#222'>ask for Ines</text></svg>"}]
   feetPosition: {x: 16.6, y: 0, z: 15.4}
   id: l5-nvg-radio
   material: {color: oklch(0.35 0.03 140), metalness: 0.6, roughness: 0.55}
