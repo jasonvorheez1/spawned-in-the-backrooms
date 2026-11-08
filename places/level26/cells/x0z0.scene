@@ -97,48 +97,56 @@ l26-blood-0:
   material: {color: oklch(0.25 0.1 25), roughness: 0.3}
   primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 1.4, radiusTop: 1.4}
   scale: {x: 1, y: 1, z: 0.55}
+  visible: false
 l26-blood-1:
   feetPosition: {x: -3.5, y: 0.005, z: 26}
   id: l26-blood-1
   material: {color: oklch(0.25 0.1 25), roughness: 0.3}
   primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 0.9, radiusTop: 0.9}
   scale: {x: 1, y: 1, z: 0.75}
+  visible: false
 l26-blood-2:
   feetPosition: {x: 6.3, y: 0.005, z: 33}
   id: l26-blood-2
   material: {color: oklch(0.25 0.1 25), roughness: 0.3}
   primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 1.1, radiusTop: 1.1}
   scale: {x: 1, y: 1, z: 0.9500000000000001}
+  visible: false
 l26-blood-3:
   feetPosition: {x: -7, y: 0.005, z: 40}
   id: l26-blood-3
   material: {color: oklch(0.25 0.1 25), roughness: 0.3}
   primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 0.8, radiusTop: 0.8}
   scale: {x: 1, y: 1, z: 0.55}
+  visible: false
 l26-blood-4:
   feetPosition: {x: 1, y: 0.005, z: 22}
   id: l26-blood-4
   material: {color: oklch(0.25 0.1 25), roughness: 0.3}
   primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 0.6, radiusTop: 0.6}
   scale: {x: 1, y: 1, z: 0.75}
+  visible: false
 l26-blood-5:
   feetPosition: {x: -8.5, y: 0.005, z: -10}
   id: l26-blood-5
   material: {color: oklch(0.25 0.1 25), roughness: 0.3}
   primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 1.2, radiusTop: 1.2}
   scale: {x: 1, y: 1, z: 0.9500000000000001}
+  visible: false
 l26-blood-6:
   feetPosition: {x: 8, y: 0.005, z: -25}
   id: l26-blood-6
   material: {color: oklch(0.25 0.1 25), roughness: 0.3}
   primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 0.7, radiusTop: 0.7}
   scale: {x: 1, y: 1, z: 0.55}
+  visible: false
 l26-blood-7:
   feetPosition: {x: -2, y: 0.005, z: -34}
   id: l26-blood-7
   material: {color: oklch(0.25 0.1 25), roughness: 0.3}
   primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 1, radiusTop: 1}
   scale: {x: 1, y: 1, z: 0.75}
+  visible: false
 l26-bridge:
   feetPosition: {x: 0, y: 3.4, z: 3}
   id: l26-bridge
