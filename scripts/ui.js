@@ -1,3 +1,4 @@
+import { overlay as lagscopeOverlay } from '../mods/lagscope/panel.js'
 // Level 0 "The Lobby" HUD
 // Clean, minimal, and atmospheric.
 // Designed with quiet restraint: unobstructed sightlines, crisp typography, and non-intrusive status readouts.
