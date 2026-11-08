@@ -1,5 +1,5 @@
 # Level 11's modelled kit (art/level11/build.py, uploaded by art/level11/upload.py): name -> cdn id
-bench: "/cdn/value.bc5f835d9109d8fec1f1cfb4e62976bfa3db67e7eb48691c05c3ecf969ee2087.glb"
+bench: "/cdn/value.d38530fe8881dbb3291b160c5f1fdd94d2e468130a063e0e7797ff41048561d1.glb" # tripo
 bin: "/cdn/value.8e2e048ba8546298c3de00a42dbd53265af4b9c43d27731e9521968179197b93.glb"
 box: "/cdn/value.9091a41fb3e3a6d3769ca29e4ad81e1c6a88170e2122520ffd6bac0142ac2074.glb"
 brick_a: "/cdn/value.4c2f777ab42e4d952aa5fcd17121cb0f4b802b74d2957056d90e44fc9e52d9ec.glb"
@@ -7,14 +7,14 @@ brick_b: "/cdn/value.e97f665aac7fca7fd4ca00d7aef83bc7b147e41e7dfc5bfc77fe5e16089
 glass_a: "/cdn/value.45ebeae511d5630c8a31ee89821e0e89261df4155efdd3aa3cc5795400fb826b.glb"
 glass_b: "/cdn/value.21beb76dac479519dd33a104f1f75d3e98b7cb14c950ebf0017d1feda52d38b1.glb"
 house: "/cdn/value.07925869ea8d303d6306d36687ed705cf62304f80e74e81a27d2f6f171597ea6.glb"
-hydrant: "/cdn/value.32314d04cf2e969c6dce946add533505559ef761a5c120b6abce508282ba745f.glb"
+hydrant: "/cdn/value.900298491adadd82d6f2f0ea33215b5dfe54fbec4db1d4a8aafe11cdb1c5d838.glb" # tripo
 lamp: "/cdn/value.4e89f1a88386c2c6018b7ee0a1f4928c407edf78d2eabce67c5d28031522a789.glb"
 mall: "/cdn/value.fffd75c8c8d11fd353840904c5dab195bc2e24c9e7cede97194a3cf282959d2a.glb"
-sedan: "/cdn/value.d62a2b4148bbba8f1f8031f5749f1d2b08428d0fbcbcb04cbf2757275c1e5b19.glb"
+sedan: "/cdn/value.7b64aefa6629593ca0750e9cce606b15e70e31bfb9db56fd96b82432876ba685.glb" # tripo
 shelter: "/cdn/value.2bf25da125a47cfbcdbc483ebe10520f5e3341cb90c72f0453abfee555b5a32e.glb"
 stone: "/cdn/value.59f401d5b707a6b017bd78e4d156a3a7fb3549ecd10bfffc5e113960f32a2456.glb"
 tree: "/cdn/value.1d09f8aedb459e5048d6875c3c4d0124eacba092db9c29c047e26fef78deb1ae.glb"
-van: "/cdn/value.7f2a64477622561266e8bad58e6ac75fb976be9e5faa007cdd289ddc9c435c48.glb"
+van: "/cdn/value.d3b533a1d86ba45eb6f46de9f603b8b252187cfdb0f0bf155f5b65fdb966e481.glb" # tripo
 barricade_pallets: "/cdn/value.dfba3700d5617527913501bfb8d19a1db554186ba5d7c4f370a3d604373e1dc8.glb"
 corrugated: "/cdn/value.dcb9771c131823f2afbf2f8353a673e1ae38181b74ac3f3f20c0217f36d25635.glb"
 sandbags: "/cdn/value.f68a23ab26d3358762379fcbfbe897d6f76fec96ca2ec94c804532b63da3f990.glb"
@@ -23,7 +23,7 @@ meg_cache: "/cdn/value.425e3801e0e441533b3d2703f643ba3f3a74b0d554f3e5aad6ebe0e15
 reno_office: "/cdn/value.34efbb6c2fafbf2728459d8bb15389865ef7891c885561254c4a76b7d3a955c0.glb"
 spam_alley: "/cdn/value.d3be766fad76b4b0d0dbbce94bb28194fde6587f32a9e36ada6904f2a9e5e574.glb"
 turnstile: "/cdn/value.62007c2a80fea7a3196cdbeb1a7c6e9a8e044d0c275450f55e13195b4ddf03b0.glb"
-trashcan: "/cdn/value.c05e12099771e30dddfac008af04b1d4ddaf4f68dfdc70c537845c9a93b5876d.glb"
+trashcan: "/cdn/value.7f3b0f23d817d7de6669f46da8e24c82a9b2793fb84d658ceec35d392cbdfc71.glb" # tripo
 taxi_wheel: "/cdn/value.84b0c57de2a5b1d18f1191f15bc0761bf99c351c56f3a6958f537966dec7fd74.glb"
 taxi: "/cdn/value.2ffcf72832ec7e0ee48af85fa6c8cd7f337687af96d153b29b4bd1e1e3c262b7.glb"
 sedco_spot: "/cdn/value.40671e0ecae12a3420a4c3c7cc3ebc6e32db290de4f15db6b160ee1afec578ba.glb"
@@ -33,7 +33,7 @@ sedco_door: "/cdn/value.129761a6fbe8c43c992d2e5c275a9280f2bd5b4703f3ac10a77e396f
 sedco_counter: "/cdn/value.ea8992eb8e42f6d29bf818a3a681fc44bdee521e51a65018307e86f19e8c6d65.glb"
 pretzels: "/cdn/value.41725b501136e612d2bdd38837bbfee50fdf6dc0b413fa2aaf78862a1a8c43e2.glb"
 payphone: "/cdn/value.2fa5dbc907edd5756d28175eb0b2ad3a0ac57741875f5cc8cffa6535eadf774c.glb"
-newsbox: "/cdn/value.e315465b7bfe830d62eca5e472494e9e4e74f1f07dc58e527e47eef139a90f81.glb"
+newsbox: "/cdn/value.3d0d805605cf3175ca63e4c4d2475cb9a8eea55d011267cd690d70706bd27323.glb" # tripo
 mvm: "/cdn/value.8da5786295f59ec0b4ac2638be8af4b1e081a828fc8322630aa3f50bd255b499.glb"
 ibeam: "/cdn/value.81c79ef69ad2039841bf0870ad66d6d91c2e0334c8d8df6133600c950da8dc2f.glb"
 foodcart: "/cdn/value.0581dee7c4ca4d6c102ef18efbbc992f02aa8115c02fa67267ee2983e64d218a.glb"
