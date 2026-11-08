@@ -161,7 +161,7 @@ export function layExtra(ctx, { HW, HD, HH }) {
   // the dining room: ketchup, mustard and a napkin box on the tables, a tray with a plate and a cup on about half, steam off the hot ones
   // one setting per real food-court table (the same spots tableSet stands them in sim.js), on the 0.75 m top
   let ti = 0;
-  const TABLES = [[-14, -13], [-14, -7], [-14, 7], [-14, 13], [14, -13], [14, -7], [14, 7], [14, 13], [-7, -13], [7, -13], [-7, 13], [7, 13], [-6, -25.5], [-2.6, -25.5], [-6, -28.9], [-2.6, -28.9], [3, -25.5], [7, -25.5]];
+  const TABLES = [[-14, -13], [-14, -7], [-14, 7], [-14, 13], [14, -13], [14, -7], [14, 7], [14, 13], [-7, -13], [7, -13], [-7, 13], [7, 13], [-6.4, -25.2], [-2.2, -25.2], [-6.4, -29.2], [-2.2, -29.2], [3, -25.5], [7, -25.5]];
   for (const [x, z] of TABLES) {
     const tx = x, tz = z, r = Math.abs((Math.sin(x * 12.9898 + z * 78.233) * 43758.5453) % 1), hot = r < 0.18;
     sp(`l61-set-${ti++}`, { feetPosition: { x: tx, y: 0.752, z: tz }, ...(hot ? { fx: { script: SMOKE } } : {}), primitive: { kind: "sphere", radius: 0.001 }, material: { color: "oklch(0.5 0 0)" },
