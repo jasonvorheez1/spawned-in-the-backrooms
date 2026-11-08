@@ -40,7 +40,7 @@ for k, (dy, zc) in enumerate([(0.03, z0 + ih * 0.75), (-0.02, z0 + ih * 0.25)]):
     box(f"s{k}r", iw / 2 - st / 2, dy, zc, st, 0.05, sh, FRAME, 0.005)
     for j in (-1, 1): box(f"s{k}m{j}", j * iw / 6, dy, zc, 0.035, 0.035, sh - 2 * st, FRAME, 0.004)
     box(f"g{k}", 0, dy + 0.005, zc, iw - 2 * st + 0.01, 0.008, sh - 2 * st + 0.01, GLASS, 0)
-    box(f"k{k}", 0, dy + 0.012, zc, iw - 2 * st + 0.02, 0.004, sh - 2 * st + 0.02, GASKET, 0)
+    pass  # no gasket: a black slab behind the glass read as dark panes from the room
 # meeting-rail latch and two lift handles on the lower sash
 box("latch", 0, -0.06, z0 + ih / 2 + 0.01, 0.12, 0.03, 0.025, mat("Brass", (0.75, 0.6, 0.3), 0.3, 0.9), 0.004)
 for j in (-1, 1): box(f"lift{j}", j * iw / 3, -0.06, z0 + 0.12, 0.08, 0.025, 0.02, parts[-1].data.materials[0], 0.004)
