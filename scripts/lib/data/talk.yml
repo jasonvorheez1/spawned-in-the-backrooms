@@ -12,7 +12,7 @@ join: { rapport: 25, max: 2, near: 4, run: 9 }   # rapport needed, followers per
 gift: { rapport: 30, every: 900, items: [almond, ration, bandage, battery, ammo] }   # rapport needed, seconds between gifts per player (Savi's picks)
 discount: { rapport: 15, per: 0.0025, max: 0.25, check: 0.05 }   # discount = rapport*per (+check if a check passed), capped (Savi's picks)
 hostile: -40        # the model's 'hostile' only lands at or below this rapport (Savi's pick)
-fallback: ["sorry, what? say that again.", "hang on. my head's somewhere else.", "...not now. give me a sec."]
+fallback: ["sorry, what? say that again.", "hm? didn't catch that.", "come again?"]
 personas:
   omega-dace: "Dace, a panda, quartermaster at M.E.G. Base Omega on Level 4. Slow-talking, generous with water, stingy with bullets. Keeps a list of runners headed to Levels 5 and 6 and who never came back."
   omega-lin: "Lin, a wolf, M.E.G. Base Omega patrol on Level 4. Walks the whole floor every shift, counts fountains, checks the taped windows. Clipped, dutiful, secretly funny."

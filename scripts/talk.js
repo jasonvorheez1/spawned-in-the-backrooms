@@ -120,6 +120,7 @@ function send(ctx, d) {
   logLine(ctx, it, 'p', text)
   if (saysName(text, ctx.self.displayName)) (ses.toldName ??= {})[it.id] = true // they introduced themselves: the reply's memory write keeps it
   it.state.talkAt = now; it.state.talkTo = ctx.self.id
+  ses.lastAsk = { system, message }
   ctx.job('llm:chat', { system, message, model: T.model }, 'heard', { id: it.id })
   // the wait for a reply is filled at once: a short thinking sound in their own voice (one of three, cached per character after first use)
   const fill = ['hmm', 'well', 'let me think'][Math.floor(ctx.random() * 3)], fp = it.feetPosition
@@ -132,6 +133,11 @@ export function heard(ctx, r, pay) {
   const it = live(ctx, pay?.id); if (!it) return
   const text = r?.data?.text ?? r?.text ?? (typeof r?.data === 'string' ? r.data : null)
   const o = r?.ok === false ? null : parseReply(text)
+  if (!o && !pay?.retry && ctx.self.session.lastAsk) { // a dropped or garbled reply: ask once more before they fumble
+    ctx.log('talk: reply failed, retrying', r?.error?.code ?? r?.error?.message ?? String(text ?? '').slice(0, 120))
+    s.talkBusy = ctx.now(); const A = ctx.self.session.lastAsk
+    ctx.job('llm:chat', { system: A.system, message: A.message + '\n(Answer with the JSON object only.)', model: T.model }, 'heard', { id: it.id, retry: true }); return
+  }
   if (!o) { const line = T.fallback[Math.floor(ctx.random() * T.fallback.length)]; say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, null) }); return }
   let { reply: line, rapportDelta: delta, intent } = o, passed = false
   if (o.check) {
@@ -273,7 +279,7 @@ export function update(ctx, dt) {
   }
   if (!it || flat(it.feetPosition, ctx.self.feetPosition) > T.range || it.state?.angry?.[ctx.self.id]) close(ctx) // walk off and it closes
   else if (combat(ctx, it, ses)) { close(ctx); s.notice = { text: 'Combat! The conversation ends.', at: ctx.now() } }
-  if (s.talkBusy && ctx.now() - s.talkBusy > 10000) { // the reply never came: they answer anyway instead of standing there mute
+  if (s.talkBusy && ctx.now() - s.talkBusy > 22000) { // the reply never came: they answer anyway instead of standing there mute
     s.talkBusy = 0
     if (it && s.talkWith) { const line = T.fallback[Math.floor(ctx.random() * T.fallback.length)]; say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, null) }) }
   }
