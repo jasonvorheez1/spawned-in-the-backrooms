@@ -8,6 +8,7 @@ import SNACKS from './lib/data/snacks.yml'
 import { describe, itemsOf, MEAT } from './lib/items.js'
 import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
+import { derived, carried } from './lib/stats.js'
 
 const CSS = `<style>
 .pb{--a:#ffb642;--ad:rgba(255,182,66,.45);--al:rgba(255,182,66,.22);color:var(--a);font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;text-transform:uppercase;text-shadow:0 0 2px rgba(255,160,30,.45)}
@@ -103,7 +104,23 @@ function detail(t, s, def) {
   return ''
 }
 
-const HALRAISE = `<style>@keyframes halRaiseI{0%{transform:perspective(900px) translateY(45%) rotateX(38deg) scale(.82);opacity:0;filter:brightness(3) blur(3px)}55%{transform:perspective(900px) translateY(-2%) rotateX(-4deg);opacity:1;filter:brightness(1.6)}72%{filter:brightness(.6)}78%{filter:brightness(1.4)}100%{transform:none;filter:none}}.halinv .pbp{animation:halRaiseI .55s cubic-bezier(.2,.9,.25,1) both;position:relative}.halinv .pbp::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(rgba(0,0,0,.18) 0 1px,transparent 1px 3px);z-index:2}</style>`
+const HALDOCK = `<style>
+.halinv.pbw{background:none;justify-content:flex-end;align-items:center;padding-right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 18px)}
+.halinv .pbp{width:min(420px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px)));min-height:0;max-height:min(620px,80vh);background:rgba(10,7,2,.88);padding:10px 14px 10px}
+.halinv .hd h2{font-size:17px}.halinv .hd .st{gap:10px;font-size:12px}
+.halinv .tabs{display:flex;gap:2px;margin:8px 0 2px}
+.halinv .tabs button{flex:1;font:inherit;font-size:12px;text-transform:inherit;color:var(--ad);background:none;border:1px solid var(--al);padding:3px 0;cursor:pointer}
+.halinv .tabs button.on{color:#120c03;background:var(--a);border-color:var(--a)}
+.halinv .tabs button:not(.on):hover{color:var(--a);border-color:var(--a)}
+.halinv .bd{flex-direction:column;gap:6px;padding:6px 0 6px}
+.halinv .ls{flex:1 1 auto;max-height:44vh}
+.halinv .it{font-size:14px;padding:2px 6px}
+.halinv .dt{position:static;width:auto;border-top:1px solid var(--al);padding-top:6px;min-height:0}
+.halinv .ls .dt{display:none}
+.halinv .wb{height:4px;background:var(--al);margin-top:4px}.halinv .wb i{display:block;height:100%;background:var(--a)}
+.halinv .wb.ov i{background:#e07a5a}
+</style>`
+const HALRAISE = `<style>@keyframes halRaiseI{0%{transform:translateX(30px);opacity:0}100%{transform:none;opacity:1}}.halinv .pbp{animation:halRaiseI .18s ease-out both;position:relative}.halinv .pbp::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(rgba(0,0,0,.18) 0 1px,transparent 1px 3px);z-index:2}</style>`
 function inventory(s) {
   const lv = s.level ?? 1, eqKey = s.equipped ?? 'fists'
   const weapons = (W.order ?? []).filter((k) => owned(s).includes(k)).map((k) => {
@@ -125,9 +142,17 @@ function inventory(s) {
       return `<button class="it" onclick="sendAction('inv',{k:'wear',w:'${t}'})"><span class="eq"></span><span class="nm">${p.row.name}${n > 1 ? ` ×${n}` : ''}</span><span class="n">DR ${p.row.dr}</span>${detail(t, s, false)}</button>` }).join('') || '<div class="em">Nothing on.</div>'
   const eq = W[eqKey] ?? W.fists
   const drop = eqKey !== 'fists' ? `<button onclick="sendAction('inv',{k:'drop',w:'${eqKey}'})">Drop ${eq.name}</button>` : ''
-  return HALRAISE + `<div class="pbw pb halinv"><div class="pbp" data-modal>
-    <div class="hd"><h2>HALOGEN&trade; · INVENTORY</h2><div class="st"><span><b>LVL</b>${lv}</span><span><b>HP</b>${Math.round(s.hp ?? 0)}/${maxHp(lv, s)}</span><span><b>SAN</b>${Math.round(s.sanity ?? 0)}/${maxSan(lv, s)}</span><span><b>XP</b>${s.xp ?? 0}/${L.xpBase * lv}</span><span><b>DR</b>${wornDR(s.look)}</span></div></div>
-    <div class="bd"><div class="ls"><div class="sec">Weapons</div>${weapons}<div class="sec">Aid</div>${aid}${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="eq"></span><span class="nm" style="color:#d8b56a">Old compass</span><span class="n">${s.compass} reads</span></button>` : ''}${s.firesalt > 0 ? `<button class="it" onclick="sendAction('inv',{k:'firesalt'})"><span class="eq"></span><span class="nm" style="color:#ff8a3a">Firesalt · Rub on weapon</span><span class="n">${s.firesalt}</span></button>` : ''}<div class="sec">Ammo</div>${ammo}<div class="sec">Apparel</div>${app}${s.pages ? `<div class="sec">Notes</div>${String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="eq"></span><span class="nm" style="color:#e8dcc0">Torn notebook page ${+n}</span><span class="n">read</span></button>`).join('')}` : ''}</div>${detail(eqKey, s, true)}</div>
+  const misc = `${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="eq"></span><span class="nm" style="color:#d8b56a">Old compass</span><span class="n">${s.compass} reads</span></button>` : ''}${s.firesalt > 0 ? `<button class="it" onclick="sendAction('inv',{k:'firesalt'})"><span class="eq"></span><span class="nm" style="color:#ff8a3a">Firesalt · Rub on weapon</span><span class="n">${s.firesalt}</span></button>` : ''}${s.pages ? String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="eq"></span><span class="nm" style="color:#e8dcc0">Torn notebook page ${+n}</span><span class="n">read</span></button>`).join('') : ''}`
+  const SECS = { weapons: ['Weapons', weapons], aid: ['Aid', aid], apparel: ['Apparel', app], ammo: ['Ammo', ammo], misc: ['Misc', misc] }
+  const tab = SECS[s.invTab] ? s.invTab : 'all'
+  const list = tab === 'all' ? Object.values(SECS).filter(([, h]) => h && !/class="em"/.test(h) || false).map(([t, h]) => `<div class="sec">${t}</div>${h}`).join('') || '<div class="em">Empty pockets.</div>' : (SECS[tab][1] || '<div class="em">None.</div>')
+  const tabs = ['all', ...Object.keys(SECS)].map((t) => `<button class="${t === tab ? 'on' : ''}" onclick="sendAction('inv',{k:'tab',t:'${t}'})">${t}</button>`).join('')
+  let cap = 0, kg = 0; try { cap = derived(s).carry; kg = carried(s) } catch {}
+  const wb = cap ? `<div class="wb${kg > cap ? ' ov' : ''}"><i style="width:${Math.min(100, (kg / cap) * 100).toFixed(0)}%"></i></div>` : ''
+  return HALDOCK + HALRAISE + `<div class="pbw pb halinv"><div class="pbp" data-modal>
+    <div class="hd"><h2>INVENTORY</h2><div class="st"><span><b>HP</b>${Math.round(s.hp ?? 0)}/${maxHp(lv, s)}</span><span><b>DR</b>${wornDR(s.look)}</span>${cap ? `<span><b>WG</b>${kg.toFixed(1)}/${cap}</span>` : ''}</div></div>${wb}
+    <div class="tabs">${tabs}</div>
+    <div class="bd"><div class="ls">${list}</div>${detail(eqKey, s, true)}</div>
     <div class="ft"><span class="c">${s.kills ?? 0} kills</span>${drop}<button onclick="sendAction('inv',{k:'close'})"><kbd>I</kbd>Close</button></div>
   </div></div>`
 }
