@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 20;
+const V = 21;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -81,7 +81,7 @@ export function tick(ctx) {
   fit("h-plant", "/cdn/value.5c55541c98397f0fd38ea7e850e3e15e4fd78fd4a5951439cde327b41abe9e09.glb", -4.3, 5.3, 0, [0.6, 0.85, 0.6]); // pothos on a wicker stand in the corner
   hang("h-wii", "/cdn/value.45d3abcae444b2dc2d981a3a199513b6d2eca018818ad98ff4aaf0a799b7d642.glb", -1.65, 0.1, -0.6, 270, [0.35, 0.32, 0.3]); // white wii, sensor bar and two wiimotes beside the TV stand
   hang("h-kitty", "/cdn/value.a9f9d3c6172c17966216abe7310be269dde6da0bf1b828779638c4c7152f6575.glb", -2.3, 0.62, -5.2, 160, [0.3, 0.32, 0.26]); // hello kitty plush propped on the pillows
-  hang("h-boombox", "/cdn/value.b65239e4484936755ff171a40f1ea0104ad73cf5d0d2b21261bab60345e000f9.glb", -1.5, 0.1, -5.6, 180, [0.5, 0.36, 0.2]); sp("h-boombox-use", { tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind: "boombox", name: "Boombox", verb: "Change station" }, feetPosition: { x: -1.5, y: 0.1, z: -5.6 }, primitive: { kind: "box", width: 0.52, height: 0.38, depth: 0.24 }, material: { opacity: 0, transparent: true } }); // pink CD boombox by the bed
+  hang("h-boombox", "/cdn/value.b65239e4484936755ff171a40f1ea0104ad73cf5d0d2b21261bab60345e000f9.glb", -1.5, 0.1, -5.6, 90, [0.2, 0.36, 0.5]); sp("h-boombox-use", { tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind: "boombox", name: "Boombox", verb: "Change station" }, feetPosition: { x: -1.5, y: 0.1, z: -5.6 }, primitive: { kind: "box", width: 0.52, height: 0.38, depth: 0.24 }, material: { opacity: 0, transparent: true } }); // pink CD boombox by the bed
   fit("h-pcdesk", "/cdn/value.c19a3a1207063b8231b343d67d98657a158515407d7c01b6c2286a1bd2d5c18c.glb", 1.2, -5.25, 180, [1.3, 1.35, 1.2]); // beige tower, CRT monitor and swivel chair against the north wall
   hang("h-sponge", "/cdn/value.584040f232cb11ac6bd83395b7bb8d36daf263e276a0a8745ae05e6ae1526e54.glb", 3.25, 0.93, -5.42, 20, [0.24, 0.3, 0.16]); // spongebob plush on the dresser top
   hang("h-coke1", "/cdn/value.8dbfe9caef376c3d74354e97aa627d7a842fdc981ef4f60ddfd2c24d34aea0fd.glb", 1.65, 0.86, -5.45, 0, [0.066, 0.12, 0.066]); // coke can by the keyboard
@@ -91,9 +91,9 @@ export function tick(ctx) {
   // things to use (Shelly: "add interactibles")
   fit("h-fridge", "/cdn/value.d0d0dc823edfbfe08bea35729295b7b5dd01a2864bcd7c46d08a7d8599993e53.glb", 4.5, 1.55, 270, [0.75, 1.75, 0.75], use("fridge", "Fridge", "Grab a drink")); // almond two-door, magnets and papers
   hang("h-micro", "/cdn/value.1d3dc84f3f95564053f8162e486d92ab5dfd9678eb26b82aed879a7371f33bea.glb", 4.5, 1.01, 3.4, 270, [0.36, 0.28, 0.5]); sp("h-micro-use", { ...use("microwave", "Microwave", "Heat a Hot Pocket"), feetPosition: { x: 4.5, y: 1.01, z: 3.4 }, primitive: { kind: "box", width: 0.36, height: 0.28, depth: 0.5 }, material: { opacity: 0, transparent: true }, physics: { body: "static", collider: "box" } });
-  hang("h-lava", "/cdn/value.8413072e1fc1e8e8482a7d553210352afec9f63c4aca06ab7775be80044401c7.glb", 0.65, 0.86, -5.5, 0, [0.13, 0.42, 0.13]); // red lava lamp on the desk
-  sp("h-lava-light", { feetPosition: { x: 0.65, y: 1.1, z: -5.4 }, light: { kind: "point", color: "oklch(0.65 0.22 25)", intensity: 0.6, distance: 2.5 } });
-  sp("h-lava-use", { ...use("lamp", "Lava Lamp", "Switch", { light: "h-lava-light", int: 0.6 }), feetPosition: { x: 0.65, y: 0.86, z: -5.5 }, primitive: { kind: "box", width: 0.16, height: 0.44, depth: 0.16 }, material: { opacity: 0, transparent: true }, physics: { body: "static", collider: "box" } });
+  hang("h-lava", "/cdn/value.8413072e1fc1e8e8482a7d553210352afec9f63c4aca06ab7775be80044401c7.glb", 1.7, 0.86, -5.6, 0, [0.13, 0.42, 0.13]); // red lava lamp on the desk
+  sp("h-lava-light", { feetPosition: { x: 1.7, y: 1.1, z: -5.45 }, light: { kind: "point", color: "oklch(0.65 0.22 25)", intensity: 0.6, distance: 2.5 } });
+  sp("h-lava-use", { ...use("lamp", "Lava Lamp", "Switch", { light: "h-lava-light", int: 0.6 }), feetPosition: { x: 1.7, y: 0.86, z: -5.6 }, primitive: { kind: "box", width: 0.16, height: 0.44, depth: 0.16 }, material: { opacity: 0, transparent: true }, physics: { body: "static", collider: "box" } });
   hang("h-ipod", "/cdn/value.d4492ec79dc96b8f287d8aad99b6b5ea0866070d9e08500ba2b9bf5d30e73875.glb", 3.8, 0.93, -5.42, 0, [0.1, 0.15, 0.1]); // white iPod on its dock, dresser top
   hang("h-razr", "/cdn/value.726b4ce1eb3fc52d4e35252d822b6f420f37c4c28ce628366a59b8cb7449f3e8.glb", -2.55, 0.62, -4.35, 30, [0.06, 0.1, 0.12]); sp("h-razr-use", { ...use("phone", "Razr", "Check texts"), feetPosition: { x: -2.55, y: 0.6, z: -4.35 }, primitive: { kind: "box", width: 0.2, height: 0.12, depth: 0.2 }, material: { opacity: 0, transparent: true } });
   hang("h-dvds", "/cdn/value.854240d4e72d45668e1d95134e4600a44ca99ac98485d362c0b6c023f2f128b6.glb", -3.25, 0.1, -0.55, 10, [0.2, 0.3, 0.15]); // DVD stack by the TV stand
