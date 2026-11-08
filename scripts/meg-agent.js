@@ -378,12 +378,12 @@ export function update(ctx, dt) {
   if (m.dressed !== 4) { m.dressed = 4; if (!s.dead) dress(ctx, me); }
   // empty level or far-off NPC: sleep to save CPU (perf)
   if (!ctx.place.players.length) { ctx.sleep(2); return; }
-  let near = 1e9; const f = me.feetPosition;
-  for (const p of ctx.place.players) { const d = Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z); if (d < near) near = d; }
+  let nearPlayerDist = 1e9; const f = me.feetPosition;
+  for (const p of ctx.place.players) { const d = Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z); if (d < nearPlayerDist) nearPlayerDist = d; }
   if (!s.follow && !s.target && !m.down && !m.talking) {
-    if (near > 45) { ctx.sleep(2); return; }
-    if (near > 28 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.2); dt += 0.2; }
-    else if (near > 18 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.1); dt += 0.1; }
+    if (nearPlayerDist > 45) { ctx.sleep(2); return; }
+    if (nearPlayerDist > 28 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.2); dt += 0.2; }
+    else if (nearPlayerDist > 18 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.1); dt += 0.1; }
   }
   if (!m.armed && !s.dead && now - (m.bornAt ??= now) > 1500) arm(ctx, me, m); // after the spawner has handed over its weapon
   // essential: whoever walks with a player drops to a knee instead of dying, then gets back up
