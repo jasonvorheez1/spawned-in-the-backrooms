@@ -5,7 +5,7 @@ import { MODEL as SMILER_MODEL, SCALE as SMILER_SCALE } from "../../scripts/smil
 import L from "../../scripts/lib/data/level0.yml";
 const MID = (L.hub[0] + L.hub[1]) / 2; // the safe room's centre cell
 import W from "../../scripts/lib/weapons.js";
-import { spawnAlmond, spawnAmmo, spawnShells, spawnWeapon, rollWeapon } from "../../scripts/lib/loot.js";
+import { spawnAlmond, spawnAmmo, spawnShells, spawnWeapon, rollWeapon, rollCash } from "../../scripts/lib/loot.js";
 import { spawnFurniture, pickKind, wallSpot0 } from "../../scripts/lib/furniture.js";
 import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ, EXIT } from "../../scripts/lib/maze.js";
 const PAPER = { texture: "/cdn/value.00a4e744acf9ab763779bbb0cc7f26fb1dd20aeafc69448c536939cd7212caeb.png", color: "oklch(0.98 0.01 90)", repeat: [1, 1] };
@@ -18,6 +18,17 @@ export const cadence = "1s";
 const FMODEL = { desk: "/cdn/value.dc2f7ac92df4c08964be1ea4af5e520bbf4c12d50609157f85b41db8f3c21fcf.glb", chair: "/cdn/value.34ee5f211b991e7489c032ed09d062af9fda8ef8a79c69afadafd1a650be47d8.glb", shelf: "/cdn/value.9f3b838cc1b4403a54d96e1b80372c75c9a440c1d4e61a4760f60de82133526b.glb", copier: "/cdn/value.5489a9397b8e52f5ea0f528a387d0449d0787726d6bc65bd041ec8faf80f9362.glb" };
 const fmodel = (kind) => ({ id: FMODEL[kind], forward: "+z" });
 const FURN = { desk: ["wood", 80], chair: ["metal", 45], shelf: ["metal", 110], copier: ["machine", 110] };
+// what an office desk's drawers hold: office junk, snacks, a little cash, now and then a tool. Weights are Savi's picks; no ammo.
+const DESK = [["cash", 22], ["bobbypin", 16], ["lobby_wafer", 12], ["bar", 9], ["almond", 12], ["tape", 8], ["battery", 8], ["book", 4], ["bandage", 5], ["weapon", 3]];
+function deskItems(ctx) {
+  const n = ctx.random() < 0.15 ? 0 : 1 + Math.floor(ctx.random() * 3), out = [], tot = DESK.reduce((a, [, w]) => a + w, 0);
+  for (let i = 0; i < n; i++) {
+    let r = ctx.random() * tot, k = "almond";
+    for (const [kk, w] of DESK) { r -= w; if (r <= 0) { k = kk; break; } }
+    out.push(k === "cash" ? rollCash(ctx) : k === "weapon" ? "weapon:" + rollWeapon(ctx) : k === "book" ? "book:lockpick" : k);
+  }
+  return out.join(",");
+}
 function furnish(ctx) {
   let n = 0;
   for (let k = 0; k < 900 && n < (L.furniture ?? 140); k++) {
@@ -27,7 +38,7 @@ function furnish(ctx) {
     const along = ctx.random() < 0.5, side = ctx.random() < 0.5 ? -1 : 1, off = kind === "shelf" || kind === "copier" ? S / 2 - 0.35 : (ctx.random() - 0.5) * 1.6;
     const pos = along ? { x: c.x + side * off, y: 0, z: c.z + (ctx.random() - 0.5) } : { x: c.x + (ctx.random() - 0.5), y: 0, z: c.z + side * off };
     const yaw = kind === "chair" ? ctx.random() * 360 : (along ? 90 : 0) + (side < 0 ? 180 : 0);
-    ctx.spawn({ tags: ["breakable", "furniture", kind], feetPosition: pos, rotation: yaw, physics: { body: "static", collider: "box" }, model: fmodel(kind), state: { mat, hp, maxHp: hp, name: kind[0].toUpperCase() + kind.slice(1) } });
+    ctx.spawn({ tags: kind === "desk" ? ["breakable", "furniture", kind, "container"] : ["breakable", "furniture", kind], feetPosition: pos, rotation: yaw, physics: { body: "static", collider: "box" }, model: fmodel(kind), state: { mat, hp, maxHp: hp, name: kind === "desk" ? "Desk drawers" : kind[0].toUpperCase() + kind.slice(1), ...(kind === "desk" ? { items: deskItems(ctx) } : {}) } });
     n++;
   }
 }
@@ -119,6 +130,14 @@ export function tick(ctx) {
   }
   shift(ctx, s, now);
   if (!s.furnished) { s.furnished = true; furnish(ctx); }
+  if (s.deskV !== 1) { // once per room: sweep loose ammo, turn the desks already standing into drawers
+    for (const a of ctx.query({ tags: ["ammo"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(a.id);
+    for (const d of ctx.query({ tags: ["furniture", "desk"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+      const o = ctx.place.objects[d.id]; if (!o || o.tags.includes("sunken") || o.tags.includes("container")) continue;
+      o.tags = [...o.tags, "container"]; o.state.items = deskItems(ctx); o.state.name = "Desk drawers";
+    }
+    s.deskV = 1;
+  }
   if (s.sunkV !== 1) { s.sunkV = 1; sink(ctx); }
   regrow(ctx, s, now);
   syncLevel0(ctx);
@@ -132,8 +151,8 @@ export function tick(ctx) {
     s.weaponsSeeded = true;
     s.nextWeapon = now + (W.pickupRespawn * 1000) / 4;
   }
-  const ammo = ctx.query({ tags: ["ammo"] }).length;
-  if (ammo < W.ammo.floor && now >= (s.nextAmmo ?? 0)) {
+  // the creator: no ammo rounds lying around Level 0 (2026-11-08). Ammo only turns up inside containers and on bodies.
+  if (false) {
     const fill = s.ammoSeeded ? 1 : W.ammo.floor - ammo;
     for (let i = 0; i < fill; i++) { const c = cell(ctx); if (c) spawnAmmo(ctx, c); }
     s.ammoSeeded = true;
