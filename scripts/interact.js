@@ -449,6 +449,11 @@ export function update(ctx, dt) {
   const m = mem(ctx), s = ctx.self.state
   if (s.focus && ctx.getObject(s.focus.id)?.place !== ctx.self.place) { s.focus = null; m.focus = null; m.key = '' } // a prompt left behind in another level (or a thing gone) clears
   seatTick(ctx)
+  { // the look outline: one thing at a time; the old one is cleared the moment the focus moves, loot opens or the level changes
+    const want = (s.level == null || s.lootOpen || s.sit) ? null : (m.focus?.id ?? null)
+    if (m.lit && m.lit !== want) { ctx.emit('highlightClear', { target: m.lit }, { audience: { player: ctx.self.id } }); m.lit = null }
+    if (want && m.lit !== want) { m.lit = want; m.litAt = 0 }
+  }
   if (s.level == null) return
   m.acc += dt
   if (m.acc < 0.2) return
@@ -459,5 +464,5 @@ export function update(ctx, dt) {
     return
   }
   refocus(ctx, true) // a standing player with the mouse still: the world changed under the look ray
-  if (m.focus) ctx.emit('highlightSet', { target: m.focus.id, color: '#fff0b0', style: 'outline', duration: 0.45, width: 3 }, { audience: { player: ctx.self.id } })
+  if (m.lit && m.lit === m.focus?.id) ctx.emit('highlightSet', { target: m.lit, color: '#fff0b0', style: 'outline', duration: 0.45, width: 3 }, { audience: { player: ctx.self.id } })
 }
