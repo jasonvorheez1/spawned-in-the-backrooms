@@ -2,7 +2,7 @@
 // transitions to the game name"). Runs on the player's own machine from scripts/main-menu.js in places/tutorial0.
 // state.t0n = beats passed, state.t0cut = { id, at } while one plays; the frame and captions are scripts/cutscene-ui.js t0Ui.
 import { animate } from "builtin/tween"
-import { BEATS, SOFT, ENC, HALO, DRAWINGS } from "./tut0.js"
+import { BEATS, SOFT, ENC, HALO, DRAWINGS, PACE } from "./tut0.js"
 import { spawnPhoebe, dropPhoebe } from "./phoebe.js"
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const SMILER_MODEL = { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" } // scripts/smilers.js
