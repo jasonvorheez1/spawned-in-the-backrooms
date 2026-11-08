@@ -3,6 +3,7 @@
 import { heard } from "./lib/hear.js";
 import { animate } from "builtin/tween";
 import { itemSpec } from "./lib/vend-item.js";
+import { handTray } from "./lib/snacktray.js";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const POOL = { snack: ["doritos", "doritos", "coolranch"], soda: ["coke", "coke", "pepsi", "dew", "sprite", "drpepper", "cherrycoke", "vault", "redbull", "snapple", "gatorade", "sobe"] };
@@ -93,7 +94,7 @@ export const ears = {
         return;
       }
       snd("paper-plate-slid-across-counter", 0.85, 12);
-      w.l61Tray = now;
+      handTray(ctx, who, s.n, s.info); // a real tray in their hands (l61Hold + l61Tray)
       w.payout = { xp: 2, items: s.items };
       tell(s.items.map((t) => "+" + t.toUpperCase()).join(" "), "#9fffb0");
       ctx.destroy(ctx.self.id);
@@ -101,12 +102,15 @@ export const ears = {
     }
 
     if (s.kind === "return") { // Slide dirty tray into return rack
-      if (!w.l61Tray) {
+      const held = w.l61Hold && ctx.getObject(w.l61Hold);
+      if (!held && (!w.l61Tray || w.l61Hold)) { // a tray set down or thrown has to be picked back up first
         snd("paper-flip-card-stand", 0.3, 6);
-        tell("NO TRAY TO RETURN", "#aaaaaa");
+        tell(w.l61Hold ? "BRING THE TRAY BACK FIRST" : "NO TRAY TO RETURN", "#aaaaaa");
+        if (w.l61Hold && !held) { w.l61Hold = null; w.l61Tray = 0; }
         return;
       }
-      w.l61Tray = 0;
+      if (held) ctx.destroy(held.id);
+      w.l61Tray = 0; w.l61Hold = null;
       snd("plastic-tray-slid-into-rack-clatter", 0.8, 12);
       w.sanity = Math.min(100, (w.sanity ?? 80) + 3);
       w.payout = { xp: 3, items: [] };
@@ -120,6 +124,15 @@ export const ears = {
           break;
         }
       }
+      return;
+    }
+
+    if (s.kind === "snacktray") { // a tray someone set down: take it up again (grab.js on their machine carries it)
+      const cur = w.l61Hold && ctx.getObject(w.l61Hold);
+      if (cur && cur.id !== ctx.self.id) { tell("HANDS FULL", "#aaaaaa"); return; }
+      ctx.self.tags = ctx.self.tags.filter((t) => t !== "usable");
+      w.l61Hold = ctx.self.id; w.l61Tray = now;
+      snd("plastic-bottle-pickup-rattle", 0.5, 8);
       return;
     }
 
