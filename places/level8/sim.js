@@ -33,15 +33,15 @@ const MEG = `<div face="front" width="2.6m" style="font-family:Arial,sans-serif;
 
 // Particle FX scripts
 const FIRE_FX = `fx
-pop flame rate=28 life=.45..0.9 on=disc(.32) v=up(.8..1.6)+sdir()*.22 size=.18..0.34 col=hdr(2.8,1.1,.2)>hdr(1.4,.2,0) a=.85>0 sz=$size*(1-.5*t) r=sprite(soft-disc,add)
+pop flame rate=28 life=.45..0.9 on=disc(.32) v=up(.8..1.6)+sdir()*.22 size=.18..0.34 col=hdr(2.8,1.1,.2)>hdr(1.4,.2,0) a=.85>0 sz=$size*(1>.5) r=sprite(soft-disc,add)
 pop ember rate=12 life=1.2..2.2 on=disc(.35) v=up(1.4..2.6)+sdir()*.45 size=.03..0.06 col=hdr(3.0,1.4,.3) a=1>0 sz=$size r=sprite(disc,add)`;
 const STEAM_FX = `fx
-pop mist rate=10 life=1.2..2.0 on=disc(.22) v=up(.45..0.85)+sdir()*.12 size=.12..0.26 col=rgb(.85,.88,.92) a=.28>0 sz=$size*(1+t) r=sprite(soft-disc)`;
+pop mist rate=10 life=1.2..2.0 on=disc(.22) v=up(.45..0.85)+sdir()*.12 size=.12..0.26 col=rgb(.85,.88,.92) a=.28>0 sz=$size*(1>2) r=sprite(soft-disc)`;
 const TAR_FX = `fx
-pop fume rate=16 life=1.5..2.8 on=disc(2.8) v=up(.35..0.75)+sdir()*.18 size=.28..0.55 col=rgb(.08,.06,.10) a=.45>0 sz=$size*(1+.8*t) r=sprite(soft-disc)
+pop fume rate=16 life=1.5..2.8 on=disc(2.8) v=up(.35..0.75)+sdir()*.18 size=.28..0.55 col=rgb(.08,.06,.10) a=.45>0 sz=$size*(1>1.8) r=sprite(soft-disc)
 pop spark rate=6 life=.8..1.5 on=disc(2.4) v=up(.5..1.1) size=.05..0.11 col=hdr(1.8,.5,.15) a=.7>0 sz=$size r=sprite(soft-disc,add)`;
 const SPORE_FX = `fx
-pop spore rate=9 life=1.6..3.0 on=ball(1.8) v=up(.12..0.32)+sdir()*.15 size=.03..0.07 col=hdr(.3,2.2,2.0) a=.75>0 sz=$size r=sprite(soft-disc,add)`;
+pop spore rate=9 life=1.6..3.0 on=sphere(1.8) v=up(.12..0.32)+sdir()*.15 size=.03..0.07 col=hdr(.3,2.2,2.0) a=.75>0 sz=$size r=sprite(soft-disc,add)`;
 
 // ---- things to harvest (scripts/l8-use.js and the breakables system): each is a spec with how long it takes to grow back once it is gone
 const rxAt = (s) => { const st = L8.stations.find((q) => s >= q.s0 && s <= q.s1); return st ? st.rx : 4; };
