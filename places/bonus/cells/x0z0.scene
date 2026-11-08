@@ -1065,7 +1065,7 @@ bonus-ctr-station:
   tags: [usable]
   visible: false
 bonus-music:
-  audio: {bus: Music, clip: /cdn/level-1-toms-diner-va9au334.mp3, gain: 0.22, loop: true, spatial: false}
+  audio: {bus: Music, clip: /cdn/music-the-bonus-room-ost-u9ypfr4u.mp3, gain: 0.22, loop: true, spatial: false}
   feetPosition: {x: 0, y: 3, z: 0}
   id: bonus-music
 bs-clothes:

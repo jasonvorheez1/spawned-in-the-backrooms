@@ -57,6 +57,6 @@ clothes:
   - ["cloth:hat:bow:ff8fc7", 3]
   - ["cloth:eyew:glasses:000000", 6]
   - ["cloth:neck:scarf:f3c64a", 5]
-music: /cdn/level-1-toms-diner-va9au334.mp3          # the creator's mall track, everywhere in the mall
+music: /cdn/music-the-bonus-room-ost-u9ypfr4u.mp3          # the creator's mall track, everywhere in the mall
 dinerRadio: /cdn/level-1-toms-diner-ur1vbwxr.mp3     # the creator's chiptune, from the diner's radio
 arcadeMusic: /cdn/music-the-bonus-room-ost-zdv3pdaa.mp3  # the creator's Bonus Room OST, from the arcade
