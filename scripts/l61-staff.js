@@ -311,7 +311,7 @@ function social(ctx, me, s, m, now, dt) {
         }
         m.emoSeen = emo;
       } else if (m.crouch) { m.crouch = 0; me.anim.gest = null; m.gestEnd = 0; }
-      const idle = !s.deliver && !m.gestEnd && s.mood !== "angry";
+      const idle = !s.deliver && !m.crouch && !(m.faceUntil && now < m.faceUntil) && s.mood !== "angry"; // a chore gesture gives way to a wave
       if (d < FC.reach.wave && idle && now - ((m.waved ??= {})[uid] ?? -1e9) > FC.every.wave * 1000) { // waving at whoever passes
         m.waved[uid] = now; m.faceUntil = now + 2400; m.faceId = q.id;
         playGesture(me, m, now, [WAVE, 2600, 4]);
