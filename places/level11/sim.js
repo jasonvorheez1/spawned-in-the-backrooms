@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 89; // bump to rebuild the city in rooms that are already open
+const V = 90; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1368,9 +1368,9 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     const OX = -164, OZ = 136, OW = 22, OD = 26, OH = 4.6;
     const SLAB = { ...T("water-stained-streaked-old-poured-concrete-column", 2), color: "oklch(0.66 0.015 80)", roughness: 0.9 };
     // the painted gable: the office's south end wall rises bare above it, the old advert fading on it, read from the avenue walking north
-    bx("l11-ot-gable", OX, 0.1, OZ - OD / 2 - 0.45, OW, 11, 0.5, SEDCO_BRICK);
-    sp("l11-ot-ad", { feetPosition: { x: OX + 4.5, y: 6.9, z: OZ - OD / 2 - 0.72 }, rotation: { yaw: 180 }, primitive: { kind: "plane", width: 5.6, height: 8.4 }, material: { texture: MODELS.ot_wallad, roughness: 0.95 } });
-    sp("l11-ot-gable-lamp", { feetPosition: { x: OX + 9.5, y: 4.4, z: OZ - OD / 2 - 1.0 }, primitive: { kind: "sphere", radius: 0.16 }, material: { color: "#fff2d0", emissive: "#ffd890", emissiveIntensity: 2 }, light: { kind: "point", color: "oklch(0.9 0.08 75)", intensity: 2, distance: 12 } });
+    bx("l11-ot-gable", OX, 0.1, OZ - OD / 2 - 0.45, OW, 24, 0.5, SEDCO_BRICK); // a firewall left standing when its building came down, taller than the brick block in front
+    sp("l11-ot-ad", { feetPosition: { x: OX + 4.5, y: 15.2, z: OZ - OD / 2 - 0.72 }, rotation: { yaw: 180 }, primitive: { kind: "plane", width: 5.6, height: 8.4 }, material: { texture: MODELS.ot_wallad, roughness: 0.95 } });
+    sp("l11-ot-gable-lamp", { feetPosition: { x: OX + 9.5, y: 15.4, z: OZ - OD / 2 - 1.0 }, primitive: { kind: "sphere", radius: 0.16 }, material: { color: "#fff2d0", emissive: "#ffd890", emissiveIntensity: 2 }, light: { kind: "point", color: "oklch(0.9 0.08 75)", intensity: 2, distance: 12 } });
     bx("l11-ot-off-floor", OX, 0.02, OZ, OW, 0.14, OD, SLAB);
     bx("l11-ot-off-roof", OX, OH, OZ, OW, 0.5, OD, SLAB);
     bx("l11-ot-off-wall-w", OX - OW / 2, 0.1, OZ, 0.4, OH, OD, SEDCO_BRICK);
