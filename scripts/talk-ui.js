@@ -37,8 +37,8 @@ const CSS = `<style>
 @keyframes tcType{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 @keyframes tcQuest{0%,100%{border-color:#ffd700;box-shadow:0 0 8px rgba(255,215,0,.3)}50%{border-color:#fff275;box-shadow:0 0 14px rgba(255,215,0,.6)}}
 
-.tkw{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:18px;background:radial-gradient(ellipse at center,rgba(0,0,0,.45),rgba(0,0,0,.75) 80%);pointer-events:none;font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;z-index:90}
-.tc-chassis{position:relative;width:min(900px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 20px)));max-height:min(72vh,620px);box-sizing:border-box;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(16,11,4,.97) 0%,rgba(8,5,2,.98) 100%);border:2px solid #ffb642;box-shadow:0 0 0 1px #000,0 8px 32px rgba(0,0,0,.8),0 0 24px rgba(255,182,66,.18) inset;padding:12px 18px 10px;pointer-events:auto;animation:tcOpen .3s cubic-bezier(.16,1,.3,1) both;color:#ffb642}
+.tkw{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;background:linear-gradient(0deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 38%);pointer-events:none;font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;z-index:90}
+.tc-chassis{position:relative;width:min(1180px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 20px)));max-height:min(38vh,340px);box-sizing:border-box;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(16,11,4,.97) 0%,rgba(8,5,2,.98) 100%);border:2px solid #ffb642;box-shadow:0 0 0 1px #000,0 8px 32px rgba(0,0,0,.8),0 0 24px rgba(255,182,66,.18) inset;padding:8px 16px 7px;pointer-events:auto;animation:tcOpen .3s cubic-bezier(.16,1,.3,1) both;color:#ffb642}
 .tc-chassis::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(rgba(0,0,0,.2) 0 1px,transparent 1px 3px);z-index:2}
 .tc-corner{position:absolute;width:8px;height:8px;border-color:#ffe2a8;pointer-events:none;z-index:3}
 .tc-c-tl{top:-2px;left:-2px;border-top:3px solid #ffe2a8;border-left:3px solid #ffe2a8}
@@ -60,7 +60,7 @@ const CSS = `<style>
 .tc-close-btn:hover{background:#ffb642;color:#100b04;box-shadow:0 0 8px rgba(255,182,66,.6)}
 
 /* Transcript Stream */
-.tc-stream{display:flex;flex-direction:column;gap:5px;max-height:140px;overflow-y:auto;padding:2px 0;scrollbar-width:thin;scrollbar-color:rgba(255,182,66,.4) transparent;position:relative;z-index:3}
+.tc-stream{display:flex;flex-direction:column;gap:4px;max-height:52px;overflow-y:auto;padding:2px 0;scrollbar-width:thin;scrollbar-color:rgba(255,182,66,.4) transparent;position:relative;z-index:3}
 .tc-hist-line{font-size:13px;line-height:1.35;opacity:.65;transition:opacity .2s}
 .tc-hist-line:hover{opacity:1}
 .tc-hist-line.p{color:#f5ebcf}.tc-hist-line.p b{color:rgba(255,182,66,.6);font-weight:400}
@@ -79,7 +79,7 @@ const CSS = `<style>
 /* Choices Grid */
 .tc-choices-hdr{font-size:11px;letter-spacing:.16em;color:rgba(255,182,66,.6);text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:6px;position:relative;z-index:3}
 .tc-choices-hdr::after{content:"";flex:1;height:1px;background:rgba(255,182,66,.2)}
-.tc-choices-list{display:flex;flex-direction:column;gap:3px;max-height:180px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,182,66,.4) transparent;position:relative;z-index:3}
+.tc-choices-list{display:grid;grid-template-columns:1fr 1fr;gap:3px 6px;max-height:96px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,182,66,.4) transparent;position:relative;z-index:3}
 .tc-choice{background:rgba(255,182,66,.03);border:1px solid rgba(255,182,66,.18);color:#ffe2a8;font:inherit;font-size:15px;padding:5px 10px;cursor:pointer;display:flex;align-items:baseline;gap:8px;text-align:left;text-shadow:0 0 2px rgba(255,170,40,.25);transition:all .15s ease}
 .tc-choice:hover,.tc-choice:focus{background:linear-gradient(90deg,rgba(255,182,66,.22) 0%,rgba(255,182,66,.08) 100%);border-color:#ffb642;outline:none;transform:translateX(3px);box-shadow:0 0 10px rgba(255,182,66,.2)}
 .tc-ch-num{color:#ffb642;font-size:13px;font-weight:400;min-width:20px}
