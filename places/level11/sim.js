@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 48; // bump to rebuild the city in rooms that are already open
+const V = 49; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -810,7 +810,7 @@ function lay(ctx) {
     tags: ["usable"],
     feetPosition: { x: 9.0, y: 0.1, z: 8.5 },
     rotation: { yaw: -90 },
-    primitive: { kind: "box", width: 0.9, height: 1.9, depth: 0.8 },
+    primitive: { kind: "scripted", script: "scripts/props11.js", params: { kind: "cabinet", w: 0.9, h: 1.9, d: 0.8, r: 0.08 } },
     material: STEEL_BRUSHED,
     behavior: "scripts/level11-use.js",
     state: { kind: "atm", name: "First Capital Bank ATM", verb: "Withdraw Capital Credits" },
@@ -854,7 +854,7 @@ function lay(ctx) {
     tags: ["usable"],
     feetPosition: { x: -8.8, y: 0.1, z: 20 },
     rotation: { yaw: 90 },
-    primitive: { kind: "box", width: 1.2, height: 2.1, depth: 0.95 },
+    primitive: { kind: "scripted", script: "scripts/props11.js", params: { kind: "cabinet", w: 1.2, h: 2.1, d: 0.95, r: 0.07 } },
     material: { color: "oklch(0.25 0.1 230)" },
     behavior: "scripts/level11-use.js",
     state: { kind: "vending", name: "Almond Water Vending Machine", verb: "Buy Cold Almond Water" },
@@ -901,7 +901,7 @@ function lay(ctx) {
     sp("l11-spamton-dumpster", {
       tags: ["usable"],
       feetPosition: { x: AX + 0.4, y: 0.08, z: Z0 + LEN - 1.1 },
-      primitive: { kind: "box", width: 2.0, height: 1.25, depth: 1.15 },
+      primitive: { kind: "scripted", script: "scripts/props11.js", params: { kind: "dumpster", w: 2.0, h: 1.25, d: 1.15 } },
       material: { ...T("grimy-scratched-steel-plate", 1), color: "oklch(0.42 0.09 150)", metalness: 0.55, roughness: 0.6 },
       physics: "static",
       behavior: "scripts/spamton.js",
@@ -965,7 +965,7 @@ function lay(ctx) {
     physics: { body: "kinematic", collider: "box" },
     behavior: "scripts/level11-boat.js",
     state: { kind: "boat", name: "Canal Motor Skiff", verb: "Pilot Canal Boat" },
-    primitive: { kind: "box", width: 1.8, height: 0.75, depth: 4.2 },
+    primitive: { kind: "scripted", script: "scripts/props11.js", params: { kind: "skiff", w: 1.8, h: 0.75, d: 4.2 } },
     material: { ...T("worn-hardwood-grain", 1), color: "oklch(0.35 0.05 240)", roughness: 0.7 },
     children: [
       { feetPosition: { x: 0, y: 0.45, z: -0.3 }, primitive: { kind: "box", width: 1.5, height: 0.35, depth: 0.6 }, material: { color: "oklch(0.6 0.06 60)", roughness: 0.8 } },
@@ -1146,7 +1146,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     tags: ["usable"],
     feetPosition: { x: RW_X - 1.2, y: 0.1, z: RW_Z - 0.6 },
     rotation: { yaw: 90 },
-    primitive: { kind: "box", width: 1.1, height: 0.9, depth: 1.6 },
+    primitive: { kind: "scripted", script: "scripts/props11.js", params: { kind: "cabinet", w: 1.1, h: 0.9, d: 1.6, r: 0.18 } },
     material: { color: "oklch(0.78 0.18 85)", metalness: 0.7, roughness: 0.35 },
     behavior: "scripts/level11-use.js",
     state: { kind: "roadwork-gen", name: "B.R.C. Infrastructure Diesel Compressor", verb: "Inspect Compressor" },
@@ -1339,7 +1339,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     tags: ["usable"],
     feetPosition: { x: 22, y: 0.35, z: CANAL_Z + 10.5 },
     rotation: { yaw: 0 },
-    primitive: { kind: "box", width: 1.1, height: 1.2, depth: 0.8 },
+    primitive: { kind: "scripted", script: "scripts/props11.js", params: { kind: "cabinet", w: 1.1, h: 1.2, d: 0.8, r: 0.1 } },
     material: { ...T("smooth-cold-poured-concrete-wall", 1), color: "oklch(0.42 0.04 150)", roughness: 0.7 },
     physics: "static",
     behavior: "scripts/level11-use.js",
