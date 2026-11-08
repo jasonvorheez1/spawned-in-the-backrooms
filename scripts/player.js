@@ -318,7 +318,7 @@ export function onInput(ctx, input) {
   if (input.pressed.jump && ctx.self.grounded && !ctx.self.parent) {
     const v = ctx.self.velocity
     ctx.self.velocity = { x: v.x, y: PLAYER.jumpSpeed, z: v.z }
-    sound(ctx, STEPS[floorOf(ctx)].walk, 0.4, true)
+    sound(ctx, (STEPS[floorOf(ctx)] ?? Object.values(STEPS)[0]).walk, 0.4, true)
   }
   {
     // melee: hold to wind up, release to swing (a heavy past power.min); a gun fires on the press
