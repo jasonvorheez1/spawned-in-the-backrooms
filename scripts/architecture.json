@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2161,
-  "updatedAt": "2026-11-08T19:09:53.381Z",
-  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Shared player, NPC, loot, combat and presentation systems support those levels; Level 11's generated city now uses full-size modelled street props and includes the guarded U.E.C. settlement of Thebes.",
+  "basedOnSpecVersion": 2165,
+  "updatedAt": "2026-11-08T19:12:51.470Z",
+  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Shared player, NPC, loot, combat and presentation systems support those levels; Level 11's generated city includes the U.E.C. Thebes checkpoint, now dressed with a dedicated modelled perimeter kit.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 / The Lobby, yellow maze and safe-room hub; authored fixtures, shifting walls, hunters and sanctuary/lore props.",
@@ -10,9 +10,9 @@
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; layouts, residents, hazards and Boiler Room Death Rats.",
     "places/level6, places/level61, places/level7, places/level8 (3D) - Lights Out, Snackrooms, ocean/Seawatch and Fort Surrender; food-court services, camps, cave systems, traders and surveyors.",
     "places/level10 (3D, Bumper Crop) - heightmapped farm and M.E.G. Outpost Bountiful with fields, quests, lake fishing and exits toward Level 7 and Level 11.",
-    "places/level11 (3D) - Infinite City districts, canal, shops, quests and Realty; generated city streets include full-size parked vehicles and street props, with the south avenue ending at the guarded U.E.C. Thebes fence and gate.",
+    "places/level11 (3D) - Infinite City districts, canal, shops, quests and Realty; generated city streets lead south to the fortified U.E.C. Thebes checkpoint.",
     "places/home11 (3D) - separately built furnished green-house interior; owner's fridge, homeKeep tote-packed/moved props and built pieces persist across visits.",
-    "places/debug (3D) is a test atmosphere; places/spamton is a basement showroom/boss arena; other numbered levels have their own configs and cells."
+    "places/debug, places/spamton and other numbered places - debug test atmosphere, basement showroom/boss arena, and their separately configured levels."
   ],
   "roots": [
     "world.config.yaml - multiplayer entry at main; declares player actions (including scripts/build.js), camera, player template/HUD, routing, eight-player cap and Backspace menu.",
@@ -20,7 +20,7 @@
     "places/<place>/config.yaml + cells + sim.js - place setup and placements; sims build local layouts and tick local behavior, generally sleeping when empty.",
     "sim.js - world cadence and out-of-bounds handling: players respawn, creatures with state.home return, other creatures are destroyed for manager respawn.",
     "places/level10/sim.js - terrain-relative Bumper Crop scenery, NPCs/props, wheat, lake dock, exits and ambience.",
-    "places/level11/sim.js + scripts/lib/level11-city.js - city/street assembly, shops, Realty, house exterior and Thebes checkpoint; sim version V=83 rebuilds generated features in open rooms.",
+    "places/level11/sim.js + scripts/lib/level11-city.js - city/street assembly, shops, Realty, house exterior and Thebes checkpoint; V=84 rebuilds generated features in open rooms.",
     "places/home11/sim.js - versioned interior builder (V=35); builds/rebuilds furnishings and restores owner's fridge, tote-packed/moved props and homeKeep.built structures.",
     "scripts/home11-door.js - home press handler for exit, doors, tote pack/place, bed, TV/radio, lamps, fridge, microwave and phone."
   ],
@@ -42,7 +42,7 @@
     "scripts/lib/level10-quests.js - quest definitions/setters/dialogue; scripts/lib/fishing.js - water checks, fishing lifecycle and loot helpers; scripts/bobber.js - spawn, schedule, update, cleanup.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, pullToken, useSnack, onInput and fishing handlers; scripts/lib/body3.js - swing3, fire3, stance.",
     "scripts/lib/ambient.js - fan, fanHousing, cable and atmosphere/effect builders; scripts/ambient-anim.js - onSpawn, update.",
-    "scripts/lib/level11-city.js - layCity, layStreet, tickCity; scripts/lib/level11-shop.js - SHOP, layShop; scripts/lib/level11-elevator.js - elevator schedule/call/ears/update; scripts/talk.js - openDialogue, heard, stopDance, onInput, update."
+    "scripts/lib/level11-city.js - layCity, layStreet, tickCity; scripts/lib/level11-shop.js - SHOP, layShop; scripts/lib/level11-elevator.js - elevator schedule/call/ears/update; scripts/talk.js - openDialogue, heard, stopDance, onInput, update; scripts/talk-ui.js - talkUi."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, clothing, karma/rep and level access.",
@@ -51,8 +51,8 @@
     "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes, skills, points, tags and sheet state; initialize/migrate/spend points and derive carry/combat values.",
     "scripts/craft.js - craft actions, recipe costs/outputs/skills/bench gating, payout redemption and needs drain; scripts/swim.js owns swim/breath session state.",
     "scripts/interact.js + scripts/lib/seat.js - focus, loot and sit state; interact.js owns loot UI and persists configured storage contents to player.state[saveKey].",
-    "scripts/talk.js owns dialogue/shop UI, rapport/trade/rep, and authored-choice heal/recruit/discount effects; level quest libraries own their quest keys/HUD/payout path, while scripts/l8-use.js also writes Level 8 interaction flags and direct interaction rewards.",
-    "places/home11/sim.js owns builtV and live fridge/tote/moved state; scripts/build.js writes player.state.homeKeep.built for pieces placed in home11, while home11-door.js/grab.js mirror packed/moved furnishings to homeKeep and fridge contents to its saved items."
+    "scripts/talk.js owns dialogue/shop UI state, rapport/trade/rep, and authored-choice effects; quest libraries own quest keys/HUD/payout, while scripts/l8-use.js writes Level 8 interaction flags.",
+    "places/home11/sim.js owns builtV and live fridge/tote/moved state; scripts/build.js writes player.state.homeKeep.built and home11-door.js/grab.js mirror packed/moved furnishings to homeKeep."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim, interact/grab/rest/mahjong/talk/build/stats/craft/OS/lockpick/spamton-fight/horde, then critter, main-menu and view3; routing is configured there.",
@@ -65,8 +65,8 @@
     "NPC dialogue: scripts/lib/npc-starters.js supplies authored choices → scripts/talk.js matches them, rolls optional skill checks and applies reply/heal/recruit/discount effects; unmatched text goes to the LLM path.",
     "scripts/talk.js checks Level 11, 10, 8, then 21 dialogue quest handlers; quest libraries write their quest flags/HUD, notices/feed and payout. Level 8 turn-ins read interaction flags produced by scripts/l8-use.js.",
     "scripts/l8-use.js ears.press handles Level 8 props: kazoo pickup writes player.state.kazoo, loop writes l8Loops, and the Carla interaction can reward/deliver; level8-quests.js provides parallel dialogue start/turn-in handling.",
-    "Level 11 Realty dialogue → scripts/talk.js / scripts/lib/level11-quests.js debits cents and writes home11; places/level11/sim.js spawns scripts/l11-mall.js shop interiors and Thebes U.E.C. guards using meg-agent behavior; scripts/level11-use.js checks ownership at exterior door → enters home11.",
-    "places/home11/sim.js builds/rebuilds the home and restores owner state; home11-door.js handles home interactions. scripts/build.js uses build-piece.js and saves home11 pieces; scripts/grab.js carries and places objects, with home tote/moved furnishings mirrored to homeKeep."
+    "Level 11 Realty dialogue → scripts/talk.js / scripts/lib/level11-quests.js debits cents and writes home11; places/level11/sim.js spawns scripts/l11-mall.js shop interiors and Thebes U.E.C. guards using meg-agent behavior.",
+    "places/home11/sim.js builds/rebuilds the home and restores owner state; home11-door.js handles home interactions. scripts/build.js uses build-piece.js and saves home11 pieces; scripts/grab.js carries and places objects, with home tote/move state mirrored to homeKeep."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and red-zone variants; Level 5 has portal/quest props and scripts/l5-rats.js Boiler Room Death Rat packs.",
@@ -75,8 +75,8 @@
     "scripts/lib/craft.js + scripts/lib/data/craft.yml - recipes vary by category, cost, skill, bench and output; canonical weapon IDs connect crafting to equip/combat/condition.",
     "places/level21/sim.js + level21.yml + level21-geo.js - shared room blocks vary by room type, zone height, lighting, decor and deterministic layout hashes.",
     "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share service systems with varying menus and Faceling roles.",
-    "scripts/lib/level11-city.js + level11-models.yml + art/level11 kits - generated buildings vary by seeded district/material/placement; street kit uses metre-scale Tripo sedans, vans, benches, hydrants and newsboxes with per-model forward axes/scales, while sim adds Thebes checkpoint variants.",
-    "scripts/lib/npc-starters.js + scripts/talk.js - authored NPC choices vary by character and can add skill checks/service effects; level8-quests.js and level21-quests.js add character-specific quests alongside Level 10/11 dialogue quests."
+    "scripts/lib/level11-city.js + level11-models.yml + art/level11 kits - generated buildings vary by seeded district/material/placement; Thebes uses metre-scale Tripo fence, gate, booth, sandbag and junk models.",
+    "scripts/lib/npc-starters.js + scripts/talk.js + scripts/talk-ui.js - authored NPC choices and service actions vary by character; talk UI presents dialogue, quest/check actions and trader buy/sell/repair views."
   ],
   "probableOrphans": [],
   "migrationNotes": [
@@ -84,7 +84,7 @@
     "Paired transitions (Level 2.1↔2, 6↔6.1, 6.1↔11, 10↔11) are owned by level-door.js; Level 10 lake-deep trigger targets level7#l7-from-l10.",
     "Level 10/184 use terrain10.js/terrain184.js heightmap/material queries; keep y placements and arrival/track regions aligned; Level 10 wheat maxDistance is 120 m with 35 m fade.",
     "Fishing uses world-space positions and canonical place-specific water regions/surface heights; keep fishing.js checks aligned with sim geometry; bobbers are named spawned objects.",
-    "Level 10 quest steps live in player.state.wheatQ/watcherQ/cellarQ plus resource counts/pages; setters synchronize player.state.quest HUD slot. Level 8 and 21 dialogue quests also share player.state.quest and write their own carlaQ/spiderQ/karstQ and saltineQ/edgesQ flags.",
-    "Home builder is V=35; retain h-fridge.state.items and mirror place.state.packed/moved into the resident player's homeKeep keyed by owner; built pieces are stored in homeKeep.built (max 80), identified by hb-* IDs, and must use builtSpec framing. Level 11 city rebuild is V=83; its generated-object reconciliation replaces changed model IDs, and TRIPO forward-axis/scale settings and street coordinates must stay matched to the uploaded kit."
+    "Level 10 quest steps live in player.state.wheatQ/watcherQ/cellarQ plus resource counts/pages; setters synchronize player.state.quest HUD slot. Level 8 and 21 dialogue quests also share player.state.quest and write their own quest keys.",
+    "Level 11 city sim V=84 rebuilds open-room features; Thebes Tripo models face +X and are placed with orientation/scale corrections. Keep these model axes/scales and the city generator placements aligned. Home builder is V=35; homeKeep.built stores up to 80 hb-* pieces."
   ]
 }
