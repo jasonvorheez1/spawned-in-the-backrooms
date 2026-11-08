@@ -3,7 +3,7 @@
 // on each other, restrooms. Everything is free (scripts/l61-use.js, scripts/lib/data/snacks.yml). Ways out: the M.E.G.-guarded rusty steel door to Level 6, the vent that sucks you to Level 3.
 // Ways in: the tripwire in Level 6, a vending machine on Level 4. Hall x -30..30, z -22..22, roof 6 m; stores 14 wide, 10 deep off the north wall.
 export const cadence = "1s";
-const V = 3;
+const V = 4;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb", M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb", M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb"; // art/snackrooms/build.py
 const SNACK = "/cdn/value.50b5fa3844cf9c705ca675660ef22ddb556c1cf0f31ad1cd69deeb8d8395df71.png", SODA = "/cdn/value.4db3afe09f392fef7c9d80e531484862384aef0ea5bcba295dc62b57197b659f.png";
 const T = (name, rep) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -117,14 +117,14 @@ function lay(ctx) {
     children: [{ feetPosition: { x: -1.5, y: 1.0, z: 0 }, primitive: { kind: "box", width: 4, height: 0.5, depth: 0.7 }, material: { color: "oklch(0.95 0.06 75)", emissive: "oklch(0.75 0.14 60)", emissiveIntensity: 0.8, opacity: 0.6, transparent: true, roughness: 0.05 } }] });
   box("l61-slice-oven", 9.5, 0, -31.3, 3, 2.2, 1, STEEL);
   sign("l61-slice-menu", 4.5, 2.2, -31.8, 180, 3.2, 1.2, `<div style="font-size:120px;color:#ffd84a">MENU</div><div style="font-size:70px;color:#fff">PEPPERONI · CHEESE · SUPREME</div><div style="font-size:60px;color:#9f9">ALL SLICES FREE · FACELING STAFF</div>`, "oklch(0.2 0.02 150)");
-  vend("l61-slice-soda", 12.8, -25, -90, true);
+  vend("l61-slice-soda", 12.8, -25, 90, true);
   for (let k = 0; k < 2; k++) tableSet(`l61-slice-table-${k}`, 3 + k * 4, -25.5, 0);
   // Burger Bop: diner counter with stools, the grill, a soda machine
   box("l61-burger-counter", 21, 0, -28.6, 10, 1.05, 0.8, { color: "oklch(0.92 0.02 90)", roughness: 0.3 }, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "burger", name: "Burger Bop counter", verb: "Order a burger", info: "The grill hisses. It smells exactly like 1986." },
     children: [{ feetPosition: { x: 0, y: 1.05, z: 0 }, primitive: { kind: "box", width: 10.2, height: 0.05, depth: 0.95 }, material: { color: "oklch(0.75 0.15 350)", roughness: 0.3 } }] });
   box("l61-burger-grill", 21, 0, -31.3, 4, 0.95, 1, STEEL, { audio: { clip: "cdn/sfx-burgers-sizzling-on-flat-top-griddle-loop.mp3", loop: true, gain: 0.18, spatial: true, maxDistance: 11 } });
   for (let k = 0; k < 6; k++) stool(`l61-burger-stool-${k}`, 17 + k * 1.6, -27.5, "oklch(0.7 0.13 195)");
-  vend("l61-burger-soda", 27.3, -25, -90, true);
+  vend("l61-burger-soda", 27.3, -25, 90, true);
 
   // ---- the vending room (south, x -22..-6): rows of machines, some stacked, one toppled across the far corner
   const vz0 = HD + 0.15, vz1 = HD + 10;
