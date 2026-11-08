@@ -116,6 +116,7 @@ function sound(ctx, name, volume = 0.7, mine = false) {
   heard(ctx, { clip: SND(name), position: chest(ctx), volume, maxDistance: 30 }, mine ? { audience: { player: ctx.self.id } } : undefined)
 }
 
+const nowMsg = (ctx) => ctx.now()
 export function gain(ctx, n) {
   const s = ctx.self.state
   const got = Math.round(n * derived(s).xp)
@@ -127,6 +128,7 @@ export function gain(ctx, n) {
   while (s.xp >= xpNeed(s.level)) {
     s.xp -= xpNeed(s.level); s.level += 1
     s.hp = maxHp(s.level, s); s.sanity = maxSan(s.level, s); s.leveledAt = ctx.now()
+    s.notice = { text: `Level up! You reached level ${s.level}.`, at: ctx.now() }
     s.lvlPrompt = true; s.levelUpAt = ctx.now() // HALOGEN waits: the HUD asks you to press K (Shelly, 2026-11-07)
     ctx.emit('playSound', { clip: 'cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3', volume: 0.6, bus: 'UI' })
     s.spts = (s.spts ?? 0) + derived(s).skillPerLevel
@@ -1019,7 +1021,9 @@ export function update(ctx, dt) {
   const crouched = !!s.crouch
   if (w.stamina <= 1) w.winded = true; else if (w.winded && w.stamina >= (L.windedAt ?? 30)) w.winded = false // ran dry: no sprint till you catch your breath
   if (!!w.winded !== !!s.winded) s.winded = !!w.winded
-  const sprinting = w.sprint && moving && w.stamina > 1 && !w.winded && !s.ads && !crouched
+  const over = (w.bur ?? 1) < 1 // carrying more than you can bear (Fallout: you walk, you do not run)
+  if (over && w.sprint && moving && nowMsg(ctx) - (w.overSay ?? 0) > 5000) { w.overSay = nowMsg(ctx); s.notice = { text: 'You are overencumbered and cannot run.', at: nowMsg(ctx) } }
+  const sprinting = w.sprint && moving && w.stamina > 1 && !w.winded && !s.ads && !crouched && !over
   const dv = w.dv ??= derived(s) // the sheet's numbers, re-derived 4x a second in the stats beat, not three times a tick
   const nowS = ctx.now(), green = nowS < (s.greenUntil ?? 0), tired = nowS < (s.tiredUntil ?? 0) // green almond water: sprint longer; red: heavy limbs
   const zh = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z)

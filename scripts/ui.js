@@ -18,6 +18,7 @@ import { hordeUi } from './horde-ui.js'
 import { derived as _dv, carried as _kg } from './lib/stats.js'
 import { derived } from './lib/stats.js'
 import { noclipUi, clipCard } from './noclip-ui.js'
+import { feedUi } from './feed-ui.js'
 import PAGES from './lib/data/pages.yml'
 import { cndOf, band, bandColor, isBroken } from './lib/condition.js'
 // the .plymodel converter is read on the first upload press, not at boot
@@ -277,7 +278,7 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
     <div class="row" style="margin-top:6px;justify-content:flex-end;gap:8px">
       <span>CASH</span><span style="font-size:15px;color:#9fcf8a">$${((s.cents ?? 0) / 100).toFixed(2)}</span><span>ALMOND</span><span style="font-size:15px">${s.almonds ?? 0}</span>${[['almondsG','#7fcf6a'],['almondsR','#d0574a'],['almondsB','#6f9be0']].filter(([k]) => s[k]).map(([k, c]) => `<span style="font-size:15px;color:${c}">${s[k]}</span>`).join('')}
     </div>
-    ${s.attr != null ? (() => { const cap = _dv(s).carry, kg = _kg(s); return `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px;${kg > cap ? 'color:oklch(0.68 0.2 35)' : ''}"><span>WG</span><span>${kg.toFixed(1)}/${cap}</span></div>` })() : ''}
+    ${s.attr != null ? (() => { const cap = _dv(s).carry, kg = _kg(s); return `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px;${kg > cap ? 'color:oklch(0.68 0.2 35)' : ''}"><span>${kg > cap ? 'OVERENCUMBERED · ' : ''}WG</span><span>${kg.toFixed(1)}/${cap}</span></div>` })() : ''}
     <div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px">
       <span>LIGHT</span><span style="${s.light ? '' : 'opacity:.45'}">${s.light ? Math.round(s.battery) + '%' : 'OFF'}</span>
     </div>
@@ -336,5 +337,5 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>
 
-</div>${lootUi(ctx, player)}${pickUi(ctx, player)}${talkUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
+</div>${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${talkUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
 }

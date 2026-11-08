@@ -3,6 +3,10 @@
 // scripts/stats-ui.js). The effects themselves are applied where they matter: scripts/player.js (damage, speed,
 // stamina, reload, carry weight), the creatures' scripts (their own attributes) and scripts/interact.js (Scavenge).
 import { tick as tickCompanions } from './lib/companion.js'
+import { pushFeed, watch } from './lib/feed.js'
+import { gain } from './player.js'
+import W from './lib/weapons.js'
+import { cndOf } from './lib/condition.js'
 import { getInputRay, raycast } from 'builtin/physics'
 import { ATTRS, SKILLS, ATTR_MAX, SKILL_MAX, START, attrsOf, spentOf, skillsOf, tagsOf, derived, packAttrs, npcMul } from './lib/stats.js'
 import L0 from './lib/data/level0.yml'
@@ -64,6 +68,23 @@ export function update(ctx, dt) {
   else if (s.sver !== 2) { // an older sheet: attributes stay, skills become the thirteen Fallout-style ones with their points
     const n = attrsOf(s).n
     Object.assign(s, { skl: START.skl, tags: '', tagsLeft: START.tagsLeft, sver: 2, spts: (s.level - 1) * (10 + Math.floor(n / 2)), apts: s.apts ?? 0 })
+  }
+  { // the message feed (scripts/lib/feed.js): every new notice joins it, and the status watcher says what Fallout would
+    const f = mem(ctx), now = ctx.now()
+    if (s.notice && s.notice.at !== f.noticeAt) { f.noticeAt = s.notice.at; if (now - s.notice.at < 2500) pushFeed(s, s.notice.text, now) }
+    if (now - (f.watchAt ?? 0) > 700) {
+      f.watchAt = now
+      const r = watch(s, f, now, { place: ctx.self.place }); if (r?.discovered) gain(ctx, 15)
+      const k = s.equipped ?? 'fists', wp = W[k], fl = (f.flags ??= {})
+      if (wp && k !== 'fists') {
+        if (wp.ranged) {
+          const loaded = s['loaded_' + k] ?? 0, res = s[wp.ammoType ?? 'ammo'] ?? 0
+          if (loaded === 0 && res === 0) { if (!fl['out' + k]) { fl['out' + k] = 1; pushFeed(s, `Out of ammo for your ${wp.name.toLowerCase()}.`, now, 'warn') } } else if (res > 0) fl['out' + k] = 0
+          if (res > 0 && res < (wp.magSize ?? 6)) { if (!fl['low' + k]) { fl['low' + k] = 1; pushFeed(s, `Low on ammo for your ${wp.name.toLowerCase()}.`, now, 'warn') } } else if (res >= (wp.magSize ?? 6) * 1.5) fl['low' + k] = 0
+        }
+        const c = cndOf(s, k); if (c < 25 && c >= 0.5) { if (!fl['cnd' + k]) { fl['cnd' + k] = 1; pushFeed(s, `Your ${wp.name.toLowerCase()} is in poor condition.`, now, 'warn') } } else if (c > 40) fl['cnd' + k] = 0
+      }
+    }
   }
   const dv = derived(s)
   tickCompanions(ctx, ctx.self) // perks and loyalty of whoever walks with you (scripts/lib/companion.js)
