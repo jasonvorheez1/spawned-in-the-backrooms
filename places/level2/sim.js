@@ -28,6 +28,7 @@ function survivor(ctx, id) {
 }
 const lit = (cx, cz) => zoneOf(cx, cz) !== "dark";
 
+const slAt = {}; // per-player sludge hiss clock, this machine's
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
   if (!(Math.abs(now - (ctx.session.wallTick ?? -1e9)) < 2000)) { ctx.session.wallTick = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)
@@ -118,12 +119,12 @@ export function tick(ctx) {
         if (Math.hypot(f.x - h.x, f.z - h.z) < 1.15 && f.y < 0.3) {
           ps.hp -= dmgAfterArmor(ps.look, (L.sludgeHurt ?? 7) * dt);
           ps.sanity = Math.max(0, (ps.sanity ?? 0) - (L.sludgeSanity ?? 3) * dt);
-          if (!p.session?.slAt || now - p.session.slAt > 1500) {
-            p.session.slAt = now;
+          if (now - (slAt[p.id] ?? -1e9) > 1500) {
+            slAt[p.id] = now;
             heard(ctx, { maxDistance: 24, refDistance: 4, clip: GRIT("acid-sizzle-hiss"), position: f, volume: 0.5 }, { audience: { player: p.id } });
             ctx.emit("screenFlash", { color: "#25101a", duration: 0.3, intensity: 0.4 }, { audience: { player: p.id } });
-            if (!p.session?.sludgeWarn) {
-              p.session.sludgeWarn = 1;
+            if (!slAt['w' + p.id]) {
+              slAt['w' + p.id] = 1;
               ps.notice = { text: "Boiling black fluid burns your boots! It is NOT almond water.", at: now };
             }
           }
@@ -145,8 +146,8 @@ export function tick(ctx) {
           ctx.emit("screenFlash", { color: "#ff7722", duration: 0.25, intensity: 0.5 }, { audience: { player: p.id } });
           const kx = f.x - vp.x, kz = f.z - vp.z, kd = Math.hypot(kx, kz) || 1;
           ctx.emit("cameraPunch", { direction: { x: kx / kd, y: 0.2, z: kz / kd }, intensity: 0.5 }, { audience: { player: p.id } });
-          if (!p.session?.steamWarn) {
-            p.session.steamWarn = 1;
+          if (!slAt['s' + p.id]) {
+            slAt['s' + p.id] = 1;
             ps.notice = { text: "High-pressure steam scalds your skin!", at: now };
           }
         }
@@ -172,9 +173,9 @@ pop ember rate=3 on=disc(.4) life=1..2 v=up(.6..1.2)+sdir()*.2 size=.015..0.03 a
 function stairRoom(ctx, r, P, [nx, nz]) {
   ctx.place.state.stairV = 1;
   const yaw = Math.atan2(-nx, -nz) * 180 / Math.PI, E = S / 2;
-  const step = (id, a, h, spec = {}) => ctx.spawn(id, { feetPosition: P(a, 0, 0), rotation: { yaw }, physics: "static", primitive: { kind: "box", width: 1.7, height: h, depth: 0.3 }, material: { color: "oklch(0.42 0.015 60)", roughness: 0.9 }, ...spec });
+  const step = (id, a, h, spec = {}) => ctx.spawn(id, { feetPosition: P(a, 0, 0), rotation: { yaw }, physics: "static", primitive: { kind: "box", width: 1.7, height: h, depth: 0.3 }, material: { color: "oklch(0.56 0.012 80)", texture: "cdn/texture-worn-poured-concrete-stair-tread.png", repeat: [2, 1], roughness: 0.9 }, ...spec });
   for (let i = 0; i < 13; i++) step(`l2-stair-${i}`, 1.85 - i * 0.3, (i + 1) * 0.25);
-  const wall = (id, a, b, w, d) => ctx.spawn(id, { feetPosition: { ...P(a, b), y: 3.0 }, rotation: { yaw }, physics: "static", primitive: { kind: "box", width: w, height: 3.7, depth: d }, material: { color: "oklch(0.3 0.012 70)", roughness: 0.95 } });
+  const wall = (id, a, b, w, d) => ctx.spawn(id, { feetPosition: { ...P(a, b), y: 3.0 }, rotation: { yaw }, physics: "static", primitive: { kind: "box", width: w, height: 3.7, depth: d }, material: { color: "oklch(0.62 0.015 85)", texture: "cdn/texture-painted-cinderblock-wall-scuffed.png", wrap: "repeat", repeat: [1.2, 1.2], roughness: 0.9 } });
   wall("l2-stair-wb", -2.28, 0, 4.9, 0.3); wall("l2-stair-wl", 0, -2.28, 0.3, 4.9); wall("l2-stair-wr", 0, 2.28, 0.3, 4.9); wall("l2-stair-wf", E - 0.1, 0, 4.9, 0.3);
   ctx.spawn("l2-stair-roof", { feetPosition: { ...P(0, 0), y: 6.7 }, rotation: { yaw }, physics: "static", primitive: { kind: "box", width: 5, height: 0.25, depth: 5 }, material: { color: "oklch(0.2 0.01 60)", roughness: 1 } });
   ctx.spawn("l2-stair-lamp", { feetPosition: P(-1.0, 0, 5.6), light: { kind: "point", color: "oklch(0.75 0.14 70)", intensity: 5, distance: 9 } });
@@ -186,6 +187,27 @@ function stairRoom(ctx, r, P, [nx, nz]) {
   ctx.spawn("l2-from-l21", { feetPosition: P(1.6, 0, 0.1), rotation: { yaw: Math.atan2(nx, nz) * 180 / Math.PI } });
   ctx.spawn("l2-to-l21", { feetPosition: { ...P(-1.85, 0), y: 3.2 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.4, height: 2.4, depth: 0.8 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level21#l21-from-l2" } });
   ctx.spawn("l2-stair-glow", { feetPosition: { ...P(-1.7, 0), y: 4.3 }, primitive: { kind: "box", width: 1.2, height: 1.4, depth: 0.04 }, rotation: { yaw }, material: { color: "oklch(0.95 0.03 95)", emissive: "oklch(0.97 0.04 95)", emissiveIntensity: 2 } }); // white light at the top
+  stairDress(ctx, P, yaw, [nx, nz]);
+}
+// the stairwell's dressing: caged lamps, safety-yellow step noses, a handrail, two pipes up the shaft, a buzzing tube, the M.E.G. sign
+function stairDress(ctx, P, yaw, [nx, nz]) {
+  const tx = -nz, tz = nx, o = P(1.85, 0), off = (a, b, y) => [nx * (a - 1.85) + tx * b, y, nz * (a - 1.85) + tz * b];
+  const yellow = { color: "oklch(0.78 0.15 85)", roughness: 0.6 }, band = { color: "oklch(0.4 0.05 165)", roughness: 0.8 };
+  for (let i = 0; i < 13; i++) ctx.spawn(`l2-sd-nose-${i}`, { feetPosition: P(1.98 - i * 0.3, 0, 0.23 + i * 0.25), rotation: { yaw }, primitive: { kind: "box", width: 1.7, height: 0.03, depth: 0.05 }, material: yellow });
+  for (const [id, b] of [["l2-sd-bandl", 2.11], ["l2-sd-bandr", -2.11]]) ctx.spawn(id, { feetPosition: P(0, b, 1.1), rotation: { yaw }, primitive: { kind: "box", width: 0.04, height: 0.18, depth: 4.6 }, material: band });
+  const cage = { color: "oklch(0.95 0.03 90)", emissive: "oklch(0.97 0.05 90)", emissiveIntensity: 3 };
+  for (const [k, a, b, y, int] of [[0, 1.8, -2.0, 2.5, 3], [1, -0.4, 2.0, 4.3, 2.5]]) {
+    ctx.spawn(`l2-sd-lamp${k}`, { feetPosition: P(a, b, y), primitive: { kind: "sphere", radius: 0.07 }, material: cage });
+    ctx.spawn(`l2-sd-lamp${k}-l`, { feetPosition: P(a, b * 0.8, y - 0.1), light: { kind: "point", color: "oklch(0.86 0.1 80)", intensity: int, distance: 8 } });
+  }
+  const rail = []; for (let i = 0; i < 9; i++) rail.push(off(2.1 - i * 0.5, 1.0, Math.min(4.15, 0.94 + i * 0.4167)));
+  ctx.spawn("l2-sd-rail", { feetPosition: o, spline: { kind: "pipe", points: rail, width: 0.05 } });
+  ctx.spawn("l2-sd-pipe0", { feetPosition: o, spline: { kind: "pipe", points: [off(2.35, -1.95, 2.9), off(-2.25, -1.95, 5.9)], width: 0.14 } });
+  ctx.spawn("l2-sd-pipe1", { feetPosition: o, spline: { kind: "pipe", points: [off(2.35, -1.95, 3.15), off(-2.25, -1.95, 6.15)], width: 0.09 } });
+  ctx.spawn("l2-sd-tube", { feetPosition: P(-1.9, 0, 6.5), rotation: { yaw }, primitive: { kind: "box", width: 1.2, height: 0.06, depth: 0.14 }, material: cage,
+    audio: { clip: "cdn/sfx-fluorescent-tube-electrical-buzz-flicker-loop.mp3", loop: true, gain: 0.18, spatial: true, maxDistance: 10 } });
+  ctx.spawn("l2-sd-sign", { feetPosition: P(1.0, -2.12, 1.4), rotation: { yaw: yaw - 90 }, primitive: { kind: "box", width: 1.1, height: 0.5, depth: 0.01 }, material: { color: "oklch(0.86 0.04 95)" },
+    ui: `<div face="front" width="1.1m" style="font-family:Arial;font-weight:900;color:#2a3a2c;text-align:center;font-size:120px;line-height:1">SUBLEVEL 2.1 ↑<div style="font-size:44px">M.E.G. BASE ALEF</div></div>` });
 }
 const yawOf = (dx, dz) => Math.atan2(-dx, -dz) * 180 / Math.PI; // the yaw that turns a front (-Z) toward (dx, dz)
 // where each room type puts its containers, in the room's own frame: [a (out toward the door), b (across)]

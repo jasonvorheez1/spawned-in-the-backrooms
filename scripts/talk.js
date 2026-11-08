@@ -11,6 +11,7 @@ import { skillsOf, SKILLS } from './lib/stats.js'
 import { describe } from './lib/items.js'
 import { addressFor, saysName } from './lib/address.js'
 import { lineFor } from './lib/personality.js'
+import { raycast } from 'builtin/physics'
 
 const getStartersLib = (ctx) => ((ctx.session ??= {}).startersP ??= import('./lib/npc-starters.js'))
 
@@ -27,10 +28,11 @@ function social(ctx, ses) {
     const o = ctx.getObject(row.id); if (!o || o.state?.dead) continue
     const mem = o.state.mem?.[k]
     const dd = flat(o.feetPosition, me.feetPosition), quiet = now - (o.state.line?.at ?? 0) > 4000 && !ctx.self.state.talkWith && !o.state.hostile && !o.state.fleeing
-    if (mem && quiet && dd < 3.5 && now - (hi[o.id] ?? -1e9) > 180000) {
+    const sees = (quiet && dd < 5) && canSee(ctx, o, me)
+    if (mem && quiet && sees && dd < 3.5 && now - (hi[o.id] ?? -1e9) > 180000) {
       hi[o.id] = now; const r = o.state.rapport?.[k] ?? 0
       o.state.talkTo = me.id; o.state.talkAt = now; say(ctx, o, r < -20 ? HI(addressFor(o, me, mem), r)[0] : lineFor(o, 'hi', addressFor(o, me, mem)), r < -20 ? 'annoyed' : 'happy')
-    } else if (quiet && dd < 5) react(ctx, ses, o, me, mem, dd, now)
+    } else if (quiet && sees) react(ctx, ses, o, me, mem, dd, now)
     if (mem?.notes?.length && ctx.random() < 0.02) for (const r2 of near) { // gossip: one thing they know about you, passed on as hearsay
       if (r2.id === o.id || flat(r2.feetPosition, o.feetPosition) > 4) continue
       const b = ctx.getObject(r2.id); if (!b || b.state?.dead) continue
@@ -39,6 +41,12 @@ function social(ctx, ses) {
       b.state.mem = { ...(b.state.mem ?? {}), [k]: { ...bm, notes: [...(bm.notes ?? []), `heard: ${n}`].slice(-6) } }; break
     }
   }
+}
+// eye to eye: a wall, a shut door or a shelf between you and they see nothing
+function canSee(ctx, o, me) {
+  const a = { x: o.feetPosition.x, y: o.feetPosition.y + 1.5, z: o.feetPosition.z }, b = { x: me.feetPosition.x, y: me.feetPosition.y + 1.2, z: me.feetPosition.z }
+  const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z, l = Math.hypot(dx, dy, dz) || 1
+  return !raycast(ctx, a, { x: dx / l, y: dy / l, z: dz / l }, { distance: l, physicsOnly: true, bodies: 'all', excludeTags: ['npc', 'player', 'weapon', 'almond'], ignoreEntities: [o.id, me.id] })
 }
 // what they notice about you, each in their own temperament: a drawn weapon, your wounds, you creeping, you crowding them; once a minute per kind per person
 function react(ctx, ses, o, me, mem, dd, now) {

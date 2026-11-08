@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1403,
-  "updatedAt": "2026-11-08T02:08:24.793Z",
-  "summary": "The Backrooms is a multiplayer survival RPG built around shared player progression across authored and simulation-generated levels. Place sims and shared grid, loot, creature, interaction, crafting, and UI systems build the levels; Level 2.1 now bridges Level 2 to Level 8, while Level 8 supplies the game's swimming volumes and Blender-built cave road.",
+  "basedOnSpecVersion": 1456,
+  "updatedAt": "2026-11-08T03:14:56.814Z",
+  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Place sims assemble local spaces and hazards around shared player, NPC, loot, crafting, combat, and UI systems; paired level-door markers connect the explored routes, including the Level 2.1 bridge to Level 8.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, containers, shifting walls and hunters.",
-    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Utility Halls and the Locked sublevel: Level 2 sim builds its stair/shutter to Level 2.1; Level 2.1 sim builds hot storage halls, Base Alef, Refrigerator Paradise and the Smiler-haunted Edges.",
+    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Utility Halls and Locked sublevel; Level 2 sim builds the shutter stair, and Level 2.1 builds Base Alef, Refrigerator Paradise, The Edges, survivors, hounds and Smilers.",
     "places/level3 + places/gamma (3D) - Electrical Station and Base Gamma; seeded layouts, hazards, agents, traders, generators, lifts and checkpoint.",
     "places/level4 (3D) - Abandoned Office; office plan, residents, cubicles, fountains, vending, lift/stairs and Base Omega.",
-    "places/level5 + places/level6 (3D) - Terror Hotel and Lights Out; Level 5 rooms, quests and portal; Level 6 dark labyrinth, shifting wall, auditory hazards, hounds and Smiler.",
-    "places/level7 (3D) - Thalassophobia; flooded Floating House, Seawatch, Fort Surrender, sea floor, diving bell and inert Level 9 hatch.",
-    "places/level8 (3D) - Cave Systems / 9th Road; colliding cave, entrance lake, flood cavern, spiders, tar dredge, survivor camp and route back to Level 2.1.",
+    "places/level5 + places/level6 (3D) - Terror Hotel and Lights Out; Level 5 rooms, quests and portal; Level 6 dark labyrinth and sensory hazards.",
+    "places/level7 (3D) - Thalassophobia; flooded Floating House, Seawatch, Fort Surrender, sea floor, diving bell and Level 9 hatch.",
+    "places/level8 (3D) - Cave Systems / 9th Road; colliding cave, entrance lake, flood cavern, spiders, tar dredge, survivor camp and route toward Level 9; Carla and camp NPCs are modeled survivors.",
     "places/debug (3D) - Debug room; separate dark atmosphere and spawn."
   ],
   "roots": [
     "world.config.yaml - multiplayer entry at main; declares camera, player actions, player template and HUD; Backspace opens the main menu.",
-    "templates/player.js - ordered player behavior chain; locomotion and player controller precede swim, interactions and other gameplay handlers, then critter, main-menu and view3.",
+    "templates/player.js - ordered player behavior chain; locomotion/player controller precede swim, interaction and gameplay handlers, then critter, main-menu and view3.",
     "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and eye position; scripts/view3.js toggles player.state.tp.",
-    "places/<place>/config.yaml + sim.js + cells - place setup and authored placements; sims construct local layouts, manage respawns/regrowth and tick local behavior.",
-    "places/level21/config.yaml + places/level21/sim.js - generated Level 2.1 environment, entry markers, containers, NPCs and threat managers; geometry comes from scripts/level21-geo.js.",
+    "places/<place>/config.yaml + sim.js + cells - place setup and authored placements; sims construct local layouts and tick local behavior, respawns and regrowth.",
+    "places/level21/sim.js + scripts/level21-geo.js - Level 2.1 generated environment, survivor camp fixtures (modeled cots/bunks/workbench), entry markers, loot and threat managers.",
     "places/level8/sim.js + art/level8/build.py - Level 8 assembler and Blender cave-road generator; cave material is scripts/mat-cave.js.",
     "scripts/ui.js and *-ui.js renderers - HUD and overlays, including menu/creator, wardrobe, loot, talk/trade, build, stats, craft and OS.",
     "scripts/main-menu.js + scripts/main-menu-ui.js - local player menu and Continue/Character actions; hides the player and supplies the menu camera backdrop."
@@ -29,9 +29,9 @@
     "scripts/lib/maze.js, level1.js, level2.js, level21.js + data - per-level grids, zones and layouts used by simulations, geometry, player zone labels and creature navigation.",
     "scripts/lib/level3.js, level4.js, level5.js, level6.js + path helpers - level plans, zone/route queries and navigation reused by place systems and creatures.",
     "scripts/lib/level-kit.js + scripts/lib/npc-respawn.js - named-person management, throttling and shared NPC return timing for place sims.",
-    "scripts/lib/clothes.js, scripts/lib/critter-model.js + model/face data, scripts/mat-cloth.js - seeded avatar looks and rendered critter bodies/garments.",
-    "scripts/lib/loot.js + scripts/lib/items.js - shared item pools, rolls, remains and containers; Level 2.1 uses the Level 2 pool and L2 container helpers.",
-    "art/props/build.py + scripts/lib/loot.js - Blender locker and fridge models reused by Level 2 and Level 2.1 container spawns; other container kinds remain script-built.",
+    "scripts/lib/clothes.js, scripts/lib/critter-model.js + model/face data, scripts/mat-cloth.js - seeded avatar/NPC looks and rendered critter bodies and garments.",
+    "scripts/lib/loot.js + scripts/lib/items.js - shared item pools, rolls, remains and containers; Level 2.1 uses Level 2 pools and container helpers.",
+    "art/props/build.py + scripts/lib/loot.js - Blender locker/fridge models reused by Level 2 and Level 2.1 container spawns; other container kinds remain script-built.",
     "scripts/lib/craft.js + scripts/lib/data/craft.yml; scripts/lib/personality.js + scripts/lib/address.js - shared recipes and NPC temperament/address rules reused by actions, UI and dialogue."
   ],
   "notableExports": [
@@ -40,33 +40,33 @@
     "scripts/l21-use.js - updateSchedule, ears, update; Level 2.1 usable props dispatch by state.kind.",
     "scripts/swim.js - onInput, update; scripts/underwater-audio.js - setup.",
     "scripts/l8-life.js - updateSchedule, update; scripts/l8-use.js - ears, onTriggerEnter, back.",
-    "scripts/lib/loot.js - POOL, poolOf and shared loot/remains/container helpers; scripts/lib/items.js - item parsing, descriptions and currency data.",
+    "scripts/soup-slick.js - updateSchedule, onSpawn, update; scripts/lib/loot.js - POOL, poolOf and shared loot/remains/container helpers; scripts/lib/items.js - item parsing and descriptions.",
     "scripts/lib/level-kit.js - keepPeople, every, RESPAWN_MS; scripts/lib/npc-respawn.js - RESPAWN_MS, mayReturn, firstLay.",
     "scripts/lib/critter-model.js - faceFill, faceMorph, rewear, toMesh and model helpers; scripts/terrain7.js - ISLES, heightAt, materialAt."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, kills/deaths, combat, rewards and look/clothing data.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs and heat, money, visits, kills/deaths, combat, rewards and look/clothing data.",
     "scripts/stats.js - HALOGEN attributes, skills, points, tags, schema version and sheet state; initializes/migrates and spends points.",
-    "scripts/craft.js - craft UI/actions, payout redemption and hunger/thirst drain; Level 2.1 heat multiplier is sourced from level21.yml.",
+    "scripts/craft.js - craft UI/actions, payout redemption and hunger/thirst drain; Level 2.1 hot/humid thirst multiplier comes from level21.yml.",
     "scripts/swim.js - player.state swimming/underwater/breath and local session swim controls, breath timer and underwater audio instance; applies drowning damage.",
     "scripts/interact.js + scripts/lib/seat.js own focus, loot and sit state; scripts/lockpick.js owns pick state and pins; seats own occupancy.",
     "scripts/talk.js + scripts/meg-agent.js - NPC dialogue memory/rapport/shop/follow state; meg-agent owns routines, attributes/nerve, loadout, combat, fear and cover.",
-    "places/level21/sim.js - place builtV/peopleV and hound manager/respawn timing; scripts/l21-use.js handles prop cooldowns, player consumable/reward and quest interactions, and Edge Smiler management.",
-    "places/level8/sim.js owns build version, camp setup and shared regrow deadlines; l8-life.js owns local hazard/boss timing and l8-use.js writes player payouts, quest flags and route progress."
+    "places/level21/sim.js - place builtV/peopleV and hound manager/respawn timing; scripts/l21-use.js handles prop cooldowns, consumable/reward and quest interactions, and Edge Smiler management.",
+    "places/level8/sim.js owns build version, camp setup and shared regrow deadlines; l8-life.js owns local hazard/boss timing; l8-use.js writes player payouts, quest flags and route progress."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js behavior order: locomotion/player, swim, interact/grab/rest/mahjong/talk/build/stats/craft/OS/lockpick/horde, then critter, main-menu and view3.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes player.state.aimPt → player.js crosshair-aligned shots.",
     "world.config.yaml Backspace → scripts/main-menu.js; menu actions and scripts/ui.js render menu/creator; menu hides player and supplies ctx.view.camera backdrop.",
     "Level 2 breakable shutter/stair → places/level2/sim.js paired l2-to-l21 door → scripts/level-door.js crosses to level21#l21-from-l2; Level 2.1 cave exit similarly crosses to level8#l8-from-l21.",
-    "places/level21/sim.js → scripts/lib/level21.js layout and scripts/level21-geo.js geometry; hounds.js uses maze21path.js for traversable pursuit, while l21-use.js handles usable props and edge Smilers.",
-    "player zone/sanity and thirst logic → level21.js zoneAt + level21.yml zone drains/heat; craft.js applies the hot-humid thirst multiplier.",
-    "scripts/swim.js queries tagged swimwater volumes in Level 8 → adjusts local player movement, breath and drowning; underwater state tints HUD in scripts/ui.js and starts scripts/underwater-audio.js on Master.",
-    "places/level7/sim.js diving bell → level8; Level 8 lake exit → level7; Level 8's Level 2.1 tunnel and Level 2.1's cave mouth use paired level-door arrival markers.",
+    "places/level21/sim.js → scripts/lib/level21.js layout and scripts/level21-geo.js geometry; hounds.js uses maze21path.js for pursuit, while l21-use.js handles usable props and Edge Smilers.",
+    "player zone/sanity and thirst → level21.js zoneAt + level21.yml drains/heat; craft.js applies the hot-humid thirst multiplier.",
+    "scripts/swim.js queries tagged swimwater volumes in Level 8 → adjusts local movement, breath and drowning; underwater state tints HUD in scripts/ui.js and starts scripts/underwater-audio.js on Master.",
+    "places/level7/sim.js diving bell → Level 8; Level 8 lake-bed trigger → Level 7; Level 8's Level 2.1 tunnel and Level 2.1 cave mouth use paired level-door arrival markers.",
     "interact.js on NPC → player.state.talkWith; talk-ui.js submits choices/text/trade → talk.js and NPC ears; dialogue stores per-player memory/rapport and follow intent feeds meg-agent.js.",
     "scripts/player.js writes state.xfer and xpPop → scripts/ui.js transition card and XP display; lvlPrompt prompts K and stats.js clears it when opening the sheet.",
-    "Level 8 resource/use handlers and breakables → player.state.payout → scripts/craft.js redemption; sim regrow deadlines respawn harvest objects, while l8-life.js updates flood, spiders, boss, tar and hazards.",
-    "scripts/lib/loot.js container spawns → shared L2 locker/fridge models from art/props/build.py; search in scripts/interact.js opens items and applies per-container scavenging."
+    "Level 8 resource/use handlers and breakables → player.state.payout → scripts/craft.js; sim regrow deadlines respawn harvest objects, while l8-life.js updates flood, spiders, boss, tar and hazards.",
+    "player.js consumes soup_bowl as a weapon/item → hitTarget damages/staggers target and spawns tagged soupslick puddle; player skates, soup-slick.js trips nearby NPCs/hostiles, and l8-life.js makes spiders tumble; puddles expire."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures, local sound/light state and red-zone variants; Level 5 cells also carry portal and quest props.",
@@ -76,15 +76,15 @@
     "scripts/lib/craft.js + craft data - recipe category, costs, skill, bench, batch size and item family vary per recipe, including Level 8 cave materials.",
     "places/level8/sim.js + scripts/l8-life.js + scripts/l8-use.js - coordinate-interpolated road stations share systems while hazards, harvests, caches, camp interactions, quests and payouts vary by station.",
     "places/level21/sim.js + level21.yml + level21-geo.js - room blocks share generated hall/room structure; room type, zone height, lighting, decor and loot placement vary by authored grid data and deterministic hashes.",
-    "art/critter-cute/build.py + scripts/lib/data/critter-models.yml + scripts/lib/critter-model.js - species/sex choose meshes and faces; snouts, markings and clothing vary through shared rendering data."
+    "scripts/player.js floorOf/steps + STEP sound data - movement uses per-floor walk/run clips selected by place and Level 2.1 zone; movement speed and sound level vary by gait and surface."
   ],
   "probableOrphans": [],
   "migrationNotes": [
-    "Level 2.1 grid is 30×30 at 4 m per cell (120 m square); keep scripts/lib/level21.js passability/room zones and maze21path.js traversal aligned with the sim geometry and hound routing.",
+    "Level 2.1 grid is 30×30 at 4 m per cell (120 m square); keep scripts/lib/level21.js passability/room zones and maze21path.js traversal aligned with sim geometry and hound routing.",
     "Keep paired arrival IDs: Level 2 ↔ Level 2.1 (l2-from-l21/l21-from-l2), Level 2.1 ↔ Level 8 (l21-from-l8/l8-from-l21); player.js CHECKS consumes these markers for respawn checkpoints.",
-    "Level 2.1 rebuild gate is V=6; sim cleanup removes l21-prefixed build objects and globally tagged prior loot before relaying. Persistent residents and l21-smilers are explicitly excluded from its ID cleanup.",
-    "Level 2.1 zone keys are the suffixes of zoneAt values and index level21.yml sanityDrain; its hot/humid thirst multiplier is level21.yml heat, applied in craft.js. Keep zone names aligned across both consumers.",
-    "Swimming depends on geometric bounds of objects tagged swimwater; swim.js uses the water surface for float/dive and breath and runs after player.js so it can override falling/movement.",
-    "Level 8's colliding Blender cave and station interpolation are paired with l8 sim geometry/use/life; keep the sim rebuild version and spawned IDs coordinated with cleanup and regrow deadlines."
+    "Level 2.1 rebuild gate is V=8; sim cleanup removes l21-prefixed build objects and globally tagged prior loot but excludes persistent residents and l21-smilers; modeled fixtures must retain their layout/collider bounds.",
+    "Level 2.1 zone keys are suffixes of zoneAt values and index level21.yml sanityDrain; hot/humid thirst multiplier is level21.yml heat, applied in craft.js. Keep zone names aligned across consumers, including player heat and floor selection.",
+    "Soup bowls live in the weapons inventory as soup_bowl and are consumed on eat or throw; soupslick tag/position and 30 s lifetime link player movement, NPC/hostile staggering and Level 8 spider behavior.",
+    "Level 8 lake return trigger is at the lake bed's middle, not the wading surface; swim.js relies on geometric bounds of tagged swimwater volumes and runs after player.js to override movement/falling."
   ]
 }

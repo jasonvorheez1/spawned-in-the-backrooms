@@ -154,13 +154,16 @@ def cover(o):
     for f in bm.faces:
         c = f.calc_center_median(); loc, n, idx, d = bv.find_nearest(c)
         reach = 0.04
+        if kind == 'Bot' and c.z < zhi - 0.04 and c.z > 0.08: reach = 0.09   # the legs: no thigh through the cloth
+        if kind == 'Hat': reach = 0.07
         if kind == 'Top' and zlo - 0.06 < c.z < zlo + 0.03: reach = 0.16   # hem down over the waistband
         if kind == 'Bot' and zhi - 0.03 < c.z < zhi + 0.04: reach = 0.16   # waistband up under the hem
         if kind == 'Top' and o.name != 'Top_dress' and max(zlo - 0.09, HIPS_Z - 0.02) < c.z < zlo + 0.05 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1   # a closed hem ring at the waist, no skin between top and bottom
         if kind == 'Bot' and zhi - 0.05 < c.z < zhi + 0.06 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1
+        if kind == 'Bot' and c.z > HIPS_Z + 0.1: reach = -1   # a waistband, not overalls
         if o.name == 'Top_dress' and c.z >= HIPS_Z + 0.02: reach = max(reach, 0.12)   # the bodice covers the whole bust and midriff
         if o.name == 'Top_dress' and c.z < HIPS_Z + 0.02: reach = -1
-        if kind == 'Top' and o.name != 'Top_dress' and c.z < HIPS_Z - 0.05 and abs(c.x) < 0.2: reach = -1   # a shirt ends at the hips: below is the legs' own (pants never show a shirt through them)          # the skirt stays the dress's own
+        if kind == 'Top' and o.name != 'Top_dress' and c.z < HIPS_Z + 0.03 and abs(c.x) < 0.2: reach = -1   # a shirt ends at the hips: below is the legs' own (pants never show a shirt through them)          # the skirt stays the dress's own
         if d is None or d > reach: kill.append(f)
         else: f.material_index = src.data.polygons[idx].material_index
     keep = set(bm.faces) - set(kill)
@@ -228,22 +231,22 @@ def refit(o):
     bpy.context.view_layer.objects.active = o; bpy.ops.object.select_all(action='DESELECT'); o.select_set(True)
     kind = o.name.split('_')[0]
     if kind == 'Eyew' and EYE is not None:
-        ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); back = max(w.y for w in ws); wid = max(w.x for w in ws) - min(w.x for w in ws)
+        ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); c.x = (max(w.x for w in ws) + min(w.x for w in ws)) / 2; back = max(w.y for w in ws); wid = max(w.x for w in ws) - min(w.x for w in ws)
         ex = [e.x for e in _ew]; k = max(0.6, min(1.6, (max(ex) - min(ex) + 0.07) / wid))
-        for v in me.vertices: v.co = Vector((EYE.x + (v.co.x - c.x) * k, EYEFRONT - 0.012 + (v.co.y - back) * k, EYE.z + (v.co.z - c.z) * k))
+        for v in me.vertices: v.co = Vector((0.0 + (v.co.x - c.x) * k, EYEFRONT - 0.012 + (v.co.y - back) * k, EYE.z + (v.co.z - c.z) * k))
         bw = [body.matrix_world @ q.co for q in body.data.vertices]; band = [w.x for w in bw if abs(w.z - EYE.z) < 0.02]
         half = (max(band) - min(band)) / 2 if band else 0.15
         pass
         gb = bmesh.new(); gb.from_mesh(me)
-        bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x - EYE.x) > min(half * 0.98, (max(ex) - min(ex)) / 2 + 0.045) or v.co.y > EYEFRONT + 0.018 or v.co.y < EYEFRONT - 0.05], context='VERTS')   # temples cut: no arm poking out ahead of the face
+        bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x) > min(half * 0.98, (max(ex) - min(ex)) / 2 + 0.045) or v.co.y > EYEFRONT + 0.018 or v.co.y < EYEFRONT - 0.05], context='VERTS')   # temples cut: no arm poking out ahead of the face
         gb.to_mesh(me); gb.free()
     elif kind == 'Hat' and EYE is not None:
-        ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); bot = min(w.z for w in ws)
+        ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); c.x = (max(w.x for w in ws) + min(w.x for w in ws)) / 2; bot = min(w.z for w in ws)
         wid = max(w.x for w in ws) - min(w.x for w in ws)
         bw = [body.matrix_world @ q.co for q in body.data.vertices]; band = [w.x for w in bw if abs(w.z - (EYE.z + 0.09)) < 0.015]
         k = (SKULL * 1.04 / wid)
-        for v in me.vertices: v.co = Vector((EYE.x + (v.co.x - c.x) * k, c.y + (v.co.y - c.y) * k, EYE.z + 0.075 + (v.co.z - bot) * k))
-        sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.006
+        for v in me.vertices: v.co = Vector((0.0 + (v.co.x - c.x) * k, c.y + (v.co.y - c.y) * k, EYE.z + 0.075 + (v.co.z - bot) * k))
+        sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.022   # clear of the fur tufts, no chips
         bpy.ops.object.modifier_apply(modifier='fit')
     elif kind in ('Top', 'Bot', 'Shoes', 'Neck', 'Hat') and o.name not in LOOSE:
         sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'
@@ -259,15 +262,19 @@ def refit(o):
         sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.004
         bpy.ops.object.modifier_apply(modifier='fit')
     if kind in ('Top', 'Bot', 'Shoes') and o.name not in LOOSE: cover(o)
-    if o.name == 'Top_dress':   # bodice cut from the skin, then a flared skirt lathed round the hips (the carried sheet tore)
-        cover(o)
+    SKL = {'Top_dress': (0.34, 0.3), 'Bot_skirt': (0.24, 0.22), 'Bot_longskirt': (0.5, 0.36)}
+    if o.name in ('Bot_skirt', 'Bot_longskirt'):   # the carried sheet tore: the skirt is lathed whole round her hips
+        import bmesh as _bm
+        _g = _bm.new(); _g.from_mesh(o.data); _bm.ops.delete(_g, geom=list(_g.verts), context='VERTS'); _g.to_mesh(o.data); _g.free()
+    if o.name in SKL:   # bodice cut from the skin, then a flared skirt lathed round the hips (the carried sheet tore)
+        if o.name == 'Top_dress': cover(o)
         ev = [env.matrix_world @ v.co for v in env.data.vertices]
-        band = [w for w in ev if abs(w.z - HIPS_Z) < 0.03]
+        band = [w for w in ev if abs(w.z - HIPS_Z) < 0.03 and abs(w.x) < 0.22]   # the hips alone, never the hands hanging beside them
         cx = (max(w.x for w in band) + min(w.x for w in band)) / 2; cy = (max(w.y for w in band) + min(w.y for w in band)) / 2
         rx = (max(w.x for w in band) - min(w.x for w in band)) / 2; ry = (max(w.y for w in band) - min(w.y for w in band)) / 2
         gb = bmesh.new(); N, R = 40, 7; rings = []
         for k in range(R + 1):
-            t = k / R; z = HIPS_Z + 0.05 - t * 0.36; f = 1.06 + 0.42 * t ** 1.3
+            t = k / R; z = HIPS_Z + 0.07 - t * SKL[o.name][0]; f = 1.1 + SKL[o.name][1] * t ** 1.2
             ring = []
             for q in range(N):
                 a = 2 * math.pi * q / N; wob = 1 + 0.03 * math.sin(a * 6) * t   # soft folds toward the hem
@@ -320,6 +327,7 @@ OUTFIT = ['Top_hoodie', 'Bot_pants', 'Shoes_sneakers', 'Hat_beanie'] if SEX == '
 shot('a_base', (0, -3.4, 1.0), [])
 shot('b_outfit', (2.2, -2.6, 1.1), OUTFIT)
 shot('c_outfit2', (-2.2, -2.6, 1.1), ['Top_dress', 'Shoes_slippers', 'Hat_bow'] if SEX == 'f' else ['Top_jacket', 'Bot_shorts', 'Shoes_boots', 'Eyew_shades'])
+shot('e_bot', (0, -3.0, 1.1), ['Bot_pants'] if SEX == 'm' else ['Top_tee'])
 shot('d_front2', (0, -3.0, 1.1), ['Top_dress', 'Shoes_slippers', 'Hat_bow'] if SEX == 'f' else ['Top_jacket', 'Bot_shorts', 'Shoes_boots', 'Eyew_shades'])
 for g in garments: g.hide_render = False
 bpy.ops.object.select_all(action='DESELECT')

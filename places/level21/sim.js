@@ -12,7 +12,8 @@ import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { fan, fanHousing, cable, DRIP, DUST, MIST } from "../../scripts/lib/ambient.js";
 export const cadence = "500ms";
-const V = 7;
+const V = 9; // 7: modeled cots, bunks and workbench (Shelly: less blocky)
+const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
 const rm = (type) => ROOMS.filter((r) => r.type === type);
 const center = (r) => cellCenter(r.x0 + (r.w - 1) / 2, r.z0 + (r.d - 1) / 2); // the middle of a room block
 const edgeOf = (r, d) => { const c = center(r); return d === 0 ? c.x + (r.w * S) / 2 : d === 2 ? c.x - (r.w * S) / 2 : d === 1 ? c.z + (r.d * S) / 2 : c.z - (r.d * S) / 2; };
@@ -93,7 +94,7 @@ function lay(ctx) {
     state: { kind: "comms", name: "Base Alef lockout terminal", verb: "Read lockout logs", info: "Buffered M.E.G. dispatches from July–August 2020, recorded after the steel wall sealed Base Alef inside Level 2.1.", tint: "#7aff9a" },
     children: [{ feetPosition: { x: 0, y: 0.2, z: -0.25 }, light: { kind: "point", color: "oklch(0.75 0.16 145)", intensity: 1.1, distance: 4.5 } }],
   });
-  for (let i = 0; i < 4; i++) sp(`l21-cot-${i}`, { feetPosition: { x: bc.x - 2 + (i % 2) * 2.2, y: 0.34, z: bc.z + 1.2 + Math.floor(i / 2) * 2.2 }, primitive: { kind: "box", width: 0.9, height: 0.12, depth: 1.9 }, material: { color: "oklch(0.4 0.05 140)", roughness: 0.9 }, physics: "static" });
+  for (let i = 0; i < 4; i++) sp(`l21-cot-${i}`, { feetPosition: { x: bc.x - 2 + (i % 2) * 2.2, y: 0, z: bc.z + 1.2 + Math.floor(i / 2) * 2.2 }, rotation: { yaw: (i % 2 ? 4 : -3) }, model: COT, layout: { box: { min: { x: -0.95, y: 0, z: -0.95 }, max: { x: 0.95, y: 0.55, z: 0.95 } } }, physics: { body: "static", collider: "box" } });
   spawnRemains(ctx, { x: bc.x + 2.6, z: bc.z - 1.4 }, ["ration", "bandage", "page:11", "ammo"], "Alef operative's remains");
   spawnRemains(ctx, { x: bc.x - 3.0, z: bc.z + 4.6 }, ["almond", "kit", "battery"], "Alef operative's remains");
 
@@ -149,11 +150,9 @@ function lay(ctx) {
   });
   // Refrigerator Paradise Workbench
   sp("l21-bench", {
-    feetPosition: { x: edgeOf(fr, 2) + 0.65, y: 0.0, z: fc.z + 1.4 }, rotation: { yaw: 90 }, tags: ["bench"], physics: "static",
-    primitive: { kind: "box", width: 1.6, height: 0.88, depth: 0.78 }, material: WOOD, state: { name: "Quartermaster's workbench" },
+    feetPosition: { x: edgeOf(fr, 2) + 0.65, y: 0.0, z: fc.z + 1.4 }, rotation: { yaw: 0 }, tags: ["bench"], physics: "static",
+    model: BENCH, layout: { box: { min: { x: -0.85, y: 0, z: -0.85 }, max: { x: 0.85, y: 1.7, z: 0.85 } } }, state: { name: "Quartermaster's workbench" },
     children: [
-      { feetPosition: { x: 0, y: 0.88, z: -0.34 }, primitive: { kind: "box", width: 1.55, height: 0.72, depth: 0.06 }, material: STEEL },
-      { feetPosition: { x: -0.45, y: 0.88, z: 0.12 }, primitive: { kind: "box", width: 0.38, height: 0.22, depth: 0.24 }, material: { color: "oklch(0.48 0.18 28)", metalness: 0.6 } },
       { feetPosition: { x: 0, y: 1.65, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.11 85)", intensity: 2.2, distance: 8 } },
     ],
   });
@@ -230,11 +229,14 @@ function lay(ctx) {
   }
 }
 
+let roofAt = 0; // this machine's clock for the ceiling check
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); s.peopleV = 0; }
   if (!ctx.getObject("l21-life")) ctx.spawn("l21-life", { behavior: "scripts/l21-use.js" });
   if (!s.peopleV) { s.peopleV = 1; for (const id of Object.keys(PEOPLE)) if (!ctx.getObject(id)) person(ctx, id); }
+  if (now - roofAt > 2000) { roofAt = now; // nobody stands on the ceiling: anyone above head height goes back to their spot on the floor
+    for (const id of Object.keys(PEOPLE)) { const o = ctx.getObject(id); if (o && o.feetPosition.y > 1.5) { const h = o.state.home ?? o.feetPosition; o.feetPosition = { x: h.x, y: 0.05, z: h.z }; o.velocity = { x: 0, y: 0, z: 0 }; } } }
   keepPeople(ctx, Object.keys(PEOPLE), person);
   // hounds roam the halls and The Edges, kept topped up (scripts/hounds.js steps the pack; scripts/lib/maze21path.js steers them)
   if (!s.packMgr || !(s.packMgr in ctx.place.objects)) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
