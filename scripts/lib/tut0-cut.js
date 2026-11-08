@@ -120,7 +120,7 @@ pop dust rate=26 on=box(<.1,0,1.5>) life=1..1.8 v=up(.3..0.7)+sdir()*.4 size=.15
     else me.feetPosition = { x: at.x, y: -2.6 * Math.pow(ss(3, 6.4, t), 1.6), z: at.z }
     // Phoebe in corridor E's mouth, the hall light behind her: a shape and a coat, her face in her own shadow
     once("phoebe", () => {
-      spawnPhoebe(ctx, "phoebe-end", { x: 44, y: 0, z: -14.5 }, 180, 9)
+      spawnPhoebe(ctx, "phoebe-end", { x: 44, y: 0, z: -16 }, 25, 9); me.faded = { ...(me.faded || {}), "phoebe-end": 0.45 } // turned away, half there
       for (const [i, v] of [[18, 0.15], [19, 0.6], [20, 0.6]]) { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) o.light = { ...o.light, intensity: v } } // the lamps between you and her go low
       const h = ctx.getObject("t0-light-17"); if (h?.light) h.light = { ...h.light, intensity: 9 } // the one behind her burns: a shape, no face
     })
