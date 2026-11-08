@@ -376,6 +376,7 @@ function lootAction(ctx, d) {
     if (itemsOf(c.state?.items).length >= (c.state.cap ?? 30)) { note(ctx, 'It\'s full.'); snd(ctx, 'ui-denied-click', 0.35); return }
     const tok = pullToken(ctx, String(d.t || '')); if (!tok) return
     c.state.items = [c.state.items, tok].filter(Boolean).join(','); s.lootList = c.state.items
+    if (c.state.saveKey) s[c.state.saveKey] = c.state.items // your home's storage rides your own save
     snd(ctx, 'gun-raise-cloth-rustle', 0.4); return
   }
   let items = itemsOf(c.state?.items), fail = ''
@@ -404,6 +405,7 @@ function lootAction(ctx, d) {
   }
   c.state.items = items.join(',')
   s.lootList = c.state.items
+  if (c.tags?.includes('storage') && c.state.saveKey) s[c.state.saveKey] = c.state.items
   if (c.state.look && (c.primitive?.params || c.model)) { // a garment taken off a body comes off the body, now, on every screen, scripted or mesh
     const l = stripTo(c.state.look, items), pr = c.primitive?.params ?? c.state.wear ?? c.state.look
     if (SLOTS.some((k) => (pr[k] ?? 'none') !== l[k])) { const next = { ...pr, ...Object.fromEntries(SLOTS.map((k) => [k, l[k]])) }; rewear(ctx, c, next); if (!c.primitive) c.state.wear = next }
