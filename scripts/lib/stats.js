@@ -103,7 +103,7 @@ export function derived(s) {
     staMax: 100 + (a.a - 5) * 8,
     staRegen: 1 + (a.a - 5) * 0.05,
     hpRegen: Math.max(0, (a.e - 4) * 0.12), // hp per second out of a fight
-    carry: 30 + a.h * 5,
+    carry: 30 + a.h * 5 + (s?.carryBonus ?? 0),
     speed: 1 + (a.a - 5) * 0.025,
     swing: 1 - (a.a - 5) * 0.03 - (k.unarmed - 15) * 0.0015,
     reload: Math.max(0.5, 1 - (a.a - 5) * 0.03 - (k.guns - 15) * 0.002),
