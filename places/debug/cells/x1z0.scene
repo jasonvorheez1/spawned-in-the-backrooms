@@ -1,4 +1,232 @@
 # spawn-scene v2 yaml x1z0
+dbg-anim-0:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 89.5, y: 0, z: -7.5}
+  id: dbg-anim-0
+  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  rotation: {yaw: 180}
+  state: {clip: cdn/clip-idle-loop.glb}
+  tags: [dbg-gallery]
+dbg-anim-1:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 91.4, y: 0, z: -7.5}
+  id: dbg-anim-1
+  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  rotation: {yaw: 180}
+  state: {clip: cdn/clip-walk-loop.glb}
+  tags: [dbg-gallery]
+dbg-anim-10:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 108.5, y: 0, z: -7.5}
+  id: dbg-anim-10
+  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  rotation: {yaw: 180}
+  state: {clip: cdn/clip-ual-walk-carry-adbb76cf-loop.glb}
+  tags: [dbg-gallery]
+dbg-anim-11:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 110.4, y: 0, z: -7.5}
+  id: dbg-anim-11
+  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  rotation: {yaw: 180}
+  state: {clip: cdn/clip-ual-treechopping-d55e5d3a-loop.glb}
+  tags: [dbg-gallery]
+dbg-anim-2:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 93.3, y: 0, z: -7.5}
+  id: dbg-anim-2
+  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  rotation: {yaw: 180}
+  state: {clip: cdn/clip-run-loop.glb}
+  tags: [dbg-gallery]
+dbg-anim-3:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 95.2, y: 0, z: -7.5}
+  id: dbg-anim-3
+  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  rotation: {yaw: 180}
+  state: {clip: cdn/clip-pistol-w1-stand-fire-single-40b6bdfc-loop.glb}
+  tags: [dbg-gallery]
+dbg-anim-4:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 97.1, y: 0, z: -7.5}
+  id: dbg-anim-4
+  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  rotation: {yaw: 180}
+  state: {clip: cdn/clip-pistol-w1-walk-aim-f-loop-ipc-c02edbce-loop.glb}
+  tags: [dbg-gallery]
+dbg-anim-5:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 99, y: 0, z: -7.5}
+  id: dbg-anim-5
+  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  rotation: {yaw: 180}
+  state: {clip: cdn/clip-pistol-w1-jog-aim-f-loop-ipc-66839d46-loop.glb}
+  tags: [dbg-gallery]
+dbg-anim-6:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 100.9, y: 0, z: -7.5}
+  id: dbg-anim-6
+  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  rotation: {yaw: 180}
+  state: {clip: cdn/clip-pistol-w1-crouchwalk-aim-f-loop-ipc-5b4132eb-loop.glb}
+  tags: [dbg-gallery]
+dbg-anim-7:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 102.8, y: 0, z: -7.5}
+  id: dbg-anim-7
+  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  rotation: {yaw: 180}
+  state: {clip: cdn/clip-ual-sword-regular-combo-fe7524ef-loop.glb}
+  tags: [dbg-gallery]
+dbg-anim-8:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 104.7, y: 0, z: -7.5}
+  id: dbg-anim-8
+  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  rotation: {yaw: 180}
+  state: {clip: cdn/clip-ual-sword-block-f2918589-loop.glb}
+  tags: [dbg-gallery]
+dbg-anim-9:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 106.6, y: 0, z: -7.5}
+  id: dbg-anim-9
+  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  rotation: {yaw: 180}
+  state: {clip: cdn/clip-ual-zombie-walk-fwd-065f2615-loop.glb}
+  tags: [dbg-gallery]
+dbg-anim-label-0:
+  feetPosition: {x: 89.5, y: 2.15, z: -7.5}
+  id: dbg-anim-label-0
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>IDLE</text></svg>"
+dbg-anim-label-1:
+  feetPosition: {x: 91.4, y: 2.15, z: -7.5}
+  id: dbg-anim-label-1
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>WALK</text></svg>"
+dbg-anim-label-10:
+  feetPosition: {x: 108.5, y: 2.15, z: -7.5}
+  id: dbg-anim-label-10
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>CARRY</text></svg>"
+dbg-anim-label-11:
+  feetPosition: {x: 110.4, y: 2.15, z: -7.5}
+  id: dbg-anim-label-11
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>CHOP</text></svg>"
+dbg-anim-label-2:
+  feetPosition: {x: 93.3, y: 2.15, z: -7.5}
+  id: dbg-anim-label-2
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>RUN</text></svg>"
+dbg-anim-label-3:
+  feetPosition: {x: 95.2, y: 2.15, z: -7.5}
+  id: dbg-anim-label-3
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>PISTOL AIM</text></svg>"
+dbg-anim-label-4:
+  feetPosition: {x: 97.1, y: 2.15, z: -7.5}
+  id: dbg-anim-label-4
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>PISTOL WALK</text></svg>"
+dbg-anim-label-5:
+  feetPosition: {x: 99, y: 2.15, z: -7.5}
+  id: dbg-anim-label-5
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>PISTOL JOG</text></svg>"
+dbg-anim-label-6:
+  feetPosition: {x: 100.9, y: 2.15, z: -7.5}
+  id: dbg-anim-label-6
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>CROUCH WALK</text></svg>"
+dbg-anim-label-7:
+  feetPosition: {x: 102.8, y: 2.15, z: -7.5}
+  id: dbg-anim-label-7
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>SWORD COMBO</text></svg>"
+dbg-anim-label-8:
+  feetPosition: {x: 104.7, y: 2.15, z: -7.5}
+  id: dbg-anim-label-8
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>BLOCK</text></svg>"
+dbg-anim-label-9:
+  feetPosition: {x: 106.6, y: 2.15, z: -7.5}
+  id: dbg-anim-label-9
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>ZOMBIE WALK</text></svg>"
+dbg-anim-plinth-0:
+  feetPosition: {x: 89.5, y: -0.05, z: -7.5}
+  id: dbg-anim-plinth-0
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-anim-plinth-1:
+  feetPosition: {x: 91.4, y: -0.05, z: -7.5}
+  id: dbg-anim-plinth-1
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-anim-plinth-10:
+  feetPosition: {x: 108.5, y: -0.05, z: -7.5}
+  id: dbg-anim-plinth-10
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-anim-plinth-11:
+  feetPosition: {x: 110.4, y: -0.05, z: -7.5}
+  id: dbg-anim-plinth-11
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-anim-plinth-2:
+  feetPosition: {x: 93.3, y: -0.05, z: -7.5}
+  id: dbg-anim-plinth-2
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-anim-plinth-3:
+  feetPosition: {x: 95.2, y: -0.05, z: -7.5}
+  id: dbg-anim-plinth-3
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-anim-plinth-4:
+  feetPosition: {x: 97.1, y: -0.05, z: -7.5}
+  id: dbg-anim-plinth-4
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-anim-plinth-5:
+  feetPosition: {x: 99, y: -0.05, z: -7.5}
+  id: dbg-anim-plinth-5
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-anim-plinth-6:
+  feetPosition: {x: 100.9, y: -0.05, z: -7.5}
+  id: dbg-anim-plinth-6
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-anim-plinth-7:
+  feetPosition: {x: 102.8, y: -0.05, z: -7.5}
+  id: dbg-anim-plinth-7
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-anim-plinth-8:
+  feetPosition: {x: 104.7, y: -0.05, z: -7.5}
+  id: dbg-anim-plinth-8
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-anim-plinth-9:
+  feetPosition: {x: 106.6, y: -0.05, z: -7.5}
+  id: dbg-anim-plinth-9
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-bodypad:
+  behavior: scripts/dbg-bodypad.js
+  feetPosition: {x: 91, y: 0, z: -2.5}
+  id: dbg-bodypad
+  material: {color: oklch(0.72 0.14 75), emissive: oklch(0.6 0.14 75), emissiveIntensity: 0.6}
+  physics: {body: static, trigger: true}
+  primitive: {height: 0.05, kind: cylinder, radiusBottom: 0.8, radiusTop: 0.8}
+  state: {label: HUMAN / FURRY}
+dbg-bodypad-label:
+  feetPosition: {x: 91, y: 1.4, z: -2.5}
+  id: dbg-bodypad-label
+  vector: "<svg viewBox='0 0 220 40' width='1.8m' billboard='yaw'><rect x='0' y='0' width='220' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='110' y='27' text-anchor='middle' font-family='sans-serif' font-size='17' fill='#ffd9a0'>STEP: HUMAN / FURRY</text></svg>"
 dbg-critter-bunny:
   feetPosition: {x: 92.5, y: 0, z: -7}
   id: dbg-critter-bunny
@@ -12,6 +240,10 @@ dbg-critter-bunny/critter-head:
   model: {id: /cdn/value.197c6676c1d1532f7be38824adc8ed3e477e72f6c3d4e68074ee282037d9dd32.glb, materials: {belly: {color: "#ffffff"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f4efe9"}, inner: {color: "#ffc2d1"}, nose: {color: "#ff9fb4"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#ffffff"}}}
   morph: {Open: 0.4, Smile: 1}
   parent: dbg-critter-bunny
+dbg-gallery-title:
+  feetPosition: {x: 100, y: 3.1, z: -9.9}
+  id: dbg-gallery-title
+  vector: "<svg viewBox='0 0 400 50' width='6m'><text x='200' y='36' text-anchor='middle' font-family='display' font-size='34' fill='#ffd9a0'>ANIMATION LAB</text></svg>"
 dbg-matdb-aluminum:
   feetPosition: {x: 91.5, y: 0.92, z: -1.25}
   id: dbg-matdb-aluminum
