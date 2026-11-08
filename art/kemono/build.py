@@ -99,51 +99,55 @@ def chest_key(o, centre_z, half):
 sp2 = rig.data.bones['Spine02']; chestZ = (rig.matrix_world @ sp2.head_local).z
 if SEX == 'f': chest_key(body, chestZ + 0.01, 0.08)
 
-# ---- garments: each vertex keeps its offset off the old skin, carried along its bone onto the new skin
-oldBVH = BVHTree.FromObject(oldBody, dg); newBVH = BVHTree.FromObject(body, bpy.context.evaluated_depsgraph_get())
-def bones_of(r):
-    return {b.name: (r.matrix_world @ b.head_local, r.matrix_world @ b.tail_local, (r.matrix_world.to_3x3() @ b.matrix_local.to_3x3()).normalized()) for b in r.data.bones}
-OB, NB = bones_of(oldRig), bones_of(rig)
-USE = [n for n in OB if n in NB and n not in ('Root',)]
-def near_bone(p):
-    best = None
-    for n in USE:
-        h, t, _ = OB[n]; ab = t - h; L = ab.length_squared or 1e-9; u = max(0, min(1, (p - h).dot(ab) / L)); d = (p - (h + ab * u)).length
-        if best is None or d < best[0]: best = (d, n, u)
-    return best[1], best[2]
+# ---- garments: posed from the old rest onto the new one by their own bone weights (each bone's segment carried
+# onto the new bone: along-bone scaled by length, across kept), then tight pieces shrink onto the new skin with a
+# small gap and loose ones (dress, skirt, cape, hats, glasses) only pushed out where they sink in
+def segs(r):
+    return {b.name: (r.matrix_world @ b.head_local, r.matrix_world @ b.tail_local) for b in r.data.bones}
+OS, NS = segs(oldRig), segs(rig)
+FALL = {'EarL': 'Head', 'EarR': 'Head', 'Tail': 'Hips', 'Tail1': 'Hips', 'Root': 'Hips'}
+def carry(n, p):
+    h, t = OS[n]; h2, t2 = NS[n]; d, d2 = t - h, t2 - h2
+    L, L2 = d.length or 1e-6, d2.length or 1e-6; ax = d / L
+    v = p - h; along = v.dot(ax); perp = v - ax * along
+    q = d.normalized().rotation_difference(d2.normalized())
+    return h2 + q @ (ax * along * (L2 / L) + perp)
+LOOSE = ('Top_dress', 'Bot_skirt', 'Bot_longskirt', 'Neck_cape', 'Eyew_glasses', 'Eyew_shades') 
 def refit(o):
-    bpy.context.view_layer.objects.active = o
-    for m in list(o.modifiers): o.modifiers.remove(m)
-    o.parent = None
     me = o.data; mw = o.matrix_world.copy()
-    keys = me.shape_keys.key_blocks if me.shape_keys else None
-    if keys:  # bake to basis; the new Bust key is made below for tops
-        o.shape_key_clear()
-    out = []
+    if me.shape_keys: o.shape_key_clear()
+    gname = {g.index: FALL.get(g.name, g.name) for g in o.vertex_groups}
     for v in me.vertices:
-        p = mw @ v.co
-        loc, nrm, fi, dist = oldBVH.find_nearest(p)
-        if loc is None: out.append(p); continue
-        d = (p - loc).dot(nrm)
-        n, u = near_bone(loc)
-        h, t, R = OB[n]; a = h + (t - h) * u; dirw = (loc - a); r = dirw.length; dl = R.transposed() @ dirw.normalized()
-        h2, t2, R2 = NB[n]; a2 = h2 + (t2 - h2) * u; d2 = (R2 @ dl).normalized()
-        hit = newBVH.ray_cast(a2, d2, 2.0)
-        if hit[0] is None: hit = newBVH.find_nearest(a2 + d2 * r)
-        hl, hn = hit[0], hit[1]
-        if hn.dot(d2) < 0: hn = -hn
-        out.append(hl + hn * max(d, 0.006))
-    for v, p in zip(me.vertices, out): v.co = p
-    o.matrix_world = Matrix.Identity(4)
-    me.update()
+        p = mw @ v.co; acc = Vector(); tw = 0
+        for ge in v.groups:
+            n = gname.get(ge.group)
+            if n in OS and n in NS and ge.weight > 0: acc += carry(n, p) * ge.weight; tw += ge.weight
+        v.co = acc / tw if tw else p
+    for m in list(o.modifiers): o.modifiers.remove(m)
+    o.parent = None; o.matrix_world = Matrix.Identity(4); me.update()
+    bpy.context.view_layer.objects.active = o; bpy.ops.object.select_all(action='DESELECT'); o.select_set(True)
+    kind = o.name.split('_')[0]
+    if kind in ('Top', 'Bot', 'Shoes', 'Neck', 'Hat') and o.name not in LOOSE:
+        sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = body; sw.wrap_method = 'NEAREST_SURFACEPOINT'
+        sw.wrap_mode = 'OUTSIDE' if kind in ('Hat', 'Neck') or o.name in ('Top_hoodie', 'Top_jacket', 'Top_sweater', 'Bot_overalls') else 'ON_SURFACE'
+        sw.offset = 0.012 if kind in ('Top', 'Bot') else 0.008
+        if sw.wrap_mode == 'OUTSIDE': sw.offset = 0.015
+        bpy.ops.object.modifier_apply(modifier='fit')
+        sm = o.modifiers.new('sm', 'CORRECTIVE_SMOOTH'); sm.iterations = 6; sm.smooth_type = 'LENGTH_WEIGHTED'; sm.use_only_smooth = True
+        bpy.ops.object.modifier_apply(modifier='sm')
+        sw = o.modifiers.new('fit2', 'SHRINKWRAP'); sw.target = body; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.006
+        bpy.ops.object.modifier_apply(modifier='fit2')
+    else:
+        sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = body; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.01
+        bpy.ops.object.modifier_apply(modifier='fit')
     # weights off the new skin
     o.vertex_groups.clear()
     dt = o.modifiers.new('w', 'DATA_TRANSFER'); dt.object = body; dt.use_vert_data = True; dt.data_types_verts = {'VGROUP_WEIGHTS'}; dt.vert_mapping = 'POLYINTERP_NEAREST'
     dt.layers_vgroup_select_src = 'ALL'; dt.layers_vgroup_select_dst = 'NAME'
-    bpy.ops.object.select_all(action='DESELECT'); o.select_set(True)
     bpy.ops.object.datalayout_transfer(modifier='w'); bpy.ops.object.modifier_apply(modifier='w')
     o.parent = rig; am = o.modifiers.new('skin', 'ARMATURE'); am.object = rig
-    if SEX == 'f' and o.name.split('_')[0] in ('Top',) or o.name == 'Bot_overalls' and SEX == 'f': chest_key(o, chestZ + 0.01, 0.08)
+    for p in me.polygons: p.use_smooth = True
+    if SEX == 'f' and (kind == 'Top' or o.name == 'Bot_overalls'): chest_key(o, chestZ + 0.01, 0.08)
 for g in garments: refit(g)
 # old critter out
 for o in [oldRig, oldBody]: bpy.data.objects.remove(o, do_unlink=True)
