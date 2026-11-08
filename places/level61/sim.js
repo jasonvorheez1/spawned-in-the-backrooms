@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 30;
+const V = 31;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -181,7 +181,7 @@ function lay(ctx) {
 
   for (let k = 0; k < 4; k++) {
     const z = -12 + k * 8, X = HW - 0.18, F = { color: "oklch(0.88 0.01 90)", metalness: 0.6, roughness: 0.35 }, np = { physics: undefined };
-    box(`l61-win-${k}`, X, 1.55, z, 0.04, 2.1, 3.2, { color: "oklch(0.93 0.03 225)", emissive: "oklch(0.9 0.04 220)", emissiveIntensity: 0.9, roughness: 0.15, metalness: 0.2 }, np);
+    box(`l61-win-${k}`, X, 1.55, z, 0.04, 2.1, 3.2, { color: "oklch(0.95 0.04 75)", emissive: "oklch(0.92 0.07 68)", emissiveIntensity: 1.6, roughness: 0.15, metalness: 0.1 }, { ...np, children: [{ feetPosition: { x: -0.6, y: 0.4, z: 0 }, light: { kind: "rect", color: "oklch(0.93 0.07 70)", intensity: 2.2, width: 3.0, height: 1.9, aim: { x: -6, y: -2, z: 0 } } }] }); // lore: a slightly orange-white glow that acts as daylight
     box(`l61-winf-${k}-t`, X - 0.04, 3.62, z, 0.1, 0.1, 3.4, F, np); box(`l61-winf-${k}-b`, X - 0.06, 1.42, z, 0.16, 0.12, 3.4, F, np);
     for (const dz of [-1.65, -0.55, 0.55, 1.65]) box(`l61-winf-${k}-m${dz}`, X - 0.04, 1.55, z + dz, 0.08, 2.1, 0.07, F, np);
     box(`l61-winf-${k}-h`, X - 0.04, 2.55, z, 0.06, 0.05, 3.3, F, np);
