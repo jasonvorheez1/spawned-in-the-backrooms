@@ -90,6 +90,13 @@ export function layCity(ctx, h) {
 }
 
 // ---- the street: lamps, trees, hydrants, bins, benches, a bus shelter, newsboxes, parked cars, manholes, a subway stair, billboards (around the avenue's old extent)
+const ADS = [["ALMOND WATER", "3 for $1 · it's what you came for", "#1e5a3a", "#f2e6a8"], ["THE CITY NEVER SLEEPS", "Neither do we · Open all hours", "#0e1a3a", "#ffd24a"], ["VISIT LEVEL 37", "Beautiful beaches · Book today", "#0d6c8a", "#fff2c8"], ["M.E.G. IS HIRING", "See the world's other worlds · Ask any agent", "#3a4a28", "#d8f0a0"], ["DON'T LOOK UP", "Brought to you by nobody", "#2a2a2e", "#d84a3a"]];
+const BB_POS = [[-17.5, 74, -90], [17.5, -74, 90]];
+// one billboard face at a time (a face is a big UI texture, so the ads swap by respawning it rather than keeping five)
+function adSign(sp, b, k, x, z, yaw) {
+  const [t1, t2, bg, fg] = ADS[k];
+  sp(`l11-bb-ad-${b}`, { feetPosition: { x: x + (yaw > 0 ? -0.06 : 0.06), y: 6.2, z }, rotation: { yaw }, primitive: { kind: "box", width: 7.2, height: 3.7, depth: 0.06 }, material: { color: bg }, state: { ad: k }, ui: `<div face="front" width="7.2m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Georgia,serif;background:${bg};color:${fg}"><div style="font-size:150px;font-weight:700;line-height:1">${t1}</div><div style="font-size:58px;margin-top:20px;opacity:.85">${t2}</div></div>` });
+}
 export function layStreet(ctx, h) {
   const { sp, bx, cyl } = h, put = (id, kind, x, z, yaw, extra = {}, y = 0) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: extra.nophys ? undefined : { body: "static", collider: extra.collider ?? "box" }, model: { id: MODELS[kind], forward: "-z", materials: extra.materials }, ...(extra.spec ?? {}) });
   const LEN = [-66, -52, -9, 24, 40, 56, 72];
@@ -125,13 +132,11 @@ pop steam rate=14 on=disc(.35) life=1.6..2.6 v=up(.9..1.5)+sdir()*.12 size=.18..
   for (const s of [-1, 1]) { bx(`l11-sub-rail-${s}`, SUB.x + s * 1.2, 0.5, SUB.z, 0.07, 0.9, 4.0, { color: "oklch(0.25 0.1 150)", metalness: 0.6, roughness: 0.4 }); cyl(`l11-sub-post-${s}`, SUB.x + s * 1.2, 0.1, SUB.z - 2.1, 0.07, 0.07, 2.6, { color: "oklch(0.25 0.1 150)", metalness: 0.6 }); sp(`l11-sub-globe-${s}`, { feetPosition: { x: SUB.x + s * 1.2, y: 2.9, z: SUB.z - 2.1 }, primitive: { kind: "sphere", radius: 0.2 }, material: { color: "oklch(0.8 0.2 145)", emissive: "oklch(0.8 0.2 145)", emissiveIntensity: 2.4 }, light: { kind: "point", color: "oklch(0.85 0.2 145)", intensity: 2.5, distance: 8 } }); }
   sp("l11-sub-sign", { feetPosition: { x: SUB.x, y: 2.5, z: SUB.z - 2.1 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.6, height: 0.5, depth: 0.06 }, material: { color: "oklch(0.2 0.02 250)" }, ui: `<div face="front" width="1.6m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;font-size:240px;letter-spacing:8px;color:#fff;background:#1a6b3a">SUBWAY</div>` });
   // billboards on stilts that change their ads when nobody is looking
-  const ADS = [["ALMOND WATER", "3 for $1 · it's what you came for", "#1e5a3a", "#f2e6a8"], ["THE CITY NEVER SLEEPS", "Neither do we · Open all hours", "#0e1a3a", "#ffd24a"], ["VISIT LEVEL 37", "Beautiful beaches · Book today", "#0d6c8a", "#fff2c8"], ["M.E.G. IS HIRING", "See the world's other worlds · Ask any agent", "#3a4a28", "#d8f0a0"], ["DON'T LOOK UP", "Brought to you by nobody", "#2a2a2e", "#d84a3a"]];
   const bb = [];
   [[-17.5, 74, -90], [17.5, -74, 90]].forEach(([x, z, yaw], b) => {
-    for (const sz of [-3.6, 3.6]) cyl(`l11-bb-post-${b}-${sz}`, x, 0, z + sz, 0.18, 0.22, 7.0, { color: "oklch(0.3 0.01 250)", metalness: 0.8, roughness: 0.5 });
-    bx(`l11-bb-back-${b}`, x + (yaw > 0 ? 0.1 : -0.1), 6.6, z, 0.2, 5.6, 11.2, { color: "oklch(0.25 0.01 250)", metalness: 0.7, roughness: 0.5 });
-    ADS.forEach(([t1, t2, bg, fg], k) => sp(`l11-bb-ad-${b}-${k}`, { feetPosition: { x: x + (yaw > 0 ? -0.06 : 0.06), y: 6.4, z }, rotation: { yaw }, visible: k === 0, primitive: { kind: "box", width: 10.8, height: 5.0, depth: 0.06 }, material: { color: bg }, ui: `<div face="front" width="10.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Georgia,serif;background:${bg};color:${fg}"><div style="font-size:220px;font-weight:700;line-height:1">${t1}</div><div style="font-size:84px;margin-top:30px;opacity:.85">${t2}</div></div>` }));
-    bb.push(b);
+    for (const sz of [-2.6, 2.6]) cyl(`l11-bb-post-${b}-${sz}`, x, 0, z + sz, 0.16, 0.2, 6.4, { color: "oklch(0.3 0.01 250)", metalness: 0.8, roughness: 0.5 });
+    bx(`l11-bb-back-${b}`, x + (yaw > 0 ? 0.1 : -0.1), 6.2, z, 0.2, 4.0, 7.6, { color: "oklch(0.25 0.01 250)", metalness: 0.7, roughness: 0.5 });
+    adSign(sp, b, 0, x, z, yaw); bb.push(b);
   });
   // the city's hum
   sp("l11-ambience", { feetPosition: { x: 0, y: 3, z: 10 }, audio: { clip: "cdn/sfx-large-city-street-ambience-distant-traffic-hum-and-wind-loop.mp3", loop: true, gain: 0.22, spatial: false, bus: "Ambience" } });
@@ -142,9 +147,9 @@ pop steam rate=14 on=disc(.35) life=1.6..2.6 v=up(.9..1.5)+sdir()*.12 size=.18..
 export function tickCity(ctx, mem, heard) {
   const now = ctx.now(), pls = ctx.place.players;
   const nearAny = (p, r) => pls.some((q) => Math.hypot(q.feetPosition.x - p.x, q.feetPosition.z - p.z) < r);
-  if (!mem.adAt) { mem.adAt = now + 20000; mem.carAt = now + 30000; mem.farAt = now + 25000; mem.ad = [0, 0]; }
-  if (now > mem.adAt) { mem.adAt = now + 45000;
-    for (const b of [0, 1]) { const o = ctx.getObject(`l11-bb-ad-${b}-${mem.ad[b]}`); if (o && nearAny(o.feetPosition, 55)) continue; const next = (mem.ad[b] + 1) % 5; const a = ctx.getObject(`l11-bb-ad-${b}-${mem.ad[b]}`), c = ctx.getObject(`l11-bb-ad-${b}-${next}`); if (a && c) { a.visible = false; c.visible = true; mem.ad[b] = next; } } }
+  if (!mem.adAt) { mem.adAt = now + 20000; mem.carAt = now + 30000; mem.farAt = now + 25000; }
+  if (now > mem.adAt) { mem.adAt = now + 45000; // the billboards change their ads when nobody is looking at them
+    BB_POS.forEach(([x, z, yaw], b) => { const o = ctx.getObject(`l11-bb-ad-${b}`); if (!o || nearAny(o.feetPosition, 55)) return; const next = ((o.state?.ad ?? 0) + 1) % ADS.length; ctx.destroy(o.id); adSign((id, s) => ctx.spawn(id, s), b, next, x, z, yaw); }); }
   if (now > mem.carAt) { mem.carAt = now + 35000 + ctx.random() * 30000;
     const cars = ctx.query({ tags: ["l11car"] }); if (cars.length > 3) { const a = cars[Math.floor(ctx.random() * cars.length)], b = cars[Math.floor(ctx.random() * cars.length)];
       if (a.id !== b.id && !nearAny(a.feetPosition, 45) && !nearAny(b.feetPosition, 45)) { const pa = a.feetPosition, pb = b.feetPosition; a.feetPosition = { x: pb.x, y: pb.y, z: pb.z }; b.feetPosition = { x: pa.x, y: pa.y, z: pa.z }; } } }
