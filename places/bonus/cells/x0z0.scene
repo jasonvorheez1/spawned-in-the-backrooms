@@ -496,13 +496,240 @@ bc-wordmark:
   rotation: {yaw: 180}
   tags: [bonus-court]
   vector: "<svg viewBox='0 0 800 160' width='8m'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#ff4fd8'/><stop offset='1' stop-color='#ff8ad0'/></linearGradient></defs>\n<rect x='6' y='6' width='788' height='148' rx='22' fill='none' stroke='#38f4ff' stroke-width='7' filter='drop-shadow(0 0 10px #38f4ff)'/>\n<text x='400' y='112' text-anchor='middle' font-family='display' font-size='96' font-style='italic' fill='none' stroke='url(#g)' stroke-width='7' filter='drop-shadow(0 0 14px #ff4fd8)'>BONUS ROOM</text>\n<text x='400' y='112' text-anchor='middle' font-family='display' font-size='96' font-style='italic' fill='#ffe8fb' opacity='0.35'>BONUS ROOM</text></svg>"
+bd-backbar-1:
+  castShadow: true
+  feetPosition: {x: -23.55, y: 0, z: -19.9}
+  id: bd-backbar-1
+  model: {forward: "+x", id: /cdn/value.0d1a282cf8054120e9bd677bad43a767259df4b3e8bb610403a782dd3ac5a42a.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  scale: 1.06
+  tags: [bonus-diner]
+bd-backbar-2:
+  castShadow: true
+  feetPosition: {x: -23.55, y: 0, z: -17.7}
+  id: bd-backbar-2
+  model: {forward: "+x", id: /cdn/value.0d1a282cf8054120e9bd677bad43a767259df4b3e8bb610403a782dd3ac5a42a.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  scale: 1.06
+  tags: [bonus-diner]
+bd-backbar-3:
+  castShadow: true
+  feetPosition: {x: -23.55, y: 0, z: -15.5}
+  id: bd-backbar-3
+  model: {forward: "+x", id: /cdn/value.0d1a282cf8054120e9bd677bad43a767259df4b3e8bb610403a782dd3ac5a42a.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  scale: 1.06
+  tags: [bonus-diner]
+bd-backbar-4:
+  castShadow: true
+  feetPosition: {x: -23.55, y: 0, z: -13.3}
+  id: bd-backbar-4
+  model: {forward: "+x", id: /cdn/value.0d1a282cf8054120e9bd677bad43a767259df4b3e8bb610403a782dd3ac5a42a.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  scale: 1.06
+  tags: [bonus-diner]
+bd-backbar-5:
+  castShadow: true
+  feetPosition: {x: -23.55, y: 0, z: -11.1}
+  id: bd-backbar-5
+  model: {forward: "+x", id: /cdn/value.0d1a282cf8054120e9bd677bad43a767259df4b3e8bb610403a782dd3ac5a42a.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  scale: 1.06
+  tags: [bonus-diner]
+bd-boombox:
+  audio: {clip: /cdn/level-1-toms-diner-ur1vbwxr.mp3, gain: 0.35, loop: true, maxDistance: 14, spatial: true}
+  castShadow: true
+  feetPosition: {x: -21, y: 1.05, z: -20.5}
+  id: bd-boombox
+  model: {forward: "+x", id: /cdn/value.a941c94840b0adf52cc16d5fff142095c3c334724d91c70b19bbe93d66a98eee.glb}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  tags: [bonus-diner]
+bd-coffee:
+  castShadow: true
+  feetPosition: {x: -23.5, y: 0.9, z: -17.6}
+  id: bd-coffee
+  model: {forward: "+x", id: /cdn/value.6fd5817efd4dcf472f9dfe25b04d117ca9faf65d880f5ee6d965c1ba3f407eec.glb}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  tags: [bonus-diner]
+bd-counter-1:
+  castShadow: true
+  feetPosition: {x: -20.434, y: 0, z: -19.5}
+  id: bd-counter-1
+  model: {id: /cdn/value.d101cc0389dc3f27245b75dd77016c79ceda43dd83507b05a45136333874847b.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  scale: {x: 0.979, y: 1.3125, z: 0.98}
+  tags: [bonus-diner]
+bd-counter-2:
+  castShadow: true
+  feetPosition: {x: -20.434, y: 0, z: -16.5}
+  id: bd-counter-2
+  model: {id: /cdn/value.d101cc0389dc3f27245b75dd77016c79ceda43dd83507b05a45136333874847b.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  scale: {x: 0.979, y: 1.3125, z: 0.98}
+  tags: [bonus-diner]
+bd-counter-3:
+  castShadow: true
+  feetPosition: {x: -20.434, y: 0, z: -13.5}
+  id: bd-counter-3
+  model: {id: /cdn/value.d101cc0389dc3f27245b75dd77016c79ceda43dd83507b05a45136333874847b.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  scale: {x: 0.979, y: 1.3125, z: 0.98}
+  tags: [bonus-diner]
+bd-counter-4:
+  castShadow: true
+  feetPosition: {x: -20.434, y: 0, z: -10.5}
+  id: bd-counter-4
+  model: {id: /cdn/value.d101cc0389dc3f27245b75dd77016c79ceda43dd83507b05a45136333874847b.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  scale: {x: 0.979, y: 1.3125, z: 0.98}
+  tags: [bonus-diner]
 bd-diner:
+  castShadow: false
   feetPosition: {x: -17, y: 0, z: -15}
   id: bd-diner
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 18, height: 4.5, kind: box, width: 14}
-  tags: [blueprint]
+  material: {pbr: true, repeat: [0.5, 0.5], roughness: 0.35, texture: cdn/texture-black-and-white-checkerboard-diner-floor-tiles.png, wrap: repeat}
+  primitive: {depth: 18, height: 0.012, kind: box, width: 14}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-jukebox:
+  castShadow: true
+  feetPosition: {x: -11, y: 0, z: -23.4}
+  id: bd-jukebox
+  model: {forward: "+x", id: /cdn/value.05a4a4dc52fbff76a3d5d7695446b50bef9a4c02f700a28672b7ea77f13cb356.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  scale: 1.55
+  tags: [bonus-diner]
+bd-jukebox-glow:
+  castShadow: true
+  feetPosition: {x: -11, y: 1.7, z: -22.7}
+  id: bd-jukebox-glow
+  light: {color: oklch(0.75 0.2 340), distance: 4.5, intensity: 1.2, kind: point}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-light-counter:
+  castShadow: true
+  feetPosition: {x: -21.5, y: 4.4, z: -15}
+  id: bd-light-counter
+  light: {color: oklch(0.92 0.06 75), distance: 12, intensity: 2.4, kind: point}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-light-tables:
+  castShadow: true
+  feetPosition: {x: -14.5, y: 4.4, z: -15}
+  id: bd-light-tables
+  light: {color: oklch(0.92 0.06 75), distance: 12, intensity: 2.2, kind: point}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-menu:
+  castShadow: false
+  feetPosition: {x: -23.9, y: 2.6, z: -15}
+  id: bd-menu
+  receiveShadow: true
+  rotation: {yaw: 90}
+  tags: [bonus-diner]
+  vector: "<svg viewBox='0 0 240 200' width='2.4m'><rect x='3' y='3' width='234' height='194' rx='10' fill='#15121a' stroke='#d8d8e0' stroke-width='5'/><text x='120' y='34' font-family='serif' font-style='italic' font-size='24' fill='#ff8fd0' text-anchor='middle' filter='drop-shadow(0 0 6 #ff3fa8)'>Tom's Menu</text><path d='M22 44 H218' stroke='#7ff3ff' stroke-width='2'/><text x='22' y='66' font-family='sans-serif' font-size='14' fill='#fff6e8'>Hot dog</text><text x='218' y='66' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$3</text><text x='22' y='85' font-family='sans-serif' font-size='14' fill='#fff6e8'>Fries</text><text x='218' y='85' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$2</text><text x='22' y='104' font-family='sans-serif' font-size='14' fill='#fff6e8'>Pizza slice</text><text x='218' y='104' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$4</text><text x='22' y='123' font-family='sans-serif' font-size='14' fill='#fff6e8'>Cheezburger</text><text x='218' y='123' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$5</text><text x='22' y='142' font-family='sans-serif' font-size='14' fill='#fff6e8'>Coca-Cola</text><text x='218' y='142' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$2</text><text x='22' y='161' font-family='sans-serif' font-size='14' fill='#fff6e8'>Minute Maid Lemonade</text><text x='218' y='161' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$2</text><text x='22' y='180' font-family='sans-serif' font-size='14' fill='#fff6e8'>Dasani water</text><text x='218' y='180' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$1</text></svg>"
+bd-mixer:
+  castShadow: true
+  feetPosition: {x: -23.5, y: 0.9, z: -19.6}
+  id: bd-mixer
+  model: {forward: "+x", id: /cdn/value.e824e06bdf642c26a7bf028e1015bcfdd28e8c7c993e9b095a69d7ae6ef58822.glb}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  tags: [bonus-diner]
+bd-sign:
+  castShadow: false
+  feetPosition: {x: -9.9, y: 3.9, z: -15}
+  id: bd-sign
+  receiveShadow: true
+  rotation: {yaw: 90}
+  tags: [bonus-diner]
+  vector: "<svg viewBox='0 0 360 100' width='3.6m'><rect x='6' y='8' width='348' height='84' rx='40' fill='#1c0d2b' stroke='#b16cff' stroke-width='5' filter='drop-shadow(0 0 8 #9b4dff)'/><text x='180' y='68' font-family='serif' font-style='italic' font-size='54' fill='#ffd2ef' stroke='#ff4fb2' stroke-width='2' text-anchor='middle' filter='drop-shadow(0 0 10 #ff3fa8)'>Tom's Diner</text><path d='M70 80 H160' stroke='#c58bff' stroke-width='3' filter='drop-shadow(0 0 6 #9b4dff)'/><path d='M200 80 H290' stroke='#c58bff' stroke-width='3' stroke-dasharray='30 8' filter='drop-shadow(0 0 6 #9b4dff)'/></svg>"
+bd-sign-glow:
+  castShadow: true
+  feetPosition: {x: -9.3, y: 3.9, z: -15}
+  id: bd-sign-glow
+  light: {color: oklch(0.72 0.22 340), distance: 6, intensity: 1.4, kind: point}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-soda:
+  castShadow: true
+  feetPosition: {x: -23.5, y: 0.9, z: -12.6}
+  id: bd-soda
+  model: {forward: "+x", id: /cdn/value.f26d91063aa7de3ad41ea3d286efe21ab60a12dbf7626345ee4d66dbaa0ba979.glb}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  scale: 1.3
+  tags: [bonus-diner]
+bd-stool-1:
+  castShadow: true
+  feetPosition: {x: -19.3, y: 0, z: -20.3}
+  id: bd-stool-1
+  model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-stool-2:
+  castShadow: true
+  feetPosition: {x: -19.3, y: 0, z: -18.6}
+  id: bd-stool-2
+  model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-stool-3:
+  castShadow: true
+  feetPosition: {x: -19.3, y: 0, z: -16.9}
+  id: bd-stool-3
+  model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-stool-4:
+  castShadow: true
+  feetPosition: {x: -19.3, y: 0, z: -13.1}
+  id: bd-stool-4
+  model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-stool-5:
+  castShadow: true
+  feetPosition: {x: -19.3, y: 0, z: -11.4}
+  id: bd-stool-5
+  model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-stool-6:
+  castShadow: true
+  feetPosition: {x: -19.3, y: 0, z: -9.7}
+  id: bd-stool-6
+  model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  tags: [bonus-diner]
 bm-deco:
   castShadow: false
   feetPosition: {x: -1.04, y: 0, z: 0}
