@@ -1,7 +1,7 @@
 # Level 2 kit, compaction pass: each module (from build.py's json, /workspace/l2kit/src/<part>.json) welded,
 # decimated per RATIO, re-normalled by angle, and written to /workspace/l2kit/out/<part>.json for encode.py.
 import bpy, bmesh, json, math, os, sys
-RATIO = {"piperun": (0.42, 0.5), "tray": (0.65, 0.7), "wall": (0.9, 1.0)}
+RATIO = {"piperun": (1, 1), "tray": (1, 1), "wall": (1, 1)}
 SRC, OUT = "/workspace/l2kit/src", "/workspace/l2kit/out"
 os.makedirs(OUT, exist_ok=True)
 parts = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [f[:-5] for f in os.listdir(SRC)]
