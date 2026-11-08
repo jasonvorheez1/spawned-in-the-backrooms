@@ -88,7 +88,7 @@ export function update(ctx) {
   const v = o.velocity ?? { x: 0, y: 0, z: 0 }, sp = Math.hypot(v.x, v.y, v.z);
   if (age > 300 && sp < 1.2) { ses.flying = null; return; }
   const p = o.feetPosition;
-  for (const t of ctx.query({ anyTags: ["npc", "critter", "breakable", "enemy"], center: p, radius: 1.3 })) {
+  for (const t of ctx.query({ anyTags: ["npc", "critter", "breakable", "enemy", "l61fc"], center: p, radius: 1.3 })) {
     if (t.id === o.id || fl.hit[t.id] || t.id === ctx.self.id) continue;
     fl.hit[t.id] = true;
     const dmg = Math.round(4 + sp * Math.sqrt(fl.kg) * 0.9), at = { x: p.x, y: p.y + 0.3, z: p.z }, n = sp > 0 ? { x: -v.x / sp, y: 0, z: -v.z / sp } : { x: 0, y: 1, z: 0 };

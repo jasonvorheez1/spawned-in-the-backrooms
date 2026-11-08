@@ -881,8 +881,8 @@ export function tick(ctx) {
     st.builtV = V;
     st.crewV = 0;
   }
-  if ((st.crewV ?? 0) < 1) {
-    st.crewV = 1;
+  if ((st.crewV ?? 0) < 2) { // 2: facelings learn names, mimic, keep a temper (scripts/l61-staff.js)
+    st.crewV = 2;
     for (const id of FACELING_IDS) faceling(ctx, id);
     for (const id of PEOPLE) person(ctx, id);
   }
