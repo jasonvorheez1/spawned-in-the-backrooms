@@ -1,7 +1,7 @@
 // Level 2 "Abandoned Utility Halls": chalky concrete tunnels with 45 degree corners, banks of pipe along the walls
 // that bend out of the concrete and back in, dead machines in the dead ends, locked steel doors, barrels and
 // trolleys in the warehouse rooms, the Survivors' corner by the door home. Layout: scripts/lib/level2.js.
-import { N, S, H, HALF, isOpen, openings, zoneOf, roomOf, hash, cellCenter, ARRIVE, BACK, SEALED, inHall, inPipes, sideOf, HALL_H } from "./lib/level2.js";
+import { N, S, H, HALF, isOpen, openings, zoneOf, roomOf, hash, cellCenter, ARRIVE, BACK, SEALED, inHall, inPipes, sideOf, HALL_H, isStairCell } from "./lib/level2.js";
 import { slab, tube, prism } from "./lib/shapes.js";
 
 const FLOOR = "cdn/texture-grimy-wet-utility-concrete-floor.png", WALL = "cdn/texture-chalky-stained-concrete-wall.png";
@@ -23,7 +23,7 @@ export function geometry(ctx) {
     ctx.quad(x0, 0, z0, x0, 0, z0 + S, x0 + S, 0, z0 + S, x0 + S, 0, z0);
   }
   ctx.albedo(CEIL); ctx.color("oklch(0.55 0.01 70)");
-  for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) { if (inHall(cx, cz)) continue; const x0 = cx * S - HALF, z0 = cz * S - HALF; ctx.quad(x0, H, z0, x0 + S, H, z0, x0 + S, H, z0 + S, x0, H, z0 + S); }
+  for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) { if (inHall(cx, cz) || isStairCell(cx, cz)) continue; const x0 = cx * S - HALF, z0 = cz * S - HALF; ctx.quad(x0, H, z0, x0 + S, H, z0, x0 + S, H, z0 + S, x0, H, z0 + S); }
 
   // walls on every closed edge; brick in some sectors, chalky concrete elsewhere
   const cut = new Set(ctx.params?.cut ?? []); // broken walls: scripts/wallpatch-geo.js draws what is left

@@ -7,6 +7,7 @@ import { heard } from "../../scripts/lib/hear.js";
 // Level 2's referee: lays the halls, lights, camp and supplies once, then keeps the hounds and survivors topped up.
 import L from "../../scripts/lib/data/level2.yml";
 import MEG from "../../scripts/lib/data/meg.yml";
+import { STAIR } from "../../scripts/lib/level2.js";
 import { N, H, S, zoneOf, cellCenter, cellAt, openings, isOpen, hash, ARRIVE, BACK, SEALED, SIDE, HALL, HALL_H, CATWALK, inHall, inPipes, sideOf, flickerSector, SLUDGE2 } from "../../scripts/lib/level2.js";
 import { spawnAlmond, spawnCrateL2, spawnWeapon, rollWeaponL2, spawnContainerL2 } from "../../scripts/lib/loot.js";
 import { npcState, dmgAfterArmor } from "../../scripts/lib/stats.js";
@@ -88,6 +89,7 @@ export function tick(ctx) {
     ctx.spawn({ feetPosition: { x: SEALED.x - 0.6, y: 2.25, z: SEALED.z }, primitive: { kind: "box", width: 0.02, height: 0.3, depth: 1.2 }, material: { color: "oklch(0.25 0.03 150)" }, ui: '<div face="left" width="1.2m" style="font-size:100px;font-weight:900;color:#ffd890;text-align:center">LEVEL 3 · ELECTRICAL</div>' });
   }
   if ((s.rev ?? 0) >= 4 && (s.snapped ?? 0) < 1) { snapContainers(ctx); s.snapped = 1; }
+  if (STAIR && (s.rev ?? 0) >= 4 && !s.stairV) sideRoom(ctx, STAIR); // rooms that were laid before the stairwell existed get it now
   if ((s.rev ?? 0) < 4) revamp(ctx, s); // the revamp lays itself over a few ticks: rooms, doors, the hall, vents
   if (s.sludgeV !== 1) { s.sludgeV = 1; laySludge2(ctx); }
   if (s.graffitiV !== 1) { s.graffitiV = 1; layGraffiti2(ctx); }
@@ -165,6 +167,26 @@ const flickFx = (col, k) => `fx\npop glow n=1 r=light(${col},(.15+.85*flick(${(3
 const FIREBOX = `fx
 pop glow n=1 r=light(<1,.45,.15>,fire()*10,9)
 pop ember rate=3 on=disc(.4) life=1..2 v=up(.6..1.2)+sdir()*.2 size=.015..0.03 acc=curl(.6)+drag(.4) col=hdr(4,1.6,.3)>hdr(1,.2,.04) a=(1>0)*flick(9,.4) sz=$size r=sprite(ember,add)`;
+// the stairwell up to Level 2.1: a dead end shut with a steel blast shutter (break it: a sledge, a pick, a lot of lead), a shaft with a steep stair rising out of the ceiling into the dark.
+// What the wiki calls the single access point, blocked by "a big metal wall" the day Base Alef was locked out.
+function stairRoom(ctx, r, P, [nx, nz]) {
+  ctx.place.state.stairV = 1;
+  const yaw = Math.atan2(-nx, -nz) * 180 / Math.PI, E = S / 2;
+  const step = (id, a, h, spec = {}) => ctx.spawn(id, { feetPosition: P(a, 0, 0), rotation: { yaw }, physics: "static", primitive: { kind: "box", width: 1.7, height: h, depth: 0.3 }, material: { color: "oklch(0.42 0.015 60)", roughness: 0.9 }, ...spec });
+  for (let i = 0; i < 13; i++) step(`l2-stair-${i}`, 1.85 - i * 0.3, (i + 1) * 0.25);
+  const wall = (id, a, b, w, d) => ctx.spawn(id, { feetPosition: { ...P(a, b), y: 3.0 }, rotation: { yaw }, physics: "static", primitive: { kind: "box", width: w, height: 3.7, depth: d }, material: { color: "oklch(0.3 0.012 70)", roughness: 0.95 } });
+  wall("l2-stair-wb", -2.28, 0, 4.9, 0.3); wall("l2-stair-wl", 0, -2.28, 0.3, 4.9); wall("l2-stair-wr", 0, 2.28, 0.3, 4.9); wall("l2-stair-wf", E - 0.1, 0, 4.9, 0.3);
+  ctx.spawn("l2-stair-roof", { feetPosition: { ...P(0, 0), y: 6.7 }, rotation: { yaw }, physics: "static", primitive: { kind: "box", width: 5, height: 0.25, depth: 5 }, material: { color: "oklch(0.2 0.01 60)", roughness: 1 } });
+  ctx.spawn("l2-stair-lamp", { feetPosition: P(-1.0, 0, 5.6), light: { kind: "point", color: "oklch(0.75 0.14 70)", intensity: 5, distance: 9 } });
+  // the shutter: ribbed steel across the door, a hazard stripe, stencilled
+  ctx.spawn("l2-stair-block", { tags: ["breakable"], feetPosition: P(E - 0.12, 0, 0), rotation: { yaw }, physics: "static",
+    primitive: { kind: "box", width: 1.3, height: 2.3, depth: 0.22 }, material: { color: "oklch(0.36 0.02 250)", roughness: 0.55, metalness: 0.6 },
+    state: { mat: "sheet_steel", hp: 800, maxHp: 800, name: "Blast shutter (SUBLEVEL 2.1)" },
+    ui: `<div face="front" width="1.3m" style="font-family:Arial,sans-serif;font-weight:900;text-align:center;line-height:1.1;color:#e6dcc0"><div style="background:repeating-linear-gradient(45deg,#d8a820 0 28px,#1a1a1a 28px 56px);height:70px"></div><div style="font-size:92px;margin-top:20px">SUBLEVEL 2.1</div><div style="font-size:42px;color:#e8a098">ACCESS SUSPENDED</div><div style="font-size:32px;margin-top:10px">M.E.G. BASE ALEF · AUTHORISED PERSONNEL</div></div>` });
+  ctx.spawn("l2-from-l21", { feetPosition: P(1.6, 0, 0.1), rotation: { yaw: Math.atan2(nx, nz) * 180 / Math.PI } });
+  ctx.spawn("l2-to-l21", { feetPosition: { ...P(-1.85, 0), y: 3.2 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.4, height: 2.4, depth: 0.8 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level21#l21-from-l2" } });
+  ctx.spawn("l2-stair-glow", { feetPosition: { ...P(-1.7, 0), y: 4.3 }, primitive: { kind: "box", width: 1.2, height: 1.4, depth: 0.04 }, rotation: { yaw }, material: { color: "oklch(0.95 0.03 95)", emissive: "oklch(0.97 0.04 95)", emissiveIntensity: 2 } }); // white light at the top
+}
 const yawOf = (dx, dz) => Math.atan2(-dx, -dz) * 180 / Math.PI; // the yaw that turns a front (-Z) toward (dx, dz)
 // where each room type puts its containers, in the room's own frame: [a (out toward the door), b (across)]
 const SLOTS = { boiler: [[-1.85, 1.2], [-1.85, -0.4]], locker: [[-1.85, -1.2], [-1.85, -0.5], [-1.85, 0.2]], pump: [[-1.85, 0], [1.5, -1.6], [1.5, 1.6]],
@@ -173,6 +195,7 @@ const SLOTS = { boiler: [[-1.85, 1.2], [-1.85, -0.4]], locker: [[-1.85, -1.2], [
 function sideRoom(ctx, r) {
   const c = cellCenter(r.cx, r.cz), [nx, nz] = D4[r.o], tx = -nz, tz = nx, E = S / 2, T = L.types[r.type];
   const P = (a, b, y = 0) => ({ x: c.x + nx * a + tx * b, y, z: c.z + nz * a + tz * b });
+  if (r.type === "stair") { stairRoom(ctx, r, P, [nx, nz]); return; }
   const style = r.type === "cage" ? "cage" : r.type === "electrical" ? "elec" : "steel";
   const label = T.label.charAt(0) + T.label.slice(1).toLowerCase();
   ctx.spawn(`l2-door-${r.i}`, { tags: ["door", "l2door"], feetPosition: P(E, -0.55), rotation: { yaw: Math.atan2(-tz, tx) * 180 / Math.PI }, physics: { body: "kinematic", collider: "box" },

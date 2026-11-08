@@ -5,7 +5,7 @@
 // with hands, a camp round a fire with a girl called Carla, and the asphalt road to Level 9. Markers every 50 m; almond water pools. Life: scripts/l8-life.js; use: scripts/l8-use.js.
 import L8 from "../../scripts/lib/data/level8.yml";
 export const cadence = "1s";
-const V = 8;
+const V = 9;
 const GLB = {
   cave: "/cdn/value.9bc4cd793bdb2ebcf2830e8a1da786f9f5c1011dc589b8c14cedee48ea949e1c.glb",
   spider: "/cdn/value.74a6298847904cccb7a38e00bdc5f6ddfe8254138ddc0e1ae65c75ba6eef6859.glb",
@@ -134,6 +134,13 @@ function lay(ctx) {
     children: [{ feetPosition: { x: 0, y: 1.7, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.12 80)", intensity: 2.2, distance: 9 } }] });
   sp("l8-board", { ...at({ ...P(446, -5.2, 1.3), yaw: P(446).yaw + 20 }), tags: ["usable"], behavior: "scripts/l8-use.js", ...sign(1.5, 1.1, `<div face="front" width="1.5m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;line-height:1.1"><div style="font-size:64px;color:#f2d870">ERRANDS</div><div style="font-size:34px">bring it back to the camp · we pay</div><div style="font-size:28px;color:#c8d8b8">glow caps · chitin · pitch · flowstone · ironstone</div></div>`),
     state: { kind: "board", name: "Errand board", verb: "Read", info: "Jobs the camp needs doing. Pay on delivery.", tint: "#f2d870" } });
+  // ---- the way you can come from Level 2.1: a rough concrete tunnel mouth in the hall's wall, where the cave of The Edges runs out (scripts/level-door.js)
+  const tm = P(46, -8.4, 0);
+  sp("l8-from-l21", at(P(46, -5.4, 0.1), { rotation: { yaw: P(46).yaw + 90 } }));
+  sp("l8-to-l21", { ...at(P(46, -8.9, 0)), physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.8, height: 2.6, depth: 1.8 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level21#l21-from-l8" } });
+  sp("l8-l21-frame", { ...at({ ...tm, y: tm.y + 1.15, yaw: P(46).yaw + 90 }), primitive: { kind: "box", width: 2.3, height: 2.5, depth: 0.5 }, material: { color: "oklch(0.58 0.01 100)", roughness: 0.95 } });
+  sp("l8-l21-dark", { ...at({ ...P(46, -8.75, 1.15), yaw: P(46).yaw + 90 }), primitive: { kind: "box", width: 1.5, height: 2.2, depth: 0.1 }, material: { color: "#050505" } });
+  sp("l8-l21-sign", { ...at({ ...P(46, -8.2, 2.9), yaw: P(46).yaw - 90 }), ...sign(1.7, 0.45, `<div face="front" width="1.7m" style="font-family:Arial,sans-serif;font-weight:900;color:#d8f0c0;text-align:center;line-height:1.05"><div style="font-size:62px">CONCRETE TUNNEL</div><div style="font-size:34px">back to Level 2.1</div></div>`, "oklch(0.2 0.03 150)") });
   sp("l8-life", { behavior: "scripts/l8-life.js" });
 }
 

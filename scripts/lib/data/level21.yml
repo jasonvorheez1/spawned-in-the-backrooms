@@ -1,0 +1,31 @@
+# Level 2.1 "Locked" (backrooms-wiki.wikidot.com/level-2-1): a storage sublevel above Level 2. Euclidean halls of janitorial supplies and lockers, white fluorescent light,
+# hot and humid, no food and no water. M.E.G. Base Alef (locked out in 2020), Refrigerator Paradise, and The Edges: deep, dark concrete caves that may lead to Level 8.
+# Every tuned number is here. Layout: scripts/lib/level21.js; geometry: scripts/level21-geo.js; the room: places/level21/sim.js.
+cells: 30
+cellSize: 4
+height: 3.1
+edgeHeight: 4.6        # The Edges: rock-cut tunnels with a high roof
+seed: 2101
+arrive: [0, 15]        # the stairwell up from Level 2: the west end of the landing
+loops: 0.1
+edgeX: 21              # cells from here east are The Edges
+lane: { z0: 14, d: 3 } # the wide main tunnel of The Edges, down to the cave mouth at the east wall
+# rooms: blocks with every inner wall gone. type = what it holds
+rooms:
+  - { x0: 2,  z0: 13, w: 4, d: 5, type: base }       # Base Alef's atrium
+  - { x0: 7,  z0: 12, w: 3, d: 3, type: explo }      # the Exploration Wing
+  - { x0: 7,  z0: 16, w: 3, d: 3, type: bunks }      # quarters
+  - { x0: 3,  z0: 5,  w: 3, d: 3, type: office }     # administration
+  - { x0: 11, z0: 14, w: 3, d: 3, type: lockers }    # the checkered locker room
+  - { x0: 11, z0: 18, w: 2, d: 2, type: restroom }
+  - { x0: 13, z0: 3,  w: 5, d: 4, type: fridges }    # Refrigerator Paradise
+  - { x0: 16, z0: 10, w: 2, d: 2, type: store }
+  - { x0: 5,  z0: 23, w: 3, d: 2, type: store }
+  - { x0: 15, z0: 22, w: 3, d: 3, type: store }
+  - { x0: 18, z0: 16, w: 2, d: 3, type: break }
+sanityDrain: { landing: 0.04, hall: 0.1, base: 0.06, explo: 0.08, bunks: 0.08, office: 0.07, lockers: 0.07, restroom: 0.09, fridges: 0.03, store: 0.09, break: 0.05, edge: 0.18, edgecave: 0.22 }
+heat: 1.35             # hot and humid: you thirst this much faster (scripts/craft.js)
+hounds: 4
+smilers: 3
+entityRespawn: 80
+crates: 26

@@ -26,7 +26,7 @@ export function spawnShells(ctx, c) {
 
 // Loot pools: a weapon with `pools: [l4, l5]` in weapons.yml turns up only where its pool is rolled (l0 lobby, l1 garage, l2 pipes, l3 station and Gamma,
 // l4 offices, l5 hotel); a weapon with none is a base weapon rolled everywhere. poolOf maps a place id to its pool.
-export const POOL = { main: "l0", level1: "l1", level2: "l2", level3: "l3", gamma: "l3", level4: "l4", level5: "l5", level7: "l7", level8: "l2" };
+export const POOL = { main: "l0", level1: "l1", level2: "l2", level3: "l3", gamma: "l3", level4: "l4", level5: "l5", level7: "l7", level8: "l2", level21: "l2" };
 export const poolOf = (place) => POOL[place] ?? "l0";
 // Weighted pick over every found weapon this pool can hold; rarer ones carry a smaller weight in weapons.yml.
 export function rollWeapon(ctx, pool = "l0") {

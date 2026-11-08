@@ -32,7 +32,7 @@ function room(ctx, r, M) {
   ctx.color("oklch(0.32 0.03 70)"); ctx.roughness(0.9); B(ctx, -IN - 0.01, -IN + 0.005, 0, 0.35 + h(50) * 0.3, -IN, IN);
   // a lamp cage on the ceiling (the light itself is an entity) and a wall pipe run under the ceiling
   ctx.albedo(RUSTY); ctx.color("oklch(0.3 0.01 250)"); ctx.metalness(0.7); ctx.roughness(0.5);
-  B(ctx, -0.4, 0.4, H - 0.06, H, -0.12, 0.12);
+  if (r.type !== "stair") B(ctx, -0.4, 0.4, H - 0.06, H, -0.12, 0.12);
   ctx.color(`oklch(${0.4 + h(51) * 0.2} ${0.03 + h(52) * 0.05} ${h(53) * 360})`);
   pipe(ctx, P(-IN, H - 0.3, IN - 0.15), P(E - 0.2, H - 0.3, IN - 0.15), 0.07, M); pipe(ctx, P(-IN, H - 0.5, IN - 0.15), P(E - 0.2, H - 0.5, IN - 0.15), 0.05, M);
   const t = r.type;
