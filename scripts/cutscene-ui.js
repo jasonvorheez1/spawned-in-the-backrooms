@@ -1,5 +1,6 @@
 // letterbox and fades over the intro (scripts/lib/intro-cut.js); timed off state.cut so a re-render picks up where it was
 export function cutUi(ctx, player) {
+  if (player.state.t0cut) return t0Ui(ctx, player)
   if (player.state.arrive || player.state.arrivePending) return arriveUi(ctx, player)
   const e = ctx.now() - (player.state.cut || ctx.now())
   const d = (ms) => `${ms - e}ms`
@@ -30,4 +31,30 @@ function arriveUi(ctx, player) {
 <div class="acc" style="animation-delay:${d(5600)}">the carpet is wet. it smells like old rain.</div>
 <div class="acc" style="animation-delay:${d(10200)}">and the lights. the lights never stop humming.</div>
 <div class="at"><div style="font-size:44px">LEVEL 0</div><div style="font-size:16px;letter-spacing:.3em;opacity:.75;margin-top:6px">THE LOBBY</div></div>`
+}
+
+// the tutorial Level 0's cutscenes (scripts/lib/tut0-cut.js): letterbox, captions, and the title at the end
+const T0CAP = {
+  almond: [[1200, 4200, "a bottle on the desk. almond water. people down here live on it."]],
+  smiler: [[300, 2400, "the lights in this hall don't stay on."], [4200, 3200, "something at the end of the hall is smiling at you."], [9400, 2400, "smilers live in the dark. stay in the light and keep moving."]],
+  shift: [[1400, 4600, "level 0 moves when you aren't looking."], [5600, 1800, "there's no going back the way you came."]],
+  final: [[600, 2400, "the carpet here is soaked through."], [3200, 3000, "and then the floor wasn't there."], [7400, 3200, "you fell for a long time. then concrete, and the sound of pipes."]],
+}
+function t0Ui(ctx, player) {
+  const c = player.state.t0cut, e = ctx.now() - c.at, d = (ms) => `${ms - e}ms`, fin = c.id === "final"
+  const caps = (T0CAP[c.id] || []).map(([at, len, txt]) => `<div class="tcc" style="animation-duration:${len}ms;animation-delay:${d(at)}">${txt}</div>`).join("")
+  return `<style>
+@keyframes tb-in{from{height:0}to{height:11vh}} @keyframes tcc{0%{opacity:0}12%{opacity:.9}85%{opacity:.9}100%{opacity:0}}
+@keyframes tblack{from{opacity:0}to{opacity:1}} @keyframes ttitle{0%{opacity:0;letter-spacing:.6em;filter:blur(6px)}25%{opacity:1;letter-spacing:.32em;filter:blur(0)}82%{opacity:1}100%{opacity:0}}
+@keyframes tsub{0%{opacity:0}30%{opacity:.6}82%{opacity:.6}100%{opacity:0}}
+.tb{position:fixed;left:0;right:0;height:11vh;background:#000;z-index:50;animation:tb-in .7s ease-out both;animation-delay:${d(0)}}
+.tcc{position:fixed;left:0;right:0;bottom:14vh;text-align:center;z-index:53;color:#f2ead8;font:400 16px/1.4 Georgia,serif;letter-spacing:.06em;text-shadow:1px 1px 3px #000;opacity:0;animation-name:tcc;animation-fill-mode:both;animation-timing-function:ease}
+.tbk{position:fixed;inset:0;background:#000;z-index:51;opacity:0;animation:tblack 1.1s ease-in both;animation-delay:${d(6200)}}
+.tt{position:fixed;left:0;right:0;top:41%;text-align:center;z-index:54;color:#f2c14e;font:400 46px/1.1 Georgia,serif;text-shadow:0 0 18px rgba(242,193,78,.35);opacity:0;animation:ttitle 9s ease both;animation-delay:${d(11400)}}
+.ts{position:fixed;left:0;right:0;top:calc(41% + 64px);text-align:center;z-index:54;color:#d9cfae;font:400 13px/1 Georgia,serif;letter-spacing:.5em;opacity:0;animation:tsub 8.2s ease both;animation-delay:${d(12400)}}
+</style><div class="tb" style="top:0"></div><div class="tb" style="bottom:0"></div>${fin ? `<div class="tbk"></div><div class="tt">SPAWN IN THE BACKROOMS</div><div class="ts">LEVEL 1 · HABITABLE ZONE</div>` : ""}${caps}`
+}
+export function t0Fade(ctx, player) {
+  const f = player.state.t0fade; if (!f || ctx.now() - f > 3000) return ""
+  return `<style>@keyframes t0f{from{opacity:1}to{opacity:0}}</style><div style="position:fixed;inset:0;background:#000;z-index:60;pointer-events:none;animation:t0f 2.6s ease-in both;animation-delay:${f - ctx.now()}ms"></div>`
 }

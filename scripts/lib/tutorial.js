@@ -22,7 +22,7 @@ export function tutStart(ctx, st) { const p = ctx.self.feetPosition; st.tut = { 
 // from update: walking and timed steps
 export function tutTick(ctx, st) {
   const tut = st.tut, step = tut && STEPS[tut.n]; if (!step) return
-  if (ctx.self.place !== "main") return
+  if (ctx.self.place !== "main" && ctx.self.place !== "tutorial0") return
   const age = (ctx.now() - tut.at) / 1000
   if (age < 1.2) return // a beat to read it
   if (step.walk) { const p = ctx.self.feetPosition; if (Math.hypot(p.x - tut.x, p.z - tut.z) >= step.walk) advance(ctx, st) }
