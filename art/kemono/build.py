@@ -108,7 +108,7 @@ OS, NS = segs(oldRig), segs(rig)
 FALL = {'EarL': 'Head', 'EarR': 'Head', 'Tail': 'Hips', 'Tail1': 'Hips', 'Root': 'Hips'}
 def top_of(o, r):
     ws = [o.matrix_world @ v.co for v in o.data.vertices]; return max(w.z for w in ws) - (r.matrix_world @ r.data.bones['Head'].head_local).z
-HEADK = top_of(body, rig) / top_of(oldBody, oldRig)  # a head is sized by the skull, not its short bone
+HEADK = top_of(body, rig) / (OS['Head'][1] - OS['Head'][0]).length  # the old body's head is its own model: its bone spans the skull  # a head is sized by the skull, not its short bone
 print('head ratio', round(HEADK, 3))
 def carry(n, p):
     h, t = OS[n]; h2, t2 = NS[n]; d, d2 = t - h, t2 - h2
