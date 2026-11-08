@@ -4,6 +4,7 @@ import { heard } from "./lib/hear.js";
 import { sitDown, standUp, seatTick, spotsOf } from './lib/seat.js'
 import { rollItemL3 } from './lib/loot3.js'
 import { startPick } from './lockpick.js'
+import { startSpamton } from './spamton-fight.js'
 import { openDialogue } from './talk.js'
 // Fallout-style looting. Nothing is picked up by walking over it any more: look at an item and the HUD
 // names it ("[E] Take  Pipe scrap"), press E to take it. Crates and the remains of what you kill are
@@ -325,6 +326,7 @@ function press(ctx) {
     m.key = ''; return
   }
   if (f.tag === 'usable' && it.state?.kind === 'boilerdoor' && !it.state.open && !s.l5boilerKey && !ctx.query({ tags: ['npc'], radius: 60 }).some((q) => /harlan$/.test(q.id) && q.state?.follow === ctx.self.id) && (s.feetPosition?.x ?? ctx.self.feetPosition.x) < (it.worldFeetPosition?.x ?? 0) && (skillsOf(s).lockpick ?? 0) >= 25 && (s.bobbypins ?? 6) > 0) { startPick(ctx, it, 25, 'boiler'); m.key = ''; return } // no key: pick it (scripts/lockpick.js), else the door says what it wants
+  if (f.tag === 'usable' && it.state?.kind === 'spamton') { if (!(s.keyItems ?? []).includes('spamton')) startSpamton(ctx); else note(ctx, 'Just trash now. Spamton rides in your pocket.'); m.key = ''; return }
   if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); if (it.tags?.includes?.('l5-elev-panel')) s.elevPanel = f.id; m.key = ''; return } // an elevator plate opens a clickable floor list (ui.js)
   if (f.tag === 'seat') { if (sitDown(ctx, it) && it.state?.boat) ctx.emit('press', { by: ctx.self.id }, { to: it.id }); m.key = ''; return } // a boat's seat also takes the oars
   if (f.tag === 'bench') { s.craftOpen = 'bench'; s.craftBench = f.id; return }
