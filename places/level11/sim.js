@@ -72,13 +72,14 @@ export function l11Lean(id, spec) {
   if (pr && pr.kind === "cylinder" && (pr.height ?? 1) < 1.2 && spec.castShadow === undefined) o.castShadow = false
   return o
 }
+// perf (Nov 8, lagscope #105-113): lay() used to spawn ~830 things and destroy the old ones in ONE tick (a 345-520 ms freeze on
+// every rebuild). Now it only writes a queue; tick() lays LAY_STEP a tick, solids first so nobody falls, each id replacing
+// its old self in place, and the stale roots go once the queue is empty.
+const LAY_STEP = 60;
+let LQ = null;
 function lay(ctx) {
-  // Clear any existing level11 entities
-  for (const id of Object.keys(ctx.place.objects ?? {})) {
-    if (/^l11-/.test(id) && !id.includes("/")) ctx.destroy(id);
-  }
-
-  const sp = (id, spec) => ctx.spawn(id, l11Lean(id, spec)); // perf (Nov 8, lagscope #105-108): every row gets a draw distance, small clutter casts no shadow
+  LQ = { rows: [], i: 0, keep: new Set() };
+  const sp = (id, spec) => { LQ.rows.push([id, l11Lean(id, spec)]); LQ.keep.add(id); return id; }; // every row gets a draw distance, small clutter casts no shadow
   const md = (id, kind, x, y, z, materials, collider = "box", extra = {}) =>
     sp(id, { feetPosition: { x, y, z }, model: { id: MODELS[kind], forward: "-z", materials }, physics: { body: "static", collider }, ...extra });
   const bx = (id, x, y, z, w, h, d, material, extra = {}) =>
@@ -1111,7 +1112,19 @@ const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
   if (!ctx.place.players?.length) return;
   const st = ctx.place.state, now = ctx.now();
-  if ((st.builtV ?? 0) < V) { st.builtV = V; lay(ctx); st.walkV = 0; }
+  if ((st.builtV ?? 0) < V && !LQ) lay(ctx);
+  if (LQ) {
+    if (LQ.i === 0) LQ.rows.sort((a, b) => (a[1].physics && a[1].physics !== "none" ? 0 : 1) - (b[1].physics && b[1].physics !== "none" ? 0 : 1));
+    const end = Math.min(LQ.rows.length, LQ.i + LAY_STEP);
+    for (; LQ.i < end; LQ.i++) { const [id, spec] = LQ.rows[LQ.i]; ctx.spawn(id, spec); }
+    if (LQ.i >= LQ.rows.length) {
+      for (const w of WALKERS) LQ.keep.add(w.id);
+      let n = 0;
+      for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l11-/.test(id) && !id.includes("/") && !LQ.keep.has(id) && n++ < 120) ctx.destroy(id);
+      if (n <= 120) { LQ = null; st.builtV = V; st.walkV = 0; }
+    }
+    return;
+  }
   if ((st.walkV ?? 0) < WALK_V) { st.walkV = WALK_V; layWalkers(ctx); }
   if (!mem.ringAt) mem.ringAt = now + 35000;
   tickCity(ctx, mem, heard);
