@@ -69,7 +69,8 @@ def shell():
     outer = [(X0, Z0), (X1, Z0), (X1, Z1), (X0, Z1)]
     md.sweep("stone", outer, [(0, 3.78), (-0.05, 3.8), (-0.05, 3.86), (-0.09, 3.9), (-0.13, 3.96), (-0.17, 4.04), (-0.17, 4.1), (-0.2, 4.12), (-0.2, 4.17), (0, 4.17)], closed=True, center=CEN)
     md.sweep("stone", outer, [(0, -0.05), (-0.035, -0.05), (-0.035, 0.26), (-0.015, 0.29), (0, 0.29)], closed=True, center=CEN)
-    md.sweep("stone", outer, [(0, 1.2), (-0.025, 1.2), (-0.025, 1.28), (0, 1.28)], closed=True, center=CEN)  # belt course
+    belt = [(X1, DZ1 + 0.06), (X1, Z1), (X0, Z1), (X0, Z0), (X1, Z0), (X1, DZ0 - 0.06)]  # open across the doorway
+    md.sweep("stone", belt, [(0, 1.2), (-0.025, 1.2), (-0.025, 1.28), (0, 1.28)], center=CEN)  # belt course
     # interior trim: baseboard, chair rail, crown; wainscot panels with stiles
     room = [(xi1, DZ0 - 0.1), (xi1, zi0), (xi0, zi0), (xi0, zi1), (xi1, zi1), (xi1, DZ1 + 0.1)]
     md.sweep("trim", room, [(0, FY), (0.022, FY), (0.022, FY + 0.14), (0.014, FY + 0.155), (0.014, FY + 0.175), (0, FY + 0.185)], center=CEN)
