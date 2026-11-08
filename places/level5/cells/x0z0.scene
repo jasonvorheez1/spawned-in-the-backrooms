@@ -18,6 +18,7 @@ l5-ball-banner:
   rotation: {yaw: 180}
   tags: [l5-ball]
   vector: "<svg viewBox='0 0 480 200' width='3.4m'><g transform='rotate(-1.6 240 100)'><rect x='6' y='10' width='468' height='182' fill='#8a6e48'/><rect x='6' y='10' width='468' height='60' fill='#937650'/><rect x='6' y='70' width='468' height='62' fill='#7e6440'/><rect x='6' y='132' width='468' height='60' fill='#8d7049'/><path d='M6 70 H474 M6 132 H474' stroke='#4a3a24' stroke-width='3'/><path d='M60 30 q30 6 60 0 M300 96 q40 -5 80 2 M150 160 q50 6 110 -2' stroke='#6a5434' stroke-width='2' fill='none'/><circle cx='22' cy='26' r='4' fill='#2e2a24'/><circle cx='458' cy='26' r='4' fill='#2e2a24'/><circle cx='22' cy='176' r='4' fill='#2e2a24'/><circle cx='458' cy='178' r='4' fill='#2e2a24'/><text x='236' y='104' font-family='display' font-size='84' fill='#1d1c1a' text-anchor='middle' transform='rotate(1 236 100)'>M.E.G.</text><path d='M166 106 v18 M214 108 v26 M300 106 v14' stroke='#1d1c1a' stroke-width='3'/><text x='240' y='162' font-family='sans-serif' font-size='27' fill='#e8e2d2' text-anchor='middle' transform='rotate(-0.8 240 160)'>HOUSEKEEPING · KNOCK FIRST</text><rect x='-4' y='2' width='70' height='22' fill='#b8b4a8' opacity='0.85' transform='rotate(-24 30 14)'/><rect x='414' y='170' width='72' height='22' fill='#b8b4a8' opacity='0.85' transform='rotate(-20 450 180)'/><text x='402' y='186' font-family='sans-serif' font-size='13' fill='#7a1a14' transform='rotate(-6 402 186)'>no rats past here!</text></g></svg>"
+  visibleRange: {max: 55}
 l5-ball-barcart:
   castShadow: false
   feetPosition: {x: -0.95, y: 0, z: -20.6}
@@ -36,6 +37,7 @@ l5-ball-boilersign:
   rotation: {yaw: -90}
   tags: [l5-ball]
   vector: "<svg viewBox='0 0 200 120' width='0.9m'><rect width='200' height='120' rx='6' fill='#e8d24a'/><rect x='5' y='5' width='190' height='110' rx='4' fill='none' stroke='#151515' stroke-width='5'/><text x='100' y='56' font-family='display' font-size='34' fill='#151515' text-anchor='middle'>BOILER ROOM</text><text x='100' y='94' font-family='sans-serif' font-size='24' fill='#a01818' text-anchor='middle'>ESCORT ONLY</text></svg>"
+  visibleRange: {max: 55}
 l5-ball-cart-0:
   feetPosition: {x: 2.6, y: 0, z: 15.6}
   id: l5-ball-cart-0
@@ -199,18 +201,21 @@ l5-ball-placard-n:
   rotation: {yaw: 0}
   tags: [l5-ball]
   vector: "<svg viewBox='0 0 400 80' width='1.9m'><text x='200' y='54' font-family='serif' font-size='40' fill='#2a2a30' text-anchor='middle'>The Beverly Room</text></svg>"
+  visibleRange: {max: 55}
 l5-ball-placard-s:
   feetPosition: {x: 6, y: 3.73, z: 11.84}
   id: l5-ball-placard-s
   rotation: {yaw: 180}
   tags: [l5-ball]
   vector: "<svg viewBox='0 0 400 80' width='1.9m'><text x='200' y='54' font-family='serif' font-size='40' fill='#2a2a30' text-anchor='middle'>The Beverly Room</text></svg>"
+  visibleRange: {max: 55}
 l5-ball-placard-w:
   feetPosition: {x: -5.84, y: 3.73, z: 0}
   id: l5-ball-placard-w
   rotation: {yaw: -90}
   tags: [l5-ball]
   vector: "<svg viewBox='0 0 400 80' width='1.9m'><text x='200' y='54' font-family='serif' font-size='40' fill='#2a2a30' text-anchor='middle'>The Beverly Room</text></svg>"
+  visibleRange: {max: 55}
 l5-ball-portrait-0:
   feetPosition: {x: -1.81, y: 1.68, z: -20.5}
   id: l5-ball-portrait-0
@@ -462,6 +467,7 @@ l5-boil-desk:
   rotation: {yaw: -90}
   state: {hp: 90, items: "bandage,almond,meat:rat,bobbypin", kind: desk, mat: wood, maxHp: 90, name: Foreman's desk}
   tags: [l5-boiler, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 55}
 l5-boil-fire-0:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-faint-hushed-whispers-inside-roaring-furnace-loop.mp3, gain: 0.4, loop: true, maxDistance: 12, spatial: true}
   feetPosition: {x: 27, y: 0.66, z: -16.25}
@@ -904,6 +910,7 @@ l5-boil-tools-2:
   rotation: {yaw: 180}
   state: {hp: 60, items: "firesalt,ammo,tape", kind: toolbox, mat: metal, maxHp: 60, name: Toolbox}
   tags: [l5-boiler, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 55}
 l5-boil-vent-0:
   feetPosition: {x: 31.5, y: 0, z: -12.5}
   id: l5-boil-vent-0
@@ -2070,6 +2077,7 @@ l5-hall-leaf-room-n3:
   rotation: {yaw: 0}
   state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 217, open: false, openYaw: 90, verb: Open}
   tags: [l5-hall, usable, l5-hall-door]
+  visibleRange: {max: 55}
 l5-hall-leaf-room-n4:
   behavior: scripts/l5-hall-door.js
   feetPosition: {x: -16, y: 0, z: -13.09}
@@ -2080,6 +2088,7 @@ l5-hall-leaf-room-n4:
   rotation: {yaw: 0}
   state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 1408, open: false, openYaw: 90, verb: Open}
   tags: [l5-hall, usable, l5-hall-door]
+  visibleRange: {max: 55}
 l5-hall-leaf-room-n5:
   behavior: scripts/l5-hall-door.js
   feetPosition: {x: -12, y: 0, z: -13.09}
@@ -2090,6 +2099,7 @@ l5-hall-leaf-room-n5:
   rotation: {yaw: 0}
   state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 9, open: false, openYaw: 90, verb: Open}
   tags: [l5-hall, usable, l5-hall-door]
+  visibleRange: {max: 55}
 l5-hall-leaf-room-s1:
   behavior: scripts/l5-hall-door.js
   feetPosition: {x: -28, y: 0, z: 13.09}
@@ -2100,6 +2110,7 @@ l5-hall-leaf-room-s1:
   rotation: {yaw: 0}
   state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 313, open: false, openYaw: -90, verb: Open}
   tags: [l5-hall, usable, l5-hall-door]
+  visibleRange: {max: 55}
 l5-hall-leaf-room-s2:
   behavior: scripts/l5-hall-door.js
   feetPosition: {x: -24, y: 0, z: 13.09}
@@ -2110,6 +2121,7 @@ l5-hall-leaf-room-s2:
   rotation: {yaw: 0}
   state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 66, open: false, openYaw: -90, verb: Open}
   tags: [l5-hall, usable, l5-hall-door]
+  visibleRange: {max: 55}
 l5-hall-leaf-room-s3:
   behavior: scripts/l5-hall-door.js
   feetPosition: {x: -20, y: 0, z: 13.09}
@@ -2120,6 +2132,7 @@ l5-hall-leaf-room-s3:
   rotation: {yaw: 0}
   state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 1932, open: false, openYaw: -90, verb: Open}
   tags: [l5-hall, usable, l5-hall-door]
+  visibleRange: {max: 55}
 l5-hall-leaf-room-s4:
   behavior: scripts/l5-hall-door.js
   feetPosition: {x: -16, y: 0, z: 13.09}
@@ -2130,6 +2143,7 @@ l5-hall-leaf-room-s4:
   rotation: {yaw: 0}
   state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: "Room 4½", open: false, openYaw: -90, verb: Open}
   tags: [l5-hall, usable, l5-hall-door]
+  visibleRange: {max: 55}
 l5-hall-leaf-suite-ne:
   behavior: scripts/l5-hall-door.js
   feetPosition: {x: -11, y: 0, z: -9.91}
@@ -2140,6 +2154,7 @@ l5-hall-leaf-suite-ne:
   rotation: {yaw: 0}
   state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 12A, open: false, openYaw: -90, verb: Open}
   tags: [l5-hall, usable, l5-hall-door]
+  visibleRange: {max: 55}
 l5-hall-leaf-suite-nw:
   behavior: scripts/l5-hall-door.js
   feetPosition: {x: -25, y: 0, z: -9.91}
@@ -2150,6 +2165,7 @@ l5-hall-leaf-suite-nw:
   rotation: {yaw: 0}
   state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 800, open: false, openYaw: -90, verb: Open}
   tags: [l5-hall, usable, l5-hall-door]
+  visibleRange: {max: 55}
 l5-hall-leaf-suite-se:
   behavior: scripts/l5-hall-door.js
   feetPosition: {x: -11, y: 0, z: 9.91}
@@ -2160,6 +2176,7 @@ l5-hall-leaf-suite-se:
   rotation: {yaw: 0}
   state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 0, open: false, openYaw: 90, verb: Open}
   tags: [l5-hall, usable, l5-hall-door]
+  visibleRange: {max: 55}
 l5-hall-leaf-suite-sw:
   behavior: scripts/l5-hall-door.js
   feetPosition: {x: -25, y: 0, z: 9.91}
@@ -2170,6 +2187,7 @@ l5-hall-leaf-suite-sw:
   rotation: {yaw: 0}
   state: {baseYaw: 0, hp: 60, info: Guest room door, mat: wood, maxHp: 60, name: Room 237, open: false, openYaw: 90, verb: Open}
   tags: [l5-hall, usable, l5-hall-door]
+  visibleRange: {max: 55}
 l5-hall-lib-arm:
   feetPosition: {x: -28.8, y: 0, z: -14.4}
   id: l5-hall-lib-arm
@@ -3908,6 +3926,7 @@ l5-l6-note:
   id: l5-l6-note
   rotation: {yaw: 90}
   vector: "<svg viewBox='0 0 200 120' width='0.45m'><rect width='200' height='120' fill='#e8e0c8'/><text x='100' y='40' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>your light won't work</text><text x='100' y='65' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>feel the left wall</text><text x='100' y='90' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>listen for waves</text></svg>"
+  visibleRange: {max: 55}
 l5-l6-plate:
   castShadow: false
   feetPosition: {x: 45.68, y: 2.3, z: 6}
@@ -4613,6 +4632,7 @@ l5-staff-bellhop:
   scale: 1.2
   state: {attr: "6,7,6,5,8,5,4", hp: 176, info: A faceling in a bellhop's coat. It still carries a room key nobody gave it. It only moves when you look away., kind: staff, maxHp: 176, mode: post, name: The Bellhop, title: Swift, verb: Look, xp: 80}
   tags: [moths, l5staff, l5-hostile, usable, faceling]
+  visibleRange: {max: 55}
 l5-staff-maid:
   children: [{attachment: {skin: true}, castShadow: true, id: critter-head, model: {id: /cdn/value.b5ba6340a943f30bf2772d5b6c93a6523798452a5ccdc376816b237606e649ad.glb, materials: {belly: {color: "#fff1dc"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f2a65a"}, mark: {color: "#d9843a"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#fff1dc"}}}, morph: {Open: 0.4, Smile: 1}, visibleRange: {max: 80}}]
   feetPosition: {x: -13.5, y: 0.02, z: 12.55}
@@ -4625,6 +4645,7 @@ l5-staff-maid:
   scale: 1.2222222222222223
   state: {disguised: true, hp: 160, info: One of the hotel staff. Polite. Very still., kind: staff, maxHp: 160, mode: post, name: The Chambermaid, verb: Look}
   tags: [moths, l5staff, l5-hostile, usable, faceling]
+  visibleRange: {max: 55}
 l5-staff-porter:
   children: [{attachment: {skin: true}, castShadow: true, id: critter-head, model: {id: /cdn/value.79934f170ef9260304b202ef4205824dba9052af0c9475c6b8846522d9c15e91.glb, materials: {belly: {color: "#ffffff"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f07a2e"}, mark: {color: "#2c1c18"}, nose: {color: "#231816"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#ffffff"}}}, morph: {Open: 0.4, Smile: 1}, visibleRange: {max: 80}}]
   feetPosition: {x: -6.55, y: 0.02, z: -11.5}
@@ -4637,6 +4658,7 @@ l5-staff-porter:
   scale: 1.3888888888888888
   state: {disguised: true, hp: 160, info: One of the hotel staff. Polite. Very still., kind: staff, maxHp: 160, mode: post, name: The Night Porter, verb: Look}
   tags: [moths, l5staff, l5-hostile, usable, faceling]
+  visibleRange: {max: 55}
 l5-stairs-up:
   behavior: scripts/level-door.js
   feetPosition: {x: -8, y: 0, z: -20.400000000000002}
