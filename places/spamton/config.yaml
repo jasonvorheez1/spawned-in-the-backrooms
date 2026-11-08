@@ -1,0 +1,21 @@
+# Spamton's arena (Shelly 11-08): the worldspace he drags you into from the Level 11 dumpster. A real-time money fight.
+mode: 3d
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 0, y: 0.1, z: 15 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -30 }
+acoustics: { reverb: 0.45 }
+atmosphere:
+  look: { script: scripts/look-default.js, params: { bloomThreshold: 0.6, bloomStrength: 0.8 } }
+  sky: { kind: color, color: oklch(0.07 0.03 330) }
+  fog: { kind: linear, near: 25, far: 70, color: oklch(0.13 0.06 330) }
+  clouds: { enabled: false }
+  stars: { enabled: false }
+  moon: { enabled: false }
+  timeOfDay: 0
+  cycle: { frozen: 0 }
+  ambient: { light: { color: oklch(0.8 0.08 330), intensity: 0.55 } }
+  hemisphere: { skyColor: oklch(0.75 0.15 340), groundColor: oklch(0.3 0.08 90), intensity: 0.6 }
+  wind: { direction: 0, speed: 0 }
