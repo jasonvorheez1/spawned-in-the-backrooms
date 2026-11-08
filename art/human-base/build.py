@@ -169,6 +169,41 @@ def shoulder_blend(body, r):
             for k, w in top: body.vertex_groups[k].add([i], w / tot, "REPLACE")
     print("shoulder blend verts", sum(len(v) for v in zone.values()))
 
+def shoulder_weights(body, r):
+    # Nov 8 rerig: bone heat leaves the deltoid on the torso, so a lowered arm slid out from under a shoulder "pad".
+    # around each arm root, weights are set by geometry: along the arm axis (t) the Arm bone takes over across an
+    # 11 cm band, and only within the arm's own radius (r), so the chest and back beside it stay on the torso.
+    W = body.matrix_world; gi = {g.name: g for g in body.vertex_groups}
+    names = {g.index: g.name for g in body.vertex_groups}
+    n = 0
+    for s in ("Left", "Right"):
+        b = r.data.bones[s + "Arm"]
+        h = r.matrix_world @ b.head_local; u = ((r.matrix_world @ b.tail_local) - h).normalized()
+        P = [(i, W @ v.co) for i, v in enumerate(body.data.vertices)]
+        def tr(p):
+            d = p - h; t = d.dot(u); return t, (d - u * t).length
+        rad = sorted(tr(p)[1] for _, p in P if 0.05 < tr(p)[0] < 0.08 and tr(p)[1] < 0.12)
+        R = rad[int(len(rad) * 0.8)] if rad else 0.05
+        print(s, "arm radius", round(R, 3))
+        for i, p in P:
+            t, rr = tr(p)
+            if t < -0.09 or t > 0.07 or rr > R + 0.05: continue
+            if (p.x > 0) != (s == "Left"): continue
+            w = smooth(-0.07, 0.04, t) * (1 - smooth(R, R + 0.05, rr))
+            v = body.data.vertices[i]
+            old = {names[g.group]: g.weight for g in v.groups}
+            arm_chain = sum(wt for k, wt in old.items() if k.startswith(s) and k.endswith(("Arm", "ForeArm", "Hand")))
+            w = max(w, min(1.0, arm_chain)) if t > 0.0 else w
+            rest = {k: wt for k, wt in old.items() if not (k.startswith(s) and k.endswith(("Arm", "ForeArm", "Hand")))}
+            tot = sum(rest.values())
+            if tot < 1e-4: rest = {s + "Shoulder": 0.6, "Spine2": 0.4}; tot = 1.0
+            for g in list(v.groups): body.vertex_groups[g.group].remove([i])
+            gi[s + "Arm"].add([i], w, "REPLACE")
+            for k, wt in rest.items():
+                if wt / tot * (1 - w) > 1e-3: gi[k].add([i], wt / tot * (1 - w), "REPLACE")
+            n += 1
+    print("shoulder weights set", n)
+
 def rig(head, body, wide):
     vs = [body.matrix_world @ v.co for v in body.data.vertices]
     tip = max(vs, key=lambda v: v.x)
@@ -215,6 +250,7 @@ def rig(head, body, wide):
     bpy.context.view_layer.objects.active = r
     bpy.ops.object.parent_set(type="ARMATURE_AUTO")
     shoulder_blend(body, r)
+    shoulder_weights(body, r)
     unweighted = sum(1 for v in body.data.vertices if not v.groups)
     print("body unweighted verts", unweighted)
     hg = head.vertex_groups.new(name="Head")
