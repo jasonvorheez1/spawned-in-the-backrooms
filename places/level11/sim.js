@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 93; // bump to rebuild the city in rooms that are already open
+const V = 94; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -594,7 +594,14 @@ function lay(ctx) {
       bx(`l11-mall-door-${k}-l`, FX, 0.5, zc - DW / 2, 0.09, 2.3, 0.07, AL, { physics: undefined });
       bx(`l11-mall-door-${k}-r`, FX, 0.5, zc + DW / 2, 0.09, 2.3, 0.07, AL, { physics: undefined });
       bx(`l11-mall-door-${k}-head`, FX, 2.8, zc, 0.09, 0.07, DW, AL, { physics: undefined });
-      sp(`l11-mall-int-${k}`, { feetPosition: { x: MALL_X, y: 0.52, z: zc }, primitive: { kind: "scripted", script: "scripts/l11-mall.js", params: { kind: "interior", shop: k, w: MALL_W - 1.0, d: w - 0.3 } }, physics: { body: "static", collider: "mesh" } });
+      sp(`l11-mall-int-${k}`, { feetPosition: { x: MALL_X, y: 0.52, z: zc }, primitive: { kind: "scripted", script: "scripts/l11-mall.js", params: { kind: "interior", shop: k, w: MALL_W - 1.0, d: w - 0.3 } }, physics: "none" });
+      { // the interior mesh's own collider closed over the aisle; its counters stand as plain invisible blocks instead
+        const X1 = MALL_X + (MALL_W - 1.0) / 2, X0 = MALL_X - (MALL_W - 1.0) / 2, hd = (w - 0.3) / 2, HIDE = { visible: false, castShadow: false };
+        const blocks = k === "derma" ? [[X1 - 4.75, X1 - 3.8, -1.5, 1.5, 1.1]]
+          : k === "islab" ? [[X1 - 4.2, X1 - 3.6, -hd + 0.3, hd - 0.3, 1.05], [X0 + 0.3, X0 + 0.9, hd - 1.0, hd - 0.3, 1.9]]
+          : [[X1 - 3.6, X1 - 2.98, -hd + 0.6, hd - 1.4, 1.37], [X0 + 0.25, X0 + 0.7, -hd + 0.4, hd - 0.4, 2.2]];
+        blocks.forEach(([a, b, z0, z1, h], i) => bx(`l11-mall-col-${k}-${i}`, (a + b) / 2, 0.52, zc + (z0 + z1) / 2, b - a, h, z1 - z0, null, HIDE));
+      }
       sp(`l11-mall-light-${k}`, { feetPosition: { x: MALL_X + 3, y: 3.1, z: zc }, light: { kind: "point", color: k === "pizza" ? "oklch(0.9 0.08 80)" : "oklch(0.96 0.02 220)", intensity: 2.2, distance: 11 } });
       bx(`l11-mall-frame-${k}-top`, FX, 3.3, zc, 0.08, 0.1, w, AL, { physics: undefined });
       for (const sgn of [-1, 1]) bx(`l11-mall-frame-${k}-sill${sgn}`, FX, 0.46, zc + sgn * (0.65 + (w - 1.3) / 4), 0.1, 0.06, (w - 1.3) / 2, AL, { physics: undefined });

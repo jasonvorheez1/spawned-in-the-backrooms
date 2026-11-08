@@ -130,7 +130,7 @@ export function layStreet(ctx, h) {
   }));
   for (const [i, [x, z]] of [[-8.6, 3], [8.6, 11], [-8.6, 62], [8.6, -12], [8.6, 48]].entries()) put(`l11-st-hyd-${i}`, "hydrant", x, z, x < 0 ? -90 : 90, { collider: "cylinder" });
   for (const [i, [x, z]] of [[-8.7, -10], [8.7, 26], [-8.7, 21], [8.7, -64], [-8.7, 70]].entries()) put(`l11-st-bin-${i}`, "trashcan", x, z, 0, { collider: "cylinder" });
-  for (const [i, [x, z]] of [[-15, 30], [-15, 46], [15, -67.5], [15, 18.5]].entries()) put(`l11-st-bench-${i}`, "bench", x, z, x < 0 ? -90 : 90);
+  for (const [i, [x, z]] of [[-15, 33.2], [-15, 46], [15, -67.5], [15, 18.5]].entries()) put(`l11-st-bench-${i}`, "bench", x, z, x < 0 ? -90 : 90);
   put("l11-st-shelter", "shelter", 14.4, 48, 90); put("l11-st-shelter2", "shelter", -14.4, -8, -90);
   for (const [i, [x, z]] of [[-9.2, 33], [9.2, 15.5], [9.2, 47], [-9.2, 5]].entries()) put(`l11-st-nbox-${i}`, "newsbox", x, z, x < 0 ? -90 : 90, { collider: "box", materials: { nbox: { color: ["#1d4fa0", "#c8231e", "#e7e2d2", "#2f7a3a"][i] } } });
   // parked cars along the kerbs, tinted at random; a few vans
