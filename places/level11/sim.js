@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 37; // bump to rebuild the city in rooms that are already open
+const V = 38; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1344,7 +1344,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   // Real Blender models (art/l11-apartment/build.py): built in world coordinates, so each sits at its own world feet with no turn.
   // Floor top y 0.32, open east doorway at x -39.5 (mesh collider keeps the doorway, the door leaf stands open against the inside north wall).
   const APT_M = {
-    shell: "/cdn/value.17c259e44002a5323a56b01733a4d227b9e11ddc98e248457b025595f5033c13.glb", // 8664 tris
+    shell: "/cdn/value.f4c84c38b5240fd2028d6129595d812d1b5007e4872b9db9b23756e864e461c0.glb", // 8664 tris
     floor: "/cdn/value.530ae8b88219c78fd76bd72a38e08bfd2feaedc34c0ff9b80e3e72d8def289a7.glb", // 12 tris
     stoop: "/cdn/value.fe9768df75103e8dc063cd0cdd2431962754bab5fe4e89b5bf13e11be63a9e4f.glb", // 456 tris
     rail: "/cdn/value.bab60998b05d8ad63dbc5c8a9b42f10e62d61088081f25af8195e327bde0f39b.glb", // 1252 tris
@@ -1502,7 +1502,11 @@ export function tick(ctx) {
     if (!q.sorted) { q.rows.sort((a, b) => (a[1].physics && a[1].physics !== "none" ? 0 : 1) - (b[1].physics && b[1].physics !== "none" ? 0 : 1)); q.sorted = true; }
     let i = lq.i ?? 0;
     const end = Math.min(q.rows.length, i + LAY_STEP);
-    for (; i < end; i++) { const [id, spec] = q.rows[i]; ctx.spawn(id, spec); }
+    for (; i < end; i++) {
+      const [id, spec] = q.rows[i], old = ctx.place.objects[id];
+      if (old && (!!old.model !== !!spec.model || !!old.primitive !== !!spec.primitive)) { ctx.destroy(id); break; } // a box row turned model: clear it, lay it fresh next tick
+      ctx.spawn(id, spec);
+    }
     lq.i = i;
     if (i >= q.rows.length) {
       for (const w of WALKERS) q.keep[w.id] = true;
