@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2681,
-  "updatedAt": "2026-11-08T23:03:08.971Z",
+  "basedOnSpecVersion": 2685,
+  "updatedAt": "2026-11-08T23:05:14.196Z",
   "summary": "The Backrooms is a survival RPG across authored maze levels, player-specific rooms and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors while scenes and place simulations supply environments and local systems; shared loot, build, breakable and loose-item systems connect exploration and physics interactions.",
   "scriptPaths": [],
   "places": [
@@ -12,7 +12,7 @@
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; residents, hazards, office/home systems and Boiler Room rats.",
     "places/level6, places/level7, places/level10, places/level11 (3D) - later authored/generated levels including city, farm and venues; Level 10's fun poster routes to Level 26.",
     "places/level26 (3D) - SS Fun =), Adventure liner lost in green fog; bespoke hull/cabin meshes, bridge, funnel, deck, pool, wrecked bar/restaurant, Partygoers and balloons.",
-    "places/debug, places/spamton and other configured places - auxiliary debug/fight spaces and continuing Backrooms routes; all are 3D except tutorial0's solo ephemeral instance."
+    "places/debug, places/spamton and other configured places - auxiliary debug/fight spaces and continuing Backrooms routes; configured places are 3D, while tutorial0 is solo ephemeral."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, player/camera setup and ordered behavior composition; L maps to kick and Z to grab.",
@@ -61,8 +61,8 @@
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done.",
     "scripts/lib/hub.js toHub/toSolo → room/place crossings; roomHop distinguishes intentional crossings from launch/resume.",
     "Death recovery → scripts/hub.js hubOffer → hub-ui.js; mall counters write hubShop → hub handler/UI; purchases debit cents and grant configured stock.",
-    "Teleport Station UI in scripts/hub-ui.js renders lastLevel(s) from scripts/lib/hub.js; travel requests reach scripts/hub.js, which boards the player via the bc-train scene, hides the placed car, animates a session train and then crosses to the selected room.",
-    "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; found weapon rarity cap is level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickup weapons/food/aid enters player.js inventory.",
+    "Teleport Station UI in scripts/hub-ui.js renders lastLevel(s) from scripts/lib/hub.js; travel requests reach scripts/hub.js, which boards the player via the bc-train scene, hides the placed car, animates a session train and crosses to the destination.",
+    "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; weapon rarity caps are level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickup weapons/food/aid enters player.js inventory.",
     "L input → scripts/kick.js tries foe kick then loose.js kickLoose; Z input → scripts/grab.js picks/carries/throws eligible bodies and calls loose.js arm/track/impact; flight tracking lives in player session and detects hard stops.",
     "scripts/lib/breakables.js strike/damageEntity → loose.js breakIt for matched loose props, otherwise generic rubble; loose.yml supplies material/hp/act rules, with breakAt as impact-energy threshold; explosions emit damage/noise/shockwave.",
     "places/level1/sim.js l1Tripo migration spawns modeled oil drums and box pallets as l1prop entities; loose.yml matches their metal/wood material and loose.js, grab/kick and combat handle interactions.",
@@ -70,7 +70,7 @@
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js - authored mall shops/landmarks with data-driven stock and simulated staff, waypoint shoppers and balcony loungers.",
-    "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence and rebuild path; CRT TV builds add matching screen, sound and glow child.",
+    "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence and rebuild path; CRT TV builds add matching screen, sound and glow children.",
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props and Boiler Room Death Rat packs.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
@@ -84,10 +84,10 @@
   ],
   "migrationNotes": [
     "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room and overflow mall rooms use bonus-N IDs. Keep routing and hub identity aligned.",
-    "Teleport Station 'last' travel derives from savePlace (excluding bonus, intake and debug; tutorial0 maps to main); keepPos preserves savePos and wakeAtSave restores it only when the arriving place matches. Travel also depends on the bc-train scene and its session train.",
+    "Teleport Station 'last' travel derives from savePlace (excluding bonus, intake and debug; tutorial0 maps to main); keepPos preserves savePos and wakeAtSave restores it only when the arriving place matches. Travel also depends on the bc-train scene.",
     "Found-item rarity gates apply only to found weapon tokens; ownership/use of existing weapons and non-weapon loot is not level-gated. Search gating excludes storage and NPC containers.",
     "Level 0 place.state.momentsV is 4: its migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout.",
     "At sanity <= 0 health is not drained; scripts/lib/stats.js lowers derived attributes except Luck by 2 (minimum 1), and derived values feed combat, carry and movement.",
-    "scripts/lib/knock.js consumes transient down/kb records and thrown-body flight/overboard state; enemy managers must call knocked() before AI and exclude heldBy bodies. loose.yml breakAt uses joules: 0.5 × kg × speed². art/human-base/build.py expects /workspace/human/female_raw.glb and exports 1.65 m female / 1.78 m male Mixamo-named rigs; these new assets do not imply the live critter renderer uses them."
+    "scripts/lib/knock.js consumes transient down/kb records and thrown-body flight/overboard state; enemy managers must call knocked() before AI and exclude heldBy bodies. loose.yml breakAt uses joules: 0.5 × kg × speed²."
   ]
 }
