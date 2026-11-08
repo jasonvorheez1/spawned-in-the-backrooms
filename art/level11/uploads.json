@@ -21,5 +21,22 @@
  "meg_table": "/cdn/value.dd3c190eacb8ea0abb48c136aae6af4b30b1ac33502ed6de0342bd4f1a706b11.glb",
  "meg_cache": "/cdn/value.425e3801e0e441533b3d2703f643ba3f3a74b0d554f3e5aad6ebe0e1545c745c.glb",
  "reno_office": "/cdn/value.34efbb6c2fafbf2728459d8bb15389865ef7891c885561254c4a76b7d3a955c0.glb",
- "spam_alley": "/cdn/value.d3be766fad76b4b0d0dbbce94bb28194fde6587f32a9e36ada6904f2a9e5e574.glb"
+ "spam_alley": "/cdn/value.d3be766fad76b4b0d0dbbce94bb28194fde6587f32a9e36ada6904f2a9e5e574.glb",
+ "turnstile": "/cdn/value.62007c2a80fea7a3196cdbeb1a7c6e9a8e044d0c275450f55e13195b4ddf03b0.glb",
+ "trashcan": "/cdn/value.c05e12099771e30dddfac008af04b1d4ddaf4f68dfdc70c537845c9a93b5876d.glb",
+ "taxi_wheel": "/cdn/value.84b0c57de2a5b1d18f1191f15bc0761bf99c351c56f3a6958f537966dec7fd74.glb",
+ "taxi": "/cdn/value.2ffcf72832ec7e0ee48af85fa6c8cd7f337687af96d153b29b4bd1e1e3c262b7.glb",
+ "sedco_spot": "/cdn/value.40671e0ecae12a3420a4c3c7cc3ebc6e32db290de4f15db6b160ee1afec578ba.glb",
+ "sedco_monitors": "/cdn/value.fd77a1a3758558c1ae8ee279ca68052869bee176446daf993be83dce9e44d9c8.glb",
+ "sedco_gondola": "/cdn/value.0fdb959d89b88b468583b965b0bf2974867d8d86833e025131c9e6fde141169f.glb",
+ "sedco_door": "/cdn/value.129761a6fbe8c43c992d2e5c275a9280f2bd5b4703f3ac10a77e396fc2648b54.glb",
+ "sedco_counter": "/cdn/value.eef510419d1f8a4e105a58acdedead7025e4da6496d5fdd96a41ad89d7f359f8.glb",
+ "pretzels": "/cdn/value.41725b501136e612d2bdd38837bbfee50fdf6dc0b413fa2aaf78862a1a8c43e2.glb",
+ "payphone": "/cdn/value.2fa5dbc907edd5756d28175eb0b2ad3a0ac57741875f5cc8cffa6535eadf774c.glb",
+ "newsbox": "/cdn/value.e315465b7bfe830d62eca5e472494e9e4e74f1f07dc58e527e47eef139a90f81.glb",
+ "mvm": "/cdn/value.8da5786295f59ec0b4ac2638be8af4b1e081a828fc8322630aa3f50bd255b499.glb",
+ "ibeam": "/cdn/value.81c79ef69ad2039841bf0870ad66d6d91c2e0334c8d8df6133600c950da8dc2f.glb",
+ "foodcart": "/cdn/value.0581dee7c4ca4d6c102ef18efbbc992f02aa8115c02fa67267ee2983e64d218a.glb",
+ "dogwell": "/cdn/value.864b425d65e39840600eb34d2fdc92c66947477cb9382d068772127838626ab9.glb",
+ "column": "/cdn/value.3291460630613c913f1ee7e7049df9834ad78a4a387cfd9e8ecaa5c109c6954d.glb"
 }
