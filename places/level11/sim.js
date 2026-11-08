@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 43; // bump to rebuild the city in rooms that are already open
+const V = 44; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -201,7 +201,7 @@ function lay(ctx) {
   cyl("l11-tlight-mast", -7.8, 0.1, 7.5, 0.16, 0.2, 5.8, IRON_RAIL);
   bx("l11-tlight-arm", 0, 5.7, 7.5, 15.5, 0.14, 0.14, IRON_RAIL);
 
-  [[-9.6, 4.6, 0], [9.6, 10.4, 180]].forEach(([x, z, yaw], k) => md(`l11-signal-pole-${k}`, "traffic_signal", x, 0.1, z, undefined, "cylinder", { rotation: { yaw }, layout: { box: { min: { x: -1.6, y: 0, z: -0.4 }, max: { x: 1.6, y: 5.2, z: 0.4 } } } }));
+  [[-9.6, 4.6, 0], [9.6, 10.4, 180]].forEach(([x, z, yaw], k) => md(`l11-signal-pole-${k}`, "traffic_signal", x, 0.1, z, undefined, "cylinder", { rotation: { yaw }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 5.6, z: 6 } } } }));
 
   // Blue Intersection Street Name Signs
   sp("l11-st-sign-11th", {
@@ -617,7 +617,7 @@ function lay(ctx) {
   });
 
   // Pizza Service Counter & Cutting Board
-  md("l11-pizza-counter", "pizza_counter", MALL_X + 2.8, 0.38, MALL_Z + 7.5, undefined, "box", { rotation: { yaw: -90 }, layout: { box: { min: { x: -2.2, y: 0, z: -0.75 }, max: { x: 2.2, y: 2.4, z: 0.75 } } } });
+  md("l11-pizza-counter", "pizza_counter", MALL_X + 2.8, 0.38, MALL_Z + 7.5, undefined, "box", { rotation: { yaw: 0 }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 2.4, z: 6 } } } });
 
   // Interactive Fresh Slice of Marroka Pizza
   sp("l11-pizza-slice", {
@@ -1199,7 +1199,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
 
 
   // Walkway decks (Tier 1 at y: 2.4, Tier 2 at y: 4.8)
-  md("l11-scaf-shed", "scaffold_shed", SCAF_X, 0.1, SCAF_Z, undefined, "mesh", { rotation: { yaw: 90 }, layout: { box: { min: { x: -2.4, y: 0, z: -1.7 }, max: { x: 2.4, y: 3.0, z: 1.7 } } } });
+  md("l11-scaf-shed", "scaffold_shed", SCAF_X, 0.1, SCAF_Z, undefined, "mesh", { rotation: { yaw: 0 }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 3.2, z: 6 } } } });
   bx("l11-scaf-deck1", SCAF_X, 2.4, SCAF_Z, 3.4, 0.08, 4.6, WOOD, { visible: false });
 
   // Outer guardrails
@@ -1246,7 +1246,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   const MKT_Z = 36.0;
 
   // Timber market stall frame
-  md("l11-market-stall", "market_stall", MKT_X - 0.8, 0.1, MKT_Z, undefined, "box", { rotation: { yaw: 90 }, layout: { box: { min: { x: -2.4, y: 0, z: -1.1 }, max: { x: 2.4, y: 3.0, z: 1.1 } } } });
+  md("l11-market-stall", "market_stall", MKT_X - 0.8, 0.1, MKT_Z, undefined, "box", { rotation: { yaw: 0 }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 3.3, z: 6 } } } });
 
   // Sign: B.N.T.G. Provisions Stall
   sp("l11-market-sign", {
