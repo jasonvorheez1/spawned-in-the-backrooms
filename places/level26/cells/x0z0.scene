@@ -2394,30 +2394,38 @@ l26x-bar-stool-0:
   feetPosition: {x: -4.2, y: 3.4, z: -4.7}
   id: l26x-bar-stool-0
   model: /cdn/value.eff9d8880880059d34267c3d6e0c2c9d60cdf5de6c73d4bb2c451f065ae35a42.glb
+  physics: {body: dynamic, collider: box}
   rotation: {yaw: 30}
   scale: 0.75
-  tags: [l26x]
+  state: {loose: wood}
+  tags: [l26x, breakable]
 l26x-bar-stool-1:
   feetPosition: {x: -2.6, y: 3.4, z: -4.4}
   id: l26x-bar-stool-1
   model: /cdn/value.eff9d8880880059d34267c3d6e0c2c9d60cdf5de6c73d4bb2c451f065ae35a42.glb
+  physics: {body: dynamic, collider: box}
   rotation: {yaw: -70}
   scale: 0.75
-  tags: [l26x]
+  state: {loose: wood}
+  tags: [l26x, breakable]
 l26x-bar-stool-2:
   feetPosition: {x: -1.2, y: 3.4, z: -4.9}
   id: l26x-bar-stool-2
   model: /cdn/value.eff9d8880880059d34267c3d6e0c2c9d60cdf5de6c73d4bb2c451f065ae35a42.glb
+  physics: {body: dynamic, collider: box}
   rotation: {yaw: 160}
   scale: 0.75
-  tags: [l26x]
+  state: {loose: wood}
+  tags: [l26x, breakable]
 l26x-bar-stool-3:
   feetPosition: {x: -5.5, y: 3.4, z: -3.6}
   id: l26x-bar-stool-3
   model: /cdn/value.eff9d8880880059d34267c3d6e0c2c9d60cdf5de6c73d4bb2c451f065ae35a42.glb
+  physics: {body: dynamic, collider: box}
   rotation: {yaw: 95}
   scale: 0.75
-  tags: [l26x]
+  state: {loose: wood}
+  tags: [l26x, breakable]
 l26x-boombox-0:
   feetPosition: {x: -5.6, y: 3.4, z: -3.6}
   id: l26x-boombox-0
@@ -2550,9 +2558,11 @@ l26x-lit-0:
   feetPosition: {x: 0.26251997011858164, y: 3.44, z: -5.498943061563837}
   id: l26x-lit-0
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 191.77714954678768}
   scale: 0.1255048958852444
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-1:
   feetPosition: {x: -4.409121769176016, y: 3.4, z: -3.062351355236741}
   id: l26x-lit-1
@@ -2564,114 +2574,146 @@ l26x-lit-10:
   feetPosition: {x: -1.0854018989323244, y: 3.44, z: -6.700473248394221}
   id: l26x-lit-10
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 185.8476695352456}
   scale: 0.12322439399325494
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-11:
   feetPosition: {x: -5.820838157609292, y: 3.4, z: -5.5823446395242255}
   id: l26x-lit-11
   model: /cdn/value.f7c7753038e24c9f170537fe75c69c479bfb6b6cf7a0215b8d51755ee14a4aa9.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -2.488792253420126, yaw: 254.96343211036333}
   scale: 0.2938033256324955
-  tags: [l26x, litter]
+  state: {loose: balloon}
+  tags: [l26x, litter, breakable]
 l26x-lit-12:
   feetPosition: {x: -4.720829110676274, y: 3.44, z: -6.483312392108415}
   id: l26x-lit-12
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 315.92074651081145}
   scale: 0.1270733064427382
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-13:
   feetPosition: {x: -0.6421449854534114, y: 3.44, z: -3.6388672088835223}
   id: l26x-lit-13
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 28.03823608348064}
   scale: 0.1116857184039828
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-14:
   feetPosition: {x: -1.4056990776467042, y: 3.4, z: -5.536061896429539}
   id: l26x-lit-14
   model: /cdn/value.9b9757db4825240cd2644158a930dede4547583da9c206965d7b7b73bc011b82.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 0.929159156945143, yaw: 164.55842504490093}
   scale: 0.39011723668506243
-  tags: [l26x, litter]
+  state: {loose: cake}
+  tags: [l26x, litter, breakable]
 l26x-lit-15:
   feetPosition: {x: -0.8844324823958618, y: 3.4, z: -3.1600448854026784}
   id: l26x-lit-15
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 2.611278289748019, yaw: 326.794431249981}
   scale: 0.12924530173709864
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-16:
   feetPosition: {x: -3.0553595802263853, y: 3.44, z: -5.176475577272655}
   id: l26x-lit-16
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 222.0624320498027}
   scale: 0.10803800822051149
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-17:
   feetPosition: {x: -2.6581427963952704, y: 3.4, z: -2.763973160612751}
   id: l26x-lit-17
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -2.6483763044925297, yaw: 317.55129758154567}
   scale: 0.11371316535291874
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-18:
   feetPosition: {x: -5.258247969825968, y: 3.44, z: -3.3459265616701157}
   id: l26x-lit-18
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 328.67669992552914}
   scale: 0.10807127457487922
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-19:
   feetPosition: {x: -5.129526259780663, y: 3.4, z: -7.829253152361119}
   id: l26x-lit-19
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 0.6528109571211094, yaw: 348.7453740223988}
   scale: 0.11251521685557217
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-2:
   feetPosition: {x: -2.3190541891920136, y: 3.4, z: -6.937841669431355}
   id: l26x-lit-2
   model: /cdn/value.188ccc30d97ee1ec9feac72f7255fc41d819f6963aba692bde8fa95d4bddc459.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -4.461126965219679, yaw: 251.29644787465057}
   scale: 0.20831605413384555
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-20:
   feetPosition: {x: -3.753430128248001, y: 3.44, z: -6.991234638371877}
   id: l26x-lit-20
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 18.84435011951455}
   scale: 0.12154585924257796
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-21:
   feetPosition: {x: -2.653925664747871, y: 3.44, z: -8.158779115355163}
   id: l26x-lit-21
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 39.710290394588505}
   scale: 0.10878554455600005
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-22:
   feetPosition: {x: -3.093946903960687, y: 0, z: 29.33451925015025}
   id: l26x-lit-22
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 4.542907648506997, yaw: 357.3858240420864}
   scale: 0.12867280452916063
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-23:
   feetPosition: {x: 0.08267335587157976, y: 0.04, z: 43.494429711394936}
   id: l26x-lit-23
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 145.75827420957307}
   scale: 0.11363394521439166
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-24:
   feetPosition: {x: 8.539002287401592, y: 0, z: 35.753735476599864}
   id: l26x-lit-24
   model: /cdn/value.9b9757db4825240cd2644158a930dede4547583da9c206965d7b7b73bc011b82.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -3.004614020699921, yaw: 330.59509929762925}
   scale: 0.451264064904891
-  tags: [l26x, litter]
+  state: {loose: cake}
+  tags: [l26x, litter, breakable]
 l26x-lit-25:
   feetPosition: {x: -6.419702196755815, y: 0, z: 36.59884002862865}
   id: l26x-lit-25
@@ -2690,9 +2732,11 @@ l26x-lit-27:
   feetPosition: {x: 2.1390857352745423, y: 0.04, z: 43.16707564424657}
   id: l26x-lit-27
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 154.50152391311784}
   scale: 0.12382973166547237
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-28:
   feetPosition: {x: 6.729824909853854, y: 0, z: 39.78528812516292}
   id: l26x-lit-28
@@ -2704,135 +2748,173 @@ l26x-lit-29:
   feetPosition: {x: 0.5004613676911881, y: 0, z: 30.160725277949002}
   id: l26x-lit-29
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -4.197293845562867, yaw: 48.945611793988206}
   scale: 0.10888839549240116
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-3:
   feetPosition: {x: -3.9385180868516096, y: 3.4, z: -7.502751361073578}
   id: l26x-lit-3
   model: /cdn/value.f7c7753038e24c9f170537fe75c69c479bfb6b6cf7a0215b8d51755ee14a4aa9.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 0.13055463094755804, yaw: 44.221139999209505}
   scale: 0.3184445391914083
-  tags: [l26x, litter]
+  state: {loose: balloon}
+  tags: [l26x, litter, breakable]
 l26x-lit-30:
   feetPosition: {x: 6.677560301024517, y: 0, z: 36.880340413754105}
   id: l26x-lit-30
   model: /cdn/value.f7c7753038e24c9f170537fe75c69c479bfb6b6cf7a0215b8d51755ee14a4aa9.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -2.977821793396874, yaw: 48.11285764356743}
   scale: 0.28152067702800065
-  tags: [l26x, litter]
+  state: {loose: balloon}
+  tags: [l26x, litter, breakable]
 l26x-lit-31:
   feetPosition: {x: -8.253432732418304, y: 0, z: 38.7144450762817}
   id: l26x-lit-31
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -0.8356273108327888, yaw: 142.8779625999173}
   scale: 0.12658425210909185
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-32:
   feetPosition: {x: 3.006370663628845, y: 0, z: 28.93037295666266}
   id: l26x-lit-32
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -2.898731114295652, yaw: 43.979035263871324}
   scale: 0.1202093729955188
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-33:
   feetPosition: {x: -8.509878186638081, y: 0.04, z: 37.4930238669518}
   id: l26x-lit-33
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 1.4995070553848087}
   scale: 0.11554686142483114
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-34:
   feetPosition: {x: -7.253691799754133, y: 0.04, z: -11.807686129122827}
   id: l26x-lit-34
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 279.885465353674}
   scale: 0.13017758428220527
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-35:
   feetPosition: {x: -7.7083603319983744, y: 0, z: -11.751600413281285}
   id: l26x-lit-35
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 0.7216326732754863, yaw: 238.2629843979436}
   scale: 0.12722293593139525
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-36:
   feetPosition: {x: -7.45882038446554, y: 0.04, z: -11.823193150676412}
   id: l26x-lit-36
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 259.83455955043183}
   scale: 0.12161821397655562
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-37:
   feetPosition: {x: -7.64907060684593, y: 0, z: -2.281242961846871}
   id: l26x-lit-37
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -0.6193924814552965, yaw: 355.76829308446884}
   scale: 0.12828438852181862
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-38:
   feetPosition: {x: -7.542233850849901, y: 0, z: -1.502675062838325}
   id: l26x-lit-38
   model: /cdn/value.f7c7753038e24c9f170537fe75c69c479bfb6b6cf7a0215b8d51755ee14a4aa9.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -1.5723313794342482, yaw: 28.516891537474883}
   scale: 0.29146633859792087
-  tags: [l26x, litter]
+  state: {loose: balloon}
+  tags: [l26x, litter, breakable]
 l26x-lit-39:
   feetPosition: {x: -7.779590350915488, y: 0, z: -2.099888653634064}
   id: l26x-lit-39
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -2.61837419942877, yaw: 74.54547144218603}
   scale: 0.126888140042726
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-4:
   feetPosition: {x: -0.5014383159855882, y: 3.4, z: -6.733000876308733}
   id: l26x-lit-4
   model: /cdn/value.9b9757db4825240cd2644158a930dede4547583da9c206965d7b7b73bc011b82.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 4.083341611122407, yaw: 328.31837926447315}
   scale: 0.4265043498317265
-  tags: [l26x, litter]
+  state: {loose: cake}
+  tags: [l26x, litter, breakable]
 l26x-lit-40:
   feetPosition: {x: -7.729089812039905, y: 0, z: 5.449883818742766}
   id: l26x-lit-40
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 0.3587451788404705, yaw: 256.12619234999926}
   scale: 0.12324466443026655
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-41:
   feetPosition: {x: -7.515813246306877, y: 0, z: 7.292922718679963}
   id: l26x-lit-41
   model: /cdn/value.f7c7753038e24c9f170537fe75c69c479bfb6b6cf7a0215b8d51755ee14a4aa9.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 1.8664449392196003, yaw: 97.40984066268888}
   scale: 0.3224219810182331
-  tags: [l26x, litter]
+  state: {loose: balloon}
+  tags: [l26x, litter, breakable]
 l26x-lit-42:
   feetPosition: {x: -7.5104056078290595, y: 0.04, z: 6.148203131998053}
   id: l26x-lit-42
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 323.5827893780464}
   scale: 0.1135546838927803
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-43:
   feetPosition: {x: -7.7432351280437945, y: 0, z: 15.011188128223266}
   id: l26x-lit-43
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 4.209258830737909, yaw: 110.75929870398683}
   scale: 0.11078213743995043
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-44:
   feetPosition: {x: -7.2507900927219495, y: 0, z: 14.516353511212559}
   id: l26x-lit-44
   model: /cdn/value.188ccc30d97ee1ec9feac72f7255fc41d819f6963aba692bde8fa95d4bddc459.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 3.9785047755476577, yaw: 249.42959636888912}
   scale: 0.1808631947640624
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-45:
   feetPosition: {x: -7.353785757768799, y: 0, z: 14.708923280848621}
   id: l26x-lit-45
   model: /cdn/value.f7c7753038e24c9f170537fe75c69c479bfb6b6cf7a0215b8d51755ee14a4aa9.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -3.8316614594457956, yaw: 63.061942059109896}
   scale: 0.3119902725247621
-  tags: [l26x, litter]
+  state: {loose: balloon}
+  tags: [l26x, litter, breakable]
 l26x-lit-46:
   feetPosition: {x: 7.625951065670676, y: 0, z: -12.76175709178753}
   id: l26x-lit-46
@@ -2844,37 +2926,47 @@ l26x-lit-47:
   feetPosition: {x: 7.448764139413258, y: 0, z: -11.084435525482723}
   id: l26x-lit-47
   model: /cdn/value.f7c7753038e24c9f170537fe75c69c479bfb6b6cf7a0215b8d51755ee14a4aa9.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 2.774559700756595, yaw: 211.74985923420167}
   scale: 0.30287054748873715
-  tags: [l26x, litter]
+  state: {loose: balloon}
+  tags: [l26x, litter, breakable]
 l26x-lit-48:
   feetPosition: {x: 7.671493436964925, y: 0, z: -11.039219722076886}
   id: l26x-lit-48
   model: /cdn/value.9b9757db4825240cd2644158a930dede4547583da9c206965d7b7b73bc011b82.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 1.1326976149029555, yaw: 16.33490671233037}
   scale: 0.38642171782461077
-  tags: [l26x, litter]
+  state: {loose: cake}
+  tags: [l26x, litter, breakable]
 l26x-lit-49:
   feetPosition: {x: 7.384928820438184, y: 0.04, z: -2.4052595817508453}
   id: l26x-lit-49
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 226.61585166427113}
   scale: 0.12288041338272412
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-5:
   feetPosition: {x: -4.36791298492296, y: 3.44, z: -4.167020487702805}
   id: l26x-lit-5
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 107.15024984774658}
   scale: 0.11166175661034033
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-50:
   feetPosition: {x: 7.7376982023416545, y: 0.04, z: -3.2252529752558345}
   id: l26x-lit-50
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 146.42024808862257}
   scale: 0.12457653128755118
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-51:
   feetPosition: {x: 7.725182709132872, y: 0, z: -2.216830415286511}
   id: l26x-lit-51
@@ -2886,79 +2978,101 @@ l26x-lit-52:
   feetPosition: {x: 7.743773722878552, y: 0, z: 6.219841679288001}
   id: l26x-lit-52
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 3.5816566080700873, yaw: 326.8179294126192}
   scale: 0.1254511684335075
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-53:
   feetPosition: {x: 7.364156710037103, y: 0.04, z: 6.927302374377522}
   id: l26x-lit-53
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 343.72227815153184}
   scale: 0.13076759176643918
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-54:
   feetPosition: {x: 7.283881487992537, y: 0, z: 5.3846747622753846}
   id: l26x-lit-54
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -2.2296077512342523, yaw: 344.3695920819275}
   scale: 0.1288740975767719
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-55:
   feetPosition: {x: 7.368951500355709, y: 0.04, z: 14.271465913612147}
   id: l26x-lit-55
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 116.31898255847348}
   scale: 0.11139761733794475
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-56:
   feetPosition: {x: 7.538566433772709, y: 0.04, z: 14.744209671646454}
   id: l26x-lit-56
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 226.56562512114905}
   scale: 0.11024424968019327
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-57:
   feetPosition: {x: 7.530769018587083, y: 0.04, z: 16.139581572422564}
   id: l26x-lit-57
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 139.6906535605391}
   scale: 0.12480926475339069
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-58:
   feetPosition: {x: 9.579143355590823, y: 0, z: 27.650321996607964}
   id: l26x-lit-58
   model: /cdn/value.f7c7753038e24c9f170537fe75c69c479bfb6b6cf7a0215b8d51755ee14a4aa9.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 3.027114406240692, yaw: 217.21241007429194}
   scale: 0.31269150961315795
-  tags: [l26x, litter]
+  state: {loose: balloon}
+  tags: [l26x, litter, breakable]
 l26x-lit-59:
   feetPosition: {x: -9.039259591158135, y: 0, z: 24.126479302591875}
   id: l26x-lit-59
   model: /cdn/value.9b9757db4825240cd2644158a930dede4547583da9c206965d7b7b73bc011b82.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -1.1304846527662522, yaw: 196.12657241342896}
   scale: 0.4142176332996309
-  tags: [l26x, litter]
+  state: {loose: cake}
+  tags: [l26x, litter, breakable]
 l26x-lit-6:
   feetPosition: {x: -4.6628628796429705, y: 3.4, z: -4.74493032225602}
   id: l26x-lit-6
   model: /cdn/value.f7c7753038e24c9f170537fe75c69c479bfb6b6cf7a0215b8d51755ee14a4aa9.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 3.7785200349886527, yaw: 262.53799171305167}
   scale: 0.303442241704763
-  tags: [l26x, litter]
+  state: {loose: balloon}
+  tags: [l26x, litter, breakable]
 l26x-lit-60:
   feetPosition: {x: -9.07315046157369, y: 0.04, z: -28.692310800166943}
   id: l26x-lit-60
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 72.04797828199713}
   scale: 0.11627112531674613
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-61:
   feetPosition: {x: 9.075256221124556, y: 0, z: -29.825541278266133}
   id: l26x-lit-61
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 2.681512598731328, yaw: 15.99550987407356}
   scale: 0.128867083141984
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-62:
   feetPosition: {x: -9.241396139022614, y: 0, z: 38.654473740912266}
   id: l26x-lit-62
@@ -2970,16 +3084,20 @@ l26x-lit-63:
   feetPosition: {x: 9.25653715275998, y: 0, z: -31.34314173336287}
   id: l26x-lit-63
   model: /cdn/value.253757c516d2c0ba9429b6a6d55203552284427702e97bbdd3de064afa5d1ed6.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 3.575482530787346, yaw: 89.68100894693332}
   scale: 0.126092817203185
-  tags: [l26x, litter]
+  state: {loose: can}
+  tags: [l26x, litter, breakable]
 l26x-lit-64:
   feetPosition: {x: 9.190758347041326, y: 0.04, z: 2.738496477128237}
   id: l26x-lit-64
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 90, yaw: 313.2125990247412}
   scale: 0.12915671332420628
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-65:
   feetPosition: {x: 9.29908490669871, y: 0, z: 35.33691802869407}
   id: l26x-lit-65
@@ -2991,9 +3109,11 @@ l26x-lit-66:
   feetPosition: {x: 9.171239796639997, y: 0, z: 22.968283791545915}
   id: l26x-lit-66
   model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 1.585241861913932, yaw: 304.32302425816795}
   scale: 0.11191100661638705
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lit-67:
   feetPosition: {x: 9.280161684881971, y: 0, z: 29.658374838371934}
   id: l26x-lit-67
@@ -3005,23 +3125,29 @@ l26x-lit-7:
   feetPosition: {x: -1.341177818297962, y: 3.4, z: -4.8974536072466845}
   id: l26x-lit-7
   model: /cdn/value.f7c7753038e24c9f170537fe75c69c479bfb6b6cf7a0215b8d51755ee14a4aa9.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -3.070500999721932, yaw: 151.71948961527994}
   scale: 0.3005280708384365
-  tags: [l26x, litter]
+  state: {loose: balloon}
+  tags: [l26x, litter, breakable]
 l26x-lit-8:
   feetPosition: {x: -4.323240376107799, y: 3.4, z: -4.095441345788838}
   id: l26x-lit-8
   model: /cdn/value.9b9757db4825240cd2644158a930dede4547583da9c206965d7b7b73bc011b82.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: -3.344495970916234, yaw: 185.34774785179076}
   scale: 0.4556452220984013
-  tags: [l26x, litter]
+  state: {loose: cake}
+  tags: [l26x, litter, breakable]
 l26x-lit-9:
   feetPosition: {x: -4.5014169266162565, y: 3.4, z: -4.547552699487285}
   id: l26x-lit-9
   model: /cdn/value.188ccc30d97ee1ec9feac72f7255fc41d819f6963aba692bde8fa95d4bddc459.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 0.3166026320851423, yaw: 119.72579268725859}
   scale: 0.19695801171332505
-  tags: [l26x, litter]
+  state: {loose: plastic}
+  tags: [l26x, litter, breakable]
 l26x-lounge-sofa-0:
   feetPosition: {x: -5.7, y: 3.4, z: -2.2}
   id: l26x-lounge-sofa-0
@@ -3042,9 +3168,11 @@ l26x-lounge-table:
   feetPosition: {x: -3.7, y: 3.4, z: -2.3}
   id: l26x-lounge-table
   model: /cdn/value.26d574fc27af0a97b151b38f9443c67c57988ee954ae6056153e18492aede2d2.glb
+  physics: {body: dynamic, collider: box}
   rotation: {roll: 9, yaw: 15}
   scale: 1.1
-  tags: [l26x]
+  state: {loose: wood}
+  tags: [l26x, breakable]
 l26x-pool-basin:
   feetPosition: {x: 0, y: 0, z: 36.5}
   id: l26x-pool-basin
