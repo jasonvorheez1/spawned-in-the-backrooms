@@ -200,35 +200,47 @@ l26-cabins-trim:
   primitive: {depth: 40.3, height: 0.25, kind: box, width: 14.3}
 l26-cb-0:
   children: [{feetPosition: {x: 0, y: 1.15, z: 0}, material: {color: oklch(0.55 0.2 25), metalness: 0.05, roughness: 0.2}, primitive: {kind: sphere, radius: 0.32}, scale: {x: 1, y: 1.2, z: 1}}, {feetPosition: {x: 0, y: 1.1, z: 0}, material: {color: oklch(0.55 0.2 25)}, primitive: {height: 0.08, kind: cone, radius: 0.05}, rotation: {pitch: 180}}]
+  children.child-0: null
+  children.child-1: null
   feetPosition: {x: -8.8, y: 0, z: 12}
   id: l26-cb-0
-  material: {color: oklch(0.55 0.2 25), roughness: 0.4}
-  primitive: {height: 1.2, kind: cylinder, radialSegments: 5, radiusBottom: 0.02, radiusTop: 0.012}
-  state: {hp: 10}
+  layout: {box: {max: {x: 0.28, y: 1.85, z: 0.28}, min: {x: -0.28, y: 0.15, z: -0.28}}}
+  model: {id: /cdn/value.bbcd28912111e39613cec71f06224b7742148d3493106c89a76f739e3003f366.glb, materials: {tripo_material_1f70d4b8-d0f3-475f-8a5a-cbffff762cc5: {color: oklch(0.72 0.18 140), metalness: 0.05, roughness: 0.15}}}
+  physics: {body: kinematic, collider: sphere}
+  state: {home: {x: -8.8, y: 0, z: 12}, hp: 10}
   tags: [l26-balloon, l8-hostile]
 l26-cb-1:
   children: [{feetPosition: {x: 0, y: 1.15, z: 0}, material: {color: oklch(0.7 0.17 140), metalness: 0.05, roughness: 0.2}, primitive: {kind: sphere, radius: 0.32}, scale: {x: 1, y: 1.2, z: 1}}, {feetPosition: {x: 0, y: 1.1, z: 0}, material: {color: oklch(0.7 0.17 140)}, primitive: {height: 0.08, kind: cone, radius: 0.05}, rotation: {pitch: 180}}]
+  children.child-0: null
+  children.child-1: null
   feetPosition: {x: 8.8, y: 0, z: -12}
   id: l26-cb-1
-  material: {color: oklch(0.55 0.2 25), roughness: 0.4}
-  primitive: {height: 1.2, kind: cylinder, radialSegments: 5, radiusBottom: 0.02, radiusTop: 0.012}
-  state: {hp: 10}
+  layout: {box: {max: {x: 0.28, y: 1.85, z: 0.28}, min: {x: -0.28, y: 0.15, z: -0.28}}}
+  model: {id: /cdn/value.bbcd28912111e39613cec71f06224b7742148d3493106c89a76f739e3003f366.glb, materials: {tripo_material_1f70d4b8-d0f3-475f-8a5a-cbffff762cc5: {color: oklch(0.6 0.22 320), metalness: 0.05, roughness: 0.15}}}
+  physics: {body: kinematic, collider: sphere}
+  state: {home: {x: 8.8, y: 0, z: -12}, hp: 10}
   tags: [l26-balloon, l8-hostile]
 l26-cb-2:
   children: [{feetPosition: {x: 0, y: 1.15, z: 0}, material: {color: oklch(0.6 0.2 320), metalness: 0.05, roughness: 0.2}, primitive: {kind: sphere, radius: 0.32}, scale: {x: 1, y: 1.2, z: 1}}, {feetPosition: {x: 0, y: 1.1, z: 0}, material: {color: oklch(0.6 0.2 320)}, primitive: {height: 0.08, kind: cone, radius: 0.05}, rotation: {pitch: 180}}]
+  children.child-0: null
+  children.child-1: null
   feetPosition: {x: -5.8, y: 0, z: 44}
   id: l26-cb-2
-  material: {color: oklch(0.55 0.2 25), roughness: 0.4}
-  primitive: {height: 1.2, kind: cylinder, radialSegments: 5, radiusBottom: 0.02, radiusTop: 0.012}
-  state: {hp: 10}
+  layout: {box: {max: {x: 0.28, y: 1.85, z: 0.28}, min: {x: -0.28, y: 0.15, z: -0.28}}}
+  model: {id: /cdn/value.bbcd28912111e39613cec71f06224b7742148d3493106c89a76f739e3003f366.glb, materials: {tripo_material_1f70d4b8-d0f3-475f-8a5a-cbffff762cc5: {color: oklch(0.75 0.15 210), metalness: 0.05, roughness: 0.15}}}
+  physics: {body: kinematic, collider: sphere}
+  state: {home: {x: -5.8, y: 0, z: 44}, hp: 10}
   tags: [l26-balloon, l8-hostile]
 l26-cb-3:
   children: [{feetPosition: {x: 0, y: 1.15, z: 0}, material: {color: oklch(0.75 0.15 200), metalness: 0.05, roughness: 0.2}, primitive: {kind: sphere, radius: 0.32}, scale: {x: 1, y: 1.2, z: 1}}, {feetPosition: {x: 0, y: 1.1, z: 0}, material: {color: oklch(0.75 0.15 200)}, primitive: {height: 0.08, kind: cone, radius: 0.05}, rotation: {pitch: 180}}]
+  children.child-0: null
+  children.child-1: null
   feetPosition: {x: 3, y: 3.4, z: -6.5}
   id: l26-cb-3
-  material: {color: oklch(0.55 0.2 25), roughness: 0.4}
-  primitive: {height: 1.2, kind: cylinder, radialSegments: 5, radiusBottom: 0.02, radiusTop: 0.012}
-  state: {hp: 10}
+  layout: {box: {max: {x: 0.28, y: 1.85, z: 0.28}, min: {x: -0.28, y: 0.15, z: -0.28}}}
+  model: {id: /cdn/value.bbcd28912111e39613cec71f06224b7742148d3493106c89a76f739e3003f366.glb, materials: {tripo_material_1f70d4b8-d0f3-475f-8a5a-cbffff762cc5: {color: oklch(0.62 0.22 27), metalness: 0.05, roughness: 0.15}}}
+  physics: {body: kinematic, collider: sphere}
+  state: {home: {x: 3, y: 3.4, z: -6.5}, hp: 10}
   tags: [l26-balloon, l8-hostile]
 l26-cup-11:
   feetPosition: {x: 8.617602361281216, y: 0, z: -2.5987857564346797}

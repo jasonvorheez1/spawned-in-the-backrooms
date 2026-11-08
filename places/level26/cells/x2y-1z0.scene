@@ -1,11 +1,13 @@
 # spawn-scene v2 yaml x2y-1z0
 l26d-cb-0:
   children: [{feetPosition: {x: 0, y: 1.15, z: 0}, material: {color: oklch(0.55 0.2 25), roughness: 0.2}, primitive: {kind: sphere, radius: 0.32}, scale: {x: 1, y: 1.2, z: 1}}]
+  children.child-0: null
   feetPosition: {x: 309.5, y: -80, z: -40.5}
   id: l26d-cb-0
-  material: {color: oklch(0.55 0.2 25)}
-  primitive: {height: 1.2, kind: cylinder, radialSegments: 5, radiusBottom: 0.02, radiusTop: 0.012}
-  state: {hp: 10}
+  layout: {box: {max: {x: 0.28, y: 1.85, z: 0.28}, min: {x: -0.28, y: 0.15, z: -0.28}}}
+  model: {id: /cdn/value.bbcd28912111e39613cec71f06224b7742148d3493106c89a76f739e3003f366.glb, materials: {tripo_material_1f70d4b8-d0f3-475f-8a5a-cbffff762cc5: {color: oklch(0.55 0.2 270), metalness: 0.05, roughness: 0.15}}}
+  physics: {body: kinematic, collider: sphere}
+  state: {home: {x: 309.5, y: -80, z: -40.5}, hp: 10}
   tags: [l26-balloon, l8-hostile]
 l26d-ceil:
   feetPosition: {x: 300, y: -77.3, z: -54}
