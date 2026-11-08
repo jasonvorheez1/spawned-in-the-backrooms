@@ -59,6 +59,7 @@ export function update(ctx, dt) {
   const allHounds = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   const lead = allHounds.reduce((a, h) => (!a || String(h.id) < String(a.id) ? h : a), null); // one hound steps the whole pack; the rest stand down
   if (lead && lead.id !== ctx.self.id && String(ctx.self.id) > String(lead.id)) { ctx.sleep(1); return; }
+  if (!ctx.place.players.length) { ctx.sleep(2); return; } // empty level: the pack rests (perf)
   for (const h of allHounds) {
     const m = (mem[h.id] ??= {}), pos = h.feetPosition, st = h.state ?? {}, mu = npcMul(st);
     if (ctx.self.place === "level5" && !st.dead && zoneAt5(pos.x, pos.z)?.id !== "boiler") { h.feetPosition = { x: [37.5, 28.5, 40.5][Math.floor(ctx.random() * 3)], y: 0.05, z: [2.5, -0.5, -9.5][Math.floor(ctx.random() * 3)] }; m.roam = null; continue; } // level 5: the pack lives in the Boiler Room alone

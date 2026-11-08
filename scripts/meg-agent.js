@@ -356,6 +356,9 @@ export function update(ctx, dt) {
   if (!ctx.self.state.temperV && ctx.self.state.attr) shapeTemper(ctx.self);
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
   if (m.dressed !== 4) { m.dressed = 4; if (!s.dead) dress(ctx, me); }
+  // nobody within 45 m and nobody to follow: rest 2 s instead of thinking every tick (perf)
+  { let near = 1e9; const f = me.feetPosition; for (const p of ctx.place.players) { const d = Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z); if (d < near) near = d; }
+    if (near > 45 && !s.follow && !s.target && !m.down) { ctx.sleep(2); return; } }
   if (!m.armed && !s.dead && now - (m.bornAt ??= now) > 1500) arm(ctx, me, m); // after the spawner has handed over its weapon
   // essential: whoever walks with a player drops to a knee instead of dying, then gets back up
   // a companion who fell anyway (killed by a path that set dead directly) comes back too
