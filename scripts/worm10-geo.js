@@ -72,4 +72,4 @@ export function geometry(ctx) {
     for (let j = 0; j < sides; j++) { ctx.tri(...last[j], ...last[(j + 1) % sides], ...tip); ctx.tri(...c0[(j + 1) % sides], ...c0[j], ...tail); }
   }
 }
-export function collider() { return { kind: "box", size: [1.5, 0.25, 1.5], center: [0, 0.12, 0] }; }
+export function collider() { return { kind: "box", width: 1.5, height: 0.25, depth: 1.5, center: [0, 0.12, 0] }; }

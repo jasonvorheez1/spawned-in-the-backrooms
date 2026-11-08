@@ -71,7 +71,7 @@ export function update(ctx, dt) {
     if ((s.hp ?? 1) <= 0 && s.phase !== "dead") { // killed while up
       s.phase = "dead"; s.dead = true; m.at = now; o.tags = (o.tags ?? []).filter((t) => t !== "moths");
       ctx.emit("fx", { position: { ...o.feetPosition, y: o.feetPosition.y + 0.8 }, script: GORE });
-      play(ctx, "giant-worm-death-wet-gurgling-squeal", o.feetPosition, 0.8);
+      play(ctx, "earthworms-squished-wet-soil-squelch", o.feetPosition, 0.8);
       ctx.emit("squash", { target: o.id, axis: "y", intensity: 0.5, duration: 0.4 });
     }
     if (s.phase === "dead") {
@@ -93,7 +93,7 @@ export function update(ctx, dt) {
         o.visible = true; o.fx = null; m.y0 = y0; o.anim.writhe = { clip: WRITHE, loop: true, weight: 1 };
         ctx.emit("fx", { position: { x, y: y0, z }, script: ERUPT });
         ctx.emit("screenShake", { intensity: 0.35, duration: 0.3 }, { audience: { player: p.id } });
-        play(ctx, "giant-worm-erupting-from-wet-soil-dirt-burst", { x, y: y0, z }, 0.95, 40);
+        play(ctx, "swarm-of-earthworms-wriggling-up-through-wet-soil-rustle", { x, y: y0, z }, 0.95, 40);
         continue;
       }
       const n = normalize({ x: p.feetPosition.x - o.feetPosition.x, y: 0, z: p.feetPosition.z - o.feetPosition.z });
@@ -114,7 +114,7 @@ export function update(ctx, dt) {
         ctx.emit("fx", { position: at, script: GORE });
         ctx.emit("cameraPunch", { direction: { x: 0, y: -1, z: 0 }, intensity: 0.5 }, { audience: { player: p.id } });
         ctx.emit("screenFlash", { color: "#7a1010", duration: 0.15, intensity: 0.25 }, { audience: { player: p.id } });
-        play(ctx, "giant-worm-bite-ring-of-teeth-wet-tearing-chomp", at, 0.9);
+        play(ctx, "earthworms-squirming-over-skin-wet-slither-sting", at, 0.9);
         ctx.emit("damageNumber", { position: { ...at, y: at.y + 0.4 }, text: "BURROWING", color: "#ff8a6a", size: 0.8 }, { audience: { player: p.id } });
         for (let i = 1; i <= S.bleedTicks; i++) ctx.after(i, "bleed", { id: p.id });
       }
@@ -123,7 +123,7 @@ export function update(ctx, dt) {
     }
     if (s.phase === "sink") {
       const t = now - m.at;
-      o.feetPosition = { ...o.feetPosition, y: m.y0 - 0.15 - 2.2 * Math.min(1, t / (S.sink * 1000)) };
+      o.feetPosition = { ...o.feetPosition, y: m.y0 - 0.4 * Math.min(1, t / (S.sink * 1000)) };
       if (t > S.sink * 1000) { // back under: it hunts you again from here
         o.visible = false; o.scale = 1; o.anim.writhe = null; o.fx = { script: RIPPLE }; s.phase = "stalk"; s.heardAt = now;
         const a = ctx.random() * 6.283; o.feetPosition = { x: o.feetPosition.x + Math.cos(a) * 6, y: m.y0 - 2.4, z: o.feetPosition.z + Math.sin(a) * 6 };
