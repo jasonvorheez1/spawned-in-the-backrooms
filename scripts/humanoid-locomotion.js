@@ -229,6 +229,7 @@ export function onInput(ctx, input) {
 
 export function update(ctx, dt) {
   if (ctx.self.sprite) return // sprites animate via the 2D mixer, never these GLB clips
+  if (ctx.self.state?.dead || (ctx.self.tags?.includes?.('npc') && (ctx.self.state?.hp ?? 1) <= 0)) { if (ctx.self.anim.idle || ctx.self.anim.walk || ctx.self.anim.run) { ctx.self.anim.idle = null; ctx.self.anim.walk = null; ctx.self.anim.run = null } return } // a corpse holds no gait
 
   const clips = ctx.self.state.gaitClips || PLAYER.clips || {} // a body wearing an imported rig names its gait clips (scripts/critter.js)
   // Seated: attached to a hull, a mount, a chair, or a sit someone else wrote on the sit channel

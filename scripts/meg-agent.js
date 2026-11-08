@@ -343,6 +343,8 @@ export function update(ctx, dt) {
     ctx.emit("damageNumber", { position: { x: me.feetPosition.x, y: me.feetPosition.y + 1.8, z: me.feetPosition.z }, text: "DOWN", color: "#ffb347" });
   }
   if (s.dead || (s.hp ?? 1) <= 0) {
+    if (!s.dead) s.dead = true; // a body is a body: looted, never talked to
+    if (me.anim.idle || me.anim.walk || me.anim.run) { me.anim.idle = null; me.anim.walk = null; me.anim.run = null; }
     if (!m.down) {
       m.down = true; bark(ctx, me, "death", true);
       for (const id of Object.keys(VOICES)) { const o = ctx.place.objects[id]; if (o && id !== me.id && !o.state?.dead && (o.state?.hp ?? 1) > 0 && Math.hypot(o.feetPosition.x - me.feetPosition.x, o.feetPosition.z - me.feetPosition.z) < 30) { bark(ctx, o, "allyDown", true); break; } } // the nearest friend sees it
