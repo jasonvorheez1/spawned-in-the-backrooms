@@ -253,81 +253,81 @@ l26-cb-3:
 l26-cup-11:
   feetPosition: {x: 8.617602361281216, y: 0, z: -2.5987857564346797}
   id: l26-cup-11
-  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
-  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
-  rotation: {roll: 90, yaw: 69.46196401001046}
+  layout: {box: {max: {x: 0.08, y: 0.1, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: {id: /cdn/value.8c080ae3bebe501e1ddafb0460b6c21773346c8d1365895517d6ca8965f83153.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 152.84141801297665}
 l26-cup-14:
   feetPosition: {x: -8.167188011746475, y: 0, z: -7.3856362334385715}
   id: l26-cup-14
-  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
-  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
-  rotation: {roll: 90, yaw: 152.62210541992548}
+  layout: {box: {max: {x: 0.08, y: 0.1, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: {id: /cdn/value.8c080ae3bebe501e1ddafb0460b6c21773346c8d1365895517d6ca8965f83153.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 131.98922608047724}
 l26-cup-17:
   feetPosition: {x: 8.632487052973586, y: 0, z: 4.415771736957026}
   id: l26-cup-17
-  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
-  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
-  rotation: {roll: 90, yaw: 248.03821301462048}
+  layout: {box: {max: {x: 0.08, y: 0.1, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: {id: /cdn/value.8c080ae3bebe501e1ddafb0460b6c21773346c8d1365895517d6ca8965f83153.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 294.1840508300811}
 l26-cup-2:
   feetPosition: {x: 8.685700543171587, y: 0, z: 19.499221564037363}
   id: l26-cup-2
-  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
-  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
-  rotation: {roll: 90, yaw: 228.9292576112455}
+  layout: {box: {max: {x: 0.08, y: 0.1, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: {id: /cdn/value.8c080ae3bebe501e1ddafb0460b6c21773346c8d1365895517d6ca8965f83153.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 70.87150286883116}
 l26-cup-20:
   feetPosition: {x: 9.355115258393397, y: 0, z: -28.669791651270256}
   id: l26-cup-20
-  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
-  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
-  rotation: {roll: 90, yaw: 294.9073590035119}
+  layout: {box: {max: {x: 0.08, y: 0.1, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: {id: /cdn/value.8c080ae3bebe501e1ddafb0460b6c21773346c8d1365895517d6ca8965f83153.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 252.9241767246276}
 l26-cup-23:
   feetPosition: {x: -8.785831831389029, y: 0, z: -26.425213473115683}
   id: l26-cup-23
-  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
-  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
-  rotation: {roll: 90, yaw: 331.87353147746694}
+  layout: {box: {max: {x: 0.08, y: 0.1, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: {id: /cdn/value.8c080ae3bebe501e1ddafb0460b6c21773346c8d1365895517d6ca8965f83153.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 73.95845839753747}
 l26-cup-26:
   feetPosition: {x: -7.603167351709291, y: 0, z: 13.814567478287302}
   id: l26-cup-26
-  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
-  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
-  rotation: {roll: 90, yaw: 83.29546103407418}
+  layout: {box: {max: {x: 0.08, y: 0.1, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: {id: /cdn/value.8c080ae3bebe501e1ddafb0460b6c21773346c8d1365895517d6ca8965f83153.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 39.53232605941594}
 l26-cup-29:
   feetPosition: {x: -8.57852120780317, y: 0, z: -37.75053898792273}
   id: l26-cup-29
-  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
-  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
-  rotation: {roll: 90, yaw: 328.67669992552914}
+  layout: {box: {max: {x: 0.08, y: 0.1, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: {id: /cdn/value.8c080ae3bebe501e1ddafb0460b6c21773346c8d1365895517d6ca8965f83153.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 312.1146376244724}
 l26-cup-32:
   feetPosition: {x: -8.045553511588626, y: 0, z: -20.44949065821687}
   id: l26-cup-32
-  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
-  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
-  rotation: {roll: 90, yaw: 203.18788863866956}
+  layout: {box: {max: {x: 0.08, y: 0.1, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: {id: /cdn/value.8c080ae3bebe501e1ddafb0460b6c21773346c8d1365895517d6ca8965f83153.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 236.08734028413892}
 l26-cup-35:
   feetPosition: {x: -8.97572357029455, y: 0, z: 37.01392950071671}
   id: l26-cup-35
-  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
-  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
-  rotation: {roll: 90, yaw: 13.341936624302498}
+  layout: {box: {max: {x: 0.08, y: 0.1, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: {id: /cdn/value.8c080ae3bebe501e1ddafb0460b6c21773346c8d1365895517d6ca8965f83153.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 34.982608230784535}
 l26-cup-38:
   feetPosition: {x: 8.396600791065302, y: 0, z: -18.281191749629187}
   id: l26-cup-38
-  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
-  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
-  rotation: {roll: 90, yaw: 145.75827420957307}
+  layout: {box: {max: {x: 0.08, y: 0.1, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: {id: /cdn/value.8c080ae3bebe501e1ddafb0460b6c21773346c8d1365895517d6ca8965f83153.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 308.5454659257084}
 l26-cup-5:
   feetPosition: {x: 9.214817973046944, y: 0, z: -27.68173400018445}
   id: l26-cup-5
-  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
-  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
-  rotation: {roll: 90, yaw: 184.6999667141121}
+  layout: {box: {max: {x: 0.08, y: 0.1, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: {id: /cdn/value.8c080ae3bebe501e1ddafb0460b6c21773346c8d1365895517d6ca8965f83153.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 8.496575066819787}
 l26-cup-8:
   feetPosition: {x: 8.264503191907192, y: 0, z: -25.18385186380886}
   id: l26-cup-8
-  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
-  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
-  rotation: {roll: 90, yaw: 107.15024984774658}
+  layout: {box: {max: {x: 0.08, y: 0.1, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}
+  model: {id: /cdn/value.8c080ae3bebe501e1ddafb0460b6c21773346c8d1365895517d6ca8965f83153.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 267.8122039139271}
 l26-deck:
   feetPosition: {x: 0, y: -0.5, z: 3}
   id: l26-deck
@@ -435,87 +435,87 @@ l26-graffiti:
 l26-hat-0:
   feetPosition: {x: -9.441529034004327, y: 0, z: -13.704070549320463}
   id: l26-hat-0
-  material: {color: oklch(0.7 0.18 25), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 0, yaw: 75.7983324470922}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 209.82041920535266}
 l26-hat-12:
   feetPosition: {x: 7.709759679115265, y: 0, z: -7.301070608804498}
   id: l26-hat-12
-  material: {color: oklch(0.8 0.17 130), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 0, yaw: 123.88404781179692}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 7.926448741927743}
 l26-hat-15:
   feetPosition: {x: -8.663320526417028, y: 0, z: 13.579674621848234}
   id: l26-hat-15
-  material: {color: oklch(0.7 0.18 25), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 0, yaw: 83.96301172858244}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 330.3864603303373}
 l26-hat-18:
   feetPosition: {x: 8.39344418774985, y: 0, z: 21.49146749241811}
   id: l26-hat-18
-  material: {color: oklch(0.85 0.16 90), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 90, yaw: 90.40347887687548}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 131.9366884790361}
 l26-hat-21:
   feetPosition: {x: -8.413607850490886, y: 0, z: -25.099985586060203}
   id: l26-hat-21
-  material: {color: oklch(0.75 0.15 200), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 0, yaw: 28.03823608348064}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 189.42229902371764}
 l26-hat-24:
   feetPosition: {x: 9.381148952330065, y: 0, z: 36.3585560798452}
   id: l26-hat-24
-  material: {color: oklch(0.6 0.2 320), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 0, yaw: 326.794431249981}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 45.502746468409896}
 l26-hat-27:
   feetPosition: {x: 8.578721666605547, y: 0, z: 19.75212685659161}
   id: l26-hat-27
-  material: {color: oklch(0.8 0.17 130), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 0, yaw: 85.69748029378125}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 163.3144999947399}
 l26-hat-3:
   feetPosition: {x: 8.08400954738446, y: 0, z: -6.564558593819179}
   id: l26-hat-3
-  material: {color: oklch(0.85 0.16 90), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 0, yaw: 254.84448720460964}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 28.17192256450653}
 l26-hat-30:
   feetPosition: {x: 9.44423406880546, y: 0, z: -36.236234638018644}
   id: l26-hat-30
-  material: {color: oklch(0.7 0.18 25), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 90, yaw: 324.0190235171556}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 319.21268661506474}
 l26-hat-33:
   feetPosition: {x: -9.138846992672814, y: 0, z: 20.859045784389153}
   id: l26-hat-33
-  material: {color: oklch(0.85 0.16 90), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 90, yaw: 257.06784955089347}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 337.47665740549564}
 l26-hat-36:
   feetPosition: {x: 9.322733710763385, y: 0, z: 45.39002560982017}
   id: l26-hat-36
-  material: {color: oklch(0.75 0.15 200), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 0, yaw: 343.5446753462519}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 332.0204355753958}
 l26-hat-39:
   feetPosition: {x: 8.717552381529265, y: 0, z: -8.479192781485242}
   id: l26-hat-39
-  material: {color: oklch(0.6 0.2 320), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 0, yaw: 223.7439496180713}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 104.63256698101759}
 l26-hat-6:
   feetPosition: {x: 8.977002886206378, y: 0, z: 16.07535576544486}
   id: l26-hat-6
-  material: {color: oklch(0.75 0.15 200), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 0, yaw: 207.87578499311383}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 338.374429307878}
 l26-hat-9:
   feetPosition: {x: -8.189746803319895, y: 0, z: 40.729982694019554}
   id: l26-hat-9
-  material: {color: oklch(0.6 0.2 320), roughness: 0.6}
-  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
-  rotation: {roll: 0, yaw: 200.65345022857815}
+  layout: {box: {max: {x: 0.1, y: 0.26, z: 0.1}, min: {x: -0.1, y: 0, z: -0.1}}}
+  model: {id: /cdn/value.f722a12d77f0cc2637934d157142392b940fdc5ad029ca81cd035cc37169733a.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 252.01083560474217}
 l26-hull:
   feetPosition: {x: 0, y: -12, z: 3}
   id: l26-hull
@@ -649,33 +649,38 @@ l26-litter-poster:
 l26-lounger-0:
   feetPosition: {x: 4.5, y: 3.4, z: -12}
   id: l26-lounger-0
-  material: {color: oklch(0.92 0.01 100), roughness: 0.6}
-  primitive: {depth: 1.9, height: 0.3, kind: box, width: 0.7}
-  rotation: {roll: 12, yaw: 0}
+  layout: {box: {max: {x: 0.95, y: 1, z: 0.95}, min: {x: -0.95, y: 0, z: -0.95}}}
+  model: {id: /cdn/value.c8723104f674b3e82fe87b6bfd9b8e2045108510951d6898333b8145c69a1dc2.glb}
+  physics: static
+  rotation: {pitch: 0, roll: 0, yaw: 0}
 l26-lounger-1:
   feetPosition: {x: 3.3, y: 3.4, z: -8.8}
   id: l26-lounger-1
-  material: {color: oklch(0.92 0.01 100), roughness: 0.6}
-  primitive: {depth: 1.9, height: 0.3, kind: box, width: 0.7}
-  rotation: {roll: 0, yaw: 37}
+  layout: {box: {max: {x: 0.95, y: 1, z: 0.95}, min: {x: -0.95, y: 0, z: -0.95}}}
+  model: {id: /cdn/value.c8723104f674b3e82fe87b6bfd9b8e2045108510951d6898333b8145c69a1dc2.glb}
+  physics: static
+  rotation: {pitch: 0, roll: 0, yaw: 37}
 l26-lounger-2:
   feetPosition: {x: 4.5, y: 3.4, z: -5.6}
   id: l26-lounger-2
-  material: {color: oklch(0.92 0.01 100), roughness: 0.6}
-  primitive: {depth: 1.9, height: 0.3, kind: box, width: 0.7}
-  rotation: {roll: 12, yaw: 74}
+  layout: {box: {max: {x: 0.95, y: 1, z: 0.95}, min: {x: -0.95, y: 0, z: -0.95}}}
+  model: {id: /cdn/value.c8723104f674b3e82fe87b6bfd9b8e2045108510951d6898333b8145c69a1dc2.glb}
+  physics: static
+  rotation: {pitch: 0, roll: 0, yaw: 74}
 l26-lounger-3:
   feetPosition: {x: 3.3, y: 3.4, z: -2.3999999999999986}
   id: l26-lounger-3
-  material: {color: oklch(0.92 0.01 100), roughness: 0.6}
-  primitive: {depth: 1.9, height: 0.3, kind: box, width: 0.7}
-  rotation: {roll: 0, yaw: 111}
+  layout: {box: {max: {x: 0.95, y: 1, z: 0.95}, min: {x: -0.95, y: 0, z: -0.95}}}
+  model: {id: /cdn/value.c8723104f674b3e82fe87b6bfd9b8e2045108510951d6898333b8145c69a1dc2.glb}
+  physics: static
+  rotation: {pitch: 0, roll: 0, yaw: 111}
 l26-lounger-4:
   feetPosition: {x: 4.5, y: 3.4, z: 0.8000000000000007}
   id: l26-lounger-4
-  material: {color: oklch(0.92 0.01 100), roughness: 0.6}
-  primitive: {depth: 1.9, height: 0.3, kind: box, width: 0.7}
-  rotation: {roll: 12, yaw: 148}
+  layout: {box: {max: {x: 0.95, y: 1, z: 0.95}, min: {x: -0.95, y: 0, z: -0.95}}}
+  model: {id: /cdn/value.c8723104f674b3e82fe87b6bfd9b8e2045108510951d6898333b8145c69a1dc2.glb}
+  physics: static
+  rotation: {pitch: 0, roll: 0, yaw: 148}
 l26-mast:
   feetPosition: {x: 0, y: 0, z: -40}
   id: l26-mast
@@ -781,80 +786,93 @@ l26-pool-water:
 l26-pop-1:
   feetPosition: {x: 8.258624627002806, y: 0, z: 25.172453518571544}
   id: l26-pop-1
-  material: {color: oklch(0.85 0.16 90), roughness: 0.3}
-  primitive: {kind: sphere, radius: 0.12}
+  layout: {box: {max: {x: 0.15, y: 0.2, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: {id: /cdn/value.c77628220199690f4019117c9dd56cef05578d674a37fc4647c449e12ec9559c.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 197.92930176481605}
   scale: {x: 1, y: 0.3, z: 1.3}
 l26-pop-10:
   feetPosition: {x: 7.717245610857962, y: 0, z: -15.026769029454687}
   id: l26-pop-10
-  material: {color: oklch(0.8 0.17 130), roughness: 0.3}
-  primitive: {kind: sphere, radius: 0.12}
+  layout: {box: {max: {x: 0.15, y: 0.2, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: {id: /cdn/value.c77628220199690f4019117c9dd56cef05578d674a37fc4647c449e12ec9559c.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 32.994056437164545}
   scale: {x: 1, y: 0.3, z: 1.3}
 l26-pop-13:
   feetPosition: {x: 8.629709710287726, y: 0, z: -24.093766155696365}
   id: l26-pop-13
-  material: {color: oklch(0.7 0.18 25), roughness: 0.3}
-  primitive: {kind: sphere, radius: 0.12}
+  layout: {box: {max: {x: 0.15, y: 0.2, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: {id: /cdn/value.c77628220199690f4019117c9dd56cef05578d674a37fc4647c449e12ec9559c.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 92.33825485222042}
   scale: {x: 1, y: 0.3, z: 1.3}
 l26-pop-16:
   feetPosition: {x: -9.326023101120267, y: 0, z: 15.350942189502966}
   id: l26-pop-16
-  material: {color: oklch(0.85 0.16 90), roughness: 0.3}
-  primitive: {kind: sphere, radius: 0.12}
+  layout: {box: {max: {x: 0.15, y: 0.2, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: {id: /cdn/value.c77628220199690f4019117c9dd56cef05578d674a37fc4647c449e12ec9559c.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 246.93678673356771}
   scale: {x: 1, y: 0.3, z: 1.3}
 l26-pop-19:
   feetPosition: {x: -8.26119967059288, y: 0, z: -5.119726508445908}
   id: l26-pop-19
-  material: {color: oklch(0.75 0.15 200), roughness: 0.3}
-  primitive: {kind: sphere, radius: 0.12}
+  layout: {box: {max: {x: 0.15, y: 0.2, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: {id: /cdn/value.c77628220199690f4019117c9dd56cef05578d674a37fc4647c449e12ec9559c.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 15.308565460145473}
   scale: {x: 1, y: 0.3, z: 1.3}
 l26-pop-22:
   feetPosition: {x: -8.864728298068385, y: 0, z: -25.8827633149376}
   id: l26-pop-22
-  material: {color: oklch(0.6 0.2 320), roughness: 0.3}
-  primitive: {kind: sphere, radius: 0.12}
+  layout: {box: {max: {x: 0.15, y: 0.2, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: {id: /cdn/value.c77628220199690f4019117c9dd56cef05578d674a37fc4647c449e12ec9559c.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 95.05691148340702}
   scale: {x: 1, y: 0.3, z: 1.3}
 l26-pop-25:
   feetPosition: {x: -7.620973200919559, y: 0, z: -17.143310088265366}
   id: l26-pop-25
-  material: {color: oklch(0.8 0.17 130), roughness: 0.3}
-  primitive: {kind: sphere, radius: 0.12}
+  layout: {box: {max: {x: 0.15, y: 0.2, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: {id: /cdn/value.c77628220199690f4019117c9dd56cef05578d674a37fc4647c449e12ec9559c.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 173.71158133260906}
   scale: {x: 1, y: 0.3, z: 1.3}
 l26-pop-28:
   feetPosition: {x: -8.347890078810924, y: 0, z: 37.11929215822336}
   id: l26-pop-28
-  material: {color: oklch(0.7 0.18 25), roughness: 0.3}
-  primitive: {kind: sphere, radius: 0.12}
+  layout: {box: {max: {x: 0.15, y: 0.2, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: {id: /cdn/value.c77628220199690f4019117c9dd56cef05578d674a37fc4647c449e12ec9559c.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 152.6707508135587}
   scale: {x: 1, y: 0.3, z: 1.3}
 l26-pop-31:
   feetPosition: {x: 8.730562191424221, y: 0, z: 19.067553209638014}
   id: l26-pop-31
-  material: {color: oklch(0.85 0.16 90), roughness: 0.3}
-  primitive: {kind: sphere, radius: 0.12}
+  layout: {box: {max: {x: 0.15, y: 0.2, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: {id: /cdn/value.c77628220199690f4019117c9dd56cef05578d674a37fc4647c449e12ec9559c.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 343.2856971770525}
   scale: {x: 1, y: 0.3, z: 1.3}
 l26-pop-34:
   feetPosition: {x: -7.820612724414381, y: 0, z: 39.1984877647825}
   id: l26-pop-34
-  material: {color: oklch(0.75 0.15 200), roughness: 0.3}
-  primitive: {kind: sphere, radius: 0.12}
+  layout: {box: {max: {x: 0.15, y: 0.2, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: {id: /cdn/value.c77628220199690f4019117c9dd56cef05578d674a37fc4647c449e12ec9559c.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 38.3132494892925}
   scale: {x: 1, y: 0.3, z: 1.3}
 l26-pop-37:
   feetPosition: {x: -8.096427401200135, y: 0, z: 23.123942768724604}
   id: l26-pop-37
-  material: {color: oklch(0.6 0.2 320), roughness: 0.3}
-  primitive: {kind: sphere, radius: 0.12}
+  layout: {box: {max: {x: 0.15, y: 0.2, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: {id: /cdn/value.c77628220199690f4019117c9dd56cef05578d674a37fc4647c449e12ec9559c.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 216.64551822468638}
   scale: {x: 1, y: 0.3, z: 1.3}
 l26-pop-4:
   feetPosition: {x: -8.967819110568529, y: 0, z: 1.3032356609139768}
   id: l26-pop-4
-  material: {color: oklch(0.75 0.15 200), roughness: 0.3}
-  primitive: {kind: sphere, radius: 0.12}
+  layout: {box: {max: {x: 0.15, y: 0.2, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: {id: /cdn/value.c77628220199690f4019117c9dd56cef05578d674a37fc4647c449e12ec9559c.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 32.43206315673888}
   scale: {x: 1, y: 0.3, z: 1.3}
 l26-pop-7:
   feetPosition: {x: 8.344491626855215, y: 0, z: -9.827552664944694}
   id: l26-pop-7
-  material: {color: oklch(0.6 0.2 320), roughness: 0.3}
-  primitive: {kind: sphere, radius: 0.12}
+  layout: {box: {max: {x: 0.15, y: 0.2, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
+  model: {id: /cdn/value.c77628220199690f4019117c9dd56cef05578d674a37fc4647c449e12ec9559c.glb}
+  rotation: {pitch: 0, roll: 0, yaw: 47.01571360230446}
   scale: {x: 1, y: 0.3, z: 1.3}
 l26-post-0-0:
   feetPosition: {x: -10, y: 0, z: 48}
@@ -2420,40 +2438,64 @@ l26-sundeck:
   primitive: {depth: 40, height: 0.05, kind: box, width: 14}
 l26-table-0:
   children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.7 0.18 25), roughness: 0.8}, primitive: {height: 0.04, kind: cylinder, radialSegments: 24, radiusBottom: 0.6, radiusTop: 0.6}}, {feetPosition: {x: 0.15, y: 0.76, z: 0.1}, material: {color: oklch(0.75 0.15 200)}, primitive: {height: 0.22, kind: cone, radialSegments: 10, radius: 0.08}}]
+  children.child-0: null
+  children.child-1: null
   feetPosition: {x: 8.4, y: 0, z: 25}
   id: l26-table-0
-  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
-  primitive: {height: 0.72, kind: cylinder, radialSegments: 12, radiusBottom: 0.25, radiusTop: 0.06}
+  layout: {box: {max: {x: 0.475, y: 0.78, z: 0.475}, min: {x: -0.475, y: 0, z: -0.475}}}
+  model: {id: /cdn/value.30427e07710f89fc5d4ee4d1afeddf0682015a7e39017bd4d3065b5303373903.glb}
+  physics: static
+  rotation: {pitch: 0, roll: 0, yaw: 274.4849434029311}
 l26-table-1:
   children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.75 0.15 200), roughness: 0.8}, primitive: {height: 0.04, kind: cylinder, radialSegments: 24, radiusBottom: 0.6, radiusTop: 0.6}}, {feetPosition: {x: 0.15, y: 0.76, z: 0.1}, material: {color: oklch(0.8 0.17 130)}, primitive: {height: 0.22, kind: cone, radialSegments: 10, radius: 0.08}}]
+  children.child-0: null
+  children.child-1: null
   feetPosition: {x: -8.4, y: 0, z: 25}
   id: l26-table-1
-  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
-  primitive: {height: 0.72, kind: cylinder, radialSegments: 12, radiusBottom: 0.25, radiusTop: 0.06}
+  layout: {box: {max: {x: 0.475, y: 0.78, z: 0.475}, min: {x: -0.475, y: 0, z: -0.475}}}
+  model: {id: /cdn/value.30427e07710f89fc5d4ee4d1afeddf0682015a7e39017bd4d3065b5303373903.glb}
+  physics: static
+  rotation: {pitch: 0, roll: 0, yaw: 64.5958414580673}
 l26-table-2:
   children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.8 0.17 130), roughness: 0.8}, primitive: {height: 0.04, kind: cylinder, radialSegments: 24, radiusBottom: 0.6, radiusTop: 0.6}}, {feetPosition: {x: 0.15, y: 0.76, z: 0.1}, material: {color: oklch(0.85 0.16 90)}, primitive: {height: 0.22, kind: cone, radialSegments: 10, radius: 0.08}}]
+  children.child-0: null
+  children.child-1: null
   feetPosition: {x: 8.4, y: 0, z: 32}
   id: l26-table-2
-  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
-  primitive: {height: 0.72, kind: cylinder, radialSegments: 12, radiusBottom: 0.25, radiusTop: 0.06}
+  layout: {box: {max: {x: 0.475, y: 0.78, z: 0.475}, min: {x: -0.475, y: 0, z: -0.475}}}
+  model: {id: /cdn/value.30427e07710f89fc5d4ee4d1afeddf0682015a7e39017bd4d3065b5303373903.glb}
+  physics: static
+  rotation: {pitch: 0, roll: 0, yaw: 261.85962681658566}
 l26-table-3:
   children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.85 0.16 90), roughness: 0.8}, primitive: {height: 0.04, kind: cylinder, radialSegments: 24, radiusBottom: 0.6, radiusTop: 0.6}}, {feetPosition: {x: 0.15, y: 0.76, z: 0.1}, material: {color: oklch(0.6 0.2 320)}, primitive: {height: 0.22, kind: cone, radialSegments: 10, radius: 0.08}}]
+  children.child-0: null
+  children.child-1: null
   feetPosition: {x: -8.4, y: 0, z: 32}
   id: l26-table-3
-  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
-  primitive: {height: 0.72, kind: cylinder, radialSegments: 12, radiusBottom: 0.25, radiusTop: 0.06}
+  layout: {box: {max: {x: 0.475, y: 0.78, z: 0.475}, min: {x: -0.475, y: 0, z: -0.475}}}
+  model: {id: /cdn/value.30427e07710f89fc5d4ee4d1afeddf0682015a7e39017bd4d3065b5303373903.glb}
+  physics: static
+  rotation: {pitch: 0, roll: 0, yaw: 92.59042918682098}
 l26-table-4:
   children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.6 0.2 320), roughness: 0.8}, primitive: {height: 0.04, kind: cylinder, radialSegments: 24, radiusBottom: 0.6, radiusTop: 0.6}}, {feetPosition: {x: 0.15, y: 0.76, z: 0.1}, material: {color: oklch(0.7 0.18 25)}, primitive: {height: 0.22, kind: cone, radialSegments: 10, radius: 0.08}}]
+  children.child-0: null
+  children.child-1: null
   feetPosition: {x: 8.4, y: 0, z: 39}
   id: l26-table-4
-  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
-  primitive: {height: 0.72, kind: cylinder, radialSegments: 12, radiusBottom: 0.25, radiusTop: 0.06}
+  layout: {box: {max: {x: 0.475, y: 0.78, z: 0.475}, min: {x: -0.475, y: 0, z: -0.475}}}
+  model: {id: /cdn/value.30427e07710f89fc5d4ee4d1afeddf0682015a7e39017bd4d3065b5303373903.glb}
+  physics: static
+  rotation: {pitch: 0, roll: 0, yaw: 301.3651839271188}
 l26-table-5:
   children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.7 0.18 25), roughness: 0.8}, primitive: {height: 0.04, kind: cylinder, radialSegments: 24, radiusBottom: 0.6, radiusTop: 0.6}}, {feetPosition: {x: 0.15, y: 0.76, z: 0.1}, material: {color: oklch(0.75 0.15 200)}, primitive: {height: 0.22, kind: cone, radialSegments: 10, radius: 0.08}}]
+  children.child-0: null
+  children.child-1: null
   feetPosition: {x: -8.4, y: 0, z: 39}
   id: l26-table-5
-  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
-  primitive: {height: 0.72, kind: cylinder, radialSegments: 12, radiusBottom: 0.25, radiusTop: 0.06}
+  layout: {box: {max: {x: 0.475, y: 0.78, z: 0.475}, min: {x: -0.475, y: 0, z: -0.475}}}
+  model: {id: /cdn/value.30427e07710f89fc5d4ee4d1afeddf0682015a7e39017bd4d3065b5303373903.glb}
+  physics: static
+  rotation: {pitch: 0, roll: 0, yaw: 288.00647436641157}
 l26-win--1-0:
   feetPosition: {x: -7.02, y: 1.5, z: -16}
   id: l26-win--1-0
