@@ -46,14 +46,32 @@ export function geometry(ctx) {
     const tip = p[n - 1], last = rings[n - 1]; // a rounded head
     for (let j = 0; j < sides; j++) ctx.tri(...last[j], ...last[(j + 1) % sides], ...tip);
   }
-  // the torn mound of wet soil they come out of
-  ctx.bone("root"); ctx.flat(); ctx.roughness(0.9);
-  const clods = lod <= 2 ? 26 : 10;
+  // the torn mound of wet soil they burst from: a lumpy dome, crumbs scattered around its lip
+  ctx.bone("root"); ctx.smooth(); ctx.roughness(0.95);
+  const segs = lod <= 2 ? 20 : 10, rows = lod <= 2 ? 6 : 3, rim = 0.95;
+  const h = (u, a) => { const n = 0.75 + 0.35 * Math.sin(a * 3 + 1.3) * Math.sin(a * 5 + 0.4) + 0.15 * Math.sin(a * 11); return [Math.cos(a) * rim * u * n, Math.cos(u * 1.5708) * 0.32 * (0.8 + 0.2 * n) - 0.04, Math.sin(a) * rim * u * n]; };
+  for (let r = 0; r < rows; r++) for (let k = 0; k < segs; k++) {
+    const u0 = r / rows, u1 = (r + 1) / rows, a0 = (k / segs) * 6.283, a1 = ((k + 1) / segs) * 6.283;
+    ctx.color(`oklch(${0.2 + (1 - u1) * 0.06} 0.035 ${50 + (k % 3) * 4})`);
+    ctx.quad(...h(u0, a0), ...h(u0, a1), ...h(u1, a1), ...h(u1, a0));
+  }
+  ctx.flat();
+  const clods = lod <= 2 ? 22 : 8;
   for (let c = 0; c < clods; c++) {
-    const a = R(c + 40) * 6.283, d = 0.15 + R(c + 41) * 0.55, s = 0.05 + R(c + 42) * 0.09, x = Math.cos(a) * d, z = Math.sin(a) * d, y = 0.02 + s * 0.4;
-    ctx.color(`oklch(${0.24 + R(c + 43) * 0.06} 0.03 55)`);
-    const v = [[x, y + s, z], [x + s, y, z], [x, y, z + s], [x - s, y, z], [x, y, z - s], [x, y - s * 0.5, z]];
+    const a = R(c + 40) * 6.283, d = 0.6 + R(c + 41) * 0.75, s = 0.03 + R(c + 42) * 0.06, x = Math.cos(a) * d, z = Math.sin(a) * d, y = s * 0.3;
+    ctx.color(`oklch(${0.22 + R(c + 43) * 0.07} 0.035 55)`);
+    const v = [[x, y + s * 0.8, z], [x + s, y, z + s * 0.3], [x - s * 0.2, y, z + s], [x - s, y, z - s * 0.2], [x + s * 0.3, y, z - s], [x, y - s * 0.4, z]];
     for (const [a1, b1] of [[1, 2], [2, 3], [3, 4], [4, 1]]) { ctx.tri(...v[0], ...v[b1], ...v[a1]); ctx.tri(...v[5], ...v[a1], ...v[b1]); }
+  }
+  // small worms lying coiled over the mound, half buried
+  ctx.smooth(); ctx.roughness(0.28);
+  for (let i = 0; i < (lod <= 2 ? 10 : 4); i++) {
+    const a0 = R(i + 70) * 6.283, d0 = 0.15 + R(i + 71) * 0.55, len = 0.5 + R(i + 72) * 0.5, rad = 0.018 + R(i + 73) * 0.012, sides = 6, n = 12;
+    const pt = (t) => { const ang = a0 + t * len * 2.2 * (i % 2 ? 1 : -1), d = d0 + Math.sin(t * 9 + i) * 0.06; const x = Math.cos(ang) * d, z = Math.sin(ang) * d; const u = Math.min(1, Math.hypot(x, z) / rim); return [x, Math.cos(u * 1.5708) * 0.3 - 0.02 + Math.sin(t * 7) * 0.012, z]; };
+    const P = Array.from({ length: n + 1 }, (_, k) => pt(k / n));
+    const rings = P.map((p0, k) => { const ax = unit(sub(P[Math.min(n, k + 1)], P[Math.max(0, k - 1)])), s1 = unit(cross(ax, [0, 1, 0.01])), o = cross(ax, s1), t = k / n, r = rad * Math.min(1, t * 5 + 0.3) * (1 - t * t * 0.6);
+      return Array.from({ length: sides }, (_, j) => { const q = (j / sides) * 6.283; return [p0[0] + (s1[0] * Math.cos(q) + o[0] * Math.sin(q)) * r, p0[1] + (s1[1] * Math.cos(q) + o[1] * Math.sin(q)) * r, p0[2] + (s1[2] * Math.cos(q) + o[2] * Math.sin(q)) * r]; }); });
+    for (let k = 0; k < n; k++) { ctx.color(`oklch(${0.44 + (k % 2) * 0.04} 0.12 ${24 + R(i) * 12})`); for (let j = 0; j < sides; j++) { const j1 = (j + 1) % sides; ctx.quad(...rings[k][j], ...rings[k][j1], ...rings[k + 1][j1], ...rings[k + 1][j]); } }
   }
 }
 export function collider() { return { kind: "capsule", radius: 0.45, halfHeight: 0.35, center: [0, 0.8, 0] }; }
