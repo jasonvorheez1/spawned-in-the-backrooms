@@ -1419,6 +1419,37 @@ def build_ear(H, kind, sc, side, inner_mat, sp):
     has_tip = "eartip" in sp["ex"]
     tip_mat = "mark" if sp.get("mark") else "tip"
 
+    # Build a 3D cupped grid ear with soft rim, concave inner dish, and arched rounded tip
+    R, C = 14, 10
+    if kind == "point":
+        H_len = .205 * sc
+        w_fn = lambda t: .092 * sc * (math.sin(math.pi * (.12 + .84 * (1.0 - t))) ** .68) * ((1.0 - t * .86) ** .52)
+        cup_d = .022 * sc; th_base = .020
+    elif kind == "long":
+        H_len = .36 * sc
+        w_fn = lambda t: .064 * sc * (math.sin(math.pi * (.08 + .88 * t)) ** .58)
+        cup_d = .022 * sc; th_base = .022
+    elif kind == "flop":
+        H_len = .23 * sc
+        w_fn = lambda t: .072 * sc * (math.sin(math.pi * (.10 + .86 * t)) ** .55)
+        cup_d = -.016 * sc; th_base = .018
+    elif kind == "leaf":
+        H_len = .20 * sc
+        w_fn = lambda t: .066 * sc * (math.sin(math.pi * (.10 + .86 * t)) ** .65)
+        cup_d = .020 * sc; th_base = .018
+    elif kind == "pig":
+        H_len = .145 * sc
+        w_fn = lambda t: .068 * sc * (math.sin(math.pi * (.14 + .82 * (1.0 - t))) ** .65) * ((1.0 - t * .82) ** .5)
+        cup_d = .018 * sc; th_base = .018
+    elif kind == "fluffy":
+        H_len = .175 * sc
+        w_fn = lambda t: .102 * sc * (math.sin(math.pi * (.12 + .82 * t)) ** .52)
+        cup_d = .022 * sc; th_base = .022
+    else:  # round
+        H_len = .145 * sc
+        w_fn = lambda t: .088 * sc * (math.sin(math.pi * (.12 + .82 * t)) ** .52)
+        cup_d = .020 * sc; th_base = .020
+
     # cupped ear: closed rounded cross-section per row (rim bevel), inner bowl with a soft lip, base flaring out of the skull
     R, M = 16, 20
     curl = .055 if kind == "long" else 0.0
