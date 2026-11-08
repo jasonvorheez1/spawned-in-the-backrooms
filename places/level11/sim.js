@@ -20,13 +20,13 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 76; // bump to rebuild the city in rooms that are already open
+const V = 77; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
 
 const ASPHALT = { ...T("cracked-dark-asphalt-road", 4), color: "oklch(0.4 0.01 250)", roughness: 0.85 };
-const SIDEWALK = { ...T("light-grey-broom-finished-sidewalk-concrete", 3), color: "oklch(0.97 0.006 85)", roughness: 0.8 };
+const SIDEWALK = { ...T("plain-light-grey-concrete-pavement-slab-fine-aggregate", 3), color: "oklch(0.93 0.004 250)", roughness: 0.85 };
 const CURB_MAT = { ...T("smooth-cold-poured-concrete-wall", 1), color: "oklch(0.72 0.02 85)", roughness: 0.65 };
 const STONE_TOWER = { ...T("large-grey-brick-wall-dusty-mortar", 3), color: "oklch(0.82 0.025 80)", roughness: 0.75 };
 const BRICK_BLDG = { ...T("old-red-brick-wall", 3), color: "oklch(0.58 0.1 35)", roughness: 0.8 };
