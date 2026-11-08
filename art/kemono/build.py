@@ -121,6 +121,18 @@ def carry(n, p):
     v = p - h; along = v.dot(ax); perp = v - ax * along
     q = d.normalized().rotation_difference(d2.normalized())
     return h2 + q @ (ax * along * (L2 / L) + perp)
+# a smooth envelope of the body: fur tufts and fluff filled in, so cloth wraps a clean shape and never crumples into tufts
+env = body.copy(); env.data = body.data.copy(); env.name = 'Envelope'; bpy.context.collection.objects.link(env)
+for m in list(env.modifiers): env.modifiers.remove(m)
+env.parent = None; env.matrix_world = body.matrix_world.copy()
+bpy.context.view_layer.objects.active = env; bpy.ops.object.select_all(action='DESELECT'); env.select_set(True)
+rm = env.modifiers.new('rm', 'REMESH'); rm.mode = 'VOXEL'; rm.voxel_size = 0.018; bpy.ops.object.modifier_apply(modifier='rm')
+sm0 = env.modifiers.new('sm', 'SMOOTH'); sm0.factor = 0.8; sm0.iterations = 6; bpy.ops.object.modifier_apply(modifier='sm')
+dp = env.modifiers.new('dp', 'DISPLACE'); dp.strength = 0.012; dp.mid_level = 0; bpy.ops.object.modifier_apply(modifier='dp')
+# the eyes: where glasses sit
+_ew = [body.matrix_world @ p.center for p in body.data.polygons if slots[p.material_index] == 'eyewhite']
+EYE = (sum(_ew, Vector()) / len(_ew)) if _ew else None
+EYEFRONT = min(w.y for w in _ew) if _ew else None
 LOOSE = ('Top_dress', 'Bot_skirt', 'Bot_longskirt', 'Neck_cape', 'Eyew_glasses', 'Eyew_shades') 
 def refit(o):
     me = o.data; mw = o.matrix_world.copy()
@@ -136,18 +148,22 @@ def refit(o):
     o.parent = None; o.matrix_world = Matrix.Identity(4); me.update()
     bpy.context.view_layer.objects.active = o; bpy.ops.object.select_all(action='DESELECT'); o.select_set(True)
     kind = o.name.split('_')[0]
-    if kind in ('Top', 'Bot', 'Shoes', 'Neck', 'Hat') and o.name not in LOOSE:
-        sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = body; sw.wrap_method = 'NEAREST_SURFACEPOINT'
+    if kind == 'Eyew' and EYE is not None:
+        ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); back = max(w.y for w in ws); wid = max(w.x for w in ws) - min(w.x for w in ws)
+        ex = [e.x for e in _ew]; k = max(0.6, min(1.6, (max(ex) - min(ex) + 0.07) / wid))
+        for v in me.vertices: v.co = Vector((EYE.x + (v.co.x - c.x) * k, EYEFRONT - 0.012 + (v.co.y - back) * k, EYE.z + (v.co.z - c.z) * k))
+    elif kind in ('Top', 'Bot', 'Shoes', 'Neck', 'Hat') and o.name not in LOOSE:
+        sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'
         sw.wrap_mode = 'OUTSIDE' if kind in ('Hat', 'Neck') or o.name in ('Top_hoodie', 'Top_jacket', 'Top_sweater', 'Bot_overalls') else 'ON_SURFACE'
-        sw.offset = 0.012 if kind in ('Top', 'Bot') else 0.008
-        if sw.wrap_mode == 'OUTSIDE': sw.offset = 0.015
+        sw.offset = 0.004
+        if sw.wrap_mode == 'OUTSIDE': sw.offset = 0.008
         bpy.ops.object.modifier_apply(modifier='fit')
         sm = o.modifiers.new('sm', 'CORRECTIVE_SMOOTH'); sm.iterations = 6; sm.smooth_type = 'LENGTH_WEIGHTED'; sm.use_only_smooth = True
         bpy.ops.object.modifier_apply(modifier='sm')
-        sw = o.modifiers.new('fit2', 'SHRINKWRAP'); sw.target = body; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.01
+        sw = o.modifiers.new('fit2', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.003
         bpy.ops.object.modifier_apply(modifier='fit2')
     else:
-        sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = body; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.01
+        sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.004
         bpy.ops.object.modifier_apply(modifier='fit')
     # weights off the new skin
     o.vertex_groups.clear()
@@ -158,6 +174,7 @@ def refit(o):
     for p in me.polygons: p.use_smooth = True
     if SEX == 'f' and (kind == 'Top' or o.name == 'Bot_overalls'): chest_key(o, chestZ + 0.01, 0.08)
 for g in garments: refit(g)
+bpy.data.objects.remove(env, do_unlink=True)
 # old critter out
 for o in [oldRig, oldBody]: bpy.data.objects.remove(o, do_unlink=True)
 for o in list(bpy.data.objects):
