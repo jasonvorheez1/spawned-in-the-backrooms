@@ -307,14 +307,14 @@ function social(ctx, me, s, m, now, dt) {
         const emo = (q.state?.face?.until ?? 0) + "|" + (q.anim?.gest?.clip ?? "");
         if (m.emoSeen !== undefined && emo !== m.emoSeen && now > (m.mimicAt ?? 0) && ctx.random() < FC.mimicChance) {
           m.mimicAt = now + FC.every.mimic * 1000; m.faceUntil = now + 2600; m.faceId = q.id;
-          playGesture(me, m, now, [WAVE, 2200, 0.9]);
+          playGesture(me, m, now, [WAVE, 2600, 4]);
         }
         m.emoSeen = emo;
       } else if (m.crouch) { m.crouch = 0; me.anim.gest = null; m.gestEnd = 0; }
       const idle = !s.deliver && !m.gestEnd && s.mood !== "angry";
       if (d < FC.reach.wave && idle && now - ((m.waved ??= {})[uid] ?? -1e9) > FC.every.wave * 1000) { // waving at whoever passes
         m.waved[uid] = now; m.faceUntil = now + 2400; m.faceId = q.id;
-        playGesture(me, m, now, [WAVE, 2200, 0.9]);
+        playGesture(me, m, now, [WAVE, 2600, 4]);
         const n = nickFor(s, q);
         if (n) say(ctx, me, pickOf(ctx, FC.greetNick).replace("{n}", n), "#ffe9a8", q.id);
       }
