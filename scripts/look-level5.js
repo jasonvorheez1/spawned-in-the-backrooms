@@ -4,6 +4,6 @@ import { grade } from 'builtin/postfx';
 import { photoBase, photoFinish } from './lib/photo2006.js';
 export function look(ctx) {
   let c = photoBase(ctx);
-  c = grade(c, { exposure: 1.08, saturation: 0.9, contrast: 1.12, temperature: 0.08, lift: 0.004 });
+  c = grade(c, { exposure: 1.08, saturation: 1.05, contrast: 1.12, temperature: 0.03, lift: 0.004 });
   return photoFinish(ctx, c);
 }
