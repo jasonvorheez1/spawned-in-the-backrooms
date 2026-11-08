@@ -169,7 +169,6 @@ export function layExtra(ctx, { HW, HD, HH }) {
 
 // ---- the people: Facelings, the staff, the guards and the pickets
 const FACELINGS = [
-const FACELINGS = [
   { id: "l61-fc-clip", greet: "Welcome to Clippers!", at: [-21, -31.4], face: 180, acts: ["wipe", "serve", "groove", "drink"], line: "A faceling slides a cold glass across the red bar. It was already pouring." },
   { id: "l61-fc-liq", greet: "Evening. Almond water?", at: [-14.7, -27], face: -90, acts: ["wipe", "serve", "drink", "groove"], line: "A faceling sets down an almond water without a word, as if it had been waiting for you." },
   { id: "l61-fc-slice", greet: "Slice Palace! Hot ones just out.", at: [7, -30.9], face: 180, acts: ["serve", "eat", "nod", "wipe"], gives: "pizza,pizza,coke", line: "A faceling hands you a slice on a paper plate. It is still too hot to hold, and perfect." },
