@@ -11,6 +11,7 @@ export function pieceOf(kind) {
 }
 export function tabsFor(s) { const own = furnOrder().filter((k) => (s.furn?.[k] ?? 0) > 0).map((k) => 'furn_' + k); return own.length ? [...B.tabs, { name: 'Furniture', pieces: own }] : B.tabs }
 export const furnOrder = () => F.order ?? Object.keys(F.pieces ?? {})
+const TV_AT = { x: 0, y: 0.78, z: -0.01, w: 0.66, h: 0.48 } // the tube's face on the crt_tv model: centre x, height share, inset from the front, size (m)
 export function furnModel(pc) { const [w, h, d] = pc.size; return { model: { id: pc.model, ...(pc.forward ? { forward: pc.forward } : {}) }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } } }
 const rad = (d) => d * Math.PI / 180
 export function hingeOf(at) { const r = rad(at.rot ?? 0); return { x: at.x - 0.5 * Math.cos(r), y: at.y, z: at.z + 0.5 * Math.sin(r) } } // the leaf's left edge on the wall line
@@ -34,6 +35,15 @@ export function builtSpec(kind, at, by, opts = {}) {
     state,
   }
   if (pc.furn) { delete spec.primitive; delete spec.material; Object.assign(spec, furnModel(pc)); spec.physics = { body: 'static', collider: 'box' }; spec.tags.push('furniture') }
+  if (pc.furn === 'crt_tv') { // a working set: same channels as the green house (scripts/built-tv.js)
+    spec.behavior = 'scripts/built-tv.js'; spec.tags.push('usable'); Object.assign(state, { kind: 'tv', verb: 'Turn on' })
+    const [, h, d] = pc.size
+    spec.children = [
+      { id: 'screen', visible: false, feetPosition: { x: TV_AT.x, y: h * TV_AT.y, z: -d / 2 + TV_AT.z }, rotation: { yaw: 180 }, primitive: { kind: 'plane', width: TV_AT.w, height: TV_AT.h }, material: { emissive: '#ffffff', emissiveIntensity: 0.9, roughness: 0.2 }, castShadow: false },
+      { id: 'sound', feetPosition: { x: 0, y: h * 0.75, z: -d / 2 } },
+      { id: 'glow', feetPosition: { x: 0, y: h * 0.75, z: -d / 2 - 0.4 }, light: { kind: 'point', color: 'oklch(0.8 0.06 240)', intensity: 0, distance: 4 } },
+    ]
+  }
   if (pc.door) spec.behavior = 'scripts/build-door.js'
   if (pc.trap) { spec.physics = { body: 'static', collider: 'box', trigger: true }; spec.behavior = 'scripts/build-spikes.js' }
   if (pc.light) spec.children = [{ feetPosition: { x: 0, y: 1.55, z: 0 }, light: { kind: 'point', color: 'oklch(0.9 0.08 80)', intensity: 2.2, distance: 11 } }]
