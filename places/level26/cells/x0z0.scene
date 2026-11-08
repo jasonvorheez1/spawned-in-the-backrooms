@@ -725,7 +725,7 @@ l26-pool-w:
 l26-pool-water:
   feetPosition: {x: 0, y: 0.5, z: 36.5}
   id: l26-pool-water
-  material: {color: oklch(0.42 0.05 135), kind: water, opacity: 0.93, waveIntensity: 0.12}
+  material: {causticsEnabled: false, color: oklch(0.42 0.05 135), depthColorDistance: 1, emissive: oklch(0.3 0.04 130), foamStrength: 0.3, kind: water, opacity: 1, refractionStrength: 0.02, roughness: 0.35, waveIntensity: 0.12}
   primitive: {height: 10.6, kind: plane, width: 10}
   rotation: {pitch: -90}
 l26-pop-1:
