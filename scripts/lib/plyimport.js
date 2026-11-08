@@ -47,8 +47,8 @@ export async function plyToGlb(buf) {
   // up axis: older exports stand on -Y, newer (v3) on +Z; the taller of the two is up
   let ey0 = Infinity, ey1 = -Infinity, ez0 = Infinity, ez1 = -Infinity
   for (let v = 0; v < n; v++) { const o = vs + v * stride, yy = dv.getFloat32(o + 4, true), zz = dv.getFloat32(o + 8, true); ey0 = Math.min(ey0, yy); ey1 = Math.max(ey1, yy); ez0 = Math.min(ez0, zz); ez1 = Math.max(ez1, zz) }
-  const zUp = ez1 - ez0 > ey1 - ey0 // z-up files face +Y: turned to face the game's forward (-Z)
-  for (let v = 0; v < n; v++) { const o = vs + v * stride; const rx = dv.getFloat32(o, true), ry = dv.getFloat32(o + 4, true), rz = dv.getFloat32(o + 8, true); const x = zUp ? -rx : rx, y = zUp ? rz : -ry, z = zUp ? ry : -rz; P.set([x, y, z], v * 3); UV[v * 2] = dv.getFloat32(o + 20, true); UV[v * 2 + 1] = dv.getFloat32(o + 24, true); ymin = Math.min(ymin, y); ymax = Math.max(ymax, y) }
+  const zUp = ez1 - ez0 > ey1 - ey0 // z-up files (Unreal) face +X: turned to face the game's forward (-Z)
+  for (let v = 0; v < n; v++) { const o = vs + v * stride; const rx = dv.getFloat32(o, true), ry = dv.getFloat32(o + 4, true), rz = dv.getFloat32(o + 8, true); const x = zUp ? -ry : rx, y = zUp ? rz : -ry, z = zUp ? -rx : -rz; // z-up (Tower Unite v3, Unreal): the body faces +X in the file, turned onto the game's -Z P.set([x, y, z], v * 3); UV[v * 2] = dv.getFloat32(o + 20, true); UV[v * 2 + 1] = dv.getFloat32(o + 24, true); ymin = Math.min(ymin, y); ymax = Math.max(ymax, y) }
   const s = 1.8 / (ymax - ymin || 1), mn = [Infinity, Infinity, Infinity], mx = [-Infinity, -Infinity, -Infinity]
   for (let v = 0; v < n; v++) { P[v * 3] *= s; P[v * 3 + 1] = (P[v * 3 + 1] - ymin) * s; P[v * 3 + 2] *= s; for (let k = 0; k < 3; k++) { mn[k] = Math.min(mn[k], P[v * 3 + k]); mx[k] = Math.max(mx[k], P[v * 3 + k]) } }
   const Nn = new Float32Array(n * 3)
@@ -104,7 +104,7 @@ function fileRig(d, dv, vh, vs, n, stride, zUp, sc, ymin) {
   }
   if (J.length < 8 || J.some((j) => j.parent >= J.length) || !J.some((j) => j.parent < 0)) return null
   // the turn the vertices took: p = A r (A = T(0,-ymin·s,0) · s · M)
-  const M = zUp ? [[-1, 0, 0], [0, 0, 1], [0, 1, 0]] : [[1, 0, 0], [0, -1, 0], [0, 0, -1]], ty = -ymin * sc
+  const M = zUp ? [[0, -1, 0], [0, 0, 1], [-1, 0, 0]] : [[1, 0, 0], [0, -1, 0], [0, 0, -1]], ty = -ymin * sc
   const q = (m) => { const [a, b, c] = m, tr = a[0] + b[1] + c[2]; let x, y, z, w; if (tr > 0) { const S = Math.sqrt(tr + 1) * 2; w = S / 4; x = (c[1] - b[2]) / S; y = (a[2] - c[0]) / S; z = (b[0] - a[1]) / S } else if (a[0] > b[1] && a[0] > c[2]) { const S = Math.sqrt(1 + a[0] - b[1] - c[2]) * 2; w = (c[1] - b[2]) / S; x = S / 4; y = (a[1] + b[0]) / S; z = (a[2] + c[0]) / S } else if (b[1] > c[2]) { const S = Math.sqrt(1 + b[1] - a[0] - c[2]) * 2; w = (a[2] - c[0]) / S; x = (a[1] + b[0]) / S; y = S / 4; z = (b[2] + c[1]) / S } else { const S = Math.sqrt(1 + c[2] - a[0] - b[1]) * 2; w = (b[0] - a[1]) / S; x = (a[2] + c[0]) / S; y = (b[2] + c[1]) / S; z = S / 4 } const l = Math.hypot(x, y, z, w) || 1; return [x / l, y / l, z / l, w / l] }
   const rows3 = (m) => [[m[0], m[1], m[2]], [m[4], m[5], m[6]], [m[8], m[9], m[10]]]
   const mm = (a, b) => a.map((r) => [0, 1, 2].map((c) => r[0] * b[0][c] + r[1] * b[1][c] + r[2] * b[2][c]))
