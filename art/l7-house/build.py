@@ -64,6 +64,7 @@ for name in "SNEW":
         k.box(P((a + b) / 2, 0.05, t + 0.08), (b - a + 0.34, 0.07, 0.16), TRIM, rot=(0, 0, yaw))
         k.box(P((a + b) / 2, 0.08, t + 0.18), (b - a + 0.4, 0.13, 0.04), TRIM, rot=(0, 0, yaw))
         dw = b - a
+        if name == "S": continue  # the south door opens into the concrete shaft back to Level 6: casing only, nothing in the shaft
         k.box(P(b + 0.08 + 0.025, -0.04 + dw / 2 + 0.03, t / 2 - 0.02), (0.045, dw, t - 0.04), DOOR, rot=(0, 0, yaw + math.pi / 2))
         k.box(P(b + 0.4, 0.09, 1.75), (0.14, 0.12, 0.24), GUT, rot=(0, 0, yaw)); k.box(P(b + 0.4, 0.13, 1.74), (0.09, 0.06, 0.15), BULB, rot=(0, 0, yaw))
         for j, (dep, top) in enumerate(((1.2, -0.02), (1.6, -0.2))):
