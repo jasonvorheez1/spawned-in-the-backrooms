@@ -964,7 +964,7 @@ function viewmodel(ctx, moving, sprinting) {
     const child = g == null ? [] : [gun
       ? (GUN_FIX[bk]
         // the Tripo shotgun mesh lies tilted ~35 deg muzzle-up with its butt at the origin: level it and put its trigger in the fist
-        ? { feetPosition: { x: 0, y: 0.01, z: 0.02 }, rotation: s.vmTune?.rot ?? Q_GUN, audience: 'local', children: [{ feetPosition: s.vmTune?.at ?? GUN_FIX[bk].at, rotation: { yaw: GUN_FIX[bk].yaw ?? 0, pitch: s.vmTune?.pitch ?? GUN_FIX[bk].pitch }, castShadow: false, ...weaponBody(kind), audience: 'local' }] }
+        ? { feetPosition: { x: 0, y: 0.01, z: 0.02 }, rotation: s.vmTune?.rot ?? Q_GUN, audience: 'local', children: [{ feetPosition: s.vmTune?.at ?? GUN_FIX[bk].at, rotation: { yaw: s.vmTune?.yaw ?? GUN_FIX[bk].yaw ?? 0, pitch: s.vmTune?.pitch ?? GUN_FIX[bk].pitch, roll: s.vmTune?.roll ?? 0 }, castShadow: false, ...weaponBody(kind), audience: 'local' }] }
         : { feetPosition: s.vmTune?.at ?? { x: 0, y: bk === 'pistol' ? 0.03 : -0.04, z: bk === 'pistol' ? 0.04 : 0.14 }, rotation: s.vmTune?.rot ?? (bk === 'pistol' ? Q_ID : Q_GUN), castShadow: false, ...weaponBody(kind), audience: 'local' })
       : MESHGRIP[bk]
         ? { feetPosition: s.vmTune?.mat ?? { x: MESHGRIP[bk].at[0], y: MESHGRIP[bk].at[1], z: MESHGRIP[bk].at[2] }, rotation: s.vmTune?.mrot ?? { x: MESHGRIP[bk].q[0], y: MESHGRIP[bk].q[1], z: MESHGRIP[bk].q[2], w: MESHGRIP[bk].q[3] }, castShadow: false, ...weaponBody(kind), audience: 'local' }
