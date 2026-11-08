@@ -756,32 +756,32 @@ l26-pg-4:
 l26-pool-e:
   feetPosition: {x: 5.25, y: 0, z: 36.5}
   id: l26-pool-e
-  material: {color: oklch(0.8 0.03 200), roughness: 0.4}
   physics: static
-  primitive: {depth: 10.5, height: 0.5, kind: box, width: 0.5}
+  primitive: {depth: 10.5, height: 0.62, kind: box, width: 0.5}
+  visible: false
 l26-pool-n:
   feetPosition: {x: 0, y: 0, z: 31}
   id: l26-pool-n
-  material: {color: oklch(0.8 0.03 200), roughness: 0.4}
   physics: static
-  primitive: {depth: 0.5, height: 0.5, kind: box, width: 11}
+  primitive: {depth: 0.5, height: 0.62, kind: box, width: 11}
+  visible: false
 l26-pool-s:
   feetPosition: {x: 0, y: 0, z: 42}
   id: l26-pool-s
-  material: {color: oklch(0.8 0.03 200), roughness: 0.4}
   physics: static
-  primitive: {depth: 0.5, height: 0.5, kind: box, width: 11}
+  primitive: {depth: 0.5, height: 0.62, kind: box, width: 11}
+  visible: false
 l26-pool-w:
   feetPosition: {x: -5.25, y: 0, z: 36.5}
   id: l26-pool-w
-  material: {color: oklch(0.8 0.03 200), roughness: 0.4}
   physics: static
-  primitive: {depth: 10.5, height: 0.5, kind: box, width: 0.5}
+  primitive: {depth: 10.5, height: 0.62, kind: box, width: 0.5}
+  visible: false
 l26-pool-water:
-  feetPosition: {x: 0, y: 0.38, z: 36.5}
+  feetPosition: {x: 0, y: 0.5, z: 36.5}
   id: l26-pool-water
-  material: {color: oklch(0.3 0.13 22), kind: water, opacity: 0.97, waveIntensity: 0.15}
-  primitive: {height: 10.5, kind: plane, width: 10}
+  material: {color: oklch(0.24 0.11 22), kind: water, opacity: 0.94, waveIntensity: 0.12}
+  primitive: {height: 10.6, kind: plane, width: 10}
   rotation: {pitch: -90}
 l26-pop-1:
   feetPosition: {x: 8.258624627002806, y: 0, z: 25.172453518571544}
@@ -2652,3 +2652,159 @@ l26-win-1-9:
   material: {color: oklch(0.2 0.02 90), emissive: oklch(0 0 0), emissiveIntensity: 0, metalness: 0.3, roughness: 0.2}
   primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
   rotation: {yaw: 90}
+l26x-blood-pool-0:
+  castShadow: false
+  feetPosition: {x: -5.9, y: 0.012, z: 33.2}
+  id: l26x-blood-pool-0
+  material: {color: oklch(0.62 0.05 30), depthWrite: false, roughness: 0.3, texture: /cdn/value.f6f110264a75cad3318ccfc112fce7a42d502fa821b53b74035c6e6ac5ec86d9.png, transparent: true}
+  primitive: {height: 1.2, kind: plane, width: 1.8}
+  rotation: {pitch: -90, yaw: 80}
+  tags: [l26x, decal]
+l26x-blood-pool-1:
+  castShadow: false
+  feetPosition: {x: 3.1, y: 0.012, z: 30.2}
+  id: l26x-blood-pool-1
+  material: {color: oklch(0.62 0.05 30), depthWrite: false, roughness: 0.3, texture: /cdn/value.f8c9c480a1631a3993011cf27c1f70024fb83041d76113ce8b5df7fe8760f2cf.png, transparent: true}
+  primitive: {height: 1.4, kind: plane, width: 1.4}
+  rotation: {pitch: -90, yaw: 20}
+  tags: [l26x, decal]
+l26x-blood-pool-2:
+  castShadow: false
+  feetPosition: {x: 7.9, y: 0.012, z: 40.6}
+  id: l26x-blood-pool-2
+  material: {color: oklch(0.62 0.05 30), depthWrite: false, roughness: 0.3, texture: /cdn/value.39e95f64d0cde4ee6d5a37c7dc615c9af3e71d75227af2a7b0fb082331f093a4.png, transparent: true}
+  primitive: {height: 4.2, kind: plane, width: 0.9}
+  rotation: {pitch: -90, yaw: 90}
+  tags: [l26x, decal]
+l26x-blood-pool-3:
+  castShadow: false
+  feetPosition: {x: 5.9, y: 0.66, z: 40.3}
+  id: l26x-blood-pool-3
+  material: {color: oklch(0.62 0.05 30), depthWrite: false, roughness: 0.3, texture: /cdn/value.f8c9c480a1631a3993011cf27c1f70024fb83041d76113ce8b5df7fe8760f2cf.png, transparent: true}
+  primitive: {height: 1.1, kind: plane, width: 1.1}
+  rotation: {pitch: -90, yaw: 140}
+  tags: [l26x, decal]
+l26x-blood-pool-4:
+  castShadow: false
+  feetPosition: {x: -1.2, y: 0.66, z: 42.25}
+  id: l26x-blood-pool-4
+  material: {color: oklch(0.62 0.05 30), depthWrite: false, roughness: 0.3, texture: /cdn/value.f6f110264a75cad3318ccfc112fce7a42d502fa821b53b74035c6e6ac5ec86d9.png, transparent: true}
+  primitive: {height: 0.9, kind: plane, width: 1.4}
+  rotation: {pitch: -90, yaw: 0}
+  tags: [l26x, decal]
+l26x-pool-basin:
+  feetPosition: {x: 0, y: 0, z: 36.5}
+  id: l26x-pool-basin
+  model: /cdn/value.1c476670bc087f50ab4077ce190f628f4350df2ab614952f13cb8f747e8f0dcb.glb
+  rotation: {}
+  scale: {x: 18.2, y: 3, z: 11.6}
+  tags: [l26x]
+l26x-pool-cup-0:
+  feetPosition: {x: 0.4, y: 0.47, z: 33.4}
+  id: l26x-pool-cup-0
+  model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  rotation: {roll: 90, yaw: 20}
+  scale: 0.13
+  tags: [l26x]
+l26x-pool-cup-1:
+  feetPosition: {x: -3.1, y: 0.47, z: 39.7}
+  id: l26x-pool-cup-1
+  model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  rotation: {roll: 90, yaw: 140}
+  scale: 0.13
+  tags: [l26x]
+l26x-pool-cup-2:
+  feetPosition: {x: 2.8, y: 0.47, z: 35.9}
+  id: l26x-pool-cup-2
+  model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  rotation: {roll: 85, yaw: 260}
+  scale: 0.13
+  tags: [l26x]
+l26x-pool-float:
+  feetPosition: {x: -1.8, y: 0.44, z: 35.2}
+  id: l26x-pool-float
+  model: /cdn/value.e319c3263d207ed9dc79212372e411150c5984eea7c3b60b0fa73b3f113a2c47.glb
+  rotation: {roll: 4, yaw: 30}
+  scale: 1.4
+  tags: [l26x]
+l26x-pool-glow:
+  feetPosition: {x: 0, y: 0.15, z: 36.5}
+  id: l26x-pool-glow
+  light: {color: oklch(0.55 0.2 25), distance: 10, intensity: 4, kind: point}
+  tags: [l26x]
+l26x-pool-hat:
+  feetPosition: {x: -0.6, y: 0.46, z: 40.2}
+  id: l26x-pool-hat
+  model: /cdn/value.188ccc30d97ee1ec9feac72f7255fc41d819f6963aba692bde8fa95d4bddc459.glb
+  rotation: {roll: 100, yaw: 60}
+  scale: 0.24
+  tags: [l26x]
+l26x-pool-ladder:
+  feetPosition: {x: 4.65, y: 0, z: 33.2}
+  id: l26x-pool-ladder
+  model: /cdn/value.40c8ad9d66937bebad79c8862f7f441df997248687d30c9f2ac60325e36c63a7.glb
+  rotation: {yaw: -90}
+  scale: 1.3
+  tags: [l26x]
+l26x-pool-lifeguard:
+  feetPosition: {x: 7.6, y: 0.62, z: 38.4}
+  id: l26x-pool-lifeguard
+  model: /cdn/value.a845791c098820e58f63d78213ee58f17183808a0686efdf94e39eda5baacb9e.glb
+  physics: {body: static, collider: box}
+  rotation: {pitch: 80, yaw: -15}
+  scale: 1.9
+  tags: [l26x]
+l26x-pool-lounger-0:
+  feetPosition: {x: -7.3, y: 1.1, z: 34.2}
+  id: l26x-pool-lounger-0
+  model: /cdn/value.705a39761e881dcdcf23e91a8fb794fdac4054e2abc9b88c1a2af73efc126252.glb
+  physics: {body: static, collider: box}
+  rotation: {roll: 180, yaw: 12}
+  scale: 1.95
+  tags: [l26x]
+l26x-pool-lounger-1:
+  feetPosition: {x: 7.7, y: 0.46, z: 33.6}
+  id: l26x-pool-lounger-1
+  model: /cdn/value.705a39761e881dcdcf23e91a8fb794fdac4054e2abc9b88c1a2af73efc126252.glb
+  physics: {body: static, collider: box}
+  rotation: {roll: 90, yaw: -22}
+  scale: 1.95
+  tags: [l26x]
+l26x-pool-lounger-2:
+  feetPosition: {x: -7.7, y: 0, z: 40.6}
+  id: l26x-pool-lounger-2
+  model: /cdn/value.705a39761e881dcdcf23e91a8fb794fdac4054e2abc9b88c1a2af73efc126252.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 118}
+  scale: 1.95
+  tags: [l26x]
+l26x-pool-lounger-3:
+  feetPosition: {x: -2.6, y: 0, z: 45}
+  id: l26x-pool-lounger-3
+  model: /cdn/value.705a39761e881dcdcf23e91a8fb794fdac4054e2abc9b88c1a2af73efc126252.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 76}
+  scale: 1.95
+  tags: [l26x]
+l26x-pool-lounger-4:
+  feetPosition: {x: 2.9, y: 1.1, z: 45.6}
+  id: l26x-pool-lounger-4
+  model: /cdn/value.705a39761e881dcdcf23e91a8fb794fdac4054e2abc9b88c1a2af73efc126252.glb
+  physics: {body: static, collider: box}
+  rotation: {roll: 180, yaw: -64}
+  scale: 1.95
+  tags: [l26x]
+l26x-pool-shoe:
+  feetPosition: {x: 1.6, y: 0.46, z: 38.6}
+  id: l26x-pool-shoe
+  model: /cdn/value.4ffc965a8f5980acdf097b4bbcff3456ff66dbf90b9e8c4598a8d9f6820a8103.glb
+  rotation: {roll: 8, yaw: 70}
+  scale: 0.29
+  tags: [l26x]
+l26x-pool-skin:
+  feetPosition: {x: 3.4, y: 0.5, z: 40.6}
+  id: l26x-pool-skin
+  model: /cdn/value.f7c7753038e24c9f170537fe75c69c479bfb6b6cf7a0215b8d51755ee14a4aa9.glb
+  rotation: {yaw: 10}
+  scale: 0.32
+  tags: [l26x]
