@@ -125,6 +125,7 @@ def carry(n, p):
 env = body.copy(); env.data = body.data.copy(); env.name = 'Envelope'; bpy.context.collection.objects.link(env)
 for m in list(env.modifiers): env.modifiers.remove(m)
 env.parent = None; env.matrix_world = body.matrix_world.copy()
+if env.data.shape_keys: env.shape_key_clear()
 bpy.context.view_layer.objects.active = env; bpy.ops.object.select_all(action='DESELECT'); env.select_set(True)
 rm = env.modifiers.new('rm', 'REMESH'); rm.mode = 'VOXEL'; rm.voxel_size = 0.012; bpy.ops.object.modifier_apply(modifier='rm')
 sm0 = env.modifiers.new('sm', 'SMOOTH'); sm0.factor = 0.8; sm0.iterations = 6; bpy.ops.object.modifier_apply(modifier='sm')
