@@ -3,7 +3,7 @@
 // on each other, restrooms. Everything is free (scripts/l61-use.js, scripts/lib/data/snacks.yml). Ways out: the M.E.G.-guarded rusty steel door to Level 6, the vent that sucks you to Level 3.
 // Ways in: the tripwire in Level 6, a vending machine on Level 4. Hall x -30..30, z -22..22, roof 6 m; stores 14 wide, 10 deep off the north wall.
 export const cadence = "1s";
-const V = 5;
+const V = 6;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb", M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb", M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb"; // art/snackrooms/build.py
 const SNACK = "/cdn/value.50b5fa3844cf9c705ca675660ef22ddb556c1cf0f31ad1cd69deeb8d8395df71.png", SODA = "/cdn/value.4db3afe09f392fef7c9d80e531484862384aef0ea5bcba295dc62b57197b659f.png";
 const T = (name, rep) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -21,6 +21,7 @@ const M_BAR10 = "/cdn/value.f3a001b67df5932f6ab0edbee786a4fea656bbdcc4bb95fe0f8f
 const M_BAR7 = "/cdn/value.602e0fd20886f20e7f9d268884aef45fc50293aee2da336124007503cceab7d6.glb";
 const M_DINER = "/cdn/value.631d37b72621a949554ab06521366b4f7678149304b4c5ace1bc3159e9c132e8.glb";
 const M_PIZZA = "/cdn/value.5c22a5f388991c20883c8482eda6ba0363d6e555148ac75b329dc228b4f20dc5.glb";
+const M_OVEN = "/cdn/value.22485741e0731ddfcae9cc3ac5261175b727fc9dad7e75df605b3d3ac7091a95.glb", M_GRILL = "/cdn/value.52e8c951e79935129fcfb50a305e01a547c4ea962c25fb44339c09ac673636a4.glb", M_JUKE = "/cdn/value.eb676c37706ec7e4c3e6457d46b4a565b82fc50d9cb775ec70525a1fe3fcad67.glb", M_BACKBAR = "/cdn/value.d8c593de7c7b1406024e79601baece61757017658bcaf7b9bbd6da42ea716075.glb"; // art/snackrooms/kitchen.py
 const M_BENCH = "/cdn/value.875f7fd721e70ac1c285cdade96da8263dc175c97f593282732e00ef66d72b83.glb";
 const MUSIC = "cdn/music-upbeat-1980s-shopping-mall-synth-pop-soft-rock-through-ceiling-speakers-loop.mp3";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
@@ -108,23 +109,22 @@ function lay(ctx) {
   for (let k = 0; k < 6; k++) stool(`l61-clip-stool-${k}`, -25 + k * 1.6, -29.2, "oklch(0.45 0.18 25)");
   for (const [n, y] of [[0, 1.4], [1, 2.0]]) sp(`l61-clip-shelf-${n}`, { feetPosition: { x: -21, y, z: -31.6 }, primitive: { kind: "box", width: 9, height: 0.05, depth: 0.3 }, material: DARKWOOD,
     children: Array.from({ length: 16 }, (_, i) => ({ feetPosition: { x: -4.2 + i * 0.56, y: 0.05, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.05, height: 0.3 + ((i * 7) % 3) * 0.05 }, material: { color: ["oklch(0.4 0.1 145)", "oklch(0.55 0.12 60)", "oklch(0.3 0.08 30)", "oklch(0.8 0.03 90)"][i % 4], roughness: 0.1, opacity: 0.85, transparent: true } })) });
-  box("l61-clip-jukebox", -26.4, 0, -25, 0.9, 1.6, 0.7, { color: "oklch(0.6 0.15 60)", emissive: "oklch(0.7 0.18 50)", emissiveIntensity: 0.6, roughness: 0.3 }, { rotation: { yaw: 90 } });
+  counter("l61-clip-jukebox", -26.4, -25, -90, M_JUKE, { light: { kind: "point", color: "oklch(0.8 0.15 55)", intensity: 0.8, distance: 4 } });
   box("l61-clip-wire", -21, 0.06, -23.2, 3.6, 0.015, 0.015, { color: "oklch(0.2 0 0)" }, { physics: undefined });
   // Liquorette: long dark bar down the left, back bar of glowing bottles, green-glass lamps
   counter("l61-liq-bar", -12.2, -27, -90, M_BAR7, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "almond,almond,coke", name: "Liquorette bar", verb: "Order", info: "Almond water, cashew water, real distilled water. Pay nothing." } });
-  sp("l61-liq-back", { feetPosition: { x: -13.6, y: 0, z: -27 }, physics: "static", primitive: { kind: "box", width: 0.5, height: 2.6, depth: 7 }, material: DARKWOOD,
-    children: [0, 1, 2].map((r) => ({ feetPosition: { x: 0.26, y: 1.0 + r * 0.55, z: 0 }, primitive: { kind: "box", width: 0.05, height: 0.32, depth: 6.6 }, material: { color: ["oklch(0.7 0.14 70)", "oklch(0.55 0.13 145)", "oklch(0.65 0.15 40)"][r], emissive: ["oklch(0.6 0.14 70)", "oklch(0.5 0.13 145)", "oklch(0.55 0.15 40)"][r], emissiveIntensity: 0.8, roughness: 0.1 } })) });
+  counter("l61-liq-back", -13.6, -27, -90, M_BACKBAR);
   for (let k = 0; k < 3; k++) sp(`l61-liq-lamp-${k}`, { feetPosition: { x: -11.6, y: 2.6, z: -29.5 + k * 2.5 }, primitive: { kind: "sphere", radius: 0.18 }, material: { color: "oklch(0.6 0.14 150)", emissive: "oklch(0.7 0.16 150)", emissiveIntensity: 1.5 }, light: { kind: "point", color: "oklch(0.85 0.1 140)", intensity: 1.5, distance: 6 } });
   for (let k = 0; k < 4; k++) tableSet(`l61-liq-table-${k}`, -6 + (k % 2) * 3.4, -25.5 - Math.floor(k / 2) * 3.4, k * 20);
   // Slice Palace: counter with a warm glass case, the oven, a menu board, a soda machine
   counter("l61-slice-counter", 7, -29.4, 180, M_PIZZA, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "pizza", name: "Slice Palace counter", verb: "Take a slice", info: "Pepperoni under a heat lamp. A faceling in a paper hat waves." } });
-  box("l61-slice-oven", 9.5, 0, -31.3, 3, 2.2, 1, STEEL);
+  counter("l61-slice-oven", 9.5, -31.3, 180, M_OVEN);
   sign("l61-slice-menu", 4.5, 2.2, -31.8, 180, 3.2, 1.2, `<div style="font-size:120px;color:#ffd84a">MENU</div><div style="font-size:70px;color:#fff">PEPPERONI · CHEESE · SUPREME</div><div style="font-size:60px;color:#9f9">ALL SLICES FREE · FACELING STAFF</div>`, "oklch(0.2 0.02 150)");
   vend("l61-slice-soda", 12.8, -25, 90, true);
   for (let k = 0; k < 2; k++) tableSet(`l61-slice-table-${k}`, 3 + k * 4, -25.5, 0);
   // Burger Bop: diner counter with stools, the grill, a soda machine
   counter("l61-burger-counter", 21, -28.6, 180, M_DINER, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "burger", name: "Burger Bop counter", verb: "Order a burger", info: "The grill hisses. It smells exactly like 1986." } });
-  box("l61-burger-grill", 21, 0, -31.3, 4, 0.95, 1, STEEL, { audio: { clip: "cdn/sfx-burgers-sizzling-on-flat-top-griddle-loop.mp3", loop: true, gain: 0.18, spatial: true, maxDistance: 11 } });
+  counter("l61-burger-grill", 21, -31.3, 180, M_GRILL, { audio: { clip: "cdn/sfx-burgers-sizzling-on-flat-top-griddle-loop.mp3", loop: true, gain: 0.18, spatial: true, maxDistance: 11 } });
   for (let k = 0; k < 6; k++) stool(`l61-burger-stool-${k}`, 17 + k * 1.6, -27.5, "oklch(0.7 0.13 195)");
   vend("l61-burger-soda", 27.3, -25, 90, true);
 
