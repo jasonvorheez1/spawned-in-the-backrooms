@@ -4,10 +4,12 @@
 // Balloons: stationary. Step within reach of the ribbon and it stings: damage, and you're rooted a beat.
 import { dmgAfterArmor } from "./lib/stats.js"
 import { animate } from "builtin/tween"
-const T = { sight: 9, call: 16, walk: 1.1, hunt: 2.3, reach: 1.6, biteDmg: 7, biteMs: 1300, hp: 90, // her picks
-  berserkAt: 45, rage: 3.1, clawReach: 2.1, clawDmg: 13, clawMs: 850, hatchOpen: 2200, hatchShut: 3200, glance: 0.8, // berserker: arms gone, chest claws out; shut hatch turns 80% of a hit
-
+const T = { sight: 14, call: 22, walk: 1.4, hunt: 3.4, reach: 1.7, biteDmg: 16, biteMs: 1000, hp: 220, // her picks: tough enough to need a mag
+  berserkAt: 100, rage: 4.6, clawReach: 2.2, clawDmg: 24, clawMs: 700, hatchOpen: 2200, hatchShut: 3200, glance: 0.8, // berserker: arms gone, chest claws out; shut hatch turns 80% of a hit
+  lungeMin: 3, lungeMax: 7, lungeWind: 450, lungeDash: 380, lungeSpeed: 10, lungeDmg: 26, lungeCd: 4200, // the pounce: a crouch tell, then a dash that knocks you back
+  comboGap: 280, dodgeChance: 0.3, dodgeCd: 2500, dodgeSpeed: 6, screamSan: 6, screamSlow: 700,
   balloonReach: 1.4, stingDmg: 9, stingMs: 2500 }
+const PARTY = ["cdn/clip-chicken-dance-loop.glb", "cdn/clip-clap-loop.glb", "cdn/clip-laugh-loop.glb", "cdn/clip-step-hip-hop-dance-loop.glb", "cdn/clip-cheer-loop.glb"] // idle partying between hunts
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z)
 const CLIP = { idle: "cdn/clip-idle-loop.glb", walk: "cdn/clip-walk-loop.glb", run: "cdn/clip-run-loop.glb" }
@@ -17,6 +19,20 @@ function gait(ctx, p, name, rate = 1) { // the body's legs follow its speed; one
   p.anim.base = { clip: CLIP[name], loop: true, weight: 1, speed: rate, blend: 0.25 }
 }
 function once(p, clip, weight = 1) { p.anim.act = { clip, loop: false, weight, blend: 0.1 } }
+function party(ctx, p, on) { // a loop on its own channel: the pack dances and claps until it smells you
+  const seen = (ctx.self.session.party ??= {}), k = on ? PARTY[(p.id.length + Math.floor(ctx.now() / 9000)) % PARTY.length] : ""
+  if (seen[p.id] === k) return; seen[p.id] = k
+  p.anim.party = on ? { clip: k, loop: true, weight: 1, blend: 0.4 } : null
+}
+function bite(ctx, p, prey, dmg, snd) {
+  prey.state.hp -= dmgAfterArmor(prey.state.look, dmg)
+  const at = { x: prey.feetPosition.x, y: prey.feetPosition.y + 1.1, z: prey.feetPosition.z }
+  ctx.emit("damageNumber", { position: at, value: dmg, color: "#ff4040" })
+  ctx.emit("playSound", { clip: SND(snd), position: at, volume: 0.9 })
+  ctx.emit("screenShake", { intensity: 0.4, duration: 0.25 }, { audience: { player: prey.id } })
+  ctx.emit("cameraPunch", { direction: { x: prey.feetPosition.x - p.feetPosition.x, y: 0, z: prey.feetPosition.z - p.feetPosition.z }, intensity: 0.4 }, { audience: { player: prey.id } })
+  ctx.emit("squash", { target: p.id, axis: "y", intensity: 0.15, duration: 0.2 })
+}
 export function update(ctx, dt) {
   const players = ctx.place.players; if (!players.length) return ctx.sleep(1)
   const now = ctx.now(), g = ctx.place.gravity?.y ?? -9.8
@@ -53,35 +69,73 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
       ctx.emit("playSound", { clip: SND("chitin-carapace-cracking-open"), position: p.feetPosition, volume: 0.9 })
       ctx.emit("highlightSet", { target: p.id, color: "#ff3030", style: "pulse", duration: T.hatchOpen / 1000 })
     }
-    if (s.lastHp != null && (s.hp ?? T.hp) < s.lastHp) { once(p, "cdn/clip-hit-react.glb", 0.8); s.stunUntil = Math.max(s.stunUntil ?? 0, now + 250) }
+    if (s.lastHp != null && (s.hp ?? T.hp) < s.lastHp) {
+      if (s.hunting && now >= (s.dodgeAt ?? 0) && ctx.random() < T.dodgeChance && !s.move) { // a sidestep roll out of your line of fire
+        s.dodgeAt = now + T.dodgeCd; s.move = "dodge"; s.moveUntil = now + 450; s.dodgeDir = ctx.random() < 0.5 ? -1 : 1
+        once(p, "cdn/clip-roll.glb")
+        ctx.emit("playSound", { clip: SND("distorted-party-blower-and-giggle"), position: p.feetPosition, volume: 0.6 })
+      } else { once(p, "cdn/clip-hit-react.glb", 0.8); s.stunUntil = Math.max(s.stunUntil ?? 0, now + 200) }
+    }
     s.lastHp = s.hp ?? T.hp
     let prey = null, best = s.hunting ? T.sight * 1.8 : T.sight
     for (const pl of players) { if ((pl.state.hp ?? 1) <= 0) continue; const d = flat(pl.feetPosition, p.feetPosition); if (d < best) { best = d; prey = pl } }
-    if (prey && !s.hunting) { // seen: the pack hears it in its head and turns as one
-      s.hunting = true
+    if (prey && !s.hunting) { // seen: it screams, the pack hears it in its head and turns as one
+      s.hunting = true; s.move = "scream"; s.moveUntil = now + 900
+      once(p, "cdn/clip-angry.glb")
+      p.rotation = { yaw: Math.atan2(-(prey.feetPosition.x - p.feetPosition.x), -(prey.feetPosition.z - p.feetPosition.z)) * 180 / Math.PI }
+      ctx.emit("playSound", { clip: SND("inhuman-shriek-in-a-dead-relatives-voice"), position: p.feetPosition, volume: 1 })
       ctx.emit("playSound", { clip: SND("distorted-party-blower-and-giggle"), position: p.feetPosition, volume: 0.9 })
+      if (best < T.sight) { prey.state.stungUntil = Math.max(prey.state.stungUntil ?? 0, now + T.screamSlow); if (typeof prey.state.san === "number") prey.state.san -= T.screamSan
+        ctx.emit("screenShake", { intensity: 0.25, duration: 0.5 }, { audience: { player: prey.id } }) }
       for (const o of pack) if (o.id !== p.id && flat(o.feetPosition, p.feetPosition) < T.call) o.state.hunting = true
     }
     if (!prey && s.hunting && !players.some((pl) => flat(pl.feetPosition, p.feetPosition) < T.sight * 2.5)) s.hunting = false
+    party(ctx, p, !s.hunting)
     const target = prey && s.hunting ? prey.feetPosition : (s.hunting ? players[0].feetPosition : s.home ?? p.feetPosition)
     const d = flat(target, p.feetPosition), speed = s.berserk ? T.rage : s.hunting ? T.hunt : T.walk
-    if (now < (s.stunUntil ?? 0) || d < (prey ? T.reach * 0.8 : 0.5)) { p.velocity = { x: 0, y: p.velocity.y + g * dt, z: 0 }; gait(ctx, p, "idle") }
+    const dx = d > 0.01 ? (target.x - p.feetPosition.x) / d : 0, dz = d > 0.01 ? (target.z - p.feetPosition.z) / d : 0
+    const face = () => { p.rotation = { yaw: Math.atan2(-dx, -dz) * 180 / Math.PI } }
+    const vy = p.velocity.y + g * dt
+    if (s.move && now >= (s.moveUntil ?? 0)) { // a move ends: the lunge's tell becomes its dash
+      if (s.move === "windup") { s.move = "lunge"; s.moveUntil = now + T.lungeDash; s.lungeHit = false; once(p, "cdn/clip-attack.glb")
+        ctx.emit("playSound", { clip: SND("wet-teeth-bite-chomp"), position: p.feetPosition, volume: 1 }) }
+      else s.move = null
+    }
+    if (s.move === "scream") { p.velocity = { x: 0, y: vy, z: 0 }; gait(ctx, p, "idle"); continue }
+    if (s.move === "windup") { p.velocity = { x: 0, y: vy, z: 0 }; face(); gait(ctx, p, "idle"); continue }
+    if (s.move === "dodge") { const sx = -dz * s.dodgeDir, sz = dx * s.dodgeDir; p.velocity = { x: sx * T.dodgeSpeed, y: vy, z: sz * T.dodgeSpeed }; continue }
+    if (s.move === "lunge") {
+      p.velocity = { x: dx * T.lungeSpeed, y: vy, z: dz * T.lungeSpeed }; face(); gait(ctx, p, "run", 1.4)
+      if (prey && !s.lungeHit && best < T.reach + 0.4) { s.lungeHit = true; s.move = null; s.nextBite = now + T.biteMs
+        bite(ctx, p, prey, T.lungeDmg, "fast-claw-slash-flesh")
+        ctx.emit("impulse", { target: prey.id, impulse: { x: dx * 420, y: 160, z: dz * 420 } })
+        ctx.emit("hitstop", { duration: 0.06 }, { audience: { player: prey.id } }) }
+      continue
+    }
+    if (s.combo && now >= s.combo.at) { // the second mouth bites a beat after the first
+      const c = s.combo; s.combo = null
+      if (prey && best < T.reach + 0.3) { once(p, "cdn/clip-kick.glb", 0.6); bite(ctx, p, prey, Math.round(c.dmg * 0.7), "wet-teeth-bite-chomp") }
+    }
+    if (prey && s.hunting && !s.berserk && best > T.lungeMin && best < T.lungeMax && now >= (s.lungeAt ?? 0) && now >= (s.stunUntil ?? 0)) { // the pounce, telegraphed by a crouch and a squash
+      s.lungeAt = now + T.lungeCd + ctx.random() * 1500; s.move = "windup"; s.moveUntil = now + T.lungeWind
+      once(p, "cdn/clip-crouch-idle-loop.glb"); face()
+      ctx.emit("squash", { target: p.id, axis: "y", intensity: 0.25, duration: T.lungeWind / 1000 })
+      ctx.emit("playSound", { clip: SND("distorted-party-blower-and-giggle"), position: p.feetPosition, volume: 1 })
+      continue
+    }
+    if (now < (s.stunUntil ?? 0) || d < (prey ? T.reach * 0.8 : 0.5)) { p.velocity = { x: 0, y: vy, z: 0 }; gait(ctx, p, "idle"); if (prey) face() }
     else {
       gait(ctx, p, speed > 2 ? "run" : "walk", speed > 2 ? speed / 3.4 : 0.8)
-      const dx = (target.x - p.feetPosition.x) / d, dz = (target.z - p.feetPosition.z) / d
-      p.velocity = { x: dx * speed, y: p.velocity.y + g * dt, z: dz * speed }
-      p.rotation = { yaw: Math.atan2(-dx, -dz) * 180 / Math.PI }
+      const weave = s.hunting && d > 2.5 ? Math.sin(now / 380 + p.id.length) * 0.45 : 0 // closes in on a zig-zag, harder to line up
+      const vx = dx - dz * weave, vz = dz + dx * weave, n = Math.hypot(vx, vz) || 1
+      p.velocity = { x: vx / n * speed, y: vy, z: vz / n * speed }; face()
     }
     const reach = s.berserk ? T.clawReach : T.reach, dmg = s.berserk ? T.clawDmg : T.biteDmg
     if (prey && best < reach && now >= (s.nextBite ?? 0)) {
       s.nextBite = now + (s.berserk ? T.clawMs : T.biteMs)
-      once(p, "cdn/clip-attack.glb")
-      prey.state.hp -= dmgAfterArmor(prey.state.look, dmg)
-      const at = { x: prey.feetPosition.x, y: prey.feetPosition.y + 1.1, z: prey.feetPosition.z }
-      ctx.emit("damageNumber", { position: at, value: dmg, color: "#ff4040" })
-      ctx.emit("playSound", { clip: SND(s.berserk ? "fast-claw-slash-flesh" : "wet-teeth-bite-chomp"), position: at, volume: 0.9 })
-      ctx.emit("screenShake", { intensity: 0.35, duration: 0.25 }, { audience: { player: prey.id } })
-      ctx.emit("squash", { target: p.id, axis: "y", intensity: 0.12, duration: 0.2 })
+      once(p, s.berserk ? "cdn/clip-throw.glb" : "cdn/clip-attack.glb")
+      bite(ctx, p, prey, dmg, s.berserk ? "fast-claw-slash-flesh" : "wet-teeth-bite-chomp")
+      if (!s.berserk) s.combo = { at: now + T.comboGap, dmg }
     }
   }
   const gas = (ctx.self.session.gas ??= [])
