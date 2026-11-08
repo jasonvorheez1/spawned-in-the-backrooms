@@ -215,7 +215,7 @@ function lay(ctx) {
       feetPosition: { x: sx, y: 2.4, z: 7.5 },
       primitive: { kind: "box", width: 0.35, height: 0.65, depth: 0.25 },
       material: { color: "oklch(0.2 0.01 250)" },
-      ui: `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:120px;text-align:center">WALK</div>`,
+      ui: `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:90px;text-align:center">WALK</div>`,
     });
   });
 
@@ -940,8 +940,8 @@ export function tick(ctx) {
       const pedsig = ctx.getObject(`l11-pedsig-${k}`);
       if (pedsig) {
         pedsig.ui = isGreen
-          ? `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:120px;text-align:center">WALK</div>`
-          : `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ff4400;font-family:Arial,sans-serif;font-weight:900;font-size:100px;text-align:center">WAIT</div>`;
+          ? `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:90px;text-align:center">WALK</div>`
+          : `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ff4400;font-family:Arial,sans-serif;font-weight:900;font-size:90px;text-align:center">WAIT</div>`;
       }
     });
   }
