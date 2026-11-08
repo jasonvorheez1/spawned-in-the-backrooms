@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1698,
-  "updatedAt": "2026-11-08T13:33:42.365Z",
-  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Players are routed to personal rooms by default; place sims assemble local layouts, populations and hazards around shared player, NPC, loot and combat systems. The visual pipeline now gives every level the same 2006 compact-camera finish, while preserving level-specific grades, and builders can open LAGSCOPE over the HUD with F3.",
+  "basedOnSpecVersion": 1720,
+  "updatedAt": "2026-11-08T13:38:55.339Z",
+  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Players are routed to personal rooms by default; place sims assemble local layouts, populations and hazards around shared player, NPC, loot and combat systems. Level 6.1 is a simulated mall food court with working service, social Facelings and a developed Camp Amber outpost; shared systems handle carried trays and combat against its staff.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 / The Lobby, yellow maze and safe-room hub; each player's room is separate by default, with authored fixtures, containers, shifting walls and hunters.",
@@ -11,8 +11,8 @@
     "places/level4 (3D) - Abandoned Office; office structure and residents, cubicles, claimed homes, coolers, vending, lift/stairs and Base Omega.",
     "places/level5 (3D) - Terror Hotel; authored hotel cells and sim-managed residents, creatures and interactions, including Samantha the psychic tuxedo cat and Boiler Room Death Rat packs.",
     "places/level6, places/level61, places/level11 (3D) - Lights Out and Snackrooms connect to Level 11, The Infinite City: modelled city blocks and road grid, canal, central tower/skydeck, living street props, interactive props, taxi and skiff.",
-    "places/level7 (3D) - Thalassophobia; flooded Floating House, Seawatch, Fort Surrender, sea floor and diving bell.",
-    "places/debug (3D) - Separate dark atmosphere and spawn for debugging."
+    "places/level61 (3D) - Snackrooms food-court sim: shops, counters, dining, staff and vending; Camp Amber has tent, fire, cookpot, bedrolls, chairs, supplies and volunteers.",
+    "places/level7 (3D) - Thalassophobia; flooded Floating House, Seawatch, Fort Surrender, sea floor and diving bell; places/debug (3D) is a separate dark atmosphere and spawn."
   ],
   "roots": [
     "world.config.yaml - multiplayer entry at main; declares player actions, camera, player template and HUD, plus scripts/routing.js with an eight-player cap; Backspace opens the main menu.",
@@ -22,7 +22,7 @@
     "sim.js - world cadence and onOutOfBounds referee; players return true for normal respawn, creatures with state.home return home, others are destroyed for manager respawn.",
     "places/level61/sim.js + scripts/lib/level61-extra.js - Level 6.1 assembler; lay() replaces l61-prefixed scene roots and layExtra() adds mall, Camp Amber and staff pieces.",
     "places/level11/sim.js + scripts/lib/level11-city.js - Level 11 assembler; builds the city in tick, adds modelled streets and animates living street details.",
-    "scripts/ui.js + scripts/*-ui.js - HUD and overlays; ui.js mounts gameplay panels and the builders-only LAGSCOPE F3 overlay; atmosphere look scripts apply the shared camera finish."
+    "scripts/ui.js + scripts/*-ui.js - HUD and overlays; ui.js mounts gameplay panels and builders-only LAGSCOPE F3 overlay; atmosphere look scripts apply the shared camera finish."
   ],
   "shared": [
     "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait and heading for player and M.E.G. NPC chains; caches measured paces in gait session by model/scale; scripts/lib/body3.js supplies weapon animation and rowing.",
@@ -32,7 +32,7 @@
     "scripts/lib/loot.js + scripts/lib/items.js + level data - shared item pools, rolls, remains, parsing and container helpers; art/props/build.py supplies modeled lockers/fridges.",
     "scripts/lib/condition.js + condition.yml and scripts/lib/stats.js - weapon/armor condition and derived handling/carry values used by player.js, clothes.js, loot-ui.js and NPC dialogue.",
     "scripts/lib/level11-city.js + scripts/lib/data/level11-models.yml - Level 11 layout/street builders; sim.js uses model IDs from art/level11/build.py and uploads.json.",
-    "scripts/lib/photo2006.js - shared photoBase/photoFinish image pipeline reused by all level look scripts; individual looks keep their own scene grade."
+    "scripts/lib/snacktray.js - Level 6.1 tray model, 1.4 kg weight, clatter and handTray/isTray helpers reused by l61-use.js, l61-staff.js and grab.js."
   ],
   "notableExports": [
     "sim.js - cadence, tick, onOutOfBounds; places/level21/sim.js and places/level61/sim.js - cadence and tick; places/level11/sim.js - cadence, onSpawn, tick.",
@@ -40,9 +40,9 @@
     "scripts/lib/level21.js - grid, room, zone, exit and height queries/constants; scripts/lib/maze21path.js - canPass21, stepToward, cellNear.",
     "scripts/l21-use.js - updateSchedule, ears, update; scripts/level21-geo.js - geometry; scripts/lib/chatter.js - tickChatter, CHATTER.",
     "scripts/l61-use.js - MENUS, ears, landed, takeItem, vendExpire, ready, expire; scripts/lib/level61-extra.js - layExtra, faceling, person, PEOPLE, FACELING_IDS.",
+    "scripts/l61-staff.js - ears, nickFor, revive, update; scripts/lib/snacktray.js - TRAY_MODEL, TRAY_KG, TRAY_LIFE, CLATTER, isTray, handTray.",
     "scripts/level11-car.js and scripts/level11-boat.js - ears, control begin/end, input and update; scripts/level11-use.js - ears; scripts/lib/level11-city.js - layCity, layStreet, tickCity.",
-    "scripts/lib/condition.js - CAP, band, bandColor, wMul, jamChance, drMul, wear and repair helpers; scripts/lib/companion.js - PERKS and recruitment/order/weapon APIs; scripts/routing.js - pickRoom.",
-    "scripts/lib/photo2006.js - photoBase, photoFinish; scripts/look-*.js - look. scripts/lib/feed.js - LIFE, PLACE_NAMES, pushFeed, watch; scripts/feed-ui.js - feedUi."
+    "scripts/lib/condition.js - CAP, band, bandColor, wMul, jamChance, drMul, wear and repair helpers; scripts/lib/companion.js - PERKS and recruitment/order/weapon APIs; scripts/routing.js - pickRoom."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, clothing and karma/rep; also transient movement/combat state.",
@@ -64,9 +64,9 @@
     "Level 11 sim.js → scripts/lib/level11-city.js layCity/layStreet builds model city/street from level11-models.yml; tick calls tickCity for billboards, parked cars and distant siren/horn activity.",
     "Level 11 l11-to-l61/l11-from-l61 ↔ level-door.js pair mappings ↔ Level 6.1 l61-to-l11/l11-from-l61; level11-use.js reads prop state.dest for elevator destinations.",
     "places/level21/sim.js → scripts/lib/level21.js layout, level21-geo.js geometry and chatter.js exchanges; hounds.js uses maze21path.js; l21-use.js handles set pieces and Edge Smilers.",
-    "scripts/player.js NPC kill → scripts/lib/witness.js markKill → scripts/lib/rep.js repKill; scripts/talk.js gifts/fair trades also call repKind/repTrade, and repDisc/isHated/repLine inform shop dialogue and stats-ui.js.",
-    "scripts/talk-ui.js Recruit/follower orders → scripts/talk.js talkdo → scripts/lib/companion.js validates/adopts/orders/transfers weapons; dialogue join/leave also adopts/dismisses.",
-    "Each place config atmosphere.look → its scripts/look-* grade → scripts/lib/photo2006.js photoBase/photoFinish; scripts/ui.js adds mods/lagscope/panel.js overlay → local builder F3 toggles ctx.session.lsOpen, watch samples and supplies panel data."
+    "scripts/player.js melee/ranged attacks include l61fc Facelings; scripts/lib/ballistics.js treats l61fc as bullet targets, and l61-staff.js reacts to fresh hits by escalating and rallying nearby Facelings.",
+    "l61-use.js counters and l61-staff.js service → snacktray.handTray spawns snacktray-* and writes customer state.l61Hold/l61Tray → scripts/grab.js takes it into the hands, sets down via E or downward Z, throws with Z; landing makes it usable and l61-use.js returns it at the rack.",
+    "Each place config atmosphere.look → its scripts/look-* grade → scripts/lib/photo2006.js photoBase/photoFinish; scripts/ui.js adds mods/lagscope/panel.js overlay → local builder F3 toggles ctx.session.lsOpen."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light state and red-zone variants; Level 5 carries portal/quest props and scripts/l5-rats.js runs Boiler Room nest/pack cycles.",
@@ -75,18 +75,18 @@
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - NPC roles, dialogue, looks and routines vary by person; meg-agent.js supplies combat and idle social behavior.",
     "scripts/lib/craft.js + craft data - recipe category, costs, skill, bench, batch size and item family vary per recipe.",
     "places/level21/sim.js + level21.yml + level21-geo.js - room blocks share generated hall/room structure; room type, zone height, lighting, decor and loot vary by authored grid data and deterministic hashes.",
-    "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share service systems with varying menus and Faceling roles; rotunda, dining terraces and Camp Amber use distinct set pieces.",
-    "scripts/lib/level11-city.js + art/level11/build.py - one model kit populates city blocks/landmarks with seeded building kind, colour and street placements; scripts/look-*.js share the 2006 camera finish but vary per-place grade."
+    "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share service systems with varying menus and Faceling roles; Facelings now wave, mimic, learn player nicknames and defend each other; Camp Amber adds stew, rest and camp props.",
+    "scripts/lib/level11-city.js + art/level11/build.py - one model kit populates city blocks/landmarks with seeded building kind, colour and street placements; scripts/look-* share the 2006 camera finish but vary per-place grade."
   ],
   "probableOrphans": [
     "scripts/lib/kemono.js"
   ],
   "migrationNotes": [
     "Level 2.1 grid is 30×30 at 4 m per cell (120 m square); keep level21.js passability/room zones, maze21path.js traversal, sim geometry/hound routing aligned, and roofAt in place state so ceiling checks survive ticks.",
-    "Keep paired arrival IDs aligned: Level 2 ↔ Level 2.1 (l2-from-l21/l21-from-l2), Level 6 ↔ Level 6.1 (l6-from-l61/l61-from-l6; wire trigger l6-wire-trip), and Level 6.1 ↔ Level 11 (l61-to-l11/l11-from-l61). Level 11 skydeck is y=35.7; elevator state.dest carries its target.",
+    "Keep paired arrival IDs aligned: Level 2 ↔ Level 2.1 (l2-from-l21/l21-from-l2), Level 6 ↔ Level 6.1 (l6-from-l61/l61-from-l6; wire trigger l6-wire-trip), and Level 6.1 ↔ Level 11 (l61-to-l11/l11-from-l61). Level 11 skydeck is y=35.7.",
     "Weapon condition is player.state.cnd_<weapon>; garment condition lives in player.state.look.cnd keyed by garment token and shared across same kind/colour copies; keep clothes.yml pattern IDs implemented by mat-cloth.js.",
-    "Level 6.1 lay() destroys and replaces root IDs prefixed l61-; keep local service/menu/pickup/tray IDs and coordinates aligned with level61-extra.js and use handlers; model forward may be asset-specific.",
-    "Companion fields are NPC state.follow/cperk/loyal/cmd/cstance (plus waitAt and weapon handoff fields); player.session.comp holds perk timers and player.state.carryBonus is companion-derived, distinct from carryExtra.",
-    "Feed entries are player.state.feed [{t, at, k}], capped at six and displayed for 7 seconds; player.state.disc is comma-separated discovered place IDs, and scripts/stats.js owns the notice/status watcher cadence and session flags. Level 11's 190 m city sim uses tick (not update) and skips its work with no place players; the Level 2.1, 6, 7 and 8 life/use handlers similarly sleep when empty."
+    "Level 6.1 lay() destroys and replaces root IDs prefixed l61-; keep service/menu/pickup/tray IDs and coordinates aligned with level61-extra.js and use handlers. Snack trays deliberately use snacktray-* IDs so they survive rebuilds.",
+    "Snacktray ownership bridges persisted player.state.l61Hold/l61Tray to scripts/grab.js session.held and the tray object: spawned/retaken trays need the state ID for carry, return-rack validation, and cleanup when thrown, set down, missing or returned.",
+    "Companion fields are NPC state.follow/cperk/loyal/cmd/cstance (plus waitAt and weapon handoff fields); player.session.comp holds perk timers and player.state.carryBonus is companion-derived, distinct from carryExtra. Feed entries are player.state.feed [{t, at, k}], capped at six, displayed for 7 seconds; player.state.disc is comma-separated discovered place IDs."
   ]
 }
