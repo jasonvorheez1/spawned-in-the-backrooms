@@ -3,6 +3,8 @@
 //   the kitchen gets busy, the "now serving" board counts up, a bell dings and your tray appears on the pickup counter; the TRAY (kind "tray") is yours to take (nobody else's),
 //   and when you are done you carry the dirty tray to the TRAY RETURN (kind "return"). Food tokens: scripts/lib/data/snacks.yml.
 import { heard } from "./lib/hear.js";
+import { animate } from "builtin/tween";
+import { itemSpec } from "./lib/vend-item.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const POOL = { snack: ["doritos", "doritos", "coolranch"], soda: ["coke", "coke", "pepsi", "dew", "sprite", "drpepper", "cherrycoke", "vault", "redbull", "snapple", "gatorade", "sobe"] };
 const LINE = { coke: "A glass Coca-Cola clunks down, sweating cold.", pepsi: "A Pepsi rolls into the tray. Blue globe can.", dew: "Mountain Dew. Neon green. You can feel your heart already.", doritos: "Doritos Nacho Cheese drop off the coil.", coolranch: "Cool Ranch. The blue bag.", pizza: "A faceling slides you a hot slice on a paper plate.", burger: "A faceling wraps a cheeseburger and pushes it across. It waves.", almond: "Almond water, poured over ice. On the house.", sprite: "A green Sprite bottle thunks into the tray.", drpepper: "Dr Pepper. Maroon can, cold.", cherrycoke: "Cherry Coke rolls out.", vault: "Vault. The can is sweating.", redbull: "A skinny Red Bull can clatters down.", snapple: "Snapple peach tea. The cap pops.", gatorade: "Fruit punch Gatorade.", sobe: "SoBe Lizard Fuel. The lizard stares at you.", budweiser: "The faceling pops a Budweiser longneck and slides it down the bar.", corona: "A Corona, lime pushed in with one finger.", millerlite: "Miller Lite, cracked open.", smirnoffice: "Smirnoff Ice. It does not ask how old you are.", jackcoke: "Jack and Coke over ice. Heavy on the Jack.", whiskey: "Jim Beam, neat. The faceling waits for you to drink it.", margarita: "A margarita with a salt rim, far too strong." };
@@ -63,14 +65,45 @@ export const ears = {
     if (s.kind === "condiment") { snd("squeeze-bottle-ketchup-squirt", 0.5, 6); tell(s.line ?? "SQUEEZE", "#ff9a7a"); return; }
 
     // vending machines and everything else: free, with a short wait before the coil restocks
+    const tray = s.tray?.[uid];
+    if (s.kind === "vend" && tray) { // it is down in the flap: your hand goes in and takes it
+      if (!tray.down) { tell("IT'S STILL FALLING"); return; }
+      const t = { ...s.tray }; delete t[uid]; s.tray = t;
+      w.grab = { at: now, tok: tray.tok }; // scripts/player.js plays the reach, in first person and on the body
+      ctx.after(0.45, "takeItem", { id: tray.item });
+      snd("plastic-bottle-pickup-rattle", 0.5, 8);
+      w.payout = { xp: 1, items: [tray.tok], text: LINE[tray.tok] ?? "Free, like everything here." };
+      tell("+" + tray.tok.toUpperCase(), "#9fffb0"); return;
+    }
     if (now - (cool[uid] ?? -1e9) < (s.cooldown ?? COOL)) { tell(s.kind === "vend" ? "THE COIL IS RESTOCKING" : "COME BACK IN A BIT"); return; }
     cool[uid] = now;
     const list = s.gives ? s.gives.split(",") : POOL[s.sells ?? "snack"], tok = list[Math.floor(ctx.random() * list.length)];
+    if (s.kind === "vend") { // the coil turns, the item creeps off the end, falls to the flap and waits there for you
+      const cx = [-0.16, 0.1, 0.34][Math.floor(ctx.random() * 3)], cy = [0.62, 0.92, 1.22, 1.5][Math.floor(ctx.random() * 4)];
+      const item = ctx.spawn({ parent: ctx.self.id, feetPosition: { x: cx, y: cy, z: -0.22 }, castShadow: false, lifetime: 90, ...itemSpec(tok) });
+      animate(ctx, item, { "feetPosition.z": -0.36 }, { duration: 0.9, easing: "linear" });
+      animate(ctx, item, { "feetPosition.y": 0.17, "feetPosition.x": 0.08 }, { duration: 0.42, delay: 0.9, easing: "easeInQuad" });
+      animate(ctx, item, { "feetPosition.z": -0.5, "rotation.roll": 90 }, { duration: 0.2, delay: 1.3, easing: "easeOutQuad" });
+      s.tray = { ...(s.tray ?? {}), [uid]: { tok, item, down: false } };
+      ctx.after(1.32, "landed", { uid, item });
+      snd("vending-machine-spiral-coil-motor-turning-whir", 0.6, 10);
+      tell("PRESS AGAIN TO TAKE IT", "#ffe9a8"); return;
+    }
     snd(s.kind === "vend" ? "vending-machine-clunk-item-drop" : "paper-plate-slid-across-counter", 0.75);
     who.state.payout = { xp: 1, items: [tok], text: LINE[tok] ?? "Free, like everything here." };
     tell("+" + tok.toUpperCase(), "#9fffb0");
   },
 };
+
+// the vending item hits the flap
+export function landed(ctx, p) {
+  const s = ctx.self.state, t = s.tray?.[p.uid]; const pos = ctx.self.feetPosition;
+  heard(ctx, { clip: G("vending-machine-clunk-item-drop"), position: { x: pos.x, y: pos.y + 0.3, z: pos.z }, volume: 0.85, maxDistance: 14 });
+  if (t && t.item === p.item) s.tray = { ...s.tray, [p.uid]: { ...t, down: true } };
+  ctx.after(80, "expire", p);
+}
+export function takeItem(ctx, p) { if (ctx.getObject(p.id)) ctx.destroy(p.id); }
+export function expire(ctx, p) { const t = ctx.self.state.tray?.[p.uid]; if (t && t.item === p.item) { const n = { ...ctx.self.state.tray }; delete n[p.uid]; ctx.self.state.tray = n; } }
 
 // the kitchen is done: the bell dings, the board counts up, the tray is on the pickup counter
 export function ready(ctx, p) {
