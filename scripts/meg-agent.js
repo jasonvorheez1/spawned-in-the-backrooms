@@ -459,8 +459,7 @@ export function update(ctx, dt) {
     if (pool) { const [clip, ms, w, upper] = pool[Math.floor(ctx.random() * pool.length)]; me.anim.gest = { clip, loop: /loop/.test(clip) ? "loop" : "once", weight: w, blendIn: 0.25, blendOut: 0.35, ...(upper ? { mask: { from: "Spine" } } : {}) }; m.gestEnd = now + ms; }
   }
   // head morph sync: articulates speech, smiles when waving, winces when hit, blinks naturally
-  const headObj = (m.headObj ??= ctx.getObject(me.id + "/" + HEAD_ID));
-  if (headObj && !s.dead) {
+  if (!s.dead && (m.headChk ?? 0) < now) {
     const isFem = (s.wear?.sex ?? s.look?.sex) === "f";
     const baseExpr = s.wear?.expr || s.look?.expr || "smile";
     let curExpr = baseExpr;
@@ -471,7 +470,9 @@ export function update(ctx, dt) {
     if (curExpr !== m.lastExpr || isBlinking !== m.lastBlink) {
       m.lastExpr = curExpr;
       m.lastBlink = isBlinking;
-      headObj.morph = faceMorph(curExpr, isBlinking, isFem, s.wear ?? s.look);
+      const headObj = ctx.getObject(me.id + "/" + HEAD_ID); // read fresh: a head rebuilt or gone never takes a stale write
+      if (headObj) headObj.morph = faceMorph(curExpr, isBlinking, isFem, s.wear ?? s.look);
+      else m.headChk = now + 30000; // no head on this body: stop asking for 30 s
     }
   }
   // held in conversation: while a player's dialogue is open on this one (player.state.talkWith), it stops where it stands and faces them; a threat or a hit still breaks it
