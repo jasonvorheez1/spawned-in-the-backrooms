@@ -36,8 +36,12 @@ export function tick(ctx) {
   if (!(Math.abs(now - (ctx.session.wallTick ?? -1e9)) < 2000)) { ctx.session.wallTick = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)
   if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(false)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   tickChatter(ctx, CHATTER.level2, {"surv-wren": "wren", "surv-hollis": "hollis", "surv-mags": "mags"}); // the camp talks among itself while someone's near
+  if (s.seeded && s.kitV !== 1) { // rooms laid out before the modelled kit: add it, and switch the old shell's visuals over
+    s.kitV = 1; spawnKit(ctx);
+    for (const id of ["l2-geo", "l2-details"]) { const o = ctx.getObject(id); if (o?.primitive && !o.primitive.params?.kit) o.primitive = { ...o.primitive, params: { ...(o.primitive.params || {}), kit: true } }; }
+  }
   if (!s.seeded) {
-    s.seeded = true;
+    s.seeded = true; s.kitV = 1;
     ctx.spawn("l2-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-geo.js", params: { kit: true } }, material: { roughness: 0.9 } });
     ctx.spawn("l2-details", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-details-geo.js", params: { kit: true } }, material: { roughness: 0.85 } }); spawnKit(ctx); // handrails, cables, stains; the modelled kit (scripts/lib/l2kit.js) draws walls, pipes, trays, ducts, lamps
     // tube lights: industrial white or sodium orange, uneven, some hanging crooked; dead circuits get a violet emergency lamp now and then
