@@ -82,8 +82,10 @@ export function l11Lean(id, spec) {
 const LAY_STEP = 60;
 function lay(ctx) {
   const st = ctx.place.state;
-  st.lq = { rows: [], i: 0, keep: {} };
-  const sp = (id, spec) => { st.lq.rows.push([id, l11Lean(id, spec)]); st.lq.keep[id] = true; return id; }; // every row gets a draw distance, small clutter casts no shadow
+  // the rows themselves stay on the machine laying them (ctx.session): only the cursor rides place.state, which every player downloads
+  const q = ctx.session.l11q = { rows: [], keep: {}, v: V };
+  if (!st.lq) st.lq = { i: 0 };
+  const sp = (id, spec) => { q.rows.push([id, l11Lean(id, spec)]); q.keep[id] = true; return id; }; // every row gets a draw distance, small clutter casts no shadow
   const md = (id, kind, x, y, z, materials, collider = "box", extra = {}) =>
     sp(id, { feetPosition: { x, y, z }, model: { id: MODELS[kind], forward: "-z", materials }, physics: { body: "static", collider }, ...extra });
   const bx = (id, x, y, z, w, h, d, material, extra = {}) =>
@@ -1469,17 +1471,22 @@ const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
   if (!ctx.place.players?.length) return;
   const st = ctx.place.state, now = ctx.now();
+  if ((st.builtV ?? 0) < V && !st.lq) lay(ctx);
   const lq = st.lq;
-  if ((st.builtV ?? 0) < V && !lq) lay(ctx);
   if (lq) {
-    if (lq.i === 0) lq.rows.sort((a, b) => (a[1].physics && a[1].physics !== "none" ? 0 : 1) - (b[1].physics && b[1].physics !== "none" ? 0 : 1));
-    const end = Math.min(lq.rows.length, lq.i + LAY_STEP);
-    for (; lq.i < end; lq.i++) { const [id, spec] = lq.rows[lq.i]; ctx.spawn(id, spec); }
-    if (lq.i >= lq.rows.length) {
-      for (const w of WALKERS) lq.keep[w.id] = true;
+    let q = ctx.session.l11q;
+    if (!q || q.v !== V) { lay(ctx); q = ctx.session.l11q; } // a fresh machine (or a new version) rebuilds the list; the cursor carries on
+    q.rows.sort((a, b) => (a[1].physics && a[1].physics !== "none" ? 0 : 1) - (b[1].physics && b[1].physics !== "none" ? 0 : 1));
+    if (!q.sorted) { q.rows.sort((a, b) => (a[1].physics && a[1].physics !== "none" ? 0 : 1) - (b[1].physics && b[1].physics !== "none" ? 0 : 1)); q.sorted = true; }
+    let i = lq.i ?? 0;
+    const end = Math.min(q.rows.length, i + LAY_STEP);
+    for (; i < end; i++) { const [id, spec] = q.rows[i]; ctx.spawn(id, spec); }
+    lq.i = i;
+    if (i >= q.rows.length) {
+      for (const w of WALKERS) q.keep[w.id] = true;
       let n = 0;
-      for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l11-/.test(id) && !id.includes("/") && !lq.keep[id] && n++ < 120) ctx.destroy(id);
-      if (n <= 120) { delete st.lq; st.builtV = V; st.walkV = 0; }
+      for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l11-/.test(id) && !id.includes("/") && !q.keep[id] && n++ < 120) ctx.destroy(id);
+      if (n <= 120) { delete st.lq; delete ctx.session.l11q; st.builtV = V; st.walkV = 0; }
     }
     return;
   }
