@@ -53,6 +53,7 @@ const CSS = `<style>
 #cc .big .sl .bar .th{width:10px;height:18px}
 </style>`
 const act = (k, v = '') => `sendAction('dress',{k:'${k}',v:'${v}'})`
+const HN = (v) => !v || v === 'none' ? 'none' : ({ afropuff: 'afro puff', curtainmid: 'curtains', halfup: 'half up', messybun: 'messy bun', sidebraid: 'side braid', sidetail: 'side tail', spacebuns: 'space buns', twinbraids: 'twin braids', twintails: 'twin tails', wolfcut: 'wolf cut', curlytop: 'curly top', sidepart: 'side part', manbun: 'man bun' })[v.slice(2)] || v.slice(2)
 const tile = (k, v, on, label) => `<button class="${on ? 'on' : ''}" onclick="${act(k, v)}">${label}</button>`
 const sw = (k, v, on) => {
   let bg = v || 'conic-gradient(#f2a65a,#9a6440,#f4efe9,#6f7d93,#f2a65a)';
@@ -92,6 +93,8 @@ export function wardrobe(ctx, player) {
     <div class="sec"><span>STATURE</span><span>${Math.round(170 * (Number(l.heightS) || 1))} cm</span></div><div class="big">${sliderRows(C.sliders.filter((r) => ['heightS', 'buildS'].includes(r[0])))}</div>
     <div class="sec"><span>FUR</span></div>${sws('fur', C.fur)}
     <div class="sec"><span>MARKINGS</span></div>${grid('marks', C.marks)}
+    <div class="sec"><span>HAIR</span><span>${HN(l.hair)}</span></div><div class="grid">${['none', ...(l.sex === 'f' ? C.hairF : C.hairM)].map((v) => tile('hair', v, (l.hair || 'none') === v, HN(v))).join('')}</div>
+    ${l.hair && l.hair !== 'none' ? `<div class="sec"><span>HAIR COLOUR</span></div>${sws('hairc', C.hairc)}` : ''}
     <div class="sec"><span>PROPORTIONS</span><span>${l.model || l.modelUrl ? 'critter only' : ''}</span></div>${sliderRows(C.sliders.filter((r) => !['heightS', 'buildS'].includes(r[0]) && (l.sex === 'f' || !['hipS', 'bustS'].includes(r[0]))))}
     <div class="sec"><span>IMPORTED MODELS</span><span>${l.modelUrl ? 'your upload' : l.model ? C.models[l.model]?.name || '' : 'critter'}</span></div><div class="grid">${tile('model', '', !l.model && !l.modelUrl, 'critter')}${Object.entries(C.models || {}).map(([k, m]) => tile('model', k, l.model === k, m.name)).join('')}</div>
     <div style="font-size:11px;line-height:1.5;opacity:.85;margin:4px 0 6px;text-transform:none;letter-spacing:.02em">HOW TO GET A PLYMODEL<br>1. install <a href="https://developer.valvesoftware.com/wiki/SteamCMD" target="_blank" rel="noopener" style="color:#ffb642;text-decoration:underline;pointer-events:auto">SteamCMD</a> and open it<br>2. type <b>login anonymous</b> and press enter<br>3. on the <a href="https://steamcommunity.com/app/394690/workshop/" target="_blank" rel="noopener" style="color:#ffb642;text-decoration:underline;pointer-events:auto">Tower Unite workshop</a>, copy the link of the playermodel you want<br>4. paste it into <a href="https://steamworkshopdownloader.io/" target="_blank" rel="noopener" style="color:#ffb642;text-decoration:underline;pointer-events:auto">steamworkshopdownloader.io</a>, copy the line it gives you and paste that into SteamCMD<br>5. SteamCMD says where it saved it (steamapps/workshop/content/394690/...). press upload below and pick the .plymodel in that folder</div>

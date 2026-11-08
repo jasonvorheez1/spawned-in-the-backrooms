@@ -4,6 +4,19 @@ import M from './data/critter-models.yml'
 import FACES from './data/faces.yml'
 import CL from './data/clothes.yml'
 import { rowOf, patOk } from './clothes.js'
+import HAIR from './data/hair.yml'
+// hair: its own GLB skinned whole to the Head bone (scripts/lib/data/hair.yml), tinted by the look's hairc; a mask hides it
+export const HAIR_ID = 'critter-hair'
+export const hairOf = (l) => (l?.hair && l.hair !== 'none' && HAIR.styles[l.hair] && !maskOf(l) ? HAIR.styles[l.hair] : null)
+const hairModel = (l) => ({ id: hairOf(l), materials: { hair: { color: l.hairc || '#5a3a26' } } })
+export const hairChild = (l, local) => hairOf(l) ? { id: HAIR_ID, attachment: { skin: true }, model: hairModel(l), ...(local ? { audience: 'local' } : {}) } : null
+export function seatHair(ctx, o, l) {
+  const want = hairOf(l), id = o.id + '/' + HAIR_ID, h = ctx.getObject(id)
+  if (!want) { if (h) ctx.destroy(id); return }
+  const m = hairModel(l)
+  if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== m.materials.hair.color) h.model = m; return }
+  ctx.spawn(HAIR_ID, { parent: o.id, ...hairChild(l, o.audience === 'local') })
+}
 export const HEAD_ID = 'critter-head'
 // a head-covering mask (the Level 11 shop's bag and shell): its own GLB skinned whole to the Head bone, a second skin child; the row's `mask` names it
 export const MASK_ID = 'critter-mask'
@@ -474,7 +487,7 @@ export function critterSpec(l) {
       morph: faceMorph(l?.expr, false, isF, l),
       jiggle: { bones: ['EarL', 'EarR'], amount: 0.58, bounce: 0.72 },
       ...(maskOf(l) ? { visible: false } : {})
-    }, maskChild(l)].filter(Boolean),
+    }, maskChild(l), hairChild(l)].filter(Boolean),
     material: { outline: { color: '#1d1420', width: 2.4 } },
     jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.68, bounce: 0.72 },
     ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {})
@@ -519,7 +532,7 @@ export function seatHead(ctx, obj, l) {
   const body = obj.model?.id ?? obj.model
   if (h && obj.state && obj.state.headBody !== body) { ctx.destroy(h.id ?? obj.id + '/' + HEAD_ID); h = null }
   if (obj.state && obj.state.headBody !== body) obj.state.headBody = body
-  seatMask(ctx, obj, l)
+  seatMask(ctx, obj, l); seatHair(ctx, obj, l)
   if (!h) { ctx.spawn(HEAD_ID, { parent: obj.id, ...want }); return }
   if (!h.attachment?.skin) {
     h.primitive = null; h.attachment = { skin: true }; h.feetPosition = { x: 0, y: 0, z: 0 }; h.rotation = 0;
