@@ -8,4 +8,4 @@ export function onTriggerEnter(ctx, other) {
   ctx.emit("screenFlash", { color: "#000000", duration: 0.5, intensity: 1 }, { audience: { player: me.id } })
   ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-old-elevator-ding-and-doors-grinding-open.mp3", position: s.to, volume: 0.8 }, { audience: { player: me.id } })
 }
-const getObjectSafe = (ctx, id) => ctx.getObject?.(id) ?? getObject(id)
+const getObjectSafe = (ctx, id) => ctx.getObject(id)
