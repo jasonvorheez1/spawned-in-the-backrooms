@@ -67,7 +67,7 @@ export const ears = {
     (me.session.m ??= {}).gestEnd = now + 2000;
 
     heard(ctx, { clip: G("paper-plate-slid-across-counter"), position: { x: pos.x, y: pos.y + 1, z: pos.z }, volume: 0.7, maxDistance: 12 });
-    who.state.payout = { xp: 2, items: [tok], text: s.line ?? "They slide a plate across to you, with great care. Nothing is asked for it." };
+    who.state.payout = { xp: 2, items: [tok] };
     tell("+" + tok.toUpperCase(), "#9fffb0");
   },
 };
@@ -110,8 +110,8 @@ export function update(ctx, dt) {
       if (d < 1.4) {
         s.deliver = null; me.anim.gest = null; gesture(ACT.serve); rest(); me.rotation = { yaw: yawOf(dx, dz) };
         ctx.destroy(D.tray); who.state.l61Tray = now;
-        who.state.payout = { xp: 2, items: D.items, text: `The faceling sets your tray down in front of you. "Order ${D.n}. Enjoy." They nod and head back to work. When you are done, the tray goes in the tray return.` };
-        ctx.emit("damageNumber", { position: { x: p.x, y: p.y + 2.1, z: p.z }, text: `ORDER ${D.n}. ENJOY!`, color: "#9fffb0", size: 0.9 }, { audience: { player: who.id } });
+        who.state.payout = { xp: 2, items: D.items };
+        ctx.emit("damageNumber", { position: { x: p.x, y: p.y + 2.1, z: p.z }, text: `ORDER #${D.n} SERVED!`, color: "#9fffb0", size: 0.95 }, { audience: { player: who.id } });
         heard(ctx, { clip: G("paper-plate-slid-across-counter"), position: { x: p.x, y: p.y + 1, z: p.z }, volume: 0.7, maxDistance: 12 });
         return;
       }

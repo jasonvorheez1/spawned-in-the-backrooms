@@ -107,8 +107,23 @@ export function layExtra(ctx, { HW, HD, HH }) {
   [[0, 3.8], [1, 8], [2, 12]].forEach(([i, a]) => bx(`l61-bent-${i}`, HW - 0.5 - i * 0.12, 0, bz + i * 1.2, 0.3, HH - 0.2 - i * 0.1, 1.25, { ...PLASTER, color: "oklch(0.88 0.03 220)" }, { rotation: { yaw: -a * (i + 1), roll: i * 2 }, physics: "static" }));
   sp("l61-bent-glow", { feetPosition: { x: HW - 0.2, y: 1.8, z: bz + 1.3 }, behavior: A, state: { anim: { kind: "pulse", amp: 1.35, sec: 2.2 } }, primitive: { kind: "box", width: 0.06, height: 3.4, depth: 0.5 }, material: { color: "oklch(0.8 0.14 225)", emissive: "oklch(0.8 0.16 225)", emissiveIntensity: 2.6 },
     children: [{ feetPosition: { x: -1.2, y: 0, z: 0 }, light: { kind: "point", color: "oklch(0.75 0.14 225)", intensity: 3, distance: 9 } }] });
-  sp("l61-bent-sign", { feetPosition: { x: HW - 4, y: 1.0, z: bz + 1.0 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.2, height: 0.7, depth: 0.04 }, material: { color: "oklch(0.88 0.1 95)" },
-    ui: `<div face="front" width="1.2m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;color:#2a1a00;text-align:center"><div style="font-size:70px">CAUTION</div><div style="font-size:32px">the wall is not straight. do not lean on it.</div></div>` });
+
+  // Environmental cues on bent wall: cold vapor seep, sparking wall sconce, and void draft hum (show, don't tell)
+  sp("l61-bent-mist", {
+    feetPosition: { x: HW - 0.4, y: 1.2, z: bz + 1.3 },
+    fx: { script: `fx\npop mist rate=5 on=box(.2,1.8,.4) life=1.5..2.5 v=<%dir|-1,0,0>*(.15..0.35)+up(.1) size=.15..0.35 col=<.35,.75,1> a=0>.3:.25>.3:.6>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)` },
+    audio: { clip: "cdn/sfx-wind-draft-cold-abyss-loop.mp3", loop: true, gain: 0.12, spatial: true, maxDistance: 12 },
+  });
+  sp("l61-bent-sconce", {
+    feetPosition: { x: HW - 0.4, y: 2.6, z: bz - 0.8 },
+    rotation: { roll: 22, yaw: -85 },
+    primitive: { kind: "box", width: 0.14, height: 0.28, depth: 0.18 },
+    material: { color: "oklch(0.3 0.01 250)", metalness: 0.7 },
+    fx: { script: `fx\npop spark rate=2 on=disc(.08) life=.15..0.35 v=sdir()*.6 size=.01..0.02 col=hdr(.4,1.8,3) a=1>0 r=sprite(soft-disc,add)` },
+    children: [
+      { feetPosition: { x: -0.12, y: 0, z: 0 }, light: { kind: "point", color: "oklch(0.72 0.2 230)", intensity: 2.4, distance: 7 } },
+    ],
+  });
   sp("l61-bent-trigger", { feetPosition: { x: HW - 1.0, y: 0, z: bz + 1.4 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.4, height: 3, depth: 3 }, visible: false, behavior: "scripts/l61-bent.js" });
 
   // ---- Camp Amber's outpost by the steel door: a canopy, a table, a pot, a sign
@@ -169,10 +184,10 @@ export function layExtra(ctx, { HW, HD, HH }) {
 
 // ---- the people: Facelings, the staff, the guards and the pickets
 const FACELINGS = [
-  { id: "l61-fc-clip", greet: "Welcome to Clippers!", at: [-21, -31.4], face: 180, acts: ["wipe", "serve", "groove", "drink"], line: "A faceling slides a cold glass across the red bar. It was already pouring." },
-  { id: "l61-fc-liq", greet: "Evening. Almond water?", at: [-14.7, -27], face: -90, acts: ["wipe", "serve", "drink", "groove"], line: "A faceling sets down an almond water without a word, as if it had been waiting for you." },
-  { id: "l61-fc-slice", greet: "Slice Palace! Hot ones just out.", at: [7, -30.9], face: 180, acts: ["serve", "eat", "nod", "wipe"], gives: "pizza,pizza,coke", line: "A faceling hands you a slice on a paper plate. It is still too hot to hold, and perfect." },
-  { id: "l61-fc-burger", greet: "Welcome to Burger Bop!", at: [21, -30.1], face: 180, acts: ["grill", "serve", "wipe", "groove"], gives: "burger,burger,coke", line: "A faceling flips something on the grill and presses the burger into your hands. No charge." },
+  { id: "l61-fc-clip", greet: "Welcome to Clippers!", at: [-21, -31.4], face: 180, acts: ["wipe", "serve", "groove", "drink"] },
+  { id: "l61-fc-liq", greet: "Evening. Almond water?", at: [-14.7, -27], face: -90, acts: ["wipe", "serve", "drink", "groove"] },
+  { id: "l61-fc-slice", greet: "Slice Palace! Hot ones just out.", at: [7, -30.9], face: 180, acts: ["serve", "eat", "nod", "wipe"], gives: "pizza,pizza,coke" },
+  { id: "l61-fc-burger", greet: "Welcome to Burger Bop!", at: [21, -30.1], face: 180, acts: ["grill", "serve", "wipe", "groove"], gives: "burger,burger,coke" },
   { id: "l61-fc-a", hasTray: true, route: [[-21, -12, 3, "wipe"], [-15, -12, 3, "tray"], [-15, -18, 2.5, "groove"], [-21, -18, 3, "wipe"]] },
   { id: "l61-fc-b", hasTray: true, route: [[21, -12, 3, "wipe"], [15, -12, 3, "tray"], [15, -18, 2.5, "groove"], [21, -18, 3, "wipe"]] },
   { id: "l61-fc-c", route: [[-21, 12, 3, "wipe"], [-15, 12, 2.5, "groove"], [-15, 18, 3, "nod"], [-21, 18, 3, "wipe"]] },
@@ -191,9 +206,9 @@ const HUMANS = {
   "l61-guard-b": { name: "M.E.G. Guard · Level 6 door", voice: "mags", faction: "guard", look: { species: "bear", sex: "f", topw: "megjacket", top: "#4a5a3a", botw: "cargo", bottom: "#3a3a30", shoes: "boots" }, gun: "carbine", at: [-27.6, 2.4], face: -90 },
   "l61-amber-a": { name: "Camp Amber volunteer", voice: "wren", faction: "trader", look: { species: "fox", sex: "f", topw: "sweater", top: "#d89a3a", botw: "pants", bottom: "#4a3a2a", shoes: "boots" }, gun: "knife", at: [-24.5, 11.4], face: 90 },
   "l61-amber-b": { name: "Camp Amber volunteer", voice: "penny", faction: "trader", look: { species: "bunny", sex: "m", topw: "hoodie", top: "#c87a2a", botw: "pants", bottom: "#4a3a2a", shoes: "sneakers" }, gun: "crowbar", at: [-23.4, 12.8], face: 150 },
-  "l61-guild-a": { name: "Guild of Many member", voice: "hollis", faction: "pilgrim", look: { species: "sheep", sex: "f", topw: "hoodie", top: "#5a5a6a", botw: "longskirt", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, -2], face: 90, sign: "WE ARE MANY" },
-  "l61-guild-b": { name: "Guild of Many member", voice: "mags", faction: "pilgrim", look: { species: "cat", sex: "m", topw: "jacket", top: "#5a5a6a", botw: "pants", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, 1], face: 90, sign: "MANY, NOT ONE" },
-  "l61-guild-c": { name: "Guild of Many member", voice: "wren", faction: "pilgrim", look: { species: "deer", sex: "f", topw: "sweater", top: "#5a5a6a", botw: "pants", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, 4], face: 90, sign: "WE ARE NOT HARMFUL" },
+  "l61-guild-a": { name: "Guild of Many member", voice: "hollis", faction: "pilgrim", look: { species: "sheep", sex: "f", topw: "hoodie", top: "#5a5a6a", botw: "longskirt", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, -2], face: 90, bedroll: true },
+  "l61-guild-b": { name: "Guild of Many member", voice: "mags", faction: "pilgrim", look: { species: "cat", sex: "m", topw: "jacket", top: "#5a5a6a", botw: "pants", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, 1], face: 90, lantern: true },
+  "l61-guild-c": { name: "Guild of Many member", voice: "wren", faction: "pilgrim", look: { species: "deer", sex: "f", topw: "sweater", top: "#5a5a6a", botw: "pants", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, 4], face: 90, canteen: true },
 };
 export const PEOPLE = [...Object.keys(HUMANS), ...PATRONS.map((p) => p.id)];
 export const FACELING_IDS = FACELINGS.map((f) => f.id);
@@ -204,7 +219,7 @@ export function faceling(ctx, id) {
   const look = { ...npcLook("l61fc" + i, { species: ["cat", "wolf", "fox", "bear", "bunny", "dog"][i % 6], sex: i % 2 ? "f" : "m", topw: "apron", top: "#f4f1ea", botw: "pants", bottom: "#2a2a30", shoes: "sneakers", hat: "beanie", hatc: "#f4f1ea" }, "trader", 6), fur: "#060606", vary: false, eye: "#000000" };
   ctx.spawn(id, { tags: ["l61npc", "usable", "faceling"], feetPosition: { x: at.x, y: 0.05, z: at.z }, rotation: { yaw: f.face ?? 0 }, physics: "character", ...faceless(critterSpec(look)),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/l61-staff.js"],
-    state: { name: "Faceling (Entity 9)", verb: "Take a plate", info: "A friendly, featureless worker in an apron. They cook, clean and serve, and nothing here costs a thing.", tint: "#f4f1ea", kind: "faceling", job: f.route ? "route" : "post", faceYaw: f.face, greet: f.greet, acts: f.acts, gives: f.gives, line: f.line, route: f.route?.map(([x, z, dwell, act]) => ({ x, z, dwell, act })), pace: 1.15 + (i % 3) * 0.15, hasTray: f.hasTray } });
+    state: { name: "Faceling", verb: "Take a plate", info: "Food court staff.", tint: "#f4f1ea", kind: "faceling", job: f.route ? "route" : "post", faceYaw: f.face, greet: f.greet, acts: f.acts, gives: f.gives, route: f.route?.map(([x, z, dwell, act]) => ({ x, z, dwell, act })), pace: 1.15 + (i % 3) * 0.15, hasTray: f.hasTray } });
   if (f.route && f.route.length > 2) ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, primitive: { kind: "box", width: 0.34, height: 0.02, depth: 0.24 }, material: { color: "oklch(0.88 0.01 90)", metalness: 0.4 }, children: [{ feetPosition: { x: 0.05, y: 0.02, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.05 }, material: { color: "oklch(0.7 0.14 40)" } }] });
 }
 
@@ -225,7 +240,7 @@ export function person(ctx, id) {
         job: "post",
         faceYaw: patron.face,
         acts: patron.acts,
-        info: "A weary survivor resting in the comfort of The Snackrooms diner.",
+        info: "Food court patron.",
         verb: "Greet",
         home: { x, z },
         ...npcState(ctx, "survivor", 100),
@@ -239,6 +254,14 @@ export function person(ctx, id) {
   ctx.spawn(id, { tags: ["npc", "l61-npc"], feetPosition: { x, y: 0.05, z }, rotation: { yaw: g.face }, physics: "character", ...critterSpec(npcLook(id, g.look, g.faction, 8)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
     state: { name: g.name, role: g.faction === "guard" ? "guard" : "survivor", voice: g.voice, faction: g.faction === "guard" ? "meg" : g.faction === "pilgrim" ? "guild" : "amber", factionName: g.faction === "guard" ? "the M.E.G.'s Level 6 Access Outpost" : g.faction === "pilgrim" ? "the Guild of Many" : "Camp Amber", rounds: [{ x, y: 0.05, z, dwell: 40, act: null, look: { x: x + Math.sin((g.face * Math.PI) / 180) * -3, z: z + Math.cos((g.face * Math.PI) / 180) * -3 } }], ri: 0, nerve: "steady", home: { x, z }, ...npcState(ctx, "agent", g.faction === "guard" ? 110 : 70) } });
   ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: g.gun }, ...weaponBody(g.gun) });
-  if (g.sign) ctx.spawn(`${id}-sign`, { feetPosition: { x: x + 0.9, y: 0, z }, rotation: { yaw: 90 }, physics: "static", primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: 1.6 }, material: { color: "oklch(0.4 0.06 55)" },
-    children: [{ feetPosition: { x: 0, y: 1.45, z: 0 }, primitive: { kind: "box", width: 1.1, height: 0.55, depth: 0.03 }, material: { color: "oklch(0.92 0.03 90)" }, ui: `<div face="front" width="1.1m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;color:#c01020;text-align:center;font-size:56px;line-height:1">${g.sign}</div>` }] });
-}
+
+  // Physical pilgrim gear on the floor instead of text slogan signs (show, don't tell)
+  if (g.bedroll) {
+    ctx.spawn(`${id}-gear`, { feetPosition: { x: x + 0.6, y: 0, z: z - 0.3 }, rotation: { yaw: 25 }, primitive: { kind: "cylinder", radiusTop: 0.16, radiusBottom: 0.16, height: 0.65 }, material: { color: "oklch(0.35 0.05 130)", roughness: 0.9 } });
+  }
+  if (g.lantern) {
+    ctx.spawn(`${id}-gear`, { feetPosition: { x: x + 0.5, y: 0, z: z + 0.2 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.1, height: 0.32 }, material: { color: "oklch(0.3 0.01 250)", metalness: 0.8 }, children: [{ feetPosition: { x: 0, y: 0.12, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.16 75)", intensity: 1.4, distance: 5 } }] });
+  }
+  if (g.canteen) {
+    ctx.spawn(`${id}-gear`, { feetPosition: { x: x + 0.5, y: 0, z: z - 0.2 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.07, height: 0.22 }, material: { color: "oklch(0.45 0.08 60)", roughness: 0.6 } });
+  }

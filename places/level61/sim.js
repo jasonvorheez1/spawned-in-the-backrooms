@@ -89,7 +89,7 @@ function lay(ctx) {
     model: { id: M_VEND, forward: "+z", materials: { cabinet: { color: soda ? "oklch(0.5 0.2 27)" : "oklch(0.16 0.005 250)", roughness: 0.4, metalness: 0.35 } } },
     tags: extra.dead ? [] : ["usable"],
     behavior: extra.dead ? undefined : "scripts/l61-use.js",
-    state: extra.dead ? {} : { kind: "vend", sells: soda ? "soda" : "snack", name: soda ? "Soda machine" : "Snack machine", verb: "Press a button", info: soda ? "Coca-Cola, Pepsi, Mountain Dew, Sprite, Dr Pepper, Vault, Snapple. Free, it never asks for coins." : "Doritos and the rest of 2003. Free." },
+    state: extra.dead ? {} : { kind: "vend", sells: soda ? "soda" : "snack", name: soda ? "Soda machine" : "Snack machine", verb: "Press a button", info: soda ? "Chilled soda machine." : "Packaged snack machine." },
     children: [{ feetPosition: { x: 0.1, y: 0.38, z: -0.447 }, primitive: { kind: "box", width: 0.72, height: 1.32, depth: 0.01 }, material: { texture: soda ? SODA : SNACK, roughness: 0.15, emissive: "oklch(0.35 0 0)", emissiveIntensity: 0.4 } }],
   });
 
@@ -250,7 +250,7 @@ function lay(ctx) {
   }
 
   // 1. Clippers: Red 1950s bar, stools, back shelves, and the interactive Wurlitzer 80s Internet Radio Jukebox
-  counter("l61-clip-bar", -21, -30.2, 180, M_BAR10, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "budweiser,budweiser,jackcoke,whiskey,smirnoffice,coke", name: "Clippers bar", verb: "Order what the menu shows", info: "Red walls, wood floor. The bartender is a faceling in a bow tie." } });
+  counter("l61-clip-bar", -21, -30.2, 180, M_BAR10, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "budweiser,budweiser,jackcoke,whiskey,smirnoffice,coke", name: "Clippers bar", verb: "Order what the menu shows", info: "Clippers drink counter." } });
   for (let k = 0; k < 6; k++) stool(`l61-clip-stool-${k}`, -25 + k * 1.6, -29.2, "oklch(0.45 0.18 25)");
   for (const [n, y] of [[0, 1.4], [1, 2.0]]) {
     sp(`l61-clip-shelf-${n}`, {
@@ -288,7 +288,7 @@ function lay(ctx) {
       verb: "Pick a record",
       playing: true,
       stationIndex: 0,
-      info: "Chrome and bubble tubes. It plays whether or not anyone feeds it.",
+      info: "1980s retro jukebox.",
       tint: "#ff3888",
     },
     ui: `<div face="front" width="0.75m" style="font-family:Arial,sans-serif;font-weight:900;background:#0d0d18;color:#ffffff;padding:12px;border:2px solid #ff3888;text-align:center;line-height:1.15;box-shadow:inset 0 0 15px rgba(255,255,255,0.2)">
@@ -309,7 +309,7 @@ function lay(ctx) {
   box("l61-clip-wire", -21, 0.06, -23.2, 3.6, 0.015, 0.015, { color: "oklch(0.2 0 0)" }, { physics: undefined });
 
   // 2. Liquorette: Long dark bar, glowing backbar, green glass lamps
-  counter("l61-liq-bar", -12.2, -27, -90, M_BAR7, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "almond,corona,millerlite,margarita,whiskey,jackcoke", name: "Liquorette bar", verb: "Order what the menu shows", info: "Almond water, Corona, margaritas, Jim Beam. Pay nothing." } });
+  counter("l61-liq-bar", -12.2, -27, -90, M_BAR7, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "almond,corona,millerlite,margarita,whiskey,jackcoke", name: "Liquorette bar", verb: "Order what the menu shows", info: "Liquorette drink counter." } });
   counter("l61-liq-back", -13.6, -27, -90, M_BACKBAR);
   for (let k = 0; k < 3; k++) {
     sp(`l61-liq-lamp-${k}`, {
@@ -322,14 +322,14 @@ function lay(ctx) {
   for (let k = 0; k < 4; k++) tableSet(`l61-liq-table-${k}`, -6 + (k % 2) * 3.4, -25.5 - Math.floor(k / 2) * 3.4, k * 20);
 
   // 3. Slice Palace: Pizza warming case, oven, menu board, soda machine
-  counter("l61-slice-counter", 7, -29.4, 180, M_PIZZA, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "pizza", name: "Slice Palace counter", verb: "Order what the menu shows", info: "Pepperoni under a heat lamp. A faceling in a paper hat waves." } });
+  counter("l61-slice-counter", 7, -29.4, 180, M_PIZZA, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "pizza", name: "Slice Palace counter", verb: "Order what the menu shows", info: "Slice Palace pizza counter." } });
   counter("l61-slice-oven", 9.5, -31.3, 180, M_OVEN);
   sign("l61-slice-menu", 4.5, 2.2, -31.8, 180, 3.2, 1.2, `<div style="font-size:120px;color:#ffd84a">MENU</div><div style="font-size:70px;color:#fff">PEPPERONI · CHEESE · SUPREME</div><div style="font-size:60px;color:#9f9">ALL SLICES FREE · FACELING STAFF</div>`, "oklch(0.2 0.02 150)");
   vend("l61-slice-soda", 12.8, -25, 90, true);
   for (let k = 0; k < 2; k++) tableSet(`l61-slice-table-${k}`, 3 + k * 4, -25.5, 0);
 
   // 4. Burger Bop: Curved diner counter, sizzling grill, revolving stools, fresh coffee urn, cherry pie cloche & Chef Sal
-  counter("l61-burger-counter", 21, -28.6, 180, M_DINER, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "burger", name: "Burger Bop counter", verb: "Order what the menu shows", info: "The grill hisses. It smells exactly like 1986." } });
+  counter("l61-burger-counter", 21, -28.6, 180, M_DINER, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "burger", name: "Burger Bop counter", verb: "Order what the menu shows", info: "Burger Bop diner counter." } });
   counter("l61-burger-grill", 21, -31.3, 180, M_GRILL, { audio: { clip: "cdn/sfx-burgers-sizzling-on-flat-top-griddle-loop.mp3", loop: true, gain: 0.18, spatial: true, maxDistance: 11 } });
   for (let k = 0; k < 6; k++) stool(`l61-burger-stool-${k}`, 17 + k * 1.6, -27.5, "oklch(0.7 0.13 195)");
   vend("l61-burger-soda", 27.3, -25, 90, true);
@@ -346,7 +346,7 @@ function lay(ctx) {
       kind: "coffee",
       name: "Fresh Diner Coffee Urn",
       verb: "Pour a cup of hot coffee",
-      info: "Piping hot, freshly brewed diner roast. Restores sanity and gives an energy kick.",
+      info: "Piping hot diner coffee.",
       tint: "#f2d870",
     },
     children: [
@@ -367,7 +367,7 @@ function lay(ctx) {
       kind: "pie",
       name: "Fresh Baked Pie & Donut Dome",
       verb: "Take a slice of warm pie",
-      info: "Freshly baked cherry pie under a sparkling glass dome. Restores hunger and health.",
+      info: "Freshly baked cherry pie.",
       tint: "#ff88a0",
     },
     children: [
