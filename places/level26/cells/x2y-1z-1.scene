@@ -108,9 +108,9 @@ l26d-loop:
 l26d-pg-1:
   feetPosition: {x: 300.3, y: -80, z: -66}
   id: l26d-pg-1
-  layout: {box: {max: {x: 0.9, y: 2.15, z: 0.9}, min: {x: -0.9, y: 0, z: -0.9}}}
+  layout: {box: {max: {x: 0.55, y: 1.45, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
   mixer: {base: {clip: cdn/clip-idle-loop.glb, loop: true, weight: 1}}
-  model: {forward: "+x", id: /cdn/value.1c1a92509ad2ac3c2c4d4ba1a1d2453069b3ffb2346278d64abd0df0aca585c2.glb}
+  model: {forward: "+x", id: /cdn/value.42f5bedd66fcac564db4abac1161a08ebd01e368342333955a3e38bf4caee95b.glb}
   physics: {body: character, collider: capsule}
   rotation: {yaw: 0}
   state: {home: {x: 300.3, y: -80, z: -66}, hp: 90}
