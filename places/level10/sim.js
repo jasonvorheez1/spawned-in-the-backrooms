@@ -15,12 +15,12 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 
 export const cadence = "1s";
-const V = 12;
+const V = 13;
 const BRK = (mat, hp) => ({ mat, hp, maxHp: hp });
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BARN = (w, d, h, ridge, wall, door) => ({ primitive: { kind: "scripted", script: "scripts/barn10.js", params: { w, d, h, ridge, wall, door } }, physics: "static" });
 const DOOR = (to, w, h, d) => ({ primitive: { kind: "box", width: w, height: h, depth: d }, visible: false, physics: { body: "static", trigger: true }, behavior: "scripts/level-door.js", state: { to } });
-const tree = (kind, h, seed) => ({ primitive: { kind: "scripted", script: "scripts/tree10.js", params: { kind, h }, seed }, material: { alphaTest: 0.5 }, physics: "static" });
+const tree = (kind, h, seed) => ({ primitive: { kind: "scripted", script: "scripts/tree10.js", params: { kind, h }, seed }, material: { alphaTest: 0.5 }, physics: "static", visibleRange: { max: kind === "hedge" ? 160 : 280 }, castShadow: kind !== "hedge" });
 const AMB = "cdn/ambience-wind-through-ripe-wheat-field-overcast-countryside-distant-crows-loop.mp3";
 const WIND_CREAK = "cdn/moodboard-realistic-gritty/sfx-wood-creak-heavy-timber-settling.mp3";
 
@@ -350,8 +350,10 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
   // 10. HEDGEROWS, REEDS & CANOLA
   // ==========================================
   const rows = [];
-  for (const x of [-120, -40, 40, 120]) rows.push({ cx: x, cz: -110, w: 5, d: 360 });
-  for (const z of [-270, -210, -150, -90, -30, 30]) rows.push({ cx: 0, cz: z, w: 320, d: 5 });
+  // the farmyard (x -72..-4, z -76..-4) is kept clear: the rows that cross it are split around it
+  const span = (a0, a1, cut0, cut1) => (a1 < cut0 || a0 > cut1) ? [[a0, a1]] : [[a0, cut0], [cut1, a1]].filter(([u, v]) => v - u > 6);
+  for (const x of [-120, -40, 40, 120]) for (const [z0, z1] of (x === -40 ? span(-290, 70, -76, -4) : [[-290, 70]])) rows.push({ cx: x, cz: (z0 + z1) / 2, w: 5, d: z1 - z0 });
+  for (const z of [-270, -210, -150, -90, -30, 30]) for (const [x0, x1] of (z === -30 ? span(-160, 160, -72, -4) : [[-160, 160]])) rows.push({ cx: (x0 + x1) / 2, cz: z, w: x1 - x0, d: 5 });
   rows.forEach((r, i) => sp(`l10-hedge-${i}`, {
     feetPosition: T(r.cx, r.cz),
     scatter: {
@@ -371,7 +373,7 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
       count: 220,
       seed: 9,
       variation: { scale: [1.2, 1.9], yaw: [0, 360] },
-      templates: [{ primitive: { kind: "scripted", script: "scripts/wheat10.js", params: { h: 1.2, n: 9, head: 0.18 }, seed: 5 }, material: { color: "oklch(0.86 0.03 85)" } }],
+      templates: [{ primitive: { kind: "scripted", script: "scripts/wheat10.js", params: { h: 1.2, n: 9, head: 0.18 }, seed: 5 }, material: { color: "oklch(0.86 0.03 85)" }, visibleRange: { max: 70 }, castShadow: false }],
     },
   });
 
@@ -384,8 +386,8 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
       seed: 18,
       variation: { scale: [0.9, 1.3], yaw: [0, 360] },
       templates: [
-        { primitive: { kind: "scripted", script: "scripts/wheat10.js", params: { h: 1.1, n: 6, head: 0.08 }, seed: 6 }, material: { color: "oklch(0.88 0.19 100)", emissive: "oklch(0.3 0.08 100)" } },
-        { primitive: { kind: "scripted", script: "scripts/wheat10.js", params: { h: 0.9, n: 8, head: 0.06 }, seed: 7 }, material: { color: "oklch(0.62 0.12 135)" } },
+        { primitive: { kind: "scripted", script: "scripts/wheat10.js", params: { h: 1.1, n: 6, head: 0.08 }, seed: 6 }, material: { color: "oklch(0.88 0.19 100)", emissive: "oklch(0.3 0.08 100)" }, visibleRange: { max: 70 }, castShadow: false },
+        { primitive: { kind: "scripted", script: "scripts/wheat10.js", params: { h: 0.9, n: 8, head: 0.06 }, seed: 7 }, material: { color: "oklch(0.62 0.12 135)" }, visibleRange: { max: 70 }, castShadow: false },
       ],
     },
   });
