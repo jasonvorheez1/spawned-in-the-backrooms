@@ -11,6 +11,7 @@ import MEG from "../../scripts/lib/data/meg.yml";
 import { STAIR } from "../../scripts/lib/level2.js";
 import { N, H, S, zoneOf, cellCenter, cellAt, openings, isOpen, hash, ARRIVE, BACK, SEALED, SIDE, HALL, HALL_H, CATWALK, inHall, inPipes, sideOf, flickerSector, SLUDGE2 } from "../../scripts/lib/level2.js";
 import { spawnAlmond, spawnCrateL2, spawnWeapon, rollWeaponL2, spawnContainerL2 } from "../../scripts/lib/loot.js";
+import { PROPS, spawnProp, dressRoom, dressHall, fitBox, crateModel, containerModel } from "../../scripts/lib/l2props.js";
 import { npcState, dmgAfterArmor } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
@@ -41,7 +42,7 @@ export function tick(ctx) {
     for (const id of ["l2-geo", "l2-details"]) { const o = ctx.getObject(id); if (o?.primitive && !o.primitive.params?.kit) o.primitive = { ...o.primitive, params: { ...(o.primitive.params || {}), kit: true } }; }
   }
   if (!s.seeded) {
-    s.seeded = true; s.kitV = 1;
+    s.seeded = true; s.kitV = 1; s.propsV = 1;
     ctx.spawn("l2-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-geo.js", params: { kit: true } }, material: { roughness: 0.9 } });
     ctx.spawn("l2-details", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-details-geo.js", params: { kit: true } }, material: { roughness: 0.85 } }); spawnKit(ctx); // handrails, cables, stains; the modelled kit (scripts/lib/l2kit.js) draws walls, pipes, trays, ducts, lamps
     // tube lights: industrial white or sodium orange, uneven, some hanging crooked; dead circuits get a violet emergency lamp now and then
@@ -65,8 +66,8 @@ export function tick(ctx) {
     const SIGN_TEX = "/cdn/value.184984b3698a8e811d65fabd0495cb2d59125220555cc5346558efc46ebf9c4b.png";
     // the camp: three warm lanterns and a stove
     const a = cellCenter(1, ARRIVE.cz);
-    for (const [dx, dz] of [[2, 0], [5, 4.5], [5, -4.5]]) ctx.spawn({ feetPosition: { x: a.x + dx, y: 1.0, z: a.z + dz }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "sphere", radius: 0.08 }, material: { color: "oklch(0.85 0.14 70)", emissive: "oklch(0.85 0.14 70)", emissiveIntensity: 2 }, light: { kind: "point", color: "oklch(0.85 0.14 70)", intensity: 5, distance: 12, shadow: { enabled: false }, visibleRange: { max: 40 } } });
-    ctx.spawn({ feetPosition: { x: a.x + 5, y: 0.85, z: a.z - 4.7 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.14, height: 0.12 }, material: { color: "oklch(0.3 0.01 250)", metalness: 0.6 },
+    for (const [dx, dz] of [[2, 0], [5, 4.5], [5, -4.5]]) ctx.spawn({ ...campLantern(), feetPosition: { x: a.x + dx, y: 0.83, z: a.z + dz }, light: { kind: "point", color: "oklch(0.85 0.14 70)", intensity: 5, distance: 12, shadow: { enabled: false }, visibleRange: { max: 40 } } });
+    ctx.spawn({ ...campStove(), feetPosition: { x: a.x + 5, y: 0.85, z: a.z - 4.7 },
       fx: { script: `fx\npop flame rate=18 on=disc(.07) life=.3..0.5 v=up(.6) size=.06..0.1 sz=$size*(1>.2) col=hdr(1.2,2,4)>hdr(.4,.6,2) a=0>.15:1>.7:.6>0 r=sprite(flame-wisp,add)\npop glow n=1 r=light(<.6,.7,1>,fire()*2,4)` } });
     ctx.spawn({ feetPosition: { x: a.x + 3, y: 2.4, z: a.z + 0.01 - 2.45 }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 2.4, height: 0.8, depth: 0.02 }, material: { texture: SIGN_TEX, roughness: 0.95 }, rotation: { roll: -2 } });
     // the doors: home to Level 1 in the west wall; the barred "3" door in the east
@@ -99,6 +100,7 @@ export function tick(ctx) {
   }
   if ((s.rev ?? 0) >= 4 && (s.snapped ?? 0) < 1) { snapContainers(ctx); s.snapped = 1; }
   if (STAIR && (s.rev ?? 0) >= 4 && !s.stairV) sideRoom(ctx, STAIR); // rooms that were laid before the stairwell existed get it now
+  if (s.seeded && (s.rev ?? 0) >= 4 && s.propsV !== 1) reprop(ctx, s); // rooms dressed before the Tripo props: re-dress them once
   if ((s.rev ?? 0) < 4) revamp(ctx, s); // the revamp lays itself over a few ticks: rooms, doors, the hall, vents
   if (s.sludgeV !== 1) { s.sludgeV = 1; laySludge2(ctx); }
   if (s.graffitiV !== 1) { s.graffitiV = 1; layGraffiti2(ctx); }
@@ -245,6 +247,7 @@ function sideRoom(ctx, r) {
     ctx.spawn({ feetPosition: P(0, 0, 1.5), audio: { clip: GRIT("water-drip-echo-loop"), gain: 0.25, loop: true, spatial: true, maxDistance: 10 } });
   }
   if (r.type === "boiler") ctx.spawn({ feetPosition: P(0.6, -1.4, 0.4), fx: { script: FIREBOX }, audio: { clip: GRIT("boiler-low-rumble-loop"), gain: 0.25, loop: true, spatial: true, maxDistance: 10 } });
+  dressRoom(ctx, r.type, P, [nx, nz], yawOf); // the room's Tripo props (lib/data/l2props.yml)
   // what can be looted: its type's containers on their slots, facing the door
   const S0 = SLOTS[r.type] ?? [[-1.8, 0]], lockedRoom = !!T.lock;
   T.containers.forEach((k, j) => { const [a, b] = S0[j % S0.length], d = L.containers[k].size[2]; spawnContainerL2(ctx, k, P(a + (a < 0 ? d / 2 - 0.25 : 0), b), yawOf(nx, nz), { bonus: T.bonus ?? 0, noLock: lockedRoom, room: r.i }); });
@@ -259,11 +262,12 @@ function revamp(ctx, s) {
       if (inHall(cx, cz) || sideOf(cx, cz)) { ctx.destroy(l.id); continue; }
       if (flickerSector(cx, cz)) { const col = typeof o.material?.color === "string" ? o.material.color : JSON.stringify(o.material?.color ?? "oklch(0.95 0.02 200)"); o.light = null; o.fx = { script: flickFx(col.includes(" 65") ? "<1,.7,.4>" : "<.85,.92,1>", hash(cx, cz, 11)) }; }
     }
-    ctx.spawn("l2-rooms", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-rooms-geo.js" }, material: { roughness: 0.85 } });
+    ctx.spawn("l2-rooms", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-rooms-geo.js", params: { props: true } }, material: { roughness: 0.85 } });
     // the Boiler Hall: high sodium lamps, the firebox, the drone, loot on the floor and up on the catwalk
     const cx = (HALL.x0 + HALL.x1) / 2, cz = (HALL.z0 + HALL.z1) / 2;
     for (const [dx, dz] of [[-6, -6], [6, -6], [-6, 6], [6, 6]]) ctx.spawn({ feetPosition: { x: cx + dx, y: HALL_H - 0.6, z: cz + dz }, visibleRange: { max: 55 }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.15, radiusBottom: 0.35, height: 0.3 }, material: { color: "oklch(0.85 0.14 65)", emissive: "oklch(0.8 0.15 60)", emissiveIntensity: 2.5 }, light: { kind: "point", color: "oklch(0.8 0.13 62)", intensity: 16, distance: 22, shadow: { enabled: false }, visibleRange: { max: 50 } } });
     ctx.spawn({ feetPosition: { x: cx - 6.8, y: 2.2, z: cz }, fx: { script: FIREBOX }, audio: { clip: GRIT("boiler-low-rumble-loop"), gain: 0.4, loop: true, spatial: true, maxDistance: 26 } });
+    dressHall(ctx, cx, cz);
     spawnContainerL2(ctx, "lockbox", { x: HALL.x1 - 0.4 - 0.7, y: CATWALK + 0.01, z: HALL.z1 - 0.4 - 0.7 }, 225, { bonus: 1 });
     spawnContainerL2(ctx, "toolbox", { x: HALL.x0 + 1.2, z: cz + 3 }, -90);
     spawnContainerL2(ctx, "cabinet", { x: cx + 2, z: HALL.z1 - 0.7 }, 180);
@@ -335,4 +339,30 @@ function layGraffiti2(ctx) {
   // stenciled caution on wall next to SEALED door:
   ctx.spawn({ tags: ["l2sign"], feetPosition: { x: SEALED.x - 0.6, y: 0.7, z: SEALED.z }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 0.02, height: 0.45, depth: 1.6 }, material: { color: "oklch(0.22 0.03 30)" },
     ui: '<div face="left" width="1.6m" style="font-size:75px;font-weight:900;color:#ff6644;text-align:center;line-height:1.15">M.E.G. ADVISORY<div style="font-size:50px;color:#ffa088">LEVEL 3 CLASS 4 HAZARD · UNGROUNDED VOLTAGE</div></div>' });
+}
+
+// ---- Tripo props (scripts/lib/l2props.js): the camp's lanterns and stove, and the one-time re-dress of rooms laid before them
+const campLantern = () => ({ tags: ["l2camp-lantern"], visibleRange: { max: 40 }, castShadow: false, model: { id: PROPS.kinds.lantern.id, forward: PROPS.forward }, layout: fitBox(PROPS.kinds.lantern.size),
+  light: { kind: "point", color: "oklch(0.85 0.14 70)", intensity: 5, distance: 12, shadow: { enabled: false }, visibleRange: { max: 40 } } });
+const campStove = () => ({ tags: ["l2camp-stove"], visibleRange: { max: 40 }, castShadow: false, model: { id: PROPS.kinds.stove.id, forward: PROPS.forward }, layout: fitBox(PROPS.kinds.stove.size) });
+function reprop(ctx, s) {
+  const step = s.propsStep ?? 0, all = { radius: 1e5, center: { x: 0, y: 0, z: 0 } }, rooms = SIDE.filter((r) => r.type !== "stair"), half = Math.ceil(rooms.length / 2);
+  if (step === 0) {
+    const g = ctx.getObject("l2-rooms"); if (g?.primitive) g.primitive = { ...g.primitive, params: { ...(g.primitive.params || {}), props: true } };
+    for (const o of ctx.query({ tags: ["l2prop"], ...all })) ctx.destroy(o.id); // a half-done earlier pass never doubles up
+  }
+  if (step === 0 || step === 1) {
+    for (const r of rooms.slice(step * half, (step + 1) * half)) { const c = cellCenter(r.cx, r.cz), [nx, nz] = D4[r.o], tx = -nz, tz = nx; dressRoom(ctx, r.type, (a, b, y = 0) => ({ x: c.x + nx * a + tx * b, y, z: c.z + nz * a + tz * b }), [nx, nz], yawOf); }
+    s.propsStep = step + 1; return;
+  }
+  dressHall(ctx, (HALL.x0 + HALL.x1) / 2, (HALL.z0 + HALL.z1) / 2);
+  // containers and crates keep their loot, tags and place: only their look changes
+  for (const row of ctx.query({ tags: ["l2box"], ...all })) { const o = ctx.getObject(row.id), id = containerModel(o?.state?.kind); if (!o || !id || o.model || !L.containers[o.state.kind]) continue; o.model = { id, forward: PROPS.forward }; o.layout = fitBox(L.containers[o.state.kind].size); o.primitive = null; }
+  for (const row of ctx.query({ tags: ["crate"], ...all })) { const o = ctx.getObject(row.id); if (!o || o.model || o.primitive?.kind !== "scripted") continue; const nm = o.state?.name ?? ""; o.model = { id: crateModel(nm), forward: PROPS.forward }; o.layout = fitBox(/^Toolbox/.test(nm) ? PROPS.toolboxSize : PROPS.crateSize); o.primitive = null; o.physics = { body: "static", collider: "box" }; }
+  // the camp: lantern bulbs and the tin stove become their meshes (light and flame carried over)
+  const a = cellCenter(1, ARRIVE.cz);
+  for (const row of ctx.query({ radius: 9, center: { x: a.x + 3, y: 0, z: a.z } })) { const o = ctx.getObject(row.id), k = o?.primitive?.kind;
+    if (k === "sphere" && o.primitive.radius === 0.08 && o.light) { const p = o.feetPosition; ctx.destroy(o.id); ctx.spawn({ ...campLantern(), feetPosition: { x: p.x, y: p.y - 0.17, z: p.z } }); }
+    else if (k === "cylinder" && o.primitive.radiusTop === 0.12 && o.fx) { const p = o.feetPosition, fx = o.fx; ctx.destroy(o.id); ctx.spawn({ ...campStove(), feetPosition: p, fx }); } }
+  s.propsV = 1; delete s.propsStep;
 }
