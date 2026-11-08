@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1631,
-  "updatedAt": "2026-11-08T07:49:12.441Z",
-  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Place sims assemble local spaces, populations and hazards around shared player, NPC, loot, crafting, combat and UI systems; paired doors and arrival markers connect the routes. Player karma and faction reputation now feed NPC reactions, trading prices and character-sheet UI.",
+  "basedOnSpecVersion": 1635,
+  "updatedAt": "2026-11-08T07:52:59.175Z",
+  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Place sims assemble local spaces, populations and hazards around shared player, NPC, loot, crafting, combat and UI systems; paired doors and arrival markers connect the routes. NPC companions reuse M.E.G. agent behavior, with recruitment, perks, orders and threshold travel mediated by shared companion helpers.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, containers, shifting walls and hunters.",
@@ -10,7 +10,7 @@
     "places/level3 + places/gamma (3D) - Electrical Station and Base Gamma; seeded layouts, hazards, agents, traders, generators, lifts and checkpoint; Gamma includes Marlo the smith.",
     "places/level4 (3D) - Abandoned Office; office plan, residents, cubicles, home-claim offices, coolers, vending, lift/stairs and Base Omega.",
     "places/level5 + places/level6 (3D) - Terror Hotel and Lights Out; Level 5 rooms, quests and portal; Level 6 dark labyrinth and sensory hazards, with a tripwire entrance to Level 6.1.",
-    "places/level61 (3D) - Level 6.1 The Snackrooms; sim-built food court with four service venues, Facelings, M.E.G. outpost and Liquorette's modelled tavern; arrivals from Levels 4 and 6 and routes onward.",
+    "places/level61 (3D) - Level 6.1 The Snackrooms; sim-built mall food court with a fountain/garden rotunda, dining terraces, four service venues, Facelings, M.E.G. outpost and Liquorette; routes connect Levels 4, 6 and 3.",
     "places/level7 (3D) - Thalassophobia; flooded Floating House, Seawatch, Fort Surrender, sea floor, diving bell and Level 9 hatch.",
     "places/level8 + places/debug (3D) - Level 8 Cave Systems / 9th Road and camp route; Debug is a separate dark atmosphere and spawn."
   ],
@@ -32,7 +32,7 @@
     "scripts/lib/clothes.js, scripts/lib/critter-model.js + model/face data, scripts/mat-cloth.js - seeded avatar/NPC looks and rendered bodies/garments; art/critter-cute/build.py supplies active cute Blender meshes selected by scripts/lib/data.",
     "scripts/lib/loot.js + scripts/lib/items.js + level data - shared item pools, rolls, remains, parsing/descriptions and container helpers; art/props/build.py supplies modeled lockers/fridges.",
     "scripts/lib/condition.js + condition.yml and scripts/lib/stats.js - weapon/armor condition and derived handling/carry values used by player.js, clothes.js, loot-ui.js and npc-talk.js.",
-    "scripts/lib/rep.js - faction grouping, karma/standing tiers and writes; scripts/player.js, scripts/talk.js, scripts/talk-ui.js, scripts/stats-ui.js and scripts/meg-agent.js consume its API."
+    "scripts/lib/rep.js + scripts/lib/companion.js - faction/karma and companion recruitment/perks/orders; used by player/NPC dialogue, meg-agent.js, stats.js and level-door.js."
   ],
   "notableExports": [
     "sim.js - cadence, tick, onOutOfBounds; places/level21/sim.js and places/level8/sim.js - cadence, tick; places/level61/sim.js - cadence, tick.",
@@ -42,31 +42,31 @@
     "scripts/l61-use.js - MENUS, ears, landed, takeItem, vendExpire, ready, expire; scripts/lib/level61-extra.js - layExtra, faceling, person, PEOPLE, FACELING_IDS.",
     "scripts/l61-staff.js - ears, update; scripts/l61-jukebox.js - STATIONS, ears, tune; scripts/lib/l61-anim.js - diner gesture clips and playGesture.",
     "scripts/lib/condition.js - CAP, band, bandColor, wMul, jamChance, drMul, useWear, armorWearFor, cndOf, repairAmount, vendorCost; scripts/lib/npc-talk.js - TALK, CHECKS, INTENTS, MOODS and dialogue/trade helpers.",
-    "scripts/lib/rep.js - GROUPS, groupOf, tierOf, repOf, standing, isVilified, isHated, repDisc, karmaOf/title, addRep/addKarma, repKill/Kind/Trade/Line; scripts/noclip-ui.js - noclipUi, CLIP_T, clipCard; mods/lagscope/panel.js - render, mount/destroy, overlay; scripts/db.js - migrate."
+    "scripts/lib/companion.js - PERKS, perkOf, isMine, followersOf, loyaltyScale, whyNot, recruit, adopt, dismiss, order, giveWeapon, takeWeapon; scripts/lib/rep.js - faction/reputation API; scripts/noclip-ui.js - noclipUi, CLIP_T, clipCard."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, clothing, snacks, and karma/rep values written by scripts/lib/rep.js; transient movement/combat timers live in its per-player walk state.",
-    "scripts/stats.js - HALOGEN attributes, skills, points, tags, schema version and sheet state; initializes/migrates and spends points; Repair skill drives derived repair values.",
-    "scripts/craft.js - craft UI/actions, payout redemption and hunger/thirst drain; Level 2.1 hot/humid thirst multiplier comes from level21.yml; scripts/swim.js owns player swimming/underwater/breath and session swim controls, timer and audio, and applies drowning damage.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, clothing, snacks, and karma/rep values; transient movement/combat state is also maintained here.",
+    "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes, skills, points, tags and sheet state; initializes/migrates and spends points; Repair skill drives derived repair values; stats.js ticks companion perks.",
+    "scripts/craft.js - craft UI/actions, payout redemption and hunger/thirst drain; Level 2.1 hot/humid thirst multiplier comes from level21.yml; scripts/swim.js owns player swimming/underwater/breath and session swim controls, timer and audio.",
     "scripts/interact.js + scripts/lib/seat.js own focus, loot and sit state; scripts/lockpick.js owns pick state and pins; seats own occupancy.",
     "scripts/talk.js owns dialogue/shop UI state and writes NPC rapport, gifts, trade and rep effects; scripts/lib/rep.js owns karma and per-group rep calculation/writes; scripts/talk-ui.js and stats-ui.js render their values.",
-    "scripts/meg-agent.js - NPC routines, attributes/nerve, loadout, combat, fear, cover, idle social coordination and transient movement/path-recovery state; responds to player faction standing alongside grudges.",
-    "places/level21/sim.js owns build/people versions and hound manager; scripts/l21-use.js owns prop cooldowns, payouts/quests and survivor talk UI; places/level61/sim.js owns build and local population setup; l61-use/staff own service/tray state.",
-    "mods/lagscope/lib/watch.js owns local sampler/report decisions and session panel/report data; lib/store.js owns shared SQL configuration, webhook and report rows; scripts/db.js migration creates its tables."
+    "scripts/meg-agent.js - NPC routines, attributes/nerve, loadout, combat, fear, cover, idle social coordination and transient movement/path-recovery; companion state.follow/cmd/cstance changes its leader, waiting and fire behavior.",
+    "scripts/lib/companion.js - companion setup, recruitment eligibility, perk effects, carried-weight bonus, loyalty and weapon handoff; NPC companion fields live on the NPC, while tick timers live in player.session.comp.",
+    "places/level21/sim.js owns build/people versions and hound manager; scripts/l21-use.js owns prop cooldowns, payouts/quests and survivor talk UI; places/level61/sim.js owns build and local population setup; l61-use/staff own service/tray state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js behavior order: locomotion/player, swim, interact/grab/rest/mahjong/talk/build/stats/craft/OS/lockpick/horde, then critter, main-menu and view3.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes player.state.aimPt → player.js crosshair-aligned shots.",
     "world.config.yaml Backspace → scripts/main-menu.js; menu actions and scripts/ui.js render menu/creator; menu hides player and supplies ctx.view.camera backdrop.",
     "engine out-of-bounds event → sim.js onOutOfBounds: player returns true for normal respawn; creature with state.home is repositioned there, otherwise destroyed for its manager to respawn.",
-    "Level threshold trigger → scripts/level-door.js maps pair IDs and writes other.state.clipKind → cross to paired arrival; scripts/player.js consumes clipKind into state.xfer.kind on place change → scripts/ui.js xferCard → scripts/noclip-ui.js clipCard.",
+    "Level threshold trigger → scripts/level-door.js maps pair IDs, writes arrival state.clipKind and calls companion.bring → nearby followers cross with player unless ordered to wait; scripts/player.js consumes clipKind into state.xfer.kind on place change → scripts/ui.js xferCard → scripts/noclip-ui.js.",
     "places/level21/sim.js → scripts/lib/level21.js layout, scripts/level21-geo.js geometry and chatter.js exchanges; hounds.js uses maze21path.js for pursuit; l21-use.js handles set pieces and Edge Smilers.",
     "Level 2.1 and Level 8 sim props carry state.anim → scripts/ambient-anim.js → builtin/tween; ambient.js supplies fan/cable meshes and DRIP/DUST/MIST/RIPPLE FX.",
     "scripts/player.js NPC kill → scripts/lib/witness.js markKill records witnesses and corpse state → scripts/lib/rep.js repKill writes player karma and witnessed faction standings; unseen kills still affect karma.",
     "scripts/talk.js gifts/fair trades → scripts/lib/rep.js repKind/repTrade; repDisc and isHated → trader shop prices/refusal; repLine → NPC dialogue prompt; stats-ui.js reads karma/rep for K sheet.",
-    "scripts/meg-agent.js moveAlong → builtin/nav findPath, smoothed by static-geometry line-of-sight checks; chase, flee, cover, home, routine and social walks share path recovery; Vilified standing seeds grudges and attacks without provocation.",
-    "Level 2 shutter/stair → places/level2/sim.js paired door → scripts/level-door.js crosses to level21#l21-from-l2; Level 2.1 and Level 8 use paired arrival markers for their tunnel/cave routes.",
-    "Level 6 tripwire/Level 4 vending route → Level 6.1 arrival markers; scripts/level-door.js crosses to arrivals and returns via l61-to-l6; Level 6.1 vent leads to Level 3; service handlers write player.state.payout → player.js adds snacks; mods/lagscope watch → SQL reports → panel."
+    "scripts/talk-ui.js exposes Recruit and follower orders → scripts/talk.js dispatches talkdo → scripts/lib/companion.js validates/adopts/orders/transfers weapons; normal dialogue join/leave also adopts/dismisses.",
+    "scripts/meg-agent.js follows state.follow, observes wait/hold commands and supplies follower combat → scripts/lib/stats.js npcMul scales gunhand damage; scripts/stats.js calls companion.tick for medic healing, mule carry bonus, mechanic wear reduction and loyalty; companion dismissal restores held weapon / tough HP.",
+    "Level 2 shutter/stair → places/level2/sim.js paired door → scripts/level-door.js crosses to level21#l21-from-l2; Level 2.1 and Level 8 use paired arrival markers for their tunnel/cave routes; Level 6/6.1 doors and service payout flow remain paired as before."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures, local sound/light state and red-zone variants; Level 5 cells also carry portal and quest props.",
@@ -76,17 +76,17 @@
     "scripts/lib/craft.js + craft data - recipe category, costs, skill, bench, batch size and item family vary per recipe, including Level 8 cave materials.",
     "places/level8/sim.js + scripts/l8-life.js + l8-use.js - coordinate-interpolated road stations share systems while hazards, harvests, caches, camp interactions, quests and payouts vary by station.",
     "places/level21/sim.js + level21.yml + level21-geo.js - room blocks share generated hall/room structure; room type, zone height, lighting, decor and loot vary by authored grid data and deterministic hashes.",
-    "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - four venues share menu/order/tray service with varying menus and Faceling roles; Liquorette's art/liquorette/build.py models vary the tavern props."
+    "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share menu/order/tray service with varying menus and Faceling roles; the new central fountain rotunda and west/east dining terraces organize the common hall; Liquorette art models vary the tavern props."
   ],
   "probableOrphans": [
     "scripts/lib/kemono.js"
   ],
   "migrationNotes": [
-    "Level 2.1 grid is 30×30 at 4 m per cell (120 m square); keep level21.js passability/room zones, maze21path.js traversal, sim geometry/hound routing aligned, and roofAt in place state so ceiling checks survive tick calls; its rebuild version drives replacement.",
+    "Level 2.1 grid is 30×30 at 4 m per cell (120 m square); keep level21.js passability/room zones, maze21path.js traversal, sim geometry/hound routing aligned, and roofAt in place state so ceiling checks survive tick calls; its rebuild version gates generated content.",
     "Keep paired arrival IDs aligned: Level 2 ↔ Level 2.1 (l2-from-l21/l21-from-l2), Level 2.1 ↔ Level 8 (l21-from-l8/l8-from-l21), and Level 6 ↔ Level 6.1 (l6-from-l61/l61-from-l6); the Level 6 wire trigger also targets l61-from-l6.",
     "Weapon condition is player.state.cnd_<weapon>; garment condition lives in player.state.look.cnd keyed by garment token, shared across same kind/colour copies; preserve those keys and keep clothes.yml pattern IDs implemented by mat-cloth.js.",
-    "Level 6.1 lay() replaces l61-prefixed roots when builtV < V and resets crewV; keep service/menu/pickup/tray IDs and positions aligned; Liquorette assets use model forward '-z' and dado paneling sits slightly off the walls to avoid flicker.",
-    "Level 8 lake return trigger is at the lake bed's middle, not the wading surface; swim.js relies on bounds of tagged swimwater volumes and runs after player.js to override movement/falling.",
-    "Karma and faction standing are durable player.state.karma and player.state.rep[group] values, each clamped to -100..100; rep.js derives groups from faction or NPC ID prefix (fallback Survivors), while witnessed kills alter reputation and unseen kills alter only karma."
+    "Level 6.1 sim build version is now V=43 and lay() replaces l61-prefixed roots; keep service/menu/pickup/tray IDs and positions aligned with scripts/lib/level61-extra.js and use handlers; Liquorette assets use model forward '-z' and dado paneling sits slightly off the walls to avoid flicker.",
+    "Companion ownership is NPC state.follow/cperk/loyal/cmd/cstance (with waitAt and gaveArm/armWas); player.session.comp holds perk timers and player.state.carryBonus is updated by companion.tick. Door crossing skips wait-ordered or more-than-16m followers.",
+    "Karma and faction standing are durable player.state.karma and player.state.rep[group] values, each clamped to -100..100; rep.js derives groups from faction or NPC ID prefix (fallback Survivors), while witnessed kills alter reputation and companion loyalty can fall for cruel karma."
   ]
 }
