@@ -44,7 +44,6 @@ export function builtSpec(kind, at, by, opts = {}) {
       { id: 'glow', feetPosition: { x: 0, y: h * 0.75, z: -d / 2 - 0.4 }, light: { kind: 'point', color: 'oklch(0.8 0.06 240)', intensity: 0, distance: 4 } },
     ]
   }
-  if (pc.furn === 'crt_tv') spec.children = [{ id: 'screen', tags: ['usable'], behavior: 'scripts/build-tv.js', visible: false, state: { name: 'TV', verb: 'Turn on' }, feetPosition: { x: 0, y: 0.69, z: -pc.size[2] / 2 - 0.01 }, rotation: { yaw: 180 }, primitive: { kind: 'plane', width: 0.6, height: 0.44 }, material: { emissive: '#ffffff', emissiveIntensity: 0.9, roughness: 0.2 }, castShadow: false }] // the tube plays like the green house's TV
   if (pc.door) spec.behavior = 'scripts/build-door.js'
   if (pc.trap) { spec.physics = { body: 'static', collider: 'box', trigger: true }; spec.behavior = 'scripts/build-spikes.js' }
   if (pc.light) spec.children = [{ feetPosition: { x: 0, y: 1.55, z: 0 }, light: { kind: 'point', color: 'oklch(0.9 0.08 80)', intensity: 2.2, distance: 11 } }]
