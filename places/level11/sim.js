@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 61; // bump to rebuild the city in rooms that are already open
+const V = 62; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -118,7 +118,7 @@ function lay(ctx) {
   sp("l11-to-l61", {
     tags: ["door"],
     feetPosition: { x: -29.4, y: 0.2, z: 12 },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 0.4, height: 3.0, depth: 2.2 },
     visible: false,
     physics: { body: "static", trigger: true },
@@ -191,7 +191,7 @@ function lay(ctx) {
   bx("l11-pegasus-arm-bot", 16.1, 9.5, 2.0, 0.8, 0.12, 0.12, STEEL_BRUSHED);
   sp("l11-pegasus-banner", {
     feetPosition: { x: 16.0, y: 9.5, z: 2.0 },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 2.2, height: 11.5, depth: 0.06 },
     material: { color: "#e85d04", roughness: 0.5 },
     ui: `<div face="front" width="2.2m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#e85d04;color:#ffffff;font-family:Arial Black,Impact,sans-serif;font-weight:900;font-size:125px;flex-direction:column;line-height:1.05;text-align:center"><span>P</span><span>E</span><span>G</span><span>A</span><span>S</span><span>U</span><span>S</span></div>`,
@@ -371,7 +371,7 @@ function lay(ctx) {
   });
   sp("l11-elev-ind-cab", {
     feetPosition: { x: 17.36, y: 2.65, z: 35.5 },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 0.48, height: 0.18, depth: 0.04 },
     material: { color: "#000000" },
     ui: `<div face="front" width="0.45m" style="width:100%;height:100%;background:#060d16;border:2px solid #00d2d3;box-sizing:border-box;color:#00d2d3;font-family:'Courier New',monospace;font-weight:900;font-size:26px;text-align:center;padding:4px 6px;letter-spacing:2px;text-shadow:0 0 10px #00d2d3;display:flex;align-items:center;justify-content:center">[ G ]</div>`,
@@ -381,7 +381,7 @@ function lay(ctx) {
   sp("l11-elev-btn-ground", {
     tags: ["usable"],
     feetPosition: { x: 17.15, y: 1.3, z: 34.0 },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 0.18, height: 0.32, depth: 0.08 },
     material: { color: "#00d2d3", emissive: "#00d2d3", emissiveIntensity: 2.5 },
     behavior: "scripts/level11-elevator.js",
@@ -389,7 +389,7 @@ function lay(ctx) {
   });
   sp("l11-elev-ind-ground", {
     feetPosition: { x: 17.15, y: 2.7, z: 35.5 },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 0.48, height: 0.18, depth: 0.04 },
     material: { color: "#000000" },
     ui: `<div face="front" width="0.45m" style="width:100%;height:100%;background:#060d16;border:2px solid #00d2d3;box-sizing:border-box;color:#00d2d3;font-family:'Courier New',monospace;font-weight:900;font-size:26px;text-align:center;padding:4px 6px;letter-spacing:2px;text-shadow:0 0 10px #00d2d3;display:flex;align-items:center;justify-content:center">[ G ]</div>`,
@@ -399,7 +399,7 @@ function lay(ctx) {
   sp("l11-elev-btn-roof", {
     tags: ["usable"],
     feetPosition: { x: 17.15, y: 36.7, z: 34.0 },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 0.18, height: 0.32, depth: 0.08 },
     material: { color: "#00d2d3", emissive: "#00d2d3", emissiveIntensity: 2.5 },
     behavior: "scripts/level11-elevator.js",
@@ -407,7 +407,7 @@ function lay(ctx) {
   });
   sp("l11-elev-ind-roof", {
     feetPosition: { x: 17.15, y: 38.1, z: 35.5 },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 0.48, height: 0.18, depth: 0.04 },
     material: { color: "#000000" },
     ui: `<div face="front" width="0.45m" style="width:100%;height:100%;background:#060d16;border:2px solid #00d2d3;box-sizing:border-box;color:#00d2d3;font-family:'Courier New',monospace;font-weight:900;font-size:26px;text-align:center;padding:4px 6px;letter-spacing:2px;text-shadow:0 0 10px #00d2d3;display:flex;align-items:center;justify-content:center">[ 14 ]</div>`,
@@ -448,7 +448,7 @@ function lay(ctx) {
   // Iconic Illuminated "SEDCO SPOTLIGHT" Horizontal Neon Sign
   sp("l11-sedco-sign", {
     feetPosition: { x: SEDCO_X - SEDCO_W / 2 - 0.08, y: SEDCO_H - 0.7, z: SEDCO_Z },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 7.2, height: 1.0, depth: 0.14 },
     material: { color: "#111111" },
     ui: `<div face="front" width="7.2m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#181818;border:3px solid #ff6a00;box-sizing:border-box;color:#ff6a00;font-family:Arial Black,sans-serif;font-weight:900;font-size:105px;letter-spacing:6px;text-shadow:0 0 16px #ff6a00">SEDCO SPOTLIGHT</div>`,
@@ -552,7 +552,7 @@ function lay(ctx) {
   // Storefront 1: Centro Dermatológico (Left)
   sp("l11-mall-sign-derma", {
     feetPosition: { x: MALL_X + MALL_W / 2 + 0.05, y: 4.1, z: MALL_Z - 6.5 },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 5.5, height: 0.85, depth: 0.06 },
     material: { color: "#ffffff" },
     ui: `<div face="front" width="5.5m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#ffffff;border:2px solid #0066cc;color:#0066cc;font-family:Arial,sans-serif;font-weight:900;font-size:75px"><span style="color:#00aa44;font-size:95px;margin-right:12px">+</span>CENTRO DERMATOLÓGICO</div>`,
@@ -562,7 +562,7 @@ function lay(ctx) {
   // Storefront 2: IS LAB (Center)
   sp("l11-mall-sign-islab", {
     feetPosition: { x: MALL_X + MALL_W / 2 + 0.05, y: 4.1, z: MALL_Z },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 4.2, height: 0.85, depth: 0.06 },
     material: { color: "#ffffff" },
     ui: `<div face="front" width="4.2m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#ffffff;border:2px solid #0088cc;color:#0088cc;font-family:Arial Black,sans-serif;font-weight:900;font-size:95px">IS LAB</div>`,
@@ -572,12 +572,43 @@ function lay(ctx) {
   // Storefront 3: Marroka Pizzeria (Right - Enterable!)
   sp("l11-mall-sign-pizza", {
     feetPosition: { x: MALL_X + MALL_W / 2 + 0.05, y: 4.1, z: MALL_Z + 6.5 },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 5.5, height: 0.85, depth: 0.06 },
     material: { color: "#181818" },
     ui: `<div face="front" width="5.5m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#181818;border:2px solid #c0392b;color:#ffffff;font-family:Georgia,serif;text-align:center"><div style="font-size:90px;font-style:italic;font-weight:bold;color:#f39c12">Marroka</div><div style="font-size:40px;letter-spacing:6px;color:#e74c3c">PIZZERIA & TRATTORIA</div></div>`,
   });
   bx("l11-mall-glass-pizza", MALL_X + MALL_W / 2 + 0.02, 0.4, MALL_Z + 8.2, 0.08, 2.6, 2.4, GLASS_TINT);
+
+  // --- CLINIC + LAB INTERIORS (Shelly's photo: Centro Dermatológico, isi LAB) ---
+  {
+    const FX = MALL_X + MALL_W / 2 - 0.3, Y0 = 0.36;
+    const fit = (id, model, x, z, yaw, size) => sp(id, { feetPosition: { x, y: Y0, z }, rotation: { yaw }, model: { id: model }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } }, physics: { body: "static", collider: "box" } });
+    const CHAIR = "/cdn/value.324d9a05c6aca4bc72f791c510f751bee89cfbbc0e2104e59ad075531e70a750.glb", PLANT = "/cdn/value.88c7684212164aa0495a65fc294a12752ef506c35708f70485202b9366795b43.glb", DESK = "/cdn/value.53a6ef111aac797583ca330cad268f4e401bd0fe5613021c07eda571623e5ea2.glb", CAB = "/cdn/value.6b73846286fe58c95018a876f85d847e8af3c7a0187d06a8838072345f9ca49e.glb";
+    const VINYL = { texture: "cdn/texture-white-speckled-clinic-vinyl-floor.png", repeat: [1, 1], wrap: "repeat", roughness: 0.6 };
+    const WHITE = { color: "oklch(0.95 0.008 95)", roughness: 0.85 };
+    // floors and the wall between clinic and lab, the lab's back wall
+    bx("l11-derma-floor", MALL_X + 1, Y0 - 0.02, MALL_Z - 6.5, 13.6, 0.04, 5.6, VINYL, { physics: undefined });
+    bx("l11-lab-floor", MALL_X + 1, Y0 - 0.02, MALL_Z - 0.5, 13.6, 0.04, 5.6, VINYL, { physics: undefined });
+    bx("l11-derma-div", MALL_X + 1, Y0, MALL_Z - 3.4, 13.6, 4.4, 0.15, WHITE);
+    for (const [k, z] of [["derma", MALL_Z - 6.5], ["lab", MALL_Z - 0.6]]) {
+      bx(`l11-${k}-troffer`, MALL_X + 2, 3.9, z, 1.2, 0.04, 0.6, { color: "#f4fbff", emissive: "#eef6ff", emissiveIntensity: 1.5 }, { physics: undefined });
+      sp(`l11-${k}-light`, { feetPosition: { x: MALL_X + 2, y: 3.6, z }, light: { kind: "point", color: "oklch(0.97 0.01 230)", intensity: 1.6, distance: 9 } });
+    }
+    // clinic: reception desk facing the door, waiting row by the glass, a plant, a cabinet
+    sp("l11-derma-desk", { feetPosition: { x: MALL_X - 1.5, y: Y0, z: MALL_Z - 6.5 }, rotation: { yaw: 90 }, model: { id: DESK, forward: "+z" }, physics: { body: "static", collider: "box" } });
+    for (const [i, z] of [[1, -8.5], [2, -7.4], [3, -5.0]]) fit(`l11-derma-chair-${i}`, CHAIR, FX - 1.2, MALL_Z + z, -90, [0.75, 0.9, 0.75]);
+    fit("l11-derma-plant", PLANT, FX - 1.0, MALL_Z - 4.0, 0, [0.55, 1.2, 0.55]);
+    fit("l11-derma-cab", CAB, MALL_X - 4.6, MALL_Z - 6.5, 90, [1.6, 0.85, 0.45]);
+    sp("l11-derma-poster", { feetPosition: { x: MALL_X - 5.1, y: 1.9, z: MALL_Z - 8.2 }, rotation: { yaw: 90 }, ui: `<div face="front" width="1.1m" style="width:1100px;height:1400px;background:#f7fbfa;border:18px solid #1b8a5a;font-family:Arial,sans-serif;color:#13324a;padding:60px;box-sizing:border-box"><div style="font-size:110px;font-weight:900;color:#1b8a5a">dermika</div><div style="font-size:60px;margin-top:40px">cuida tu piel</div><div style="font-size:46px;margin-top:80px;line-height:1.5">consultas · láser · cosmética</div></div>`, primitive: { kind: "box", width: 1.1, height: 1.4, depth: 0.02 }, material: { color: "#ffffff" } });
+    // lab: a sample counter with a divider, two chairs, a plant
+    bx("l11-lab-counter", MALL_X - 1.2, Y0, MALL_Z - 0.6, 0.8, 1.05, 3.4, { color: "oklch(0.93 0.01 230)", roughness: 0.5 });
+    bx("l11-lab-counter-top", MALL_X - 1.2, Y0 + 1.05, MALL_Z - 0.6, 0.95, 0.05, 3.55, { color: "oklch(0.45 0.12 250)", roughness: 0.3 }, { physics: undefined });
+    bx("l11-lab-glass", MALL_X - 1.35, Y0 + 1.1, MALL_Z - 0.6, 0.03, 0.7, 3.2, GLASS_TINT, { physics: undefined });
+    fit("l11-lab-chair-1", CHAIR, FX - 1.2, MALL_Z - 1.6, -90, [0.75, 0.9, 0.75]);
+    fit("l11-lab-chair-2", CHAIR, FX - 1.2, MALL_Z + 0.4, -90, [0.75, 0.9, 0.75]);
+    fit("l11-lab-plant", PLANT, MALL_X - 4.5, MALL_Z + 1.6, 30, [0.5, 1.1, 0.5]);
+    sp("l11-lab-hum", { feetPosition: { x: MALL_X, y: 3, z: MALL_Z - 3.5 }, audio: { clip: "cdn/sfx-quiet-office-air-vent-hvac-room-tone-loop.mp3", loop: true, gain: 0.08, spatial: true, maxDistance: 10 } });
+  }
 
   // --- ENTERABLE MARROKA PIZZERIA INTERIOR ---
   bx("l11-pizza-floor", MALL_X + 2, 0.36, MALL_Z + 6.5, 10, 0.06, 8, TERRACOTTA_TILES);
@@ -792,7 +823,7 @@ function lay(ctx) {
   // Spray-Painted Hazard Warning Signs
   sp("l11-barricade-sign1", {
     feetPosition: { x: BARRICADE_X + 0.6, y: 2.0, z: BARRICADE_Z - 1.5 },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 2.4, height: 0.8, depth: 0.04 },
     material: { color: "oklch(0.2 0.01 250)" },
     ui: `<div face="front" width="2.4m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;color:#ff3333;text-align:center"><div style="font-size:75px">DANGER: UNMAPPED EXITS</div><div style="font-size:32px;color:#ffffff">100+ NOCLIP RIFTS AHEAD · DO NOT ENTER</div></div>`,
@@ -801,7 +832,7 @@ function lay(ctx) {
   // Memorial Site: Tamsin Clarke Memorial ("For my little strawberry")
   sp("l11-memorial-wreath", {
     feetPosition: { x: BARRICADE_X + 0.5, y: 0.1, z: BARRICADE_Z + 2.0 },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 1.8, height: 0.7, depth: 0.04 },
     material: { color: "oklch(0.95 0.01 90)" },
     ui: `<div face="front" width="1.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Georgia,serif;font-style:italic;color:#333333;text-align:center"><div style="font-size:60px;color:#c01020">For my little strawberry</div><div style="font-size:28px">Tamsin Clarke · We will never stop searching</div></div>`,
@@ -1281,7 +1312,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   // Sign: B.N.T.G. Provisions Stall
   sp("l11-market-sign", {
     feetPosition: { x: MKT_X + 0.1, y: 2.5, z: MKT_Z },
-    rotation: { yaw: 90 },
+    rotation: { yaw: -90 },
     primitive: { kind: "box", width: 3.6, height: 0.65, depth: 0.04 },
     material: { color: "#111" },
     ui: `<div face="front" width="3.6m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a252f;border:2px solid #f39c12;box-sizing:border-box;color:#ffffff;font-family:Georgia,serif;text-align:center">
