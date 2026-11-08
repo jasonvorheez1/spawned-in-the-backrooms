@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1495,
-  "updatedAt": "2026-11-08T04:16:37.503Z",
-  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Place sims assemble local spaces and hazards around shared player, NPC, loot, crafting, combat, animation and UI systems; level-door triggers and arrival markers connect the routes, now including Level 6.1 The Snackrooms.",
+  "basedOnSpecVersion": 1522,
+  "updatedAt": "2026-11-08T04:59:58.677Z",
+  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Place sims assemble local spaces and hazards around shared player, NPC, loot, crafting, combat, animation and UI systems; doors and arrival markers connect the routes, including the sim-built Level 6.1 Snackrooms.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, containers, shifting walls and hunters.",
-    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Utility Halls and Locked sublevel; Level 2 dresses its shutter stair, Level 2.1 sim builds Base Alef, Refrigerator Paradise, The Edges and their agents/set pieces.",
+    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Utility Halls and Locked sublevel; Level 2.1 sim builds Base Alef, Refrigerator Paradise, The Edges and their agents/set pieces.",
     "places/level3 + places/gamma (3D) - Electrical Station and Base Gamma; seeded layouts, hazards, agents, traders, generators, lifts and checkpoint.",
     "places/level4 (3D) - Abandoned Office; office plan, residents, cubicles, home-claim offices, coolers, vending, lift/stairs and Base Omega.",
-    "places/level5 + places/level6 (3D) - Terror Hotel and Lights Out; Level 5 rooms, quests and portal; Level 6 dark labyrinth and sensory hazards, with its tripwire entrance to 6.1.",
-    "places/level61 (3D) - Level 6.1 The Snackrooms; sim-built mall food court, diners, free food counters/vending, restrooms, Level 6 door and Level 3 vent.",
-    "places/level7 (3D) - Thalassophobia; flooded Floating House, Seawatch, Fort Surrender, sea floor, diving bell and Level 9 hatch; entrance parlor furnishings include interactive antique drawers and armoire.",
+    "places/level5 + places/level6 (3D) - Terror Hotel and Lights Out; Level 5 rooms, quests and portal; Level 6 dark labyrinth and sensory hazards, with a tripwire entrance to Level 6.1.",
+    "places/level61 (3D) - Level 6.1 The Snackrooms; sim-built food-court mall with diners, Facelings, free vending/counters, jukebox, sliding Level 11 doors and Blue Channel wall; connected arrivals from Levels 4 and 6, plus its Level 3 vent.",
+    "places/level7 (3D) - Thalassophobia; flooded Floating House, Seawatch, Fort Surrender, sea floor, diving bell and Level 9 hatch.",
     "places/level8 + places/debug (3D) - Level 8 Cave Systems / 9th Road and camp route; Debug is a separate dark atmosphere and spawn."
   ],
   "roots": [
@@ -19,9 +19,9 @@
     "templates/player.js - ordered player behavior chain; locomotion/player controller precede swim, interaction and gameplay handlers, then critter, main-menu and view3.",
     "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and eye position; scripts/view3.js toggles player.state.tp.",
     "places/<place>/config.yaml + sim.js + cells - place setup and authored placements; sims construct local layouts and tick local behavior, respawns and regrowth.",
-    "sim.js - world referee cadence plus onOutOfBounds; players keep normal respawn, creatures return to state.home or are destroyed for manager respawn.",
+    "sim.js - world referee cadence plus onOutOfBounds; players keep normal respawn, creatures return to state.home or are destroyed for their manager to respawn.",
     "places/level8/sim.js + art/level8/build.py - Level 8 assembler and Blender cave-road generator; cave material is scripts/mat-cave.js.",
-    "places/level61/sim.js - Level 6.1 assembler; versioned lay() builds and replaces l61-prefixed scene objects, while local usable counters/vending delegate to l61-use.js.",
+    "places/level61/sim.js - Level 6.1 assembler; versioned lay() replaces l61-prefixed scene objects, then seeds Facelings and people; layExtra() adds shared mall set pieces.",
     "scripts/ui.js and *-ui.js renderers - HUD and overlays, including menu/creator, wardrobe, loot, talk/trade, build, stats, craft and Back OS."
   ],
   "shared": [
@@ -32,27 +32,27 @@
     "scripts/lib/clothes.js, scripts/lib/critter-model.js + model/face data, scripts/mat-cloth.js - seeded avatar/NPC looks and rendered critter bodies and garments.",
     "scripts/lib/loot.js + scripts/lib/items.js + level data - shared item pools, rolls, remains, parsing/descriptions and container helpers; art/props/build.py supplies modeled lockers/fridges.",
     "scripts/lib/craft.js + craft data; scripts/lib/personality.js + scripts/lib/address.js - recipes, NPC temperament and address rules reused by actions, UI and dialogue.",
-    "scripts/lib/terminal.js + scripts/lib/os.js + scripts/lib/data/os.yml - Back OS workstation spec and host-profile-driven mail/files/database/password content; scripts/lib/data/snacks.yml feeds items.js and player.js snack consumption."
+    "scripts/lib/terminal.js + scripts/lib/os.js + scripts/lib/data/os.yml - Back OS workstation and host-profile content; scripts/lib/data/snacks.yml feeds items.js, scripts/lib/vend-item.js and player.js snack consumption."
   ],
   "notableExports": [
     "sim.js - cadence, tick, onOutOfBounds; places/level21/sim.js and places/level8/sim.js - cadence, tick; places/level61/sim.js - cadence, tick.",
     "scripts/ambient-anim.js - onSpawn, update; scripts/lib/ambient.js - fan, fanHousing, cable and DRIP, DUST, MIST, SPORES, BUBBLES, RIPPLE builders/effects.",
     "scripts/lib/level21.js - grid, room, zone, exit and height queries/constants; scripts/lib/maze21path.js - canPass21, stepToward, cellNear.",
     "scripts/l21-use.js - updateSchedule, ears, update; scripts/level21-geo.js - geometry; scripts/lib/chatter.js - tickChatter, CHATTER.",
-    "scripts/l61-use.js - ears.press for free snack vending and food counters; scripts/lib/data/snacks.yml - snack/drink item definitions and effects.",
+    "scripts/l61-use.js - MENUS, ears.press, landed/ready and vending/order handlers; scripts/lib/level61-extra.js - layExtra, faceling, person, PEOPLE, FACELING_IDS.",
+    "scripts/l61-staff.js and scripts/l61-diner.js - ears.press, update; scripts/l61-jukebox.js - STATIONS, ears.press, tune; scripts/lib/l61-anim.js - diner gesture clips and playGesture.",
     "scripts/lib/terminal.js - idleScreen, terminalSpec; scripts/lib/os.js - PROFILE, mailsOf, filesOf, entriesOf, entryById, binOf, forumOf, passwordOf, runCmd.",
-    "scripts/lib/kemono.js - KEMONO, SLOTS, outfitParts, kemonoModel; describes outfitted kemono GLB bodies but has no current code importer.",
     "scripts/swim.js - onInput, update; scripts/underwater-audio.js - setup; scripts/terrain7.js - ISLES, heightAt, materialAt."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs and heat, money, visits, kills/deaths, combat, rewards, clothing and snack effects.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, alcohol intoxication, money, visits, kills/deaths, combat, rewards, clothing and snack effects.",
     "scripts/stats.js - HALOGEN attributes, skills, points, tags, schema version and sheet state; initializes/migrates and spends points.",
     "scripts/craft.js - craft UI/actions, payout redemption and hunger/thirst drain; Level 2.1 hot/humid thirst multiplier comes from level21.yml.",
     "scripts/swim.js - player.state swimming/underwater/breath and local session swim controls, breath timer and underwater audio instance; applies drowning damage.",
     "scripts/interact.js + scripts/lib/seat.js own focus, loot and sit state; scripts/lockpick.js owns pick state and pins; seats own occupancy.",
     "scripts/talk.js + scripts/meg-agent.js - NPC dialogue memory/rapport/shop/follow state; meg-agent owns routines, attributes/nerve, loadout, combat, fear and cover.",
-    "places/level21/sim.js owns build/people versions and hound manager; scripts/l21-use.js owns prop cooldowns, payouts/quests, survivor talk UI and Edge Smiler management; scripts/l61-use.js owns vending/counter per-user cooldowns and writes player payouts.",
-    "scripts/l4-home.js owns Level 4 claim/cooler/cupboard state and dynamic home kit; places/level8/sim.js owns build/camp setup/regrow deadlines, while l8-life.js owns hazard timing and l8-use.js writes payouts, quest flags and route progress."
+    "places/level21/sim.js owns build/people versions and hound manager; scripts/l21-use.js owns prop cooldowns, payouts/quests and survivor talk UI; places/level61/sim.js owns builtV/crewV and local population setup.",
+    "scripts/l61-use.js owns per-object menu/order/cooldown/tray state; scripts/l61-staff.js owns Faceling routes, interactions and gesture state; scripts/l61-jukebox.js owns selected station/playback, while player.js applies earned snack tokens."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js behavior order: locomotion/player, swim, interact/grab/rest/mahjong/talk/build/stats/craft/OS/lockpick/horde, then critter, main-menu and view3.",
@@ -63,10 +63,10 @@
     "places/level21/sim.js → scripts/lib/level21.js layout and scripts/level21-geo.js geometry; hounds.js uses maze21path.js for pursuit; l21-use.js handles set pieces and Edge Smilers.",
     "Level 2.1 and Level 8 sim props carry state.anim → scripts/ambient-anim.js → builtin/tween; ambient.js supplies fan/cable meshes and DRIP/DUST/MIST/RIPPLE FX.",
     "places/level21/sim.js tick → chatter.js with CHATTER.level21 and voice IDs → survivor agents emit voiced nearby exchanges; l21-use.js prop handlers update local logs and player payouts.",
-    "Level 6 tripwire door → level61#l61-from-l6; Level 4 vending handler scripts/l4-home.js can cross to level61#l61-from-l4; Level 6.1 door → level6#l6-from-l61 and vent → level3.",
-    "Level 6.1 sim spawns usable vending/counter objects with scripts/l61-use.js → ears.press selects a token and writes player.state.payout → player.js applies snack inventory; snacks.yml defines eat/drink effects.",
-    "Level 2.1 sim places terminalSpec workstation → scripts/computer.js and player OS state → scripts/os-ui.js / scripts/lib/os.js; host prefix selects os.yml profile for guest/admin mail, files, entries and login.",
-    "scripts/swim.js queries tagged swimwater volumes in Level 8 → adjusts local movement, breath and drowning; underwater state tints HUD in scripts/ui.js and starts scripts/underwater-audio.js on Master."
+    "Level 6 tripwire and Level 4 vending route → Level 6.1 arrival markers l61-from-l6/l61-from-l4; scripts/level-door.js returns via l61-to-l6; Level 6.1 vent leads to Level 3.",
+    "Level 6.1 sim → scripts/l61-use.js for vending/menu/counter; pressing orders or vending writes local order/tray state and spawns food → l61-use handlers deliver tokens to player.state.payout → player.js applies items from snacks.yml.",
+    "Level 6.1 sim → level61-extra layExtra set pieces, faceling()/person() populations → scripts/l61-staff.js; diner fixtures route to scripts/l61-diner.js and Wurlitzer fixture to scripts/l61-jukebox.js, which selects audio and retunes on station changes.",
+    "scripts/talk.js requests NPC replies; AI response via heard() clears talkBusy, while a dropped response selects scripts/lib/data/canned-talk.yml by message intent and safe/danger context; scripts/lib/npc-starters.js supplies NPC-specific starter prompts."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures, local sound/light state and red-zone variants; Level 5 cells also carry portal and quest props.",
@@ -75,8 +75,8 @@
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - NPC roles, dialogue, looks and routines vary by person; meg-agent.js supplies combat behavior.",
     "scripts/lib/craft.js + craft data - recipe category, costs, skill, bench, batch size and item family vary per recipe, including Level 8 cave materials.",
     "places/level8/sim.js + scripts/l8-life.js + scripts/l8-use.js - coordinate-interpolated road stations share systems while hazards, harvests, caches, camp interactions, quests and payouts vary by station.",
-    "places/level21/sim.js + level21.yml + level21-geo.js - room blocks share generated hall/room structure; room type, zone height, lighting, decor and loot placement vary by authored grid data and deterministic hashes.",
-    "places/level61/sim.js + scripts/l61-use.js + snacks.yml - themed diners, free vending and counters share tokenized food rewards, varied by stock pool, counter and snack effect; scripts/lib/ambient.js + ambient-anim.js reuse prop motion/FX."
+    "places/level21/sim.js + level21.yml + level21-geo.js - room blocks share generated hall/room structure; room type, zone height, lighting, decor and loot vary by authored grid data and deterministic hashes.",
+    "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - shared mall, service, animation and food interactions vary by diner, stock/menu, Faceling role and jukebox station; l61-anim gesture clips are reused across characters."
   ],
   "probableOrphans": [
     "scripts/lib/kemono.js"
@@ -86,7 +86,7 @@
     "Keep paired arrival IDs aligned: Level 2 ↔ Level 2.1 (l2-from-l21/l21-from-l2), Level 2.1 ↔ Level 8 (l21-from-l8/l8-from-l21), and Level 6 ↔ Level 6.1 (l6-from-l61/l61-from-l6); player.js CHECKS consumes arrival markers.",
     "Level 2.1 rebuilt fixtures/ambience are sim-managed; its peopleV reset replaces survivor agents, and roofAt belongs in place state so the ceiling check survives tick calls.",
     "Level 2.1 zone keys are suffixes of zoneAt values and index level21.yml sanityDrain; hot/humid thirst multiplier is level21.yml heat applied in craft.js. Keep zone names aligned across consumers, including player heat and floor selection.",
-    "Level 6.1 layout replaces l61-prefixed roots when builtV < V (currently 6); preserve l61-from-l4/l61-from-l6 arrival IDs used by the separate Level 4 and Level 6 entrances.",
+    "Level 6.1 layout replaces l61-prefixed roots when builtV < V (currently 11); crewV separately seeds people. Keep l61-from-l4/l61-from-l6 arrival IDs aligned with Level 4 and Level 6 entrances and player.js CHECKS.",
     "Level 8 lake return trigger is at the lake bed's middle, not the wading surface; swim.js relies on bounds of tagged swimwater volumes and runs after player.js to override movement/falling."
   ]
 }
