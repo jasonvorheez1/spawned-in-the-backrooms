@@ -393,8 +393,9 @@ export function update(ctx, dt) {
   // airtime picks, then clears itself. Memo in gait (this machine), the channels are the only writes.
   const now = ctx.now()
   const vy = vel.y || 0
-  if (ctx.self.grounded === false && !ctx.self.state?.swim) gait.airSince ??= now
-  else if (ctx.self.grounded) {
+  const noAir = ctx.self.state?.swimming || ctx.self.tags?.includes?.('helper')
+  if (ctx.self.grounded === false && !noAir) gait.airSince ??= now
+  else if (ctx.self.grounded || noAir) {
     const air = gait.airSince != null ? (now - gait.airSince) / 1000 : 0
     gait.airSince = null
     if (gait.inAir) {
