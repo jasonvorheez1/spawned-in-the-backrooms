@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 62; // bump to rebuild the city in rooms that are already open
+const V = 63; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -713,6 +713,25 @@ function lay(ctx) {
   // Large Glass Windows into Renovation Office, set in the storefront frame
   bx("l11-reno-glass-e", RENO_X + RENO_W / 2 - 0.2, 0.2, 4, 0.03, 4.2, 8, GLASS_TINT);
   bx("l11-reno-glass-e2", RENO_X + RENO_W / 2 - 0.2, 0.2, -5, 0.03, 4.2, 6, GLASS_TINT);
+  // the realty doorway: a dark aluminium frame in the 2 m gap (z -2..0), transom glass above, the door held open against the glass
+  {
+    const DX = RENO_X + RENO_W / 2 - 0.2, AL = { color: "oklch(0.25 0.01 250)", metalness: 0.6, roughness: 0.4 };
+    bx("l11-realty-jamb-n", DX, 0.2, -1.97, 0.12, 2.45, 0.08, AL);
+    bx("l11-realty-jamb-s", DX, 0.2, -0.03, 0.12, 2.45, 0.08, AL);
+    bx("l11-realty-header", DX, 2.6, -1, 0.14, 0.12, 2.0, AL, { physics: undefined });
+    bx("l11-realty-transom", DX, 2.72, -1, 0.03, 1.68, 1.9, GLASS_TINT, { physics: undefined });
+    bx("l11-realty-threshold", DX, 0.2, -1, 0.3, 0.03, 1.9, AL, { physics: undefined });
+    sp("l11-realty-door", { feetPosition: { x: DX + 0.45, y: 0.24, z: -0.08 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 0.9, height: 2.32, depth: 0.04 }, material: GLASS_TINT, physics: { body: "static", collider: "box" },
+      children: [
+        { feetPosition: { x: 0, y: 0, z: 0 }, primitive: { kind: "box", width: 0.94, height: 0.1, depth: 0.06 }, material: AL },
+        { feetPosition: { x: 0, y: 2.24, z: 0 }, primitive: { kind: "box", width: 0.94, height: 0.08, depth: 0.06 }, material: AL },
+        { feetPosition: { x: 0.43, y: 0, z: 0 }, primitive: { kind: "box", width: 0.06, height: 2.32, depth: 0.06 }, material: AL },
+        { feetPosition: { x: -0.43, y: 0, z: 0 }, primitive: { kind: "box", width: 0.06, height: 2.32, depth: 0.06 }, material: AL },
+        { feetPosition: { x: 0.3, y: 1.0, z: 0.06 }, primitive: { kind: "cylinder", radiusTop: 0.015, radiusBottom: 0.015, height: 0.35 }, material: { color: "oklch(0.8 0.01 90)", metalness: 0.9, roughness: 0.2 } },
+      ] });
+    sp("l11-realty-door-decal", { feetPosition: { x: DX - 0.05, y: 2.75, z: -1 }, rotation: { yaw: 90 }, primitive: { kind: "plane", width: 1.6, height: 0.3 }, material: { color: "#ffffff", opacity: 0 },
+      ui: `<div face="front" width="1.6m" style="width:1600px;height:300px;display:flex;align-items:center;justify-content:center;color:#e9e2c8;font-family:Georgia,serif;font-size:120px;letter-spacing:12px">B.N.T.G.</div>` });
+  }
 
   // Unfinished Drywall Partition Boards
   bx("l11-drywall-stack", -28.5, 0.22, -4.5, 1.2, 2.4, 0.35, DRYWALL_MAT, { rotation: { pitch: 12 } });
