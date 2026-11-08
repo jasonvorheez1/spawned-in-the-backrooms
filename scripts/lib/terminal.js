@@ -14,7 +14,7 @@ export const idleScreen = (host, tint = "#f2c200") => `<div face="front" width="
 <div style="font-size:30px;letter-spacing:4px;font-weight:700;text-shadow:0 0 8px ${tint}">BACK OS(tm)</div>
 <div style="font-size:15px;opacity:.85">Backdoor client · BACKDRIVE mounted</div>
 <div style="font-size:20px;margin-top:10px;letter-spacing:2px">${host}</div>
-<div style="font-size:14px;margin-top:12px;opacity:.7">login: <span style="animation:blink 1s steps(2) infinite">_</span></div>
+<div style="font-size:14px;margin-top:12px;opacity:.7">login: <span>_</span></div>
 <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px);pointer-events:none"></div></div>`;
 
 export function terminalSpec({ host, lock = "", name = "Computer", verb = "Log in", info, at, yaw = 0, tint = "#f2c200", note }) {
