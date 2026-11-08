@@ -3,9 +3,14 @@
 //   dredge (B.N.T.G. tar dredge winch over the boiling tar pool), radio (Harmouth field transceiver at camp), carla (a girl at the camp: give her the kazoo),
 //   loop (the end of the crawl: the first time, it brings you out where you started), exit (the asphalt, a dim glow ahead).
 import { heard } from "./lib/hear.js";
+import { vo } from "./lib/voices.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const say = (who, text, ctx) => { if (who?.state) who.state.notice = { text, at: ctx.now() }; };
-const CARLA = ["\"Hey! You're new here. What's your name?\"", "\"I don't mind. Nice to meet you!\"", "\"Mum says the lights down the Road are the friendly ones. The red ones aren't.\"", "\"Do you like soup? It's always soup.\""];
+const CARLA = [
+  "Hey! You're new here. What's your name?",
+  "Mum says the lights down the Road are the friendly ones. The red ones aren't.",
+  "Do you like soup? It's always soup."
+];
 const RADIO_LOGS = [
   "HARMOUTH LOG #14: \"Do not trust the crawl past Marker #78 on your first pass. The karst loops back on itself until you've seen the Face Rock twice.\"",
   "M.E.G. SURVEY: \"The third cavern floods on a five-and-a-half-minute siphon cycle. When the water hits your ankles, take the limestone ledges on the left wall.\"",
@@ -20,55 +25,98 @@ export const ears = {
     const now = ctx.now(), uid = who.userId ?? by, w = who.state, pos = ctx.self.worldFeetPosition ?? ctx.self.feetPosition, cool = (s.cool ??= {});
     const snd = (n, v = 0.6) => heard(ctx, { clip: G(n), position: { x: pos.x, y: pos.y + 0.8, z: pos.z }, volume: v, maxDistance: 14 });
     if (s.kind === "pool") {
-      snd("water-pour-splash-short", 0.5); w.thirst = Math.min(100, (w.thirst ?? 100) + 30);
-      return say(who, "You cup the almond water in your hands. Cold, and a little bitter: harmless minerals. (Thirst +30. Do not bathe in it.)", ctx);
+      snd("water-pour-splash-short", 0.6);
+      w.thirst = Math.min(100, (w.thirst ?? 100) + 30);
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+30 THIRST", color: "#60c0ff", size: 1.1 }, { audience: { player: who.id } });
+      return;
     }
     if (s.kind === "soup") { // the cook's pot: a bowl is bought, $3 (her pick), and handed over to eat (E) or throw (Z)
       const PRICE = 300, cook = ctx.query({ tags: ["npc"], center: pos, radius: 7 }).find((o) => !o.state?.dead && (o.state?.hp ?? 1) > 0);
       const cn = cook?.state?.name ?? cook?.state?.displayName ?? "The cook";
-      if (!cook) return say(who, "Nobody is minding the pot. You leave it be; it isn't yours.", ctx);
-      if (now - (cool[uid] ?? -1e9) < 20000) return say(who, `${cn} slaps your hand off the ladle. "One at a time. Eat what you've got."`, ctx);
-      if ((w.cents ?? 0) < PRICE) return say(who, `${cn} covers the pot. "Three Backdollars a bowl. Come back when you've got it."`, ctx);
+      const cv = cook?.state?.voice ?? "dolores";
+      if (!cook) return say(who, "Nobody is minding the pot.", ctx);
+      if (now - (cool[uid] ?? -1e9) < 20000) {
+        const line = "One at a time. Eat what you've got.";
+        heard(ctx, { clip: vo(cv, line), position: pos, volume: 0.9, maxDistance: 14 });
+        return say(who, `${cn}: "${line}"`, ctx);
+      }
+      if ((w.cents ?? 0) < PRICE) {
+        const line = "Three Backdollars a bowl. Come back when you've got it.";
+        heard(ctx, { clip: vo(cv, line), position: pos, volume: 0.9, maxDistance: 14 });
+        return say(who, `${cn}: "${line}"`, ctx);
+      }
       const ask = (s.ask ??= {});
-      if (!(now - (ask[uid] ?? -1e9) < 10000)) { ask[uid] = now; return say(who, `${cn} looks up from the ladle. "Soup's three Backdollars a bowl. You want one?" (Press again to pay $3.00)`, ctx); }
+      if (!(now - (ask[uid] ?? -1e9) < 10000)) {
+        ask[uid] = now;
+        const line = "Soup's three Backdollars a bowl. You want one?";
+        heard(ctx, { clip: vo(cv, line), position: pos, volume: 0.9, maxDistance: 14 });
+        return say(who, `${cn}: "${line}" (Press again to pay $3.00)`, ctx);
+      }
       delete ask[uid]; w.cents -= PRICE; cool[uid] = now; snd("pot-lid-clink-and-ladle-in-soup", 0.5);
       w.weapons = [...(w.weapons ? w.weapons.split(',') : []), 'soup_bowl'].join(','); // held like a weapon: equip it, click throws, Q eats (scripts/player.js)
-      return say(who, `${cn} ladles you a bowl and pockets three Backdollars. "Eat it or wear it, it's yours now." (−$3.00 · Bowl of soup in your inventory: equip it, click to throw, Q to eat)`, ctx);
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "-$3.00 (SOUP)", color: "#ffcf60", size: 1.0 }, { audience: { player: who.id } });
+      const line = "Eat it or wear it, it's yours now.";
+      heard(ctx, { clip: vo(cv, line), position: pos, volume: 0.9, maxDistance: 14 });
+      return say(who, `${cn}: "${line}"`, ctx);
     }
-    if (s.kind === "bowl") { w.weapons = [...(w.weapons ? w.weapons.split(",") : []), "soup_bowl"].join(","); ctx.destroy(ctx.self.id); return say(who, "You pick up the bowl of soup. (In your inventory: equip it, click to throw, Q to eat)", ctx); }
+    if (s.kind === "bowl") {
+      w.weapons = [...(w.weapons ? w.weapons.split(",") : []), "soup_bowl"].join(",");
+      ctx.destroy(ctx.self.id);
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.0, z: pos.z }, text: "+SOUP BOWL", color: "#e8c070", size: 1.0 }, { audience: { player: who.id } });
+      return;
+    }
     if (s.kind === "fire") {
-      if (now - (cool[uid] ?? -1e9) < 40000) return say(who, "You are already as dry as the cave allows.", ctx);
-      cool[uid] = now; w.sanity = Math.min(100, (w.sanity ?? 80) + 12); w.hp = Math.min(w.maxHp ?? 1e9, (w.hp ?? 0) + 10);
-      return say(who, "You sit by the fire and dry slowly. The cold lets go of your hands. Do not fall asleep. (Sanity +12)", ctx);
+      if (now - (cool[uid] ?? -1e9) < 40000) {
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "STILL WARM", color: "#e8a060", size: 0.9 }, { audience: { player: who.id } });
+        return;
+      }
+      cool[uid] = now;
+      w.sanity = Math.min(100, (w.sanity ?? 80) + 12);
+      w.hp = Math.min(w.maxHp ?? 1e9, (w.hp ?? 0) + 10);
+      snd("bandage-wrap-cloth", 0.4);
+      ctx.emit("flash", { target: who.id, color: "#ff9933", duration: 0.35 });
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.5, z: pos.z }, text: "+12 SANITY", color: "#80ffaa", size: 1.1 }, { audience: { player: who.id } });
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+10 HP", color: "#ff8080", size: 1.0 }, { audience: { player: who.id } });
+      return;
     }
     if (s.kind === "kazoo") {
-      w.kazoo = true; say(who, "You pocket a stone kazoo. It is cold, rough and jagged, and when you breathe through it, it buzzes.", ctx); return ctx.destroy(ctx.self.id);
+      w.kazoo = true;
+      snd("walkie-talkie-radio-click-static-burst", 0.4);
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+STONE KAZOO", color: "#f2d870", size: 1.2 }, { audience: { player: who.id } });
+      return ctx.destroy(ctx.self.id);
     }
     if (s.kind === "altar") {
-      if (now - (cool[uid] ?? -1e9) < 60000) return say(who, "The stone pipes are still humming softly in the damp air.", ctx);
+      if (now - (cool[uid] ?? -1e9) < 60000) {
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "RESONATING...", color: "#80e0d0", size: 0.9 }, { audience: { player: who.id } });
+        return;
+      }
       cool[uid] = now;
       const bonus = w.kazoo || w.kazooGiven ? 22 : 14;
       w.sanity = Math.min(100, (w.sanity ?? 80) + bonus);
       w.hp = Math.min(w.maxHp ?? 100, (w.hp ?? 80) + 12);
-      return say(who, w.kazoo
-        ? "You press the stone kazoo to the acoustic pipes. A warm, bell-clear chord ripples down Hyperspace Lane, and the blue-green light guides flare bright around you. (Sanity +22, Health +12)"
-        : "You hum into the hollow flowstone flutes. The cavern answers with a low, comforting chord that steadies your breathing. (Sanity +14, Health +12)", ctx);
+      heard(ctx, { clip: G("deep-whale-like-groan-from-far-under-dark-water"), position: pos, volume: 0.85, maxDistance: 40 });
+      ctx.emit("flash", { target: who.id, color: "#40e0d0", duration: 0.5 });
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.5, z: pos.z }, text: `+${bonus} SANITY`, color: "#80ffaa", size: 1.2 }, { audience: { player: who.id } });
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+12 HP", color: "#ff8080", size: 1.0 }, { audience: { player: who.id } });
+      return;
     }
     if (s.kind === "dredge") {
-      if (now - (cool[uid] ?? -1e9) < 55000) return say(who, "The dredge bucket is still sinking back into the heavy pitch. Give it a moment.", ctx);
+      if (now - (cool[uid] ?? -1e9) < 55000) return say(who, "The dredge bucket is still sinking into the pitch.", ctx);
       cool[uid] = now; snd("thick-tar-bubbling-and-wet-gurgle", 0.65);
       const r = ctx.random();
-      let extra = "pitch", label = "two heavy cakes of tar pitch";
-      if (r < 0.28) { extra = "ammo"; label = "pitch and a pitch-sealed tin of rifle rounds"; }
-      else if (r < 0.52) { extra = "battery"; label = "pitch and a waterproof caver's battery"; }
-      else if (r < 0.72) { extra = "ironstone"; label = "pitch and a heavy nodule of ironstone"; }
-      else if (r < 0.88) { extra = "cash:1500"; label = "pitch and a B.N.T.G. scrip pouch"; }
+      let extra = "pitch", label = "tar pitch";
+      if (r < 0.28) { extra = "ammo"; label = "pitch and rifle rounds"; }
+      else if (r < 0.52) { extra = "battery"; label = "pitch and caver's battery"; }
+      else if (r < 0.72) { extra = "ironstone"; label = "pitch and ironstone nodule"; }
+      else if (r < 0.88) { extra = "cash:1500"; label = "pitch and B.N.T.G. scrip pouch"; }
       let slap = "";
       if (ctx.random() < 0.25) {
         w.hp = Math.max(1, (w.hp ?? 100) - 8);
-        slap = " A tar-coated hand lunged up along the cable and scorched your wrist before dropping back!";
+        slap = " A tar hand lunged up and scorched your wrist!";
+        ctx.emit("cameraPunch", { direction: { x: 0, y: 0.4, z: -0.4 }, intensity: 0.35 }, { audience: { player: who.id } });
       }
-      w.payout = { xp: 16, items: ["pitch", extra], text: `You crank the B.N.T.G. winch and haul up the dredge basket: ${label}.${slap}` };
+      w.payout = { xp: 16, items: ["pitch", extra], text: `Dredge hauled: ${label}.${slap}` };
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+TAR DREDGE", color: "#f0c040", size: 1.1 }, { audience: { player: who.id } });
       return;
     }
     if (s.kind === "radio") {
@@ -80,21 +128,24 @@ export const ears = {
     if (s.kind === "fungus") {
       const n = 1 + (ctx.random() < 0.55 ? 1 : 0) + (ctx.random() < 0.15 ? 1 : 0); snd("plastic-bottle-pickup-rattle", 0.3);
       w.sanity = Math.min(100, (w.sanity ?? 80) + 1.5);
-      w.payout = { xp: 4, items: Array(n).fill("glow_cap"), text: `You pinch off ${n} glow cap${n > 1 ? "s" : ""}. They light your fingers blue-green and go dark within the minute. (They charge a battery with pitch, or press into a salve.)` };
+      w.payout = { xp: 4, items: Array(n).fill("glow_cap"), text: `Harvested ${n} glow cap${n > 1 ? "s" : ""} (+4 XP)` };
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 0.8, z: pos.z }, text: `+${n} GLOW CAP`, color: "#40f0c0", size: 1.0 }, { audience: { player: who.id } });
       return ctx.destroy(ctx.self.id);
     }
     if (s.kind === "cocoon") {
       snd("bandage-wrap-cloth", 0.5); const n = 2 + (ctx.random() < 0.5 ? 1 : 0), items = Array(n).fill("spider_silk"), extra = ctx.random() < 0.45 ? ["almond", "bandage", "battery", "ration", "ammo", "kit"][Math.floor(ctx.random() * 6)] : null;
       if (extra) items.push(extra);
       let bit = "";
-      if (ctx.random() < 0.18) { w.hp = Math.max(1, (w.hp ?? 0) - (w.maxHp ?? 100) * 0.03); bit = " Something small and hungry was still inside: it bit you and fled."; }
-      w.payout = { xp: 8, items, text: `You slit the silk. Wrapped inside: ${extra ? "a little of what its last victim carried, and " : ""}a heap of strong, sticky thread.${bit}` };
+      if (ctx.random() < 0.18) { w.hp = Math.max(1, (w.hp ?? 0) - (w.maxHp ?? 100) * 0.03); bit = " (bitten by young spider!)"; }
+      w.payout = { xp: 8, items, text: `Slit cocoon: ${n} spider silk${extra ? ` + ${extra}` : ""}${bit} (+8 XP)` };
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 0.8, z: pos.z }, text: `+${n} SILK`, color: "#e0e0e0", size: 1.0 }, { audience: { player: who.id } });
       return ctx.destroy(ctx.self.id);
     }
     if (s.kind === "seep") {
       snd("water-pour-splash-short", 0.3); let burn = "";
-      if (ctx.random() < 0.3) { w.hp = Math.max(1, (w.hp ?? 0) - (w.maxHp ?? 100) * 0.035); burn = " It is hot, and it grabbed at your glove. You rip free."; }
-      w.payout = { xp: 10, items: ["pitch", "pitch"], text: `You scrape warm pitch into a tin.${burn} (It seals, waterproofs and burns: caps, boots and plates all want it.)` };
+      if (ctx.random() < 0.3) { w.hp = Math.max(1, (w.hp ?? 0) - (w.maxHp ?? 100) * 0.035); burn = " (pitch burned hands!)"; }
+      w.payout = { xp: 10, items: ["pitch", "pitch"], text: `Scraped 2 pitch${burn} (+10 XP)` };
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 0.8, z: pos.z }, text: "+2 PITCH", color: "#b8a070", size: 1.0 }, { audience: { player: who.id } });
       return ctx.destroy(ctx.self.id);
     }
     if (s.kind === "board") {
@@ -123,11 +174,19 @@ export const ears = {
     if (s.kind === "carla") {
       if (w.kazoo && !w.kazooGiven) {
         w.kazoo = false; w.kazooGiven = true; w.sanity = Math.min(100, (w.sanity ?? 80) + 35);
-        w.payout = { xp: 90, items: ["almond", "bandage"], text: "You do not shake her hand. You put the stone kazoo in Carla's palm and close her fingers round it. She runs back to her mother, clutching it to her chest. Somewhere within, a spark of wonder. (+90 XP, Sanity +35, +Almond Water, +Bandage)" };
-        return;
+        heard(ctx, { clip: G("level-up-jingle-retro-terminal-chime-rising-three-notes"), position: pos, volume: 0.85, maxDistance: 16 });
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.8, z: pos.z }, text: "+90 XP", color: "#ffd700", size: 1.3 }, { audience: { player: who.id } });
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.4, z: pos.z }, text: "+35 SANITY", color: "#80ffaa", size: 1.1 }, { audience: { player: who.id } });
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.0, z: pos.z }, text: "+ALMOND WATER & BANDAGE", color: "#60c0ff", size: 0.9 }, { audience: { player: who.id } });
+        w.payout = { xp: 90, items: ["almond", "bandage"] };
+        const line = "A kazoo! Listen to this! Thank you! Mum, look what I got!";
+        heard(ctx, { clip: vo("penny", line), position: pos, volume: 1.0, maxDistance: 14 });
+        return say(who, `Carla: "${line}"`, ctx);
       }
       const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
-      return say(who, `Carla: ${CARLA[n % CARLA.length]}${w.kazooGiven ? " She hums into the kazoo." : ""}`, ctx);
+      const line = CARLA[n % CARLA.length];
+      heard(ctx, { clip: vo("penny", line), position: pos, volume: 1.0, maxDistance: 14 });
+      return say(who, `Carla: "${line}"${w.kazooGiven ? " (She hums into the stone kazoo.)" : ""}`, ctx);
     }
   },
 };
@@ -138,15 +197,20 @@ export function onTriggerEnter(ctx, other) {
   if (s.kind === "loop") {
     if ((w.l8Loops ?? 0) >= 1) return; // only the first crawl is wrong: the second time through, the path leads on
     w.l8Loops = (w.l8Loops ?? 0) + 1;
-    ctx.emit("screenFlash", { color: "#000000", duration: 1.2, intensity: 0.9 }, { audience: { player: other.id } });
-    other.feetPosition = { x: s.back.x, y: s.back.y + 0.2, z: s.back.z }; other.rotation = { yaw: s.back.yaw };
-    w.notice = { text: "You haul yourself out of the crevice into a large, round chamber. This feels oddly familiar. You could swear you've seen that rock before, the one that looks too much like a face. A marker on the ceiling: '9th Road: Marker #74'. Didn't you just pass #78?", at: now };
+    // Show, don't tell: disorienting spatial anomaly flash, camera punch, and static burst sound
+    ctx.emit("screenFlash", { color: "#000000", duration: 0.7, intensity: 1.0 }, { audience: { player: other.id } });
+    ctx.emit("cameraPunch", { direction: { x: 0, y: -0.2, z: 0.6 }, intensity: 0.4 }, { audience: { player: other.id } });
+    heard(ctx, { clip: G("static-burst-glitch-threshold"), position: s.back, volume: 0.8, maxDistance: 25 }, { audience: { player: other.id } });
+    // Teleport player out of the crevice directly under illuminated Marker #74 facing Face Rock
+    other.feetPosition = { x: s.back.x, y: s.back.y + 0.2, z: s.back.z };
+    other.rotation = { yaw: s.back.yaw };
     return;
   }
   if (s.kind === "exit") {
     if (now - (w.l8ExitAt ?? -1e9) < 20000) return; w.l8ExitAt = now;
-    ctx.emit("screenFlash", { color: "#fff6e0", duration: 2.0, intensity: 1 }, { audience: { player: other.id } });
-    w.notice = { text: "The crowds are gone. Rock turned to sand, sand to gravel, gravel to asphalt under your aching feet. A dim glow looms ahead. At last, the nightmare is over... isn't it?", at: now };
+    // Show, don't tell: cold suburban sodium blinding flare & wind draft sound at the threshold
+    ctx.emit("screenFlash", { color: "#fff0c0", duration: 2.2, intensity: 1.0 }, { audience: { player: other.id } });
+    heard(ctx, { clip: G("static-burst-glitch-threshold"), position: other.feetPosition, volume: 0.75, maxDistance: 20 }, { audience: { player: other.id } });
     w.l8Exits = (w.l8Exits ?? 0) + 1;
     ctx.after(2.2, "back", { id: other.id });
   }

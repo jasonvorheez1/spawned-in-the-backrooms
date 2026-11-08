@@ -6,7 +6,7 @@
 import L8 from "../../scripts/lib/data/level8.yml";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "1s";
-const V = 15;
+const V = 16;
 const GLB = {
   cave: "/cdn/value.6ae7c035c9583dda020bc92a7e80e75e9d3d462632234677d4a5f5a717fe311b.glb",
   spider: "/cdn/value.f2baeaec87cf017372e92e66ec42fae95179b52161e15051d3253036b89b9323.glb",
@@ -193,9 +193,21 @@ function lay(ctx) {
   }
 
   // ---- Station 2 & 3: the hall, the eerie Face Rock monolith, and the looping crawl (scripts/l8-use.js)
-  sp("l8-loop-sign", { ...at({ ...P(78, -(ST.hall.rx - 1.6), 2.2), yaw: P(78).yaw - 90 }), ...sign(0.9, 0.5, `<div face="front" width="0.9m" style="font-family:Arial,sans-serif;font-weight:900;color:#f2d870;text-align:center;line-height:1.05"><div style="font-size:46px">9TH ROAD: MARKER</div><div style="font-size:50px;color:#fff">#74</div></div>`), visible: false, state: { loop: true } });
+  // Marker #74 mounted prominently overhead directly in view of the loop return
+  sp("l8-loop-sign", {
+    ...at({ ...P(78, 0, 2.7), yaw: P(78).yaw + 180 }),
+    ...sign(1.2, 0.65, `<div face="front" width="1.2m" style="font-family:Arial,sans-serif;font-weight:900;color:#f2d870;text-align:center;line-height:1.05"><div style="font-size:36px;color:#c8d8b8">▼ 9TH ROAD ▼</div><div style="font-size:56px;color:#fff;letter-spacing:2px">MARKER #74</div></div>`),
+    visible: true, state: { loop: true },
+    children: [
+      { feetPosition: { x: -0.5, y: 0.55, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.035, radiusBottom: 0.035, height: 1.2 }, material: STEEL },
+      { feetPosition: { x: 0.5, y: 0.55, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.035, radiusBottom: 0.035, height: 1.2 }, material: STEEL },
+      { feetPosition: { x: 0, y: -0.42, z: 0.05 }, primitive: { kind: "sphere", radius: 0.1 }, material: { color: "oklch(0.88 0.16 85)", emissive: "oklch(0.9 0.18 85)", emissiveIntensity: 3.2 } },
+    ],
+  });
+  sp("l8-loop-lamp", { feetPosition: { x: P(78).x, y: P(78).y + 2.9, z: P(78).z }, light: { kind: "point", color: "oklch(0.88 0.15 85)", intensity: 1.4, distance: 10 } });
   sp("l8-crawl-end", { ...at(P(154, 0, 1.0)), physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 2.6, height: 2.2, depth: 1.4 }, visible: false, behavior: "scripts/l8-use.js", state: { kind: "loop", back: P(72, 2, 0.2) } });
-  // Sculpted Pareidolia "Face Rock" landmark (mentioned in the crawl-loop notice!)
+
+  // Sculpted Pareidolia "Face Rock" landmark with dramatic eerie shadow casting
   const fr = P(90, 7, 0.0);
   sp("l8-face-rock", {
     ...at({ ...fr, yaw: fr.yaw - 95 }), physics: "static", primitive: { kind: "dodecahedron", radius: 1.35 }, scale: { x: 0.95, y: 1.45, z: 0.85 }, material: FLOW_MAT,
@@ -207,6 +219,7 @@ function lay(ctx) {
       { feetPosition: { x: 0, y: 0.62, z: 0.66 }, primitive: { kind: "box", width: 0.58, height: 0.26, depth: 0.35 }, material: TAR_ROCK }, // hollow stone mouth
     ],
   });
+  sp("l8-face-lamp", { feetPosition: { x: fr.x - 2.4, y: fr.y + 0.8, z: fr.z + 1.5 }, light: { kind: "point", color: "oklch(0.72 0.08 240)", intensity: 1.6, distance: 12 } });
 
   // ---- Station 4: the flooded cavern: rising tide (scripts/l8-life.js), parkour stepping stones, tide gauge, and the Dead Caver on the high ledge
   const fl = P(176, 0, 0);
@@ -390,25 +403,75 @@ function lay(ctx) {
   });
   sp("l8-camp-sign", { ...at({ ...P(414, 4.5, 1.4), yaw: P(414).yaw + 160 }), ...sign(2.0, 1.1, `${MEG}<div style="font-size:70px">9TH ROAD CAMP</div><div style="font-size:42px;color:#e8e0c0">M.E.G. · B.N.T.G. · HARMOUTH SOCIETY</div><div style="font-size:34px;color:#c8d8b8">hot meals · a place to rest · guides for hire</div></div>`) });
   sp("l8-from-camp", at(P(424, -2, 0.1)));
-  sp("l8-carla", { ...at(P(437, 2.2, 0.1)), tags: ["usable"], visible: false, primitive: { kind: "box", width: 0.7, height: 1.2, depth: 0.7 }, behavior: "scripts/l8-use.js",
-    state: { kind: "carla", name: "Carla", verb: "Say hello", info: "A child with matted blonde hair and bright eyes.", tint: "#ffe0b0" } });
 
-  // ---- Station 9: the end of the Road: rock turns to sand, sand to gravel, gravel to asphalt; yellow center dashes, suburban streetlight, and a dim glow ahead
-  const asp = P(486, 0, -0.04);
+  // ---- Station 9: Physical terrain transition at the end of the Road:
+  // 1. Rock to Sand & Rubble (s = 464..472)
+  sp("l8-rubble-1", { ...at(P(465, -1.2, 0.02)), primitive: { kind: "box", width: 3.8, height: 0.12, depth: 4.5 }, material: { color: "oklch(0.34 0.03 62)", roughness: 0.95 } });
+  sp("l8-rubble-2", { ...at(P(468, 1.4, 0.02)), primitive: { kind: "box", width: 3.4, height: 0.14, depth: 4.0 }, material: { color: "oklch(0.31 0.03 65)", roughness: 0.95 } });
+  sp("l8-survey-stake", {
+    ...at(P(466, 3.2, 0)), primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 1.2 }, material: WOOD,
+    children: [{ feetPosition: { x: 0, y: 1.05, z: 0.1 }, primitive: { kind: "box", width: 0.02, height: 0.16, depth: 0.26 }, material: { color: "#f2d870" } }],
+  });
+
+  // 2. Sand to Crushed Gravel Roadbed with Weathered Timber Curbs (s = 472..482)
+  sp("l8-gravel", { ...at(P(476, 0, 0.03)), primitive: { kind: "box", width: 7.4, height: 0.14, depth: 10.5 }, material: { color: "oklch(0.26 0.02 70)", roughness: 0.98 } });
+  sp("l8-curb-l", { ...at(P(476, -3.5, 0.12)), primitive: { kind: "box", width: 0.26, height: 0.22, depth: 10.2 }, material: WOOD });
+  sp("l8-curb-r", { ...at(P(476, 3.5, 0.12)), primitive: { kind: "box", width: 0.26, height: 0.22, depth: 10.2 }, material: WOOD });
+
+  // 3. Gravel to Asphalt with Painted Yellow Center Line Dashes (s = 484..504)
+  const asp = P(492, 0, -0.04);
   sp("l8-asphalt", {
-    ...at({ ...asp, y: P(486).y - 0.05 }), primitive: { kind: "box", width: 8.5, height: 0.1, depth: 40 }, material: { color: "oklch(0.2 0.005 260)", roughness: 0.9 }, physics: "static",
-    children: [-15, -9, -3, 3, 9, 15].map((dz) => ({
-      feetPosition: { x: 0, y: 0.06, z: dz }, primitive: { kind: "box", width: 0.18, height: 0.02, depth: 2.8 }, material: { color: "oklch(0.78 0.16 88)", roughness: 0.7 },
+    ...at({ ...asp, y: P(492).y - 0.04 }), primitive: { kind: "box", width: 8.5, height: 0.14, depth: 26 }, material: { color: "oklch(0.18 0.005 260)", roughness: 0.92 }, physics: "static",
+    children: [-10, -5, 0, 5, 10].map((dz) => ({
+      feetPosition: { x: 0, y: 0.08, z: dz }, primitive: { kind: "box", width: 0.2, height: 0.02, depth: 2.8 }, material: { color: "oklch(0.8 0.18 85)", roughness: 0.65 },
     })),
   });
-  const endSign = P(492, 3.4, 0);
+
+  // 4. Highway Guardrail along the shoulder
+  const gr = P(492, 3.8, 0.1);
+  sp("l8-guardrail", {
+    ...at({ ...gr, yaw: gr.yaw }), physics: "static",
+    primitive: { kind: "box", width: 0.12, height: 0.42, depth: 18 }, material: STEEL,
+    children: [-7, -3.5, 0, 3.5, 7].map((dz) => ({
+      feetPosition: { x: 0.05, y: -0.42, z: dz }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 0.85 }, material: STEEL,
+    })),
+  });
+
+  // 5. M.E.G. Road Hazard Barricade with flashing warning beacon (s = 489)
+  const bPos = P(489, -1.2, 0.08);
+  sp("l8-barricade", {
+    ...at({ ...bPos, yaw: bPos.yaw + 180 }), physics: "static",
+    children: [
+      { feetPosition: { x: -0.85, y: 0.45, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 1.0 }, material: WOOD },
+      { feetPosition: { x: 0.85, y: 0.45, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 1.0 }, material: WOOD },
+      { feetPosition: { x: 0, y: 0.72, z: 0.04 }, ...sign(1.9, 0.55, `<div face="front" width="1.9m" style="font-family:Arial,sans-serif;font-weight:900;color:#fff;text-align:center;line-height:1.1"><div style="background:#b32400;padding:4px;font-size:42px">ROAD CLOSED</div><div style="color:#ffc850;font-size:26px;margin-top:2px">ABNORMAL TOPOLOGY · DO NOT CROSS</div></div>`) },
+      { feetPosition: { x: 0, y: 1.15, z: 0 }, primitive: { kind: "sphere", radius: 0.1 }, material: { color: "#ffb020", emissive: "#ffa000", emissiveIntensity: 3.5 } },
+      { feetPosition: { x: 0, y: 1.25, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.18 70)", intensity: 1.8, distance: 9 } },
+    ],
+  });
+
+  // 6. Vintage Suburban Sodium Streetlight (s = 496)
+  const sl = P(496, 3.7, 0.05);
+  sp("l8-streetlight", {
+    ...at({ ...sl, yaw: sl.yaw - 90 }), physics: "static",
+    primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.11, height: 5.6 }, material: STEEL,
+    children: [
+      { feetPosition: { x: 1.1, y: 5.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 2.4 }, rotation: { roll: -60 }, material: STEEL }, // mast arm
+      { feetPosition: { x: 2.1, y: 5.85, z: 0 }, primitive: { kind: "box", width: 0.34, height: 0.18, depth: 0.65 }, material: STEEL }, // cobrahead housing
+      { feetPosition: { x: 2.1, y: 5.74, z: 0 }, primitive: { kind: "box", width: 0.24, height: 0.04, depth: 0.42 }, material: { color: "#ffc860", emissive: "#ffa520", emissiveIntensity: 4.8 } }, // sodium lens
+      { feetPosition: { x: 2.1, y: 5.5, z: 0 }, light: { kind: "point", color: "oklch(0.84 0.19 72)", intensity: 6.2, distance: 34 } },
+    ],
+  });
+
+  // 7. Highway exit sign & suburban threshold glow (s = 502)
+  const endSign = P(498, 3.4, 0);
   sp("l8-end-sign", {
     ...at({ ...endSign, yaw: endSign.yaw + 165 }), physics: "static", primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.06, height: 2.4 }, material: STEEL,
     children: [
       { feetPosition: { x: 0, y: 1.85, z: 0 }, ...sign(1.6, 0.75, `<div face="front" width="1.6m" style="font-family:Arial,sans-serif;font-weight:900;color:#fff;text-align:center;line-height:1.1"><div style="font-size:48px">LEVEL 9 · THE SUBURBS</div><div style="font-size:32px;color:#cfe8d8">NEXT EXIT · WATCH FOR NEIGHBORS</div></div>`, "oklch(0.28 0.08 155)") },
     ],
   });
-  sp("l8-glow", { feetPosition: { x: P(502).x, y: P(502).y + 1.4, z: P(502).z }, primitive: { kind: "box", width: 2.8, height: 2.8, depth: 0.2 }, material: { color: "#fff6e0", emissive: "#fff0d0", emissiveIntensity: 3.2 }, children: [{ feetPosition: { x: 0, y: 0, z: 1.5 }, light: { kind: "point", color: "oklch(0.95 0.05 85)", intensity: 5.5, distance: 32 } }] });
+  sp("l8-glow", { feetPosition: { x: P(502).x, y: P(502).y + 1.4, z: P(502).z }, primitive: { kind: "box", width: 3.2, height: 3.2, depth: 0.2 }, material: { color: "#fff6e0", emissive: "#fff0d0", emissiveIntensity: 3.5 }, children: [{ feetPosition: { x: 0, y: 0, z: 1.5 }, light: { kind: "point", color: "oklch(0.95 0.05 85)", intensity: 6.0, distance: 35 } }] });
   sp("l8-exit", { ...at(P(500, 0, 1.2)), physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 5, height: 2.6, depth: 1.2 }, visible: false, behavior: "scripts/l8-use.js", state: { kind: "exit", back: P(436, -4, 0.3) } });
 
   // ---- stuff to do: detailed supply crates to search, a workbench with tools, and an errand board at the camp (scripts/l8-use.js)
@@ -460,7 +523,13 @@ export function tick(ctx) {
   const s = ctx.place.state;
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); }
   if (!ctx.getObject("l8-life")) ctx.spawn("l8-life", { behavior: "scripts/l8-life.js" });
-  if (!s.campV) { s.campV = 1; spawnCamp(ctx); }
+  if (!s.campV || s.campV < 2) {
+    s.campV = 2;
+    for (const id of Object.keys(CAMP)) {
+      if (ctx.place.objects[id] || ctx.getObject(id)) ctx.destroy(id);
+    }
+    spawnCamp(ctx);
+  }
   if ((s.denV ?? 0) < DEN_V) { s.denV = DEN_V; layDens(ctx); }
   keepWretched(ctx);
   tickChatter(ctx, CHATTER.level8, { "l8-hobb": "hollis", "l8-wen": "mags", "l8-ivo": "reyes", "l8-marit": "wren", "l8-carla-kid": "penny" }); // the camp talks among itself
@@ -487,11 +556,31 @@ function spawnCamp(ctx) {
     const cf = P(436, 0, 0.1);
     for (const [id, g] of Object.entries(CAMP)) {
       if (ctx.place.objects[id]) continue;
+      const isCarla = id === "l8-carla-kid";
       const x = cf.x + g.at[0], z = cf.z + g.at[1], look = { species: g.sp, sex: g.sex, eye: g.eye, topw: "sweater", top: g.top, botw: g.child ? "overalls" : "pants", bottom: "#33332a", shoes: "boots", shoec: "#2a2018" };
       ctx.spawn(id, {
-        tags: ["npc", "l8-npc"], feetPosition: { x, y: cf.y + 0.3, z }, rotation: { yaw: 0 }, physics: "character", ...critterSpec(npcLook(id, look, "survivor", 8)), ...(g.child ? { scale: { x: 0.68, y: 0.68, z: 0.68 } } : {}),
-        behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-        state: { name: g.name, role: "survivor", voice: g.voice, faction: "camp", factionName: "the 9th Road camp: M.E.G. operatives, B.N.T.G. traders and the Harmouth Speleological Society", rounds: [{ x, y: cf.y + 0.3, z, dwell: 40, act: null, look: { x: cf.x, z: cf.z } }], ri: 0, nerve: g.child ? "coward" : "steady", home: { x, z }, ...npcState(ctx, "agent", 90) },
+        tags: ["npc", "l8-npc", ...(isCarla ? ["usable"] : [])],
+        feetPosition: { x, y: cf.y + 0.3, z },
+        rotation: { yaw: 0 },
+        physics: "character",
+        ...critterSpec(npcLook(id, look, "survivor", 8)),
+        ...(g.child ? { scale: { x: 0.68, y: 0.68, z: 0.68 } } : {}),
+        behavior: isCarla
+          ? ["scripts/humanoid-locomotion.js", "scripts/l8-use.js"]
+          : ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
+        state: {
+          name: g.name,
+          role: "survivor",
+          voice: g.voice,
+          faction: "camp",
+          factionName: "the 9th Road camp: M.E.G. operatives, B.N.T.G. traders and the Harmouth Speleological Society",
+          rounds: [{ x, y: cf.y + 0.3, z, dwell: 40, act: null, look: { x: cf.x, z: cf.z } }],
+          ri: 0,
+          nerve: g.child ? "coward" : "steady",
+          home: { x, z },
+          ...npcState(ctx, "agent", 90),
+          ...(isCarla ? { kind: "carla", verb: "Talk to Carla", info: "A survivor child huddled by the fire.", tint: "#ffe0b0" } : {})
+        },
       });
       if (g.gun) ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: g.gun }, ...weaponBody(g.gun) });
     }

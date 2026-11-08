@@ -59,8 +59,14 @@ export function update(ctx, dt) {
       const f = p.feetPosition, inside = Math.abs(f.x - fp.x) < 15 && Math.abs(f.z - fp.z) < 15 && f.y < F + 4;
       const head = f.y + 1.7 < surf;
       m.drown[p.id] = inside && head ? (m.drown[p.id] ?? 0) + dt : 0;
-      if (m.drown[p.id] > 12) { if (!m.drowned?.[p.id] || now - m.drowned[p.id] > 4000) { (m.drowned ??= {})[p.id] = now; p.state.notice = { text: "The waters are over your head. You must swim or scramble onto the left ledges. Your chest burns.", at: now }; } }
-      if (inside && f.y + 0.4 < surf && !(m.wet?.[p.id] > now - 60000)) { (m.wet ??= {})[p.id] = now; p.state.notice = { text: surf - f.y > 1.6 ? "The waters are at your chin." : "The water has risen past your ankles. The stepping ledges on the left wall climb above the tide.", at: now }; }
+      if (m.drown[p.id] > 10) {
+        p.state.hp = Math.max(1, (p.state.hp ?? 100) - 12 * dt);
+        ctx.emit("cameraPunch", { direction: { x: 0, y: -0.15, z: 0 }, intensity: 0.2 }, { audience: { player: p.id } });
+      }
+      if (inside && f.y + 0.4 < surf && !(m.wet?.[p.id] > now - 45000)) {
+        (m.wet ??= {})[p.id] = now;
+        heard(ctx, { clip: G("water-pour-splash-short"), position: f, volume: 0.55, maxDistance: 16 }, { audience: { player: p.id } });
+      }
     }
   }
   // ---- the light guides: little blue-green lights that dance over the lane's stream, and the first of them waits for you and leads you down the lane
@@ -142,8 +148,7 @@ export function update(ctx, dt) {
           const yaw = (Math.atan2(p.feetPosition.x - hx, p.feetPosition.z - hz) * 180) / Math.PI;
           return spawnTarHand(ctx, `l8-hand-${p.id.slice(-6)}-${k}`, hx, tar.feetPosition.y - 0.15, hz, yaw);
         });
-        p.state.notice = { text: "The tar ripples. A group of tar-covered hands reaches out from the pool.", at: now };
-        heard(ctx, { clip: G("thick-tar-bubbling-and-wet-gurgle"), position: { x: tc.x, y: tar.feetPosition.y, z: tc.z }, volume: 0.8, maxDistance: 24 });
+        heard(ctx, { clip: G("thick-tar-bubbling-and-wet-gurgle"), position: { x: tc.x, y: tar.feetPosition.y, z: tc.z }, volume: 0.9, maxDistance: 24 });
       }
       if (T.hands) {
         const dx = tc.x - p.feetPosition.x, dz = tc.z - p.feetPosition.z, dd = Math.hypot(dx, dz) || 1;
@@ -156,13 +161,29 @@ export function update(ctx, dt) {
           ho.rotation = { yaw, pitch: Math.sin(now / 180 + k) * 14, roll: Math.cos(now / 220 + k) * 10 };
         });
       }
-      if (T.in > 2.2) { T.in = 0; T.t = 0; const a = P(31, 0, 0.3); p.feetPosition = { x: a.x, y: a.y, z: a.z }; p.state.hp = Math.max(8, (p.state.hp ?? 100) * 0.4); p.state.sanity = Math.max(0, (p.state.sanity ?? 80) - 20); p.state.notice = { text: "You lose consciousness in the boiling dark. You wake on a shore of a lake you do not know. (The few who survive the hands wake on Level 41 or 91.)", at: now }; }
+      if (T.in > 2.2) {
+        T.in = 0; T.t = 0;
+        ctx.emit("screenFlash", { color: "#000000", duration: 2.5, intensity: 1.0 }, { audience: { player: p.id } });
+        heard(ctx, { clip: G("thick-tar-bubbling-and-wet-gurgle"), position: tc, volume: 1.0, maxDistance: 30 });
+        const a = P(31, 0, 0.3);
+        p.feetPosition = { x: a.x, y: a.y, z: a.z };
+        p.state.hp = Math.max(8, (p.state.hp ?? 100) * 0.4);
+        p.state.sanity = Math.max(0, (p.state.sanity ?? 80) - 20);
+        heard(ctx, { clip: G("swimmer-surfacing-gasping-breath"), position: a, volume: 0.95, maxDistance: 16 }, { audience: { player: p.id } });
+        heard(ctx, { clip: G("water-pour-splash-short"), position: a, volume: 0.6, maxDistance: 12 }, { audience: { player: p.id } });
+        ctx.emit("cameraPunch", { direction: { x: 0, y: 0.7, z: 0 }, intensity: 0.5 }, { audience: { player: p.id } });
+      }
     } else { T.t = Math.max(0, T.t - dt); T.in = 0; if (T.hands && d > 8) { for (const h of T.hands) ctx.destroy(h); T.hands = null; } }
   }
   // ---- the rock: a distant rumble (a wrangler somewhere in the deep), far screams, chittering
   if (now > m.next && players.length) {
     m.next = now + 70000 + ctx.random() * 110000; const r = ctx.random();
-    if (r < 0.5) { for (const p of players) { ctx.emit("screenShake", { intensity: 0.2, duration: 1.8 }, { audience: { player: p.id } }); heard(ctx, { clip: G("deep-rock-rumble-from-far-underground"), position: p.feetPosition, volume: 0.75, maxDistance: 60 }, { audience: { player: p.id } }); p.state.notice = { text: "A distant rumble travels through the rock under your feet.", at: now }; } }
+    if (r < 0.5) {
+      for (const p of players) {
+        ctx.emit("screenShake", { intensity: 0.28, duration: 2.2 }, { audience: { player: p.id } });
+        heard(ctx, { clip: G("deep-rock-rumble-from-far-underground"), position: p.feetPosition, volume: 0.85, maxDistance: 60 }, { audience: { player: p.id } });
+      }
+    }
     else if (r < 0.8) for (const p of players) heard(ctx, { clip: G("faint-distant-human-scream-echoing-in-cave"), position: { x: p.feetPosition.x + 40, y: p.feetPosition.y, z: p.feetPosition.z - 40 }, volume: 0.5, maxDistance: 120 }, { audience: { player: p.id } });
     else for (const p of players) heard(ctx, { clip: G("chittering-and-clicking-of-unseen-creatures-echo-cave"), position: p.feetPosition, volume: 0.45, maxDistance: 50 }, { audience: { player: p.id } });
   }
