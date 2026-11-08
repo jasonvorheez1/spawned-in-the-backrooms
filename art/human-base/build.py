@@ -148,13 +148,15 @@ def proof(name, r):
     bpy.context.view_layer.update(); shot("pose", (2.8, -3.6, 1.1))
     for b in pb: b.rotation_euler = (0, 0, 0)
 
-def garment(body, r, name, keep, color, push=0.005):
+def garment(body, r, name, keep, color, cuts=(), push=0.005):
     import bmesh
     o = body.copy(); o.data = body.data.copy(); o.name = name
     bpy.context.collection.objects.link(o)
     bm = bmesh.new(); bm.from_mesh(o.data)
     gi = {g.index: g.name for g in o.vertex_groups}
     dl = bm.verts.layers.deform.active
+    for zc in cuts:
+        bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=(0, 0, zc), plane_no=(0, 0, 1))
     def armw(v):
         return sum(w for g, w in v[dl].items() if any(gi[g].endswith(k) for k in ("Arm", "ForeArm", "Hand"))) if dl else 0
     gone = [f for f in bm.faces if not keep(f.calc_center_median(), max(armw(v) for v in f.verts))]
@@ -173,8 +175,8 @@ def build(name, is_male, height):
     r = rig(head, body, 0.26 if is_male else 0.0)
     extra = []
     if not is_male:
-        extra.append(garment(body, r, "Bra", lambda c, a: 1.24 < c.z < 1.43 and a < 0.15, (0.07, 0.07, 0.08, 1)))
-        extra.append(garment(body, r, "Shorts", lambda c, a: 0.74 < c.z < 1.08 and a < 0.15, (0.08, 0.1, 0.16, 1)))
+        extra.append(garment(body, r, "Bra", lambda c, a: 1.25 < c.z < 1.42 and a < 0.3, (0.07, 0.07, 0.08, 1), cuts=(1.25, 1.42)))
+        extra.append(garment(body, r, "Shorts", lambda c, a: 0.82 < c.z < 1.07 and a < 0.3, (0.08, 0.1, 0.16, 1), cuts=(0.82, 1.07)))
     s = height / 1.94
     r.scale = (s, s, s); bpy.ops.object.select_all(action="DESELECT")
     for o in (r, head, body, *extra): o.select_set(True)
