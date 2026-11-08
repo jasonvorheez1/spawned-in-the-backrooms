@@ -57,8 +57,16 @@ export function onInput(ctx, input) {
     if (ses.zDown && input.released?.grab) { const quick = ctx.now() - ses.zDown < HOLD_MS; ses.zDown = null; return quick ? setDown(ctx, held) : toss(ctx, held, h); }
     return;
   }
+  const foe = ses.heldFoe && ctx.getObject(ses.heldFoe);
+  if (foe) { // a body in your arms: tap Z drops it at your feet, hold Z hurls it
+    if (input.pressed?.grab) ses.zDown = ctx.now();
+    if (ses.zDown && ((input.held?.grab && ctx.now() - ses.zDown >= HOLD_MS) || input.released?.grab)) { const quick = ctx.now() - ses.zDown < HOLD_MS; ses.zDown = null; return hurl(ctx, foe, quick); }
+    return;
+  }
+  ses.heldFoe = null;
   if (!input.pressed?.grab) return;
   ses.held = null;
+  if (grabFoe(ctx, input)) return;
   const f = ctx.self.feetPosition, eye = { x: f.x, y: f.y + 1.5, z: f.z }, d = ses.dir ?? look(ctx, input);
   const hit = raycast(ctx, eye, d, { distance: 2.6, ignoreEntities: [ctx.self.id] });
   let o = hit?.id && ctx.getObject(hit.id);
@@ -108,9 +116,52 @@ function toss(ctx, o, h) {
   const f = ctx.self.feetPosition;
   heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-heavy-object-throw-whoosh.mp3", position: { x: f.x, y: f.y + 1.4, z: f.z }, volume: 0.5, maxDistance: 14 });
 }
+// bodies: Z grabs any NPC or enemy in reach if your strength lifts it (heft x 12 kg against power()), hold Z throws it.
+// Savi's picks: throw speed 4 + 7 x (power / kg, at most 1.6) + 0.6 per Agility past 5, launched 25 degrees up.
+const BODIES = ["partygoer", "smiler", "lurker", "hound", "stealer", "l8spider", "l8-hostile", "npc", "entity", "l6-smiler"];
+const HEFT = { partygoer: 6, hound: 4, smiler: 10, lurker: 8, stealer: 7, l8spider: 5, npc: 6, "l26-balloon": 1 };
+const bodyKg = (o) => o.state?.carryKg ?? 12 * (Object.entries(HEFT).find(([t]) => o.tags?.includes(t))?.[1] ?? 6);
+function grabFoe(ctx, input) {
+  const ses = ctx.self.session, f = ctx.self.feetPosition, d = ses.dir ?? look(ctx, input), hl = Math.hypot(d.x, d.z) || 1;
+  let e = null, bd = 2.2;
+  for (const c of ctx.query({ anyTags: BODIES, radius: 2.6 })) {
+    if (c.id === ctx.self.id || c.state?.dead || (c.state?.hp ?? 1) <= 0 || c.state?.heldBy) continue;
+    const dx = c.feetPosition.x - f.x, dz = c.feetPosition.z - f.z, dist = Math.hypot(dx, dz);
+    if (dist > bd || (dist > 0.4 && (dx * d.x + dz * d.z) / (dist * hl) < 0.5)) continue;
+    bd = dist; e = c;
+  }
+  if (!e) return false;
+  const kg = bodyKg(e), cap = power(ctx);
+  if (kg > cap * 1.25) { note(ctx, `Too heavy to lift (${Math.round(kg)} kg). More Hardiness.`); heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-straining-grunt-failed-lift.mp3", position: f, volume: 0.5, maxDistance: 10 }); return true; }
+  const st = e.state; st.heldBy = ctx.self.id; st.heldAt = ctx.now(); st.down = null; st.kb = null; st.stunUntil = ctx.now() + 9000;
+  ses.heldFoe = e.id; ses.foeKg = kg;
+  ctx.self.state.carryMul = Math.max(0.45, 1 - (kg / cap) * 0.5);
+  ctx.self.anim.grab = { clip: "cdn/clip-pick-up.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 }; ses.grabAnimEnd = ctx.now() + 900;
+  ctx.emit("squash", { target: e.id, axis: "y", intensity: 0.25, duration: 0.2 });
+  heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-grab-body-cloth-rustle-and-lift-grunt.mp3", position: e.feetPosition, volume: 0.7, maxDistance: 14 });
+  note(ctx, "Hold Z to throw. Tap Z to drop.");
+  return true;
+}
+function hurl(ctx, e, drop) {
+  const ses = ctx.self.session, s = ctx.self.state, d = ses.dir ?? { x: 0, y: 0, z: -1 }, hl = Math.hypot(d.x, d.z) || 1, A = attrsOf(s);
+  const kg = ses.foeKg ?? bodyKg(e), r = Math.min(1.6, power(ctx) / kg);
+  const sp = drop ? 1 : 4 + 7 * r + Math.max(0, (A.a ?? 5) - 5) * 0.6, dx = (d.x / hl) * sp, dz = (d.z / hl) * sp;
+  const st = e.state; st.heldBy = null;
+  st.down = { x: dx, z: dz, at: ctx.now(), ms: 1000, fly: !drop, y0: e.feetPosition.y };
+  e.velocity = { x: dx, y: drop ? 0 : sp * 0.47, z: dz };
+  ses.heldFoe = null; ses.foeKg = null; s.carryMul = 1;
+  if (drop) return;
+  ctx.self.anim.grab = { clip: "cdn/clip-throw.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 }; ses.grabAnimEnd = ctx.now() + 1000;
+  ctx.emit("cameraPunch", { direction: { x: d.x / hl, y: 0, z: d.z / hl }, intensity: 0.35 }, { audience: { player: ctx.self.id } });
+  ctx.emit("damageNumber", { position: { x: e.feetPosition.x, y: e.feetPosition.y + 2, z: e.feetPosition.z }, text: r >= 1.2 ? "HURLED" : "THROWN", color: "#ffb347", size: 1 });
+  heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-heavy-object-throw-whoosh.mp3", position: e.feetPosition, volume: 0.8, maxDistance: 18 });
+}
 export function update(ctx) {
   if (ctx.self.anim?.grab && ctx.now() > (ctx.self.session.grabAnimEnd ?? 0)) ctx.self.anim.grab = null; // a once-clip left at weight 1 freezes the body in its last frame
   const ses = ctx.self.session;
+  if (ses.heldFoe) { const e = ctx.getObject(ses.heldFoe), f = ctx.self.feetPosition, d = ses.dir ?? { x: 0, y: 0, z: -1 }, hl = Math.hypot(d.x, d.z) || 1;
+    if (!e || e.state?.dead || e.state?.heldBy !== ctx.self.id) { ses.heldFoe = null; ctx.self.state.carryMul = 1; }
+    else { e.feetPosition = { x: f.x + (d.x / hl) * 1.0, y: f.y + 0.6, z: f.z + (d.z / hl) * 1.0 }; e.velocity = { x: 0, y: 0, z: 0 }; e.rotation = { yaw: Math.atan2(-d.x, -d.z) * 57.2958 + 180, pitch: -20 }; } }
   if (ses.heave && ctx.now() >= ses.heave.until) { const o = ctx.getObject(ses.heave.id), kg = ses.heave.kg; ses.heave = null; if (o) lift(ctx, o, kg, power(ctx)); else ctx.self.state.carryMul = 1; }
   { const s = ctx.self.state; // a food tray handed over by the Snackrooms counter or a waiter (player.state.l61Hold) comes into the hands here
     if (s.l61Hold && ses.held !== s.l61Hold && !ses.heave) { const t = ctx.getObject(s.l61Hold);

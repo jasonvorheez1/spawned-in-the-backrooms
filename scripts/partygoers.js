@@ -2,6 +2,8 @@
 // Partygoers: nearsighted (they see 9 m), slow, and never alone: the one that sees you calls the pack within 16 m.
 // Their arms end in toothed mouths: a bite every 1.3 s. Tagged l8-hostile so every weapon and kick hits them.
 // Balloons: stationary. Step within reach of the ribbon and it stings: damage, and you're rooted a beat.
+import { knocked } from "./lib/knock.js";
+const knockedHold = (ctx, p, now, dt) => !!p.state?.heldBy && knocked(ctx, p, now, dt);
 import { dmgAfterArmor } from "./lib/stats.js"
 import { animate } from "builtin/tween"
 const T = { sight: 14, call: 22, walk: 1.4, hunt: 3.4, reach: 1.7, biteDmg: 16, biteMs: 1000, hp: 220, // her picks: tough enough to need a mag
@@ -98,8 +100,9 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
     const dx = d > 0.01 ? (target.x - p.feetPosition.x) / d : 0, dz = d > 0.01 ? (target.z - p.feetPosition.z) / d : 0
     const face = () => { p.rotation = { yaw: Math.atan2(-dx, -dz) * 180 / Math.PI } }
     const vy = p.velocity.y + g * dt
+    if (knockedHold(ctx, p, now, dt)) continue
     if (s.down) { // kicked flat: flung, tipped onto its back, then it scrambles up
-      const t = now - s.down.at, k = Math.max(0, 1 - t / 450), yaw = typeof p.rotation === "number" ? p.rotation : (p.rotation?.yaw ?? 0)
+      const t = now - s.down.at, k = Math.max(0, 1 - t / 450); if (s.down.fly || s.down.y0 != null) { knocked(ctx, p, now, dt); if (s.down?.fly && now - s.down.at < 260) continue }, yaw = typeof p.rotation === "number" ? p.rotation : (p.rotation?.yaw ?? 0)
       if (!s.down.fell) { s.down.fell = 1; s.move = null; s.combo = null; p.anim.act = { clip: "cdn/clip-fall-loop.glb", loop: true, weight: 1, blend: 0.08 }; animate(ctx, p.id, { "rotation.pitch": [0, -80] }, { duration: 0.3, easing: "easeOutQuad" }) }
       p.velocity = { x: s.down.x * k, y: vy, z: s.down.z * k }; gait(ctx, p, "idle")
       if (t > s.down.ms && !s.down.up) { s.down.up = 1; animate(ctx, p.id, { "rotation.pitch": [-80, 0] }, { duration: 0.35, easing: "easeOutBack" }); once(p, "cdn/clip-land.glb")

@@ -5,9 +5,14 @@ export function knocked(ctx, e, now, dt) {
   const s = e.state; if (!s || s.dead || (s.hp ?? 1) <= 0) return false
   const g = ctx.place.gravity?.y ?? -9.8, vy = (e.velocity?.y ?? 0) + g * dt
   const yaw = typeof e.rotation === "number" ? e.rotation : (e.rotation?.yaw ?? 0)
+  if (s.heldBy) { // in someone's arms: the holder's machine places it
+    if (now - (s.heldAt ?? 0) > 8000) { s.heldBy = null } else { e.velocity = { x: 0, y: 0, z: 0 }; return true }
+  }
   const d = s.down
   if (d) {
     const t = now - d.at
+    if (d.y0 != null && e.feetPosition.y < d.y0 - 8) { s.hp = 0; s.dead = true; s.overboard = true; s.down = null; return false } // thrown off a ledge: gone, and no xp (Shelly)
+    if (d.fly && !(t > 250 && e.grounded) && t < 4000) { e.velocity = { x: d.x, y: vy, z: d.z }; e.rotation = { yaw, pitch: -80 }; d.at = now - 250; return true } // still airborne: keeps its throw
     if (t > d.ms + 450) { s.down = null; e.rotation = { yaw, pitch: 0 }; return false }
     const k = Math.max(0, 1 - t / 450)
     e.velocity = { x: d.x * k, y: vy, z: d.z * k }
