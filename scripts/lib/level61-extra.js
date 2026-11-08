@@ -265,3 +265,4 @@ export function person(ctx, id) {
   if (g.canteen) {
     ctx.spawn(`${id}-gear`, { feetPosition: { x: x + 0.5, y: 0, z: z - 0.2 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.07, height: 0.22 }, material: { color: "oklch(0.45 0.08 60)", roughness: 0.6 } });
   }
+}
