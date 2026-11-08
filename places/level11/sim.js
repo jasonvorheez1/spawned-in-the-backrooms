@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 60; // bump to rebuild the city in rooms that are already open
+const V = 61; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -691,7 +691,7 @@ function lay(ctx) {
   // B.N.T.G. Realty: a temporary office in the renovation building; the agent sells the green house (Shelly: "i should go to an npc for that preferably in a building")
   // B.N.T.G. Realty suite: a finished room carved out of the gutted floor (x -22.9..-16.4, z -5.2..3.2), entered from the glass front
   {
-    const WALLP = { texture: "cdn/texture-sage-green-damask-wallpaper.png", repeat: [1, 1], wrap: "repeat", color: "oklch(0.92 0.02 120)", roughness: 0.9 };
+    const WALLP = { color: "oklch(0.8 0.045 135)", roughness: 0.92 };
     const PANEL = { texture: "cdn/texture-dark-walnut-wood-wainscot-paneling.png", repeat: [1, 1], wrap: "repeat", color: "oklch(0.8 0.03 60)", roughness: 0.55 };
     const CARPET = { texture: "cdn/texture-short-pile-office-carpet-deep-green.png", repeat: [1, 1], wrap: "repeat", roughness: 1 };
     const TRIMW = { color: "oklch(0.9 0.02 85)", roughness: 0.5 };
