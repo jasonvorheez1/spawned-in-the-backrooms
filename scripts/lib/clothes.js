@@ -179,7 +179,9 @@ export const CLOTHES = CL
 const NATURAL = { cat: ['f2a65a', 'c98b55', '3b3440', 'f4efe9', 'b9b3c2', '9a6440'], dog: ['c98b55', '9a6440', 'f4efe9', '3b3440', 'e0c090'], fox: ['f07a2e', 'd8602a', 'b9b3c2', 'f4efe9'], bunny: ['f4efe9', 'b9b3c2', 'c98b55', 'e8d8c8', '9a8478'],
   bear: ['9a6440', '6a4630', '3b3440', 'c98b55'], deer: ['c98b55', 'b07a4a', '9a6440'], mouse: ['b9b3c2', '9a8478', 'f4efe9', 'c98b55'], wolf: ['6f7d93', 'b9b3c2', '3b3440', '8a8278'], raccoon: ['6f7d93', '8a8278', 'b9b3c2'],
   panda: ['f4efe9'], pig: ['ffb3cf', 'f0a0a8', 'e8c0b0'], sheep: ['f4efe9', 'e8e0d0', '3b3440'], lion: ['e0a850', 'c98b55'], tiger: ['f07a2e', 'f4efe9'], redpanda: ['c8502a', 'b04a2a'], skunk: ['3b3440', '2b2633'],
-  hamster: ['f2a65a', 'e8c090', 'f4efe9'], otter: ['7a5236', '9a6440', '6a4630'], koala: ['8a909a', 'b9b3c2'] }
+  hamster: ['f2a65a', 'e8c090', 'f4efe9'], otter: ['7a5236', '9a6440', '6a4630'], koala: ['8a909a', 'b9b3c2'],
+  rat: ['8a8078', '6a5a50', 'f4efe9', '3b3440'], squirrel: ['b8683a', '8a5a3a', '9a9aa4', 'c98b55'], leopard: ['e8b24a', 'd89a3a', '3b3440'], jackal: ['c89a5a', 'b08a5a', '8a8278'], badger: ['5c5864', '7a7480', '3b3440'],
+  ferret: ['c9a47c', '8a6a4a', 'f4efe9'], beaver: ['7a4a2c', '9a6440', '6a4630'], capybara: ['a07848', '8a6a40', 'b08a5a'], lop: ['d8c4a8', 'f4efe9', '9a8478', 'c98b55'], fennec: ['e8c898', 'f0d8b0', 'd8b888'] }
 const COMMON = ['e8c890', 'd89060', '7a4a30', '5a5a6a', 'a89080', 'f0e0c8', 'c87040', '484050']
 const PASTEL = ['ffb3cf', '9fd3ff', 'b8e986', 'c9a0ff', 'ffe066', 'ffc8a0', 'a0e8d8', 'e8a0e0', 'f8f0a0', 'a8c0ff']
 // dyes a plain garment may come in: Savi's picks, wide on purpose

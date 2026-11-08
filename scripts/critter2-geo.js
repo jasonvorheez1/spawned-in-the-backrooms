@@ -70,6 +70,15 @@ export const SPECIES = {
   koala:    { fur: "#9a9aa4", belly: "#ececf0", nose: "#2a2830", ears: "round", earL: 0.2, earW: 1.45, earIn: "#f4f4f6", tail: "stub", snout: 0.05, chunky: true, bignose: true, muzzle: false, fluffEar: true },
 };
 
+// the Nov 8 species: the scripted fallback and the first-person hands read these (the Blender heads are the real thing: art/critter-cute/build.py)
+Object.assign(SPECIES, {
+  rat: { ...SPECIES.mouse, fur: "#8a8078", belly: "#d8cfc4", earL: 0.24 }, squirrel: { ...SPECIES.hamster, fur: "#b8683a", belly: "#f4e4cf", tail: "bushy", ears: "point", earL: 0.16, tip: "#f4e4cf" },
+  leopard: { ...SPECIES.tiger, fur: "#e8b24a", belly: "#fff1d4", stripes: undefined, spots: "#2a1c18", tail: "cat" }, jackal: { ...SPECIES.wolf, fur: "#c89a5a", belly: "#f1dcb8", earTip: "#2a1c18", tip: "#2a1c18", paw: "#5a3a22" },
+  badger: { ...SPECIES.skunk, fur: "#5c5864", belly: "#2e2c36", skunk: "#f1ece4", tail: "stub" }, ferret: { ...SPECIES.raccoon, fur: "#c9a47c", belly: "#efe0c8", tail: "otter", tip: "#5a4030" },
+  beaver: { ...SPECIES.otter, fur: "#7a4a2c", belly: "#d8b88c", buck: true }, capybara: { ...SPECIES.koala, fur: "#a07848", belly: "#d8b88a", earIn: "#d8a888", earW: 1 },
+  lop: { ...SPECIES.bunny, fur: "#d8c4a8", ears: "flop", earL: 0.3 }, fennec: { ...SPECIES.fox, fur: "#e8c898", earL: 0.5, earTip: "#7a5a38" },
+});
+
 // expressions: eyes, mouth, brows, extras
 const EXPR = {
   grin: { e: "open", m: "grin", b: 0 }, smile: { e: "open", m: "smile", b: 0 }, beam: { e: "happy", m: "beam", b: 0.4 },

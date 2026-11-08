@@ -1,6 +1,6 @@
 # Custom critter options: what the creator offers and what a new player wears (her picks)
 default: { species: cat, sex: m, fur: "", eye: "#2b2233", eyes: round, marks: none, ftype: oval, trait: placid, blush: "#ff6285", nose: "", expr: grin, topw: tee, botw: pants, shoes: sneakers, hat: none, eyew: none, neck: none, top: "#e85d75", bottom: "#3d5a98", shoec: "#f4f1ea", hatc: "#e85d75", neckc: "#f3c64a", model: "", headS: 1, earS: 1, snoutS: 1, waistS: 1, hipS: 1, bustS: 1, tailS: 1, heightS: 1, buildS: 1 }
-species: [cat, dog, fox, bunny, bear, deer, mouse, wolf, raccoon, panda, pig, sheep, lion, tiger, redpanda, skunk, hamster, otter, koala]
+species: [cat, dog, fox, bunny, bear, deer, mouse, wolf, raccoon, panda, pig, sheep, lion, tiger, redpanda, skunk, hamster, otter, koala, rat, squirrel, leopard, jackal, badger, ferret, beaver, capybara, lop, fennec]
 sex: [m, f]
 # clothing slots: each is worn on its own, each has its own colour
 topw: [none, tee, tank, longsleeve, hoodie, sweater, jacket, pajamas, apron, dress]

@@ -209,7 +209,9 @@ export function seatHead(ctx, obj, l) {
 export const staleBody = (model) => !!model && !Object.values(M.body).includes(model.id ?? model)
 const SPECIES = Object.keys(M.species)
 const hashOf = (str) => { let h = 2166136261; for (const c of String(str)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
-export const speciesFor = (id) => SPECIES[hashOf(id + ':sp') % SPECIES.length]
+const NEWSP = ['rat', 'squirrel', 'leopard', 'jackal', 'badger', 'ferret', 'beaver', 'capybara', 'lop', 'fennec'].filter((k) => SPECIES.includes(k)), OLDSP = SPECIES.filter((k) => !NEWSP.includes(k))
+// about a third of the people with no species of their own are one of the newer ones; the rest keep the species they always had
+export const speciesFor = (id) => (NEWSP.length && hashOf(id + ':sp2') % 100 < 34 ? NEWSP[hashOf(id + ':sp3') % NEWSP.length] : OLDSP[hashOf(id + ':sp') % OLDSP.length])
 // each body its own height and build, stable by id: h 0.86..1.14, w 0.88..1.16 (Savi's picks)
 export function buildFor(id, sex) {
   const a = (hashOf(id + ':h') % 1000) / 1000, b = (hashOf(id + ':w') % 1000) / 1000
