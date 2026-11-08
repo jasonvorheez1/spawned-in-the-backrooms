@@ -6,7 +6,7 @@
 //   menu      s.menuOpen                     scripts/main-menu.js (title / pause)
 //   wardrobe  s.wardrobeOpen                 intake room creator
 //   mahjong   s.mj.seats                     scripts/mahjong.js
-//   talk      s.talkWith | s.shopOpen        scripts/talk.js
+//   talk      s.talkWith | s.shopOpen        scripts/talk.js (s.hubShop: the Bonus Room's counters, scripts/hub.js)
 //   loot      s.lootOpen                     scripts/interact.js
 //   sheet     s.sheetOpen                    scripts/stats.js     ┐
 //   inventory s.invOpen                      scripts/player.js    │ the wrist panels: one swaps for another
@@ -24,7 +24,7 @@ export function screen(s, place) {
   if (s.menuOpen) return "menu"
   if (s.wardrobeOpen || place === "intake") return "wardrobe"
   if (s.mj?.seats) return "mahjong"
-  if (s.talkWith || s.shopOpen) return "talk"
+  if (s.talkWith || s.shopOpen || s.hubShop) return "talk"
   if (s.lootOpen) return "loot"
   if (s.sheetOpen) return "sheet"
   if (s.invOpen) return "inventory"

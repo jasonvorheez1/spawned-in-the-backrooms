@@ -1,6 +1,6 @@
 // spawn6 native template "player"
 export const player = {
-  behavior: ["scripts/humanoid-locomotion.js", "scripts/player.js", "scripts/swim.js", "scripts/interact.js", "scripts/grab.js", "scripts/rest.js", "scripts/mahjong.js", "scripts/talk.js", "scripts/build.js", "scripts/noclip.js", "scripts/stats.js", "scripts/craft.js", "scripts/os.js", "scripts/lockpick.js", "scripts/spamton-fight.js", "scripts/horde.js", "scripts/critter.js", "scripts/main-menu.js", "scripts/view3.js"],
+  behavior: ["scripts/humanoid-locomotion.js", "scripts/player.js", "scripts/swim.js", "scripts/interact.js", "scripts/grab.js", "scripts/rest.js", "scripts/mahjong.js", "scripts/talk.js", "scripts/build.js", "scripts/noclip.js", "scripts/stats.js", "scripts/craft.js", "scripts/os.js", "scripts/lockpick.js", "scripts/spamton-fight.js", "scripts/horde.js", "scripts/critter.js", "scripts/main-menu.js", "scripts/hub.js", "scripts/view3.js"],
   feetPosition: { x: 0, y: 2, z: 0 },
   physics: { body: "character" },
   tags: ["player"],

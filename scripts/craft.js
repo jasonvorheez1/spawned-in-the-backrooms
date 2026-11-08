@@ -54,7 +54,7 @@ export function update(ctx, dt) {
   if (s.level == null) return
   const N = C.needs
   if (m.h == null) { m.h = s.hunger ?? 100; m.t = s.thirst ?? 100 }
-  if (ctx.self.place === 'level6') { m.h = s.hunger ?? m.h; m.t = s.thirst ?? m.t; return } // Shelly: no hunger or thirst drain in Level 6
+  if (ctx.self.place === 'level6' || ctx.self.place === 'bonus') { m.h = s.hunger ?? m.h; m.t = s.thirst ?? m.t; return } // Shelly: no hunger or thirst drain in Level 6
   const mul = (s.sprinting ? N.sprintMul : 1) * (ctx.self.place === 'level21' ? L21H.heat : 1) // Level 2.1 is hot and humid
   // the bars follow the state (eating and drinking write it from scripts/player.js)
   if (s.hunger != null && Math.abs(s.hunger - Math.round(m.h)) > 1) m.h = s.hunger

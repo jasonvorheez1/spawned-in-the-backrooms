@@ -119,6 +119,7 @@ inputs:
       touch:
         button: false
     talk: {}
+    hub: {}
     talkdo: {}
     shop: {}
     build:
@@ -186,7 +187,7 @@ authoring:
     id: 3d
 routing:
   script: scripts/routing.js
-  maxPlayers: 8
+  maxPlayers: 24   # the Bonus Room is shared (johnadams2); solo rooms still hold only you and invited friends
 audio:
   gains: { Footsteps: 0.6 }   # Nov 8: Shelly, "make footsteps quiet"
 godMode:
