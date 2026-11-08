@@ -247,11 +247,6 @@ def sedco_gondola():   # 2.4 m double-sided gondola: pegboard spine, three shelf
     cbox(M, "steel", (0, 0, H - .02), (L, .1, .04), .008)
     for s in (-1, 1):
         cbox(M, "peg", (0, s * .03, .2 + (H - .25) / 2), (L - .08, .018, H - .25), .002)
-        for i in range(44):
-            for j in range(26):
-                x = -L / 2 + .1 + i * .051; z = .26 + j * .051
-                if z > H - .08: continue
-                M.box("pegHole", (x, s * .0405, z), (.008, .002, .008))
         for zz in (.14, .58, 1.0):
             sh = .4 if zz < .2 else .36
             cbox(M, "steel", (0, s * (.04 + sh / 2), zz + .012), (L - .08, sh, .024), .004)
