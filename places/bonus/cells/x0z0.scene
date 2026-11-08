@@ -85,6 +85,42 @@ bc-banner-6:
   material: {emissive: "#ffffff", emissiveIntensity: 0.15, emissiveMap: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png, roughness: 0.95, side: double, texture: /cdn/value.3619103595e1e0d79fe4d13014252ce3e24714cf9dbb5a1f60b7f609f2ddbe1f.png}
   pivot: feet
   primitive: {height: 4.5, kind: plane, width: 1.5}
+bc-bay-e12:
+  feetPosition: {x: 9.82, y: 9.6, z: 12}
+  id: bc-bay-e12
+  rotation: {yaw: -90}
+  tags: [bonus-court]
+  vector: "<svg viewBox='0 0 600 110' width='5.4m'><rect x='4' y='4' width='592' height='102' rx='10' fill='#1a0f2e' stroke='#ff4fd8' stroke-width='4' opacity='1'/><text x='300' y='74' text-anchor='middle' font-family='display' font-size='56' fill='#38f4ff' opacity='1' filter='drop-shadow(0 0 10px #38f4ff)'>KIDZ KORNER</text></svg>"
+bc-bay-e20:
+  feetPosition: {x: 9.82, y: 9.6, z: 20}
+  id: bc-bay-e20
+  rotation: {yaw: -90}
+  tags: [bonus-court]
+  vector: "<svg viewBox='0 0 600 110' width='5.4m'><rect x='4' y='4' width='592' height='102' rx='10' fill='#1a0f2e' stroke='#7df9ff' stroke-width='4' opacity='0.6'/><text x='300' y='74' text-anchor='middle' font-family='display' font-size='56' fill='#ff6ec7' opacity='0.35' >MOONLIGHT TANNING</text></svg>"
+bc-bay-e4:
+  feetPosition: {x: 9.82, y: 9.6, z: 4}
+  id: bc-bay-e4
+  rotation: {yaw: -90}
+  tags: [bonus-court]
+  vector: "<svg viewBox='0 0 600 110' width='5.4m'><rect x='4' y='4' width='592' height='102' rx='10' fill='#1a0f2e' stroke='#38f4ff' stroke-width='4' opacity='1'/><text x='300' y='74' text-anchor='middle' font-family='display' font-size='56' fill='#b14cff' opacity='1' filter='drop-shadow(0 0 10px #b14cff)'>CASSETTE CITY</text></svg>"
+bc-bay-w12:
+  feetPosition: {x: -9.82, y: 9.6, z: 12}
+  id: bc-bay-w12
+  rotation: {yaw: 90}
+  tags: [bonus-court]
+  vector: "<svg viewBox='0 0 600 110' width='5.4m'><rect x='4' y='4' width='592' height='102' rx='10' fill='#1a0f2e' stroke='#ffe66d' stroke-width='4' opacity='0.6'/><text x='300' y='74' text-anchor='middle' font-family='display' font-size='56' fill='#38f4ff' opacity='0.35' >PAGER PLANET</text></svg>"
+bc-bay-w20:
+  feetPosition: {x: -9.82, y: 9.6, z: 20}
+  id: bc-bay-w20
+  rotation: {yaw: 90}
+  tags: [bonus-court]
+  vector: "<svg viewBox='0 0 600 110' width='5.4m'><rect x='4' y='4' width='592' height='102' rx='10' fill='#1a0f2e' stroke='#ff4fd8' stroke-width='4' opacity='1'/><text x='300' y='74' text-anchor='middle' font-family='display' font-size='56' fill='#ffe66d' opacity='1' filter='drop-shadow(0 0 10px #ffe66d)'>DREAM PRETZEL</text></svg>"
+bc-bay-w4:
+  feetPosition: {x: -9.82, y: 9.6, z: 4}
+  id: bc-bay-w4
+  rotation: {yaw: 90}
+  tags: [bonus-court]
+  vector: "<svg viewBox='0 0 600 110' width='5.4m'><rect x='4' y='4' width='592' height='102' rx='10' fill='#1a0f2e' stroke='#38f4ff' stroke-width='4' opacity='1'/><text x='300' y='74' text-anchor='middle' font-family='display' font-size='56' fill='#ff4fd8' opacity='1' filter='drop-shadow(0 0 10px #ff4fd8)'>SUNSET VIDEO</text></svg>"
 bc-bench-1:
   feetPosition: {x: -4.5, y: 0, z: 24.05}
   id: bc-bench-1
@@ -340,6 +376,46 @@ bc-glight-4:
   feetPosition: {x: 17, y: 10.2, z: -1.85}
   id: bc-glight-4
   light: {aim: {x: 17, y: 7.4, z: -0.05}, angle: 24, color: "#fff1d6", distance: 9, intensity: 8, kind: spot, penumbra: 0.6}
+bc-glight-s:
+  feetPosition: {x: 17, y: 10.2, z: -11.5}
+  id: bc-glight-s
+  light: {aim: {x: 17, y: 7, z: -14}, angle: 22, color: "#fff1d6", distance: 9, intensity: 7, kind: spot, penumbra: 0.7}
+bc-gottoman-1:
+  castShadow: true
+  feetPosition: {x: 13.9, y: 5.515, z: -14}
+  id: bc-gottoman-1
+  layout: {box: {max: {x: 0.75, y: 0.5, z: 0.75}, min: {x: -0.75, y: 0, z: -0.75}}}
+  model: {id: /cdn/value.a7167883a35e960ccbef91de680582184f81fed2a23eb978b21b11de007756d0.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-gallery]
+bc-gottoman-2:
+  castShadow: true
+  feetPosition: {x: 20.1, y: 5.515, z: -14}
+  id: bc-gottoman-2
+  layout: {box: {max: {x: 0.75, y: 0.5, z: 0.75}, min: {x: -0.75, y: 0, z: -0.75}}}
+  model: {id: /cdn/value.a7167883a35e960ccbef91de680582184f81fed2a23eb978b21b11de007756d0.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-gallery]
+bc-gplaque-s:
+  feetPosition: {x: 17, y: 6.3, z: -13.4}
+  id: bc-gplaque-s
+  rotation: {yaw: 0}
+  vector: "<svg viewBox='0 0 120 50' width='0.28m'><rect x='1' y='1' width='118' height='48' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='22' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Bubblegum Ionic, 1988</text><text x='60' y='38' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>Marble and plaster</text></svg>"
+bc-grug:
+  feetPosition: {x: 17, y: 5.5, z: -14}
+  id: bc-grug
+  material: {repeat: [1, 1], roughness: 0.95, texture: cdn/texture-pastel-1980s-memphis-wool-rug-pink-teal-squiggles.png}
+  primitive: {height: 0.015, kind: cylinder, radialSegments: 48, radiusBottom: 3.2, radiusTop: 3.2}
+  receiveShadow: true
+  tags: [bonus-gallery]
+bc-gsculpt:
+  castShadow: true
+  feetPosition: {x: 17, y: 5.515, z: -14}
+  id: bc-gsculpt
+  layout: {box: {max: {x: 0.5, y: 2.4, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
+  model: {id: /cdn/value.de17487e646a7f725cfcf4e54de509ef2381aaf2a3b8810b42e26e3942dfb7a5.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-gallery]
 bc-kiosk:
   feetPosition: {x: -20.5, y: 5.5, z: -3}
   id: bc-kiosk
@@ -347,6 +423,16 @@ bc-kiosk:
   model: {forward: "+x", id: /cdn/value.1cad17ca4953c6401675ca097a46c7857f7e0098982fc3f9ce27583fb730580e.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
+bc-northglow:
+  feetPosition: {x: 0, y: 8.5, z: -30.4}
+  id: bc-northglow
+  light: {color: "#ff6ec7", distance: 9, intensity: 2.2, kind: point}
+bc-northneon:
+  feetPosition: {x: 0, y: 8.4, z: -31.93}
+  id: bc-northneon
+  rotation: {yaw: 0}
+  tags: [bonus-court]
+  vector: "<svg viewBox='0 0 1100 500' width='11m'><defs><linearGradient id='sun' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#ffe66d'/><stop offset='0.55' stop-color='#ff6ec7'/><stop offset='1' stop-color='#b14cff'/></linearGradient></defs>\n<g filter='drop-shadow(0 0 14px #ff4fd8)'><circle cx='550' cy='230' r='150' fill='url(#sun)' opacity='0.92'/></g>\n<rect x='390' y='250' width='320' height='10' fill='#2a1240'/><rect x='390' y='285' width='320' height='13' fill='#2a1240'/><rect x='390' y='322' width='320' height='17' fill='#2a1240'/><rect x='390' y='362' width='320' height='22' fill='#2a1240'/>\n<g stroke='#38f4ff' stroke-width='4' fill='none' filter='drop-shadow(0 0 8px #38f4ff)'><path d='M60 470 L1040 470'/><path d='M120 430 L980 430'/><path d='M550 380 L550 490'/><path d='M450 380 L300 490'/><path d='M650 380 L800 490'/><path d='M350 380 L60 490'/><path d='M750 380 L1040 490'/><path d='M250 395 L850 395'/></g>\n<g fill='#1a0f2e' stroke='#ff4fd8' stroke-width='3' filter='drop-shadow(0 0 6px #ff4fd8)'><path d='M215 470 C210 360 225 260 245 200 L252 202 C236 270 228 360 232 470 Z'/><path d='M248 200 C200 170 150 180 110 220 C160 200 200 198 246 206 Z M248 200 C230 150 190 120 150 120 C200 145 225 170 244 206 Z M250 200 C280 150 330 135 370 150 C320 160 285 180 254 206 Z M250 200 C300 190 350 210 380 250 C340 225 300 215 254 206 Z'/>\n<path d='M868 470 C872 380 862 300 846 240 L852 238 C870 300 880 380 884 470 Z'/><path d='M849 240 C810 210 770 215 740 250 C780 235 810 236 848 246 Z M849 240 C840 195 810 170 775 168 C815 190 832 212 846 246 Z M851 240 C880 200 920 190 955 205 C915 212 885 225 854 246 Z M851 240 C890 235 930 255 950 290 C915 268 885 255 854 246 Z'/></g>\n<text x='550' y='130' text-anchor='middle' font-family='display' font-style='italic' font-size='120' fill='none' stroke='#ff4fd8' stroke-width='8' filter='drop-shadow(0 0 16px #ff4fd8)'>BONUS ROOM</text>\n<text x='550' y='130' text-anchor='middle' font-family='display' font-style='italic' font-size='120' fill='#fff0fb' opacity='0.85'>BONUS ROOM</text>\n<text x='550' y='182' text-anchor='middle' font-family='sans-serif' font-size='30' letter-spacing='18' fill='#38f4ff' filter='drop-shadow(0 0 8px #38f4ff)'>SHOP . PLAY . STAY A WHILE</text></svg>"
 bc-palm-1:
   feetPosition: {x: -4.5, y: 1, z: 22}
   id: bc-palm-1
@@ -393,42 +479,42 @@ bc-planter-1:
   feetPosition: {x: -4.5, y: 0, z: 22}
   id: bc-planter-1
   layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.ce0f1ed9a8452220c62523c8962435fe4db30c8633edd8e6197beb756c6d82dc.glb}
+  model: {id: /cdn/value.e05badc9b9923df9c06913e5ac84465d30624ebfef6d1ff5f2fe32071243020d.glb}
   physics: {body: static, collider: box}
   tags: [bonus-court]
 bc-planter-2:
   feetPosition: {x: 4.5, y: 0, z: 22}
   id: bc-planter-2
   layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.ce0f1ed9a8452220c62523c8962435fe4db30c8633edd8e6197beb756c6d82dc.glb}
+  model: {id: /cdn/value.e05badc9b9923df9c06913e5ac84465d30624ebfef6d1ff5f2fe32071243020d.glb}
   physics: {body: static, collider: box}
   tags: [bonus-court]
 bc-planter-3:
   feetPosition: {x: -4.5, y: 0, z: 4}
   id: bc-planter-3
   layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.ce0f1ed9a8452220c62523c8962435fe4db30c8633edd8e6197beb756c6d82dc.glb}
+  model: {id: /cdn/value.e05badc9b9923df9c06913e5ac84465d30624ebfef6d1ff5f2fe32071243020d.glb}
   physics: {body: static, collider: box}
   tags: [bonus-court]
 bc-planter-4:
   feetPosition: {x: 4.5, y: 0, z: 4}
   id: bc-planter-4
   layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.ce0f1ed9a8452220c62523c8962435fe4db30c8633edd8e6197beb756c6d82dc.glb}
+  model: {id: /cdn/value.e05badc9b9923df9c06913e5ac84465d30624ebfef6d1ff5f2fe32071243020d.glb}
   physics: {body: static, collider: box}
   tags: [bonus-court]
 bc-planter-5:
   feetPosition: {x: -4.5, y: 0, z: -24}
   id: bc-planter-5
   layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.ce0f1ed9a8452220c62523c8962435fe4db30c8633edd8e6197beb756c6d82dc.glb}
+  model: {id: /cdn/value.e05badc9b9923df9c06913e5ac84465d30624ebfef6d1ff5f2fe32071243020d.glb}
   physics: {body: static, collider: box}
   tags: [bonus-court]
 bc-planter-6:
   feetPosition: {x: 4.5, y: 0, z: -24}
   id: bc-planter-6
   layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
-  model: {id: /cdn/value.ce0f1ed9a8452220c62523c8962435fe4db30c8633edd8e6197beb756c6d82dc.glb}
+  model: {id: /cdn/value.e05badc9b9923df9c06913e5ac84465d30624ebfef6d1ff5f2fe32071243020d.glb}
   physics: {body: static, collider: box}
   tags: [bonus-court]
 bc-plaque-1:
@@ -451,6 +537,24 @@ bc-plaque-4:
   id: bc-plaque-4
   rotation: {yaw: 360}
   vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Untitled No. 4, 1999</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>Oil on canvas</text></svg>"
+bc-poster-w12:
+  feetPosition: {x: -9.94, y: 7.1, z: 9.6}
+  id: bc-poster-w12
+  rotation: {yaw: 90}
+  tags: [bonus-court]
+  vector: "<svg viewBox='0 0 200 260' width='0.9m'><rect x='0' y='0' width='200' height='260' fill='#fff6fb'/><rect x='10' y='10' width='180' height='240' fill='none' stroke='#38f4ff' stroke-width='6'/><circle cx='100' cy='95' r='48' fill='#38f4ff' opacity='0.85'/><path d='M40 150 L160 150' stroke='#1a0f2e' stroke-width='3'/><text x='100' y='188' text-anchor='middle' font-family='display' font-size='22' fill='#1a0f2e'>STORE CLOSED</text><text x='100' y='214' text-anchor='middle' font-family='sans-serif' font-size='11' fill='#4a3a5a'>thanks for 9 great years</text><rect x='70' y='-6' width='60' height='16' fill='#f3e9c8' opacity='0.8' transform='rotate(-6 100 2)'/></svg>"
+bc-poster-w20:
+  feetPosition: {x: -9.94, y: 7.1, z: 20}
+  id: bc-poster-w20
+  rotation: {yaw: 90}
+  tags: [bonus-court]
+  vector: "<svg viewBox='0 0 200 260' width='0.9m'><rect x='0' y='0' width='200' height='260' fill='#fff6fb'/><rect x='10' y='10' width='180' height='240' fill='none' stroke='#b14cff' stroke-width='6'/><circle cx='100' cy='95' r='48' fill='#b14cff' opacity='0.85'/><path d='M40 150 L160 150' stroke='#1a0f2e' stroke-width='3'/><text x='100' y='188' text-anchor='middle' font-family='display' font-size='22' fill='#1a0f2e'>SPACE AVAILABLE</text><text x='100' y='214' text-anchor='middle' font-family='sans-serif' font-size='11' fill='#4a3a5a'>ask at the management office</text><rect x='70' y='-6' width='60' height='16' fill='#f3e9c8' opacity='0.8' transform='rotate(-6 100 2)'/></svg>"
+bc-poster-w4:
+  feetPosition: {x: -9.94, y: 7.1, z: 4}
+  id: bc-poster-w4
+  rotation: {yaw: 90}
+  tags: [bonus-court]
+  vector: "<svg viewBox='0 0 200 260' width='0.9m'><rect x='0' y='0' width='200' height='260' fill='#fff6fb'/><rect x='10' y='10' width='180' height='240' fill='none' stroke='#ff6ec7' stroke-width='6'/><circle cx='100' cy='95' r='48' fill='#ff6ec7' opacity='0.85'/><path d='M40 150 L160 150' stroke='#1a0f2e' stroke-width='3'/><text x='100' y='188' text-anchor='middle' font-family='display' font-size='22' fill='#1a0f2e'>OPENING SOON</text><text x='100' y='214' text-anchor='middle' font-family='sans-serif' font-size='11' fill='#4a3a5a'>a new store is coming to the Bonus Room</text><rect x='70' y='-6' width='60' height='16' fill='#f3e9c8' opacity='0.8' transform='rotate(-6 100 2)'/></svg>"
 bc-pretzel-cart:
   feetPosition: {x: -6.8, y: 0, z: 8}
   id: bc-pretzel-cart
