@@ -62,7 +62,7 @@ def metro():
     a += noise(n, 5, 2)[..., None]; return a
 save(metro(), "metro.png")
 # 6. platform: warm beige quarry tile, 4 x 4 of 0.5 m = 2 m
-save(tiles(512, 4, lambda i, j: hexc("c9b38f") + rng.normal(0, 8, 3), hexc("5d5143"), 3, 6, wear=1.2), "platform.png")
+save(tiles(512, 4, lambda i, j: hexc("cdbb9c") + rng.normal(0, 3, 3), hexc("5d5143"), 3, 3, wear=1.2), "platform.png")
 # 7. shutter: rolled steel slats, 16 per 2 m
 def shutter():
     n = 512; a = np.zeros((n, n, 3)); y = np.arange(n) % 32
