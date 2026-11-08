@@ -148,6 +148,13 @@ export function layStreet(ctx, h) {
       },
     }, 0.14); // wheels on the asphalt, not sunk into it cars.push(`l11-car-${i}`);
   });
+  // moving traffic: tripo sedans and a van in both lanes (scripts/l11-traffic.js), right-hand drive
+  [[-3.2, -60, 1, "sedan"], [-3.2, 10, 1, "van"], [3.2, 40, -1, "sedan"], [3.2, -20, -1, "sedan"]].forEach(([x, z, dir, kind], i) =>
+    put(`l11-traffic-${i}`, kind, x, z, dir > 0 ? 180 : 0, {
+      materials: { paint: { color: PAINT[(i * 3 + 1) % PAINT.length], roughness: 0.35, metalness: 0.2 } },
+      spec: { tags: ["l11traffic"], physics: { body: "kinematic", collider: "box" }, behavior: "scripts/l11-traffic.js", state: { dir },
+        audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-car-engine-idling-low-rumble-loop.mp3", loop: true, gain: 0.25, spatial: true, maxDistance: 30 } },
+    }, 0.14));
   // manholes that steam, and a subway stair going down
   const STEAM = `fx
 pop steam rate=14 on=disc(.35) life=1.6..2.6 v=up(.9..1.5)+sdir()*.12 size=.18..0.4 acc=drag(1.1)+buoy(.25) col=<.9,.9,.93> a=.3>0 sz=$size*(1>2.6) r=sprite(smoke-puff,alpha)`;
