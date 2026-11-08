@@ -2,7 +2,7 @@
 import O from './data/os.yml'
 import { skillsOf } from './stats.js'
 
-export const PROFILE = (host) => (host.startsWith('OMEGA') ? 'omega' : host.startsWith('GAMMA') ? 'gamma' : 'office')
+export const PROFILE = (host) => { for (const [k, p] of Object.entries(O.profiles)) if (p.prefix && host.startsWith(p.prefix)) return k; return 'office' } // a host's prefix picks its profile (data/os.yml)
 const hash = (s) => { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
 const pickN = (list, host, n, seed) => { const a = list.map((m, i) => [m, hash(host + seed + i)]).sort((x, y) => x[1] - y[1]); return a.slice(0, n).map((x) => x[0]) }
 
@@ -37,7 +37,7 @@ export function runCmd(os, line, who) {
   if (c === 'who') return out(admin ? 'admin    tty0   15:40' : 'guest    tty0   15:40', 'temp04   tty1   15:40   (idle 4 years)')
   if (c === 'last') return out(...O.about.users.map((u, i) => `${u.padEnd(12)} ${os.host}   15:40   ${i === O.about.users.length - 1 ? 'still logged in' : 'gone'}`))
   if (c === 'shutdown' || c === 'halt' || c === 'poweroff') return { out: ['shutting down...'], act: 'logout' }
-  if (c === 'level') return out(`${PROFILE(os.host) === 'omega' ? 'Level 4 · Base Omega' : PROFILE(os.host) === 'gamma' ? 'Level 3 · Base Gamma' : 'a desk somewhere'}`)
+  if (c === 'level') return out(O.profiles[PROFILE(os.host)]?.level ?? 'a desk somewhere')
   if (c === 'entities') return out(...entriesOf(admin).filter((e) => e.cat === 'Entities').map((e) => `${e.title.padEnd(14)} ${e.sc}`))
   if (c === 'db' || c === 'search') { const q = arg.toLowerCase(); const hits = entriesOf(admin).filter((e) => !q || e.title.toLowerCase().includes(q) || e.text.toLowerCase().includes(q)); return hits.length ? out(...hits.map((e) => `${e.cat}/${e.title}`), '(open the Database to read)') : out('no entries') }
   if (c === 'mail') return { out: ['opening Backmail...'], act: 'open:mail' }

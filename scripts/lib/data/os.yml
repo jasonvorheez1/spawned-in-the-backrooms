@@ -1,4 +1,6 @@
 # BackOS: the M.E.G.'s Backdoor client that every working computer in the Backrooms boots into. All text is ours (a game's version of the wiki).
+# ADDING A MACHINE: give it a host whose name starts with a profile's `prefix` (profiles below), place it with scripts/lib/terminal.js (terminalSpec), and write its mail and files here with
+# `where: <profile>`. A new place gets its own profile: owner, motd, level (what `level` prints), a password (passwords:) and its mail, files and database entries. Hosts with no prefix are offices.
 # A computer's state: host, lock ('' | 'science:N' | 'pw:<word>'), profile (office | omega | gamma). Guests see public data; admin sees all.
 version: "Back OS(tm) 95 (Backdoor client)"
 boot:
@@ -11,10 +13,11 @@ boot:
   - "last session ended: improperly"
   - "welcome back."
 profiles:
-  office:  { owner: "Facilities", motd: "Quarterly review postponed indefinitely." }
-  omega:   { owner: "Base Omega · Overseer desk", motd: "Authorised M.E.G. personnel. Everyone else: hi." }
-  gamma:   { owner: "Base Gamma · Administration", motd: "The Database. Handle with care." }
-passwords: { omega: "overseerb", gamma: "minerva2015" }
+  office:  { prefix: "", level: "a desk somewhere", owner: "Facilities", motd: "Quarterly review postponed indefinitely." }
+  omega:   { prefix: "OMEGA", level: "Level 4 · Base Omega", owner: "Base Omega · Overseer desk", motd: "Authorised M.E.G. personnel. Everyone else: hi." }
+  gamma:   { prefix: "GAMMA", level: "Level 3 · Base Gamma", owner: "Base Gamma · Administration", motd: "The Database. Handle with care." }
+  alef:    { prefix: "ALEF", level: "Level 2.1 · Base Alef (sealed since 11 Jul 2020)", owner: "M.E.G. Base Alef · Comms desk", motd: "UPLINK DOWN since 11 JUL 2020. Cached mail only. Do not wait for a reply." }
+passwords: { omega: "overseerb", gamma: "minerva2015", alef: "keisha" }
 # the database. restricted entries and every "weak" line are admin only. studied: reading it sharpens you against that creature (+10% damage)
 entries:
   - { id: l0, cat: Levels, title: "Level 0 · The Lobby", sc: "Class 2", text: "Endless yellow rooms, damp carpet, a hum that gets into your teeth. Smilers and lurkers wander the maze. The only way on is the flickering wall on the west edge. Sanity drains everywhere except the safe room.", weak: "Red rooms and dark rooms drain sanity several times faster. Walk, do not run, when the hum spikes. A lit flashlight is seen from forty metres; a dark one from eleven." }
@@ -38,6 +41,12 @@ entries:
   - { id: samantha, cat: Entities, title: "Entity 26 · Samantha", sc: "Friendly", text: "A very small black-and-white cat with green eyes and serrated teeth. Speaks eloquently. Keeps the Beverly Room on Level 5 and has been seen near the Level 3 lift. Offers psychic readings in exchange for meat. Her readings have so far been accurate.", weak: "Steak gets the best reading. Spam gets a polite one. Do not offer her rat. Do not touch her." }
   - { id: deathrat, cat: Entities, title: "Death Rat", sc: "Class 3", studied: l5rat, text: "Rats the size of a dog that pour out of walls and vents in the Terror Hotel and, lately, the Level 3 maze. They hunt in small packs and go for the legs. Their meat is edible if you are desperate.", weak: "They flinch from light and break off when the pack thins. Kill the first one; the rest hesitate." }
   - { id: staff, cat: Entities, title: "The Staff (Facelings)", sc: "Class 4", studied: l5staff, restricted: true, text: "Faceless figures in hotel livery who walk the corridors of Level 5 as if on shift. Usually indifferent. They do not like guests in rooms that are not theirs, and they do not like noise.", weak: "Holster your weapon and they lose interest once. Never block a doorway they are walking to." }
+  - { id: l21, cat: Levels, title: "Level 2.1 · \"Locked\"", sc: "Class 3", text: "A sublevel above Level 2: hot, humid storage halls of lockers, janitorial gear and fluorescent light, and one stairwell in. About ten kilometres across. Hounds are the commonest thing in it. Base Alef lives here. In July 2020 a steel wall closed the stairwell and nobody has opened it from the Level 2 side since, until now.", weak: "No food and no water on the whole level. Take your own. Refrigerator Paradise, north of the checkered locker room, is the only food anywhere." }
+  - { id: alef, cat: Groups, title: "M.E.G. Base Alef", sc: "-", text: "The first of the sublevel bases, founded in June 2020 with 53 staff as a storage and quarters outpost for Level 2. Locked out on 11 July 2020 by a steel wall across the only stairwell. Twelve people are known to have got out.", weak: "" }
+  - { id: fridgep, cat: Levels, title: "Refrigerator Paradise (Level 2.1)", sc: "-", text: "A room of banks of refrigerators, freezers and cupboards north of the checkered locker room. Enough saltine crackers to last a lifetime, if the lifetime is short. A few survivors live there.", weak: "The water that drips off the freezer coils is clean. Hold a jug under it." }
+  - { id: edges, cat: Levels, title: "The Edges (Level 2.1)", sc: "Class 4", restricted: true, text: "The east end of Level 2.1, where the white painted halls give way to rock-cut concrete caves under silver ducts. Smilers nest in the dark side tunnels. The lane runs to a cave mouth that survey teams call unsurveyed.", weak: "The cave mouth leads down to Level 8. Take rope, a flashlight, and spare batteries. The lane is lit only down its middle." }
+  - { id: l8, cat: Levels, title: "Level 8 · Cave Systems", sc: "Class 3", text: "A sprawling system of karst caves, cold and dark, reached through a lake from Level 7's diving bell or the concrete caves at the far end of Level 2.1. Markers every fifty metres count down along the 9th Road. A camp near the end keeps a fire.", weak: "Flashlights give a twelfth of their light here and their batteries drain faster. Spiders cannot swim. Never enter caverns marked in red." }
+  - { id: warpberry, cat: Objects, title: "Warpberries", sc: "Restricted", restricted: true, text: "A berry that tastes of copper and static. Eaten, it opens a door somewhere else for a moment: most of the administrators who left Base Alef on the first day did so on warpberries.", weak: "Not reliable. Not safe. Not for sharing." }
 # email. from, subj, body. tip: crate (a supply crate appears in a Level 4 office) | xp | key (a keycard, admin only) . where: office | omega | gamma | any
 mails:
   - { where: office, from: "Facilities", subj: "Re: the windows", body: "We have blacked out every window on the floor. Three were missed. We know which three. Please do not go near them to check.", tip: "" }
@@ -61,6 +70,14 @@ mails:
   - { where: any, from: "Backmail", subj: "Welcome", body: "Your mailbox is empty except for this message. This message was empty too.", tip: "" }
   - { where: any, from: "Homely Hotel Management", subj: "RENTAL NOTICE: rooms available", body: "The Homely Hotel is pleased to announce vacancies on every floor. Rooms are let by the night, the week, or permanently. Meals are served in the kitchen at all hours. Guests are reminded that the thirteenth floor is closed for refurbishment. Please do not ask the Staff about it. Rent is collected.", tip: "" }
   - { where: gamma, from: "Archivist", subj: "Terror Hotel files", body: "New pages for Level 5: the hotel, Entity 26 (the cat, yes, the talking one), the Death Rats and the Staff. The Staff page is restricted. If you meet Samantha, bring meat and be polite.", tip: "xp" }
+  - { where: alef, from: "Wilson (Comms)", subj: "READ THIS FIRST", body: "11 JUL 2020 03:18. A solid steel shutter has dropped across the Level 2 stairwell. Blowtorches barely scratch it. All 53 of us are sealed in. Comms are down. If you are reading this, the uplink is not coming back. Do not wait for it.", tip: "" }
+  - { where: alef, from: "Base Leader", subj: "Memo #13: the berries", body: "Under NO circumstances are the specimen berries in the Exploration Wing to be taken or eaten. Ten of the administration have already left on them. We do not know where they went. If you are reading this because you are hungry: do not.", tip: "" }
+  - { where: alef, from: "Pell (IT)", subj: "temporary connection loss", body: "Everyone keeps asking. It is a temporary connection loss between us and the rest of the Backrooms. It will be fixed quickly. It has been nine days. It will be fixed quickly.", tip: "" }
+  - { where: alef, from: "Arellano (Quartermaster)", subj: "rationing", body: "Strict shares from tonight: quarter-rations, one jug a day. Anyone caught taking more is on their own. I am not in charge of what happens next, only of the count. The count is not good.", tip: "" }
+  - { where: alef, from: "Connor Goknar", subj: "Refrigerator Paradise", body: "Found it. A room north of the checkered lockers, behind the double doors with the orange paint. Banks of humming refrigerators packed floor to ceiling with saltines. I am not making this up. Tell them to come. Tell them to bring jugs: the freezer coils drip clean water.", tip: "xp" }
+  - { where: alef, from: "Banks, J.", subj: "the roof", body: "Six sticks of dynamite, the plunger box, and a roof I think is five metres of solid concrete. Detonation velocity 6.5k m/s. If I get three to five metres I reach the surface. Going east into The Edges in the morning. Now or never.", tip: "" }
+  - { where: alef, from: "Survey Team A (Gray)", subj: "The Edges: turn back at the white rooms", body: "East of the white rooms the lights stop. The rock starts. Smilers nest in the side tunnels. The lane runs to a cold fissure that breathes. It goes down. I do not think it goes to anywhere we have a map for. The spare cage keycard is taped under the comms desk.", tip: "key" }
+  - { where: alef, from: "(delivery system)", subj: "DELIVERY FAILED x 412", body: "Backmail could not reach meg-database. Backmail will keep trying. Backmail will keep trying. Backmail will keep trying.", tip: "" }
 forum:
   - { title: "Anyone else hear the phone in 4-09?", by: "late_shift", replies: ["yes. do not answer it twice", "I answered it once. nothing happened. that is the worst part", "it knew my name"] }
   - { title: "Best way to carry almond water", by: "carry_weight_gang", replies: ["bag, obviously", "Hardiness 8 and no regrets", "I got the Hardiness. I regret it now, I never rest"] }
@@ -84,6 +101,11 @@ files:
   - { where: omega, name: "safe.txt", text: "The spare keycard opens a fused door on Level 2. The fuse you will have to find yourself." }
   - { where: gamma, name: "database_stats.txt", text: "Entries: levels 0-5, nine entities, three objects, four groups. Reading the entity pages gives you an edge. Reading them twice does not." }
   - { where: any, name: "homely_hotel_notice.txt", text: "HOMELY HOTEL · RENTAL NOTICE\nVacancies: all floors.\nTerms: nightly / weekly / permanent.\nThe 13th floor is closed. It has always been closed.\nGuests must not prop doors open. Guests must not leave.\n- Management" }
+  - { where: alef, name: "alef_layout.txt", text: "BASE ALEF (sublevel 2.1)\nWest wall: stairwell down to Level 2 (SHUTTER).\nAtrium: lockers, cots, this desk.  North door: administration.  East door: Exploration Wing.\nSouth: quarters (double bunks). Further east: the checkered locker room, restrooms, break room.\nNorth of the locker room, behind the orange double doors: Refrigerator Paradise.\nFar east: the white rooms, then The Edges. Do not go past the white rooms." }
+  - { where: alef, name: "headcount.txt", text: "11 JUL 2020   53\n12 JUL         53 (ten administration unaccounted for)\n19 JUL         41\n02 AUG         27\n27 AUG         14\n04 APR 2022   1 (Arellano, out by warpberry)\n19 JUN 2025   1 (Banks, out through the roof)" }
+  - { where: alef, name: "ration_log.txt", text: "DAY 1   full shares\nDAY 3   half\nDAY 7   quarter\nDAY 14  one jug, one cracker\nDAY 19  Refrigerator Paradise found. rations suspended.\nDAY 21  rations resumed. the crackers are not enough. the crackers are never enough." }
+  - { where: alef, name: "explosives_signout.txt", text: "EXPLORATION WING SIGN-OUT\nitem: dynamite x6 + plunger box\nsigned: J. Banks\nreason: (left blank)\nreturn by: (left blank)" }
+  - { where: alef, name: "ids.txt", text: "Gray, K.   Team A leader   missing 11 JUL 2020\nWilson      Comms\nPell        IT\nArellano    Quartermaster\nGoknar, C.  Agent\nBanks, J.   Writer, documentation" }
 
 # System Properties (the About page): what this machine says about itself. Written in-world, by whoever had it last.
 about:

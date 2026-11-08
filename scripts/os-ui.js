@@ -1,7 +1,7 @@
 // Back OS(tm): the screen. A Windows 95 look with only the yellow left (the Object-94 logo): gray bevelled windows, gold title bars, a taskbar with
 // a Start button. Drawn from player.state.os (scripts/os.js). Buttons send the 'os' action.
 import O from './lib/data/os.yml'
-import { mailsOf, filesOf, entriesOf, entryById, forumOf, binOf } from './lib/os.js'
+import { mailsOf, filesOf, entriesOf, entryById, forumOf, binOf, PROFILE } from './lib/os.js'
 
 const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 const A = (o) => `sendAction('os',${JSON.stringify(o).replace(/"/g, "'")})`
@@ -103,7 +103,7 @@ export function osUi(ctx, player) {
     const lines = O.boot.map((l, i) => `<div class="ln" style="animation-delay:${(i * 0.45 - t).toFixed(2)}s">${esc(l)}</div>`).join('')
     body = `<div class="boot">${LOGO(2.6)}<h1>Back OS<sup style="font-size:14px">™</sup></h1>${lines}<div class="bar"><i style="animation-delay:-${Math.min(t, 3.1).toFixed(2)}s"></i></div></div>`
   } else if (os.app === 'login') {
-    body = `<div class="login">${chrome('Welcome to Back OS', `<div style="padding:14px 16px;background:#c0c0c0"><div style="display:flex;gap:14px;align-items:center">${LOGO(1)}<div style="font-size:13px"><b>${esc(O.profiles[os.host.startsWith('OMEGA') ? 'omega' : os.host.startsWith('GAMMA') ? 'gamma' : 'office'].owner)}</b><br>${esc(os.host)}<br><span style="color:#444">This machine asks for a password.</span></div></div>
+    body = `<div class="login">${chrome('Welcome to Back OS', `<div style="padding:14px 16px;background:#c0c0c0"><div style="display:flex;gap:14px;align-items:center">${LOGO(1)}<div style="font-size:13px"><b>${esc(O.profiles[PROFILE(os.host)].owner)}</b><br>${esc(os.host)}<br><span style="color:#444">This machine asks for a password.</span></div></div>
       <div style="margin:12px 0 4px;font-size:12px">Password:</div><input id="pw" type="password" data-interactive autocomplete="off" maxlength="40" onkeydown="if(event.key==='Enter')${A({ k: 'pw', v: '__PW__' }).replace("'__PW__'", 'this.value')}">
       ${os.err ? `<div style="color:#a00;font-size:12px;margin-top:6px">${esc(os.err)}</div>` : ''}
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="btn" onclick="${A({ k: 'hack' })}">Hack...</button><button class="btn" onclick="${A({ k: 'login' })}">Guest</button><button class="btn" onclick="${A({ k: 'close' })}">Shut down</button></div></div>`)}</div>`

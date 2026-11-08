@@ -75,6 +75,33 @@ def fridge():
     parts.append(box("note", (0.08, 0.004, 0.1), (-0.04, fy + 0.016, 1.12), mat("paper", (0.92, 0.88, 0.7), 0.9), 0.0, 1))
     ob = join_export("fridge", parts); preview("fridge", ob); return ob
 
+# ------------------------------------------------------------ a CRT workstation: beige monitor with a tapering back, swivel stand, keyboard with rows of keys. The glass is its own material ("glass") so the game can light it.
+def crt():
+    case = mat("case", (0.76, 0.73, 0.64), 0.55, 0.0); dark = mat("dark", (0.04, 0.04, 0.045), 0.8); glass = mat("glass", (0.02, 0.05, 0.04), 0.12, 0.1); key = mat("key", (0.66, 0.63, 0.55), 0.6); led = mat("led", (0.2, 0.9, 0.2), 0.3)
+    parts = []; y0 = 0.0   # monitor centre depth
+    parts.append(box("front", (0.44, 0.1, 0.4), (0, y0 + 0.14, 0.40), case, 0.03, 4))                  # the front shell, rounded
+    parts.append(box("back", (0.32, 0.28, 0.3), (0, y0 - 0.05, 0.395), case, 0.035, 4))                 # the tube housing, narrower
+    parts.append(box("tail", (0.2, 0.12, 0.2), (0, y0 - 0.25, 0.39), case, 0.03, 3))                    # the neck of the tube
+    parts.append(box("glass", (0.34, 0.012, 0.27), (0, y0 + 0.19, 0.415), glass, 0.01, 3))              # the screen, a little proud
+    parts.append(box("bezel", (0.37, 0.012, 0.3), (0, y0 + 0.188, 0.415), dark, 0.012, 2))              # a dark bezel round it
+    for k in range(7): parts.append(box("vent", (0.2, 0.18, 0.006), (0, y0 - 0.05, 0.545 - k * 0.0 + 0.0), dark, 0.0, 1)) if False else None
+    for k in range(6): parts.append(box("slot", (0.16, 0.22, 0.008), (0, y0 - 0.04, 0.545 + 0.0), dark, 0.0, 1)) if False else None
+    for k in range(7): parts.append(box("vslot", (0.22, 0.012, 0.006), (0, y0 - 0.05 + (k - 3) * 0.032, 0.5435), dark, 0.0, 1))  # top vents (rows of slits across the housing)
+    parts.append(cyl("neck", 0.055, 0.19, (0, y0 + 0.0, 0.105), dark, verts=16))
+    parts.append(cyl("base", 0.13, 0.03, (0, y0 + 0.0, 0.015), case, verts=28))                          # the swivel foot, on the desk
+    parts.append(cyl("ledcap", 0.007, 0.01, (0.16, y0 + 0.193, 0.24), led, rot=(math.pi / 2, 0, 0), verts=10))
+    for dx in (0.1, 0.13): parts.append(cyl("knob", 0.01, 0.014, (dx, y0 + 0.193, 0.245), dark, rot=(math.pi / 2, 0, 0), verts=10))
+    ky = y0 + 0.42
+    parts.append(box("kbase", (0.46, 0.17, 0.028), (0, ky, 0.014), case, 0.01, 2))                       # the keyboard
+    parts.append(box("kdeck", (0.42, 0.14, 0.012), (0, ky, 0.033), dark, 0.004, 1))
+    for r in range(4):
+        n = 14 - (r == 3) * 4
+        for c in range(n): parts.append(box("k", (0.024, 0.026, 0.01), (-0.185 + c * (0.37 / max(n - 1, 1)) + (r == 3) * 0.0, ky + 0.052 - r * 0.034, 0.045), key, 0.003, 1))
+    parts.append(box("space", (0.18, 0.026, 0.01), (0, ky - 0.056, 0.045), key, 0.003, 1))
+    ob = join_export("crt", parts); preview("crt", ob, az=25)
+    bb = [ob.matrix_world @ Vector(c) for c in ob.bound_box]; ys = [v.y for v in bb]; print("DEPTH", min(ys), max(ys), "centre", (min(ys) + max(ys)) / 2, "glassY", y0 + 0.2, "dims", tuple(ob.dimensions))
+    return ob
+
 for name in only:
     reset()
-    {"locker": locker, "fridge": fridge}[name]()
+    {"locker": locker, "fridge": fridge, "crt": crt}[name]()

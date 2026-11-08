@@ -11,9 +11,10 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { fan, fanHousing, cable, DRIP, DUST, MIST } from "../../scripts/lib/ambient.js";
+import { terminalSpec } from "../../scripts/lib/terminal.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "500ms";
-const V = 10; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist
+const V = 12; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist
 const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
 const rm = (type) => ROOMS.filter((r) => r.type === type);
 const center = (r) => cellCenter(r.x0 + (r.w - 1) / 2, r.z0 + (r.d - 1) / 2); // the middle of a room block
@@ -96,12 +97,9 @@ function lay(ctx) {
   // ---- Base Alef: the atrium gutted, lockers along its walls, cots and an interactive lockout comms terminal
   for (let i = 0; i < 5; i++) spawnContainerL2(ctx, "locker", { x: edgeOf(L1, 2) + 0.5, z: bc.z - 6 + i * 3 }, -90, { noLock: i % 2 === 0, room: 70 });
   spawnContainerL2(ctx, "desk", { x: bc.x + 1.5, z: edgeOf(L1, 1) - 0.9 }, 180, { room: 70 });
-  sp("l21-comms", {
-    feetPosition: { x: bc.x + 1.5, y: 1.0, z: edgeOf(L1, 1) - 0.9 }, tags: ["usable"], behavior: "scripts/l21-use.js",
-    ...sign(0.9, 0.5, `<div face="front" width="0.9m" style="font-family:monospace;color:#7aff9a;font-size:60px;text-align:left;line-height:1.1">BASE ALEF<br>NO CARRIER<br>LAST SYNC 11 JUL 2020</div>`, "oklch(0.1 0.01 150)"),
-    state: { kind: "comms", name: "Base Alef lockout terminal", verb: "Read lockout logs", info: "Buffered M.E.G. dispatches from July–August 2020, recorded after the steel wall sealed Base Alef inside Level 2.1.", tint: "#7aff9a" },
-    children: [{ feetPosition: { x: 0, y: 0.2, z: -0.25 }, light: { kind: "point", color: "oklch(0.75 0.16 145)", intensity: 1.1, distance: 4.5 } }],
-  });
+  // the comms desk is a working Back OS terminal (scripts/lib/terminal.js): its Backmail holds the lockout dispatches, its Database knows 2.1, and Level 8 (data/os.yml, profile alef)
+  sp("l21-comms", terminalSpec({ host: "ALEF-COMMS-01", lock: "science:25", name: "Base Alef comms terminal", at: { x: bc.x + 1.5, y: 0.77, z: edgeOf(L1, 1) - 0.78 }, yaw: 0,
+    note: "pw: Team A's leader, first name, lower case" }));
   for (let i = 0; i < 4; i++) sp(`l21-cot-${i}`, { feetPosition: { x: bc.x - 2 + (i % 2) * 2.2, y: 0, z: bc.z + 1.2 + Math.floor(i / 2) * 2.2 }, rotation: { yaw: (i % 2 ? 4 : -3) }, model: COT, layout: { box: { min: { x: -0.95, y: 0, z: -0.95 }, max: { x: 0.95, y: 0.55, z: 0.95 } } }, physics: { body: "static", collider: "box" } });
   spawnRemains(ctx, { x: bc.x + 2.6, z: bc.z - 1.4 }, ["ration", "bandage", "page:11", "ammo"], "Alef operative's remains");
   spawnRemains(ctx, { x: bc.x - 3.0, z: bc.z + 4.6 }, ["almond", "kit", "battery"], "Alef operative's remains");
