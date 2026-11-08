@@ -80,12 +80,16 @@ const BEAT = {
       me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" }
     })
     if (t > 9.3) once("lunge", () => { raw(ctx, N("entity-wet-guttural-snarl-close"), 1.0, { x: lunge.x, y: 1, z: lunge.z }); const e = ctx.getObject(c.ent); if (e) e.anim.body = { clip: "cdn/clip-run-loop.glb", loop: "loop", weight: 1 } })
-    if (t > 9.75) once("swing", () => { me.anim.cut = { clip: "cdn/clip-attack.glb", weight: 4 }; snd(ctx, "sword-whoosh-swing", 0.8) })
+    if (t > 9.0) once("windup", () => { raw(ctx, N("sharp-inhale-through-teeth-before-strike"), 0.8); fx1(ctx, "slowMo", { scale: 0.5, duration: 0.6 }) })
+    if (t > 9.75) once("swing", () => { me.anim.cut = { clip: "cdn/clip-attack.glb", weight: 4 }; raw(ctx, N("heavy-wooden-club-swing-whoosh-low"), 0.9) })
     if (t > 10.2) once("hit", () => {
       const hit = { x: lunge.x, y: 1.0, z: lunge.z }
       raw(ctx, N("heavy-wood-club-hit-flesh-crack"), 1.0, hit)
-      fx1(ctx, "hitstop", { duration: 0.09 }); fx1(ctx, "slowMo", { scale: 0.35, duration: 0.7 })
-      fx1(ctx, "cameraPunch", { direction: { x: 0.6, y: 0, z: 0.3 }, intensity: 0.8 }); fx1(ctx, "screenFlash", { color: "#fff3cf", duration: 0.12, intensity: 0.5 })
+      raw(ctx, N("deep-sub-bass-impact-boom-with-bone-crunch"), 1.0, hit); raw(ctx, N("high-pitched-tinnitus-ear-ring-after-blast"), 0.5)
+      fx1(ctx, "hitstop", { duration: 0.18 }); fx1(ctx, "slowMo", { scale: 0.2, duration: 1.6 })
+      fx1(ctx, "cameraPunch", { direction: { x: 0.6, y: 0, z: 0.3 }, intensity: 1.6 }); fx1(ctx, "screenFlash", { color: "#fff3cf", duration: 0.22, intensity: 0.85 })
+      fx1(ctx, "screenShake", { intensity: 0.55, duration: 0.45 }); fx1(ctx, "shockwave", { position: hit, speed: 9, thickness: 0.4, intensity: 0.9 })
+      fx1(ctx, "squash", { target: c.ent, axis: "x", intensity: 0.35, duration: 0.3 })
       ctx.emit("fx", { position: hit, script: `fx
 pop dust burst=18..26 life=.5..0.9 v=sdir()*(1..2.4)+up(.6) size=.05..0.11 acc=grav()*.5+drag(1.5) col=<.55,.5,.4> a=1>.6:1>0 sz=$size r=sprite(soft-disc,alpha)
 pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav()+drag(.6) col=<.35,.24,.14> a=1 sz=$size floor=stick r=sprite(stalk,alpha,velocity,.02)` }, { audience: { player: me.id } })
