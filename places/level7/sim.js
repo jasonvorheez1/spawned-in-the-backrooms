@@ -86,7 +86,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 18; // 18: walkable stairs back to Level 6
+const V = 19; // 19: walkable stairs back to Level 6
 // 16 // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
@@ -345,10 +345,10 @@ function lay(ctx) {
   for (let k = 0; k < 6; k++) { // 0.26 m risers: a body climbs 0.3 at most
     box(ctx, `l7-step-${k}`, 0, FY + k * 0.26, 3.4 + k * 0.3, 1.2, 0.26, 0.32, { ...CONCRETE, color: "oklch(0.29 0.008 240)" });
   }
-  box(ctx, "l7-shaft-e", 0.8, FY, 4.4, 0.4, 3.6, 2.4, CONCRETE);
-  box(ctx, "l7-shaft-w", -0.8, FY, 4.4, 0.4, 3.6, 2.4, CONCRETE);
-  box(ctx, "l7-shaft-top", 0, FY + 2.7, 4.4, 1.2, 1.0, 2.4, CONCRETE);
-  box(ctx, "l7-shaft-end", 0, FY, 5.7, 1.2, 3.6, 0.3, { color: "oklch(0.01 0 0)" });
+  box(ctx, "l7-shaft-e", 0.8, FY, 4.4, 0.4, 4.0, 2.4, CONCRETE);
+  box(ctx, "l7-shaft-w", -0.8, FY, 4.4, 0.4, 4.0, 2.4, CONCRETE);
+  box(ctx, "l7-shaft-top", 0, FY + 3.1, 4.4, 1.2, 1.0, 2.4, CONCRETE); // headroom over the climbing steps
+  box(ctx, "l7-shaft-end", 0, FY, 5.7, 1.2, 4.0, 0.3, { color: "oklch(0.01 0 0)" });
 
   // Transition trigger to return to Level 6
   ctx.spawn("l7-back", {
@@ -892,7 +892,7 @@ export function tick(ctx) {
   if ((s.builtV ?? 0) < V) {
     for (const id of Object.keys(ctx.place.objects)) if (GONE.includes(id) || /^l7-(plank|post)-/.test(id)) ctx.destroy(id);
     // rooms built before the fort moved still hold its old pieces (and the worshippers, standing where it was): clear them so the new ones are laid and the people come back
-    for (const id of Object.keys(ctx.place.objects)) if (/^(l7x-|l7h-|l7-(wall-|wainscot-|step-|back$|ceil$|hearth$|pedestal$|wirerack$|cloth-drape$|painting$|vase|dresser-top$|fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$))/.test(id)) ctx.destroy(id);
+    for (const id of Object.keys(ctx.place.objects)) if (/^(l7x-|l7h-|l7-(wall-|wainscot-|step-|back$|shaft-|ceil$|hearth$|pedestal$|wirerack$|cloth-drape$|painting$|vase|dresser-top$|fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$))/.test(id)) ctx.destroy(id);
     s.npcGone = {};
     lay(ctx);
     s.builtV = V;
