@@ -1,5 +1,6 @@
 # Footsteps (Nov 8, Shelly: "improve footstep technology + make it more dynamic"). Every number is Savi's pick.
 # The floor is read under your feet (a short ray down): the object's state.floor, else its texture's words, else the level's default.
+# Nov 8: Shelly, "level 6.1 footsteps are horrendously loud": hard mall floors (terrazzo, tile, linoleum) cut to under half.
 # Order matters: the first word that matches wins.
 match:
   - [metal, "steel|metal|diamond|grate|iron|aluminum"]
@@ -17,7 +18,7 @@ match:
 # stride in metres: a step lands every stride walked, so a faster walk steps faster on its own
 stride: { crouch: 0.55, walk: 0.78, run: 1.25 }
 runSpeed: 4.2        # m/s past which the run take plays
-loud: { crouch: 0.3, walkMin: 0.75, runMax: 1.5, heavyMax: 0.45 }   # heavyMax: extra loudness at full burden
+loud: { crouch: 0.3, walkMin: 0.75, runMax: 1.2, heavyMax: 0.45 }   # heavyMax: extra loudness at full burden
 pitch: { jitter: 0.05, foot: 0.025, heavy: -0.08 }
 side: 0.13           # each foot sounds this far left or right of centre
 scuffAfter: 0.25     # a stop after this much walking ends on a scuff
@@ -29,9 +30,9 @@ surfaces:
   office:   { walk: footstep-shoe-on-low-pile-office-carpet-tile-single-step, run: footstep-shoe-running-on-low-pile-office-carpet-single-step, v: 0.2, land: landing-soft }
   concrete: { walk: footstep-shelly-street-walk, run: footstep-shelly-street-run, v: 0.3, land: landing-hard }
   asphalt:  { walk: footstep-shelly-street-walk, run: footstep-shelly-street-run, v: 0.3, land: landing-hard }
-  tile:     { walk: footstep-sneaker-on-vinyl-school-floor-tile-single-step, run: footstep-sneaker-running-on-vinyl-floor-tile-single-step, v: 0.22, land: landing-hard }
-  terrazzo: { walk: footstep-sneaker-on-polished-mall-terrazzo-floor-squeak-single-step, run: footstep-sneaker-running-on-polished-mall-floor-single-step, v: 0.24, land: landing-hard }
-  checker:  { walk: footstep-boot-on-worn-checkered-linoleum-locker-room-single-step, run: footstep-boot-running-on-worn-linoleum-tile-single-step, v: 0.23, land: landing-hard }
+  tile:     { walk: footstep-sneaker-on-vinyl-school-floor-tile-single-step, run: footstep-sneaker-running-on-vinyl-floor-tile-single-step, v: 0.11, land: landing-hard }
+  terrazzo: { walk: footstep-sneaker-on-polished-mall-terrazzo-floor-squeak-single-step, run: footstep-sneaker-running-on-polished-mall-floor-single-step, v: 0.09, land: landing-hard }
+  checker:  { walk: footstep-boot-on-worn-checkered-linoleum-locker-room-single-step, run: footstep-boot-running-on-worn-linoleum-tile-single-step, v: 0.11, land: landing-hard }
   gravel:   { walk: footstep-boot-crunch-on-loose-cave-gravel-single-step, run: footstep-boot-running-on-loose-cave-gravel-single-step, v: 0.26, land: landing-gravel }
   grass:    { walk: footstep-boot-on-short-damp-lawn-grass-single-step, run: footstep-boot-running-on-damp-lawn-grass-single-step, v: 0.2, land: landing-soft }
   wood:     { walk: footstep-boot-on-wet-wooden-floorboards-creak-single-step, run: footstep-boot-running-on-wet-wooden-floorboards-single-step, v: 0.24, land: landing-wood }
