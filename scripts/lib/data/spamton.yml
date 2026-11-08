@@ -5,12 +5,19 @@ maxHit: 18       # the client can't claim more per hit
 iframes: 0.9     # seconds the SOUL blinks after a hit
 attackSeconds: 9
 introSeconds: 2.6
-neoFromStep: 3   # the last half of the deal he goes NEO
+lateFromStep: 3   # the last half of the deal he throws his nastier attacks (there is no NEO form: Shelly's call)
 losePenaltyHp: 20
 soulSpeed: 150   # px/s inside a 220 px box
 attacks:
-  base: [words, minitons, vacuum]
-  neo: [heads, heart, pipis, words]
+  base: [words, minitons, vacuum, strings]
+  late: [heads, heart, pipis, rain, strings, words]
+warnSeconds: 0.9   # every attack warns first: the box flashes and nothing flies yet
+grazeTp: 4         # TP per bullet grazed (passed close without a hit)
+healCost: 50       # TP spent at the deal to get healHp back
+healHp: 20
+taunts: ["KEEP DANCING!!", "[[SALE]] ENDS SOON!", "HEH HEH HEH!!", "CAN'T [[AFFORD]] ME?", "LOOK AT YOU GO!", "[[FREE]] SAMPLES!!", "DON'T BLINK!", "ONE [[PAYMENT]] AT A TIME!"]
+hitTaunts: ["OUCH! THAT'S [[EXTRA]]!", "HAHA!! NO [[REFUNDS]]!", "SO CLOSE!!", "THAT'S GONNA [[LEAVE A MARK]]!", "WATCH THE [[FINE PRINT]]!", "[[SOLD]]!!"]
+grazeTaunts: ["HEY!! STOP [[SHOPPING AROUND]]!", "STAY STILL, [[WINDOW SHOPPER]]!", "TOO CLOSE FOR [[COMFORT]]!!"]
 intro: "HEY      HEY HEY!! IT'S ME, [[Number 1 Rated Salesman1997]]!! WHAT'S A [[Little Sponge]] DOING DOWN HERE IN MY [[Penthouse Suite]]?"
 winLine: "HOCHI MAMA!! YOU GOT YOURSELF A [[Pocket Pal]], KID! FITS ANYWHERE! WEIGHS [[0 KG]]! NO REFUNDS!!!"
 loseLine: "TOO BAD!! TOO SAD!! CALL [[1-800-ROOM-0]] WHEN YOU'RE READY TO BE A [[Real Customer]]."

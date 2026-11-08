@@ -17,7 +17,8 @@ const SND = {
   heavy: '/cdn/sfx-heavy-swing-weapon-whoosh-c829zq2g.mp3',
   small: '/cdn/sfx-small-swing-whoosh-fast-hkdsujvu.mp3',
 }
-const ATK_SND = { vacuum: 'boost', minitons: 'small', words: 'heavy', heads: 'heavy', heart: 'crit', pipis: 'crit' }
+const ATK_SND = { vacuum: 'boost', minitons: 'small', words: 'heavy', heads: 'heavy', heart: 'crit', pipis: 'crit', strings: 'small', rain: 'small' }
+const pick = (ctx, a) => a[Math.floor(ctx.random() * a.length)]
 
 function play(ctx, k, volume = 0.7) { ctx.emit('playSound', { clip: SND[k], volume }, { audience: { player: ctx.self.id } }) }
 // his two themes (Shelly's files, this fight only): the talk theme from the pop-up, the battle theme from his first attack.
@@ -46,13 +47,14 @@ function offer(ctx, b) {
   play(ctx, ctx.random() < 0.5 ? 'talkA' : 'talkB', 0.55)
 }
 function attack(ctx, b) {
-  const pool = b.step >= F.neoFromStep || b.rage >= 2 ? F.attacks.neo : F.attacks.base
+  const pool = b.step >= F.lateFromStep || b.rage >= 2 ? F.attacks.late : F.attacks.base
   const atk = pool[b.turn % pool.length]
   b.turn += 1
   b.atk = atk
   b.seed = Math.floor(ctx.random() * 1e6)
   b.phase = 'attack'
   b.atkAt = ctx.now()
+  b.taunt = pick(ctx, F.taunts)
   play(ctx, ATK_SND[atk] ?? 'heavy', 0.6)
   theme(ctx, 'battle')
 }
@@ -60,7 +62,7 @@ function attack(ctx, b) {
 export function startSpamton(ctx) {
   const s = ctx.self.state
   if (s.spam?.on) return
-  s.spam = { on: true, phase: 'intro', hp: F.soulHp, step: 0, rage: 0, turn: 0, line: F.intro, opts: null, atk: null, seed: 0, at: ctx.now() }
+  s.spam = { on: true, phase: 'intro', hp: F.soulHp, tp: 0, step: 0, rage: 0, turn: 0, line: F.intro, opts: null, atk: null, seed: 0, at: ctx.now() }
   s.invOpen = false; s.lootOpen = null
   pop(ctx, true)
   play(ctx, 'start', 0.8)
@@ -100,8 +102,16 @@ export function onInput(ctx, input) {
     const dmg = Math.min(F.maxHit, Math.max(1, Number(d.d) || F.hit))
     b.hp = Math.max(0, b.hp - dmg)
     play(ctx, 'hurt', 0.55)
+    if (ctx.random() < 0.55) b.taunt = pick(ctx, F.hitTaunts)
     if (b.hp <= 0) { b.phase = 'lost'; b.line = F.loseLine; ctx.after(2.2, 'spamEnd', { how: 'lose' }) }
     return
+  }
+  if (d.k === 'graze' && b.phase === 'attack') { // grazing fills the TP gauge (a few per second at most: the screen sends batches)
+    const n = Math.max(0, Math.min(6, Math.round(Number(d.n) || 0))); if (ctx.now() - (b.grazeAt ?? 0) < 250 || !n) return
+    b.grazeAt = ctx.now(); b.tp = Math.min(100, (b.tp ?? 0) + n * F.grazeTp); if (ctx.random() < 0.25) b.taunt = pick(ctx, F.grazeTaunts); return
+  }
+  if (d.k === 'heal' && b.phase === 'choose' && (b.tp ?? 0) >= F.healCost && b.hp < F.soulHp) { // cash the TP in for health at the deal
+    b.tp -= F.healCost; b.hp = Math.min(F.soulHp, b.hp + F.healHp); play(ctx, 'chime', 0.6); b.line = 'HEH!! A [[REFUND]]?? THAT'S NOT ON THE [[MENU]]!!'; return
   }
   if (d.k === 'done' && b.phase === 'attack' && ctx.now() - b.atkAt > (F.attackSeconds - 1) * 1000) { offer(ctx, b); return }
   if (d.k === 'pick' && b.phase === 'choose' && b.opts?.includes(d.o)) {
