@@ -9,9 +9,9 @@ export function cutUi(ctx, player) {
 @keyframes cc{0%{opacity:0}15%{opacity:.85}80%{opacity:.85}100%{opacity:0}}
 .cb{position:fixed;left:0;right:0;height:11vh;background:#000;z-index:50;animation:cb-in 1.2s ease-out both;animation-delay:${d(0)}}
 .cfa{position:fixed;inset:0;background:#000;z-index:49;animation:cf-out 2.2s ease-out both;animation-delay:${d(0)}}
-.cfy{position:fixed;inset:0;background:#f4e39a;z-index:49;opacity:0;animation:cf-in 2.6s ease-in forwards;animation-delay:${d(31600)}}
+.cfy{position:fixed;inset:0;background:#f4e39a;z-index:49;opacity:0;animation:cf-in 2.6s ease-in forwards;animation-delay:${d(37600)}}
 .cc{position:fixed;left:6vw;bottom:14vh;z-index:51;color:#f2ead8;font:400 15px/1.4 Georgia,serif;letter-spacing:.08em;opacity:0;animation:cc 5s ease both;animation-delay:${d(1200)}}
-</style><div class="cfa"></div><div class="cb" style="top:0"></div><div class="cb" style="bottom:0"></div>${e > 31300 ? '<div class="cfy"></div>' : ''}<div class="cc">a tuesday night, 2006</div><div class="cc" style="animation-delay:${d(5200)}">that humming again.</div>`
+</style><div class="cfa"></div><div class="cb" style="top:0"></div><div class="cb" style="bottom:0"></div>${e > 37300 ? '<div class="cfy"></div>' : ''}`
 }
 
 // the Level 0 arrival (scripts/lib/arrive-cut.js): the yellow lifts, letterbox, a caption, then the title card as the camera settles
@@ -28,18 +28,16 @@ function arriveUi(ctx, player) {
 .acc{position:fixed;left:6vw;bottom:14vh;z-index:51;color:#f2ead8;font:400 15px/1.4 Georgia,serif;letter-spacing:.08em;opacity:0;animation:acc 4.6s ease both}
 .at{position:fixed;left:0;right:0;top:40%;text-align:center;z-index:51;color:#f2c14e;text-shadow:2px 2px #000;opacity:0;animation:atitle 4.2s ease both;animation-delay:${d(13600)}}
 </style><div class="ay"></div><div class="ab" style="top:0"></div><div class="ab" style="bottom:0"></div>
-<div class="acc" style="animation-delay:${d(5600)}">the carpet is wet. it smells like old rain.</div>
-<div class="acc" style="animation-delay:${d(10200)}">and the lights. the lights never stop humming.</div>
 <div class="at"><div style="font-size:44px">LEVEL 0</div><div style="font-size:16px;letter-spacing:.3em;opacity:.75;margin-top:6px">THE LOBBY</div></div>`
 }
 
 // the tutorial Level 0's cutscenes (scripts/lib/tut0-cut.js): letterbox, captions, and the title at the end
-const T0CAP = {
-  almond: [[1200, 4200, "a bottle on the desk. almond water. people down here live on it."]],
-  halogen: [[1300, 2300, "a wrist unit. BACKROOMS ROBOTICS stamped on the back, someone's name scratched off under it."], [3700, 1500, "PROPERTY OF BACKROOMS ROBOTICS. it still turns on."]],
-  smiler: [[300, 2400, "the light at the end of this hall is dying."], [4200, 3200, "something down there is smiling at you."], [9400, 2400, "smilers keep to dark corners. stay under the lights and keep moving."]],
-  shift: [[1400, 4600, "level 0 moves when you aren't looking."], [5600, 1800, "there's no going back the way you came."]],
-  final: [[600, 2400, "the carpet here is soaked through."], [3200, 3000, "and then the floor wasn't there."], [7400, 3200, "you fell for a long time. then concrete, and the sound of pipes."]],
+const T0CAP = { // plain and useful, said once: what it is, what to do
+  almond: [[1400, 3600, "Almond water. Drink it when you're hurt."]],
+  halogen: [[3700, 2200, "Backrooms Robotics HALOGEN unit. Still works."]],
+  smiler: [[9400, 2800, "Smilers stay in the dark. Stay under the lights."]],
+  shift: [[2000, 3000, "The way back is gone."]],
+  final: [],
 }
 function t0Ui(ctx, player) {
   const c = player.state.t0cut, e = ctx.now() - c.at, d = (ms) => `${ms - e}ms`, fin = c.id === "final"
