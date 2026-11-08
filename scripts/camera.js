@@ -106,7 +106,7 @@ export function update(ctx, dt) {
     if (block) goal = { x: c.x + hx / hl * Math.max(0.6, block.distance - 0.15), y: goal.y, z: c.z + hz / hl * Math.max(0.6, block.distance - 0.15) }
     const e = { x: e0.x + (goal.x - e0.x) * k, y: e0.y + (goal.y - e0.y) * k, z: e0.z + (goal.z - e0.z) * k }
     ctx.self.feetPosition = e
-    const dx = c.x - e.x, dy = c.y - 0.24 - e.y, dz = c.z - e.z // aimed at their chin-to-chest: the face rides the upper third, clear of the dialogue box
+    const dx = c.x - e.x, dy = c.y - 0.34 - e.y, dz = c.z - e.z // aimed at their chin-to-chest: the face rides the upper third, clear of the dialogue box
     const want = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
     if (!rot) rot = want
     else { const dyaw = ((want.yaw - rot.yaw + 540) % 360) - 180; rot = { yaw: rot.yaw + dyaw * k, pitch: rot.pitch + (want.pitch - rot.pitch) * k } }
