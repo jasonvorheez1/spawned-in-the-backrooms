@@ -33,10 +33,8 @@ function arriveUi(ctx, player) {
 
 // the tutorial Level 0's cutscenes (scripts/lib/tut0-cut.js): letterbox, captions, and the title at the end
 const T0CAP = { // plain and useful, said once: what it is, what to do
-  almond: [[1400, 3600, "Almond water. Drink it when you're hurt."]],
-  halogen: [[3700, 2200, "Backrooms Robotics HALOGEN unit. Still works."]],
-  smiler: [[9400, 2800, "Smilers stay in the dark. Stay under the lights."]],
-  shift: [[2000, 3000, "The way back is gone."]],
+  encounter: [[13400, 3000, "RUN."]],
+  halogen: [[2700, 1800, "Backrooms Robotics HALOGEN unit. Still works."]],
   final: [],
 }
 function t0Ui(ctx, player) {
