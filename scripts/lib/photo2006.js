@@ -6,8 +6,8 @@ import { blur, chromaticAberration, vignette, grain, grade } from 'builtin/postf
 import { vec3, dot, smoothstep, mix } from 'builtin/tsl';
 export function photoBase(ctx) {
   const low = ctx.quality === 'low';
-  const soft = blur(ctx.scene, 0.05);
-  return low ? soft : chromaticAberration(soft, 0.0012);
+  const soft = blur(ctx.scene, 0.12);
+  return low ? soft : chromaticAberration(soft, 0.003);
 }
 export function photoFinish(ctx, c, o = {}) {
   // jpeg tone: mids pushed, blacks lifted a little (murky, never grey), colour punchy like a 2006 compact's vivid mode
@@ -15,6 +15,6 @@ export function photoFinish(ctx, c, o = {}) {
   // CCD clip: past ~80% the highlight runs flat warm-white instead of rolling off
   const l = dot(c, vec3(0.2126, 0.7152, 0.0722));
   c = mix(c, vec3(1.0, 0.99, 0.96), smoothstep(0.72, 1.0, l).mul(o.clip ?? 0.45));
-  c = vignette(c, ctx.param('vignette', 0.4), { color: [0.02, 0.015, 0.01], roundness: 1.6, feather: 0.7 });
-  return grain(c, o.grain ?? 0.035);
+  c = vignette(c, ctx.param('photoVignette', 0.7), { color: [0.02, 0.015, 0.01], roundness: 1.6, feather: 0.7 });
+  return grain(c, o.grain ?? 0.07);
 }

@@ -4,7 +4,7 @@ import { grade, vignette, grain, bloom } from 'builtin/postfx';
 import { photoBase, photoFinish } from './lib/photo2006.js';
 export function look(ctx) {
   let c = photoBase(ctx);
-  c = grade(c, { exposure: 1.06, saturation: 0.95, contrast: 1.12, temperature: -0.03, lift: 0.01 });
+  c = grade(c, { exposure: 1.06, saturation: 1.0, contrast: 1.12, temperature: -0.03, lift: 0.01 });
   c = bloom(c);
   c = vignette(c, ctx.param('vignette', 0.38), { color: [0.02, 0.025, 0.02], roundness: 1.4, feather: 0.6 });
   c = grain(c, 0.035);

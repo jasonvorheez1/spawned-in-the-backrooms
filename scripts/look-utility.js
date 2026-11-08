@@ -5,7 +5,7 @@ import { photoBase, photoFinish } from './lib/photo2006.js';
 
 export function look(ctx) {
   let c = photoBase(ctx);
-  c = grade(c, { exposure: 1.0, saturation: 0.95, contrast: 1.2, temperature: 0.1, lift: 0.0 });
+  c = grade(c, { exposure: 1.0, saturation: 1.0, contrast: 1.2, temperature: 0.1, lift: 0.0 });
   c = vignette(c, ctx.param('vignette', 0.4), { color: [0.01, 0.006, 0.003], roundness: 1.5, feather: 0.55 });
   c = grain(c, 0.03);
   c = bloom(c);
