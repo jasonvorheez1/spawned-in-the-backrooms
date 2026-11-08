@@ -9,13 +9,25 @@ const T = { sight: 9, call: 16, walk: 1.1, hunt: 2.3, reach: 1.6, biteDmg: 7, bi
   balloonReach: 1.4, stingDmg: 9, stingMs: 2500 }
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z)
+const CLIP = { idle: "cdn/clip-idle-loop.glb", walk: "cdn/clip-walk-loop.glb", run: "cdn/clip-run-loop.glb" }
+function gait(ctx, p, name, rate = 1) { // the body's legs follow its speed; one write when the gait changes
+  const k = name + rate, seen = (ctx.self.session.gait ??= {})
+  if (seen[p.id] === k) return; seen[p.id] = k
+  p.anim.base = { clip: CLIP[name], loop: true, weight: 1, speed: rate, blend: 0.25 }
+}
+function once(p, clip, weight = 1) { p.anim.act = { clip, loop: false, weight, blend: 0.1 } }
 export function update(ctx, dt) {
   const players = ctx.place.players; if (!players.length) return ctx.sleep(1)
   const now = ctx.now(), g = ctx.place.gravity?.y ?? -9.8
   const pack = ctx.query({ tags: ["partygoer"] })
   for (const p of pack) {
     const s = p.state
-    if ((s.hp ?? T.hp) <= 0) {
+    if ((s.hp ?? T.hp) <= 0 && !s.dying) { // it folds and drops first: the body stays a beat on the deck
+      s.dying = now; p.velocity = { x: 0, y: 0, z: 0 }; once(p, "cdn/clip-die.glb"); gait(ctx, p, "idle")
+      ctx.emit("playSound", { clip: SND("inhuman-shriek-in-a-dead-relatives-voice"), position: p.feetPosition, volume: 0.7 })
+      continue
+    }
+    if (s.dying) { if (now - s.dying < 2200) { p.velocity = { x: 0, y: p.velocity.y + g * dt, z: 0 }; continue }
       ctx.emit("fx", { position: { ...p.feetPosition, y: p.feetPosition.y + 1 }, script: `fx
 pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 acc=buoy(.6)+drag(1) sz=$size*(.6>2.2) col=<.05,.05,.05> a=0>.7:.5>.7:.3>0 r=sprite(smoke-puff,alpha)` })
       ctx.emit("playSound", { clip: SND("wet-flesh-tear-and-collapse"), position: p.feetPosition, volume: 0.8 })
@@ -40,6 +52,7 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
       ctx.emit("playSound", { clip: SND("chitin-carapace-cracking-open"), position: p.feetPosition, volume: 0.9 })
       ctx.emit("highlightSet", { target: p.id, color: "#ff3030", style: "pulse", duration: T.hatchOpen / 1000 })
     }
+    if (s.lastHp != null && (s.hp ?? T.hp) < s.lastHp) { once(p, "cdn/clip-hit-react.glb", 0.8); s.stunUntil = Math.max(s.stunUntil ?? 0, now + 250) }
     s.lastHp = s.hp ?? T.hp
     let prey = null, best = s.hunting ? T.sight * 1.8 : T.sight
     for (const pl of players) { if ((pl.state.hp ?? 1) <= 0) continue; const d = flat(pl.feetPosition, p.feetPosition); if (d < best) { best = d; prey = pl } }
@@ -51,8 +64,9 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
     if (!prey && s.hunting && !players.some((pl) => flat(pl.feetPosition, p.feetPosition) < T.sight * 2.5)) s.hunting = false
     const target = prey && s.hunting ? prey.feetPosition : (s.hunting ? players[0].feetPosition : s.home ?? p.feetPosition)
     const d = flat(target, p.feetPosition), speed = s.berserk ? T.rage : s.hunting ? T.hunt : T.walk
-    if (now < (s.stunUntil ?? 0) || d < (prey ? T.reach * 0.8 : 0.5)) p.velocity = { x: 0, y: p.velocity.y + g * dt, z: 0 }
+    if (now < (s.stunUntil ?? 0) || d < (prey ? T.reach * 0.8 : 0.5)) { p.velocity = { x: 0, y: p.velocity.y + g * dt, z: 0 }; gait(ctx, p, "idle") }
     else {
+      gait(ctx, p, speed > 2 ? "run" : "walk", speed > 2 ? speed / 3.4 : 0.8)
       const dx = (target.x - p.feetPosition.x) / d, dz = (target.z - p.feetPosition.z) / d
       p.velocity = { x: dx * speed, y: p.velocity.y + g * dt, z: dz * speed }
       p.rotation = { yaw: Math.atan2(-dx, -dz) * 180 / Math.PI }
@@ -60,6 +74,7 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
     const reach = s.berserk ? T.clawReach : T.reach, dmg = s.berserk ? T.clawDmg : T.biteDmg
     if (prey && best < reach && now >= (s.nextBite ?? 0)) {
       s.nextBite = now + (s.berserk ? T.clawMs : T.biteMs)
+      once(p, "cdn/clip-attack.glb")
       prey.state.hp -= dmgAfterArmor(prey.state.look, dmg)
       const at = { x: prey.feetPosition.x, y: prey.feetPosition.y + 1.1, z: prey.feetPosition.z }
       ctx.emit("damageNumber", { position: at, value: dmg, color: "#ff4040" })
