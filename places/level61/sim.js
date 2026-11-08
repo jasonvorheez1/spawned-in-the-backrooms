@@ -874,6 +874,7 @@ pop mist rate=5 on=ring(1.2,1.6) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.22 
 }
 
 export function tick(ctx) {
+  if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const st = ctx.place.state;
   if ((st.builtV ?? 0) < V) {
     lay(ctx);

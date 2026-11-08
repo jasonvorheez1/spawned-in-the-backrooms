@@ -104,6 +104,7 @@ function layOffice(ctx) {
   ctx.spawn("l4-office-mgr", { feetPosition: { x: 0, y: 0, z: 0 }, behavior: "scripts/l4-office.js", state: { kind: "manager" } });
 }
 export function tick(ctx) {
+  if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   if (ctx.place.state.stairsV !== 1) { ctx.place.state.stairsV = 1; // the stairwell's chain came off: down to Level 5
     ctx.spawn("l4-stairs-down", { tags: ["door"], feetPosition: { x: STAIRS.x, y: 0, z: STAIRS.z - 0.5 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.4, height: 2.4, depth: 0.6 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level5#l5-from-l4" } });
     ctx.spawn("l4-from-l5", { feetPosition: { x: STAIRS.x, y: 0.1, z: STAIRS.z - 3 }, rotation: { yaw: 0 } });

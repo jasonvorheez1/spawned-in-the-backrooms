@@ -93,6 +93,7 @@ function layComputers(ctx) { // the Administration's Database terminal (scripts/
     state: { kind: "computer", host: "GAMMA-DB-01", lock: "science:50", name: "The Database", verb: "Log in", info: "Locked · Science 50 or a password", tint: "#f2c200" } });
 }
 export function tick(ctx) {
+  if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; lay(ctx); }
   if (s.osV !== 1) { s.osV = 1; layComputers(ctx); }

@@ -120,6 +120,7 @@ function layGammaSignage(ctx) {
 }
 
 export function tick(ctx) {
+  if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   if (ctx.place.state.liftV !== 1) { ctx.place.state.liftV = 1; // the freight lift has power again: up to Level 4
     ctx.spawn("l3-lift", { tags: ["door"], feetPosition: { x: LIFT.x - 0.6, y: 0, z: LIFT.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 2.2 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level4#l4-lift-arrive" } });
     ctx.spawn("l3-lift-arrive", { feetPosition: { x: LIFT.x - 3, y: 0.1, z: LIFT.z }, rotation: { yaw: 90 } });

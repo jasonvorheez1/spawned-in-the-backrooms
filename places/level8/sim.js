@@ -525,6 +525,7 @@ function lay(ctx) {
 }
 
 export function tick(ctx) {
+  if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state;
   if (s.lakeDoorV !== 2) { const d = ctx.place.objects["l8-lake-back"]; if (d) { s.lakeDoorV = 2; d.primitive = { kind: "box", width: 6, height: 0.7, depth: 6 }; d.feetPosition = { ...d.feetPosition, y: -2.65 }; } } // the lake swims; only its bed's middle leads down to 7
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); }

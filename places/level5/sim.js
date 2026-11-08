@@ -331,6 +331,7 @@ function breakablesOnce(ctx) {
   }
 }
 export function tick(ctx) {
+  if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   breakablesOnce(ctx);
   const s = ctx.place.state;
   if (s.builtV !== V) {

@@ -12,6 +12,7 @@ const near = (rows, p) => rows.some((r) => Math.hypot(r.feetPosition.x - p.x, r.
 function due(s, key, now) { if (!s[key]) { s[key] = now + REFILL; return false; } if (now < s[key]) return false; delete s[key]; return true; }
 
 export function tick(ctx) {
+  if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state, now = ctx.now();
   const weapons = ctx.query({ tags: ["weapon"] }), almonds = ctx.query({ tags: ["almond"] }), ammo = ctx.query({ tags: ["ammo"] });
   for (const w of WEAPON_SLOTS) {

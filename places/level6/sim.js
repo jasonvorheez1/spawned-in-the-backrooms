@@ -219,6 +219,7 @@ function laySnack(ctx) {
   ctx.spawn("l6-wire-note", { feetPosition: { x: x + e.dx * (C / 2 - 0.02), y: 1.45, z: z + e.dz * (C / 2 - 0.02) }, rotation: { lookAt: { x: x - e.dx * C, y: 1.45, z: z - e.dz * C } }, vector: chalk("i smell fries. why do i smell fries") });
 }
 export function tick(ctx) {
+  if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const st = ctx.place.state;
   if ((st.builtV ?? 0) < 1) lay(ctx);
   if ((st.builtV ?? 0) < 2) lay2(ctx);
