@@ -430,4 +430,3 @@ export function update(ctx, dt) {
     const mode = Math.hypot(vx, vz) > 0.1 ? "skitter" : "idle";
     if (m.mode !== mode) { m.mode = mode; w.anim.body = { clip: CLIP[mode], loop: "loop", speed: speed > 3 ? 1.5 : 1 }; }
   }
-}
