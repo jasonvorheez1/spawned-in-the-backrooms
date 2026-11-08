@@ -23,7 +23,7 @@ function music(ctx, want) {
 
 export function update(ctx) {
   if (!ctx.self.isLocal && ctx.self.isLocal !== undefined) return ctx.sleep()
-  const st = ctx.self.state, ses = ctx.session, place = ctx.self.place
+  const st = ctx.self.state, ses = ctx.session, place = ctx.self.place?.startsWith("tutorial0") ? "tutorial0" : ctx.self.place // a solo copy is named tutorial0-<id>
   if (!ses.menuMark) {
     ses.menuMark = true
     if (!st.madeChar && (st.xp || st.lvl || st.level || st.visits)) st.madeChar = true // a save that already played keeps its critter
