@@ -256,7 +256,7 @@ bc-fstatue:
   id: bc-fstatue
   layout: {box: {max: {x: 0.65, y: 2.5, z: 0.65}, min: {x: -0.65, y: 0, z: -0.65}}}
   model: {id: /cdn/value.eb4351da807a7988461aec04b376d7da9e1cfbe1635928e0fc1de5766472458f.glb}
-  rotation: {yaw: 180}
+  rotation: {yaw: 90}
 bc-gallery-sign:
   feetPosition: {x: 9.7, y: 9.6, z: -13}
   id: bc-gallery-sign
