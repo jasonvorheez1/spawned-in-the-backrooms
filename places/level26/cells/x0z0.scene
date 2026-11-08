@@ -3549,3 +3549,33 @@ l26x-speaker-4:
   rotation: {pitch: -88, yaw: -80}
   scale: 1
   tags: [l26x]
+l26x-stringglow-0:
+  feetPosition: {x: -4.5, y: 3.2, z: 36}
+  id: l26x-stringglow-0
+  light: {color: oklch(0.85 0.1 75), distance: 11, intensity: 1.6, kind: point}
+  tags: [l26x]
+l26x-stringglow-1:
+  feetPosition: {x: 4.5, y: 3.2, z: 34}
+  fx: {script: "fx\npop glow n=1 at=point() g=flick(3,.85) r=light(<1,.72,.38>,$g*2.2,11)"}
+  id: l26x-stringglow-1
+  tags: [l26x]
+l26x-stringglow-2:
+  feetPosition: {x: 0, y: 4.5, z: 30}
+  id: l26x-stringglow-2
+  light: {color: oklch(0.85 0.1 75), distance: 11, intensity: 1.6, kind: point}
+  tags: [l26x]
+l26x-stringglow-3:
+  feetPosition: {x: -3, y: 3.2, z: -26}
+  id: l26x-stringglow-3
+  light: {color: oklch(0.85 0.1 75), distance: 11, intensity: 1.6, kind: point}
+  tags: [l26x]
+l26x-stringglow-4:
+  feetPosition: {x: 3.5, y: 3.2, z: -32}
+  fx: {script: "fx\npop glow n=1 at=point() g=flick(3,.85) r=light(<1,.72,.38>,$g*2.2,11)"}
+  id: l26x-stringglow-4
+  tags: [l26x]
+l26x-stringglow-5:
+  feetPosition: {x: 0, y: 6.8, z: -4}
+  id: l26x-stringglow-5
+  light: {color: oklch(0.85 0.1 75), distance: 11, intensity: 1.6, kind: point}
+  tags: [l26x]

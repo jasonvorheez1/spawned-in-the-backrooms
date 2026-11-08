@@ -1,0 +1,37 @@
+# spawn-scene v2 yaml objects
+l26x-string-0:
+  id: l26x-string-0
+  spline: {bulbSpacing: 0.7, kind: stringlight, points: [[0, 10, 12], [-9.5, 1.3, 48]]}
+  tags: [l26x]
+l26x-string-1:
+  id: l26x-string-1
+  spline: {bulbSpacing: 0.7, kind: stringlight, points: [[0, 10, 12], [9.5, 1.3, 48]]}
+  tags: [l26x]
+l26x-string-2:
+  id: l26x-string-2
+  spline: {bulbSpacing: 0.7, kind: stringlight, points: [[0, 10, 12], [0, 1.3, 57]]}
+  tags: [l26x]
+l26x-string-3:
+  id: l26x-string-3
+  spline: {bulbSpacing: 0.7, kind: stringlight, points: [[0, 10, 12], [-6.8, 4.6, -17]]}
+  tags: [l26x]
+l26x-string-4:
+  id: l26x-string-4
+  spline: {bulbSpacing: 0.7, kind: stringlight, points: [[0, 10, 12], [6.8, 4.6, -17]]}
+  tags: [l26x]
+l26x-string-5:
+  id: l26x-string-5
+  spline: {bulbSpacing: 0.7, kind: stringlight, points: [[0, 9, -40], [-9.3, 1.3, -28]]}
+  tags: [l26x]
+l26x-string-6:
+  id: l26x-string-6
+  spline: {bulbSpacing: 0.7, kind: stringlight, points: [[0, 9, -40], [9.3, 1.3, -28]]}
+  tags: [l26x]
+l26x-string-7:
+  id: l26x-string-7
+  spline: {bulbSpacing: 0.7, kind: stringlight, points: [[0, 9, -40], [0, 1.3, -50]]}
+  tags: [l26x]
+l26x-string-8:
+  id: l26x-string-8
+  spline: {bulbSpacing: 0.7, kind: stringlight, points: [[0, 9, -40], [0, 4.6, -18]]}
+  tags: [l26x]
