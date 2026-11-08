@@ -349,7 +349,7 @@ pop mist rate=5 on=arc(1.4,6.283,.4) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0
   // Perimeter curved diner booths
   spawnBooth("l61-booth-w0", -23, -12, 90);
   spawnBooth("l61-booth-w1", -23, 0, 90);
-  spawnBooth("l61-booth-w2", -23, 5.8, 90); // moved off Camp Amber
+  spawnBooth("l61-booth-w2", -23, 3, 90); // clear of Camp Amber (z 8..18) and the z=6 divider
   spawnBooth("l61-booth-e0", 23, -12, -90);
   spawnBooth("l61-booth-e1", 23, 0, -90);
   spawnBooth("l61-booth-e2", 23, 12, -90);
