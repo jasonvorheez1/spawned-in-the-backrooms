@@ -136,7 +136,7 @@ export function layExtra(ctx, { HW, HD, HH }) {
   const MENU_AT = { clip: [-24.4, 1.05, -30.2, 180], liq: [-12.2, 1.1, -24.3, -90], slice: [4.6, 1.48, -29.4, 180], burger: [17.6, 1.05, -28.4, 180] }; // each stands on its counter top (raycast tops: clip 1.05, liq 1.1, slice 1.48, burger 1.05)
   const STORE_X = { clip: -21, liq: -7, slice: 7, burger: 21 }, MENUS = {
     clip: [["Budweiser", "3.00"], ["Jack and Coke", "4.50"], ["Smirnoff Ice", "3.75"], ["Coca-Cola float", "2.25"], ["Chips and a Coke", "2.75"]],
-    liq: [["Almond water", "3.00"], ["Corona with lime", "4.00"], ["Margarita", "5.50"], ["Miller Lite", "3.00"], ["Whiskey, neat", "5.00"], ["Bar snacks", "2.50"]],
+    liq: [["Almond water", "3.00"], ["Corona with lime", "4.00"], ["Cuervo margarita", "5.50"], ["Miller Lite", "3.00"], ["Jim Beam, neat", "5.00"], ["Bar snacks", "2.50"]],
     slice: [["Pepperoni slice", "3.25"], ["2 cheese + Coke", "6.25"], ["Supreme slice", "5.00"]],
     burger: [["Cheeseburger", "4.50"], ["Bop meal", "7.95"], ["Fries + Coke", "3.25"]],
   };

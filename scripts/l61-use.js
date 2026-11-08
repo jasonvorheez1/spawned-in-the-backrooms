@@ -11,7 +11,7 @@ const COOL = 20000;
 // Menus at each food court venue: [name, items given, original crossed-out price]
 export const MENUS = {
   clip: [["Budweiser, ice cold", ["budweiser"], "3.00"], ["Jack and Coke", ["jackcoke"], "4.50"], ["Smirnoff Ice", ["smirnoffice"], "3.75"], ["Coca-Cola float", ["coke"], "2.25"], ["Chips and a Coke", ["doritos", "coke"], "2.75"]],
-  liq: [["Almond water", ["almond"], "3.00"], ["Corona with lime", ["corona"], "4.00"], ["Margarita", ["margarita"], "5.50"], ["Miller Lite", ["millerlite"], "3.00"], ["Whiskey, neat", ["whiskey"], "5.00"], ["Bar snacks", ["doritos", "coolranch"], "2.50"]],
+  liq: [["Almond water", ["almond"], "3.00"], ["Corona with lime", ["corona"], "4.00"], ["Jose Cuervo margarita", ["margarita"], "5.50"], ["Miller Lite", ["millerlite"], "3.00"], ["Jim Beam, neat", ["whiskey"], "5.00"], ["Bar snacks", ["doritos", "coolranch"], "2.50"]],
   slice: [["Pepperoni slice", ["pizza"], "3.25"], ["Two cheese slices and a Coke", ["pizza", "coke"], "6.25"], ["Supreme slice", ["pizza", "pizza"], "5.00"]],
   burger: [["Cheeseburger", ["burger"], "4.50"], ["Bop meal: burger, chips, shake", ["burger", "doritos", "dew"], "7.95"], ["Fries and a Coke", ["doritos", "coke"], "3.25"]],
 };
