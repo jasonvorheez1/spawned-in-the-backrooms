@@ -2,6 +2,7 @@
 // Scrap becomes ammo, kits, batteries and fuses at your hands (Y) or at a workbench you built (B, then look at it and press E).
 // Recipes are gated by a Fallout-style skill level, and spare skill points buy a chance of an extra item.
 // State: player.state.hunger, thirst (0..100), craftOpen ('hand' | 'bench'), craftBench (the bench's id).
+import { canOpen, openWrist } from './lib/screen.js'
 import { heard } from "./lib/hear.js";
 import C from './lib/data/craft.yml'
 import L21H from './lib/data/level21.yml'
@@ -17,7 +18,7 @@ const note = (s, ctx, text) => { s.notice = { text, at: ctx.now() } }
 export function onInput(ctx, input) {
   const s = ctx.self.state
   if (s.level == null) return
-  if (input.pressed?.craft) { if (s.craftOpen) s.craftOpen = ''; else if (!s.lootOpen && !s.sheetOpen && !s.invOpen && !s.talkWith) { s.craftOpen = 'hand'; s.craftBench = '' } }
+  if (input.pressed?.craft) { if (s.craftOpen) s.craftOpen = ''; else if (canOpen(s, ctx.self.place, 'craft')) { openWrist(s, 'craft', 'hand'); s.craftBench = '' } }
   const d = input.actionData?.make
   if (input.pressed?.make && d && typeof d.k === 'string') act(ctx, s, d)
 }

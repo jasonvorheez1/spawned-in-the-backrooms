@@ -2,6 +2,7 @@
 // points, slow HP regeneration from Endurance, and reading the creature you look at (state.target, drawn by
 // scripts/stats-ui.js). The effects themselves are applied where they matter: scripts/player.js (damage, speed,
 // stamina, reload, carry weight), the creatures' scripts (their own attributes) and scripts/interact.js (Scavenge).
+import { canOpen, openWrist } from './lib/screen.js'
 import { tick as tickCompanions } from './lib/companion.js'
 import D from './lib/data/difficulty.yml'
 import { pushFeed, watch } from './lib/feed.js'
@@ -26,7 +27,7 @@ export function onInput(ctx, input) {
   const ray = getInputRay(ctx, input); if (ray) m.ray = ray
   if (s.level == null) return
   if (input.pressed?.sheet && s.creating) return
-  if (input.pressed?.sheet) { s.sheetOpen = !s.sheetOpen && !s.lootOpen; if (s.sheetOpen) s.lvlPrompt = false; if (s.sheetOpen) s.invOpen = false; ctx.emit('playSound', { clip: s.sheetOpen ? 'cdn/moodboard-realistic-gritty/sfx-wrist-device-raise-click-crt-power-on-hum.mp3' : 'cdn/moodboard-realistic-gritty/sfx-wrist-device-lower-click-crt-power-off.mp3', volume: 0.55, bus: 'UI' }) }
+  if (input.pressed?.sheet) { if (s.sheetOpen) s.sheetOpen = false; else if (canOpen(s, ctx.self.place, 'sheet')) { openWrist(s, 'sheet'); s.lvlPrompt = false } else return; ctx.emit('playSound', { clip: s.sheetOpen ? 'cdn/moodboard-realistic-gritty/sfx-wrist-device-raise-click-crt-power-on-hum.mp3' : 'cdn/moodboard-realistic-gritty/sfx-wrist-device-lower-click-crt-power-off.mp3', volume: 0.55, bus: 'UI' }) }
   const d = input.actionData?.stat
   if (input.pressed?.stat && d && typeof d.k === 'string') spend(s, d)
 }

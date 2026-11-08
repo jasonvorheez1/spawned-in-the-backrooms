@@ -1,6 +1,7 @@
 // The wanderer: walk/sprint on stamina, sanity that the halls eat, a flashlight on battery,
 // almond water, swings at smilers, xp and levels. Every number lives in lib/data/level0.yml.
 // player.state is the player's save: their level, xp and almonds follow them between visits.
+import { canOpen, openWrist } from './lib/screen.js'
 import { heard } from "./lib/hear.js";
 import PLAYER from './lib/data/player.yml'
 import L from './lib/data/level0.yml'
@@ -362,7 +363,7 @@ export function onInput(ctx, input) {
       }
     }
   }
-  if (input.pressed.inventory) { const sv = ctx.self.state; sv.invOpen = !sv.invOpen && !sv.lootOpen; sound(ctx, 'flashlight-switch-click', 0.35, true) }
+  if (input.pressed.inventory) { const sv = ctx.self.state; if (sv.invOpen) sv.invOpen = false; else if (canOpen(sv, ctx.self.place, 'inventory')) openWrist(sv, 'inventory'); sound(ctx, 'flashlight-switch-click', 0.35, true) }
   if (input.pressed.inv && input.actionData?.inv) invAction(ctx, input.actionData.inv)
   if (input.pressed.drink) { if (ctx.self.state.equipped === 'soup_bowl') soupEat(ctx); else drink(ctx) } // holding the soup, Q eats it
   if (input.pressed.splash) splash(ctx)

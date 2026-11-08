@@ -2,6 +2,7 @@
 // START walks you into the intake room (places/intake), where the critter creator opens; closing it walks you back
 // to the place you came from. Backspace mid-game opens the same screen as a pause with RESUME.
 // The title theme plays on this machine alone through the title and the intake room, and fades when you step out.
+import { screen } from "./lib/screen.js"
 import { cutTick } from "./lib/intro-cut.js"
 import { arriveTick } from "./lib/arrive-cut.js"
 import { tutStart, tutTick, tutInput } from "./lib/tutorial.js"
@@ -68,7 +69,7 @@ export function update(ctx) {
 export function onInput(ctx, input) {
   const st = ctx.self.state
   if (st.tut) tutInput(ctx, st, input)
-  if (input.pressed?.mainmenu && !st.talkWith && !st.mj?.seats && ctx.self.place !== "intake") {
+  if (input.pressed?.mainmenu && ctx.self.place !== "intake" && (st.menuOpen || !['talk', 'mahjong', 'cutscene'].includes(screen(st, ctx.self.place)))) { // pause never stacks on a talk, the mahjong table or a cutscene it couldn't draw over
     st.menuOpen = !st.menuOpen
     if (st.menuOpen) { st.menuKind = "pause"; st.wardrobeOpen = false; st.wrMenu = false }
   }
