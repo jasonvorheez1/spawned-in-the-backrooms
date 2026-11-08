@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 27;
+const V = 28;
 const M_TABLE = "/cdn/value.d10ee1eebdf77a5a32504cb94060034b91ce30d295b977a1a3a23bb2cbb9054f.glb"; // art/l61-table/build.py: chairs pushed 0.32 m out
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -359,7 +359,7 @@ function lay(ctx) {
 
   // Fresh hot coffee urn on the counter
   sp("l61-coffee-urn", {
-    feetPosition: { x: 25.2, y: 0.95, z: -28.6 },
+    feetPosition: { x: 25.2, y: 1.05, z: -28.6 },
     tags: ["usable"],
     behavior: "scripts/l61-diner.js",
     physics: "static",
@@ -380,7 +380,7 @@ function lay(ctx) {
 
   // Fresh baked cherry pie cloche dome on the counter
   sp("l61-pie-stand", {
-    feetPosition: { x: 16.8, y: 0.95, z: -28.6 },
+    feetPosition: { x: 16.8, y: 1.05, z: -28.6 },
     tags: ["usable"],
     behavior: "scripts/l61-diner.js",
     physics: "static",

@@ -133,7 +133,7 @@ export function layExtra(ctx, { HW, HD, HH }) {
     ui: `<div face="front" width="1.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;color:#fff;text-align:center"><div style="font-size:90px">CAMP AMBER</div><div style="font-size:38px">Level 6.1 outpost · new here? sit down, eat</div></div>` });
 
   // ---- a real restaurant's furniture: menu boards you flip through, a register, the "now serving" board, a tray return, condiments and a half-eaten tray on the tables, a wet-floor sign
-  const MENU_AT = { clip: [-24.4, 1.12, -29.7, 180], liq: [-11.7, 1.12, -23.2, -90], slice: [4.4, 1.04, -28.8, 180], burger: [17.6, 1.04, -28.2, 180] };
+  const MENU_AT = { clip: [-24.4, 1.05, -30.2, 180], liq: [-12.2, 1.1, -24.3, -90], slice: [4.6, 1.48, -29.4, 180], burger: [17.6, 1.05, -28.4, 180] }; // each stands on its counter top (raycast tops: clip 1.05, liq 1.1, slice 1.48, burger 1.05)
   const STORE_X = { clip: -21, liq: -7, slice: 7, burger: 21 }, MENUS = {
     clip: [["Budweiser", "3.00"], ["Jack and Coke", "4.50"], ["Smirnoff Ice", "3.75"], ["Coca-Cola float", "2.25"], ["Chips and a Coke", "2.75"]],
     liq: [["Almond water", "3.00"], ["Corona with lime", "4.00"], ["Margarita", "5.50"], ["Miller Lite", "3.00"], ["Whiskey, neat", "5.00"], ["Bar snacks", "2.50"]],
@@ -147,7 +147,7 @@ export function layExtra(ctx, { HW, HD, HH }) {
       state: { kind: "menu", key, name: `${NAMES[key]} menu`, verb: "Flip the menu", info: "Press to see the next item. Everything is crossed out and free.", tint: "#ffd84a" },
       ui: `<div face="front" width="0.5m" style="width:100%;height:100%;box-sizing:border-box;padding:14px 12px;background:#161a1e;color:#f4f1ea;font-family:Georgia,serif;text-align:center"><div style="font-size:30px;letter-spacing:3px;color:#ffd84a;border-bottom:2px solid #ffd84a;padding-bottom:4px">${NAMES[key]}</div>${MENUS[key].map(([n, p]) => `<div style="font-size:21px;margin-top:10px;display:flex;justify-content:space-between"><span>${n}</span><span><s style="color:#aaa">$${p}</s> <b style="color:#7affb0">FREE</b></span></div>`).join("")}<div style="font-size:15px;margin-top:14px;color:#9fb8c8">please take a number</div></div>` });
     // the till: a little register with a bell
-    const [px, py, pz] = { clip: [-24.8, 1.1, -30.6], liq: [-12.2, 1.1, -22.8], slice: [9.3, 1.02, -29.6], burger: [18.3, 1.02, -29.6] }[key];
+    const [px, py, pz] = { clip: [-17.6, 1.05, -30.3], liq: [-12.2, 1.1, -29.6], slice: [9.4, 1.48, -29.5], burger: [18.6, 1.05, -28.6] }[key];
     sp(`l61-reg-${key}`, { feetPosition: { x: px, y: py, z: pz }, rotation: { yaw: myaw }, primitive: { kind: "box", width: 0.36, height: 0.24, depth: 0.34 }, material: { color: "oklch(0.7 0.03 80)", roughness: 0.5, metalness: 0.4 },
       children: [{ feetPosition: { x: 0, y: 0.24, z: 0.02 }, rotation: { pitch: -35 }, primitive: { kind: "box", width: 0.28, height: 0.16, depth: 0.02 }, material: { color: "#031", emissive: "#2bff80", emissiveIntensity: 0.6 }, ui: `<div face="front" width="0.28m" style="width:100%;height:100%;background:#031;color:#7affb0;font:700 40px 'Courier New',monospace;padding:6px;box-sizing:border-box;text-align:center;line-height:1.05">TOTAL<br>$0.00<br><span style="font-size:22px">THANK YOU</span></div>` },
         { feetPosition: { x: 0.2, y: 0.2, z: -0.1 }, primitive: { kind: "sphere", radius: 0.05 }, material: { color: "oklch(0.8 0.1 85)", metalness: 0.9, roughness: 0.2 } }] });
@@ -159,11 +159,12 @@ export function layExtra(ctx, { HW, HD, HH }) {
       children: [{ feetPosition: { x: 0, y: 1.1, z: 0 }, primitive: { kind: "box", width: 0.7, height: 0.4, depth: 0.04 }, material: { color: "oklch(0.35 0.09 230)" }, ui: `<div face="front" width="0.7m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font:900 70px Arial,sans-serif;color:#fff">TRAYS</div>` }] });
   }
   // the dining room: ketchup, mustard and a napkin box on the tables, a tray with a plate and a cup on about half, steam off the hot ones
+  // one setting per real food-court table (the same spots tableSet stands them in sim.js), on the 0.75 m top
   let ti = 0;
-  for (let x = -24; x <= 24; x += 6) for (let z = -15; z <= 15; z += 6) {
-    if (Math.abs(x) < 9 && Math.abs(z) < 9) continue;
-    const tx = x + Math.sin(x * 3.1 + z) * 0.6, tz = z + Math.cos(x + z * 2.3) * 0.5, r = Math.abs((Math.sin(x * 12.9898 + z * 78.233) * 43758.5453) % 1), hot = r < 0.18;
-    sp(`l61-set-${ti++}`, { feetPosition: { x: tx, y: 0.78, z: tz }, ...(hot ? { fx: { script: SMOKE } } : {}), primitive: { kind: "sphere", radius: 0.001 }, material: { color: "oklch(0.5 0 0)" },
+  const TABLES = [[-14, -13], [-14, -7], [-14, 7], [-14, 13], [14, -13], [14, -7], [14, 7], [14, 13], [-7, -13], [7, -13], [-7, 13], [7, 13], [-6, -25.5], [-2.6, -25.5], [-6, -28.9], [-2.6, -28.9], [3, -25.5], [7, -25.5]];
+  for (const [x, z] of TABLES) {
+    const tx = x, tz = z, r = Math.abs((Math.sin(x * 12.9898 + z * 78.233) * 43758.5453) % 1), hot = r < 0.18;
+    sp(`l61-set-${ti++}`, { feetPosition: { x: tx, y: 0.752, z: tz }, ...(hot ? { fx: { script: SMOKE } } : {}), primitive: { kind: "sphere", radius: 0.001 }, material: { color: "oklch(0.5 0 0)" },
       children: [
         { feetPosition: { x: 0.12, y: 0, z: 0.1 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.035, height: 0.17 }, material: { color: "oklch(0.5 0.22 28)", roughness: 0.4 } },
         { feetPosition: { x: 0.2, y: 0, z: 0.05 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.035, height: 0.17 }, material: { color: "oklch(0.85 0.17 95)", roughness: 0.4 } },
