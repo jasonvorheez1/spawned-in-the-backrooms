@@ -5,6 +5,7 @@
 import CL from './data/clothes.yml'
 import C from './data/critter.yml'
 import { drMul, armorCnd } from './condition.js'
+import { mitigated } from './combat.js'
 
 export const SLOTS = ['topw', 'botw', 'shoes', 'hat', 'eyew', 'neck']
 export const SLOT_NAME = { topw: 'Top', botw: 'Bottom', shoes: 'Shoes', hat: 'Hat', eyew: 'Eyewear', neck: 'Neck' }
@@ -69,7 +70,8 @@ export function wornRows(look) {
 }
 // the damage that gets through: Fallout NV threshold, a hit always keeps `floor` of itself and at least 1
 export const armorFloor = CL.floor
-export function afterDR(dr, dmg) { return dmg <= 0 ? dmg : Math.max(1, Math.ceil(dmg * CL.floor), Math.round(dmg - dr)) }
+// the damage that gets through armor: a share that grows with DR and shrinks as the hit grows, after the hit's armor penetration (scripts/lib/combat.js)
+export function afterDR(dr, dmg, pen = 0) { return mitigated(dr, dmg, pen) }
 
 // put a garment on: { look, back } where back is the token of what came off (null if the slot was bare)
 export function wear(look, token) {

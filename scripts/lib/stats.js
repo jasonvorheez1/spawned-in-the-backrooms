@@ -30,7 +30,7 @@ export const SKILLS = [
   { k: 'barter', name: 'Barter', attr: 'g', info: 'The quartermaster gives you more' },
   { k: 'energy', name: 'Energy Weapons', attr: 'o', info: 'No energy weapons exist yet' },
   { k: 'explosives', name: 'Explosives', attr: 'o', info: 'No explosives exist yet' },
-  { k: 'guns', name: 'Guns', attr: 'a', info: 'Pistol and shotgun damage, a little faster reloads' },
+  { k: 'guns', name: 'Guns', attr: 'a', info: 'Gun damage, a tighter spread, a little faster reloads' },
   { k: 'lockpick', name: 'Lockpick', attr: 'o', info: 'Opens locked crates up to its level' },
   { k: 'medicine', name: 'Medicine', attr: 'n', info: 'Bandages and the medic heal more' },
   { k: 'melee', name: 'Melee Weapons', attr: 'h', info: 'Melee weapon damage' },
@@ -156,7 +156,7 @@ export const burden = (s) => { const cap = derived(s).carry, now = carried(s); r
 
 // ---- armor: one rule for every hit on a critter (player or NPC) from what it wears. look = player.state.look or an NPC's look
 // every hit on someone goes through here: enemyDmg turns what creatures and people do up (the player hitting an npc opts out: scripts/player.js)
-export const dmgAfterArmor = (look, dmg, scale = true) => afterDR(wornDR(look), scale ? dmg * D.enemyDmg : dmg)
+export const dmgAfterArmor = (look, dmg, scale = true, pen = 0) => afterDR(wornDR(look), scale ? dmg * D.enemyDmg : dmg, pen)
 // an NPC's look: its state.look, else the params its critter body was drawn from
 export const lookOfNpc = (o) => o?.state?.look ?? o?.state?.wear ?? (o?.primitive?.params?.species && o?.primitive?.params?.topw ? o.primitive.params : null) // either critter body's params carry the worn slots
 

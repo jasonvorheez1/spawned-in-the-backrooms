@@ -9,6 +9,7 @@ import W from './lib/weapons.js'
 import { derived, carried, handling } from './lib/stats.js'
 import { parseCloth, wornTokens, wornDR, fullLook, SLOTS, SLOT_NAME, rowOf, CLOTHES } from './lib/clothes.js'
 import { cndOf, armorCnd, band, bandColor, wMul, drMul, repairAmount, isBroken } from './lib/condition.js'
+import { penOf } from './lib/combat.js'
 
 const CSS = `<style>
 .pb {
@@ -367,6 +368,7 @@ function detail(t, s, def) {
         ${cell('REQ', reqStr, true, reqHarm ? 'req-fail' : '')}
         ${cell('SPD', `${(1 / w.cooldown).toFixed(1)}/S`)}
         ${cell('AP', `${w.stamina}`)}
+        ${cell('PEN', `${Math.round(penOf(w, k) * 100)}% ARMOR`)}
         ${cell('WG', `${w.kg ?? 1.0} KG`)}
         ${cell('VAL', `$${val}.00`)}
         ${w.ranged ? cell('MAG', `${s['loaded_' + k] ?? 0}/${w.magSize}`) + cell(w.ammoType === 'shells' ? 'SHELLS' : 'ROUNDS', s[w.ammoType ?? 'ammo'] ?? 0) : ''}

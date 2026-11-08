@@ -1,0 +1,28 @@
+# The combat maths (Shelly, Nov 8: improve the calculations for damage, armor, weapons, spread and stats). Every number is a pick. Code: scripts/lib/combat.js.
+# Armor: the old rule took DR off every hit flat, so armor erased weak hits (a fist, a stab, an SMG round) and did next to nothing to a strong one.
+#   Now a hit is cut by a share that grows with DR and shrinks with the hit: reduction = DRe / (DRe + k * damage + c), never more than maxRed.
+#   DRe is the DR after armor penetration: DRe = DR * (1 - pen). A shotgun's pellets are each cut on their own, so armor eats a shotgun alive.
+armor: { k: 0.5, c: 8, maxRed: 0.8 }
+# Every hit rolls this much either side of its number (0.1: 90% to 110%), so two swings are never the same.
+variance: 0.10
+# Armor penetration (the share of the target's DR a hit ignores). A weapon can set its own `pen` in weapons.yml.
+pen:
+  fists: 0
+  blunt: 0.08      # clubs and bats: they bruise through cloth, not plate
+  blade: 0.28      # an edge finds the seams
+  heavy: 0.4       # damage 50+ melee (an axe, a pick, a sledge) goes through
+  stab: 0.3        # a knife in the back
+  pellet: 0.04     # shot
+  gunBase: 0.12    # a bullet: this plus gunPerMv for every m/s of muzzle velocity over 300
+  gunPerMv: 0.001
+  max: 0.7
+# A headshot's multiplier (pellets get less: a head is a bigger share of a spread)
+head: { bullet: 2, pellet: 1.5 }
+# Spread, on top of the weapon's own (scripts/lib/ballistics.js spreadDeg)
+spread:
+  observation: 0.02   # per Observation over 5: a steadier eye
+  settle: 0.55        # seconds after raising the sights before they hold their best
+  settleBloom: 0.5    # extra spread at the instant you raise them, fading over `settle`
+  winded: 1.25        # out of breath: the barrel dances
+  tired: 1.1          # under 20 AP
+  frayed: 1.2         # sanity under a quarter: the hands shake

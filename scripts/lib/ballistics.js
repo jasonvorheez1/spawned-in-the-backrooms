@@ -6,6 +6,7 @@
 //   degrees at rest), zero (the range the sights are set for, m), req { h: Hardiness, guns: skill } (scripts/lib/stats.js handling).
 import { raycast } from 'builtin/physics'
 import { attrsOf, skillsOf, handling } from './stats.js'
+import { steady, headMul } from './combat.js'
 
 export const G = 9.81
 const DEF = { mv: 330, drag: 0.005, acc: [3.5, 1.0], zero: 25 }
@@ -21,6 +22,7 @@ export function spreadDeg(ctx, s, wp, w) {
   const P = prof(wp), H = handling(s, wp), k = skillsOf(s), ads = !!s.ads
   let d = (ads ? P.acc[1] : P.acc[0] * 0.7) * H.spread * (1.2 - 0.4 * (k.guns ?? 15) / 100)
   const v = ctx.self.velocity ?? { x: 0, y: 0, z: 0 }, sp = Math.hypot(v.x, v.z)
+  d *= steady(s, attrsOf(s), ctx.now()) // Observation, how long the sights have been up, breath and nerves (data/combat.yml)
   d *= 1 + Math.min(1, sp / 6) * (ads ? 0.4 : 0.5) // moving opens it up
   if (Math.abs(v.y ?? 0) > 1.2) d *= 1.8 // in the air
   if (s.crouch) d *= 0.78
@@ -78,7 +80,7 @@ export function fire(ctx, s, wp, w, eye, fwd, pitch, base) {
       const H0 = (e.tags?.includes?.('hound') ? HEADS.hound : e.tags?.includes?.('smiler') ? HEADS.smiler : 1.9) * (e.scale?.y ?? 1)
       const head = f.hit.position.y - (e.feetPosition?.y ?? 0) > 0.78 * H0
       b.body = true
-      const r = hits.get(e.id) ?? { m: e, dmg: 0, head: false, n: 0 }; r.dmg += per * energy * (head ? 2 : 1); r.head ||= head; r.n++; hits.set(e.id, r)
+      const r = hits.get(e.id) ?? { m: e, dmg: 0, head: false, n: 0 }; r.dmg += per * energy * (head ? headMul(n) : 1); r.head ||= head; r.n++; hits.set(e.id, r)
     } else if (!world) world = { hit: f.hit, dir: d }
   }
   return { bullets, targets: [...hits.values()], world, spread }

@@ -15,6 +15,7 @@ import { becomeCorpse } from './lib/l5-hostile.js'
 import { markKill } from './lib/witness.js'
 import { repKill } from './lib/rep.js'
 import D from './lib/data/difficulty.yml'
+import { penOf, vary } from './lib/combat.js'
 import { derived, canCarry, burden, npcMul, START, dmgMul, handling, skillsOf, spentOf, SKILLS, SKILL_MAX, dmgAfterArmor, lookOfNpc } from './lib/stats.js'
 import { parseCloth, wear, takeOff, wornRows, fullLook } from './lib/clothes.js'
 import { wMul, jamChance, isBroken, useWear, armorWearFor, cndOf, repairAmount, armorCnd, band } from './lib/condition.js'
@@ -354,19 +355,20 @@ export function onInput(ctx, input) {
     // aiming down the sights: a ranged weapon, button held, not mid-reload, not downed
     const sv = ctx.self.state, aw = W[sv.equipped]
     const ads = !!(input.held.aim && aw?.ranged && !sv.reloading && !(sv.downAt && ctx.now() - sv.downAt < 1200))
-    if (!!sv.ads !== ads) { sv.ads = ads; sound(ctx, 'gun-raise-cloth-rustle', 0.25, true) }
+    if (!!sv.ads !== ads) { sv.ads = ads; if (ads) sv.adsAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.25, true) }
   }
   if (input.pressed.flashlight) toggleLight(ctx)
 }
 
-function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
+function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pellets = 1) {
+  dmg = Math.max(1, Math.round(vary(ctx, dmg))) // every hit rolls its own 90% to 110% (data/combat.yml)
   if (s.studied && m.tags?.some((tg) => s.studied.split(',').some((k) => tg.includes(k)))) dmg = Math.round(dmg * 1.1) // read its Database page
   const npc = m.tags?.includes('npc')
   if (npc && m.state?.follow && ctx.place.players.some((p) => p.id === m.state.follow)) { // a companion: no friendly fire
     ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 1.7, z: m.feetPosition.z }, text: 'ALLY', color: '#9fd7ff', size: 0.8 }, { audience: { player: ctx.self.id } })
     return
   }
-  if (npc) dmg = dmgAfterArmor(lookOfNpc(m), dmg, false) // an agent's or survivor's clothes soak the hit like yours do
+  if (npc) dmg = pellets > 1 ? pellets * dmgAfterArmor(lookOfNpc(m), dmg / pellets, false, pen) : dmgAfterArmor(lookOfNpc(m), dmg, false, pen) // an agent's or survivor's clothes soak the hit like yours do: a shotgun's pellets one by one, and a hit's armor penetration takes some of it off
   m.state.hp -= dmg
   if (npc || m.tags?.includes('l61fc')) { m.state.angry = { ...(m.state.angry ?? {}), [ctx.self.id]: true }; m.state.fresh = { ...(m.state.fresh ?? {}), [ctx.self.id]: true } } // the camp remembers who shot first; a fresh shot spreads even after a pardon
   const hit = { x: m.feetPosition.x, y: m.feetPosition.y + 1.5, z: m.feetPosition.z }
@@ -465,7 +467,7 @@ function swing(ctx, power = 0) {
       const m = t.m
       if (t.head) ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: 'HEADSHOT', color: '#ffd23a', size: 1.2 })
       else if (crit) ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2, z: m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
-      hitTarget(ctx, s, m, Math.max(1, Math.round(t.dmg)), f, !wp.quiet)
+      hitTarget(ctx, s, m, Math.max(1, Math.round(t.dmg)), f, !wp.quiet, 0, penOf(wp, s.equipped), t.n ?? 1)
     }
     if (!res.targets.length && res.world) {
       const d = res.world.dir, h = Math.hypot(d.x, d.z) || 1
@@ -499,16 +501,16 @@ function swing(ctx, power = 0) {
     const m = found[0].m, dmg = Math.round((wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * wp.sneak)
     ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: `SNEAK CRIT x${wp.sneak}`, color: '#ff3a3a', size: 1.3 })
     ctx.emit('hitstop', { duration: 0.04 }, { audience: { player: ctx.self.id } }); s.lastSneak = { id: m.id, dmg, at: now }
-    sound(ctx, 'knife-stab-flesh-quiet', 0.6, true); hitTarget(ctx, s, m, dmg, f, false); return } }
+    sound(ctx, 'knife-stab-flesh-quiet', 0.6, true); hitTarget(ctx, s, m, dmg, f, false, 0, penOf(wp, s.equipped)); return } }
   const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? D.crit : 1) * (!wp.ranged && (s.firesaltUntil ?? 0) > ctx.now() ? L3I.firesalt.damage : 1)
   if (crit) ctx.emit('damageNumber', { position: { x: found[0].m.feetPosition.x, y: found[0].m.feetPosition.y + 2, z: found[0].m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
   if (wp.pellets) {
     // a spread of pellets: everything in the cone is hit, hard up close and weak at range
-    for (const { m, d } of found) hitTarget(ctx, s, m, Math.max(1, Math.round(base * Math.max(0.2, 1 - d / wp.range))), f, false)
+    for (const { m, d } of found) hitTarget(ctx, s, m, Math.max(1, Math.round(base * Math.max(0.2, 1 - d / wp.range))), f, false, 0, penOf(wp, s.equipped))
     return
   }
   found.sort((x, y) => x.d - y.d)
-  hitTarget(ctx, s, found[0].m, Math.round(base), f, !wp.quiet, power)
+  hitTarget(ctx, s, found[0].m, Math.round(base), f, !wp.quiet, power, penOf(wp, s.equipped))
   if (power) { const m = found[0].m, d = found[0].d || 1; ctx.emit('impulse', { target: m.id, impulse: { x: f.x * 260 * power, y: 60 * power, z: f.z * 260 * power } }) } // a heavy shoves them back
 }
 
