@@ -355,7 +355,7 @@ function lay(ctx) {
   });
   // wood-panelled walls: a dado of dark wood with a brass-edged rail, round the back and both sides (the open side faces the hall)
   const dado = (id, x, z, w, d) => { box(id, x, 0, z, w, 1.25, d, DARKWOOD); box(`${id}-rail`, x, 1.25, z, w + (d < w ? 0 : 0.06), 0.07, d + (d < w ? 0.06 : 0), WOOD); };
-  dado("l61-liq-dado-b", -7, -31.9, 13.6, 0.1); dado("l61-liq-dado-l", -13.86, -27.1, 0.1, 9.7); dado("l61-liq-dado-r", -0.14, -27.1, 0.1, 9.7);
+  dado("l61-liq-dado-b", -7, -31.86, 13.6, 0.1); dado("l61-liq-dado-l", -13.82, -27.1, 0.1, 9.7); dado("l61-liq-dado-r", -0.18, -27.1, 0.1, 9.7);
   // a coffered ceiling: dark beams across the plaster
   box("l61-liq-ceil", -7, 3.88, -27.1, 13.7, 0.12, 9.8, { color: "oklch(0.22 0.04 30)", roughness: 0.8 });
   for (let k = 0; k < 5; k++) box(`l61-liq-beam-${k}`, -12 + k * 3, 3.7, -27.1, 0.22, 0.2, 9.8, DARKWOOD, { physics: undefined });
