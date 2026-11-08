@@ -78,6 +78,7 @@ export function noclipUi(ctx, player) {
 // drawn from s.xfer = { at, to, kind } like the title card it replaces (scripts/ui.js xferCard). Driven by negative delays so a re-render never restarts them.
 //   floor   you fall through the floor: wallpaper and carpet streak UP past you, an impact, the new level swims in
 //   wall    you clip through a wall: the world shears into jagged slices that slide apart and close, split in red and cyan
+//   water   you sink through a lake bed: dark water, bubbles streaming up past you, then light breaking overhead as you surface
 //   glitch  a plain threshold: static, scanlines and a flicker, then the card
 export const CLIP_T = 2.6
 const CLIP_CSS = `<style>
@@ -90,6 +91,9 @@ const CLIP_CSS = `<style>
 @keyframes xc-sl{0%,10%{transform:translateX(0)}30%{transform:translateX(var(--d))}46%{transform:translateX(calc(var(--d) * -.5))}64%,100%{transform:translateX(0)}}
 @keyframes xc-seam{0%,6%{opacity:0;width:2px}20%,50%{opacity:1;width:7px}70%,100%{opacity:0;width:2px}}
 @keyframes xc-flick{0%,6%,12%,18%{opacity:1}9%,15%{opacity:.15}24%,100%{opacity:1}}
+@keyframes xc-bub{0%{transform:translateY(0)}100%{transform:translateY(-120vh)}}
+@keyframes xc-dark{0%{opacity:.2}45%{opacity:1}70%{opacity:1}100%{opacity:.1}}
+@keyframes xc-surf{0%,62%{opacity:0}74%{opacity:.9}100%{opacity:0}}
 @keyframes xc-fade{0%,40%{opacity:1}100%{opacity:0}}
 .xc{position:absolute;inset:0;overflow:hidden;pointer-events:none;font-family:inherit;color:#f2c14e}
 .xc .ttl{position:absolute;left:0;right:0;top:40%;text-align:center;text-shadow:2px 2px #000,0 0 22px #000}
@@ -110,6 +114,15 @@ export function clipCard(x, now, names) {
     return wrap(`<div class="fl" style="${f(0.3)}"></div><div class="fl" style="opacity:.5;mix-blend-mode:screen;transform:scaleX(1.6);${f(0.14)}"></div>
       <div style="position:absolute;inset:0;background:radial-gradient(transparent 30%,#000 100%);opacity:.8"></div>
       <div style="position:absolute;inset:0;background:#fffbe0;${an('xc-hit', 2.4)}"></div>${title}`, true)
+  }
+  if (x.kind === 'water') {
+    let b = ''
+    for (let i = 0; i < 26; i++) { const l = (i * 37) % 100, sz = 4 + (i * 13) % 14, dl = ((i * 0.23) % 2.2).toFixed(2), sp = (1.2 + (i % 5) * 0.25).toFixed(2)
+      b += `<div style="position:absolute;left:${l}%;bottom:-30px;width:${sz}px;height:${sz}px;border-radius:50%;border:1.5px solid rgba(190,230,255,.7);background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.6),transparent 60%);animation:xc-bub ${sp}s ease-in infinite;animation-delay:-${dl}s"></div>` }
+    return wrap(`<div style="position:absolute;inset:0;background:linear-gradient(180deg,#2d4f5c 0%,#0b1d24 55%,#020608 100%)"></div>
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% -10%,rgba(160,220,255,.35),transparent 60%);${an('xc-fade', 2.4)}"></div>
+      ${b}<div style="position:absolute;inset:0;background:#000;${an('xc-dark', 2.4)}"></div>
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,#cfe8ff 0%,rgba(80,140,180,.6) 40%,transparent 80%);${an('xc-surf', 2.4)}"></div>${title}`, false)
   }
   if (x.kind === 'wall') {
     let sl = ''

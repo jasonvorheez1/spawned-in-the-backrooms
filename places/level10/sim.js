@@ -3,7 +3,7 @@
 //  - following the track far enough leads to Level 11 (l10-road-north at its far end, l10-road-south behind the spawn)
 //  - swimming down into the lake leads to an aquatic level: Level 7 (l10-lake-deep)
 export const cadence = "1s";
-const V = 6;
+const V = 7;
 const BRK = (mat, hp) => ({ mat, hp, maxHp: hp });
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BARN = (w, d, h, ridge, wall, door) => ({ primitive: { kind: "scripted", script: "scripts/barn10.js", params: { w, d, h, ridge, wall, door } }, physics: "static" });
@@ -16,7 +16,14 @@ function lay(ctx) {
   sp("l10-from-l11", { feetPosition: T(0, 30, 0.2), rotation: { yaw: 0 } });
   sp("l10-road-north", { ...DOOR("level11#lv10-arrive", 8, 4, 2), feetPosition: T(0, -282, 0) });
   sp("l10-road-south", { ...DOOR("level11#lv10-arrive", 8, 4, 2), feetPosition: T(0, 72, 0) });
-  sp("l10-lake-deep", { ...DOOR("level7#l7-from-l6", 8, 1.2, 8), feetPosition: { x: 70, y: -2.6, z: -95 } });
+  sp("l10-lake-deep", { ...DOOR("level7#l7-from-l10", 5, 1.2, 5), feetPosition: { x: 70, y: -3.4, z: -95 } });
+  // what draws you down: the lake's deepest point is a dark hole in the bed, a cold column of bubbles rising out of it, the water above it a shade darker
+  sp("l10-lake-hole", { feetPosition: { x: 70, y: -2.98, z: -95 }, primitive: { kind: "circle", radius: 3.4, segments: 40 }, rotation: { pitch: -90 }, material: { color: "oklch(0.06 0.01 230)", roughness: 1 } });
+  sp("l10-lake-hole-rim", { feetPosition: { x: 70, y: -2.97, z: -95 }, primitive: { kind: "ring", innerRadius: 3.2, outerRadius: 5, thetaSegments: 40 }, rotation: { pitch: -90 }, material: { color: "oklch(0.2 0.025 70)", roughness: 1, transparent: true, opacity: 0.85 } });
+  sp("l10-lake-bubbles", { feetPosition: { x: 70, y: -2.9, z: -95 }, visibleRange: { max: 60 }, fx: { script: `fx
+pop bub rate=?mobile:8|16 on=disc(2.6) life=1.6..2.6 v=up(.8..1.4) size=.02..0.06 acc=curl(.4)*.3 col=<.8,.9,1> a=.7>.5:.7>0 sz=$size r=sprite(soft-disc,add)
+pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2 col=<.2,.22,.2> a=0>.25:.2>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)` } });
+  sp("l10-lake-hum", { feetPosition: { x: 70, y: -2, z: -95 }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-deep-underwater-low-drone-with-faint-bubbles-loop.mp3", gain: 0.35, loop: true, spatial: true, maxDistance: 14, bus: "Ambience" } });
   // the road out: a leaning farm sign where the track leaves, and the city's glow felt in the fog at the far end
   sp("l10-sign-city", { feetPosition: T(4, -270, 0), rotation: { yaw: 15 }, primitive: { kind: "box", width: 1.4, height: 0.5, depth: 0.05 }, material: { color: "oklch(0.75 0.02 90)", roughness: 0.9 },
     ui: '<div face="front" width="1.4m" style="font-family:Arial,sans-serif;font-weight:800;color:#2b2b2b;text-align:center;font-size:120px;line-height:1">CITY →</div>' });

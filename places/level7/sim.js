@@ -78,7 +78,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 24;
+const V = 25;
 // 24: Wikidot canonical drowned antique entrance room (stacked bureau drawers, armoire with draped linen & silver tea service, stone hearth, turned pedestal, show-don't-tell)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
@@ -527,6 +527,8 @@ function lay(ctx) {
   });
 
   // Seawatch Outpost Summit Checkpoint & Signboard (x: 46, y: 7.0, z: -120)
+  // Arrival from Level 10's lake: you come up out of deep water a short swim off the Seawatch pier
+  ctx.spawn("l7-from-l10", { feetPosition: { x: 36, y: -2.2, z: -96 }, rotation: { yaw: 200 } });
   ctx.spawn("l7-seawatch-spawn", { feetPosition: { x: 45.0, y: 7.1, z: -116.0 }, rotation: { yaw: 180 } });
   ctx.spawn("l7-seawatch-sign", {
     feetPosition: { x: 44.5, y: 9.2, z: -114.5 },
