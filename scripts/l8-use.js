@@ -32,19 +32,10 @@ export const ears = {
       const ask = (s.ask ??= {});
       if (!(now - (ask[uid] ?? -1e9) < 10000)) { ask[uid] = now; return say(who, `${cn} looks up from the ladle. "Soup's three Backdollars a bowl. You want one?" (Press again to pay $3.00)`, ctx); }
       delete ask[uid]; w.cents -= PRICE; cool[uid] = now; snd("pot-lid-clink-and-ladle-in-soup", 0.5);
-      const hp = who.feetPosition, f = { x: hp.x + (pos.x - hp.x) * 0.35, z: hp.z + (pos.z - hp.z) * 0.35 }; // set down between you and the pot, on the ground you stand on (a small dynamic bowl fell through the cave mesh)
-      ctx.spawn({ tags: ["usable", "soupbowl"], feetPosition: { x: f.x, y: hp.y + 0.01, z: f.z }, lifetime: 600, behavior: "scripts/l8-use.js",
-        primitive: { kind: "cylinder", radiusTop: 0.13, radiusBottom: 0.07, height: 0.08 }, material: { color: "oklch(0.86 0.02 80)", roughness: 0.6 },
-        physics: { body: "static", collider: "cylinder" },
-        state: { kind: "bowl", name: `Bowl of ${cn}'s soup`, verb: "Eat", info: "Hot. Z to pick it up and throw it.", tint: "#e8c070", mat: "ceramic", hp: 4, maxHp: 4 },
-        children: [{ feetPosition: { x: 0, y: 0.055, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.115, radiusBottom: 0.115, height: 0.015 }, material: { color: "oklch(0.62 0.12 70)", roughness: 0.25 } }] });
-      return say(who, `${cn} ladles you a bowl and pockets three Backdollars. "Eat it or wear it, it's yours now." (−$3.00)`, ctx);
+      w.soup = (w.soup ?? 0) + 1; // an item: eat it or throw it from the inventory (scripts/player.js)
+      return say(who, `${cn} ladles you a bowl and pockets three Backdollars. "Eat it or wear it, it's yours now." (−$3.00 · Bowl of soup in your inventory: eat it, or throw it)`, ctx);
     }
-    if (s.kind === "bowl") {
-      snd("pot-lid-clink-and-ladle-in-soup", 0.4); w.hunger = Math.min(100, (w.hunger ?? 100) + 45); w.hp = Math.min(w.maxHp ?? 1e9, (w.hp ?? 0) + 25);
-      ctx.destroy(ctx.self.id);
-      return say(who, "Steaming hot soup. You slurp it down too gratefully to ask what the chunks are. (Hunger +45, a little health)", ctx);
-    }
+    if (s.kind === "bowl") { w.soup = (w.soup ?? 0) + 1; ctx.destroy(ctx.self.id); return say(who, "You pick up the bowl of soup. (In your inventory: eat it, or throw it)", ctx); }
     if (s.kind === "fire") {
       if (now - (cool[uid] ?? -1e9) < 40000) return say(who, "You are already as dry as the cave allows.", ctx);
       cool[uid] = now; w.sanity = Math.min(100, (w.sanity ?? 80) + 12); w.hp = Math.min(w.maxHp ?? 1e9, (w.hp ?? 0) + 10);

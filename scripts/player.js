@@ -641,6 +641,10 @@ function invAction(ctx, d) {
     s.meat = { ...s.meat, [c]: n - 1 }; s.hp = Math.min(maxHp(s.level, s), (s.hp ?? 0) + MEAT[c].hp); s.hunger = Math.min(100, (s.hunger ?? 100) + MEAT[c].food)
     s.notice = { text: `You eat the ${MEAT[c].name.toLowerCase()} · +${MEAT[c].hp} HP`, at: ctx.now() }; sound(ctx, 'eating-chewing-food', 0.6, true); return }
   if (d.k === 'splash') { s.invOpen = false; splash(ctx); return }
+  if (d.k === 'soupEat') { if ((s.soup ?? 0) <= 0) return; s.soup -= 1
+    s.hunger = Math.min(100, (s.hunger ?? 100) + 45); s.hp = Math.min(maxHp(s.level, s), (s.hp ?? 0) + 25)
+    s.notice = { text: 'You slurp the soup down too gratefully to ask what the chunks are · +25 HP', at: ctx.now() }; sound(ctx, 'eating-chewing-food', 0.6, true); return }
+  if (d.k === 'soupThrow') { s.invOpen = false; soupThrow(ctx); return }
   if (d.k === 'firesalt') { // rub a pinch on the blade or head: melee hits burn harder for a while
     if ((s.firesalt ?? 0) <= 0 || W[s.equipped]?.ranged || s.equipped === 'fists') { s.notice = { text: 'Hold a melee weapon to rub firesalt on it', at: ctx.now() }; return }
     s.firesalt -= 1; s.firesaltUntil = ctx.now() + L3I.firesalt.seconds * 1000
@@ -735,6 +739,36 @@ function splash(ctx) {
     ctx.emit('hitstop', { duration: 0.04 }, { audience: { player: ctx.self.id } })
     return
   }
+}
+
+// a bowl of scalding soup flung at whatever is in front of you (her pick: 7 m reach, 22 damage, a 1 s stagger)
+const SOUP = `fx
+pop broth burst=45..60 life=.35..0.7 v=<%dir|0,0,-1>*(4..7)+sdir()*(.8..1.6)+up(1.2) size=.03..0.06 acc=grav()+drag(.5) col=<.78,.55,.22> a=.9>0 floor=stick r=sprite(soft-disc,alpha,velocity,.02)
+pop chunks burst=6..9 life=.5..0.9 v=<%dir|0,0,-1>*(3..5)+up(1.5..2.5) size=.05..0.08 acc=grav() col=<.45,.3,.18> a=1 floor=stick r=sprite(soft-disc,alpha)
+pop steam burst=8 life=.6..1.1 v=<%dir|0,0,-1>*(1.5..2.5)+up(.8) size=.25..0.4 acc=buoy(.6)+drag(2) col=<.92,.9,.84> a=0>.35:.25>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)`
+function soupThrow(ctx) {
+  const s = ctx.self.state, now = ctx.now()
+  if ((s.soup ?? 0) <= 0) { s.notice = { text: 'No soup to throw', at: now }; return }
+  s.soup -= 1
+  const p = ctx.self.feetPosition, f = walkOf(ctx).fwd ?? { x: 0, z: -1 }
+  ctx.emit('fx', { position: { x: p.x + f.x * 0.5, y: p.y + 1.3, z: p.z + f.z * 0.5 }, script: SOUP, params: { dir: { x: f.x, y: 0.1, z: f.z } } })
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-water-splash-thrown-from-bottle.mp3', position: chest(ctx), volume: 0.8, maxDistance: 20 })
+  let best = null, bd = 7
+  for (const m of ctx.query({ anyTags: ['smiler', 'lurker', 'hound', 'stealer', 'moths', 'l8spider', 'l8-hostile'], radius: 7 })) {
+    if (m.state?.dead || (m.state?.hp ?? 1) <= 0) continue
+    const dx = m.feetPosition.x - p.x, dz = m.feetPosition.z - p.z, d = Math.hypot(dx, dz)
+    if (d > 0.4 && (dx * f.x + dz * f.z) / d < 0.8) continue
+    if (d < bd) { bd = d; best = m }
+  }
+  if (!best) { s.notice = { text: 'The soup splatters across the stone', at: now }; return }
+  best.state.hp -= 22; best.state.stunUntil = now + 1000; best.state.splashedAt = now
+  const at = { x: best.feetPosition.x, y: best.feetPosition.y + 1, z: best.feetPosition.z }
+  ctx.emit('damageNumber', { position: at, value: 22, color: '#e8b060' })
+  ctx.emit('squash', { target: best.id, axis: 'y', intensity: 0.3, duration: 0.2 })
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-ceramic-bowl-shatter-on-stone.mp3', position: at, volume: 0.85, maxDistance: 22 })
+  heard(ctx, { clip: '/cdn/moodboard-gothic-horror/sfx-flesh-sizzle-steam-hiss.mp3', position: at, volume: 0.8, maxDistance: 22 })
+  ctx.emit('hitstop', { duration: 0.05 }, { audience: { player: ctx.self.id } })
+  s.notice = { text: `Scalding soup, right in the face · ${best.state?.name ?? 'it'} staggers`, at: now }
 }
 
 function toggleLight(ctx) {
