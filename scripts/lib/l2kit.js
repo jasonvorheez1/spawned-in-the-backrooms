@@ -1,4 +1,4 @@
-// Level 2's modelled kit: Blender modules (art/level2/build.py -> scripts/lib/l2kit-data/<part>.js, AO and grime baked
+// Level 2's modelled kit: Blender modules (art/level2/build.py, compact.py, encode.py -> scripts/lib/l2kit-data/<part>.js, packed; AO and grime baked
 // into vertex colour) drawn as ONE instance set per part, placed per cell from the seeded layout (scripts/lib/level2.js).
 // Visual only: scripts/level2-geo.js keeps the collider shells. Walls follow params.cut (breakables.syncWalls).
 import { N, S, H, HALF, isOpen, openings, zoneOf, hash, cellCenter, inHall, inPipes, sideOf, HALL_H, isStairCell } from "./level2.js";
@@ -69,8 +69,39 @@ export function placements(part, params = {}) {
   }
   return P;
 }
+// unpacks a module file written by art/level2/encode.py into { hi, lo, uv } groups of { m, p, n, u, c, i }
+const B64 = new Uint8Array(128); "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".split("").forEach((ch, i) => { B64[ch.charCodeAt(0)] = i; });
+const UNPACKED = new Map();
+export function unpack(D) {
+  if (UNPACKED.has(D)) return UNPACKED.get(D);
+  const s = D.b, len = Math.floor(s.length * 3 / 4) - (s.endsWith("==") ? 2 : s.endsWith("=") ? 1 : 0), by = new Uint8Array(len);
+  for (let i = 0, o = 0; i < s.length; i += 4) {
+    const n = (B64[s.charCodeAt(i)] << 18) | (B64[s.charCodeAt(i + 1)] << 12) | (B64[s.charCodeAt(i + 2)] << 6) | B64[s.charCodeAt(i + 3)];
+    if (o < len) by[o++] = n >> 16; if (o < len) by[o++] = (n >> 8) & 255; if (o < len) by[o++] = n & 255;
+  }
+  let at = 0; const u16 = () => { const v = by[at] | (by[at + 1] << 8); at += 2; return v; };
+  const out = { hi: [], lo: [], uv: D.uv };
+  for (const h of D.g) {
+    const [lv, m, nv, ni, x0, y0, z0, x1, y1, z1, u0, v0, u1, v1] = h, p = new Array(nv * 3), n = new Array(nv * 3), c = new Array(nv * 3), i = new Array(ni);
+    const lo = [x0, y0, z0], sp = [(x1 - x0) / 65535, (y1 - y0) / 65535, (z1 - z0) / 65535];
+    for (let k = 0; k < nv * 3; k++) p[k] = lo[k % 3] + u16() * sp[k % 3];
+    for (let k = 0; k < nv; k++) {
+      let x = by[at++] / 255 * 2 - 1, y = by[at++] / 255 * 2 - 1; const z = 1 - Math.abs(x) - Math.abs(y);
+      if (z < 0) { const ox = x; x = (1 - Math.abs(y)) * (ox >= 0 ? 1 : -1); y = (1 - Math.abs(ox)) * (y >= 0 ? 1 : -1); }
+      const l = Math.hypot(x, y, z) || 1; n[k * 3] = x / l; n[k * 3 + 1] = y / l; n[k * 3 + 2] = z / l;
+    }
+    for (let k = 0; k < nv; k++) { const v = u16(); c[k * 3] = (v >> 11) / 31; c[k * 3 + 1] = ((v >> 5) & 63) / 63; c[k * 3 + 2] = (v & 31) / 31; }
+    let u = null;
+    if (D.uv) { u = new Array(nv * 2); for (let k = 0; k < nv; k++) { u[k * 2] = u0 + u16() * (u1 - u0) / 65535; u[k * 2 + 1] = v0 + u16() * (v1 - v0) / 65535; } }
+    for (let k = 0; k < ni; k++) i[k] = u16();
+    (lv ? out.lo : out.hi).push({ m, p, n, c, u, i });
+  }
+  UNPACKED.set(D, out);
+  return out;
+}
 // emits one module (hi then lo) and its instance records
-export function kit(ctx, part, D) {
+export function kit(ctx, part, packed) {
+  const D = unpack(packed);
   const pos = [], nor = [], uvs = [], col = [];
   const emit = (groups) => {
     let n = 0;
@@ -80,7 +111,7 @@ export function kit(ctx, part, D) {
       for (let k = 0; k < I.length; k += 3) {
         const a = I[k] * 3, b = I[k + 1] * 3, c = I[k + 2] * 3, p = g.p;
         ctx.tri(p[a], p[a + 1], p[a + 2], p[b], p[b + 1], p[b + 2], p[c], p[c + 1], p[c + 2]);
-        for (const v of [I[k], I[k + 1], I[k + 2]]) { nor.push(g.n[v * 3], g.n[v * 3 + 1], g.n[v * 3 + 2]); uvs.push(g.u[v * 2], g.u[v * 2 + 1]); col.push(Math.min(1, g.c[v * 3] * gn), Math.min(1, g.c[v * 3 + 1] * gn), Math.min(1, g.c[v * 3 + 2] * gn)); }
+        for (const v of [I[k], I[k + 1], I[k + 2]]) { nor.push(g.n[v * 3], g.n[v * 3 + 1], g.n[v * 3 + 2]); if (g.u) uvs.push(g.u[v * 2], g.u[v * 2 + 1]); col.push(Math.min(1, g.c[v * 3] * gn), Math.min(1, g.c[v * 3 + 1] * gn), Math.min(1, g.c[v * 3 + 2] * gn)); }
         n += 3;
       }
     }
@@ -94,7 +125,7 @@ export function kit(ctx, part, D) {
     lods: far ? [{ indices: [0, nLo], distance: 0 }] : [{ indices: [0, nHi], distance: 0 }, { indices: [nHi, nHi + nLo], distance: part === "lamp" || part === "tray" ? 12 : 18 }],
     bounds: { min: [-HALF - 2, -1, -HALF - 2], max: [HALF + 2, HALL_H + 1, HALF + 2] } });
   for (const r of recs) ctx.instance(r);
-  return { normals: nor, uvs, colors: col };
+  return D.uv ? { normals: nor, uvs, colors: col } : { normals: nor, colors: col, uvProjection: "triplanar" };
 }
 
 // lays the kit once per room (ids l2kit-<part>) and turns the old shell and details to their kit mode; safe to call again
