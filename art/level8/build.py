@@ -10,11 +10,12 @@ only = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else ["cave", "sp
 R = random.Random(808)
 
 def reset(): bpy.ops.wm.read_factory_settings(use_empty=True)
-def mat(name, rgb, rough=0.9, metal=0.0, emit=None):
+def mat(name, rgb, rough=0.9, metal=0.0, emit=None, emit_s=3.0):
     m = bpy.data.materials.new(name); m.use_nodes = True
+    m.diffuse_color = (*(emit if emit else rgb), 1); m.roughness = rough; m.metallic = metal
     b = m.node_tree.nodes["Principled BSDF"]
     b.inputs["Base Color"].default_value = (*rgb, 1); b.inputs["Roughness"].default_value = rough; b.inputs["Metallic"].default_value = metal
-    if emit: b.inputs["Emission Color"].default_value = (*emit, 1); b.inputs["Emission Strength"].default_value = 3.0
+    if emit: b.inputs["Emission Color"].default_value = (*emit, 1); b.inputs["Emission Strength"].default_value = emit_s
     m.use_backface_culling = False
     return m
 def smooth(a, b, x):
@@ -45,8 +46,17 @@ def spine(ds=2.0):
     return pts
 
 def build_cave():
-    rock = mat("rock", (0.075, 0.07, 0.065), 0.95)
+    # Multi-material palette for the karst cavern system
+    rock = mat("rock", (0.085, 0.08, 0.075), 0.93)
+    wet_rock = mat("wet_rock", (0.045, 0.05, 0.055), 0.28, 0.15)
+    flowstone = mat("flowstone", (0.28, 0.24, 0.18), 0.62, 0.05)
+    road_bed = mat("road_bed", (0.13, 0.12, 0.105), 0.88)
+    biolum = mat("biolum", (0.12, 0.55, 0.52), 0.35, 0.1, emit=(0.15, 0.78, 0.72), emit_s=2.8)
+    tar_rock = mat("tar_rock", (0.02, 0.018, 0.025), 0.16, 0.25)
+
     me = bpy.data.meshes.new("cave"); ob = bpy.data.objects.new("cave", me); bpy.context.collection.objects.link(ob)
+    for m in (rock, wet_rock, flowstone, road_bed, biolum, tar_rock): ob.data.materials.append(m)
+
     bm = bmesh.new(); N = 34; rings = []; info = []
     for s, x, z in spine():
         h = heading(s); rx, ry = prof(s); fy = floor_y(s); cy = fy + 0.62 * ry
@@ -60,11 +70,29 @@ def build_cave():
             if uy < -0.62 * ry: uy = -0.62 * ry + 0.2 * noise.noise(Vector((x * 0.4, z * 0.4, th))) * (1 if rx > 5 else 0.5)  # a flat, rubbly floor
             p = base + right * ux + Vector((0, uy, 0)); ring.append(bm.verts.new(p))
         rings.append(ring); info.append((s, x, fy, z, h, rx, ry))
-    for r0, r1 in zip(rings, rings[1:]):
+
+    for idx, (r0, r1) in enumerate(zip(rings, rings[1:])):
+        s, x, fy, z, h, rx, ry = info[idx]
         for k in range(N):
             a, b, c, d = r0[k], r0[(k + 1) % N], r1[(k + 1) % N], r1[k]
-            try: bm.faces.new((a, d, c, b))  # the winding that faces inward
-            except ValueError: pass
+            try:
+                f = bm.faces.new((a, d, c, b))  # the winding that faces inward
+                th = (k + 0.5) / N * math.tau
+                uy_norm = math.sin(th)
+                ux_norm = abs(math.cos(th))
+                # Assign material index based on cave zone and height/angle
+                if uy_norm < -0.58 and ux_norm * rx < 2.2 and s >= 32:
+                    f.material_index = 3  # road_bed: the worn 9th Road path
+                elif 352 <= s <= 404 and uy_norm < -0.25:
+                    f.material_index = 5  # tar_rock: glossy pitch-stained basin
+                elif (s <= 38 or (160 <= s <= 214) or (218 <= s <= 268 and uy_norm < -0.35)) and uy_norm < -0.15:
+                    f.material_index = 1  # wet_rock: glistening damp walls & floor
+                elif uy_norm > 0.22 and noise.noise(Vector((x * 0.11, z * 0.11, k * 0.25))) > 0.28:
+                    f.material_index = 2  # flowstone: pale calcite wall/vault drapery veins
+                else:
+                    f.material_index = 0  # rock
+            except ValueError:
+                pass
     for ring, rev in ((rings[0], False), (rings[-1], True)):  # the shell is sealed at both ends
         try: bm.faces.new(list(reversed(ring)) if rev else ring)
         except ValueError: pass
@@ -78,22 +106,73 @@ def build_cave():
     print("inward faces", inward, "of", total)
     if inward < total / 2: bmesh.ops.reverse_faces(bm, faces=bm.faces[:]); bm.normal_update()
     bm.to_mesh(me); bm.free()
-    ob.data.materials.append(rock)
     for p in ob.data.polygons: p.use_smooth = True
-    # stalactites hanging from the ceiling and stalagmites standing on the floor, in every chamber, and a few in the tunnels
+
+    # Keep exact RNG sequence for the 210 primary stalactites & stalagmites, now properly oriented along vertical Y axis!
     objs = [ob]
     for i in range(210):
         j = R.randrange(2, len(info) - 2); s, x, fy, z, h, rx, ry = info[j]
         if rx < 5 and R.random() < 0.8: continue
-        up = R.random() < 0.55
+        up = R.random() < 0.55  # True = hanging from ceiling (-Y), False = rising from floor (+Y)
         off = R.uniform(-0.72, 0.72) * rx; right = Vector((math.cos(h), 0, math.sin(h)))
         L = R.uniform(0.9, 2.8) * (1.4 if rx > 8 else 0.7); w = L * R.uniform(0.14, 0.24)
-        ceil = fy + 0.62 * ry + ry * math.sqrt(max(0.04, 1 - (off / rx) ** 2)) * 0.92
-        base_y = ceil - 0.2 if up else fy
-        bpy.ops.mesh.primitive_cone_add(vertices=7, radius1=w, radius2=0.02, depth=L, location=(x + right.x * off, base_y + (-L / 2 if up else L / 2), z + right.z * off))
+        # Keep the center road walkable for ground stalagmites
+        off_use = off
+        if not up and abs(off_use) < 2.2:
+            off_use = (2.3 + abs(off_use) * 0.5) * (1 if off_use >= 0 else -1)
+            if abs(off_use) > 0.75 * rx: continue
+        ceil = fy + 0.62 * ry + ry * math.sqrt(max(0.04, 1 - (off_use / rx) ** 2)) * 1.05
+        base_y = min(14.45, ceil) if up else max(-2.35, fy - 0.15)
+        cy_pos = base_y - L / 2 if up else base_y + L / 2
+        if cy_pos - L / 2 < -2.48 or cy_pos + L / 2 > 14.52: continue
+        loc_x, loc_z = x + right.x * off_use, z + right.z * off_use
+        use_flow = (i % 3 == 0) or (216 <= s <= 270 and i % 2 == 0)
+        chosen_mat = flowstone if use_flow else rock
+        # Rotate cone +Z tip to point -Y (hanging stalactite) or +Y (standing stalagmite)
+        rot_x = math.pi / 2 if up else -math.pi / 2
+        bpy.ops.mesh.primitive_cone_add(vertices=8, radius1=w, radius2=0.02, depth=L, location=(loc_x, cy_pos, loc_z), rotation=(rot_x, i * 0.7, 0))
         c = bpy.context.active_object
-        if up: c.rotation_euler.x = math.pi
-        c.data.materials.append(rock); objs.append(c)
+        c.data.materials.append(chosen_mat); objs.append(c)
+
+    # Secondary detail pass: fluted karst pillars, twin stalactite icicles, and glowing crystal shards in Hyperspace Lane
+    R2 = random.Random(1808)
+    for j in range(6, len(info) - 6, 3):
+        s, x, fy, z, h, rx, ry = info[j]
+        right = Vector((math.cos(h), 0, math.sin(h)))
+        fwd = Vector((math.sin(h), 0, -math.cos(h)))
+        # Glowing cyan crystal clusters & ceiling draperies in Hyperspace Lane (s=216..270) and scattered caverns
+        if (216 <= s <= 272) or (rx > 8 and j % 9 == 0):
+            for side_sign in (-1, 1):
+                off = side_sign * R2.uniform(0.38, 0.72) * rx
+                ceil = fy + 0.62 * ry + ry * math.sqrt(max(0.04, 1 - (off / rx) ** 2)) * 1.05
+                if ceil > 14.45: continue
+                px, pz = x + right.x * off, z + right.z * off
+                for k in range(3):
+                    cl = R2.uniform(0.85, 1.75)
+                    cw = cl * R2.uniform(0.11, 0.18)
+                    dx = R2.uniform(-0.28, 0.28); dz = R2.uniform(-0.28, 0.28)
+                    tilt_x = math.pi / 2 + R2.uniform(-0.18, 0.18)
+                    tilt_z = R2.uniform(-0.18, 0.18)
+                    bpy.ops.mesh.primitive_cone_add(vertices=6, radius1=cw, radius2=0.015, depth=cl, location=(px + dx, ceil - cl * 0.42, pz + dz), rotation=(tilt_x, k * 1.1, tilt_z))
+                    cr = bpy.context.active_object
+                    cr.data.materials.append(biolum if 216 <= s <= 272 else flowstone)
+                    objs.append(cr)
+        # Fluted floor-to-ceiling karst columns near chamber walls
+        if rx >= 8.5 and j % 6 == 0:
+            for side_sign in (-1, 1):
+                if R2.random() < 0.45: continue
+                off = side_sign * R2.uniform(0.58, 0.74) * rx
+                ceil = fy + 0.62 * ry + ry * math.sqrt(max(0.04, 1 - (off / rx) ** 2)) * 1.06
+                y0 = max(-2.35, fy - 0.2); y1 = min(14.45, ceil)
+                col_h = y1 - y0
+                if col_h < 2.0: continue
+                rad = R2.uniform(0.28, 0.52)
+                px, pz = x + right.x * off, z + right.z * off
+                bpy.ops.mesh.primitive_cylinder_add(vertices=9, radius=rad, depth=col_h, location=(px, (y0 + y1) * 0.5, pz), rotation=(math.pi / 2, 0, 0))
+                col = bpy.context.active_object
+                col.data.materials.append(flowstone if R2.random() < 0.65 else rock)
+                objs.append(col)
+
     bpy.ops.object.select_all(action="DESELECT")
     for o in objs: o.select_set(True)
     bpy.context.view_layer.objects.active = ob; bpy.ops.object.join()
@@ -104,30 +183,93 @@ def build_cave():
     out["road"] = [[t[0], round(t[1], 2), round(t[2], 2), round(t[3], 2), round(math.degrees(t[4]), 1)] for t in info[::5]]
     return "cave_road", out
 
-# ---------------------------------------------------------------- a cave spider (a metre across, eight legs, a bright cluster of eyes)
+# ---------------------------------------------------------------- a cave spider (detailed Backrooms Arachnid, eight multi-jointed legs, glowing eye cluster, dorsal markings)
 def build_spider():
-    body = mat("spider", (0.035, 0.028, 0.025), 0.45, 0.2); eyes = mat("eyes", (0.9, 0.05, 0.03), 0.3, 0, emit=(1.0, 0.1, 0.05)); fang = mat("fang", (0.5, 0.42, 0.3), 0.5)
-    def sph(loc, sc, m):
-        bpy.ops.mesh.primitive_uv_sphere_add(segments=14, ring_count=10, location=loc); o = bpy.context.active_object; o.scale = sc
-        bpy.ops.object.transform_apply(scale=True); o.data.materials.append(m)
+    body = mat("spider", (0.05, 0.038, 0.032), 0.38, 0.25)
+    joint = mat("joint", (0.18, 0.11, 0.07), 0.5, 0.15)
+    mark = mat("mark", (0.78, 0.09, 0.04), 0.35, 0.1, emit=(0.65, 0.07, 0.02), emit_s=1.8)
+    eyes = mat("eyes", (0.98, 0.08, 0.04), 0.2, 0.0, emit=(1.0, 0.14, 0.05), emit_s=4.0)
+    fang = mat("fang", (0.42, 0.31, 0.19), 0.25, 0.35)
+
+    def sph(loc, sc, m, rot=(0, 0, 0), segs=16, rings=12):
+        bpy.ops.mesh.primitive_uv_sphere_add(segments=segs, ring_count=rings, location=loc, rotation=rot)
+        o = bpy.context.active_object; o.scale = sc
+        bpy.ops.object.transform_apply(location=False, rotation=True, scale=True); o.data.materials.append(m)
         for p in o.data.polygons: p.use_smooth = True
         return o
-    def seg(a, b, r, m):
+
+    def seg(a, b, r1, r2, m, verts=10):
         a, b = Vector(a), Vector(b); d = b - a
-        bpy.ops.mesh.primitive_cylinder_add(vertices=7, radius=r, depth=d.length, location=(a + b) / 2); o = bpy.context.active_object
+        bpy.ops.mesh.primitive_cone_add(vertices=verts, radius1=r1, radius2=r2, depth=d.length, location=(a + b) / 2)
+        o = bpy.context.active_object
         o.rotation_euler = d.to_track_quat("Z", "Y").to_euler(); o.data.materials.append(m)
         for p in o.data.polygons: p.use_smooth = True
         return o
-    sph((0, 0.42, 0.34), (0.3, 0.46, 0.3), body); sph((0, -0.12, 0.3), (0.2, 0.22, 0.17), body)  # abdomen, cephalothorax
+
+    # Abdomen (opisthosoma) - large bulbous rear sac with dorsal markings, spines, and spinnerets
+    sph((0, 0.46, 0.38), (0.33, 0.49, 0.32), body, rot=(0.16, 0, 0), segs=20, rings=14)
+    # Dorsal crimson chevron/hourglass markings sitting clearly on top of the abdomen carapace
+    for k, (yk, zk, w, l) in enumerate([
+        (0.22, 0.65, 0.14, 0.07),
+        (0.36, 0.69, 0.21, 0.08),
+        (0.52, 0.68, 0.17, 0.075),
+        (0.67, 0.62, 0.11, 0.06),
+    ]):
+        sph((0, yk, zk), (w, l, 0.045), mark, rot=(-0.12 + k * 0.1, 0, 0), segs=12, rings=8)
+    # Dorsal chitin spikes along abdomen flanks
     for sx in (-1, 1):
-        seg((sx * 0.07, -0.3, 0.26), (sx * 0.06, -0.38, 0.1), 0.025, fang)  # fangs
-        for k in range(4):  # eyes
-            sph((sx * (0.04 + (k % 2) * 0.045), -0.3, 0.33 + (k // 2) * 0.05), (0.022, 0.022, 0.022), eyes)
+        for k, (yk, zk) in enumerate([(0.28, 0.58), (0.46, 0.61), (0.64, 0.55)]):
+            seg((sx * 0.22, yk, zk), (sx * 0.31, yk + 0.08, zk + 0.11), 0.026, 0.004, fang)
+    # Spinnerets at rear tip of abdomen
     for sx in (-1, 1):
-        for k in range(4):  # legs: out and up to a knee, then down to a foot
-            fy = 0.18 - k * 0.19; ph = (k - 1.5) * 0.35
-            hip = (sx * 0.14, fy * 0.5 - 0.02, 0.3); knee = (sx * (0.66 + 0.1 * abs(ph)), fy + ph * 0.3, 0.62); foot = (sx * (1.0 + 0.12 * abs(ph)), fy * 1.5 + ph * 0.55, 0.02)
-            seg(hip, knee, 0.024, body); seg(knee, foot, 0.017, body)
+        seg((sx * 0.065, 0.88, 0.26), (sx * 0.09, 1.00, 0.19), 0.04, 0.012, joint)
+    # Pedicel (narrow waist connecting abdomen and cephalothorax)
+    seg((0, 0.05, 0.29), (0, -0.04, 0.29), 0.095, 0.085, joint)
+
+    # Cephalothorax (prosoma) - armored head/thorax plate with ocular turret
+    sph((0, -0.14, 0.30), (0.24, 0.26, 0.175), body, segs=18, rings=12)
+    sph((0, -0.25, 0.36), (0.135, 0.125, 0.105), body, segs=14, rings=10)  # ocular turret
+    sph((0, -0.12, 0.465), (0.08, 0.14, 0.025), mark, segs=12, rings=8)     # cephalic crest mark
+
+    # Chelicerae (heavy jaws) + curved venomous fangs + pedipalps (front feeler claws)
+    for sx in (-1, 1):
+        sph((sx * 0.07, -0.32, 0.26), (0.062, 0.09, 0.08), body, rot=(0.3, 0, sx * 0.15))
+        seg((sx * 0.072, -0.35, 0.23), (sx * 0.048, -0.44, 0.08), 0.034, 0.005, fang)
+        # Pedipalps (3-segment feelers flanking the jaws)
+        p0 = (sx * 0.12, -0.27, 0.26)
+        p1 = (sx * 0.25, -0.44, 0.36)
+        p2 = (sx * 0.19, -0.56, 0.14)
+        seg(p0, p1, 0.026, 0.021, body); sph(p1, (0.026, 0.026, 0.026), joint)
+        seg(p1, p2, 0.021, 0.008, fang)
+
+        # 8 glowing crimson eyes arranged in two curved rows on the ocular turret
+        eye_layout = [
+            (0.034, -0.362, 0.365, 0.027),  # large anterior median eye
+            (0.080, -0.345, 0.360, 0.022),  # anterior lateral eye
+            (0.048, -0.340, 0.415, 0.023),  # posterior median eye
+            (0.098, -0.312, 0.402, 0.020),  # posterior lateral eye
+        ]
+        for ex, ey, ez, er in eye_layout:
+            sph((sx * ex, ey, ez), (er, er, er), eyes, segs=10, rings=8)
+
+    # 8 multi-jointed legs fanned out cleanly from front (-Y) to back (+Y)
+    leg_angles = [-0.82, -0.26, 0.32, 0.88]  # radians in XY plane from lateral (+X/-X) axis
+    leg_spans = [1.08, 1.02, 1.00, 1.12]
+    for sx in (-1, 1):
+        for k, (ang, span) in enumerate(zip(leg_angles, leg_spans)):
+            ca, sa = math.cos(ang), math.sin(ang)
+            coxa = (sx * 0.18, -0.22 + k * 0.08, 0.27)
+            femur_top = (sx * (0.18 + 0.48 * ca), coxa[1] + 0.52 * sa, 0.68 + (0.05 if k in (1, 2) else 0.0))
+            tibia_mid = (sx * (0.18 + 0.78 * ca), coxa[1] + 0.84 * sa, 0.36)
+            foot = (sx * (0.18 + span * ca), coxa[1] + (span * 1.08) * sa, 0.015)
+
+            sph(coxa, (0.044, 0.044, 0.044), joint, segs=10, rings=8)
+            seg(coxa, femur_top, 0.038, 0.029, body)
+            sph(femur_top, (0.034, 0.034, 0.034), joint, segs=10, rings=8)
+            seg(femur_top, tibia_mid, 0.028, 0.020, body)
+            sph(tibia_mid, (0.023, 0.023, 0.023), joint, segs=8, rings=6)
+            seg(tibia_mid, foot, 0.019, 0.006, fang)
+
     bpy.ops.object.select_all(action="SELECT"); bpy.ops.object.join(); o = bpy.context.active_object
     return "spider", None
 
@@ -142,15 +284,32 @@ def join_export(name, yup=True):
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)  # the object's origin is the world origin: the node carries no translation (the physics mesh and the draw agree)
     path = os.path.join(D, name + ".glb"); bpy.ops.object.select_all(action="DESELECT"); ob.select_set(True)
     bpy.ops.export_scene.gltf(filepath=path, export_format="GLB", use_selection=True, export_apply=True, export_yup=yup, export_materials="EXPORT")
-    print("exported", path, "tris", sum(len(p.vertices) - 2 for p in ob.data.polygons), "dims", tuple(round(x, 1) for x in ob.dimensions))
+    bb = [Vector(v) for v in ob.bound_box]
+    bmin = tuple(round(min(v[i] for v in bb), 2) for i in range(3))
+    bmax = tuple(round(max(v[i] for v in bb), 2) for i in range(3))
+    print("exported", path, "tris", sum(len(p.vertices) - 2 for p in ob.data.polygons), "dims", tuple(round(x, 1) for x in ob.dimensions), "box", bmin, bmax)
     return ob
 def preview(name, ob, top=False):
     sc = bpy.context.scene; sc.render.engine = "BLENDER_WORKBENCH"; sc.display.shading.light = "STUDIO"; sc.display.shading.color_type = "MATERIAL"
     sc.render.resolution_x = 1100; sc.render.resolution_y = 700; big = max(ob.dimensions)
     cam_d = bpy.data.cameras.new("c"); cam = bpy.data.objects.new("c", cam_d); bpy.context.collection.objects.link(cam)
-    mid = Vector((0, 0, 0)) if not top else Vector((sum(v[0] for v in ob.bound_box) / 8, sum(v[1] for v in ob.bound_box) / 8, 0))
-    cam.location = (mid + Vector((0, 0, big * 1.05))) if top else (mid + Vector((big * 1.2, -big * 1.2, big * 0.9)))
-    cam.rotation_euler = (mid - cam.location).to_track_quat("-Z", "Y").to_euler(); cam_d.lens = 30; sc.camera = cam
+    if top:
+        pts = spine()
+        _, x0, z0 = pts[116]; _, x1, z1 = pts[124]  # inside Hyperspace Lane (s=220..236)
+        cam.location = Vector((x0, floor_y(220) + 2.2, z0))
+        mid = Vector((x1, floor_y(236) + 2.0, z1))
+        fwd = (mid - cam.location).normalized()
+        up_v = Vector((0, 1, 0))
+        right_v = fwd.cross(up_v).normalized()
+        true_up = right_v.cross(fwd).normalized()
+        from mathutils import Matrix
+        rot_m = Matrix((right_v, true_up, -fwd)).transposed()
+        cam.rotation_euler = rot_m.to_euler(); cam_d.lens = 22
+    else:
+        mid = Vector((0, 0.1, 0.32))
+        cam.location = mid + Vector((big * 0.72, -big * 0.82, big * 0.55))
+        cam.rotation_euler = (mid - cam.location).to_track_quat("-Z", "Y").to_euler(); cam_d.lens = 38
+    sc.camera = cam
     sc.world = bpy.data.worlds.new("w"); sc.world.color = (0.55, 0.58, 0.62)
     sc.render.filepath = os.path.join(D, "preview_%s.png" % name); bpy.ops.render.render(write_still=True)
 

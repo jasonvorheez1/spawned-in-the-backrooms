@@ -1,10 +1,18 @@
 // Level 8 "Cave Systems": what you press and walk into (places/level8/sim.js). state.kind:
-//   pool (almond water, drink), soup and fire (the camp), kazoo (a stone kazoo in a niche on Hyperspace Lane), carla (a girl at the camp: give her the kazoo),
+//   pool (almond water, drink), soup and fire (the camp), kazoo (a stone kazoo in a niche on Hyperspace Lane), altar (acoustic stone pipes on Hyperspace Lane),
+//   dredge (B.N.T.G. tar dredge winch over the boiling tar pool), radio (Harmouth field transceiver at camp), carla (a girl at the camp: give her the kazoo),
 //   loop (the end of the crawl: the first time, it brings you out where you started), exit (the asphalt, a dim glow ahead).
 import { heard } from "./lib/hear.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const say = (who, text, ctx) => { if (who?.state) who.state.notice = { text, at: ctx.now() }; };
 const CARLA = ["\"Hey! You're new here. What's your name?\"", "\"I don't mind. Nice to meet you!\"", "\"Mum says the lights down the Road are the friendly ones. The red ones aren't.\"", "\"Do you like soup? It's always soup.\""];
+const RADIO_LOGS = [
+  "HARMOUTH LOG #14: \"Do not trust the crawl past Marker #78 on your first pass. The karst loops back on itself until you've seen the Face Rock twice.\"",
+  "M.E.G. SURVEY: \"The third cavern floods on a five-and-a-half-minute siphon cycle. When the water hits your ankles, take the limestone ledges on the left wall.\"",
+  "HARMOUTH LOG #22: \"Hyperspace Lane's cyan lights respond to acoustic resonance. Hum into the hollow flowstone pipes and the cold leaves your bones.\"",
+  "B.N.T.G. DISPATCH: \"We rigged a cable dredge on the west rim of the Tar Pool. Crank it fast—if the pitch starts reaching back, let go of the handle.\"",
+  "SENTRY ALERT: \"A Broodmother has nested beyond the red glyph at Marker #76. Her chitin plates stop small-caliber rounds, but the camp pays top dollar for them.\"",
+];
 
 export const ears = {
   press: (ctx, { by }) => {
@@ -27,6 +35,38 @@ export const ears = {
     }
     if (s.kind === "kazoo") {
       w.kazoo = true; say(who, "You pocket a stone kazoo. It is cold, rough and jagged, and when you breathe through it, it buzzes.", ctx); return ctx.destroy(ctx.self.id);
+    }
+    if (s.kind === "altar") {
+      if (now - (cool[uid] ?? -1e9) < 60000) return say(who, "The stone pipes are still humming softly in the damp air.", ctx);
+      cool[uid] = now;
+      const bonus = w.kazoo || w.kazooGiven ? 22 : 14;
+      w.sanity = Math.min(100, (w.sanity ?? 80) + bonus);
+      w.hp = Math.min(w.maxHp ?? 100, (w.hp ?? 80) + 12);
+      return say(who, w.kazoo
+        ? "You press the stone kazoo to the acoustic pipes. A warm, bell-clear chord ripples down Hyperspace Lane, and the blue-green light guides flare bright around you. (Sanity +22, Health +12)"
+        : "You hum into the hollow flowstone flutes. The cavern answers with a low, comforting chord that steadies your breathing. (Sanity +14, Health +12)", ctx);
+    }
+    if (s.kind === "dredge") {
+      if (now - (cool[uid] ?? -1e9) < 55000) return say(who, "The dredge bucket is still sinking back into the heavy pitch. Give it a moment.", ctx);
+      cool[uid] = now; snd("thick-tar-bubbling-and-wet-gurgle", 0.65);
+      const r = ctx.random();
+      let extra = "pitch", label = "two heavy cakes of tar pitch";
+      if (r < 0.28) { extra = "ammo"; label = "pitch and a pitch-sealed tin of rifle rounds"; }
+      else if (r < 0.52) { extra = "battery"; label = "pitch and a waterproof caver's battery"; }
+      else if (r < 0.72) { extra = "ironstone"; label = "pitch and a heavy nodule of ironstone"; }
+      else if (r < 0.88) { extra = "cash:1500"; label = "pitch and a B.N.T.G. scrip pouch"; }
+      let slap = "";
+      if (ctx.random() < 0.25) {
+        w.hp = Math.max(1, (w.hp ?? 100) - 8);
+        slap = " A tar-coated hand lunged up along the cable and scorched your wrist before dropping back!";
+      }
+      w.payout = { xp: 16, items: ["pitch", extra], text: `You crank the B.N.T.G. winch and haul up the dredge basket: ${label}.${slap}` };
+      return;
+    }
+    if (s.kind === "radio") {
+      snd("plastic-bottle-pickup-rattle", 0.35);
+      const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
+      return say(who, RADIO_LOGS[n % RADIO_LOGS.length], ctx);
     }
     // ---- harvesting: the payout (items, XP) lands through scripts/craft.js, which owns the bag
     if (s.kind === "fungus") {
@@ -53,7 +93,7 @@ export const ears = {
       const Q = [
         { name: "Lights for the Road", need: { glow_cap: 4 }, xp: 60, items: ["battery", "cash:1500"], text: "The camp wants four glow caps for the lamps." },
         { name: "Plate for the Perimeter", need: { chitin: 3 }, xp: 80, items: ["bandage", "bandage", "cash:2500"], text: "Three chitin plates, for the sentries' armor. They come off cave spiders." },
-        { name: "A Sample from the Tar", need: { pitch: 3 }, xp: 90, items: ["firstaid", "cash:2000"], text: "Three scrapings of tar pitch. Do not stand on the pool to get them." },
+        { name: "A Sample from the Tar", need: { pitch: 3 }, xp: 90, items: ["firstaid", "cash:2000"], text: "Three scrapings of tar pitch. Use the dredge winch or scrape the seeps." },
         { name: "Flowstone for the Wall", need: { flowstone: 6 }, xp: 70, items: ["almond", "almond", "cash:1500"], text: "Six flowstone shards for the camp's wall. Break the pale stalagmites." },
         { name: "Ore for the Smith", need: { ironstone: 4 }, xp: 100, items: ["kit", "ammo", "cash:3000"], text: "Four ironstone ore. The dark red-brown rocks in the walls." },
         { name: "The Road's End", need: null, xp: 150, items: ["firstaid", "cash:5000"], text: "Walk the whole 9th Road to the asphalt and the glow, and come back. Tell us what is there." },

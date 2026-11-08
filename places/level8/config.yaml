@@ -7,7 +7,7 @@ defaultSpawnRotation: { yaw: -32 }
 worldBounds: { bottom: -40 }
 atmosphere:
   clouds: { enabled: false }
-  fog: { kind: linear, near: 6, far: 70, color: oklch(0.09 0.02 235) }
+  fog: { kind: linear, near: 9, far: 82, color: oklch(0.09 0.022 230) }
   moon: { enabled: false, intensity: 0 }
   sky: { kind: color, color: oklch(0.02 0.005 235) }
   stars: { enabled: false }
