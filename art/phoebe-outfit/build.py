@@ -35,12 +35,15 @@ def R1(az, el):
     d = hdir(az, el)
     ri = HB.ray_cast(C, d, 1.0); rin = (ri[0] - C).length if ri[0] else 0.27
     ro = HB.ray_cast(C + d * 1.0, -d, 1.0); rout = (ro[0] - C).length if ro[0] else rin
-    return rout if rout - rin < 0.04 else rin      # ears are skipped, eyes/face kept
+    for ea in (34, -34):                            # ear bases: lie under them, part round them
+        if hdir(az, el).dot(hdir(ea, 49)) > math.cos(math.radians(17)): return rin
+    return rout if rout - rin < 0.12 else rin       # fur tufts are covered, eyes/face kept
 _rc = {}
 def R(az, el):
     k = (round(az, 1), round(el, 1))
     if k not in _rc:
-        _rc[k] = sum(R1(az + da, el + de) for da, de in ((0, 0), (4, 0), (-4, 0), (0, 4), (0, -4))) / 5
+        rs = [R1(az + da, el + de) for da, de in ((0, 0), (5, 0), (-5, 0), (0, 5), (0, -5), (4, 4), (-4, 4), (4, -4), (-4, -4))]
+        _rc[k] = 0.5 * (max(rs) + sum(rs) / len(rs))
     return _rc[k]
 def H(az, el, off): return C + hdir(az, el) * (R(az, el) + off)
 
@@ -100,7 +103,7 @@ def make(name, mb, matname, wfn, solid=0.0, subd=0):
     if subd:
         s = o.modifiers.new("subd", "SUBSURF"); s.levels = subd; s.render_levels = subd
     bake_mods(o)
-    weights(o, wfn); PARTS.append(o); return o
+    weights(o, wfn); PARTS.append(o); print("PART", name, sum(len(p.vertices) - 2 for p in o.data.polygons)); return o
 def bake_mods(o):
     if not o.modifiers: return
     d = bpy.context.evaluated_depsgraph_get(); m = bpy.data.meshes.new_from_object(o.evaluated_get(d))
@@ -138,6 +141,24 @@ def w_coat(p):
         sR = ss(-0.10, 0.10, p.x); w = {k: v * (1 - leg) for k, v in w.items()}
         w["RightUpLeg"] = leg * sR; w["LeftUpLeg"] = leg * (1 - sR)
     return w
+SK = bpy.data.objects["Bot_longskirt"]; SKB = CLOTH[2]
+SKG = {g.index: g.name for g in SK.vertex_groups}
+def skirt_w(p):
+    loc, nrm, fi, dist = SKB.find_nearest(p)
+    poly = SK.data.polygons[fi]; acc = {}; tw = 0
+    for vi in poly.vertices:
+        v = SK.data.vertices[vi]; w = 1.0 / (0.01 + (SK.matrix_world @ v.co - loc).length); tw += w
+        for g in v.groups: acc[SKG[g.group]] = acc.get(SKG[g.group], 0) + g.weight * w
+    return {k: v / tw for k, v in acc.items()}
+_w_coat0 = w_coat
+def w_coat(p):
+    if abs(p.x) > 0.13 and p.z > 0.8: return _w_coat0(p)
+    t = ss(0.72, 0.6, p.z)
+    if t <= 0: return _w_coat0(p)
+    a = spine_w(p.z); b = skirt_w(p); out = {}
+    for k, v in a.items(): out[k] = out.get(k, 0) + v * (1 - t)
+    for k, v in b.items(): out[k] = out.get(k, 0) + v * t
+    return out
 def w_chest(p): return spine_w(min(p.z, 0.99)) if p.z < 0.95 else {"Spine02": 0.8, "neck": 0.2}
 def w_boot(p):
     s = "Left" if p.x < 0 else "Right"
@@ -197,7 +218,7 @@ for side in (1, -1):
         H_CLUMPS.append(clump([top, mid, Vector((side * 0.285, 0.13 + dy, 1.15 + dz)), Vector((side * 0.27, 0.15 + dy, 1.06 + dz)), Vector((side * 0.235, 0.17 + dy, 0.975 + dz))], w, thick=0.4, n=16, ring=10, root=0.85))
 for k, mb in enumerate(H_CLUMPS): make("Hair%02d" % k, mb, "hair", w_head)
 # the bun: a twisted lobed knot on the crown
-bun = MB(); bc = H(180, 70, 0.045); up = (bc - C).normalized()
+bun = MB(); bc = H(180, 76, 0.07); up = (bc - C).normalized()
 ax = up.cross(Vector((1, 0, 0))).normalized(); ay = up.cross(ax)
 BR = []
 for j in range(13):
@@ -206,12 +227,12 @@ for j in range(13):
     for i in range(28):
         th = 2 * math.pi * i / 28
         lobe = 1 + 0.10 * math.cos(5 * th + 4.0 * v) * rr
-        r = 0.072 * rr * lobe
-        row.append(bc + up * (0.062 * h) + ax * (r * math.cos(th)) + ay * (r * math.sin(th)))
+        r = 0.088 * rr * lobe
+        row.append(bc + up * (0.075 * h) + ax * (r * math.cos(th)) + ay * (r * math.sin(th)))
     BR.append(row)
 grid(bun, BR, closeU=True)
 make("Bun", bun, "hair", w_head)
-loop = MB(); pts = [bc - up * 0.035 + ax * (0.07 * math.cos(2 * math.pi * k / 24)) + ay * (0.07 * math.sin(2 * math.pi * k / 24)) for k in range(24)]
+loop = MB(); pts = [bc - up * 0.045 + ax * (0.085 * math.cos(2 * math.pi * k / 24)) + ay * (0.085 * math.sin(2 * math.pi * k / 24)) for k in range(24)]
 sweep(loop, pts, [0.022] * 24, [0.016] * 24, lambda p: up, ring=8, closed=True)
 make("BunWrap", loop, "hair", w_head)
 
@@ -237,6 +258,7 @@ for z in ZS:
         if z > 0.86 and s > 0.6: r = min(r, lerp(0.19, 0.15, ss(0.86, 1.0, z)))
         row.append(r)
     RAW.append(row)
+RAW = [[max(RAW[jj][ii] for jj in range(max(j - 1, 0), min(j + 2, len(RAW))) for ii in range(max(i - 2, 0), min(i + 3, NU))) for i in range(NU)] for j in range(len(RAW))]
 for _ in range(2):   # smooth around and up
     RAW = [[(r[max(i - 1, 0)] + 2 * r[i] + r[min(i + 1, NU - 1)]) / 4 for i in range(NU)] for r in RAW]
     RAW = [[(RAW[max(j - 1, 0)][i] + 2 * RAW[j][i] + RAW[min(j + 1, len(RAW) - 1)][i]) / 4 for i in range(NU)] for j in range(len(RAW))]
@@ -333,7 +355,7 @@ def boot(side):
     o = bpy.context.object; o.name = "Boot%d" % side
     r = o.modifiers.new("r", "REMESH"); r.mode = "VOXEL"; r.voxel_size = 0.006
     s = o.modifiers.new("s", "SMOOTH"); s.factor = 0.6; s.iterations = 6
-    d = o.modifiers.new("d", "DECIMATE"); d.ratio = 0.22
+    d = o.modifiers.new("d", "DECIMATE"); d.ratio = 0.10
     bake_mods(o)
     for v in o.data.vertices:            # flat chunky sole
         if v.co.z < -0.008: v.co.z = -0.012
@@ -396,3 +418,4 @@ fr = act.frame_range; sc.frame_set(int(fr[0] + (fr[1] - fr[0]) * 0.25))
 shot("e_walk", (2.4, 2.4, 1.0), (0, 0, 0.75))
 act = bpy.data.actions.get("Idle"); ARM.animation_data.action = act; sc.frame_set(int(act.frame_range[0]))
 shot("f_idle", (1.2, 3.0, 1.0), (0, 0, 0.8))
+shot("g_idlecu", (0.9, 1.6, 0.85), (0, 0, 0.75))
