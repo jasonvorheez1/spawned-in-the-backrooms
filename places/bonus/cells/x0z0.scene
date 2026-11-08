@@ -555,6 +555,132 @@ bd-boombox:
   receiveShadow: true
   rotation: {yaw: -90}
   tags: [bonus-diner]
+bd-chair-1-1:
+  castShadow: true
+  feetPosition: {x: -15.599999999999998, y: 0, z: -20}
+  id: bd-chair-1-1
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  tags: [bonus-diner]
+bd-chair-1-2:
+  castShadow: true
+  feetPosition: {x: -17.2, y: 0, z: -20}
+  id: bd-chair-1-2
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  tags: [bonus-diner]
+bd-chair-1-3:
+  castShadow: true
+  feetPosition: {x: -16.4, y: 0, z: -19.2}
+  id: bd-chair-1-3
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [bonus-diner]
+bd-chair-1-4:
+  castShadow: true
+  feetPosition: {x: -16.4, y: 0, z: -20.8}
+  id: bd-chair-1-4
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  tags: [bonus-diner]
+bd-chair-2-1:
+  castShadow: true
+  feetPosition: {x: -11.799999999999999, y: 0, z: -20}
+  id: bd-chair-2-1
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  tags: [bonus-diner]
+bd-chair-2-2:
+  castShadow: true
+  feetPosition: {x: -13.4, y: 0, z: -20}
+  id: bd-chair-2-2
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  tags: [bonus-diner]
+bd-chair-2-3:
+  castShadow: true
+  feetPosition: {x: -12.6, y: 0, z: -19.2}
+  id: bd-chair-2-3
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [bonus-diner]
+bd-chair-3-1:
+  castShadow: true
+  feetPosition: {x: -15.599999999999998, y: 0, z: -10.2}
+  id: bd-chair-3-1
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  tags: [bonus-diner]
+bd-chair-3-2:
+  castShadow: true
+  feetPosition: {x: -17.2, y: 0, z: -10.2}
+  id: bd-chair-3-2
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  tags: [bonus-diner]
+bd-chair-3-3:
+  castShadow: true
+  feetPosition: {x: -16.4, y: 0, z: -9.399999999999999}
+  id: bd-chair-3-3
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [bonus-diner]
+bd-chair-3-4:
+  castShadow: true
+  feetPosition: {x: -16.4, y: 0, z: -11}
+  id: bd-chair-3-4
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  tags: [bonus-diner]
+bd-chair-4-1:
+  castShadow: true
+  feetPosition: {x: -11.799999999999999, y: 0, z: -10.2}
+  id: bd-chair-4-1
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  tags: [bonus-diner]
+bd-chair-4-2:
+  castShadow: true
+  feetPosition: {x: -13.4, y: 0, z: -10.2}
+  id: bd-chair-4-2
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  tags: [bonus-diner]
+bd-chair-4-3:
+  castShadow: true
+  feetPosition: {x: -12.6, y: 0, z: -11}
+  id: bd-chair-4-3
+  model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  tags: [bonus-diner]
 bd-coffee:
   castShadow: true
   feetPosition: {x: -23.5, y: 0.9, z: -17.6}
@@ -628,6 +754,38 @@ bd-jukebox-glow:
   light: {color: oklch(0.75 0.2 340), distance: 4.5, intensity: 1.2, kind: point}
   receiveShadow: true
   tags: [bonus-diner]
+bd-ketchup-1:
+  castShadow: true
+  feetPosition: {x: -16.24, y: 0.75, z: -19.88}
+  id: bd-ketchup-1
+  model: {forward: "+x", id: /cdn/value.d61aa4714379134421e81efb768d65b602715becf19fdb87aad623b31ceafd39.glb}
+  receiveShadow: true
+  rotation: {yaw: -60}
+  tags: [bonus-diner]
+bd-ketchup-2:
+  castShadow: true
+  feetPosition: {x: -12.44, y: 0.75, z: -19.88}
+  id: bd-ketchup-2
+  model: {forward: "+x", id: /cdn/value.d61aa4714379134421e81efb768d65b602715becf19fdb87aad623b31ceafd39.glb}
+  receiveShadow: true
+  rotation: {yaw: -60}
+  tags: [bonus-diner]
+bd-ketchup-3:
+  castShadow: true
+  feetPosition: {x: -16.24, y: 0.75, z: -10.08}
+  id: bd-ketchup-3
+  model: {forward: "+x", id: /cdn/value.d61aa4714379134421e81efb768d65b602715becf19fdb87aad623b31ceafd39.glb}
+  receiveShadow: true
+  rotation: {yaw: -60}
+  tags: [bonus-diner]
+bd-ketchup-4:
+  castShadow: true
+  feetPosition: {x: -12.44, y: 0.75, z: -10.08}
+  id: bd-ketchup-4
+  model: {forward: "+x", id: /cdn/value.d61aa4714379134421e81efb768d65b602715becf19fdb87aad623b31ceafd39.glb}
+  receiveShadow: true
+  rotation: {yaw: -60}
+  tags: [bonus-diner]
 bd-light-counter:
   castShadow: true
   feetPosition: {x: -21.5, y: 4.4, z: -15}
@@ -657,6 +815,70 @@ bd-mixer:
   model: {forward: "+x", id: /cdn/value.e824e06bdf642c26a7bf028e1015bcfdd28e8c7c993e9b095a69d7ae6ef58822.glb}
   receiveShadow: true
   rotation: {yaw: -90}
+  tags: [bonus-diner]
+bd-mustard-1:
+  castShadow: true
+  feetPosition: {x: -16.54, y: 0.75, z: -19.85}
+  id: bd-mustard-1
+  model: {forward: "+x", id: /cdn/value.6ac2a787f498c47a1d85a476e4a808a345c24d0da4b7ec8f2ee023884161047c.glb}
+  receiveShadow: true
+  rotation: {yaw: 40}
+  tags: [bonus-diner]
+bd-mustard-2:
+  castShadow: true
+  feetPosition: {x: -12.74, y: 0.75, z: -19.85}
+  id: bd-mustard-2
+  model: {forward: "+x", id: /cdn/value.6ac2a787f498c47a1d85a476e4a808a345c24d0da4b7ec8f2ee023884161047c.glb}
+  receiveShadow: true
+  rotation: {yaw: 40}
+  tags: [bonus-diner]
+bd-mustard-3:
+  castShadow: true
+  feetPosition: {x: -16.54, y: 0.75, z: -10.049999999999999}
+  id: bd-mustard-3
+  model: {forward: "+x", id: /cdn/value.6ac2a787f498c47a1d85a476e4a808a345c24d0da4b7ec8f2ee023884161047c.glb}
+  receiveShadow: true
+  rotation: {yaw: 40}
+  tags: [bonus-diner]
+bd-mustard-4:
+  castShadow: true
+  feetPosition: {x: -12.74, y: 0.75, z: -10.049999999999999}
+  id: bd-mustard-4
+  model: {forward: "+x", id: /cdn/value.6ac2a787f498c47a1d85a476e4a808a345c24d0da4b7ec8f2ee023884161047c.glb}
+  receiveShadow: true
+  rotation: {yaw: 40}
+  tags: [bonus-diner]
+bd-napkin-1:
+  castShadow: true
+  feetPosition: {x: -16.419999999999998, y: 0.75, z: -20.05}
+  id: bd-napkin-1
+  model: {id: /cdn/value.5dbf5e49a99548e423963a955af081b8d15b90689d6f4bb4f719ff167a93150f.glb}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [bonus-diner]
+bd-napkin-2:
+  castShadow: true
+  feetPosition: {x: -12.62, y: 0.75, z: -20.05}
+  id: bd-napkin-2
+  model: {id: /cdn/value.5dbf5e49a99548e423963a955af081b8d15b90689d6f4bb4f719ff167a93150f.glb}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  tags: [bonus-diner]
+bd-napkin-3:
+  castShadow: true
+  feetPosition: {x: -16.419999999999998, y: 0.75, z: -10.25}
+  id: bd-napkin-3
+  model: {id: /cdn/value.5dbf5e49a99548e423963a955af081b8d15b90689d6f4bb4f719ff167a93150f.glb}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [bonus-diner]
+bd-napkin-4:
+  castShadow: true
+  feetPosition: {x: -12.62, y: 0.75, z: -10.25}
+  id: bd-napkin-4
+  model: {id: /cdn/value.5dbf5e49a99548e423963a955af081b8d15b90689d6f4bb4f719ff167a93150f.glb}
+  receiveShadow: true
+  rotation: {yaw: 90}
   tags: [bonus-diner]
 bd-sign:
   castShadow: false
@@ -727,6 +949,38 @@ bd-stool-6:
   feetPosition: {x: -19.3, y: 0, z: -9.7}
   id: bd-stool-6
   model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-table-1:
+  castShadow: true
+  feetPosition: {x: -16.4, y: 0, z: -20}
+  id: bd-table-1
+  model: {id: /cdn/value.f5ac1ed53601a4c7b4064f0ef64ad3be787b38ac2ff5b08bd3a19a3054d8a21f.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-table-2:
+  castShadow: true
+  feetPosition: {x: -12.6, y: 0, z: -20}
+  id: bd-table-2
+  model: {id: /cdn/value.f5ac1ed53601a4c7b4064f0ef64ad3be787b38ac2ff5b08bd3a19a3054d8a21f.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-table-3:
+  castShadow: true
+  feetPosition: {x: -16.4, y: 0, z: -10.2}
+  id: bd-table-3
+  model: {id: /cdn/value.f5ac1ed53601a4c7b4064f0ef64ad3be787b38ac2ff5b08bd3a19a3054d8a21f.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  tags: [bonus-diner]
+bd-table-4:
+  castShadow: true
+  feetPosition: {x: -12.6, y: 0, z: -10.2}
+  id: bd-table-4
+  model: {id: /cdn/value.f5ac1ed53601a4c7b4064f0ef64ad3be787b38ac2ff5b08bd3a19a3054d8a21f.glb}
   physics: {body: static, collider: box}
   receiveShadow: true
   tags: [bonus-diner]
