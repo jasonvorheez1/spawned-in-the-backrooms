@@ -1047,7 +1047,7 @@ bonus-ctr-clothes:
   id: bonus-ctr-clothes
   physics: {body: static, collider: box, trigger: true}
   primitive: {depth: 1.6, height: 1.2, kind: box, width: 1.6}
-  state: {info: "", kind: clothes, name: Liminal Clothes, tint: "#ff71ce", verb: Browse}
+  state: {c: {x: -19.4, y: 1.15, z: 18.5}, info: "", kind: clothes, name: Liminal Clothes, tint: "#ff71ce", verb: Browse}
   tags: [usable]
   visible: false
 bonus-ctr-diner:
@@ -1056,7 +1056,7 @@ bonus-ctr-diner:
   id: bonus-ctr-diner
   physics: {body: static, collider: box, trigger: true}
   primitive: {depth: 1.6, height: 1.2, kind: box, width: 1.6}
-  state: {info: "", kind: diner, name: Tom's Diner, tint: "#ff71ce", verb: Order}
+  state: {c: {x: -19.4, y: 1.15, z: -15}, info: "", kind: diner, name: Tom's Diner, tint: "#ff71ce", verb: Order}
   tags: [usable]
   visible: false
 bonus-ctr-furn:
@@ -1065,7 +1065,7 @@ bonus-ctr-furn:
   id: bonus-ctr-furn
   physics: {body: static, collider: box, trigger: true}
   primitive: {depth: 1.6, height: 1.2, kind: box, width: 1.6}
-  state: {info: "", kind: furniture, name: Andrew's Furniture, tint: "#ff71ce", verb: Browse}
+  state: {c: {x: 19.4, y: 1.15, z: 18.5}, info: "", kind: furniture, name: Andrew's Furniture, tint: "#ff71ce", verb: Browse}
   tags: [usable]
   visible: false
 bonus-ctr-station:
@@ -1074,7 +1074,7 @@ bonus-ctr-station:
   id: bonus-ctr-station
   physics: {body: static, collider: box, trigger: true}
   primitive: {depth: 1.6, height: 1.2, kind: box, width: 1.6}
-  state: {info: "", kind: station, name: Teleport Station, tint: "#ff71ce", verb: Travel}
+  state: {c: {x: -19.6, y: 6.65, z: -3}, info: "", kind: station, name: Teleport Station, tint: "#ff71ce", verb: Travel}
   tags: [usable]
   visible: false
 bonus-music:
