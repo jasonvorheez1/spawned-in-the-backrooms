@@ -83,7 +83,7 @@ def grid(mb, P, closeU=False):
             i2 = (i + 1) % U; mb.f.append((rows[j][i], rows[j][i2], rows[j + 1][i2], rows[j + 1][i]))
     return rows
 
-MATS = {"hair": ("#e08a62", 0.0, 0.55), "coat": ("#d29a2c", 0.0, 0.8), "cuff": ("#f2efe8", 0.0, 0.7), "bow": ("#b8202a", 0.0, 0.5),
+MATS = {"hair": ("#e9a07e", 0.0, 0.6), "coat": ("#d29a2c", 0.0, 0.8), "cuff": ("#f2efe8", 0.0, 0.7), "bow": ("#b8202a", 0.0, 0.5),
         "chain": ("#d8dadf", 1.0, 0.25), "boot": ("#141216", 0.0, 0.38), "band": ("#a8562a", 0.0, 0.55)}
 def hexc(h): return tuple(((int(h[i:i + 2], 16) / 255) ** 2.2) for i in (1, 3, 5)) + (1,)
 def mat(name):
@@ -126,8 +126,14 @@ def spine_w(z):
     if z >= keys[-1][0]: return {"Spine02": 1.0}
     for (z0, a), (z1, b) in zip(keys, keys[1:]):
         if z0 <= z <= z1: t = ss(z0, z1, z); return {a: 1 - t, b: t}
+def w_sleeve(p):                                          # sleeves and cuffs: by x along the arm alone, whatever the drop
+    x = abs(p.x); s = "Left" if p.x < 0 else "Right"
+    if x < 0.17: t = ss(0.10, 0.17, x); return {"Spine02": 1 - t, s + "Shoulder": t * 0.5, s + "Arm": t * 0.5}
+    if x < 0.30: t = ss(0.17, 0.24, x); return {s + "Shoulder": 0.5 * (1 - t), s + "Arm": 0.5 + 0.5 * t}
+    if x < 0.46: t = ss(0.30, 0.40, x); return {s + "Arm": 1 - t, s + "ForeArm": t}
+    t = 0.5 * ss(0.46, 0.51, x); return {s + "ForeArm": 1 - t, s + "Hand": t}
 def w_coat(p):
-    if abs(p.x) > 0.13 and p.z > 0.8:                     # sleeve: along the arm
+    if abs(p.x) > 0.17 and p.z > 0.9:                     # sleeve root: along the arm
         x = abs(p.x); s = "Left" if p.x < 0 else "Right"
         if x < 0.17: t = ss(0.13, 0.17, x); return {"Spine02": 1 - t, s + "Shoulder": t * 0.5, s + "Arm": t * 0.5}
         if x < 0.30: t = ss(0.17, 0.24, x); return {s + "Shoulder": 0.5 * (1 - t), s + "Arm": 0.5 + 0.5 * t}
@@ -152,7 +158,7 @@ def skirt_w(p):
     return {k: v / tw for k, v in acc.items()}
 _w_coat0 = w_coat
 def w_coat(p):
-    if abs(p.x) > 0.13 and p.z > 0.8: return _w_coat0(p)
+    if abs(p.x) > 0.17 and p.z > 0.9: return _w_coat0(p)
     t = ss(0.72, 0.6, p.z)
     if t <= 0: return _w_coat0(p)
     a = spine_w(p.z); b = skirt_w(p); out = {}
@@ -297,7 +303,7 @@ for side in (1, -1):
             row.append(Vector((side * x, yy, 0.955 + zz)))
         SP.append(row)
     if side < 0: SP = [r[::-1] for r in SP]
-    grid(sl, SP, closeU=True); make("Sleeve%d" % side, sl, "coat", w_coat, solid=0.008)
+    grid(sl, SP, closeU=True); make("Sleeve%d" % side, sl, "coat", w_sleeve, solid=0.008)
     cf = MB(); CPc = []
     for j in range(5):
         t = j / 4; x = lerp(0.435, 0.512, t); bulge = 0.008 * math.sin(math.pi * t) + 0.004
@@ -309,7 +315,7 @@ for side in (1, -1):
             row.append(Vector((side * x, yy, 0.955 + zz)))
         CPc.append(row)
     if side < 0: CPc = [r[::-1] for r in CPc]
-    grid(cf, CPc, closeU=True); make("Cuff%d" % side, cf, "cuff", w_coat, solid=0.008)
+    grid(cf, CPc, closeU=True); make("Cuff%d" % side, cf, "cuff", w_sleeve, solid=0.008)
 
 # ================= COLLAR, BOW, CHAIN =================
 def front(z): return prof(z, 0)
@@ -378,6 +384,8 @@ for o in PARTS: o.select_set(True)
 bpy.context.view_layer.objects.active = PARTS[0]; bpy.ops.object.join()
 OUTF = bpy.context.object; OUTF.name = "PhoebeOutfit"; OUTF.data.name = "PhoebeOutfit"
 for p in OUTF.data.polygons: p.use_smooth = True
+dm = OUTF.modifiers.new("dec", "DECIMATE"); dm.ratio = 0.72; dm.use_collapse_triangulate = True
+bpy.ops.object.modifier_apply(modifier="dec")
 OUTF.parent = ARM; m = OUTF.modifiers.new("Armature", "ARMATURE"); m.object = ARM
 # normalize
 for v in OUTF.data.vertices:
