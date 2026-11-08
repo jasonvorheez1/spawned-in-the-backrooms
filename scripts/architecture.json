@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2615,
-  "updatedAt": "2026-11-08T22:39:42.070Z",
-  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place scenes and simulations provide authored environments and local systems. Level 2 combines a generated modelled visual kit with its original collider shell, and players can grab and hurl eligible NPCs as well as props.",
+  "basedOnSpecVersion": 2628,
+  "updatedAt": "2026-11-08T22:42:35.245Z",
+  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors while scenes and place simulations supply authored environments and local systems; bespoke Blender pipelines build the Level 26 ship and the Level 2 modular tunnel kit.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with shops, arcade, fountain, court storefronts and west-balcony lounge; authored shops plus shopper/staff simulation.",
     "places/main (3D) - authored Level 0/Lobby maze; sim generates furniture/loot, safe-room almond water, shifting walls, creature ecology and versioned route-guidance moments.",
-    "places/intake (3D) - bedroom character-creation space; scripts/intake-geo.js and intro cutscene support its authored room.",
-    "places/tutorial0 (3D, solo ephemeral) - authored Level 0 tutorial route, staged encounter and HALOGEN; tutorial libraries drive geometry and beats.",
-    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored levels with local generation, loot and agents. Level 2's sim deploys modelled tunnel modules over its retained collider shell.",
+    "places/intake (3D) + places/tutorial0 (solo ephemeral 3D) - bedroom character-creation/waking space and authored Level 0 tutorial route with staged encounter and HALOGEN.",
+    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored levels with local generation, loot and agents; Level 2 uses generated modelled tunnel modules over its retained collider shell.",
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; residents, hazards, office/home systems and Boiler Room rats.",
-    "places/level6, places/level7, places/level10, places/level11 (3D) - later authored/generated levels, including city/farm/venues and local simulations; Level 10's fun poster routes to Level 26.",
-    "places/level26 (3D) - SS Fun =), the Adventure cruise ship lost in green fog; pool, wrecked bar and restaurant, party litter, deck lamps (including flickering posts), fog/lights, Partygoers and balloons, lower corridor, Phoebe trigger and deck cutscene. art/l26-ship builds hull and superstructure sources."
+    "places/level6, places/level7, places/level10, places/level11 (3D) - later authored/generated levels including city, farm and venues; Level 10's fun poster routes to Level 26.",
+    "places/level26 (3D) - SS Fun =), Adventure liner lost in green fog; scene now places bespoke modeled hull and cabin meshes alongside bridge, funnel, deck, pool, wrecked bar/restaurant, Partygoers and balloons.",
+    "places/debug, places/spamton, places/level2, places/level21 and remaining configured places - auxiliary debug/fight spaces and the continuing Backrooms routes; all places use 3D mode except tutorial0's solo ephemeral instance."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, player/camera setup and ordered behavior composition; L maps to kick and Z to grab.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - place settings, authored placements and local generated/ticked behavior; places/main/sim.js owns Level 0 generation and timers.",
     "sim.js - world cadence and out-of-bounds recovery.",
     "scripts/main-menu.js + scripts/main-menu-ui.js - title/pause, character creation, arrival, tutorial routing and first-arrival Level 26 cutscene driver.",
-    "places/intake/cells/x0z0.scene + scripts/intake-geo.js + scripts/lib/intro-cut.js - bedroom shell and waking sequence.",
-    "places/tutorial0/cells/x0z0.scene + scripts/tut0-geo.js + scripts/tut0-panels-geo.js + places/tutorial0/sim.js - tutorial layout and local props.",
+    "places/intake/cells/x0z0.scene + scripts/intake-geo.js + scripts/lib/intro-cut.js - bedroom shell and waking sequence; tutorial scene plus tut0 geometry/sim scripts own its route and beats.",
     "scripts/camera.js + scripts/view3.js - camera and third-person toggle; scripts/ui.js and specialized UI scripts present HUD, panels and cutscenes.",
-    "art/l26-ship/build.py + hull.py + super.py + lib.py + tex.py - Blender source pipeline exporting the Level 26 liner hull and superstructure GLBs and generating ship textures."
+    "art/l26-ship/build.py + hull.py + super.py + lib.py + tex.py - Blender source pipeline exporting the Level 26 liner hull and superstructure GLBs and generating ship textures.",
+    "art/level2/build.py + compact.py + encode.py + pack.py - offline Level 2 kit geometry/data compaction and packing pipeline for the runtime kit decoder."
   ],
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings; used by routing and hub handlers.",
@@ -32,7 +32,7 @@
     "scripts/lib/screen.js - derived read-only panel classifier and wrist gates shared by player, stats, craft, rest and menu input.",
     "scripts/lib/maze.js and scripts/lib/level*.js + level data - grids, zones, layouts and paths reused by place sims, geometry and navigation.",
     "scripts/lib/clothes.js + clothes.yml + critter.yml + hair.yml + scripts/lib/critter-model.js - wardrobe/look rules and player/NPC critter models.",
-    "scripts/lib/l2kit.js - Level 2 model-instance drawing from scripts/lib/l2kit-data, used by scripts/l2kit/*-geo.js; scripts/lib/knock.js - shared kicked/thrown-body recovery used by enemy managers."
+    "scripts/lib/l2kit.js - Level 2 model-instance drawing/decoding from scripts/lib/l2kit-data, used by scripts/l2kit/*-geo.js; scripts/lib/knock.js - shared kicked/thrown-body recovery used by enemy managers."
   ],
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollItem, spawnCrate, rollLoot and level-specific loot helpers.",
@@ -64,7 +64,7 @@
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; weapon rarity cap is level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite.",
     "Pickup weapon/food/aid → scripts/player.js inventory; SNACKS entries enter player.state.snacks for later Aid-panel use, with medical aid healing through healMed.",
     "L input → scripts/kick.js onInput; pushes wheeled objects or kicks nearby foes, writing down/kb/stunUntil; target managers call scripts/lib/knock.js knocked() before AI to resolve kick/throw recovery.",
-    "Z input → scripts/grab.js onInput; picks a reachable eligible body if the player has hands free and sufficient strength, writes target heldBy/down and player carry session; Z tap drops or hold throws it, and enemy managers respect heldBy/knocked().",
+    "Z input → scripts/grab.js onInput; picks a reachable eligible body if the player has hands free and sufficient strength, writes target heldBy/down and player carry session; Z tap drops or hold throws it, and enemy managers respect heldBy.",
     "Melee player.js hitTarget and scripts/lib/ballistics.js bullet target queries include l8-hostile (excluding already-covered l8spider for melee), so tagged hostile entities are hittable by swings and shots.",
     "Level 2 places/level2/sim.js → scripts/lib/l2kit.js spawnKit and per-part scripts/l2kit/*-geo.js visuals; breakables.syncWalls updates wall cuts while scripts/level2-geo.js retains the full original collider shell."
   ],
@@ -75,8 +75,8 @@
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props and Boiler Room Death Rat packs.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml - player and NPCs share body/head/hair rendering; appearance varies by sex, style, color and look.",
-    "scripts/l2kit/*-geo.js + scripts/lib/l2kit.js + scripts/lib/l2kit-data/* - ten Level 2 cast-concrete/pipework/cable/fixture modules share instancing; each varies by module geometry/data and seeded cell layout."
+    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml + art/critter-hair/build.py - player and NPCs share body/head/hair rendering; style meshes vary in form, with long backs, face-framing locks, multi-lock tails and braids.",
+    "art/level2/{build,compact,encode,pack}.py + scripts/lib/l2kit-data/* + scripts/lib/l2kit.js - authored module meshes become runtime geometry; compact.py decimates selected heavy parts, encode.py packs data and pack.py can emit 16-bit PNG sample streams."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but has no references; Level 26 scene placements and the barrage use uploaded models instead."
@@ -87,6 +87,6 @@
     "Level 0 place.state.momentsV is 4: its migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout.",
     "At sanity <= 0 health is not drained; scripts/lib/stats.js lowers derived attributes except Luck by 2 (minimum 1), and derived values feed combat, carry and movement.",
     "scripts/lib/knock.js consumes transient down/kb records and thrown-body flight/overboard state; all enemy managers that own these targets need to call knocked() before AI, and heldBy bodies must be excluded from ordinary AI.",
-    "Level 2's modelled kit is visual only: scripts/level2-geo.js retains the original full collider shell; keep kit visuals, seeded scripts/lib/level2.js layout and breakables.syncWalls cut handling aligned."
+    "Level 2's modelled kit is visual only: scripts/level2-geo.js retains the original full collider shell; keep kit visuals, seeded scripts/lib/level2.js layout and breakables.syncWalls cut handling aligned. Level 26's visible hull and cabins are exported meshes while hidden primitive geometry remains as proxy/collision structure; keep scene placements aligned with the mesh origins/offsets."
   ]
 }
