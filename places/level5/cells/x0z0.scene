@@ -1087,8 +1087,9 @@ l5-elev-corrS/object/xe5bfa1adb29c7d30/14:
   castShadow: false
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-corrS/object/xe5bfa1adb29c7d30/14
-  light: {color: "#ffd9a0", distance: 4.5, intensity: 3, kind: point}
+  light: {color: "#ffd9a0", distance: 4.5, intensity: 3, kind: point, shadow: {enabled: false}}
   parent: l5-elev-corrS
+  visibleRange: {max: 35}
 l5-elev-lobby-n:
   behavior: scripts/l5-elevator.js
   feetPosition: {x: -44.85, y: 0, z: -7}
@@ -1146,8 +1147,9 @@ l5-elev-lobby-n/object/xe5bfa1adb29c7d30/4:
   castShadow: false
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/4
-  light: {color: "#ffd9a0", distance: 4.5, intensity: 3, kind: point}
+  light: {color: "#ffd9a0", distance: 4.5, intensity: 3, kind: point, shadow: {enabled: false}}
   parent: l5-elev-lobby-n
+  visibleRange: {max: 35}
 l5-elev-lobby-s:
   behavior: scripts/l5-elevator.js
   feetPosition: {x: -44.85, y: 0, z: 7}
@@ -1205,8 +1207,9 @@ l5-elev-lobby-s/object/xe5bfa1adb29c7d30/9:
   castShadow: false
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/9
-  light: {color: "#ffd9a0", distance: 4.5, intensity: 3, kind: point}
+  light: {color: "#ffd9a0", distance: 4.5, intensity: 3, kind: point, shadow: {enabled: false}}
   parent: l5-elev-lobby-s
+  visibleRange: {max: 35}
 l5-elev-maint:
   behavior: scripts/l5-elevator.js
   feetPosition: {x: 44.85, y: 0, z: 0}
@@ -1264,8 +1267,9 @@ l5-elev-maint/object/xe5bfa1adb29c7d30/24:
   castShadow: false
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-maint/object/xe5bfa1adb29c7d30/24
-  light: {color: "#ffb066", distance: 4.5, intensity: 2.2, kind: point}
+  light: {color: "#ffb066", distance: 4.5, intensity: 2.2, kind: point, shadow: {enabled: false}}
   parent: l5-elev-maint
+  visibleRange: {max: 35}
 l5-elev-salon:
   behavior: scripts/l5-elevator.js
   feetPosition: {x: 12.85, y: 0, z: -18}
@@ -1323,8 +1327,9 @@ l5-elev-salon/object/xe5bfa1adb29c7d30/19:
   castShadow: false
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-salon/object/xe5bfa1adb29c7d30/19
-  light: {color: "#ffd9a0", distance: 4.5, intensity: 3, kind: point}
+  light: {color: "#ffd9a0", distance: 4.5, intensity: 3, kind: point, shadow: {enabled: false}}
   parent: l5-elev-salon
+  visibleRange: {max: 35}
 l5-from-l3:
   feetPosition: {x: -42.5, y: 0.1, z: 0}
   id: l5-from-l3

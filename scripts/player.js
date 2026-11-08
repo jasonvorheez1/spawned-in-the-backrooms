@@ -1040,6 +1040,9 @@ export function update(ctx, dt) {
 
 const HOSTILE = ['smiler', 'lurker', 'hound', 'stealer', 'deathmoth', 'moth']
 const HOSTILE_AND_NPC = [...HOSTILE, 'npc']
+const _rayEye = { x: 0, y: 0, z: 0 }
+const _rayDir = { x: 0, y: 0, z: 0 }
+const _rayOpt = { distance: 10, physicsOnly: true, bodies: 'static', ignoreEntities: [] }
 function detection(ctx, p, w) {
   const me = ctx.self.id, sneak = skillsOf(ctx.self.state).sneak ?? 0
   const reach = (w.light ? 16 : 10) * (1 - Math.min(0.5, sneak / 200)) // a lit flashlight gives you away from further off
@@ -1053,8 +1056,13 @@ function detection(ctx, p, w) {
     const r = ctx.getObject(o.id)?.rotation, yaw = ((typeof r === 'number' ? r : r?.yaw) ?? 0) * Math.PI / 180
     const facing = (-Math.sin(yaw) * dx - Math.cos(yaw) * dz) / (d || 1) // 1 = looking straight at you
     if (facing < 0.25 && d > 1.6) continue
-    const eye = { x: q.x, y: q.y + 1.3, z: q.z }, to = { x: p.x - eye.x, y: p.y + 0.8 - eye.y, z: p.z - eye.z }, n = Math.hypot(to.x, to.y, to.z) || 1
-    if (raycast(ctx, eye, { x: to.x / n, y: to.y / n, z: to.z / n }, { distance: n - 0.3, physicsOnly: true, bodies: 'static', ignoreEntities: [o.id, me] })) continue
+    _rayEye.x = q.x; _rayEye.y = q.y + 1.3; _rayEye.z = q.z
+    const tox = p.x - _rayEye.x, toy = p.y + 0.8 - _rayEye.y, toz = p.z - _rayEye.z
+    const n = Math.hypot(tox, toy, toz) || 1
+    _rayDir.x = tox / n; _rayDir.y = toy / n; _rayDir.z = toz / n
+    _rayOpt.distance = n - 0.3
+    _rayOpt.ignoreEntities = [o.id, me]
+    if (raycast(ctx, _rayEye, _rayDir, _rayOpt)) continue
     if (hostile && d < reach * 0.6) return 'danger'
     seen = true
   }

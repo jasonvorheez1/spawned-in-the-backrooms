@@ -67,10 +67,11 @@ FUNG.forEach((f, k) => {
   def(`l8-glow-${k}`, 150, {
     feetPosition: { x: p.x, y: P(f.s).y + f.up, z: p.z }, rotation: { yaw: k * 53 }, tags: ["usable"], behavior: ["scripts/l8-use.js", "scripts/ambient-anim.js"],
     model: { id: GLB.mush, materials: {} }, layout: BOX(r * 3.6, r * 4.2, r * 3.6), material: { emissive: "oklch(0.7 0.14 190)", emissiveIntensity: 0.35 },
+    visibleRange: { max: 35 }, castShadow: false,
     ...(k % 4 === 0 ? { fx: { script: SPORE_FX } } : {}),
     state: { anim: { kind: "pulse", amp: 1.07, sec: 2.2 + (k % 5) * 0.4, phase: (k % 7) / 7 }, kind: "fungus", name: "Glowing fungus cluster", verb: "Pick the caps", info: "Bioluminescent caps on almond-wet rock. They bruise easily, and make a good light.", tint: "#6fe8d8" },
     children: [
-      { feetPosition: { x: 0, y: stemH + 0.15, z: 0 }, light: { kind: "point", color: "oklch(0.72 0.15 190)", intensity: 1.05, distance: 8.5 } },
+      { feetPosition: { x: 0, y: stemH + 0.15, z: 0 }, light: { kind: "point", color: "oklch(0.72 0.15 190)", intensity: 1.05, distance: 8.5, shadow: { enabled: false }, visibleRange: { max: 30 } } },
     ],
   });
 });
@@ -80,7 +81,7 @@ FUNG.forEach((f, k) => {
   const side = (k % 2 ? 1 : -1) * (3 + (k * 5) % 6), p = P(s, side), silk = { color: "oklch(0.9 0.012 230)", roughness: 0.95 };
   def(`l8-cocoon-${k}`, 300, {
     feetPosition: { x: p.x, y: P(s).y, z: p.z }, rotation: { yaw: k * 47 }, tags: ["usable"], behavior: ["scripts/l8-use.js", "scripts/ambient-anim.js"],
-    model: { id: GLB.cocoon }, layout: BOX(0.8, 1.5, 0.8),
+    model: { id: GLB.cocoon }, layout: BOX(0.8, 1.5, 0.8), visibleRange: { max: 40 }, castShadow: false,
     state: { anim: { kind: "sway", deg: 2.4, sec: 3.4 + (k % 4) * 0.5, axis: "pitch", phase: (k % 5) / 5 }, kind: "cocoon", name: "Silk cocoon", verb: "Cut open", info: "Something was wrapped tightly in this. It is not moving.", tint: "#e8eef2" },
     children: [
       { feetPosition: { x: 0, y: 1.45, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.08, height: 3.8 }, material: { color: "oklch(0.92 0.01 230)", opacity: 0.55, transparent: true } },
@@ -93,10 +94,10 @@ FUNG.forEach((f, k) => {
   const p = P(s, side), pitchMat = { color: "oklch(0.07 0.008 280)", roughness: 0.14, metalness: 0.25 };
   def(`l8-seep-${k}`, 120, {
     feetPosition: { x: p.x, y: P(s).y, z: p.z }, tags: ["usable"], behavior: "scripts/l8-use.js",
-    model: { id: GLB.tar }, layout: BOX(1.5, 0.42, 1.5),
+    model: { id: GLB.tar }, layout: BOX(1.5, 0.42, 1.5), visibleRange: { max: 40 }, castShadow: false,
     state: { kind: "seep", name: "Tar seep", verb: "Scrape pitch", info: "Warm, black and slow. The Tar is not far below it.", tint: "#8a7a9a" },
     children: [
-      { feetPosition: { x: 0, y: 0.3, z: 0 }, light: { kind: "point", color: "oklch(0.6 0.16 40)", intensity: 0.6, distance: 4 } }, { feetPosition: { x: 0.05, y: 0.12, z: -0.08 }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: "oklch(0.35 0.12 45)", emissive: "oklch(0.45 0.15 40)", emissiveIntensity: 1.2 } },
+      { feetPosition: { x: 0, y: 0.3, z: 0 }, light: { kind: "point", color: "oklch(0.6 0.16 40)", intensity: 0.6, distance: 4, shadow: { enabled: false }, visibleRange: { max: 30 } } }, { feetPosition: { x: 0.05, y: 0.12, z: -0.08 }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: "oklch(0.35 0.12 45)", emissive: "oklch(0.45 0.15 40)", emissiveIntensity: 1.2 } },
     ],
   });
 });
@@ -107,6 +108,7 @@ FUNG.forEach((f, k) => {
   def(`l8-flow-${k}`, 420, {
     feetPosition: { x: p.x, y: P(s).y - 0.1, z: p.z }, rotation: { yaw: k * 37 }, tags: ["breakable"], physics: "static",
     model: { id: GLB.flow }, layout: BOX(1.2 + (k % 3) * 0.25, h * 1.25, 1.1 + (k % 3) * 0.2), state: brk("flowstone", 150, "Flowstone"),
+    visibleRange: { max: 45 }, castShadow: false,
   });
 });
 [60, 90, 170, 230, 262, 296, 330, 360, 396, 420, 458, 476].forEach((s, k) => {
@@ -114,6 +116,7 @@ FUNG.forEach((f, k) => {
   def(`l8-iron-${k}`, 420, {
     feetPosition: { x: p.x, y: P(s).y + 0.05, z: p.z }, rotation: { yaw: k * 63 }, tags: ["breakable"], physics: "static",
     primitive: { kind: "dodecahedron", radius: 0.64 }, material: { color: "oklch(0.36 0.07 38)", roughness: 0.85, metalness: 0.25 }, state: brk("ironstone", 230, "Ironstone vein"),
+    visibleRange: { max: 45 }, castShadow: false,
     children: [
       { feetPosition: { x: 0.28, y: 0.22, z: 0.18 }, primitive: { kind: "octahedron", radius: 0.28 }, material: { color: "oklch(0.48 0.09 42)", roughness: 0.45, metalness: 0.65 } },
       { feetPosition: { x: -0.24, y: 0.15, z: -0.22 }, primitive: { kind: "octahedron", radius: 0.24 }, material: { color: "oklch(0.44 0.08 40)", roughness: 0.5, metalness: 0.6 } },
@@ -136,12 +139,13 @@ function lay(ctx) {
   for (let k = 0, sd = 1; k * 15 + 20 < 500; k++, sd = -sd) {
     const at0 = 20 + k * 15, q = P(at0, sd * rxAt(at0) * 0.62), y = P(at0).y;
     sp(`l8-worklamp-${k}`, { feetPosition: { x: q.x, y, z: q.z }, rotation: { yaw: q.yaw }, physics: "static",
+      visibleRange: { max: 45 }, castShadow: false,
       primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.05, height: 1.7 }, material: RUST,
       children: [
         { feetPosition: { x: 0, y: -0.02, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.26, height: 0.06 }, material: STEEL },
         { feetPosition: { x: 0, y: 1.62, z: 0.06 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.1, height: 0.16 }, material: STEEL },
         { feetPosition: { x: 0, y: 1.58, z: 0.06 }, primitive: { kind: "sphere", radius: 0.055 }, material: { color: "oklch(0.95 0.08 80)", emissive: "oklch(0.92 0.12 75)", emissiveIntensity: 4 } },
-        { feetPosition: { x: 0, y: 1.5, z: 0.1 }, light: { kind: "point", color: "oklch(0.86 0.1 72)", intensity: 1.7, distance: 13 } },
+        { feetPosition: { x: 0, y: 1.5, z: 0.1 }, light: { kind: "point", color: "oklch(0.86 0.1 72)", intensity: 1.7, distance: 13, shadow: { enabled: false }, visibleRange: { max: 40 } } },
       ] });
   }
 
@@ -154,43 +158,47 @@ function lay(ctx) {
   const bellP = P(18, -4.8, 0);
   sp("l8-bell", {
     ...at({ ...bellP, y: -1.35 }), physics: "static", primitive: { kind: "cylinder", radiusTop: 1.05, radiusBottom: 1.35, height: 2.4 }, material: { color: "oklch(0.58 0.13 82)", roughness: 0.6, metalness: 0.55 },
+    visibleRange: { max: 50 }, castShadow: false,
     children: [
       { feetPosition: { x: 0, y: 2.1, z: 0 }, primitive: { kind: "sphere", radius: 1.05 }, material: { color: "oklch(0.55 0.13 82)", roughness: 0.6, metalness: 0.55 } },
       { feetPosition: { x: 0, y: 0.1, z: 0 }, primitive: { kind: "torus", radius: 1.38, tube: 0.12 }, rotation: { pitch: 90 }, material: RUST },
       { feetPosition: { x: 0, y: 1.3, z: 1.08 }, primitive: { kind: "cylinder", radiusTop: 0.36, radiusBottom: 0.36, height: 0.18 }, rotation: { pitch: 90 }, material: { color: "oklch(0.78 0.12 200)", emissive: "oklch(0.75 0.14 195)", emissiveIntensity: 2.2 } },
       { feetPosition: { x: 0, y: 3.1, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.05, height: 11.0 }, material: STEEL },
-      { feetPosition: { x: 0, y: 3.3, z: 0 }, light: { kind: "point", color: "oklch(0.78 0.15 75)", intensity: 1.8, distance: 12 } },
+      { feetPosition: { x: 0, y: 3.3, z: 0 }, light: { kind: "point", color: "oklch(0.78 0.15 75)", intensity: 1.8, distance: 12, shadow: { enabled: false }, visibleRange: { max: 40 } } },
     ],
   });
   // Shoreline work-lamp tripod & welcome sign
   const shoreLamp = P(34, -4.4, 0);
   sp("l8-shore-rig", {
     ...at(shoreLamp), physics: "static", primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.35, height: 1.9 }, material: STEEL,
+    visibleRange: { max: 45 }, castShadow: false,
     children: [
       { feetPosition: { x: 0, y: 1.9, z: 0 }, primitive: { kind: "box", width: 0.45, height: 0.28, depth: 0.22 }, material: { color: "oklch(0.88 0.12 85)", emissive: "oklch(0.9 0.14 85)", emissiveIntensity: 3 } },
-      { feetPosition: { x: 0, y: 2.1, z: 0 }, light: { kind: "point", color: "oklch(0.86 0.11 85)", intensity: 1.6, distance: 14 } },
+      { feetPosition: { x: 0, y: 2.1, z: 0 }, light: { kind: "point", color: "oklch(0.86 0.11 85)", intensity: 1.6, distance: 14, shadow: { enabled: false }, visibleRange: { max: 35 } } },
     ],
   });
   sp("l8-welcome", {
     ...at(P(38, 6.5, 1.0)), rotation: { yaw: P(38).yaw + 150 }, ...sign(2.8, 1.8, `${MEG}<div style="font-size:92px">WELCOME TO THE 9TH ROAD</div><div style="font-size:56px;color:#e8e0c0">« M.E.G. OUTPOST (8.7 MILES | 14 KM) »</div><div style="font-size:44px;color:#c8d8b8">Help is ahead! Stay strong.</div><div style="font-size:34px;opacity:.7;margin-top:6px">M.E.G. — Bettering Humanity</div></div>`),
+    visibleRange: { max: 50 }, castShadow: false,
     children: [
       { feetPosition: { x: -1.1, y: -1.0, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.06, height: 2.1 }, material: STEEL },
       { feetPosition: { x: 1.1, y: -1.0, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.06, height: 2.1 }, material: STEEL },
     ],
   });
-  sp("l8-welcome-lamp", { feetPosition: { x: P(38, 5.2).x, y: P(38).y + 2.2, z: P(38, 5.2).z }, light: { kind: "point", color: "oklch(0.85 0.1 90)", intensity: 1.1, distance: 9 } });
+  sp("l8-welcome-lamp", { feetPosition: { x: P(38, 5.2).x, y: P(38).y + 2.2, z: P(38, 5.2).z }, light: { kind: "point", color: "oklch(0.85 0.1 90)", intensity: 1.1, distance: 9, shadow: { enabled: false }, visibleRange: { max: 35 } } });
 
   // ---- the markers: a plaque every 50 m mounted on steel stanchions with caged beacon bulbs; "stay on the road"
   for (let s = 50, n = 0; s <= 460; s += 50, n++) {
     const p = P(s, -(ST.hall.rx - 1.2), 1.55);
     sp(`l8-marker-${n}`, {
       ...at({ ...p, yaw: P(s).yaw - 90 }), ...sign(0.9, 0.5, `<div face="front" width="0.9m" style="font-family:Arial,sans-serif;font-weight:900;color:#f2d870;text-align:center;line-height:1.05"><div style="font-size:46px">9TH ROAD</div><div style="font-size:34px;color:#e8e0c0">MARKER #${82 - n}</div></div>`),
+      visibleRange: { max: 40 }, castShadow: false,
       children: [
         { feetPosition: { x: 0, y: -1.55, z: -0.04 }, primitive: { kind: "cylinder", radiusTop: 0.045, radiusBottom: 0.06, height: 1.8 }, material: STEEL },
         { feetPosition: { x: 0, y: 0.56, z: 0.04 }, primitive: { kind: "sphere", radius: 0.09 }, material: { color: "oklch(0.88 0.14 85)", emissive: "oklch(0.9 0.16 85)", emissiveIntensity: 2.8 } },
       ],
     });
-    sp(`l8-marker-l-${n}`, { feetPosition: { x: p.x, y: p.y + 0.6, z: p.z }, light: { kind: "point", color: "oklch(0.82 0.12 90)", intensity: 0.65, distance: 7 } });
+    sp(`l8-marker-l-${n}`, { feetPosition: { x: p.x, y: p.y + 0.6, z: p.z }, light: { kind: "point", color: "oklch(0.82 0.12 90)", intensity: 0.65, distance: 7, shadow: { enabled: false }, visibleRange: { max: 30 } } });
   }
 
   // ---- Station 2 & 3: the hall, the eerie Face Rock monolith, and the looping crawl (scripts/l8-use.js)
@@ -198,6 +206,7 @@ function lay(ctx) {
   sp("l8-loop-sign", {
     ...at({ ...P(78, 0, 2.7), yaw: P(78).yaw + 180 }),
     ...sign(1.2, 0.65, `<div face="front" width="1.2m" style="font-family:Arial,sans-serif;font-weight:900;color:#f2d870;text-align:center;line-height:1.05"><div style="font-size:36px;color:#c8d8b8">▼ 9TH ROAD ▼</div><div style="font-size:56px;color:#fff;letter-spacing:2px">MARKER #74</div></div>`),
+    visibleRange: { max: 40 }, castShadow: false,
     visible: true, state: { loop: true },
     children: [
       { feetPosition: { x: -0.5, y: 0.55, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.035, radiusBottom: 0.035, height: 1.2 }, material: STEEL },
@@ -205,13 +214,14 @@ function lay(ctx) {
       { feetPosition: { x: 0, y: -0.42, z: 0.05 }, primitive: { kind: "sphere", radius: 0.1 }, material: { color: "oklch(0.88 0.16 85)", emissive: "oklch(0.9 0.18 85)", emissiveIntensity: 3.2 } },
     ],
   });
-  sp("l8-loop-lamp", { feetPosition: { x: P(78).x, y: P(78).y + 2.9, z: P(78).z }, light: { kind: "point", color: "oklch(0.88 0.15 85)", intensity: 1.4, distance: 10 } });
+  sp("l8-loop-lamp", { feetPosition: { x: P(78).x, y: P(78).y + 2.9, z: P(78).z }, light: { kind: "point", color: "oklch(0.88 0.15 85)", intensity: 1.4, distance: 10, shadow: { enabled: false }, visibleRange: { max: 35 } } });
   sp("l8-crawl-end", { ...at(P(154, 0, 1.0)), physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 2.6, height: 2.2, depth: 1.4 }, visible: false, behavior: "scripts/l8-use.js", state: { kind: "loop", back: P(72, 2, 0.2) } });
 
   // Sculpted Pareidolia "Face Rock" landmark with dramatic eerie shadow casting
   const fr = P(90, 7, 0.0);
   sp("l8-face-rock", {
     ...at({ ...fr, yaw: fr.yaw - 95 }), physics: "static", primitive: { kind: "dodecahedron", radius: 1.35 }, scale: { x: 0.95, y: 1.45, z: 0.85 }, material: FLOW_MAT,
+    visibleRange: { max: 50 }, castShadow: false,
     children: [
       { feetPosition: { x: 0, y: 1.75, z: 0.55 }, primitive: { kind: "box", width: 1.15, height: 0.28, depth: 0.45 }, material: ROCK }, // brow ridge
       { feetPosition: { x: -0.32, y: 1.42, z: 0.68 }, primitive: { kind: "sphere", radius: 0.22 }, material: TAR_ROCK }, // left eye socket
@@ -220,7 +230,7 @@ function lay(ctx) {
       { feetPosition: { x: 0, y: 0.62, z: 0.66 }, primitive: { kind: "box", width: 0.58, height: 0.26, depth: 0.35 }, material: TAR_ROCK }, // hollow stone mouth
     ],
   });
-  sp("l8-face-lamp", { feetPosition: { x: fr.x - 2.4, y: fr.y + 0.8, z: fr.z + 1.5 }, light: { kind: "point", color: "oklch(0.72 0.08 240)", intensity: 1.6, distance: 12 } });
+  sp("l8-face-lamp", { feetPosition: { x: fr.x - 2.4, y: fr.y + 0.8, z: fr.z + 1.5 }, light: { kind: "point", color: "oklch(0.72 0.08 240)", intensity: 1.6, distance: 12, shadow: { enabled: false }, visibleRange: { max: 35 } } });
 
   // ---- Station 4: the flooded cavern: rising tide (scripts/l8-life.js), parkour stepping stones, tide gauge, and the Dead Caver on the high ledge
   const fl = P(176, 0, 0);
@@ -228,16 +238,17 @@ function lay(ctx) {
   // Parkour stepping pillars & scramble ledges leading up out of the floodwaters to the Dead Caver's ledge
   [[166, -3.4, 0.6, 1.8], [171, -4.8, 1.15, 2.0], [177, -5.8, 1.7, 2.2], [183, -6.2, 2.2, 2.3], [189, -6.4, 2.6, 2.4]].forEach(([s, side, h, w], k) => {
     const sp0 = P(s, side, 0);
-    sp(`l8-step-${k}`, { ...at(sp0), physics: "static", primitive: { kind: "cylinder", radiusTop: w * 0.52, radiusBottom: w * 0.65, height: h, radialSegments: 8 }, material: k % 2 ? FLOW_MAT : ROCK });
+    sp(`l8-step-${k}`, { ...at(sp0), physics: "static", primitive: { kind: "cylinder", radiusTop: w * 0.52, radiusBottom: w * 0.65, height: h, radialSegments: 8 }, material: k % 2 ? FLOW_MAT : ROCK, visibleRange: { max: 45 }, castShadow: false });
   });
   // Tide Depth Gauge Pole with warning beacon
   const gp = P(169, 3.6, 0);
   sp("l8-gauge", {
     ...at({ ...gp, yaw: gp.yaw + 180 }), physics: "static", primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.09, height: 3.8 }, material: { color: "oklch(0.75 0.16 80)", roughness: 0.5 },
+    visibleRange: { max: 45 }, castShadow: false,
     children: [
       { feetPosition: { x: 0, y: 2.6, z: 0.08 }, ...sign(0.65, 0.42, `<div face="front" width="0.65m" style="font-family:Arial,sans-serif;font-weight:900;color:#ff6a4a;text-align:center;line-height:1.05"><div style="font-size:38px">FLOOD GAUGE</div><div style="font-size:26px;color:#fff">HIGH TIDE: +3.5M · CLIMB LEFT</div></div>`) },
       { feetPosition: { x: 0, y: 3.8, z: 0 }, primitive: { kind: "sphere", radius: 0.12 }, material: { color: "oklch(0.65 0.22 30)", emissive: "oklch(0.7 0.24 28)", emissiveIntensity: 3 } },
-      { feetPosition: { x: 0, y: 3.95, z: 0 }, light: { kind: "point", color: "oklch(0.68 0.22 30)", intensity: 1.1, distance: 9 } },
+      { feetPosition: { x: 0, y: 3.95, z: 0 }, light: { kind: "point", color: "oklch(0.68 0.22 30)", intensity: 1.1, distance: 9, shadow: { enabled: false }, visibleRange: { max: 35 } } },
     ],
   });
   // Dead Caver in an orange caving suit with helmet, flickering headlamp beam, dual air tanks, and pack
@@ -245,12 +256,13 @@ function lay(ctx) {
   sp("l8-caver", {
     ...at({ ...cv, y: P(196).y + 2.9 }), rotation: { yaw: cv.yaw + 90 }, tags: ["container", "remains"],
     primitive: { kind: "box", width: 0.62, height: 0.85, depth: 0.42 }, material: suitMat,
+    visibleRange: { max: 40 }, castShadow: false,
     state: { name: "Dead caver (orange caving suit)", verb: "Search", info: "A dent in the helmet; not yet decayed. His headlamp still shines weakly across the wet stone.", items: "battery,battery,kit,ration,cloth:topw:jacket:ff7a1a,cloth:botw:pants:ff7a1a,cloth:shoes:boots:2b2b33" },
     children: [
       { feetPosition: { x: 0, y: 0.88, z: 0.04 }, primitive: { kind: "sphere", radius: 0.2 }, material: { color: "oklch(0.7 0.05 60)", roughness: 0.8 } }, // head
       { feetPosition: { x: 0, y: 0.98, z: 0.02 }, primitive: { kind: "sphere", radius: 0.23 }, material: { color: "oklch(0.82 0.15 85)", roughness: 0.35 } }, // caving helmet
       { feetPosition: { x: 0, y: 1.06, z: 0.24 }, primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.06, height: 0.08 }, rotation: { pitch: 90 }, material: { color: "#fff8d0", emissive: "#fff4b8", emissiveIntensity: 4 } }, // headlamp lens
-      { feetPosition: { x: 0, y: 1.06, z: 0.55 }, light: { kind: "point", color: "oklch(0.92 0.08 85)", intensity: 1.8, distance: 10 } },
+      { feetPosition: { x: 0, y: 1.06, z: 0.55 }, light: { kind: "point", color: "oklch(0.92 0.08 85)", intensity: 1.8, distance: 10, shadow: { enabled: false }, visibleRange: { max: 35 } } },
       { feetPosition: { x: -0.18, y: -0.02, z: 0.48 }, primitive: { kind: "box", width: 0.22, height: 0.2, depth: 0.72 }, material: suitMat }, // left leg
       { feetPosition: { x: 0.18, y: -0.02, z: 0.48 }, primitive: { kind: "box", width: 0.22, height: 0.2, depth: 0.72 }, material: suitMat },  // right leg
       { feetPosition: { x: -0.36, y: 0.18, z: 0.16 }, primitive: { kind: "box", width: 0.16, height: 0.58, depth: 0.18 }, rotation: { pitch: -25 }, material: suitMat }, // left arm
@@ -263,20 +275,22 @@ function lay(ctx) {
 
   // ---- Station 5: Hyperspace Lane: glowing fungi, cold stream with stepping stones, stone kazoo shrine, and harmonic resonance altar
   for (const [id, d] of Object.entries(DEFS)) sp(id, d.spec);
-  sp("l8-stream", { ...at({ ...P(244, 0, 0), y: P(244).y + 0.05 }), primitive: { kind: "box", width: 2.4, height: 0.12, depth: 46 }, material: { kind: "water", color: "oklch(0.3 0.05 215)", opacity: 0.8, waveIntensity: 0.08 } });
+  sp("l8-stream", { ...at({ ...P(244, 0, 0), y: P(244).y + 0.05 }), primitive: { kind: "box", width: 2.4, height: 0.12, depth: 46 }, material: { kind: "water", color: "oklch(0.3 0.05 215)", opacity: 0.8, waveIntensity: 0.08 }, visibleRange: { max: 55 }, castShadow: false });
   // Carved stone shrine around the Stone Kazoo
   const kzP = P(262, 6.5, 0);
   sp("l8-shrine", {
     ...at({ ...kzP, yaw: kzP.yaw - 90 }), physics: "static", primitive: { kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.58, height: 0.52, radialSegments: 8 }, material: FLOW_MAT,
+    visibleRange: { max: 45 }, castShadow: false,
     children: [
       { feetPosition: { x: -0.48, y: 0, z: -0.1 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.16, height: 1.55, radialSegments: 7 }, material: ROCK },
       { feetPosition: { x: 0.48, y: 0, z: -0.1 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.16, height: 1.55, radialSegments: 7 }, material: ROCK },
       { feetPosition: { x: 0, y: 1.48, z: -0.1 }, primitive: { kind: "box", width: 1.25, height: 0.22, depth: 0.42 }, material: FLOW_MAT },
-      { feetPosition: { x: 0, y: 0.9, z: 0.1 }, light: { kind: "point", color: "oklch(0.78 0.14 190)", intensity: 1.2, distance: 7 } },
+      { feetPosition: { x: 0, y: 0.9, z: 0.1 }, light: { kind: "point", color: "oklch(0.78 0.14 190)", intensity: 1.2, distance: 7, shadow: { enabled: false }, visibleRange: { max: 35 } } },
     ],
   });
   sp("l8-kazoo", {
     ...at(P(262, 6.5, 0.54)), tags: ["usable"], primitive: { kind: "box", width: 0.22, height: 0.09, depth: 0.12 }, material: { color: "oklch(0.65 0.04 88)", roughness: 0.75 }, behavior: "scripts/l8-use.js",
+    visibleRange: { max: 35 }, castShadow: false,
     state: { kind: "kazoo", name: "Stone kazoo", verb: "Take", info: "Cold, rough and jagged. Carved with acoustic holes that hum in the draft.", tint: "#bfb89c" },
   });
   // Interactive Harmonic Resonance Altar in Hyperspace Lane
@@ -284,6 +298,7 @@ function lay(ctx) {
   sp("l8-altar", {
     ...at({ ...altP, yaw: altP.yaw + 90 }), tags: ["usable"], physics: "static", behavior: "scripts/l8-use.js",
     primitive: { kind: "cylinder", radiusTop: 0.55, radiusBottom: 0.72, height: 0.95, radialSegments: 8 }, material: FLOW_MAT,
+    visibleRange: { max: 45 }, castShadow: false,
     fx: { script: SPORE_FX },
     state: { kind: "altar", name: "Acoustic stone pipes", verb: "Hum into the stone", info: "Hollow flowstone flutes carved by the Harmouth Society. They resonate with the blue-green light guides.", tint: "#7cf0e4" },
     children: [
@@ -297,6 +312,7 @@ function lay(ctx) {
   [[56, 3], [86, -4], [170, 5], [232, 4], [296, -5], [360, 5], [424, -5]].forEach(([s, side], i) => sp(`l8-pool-${i}`, {
     ...at(P(s, side, 0.05)), tags: ["usable"], primitive: { kind: "cylinder", radiusTop: 0.92, radiusBottom: 1.05, height: 0.12 },
     material: { kind: "water", color: "oklch(0.55 0.08 90)", opacity: 0.82, waveIntensity: 0.03 },
+    visibleRange: { max: 45 }, castShadow: false,
     behavior: "scripts/l8-use.js", state: { kind: "pool", name: "Almond water pool", verb: "Drink", info: "Cold and bitter with harmless minerals. Do not bathe in it.", tint: "#d8d098" },
     children: [{ feetPosition: { x: 0, y: 0.02, z: 0 }, primitive: { kind: "torus", radius: 0.96, tube: 0.11 }, rotation: { pitch: 90 }, material: FLOW_MAT }],
   }));
@@ -307,6 +323,7 @@ function lay(ctx) {
     const s = 286 + k * 4.5, side = ((k * 7) % 11) - 5, up = 1.6 + (k % 4) * 1.0, w = 3.4 + (k % 3);
     sp(`l8-web-${k}`, {
       behavior: "scripts/ambient-anim.js", state: { anim: { kind: "sway", deg: 3.2, sec: 4.2 + (k % 5) * 0.6, axis: "pitch", phase: (k % 9) / 9 } },
+      visibleRange: { max: 45 }, castShadow: false,
       ...at({ ...P(s, side, up), yaw: P(s).yaw + k * 23 }), primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: w * 1.3 }, rotation: { yaw: P(s).yaw + k * 23, roll: 52 }, material: webMat,
       children: [
         { feetPosition: { x: 0, y: 1.2, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: w * 1.3 }, rotation: { roll: -104 }, material: webMat },
@@ -316,24 +333,26 @@ function lay(ctx) {
       ],
     });
   }
-  sp("l8-glyph", { ...at({ ...P(278, -2.6, 1.6), yaw: P(278).yaw + 90 }), ...sign(1.3, 1.3, `<div face="front" width="1.3m" style="font-family:serif;font-weight:900;color:#ff5a4a;text-align:center;font-size:120px;line-height:1;text-shadow:0 0 18px #ff2a1a">⛧<div style="font-size:30px;font-family:Arial,sans-serif">NEVER ENTER</div></div>`, "oklch(0.09 0.01 20)"), children: [{ feetPosition: { x: 0, y: 0, z: 0.4 }, light: { kind: "point", color: "oklch(0.6 0.22 25)", intensity: 1.2, distance: 6.5 } }] });
+  sp("l8-glyph", { ...at({ ...P(278, -2.6, 1.6), yaw: P(278).yaw + 90 }), ...sign(1.3, 1.3, `<div face="front" width="1.3m" style="font-family:serif;font-weight:900;color:#ff5a4a;text-align:center;font-size:120px;line-height:1;text-shadow:0 0 18px #ff2a1a">⛧<div style="font-size:30px;font-family:Arial,sans-serif">NEVER ENTER</div></div>`, "oklch(0.09 0.01 20)"), visibleRange: { max: 45 }, castShadow: false, children: [{ feetPosition: { x: 0, y: 0, z: 0.4 }, light: { kind: "point", color: "oklch(0.6 0.22 25)", intensity: 1.2, distance: 6.5, shadow: { enabled: false }, visibleRange: { max: 30 } } }] });
 
   // ---- Station 7: the boiling tar pool, fume FX, and the B.N.T.G. Tar Dredge Winch
   const tp = P(376, 0, 0.04);
   sp("l8-tar", {
     ...at(tp), primitive: { kind: "cylinder", radiusTop: 3.45, radiusBottom: 3.55, height: 0.14 }, material: { color: "oklch(0.06 0.008 280)", roughness: 0.1, metalness: 0.3 },
+    visibleRange: { max: 55 }, castShadow: false,
     fx: { script: TAR_FX }, state: { c: { x: tp.x, z: tp.z } },
     children: [
       { feetPosition: { x: 0, y: 0.04, z: 0 }, primitive: { kind: "torus", radius: 3.5, tube: 0.22 }, rotation: { pitch: 90 }, material: TAR_ROCK },
-      { feetPosition: { x: 0, y: 0.5, z: 0 }, light: { kind: "point", color: "oklch(0.55 0.16 40)", intensity: 0.9, distance: 9 } },
+      { feetPosition: { x: 0, y: 0.5, z: 0 }, light: { kind: "point", color: "oklch(0.55 0.16 40)", intensity: 0.9, distance: 9, shadow: { enabled: false }, visibleRange: { max: 35 } } },
     ],
   });
-  sp("l8-tar-warn", { ...at({ ...P(364, 3, 1.1), yaw: P(364).yaw + 180 }), ...sign(0.8, 0.5, `<div face="front" width="0.8m" style="font-family:Arial,sans-serif;font-weight:900;color:#ff9a4a;text-align:center;font-size:50px;line-height:1">TAR<div style="font-size:30px">KEEP BACK · IT IS HOT</div></div>`) });
+  sp("l8-tar-warn", { ...at({ ...P(364, 3, 1.1), yaw: P(364).yaw + 180 }), ...sign(0.8, 0.5, `<div face="front" width="0.8m" style="font-family:Arial,sans-serif;font-weight:900;color:#ff9a4a;text-align:center;font-size:50px;line-height:1">TAR<div style="font-size:30px">KEEP BACK · IT IS HOT</div></div>`), visibleRange: { max: 40 }, castShadow: false });
   // B.N.T.G. Tar Dredge Winch & Timber Catwalk overlooking the Tar Pool
   const drP = P(370, -4.4, 0.05);
   sp("l8-dredge", {
     ...at({ ...drP, yaw: drP.yaw + 65 }), tags: ["usable"], physics: "static", behavior: "scripts/l8-use.js",
     primitive: { kind: "box", width: 2.2, height: 0.18, depth: 2.6 }, material: WOOD,
+    visibleRange: { max: 45 }, castShadow: false,
     state: { kind: "dredge", name: "B.N.T.G. tar dredge winch", verb: "Haul the dredge line", info: "A hand-cranked cable winch over the edge of the boiling tar. Prospectors use it to fish up pitch and sunken gear without stepping into reach of the hands.", tint: "#ffb86c" },
     children: [
       { feetPosition: { x: -0.75, y: 0.18, z: 0.8 }, primitive: { kind: "box", width: 0.14, height: 1.5, depth: 0.14 }, material: WOOD },
@@ -342,7 +361,7 @@ function lay(ctx) {
       { feetPosition: { x: 0, y: 0.85, z: 0.8 }, primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.22, height: 1.35 }, rotation: { roll: 90 }, material: RUST }, // winch drum
       { feetPosition: { x: 0, y: 1.65, z: 1.35 }, primitive: { kind: "box", width: 0.14, height: 0.14, depth: 1.4 }, material: STEEL }, // crane boom
       { feetPosition: { x: 0, y: 0.35, z: 1.95 }, primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: 1.3 }, material: STEEL }, // cable
-      { feetPosition: { x: 0, y: 1.9, z: 0.8 }, light: { kind: "point", color: "oklch(0.82 0.14 75)", intensity: 1.4, distance: 8 } },
+      { feetPosition: { x: 0, y: 1.9, z: 0.8 }, light: { kind: "point", color: "oklch(0.82 0.14 75)", intensity: 1.4, distance: 8, shadow: { enabled: false }, visibleRange: { max: 35 } } },
     ],
   });
 
@@ -350,6 +369,7 @@ function lay(ctx) {
   const cf = P(436, 0, 0.05);
   sp("l8-fire", {
     ...at(cf), tags: ["usable"], primitive: { kind: "cylinder", radiusTop: 0.62, radiusBottom: 0.72, height: 0.18 }, material: { color: "oklch(0.22 0.03 40)", roughness: 0.95 },
+    visibleRange: { max: 55 }, castShadow: false,
     fx: { script: FIRE_FX }, behavior: "scripts/l8-use.js",
     state: { kind: "fire", name: "Camp fire", verb: "Warm up", info: "Dry yourself. Rest a while.", tint: "#ffb066" },
     children: [
@@ -357,11 +377,12 @@ function lay(ctx) {
       { feetPosition: { x: 0, y: 0.18, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.1, height: 0.95 }, rotation: { pitch: 72, yaw: 25 }, material: WOOD },
       { feetPosition: { x: 0, y: 0.18, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.1, height: 0.95 }, rotation: { pitch: 72, yaw: 115 }, material: WOOD },
       { feetPosition: { x: 0, y: 0.15, z: 0 }, primitive: { kind: "sphere", radius: 0.32 }, scale: { x: 1.2, y: 0.5, z: 1.2 }, material: { color: "oklch(0.75 0.2 45)", emissive: "oklch(0.82 0.22 50)", emissiveIntensity: 3.5 } },
-      { feetPosition: { x: 0, y: 1.0, z: 0 }, light: { kind: "point", color: "oklch(0.78 0.17 55)", intensity: 5.5, distance: 26 } },
+      { feetPosition: { x: 0, y: 1.0, z: 0 }, light: { kind: "point", color: "oklch(0.78 0.17 55)", intensity: 5.5, distance: 26, shadow: { enabled: false }, visibleRange: { max: 45 } } },
     ],
   });
   sp("l8-pot", {
     ...at(P(436, 1.45, 0.08)), tags: ["usable"], primitive: { kind: "cylinder", radiusTop: 0.38, radiusBottom: 0.32, height: 0.44 },
+    visibleRange: { max: 40 }, castShadow: false,
     material: { color: "oklch(0.26 0.02 250)", metalness: 0.75, roughness: 0.45 }, fx: { script: STEAM_FX }, behavior: "scripts/l8-use.js",
     state: { kind: "soup", name: "Pot of soup", verb: "Buy a bowl ($3)", info: "The cook's pot. Eat it, or throw it.", tint: "#e8c070" },
     children: [
@@ -377,6 +398,7 @@ function lay(ctx) {
     const tp0 = P(436 + dz, side, 0.05), canvas = { color: tentColors[i], roughness: 0.92 };
     sp(`l8-tent-${i}`, {
       ...at({ ...tp0, yaw: P(436).yaw + i * 70 + 35 }), physics: "static",
+      visibleRange: { max: 50 }, castShadow: false,
       primitive: { kind: "box", width: 2.3, height: 0.12, depth: 2.8 }, material: { color: "oklch(0.24 0.03 60)", roughness: 0.95 }, // ground tarp
       children: [
         { feetPosition: { x: -0.56, y: 0.08, z: 0 }, primitive: { kind: "box", width: 0.08, height: 1.95, depth: 2.75 }, rotation: { roll: -34 }, material: canvas }, // left roof slope
@@ -395,35 +417,37 @@ function lay(ctx) {
   sp("l8-radio", {
     ...at({ ...radP, yaw: radP.yaw - 110 }), tags: ["usable"], physics: "static", behavior: "scripts/l8-use.js",
     primitive: { kind: "box", width: 1.25, height: 0.82, depth: 0.72 }, material: WOOD,
+    visibleRange: { max: 40 }, castShadow: false,
     state: { kind: "radio", name: "Harmouth field transceiver", verb: "Tune transceiver", info: "A shortwave cave-induction radio wired to a copper ground spike. It picks up Harmouth survey logs and M.E.G. outpost telemetry.", tint: "#88e8a0" },
     children: [
       { feetPosition: { x: -0.15, y: 0.82, z: 0 }, primitive: { kind: "box", width: 0.52, height: 0.34, depth: 0.38 }, material: { color: "oklch(0.28 0.04 145)", roughness: 0.5, metalness: 0.6 } },
       { feetPosition: { x: -0.15, y: 0.92, z: 0.2 }, primitive: { kind: "box", width: 0.28, height: 0.12, depth: 0.02 }, material: { color: "oklch(0.75 0.16 145)", emissive: "oklch(0.8 0.18 145)", emissiveIntensity: 2.5 } },
       { feetPosition: { x: 0.05, y: 1.15, z: -0.1 }, primitive: { kind: "cylinder", radiusTop: 0.01, radiusBottom: 0.02, height: 1.1 }, material: STEEL },
-      { feetPosition: { x: -0.15, y: 1.15, z: 0.25 }, light: { kind: "point", color: "oklch(0.75 0.16 145)", intensity: 0.9, distance: 5 } },
+      { feetPosition: { x: -0.15, y: 1.15, z: 0.25 }, light: { kind: "point", color: "oklch(0.75 0.16 145)", intensity: 0.9, distance: 5, shadow: { enabled: false }, visibleRange: { max: 30 } } },
     ],
   });
-  sp("l8-camp-sign", { ...at({ ...P(414, 4.5, 1.4), yaw: P(414).yaw + 160 }), ...sign(2.0, 1.1, `${MEG}<div style="font-size:70px">9TH ROAD CAMP</div><div style="font-size:42px;color:#e8e0c0">M.E.G. · B.N.T.G. · HARMOUTH SOCIETY</div><div style="font-size:34px;color:#c8d8b8">hot meals · a place to rest · guides for hire</div></div>`) });
+  sp("l8-camp-sign", { ...at({ ...P(414, 4.5, 1.4), yaw: P(414).yaw + 160 }), ...sign(2.0, 1.1, `${MEG}<div style="font-size:70px">9TH ROAD CAMP</div><div style="font-size:42px;color:#e8e0c0">M.E.G. · B.N.T.G. · HARMOUTH SOCIETY</div><div style="font-size:34px;color:#c8d8b8">hot meals · a place to rest · guides for hire</div></div>`), visibleRange: { max: 45 }, castShadow: false });
   sp("l8-from-camp", at(P(424, -2, 0.1)));
 
   // ---- Station 9: Physical terrain transition at the end of the Road:
   // 1. Rock to Sand & Rubble (s = 464..472)
-  sp("l8-rubble-1", { ...at(P(465, -1.2, 0.02)), primitive: { kind: "box", width: 3.8, height: 0.12, depth: 4.5 }, material: { color: "oklch(0.34 0.03 62)", roughness: 0.95 } });
-  sp("l8-rubble-2", { ...at(P(468, 1.4, 0.02)), primitive: { kind: "box", width: 3.4, height: 0.14, depth: 4.0 }, material: { color: "oklch(0.31 0.03 65)", roughness: 0.95 } });
+  sp("l8-rubble-1", { ...at(P(465, -1.2, 0.02)), primitive: { kind: "box", width: 3.8, height: 0.12, depth: 4.5 }, material: { color: "oklch(0.34 0.03 62)", roughness: 0.95 }, visibleRange: { max: 45 }, castShadow: false });
+  sp("l8-rubble-2", { ...at(P(468, 1.4, 0.02)), primitive: { kind: "box", width: 3.4, height: 0.14, depth: 4.0 }, material: { color: "oklch(0.31 0.03 65)", roughness: 0.95 }, visibleRange: { max: 45 }, castShadow: false });
   sp("l8-survey-stake", {
-    ...at(P(466, 3.2, 0)), primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 1.2 }, material: WOOD,
+    ...at(P(466, 3.2, 0)), primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 1.2 }, material: WOOD, visibleRange: { max: 35 }, castShadow: false,
     children: [{ feetPosition: { x: 0, y: 1.05, z: 0.1 }, primitive: { kind: "box", width: 0.02, height: 0.16, depth: 0.26 }, material: { color: "#f2d870" } }],
   });
 
   // 2. Sand to Crushed Gravel Roadbed with Weathered Timber Curbs (s = 472..482)
-  sp("l8-gravel", { ...at(P(476, 0, 0.03)), primitive: { kind: "box", width: 7.4, height: 0.14, depth: 10.5 }, material: { color: "oklch(0.26 0.02 70)", roughness: 0.98 } });
-  sp("l8-curb-l", { ...at(P(476, -3.5, 0.12)), primitive: { kind: "box", width: 0.26, height: 0.22, depth: 10.2 }, material: WOOD });
-  sp("l8-curb-r", { ...at(P(476, 3.5, 0.12)), primitive: { kind: "box", width: 0.26, height: 0.22, depth: 10.2 }, material: WOOD });
+  sp("l8-gravel", { ...at(P(476, 0, 0.03)), primitive: { kind: "box", width: 7.4, height: 0.14, depth: 10.5 }, material: { color: "oklch(0.26 0.02 70)", roughness: 0.98 }, visibleRange: { max: 50 }, castShadow: false });
+  sp("l8-curb-l", { ...at(P(476, -3.5, 0.12)), primitive: { kind: "box", width: 0.26, height: 0.22, depth: 10.2 }, material: WOOD, visibleRange: { max: 50 }, castShadow: false });
+  sp("l8-curb-r", { ...at(P(476, 3.5, 0.12)), primitive: { kind: "box", width: 0.26, height: 0.22, depth: 10.2 }, material: WOOD, visibleRange: { max: 50 }, castShadow: false });
 
   // 3. Gravel to Asphalt with Painted Yellow Center Line Dashes (s = 484..504)
   const asp = P(492, 0, -0.04);
   sp("l8-asphalt", {
     ...at({ ...asp, y: P(492).y - 0.04 }), primitive: { kind: "box", width: 8.5, height: 0.14, depth: 26 }, material: { color: "oklch(0.18 0.005 260)", roughness: 0.92 }, physics: "static",
+    visibleRange: { max: 55 }, castShadow: false,
     children: [-10, -5, 0, 5, 10].map((dz) => ({
       feetPosition: { x: 0, y: 0.08, z: dz }, primitive: { kind: "box", width: 0.2, height: 0.02, depth: 2.8 }, material: { color: "oklch(0.8 0.18 85)", roughness: 0.65 },
     })),
@@ -433,6 +457,7 @@ function lay(ctx) {
   const gr = P(492, 3.8, 0.1);
   sp("l8-guardrail", {
     ...at({ ...gr, yaw: gr.yaw }), physics: "static",
+    visibleRange: { max: 50 }, castShadow: false,
     primitive: { kind: "box", width: 0.12, height: 0.42, depth: 18 }, material: STEEL,
     children: [-7, -3.5, 0, 3.5, 7].map((dz) => ({
       feetPosition: { x: 0.05, y: -0.42, z: dz }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 0.85 }, material: STEEL,
@@ -443,12 +468,13 @@ function lay(ctx) {
   const bPos = P(489, -1.2, 0.08);
   sp("l8-barricade", {
     ...at({ ...bPos, yaw: bPos.yaw + 180 }), physics: "static",
+    visibleRange: { max: 45 }, castShadow: false,
     children: [
       { feetPosition: { x: -0.85, y: 0.45, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 1.0 }, material: WOOD },
       { feetPosition: { x: 0.85, y: 0.45, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 1.0 }, material: WOOD },
       { feetPosition: { x: 0, y: 0.72, z: 0.04 }, ...sign(1.9, 0.55, `<div face="front" width="1.9m" style="font-family:Arial,sans-serif;font-weight:900;color:#fff;text-align:center;line-height:1.1"><div style="background:#b32400;padding:4px;font-size:42px">ROAD CLOSED</div><div style="color:#ffc850;font-size:26px;margin-top:2px">ABNORMAL TOPOLOGY · DO NOT CROSS</div></div>`) },
       { feetPosition: { x: 0, y: 1.15, z: 0 }, primitive: { kind: "sphere", radius: 0.1 }, material: { color: "#ffb020", emissive: "#ffa000", emissiveIntensity: 3.5 } },
-      { feetPosition: { x: 0, y: 1.25, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.18 70)", intensity: 1.8, distance: 9 } },
+      { feetPosition: { x: 0, y: 1.25, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.18 70)", intensity: 1.8, distance: 9, shadow: { enabled: false }, visibleRange: { max: 35 } } },
     ],
   });
 
@@ -456,12 +482,13 @@ function lay(ctx) {
   const sl = P(496, 3.7, 0.05);
   sp("l8-streetlight", {
     ...at({ ...sl, yaw: sl.yaw - 90 }), physics: "static",
+    visibleRange: { max: 55 }, castShadow: false,
     primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.11, height: 5.6 }, material: STEEL,
     children: [
       { feetPosition: { x: 1.1, y: 5.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 2.4 }, rotation: { roll: -60 }, material: STEEL }, // mast arm
       { feetPosition: { x: 2.1, y: 5.85, z: 0 }, primitive: { kind: "box", width: 0.34, height: 0.18, depth: 0.65 }, material: STEEL }, // cobrahead housing
       { feetPosition: { x: 2.1, y: 5.74, z: 0 }, primitive: { kind: "box", width: 0.24, height: 0.04, depth: 0.42 }, material: { color: "#ffc860", emissive: "#ffa520", emissiveIntensity: 4.8 } }, // sodium lens
-      { feetPosition: { x: 2.1, y: 5.5, z: 0 }, light: { kind: "point", color: "oklch(0.84 0.19 72)", intensity: 6.2, distance: 34 } },
+      { feetPosition: { x: 2.1, y: 5.5, z: 0 }, light: { kind: "point", color: "oklch(0.84 0.19 72)", intensity: 6.2, distance: 34, shadow: { enabled: false }, visibleRange: { max: 45 } } },
     ],
   });
 
@@ -469,17 +496,19 @@ function lay(ctx) {
   const endSign = P(498, 3.4, 0);
   sp("l8-end-sign", {
     ...at({ ...endSign, yaw: endSign.yaw + 165 }), physics: "static", primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.06, height: 2.4 }, material: STEEL,
+    visibleRange: { max: 45 }, castShadow: false,
     children: [
       { feetPosition: { x: 0, y: 1.85, z: 0 }, ...sign(1.6, 0.75, `<div face="front" width="1.6m" style="font-family:Arial,sans-serif;font-weight:900;color:#fff;text-align:center;line-height:1.1"><div style="font-size:48px">LEVEL 9 · THE SUBURBS</div><div style="font-size:32px;color:#cfe8d8">NEXT EXIT · WATCH FOR NEIGHBORS</div></div>`, "oklch(0.28 0.08 155)") },
     ],
   });
-  sp("l8-glow", { feetPosition: { x: P(502).x, y: P(502).y + 1.4, z: P(502).z }, primitive: { kind: "box", width: 3.2, height: 3.2, depth: 0.2 }, material: { color: "#fff6e0", emissive: "#fff0d0", emissiveIntensity: 3.5 }, children: [{ feetPosition: { x: 0, y: 0, z: 1.5 }, light: { kind: "point", color: "oklch(0.95 0.05 85)", intensity: 6.0, distance: 35 } }] });
+  sp("l8-glow", { feetPosition: { x: P(502).x, y: P(502).y + 1.4, z: P(502).z }, primitive: { kind: "box", width: 3.2, height: 3.2, depth: 0.2 }, material: { color: "#fff6e0", emissive: "#fff0d0", emissiveIntensity: 3.5 }, visibleRange: { max: 55 }, castShadow: false, children: [{ feetPosition: { x: 0, y: 0, z: 1.5 }, light: { kind: "point", color: "oklch(0.95 0.05 85)", intensity: 6.0, distance: 35, shadow: { enabled: false }, visibleRange: { max: 45 } } }] });
   sp("l8-exit", { ...at(P(500, 0, 1.2)), physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 5, height: 2.6, depth: 1.2 }, visible: false, behavior: "scripts/l8-use.js", state: { kind: "exit", back: P(436, -4, 0.3) } });
 
   // ---- stuff to do: detailed supply crates to search, a workbench with tools, and an errand board at the camp (scripts/l8-use.js)
   const cache = (id, p, name, info, items, color = "oklch(0.35 0.05 120)") => sp(id, {
     ...at(p), tags: ["container", "breakable"], physics: "static", primitive: { kind: "box", width: 0.92, height: 0.58, depth: 0.56 },
     material: { color, roughness: 0.65, metalness: 0.35 }, state: { ...brk("metal", 120, name), name, verb: "Search", info, items },
+    visibleRange: { max: 40 }, castShadow: false,
     children: [
       { feetPosition: { x: 0, y: 0.54, z: 0 }, primitive: { kind: "box", width: 0.96, height: 0.09, depth: 0.6 }, material: STEEL },
       { feetPosition: { x: 0, y: 0.42, z: 0.29 }, primitive: { kind: "box", width: 0.16, height: 0.14, depth: 0.04 }, material: { color: "oklch(0.75 0.14 85)", metalness: 0.7 } },
@@ -492,19 +521,22 @@ function lay(ctx) {
   const diveBag = P(14, 4.0, 0.1);
   sp("l8-cache-lake", {
     ...at({ ...diveBag, y: -2.2 }), tags: ["container"], physics: "static", primitive: { kind: "box", width: 0.72, height: 0.42, depth: 0.52 }, material: { color: "oklch(0.32 0.06 230)", roughness: 0.85 },
+    visibleRange: { max: 35 }, castShadow: false,
     state: { name: "Sunken dive bag", verb: "Search", info: "On the lake bed, snagged on a rock. Someone swam out and did not swim back.", items: "battery,almond,almond,bandage,cash:2500" },
   });
   sp("l8-bench", {
     ...at({ ...P(428, 5.4, 0.05), yaw: P(428).yaw + 180 }), tags: ["bench"], primitive: { kind: "box", width: 1.7, height: 0.9, depth: 0.85 }, material: WOOD, physics: "static", state: { name: "9th Road workbench" },
+    visibleRange: { max: 40 }, castShadow: false,
     children: [
       { feetPosition: { x: 0, y: 0.88, z: -0.36 }, primitive: { kind: "box", width: 1.65, height: 0.75, depth: 0.08 }, material: STEEL }, // pegboard
       { feetPosition: { x: -0.55, y: 0.9, z: 0.25 }, primitive: { kind: "box", width: 0.26, height: 0.22, depth: 0.28 }, material: RUST }, // bench vice
       { feetPosition: { x: 0.45, y: 0.9, z: 0.1 }, primitive: { kind: "box", width: 0.42, height: 0.24, depth: 0.26 }, material: { color: "oklch(0.45 0.16 30)", metalness: 0.6 } }, // toolbox
-      { feetPosition: { x: 0, y: 1.75, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.12 80)", intensity: 2.5, distance: 10 } },
+      { feetPosition: { x: 0, y: 1.75, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.12 80)", intensity: 2.5, distance: 10, shadow: { enabled: false }, visibleRange: { max: 35 } } },
     ],
   });
   sp("l8-board", {
     ...at({ ...P(446, -5.2, 1.3), yaw: P(446).yaw + 20 }), tags: ["usable"], behavior: "scripts/l8-use.js", ...sign(1.5, 1.1, `<div face="front" width="1.5m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;line-height:1.1"><div style="font-size:64px;color:#f2d870">ERRANDS</div><div style="font-size:34px">bring it back to the camp · we pay</div><div style="font-size:28px;color:#c8d8b8">glow caps · chitin · pitch · flowstone · ironstone</div></div>`),
+    visibleRange: { max: 40 }, castShadow: false,
     state: { kind: "board", name: "Errand board", verb: "Read", info: "Jobs the camp needs doing. Pay on delivery.", tint: "#f2d870" },
     children: [
       { feetPosition: { x: -0.62, y: -1.3, z: -0.04 }, primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.06, height: 1.6 }, material: WOOD },
@@ -515,9 +547,9 @@ function lay(ctx) {
   const tm = P(46, -8.4, 0);
   sp("l8-from-l21", at(P(46, -5.4, 0.1), { rotation: { yaw: P(46).yaw + 90 } }));
   sp("l8-to-l21", { ...at(P(46, -8.9, 0)), physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.8, height: 2.6, depth: 1.8 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level21#l21-from-l8" } });
-  sp("l8-l21-frame", { ...at({ ...tm, y: tm.y + 1.15, yaw: P(46).yaw + 90 }), primitive: { kind: "box", width: 2.3, height: 2.5, depth: 0.5 }, material: { color: "oklch(0.58 0.01 100)", roughness: 0.95 } });
-  sp("l8-l21-dark", { ...at({ ...P(46, -8.75, 1.15), yaw: P(46).yaw + 90 }), primitive: { kind: "box", width: 1.5, height: 2.2, depth: 0.1 }, material: { color: "#050505" } });
-  sp("l8-l21-sign", { ...at({ ...P(46, -8.2, 2.9), yaw: P(46).yaw - 90 }), ...sign(1.7, 0.45, `<div face="front" width="1.7m" style="font-family:Arial,sans-serif;font-weight:900;color:#d8f0c0;text-align:center;line-height:1.05"><div style="font-size:62px">CONCRETE TUNNEL</div><div style="font-size:34px">back to Level 2.1</div></div>`, "oklch(0.2 0.03 150)") });
+  sp("l8-l21-frame", { ...at({ ...tm, y: tm.y + 1.15, yaw: P(46).yaw + 90 }), primitive: { kind: "box", width: 2.3, height: 2.5, depth: 0.5 }, material: { color: "oklch(0.58 0.01 100)", roughness: 0.95 }, visibleRange: { max: 45 }, castShadow: false });
+  sp("l8-l21-dark", { ...at({ ...P(46, -8.75, 1.15), yaw: P(46).yaw + 90 }), primitive: { kind: "box", width: 1.5, height: 2.2, depth: 0.1 }, material: { color: "#050505" }, visibleRange: { max: 45 }, castShadow: false });
+  sp("l8-l21-sign", { ...at({ ...P(46, -8.2, 2.9), yaw: P(46).yaw - 90 }), ...sign(1.7, 0.45, `<div face="front" width="1.7m" style="font-family:Arial,sans-serif;font-weight:900;color:#d8f0c0;text-align:center;line-height:1.05"><div style="font-size:62px">CONCRETE TUNNEL</div><div style="font-size:34px">back to Level 2.1</div></div>`, "oklch(0.2 0.03 150)"), visibleRange: { max: 45 }, castShadow: false });
   // ---- the cave drips: beads of water fall from the roof along the road, and ripple the almond pools
   [44, 72, 124, 170, 198, 226, 258, 292, 318, 352, 396, 432, 460].forEach((s, k) => { const sd = ((k * 3) % 7) - 3, q = P(s, sd * 0.6), st = L8.stations.find((z) => s >= z.s0 && s <= z.s1); sp(`l8-drip-${k}`, { feetPosition: { x: q.x, y: P(s).y + Math.max(2.4, (st?.ry ?? 3) * 1.15), z: q.z }, fx: { script: DRIP } }); });
   [[56, 3], [86, -4], [170, 5], [232, 4], [296, -5], [360, 5], [424, -5]].forEach(([s, side], i) => { const q = P(s, side, 0.12); sp(`l8-ripple-${i}`, { feetPosition: { x: q.x, y: q.y, z: q.z }, fx: { script: RIPPLE } }); });
@@ -624,19 +656,19 @@ function layDens(ctx) {
   for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l8d-/.test(id) && !id.includes("/")) ctx.destroy(id); // a re-lay clears the last one
   for (const [k, d] of Object.entries(DENS)) {
     const c = P(d.s, d.side, 0), id = (n) => `l8d-${k}-${n}`;
-    ctx.spawn(id("fire"), { feetPosition: { x: c.x, y: c.y, z: c.z }, fx: { script: FIRE_FX }, light: { kind: "point", color: d.tint, intensity: 1.6, distance: 11 }, audio: { clip: "cdn/ambience-many-voices-muttering-and-humming-tunelessly-in-a-stone-cave-loop.mp3", gain: 0.22, loop: true, spatial: true, maxDistance: 22 } });
-    ctx.spawn(id("ring"), { feetPosition: { x: c.x, y: c.y, z: c.z }, primitive: { kind: "torus", radius: 0.55, tube: 0.13, radialSegments: 6, tubularSegments: 10 }, rotation: { pitch: 90 }, pivot: "center", material: { color: "oklch(0.18 0.01 60)", roughness: 0.9 }, physics: "static" });
+    ctx.spawn(id("fire"), { feetPosition: { x: c.x, y: c.y, z: c.z }, fx: { script: FIRE_FX }, light: { kind: "point", color: d.tint, intensity: 1.6, distance: 11, shadow: { enabled: false }, visibleRange: { max: 35 } }, audio: { clip: "cdn/ambience-many-voices-muttering-and-humming-tunelessly-in-a-stone-cave-loop.mp3", gain: 0.22, loop: true, spatial: true, maxDistance: 22 }, visibleRange: { max: 40 }, castShadow: false });
+    ctx.spawn(id("ring"), { feetPosition: { x: c.x, y: c.y, z: c.z }, primitive: { kind: "torus", radius: 0.55, tube: 0.13, radialSegments: 6, tubularSegments: 10 }, rotation: { pitch: 90 }, pivot: "center", material: { color: "oklch(0.18 0.01 60)", roughness: 0.9 }, physics: "static", visibleRange: { max: 35 }, castShadow: false });
     for (let i = 0; i < 4; i++) { // bedrolls kicked into a circle, stained
       const a = (i / 4) * Math.PI * 2 + 0.4, r = 2.4;
-      ctx.spawn(id(`roll${i}`), { feetPosition: { x: c.x + Math.cos(a) * r, y: c.y, z: c.z + Math.sin(a) * r }, rotation: { yaw: (-a * 180) / Math.PI + 90 }, primitive: { kind: "capsule", radius: 0.16, halfHeight: 0.7 }, pivot: "center", scale: { x: 1, y: 1, z: 0.6 }, material: { color: ["oklch(0.32 0.05 60)", "oklch(0.28 0.04 30)", "oklch(0.3 0.03 140)", "oklch(0.25 0.02 260)"][i], roughness: 0.95 } });
+      ctx.spawn(id(`roll${i}`), { feetPosition: { x: c.x + Math.cos(a) * r, y: c.y, z: c.z + Math.sin(a) * r }, rotation: { yaw: (-a * 180) / Math.PI + 90 }, primitive: { kind: "capsule", radius: 0.16, halfHeight: 0.7 }, pivot: "center", scale: { x: 1, y: 1, z: 0.6 }, material: { color: ["oklch(0.32 0.05 60)", "oklch(0.28 0.04 30)", "oklch(0.3 0.03 140)", "oklch(0.25 0.02 260)"][i], roughness: 0.95 }, visibleRange: { max: 35 }, castShadow: false });
     }
     for (let i = 0; i < 9; i++) { // a pile of picked bones by the fire
       const a = i * 2.4, r = 0.25 + (i % 3) * 0.12;
-      ctx.spawn(id(`bone${i}`), { feetPosition: { x: c.x + 1.3 + Math.cos(a) * r, y: c.y + 0.05 + (i % 2) * 0.06, z: c.z - 1 + Math.sin(a) * r }, rotation: { yaw: i * 47, roll: 90 }, pivot: "center", primitive: { kind: "capsule", radius: 0.035, halfHeight: 0.16 + (i % 3) * 0.05 }, material: { color: "oklch(0.86 0.03 85)", roughness: 0.7 } });
+      ctx.spawn(id(`bone${i}`), { feetPosition: { x: c.x + 1.3 + Math.cos(a) * r, y: c.y + 0.05 + (i % 2) * 0.06, z: c.z - 1 + Math.sin(a) * r }, rotation: { yaw: i * 47, roll: 90 }, pivot: "center", primitive: { kind: "capsule", radius: 0.035, halfHeight: 0.16 + (i % 3) * 0.05 }, material: { color: "oklch(0.86 0.03 85)", roughness: 0.7 }, visibleRange: { max: 25 }, castShadow: false });
     }
-    ctx.spawn(id("skull"), { feetPosition: { x: c.x + 1.3, y: c.y + 0.12, z: c.z - 1 }, primitive: { kind: "sphere", radius: 0.12 }, scale: { x: 1, y: 0.9, z: 1.2 }, material: { color: "oklch(0.84 0.03 80)", roughness: 0.6 } });
-    ctx.spawn(id("smash"), { feetPosition: { x: c.x - 1.5, y: c.y, z: c.z - 1.5 }, primitive: { kind: "box", width: 0.5, height: 0.3, depth: 0.4 }, rotation: { yaw: 20, roll: 12 }, material: { color: "oklch(0.3 0.02 250)", roughness: 0.6, metalness: 0.5 } }); // smashed flashlights: no lights here
-    for (let i = 0; i < 5; i++) ctx.spawn(id(`torch${i}`), { feetPosition: { x: c.x - 1.4 + i * 0.18, y: c.y + 0.32, z: c.z - 1.5 + (i % 2) * 0.1 }, rotation: { yaw: i * 70, roll: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.03, height: 0.2 }, material: { color: "oklch(0.25 0.02 250)", roughness: 0.4, metalness: 0.6 } });
+    ctx.spawn(id("skull"), { feetPosition: { x: c.x + 1.3, y: c.y + 0.12, z: c.z - 1 }, primitive: { kind: "sphere", radius: 0.12 }, scale: { x: 1, y: 0.9, z: 1.2 }, material: { color: "oklch(0.84 0.03 80)", roughness: 0.6 }, visibleRange: { max: 25 }, castShadow: false });
+    ctx.spawn(id("smash"), { feetPosition: { x: c.x - 1.5, y: c.y, z: c.z - 1.5 }, primitive: { kind: "box", width: 0.5, height: 0.3, depth: 0.4 }, rotation: { yaw: 20, roll: 12 }, material: { color: "oklch(0.3 0.02 250)", roughness: 0.6, metalness: 0.5 }, visibleRange: { max: 25 }, castShadow: false }); // smashed flashlights: no lights here
+    for (let i = 0; i < 5; i++) ctx.spawn(id(`torch${i}`), { feetPosition: { x: c.x - 1.4 + i * 0.18, y: c.y + 0.32, z: c.z - 1.5 + (i % 2) * 0.1 }, rotation: { yaw: i * 70, roll: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.03, height: 0.2 }, material: { color: "oklch(0.25 0.02 250)", roughness: 0.4, metalness: 0.6 }, visibleRange: { max: 25 }, castShadow: false });
   }
 }
 function keepWretched(ctx) {

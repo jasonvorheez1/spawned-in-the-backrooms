@@ -20,6 +20,7 @@ l2-sd-lamp0-l:
   feetPosition: {x: 29.1, y: 2.4, z: -40.699999999999996}
   id: l2-sd-lamp0-l
   light: {color: oklch(0.9 0.08 85), distance: 8, intensity: 3, kind: point}
+  visibleRange: {max: 40}
 l2-sd-lamp1:
   feetPosition: {x: 25.5, y: 4.3, z: -42.9}
   id: l2-sd-lamp1
@@ -29,6 +30,7 @@ l2-sd-lamp1-l:
   feetPosition: {x: 25.9, y: 4.2, z: -42.9}
   id: l2-sd-lamp1-l
   light: {color: oklch(0.9 0.08 85), distance: 8, intensity: 2.5, kind: point}
+  visibleRange: {max: 40}
 l2-sd-nose-0:
   feetPosition: {x: 27.5, y: 0.23, z: -40.519999999999996}
   id: l2-sd-nose-0

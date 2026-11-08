@@ -32,6 +32,10 @@ function lay(ctx) {
     const drawn = spec.primitive || spec.model;
     if (drawn && !spec.scatter && !spec.visibleRange && !/npc/.test(String(spec.tags))) spec.visibleRange = { max: BIG.test(id) ? 320 : 110 };
     if (drawn && SMALL.test(id) && spec.castShadow === undefined) spec.castShadow = false;
+    if (spec.light) {
+      if (spec.light.shadow === undefined) spec.light.shadow = { enabled: false };
+      if (!spec.light.visibleRange) spec.light.visibleRange = { max: Math.min(45, (spec.light.distance ?? 10) * 2.5) };
+    }
     ctx.spawn(id, spec);
   };
 

@@ -45,25 +45,26 @@ export function tick(ctx) {
       const c = cellCenter(cx, cz), tube = k === "tube";
       ctx.spawn({ tags: ["l1lamp"], feetPosition: { x: c.x, y: H - (tube ? 0.08 : 0.5), z: c.z }, primitive: tube ? { kind: "box", width: 0.35, height: 0.06, depth: 2.4 } : { kind: "sphere", radius: 0.09 },
         material: { color: "oklch(0.97 0.02 220)", emissive: "oklch(0.95 0.03 220)", emissiveIntensity: 2.2 },
+        visibleRange: { max: 42 },
         light: { kind: "point", color: tube ? "oklch(0.95 0.02 220)" : "oklch(0.9 0.08 80)", intensity: tube ? LAMP_ON : 2.5, distance: tube ? 20 : 9, shadow: { enabled: false } } });
     }
     ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level1-props-geo.js" }, material: { roughness: 0.85 } }); // clutter, camp and guide line
-    { const c = cellCenter(ARRIVE.cx, ARRIVE.cz); for (const [dx, dz, col] of [[3.4, 3.4, "oklch(0.85 0.14 70)"], [-5, 0, "oklch(0.85 0.12 80)"], [1, 8.2, "oklch(0.9 0.08 90)"]]) ctx.spawn({ feetPosition: { x: c.x + dx, y: 0.9, z: c.z + dz }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: col, emissive: col, emissiveIntensity: 2 }, light: { kind: "point", color: col, intensity: 4, distance: 11, shadow: { enabled: false } } }); } // camp lanterns
+    { const c = cellCenter(ARRIVE.cx, ARRIVE.cz); for (const [dx, dz, col] of [[3.4, 3.4, "oklch(0.85 0.14 70)"], [-5, 0, "oklch(0.85 0.12 80)"], [1, 8.2, "oklch(0.9 0.08 90)"]]) ctx.spawn({ feetPosition: { x: c.x + dx, y: 0.9, z: c.z + dz }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: col, emissive: col, emissiveIntensity: 2 }, visibleRange: { max: 42 }, castShadow: false, light: { kind: "point", color: col, intensity: 4, distance: 11, shadow: { enabled: false } } }); } // camp lanterns
     ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level1-details-geo.js" }, material: { roughness: 0.85 } }); // beams, sprinkler pipes, wet stains, strip lights
     for (let i = 2; i < N; i += 2) for (let j = 2; j < N; j += 2) { // stencilled grid letters and numbers on the pillars, as in a real car park
       if (!hasPillar(i, j) || hash(i, j, 401) > 0.55) continue;
       const x = i * S - HALF, z = j * S - HALF, letter = String.fromCharCode(65 + ((i / 2 - 1) % 15)) + (j / 2);
-      ctx.spawn({ feetPosition: { x, y: 0.5, z: z + 0.465 }, rotation: { yaw: 0 }, primitive: { kind: "box", width: 0.01, height: 0.01, depth: 0.01 }, ui: '<div face="front" width="0.6m" style="font-size:220px;font-weight:800;color:#3a4048;text-align:center;opacity:.8">' + letter + '</div>' });
+      ctx.spawn({ feetPosition: { x, y: 0.5, z: z + 0.465 }, rotation: { yaw: 0 }, primitive: { kind: "box", width: 0.01, height: 0.01, depth: 0.01 }, visibleRange: { max: 35 }, castShadow: false, ui: '<div face="front" width="0.6m" style="font-size:220px;font-weight:800;color:#3a4048;text-align:center;opacity:.8">' + letter + '</div>' });
     }
     // supplies: crates on the racks first, then loose ones; almond water; M.E.G. landmarks near arrival
     seedFurniture(ctx, L.crates);
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz);
     for (let i = 0; i < 3; i++) spawnAlmond(ctx, { x: a.x + 2 + i * 0.4, z: a.z - 2 });
-    ctx.spawn({ id: "meg-cloth", feetPosition: { x: a.x + 2.4, y: 0, z: a.z - 2.6 }, primitive: { kind: "box", width: 1.4, height: 0.02, depth: 0.9 }, material: { color: "oklch(0.85 0.2 125)" },
+    ctx.spawn({ id: "meg-cloth", feetPosition: { x: a.x + 2.4, y: 0, z: a.z - 2.6 }, primitive: { kind: "box", width: 1.4, height: 0.02, depth: 0.9 }, material: { color: "oklch(0.85 0.2 125)" }, visibleRange: { max: 35 }, castShadow: false,
       ui: '<div face="top" width="1.3m" style="font-size:120px;font-weight:900;color:#1d2a10;text-align:center">M.E.G.</div>' });
     // the thresholds: home to level 0
     ctx.spawn("l1-back", { feetPosition: { x: BACK.x + 0.5, y: 0, z: BACK.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2.4, depth: 2.2 }, visible: false, behavior: "scripts/level-door.js", state: { to: "main" } });
-    ctx.spawn({ feetPosition: { x: BACK.x + 0.4, y: 0, z: BACK.z }, light: { kind: "point", color: "oklch(0.85 0.12 92)", intensity: 3, distance: 6 } });
+    ctx.spawn({ feetPosition: { x: BACK.x + 0.4, y: 0, z: BACK.z }, visibleRange: { max: 35 }, light: { kind: "point", color: "oklch(0.85 0.12 92)", intensity: 3, distance: 6, shadow: { enabled: false } } });
     s.nextFlicker = now + 60000;
   }
   if (!s.arrive2) { s.arrive2 = true; // where a doorway lets you out: just inside each door, facing into the level
@@ -72,17 +73,17 @@ export function tick(ctx) {
   }
   if (!s.l2door) { s.l2door = true; // the pipeworks: a green door in the east wall, down into Level 2
     ctx.spawn("l1-onward", { feetPosition: { x: ONWARD.x - 0.3, y: 0, z: ONWARD.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2.4, depth: 1.6 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level2" } });
-    ctx.spawn("l1-onward-door", { feetPosition: { x: ONWARD.x + 0.45, y: 0, z: ONWARD.z }, physics: "static", primitive: { kind: "box", width: 0.12, height: 2.25, depth: 1.25 }, material: { color: "oklch(0.82 0.03 85)", metalness: 0.3, roughness: 0.75 },
+    ctx.spawn("l1-onward-door", { feetPosition: { x: ONWARD.x + 0.45, y: 0, z: ONWARD.z }, physics: "static", primitive: { kind: "box", width: 0.12, height: 2.25, depth: 1.25 }, material: { color: "oklch(0.82 0.03 85)", metalness: 0.3, roughness: 0.75 }, visibleRange: { max: 45 }, castShadow: false,
       ui: '<div face="left" width="1.25m" style="height:2250px;position:relative"><div style="position:absolute;left:330px;top:300px;width:560px;height:520px;background:#0a0c0c;border:30px solid #6a6a60;background-image:repeating-linear-gradient(45deg,transparent 0 60px,#555 60px 66px),repeating-linear-gradient(-45deg,transparent 0 60px,#555 60px 66px)"></div><div style="position:absolute;left:0;right:0;top:950px;text-align:center;font-size:520px;font-weight:900;color:#2a241c;opacity:.8;font-family:display">2</div><div style="position:absolute;right:90px;top:1180px;width:90px;height:220px;background:#3a3832;border-radius:20px"></div><div style="position:absolute;left:0;right:0;bottom:0;height:300px;background:linear-gradient(transparent,#3a2e1e99)"></div></div>' });
-    ctx.spawn({ feetPosition: { x: ONWARD.x - 0.6, y: 2.6, z: ONWARD.z }, light: { kind: "point", color: "oklch(0.8 0.12 150)", intensity: 2.5, distance: 7 } });
+    ctx.spawn({ feetPosition: { x: ONWARD.x - 0.6, y: 2.6, z: ONWARD.z }, visibleRange: { max: 35 }, light: { kind: "point", color: "oklch(0.8 0.12 150)", intensity: 2.5, distance: 7, shadow: { enabled: false } } });
   }
   if (!s.megCamp) { s.megCamp = true; // the M.E.G. waypoint: the camp, its fire, its lamps, and three agents
     if (ctx.place.objects["meg-cloth"]) ctx.destroy("meg-cloth");
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz);
-    ctx.spawn("meg-camp", { feetPosition: { x: a.x, y: 0, z: a.z }, physics: { body: "static", collider: "mesh" }, primitive: { kind: "scripted", script: "scripts/meg-camp-geo.js" } });
+    ctx.spawn("meg-camp", { feetPosition: { x: a.x, y: 0, z: a.z }, physics: { body: "static", collider: "mesh" }, primitive: { kind: "scripted", script: "scripts/meg-camp-geo.js" }, visibleRange: { max: 70 }, castShadow: false });
     ctx.spawn("meg-stove", { feetPosition: { x: a.x + 9.5, y: 0.72, z: a.z - 2.8 }, fx: { script: STOVE }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-small-fire-crackle-loop.mp3", gain: 0.25, loop: true, spatial: true, maxDistance: 14 } });
     ctx.spawn("meg-radio", { feetPosition: { x: a.x + 6.9, y: 1, z: a.z - 0.6 }, audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-radio-static-chatter-loop.mp3", gain: 0.1, loop: true, spatial: true, refDistance: 1, maxDistance: 6 } });
-    for (const [dx, dz, col] of [[6, 4.2, "oklch(0.85 0.12 75)"], [6, -4.2, "oklch(0.85 0.12 75)"], [13, 0, "oklch(0.92 0.04 220)"]]) ctx.spawn({ feetPosition: { x: a.x + dx, y: 2.3, z: a.z + dz }, light: { kind: "point", color: col, intensity: 2.5, distance: 9 } });
+    for (const [dx, dz, col] of [[6, 4.2, "oklch(0.85 0.12 75)"], [6, -4.2, "oklch(0.85 0.12 75)"], [13, 0, "oklch(0.92 0.04 220)"]]) ctx.spawn({ feetPosition: { x: a.x + dx, y: 2.3, z: a.z + dz }, visibleRange: { max: 42 }, light: { kind: "point", color: col, intensity: 2.5, distance: 9, shadow: { enabled: false } } });
     for (const [id, dx, dz] of AGENTS) ctx.spawn(id, agentSpec(a, id, dx, dz));
   }
   if (s.megCamp) { // a fallen agent is replaced after a while; the new one holds no grudge
@@ -92,7 +93,7 @@ export function tick(ctx) {
   if (!s.puddles) { s.puddles = true;
     for (let i = 0; i < 70; i++) { const cx = Math.floor(ctx.random() * N), cz = Math.floor(ctx.random() * N); if (zoneOf(cx, cz) !== "halls" && zoneOf(cx, cz) !== "storage") continue;
       const c = cellCenter(cx, cz), r = 0.6 + ctx.random() * 1.4;
-      ctx.spawn({ tags: ["puddle"], feetPosition: { x: c.x + (ctx.random() - 0.5) * 5, y: 0.012, z: c.z + (ctx.random() - 0.5) * 5 }, rotation: { yaw: ctx.random() * 360, pitch: -90 }, scale: { x: 1, y: 0.5 + ctx.random() * 0.5, z: 1 }, primitive: { kind: "circle", radius: r, segments: 20 }, material: { color: "oklch(0.18 0.01 240 / 0.75)", roughness: 0.05, metalness: 0.3, transparent: true } });
+      ctx.spawn({ tags: ["puddle"], feetPosition: { x: c.x + (ctx.random() - 0.5) * 5, y: 0.012, z: c.z + (ctx.random() - 0.5) * 5 }, rotation: { yaw: ctx.random() * 360, pitch: -90 }, scale: { x: 1, y: 0.5 + ctx.random() * 0.5, z: 1 }, primitive: { kind: "circle", radius: r, segments: 20 }, visibleRange: { max: 35 }, castShadow: false, material: { color: "oklch(0.18 0.01 240 / 0.75)", roughness: 0.05, metalness: 0.3, transparent: true } });
     }
   }
   if (now >= (s.nextClang ?? 0)) { s.nextClang = now + 9000 + ctx.random() * 14000;

@@ -181,11 +181,12 @@ object/xed748b99acfa6386/6:
 object/xed748b99acfa6386/7:
   feetPosition: {x: 119.68, y: 2.95, z: -21.7}
   id: object/xed748b99acfa6386/7
-  light: {color: oklch(0.92 0.03 210), distance: 6, intensity: 3, kind: point}
+  light: {color: oklch(0.92 0.03 210), distance: 6, intensity: 3, kind: point, shadow: {enabled: false}}
   material: {color: oklch(0.95 0.02 210), emissive: oklch(0.92 0.03 210), emissiveIntensity: 2.2}
   primitive: {depth: 1.1, height: 0.08, kind: box, width: 0.12}
   rotation: {roll: 8}
   tags: [l2-entrance]
+  visibleRange: {max: 40}
 object/xed748b99acfa6386/8:
   feetPosition: {x: 119.47, y: 3.55, z: -20}
   id: object/xed748b99acfa6386/8

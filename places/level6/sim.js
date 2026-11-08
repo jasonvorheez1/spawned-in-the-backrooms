@@ -35,11 +35,11 @@ function lay(ctx) {
   });
   // "we blocked it off": boards across the next dead end
   const b = ends[NOTES.length + 2];
-  if (b) for (let k = 0; k < 4; k++) ctx.spawn(`l6-board-${k}`, { feetPosition: { x: cx(b.i) + b.dx * 0.6, y: 0.35 + k * 0.45, z: cz(b.j) + b.dz * 0.6 }, rotation: { yaw: b.dx ? 90 : 0, roll: (k % 2 ? 8 : -6) }, physics: "static", primitive: { kind: "box", width: C, height: 0.16, depth: 0.04 }, material: { color: "oklch(0.42 0.05 60)", roughness: 0.9, texture: "cdn/texture-worn-hardwood-grain.png" } });
-  if (b) ctx.spawn("l6-board-note", { feetPosition: { x: cx(b.i) + b.dx * 0.55, y: 1.9, z: cz(b.j) + b.dz * 0.55 }, rotation: { lookAt: { x: cx(b.i) + b.dx * 3, y: 1.9, z: cz(b.j) + b.dz * 3 } }, vector: chalk("we blocked it off") });
+  if (b) for (let k = 0; k < 4; k++) ctx.spawn(`l6-board-${k}`, { feetPosition: { x: cx(b.i) + b.dx * 0.6, y: 0.35 + k * 0.45, z: cz(b.j) + b.dz * 0.6 }, rotation: { yaw: b.dx ? 90 : 0, roll: (k % 2 ? 8 : -6) }, physics: "static", visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: C, height: 0.16, depth: 0.04 }, material: { color: "oklch(0.42 0.05 60)", roughness: 0.9, texture: "cdn/texture-worn-hardwood-grain.png" } });
+  if (b) ctx.spawn("l6-board-note", { feetPosition: { x: cx(b.i) + b.dx * 0.55, y: 1.9, z: cz(b.j) + b.dz * 0.55 }, rotation: { lookAt: { x: cx(b.i) + b.dx * 3, y: 1.9, z: cz(b.j) + b.dz * 3 } }, visibleRange: { max: 35 }, vector: chalk("we blocked it off") });
   // the stairwell down: you hear it before you find it. faint waves, cold air
   const s = ends[1];
-  ctx.spawn("l6-stair", { feetPosition: { x: cx(s.i), y: 0, z: cz(s.j) }, tags: ["l6-stair"], audio: { clip: G("faint-distant-ocean-waves-echoing-up-concrete-stairwell-loop"), loop: true, gain: 0.35, spatial: true, maxDistance: 26 },
+  ctx.spawn("l6-stair", { feetPosition: { x: cx(s.i), y: 0, z: cz(s.j) }, tags: ["l6-stair"], visibleRange: { max: 45 }, castShadow: false, audio: { clip: G("faint-distant-ocean-waves-echoing-up-concrete-stairwell-loop"), loop: true, gain: 0.35, spatial: true, maxDistance: 26 },
     children: [0, 1, 2, 3].map((k) => ({ feetPosition: { x: 0, y: -0.2 - k * 0.2, z: -0.3 * k * (s.dz ? -s.dz : 0) }, primitive: { kind: "box", width: C * 0.9, height: 0.05, depth: 0.32 }, material: { ...CONCRETE, color: "oklch(0.3 0.005 250)" } })) });
   ctx.spawn("l6-to-l7", {
     tags: ["door"],
@@ -59,7 +59,7 @@ function lay(ctx) {
 
 // v2: the map's notes come true. what the lost left, where they left it (Savi's picks over Shelly's hand-drawn map)
 const at = (e, k = 0) => ({ x: cx(e.i) - e.dx * k, z: cz(e.j) - e.dz * k }); // k metres deeper into the dead end
-const prop = (ctx, id, kind, p, yaw, extra = {}) => ctx.spawn(id, { feetPosition: { x: p.x, y: 0, z: p.z }, rotation: { yaw }, primitive: { kind: "scripted", script: "scripts/l6-props-geo.js", params: { kind } }, ...extra });
+const prop = (ctx, id, kind, p, yaw, extra = {}) => ctx.spawn(id, { feetPosition: { x: p.x, y: 0, z: p.z }, rotation: { yaw }, visibleRange: { max: 35 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l6-props-geo.js", params: { kind } }, ...extra });
 const pack = (ctx, id, kind, p, yaw, name, items) => prop(ctx, id, kind, p, yaw, { tags: ["container"], physics: "static", state: { name, items } });
 const spot = (ctx, id, p, state, r = 1.6) => ctx.spawn(id, { feetPosition: { x: p.x, y: 0, z: p.z }, physics: { body: "static", trigger: true, collider: "box" }, primitive: { kind: "box", width: r, height: 2.2, depth: r }, visible: false, behavior: "scripts/l6-spot.js", state });
 function lay2(ctx) {
@@ -96,16 +96,18 @@ function lay2(ctx) {
       feetPosition: { x: p61.x, y: 0.02, z: p61.z },
       primitive: { kind: "cylinder", radiusTop: 0.018, radiusBottom: 0.018, height: 1.4 },
       rotation: { pitch: 90, yaw: 35 },
+      visibleRange: { max: 35 }, castShadow: false,
       material: { color: "#111111", roughness: 0.8 },
       children: [
         { feetPosition: { x: 0, y: 0.01, z: 0 }, primitive: { kind: "box", width: 0.9, height: 0.02, depth: 0.1 }, material: { color: "#ffeedd", emissive: "#ffeedd", emissiveIntensity: 2.8 } },
-        { feetPosition: { x: 0, y: 0.08, z: 0 }, light: { kind: "point", color: "oklch(0.92 0.12 75)", intensity: 1.2, distance: 4.5 } },
+        { feetPosition: { x: 0, y: 0.08, z: 0 }, light: { kind: "point", color: "oklch(0.92 0.12 75)", intensity: 1.2, distance: 4.5, shadow: { enabled: false }, visibleRange: { max: 30 } } },
       ],
       audio: { clip: "https://media-ssl.musicradio.com/Heart80sMP3", loop: true, gain: 0.15, spatial: true, maxDistance: 10 },
     });
     ctx.spawn("l6-wire-note", {
       feetPosition: { x: cx(E(6).i) - E(6).dx * (C / 2 - 0.02), y: 1.45, z: cz(E(6).j) - E(6).dz * (C / 2 - 0.02) },
       rotation: { lookAt: { x: cx(E(6).i) + E(6).dx * C, y: 1.45, z: cz(E(6).j) + E(6).dz * C } },
+      visibleRange: { max: 35 },
       vector: chalk("music under the floor? watch the wire"),
     });
   }
@@ -152,6 +154,7 @@ function lay3(ctx) {
     ctx.spawn(`l6-pipe-${idx}`, {
       feetPosition: { x: ps.p.x, y: 2.1, z: ps.p.z },
       rotation: { yaw: ps.yaw },
+      visibleRange: { max: 40 }, castShadow: false,
       primitive: { kind: "scripted", script: "scripts/l6-props-geo.js", params: { kind: "pipe" } },
       physics: "static",
     });
@@ -175,6 +178,7 @@ function lay3(ctx) {
     ctx.spawn("l6-smiler-1", {
       tags: ["smiler", "l6-smiler", "hostile"],
       feetPosition: { x: smPos.x, y: 0.05, z: smPos.z },
+      visibleRange: { max: 45 }, castShadow: false,
       model: { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" },
       scale: 1.6,
       physics: { body: "character" },
@@ -182,7 +186,7 @@ function lay3(ctx) {
       children: [
         {
           feetPosition: { x: 0, y: 1.1, z: 0.35 },
-          light: { kind: "point", color: "#ffffff", intensity: 1.2, distance: 3.5 },
+          light: { kind: "point", color: "#ffffff", intensity: 1.2, distance: 3.5, shadow: { enabled: false }, visibleRange: { max: 30 } },
         },
         {
           feetPosition: { x: 0, y: 1.1, z: 0.4 },

@@ -48,7 +48,7 @@ export function breakables(FY, PY) {
     "l7-pier-crate": { tags: ["container", "breakable"], feetPosition: { x: -0.9, y: PY + 0.04, z: -32.5 }, rotation: { yaw: -20 }, model: GLB.crate, layout: fit(0.6, 0.6, 0.6), physics: { body: "static", collider: "box" }, state: { name: "Salt-crusted maritime locker", items: "weapon:fishing_rod,cloth:topw:hoodie:d49b27,almond,battery,bandage", ...brk("wood", 35) } },
     "l7-boxes": { tags: ["breakable"], feetPosition: { x: 1.25, y: FY, z: 2.45 }, rotation: { yaw: 6 }, model: GLB.boxes, layout: fit(0.8, 1.05, 0.8), physics: { body: "static", collider: "box" }, state: { items: "wire", ...brk("wood", 20) } },
     "l7-lamp": { tags: ["breakable"], feetPosition: { x: -2.5, y: FY, z: 2.3 }, rotation: { yaw: 210, roll: -9 }, model: GLB.floorlamp, layout: fit(0.9, 1.7, 0.9), physics: { body: "static", collider: "box" },
-      children: [{ feetPosition: { x: 0, y: 1.45, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.11 70)", intensity: 0.7, distance: 4 } }], state: brk("wood", 25) },
+      children: [{ feetPosition: { x: 0, y: 1.45, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.11 70)", intensity: 0.7, distance: 4, shadow: { enabled: false }, visibleRange: { max: 35 } } }], state: brk("wood", 25) },
     "l7-plant": { tags: ["breakable"], feetPosition: { x: -1.3, y: FY, z: 2.5 }, rotation: { yaw: 40 }, model: GLB.plant, layout: fit(0.6, 0.75, 0.6), physics: { body: "static", collider: "box" }, state: brk("wood", 15) },
     "l7-debris-1": { feetPosition: { x: -0.95, y: FY + 0.12, z: 0.9 }, rotation: { yaw: 30 }, model: GLB.debris, layout: fit(0.8, 0.45, 0.8) },
     "l7-debris-2": { feetPosition: { x: -1.5, y: FY + 0.12, z: -2.3 }, rotation: { yaw: 200 }, model: GLB.debris, layout: fit(0.65, 0.4, 0.65) },
@@ -75,7 +75,7 @@ export function breakables(FY, PY) {
   ].forEach(([x, z, sc, seed], i) => {
     R[`l7-boulder-${i}`] = { tags: ["breakable"], feetPosition: { x, z, y: { terrain: -0.15 * sc } }, rotation: { yaw: seed * 47 }, model: GLB.boulder, layout: fit(1.9 * sc, 1.9 * sc, 1.9 * sc), physics: { body: "static", collider: "auto" }, state: brk("concrete", Math.round(140 * sc)) };
   });
-  for (const sp of Object.values(R)) { sp.visibleRange ??= { max: 90 }; const b = sp.layout?.box; if (b && Math.max(b.max.x - b.min.x, b.max.y - b.min.y) < 1.2) sp.castShadow = false; } // lag pass (#138)
+  for (const sp of Object.values(R)) { sp.visibleRange ??= { max: 65 }; const b = sp.layout?.box; if (b && Math.max(b.max.x - b.min.x, b.max.y - b.min.y) < 1.2) { sp.castShadow = false; sp.visibleRange = { max: 45 }; } else { sp.castShadow = false; } } // lag pass (#138)
   return R;
 }
 
@@ -112,6 +112,8 @@ const box = (ctx, id, x, y, z, w, h, d, material, extra = {}) =>
   ctx.spawn(id, {
     feetPosition: { x, y, z },
     physics: "static",
+    visibleRange: { max: Math.max(w, h, d) > 4 ? 75 : 45 },
+    castShadow: Math.max(w, h, d) > 1.2,
     primitive: { kind: "box", width: w, height: h, depth: d },
     material,
     ...extra,
@@ -411,24 +413,28 @@ function lay(ctx) {
     feetPosition: { x: -1.5, y: PY + 0.5, z: -20 },
     rotation: { yaw: 90 },
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "lifebuoy" } },
+    visibleRange: { max: 40 }, castShadow: false,
   });
 
   // Ship's Hurricane Storm Lanterns along the wharf
   ctx.spawn("l7-lantern-mid", {
     feetPosition: { x: -1.45, y: PY + 0.88, z: -18 },
+    visibleRange: { max: 40 }, castShadow: false,
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "lantern" } },
-    children: [{ feetPosition: { x: 0, y: 0.22, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.15 75)", intensity: 1.8, distance: 10 } }],
+    children: [{ feetPosition: { x: 0, y: 0.22, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.15 75)", intensity: 1.8, distance: 10, shadow: { enabled: false }, visibleRange: { max: 35 } } }],
   });
   ctx.spawn("l7-lantern-end", {
     feetPosition: { x: 1.35, y: PY + 0.88, z: -33 },
+    visibleRange: { max: 40 }, castShadow: false,
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "lantern" } },
-    children: [{ feetPosition: { x: 0, y: 0.22, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.16 75)", intensity: 2.2, distance: 14 } }],
+    children: [{ feetPosition: { x: 0, y: 0.22, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.16 75)", intensity: 2.2, distance: 14, shadow: { enabled: false }, visibleRange: { max: 35 } } }],
   });
 
   // Chalk warning carved into the wet pierhead timber
   ctx.spawn("l7-pier-note", {
     feetPosition: { x: 0, y: PY + 0.05, z: -32.5 },
     rotation: { pitch: -90, yaw: 180 },
+    visibleRange: { max: 40 },
     vector: chalk("IT IS UNDER THE WATER. TAKE THE SKIFF.", "1.9m"),
   });
 
@@ -442,6 +448,7 @@ function lay(ctx) {
       state: { kind: "fishing_rod" },
       feetPosition: { x: rx, y: ry, z: rz },
       rotation: { yaw: ryaw },
+      visibleRange: { max: 40 }, castShadow: false,
       primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: "fishing_rod" } },
     });
   }
@@ -452,6 +459,7 @@ function lay(ctx) {
     physics: { body: "kinematic", collider: "box" },
     feetPosition: { x: 2.3, y: -0.4, z: -31 },
     rotation: { yaw: 14, roll: 3 },
+    visibleRange: { max: 65 }, castShadow: false,
     model: { id: GLB.rowboat, forward: "+x" }, // the dory was built along X: its bow turned onto -Z, the way you row
     layout: fit(3.8, 1.2, 3.8),
     behavior: "scripts/l7-dory.js", // a boat you row yourself: E sits, WASD rows, E steps out
@@ -491,8 +499,9 @@ function lay(ctx) {
   box(ctx, "l7-seawatch-pier-col", 38, PY - 0.1, -95, 3.4, 0.2, 13, {}, { visible: false });
   ctx.spawn("l7-seawatch-lantern", {
     feetPosition: { x: 36.6, y: PY + 0.88, z: -90 },
+    visibleRange: { max: 40 }, castShadow: false,
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "lantern" } },
-    children: [{ feetPosition: { x: 0, y: 0.22, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.16 75)", intensity: 2.5, distance: 16 } }],
+    children: [{ feetPosition: { x: 0, y: 0.22, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.16 75)", intensity: 2.5, distance: 16, shadow: { enabled: false }, visibleRange: { max: 35 } } }],
   });
 
   // Stone steps climbing Seawatch Island from Jetty (y = 1.1) to Summit (y = 7.0)
@@ -509,6 +518,7 @@ function lay(ctx) {
     physics: { body: "kinematic", collider: "box" },
     feetPosition: { x: 35.6, y: -0.4, z: -91.5 },
     rotation: { yaw: -12, roll: -2 },
+    visibleRange: { max: 65 }, castShadow: false,
     model: { id: GLB.rowboat, forward: "+x" },
     layout: fit(3.8, 1.2, 3.8),
     behavior: "scripts/l7-dory.js",
@@ -521,6 +531,7 @@ function lay(ctx) {
     physics: { body: "kinematic", collider: "box" },
     feetPosition: { x: 40.4, y: -0.4, z: -92.5 },
     rotation: { yaw: 145, roll: 3 },
+    visibleRange: { max: 65 }, castShadow: false,
     model: { id: GLB.rowboat, forward: "+x" },
     layout: fit(3.8, 1.2, 3.8),
     behavior: "scripts/l7-dory.js",
@@ -534,6 +545,7 @@ function lay(ctx) {
   ctx.spawn("l7-seawatch-sign", {
     feetPosition: { x: 44.5, y: 9.2, z: -114.5 },
     rotation: { yaw: 0 },
+    visibleRange: { max: 45 }, castShadow: false,
     primitive: { kind: "box", width: 2.8, height: 0.55, depth: 0.06 },
     material: { color: "oklch(0.24 0.03 230)" },
     ui: '<div face="front" width="2.8m" style="font-size:135px;font-weight:900;color:#9fe8ff;text-align:center;line-height:1.05">M.E.G. OUTPOST SEAWATCH<div style="font-size:66px;color:#cfe8f0">HYDROPHONE ARRAY 07 · SALVAGE &amp; WORKBENCH</div></div>',
@@ -544,7 +556,7 @@ function lay(ctx) {
     tags: ["bench"],
     state: { name: "M.E.G. Marine Salvage Workbench" },
     children: [
-      { feetPosition: { x: 0, y: 1.6, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.12 80)", intensity: 2.6, distance: 11 } },
+      { feetPosition: { x: 0, y: 1.6, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.12 80)", intensity: 2.6, distance: 11, shadow: { enabled: false }, visibleRange: { max: 35 } } },
     ],
   });
 
@@ -553,6 +565,7 @@ function lay(ctx) {
     tags: ["usable"],
     feetPosition: { x: 46.8, y: 7.0, z: -118.2 },
     physics: "static",
+    visibleRange: { max: 45 }, castShadow: false,
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "brazier" } },
     behavior: "scripts/l7-use.js",
     state: {
@@ -564,7 +577,7 @@ function lay(ctx) {
       c: { x: 46.8, y: 7.6, z: -118.2 },
     },
     children: [
-      { feetPosition: { x: 0, y: 1.1, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.18 50)", intensity: 3.2, distance: 14 } },
+      { feetPosition: { x: 0, y: 1.1, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.18 50)", intensity: 3.2, distance: 14, shadow: { enabled: false }, visibleRange: { max: 35 } } },
     ],
   });
 
@@ -574,6 +587,7 @@ function lay(ctx) {
     feetPosition: { x: 47.8, y: 7.0, z: -124.8 },
     rotation: { yaw: 180 },
     physics: "static",
+    visibleRange: { max: 45 }, castShadow: false,
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "sonar" } },
     behavior: "scripts/l7-use.js",
     state: {
@@ -585,7 +599,7 @@ function lay(ctx) {
       c: { x: 47.8, y: 7.9, z: -124.8 },
     },
     children: [
-      { feetPosition: { x: 0, y: 1.3, z: 0.3 }, light: { kind: "point", color: "oklch(0.8 0.18 165)", intensity: 1.8, distance: 7 } },
+      { feetPosition: { x: 0, y: 1.3, z: 0.3 }, light: { kind: "point", color: "oklch(0.8 0.18 165)", intensity: 1.8, distance: 7, shadow: { enabled: false }, visibleRange: { max: 35 } } },
     ],
   });
 
@@ -595,17 +609,20 @@ function lay(ctx) {
   // Fort Surrender Southeast Wharf (x: -47, y: 1.1, z: -58)
   ctx.spawn("l7-fort-pier-0", {
     feetPosition: { x: -47, y: PY, z: -57 },
+    visibleRange: { max: 55 }, castShadow: false,
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "pier" } },
   });
   ctx.spawn("l7-fort-pier-1", {
     feetPosition: { x: -47, y: PY, z: -63 },
+    visibleRange: { max: 55 }, castShadow: false,
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "pier" } },
   });
   box(ctx, "l7-fort-pier-col", -47, PY - 0.1, -60, 3.4, 0.2, 13, {}, { visible: false });
   ctx.spawn("l7-fort-lantern", {
     feetPosition: { x: -45.6, y: PY + 0.88, z: -55 },
+    visibleRange: { max: 40 }, castShadow: false,
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "lantern" } },
-    children: [{ feetPosition: { x: 0, y: 0.22, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.16 75)", intensity: 2.5, distance: 16 } }],
+    children: [{ feetPosition: { x: 0, y: 0.22, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.16 75)", intensity: 2.5, distance: 16, shadow: { enabled: false }, visibleRange: { max: 35 } } }],
   });
 
   // Ferry Skiff from Fort Surrender back to M.E.G. Seawatch
@@ -614,6 +631,7 @@ function lay(ctx) {
     physics: { body: "kinematic", collider: "box" },
     feetPosition: { x: -44.5, y: -0.4, z: -57.5 },
     rotation: { yaw: -35, roll: 2 },
+    visibleRange: { max: 65 }, castShadow: false,
     model: { id: GLB.rowboat, forward: "+x" },
     layout: fit(3.8, 1.2, 3.8),
     behavior: "scripts/l7-dory.js",
@@ -631,13 +649,14 @@ function lay(ctx) {
   // Fort Surrender Summit Checkpoint & Lashed-Furniture Palisades (x: -70, y: 11.0, z: -95)
   ctx.spawn("l7-fort-spawn", { feetPosition: { x: -68.0, y: 11.1, z: -89.0 }, rotation: { yaw: 180 } });
   // the fort itself: two rows of wardrobes, dressers, beds and doors stacked and tarred, lean-to shanties inside, a watchtower of lashed wardrobes; the gate faces the wharf (south)
-  ctx.spawn("l7-fort", { feetPosition: { x: -70.0, y: 10.95, z: -93.0 }, rotation: { yaw: 0 }, physics: { body: "static", collider: "mesh" }, model: { id: GLB.fort }, receiveShadow: true });
+  ctx.spawn("l7-fort", { feetPosition: { x: -70.0, y: 10.95, z: -93.0 }, rotation: { yaw: 0 }, physics: { body: "static", collider: "mesh" }, model: { id: GLB.fort }, receiveShadow: true, visibleRange: { max: 70 } });
   // the Thing's worshippers keep tar lamps along the wall: the only light here, low and red-black
-  [[-6, -7], [6, -7], [-8, 1], [8, 1], [0, -9]].forEach(([dx, dz], i) => ctx.spawn(`l7-fort-lamp-${i}`, { feetPosition: { x: -70 + dx, y: 12.4, z: -93 + dz }, light: { kind: "point", color: "oklch(0.7 0.16 45)", intensity: 1.6, distance: 11 } }));
+  [[-6, -7], [6, -7], [-8, 1], [8, 1], [0, -9]].forEach(([dx, dz], i) => ctx.spawn(`l7-fort-lamp-${i}`, { feetPosition: { x: -70 + dx, y: 12.4, z: -93 + dz }, light: { kind: "point", color: "oklch(0.7 0.16 45)", intensity: 1.6, distance: 11, shadow: { enabled: false }, visibleRange: { max: 35 } } }));
 
   ctx.spawn("l7-fort-sign", {
     feetPosition: { x: -70.0, y: 15.1, z: -83.55 },
     rotation: { yaw: 0 },
+    visibleRange: { max: 45 }, castShadow: false,
     primitive: { kind: "box", width: 3.2, height: 0.6, depth: 0.06 },
     material: { color: "oklch(0.18 0.02 55)" },
     ui: '<div face="front" width="3.2m" style="font-size:135px;font-weight:900;color:#f2d184;text-align:center;line-height:1.05">FORT SURRENDER<div style="font-size:64px;color:#d8c8a8">BROKEN FURNITURE · HELD WITH TAR · NOT FOR VISITORS</div></div>',
@@ -648,6 +667,7 @@ function lay(ctx) {
     tags: ["usable"],
     feetPosition: { x: -70.0, y: 11.0, z: -93.5 },
     physics: "static",
+    visibleRange: { max: 45 }, castShadow: false,
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "brazier" } },
     behavior: "scripts/l7-use.js",
     state: {
@@ -659,7 +679,7 @@ function lay(ctx) {
       c: { x: -70.0, y: 11.6, z: -93.5 },
     },
     children: [
-      { feetPosition: { x: 0, y: 1.1, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.18 50)", intensity: 3.5, distance: 16 } },
+      { feetPosition: { x: 0, y: 1.1, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.18 50)", intensity: 3.5, distance: 16, shadow: { enabled: false }, visibleRange: { max: 35 } } },
     ],
   });
 
@@ -668,6 +688,7 @@ function lay(ctx) {
     tags: ["usable"],
     feetPosition: { x: -65.2, y: 11.0, z: -92.5 },
     physics: "static",
+    visibleRange: { max: 45 }, castShadow: false,
     primitive: { kind: "cylinder", radiusTop: 0.35, radiusBottom: 0.42, height: 1.25 },
     material: { color: "oklch(0.58 0.12 60)", metalness: 0.75, roughness: 0.35 },
     behavior: "scripts/l7-use.js",
@@ -686,6 +707,7 @@ function lay(ctx) {
     tags: ["usable"],
     feetPosition: { x: -70.0, y: 11.0, z: -101.0 },
     physics: "static",
+    visibleRange: { max: 45 }, castShadow: false,
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "shrine" } },
     behavior: "scripts/l7-use.js",
     state: {
@@ -697,7 +719,7 @@ function lay(ctx) {
       c: { x: -70.0, y: 11.8, z: -101.0 },
     },
     children: [
-      { feetPosition: { x: 0, y: 1.4, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.19 180)", intensity: 2.8, distance: 12 } },
+      { feetPosition: { x: 0, y: 1.4, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.19 180)", intensity: 2.8, distance: 12, shadow: { enabled: false }, visibleRange: { max: 35 } } },
     ],
   });
 
@@ -707,6 +729,7 @@ function lay(ctx) {
     feetPosition: { x: -81.0, y: { terrain: 0.05 }, z: -113.0 },
     rotation: { yaw: 160 },
     physics: "static",
+    visibleRange: { max: 45 }, castShadow: false,
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "divingbell" } },
     behavior: "scripts/l7-use.js",
     state: {
@@ -718,7 +741,7 @@ function lay(ctx) {
       c: { x: -81.0, y: 11.4, z: -113.0 },
     },
     children: [
-      { feetPosition: { x: 0, y: 1.5, z: 0 }, light: { kind: "point", color: "oklch(0.8 0.18 175)", intensity: 2.5, distance: 12 } },
+      { feetPosition: { x: 0, y: 1.5, z: 0 }, light: { kind: "point", color: "oklch(0.8 0.18 175)", intensity: 2.5, distance: 12, shadow: { enabled: false }, visibleRange: { max: 35 } } },
     ],
   });
 
@@ -735,11 +758,12 @@ function lay(ctx) {
       feetPosition: { x: b.x, y: -0.7, z: b.z },
       model: GLB.buoy,
       layout: fit(4.2, 4.2, 4.2),
+      visibleRange: { max: 70 },
       children: [
         {
           id: `${b.id}-light`,
           feetPosition: { x: 0, y: 3.9, z: 0 },
-          light: { kind: "point", color: "oklch(0.85 0.22 45)", intensity: 2.8, distance: 18 },
+          light: { kind: "point", color: "oklch(0.85 0.22 45)", intensity: 2.8, distance: 18, shadow: { enabled: false }, visibleRange: { max: 45 } },
         },
       ],
     });
@@ -749,11 +773,11 @@ function lay(ctx) {
   // 4B. THE CIRCULAR FORMATION (about 150 m west of the entrance) and the dead of the deep
   // =========================================================================
   // pipes and cut stone pillars round a circular stone platform on the sea floor, a wooden door in its floor (to Level 9); Tiny's lair
-  ctx.spawn("l7-circle", { feetPosition: { x: -150, y: { terrain: -0.3 }, z: 0 }, physics: { body: "static", collider: "mesh" }, model: { id: GLB.circle } });
-  ctx.spawn("l7-circle-glow", { feetPosition: { x: -150, y: -20.6, z: 0 }, light: { kind: "point", color: "oklch(0.7 0.1 175)", intensity: 1.2, distance: 14 } });
+  ctx.spawn("l7-circle", { feetPosition: { x: -150, y: { terrain: -0.3 }, z: 0 }, physics: { body: "static", collider: "mesh" }, model: { id: GLB.circle }, visibleRange: { max: 65 } });
+  ctx.spawn("l7-circle-glow", { feetPosition: { x: -150, y: -20.6, z: 0 }, light: { kind: "point", color: "oklch(0.7 0.1 175)", intensity: 1.2, distance: 14, shadow: { enabled: false }, visibleRange: { max: 45 } } });
   // skeletons on the sea floor and washed up on the shore: humanoid, large jaws, flipper-like legs (they thicken toward the Twilight zone, the first full ones)
   [[-60, 40, 0], [-110, -50, 1], [-30, -30, 2], [20, 60, 3], [70, -60, 4], [-180, -30, 5], [-125, 28, 6], [-165, 22, 7], [-40, -150, 8], [90, -30, 9], [-95, 75, 10], [5, -88, 11]].forEach(([x, z, k]) => {
-    ctx.spawn(`l7-skeleton-${k}`, { feetPosition: { x, z, y: { terrain: 0.02 } }, rotation: { yaw: k * 61 }, scale: 1.0 + (k % 3) * 0.12, model: { id: GLB.skeleton } });
+    ctx.spawn(`l7-skeleton-${k}`, { feetPosition: { x, z, y: { terrain: 0.02 } }, rotation: { yaw: k * 61 }, scale: 1.0 + (k % 3) * 0.12, model: { id: GLB.skeleton }, visibleRange: { max: 45 } });
   });
 
   ctx.spawn("l7-from-l8", { feetPosition: { x: -79.0, y: { terrain: 0.4 }, z: -110.5 }, rotation: { yaw: 20 } }); // where Level 8's lake sends you back: beside the diving bell
@@ -768,9 +792,10 @@ function lay(ctx) {
     feetPosition: { x: 30, y: -15.0, z: -75 }, // the Thing keeps to the Midnight Zone and the upper Abyss: far down, its light the only sign
     rotation: { yaw: 70 },
     scale: { x: 6.8, y: 6.8, z: 6.8 },
+    visibleRange: { max: 70 },
     model: { id: GLB.thing },
     children: [
-      { feetPosition: { x: 0, y: 0.6, z: -1.2 }, light: { kind: "point", color: "oklch(0.85 0.22 175)", intensity: 5.0, distance: 22 } },
+      { feetPosition: { x: 0, y: 0.6, z: -1.2 }, light: { kind: "point", color: "oklch(0.85 0.22 175)", intensity: 5.0, distance: 22, shadow: { enabled: false }, visibleRange: { max: 50 } } },
       { feetPosition: { x: 0.5, y: 0.7, z: -1.1 }, material: { color: "#ffffff", emissive: "oklch(0.85 0.22 175)", emissiveIntensity: 4.5 }, primitive: { kind: "sphere", radius: 0.09 } },
       { feetPosition: { x: -0.5, y: 0.7, z: -1.1 }, material: { color: "#ffffff", emissive: "oklch(0.85 0.22 175)", emissiveIntensity: 4.5 }, primitive: { kind: "sphere", radius: 0.09 } },
     ],
@@ -781,9 +806,10 @@ function lay(ctx) {
     feetPosition: { x: -138, y: -8.2, z: 14 },
     rotation: { yaw: -40 },
     scale: { x: 5.8, y: 5.8, z: 5.8 },
+    visibleRange: { max: 70 },
     model: { id: GLB.thing },
     children: [
-      { feetPosition: { x: 0, y: 0.6, z: -1.2 }, light: { kind: "point", color: "oklch(0.78 0.24 295)", intensity: 4.8, distance: 20 } },
+      { feetPosition: { x: 0, y: 0.6, z: -1.2 }, light: { kind: "point", color: "oklch(0.78 0.24 295)", intensity: 4.8, distance: 20, shadow: { enabled: false }, visibleRange: { max: 50 } } },
       { feetPosition: { x: 0.5, y: 0.7, z: -1.1 }, material: { color: "#ffffff", emissive: "oklch(0.78 0.24 295)", emissiveIntensity: 4.5 }, primitive: { kind: "sphere", radius: 0.09 } },
       { feetPosition: { x: -0.5, y: 0.7, z: -1.1 }, material: { color: "#ffffff", emissive: "oklch(0.78 0.24 295)", emissiveIntensity: 4.5 }, primitive: { kind: "sphere", radius: 0.09 } },
     ],

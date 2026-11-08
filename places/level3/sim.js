@@ -64,13 +64,13 @@ function layLamps(ctx) {
     const z = zoneOf(cx, cz), c = cellCenter(cx, cz), r = hash(cx, cz, 201), top = ceilingAt(cx, cz);
     if (z === "vault" || (z === "gamma" && (cx + cz) % 2)) continue;
     const pos = { x: c.x + (hash(cx, cz, 205) - 0.5) * (z === "tight" ? 0 : 1), y: top - 0.3, z: c.z + (hash(cx, cz, 207) - 0.5) * (z === "tight" ? 0 : 1) };
-    if (z === "dark") { if (r < 0.35) ctx.spawn({ tags: ["l3lamp"], feetPosition: pos, primitive: { kind: "scripted", script: "scripts/l3-lamp-geo.js", params: { drop: 0.3, dead: true } } }); continue; }
+    if (z === "dark") { if (r < 0.35) ctx.spawn({ tags: ["l3lamp"], feetPosition: pos, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l3-lamp-geo.js", params: { drop: 0.3, dead: true } } }); continue; }
     const deadEnd = (z === "hall" || z === "tight") && openings(cx, cz).length === 1;
     if (!deadEnd && z !== "gamma" && z !== "gen" && z !== "line" && r > 0.42) continue;
     const cold = deadEnd || z === "line" || hash(cx, cz, 203) < 0.25, col = z === "gamma" ? "oklch(0.92 0.06 95)" : cold ? "oklch(0.95 0.03 210)" : "oklch(0.82 0.13 62)";
     const inten = deadEnd ? 9 : z === "gamma" ? 5.5 : 3.2;
-    ctx.spawn({ tags: ["l3lamp"], feetPosition: pos, primitive: { kind: "scripted", script: "scripts/l3-lamp-geo.js", params: { drop: 0.3, cold } },
-      light: { kind: "point", color: col, intensity: inten, distance: deadEnd ? 14 : z === "tight" ? 10 : 11, shadow: { enabled: false } } });
+    ctx.spawn({ tags: ["l3lamp"], feetPosition: pos, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/l3-lamp-geo.js", params: { drop: 0.3, cold } },
+      light: { kind: "point", color: col, intensity: inten, distance: deadEnd ? 14 : z === "tight" ? 10 : 11, shadow: { enabled: false }, visibleRange: { max: 40 } } });
   }
 }
 
@@ -79,19 +79,19 @@ function layLayout(ctx) {
   layLamps(ctx);
     // hazards: black sludge pooled under leaking pipes; live junction boxes that arc
   for (const h of SLUDGE) {
-    ctx.spawn({ tags: ["sludge"], feetPosition: { x: h.x, y: 0.015, z: h.z }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 1.1, segments: 20 }, material: { color: "oklch(0.1 0.01 300)", roughness: 0.05, metalness: 0.3 } });
+    ctx.spawn({ tags: ["sludge"], feetPosition: { x: h.x, y: 0.015, z: h.z }, rotation: { pitch: -90 }, visibleRange: { max: 35 }, castShadow: false, primitive: { kind: "circle", radius: 1.1, segments: 20 }, material: { color: "oklch(0.1 0.01 300)", roughness: 0.05, metalness: 0.3 } });
     ctx.spawn({ feetPosition: { x: h.wx, y: ceilingAt(h.cx, h.cz) - 0.3, z: h.wz }, tags: ["l3drip"], fx: { script: DRIP }, audio: { clip: GRIT("water-drip-echo-loop"), gain: 0.18, loop: true, spatial: true, maxDistance: 8 } });
   }
   for (const h of SPARKS) {
     const [nx, nz] = D4[h.d];
-    ctx.spawn({ tags: ["live-box", "breakable"], feetPosition: { x: h.wx - nx * 0.1, y: 1.2, z: h.wz - nz * 0.1 }, physics: { body: "static", collider: "box" }, state: { mat: "machine", hp: 90, maxHp: 90, name: "Junction box" }, primitive: { kind: "box", width: 0.45, height: 0.6, depth: 0.45 }, material: { color: "oklch(0.55 0.01 240)", metalness: 0.6, roughness: 0.5 },
+    ctx.spawn({ tags: ["live-box", "breakable"], feetPosition: { x: h.wx - nx * 0.1, y: 1.2, z: h.wz - nz * 0.1 }, physics: { body: "static", collider: "box" }, visibleRange: { max: 35 }, castShadow: false, state: { mat: "machine", hp: 90, maxHp: 90, name: "Junction box" }, primitive: { kind: "box", width: 0.45, height: 0.6, depth: 0.45 }, material: { color: "oklch(0.55 0.01 240)", metalness: 0.6, roughness: 0.5 },
       fx: { script: ARC, params: { dir: { x: -nx, y: 0.2, z: -nz } } }, audio: { clip: GRIT("electrical-arc-buzz-loop"), gain: 0.3, loop: true, spatial: true, maxDistance: 9 } });
   }
   // yellow OUT OF BOUNDS plates with real lettering, hung on the bars
   for (const o of OOB) {
     const e = o.d === 0 ? { x: (o.cx + 1) * S - HALF, z: o.cz * S - HALF + S / 2 } : { x: o.cx * S - HALF + S / 2, z: (o.cz + 1) * S - HALF };
     const side = o.r < 0.5 ? 1 : -1, x = o.d === 0 ? e.x + side * 0.06 : e.x - 0.9, z = o.d === 0 ? e.z - 0.9 : e.z + side * 0.06;
-    ctx.spawn({ tags: ["l3oob"], feetPosition: { x, y: 1.55, z }, rotation: { yaw: o.d === 0 ? (side > 0 ? -90 : 90) : (side > 0 ? 180 : 0) }, primitive: { kind: "box", width: 0.62, height: 0.3, depth: 0.02 }, material: { color: "oklch(0.8 0.15 88)", roughness: 0.6 },
+    ctx.spawn({ tags: ["l3oob"], feetPosition: { x, y: 1.55, z }, rotation: { yaw: o.d === 0 ? (side > 0 ? -90 : 90) : (side > 0 ? 180 : 0) }, visibleRange: { max: 35 }, castShadow: false, primitive: { kind: "box", width: 0.62, height: 0.3, depth: 0.02 }, material: { color: "oklch(0.8 0.15 88)", roughness: 0.6 },
       ui: '<div face="front" width="0.62m" style="font-size:118px;font-weight:900;color:#17130c;text-align:center;line-height:1.05;letter-spacing:4px;padding-top:30px">OUT OF<br>BOUNDS</div>' });
   }
 }
@@ -99,22 +99,22 @@ function layLayout(ctx) {
 function layGammaSignage(ctx) {
   const a = cellCenter(1, ARRIVE.cz);
   // Corridor outside Base Gamma heading into the station:
-  ctx.spawn({ tags: ["l3sign"], feetPosition: { x: a.x + 10.5, y: 1.8, z: a.z }, rotation: { yaw: -90 }, primitive: { kind: "box", width: 2.2, height: 0.55, depth: 0.02 }, material: { color: "oklch(0.24 0.03 140)", roughness: 0.85 },
+  ctx.spawn({ tags: ["l3sign"], feetPosition: { x: a.x + 10.5, y: 1.8, z: a.z }, rotation: { yaw: -90 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 2.2, height: 0.55, depth: 0.02 }, material: { color: "oklch(0.24 0.03 140)", roughness: 0.85 },
     ui: '<div face="left" width="2.2m" style="font-size:95px;font-weight:900;color:#d8e8b0;text-align:center;line-height:1.15">◄ M.E.G. BASE GAMMA<div style="font-size:55px;color:#a8c880">CHECKPOINT · WEAPONS HOLSTERED · REFUGE</div></div>' });
   // Blood test directive stencil on wall:
-  ctx.spawn({ tags: ["l3sign"], feetPosition: { x: a.x + 6.2, y: 0.9, z: a.z + 4.5 }, rotation: { yaw: 0 }, primitive: { kind: "box", width: 2.0, height: 0.45, depth: 0.02 }, material: { color: "oklch(0.22 0.02 240)", roughness: 0.9 },
+  ctx.spawn({ tags: ["l3sign"], feetPosition: { x: a.x + 6.2, y: 0.9, z: a.z + 4.5 }, rotation: { yaw: 0 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 2.0, height: 0.45, depth: 0.02 }, material: { color: "oklch(0.22 0.02 240)", roughness: 0.9 },
     ui: '<div face="front" width="2.0m" style="font-size:80px;font-weight:900;color:#e8f0c0;text-align:center;line-height:1.2">SECURITY DIRECTIVE<div style="font-size:50px;color:#c8d890">MANDATORY BLOOD TEST · ANTI-STEALER PROTOCOL</div></div>' });
   // High voltage caution stencil:
   if (GENS.length) {
     const g0 = GENS[0];
-    ctx.spawn({ tags: ["l3sign"], feetPosition: { x: g0.x - 3.8, y: 1.9, z: g0.z }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.8, height: 0.45, depth: 0.02 }, material: { color: "oklch(0.25 0.04 40)", roughness: 0.9 },
-      ui: '<div face="right" width="1.8m" style="font-size:85px;font-weight:900;color:#ffaa33;text-align:center;line-height:1.15">DANGER: 10,000 VOLTS<div style="font-size:50px;color:#ffd060">TRANSFORMER SUB-STATION · LIVE ARC HAZARD</div></div>' });
+    ctx.spawn({ tags: ["l3sign"], feetPosition: { x: g0.x - 3.8, y: 1.9, z: g0.z }, rotation: { yaw: 90 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 1.8, height: 0.45, depth: 0.02 }, material: { color: "oklch(0.25 0.04 40)", roughness: 0.9 },
+      ui: '<div face="right" width="1.8m" style="font-size:85px;font-weight:900;color:#ffaa33;text-align:center;line-line:1.15">DANGER: 10,000 VOLTS<div style="font-size:50px;color:#ffd060">TRANSFORMER SUB-STATION · LIVE ARC HAZARD</div></div>' });
   }
   // Indestructible bars caution stencil:
   if (OOB.length) {
     const o0 = OOB[0];
     const e = o0.d === 0 ? { x: (o0.cx + 1) * S - HALF, z: o0.cz * S - HALF + S / 2 } : { x: o0.cx * S - HALF + S / 2, z: (o0.cz + 1) * S - HALF };
-    ctx.spawn({ tags: ["l3sign"], feetPosition: { x: e.x, y: 0.9, z: e.z }, primitive: { kind: "box", width: 0.8, height: 0.35, depth: 0.02 }, material: { color: "oklch(0.22 0.03 30)" },
+    ctx.spawn({ tags: ["l3sign"], feetPosition: { x: e.x, y: 0.9, z: e.z }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 0.8, height: 0.35, depth: 0.02 }, material: { color: "oklch(0.22 0.03 30)" },
       ui: '<div face="front" width="0.8m" style="font-size:65px;font-weight:900;color:#ff7766;text-align:center;line-height:1.15">IMPERVIOUS<div style="font-size:42px;color:#ffa090">DO NOT APPROACH</div></div>' });
   }
 }
@@ -124,18 +124,18 @@ export function tick(ctx) {
   if (ctx.place.state.liftV !== 1) { ctx.place.state.liftV = 1; // the freight lift has power again: up to Level 4
     ctx.spawn("l3-lift", { tags: ["door"], feetPosition: { x: LIFT.x - 0.6, y: 0, z: LIFT.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 2.2 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level4#l4-lift-arrive" } });
     ctx.spawn("l3-lift-arrive", { feetPosition: { x: LIFT.x - 3, y: 0.1, z: LIFT.z }, rotation: { yaw: 90 } });
-    ctx.spawn({ feetPosition: { x: LIFT.x - 0.54, y: 1.4, z: LIFT.z }, primitive: { kind: "box", width: 0.02, height: 0.56, depth: 1.2 }, material: { color: "oklch(0.62 0.14 85)" },
+    ctx.spawn({ feetPosition: { x: LIFT.x - 0.54, y: 1.4, z: LIFT.z }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 0.02, height: 0.56, depth: 1.2 }, material: { color: "oklch(0.62 0.14 85)" },
       ui: '<div face="left" width="1.2m" style="font-size:120px;font-weight:900;color:#1a1410;text-align:center;line-height:1.1">LIFT 4<div style="font-size:70px">▲ abandoned office</div></div>' });
-    ctx.spawn({ feetPosition: { x: LIFT.x - 1.2, y: 2.6, z: LIFT.z }, light: { kind: "point", color: "oklch(0.85 0.1 85)", intensity: 3, distance: 6 } });
+    ctx.spawn({ feetPosition: { x: LIFT.x - 1.2, y: 2.6, z: LIFT.z }, light: { kind: "point", color: "oklch(0.85 0.1 85)", intensity: 3, distance: 6, shadow: { enabled: false }, visibleRange: { max: 35 } } });
   }
   if (ctx.place.state.lift5V !== 1) { ctx.place.state.lift5V = 1; // the guest lift beside it: brass doors, to Level 5's hotel (one cell south of LIFT 4)
     const z5 = LIFT.z + 4;
     ctx.spawn("l3-lift5", { tags: ["door"], feetPosition: { x: LIFT.x - 0.6, y: 0, z: z5 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 2.2 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level5#l5-from-l3" } });
     ctx.spawn("l3-from-l5", { feetPosition: { x: LIFT.x - 3, y: 0.1, z: z5 }, rotation: { yaw: 90 } });
-    ctx.spawn({ feetPosition: { x: LIFT.x - 0.12, y: 0, z: z5 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.6, height: 2.3, depth: 0.08 }, material: { color: "oklch(0.62 0.11 75)", texture: "cdn/texture-scratched-worn-steel.png", metalness: 0.85, roughness: 0.3 } });
-    ctx.spawn({ feetPosition: { x: LIFT.x - 0.54, y: 1.4 + 1.2, z: z5 }, primitive: { kind: "box", width: 0.02, height: 0.56, depth: 1.2 }, material: { color: "oklch(0.3 0.05 40)" },
+    ctx.spawn({ feetPosition: { x: LIFT.x - 0.12, y: 0, z: z5 }, rotation: { yaw: 90 }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 1.6, height: 2.3, depth: 0.08 }, material: { color: "oklch(0.62 0.11 75)", texture: "cdn/texture-scratched-worn-steel.png", metalness: 0.85, roughness: 0.3 } });
+    ctx.spawn({ feetPosition: { x: LIFT.x - 0.54, y: 1.4 + 1.2, z: z5 }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 0.02, height: 0.56, depth: 1.2 }, material: { color: "oklch(0.3 0.05 40)" },
       ui: '<div face="left" width="1.2m" style="font-family:serif;font-size:120px;font-weight:900;color:#e8c983;text-align:center;line-height:1.1">LIFT 5<div style="font-size:66px;font-style:italic">the hotel</div></div>' });
-    ctx.spawn({ feetPosition: { x: LIFT.x - 1.2, y: 2.6, z: z5 }, light: { kind: "point", color: "oklch(0.8 0.12 70)", intensity: 3, distance: 6 } });
+    ctx.spawn({ feetPosition: { x: LIFT.x - 1.2, y: 2.6, z: z5 }, light: { kind: "point", color: "oklch(0.8 0.12 70)", intensity: 3, distance: 6, shadow: { enabled: false }, visibleRange: { max: 35 } } });
   }
   const s = ctx.place.state, now = ctx.now();
   // a blackout (scripts/horde.js) on anyone here kills the level's lamps: a faint red emergency glow, and the hounds see farther in the dark
@@ -175,26 +175,26 @@ export function tick(ctx) {
     layLayout(ctx); s.layoutV = 2;
     // the door home, west wall: a green LEVEL 2 plate and a light over it
     ctx.spawn("l3-back", { feetPosition: { x: BACK.x + 0.6, y: 0, z: BACK.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 1.3 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level2" } });
-    ctx.spawn({ feetPosition: { x: BACK.x + 0.52, y: 2.6, z: BACK.z }, primitive: { kind: "box", width: 0.02, height: 0.4, depth: 1.2 }, material: { color: "oklch(0.25 0.03 150)" },
+    ctx.spawn({ feetPosition: { x: BACK.x + 0.52, y: 2.6, z: BACK.z }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 0.02, height: 0.4, depth: 1.2 }, material: { color: "oklch(0.25 0.03 150)" },
       ui: '<div face="right" width="1.2m" style="font-size:110px;font-weight:900;color:#d8f0c0;text-align:center">LEVEL 2</div>' });
     // Base Gamma: a hand-painted plate, a stove, the agents
     const a = cellCenter(1, ARRIVE.cz);
-    ctx.spawn({ feetPosition: { x: a.x + 6.2, y: 1.7, z: a.z - 5.6 }, rotation: { yaw: 0 }, primitive: { kind: "box", width: 2.4, height: 0.7, depth: 0.03 }, material: { color: "oklch(0.3 0.03 140)", roughness: 0.9 },
+    ctx.spawn({ feetPosition: { x: a.x + 6.2, y: 1.7, z: a.z - 5.6 }, rotation: { yaw: 0 }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 2.4, height: 0.7, depth: 0.03 }, material: { color: "oklch(0.3 0.03 140)", roughness: 0.9 },
       ui: '<div face="front" width="2.4m" style="font-size:150px;font-weight:900;color:#e8f0d0;text-align:center;line-height:1.1">M.E.G. · GAMMA<div style="font-size:80px;color:#c8d880">checkpoint. no further w/o escort</div></div>' });
-    ctx.spawn({ feetPosition: { x: a.x + 2.5, y: 0, z: a.z + 0.5 }, primitive: { kind: "cylinder", radiusTop: 0.25, radiusBottom: 0.3, height: 0.4 }, material: { color: "oklch(0.25 0.01 250)", metalness: 0.6 },
+    ctx.spawn({ feetPosition: { x: a.x + 2.5, y: 0, z: a.z + 0.5 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.25, radiusBottom: 0.3, height: 0.4 }, material: { color: "oklch(0.25 0.01 250)", metalness: 0.6 },
       fx: { script: `fx\npop flame rate=16 on=disc(.12).c(.4) life=.3..0.6 v=up(.7) size=.08..0.14 sz=$size*(1>.2) col=hdr(4,2,.6)>hdr(1.4,.4,.1) a=0>.15:1>.7:.6>0 r=sprite(flame-wisp,add)\npop glow n=1 at=disc(.1).c(.6) r=light(<1,.6,.3>,fire()*6,8)` },
       audio: { clip: GRIT("campfire-crackle-loop"), gain: 0.2, loop: true, spatial: true, maxDistance: 10 } });
     for (const id of Object.keys(GAMMA)) agent(ctx, id);
     // the freight lift east: dead, a sign on its gate
-    ctx.spawn({ feetPosition: { x: LIFT.x - 0.5, y: 1.4, z: LIFT.z }, primitive: { kind: "box", width: 0.02, height: 0.5, depth: 1.1 }, material: { color: "oklch(0.6 0.13 80)" },
+    ctx.spawn({ feetPosition: { x: LIFT.x - 0.5, y: 1.4, z: LIFT.z }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 0.02, height: 0.5, depth: 1.1 }, material: { color: "oklch(0.6 0.13 80)" },
       ui: '<div face="left" width="1.1m" style="font-size:120px;font-weight:900;color:#1a1410;text-align:center;line-height:1.1">LIFT 4<div style="font-size:70px">no power</div></div>' });
-    ctx.spawn({ feetPosition: { x: LIFT.x - 1.2, y: 2.6, z: LIFT.z }, light: { kind: "point", color: "oklch(0.7 0.16 30)", intensity: 2.5, distance: 6 } });
+    ctx.spawn({ feetPosition: { x: LIFT.x - 1.2, y: 2.6, z: LIFT.z }, light: { kind: "point", color: "oklch(0.7 0.16 30)", intensity: 2.5, distance: 6, shadow: { enabled: false }, visibleRange: { max: 35 } } });
     // generators hum
     for (const g of GENS) ctx.spawn(`l3-gen-${g.i}`, { feetPosition: { x: g.x, y: 1.2, z: g.z }, audio: { clip: GRIT("generator-heavy-hum-loop"), gain: 0.35, loop: true, spatial: true, maxDistance: 16 } });
     ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level3-details-geo.js" }, material: { roughness: 0.85 } }); // tile wainscot, signs, sludge pools, the statue, violet bricks, almond piles
     // the Blender-built models (art/level3/build.py): generators, assembly lines, the marble statue, wall boxes, bottle piles, cameras
     const L3M = { bottles: "/cdn/value.fd97d841d450a844d49368f6140950f0c48b8c6b50ba3cda61291a7d82fbec96.glb", camera: "/cdn/value.9a228d2a44ac47cc422ab5bcdbbaa10b84f595f45d7cb1acd62d496a80a648bc.glb", generator: "/cdn/value.f2cc96cb814887e44442e010f610a0890537af8e6f7f6965290304f2f4b81c85.glb", line: "/cdn/value.1bc56a08754ad99605d9605af31ac68640ddc6126fd6cea17b05fd46cc96bc52.glb", statue: "/cdn/value.17d71ddd03bd0c0f26442d38dda850d8d8eb3e49d1e3c8b09ad1cec98ca90a95.glb", wallbox: "/cdn/value.ba5136c85ccb173e33e96f5633746c6ea83673f487d82fd34c0b727875111c93.glb" }; // uploaded from art/level3 (art/level3/build.py makes them)
-    const M3 = (name, x, y, z, o = {}) => ctx.spawn({ feetPosition: { x, y, z }, model: L3M[name], castShadow: false, ...o });
+    const M3 = (name, x, y, z, o = {}) => ctx.spawn({ feetPosition: { x, y, z }, model: L3M[name], visibleRange: { max: 45 }, castShadow: false, ...o });
     const SOLID = { physics: { body: "static", collider: "mesh" } };
     for (const g of GENS) M3("generator", g.x, 0, g.z, { scale: { x: 0.9, y: 0.9, z: 0.9 }, ...SOLID });
     for (const l of LINES) { M3("line", (l.x0 + l.x1) / 2, 0, l.z, SOLID); M3("bottles", l.x1 - 0.2, 0, l.z + 1.4, { rotation: { yaw: 40 } }); }

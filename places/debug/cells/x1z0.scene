@@ -164,38 +164,47 @@ dbg/lamp0:
   feetPosition: {x: 94, y: 2.7, z: -8}
   id: dbg/lamp0
   light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+  visibleRange: {max: 40}
 dbg/lamp1:
   feetPosition: {x: 106, y: 2.7, z: -8}
   id: dbg/lamp1
   light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+  visibleRange: {max: 40}
 dbg/lamp2:
   feetPosition: {x: 94, y: 2.7, z: -2}
   id: dbg/lamp2
   light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+  visibleRange: {max: 40}
 dbg/lamp3:
   feetPosition: {x: 106, y: 2.7, z: -2}
   id: dbg/lamp3
   light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+  visibleRange: {max: 40}
 dbg/lamp4:
   feetPosition: {x: 100, y: 2.7, z: 0}
   id: dbg/lamp4
   light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+  visibleRange: {max: 40}
 dbg/lamp5:
   feetPosition: {x: 94, y: 2.7, z: 5}
   id: dbg/lamp5
   light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+  visibleRange: {max: 40}
 dbg/lamp6:
   feetPosition: {x: 106, y: 2.7, z: 5}
   id: dbg/lamp6
   light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+  visibleRange: {max: 40}
 dbg/lamp7:
   feetPosition: {x: 90, y: 2.7, z: 0}
   id: dbg/lamp7
   light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+  visibleRange: {max: 40}
 dbg/lamp8:
   feetPosition: {x: 110, y: 2.7, z: 0}
   id: dbg/lamp8
   light: {color: oklch(0.95 0.06 92), distance: 11, intensity: 2.2, kind: point}
+  visibleRange: {max: 40}
 dbg/lurker-label:
   feetPosition: {x: 106, y: 2.55, z: -5.35}
   id: dbg/lurker-label

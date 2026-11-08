@@ -67,7 +67,7 @@ export function lay(ctx) {
   LIGHTS.forEach((l, i) => {
     if (!ctx.getObject(`l5-light-${i}`)) {
       ctx.spawn(`l5-light-${i}`, { tags: ["l5-light", `l5-fix-${l.kind}`], feetPosition: { x: l.x, y: l.y, z: l.z }, state: { kind: l.kind },
-        light: { kind: "point", color: l.color, intensity: l.intensity, distance: l.distance, shadow: { enabled: false } } });
+        light: { kind: "point", color: l.color, intensity: l.intensity, distance: l.distance, shadow: { enabled: false }, visibleRange: { max: 45 } } });
     }
   });
 
@@ -75,7 +75,7 @@ export function lay(ctx) {
   for (const r of RADIOS) {
     if (ctx.getObject(r.id)) continue;
     const track = { clip: POLONAISE, gain: 0.55, loop: true, spatial: true, refDistance: 2, maxDistance: 16, bus: "music" };
-    ctx.spawn(r.id, { tags: ["usable", "l5-radio"], feetPosition: { x: r.x, y: r.y, z: r.z }, rotation: { yaw: r.yaw }, physics: "static",
+    ctx.spawn(r.id, { tags: ["usable", "l5-radio"], feetPosition: { x: r.x, y: r.y, z: r.z }, rotation: { yaw: r.yaw }, physics: "static", visibleRange: { max: 40 }, castShadow: false,
       primitive: { kind: "box", width: 0.46, height: 0.34, depth: 0.24 }, material: { color: "oklch(0.42 0.08 50)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.4 },
       behavior: "scripts/l5-door.js", audio: track,
       state: { kind: "radio", on: true, track, name: "Valve radio", verb: "Switch off", info: `A polonaise, from ${r.where}. Nobody tuned it.`, tint: "#e8c983" } });
@@ -88,11 +88,11 @@ export function lay(ctx) {
     if (e.to) {
       ctx.spawn(e.id, { tags: ["door"], feetPosition: { x: e.at.x + f.x * 0.4, y: 0, z: e.at.z + f.z * 0.4 }, rotation: { yaw: e.yaw }, physics: { body: "static", trigger: true },
         primitive: { kind: "box", width: 1.4, height: 2.4, depth: 0.6 }, visible: false, behavior: "scripts/level-door.js", state: { to: e.to } });
-      ctx.spawn(`${e.id}-plate`, { feetPosition: { x: e.at.x + f.x * 0.06, y: 2.55, z: e.at.z + f.z * 0.06 }, rotation: { yaw: e.yaw }, primitive: { kind: "box", width: 1.2, height: 0.36, depth: 0.03 }, material: { color: "oklch(0.25 0.04 50)" },
+      ctx.spawn(`${e.id}-plate`, { feetPosition: { x: e.at.x + f.x * 0.06, y: 2.55, z: e.at.z + f.z * 0.06 }, rotation: { yaw: e.yaw }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 1.2, height: 0.36, depth: 0.03 }, material: { color: "oklch(0.25 0.04 50)" },
         ui: plate(e.label, e.kind === "lift" ? "▼ electrical station" : "▲ abandoned office") });
-      ctx.spawn(`${e.id}-lamp`, { feetPosition: { x: e.at.x + f.x * 0.8, y: 2.9, z: e.at.z + f.z * 0.8 }, light: { kind: "point", color: "oklch(0.82 0.1 70)", intensity: 2.2, distance: 6 } });
+      ctx.spawn(`${e.id}-lamp`, { feetPosition: { x: e.at.x + f.x * 0.8, y: 2.9, z: e.at.z + f.z * 0.8 }, light: { kind: "point", color: "oklch(0.82 0.1 70)", intensity: 2.2, distance: 6, shadow: { enabled: false }, visibleRange: { max: 35 } } });
     } else {
-      ctx.spawn(e.id, { tags: ["usable", "l5-sealed"], feetPosition: { x: e.at.x + f.x * 0.08, y: 0, z: e.at.z + f.z * 0.08 }, rotation: { yaw: e.yaw }, physics: "static",
+      ctx.spawn(e.id, { tags: ["usable", "l5-sealed"], feetPosition: { x: e.at.x + f.x * 0.08, y: 0, z: e.at.z + f.z * 0.08 }, rotation: { yaw: e.yaw }, physics: "static", visibleRange: { max: 45 }, castShadow: false,
         primitive: { kind: "box", width: e.kind === "gate" ? 2.2 : 1.1, height: e.kind === "gate" ? 2.8 : 2.3, depth: 0.12 },
         material: e.kind === "metal" || e.kind === "airlock" ? { color: "oklch(0.5 0.03 40)", texture: "cdn/texture-peeling-white-paint-rusty-steel.png", roughness: 0.55, metalness: 0.6 } : { color: "oklch(0.5 0.06 45)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.55 },
         behavior: "scripts/l5-door.js", state: { kind: "sealed", text: e.sealed, name: e.sealed.split(" · ")[0], verb: "Try the door", info: "It won't open", tint: "#b89b6a", sound: e.kind === "airlock" ? "metal-valve-wheel-creak" : null } });
@@ -135,7 +135,7 @@ export function lay(ctx) {
 
   // The Beverly Room Concert Grand Piano on Stage
   if (!ctx.getObject("l5-piano")) {
-    ctx.spawn("l5-piano", { visibleRange: { min: 0, max: 80 }, 
+    ctx.spawn("l5-piano", { visibleRange: { min: 0, max: 45 }, castShadow: false, 
       tags: ["usable"],
       feetPosition: { x: 15.5, y: 0, z: -10.6 },
       rotation: { yaw: 45 },
@@ -157,7 +157,7 @@ export function lay(ctx) {
       behavior: "scripts/l5-door.js",
       state: { kind: "bell", name: "Service bell", verb: "Ring", info: "Polished brass desk bell", tint: "#f2c14e" },
     });
-    for (const [id, x, z, yaw] of [["l5-cart-lobby-n", -43.6, -3.9, 15], ["l5-cart-lobby-s", -41.5, 10.8, -20]]) ctx.spawn(id, { visibleRange: { min: 0, max: 80 }, 
+    for (const [id, x, z, yaw] of [["l5-cart-lobby-n", -43.6, -3.9, 15], ["l5-cart-lobby-s", -41.5, 10.8, -20]]) ctx.spawn(id, { visibleRange: { min: 0, max: 45 }, castShadow: false, 
       feetPosition: { x, y: 0, z }, rotation: { yaw },
       physics: { body: "static", collider: "box" },
       primitive: { kind: "scripted", script: "scripts/level5-props-geo.js", params: { kind: "luggage_cart" } },
@@ -192,7 +192,7 @@ export function lay(ctx) {
         { feetPosition: { x: 0.45, y: 0.95, z: -0.2 }, primitive: { kind: "box", width: 0.22, height: 0.08, depth: 0.1 }, material: { color: "oklch(0.48 0.16 145)", roughness: 0.15 }, light: { kind: "point", color: "oklch(0.85 0.1 135)", intensity: 1.8, distance: 4.5 } },
       ],
     });
-    ctx.spawn("l5-lib-cabinet", { visibleRange: { min: 0, max: 80 }, 
+    ctx.spawn("l5-lib-cabinet", { visibleRange: { min: 0, max: 45 }, castShadow: false, 
       tags: ["container"],
       feetPosition: { x: -22.37, y: 0, z: -14 },
       rotation: { yaw: -90 },
@@ -209,7 +209,7 @@ export function lay(ctx) {
 
   // M.E.G. Outpost Housekeeping Workbench
   if (!ctx.getObject("l5-hk-workbench")) {
-    ctx.spawn("l5-hk-workbench", { visibleRange: { min: 0, max: 80 }, 
+    ctx.spawn("l5-hk-workbench", { visibleRange: { min: 0, max: 45 }, castShadow: false, 
       tags: ["bench"],
       feetPosition: { x: 5, y: 0, z: 22.8 },
       rotation: { yaw: 180 },
@@ -270,6 +270,7 @@ export function lay(ctx) {
       feetPosition: pos,
       rotation: { yaw: yaw0 },
       physics: { body: "kinematic", collider: "box" },
+      visibleRange: { max: 45 }, castShadow: false,
       primitive: { kind: "scripted", script: "scripts/level5-props-geo.js", params: { kind: "hotel_door", num } },
       behavior: "scripts/l2-door.js",
       state: {
@@ -384,7 +385,7 @@ export function tick(ctx) {
 function relight(ctx) {
   for (let i = 0; i < 200; i++) if (ctx.getObject(`l5-light-${i}`)) ctx.destroy(`l5-light-${i}`);
   LIGHTS.forEach((l, i) => ctx.spawn(`l5-light-${i}`, { tags: ["l5-light", `l5-fix-${l.kind}`], feetPosition: { x: l.x, y: l.y, z: l.z }, state: { kind: l.kind },
-    light: { kind: "point", color: l.color, intensity: l.intensity, distance: l.distance, shadow: { enabled: false } } }));
+    light: { kind: "point", color: l.color, intensity: l.intensity, distance: l.distance, shadow: { enabled: false }, visibleRange: { max: 45 } } }));
 }
 
 // every live way out reads as one: a walnut stair door swung open on a dark climbing stair, or a copper cage lift with its gate folded back
@@ -406,13 +407,13 @@ function dressExits(ctx) {
       kids.push(box(0.62, 0, -0.62, 0.05, 2.25, 1.1, WAL, { rotation: { yaw: 20 } })); // the door, swung in toward the room
       kids.push(box(0.47, 1.0, -0.95, 0.06, 0.06, 0.06, BRASS)); // its knob
       for (let i = 0; i < 6; i++) kids.push(box(0, i * 0.18, 0.15 + i * 0.28, 1.2, 0.18, 0.28, { color: `oklch(${0.22 - i * 0.03} 0.04 45)`, roughness: 0.8 }, { physics: "none" })); // the first steps climbing into the dark
-      kids.push({ feetPosition: { x: 0, y: 2.0, z: 0.6 }, light: { kind: "point", color: "oklch(0.75 0.1 65)", intensity: 0.6, distance: 3 } });
+      kids.push({ feetPosition: { x: 0, y: 2.0, z: 0.6 }, light: { kind: "point", color: "oklch(0.75 0.1 65)", intensity: 0.6, distance: 3, shadow: { enabled: false }, visibleRange: { max: 30 } } });
     } else {
       for (let i = 0; i < 7; i++) { kids.push(box(-0.9 - i * 0.05, 0, -0.1, 0.025, 2.3, 0.025, COPPER)); kids.push(box(0.9 + i * 0.05, 0, -0.1, 0.025, 2.3, 0.025, COPPER)); } // the cage gate folded back each side
       for (const y of [0.4, 1.2, 2.0]) kids.push(box(0, y, 0.6, 1.3, 0.03, 1.2, COPPER)); // the cage's rails inside
       kids.push(box(0, 2.62, -0.04, 0.5, 0.26, 0.04, BRASS)); // the floor dial above
-      kids.push({ feetPosition: { x: 0, y: 2.0, z: 0.6 }, light: { kind: "point", color: "oklch(0.8 0.12 75)", intensity: 1.2, distance: 3.5 } });
+      kids.push({ feetPosition: { x: 0, y: 2.0, z: 0.6 }, light: { kind: "point", color: "oklch(0.8 0.12 75)", intensity: 1.2, distance: 3.5, shadow: { enabled: false }, visibleRange: { max: 30 } } });
     }
-    ctx.spawn(id, { feetPosition: { x: e.at.x, y: 0, z: e.at.z }, rotation: { yaw: e.yaw }, children: kids });
+    ctx.spawn(id, { feetPosition: { x: e.at.x, y: 0, z: e.at.z }, rotation: { yaw: e.yaw }, visibleRange: { max: 45 }, castShadow: false, children: kids });
   }
 }

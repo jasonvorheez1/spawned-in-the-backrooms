@@ -70,12 +70,18 @@ export const L11_FAR = /^l11-(b|ntower|hero|tower|skydeck|bb)/
 export function l11Lean(id, spec) {
   if (!spec) return spec
   const kids = Array.isArray(spec.children) ? spec.children.map((c) => l11Lean(id, c)) : spec.children // children carry their own range and shadow (lagscope #109-113: l11-taxi/child, payphone/child...)
-  if (spec.visibleRange) return kids === spec.children ? spec : { ...spec, children: kids }
-  const o = { ...spec, children: kids, visibleRange: { max: L11_FAR.test(id) ? 260 : 70 } }
-  if (!kids) delete o.children
-  const pr = spec.primitive
-  if (pr && pr.kind === "box" && Math.max(pr.width ?? 1, pr.height ?? 1, pr.depth ?? 1) < 1.2 && spec.castShadow === undefined) o.castShadow = false
-  if (pr && pr.kind === "cylinder" && (pr.height ?? 1) < 1.2 && spec.castShadow === undefined) o.castShadow = false
+  const o = { ...spec }
+  if (kids !== undefined) o.children = kids
+  if (!o.visibleRange) o.visibleRange = { max: L11_FAR.test(id) ? 260 : 70 }
+  const pr = o.primitive
+  if (pr && pr.kind === "box" && Math.max(pr.width ?? 1, pr.height ?? 1, pr.depth ?? 1) < 1.2 && o.castShadow === undefined) o.castShadow = false
+  if (pr && pr.kind === "cylinder" && (pr.height ?? 1) < 1.2 && o.castShadow === undefined) o.castShadow = false
+  if (o.light) {
+    const lgt = { ...o.light }
+    if (lgt.shadow === undefined) lgt.shadow = { enabled: false }
+    if (!lgt.visibleRange) lgt.visibleRange = { max: Math.min(45, (lgt.distance ?? 10) * 2.5) }
+    o.light = lgt
+  }
   return o
 }
 // perf (Nov 8, lagscope #105-113): lay() used to spawn ~830 things and destroy the old ones in ONE tick (a 345-520 ms freeze on

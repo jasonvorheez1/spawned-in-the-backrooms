@@ -84,28 +84,44 @@ function bar(label, cur, max, color, valText = '', left = false) {
     <div class="fb${left ? ' l' : ''}"><div class="fbi" style="${left ? 'display:flex;justify-content:flex-end' : ''}"><div class="fbf" style="width:${pct}%;--c:${color}"></div></div></div>
   </div>`
 }
+const COMPASS_CACHE = new Array(360)
 function compass(yaw) {
+  const y = Math.round(((yaw % 360) + 360) % 360)
+  const cached = COMPASS_CACHE[y]
+  if (cached) return cached
   const D = ['N','NE','E','SE','S','SW','W','NW']
   let h = ''
-  for (let i = 0; i < 8; i++) { let o = ((i * 45 - yaw) % 360 + 540) % 360 - 180; if (Math.abs(o) < 75) h += `<b style="left:${50 + o / 75 * 50}%">${D[i]}</b>` }
-  return `<div class="cmp"><i></i>${h}</div>`
+  for (let i = 0; i < 8; i++) { let o = ((i * 45 - y) % 360 + 540) % 360 - 180; if (Math.abs(o) < 75) h += `<b style="left:${50 + o / 75 * 50}%">${D[i]}</b>` }
+  const res = `<div class="cmp"><i></i>${h}</div>`
+  COMPASS_CACHE[y] = res
+  return res
 }
 
+const CND_CACHE = { key: '', html: '' }
 function hudCnd(s, now) {
   const k = s.equipped ?? 'fists'
   if (k === 'fists') return ''
-  const c = cndOf(s, k), col = bandColor(c), b = band(c)
+  const c = cndOf(s, k)
   const isJammed = s.jammedAt && (now - s.jammedAt < 1400)
   const isBroke = isBroken(c)
+  const roundC = Math.round(c)
+  const key = `${k}:${roundC}:${isJammed ? 1 : 0}:${isBroke ? 1 : 0}`
+  if (key === CND_CACHE.key) return CND_CACHE.html
+  const col = bandColor(c)
   const pips = Math.round(c / 10)
-  const pipsHtml = Array.from({ length: 10 }, (_, i) => `<i style="display:inline-block;width:3px;height:7px;margin-right:1px;background:${i < pips ? col : 'rgba(255,182,66,0.18)'}"></i>`).join('')
-  return `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:6px;font-size:11px">
+  let pipsHtml = ''
+  for (let i = 0; i < 10; i++) {
+    pipsHtml += `<i style="display:inline-block;width:3px;height:7px;margin-right:1px;background:${i < pips ? col : 'rgba(255,182,66,0.18)'}"></i>`
+  }
+  CND_CACHE.key = key
+  CND_CACHE.html = `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:6px;font-size:11px">
     <span style="color:var(--ad)">CND</span>
     <span style="display:inline-flex;align-items:center;padding:1px 3px;border:1px solid rgba(255,182,66,0.3);background:rgba(10,7,2,0.6)">${pipsHtml}</span>
-    <span style="color:${col};font-weight:bold">${Math.round(c)}%</span>
+    <span style="color:${col};font-weight:bold">${roundC}%</span>
     ${isJammed ? '<span style="color:#ff4433;font-weight:bold;animation:blink .3s infinite;margin-left:4px">[ JAMMED ]</span>' : ''}
     ${isBroke ? '<span style="color:#ff4433;font-weight:bold;animation:blink .5s infinite;margin-left:4px">[ BROKEN ]</span>' : ''}
   </div>`
+  return CND_CACHE.html
 }
 
 function sniperScope(s, wp) {
@@ -151,34 +167,40 @@ function xferCard(s, now) {
   return `<style>@keyframes xferOut{0%,45%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="xfer${x.at}" style="position:absolute;inset:0;background:#050403;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:xferOut 2.4s forwards;color:#f2c14e;text-shadow:2px 2px #000"><div style="font-size:44px;letter-spacing:.2em">${a}</div><div style="font-size:18px;letter-spacing:.3em;opacity:.75;margin-top:6px">${b}</div></div>`
 }
 const TALKERS = ['meg-ale', 'meg-ortiz', 'meg-callum', 'surv-wren', 'surv-hollis', 'surv-mags', 'omega-okafor', 'omega-rhea', 'hk-constance', 'hk-vance', 'homely-barnaby', 'homely-auguste', 'l5-samantha', 'l5-ambrose', 'l5-dolores', 'l5-pip', 'l5-odette', 'l5-harlan', 'l5-vesna', 'l5-tobias', 'l5-imani', 'l5-millie', 'l5-whitlock', 'l5-vanderholt', 'l5-zelda', 'l5-wat', 'l11-meg-agent-vance', 'l11-trader-kael', 'l11-commuter-faceling', 'l11-walker-1', 'l11-walker-2', 'l11-walker-3']
+const CB_CACHE = { at: 0, html: '' }
 function chatBubbles(ctx, now, player) {
+  if (now - CB_CACHE.at < 120) return CB_CACHE.html
+  CB_CACHE.at = now
   const objs = ctx.place?.objects
-  if (!objs) return ''
+  if (!objs) return (CB_CACHE.html = '')
   let h = ''
   for (const id of TALKERS) {
     const o = objs[id], l = o?.state?.line
-    if (!l || now - l.at > l.d || o.state.dead) continue
+    if (!l || now - l.at > l.d || o.state?.dead) continue
     if (o.place && player?.place && o.place !== player.place) continue
     const who = String(o.state.name ?? '').split(' ·')[0]
     h += `<div data-world-anchor="${id}" data-anchor-offset="0 2.05 0" style="transform:translate(-50%,-100%);opacity:clamp(0,calc(1.6 - var(--anchor-depth,0) / 14),1)"><div id="cb${l.at}" style="max-width:260px;padding:6px 10px;background:oklch(0.16 0.02 80 / .88);border:1px solid oklch(0.7 0.12 85 / .55);color:oklch(0.93 0.03 90);font-size:14px;line-height:1.3;animation:hud-pop .18s ease-out"><span style="color:oklch(0.8 0.13 85);font-size:11px;letter-spacing:.06em">${who.toUpperCase()}</span><br>${l.t}</div></div>`
   }
-  return h
+  return (CB_CACHE.html = h)
 }
 
 // subtitles: every voiced line within earshot, speaker first, along the bottom (chatter rows from chatter.js, s.sub from interact/stealers)
+const SUB_CACHE = { at: 0, html: '' }
 function subtitles(ctx, player, now) {
+  if (now - SUB_CACHE.at < 120) return SUB_CACHE.html
+  SUB_CACHE.at = now
   const rows = [], s = player.state ?? {}, me = player.feetPosition, objs = ctx.place?.objects
-  if (s.talkWith) return '' // the open talk card already shows the line
+  if (s.talkWith) return (SUB_CACHE.html = '') // the open talk card already shows the line
   if (objs && me) for (const id of TALKERS) {
     const o = objs[id], l = o?.state?.line
-    if (!l || now - l.at > l.d || o.state.dead) continue
+    if (!l || now - l.at > l.d || o.state?.dead) continue
     if ((o.place && player.place && o.place !== player.place) || Math.hypot(o.feetPosition.x - me.x, o.feetPosition.z - me.z) > 12) continue // same level, in earshot
     rows.push([l.at, String(o.state.name ?? '').split(' ·')[0], l.t])
   }
   if (s.sub && now - s.sub.at < s.sub.d) rows.push([s.sub.at, s.sub.who, s.sub.t])
-  if (!rows.length) return ''
+  if (!rows.length) return (SUB_CACHE.html = '')
   rows.sort((a, b) => a[0] - b[0])
-  return `<div style="position:absolute;left:0;right:0;bottom:120px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px)">${rows.slice(-2).map(([at, who, t]) => `<div id="sub${at}" style="max-width:720px;padding:5px 12px;background:oklch(0.1 0.01 80 / .78);color:oklch(0.95 0.02 90);font-size:17px;line-height:1.35;text-align:center;animation:hud-pop .15s ease-out"><span style="color:oklch(0.8 0.13 85)">${who}:</span> ${t}</div>`).join('')}</div>`
+  return (SUB_CACHE.html = `<div style="position:absolute;left:0;right:0;bottom:120px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px)">${rows.slice(-2).map(([at, who, t]) => `<div id="sub${at}" style="max-width:720px;padding:5px 12px;background:oklch(0.1 0.01 80 / .78);color:oklch(0.95 0.02 90);font-size:17px;line-height:1.35;text-align:center;animation:hud-pop .15s ease-out"><span style="color:oklch(0.8 0.13 85)">${who}:</span> ${t}</div>`).join('')}</div>`)
 }
 
 // the old compass read (scripts/lib/compass.js): a brass dial whose needles turn with your view, and the vague words
@@ -226,17 +248,21 @@ function underwater(s) {
 }
 
 const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+const Q_CACHE = { key: '', html: '' }
 function questTracker(s) {
   const q = s.quest
   if (!q || !q.step) return ''
-  return `<div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;max-width:340px;background:linear-gradient(rgba(18,12,3,0.92),rgba(10,6,1,0.96));border-left:3px solid var(--a);box-shadow:0 0 10px rgba(0,0,0,0.8),inset 0 0 15px rgba(255,182,66,0.06);padding:7px 12px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:none;z-index:40;animation:hud-pop .3s ease-out">
+  const key = `${q.name ?? ''}|${q.step ?? ''}`
+  if (key === Q_CACHE.key) return Q_CACHE.html
+  Q_CACHE.key = key
+  return (Q_CACHE.html = `<div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;max-width:340px;background:linear-gradient(rgba(18,12,3,0.92),rgba(10,6,1,0.96));border-left:3px solid var(--a);box-shadow:0 0 10px rgba(0,0,0,0.8),inset 0 0 15px rgba(255,182,66,0.06);padding:7px 12px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:none;z-index:40;animation:hud-pop .3s ease-out">
     <div style="display:flex;align-items:center;gap:6px;font-size:9.5px;letter-spacing:.22em;color:var(--ad)">
       <span style="display:inline-block;width:5px;height:5px;background:var(--a);border-radius:1px"></span>
       <span>ACTIVE OBJECTIVE</span>
     </div>
     <div style="font-size:13.5px;color:var(--a);font-weight:400;margin:2px 0 3px;letter-spacing:.05em">${esc(q.name).toUpperCase()}</div>
     <div style="font-size:12px;color:#fff2d4;opacity:.92;text-transform:none;letter-spacing:.02em;line-height:1.3">${esc(q.step)}</div>
-  </div>`
+  </div>`)
 }
 
 // F3: the LAGSCOPE lag panel floats over whatever the HUD draws (builders only; players never see it)

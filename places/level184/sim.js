@@ -7,13 +7,20 @@ const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BRK = (mat, hp) => ({ mat, hp, maxHp: hp });
 const BARN = (w, d, h, ridge, wall, door) => ({ primitive: { kind: "scripted", script: "scripts/barn10.js", params: { w, d, h, ridge, wall, door } }, physics: "static" });
 const DOOR = (to, w, h, d) => ({ primitive: { kind: "box", width: w, height: h, depth: d }, visible: false, physics: { body: "static", trigger: true }, behavior: "scripts/level-door.js", state: { to } });
-const tree = (kind, h, seed) => ({ primitive: { kind: "scripted", script: "scripts/tree10.js", params: { kind, h }, seed }, material: { alphaTest: 0.5 }, physics: "static" });
+const tree = (kind, h, seed) => ({ primitive: { kind: "scripted", script: "scripts/tree10.js", params: { kind, h }, seed }, material: { alphaTest: 0.5 }, physics: "static", visibleRange: { max: kind === "hedge" ? 160 : 280 }, castShadow: kind !== "hedge" });
 const M = { sedan: "/cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb" };
 const CRATE = "/cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb";
 const AMB = "cdn/ambience-wind-through-ripe-wheat-field-overcast-countryside-distant-crows-loop.mp3";
 const RUST = { texture: "cdn/texture-flaking-rusted-sheet-metal-orange-brown.png", color: "oklch(0.62 0.08 50)", roughness: 0.9, metalness: 0.3 };
 function lay(ctx) {
-  const sp = (id, spec) => { if (ctx.getObject(id)) ctx.destroy(id); ctx.spawn(id, spec); };
+  const sp = (id, spec) => {
+    if (ctx.getObject(id)) ctx.destroy(id);
+    const drawn = spec.primitive || spec.model || spec.spline;
+    if (drawn && !spec.scatter && !spec.visibleRange) spec.visibleRange = { max: 120 };
+    const pr = spec.primitive;
+    if (pr && pr.kind === "box" && Math.max(pr.width ?? 1, pr.height ?? 1, pr.depth ?? 1) < 1.2 && spec.castShadow === undefined) spec.castShadow = false;
+    ctx.spawn(id, spec);
+  };
   sp("l184-from-l10", { feetPosition: T(0, 8, 0.2), rotation: { yaw: 0 } });
   sp("l184-back", { ...DOOR("level10#l10-from-l184", 5, 3, 2), feetPosition: T(10, -172, 0) });
   // the old stone wall the track runs out through, a gap where the way back is

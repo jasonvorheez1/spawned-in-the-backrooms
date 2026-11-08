@@ -38,6 +38,8 @@ l4-office-1-cooler:
   rotation: {yaw: 360}
   state: {c: {x: -16.6, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-1-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-1-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: -20.95, y: 1.35, z: -25.87}
@@ -47,6 +49,8 @@ l4-office-1-plate:
   rotation: {yaw: 180}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-01", label2: vacant, name: Office 4-01, room: {id: l4-office-1, kit: {cot: {x: -18.4, y: 0, z: -30.6}, desk: {x: -22.4, y: 0, z: -30.9}, yaw: 360}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-01</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-10-cooler:
   behavior: scripts/l4-home.js
@@ -59,6 +63,8 @@ l4-office-10-cooler:
   rotation: {yaw: 180}
   state: {c: {x: 0.6, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-10-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-10-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: 7.05, y: 1.35, z: 25.87}
@@ -68,6 +74,8 @@ l4-office-10-plate:
   rotation: {yaw: 0}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-10", label2: vacant, name: Office 4-10, room: {id: l4-office-10, kit: {cot: {x: 2.4, y: 0, z: 30.6}, desk: {x: 6.4, y: 0, z: 30.9}, yaw: 180}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-10</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-11-cooler:
   behavior: scripts/l4-home.js
@@ -80,6 +88,8 @@ l4-office-11-cooler:
   rotation: {yaw: 180}
   state: {c: {x: 15.4, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-11-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-11-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: 11.05, y: 1.35, z: 25.87}
@@ -89,6 +99,8 @@ l4-office-11-plate:
   rotation: {yaw: 0}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-11", label2: vacant, name: Office 4-11, room: {id: l4-office-11, kit: {cot: {x: 13.6, y: 0, z: 30.6}, desk: {x: 9.6, y: 0, z: 30.9}, yaw: 180}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-11</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-12-cooler:
   behavior: scripts/l4-home.js
@@ -101,6 +113,8 @@ l4-office-12-cooler:
   rotation: {yaw: 180}
   state: {c: {x: 16.6, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-12-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-12-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: 23.05, y: 1.35, z: 25.87}
@@ -110,6 +124,8 @@ l4-office-12-plate:
   rotation: {yaw: 0}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-12", label2: vacant, name: Office 4-12, room: {id: l4-office-12, kit: {cot: {x: 18.4, y: 0, z: 30.6}, desk: {x: 22.4, y: 0, z: 30.9}, yaw: 180}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-12</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-13-cooler:
   behavior: scripts/l4-home.js
@@ -122,6 +138,8 @@ l4-office-13-cooler:
   rotation: {yaw: 90}
   state: {c: {x: -26.55, y: 1.1, z: -16.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-13-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-13-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: -25.87, y: 1.35, z: -20.95}
@@ -131,6 +149,8 @@ l4-office-13-plate:
   rotation: {yaw: -90}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-13", label2: vacant, name: Office 4-13, room: {id: l4-office-13, kit: {cot: {x: -30.6, y: 0, z: -18.4}, desk: {x: -30.9, y: 0, z: -22.4}, yaw: 90}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-13</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-15-cooler:
   behavior: scripts/l4-home.js
@@ -143,6 +163,8 @@ l4-office-15-cooler:
   rotation: {yaw: 90}
   state: {c: {x: -26.55, y: 1.1, z: -0.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-15-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-15-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: -25.87, y: 1.35, z: -4.95}
@@ -152,6 +174,8 @@ l4-office-15-plate:
   rotation: {yaw: -90}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-15", label2: vacant, name: Office 4-15, room: {id: l4-office-15, kit: {cot: {x: -30.6, y: 0, z: -2.4}, desk: {x: -30.9, y: 0, z: -6.4}, yaw: 90}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-15</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-16-cooler:
   behavior: scripts/l4-home.js
@@ -164,6 +188,8 @@ l4-office-16-cooler:
   rotation: {yaw: 90}
   state: {c: {x: -26.55, y: 1.1, z: 0.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-16-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-16-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: -25.87, y: 1.35, z: 7.05}
@@ -173,6 +199,8 @@ l4-office-16-plate:
   rotation: {yaw: -90}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-16", label2: vacant, name: Office 4-16, room: {id: l4-office-16, kit: {cot: {x: -30.6, y: 0, z: 2.4}, desk: {x: -30.9, y: 0, z: 6.4}, yaw: 90}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-16</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-17-cooler:
   behavior: scripts/l4-home.js
@@ -185,6 +213,8 @@ l4-office-17-cooler:
   rotation: {yaw: 90}
   state: {c: {x: -26.55, y: 1.1, z: 15.4}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-17-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-17-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: -25.87, y: 1.35, z: 11.05}
@@ -194,6 +224,8 @@ l4-office-17-plate:
   rotation: {yaw: -90}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-17", label2: vacant, name: Office 4-17, room: {id: l4-office-17, kit: {cot: {x: -30.6, y: 0, z: 13.6}, desk: {x: -30.9, y: 0, z: 9.6}, yaw: 90}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-17</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-18-cooler:
   behavior: scripts/l4-home.js
@@ -206,6 +238,8 @@ l4-office-18-cooler:
   rotation: {yaw: 90}
   state: {c: {x: -26.55, y: 1.1, z: 16.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-18-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-18-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: -25.87, y: 1.35, z: 23.05}
@@ -215,6 +249,8 @@ l4-office-18-plate:
   rotation: {yaw: -90}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-18", label2: vacant, name: Office 4-18, room: {id: l4-office-18, kit: {cot: {x: -30.6, y: 0, z: 18.4}, desk: {x: -30.9, y: 0, z: 22.4}, yaw: 90}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-18</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-19-cooler:
   behavior: scripts/l4-home.js
@@ -227,6 +263,8 @@ l4-office-19-cooler:
   rotation: {yaw: 270}
   state: {c: {x: 26.55, y: 1.1, z: -16.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-19-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-19-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: 25.87, y: 1.35, z: -20.95}
@@ -236,6 +274,8 @@ l4-office-19-plate:
   rotation: {yaw: 90}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-19", label2: vacant, name: Office 4-19, room: {id: l4-office-19, kit: {cot: {x: 30.6, y: 0, z: -18.4}, desk: {x: 30.9, y: 0, z: -22.4}, yaw: 270}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-19</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-2-cooler:
   behavior: scripts/l4-home.js
@@ -248,6 +288,8 @@ l4-office-2-cooler:
   rotation: {yaw: 360}
   state: {c: {x: -15.4, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-2-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-2-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: -8.95, y: 1.35, z: -25.87}
@@ -257,6 +299,8 @@ l4-office-2-plate:
   rotation: {yaw: 180}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-02", label2: vacant, name: Office 4-02, room: {id: l4-office-2, kit: {cot: {x: -13.6, y: 0, z: -30.6}, desk: {x: -9.6, y: 0, z: -30.9}, yaw: 360}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-02</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-20-cooler:
   behavior: scripts/l4-home.js
@@ -269,6 +313,8 @@ l4-office-20-cooler:
   rotation: {yaw: 270}
   state: {c: {x: 26.55, y: 1.1, z: -15.4}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-20-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-20-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: 25.87, y: 1.35, z: -8.95}
@@ -278,6 +324,8 @@ l4-office-20-plate:
   rotation: {yaw: 90}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-20", label2: vacant, name: Office 4-20, room: {id: l4-office-20, kit: {cot: {x: 30.6, y: 0, z: -13.6}, desk: {x: 30.9, y: 0, z: -9.6}, yaw: 270}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-20</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-22-cooler:
   behavior: scripts/l4-home.js
@@ -290,6 +338,8 @@ l4-office-22-cooler:
   rotation: {yaw: 270}
   state: {c: {x: 26.55, y: 1.1, z: 0.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-22-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-22-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: 25.87, y: 1.35, z: 7.05}
@@ -299,6 +349,8 @@ l4-office-22-plate:
   rotation: {yaw: 90}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-22", label2: vacant, name: Office 4-22, room: {id: l4-office-22, kit: {cot: {x: 30.6, y: 0, z: 2.4}, desk: {x: 30.9, y: 0, z: 6.4}, yaw: 270}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-22</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-23-cooler:
   behavior: scripts/l4-home.js
@@ -311,6 +363,8 @@ l4-office-23-cooler:
   rotation: {yaw: 270}
   state: {c: {x: 26.55, y: 1.1, z: 15.4}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-23-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-23-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: 25.87, y: 1.35, z: 11.05}
@@ -320,6 +374,8 @@ l4-office-23-plate:
   rotation: {yaw: 90}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-23", label2: vacant, name: Office 4-23, room: {id: l4-office-23, kit: {cot: {x: 30.6, y: 0, z: 13.6}, desk: {x: 30.9, y: 0, z: 9.6}, yaw: 270}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-23</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-24-cooler:
   behavior: scripts/l4-home.js
@@ -332,6 +388,8 @@ l4-office-24-cooler:
   rotation: {yaw: 270}
   state: {c: {x: 26.55, y: 1.1, z: 16.6}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-24-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-24-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: 25.87, y: 1.35, z: 23.05}
@@ -341,6 +399,8 @@ l4-office-24-plate:
   rotation: {yaw: 90}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-24", label2: vacant, name: Office 4-24, room: {id: l4-office-24, kit: {cot: {x: 30.6, y: 0, z: 18.4}, desk: {x: 30.9, y: 0, z: 22.4}, yaw: 270}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-24</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-3-cooler:
   behavior: scripts/l4-home.js
@@ -353,6 +413,8 @@ l4-office-3-cooler:
   rotation: {yaw: 360}
   state: {c: {x: -0.6, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-3-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-3-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: -4.95, y: 1.35, z: -25.87}
@@ -362,6 +424,8 @@ l4-office-3-plate:
   rotation: {yaw: 180}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-03", label2: vacant, name: Office 4-03, room: {id: l4-office-3, kit: {cot: {x: -2.4, y: 0, z: -30.6}, desk: {x: -6.4, y: 0, z: -30.9}, yaw: 360}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-03</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-4-cooler:
   behavior: scripts/l4-home.js
@@ -374,6 +438,8 @@ l4-office-4-cooler:
   rotation: {yaw: 360}
   state: {c: {x: 0.6, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-4-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-4-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: 7.05, y: 1.35, z: -25.87}
@@ -383,6 +449,8 @@ l4-office-4-plate:
   rotation: {yaw: 180}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-04", label2: vacant, name: Office 4-04, room: {id: l4-office-4, kit: {cot: {x: 2.4, y: 0, z: -30.6}, desk: {x: 6.4, y: 0, z: -30.9}, yaw: 360}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-04</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-6-cooler:
   behavior: scripts/l4-home.js
@@ -395,6 +463,8 @@ l4-office-6-cooler:
   rotation: {yaw: 360}
   state: {c: {x: 16.6, y: 1.1, z: -26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-6-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-6-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: 23.05, y: 1.35, z: -25.87}
@@ -404,6 +474,8 @@ l4-office-6-plate:
   rotation: {yaw: 180}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-06", label2: vacant, name: Office 4-06, room: {id: l4-office-6, kit: {cot: {x: 18.4, y: 0, z: -30.6}, desk: {x: 22.4, y: 0, z: -30.9}, yaw: 360}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-06</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-7-cooler:
   behavior: scripts/l4-home.js
@@ -416,6 +488,8 @@ l4-office-7-cooler:
   rotation: {yaw: 180}
   state: {c: {x: -16.6, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-7-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-7-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: -20.95, y: 1.35, z: 25.87}
@@ -425,6 +499,8 @@ l4-office-7-plate:
   rotation: {yaw: 0}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-07", label2: vacant, name: Office 4-07, room: {id: l4-office-7, kit: {cot: {x: -18.4, y: 0, z: 30.6}, desk: {x: -22.4, y: 0, z: 30.9}, yaw: 180}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-07</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-8-cooler:
   behavior: scripts/l4-home.js
@@ -437,6 +513,8 @@ l4-office-8-cooler:
   rotation: {yaw: 180}
   state: {c: {x: -15.4, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-8-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-8-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: -8.95, y: 1.35, z: 25.87}
@@ -446,6 +524,8 @@ l4-office-8-plate:
   rotation: {yaw: 0}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-08", label2: vacant, name: Office 4-08, room: {id: l4-office-8, kit: {cot: {x: -13.6, y: 0, z: 30.6}, desk: {x: -9.6, y: 0, z: 30.9}, yaw: 180}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-08</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-office-9-cooler:
   behavior: scripts/l4-home.js
@@ -458,6 +538,8 @@ l4-office-9-cooler:
   rotation: {yaw: 180}
   state: {c: {x: -0.6, y: 1.1, z: 26.55}, fill: 0, info: Your office's almond water, jugs: 3, kind: cooler, name: Water cooler, plate: l4-office-9-plate, tint: "#7fd6ff", verb: Fill a bottle}
   tags: [usable, l4-cooler]
+  castShadow: false
+  visibleRange: {max: 45}
 l4-office-9-plate:
   behavior: scripts/l4-home.js
   feetPosition: {x: -4.95, y: 1.35, z: 25.87}
@@ -467,233 +549,258 @@ l4-office-9-plate:
   rotation: {yaw: 0}
   state: {info: "Vacant office · make it your home", kind: claim, label: "4-09", label2: vacant, name: Office 4-09, room: {id: l4-office-9, kit: {cot: {x: -2.4, y: 0, z: 30.6}, desk: {x: -6.4, y: 0, z: 30.9}, yaw: 180}}, tint: "#f2c14e", verb: Claim}
   tags: [usable, l4-plate]
+  castShadow: false
+  visibleRange: {max: 45}
   ui: "<div face=\"front\" width=\"0.5m\" style=\"font-family:sans-serif;text-align:center;color:#2a2620;line-height:1.05\"><div style=\"font-size:150px;font-weight:900\">4-09</div><div style=\"font-size:62px\">{{ state.label2 }}</div></div>"
 l4-prop-0:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -11.5, y: 0, z: 3.2}
   id: l4-prop-0
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 35}
   state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
   tags: [l4-prop, breakable, seat]
 l4-prop-1:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 5.4, y: 0, z: -12.6}
   id: l4-prop-1
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 200}
   state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
   tags: [l4-prop, breakable, seat]
 l4-prop-10:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -5.2, y: 0, z: 13.6}
   id: l4-prop-10
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: box}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 80}
   state: {hp: 35, mat: wood, maxHp: 35}
   tags: [l4-prop, breakable]
 l4-prop-11:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 12.6, y: 0, z: -21.8}
   id: l4-prop-11
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: boxes}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 5}
   state: {hp: 56, mat: wood, maxHp: 56}
   tags: [l4-prop, breakable]
 l4-prop-12:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -23.6, y: 0, z: 23.6}
   id: l4-prop-12
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: plant}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 0}
   state: {hp: 28, mat: wood, maxHp: 28}
   tags: [l4-prop, breakable]
 l4-prop-13:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 23.4, y: 0, z: -23.4}
   id: l4-prop-13
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: plant}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 40}
   state: {hp: 28, mat: wood, maxHp: 28}
   tags: [l4-prop, breakable]
 l4-prop-14:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 1.6, y: 0, z: -24.2}
   id: l4-prop-14
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: plant}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 90}
   state: {hp: 28, mat: wood, maxHp: 28}
   tags: [l4-prop, breakable]
 l4-prop-15:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -14.5, y: 0, z: 13}
   id: l4-prop-15
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 20}
   state: {hp: 63, mat: wood, maxHp: 63}
   tags: [l4-prop, breakable]
 l4-prop-16:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 15.5, y: 0, z: 4.6}
   id: l4-prop-16
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 95}
   state: {hp: 63, mat: wood, maxHp: 63}
   tags: [l4-prop, breakable]
 l4-prop-17:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -2.5, y: 0, z: -16}
   id: l4-prop-17
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 170}
   state: {hp: 63, mat: wood, maxHp: 63}
   tags: [l4-prop, breakable]
 l4-prop-18:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 6.8, y: 0, z: 15.2}
   id: l4-prop-18
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: panel}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 60}
   state: {hp: 63, mat: wood, maxHp: 63}
   tags: [l4-prop, breakable]
 l4-prop-19:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 25.2, y: 0, z: 9.6}
   id: l4-prop-19
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 90}
   state: {hp: 120, mat: sheet_steel, maxHp: 120}
   tags: [l4-prop, breakable]
 l4-prop-2:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 13.8, y: 0, z: 11.2}
   id: l4-prop-2
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 110}
   state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
   tags: [l4-prop, breakable, seat]
 l4-prop-20:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -25.2, y: 0, z: -10.4}
   id: l4-prop-20
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: -90}
   state: {hp: 120, mat: sheet_steel, maxHp: 120}
   tags: [l4-prop, breakable]
 l4-prop-21:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -9.6, y: 0, z: 25.2}
   id: l4-prop-21
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 180}
   state: {hp: 120, mat: sheet_steel, maxHp: 120}
   tags: [l4-prop, breakable]
 l4-prop-22:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 10.4, y: 0, z: -25.2}
   id: l4-prop-22
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: cabinet}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 0}
   state: {hp: 120, mat: sheet_steel, maxHp: 120}
   tags: [l4-prop, breakable]
 l4-prop-3:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -3.1, y: 0, z: 21.5}
   id: l4-prop-3
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 290}
   state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
   tags: [l4-prop, breakable, seat]
 l4-prop-4:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 22.5, y: 0, z: -2.2}
   id: l4-prop-4
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 160}
   state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
   tags: [l4-prop, breakable, seat]
 l4-prop-5:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -21.6, y: 0, z: -12.4}
   id: l4-prop-5
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: chair}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 60}
   state: {hp: 64, mat: metal, maxHp: 64, name: Chair, seat: {d: 0.02, gap: 0.65, w: 1}}
   tags: [l4-prop, breakable, seat]
 l4-prop-6:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -13.2, y: 0, z: -21.5}
   id: l4-prop-6
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: boxes}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 12}
   state: {hp: 56, mat: wood, maxHp: 56}
   tags: [l4-prop, breakable]
 l4-prop-7:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -12.4, y: 0, z: -20.9}
   id: l4-prop-7
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: box}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 70}
   state: {hp: 35, mat: wood, maxHp: 35}
   tags: [l4-prop, breakable]
 l4-prop-8:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 21.2, y: 0, z: 13.4}
   id: l4-prop-8
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: boxes}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: -20}
   state: {hp: 56, mat: wood, maxHp: 56}
   tags: [l4-prop, breakable]
 l4-prop-9:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 3.6, y: 0, z: 4.1}
   id: l4-prop-9
   physics: {body: static, collider: box}
   primitive: {kind: scripted, params: {kind: box}, script: scripts/l4-prop-geo.js}
+  visibleRange: {max: 45}
   receiveShadow: true
   rotation: {yaw: 33}
   state: {hp: 35, mat: wood, maxHp: 35}
@@ -703,16 +810,19 @@ object/xad4c834675863151/0:
   id: object/xad4c834675863151/0
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/1:
   feetPosition: {x: -24, y: 2.85, z: -16}
   id: object/xad4c834675863151/1
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/10:
   feetPosition: {x: -16, y: 2.85, z: 0}
   id: object/xad4c834675863151/10
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/100:
   feetPosition: {x: -28, y: 1.25, z: 31.58}
   id: object/xad4c834675863151/100
@@ -769,6 +879,7 @@ object/xad4c834675863151/11:
   id: object/xad4c834675863151/11
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/110:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-fluorescent-light-buzz-loop.mp3, gain: 0.08, loop: true, maxDistance: 18, spatial: true}
   feetPosition: {x: -12, y: 2.6, z: 12}
@@ -794,356 +905,427 @@ object/xad4c834675863151/12:
   id: object/xad4c834675863151/12
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/13:
   feetPosition: {x: -16, y: 2.85, z: 24}
   id: object/xad4c834675863151/13
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/14:
   feetPosition: {x: -8, y: 2.85, z: -24}
   id: object/xad4c834675863151/14
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/15:
   feetPosition: {x: -8, y: 2.85, z: -16}
   id: object/xad4c834675863151/15
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/16:
   feetPosition: {x: -8, y: 2.85, z: -8}
   id: object/xad4c834675863151/16
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/17:
   feetPosition: {x: -8, y: 2.85, z: 0}
   id: object/xad4c834675863151/17
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/18:
   feetPosition: {x: -8, y: 2.85, z: 8}
   id: object/xad4c834675863151/18
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/19:
   feetPosition: {x: -8, y: 2.85, z: 16}
   id: object/xad4c834675863151/19
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/2:
   feetPosition: {x: -24, y: 2.85, z: -8}
   id: object/xad4c834675863151/2
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/20:
   feetPosition: {x: -8, y: 2.85, z: 24}
   id: object/xad4c834675863151/20
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/21:
   feetPosition: {x: 0, y: 2.85, z: -24}
   id: object/xad4c834675863151/21
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/22:
   feetPosition: {x: 0, y: 2.85, z: -16}
   id: object/xad4c834675863151/22
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/23:
   feetPosition: {x: 0, y: 2.85, z: -8}
   id: object/xad4c834675863151/23
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/24:
   feetPosition: {x: 0, y: 2.85, z: 0}
   id: object/xad4c834675863151/24
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/25:
   feetPosition: {x: 0, y: 2.85, z: 8}
   id: object/xad4c834675863151/25
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/26:
   feetPosition: {x: 0, y: 2.85, z: 16}
   id: object/xad4c834675863151/26
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/27:
   feetPosition: {x: 0, y: 2.85, z: 24}
   id: object/xad4c834675863151/27
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/28:
   feetPosition: {x: 8, y: 2.85, z: -24}
   id: object/xad4c834675863151/28
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/29:
   feetPosition: {x: 8, y: 2.85, z: -16}
   id: object/xad4c834675863151/29
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/3:
   feetPosition: {x: -24, y: 2.85, z: 0}
   id: object/xad4c834675863151/3
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/30:
   feetPosition: {x: 8, y: 2.85, z: -8}
   id: object/xad4c834675863151/30
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/31:
   feetPosition: {x: 8, y: 2.85, z: 0}
   id: object/xad4c834675863151/31
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/32:
   feetPosition: {x: 8, y: 2.85, z: 8}
   id: object/xad4c834675863151/32
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/33:
   feetPosition: {x: 8, y: 2.85, z: 16}
   id: object/xad4c834675863151/33
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/34:
   feetPosition: {x: 8, y: 2.85, z: 24}
   id: object/xad4c834675863151/34
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/35:
   feetPosition: {x: 16, y: 2.85, z: -24}
   id: object/xad4c834675863151/35
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/36:
   feetPosition: {x: 16, y: 2.85, z: -16}
   id: object/xad4c834675863151/36
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/37:
   feetPosition: {x: 16, y: 2.85, z: -8}
   id: object/xad4c834675863151/37
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/38:
   feetPosition: {x: 16, y: 2.85, z: 0}
   id: object/xad4c834675863151/38
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/39:
   feetPosition: {x: 16, y: 2.85, z: 8}
   id: object/xad4c834675863151/39
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/4:
   feetPosition: {x: -24, y: 2.85, z: 8}
   id: object/xad4c834675863151/4
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/40:
   feetPosition: {x: 16, y: 2.85, z: 16}
   id: object/xad4c834675863151/40
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/41:
   feetPosition: {x: 16, y: 2.85, z: 24}
   id: object/xad4c834675863151/41
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/42:
   feetPosition: {x: 24, y: 2.85, z: -24}
   id: object/xad4c834675863151/42
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/43:
   feetPosition: {x: 24, y: 2.85, z: -16}
   id: object/xad4c834675863151/43
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/44:
   feetPosition: {x: 24, y: 2.85, z: -8}
   id: object/xad4c834675863151/44
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/45:
   feetPosition: {x: 24, y: 2.85, z: 0}
   id: object/xad4c834675863151/45
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/46:
   feetPosition: {x: 24, y: 2.85, z: 8}
   id: object/xad4c834675863151/46
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/47:
   feetPosition: {x: 24, y: 2.85, z: 16}
   id: object/xad4c834675863151/47
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/48:
   feetPosition: {x: 24, y: 2.85, z: 24}
   id: object/xad4c834675863151/48
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/49:
   feetPosition: {x: -20, y: 2.85, z: -29}
   id: object/xad4c834675863151/49
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/5:
   feetPosition: {x: -24, y: 2.85, z: 16}
   id: object/xad4c834675863151/5
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/50:
   feetPosition: {x: -12, y: 2.85, z: -29}
   id: object/xad4c834675863151/50
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/51:
   feetPosition: {x: -4, y: 2.85, z: -29}
   id: object/xad4c834675863151/51
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/52:
   feetPosition: {x: 4, y: 2.85, z: -29}
   id: object/xad4c834675863151/52
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/53:
   feetPosition: {x: 12, y: 2.85, z: -29}
   id: object/xad4c834675863151/53
   light: {color: oklch(0.9 0.05 220), distance: 9, intensity: 5, kind: point}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/54:
   feetPosition: {x: 20, y: 2.85, z: -29}
   id: object/xad4c834675863151/54
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/55:
   feetPosition: {x: -20, y: 2.85, z: 29}
   id: object/xad4c834675863151/55
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/56:
   feetPosition: {x: -12, y: 2.85, z: 29}
   id: object/xad4c834675863151/56
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/57:
   feetPosition: {x: -4, y: 2.85, z: 29}
   id: object/xad4c834675863151/57
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/58:
   feetPosition: {x: 4, y: 2.85, z: 29}
   id: object/xad4c834675863151/58
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/59:
   feetPosition: {x: 12, y: 2.85, z: 29}
   id: object/xad4c834675863151/59
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/6:
   feetPosition: {x: -24, y: 2.85, z: 24}
   id: object/xad4c834675863151/6
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/60:
   feetPosition: {x: 20, y: 2.85, z: 29}
   id: object/xad4c834675863151/60
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/61:
   feetPosition: {x: -29, y: 2.85, z: -20}
   id: object/xad4c834675863151/61
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/62:
   feetPosition: {x: -29, y: 2.85, z: -12}
   id: object/xad4c834675863151/62
   light: {color: oklch(0.9 0.05 220), distance: 9, intensity: 5, kind: point}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/63:
   feetPosition: {x: -29, y: 2.85, z: -4}
   id: object/xad4c834675863151/63
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/64:
   feetPosition: {x: -29, y: 2.85, z: 4}
   id: object/xad4c834675863151/64
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/65:
   feetPosition: {x: -29, y: 2.85, z: 12}
   id: object/xad4c834675863151/65
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/66:
   feetPosition: {x: -29, y: 2.85, z: 20}
   id: object/xad4c834675863151/66
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/67:
   feetPosition: {x: 29, y: 2.85, z: -20}
   id: object/xad4c834675863151/67
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/68:
   feetPosition: {x: 29, y: 2.85, z: -12}
   id: object/xad4c834675863151/68
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/69:
   feetPosition: {x: 29, y: 2.85, z: -4}
   id: object/xad4c834675863151/69
   light: {color: oklch(0.9 0.05 220), distance: 9, intensity: 5, kind: point}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/7:
   feetPosition: {x: -16, y: 2.85, z: -24}
   id: object/xad4c834675863151/7
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/70:
   feetPosition: {x: 29, y: 2.85, z: 4}
   id: object/xad4c834675863151/70
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/71:
   feetPosition: {x: 29, y: 2.85, z: 12}
   id: object/xad4c834675863151/71
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/72:
   feetPosition: {x: 29, y: 2.85, z: 20}
   id: object/xad4c834675863151/72
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/73:
   feetPosition: {x: -28, y: 2.85, z: -28}
   id: object/xad4c834675863151/73
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/74:
   feetPosition: {x: 28, y: 2.85, z: -28}
   id: object/xad4c834675863151/74
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/75:
   feetPosition: {x: -28, y: 2.85, z: 28}
   id: object/xad4c834675863151/75
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/76:
   feetPosition: {x: 28, y: 2.85, z: 28}
   id: object/xad4c834675863151/76
   light: {color: oklch(0.96 0.02 95), distance: 9, intensity: 2.6, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/77:
   feetPosition: {x: 11.05, y: 1.35, z: -25.87}
   id: object/xad4c834675863151/77
@@ -1168,6 +1350,7 @@ object/xad4c834675863151/8:
   id: object/xad4c834675863151/8
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/80:
   feetPosition: {x: -25.87, y: 1.35, z: -8.95}
   id: object/xad4c834675863151/80
@@ -1255,6 +1438,7 @@ object/xad4c834675863151/9:
   id: object/xad4c834675863151/9
   light: {color: oklch(0.97 0.02 95), distance: 12, intensity: 3, kind: point, shadow: {enabled: false}}
   tags: [l4-light]
+  visibleRange: {max: 42}
 object/xad4c834675863151/90:
   behavior: scripts/l4-home.js
   children: [{feetPosition: {x: -0.12, y: 0.55, z: -0.405}, material: {color: oklch(0.85 0.04 90), emissive: oklch(0.8 0.05 90), emissiveIntensity: 0.9}, primitive: {depth: 0.01, height: 1.1, kind: box, width: 0.62}}, {feetPosition: {x: 0, y: 0.6, z: -0.6}, light: {color: oklch(0.9 0.05 90), distance: 3.5, intensity: 1.2, kind: point}}]

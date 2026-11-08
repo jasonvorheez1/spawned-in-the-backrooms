@@ -59,7 +59,37 @@ function person(ctx, id) {
 }
 
 function lay(ctx) {
-  const sp = (id, spec) => ctx.spawn(id, spec);
+  const sp = (id, spec) => {
+    const o = { ...spec };
+    if (id !== "l21-geo" && !o.visibleRange && !/npc/.test(String(o.tags))) {
+      o.visibleRange = { max: 45 };
+    }
+    const pr = o.primitive;
+    if (pr && pr.kind === "box" && Math.max(pr.width ?? 1, pr.height ?? 1, pr.depth ?? 1) < 1.2 && o.castShadow === undefined) o.castShadow = false;
+    if (pr && pr.kind === "cylinder" && (pr.height ?? 1) < 1.2 && o.castShadow === undefined) o.castShadow = false;
+    if (o.light) {
+      const lgt = { ...o.light };
+      if (lgt.shadow === undefined) lgt.shadow = { enabled: false };
+      if (!lgt.visibleRange) lgt.visibleRange = { max: 35 };
+      o.light = lgt;
+    }
+    if (Array.isArray(o.children)) {
+      o.children = o.children.map(c => {
+        const ck = { ...c };
+        const cpr = ck.primitive;
+        if (cpr && cpr.kind === "box" && Math.max(cpr.width ?? 1, cpr.height ?? 1, cpr.depth ?? 1) < 1.2 && ck.castShadow === undefined) ck.castShadow = false;
+        if (cpr && cpr.kind === "cylinder" && (cpr.height ?? 1) < 1.2 && ck.castShadow === undefined) ck.castShadow = false;
+        if (ck.light) {
+          const lgt = { ...ck.light };
+          if (lgt.shadow === undefined) lgt.shadow = { enabled: false };
+          if (!lgt.visibleRange) lgt.visibleRange = { max: 35 };
+          ck.light = lgt;
+        }
+        return ck;
+      });
+    }
+    return ctx.spawn(id, o);
+  };
   // a rebuild (V bumped): take down what the last build laid
   for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l21-/.test(id) && !id.includes("/") && !PEOPLE[id] && !/^l21-smiler/.test(id)) ctx.destroy(id);
   for (const tag of ["l2box", "container", "weapon", "crate", "remains"]) for (const o of ctx.query({ tags: [tag], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id); // the loot of the last build goes too: it was laid under auto ids

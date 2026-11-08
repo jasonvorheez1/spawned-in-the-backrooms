@@ -4,243 +4,292 @@ level0-lights/l0_0:
   id: level0-lights/l0_0
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l0_10:
   feetPosition: {x: -110, y: 2.7, z: -70}
   id: level0-lights/l0_10
   light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l0_2:
   feetPosition: {x: -110, y: 2.7, z: -102}
   id: level0-lights/l0_2
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l0_4:
   feetPosition: {x: -110, y: 2.7, z: -94}
   id: level0-lights/l0_4
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l0_6:
   feetPosition: {x: -110, y: 2.7, z: -86}
   id: level0-lights/l0_6
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l0_8:
   feetPosition: {x: -110, y: 2.7, z: -78}
   id: level0-lights/l0_8
   light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l10_0:
   feetPosition: {x: -70, y: 2.7, z: -110}
   id: level0-lights/l10_0
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l10_10:
   feetPosition: {x: -70, y: 2.7, z: -70}
   id: level0-lights/l10_10
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l10_2:
   feetPosition: {x: -70, y: 2.7, z: -102}
   id: level0-lights/l10_2
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l10_4:
   feetPosition: {x: -70, y: 2.7, z: -94}
   id: level0-lights/l10_4
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l10_6:
   feetPosition: {x: -70, y: 2.7, z: -86}
   id: level0-lights/l10_6
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l11_1:
   feetPosition: {x: -66, y: 2.7, z: -106}
   id: level0-lights/l11_1
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l11_11:
   feetPosition: {x: -66, y: 2.7, z: -66}
   id: level0-lights/l11_11
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l11_5:
   feetPosition: {x: -66, y: 2.7, z: -90}
   id: level0-lights/l11_5
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l11_7:
   feetPosition: {x: -66, y: 2.7, z: -82}
   id: level0-lights/l11_7
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l1_1:
   feetPosition: {x: -106, y: 2.7, z: -106}
   id: level0-lights/l1_1
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l1_11:
   feetPosition: {x: -106, y: 2.7, z: -66}
   id: level0-lights/l1_11
   light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l1_5:
   feetPosition: {x: -106, y: 2.7, z: -90}
   id: level0-lights/l1_5
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l2_0:
   feetPosition: {x: -102, y: 2.7, z: -110}
   id: level0-lights/l2_0
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l2_4:
   feetPosition: {x: -102, y: 2.7, z: -94}
   id: level0-lights/l2_4
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l2_6:
   feetPosition: {x: -102, y: 2.7, z: -86}
   id: level0-lights/l2_6
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l2_8:
   feetPosition: {x: -102, y: 2.7, z: -78}
   id: level0-lights/l2_8
   light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l3_11:
   feetPosition: {x: -98, y: 2.7, z: -66}
   id: level0-lights/l3_11
   light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l3_5:
   feetPosition: {x: -98, y: 2.7, z: -90}
   id: level0-lights/l3_5
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l3_9:
   feetPosition: {x: -98, y: 2.7, z: -74}
   id: level0-lights/l3_9
   light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l4_10:
   feetPosition: {x: -94, y: 2.7, z: -70}
   id: level0-lights/l4_10
   light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l4_2:
   feetPosition: {x: -94, y: 2.7, z: -102}
   id: level0-lights/l4_2
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l4_4:
   feetPosition: {x: -94, y: 2.7, z: -94}
   id: level0-lights/l4_4
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l4_6:
   feetPosition: {x: -94, y: 2.7, z: -86}
   id: level0-lights/l4_6
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l4_8:
   feetPosition: {x: -94, y: 2.7, z: -78}
   id: level0-lights/l4_8
   light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l5_1:
   feetPosition: {x: -90, y: 2.7, z: -106}
   id: level0-lights/l5_1
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l5_11:
   feetPosition: {x: -90, y: 2.7, z: -66}
   id: level0-lights/l5_11
   light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l5_7:
   feetPosition: {x: -90, y: 2.7, z: -82}
   id: level0-lights/l5_7
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l6_10:
   feetPosition: {x: -86, y: 2.7, z: -70}
   id: level0-lights/l6_10
   light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l6_2:
   feetPosition: {x: -86, y: 2.7, z: -102}
   id: level0-lights/l6_2
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l6_4:
   feetPosition: {x: -86, y: 2.7, z: -94}
   id: level0-lights/l6_4
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l6_8:
   feetPosition: {x: -86, y: 2.7, z: -78}
   id: level0-lights/l6_8
   light: {color: oklch(0.95 0.03 100), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l7_1:
   feetPosition: {x: -82, y: 2.7, z: -106}
   id: level0-lights/l7_1
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l7_3:
   feetPosition: {x: -82, y: 2.7, z: -98}
   id: level0-lights/l7_3
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l7_5:
   feetPosition: {x: -82, y: 2.7, z: -90}
   id: level0-lights/l7_5
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l7_7:
   feetPosition: {x: -82, y: 2.7, z: -82}
   id: level0-lights/l7_7
   light: {color: oklch(0.62 0.2 28), distance: 10, intensity: 4, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l8_10:
   feetPosition: {x: -78, y: 2.7, z: -70}
   id: level0-lights/l8_10
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l8_2:
   feetPosition: {x: -78, y: 2.7, z: -102}
   id: level0-lights/l8_2
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l8_4:
   feetPosition: {x: -78, y: 2.7, z: -94}
   id: level0-lights/l8_4
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l8_8:
   feetPosition: {x: -78, y: 2.7, z: -78}
   id: level0-lights/l8_8
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l9_1:
   feetPosition: {x: -74, y: 2.7, z: -106}
   id: level0-lights/l9_1
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l9_5:
   feetPosition: {x: -74, y: 2.7, z: -90}
   id: level0-lights/l9_5
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l9_7:
   feetPosition: {x: -74, y: 2.7, z: -82}
   id: level0-lights/l9_7
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}
 level0-lights/l9_9:
   feetPosition: {x: -74, y: 2.7, z: -74}
   id: level0-lights/l9_9
   light: {color: oklch(0.95 0.06 95), distance: 10, intensity: 5, kind: point, shadow: {enabled: false}}
   parent: level0-lights
+  visibleRange: {max: 42}

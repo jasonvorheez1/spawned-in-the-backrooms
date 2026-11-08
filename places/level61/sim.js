@@ -55,8 +55,8 @@ pop mist rate=6 life=1.2..2.0 on=disc(.08) v=up(.35..0.75)+sdir()*.08 size=.08..
 
 function lay(ctx) {
   const sp = (id, spec) => ctx.spawn(id, spec);
-  const box = (id, x, y, z, w, h, d, material, extra = {}) => sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material, physics: "static", ...extra });
-  const light = (id, x, y, z, color, intensity, distance) => sp(id, { feetPosition: { x, y, z }, light: { kind: "point", color, intensity, distance, shadow: { enabled: false } } });
+  const box = (id, x, y, z, w, h, d, material, extra = {}) => sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material, physics: "static", visibleRange: { max: Math.max(w, h, d) > 4 ? 65 : 45 }, castShadow: Math.max(w, h, d) > 1.2, ...extra });
+  const light = (id, x, y, z, color, intensity, distance) => sp(id, { feetPosition: { x, y, z }, light: { kind: "point", color, intensity, distance, shadow: { enabled: false }, visibleRange: { max: 40 } } });
 
   const wallZ = (id, z, x0, x1, holes, h, mat, t = 0.3) => {
     let a = x0;
@@ -83,6 +83,8 @@ function lay(ctx) {
   const sign = (id, x, y, z, yaw, w, h, html, bg) => sp(id, {
     feetPosition: { x, y, z },
     rotation: { yaw },
+    visibleRange: { max: 45 },
+    castShadow: false,
     primitive: { kind: "box", width: w, height: h, depth: 0.08 },
     material: { color: bg, roughness: 0.6 },
     ui: `<div face="front" width="${w}m" style="width:${w * 1000}px;height:${h * 1000}px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Arial,sans-serif;font-weight:900;line-height:1.05">${html}</div>`,
@@ -93,6 +95,8 @@ function lay(ctx) {
     feetPosition: { x, y: extra.y ?? 0, z },
     rotation: { yaw, ...(extra.rot ?? {}) },
     physics: { body: "static", collider: "box" },
+    visibleRange: { max: 45 },
+    castShadow: false,
     model: soda ? { id: M_VEND, forward: "+z", materials: { cabinet: { color: "oklch(0.5 0.2 27)", roughness: 0.4, metalness: 0.35 } } } : { id: M_SNACK_TRIPO, forward: "+z" },
     tags: extra.dead ? [] : ["usable"],
     behavior: extra.dead ? undefined : "scripts/l61-use.js",
@@ -100,14 +104,16 @@ function lay(ctx) {
     children: soda ? [{ feetPosition: { x: 0.1, y: 0.38, z: -0.447 }, primitive: { kind: "box", width: 0.72, height: 1.32, depth: 0.01 }, material: { texture: soda ? SODA : SNACK, roughness: 0.15, emissive: "oklch(0.35 0 0)", emissiveIntensity: 0.4 } }] : [],
   });
 
-  const tableSet = (id, x, z, yaw) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", collider: "mesh" }, model: { id: M_TABLE, forward: "+z" } });
-  const counter = (id, x, z, yaw, m, extra) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, model: { id: m, forward: "+z" }, ...extra });
+  const tableSet = (id, x, z, yaw) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", collider: "mesh" }, visibleRange: { max: 45 }, castShadow: false, model: { id: M_TABLE, forward: "+z" } });
+  const counter = (id, x, z, yaw, m, extra) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, castShadow: false, model: { id: m, forward: "+z" }, ...extra });
 
   // Chrome pedestal bar stool with circular padded leather seat and footrest
   const stool = (id, x, z, vinyl) => sp(id, {
     feetPosition: { x, y: 0, z },
     tags: ["seat", "chair"],
     physics: { body: "static", collider: "cylinder" },
+    visibleRange: { max: 40 },
+    castShadow: false,
     primitive: { kind: "cylinder", radiusTop: 0.24, radiusBottom: 0.26, height: 0.12 },
     material: STEEL,
     children: [
@@ -123,15 +129,17 @@ function lay(ctx) {
   // sit spots read off the build (booth-local x, z; the sitter faces the table): the side bench and the back bench
   const BOOTH_SEATS = [{ k: "a", x: -0.76, z: 0.47, yaw: -90, w: 2, gap: 0.55 }, { k: "b", x: 0.56, z: -0.59, yaw: 180, w: 2, gap: 0.62 }];
   const spawnBooth = (id, x, z, yaw) => { boothSeats(id, x, z, yaw); return boothBody(id, x, z, yaw); };
-  const boothSeats = (id, x, z, yaw) => { const r = (yaw * Math.PI) / 180, c = Math.cos(r), s = Math.sin(r); for (const b of BOOTH_SEATS) sp(`${id}-seat-${b.k}`, { feetPosition: { x: x + b.x * c + b.z * s, y: 0, z: z - b.x * s + b.z * c }, rotation: { yaw: yaw + b.yaw }, tags: ["seat"], state: { seat: { w: b.w, gap: b.gap, d: 0.04, y: 0.28 }, verb: "Sit", name: "Diner booth" } }); };
+  const boothSeats = (id, x, z, yaw) => { const r = (yaw * Math.PI) / 180, c = Math.cos(r), s = Math.sin(r); for (const b of BOOTH_SEATS) sp(`${id}-seat-${b.k}`, { feetPosition: { x: x + b.x * c + b.z * s, y: 0, z: z - b.x * s + b.z * c }, rotation: { yaw: yaw + b.yaw }, tags: ["seat"], visibleRange: { max: 40 }, state: { seat: { w: b.w, gap: b.gap, d: 0.04, y: 0.28 }, verb: "Sit", name: "Diner booth" } }); };
   const boothBody = (id, x, z, yaw) => sp(id, {
     feetPosition: { x, y: 0, z },
     rotation: { yaw },
     physics: { body: "static", collider: "box" },
+    visibleRange: { max: 45 },
+    castShadow: false,
     model: BOOTH_GLB,
     layout: { box: { min: { x: -1.264, y: 0, z: -1.042 }, max: { x: 1.264, y: 1.35, z: 1.042 } } },
     children: [
-      { feetPosition: { x: 0, y: 2.5, z: 0 }, light: { kind: "point", color: "oklch(0.92 0.08 75)", intensity: 2.2, distance: 7 } },
+      { feetPosition: { x: 0, y: 2.5, z: 0 }, light: { kind: "point", color: "oklch(0.92 0.08 75)", intensity: 2.2, distance: 7, shadow: { enabled: false }, visibleRange: { max: 35 } } },
       { feetPosition: { x: 0, y: 2.6, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.24, height: 0.16 }, material: { color: "#1e5238", roughness: 0.4 } },
     ],
   });

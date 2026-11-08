@@ -28,16 +28,17 @@ function lay(ctx) {
   }
   for (let k = 0; k < 3; k++) sp(`sa-string${k}`, { feetPosition: { x: (k - 1) * 0.6, y: 3, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.008, radiusBottom: 0.008, height: 6.4, radialSegments: 4 }, material: { color: "oklch(0.8 0.01 90)", roughness: 0.5 }, castShadow: false });
   // one bare bulb on a cord over the middle, swinging (scripts/spamton-bulb.js), plus a dim cold fill so the edges read
-  sp("sa-bulbcord", { feetPosition: { x: 0, y: 5.6, z: 3 }, primitive: { kind: "cylinder", radiusTop: 0.01, radiusBottom: 0.01, height: 3.8 }, material: { color: "oklch(0.1 0 0)" }, castShadow: false });
-  sp("sa-bulb", { feetPosition: { x: 0, y: 5.45, z: 3 }, primitive: { kind: "sphere", radius: 0.09 }, material: { color: "oklch(0.98 0.05 90)", emissive: "oklch(0.95 0.12 85)", emissiveIntensity: 6 }, castShadow: false,
-    light: { kind: "point", color: "oklch(0.9 0.1 80)", intensity: 45, distance: 34, shadow: { enabled: true } }, behavior: "scripts/spamton-bulb.js" });
-  sp("sa-key", { feetPosition: { x: 0, y: 9, z: 6 }, light: { kind: "spot", color: "oklch(0.8 0.03 220)", intensity: 14, distance: 45, angle: 75, penumbra: 0.8, aim: { x: 0, y: 0, z: -4 } } });
+  sp("sa-bulbcord", { feetPosition: { x: 0, y: 5.6, z: 3 }, primitive: { kind: "cylinder", radiusTop: 0.01, radiusBottom: 0.01, height: 3.8 }, material: { color: "oklch(0.1 0 0)" }, castShadow: false, visibleRange: { max: 45 } });
+  sp("sa-bulb", { feetPosition: { x: 0, y: 5.45, z: 3 }, primitive: { kind: "sphere", radius: 0.09 }, material: { color: "oklch(0.98 0.05 90)", emissive: "oklch(0.95 0.12 85)", emissiveIntensity: 6 }, castShadow: false, visibleRange: { max: 45 },
+    light: { kind: "point", color: "oklch(0.9 0.1 80)", intensity: 45, distance: 34, shadow: { enabled: true }, visibleRange: { max: 45 } }, behavior: "scripts/spamton-bulb.js" });
+  sp("sa-key", { feetPosition: { x: 0, y: 9, z: 6 }, light: { kind: "spot", color: "oklch(0.8 0.03 220)", intensity: 14, distance: 45, angle: 75, penumbra: 0.8, aim: { x: 0, y: 0, z: -4 }, shadow: { enabled: false }, visibleRange: { max: 45 } } });
   // caged work lamps bolted round the wall, every other one dead or dim: they light the pit's edge so you can read where you run
   for (let k = 0; k < 8; k++) {
     const a = (k / 8) * Math.PI * 2 + 0.2, on = k % 3 !== 2
     sp(`sa-lamp${k}`, { feetPosition: { x: Math.sin(a) * 23.6, y: 3.6, z: Math.cos(a) * 23.6 }, rotation: { yaw: (a * 180) / Math.PI },
+      visibleRange: { max: 45 },
       primitive: { kind: "box", width: 0.5, height: 0.32, depth: 0.25 }, material: { color: "oklch(0.3 0.02 90)", emissive: on ? "oklch(0.9 0.12 80)" : "oklch(0.3 0.05 80)", emissiveIntensity: on ? 3 : 0.5, roughness: 0.6, metalness: 0.5 }, castShadow: false,
-      light: on ? { kind: "point", color: "oklch(0.88 0.1 75)", intensity: 18, distance: 22 } : undefined });
+      light: on ? { kind: "point", color: "oklch(0.88 0.1 75)", intensity: 18, distance: 22, shadow: { enabled: false }, visibleRange: { max: 35 } } : undefined });
   }
   sp("spam-in", { feetPosition: { x: 0, y: 0.1, z: 15 }, rotation: { yaw: 0 } });
   sp("sa-dust", { feetPosition: { x: 0, y: 0, z: 0 }, fx: { script: `fx
