@@ -12,7 +12,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { layCity, layStreet, tickCity } from "../../scripts/lib/level11-city.js";
 
 export const cadence = "1s";
-const V = 12; // bump to rebuild the city in rooms that are already open
+const V = 13; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -316,6 +316,46 @@ function lay(ctx) {
   // ==========================================
   // the street: lamps, trees, benches, parked cars, billboards, manholes and a subway stair (scripts/lib/level11-city.js)
   const street = layStreet(ctx, { sp, bx, cyl });
+
+  // ==========================================
+  // SPAMTON'S ALLEY (Shelly's ask): a dead-end brick alley off the east street; E on the dumpster starts his battle (scripts/spamton-fight.js)
+  // ==========================================
+  {
+    const AX = 44, Z0 = 19, LEN = 13, W = 4.2;
+    const BRICK = { ...T("grimy-red-brick-wall", 2), color: "oklch(0.42 0.07 35)", roughness: 0.92 };
+    const GRIME = { ...T("stained-concrete-floor", 3), color: "oklch(0.32 0.012 80)", roughness: 0.95 };
+    bx("l11-spam-wall-w", AX - W / 2 - 0.3, 0, Z0 + LEN / 2, 0.6, 7, LEN, BRICK);
+    bx("l11-spam-wall-e", AX + W / 2 + 0.3, 0, Z0 + LEN / 2, 0.6, 7, LEN, BRICK);
+    bx("l11-spam-wall-back", AX, 0, Z0 + LEN + 0.3, W + 1.2, 7, 0.6, BRICK);
+    bx("l11-spam-floor", AX, 0.04, Z0 + LEN / 2, W, 0.08, LEN, GRIME);
+    bx("l11-spam-puddle", AX - 0.6, 0.085, Z0 + 5, 1.6, 0.01, 1.1, { color: "oklch(0.2 0.02 240)", roughness: 0.05, metalness: 0.3 }, { physics: undefined });
+    // the dumpster: a green steel bin with a hinged lid; state.up = the player he is fighting (the lid flies open, he stands in it)
+    sp("l11-spamton-dumpster", {
+      tags: ["usable"],
+      feetPosition: { x: AX + 0.4, y: 0.08, z: Z0 + LEN - 1.1 },
+      primitive: { kind: "box", width: 2.0, height: 1.25, depth: 1.15 },
+      material: { ...T("grimy-scratched-steel-plate", 1), color: "oklch(0.42 0.09 150)", metalness: 0.55, roughness: 0.6 },
+      physics: "static",
+      behavior: "scripts/spamton.js",
+      state: { kind: "spamton", name: "Dumpster", verb: "Inspect dumpster", info: "Something inside is giggling.", up: null },
+      children: [
+        { id: "lid", feetPosition: { x: 0, y: 1.25, z: 0.55 }, pivot: [0.5, 0, 1], primitive: { kind: "box", width: 2.05, height: 0.07, depth: 1.2 }, material: { color: "oklch(0.36 0.08 150)", metalness: 0.5, roughness: 0.65 } },
+        { id: "rim", feetPosition: { x: 0, y: 1.1, z: 0 }, primitive: { kind: "box", width: 2.08, height: 0.12, depth: 1.22 }, material: { color: "oklch(0.3 0.05 150)", metalness: 0.6, roughness: 0.5 } },
+        { id: "wheel-l", feetPosition: { x: -0.8, y: -0.08, z: 0.4 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.08, height: 0.08 }, rotation: { roll: 90 }, material: { color: "#111" } },
+        { id: "wheel-r", feetPosition: { x: 0.8, y: -0.08, z: 0.4 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.08, height: 0.08 }, rotation: { roll: 90 }, material: { color: "#111" } },
+        { id: "spamton", visible: false, feetPosition: { x: 0, y: 0.75, z: 0 }, model: { id: "/cdn/model-humanoid-spamton-g-spamton-deltarune-nzecetwb.glb" }, layout: { box: { min: { x: -0.5, y: 0, z: -0.5 }, max: { x: 0.5, y: 1.3, z: 0.5 } } }, rotation: { yaw: 180 } },
+        { id: "glow", feetPosition: { x: 0, y: 1.3, z: 0 }, light: { kind: "point", color: "#ff6fd0", intensity: 0, distance: 5 } },
+      ],
+    });
+    // the dressing: bags, a crushed box, a buzzing caged bulb over the door that never opens
+    for (const [i, x, z, s] of [[0, AX - 1.3, Z0 + LEN - 0.8, 0.7], [1, AX - 0.8, Z0 + LEN - 1.6, 0.55], [2, AX + 1.6, Z0 + LEN - 2.4, 0.5]])
+      sp(`l11-spam-bag-${i}`, { feetPosition: { x, y: 0.08, z }, primitive: { kind: "sphere", radius: s / 2 }, scale: { x: 1.15, y: 0.85, z: 1 }, material: { color: "oklch(0.18 0.01 260)", roughness: 0.35 }, physics: "static", castShadow: false });
+    bx("l11-spam-box", AX - 1.4, 0.08, Z0 + 6.5, 0.7, 0.35, 0.5, { color: "oklch(0.55 0.07 70)", roughness: 0.95 }, { rotation: { yaw: 23 }, castShadow: false });
+    bx("l11-spam-door", AX + W / 2 + 0.02, 0.08, Z0 + 8, 0.06, 2.2, 1.0, { color: "oklch(0.3 0.03 250)", metalness: 0.6, roughness: 0.55 });
+    sp("l11-spam-bulb", { feetPosition: { x: AX + W / 2 - 0.1, y: 2.7, z: Z0 + 8 }, primitive: { kind: "sphere", radius: 0.09 }, material: { color: "#ffe9b0", emissive: "#ffcf70", emissiveIntensity: 3 }, light: { kind: "point", color: "#ffcf8a", intensity: 2.2, distance: 9 }, castShadow: false });
+    sp("l11-spam-sign", { feetPosition: { x: AX - W / 2 + 0.02, y: 2.0, z: Z0 + LEN - 1 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.1, height: 0.5, depth: 0.03 }, material: { color: "oklch(0.92 0.02 90)", roughness: 0.8 },
+      ui: `<div face="front" width="1.1m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:Arial Black,Arial,sans-serif;color:#1b1b1b;font-size:64px;text-align:center;line-height:1">NO DUMPING<br><span style="font-size:34px;color:#b01818">VIOLATORS WILL BE [[PROSECUTED]]</span></div>` });
+  }
 
   // Overhead Traffic Light Gantry at Intersection Z: 12
   cyl("l11-tlight-mast", -7.8, 0.1, 7.5, 0.16, 0.2, 5.8, IRON_RAIL);
