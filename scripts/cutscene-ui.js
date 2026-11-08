@@ -72,5 +72,5 @@ function l26Ui(ctx, player) {
 .lt{position:fixed;left:0;right:0;top:40%;text-align:center;z-index:54;color:#cfe8c0;font:400 44px/1.1 Georgia,serif;text-shadow:0 0 18px rgba(120,220,140,.35);opacity:0;animation:lt 6s ease both;animation-delay:${d(1.5)}}
 .ls{position:fixed;left:0;right:0;top:calc(40% + 60px);text-align:center;z-index:54;color:#e05a4a;font:400 14px/1 Georgia,serif;letter-spacing:.5em;opacity:0;animation:lt 5.4s ease both;animation-delay:${d(2.4)}}
 .lk{position:fixed;right:28px;bottom:3vh;z-index:55;color:#8a8a7a;font:400 11px/1 Georgia,serif;letter-spacing:.2em}
-</style><div class="lb" style="top:0"></div><div class="lb" style="bottom:0"></div><div class="lt">LEVEL 26</div><div class="ls">THE SS FUN =)</div>${caps}<div class="lk">HOLD SPACE TO SKIP</div>`
+</style><div class="lb" style="top:0"></div><div class="lb" style="bottom:0"></div><div class="lt">LEVEL 26</div><div class="ls">THE SS FUN =)</div>${caps}<div class="lk">HOLD JUMP TO SKIP</div>`
 }

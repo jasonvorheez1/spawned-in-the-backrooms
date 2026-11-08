@@ -74,6 +74,7 @@ export function update(ctx) {
 export function onInput(ctx, input) {
   const st = ctx.self.state
   if (st.tut) tutInput(ctx, st, input)
+  if (st.l26cut) { const ss = ctx.session; if (input.held?.jump) ss.l26skip ??= ctx.now(); else ss.l26skip = null } // hold jump 1.2 s skips Level 26's cutscene
   if (input.pressed?.mainmenu && ctx.self.place !== "intake" && (st.menuOpen || !['talk', 'mahjong', 'cutscene'].includes(screen(st, ctx.self.place)))) { // pause never stacks on a talk, the mahjong table or a cutscene it couldn't draw over
     st.menuOpen = !st.menuOpen
     if (st.menuOpen) { st.menuKind = "pause"; st.wardrobeOpen = false; st.wrMenu = false }
