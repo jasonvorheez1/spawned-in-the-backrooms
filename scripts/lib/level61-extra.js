@@ -116,14 +116,63 @@ export function layExtra(ctx, { HW, HD, HH }) {
   sp("l61-amber-pot", { feetPosition: { x: -23.5, y: 0, z: 13.2 }, physics: "static", primitive: { kind: "cylinder", radiusTop: 0.4, radiusBottom: 0.32, height: 0.55 }, material: { color: "oklch(0.3 0.02 250)", metalness: 0.7 }, fx: { script: SMOKE } });
   sp("l61-amber-sign", { feetPosition: { x: -22.5, y: 2.2, z: 11 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.8, height: 0.9, depth: 0.05 }, material: { color: "oklch(0.55 0.15 60)" },
     ui: `<div face="front" width="1.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;color:#fff;text-align:center"><div style="font-size:90px">CAMP AMBER</div><div style="font-size:38px">Level 6.1 outpost · new here? sit down, eat</div></div>` });
+
+  // ---- a real restaurant's furniture: menu boards you flip through, a register, the "now serving" board, a tray return, condiments and a half-eaten tray on the tables, a wet-floor sign
+  const MENU_AT = { clip: [-24.4, 1.12, -29.7, 180], liq: [-11.7, 1.12, -23.2, -90], slice: [4.4, 1.04, -28.8, 180], burger: [17.6, 1.04, -28.2, 180] };
+  const STORE_X = { clip: -21, liq: -7, slice: 7, burger: 21 }, MENUS = {
+    clip: [["Budweiser", "3.00"], ["Jack and Coke", "4.50"], ["Smirnoff Ice", "3.75"], ["Coca-Cola float", "2.25"], ["Chips and a Coke", "2.75"]],
+    liq: [["Almond water", "3.00"], ["Corona with lime", "4.00"], ["Margarita", "5.50"], ["Miller Lite", "3.00"], ["Whiskey, neat", "5.00"], ["Bar snacks", "2.50"]],
+    slice: [["Pepperoni slice", "3.25"], ["2 cheese + Coke", "6.25"], ["Supreme slice", "5.00"]],
+    burger: [["Cheeseburger", "4.50"], ["Bop meal", "7.95"], ["Fries + Coke", "3.25"]],
+  };
+  const NAMES = { clip: "Clippers", liq: "Liquorette", slice: "Slice Palace", burger: "Burger Bop" };
+  for (const key of Object.keys(MENUS)) {
+    const [mx, my, mz, myaw] = MENU_AT[key], cx = STORE_X[key];
+    sp(`l61-menu-${key}`, { tags: ["usable"], feetPosition: { x: mx, y: my, z: mz }, rotation: { yaw: myaw, pitch: -12 }, behavior: "scripts/l61-use.js", primitive: { kind: "box", width: 0.5, height: 0.66, depth: 0.04 }, material: { color: "oklch(0.2 0.02 250)", roughness: 0.6 },
+      state: { kind: "menu", key, name: `${NAMES[key]} menu`, verb: "Flip the menu", info: "Press to see the next item. Everything is crossed out and free.", tint: "#ffd84a" },
+      ui: `<div face="front" width="0.5m" style="width:100%;height:100%;box-sizing:border-box;padding:14px 12px;background:#161a1e;color:#f4f1ea;font-family:Georgia,serif;text-align:center"><div style="font-size:30px;letter-spacing:3px;color:#ffd84a;border-bottom:2px solid #ffd84a;padding-bottom:4px">${NAMES[key]}</div>${MENUS[key].map(([n, p]) => `<div style="font-size:21px;margin-top:10px;display:flex;justify-content:space-between"><span>${n}</span><span><s style="color:#aaa">$${p}</s> <b style="color:#7affb0">FREE</b></span></div>`).join("")}<div style="font-size:15px;margin-top:14px;color:#9fb8c8">please take a number</div></div>` });
+    // the till: a little register with a bell
+    const [px, py, pz] = { clip: [-24.8, 1.1, -30.6], liq: [-12.2, 1.1, -22.8], slice: [9.3, 1.02, -29.6], burger: [18.3, 1.02, -29.6] }[key];
+    sp(`l61-reg-${key}`, { feetPosition: { x: px, y: py, z: pz }, rotation: { yaw: myaw }, primitive: { kind: "box", width: 0.36, height: 0.24, depth: 0.34 }, material: { color: "oklch(0.7 0.03 80)", roughness: 0.5, metalness: 0.4 },
+      children: [{ feetPosition: { x: 0, y: 0.24, z: 0.02 }, rotation: { pitch: -35 }, primitive: { kind: "box", width: 0.28, height: 0.16, depth: 0.02 }, material: { color: "#031", emissive: "#2bff80", emissiveIntensity: 0.6 }, ui: `<div face="front" width="0.28m" style="width:100%;height:100%;background:#031;color:#7affb0;font:700 40px 'Courier New',monospace;padding:6px;box-sizing:border-box;text-align:center;line-height:1.05">TOTAL<br>$0.00<br><span style="font-size:22px">THANK YOU</span></div>` },
+        { feetPosition: { x: 0.2, y: 0.2, z: -0.1 }, primitive: { kind: "sphere", radius: 0.05 }, material: { color: "oklch(0.8 0.1 85)", metalness: 0.9, roughness: 0.2 } }] });
+    // the "now serving" board high on the store front (the counter's tickets count up on it) and the tray return beside the store
+    sp(`l61-serve-${key}`, { feetPosition: { x: cx + 3.4, y: 2.7, z: -HD + 0.22 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.8, height: 1.0, depth: 0.06 }, material: { color: "oklch(0.1 0.01 250)" },
+      ui: `<div face="front" width="1.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Courier New',monospace;background:#101418;color:#7affb0;text-align:center"><div style="font-size:54px;color:#ffd84a">NOW SERVING</div><div style="font-size:150px;font-weight:700;letter-spacing:6px;text-shadow:0 0 18px #3f9">040</div><div style="font-size:34px;color:#9fb8c8">${NAMES[key]}</div></div>` });
+    sp(`l61-ret-${key}`, { tags: ["usable"], feetPosition: { x: cx + 5.6, y: 0, z: -HD + 1.4 }, physics: { body: "static", collider: "box" }, behavior: "scripts/l61-use.js", primitive: { kind: "box", width: 0.7, height: 1.1, depth: 0.55 }, material: { color: "oklch(0.7 0.02 250)", metalness: 0.7, roughness: 0.4 },
+      state: { kind: "return", name: "Tray return", verb: "Return your tray", info: "A rack for trays. Please be considerate.", tint: "#9fe8ff" },
+      children: [{ feetPosition: { x: 0, y: 1.1, z: 0 }, primitive: { kind: "box", width: 0.7, height: 0.4, depth: 0.04 }, material: { color: "oklch(0.35 0.09 230)" }, ui: `<div face="front" width="0.7m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font:900 70px Arial,sans-serif;color:#fff">TRAYS</div>` }] });
+  }
+  // the dining room: ketchup, mustard and a napkin box on the tables, a tray with a plate and a cup on about half, steam off the hot ones
+  let ti = 0;
+  for (let x = -24; x <= 24; x += 6) for (let z = -15; z <= 15; z += 6) {
+    if (Math.abs(x) < 9 && Math.abs(z) < 9) continue;
+    const tx = x + Math.sin(x * 3.1 + z) * 0.6, tz = z + Math.cos(x + z * 2.3) * 0.5, r = Math.abs((Math.sin(x * 12.9898 + z * 78.233) * 43758.5453) % 1), hot = r < 0.18;
+    sp(`l61-set-${ti++}`, { feetPosition: { x: tx, y: 0.78, z: tz }, ...(hot ? { fx: { script: SMOKE } } : {}), primitive: { kind: "sphere", radius: 0.001 }, material: { color: "oklch(0.5 0 0)" },
+      children: [
+        { feetPosition: { x: 0.12, y: 0, z: 0.1 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.035, height: 0.17 }, material: { color: "oklch(0.5 0.22 28)", roughness: 0.4 } },
+        { feetPosition: { x: 0.2, y: 0, z: 0.05 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.035, height: 0.17 }, material: { color: "oklch(0.85 0.17 95)", roughness: 0.4 } },
+        { feetPosition: { x: 0.04, y: 0, z: 0.14 }, primitive: { kind: "box", width: 0.1, height: 0.1, depth: 0.07 }, material: { color: "oklch(0.78 0.01 250)", metalness: 0.7 } },
+        ...(r > 0.5 ? [] : [
+          { feetPosition: { x: -0.25, y: 0, z: -0.1 }, rotation: { yaw: r * 400 }, primitive: { kind: "box", width: 0.4, height: 0.02, depth: 0.28 }, material: { color: ["oklch(0.62 0.17 30)", "oklch(0.55 0.12 190)", "oklch(0.88 0.12 95)"][ti % 3], roughness: 0.5 } },
+          { feetPosition: { x: -0.3, y: 0.02, z: -0.1 }, primitive: { kind: "cylinder", radiusTop: 0.1, radiusBottom: 0.09, height: 0.02 }, material: { color: "oklch(0.97 0.005 90)" } },
+          { feetPosition: { x: -0.3, y: 0.04, z: -0.1 }, primitive: { kind: "sphere", radius: hot ? 0.065 : 0.04 }, material: { color: hot ? "oklch(0.58 0.12 55)" : "oklch(0.7 0.1 70)", roughness: 0.8 } },
+          { feetPosition: { x: -0.14, y: 0.02, z: -0.04 }, primitive: { kind: "cylinder", radiusTop: 0.045, radiusBottom: 0.035, height: 0.12 }, material: { color: "oklch(0.55 0.2 25)" } },
+        ]),
+      ] });
+  }
+  // a faceling is mopping: wet-floor signs in the aisles, and the sound of a busy food court
+  for (const [k, [x, z]] of [[8, 12], [-18, 17], [10, -20]].entries()) sp(`l61-wet-${k}`, { feetPosition: { x, y: 0, z }, rotation: { yaw: 30 + k * 40 }, primitive: { kind: "box", width: 0.34, height: 0.62, depth: 0.04 }, material: { color: "oklch(0.88 0.17 95)", roughness: 0.6 },
+    ui: `<div face="front" width="0.34m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;color:#c0201a;text-align:center"><div style="font-size:34px">CAUTION</div><div style="font-size:26px;color:#222">WET FLOOR</div></div>` });
+  [[-15, 0], [15, 0], [0, -18], [0, 18]].forEach(([x, z], k) => sp(`l61-murmur-${k}`, { feetPosition: { x, y: 1.5, z }, audio: { clip: "cdn/sfx-busy-restaurant-ambience-dishes-clinking-distant-chatter-loop.mp3", loop: true, gain: 0.16, spatial: true, maxDistance: 20 } }));
 }
 
 // ---- the people: Facelings, the staff, the guards and the pickets
 const FACELINGS = [
-  { id: "l61-fc-clip", at: [-21, -31.4], face: 180, acts: ["wipe", "serve", "nod"], line: "A faceling slides a cold glass across the red bar. It was already pouring." },
-  { id: "l61-fc-liq", at: [-14.7, -27], face: -90, acts: ["wipe", "serve"], line: "A faceling sets down an almond water without a word, as if it had been waiting for you." },
-  { id: "l61-fc-slice", at: [7, -30.9], face: 180, acts: ["serve", "nod"], gives: "pizza,pizza,coke", line: "A faceling hands you a slice on a paper plate. It is still too hot to hold, and perfect." },
-  { id: "l61-fc-burger", at: [21, -30.1], face: 180, acts: ["serve", "wipe"], gives: "burger,burger,coke", line: "A faceling flips something on the grill and presses the burger into your hands. No charge." },
+  { id: "l61-fc-clip", greet: "Welcome to Clippers!", at: [-21, -31.4], face: 180, acts: ["wipe", "serve", "nod"], line: "A faceling slides a cold glass across the red bar. It was already pouring." },
+  { id: "l61-fc-liq", greet: "Evening. Almond water?", at: [-14.7, -27], face: -90, acts: ["wipe", "serve"], line: "A faceling sets down an almond water without a word, as if it had been waiting for you." },
+  { id: "l61-fc-slice", greet: "Slice Palace! Hot ones just out.", at: [7, -30.9], face: 180, acts: ["serve", "nod"], gives: "pizza,pizza,coke", line: "A faceling hands you a slice on a paper plate. It is still too hot to hold, and perfect." },
+  { id: "l61-fc-burger", greet: "Welcome to Burger Bop!", at: [21, -30.1], face: 180, acts: ["serve", "wipe"], gives: "burger,burger,coke", line: "A faceling flips something on the grill and presses the burger into your hands. No charge." },
   { id: "l61-fc-a", route: [[-21, -12, 2, "wipe"], [-15, -12, 2, "wipe"], [-15, -18, 3, "nod"], [-21, -18, 2, "wipe"]] },
   { id: "l61-fc-b", route: [[21, -12, 2, "wipe"], [15, -12, 2, "wipe"], [15, -18, 3, "nod"], [21, -18, 2, "wipe"]] },
   { id: "l61-fc-c", route: [[-21, 12, 2, "wipe"], [-15, 12, 2, "wipe"], [-15, 18, 3, "nod"], [-21, 18, 2, "wipe"]] },
@@ -150,7 +199,7 @@ export function faceling(ctx, id) {
   const look = { ...npcLook("l61fc" + i, { species: ["cat", "wolf", "fox", "bear", "bunny", "dog"][i % 6], sex: i % 2 ? "f" : "m", topw: "apron", top: "#f4f1ea", botw: "pants", bottom: "#2a2a30", shoes: "sneakers", hat: "beanie", hatc: "#f4f1ea" }, "trader", 6), fur: "#060606", vary: false, eye: "#000000" };
   ctx.spawn(id, { tags: ["l61npc", "usable", "faceling"], feetPosition: { x: at.x, y: 0.05, z: at.z }, rotation: { yaw: f.face ?? 0 }, physics: "character", ...faceless(critterSpec(look)),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/l61-staff.js"],
-    state: { name: "Faceling (Entity 9)", verb: "Take a plate", info: "A friendly, featureless worker in an apron. They cook, clean and serve, and nothing here costs a thing.", tint: "#f4f1ea", kind: "faceling", job: f.route ? "route" : "post", faceYaw: f.face, acts: f.acts, gives: f.gives, line: f.line, route: f.route?.map(([x, z, dwell, act]) => ({ x, z, dwell, act })), pace: 1.15 + (i % 3) * 0.15 } });
+    state: { name: "Faceling (Entity 9)", verb: "Take a plate", info: "A friendly, featureless worker in an apron. They cook, clean and serve, and nothing here costs a thing.", tint: "#f4f1ea", kind: "faceling", job: f.route ? "route" : "post", faceYaw: f.face, greet: f.greet, acts: f.acts, gives: f.gives, line: f.line, route: f.route?.map(([x, z, dwell, act]) => ({ x, z, dwell, act })), pace: 1.15 + (i % 3) * 0.15 } });
   if (f.route && f.route.length > 2) ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, primitive: { kind: "box", width: 0.34, height: 0.02, depth: 0.24 }, material: { color: "oklch(0.88 0.01 90)", metalness: 0.4 }, children: [{ feetPosition: { x: 0.05, y: 0.02, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.05 }, material: { color: "oklch(0.7 0.14 40)" } }] });
 }
 
