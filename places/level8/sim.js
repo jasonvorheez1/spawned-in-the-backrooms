@@ -5,7 +5,7 @@
 // a pool of boiling tar with a B.N.T.G. dredge winch and reaching hands, a survivor camp round a fire with Carla, and the asphalt road to Level 9. Life: scripts/l8-life.js; use: scripts/l8-use.js.
 import L8 from "../../scripts/lib/data/level8.yml";
 export const cadence = "1s";
-const V = 12;
+const V = 13;
 const GLB = {
   cave: "/cdn/value.2109832add9ec72ac83009c0355494c0f9b184ad1b3bb101edb373306f8be2dc.glb",
   spider: "/cdn/value.f2baeaec87cf017372e92e66ec42fae95179b52161e15051d3253036b89b9323.glb",
@@ -126,7 +126,7 @@ function lay(ctx) {
   // the cave model (box min -10.91,-2.56,-455.46, max 124.61,14.62,0.40) placed by its bottom-centre with multi-zone karst materials
   sp("l8-cave", {
     feetPosition: { x: 56.85, y: -2.56, z: -227.53 }, physics: { body: "static", collider: "mesh" },
-    model: { id: GLB.cave, materials: { rock: CAVE("rock", ROCK), wet_rock: CAVE("wet", WET_ROCK), flowstone: CAVE("flow", { color: "oklch(0.58 0.045 78)" }), road_bed: CAVE("road", ROAD_MAT), biolum: BIOLUM_MAT, tar_rock: CAVE("tar", TAR_ROCK) } },
+    model: { id: GLB.cave, materials: { rock: CAVE("rock", ROCK), wet_rock: CAVE("wet", WET_ROCK), flowstone: CAVE("rock", { color: "oklch(0.5 0.03 72)" }), road_bed: CAVE("road", ROAD_MAT), biolum: BIOLUM_MAT, tar_rock: CAVE("tar", TAR_ROCK) } },
     receiveShadow: true,
   });
 
