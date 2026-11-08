@@ -9,15 +9,7 @@ healMul: 0.75       # almond water, rations, bandages, first aid heal this much 
 regenCap: 0.5       # out-of-fight regeneration stops at this share of your max hp (it was 0.7)
 # Gear wears out faster and costs more to keep up
 wearMul: 1.4        # weapon condition lost per use (scripts/lib/condition.js)
-# Dying costs something now (it used to cost nothing): you get up weak, lighter, and your gear is hurt
-death:
-  hpFrac: 0.6       # hp you get up with (it was full)
-  sanityFrac: 0.5   # sanity you get up with (it was 0.6)
-  cash: 0.25        # share of your Backdollars lost
-  ammo: 0.25        # share of your rounds and shells lost
-  needs: 15         # hunger and thirst lost: you wake up weak
-  weaponCnd: 12     # condition points your weapon loses
-  armorCnd: 10      # and each worn garment
+# Dying costs nothing (Shelly's rule, Nov 8): you get up with full health and 60% sanity, and keep everything.
 # Carrying
 carryBase: 26       # kg: carryBase + hardiness * carryPerH (it was 30 + 5 each)
 carryPerH: 4.5

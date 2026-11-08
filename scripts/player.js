@@ -1235,14 +1235,7 @@ function tickStats(ctx, t, moving) {
       const id = ctx.self.id
       for (const k of ['angry', 'fresh', 'warned']) if (n.state?.[k]?.[id]) { const o = { ...n.state[k] }; delete o[id]; n.state[k] = o }
     }
-    // dying costs now (data/difficulty.yml death): you get up weak, poorer, with less ammo, hungry and thirsty, and your gear is hurt
-    s.hp = Math.max(1, Math.round(mh * D.death.hpFrac)); s.sanity = Math.round(ms * D.death.sanityFrac)
-    { const lost = Math.round((s.cents ?? 0) * D.death.cash); if (lost > 0) s.cents -= lost
-      s.ammo = Math.floor((s.ammo ?? 0) * (1 - D.death.ammo)); s.shells = Math.floor((s.shells ?? 0) * (1 - D.death.ammo))
-      s.hunger = Math.max(5, (s.hunger ?? 100) - D.death.needs); s.thirst = Math.max(5, (s.thirst ?? 100) - D.death.needs)
-      const k = s.equipped; if (k && k !== 'fists') s['cnd_' + k] = Math.max(1, cndOf(s, k) - D.death.weaponCnd)
-      if (s.look) { const cnd = { ...(s.look.cnd ?? {}) }; for (const r of wornRows(s.look)) cnd[r.token] = Math.max(1, Math.round((cnd[r.token] ?? r.cnd) - D.death.armorCnd)); s.look = { ...s.look, cnd } }
-      s.notice = { text: `You come to, weak and light-handed${lost > 0 ? ` ($${(lost / 100).toFixed(2)} lost)` : ''}. Your gear took a beating.`, at: ctx.now() } }
+    s.hp = mh; s.sanity = Math.round(ms * 0.6) // no penalty for dying (Shelly): you get up whole
     sound(ctx, 'static-burst-glitch', 0.95, true)
     ctx.emit('screenFlash', { color: '#5a0000', duration: 0.5, intensity: 0.6 }, { audience: { player: ctx.self.id } })
     // the body goes limp and is knocked back off its feet; the camera pulls out to watch (scripts/camera.js)
