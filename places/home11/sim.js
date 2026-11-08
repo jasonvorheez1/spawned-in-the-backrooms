@@ -1,10 +1,13 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 2;
+const V = 3;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
-const PAPER = T("faded-green-floral-wallpaper", 0.5, "oklch(0.95 0.02 120)");
-const CEIL = { color: "oklch(0.93 0.01 90)", roughness: 1 };
+const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
+const VINYL = T("almond-checker-sheet-vinyl-kitchen-floor", 0.8, "oklch(0.95 0.01 85)");
+const PAPER = T("eggshell-painted-drywall-light-orange-peel", 0.6, "oklch(0.93 0.025 85)"); // builder-beige paint
+const BORDER = T("country-ivy-wallpaper-border-strip", 1, "oklch(0.95 0.02 110)");
+const CEIL = T("white-popcorn-acoustic-ceiling-texture", 0.8, "oklch(0.96 0.005 90)");
 const TRIM = { color: "oklch(0.9 0.02 85)", roughness: 0.6 };
 const M = {
   bed: "/cdn/value.635524f2594f1ed2764d403655620f2d338b78b42bf046d268d365abe5a6ffc9.glb",
@@ -28,6 +31,10 @@ export function tick(ctx) {
   const fit = (id, model, x, z, yaw, size, extra = {}) => sp(id, { feetPosition: { x, y: 0.1, z }, rotation: { yaw }, model: { id: model }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } }, physics: { body: "static", collider: "box" }, ...extra });
 
   bx("h-floor", 0, 0, 0, W, 0.1, D, FLOOR);
+  bx("h-carpet-living", -0.7, 0.1, 2.5, W - 1.6, 0.012, 6.6, CARPET, { physics: "none" }); // carpet to the kitchen edge
+  bx("h-vinyl-kitchen", 4.15, 0.1, 3.4, 1.6, 0.012, 4.6, VINYL, { physics: "none" });
+  bx("h-carpet-bed", 0, 0.1, -3.5, W - 0.2, 0.012, 4.8, CARPET, { physics: "none" });
+  for (const [id, x, z, w, d] of [["h-border-w", -4.9, 0, 0.03, D - 0.1], ["h-border-e", 4.9, 0, 0.03, D - 0.1], ["h-border-n", 0, -5.9, W - 0.1, 0.03], ["h-border-sl", -3, 5.9, 4, 0.03], ["h-border-sr", 3, 5.9, 4, 0.03]]) bx(id, x, 2.05, z, w, 0.18, d, BORDER, { physics: "none" }); // the wallpaper border at chair-rail-to-ceiling height
   bx("h-ceil", 0, H, 0, W, 0.1, D, CEIL);
   bx("h-wall-w", -W / 2, 0, 0, 0.15, H, D, PAPER);
   bx("h-wall-e", W / 2, 0, 0, 0.15, H, D, PAPER);
