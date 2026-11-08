@@ -873,6 +873,23 @@ pop mist rate=5 on=arc(1.4,6.283,.4) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0
   sign("l61-welcome", 0, 3.8, HD - 0.2, 0, 5, 1.0, `<div style="font-size:150px;color:#ff7ab8;font-style:italic">The Snackrooms</div><div style="font-size:70px;color:#5ad8e0">EAT · DRINK · STAY AS LONG AS YOU LIKE</div>`, "oklch(0.22 0.06 280)");
 }
 
+// perf: a few hundred rows a tick, not the whole mall at once (one pass of ~1100 cost ~100 ms)
+let slimQ = null;
+function slim(ctx, st) {
+  if (st.slimV === V || st.builtV !== V) return;
+  if (!slimQ) slimQ = Object.keys(ctx.place.objects ?? {}).filter((id) => /^l61-/.test(id));
+  const skip = new Set([...PEOPLE, ...FACELING_IDS]);
+  for (let n = 0; n < 150 && slimQ.length; n++) {
+    const id = slimQ.pop(), o = ctx.getObject(id);
+    if (!o || o.light || skip.has(id.split("/")[0])) continue;
+    const s = o.bounds?.size; if (!s) continue;
+    const m = Math.max(s.x, s.y, s.z);
+    if (m < 1.2 && o.castShadow !== false) o.castShadow = false;
+    if (!id.includes("/") && !o.visibleRange && m < 3) o.visibleRange = { min: 0, max: m < 1.2 ? 40 : 80 };
+  }
+  if (!slimQ.length) { slimQ = null; st.slimV = V; }
+}
+
 export function tick(ctx) {
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const st = ctx.place.state;
@@ -887,6 +904,7 @@ export function tick(ctx) {
     for (const id of PEOPLE) person(ctx, id);
   }
   keepPeople(ctx, PEOPLE, person);
+  slim(ctx, st); // perf: small props cast no shadow, props stop drawing past 40/80 m; ~150 a tick after each rebuild
 
   // Sanctuary effect: The Snackrooms restores player sanity and health over time
   const now = ctx.now();
