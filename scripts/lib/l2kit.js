@@ -47,7 +47,7 @@ export function placements(part, params = {}) {
     const alongZ = o.some((d) => d === 1 || d === 3) && !o.some((d) => d === 0 || d === 2);
     if (part === "corner" && z !== "camp" && !inPipes(cx, cz)) {
       const x0 = cx * S - HALF + T, x1 = (cx + 1) * S - HALF - T, z0 = cz * S - HALF + T, z1 = (cz + 1) * S - HALF - T;
-      for (const [dx, dz, X, Z, yaw] of [[0, 1, x1, z1, 180], [0, 3, x1, z0, 90], [2, 1, x0, z1, 270], [2, 3, x0, z0, 0]])
+      for (const [dx, dz, X, Z, yaw] of [[0, 1, x1, z1, 180], [0, 3, x1, z0, 270], [2, 1, x0, z1, 90], [2, 3, x0, z0, 0]])
         if (closed(cx, cz, dx) && closed(cx, cz, dz)) put(X, 0, Z, yaw, inHall(cx, cz) ? tallS : 1);
     }
     if (part === "ceil" && !inHall(cx, cz) && !isStairCell(cx, cz)) put(c.x, H, c.z, alongZ ? 90 : 0);

@@ -13,10 +13,15 @@ const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]];
 const hallEdge = (cx, cz, d) => inHall(cx, cz) || inHall(cx + D4[d][0], cz + D4[d][1]);
 const pipeEdge = (cx, cz, d) => inPipes(cx, cz) && inPipes(cx + D4[d][0], cz + D4[d][1]); // inside the pipe maze the walls are pipe banks (level2-rooms-geo.js)
 
-export function geometry(ctx) {
+// params.kit: the modelled kit (scripts/l2kit/*, scripts/lib/l2kit.js) draws floor, ceiling, walls, corners, wall pipes
+// and cable trays; this draws the rest. The collider is always the whole original shell, so nothing walkable changes.
+export function geometry(ctx) { draw(ctx, !!ctx.params?.kit); }
+export function collider(ctx) { draw(ctx, false); }
+function draw(ctx, kit) {
   const hi = ctx.lod <= 2, M = hi ? 6 : 4; // pipe sides: thin pipes read round at six
   // floor and ceiling, one quad a cell, tinted by zone
   ctx.albedo(FLOOR);
+  if (!kit) {
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const x0 = cx * S - HALF, z0 = cz * S - HALF, z = zoneOf(cx, cz);
     ctx.color(z === "camp" ? "oklch(0.72 0.02 70)" : z === "room" ? "oklch(0.66 0.012 80)" : hash(cx, cz, 5) < 0.2 ? "oklch(0.5 0.02 60)" : "oklch(0.6 0.012 70)");
@@ -24,6 +29,7 @@ export function geometry(ctx) {
   }
   ctx.albedo(CEIL); ctx.color("oklch(0.55 0.01 70)");
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) { if (inHall(cx, cz) || isStairCell(cx, cz)) continue; const x0 = cx * S - HALF, z0 = cz * S - HALF; ctx.quad(x0, H, z0, x0 + S, H, z0, x0 + S, H, z0 + S, x0, H, z0 + S); }
+  }
 
   // walls on every closed edge; brick in some sectors, chalky concrete elsewhere
   const cut = new Set(ctx.params?.cut ?? []); // broken walls: scripts/wallpatch-geo.js draws what is left
@@ -33,8 +39,8 @@ export function geometry(ctx) {
     for (let cx = -1; cx < N; cx++) for (let cz = -1; cz < N; cz++) {
       if (wallTone(Math.max(cx, 0), Math.max(cz, 0)) !== brick) continue;
       const xe = (cx + 1) * S - HALF, ze = (cz + 1) * S - HALF;
-      if (cz >= 0 && (cx < 0 ? true : closed(cx, cz, 0)) && !pipeEdge(cx, cz, 0) && !cut.has(`x:${cx}:${cz}`)) box(ctx, xe - T, xe + T, 0, hallEdge(cx, cz, 0) ? HALL_H : H, cz * S - HALF - T, cz * S - HALF + S + T);
-      if (cx >= 0 && (cz < 0 ? true : closed(cx, cz, 1)) && !pipeEdge(cx, cz, 1) && !cut.has(`z:${cx}:${cz}`)) box(ctx, cx * S - HALF - T, cx * S - HALF + S + T, 0, hallEdge(cx, cz, 1) ? HALL_H : H, ze - T, ze + T);
+      if (!kit && cz >= 0 && (cx < 0 ? true : closed(cx, cz, 0)) && !pipeEdge(cx, cz, 0) && !cut.has(`x:${cx}:${cz}`)) box(ctx, xe - T, xe + T, 0, hallEdge(cx, cz, 0) ? HALL_H : H, cz * S - HALF - T, cz * S - HALF + S + T);
+      if (!kit && cx >= 0 && (cz < 0 ? true : closed(cx, cz, 1)) && !pipeEdge(cx, cz, 1) && !cut.has(`z:${cx}:${cz}`)) box(ctx, cx * S - HALF - T, cx * S - HALF + S + T, 0, hallEdge(cx, cz, 1) ? HALL_H : H, ze - T, ze + T);
       // over a tunnel mouth into the boiler hall, the wall carries on above the tunnel's ceiling
       if (cx >= 0 && cz >= 0 && !closed(cx, cz, 0) && hallEdge(cx, cz, 0) && inHall(cx, cz) !== inHall(cx + 1, cz)) box(ctx, xe - T, xe + T, H, HALL_H, cz * S - HALF - T, cz * S - HALF + S + T);
       if (cx >= 0 && cz >= 0 && !closed(cx, cz, 1) && hallEdge(cx, cz, 1) && inHall(cx, cz) !== inHall(cx, cz + 1)) box(ctx, cx * S - HALF - T, cx * S - HALF + S + T, H, HALL_H, ze - T, ze + T);
@@ -43,7 +49,7 @@ export function geometry(ctx) {
   // 45 degree corners: wherever two walls of a cell meet, a diagonal face cuts the corner
   ctx.albedo(WALL); ctx.color("oklch(0.74 0.012 85)");
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
-    if (zoneOf(cx, cz) === "camp" || inPipes(cx, cz)) continue;
+    if (kit || zoneOf(cx, cz) === "camp" || inPipes(cx, cz)) continue;
     const x0 = cx * S - HALF + T, x1 = (cx + 1) * S - HALF - T, z0 = cz * S - HALF + T, z1 = (cz + 1) * S - HALF - T;
     for (const [dx, dz, X, Z, sx, sz] of [[0, 1, x1, z1, -1, -1], [0, 3, x1, z0, -1, 1], [2, 1, x0, z1, 1, -1], [2, 3, x0, z0, 1, 1]])
       if (closed(cx, cz, dx) && closed(cx, cz, dz)) prism(ctx, [[X, Z], [X + sx * CH, Z], [X, Z + sz * CH]], 0, inHall(cx, cz) ? HALL_H : H);
@@ -60,7 +66,7 @@ export function geometry(ctx) {
   };
   const PIPE = ["oklch(0.62 0.03 150)", "oklch(0.5 0.07 40)", "oklch(0.72 0.01 250)"];
   ctx.albedo(RUSTY);
-  for (let k = 0; k < 3; k++) {
+  for (let k = 0; k < (kit ? 0 : 3); k++) {
     ctx.color(PIPE[k]); ctx.metalness(0.45); ctx.roughness(0.7);
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
       const z = zoneOf(cx, cz); if (z === "camp" || z === "room" || inPipes(cx, cz)) continue;
@@ -70,7 +76,7 @@ export function geometry(ctx) {
   // a cable tray down the middle of every tunnel ceiling
   ctx.albedo(null); ctx.color("oklch(0.35 0.01 250)"); ctx.metalness(0.6); ctx.roughness(0.5);
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
-    if (zoneOf(cx, cz) === "camp" || inHall(cx, cz) || sideOf(cx, cz)) continue; const c = cellCenter(cx, cz);
+    if (kit || zoneOf(cx, cz) === "camp" || inHall(cx, cz) || sideOf(cx, cz)) continue; const c = cellCenter(cx, cz);
     if (isOpen(cx, cz, 0)) box(ctx, c.x, c.x + S, H - 0.12, H - 0.06, c.z - 0.15, c.z + 0.15);
     if (isOpen(cx, cz, 1)) box(ctx, c.x - 0.15, c.x + 0.15, H - 0.12, H - 0.06, c.z, c.z + S);
   }

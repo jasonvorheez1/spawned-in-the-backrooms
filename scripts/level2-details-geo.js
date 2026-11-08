@@ -11,7 +11,7 @@ const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1)
 const ok = (cx, cz) => { const z = zoneOf(cx, cz); return z === "tunnel" || z === "dark"; };
 
 export function geometry(ctx) {
-  const hi = ctx.lod <= 2;
+  const hi = ctx.lod <= 2, kit = !!ctx.params?.kit; // kit: lagged pipes, conduit, wall lamps and ducts come from scripts/l2kit/*
   ctx.smooth(); ctx.metalness(0);
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     if (!ok(cx, cz) || inHall(cx, cz) || inPipes(cx, cz) || sideOf(cx, cz)) continue;
@@ -25,7 +25,7 @@ export function geometry(ctx) {
       const P = (a, o, y) => [wx + tx * a - nx * o, y, wz + tz * a - nz * o];
       const half = S / 2 - T - 0.2, r = hash(cx * 4 + d, cz, 301);
       // a fat lagged pipe: cream wrap, dark bandage rings every metre, a brass-coloured collar at the wall
-      if (r < 0.5) {
+      if (!kit && r < 0.5) {
         const y = 1.7 + hash(cx, cz, 303) * 0.5, off = 0.5;
         ctx.roughness(0.95); ctx.color("oklch(0.84 0.03 85)");
         tube(ctx, [P(-half, off, y), P(half, off, y)], [0.2, 0.2], hi ? 9 : 6, [1, 1], 0.03, cx + cz, 1);
@@ -44,7 +44,7 @@ export function geometry(ctx) {
         ctx.metalness(0);
       }
       // a bundle of grey conduit on clamps along the upper wall
-      if (hash(cx * 4 + d, cz, 309) < 0.55) {
+      if (!kit && hash(cx * 4 + d, cz, 309) < 0.55) {
         ctx.color("oklch(0.62 0.01 250)"); ctx.metalness(0.7); ctx.roughness(0.45);
         for (let k = 0; k < 4; k++) wb(-half, half, 0.07 + k * 0.07, 0.07 + k * 0.07 + 0.04, 2.45 + (k % 2) * 0.07, 2.49 + (k % 2) * 0.07);
         ctx.color("oklch(0.35 0.01 250)"); for (let a = -half + 0.5; a < half; a += 1.4) wb(a - 0.03, a + 0.03, 0.04, 0.34, 2.4, 2.58);
@@ -53,12 +53,12 @@ export function geometry(ctx) {
       // peeling paint: pale and dark patches on the wall face
       ctx.roughness(0.95);
       for (let i = 0; i < 3; i++) {
-        if (hash(cx * 4 + d, cz, 311 + i) > 0.55) continue;
+        if (kit || hash(cx * 4 + d, cz, 311 + i) > 0.55) continue;
         const a = (hash(cx * 4 + d, cz, 321 + i) - 0.5) * 3.4, hh = 0.4 + hash(cx, cz, 331 + i) * 0.9, y = 0.4 + hash(cz, cx * 4 + d, 341 + i) * 1.5, ww = 0.3 + hash(cx, cz, 351 + i) * 0.7;
         ctx.color(i % 2 ? "oklch(0.88 0.015 90)" : "oklch(0.36 0.03 55)"); wb(a - ww / 2, a + ww / 2, -0.005, 0.012, y, y + hh);
       }
       // a caged wall lamp: wire cage over a tube, warm or cold
-      if (hash(cx * 4 + d, cz, 361) < (dead ? 0.03 : 0.1)) {
+      if (!kit && hash(cx * 4 + d, cz, 361) < (dead ? 0.03 : 0.1)) {
         const warm = hash(cx, cz, 363) < 0.6, col = warm ? "oklch(0.88 0.13 75)" : "oklch(0.95 0.03 230)";
         ctx.color(col); ctx.emissive(col); wb(-0.45, 0.45, 0.04, 0.12, 2.0, 2.16); ctx.emissive(null);
         ctx.color("oklch(0.4 0.01 250)"); ctx.metalness(0.6);
@@ -70,7 +70,7 @@ export function geometry(ctx) {
     // ceiling: a lagged duct hanging along the way through, ribbed; cables sagging; a conduit box
     if (hi && open.length >= 1) {
       const along = open.some((d) => d === 0 || d === 2) ? 0 : 1, ex = along === 0 ? 1 : 0, ez = 1 - ex;
-      if (hash(cx, cz, 371) < 0.4) {
+      if (!kit && hash(cx, cz, 371) < 0.4) {
         ctx.color("oklch(0.3 0.015 80)"); ctx.roughness(0.95);
         box(ctx, c.x - ex * S / 2 - ez * 0.55, c.x + ex * S / 2 + ez * 0.55, H - 0.95, H - 0.4, c.z - ez * S / 2 - ex * 0.55, c.z + ez * S / 2 + ex * 0.55);
         ctx.color("oklch(0.2 0.01 80)");
