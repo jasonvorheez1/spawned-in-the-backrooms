@@ -940,7 +940,7 @@ export function update(ctx, dt) {
   if (ctx.self.parent) return
   const w = walkOf(ctx), s = ctx.self.state
   w.stamina ??= s.stamina; w.battery ??= s.battery
-  const dir = w.dir ?? { x: 0, z: 0 }, pressing = dir.x !== 0 || dir.z !== 0
+  let dir = w.dir ?? { x: 0, z: 0 }, pressing = dir.x !== 0 || dir.z !== 0
   { // pressed into a wall: the keys say go, the feet stay put. after a beat you stop running (no drain, no steps, no bob)
     const f = ctx.self.feetPosition, lf = w.lastFp, mv = lf && dt > 0 ? Math.hypot(f.x - lf.x, f.z - lf.z) / dt : 9
     w.lastFp = { x: f.x, z: f.z }
