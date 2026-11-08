@@ -30,9 +30,9 @@ export function geometry(ctx) {
       ctx.quad(x0, yA - ch, z1, x1, yB - ch, z1, x1 - ch, yB, z1 - ch, x0 + ch, yA, z1 - ch);
       ctx.quad(x0 + ch, yA, z0 + ch, x1 - ch, yB, z0 + ch, x1, yB - ch, z0, x0, yA - ch, z0);
     }
-    if (lod < 3 && hash(i, j, 4) < 0.18) { // a gum spot or old stain
+    if (lod < 3 && hash(i, j, 4) < 0.07) { // a gum spot or old stain
       const sx = x0 + 0.2 + hash(i, j, 5) * (px - 0.5), sz = z0 + 0.2 + hash(i, j, 6) * (pz - 0.5), s = 0.08 + hash(i, j, 7) * 0.25;
-      ctx.color(hash(i, j, 8) < 0.5 ? "oklch(0.5 0.02 70)" : "oklch(0.62 0.03 60)");
+      ctx.color(hash(i, j, 8) < 0.5 ? "oklch(0.78 0.02 75)" : "oklch(0.82 0.03 65)");
       ctx.quad(sx - s, y + 0.002, sz + s * 0.7, sx + s, y + 0.002, sz + s * 0.7, sx + s * 0.8, y + 0.002, sz - s, sx - s * 0.9, y + 0.002, sz - s * 0.8);
     }
   }
