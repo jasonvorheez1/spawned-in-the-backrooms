@@ -1,0 +1,19 @@
+# premade replies an npc falls back on when the ai reply fails; picked by what the player said and how safe the level is
+safe: [main, level1, level4, level5, level61, gamma]
+hello:
+  any: ["hey. you look like you walked a long way.", "oh, hi. didn't hear you come up.", "hey there. you new around here?", "evening. or morning. hard to tell down here."]
+place:
+  safe: ["it's quiet here, mostly. people keep to themselves.", "honestly? this is one of the better spots. food, light, nobody chasing you.", "you can catch your breath here. most do."]
+  danger: ["keep your voice down. things listen here.", "don't stay in one spot too long, that's my advice.", "i've lost people on this level. watch the dark corners."]
+danger:
+  safe: ["nothing here'll hurt you, far as i know. it's the next level you worry about.", "here? you're fine. just don't wander off through the wrong door."]
+  danger: ["if you hear something behind you, don't look. just move.", "stay near the lights. that's the only rule that's kept me alive."]
+trade:
+  any: ["i might have a few things. show me what you've got.", "depends what you're after. backbucks talk.", "i'll trade, sure. just don't lowball me."]
+you:
+  any: ["me? just trying to get by like everyone else.", "long story. maybe another time.", "been down here longer than i'd like to say."]
+bye:
+  any: ["take care out there.", "see you around. hopefully.", "alright. don't get lost."]
+other:
+  safe: ["huh. can't say i've thought about it.", "maybe. hard to say.", "ha. sure, why not.", "i hear you."]
+  danger: ["not now. keep your eyes open.", "talk later. this isn't the place.", "mm. let's just get through this first."]

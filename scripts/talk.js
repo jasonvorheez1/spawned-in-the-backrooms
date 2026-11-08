@@ -1,3 +1,4 @@
+import CANNED from './lib/data/canned-talk.yml'
 // Free talk with NPCs, on the player. E on an M.E.G. agent or Survivor opens the card (interact.js sets
 // state.talkWith); what you type goes to the built-in model as 'talk', its JSON comes back to heard().
 // The model only ever picks words, a mood, a rapport nudge and one whitelisted intent; every check is rolled here.
@@ -110,6 +111,7 @@ function send(ctx, d) {
   if (!it || d.id !== it.id) return
   const text = String(d.text ?? '').replace(/\s+/g, ' ').trim().slice(0, T.maxText)
   if (!text) return
+  ses.lastText = text
   if (s.talkBusy && now - s.talkBusy < 15000) return
   if (now - (ses.talkAt ?? -1e9) < T.rate * 1000) { note(ctx, `${nameOf(it)} is still answering.`); return }
   if (it.state?.angry?.[ctx.self.id]) { service(ctx, it); return }
@@ -138,7 +140,7 @@ export function heard(ctx, r, pay) {
     s.talkBusy = ctx.now(); const A = ctx.self.session.lastAsk
     ctx.job('llm:chat', { system: A.system, message: A.message + '\n(Answer with the JSON object only.)', model: T.model }, 'heard', { id: it.id, retry: true }); return
   }
-  if (!o) { const line = T.fallback[Math.floor(ctx.random() * T.fallback.length)]; say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, null) }); return }
+  if (!o) { const line = canned(ctx); say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, null) }); return }
   let { reply: line, rapportDelta: delta, intent } = o, passed = false
   if (o.check) {
     const c = rollCheck(ctx, s, o.check); passed = c.ok
@@ -281,6 +283,19 @@ export function update(ctx, dt) {
   else if (combat(ctx, it, ses)) { close(ctx); s.notice = { text: 'Combat! The conversation ends.', at: ctx.now() } }
   if (s.talkBusy && ctx.now() - s.talkBusy > 22000) { // the reply never came: they answer anyway instead of standing there mute
     s.talkBusy = 0
-    if (it && s.talkWith) { const line = T.fallback[Math.floor(ctx.random() * T.fallback.length)]; say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, null) }) }
+    if (it && s.talkWith) { const line = canned(ctx); say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, null) }) }
   }
+}
+
+function canned(ctx) {
+  const t = String(ctx.self.session.lastText ?? '').toLowerCase()
+  const k = /\b(hi|hey|hello|yo|sup|morning|evening)\b/.test(t) ? 'hello'
+    : /\b(bye|later|see you|goodbye|gotta go)\b/.test(t) ? 'bye'
+    : /\b(trade|buy|sell|backbucks|money|cash|price)\b/.test(t) ? 'trade'
+    : /\b(danger|safe|avoid|monster|entit|hound|smiler|kill)\b/.test(t) ? 'danger'
+    : /\b(who are you|your name|about you|yourself|how long)\b/.test(t) ? 'you'
+    : /\b(level|place|here|where|this room|lore)\b/.test(t) ? 'place' : 'other'
+  const row = CANNED[k] ?? CANNED.other, safe = (CANNED.safe ?? []).includes(ctx.self.place)
+  const pool = row.any ?? (safe ? row.safe : row.danger) ?? row.safe ?? T.fallback
+  return pool[Math.floor(ctx.random() * pool.length)]
 }
