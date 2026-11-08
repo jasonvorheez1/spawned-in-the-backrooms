@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 85; // bump to rebuild the city in rooms that are already open
+const V = 86; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1364,15 +1364,13 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
       fit(`l11-ot-pole-e-${i}`, "trampole", AX + 6.6, 0.15, z, 180, [1.9, 7.2, 0.5], "cylinder");
     }
     [-2.2, 2.2].forEach((tx, t) => sp(`l11-ot-wire-${t}`, { feetPosition: { x: AX + tx, y: 6.55, z: Z0 + 4 }, spline: { kind: "powerline", points: [[0, 0, 0], [0, -0.25, 21], [0, 0, 42], [0, -0.25, 49]], width: 0.025 } }));
-    // the painted gable: a bare brick end wall on the corner lot with the old advert fading on it
-    const GX = -152.4, GZ = 120.5;
-    bx("l11-ot-gable", GX - 6, 0.1, GZ, 12, 11, 0.5, SEDCO_BRICK);
-    sp("l11-ot-gable-roof", { feetPosition: { x: GX - 6, y: 11.1, z: GZ }, primitive: { kind: "extrude", shape: [[-6, 0], [6, 0], [0, 3.4]], depth: 0.5 }, material: SEDCO_BRICK, physics: "static" });
-    sp("l11-ot-ad", { feetPosition: { x: GX - 6.6, y: 2.4, z: GZ + 0.27 }, primitive: { kind: "plane", width: 5.6, height: 8.4 }, material: { texture: MODELS.ot_wallad, roughness: 0.95, opacity: 0.93, transparent: true } });
-    sp("l11-ot-gable-lamp", { feetPosition: { x: GX - 0.8, y: 4.2, z: GZ + 0.5 }, primitive: { kind: "sphere", radius: 0.16 }, material: { color: "#fff2d0", emissive: "#ffd890", emissiveIntensity: 2 }, light: { kind: "point", color: "oklch(0.9 0.08 75)", intensity: 2, distance: 12 } });
     // the stripped office: a concrete shell behind the gable, open to the avenue, ducts and foil overhead, the drywall half up
     const OX = -164, OZ = 136, OW = 22, OD = 26, OH = 4.6;
     const SLAB = { ...T("water-stained-streaked-old-poured-concrete-column", 2), color: "oklch(0.66 0.015 80)", roughness: 0.9 };
+    // the painted gable: the office's south end wall rises bare above it, the old advert fading on it, read from the avenue walking north
+    bx("l11-ot-gable", OX, 0.1, OZ - OD / 2 - 0.45, OW, 11, 0.5, SEDCO_BRICK);
+    sp("l11-ot-ad", { feetPosition: { x: OX + 4.5, y: 2.6, z: OZ - OD / 2 - 0.72 }, rotation: { yaw: 180 }, primitive: { kind: "plane", width: 5.6, height: 8.4 }, material: { texture: MODELS.ot_wallad, roughness: 0.95 } });
+    sp("l11-ot-gable-lamp", { feetPosition: { x: OX + 9.5, y: 4.4, z: OZ - OD / 2 - 1.0 }, primitive: { kind: "sphere", radius: 0.16 }, material: { color: "#fff2d0", emissive: "#ffd890", emissiveIntensity: 2 }, light: { kind: "point", color: "oklch(0.9 0.08 75)", intensity: 2, distance: 12 } });
     bx("l11-ot-off-floor", OX, 0.02, OZ, OW, 0.14, OD, SLAB);
     bx("l11-ot-off-roof", OX, OH, OZ, OW, 0.5, OD, SLAB);
     bx("l11-ot-off-wall-w", OX - OW / 2, 0.1, OZ, 0.4, OH, OD, SEDCO_BRICK);
@@ -1398,7 +1396,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     sp("l11-ot-off-hum", { feetPosition: { x: OX, y: 3.6, z: OZ }, audio: { clip: "cdn/sfx-empty-concrete-office-floor-fluorescent-tube-buzz-and-ventilation-drone-loop.mp3", loop: true, gain: 0.14, spatial: true, maxDistance: 18 } });
     // a second crossing over the canal: a white steel footbridge, west of the road bridge
     const CZ = -30;
-    fit("l11-canal-footbridge", "footbridge", -36, 0.32, CZ, 90, [4.2, 2.4, 26], "mesh");
+    fit("l11-canal-footbridge", "footbridge", -36, 0.32, CZ, 90, [26, 2.4, 4.2], "mesh");
   }
 
   // ==========================================
