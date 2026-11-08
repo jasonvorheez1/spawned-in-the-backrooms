@@ -547,6 +547,42 @@ bm-shell:
   physics: {body: static, collider: mesh}
   receiveShadow: true
   tags: [bonus-mall]
+bonus-ctr-clothes:
+  behavior: scripts/bonus-counter.js
+  feetPosition: {x: -19.4, y: 0, z: 18.5}
+  id: bonus-ctr-clothes
+  physics: {body: static, collider: box, trigger: true}
+  primitive: {depth: 1.6, height: 1.2, kind: box, width: 1.6}
+  state: {info: "", kind: clothes, name: Liminal Clothes, tint: "#ff71ce", verb: Browse}
+  tags: [usable]
+  visible: false
+bonus-ctr-diner:
+  behavior: scripts/bonus-counter.js
+  feetPosition: {x: -19.4, y: 0, z: -15}
+  id: bonus-ctr-diner
+  physics: {body: static, collider: box, trigger: true}
+  primitive: {depth: 1.6, height: 1.2, kind: box, width: 1.6}
+  state: {info: "", kind: diner, name: Tom's Diner, tint: "#ff71ce", verb: Order}
+  tags: [usable]
+  visible: false
+bonus-ctr-furn:
+  behavior: scripts/bonus-counter.js
+  feetPosition: {x: 19.4, y: 0, z: 18.5}
+  id: bonus-ctr-furn
+  physics: {body: static, collider: box, trigger: true}
+  primitive: {depth: 1.6, height: 1.2, kind: box, width: 1.6}
+  state: {info: "", kind: furniture, name: Andrew's Furniture, tint: "#ff71ce", verb: Browse}
+  tags: [usable]
+  visible: false
+bonus-ctr-station:
+  behavior: scripts/bonus-counter.js
+  feetPosition: {x: -19.6, y: 5.5, z: -3}
+  id: bonus-ctr-station
+  physics: {body: static, collider: box, trigger: true}
+  primitive: {depth: 1.6, height: 1.2, kind: box, width: 1.6}
+  state: {info: "", kind: station, name: Teleport Station, tint: "#ff71ce", verb: Travel}
+  tags: [usable]
+  visible: false
 bonus-music:
   audio: {bus: Music, clip: /cdn/level-1-toms-diner-va9au334.mp3, gain: 0.22, loop: true, spatial: false}
   feetPosition: {x: 0, y: 3, z: 0}
