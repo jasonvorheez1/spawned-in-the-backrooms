@@ -86,7 +86,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 20; // 20: walkable stairs back to Level 6
+const V = 21; // 21: walkable stairs back to Level 6
 // 16 // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
@@ -287,7 +287,7 @@ function lay(ctx) {
   box(ctx, "l7-wall-n3", 0, FY + 2.1, -3.05, 1.6, 0.6, 0.3, CONCRETE); // Door lintel North
   box(ctx, "l7-wall-s1", -1.9, FY, 3.05, 2.6, 2.7, 0.3, PAPER);
   box(ctx, "l7-wall-s2", 1.9, FY, 3.05, 2.6, 2.7, 0.3, PAPER);
-  box(ctx, "l7-wall-s3", 0, FY + 2.2, 3.05, 1.2, 0.5, 0.3, CONCRETE); // Door lintel South
+  box(ctx, "l7-wall-s3", 0, FY + 2.5, 3.05, 1.2, 0.2, 0.3, CONCRETE); // Door lintel South: high enough to clear your head on the first steps
 
   // White vertical beadboard wainscoting paneling along the lower walls (matching the Wikidot photo!)
   for (const [id, x, z, w, d] of [
