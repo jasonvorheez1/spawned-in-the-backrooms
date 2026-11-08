@@ -219,7 +219,7 @@ def refit(o):
         half = (max(band) - min(band)) / 2 if band else 0.15
         import bmesh
         gb = bmesh.new(); gb.from_mesh(me)
-        bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x - EYE.x) > half * 0.98 or v.co.y > EYEFRONT + 0.06], context='VERTS')
+        bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x - EYE.x) > min(half * 0.98, (max(ex) - min(ex)) / 2 + 0.045) or v.co.y > EYEFRONT + 0.06], context='VERTS')
         gb.to_mesh(me); gb.free()
     elif kind == 'Hat' and EYE is not None:
         ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); bot = min(w.z for w in ws)
