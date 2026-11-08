@@ -61,14 +61,14 @@ export function statsUi(ctx, player) {
   }
   if (!s.sheetOpen) return out
   const at = attrsOf(s), sk = skillsOf(s), sp = spentOf(s), d = derived(s), apts = s.apts ?? 0, spts = s.spts ?? 0
-  const attrRows = ATTRS.map((a, i) => `<div class="row"><div class="n">${a.name}<small>${a.info}</small></div><div class="pips">${Array.from({ length: ATTR_MAX }, (_, q) => `<i class="${q < at[a.k] ? 'on' : ''}"></i>`).join('')}</div><div class="v">${at[a.k]}</div><button ${apts > 0 && at[a.k] < ATTR_MAX ? '' : 'disabled'} onclick="sendAction('stat',{k:'attr',i:${i}})">+</button></div>`).join('')
+  const attrRows = ATTRS.map((a, i) => `<div class="row"><div class="n">${a.name}<small>${a.info}</small></div><div class="pips">${Array.from({ length: ATTR_MAX }, (_, q) => `<i class="${q < at[a.k] ? 'on' : ''}"></i>`).join('')}</div><div class="v">${at[a.k]}</div>${s.creating ? `<button ${at[a.k] > 1 ? '' : 'disabled'} onclick="sendAction('stat',{k:'attrDown',i:${i}})">&minus;</button>` : ''}<button ${apts > 0 && at[a.k] < ATTR_MAX ? '' : 'disabled'} onclick="sendAction('stat',{k:'attr',i:${i}})">+</button></div>`).join('')
   const tg = tagsOf(s), tl = s.tagsLeft ?? 0
   const skillRows = SKILLS.map((k, i) => `<div class="row"><div class="n">${tg.includes(k.k) ? '<b style="color:#ffe2a8">★ </b>' : ''}${k.name}<small>${k.info}</small></div><div class="v">${sk[k.k]}</div>${tl > 0 && !tg.includes(k.k) ? `<button style="width:34px;font-size:10px" onclick="sendAction('stat',{k:'tag',i:${i}})">TAG</button>` : ''}<button ${spts > 0 && sk[k.k] < SKILL_MAX ? '' : 'disabled'} onclick="sendAction('stat',{k:'skill',i:${i}})">+</button></div>`).join('')
   const slow = burden(s) < 1
   const wp = W[s.equipped] ?? W.fists
   const dam = (w) => Math.round((w.damage + (s.level - 1) * L.perLevel.damage * (w.levelScale ?? 1)) * dmgMul(s, w))
   out += `<div id="sh" data-modal>
-    <div class="hd"><h2>HALOGEN&trade; · LEVEL ${s.level}</h2>${(apts > 0 || spts > 0) ? `<div class="pt" style="color:#ffe2a8;animation:halBlink .8s steps(2) infinite">LEVEL UP · ALLOCATE NOW</div><style>@keyframes halBlink{50%{opacity:.3}}</style>` : ""}<div class="pt" style="opacity:.6">a BACKROOMS ROBOTICS product · property of BR</div><div class="pt">ATTRIBUTE POINTS <b>${apts}</b></div><div class="pt">SKILL POINTS <b>${spts}</b></div>${tl > 0 ? `<div class="pt">TAG <b>${tl}</b> MORE</div>` : ''}</div>
+    <div class="hd"><h2>${s.creating ? 'HALOGEN&trade; · WHO WERE YOU BEFORE?' : `HALOGEN&trade; · LEVEL ${s.level}`}</h2>${s.creating ? `<div class="pt" style="color:#ffe2a8">LOWER ONE TO RAISE ANOTHER · TAG ${s.tagsLeft ?? 0} SKILLS</div>` : (apts > 0 || spts > 0) ? `<div class="pt" style="color:#ffe2a8;animation:halBlink .8s steps(2) infinite">LEVEL UP · ALLOCATE NOW</div><style>@keyframes halBlink{50%{opacity:.3}}</style>` : ""}<div class="pt" style="opacity:.6">a BACKROOMS ROBOTICS product · property of BR</div><div class="pt">ATTRIBUTE POINTS <b>${apts}</b></div><div class="pt">SKILL POINTS <b>${spts}</b></div>${tl > 0 ? `<div class="pt">TAG <b>${tl}</b> MORE</div>` : ''}</div>
     <div class="cols"><div class="col"><div class="sec">ATTRIBUTES</div>${attrRows}</div><div class="col"><div class="sec">SKILLS</div>${skillRows}</div></div>
     <div class="dv">
       <span>Max HP <b>${L.hp + (s.level - 1) * L.perLevel.hp + d.hpBonus}</b></span><span>Max sanity <b>${L.sanity + (s.level - 1) * L.perLevel.sanity + d.sanBonus}</b></span>
@@ -80,7 +80,7 @@ export function statsUi(ctx, player) {
       <span>Unarmed DAM <b>${dam(W.fists)}</b></span><span>Crit chance <b>${Math.round(d.crit * 100)}%</b></span>
       ${wp.ranged ? `<span>Reload <b>${(wp.reloadTime ?? (wp.reloadStart + wp.reloadShell * wp.magSize)).toFixed(1) * 1 && ((wp.reloadTime ?? (wp.reloadStart + wp.reloadShell * wp.magSize)) * d.reload).toFixed(1)} s</b></span>` : `<span>Swing <b>${(wp.cooldown * d.swing).toFixed(2)} s</b></span>`}<span>Find chance <b>${Math.round(d.scav * 100)}%</b></span><span>${wp.name} condition <b>${Math.round(s['cnd_' + s.equipped] ?? 100)}%</b></span>
     </div>
-    <div class="ft"><button style="color:#16140e" onclick="sendAction('stat',{k:'close'})">CLOSE (K)</button></div>
+    <div class="ft"><button style="color:#16140e" ${s.creating && (apts > 0 || (s.tagsLeft ?? 0) > 0) ? 'disabled' : ''} onclick="sendAction('stat',{k:'close'})">${s.creating ? 'DONE' : 'CLOSE (K)'}</button></div>
   </div>`
   return out
 }
