@@ -153,11 +153,16 @@ function held(ctx, dt) {
 
 export function update(ctx, dt) {
   if (ctx.self.tags?.includes?.("player") || ctx.self.userId) return held(ctx, dt);
+  if (!ctx.place.players.length) { ctx.sleep(2); return; }
 
   const now = ctx.now();
   const players = ctx.place.players.filter((p) => !(p.state?.downAt && now - p.state.downAt < 4500));
   const mem = (ctx.self.session.m ??= {});
-  const allLurkers = ctx.query({ tags: ["lurker"] });
+  if (!mem.lurkersAt || now > mem.lurkersAt || !mem.allLurkers) {
+    mem.lurkersAt = now + 1200;
+    mem.allLurkers = ctx.query({ tags: ["lurker"] });
+  }
+  const allLurkers = mem.allLurkers;
 
   for (const w of allLurkers) {
     const m = (mem[w.id] ??= {});

@@ -143,6 +143,7 @@ function checkSightThrottled(ctx, m, now, a, b, ignoreId, targetId) {
 }
 
 export function update(ctx, dt) {
+  if (!ctx.place.players.length) { ctx.sleep(2); return; }
   const now = ctx.now();
   const mem = (ctx.self.session.m ??= {});
   const bleeds = (ctx.self.session.b ??= {});
@@ -171,7 +172,11 @@ export function update(ctx, dt) {
     }
   }
 
-  const allStealers = ctx.query({ tags: ["stealer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+  if (!mem.stealersAt || now > mem.stealersAt || !mem.allStealers) {
+    mem.stealersAt = now + 1200;
+    mem.allStealers = ctx.query({ tags: ["stealer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+  }
+  const allStealers = mem.allStealers;
 
   for (const e of allStealers) {
     const m = (mem[e.id] ??= { ph: "skin" });

@@ -132,6 +132,18 @@ function inView(ctx, me, m, f, d) {
 }
 function pickTarget(ctx, me, m) {
   const p = me.feetPosition, now = ctx.now();
+  if (m.curTarget) {
+    const cur = ctx.getObject(m.curTarget);
+    if (cur && !DEAD(cur) && inView(ctx, me, m, cur, flat(cur.feetPosition, p))) {
+      if (now < (m.retargetAt ?? 0)) return cur;
+    } else {
+      m.curTarget = null;
+    }
+  }
+  if (now < (m.targetScanAt ?? 0)) {
+    return m.curTarget ? ctx.getObject(m.curTarget) : null;
+  }
+  m.targetScanAt = now + 280 + (Number(String(me.id).charCodeAt(0)) % 50);
   let best = null, bd = G.sight;
   const fighter = (!me.state.faction5 || me.state.faction5 === "hk" || me.state.follow) && !me.state.mjguest; // hotel guests are no fighters: a hound is something to run from, but anything on top of them gets the weapon
   if (!me.state.mjguest) {
@@ -184,6 +196,8 @@ function pickTarget(ctx, me, m) {
     }
     const d = flat(pl.feetPosition, p); if (d < bd) { bd = d; best = pl; }
   }
+  m.curTarget = best ? best.id : null;
+  m.retargetAt = now + 650;
   return best;
 }
 
@@ -223,10 +237,16 @@ function moveAlong(ctx, me, m, goal, speed, dt) {
     if (r?.points?.length || r?.partial) m.fails = 0; else m.fails = Math.min(4, (m.fails ?? 0) + 1); // no way through: ask less and less often
     m.repath = now + (r?.partial ? 250 : (1500 + ctx.random() * 700) * (1 + (m.fails ?? 0))); // jitter keeps a crowd from all asking on the same tick
   }
-  if (!m.path && !clearLine(ctx, me, p, goal)) {
-    stop(me, dt);
-    m.repath = Math.min(m.repath, now + 350);
-    return;
+  if (!m.path) {
+    if (now > (m.clearLineAt ?? 0)) {
+      m.clearLineAt = now + 250;
+      m.clearLineOk = clearLine(ctx, me, p, goal);
+    }
+    if (!m.clearLineOk) {
+      stop(me, dt);
+      m.repath = Math.min(m.repath, now + 350);
+      return;
+    }
   }
   let to = goal;
   if (m.path) {
@@ -356,9 +376,15 @@ export function update(ctx, dt) {
   if (!ctx.self.state.temperV && ctx.self.state.attr) shapeTemper(ctx.self);
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
   if (m.dressed !== 4) { m.dressed = 4; if (!s.dead) dress(ctx, me); }
-  // nobody within 45 m and nobody to follow: rest 2 s instead of thinking every tick (perf)
-  { let near = 1e9; const f = me.feetPosition; for (const p of ctx.place.players) { const d = Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z); if (d < near) near = d; }
-    if (near > 45 && !s.follow && !s.target && !m.down) { ctx.sleep(2); return; } }
+  // empty level or far-off NPC: sleep to save CPU (perf)
+  if (!ctx.place.players.length) { ctx.sleep(2); return; }
+  let nearPlayerDist = 1e9; const f = me.feetPosition;
+  for (const p of ctx.place.players) { const d = Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z); if (d < nearPlayerDist) nearPlayerDist = d; }
+  if (!s.follow && !s.target && !m.down && !m.talking) {
+    if (nearPlayerDist > 45) { ctx.sleep(2); return; }
+    if (nearPlayerDist > 28 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.2); dt += 0.2; }
+    else if (nearPlayerDist > 18 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.1); dt += 0.1; }
+  }
   if (!m.armed && !s.dead && now - (m.bornAt ??= now) > 1500) arm(ctx, me, m); // after the spawner has handed over its weapon
   // essential: whoever walks with a player drops to a knee instead of dying, then gets back up
   // a companion who fell anyway (killed by a path that set dead directly) comes back too
@@ -433,7 +459,7 @@ export function update(ctx, dt) {
     if (pool) { const [clip, ms, w, upper] = pool[Math.floor(ctx.random() * pool.length)]; me.anim.gest = { clip, loop: /loop/.test(clip) ? "loop" : "once", weight: w, blendIn: 0.25, blendOut: 0.35, ...(upper ? { mask: { from: "Spine" } } : {}) }; m.gestEnd = now + ms; }
   }
   // head morph sync: articulates speech, smiles when waving, winces when hit, blinks naturally
-  const headObj = ctx.getObject(me.id + "/" + HEAD_ID);
+  const headObj = (m.headObj ??= ctx.getObject(me.id + "/" + HEAD_ID));
   if (headObj && !s.dead) {
     const isFem = (s.wear?.sex ?? s.look?.sex) === "f";
     const baseExpr = s.wear?.expr || s.look?.expr || "smile";
@@ -442,7 +468,11 @@ export function update(ctx, dt) {
     else if (now - (m.wavedAt ?? 0) < 2200) curExpr = "catmouth"; // :3 on hello
     else if (talking) curExpr = Math.floor(now / 220) % 2 === 0 ? "beam" : "smile";
     else if (m.aimAt) curExpr = "cocky";
-    headObj.morph = faceMorph(curExpr, isBlinking, isFem, s.wear ?? s.look);
+    if (curExpr !== m.lastExpr || isBlinking !== m.lastBlink) {
+      m.lastExpr = curExpr;
+      m.lastBlink = isBlinking;
+      headObj.morph = faceMorph(curExpr, isBlinking, isFem, s.wear ?? s.look);
+    }
   }
   // held in conversation: while a player's dialogue is open on this one (player.state.talkWith), it stops where it stands and faces them; a threat or a hit still breaks it
   const listener = !s.dead && !m.aimAt && now - (m.hitAt ?? 0) > 3000 ? ctx.place.players.find((p) => p.state?.talkWith === me.id && Math.hypot(p.feetPosition.x - me.feetPosition.x, p.feetPosition.z - me.feetPosition.z) < 7) : null;
@@ -523,25 +553,25 @@ export function update(ctx, dt) {
   }
   stop(me, dt); gait(me, m, "idle"); m.path = null; m.leftAt = 0;
   // at the post: turn to whoever walks up, wave once (not at someone the camp is at war with)
-  let near = null, best = 7;
-  for (const pl of ctx.place.players) { const d = flat(pl.feetPosition, me.feetPosition); if (d < best) { best = d; near = pl; } }
+  let close = null, best = 7;
+  for (const pl of ctx.place.players) { const d = flat(pl.feetPosition, me.feetPosition); if (d < best) { best = d; close = pl; } }
   const chatTo = s.talkTo && now - (s.talkAt ?? 0) < 6000 ? ctx.place.objects[s.talkTo] : null; // mid-conversation with another npc
   if (stop0) {
     m.at ||= now;
-    const busy = (near && best < 3) || chatTo || talking;
+    const busy = (close && best < 3) || chatTo || talking;
     let act = busy ? null : stop0.act ?? null;
     if (act && /sit/.test(act) && !s.sit) act = null; // the sit clip only plays seated (state.sit); on the floor it lies flat like a corpse
     work(me, m, act);
-    if (!busy && !near && stop0.look) face(me, stop0.look.x - me.feetPosition.x, stop0.look.z - me.feetPosition.z, dt);
+    if (!busy && !close && stop0.look) face(me, stop0.look.x - me.feetPosition.x, stop0.look.z - me.feetPosition.z, dt);
     if (!busy && now - m.at > (stop0.dwell ?? 10) * 1000) { s.ri = ((s.ri ?? 0) + 1) % s.rounds.length; m.at = 0; if (ctx.random() < 0.08) bark(ctx, me, "move"); }
   }
-  if (chatTo && !(near && best < 3)) { face(me, chatTo.feetPosition.x - me.feetPosition.x, chatTo.feetPosition.z - me.feetPosition.z, dt); ctx.sleep(0.1); return; }
-  if (!near) {
+  if (chatTo && !(close && best < 3)) { face(me, chatTo.feetPosition.x - me.feetPosition.x, chatTo.feetPosition.z - me.feetPosition.z, dt); ctx.sleep(0.1); return; }
+  if (!close) {
     if (now > (m.glance ?? 0)) { m.glance = now + 5000 + ctx.random() * 5000; animate(ctx, me.id, { "bones.Head.yaw": [0, (ctx.random() - 0.5) * 80, 0] }, { duration: 2.8, easing: "easeInOutSine" }); } // a glance down the halls
     ctx.sleep(0.5); return;
   }
-  face(me, near.feetPosition.x - me.feetPosition.x, near.feetPosition.z - me.feetPosition.z, dt);
-  if (!m.waved[near.id] && best < 5 && !s.angry?.[near.id]) { m.waved[near.id] = true; m.wavedAt = now; me.anim.wave = { clip: "cdn/clip-wave-loop.glb", loop: "once", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } }; }
+  face(me, close.feetPosition.x - me.feetPosition.x, close.feetPosition.z - me.feetPosition.z, dt);
+  if (!m.waved[close.id] && best < 5 && !s.angry?.[close.id]) { m.waved[close.id] = true; m.wavedAt = now; me.anim.wave = { clip: "cdn/clip-wave-loop.glb", loop: "once", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } }; }
 }
 function work(me, m, clip) {
   if (m.work === clip) return; m.work = clip;

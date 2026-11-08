@@ -78,6 +78,7 @@ export function onSpawn(ctx) {
 }
 
 export function update(ctx, dt) {
+  if (!ctx.place.players.length) { ctx.sleep(2); return; }
   const now = ctx.now();
   const S = ctx.self.state;
   const mem = (ctx.self.session.m ??= {});
@@ -107,7 +108,11 @@ export function update(ctx, dt) {
     }
   }
 
-  const all = ctx.query({ tags: ["l5rat"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+  if (!mem.ratsAt || now > mem.ratsAt || !mem.allRats) {
+    mem.ratsAt = now + 1200;
+    mem.allRats = ctx.query({ tags: ["l5rat"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+  }
+  const all = mem.allRats;
 
   // Group rats by pack in a single pass
   const packRats = new Map();
