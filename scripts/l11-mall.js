@@ -32,8 +32,7 @@ export function geometry(ctx) {
     ctx.color("oklch(0.58 0.13 255)");
     for (const z of [-d / 2, d / 2]) for (let i = 0; i < N; i++) {
       const [x0, y0] = pt(i / N), [x1, y1] = pt((i + 1) / N);
-      ctx.tri(0, y1, z, x0, y0, z, x1, y1, z); ctx.tri(0, y1, z, x1, y1, z, x0, y0, z);
-      if (y1 < y0) { ctx.quad(0, y1, z, x1, y1, z, x1, y1, z, 0, y1, z); }
+      ctx.tri(0, -r, z, x0, y0, z, x1, y1, z); ctx.tri(0, -r, z, x1, y1, z, x0, y0, z);
     }
     // pipe arms every ~2.4 m
     ctx.albedo(null); ctx.color("oklch(0.35 0.01 250)");
