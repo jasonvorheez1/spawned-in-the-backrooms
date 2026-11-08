@@ -12,8 +12,8 @@ function texWords(o) {
   const ms = o.model?.materials; if (ms) for (const m of Object.values(ms)) w += ' ' + String(m?.texture ?? '') + ' ' + String(m?.map ?? '')
   return w
 }
-export function surfaceUnder(ctx, fallback) {
-  const p = ctx.self.feetPosition
+export function surfaceUnder(ctx, fallback, at) {
+  const p = at ?? ctx.self.feetPosition
   const h = raycast(ctx, { x: p.x, y: p.y + 0.3, z: p.z }, { x: 0, y: -1, z: 0 }, { distance: 1.0, ignoreEntities: [ctx.self.id], physicsOnly: true })
   if (!h) return fallback
   const o = h.id ? ctx.getObject(h.id) : null
@@ -31,7 +31,7 @@ export function surfaceUnder(ctx, fallback) {
 export function stepTick(ctx, w, dt, o) {
   const self = ctx.self, v = self.velocity, sp = Math.hypot(v.x, v.z), g = self.grounded
   const fs = w.fs ??= { dist: 0, walked: 0, foot: 1, air: 0, minVy: 0, surf: o.fallback, surfAt: 0 }
-  if (!g) { fs.air += dt; fs.minVy = Math.min(fs.minVy, v.y); return }
+  if (!g) { fs.air += dt; fs.minVy = Math.min(fs.minVy, v.y); fs.lastY = null; return }
   const now = ctx.now()
   if (now >= fs.surfAt) { fs.surf = surfaceUnder(ctx, o.fallback); fs.surfAt = now + 220 }
   const surfKey = o.wet ? 'wet' : fs.surf
@@ -51,11 +51,21 @@ export function stepTick(ctx, w, dt, o) {
   const stride = strideOf(o, sp)
   if (fs.dist < stride) return
   fs.dist -= stride; fs.foot = -fs.foot
+  // the planting foot reads its own ground: a step off the path onto grass sounds on the grass
+  { const fp = ctx.self.feetPosition, k = FS.side * fs.foot / (sp || 1)
+    const s2 = surfaceUnder(ctx, o.fallback, { x: fp.x - v.z * k + (v.x / (sp || 1)) * 0.3, y: fp.y, z: fp.z + v.x * k + (v.z / (sp || 1)) * 0.3 })
+    if (!o.wet) { fs.surf = s2; fs.surfAt = now + 220 } }
+  const F2 = FS.surfaces[o.wet ? 'wet' : fs.surf] ?? F
+  // grade since the last step: downhill lands heavier, uphill lighter; a drop off a kerb or step gets its own soft thump
+  const y = ctx.self.feetPosition.y, dy = fs.lastY == null ? 0 : y - fs.lastY; fs.lastY = y
+  const grade = Math.max(-1, Math.min(1, -dy / Math.max(0.3, stride)))
+  const slopeK = 1 + (grade > 0 ? grade * FS.slope.down : -grade * FS.slope.up)
+  if (-dy > FS.stepDown && -dy < FS.land.min * 0.3) play(ctx, o.clip(FS.landings[F2.land] ?? FS.landings['landing-soft']), F2.v * 0.8 * (o.crouched ? FS.loud.crouch : 1), 1.05, 0)
   const run = sp >= FS.runSpeed
   const pace = Math.min(1, sp / 7)
-  const vol = F.v * (FS.loud.walkMin + (FS.loud.runMax - FS.loud.walkMin) * pace) * (o.crouched ? FS.loud.crouch : 1) * (1 + heavy * FS.loud.heavyMax) * (0.88 + ctx.random() * 0.24)
+  const vol = slopeK * F2.v * (FS.loud.walkMin + (FS.loud.runMax - FS.loud.walkMin) * pace) * (o.crouched ? FS.loud.crouch : 1) * (1 + heavy * FS.loud.heavyMax) * (0.88 + ctx.random() * 0.24)
   const pitch = 1 + fs.foot * FS.pitch.foot + (ctx.random() * 2 - 1) * FS.pitch.jitter + heavy * FS.pitch.heavy
-  play(ctx, o.clip(run ? F.run : F.walk), vol, pitch, fs.foot)
+  play(ctx, o.clip(run ? F2.run : F2.walk), vol, pitch, fs.foot)
 }
 function strideOf(o, sp) {
   const S = FS.stride

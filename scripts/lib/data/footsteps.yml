@@ -21,12 +21,12 @@ match:
 # stride in metres: a step lands every stride walked, so a faster walk steps faster on its own
 stride: { crouch: 0.55, walk: 0.78, run: 1.25 }
 runSpeed: 4.2        # m/s past which the run take plays
-loud: { crouch: 0.3, walkMin: 0.75, runMax: 1.2, heavyMax: 0.45 }   # heavyMax: extra loudness at full burden
+loud: { crouch: 0.18, walkMin: 0.45, runMax: 0.8, heavyMax: 0.35 }   # Nov 8: Shelly, "make footsteps quiet": everything about 40% down   # heavyMax: extra loudness at full burden
 pitch: { jitter: 0.05, foot: 0.025, heavy: -0.08 }
 side: 0.13           # each foot sounds this far left or right of centre
 scuffAfter: 0.25     # a stop after this much walking ends on a scuff
 land: { min: 3.2, hard: 8 }   # fall speed (m/s) for a landing sound, and for the loudest one
-hearRange: 26        # other players hear your steps this far, walls muffle them
+hearRange: 18        # other players hear your steps this far, walls muffle them
 surfaces:
   carpet:   { walk: footstep-damp-carpet-squelch-soft, run: footstep-damp-carpet-run, v: 0.2, land: landing-soft }
   hotel:    { walk: footstep-shoe-on-thick-plush-hotel-hallway-carpet-single-step, run: footstep-shoe-running-on-thick-hotel-carpet-single-step, v: 0.2, land: landing-soft }
@@ -52,4 +52,6 @@ landings:
   landing-metal:  body-landing-boots-clang-on-steel-plate-floor-after-jump
   landing-soil:   body-landing-feet-soft-thud-on-packed-dry-farm-soil-after-jump
   landing-water:  body-landing-feet-splash-into-shallow-water-after-jump
+slope: { down: 0.25, up: -0.2 }   # loudness added per unit of downhill grade, taken off going uphill
+stepDown: 0.18      # metres dropped between steps that plays a soft drop step
 scuff: shoe-sole-short-scuff-stop-on-floor
