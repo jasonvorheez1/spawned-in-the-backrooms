@@ -36,8 +36,8 @@ function lay(ctx) {
   sp("spam-in", { feetPosition: { x: 0, y: 0.1, z: 15 }, rotation: { yaw: 0 } });
   // floating money drifting in the dark around the stage
   sp("sa-drift", { feetPosition: { x: 0, y: 0, z: 0 }, fx: { script: `fx
-pop bills n=?mobile:40|90 on=ring(26,40) life=6..10 v=up(.2..0.6)+sdir()*.2 size=.25..0.4 acc=curl(.3)*.6 col=<.45,1.2,.55> a=0>.15:.9>.85:.9>0 rot=spin(1.5) r=sprite(soft-disc,alpha)
-pop dollars n=?mobile:14|30 on=ring(20,34) life=4..7 v=up(.6..1.2) size=.4..0.7 col=hdr(2.4,2.1,.4) a=0>.2:.8>.8:.8>0 r=sprite(sparkle,add)` } });
+pop bills n=?mobile:40|90 on=arc(33,6.283,14) life=6..10 v=up(.2..0.6)+sdir()*.2 size=.25..0.4 acc=curl(.3)*.6 col=<.45,1.2,.55> a=0>.15:.9>.85:.9>0 rot=spin(1.5) r=sprite(soft-disc,alpha)
+pop dollars n=?mobile:14|30 on=arc(27,6.283,14) life=4..7 v=up(.6..1.2) size=.4..0.7 col=hdr(2.4,2.1,.4) a=0>.2:.8>.8:.8>0 r=sprite(mote,add)` } });
 }
 
 export function tick(ctx) {
