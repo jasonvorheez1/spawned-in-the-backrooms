@@ -92,7 +92,7 @@ export function wardrobe(ctx, player) {
     <div class="sec"><span>STATURE</span><span>${Math.round(170 * (Number(l.heightS) || 1))} cm</span></div><div class="big">${sliderRows(C.sliders.filter((r) => ['heightS', 'buildS'].includes(r[0])))}</div>
     <div class="sec"><span>FUR</span></div>${sws('fur', C.fur)}
     <div class="sec"><span>MARKINGS</span></div>${grid('marks', C.marks)}
-    <div class="sec"><span>PROPORTIONS</span><span>${l.model || l.modelUrl ? 'critter only' : ''}</span></div>${sliderRows(C.sliders.filter((r) => !['heightS', 'buildS'].includes(r[0])))}
+    <div class="sec"><span>PROPORTIONS</span><span>${l.model || l.modelUrl ? 'critter only' : ''}</span></div>${sliderRows(C.sliders.filter((r) => !['heightS', 'buildS'].includes(r[0]) && (l.sex === 'f' || !['hipS', 'bustS'].includes(r[0]))))}
     <div class="sec"><span>IMPORTED MODELS</span><span>${l.modelUrl ? 'your upload' : l.model ? C.models[l.model]?.name || '' : 'critter'}</span></div><div class="grid">${tile('model', '', !l.model && !l.modelUrl, 'critter')}${Object.entries(C.models || {}).map(([k, m]) => tile('model', k, l.model === k, m.name)).join('')}</div>
     <div class="sl"><button style="flex:1;width:auto;padding:6px 0" onclick="this.nextElementSibling.click()">⬆ upload .plymodel</button><input type="file" accept=".plymodel" style="display:none" onchange="plyUpload(this)"></div><div id="ply-st" style="font-size:11px;opacity:.75;margin-top:4px">${l.modelUrl ? 'wearing your upload' : 'any tower unite .plymodel, worn as your body'}</div>`
   else if (tab === 'face') body = `

@@ -65,6 +65,7 @@ function furMats(l) {
     inner: { color: innerCol, roughness: 0.9, metalness: 0 },
     nose: { color: noseCol, roughness: 0.35, metalness: 0.05 }
   }
+  if (l.marks === 'none') mark = fur // markings off: the head's mark faces (cheek dots, brow tufts) wear the plain fur (johnadams2)
   if (mark) m.mark = { color: mark, roughness: 0.82, metalness: 0 }
   if (antlerCol) m.antler = { color: antlerCol, roughness: 0.65, metalness: 0.05 }
   return m

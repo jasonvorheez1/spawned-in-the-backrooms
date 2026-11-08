@@ -132,6 +132,7 @@ export function onInput(ctx, input) {
     if (d.k === 'sz') { // a body slider: v = "<key>:<value>"
       const [key, raw] = String(d.v).split(':'), row = C.sliders.find((r) => r[0] === key)
       if (!row) return
+      if (lookOf(ctx).sex !== 'f' && (key === 'hipS' || key === 'bustS')) return // boys have no bust or hips sliders (johnadams2)
       const cur = Number(lookOf(ctx)[key]) || 1
       const v = raw === '+' ? cur + C.sliderStep : raw === '-' ? cur - C.sliderStep : Number(raw)
       if (!Number.isFinite(v)) return
@@ -200,7 +201,7 @@ export function update(ctx) {
     const params = { species: l.species, sex: l.sex, ftype: l.ftype || 'oval', trait: l.trait || 'placid', blush: l.blush, nose: l.nose || undefined, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks }
     if (l.fur) params.fur = l.fur
     const worn = l.modelUrl ? { url: l.modelUrl } : l.model && C.models?.[l.model] // an imported model worn instead of the critter
-    for (const [k] of C.sliders) if (k !== 'headS' && k !== 'tailS' && Number(l[k]) && Number(l[k]) !== 1) params[k] = Number(l[k])
+    for (const [k] of C.sliders) if (k !== 'headS' && k !== 'tailS' && (l.sex === 'f' || (k !== 'hipS' && k !== 'bustS')) && Number(l[k]) && Number(l[k]) !== 1) params[k] = Number(l[k])
     ses.cachedParams = params
     ses.cachedWorn = worn
     ses.lookKey = JSON.stringify(MESH ? { ...params, expr: 0 } : params) + (worn ? '|' + worn.url : '')
