@@ -26,7 +26,7 @@ def shoot(path):
 objs = load(src); s0 = sig(); b0 = bones(); shoot(proof + "_before")
 objs = load(src)
 for o in objs:
-    if o.data.shape_keys or len(o.data.polygons) < 60: continue
+    if o.data.shape_keys or len(o.data.polygons) < 2000 or o.name.startswith(("Hat_", "Eyew_", "Neck_")): continue  # thin shells tear under collapse
     m = o.modifiers.new("lod", "DECIMATE"); m.decimate_type = "COLLAPSE"; m.ratio = ratio; m.use_collapse_triangulate = True
     bpy.context.view_layer.objects.active = o
     with bpy.context.temp_override(object=o, active_object=o): bpy.ops.object.modifier_apply(modifier="lod")
