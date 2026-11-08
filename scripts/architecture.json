@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1315,
-  "updatedAt": "2026-11-07T23:45:11.084Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, Levels 1–7, Base Gamma and a debug room. Authored cells and place simulations assemble maze, outposts and hazards; shared player, creature, NPC, loot, clothing, crafting and UI systems support individual progression and scavenging. Level 7's island camps, ocean entities and new lore-specific fort, formation and skeleton models are assembled by its place simulation.",
+  "basedOnSpecVersion": 1344,
+  "updatedAt": "2026-11-08T01:01:10.282Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0, Levels 1–7, Base Gamma and a debug room. Authored cells and place simulations assemble the environments and local hazards; shared player, creature, NPC, loot, crafting and UI systems support individual progression. Level 7's simulation now lays a 2000s floating-house interior, a rebuilt Fort Surrender, sea-floor and seamount details, and its existing island camps, routes and entities.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, containers, breakable furniture, shifting walls and hunters.",
@@ -12,8 +12,7 @@
     "places/level4 (3D) - Abandoned Office; offices, fountains, break-room vending, lift/stairs and Base Omega; sim lays residents and office systems.",
     "places/level5 (3D) - Terror Hotel; Main Hall, guest rooms, Beverly Room and Boiler Room; residents, rentals, mahjong, rat packs, Level 6 portal and Ines's goggles quest.",
     "places/level6 (3D) - Lights Out: seeded dark concrete labyrinth, survivor notes/props, shifting wall, auditory hazards, hounds and Smiler; stairs link Levels 5 and 7.",
-    "places/level7 (3D) - Thalassophobia: Entrance Room/Pier, Seawatch on (46,-120), and Fort Surrender on nearer island (-70,-95); diving-bell Level 8 route, circular formation at about (-150,0), sea-floor skeletons and two patrolling titans.",
-    "places/debug (3D) - modeling/placement test room, with authored studio cells."
+    "places/level7 (3D) - Thalassophobia: flooded 2000s Floating House on the entrance rock, Seawatch at (46,-120), Fort Surrender at (-70,-95), diving-bell route, sea-floor/seamount details, circular formation and an unopenable Level 9 hatch."
   ],
   "roots": [
     "world.config.yaml - multiplayer entry at main; declares camera, player actions, player template and HUD renderer; Backspace opens the main menu.",
@@ -22,8 +21,8 @@
     "places/<place>/sim.js + config.yaml/cells - place setup and authored placements; sims build local layouts, manage respawns/regrowth and tick local behavior.",
     "scripts/ui.js and *-ui.js renderers - HUD and overlays, including main menu, wardrobe, mahjong, loot, talk/trade, build, stats, craft and OS panels.",
     "scripts/main-menu.js + scripts/main-menu-ui.js - local player menu and Continue/Character actions; fresh profiles enter the critter creator, returning profiles the menu; menu tick supplies panning hidden-player camera backdrop.",
-    "places/level7/config.yaml atmosphere.look → scripts/look-level7.js; scripts/terrain7.js supplies ocean/island height and material; level7/sim.js lays and ticks the camps, formation, skeletons and entities.",
-    "art/level7/build.py - Blender model generator for fort_surrender.glb, circular_formation.glb and skeleton.glb; level7/sim.js places their published GLB assets."
+    "places/level7/config.yaml + scripts/look-level7.js - Level 7 atmosphere; scripts/terrain7.js supplies ocean, islands and the below-entrance seamount; places/level7/sim.js lays and ticks the place.",
+    "art/level7/build.py and art/l7-house/build.py - Blender generators for Fort Surrender/circle/skeleton and the house shell; sim.js places their published models, while art/l7kit/l7lib.py supplies the house generator's Kit."
   ],
   "shared": [
     "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait/heading; player and M.E.G. NPC chains run it before their controllers; scripts/lib/body3.js supplies body weapon animation and rowing IK.",
@@ -37,13 +36,13 @@
   ],
   "notableExports": [
     "places/*/sim.js - cadence and tick; Level 4/5 also export lay; places/gamma/sim.js exports PEOPLE; places/level7/sim.js exports cadence, breakables(FY, PY) and tick.",
-    "scripts/main-menu-ui.js - mainMenu(ctx, player); scripts/main-menu.js - update, onInput; scripts/player.js - fishCatch(ctx, d), maxHp, maxSan, xpNeed and weaponOf.",
     "scripts/lib/level-kit.js - keepPeople, every, RESPAWN_MS; scripts/lib/npc-respawn.js - RESPAWN_MS, mayReturn, firstLay.",
     "scripts/lib/level3.js - grid/constants, cell/zone queries, openings, blocks/hazards, crawl spans and exits; maze3path.js - stepToward, cellNear.",
     "scripts/lib/level2.js, level4.js, level5.js, level6.js - plan/grid constants and queries; scripts/lib/level6path.js - cellAt, cellCenter, isWalkable, stepToward6.",
     "scripts/terrain7.js - ISLES, heightAt, materialAt; scripts/lib/critter-model.js - faceFill, faceMorph, rewear, toMesh and model helpers.",
     "scripts/lib/maze0path.js, maze1path.js, maze2path.js, boilerpath.js - cell/door passage and stepToward routes; maze1path/2path also export cellNear.",
-    "scripts/lib/chatter.js - tickChatter, CHATTER; scripts/lib/l5-people.js - PEOPLE5, roundsOf, speak, spawnResident, tickPeople; scripts/l7-dory.js - ears, input/control and update handlers."
+    "scripts/lib/chatter.js - tickChatter, CHATTER; scripts/lib/l5-people.js - PEOPLE5, roundsOf, speak, spawnResident, tickPeople; scripts/l7-dory.js - ears, input/control and update handlers.",
+    "scripts/lib/level7-house.js - layHouse(ctx, FY); scripts/lib/level7-extras.js - layExtras(ctx, GLB, fit); scripts/l7-use.js - ears."
   ],
   "ownership": [
     "scripts/player.js - player.state progression, health/sanity, inventory/equipment/ammo/weapon condition, hunger/thirst, cents, visits, kills/deaths, heat, combat and fishing rewards; owns persistent player look/clothing data.",
@@ -53,11 +52,12 @@
     "scripts/build.js + player.js - player scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
     "scripts/interact.js + scripts/lib/seat.js - focus/loot/interaction and player sit state; scripts/lockpick.js owns pick state, pins and boiler-pick timestamp; seats own occupancy.",
     "scripts/talk.js + scripts/meg-agent.js - dialogue/social memory, shop tab/trades and NPC follow; meg-agent owns routines, nerve, loadout, combat, fear/want, cover, worn look and corpse inspections.",
-    "scripts/main-menu.js + scripts/critter.js - menuOpen/madeChar, wardrobe editing state/look and session.mmCam; places/level7/sim.js owns Level 7 placements and titan patrol transforms; l7-fauna.js manages fauna."
+    "scripts/main-menu.js + scripts/critter.js own menu/creator state; places/level7/sim.js owns Level 7 placements and titan patrol transforms; l7-fauna.js manages fauna; l7-use.js writes interaction payouts and player effects."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered handlers: locomotion before movement; interact, grab, rest, mahjong, talk, build, noclip, stats, craft, OS, lockpick and horde before critter, main-menu and view3.",
-    "world.config.yaml camera → scripts/camera.js owns presented yaw/pitch and eye position; view3.js writes player.state.tp → shoulder camera; camera writes player.state.aimPt in third person → player.js crosshair-aligned shots.",
+    "world.config.yaml camera → scripts/camera.js owns presented yaw/pitch and eye position; view3.js writes player.state.tp → third-person camera; camera writes player.state.aimPt in third person → player.js crosshair-aligned shots.",
+    "scripts/view3.js middle-button input → player.state.tp and state.orbit; holding in third person sets turnTo='none' for orbit, release restores heading, and movement during orbit hands heading back to the player.",
     "scripts/main-menu.js first local session → session.menuMark and player.state.madeChar/menuOpen/wardrobeOpen/wrMenu; legacy played saves are recognized by progress, fresh saves open body/face creator, returning saves open menu.",
     "world.config.yaml Backspace mainmenu action → scripts/main-menu.js toggles menu; mmenu play closes it, char opens creator; scripts/ui.js renders mainMenu or wardrobe, whose close returns to menu when wrMenu is set.",
     "While menuOpen, scripts/main-menu.js hides the local player, saves starting position/time in session.mmCam and writes ctx.view.camera; closing clears override and restores visibility.",
@@ -65,9 +65,8 @@
     "Level 0 exit in scripts/player.js → Level 1; paired thresholds connect Levels 1–3; lifts/stairs connect Levels 3–5; Level 5 portal → Level 6 → Level 7; Level 6/7 stair markers remain paired.",
     "scripts/level-door.js trigger → paired arrival marker IDs or state.to fallback; place sims add inbound markers and player.js selects safe spawn/checkpoints after death.",
     "scripts/player.js writes state.xfer → scripts/ui.js transition card; player.js gain() writes xpPop → UI aggregates XP; lvlPrompt prompts K and stats.js clears it when opening the sheet.",
-    "interact.js E on living NPC → player.state.talkWith; talk-ui.js submits choices/text/trade → talk.js/NPC ears; join intent writes NPC state.follow → meg-agent.js pursuit/return and companion recovery.",
-    "talk-ui.js buy/sell → talk.js; shops.yml sets Backdollar base prices, talk.js debits/credits player.state.cents and mutates trader stock; scripts/lib/data/talk.yml and npc-lore.yml supply persona and faction lore.",
-    "Level 7 sim + terrain7.js → island and sea-floor placements; sim ticks both titan transforms and l7-fauna.js updates crawlers/Deep; player.js classifies zone at island centers (-70,-95) and (46,-120) → ui.js zone banner; sim's NPC definitions → meg-agent behavior and shared chatter."
+    "interact.js E on living NPC → player.state.talkWith; talk-ui.js submits choices/text/trade → talk.js/NPC ears; join intent writes NPC state.follow → meg-agent.js pursuit/return and companion recovery; talk-ui buy/sell → talk.js and shops.yml-priced cents/stock changes.",
+    "places/level7/sim.js lays terrain, house/extras, camps, fort and entities; usable props → scripts/l7-use.js ears for ferry/sonar/braziers/still/altar/diving bell/hatch, which emits feedback or payout and mutates player effects/sanity; sim ticks chatter, people, hazards and fauna."
   ],
   "behaviorFamilies": [
     "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local flicker/light state; Level 5 cells hold hotel portal and quest props.",
@@ -77,7 +76,7 @@
     "scripts/lib/craft.js + data/craft.yml - crafting actions/menu reuse category and recipe checks; category, scrap costs, skills, bench requirement, output batches and item families vary by recipe.",
     "scripts/lib/npc-talk.js + shops.yml/talk.yml - shared NPC dialogue and trader interfaces vary by persona, stock, barter, discount and item section; buy/sell uses Backdollars.",
     "scripts/lib/clothes.js, critter-model.js + data/faces.yml/critter-models.yml and scripts/mat-cloth.js - identity-seeded looks vary facial traits, colors, fur/markings, body proportions and garment dyes/patterns.",
-    "scripts/lib/chatter.js + data/chatter.yml - Level 1–3 camps and Level 7 crews reuse timed exchanges with site-specific dialogue/voices; art/level7/build.py generates the three fort/circle/skeleton meshes placed by level7/sim.js, with the skeleton mesh reused at twelve positions/scales."
+    "scripts/lib/chatter.js + data/chatter.yml - Level 1–3 camps and Level 7 crews reuse timed exchanges with site-specific dialogue/voices; places/level7/sim.js delegates house and sea-floor/fort details to level7-house.js and level7-extras.js and places generated models."
   ],
   "probableOrphans": [],
   "migrationNotes": [
@@ -85,7 +84,7 @@
     "Level 6 builtV is versioned to 3: moving trigger/prop sites requires keeping endpoint coordinates aligned to scripts/lib/level6.js plan(); its shift wall toggles only outside a 7 m player radius.",
     "Level 6 suppresses the flashlight and destroys any carried torch on arrival; NVG F uses a local camera-attached green light and spare goggles replenish the shared battery.",
     "Level 5 Ines quest progress is per-player state.nvgQ (1 asked, 2 case, 3 goggles, 4 complete); its north portal leads to Level 6; the Level 6 auxiliary bulkhead remains welded shut.",
-    "Level 6/7 stair marker IDs l6-from-l7/l7-from-l6 must remain paired. Level 7 terrain islands are centered at (0,0), (46,-120) top 7 and (-70,-95) top 11; heightAt blends shoreline shaping below 3 m and preserves higher land. Fort site, scripts/player.js zone center and terrain7.js island center are coupled.",
-    "Level 7 sim places circle at x=-150,z=0 and skeletons with terrain-relative y; it also patrols l7-tiny on a distinct hard-coded arc, while generated GLBs must keep their static asset references synchronized with sim.js."
+    "Level 6/7 stair marker IDs l6-from-l7/l7-from-l6 must remain paired. Level 7 terrain centers are (0,0), (46,-120) top 7, (-70,-95) top 11 and (4,8) top -7; the floating-house model is visual-only around the room's own colliding walls.",
+    "Level 7 sim rebuild is gated by builtV=22 and clears l7x-/l7h- detail IDs plus legacy fort IDs before relaying; the new hatch is at (-150, terrain, 0), while the diving bell remains the usable Level 8 winch route."
   ]
 }
