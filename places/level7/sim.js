@@ -18,7 +18,7 @@ export const cadence = "2s";
 
 // Tripo models for the props (Savi, Nov 7): each fits a layout box; breakables take tag + { mat, hp, maxHp } (lib/breakables.js)
 const GLB = {
-  fort: "/cdn/value.93d4854ba6746ab4ed61d44496894c9b50026989d30f6b6c0ced8a51c8b81403.glb", circle: "/cdn/value.4de05de0a92bd78ed14fe0b2955f6b4fe0ecd0ec4e7c9d870956ee666aec2edd.glb", skeleton: "/cdn/value.2de5857513c7f3b7e1c18aae534bd2f525f58f06ca035b9e09fdf46a98695635.glb", // art/level7/build.py
+  fort: "/cdn/value.ae43401a6490aca8dc769b1307703673ac02e403222b4ddf4f0782d076e99ba1.glb", circle: "/cdn/value.4de05de0a92bd78ed14fe0b2955f6b4fe0ecd0ec4e7c9d870956ee666aec2edd.glb", skeleton: "/cdn/value.2de5857513c7f3b7e1c18aae534bd2f525f58f06ca035b9e09fdf46a98695635.glb", // art/level7/build.py
   dresser: "/cdn/value.6b73846286fe58c95018a876f85d847e8af3c7a0187d06a8838072345f9ca49e.glb",
   sideboard: "/cdn/value.4594d9a21e6d7e2e5f94a71011243747c652c77035a1fc981fbcf4bee983324f.glb",
   floorlamp: "/cdn/value.0871d1626b929961d73cb28c05f82070ad822c5cc2e6b8deec5046248fb4086d.glb",
