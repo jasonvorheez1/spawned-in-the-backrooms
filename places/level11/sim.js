@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 52; // bump to rebuild the city in rooms that are already open
+const V = 53; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1121,23 +1121,22 @@ function lay(ctx) {
 pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 size=0.15..0.35 acc=drag(1.1)+buoy(0.2) col=<0.95,0.95,0.98> a=0.35>0 sz=$size*(1>2.4) r=sprite(smoke-puff,alpha)` },
   });
 
-  // A-Frame Striped Orange/White Road Barricades
+  // A-Frame Striped Orange/White Road Barricades (scripts/roadwork11.js: steel A-legs, chevron rails, lamp)
   [-1.8, 1.8].forEach((dz, k) => {
-    bx(`l11-roadwork-barricade-${k}`, RW_X, 0.1, RW_Z + dz, 2.2, 0.9, 0.15, { color: "#ff6600", roughness: 0.7 }, {
-      children: [
-        { feetPosition: { x: 0, y: 0.65, z: 0.08 }, primitive: { kind: "box", width: 2.1, height: 0.2, depth: 0.02 }, material: { color: "#ffffff", roughness: 0.5 } },
-        { feetPosition: { x: 0, y: 0.35, z: 0.08 }, primitive: { kind: "box", width: 2.1, height: 0.2, depth: 0.02 }, material: { color: "#ffffff", roughness: 0.5 } },
-        { feetPosition: { x: 0.8, y: 0.95, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.08, height: 0.18 }, material: { color: "#ff9900", emissive: "#ff9900", emissiveIntensity: 2.5 } },
-      ],
+    sp(`l11-roadwork-barricade-${k}`, {
+      feetPosition: { x: RW_X, y: 0.1, z: RW_Z + dz }, rotation: { yaw: k ? 3 : -4 },
+      primitive: { kind: "scripted", script: "scripts/roadwork11.js", params: { kind: "barricade", w: 2.2, h: 0.9 } },
+      material: { color: "#ffffff", roughness: 0.6 }, physics: "static",
+      children: [{ feetPosition: { x: 0.92, y: 1.04, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.12 }, material: { color: "#ff9900", emissive: "#ff9900", emissiveIntensity: 2.5 } }],
     });
   });
 
-  // Orange Rubber Traffic Cones
-  [-1.2, -0.4, 0.4, 1.2].forEach((dz, k) => {
-    cyl(`l11-roadwork-cone-${k}`, RW_X + 1.3, 0.1, RW_Z + dz, 0.04, 0.18, 0.7, { color: "#ff5500", roughness: 0.6 }, {
-      children: [
-        { feetPosition: { x: 0, y: 0.35, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.11, radiusBottom: 0.13, height: 0.16 }, material: { color: "#ffffff", roughness: 0.4 } },
-      ],
+  // Orange Rubber Traffic Cones, set down by hand: not a ruler line
+  [[-1.2, 0, 7], [-0.4, 0.06, -12], [0.4, -0.04, 20], [1.2, 0.05, 41]].forEach(([dz, dx, yaw], k) => {
+    sp(`l11-roadwork-cone-${k}`, {
+      feetPosition: { x: RW_X + 1.3 + dx, y: 0.1, z: RW_Z + dz }, rotation: { yaw },
+      primitive: { kind: "scripted", script: "scripts/roadwork11.js", params: { kind: "cone" } },
+      material: { color: "#ffffff", roughness: 0.55 }, physics: "static",
     });
   });
 
@@ -1173,7 +1172,8 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
 
   // B.R.C. Roadwork Sign
   sp("l11-roadwork-sign", {
-    feetPosition: { x: RW_X, y: 0.1, z: RW_Z - 2.8 },
+    feetPosition: { x: RW_X, y: 0.6, z: RW_Z - 2.8 },
+    children: [{ feetPosition: { x: 0, y: -0.5, z: 0 }, primitive: { kind: "scripted", script: "scripts/roadwork11.js", params: { kind: "sign", w: 1.8, y0: 0.5 } }, material: { color: "#ffffff", roughness: 0.5 } }],
     rotation: { yaw: 180 },
     primitive: { kind: "box", width: 1.8, height: 1.1, depth: 0.05 },
     material: { color: "#ff6600" },
