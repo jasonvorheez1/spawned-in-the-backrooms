@@ -9,8 +9,8 @@ const TEX = {
   galv: "cdn/texture-galvanized-sheet-metal-duct.png", steel: "cdn/texture-scratched-worn-steel.png",
   green: "cdn/texture-scratched-worn-steel.png", red: "cdn/texture-scratched-worn-steel.png", housing: "cdn/texture-scratched-worn-steel.png",
 };
-const METAL = { steel: [0.55, 0.55], green: [0.35, 0.6], red: [0.3, 0.55], galv: [0.6, 0.45], housing: [0.3, 0.6], brass: [0.8, 0.4], band: [0, 0.9], rubber: [0, 0.8], stain: [0, 0.3], paint: [0, 0.8] };
-const GAIN = { concrete: 2.2, floor: 2.3, ceil: 3, lag: 2.2, paint: 3.5, galv: 1.6, housing: 1.5 };
+const METAL = { steel: [0.2, 0.6], green: [0.15, 0.6], red: [0.15, 0.55], galv: [0.35, 0.5], housing: [0.3, 0.6], brass: [0.8, 0.4], band: [0, 0.9], rubber: [0, 0.8], stain: [0, 0.3], paint: [0, 0.8] };
+const GAIN = { steel: 2, green: 2.4, red: 2.4, brass: 2, concrete: 2.2, floor: 2.3, ceil: 3, lag: 2.2, paint: 3.5, galv: 1.6, housing: 1.5 };
 const closed = (cx, cz, d) => !isOpen(cx, cz, d);
 const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]];
 const hallEdge = (cx, cz, d) => inHall(cx, cz) || inHall(cx + D4[d][0], cz + D4[d][1]);
@@ -102,7 +102,7 @@ export function unpack(D) {
 // emits one module (hi then lo) and its instance records
 // the vertex bake read false occlusion on the big concrete faces (dark corners against light ones drew as a triangle checker):
 // a group's shade never drops below its floor here, so the texture carries the grime on those faces
-const FLOOR = { concrete: 0.46, ceil: 0.24 };
+const FLOOR = { concrete: 0.46, ceil: 0.24, steel: 0.14 };
 export function kit(ctx, part, packed) {
   const D = unpack(packed);
   const pos = [], nor = [], uvs = [], col = [];
