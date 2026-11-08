@@ -103,6 +103,16 @@ function lay(ctx) {
     rotation: { yaw: 90 },
   });
 
+  // Back road to Level 10 (wiki: "certain streets have a back road that leads to Level 10"): the south street runs out into a dirt lane
+  sp("lv10-arrive", { feetPosition: { x: 0, y: 0.25, z: 70 }, rotation: { yaw: 0 } });
+  bx("lv10-lane", 0, -0.04, 88, 5, 0.12, 24, { texture: "cdn/texture-terrain-packed-brown-farm-track-dirt-tire-ruts.png", repeat: [2, 10], color: "oklch(0.55 0.04 70)", roughness: 0.95 });
+  bx("lv10-lane-verge-w", -4.5, -0.05, 88, 4, 0.1, 24, { texture: "cdn/texture-terrain-rough-overcast-meadow-grass.png", repeat: [2, 10], color: "oklch(0.55 0.07 130)", roughness: 0.95 });
+  bx("lv10-lane-verge-e", 4.5, -0.05, 88, 4, 0.1, 24, { texture: "cdn/texture-terrain-rough-overcast-meadow-grass.png", repeat: [2, 10], color: "oklch(0.55 0.07 130)", roughness: 0.95 });
+  sp("lv10-backroad", { tags: ["door"], feetPosition: { x: 0, y: 0, z: 98 }, primitive: { kind: "box", width: 13, height: 4, depth: 1.5 }, visible: false, physics: { body: "static", trigger: true }, behavior: "scripts/level-door.js", state: { to: "level10#l10-from-l11" } });
+  sp("lv10-sign", { feetPosition: { x: 3.2, y: 0.9, z: 80 }, rotation: { yaw: 195 }, primitive: { kind: "box", width: 1.2, height: 0.42, depth: 0.04 }, material: { color: "oklch(0.78 0.02 90)", roughness: 0.9 },
+    ui: '<div face="front" width="1.2m" style="font-family:Arial,sans-serif;font-weight:800;color:#2b2b2b;text-align:center;font-size:110px;line-height:1">FARM RD</div>' });
+  bx("lv10-sign-post", 3.2, 0, 80.05, 0.08, 1.1, 0.08, { color: "oklch(0.4 0.03 60)", roughness: 0.9 });
+
   // Return doorway back to Level 6.1
   bx("l11-to-l61-frame", -29.6, 0.2, 12, 0.2, 3.2, 2.4, { color: "oklch(0.3 0.01 250)", metalness: 0.7 });
   sp("l11-to-l61", {
