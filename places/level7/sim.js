@@ -86,7 +86,8 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 16; // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
+const V = 17; // 17: walkable stairs back to Level 6
+const V_PREV = 16; // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
@@ -341,8 +342,8 @@ function lay(ctx) {
   // 4) Draped white fabric sheet hanging off the left bookcase edge (as in the photo)
 
   // Staircase ascending into the darkness back to Level 6 (South)
-  for (let k = 0; k < 6; k++) {
-    box(ctx, `l7-step-${k}`, 0, FY + k * 0.32, 3.4 + k * 0.32, 1.2, 0.32, 0.34, { ...CONCRETE, color: "oklch(0.29 0.008 240)" });
+  for (let k = 0; k < 6; k++) { // 0.26 m risers: a body climbs 0.3 at most
+    box(ctx, `l7-step-${k}`, 0, FY + k * 0.26, 3.4 + k * 0.3, 1.2, 0.26, 0.32, { ...CONCRETE, color: "oklch(0.29 0.008 240)" });
   }
   box(ctx, "l7-shaft-e", 0.8, FY, 4.4, 0.4, 3.6, 2.4, CONCRETE);
   box(ctx, "l7-shaft-w", -0.8, FY, 4.4, 0.4, 3.6, 2.4, CONCRETE);
@@ -351,7 +352,7 @@ function lay(ctx) {
 
   // Transition trigger to return to Level 6
   ctx.spawn("l7-back", {
-    feetPosition: { x: 0, y: FY + 1.2, z: 5.1 },
+    feetPosition: { x: 0, y: FY + 0.3, z: 4.3 }, // met on the third step, before the shaft's lid at FY + 2.7 meets your head
     physics: { body: "static", trigger: true },
     primitive: { kind: "box", width: 1.2, height: 2.2, depth: 0.8 },
     visible: false,
