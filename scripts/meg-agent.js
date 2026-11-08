@@ -70,7 +70,7 @@ const HIT = `fx
 pop blood burst=10 life=.4..0.7 v=sdir()*(1..2.4)+up(.6) size=.04..0.08 acc=grav() col=<.35,.05,.04> a=1>0 floor=stick r=sprite(soft-disc,alpha)`;
 const FOES = ["hound", "stealer"];
 // what a fighter takes on: every creature of the halls (the hotel's own staff, l5staff, are not for shooting). A civilian only fights what is on top of them.
-const HOSTILE = ["hound", "stealer", "smiler", "lurker", "moths", "l8spider"];
+const HOSTILE = ["hound", "stealer", "smiler", "lurker", "moths", "l8spider", "hostile", "l8-hostile", "wretched", "l7beast"]; // creatures and the insane: every sane npc fights these
 const CROUCH = "cdn/clip-crouch-idle-loop.glb";
 const DEAD = (o) => !o || o.state?.dead || (o.state?.hp ?? 1) <= 0;
 const corpseOf = (o) => !!o && DEAD(o) && !o.tags?.includes?.("l5staff") && HOSTILE.some((g) => o.tags?.includes?.(g));
@@ -133,13 +133,13 @@ function pickTarget(ctx, me, m) {
   let best = null, bd = G.sight;
   const fighter = (!me.state.faction5 || me.state.faction5 === "hk" || me.state.follow) && !me.state.mjguest; // hotel guests are no fighters: a hound is something to run from, but anything on top of them gets the weapon
   if (!me.state.mjguest) for (const tag of HOSTILE) for (const f of ctx.query({ tags: [tag], radius: fighter ? G.sight : 5 })) {
-    if (DEAD(f) || f.tags?.includes?.("l5staff")) continue;
+    if (DEAD(f) || f.tags?.includes?.("l5staff") || f.id === me.id || (me.state.faction && f.state?.faction === me.state.faction)) continue; // a wretch never counts its own den
     const d = flat(f.feetPosition, p); if (d >= bd || !inView(ctx, me, m, f, d)) continue; // a creature behind (or stuck in) a wall is not a target
     bd = d; best = f;
   }
   if (me.state.nerve === "frenzied" && !me.state.mjguest) { // anyone close enough: npc or player
     for (const n of ctx.query({ tags: ["npc"], radius: 12 })) { if (n.state?.dead || (n.state?.hp ?? 1) <= 0 || (me.state.faction && n.state?.faction === me.state.faction)) continue; const d = flat(n.feetPosition, p); if (d < bd) { bd = d; best = n; } }
-    for (const pl of ctx.place.players) { if ((pl.state?.hp ?? 1) <= 0) continue; const d = flat(pl.feetPosition, p); if (d < Math.min(bd, 12)) { bd = d; best = pl; } }
+    for (const pl of ctx.place.players) { if ((pl.state?.hp ?? 1) <= 0) continue; const d = flat(pl.feetPosition, p); if (d < bd && (d < 4 || inView(ctx, me, m, pl, d))) { bd = d; best = pl; } } // the insane hunt you on sight, not only up close
   }
   // a player who attacked the camp: this agent's grudge, or a neighbour's
   const grudges = new Set(Object.keys(me.state.angry ?? {}));
