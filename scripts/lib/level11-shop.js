@@ -42,12 +42,12 @@ export function layShop(ctx, { sp }) {
   sp("l11-tm-counter", { feetPosition: { x: x + 2.4, y, z: z + 1.4 }, model: { id: M.counter, forward: "+z" }, physics: { body: "static", collider: "box" } });
   for (const [id, dx, look] of DUMMIES) sp(id, {
     tags: ["l11-shop"], feetPosition: { x: dx, y, z: z - 2.1 }, rotation: { yaw: 0 }, physics: { body: "static", collider: "capsule" },
-    ...critterSpec(fullLook({ species: "cat", sex: dx < x ? "f" : "m", botw: "jeans", bottom: "#3d4a66", shoes: "sneakers", tint: "#dcd8d0", ...look })),
+    ...critterSpec(fullLook({ species: "cat", sex: dx < x ? "f" : "m", botw: "pants", bottom: "#3d4a66", shoes: "sneakers", tint: "#dcd8d0", ...look })),
     state: { name: "Mannequin", info: "Shop window display." },
   });
   sp("l11-tm-clerk", {
     tags: ["npc", "l11-shop"], feetPosition: { x: x + 2.4, y, z: z + 2.15 }, rotation: { yaw: 0 }, physics: "character",
-    ...critterSpec(npcLook("l11-tm-clerk", { species: "raccoon", sex: "f", topw: "tee", top: "#1d2540", topp: "jerry", botw: "jeans", bottom: "#2b2b33", shoes: "sneakers", eyew: "glasses" }, "trader", 11)),
+    ...critterSpec(npcLook("l11-tm-clerk", { species: "raccoon", sex: "f", topw: "tee", top: "#1d2540", topp: "jerry", botw: "pants", bottom: "#2b2b33", shoes: "sneakers", eyew: "glasses" }, "trader", 11)),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
     state: {
       name: "Dee · Thrift Mode", role: "trader", voice: "l11-tm-clerk#f", faction: "city", factionName: "Thrift Mode, a clothing shop in the Infinite City",
