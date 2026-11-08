@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 74; // bump to rebuild the city in rooms that are already open
+const V = 75; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -172,17 +172,17 @@ function lay(ctx) {
   }
 
   // Concrete Sidewalks & Beveled Curbs
-  sp("l11-sw-west-mid", { feetPosition: { x: -12, y: 0.08, z: 0 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 36, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
+  sp("l11-sw-west-mid", { feetPosition: { x: -12, y: 0.08, z: -6 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 24, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } }); // stops at the 11th street crossing (z 6..18) so cars drive through
   sp("l11-sw-west-south", { feetPosition: { x: -12, y: 0.08, z: 48 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 56, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
   sp("l11-sw-west-north", { feetPosition: { x: -12, y: 0.08, z: -55 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 50, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
-  bx("l11-curb-w-mid", -8.1, 0.08, 0, 0.2, 0.28, 36, CURB_MAT);
+  bx("l11-curb-w-mid", -8.1, 0.08, -6, 0.2, 0.28, 24, CURB_MAT);
   bx("l11-curb-w-south", -8.1, 0.08, 48, 0.2, 0.28, 56, CURB_MAT);
   bx("l11-curb-w-north", -8.1, 0.08, -55, 0.2, 0.28, 50, CURB_MAT);
 
-  sp("l11-sw-east-mid", { feetPosition: { x: 12, y: 0.08, z: 0 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 36, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
+  sp("l11-sw-east-mid", { feetPosition: { x: 12, y: 0.08, z: -6 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 24, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } }); // stops at the 11th street crossing (z 6..18) so cars drive through
   sp("l11-sw-east-south", { feetPosition: { x: 12, y: 0.08, z: 48 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 56, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
   sp("l11-sw-east-north", { feetPosition: { x: 12, y: 0.08, z: -55 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 50, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
-  bx("l11-curb-e-mid", 8.1, 0.08, 0, 0.2, 0.28, 36, CURB_MAT);
+  bx("l11-curb-e-mid", 8.1, 0.08, -6, 0.2, 0.28, 24, CURB_MAT);
   bx("l11-curb-e-south", 8.1, 0.08, 48, 0.2, 0.28, 56, CURB_MAT);
   bx("l11-curb-e-north", 8.1, 0.08, -55, 0.2, 0.28, 50, CURB_MAT);
 
