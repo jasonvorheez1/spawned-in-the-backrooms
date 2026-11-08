@@ -37,6 +37,13 @@ class Envelope:
             ob = next(o for o in bpy.context.scene.objects if o.type == "MESH" and o.vertex_groups and not o.name.startswith("Ico"))
             me = ob.data; gi = {g.index: g.name for g in ob.vertex_groups}
             vs = [ob.matrix_world @ v.co for v in me.vertices]
+            if me.shape_keys:                                  # the face-type morphs (FT_*) reshape the skull in game: cover the fullest of them
+                bas = me.shape_keys.key_blocks[0]
+                for kb in me.shape_keys.key_blocks[1:]:
+                    if not kb.name.startswith("FT_"): continue
+                    for i, d in enumerate(kb.data):
+                        q = ob.matrix_world @ d.co
+                        if (q - HC).length > (vs[i] - HC).length: vs[i] = q
             ear = [any(gi.get(g.group, "").startswith("Ear") and g.weight > .3 for g in v.groups) for v in me.vertices]
             polys = [list(p.vertices) for p in me.polygons if not any(ear[i] for i in p.vertices) and all(vs[i].z > .95 for i in p.vertices)]
             bvh = BVHTree.FromPolygons(vs, polys); s.bvhs.append(bvh)
@@ -60,7 +67,7 @@ class Envelope:
             for b in s.bvhs:
                 h = b.ray_cast(HC + d * 1.0, -d, 1.0); rs.append((h[0] - HC).length if h[0] else .3)
             rs.sort(); med = rs[len(rs) // 2]
-            s.cache[k] = (min(rs[-1], med + .03) + .004, rs[0])   # cover: outside every head (a big outlier capped at +3 cm), never sunk into fur
+            s.cache[k] = (min(rs[-1], med + .05) + .008, rs[0])   # cover: outside every head (a big outlier capped at +3 cm), never sunk into fur
         return s.cache[k]
     def hug(s, d): return s.radii(d)[0]
     def sink(s, d): return s.radii(d)[1] - .015
