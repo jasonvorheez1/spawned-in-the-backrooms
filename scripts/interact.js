@@ -156,7 +156,8 @@ export function openLoot(ctx, c) {
     if (cl) c.state.items = [c.state.items, cl].filter(Boolean).join(',')
     spamtonPerk(ctx, c)
   }
-  s.lootOpen = c.id; s.lootName = c.state?.name ?? 'Container'; s.lootList = c.state?.items ?? ''; s.focus = null
+  const own = ownerOf(ctx, c)
+  s.lootOpen = c.id; s.lootName = (own ? `${c.state.ownerName ?? 'Someone'}'s · ` : '') + (c.state?.name ?? 'Container'); s.lootList = c.state?.items ?? ''; s.focus = null
   snd(ctx, 'container-open-rustle', 0.5)
 }
 
@@ -341,6 +342,25 @@ function press(ctx) {
   if (r.ok) { it.state.taken = true; ctx.destroy(f.id); s.focus = null; m.key = ''; m.focus = null } else if (r.msg) { note(ctx, r.msg); snd(ctx, 'ui-denied-click', 0.35) }
 }
 
+// ownership (Shelly, Nov 8): a container near a resident is theirs. take from it while they can see you and they snatch it back
+// and shove you off; do it again and they fight (the same warned/angry memory as pickpocketing). Crouched past 5 m, unseen.
+const OWN_R = 9, SEE_R = 14
+function ownerOf(ctx, c) {
+  if (c.tags?.includes('rubble') || c.tags?.includes('npc') || c.state.dead || /^remains/i.test(c.state.name ?? '')) return null
+  if (c.state.owner === undefined) { // decided once, the first time anyone opens it
+    const q = c.feetPosition, near = ctx.query({ tags: ['npc'], center: q, radius: OWN_R }).find((n) => !n.state.dead && !n.state.hostile && n.state.name)
+    c.state.owner = near?.id ?? ''; if (near) c.state.ownerName = String(near.state.name).split(' ·')[0]
+  }
+  if (!c.state.owner) return null
+  const o = ctx.getObject(c.state.owner); if (!o || o.state.dead) return null
+  return o
+}
+function watching(ctx, o) {
+  const p = ctx.self.feetPosition, q = o.feetPosition, d = Math.hypot(p.x - q.x, p.z - q.z)
+  if (d > SEE_R) return false
+  if (ctx.self.state.crouch && d > 5) return false
+  return true
+}
 // the loot menu's buttons: take one, take all, close
 function lootAction(ctx, d) {
   const s = ctx.self.state
@@ -350,6 +370,14 @@ function lootAction(ctx, d) {
   if (!c) { closeLoot(ctx); return }
   if (s.pocket) { if (d.k === 'take') liftOne(ctx, c, Number(d.i)); else if (d.k === 'all') { note(ctx, 'One thing at a time, or they\'ll feel it.'); snd(ctx, 'ui-denied-click', 0.3) } return }
   let items = itemsOf(c.state?.items), fail = ''
+  const own = (d.k === 'take' || d.k === 'all') ? ownerOf(ctx, c) : null
+  if (own && watching(ctx, own) && !own.state.angry?.[ctx.self.id]) {
+    const who = c.state.ownerName ?? String(own.state.name ?? 'Someone').split(' ·')[0]
+    if (!own.state.warned?.[ctx.self.id]) { // first time: it never reaches your bag
+      closeLoot(ctx); note(ctx, `${who} snatches it back out of your hands.`); caught(ctx, own, who); return
+    }
+    caught(ctx, own, who) // second time: you get it, and they come for you
+  }
   if (d.k === 'take') {
     const i = Number(d.i)
     if (!(i >= 0 && i < items.length)) return
