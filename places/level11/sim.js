@@ -456,9 +456,9 @@ function lay(ctx) {
   SPOT("l11-sedco-spotlight1", SX0 + 0.8, SEDCO_Z - 1.9, SEDCO_X, SEDCO_Z - 3, true);
   SPOT("l11-sedco-int-spot-0", SX0 + 1.0, SZ1 - 0.8, SEDCO_X, SEDCO_Z, false);
   SPOT("l11-sedco-int-spot-1", SX1 - 1.4, SZ0 + 0.8, SEDCO_X, SEDCO_Z + 1, false);
-  md("l11-sedco-int-counter", "sedco_counter", SX1 - 2.0, 0.14, SEDCO_Z + 0.5, undefined, "box", { rotation: { yaw: 90 } });
-  for (const [i, dz] of [-2.0, 2.0].entries()) md(`l11-sedco-int-gondola-${i}`, "sedco_gondola", SEDCO_X - 1, 0.14, SEDCO_Z + dz, undefined);
-  md("l11-sedco-int-monitors", "sedco_monitors", SEDCO_X - 1, 0.14, SZ0 + 0.45, { crt: { color: "#1c2a26", emissive: "#9fc0b0", emissiveIntensity: 0.55, roughness: 0.15 } }, "box", { rotation: { yaw: 180 } });
+  md("l11-sedco-int-counter", "sedco_counter", SX1 - 2.0, 0.14, SEDCO_Z + 0.5, { laminate: { texture: "cdn/texture-wood-grain-laminate.png", color: "#d8c8b0", roughness: 0.6 }, pkgW: { texture: "cdn/texture-white-formica-countertop.png", roughness: 0.4 } }, "box", { rotation: { yaw: 90 } });
+  for (const [i, dz] of [-2.0, 2.0].entries()) md(`l11-sedco-int-gondola-${i}`, "sedco_gondola", SEDCO_X - 1, 0.14, SEDCO_Z + dz, { peg: { texture: "cdn/texture-brown-pegboard-holes.png", repeat: [4, 2.5], roughness: 0.85 }, steel: { texture: "cdn/texture-brushed-steel.png", roughness: 0.4, metalness: 0.7 } });
+  md("l11-sedco-int-monitors", "sedco_monitors", SEDCO_X - 1, 0.14, SZ0 + 0.45, { crt: { color: "#1c2a26", emissive: "#9fc0b0", emissiveIntensity: 0.55, roughness: 0.15 }, beige: { texture: "cdn/texture-aged-beige-plastic.png", roughness: 0.5 } }, "box", { rotation: { yaw: 180 } });
   md("l11-sedco-int-door", "sedco_door", SX1 - WT - 0.06, 0.14, SZ1 - 1.2, undefined, "box", { rotation: { yaw: 90 },
     children: [{ feetPosition: { x: 0, y: 1.53, z: -0.055 }, primitive: { kind: "plane", width: 0.4, height: 0.14 }, material: { color: "#f2efe6" }, ui: `<div face="front" width="0.4m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f2efe6;color:#a01818;font:900 64px Arial">STAFF ONLY</div>` }] });
 
