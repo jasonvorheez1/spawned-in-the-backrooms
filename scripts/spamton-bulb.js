@@ -9,6 +9,6 @@ export function update(ctx) {
   m.on = !m.on || ctx.random() < 0.85
   m.at = now + (m.on ? 400 + ctx.random() * 3500 : 40 + ctx.random() * 90)
   const L = ctx.self.light
-  if (L) ctx.self.light = { ...L, intensity: m.on ? 7 : 0.6 }
+  if (L) ctx.self.light = { ...L, intensity: m.on ? 45 : 6 }
   ctx.self.material = { ...ctx.self.material, emissiveIntensity: m.on ? 6 : 0.4 }
 }
