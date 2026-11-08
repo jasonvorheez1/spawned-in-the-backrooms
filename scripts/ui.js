@@ -164,8 +164,9 @@ function sniperScope(s, wp) {
 const LEVEL_NAMES = { main: ['LEVEL 0', 'THE LOBBY'], level1: ['LEVEL 1', 'HABITABLE ZONE'], level2: ['LEVEL 2', 'PIPE DREAMS'], level3: ['LEVEL 3', 'ELECTRICAL STATION'], level4: ['LEVEL 4', 'ABANDONED OFFICE'], level5: ['LEVEL 5', 'TERROR HOTEL'], level6: ['LEVEL 6', 'LIGHTS OUT'], level61: ['LEVEL 6.1', 'THE SNACKROOMS'], level11: ['LEVEL 11', 'THE INFINITE CITY'], level10: ['LEVEL 10', 'BUMPER CROP'], level7: ['LEVEL 7', 'THALASSOPHOBIA'], level8: ['LEVEL 8', 'CAVE SYSTEMS'], level21: ['LEVEL 2.1', 'LOCKED'], gamma: ['M.E.G.', 'BASE GAMMA'], spamton: ['[[NOWHERE]]', "SPAMTON'S BASEMENT"] }
 function xferCard(s, now) {
   const x = s.xfer; if (!x || now - x.at > 2600) return ''
-  if (x.kind) return clipCard(x, now, LEVEL_NAMES) // the noclip between levels (scripts/noclip-ui.js)
-  const [a, b] = LEVEL_NAMES[x.to] ?? [String(x.to).toUpperCase(), '']
+  const to = String(x.to ?? '').startsWith('tutorial0') ? 'main' : x.to // a solo tutorial copy is still Level 0
+  if (x.kind) return clipCard({ ...x, to }, now, LEVEL_NAMES) // the noclip between levels (scripts/noclip-ui.js)
+  const [a, b] = LEVEL_NAMES[to] ?? [String(to).toUpperCase(), '']
   return `<style>@keyframes xferOut{0%,45%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="xfer${x.at}" style="position:absolute;inset:0;background:#050403;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:xferOut 2.4s forwards;color:#f2c14e;text-shadow:2px 2px #000"><div style="font-size:44px;letter-spacing:.2em">${a}</div><div style="font-size:18px;letter-spacing:.3em;opacity:.75;margin-top:6px">${b}</div></div>`
 }
 const TALKERS = ['meg-ale', 'meg-ortiz', 'meg-callum', 'surv-wren', 'surv-hollis', 'surv-mags', 'omega-okafor', 'omega-rhea', 'hk-constance', 'hk-vance', 'homely-barnaby', 'homely-auguste', 'l5-samantha', 'l5-ambrose', 'l5-dolores', 'l5-pip', 'l5-odette', 'l5-harlan', 'l5-vesna', 'l5-tobias', 'l5-imani', 'l5-millie', 'l5-whitlock', 'l5-vanderholt', 'l5-zelda', 'l5-wat', 'l11-meg-agent-vance', 'l11-trader-kael', 'l11-commuter-faceling', 'l11-walker-1', 'l11-walker-2', 'l11-walker-3']
