@@ -653,7 +653,7 @@ function invAction(ctx, d) {
     else if (t.startsWith('almond:')) { const k = AW_KEY[t.slice(7)]; if (k && s[k] > 0) { s[k] -= 1; tok = t } }
     else if (t.startsWith('meat:')) { const c = t.slice(5); if ((s.meat?.[c] ?? 0) > 0) { s.meat = { ...s.meat, [c]: s.meat[c] - 1 }; tok = t } }
     else if (t.startsWith('snack:')) { const c = t.slice(6); if ((s.snacks?.[c] ?? 0) > 0) { s.snacks = { ...s.snacks, [c]: s.snacks[c] - 1 }; tok = c } }
-    else if (t === 'ammo' || t === 'shells') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= 1) { s[t] = Math.max(0, s[t] - per); tok = t } }
+    else if (t === 'ammo' || t === 'shells') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= per) { s[t] -= per; tok = t } else return say(`Need a full box (${per}) to drop`) }
     else if (t === 'bobbypin') { if (s.bobbypins > 0) { s.bobbypins -= 1; tok = 'bobbypin' } }
     if (!tok) return
     const f = ctx.self.feetPosition, fw = walkOf(ctx).fwd ?? { x: 0, z: -1 }, at = { x: f.x + fw.x * 0.8, z: f.z + fw.z * 0.8 }
