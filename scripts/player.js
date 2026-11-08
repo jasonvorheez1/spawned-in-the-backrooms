@@ -210,16 +210,31 @@ function takeToken0(ctx, token) {
     sound(ctx, 'plastic-bottle-pickup-rattle', 0.6, true)
     return { ok: true }
   }
-  if (SNACKS[token]) { // Level 6.1's real snacks: drunk or eaten on the spot
+  if (SNACKS[token]) { // Level 6.1's real snacks: into the bag (player.state.snacks); the inventory eats or drinks them
+    const v = SNACKS[token]
+    s.snacks = { ...(s.snacks ?? {}), [token]: (s.snacks?.[token] ?? 0) + 1 }; s.pickedAt = now
+    s.notice = { text: `${v.name} · in your bag`, at: now }
+    sound(ctx, v.drink ? 'plastic-bottle-pickup-rattle' : 'loot-take-all-rustle', 0.6, true)
+    return { ok: true }
+  }
+  return takeToken1(ctx, token)
+}
+export function useSnack(ctx, token) { // consume one from the bag
+  const s = ctx.self.state, now = ctx.now(), n = s.snacks?.[token] ?? 0
+  if (n <= 0 || !SNACKS[token]) return
+  s.snacks = { ...s.snacks, [token]: n - 1 }
+  {
     const v = SNACKS[token], mh = maxHp(s.level, s), ms = maxSan(s.level, s)
     s.hp = Math.min(mh, (s.hp ?? mh) + v.hp * derived(s).heal); s.sanity = Math.min(ms, (s.sanity ?? ms) + v.sanity)
     s.hunger = Math.max(0, Math.min(100, (s.hunger ?? 100) + v.hunger)); s.thirst = Math.max(0, Math.min(100, (s.thirst ?? 100) + v.thirst))
     if (v.drunk) { s.drunk = Math.min(100, (s.drunk ?? 0) + v.drunk); s.drunkAt = now }
     if (v.stamina) { const w = walkOf(ctx); w.stamina = Math.min(L.stamina * 2, (w.stamina ?? s.stamina ?? 0) + v.stamina) }
     s.pickedAt = now; s.notice = { text: `${v.name}. ${v.drink ? `Thirst +${v.thirst}` : `Hunger +${v.hunger}`}`, at: now }
-    sound(ctx, v.drink ? 'plastic-bottle-pickup-rattle' : 'loot-take-all-rustle', 0.7, true)
-    return { ok: true }
+    sound(ctx, v.drink ? 'drinking-gulp-swallow' : 'eating-chewing-food', 0.7, true)
   }
+}
+function takeToken1(ctx, token) {
+  const s = ctx.self.state, now = ctx.now()
   if (token === 'beans' || token === 'bar' || token === 'firstaid') { // Level 2 food and first aid, used on the spot
     const mh = maxHp(s.level, s), ms = maxSan(s.level, s), U = L2.use
     s.hp = Math.min(mh, (s.hp ?? mh) + (token === 'beans' ? U.beansHp * derived(s).heal : token === 'bar' ? U.barHp * derived(s).heal : U.firstaidHp * derived(s).healMed))
@@ -683,6 +698,7 @@ function invAction(ctx, d) {
     s.notice = { text: `You eat the ${MEAT[c].name.toLowerCase()} · +${MEAT[c].hp} HP`, at: ctx.now() }; sound(ctx, 'eating-chewing-food', 0.6, true); return }
   if (d.k === 'splash') { s.invOpen = false; splash(ctx); return }
   if (d.k === 'soupEat') { soupEat(ctx); return }
+  if (d.k === 'snack') { useSnack(ctx, String(d.c || '')); return }
   if (d.k === 'soupThrow') { s.invOpen = false; soupThrow(ctx); return }
   if (d.k === 'firesalt') { // rub a pinch on the blade or head: melee hits burn harder for a while
     if ((s.firesalt ?? 0) <= 0 || W[s.equipped]?.ranged || s.equipped === 'fists') { s.notice = { text: 'Hold a melee weapon to rub firesalt on it', at: ctx.now() }; return }
