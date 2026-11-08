@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 33;
+const V = 34;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -77,6 +77,7 @@ export function tick(ctx) {
     ] });
   swing("h-bed-door", -3.5, HZ, -1, 0.98, -95, "Bedroom Door");
   swing("h-bath-door", 3.15, HZ, 1, 0.88, 95, "Bathroom Door");
+  fit("h-tote", "/cdn/value.4217a4d0fbbdf5acae70d131990e12dfa9c8a5a692a2643c6ef67c5bac4ea413.glb", -1.6, -3.3, 15, [0.6, 0.5, 0.45], { tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind: "tote", name: "Storage Tote", verb: "Take out" } }); // tripo: blue-lid tote at the foot of the bed
   bx("h-bath-floor", 3.6, BY, -4.3, 2.7, 0.015, 3.3, TILE, { physics: "none" });
   bx("h-bath-tile-wall", 3.6, BY, -5.9, 2.7, 1.2, 0.03, TILE, { physics: "none" }); // tiled wainscot behind the tub
   const TUB = "/cdn/value.41d0f172f22f0963c0cdb6b958c4a3e95e6b3aa065b3c91c096683efc4c87a4b.glb", LOO = "/cdn/value.28601a408e0ea5cc0d4ad5e63b60d0044db81cc693682addc38ae0e75b28cea5.glb", VAN = "/cdn/value.a30ff86587854900fffcfd845866aa93ccabcb94e10e503cb75a73dcc64bac6f.glb";
