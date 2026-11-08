@@ -123,8 +123,8 @@ export function tick(ctx) {
             slAt[p.id] = now;
             heard(ctx, { maxDistance: 24, refDistance: 4, clip: GRIT("acid-sizzle-hiss"), position: f, volume: 0.5 }, { audience: { player: p.id } });
             ctx.emit("screenFlash", { color: "#25101a", duration: 0.3, intensity: 0.4 }, { audience: { player: p.id } });
-            if (!p.session?.sludgeWarn) {
-              p.session.sludgeWarn = 1;
+            if (!slAt['w' + p.id]) {
+              slAt['w' + p.id] = 1;
               ps.notice = { text: "Boiling black fluid burns your boots! It is NOT almond water.", at: now };
             }
           }
@@ -146,8 +146,8 @@ export function tick(ctx) {
           ctx.emit("screenFlash", { color: "#ff7722", duration: 0.25, intensity: 0.5 }, { audience: { player: p.id } });
           const kx = f.x - vp.x, kz = f.z - vp.z, kd = Math.hypot(kx, kz) || 1;
           ctx.emit("cameraPunch", { direction: { x: kx / kd, y: 0.2, z: kz / kd }, intensity: 0.5 }, { audience: { player: p.id } });
-          if (!p.session?.steamWarn) {
-            p.session.steamWarn = 1;
+          if (!slAt['s' + p.id]) {
+            slAt['s' + p.id] = 1;
             ps.notice = { text: "High-pressure steam scalds your skin!", at: now };
           }
         }

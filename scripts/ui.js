@@ -239,7 +239,7 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
     <div style="font-size:clamp(26px,7vw,56px);letter-spacing:.28em;line-height:1.1;margin:4px 0;white-space:nowrap">LIGHTS OUT</div>
     <div style="font-size:13px;letter-spacing:.18em;opacity:.75">THE DARK HERE IS OLDER THAN YOU</div>
   </div>` : `<div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:100px;animation:hud-fade 3.5s forwards;pointer-events:none">
-    <div style="font-size:22px;letter-spacing:0.12em">${ZONE_NAMES[zone] ?? 'The Lobby'}</div>
+    <div style="font-size:22px;letter-spacing:0.12em">${ZONE_NAMES[zone] ?? (LEVEL_NAMES[player.place]?.[1] ?? 'THE LOBBY').toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}</div>
     <div class="muted" style="font-size:12px;margin-top:2px">
       ${zone === 'hub' ? 'Sanity stabilizes here. Nothing follows.' : zone === 'dark' ? 'Total blackout. Watch the corners.' : zone === 'red' ? 'Severe sanity decay.' : zone === 'l5_housekeeping' ? 'M.E.G. Outpost Housekeeping. Sanity and health recover here.' : zone === 'l5_boiler' ? 'The Boiler Room. Extreme heat and heavy sanity drain.' : zone === 'l5_beverly' ? 'The Beverly Room. Hypnotic ballroom music echoes.' : ''}
     </div>
