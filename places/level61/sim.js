@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 34;
+const V = 35;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -182,7 +182,7 @@ function lay(ctx) {
   for (let k = 0; k < 4; k++) {
     const z = -12 + k * 8, X = HW - 0.18, F = { color: "oklch(0.88 0.01 90)", metalness: 0.6, roughness: 0.35 }, np = { physics: undefined };
     // a modelled sash window (art/l61-window/build.py): casing, two sashes of three lites, deep sill; warm glass + daylight spill
-    sp(`l61-win-${k}`, { feetPosition: { x: X - 0.14, y: 1.3, z }, rotation: { yaw: -90 }, model: { id: "/cdn/value.7f1e19d42adceaf588354f40a2916f3606681fb31afdca46ad7d8d03f85f746e.glb", forward: "+z" },
+    sp(`l61-win-${k}`, { feetPosition: { x: X - 0.14, y: 1.3, z }, rotation: { yaw: -90 }, model: { id: "/cdn/value.7f1e19d42adceaf588354f40a2916f3606681fb31afdca46ad7d8d03f85f746e.glb", forward: "+z", materials: { Glass: { color: "oklch(0.95 0.05 75)", emissive: "oklch(0.93 0.07 70)", emissiveIntensity: 1.5, roughness: 0.1 } } },
       children: [{ feetPosition: { x: 0, y: 1.2, z: 0 }, light: { kind: "rect", color: "oklch(0.93 0.07 70)", intensity: 2.2, width: 3.0, height: 1.9, aim: "forward" } }] });
   }
 
