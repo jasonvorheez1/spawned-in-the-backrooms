@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 16;
+const V = 17;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb";
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -112,26 +112,16 @@ function lay(ctx) {
   });
 
   // Curved 1980s diner booth with red leather banquettes, formica table with chrome edging, and condiments
+  const BOOTH_GLB = "/cdn/value.bc27142d58376e6d19cb25699d0a58a713302c81a9fc7f60a167c89f32831d20.glb" // tripo: red vinyl tufted booth, wood base
   const spawnBooth = (id, x, z, yaw) => sp(id, {
     feetPosition: { x, y: 0, z },
     rotation: { yaw },
     physics: { body: "static", collider: "box" },
-    primitive: { kind: "box", width: 2.2, height: 0.44, depth: 1.8 },
-    material: DARKWOOD,
+    model: BOOTH_GLB,
+    layout: { box: { min: { x: -1.1, y: 0, z: -0.9 }, max: { x: 1.1, y: 1.35, z: 0.9 } } },
     children: [
-      { feetPosition: { x: 0, y: 0.44, z: -0.65 }, primitive: { kind: "box", width: 2.1, height: 0.12, depth: 0.46 }, material: VINYL_RED },
-      { feetPosition: { x: 0, y: 0.44, z: 0.65 }, primitive: { kind: "box", width: 2.1, height: 0.12, depth: 0.46 }, material: VINYL_RED },
-      { feetPosition: { x: 0, y: 0.56, z: -0.84 }, primitive: { kind: "box", width: 2.1, height: 0.58, depth: 0.14 }, material: VINYL_RED },
-      { feetPosition: { x: 0, y: 0.56, z: 0.84 }, primitive: { kind: "box", width: 2.1, height: 0.58, depth: 0.14 }, material: VINYL_RED },
-      { feetPosition: { x: -0.98, y: 0.56, z: 0 }, primitive: { kind: "box", width: 0.14, height: 0.58, depth: 1.54 }, material: VINYL_RED },
-      { feetPosition: { x: 0.05, y: 0, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.045, radiusBottom: 0.18, height: 0.72 }, material: STEEL },
-      { feetPosition: { x: 0.05, y: 0.72, z: 0 }, primitive: { kind: "box", width: 1.45, height: 0.05, depth: 0.78 }, material: { color: "#f2ede4", roughness: 0.3 } },
-      { feetPosition: { x: 0.05, y: 0.72, z: 0 }, primitive: { kind: "box", width: 1.48, height: 0.03, depth: 0.81 }, material: STEEL },
-      { feetPosition: { x: -0.45, y: 0.77, z: -0.1 }, primitive: { kind: "cylinder", radiusTop: 0.024, radiusBottom: 0.026, height: 0.14 }, material: { color: "#d21414", roughness: 0.4 } },
-      { feetPosition: { x: -0.45, y: 0.77, z: 0.1 }, primitive: { kind: "cylinder", radiusTop: 0.024, radiusBottom: 0.026, height: 0.14 }, material: { color: "#e6b800", roughness: 0.4 } },
-      { feetPosition: { x: -0.45, y: 0.77, z: 0 }, primitive: { kind: "box", width: 0.08, height: 0.11, depth: 0.07 }, material: STEEL },
-      { feetPosition: { x: 0.05, y: 2.5, z: 0 }, light: { kind: "point", color: "oklch(0.92 0.08 75)", intensity: 2.2, distance: 7 } },
-      { feetPosition: { x: 0.05, y: 2.6, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.24, height: 0.16 }, material: { color: "#1e5238", roughness: 0.4 } },
+      { feetPosition: { x: 0, y: 2.5, z: 0 }, light: { kind: "point", color: "oklch(0.92 0.08 75)", intensity: 2.2, distance: 7 } },
+      { feetPosition: { x: 0, y: 2.6, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.24, height: 0.16 }, material: { color: "#1e5238", roughness: 0.4 } },
     ],
   });
 
