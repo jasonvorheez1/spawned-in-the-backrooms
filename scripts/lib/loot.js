@@ -29,11 +29,20 @@ export function spawnShells(ctx, c) {
 export const POOL = { main: "l0", level1: "l1", level2: "l2", level3: "l3", gamma: "l3", level4: "l4", level5: "l5", level7: "l7", level8: "l2", level21: "l2" };
 export const poolOf = (place) => POOL[place] ?? "l0";
 // Weighted pick over every found weapon this pool can hold; rarer ones carry a smaller weight in weapons.yml.
-export function rollWeapon(ctx, pool = "l0") {
-  const kinds = W.order.slice(1).filter((k) => !W[k].level1 && !W[k].level2 && !W[k].level3 && (!W[k].pools?.length || W[k].pools.includes(pool))), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
+export function rollWeapon(ctx, pool = "l0", cap = 3) {
+  const kinds = W.order.slice(1).filter((k) => !W[k].level1 && !W[k].level2 && !W[k].level3 && (!W[k].pools?.length || W[k].pools.includes(pool)) && rarityIdx(k) <= cap), total = kinds.reduce((a, k) => a + (W[k].weight ?? 1), 0);
   let r = ctx.random() * total;
-  for (const k of kinds) { r -= W[k].weight ?? 1; if (r <= 0) return rollVariant(ctx, k); }
-  return kinds[0];
+  for (const k of kinds) { r -= W[k].weight ?? 1; if (r <= 0) { const v = rollVariant(ctx, k); return rarityIdx(v) <= cap ? v : k; } }
+  return kinds[0] ?? "table_leg";
+}
+// A found thing too good for this player's level becomes a fitting one (weapon tokens only; the rest is level-free).
+export function gateItems(ctx, items, level, pool = "l0") {
+  const cap = rarityCap(level);
+  return String(items ?? "").split(",").filter(Boolean).map((t) => {
+    if (!t.startsWith("weapon:")) return t;
+    const k = t.slice(7);
+    return rarityIdx(k) <= cap ? t : "weapon:" + rollWeapon(ctx, pool, cap);
+  }).join(",");
 }
 
 // ---- containers: a crate in the maze, or the remains of what you killed. Their contents are tokens (scripts/lib/items.js).

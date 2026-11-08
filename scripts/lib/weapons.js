@@ -39,4 +39,8 @@ export function rollVariant(ctx, k) {
   for (const [key, c] of opts) { r -= c; if (r <= 0) return key }
   return k
 }
+// What a player of this level may find (the creator, 2026-11-08: no rare+ finds at level 1). Savi's picks:
+// levels 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite. Applies to found loot only; anything you own still works.
+export const rarityIdx = (k) => Math.max(0, RAR.indexOf(W[k]?.rarity ?? 'common'))
+export const rarityCap = (level) => (level ?? 1) < 3 ? 0 : level < 6 ? 1 : level < 10 ? 2 : 3
 export default W
