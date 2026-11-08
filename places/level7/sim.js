@@ -86,7 +86,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 19; // 19: walkable stairs back to Level 6
+const V = 20; // 20: walkable stairs back to Level 6
 // 16 // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
@@ -343,7 +343,7 @@ function lay(ctx) {
 
   // Staircase ascending into the darkness back to Level 6 (South)
   for (let k = 0; k < 6; k++) { // 0.26 m risers: a body climbs 0.3 at most
-    box(ctx, `l7-step-${k}`, 0, FY + k * 0.26, 3.4 + k * 0.3, 1.2, 0.26, 0.32, { ...CONCRETE, color: "oklch(0.29 0.008 240)" });
+    box(ctx, `l7-step-${k}`, 0, FY + k * 0.26, 3.4 + k * 0.3, 1.2, 0.26, 0.42, { ...CONCRETE, color: "oklch(0.29 0.008 240)" });
   }
   box(ctx, "l7-shaft-e", 0.8, FY, 4.4, 0.4, 4.0, 2.4, CONCRETE);
   box(ctx, "l7-shaft-w", -0.8, FY, 4.4, 0.4, 4.0, 2.4, CONCRETE);
