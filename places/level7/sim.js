@@ -825,6 +825,7 @@ function lay(ctx) {
   // =========================================================================
   // 8. LEVEL 7 IS A ROOM: Concrete ceiling over the whole sea & megalithic pillars
   // =========================================================================
+  const PILLAR = { color: "oklch(0.36 0.01 230)", roughness: 0.9, texture: "cdn/texture-water-stained-streaked-old-poured-concrete-column.png", repeat: [0.12, 0.08], wrap: "repeat" };
   const CEIL = { color: "oklch(0.3 0.008 240)", roughness: 0.95, texture: "cdn/texture-smooth-cold-poured-concrete-wall.png", repeat: [0.25, 0.25], wrap: "repeat" };
   ctx.spawn("l7-sky-ceiling", { feetPosition: { x: 0, y: 34, z: -100 }, primitive: { kind: "box", width: 1600, height: 3, depth: 1600 }, material: CEIL, castShadow: false });
   // the house hangs from the ceiling on one concrete column standing on its ridge (ridge at FY + 4.42)
@@ -844,7 +845,10 @@ function lay(ctx) {
     [-140, -160, 14], [120, -230, 18], [-60, -330, 22],
     [210, -60, 16], [-230, -40, 16], [40, -420, 24],
   ].forEach(([x, z, w], i) =>
-    ctx.spawn(`l7-pillar-${i}`, { feetPosition: { x, y: -30, z }, primitive: { kind: "box", width: w, height: 64, depth: w }, material: CEIL, castShadow: false })
+    ctx.spawn(`l7-pillar-${i}`, { feetPosition: { x, y: -30, z }, primitive: { kind: "cylinder", radiusTop: w * 0.5, radiusBottom: w * 0.56, height: 64, radialSegments: 20 }, material: PILLAR, castShadow: false, children: [
+      { feetPosition: { x: 0, y: 29.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: w * 0.535, radiusBottom: w * 0.545, height: 2.2, radialSegments: 20 }, material: { color: "oklch(0.2 0.03 160)", roughness: 0.5, texture: "cdn/texture-slimy-dark-green-algae-tide-line-on-wet-concrete.png", repeat: [0.3, 0.5], wrap: "repeat" } }, // the tide band: slime where the sea licks it
+      { feetPosition: { x: 0, y: 61.5, z: 0 }, primitive: { kind: "cylinder", radiusTop: w * 0.9, radiusBottom: w * 0.5, height: 2.5, radialSegments: 20 }, material: PILLAR }, // a flared capital where it meets the ceiling
+    ] })
   );
 
   // =========================================================================
