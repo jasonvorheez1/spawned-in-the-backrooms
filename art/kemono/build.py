@@ -73,7 +73,7 @@ slots = ['fur', 'belly', 'limb', 'mark', 'pad', 'inner', 'nose', 'eyewhite', 'un
 body.data.materials.clear()
 for k in slots:
     m = bpy.data.materials.new(k); m.use_nodes = True
-    b = m.node_tree.nodes['Principled BSDF']; b.inputs['Base Color'].default_value = (*lin(hexc(COLS[k])), 1); b.inputs['Roughness'].default_value = 0.85
+    b = m.node_tree.nodes['Principled BSDF']; b.inputs['Base Color'].default_value = (*lin(hexc(next((h for kk, h in PAL[SEX] if kk == k), COLS[k]))), 1); b.inputs['Roughness'].default_value = 0.85
     body.data.materials.append(m)
 cnt = {}
 for p in body.data.polygons:
@@ -84,6 +84,7 @@ for p in body.data.polygons:
     # bright, colourless = eye white (only on the head); else the nearest painted colour
     hz = sum((body.data.vertices[vi].co.z for vi in p.vertices)) / len(p.vertices)
     if lum > 0.8 and sat < 0.06 and hz > 1.05: k = 'eyewhite'
+    elif lum < 0.3 and sat < 0.08 and hz > 1.05: k = 'nose'   # eye ink on the head, never the grey underwear
     else: k = min(pal, key=lambda kv: sum((kv[1][i] - c[i]) ** 2 for i in range(3)))[0]
     p.material_index = slots.index(k); cnt[k] = cnt.get(k, 0) + 1
 print('slots', cnt)
