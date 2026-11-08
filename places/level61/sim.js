@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 42;
+const V = 43;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -137,17 +137,8 @@ function lay(ctx) {
     ],
   });
 
-  // ---- The Hall: Terrazzo, cream plaster with teal and pink bands, drop ceiling with skylights
-  box("l61-floor-w", -19, -0.3, 0, 24, 0.3, 2 * HD + 26, TERRAZZO);
-  box("l61-floor-e", 19, -0.3, 0, 24, 0.3, 2 * HD + 26, TERRAZZO);
-  box("l61-floor-n", 0, -0.3, -21, 14, 0.3, 28, TERRAZZO);
-  box("l61-floor-s", 0, -0.3, 21, 14, 0.3, 28, TERRAZZO);
-
-  for (const s of [-1, 1]) {
-    box(`l61-step-z${s}`, 0, -0.6, s * 6.25, 14, 0.3, 1.5, { ...TERRAZZO, color: "oklch(0.8 0.04 350)" });
-    box(`l61-step-x${s}`, s * 6.25, -0.6, 0, 1.5, 0.3, 11, { ...TERRAZZO, color: "oklch(0.8 0.04 190)" });
-  }
-  box("l61-pit-floor", 0, -0.9, 0, 11, 0.3, 11, { ...TERRAZZO, color: "oklch(0.55 0.1 30)" });
+  // ---- The Hall: Continuous polished terrazzo, brass expansion joints, drop ceiling with skylights
+  box("l61-floor-main", 0, -0.3, 0, 2 * HW + 12, 0.3, 2 * HD + 26, TERRAZZO);
   box("l61-roof", 0, HH, 0, 2 * HW, 0.3, 2 * HD, CEIL);
 
   for (const [i, sx] of [-18, 0, 18].entries()) {
@@ -180,8 +171,8 @@ function lay(ctx) {
   wain("l61-wain-w", "z", -HW + 0.19, -HD + 0.2, HD - 0.2, [[0, 1.6], [-21, 0.01]]);
   wain("l61-wain-e", "z", HW - 0.19, -HD + 0.2, HD - 0.2, [[-9, 2.2]]);
   let bs = 0;
-  for (let x = -28; x <= 28; x += 4) for (const [z0, z1] of (Math.abs(x) < 7.5 ? [[-HD, -7.2], [7.2, HD]] : [[-HD, HD]])) box(`l61-brass-${bs++}`, x, -0.003, (z0 + z1) / 2, 0.035, 0.006, z1 - z0, BRASS, { physics: undefined, receiveShadow: true });
-  for (let z = -20; z <= 20; z += 4) for (const [x0, x1] of (Math.abs(z) < 7.5 ? [[-HW, -7.2], [7.2, HW]] : [[-HW, HW]])) box(`l61-brass-${bs++}`, (x0 + x1) / 2, -0.003, z, x1 - x0, 0.006, 0.035, BRASS, { physics: undefined, receiveShadow: true });
+  for (let x = -28; x <= 28; x += 4) for (const [z0, z1] of (Math.abs(x) < 5.8 ? [[-HD, -6.2], [6.2, HD]] : [[-HD, HD]])) box(`l61-brass-${bs++}`, x, -0.003, (z0 + z1) / 2, 0.035, 0.006, z1 - z0, BRASS, { physics: undefined, receiveShadow: true });
+  for (let z = -20; z <= 20; z += 4) for (const [x0, x1] of (Math.abs(z) < 5.8 ? [[-HW, -6.2], [6.2, HW]] : [[-HW, HW]])) box(`l61-brass-${bs++}`, (x0 + x1) / 2, -0.003, z, x1 - x0, 0.006, 0.035, BRASS, { physics: undefined, receiveShadow: true });
 
   for (const [n, y, c] of [[0, 1.0, "oklch(0.62 0.09 190)"], [1, 1.2, "oklch(0.74 0.11 350)"]]) {
     for (const s of [-1, 1]) box(`l61-band-z${n}${s}`, 0, y, s * (HD - 0.17), 2 * HW - 0.4, 0.12, 0.04, { color: c, roughness: 0.5 }, { physics: undefined });
@@ -195,51 +186,366 @@ function lay(ctx) {
       children: [{ feetPosition: { x: 0, y: 1.2, z: 0 }, light: { kind: "rect", color: "oklch(0.93 0.07 70)", intensity: 2.2, width: 3.0, height: 1.9, aim: "forward" } }] });
   }
 
-  // ---- The Dining Court: Cozy curved diner booths along walls + center conversation pit
-  // West perimeter curved booths
+  // ---- Central Fountain & Garden Rotunda (The Main Centerpiece at 0, 0)
+  // Outer circular marble retaining wall & rounded brass coping
+  sp("l61-rotunda-wall", {
+    feetPosition: { x: 0, y: 0, z: 0 },
+    physics: { body: "static", collider: "cylinder" },
+    primitive: { kind: "cylinder", radiusTop: 4.6, radiusBottom: 4.8, height: 0.52 },
+    material: { ...TERRAZZO, color: "oklch(0.92 0.02 85)", roughness: 0.3 },
+  });
+  sp("l61-rotunda-rim", {
+    feetPosition: { x: 0, y: 0.52, z: 0 },
+    rotation: { pitch: 90 },
+    primitive: { kind: "torus", radius: 4.65, tube: 0.045 },
+    material: BRASS,
+    physics: undefined,
+  });
+  // Circular polished honey-oak seating ledge around the rotunda rim
+  sp("l61-rotunda-bench", {
+    feetPosition: { x: 0, y: 0.44, z: 0 },
+    rotation: { pitch: 90 },
+    primitive: { kind: "torus", radius: 4.88, tube: 0.11 },
+    material: WOOD,
+    physics: undefined,
+  });
+  for (let k = 0; k < 4; k++) {
+    const a = (k * Math.PI) / 2;
+    sp(`l61-rotunda-seat-${k}`, {
+      feetPosition: { x: Math.sin(a) * 4.9, y: 0, z: Math.cos(a) * 4.9 },
+      rotation: { yaw: (a * 180) / Math.PI + 180 },
+      tags: ["seat", "chair"],
+      state: { seat: { w: 1.2, d: 0.3, y: 0.44 }, verb: "Sit by the fountain", name: "Fountain ledge" },
+    });
+  }
+  // Soft teal under-glow beneath seating overhang
+  sp("l61-rotunda-glow", {
+    feetPosition: { x: 0, y: 0.12, z: 0 },
+    rotation: { pitch: 90 },
+    primitive: { kind: "torus", radius: 4.5, tube: 0.02 },
+    material: { color: "oklch(0.8 0.14 195)", emissive: "oklch(0.8 0.14 195)", emissiveIntensity: 2.2, roughness: 0.3 },
+    physics: undefined,
+  });
+
+  // Concentric brass floor inlay ring & geometric quadrant medallions on the terrazzo
+  sp("l61-rotunda-inlay-ring", {
+    feetPosition: { x: 0, y: 0.004, z: 0 },
+    rotation: { pitch: 90 },
+    primitive: { kind: "torus", radius: 5.4, tube: 0.02 },
+    material: BRASS,
+    physics: undefined,
+  });
+  for (let i = 0; i < 4; i++) {
+    const a = (i * Math.PI) / 2 + Math.PI / 4;
+    sp(`l61-medallion-${i}`, {
+      feetPosition: { x: Math.sin(a) * 5.7, y: 0.003, z: Math.cos(a) * 5.7 },
+      rotation: { yaw: (a * 180) / Math.PI + 45 },
+      primitive: { kind: "box", width: 0.9, height: 0.005, depth: 0.9 },
+      material: { ...TERRAZZO, color: i % 2 === 0 ? "oklch(0.65 0.1 190)" : "oklch(0.72 0.12 350)" },
+      physics: undefined,
+    });
+  }
+
+  // Inner pool basin: aquatic mosaic floor, rippling water, underwater spotlights, wishing coins
+  sp("l61-pool-floor", {
+    feetPosition: { x: 0, y: 0.04, z: 0 },
+    primitive: { kind: "cylinder", radiusTop: 4.25, radiusBottom: 4.25, height: 0.04 },
+    material: { ...MOSAIC, color: "oklch(0.72 0.06 215)", roughness: 0.3 },
+    physics: undefined,
+  });
+  sp("l61-pool-water", {
+    feetPosition: { x: 0, y: 0.40, z: 0 },
+    primitive: { kind: "cylinder", radiusTop: 4.25, radiusBottom: 4.25, height: 0.02 },
+    material: { kind: "water", color: "oklch(0.82 0.08 200)", opacity: 0.74, roughness: 0.08, waveIntensity: 0.06 },
+    physics: undefined,
+  });
+  for (let k = 0; k < 4; k++) {
+    const a = (k * Math.PI) / 2 + Math.PI / 4;
+    sp(`l61-pool-light-${k}`, {
+      feetPosition: { x: Math.sin(a) * 2.8, y: 0.15, z: Math.cos(a) * 2.8 },
+      light: { kind: "point", color: "oklch(0.85 0.14 195)", intensity: 3.5, distance: 8, shadow: { enabled: false } },
+    });
+  }
+  const COIN_BRASS = { color: "oklch(0.78 0.12 85)", metalness: 0.95, roughness: 0.2 };
+  const COIN_COPPER = { color: "oklch(0.65 0.14 45)", metalness: 0.9, roughness: 0.25 };
+  const COINS = [
+    [1.8, 1.2, 0], [-2.1, 1.5, 1], [0.8, -2.4, 0], [-1.4, -1.9, 1],
+    [2.4, -1.1, 0], [-0.7, 2.6, 1], [2.2, 2.0, 1], [-2.5, -0.9, 0],
+    [0.4, 1.9, 0], [-1.9, 0.7, 1], [1.5, -1.8, 1], [-0.5, -2.8, 0]
+  ];
+  COINS.forEach(([cx, cz, ct], i) => {
+    sp(`l61-coin-${i}`, {
+      feetPosition: { x: cx, y: 0.045, z: cz },
+      primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.04, height: 0.006 },
+      material: ct === 0 ? COIN_BRASS : COIN_COPPER,
+      physics: undefined,
+    });
+  });
+
+  // Central fluted pedestal & upper overflow spill basin with weeping fig tree
+  sp("l61-fountain-pedestal", {
+    feetPosition: { x: 0, y: 0, z: 0 },
+    physics: { body: "static", collider: "cylinder" },
+    primitive: { kind: "cylinder", radiusTop: 1.5, radiusBottom: 1.65, height: 0.95 },
+    material: { ...TERRAZZO, color: "oklch(0.94 0.02 85)", roughness: 0.25 },
+    children: [
+      { feetPosition: { x: 0, y: 0.45, z: 0 }, primitive: { kind: "torus", radius: 1.58, tube: 0.035 }, rotation: { pitch: 90 }, material: BRASS },
+    ],
+  });
+  sp("l61-fountain-bowl", {
+    feetPosition: { x: 0, y: 0.95, z: 0 },
+    primitive: { kind: "cylinder", radiusTop: 1.85, radiusBottom: 1.45, height: 0.38 },
+    material: BRASS,
+    children: [
+      { feetPosition: { x: 0, y: 0.38, z: 0 }, primitive: { kind: "torus", radius: 1.86, tube: 0.04 }, rotation: { pitch: 90 }, material: BRASS },
+      { feetPosition: { x: 0, y: 0.34, z: 0 }, primitive: { kind: "cylinder", radiusTop: 1.78, radiusBottom: 1.78, height: 0.02 }, material: { kind: "water", color: "oklch(0.85 0.09 200)", opacity: 0.8, waveIntensity: 0.08 } },
+      { feetPosition: { x: 0, y: 0.36, z: 0 }, primitive: { kind: "cylinder", radiusTop: 1.3, radiusBottom: 1.3, height: 0.08 }, material: { ...T("dark-potting-soil-with-bark-mulch", 1), color: "oklch(0.38 0.04 50)", roughness: 1 } },
+      { feetPosition: { x: 0, y: 0.42, z: 0 }, primitive: { kind: "scripted", script: "scripts/tree61.js", params: { h: 4.8 }, seed: 61 }, material: { alphaTest: 0.5, side: "double", roughness: 0.55 } },
+    ],
+  });
+  const FOUNTAIN_FX = `fx
+pop spray rate=12 on=ring(1.3,1.7) life=.7..1.2 v=up(.7..1.2)+sdir()*.18 size=.03..0.06 acc=grav() floor=die col=<.75,.9,1> a=0>.6:1>.8:.8>0 sz=$size r=sprite(soft-disc,alpha)
+pop mist rate=5 on=ring(1.2,1.6) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.22 col=<.85,.95,1> a=0>.4:.2>.4:.8>0 sz=$size*(.8>1.8) r=sprite(smoke-puff,alpha)`;
+  sp("l61-fountain-spray", {
+    feetPosition: { x: 0, y: 1.32, z: 0 },
+    fx: { script: FOUNTAIN_FX },
+    audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-calm-sea-water-lapping-against-small-wooden-boat-hull-loop.mp3", loop: true, gain: 0.18, spatial: true, maxDistance: 18 },
+  });
+
+  // 4 Outer promenade curved benches & fluted ficus planters facing outward from the rotunda
+  for (let k = 0; k < 4; k++) {
+    const a = (k * Math.PI) / 2;
+    const bx = Math.sin(a) * 6.0, bz = Math.cos(a) * 6.0;
+    sp(`l61-fountain-bench-${k}`, {
+      feetPosition: { x: bx, y: 0, z: bz },
+      rotation: { yaw: (a * 180) / Math.PI + 180 },
+      physics: { body: "static", collider: "box" },
+      model: { id: M_BENCH, forward: "+z" },
+    });
+    for (const side of [-1, 1]) {
+      const pAngle = a + side * 0.22;
+      const px = Math.sin(pAngle) * 5.85, pz = Math.cos(pAngle) * 5.85;
+      sp(`l61-fountain-pot-${k}-${side}`, {
+        feetPosition: { x: px, y: 0, z: pz },
+        physics: "static",
+        primitive: { kind: "cylinder", radiusTop: 0.38, radiusBottom: 0.30, height: 0.58 },
+        material: BRASS,
+        children: [
+          { feetPosition: { x: 0, y: 0.55, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.35, radiusBottom: 0.35, height: 0.05 }, material: { ...T("dark-potting-soil-with-bark-mulch", 1), color: "oklch(0.38 0.04 50)", roughness: 1 } },
+          { feetPosition: { x: 0, y: 0.58, z: 0 }, primitive: { kind: "scripted", script: "scripts/tree61.js", params: { h: 2.2 }, seed: 70 + k * 2 + (side > 0 ? 1 : 0) }, material: { alphaTest: 0.5, side: "double", roughness: 0.55 } },
+        ],
+      });
+    }
+  }
+
+  // ---- The Dining Terraces: West Bistro & East Fast-Casual Wings
+  // Perimeter curved diner booths
   spawnBooth("l61-booth-w0", -23, -12, 90);
   spawnBooth("l61-booth-w1", -23, 0, 90);
   spawnBooth("l61-booth-w2", -23, 12, 90);
-
-  // East perimeter curved booths
   spawnBooth("l61-booth-e0", 23, -12, -90);
   spawnBooth("l61-booth-e1", 23, 0, -90);
   spawnBooth("l61-booth-e2", 23, 12, -90);
-
-  // South perimeter curved booths
   spawnBooth("l61-booth-s0", -6, 15, 0);
   spawnBooth("l61-booth-s1", 6, 15, 0);
 
-  // Intermediate dining tables scattered naturally in the court
-  let t = 0;
-  for (const [x, z] of [[-14, -13], [-14, -7], [-14, 7], [-14, 13], [14, -13], [14, -7], [14, 7], [14, 13], [-7, -13], [7, -13], [-7, 13], [7, 13]]) {
-    tableSet(`l61-table-${t++}`, x, z, (x * 19 + z * 7) % 36);
+  // Booth privacy dividers along West & East walls
+  for (const bz of [-6, 6]) {
+    sp(`l61-booth-divider-w-${bz}`, {
+      feetPosition: { x: -23.0, y: 0, z: bz },
+      physics: { body: "static", collider: "box" },
+      primitive: { kind: "box", width: 0.14, height: 1.45, depth: 2.4 },
+      material: DARKWOOD,
+      children: [
+        { feetPosition: { x: 0, y: 1.45, z: 0 }, primitive: { kind: "box", width: 0.08, height: 0.75, depth: 2.2 }, material: { color: "oklch(0.85 0.04 70 / 0.4)", transparent: true, opacity: 0.45, roughness: 0.2 } },
+        { feetPosition: { x: 0, y: 2.22, z: 0 }, primitive: { kind: "box", width: 0.14, height: 0.06, depth: 2.4 }, material: BRASS },
+      ],
+    });
+    sp(`l61-booth-divider-e-${bz}`, {
+      feetPosition: { x: 23.0, y: 0, z: bz },
+      physics: { body: "static", collider: "box" },
+      primitive: { kind: "box", width: 0.14, height: 1.45, depth: 2.4 },
+      material: WOOD,
+      children: [
+        { feetPosition: { x: 0, y: 1.45, z: 0 }, primitive: { kind: "box", width: 0.08, height: 0.75, depth: 2.2 }, material: { color: "oklch(0.85 0.04 70 / 0.4)", transparent: true, opacity: 0.45, roughness: 0.2 } },
+        { feetPosition: { x: 0, y: 2.22, z: 0 }, primitive: { kind: "box", width: 0.14, height: 0.06, depth: 2.4 }, material: BRASS },
+      ],
+    });
   }
 
-  // Conversation pit benches & central planter
-  for (let k = 0; k < 8; k++) {
-    const a = (k / 8) * Math.PI * 2;
-    sp(`l61-pbench-${k}`, { feetPosition: { x: Math.sin(a) * 4.4, y: -0.6, z: Math.cos(a) * 4.4 }, rotation: { yaw: (a * 180) / Math.PI }, physics: { body: "static", collider: "box" }, model: { id: M_BENCH, forward: "+z" } });
-  }
+  // 14 Sensibly positioned Dining Tables
+  const DINING_TABLES = [
+    // West Dining Terrace (Bistro & Lounge)
+    [-16.5, -13.5, 15],
+    [-12.0, -8.5, -20],
+    [-16.5, -5.0, 0],
+    [-16.5, 5.0, 10],
+    [-12.0, 8.5, -15],
+    [-16.5, 13.5, 25],
+    // East Dining Terrace (Fast-Casual Family)
+    [16.5, -13.5, -10],
+    [12.0, -8.5, 15],
+    [16.5, -5.0, -5],
+    [16.5, 5.0, 20],
+    [12.0, 8.5, -10],
+    [16.5, 13.5, 10],
+    // North Quick-Bite tables
+    [-7.5, -14.0, 0],
+    [7.5, -14.0, 0],
+  ];
+  DINING_TABLES.forEach(([tx, tz, tyaw], idx) => {
+    tableSet(`l61-table-${idx}`, tx, tz, tyaw);
+  });
 
-  sp("l61-planter", {
-    feetPosition: { x: 0, y: -0.6, z: 0 },
-    physics: "static",
-    primitive: { kind: "cylinder", radiusTop: 1.6, radiusBottom: 1.6, height: 0.7 },
-    material: { color: "oklch(0.8 0.03 70)", roughness: 0.6 },
+  // West Lounge: 2 High-Top Cocktail Tables near Clippers with chrome swivel barstools
+  const HIGH_TOPS = [
+    [-19.5, -19.0],
+    [-15.0, -19.0],
+  ];
+  HIGH_TOPS.forEach(([hx, hz], hi) => {
+    sp(`l61-hightop-${hi}`, {
+      feetPosition: { x: hx, y: 0, z: hz },
+      physics: { body: "static", collider: "cylinder" },
+      primitive: { kind: "cylinder", radiusTop: 0.55, radiusBottom: 0.55, height: 0.05 },
+      material: DARKWOOD,
+      children: [
+        { feetPosition: { x: 0, y: -0.55, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.05, height: 1.0 }, material: STEEL },
+        { feetPosition: { x: 0, y: -1.03, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.32, radiusBottom: 0.34, height: 0.04 }, material: STEEL },
+        { feetPosition: { x: 0, y: 0.03, z: 0 }, primitive: { kind: "torus", radius: 0.54, tube: 0.02 }, rotation: { pitch: 90 }, material: BRASS },
+      ],
+    });
+    stool(`l61-hightop-stool-${hi}-0`, hx - 0.72, hz, "oklch(0.45 0.18 25)");
+    stool(`l61-hightop-stool-${hi}-1`, hx + 0.72, hz, "oklch(0.45 0.18 25)");
+  });
+
+  // Suspended Frosted Opal Sphere Pendant Lights over dining clusters
+  const PENDANT_SPOTS = [
+    [-16.5, -13.5], [-12.0, -8.5], [-16.5, -5.0],
+    [-16.5, 5.0], [-12.0, 8.5], [-16.5, 13.5],
+    [16.5, -13.5], [12.0, -8.5], [16.5, -5.0],
+    [16.5, 5.0], [12.0, 8.5], [16.5, 13.5],
+  ];
+  PENDANT_SPOTS.forEach(([lx, lz], li) => {
+    sp(`l61-pendant-${li}`, {
+      feetPosition: { x: lx, y: 3.1, z: lz },
+      primitive: { kind: "sphere", radius: 0.22 },
+      material: { color: "oklch(0.96 0.02 85)", emissive: "oklch(0.92 0.08 75)", emissiveIntensity: 1.4, roughness: 0.2 },
+      light: { kind: "point", color: "oklch(0.92 0.08 75)", intensity: 2.2, distance: 7, shadow: { enabled: false } },
+      children: [
+        { feetPosition: { x: 0, y: 0.21, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.07, height: 0.08 }, material: BRASS },
+        { feetPosition: { x: 0, y: 0.29, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: HH - 3.4 }, material: { color: "oklch(0.18 0 0)" } },
+      ],
+    });
+  });
+
+  // ---- Authentic Food Court Amenities
+  // 1. Central 3-Sided Illuminated Mall Directory & Map Lightbox Kiosk at (0, 8.5)
+  sp("l61-directory-kiosk", {
+    feetPosition: { x: 0, y: 0, z: 8.5 },
+    rotation: { yaw: 0 },
+    physics: { body: "static", collider: "cylinder" },
+    primitive: { kind: "cylinder", radiusTop: 0.85, radiusBottom: 0.9, height: 2.4 },
+    material: { color: "oklch(0.25 0.01 250)", metalness: 0.7, roughness: 0.35 },
+    tags: ["usable"],
+    behavior: "scripts/l61-use.js",
+    state: { kind: "directory", name: "Mall Directory & Map", verb: "Inspect directory", info: "Illuminated 3-sided directory kiosk.", tint: "#ffd84a" },
+    ui: `<div face="front" width="1.4m" style="width:1400px;height:2200px;box-sizing:border-box;padding:40px 30px;background:#0d1217;color:#f0f4f8;font-family:Arial,sans-serif;border:16px solid #d4af37;border-radius:12px;text-align:center;display:flex;flex-direction:column;justify-content:space-between">
+      <div style="background:#162432;border:4px solid #5ad8e0;padding:24px 16px;border-radius:8px">
+        <div style="font-size:74px;font-weight:900;letter-spacing:4px;color:#ff7ab8">LEVEL 6.1 DIRECTORY</div>
+        <div style="font-size:36px;color:#5ad8e0;margin-top:6px;letter-spacing:2px">THE SNACKROOMS · SANCTUARY</div>
+      </div>
+      <div style="margin:20px 0;padding:20px;background:#141a20;border:2px dashed #445566;border-radius:6px;text-align:left">
+        <div style="font-size:42px;font-weight:bold;color:#ffd84a;margin-bottom:14px">DINING &amp; LIBATIONS [NORTH]</div>
+        <div style="font-size:32px;color:#ffe0d0;margin-bottom:8px">✦ CLIPPERS · Red 50s Bar &amp; Live 80s Jukebox</div>
+        <div style="font-size:32px;color:#f2d98a;margin-bottom:8px">✦ LIQUORETTE · Tavern, Stained Glass &amp; Almond Water</div>
+        <div style="font-size:32px;color:#ff8a7a;margin-bottom:8px">✦ SLICE PALACE · Pizza Warming Case &amp; Oven</div>
+        <div style="font-size:32px;color:#ff9ad0;margin-bottom:8px">✦ BURGER BOP · Griddle, Shakes &amp; Chef Sal</div>
+        <div style="font-size:42px;font-weight:bold;color:#7affb0;margin:18px 0 10px">SANCTUARY AMENITIES</div>
+        <div style="font-size:32px;color:#e8f4f8;margin-bottom:8px">✦ RESTROOMS &amp; VENDING · South Hall Wing</div>
+        <div style="font-size:32px;color:#88e0ff;margin-bottom:8px">✦ LEVEL 11 RESTAURANT · Automatic Glass Doors [East]</div>
+        <div style="font-size:32px;color:#ffaa50;margin-bottom:8px">✦ M.E.G. CHECKPOINT · Level 6 Access Outpost [West]</div>
+      </div>
+      <div style="background:#281618;border:3px solid #ff4a4a;padding:16px;border-radius:6px">
+        <div style="font-size:34px;font-weight:900;color:#ff6b6b">★ YOU ARE HERE · ALL FOOD &amp; DRINK FREE ★</div>
+        <div style="font-size:26px;color:#cccccc;margin-top:4px">Rest safely. Entity 9 Faceling staff are non-hostile.</div>
+      </div>
+    </div>`,
     children: [
-      { feetPosition: { x: 0, y: 0.62, z: 0 }, primitive: { kind: "cylinder", radiusTop: 1.5, radiusBottom: 1.5, height: 0.06 }, material: { ...T("dark-potting-soil-with-bark-mulch", 1), color: "oklch(0.4 0.04 50)", roughness: 1 } },
-      { feetPosition: { x: 0, y: 0.66, z: 0 }, primitive: { kind: "scripted", script: "scripts/tree61.js", params: { h: 4.6 }, seed: 61 }, material: { alphaTest: 0.5, side: "double", roughness: 0.55 } },
+      { feetPosition: { x: 0, y: 2.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.95, radiusBottom: 0.95, height: 0.08 }, material: BRASS },
+      { feetPosition: { x: 0, y: 2.2, z: 0.8 }, light: { kind: "point", color: "oklch(0.95 0.05 85)", intensity: 2.4, distance: 5 } },
     ],
   });
 
+  // 2. Dual Waste & Tray Return stations with Stainless Condiment Pump Carousels
+  for (const [side, sx] of [[-1, -8.8], [1, 8.8]]) {
+    sp(`l61-waste-condiment-${side}`, {
+      feetPosition: { x: sx, y: 0, z: -1.0 },
+      rotation: { yaw: side > 0 ? -90 : 90 },
+      physics: { body: "static", collider: "box" },
+      primitive: { kind: "box", width: 1.4, height: 1.05, depth: 0.75 },
+      material: DARKWOOD,
+      tags: ["usable"],
+      behavior: "scripts/l61-use.js",
+      state: { kind: "condiment", name: "Condiment & Waste Station", verb: "Pump ketchup or mustard", line: "PUMP SQUIRT! (Extra Heinz & French's on your napkin)", tint: "#ff4a3a" },
+      children: [
+        { feetPosition: { x: 0, y: 1.05, z: 0 }, primitive: { kind: "box", width: 1.42, height: 0.04, depth: 0.77 }, material: STEEL },
+        { feetPosition: { x: 0, y: 1.09, z: -0.32 }, primitive: { kind: "box", width: 1.42, height: 0.45, depth: 0.12 }, material: DARKWOOD },
+        { feetPosition: { x: -0.35, y: 0.5, z: 0.38 }, primitive: { kind: "box", width: 0.52, height: 0.42, depth: 0.02 }, material: { color: "oklch(0.35 0.08 40)", roughness: 0.6 } },
+        { feetPosition: { x: 0.35, y: 0.5, z: 0.38 }, primitive: { kind: "box", width: 0.52, height: 0.42, depth: 0.02 }, material: { color: "oklch(0.35 0.08 40)", roughness: 0.6 } },
+        { feetPosition: { x: -0.42, y: 1.09, z: 0.05 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.18 }, material: STEEL, children: [
+          { feetPosition: { x: 0, y: 0.18, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.02, height: 0.08 }, material: { color: "#c82020", roughness: 0.3 } },
+        ] },
+        { feetPosition: { x: -0.22, y: 1.09, z: 0.05 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.18 }, material: STEEL, children: [
+          { feetPosition: { x: 0, y: 0.18, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.02, height: 0.08 }, material: { color: "#d8a810", roughness: 0.3 } },
+        ] },
+        { feetPosition: { x: -0.02, y: 1.09, z: 0.05 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.18 }, material: STEEL, children: [
+          { feetPosition: { x: 0, y: 0.18, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.02, height: 0.08 }, material: { color: "#288830", roughness: 0.3 } },
+        ] },
+        { feetPosition: { x: 0.28, y: 1.09, z: 0.05 }, primitive: { kind: "box", width: 0.16, height: 0.22, depth: 0.14 }, material: STEEL, children: [
+          { feetPosition: { x: 0, y: 0.04, z: 0.072 }, primitive: { kind: "box", width: 0.12, height: 0.06, depth: 0.01 }, material: { color: "#f8f8f8", roughness: 0.9 } },
+        ] },
+        { feetPosition: { x: 0, y: 1.54, z: -0.32 }, primitive: { kind: "box", width: 0.5, height: 0.08, depth: 0.35 }, material: { color: "#8a2020", roughness: 0.5 } },
+      ],
+    });
+  }
+
+  // 3. Retro South Wall Chrome Payphone Bank at (5.0, HD - 0.25)
+  sp("l61-payphone-bank", {
+    feetPosition: { x: 5.0, y: 0, z: HD - 0.25 },
+    rotation: { yaw: 0 },
+    physics: { body: "static", collider: "box" },
+    primitive: { kind: "box", width: 2.6, height: 2.2, depth: 0.5 },
+    material: { color: "oklch(0.3 0.02 240)", metalness: 0.7, roughness: 0.3 },
+    tags: ["usable"],
+    behavior: "scripts/l61-use.js",
+    state: { kind: "payphone", name: "Public Payphones", verb: "Pick up receiver", tint: "#9fe8ff" },
+    audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-walkie-talkie-radio-click-static-burst.mp3", gain: 0.04, loop: true, spatial: true, maxDistance: 4 },
+    children: [
+      { feetPosition: { x: -0.85, y: 0.7, z: 0.25 }, primitive: { kind: "box", width: 0.04, height: 1.4, depth: 0.45 }, material: STEEL },
+      { feetPosition: { x: 0, y: 0.7, z: 0.25 }, primitive: { kind: "box", width: 0.04, height: 1.4, depth: 0.45 }, material: STEEL },
+      { feetPosition: { x: 0.85, y: 0.7, z: 0.25 }, primitive: { kind: "box", width: 0.04, height: 1.4, depth: 0.45 }, material: STEEL },
+      ...[-0.55, 0.42].flatMap((px) => [
+        { feetPosition: { x: px, y: 1.1, z: 0.26 }, primitive: { kind: "box", width: 0.32, height: 0.65, depth: 0.16 }, material: STEEL },
+        { feetPosition: { x: px, y: 1.25, z: 0.345 }, primitive: { kind: "box", width: 0.18, height: 0.18, depth: 0.02 }, material: { color: "#111111", roughness: 0.5 } },
+        { feetPosition: { x: px - 0.12, y: 1.18, z: 0.36 }, primitive: { kind: "capsule", radius: 0.035, halfHeight: 0.14 }, material: { color: "#151515", roughness: 0.4 } },
+      ]),
+      { feetPosition: { x: 0, y: 2.22, z: 0.25 }, primitive: { kind: "box", width: 2.5, height: 0.3, depth: 0.06 }, material: { color: "oklch(0.2 0.08 240)" },
+        ui: `<div face="front" width="2.5m" style="width:2500px;height:300px;display:flex;align-items:center;justify-content:center;background:#0c1e38;color:#9fe8ff;font-family:Arial,sans-serif;font-weight:900;letter-spacing:6px"><span style="font-size:110px">PUBLIC PHONES</span></div>` },
+    ],
+  });
+
+  // Corner Planters: Realistic weeping fig ficus trees in fluted pots
   for (const [k, [x, z]] of [[-27, -18], [27, -18], [-27, 18], [27, 18], [-10, 19], [10, 19]].entries()) {
     sp(`l61-pot-${k}`, {
       feetPosition: { x, y: 0, z },
       physics: "static",
-      primitive: { kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.35, height: 0.6 },
-      material: { color: "oklch(0.55 0.08 40)" },
-      children: [{ feetPosition: { x: 0, y: 0.6, z: 0 }, primitive: { kind: "cone", radius: 0.5, height: 1.8 }, material: { color: "oklch(0.42 0.11 150)", roughness: 0.9 } }],
+      primitive: { kind: "cylinder", radiusTop: 0.48, radiusBottom: 0.38, height: 0.65 },
+      material: { color: "oklch(0.55 0.08 40)", roughness: 0.6 },
+      children: [
+        { feetPosition: { x: 0, y: 0.62, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.45, height: 0.06 }, material: { ...T("dark-potting-soil-with-bark-mulch", 1), color: "oklch(0.38 0.04 50)", roughness: 1 } },
+        { feetPosition: { x: 0, y: 0.65, z: 0 }, primitive: { kind: "torus", radius: 0.48, tube: 0.03 }, rotation: { pitch: 90 }, material: BRASS },
+        { feetPosition: { x: 0, y: 0.68, z: 0 }, primitive: { kind: "scripted", script: "scripts/tree61.js", params: { h: 3.2 }, seed: 80 + k * 3 }, material: { alphaTest: 0.5, side: "double", roughness: 0.55 } },
+      ],
     });
   }
 

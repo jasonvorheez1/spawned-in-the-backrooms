@@ -129,6 +129,18 @@ export const ears = {
       return;
     }
 
+    if (s.kind === "directory") {
+      snd("paper-flip-card-stand", 0.5, 8);
+      tell("MAP: CLIPPERS & LIQUORETTE [WEST] · SLICE & BURGER [EAST] · RESTROOMS [SOUTH]", "#ffd84a");
+      return;
+    }
+
+    if (s.kind === "payphone") {
+      snd("walkie-talkie-radio-click-static-burst", 0.45, 6);
+      tell("...STATIC ON THE LINE... (NO OUTSIDE CARRIER · LEVEL 6.1 EXTENSIONS ONLY)", "#9fe8ff");
+      return;
+    }
+
     // Vending machines: spiral coil motor turns, item drops into flap
     const tray = s.tray?.[uid];
     if (s.kind === "vend" && tray) {
