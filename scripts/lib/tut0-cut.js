@@ -39,14 +39,20 @@ export function t0Tick(ctx, ses, st) {
   const once = (k, fn) => { if (!c.did[k]) { c.did[k] = true; fn() } }
   if (id !== "final" || t < 3) { me.feetPosition = c.p0 }
   me.velocity = { x: 0, y: 0, z: 0 }
+  if (CUE[id]) once("cue", () => raw(ctx, CUE[id], 0.75))
   const done = BEAT[id](ctx, c, t, once, st)
   if (!done) return true
   if (id === "halogen") { st.creating = false; st.sheetOpen = false }
-  for (const k of ["smiler", "glint", "dust", "leg"]) if (c[k]) ctx.destroy(c[k]) // the knocked-down entity (c.ent) stays where it fell
+  for (const k of ["smiler", "glint", "dust", "leg", "ent"]) if (c[k]) ctx.destroy(c[k]) // the knocked-down entity (c.ent) stays where it fell
   me.anim.cut = null; ctx.view.camera = null; me.hidden = (me.hidden || []).filter((i) => i !== me.id)
   st.t0n = (st.t0n ?? 0) + 1; st.t0cut = null; ses.t0 = null
   return id === "final" ? "level1" : true
 }
+// Shelly's horror pack (scripts/lib/data/sfx-library.yml), Nov 8: "the sounds are stupid as hell": the pack carries the tutorial
+const H = { growl: "/cdn/value.eff7b4c4645715b8686565c6211d50b2b9e416267f58c3d912e5857768ad366a.mp3", grunt: "/cdn/value.d0066beac8550b339a3eec0d5532997fde8cf394856f8ad3041c909659bea09a.mp3", mbreath: "/cdn/value.783cfc4c74e9c314ae36d9305103e6e8794cf0493ca86f23facf3f4c10d25b1d.mp3", scream: "/cdn/value.e7a73d3533435fe19d5140141081aa76bfe425f66affd0fb7653cd9afc7a7844.mp3", sting1: "/cdn/value.3220d45eae556d4b712b075cd8f883e150c941f2fb8cfbd774f388eebe7c9432.mp3", sting2: "/cdn/value.8c4011cd8c3d14bfeff784df9c17be809b21b0beccfafbea8271a0bc409125bd.mp3", run: "/cdn/value.14f7bc36d15cfcd8449842041089164a319c2ca1ff4917294b7ed2156179b62f.mp3", flashoff: "/cdn/value.6d88ccc0b16b07ffd52f328835bad9d9bf3239d8146e88b2266ff673fbfbde94.mp3", buzz: "/cdn/value.eb34f5496883ceba559e80813abd255098c4a18b2f5d2dbcd6465447d4afa7f2.mp3" }
+// each scene's own score, cut to its length (PACE-stretched seconds in the name)
+const M = (n) => `/cdn/moodboard-realistic-gritty/music-${n}.mp3`
+const CUE = { encounter: M("horror-film-cue-28-seconds-low-cello-drone-creeping-heartbeat-pulse-rising-strings-hit-at-17-seconds-then-frantic-chase-percussion"), smiler: M("horror-film-cue-19-seconds-near-silence-sub-drone-dissonant-piano-notes-swelling-to-a-scream-of-strings-cut-dead-at-16-seconds"), halogen: M("horror-film-cue-10-seconds-cold-analog-synth-hum-mechanical-ticking-ominous-low-brass"), drawings: M("horror-film-cue-17-seconds-music-box-melody-detuned-over-distant-hum-slow-and-sad") }
 const GRIN_SVG = `<svg viewBox='0 0 100 60' width='0.9m' billboard='full'><g filter='drop-shadow(0 0 3px #fffbe8)'><ellipse cx='30' cy='14' rx='7' ry='4.5' fill='#f4f1e2'/><ellipse cx='70' cy='14' rx='7' ry='4.5' fill='#f4f1e2'/><path d='M10 30 Q50 64 90 30 Q50 45 10 30 Z' fill='#f4f1e2'/><path d='M20 34 L22 42 M30 37 L31 47 M40 39 L40 50 M50 40 L50 51 M60 39 L60 50 M70 37 L69 47 M80 34 L78 42' stroke='#17150f' stroke-width='1.8'/></g></svg>`
 const BEAT = {
   // hall C: the panels die one by one from the far end toward them; in the black, a grin. It comes closer in jumps. The lights bang back on: nothing there
@@ -58,13 +64,13 @@ const BEAT = {
     c.orig ??= {}
     ;[13, 12, 11, 10, 9].forEach((i, k) => { if (t > 0.7 + k * 0.6) once("die" + i, () => {
       const o = ctx.getObject(`t0-light-${i}`); if (o?.light) { c.orig[i] = o.light.intensity; o.light = { ...o.light, intensity: 0 } }
-      raw(ctx, N("fluorescent-tube-pop-and-die-click-buzz-cut"), 0.8, o?.feetPosition ?? p)
+      raw(ctx, H.flashoff, 0.8, o?.feetPosition ?? p)
     }) })
     const spots = [[4.0, 13], [6.3, 7.5], [8.1, 3.6]] // [when, metres ahead of where they started]
     for (const [when, ahead] of spots) if (t > when) once("grin" + when, () => {
       if (c.smiler) ctx.destroy(c.smiler)
       c.smiler = ctx.spawn({ audience: "local", scope: "session", lifetime: 30, feetPosition: { x: x0 + ahead, y: 1.45, z }, vector: GRIN_SVG, children: [{ feetPosition: { x: 0, y: 0, z: 0 }, light: { kind: "point", color: "#fffbe8", intensity: 0.25, distance: 1.6 } }] })
-      raw(ctx, N(when < 5 ? "low-wet-clicking-chuckle-in-darkness" : "sharp-horror-sting-whoosh-close"), when < 5 ? 0.7 : 0.9, { x: x0 + ahead, y: 1.4, z })
+      raw(ctx, (when < 5 ? H.mbreath : when > 8 ? H.sting2 : H.sting1), when < 5 ? 0.7 : 0.9, { x: x0 + ahead, y: 1.4, z })
       if (when > 5) fx1(ctx, "screenShake", { intensity: when > 8 ? 0.35 : 0.18, duration: 0.3 })
       if (when > 8) { raw(ctx, GASP, 0.8); fx1(ctx, "cameraPunch", { direction: { x: -1, y: 0, z: 0 }, intensity: 0.6 }) }
     })
@@ -72,7 +78,7 @@ const BEAT = {
     if (t > 9.3) once("on", () => {
       if (c.smiler) { ctx.destroy(c.smiler); c.smiler = null }
       for (const [i, v] of Object.entries(c.orig)) { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) o.light = { ...o.light, intensity: v } }
-      raw(ctx, N("fluorescent-lights-slam-back-on-heavy-relay-clunk-hum"), 1.0, p); fx1(ctx, "screenFlash", { color: "#fff6c8", duration: 0.2, intensity: 0.6 })
+      raw(ctx, H.buzz, 1.0, p); fx1(ctx, "screenFlash", { color: "#fff6c8", duration: 0.2, intensity: 0.6 })
     })
     const head = { x: p.x, y: 1.6, z: p.z }
     ctx.view.camera = { eye: head, aim: { x: p.x + 10, y: 1.45, z }, fov: t < 4 ? 62 : lerp(62, 44, ss(4, 8.4, t)) }
@@ -86,7 +92,7 @@ const BEAT = {
     once("set", () => {
       c.leg = ctx.spawn({ audience: "local", scope: "session", feetPosition: legAt, rotation: { yaw: 70, roll: 90 }, model: LEG_MODEL, layout: { box: { min: { x: -0.04, y: 0, z: -0.04 }, max: { x: 0.04, y: 0.72, z: 0.04 } } } })
       for (const i of [7, 8]) { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) o.light = { ...o.light, intensity: 1.2 } } // the bend goes dim
-      raw(ctx, N("entity-clicking-crawl-on-carpet"), 0.7, { x: ENC.from.x, y: 0.4, z: ENC.from.z })
+      raw(ctx, H.mbreath, 0.7, { x: ENC.from.x, y: 0.4, z: ENC.from.z })
     })
     // the entity: crawls in, stops short, lunges, gets hit, goes down
     if (t > 1.0) once("ent", () => {
@@ -98,7 +104,7 @@ const BEAT = {
       const a = t < 7 ? L3({ x: ENC.from.x, y: 0, z: ENC.from.z }, { x: stop.x, y: 0, z: stop.z }, ss(1.0, 7, t)) : L3({ x: stop.x, y: 0, z: stop.z }, { x: lunge.x, y: 0, z: lunge.z }, ss(9.3, 10.2, t))
       E.feetPosition = a; E.rotation = { yaw: yawTo(a, cor) + 90 } // the model faces +x
     }
-    if (t > 2.4) once("snarl", () => { raw(ctx, N("entity-wet-guttural-snarl-close"), 0.9, { x: 2, y: 1, z: -28.3 }); raw(ctx, BREATHF, 0.55) })
+    if (t > 2.4) once("snarl", () => { raw(ctx, H.growl, 0.9, { x: 2, y: 1, z: -28.3 }); raw(ctx, BREATHF, 0.55) })
     // they: back away into the corner, eyes on it
     if (t < 6.4) { const u = ss(2.6, 6.2, t); me.feetPosition = { x: lerp(c.p0.x, cor.x, u), y: 0, z: lerp(c.p0.z, cor.z, u) }; me.anim.cut = u > 0 && u < 1 ? { clip: "cdn/clip-walk-loop.glb", weight: 4, loop: "loop", speed: -0.7 } : { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } }
     else if (t < 13) me.feetPosition = cor
@@ -111,31 +117,32 @@ const BEAT = {
       st.weapons = list.join(","); st.equipped = "table_leg"; st.cnd_table_leg ??= 55 // splintered, but it swings
       me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" }
     })
-    if (t > 9.3) once("lunge", () => { raw(ctx, N("entity-wet-guttural-snarl-close"), 1.0, { x: lunge.x, y: 1, z: lunge.z }); const e = ctx.getObject(c.ent); if (e) e.anim.body = { clip: "cdn/clip-run-loop.glb", loop: "loop", weight: 1 } })
-    if (t > 9.0) once("windup", () => { raw(ctx, N("sharp-inhale-through-teeth-before-strike"), 0.8); fx1(ctx, "slowMo", { scale: 0.5, duration: 0.6 }) })
-    if (t > 9.75) once("swing", () => { me.anim.cut = { clip: "cdn/clip-attack.glb", weight: 4 }; raw(ctx, N("heavy-wooden-club-swing-whoosh-low"), 0.9) })
+    if (t > 9.3) once("lunge", () => { raw(ctx, H.growl, 1.0, { x: lunge.x, y: 1, z: lunge.z }); const e = ctx.getObject(c.ent); if (e) e.anim.body = { clip: "cdn/clip-run-loop.glb", loop: "loop", weight: 1 } })
+    if (t > 9.0) once("windup", () => { raw(ctx, BREATHF, 0.8); fx1(ctx, "slowMo", { scale: 0.5, duration: 0.6 }) })
+    if (t > 9.75) once("swing", () => { me.anim.cut = { clip: "cdn/clip-attack.glb", weight: 4 }; snd(ctx, "sword-whoosh-swing", 0.6) })
     if (t > 10.2) once("hit", () => {
       const hit = { x: lunge.x, y: 1.0, z: lunge.z }
-      raw(ctx, N("heavy-wood-club-hit-flesh-crack"), 1.0, hit)
-      raw(ctx, N("deep-sub-bass-impact-boom-with-bone-crunch"), 1.0, hit); raw(ctx, N("high-pitched-tinnitus-ear-ring-after-blast"), 0.5)
-      fx1(ctx, "hitstop", { duration: 0.18 }); fx1(ctx, "slowMo", { scale: 0.2, duration: 1.6 })
-      fx1(ctx, "cameraPunch", { direction: { x: 0.6, y: 0, z: 0.3 }, intensity: 1.6 }); fx1(ctx, "screenFlash", { color: "#fff3cf", duration: 0.22, intensity: 0.85 })
-      fx1(ctx, "screenShake", { intensity: 0.55, duration: 0.45 }); fx1(ctx, "shockwave", { position: hit, speed: 9, thickness: 0.4, intensity: 0.9 })
+      raw(ctx, H.sting1, 1.0, hit)
+      
+      fx1(ctx, "hitstop", { duration: 0.12 }); fx1(ctx, "slowMo", { scale: 0.3, duration: 1.1 })
+      fx1(ctx, "cameraPunch", { direction: { x: 0.6, y: 0, z: 0.3 }, intensity: 1.0 }); fx1(ctx, "screenShake", { intensity: 0.4, duration: 0.4 }) // it barely notices
       fx1(ctx, "squash", { target: c.ent, axis: "x", intensity: 0.35, duration: 0.3 })
       ctx.emit("fx", { position: hit, script: `fx
 pop dust burst=18..26 life=.5..0.9 v=sdir()*(1..2.4)+up(.6) size=.05..0.11 acc=grav()*.5+drag(1.5) col=<.55,.5,.4> a=1>.6:1>0 sz=$size r=sprite(soft-disc,alpha)
 pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav()+drag(.6) col=<.35,.24,.14> a=1 sz=$size floor=stick r=sprite(stalk,alpha,velocity,.02)` }, { audience: { player: me.id } })
       const e = ctx.getObject(c.ent)
-      if (e) { e.anim.body = { clip: "cdn/clip-death-backward.glb", weight: 1 }; animate(ctx, c.ent, { "feetPosition.x": lunge.x + 1.1, "feetPosition.z": lunge.z + 0.5 }, { duration: 0.7, easing: "easeOutCubic" }) }
+      if (e) { e.anim.body = { clip: "cdn/clip-crouch-walk-loop.glb", loop: "loop", weight: 1 }; animate(ctx, c.ent, { "feetPosition.x": lunge.x + 0.9, "feetPosition.z": lunge.z + 0.4 }, { duration: 0.5, easing: "easeOutCubic" }) } // a stagger, not a kill
     })
-    if (t > 11.0) once("fall", () => { raw(ctx, N("body-collapse-thud-carpet"), 0.9, { x: lunge.x + 1, y: 0.2, z: lunge.z }); fx1(ctx, "screenShake", { intensity: 0.2, duration: 0.3 }); const e = ctx.getObject(c.ent); const l = e?.children?.[0]; if (l?.light) l.light = { ...l.light, intensity: 0.15 } })
-    if (t > 12.2) once("breath", () => raw(ctx, BREATH, 0.6))
+    if (t > 11.0) once("fall", () => { raw(ctx, H.grunt, 0.9, { x: lunge.x + 1, y: 0.2, z: lunge.z }); fx1(ctx, "screenShake", { intensity: 0.2, duration: 0.3 }); const e = ctx.getObject(c.ent); const l = e?.children?.[0]; if (l?.light) l.light = { ...l.light, intensity: 0.15 } })
+    if (t > 12.0) once("rise", () => { raw(ctx, H.growl, 1.0, { x: lunge.x + 0.9, y: 1, z: lunge.z + 0.4 }); fx1(ctx, "screenShake", { intensity: 0.25, duration: 0.4 }); const e = ctx.getObject(c.ent); if (e) e.anim.body = { clip: "cdn/clip-run-loop.glb", loop: "loop", weight: 1 } })
+    if (E && t > 12.4) { const q = me.feetPosition, a = L3({ x: lunge.x + 0.9, y: 0, z: lunge.z + 0.4 }, { x: q.x - 1.7, y: 0, z: q.z }, ss(12.4, 16.2, t)); E.feetPosition = a; E.rotation = { yaw: yawTo(a, q) + 90 } } // right behind them the whole way out
+    if (t > 14.5) once("breath", () => raw(ctx, BREATHF, 0.7))
     // and run: past it, out the east door into hall C
     if (t > 13) {
       const u = ss(13, 16.2, t), mid = { x: 0.6, y: 0, z: -28.4 }
       me.feetPosition = u < 0.5 ? L3(cor, mid, u * 2) : L3(mid, out, (u - 0.5) * 2)
       me.rotation = { yaw: yawTo(me.feetPosition, out) }
-      once("run", () => { me.anim.cut = { clip: "cdn/clip-run-loop.glb", weight: 4, loop: "loop" }; snd(ctx, "footsteps-running-carpet", 0.7) })
+      once("run", () => { me.anim.cut = { clip: "cdn/clip-run-loop.glb", weight: 4, loop: "loop" }; raw(ctx, H.run, 0.8) })
     }
     // the camera
     const eFoot = E?.feetPosition ?? { x: ENC.from.x, y: 0, z: ENC.from.z }, eHead = { x: eFoot.x, y: 0.75, z: eFoot.z }
@@ -195,18 +202,18 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
       const h = ctx.getObject("t0-light-17"); if (h?.light) h.light = { ...h.light, intensity: 9 } // the lamp behind her burns: a shape, no face
     })
     if (t > 4.9) once("phoebeGone", () => dropPhoebe(ctx, "phoebe-end")) // gone in the cut, never seen leaving
-    once("hum", () => { raw(ctx, N("electrical-static-crackle-buzzing-inside-wall"), 0.7, wall); me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
+    once("hum", () => { raw(ctx, H.buzz, 0.7, wall); me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
     if (t > 2.0) once("breath", () => raw(ctx, BREATH, 0.5))
     if (t > 3.0) once("whisper", () => raw(ctx, PHOEBE_WHISPER, 0.5, her)) // under the hum, from down the hall
     if (t > 4.2) once("groan", () => snd(ctx, "deep-rumble-groan", 0.8))
     if (t > S) once("walk", () => { me.anim.cut = { clip: "cdn/clip-walk-loop.glb", weight: 4, loop: "loop", speed: 0.8 } })
     if (t > S + 2.2) once("score", () => raw(ctx, SCORE, 1.0)) // the score comes up as they touch the wall and carries the fall and the title
     if (t > S + 2.4) once("through", () => {
-      raw(ctx, N("reality-tearing-digital-glitch-static-burst-whoosh"), 1.0, wall); raw(ctx, GASP, 0.8)
+      raw(ctx, H.sting2, 1.0, wall); raw(ctx, GASP, 0.8)
       fx1(ctx, "screenFlash", { color: "#fffbe0", duration: 0.35, intensity: 0.7 }); fx1(ctx, "screenShake", { intensity: 0.35, duration: 1.2 })
       fx1(ctx, "shockwave", { position: wall, speed: 6, thickness: 0.5, intensity: 0.7 })
     })
-    if (t > S + 2.7) once("gone", () => { me.hidden = [...(me.hidden || []), me.id]; raw(ctx, N("falling-through-void-breathtaking-choir-wind"), 0.85) })
+    if (t > S + 2.7) once("gone", () => { me.hidden = [...(me.hidden || []), me.id]; raw(ctx, H.scream, 0.35) })
     if (t > S + 6.2) once("thud", () => snd(ctx, "heavy-impact-thud-boom", 0.7))
     if (t > 13.4) once("title", () => raw(ctx, N("title-reveal-massive-reverse-swell-boom"), 1.0)) // lands with the name (cutscene-ui: 13.7 s)
     if (t < 2) { const u = ss(0, 2, t); ctx.view.camera = { eye: { x: at.x + 0.4, y: 1.6, z: at.z + 0.6 }, aim: wall, fov: lerp(55, 32, u) } } // the wallpaper ahead, crawling
