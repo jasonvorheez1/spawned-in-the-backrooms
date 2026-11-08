@@ -452,7 +452,7 @@ bc-strash-1:
   model: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb
   physics: {body: static, collider: box}
 bc-train:
-  feetPosition: {x: -22.3, y: 2.3, z: -14}
+  feetPosition: {x: -22.3, y: 5.15, z: -14}
   id: bc-train
   layout: {box: {max: {x: 7.75, y: 4, z: 1.3}, min: {x: -7.75, y: 0, z: -1.3}}}
   model: /cdn/value.0acca2e0ac67eefdec5847a54aa394caac361fb8cc6dc2cab7a4de2b5c39d5d9.glb
