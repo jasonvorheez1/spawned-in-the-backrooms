@@ -530,6 +530,7 @@ export function tick(ctx) {
     }
     spawnCamp(ctx);
   }
+  if (ctx.now() > (s.campAt ?? 0)) { s.campAt = ctx.now() + 10000; if (Object.keys(CAMP).some((id) => !ctx.place.objects[id])) spawnCamp(ctx); } // anyone missing from the camp walks back in
   if ((s.denV ?? 0) < DEN_V) { s.denV = DEN_V; layDens(ctx); }
   keepWretched(ctx);
   tickChatter(ctx, CHATTER.level8, { "l8-hobb": "hollis", "l8-wen": "mags", "l8-ivo": "reyes", "l8-marit": "wren", "l8-carla-kid": "penny" }); // the camp talks among itself
