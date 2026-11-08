@@ -18,7 +18,7 @@ import { layVaults } from "../../scripts/lib/level11-vaults.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 31; // bump to rebuild the city in rooms that are already open
+const V = 32; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1332,7 +1332,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   // ==========================================
   // "45,000 people who predominantly live in small apartments."
   // "Appliances are fully operational, which at minimum encompasses lighting, heating, and taps."
-  const APT_X = -27.0;
+  const APT_X = -44.5; // was -27 (Nov 8): the hero house and glass tower now stand on that lot and buried it; this lot is clear, door on the alley
   const APT_Z = 58.0;
   const APT_W = 10.0;
   const APT_D = 8.0;
