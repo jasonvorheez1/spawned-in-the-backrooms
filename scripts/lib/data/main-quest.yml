@@ -1,45 +1,85 @@
-# Main quest "The Front Door", part one (johnadams2 2026-11-08: slow burn, Levels 1-5 only, no more for now).
-# Written, not wired yet. Reveals are held back: nobody says "exit" outright until a later part.
+# Main quest "Lost and Found", part one (johnadams2 2026-11-08: slow burn, Levels 1-5 only; Phoebe not seen at all for now).
+# Optional, never forced (ruling: no mandatory main quest). Written, not wired yet.
+# The mystery: the HALOGEN on your wrist keeps flashing an owner, DANA K. Who was she, and why is her unit on you?
+# Rewards are Savi's picks: xp and backdollars per chapter, and the HALOGEN gains a feature in chapter 3.
 key: mainQ
-name: The Front Door
+name: Lost and Found
 chapters:
-  - id: alpha
-    name: Static
+  - id: flyer
+    name: Missing
     level: level1
+    reward: { xp: 150, cash: 5 }
     steps:
-      - "Your HALOGEN keeps flickering. Ask at the M.E.G. camp about it"
-      - "Let the M.E.G. technician look at your HALOGEN"
-      - "Its memory is locked and dead. Find a Robotics power cell"
-    beat: "The technician goes quiet at the serial number and says only that it belonged to someone called Dana, and that you should keep it charged."
-  - id: pipes
-    name: Steam
+      - "Your HALOGEN boots with a name: DANA K. Ask around Base Alpha"
+      - "Find the faded MISSING flyer on the camp notice board"
+      - "Ask three campers about Dana"
+      - "Decide: sell the unit to the quartermaster, or keep it"
+      - "Have the M.E.G. technician open it up"
+    beat: >
+      The flyer has a sketch of a woman with your exact wrist unit. The campers
+      don't agree: one says she owed everyone almond water, one says she was the
+      kindest person in camp, one tells you to stop asking. The quartermaster
+      offers $40 for the unit, no questions. Sell it and the quest goes quiet
+      (buy it back later to resume). Keep it and the technician finds the memory
+      sealed by Backrooms Robotics and the cell nearly dead. Only a Robotics-grade
+      cell will wake it. The last crew that carried those went into Pipe Dreams
+      and didn't come back.
+  - id: crew
+    name: Maintenance Crew
     level: level2
+    reward: { xp: 250, cash: 10 }
     steps:
-      - "Find the Robotics maintenance locker in the pipe halls"
-      - "Pick its lock or find the key on a dead technician"
+      - "Follow the lost crew's trail through the pipe halls"
+      - "Find the crew's logbook"
+      - "Open the Robotics maintenance locker (lockpick, or the code in the logbook)"
       - "Take the power cell and get out of the heat"
-    beat: "Someone is watching from a catwalk. When you look up, nobody is there."
-  - id: station
-    name: Charge
+    beat: >
+      The trail is dropped tool bags and chalk arrows, the same hand as the
+      arrows in Level 0. The logbook's code is half burned, so the lock is a
+      Lockpick check or a search for the other half. The last entry: "the
+      cartographer with the yellow wrist unit came through. asked about the
+      station. told her it was a bad idea."
+  - id: bay
+    name: Bay Seven
     level: level3
+    reward: { xp: 400, cash: 15, unlock: halogenPing }
     steps:
-      - "Find a working charging bay in the Electrical Station"
-      - "Hold out through the blackout while it charges"
-      - "Listen to the recording that plays"
-    beat: "A woman's voice, Dana, half static: 'if you're hearing this, it still works. don't let them take it back.' Then it cuts. Robotics drones begin to show up where you go."
-  - id: office
-    name: Them
+      - "Find charging bay 7 in the Electrical Station"
+      - "Hold out through the blackout while the cell charges"
+      - "Listen to what the HALOGEN plays when it wakes"
+    beat: >
+      Halfway through the charge the station blacks out and you hold the bay in
+      the dark. The unit wakes on a nine-second recording, a woman out of
+      breath: "if they ask, i'm not M.E.G. anymore. i'm not anyone." The HALOGEN
+      can now ping the nearest exit. From here on a Backrooms Robotics drone
+      sometimes hangs at the end of a hall, watching, never coming closer.
+  - id: file
+    name: Personnel File
     level: level4
+    reward: { xp: 550, cash: 25 }
     steps:
-      - "Find the Backrooms Robotics office in the Abandoned Office"
-      - "Get past the security doors"
-      - "Copy whatever the server keeps under Dana's name"
-    beat: "One file, unreadable, named FRONT DOOR. A memo says a copy went to the Terror Hotel."
-  - id: hotel
-    name: Check-In
+      - "Follow the HALOGEN's ping to the Robotics regional office"
+      - "Talk to the resident who used to work there"
+      - "Get in after hours, unseen"
+      - "Hack the records terminal"
+    beat: >
+      The ex-employee knew Dana and won't say much until you show the unit. The
+      office is only empty after the residents go home, so it's a sneak. The
+      terminal gives up her file: DANA K., FIELD CARTOGRAPHER, STATUS: RECALLED.
+      A memo underneath: "recovered unit and effects forwarded to Hotel lost and
+      found for collection."
+  - id: desk
+    name: Lost and Found
     level: level5
+    reward: { xp: 800, cash: 40 }
     steps:
-      - "Ask at the Terror Hotel front desk about the copy"
-      - "Go down to the Boiler Room"
-      - "Someone is waiting by the furnace"
-    beat: "Phoebe, face hidden, smiling. She holds up the copy, says 'not yet,' and is gone. End of part one."
+      - "Ask at the Terror Hotel front desk about the lost and found"
+      - "Book a room so the staff will talk to you"
+      - "Find the lost and found in the Boiler Room"
+      - "Open the box marked K."
+    beat: >
+      One of the desk clerks is a faceling and gives you a wrong answer. The
+      real clerk only helps a paying guest. Lost and found is past the Death
+      Rats in the Boiler Room. In the box: Dana's jacket, a photo of Base Alpha,
+      and a second HALOGEN, smashed. Same serial as yours. Your unit can't be
+      hers. End of part one.
