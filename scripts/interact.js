@@ -78,6 +78,8 @@ function refocus(ctx, force = false) {
   if (!m.ray || (!force && now - m.last < 70)) return
   m.last = now
   if (s.lootOpen) { if (s.focus) s.focus = null; m.focus = null; return }
+  const me = ctx.self.feetPosition, ro = m.ray.origin
+  if (Math.hypot(ro.x - me.x, ro.z - me.z) > 2.5) { m.ray = null; m.focus = null; if (s.focus) s.focus = null; m.key = ''; return } // a look ray left from where you stood a moment ago: no prompt, no outline until a fresh one
   const f = findFocus(ctx, m.ray)
   m.focus = f
   let info = null
