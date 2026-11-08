@@ -124,12 +124,15 @@ function hasSight(ctx, a, b, idA, idB) {
 }
 
 function spawnEdgeSmiler(ctx, idx) {
-  const cx = EDGE_X + 1 + Math.floor(ctx.random() * (N - EDGE_X - 2));
-  const cz = Math.floor(ctx.random() * N);
+  let cx = 0, cz = 0;
+  for (let t = 0; t < 20; t++) { // an open floor cell, never inside rock (a body spawned in rock falls out and lands at the arrival)
+    cx = EDGE_X + 1 + Math.floor(ctx.random() * (N - EDGE_X - 2)); cz = Math.floor(ctx.random() * N);
+    if (openings(cx, cz).length) break;
+  }
   const c = cellCenter(cx, cz);
   const glowMat = { color: "#ffffff", emissive: "#ffffff", emissiveIntensity: 4.5 };
   return ctx.spawn(`l21-smiler-${idx}-${Math.floor(ctx.now() / 1000) % 100000}`, {
-    tags: ["l21-smiler", "smiler"], feetPosition: { x: c.x, y: 0.05, z: c.z }, rotation: { yaw: ctx.random() * 360 },
+    tags: ["l21-smiler", "smiler"], feetPosition: { x: c.x, y: 0.4, z: c.z }, rotation: { yaw: ctx.random() * 360 },
     scale: 1.6, model: SMILER_MODEL, physics: { body: "character" },
     state: { ...npcState(ctx, "smiler", 75, { xp: 45 }), name: "Smiler (The Edges)" },
     children: [
