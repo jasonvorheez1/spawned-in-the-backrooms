@@ -130,6 +130,36 @@ def male(head, body):
 ANAT = dict(hipZ=0.90, legX=0.078, legY=0.12, kneeZ=0.48, ankleZ=0.085, toeY=-0.01, spineY=0.09,
             shoulder=(0.075, 1.42), arm=(0.17, 1.40), neckZ=1.55, headZ=1.64, topZ=1.94)
 
+def proxy_weights(body, r):
+    # Nov 8, Shelly: "feels like you weight painted them oddly". bone heat on the raw body stops at every seam (arms,
+    # neck and legs are open islands), so each island skinned on its own. now: a watertight voxel copy takes the bone
+    # heat as one solid, the real body copies its weights from the nearest point of that copy, then a light smooth.
+    px = body.copy(); px.data = body.data.copy(); px.name = "WeightProxy"; bpy.context.collection.objects.link(px)
+    px.vertex_groups.clear()
+    for m in list(px.modifiers): px.modifiers.remove(m)
+    rm = px.modifiers.new("vox", "REMESH"); rm.mode = "VOXEL"; rm.voxel_size = 0.009; rm.use_smooth_shade = True
+    bpy.ops.object.select_all(action="DESELECT"); px.select_set(True); bpy.context.view_layer.objects.active = px
+    bpy.ops.object.modifier_apply(modifier="vox")
+    bpy.ops.object.select_all(action="DESELECT"); px.select_set(True); r.select_set(True)
+    bpy.context.view_layer.objects.active = r
+    bpy.ops.object.parent_set(type="ARMATURE_AUTO")
+    print("proxy verts", len(px.data.vertices), "proxy unweighted", sum(1 for v in px.data.vertices if not v.groups))
+    body.vertex_groups.clear()
+    for b in r.data.bones: body.vertex_groups.new(name=b.name)
+    dt = body.modifiers.new("dt", "DATA_TRANSFER"); dt.object = px
+    dt.use_vert_data = True; dt.data_types_verts = {"VGROUP_WEIGHTS"}; dt.vert_mapping = "POLYINTERP_NEAREST"
+    dt.layers_vgroup_select_src = "ALL"; dt.layers_vgroup_select_dst = "NAME"
+    bpy.ops.object.select_all(action="DESELECT"); body.select_set(True); bpy.context.view_layer.objects.active = body
+    bpy.ops.object.modifier_move_to_index(modifier="dt", index=0); bpy.ops.object.modifier_apply(modifier="dt")
+    bpy.ops.object.mode_set(mode="WEIGHT_PAINT")
+    bpy.ops.object.vertex_group_smooth(group_select_mode="ALL", factor=0.5, repeat=2)
+    bpy.ops.object.vertex_group_limit_total(group_select_mode="ALL", limit=4)
+    bpy.ops.object.vertex_group_normalize_all(group_select_mode="ALL", lock_active=False)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    if not any(m.type == "ARMATURE" for m in body.modifiers): body.modifiers.new("skin", "ARMATURE").object = r
+    body.parent = r
+    bpy.data.objects.remove(px, do_unlink=True)
+
 def shoulder_blend(body, r):
     # bone heat stops at the arm's seam (a separate mesh island), so the shoulder split. around each shoulder joint,
     # weld the seam by position and smooth the weights over the welded surface, so the arm eases out of the torso
@@ -248,8 +278,7 @@ def rig(head, body, wide):
     # body: bone heat; head: all Head, the neck ring blended
     bpy.ops.object.select_all(action="DESELECT"); body.select_set(True); r.select_set(True)
     bpy.context.view_layer.objects.active = r
-    bpy.ops.object.parent_set(type="ARMATURE_AUTO")
-    shoulder_blend(body, r)
+    proxy_weights(body, r)
     unweighted = sum(1 for v in body.data.vertices if not v.groups)
     print("body unweighted verts", unweighted)
     hg = head.vertex_groups.new(name="Head")
@@ -277,7 +306,13 @@ def proof(name, r):
     pb["LeftArm"].rotation_euler = (0, 0, math.radians(-50)); pb["LeftForeArm"].rotation_euler = (math.radians(60), 0, 0)
     pb["RightArm"].rotation_euler = (0, 0, math.radians(-55))
     pb["RightUpLeg"].rotation_euler = (math.radians(-50), 0, 0); pb["RightLeg"].rotation_euler = (math.radians(70), 0, 0)
-    bpy.context.view_layer.update(); shot("pose", (2.8, -3.6, 1.1))
+    bpy.context.view_layer.update(); shot("pose", (2.8, -3.6, 1.1)); shot("poseback", (-2.8, 3.6, 1.4))
+    for b in pb: b.rotation_mode = "XYZ"; b.rotation_euler = (0, 0, 0)
+    pb["LeftArm"].rotation_euler = (math.radians(45), 0, math.radians(-10)); pb["RightArm"].rotation_euler = (math.radians(-45), 0, math.radians(10))
+    pb["LeftForeArm"].rotation_euler = (math.radians(70), 0, 0); pb["RightForeArm"].rotation_euler = (math.radians(70), 0, 0)
+    pb["LeftUpLeg"].rotation_euler = (math.radians(-40), 0, 0); pb["RightUpLeg"].rotation_euler = (math.radians(25), 0, 0); pb["RightLeg"].rotation_euler = (math.radians(60), 0, 0)
+    pb["Spine1"].rotation_euler = (0, math.radians(15), 0)
+    bpy.context.view_layer.update(); shot("run", (2.8, -3.6, 1.1))
     for b in pb: b.rotation_euler = (0, 0, 0)
 
 def garment(body, r, name, keep, color, cuts=(), push=0.005):
@@ -311,7 +346,7 @@ def build(name, is_male, height):
         extra.append(garment(body, r, "Shorts", lambda c, a: 0.82 < c.z < 1.07 and a < 0.3, (0.08, 0.1, 0.16, 1), cuts=(0.82, 1.07)))
     if is_male:  # 16+: plain trunks on him too (Shelly #94829 asked the same floor for her)
         extra.append(garment(body, r, "Shorts", lambda c, a: 0.80 < c.z < 1.08 and a < 0.3, (0.09, 0.11, 0.17, 1), cuts=(0.80, 1.08)))
-    shoulder_weights(body, r)  # after the garments, so the bra and shorts keep their own cut
+    # the proxy weights replace the old shoulder patch (shoulder_weights), kept below for reference
     s = height / 1.94
     r.scale = (s, s, s); bpy.ops.object.select_all(action="DESELECT")
     for o in (r, head, body, *extra): o.select_set(True)
