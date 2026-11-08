@@ -31,6 +31,15 @@ export function geometry(ctx) {
     q([x0, y1, z1], [x1, y1, z1], [x1, y1, z0], [x0, y1, z0]); q([x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z1]);
   };
   const both = (a, b, c) => { ctx.tri(...a, ...b, ...c); ctx.tri(...a, ...c, ...b); };
+  if ((ctx.lod ?? 1) >= 4) { // far away: a walled shell and a roof, the same silhouette in a few dozen faces
+    ctx.albedo(TEX[p.wall]); ctx.color(p.wall === "brick" ? "oklch(0.78 0.04 45)" : "oklch(0.8 0.01 70)");
+    box(-w / 2, 0, -d / 2, w / 2, h, d / 2);
+    for (const z of [-d / 2, d / 2]) both([w / 2, h, z], [-w / 2, h, z], [0, R, z]);
+    ctx.albedo(null); ctx.color("oklch(0.4 0.02 240)");
+    const o = 0.4; both([-w / 2 - o, h - 0.2, -d / 2 - o], [-w / 2 - o, h - 0.2, d / 2 + o], [0, R + 0.05, d / 2 + o]); both([-w / 2 - o, h - 0.2, -d / 2 - o], [0, R + 0.05, d / 2 + o], [0, R + 0.05, -d / 2 - o]);
+    both([w / 2 + o, h - 0.2, -d / 2 - o], [0, R + 0.05, d / 2 + o], [w / 2 + o, h - 0.2, d / 2 + o]); both([w / 2 + o, h - 0.2, -d / 2 - o], [0, R + 0.05, -d / 2 - o], [0, R + 0.05, d / 2 + o]);
+    return;
+  }
   ctx.albedo(TEX[p.wall]); ctx.color(p.wall === "brick" ? "oklch(0.78 0.04 45)" : "oklch(0.8 0.01 70)");
   for (const b of boxes(p)) box(...b);
   // gables, both faces, on the front and back walls
