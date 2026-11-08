@@ -3,6 +3,7 @@
 // Tunables are Savi's picks: kick 8 m/s, rolling friction 5 m/s², hit 14 + 3 per m/s of speed, a 1.2 s stagger.
 import { raycast } from 'builtin/physics'
 import { hitTarget } from './player.js'
+import { animate } from 'builtin/tween'
 const KICK_V = 8, FRICTION = 5, PUSH_REACH = 0.95, KICK_REACH = 1.7
 const FOES = ['smiler', 'lurker', 'hound', 'stealer', 'moths', 'l8spider', 'l8-hostile', 'npc', 'entity']
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
@@ -32,6 +33,12 @@ export function onInput(ctx, input) {
   const f = fwd(ctx), o = wheeledNear(ctx, KICK_REACH, f), p = ctx.self.feetPosition
   ctx.self.anim.kick = { clip: 'cdn/clip-kick.glb', loop: false, weight: 1 }
   ctx.after(0.6, 'kickEnd')
+  // first person: your leg swings up from below the screen and snaps forward, then drops away
+  const leg = ctx.spawn({ audience: 'local', scope: 'session', lifetime: 0.5, feetPosition: { attach: 'camera', x: 0.12, y: -1.1, depth: 0.55 }, rotation: { pitch: -20 }, visibleInFirstPerson: true, castShadow: false,
+    primitive: { kind: 'capsule', radius: 0.085, halfHeight: 0.32 }, material: { color: 'oklch(0.32 0.03 260)', roughness: 0.9 },
+    children: [{ feetPosition: { x: 0, y: 0.72, z: -0.08 }, primitive: { kind: 'capsule', radius: 0.08, halfHeight: 0.1 }, rotation: { pitch: 90 }, material: { color: 'oklch(0.92 0.01 90)', roughness: 0.7 } }] })
+  animate(ctx, leg, { 'feetPosition.y': [-1.1, -0.62, -0.66, -1.2], 'rotation.pitch': [-20, 62, 58, -10] }, { duration: 0.45, easing: 'easeOutCubic' })
+  ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 0.12 }, { audience: { player: ctx.self.id } })
   if (!o) { ctx.emit('playSound', { clip: SND('cloth-whoosh-swing'), position: p, volume: 0.4 }); return }
   mem(ctx).rolls[o.id] = { vx: f.x * KICK_V, vz: f.z * KICK_V, spin: (ctx.random() - 0.5) * 720, hit: false }
   const at = { x: o.feetPosition.x, y: o.feetPosition.y + 0.5, z: o.feetPosition.z }
