@@ -147,7 +147,7 @@ function lay(ctx) {
   // ---- Station 1: the entrance lake and the M.E.G. diving bell that brought you down from Level 7's abyss
   const lake = P(12, 0, 0);
   sp("l8-lake", { tags: ["swimwater"], ...at({ ...lake, y: -2.65 }), primitive: { kind: "box", width: 26, height: 2.5, depth: 38 }, material: { kind: "water", color: "oklch(0.22 0.04 230)", opacity: 0.88, waveIntensity: 0.05 } });
-  sp("l8-lake-back", { ...at({ ...P(10, 0, 0), y: -1.2 }), physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 26, height: 2.4, depth: 30 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level7#l7-from-l8" } });
+  sp("l8-lake-back", { ...at({ ...P(10, 0, 0), y: -2.65 }), physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 6, height: 0.7, depth: 6 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level7#l7-from-l8" } });
   sp("l8-from-l7", at(P(31, 0, 0.1)));
   // Submerged M.E.G. Diving Bell & hoist cable rising into the flooded ceiling shaft
   const bellP = P(18, -4.8, 0);
@@ -521,6 +521,7 @@ function lay(ctx) {
 
 export function tick(ctx) {
   const s = ctx.place.state;
+  if (s.lakeDoorV !== 2) { const d = ctx.place.objects["l8-lake-back"]; if (d) { s.lakeDoorV = 2; d.primitive = { kind: "box", width: 6, height: 0.7, depth: 6 }; d.feetPosition = { ...d.feetPosition, y: -2.65 }; } } // the lake swims; only its bed's middle leads down to 7
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); }
   if (!ctx.getObject("l8-life")) ctx.spawn("l8-life", { behavior: "scripts/l8-life.js" });
   if (!s.campV || s.campV < 2) {
