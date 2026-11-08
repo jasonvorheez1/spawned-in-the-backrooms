@@ -75,6 +75,7 @@ export function breakables(FY, PY) {
   ].forEach(([x, z, sc, seed], i) => {
     R[`l7-boulder-${i}`] = { tags: ["breakable"], feetPosition: { x, z, y: { terrain: -0.15 * sc } }, rotation: { yaw: seed * 47 }, model: GLB.boulder, layout: fit(1.9 * sc, 1.9 * sc, 1.9 * sc), physics: { body: "static", collider: "auto" }, state: brk("concrete", Math.round(140 * sc)) };
   });
+  for (const sp of Object.values(R)) { sp.visibleRange ??= { max: 90 }; const b = sp.layout?.box; if (b && Math.max(b.max.x - b.min.x, b.max.y - b.min.y) < 1.2) sp.castShadow = false; } // lag pass (#138)
   return R;
 }
 
@@ -914,6 +915,7 @@ export function tick(ctx) {
   const now = ctx.now();
   tickChatter(ctx, CHATTER.level7, { "l7-vance": "reyes", "l7-jude": "hollis", "l7-mara": "mags", "l7-ezra": "reyes", "l7-ines": "mags", "l7-tobit": "hollis" }); // the fort talks among itself, Vance talks to his radio
 
+  if (!s.lag138) { s.lag138 = 1; s.smashed = {}; for (const [id, spec] of Object.entries(breakables(FY, PY))) if (!ctx.place.objects[id]) ctx.spawn(id, spec); } // re-lay what the failed build pass left out
   // Smashed props grow back after 60 min, never in someone's face
   if (every(ctx, "regrow", 5000)) {
     s.smashed ??= {};
