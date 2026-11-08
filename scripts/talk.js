@@ -9,6 +9,7 @@ import { takeToken } from './player.js'
 import { talk as service } from './interact.js'
 import { skillsOf, SKILLS } from './lib/stats.js'
 import { describe } from './lib/items.js'
+import { addressFor, saysName } from './lib/address.js'
 
 const getStartersLib = (ctx) => ((ctx.session ??= {}).startersP ??= import('./lib/npc-starters.js'))
 
@@ -19,13 +20,13 @@ const HI = (n, mood) => mood < -20 ? [`you again.`, `${n}. keep walking.`] : moo
 // once a second: someone who knows you looks up when you come close (once every 3 min each); people who know you tell the ones beside them
 function social(ctx, ses) {
   const now = ctx.now(); if (now < (ses.socAt ?? 0)) return; ses.socAt = now + 1000
-  const me = ctx.self, k = keyOf(me), name = me.displayName ?? 'you', hi = (ses.hiAt ??= {})
+  const me = ctx.self, k = keyOf(me), hi = (ses.hiAt ??= {})
   const near = ctx.query({ tags: ['npc'], radius: 8 })
   for (const row of near) {
     const o = ctx.getObject(row.id); if (!o || o.state?.dead) continue
     const mem = o.state.mem?.[k]
     if (mem && !ctx.self.state.talkWith && flat(o.feetPosition, me.feetPosition) < 3.5 && now - (hi[o.id] ?? -1e9) > 180000 && now - (o.state.line?.at ?? 0) > 4000) {
-      hi[o.id] = now; const r = o.state.rapport?.[k] ?? 0, lines = HI(name, r)
+      hi[o.id] = now; const r = o.state.rapport?.[k] ?? 0, lines = HI(addressFor(o, me, mem), r)
       o.state.talkTo = me.id; o.state.talkAt = now; say(ctx, o, lines[Math.floor(ctx.random() * lines.length)], r < -20 ? 'annoyed' : 'happy')
     }
     if (mem?.notes?.length && ctx.random() < 0.02) for (const r2 of near) { // gossip: one thing they know about you, passed on as hearsay
@@ -122,7 +123,8 @@ export function heard(ctx, r, pay) {
   { const m0 = it.state.mem?.[key] ?? { met: 0, notes: [] }, ses2 = ctx.self.session, fresh = ses2.memWith !== it.id
     if (fresh) ses2.memWith = it.id
     const notes = o.remember ? [...(m0.notes ?? []).filter((n) => n !== o.remember), o.remember].slice(-6) : (m0.notes ?? [])
-    it.state.mem = { ...(it.state.mem ?? {}), [key]: { met: m0.met + (fresh ? 1 : 0), notes, at: now } } }
+    const named = !!m0.named || saysName(text, ctx.self.displayName)
+    it.state.mem = { ...(it.state.mem ?? {}), [key]: { met: m0.met + (fresh ? 1 : 0), notes, at: now, named } } }
   // a spoken yes to come along counts even when the model forgot to mark it: their words are the promise
   const ESCORT = /\b(follow me|stay (close|behind me)|come with me|i('ll| will| can) (walk|take|lead|escort|show) you|let'?s (go|move)|we move|lead the way|i'?m coming with you|right behind you)\b/i
   if (intent === 'none' && line && ESCORT.test(line) && !/\b(won'?t|not going|no way|can'?t)\b.{0,20}\b(come|walk|go|lead)\b/i.test(line)) intent = 'join'
