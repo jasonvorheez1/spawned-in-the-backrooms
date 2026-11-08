@@ -1,7 +1,7 @@
 # Level 2 kit, compaction pass: each module (from build.py's json, /workspace/l2kit/src/<part>.json) welded,
 # decimated per RATIO, re-normalled by angle, and written to /workspace/l2kit/out/<part>.json for encode.py.
 import bpy, bmesh, json, math, os, sys
-RATIO = {"piperun": (0.45, 0.6), "tray": (0.6, 0.7), "wall": (0.85, 1.0)}
+RATIO = {"piperun": (0.5, 0.6), "tray": (0.65, 0.7), "wall": (0.9, 1.0)}
 SRC, OUT = "/workspace/l2kit/src", "/workspace/l2kit/out"
 os.makedirs(OUT, exist_ok=True)
 parts = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [f[:-5] for f in os.listdir(SRC)]
@@ -17,13 +17,13 @@ def group(g, ratio):
     if ratio < 1:
         m = ob.modifiers.new("d", "DECIMATE"); m.ratio = ratio; m.use_collapse_triangulate = True
         bpy.context.view_layer.objects.active = ob; ob.select_set(True); bpy.ops.object.modifier_apply(modifier="d")
-    me.set_sharp_from_angle(angle=math.radians(38)); me.calc_loop_triangles()
+    me.set_sharp_from_angle(angle=math.radians(62)); me.calc_loop_triangles()
     uv = me.uv_layers["uv"].data; col = me.color_attributes["c"].data; cn = me.corner_normals
     P, N, U, C, I, seen = [], [], [], [], [], {}
     for t in me.loop_triangles:
         for li in t.loops:
             co = me.vertices[me.loops[li].vertex_index].co; n = cn[li].vector; u = uv[li].uv; c = col[li].color
-            key = tuple(round(x, 4) for x in (*co, *n, *u, *c[:3]))
+            key = (*(round(x, 4) for x in co), *(round(x, 1) for x in n), *(round(x, 2) for x in u), *(round(x, 1) for x in c[:3]))
             if key not in seen:
                 seen[key] = len(P) // 3; P += list(co); N += list(n); U += list(u); C += list(c[:3])
             I.append(seen[key])
