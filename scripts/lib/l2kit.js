@@ -100,6 +100,9 @@ export function unpack(D) {
   return out;
 }
 // emits one module (hi then lo) and its instance records
+// the vertex bake read false occlusion on the big concrete faces (dark corners against light ones drew as a triangle checker):
+// a group's shade never drops below its floor here, so the texture carries the grime on those faces
+const FLOOR = { concrete: 0.46, ceil: 0.24 };
 export function kit(ctx, part, packed) {
   const D = unpack(packed);
   const pos = [], nor = [], uvs = [], col = [];
@@ -111,7 +114,8 @@ export function kit(ctx, part, packed) {
       for (let k = 0; k < I.length; k += 3) {
         const a = I[k] * 3, b = I[k + 1] * 3, c = I[k + 2] * 3, p = g.p;
         ctx.tri(p[a], p[a + 1], p[a + 2], p[b], p[b + 1], p[b + 2], p[c], p[c + 1], p[c + 2]);
-        for (const v of [I[k], I[k + 1], I[k + 2]]) { nor.push(g.n[v * 3], g.n[v * 3 + 1], g.n[v * 3 + 2]); if (g.u) uvs.push(g.u[v * 2], g.u[v * 2 + 1]); col.push(Math.min(1, g.c[v * 3] * gn), Math.min(1, g.c[v * 3 + 1] * gn), Math.min(1, g.c[v * 3 + 2] * gn)); }
+        for (const v of [I[k], I[k + 1], I[k + 2]]) { nor.push(g.n[v * 3], g.n[v * 3 + 1], g.n[v * 3 + 2]); if (g.u) uvs.push(g.u[v * 2], g.u[v * 2 + 1]); const r = g.c[v * 3], gg = g.c[v * 3 + 1], bb = g.c[v * 3 + 2], L = (r + gg + bb) / 3, fl = FLOOR[g.m] ?? 0, lift = fl && L < fl ? fl / Math.max(L, 0.02) : 1;
+          col.push(Math.min(1, (L < 0.02 && fl ? fl : r * lift) * gn), Math.min(1, (L < 0.02 && fl ? fl : gg * lift) * gn), Math.min(1, (L < 0.02 && fl ? fl : bb * lift) * gn)); }
         n += 3;
       }
     }
