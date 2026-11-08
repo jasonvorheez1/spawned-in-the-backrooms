@@ -10,12 +10,12 @@ export const LEN = { almond: 6.5, halogen: 6, smiler: 12, shift: 7.5, final: 23 
 const GASP = "/cdn/value.1f5d195f954552c9304c8d13f9177b97b62b100316d004215a918c9282445aad.mp3"   // Shelly's horror pack: Gasp.wav
 const BREATHF = "/cdn/value.92bf175ed8ff7226b4ca07fa700883e57e814e1ef5cefa26e09a4a8eac38b2b6.mp3" // Breathing_fast.wav
 const BREATH = "/cdn/value.60bf2d4498f8ed4068160ee05c1cfd064e645f3eb921729cf5a8fd3f1d127754.mp3"  // Breathing_slow.wav
-function raw(ctx, ref, v, at) { ctx.emit("playSound", { clip: ref, position: at ?? ctx.self.feetPosition, volume: v, maxDistance: 40 }, { audience: { player: me1(ctx) } }) }
+function raw(ctx, ref, v, at) { ctx.emit("playSound", { clip: ref, position: at ?? ctx.self.feetPosition, volume: v, maxDistance: 40 }, { audience: { player: ctx.self.id } }) }
 const ss = (a, b, t) => { const u = Math.min(1, Math.max(0, (t - a) / (b - a))); return u * u * (3 - 2 * u) }
 const lerp = (a, b, u) => a + (b - a) * u
 const L3 = (a, b, u) => ({ x: lerp(a.x, b.x, u), y: lerp(a.y, b.y, u), z: lerp(a.z, b.z, u) })
 const me1 = (ctx) => ctx.self.id
-function snd(ctx, n, v, at) { ctx.emit("playSound", { clip: SND(n), position: at ?? ctx.self.feetPosition, volume: v, maxDistance: 40 }, { audience: { player: me1(ctx) } }) }
+function snd(ctx, n, v, at) { ctx.emit("playSound", { clip: SND(n), position: at ?? ctx.self.feetPosition, volume: v, maxDistance: 40 }, { audience: { player: ctx.self.id } }) }
 function endLight(ctx, on) { // the hall's last working fixture stutters; the dead one past it never comes on
   const o = ctx.getObject("t0-light-13"); if (o?.light) o.light = { ...o.light, intensity: on ? 5 : 0.3 }
 }
