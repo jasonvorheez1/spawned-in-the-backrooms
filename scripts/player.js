@@ -633,25 +633,27 @@ function tracer(ctx, p, f, range) {
 
 // ---- reloading: a magazine gun swaps its magazine; a shotgun loads one shell at a time and can be fired mid-reload.
 // player.state.loaded_<weapon> is the rounds in the gun; the ammo / shells counts are the reserve.
-const reloadLive = (ctx, p) => { const s = ctx.self.state; return s.reloading === p.k && s.equipped === p.k && walkOf(ctx).reloadTok === p.tok }
+const reloadLive = (ctx, p) => { const s = ctx.self.state; return s.reloading === p.k && s.equipped === p.k && (s.reloadTok ?? 0) === p.tok }
 
 function startReload(ctx) {
   const s = ctx.self.state, wp = weaponOf(s), k = s.equipped, w = walkOf(ctx)
   if (!wp.ranged || !wp.magSize || s.reloading || s.lootOpen) return
   if ((s['loaded_' + k] ?? 0) >= wp.magSize || (s[wp.ammoType ?? 'ammo'] ?? 0) <= 0) return
-  w.reloadTok = (w.reloadTok ?? 0) + 1
+  const tok = (s.reloadTok ?? 0) + 1
+  s.reloadTok = tok; s.reloadAt = ctx.now() // the token lives in state, so a page reload or a machine change never strands a reload
   s.reloading = k; s.ads = false
-  if (wp.pellets || wp.tube) ctx.after(wp.reloadStart ?? 0.4, 'reloadStep', { k, tok: w.reloadTok }) // a shell, or a cartridge into a tube or box magazine, one at a time
+  if (wp.pellets || wp.tube) ctx.after(wp.reloadStart ?? 0.4, 'reloadStep', { k, tok }) // a shell, or a cartridge into a tube or box magazine, one at a time
   else {
     sound(ctx, 'pistol-magazine-eject-click', 0.6, true)
-    ctx.after(wp.reloadTime * derived(s).reload * 0.55, 'reloadMagIn', { k, tok: w.reloadTok })
-    ctx.after(wp.reloadTime * derived(s).reload, 'reloadDone', { k, tok: w.reloadTok })
+    ctx.after(wp.reloadTime * derived(s).reload * 0.55, 'reloadMagIn', { k, tok })
+    ctx.after(wp.reloadTime * derived(s).reload, 'reloadDone', { k, tok })
   }
 }
 
 function cancelReload(ctx) {
-  walkOf(ctx).reloadTok = (walkOf(ctx).reloadTok ?? 0) + 1
-  ctx.self.state.reloading = ''
+  const s = ctx.self.state
+  s.reloadTok = (s.reloadTok ?? 0) + 1
+  s.reloading = ''
 }
 
 export function reloadMagIn(ctx, p) {
@@ -949,6 +951,7 @@ function plyArm(ctx, w) {
 }
 
 export function update(ctx, dt) {
+  { const st = ctx.self.state; if (st.reloading && (st.equipped !== st.reloading || !st.reloadAt || ctx.now() - st.reloadAt > 9000)) { st.reloading = ''; st.reloadTok = (st.reloadTok ?? 0) + 1 } } // a reload stranded by a swap, a page reload or a lost timer clears itself
   { const s0 = ctx.self.state, ses = ctx.self.session; const pl = ctx.self.place, fz = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z)
     const hot = pl === 'level2' ? (fz === 'l2_pipes' ? 75 : fz === 'l2_hall' ? 55 : 30) : pl === 'level21' ? (fz === 'l21_edge' || fz === 'l21_edgecave' ? 0 : fz === 'l21_fridges' ? 0 : 45) : pl === 'level3' || pl === 'gamma' ? 35 : 0 // how hot each place runs, in degrees on the meter
     if (hot > 0) { ses.heatF = (ses.heatF ?? s0.heat ?? 0) + Math.sign(hot - (ses.heatF ?? s0.heat ?? 0)) * Math.min(Math.abs(hot - (ses.heatF ?? s0.heat ?? 0)), 2 * dt); const n = Math.round(ses.heatF); if (n !== Math.round(s0.heat ?? 0)) s0.heat = n }
@@ -999,7 +1002,7 @@ export function update(ctx, dt) {
     const interval = sprinting ? 0.32 : crouched ? 0.7 : 0.48
     if (w.stepClock >= interval) {
       w.stepClock = 0
-      const fl = floorOf(ctx), F = STEPS[fl] ?? STEPS.carpet ?? Object.values(STEPS)[0]
+      const fl = floorOf(ctx), F = STEPS?.[fl] ?? STEPS?.carpet ?? Object.values(STEPS ?? {})[0] ?? { walk: 'footstep-soft-carpet', run: 'footstep-soft-carpet', v: 0.3 }
       const clip = w.wet ? 'footstep-soaked-carpet-deep-squelch' : sprinting ? F.run : F.walk
       sound(ctx, clip, (w.wet ? 0.4 : sprinting ? F.v * 1.4 : F.v) * (crouched ? 0.3 : 1) * (0.85 + Math.random() * 0.3), true) // each step a touch louder or softer: no machine-gun repeat
     }
