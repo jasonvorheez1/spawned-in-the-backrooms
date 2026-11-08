@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 29;
+const V = 30;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -53,7 +53,9 @@ export function tick(ctx) {
   // the hallway (Shelly: "add a hallway"): z -1..-2.6, living room doorway in the middle, bedroom door at the west end, bath door at the east
   const HZ = -2.6;
   bx("h-hall-wall-l", -4.75, 0, HZ, 0.5, H, 0.12, PAPER);
-  bx("h-hall-wall-r", 0.75, 0, HZ, 8.5, H, 0.12, PAPER);
+  bx("h-hall-wall-r", -0.175, 0, HZ, 6.65, H, 0.12, PAPER);
+  bx("h-hall-wall-r2", 4.525, 0, HZ, 0.95, H, 0.12, PAPER);
+  bx("h-hall-wall-top2", 3.6, 2.1, HZ, 0.9, H - 2.1, 0.12, PAPER);
   bx("h-hall-wall-top", -4.0, 2.1, HZ, 1.0, H - 2.1, 0.12, PAPER);
   for (const [id, x, w] of [["h-case-l", -4.52, 0.05], ["h-case-r", -3.48, 0.05]]) bx(id, x, 0, HZ, w, 2.12, 0.16, TRIM, { physics: "none" }); // bedroom door casing
   bx("h-case-top", -4.0, 2.08, HZ, 1.1, 0.06, 0.16, TRIM, { physics: "none" });
@@ -61,8 +63,28 @@ export function tick(ctx) {
   bx("h-hall-runner", -0.4, 0.112, -1.8, 7.6, 0.01, 0.9, { color: "oklch(0.42 0.09 30)", roughness: 0.95 }, { physics: "none" }); // a worn burgundy runner down the hall
   bx("h-bed-wall-e", 2.2, 0, -4.3, 0.12, H, 3.4, PAPER); // the bedroom's east wall; the bathroom sits behind it
   bx("h-base-bed-e", 2.13, 0.05, -4.3, 0.02, 0.12, 3.4, TRIM, { physics: "none" });
-  bx("h-bath-door", 3.6, 0.05, HZ + 0.08, 0.85, 2.05, 0.05, { color: "oklch(0.93 0.015 85)", roughness: 0.5 }); // bath door off the hall, shut
-  sp("h-bath-knob", { feetPosition: { x: 3.27, y: 1.0, z: HZ + 0.13 }, primitive: { kind: "sphere", radius: 0.035 }, material: { color: "oklch(0.8 0.1 85)", metalness: 0.9, roughness: 0.3 } });
+  // the bathroom (Shelly: "give this door a room too"): x 2.2..5, z -2.6..-6
+  const BY = 0.1, TILE = T("white-square-ceramic-bathroom-floor-tile", 0.6, "oklch(0.95 0.01 90)"), PORC = { color: "oklch(0.97 0.006 95)", roughness: 0.25 }, CHROME = { color: "oklch(0.85 0.01 250)", metalness: 0.9, roughness: 0.2 };
+  bx("h-bath-door", 3.2, 0.05, HZ - 0.45, 0.04, 2.05, 0.82, { color: "oklch(0.93 0.015 85)", roughness: 0.5 }, { physics: "none" }); // swung open against the wall
+  bx("h-bath-floor", 3.6, BY, -4.3, 2.7, 0.015, 3.3, TILE, { physics: "none" });
+  bx("h-bath-tile-wall", 3.6, BY, -5.9, 2.7, 1.2, 0.03, TILE, { physics: "none" }); // tiled wainscot behind the tub
+  // tub along the north wall, rounded rim
+  sp("h-tub", { feetPosition: { x: 3.6, y: BY, z: -5.35 }, primitive: { kind: "capsule", radius: 0.38, halfHeight: 0.6 }, rotation: { roll: 90 }, scale: { x: 1, y: 1, z: 1.05 }, pivot: "center", material: PORC, physics: "static" });
+  sp("h-tub-skirt", { feetPosition: { x: 3.6, y: BY, z: -5.35 }, primitive: { kind: "box", width: 2.6, height: 0.42, depth: 0.76 }, material: PORC, physics: "static" });
+  sp("h-tub-water-line", { feetPosition: { x: 3.6, y: BY + 0.43, z: -5.35 }, primitive: { kind: "box", width: 2.3, height: 0.01, depth: 0.55 }, material: { color: "oklch(0.88 0.02 230)", roughness: 0.1 } });
+  sp("h-shower-rod", { feetPosition: { x: 3.6, y: 1.95, z: -4.95 }, rotation: { roll: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.015, radiusBottom: 0.015, height: 2.7 }, material: CHROME });
+  sp("h-shower-curtain", { feetPosition: { x: 4.35, y: 0.55, z: -4.95 }, primitive: { kind: "box", width: 0.9, height: 1.38, depth: 0.02 }, material: { color: "oklch(0.8 0.08 230)", roughness: 0.7, opacity: 0.85, transparent: true } }); // a pulled-back blue curtain
+  sp("h-faucet", { feetPosition: { x: 2.4, y: BY + 0.6, z: -5.35 }, rotation: { roll: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.03, height: 0.2 }, material: CHROME });
+  // toilet by the east wall
+  sp("h-toilet-bowl", { feetPosition: { x: 4.5, y: BY, z: -3.9 }, primitive: { kind: "cylinder", radiusTop: 0.21, radiusBottom: 0.14, height: 0.4 }, scale: { x: 1, y: 1, z: 1.3 }, material: PORC, physics: "static" });
+  sp("h-toilet-seat", { feetPosition: { x: 4.5, y: BY + 0.4, z: -3.9 }, primitive: { kind: "torus", radius: 0.17, tube: 0.04 }, rotation: { pitch: 90 }, scale: { x: 1, y: 1.3, z: 1 }, material: PORC });
+  sp("h-toilet-tank", { feetPosition: { x: 4.8, y: BY + 0.38, z: -3.9 }, primitive: { kind: "box", width: 0.2, height: 0.4, depth: 0.48 }, material: PORC, physics: "static" });
+  sp("h-toilet-lid", { feetPosition: { x: 4.8, y: BY + 0.78, z: -3.9 }, primitive: { kind: "box", width: 0.24, height: 0.04, depth: 0.52 }, material: PORC });
+  // vanity on the west wall with a mirror and a hollywood light bar
+  fit("h-vanity", M.kitchen, 2.55, -3.6, 270, [0.55, 0.85, 0.95]);
+  sp("h-mirror", { feetPosition: { x: 2.27, y: 1.1, z: -3.6 }, primitive: { kind: "box", width: 0.02, height: 0.8, depth: 0.7 }, material: { color: "oklch(0.92 0.01 230)", metalness: 1, roughness: 0.05 } });
+  sp("h-vanity-bar", { feetPosition: { x: 2.3, y: 1.95, z: -3.6 }, primitive: { kind: "box", width: 0.08, height: 0.1, depth: 0.75 }, material: { color: "oklch(0.97 0.03 90)", emissive: "oklch(0.95 0.05 85)", emissiveIntensity: 1 }, light: { kind: "point", color: "oklch(0.9 0.06 80)", intensity: 1.2, distance: 5 } });
+  sp("h-towel", { feetPosition: { x: 4.93, y: 1.0, z: -4.8 }, primitive: { kind: "box", width: 0.04, height: 0.55, depth: 0.45 }, material: { color: "oklch(0.7 0.1 160)", roughness: 1 } }); // seafoam towel on the east wall
   sp("h-light-hall", { feetPosition: { x: -1.2, y: 2.55, z: -1.8 }, primitive: { kind: "cylinder", radiusTop: 0.17, radiusBottom: 0.12, height: 0.12 }, material: { color: "oklch(0.97 0.02 90)", emissive: "oklch(0.9 0.05 85)", emissiveIntensity: 0.6 }, light: { kind: "point", color: "oklch(0.88 0.07 70)", intensity: 1.0, distance: 6 } }); // frosted flush-mount dome
   for (const [id, x, z, w, d] of [["h-base-w", -4.9, 0, 0.04, D], ["h-base-e", 4.9, 0, 0.04, D], ["h-base-n", 0, -5.9, W, 0.04]]) bx(id, x, 0.05, z, w, 0.12, d, TRIM, { physics: "none" });
 
