@@ -50,11 +50,9 @@ def male(head, body):
     for i, v in enumerate(body.data.vertices):
         x, y, z = v.co; sg = 1 if x >= 0 else -1
         A = aw[i]; T = 1 - A
-        sh = bump(1.12, 1.34, 1.5, 1.58, z)
-        x = x * (1 + 0.26 * sh * T) + sg * SH * A
-        x *= 1 + 0.1 * bump(1.06, 1.14, 1.24, 1.32, z) * T
-        x *= 1 - 0.3 * bump(0.55, 0.8, 1.02, 1.14, z) * T
-        if y > 0.1: y = 0.1 + (y - 0.1) * (1 - 0.55 * bump(0.68, 0.82, 1.0, 1.12, z) * T)
+        sh = bump(1.34, 1.44, 1.54, 1.6, z)
+        x = x * (1 + 0.2 * sh * T) + sg * SH * A
+        if y > 0.1: y = 0.1 + (y - 0.1) * (1 - 0.5 * bump(0.9, 1.0, 1.14, 1.24, z) * T)
         v.co = Vector((x, y, z))
     key = lambda c: (round(c.x, 4), round(c.y, 4), round(c.z, 4))
     grp = {}; gid = []
@@ -85,30 +83,31 @@ def male(head, body):
     def at(bins, z):
         k = int(z / 0.02); ks = [j for j in (k - 1, k, k + 1) if j in bins]
         return sum(bins[j] for j in ks) / len(ks) if ks else 0
-    print("PROF", " ".join(f"{k*0.02:.2f}:{half[k]:.3f}" for k in sorted(half)))
-    wz = min((z / 100 for z in range(98, 120)), key=lambda z: at(half, z))
-    ww = at(half, wz); sw = at(half, 1.42)
-    print("waist", round(wz, 3), "half", round(ww, 3), "chest half", round(sw, 3), "hip half", round(max(at(half, z / 100) for z in range(80, 96)), 3))
+    C = at(half, 1.46)
+    G = [(0.9, 0.9), (1.0, 0.88), (1.12, 0.88), (1.22, 0.9), (1.32, 0.94), (1.4, 1.0)]
     def target(z):
-        if z >= wz: return ww + (max(sw, ww) - ww) * smooth(wz, 1.42, z) * 1.04
-        return ww * (1 + 0.06 * smooth(wz, 0.78, z))
+        if z <= G[0][0]: return C * G[0][1]
+        for (z0, g0), (z1, g1) in zip(G, G[1:]):
+            if z <= z1: return C * (g0 + (g1 - g0) * (z - z0) / (z1 - z0))
+        return C
+    print("chest half", round(C, 3), "hip src", round(at(half, 1.08), 3), "->", round(target(1.08), 3), "waist src", round(at(half, 1.32), 3), "->", round(target(1.32), 3))
     pass1 = [v.co.copy() for v in body.data.vertices]
     for i, v in enumerate(body.data.vertices):
         z = v.co.z
-        if not 0.72 <= z <= 1.42: continue
-        src = at(half, z)
+        if not 0.8 <= z <= 1.44: continue
+        src = sum(at(half, z + d) for d in (-0.04, -0.02, 0, 0.02, 0.04)) / 5
         if src <= 0: continue
-        f = target(z) / src
-        f = 1 + (min(f, 1.0) - 1) * bump(0.62, 0.76, 1.38, 1.46, z)  # only ever pulls in
+        f = max(0.75, min(1.3, target(z) / src))
+        f = 1 + (f - 1) * bump(0.82, 0.95, 1.38, 1.44, z)
         v.co.x *= 1 + (f - 1) * (1 - aw[i])
     # flat chest: the front of the ribcage on a straight line from collarbone to belly
-    front = prof(lambda i, c: abs(c.x) < 0.12, 1.1, 1.5, lambda m, c: min(m if m is not None else 9, c.y))
-    y0, y1 = at(front, 1.46), at(front, 1.14)
+    front = prof(lambda i, c: abs(c.x) < 0.12, 1.2, 1.56, lambda m, c: min(m if m is not None else 9, c.y))
+    y0, y1 = at(front, 1.52), at(front, 1.26)
     for i, v in enumerate(body.data.vertices):
         x, y, z = v.co; ax = abs(x); T = 1 - aw[i]
-        band = bump(1.14, 1.2, 1.42, 1.48, z) * (1 - smooth(0.12, 0.2, ax)) * T
+        band = bump(1.24, 1.3, 1.48, 1.53, z) * (1 - smooth(0.12, 0.2, ax)) * T
         if band <= 0: continue
-        line = y1 + (y0 - y1) * (z - 1.14) / 0.32 - 0.006 * bump(1.3, 1.35, 1.4, 1.45, z) * bump(0.02, 0.05, 0.1, 0.13, ax)
+        line = y1 + (y0 - y1) * (z - 1.26) / 0.26 - 0.006 * bump(1.38, 1.42, 1.46, 1.5, z) * bump(0.02, 0.05, 0.1, 0.13, ax)
         if y < line: v.co.y = y + (line - y) * band
     # thick neck, arm and calf mass
     for i, v in enumerate(body.data.vertices):
