@@ -126,8 +126,8 @@ rows:
   - { id: silkcloak,   slot: neck, kind: cape,       name: "Silk caving cloak",  dr: 3, kg: 0.6, rarity: uncommon, places: [level8], strict: true, colours: [dfe6ea], crafted: true, pats: [canvas] }
   - { id: lifemantle,  slot: neck, kind: cape,       name: "Cork lifebelt mantle",  dr: 3, kg: 1.1, rarity: rare, places: [level7], strict: true, colours: [c85a28, 3a4e54], pats: [canvas] }
   # the Level 11 clothing shop's own stock (scripts/lib/level11-shop.js): sold by its clerk only, in no faction, role or loot list
-  - { id: pgmask,      slot: hat,  kind: bagmask,    name: Partygoer mask,       dr: 1, kg: 0.2, rarity: rare, strict: true, shop: true, colours: [c4a46a], mask: /cdn/value.9c087b407fa6ffa0e2ca3ed5a0ed8cd8d0710c49dcd2361a2822d37db48bd093.glb }
-  - { id: ppmask,      slot: hat,  kind: shellmask,  name: Partypooper mask,     dr: 3, kg: 0.6, rarity: rare, strict: true, shop: true, colours: [3a3878], mask: /cdn/value.9b5bd175c5394b51b88af39b7e24cdc6e895f618b4a15aba66601d92a3110833.glb }
+  - { id: pgmask,      slot: hat,  kind: bagmask,    name: Partygoer mask,       dr: 1, kg: 0.2, rarity: rare, strict: true, shop: true, colours: [c4a46a], mask: /cdn/value.5224d797ee3c620174d7d2c9de5ca4d8d05a0a6148df00937643b5b6022cd171.glb }
+  - { id: ppmask,      slot: hat,  kind: shellmask,  name: Partypooper mask,     dr: 3, kg: 0.6, rarity: rare, strict: true, shop: true, colours: [3a3878], mask: /cdn/value.7f5f9805ea9e1c42c92a150e7128ee72cb6bfeb8fc152ef3e28e363047152d0a.glb }
   - { id: pgcoat,      slot: topw, kind: jacket,     name: Partygoer coat,       dr: 3, kg: 1.4, rarity: rare, strict: true, shop: true, colours: [b8975c], pats: [pgcoat] }
   - { id: jerrytee,    slot: topw, kind: tee,        name: All Hail Jerry shirt, dr: 1, kg: 0.2, rarity: rare, strict: true, shop: true, colours: [1d2540], pats: [jerry] }
   - { id: pphoodie,    slot: topw, kind: hoodie,     name: Partypooper hoodie,   dr: 2, kg: 0.8, rarity: rare, strict: true, shop: true, colours: [2a2033], pats: [ppsad] }

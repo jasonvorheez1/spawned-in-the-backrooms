@@ -11,6 +11,7 @@ export const maskOf = (l) => (l?.hat && l.hat !== 'none' ? CL.rows.find((r) => r
 export const maskChild = (l, local) => { const m = maskOf(l); return m ? { id: MASK_ID, attachment: { skin: true }, model: m, ...(local ? { audience: 'local' } : {}) } : null }
 export function seatMask(ctx, o, l) {
   const want = maskOf(l), id = o.id + '/' + MASK_ID, m = ctx.getObject(id)
+  const h = ctx.getObject(o.id + '/' + HEAD_ID); if (h && h.visible !== !want) h.visible = !want // the mask covers the head whole: snout and ears stay inside it
   if (!want) { if (m) ctx.destroy(id); return }
   if (m) { if ((m.model?.id ?? m.model) !== want) m.model = want; return }
   ctx.spawn(MASK_ID, { parent: o.id, ...maskChild(l, o.audience === 'local') })
@@ -337,7 +338,8 @@ export function critterSpec(l) {
       attachment: { skin: true },
       model: headModel(l),
       morph: faceMorph(l?.expr, false, isF, l),
-      jiggle: { bones: ['EarL', 'EarR'], amount: 0.58, bounce: 0.72 }
+      jiggle: { bones: ['EarL', 'EarR'], amount: 0.58, bounce: 0.72 },
+      ...(maskOf(l) ? { visible: false } : {})
     }, maskChild(l)].filter(Boolean),
     material: { outline: { color: '#1d1420', width: 2.4 } },
     jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.68, bounce: 0.72 },
