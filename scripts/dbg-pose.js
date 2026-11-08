@@ -1,8 +1,7 @@
-// debug room gallery: a mannequin plays the clip its row names, on a loop, so every new clip can be judged on the real bodies
+// debug room gallery: a mannequin loops the clip its row names, so every new clip can be judged on the real bodies
 export function onSpawn(ctx) { pose(ctx) }
-export function update(ctx) { if (!ctx.self.session.posed) pose(ctx); ctx.sleep() }
+export function update(ctx) { pose(ctx); ctx.sleep(5) }
 function pose(ctx) {
   const s = ctx.self.state; if (!s?.clip) return
-  ctx.self.anim.idle = { clip: s.clip, loop: true, weight: 1 }
-  ctx.self.session.posed = true
+  if (ctx.self.anim.idle?.clip !== s.clip) ctx.self.anim.idle = { clip: s.clip, loop: true, weight: 1 }
 }
