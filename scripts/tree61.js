@@ -1,5 +1,5 @@
 // an indoor weeping fig: bark tube trunk with a few limbs, crown of painted ficus-spray cards. params { h }
-const LEAF = "/cdn/value.dc55d8ede1560c3fa0da3c31ccd64ea264cbef7fbd243701a8158be84065b975.png";
+const LEAF = "/cdn/value.301c0ede48341f8b7b30a5abb36bf908b9e049ab26bd2e38c65410f52836a6e6.png";
 const add = (a, b, k = 1) => [a[0] + b[0] * k, a[1] + b[1] * k, a[2] + b[2] * k];
 const unit = (a) => add([0, 0, 0], a, 1 / (Math.hypot(...a) || 1));
 const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
