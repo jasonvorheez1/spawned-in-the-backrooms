@@ -596,6 +596,10 @@ export function getStarter(ctx, it, s) {
 }
 
 export function getChoices(ctx, it, s, lastNpcReply, replyObj) {
+  return fitPlace(ctx, it, rawChoices(ctx, it, s, lastNpcReply, replyObj))
+}
+
+function rawChoices(ctx, it, s, lastNpcReply, replyObj) {
   if (!it) return []
   const id = short(it)
   const sk = skillsOf(s ?? {})
@@ -643,7 +647,7 @@ function generateFollowUpChoices(ctx, it, s, line, entry, sk) {
     out.push({ text: "How intense does the steam heat get further down?", tag: `Survival ${sk.survival}` })
   } else if (t.includes('rat') || t.includes('beast') || t.includes('hound') || t.includes('entity') || t.includes('faceling') || t.includes('smiler')) {
     out.push({ text: "What's the best weapon or tactic against them?", tag: `Survival ${sk.survival}` })
-  } else if (t.includes('hotel') || t.includes('room') || t.includes('suite') || t.includes('corridor')) {
+  } else if (t.includes('hotel') || t.includes('suite') || (t.includes('room') && !t.includes('snackroom') && !t.includes('restroom') && !t.includes('bathroom') && !t.includes('backroom'))) {
     out.push({ text: "Are there any rooms wanderers should strictly avoid?", tag: "Lore" })
   } else if (t.includes('ballroom') || t.includes('waltz') || t.includes('music')) {
     out.push({ text: "Who is playing the music in the ballroom?", tag: "Lore" })
@@ -719,5 +723,43 @@ function generateGenericChoices(it, s, sk) {
 
   out.push({ text: "Stay safe out there in the corridors.", tag: "Farewell" })
 
+  return out.slice(0, 4)
+}
+
+// ---- what fits the level: a safe level (Snackrooms, Refrigerator Paradise) asks no danger questions; the hotel's rooms are asked about in the hotel
+// Survival difficulty by place (the wiki's SD class, Savi's reading); 1 = safe: no "what should I avoid", no "best weapon against them"
+const SD = { level61: 1, main: 1, level1: 1, level4: 1, level2: 2, level21: 3, level3: 4, gamma: 2, level5: 3, level6: 4, level7: 4, level8: 4, debug: 1 }
+const DANGER = /avoid|danger|deadly|entit|hound|smiler|weapon|tactic|stay alive|staying alive|survive|survived|kill|threat|hunt|flicker|dark alone|face the dark|watch out/i
+const HOTEL = /\brooms?\b.*avoid|suite|hotel|ballroom/i
+const SAFE_ASK = {
+  level61: [
+    { text: "What's actually good to eat around here?", tag: "Help" },
+    { text: "Who runs all these places? Do the facelings ever talk?", tag: "Lore" },
+    { text: "Is the food really free? What's the catch?", tag: "Lore" },
+    { text: "What's playing on the speakers? I swear I know this song.", tag: "Chat" },
+    { text: "Where are the restrooms, and the way back out?", tag: "Help" },
+    { text: "How did you end up in the Snackrooms?", tag: "Lore" },
+  ],
+  default: [
+    { text: "How long have you been here?", tag: "Lore" },
+    { text: "What do people do for fun around here?", tag: "Chat" },
+    { text: "Anywhere good to rest nearby?", tag: "Help" },
+  ],
+}
+function fitPlace(ctx, it, list) {
+  const place = String(it?.place ?? ctx.self?.place ?? 'main')
+  const sd = SD[place] ?? 3
+  let out = (list ?? []).filter((c) => {
+    if (HOTEL.test(c.text) && place !== 'level5') return false
+    if (sd <= 1 && DANGER.test(c.text)) return false
+    return true
+  })
+  const pool = SAFE_ASK[place] ?? (sd <= 1 ? SAFE_ASK.default : [])
+  let k = Math.floor((ctx.now?.() ?? 0) / 7000) % Math.max(1, pool.length)
+  while (out.length < 4 && pool.length) {
+    const c = pool[k++ % pool.length]
+    if (out.some((o) => o.text === c.text)) { if (out.length + 1 > pool.length) break; if (k > pool.length * 2) break; continue }
+    out.splice(Math.max(0, out.length - 1), 0, c)
+  }
   return out.slice(0, 4)
 }
