@@ -3,6 +3,7 @@
 // state.t0n = beats passed, state.t0cut = { id, at } while one plays; the frame and captions are scripts/cutscene-ui.js t0Ui.
 import { animate } from "builtin/tween"
 import { BEATS, SMILER, SHIFT, SOFT, ALMOND, UNIT } from "./tut0.js"
+import { spawnPhoebe, dropPhoebe } from "./phoebe.js"
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const SMILER_MODEL = { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" } // scripts/smilers.js
 export const LEN = { almond: 6.5, halogen: 6, smiler: 12, shift: 7.5, final: 21 }
@@ -117,6 +118,13 @@ pop dust rate=26 on=box(<.1,0,1.5>) life=1..1.8 v=up(.3..0.7)+sdir()*.4 size=.15
     const me = ctx.self, at = { x: SOFT.x, y: 0, z: SOFT.z }
     if (t < 3) me.feetPosition = { x: lerp(c.p0.x, at.x, ss(0, 0.8, t)), y: 0, z: lerp(c.p0.z, at.z, ss(0, 0.8, t)) }
     else me.feetPosition = { x: at.x, y: -2.6 * Math.pow(ss(3, 6.4, t), 1.6), z: at.z }
+    // Phoebe in corridor E's mouth, the hall light behind her: a shape and a coat, her face in her own shadow
+    once("phoebe", () => {
+      spawnPhoebe(ctx, "phoebe-end", { x: 44, y: 0, z: -9.6 }, 180, 9)
+      for (const i of [19, 20]) { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) o.light = { ...o.light, intensity: 0.6 } } // the two lamps between you and her
+      const h = ctx.getObject("t0-light-18"); if (h?.light) h.light = { ...h.light, intensity: 9 }
+    })
+    if (t > 6.2) once("phoebeGone", () => dropPhoebe(ctx, "phoebe-end"))
     once("squelch", () => { snd(ctx, "wet-squelch-mud-step", 0.9); me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
     if (t > 1.4) once("look", () => { me.anim.cut = { clip: "cdn/clip-shrug.glb", weight: 4 }; snd(ctx, "deep-rumble-groan", 0.8) })
     if (t > 3) once("sink", () => { me.anim.cut = { clip: "cdn/clip-fall-loop.glb", weight: 4, loop: "loop" }; snd(ctx, "wet-squelch-mud-step", 1.0); ctx.emit("screenShake", { intensity: 0.3, duration: 3 }, { audience: { player: me.id } }) })

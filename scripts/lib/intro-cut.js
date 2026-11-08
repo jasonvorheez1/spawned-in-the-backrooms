@@ -3,6 +3,7 @@
 // state.cut (a ctx.now() stamp) stands in the intake bedroom. ~25 s: five camera shots, the body walked by hand,
 // the wall goes yellow under their palm, they sink in, a yellow flash, then the existing Level 0 fall (scripts/noclip.js).
 import { animate } from "builtin/tween"
+import { spawnPhoebe, dropPhoebe } from "./phoebe.js"
 const WALL = { x: 1.0, z: 2.5 }          // the bedroom's back wall (places/intake), right of the skate poster
 const STAND = { x: 1.0, z: 1.95 }        // where they stop, a step off it
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
@@ -43,6 +44,9 @@ function bedTick(ctx, c, t, y0) {
 // returns true once the scene is over and the player has been sent on
 export function cutTick(ctx, ses, st) {
   const raw = (ctx.now() - st.cut) / 1000, c = (ses.cut ??= { p0: { x: UP.x, y: ctx.self.feetPosition.y || 0, z: UP.z }, did: {} }), y0 = c.p0.y || 0
+  // Phoebe half behind the headboard, watching them wake and wander; gone once the camera turns to the wall
+  if (raw < PRE + 6.5) { if (!c.phoebe) { c.phoebe = true; spawnPhoebe(ctx, "phoebe-intro", { x: -2.75, y: y0, z: 2.2 }, 40, PRE + 8) } }
+  else if (!c.phoebeGone) { c.phoebeGone = true; dropPhoebe(ctx, "phoebe-intro") }
   if (raw < PRE) return bedTick(ctx, c, raw, y0)
   const t = raw - PRE
   const once = (k, fn) => { if (!c.did[k]) { c.did[k] = true; fn() } }
