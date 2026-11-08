@@ -17,138 +17,138 @@ bc-bench-1:
   feetPosition: {x: -4.5, y: 0, z: 24.05}
   id: bc-bench-1
   layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: {forward: "+z", id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
+  model: {id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 180}
+  rotation: {yaw: 0}
   tags: [bonus-court]
 bc-bench-2:
   feetPosition: {x: 4.5, y: 0, z: 24.05}
   id: bc-bench-2
   layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: {forward: "+z", id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
+  model: {id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 180}
+  rotation: {yaw: 0}
   tags: [bonus-court]
 bc-bench-3:
   feetPosition: {x: -4.5, y: 0, z: 6.05}
   id: bc-bench-3
   layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: {forward: "+z", id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
+  model: {id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 180}
+  rotation: {yaw: 0}
   tags: [bonus-court]
 bc-bench-4:
   feetPosition: {x: 4.5, y: 0, z: 6.05}
   id: bc-bench-4
   layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: {forward: "+z", id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
+  model: {id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 180}
+  rotation: {yaw: 0}
   tags: [bonus-court]
 bc-bench-5:
   feetPosition: {x: -4.5, y: 0, z: -21.95}
   id: bc-bench-5
   layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: {forward: "+z", id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
+  model: {id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 180}
+  rotation: {yaw: 0}
   tags: [bonus-court]
 bc-bench-6:
   feetPosition: {x: 4.5, y: 0, z: -21.95}
   id: bc-bench-6
   layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
-  model: {forward: "+z", id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
+  model: {id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 180}
+  rotation: {yaw: 0}
   tags: [bonus-court]
 bc-cab-1:
-  children: [{feetPosition: {x: 0, y: 1.22, z: -0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: -12}}]
+  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
   feetPosition: {x: 13, y: 0.02, z: -22.9}
   id: bc-cab-1
   layout: {box: {max: {x: 0.55, y: 1.8, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
-  model: {forward: "+z", id: /cdn/value.f3c49f1f0d8fbf2e0f33771060b84d640d7959a2e64c552606ed1745488efced.glb}
+  model: {id: /cdn/value.f3c49f1f0d8fbf2e0f33771060b84d640d7959a2e64c552606ed1745488efced.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 180}
+  rotation: {yaw: 0}
   tags: [bonus-arcade]
 bc-cab-2:
-  children: [{feetPosition: {x: 0, y: 1.22, z: -0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: -12}}]
+  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
   feetPosition: {x: 13, y: 0.02, z: -7.1}
   id: bc-cab-2
   layout: {box: {max: {x: 0.55, y: 1.8, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
-  model: {forward: "+z", id: /cdn/value.275bdb99ee0aea3f4011236b7cf52502b0ed684b54934ec0a2eb7e088db69d1a.glb}
+  model: {id: /cdn/value.275bdb99ee0aea3f4011236b7cf52502b0ed684b54934ec0a2eb7e088db69d1a.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 0}
+  rotation: {yaw: 180}
   tags: [bonus-arcade]
 bc-cab-3:
-  children: [{feetPosition: {x: 0, y: 1.22, z: -0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: -12}}]
+  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
   feetPosition: {x: 15.2, y: 0.02, z: -22.9}
   id: bc-cab-3
   layout: {box: {max: {x: 0.55, y: 1.8, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
-  model: {forward: "+z", id: /cdn/value.275bdb99ee0aea3f4011236b7cf52502b0ed684b54934ec0a2eb7e088db69d1a.glb}
+  model: {id: /cdn/value.275bdb99ee0aea3f4011236b7cf52502b0ed684b54934ec0a2eb7e088db69d1a.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 180}
+  rotation: {yaw: 0}
   tags: [bonus-arcade]
 bc-cab-4:
-  children: [{feetPosition: {x: 0, y: 1.22, z: -0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: -12}}]
+  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
   feetPosition: {x: 15.2, y: 0.02, z: -7.1}
   id: bc-cab-4
   layout: {box: {max: {x: 0.55, y: 1.8, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
-  model: {forward: "+z", id: /cdn/value.f3c49f1f0d8fbf2e0f33771060b84d640d7959a2e64c552606ed1745488efced.glb}
+  model: {id: /cdn/value.f3c49f1f0d8fbf2e0f33771060b84d640d7959a2e64c552606ed1745488efced.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 0}
+  rotation: {yaw: 180}
   tags: [bonus-arcade]
 bc-cab-5:
-  children: [{feetPosition: {x: 0, y: 1.22, z: -0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: -12}}]
+  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
   feetPosition: {x: 17.4, y: 0.02, z: -22.9}
   id: bc-cab-5
   layout: {box: {max: {x: 0.55, y: 1.8, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
-  model: {forward: "+z", id: /cdn/value.f3c49f1f0d8fbf2e0f33771060b84d640d7959a2e64c552606ed1745488efced.glb}
+  model: {id: /cdn/value.f3c49f1f0d8fbf2e0f33771060b84d640d7959a2e64c552606ed1745488efced.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 180}
+  rotation: {yaw: 0}
   tags: [bonus-arcade]
 bc-cab-6:
-  children: [{feetPosition: {x: 0, y: 1.22, z: -0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: -12}}]
+  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
   feetPosition: {x: 17.4, y: 0.02, z: -7.1}
   id: bc-cab-6
   layout: {box: {max: {x: 0.55, y: 1.8, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
-  model: {forward: "+z", id: /cdn/value.275bdb99ee0aea3f4011236b7cf52502b0ed684b54934ec0a2eb7e088db69d1a.glb}
-  physics: {body: static, collider: box}
-  rotation: {yaw: 0}
-  tags: [bonus-arcade]
-bc-cab-7:
-  children: [{feetPosition: {x: 0, y: 1.22, z: -0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: -12}}]
-  feetPosition: {x: 19.6, y: 0.02, z: -22.9}
-  id: bc-cab-7
-  layout: {box: {max: {x: 0.55, y: 1.8, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
-  model: {forward: "+z", id: /cdn/value.275bdb99ee0aea3f4011236b7cf52502b0ed684b54934ec0a2eb7e088db69d1a.glb}
+  model: {id: /cdn/value.275bdb99ee0aea3f4011236b7cf52502b0ed684b54934ec0a2eb7e088db69d1a.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 180}
   tags: [bonus-arcade]
+bc-cab-7:
+  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
+  feetPosition: {x: 19.6, y: 0.02, z: -22.9}
+  id: bc-cab-7
+  layout: {box: {max: {x: 0.55, y: 1.8, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
+  model: {id: /cdn/value.275bdb99ee0aea3f4011236b7cf52502b0ed684b54934ec0a2eb7e088db69d1a.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 0}
+  tags: [bonus-arcade]
 bc-cab-8:
-  children: [{feetPosition: {x: 0, y: 1.22, z: -0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: -12}}]
+  children: [{feetPosition: {x: 0, y: 1.22, z: 0.18}, id: screen, material: {emissive: "#ffffff", emissiveIntensity: 1.6, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.2, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, primitive: {depth: 0.01, height: 0.36, kind: box, width: 0.46}, rotation: {pitch: 12}}]
   feetPosition: {x: 19.6, y: 0.02, z: -7.1}
   id: bc-cab-8
   layout: {box: {max: {x: 0.55, y: 1.8, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
-  model: {forward: "+z", id: /cdn/value.f3c49f1f0d8fbf2e0f33771060b84d640d7959a2e64c552606ed1745488efced.glb}
+  model: {id: /cdn/value.f3c49f1f0d8fbf2e0f33771060b84d640d7959a2e64c552606ed1745488efced.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 0}
+  rotation: {yaw: 180}
   tags: [bonus-arcade]
 bc-claw-1:
   children: [{feetPosition: {x: 0, y: 1.6, z: 0}, id: lamp, light: {color: "#ffd0f0", distance: 3, intensity: 0.8, kind: point}}]
   feetPosition: {x: 22.6, y: 0.02, z: -9.2}
   id: bc-claw-1
   layout: {box: {max: {x: 0.65, y: 2, z: 0.65}, min: {x: -0.65, y: 0, z: -0.65}}}
-  model: {forward: "+z", id: /cdn/value.343e20728fe5fff9520e8ab82ab8cbc4b5084303f1e1ef791742b74d05a94f12.glb}
+  model: {id: /cdn/value.343e20728fe5fff9520e8ab82ab8cbc4b5084303f1e1ef791742b74d05a94f12.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 90}
+  rotation: {yaw: -90}
   tags: [bonus-arcade]
 bc-directory:
   feetPosition: {x: 0, y: 0, z: -31.5}
   id: bc-directory
   layout: {box: {max: {x: 0.6, y: 2.4, z: 0.2}, min: {x: -0.6, y: 0, z: -0.2}}}
-  model: {forward: "-x", id: /cdn/value.d498b705ca9b103ef3759c93502b6ddbd2a61de3f859d7d315c8431ec012663b.glb}
+  model: {id: /cdn/value.d498b705ca9b103ef3759c93502b6ddbd2a61de3f859d7d315c8431ec012663b.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 180}
+  rotation: {yaw: 90}
   tags: [bonus-court]
 bc-fern-1:
   feetPosition: {x: -3.9, y: 0, z: 1.3}
@@ -183,7 +183,7 @@ bc-fern-4:
   rotation: {yaw: 231}
   tags: [bonus-court]
 bc-fountain:
-  children: [{feetPosition: {x: 0, y: 0.8333333333333334, z: 0}, id: statue, layout: {box: {max: {x: 0.6, y: 2.5, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}, model: {forward: "+z", id: /cdn/value.230f8a809bb4151e629f63be75354d1b39a79297ff3f5301bc63e64478b30ea3.glb}, scale: {x: 1, y: 3.3333333333333335, z: 1}}, {feetPosition: {x: 0, y: 2.066666666666667, z: 0}, id: water, material: {color: "#7fd6e6", kind: water, opacity: 0.8, waveIntensity: 0.3}, primitive: {height: 0.02, kind: cylinder, radialSegments: 48, radiusBottom: 2.85, radiusTop: 2.85}, scale: {x: 1, y: 3.3333333333333335, z: 1}}, {feetPosition: {x: 0, y: 2.1333333333333333, z: 0}, fx: {script: "fx\npop jet rate=flick(.6,.25)*70 on=disc(.25).c(2.6) life=.7..1.1 v=up(3.2..4.2)+sdir()*.35 size=.04..0.08 acc=grav()*.9+drag(.4) col=<.85,.95,1> a=.7>.5:.6>0 sz=$size r=sprite(droplet,alpha,velocity,.03)\npop ring rate=?mobile:30|60 on=arc().c(.6) life=.5..0.8 v=radial(.7..1.1)+up(1.4..2) size=.03..0.06 acc=grav()+drag(.3) col=<.8,.92,1> a=.6>0 sz=$size r=sprite(droplet,alpha,velocity,.03)\npop mist on=@jet?.25 life=1..1.8 v=up(.2) size=.3..0.6 acc=buoy(.2)+drag(1.2) col=<.9,.95,1> a=0>.12:.3>.7:.1>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)"}, id: spray, scale: {x: 1, y: 3.3333333333333335, z: 1}}, {audio: {clip: cdn/sfx-mall-fountain-water-splashing-loop.mp3, gain: 0.25, loop: true, maxDistance: 18, spatial: true}, feetPosition: {x: 0, y: 0.6, z: 0}, id: splash}]
+  children: [{feetPosition: {x: 0, y: 0.8333333333333334, z: 0}, id: statue, layout: {box: {max: {x: 0.6, y: 2.5, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}, model: {id: /cdn/value.230f8a809bb4151e629f63be75354d1b39a79297ff3f5301bc63e64478b30ea3.glb}, scale: {x: 1, y: 3.3333333333333335, z: 1}}, {feetPosition: {x: 0, y: 2.066666666666667, z: 0}, id: water, material: {color: "#7fd6e6", kind: water, opacity: 0.8, waveIntensity: 0.3}, primitive: {height: 0.02, kind: cylinder, radialSegments: 48, radiusBottom: 2.85, radiusTop: 2.85}, scale: {x: 1, y: 3.3333333333333335, z: 1}}, {feetPosition: {x: 0, y: 2.1333333333333333, z: 0}, fx: {script: "fx\npop jet rate=flick(.6,.25)*70 on=disc(.25).c(2.6) life=.7..1.1 v=up(3.2..4.2)+sdir()*.35 size=.04..0.08 acc=grav()*.9+drag(.4) col=<.85,.95,1> a=.7>.5:.6>0 sz=$size r=sprite(droplet,alpha,velocity,.03)\npop ring rate=?mobile:30|60 on=arc().c(.6) life=.5..0.8 v=radial(.7..1.1)+up(1.4..2) size=.03..0.06 acc=grav()+drag(.3) col=<.8,.92,1> a=.6>0 sz=$size r=sprite(droplet,alpha,velocity,.03)\npop mist on=@jet?.25 life=1..1.8 v=up(.2) size=.3..0.6 acc=buoy(.2)+drag(1.2) col=<.9,.95,1> a=0>.12:.3>.7:.1>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)"}, id: spray, scale: {x: 1, y: 3.3333333333333335, z: 1}}, {audio: {clip: cdn/sfx-mall-fountain-water-splashing-loop.mp3, gain: 0.25, loop: true, maxDistance: 18, spatial: true}, feetPosition: {x: 0, y: 0.6, z: 0}, id: splash}]
   feetPosition: {x: 0, y: 0, z: 12}
   id: bc-fountain
   layout: {box: {max: {x: 3.2, y: 3, z: 3.2}, min: {x: -3.2, y: 0, z: -3.2}}}
@@ -279,37 +279,41 @@ bc-prize:
   feetPosition: {x: 22.7, y: 0.02, z: -16}
   id: bc-prize
   layout: {box: {max: {x: 1.7, y: 1.5, z: 0.5}, min: {x: -1.7, y: 0, z: -0.5}}}
-  model: {forward: "+z", id: /cdn/value.590b7ee20653562649fd66665a66ee0873e216afd8c121fc9d770f8388a5c577.glb}
+  model: {id: /cdn/value.590b7ee20653562649fd66665a66ee0873e216afd8c121fc9d770f8388a5c577.glb}
   physics: {body: static, collider: box}
-  rotation: {yaw: 90}
+  rotation: {yaw: -90}
   tags: [bonus-arcade]
 bc-trash-1:
   feetPosition: {x: -5.8, y: 0, z: 14}
   id: bc-trash-1
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
-  model: {forward: "+z", id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
+  model: {id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
   physics: {body: static, collider: box}
+  rotation: {yaw: 0}
   tags: [bonus-court]
 bc-trash-2:
   feetPosition: {x: 5.8, y: 0, z: 14}
   id: bc-trash-2
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
-  model: {forward: "+z", id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
+  model: {id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
   physics: {body: static, collider: box}
+  rotation: {yaw: 0}
   tags: [bonus-court]
 bc-trash-3:
   feetPosition: {x: -5.8, y: 0, z: -20}
   id: bc-trash-3
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
-  model: {forward: "+z", id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
+  model: {id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
   physics: {body: static, collider: box}
+  rotation: {yaw: 0}
   tags: [bonus-court]
 bc-trash-4:
   feetPosition: {x: 5.8, y: 0, z: -20}
   id: bc-trash-4
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
-  model: {forward: "+z", id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
+  model: {id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
   physics: {body: static, collider: box}
+  rotation: {yaw: 0}
   tags: [bonus-court]
 bc-wordmark:
   feetPosition: {x: 0, y: 9, z: 30}
