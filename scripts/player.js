@@ -34,6 +34,7 @@ import L3 from './lib/data/level3.yml'
 const zoneHere = (ctx, x, z) => ctx.self.place === 'spamton' ? 'spam_arena' : ctx.self.place === 'level7' ? (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 70, z + 95) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea') : ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : ctx.self.place === 'level4' ? 'l4_' + zoneAt4(x, z, ctx.self.state.home) : ctx.self.place === 'level5' ? 'l5_' + (zoneAt5(x, z)?.id ?? 'lobby') : ctx.self.place === 'level6' ? 'l6_halls' : ctx.self.place === 'level61' ? 'l61_court' : ctx.self.place === 'level11' ? 'l11_city' : ctx.self.place === 'level8' ? 'l8_cave' : ctx.self.place === 'level21' ? 'l21_' + zoneAt21(x, z) : zoneAt(x, z)
 
 import SOUNDS from './lib/data/sounds.yml'
+import { stepTick } from './lib/footsteps.js'
 import { useCompass, COMPASS } from './lib/compass.js'
 import L3I from './lib/data/l3items.yml'
 import CR from './lib/data/craft.yml'
@@ -105,7 +106,6 @@ function floorOf(ctx) {
   if (pl === 'level8') return 'gravel'
   if (pl === 'level7') return 'wood'
   if (pl === 'level61') return 'terrazzo'
-  if (pl === 'level5') return 'plush'
   if (pl === 'level4') return 'office'
   if (CONCRETE.has(pl)) return 'concrete'
   if (pl === 'level21') { const z = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z); return z === 'l21_edge' || z === 'l21_edgecave' ? 'concrete' : z === 'l21_lockers' || z === 'l21_restroom' ? 'checker' : 'tile' }
@@ -1055,19 +1055,8 @@ export function update(ctx, dt) {
   const dx = intent.x - v.x, dz = intent.z - v.z, gap = Math.hypot(dx, dz), k = gap > step ? step / gap : 1
   ctx.self.velocity = { x: v.x + dx * k, y: v.y + ctx.place.gravity.y * dt, z: v.z + dz * k }
 
-  // Footsteps on carpet: soft, muted, non-intrusive
-  if (moving && ctx.self.grounded) {
-    w.stepClock = (w.stepClock ?? 0) + dt
-    const interval = sprinting ? 0.32 : crouched ? 0.7 : 0.48
-    if (w.stepClock >= interval) {
-      w.stepClock = 0
-      const fl = floorOf(ctx), F = STEPS?.[fl] ?? STEPS?.carpet ?? Object.values(STEPS ?? {})[0] ?? { walk: 'footstep-soft-carpet', run: 'footstep-soft-carpet', v: 0.3 }
-      const clip = w.wet ? 'footstep-soaked-carpet-deep-squelch' : sprinting ? F.run : F.walk
-      sound(ctx, clip, (w.wet ? 0.4 : sprinting ? F.v * 1.4 : F.v) * (crouched ? 0.3 : 1) * (0.85 + Math.random() * 0.3), true) // each step a touch louder or softer: no machine-gun repeat
-    }
-  } else {
-    w.stepClock = 0.22
-  }
+  // Footsteps (scripts/lib/footsteps.js): the floor under you, a step per stride, left/right feet, weight, scuffs and landings
+  stepTick(ctx, w, dt, { moving, sprinting, crouched, wet: w.wet, bur: w.bur ?? 1, fallback: floorOf(ctx), clip: SND })
 
   w.acc = (w.acc ?? 0) + dt
   if (w.acc >= 0.25) { w.dv = derived(s); w.bur = burden(s); w.vmCheck = true; tickStats(ctx, w.acc, moving); w.acc = 0 }
