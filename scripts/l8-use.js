@@ -29,7 +29,9 @@ export const ears = {
       if (!cook) return say(who, "Nobody is minding the pot. You leave it be; it isn't yours.", ctx);
       if (now - (cool[uid] ?? -1e9) < 20000) return say(who, `${cn} slaps your hand off the ladle. "One at a time. Eat what you've got."`, ctx);
       if ((w.cents ?? 0) < PRICE) return say(who, `${cn} covers the pot. "Three Backdollars a bowl. Come back when you've got it."`, ctx);
-      w.cents -= PRICE; cool[uid] = now; snd("pot-lid-clink-and-ladle-in-soup", 0.5);
+      const ask = (s.ask ??= {});
+      if (!(now - (ask[uid] ?? -1e9) < 10000)) { ask[uid] = now; return say(who, `${cn} looks up from the ladle. "Soup's three Backdollars a bowl. You want one?" (Press again to pay $3.00)`, ctx); }
+      delete ask[uid]; w.cents -= PRICE; cool[uid] = now; snd("pot-lid-clink-and-ladle-in-soup", 0.5);
       const hp = who.feetPosition, f = { x: hp.x + (pos.x - hp.x) * 0.4, z: hp.z + (pos.z - hp.z) * 0.4 };
       ctx.spawn({ tags: ["usable", "soupbowl"], feetPosition: { x: f.x, y: hp.y + 0.9, z: f.z }, lifetime: 600, behavior: "scripts/l8-use.js",
         primitive: { kind: "cylinder", radiusTop: 0.13, radiusBottom: 0.07, height: 0.08 }, material: { color: "oklch(0.86 0.02 80)", roughness: 0.6 },
