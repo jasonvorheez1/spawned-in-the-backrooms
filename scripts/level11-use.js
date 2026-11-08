@@ -52,16 +52,7 @@ export const ears = {
     // the green house: bought from the B.N.T.G. sign, price said and confirmed before any money moves
     if (s.kind === "house-sale") {
       if (!who) return;
-      const price = s.price ?? 250000, usd = `$${(price / 100).toLocaleString()}`;
-      if (w.home11) { w.sub = { who: "B.N.T.G. REALTY", t: "It's already yours. The sign stays up so the neighbours stay jealous.", at: now, d: 4500 }; return; }
-      if (!w.homeAsk || now - w.homeAsk > 8000) { w.homeAsk = now; w.sub = { who: "B.N.T.G. REALTY", t: `The green house, ${usd}. Keys, porch and the lock that actually works. Press E again to buy.`, at: now, d: 6000 }; heard(ctx, { clip: BUTTON_CLICK, position: pos, volume: 0.6, maxDistance: 10 }); return; }
-      w.homeAsk = 0;
-      if ((w.cents ?? 0) < price) { w.notice = { text: `Not enough cash. The house is ${usd}, you have $${((w.cents ?? 0) / 100).toFixed(2)}.`, at: now }; return; }
-      w.cents -= price; w.home11 = true;
-      heard(ctx, { clip: REGISTER_CHIME, position: pos, volume: 0.9, maxDistance: 14 });
-      ctx.emit("screenFlash", { color: "#fff2c8", duration: 0.4, intensity: 0.35 }, { audience: { player: who.id } });
-      w.sub = { who: "B.N.T.G. REALTY", t: "Sold. Keys are under the mat, which is a terrible place for keys, so move them.", at: now, d: 6000 };
-      w.notice = { text: `You bought the green house for ${usd}. Rest at the front door any time.`, at: now };
+      w.sub = { who: "B.N.T.G. REALTY", t: w.home11 ? "Sold. To you, apparently." : "For sale. Ask Mara at the B.N.T.G. Realty office, in the old office under renovation.", at: now, d: 5000 };
       return;
     }
     if (s.kind === "house-door") {

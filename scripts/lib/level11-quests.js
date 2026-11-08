@@ -135,6 +135,25 @@ export function handleDialogueQuest(ctx, p, npc, text) {
   if (!s || !npc) return null;
   const npcId = String(npc.id ?? "").split("/").pop();
 
+  // B.N.T.G. Realty: Mara sells the green house; the price is said, then a yes buys it
+  if (npcId === "l11-realty-agent") {
+    const price = 250000, usd = "$2,500";
+    if (s.home11 && /house|home|buy|key/.test(t)) return { reply: "It's yours already. Rest at the front door whenever. And move the keys out from under the mat.", mood: "happy" };
+    const asked = s.homeAsk && ctx.now() - s.homeAsk < 120000;
+    if (asked && /\b(yes|yeah|yep|deal|sure|ok|okay)\b|buy it|i'll take|sign/.test(t)) {
+      s.homeAsk = 0;
+      if ((s.cents ?? 0) < price) return { reply: `It's ${usd} and you've got $${((s.cents ?? 0) / 100).toFixed(2)}. Come back when the math works.`, mood: "neutral" };
+      s.cents -= price; s.home11 = true;
+      s.notice = { text: `You bought the green house for ${usd}. Rest at its front door any time.`, at: ctx.now() };
+      ctx.emit("playSound", { clip: "cdn/sfx-cash-register-ka-ching-bell.mp3", volume: 0.8 }, { audience: { player: p.id } });
+      return { reply: "Sold. Keys are under the mat, which is a terrible place for keys, so move them. The front door's yours now, go rest whenever.", mood: "happy" };
+    }
+    if (/house|home|buy|property|place|green/.test(t)) {
+      s.homeAsk = ctx.now();
+      return { reply: `The green house down the street. Porch, two floors, a lock that actually works. ${usd}, cash. Want it?`, mood: "happy" };
+    }
+  }
+
   // 1. Sedco Quest Start (from Courier)
   if (npcId === "l11-walker-1" && (t.includes("sedco manifest") || t.includes("need a hand"))) {
     if (!s.sedcoQ) {

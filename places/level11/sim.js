@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 55; // bump to rebuild the city in rooms that are already open
+const V = 56; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -687,6 +687,21 @@ function lay(ctx) {
   bx("l11-drywall-stack", -28.5, 0.22, -4.5, 1.2, 2.4, 0.35, DRYWALL_MAT, { rotation: { pitch: 12 } });
   bx("l11-drywall-wall-w", -25, 0.22, -6.8, 6.5, 4.2, 0.15, DRYWALL_MAT);
   bx("l11-reno-int-glass", -23, 0.22, 1.5, 0.04, 4.2, 6.0, GLASS_TINT);
+
+  // B.N.T.G. Realty: a temporary office in the renovation building; the agent sells the green house (Shelly: "i should go to an npc for that preferably in a building")
+  sp("l11-realty-desk", { feetPosition: { x: -19.5, y: 0.32, z: -1 }, rotation: { yaw: -90 }, model: { id: "/cdn/value.53a6ef111aac797583ca330cad268f4e401bd0fe5613021c07eda571623e5ea2.glb", forward: "+z" }, physics: { body: "static", collider: "box" } });
+  sp("l11-realty-lamp", { feetPosition: { x: -19.5, y: 3.4, z: -1 }, light: { kind: "point", color: "oklch(0.95 0.05 85)", intensity: 2.4, distance: 9 } });
+  sp("l11-realty-sign", { feetPosition: { x: -16.05, y: 3.0, z: -1 }, rotation: { yaw: 90 }, vector: `<svg viewBox='0 0 400 90' width='2.6m'><rect x='2' y='2' width='396' height='86' rx='6' fill='#1f3d2c' stroke='#e9dfc4' stroke-width='4'/><text x='200' y='44' text-anchor='middle' font-family='serif' font-weight='bold' font-size='34' fill='#e9dfc4'>B.N.T.G. REALTY</text><text x='200' y='74' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#e9dfc4'>homes, keys, no questions</text></svg>` });
+  sp("l11-realty-agent", {
+    tags: ["npc", "bntg"], feetPosition: { x: -20.25, y: 0.32, z: -1 }, rotation: { yaw: -90 }, physics: "character",
+    ...critterSpec(npcLook("l11-realty-agent", { species: "badger", sex: "f", topw: "blazer", top: "#2e4a3a", botw: "skirt", bottom: "#2b2b33", shoes: "heels", eyew: "glasses" }, "trader", 11)),
+    behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
+    state: {
+      name: "Mara · B.N.T.G. Realty", role: "trader", voice: "l11-realty-agent#f", faction: "bntg", factionName: "B.N.T.G., the Backrooms Nonaligned Trade Group",
+      home: { x: -20.25, z: -1 }, line: "Looking for a place? I've got one house on the books and it's a nice one.",
+      ...npcState(ctx, "trader", 100),
+    },
+  });
 
   // Contractor Step Ladder (climbable in center of room!)
   sp("l11-reno-ladder", {
