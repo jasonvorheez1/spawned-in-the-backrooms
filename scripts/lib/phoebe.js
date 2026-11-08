@@ -4,15 +4,18 @@
 import { critterSpec } from "./critter-model.js"
 export const PHOEBE_LOOK = {
   species: "cat", sex: "f", fur: "#d9824a", belly: "#f3d9c4", tip: "#f3d9c4", nose: "#c86f6a", eye: "#1a1214",
-  topw: "jacket", top: "#d29a2c", botw: "longskirt", bottom: "#17141a", shoes: "boots", shoec: "#121014",
-  neck: "cape", neckc: "#c8922a", expr: "smile",
+  topw: "longsleeve", top: "#141216", botw: "skirt", bottom: "#17141a", shoes: "boots", shoec: "#121014",
+  expr: "smile", // coat, hair, bow, chain and banded boots ride on top as the Blender outfit (art/phoebe-outfit/build.py)
 }
 // a local, unsaved watcher: spawned on the viewer's own machine for one beat, gone after `life` seconds
+const OUTFIT = "/cdn/value.e43b3c8653d59ec8a87df263e493204dce99174142ce49d7deb6f7ae68473092.glb"
 export function spawnPhoebe(ctx, id, at, yaw, life) {
   if (ctx.getObject(id)) return id
+  const spec = critterSpec(PHOEBE_LOOK)
   return ctx.spawn(id, {
     tags: ["phoebe"], audience: "local", lifetime: life, feetPosition: at, rotation: { yaw },
-    ...critterSpec(PHOEBE_LOOK),
+    ...spec,
+    children: [...(spec.children || []), { id: "phoebe-outfit", attachment: { skin: true }, model: OUTFIT }],
     state: { cutPose: true },
   })
 }
