@@ -528,10 +528,10 @@ export function geometry(ctx) {
   const RZK = fem
     ? [[0.46, 0.118], [0.52, 0.144 * hipS], [0.6, 0.146 * hipS], [0.68, 0.122], [0.76, 0.100 * waistS * ch], [0.85, 0.104 * ch], [0.93, 0.108 * ch], [1.0, 0.098], [1.07, 0.070]]
     : [[0.46, 0.1], [0.52, 0.12], [0.6, 0.125], [0.7, 0.118 * ch], [0.78, 0.12 * waistS * ch], [0.86, 0.128 * ch], [0.94, 0.13 * ch], [1.0, 0.11], [1.07, 0.072]];
-  const BUST = fem ? 0.088 * bustS : 0.014, BY = fem ? 0.885 : 0.9, BX = fem ? 0.072 : 0.075;
+  const BUST = fem ? 0.075 * bustS : 0.014, BY = fem ? 0.865 : 0.89, BX = fem ? 0.070 : 0.075;
   const torsoPt = (y, a, off, bridged) => {
     const rx = prof(RXK, y) + off, rz = prof(RZK, y) + off; let x = Math.cos(a) * rx, z = Math.sin(a) * rz;
-    if (z < 0) { const gy = Math.exp(-(((y - BY) / (fem ? 0.06 : 0.07)) ** 2)), dx = bridged ? Math.max(0, Math.abs(x) - BX) : Math.min(Math.abs(x - BX), Math.abs(x + BX)); z -= BUST * gy * Math.exp(-((dx / 0.058) ** 2)) * Math.min(1, -Math.sin(a) * 1.4); }
+    if (z < 0) { const gy = Math.exp(-(((y - BY) / (fem ? 0.075 : 0.07)) ** 2)), dx = bridged ? Math.max(0, Math.abs(x) - BX) : Math.min(Math.abs(x - BX), Math.abs(x + BX)); z -= BUST * gy * Math.exp(-((dx / 0.072) ** 2)) * Math.min(1, -Math.sin(a) * 1.25); }
     else { const gy = Math.exp(-(((y - 0.555) / 0.07) ** 2)); z += (fem ? 0.032 : 0.018) * hipS * gy * Math.min(1, Math.sin(a) * 1.3) * (1 - 0.35 * Math.exp(-((x / 0.025) ** 2))); }
     return [x, y, z];
   };

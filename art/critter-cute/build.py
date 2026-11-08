@@ -252,12 +252,17 @@ def torso_shapes(mb, F, inflate=0.0, lo=0.0, hi=9.0, sleeves=None, legs=None, bu
         else:
             ell(mb, (0, .004, .878), .126 + i, .090 + i, .088 + i)                                            # broad male chest
             for s in (-1, 1): ell(mb, (.052 * s, .032, .882), .062 + i, .052 + i, .056 + i)                   # subtle masculine pec contour
-    if F and bust and lo <= .87 <= hi:
-        ell(mb, (0, .046 + i * .25, .856), .050 + i, .050 + i, .050 + i)                                   # smooth sternum bridge
+    if F and bust and lo <= .88 <= hi:
+        ell(mb, (0, .038 + i * .22, .850), .046 + i, .038 + i, .048 + i)                                   # smooth sternum valley bridge
         for s in (-1, 1):
-            ell(mb, (.054 * s, .082 + i * .35, .858), .066 + i, .076 + i, .062 + i, rot=(math.radians(-6), 0, math.radians(-10 * s))) # full curvy breasts
-            ell(mb, (.048 * s, .056 + i * .25, .890), .052 + i, .052 + i, .048 + i)                           # natural upper-bust teardrop slope
-            ell(mb, (.050 * s, .056 + i * .30, .830), .056 + i, .054 + i, .050 + i)                           # smooth underbust-to-ribcage transition
+            # natural rounded breasts: soft lower-pole fullness, gentle hemispherical dome, no conical forward point
+            ell(mb, (.056 * s, .066 + i * .30, .846), .070 + i, .063 + i, .065 + i, rot=(math.radians(-4), 0, math.radians(-6 * s)))
+            # gentle upper teardrop slope from collarbone
+            ell(mb, (.052 * s, .052 + i * .24, .882), .060 + i, .048 + i, .054 + i)
+            # smooth underbust support cradle blending into ribcage
+            ell(mb, (.054 * s, .048 + i * .25, .820), .064 + i, .048 + i, .046 + i)
+            # lateral pectoral curve wrapping into axilla
+            ell(mb, (.078 * s, .040 + i * .20, .854), .054 + i, .042 + i, .054 + i)
     if lo <= .94 <= hi:
         for s in (-1, 1):
             ell(mb, ((.098 if F else .114) * s, -.004, .942), (.044 if F else .052) + i, (.040 if F else .048) + i, (.042 if F else .048) + i)
@@ -285,17 +290,23 @@ def add_bust_key(o):
         if p.y <= 0.005 or p.z < 0.76 or p.z > 0.95 or abs(p.x) > 0.17:
             sk.data[i].co = p.copy(); continue
         s = 1 if p.x >= 0 else -1
-        dx = (abs(p.x) - 0.054) / 0.088
-        dz = (p.z - 0.858) / 0.074
+        dx = (abs(p.x) - 0.056) / 0.092
+        dz = (p.z - 0.848) / 0.078
         dy = max(0.0, min(1.0, (p.y - 0.005) / 0.065))
         r2 = dx * dx + dz * dz
-        w = ((1.0 - r2) ** 1.55) * dy if r2 < 1.0 else 0.0
-        # keep cleavage bridge moving smoothly when garments stretch across the chest
-        wb = ((1.0 - min(1.0, dz * dz)) ** 1.6) * dy * max(0.0, 1.0 - (p.x / 0.065) ** 2) * 0.58
+        if r2 < 1.0:
+            # smooth cosine bell curve produces a soft rounded dome at the apex (no pointy peak)
+            r = math.sqrt(r2)
+            w = 0.5 * (1.0 + math.cos(math.pi * r)) * dy
+        else:
+            w = 0.0
+        # keep cleavage valley moving smoothly when garments stretch across the chest
+        dz_b = min(1.0, abs(dz))
+        wb = 0.5 * (1.0 + math.cos(math.pi * dz_b)) * dy * max(0.0, 1.0 - (p.x / 0.065) ** 2) * 0.55
         w = max(w, wb)
         if w > 1e-4:
-            out_x = s * 0.016 * w * min(1.0, abs(p.x) / 0.054)
-            sk.data[i].co = p + Vector((out_x, 0.044 * w, (-0.006 + 0.014 * dz) * w))
+            out_x = s * 0.014 * w * min(1.0, abs(p.x) / 0.056)
+            sk.data[i].co = p + Vector((out_x, 0.034 * w, (-0.008 + 0.008 * dz) * w))
         else:
             sk.data[i].co = p.copy()
 
@@ -504,7 +515,9 @@ def build_garments(F, body, rig):
     def apron(mb):
         ell(mb, (0, .092, .84), .085, .026, .09); ell(mb, (0, .112 if F else .102, .62), .145, .034, .125)
         if F:
-            for s in (-1, 1): ell(mb, (.054 * s, .092, .858), .064, .068, .058, rot=(math.radians(-8), 0, math.radians(-10 * s)))
+            for s in (-1, 1):
+                ell(mb, (.056 * s, .078, .848), .068, .060, .062, rot=(math.radians(-4), 0, math.radians(-6 * s)))
+                ell(mb, (.052 * s, .064, .882), .060, .048, .052)
         for s in (-1, 1):
             cap(mb, (.06 * s, .092 if F else .075, .9), (.09 * s, -.02, 1.0), .013)
             cap(mb, (.09 * s, -.02, 1.0), (-.06 * s, -.09, .74), .012)
@@ -565,7 +578,9 @@ def build_garments(F, body, rig):
         torso_shapes(mb, F, .026, .6, .78, legs=.14, bust=False)
         ell(mb, (0, .092 if F else .088, .81), .096, .036, .09)
         if F:
-            for s in (-1, 1): ell(mb, (.054 * s, .100, .858), .070, .072, .062, rot=(math.radians(-8), 0, math.radians(-10 * s)))
+            for s in (-1, 1):
+                ell(mb, (.056 * s, .086, .848), .074, .066, .066, rot=(math.radians(-4), 0, math.radians(-6 * s)))
+                ell(mb, (.052 * s, .070, .882), .064, .052, .056)
         for s in (-1, 1):
             cap(mb, (.06 * s, .114 if F else .096, .88), (.08 * s, -.05, .97), .016)
             cap(mb, (.08 * s, -.05, .97), (.04 * s, -.09, .74), .015)

@@ -4,7 +4,7 @@
 # The cute Dandy/Sanrio pass: art/critter-cute/build.py (bodies per sex, heads per species AND sex: headM/headF).
 # mesh: false = everyone wears the scripted critter (scripts/critter2-geo.js) until the Blender heads pass the cute bar; true = the GLBs below
 mesh: true
-body: { m: "/cdn/value.7881d7f27de1c28b970263e16694310cb94ae5ece79639de9752d49d65a1299c.glb", f: "/cdn/value.682501798e8138b9346c8fc59bc505fa52fafd071bdc7f566468535e1afcc273.glb" }
+body: { m: "/cdn/value.7881d7f27de1c28b970263e16694310cb94ae5ece79639de9752d49d65a1299c.glb", f: "/cdn/value.f85313e21c5febc95b5c9f067785582c5c50427d2a84f8df954577daef87f6b0.glb" }
 bodyMats: [fur, limb, pad, belly, cloth_top, cloth_bottom, cloth_shoes, cloth_hat, cloth_neck, button, metal, lens, gold, sole]
 slots: { topw: Top, botw: Bot, shoes: Shoes, hat: Hat, eyew: Eyew, neck: Neck }
 parts: [Top_apron, Top_dress, Top_hoodie, Top_jacket, Top_longsleeve, Top_pajamas, Top_sweater, Top_tank, Top_tee, Bot_longskirt, Bot_overalls, Bot_pants, Bot_pjpants, Bot_shorts, Bot_skirt, Shoes_boots, Shoes_slippers, Shoes_sneakers, Hat_beanie, Hat_bow, Hat_cap, Hat_crown, Hat_flower, Hat_headphones, Hat_partyhat, Hat_tophat, Eyew_glasses, Eyew_shades, Neck_bell, Neck_bowtie, Neck_cape, Neck_scarf]

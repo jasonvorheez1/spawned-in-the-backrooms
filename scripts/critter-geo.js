@@ -386,7 +386,7 @@ export function geometry(ctx) {
     return torsoRadius(1);
   };
   const bS = SZ('bustS', 0.6, 1.5); // grown women: a real bust
-  const BUST = { y: 0.868, x: 0.05, z: -0.095 + (1 - bS) * 0.03, r: [0.088 * bS, 0.078 * bS, 0.085 * bS] }; // modest, under every top
+  const BUST = { y: 0.856, x: 0.052, z: -0.090 + (1 - bS) * 0.025, r: [0.086 * bS, 0.080 * bS, 0.072 * bS] }; // natural rounded curvature, under every top
 
   // Lofted torso sections from hips to neck
   {
