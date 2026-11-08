@@ -200,7 +200,8 @@ export function update(ctx) {
     if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
     life(ctx, face)
   }
-  if (ses.lookKey == null || (!MESH && ses.lastFace !== face)) {
+  if (ses.lookKey == null || ses.lookVer !== 'human1' || (!MESH && ses.lastFace !== face)) {
+    ses.lookVer = 'human1' // a body built before the human swap rebuilds once
     const params = { species: l.species, sex: l.sex, ftype: l.ftype || 'oval', trait: l.trait || 'placid', blush: l.blush, nose: l.nose || undefined, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks, hair: l.hair, hairc: l.hairc }
     if (l.fur) params.fur = l.fur
     const worn = l.modelUrl ? { url: l.modelUrl } : l.model && C.models?.[l.model] // an imported model worn instead of the critter
