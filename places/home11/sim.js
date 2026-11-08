@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 13;
+const V = 14;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -69,7 +69,7 @@ export function tick(ctx) {
 
   // bedroom: the bed is where you rest
   fit("h-bed", M.bed, -2.8, -4.7, 0, [1.65, 1.1, 2.1], { tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind: "bed", name: "Your Bed", verb: "Sleep" } });
-  fit("h-dresser", M.dresser, 3.6, -5.6, 0, [1.1, 1.75, 0.5]); // tripo: oak dresser with arched mirror
+  fit("h-dresser", M.dresser, 3.6, -5.55, 90, [0.45, 1.6, 0.95]); // tripo: oak dresser with arched mirror
   const poster = (id, tex, x, y, z, yaw) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, primitive: { kind: "plane", width: 0.6, height: 0.8 }, material: { texture: tex, roughness: 0.7 }, castShadow: false }); // tacked-up 2000s posters
   poster("h-poster-sponge", "/cdn/value.d6647818cc1864e1a57ae459da01d37274878ab52fa91397bc0bbf8f3b07b94b.png", -4.93, 1.2, -1.9, 90);
   poster("h-poster-kitty", "/cdn/value.5b3fa0a1b106e04b6db787f988eda22e31496b76d9b76c508f5041e6c2192afa.png", 1.4, 1.2, -5.93, 0);
@@ -82,7 +82,7 @@ export function tick(ctx) {
   hang("h-kitty", "/cdn/value.a9f9d3c6172c17966216abe7310be269dde6da0bf1b828779638c4c7152f6575.glb", -2.3, 0.62, -5.2, 160, [0.3, 0.32, 0.26]); // hello kitty plush propped on the pillows
   hang("h-boombox", "/cdn/value.b65239e4484936755ff171a40f1ea0104ad73cf5d0d2b21261bab60345e000f9.glb", -1.5, 0.1, -5.6, 180, [0.5, 0.36, 0.2]); // pink CD boombox by the bed
   fit("h-pcdesk", "/cdn/value.c19a3a1207063b8231b343d67d98657a158515407d7c01b6c2286a1bd2d5c18c.glb", 1.2, -5.25, 180, [1.3, 1.35, 1.2]); // beige tower, CRT monitor and swivel chair against the north wall
-  hang("h-sponge", "/cdn/value.584040f232cb11ac6bd83395b7bb8d36daf263e276a0a8745ae05e6ae1526e54.glb", 3.35, 1.0, -5.6, 200, [0.24, 0.3, 0.16]); // spongebob plush on the dresser top
+  hang("h-sponge", "/cdn/value.584040f232cb11ac6bd83395b7bb8d36daf263e276a0a8745ae05e6ae1526e54.glb", 3.25, 0.93, -5.42, 20, [0.24, 0.3, 0.16]); // spongebob plush on the dresser top
   hang("h-coke1", "/cdn/value.8dbfe9caef376c3d74354e97aa627d7a842fdc981ef4f60ddfd2c24d34aea0fd.glb", 1.65, 0.86, -5.45, 0, [0.066, 0.12, 0.066]); // coke can by the keyboard
   hang("h-coke2", "/cdn/value.8dbfe9caef376c3d74354e97aa627d7a842fdc981ef4f60ddfd2c24d34aea0fd.glb", -1.62, 0.46, -5.62, 40, [0.066, 0.12, 0.066]); // another on the boombox
   fit("h-lamp-2", M.lamp, -0.9, -5.5, 0, [0.4, 1.2, 0.4]);
