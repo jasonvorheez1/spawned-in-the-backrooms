@@ -9,6 +9,7 @@ const MUSIC_GAIN = 0.12; // her pick
 
 function music(ctx, want) {
   const ses = ctx.session, have = ses.mmMusic && ctx.getObject(ses.mmMusic)
+  if (have && have.audio?.clip !== MUSIC && !ses.mmKill) { have.audio = { ...have.audio, clip: MUSIC, gain: MUSIC_GAIN } } // a track left over from an older save swaps to the current one
   if (want && !have) { ses.mmMusic = ctx.spawn({ audience: "local", scope: "session", feetPosition: ctx.self.feetPosition, audio: { clip: MUSIC, loop: true, spatial: false, gain: MUSIC_GAIN, bus: "Music" } }); ses.mmKill = 0 }
   else if (want && have && ses.mmKill) { ses.mmKill = 0; animate(ctx, ses.mmMusic, { "audio.gain": MUSIC_GAIN }, { duration: 0.6 }) }
   else if (!want && have && !ses.mmKill) { ses.mmKill = ctx.now() + 1800; animate(ctx, ses.mmMusic, { "audio.gain": 0 }, { duration: 1.6 }) }
