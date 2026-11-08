@@ -8,7 +8,7 @@ const RADIO = [
   { name: "eurodance hits", clip: "cdn/music-2000s-eurodance-trance-synth-club-loop.mp3" },
 ];
 const TEXTS = ["u up? lol", "did u see the new episode of laguna beach", "brb mom needs the phone line", "pls add me back to ur top 8", "ttyl going 2 blockbuster", "r u coming 2 the mall later"];
-export function ding(ctx, { by }) {
+export function ding(ctx, { by, meat, snack }) {
   ctx.self.state.busy = false; ctx.self.audio = null;
   ctx.emit("playSound", { clip: "cdn/sfx-microwave-oven-triple-beep-ding.mp3", position: ctx.self.feetPosition, volume: 0.8 });
   const w = ctx.getObject(by)?.state; if (w) {
