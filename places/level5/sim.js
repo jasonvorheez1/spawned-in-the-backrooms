@@ -119,16 +119,7 @@ export function lay(ctx) {
       rotation: { yaw: -130 },
       physics: "character",
       scale: { x: 0.9, y: 0.9, z: 0.9 },
-      ...critterSpec({
-        species: "cat",
-        sex: "f",
-        fur: "#181820",
-        belly: "#fffdf8",
-        tip: "#fffdf8",
-        eye: "#ffb400",
-        nose: "#ff9eb2",
-        expr: "smug",
-      }),
+      model: { id: "/cdn/value.05b6fcdb02ae0489f79f366c2285414facaa51f7639114b24430fb4ac82f5455.glb", forward: "+z" }, // her own tuxedo cat (scripts/samantha.js MODEL), never a dressed critter
       anim: { main: { clip: "cdn/clip-sit-loop.glb", loop: true } },
       behavior: ["scripts/l5-samantha.js"],
       state: {
