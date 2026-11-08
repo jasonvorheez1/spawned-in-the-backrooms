@@ -187,9 +187,9 @@ def shoulder_weights(body, r):
         print(s, "arm radius", round(R, 3))
         for i, p in P:
             t, rr = tr(p)
-            if t < -0.09 or t > 0.07 or rr > R + 0.05: continue
+            if t < -0.11 or t > 0.07 or rr > R + 0.10: continue
             if (p.x > 0) != (s == "Left"): continue
-            w = smooth(-0.07, 0.04, t) * (1 - smooth(R, R + 0.05, rr))
+            w = smooth(-0.10, 0.0, t) * (1 - smooth(R + 0.03, R + 0.10, rr))
             v = body.data.vertices[i]
             old = {names[g.group]: g.weight for g in v.groups}
             arm_chain = sum(wt for k, wt in old.items() if k.startswith(s) and k.endswith(("Arm", "ForeArm", "Hand")))
