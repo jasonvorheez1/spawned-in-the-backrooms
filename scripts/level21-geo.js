@@ -61,14 +61,7 @@ function dressRooms(ctx, M) {
         box(ctx, c.x + 2.62 + k * 0.13, c.x + 2.68 + k * 0.13, 1.55, 1.6, zS - 0.67, zS - 0.64);
       }
       ctx.emissive(null);
-      // Legs, frames, and pillows for Base Alef's 4 cots
-      for (let i = 0; i < 4; i++) {
-        const cx0 = c.x - 2 + (i % 2) * 2.2, cz0 = c.z + 1.2 + Math.floor(i / 2) * 2.2;
-        ctx.albedo(RUSTY); ctx.color("oklch(0.35 0.02 250)"); ctx.metalness(0.6);
-        for (const [lx, lz] of [[-0.42, -0.88], [0.42, -0.88], [-0.42, 0.88], [0.42, 0.88]]) pipe(ctx, [cx0 + lx, 0, cz0 + lz], [cx0 + lx, 0.34, cz0 + lz], 0.025, 5);
-        ctx.albedo(null); ctx.metalness(0); ctx.color("oklch(0.88 0.015 90)");
-        box(ctx, cx0 - 0.28, cx0 + 0.28, 0.4, 0.47, cz0 - 0.85, cz0 - 0.52);
-      }
+      // Base Alef's 4 cots are modeled pieces now (places/level21/sim.js, COT)
     } else if (r.type === "bunks") {
       // Quarters: 6 full double-decker bunk beds matching the 6 physics colliders in sim.js
       for (let i = 0; i < 6; i++) {
