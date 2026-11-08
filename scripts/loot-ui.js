@@ -705,13 +705,28 @@ function inventory(s) {
   </div></div>`
 }
 
-function storeRows(s) { // your fridge: what you carry, one press puts one in
+function bagRows(s) { // what you carry that a fridge holds: [token, name, count]
   const AWK = { grey: 'almonds', green: 'almondsG', red: 'almondsR', blue: 'almondsB' }, out = []
-  for (const [c, k] of Object.entries(AWK)) if ((s[k] ?? 0) > 0) out.push([`almond:${c}`, `${AW[c]?.name ?? 'Almond Water'}`, s[k]])
+  for (const [c, k] of Object.entries(AWK)) if ((s[k] ?? 0) > 0) out.push([`almond:${c}`, AW[c]?.name ?? 'Almond Water', s[k]])
   for (const [k, n] of Object.entries(s.snacks ?? {})) if (n > 0 && SNACKS[k]) out.push([`snack:${k}`, SNACKS[k].name, n])
   for (const [k, n] of Object.entries(s.meat ?? {})) if (n > 0 && MEAT[k]) out.push([`meat:${k}`, MEAT[k].name, n])
-  const rows = out.map(([t, nm, n]) => `<button class="it" onclick="sendAction('loot',{k:'store',t:'${t}'})"><span class="cur">&lt;</span><span class="nm">${nm}</span><span class="stat-r"><span>x${n} · PUT IN</span></span></button>`).join('')
-  return `<div class="em" style="margin-top:10px;opacity:.8">YOUR BAG</div>${rows || '<div class="em">Nothing to put in.</div>'}`
+  return out
+}
+function storage(s, key) { // your fridge: two sides, one press moves one thing
+  const items = itemsOf(s.lootList), nameOf = (t) => t.startsWith('almond:') && AW[t.slice(7)]?.name ? AW[t.slice(7)].name : describe(t).name
+  const groups = {}; items.forEach((t, i) => { (groups[t] ??= { t, i, n: 0 }).n++ })
+  const row = (label, n, act, btn) => `<div style="display:flex;align-items:center;gap:10px;padding:5px 2px;border-bottom:1px solid rgba(255,190,90,.12)"><span style="flex:1">${label}</span><span style="opacity:.6;min-width:34px;text-align:right">x${n}</span><button onclick="sendAction('loot',${act})" style="padding:3px 10px;border:1px solid rgba(255,190,90,.6);background:rgba(255,190,90,.08);color:inherit;font:inherit;cursor:pointer">${btn}</button></div>`
+  const left = Object.values(groups).map((g) => row(nameOf(g.t), g.n, `{k:'take',i:${g.i}}`, 'TAKE')).join('') || '<div class="em">Empty.</div>'
+  const right = bagRows(s).map(([t, nm, n]) => row(nm, n, `{k:'store',t:'${t}'}`, 'PUT IN')).join('') || '<div class="em">No food or drinks on you.</div>'
+  const col = (title, body) => `<div style="flex:1;min-width:0"><div style="opacity:.7;letter-spacing:.15em;margin-bottom:6px">${title}</div><div style="max-height:46vh;overflow:auto">${body}</div></div>`
+  return `<div class="pbw pb"><div class="pbp" data-modal>
+    <div class="nv-top"><div class="nv-top-left"><h2>${(s.lootName || 'STORAGE').toUpperCase()}</h2></div><div class="nv-vitals"><span><b>SPACE</b>${items.length}/30</span></div></div>
+    <div style="display:flex;gap:28px;margin-top:10px">${col('INSIDE', left)}${col('YOUR BAG', right)}</div>
+    <div class="ft">
+      ${items.length ? `<button onclick="sendAction('loot',{k:'all'})"><kbd>R</kbd>Take all</button>` : ''}
+      <button onclick="sendAction('loot',{k:'close'})"><kbd>${key}</kbd>Close</button>
+    </div>
+  </div></div>`
 }
 function container(s, key) {
   const items = itemsOf(s.lootList)
@@ -742,7 +757,7 @@ function container(s, key) {
       </div>
     </div>
     <div class="bd" style="margin-top:8px">
-      <div class="ls">${rows || '<div class="em">Container is empty.</div>'}${s.lootStore ? storeRows(s) : ''}</div>
+      <div class="ls">${rows || '<div class="em">Container is empty.</div>'}</div>
       ${items[0] ? detail(items[0], s, true) : '<div class="dt def"><div class="em">Nothing inside.</div></div>'}
     </div>
     <div class="ft">
@@ -758,7 +773,7 @@ export function lootUi(ctx, player) {
   if (s.level == null) return ''
   const key = ctx.world.inputs?.actions?.interact?.label ?? 'E'
   let out = CSS
-  if (s.lootOpen) out += container(s, key)
+  if (s.lootOpen) out += s.lootStore ? storage(s, key) : container(s, key)
   else if (s.invOpen) out += inventory(s)
   else if (s.focus) {
     const f = s.focus
