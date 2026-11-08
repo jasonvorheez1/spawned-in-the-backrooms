@@ -120,7 +120,7 @@ function send(ctx, d) {
   const system = systemPrompt({ it, place: ctx.self.place, pl: ctx.self, rapport: rapportOf(ctx, it), following: it.state?.follow === ctx.self.id })
   let message = userMessage(hist, text, ctx.self.displayName ?? 'Wanderer')
   ses.preCheck = null
-  const pc = d.check && SKILLS.includes?.(String(d.check.skill)) !== false && d.check.skill ? { skill: String(d.check.skill).toLowerCase(), difficulty: Math.max(5, Math.min(110, Number(d.check.difficulty) || 50)) } : null
+  const pc = d.check && SKILLS.some((x) => x.k === String(d.check.skill).toLowerCase()) ? { skill: String(d.check.skill).toLowerCase(), difficulty: Math.max(5, Math.min(110, Number(d.check.difficulty) || 50)) } : null
   if (pc) { // the roll happens the moment they pick it, and the npc is told how it went
     const c = rollCheck(ctx, s, pc), v = skillsOf(s)[pc.skill] ?? 0
     const pct = Math.max(0, Math.min(100, Math.round((T.roll - (pc.difficulty - v) + 1) / T.roll * 100)))
