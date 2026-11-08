@@ -20,6 +20,18 @@ const SND = {
 const ATK_SND = { vacuum: 'boost', minitons: 'small', words: 'heavy', heads: 'heavy', heart: 'crit', pipis: 'crit' }
 
 function play(ctx, k, volume = 0.7) { ctx.emit('playSound', { clip: SND[k], volume }, { audience: { player: ctx.self.id } }) }
+// his two themes (Shelly's files, this fight only): the talk theme from the pop-up, the battle theme from his first attack.
+// a local, page-wide loop on the fighter's own machine, so a friend in the room never hears it
+const THEME = { talk: '/cdn/music-toby-fox-spamton-chiptune-boss-hkhzdgie.mp3', battle: '/cdn/music-nows-your-chance-to-be-a-3djhwuqa.mp3' }
+function theme(ctx, which) {
+  const ses = ctx.self.session
+  if (ses.spamTheme === which) return
+  if (ses.spamMusic) { try { ctx.destroy(ses.spamMusic) } catch {} ses.spamMusic = null }
+  ses.spamTheme = which
+  if (!which) return
+  const p = ctx.self.feetPosition
+  ses.spamMusic = ctx.spawn({ audience: 'local', scope: 'session', feetPosition: { x: p.x, y: p.y, z: p.z }, audio: { clip: THEME[which], gain: 0.4, loop: true, spatial: false, bus: 'music' } })
+}
 function dumpster(ctx) { return ctx.getObject('l11-spamton-dumpster') }
 function pop(ctx, up) { const d = dumpster(ctx); if (d) d.state.up = up ? ctx.self.id : null }
 
@@ -42,6 +54,7 @@ function attack(ctx, b) {
   b.phase = 'attack'
   b.atkAt = ctx.now()
   play(ctx, ATK_SND[atk] ?? 'heavy', 0.6)
+  theme(ctx, 'battle')
 }
 
 export function startSpamton(ctx) {
@@ -51,6 +64,7 @@ export function startSpamton(ctx) {
   s.invOpen = false; s.lootOpen = null
   pop(ctx, true)
   play(ctx, 'start', 0.8)
+  theme(ctx, 'talk')
   ctx.after(F.introSeconds, 'spamIntroOver', {})
 }
 export function spamIntroOver(ctx) { const b = ctx.self.state.spam; if (b?.on && b.phase === 'intro') { b.phase = 'talk'; offer(ctx, b) } }
@@ -72,6 +86,7 @@ function end(ctx, how) {
     s.notice = { text: 'You back away. The dumpster giggles.', at: ctx.now() }
   }
   pop(ctx, false)
+  theme(ctx, null)
   s.spam = null
 }
 
