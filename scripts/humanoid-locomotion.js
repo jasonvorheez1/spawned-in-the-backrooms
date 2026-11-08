@@ -85,6 +85,7 @@ const WALK_FROM = 0.45
 // A gait rung is held down to this share of its threshold, for at most this long, before the body drops to the rung below.
 const HOLD = 0.85
 const HOLD_SECONDS = 0.35
+const AIR_GRACE = 140 // ms off the ground before the air pose takes over (Savi's pick: a curb or a stair never jumps)
 
 // Each stepping clip's pace on THIS body, in metres a second, keyed by clip name or library address:
 // the engine's measure in ctx.world.assets[<model>].gait, times the body's scale; none until measured.
