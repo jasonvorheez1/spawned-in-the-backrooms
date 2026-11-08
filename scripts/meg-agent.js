@@ -76,10 +76,8 @@ const DEAD = (o) => !o || o.state?.dead || (o.state?.hp ?? 1) <= 0;
 const corpseOf = (o) => !!o && DEAD(o) && !o.tags?.includes?.("l5staff") && HOSTILE.some((g) => o.tags?.includes?.(g));
 const VERMIN = (o) => o?.tags?.includes?.("l5rat") || o?.state?.kind === "rat"; // a dead rat is not worth a crowd: nobody walks over to study one
 
-export function onSpawn(ctx) {
-  const me = ctx.self;
-  if (!me.state.attr) { const r = npcState(ctx, "agent", G.hp); me.state.attr = r.attr; me.state.title = r.title; me.state.maxHp = r.hp; me.state.hp ??= r.hp; }
-  if (!me.state.temperV) { // temperament shapes the body once: attributes nudged, hp re-derived, nerve leaned
+function shapeTemper(me) {
+  if (me.state.temperV) return; { // temperament shapes the body once: attributes nudged, hp re-derived, nerve leaned
     const tp = temperOf(me), a = attrsOf(me.state), nd = TEMPER_STATS[tp] ?? {};
     for (const k in nd) a[k] = Math.max(1, Math.min(10, (a[k] ?? 5) + nd[k]));
     me.state.attr = packAttrs(a); me.state.temper = tp; me.state.temperV = 1;
@@ -87,6 +85,11 @@ export function onSpawn(ctx) {
     me.state.maxHp = hp; me.state.hp = Math.max(1, Math.round(hp * Math.min(1, f)));
     if (TEMPER_NERVE[tp] && hashN(me.id, 91) < 0.6) me.state.nerve = TEMPER_NERVE[tp];
   }
+}
+export function onSpawn(ctx) {
+  const me = ctx.self;
+  if (!me.state.attr) { const r = npcState(ctx, "agent", G.hp); me.state.attr = r.attr; me.state.title = r.title; me.state.maxHp = r.hp; me.state.hp ??= r.hp; }
+  shapeTemper(me);
   me.state.hp ??= G.hp;
   me.state.home ??= { x: me.feetPosition.x, y: me.feetPosition.y, z: me.feetPosition.z };
   dress(ctx, me);
@@ -321,6 +324,7 @@ function life(ctx, me, m, now) {
   }
 }
 export function update(ctx, dt) {
+  if (!ctx.self.state.temperV && ctx.self.state.attr) shapeTemper(ctx.self);
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
   if (m.dressed !== 4) { m.dressed = 4; if (!s.dead) dress(ctx, me); }
   if (!m.armed && !s.dead && now - (m.bornAt ??= now) > 1500) arm(ctx, me, m); // after the spawner has handed over its weapon
