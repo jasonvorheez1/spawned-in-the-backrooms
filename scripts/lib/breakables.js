@@ -188,7 +188,7 @@ export function damageEntity(ctx, o, dmg, at, normal, kind) {
 // a smashed prop isn't deleted: it goes out of sight, untouchable, and stands again an hour later (Shelly 2026-11-07)
 export const REGROW_MS = (B.propRegrowMinutes ?? 60) * 60000
 function wreck(ctx, o) {
-  if (o.tags?.includes('rubble') || o.lifetime) { ctx.destroy(o.id); return }
+  if (o.tags?.includes('rubble') || o.lifetime || o.state?.stayGone) { ctx.destroy(o.id); return }
   o.state.wreck = { at: ctx.now(), tags: [...(o.tags ?? [])], physics: o.physics ?? null, items: o.state.items ?? null }
   o.tags = ['wreck']; o.visible = false; o.physics = 'none'
   const wr = (ctx.place.state.wrecks ??= [])
@@ -319,6 +319,7 @@ export function strike(ctx, s, wp, kind, base, fwd, pitch = 0) {
   let t = o
   while (t && !t.tags?.includes('breakable') && t.parent?.id) t = ctx.getObject(t.parent.id)
   if (!t?.tags?.includes('breakable') || t.state?.broke) return false
+  if (t.state?.needs && !s?.[t.state.needs]) return false // e.g. the B.N.T.G. yard sign: only its house's owner may break it
   const m = B.materials[t.state?.mat ?? 'wood'] ?? B.materials.wood
   return damageEntity(ctx, t, base * (m.mul[cls] ?? 1) * (m.toolMul?.[toolOf(kind)] ?? 1) * fac, hit.position, hit.normal, kind)
 }
