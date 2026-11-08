@@ -240,6 +240,34 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   // ==========================================
   // 8. M.E.G. OUTPOST BOUNTIFUL NPCS
   // ==========================================
+  const ROUNDS_COOPER = [
+    { ...T(-21.8, -43.2, 0.45), dwell: 18, act: "cdn/clip-nod-yes.glb", look: T(-21, -44.5, 0.45) },
+    { ...T(-23.5, -40.5, 0.45), dwell: 16, act: null, look: T(-10, -40, 0) },
+    { ...T(-20.5, -41.2, 0.45), dwell: 14, act: "cdn/clip-pickup.glb", look: T(-20, -42, 0.45) },
+    { ...T(-13, -47.2, 0), dwell: 22, act: null, look: T(-13, -49, 0) },
+  ];
+  const ROUNDS_MAEVE = [
+    { ...T(-26, -42.4, 0.45), dwell: 20, act: "cdn/clip-pickup.glb", look: T(-26, -44, 0.45) },
+    { ...T(-28.2, -41, 0.45), dwell: 15, act: "cdn/clip-point.glb", look: T(-32, -40, 0.45) },
+    { ...T(-25, -38, 0.1), dwell: 18, act: "cdn/clip-crouch-idle-loop.glb", look: T(-25, -35, 0) },
+  ];
+  const ROUNDS_HALE = [
+    { ...T(-14.2, -36.5, 0), dwell: 22, act: "cdn/clip-pickup.glb", look: T(-15.5, -36.5, 0) },
+    { ...T(-13.0, -39.0, 0), dwell: 18, act: null, look: T(-13, -45, 0) },
+    { ...T(-16.0, -34.5, 0), dwell: 20, act: "cdn/clip-nod-yes.glb", look: T(-17, -34, 0) },
+  ];
+  const ROUNDS_WREN = [
+    { ...T(-6, -40, 0), dwell: 22, act: "cdn/clip-crouch-idle-loop.glb", look: T(-3, -40, 0) },
+    { ...T(-10, -44, 0), dwell: 18, act: "cdn/clip-point.glb", look: T(-14, -58, 0) },
+    { ...T(-11.1, -48.6, 0), dwell: 24, act: null, look: T(-13, -49, 0) },
+    { ...T(-24, -48, 0.1), dwell: 16, act: "cdn/clip-nod-yes.glb", look: T(-32, -52, 0) },
+  ];
+  const ROUNDS_SULLY = [
+    { ...T(-29, -43, 0.45), dwell: 25, act: null, look: T(-29, -44.5, 0.45) },
+    { ...T(-31.5, -41.5, 0.2), dwell: 18, act: "cdn/clip-point.glb", look: T(-35, -41.5, 0.2) },
+    { ...T(-27.5, -40.5, 0.45), dwell: 16, act: null, look: T(-27.5, -35, 0.45) },
+  ];
+
   // Homesteader Cooper (Head Agrarian Coordinator)
   sp("l10-meg-cooper", {
     tags: ["npc", "meg"],
@@ -255,6 +283,8 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
       faction: "meg",
       factionName: "M.E.G. Outpost Bountiful",
       home: { x: -22, z: -42.4 },
+      rounds: ROUNDS_COOPER,
+      ri: 0,
       line: "Welcome to Outpost Bountiful, wanderer! Fresh bread is in the oven and the wheat is ripe.",
       ...npcState(ctx, "agent", 120),
     },
@@ -275,21 +305,23 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
       faction: "meg",
       factionName: "M.E.G. Outpost Bountiful",
       home: { x: -26, z: -42.4 },
+      rounds: ROUNDS_MAEVE,
+      ri: 0,
       line: "Keep your compass steady in the fields. The scarecrows aren't hostile, but they certainly aren't ordinary.",
       ...npcState(ctx, "agent", 100),
     },
   });
 
   // the rest of the outpost's people: who keeps the stores, who works the rows, who keeps the radio
-  const MEG = (id, at, yaw, look, role, hp, name, voice, line) => sp(id, { tags: ["npc", "meg"], feetPosition: at, rotation: { yaw }, physics: "character",
+  const MEG = (id, at, yaw, look, role, hp, name, voice, line, rounds) => sp(id, { tags: ["npc", "meg"], feetPosition: at, rotation: { yaw }, physics: "character",
     ...critterSpec(npcLook(id.replace("l10-meg-", "l10-"), look, role, hp)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-    state: { name, role, voice, faction: "meg", factionName: "M.E.G. Outpost Bountiful", home: { x: at.x, z: at.z }, line, ...npcState(ctx, "agent", hp * 10) } });
+    state: { name, role, voice, faction: "meg", factionName: "M.E.G. Outpost Bountiful", home: { x: at.x, z: at.z }, ...(rounds ? { rounds, ri: 0 } : {}), line, ...npcState(ctx, "agent", hp * 10) } });
   MEG("l10-meg-hale", T(-14.2, -36.5, 0), -90, { species: "bear", sex: "m", topw: "shirt", top: "#6b6a4a", botw: "pants", bottom: "#3b3226", shoes: "boots" }, "quarter", 12,
-    "Quartermaster Hale · M.E.G. Outpost Bountiful", "hollis", "Everything that leaves this farm gets weighed. Everything.");
+    "Quartermaster Hale · M.E.G. Outpost Bountiful", "hollis", "Everything that leaves this farm gets weighed. Everything.", ROUNDS_HALE);
   MEG("l10-meg-wren", T(-6, -40, 0), 120, { species: "rabbit", sex: "f", topw: "tank", top: "#c9a86a", botw: "overalls", bottom: "#41587a", shoes: "boots", hat: "cap" }, "scout", 9,
-    "Wren · Outpost Farmhand", "mags", "Mind your boots in the rows. And don't dig past your ankles.");
+    "Wren · Outpost Farmhand", "mags", "Mind your boots in the rows. And don't dig past your ankles.", ROUNDS_WREN);
   MEG("l10-meg-sully", T(-29, -43, 0.45), 200, { species: "raccoon", sex: "m", topw: "jacket", top: "#4a5240", botw: "pants", bottom: "#2a2a26", shoes: "boots", hat: "beanie" }, "default", 10,
-    "Sully · Outpost Radio Operator", "reyes", "Bountiful to Alpha, still green out here. Over.");
+    "Sully · Outpost Radio Operator", "reyes", "Bountiful to Alpha, still green out here. Over.", ROUNDS_SULLY);
   // the cookfire the outpost eats around: a stone ring, split logs, stumps to sit on
   const fire = T(-13, -49, 0);
   for (let i = 0; i < 9; i++) { const a = i * 0.698; sp(`l10-fire-stone-${i}`, { feetPosition: { x: fire.x + Math.cos(a) * 0.75, y: fire.y, z: fire.z + Math.sin(a) * 0.75 }, rotation: { yaw: i * 47 }, scale: { x: 1, y: 0.6, z: 0.8 }, primitive: { kind: "sphere", radius: 0.2, widthSegments: 7, heightSegments: 5 }, material: { color: "oklch(0.5 0.01 80)", roughness: 0.95 }, castShadow: false, visibleRange: { max: 60 } }); }

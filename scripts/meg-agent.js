@@ -505,7 +505,14 @@ export function update(ctx, dt) {
     else if (m.barkT) { bark(ctx, me, prevDead || !prev ? "kill" : "clear", true); m.clearAt = now + 2600; }
     m.barkT = tid;
   }
-  if (m.clearAt && now > m.clearAt) { m.clearAt = 0; if (!tid) bark(ctx, me, "clear", true); }
+  if (m.clearAt && now > m.clearAt) {
+    m.clearAt = 0;
+    if (!tid) {
+      bark(ctx, me, "relief", true);
+      me.anim.gest = { clip: "cdn/clip-nod-yes.glb", loop: "once", weight: 0.8, blendIn: 0.2, blendOut: 0.35, mask: { from: "Spine" } };
+      m.gestEnd = now + 1500;
+    }
+  }
   const fighting = !!(t && flat(t.feetPosition, home) < G.leash);
   if (!fighting && !m.inspect && !lead && !s.mjguest && now > (m.corpseAt ?? 0)) { // no one to fight: notice a dead creature close by that nobody has checked, and go and see
     m.corpseAt = now + 2000; m.seen ??= {};
@@ -576,6 +583,20 @@ export function update(ctx, dt) {
     work(me, m, act);
     if (!busy && !close && stop0.look) face(me, stop0.look.x - me.feetPosition.x, stop0.look.z - me.feetPosition.z, dt);
     if (!busy && now - m.at > (stop0.dwell ?? 10) * 1000) { s.ri = ((s.ri ?? 0) + 1) % s.rounds.length; m.at = 0; if (ctx.random() < 0.08) bark(ctx, me, "move"); }
+    if (!close && now - m.at > 6000 && now - (m.ambBarkAt ?? 0) > 42000 && ctx.random() < 0.06) {
+      m.ambBarkAt = now;
+      bark(ctx, me, "ambientIdle");
+    }
+  }
+  // campfire / heat source warming: if standing near fire/hearth/stove, warm hands periodically
+  if (now > (m.fireChk ?? 0)) {
+    m.fireChk = now + 4000;
+    m.nearFire = ctx.query({ radius: 2.8 }).some((o) => /fire|stove|oven|hearth/.test(String(o.id)) || o.state?.kind === "fire" || o.state?.kind === "hearth-oven");
+  }
+  if (m.nearFire && !m.aimAt && !talking && !me.anim.gest && now > (m.gestNext ?? 0) && ctx.random() < 0.45) {
+    me.anim.gest = { clip: "cdn/clip-clap-loop.glb", loop: "once", weight: 0.85, blendIn: 0.3, blendOut: 0.35, mask: { from: "Spine" } };
+    m.gestEnd = now + 2400;
+    m.gestNext = now + 10000 + ctx.random() * 8000;
   }
   if (chatTo && !(close && best < 3)) { face(me, chatTo.feetPosition.x - me.feetPosition.x, chatTo.feetPosition.z - me.feetPosition.z, dt); ctx.sleep(0.1); return; }
   if (!close) {
@@ -583,7 +604,56 @@ export function update(ctx, dt) {
     ctx.sleep(0.5); return;
   }
   face(me, close.feetPosition.x - me.feetPosition.x, close.feetPosition.z - me.feetPosition.z, dt);
-  if (!m.waved[close.id] && best < 5 && !s.angry?.[close.id]) { m.waved[close.id] = true; m.wavedAt = now; me.anim.wave = { clip: "cdn/clip-wave-loop.glb", loop: "once", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } }; }
+
+  // Dynamic player reactions (bump, brandishing warning & holstered relief, low health / sanity empathy)
+  const eq = close.state?.equipped;
+  const isBrandishing = eq && eq !== "fists" && (WP[eq]?.ranged || (WP[eq]?.damage ?? 0) >= 20);
+  if (!s.angry?.[close.id]) {
+    // 1. Player sprint / fast collision bump
+    const plSpd = Math.hypot(close.velocity?.x ?? 0, close.velocity?.z ?? 0);
+    if (best < 0.85 && (plSpd > 3.2 || close.state?.sprint) && now - (m.bumpAt ?? 0) > 8000) {
+      m.bumpAt = now;
+      bark(ctx, me, "bump", true);
+      me.anim.hit = { clip: "cdn/clip-hit-react.glb", loop: "once", weight: 0.75, blendIn: 0.05, blendOut: 0.3, timeAt: now };
+      m.hitAt = now;
+    }
+    // 2. Weapon brandishing warning in safe camp
+    if (isBrandishing && best < 6.5) {
+      if (now - (m.brandishAt ?? 0) > 18000) {
+        m.brandishAt = now;
+        m.brandishPl = close.id;
+        bark(ctx, me, "brandish", true);
+        me.anim.gest = { clip: "cdn/clip-shake-no.glb", loop: "once", weight: 0.9, blendIn: 0.2, blendOut: 0.35, mask: { from: "Spine" } };
+        m.gestEnd = now + 1500;
+      }
+    } else if (m.brandishPl === close.id && (!eq || eq === "fists") && now - (m.brandishAt ?? 0) < 7000) {
+      m.brandishPl = null;
+      bark(ctx, me, "holstered", true);
+      me.anim.gest = { clip: "cdn/clip-nod-yes.glb", loop: "once", weight: 0.85, blendIn: 0.2, blendOut: 0.35, mask: { from: "Spine" } };
+      m.gestEnd = now + 1400;
+    }
+    // 3. Empathy for low HP or low sanity
+    if (best < 5.0 && now - (m.empathyAt ?? 0) > 32000 && !talking) {
+      const plHp = close.state?.hp, plMax = close.state?.maxHp ?? 100, plSan = close.state?.sanity;
+      if (plHp != null && plHp > 0 && plHp < plMax * 0.35) {
+        m.empathyAt = now;
+        bark(ctx, me, "lowHealth", true);
+        me.anim.gest = { clip: "cdn/clip-point.glb", loop: "once", weight: 0.8, blendIn: 0.2, blendOut: 0.35, mask: { from: "Spine" } };
+        m.gestEnd = now + 1700;
+      } else if (plSan != null && plSan < 30) {
+        m.empathyAt = now;
+        bark(ctx, me, "lowSanity", true);
+        me.anim.gest = { clip: "cdn/clip-nod-yes.glb", loop: "once", weight: 0.8, blendIn: 0.2, blendOut: 0.35, mask: { from: "Spine" } };
+        m.gestEnd = now + 1600;
+      }
+    }
+  }
+
+  if (!m.waved[close.id] && best < 5 && !s.angry?.[close.id] && !isBrandishing && now - (m.bumpAt ?? 0) > 3000) {
+    m.waved[close.id] = true;
+    m.wavedAt = now;
+    me.anim.wave = { clip: "cdn/clip-wave-loop.glb", loop: "once", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } };
+  }
 }
 function work(me, m, clip) {
   if (m.work === clip) return; m.work = clip;

@@ -684,6 +684,129 @@ export const STARTERS = {
       { text: "Where does the road lead if I follow it to the horizon?", tag: "Help" },
     ],
   },
+
+  // ---- Level 11 (Additional Urban NPCs) ----
+  'l11-realty-agent': {
+    greeting: "Looking for a home in the Capital? B.N.T.G. Realty holds the listing. One green two-story house on the avenue. Solid roof, real bed, quiet porch.",
+    mood: 'calm',
+    returning: "Back about the green house? The listing is still open, but properties on Level 11 don't wait forever.",
+    friendly: "Always good to see a serious buyer. Have a seat. Let's discuss terms.",
+    cold: "The front door stays locked until the deed is signed and paid. What can I do for you?",
+    choices: [
+      { text: "Tell me about the house. What comes with the deed?", tag: "Lore" },
+      { text: "Is the price flexible for an honest explorer?", tag: "Barter 40", check: { skill: 'barter', difficulty: 40 } },
+      { text: "How does property ownership work when levels shift?", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+      { text: "What's the neighborhood like after dark?", tag: "Survival 30", check: { skill: 'survival', difficulty: 30 } },
+    ],
+  },
+  'l11-tm-clerk': {
+    greeting: "Welcome to Thrift Mode! Hand-washed garments, fresh threads, odd jackets. We take Backdollars or good trades. Don't touch the mannequin.",
+    mood: 'happy',
+    returning: "Back to browse the racks? We got a new batch of courier vests and denim in.",
+    friendly: "Hey, friend! For you, I'll pull the good jackets from the back rack.",
+    cold: "Browse all you want, but shoplifters answer to Base Beta security.",
+    choices: [
+      { text: "Let me see what clothing and jackets you have in stock.", tag: "Help" },
+      { text: "Who trades clothing down here in the city?", tag: "Lore" },
+      { text: "Can you cut me a discount on winter coats?", tag: "Barter 35", check: { skill: 'barter', difficulty: 35 } },
+      { text: "What's the story with the hoodie with the red smile?", tag: "Lore" },
+    ],
+  },
+
+  // ---- Level 8 (The 9th Road Camp) ----
+  'l8-hobb': {
+    greeting: "Keep close to the fire and keep your voice low. Sound carries in these caverns, and the things in the dark have big ears.",
+    mood: 'calm',
+    returning: "Back from the road? Shake the cave dust off your boots and warm up by the flame.",
+    friendly: "Good to see you walking, friend. Take a bowl of Carla's soup, on the house.",
+    cold: "Don't bring trouble toward the camp. If you've got spiders on your tail, turn around and deal with them.",
+    choices: [
+      { text: "What is the 9th Road, and where does it lead?", tag: "Lore" },
+      { text: "How do you defend the camp against the giant spiders?", tag: "Guns 35", check: { skill: 'guns', difficulty: 35 } },
+      { text: "Who are the Lightless in the side tunnels?", tag: "Survival 35", check: { skill: 'survival', difficulty: 35 } },
+      { text: "Can you spare some torches or fuel?", tag: "Barter 30", check: { skill: 'barter', difficulty: 30 } },
+    ],
+  },
+  'l8-wen': {
+    greeting: "Watch your step around the crates! Wen's the name, B.N.T.G. trade outpost. Spider silk, cave caps, ironstone. If it's in Level 8, I've got a price on it.",
+    mood: 'happy',
+    returning: "Back for more trade? I just sorted a fresh bundle of clean spider silk.",
+    friendly: "My favorite caver! What oddities did you drag out of the karst today?",
+    cold: "I don't do charity. Backbucks or trade goods, let's see them.",
+    choices: [
+      { text: "What supplies do you have for sale?", tag: "Help" },
+      { text: "How did you set up those glowing mushroom light guides?", tag: "Science 35", check: { skill: 'science', difficulty: 35 } },
+      { text: "Let's negotiate a bulk discount on cave supplies.", tag: "Barter 40", check: { skill: 'barter', difficulty: 40 } },
+      { text: "What's at the end of Hyperspace Lane?", tag: "Lore" },
+    ],
+  },
+  'l8-ivo': {
+    greeting: "Shh. Did you hear that resonance in the stone? Ivo, Harmouth Speleological Society. I'm mapping the karst fissures.",
+    mood: 'scared',
+    returning: "You made it back! The road past Marker 74 didn't flood, did it?",
+    friendly: "It's so reassuring seeing someone who can read a compass. Let me show you what I've surveyed.",
+    cold: "Don't smudge my survey charts! These maps cost people their lives.",
+    choices: [
+      { text: "What happened to the rest of your survey team?", tag: "Lore" },
+      { text: "How do I navigate past the flooding cavern safely?", tag: "Survival 35", check: { skill: 'survival', difficulty: 35 } },
+      { text: "Where did this old asphalt road come from inside a cave?", tag: "Speech 30", check: { skill: 'speech', difficulty: 30 } },
+      { text: "Let me inspect your survey notes. Maybe I can help.", tag: "Science 35", check: { skill: 'science', difficulty: 35 } },
+    ],
+  },
+  'l8-marit': {
+    greeting: "Sit down by the fire. Let me check your arms for spider bites. Neurotoxin works slow, but it works thorough.",
+    mood: 'calm',
+    returning: "Still on two feet? Good. Let me know if your joints ache or if your vision blurs.",
+    friendly: "Good to see you whole, wanderer. Take a clean bandage, you've earned it.",
+    cold: "If you got bitten and hid it, that's on you. What do you need?",
+    choices: [
+      { text: "Can you treat my venom wounds and fractures?", tag: "Help" },
+      { text: "How do you extract antivenom from the spider gland sacs?", tag: "Medicine 35", check: { skill: 'medicine', difficulty: 35 } },
+      { text: "You knew Sister Lull before she joined the Lightless?", tag: "Lore" },
+      { text: "What keeps you going out here in the dark?", tag: "Chat" },
+    ],
+  },
+  'l8-carla-kid': {
+    greeting: "Three Backbucks for soup! Hobb says hot food keeps the chills out of your ribs. It's mushroom and salt.",
+    mood: 'happy',
+    returning: "More soup? The pot's bubbling. I stirred it fifty times!",
+    friendly: "Yay, you're back! You're my best customer. Hobb says I can buy my own boots soon!",
+    cold: "No soup without three Backbucks. Hobb's watching.",
+    choices: [
+      { text: "I'll take a bowl of hot soup. Here are three Backbucks.", tag: "Help" },
+      { text: "How did a kid end up living in a cave camp?", tag: "Lore" },
+      { text: "Are you scared of the dark outside the torches?", tag: "Speech 25", check: { skill: 'speech', difficulty: 25 } },
+      { text: "You're doing a great job tending the fire, Carla.", tag: "Chat" },
+    ],
+  },
+
+  // ---- Level 21 (Refrigerator Paradise) ----
+  'l21-ned': {
+    greeting: "Welcome to Refrigerator Paradise, wanderer. Grab a carton of Saltines from the table and watch your step on the frost.",
+    mood: 'calm',
+    returning: "Back from the freezer aisles? Bring any wire or scrap for the compressors?",
+    friendly: "Good to see you, runner. The coils are dripping cold water, fill up your jugs.",
+    cold: "Don't mess with the inventory ledger. We count every cracker sleeve.",
+    choices: [
+      { text: "How does the Base Alef lockout work, and who are you?", tag: "Lore" },
+      { text: "What errands does the quartermaster board have posted?", tag: "Help" },
+      { text: "Can you teach me how to repair cooling systems and wiring?", tag: "Science 35", check: { skill: 'science', difficulty: 35 } },
+      { text: "Let's trade for emergency rations and batteries.", tag: "Barter 35", check: { skill: 'barter', difficulty: 35 } },
+    ],
+  },
+  'l21-goknar': {
+    greeting: "Keep your voice down. The hum of the fridges covers our noise, but the Smilers in The Edges have sharp ears.",
+    mood: 'calm',
+    returning: "Back alive from the dark corridors? Good. Keep your flashlight batteries fresh.",
+    friendly: "Glad you made it through the numbered doors. It's rare seeing runners with your kind of grit.",
+    cold: "Watch where you point that barrel. I've got enough headaches with the perimeter.",
+    choices: [
+      { text: "How do you fight off Smilers in these tight freezer hallways?", tag: "Guns 40", check: { skill: 'guns', difficulty: 40 } },
+      { text: "What's out past the white block rooms in The Edges?", tag: "Survival 35", check: { skill: 'survival', difficulty: 35 } },
+      { text: "What happened when John Banks blew the dynamite plunger?", tag: "Lore" },
+      { text: "How do I reach the cold karst descent to Level 8?", tag: "Help" },
+    ],
+  },
 }
 
 // Fallback starters for generic / unlisted NPCs by faction & role
