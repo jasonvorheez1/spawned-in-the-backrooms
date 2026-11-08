@@ -599,6 +599,27 @@ l26-lamp-1-6:
   light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 2.2, kind: point}
   material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
   primitive: {kind: sphere, radius: 0.12}
+l26-lift-down:
+  behavior: scripts/l26-lift.js
+  feetPosition: {x: 0, y: 0, z: 22.5}
+  id: l26-lift-down
+  physics: {body: static, trigger: true}
+  primitive: {depth: 0.6, height: 2, kind: box, width: 1.6}
+  state: {to: {x: 300, y: -79.9, z: 2.5}, yaw: 0}
+  visible: false
+l26-liftdoor:
+  feetPosition: {x: 0, y: 0, z: 22.04}
+  id: l26-liftdoor
+  material: {color: oklch(0.7 0.02 80), metalness: 0.8, roughness: 0.3}
+  physics: none
+  primitive: {depth: 0.08, height: 2.2, kind: box, width: 1.6}
+l26-liftsign:
+  feetPosition: {x: 0, y: 2.3, z: 22.06}
+  id: l26-liftsign
+  material: {color: oklch(0.75 0.15 140), emissive: oklch(0.75 0.15 140), emissiveIntensity: 1.5}
+  primitive: {height: 0.25, kind: plane, width: 0.9}
+  rotation: {yaw: 180}
+  ui: "<div face=\"front\" style=\"font:700 120px Georgia;color:#123;text-align:center\">DOWN</div>"
 l26-litter-poster:
   feetPosition: {x: -8.6, y: 0.01, z: 20}
   id: l26-litter-poster
