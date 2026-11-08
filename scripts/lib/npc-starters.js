@@ -714,9 +714,36 @@ function rawChoices(ctx, it, s, lastNpcReply, replyObj) {
   const sk = skillsOf(s ?? {})
   const entry = STARTERS[id]
 
+  // Quest dialogue hooks for Level 11
+  const qChoices = []
+  if (id === 'l11-walker-1') {
+    if (!s?.sedcoQ) {
+      qChoices.push({ text: "You look overwhelmed with those parcels. Need a hand with a Sedco manifest?", tag: "Quest Start" })
+    } else if (s?.sedcoQ === 5) {
+      qChoices.push({ text: "I've retrieved the Sedco Master Security Drive from the vault.", tag: "Quest Turn-In" })
+    }
+  } else if (id === 'l11-meg-agent-vance') {
+    if (s?.sedcoQ === 5) {
+      qChoices.push({ text: "I've recovered the Sedco Master Security Drive from the 14th St vault for M.E.G.", tag: "Quest Turn-In" })
+    }
+  } else if (id === 'l11-trader-kael') {
+    if (!s?.craneQ) {
+      qChoices.push({ text: "Is something wrong with the canal trade route? The docks seem quiet.", tag: "Quest Start" })
+    } else if (s?.craneQ === 4) {
+      qChoices.push({ text: "I cleared the canal lock spillway and brought pure Almond Water.", tag: "Quest Turn-In" })
+    }
+  } else if (id === 'l11-walker-3') {
+    if (!s?.maintQ) {
+      qChoices.push({ text: "How are the maintenance rounds? Need assistance with the infrastructure?", tag: "Quest Start" })
+    } else if (s?.maintQ === 4) {
+      qChoices.push({ text: "The compressor is bypassed and the apartment 11-B utilities are running smooth.", tag: "Quest Turn-In" })
+    }
+  }
+
+  let baseChoices = []
   // If the model provided choices in JSON, validate and prioritize them
   if (Array.isArray(replyObj?.choices) && replyObj.choices.length >= 2) {
-    return replyObj.choices.slice(0, 4).map((c, i) => {
+    baseChoices = replyObj.choices.slice(0, 4).map((c, i) => {
       const txt = String(c).trim()
       let tag = 'Reply'
       if (txt.toLowerCase().includes('speech') || txt.toLowerCase().includes('persuade')) tag = `Speech ${sk.speech}`
@@ -725,26 +752,24 @@ function rawChoices(ctx, it, s, lastNpcReply, replyObj) {
       else if (txt.toLowerCase().includes('entity') || txt.toLowerCase().includes('danger') || txt.toLowerCase().includes('navigate')) tag = `Survival ${sk.survival}`
       return { text: txt.replace(/^\[.*?\]\s*/, ''), tag }
     })
-  }
-
-  // If there's an active follow-up turn (the NPC just replied to something):
-  if (lastNpcReply && typeof lastNpcReply === 'string') {
-    return generateFollowUpChoices(ctx, it, s, lastNpcReply, entry, sk)
-  }
-
-  // Initial dialogue encounter: use curated starter choices
-  if (entry?.choices?.length) {
-    return entry.choices.map((c) => {
+  } else if (lastNpcReply && typeof lastNpcReply === 'string') {
+    baseChoices = generateFollowUpChoices(ctx, it, s, lastNpcReply, entry, sk)
+  } else if (entry?.choices?.length) {
+    baseChoices = entry.choices.map((c) => {
       const check = c.check
       const skillName = check?.skill ?? ''
       const diff = check?.difficulty ?? 35
       const tag = skillName ? `${skillName[0].toUpperCase() + skillName.slice(1)} ${diff}` : c.tag ?? 'Inquire'
       return { text: c.text, tag, check }
     })
+  } else {
+    baseChoices = generateGenericChoices(it, s, sk)
   }
 
-  // Generic initial choices
-  return generateGenericChoices(it, s, sk)
+  if (qChoices.length > 0) {
+    return [...qChoices, ...baseChoices].slice(0, 5)
+  }
+  return baseChoices
 }
 
 function generateFollowUpChoices(ctx, it, s, line, entry, sk) {
