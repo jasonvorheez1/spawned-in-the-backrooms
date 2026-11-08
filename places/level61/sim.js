@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 20;
+const V = 21;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb";
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -166,10 +166,10 @@ function lay(ctx) {
     if (a1 > a) seg(a, a1);
     function seg(u, v) { const m = (u + v) / 2, len = v - u; box(`${id}-${k++}`, along === "x" ? m : fixed, 0, along === "x" ? fixed : m, along === "x" ? len : 0.05, 1.0, along === "x" ? 0.05 : len, WAINSCOT, { physics: undefined }); }
   };
-  wain("l61-wain-n", "x", -HD + 0.17, -HW + 0.2, HW - 0.2, [[-21, 4], [-7, 4], [7, 4], [21, 4]]);
-  wain("l61-wain-s", "x", HD - 0.17, -HW + 0.2, HW - 0.2, [[-14, 3], [14, 2.2]]);
-  wain("l61-wain-w", "z", -HW + 0.17, -HD + 0.2, HD - 0.2, [[0, 1.6], [-21, 0.01]]);
-  wain("l61-wain-e", "z", HW - 0.17, -HD + 0.2, HD - 0.2, [[-9, 2.2]]);
+  wain("l61-wain-n", "x", -HD + 0.19, -HW + 0.2, HW - 0.2, [[-21, 4], [-7, 4], [7, 4], [21, 4]]);
+  wain("l61-wain-s", "x", HD - 0.19, -HW + 0.2, HW - 0.2, [[-14, 3], [14, 2.2]]);
+  wain("l61-wain-w", "z", -HW + 0.19, -HD + 0.2, HD - 0.2, [[0, 1.6], [-21, 0.01]]);
+  wain("l61-wain-e", "z", HW - 0.19, -HD + 0.2, HD - 0.2, [[-9, 2.2]]);
   let bs = 0;
   for (let x = -28; x <= 28; x += 4) for (const [z0, z1] of (Math.abs(x) < 7.5 ? [[-HD, -7.2], [7.2, HD]] : [[-HD, HD]])) box(`l61-brass-${bs++}`, x, -0.003, (z0 + z1) / 2, 0.035, 0.006, z1 - z0, BRASS, { physics: undefined, receiveShadow: true });
   for (let z = -20; z <= 20; z += 4) for (const [x0, x1] of (Math.abs(z) < 7.5 ? [[-HW, -7.2], [7.2, HW]] : [[-HW, HW]])) box(`l61-brass-${bs++}`, (x0 + x1) / 2, -0.003, z, x1 - x0, 0.006, 0.035, BRASS, { physics: undefined, receiveShadow: true });
