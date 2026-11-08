@@ -9,7 +9,8 @@ mn=mathutils.Vector([min(v[i] for v in vs) for i in range(3)]); mx=mathutils.Vec
 print("bbox",tuple(mn),tuple(mx))
 s=1.83/(mx.z-mn.z)
 c=mathutils.Vector(((mn.x+mx.x)/2,(mn.y+mx.y)/2,mn.z))
-for v in o.data.vertices: v.co=(v.co-c)*s
+R=mathutils.Matrix.Rotation(-1.5708,3,'Z')
+for v in o.data.vertices: v.co=R@((v.co-c)*s)
 o.data.update()
 # proof from -Y (blender front)
 sc=bpy.context.scene; sc.render.engine="CYCLES"; sc.cycles.samples=8; sc.render.resolution_x=sc.render.resolution_y=400
