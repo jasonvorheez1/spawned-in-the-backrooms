@@ -27,7 +27,7 @@ export function onInput(ctx, input) {
   const ray = getInputRay(ctx, input); if (ray) m.ray = ray
   if (s.level == null) return
   if (input.pressed?.sheet && s.creating) return
-  if (input.pressed?.sheet) { if (s.sheetOpen) s.sheetOpen = false; else if (canOpen(s, ctx.self.place, 'sheet')) { openWrist(s, 'sheet'); s.lvlPrompt = false } else return; ctx.emit('playSound', { clip: s.sheetOpen ? 'cdn/moodboard-realistic-gritty/sfx-wrist-device-raise-click-crt-power-on-hum.mp3' : 'cdn/moodboard-realistic-gritty/sfx-wrist-device-lower-click-crt-power-off.mp3', volume: 0.55, bus: 'UI' }) }
+  if (input.pressed?.sheet && (s.sheetOpen || canOpen(s, ctx.self.place, 'sheet'))) { if (s.sheetOpen) s.sheetOpen = false; else { openWrist(s, 'sheet'); s.lvlPrompt = false } ctx.emit('playSound', { clip: s.sheetOpen ? 'cdn/moodboard-realistic-gritty/sfx-wrist-device-raise-click-crt-power-on-hum.mp3' : 'cdn/moodboard-realistic-gritty/sfx-wrist-device-lower-click-crt-power-off.mp3', volume: 0.55, bus: 'UI' }) }
   const d = input.actionData?.stat
   if (input.pressed?.stat && d && typeof d.k === 'string') spend(s, d)
 }

@@ -1,12 +1,13 @@
 // T: wait or sleep, Fallout-style. A menu of hours; time jumps forward for the whole world (lib/clock.js).
 // On or beside a bed it's sleep: HP and sanity come back with the hours. Either way you get hungry and thirsty.
 // Refused with a hostile close by. Residents read the same clock, so a wait into night sends them to bed.
+import { canOpen, openWrist } from "./lib/screen.js";
 import { HOUR_MS, clockOf } from "./lib/clock.js";
 const HOSTILE = ["l5-hostile", "hound", "smiler", "lurker", "stealer", "enemy", "faceling", "deathmoth"];
 const bedNear = (ctx) => ctx.query({ radius: 2.6 }).find((r) => /bed|cot|bunk|mattress/i.test(r.id + " " + (r.state?.name ?? "")));
 export function onInput(ctx, input) {
   const s = ctx.self.state;
-  if (input.pressed.wait) { s.waitOpen = !s.waitOpen; if (s.waitOpen) { s.waitBed = !!bedNear(ctx); s.waitClock = clockOf(ctx).text; } return; }
+  if (input.pressed.wait) { if (s.waitOpen) s.waitOpen = false; else if (canOpen(s, ctx.self.place, "rest")) openWrist(s, "rest"); if (s.waitOpen) { s.waitBed = !!bedNear(ctx); s.waitClock = clockOf(ctx).text; } return; }
   if (input.pressed.waitdo) { const h = Math.max(0, Math.min(24, input.actionData?.waitdo?.h | 0)); if (!h) { s.waitOpen = false; return; } rest(ctx, h); }
 }
 function rest(ctx, h) {
