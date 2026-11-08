@@ -590,11 +590,11 @@ function spawnCamp(ctx) {
 
 // ---- the Lightless (Shelly: "parts of the map where theres insane people trying to kill you"): wanderers the dark got into. Two dens off the road:
 // the Choir in a side pocket of the hall, the Tar-Drinkers past the dredge. Frenzied nerve (scripts/meg-agent.js): they go for anyone close, never each other.
-Killed, they stay dead an hour (Shelly's rule), then the den fills again.
+// Killed, they stay dead an hour (Shelly's rule), then the den fills again.
 const DEN_V = 2, RETURN_MS = 3600000;
 const DENS = {
-  choir: { s: 84, side: -5.5, warn: 70, scrawl: "THE DARK SINGS<br>WE SING BACK", tint: "oklch(0.55 0.2 25)" },
-  tar: { s: 414, side: 9, warn: 402, scrawl: "DRINK THE TAR<br>AND YOU WONT<br>NEED LIGHT", tint: "oklch(0.5 0.16 300)" },
+  choir: { s: 84, side: -5.5, tint: "oklch(0.55 0.2 25)" },
+  tar: { s: 414, side: 9, tint: "oklch(0.5 0.16 300)" },
 };
 const WRETCH = {
   "l8x-choir-1": { den: "choir", name: "Hymn-Mouth", sp: "rat", sex: "m", gun: "pipe_scrap", at: [0, 0], top: "#4a3a2a" },
