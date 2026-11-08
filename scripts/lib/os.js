@@ -61,3 +61,20 @@ export function runCmd(os, line, who) {
   }
   return out(`${c}: command not found`)
 }
+
+// Level 11 security panels (scripts/os.js ctrl, scripts/os-ui.js)
+export const CTRL = {
+  sub: { title: 'MTA Station Control · Gate 07', rows: [
+    { id: 'light', label: 'Platform lighting', act: 'CYCLE', say: 'The platform lights stutter off and on. Nothing else moves.' },
+    { id: 'fare', label: 'Fare gates', act: 'FREE ENTRY', say: 'Turnstiles click to free entry. The steel gate stays shut.' },
+    { id: 'rail', label: 'Third rail, track 2', act: 'ENERGIZE', say: 'Somewhere below, the rail hums. Better not walk the tracks.' },
+    { id: 'gate', label: 'Gate 07 maglock', act: 'RELEASE', ok: true },
+    { id: 'alarm', label: 'Station alarm', act: 'TEST', alarm: true } ] },
+  sedco: { title: 'Sedco Closed-Circuit Security', rows: [
+    { id: 'cctv', label: 'CCTV loop, cams 1-9', act: 'RECORD', say: 'The cameras start recording. Smile.' },
+    { id: 'shut', label: 'Lobby shutters', act: 'LOWER', say: 'A shutter rattles down somewhere upstairs.' },
+    { id: 'lift', label: 'Service elevator', act: 'LOCK', say: 'The elevator locks at B1.' },
+    { id: 'vault', label: 'Vault B2 timelock', act: 'OVERRIDE', ok: true },
+    { id: 'silent', label: 'Silent alarm', act: 'ARM', alarm: true } ] },
+}
+export const OPENS = { 'MTA-GATE-07': 'sub', 'SEDCO-SEC-01': 'sedco', 'BETA-DISPATCH-01': 'sub' }

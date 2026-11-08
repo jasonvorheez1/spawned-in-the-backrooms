@@ -1,4 +1,5 @@
 // Back OS(tm): the player's side of a computer (player.state.os = { id, host, lock, user: guest | admin, app, at, sel, term }).
+import { CTRL, OPENS } from './lib/os.js'
 // The screen is scripts/os-ui.js; the machine is scripts/computer.js; what it holds is scripts/lib/os.js + data/os.yml.
 // 'os' action: {k:'close'} {k:'app', v} {k:'mail', id} {k:'entry', id} {k:'file', v} {k:'cat', v} {k:'cmd', v} {k:'pw', v} {k:'hack'} {k:'login'}
 import { takeToken, gain } from './player.js'
@@ -21,21 +22,6 @@ const shutdown = (ctx, s) => { if (s.os && s.os.app !== 'off') s.os = { ...s.os,
 
 // Level 11 unlockables (Shelly: "hacking some stuff and pressing the right thing can unlock some stuff"): getting in is half of it.
 // The security panel holds a row of switches; one releases the door, the harmless ones just do their thing, the alarm locks you out.
-export const CTRL = {
-  sub: { title: 'MTA Station Control · Gate 07', rows: [
-    { id: 'light', label: 'Platform lighting', act: 'CYCLE', say: 'The platform lights stutter off and on. Nothing else moves.' },
-    { id: 'fare', label: 'Fare gates', act: 'FREE ENTRY', say: 'Turnstiles click to free entry. The steel gate stays shut.' },
-    { id: 'rail', label: 'Third rail, track 2', act: 'ENERGIZE', say: 'Somewhere below, the rail hums. Better not walk the tracks.' },
-    { id: 'gate', label: 'Gate 07 maglock', act: 'RELEASE', ok: true },
-    { id: 'alarm', label: 'Station alarm', act: 'TEST', alarm: true } ] },
-  sedco: { title: 'Sedco Closed-Circuit Security', rows: [
-    { id: 'cctv', label: 'CCTV loop, cams 1-9', act: 'RECORD', say: 'The cameras start recording. Smile.' },
-    { id: 'shut', label: 'Lobby shutters', act: 'LOWER', say: 'A shutter rattles down somewhere upstairs.' },
-    { id: 'lift', label: 'Service elevator', act: 'LOCK', say: 'The elevator locks at B1.' },
-    { id: 'vault', label: 'Vault B2 timelock', act: 'OVERRIDE', ok: true },
-    { id: 'silent', label: 'Silent alarm', act: 'ARM', alarm: true } ] },
-}
-const OPENS = { 'MTA-GATE-07': 'sub', 'SEDCO-SEC-01': 'sedco', 'BETA-DISPATCH-01': 'sub' }
 function unlock(ctx, s) {
   const c = ctx.getObject(s.os.id); if (c) c.state.unlocked = true
   const opens = OPENS[s.os.host]

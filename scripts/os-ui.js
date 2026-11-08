@@ -1,7 +1,7 @@
 // Back OS(tm): the screen. A Windows 95 look with only the yellow left (the Object-94 logo): gray bevelled windows, gold title bars, a taskbar with
 // a Start button. Drawn from player.state.os (scripts/os.js). Buttons send the 'os' action.
 import O from './lib/data/os.yml'
-import { mailsOf, filesOf, entriesOf, entryById, forumOf, binOf, PROFILE } from './lib/os.js'
+import { mailsOf, filesOf, entriesOf, entryById, forumOf, binOf, PROFILE, CTRL, OPENS } from './lib/os.js'
 
 const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 const A = (o) => `sendAction('os',${JSON.stringify(o).replace(/"/g, "'")})`
