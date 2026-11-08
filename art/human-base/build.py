@@ -44,7 +44,7 @@ def arm_leg_weights(head, body):
 
 def male(head, body):
     aw, lw = arm_leg_weights(head, body)
-    SH = 0.03  # arms ride out this far with the broader shoulders
+    SH = 0.045  # arms ride out this far with the broader shoulders
     for i, v in enumerate(body.data.vertices):
         x, y, z = v.co; ax = abs(x); sg = 1 if x >= 0 else -1
         A = aw[i]; L = lw[i]; T = 1 - A
@@ -55,10 +55,10 @@ def male(head, body):
         if y < 0.03: y -= 0.012 * pec
         # broad shoulders and lats: the torso scaled out, the arms carried rigidly
         sh = bump(1.12, 1.34, 1.5, 1.58, z)
-        x = x * (1 + 0.2 * sh * T) + sg * SH * A
+        x = x * (1 + 0.3 * sh * T) + sg * SH * A
         # waist straight, hips and thighs in: a V, not an hourglass
-        x *= 1 + 0.08 * bump(1.06, 1.14, 1.24, 1.32, z) * T
-        x *= 1 - 0.16 * bump(0.76, 0.9, 1.04, 1.13, z) * T
+        x *= 1 + 0.12 * bump(1.06, 1.14, 1.24, 1.32, z) * T
+        x *= 1 - 0.25 * bump(0.74, 0.88, 1.04, 1.14, z) * T
         if L > 0.3 and 0.4 < z < 0.95:
             cx = sg * 0.078; x = cx + (x - cx) * (1 - 0.14 * bump(0.4, 0.55, 0.8, 0.95, z))
         # flatter seat
@@ -148,19 +148,42 @@ def proof(name, r):
     bpy.context.view_layer.update(); shot("pose", (2.8, -3.6, 1.1))
     for b in pb: b.rotation_euler = (0, 0, 0)
 
+def garment(body, r, name, keep, color, push=0.005):
+    import bmesh
+    o = body.copy(); o.data = body.data.copy(); o.name = name
+    bpy.context.collection.objects.link(o)
+    bm = bmesh.new(); bm.from_mesh(o.data)
+    gi = {g.index: g.name for g in o.vertex_groups}
+    dl = bm.verts.layers.deform.active
+    def armw(v):
+        return sum(w for g, w in v[dl].items() if any(gi[g].endswith(k) for k in ("Arm", "ForeArm", "Hand"))) if dl else 0
+    gone = [f for f in bm.faces if not keep(f.calc_center_median(), max(armw(v) for v in f.verts))]
+    bmesh.ops.delete(bm, geom=gone, context="FACES")
+    for v in bm.verts: v.co += v.normal * push
+    bm.to_mesh(o.data); bm.free()
+    m = bpy.data.materials.new(name); m.use_nodes = True
+    bsdf = m.node_tree.nodes["Principled BSDF"]; bsdf.inputs["Base Color"].default_value = color; bsdf.inputs["Roughness"].default_value = 0.75
+    o.data.materials.clear(); o.data.materials.append(m)
+    o.parent = r
+    return o
+
 def build(name, is_male, height):
     head, body = load()
     if is_male: male(head, body)
-    r = rig(head, body, 0.18 if is_male else 0.0)
+    r = rig(head, body, 0.26 if is_male else 0.0)
+    extra = []
+    if not is_male:
+        extra.append(garment(body, r, "Bra", lambda c, a: 1.24 < c.z < 1.43 and a < 0.15, (0.07, 0.07, 0.08, 1)))
+        extra.append(garment(body, r, "Shorts", lambda c, a: 0.74 < c.z < 1.08 and a < 0.15, (0.08, 0.1, 0.16, 1)))
     s = height / 1.94
     r.scale = (s, s, s); bpy.ops.object.select_all(action="DESELECT")
-    for o in (r, head, body): o.select_set(True)
+    for o in (r, head, body, *extra): o.select_set(True)
     bpy.context.view_layer.objects.active = r
     bpy.ops.object.transform_apply(scale=True)
     head.data.materials[0].name = "Head_Skin"; body.data.materials[0].name = "Body_Skin"
     proof(name, r)
     bpy.ops.object.select_all(action="DESELECT")
-    for o in (r, head, body): o.select_set(True)
+    for o in (r, head, body, *extra): o.select_set(True)
     bpy.ops.export_scene.gltf(filepath=f"{OUT}/{name}.glb", use_selection=True, export_apply=False, export_animations=False)
     print("exported", name)
 
