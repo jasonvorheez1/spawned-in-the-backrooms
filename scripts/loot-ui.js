@@ -487,20 +487,20 @@ function pane(s, sel, eqKey) {
     if (sel !== 'fists') acts.push(btn('DROP ONE', { k: 'drop', w: sel }))
   } else if (sel.startsWith('cloth:') && (bag.includes(sel) || on.includes(sel))) {
     card = detail(sel, s, true); const p = parseCloth(sel)
-    acts.push(on.includes(sel) ? btn('TAKE OFF', { k: 'unwear', w: p?.slot }) : btn('WEAR', { k: 'wear', w: sel }))
+    acts.push(on.includes(sel) ? btn('TAKE OFF', { k: 'unwear', w: p?.slot }) : btn('WEAR', { k: 'wear', w: sel })); if (bag.includes(sel)) acts.push(btn('DROP ONE', { k: 'dropItem', t: sel }))
   } else if (sel.startsWith('almond:')) {
     const c = sel.slice(7), key = { grey: 'almonds', green: 'almondsG', red: 'almondsR', blue: 'almondsB' }[c]
-    if (s[key] > 0) { card = detail(sel, s, true); acts.push(btn('DRINK', { k: 'drink', c })) }
+    if (s[key] > 0) { card = detail(sel, s, true); acts.push(btn('DRINK', { k: 'drink', c }), btn('DROP ONE', { k: 'dropItem', t: sel })) }
   } else if (sel.startsWith('meat:') && (s.meat?.[sel.slice(5)] ?? 0) > 0 && MEAT[sel.slice(5)]) {
     const m = MEAT[sel.slice(5)]
     card = `<div class="dt def"><div class="dt-header"><h4 style="color:${m.color}">${m.name}</h4><span class="dt-rarity">AID</span></div><div class="art-box">${SVG_AID}</div><div class="g">${cell('HP', '+' + m.hp)}${cell('HUNGER', '+' + (m.food ?? 0))}${cell('CARRIED', s.meat[sel.slice(5)], true)}</div></div>`
-    acts.push(btn('EAT', { k: 'eat', c: sel.slice(5) }))
+    acts.push(btn('EAT', { k: 'eat', c: sel.slice(5) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
   } else if (sel.startsWith('snack:') && (s.snacks?.[sel.slice(6)] ?? 0) > 0 && SNACKS[sel.slice(6)]) {
     const v = SNACKS[sel.slice(6)]
     card = `<div class="dt def"><div class="dt-header"><h4>${v.name}</h4><span class="dt-rarity">${v.drink ? 'DRINK' : 'FOOD'}</span></div><div class="art-box">${SVG_AID}</div><div class="g">${v.drink ? cell('THIRST', '+' + v.thirst) : cell('HUNGER', '+' + v.hunger)}${cell('CARRIED', s.snacks[sel.slice(6)], true)}</div></div>`
-    acts.push(btn(v.drink ? 'DRINK' : 'EAT', { k: 'snack', c: sel.slice(6) }))
-  } else if ((sel === 'ammo' || sel === 'shells') && s[sel] > 0) card = detail(sel, s, true)
-  else if (sel === 'bobbypin' && s.bobbypins > 0) card = detail(sel, s, true)
+    acts.push(btn(v.drink ? 'DRINK' : 'EAT', { k: 'snack', c: sel.slice(6) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
+  } else if ((sel === 'ammo' || sel === 'shells') && s[sel] > 0) { card = detail(sel, s, true); acts.push(btn('DROP A BOX', { k: 'dropItem', t: sel })) }
+  else if (sel === 'bobbypin' && s.bobbypins > 0) { card = detail(sel, s, true); acts.push(btn('DROP ONE', { k: 'dropItem', t: sel })) }
   if (!card) { card = detail(eqKey, s, true); acts = eqKey !== 'fists' ? [btn('DROP ONE', { k: 'drop', w: eqKey })] : [] }
   const bar = acts.length ? `<div class="acts">${acts.join('')}</div>` : ''
   const i = card.lastIndexOf('</div>')

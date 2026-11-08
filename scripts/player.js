@@ -11,7 +11,7 @@ import { strike } from './lib/breakables.js'
 import { startFishing, handleFishingClick, onFishNibble, onFishBite, finishFishingCatch, cancelFishing } from './lib/fishing.js'
 import { fire as fireBullets, show as showBullets } from './lib/ballistics.js'
 import { swing3, fire3 } from './lib/body3.js'
-import { dropLoot, rollLoot, spawnWeapon, poolOf } from './lib/loot.js'
+import { dropLoot, rollLoot, spawnWeapon, poolOf, spawnRemains } from './lib/loot.js'
 import { becomeCorpse } from './lib/l5-hostile.js'
 import { markKill } from './lib/witness.js'
 import { repKill } from './lib/rep.js'
@@ -647,6 +647,21 @@ export function pumpRack(ctx) {
 function invAction(ctx, d) {
   const s = ctx.self.state
   if (d.k === 'close') { s.invOpen = false; return }
+  if (d.k === 'dropItem') { // anything that isn't a weapon: taken out of the bag as its pickup token, into a canvas bag at your feet (looted back with E)
+    const t = String(d.t || ''); let tok = null
+    if (t.startsWith('cloth:')) { const bag = s.clothes ? s.clothes.split(',').filter(Boolean) : [], i = bag.indexOf(t); if (i >= 0) { bag.splice(i, 1); s.clothes = bag.join(','); tok = t } }
+    else if (t.startsWith('almond:')) { const k = AW_KEY[t.slice(7)]; if (k && s[k] > 0) { s[k] -= 1; tok = t } }
+    else if (t.startsWith('meat:')) { const c = t.slice(5); if ((s.meat?.[c] ?? 0) > 0) { s.meat = { ...s.meat, [c]: s.meat[c] - 1 }; tok = t } }
+    else if (t.startsWith('snack:')) { const c = t.slice(6); if ((s.snacks?.[c] ?? 0) > 0) { s.snacks = { ...s.snacks, [c]: s.snacks[c] - 1 }; tok = c } }
+    else if (t === 'ammo' || t === 'shells') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= 1) { s[t] = Math.max(0, s[t] - per); tok = t } }
+    else if (t === 'bobbypin') { if (s.bobbypins > 0) { s.bobbypins -= 1; tok = 'bobbypin' } }
+    if (!tok) return
+    const f = ctx.self.feetPosition, fw = walkOf(ctx).fwd ?? { x: 0, z: -1 }, at = { x: f.x + fw.x * 0.8, z: f.z + fw.z * 0.8 }
+    const near = ctx.query({ tags: ['remains'], center: { x: at.x, y: f.y, z: at.z }, radius: 1.2 }).find((r) => r.state?.name === 'Dropped bag')
+    if (near) { const o = ctx.getObject(near.id); if (o) o.state.items = [o.state.items, tok].filter(Boolean).join(',') } // one bag piles up what you drop in one spot
+    else spawnRemains(ctx, at, [tok], 'Dropped bag')
+    sound(ctx, 'gun-raise-cloth-rustle', 0.5, true); return
+  }
   if (d.k === 'sel') { s.invSel = String(d.t || '').slice(0, 80); return }
   if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc'].includes(d.t) ? d.t : 'all'; return }
   if (d.k === 'sort') { s.invSort = ['name', 'dam', 'wg', 'cnd'].includes(d.s) ? d.s : 'name'; return }

@@ -22,6 +22,15 @@ export function geometry(ctx) {
     ctx.color("oklch(0.82 0.1 85)"); box(-0.035, H - 0.2, D, 0.035, H - 0.14, D + 0.02); // latch
     return;
   }
+  if (kind === "sack") { // a dropped canvas duffel lying on its side: a rounded tube, end caps, two straps and a zip line
+    ctx.smooth(); ctx.roughness(0.95); const M = hi ? 14 : 7;
+    ctx.color("oklch(0.5 0.05 95)");
+    tube(ctx, [[-0.3, 0.13, 0], [-0.26, 0.15, 0.01], [0, 0.16, 0], [0.26, 0.15, -0.01], [0.3, 0.13, 0]], [0.02, 0.13, 0.15, 0.13, 0.02], M, [1, 0.8]);
+    ctx.color("oklch(0.3 0.03 80)");
+    for (const x of [-0.12, 0.12]) tube(ctx, [[x, 0.005, -0.16], [x, 0.13, -0.175], [x, 0.29, 0], [x, 0.13, 0.175], [x, 0.005, 0.16]], [0.012, 0.012, 0.012, 0.012, 0.012], 5);
+    if (hi) { ctx.color("oklch(0.25 0.01 250)"); tube(ctx, [[-0.22, 0.285, -0.03], [0.22, 0.285, -0.03]], [0.006, 0.006], 4); tube(ctx, [[0.0, 0.29, -0.03], [-0.02, 0.36, 0.05], [0.02, 0.4, 0.12]], [0.01, 0.01, 0.01], 5); } // zip and a carry handle flopped over
+    return;
+  }
   // a body, seen from above: slumped torso, head, limbs splayed. The head end points -Z.
   ctx.smooth(); ctx.roughness(0.7);
   const lurker = kind === "lurker";

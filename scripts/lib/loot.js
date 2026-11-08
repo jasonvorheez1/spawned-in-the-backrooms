@@ -63,7 +63,7 @@ export function spawnCrate(ctx, c, pool = "l0") {
 }
 
 export function spawnRemains(ctx, pos, items, name = "Remains") {
-  ctx.spawn({ tags: ["container", "remains"], feetPosition: { x: pos.x, y: 0.02, z: pos.z }, rotation: ctx.random() * 360, lifetime: 3600, primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: name.startsWith("Lurker") ? "lurker" : "smiler" } }, state: { name, items: items.join(",") } });
+  ctx.spawn({ tags: ["container", "remains"], feetPosition: { x: pos.x, y: 0.02, z: pos.z }, rotation: ctx.random() * 360, lifetime: 3600, primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: name === "Dropped bag" ? "sack" : name.startsWith("Lurker") ? "lurker" : "smiler" } }, state: { name, items: items.join(",") } });
 }
 
 // What a dead critter NPC (M.E.G. agent, survivor) was wearing, as cloth tokens of its exact garments: looting them strips the body
