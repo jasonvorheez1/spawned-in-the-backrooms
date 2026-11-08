@@ -9,6 +9,7 @@ import { wardrobe } from './wardrobe-ui.js'
 import { mainMenu } from './main-menu-ui.js'
 import { pickUi } from './lockpick-ui.js'
 import { spamUi } from './spamton-ui.js'
+import { spamArenaUi } from './spamton-arena-ui.js'
 import { lootUi } from './loot-ui.js'
 import { talkUi } from './talk-ui.js'
 import { buildUi } from './build-ui.js'
@@ -339,5 +340,5 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>
 
-</div>${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${talkUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
+</div>${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
 }
