@@ -9,6 +9,8 @@ import { takeToken } from './player.js'
 import { talk as service } from './interact.js'
 import { skillsOf, SKILLS } from './lib/stats.js'
 import { describe } from './lib/items.js'
+import { addressFor, saysName } from './lib/address.js'
+import { lineFor } from './lib/personality.js'
 
 const getStartersLib = (ctx) => ((ctx.session ??= {}).startersP ??= import('./lib/npc-starters.js'))
 
@@ -19,15 +21,16 @@ const HI = (n, mood) => mood < -20 ? [`you again.`, `${n}. keep walking.`] : moo
 // once a second: someone who knows you looks up when you come close (once every 3 min each); people who know you tell the ones beside them
 function social(ctx, ses) {
   const now = ctx.now(); if (now < (ses.socAt ?? 0)) return; ses.socAt = now + 1000
-  const me = ctx.self, k = keyOf(me), name = me.displayName ?? 'you', hi = (ses.hiAt ??= {})
+  const me = ctx.self, k = keyOf(me), hi = (ses.hiAt ??= {})
   const near = ctx.query({ tags: ['npc'], radius: 8 })
   for (const row of near) {
     const o = ctx.getObject(row.id); if (!o || o.state?.dead) continue
     const mem = o.state.mem?.[k]
-    if (mem && !ctx.self.state.talkWith && flat(o.feetPosition, me.feetPosition) < 3.5 && now - (hi[o.id] ?? -1e9) > 180000 && now - (o.state.line?.at ?? 0) > 4000) {
-      hi[o.id] = now; const r = o.state.rapport?.[k] ?? 0, lines = HI(name, r)
-      o.state.talkTo = me.id; o.state.talkAt = now; say(ctx, o, lines[Math.floor(ctx.random() * lines.length)], r < -20 ? 'annoyed' : 'happy')
-    }
+    const dd = flat(o.feetPosition, me.feetPosition), quiet = now - (o.state.line?.at ?? 0) > 4000 && !ctx.self.state.talkWith && !o.state.hostile && !o.state.fleeing
+    if (mem && quiet && dd < 3.5 && now - (hi[o.id] ?? -1e9) > 180000) {
+      hi[o.id] = now; const r = o.state.rapport?.[k] ?? 0
+      o.state.talkTo = me.id; o.state.talkAt = now; say(ctx, o, r < -20 ? HI(addressFor(o, me, mem), r)[0] : lineFor(o, 'hi', addressFor(o, me, mem)), r < -20 ? 'annoyed' : 'happy')
+    } else if (quiet && dd < 5) react(ctx, ses, o, me, mem, dd, now)
     if (mem?.notes?.length && ctx.random() < 0.02) for (const r2 of near) { // gossip: one thing they know about you, passed on as hearsay
       if (r2.id === o.id || flat(r2.feetPosition, o.feetPosition) > 4) continue
       const b = ctx.getObject(r2.id); if (!b || b.state?.dead) continue
@@ -36,6 +39,17 @@ function social(ctx, ses) {
       b.state.mem = { ...(b.state.mem ?? {}), [k]: { ...bm, notes: [...(bm.notes ?? []), `heard: ${n}`].slice(-6) } }; break
     }
   }
+}
+// what they notice about you, each in their own temperament: a drawn weapon, your wounds, you creeping, you crowding them; once a minute per kind per person
+function react(ctx, ses, o, me, mem, dd, now) {
+  const st = me.state, ra = (ses.react ??= {}), hpF = (st.hp ?? 100) / (st.maxHp ?? 100)
+  const kind = !st.sheathed && st.equipped && st.equipped !== 'fists' && dd < 4.5 ? 'drawn' : hpF < 0.35 && dd < 4.5 ? 'hurt' : st.crouch && dd < 3 ? 'sneak' : dd < 1.1 ? 'close' : null
+  if (!kind) return
+  const key = o.id + ':' + kind; if (now - (ra[key] ?? -1e9) < 60000) return
+  if (now - (ses.reactAny ?? -1e9) < 6000) return // one voice at a time near you
+  ra[key] = now; ses.reactAny = now
+  o.state.talkTo = me.id; o.state.talkAt = now
+  say(ctx, o, lineFor(o, kind, addressFor(o, me, mem)), kind === 'drawn' ? 'scared' : kind === 'hurt' ? 'calm' : 'annoyed')
 }
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v))
 const note = (ctx, text) => { ctx.self.state.notice = { text, at: ctx.now() } }
@@ -96,6 +110,7 @@ function send(ctx, d) {
   const system = systemPrompt({ it, place: ctx.self.place, pl: ctx.self, rapport: rapportOf(ctx, it), following: it.state?.follow === ctx.self.id })
   const message = userMessage(hist, text, ctx.self.displayName ?? 'Wanderer')
   logLine(ctx, it, 'p', text)
+  if (saysName(text, ctx.self.displayName)) (ses.toldName ??= {})[it.id] = true // they introduced themselves: the reply's memory write keeps it
   it.state.talkAt = now; it.state.talkTo = ctx.self.id
   ctx.job('llm:chat', { system, message, model: T.model }, 'heard', { id: it.id })
   // the wait for a reply is filled at once: a short thinking sound in their own voice (one of three, cached per character after first use)
@@ -122,7 +137,8 @@ export function heard(ctx, r, pay) {
   { const m0 = it.state.mem?.[key] ?? { met: 0, notes: [] }, ses2 = ctx.self.session, fresh = ses2.memWith !== it.id
     if (fresh) ses2.memWith = it.id
     const notes = o.remember ? [...(m0.notes ?? []).filter((n) => n !== o.remember), o.remember].slice(-6) : (m0.notes ?? [])
-    it.state.mem = { ...(it.state.mem ?? {}), [key]: { met: m0.met + (fresh ? 1 : 0), notes, at: now } } }
+    const named = !!m0.named || !!ctx.self.session.toldName?.[it.id]
+    it.state.mem = { ...(it.state.mem ?? {}), [key]: { met: m0.met + (fresh ? 1 : 0), notes, at: now, named } } }
   // a spoken yes to come along counts even when the model forgot to mark it: their words are the promise
   const ESCORT = /\b(follow me|stay (close|behind me)|come with me|i('ll| will| can) (walk|take|lead|escort|show) you|let'?s (go|move)|we move|lead the way|i'?m coming with you|right behind you)\b/i
   if (intent === 'none' && line && ESCORT.test(line) && !/\b(won'?t|not going|no way|can'?t)\b.{0,20}\b(come|walk|go|lead)\b/i.test(line)) intent = 'join'

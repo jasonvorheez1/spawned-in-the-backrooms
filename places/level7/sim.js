@@ -18,7 +18,7 @@ export const cadence = "2s";
 
 // Tripo models for the props (Savi, Nov 7): each fits a layout box; breakables take tag + { mat, hp, maxHp } (lib/breakables.js)
 const GLB = {
-  fort: "/cdn/value.93d4854ba6746ab4ed61d44496894c9b50026989d30f6b6c0ced8a51c8b81403.glb", circle: "/cdn/value.4de05de0a92bd78ed14fe0b2955f6b4fe0ecd0ec4e7c9d870956ee666aec2edd.glb", skeleton: "/cdn/value.2de5857513c7f3b7e1c18aae534bd2f525f58f06ca035b9e09fdf46a98695635.glb", // art/level7/build.py
+  fort: "/cdn/value.ae43401a6490aca8dc769b1307703673ac02e403222b4ddf4f0782d076e99ba1.glb", circle: "/cdn/value.4de05de0a92bd78ed14fe0b2955f6b4fe0ecd0ec4e7c9d870956ee666aec2edd.glb", skeleton: "/cdn/value.2de5857513c7f3b7e1c18aae534bd2f525f58f06ca035b9e09fdf46a98695635.glb", // art/level7/build.py
   dresser: "/cdn/value.6b73846286fe58c95018a876f85d847e8af3c7a0187d06a8838072345f9ca49e.glb",
   sideboard: "/cdn/value.4594d9a21e6d7e2e5f94a71011243747c652c77035a1fc981fbcf4bee983324f.glb",
   floorlamp: "/cdn/value.0871d1626b929961d73cb28c05f82070ad822c5cc2e6b8deec5046248fb4086d.glb",
@@ -86,7 +86,8 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 17; // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
+const V = 23;
+// 16 // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
@@ -286,7 +287,7 @@ function lay(ctx) {
   box(ctx, "l7-wall-n3", 0, FY + 2.1, -3.05, 1.6, 0.6, 0.3, CONCRETE); // Door lintel North
   box(ctx, "l7-wall-s1", -1.9, FY, 3.05, 2.6, 2.7, 0.3, PAPER);
   box(ctx, "l7-wall-s2", 1.9, FY, 3.05, 2.6, 2.7, 0.3, PAPER);
-  box(ctx, "l7-wall-s3", 0, FY + 2.2, 3.05, 1.2, 0.5, 0.3, CONCRETE); // Door lintel South
+  box(ctx, "l7-wall-s3", 0, FY + 2.5, 3.05, 1.2, 0.2, 0.3, CONCRETE); // Door lintel South: high enough to clear your head on the first steps
 
   // White vertical beadboard wainscoting paneling along the lower walls (matching the Wikidot photo!)
   for (const [id, x, z, w, d] of [
@@ -341,17 +342,17 @@ function lay(ctx) {
   // 4) Draped white fabric sheet hanging off the left bookcase edge (as in the photo)
 
   // Staircase ascending into the darkness back to Level 6 (South)
-  for (let k = 0; k < 6; k++) {
-    box(ctx, `l7-step-${k}`, 0, FY + k * 0.32, 3.4 + k * 0.32, 1.2, 0.32, 0.34, { ...CONCRETE, color: "oklch(0.29 0.008 240)" });
+  for (let k = 0; k < 6; k++) { // 0.26 m risers: a body climbs 0.3 at most
+    box(ctx, `l7-step-${k}`, 0, FY + k * 0.26, 3.4 + k * 0.3, 1.2, 0.26, 0.42, { ...CONCRETE, color: "oklch(0.29 0.008 240)" });
   }
-  box(ctx, "l7-shaft-e", 0.8, FY, 4.4, 0.4, 3.6, 2.4, CONCRETE);
-  box(ctx, "l7-shaft-w", -0.8, FY, 4.4, 0.4, 3.6, 2.4, CONCRETE);
-  box(ctx, "l7-shaft-top", 0, FY + 2.7, 4.4, 1.2, 1.0, 2.4, CONCRETE);
-  box(ctx, "l7-shaft-end", 0, FY, 5.7, 1.2, 3.6, 0.3, { color: "oklch(0.01 0 0)" });
+  box(ctx, "l7-shaft-e", 0.8, FY, 4.4, 0.4, 4.0, 2.4, CONCRETE);
+  box(ctx, "l7-shaft-w", -0.8, FY, 4.4, 0.4, 4.0, 2.4, CONCRETE);
+  box(ctx, "l7-shaft-top", 0, FY + 3.1, 4.4, 1.2, 1.0, 2.4, CONCRETE); // headroom over the climbing steps
+  box(ctx, "l7-shaft-end", 0, FY, 5.7, 1.2, 4.0, 0.3, { color: "oklch(0.01 0 0)" });
 
   // Transition trigger to return to Level 6
   ctx.spawn("l7-back", {
-    feetPosition: { x: 0, y: FY + 1.2, z: 5.1 },
+    feetPosition: { x: 0, y: FY + 0.3, z: 4.3 }, // met on the third step, before the shaft's lid at FY + 2.7 meets your head
     physics: { body: "static", trigger: true },
     primitive: { kind: "box", width: 1.2, height: 2.2, depth: 0.8 },
     visible: false,
@@ -825,6 +826,7 @@ function lay(ctx) {
   // =========================================================================
   // 8. LEVEL 7 IS A ROOM: Concrete ceiling over the whole sea & megalithic pillars
   // =========================================================================
+  const PILLAR = { color: "oklch(0.36 0.01 230)", roughness: 0.9, texture: "cdn/texture-water-stained-streaked-old-poured-concrete-column.png", repeat: [0.12, 0.08], wrap: "repeat" };
   const CEIL = { color: "oklch(0.3 0.008 240)", roughness: 0.95, texture: "cdn/texture-smooth-cold-poured-concrete-wall.png", repeat: [0.25, 0.25], wrap: "repeat" };
   ctx.spawn("l7-sky-ceiling", { feetPosition: { x: 0, y: 34, z: -100 }, primitive: { kind: "box", width: 1600, height: 3, depth: 1600 }, material: CEIL, castShadow: false });
   // the house hangs from the ceiling on one concrete column standing on its ridge (ridge at FY + 4.42)
@@ -844,7 +846,10 @@ function lay(ctx) {
     [-140, -160, 14], [120, -230, 18], [-60, -330, 22],
     [210, -60, 16], [-230, -40, 16], [40, -420, 24],
   ].forEach(([x, z, w], i) =>
-    ctx.spawn(`l7-pillar-${i}`, { feetPosition: { x, y: -30, z }, primitive: { kind: "box", width: w, height: 64, depth: w }, material: CEIL, castShadow: false })
+    ctx.spawn(`l7-pillar-${i}`, { feetPosition: { x, y: -30, z }, primitive: { kind: "cylinder", radiusTop: w * 0.5, radiusBottom: w * 0.56, height: 64, radialSegments: 20 }, material: PILLAR, castShadow: false, children: [
+      { feetPosition: { x: 0, y: 29.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: w * 0.535, radiusBottom: w * 0.545, height: 2.2, radialSegments: 20 }, material: { color: "oklch(0.2 0.03 160)", roughness: 0.5, texture: "cdn/texture-slimy-dark-green-algae-tide-line-on-wet-concrete.png", repeat: [0.3, 0.5], wrap: "repeat" } }, // the tide band: slime where the sea licks it
+      { feetPosition: { x: 0, y: 61.5, z: 0 }, primitive: { kind: "cylinder", radiusTop: w * 0.9, radiusBottom: w * 0.5, height: 2.5, radialSegments: 20 }, material: PILLAR }, // a flared capital where it meets the ceiling
+    ] })
   );
 
   // =========================================================================
@@ -892,7 +897,7 @@ export function tick(ctx) {
   if ((s.builtV ?? 0) < V) {
     for (const id of Object.keys(ctx.place.objects)) if (GONE.includes(id) || /^l7-(plank|post)-/.test(id)) ctx.destroy(id);
     // rooms built before the fort moved still hold its old pieces (and the worshippers, standing where it was): clear them so the new ones are laid and the people come back
-    for (const id of Object.keys(ctx.place.objects)) if (/^(l7x-|l7h-|l7-(diving-bell$|from-l8$|wall-|wainscot-|ceil$|hearth$|pedestal$|wirerack$|cloth-drape$|painting$|vase|dresser-top$|fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$))/.test(id)) ctx.destroy(id);
+    for (const id of Object.keys(ctx.place.objects)) if (/^(l7x-|l7h-|l7-(from-l8$|wall-|wainscot-|step-|back$|shaft-|ceil$|hearth$|pedestal$|wirerack$|cloth-drape$|painting$|vase|dresser-top$|fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$))/.test(id)) ctx.destroy(id);
     s.npcGone = {};
     lay(ctx);
     s.builtV = V;
