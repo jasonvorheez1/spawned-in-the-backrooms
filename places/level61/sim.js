@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 19;
+const V = 20;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb";
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -18,9 +18,11 @@ const SNACK = "/cdn/value.50b5fa3844cf9c705ca675660ef22ddb556c1cf0f31ad1cd69deeb
 const SODA = "/cdn/value.4db3afe09f392fef7c9d80e531484862384aef0ea5bcba295dc62b57197b659f.png";
 
 const T = (name, rep) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
-const TERRAZZO = { ...T("polished-cream-terrazzo-mall-floor-with-flecks", 0.3), color: "oklch(0.9 0.02 80)", roughness: 0.35 };
+const TERRAZZO = { ...T("polished-cream-terrazzo-mall-floor-with-flecks", 0.6), color: "oklch(0.9 0.02 80)", roughness: 0.35 };
 const PLASTER = { ...T("cream-painted-plaster-wall", 0.5), color: "oklch(0.93 0.02 85)", roughness: 0.85 };
-const CEIL = { ...T("acoustic-drop-ceiling-tiles-water-stained", 0.4), color: "oklch(0.95 0.01 90)" };
+const CEIL = { ...T("white-2x2-acoustic-drop-ceiling-tiles-with-aluminum-t-bar-grid", 0.83), color: "oklch(0.96 0.01 90)", roughness: 0.9 };
+const WAINSCOT = { ...T("glossy-pastel-teal-square-ceramic-wall-tiles-with-white-grout", 1), color: "oklch(0.95 0.02 190)", roughness: 0.18 };
+const BRASS = { color: "oklch(0.78 0.11 85)", metalness: 0.9, roughness: 0.25 };
 const WOOD = { ...T("worn-hardwood-grain", 0.6), color: "oklch(0.55 0.08 55)", roughness: 0.6 };
 const DARKWOOD = { ...T("worn-hardwood-grain", 0.6), color: "oklch(0.3 0.05 40)", roughness: 0.5 };
 const CHECK = { ...T("black-and-white-checkerboard-vinyl-floor-tiles", 0.5), roughness: 0.4 };
@@ -142,7 +144,9 @@ function lay(ctx) {
   for (const [i, sx] of [-18, 0, 18].entries()) {
     for (const [j, sz] of [-9, 9].entries()) {
       const k = `${i}${j}`;
-      box(`l61-sky-${k}`, sx, HH - 0.02, sz, 9, 0.05, 7, { color: "oklch(0.02 0 0)", roughness: 0.05, metalness: 0.4 }, { physics: undefined });
+      box(`l61-sky-${k}`, sx, HH - 0.02, sz, 9, 0.05, 7, { color: "oklch(0.97 0.02 230)", emissive: "oklch(0.95 0.03 225)", emissiveIntensity: 1.3, roughness: 0.6 }, { physics: undefined });
+      for (const m of [-1.5, 1.5]) box(`l61-skym-${k}-x${m}`, sx + m * 1.5, HH - 0.1, sz, 0.08, 0.08, 7, { color: "oklch(0.86 0.01 90)", metalness: 0.5, roughness: 0.4 }, { physics: undefined });
+      box(`l61-skym-${k}-z`, sx, HH - 0.1, sz, 9, 0.08, 0.08, { color: "oklch(0.86 0.01 90)", metalness: 0.5, roughness: 0.4 }, { physics: undefined });
       for (const [n, f] of [[0, [0, -3.5, 9.4, 0.25]], [1, [0, 3.5, 9.4, 0.25]], [2, [-4.5, 0, 0.25, 7.2]], [3, [4.5, 0, 0.25, 7.2]]]) {
         box(`l61-skyf-${k}-${n}`, sx + f[0], HH - 0.2, sz + f[1], f[2], 0.2, f[3], { color: "oklch(0.86 0.01 90)", metalness: 0.5, roughness: 0.4 }, { physics: undefined });
       }
@@ -154,6 +158,21 @@ function lay(ctx) {
   wallZ("l61-ws", HD, -HW, HW, [[-14, 3, 3], [14, 2.2, 2.6]], HH, PLASTER);
   wallX("l61-ww", -HW, -HD, HD, [[0, 1.6, 2.3]], HH, PLASTER);
   wallX("l61-we", HW, -HD, HD, [[-9, 2.2, 2.7]], HH, PLASTER);
+
+  // glossy tile wainscot under the bands, broken at every doorway; brass divider strips set in the terrazzo
+  const wain = (id, along, fixed, a0, a1, holes) => {
+    let a = a0, k = 0;
+    for (const [c, w] of [...holes].sort((p, q) => p[0] - q[0])) { const l = c - w / 2; if (l > a) seg(a, l); a = c + w / 2; }
+    if (a1 > a) seg(a, a1);
+    function seg(u, v) { const m = (u + v) / 2, len = v - u; box(`${id}-${k++}`, along === "x" ? m : fixed, 0, along === "x" ? fixed : m, along === "x" ? len : 0.05, 1.0, along === "x" ? 0.05 : len, WAINSCOT, { physics: undefined }); }
+  };
+  wain("l61-wain-n", "x", -HD + 0.17, -HW + 0.2, HW - 0.2, [[-21, 4], [-7, 4], [7, 4], [21, 4]]);
+  wain("l61-wain-s", "x", HD - 0.17, -HW + 0.2, HW - 0.2, [[-14, 3], [14, 2.2]]);
+  wain("l61-wain-w", "z", -HW + 0.17, -HD + 0.2, HD - 0.2, [[0, 1.6], [-21, 0.01]]);
+  wain("l61-wain-e", "z", HW - 0.17, -HD + 0.2, HD - 0.2, [[-9, 2.2]]);
+  let bs = 0;
+  for (let x = -28; x <= 28; x += 4) for (const [z0, z1] of (Math.abs(x) < 7.5 ? [[-HD, -7.2], [7.2, HD]] : [[-HD, HD]])) box(`l61-brass-${bs++}`, x, -0.003, (z0 + z1) / 2, 0.035, 0.006, z1 - z0, BRASS, { physics: undefined, receiveShadow: true });
+  for (let z = -20; z <= 20; z += 4) for (const [x0, x1] of (Math.abs(z) < 7.5 ? [[-HW, -7.2], [7.2, HW]] : [[-HW, HW]])) box(`l61-brass-${bs++}`, (x0 + x1) / 2, -0.003, z, x1 - x0, 0.006, 0.035, BRASS, { physics: undefined, receiveShadow: true });
 
   for (const [n, y, c] of [[0, 1.0, "oklch(0.62 0.09 190)"], [1, 1.2, "oklch(0.74 0.11 350)"]]) {
     for (const s of [-1, 1]) box(`l61-band-z${n}${s}`, 0, y, s * (HD - 0.17), 2 * HW - 0.4, 0.12, 0.04, { color: c, roughness: 0.5 }, { physics: undefined });
