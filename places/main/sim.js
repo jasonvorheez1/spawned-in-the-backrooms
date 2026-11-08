@@ -152,12 +152,6 @@ export function tick(ctx) {
     s.nextWeapon = now + (W.pickupRespawn * 1000) / 4;
   }
   // the creator: no ammo rounds lying around Level 0 (2026-11-08). Ammo only turns up inside containers and on bodies.
-  if (false) {
-    const fill = s.ammoSeeded ? 1 : W.ammo.floor - ammo;
-    for (let i = 0; i < fill; i++) { const c = cell(ctx); if (c) spawnAmmo(ctx, c); }
-    s.ammoSeeded = true;
-    s.nextAmmo = now + (W.ammo.respawn * 1000) / 4;
-  }
   const smilers = ctx.query({ tags: ["smiler"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((m) => !m.state?.dead).length;
   if (smilers < L.smilers && now >= (s.nextSmiler ?? 0)) {
     const fill = s.smilersSeeded ? 1 : L.smilers - smilers;
