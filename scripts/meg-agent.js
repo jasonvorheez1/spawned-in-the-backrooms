@@ -131,21 +131,43 @@ function inView(ctx, me, m, f, d) {
   return now - v.saw < 5000;
 }
 function pickTarget(ctx, me, m) {
-  const p = me.feetPosition;
+  const p = me.feetPosition, now = ctx.now();
   let best = null, bd = G.sight;
   const fighter = (!me.state.faction5 || me.state.faction5 === "hk" || me.state.follow) && !me.state.mjguest; // hotel guests are no fighters: a hound is something to run from, but anything on top of them gets the weapon
-  if (!me.state.mjguest) for (const tag of HOSTILE) for (const f of ctx.query({ tags: [tag], radius: fighter ? G.sight : 5 })) {
-    if (DEAD(f) || f.tags?.includes?.("l5staff") || f.id === me.id || (me.state.faction && f.state?.faction === me.state.faction)) continue; // a wretch never counts its own den
-    const d = flat(f.feetPosition, p); if (d >= bd || !inView(ctx, me, m, f, d)) continue; // a creature behind (or stuck in) a wall is not a target
-    bd = d; best = f;
+  if (!me.state.mjguest) {
+    for (const f of ctx.query({ anyTags: HOSTILE, radius: fighter ? G.sight : 5 })) {
+      if (DEAD(f) || f.tags?.includes?.("l5staff") || f.id === me.id || (me.state.faction && f.state?.faction === me.state.faction)) continue; // a wretch never counts its own den
+      const d = flat(f.feetPosition, p);
+      if (d >= bd || !inView(ctx, me, m, f, d)) continue; // a creature behind (or stuck in) a wall is not a target
+      bd = d; best = f;
+    }
   }
   if (me.state.nerve === "frenzied" && !me.state.mjguest) { // anyone close enough: npc or player
-    for (const n of ctx.query({ tags: ["npc"], radius: 12 })) { if (n.state?.dead || (n.state?.hp ?? 1) <= 0 || (me.state.faction && n.state?.faction === me.state.faction)) continue; const d = flat(n.feetPosition, p); if (d < bd) { bd = d; best = n; } }
-    for (const pl of ctx.place.players) { if ((pl.state?.hp ?? 1) <= 0) continue; const d = flat(pl.feetPosition, p); if (d < bd && (d < 4 || inView(ctx, me, m, pl, d))) { bd = d; best = pl; } } // the insane hunt you on sight, not only up close
+    for (const n of ctx.query({ tags: ["npc"], radius: 12 })) {
+      if (n.state?.dead || (n.state?.hp ?? 1) <= 0 || (me.state.faction && n.state?.faction === me.state.faction)) continue;
+      const d = flat(n.feetPosition, p);
+      if (d < bd) { bd = d; best = n; }
+    }
+    for (const pl of ctx.place.players) {
+      if ((pl.state?.hp ?? 1) <= 0) continue;
+      const d = flat(pl.feetPosition, p);
+      if (d < bd && (d < 4 || inView(ctx, me, m, pl, d))) { bd = d; best = pl; }
+    } // the insane hunt you on sight, not only up close
   }
   // a player who attacked the camp: this agent's grudge, or a neighbour's
   const grudges = new Set(Object.keys(me.state.angry ?? {}));
-  for (const n of ctx.query({ tags: ["npc"], radius: 30 })) for (const k of Object.keys(n.state?.angry ?? {})) if (!grudges.has(k) && !(me.state.pardoned?.[k] && !me.state.angry?.[k] && !n.state?.fresh?.[k])) { grudges.add(k); me.state.angry = { ...(me.state.angry ?? {}), [k]: true }; }
+  if (now > (m.grudgeAt ?? 0)) {
+    m.grudgeAt = now + 1500;
+    for (const n of ctx.query({ tags: ["npc"], radius: 30 })) {
+      if (n.id === me.id) continue;
+      for (const k of Object.keys(n.state?.angry ?? {})) {
+        if (!grudges.has(k) && !(me.state.pardoned?.[k] && !me.state.angry?.[k] && !n.state?.fresh?.[k])) {
+          grudges.add(k);
+          me.state.angry = { ...(me.state.angry ?? {}), [k]: true };
+        }
+      }
+    }
+  }
   // a group that has you Vilified (scripts/lib/rep.js) shoots on sight: no provocation needed, and holstering does not calm it
   for (const pl of ctx.place.players) if (!grudges.has(pl.id) && (pl.state?.hp ?? 1) > 0 && isVilified(pl.state, me) && flat(pl.feetPosition, p) < G.sight) { grudges.add(pl.id); me.state.angry = { ...(me.state.angry ?? {}), [pl.id]: true }; ctx.emit("damageNumber", { position: { x: p.x, y: p.y + 2.1, z: p.z }, text: "VILIFIED", color: "#e06050", size: 1.0 }, { audience: { player: pl.id } }); }
   for (const pl of ctx.place.players) {
@@ -442,7 +464,13 @@ export function update(ctx, dt) {
   const fighting = !!(t && flat(t.feetPosition, home) < G.leash);
   if (!fighting && !m.inspect && !lead && !s.mjguest && now > (m.corpseAt ?? 0)) { // no one to fight: notice a dead creature close by that nobody has checked, and go and see
     m.corpseAt = now + 2000; m.seen ??= {};
-    for (const tag of HOSTILE) { const o = ctx.query({ tags: [tag], radius: 14 }).find((c) => corpseOf(c) && !VERMIN(c) && !m.seen[c.id] && !c.state?.inspectUntil && seesIt(ctx, me, c)); /* one looker per body, once checked it stays checked */ if (o) { m.seen[o.id] = true; o.state.inspectUntil = now + 16000; m.inspect = { id: o.id, x: o.feetPosition.x, z: o.feetPosition.z, at: now, phase: "walk", hostile: false }; bark(ctx, me, "found", true); break; } }
+    const o = ctx.query({ anyTags: HOSTILE, radius: 14 }).find((c) => corpseOf(c) && !VERMIN(c) && !m.seen[c.id] && !c.state?.inspectUntil && seesIt(ctx, me, c));
+    if (o) {
+      m.seen[o.id] = true;
+      o.state.inspectUntil = now + 16000;
+      m.inspect = { id: o.id, x: o.feetPosition.x, z: o.feetPosition.z, at: now, phase: "walk", hostile: false };
+      bark(ctx, me, "found", true);
+    }
   }
   if (!fighting && m.inspect && inspect(ctx, me, m, now, dt)) return;
   holster(ctx, me, m, fighting);

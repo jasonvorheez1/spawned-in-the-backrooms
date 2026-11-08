@@ -55,7 +55,7 @@ export function update(ctx, dt) {
   const safeAt = L6 || L21 ? () => false : L3 ? (x, z) => zoneAt3(x, z) === "gamma" : L2 ? (x, z) => zoneAt2(x, z) === "camp" : L5 ? (x, z) => zoneAt5(x, z)?.id !== "boiler" : (x, z) => safeZone(zoneAt(x, z));
   const now = ctx.now(), dark = ctx.place.state.flicker === "dark", mem = (ctx.self.session.m ??= {});
   const players = ctx.place.players.filter((p) => !safeAt(p.feetPosition.x, p.feetPosition.z) && !(p.state?.downAt && now - p.state.downAt < 4500));
-  const byId = (id) => players.find((p) => p.id === id) ?? ctx.place.players.find((p) => p.id === id) ?? ctx.query({ tags: ["npc"], radius: 80, center: { x: 0, y: 0, z: 0 } }).find((n) => n.id === id) ?? null;
+  const byId = (id) => players.find((p) => p.id === id) ?? ctx.place.players.find((p) => p.id === id) ?? ctx.getObject(id) ?? null;
   const allHounds = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   const lead = allHounds.reduce((a, h) => (!a || String(h.id) < String(a.id) ? h : a), null); // one hound steps the whole pack; the rest stand down
   if (lead && lead.id !== ctx.self.id && String(ctx.self.id) > String(lead.id)) { ctx.sleep(1); return; }
@@ -95,13 +95,16 @@ export function update(ctx, dt) {
     if (now < (m.howlUntil ?? 0)) { h.velocity = { x: 0, y: (h.velocity?.y ?? 0) - 20 * dt, z: 0 }; continue; } // rearing back, jaw open
     const sight = L.houndSight * mu.sight * (dark ? L.houndSightFlicker : 1);
     let prey = null, best = Infinity;
-    for (const p of [...players, ...ctx.query({ tags: ["npc"], radius: sight, center: pos }).filter((n) => !n.state?.dead && !safeAt(n.feetPosition.x, n.feetPosition.z))]) { // an npc past a door, in a safe zone, is out of reach // agents are meat too
+    const checkTarget = (p, isNpc) => {
       const d = Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z);
       const loud = (p.state?.sprinting ? L.houndHear : 0) || (dark && p.state?.light ? L.houndHearLight : 0);
-      if (!(d < Math.max(sight, loud) * sn(p) && d < best)) continue;
-      const isNpc = !players.includes(p);
-      if (!sees(ctx, h, p) && (isNpc || !(loud && d < loud * sn(p)))) continue; // walls block sight; only a player's noise carries through
+      if (!(d < Math.max(sight, loud) * sn(p) && d < best)) return;
+      if (!sees(ctx, h, p) && (isNpc || !(loud && d < loud * sn(p)))) return;
       best = d; prey = p;
+    };
+    for (const p of players) checkTarget(p, false);
+    for (const n of ctx.query({ tags: ["npc"], radius: sight, center: pos })) {
+      if (!n.state?.dead && !safeAt(n.feetPosition.x, n.feetPosition.z)) checkTarget(n, true);
     }
     if (st.horde) { const hp = players.find((p) => p.id === st.horde); if (hp) { prey = hp; best = Math.hypot(hp.feetPosition.x - pos.x, hp.feetPosition.z - pos.z); } } // a blackout horde hunts its player
     if (L3) { // brigades: share the spotter's prey, and lie in wait in dead ends
@@ -112,7 +115,11 @@ export function update(ctx, dt) {
       heard(ctx, { clip: SND("hound-bark-howl-call"), position: pos, volume: 1, maxDistance: 60 });
       for (const o of ctx.query({ tags: ["hound"], radius: T.callRadius, center: pos })) if (o.id !== h.id) { const om = (mem[o.id] ??= {}); om.pack = prey.id; om.packUntil = now + T.callHold * 1000; om.howled = true; }
     }
-    if (!prey && m.pack && now < m.packUntil) { prey = players.find((p) => p.id === m.pack) ?? ctx.query({ tags: ["npc"], radius: 60, center: pos }).find((n) => n.id === m.pack && !n.state?.dead) ?? null; if (prey && !sees(ctx, h, prey)) { m.lastSeen ??= { x: prey.feetPosition.x, z: prey.feetPosition.z }; prey = null; } if (prey) best = Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z); }
+    if (!prey && m.pack && now < m.packUntil) {
+      prey = players.find((p) => p.id === m.pack) ?? (() => { const n = ctx.getObject(m.pack); return n && !n.state?.dead ? n : null; })() ?? null;
+      if (prey && !sees(ctx, h, prey)) { m.lastSeen ??= { x: prey.feetPosition.x, z: prey.feetPosition.z }; prey = null; }
+      if (prey) best = Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z);
+    }
     if (prey) m.lastSeen = { x: prey.feetPosition.x, z: prey.feetPosition.z, at: now };
     if (L3) {
       if (!prey) { // ambush: crouched in a dead end until someone walks past or turns their back
