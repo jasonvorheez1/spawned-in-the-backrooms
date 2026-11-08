@@ -54,7 +54,8 @@ export const SPECIES = {
   fox:      { noBlush: true, fur: "#f07a2e", belly: "#ffffff", nose: "#231816", ears: "point", earL: 0.34, earTip: "#2c1c18", tail: "bushy", tip: "#ffffff", snout: 0.13, fangs: true, muzzle: true, paw: "#2c1c18" },
   bunny:    { fur: "#f4efe9", belly: "#ffffff", nose: "#ff9fb4", ears: "long", earL: 0.42, tail: "puff", snout: 0.06, buck: true, muzzle: true, earIn: "#ffc2d1" },
   bear:     { fur: "#9a6440", belly: "#e8c79e", nose: "#2a1c18", ears: "round", earL: 0.13, tail: "stub", snout: 0.1, muzzle: true, chunky: true, paw: "#6e4329" },
-  deer:     { fur: "#a8703f", belly: "#f1d4ae", nose: "#2a1612", ears: "leaf", earL: 0.22, tail: "flag", tip: "#ffffff", snout: 0.1, muzzle: true, antlers: true, spots: "#f1d4ae", paw: "#4a2a1c", freck: true },
+  deer:     { fur: "#a8703f", belly: "#f1d4ae", nose: "#2a1612", ears: "leaf", earL: 0.22, tail: "flag", tip: "#ffffff", snout: 0.1, muzzle: true, antlers: true, antler: "#e9d8b4", spots: "#f1d4ae", paw: "#4a2a1c", freck: true },
+  reindeer: { fur: "#8a5a3a", belly: "#f1e0c8", nose: "#e0404c", ears: "leaf", earL: 0.22, tail: "stub", tip: "#f6efe4", snout: 0.1, muzzle: true, antlers: true, antler: "#efe0bd", spots: "#f1e0c8", paw: "#4a2e20", freck: true },
   mouse:    { fur: "#b9b3c2", belly: "#f6eef4", nose: "#ff8fa3", ears: "round", earL: 0.2, earW: 1.5, tail: "thin", snout: 0.08, whisk: true, muzzle: true, earIn: "#ffc2d1" },
   wolf:     { fur: "#4f6f9f", belly: "#a9bfdc", nose: "#16141c", ears: "point", earL: 0.36, earTip: "#26406c", tail: "bushy", tip: "#a9bfdc", snout: 0.12, fangs: true, muzzle: true, paw: "#26406c" },
   raccoon:  { fur: "#8b8a92", belly: "#e9e6ea", nose: "#1c1a20", ears: "point", earL: 0.17, tail: "ringed", tip: "#2a2830", snout: 0.11, muzzle: true, mask: "#2c2a32", paw: "#2c2a32", whisk: true },
@@ -72,11 +73,16 @@ export const SPECIES = {
 
 // the Nov 8 species: the scripted fallback and the first-person hands read these (the Blender heads are the real thing: art/critter-cute/build.py)
 Object.assign(SPECIES, {
-  rat: { ...SPECIES.mouse, fur: "#8a8078", belly: "#d8cfc4", earL: 0.24 }, squirrel: { ...SPECIES.hamster, fur: "#b8683a", belly: "#f4e4cf", tail: "bushy", ears: "point", earL: 0.16, tip: "#f4e4cf" },
-  leopard: { ...SPECIES.tiger, fur: "#e8b24a", belly: "#fff1d4", stripes: undefined, spots: "#2a1c18", tail: "cat" }, jackal: { ...SPECIES.wolf, fur: "#c89a5a", belly: "#f1dcb8", earTip: "#2a1c18", tip: "#2a1c18", paw: "#5a3a22" },
-  badger: { ...SPECIES.skunk, fur: "#5c5864", belly: "#2e2c36", skunk: "#f1ece4", tail: "stub" }, ferret: { ...SPECIES.raccoon, fur: "#c9a47c", belly: "#efe0c8", tail: "otter", tip: "#5a4030" },
-  beaver: { ...SPECIES.otter, fur: "#7a4a2c", belly: "#d8b88c", buck: true }, capybara: { ...SPECIES.koala, fur: "#a07848", belly: "#d8b88a", earIn: "#d8a888", earW: 1 },
-  lop: { ...SPECIES.bunny, fur: "#d8c4a8", ears: "flop", earL: 0.3 }, fennec: { ...SPECIES.fox, fur: "#e8c898", earL: 0.5, earTip: "#7a5a38" },
+  rat: { ...SPECIES.mouse, fur: "#8a8078", belly: "#d8cfc4", nose: "#e8929e", ears: "round", earL: 0.17, earW: 0.95, tail: "thin", snout: 0.12, whisk: true, muzzle: true, earIn: "#f0b8b8" },
+  squirrel: { ...SPECIES.hamster, fur: "#b8683a", belly: "#f4e4cf", tail: "bushy", ears: "point", earL: 0.16, tip: "#f4e4cf" },
+  leopard: { ...SPECIES.tiger, fur: "#e8b24a", belly: "#fff1d4", stripes: undefined, spots: "#2a1c18", tail: "cat" },
+  jackal: { ...SPECIES.wolf, fur: "#c89a5a", belly: "#f1dcb8", earTip: "#2a1c18", tip: "#2a1c18", paw: "#5a3a22" },
+  badger: { fur: "#5c5864", belly: "#2e2c36", nose: "#16141c", ears: "round", earL: 0.11, earTip: "#e8e4dc", tail: "stub", snout: 0.11, muzzle: true, mask: "#2e2c36", cheek: 1.15, face: "#f1ece4" },
+  ferret: { fur: "#c9a47c", belly: "#efe0c8", nose: "#e8929e", ears: "round", earL: 0.09, tail: "otter", tip: "#5a4030", snout: 0.10, muzzle: true, earIn: "#f0c8c0" },
+  beaver: { ...SPECIES.otter, fur: "#7a4a2c", belly: "#d8b88c", buck: true },
+  capybara: { fur: "#a07848", belly: "#d8b88a", nose: "#2a1c18", ears: "round", earL: 0.09, earW: 0.95, tail: "stub", snout: 0.14, muzzle: true, chunky: true, earIn: "#d8a888" },
+  lop: { ...SPECIES.bunny, fur: "#d8c4a8", ears: "flop", earL: 0.3 },
+  fennec: { ...SPECIES.fox, fur: "#e8c898", earL: 0.5, earTip: "#7a5a38" },
 });
 
 // expressions: eyes, mouth, brows, extras
@@ -350,8 +356,17 @@ export function geometry(ctx) {
     // species face marks
     if (patch) { col(patch); for (const s of [-1, 1]) fill(ellipse(s * (EX + 0.01), EY - 0.025, ERU + 0.05, ERV + 0.045, hi ? 24 : 14, s * -0.5), 0.002); }
     if (mask) { col(mask); const pts = []; for (let i = 0; i <= 16; i++) { const t = i / 16, x = lerp(-0.3, 0.3, t); pts.push([x, EY + 0.03 - 0.02 * Math.cos(t * TAU)]); } for (let i = 16; i >= 0; i--) { const t = i / 16, x = lerp(-0.3, 0.3, t); pts.push([x, EY - 0.085 - 0.05 * Math.sin(t * Math.PI) + 0.06 * Math.abs(x) * 2]); } fill(pts, 0.002, 2); }
-    if (sp.face) { col(sp.face); for (const s of [-1, 1]) fill(ellipse(s * 0.12, EY + 0.135, 0.05, 0.03, 14), 0.002); col(sp.tear); for (const s of [-1, 1]) stroke(curve((t) => [s * (EX + 0.01 + 0.01 * t), EY - ERV - 0.01 - 0.12 * t]), [0.03, 0.022], 0.003); }
+    if (sp.face) { col(sp.face); for (const s of [-1, 1]) fill(ellipse(s * 0.12, EY + 0.135, 0.05, 0.03, 14), 0.002); if (sp.tear) { col(sp.tear); for (const s of [-1, 1]) stroke(curve((t) => [s * (EX + 0.01 + 0.01 * t), EY - ERV - 0.01 - 0.12 * t]), [0.03, 0.022], 0.003); } }
     if (sp.freck) { col(mixc(FUR, "#ffffff", 0.45)); for (const [x, y] of [[-0.05, 0.215], [0, 0.23], [0.05, 0.215], [-0.025, 0.25], [0.025, 0.25]]) fill(ellipse(x, EY + y - 0.04, 0.011, 0.011, 8), 0.002, 1); }
+    if (sp.spots && !sp.antlers) { // leopard spots on cheek and forehead
+      col(sp.spots);
+      for (const s of [-1, 1]) {
+        fill(ellipse(s * 0.22, EY - 0.08, 0.013, 0.010, 8, s * 0.2), 0.003);
+        fill(ellipse(s * 0.25, EY - 0.045, 0.014, 0.011, 8, s * -0.3), 0.003);
+        fill(ellipse(s * 0.19, EY - 0.115, 0.012, 0.009, 8, s * 0.1), 0.003);
+        fill(ellipse(s * 0.08, EY + 0.18, 0.012, 0.010, 8), 0.003);
+      }
+    }
     if (marks === "freckles") { col(mixc(FUR, "#5a2a1a", 0.5)); for (const s of [-1, 1]) for (const [x, y] of [[0.17, -0.13], [0.2, -0.115], [0.23, -0.135], [0.2, -0.15]]) fill(ellipse(s * x, EY + y, 0.008, 0.008, 6), 0.004, 1); }
     if (marks === "stripes") { col(mixc(FUR, "#000000", 0.6)); for (const s of [-1, 1]) for (let k = 0; k < 3; k++) stroke(curve((t) => [s * (0.3 + 0.06 * t), EY - 0.05 - k * 0.045 + 0.01 * t]), [0.025, 0.01], 0.004); }
     if (marks === "patch") { col(mixc(FUR, "#000000", 0.45)); fill(ellipse(EX + 0.02, EY + 0.01, ERU + 0.055, ERV + 0.05, 20, 0.4), 0.002); }
@@ -534,15 +549,16 @@ export function geometry(ctx) {
     }
   }
   WO = null;
-  // antlers: candy-striped, two tines
+  // antlers: natural bone/horn tones with gradient
   if (sp.antlers && !low) {
     WO = { Head: 1 };
+    const antCol = sp.antler || "#e9d8b4", antTip = mixc(antCol, "#ffffff", 0.25);
     for (const s of [-1, 1]) {
       const b = headPt(norm3([s * 0.35, 0.92, 0.02]), -0.02);
       const main = path([[b, 0.025], [add3(b, [s * 0.02, 0.12, 0]), 0.022], [add3(b, [s * 0.07, 0.22, 0.01]), 0.02], [add3(b, [s * 0.13, 0.25, 0.02]), 0.017]], hi ? 5 : 3);
-      tube(main, { m: hi ? 9 : 6, domeB: true, colFn: (t) => col(Math.floor(t * 9) % 2 ? "#e8333c" : "#fff6ee") });
+      tube(main, { m: hi ? 9 : 6, domeB: true, colFn: (t) => col(mixc(antCol, antTip, t * 0.7)) });
       const mb = main[Math.floor(main.length * 0.45)].p;
-      tube(path([[mb, 0.016], [add3(mb, [-s * 0.035, 0.08, 0]), 0.013]], hi ? 4 : 2), { m: hi ? 8 : 5, domeB: true, colFn: (t) => col(Math.floor(t * 4) % 2 ? "#e8333c" : "#fff6ee") });
+      tube(path([[mb, 0.016], [add3(mb, [-s * 0.035, 0.08, 0]), 0.013]], hi ? 4 : 2), { m: hi ? 8 : 5, domeB: true, colFn: (t) => col(mixc(antCol, antTip, t * 0.7)) });
     }
     WO = null;
   }

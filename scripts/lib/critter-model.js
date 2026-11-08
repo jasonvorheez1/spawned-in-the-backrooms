@@ -15,26 +15,47 @@ const mix = (a, b, t) => toHex(hx(a).map((v, i) => v + (hx(b)[i] - v) * t))
 function seedOf(l) { let h = 2166136261; for (const c of `${l.fur}|${l.species}|${l.sex}|${l.top}|${l.bottom}|${l.eye}`) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 10000) / 10000 } }
 const CREAMS = ['#fff4e2', '#f6efe6', '#fbe6cc', '#efe6dc', '#fff9f0', '#e9dccb']
 const INKS = ['#1e1a1c', '#2c2220', '#3a2a22', '#24242c', '#40302a']
+// Species with mandatory biological markings preserve their iconic colors (stripes, bandit masks, panda eyes/limbs, rudolph nose)
+const ICONIC = {
+  panda: { mark: '#2b2530', tip: '#2b2530', limb: '#2b2530', belly: '#ffffff' },
+  skunk: { mark: '#f4f1ea', tip: '#f4f1ea', belly: '#f4f1ea' },
+  badger: { mark: '#f1ece4', tip: '#e8e4dc', belly: '#2e2c36', nose: '#16141c' },
+  tiger: { mark: '#2a1c18', belly: '#fff6ea' },
+  leopard: { mark: '#2a1c18', belly: '#fff1d4' },
+  raccoon: { mark: '#2c2a32', belly: '#e9e6ea', tip: '#2a2830' },
+  redpanda: { belly: '#f4ece2', tip: '#7a2e16', mark: '#2b1a14', limb: '#2b1a14' },
+  sheep: { mark: '#5d5560', belly: '#ffffff' },
+  deer: { antler: '#e9d8b4', mark: '#4a2a1c' },
+  reindeer: { nose: '#e0404c', antler: '#efe0bd', mark: '#4a2e20' },
+  pig: { nose: '#ff8ca2' },
+  koala: { nose: '#2a2830' }
+}
 function furMats(l) {
-  const sp = M.species[speciesOf(l)], fur = l.fur || sp.fur
-  let belly = sp.belly, tip = sp.tip || sp.belly, mark = sp.mark
+  const spName = speciesOf(l), sp = M.species[spName], fur = l.fur || sp.fur
+  const icon = ICONIC[spName] || {}
+  let belly = l.belly || icon.belly || sp.belly
+  let tip = l.tip || icon.tip || sp.tip || sp.belly
+  let mark = l.mark || icon.mark || sp.mark
   if (l.fur && l.vary !== false) {
     const u = seedOf(l), cream = CREAMS[Math.floor(u() * CREAMS.length)], ink = INKS[Math.floor(u() * INKS.length)]
-    belly = mix(fur, cream, 0.45 + u() * 0.45)
-    tip = u() < 0.5 ? belly : mix(fur, ink, 0.35 + u() * 0.4)
-    mark = mix(fur, u() < 0.3 ? cream : ink, 0.3 + u() * 0.45)
+    if (!icon.belly && !l.belly) belly = mix(fur, cream, 0.45 + u() * 0.45)
+    if (!icon.tip && !l.tip) tip = u() < 0.5 ? belly : mix(fur, ink, 0.35 + u() * 0.4)
+    if (!icon.mark && !l.mark) mark = mix(fur, u() < 0.3 ? cream : ink, 0.3 + u() * 0.45)
   }
   const innerCol = l.inner || sp.inner || mix(fur, '#ffb8c6', 0.65)
+  const limbCol = l.limb || icon.limb || sp.limb || fur
+  const noseCol = l.nose || icon.nose || sp.nose || '#231816'
+  const antlerCol = l.antler || icon.antler || sp.antler
   const m = {
     fur: { color: fur, roughness: 0.82, metalness: 0 },
-    limb: { color: l.limb || (l.fur ? (sp.limb && !l.fur ? sp.limb : fur) : sp.limb || fur), roughness: 0.82, metalness: 0 },
-    belly: { color: l.belly || belly, roughness: 0.88, metalness: 0 },
-    tip: { color: l.tip || tip, roughness: 0.82, metalness: 0 },
+    limb: { color: limbCol, roughness: 0.82, metalness: 0 },
+    belly: { color: belly, roughness: 0.88, metalness: 0 },
+    tip: { color: tip, roughness: 0.82, metalness: 0 },
     inner: { color: innerCol, roughness: 0.9, metalness: 0 },
-    nose: { color: l.nose || sp.nose || '#231816', roughness: 0.35, metalness: 0.05 }
+    nose: { color: noseCol, roughness: 0.35, metalness: 0.05 }
   }
-  if (mark || l.mark) m.mark = { color: l.mark || mark, roughness: 0.82, metalness: 0 }
-  if (sp.antler || l.antler) m.antler = { color: l.antler || sp.antler, roughness: 0.65, metalness: 0.05 }
+  if (mark) m.mark = { color: mark, roughness: 0.82, metalness: 0 }
+  if (antlerCol) m.antler = { color: antlerCol, roughness: 0.65, metalness: 0.05 }
   return m
 }
 const only = (m, keys) => { const o = {}; for (const k of keys || []) if (m[k]) o[k] = m[k]; return o }
@@ -68,13 +89,14 @@ export function hasBlush(l) {
   return true
 }
 export function headModel(l0) {
-  const l = faceFill(l0), sp = M.species[speciesOf(l)];
+  const l = faceFill(l0), spName = speciesOf(l), sp = M.species[spName];
   const isFemale = l?.sex === 'f';
   const eyeCol = l?.eye && l.eye !== '#2b2233' && l.eye !== '#000000' ? l.eye : null;
   const wearsBlush = hasBlush(l);
   const blushCol = (typeof l?.blush === 'string' && l.blush.startsWith('#'))
     ? l.blush
     : (isFemale ? '#ff6588' : '#ff7b94');
+  const icon = ICONIC[spName] || {};
   return {
     id: (isFemale ? sp.headF : sp.headM) || sp.head,
     materials: only({
@@ -93,7 +115,7 @@ export function headModel(l0) {
         : { color: blushCol, visible: false, transparent: true, opacity: 0, depthWrite: false },
       mouth: { color: '#44141e', roughness: 0.85 },
       tongue: { color: '#ff758c', roughness: 0.65 },
-      nose: { color: l?.nose || sp.nose || '#221614', roughness: 0.32, metalness: 0.05 }
+      nose: { color: l?.nose || icon.nose || sp.nose || '#221614', roughness: 0.32, metalness: 0.05 }
     }, sp.mats)
   }
 }
@@ -110,7 +132,9 @@ export function faceFill(l) {
   const own = l.fseed != null && l.faceOwn !== true // an NPC rolls its whole face from its id (a bespoke resident sets faceOwn to keep theirs)
   if (own || !l.eye || l.eye === '#2b2233') o.eye = pickOf(FACES.eye, u)
   if (own || !l.blush) o.blush = pickOf(FACES.blush, u)
-  if (own || !l.nose) { const n = pickOf(FACES.nose, u); o.nose = n || (own ? '' : l.nose) }
+  const icon = ICONIC[speciesOf(l)] || {}
+  if (icon.nose) o.nose = icon.nose
+  else if (own || !l.nose) { const n = pickOf(FACES.nose, u); o.nose = n || (own ? '' : l.nose) }
   if (own || !l.eyes) o.eyes = pickOf(['round', 'round', 'tall', 'wide'], u) // rolled late so the older rolls keep their faces
   if (own || !l.ftype) { // the shape of the head: rolled after everything else, so every older roll keeps its face
     const tn = Object.keys(FACES.types), tt = tn.reduce((a, k) => a + (FACES.types[k].w ?? 1), 0); let q = u() * tt, ft = tn[0]
@@ -133,17 +157,62 @@ export function faceMorph(expr, blink, isFemale, look) {
 
   // --- Head silhouette smoothing: anti-oval & anti-blocky ---
   // Soften tall/narrow weights to fix heads being too ovally
-  if (f.FT_Long) f.FT_Long = Math.min(0.38, f.FT_Long * 0.45)
-  if (f.FT_Narrow) f.FT_Narrow = Math.min(0.38, f.FT_Narrow * 0.5)
+  if (f.FT_Long) f.FT_Long = Math.min(0.35, f.FT_Long * 0.45)
+  if (f.FT_Narrow) f.FT_Narrow = Math.min(0.35, f.FT_Narrow * 0.5)
   // Soften square / blocky jaws into rounded cute cheeks
   if (f.FT_Square) {
-    f.FT_Square = Math.min(0.32, f.FT_Square * 0.4)
-    f.FT_Round = Math.min(1, (f.FT_Round ?? 0) + 0.25)
+    f.FT_Square = Math.min(0.28, f.FT_Square * 0.35)
+    f.FT_Round = Math.min(1, (f.FT_Round ?? 0) + 0.2)
   }
-  if (f.FT_Snout) f.FT_Snout = Math.min(0.42, f.FT_Snout * 0.55)
-  // Baseline soft, cute roundness for all critter heads
-  f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.35) + (isFemale ? 0.16 : 0.08))
-  f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.25) + (isFemale ? 0.14 : 0.06))
+
+  // Species-specific anatomical profile:
+  // Canines, cervids, bears, pigs, rodents each keep their distinctive species head silhouette
+  // instead of being flattened into identical cat faces.
+  const spName = speciesOf(ff ?? look)
+  if (['wolf', 'fox', 'jackal', 'dog'].includes(spName)) {
+    // Canines & Vulpines: distinct muzzle/snout, sleek cheeks, alert tapering jaw
+    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.42) + (isFemale ? 0.05 : 0.12))
+    f.FT_Round = Math.min(0.35, (f.FT_Round ?? 0) * 0.6)
+    f.FT_Chubby = Math.min(0.28, (f.FT_Chubby ?? 0) * 0.5)
+    f.FT_Broad = Math.min(0.3, Math.max(f.FT_Broad ?? 0, 0.12))
+  } else if (['deer', 'reindeer'].includes(spName)) {
+    // Cervids: graceful tapered heart-shaped muzzle with moderate snout
+    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.35))
+    f.FT_Heart = Math.min(1, Math.max(f.FT_Heart ?? 0, 0.4))
+    f.FT_Chubby = Math.min(0.22, (f.FT_Chubby ?? 0) * 0.4)
+    f.FT_Round = Math.min(0.35, (f.FT_Round ?? 0) * 0.6)
+  } else if (spName === 'pig') {
+    // Suids: prominent snout disc, round cheeks
+    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.52))
+    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.35))
+    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.28))
+  } else if (['bear', 'capybara', 'badger'].includes(spName)) {
+    // Heavy / broad skulls: wide jaw, blunt muzzle, sturdy cute cheeks
+    f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.48))
+    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.28))
+    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.32))
+    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.25))
+  } else if (['bunny', 'lop', 'hamster', 'mouse', 'squirrel'].includes(spName)) {
+    // Lagomorphs & small rodents: cute snub muzzle, chubby puffy cheeks
+    f.FT_Snub = Math.min(1, Math.max(f.FT_Snub ?? 0, 0.42))
+    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.40) + (isFemale ? 0.12 : 0.05))
+    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.38) + (isFemale ? 0.12 : 0.05))
+  } else if (['rat', 'ferret', 'otter', 'beaver'].includes(spName)) {
+    // Sleek rodents & mustelids: streamlined muzzle, balanced cheeks
+    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.28))
+    f.FT_Round = Math.min(0.42, Math.max(f.FT_Round ?? 0, 0.22))
+    f.FT_Chubby = Math.min(0.32, (f.FT_Chubby ?? 0) * 0.6)
+  } else if (spName === 'koala') {
+    // Koala: wide broad face, fluffy sides
+    f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.45))
+    f.FT_Snub = Math.min(1, Math.max(f.FT_Snub ?? 0, 0.32))
+    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.35))
+  } else {
+    // Felids (cat, tiger, leopard, lion, redpanda, etc.): cute kemono roundness
+    if (f.FT_Snout) f.FT_Snout = Math.min(0.35, f.FT_Snout * 0.55)
+    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.35) + (isFemale ? 0.16 : 0.08))
+    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.25) + (isFemale ? 0.14 : 0.06))
+  }
 
   // --- Blush stickers: NOT permanent on everyone ---
   const wearsBlush = hasBlush(ff ?? look)
