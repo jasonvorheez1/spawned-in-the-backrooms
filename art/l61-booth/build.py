@@ -17,23 +17,15 @@ for v in bm.verts:
             b=e.other_vert(a)
             if b not in seen: seen.add(b); st.append(b)
     islands.append(I)
-# welded, each bench is whole: the table stays, the back bench slides +y and the side bench -x so a body fits
-PUSH=0.2
+# welded, the benches are the two big islands; the table (top + pedestal) shrinks a touch and slides toward the open corner, out of the backrests
 big=sorted(islands,key=len,reverse=True)
-for I in big[:12]:
-    xs=[v.co.x for v in I]; ys=[v.co.y for v in I]; zs=[v.co.z for v in I]
-    print("isl",len(I),"x",round(min(xs),2),round(max(xs),2),"y",round(min(ys),2),round(max(ys),2),"z",round(min(zs),2),round(max(zs),2))
-mb=ms=0
-for I in islands:
-    xs=[v.co.x for v in I]; ys=[v.co.y for v in I]
-    c=sum((v.co for v in I),mathutils.Vector())/len(I)
-    w=max(xs)-min(xs); h=max(ys)-min(ys)
-    d=mathutils.Vector((0,0,0))
-    if c.y>0.25 and w>h*0.6: d.y=PUSH; mb+=1        # back bench: wide along x, at the back
-    elif c.x<-0.3: d.x=-PUSH; ms+=1                  # side bench: along y, on the left
-    if d.length:
-        for v in I: v.co+=d
-print("islands",len(islands),"back",mb,"side",ms)
+TV=[v for I in big[2:] for v in I]
+top=big[2]; c=sum((v.co for v in top),mathutils.Vector())/len(top)
+S=0.86; SH=mathutils.Vector((0.13,-0.13,0))
+for v in TV:
+    if v in set(top): v.co.x=c.x+(v.co.x-c.x)*S; v.co.y=c.y+(v.co.y-c.y)*S
+    v.co+=SH
+print("islands",len(islands),"table verts",len(TV))
 bm.to_mesh(o.data); bm.free()
 sc=bpy.context.scene; sc.render.engine="CYCLES"; sc.cycles.samples=8; sc.render.resolution_x=sc.render.resolution_y=600
 w=bpy.data.worlds.new("w"); w.color=(0.7,0.7,0.7); sc.world=w
