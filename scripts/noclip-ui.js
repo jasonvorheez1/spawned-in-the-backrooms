@@ -73,3 +73,54 @@ export function noclipUi(ctx, player) {
   }
   return out
 }
+
+// ---- the noclip between levels (Shelly: make noclip animations). Every threshold you cross plays one of three, picked by the door (scripts/level-door.js KIND),
+// drawn from s.xfer = { at, to, kind } like the title card it replaces (scripts/ui.js xferCard). Driven by negative delays so a re-render never restarts them.
+//   floor   you fall through the floor: wallpaper and carpet streak UP past you, an impact, the new level swims in
+//   wall    you clip through a wall: the world shears into jagged slices that slide apart and close, split in red and cyan
+//   glitch  a plain threshold: static, scanlines and a flicker, then the card
+export const CLIP_T = 2.6
+const CLIP_CSS = `<style>
+@keyframes xc-all{0%{opacity:1}78%{opacity:1}100%{opacity:0;visibility:hidden}}
+@keyframes xc-streak{0%{background-position:0 0}100%{background-position:0 306px}}
+@keyframes xc-streakA{0%{opacity:0}8%{opacity:1}52%{opacity:1}60%,100%{opacity:0}}
+@keyframes xc-hit{0%,56%{opacity:0}58%{opacity:1}68%{opacity:.5}82%,100%{opacity:0}}
+@keyframes xc-shk{0%,56%{transform:none}58%{transform:translate(12px,-16px)}61%{transform:translate(-10px,11px)}65%{transform:translate(6px,-6px)}70%,100%{transform:none}}
+@keyframes xc-title{0%,48%{opacity:0;letter-spacing:.6em}62%{opacity:1;letter-spacing:.24em}88%{opacity:1}100%{opacity:0}}
+@keyframes xc-sl{0%,10%{transform:translateX(0)}30%{transform:translateX(var(--d))}46%{transform:translateX(calc(var(--d) * -.5))}64%,100%{transform:translateX(0)}}
+@keyframes xc-seam{0%,6%{opacity:0;width:2px}20%,50%{opacity:1;width:7px}70%,100%{opacity:0;width:2px}}
+@keyframes xc-flick{0%,6%,12%,18%{opacity:1}9%,15%{opacity:.15}24%,100%{opacity:1}}
+@keyframes xc-fade{0%,40%{opacity:1}100%{opacity:0}}
+.xc{position:absolute;inset:0;overflow:hidden;pointer-events:none;font-family:inherit;color:#f2c14e}
+.xc .ttl{position:absolute;left:0;right:0;top:40%;text-align:center;text-shadow:2px 2px #000,0 0 22px #000}
+.xc .rgb{text-shadow:-3px 0 #f0f,3px 0 #0ff,0 0 14px #fff8}
+.xc .fl{position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,transparent 0 38px,rgba(70,45,5,.55) 38px 42px,transparent 42px 80px),repeating-linear-gradient(0deg,oklch(.78 .12 90) 0 110px,oklch(.45 .06 70) 110px 118px,oklch(.62 .09 85) 118px 300px,oklch(.3 .05 60) 300px 306px)}
+.xc .st{position:absolute;inset:-40px;background-image:radial-gradient(#fff 1px,transparent 1.4px),radial-gradient(#9aa 1px,transparent 1.5px);background-size:5px 5px,7px 7px;opacity:.5;animation:nc-static .16s steps(4) infinite}
+.xc .sc{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 2px,transparent 2px 4px)}
+</style>`
+export function clipCard(x, now, names) {
+  const t = (now - x.at) / 1000; if (t < 0 || t >= CLIP_T) return ''
+  const [a, b] = names[x.to] ?? [String(x.to).toUpperCase(), '']
+  const d = `animation-delay:-${t.toFixed(2)}s`, an = (n, dur, e = 'linear forwards') => `animation:${n} ${dur}s ${e};${d}`
+  const card = `<div style="font-size:min(9vw,46px);letter-spacing:.24em">${a}</div><div style="font-size:16px;letter-spacing:.3em;opacity:.78;margin-top:6px">${b}</div>`
+  const title = `<div class="ttl" style="${an('xc-title', 2.4)}">${card}</div>`
+  const wrap = (inner, shake) => `${CLIP_CSS}<div class="xc"${shake ? ` style="${an('xc-shk', 2.4)}"` : ''}><div style="position:absolute;inset:0;background:#050403"></div><div style="position:absolute;inset:0;${an('xc-all', 2.6)}">${inner}</div></div>`
+  if (x.kind === 'floor') {
+    const f = (sp) => `animation:xc-streak ${sp}s linear infinite,xc-streakA 2.4s linear forwards;animation-delay:0s,-${t.toFixed(2)}s`
+    return wrap(`<div class="fl" style="${f(0.3)}"></div><div class="fl" style="opacity:.5;mix-blend-mode:screen;transform:scaleX(1.6);${f(0.14)}"></div>
+      <div style="position:absolute;inset:0;background:radial-gradient(transparent 30%,#000 100%);opacity:.8"></div>
+      <div style="position:absolute;inset:0;background:#fffbe0;${an('xc-hit', 2.4)}"></div>${title}`, true)
+  }
+  if (x.kind === 'wall') {
+    let sl = ''
+    for (let i = 0; i < 12; i++) {
+      const dir = i % 2 ? 1 : -1, off = (18 + ((i * 37) % 40)) * dir
+      sl += `<div style="position:absolute;left:0;right:0;top:${(i / 12) * 100}%;height:${100 / 12 + 0.4}%;--d:${off}vw;background:linear-gradient(90deg,oklch(.${80 - (i % 3) * 6} .12 ${88 + (i % 4) * 3}),oklch(.6 .09 80));box-shadow:inset 0 0 0 1px rgba(0,0,0,.25);${an('xc-sl', 2.4)}"><div style="position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 38px,rgba(90,60,10,.4) 38px 42px)"></div></div>`
+    }
+    return wrap(`<div style="position:absolute;inset:0;background:#fff7d0"></div>${sl}
+      <div style="position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);background:#fff;box-shadow:0 0 50px 24px #fff6c0;${an('xc-seam', 2.4)}"></div>
+      <div style="position:absolute;inset:0;mix-blend-mode:screen;background:rgba(255,0,60,.16);transform:translateX(5px);${an('xc-flick', 2.4)}"></div><div style="position:absolute;inset:0;mix-blend-mode:screen;background:rgba(0,220,255,.16);transform:translateX(-5px)"></div>${title}`)
+  }
+  return wrap(`<div class="st"></div><div class="sc"></div><div style="position:absolute;inset:0;background:#000;opacity:.75;${an('xc-fade', 1.6)}"></div>
+    <div class="ttl rgb" style="${an('xc-title', 2.4)}">${card}</div>`)
+}

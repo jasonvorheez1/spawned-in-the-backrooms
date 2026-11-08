@@ -17,7 +17,7 @@ import { osUi } from './os-ui.js'
 import { hordeUi } from './horde-ui.js'
 import { derived as _dv, carried as _kg } from './lib/stats.js'
 import { derived } from './lib/stats.js'
-import { noclipUi } from './noclip-ui.js'
+import { noclipUi, clipCard } from './noclip-ui.js'
 import PAGES from './lib/data/pages.yml'
 import { cndOf, band, bandColor, isBroken } from './lib/condition.js'
 // the .plymodel converter is read on the first upload press, not at boot
@@ -142,6 +142,7 @@ function sniperScope(s, wp) {
 const LEVEL_NAMES = { main: ['LEVEL 0', 'THE LOBBY'], level1: ['LEVEL 1', 'HABITABLE ZONE'], level2: ['LEVEL 2', 'PIPE DREAMS'], level3: ['LEVEL 3', 'ELECTRICAL STATION'], level4: ['LEVEL 4', 'ABANDONED OFFICE'], level5: ['LEVEL 5', 'TERROR HOTEL'], level6: ['LEVEL 6', 'LIGHTS OUT'], level61: ['LEVEL 6.1', 'THE SNACKROOMS'], level7: ['LEVEL 7', 'THALASSOPHOBIA'], level8: ['LEVEL 8', 'CAVE SYSTEMS'], level21: ['LEVEL 2.1', 'LOCKED'], gamma: ['M.E.G.', 'BASE GAMMA'] }
 function xferCard(s, now) {
   const x = s.xfer; if (!x || now - x.at > 2600) return ''
+  if (x.kind) return clipCard(x, now, LEVEL_NAMES) // the noclip between levels (scripts/noclip-ui.js)
   const [a, b] = LEVEL_NAMES[x.to] ?? [String(x.to).toUpperCase(), '']
   return `<style>@keyframes xferOut{0%,45%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="xfer${x.at}" style="position:absolute;inset:0;background:#050403;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:xferOut 2.4s forwards;color:#f2c14e;text-shadow:2px 2px #000"><div style="font-size:44px;letter-spacing:.2em">${a}</div><div style="font-size:18px;letter-spacing:.3em;opacity:.75;margin-top:6px">${b}</div></div>`
 }

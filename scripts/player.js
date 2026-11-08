@@ -1182,7 +1182,7 @@ function tickStats(ctx, t, moving) {
   if (st !== s.stamina) s.stamina = st
   if (bt !== s.battery) s.battery = bt
   // a new level: the transition card fades off the black (scripts/ui.js reads s.xfer)
-  if (w.lastPlace && w.lastPlace !== ctx.self.place) s.xfer = { at: now, to: ctx.self.place }
+  if (w.lastPlace && w.lastPlace !== ctx.self.place) { const kind = s.clipKind; s.clipKind = undefined; s.xfer = { at: now, to: ctx.self.place, ...(kind ? { kind } : {}) } }
   if (ctx.self.place === 'level6' && w.light) { ctx.destroy(w.light); w.light = null; s.light = false } // the dark swallows it
   w.lastPlace = ctx.self.place
   // down: the body lies where it fell (third person, scripts/camera.js), then you wake at the nearest checkpoint
