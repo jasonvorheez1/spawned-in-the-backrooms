@@ -22,9 +22,11 @@ export function describe(token) {
 import L2 from './data/level2.yml'
 import BRK from './data/breakables.yml'
 import L3I from './data/l3items.yml'
-export const L2_NOW = ['lobby_wafer', 'beans', 'bar', 'firstaid', 'tape']
+import SNACKS from './data/snacks.yml'
+export const L2_NOW = ['lobby_wafer', 'beans', 'bar', 'firstaid', 'tape', ...Object.keys(SNACKS)]
 export const L2_KEYS = { fuse: 'fuses', valve: 'valves', keycard: 'keycards' }
 const L2_DESC = {
+  ...Object.fromEntries(Object.entries(SNACKS).map(([k, v]) => [k, () => ({ name: v.name, info: `${v.info} · ${v.drink ? `+${v.thirst} thirst` : `+${v.hunger} hunger`}`, color: v.color })])),
   lobby_wafer: () => ({ name: 'Lobby Wafers', info: `A damp sleeve of yellow vanilla wafers. They taste like the wallpaper looks. +${L2.use.waferHp} HP · +${L2.use.waferSanity} sanity`, color: '#f2d36b' }),
   beans: () => ({ name: 'Canned beans', info: `+${L2.use.beansHp} HP · +${L2.use.beansSanity} sanity`, color: '#d9a35a' }),
   bar: () => ({ name: 'Energy bar', info: `+${L2.use.barHp} HP · stamina`, color: '#e8c44a' }),

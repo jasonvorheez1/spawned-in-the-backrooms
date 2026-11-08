@@ -1,0 +1,7 @@
+# Level 6.1 "The Snackrooms": real-world snacks as they looked in the 2000s (Shelly's ask). Eaten or drunk where you take them.
+# hunger / thirst / sanity / hp are what one gives back (Savi's picks). Drinks quench, chips fill.
+coke:    { name: "Coca-Cola (glass bottle)", info: "Classic. Cold. 2003 contour bottle", hunger: 4,  thirst: 30, sanity: 6, hp: 3, color: "#e8302a", drink: true }
+pepsi:   { name: "Pepsi", info: "The blue globe can. Sweeter than you remember", hunger: 4, thirst: 28, sanity: 6, hp: 3, color: "#2a6ae8", drink: true }
+dew:     { name: "Mountain Dew", info: "Do the Dew. Neon green, wildly caffeinated · stamina", hunger: 3, thirst: 26, sanity: 4, hp: 2, color: "#7ae83a", drink: true, stamina: 40 }
+doritos: { name: "Doritos Nacho Cheese", info: "Orange dust on your fingers for an hour", hunger: 22, thirst: -6, sanity: 5, hp: 6, color: "#ff6a2a" }
+coolranch: { name: "Doritos Cool Ranch", info: "The blue bag. Nobody knows what ranch is cool about it", hunger: 22, thirst: -6, sanity: 5, hp: 6, color: "#3a9ae8" }
