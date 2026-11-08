@@ -221,7 +221,9 @@ function underwater(s) {
 <div style="position:fixed;left:50%;bottom:22%;transform:translateX(-50%);width:220px;pointer-events:none;font:11px monospace;letter-spacing:2px;color:${low ? '#ff8a6a' : '#9fe0d0'};text-align:center;${low ? 'animation:uwBreath .6s infinite' : ''}">BREATH<div style="margin-top:4px;height:6px;border:1px solid currentColor;padding:1px"><div style="height:100%;width:${b}%;background:currentColor"></div></div></div>`
 }
 
-export default function render(ctx, player) {
+// F3: the LAGSCOPE lag panel floats over whatever the HUD draws (builders only; players never see it)
+export default function render(ctx, player) { return renderHud(ctx, player) + lagscopeOverlay(ctx, player) }
+function renderHud(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
   if (s.menuOpen) return mainMenu(ctx, player)
