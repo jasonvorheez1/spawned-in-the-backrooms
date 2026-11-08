@@ -2714,6 +2714,114 @@ l26x-fogwisps:
   fx: {script: "fx follow=player\npop wisp n=?mobile:10|low:8|26 on=box(18,1.2,18).c(1) wrap=18;3;18 v=<.35,0,.12>*(.6..1.2) size=3..6 acc=curl(.08)*.3 sz=$size col=<.55,.68,.52> a=.10..0.18 rot=spin(.02) r=sprite(smoke-puff,alpha)"}
   id: l26x-fogwisps
   tags: [l26x, fx]
+l26x-lamppost-0:
+  children: [{feetPosition: {x: 0, y: 2.75, z: 0}, light: {color: oklch(0.85 0.09 75), distance: 9, intensity: 1.8, kind: point}}]
+  feetPosition: {x: -9.2, y: 0, z: -34}
+  id: l26x-lamppost-0
+  layout: {box: {max: {x: 0.28, y: 3.1, z: 0.28}, min: {x: -0.28, y: 0, z: -0.28}}}
+  material: {color: oklch(0.9 0.01 90)}
+  model: /cdn/value.c24e22aeb5283e7db0dfe271edbcf822e6e1e5ce582550db257bd3f821c5687c.glb
+  physics: {body: static, collider: cylinder}
+  tags: [l26x, lamppost]
+l26x-lamppost-1:
+  children: [{feetPosition: {x: 0, y: 2.75, z: 0}, light: {color: oklch(0.85 0.09 75), distance: 9, intensity: 1.8, kind: point}}]
+  feetPosition: {x: 9.2, y: 0, z: -34}
+  id: l26x-lamppost-1
+  layout: {box: {max: {x: 0.28, y: 3.1, z: 0.28}, min: {x: -0.28, y: 0, z: -0.28}}}
+  material: {color: oklch(0.9 0.01 90)}
+  model: /cdn/value.c24e22aeb5283e7db0dfe271edbcf822e6e1e5ce582550db257bd3f821c5687c.glb
+  physics: {body: static, collider: cylinder}
+  tags: [l26x, lamppost]
+l26x-lamppost-10:
+  children: [{feetPosition: {x: 0, y: 2.75, z: 0}, light: {color: oklch(0.85 0.09 75), distance: 9, intensity: 1.8, kind: point}}]
+  feetPosition: {x: -8.6, y: 0, z: 50}
+  id: l26x-lamppost-10
+  layout: {box: {max: {x: 0.28, y: 3.1, z: 0.28}, min: {x: -0.28, y: 0, z: -0.28}}}
+  material: {color: oklch(0.9 0.01 90)}
+  model: /cdn/value.c24e22aeb5283e7db0dfe271edbcf822e6e1e5ce582550db257bd3f821c5687c.glb
+  physics: {body: static, collider: cylinder}
+  tags: [l26x, lamppost]
+l26x-lamppost-11:
+  children: [{feetPosition: {x: 0, y: 2.75, z: 0}, light: {color: oklch(0.85 0.09 75), distance: 9, intensity: 1.8, kind: point}}]
+  feetPosition: {x: 8.6, y: 0, z: 50}
+  id: l26x-lamppost-11
+  layout: {box: {max: {x: 0.28, y: 3.1, z: 0.28}, min: {x: -0.28, y: 0, z: -0.28}}}
+  material: {color: oklch(0.9 0.01 90)}
+  model: /cdn/value.c24e22aeb5283e7db0dfe271edbcf822e6e1e5ce582550db257bd3f821c5687c.glb
+  physics: {body: static, collider: cylinder}
+  tags: [l26x, lamppost]
+l26x-lamppost-2:
+  children: [{feetPosition: {x: 0, y: 2.75, z: 0}, light: {color: oklch(0.85 0.09 75), distance: 9, intensity: 1.8, kind: point}}]
+  feetPosition: {x: -9.2, y: 0, z: -24}
+  id: l26x-lamppost-2
+  layout: {box: {max: {x: 0.28, y: 3.1, z: 0.28}, min: {x: -0.28, y: 0, z: -0.28}}}
+  material: {color: oklch(0.9 0.01 90)}
+  model: /cdn/value.c24e22aeb5283e7db0dfe271edbcf822e6e1e5ce582550db257bd3f821c5687c.glb
+  physics: {body: static, collider: cylinder}
+  tags: [l26x, lamppost]
+l26x-lamppost-3:
+  children: [{feetPosition: {x: 0, y: 2.75, z: 0}, fx: {script: "fx\npop glow n=1 at=point() g=flick(7,.85) r=light(<1,.78,.5>,$g*2.2,9)"}}]
+  feetPosition: {x: 9.2, y: 0, z: -24}
+  id: l26x-lamppost-3
+  layout: {box: {max: {x: 0.28, y: 3.1, z: 0.28}, min: {x: -0.28, y: 0, z: -0.28}}}
+  material: {color: oklch(0.9 0.01 90)}
+  model: /cdn/value.c24e22aeb5283e7db0dfe271edbcf822e6e1e5ce582550db257bd3f821c5687c.glb
+  physics: {body: static, collider: cylinder}
+  tags: [l26x, lamppost]
+l26x-lamppost-4:
+  children: [{feetPosition: {x: 0, y: 2.75, z: 0}, light: {color: oklch(0.85 0.09 75), distance: 9, intensity: 1.8, kind: point}}]
+  feetPosition: {x: -9.2, y: 0, z: 26}
+  id: l26x-lamppost-4
+  layout: {box: {max: {x: 0.28, y: 3.1, z: 0.28}, min: {x: -0.28, y: 0, z: -0.28}}}
+  material: {color: oklch(0.9 0.01 90)}
+  model: /cdn/value.c24e22aeb5283e7db0dfe271edbcf822e6e1e5ce582550db257bd3f821c5687c.glb
+  physics: {body: static, collider: cylinder}
+  tags: [l26x, lamppost]
+l26x-lamppost-5:
+  children: [{feetPosition: {x: 0, y: 2.75, z: 0}, light: {color: oklch(0.85 0.09 75), distance: 9, intensity: 1.8, kind: point}}]
+  feetPosition: {x: 9.2, y: 0, z: 26}
+  id: l26x-lamppost-5
+  layout: {box: {max: {x: 0.28, y: 3.1, z: 0.28}, min: {x: -0.28, y: 0, z: -0.28}}}
+  material: {color: oklch(0.9 0.01 90)}
+  model: /cdn/value.c24e22aeb5283e7db0dfe271edbcf822e6e1e5ce582550db257bd3f821c5687c.glb
+  physics: {body: static, collider: cylinder}
+  tags: [l26x, lamppost]
+l26x-lamppost-6:
+  children: [{feetPosition: {x: 0, y: 2.75, z: 0}, light: {color: oklch(0.85 0.09 75), distance: 9, intensity: 1.8, kind: point}}]
+  feetPosition: {x: -6.2, y: 0, z: 30}
+  id: l26x-lamppost-6
+  layout: {box: {max: {x: 0.28, y: 3.1, z: 0.28}, min: {x: -0.28, y: 0, z: -0.28}}}
+  material: {color: oklch(0.9 0.01 90)}
+  model: /cdn/value.c24e22aeb5283e7db0dfe271edbcf822e6e1e5ce582550db257bd3f821c5687c.glb
+  physics: {body: static, collider: cylinder}
+  tags: [l26x, lamppost]
+l26x-lamppost-7:
+  children: [{feetPosition: {x: 0, y: 2.75, z: 0}, light: {color: oklch(0.85 0.09 75), distance: 9, intensity: 1.8, kind: point}}]
+  feetPosition: {x: 6.2, y: 0, z: 30}
+  id: l26x-lamppost-7
+  layout: {box: {max: {x: 0.28, y: 3.1, z: 0.28}, min: {x: -0.28, y: 0, z: -0.28}}}
+  material: {color: oklch(0.9 0.01 90)}
+  model: /cdn/value.c24e22aeb5283e7db0dfe271edbcf822e6e1e5ce582550db257bd3f821c5687c.glb
+  physics: {body: static, collider: cylinder}
+  tags: [l26x, lamppost]
+l26x-lamppost-8:
+  children: [{feetPosition: {x: 0, y: 2.75, z: 0}, fx: {script: "fx\npop glow n=1 at=point() g=flick(7,.85) r=light(<1,.78,.5>,$g*2.2,9)"}}]
+  feetPosition: {x: -6.2, y: 0, z: 44}
+  id: l26x-lamppost-8
+  layout: {box: {max: {x: 0.28, y: 3.1, z: 0.28}, min: {x: -0.28, y: 0, z: -0.28}}}
+  material: {color: oklch(0.9 0.01 90)}
+  model: /cdn/value.c24e22aeb5283e7db0dfe271edbcf822e6e1e5ce582550db257bd3f821c5687c.glb
+  physics: {body: static, collider: cylinder}
+  tags: [l26x, lamppost]
+l26x-lamppost-9:
+  children: [{feetPosition: {x: 0, y: 2.75, z: 0}, light: {color: oklch(0.85 0.09 75), distance: 9, intensity: 1.8, kind: point}}]
+  feetPosition: {x: 6.2, y: 0, z: 44}
+  id: l26x-lamppost-9
+  layout: {box: {max: {x: 0.28, y: 3.1, z: 0.28}, min: {x: -0.28, y: 0, z: -0.28}}}
+  material: {color: oklch(0.9 0.01 90)}
+  model: /cdn/value.c24e22aeb5283e7db0dfe271edbcf822e6e1e5ce582550db257bd3f821c5687c.glb
+  physics: {body: static, collider: cylinder}
+  tags: [l26x, lamppost]
 l26x-lit-0:
   feetPosition: {x: 0.26251997011858164, y: 3.44, z: -5.498943061563837}
   id: l26x-lit-0
