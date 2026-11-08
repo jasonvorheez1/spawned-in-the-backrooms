@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 35;
+const V = 36;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -115,7 +115,7 @@ function lay(ctx) {
   });
 
   // Curved 1980s diner booth with red leather banquettes, formica table with chrome edging, and condiments
-  const BOOTH_GLB = "/cdn/value.0cd96277bf795ecca2ae17aaf43359420b049216cb89c298eae1c4202ab9a1ad.glb" // art/l61-booth/build.py: tripo booth, table pulled off the benches
+  const BOOTH_GLB = "/cdn/value.2cd39502d1010b8a7f95188d8438cb40ca75672cdce4f90a67594b39add98c68.glb" // art/l61-booth/build.py: tripo booth, table pulled off the benches
   const spawnBooth = (id, x, z, yaw) => sp(id, {
     feetPosition: { x, y: 0, z },
     rotation: { yaw },
