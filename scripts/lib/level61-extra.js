@@ -40,13 +40,12 @@ export function layExtra(ctx, { HW, HD, HH }) {
         { feetPosition: { x: 0, y: HH - 0.45, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.7, radiusBottom: 0.46, height: 0.45 }, material: PLASTER },
       ] });
   });
-  // coving: a navy baseboard round the hall, and neon lines round the hall's four walls and the pit rim
+  // coving: a navy baseboard round the hall, and neon lines round the hall's four walls and the fountain rotunda base
   for (const s of [-1, 1]) {
     bx(`l61-skirt-z${s}`, 0, 0, s * (HD - 0.2), 2 * HW - 0.5, 0.26, 0.12, { color: "oklch(0.25 0.08 262)", roughness: 0.5 });
     bx(`l61-skirt-x${s}`, s * (HW - 0.2), 0, 0, 0.12, 0.26, 2 * HD - 0.5, { color: "oklch(0.25 0.08 262)", roughness: 0.5 });
-    bx(`l61-pitneon-z${s}`, 0, 0.02, s * 7.1, 14.4, 0.05, 0.08, neon(NEON_P), { physics: undefined });
-    bx(`l61-pitneon-x${s}`, s * 7.1, 0.02, 0, 0.08, 0.05, 14.4, neon(NEON_T), { physics: undefined });
   }
+  sp("l61-rotunda-neon-ring", { feetPosition: { x: 0, y: 0.02, z: 0 }, rotation: { pitch: 90 }, primitive: { kind: "torus", radius: 5.4, tube: 0.025 }, material: neon(NEON_T), physics: undefined });
   // the skylights get rafters and neon edges, so the black glass reads as a window and not a hole
   for (const sx of [-18, 0, 18]) for (const sz of [-9, 9]) {
     bx(`l61-raf-${sx}-${sz}-a`, sx, HH - 0.32, sz, 9.4, 0.2, 0.2, { color: "oklch(0.36 0.02 250)", metalness: 0.7, roughness: 0.4 }, { physics: undefined });
@@ -77,10 +76,6 @@ export function layExtra(ctx, { HW, HD, HH }) {
       primitive: { kind: "box", width: 0.9, height: 0.05, depth: 0.05 }, material: { color: "oklch(0.3 0.01 250)" },
       children: [{ feetPosition: { x: 0, y: -2.0, z: 0 }, primitive: { kind: "box", width: 0.85, height: 1.9, depth: 0.03 }, material: { color: [NEON_P, NEON_T, "oklch(0.85 0.17 85)"][k % 3], emissive: [NEON_P, NEON_T, "oklch(0.85 0.17 85)"][k % 3], emissiveIntensity: 0.5, roughness: 0.8 },
         ui: `<div face="front" width="0.85m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;color:#fff;text-shadow:2px 2px 0 #0008;text-align:center"><div style="font-size:60px">${["SUMMER","SALE","FREE","'86","EAT","NEW!"][k]}</div><div style="font-size:24px">${["all season","everything must go","take two","grand reopening","you are welcome","same as always"][k]}</div></div>` }] });
-  });
-  [[-27, -18], [27, -18], [-27, 18], [27, 18]].forEach(([x, z], k) => {
-    sp(`l61-palm-${k}`, { feetPosition: { x, y: 0, z }, behavior: A, state: { anim: { kind: "sway", deg: 2.2, sec: 4.5 + k * 0.4, axis: k % 2 ? "roll" : "pitch", phase: k / 4 } }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.1, height: 2.6 }, material: { color: "oklch(0.4 0.06 55)", roughness: 0.9 },
-      children: Array.from({ length: 7 }, (_, i) => ({ feetPosition: { x: Math.cos((i / 7) * 6.283) * 0.5, y: 2.5, z: Math.sin((i / 7) * 6.283) * 0.5 }, rotation: { yaw: -(i / 7) * 360, pitch: -38 }, primitive: { kind: "box", width: 0.34, height: 0.03, depth: 1.5 }, material: { color: "oklch(0.45 0.13 148)", roughness: 0.8 } })) });
   });
   // dust in the daylight that has no sun, steam off the grill, flame in the oven, notes off the jukebox
   [[-18, 3, -8], [18, 3, -8], [-18, 3, 8], [18, 3, 8], [0, 3, 14], [0, 3, -14]].forEach(([x, y, z], k) => sp(`l61-dust-${k}`, { feetPosition: { x, y, z }, fx: { script: SUNDUST } }));
@@ -161,7 +156,12 @@ export function layExtra(ctx, { HW, HD, HH }) {
   // the dining room: ketchup, mustard and a napkin box on the tables, a tray with a plate and a cup on about half, steam off the hot ones
   // one setting per real food-court table (the same spots tableSet stands them in sim.js), on the 0.75 m top
   let ti = 0;
-  const TABLES = [[-14, -13], [-14, -7], [-14, 7], [-14, 13], [14, -13], [14, -7], [14, 7], [14, 13], [-7, -13], [7, -13], [-7, 13], [7, 13], [-6.4, -25.2], [-2.2, -25.2], [-6.4, -29.2], [-2.2, -29.2], [3, -25.5], [7, -25.5]];
+  const TABLES = [
+    [-16.5, -13.5], [-12.0, -8.5], [-16.5, -5.0], [-16.5, 5.0], [-12.0, 8.5], [-16.5, 13.5],
+    [16.5, -13.5], [12.0, -8.5], [16.5, -5.0], [16.5, 5.0], [12.0, 8.5], [16.5, 13.5],
+    [-7.5, -14.0], [7.5, -14.0],
+    [-6.4, -25.2], [-2.2, -25.2], [-6.4, -29.2], [-2.2, -29.2], [3, -25.5], [7, -25.5]
+  ];
   for (const [x, z] of TABLES) {
     const tx = x, tz = z, r = Math.abs((Math.sin(x * 12.9898 + z * 78.233) * 43758.5453) % 1), hot = r < 0.18;
     sp(`l61-set-${ti++}`, { feetPosition: { x: tx, y: 0.752, z: tz }, ...(hot ? { fx: { script: SMOKE } } : {}), primitive: { kind: "sphere", radius: 0.001 }, material: { color: "oklch(0.5 0 0)" },
