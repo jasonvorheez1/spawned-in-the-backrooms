@@ -27,7 +27,8 @@ function dress(kind, u) {
 // footprint of each model, as built (width along local x, depth along local y)
 const FOOT = { glass_a: [23.6, 24.3], glass_b: [17, 17], stone: [21.2, 21.6], brick_a: [19.7, 16.1], brick_b: [13.7, 13.1], mall: [24.5, 15.3], house: [9.5, 12.8] };
 const HEIGHT = { glass_a: 101, glass_b: 105, stone: 43, brick_a: 37.6, brick_b: 20.2, mall: 7.3, house: 11.1 };
-export const RADIUS = 190; export const SHADOW_R = 75; // buildings beyond this many metres of the middle cast no shadow export const DBG = { buildings: true, city: true, street: true }; // how far out the buildings go (the road grid and the ground go on to the fog)
+export const RADIUS = 190; export const SHADOW_R = 75; // buildings beyond this many metres of the middle cast no shadow
+export const DBG = { buildings: true, city: true, street: true }; // how far out the buildings go (the road grid and the ground go on to the fog)
 const PAINT = ["#b81c28", "#2f4f8a", "#e8e4d8", "#2a2a30", "#3a6a4a", "#c8a24a", "#7a7a84", "#8a2a2a", "#d8d0b8", "#1e3a5a"];
 
 export function layCity(ctx, h) {
