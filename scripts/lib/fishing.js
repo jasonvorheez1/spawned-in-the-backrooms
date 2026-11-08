@@ -1,9 +1,9 @@
 // scripts/lib/fishing.js
 // Complete Backrooms fishing system: canonical water validation, animated casts, physical floating bobbers,
 // bite tension & strikes, location-specific aquatic loot, and reel-in rewards.
-import { skillsOf, derived, gain } from './stats.js';
+import { skillsOf, derived } from './stats.js';
 import { heard } from './hear.js';
-import { takeToken } from '../player.js';
+import { takeToken, gain } from '../player.js';
 
 const FISH_SPLASH = `fx
 pop ring burst=12 life=0.6..1.1 on=disc(0.8) v=sdir()*(1.2..2.4)+up(0.6..1.8) size=0.04..0.12 col=hdr(0.7,0.85,1.0) a=0.8>0 r=sprite(soft-disc,add)
