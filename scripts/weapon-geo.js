@@ -63,7 +63,11 @@ const builders = {
     steel(ctx, "oklch(0.6 0.01 250)", 0.3);
     rod(ctx, [[0, B + 0.021, 0.27], [0, B + 0.034, 0.27]], [0.004, 0.006], 8); // cocking knob
     plain(ctx, "oklch(0.22 0.01 260)", 0.45, 0.85);
-    bar(ctx, 0, B + 0.028, 0.008, 0.008, 0.08, 0.1, 0.002, 1); // rear sight
+    bar(ctx, 0, B + 0.024, 0.008, 0.003, 0.08, 0.1, 0.001, 1); // rear sight base
+    bar(ctx, -0.0055, B + 0.029, 0.002, 0.006, 0.08, 0.1, 0.001, 1); // left ear
+    bar(ctx, 0.0055, B + 0.029, 0.002, 0.006, 0.08, 0.1, 0.001, 1); // right ear
+    bar(ctx, -0.0022, B + 0.027, 0.0012, 0.0035, 0.088, 0.092, 0.0005, 1); // peep aperture notch
+    bar(ctx, 0.0022, B + 0.027, 0.0012, 0.0035, 0.088, 0.092, 0.0005, 1);
     steel(ctx, "oklch(0.4 0.01 260)", 0.35);
     rod(ctx, [[0, B, 0.36], [0, B, 0.585]], [0.0105, 0.0105], M); // barrel
     if (hi) for (let z = 0.372; z < 0.5; z += 0.011) rod(ctx, [[0, B, z], [0, B, z + 0.004]], [0.0165, 0.0165], M); // cooling fins
@@ -71,7 +75,7 @@ const builders = {
     rod(ctx, [[0, B, 0.578], [0, B, 0.636]], [0.0155, 0.0155], M); // Cutts compensator
     if (hi) { plain(ctx, "oklch(0.06 0 0)", 1); for (let k = 0; k < 4; k++) bar(ctx, 0, B + 0.0145, 0.006, 0.0015, 0.59 + k * 0.011, 0.595 + k * 0.011, 0.001, 1); rod(ctx, [[0, B, 0.636], [0, B, 0.637]], [0.007, 0.007], 10); } // ports and bore
     plain(ctx, "oklch(0.22 0.01 260)", 0.45, 0.85);
-    bar(ctx, 0, B + 0.02, 0.0015, 0.006, 0.625, 0.632, 0.001, 1); // front blade
+    bar(ctx, 0, B + 0.027, 0.0016, 0.0065, 0.625, 0.632, 0.0008, 1); // front blade (lines up through peep notch)
     rod(ctx, [[0, B - 0.03, 0.2], [0, B - 0.05, 0.198], [0, B - 0.056, 0.175], [0, B - 0.05, 0.15], [0, B - 0.03, 0.148]], [0.0032, 0.0032, 0.0032, 0.0032, 0.0032], 6); // trigger guard
     rod(ctx, [[0, B - 0.034, 0.182], [0, B - 0.046, 0.178], [0, B - 0.05, 0.172]], [0.0026, 0.0026, 0.002], 5); // trigger
     for (let k = 0; k < 8; k++) { const y0 = B - 0.04 - k * 0.012; bar(ctx, 0, y0, 0.011, 0.0065, 0.243 + k * 0.0015, 0.272 + k * 0.0015, 0.003); } // 30-round stick magazine
@@ -169,7 +173,17 @@ const builders = {
     steel(ctx, "oklch(0.7 0.01 250)", 0.3);
     rod(ctx, [[0, Y + 0.036, 0.215], [0, Y + 0.036, 0.228]], [0.006, 0.006], 10); // muzzle
     plain(ctx, BLACK, 0.4, 0.8);
-    bar(ctx, 0, Y + 0.051, 0.002, 0.003, 0.205, 0.212, 0.001, 1); bar(ctx, 0, Y + 0.051, 0.007, 0.003, 0.04, 0.05, 0.001, 1); // sights
+    // combat sights: squared U-notch rear sight with tritium dots, front blade with center tritium dot
+    bar(ctx, 0, Y + 0.0495, 0.007, 0.0015, 0.038, 0.052, 0.001, 1); // rear sight base plate
+    bar(ctx, -0.0042, Y + 0.0525, 0.0022, 0.0035, 0.038, 0.052, 0.001, 1); // rear left blade
+    bar(ctx, 0.0042, Y + 0.0525, 0.0022, 0.0035, 0.038, 0.052, 0.001, 1); // rear right blade
+    bar(ctx, 0, Y + 0.0525, 0.0018, 0.0035, 0.204, 0.214, 0.001, 1); // front sight post
+    if (hi) {
+      plain(ctx, "oklch(0.92 0.16 135)", 0.2); // luminescent tritium green 3-dot sight
+      bar(ctx, -0.0042, Y + 0.053, 0.0007, 0.0007, 0.0378, 0.0384, 0.0004, 1); // rear left dot
+      bar(ctx, 0.0042, Y + 0.053, 0.0007, 0.0007, 0.0378, 0.0384, 0.0004, 1); // rear right dot
+      bar(ctx, 0, Y + 0.053, 0.0007, 0.0007, 0.2036, 0.2042, 0.0004, 1); // front dot
+    }
     rod(ctx, [[0, Y + 0.002, 0.13], [0, Y - 0.018, 0.125], [0, Y - 0.026, 0.1], [0, Y - 0.02, 0.07], [0, Y + 0.002, 0.065]], [0.003, 0.003, 0.003, 0.003, 0.003], 6); // trigger guard
     rod(ctx, [[0, Y + 0.002, 0.1], [0, Y - 0.012, 0.096], [0, Y - 0.016, 0.09]], [0.0025, 0.0025, 0.002], 5); // trigger
     plain(ctx, "oklch(0.22 0.02 60)", 0.9);
@@ -187,6 +201,14 @@ const builders = {
     rod(ctx, [[0, Y + 0.013, 0.84], [0, Y + 0.013, 0.86]], [0.03, 0.03], M); // barrel band
     plain(ctx, BLACK, 0.45, 0.8);
     bar(ctx, 0, Y + 0.014, 0.022, 0.03, 0.18, 0.34, 0.006); // receiver
+    // shallow receiver sighting channel
+    plain(ctx, "oklch(0.2 0.01 260)", 0.6, 0.7);
+    bar(ctx, 0, Y + 0.029, 0.0035, 0.0015, 0.18, 0.34, 0.001, 1);
+    // front bead sight base & brass bead
+    plain(ctx, BLACK, 0.45, 0.8);
+    bar(ctx, 0, Y + 0.0465, 0.0025, 0.002, 0.895, 0.918, 0.001, 1);
+    plain(ctx, "oklch(0.85 0.15 85)", 0.2, 0.95);
+    rod(ctx, [[0, Y + 0.049, 0.902], [0, Y + 0.049, 0.916]], [0.0026, 0.0026], 8);
     rod(ctx, [[0.023, Y + 0.025, 0.26], [0.034, Y + 0.025, 0.26]], [0.004, 0.006], 6); // bolt handle
     rod(ctx, [[0, Y - 0.016, 0.27], [0, Y - 0.036, 0.26], [0, Y - 0.04, 0.23], [0, Y - 0.032, 0.2], [0, Y - 0.016, 0.195]], [0.003, 0.003, 0.003, 0.003, 0.003], 6); // trigger guard
     wood(ctx, "oklch(0.86 0.06 55)");
@@ -328,7 +350,16 @@ const builders = {
     bar(ctx, 0, B + 0.029, 0.0035, 0.0025, 0.31, 0.52, 0.001, 1); // top rib
     rod(ctx, [[0, B - 0.012, 0.3], [0, B - 0.012, 0.47]], [0.0048, 0.0048], 7); // ejector rod
     rod(ctx, [[0, B + 0.03, 0.11], [0, B + 0.045, 0.098]], [0.006, 0.0065], 6); // hammer
-    bar(ctx, 0, B + 0.03, 0.002, 0.0025, 0.5, 0.52, 0.001, 1); // front sight
+    // rear square notch on top strap
+    plain(ctx, "oklch(0.18 0.01 260)", 0.5, 0.85);
+    bar(ctx, 0, B + 0.024, 0.0065, 0.0015, 0.11, 0.145, 0.001, 1); // rear sight base
+    bar(ctx, -0.004, B + 0.0275, 0.0022, 0.0035, 0.11, 0.145, 0.001, 1); // rear left blade
+    bar(ctx, 0.004, B + 0.0275, 0.0022, 0.0035, 0.11, 0.145, 0.001, 1); // rear right blade
+    // front ramp sight blade with red-orange target ramp
+    plain(ctx, BLACK, 0.4, 0.85);
+    bar(ctx, 0, B + 0.032, 0.0018, 0.0045, 0.5, 0.525, 0.001, 1);
+    plain(ctx, "oklch(0.64 0.22 35)", 0.25);
+    bar(ctx, 0, B + 0.0325, 0.0014, 0.0035, 0.499, 0.505, 0.0005, 1); // red-orange ramp facing shooter
     rod(ctx, [[0, B - 0.03, 0.2], [0, B - 0.055, 0.17], [0, B - 0.05, 0.13], [0, B - 0.03, 0.115]], [0.0028, 0.0028, 0.0028, 0.0028], 6); // trigger guard
     rod(ctx, [[0, B - 0.028, 0.16], [0, B - 0.044, 0.156]], [0.0024, 0.0018], 5); // trigger
     wood(ctx, "oklch(0.7 0.08 50)"); const g = (t) => [0.135 - t * 0.04, B - 0.03 - t * 0.095];
@@ -339,6 +370,13 @@ const builders = {
     steel(ctx, "oklch(0.36 0.01 260)", 0.4);
     for (const sx of [-1, 1]) rod(ctx, [[sx * 0.0125, B, 0.2], [sx * 0.0125, B, 0.66]], [0.0135, 0.0135], M); // barrels
     bar(ctx, 0, B + 0.012, 0.004, 0.003, 0.2, 0.66, 0.001, 1); // rib between them
+    // brass bead sight at the muzzle
+    plain(ctx, "oklch(0.85 0.15 85)", 0.25, 0.95);
+    rod(ctx, [[0, B + 0.017, 0.64], [0, B + 0.017, 0.655]], [0.0028, 0.0028], 8);
+    // breech V-sight guide
+    plain(ctx, "oklch(0.2 0.01 260)", 0.5, 0.85);
+    bar(ctx, -0.0035, B + 0.0145, 0.0018, 0.0025, 0.2, 0.22, 0.001, 1);
+    bar(ctx, 0.0035, B + 0.0145, 0.0018, 0.0025, 0.2, 0.22, 0.001, 1);
     if (hi) { plain(ctx, "oklch(0.06 0 0)", 1); for (const sx of [-1, 1]) rod(ctx, [[sx * 0.0125, B, 0.659], [sx * 0.0125, B, 0.661]], [0.0105, 0.0105], 8); }
     plain(ctx, "oklch(0.3 0.015 260)", 0.4, 0.85);
     bar(ctx, 0, B - 0.002, 0.021, 0.03, 0.06, 0.22, 0.006); // receiver
@@ -358,7 +396,15 @@ const builders = {
     plain(ctx, "oklch(0.48 0.05 80)", 0.4, 0.9);
     bar(ctx, 0, B + 0.002, 0.0145, 0.028, 0.06, 0.3, 0.005); // receiver
     plain(ctx, "oklch(0.2 0.01 260)", 0.45, 0.85);
-    bar(ctx, 0, B + 0.04, 0.002, 0.003, 0.62, 0.64, 0.001, 1); bar(ctx, 0, B + 0.04, 0.007, 0.003, 0.255, 0.275, 0.001, 1); // sights
+    // semi-buckhorn rear sight with V-notch
+    bar(ctx, 0, B + 0.024, 0.0065, 0.002, 0.25, 0.28, 0.001, 1); // base ramp
+    bar(ctx, -0.0042, B + 0.0285, 0.0018, 0.0045, 0.255, 0.275, 0.001, 1); // left buckhorn wing
+    bar(ctx, 0.0042, B + 0.0285, 0.0018, 0.0045, 0.255, 0.275, 0.001, 1); // right buckhorn wing
+    // ramp front sight with brass bead
+    bar(ctx, 0, B + 0.026, 0.0022, 0.0035, 0.61, 0.64, 0.001, 1); // ramp base
+    bar(ctx, 0, B + 0.031, 0.0015, 0.004, 0.622, 0.638, 0.0008, 1); // post
+    plain(ctx, "oklch(0.85 0.15 85)", 0.2, 0.95);
+    rod(ctx, [[0, B + 0.0335, 0.622], [0, B + 0.0335, 0.636]], [0.0018, 0.0018], 8); // brass bead
     steel(ctx, "oklch(0.4 0.01 260)", 0.4); rod(ctx, [[0, B - 0.03, 0.22], [0, B - 0.075, 0.215], [0, B - 0.08, 0.1], [0, B - 0.05, 0.065], [0, B - 0.03, 0.09]], [0.0035, 0.0035, 0.0035, 0.0035, 0.0035], 6); // the lever loop
     wood(ctx, "oklch(0.76 0.08 52)");
     for (let k = 0; k < 7; k++) { const z = 0.1 - k * 0.04, top = B + 0.026 - k * 0.002, bot = B - 0.022 - k * 0.012; bar(ctx, 0, (top + bot) / 2, 0.017 + k * 0.0009, (top - bot) / 2, z - 0.04, z, 0.007); } // stock
@@ -388,11 +434,22 @@ const builders = {
     plain(ctx, "oklch(0.22 0.01 260)", 0.5, 0.8);
     bar(ctx, 0, B + 0.004, 0.0165, 0.024, 0.04, 0.3, 0.005); // upper receiver
     bar(ctx, 0, B + 0.03, 0.01, 0.004, 0.04, 0.3, 0.002); // flat-top rail
+    // rail-mounted flip-up rear aperture (ghost ring) sight
+    plain(ctx, "oklch(0.18 0.01 260)", 0.5, 0.85);
+    bar(ctx, 0, B + 0.034, 0.0085, 0.0035, 0.05, 0.08, 0.001, 1); // base clamp
+    bar(ctx, -0.0052, B + 0.042, 0.0018, 0.0065, 0.055, 0.075, 0.001, 1); // left protective ear
+    bar(ctx, 0.0052, B + 0.042, 0.0018, 0.0065, 0.055, 0.075, 0.001, 1); // right protective ear
+    bar(ctx, -0.0022, B + 0.042, 0.0012, 0.004, 0.062, 0.068, 0.0006, 1); // aperture left
+    bar(ctx, 0.0022, B + 0.042, 0.0012, 0.004, 0.062, 0.068, 0.0006, 1); // aperture right
+    bar(ctx, 0, B + 0.038, 0.0035, 0.0012, 0.062, 0.068, 0.0006, 1); // aperture bottom
     rod(ctx, [[0, B + 0.006, 0.28], [0, B + 0.006, 0.4], [0, B + 0.006, 0.5]], [0.0215, 0.021, 0.021], M); // handguard
     if (hi) { plain(ctx, "oklch(0.14 0.01 260)", 0.6, 0.8); for (let z = 0.3; z < 0.48; z += 0.03) rod(ctx, [[0, B + 0.006, z], [0, B + 0.006, z + 0.008]], [0.0222, 0.0222], M); }
     plain(ctx, "oklch(0.22 0.01 260)", 0.5, 0.8);
     rod(ctx, [[0, B + 0.012, 0.5], [0, B + 0.012, 0.56]], [0.0095, 0.0095], M); // flash hider
-    bar(ctx, 0, B + 0.032, 0.0025, 0.01, 0.46, 0.48, 0.001, 1); // front sight post
+    // front A-frame tower with centered sight post
+    bar(ctx, -0.0045, B + 0.042, 0.0016, 0.008, 0.46, 0.48, 0.001, 1); // left protective wing
+    bar(ctx, 0.0045, B + 0.042, 0.0016, 0.008, 0.46, 0.48, 0.001, 1); // right protective wing
+    bar(ctx, 0, B + 0.042, 0.0014, 0.0075, 0.465, 0.475, 0.0008, 1); // front sight post
     bar(ctx, 0, B - 0.02, 0.0165, 0.018, -0.02, 0.1, 0.005); // lower receiver
     rod(ctx, [[0, B - 0.03, 0.16], [0, B - 0.052, 0.14], [0, B - 0.052, 0.1], [0, B - 0.03, 0.085]], [0.0028, 0.0028, 0.0028, 0.0028], 6); // trigger guard
     plain(ctx, "oklch(0.2 0.01 260)", 0.8);

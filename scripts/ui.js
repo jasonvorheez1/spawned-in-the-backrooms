@@ -18,6 +18,7 @@ import { derived as _dv, carried as _kg } from './lib/stats.js'
 import { derived } from './lib/stats.js'
 import { noclipUi } from './noclip-ui.js'
 import PAGES from './lib/data/pages.yml'
+import { cndOf, band, bandColor, isBroken } from './lib/condition.js'
 // the .plymodel converter is read on the first upload press, not at boot
 export async function plyUpload(input) { const m = await import('./lib/plyimport.js'); return m.plyUpload(input) }
 
@@ -83,6 +84,55 @@ function compass(yaw) {
   let h = ''
   for (let i = 0; i < 8; i++) { let o = ((i * 45 - yaw) % 360 + 540) % 360 - 180; if (Math.abs(o) < 75) h += `<b style="left:${50 + o / 75 * 50}%">${D[i]}</b>` }
   return `<div class="cmp"><i></i>${h}</div>`
+}
+
+function hudCnd(s, now) {
+  const k = s.equipped ?? 'fists'
+  if (k === 'fists') return ''
+  const c = cndOf(s, k), col = bandColor(c), b = band(c)
+  const isJammed = s.jammedAt && (now - s.jammedAt < 1400)
+  const isBroke = isBroken(c)
+  const pips = Math.round(c / 10)
+  const pipsHtml = Array.from({ length: 10 }, (_, i) => `<i style="display:inline-block;width:3px;height:7px;margin-right:1px;background:${i < pips ? col : 'rgba(255,182,66,0.18)'}"></i>`).join('')
+  return `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:6px;font-size:11px">
+    <span style="color:var(--ad)">CND</span>
+    <span style="display:inline-flex;align-items:center;padding:1px 3px;border:1px solid rgba(255,182,66,0.3);background:rgba(10,7,2,0.6)">${pipsHtml}</span>
+    <span style="color:${col};font-weight:bold">${Math.round(c)}%</span>
+    ${isJammed ? '<span style="color:#ff4433;font-weight:bold;animation:blink .3s infinite;margin-left:4px">[ JAMMED ]</span>' : ''}
+    ${isBroke ? '<span style="color:#ff4433;font-weight:bold;animation:blink .5s infinite;margin-left:4px">[ BROKEN ]</span>' : ''}
+  </div>`
+}
+
+function sniperScope(s, wp) {
+  if (!s.ads || (s.equipped !== 'hunting_rifle' && wp?.base !== 'hunting_rifle')) return ''
+  return `<div style="position:fixed;inset:0;pointer-events:none;z-index:99;display:flex;align-items:center;justify-content:center">
+    <div style="position:absolute;inset:0;background:radial-gradient(circle at center, transparent clamp(140px, 32vmin, 260px), rgba(4,3,2,0.94) clamp(160px, 35vmin, 290px), #030201 clamp(200px, 42vmin, 340px))"></div>
+    <div style="position:relative;width:clamp(320px, 70vmin, 580px);height:clamp(320px, 70vmin, 580px);border-radius:50%;box-shadow:inset 0 0 40px rgba(0,0,0,0.9), 0 0 0 3px rgba(35,28,15,0.85);overflow:hidden">
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 35% 30%, rgba(120,200,180,0.07) 0%, transparent 60%)"></div>
+      <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(20,15,8,0.95);box-shadow:0 0 1px rgba(255,182,66,0.3)"></div>
+      <div style="position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(20,15,8,0.95);box-shadow:0 0 1px rgba(255,182,66,0.3)"></div>
+      <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;border:1px solid rgba(255,182,66,0.6)"></div>
+      <div style="position:absolute;left:calc(50% - 100px);top:50%;width:200px;display:flex;justify-content:space-between;transform:translateY(-50%)">
+        <span style="width:1px;height:8px;background:rgba(20,15,8,0.85)"></span>
+        <span style="width:1px;height:5px;background:rgba(20,15,8,0.85)"></span>
+        <span style="width:1px;height:12px;background:rgba(20,15,8,0.85)"></span>
+        <span style="width:1px;height:5px;background:rgba(20,15,8,0.85)"></span>
+        <span style="width:1px;height:8px;background:rgba(20,15,8,0.85)"></span>
+      </div>
+      <div style="position:absolute;top:calc(50% - 100px);left:50%;height:200px;display:flex;flex-direction:column;justify-content:space-between;transform:translateX(-50%)">
+        <span style="height:1px;width:8px;background:rgba(20,15,8,0.85)"></span>
+        <span style="height:1px;width:5px;background:rgba(20,15,8,0.85)"></span>
+        <span style="height:1px;width:12px;background:rgba(20,15,8,0.85)"></span>
+        <span style="height:1px;width:5px;background:rgba(20,15,8,0.85)"></span>
+        <span style="height:1px;width:8px;background:rgba(20,15,8,0.85)"></span>
+      </div>
+      <div style="position:absolute;bottom:18%;right:22%;font-size:9px;color:rgba(255,182,66,0.55);letter-spacing:1px;font-family:monospace;pointer-events:none">
+        <div>100M ───</div>
+        <div style="margin-top:4px">200M ──</div>
+        <div style="margin-top:4px">300M ─</div>
+      </div>
+    </div>
+  </div>`
 }
 
 
@@ -195,8 +245,9 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
 
   ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${restUi(ctx, s)}${mahjongPanel(s, now)}
   ${chatBubbles(ctx, now, player)}
-  <!-- Unobtrusive Center Point -->
-  <div class="dot-crosshair"></div>${s.crouch ? `<div class="sneak sneak-${s.detect ?? 'hidden'}" id="sn-${s.detect ?? 'hidden'}">[${(s.detect ?? 'hidden').toUpperCase()}]</div>` : ''}
+  ${sniperScope(s, wp)}
+  <!-- Center Point (hidden during ADS for true ironsights aiming) -->
+  ${s.ads ? '' : '<div class="dot-crosshair"></div>'}${s.crouch ? `<div class="sneak sneak-${s.detect ?? 'hidden'}" id="sn-${s.detect ?? 'hidden'}">[${(s.detect ?? 'hidden').toUpperCase()}]</div>` : ''}
   ${s.chargeAt && !W[s.equipped ?? 'fists']?.ranged ? `<style>@keyframes pwrfill{from{stroke-dashoffset:113}to{stroke-dashoffset:0}}@keyframes pwrfull{0%,100%{opacity:1}50%{opacity:.45}}</style><svg id="pwr${s.chargeAt}" width="44" height="44" viewBox="0 0 44 44" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-90deg)"><circle cx="22" cy="22" r="18" fill="none" stroke="rgba(20,16,8,.6)" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="#ffb347" stroke-width="3" stroke-dasharray="113" style="filter:drop-shadow(0 0 3px rgba(255,170,40,.9));animation:pwrfill ${(W.power?.charge ?? 0.9)}s linear forwards, pwrfull .25s ${(W.power?.charge ?? 0.9)}s steps(2) infinite"/></svg>` : ''}
 
   <!-- Subtle Sanity Edge Vignette (gently narrows peripheral vision as sanity drops) -->
@@ -216,9 +267,10 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
     <div style="font-size:11px;margin-top:4px;opacity:.85">LV ${lv} · XP ${s.xp}/${L.xpBase * lv}</div>
   </div>
 
-  <!-- BOTTOM-RIGHT: weapon, stamina, almond water, light -->
+  <!-- BOTTOM-RIGHT: weapon, condition, stamina, almond water, light -->
   <div class="br" style="position:absolute;bottom:22px;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);width:min(300px,44vw);text-align:right">
     <div style="font-size:15px;color:${rar?.color ?? 'var(--a)'}">${wp.name}${wp.ranged ? (s.reloading ? " · RELOADING" : ` · ${s["loaded_" + s.equipped] ?? 0}/${s[wp.ammoType ?? "ammo"] ?? 0}`) : ""}${rar ? `<span class="tag">${rar.label}</span>` : ''}</div>
+    ${hudCnd(s, now)}
     ${bar(s.winded ? 'AP · WINDED' : 'AP', s.stamina, L.stamina, s.winded || s.stamina < 25 ? 'var(--ad)' : 'var(--a)', `${Math.ceil(s.stamina)}`, true)}
     <div class="row" style="margin-top:6px;justify-content:flex-end;gap:8px">
       <span>CASH</span><span style="font-size:15px;color:#9fcf8a">$${((s.cents ?? 0) / 100).toFixed(2)}</span><span>ALMOND</span><span style="font-size:15px">${s.almonds ?? 0}</span>${[['almondsG','#7fcf6a'],['almondsR','#d0574a'],['almondsB','#6f9be0']].filter(([k]) => s[k]).map(([k, c]) => `<span style="font-size:15px;color:${c}">${s[k]}</span>`).join('')}

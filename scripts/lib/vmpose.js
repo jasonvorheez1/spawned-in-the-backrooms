@@ -8,6 +8,7 @@
 // Springs and timelines run on real frame time; the object is posed with interpolation off.
 import W, { baseOf } from './weapons.js'
 import { handling } from './stats.js'
+import { cndOf } from './condition.js'
 
 export const VM_FOV = 55
 const REST = [0.19, -0.17, 0.44]
@@ -236,6 +237,15 @@ export function poseViewmodel(ctx, dt) {
 
   // too heavy for your Hardiness: the gun sags and the muzzle wanders in your hands
   if (hd.hold > 0 && (gun || kind !== 'fists')) { const wob = Math.sin(m.breath * 1.3) * Math.cos(m.breath * 0.8); y -= hd.hold * 0.035 * (1 - 0.5 * m.ads); pitch -= hd.hold * 5; yaw += wob * hd.hold * 2.2; roll += Math.sin(m.breath * 1.9) * hd.hold * 2 }
+  // worn weapon mechanical wear: loose pins, rattling receiver, looser tolerances
+  const cndVal = kind !== 'fists' ? cndOf(ps, kind) : 100
+  if (cndVal < 50) {
+    const loose = (50 - cndVal) / 50
+    const rat = Math.sin(m.breath * 32) * loose
+    pitch += rat * 0.45 * (1 - 0.5 * m.ads)
+    yaw += Math.cos(m.breath * 26) * 0.35 * (1 - 0.5 * m.ads) * loose
+    y += rat * 0.0012
+  }
   // sprinting: lower it and turn it away
   y -= run * 0.07; pitch -= run * 18; yaw += run * 14; x -= run * 0.03
 

@@ -402,7 +402,13 @@ function swing(ctx, power = 0) {
   if (now < (w.nextSwing ?? 0) || (s.downAt && now - s.downAt < 1200)) return
   const wp = weaponOf(s)
   if (s.equipped !== 'fists' && isBroken(cndOf(s, s.equipped))) { w.nextSwing = now + 700; if (now - (w.brokeSay ?? 0) > 2500) { w.brokeSay = now; s.notice = { text: `Your ${wp.name.toLowerCase()} is BROKEN: repair it in the inventory (I)`, at: now } } return }
-  if (s.equipped !== 'fists' && !s.reloading && ctx.random() < jamChance(cndOf(s, s.equipped)) * (wp.ranged ? 1 : 0.5)) { w.nextSwing = now + 650; s.notice = { text: wp.ranged ? `JAM: your ${wp.name.toLowerCase()} will not cycle (${band(cndOf(s, s.equipped))})` : `Your ${wp.name.toLowerCase()} slips in your hand (${band(cndOf(s, s.equipped))})`, at: now }; sound(ctx, 'flashlight-switch-click', 0.5, true); return }
+  if (s.equipped !== 'fists' && !s.reloading && ctx.random() < jamChance(cndOf(s, s.equipped)) * (wp.ranged ? 1 : 0.5)) {
+    w.nextSwing = now + 650; s.jammedAt = now
+    s.notice = { text: wp.ranged ? `JAM: your ${wp.name.toLowerCase()} will not cycle (${band(cndOf(s, s.equipped))})` : `Your ${wp.name.toLowerCase()} slips in your hand (${band(cndOf(s, s.equipped))})`, at: now }
+    sound(ctx, 'flashlight-switch-click', 0.5, true)
+    ctx.emit('screenShake', { intensity: 0.18, duration: 0.15 }, { audience: { player: ctx.self.id } })
+    return
+  }
   if (wp.ranged) power = 0
   const Hd = handling(s, wp) // what the weapon asks of you: too heavy for your Hardiness costs stamina and swing speed (scripts/lib/stats.js)
   if (power && (w.stamina ?? s.stamina) < wp.stamina * Hd.stam * P.stamina) power = 0 // too tired to put weight behind it: a light swing
@@ -688,6 +694,8 @@ function invAction(ctx, d) {
   const s = ctx.self.state
   if (d.k === 'close') { s.invOpen = false; return }
   if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc'].includes(d.t) ? d.t : 'all'; return }
+  if (d.k === 'sort') { s.invSort = ['name', 'dam', 'wg', 'cnd'].includes(d.s) ? d.s : 'name'; return }
+  if (d.k === 'sheet') { s.invOpen = false; s.sheetOpen = true; return }
   if (d.k === 'drink') { drink(ctx, d.c); return }
   if (d.k === 'eat') { const c = d.c, n = s.meat?.[c] ?? 0; if (!MEAT[c] || n <= 0) return
     s.meat = { ...s.meat, [c]: n - 1 }; s.hp = Math.min(maxHp(s.level, s), (s.hp ?? 0) + MEAT[c].hp); s.hunger = Math.min(100, (s.hunger ?? 100) + MEAT[c].food)
