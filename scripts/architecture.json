@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2434,
-  "updatedAt": "2026-11-08T21:37:41.696Z",
-  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms and the shared Bonus Room mall. The player template composes movement, combat, loot, interaction and routing behaviors; place scenes and simulations supply authored spaces and local systems.",
+  "basedOnSpecVersion": 2463,
+  "updatedAt": "2026-11-08T21:47:34.602Z",
+  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms and the shared Bonus Room mall. The player template composes movement, combat, loot, interaction and routing behaviors; place scenes and simulations supply authored spaces and local systems, with Level 0 moments and creature ecology seeded by its sim.",
   "scriptPaths": [],
   "places": [
-    "places/bonus (3D) - shared vaporwave mall with shops, arcade, gallery, fountain, vending/pretzel cart, six court banners and a furnished west-balcony lounge; sim supplies staff and shoppers.",
-    "places/main (3D) - authored Level 0/Lobby maze; sim generates furniture/loot, safe-room almond water, shifting walls and creature ecology.",
+    "places/bonus (3D) - shared vaporwave mall with shops, arcade, fountain, court storefronts and west-balcony lounge; the expanded Art Gallery has framed art, sculpture island, rug and lighting.",
+    "places/main (3D) - authored Level 0/Lobby maze; sim generates furniture/loot, safe-room almond water, shifting walls, creature ecology and versioned route-guidance moments.",
     "places/intake (3D) - bedroom character-creation space; scripts/intake-geo.js and intro cutscene support its authored room.",
     "places/tutorial0 (3D, solo ephemeral) - authored Level 0 tutorial route, staged encounter and HALOGEN; tutorial libraries drive geometry and beats.",
     "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored levels with local generation, loot and agents.",
@@ -31,7 +31,7 @@
     "scripts/lib/screen.js - derived read-only panel classifier and wrist gates shared by player, stats, craft, rest and menu input.",
     "scripts/lib/maze.js and scripts/lib/level*.js + level data - grids, zones, layouts and paths reused by place sims, geometry and navigation.",
     "scripts/lib/clothes.js + clothes.yml + critter.yml + hair.yml + scripts/lib/critter-model.js - wardrobe/look rules and player/NPC critter models.",
-    "scripts/lib/nav.js, footsteps.js + data, combat.js + data and quest libraries - shared navigation, surface sounds, damage and quest definitions."
+    "scripts/lib/stats.js - attributes/skills and derived combat, carry, movement and sanity effects used by player and NPC systems."
   ],
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollItem, spawnCrate, rollLoot, dropLoot and level-specific loot helpers.",
@@ -41,12 +41,12 @@
     "scripts/player.js - takeToken, hitTarget and player progression/combat/input handlers.",
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
     "sim.js - cadence, tick, onOutOfBounds; places/main/sim.js and places/bonus/sim.js - cadence, tick.",
-    "scripts/lib/critter-model.js - critter appearance/model helpers; scripts/lib/clothes.js - clothing, look and armor helpers."
+    "scripts/lib/stats.js - isBroken, derived, canCarry, burden; scripts/lib/critter-model.js - critter appearance/model helpers."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards and level access; found snacks/aid now increment state.snacks instead of auto-use.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards and level access; found snacks/aid are state inventory.",
     "scripts/kick.js - per-player session kicked-chair rolls and push sound cooldown; chair movement is performed on the kicker's machine.",
-    "scripts/lurkers.js - player.state.lurkHold while caught and lurker grab/stun behavior; release clears crouch so the player stands.",
+    "scripts/lurkers.js - player.state.lurkHold while caught and lurker entity grab/frenzy/prey state; release clears the player's hold.",
     "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim.",
     "scripts/hub.js - local mall offer/shop/food and room-hop flags; purchases update player currencies/unlocks and mall-local held food.",
     "scripts/grab.js - carried object and carry/session fields; strength, load, health and stamina limit lifting.",
@@ -64,8 +64,8 @@
     "Level 0 floor weapon seeding/refill → places/main/sim.js + loot.rollWeapon(pool, cap); floorGateV removes over-cap legacy floor weapons once per room.",
     "Pickup weapon/food/aid → scripts/player.js inventory; SNACKS entries enter player.state.snacks for later Aid-panel use, with medical aid healing through healMed.",
     "L input → scripts/kick.js onInput; pushes nearby wheeled chairs and rolls kicked chairs into entities via player.hitTarget; hit chair/creature stuns and emits local/nearby effects.",
-    "Lurker catch → scripts/lurkers.js writes player.state.lurkHold; kick clears hold and stuns lurker, while lurker release restores standing posture.",
-    "Level 0 shifting-wall sim avoids closing on creatures and periodically unsticks creatures embedded in geometry; safe-room table set dressing is migrated to takeable almond water."
+    "Lurker catch → scripts/lurkers.js writes player.state.lurkHold; after throw entity frenzy temporarily ignores watched gaze and pursues prey before gaze-freeze behavior resumes.",
+    "Level 0 places/main/sim.js calls scripts/lib/level0-moments.js; momentsV 4 replaces seeded chalk route arrows/props, with arrows following the generated shortest path to EXIT."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js - authored mall shops/landmarks with data-driven stock; sim adds staff, waypoint shoppers and balcony loungers.",
@@ -75,15 +75,15 @@
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
     "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml - player and NPCs share body/head/hair rendering; appearance varies by sex, style, color and look.",
-    "scripts/lib/level11-city.js + level11-models.yml + art/level11 kits - seeded district/building/prop variation; sim adds city life, traffic, tram and canal crossings."
+    "scripts/lib/level0-moments.js + places/main/sim.js - deterministic authored-in-code Level 0 moments and shortest-route chalk guidance; seeded layout varies with maze cells."
   ],
   "probableOrphans": [],
   "migrationNotes": [
     "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room and overflow mall rooms use bonus-N IDs. Keep routing and hub identity aligned.",
     "Found-item rarity gates apply only to found weapon tokens; ownership/use of existing weapons and non-weapon loot is not level-gated. Search gating excludes storage and NPC containers.",
-    "Level 0 uses place.state.deskV/floorGateV/tableAlmondV migrations; keep guards compatible with already-running solo rooms and retain body/container ammo as a source.",
-    "scripts/kick.js imports hitTarget from player.js and does local chair motion; preserve its kick action binding, player template behavior inclusion and hit/stun effect coupling.",
-    "scripts/lib/tut0.js is shared route-coordinate source for tutorial geometry, placements, simulation props and beats; tutorial cutscene runs in the player's main-menu behavior.",
-    "Critter hair keys are sex-prefixed and model data must stay aligned; scripts/lib/screen.js is derived/read-only with cutscene/menu/wardrobe and other panel priority."
+    "Level 0 place.state.momentsV is now 4: its migration deletes old tagged moment entities before relaying them; preserve the deterministic route/arrow direction logic when changing moment layout.",
+    "At sanity <= 0 health is not drained; scripts/lib/stats.js lowers derived attributes except Luck by 2 (minimum 1), and derived values feed combat, carry and movement.",
+    "scripts/lurkers.js keeps the caught player's lurkHold separate from lurker entity frenzy/prey; post-throw frenzy lasts 7 seconds after the scream delay and bypasses gaze freeze.",
+    "scripts/lib/data/main-quest.yml defines The Front Door, Levels 1-5, as authored quest data only; it is not wired into play."
   ]
 }
