@@ -941,8 +941,8 @@ const Q_GUN = { x: 0, y: 1, z: 0, w: 0 } // yaw 180: lays the mesh's +Z barrel f
 // `at` = { x: 0, y: 0.255, z: -0.224 } translates the trigger to (0, 0, 0) so it lands in the fist.
 // degrees to a quaternion: yaw about Y, then pitch about X, then roll about Z (the viewmodel's children take quaternions; an euler rotation on a mesh child was ignored)
 const eulerQ = (yaw, pitch, roll) => { const h = Math.PI / 360, [cy, sy, cp, sp, cr, sr] = [Math.cos(yaw * h), Math.sin(yaw * h), Math.cos(pitch * h), Math.sin(pitch * h), Math.cos(roll * h), Math.sin(roll * h)]; return { x: cy * sp * cr + sy * cp * sr, y: sy * cp * cr - cy * sp * sr, z: cy * cp * sr - sy * sp * cr, w: cy * cp * cr + sy * sp * sr } }
-// q: the exact correction, from the mesh itself (its barrel axis leans 23.8 deg to +x and 32.4 deg up: q = Rx(32.4) * Ry(-23.8), which lays it along +Z)
-const GUN_FIX = { shotgun: { yaw: -24, pitch: 31, q: { x: 0.27308, y: -0.19827, z: -0.05762, w: 0.93957 }, at: { x: -0.03, y: -0.35, z: 0 } } } // measured on a render: the engine centres the mesh on its box, so the trigger sat ~0.5 m above the fist
+// q: the correction, from the mesh itself (measured from its vertices, art/weapons: the barrel axis leans 23.8 deg to +x and 32.4 deg up; q = Ry(10) * Rx(32.4) * Ry(-23.8) lays it along +Z, the 10 being the sights lined up on the crosshair). A child's rotation must be a quaternion: the euler form is ignored on a mesh child.
+const GUN_FIX = { shotgun: { q: { x: 0.26702, y: -0.11563, z: -0.0812, w: 0.95328 }, at: { x: -0.03, y: -0.37, z: 0 } } } // q = yaw(10) * the exact correction above: the barrel lies along the look; at: the receiver sits at the fist and the pump under the off hand (weapons.yml two) // measured on a render: the engine centres the mesh on its box, so the trigger sat ~0.5 m above the fist
 function toggleHolster(ctx) {
   const s = ctx.self.state; cancelReload(ctx); s.ads = false
   if (!s.sheathed) { if (s.equipped !== 'fists') s.holstered = s.equipped; s.equipped = 'fists'; s.sheathed = true; s.sheathAt = ctx.now() } // hands away: nothing in view
