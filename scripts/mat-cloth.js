@@ -1,9 +1,17 @@
 // cloth patterns for the critter garments (Shelly, Nov 7: "add textures to most of the clothes"). Drawn on the garment's own
 // bind-pose geometry (positionGeometry), so a pattern sticks to the cloth as it moves, and needs no UVs (many garment meshes have none).
 // The garment's colour (material color = the look's hex) is the base; each pattern darkens/lightens it. params: { pat, s }
-import { materialColor, positionGeometry, vec2, vec3, float, abs, fract, floor, sin, mix, smoothstep, step, max, min, mx_noise_float, mx_fractal_noise_float, mx_worley_noise_float } from "builtin/tsl";
+import { materialColor, positionGeometry, normalGeometry, vec2, vec3, float, abs, fract, floor, sin, mix, smoothstep, step, max, min, mx_noise_float, mx_fractal_noise_float, mx_worley_noise_float } from "builtin/tsl";
 import { MeshStandardNodeMaterial } from "builtin/three";
 
+// the printed pieces: picture, centre on the torso (bind-pose metres, front = +z), square size; split = the other half's colour; x = sleeve marks
+const PRINTS = {
+  pgsmile: { tex: "/cdn/value.b7652a767b44728f013f67d62067f01ff29e190eebcbb6d97a0245474eecf35d.png", at: [0, 0.87], size: 0.34, x: true },
+  pgcoat: { tex: "/cdn/value.b7652a767b44728f013f67d62067f01ff29e190eebcbb6d97a0245474eecf35d.png", at: [0.08, 0.93], size: 0.16, x: true },
+  ppsad: { tex: "/cdn/value.f3ad0803396844a6d0d054965edeaadb21929d53b47a09dcd74d9592e476b3c1.png", at: [0, 0.88], size: 0.3 },
+  jerry: { tex: "/cdn/value.b15266ce1868d021e312782199838b392725e146a0f34b35d6aca41636a7fc9b.png", at: [0, 0.86], size: 0.36 },
+  gmsplit: { tex: "/cdn/value.749c8c14c24075f3bf95d9b6f842c23ec673aa5a022365846d06f00fed083984.png", at: [0, 0.87], size: 0.36, split: [0.62, 0.64, 0.88], x: true },
+};
 export function material(ctx) {
   const m = new MeshStandardNodeMaterial();
   const pat = String(ctx.params.pat ?? "weave"), S = Number(ctx.params.s ?? 1);
@@ -135,6 +143,24 @@ export function material(ctx) {
     col = mix(col, vec3(0.42, 0.65, 0.38), leaf.mul(0.8));
     col = mix(col, mix(vec3(0.98, 0.88, 0.92), vec3(1.0, 0.92, 0.70), jit), flower.mul(0.95));
     col = mix(col, vec3(0.92, 0.65, 0.20), eye);
+  } else if (PRINTS[pat]) { // the shop's printed pieces (Level 11 clothing shop): a picture on the chest, front-facing, over plain fabric
+    const P = PRINTS[pat], q = positionGeometry;
+    const wv = abs(sin(u.mul(300))).mul(0.5).add(abs(sin(v.mul(300))).mul(0.5));
+    col = base.mul(float(0.9).add(wv.mul(0.1)).add(fine.mul(0.04)));
+    if (P.split) col = mix(col, vec3(...P.split).mul(float(0.9).add(wv.mul(0.1))), step(0.0, q.x)); // two-tone halves, split down the middle
+    if (P.x) { // stitched red x's on the sleeves
+      for (const [ax, ay] of [[0.40, 0.98], [0.47, 0.94], [-0.40, 0.98], [-0.47, 0.94], [0.44, 0.86], [-0.44, 0.86]]) {
+        const dx = q.x.sub(ax), dy = q.y.sub(ay), r = 0.022;
+        const inBox = step(abs(dx), r).mul(step(abs(dy), r));
+        const lineA = smoothstep(0.006, 0.003, abs(dx.sub(dy))), lineB = smoothstep(0.006, 0.003, abs(dx.add(dy)));
+        col = mix(col, vec3(0.55, 0.06, 0.06), lineA.max(lineB).mul(inBox));
+      }
+    }
+    const T = ctx.texture(P.tex);
+    const pu = q.x.sub(P.at[0]).div(P.size).add(0.5), pv = q.y.sub(P.at[1]).div(P.size).add(0.5);
+    const inside = step(0.0, pu).mul(step(pu, 1.0)).mul(step(0.0, pv)).mul(step(pv, 1.0)).mul(smoothstep(0.15, 0.4, normalGeometry.z)).mul(step(0.0, q.z));
+    const t = T.sample(vec2(pu, pv));
+    col = mix(col, t.rgb.mul(float(0.88).add(fine.mul(0.12))), t.a.mul(inside));
   } else { // weave: a plain fabric
     const wv = abs(sin(u.mul(300))).mul(0.5).add(abs(sin(v.mul(300))).mul(0.5));
     col = base.mul(float(0.9).add(wv.mul(0.1)).add(fine.mul(0.04)));

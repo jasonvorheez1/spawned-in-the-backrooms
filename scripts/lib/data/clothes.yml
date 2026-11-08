@@ -10,7 +10,7 @@ colourKey: { topw: top, botw: bottom, shoes: shoec, hat: hatc, neck: neckc }   #
 # A row's pats: the patterns it comes in, the first its usual one. The pattern rides the look (patKey) and the token's 5th part
 # ("cloth:topw:longsleeve:3d5a98:plaid"); same DR and weight, a different cloth. Drawn by scripts/mat-cloth.js.
 patKey: { topw: topp, botw: botp, shoes: shoep, hat: hatp, neck: neckp }
-patterns: { weave: "", denim: Denim, plaid: Plaid, tartan: Tartan, gingham: Gingham, stripes: Striped, pinstripe: Pinstripe, breton: Breton, camo: Camo, knit: Knit, cable: Cable-knit, argyle: Argyle, polka: Polka-dot, floral: Floral, leather: Leather, canvas: Canvas, hivis: Reflective, scales: Scaled, velvet: Velvet, oilskin: Waxed, houndstooth: Houndstooth, fairisle: Fair Isle, corduroy: Corduroy, quilted: Quilted, ditsy: Ditsy }
+patterns: { weave: "", denim: Denim, plaid: Plaid, tartan: Tartan, gingham: Gingham, stripes: Striped, pinstripe: Pinstripe, breton: Breton, camo: Camo, knit: Knit, cable: Cable-knit, argyle: Argyle, polka: Polka-dot, floral: Floral, leather: Leather, canvas: Canvas, hivis: Reflective, scales: Scaled, velvet: Velvet, oilskin: Waxed, houndstooth: Houndstooth, fairisle: Fair Isle, corduroy: Corduroy, quilted: Quilted, ditsy: Ditsy, pgsmile: Partygoer print, pgcoat: Partygoer print, ppsad: Partypooper print, jerry: All Hail Jerry print, gmsplit: Game Master print, ppface: Partypooper face }
 floor: 0.2          # Savi's pick: a hit keeps at least 20% of itself, however armored
 drCap: 22           # Nov 8 rebalance: a full set cannot stack past this much DR, however many top-tier pieces are worn (a worn-down piece gives less: scripts/lib/condition.js)
 findBase: 0.05      # Savi's pick: chance a remains body holds a garment at Observation 5, Luck 5
@@ -125,3 +125,11 @@ rows:
   - { id: pitchboots,  slot: shoes, kind: boots,     name: "Pitch-soled boots",  dr: 4, kg: 1.6, rarity: uncommon, places: [level8], strict: true, colours: [1a1820], crafted: true, pats: [leather] }
   - { id: silkcloak,   slot: neck, kind: cape,       name: "Silk caving cloak",  dr: 3, kg: 0.6, rarity: uncommon, places: [level8], strict: true, colours: [dfe6ea], crafted: true, pats: [canvas] }
   - { id: lifemantle,  slot: neck, kind: cape,       name: "Cork lifebelt mantle",  dr: 3, kg: 1.1, rarity: rare, places: [level7], strict: true, colours: [c85a28, 3a4e54], pats: [canvas] }
+  # the Level 11 clothing shop's own stock (scripts/lib/level11-shop.js): sold by its clerk only, in no faction, role or loot list
+  - { id: pgmask,      slot: hat,  kind: bagmask,    name: Partygoer mask,       dr: 1, kg: 0.2, rarity: rare, strict: true, shop: true, colours: [c4a46a] }
+  - { id: ppmask,      slot: hat,  kind: shellmask,  name: Partypooper mask,     dr: 3, kg: 0.6, rarity: rare, strict: true, shop: true, colours: [3a3878] }
+  - { id: pgcoat,      slot: topw, kind: jacket,     name: Partygoer coat,       dr: 3, kg: 1.4, rarity: rare, strict: true, shop: true, colours: [b8975c], pats: [pgcoat] }
+  - { id: jerrytee,    slot: topw, kind: tee,        name: All Hail Jerry shirt, dr: 1, kg: 0.2, rarity: rare, strict: true, shop: true, colours: [1d2540], pats: [jerry] }
+  - { id: pphoodie,    slot: topw, kind: hoodie,     name: Partypooper hoodie,   dr: 2, kg: 0.8, rarity: rare, strict: true, shop: true, colours: [2a2033], pats: [ppsad] }
+  - { id: pghoodie,    slot: topw, kind: hoodie,     name: Partygoer hoodie,     dr: 2, kg: 0.8, rarity: rare, strict: true, shop: true, colours: [c4a46a], pats: [pgsmile] }
+  - { id: gmhoodie,    slot: topw, kind: hoodie,     name: Game Master hoodie,   dr: 2, kg: 0.8, rarity: rare, strict: true, shop: true, colours: [c8a878], pats: [gmsplit] }
