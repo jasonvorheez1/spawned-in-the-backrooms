@@ -53,11 +53,13 @@ def build_hull():
         u0, u1 = i * 0.5, (i + 1) * 0.5
         M.f([it[i], it[i + 1], ib[i + 1], ib[i]], hp, [(0.2, 0.995), (0.2, 0.995), (0.2, 0.99), (0.2, 0.99)])
     # teak deck at y=0
-    pts = []
-    for p in inner_bot:
-        if not pts or math.dist(p, pts[-1]) > 0.01: pts.append(p)
-    while len(pts) > 2 and math.dist(pts[0], pts[-1]) < 0.01: pts.pop()
-    M.f([M.v(p) for p in pts], teak, [(p[0] / 4, -p[2] / 4) for p in pts])
+    prev = None
+    for sv in S:
+        z = zat(sv, 0); x = max(0.0, half(z, 0) - 0.14)
+        cur = (M.v((x, 0.0, z)), M.v((-x, 0.0, z)), x, z)
+        if prev:
+            M.f([prev[0], prev[1], cur[1], cur[0]], teak, [(prev[2] / 4, -prev[3] / 4), (-prev[2] / 4, -prev[3] / 4), (-cur[2] / 4, -cur[3] / 4), (cur[2] / 4, -cur[3] / 4)])
+        prev = cur
     hull = M.build("hull", angle=1.0)
     parts = [hull]
     # name decals on both bow flanks: ADVENTURE crossed out, SS Fun =) sprayed under it
