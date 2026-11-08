@@ -58,6 +58,7 @@ function setSwarmClip(ctx, s, m, name, opt = {}) {
 }
 
 export function update(ctx, dt) {
+  if (!ctx.place.players.length) { ctx.sleep(2); return; }
   const now = ctx.now();
   const mem = (ctx.self.session.m ??= {});
   const blur = (ctx.self.session.blur ??= {});
@@ -74,7 +75,11 @@ export function update(ctx, dt) {
     (p) => zoneAt(p.feetPosition.x, p.feetPosition.z) !== "gamma" && (p.state?.hp ?? 1) > 0
   );
 
-  const allSwarms = ctx.query({ tags: ["moths"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+  if (!mem.mothsAt || now > mem.mothsAt || !mem.allSwarms) {
+    mem.mothsAt = now + 1200;
+    mem.allSwarms = ctx.query({ tags: ["moths"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+  }
+  const allSwarms = mem.allSwarms;
 
   for (const s of allSwarms) {
     const m = (mem[s.id] ??= {

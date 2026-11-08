@@ -88,13 +88,19 @@ const HOLD_SECONDS = 0.35
 
 // Each stepping clip's pace on THIS body, in metres a second, keyed by clip name or library address:
 // the engine's measure in ctx.world.assets[<model>].gait, times the body's scale; none until measured.
-function pacesOf(ctx) {
+function pacesOf(ctx, gait) {
   const model = ctx.self.model
   const ref = typeof model === 'string' ? model : model?.id
-  const measured = (ref && ctx.world?.assets?.[ref]?.gait) || {}
   const scale = ctx.self.effectiveScale?.y ?? 1
+  if (gait && gait.paces && gait.paceRef === ref && gait.paceScale === scale) return gait.paces
+  const measured = (ref && ctx.world?.assets?.[ref]?.gait) || {}
   const paces = {}
   for (const name in measured) paces[name] = measured[name] * scale
+  if (gait) {
+    gait.paces = paces
+    gait.paceRef = ref
+    gait.paceScale = scale
+  }
   return paces
 }
 
@@ -277,7 +283,10 @@ export function update(ctx, dt) {
   const feet = ctx.self.feetPosition
   const moved =
     feet && gait.lastFeet && dt > 0 ? Math.hypot((feet.x || 0) - gait.lastFeet.x, (feet.z || 0) - gait.lastFeet.z) / dt : null
-  if (feet) gait.lastFeet = { x: feet.x || 0, z: feet.z || 0 }
+  if (feet) {
+    if (!gait.lastFeet) gait.lastFeet = { x: feet.x || 0, z: feet.z || 0 }
+    else { gait.lastFeet.x = feet.x || 0; gait.lastFeet.z = feet.z || 0 }
+  }
   const movedSpeed = moved === null || moved > asked * 1.5 + 0.5 ? asked : Math.min(asked, moved)
   const speed = typeof PLAYER.speedOverride === 'number' ? PLAYER.speedOverride : movedSpeed
   // The speed the clips blend and play at: the body's, held still through float noise. A steady run under a
@@ -297,7 +306,7 @@ export function update(ctx, dt) {
   const walkClip = clips.walk || 'Walk'
   const runClip = clips.run || 'Run'
   const sprintClip = clips.sprint || 'Sprint'
-  const paces = pacesOf(ctx)
+  const paces = pacesOf(ctx, gait)
   const walkPace = paces[walkClip]
   const runPace = paces[runClip]
   const sprintPace = sprintClip === runClip ? 0 : paces[sprintClip]

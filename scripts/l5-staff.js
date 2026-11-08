@@ -149,10 +149,11 @@ function watched(ctx, me, players) {
 }
 
 export function update(ctx, dt) {
+  const everyone = ctx.place.players;
+  if (!everyone.length) { ctx.sleep(2); return; }
   const now = ctx.now();
   const mem = (ctx.self.session.m ??= {});
   const hunt = prey(ctx, now);
-  const everyone = ctx.place.players;
 
   for (const f of T.figures) {
     const o = ctx.getObject(f.id);
@@ -196,7 +197,14 @@ export function update(ctx, dt) {
       if (flat(pos, f.post) < 0.5) o.rotation = f.yaw;
       if (!o.anim?.move) o.anim.move = IDLE;
 
-      const close = everyone.some((p) => flat(p.feetPosition, pos) < REVEAL.near);
+      let nearDist = 1e9;
+      for (const p of everyone) {
+        const d = flat(p.feetPosition, pos);
+        if (d < nearDist) nearDist = d;
+      }
+      if (nearDist > 30) continue; // players far away: figure holds pose, skip gaze checks
+
+      const close = nearDist < REVEAL.near;
       const seer = watched(ctx, pos, everyone);
 
       if (seer && flat(seer.feetPosition, pos) < REVEAL.stareRange) {

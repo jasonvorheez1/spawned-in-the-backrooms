@@ -177,9 +177,23 @@ export const ears = {
 };
 
 export function update(ctx, dt) {
+  if (!ctx.place.players.length) { ctx.sleep(2); return; }
   const me = ctx.self, s = me.state, now = ctx.now();
   const m = (me.session.m ??= { i: 0, next: now + 2000 + ctx.random() * 4000 });
   const p = me.feetPosition, v = me.velocity ?? { x: 0, z: 0 };
+
+  // Tiered distance sleeping for staff when no active orders/deliveries
+  if (!s.deliver && !s.orderAt && !(m.react && now < m.react)) {
+    let nearDistSq = Infinity;
+    for (const q of ctx.place.players) {
+      const qp = q.feetPosition;
+      if (!qp) continue;
+      const d2 = (qp.x - p.x) ** 2 + (qp.z - p.z) ** 2;
+      if (d2 < nearDistSq) nearDistSq = d2;
+    }
+    if (nearDistSq > 45 * 45) { ctx.sleep(2); return; }
+    if (nearDistSq > 28 * 28 && s.job === "post") { ctx.sleep(0.2); dt += 0.2; }
+  }
 
   if (m.gestEnd && now > m.gestEnd) {
     me.anim.gest = null;

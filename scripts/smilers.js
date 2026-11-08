@@ -87,10 +87,15 @@ function checkSightThrottled(ctx, m, now, a, b, ignoreId, targetId) {
 }
 
 export function update(ctx, dt) {
+  if (!ctx.place.players.length) { ctx.sleep(2); return; }
   const now = ctx.now();
   const players = ctx.place.players.filter((p) => !(p.state?.downAt && now - p.state.downAt < 4500));
   const mem = (ctx.self.session.m ??= {});
-  const allSmilers = ctx.query({ tags: ["smiler"] });
+  if (!mem.smilersAt || now > mem.smilersAt || !mem.allSmilers) {
+    mem.smilersAt = now + 1200;
+    mem.allSmilers = ctx.query({ tags: ["smiler"] });
+  }
+  const allSmilers = mem.allSmilers;
 
   for (const w of allSmilers) {
     const m = (mem[w.id] ??= {});

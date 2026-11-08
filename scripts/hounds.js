@@ -53,13 +53,17 @@ export function update(ctx, dt) {
   const place = ctx.self.place;
   const L6 = place === "level6", L3 = place === "level3", L2 = place === "level2", L5 = place === "level5", L21 = place === "level21", L1 = !L2 && !L3 && !L5 && !L6 && !L21;
   const safeAt = L6 || L21 ? () => false : L3 ? (x, z) => zoneAt3(x, z) === "gamma" : L2 ? (x, z) => zoneAt2(x, z) === "camp" : L5 ? (x, z) => zoneAt5(x, z)?.id !== "boiler" : (x, z) => safeZone(zoneAt(x, z));
+  if (!ctx.place.players.length) { ctx.sleep(2); return; } // empty level: the pack rests (perf)
   const now = ctx.now(), dark = ctx.place.state.flicker === "dark", mem = (ctx.self.session.m ??= {});
   const players = ctx.place.players.filter((p) => !safeAt(p.feetPosition.x, p.feetPosition.z) && !(p.state?.downAt && now - p.state.downAt < 4500));
   const byId = (id) => players.find((p) => p.id === id) ?? ctx.place.players.find((p) => p.id === id) ?? ctx.getObject(id) ?? null;
-  const allHounds = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+  if (!mem.houndsAt || now > mem.houndsAt || !mem.allHounds) {
+    mem.houndsAt = now + 1200;
+    mem.allHounds = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+  }
+  const allHounds = mem.allHounds;
   const lead = allHounds.reduce((a, h) => (!a || String(h.id) < String(a.id) ? h : a), null); // one hound steps the whole pack; the rest stand down
   if (lead && lead.id !== ctx.self.id && String(ctx.self.id) > String(lead.id)) { ctx.sleep(1); return; }
-  if (!ctx.place.players.length) { ctx.sleep(2); return; } // empty level: the pack rests (perf)
   for (const h of allHounds) {
     const m = (mem[h.id] ??= {}), pos = h.feetPosition, st = h.state ?? {}, mu = npcMul(st);
     if (ctx.self.place === "level5" && !st.dead && zoneAt5(pos.x, pos.z)?.id !== "boiler") { h.feetPosition = { x: [37.5, 28.5, 40.5][Math.floor(ctx.random() * 3)], y: 0.05, z: [2.5, -0.5, -9.5][Math.floor(ctx.random() * 3)] }; m.roam = null; continue; } // level 5: the pack lives in the Boiler Room alone
