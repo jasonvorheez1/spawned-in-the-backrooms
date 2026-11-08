@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 86; // bump to rebuild the city in rooms that are already open
+const V = 87; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1351,7 +1351,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   // ==========================================
   {
     const OT = (k) => MODELS[`ot_${k}`];
-    const fit = (id, k, x, y, z, yaw, box, collider = "box", extra = {}) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: OT(k), forward: "+x" }, layout: { box: { min: { x: -box[0] / 2, y: 0, z: -box[2] / 2 }, max: { x: box[0] / 2, y: box[1], z: box[2] / 2 } } }, physics: collider ? { body: "static", collider } : undefined, ...extra });
+    const fit = (id, k, x, y, z, yaw, scale, collider = "box", extra = {}) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: OT(k), forward: "+x" }, scale, physics: collider ? { body: "static", collider } : undefined, ...extra }); // scale from the glb's measured metres: tripo pieces stand full size
     const COBBLE = { ...T("worn-grey-granite-cobblestone-street-setts", 1), repeat: [5, 24], color: "oklch(0.62 0.02 70)", roughness: 0.9 };
     const RAIL = { color: "oklch(0.55 0.01 250)", metalness: 0.9, roughness: 0.35 };
     // the avenue between the 84 and 156 cross streets is laid in setts with two tram tracks; cars still drive it
@@ -1360,8 +1360,8 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     [-2.2, 2.2].forEach((tx, t) => [-0.72, 0.72].forEach((rx, r) => bx(`l11-ot-rail-${t}-${r}`, AX + tx + rx, 0.06, ZM, 0.08, 0.05, L, RAIL, { physics: "none" })));
     // green cast-iron wire poles both kerbs, every 14 m, arms reaching over the tracks; the wires sag between them
     for (let i = 0, z = Z0 + 4; z <= Z1 - 4; z += 14, i++) {
-      fit(`l11-ot-pole-w-${i}`, "trampole", AX - 6.6, 0.15, z, 0, [1.9, 7.2, 0.5], "cylinder");
-      fit(`l11-ot-pole-e-${i}`, "trampole", AX + 6.6, 0.15, z, 180, [1.9, 7.2, 0.5], "cylinder");
+      fit(`l11-ot-pole-w-${i}`, "trampole", AX - 6.6, 0.15, z, 0, 2.9, "cylinder");
+      fit(`l11-ot-pole-e-${i}`, "trampole", AX + 6.6, 0.15, z, 180, 2.9, "cylinder");
     }
     [-2.2, 2.2].forEach((tx, t) => sp(`l11-ot-wire-${t}`, { feetPosition: { x: AX + tx, y: 6.55, z: Z0 + 4 }, spline: { kind: "powerline", points: [[0, 0, 0], [0, -0.25, 21], [0, 0, 42], [0, -0.25, 49]], width: 0.025 } }));
     // the stripped office: a concrete shell behind the gable, open to the avenue, ducts and foil overhead, the drywall half up
@@ -1369,7 +1369,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     const SLAB = { ...T("water-stained-streaked-old-poured-concrete-column", 2), color: "oklch(0.66 0.015 80)", roughness: 0.9 };
     // the painted gable: the office's south end wall rises bare above it, the old advert fading on it, read from the avenue walking north
     bx("l11-ot-gable", OX, 0.1, OZ - OD / 2 - 0.45, OW, 11, 0.5, SEDCO_BRICK);
-    sp("l11-ot-ad", { feetPosition: { x: OX + 4.5, y: 2.6, z: OZ - OD / 2 - 0.72 }, rotation: { yaw: 180 }, primitive: { kind: "plane", width: 5.6, height: 8.4 }, material: { texture: MODELS.ot_wallad, roughness: 0.95 } });
+    sp("l11-ot-ad", { feetPosition: { x: OX + 4.5, y: 6.9, z: OZ - OD / 2 - 0.72 }, rotation: { yaw: 180 }, primitive: { kind: "plane", width: 5.6, height: 8.4 }, material: { texture: MODELS.ot_wallad, roughness: 0.95 } });
     sp("l11-ot-gable-lamp", { feetPosition: { x: OX + 9.5, y: 4.4, z: OZ - OD / 2 - 1.0 }, primitive: { kind: "sphere", radius: 0.16 }, material: { color: "#fff2d0", emissive: "#ffd890", emissiveIntensity: 2 }, light: { kind: "point", color: "oklch(0.9 0.08 75)", intensity: 2, distance: 12 } });
     bx("l11-ot-off-floor", OX, 0.02, OZ, OW, 0.14, OD, SLAB);
     bx("l11-ot-off-roof", OX, OH, OZ, OW, 0.5, OD, SLAB);
@@ -1389,14 +1389,14 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     bx("l11-ot-off-board-0", OX - 1.5, 0.15, OZ + 9.55, 1.2, 2.4, 0.03, DRYWALL_MAT);
     bx("l11-ot-off-board-1", OX - 0.3, 0.15, OZ + 9.55, 1.2, 2.4, 0.03, DRYWALL_MAT);
     // the work left where it stopped
-    fit("l11-ot-off-ladder", "ladder", OX + 4.5, 0.1, OZ - 3.5, 25, [0.75, 2.5, 1.4]);
-    fit("l11-ot-off-drywall", "drywall", OX - 6.5, 0.1, OZ + 4, 90, [3.4, 1.2, 2.0]);
-    fit("l11-ot-off-spool-0", "spool", OX - 7.5, 0.1, OZ - 7.5, 0, [1.2, 1.1, 1.0], "cylinder");
-    fit("l11-ot-off-spool-1", "spool", OX - 6.1, 0.1, OZ - 8.4, 70, [0.9, 0.8, 0.75], "cylinder");
+    fit("l11-ot-off-ladder", "ladder", OX + 4.5, 0.1, OZ - 3.5, 25, 1.35);
+    fit("l11-ot-off-drywall", "drywall", OX - 6.5, 0.1, OZ + 4, 90, 0.68);
+    fit("l11-ot-off-spool-0", "spool", OX - 7.5, 0.1, OZ - 7.5, 0, 2.2, "cylinder");
+    fit("l11-ot-off-spool-1", "spool", OX - 6.1, 0.1, OZ - 8.4, 70, 1.6, "cylinder");
     sp("l11-ot-off-hum", { feetPosition: { x: OX, y: 3.6, z: OZ }, audio: { clip: "cdn/sfx-empty-concrete-office-floor-fluorescent-tube-buzz-and-ventilation-drone-loop.mp3", loop: true, gain: 0.14, spatial: true, maxDistance: 18 } });
     // a second crossing over the canal: a white steel footbridge, west of the road bridge
     const CZ = -30;
-    fit("l11-canal-footbridge", "footbridge", -36, 0.32, CZ, 90, [26, 2.4, 4.2], "mesh");
+    fit("l11-canal-footbridge", "footbridge", -36, 0.32, CZ, 45, 5.2, "mesh");
   }
 
   // ==========================================
