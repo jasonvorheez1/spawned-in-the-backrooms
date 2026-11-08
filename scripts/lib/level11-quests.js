@@ -174,7 +174,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
     if (!s.craneQ) {
       setCraneStep(ctx, p, 1, "Quest Started: The Paper Bird's Blessing · Visit Entity 14 on the canal coping");
       return {
-        reply: "It's the canal locks upstream, citizen. The spillway pressure valve jammed, and the B.N.T.G. freight barge from Level 6.1 can't dock! Even the Lucky Cranes along the promenade stopped chirping. Seek out the origami crane on the canal wall—its blessing will guide you to the spillway pump.",
+        reply: "It's the canal locks upstream, citizen. The spillway pressure valve jammed, and the B.N.T.G. freight barge from Level 6.1 can't dock! Even the Lucky Cranes along the promenade stopped chirping. Seek out the origami crane on the canal wall, its blessing will guide you to the spillway pump.",
         mood: "calm",
       };
     }
@@ -190,7 +190,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
         text: "Quest Completed: The Paper Bird's Blessing · +95 XP, +$40.00, Fresh Provisions",
       });
       return {
-        reply: "You did it! I can hear the canal locks opening right now—the B.N.T.G. coffee caravan is sailing in! As promised, forty Backdollars, fresh rations, and two bottles of pure Almond Water. The Guild won't forget your help, citizen!",
+        reply: "You did it! I can hear the canal locks opening right now, the B.N.T.G. coffee caravan is sailing in! As promised, forty Backdollars, fresh rations, and two bottles of pure Almond Water. The Guild won't forget your help, citizen!",
         mood: "happy",
       };
     }

@@ -122,7 +122,7 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
     const [a, b, yw] = corner(cp.cx, cp.cz), xs = [a, b].includes(0) ? lo(cp.cx + 1) - 0.1 : lo(cp.cx) + 0.1, zs = [a, b].includes(1) ? lo(cp.cz + 1) - 0.1 : lo(cp.cz) + 0.1;
     put("camp", { feetPosition: { x: xs, y: 0, z: zs }, rotation: yw, primitive: geo("camp"), physics: { body: "static", collider: "auto" } });
     const r = (yw * Math.PI) / 180, lx = 1.05, lz = -1.05, nx = xs + lx * Math.cos(r) + lz * Math.sin(r), nz = zs - lx * Math.sin(r) + lz * Math.cos(r);
-    put("note", { feetPosition: { x: nx, y: 0, z: nz }, tags: ["moment", "m-note", "usable", "container"], primitive: { kind: "box", width: 0.22, height: 0.02, depth: 0.3 }, visible: false, behavior: "scripts/moments.js", state: { kind: "note", name: "Wanderer's note", verb: "Read", info: "pencil, smudged", text: "Day 31? Ran out of the water. The lights hum louder when they're close. Follow the chalk west, it's still there, it HAS to be. — R.", items: "page:23" } });
+    put("note", { feetPosition: { x: nx, y: 0, z: nz }, tags: ["moment", "m-note", "usable", "container"], primitive: { kind: "box", width: 0.22, height: 0.02, depth: 0.3 }, visible: false, behavior: "scripts/moments.js", state: { kind: "note", name: "Wanderer's note", verb: "Read", info: "pencil, smudged", text: "Day 31? Ran out of the water. The lights hum louder when they're close. Follow the chalk west, it's still there, it HAS to be., R.", items: "page:23" } });
     scrib("tally", cp.cx, cp.cz, a, 0.9, 1.25);
     out.campAt = cellCenter(cp.cx, cp.cz);
   }

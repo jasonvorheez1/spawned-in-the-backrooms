@@ -10,7 +10,7 @@ export const STARTERS = {
   'meg-ale': {
     greeting: "Still breathing? Good. Keep your boots quiet and don't touch the dark puddles near the exit.",
     mood: 'calm',
-    returning: "Back again, wanderer? Watch your corners—the halls don't stay empty for long.",
+    returning: "Back again, wanderer? Watch your corners, the halls don't stay empty for long.",
     friendly: "Hey! Good to see you still in one piece. What's the plan?",
     cold: "Make it quick. I've got a patrol sweep in five minutes.",
     choices: [
@@ -21,7 +21,7 @@ export const STARTERS = {
     ],
   },
   'meg-ortiz': {
-    greeting: "Sit down before you fall down. Let me see where it hurts—and don't tell me you're fine.",
+    greeting: "Sit down before you fall down. Let me see where it hurts, and don't tell me you're fine.",
     mood: 'calm',
     returning: "Still walking? Let me know the moment you feel a fever or see shadows twitching.",
     friendly: "Ah, good to see you, wanderer. Take a breath. How is your condition holding up?",
@@ -49,7 +49,7 @@ export const STARTERS = {
 
   // ---- Level 2 (Survivor Camp in Pipe Dreams) ----
   'surv-wren': {
-    greeting: "Whoa—stay back! ...Oh. You're not a Hound. Sorry! My nerves are completely shot today.",
+    greeting: "Whoa, stay back! ...Oh. You're not a Hound. Sorry! My nerves are completely shot today.",
     mood: 'scared',
     returning: "Oh, it's you! Did you hear that banging in the steam pipes? It's getting louder...",
     friendly: "Hey! Honestly, it's a huge relief seeing you. Don't leave me alone too long, okay?",
@@ -62,7 +62,7 @@ export const STARTERS = {
     ],
   },
   'surv-hollis': {
-    greeting: "*taps a hissing radio* Static again... Hey, wanderer. You look rough around the edges. Rest by the stove a minute.",
+    greeting: "Static again... Hey, wanderer. You look rough around the edges. Rest by the stove a minute.",
     mood: 'calm',
     returning: "Still with us? Good. Grab some warm water, the pipes are running hot.",
     friendly: "Come on in, friend. The radio's quiet, but you're always welcome at our fire.",
@@ -103,7 +103,7 @@ export const STARTERS = {
     ],
   },
   'gamma-pell': {
-    greeting: "Wipe your feet. Copper wire, batteries, almond water—everything has an inventory line. What's your business?",
+    greeting: "Wipe your feet. Copper wire, batteries, almond water, everything has an inventory line. What's your business?",
     mood: 'calm',
     returning: "Ledger's open. Got supplies to declare, or just browsing the requisition bins?",
     friendly: "Ah, the reliable wanderer. Your credit is good with Base Gamma. Let's talk supplies.",
@@ -129,7 +129,7 @@ export const STARTERS = {
     ],
   },
   'gamma-hask': {
-    greeting: "Cpl. Hask here. Watch your step by the perimeter—the liquid pain hoses are pressurized.",
+    greeting: "Cpl. Hask here. Watch your step by the perimeter, the liquid pain hoses are pressurized.",
     mood: 'calm',
     returning: "Back through the gates. Keep moving toward the public sector.",
     choices: [
@@ -139,7 +139,7 @@ export const STARTERS = {
     ],
   },
   'gamma-marlo': {
-    greeting: "Looking for firepower? Marlo's the name. Shotguns, pistols, modifications—almond water talks.",
+    greeting: "Looking for firepower? Marlo's the name. Shotguns, pistols, modifications, almond water talks.",
     mood: 'happy',
     choices: [
       { text: "Show me what weapons and ammo you've got.", tag: "Help" },
@@ -183,7 +183,7 @@ export const STARTERS = {
   'omega-lin': {
     greeting: "Floor check in progress. Fountains are running, windows are taped. Keep moving and stay out of empty cubicles.",
     mood: 'calm',
-    returning: "Still circling? Stick to the main corridors—the side offices are easy to get turned around in.",
+    returning: "Still circling? Stick to the main corridors, the side offices are easy to get turned around in.",
     friendly: "Hey. Glad to see you're not seeing things yet. Want a patrol tip?",
     choices: [
       { text: "Why are all the office windows taped over?", tag: "Lore" },
@@ -193,7 +193,7 @@ export const STARTERS = {
     ],
   },
   'omega-okafor': {
-    greeting: "Sgt. Okafor. State your business on Level 4. Base Omega maintains order here—no looting claimed offices.",
+    greeting: "Sgt. Okafor. State your business on Level 4. Base Omega maintains order here, no looting claimed offices.",
     mood: 'calm',
     choices: [
       { text: "What are the rules regarding office claims?", tag: "Lore" },
@@ -234,7 +234,7 @@ export const STARTERS = {
     ],
   },
   'l4-penny': {
-    greeting: "*yawns softly and rubs eyes* Oh... hi. I was just about to take another nap. Did you find where the morning comes from?",
+    greeting: "Oh... hi. I was just about to take another nap. Did you find where the morning comes from?",
     mood: 'calm',
     returning: "Hi again... I was having the sweetest dream about real sunshine.",
     choices: [
@@ -267,7 +267,7 @@ export const STARTERS = {
     ],
   },
   'tbd-nib': {
-    greeting: "*giggles twitchily* Shiny! Everything shines if you turn the desk lamp right! Don't touch my shiny piles!",
+    greeting: "Shiny! Everything shines if you turn the desk lamp right! Don't touch my shiny piles!",
     mood: 'happy',
     choices: [
       { text: "How do you slip past the M.E.G. patrols to scavenge shiny things?", tag: "Sneak 35", check: { skill: 'sneak', difficulty: 35 } },
@@ -336,7 +336,7 @@ export const STARTERS = {
     ],
   },
   'l5-odette': {
-    greeting: "*sighs heavily with a feather duster* If one more guest leaves ash on the Persian rug, I'm locking the broom closet. What do you want?",
+    greeting: "If one more guest leaves ash on the Persian rug, I'm locking the broom closet. What do you want?",
     mood: 'annoyed',
     returning: "Still here? Don't make a mess in the halls. It takes hours to get blood out of damask.",
     choices: [
@@ -370,7 +370,7 @@ export const STARTERS = {
     ],
   },
   'l5-tobias': {
-    greeting: "Ah, another exterminator? The Death Rats are breeding behind the hot pipes again. Ten almond water per pelt—interested?",
+    greeting: "Ah, another exterminator? The Death Rats are breeding behind the hot pipes again. Ten almond water per pelt, interested?",
     mood: 'calm',
     returning: "Got any rat pelts for the bounty board? The boiler crew is begging for relief.",
     choices: [
@@ -412,7 +412,7 @@ export const STARTERS = {
     ],
   },
   'l5-vanderholt': {
-    greeting: "*polishes gold monocle* Hm? A newcomer in modern rags. If you've come begging for a railway loan, my terms are twenty percent compound interest.",
+    greeting: "Hm? A newcomer in modern rags. If you've come begging for a railway loan, my terms are twenty percent compound interest.",
     mood: 'annoyed',
     choices: [
       { text: "What was your railway empire like before you no-clipped?", tag: "Lore" },
@@ -432,7 +432,7 @@ export const STARTERS = {
     ],
   },
   'l5-wat': {
-    greeting: "*crosses himself frantically* Sancta Maria... Traveler, pray tell me: is this the purgatory of souls, or have the Black Death fevers finally taken my mind?",
+    greeting: "Sancta Maria... Traveler, pray tell me: is this the purgatory of souls, or have the Black Death fevers finally taken my mind?",
     mood: 'scared',
     choices: [
       { text: "This isn't purgatory, Brother Wat. You've fallen into the Backrooms.", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
@@ -442,7 +442,7 @@ export const STARTERS = {
     ],
   },
   'l5-samantha': {
-    greeting: "*purrs softly, psychic eyes glowing* Welcome to my parlor, wanderer. The threads of your past and future hum like plucked harp strings. Do you bring tribute, or just idle words?",
+    greeting: "Welcome to my parlor, wanderer. The threads of your past and future hum like plucked harp strings. Do you bring tribute, or just idle words?",
     mood: 'calm',
     returning: "You return to Samantha's presence. Do your hands bear savory meat, or only empty promises?",
     friendly: "Ah, mon cher! The stars sing around you. Have you brought another feast for my reading?",
@@ -465,7 +465,7 @@ export const STARTERS = {
     ],
   },
   'hk-vance': {
-    greeting: "*wipes soot from his brow* Boiler pressure is running red hot today. Keep your distance from the steam vents unless you want your fur scorched.",
+    greeting: "Boiler pressure is running red hot today. Keep your distance from the steam vents unless you want your fur scorched.",
     mood: 'calm',
     choices: [
       { text: "What's the safest route through the Boiler Room?", tag: "Survival 45", check: { skill: 'survival', difficulty: 45 } },
@@ -497,9 +497,9 @@ export const STARTERS = {
 
   // ---- Level 7 (Thalassophobia: M.E.G. Seawatch & Fort Surrender) ----
   'l7-vance': {
-    greeting: "Easy on the jetty planks—they're slick with sea spray. Welcome to M.E.G. Outpost Seawatch. If you swam here instead of taking the skiff, you're luckier than the last three runners.",
+    greeting: "Easy on the jetty planks, they're slick with sea spray. Welcome to M.E.G. Outpost Seawatch. If you swam here instead of taking the skiff, you're luckier than the last three runners.",
     mood: 'calm',
-    returning: "Back on dry basalt, runner? Keep an eye on the sonar trace—Entity 20 just circled the trench.",
+    returning: "Back on dry basalt, runner? Keep an eye on the sonar trace, Entity 20 just circled the trench.",
     friendly: "Good to see you breathing, friend. Warm your hands by the brazier and check the workbench if your gear's rusted.",
     cold: "Don't touch the hydrophone array unless you know how to read an acoustic sweep.",
     choices: [
@@ -510,7 +510,7 @@ export const STARTERS = {
     ],
   },
   'l7-jude': {
-    greeting: "Cease your rowing, wanderer. Listen to the slow breath beneath the waves. You have reached Fort Surrender—where the fear of the deep becomes our sanctuary.",
+    greeting: "Cease your rowing, wanderer. Listen to the slow breath beneath the waves. You have reached Fort Surrender, where the fear of the deep becomes our sanctuary.",
     mood: 'calm',
     returning: "You return to the rock. Have you heard the Leviathan's song beneath the tar?",
     friendly: "Peace of the Abyss upon you, sibling. Sit by the Leviathan ribs and let the tide quiet your mind.",
@@ -518,7 +518,7 @@ export const STARTERS = {
     choices: [
       { text: "Why does the Society of the Pushing worship the Thing on Level 7?", tag: "Lore" },
       { text: "What lies below the Midnight Zone in the underwater tar caves?", tag: "Survival 40", check: { skill: 'survival', difficulty: 40 } },
-      { text: "There's a second gargantuan creature out there—what is 'Tiny'?", tag: "Lore" },
+      { text: "There's a second gargantuan creature out there, what is 'Tiny'?", tag: "Lore" },
       { text: "Your people built a fortress out of drifting furniture. Share your wisdom with me.", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
     ],
   },
@@ -538,7 +538,7 @@ export const STARTERS = {
 
   // ---- Level 11 (The Infinite City) ----
   'l11-meg-agent-vance': {
-    greeting: "Welcome to Base Beta forward post, wanderer. Take a breath—the sun's real enough, and the air won't choke you.",
+    greeting: "Welcome to Base Beta forward post, wanderer. Take a breath, the sun's real enough, and the air won't choke you.",
     mood: 'calm',
     returning: "Still patrolling the avenue? Keep an eye out on the side alleys; some streets lead to places you don't want to fall into.",
     friendly: "Good to see another friendly face on the boulevard. Let me know if you need supplies from the chest or tactical logs from the terminal.",
@@ -555,14 +555,14 @@ export const STARTERS = {
     greeting: "Greetings, citizen! Fresh bread and apples just noclipped into our crates this morning. The Capital always keeps its people fed.",
     mood: 'calm',
     returning: "Back to the market? We just unpacked a fresh crate of Level 6.1 roasted coffee and bottled sodas.",
-    friendly: "Always good to see a loyal customer! Tell you what—I'll knock a few Backdollars off your bulk order today.",
+    friendly: "Always good to see a loyal customer! Tell you what, I'll knock a few Backdollars off your bulk order today.",
     cold: "Take your free ration and keep moving. The Guild's got a schedule to keep.",
     choices: [
       { text: "Show me your wares. What has the Traders Guild brought to the Capital?", tag: "Barter 30", check: { skill: 'barter', difficulty: 30 } },
       { text: "How does the food supply work? Does food really noclip into crates out of thin air?", tag: "Lore" },
       { text: "How does the B.N.T.G. navigate trade caravans through the canal locks to other levels?", tag: "Survival 35", check: { skill: 'survival', difficulty: 35 } },
       { text: "I've brought valuable salvage from the utility tunnels. Let's make a mutually profitable deal.", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
-      { text: "What's in that pamphlet—'A Different Kind of Urban'?", tag: "Lore" },
+      { text: "What's in that pamphlet, 'A Different Kind of Urban'?", tag: "Lore" },
     ],
   },
   'l11-commuter-faceling': {
@@ -581,7 +581,7 @@ export const STARTERS = {
   'l11-walker-1': {
     greeting: "Can't stop, kid! Dispatch manifest for Sedco Tower and the commercial elevator's being moody again.",
     mood: 'calm',
-    returning: "Hey, runner! Still alive on the avenue? Watch out for the delivery skiff down by the locks—wake was choppy earlier.",
+    returning: "Hey, runner! Still alive on the avenue? Watch out for the delivery skiff down by the locks, wake was choppy earlier.",
     friendly: "Yo! Good to run into you. If you ever need to know which alleys are dead ends and which ones lead to Level 6.1, just ask.",
     cold: "Out of the way! If this cargo is two minutes late, dispatch docks my pay.",
     choices: [
@@ -599,7 +599,7 @@ export const STARTERS = {
     cold: "I really need to get back to the office. Supervisor was already tapping her watch.",
     choices: [
       { text: "How did you end up working in an office inside the Backrooms?", tag: "Lore" },
-      { text: "You seem stressed. Take a breath—you're doing great out here.", tag: "Medicine 25", check: { skill: 'medicine', difficulty: 25 } },
+      { text: "You seem stressed. Take a breath, you're doing great out here.", tag: "Medicine 25", check: { skill: 'medicine', difficulty: 25 } },
       { text: "What's inside that enterable brick apartment down the block?", tag: "Speech 25", check: { skill: 'speech', difficulty: 25 } },
       { text: "Do the office telephones ever ring? Does anyone ever answer them?", tag: "Lore" },
     ],
@@ -608,7 +608,7 @@ export const STARTERS = {
     greeting: "Every block looks like the last one if you walk it long enough. Keep your map close and don't trip over the curbs, wanderer.",
     mood: 'calm',
     returning: "Back again? Steam lines on 11th Avenue are hissing steady. Just vented three manholes of Almond Water vapor.",
-    friendly: "Good to see someone with good sense. Here—take this spare flashlight battery. A good wanderer never walks into a dark stairwell unprepared.",
+    friendly: "Good to see someone with good sense. Here, take this spare flashlight battery. A good wanderer never walks into a dark stairwell unprepared.",
     cold: "Step around the wet sealant, kid. Don't make my shift longer than it already is.",
     choices: [
       { text: "What are those steam seeps coming out of the manhole covers?", tag: "Science 30", check: { skill: 'science', difficulty: 30 } },
@@ -620,7 +620,7 @@ export const STARTERS = {
 
   // ---- Level 10 (M.E.G. Outpost Bountiful) ----
   'l10-meg-cooper': {
-    greeting: "Welcome to M.E.G. Outpost Bountiful, wanderer! Smell that? That's real honest sourdough baking. Breathe the open air—there's no ceiling above you here.",
+    greeting: "Welcome to M.E.G. Outpost Bountiful, wanderer! Smell that? That's real honest sourdough baking. Breathe the open air, there's no ceiling above you here.",
     mood: 'happy',
     returning: "Back from the wheat fields? Grab a warm slice and tell me what the horizon looks like today.",
     friendly: "Always a pleasure, friend! The harvest is coming along great thanks to folks like you.",
@@ -829,7 +829,7 @@ function rawChoices(ctx, it, s, lastNpcReply, replyObj) {
       else if (txt.toLowerCase().includes('trade') || txt.toLowerCase().includes('buy') || txt.toLowerCase().includes('sell') || txt.toLowerCase().includes('discount')) tag = `Barter ${sk.barter}`
       else if (txt.toLowerCase().includes('hurt') || txt.toLowerCase().includes('heal') || txt.toLowerCase().includes('wound')) tag = `Medicine ${sk.medicine}`
       else if (txt.toLowerCase().includes('entity') || txt.toLowerCase().includes('danger') || txt.toLowerCase().includes('navigate')) tag = `Survival ${sk.survival}`
-      return { text: txt.replace(/^\[.*?\]\s*/, ''), tag }
+      return { text: txt.replace(/^\[./, ''), tag }
     })
   } else if (lastNpcReply && typeof lastNpcReply === 'string') {
     baseChoices = generateFollowUpChoices(ctx, it, s, lastNpcReply, entry, sk)

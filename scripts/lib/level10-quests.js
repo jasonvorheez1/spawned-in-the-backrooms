@@ -183,7 +183,7 @@ export function handleDialogueQuest10(ctx, p, npc, text) {
           text: "Quest Completed: The Still Watcher · +120 XP, +$50.00, 2x Almond Water, First Aid Kit",
         });
         return {
-          reply: "Astounding! These notes confirm my hypothesis—Entity 17 acts as passive spatial stabilizers across the wheat plains. Excellent fieldwork, wanderer. Here is your research stipend and emergency medical supplies from M.E.G. Research Wing.",
+          reply: "Astounding! These notes confirm my hypothesis, Entity 17 acts as passive spatial stabilizers across the wheat plains. Excellent fieldwork, wanderer. Here is your research stipend and emergency medical supplies from M.E.G. Research Wing.",
           mood: "happy",
         };
       }

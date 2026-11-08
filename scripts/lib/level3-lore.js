@@ -116,7 +116,7 @@ export function layLore(ctx) {
     const p = wallPt(cx, cz, d, (hash(cx, cz, 3) - 0.5) * 2, 0.25, 0.005);
     ctx.spawn({ tags: ["lore", "lore-page", "container", "breakable"], feetPosition: p, rotation: { yaw: yawOf(d) + (hash(cx, cz, 4) - 0.5) * 50 }, physics: "static",
       primitive: { kind: "box", width: 0.21, height: 0.004, depth: 0.28 }, material: { color: "oklch(0.86 0.025 90)", roughness: 1 },
-      ui: `<div face="top" width="0.21m" style="padding:10px;font-family:serif;font-size:15px;line-height:1.05;color:#1d2a52;background:repeating-linear-gradient(#e6dfcc 0 17px,#9fb0cf 17px 18px)">${PAGES[i]}<br>— — — —<br>it's so quiet when you stop</div>`,
+      ui: `<div face="top" width="0.21m" style="padding:10px;font-family:serif;font-size:15px;line-height:1.05;color:#1d2a52;background:repeating-linear-gradient(#e6dfcc 0 17px,#9fb0cf 17px 18px)">${PAGES[i]}<br>, , , , <br>it's so quiet when you stop</div>`,
       state: { mat: "wood", hp: 5, maxHp: 5, name: "Notebook page", items: "page:" + (1 + (i * 3) % 8) } });
     n.page++; }
   // 2. Object 56 (the Blender statue in its vault): one bare bulb over her

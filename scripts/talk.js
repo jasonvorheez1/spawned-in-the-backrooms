@@ -1,3 +1,4 @@
+import { plain } from './lib/plain.js'
 import CANNED from './lib/data/canned-talk.yml'
 // Free talk with NPCs, on the player. E on an M.E.G. agent or Survivor opens the card (interact.js sets
 // state.talkWith); what you type goes to the built-in model as 'talk', its JSON comes back to heard().
@@ -77,6 +78,7 @@ function logLine(ctx, it, w, t) {
 }
 // the reply: a voice at the npc everyone near hears, their speech bubble, your subtitle
 function say(ctx, it, line, mood) {
+  line = plain(line) // every spoken line, written or generated: no dashes, no *actions*
   const now = ctx.now(), p = it.feetPosition, d = 1600 + line.length * 60
   ctx.self.state.sub = { who: nameOf(it), t: line, at: now, d }
   it.state.line = { t: line, at: now, d }; it.state.talkAt = now; it.state.talkTo = ctx.self.id
