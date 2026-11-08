@@ -13,6 +13,7 @@
 import { keepPeople, every } from "../../scripts/lib/level-kit.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { layExtras } from "../../scripts/lib/level7-extras.js";
+import { layHouse } from "../../scripts/lib/level7-house.js";
 export const cadence = "2s";
 
 // Tripo models for the props (Savi, Nov 7): each fits a layout box; breakables take tag + { mat, hp, maxHp } (lib/breakables.js)
@@ -48,19 +49,15 @@ export function breakables(FY, PY) {
     "l7-bookcase": { tags: ["breakable"], feetPosition: { x: -2.72, y: FY, z: 0.3 }, rotation: { yaw: 0 }, model: GLB.bookcase, layout: fit(1.5, 2.3, 1.5), physics: { body: "static", collider: "box" }, state: brk("wood", 90) },
     "l7-armchair": { tags: ["breakable"], feetPosition: { x: 1.7, y: FY, z: 0.2 }, rotation: { yaw: -115 }, model: GLB.armchair, layout: fit(0.95, 0.95, 0.95), physics: { body: "static", collider: "box" }, state: brk("wood", 50) },
     "l7-table": { tags: ["breakable"], feetPosition: { x: 1.15, y: FY, z: -0.9 }, rotation: { yaw: 8 }, model: GLB.table, layout: fit(1.15, 0.5, 1.15), physics: { body: "static", collider: "box" }, state: brk("wood", 40) },
-    "l7-dresser": { tags: ["container", "breakable"], feetPosition: { x: 2.4, y: FY, z: -2.15 }, rotation: { yaw: 84 }, model: GLB.dresser, layout: fit(1.0, 1.1, 1.0), physics: { body: "static", collider: "box" }, state: { name: "Swollen chest of drawers", items: "almond,bandage,bobbypin", ...brk("wood", 70) } },
-    "l7-dresser-top": { tags: ["breakable"], feetPosition: { x: 1.15, y: FY + 0.5, z: -0.9 }, rotation: { yaw: 172, roll: 4 }, model: GLB.dresser, layout: fit(0.75, 0.8, 0.75), physics: { body: "static", collider: "box" }, state: brk("wood", 50) },
-    "l7-sideboard": { tags: ["container", "breakable"], feetPosition: { x: 2.42, y: FY, z: 2.2 }, rotation: { yaw: 90 }, model: GLB.sideboard, layout: fit(1.15, 1.25, 1.15), physics: { body: "static", collider: "box" }, state: { name: "Waterlogged sideboard", items: "ration,battery", ...brk("wood", 80) } },
+    "l7-dresser": { tags: ["container", "breakable"], feetPosition: { x: 2.4, y: FY, z: -2.15 }, rotation: { yaw: 84 }, model: GLB.dresser, layout: fit(1.0, 1.1, 1.0), physics: { body: "static", collider: "box" }, state: { name: "Swollen TV cabinet", items: "almond,bandage,bobbypin", ...brk("wood", 70) } },
+    "l7-sideboard": { tags: ["container", "breakable"], feetPosition: { x: 2.42, y: FY, z: 2.2 }, rotation: { yaw: 90 }, model: GLB.sideboard, layout: fit(1.15, 1.25, 1.15), physics: { body: "static", collider: "box" }, state: { name: "Waterlogged computer cabinet", items: "ration,battery", ...brk("wood", 80) } },
     "l7-boxes": { tags: ["breakable"], feetPosition: { x: 1.25, y: FY, z: 2.45 }, rotation: { yaw: 6 }, model: GLB.boxes, layout: fit(0.8, 1.05, 0.8), physics: { body: "static", collider: "box" }, state: { items: "wire", ...brk("wood", 20) } },
     "l7-lamp": { tags: ["breakable"], feetPosition: { x: -2.5, y: FY, z: 2.3 }, rotation: { yaw: 210, roll: -9 }, model: GLB.floorlamp, layout: fit(0.9, 1.7, 0.9), physics: { body: "static", collider: "box" },
       children: [{ feetPosition: { x: 0, y: 1.45, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.11 70)", intensity: 0.7, distance: 4 } }], state: brk("wood", 25) },
     "l7-plant": { tags: ["breakable"], feetPosition: { x: -1.3, y: FY, z: 2.5 }, rotation: { yaw: 40 }, model: GLB.plant, layout: fit(0.6, 0.75, 0.6), physics: { body: "static", collider: "box" }, state: brk("wood", 15) },
-    "l7-vase": { tags: ["breakable"], feetPosition: { x: 1.0, y: FY + 1.28, z: -0.85 }, rotation: { yaw: 20 }, model: GLB.vase, layout: fit(0.35, 0.75, 0.35), physics: { body: "static", collider: "box" }, state: brk("wood", 10) },
     "l7-dresser-2": { tags: ["breakable"], feetPosition: { x: 2.4, y: FY + 1.08, z: -2.1 }, rotation: { yaw: 70, roll: -6 }, model: GLB.boxes, layout: fit(0.7, 0.9, 0.7), physics: { body: "static", collider: "box" }, state: { items: "ration", ...brk("wood", 20) } },
     "l7-boxes-2": { tags: ["breakable"], feetPosition: { x: -2.35, y: FY, z: -0.95 }, rotation: { yaw: 80, roll: 3 }, model: GLB.boxes, layout: fit(0.7, 0.9, 0.7), physics: { body: "static", collider: "box" }, state: brk("wood", 20) },
-    "l7-vase-2": { tags: ["breakable"], feetPosition: { x: 2.35, y: FY + 1.25, z: 2.0 }, rotation: { yaw: 160 }, model: GLB.vase, layout: fit(0.3, 0.6, 0.3), physics: { body: "static", collider: "box" }, state: brk("wood", 10) },
     "l7-plant-2": { tags: ["breakable"], feetPosition: { x: -2.2, y: FY + 0.8, z: -1.8 }, rotation: { yaw: 250 }, model: GLB.plant, layout: fit(0.5, 0.6, 0.5), physics: { body: "static", collider: "box" }, state: brk("wood", 15) },
-    "l7-painting": { feetPosition: { x: -1.6, y: FY + 1.0, z: 2.86 }, rotation: { yaw: 180, roll: 5 }, model: GLB.painting, layout: fit(1.3, 1.1, 1.3) },
     "l7-debris-1": { feetPosition: { x: -0.95, y: FY + 0.12, z: 0.9 }, rotation: { yaw: 30 }, model: GLB.debris, layout: fit(0.8, 0.45, 0.8) },
     "l7-debris-2": { feetPosition: { x: -1.5, y: FY + 0.12, z: -2.3 }, rotation: { yaw: 200 }, model: GLB.debris, layout: fit(0.65, 0.4, 0.65) },
 
@@ -89,7 +86,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 13; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
+const V = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
 const CONCRETE = {
@@ -106,8 +103,8 @@ const WOOD = {
   repeat: [1, 1],
   wrap: "repeat",
 };
-const PAPER = { color: "oklch(0.8 0.05 85)", roughness: 0.95, texture: "cdn/texture-faded-water-stained-vintage-floral-wallpaper.png", repeat: [1, 1], wrap: "repeat" };
-const WAINSCOT = { color: "oklch(0.84 0.02 85)", roughness: 0.75, texture: "cdn/texture-weathered-wood-planks.png", repeat: [3, 1], wrap: "repeat" };
+const PAPER = { color: "oklch(0.72 0.06 150)", roughness: 0.95 }; // a 2000s sage-green paint
+const WAINSCOT = { color: "oklch(0.86 0.04 88)", roughness: 0.85 }; // cream lower walls under a chair rail
 const RUST = { color: "oklch(0.38 0.06 45)", metalness: 0.6, roughness: 0.8 };
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const FY = 4.0; // The landing room floor elevation atop the basalt rock
@@ -278,7 +275,7 @@ function lay(ctx) {
     repeat: [1, 1],
     wrap: "repeat",
   });
-  box(ctx, "l7-ceil", 0, FY + 2.7, 0, 6.4, 0.25, 6.4, { ...CONCRETE, color: "oklch(0.36 0.008 240)" });
+  box(ctx, "l7-ceil", 0, FY + 2.7, 0, 6.4, 0.25, 6.4, { color: "oklch(0.88 0.015 90)", roughness: 1 }); // popcorn ceiling
 
   // Walls with faded vintage wallpaper & North doorway opening out to the ocean
   box(ctx, "l7-wall-e", 3.05, FY, 0, 0.3, 2.7, 6.4, PAPER);
@@ -338,29 +335,9 @@ function lay(ctx) {
 
   // Wikidot reference photo architectural details inside Room 1:
   // 1) Stone chimney hearth & timber mantelpiece on the East wall
-  ctx.spawn("l7-hearth", {
-    feetPosition: { x: 2.72, y: FY, z: 0.55 },
-    rotation: { yaw: -90 },
-    primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "hearth" } },
-  });
   // 2) Turned-wood round pedestal table with white saucer top beside the hearth
-  ctx.spawn("l7-pedestal", {
-    feetPosition: { x: 2.25, y: FY, z: -0.35 },
-    primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "pedestal" } },
-  });
   // 3) Metal wire shelving rack with emerald-green bottle vase & ceramic planter beside the armchair
-  ctx.spawn("l7-wirerack", {
-    feetPosition: { x: -1.65, y: FY, z: 2.15 },
-    rotation: { yaw: 180 },
-    primitive: { kind: "scripted", script: "scripts/l7-room-geo.js", params: { kind: "wirerack" } },
-  });
   // 4) Draped white fabric sheet hanging off the left bookcase edge (as in the photo)
-  ctx.spawn("l7-cloth-drape", {
-    feetPosition: { x: -2.32, y: FY + 0.75, z: -0.38 },
-    rotation: { yaw: 12, roll: -6 },
-    primitive: { kind: "box", width: 0.08, height: 1.15, depth: 0.42 },
-    material: { color: "oklch(0.9 0.015 85)", roughness: 0.9 },
-  });
 
   // Staircase ascending into the darkness back to Level 6 (South)
   for (let k = 0; k < 6; k++) {
@@ -783,6 +760,7 @@ function lay(ctx) {
   });
 
   layExtras(ctx, GLB, fit);
+  layHouse(ctx, FY); // the entrance room as a 2000s living room
 
   // =========================================================================
   // 5. DUAL ABYSSAL TITANS: ENTITY 20 ("THE THING ON LEVEL 7") & "TINY"
@@ -900,7 +878,7 @@ export function tick(ctx) {
   if ((s.builtV ?? 0) < V) {
     for (const id of Object.keys(ctx.place.objects)) if (GONE.includes(id) || /^l7-(plank|post)-/.test(id)) ctx.destroy(id);
     // rooms built before the fort moved still hold its old pieces (and the worshippers, standing where it was): clear them so the new ones are laid and the people come back
-    for (const id of Object.keys(ctx.place.objects)) if (/^(l7x-|l7-(fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$))/.test(id)) ctx.destroy(id);
+    for (const id of Object.keys(ctx.place.objects)) if (/^(l7x-|l7h-|l7-(wall-|wainscot-|ceil$|hearth$|pedestal$|wirerack$|cloth-drape$|painting$|vase|dresser-top$|fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$))/.test(id)) ctx.destroy(id);
     s.npcGone = {};
     lay(ctx);
     s.builtV = V;
