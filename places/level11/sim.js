@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 88; // bump to rebuild the city in rooms that are already open
+const V = 89; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1363,7 +1363,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
       fit(`l11-ot-pole-w-${i}`, "trampole", AX - 6.6, 0.15, z, 0, 2.9, "cylinder");
       fit(`l11-ot-pole-e-${i}`, "trampole", AX + 6.6, 0.15, z, 180, 2.9, "cylinder");
     }
-    [-2.5, 2.5].forEach((tx, t) => sp(`l11-ot-wire-${t}`, { feetPosition: { x: AX + tx, y: 8.25, z: ZM }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: L - 6, radialSegments: 5 }, material: { color: "#1a1a1a", metalness: 0.6, roughness: 0.5 }, castShadow: false }));
+    [-2.5, 2.5].forEach((tx, t) => sp(`l11-ot-wire-${t}`, { feetPosition: { x: AX + tx, y: 8.25 - (L - 6) / 2, z: ZM }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: L - 6, radialSegments: 5 }, material: { color: "#1a1a1a", metalness: 0.6, roughness: 0.5 }, castShadow: false }));
     // the stripped office: a concrete shell behind the gable, open to the avenue, ducts and foil overhead, the drywall half up
     const OX = -164, OZ = 136, OW = 22, OD = 26, OH = 4.6;
     const SLAB = { ...T("water-stained-streaked-old-poured-concrete-column", 2), color: "oklch(0.66 0.015 80)", roughness: 0.9 };
@@ -1382,7 +1382,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     // the frame inside: raw columns on a 6 m grid
     [-5.5, 0.5, 6.5].forEach((dx, i) => [-6, 0, 6].forEach((dz, j) => cyl(`l11-ot-off-col-${i}-${j}`, OX + dx, 0.1, OZ + dz, 0.32, 0.32, OH - 0.1, PILLAR_MAT)));
     // the foil-wrapped duct runs under the slab and the bare tubes that light it
-    [-4, 4].forEach((dx, i) => sp(`l11-ot-off-duct-${i}`, { feetPosition: { x: OX + dx, y: OH - 0.55, z: OZ }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.3, radiusBottom: 0.3, height: OD - 1.2, radialSegments: 20 }, material: SILVER_FOIL }));
+    [-4, 4].forEach((dx, i) => sp(`l11-ot-off-duct-${i}`, { feetPosition: { x: OX + dx, y: OH - 0.55 - (OD - 1.2) / 2, z: OZ }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.3, radiusBottom: 0.3, height: OD - 1.2, radialSegments: 20 }, material: SILVER_FOIL }));
     [-6, 0, 6].forEach((dz, i) => sp(`l11-ot-off-tube-${i}`, { feetPosition: { x: OX, y: OH - 0.32, z: OZ + dz }, primitive: { kind: "box", width: 3, height: 0.06, depth: 0.12 }, material: { color: "#f4f6f0", emissive: "#f4f8ff", emissiveIntensity: 1.6 }, light: { kind: "point", color: "oklch(0.96 0.02 220)", intensity: 1.6, distance: 11 } }));
     // half-hung drywall: a studded partition with the boards stopping short
     for (let k = 0; k < 9; k++) bx(`l11-ot-off-stud-${k}`, OX - 1 + k * 0.6, 0.15, OZ + 9.5, 0.09, OH - 0.15, 0.06, WOOD, { physics: k % 4 ? "none" : "static" });
