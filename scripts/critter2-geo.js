@@ -50,39 +50,39 @@ export function collider() { return { kind: "capsule", radius: 0.3, halfHeight: 
 // ears: point long round leaf flop pig | tail: bushy cat thin stub puff flag ringed curly lion otter
 export const SPECIES = {
   cat:      { fur: "#f2a65a", belly: "#fff1dc", nose: "#ff8fa3", ears: "point", earL: 0.25, tail: "cat", tip: "#fff1dc", snout: 0.06, fangs: true, whisk: true, muzzle: true },
-  dog:      { fur: "#c98b55", belly: "#fbe8cf", nose: "#2a1c18", ears: "flop", earL: 0.24, tail: "bushy", tip: "#fbe8cf", snout: 0.12, muzzle: true, paw: "#8a5a36" },
-  fox:      { noBlush: true, fur: "#f07a2e", belly: "#ffffff", nose: "#231816", ears: "point", earL: 0.34, earTip: "#2c1c18", tail: "bushy", tip: "#ffffff", snout: 0.13, fangs: true, muzzle: true, paw: "#2c1c18" },
+  dog:      { fur: "#c98b55", belly: "#fbe8cf", nose: "#2a1c18", ears: "flop", earL: 0.24, tail: "bushy", tip: "#fbe8cf", snout: 0.12, muzzle: true, paw: "#8a5a36", bridge: true },
+  fox:      { noBlush: true, fur: "#f07a2e", belly: "#ffffff", nose: "#231816", ears: "point", earL: 0.34, earTip: "#2c1c18", tail: "bushy", tip: "#ffffff", snout: 0.13, fangs: true, muzzle: true, paw: "#2c1c18", bridge: true },
   bunny:    { fur: "#f4efe9", belly: "#ffffff", nose: "#ff9fb4", ears: "long", earL: 0.42, tail: "puff", snout: 0.06, buck: true, muzzle: true, earIn: "#ffc2d1" },
-  bear:     { fur: "#9a6440", belly: "#e8c79e", nose: "#2a1c18", ears: "round", earL: 0.13, tail: "stub", snout: 0.1, muzzle: true, chunky: true, paw: "#6e4329" },
-  deer:     { fur: "#a8703f", belly: "#f1d4ae", nose: "#2a1612", ears: "leaf", earL: 0.22, tail: "flag", tip: "#ffffff", snout: 0.1, muzzle: true, antlers: true, antler: "#e9d8b4", spots: "#f1d4ae", paw: "#4a2a1c", freck: true },
-  reindeer: { fur: "#8a5a3a", belly: "#f1e0c8", nose: "#e0404c", ears: "leaf", earL: 0.22, tail: "stub", tip: "#f6efe4", snout: 0.1, muzzle: true, antlers: true, antler: "#efe0bd", spots: "#f1e0c8", paw: "#4a2e20", freck: true },
+  bear:     { fur: "#9a6440", belly: "#e8c79e", nose: "#2a1c18", ears: "round", earL: 0.13, tail: "stub", snout: 0.11, snoutW: 0.08, muzzle: true, chunky: true, paw: "#6e4329", bridge: true },
+  deer:     { fur: "#a8703f", belly: "#f1d4ae", nose: "#2a1612", ears: "leaf", earL: 0.22, tail: "flag", tip: "#ffffff", snout: 0.11, muzzle: true, antlers: true, antler: "#e9d8b4", spots: "#f1d4ae", paw: "#4a2a1c", freck: true, bridge: true },
+  reindeer: { fur: "#8a5a3a", belly: "#f1e0c8", nose: "#e0404c", ears: "leaf", earL: 0.22, tail: "stub", tip: "#f6efe4", snout: 0.11, muzzle: true, antlers: true, antler: "#efe0bd", spots: "#f1e0c8", paw: "#4a2e20", freck: true, bridge: true },
   mouse:    { fur: "#b9b3c2", belly: "#f6eef4", nose: "#ff8fa3", ears: "round", earL: 0.2, earW: 1.5, tail: "thin", snout: 0.08, whisk: true, muzzle: true, earIn: "#ffc2d1" },
-  wolf:     { fur: "#4f6f9f", belly: "#a9bfdc", nose: "#16141c", ears: "point", earL: 0.36, earTip: "#26406c", tail: "bushy", tip: "#a9bfdc", snout: 0.12, fangs: true, muzzle: true, paw: "#26406c" },
-  raccoon:  { fur: "#8b8a92", belly: "#e9e6ea", nose: "#1c1a20", ears: "point", earL: 0.17, tail: "ringed", tip: "#2a2830", snout: 0.11, muzzle: true, mask: "#2c2a32", paw: "#2c2a32", whisk: true },
+  wolf:     { fur: "#4f6f9f", belly: "#a9bfdc", nose: "#16141c", ears: "point", earL: 0.36, earTip: "#26406c", tail: "bushy", tip: "#a9bfdc", snout: 0.14, fangs: true, muzzle: true, paw: "#26406c", bridge: true },
+  raccoon:  { fur: "#8b8a92", belly: "#e9e6ea", nose: "#1c1a20", ears: "point", earL: 0.17, tail: "ringed", tip: "#2a2830", snout: 0.11, muzzle: true, mask: "#2c2a32", paw: "#2c2a32", whisk: true, bridge: true },
   panda:    { fur: "#f7f3ee", belly: "#ffffff", nose: "#1c1a20", ears: "round", earL: 0.13, earCol: "#2b2530", tail: "stub", snout: 0.08, chunky: true, limbs: "#2b2530", patch: "#2b2530" },
-  pig:      { fur: "#ffb3c1", belly: "#ffd9e0", nose: "#ff8ca2", ears: "pig", earL: 0.15, tail: "curly", snout: 0.07, pig: true, muzzle: false },
+  pig:      { fur: "#ffb3c1", belly: "#ffd9e0", nose: "#ff8ca2", ears: "pig", earL: 0.15, tail: "curly", snout: 0.12, pig: true, muzzle: false },
   sheep:    { fur: "#f6f1e7", belly: "#ffffff", headFur: "#5d5560", nose: "#2a1c18", ears: "flop", earL: 0.14, tail: "puff", snout: 0.08, wool: true, paw: "#5d5560", earIn: "#8a7f8c" },
-  lion:     { fur: "#ebb04e", belly: "#fbe3b0", nose: "#8a4a2a", ears: "round", earL: 0.11, tail: "lion", tip: "#a3592a", snout: 0.1, muzzle: true, mane: "#a3592a", fangs: true, whisk: true },
-  tiger:    { fur: "#f08a24", belly: "#fff6ea", nose: "#ff8fa3", ears: "round", earL: 0.12, earSpot: "#ffffff", tail: "ringed", tip: "#2a1c18", snout: 0.08, fangs: true, whisk: true, muzzle: true, stripes: "#2a1c18" },
+  lion:     { fur: "#ebb04e", belly: "#fbe3b0", nose: "#8a4a2a", ears: "round", earL: 0.11, tail: "lion", tip: "#a3592a", snout: 0.11, muzzle: true, mane: "#a3592a", fangs: true, whisk: true, bridge: true },
+  tiger:    { fur: "#f08a24", belly: "#fff6ea", nose: "#ff8fa3", ears: "round", earL: 0.12, earSpot: "#ffffff", tail: "ringed", tip: "#2a1c18", snout: 0.09, fangs: true, whisk: true, muzzle: true, stripes: "#2a1c18" },
   redpanda: { fur: "#c4532a", belly: "#3a2018", nose: "#1c1a20", ears: "point", earL: 0.17, earCol: "#f4ece2", tail: "ringed", tip: "#7a2e16", snout: 0.09, fangs: true, muzzle: true, face: "#f4ece2", tear: "#7a2e16", paw: "#2b1a14" },
-  skunk:    { fur: "#2e2c36", belly: "#f4f1ea", nose: "#16141c", ears: "round", earL: 0.12, tail: "bushy", tip: "#f4f1ea", snout: 0.1, muzzle: false, skunk: "#f4f1ea" },
+  skunk:    { fur: "#2e2c36", belly: "#f4f1ea", nose: "#16141c", ears: "round", earL: 0.12, tail: "bushy", tip: "#f4f1ea", snout: 0.10, muzzle: false, skunk: "#f4f1ea", bridge: true },
   hamster:  { fur: "#e8b77a", belly: "#fff4e0", nose: "#ff8fa3", ears: "round", earL: 0.12, tail: "stub", snout: 0.05, buck: true, chunky: true, whisk: true, muzzle: true, cheek: 1.8, earIn: "#ffc2d1" },
-  otter:    { fur: "#7a5236", belly: "#e8d2b4", nose: "#2a1c18", ears: "round", earL: 0.08, tail: "otter", snout: 0.08, whisk: true, muzzle: true, paw: "#5a3a24" },
+  otter:    { fur: "#7a5236", belly: "#e8d2b4", nose: "#2a1c18", ears: "round", earL: 0.08, tail: "otter", snout: 0.09, whisk: true, muzzle: true, paw: "#5a3a24" },
   koala:    { fur: "#9a9aa4", belly: "#ececf0", nose: "#2a2830", ears: "round", earL: 0.2, earW: 1.45, earIn: "#f4f4f6", tail: "stub", snout: 0.05, chunky: true, bignose: true, muzzle: false, fluffEar: true },
 };
 
 // the Nov 8 species: the scripted fallback and the first-person hands read these (the Blender heads are the real thing: art/critter-cute/build.py)
 Object.assign(SPECIES, {
-  rat: { ...SPECIES.mouse, fur: "#8a8078", belly: "#d8cfc4", nose: "#e8929e", ears: "round", earL: 0.17, earW: 0.95, tail: "thin", snout: 0.12, whisk: true, muzzle: true, earIn: "#f0b8b8" },
-  squirrel: { ...SPECIES.hamster, fur: "#b8683a", belly: "#f4e4cf", tail: "bushy", ears: "point", earL: 0.16, tip: "#f4e4cf" },
-  leopard: { ...SPECIES.tiger, fur: "#e8b24a", belly: "#fff1d4", stripes: undefined, spots: "#2a1c18", tail: "cat" },
-  jackal: { ...SPECIES.wolf, fur: "#c89a5a", belly: "#f1dcb8", earTip: "#2a1c18", tip: "#2a1c18", paw: "#5a3a22" },
-  badger: { fur: "#5c5864", belly: "#2e2c36", nose: "#16141c", ears: "round", earL: 0.11, earTip: "#e8e4dc", tail: "stub", snout: 0.11, muzzle: true, mask: "#2e2c36", cheek: 1.15, face: "#f1ece4" },
+  rat: { ...SPECIES.mouse, fur: "#8a8078", belly: "#d8cfc4", nose: "#e8929e", ears: "round", earL: 0.17, earW: 0.95, tail: "thin", snout: 0.13, whisk: true, muzzle: true, earIn: "#f0b8b8", bridge: true },
+  squirrel: { ...SPECIES.hamster, fur: "#b8683a", belly: "#f4e4cf", tail: "bushy", ears: "point", earL: 0.16, tip: "#f4e4cf", snout: 0.07 },
+  leopard: { ...SPECIES.tiger, fur: "#e8b24a", belly: "#fff1d4", stripes: undefined, spots: "#2a1c18", tail: "cat", snout: 0.09 },
+  jackal: { ...SPECIES.wolf, fur: "#c89a5a", belly: "#f1dcb8", earTip: "#2a1c18", tip: "#2a1c18", paw: "#5a3a22", snout: 0.14, bridge: true },
+  badger: { fur: "#5c5864", belly: "#2e2c36", nose: "#16141c", ears: "round", earL: 0.11, earTip: "#e8e4dc", tail: "stub", snout: 0.11, muzzle: true, mask: "#2e2c36", cheek: 1.15, face: "#f1ece4", bridge: true },
   ferret: { fur: "#c9a47c", belly: "#efe0c8", nose: "#e8929e", ears: "round", earL: 0.09, tail: "otter", tip: "#5a4030", snout: 0.10, muzzle: true, earIn: "#f0c8c0" },
-  beaver: { ...SPECIES.otter, fur: "#7a4a2c", belly: "#d8b88c", buck: true },
-  capybara: { fur: "#a07848", belly: "#d8b88a", nose: "#2a1c18", ears: "round", earL: 0.09, earW: 0.95, tail: "stub", snout: 0.14, muzzle: true, chunky: true, earIn: "#d8a888" },
+  beaver: { ...SPECIES.otter, fur: "#7a4a2c", belly: "#d8b88c", buck: true, snout: 0.10, snoutW: 0.08, bridge: true },
+  capybara: { fur: "#a07848", belly: "#d8b88a", nose: "#2a1c18", ears: "round", earL: 0.09, earW: 0.95, tail: "stub", snout: 0.15, snoutW: 0.12, muzzle: true, chunky: true, earIn: "#d8a888", bridge: true },
   lop: { ...SPECIES.bunny, fur: "#d8c4a8", ears: "flop", earL: 0.3 },
-  fennec: { ...SPECIES.fox, fur: "#e8c898", earL: 0.5, earTip: "#7a5a38" },
+  fennec: { ...SPECIES.fox, fur: "#e8c898", earL: 0.5, earTip: "#7a5a38", snout: 0.12, bridge: true },
 });
 
 // expressions: eyes, mouth, brows, extras
@@ -93,6 +93,18 @@ const EXPR = {
   blep: { e: "open", m: "blep", b: 0 }, love: { e: "heart", m: "grin", b: 0.3, blush: true, hearts: true }, sparkle: { e: "star", m: "beam", b: 0.5, sparks: true },
   kiss: { e: "happy", m: "kiss", b: 0.2, blush: true, hearts: true }, shy: { e: "down", m: "small", b: -0.5, blush: true }, smug: { e: "half", m: "smirk", b: 0.5, uneven: true },
   lidded: { e: "half", m: "smile", b: 0 }, sideeye: { e: "side", m: "flat", b: -0.2 }, unimpressed: { e: "heavy", m: "flat", b: 0 },
+  cocky: { e: "half", m: "smirkfang", b: 0.6, uneven: true }, pout: { e: "open", m: "pout", b: -0.8, blush: true }, evil: { e: "angry", m: "evil", b: -1 },
+  bored: { e: "heavy", m: "flatslant", b: 0 }, surprised: { e: "wide", m: "o", b: 1 }, scared: { e: "wide", m: "scream", b: -0.9, sweat: true },
+  sad: { e: "sad", m: "frown", b: -0.9 }, cry: { e: "cryshut", m: "wail", b: -1, tear: 2 }, angry: { e: "angry", m: "shout", b: -1 },
+  dizzy: { e: "spiral", m: "wobble", b: 0.3 }, sleepy: { e: "shut", m: "o-small", b: 0 },
+  catmouth: { e: "happy", m: "smile", b: 0.2, blush: true },
+  curious: { e: "wide", m: "small", b: 0.4 },
+  nervous: { e: "wide", m: "wobble", b: -0.4, sweat: true, blush: true },
+  flustered: { e: "spiral", m: "o", b: 0.6, blush: true, sweat: true },
+  determined: { e: "angry", m: "smirk", b: -0.5 },
+  disgusted: { e: "heavy", m: "wobble", b: -0.7 },
+  relieved: { e: "happy", m: "smile", b: -0.2 },
+};
   cocky: { e: "half", m: "smirkfang", b: 0.6, uneven: true }, pout: { e: "open", m: "pout", b: -0.8, blush: true }, evil: { e: "angry", m: "evil", b: -1 },
   bored: { e: "heavy", m: "flatslant", b: 0 }, surprised: { e: "wide", m: "o", b: 1 }, scared: { e: "wide", m: "scream", b: -0.9, sweat: true },
   sad: { e: "sad", m: "frown", b: -0.9 }, cry: { e: "cryshut", m: "wail", b: -1, tear: 2 }, angry: { e: "angry", m: "shout", b: -1 },
@@ -142,7 +154,13 @@ export function geometry(ctx) {
   const shoes = P.shoes || "none";
   const TOP = P.top || "#e85d75", BOT = P.bottom || "#3d5a98";
   const HATC = P.hatc || TOP, NECKC = P.neckc || "#f3c64a", SHOEC = P.shoec || "#f4f1ea";
-  const E = EXPR[P.expr] || EXPR.grin;
+  let E = EXPR[P.expr] || EXPR.grin;
+  if (P.talking || P.speech) {
+    const t = ((P.talkTime ? P.talkTime * 1000 : Date.now()) / 160) % 3;
+    if (t < 1) E = { ...E, m: "beam" };
+    else if (t < 2) E = { ...E, m: "o" };
+    else E = { ...E, m: "smile" };
+  }
   const marks = P.marks || "none";
   const LOD = ctx.lod || 1, hi = LOD <= 1, mid = LOD <= 2, low = LOD >= 4;
   const M = hi ? 14 : mid ? 12 : LOD === 3 ? 9 : 6; // ring segments for limbs
@@ -243,7 +261,9 @@ export function geometry(ctx) {
   const cone = (base, tip, r, c, m = hi ? 7 : 5) => { if (c) col(c); tube(path([[base, r], [lerp3(base, tip, 0.55), r * 0.62], [tip, 0.003]], hi ? 3 : 2), { m, domeA: true }); };
 
   // ---------- the head: a wide soft kemono head as one radial surface ----------
-  const SNL = (0.035 + (sp.snout || 0.08) * 0.9) * SZ("snoutS", 0.3, 1.8), SNW = 0.4 * Math.sqrt(SZ("snoutS", 0.3, 1.8)), SNH = 0.27, SNY = -0.34;
+  const SNL = (0.04 + (sp.snout || 0.08) * 1.05) * SZ("snoutS", 0.3, 1.8);
+  const SNW = (0.36 + (sp.snoutW || (sp.chunky ? 0.06 : 0.02))) * Math.sqrt(SZ("snoutS", 0.3, 1.8));
+  const SNH = 0.27, SNY = -0.34;
   const CHK = sp.cheek || 1;
   const headR = (d) => {
     const [x, y, z] = d;
@@ -253,19 +273,29 @@ export function geometry(ctx) {
     if (y < -0.48) r *= 1 - 0.08 * (-0.48 - y) * (1 - Math.abs(x) * 0.7); // soft rounded chin, not blocky
     if (z < 0) {
       const u = x / SNW, v = (y - SNY) / SNH, q = u * u + v * v;
-      if (q < 1) { const t = 1 - q; r += SNL * Math.sqrt(t) * (0.6 + 0.4 * t) * Math.min(1, -z * 2); }
+      if (q < 1) { const t = 1 - q; r += SNL * Math.sqrt(t) * (0.65 + 0.35 * t) * Math.min(1, -z * 2.1); }
+      // Kemono whisker pads (cats, rabbits, foxes, rodents)
       if (sp.whisk || sp.catnose || sp.snout == null || sp.snout < 0.12) {
         const padX = 0.14 * SNW;
         for (const s of [-1, 1]) {
           const pu = (x - s * padX) / (SNW * 0.52), pv = (y - (SNY - 0.02)) / (SNH * 0.65), pq = pu * pu + pv * pv;
-          if (pq < 1) r += SNL * 0.38 * ((1 - pq) ** 1.5) * Math.min(1, -z * 2.2);
+          if (pq < 1) r += SNL * 0.40 * ((1 - pq) ** 1.5) * Math.min(1, -z * 2.2);
         }
       }
-      if (sp.snout && sp.snout >= 0.12) {
-        const bu = x / (SNW * 0.38), bv = (y - SNY) / (SNH * 1.6);
+      // Sculpted nasal bridge: smooth anatomical ridge from forehead down to the nose tip
+      const hasBridge = (sp.snout && sp.snout >= 0.09) || sp.bridge;
+      if (hasBridge) {
+        const bridgeTaper = 0.32 + 0.14 * Math.max(0, (y - SNY) / (SNH * 1.8));
+        const bu = x / (SNW * bridgeTaper), bv = (y - SNY) / (SNH * 1.85);
         if (Math.abs(bu) < 1 && bv >= 0 && bv <= 1) {
-          r += SNL * 0.45 * (1 - bu * bu) * Math.sin(bv * Math.PI) * Math.min(1, -z * 2);
+          r += SNL * 0.50 * (1 - bu * bu) * Math.sin(bv * Math.PI) * Math.min(1, -z * 2.1);
         }
+      }
+      // Lower mandibular support: subtle chin contour supporting the muzzle
+      const cu = x / (SNW * 0.48), cv = (y - (SNY - SNH * 0.65)) / (SNH * 0.55);
+      if (cu * cu + cv * cv < 1 && y < SNY - 0.04) {
+        const ct = 1 - (cu * cu + cv * cv);
+        r += SNL * 0.28 * Math.sqrt(ct) * Math.min(1, -z * 1.8);
       }
     }
     return r;

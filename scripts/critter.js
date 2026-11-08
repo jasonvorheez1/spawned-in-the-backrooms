@@ -18,7 +18,14 @@ export const updateSchedule = { every: { seconds: 0.1 } } // 10 Hz: the hands fo
 const EYES_SHUT = ['joy', 'laugh', 'kiss', 'dizzy']
 function applyBones(ctx) {
   const ses = ctx.self.session, b = {}
-  if (MESH) { const h = ctx.getObject(ctx.self.id + '/' + HEAD_ID); if (h && ses.face) { const lk = ses.cachedLook ?? lookOf(ctx); h.morph = faceMorph(ses.face, ses.lids, lk?.sex === 'f', lk) } } // the blink is the head's Blink key
+  if (MESH) {
+    const h = ctx.getObject(ctx.self.id + '/' + HEAD_ID);
+    if (h && ses.face) {
+      const lk = ses.cachedLook ?? lookOf(ctx);
+      const isHurt = (ctx.now() - (ses.hitAt3 ?? 0)) < 700;
+      h.morph = faceMorph(ses.face, ses.lids, lk?.sex === 'f', { ...lk, hurt: isHurt });
+    }
+  }
   else if (ses.lids) { b.LidL = { scale: LID_SCALE }; b.LidR = { scale: LID_SCALE } }
   if (ses.twitch) b[ses.twitch] = { rotate: [0, 0, ses.twitchDir * 24] }
   if (ses.headS && ses.headS !== 1) b.Head = { scale: ses.headS }

@@ -149,10 +149,25 @@ export function faceMorph(expr, blink, isFemale, look) {
   if (tr) for (const [k, v] of Object.entries(tr)) if (k !== 'w') f[k] = Math.min(1, (f[k] ?? 0) + v * ts)
   const fty = ff ? FACES.types[ff.ftype] : null, fs = ff?.ftstr ?? 1 // the head's own shape: FT_ keys
   if (fty) for (const [k, v] of Object.entries(fty)) if (k !== 'w') f[k] = Math.min(1, v * fs)
-  const snoutS = Number(look?.snoutS ?? ff?.snoutS)
-  if (snoutS && snoutS !== 1) {
-    if (snoutS > 1.0) f.FT_Snout = Math.min(1, (f.FT_Snout ?? 0) + (snoutS - 1.0) * 1.2)
-    else if (snoutS < 1.0) f.FT_Snub = Math.min(1, (f.FT_Snub ?? 0) + (1.0 - snoutS) * 1.2)
+
+  // --- Dynamic Speech Viseme Technology (phonetic mouth shapes during dialogue) ---
+  if (look?.talking || look?.speech || look?.talk || expr === 'talking') {
+    const t = Number(look?.talkTime ?? (Date.now() / 1000))
+    // Multi-harmonic phonetic syllable rhythm (approx 4-5 Hz speech rate)
+    const syllable = (Math.sin(t * 18) * 0.5 + 0.5) * (Math.sin(t * 8) * 0.35 + 0.65)
+    const oVowel = (Math.cos(t * 12) * 0.5 + 0.5) * 0.35
+    const intensity = Number(look?.talkIntensity ?? 0.72)
+    f.Open = Math.min(1, (f.Open ?? 0) + syllable * intensity)
+    f.O = Math.min(1, (f.O ?? 0) + oVowel * intensity * 0.55)
+    f.Smile = Math.min(1, (f.Smile ?? 0) + 0.15)
+  }
+
+  // --- Hurt / Flinch Expression Technology ---
+  if (look?.hurt || look?.flinch) {
+    f.Sad = Math.min(1, (f.Sad ?? 0) + 0.65)
+    f.Half = Math.min(1, (f.Half ?? 0) + 0.55)
+    f.Frown = Math.min(1, (f.Frown ?? 0) + 0.75)
+    f.Angry = Math.min(1, (f.Angry ?? 0) + 0.35)
   }
 
   // --- Head silhouette smoothing: anti-oval & anti-blocky ---
@@ -165,53 +180,89 @@ export function faceMorph(expr, blink, isFemale, look) {
     f.FT_Round = Math.min(1, (f.FT_Round ?? 0) + 0.2)
   }
 
-  // Species-specific anatomical profile:
-  // Canines, cervids, bears, pigs, rodents each keep their distinctive species head silhouette
-  // instead of being flattened into identical cat faces.
+  // --- Species Anatomical Snout & Head Profiles ---
+  // Each animal species establishes its authentic cranial and snout profile
   const spName = speciesOf(ff ?? look)
   if (['wolf', 'fox', 'jackal', 'dog'].includes(spName)) {
     // Canines & Vulpines: distinct muzzle/snout, sleek cheeks, alert tapering jaw
-    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.42) + (isFemale ? 0.05 : 0.12))
+    if (spName === 'wolf') {
+      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.54) + (isFemale ? 0.04 : 0.12))
+      f.FT_Broad = Math.min(0.32, Math.max(f.FT_Broad ?? 0, 0.18))
+    } else if (spName === 'fox' || spName === 'jackal') {
+      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.48) + (isFemale ? 0.04 : 0.10))
+      f.FT_Narrow = Math.min(0.35, Math.max(f.FT_Narrow ?? 0, 0.22))
+      f.FT_Heart = Math.min(0.42, Math.max(f.FT_Heart ?? 0, 0.30))
+    } else {
+      // Dog
+      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.44) + (isFemale ? 0.04 : 0.08))
+      f.FT_Broad = Math.min(0.28, Math.max(f.FT_Broad ?? 0, 0.16))
+    }
     f.FT_Round = Math.min(0.35, (f.FT_Round ?? 0) * 0.6)
     f.FT_Chubby = Math.min(0.28, (f.FT_Chubby ?? 0) * 0.5)
-    f.FT_Broad = Math.min(0.3, Math.max(f.FT_Broad ?? 0, 0.12))
   } else if (['deer', 'reindeer'].includes(spName)) {
-    // Cervids: graceful tapered heart-shaped muzzle with moderate snout
-    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.35))
-    f.FT_Heart = Math.min(1, Math.max(f.FT_Heart ?? 0, 0.4))
+    // Cervids: graceful tapered heart-shaped muzzle with slender snout
+    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.38))
+    f.FT_Heart = Math.min(1, Math.max(f.FT_Heart ?? 0, 0.48))
+    f.FT_Narrow = Math.min(0.32, Math.max(f.FT_Narrow ?? 0, 0.24))
     f.FT_Chubby = Math.min(0.22, (f.FT_Chubby ?? 0) * 0.4)
     f.FT_Round = Math.min(0.35, (f.FT_Round ?? 0) * 0.6)
   } else if (spName === 'pig') {
-    // Suids: prominent snout disc, round cheeks
-    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.52))
-    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.35))
-    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.28))
+    // Suids: prominent forward snout disc, round cheeks
+    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.60))
+    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.32))
+    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.24))
   } else if (['bear', 'capybara', 'badger'].includes(spName)) {
     // Heavy / broad skulls: wide jaw, blunt muzzle, sturdy cute cheeks
-    f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.48))
-    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.28))
+    if (spName === 'capybara') {
+      f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.60))
+      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.40))
+      f.FT_Square = Math.min(0.35, Math.max(f.FT_Square ?? 0, 0.28))
+    } else if (spName === 'bear') {
+      f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.54))
+      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.34))
+      f.FT_Square = Math.min(0.30, Math.max(f.FT_Square ?? 0, 0.20))
+    } else {
+      f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.48))
+      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.32))
+    }
     f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.32))
     f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.25))
   } else if (['bunny', 'lop', 'hamster', 'mouse', 'squirrel'].includes(spName)) {
     // Lagomorphs & small rodents: cute snub muzzle, chubby puffy cheeks
-    f.FT_Snub = Math.min(1, Math.max(f.FT_Snub ?? 0, 0.42))
-    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.40) + (isFemale ? 0.12 : 0.05))
-    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.38) + (isFemale ? 0.12 : 0.05))
+    f.FT_Snub = Math.min(1, Math.max(f.FT_Snub ?? 0, 0.48))
+    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.42) + (isFemale ? 0.12 : 0.05))
+    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.40) + (isFemale ? 0.12 : 0.05))
   } else if (['rat', 'ferret', 'otter', 'beaver'].includes(spName)) {
     // Sleek rodents & mustelids: streamlined muzzle, balanced cheeks
-    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.28))
-    f.FT_Round = Math.min(0.42, Math.max(f.FT_Round ?? 0, 0.22))
+    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, spName === 'rat' ? 0.34 : 0.30))
+    f.FT_Round = Math.min(0.42, Math.max(f.FT_Round ?? 0, 0.24))
     f.FT_Chubby = Math.min(0.32, (f.FT_Chubby ?? 0) * 0.6)
+    if (spName === 'otter' || spName === 'beaver') f.FT_Broad = Math.min(0.32, Math.max(f.FT_Broad ?? 0, 0.18))
   } else if (spName === 'koala') {
     // Koala: wide broad face, fluffy sides
-    f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.45))
+    f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.48))
     f.FT_Snub = Math.min(1, Math.max(f.FT_Snub ?? 0, 0.32))
-    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.35))
+    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.36))
   } else {
     // Felids (cat, tiger, leopard, lion, redpanda, etc.): cute kemono roundness
     if (f.FT_Snout) f.FT_Snout = Math.min(0.35, f.FT_Snout * 0.55)
-    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.35) + (isFemale ? 0.16 : 0.08))
-    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.25) + (isFemale ? 0.14 : 0.06))
+    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.38) + (isFemale ? 0.16 : 0.08))
+    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.28) + (isFemale ? 0.14 : 0.06))
+  }
+
+  // --- Interactive Snout Slider Scaling (snoutS: 0.3..1.8) ---
+  // Gracefully multiplies or reduces the snout length on top of species anatomy
+  const snoutS = Number(look?.snoutS ?? ff?.snoutS)
+  if (snoutS && snoutS !== 1) {
+    if (snoutS > 1.0) {
+      const bonus = (snoutS - 1.0) * 0.75
+      f.FT_Snout = Math.min(1, (f.FT_Snout ?? 0) * (1 + bonus * 0.8) + bonus * 0.6)
+      if (f.FT_Snub) f.FT_Snub = Math.max(0, f.FT_Snub - bonus * 0.8)
+    } else {
+      const reduction = (1.0 - snoutS) * 0.75
+      f.FT_Snout = Math.max(0, (f.FT_Snout ?? 0) * (1 - reduction * 1.1))
+      f.FT_Snub = Math.min(1, (f.FT_Snub ?? 0) + reduction * 0.75)
+    }
   }
 
   // --- Blush stickers: NOT permanent on everyone ---
@@ -221,13 +272,13 @@ export function faceMorph(expr, blink, isFemale, look) {
     if (f.Blush == null || f.Blush < 0.35) f.Blush = 0.38
   } else {
     // If they do NOT wear a blush sticker, only emotional reactions blush
-    if (!['shy', 'love', 'kiss', 'joy', 'catmouth'].includes(expr) && !tr?.Blush) {
+    if (!['shy', 'love', 'kiss', 'joy', 'catmouth', 'nervous', 'flustered', 'beam'].includes(expr) && !tr?.Blush) {
       delete f.Blush
     }
   }
 
   // Cute resting face warmth for friendly expressions
-  if (f.Smile == null && !['sad', 'angry', 'cry', 'scared', 'pout', 'shock', 'teary', 'unimpressed', 'grumpy'].includes(expr)) {
+  if (f.Smile == null && !['sad', 'angry', 'cry', 'scared', 'pout', 'shock', 'teary', 'unimpressed', 'grumpy', 'disgusted', 'bored'].includes(expr)) {
     f.Smile = isFemale ? 0.25 : 0.18
   }
 
