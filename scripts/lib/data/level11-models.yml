@@ -43,3 +43,9 @@ market_stall: "/cdn/value.6c3728e77a51fda63535641303a051ae7a47011733784bef1653ad
 pizza_counter: "/cdn/value.0e35df1739d5de66a3cd79e1726db3d2ea0c673e9b2c1f1b1309d5eed771b0fc.glb"
 scaffold_shed: "/cdn/value.8f9039ffc140c9403244c7681f9eb01adcc1039749a34cddd038615ed36f1a76.glb"
 traffic_signal: "/cdn/value.1f087db772f23b509dddcfa963525476cce756686d0899475ac72641d1eb8f64.glb"
+# U.E.C. Thebes perimeter (tripo, metres, front on +X)
+th_fence: /cdn/value.2365f08320c96ab0ea32ce029ad744a7e06fab7864aa0b6c43a7c37e9bbec790.glb
+th_gate: /cdn/value.94e355da2618390e604bf97ed9eaad5c4f8a27d6e3b76ebd54d64420c67e3ff4.glb
+th_booth: /cdn/value.85c30d0824d5c18eb0f2a29c932865c2c4e771f0e7b6316842ef8e81f74dc40c.glb
+th_sandbag: /cdn/value.c0600549c9e1d54174d58d9238d92cfbf3929ad4b2633bef6b9680354f71c295.glb
+th_junk: /cdn/value.e2ffab9985cc6676eb11ad22e1d9e8733a725ae4b9a32417ac97e08826fa28b9.glb

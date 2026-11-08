@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 83; // bump to rebuild the city in rooms that are already open
+const V = 84; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1308,13 +1308,13 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   // ==========================================
   {
     const TZ = -130, TH = (k) => MODELS[`th_${k}`];
-    const THM = { fence: { forward: "-z", scale: 1 }, junk: { forward: "-z", scale: 1 }, booth: { forward: "-z", scale: 1 }, sandbag: { forward: "-z", scale: 1 }, gate: { forward: "-z", scale: 1 }, ...(MODELS.th_fit ?? {}) };
+    const THM = { fence: { forward: "+x", scale: 1.06 }, junk: { forward: "+x", scale: 1.7 }, booth: { forward: "+x", scale: 1.05 }, sandbag: { forward: "+x", scale: 1.1 }, gate: { forward: "+x", scale: 1.22 } }; // tripo comes in metres: fence 3.4 m, gate 3.3 m, junk 3.8 m wide before these
     const piece = (id, k, x, z, yaw, box, collider = "box") => TH(k)
       ? sp(id, { feetPosition: { x, y: 0.1, z }, rotation: { yaw }, model: { id: TH(k), forward: THM[k].forward }, scale: THM[k].scale, physics: { body: "static", collider } })
       : bx(id, x, 0.1, z, box[0], box[1], box[2], { color: "oklch(0.6 0.01 240)", metalness: 0.6, roughness: 0.5, opacity: 0.55, transparent: true }, { rotation: { yaw } });
     // the fence line, wall to wall, a 4 m gap for the gate
-    [3.75, 7.25, 10.75, 14.25, 17.25].forEach((ax, i) => [-1, 1].forEach((sgn) => piece(`l11-th-fence-${i}-${sgn}`, "fence", sgn * ax, TZ, 0, [3.5, 2.1, 0.12])));
-    piece("l11-th-gate", "gate", 0, TZ, 0, [4, 2.4, 0.15]);
+    [3.75, 7.25, 10.75, 14.25, 17.25].forEach((ax, i) => [-1, 1].forEach((sgn) => piece(`l11-th-fence-${i}-${sgn}`, "fence", sgn * ax, TZ, 180, [3.5, 2.1, 0.12])));
+    piece("l11-th-gate", "gate", 0, TZ, 180, [4, 2.4, 0.15]);
     // furniture junk heaped high behind the wire
     [[-12.5, 2], [-6.5, -1.5], [6.5, 1.5], [12.5, -2]].forEach(([x, dz], i) => piece(`l11-th-junk-${i}`, "junk", x, TZ - 3.2 + dz * 0.3, i * 37 % 360, [5.5, 3.2, 3], "box"));
     // the checkpoint outside the gate
@@ -1338,7 +1338,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
       ["l11-th-guard-1", 2.4, "l11-th-diana", { species: "fox", sex: "f", topw: "megjacket", top: "#3a3e44", botw: "cargo", bottom: "#2c2c2c", shoes: "boots" }, "Gate Guard Stewards · U.E.C. Thebes", "Nobody gets in without the council's say. And if you're carrying anything that smiles too wide, keep walking."],
     ];
     for (const [id, x, seed, look, name, line] of GUARDS) sp(id, {
-      tags: ["npc", "uec"], feetPosition: { x, y: 0.1, z: TZ + 1.6 }, rotation: { yaw: 0 }, physics: "character",
+      tags: ["npc", "uec"], feetPosition: { x, y: 0.1, z: TZ + 1.6 }, rotation: { yaw: 180 }, physics: "character",
       ...critterSpec(npcLook(seed, look, "guard", 11)),
       behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
       state: { name, role: "guard", voice: "reyes", faction: "uec", factionName: "U.E.C. Thebes", home: { x, z: TZ + 1.6 }, line, ...npcState(ctx, "agent", 140) },
