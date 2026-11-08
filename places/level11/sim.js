@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 87; // bump to rebuild the city in rooms that are already open
+const V = 88; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1363,7 +1363,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
       fit(`l11-ot-pole-w-${i}`, "trampole", AX - 6.6, 0.15, z, 0, 2.9, "cylinder");
       fit(`l11-ot-pole-e-${i}`, "trampole", AX + 6.6, 0.15, z, 180, 2.9, "cylinder");
     }
-    [-2.2, 2.2].forEach((tx, t) => sp(`l11-ot-wire-${t}`, { feetPosition: { x: AX + tx, y: 6.55, z: Z0 + 4 }, spline: { kind: "powerline", points: [[0, 0, 0], [0, -0.25, 21], [0, 0, 42], [0, -0.25, 49]], width: 0.025 } }));
+    [-2.5, 2.5].forEach((tx, t) => sp(`l11-ot-wire-${t}`, { feetPosition: { x: AX + tx, y: 8.25, z: ZM }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: L - 6, radialSegments: 5 }, material: { color: "#1a1a1a", metalness: 0.6, roughness: 0.5 }, castShadow: false }));
     // the stripped office: a concrete shell behind the gable, open to the avenue, ducts and foil overhead, the drywall half up
     const OX = -164, OZ = 136, OW = 22, OD = 26, OH = 4.6;
     const SLAB = { ...T("water-stained-streaked-old-poured-concrete-column", 2), color: "oklch(0.66 0.015 80)", roughness: 0.9 };
@@ -1396,7 +1396,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     sp("l11-ot-off-hum", { feetPosition: { x: OX, y: 3.6, z: OZ }, audio: { clip: "cdn/sfx-empty-concrete-office-floor-fluorescent-tube-buzz-and-ventilation-drone-loop.mp3", loop: true, gain: 0.14, spatial: true, maxDistance: 18 } });
     // a second crossing over the canal: a white steel footbridge, west of the road bridge
     const CZ = -30;
-    fit("l11-canal-footbridge", "footbridge", -36, 0.32, CZ, 45, 5.2, "mesh");
+    fit("l11-canal-footbridge", "footbridge", -36, 0.32, CZ, -45, 5.2, "mesh");
   }
 
   // ==========================================
