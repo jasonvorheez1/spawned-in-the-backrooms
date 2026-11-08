@@ -1,0 +1,50 @@
+# Level 2 props: every kind is a Tripo mesh at real-world size. size = [w, h, d] metres the model is fitted into
+# (front = -Z after forward). mat/hp feed breakables.js; name feeds loose.yml's material match (grab/kick/throw).
+# tags: extra tags (chair + furniture = kick.js pushes and kicks it on its casters).
+kinds:
+  boiler:      { id: /cdn/value.27948c141e734520b9ef7f402a8dcaba41bb12b008439d287a954aeb32c0753a.glb, size: [1.1, 2.0, 1.1],  name: Boiler,            mat: machine, hp: 220 }
+  heater:      { id: /cdn/value.6ce06512c0fae6bd792b208bb037ab9598010f7b122b4e2f9c888425162708e9.glb, size: [0.62, 1.6, 0.62], name: Water heater tank, mat: metal,   hp: 160 }
+  pump:        { id: /cdn/value.27ec9d05a1f59266dfcdc97e6713fa9b07509ec86ae09b9b3a19892f8cbe5267.glb, size: [1.4, 1.1, 0.75], name: Water pump,        mat: machine, hp: 180 }
+  bench:       { id: /cdn/value.dd903b9338239a5216f0755d356585b5b50f91b7633c6c80a4830e7ce2052a73.glb, size: [1.8, 0.9, 0.7],  name: Workbench,         mat: wood,    hp: 90 }
+  mop:         { id: /cdn/value.7cef96d0a3d0ffc03dcff7d0eb7f5b3fc3ad0c657105c2834a5a2a9e70cee26d.glb, size: [0.5, 1.2, 0.45], name: Mop bucket,        mat: fixture, hp: 25 }
+  chair:       { id: /cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb, size: [0.62, 1.0, 0.62], name: Office chair,     mat: metal,   hp: 45, tags: [furniture, chair] }
+  shelf:       { id: /cdn/value.d86244329c78a1af95aa40497523939bd9cc0e9d77b353d36202157ac9073d3e.glb, size: [1.4, 1.9, 0.45], name: Steel shelf,       mat: metal,   hp: 110 }
+  drum:        { id: /cdn/value.668d163d6e09ffdbc9f2a2d861fe00b69638b9cf11a21c5c5f81b60b4107094e.glb, size: [0.6, 0.9, 0.6],  name: Oil drum,          mat: metal,   hp: 140 }
+  canister:    { id: /cdn/value.f6da85fb2964fae153be333cecccc61db1a0a412645c25de98f495b18824ec7b.glb, size: [0.32, 0.6, 0.32], name: Propane tank,     mat: metal,   hp: 30 }
+  fuse:        { id: /cdn/value.2268805ae5f337235de318b92236f96c3475a7caaea724697c13e30c88a27545.glb, size: [0.6, 0.9, 0.24], name: Fuse box,          mat: junction, hp: 80 }
+  transformer: { id: /cdn/value.60f9ddc457b425e28e331ae1a63e32fabaa6422a7e605ddf5115f266c3d5bfa6.glb, size: [0.9, 1.15, 0.9], name: Transformer,       mat: machine, hp: 200 }
+  table:       { id: /cdn/value.cf4b7e08e8b8ebeae461128c58b33779289448325288361133e27aa7f17a212d.glb, size: [1.2, 0.76, 0.8], name: Break table,       mat: wood,    hp: 70 }
+  stackchair:  { id: /cdn/value.b579afa379fe0730c5aaa825796dba3705faf3c6b1ab0a11aaa6e326405aabe9.glb, size: [0.48, 0.85, 0.5], name: Stacking chair,   mat: metal,   hp: 40 }
+  counter:     { id: /cdn/value.4f71805b2a0e53229ed5894dbb189ce58e73fc3ae96ccccf711def093a035ae2.glb, size: [2.2, 0.92, 0.6], name: Kitchen counter,   mat: wood,    hp: 120 }
+  microwave:   { id: /cdn/value.74930cb789fa761fe722e0971e233ad9b61080257135f182850c61c51300b5d4.glb, size: [0.5, 0.3, 0.38], name: Microwave,         mat: junction, hp: 30 }
+  stove:       { id: /cdn/value.4c288814480bee5bc0698991caa539a68f89a43818ddf332974a5f6a92a6a51c.glb, size: [0.36, 0.16, 0.3], name: Camp stove,       mat: metal,   hp: 30 }
+  lantern:     { id: /cdn/value.c10572b2de804fd98cf1690adb38d1337fc5d9a43e100401319716ff9611058b.glb, size: [0.2, 0.34, 0.2], name: Lantern,           mat: fixture, hp: 15 }
+# container kinds (loot.js spawnContainerL2 / spawnCrateL2) -> their Tripo mesh; the box collider and loot state stay the container's own
+containers:
+  locker:    /cdn/value.46194c321486159b82a5dc79a0f592e1c5c4c2670c21d94bda46986638c4c126.glb
+  toolbox:   /cdn/value.640efdfdc0471d4dbd9936a5653206c0de9e1f2ed28e5103776aa5ef987e37af.glb
+  cabinet:   /cdn/value.c7871eb32277ddeef6c32064d3e1ef1ba141d383958ab4e7e37894b3be67e08b.glb
+  filing:    /cdn/value.75637f6fc1ee2b69c705c0f9b2a5e7481132c57e671a9dd6b6526820f603929e.glb
+  desk:      /cdn/value.f8d6323e2923533924b4dd1322d82bb526402938e1c04a3206326914cc995951.glb
+  vending:   /cdn/value.b5e982116d78ae3868f9b9db3ccbd35f5d24d5d57451cfbb6122f9d28f2e2b53.glb
+  fridge:    /cdn/value.713ecdc73aeccf951f49b81e23757b2ecc4e8e2a9ea71ed55f65dcac90d5c647.glb
+  cagecrate: /cdn/value.a892cd053efc3e9507b4ce4e8aa46e9a55c00cfead37a589bbaaed929eb572b5.glb
+  lockbox:   /cdn/value.1fee7997b4551fad56430b7203c05037bc1ac19f8703a16160f6dc8f47a7fc1f.glb
+crates:   # by the crate's rolled name
+  Wooden crate: /cdn/value.96f48b56e826ebb5fd584d269b08f2272040ab5d50589b2e04101b00f31d82a2.glb
+  Metal crate:  /cdn/value.a892cd053efc3e9507b4ce4e8aa46e9a55c00cfead37a589bbaaed929eb572b5.glb
+  Parts bin:    /cdn/value.65b1cf4b647cedc952ad4a7628071e0fbbf64952b6cd06bb3ae156a729b11eb6.glb
+  Toolbox:      /cdn/value.640efdfdc0471d4dbd9936a5653206c0de9e1f2ed28e5103776aa5ef987e37af.glb
+  default:      /cdn/value.65b1cf4b647cedc952ad4a7628071e0fbbf64952b6cd06bb3ae156a729b11eb6.glb
+crateSize: [0.8, 0.6, 0.6]
+toolboxSize: [0.62, 0.32, 0.3]
+forward: "+x"
+# what dresses each side room, in the room's frame: a out through the door, b across; face: door | back | +b | -b; y lifts it
+rooms:
+  boiler:     [[boiler, 0.6, -1.4, +b], [heater, 1.55, 1.55, -b], [drum, 1.6, 0.75, door], [canister, 0.9, 1.75, -b]]
+  locker:     [[bench, 0.1, 1.7, -b], [mop, 1.5, 1.6, back], [drum, 1.5, -1.6, door]]
+  pump:       [[pump, 0.15, -1.15, -b], [pump, 0.15, 1.15, +b], [canister, -0.9, 1.8, -b]]
+  office:     [[chair, 1.0, 0.25, back], [shelf, 0.95, 1.85, -b], [stackchair, -1.0, -0.6, door]]
+  cage:       [[shelf, -0.4, -1.85, +b], [shelf, -0.4, 1.85, -b], [drum, 0.5, -1.6, door], [canister, 0.2, 1.5, -b]]
+  break:      [[table, 0.2, -0.1, door], [stackchair, 0.2, -0.85, +b], [stackchair, 0.2, 0.75, -b], [counter, -0.3, 1.8, -b], [microwave, 0.3, 1.82, -b, 0.92]]
+  electrical: [[fuse, -0.85, -1.98, +b, 0.9], [fuse, 0.55, -1.98, +b, 0.9], [fuse, -0.85, 1.98, -b, 0.9], [fuse, 0.55, 1.98, -b, 0.9], [transformer, 1.0, 0, back]]
