@@ -14,7 +14,7 @@ import { fan, fanHousing, cable, DRIP, DUST, MIST } from "../../scripts/lib/ambi
 import { terminalSpec } from "../../scripts/lib/terminal.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "500ms";
-const V = 12; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist
+const V = 13; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist
 const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
 const rm = (type) => ROOMS.filter((r) => r.type === type);
 const center = (r) => cellCenter(r.x0 + (r.w - 1) / 2, r.z0 + (r.d - 1) / 2); // the middle of a room block
@@ -63,11 +63,12 @@ function lay(ctx) {
     const z = zoneOf(cx, cz), c = cellCenter(cx, cz), r = hash(cx, cz, 201), h = z === "edge" || z === "edgecave" ? L.edgeHeight : z === "base" ? H + 0.5 : H;
     let on = r < 0.62;
     if (z === "edge") on = cz === LANE.z0 + 1 && cx % 2 === 0; else if (z === "edgecave") on = r < 0.1;
-    if (z === "fridges" || z === "base" || z === "lockers") on = r < 0.9;
+    if (z === "fridges" || z === "lockers") on = r < 0.9;
+    if (z === "base") on = r < 0.35; // Alef was abandoned in 2020: most tubes dead, the rest failing
     if (!on) continue;
     const col = z === "edge" || z === "edgecave" ? "oklch(0.93 0.05 150)" : r < 0.07 ? "oklch(0.9 0.1 70)" : "oklch(0.97 0.012 200)", along = isOpen(cx, cz, 1) && !isOpen(cx, cz, 0) ? 90 : 0;
     const spec = { feetPosition: { x: c.x, y: h - 0.1, z: c.z }, rotation: { yaw: along }, primitive: { kind: "box", width: 1.2, height: 0.06, depth: 0.2 }, material: { color: col, emissive: col, emissiveIntensity: 2.4 } };
-    if (hash(cx, cz, 203) < 0.1 && z !== "edge") sp(`l21-lamp-${cx}-${cz}`, { ...spec, fx: { script: `fx\npop flick n=1 r=light(<.9,.95,1>,flick(5,.5)*5,9)` } });
+    if (hash(cx, cz, 203) < (z === "base" ? 0.6 : 0.1) && z !== "edge") sp(`l21-lamp-${cx}-${cz}`, { ...spec, fx: { script: `fx\npop flick n=1 r=light(<.9,.95,1>,flick(5,.5)*5,9)` } });
     else if (hash(cx, cz, 207) < 0.07 && z === "hall") sp(`l21-lamp-${cx}-${cz}`, { ...spec, behavior: "scripts/ambient-anim.js", state: { anim: { kind: "sway", deg: 4, sec: 3.1 + hash(cx, cz, 208), axis: "roll", phase: hash(cx, cz, 209) } }, light: { kind: "point", color: col, intensity: 5, distance: 11, shadow: { enabled: false } } }); // a tube hanging from one chain, swinging in the draught
     else sp(`l21-lamp-${cx}-${cz}`, { ...spec, light: { kind: "point", color: col, intensity: z === "edge" ? 7 : 5, distance: z === "edge" ? 16 : 11, shadow: { enabled: false } } });
     // Occasional hissing ceiling steam leak in the hot storage halls
@@ -100,7 +101,10 @@ function lay(ctx) {
   // the comms desk is a working Back OS terminal (scripts/lib/terminal.js): its Backmail holds the lockout dispatches, its Database knows 2.1, and Level 8 (data/os.yml, profile alef)
   sp("l21-comms", terminalSpec({ host: "ALEF-COMMS-01", lock: "science:25", name: "Base Alef comms terminal", at: { x: bc.x + 1.5, y: 0.77, z: edgeOf(L1, 1) - 0.78 }, yaw: 0,
     note: "pw: Team A's leader, first name, lower case" }));
-  for (let i = 0; i < 4; i++) sp(`l21-cot-${i}`, { feetPosition: { x: bc.x - 2 + (i % 2) * 2.2, y: 0, z: bc.z + 1.2 + Math.floor(i / 2) * 2.2 }, rotation: { yaw: (i % 2 ? 4 : -3) }, model: COT, layout: { box: { min: { x: -0.95, y: 0, z: -0.95 }, max: { x: 0.95, y: 0.55, z: 0.95 } } }, physics: { body: "static", collider: "box" } });
+  // abandoned in a hurry: cots shoved out of line, one kicked over on its side, the paperwork of a locked-out base across the floor
+  const COTPOSE = [{ yaw: 23 }, { yaw: -41 }, { yaw: 78, roll: 90 }, { yaw: 9 }], COTOFF = [[0, 0, 0], [0.4, 0, -0.5], [0.3, 0.42, 0.6], [-0.5, 0, 0.3]];
+  for (let i = 0; i < 18; i++) sp(`l21-alef-paper-${i}`, { feetPosition: { x: bc.x + (hash(i, 3, 901) - 0.5) * 10, y: 0.006 + i * 0.0004, z: bc.z + (hash(i, 5, 902) - 0.5) * 14 }, rotation: { yaw: hash(i, 7, 903) * 360 }, primitive: { kind: "box", width: 0.21, height: 0.002, depth: 0.29 }, material: { color: i % 5 === 0 ? "oklch(0.86 0.06 90)" : "oklch(0.9 0.012 90)", roughness: 0.95 } });
+  for (let i = 0; i < 4; i++) sp(`l21-cot-${i}`, { feetPosition: { x: bc.x - 2 + (i % 2) * 2.2 + COTOFF[i][0], y: COTOFF[i][1], z: bc.z + 1.2 + Math.floor(i / 2) * 2.2 + COTOFF[i][2] }, rotation: COTPOSE[i], model: COT, layout: { box: { min: { x: -0.95, y: 0, z: -0.95 }, max: { x: 0.95, y: 0.55, z: 0.95 } } }, physics: { body: "static", collider: "box" } });
   spawnRemains(ctx, { x: bc.x + 2.6, z: bc.z - 1.4 }, ["ration", "bandage", "page:11", "ammo"], "Alef operative's remains");
   spawnRemains(ctx, { x: bc.x - 3.0, z: bc.z + 4.6 }, ["almond", "kit", "battery"], "Alef operative's remains");
 
