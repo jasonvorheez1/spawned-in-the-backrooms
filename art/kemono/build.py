@@ -148,12 +148,19 @@ def cover(o):
     kill = []
     zs = [v.co.z for v in src.data.vertices]; zlo, zhi = min(zs), max(zs)
     kind = o.name.split('_')[0]
+    _bz = zlo if kind == 'Top' else zhi
+    _bx = [abs(v.co.x) for v in src.data.vertices if abs(v.co.z - _bz) < 0.05]
+    BANDX = min(max(_bx) if _bx else 0.2, 0.24)
     for f in bm.faces:
         c = f.calc_center_median(); loc, n, idx, d = bv.find_nearest(c)
         reach = 0.04
         if kind == 'Top' and zlo - 0.06 < c.z < zlo + 0.03: reach = 0.16   # hem down over the waistband
         if kind == 'Bot' and zhi - 0.03 < c.z < zhi + 0.04: reach = 0.16   # waistband up under the hem
-        if o.name == 'Top_dress' and c.z < HIPS_Z + 0.02: reach = -1          # the skirt stays the dress's own
+        if kind == 'Top' and o.name != 'Top_dress' and max(zlo - 0.09, HIPS_Z - 0.02) < c.z < zlo + 0.05 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1   # a closed hem ring at the waist, no skin between top and bottom
+        if kind == 'Bot' and zhi - 0.05 < c.z < zhi + 0.06 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1
+        if o.name == 'Top_dress' and c.z >= HIPS_Z + 0.02: reach = max(reach, 0.12)   # the bodice covers the whole bust and midriff
+        if o.name == 'Top_dress' and c.z < HIPS_Z + 0.02: reach = -1
+        if kind == 'Top' and o.name != 'Top_dress' and c.z < HIPS_Z - 0.05 and abs(c.x) < 0.2: reach = -1   # a shirt ends at the hips: below is the legs' own (pants never show a shirt through them)          # the skirt stays the dress's own
         if d is None or d > reach: kill.append(f)
         else: f.material_index = src.data.polygons[idx].material_index
     keep = set(bm.faces) - set(kill)
@@ -228,7 +235,7 @@ def refit(o):
         half = (max(band) - min(band)) / 2 if band else 0.15
         pass
         gb = bmesh.new(); gb.from_mesh(me)
-        bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x - EYE.x) > min(half * 0.98, (max(ex) - min(ex)) / 2 + 0.045) or v.co.y > EYEFRONT + 0.018], context='VERTS')
+        bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x - EYE.x) > min(half * 0.98, (max(ex) - min(ex)) / 2 + 0.045) or v.co.y > EYEFRONT + 0.018 or v.co.y < EYEFRONT - 0.05], context='VERTS')   # temples cut: no arm poking out ahead of the face
         gb.to_mesh(me); gb.free()
     elif kind == 'Hat' and EYE is not None:
         ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); bot = min(w.z for w in ws)
@@ -252,12 +259,33 @@ def refit(o):
         sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.004
         bpy.ops.object.modifier_apply(modifier='fit')
     if kind in ('Top', 'Bot', 'Shoes') and o.name not in LOOSE: cover(o)
-    if o.name == 'Top_dress':   # bodice cut from the skin (no chest gaps), the flared skirt kept, joined into one piece
-        sk = o.copy(); sk.data = o.data.copy(); bpy.context.collection.objects.link(sk)
-        gb = bmesh.new(); gb.from_mesh(sk.data)
-        bmesh.ops.delete(gb, geom=[v for v in gb.verts if v.co.z > HIPS_Z + 0.04], context='VERTS'); gb.to_mesh(sk.data); gb.free()
+    if o.name == 'Top_dress':   # bodice cut from the skin, then a flared skirt lathed round the hips (the carried sheet tore)
         cover(o)
-        bpy.ops.object.select_all(action='DESELECT'); sk.select_set(True); o.select_set(True); bpy.context.view_layer.objects.active = o
+        ev = [env.matrix_world @ v.co for v in env.data.vertices]
+        band = [w for w in ev if abs(w.z - HIPS_Z) < 0.03]
+        cx = (max(w.x for w in band) + min(w.x for w in band)) / 2; cy = (max(w.y for w in band) + min(w.y for w in band)) / 2
+        rx = (max(w.x for w in band) - min(w.x for w in band)) / 2; ry = (max(w.y for w in band) - min(w.y for w in band)) / 2
+        gb = bmesh.new(); N, R = 40, 7; rings = []
+        for k in range(R + 1):
+            t = k / R; z = HIPS_Z + 0.05 - t * 0.36; f = 1.06 + 0.42 * t ** 1.3
+            ring = []
+            for q in range(N):
+                a = 2 * math.pi * q / N; wob = 1 + 0.03 * math.sin(a * 6) * t   # soft folds toward the hem
+                ring.append(gb.verts.new((cx + math.cos(a) * rx * f * wob, cy + math.sin(a) * ry * f * wob, z)))
+            rings.append(ring)
+        for k in range(R):
+            for q in range(N):
+                gb.faces.new((rings[k][q], rings[k][(q + 1) % N], rings[k + 1][(q + 1) % N], rings[k + 1][q]))
+        bmesh.ops.recalc_face_normals(gb, faces=gb.faces[:])
+        gb.loops.layers.uv.new('UVMap'); uvl = gb.loops.layers.uv.active
+        for fc in gb.faces:
+            for l in fc.loops: l[uvl].uv = (math.atan2(l.vert.co.y - cy, l.vert.co.x - cx) / 6.283 + 0.5, (l.vert.co.z - HIPS_Z + 0.4) * 2)
+        sm_ = bpy.data.meshes.new('skirt'); gb.to_mesh(sm_); gb.free()
+        sk = bpy.data.objects.new('skirt', sm_); bpy.context.collection.objects.link(sk)
+        for m_ in o.data.materials: sm_.materials.append(m_)
+        sol = sk.modifiers.new('sol', 'SOLIDIFY'); sol.thickness = 0.008
+        bpy.ops.object.select_all(action='DESELECT'); sk.select_set(True); bpy.context.view_layer.objects.active = sk; bpy.ops.object.modifier_apply(modifier='sol')
+        sk.select_set(True); o.select_set(True); bpy.context.view_layer.objects.active = o
         bpy.ops.object.join()
     # weights off the new skin
     o.vertex_groups.clear()
@@ -292,6 +320,7 @@ OUTFIT = ['Top_hoodie', 'Bot_pants', 'Shoes_sneakers', 'Hat_beanie'] if SEX == '
 shot('a_base', (0, -3.4, 1.0), [])
 shot('b_outfit', (2.2, -2.6, 1.1), OUTFIT)
 shot('c_outfit2', (-2.2, -2.6, 1.1), ['Top_dress', 'Shoes_slippers', 'Hat_bow'] if SEX == 'f' else ['Top_jacket', 'Bot_shorts', 'Shoes_boots', 'Eyew_shades'])
+shot('d_front2', (0, -3.0, 1.1), ['Top_dress', 'Shoes_slippers', 'Hat_bow'] if SEX == 'f' else ['Top_jacket', 'Bot_shorts', 'Shoes_boots', 'Eyew_shades'])
 for g in garments: g.hide_render = False
 bpy.ops.object.select_all(action='DESELECT')
 for o in [rig, body] + garments: o.select_set(True)
