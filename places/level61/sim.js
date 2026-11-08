@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 8;
+const V = 9;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb";
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -89,7 +89,7 @@ function lay(ctx) {
     model: { id: M_VEND, forward: "+z", materials: { cabinet: { color: soda ? "oklch(0.5 0.2 27)" : "oklch(0.16 0.005 250)", roughness: 0.4, metalness: 0.35 } } },
     tags: extra.dead ? [] : ["usable"],
     behavior: extra.dead ? undefined : "scripts/l61-use.js",
-    state: extra.dead ? {} : { kind: "vend", sells: soda ? "soda" : "snack", name: soda ? "Soda machine" : "Snack machine", verb: "Press a button", info: soda ? "Coca-Cola, Pepsi, Mountain Dew. Free, it never asks for coins." : "Doritos and the rest of 2003. Free." },
+    state: extra.dead ? {} : { kind: "vend", sells: soda ? "soda" : "snack", name: soda ? "Soda machine" : "Snack machine", verb: "Press a button", info: soda ? "Coca-Cola, Pepsi, Mountain Dew, Sprite, Dr Pepper, Vault, Snapple. Free, it never asks for coins." : "Doritos and the rest of 2003. Free." },
     children: [{ feetPosition: { x: 0.1, y: 0.38, z: -0.447 }, primitive: { kind: "box", width: 0.72, height: 1.32, depth: 0.01 }, material: { texture: soda ? SODA : SNACK, roughness: 0.15, emissive: "oklch(0.35 0 0)", emissiveIntensity: 0.4 } }],
   });
 
@@ -231,7 +231,7 @@ function lay(ctx) {
   // ---- The Stores off North Wall
   const STORES = [
     [-21, "clippers", WOOD, "oklch(0.42 0.17 25)", `<div style="font-size:300px;color:#ffe0d0;font-family:serif;font-style:italic">Clippers</div><div style="font-size:90px;color:#ffb0a0">COCKTAILS · EST. 1954</div>`, "oklch(0.3 0.14 25)", "oklch(0.8 0.12 30)"],
-    [-7, "liquorette", CHECK, "oklch(0.3 0.06 40)", `<div style="font-size:280px;color:#f2d98a;font-family:serif">Liquorette</div><div style="font-size:80px;color:#b8e0a8">ALMOND · CASHEW · DISTILLED</div>`, "oklch(0.2 0.04 40)", "oklch(0.85 0.1 85)"],
+    [-7, "liquorette", CHECK, "oklch(0.3 0.06 40)", `<div style="font-size:280px;color:#f2d98a;font-family:serif">Liquorette</div><div style="font-size:80px;color:#b8e0a8">BEER · WHISKEY · ALMOND WATER</div>`, "oklch(0.2 0.04 40)", "oklch(0.85 0.1 85)"],
     [7, "slice", { ...TERRAZZO, color: "oklch(0.85 0.04 30)" }, "oklch(0.9 0.03 90)", `<div style="font-size:250px;color:#ff4a3a">SLICE PALACE</div><div style="font-size:90px;color:#2a7a3a">PIZZA BY THE SLICE · FREE</div>`, "oklch(0.96 0.01 90)", "oklch(0.95 0.04 80)"],
     [21, "burger", CHECK, "oklch(0.7 0.11 195)", `<div style="font-size:260px;color:#ff7ab8">BURGER BOP</div><div style="font-size:90px;color:#ffffff">SHAKES · FRIES · '86 PRICES</div>`, "oklch(0.35 0.1 280)", "oklch(0.92 0.05 330)"],
   ];
@@ -250,7 +250,7 @@ function lay(ctx) {
   }
 
   // 1. Clippers: Red 1950s bar, stools, back shelves, and the interactive Wurlitzer 80s Internet Radio Jukebox
-  counter("l61-clip-bar", -21, -30.2, 180, M_BAR10, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "coke,coke,almond", name: "Clippers bar", verb: "Ask for a drink", info: "Red walls, wood floor. The bartender is a faceling in a bow tie." } });
+  counter("l61-clip-bar", -21, -30.2, 180, M_BAR10, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "budweiser,budweiser,jackcoke,whiskey,smirnoffice,coke", name: "Clippers bar", verb: "Ask for a drink", info: "Red walls, wood floor. The bartender is a faceling in a bow tie." } });
   for (let k = 0; k < 6; k++) stool(`l61-clip-stool-${k}`, -25 + k * 1.6, -29.2, "oklch(0.45 0.18 25)");
   for (const [n, y] of [[0, 1.4], [1, 2.0]]) {
     sp(`l61-clip-shelf-${n}`, {
@@ -309,7 +309,7 @@ function lay(ctx) {
   box("l61-clip-wire", -21, 0.06, -23.2, 3.6, 0.015, 0.015, { color: "oklch(0.2 0 0)" }, { physics: undefined });
 
   // 2. Liquorette: Long dark bar, glowing backbar, green glass lamps
-  counter("l61-liq-bar", -12.2, -27, -90, M_BAR7, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "almond,almond,coke", name: "Liquorette bar", verb: "Order", info: "Almond water, cashew water, real distilled water. Pay nothing." } });
+  counter("l61-liq-bar", -12.2, -27, -90, M_BAR7, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "almond,corona,millerlite,margarita,whiskey,jackcoke", name: "Liquorette bar", verb: "Order", info: "Almond water, Corona, margaritas, Jim Beam. Pay nothing." } });
   counter("l61-liq-back", -13.6, -27, -90, M_BACKBAR);
   for (let k = 0; k < 3; k++) {
     sp(`l61-liq-lamp-${k}`, {

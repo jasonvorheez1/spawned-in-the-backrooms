@@ -214,6 +214,7 @@ function takeToken0(ctx, token) {
     const v = SNACKS[token], mh = maxHp(s.level, s), ms = maxSan(s.level, s)
     s.hp = Math.min(mh, (s.hp ?? mh) + v.hp * derived(s).heal); s.sanity = Math.min(ms, (s.sanity ?? ms) + v.sanity)
     s.hunger = Math.max(0, Math.min(100, (s.hunger ?? 100) + v.hunger)); s.thirst = Math.max(0, Math.min(100, (s.thirst ?? 100) + v.thirst))
+    if (v.drunk) { s.drunk = Math.min(100, (s.drunk ?? 0) + v.drunk); s.drunkAt = now }
     if (v.stamina) { const w = walkOf(ctx); w.stamina = Math.min(L.stamina * 2, (w.stamina ?? s.stamina ?? 0) + v.stamina) }
     s.pickedAt = now; s.notice = { text: `${v.name}. ${v.drink ? `Thirst +${v.thirst}` : `Hunger +${v.hunger}`}`, at: now }
     sound(ctx, v.drink ? 'plastic-bottle-pickup-rattle' : 'loot-take-all-rustle', 0.7, true)
@@ -962,6 +963,10 @@ export function update(ctx, dt) {
   const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
   const speed = (w.walkMode && !sprinting ? 0.5 : 1) * (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (s.carryMul ?? 1) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * dv.speed * (w.bur ??= burden(s))
+  const drunk = Math.max(0, (s.drunk ?? 0) - (nowS - (s.drunkAt ?? nowS)) * 0.4) // sobers 0.4 a second
+  if (s.drunk && drunk <= 0) s.drunk = 0
+  const sway = drunk > 15 && moving ? Math.sin(nowS * 1.3) * Math.min(0.5, drunk / 160) : 0 // past a couple of drinks the walk drifts
+  if (sway) dir = { x: dir.x * Math.cos(sway) - dir.z * Math.sin(sway), y: dir.y, z: dir.x * Math.sin(sway) + dir.z * Math.cos(sway) }
   const intent = { x: dir.x * speed * (moving || !pressing ? 1 : 0.35), z: dir.z * speed * (moving || !pressing ? 1 : 0.35) } // stuck on a wall: a gentle lean, still enough to slide off a corner
   viewmodel(ctx, moving, sprinting)
   const v = ctx.self.velocity
