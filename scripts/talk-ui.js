@@ -107,7 +107,7 @@ export function talkUi(ctx, player) {
     : shown ? (shown[0] === 'x' ? `<div class="chk" id="c${lastN}">${esc(shown[1])}</div>` : `<div class="now" id="n${lastN}-${log.length}" style="color:${col}"><i>${who.toUpperCase()}</i>${esc(shown[1])}</div>`)
     : `<div class="now" style="opacity:.6"><i>${who.toUpperCase()}</i>…</div>`
   const SYS = { svc: SVC[role], trade: 'Let me see what you have to trade.', leave: 'Goodbye.' }
-  const sys = [SVC[role] ? ['svc', `[${role === 'medic' ? 'Medicine' : 'Ask'}]`, SVC[role] + '.'] : null, isTrader(it) ? ['trade', '[Barter]', SYS.trade] : null, ...(it.state?.offers ?? []).map(([k, tx]) => [k, '', tx]), ['leave', '', SYS.leave]].filter(Boolean)
+  const sys = [['wave', '', 'Wave'], ['gift', '', 'Gift'], ['dance', '', 'Dance'], ['insult', '', 'Insult'], SVC[role] ? ['svc', `[${role === 'medic' ? 'Medicine' : 'Ask'}]`, SVC[role] + '.'] : null, isTrader(it) ? ['trade', '[Barter]', SYS.trade] : null, ...(it.state?.offers ?? []).map(([k, tx]) => [k, '', tx]), ['leave', '', SYS.leave]].filter(Boolean)
   const opts = ''
   const send = `const i=document.getElementById('tkin');if(i&&i.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:i.value});i.value=''}`
   const choices = Array.isArray(s.talkChoices) ? s.talkChoices : []
@@ -127,6 +127,6 @@ export function talkUi(ctx, player) {
   return `${CINE}<div class="tc" data-modal tabindex="0" onkeydown="${kd}">
     <div class="low ${s.talkBusy ? 'busy' : ''}"><div class="who">${who} · ${esc(it.state?.temper ?? '')}${it.state?.title ? ' · ' + esc(it.state.title) : ''} · hp ${Math.max(0, Math.round(it.state?.hp ?? 0))}/${Math.round(it.state?.maxHp ?? 100)}</div><div class="sub">${now}</div>
       <div class="choices">${top}</div>
-      <form class="row" data-interactive onsubmit="event.preventDefault();${send}"><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" placeholder="say something…"/>${small}<span class="feel" style="color:${col}">${feel(r)}</span></form>
+      <div class="row" data-interactive><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" placeholder="say something… (enter)" onkeydown="event.stopPropagation();if(event.key==='Enter'&&this.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:this.value});this.value=''}"/>${small}<span class="feel" style="color:${col}">${feel(r)}</span></div>
     </div></div>`
 }

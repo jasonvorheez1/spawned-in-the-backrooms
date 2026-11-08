@@ -120,7 +120,7 @@ function send(ctx, d) {
   const system = systemPrompt({ it, place: ctx.self.place, pl: ctx.self, rapport: rapportOf(ctx, it), following: it.state?.follow === ctx.self.id })
   let message = userMessage(hist, text, ctx.self.displayName ?? 'Wanderer')
   ses.preCheck = null
-  const pc = d.check && SKILLS.includes?.(String(d.check.skill)) !== false && d.check.skill ? { skill: String(d.check.skill).toLowerCase(), difficulty: Math.max(5, Math.min(110, Number(d.check.difficulty) || 50)) } : null
+  const pc = d.check && SKILLS.some((x) => x.k === String(d.check.skill).toLowerCase()) ? { skill: String(d.check.skill).toLowerCase(), difficulty: Math.max(5, Math.min(110, Number(d.check.difficulty) || 50)) } : null
   if (pc) { // the roll happens the moment they pick it, and the npc is told how it went
     const c = rollCheck(ctx, s, pc), v = skillsOf(s)[pc.skill] ?? 0
     const pct = Math.max(0, Math.min(100, Math.round((T.roll - (pc.difficulty - v) + 1) / T.roll * 100)))
@@ -202,8 +202,52 @@ function act(ctx, d) {
   if (String(d.k).startsWith('o:')) { ctx.emit('talkopt', { by: ctx.self.id, k: String(d.k).slice(2) }, { to: it.id }); return } // an npc's own card buttons (state.offers) ring its ears.talkopt
   if (d.k === 'svc') { const before = s.sub?.at; service(ctx, it); if (s.sub?.at !== before) logLine(ctx, it, 'n', s.sub.t); return }
   if (d.k === 'trade' && isTrader(it)) { restock(ctx, it); s.shopOpen = it.id; return }
+  if (['wave', 'gift', 'dance', 'insult'].includes(d.k)) { gesture(ctx, it, d.k); return }
   if (d.k === 'back') s.shopOpen = null
   if (d.k === 'stab') s.shopTab = ['buy', 'sell'].includes(d.t) ? d.t : 'buy'
+}
+
+// the small social moves beside the talk box: each moves rapport, plays on the body, and the npc answers it in its own words
+function gesture(ctx, it, k) {
+  const s = ctx.self.state, now = ctx.now(), ses = ctx.self.session
+  if (now - (ses.gestAt ?? -1e9) < 2500) return
+  ses.gestAt = now
+  const r = rapportOf(ctx, it)
+  if (k === 'wave') {
+    ctx.self.anim.gest = { clip: 'cdn/clip-wave-loop.glb', weight: 0.9, loop: 'once', mask: { from: 'Spine' }, blendIn: 0.15, blendOut: 0.3 }
+    setRapport(ctx, it, r + 2)
+    send(ctx, { id: it.id, text: '*waves at you*' }); return
+  }
+  if (k === 'gift') {
+    const snack = Object.entries(s.snacks ?? {}).find(([, n]) => n > 0)
+    let name
+    if (snack) { s.snacks = { ...s.snacks, [snack[0]]: snack[1] - 1 }; name = describe(snack[0])?.name ?? snack[0] }
+    else if ((s.almonds ?? 0) > 0) { s.almonds -= 1; name = 'bottle of Almond Water' }
+    else { note(ctx, 'You have nothing to give.'); return }
+    setRapport(ctx, it, r + 10)
+    note(ctx, `Gave ${name}.`)
+    send(ctx, { id: it.id, text: `*hands you a ${name}, free*` }); return
+  }
+  if (k === 'dance') {
+    const willing = r > -10 && !it.state?.angry?.[ctx.self.id] && ctx.random() < 0.55 + r / 200
+    if (willing) {
+      const clip = 'cdn/clip-dance-loop.glb'
+      it.anim.groove = { clip, loop: 'loop', weight: 0.85, blendIn: 0.3, blendOut: 0.4 }
+      ctx.self.anim.groove = { clip, loop: 'loop', weight: 0.85, blendIn: 0.3, blendOut: 0.4 }
+      s.grooveEnd = now + 10000
+      ctx.after(10, 'stopDance', { id: it.id })
+      setRapport(ctx, it, r + 5)
+    }
+    send(ctx, { id: it.id, text: willing ? '*asks you to dance, and you start dancing together*' : '*asks you to dance* (you are not in the mood, turn them down)' }); return
+  }
+  if (k === 'insult') {
+    setRapport(ctx, it, r - 15)
+    send(ctx, { id: it.id, text: '*sneers and insults you to your face*' }); return
+  }
+}
+export function stopDance(ctx, p) {
+  const it = ctx.getObject(p?.id); if (it?.anim?.groove) it.anim.groove = null
+  if (ctx.self.anim?.groove) ctx.self.anim.groove = null
 }
 
 function restock(ctx, it) {

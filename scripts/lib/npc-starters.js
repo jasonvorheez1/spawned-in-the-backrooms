@@ -597,7 +597,33 @@ export function getStarter(ctx, it, s) {
 }
 
 export function getChoices(ctx, it, s, lastNpcReply, replyObj) {
-  return fitPlace(ctx, it, rawChoices(ctx, it, s, lastNpcReply, replyObj))
+  return withChecks(ctx, it, fitPlace(ctx, it, rawChoices(ctx, it, s, lastNpcReply, replyObj)))
+}
+
+// every skill-tagged line is a real roll, and each turn offers at least one: the ui shows its odds as a %
+const SK_WORDS = { speech: 'speech', barter: 'barter', medicine: 'medicine', survival: 'survival', science: 'science', sneak: 'sneak' }
+const PUSH = {
+  speech: ["Come on, you can trust me. Tell me what you're really thinking.", "I think we both know you want to help me out here.", "Level with me. What aren't you saying?"],
+  barter: ["What would it take for you to cut me a better deal?", "I'll make it worth your while. What do you need?"],
+  survival: ["You've lasted down here. What's your trick for staying alive?", "Read the room for me: is this spot actually safe?"],
+  medicine: ["You look a bit off. Let me take a look at you.", "When did you last sleep? Honestly."],
+}
+function withChecks(ctx, it, list) {
+  if (!Array.isArray(list)) return list
+  const key = it?.id ?? 'x'
+  let h = 0; for (const c of String(key) + (list[0]?.text ?? '')) h = (h * 31 + c.charCodeAt(0)) | 0
+  const diffOf = (k) => 25 + (Math.abs(h + k.length * 7) % 40) // her pick: 25..64
+  const out = list.map((c) => {
+    if (typeof c !== 'object' || c.check) return c
+    const sk = String(c.tag ?? '').toLowerCase().split(/\s+/)[0]
+    return SK_WORDS[sk] ? { ...c, check: { skill: SK_WORDS[sk], difficulty: diffOf(sk) } } : c
+  })
+  if (!out.some((c) => c && c.check)) {
+    const kinds = Object.keys(PUSH), k = kinds[Math.abs(h) % kinds.length], lines = PUSH[k]
+    const line = { text: lines[Math.abs(h >> 3) % lines.length], tag: k, check: { skill: k, difficulty: diffOf(k) } }
+    if (out.length >= 4) out[3] = line; else out.push(line)
+  }
+  return out
 }
 
 function rawChoices(ctx, it, s, lastNpcReply, replyObj) {
