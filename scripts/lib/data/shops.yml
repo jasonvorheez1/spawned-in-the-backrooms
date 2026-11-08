@@ -192,6 +192,14 @@ shops:
     - ["cloth:botw:overalls:28322c", 1, 8]
     - ["cloth:topw:apron:1c282e", 1, 12]
     - ["cloth:hat:beanie:d46a28", 1, 6]
+  l11-tm-clerk:      # Thrift Mode, the Level 11 clothing shop: these seven only (shown price ~ base x 1.45)
+    - [cloth:hat:bagmask:c4a46a, 2, 35]
+    - [cloth:hat:shellmask:3a3878, 2, 38]
+    - ["cloth:topw:tee:1d2540:jerry", 3, 17]
+    - ["cloth:topw:hoodie:2a2033:ppsad", 2, 55]
+    - ["cloth:topw:hoodie:c4a46a:pgsmile", 2, 52]
+    - ["cloth:topw:hoodie:c8a878:gmsplit", 1, 60]
+    - ["cloth:topw:jacket:b8975c:pgcoat", 1, 83]
   default:
     - [ammo, 2, 5]
     - [ration, 2, 3]
