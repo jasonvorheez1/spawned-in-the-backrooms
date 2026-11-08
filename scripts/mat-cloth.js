@@ -1,7 +1,7 @@
 // cloth patterns for the critter garments (Shelly, Nov 7: "add textures to most of the clothes"). Drawn on the garment's own
 // bind-pose geometry (positionGeometry), so a pattern sticks to the cloth as it moves, and needs no UVs (many garment meshes have none).
 // The garment's colour (material color = the look's hex) is the base; each pattern darkens/lightens it. params: { pat, s }
-import { materialColor, positionGeometry, normalGeometry, vec2, vec3, float, abs, fract, floor, sin, mix, smoothstep, step, max, min, mx_noise_float, mx_fractal_noise_float, mx_worley_noise_float } from "builtin/tsl";
+import { materialColor, positionGeometry, vec2, vec3, float, abs, fract, floor, sin, mix, smoothstep, step, max, min, mx_noise_float, mx_fractal_noise_float, mx_worley_noise_float } from "builtin/tsl";
 import { MeshStandardNodeMaterial } from "builtin/three";
 
 // the printed pieces: picture, centre on the torso (bind-pose metres, front = +z), square size; split = the other half's colour; x = sleeve marks
@@ -158,7 +158,7 @@ export function material(ctx) {
     }
     const T = ctx.texture(P.tex);
     const pu = q.x.sub(P.at[0]).div(P.size).add(0.5), pv = q.y.sub(P.at[1]).div(P.size).add(0.5);
-    const inside = step(0.0, pu).mul(step(pu, 1.0)).mul(step(0.0, pv)).mul(step(pv, 1.0)).mul(smoothstep(0.15, 0.4, normalGeometry.z)).mul(step(0.0, q.z));
+    const inside = step(0.0, pu).mul(step(pu, 1.0)).mul(step(0.0, pv)).mul(step(pv, 1.0)).mul(smoothstep(0.02, 0.06, q.z));
     const t = T.sample(vec2(pu, pv));
     col = mix(col, t.rgb.mul(float(0.88).add(fine.mul(0.12))), t.a.mul(inside));
   } else { // weave: a plain fabric
