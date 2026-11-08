@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 3;
+const V = 4;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -14,12 +14,13 @@ const M = {
   armchair: "/cdn/value.324d9a05c6aca4bc72f791c510f751bee89cfbbc0e2104e59ad075531e70a750.glb",
   bookshelf: "/cdn/value.1eb5a4d0d74feb46ccccd20ebf5c2f0ea69a16afd52c50bb36f6566d9513bf46.glb",
   dresser: "/cdn/value.6b73846286fe58c95018a876f85d847e8af3c7a0187d06a8838072345f9ca49e.glb",
-  tv: "/cdn/value.b79efce1d521ae03d971eaf72e9dfe3a834187a69caa1ab8860230583ed777d8.glb",
-  sofa: "/cdn/value.7f631c34e237ad39ccebd987acb92f1e2ca3aca481abae3ae3db00708ad4d9a9.glb",
+  tv: "/cdn/value.b06d0c09b1cda983be988ee780d72e0a4105b28ed612b279c94d5cd545017813.glb",
+  sofa: "/cdn/value.0feff3db97a7d03c96c612e304e76e62ee1a577e754a9073a4ca0d3ddfb2c023.glb",
   kitchen: "/cdn/value.a913b60b5860de57e7072069c2b3384708d80abc5c3df3ac13c9341b06c3e2fe.glb",
   lamp: "/cdn/value.0871d1626b929961d73cb28c05f82070ad822c5cc2e6b8deec5046248fb4086d.glb",
   rug: "/cdn/value.455dde0ca22a985f649dee005f80bad45966342485d248a0fa95d86fb0a2d2c3.glb",
-  table: "/cdn/value.ae333c2667c26f3447936196f710a35594496dcf39c35d76b8c06a720189174d.glb",
+  table: "/cdn/value.a749a8b797903df85e052391facf77d67915ec4b704e8f32b969e139f78b6719.glb",
+  recliner: "/cdn/value.6ec1a2b9d968af70d73a7b98c25363a35ce9a32fb8df9cdca48104a25d629670.glb",
 };
 const W = 10, D = 12, H = 2.8; // room x -5..5, z -6..6; front door on the +z wall
 
@@ -53,11 +54,11 @@ export function tick(ctx) {
   sp("home-from-l11", { feetPosition: { x: 0, y: 0.1, z: 4.6 }, rotation: { yaw: 0 } });
 
   // living room
-  fit("h-rug", M.rug, 0, 2.5, 0, [3, 0.02, 2.2], { physics: undefined });
-  fit("h-sofa", M.sofa, -3.9, 2.2, 90, [2.1, 1.0, 0.9]); // beige microfibre three-seater, back to the wall
-  fit("h-armchair-2", M.armchair, 1.6, 0.4, 210, [0.9, 1.0, 0.9]);
-  fit("h-tv", M.tv, 4.4, 2.4, -90, [1.1, 1.5, 0.6]); // CRT on a veneer stand, VCR under it
-  fit("h-table", M.table, 0, 2.5, 0, [1.2, 0.5, 0.7]);
+  fit("h-rug", M.rug, -2.2, 2.5, 90, [2.6, 0.02, 1.9], { physics: undefined });
+  fit("h-sofa", M.sofa, -4.3, 2.5, 90, [2.1, 0.95, 0.95]); // beige microfibre three-seater, back to the wall
+  fit("h-recliner", M.recliner, -2.6, 0.3, 150, [0.95, 1.05, 0.95]); // leather recliner angled at the TV
+  fit("h-tv", M.tv, 1.0, 0.0, 0, [1.2, 1.2, 0.55]); // silver CRT on a black glass stand, DVD and VCR on the shelves // CRT on a veneer stand, VCR under it
+  fit("h-table", M.table, -2.2, 2.5, 90, [1.1, 0.48, 0.7]);
   fit("h-shelf", M.bookshelf, -4.6, 4.2, 90, [1.6, 2.0, 0.4]);
   fit("h-lamp-1", M.lamp, 3.9, 0.3, 0, [0.5, 1.6, 0.5]);
   fit("h-kitchen", M.kitchen, 3.7, 4.4, -90, [2.6, 1.0, 0.7]);
