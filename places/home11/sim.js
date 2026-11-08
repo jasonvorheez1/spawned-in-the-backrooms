@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 6;
+const V = 7;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -67,6 +67,9 @@ export function tick(ctx) {
   // bedroom: the bed is where you rest
   fit("h-bed", M.bed, -2.8, -4.7, 0, [1.65, 1.1, 2.1], { tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind: "bed", name: "Your Bed", verb: "Sleep" } });
   fit("h-dresser", M.dresser, 3.6, -5.6, 0, [1.1, 1.75, 0.5]); // tripo: oak dresser with arched mirror
+  const poster = (id, tex, x, y, z, yaw) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, primitive: { kind: "plane", width: 0.6, height: 0.8 }, material: { texture: tex, roughness: 0.7 }, castShadow: false }); // tacked-up 2000s posters
+  poster("h-poster-sponge", "/cdn/value.d6647818cc1864e1a57ae459da01d37274878ab52fa91397bc0bbf8f3b07b94b.png", -4.93, 1.2, -3.2, 90);
+  poster("h-poster-kitty", "/cdn/value.5b3fa0a1b106e04b6db787f988eda22e31496b76d9b76c508f5041e6c2192afa.png", 1.4, 1.2, -5.93, 0);
   fit("h-lamp-2", M.lamp, -0.9, -5.5, 0, [0.4, 1.2, 0.4]);
   sp("h-light-bed", { feetPosition: { x: -1, y: 2.5, z: -3.5 }, light: { kind: "point", color: "oklch(0.85 0.08 65)", intensity: 1.4, distance: 7 } });
   sp("h-window", { feetPosition: { x: -4.9, y: 1.0, z: -3.5 }, primitive: { kind: "box", width: 0.05, height: 1.1, depth: 1.4 }, material: { color: "oklch(0.95 0.04 85)", emissive: "#fff1d0", emissiveIntensity: 1.2 } });
