@@ -1566,7 +1566,7 @@ export function tick(ctx) {
     const end = Math.min(q.rows.length, i + LAY_STEP);
     for (; i < end; i++) {
       const [id, spec] = q.rows[i], old = ctx.place.objects[id];
-      if (old && (!!old.model !== !!spec.model || !!old.primitive !== !!spec.primitive || (old.primitive && spec.primitive && (old.primitive.kind !== spec.primitive.kind || old.primitive.script !== spec.primitive.script)) || (!spec.children && ctx.place.objects[id + "/child-0"]))) { ctx.destroy(id); break; } // a box row turned model: clear it, lay it fresh next tick
+      if (old && (!!old.model !== !!spec.model || !!old.primitive !== !!spec.primitive || (old.primitive && spec.primitive && (old.primitive.kind !== spec.primitive.kind || old.primitive.script !== spec.primitive.script)) || (!spec.children && ctx.place.objects[id + "/child-0"]) || (spec.tags && !old.tags?.includes("wreck") && spec.tags.join() !== (old.tags ?? []).join()))) { ctx.destroy(id); break; } // a box row turned model: clear it, lay it fresh next tick
       ctx.spawn(id, spec);
     }
     lq.i = i;
