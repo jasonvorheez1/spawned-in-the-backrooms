@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 22;
+const V = 23;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -27,6 +27,7 @@ const W = 10, D = 12, H = 2.8; // room x -5..5, z -6..6; front door on the +z wa
 export function tick(ctx) {
   const st = ctx.place.state;
   if (st.builtV === V) return;
+  const fridgeKeep = ctx.place.objects["h-fridge"]?.state?.items; // what you stored survives a rebuild
   const sp = (id, spec) => { if (ctx.place.objects[id]) ctx.destroy(id); ctx.spawn(id, spec); };
   const bx = (id, x, y, z, w, h, d, material, extra = {}) => sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material, physics: "static", ...extra });
   const fit = (id, model, x, z, yaw, size, extra = {}) => sp(id, { feetPosition: { x, y: 0.1, z }, rotation: { yaw }, model: { id: model }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } }, physics: { body: "static", collider: "box" }, ...extra });
@@ -89,8 +90,8 @@ export function tick(ctx) {
   fit("h-lamp-2", M.lamp, -0.9, -5.5, 0, [0.4, 1.2, 0.4], use("lamp", "Lamp", "Switch", { light: "h-lamp-2-light", int: 0.8 }));
   sp("h-light-bed", { feetPosition: { x: -1, y: 2.5, z: -3.5 }, light: { kind: "point", color: "oklch(0.85 0.08 65)", intensity: 1.4, distance: 7 } });
   // things to use (Shelly: "add interactibles")
-  fit("h-fridge", "/cdn/value.d0d0dc823edfbfe08bea35729295b7b5dd01a2864bcd7c46d08a7d8599993e53.glb", 4.5, 1.55, 270, [0.75, 1.75, 0.75], use("fridge", "Fridge", "Grab a drink")); // almond two-door, magnets and papers
-  hang("h-micro", "/cdn/value.1d3dc84f3f95564053f8162e486d92ab5dfd9678eb26b82aed879a7371f33bea.glb", 4.5, 1.01, 3.4, 270, [0.36, 0.28, 0.5]); sp("h-micro-use", { ...use("microwave", "Microwave", "Heat a Hot Pocket"), feetPosition: { x: 4.5, y: 1.01, z: 3.4 }, primitive: { kind: "box", width: 0.36, height: 0.28, depth: 0.5 }, material: { opacity: 0, transparent: true }, physics: { body: "static", collider: "box" } });
+  fit("h-fridge", "/cdn/value.d0d0dc823edfbfe08bea35729295b7b5dd01a2864bcd7c46d08a7d8599993e53.glb", 4.5, 1.55, 270, [0.75, 1.75, 0.75], { tags: ["container", "storage"], state: { name: "Fridge", cap: 30, items: fridgeKeep ?? "coke,snapple,almond:grey,pizza" } }); // almond two-door, magnets and papers
+  hang("h-micro", "/cdn/value.1d3dc84f3f95564053f8162e486d92ab5dfd9678eb26b82aed879a7371f33bea.glb", 4.5, 1.01, 3.4, 270, [0.36, 0.28, 0.5]); sp("h-micro-use", { ...use("microwave", "Microwave", "Heat your food"), feetPosition: { x: 4.5, y: 1.01, z: 3.4 }, primitive: { kind: "box", width: 0.36, height: 0.28, depth: 0.5 }, material: { opacity: 0, transparent: true }, physics: { body: "static", collider: "box" } });
   hang("h-lava", "/cdn/value.8413072e1fc1e8e8482a7d553210352afec9f63c4aca06ab7775be80044401c7.glb", 1.7, 0.86, -5.6, 0, [0.13, 0.42, 0.13]); // red lava lamp on the desk
   sp("h-lava-light", { feetPosition: { x: 1.7, y: 1.1, z: -5.45 }, light: { kind: "point", color: "oklch(0.65 0.22 25)", intensity: 0.6, distance: 2.5 } });
   sp("h-lava-use", { ...use("lamp", "Lava Lamp", "Switch", { light: "h-lava-light", int: 0.6 }), feetPosition: { x: 1.7, y: 0.86, z: -5.6 }, primitive: { kind: "box", width: 0.16, height: 0.44, depth: 0.16 }, material: { opacity: 0, transparent: true }, physics: { body: "static", collider: "box" } });

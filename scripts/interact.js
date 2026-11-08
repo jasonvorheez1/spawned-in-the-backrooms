@@ -15,7 +15,7 @@ import { getInputRay, raycast } from 'builtin/physics'
 import { stripTo, SLOTS } from './lib/clothes.js'
 import { rewear } from './lib/critter-model.js'
 import { tokenOf, describe, itemsOf } from './lib/items.js'
-import { takeToken, maxHp, maxSan } from './player.js'
+import { takeToken, maxHp, maxSan, pullToken } from './player.js'
 import { derived, skillsOf, SKILLS } from './lib/stats.js'
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 import { rollItem, rollItemL1, rollItemL2, spotCloth, poolOf } from './lib/loot.js'
@@ -122,7 +122,7 @@ function closeLoot(ctx) {
   const s = ctx.self.state, c = s.lootOpen ? ctx.getObject(s.lootOpen) : null
   if (c) snd(ctx, 'container-close-thud', 0.35)
   if (c && c.tags?.includes('remains') && !itemsOf(c.state?.items).length) ctx.destroy(c.id) // an emptied corpse is cleared away
-  s.lootOpen = ''; s.lootList = ''; s.lootName = ''; s.pocket = false
+  s.lootOpen = ''; s.lootList = ''; s.lootName = ''; s.pocket = false; s.lootStore = false
   mem(ctx).key = ''
 }
 
@@ -151,7 +151,7 @@ export function openLoot(ctx, c) {
     c.state.lock = ''; c.state.name = sk === 'science' ? 'Unlocked locker' : 'Opened crate'
     note(ctx, `[${SKN[sk]} ${lv}] ${sk === 'science' ? 'You crack the locker' : 'You pick the lock'}`); snd(ctx, 'lock-picking-click', 0.5)
   }
-  if (!c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per container
+  if (!c.tags?.includes('storage') && !c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per container
     c.state.scavved = true
     if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : ctx.self.place === 'level3' ? rollItemL3(ctx) : rollItem(ctx, poolOf(ctx.self.place)))].filter(Boolean).join(',')
     const cl = spotCloth(ctx, derived(s).clothFind) // Observation (Perception) spots a wearable tucked in the junk
@@ -159,7 +159,7 @@ export function openLoot(ctx, c) {
     spamtonPerk(ctx, c)
   }
   const own = ownerOf(ctx, c)
-  s.lootOpen = c.id; s.lootName = (own ? `${c.state.ownerName ?? 'Someone'}'s · ` : '') + (c.state?.name ?? 'Container'); s.lootList = c.state?.items ?? ''; s.focus = null
+  s.lootOpen = c.id; s.lootName = (own ? `${c.state.ownerName ?? 'Someone'}'s · ` : '') + (c.state?.name ?? 'Container'); s.lootList = c.state?.items ?? ''; s.focus = null; s.lootStore = !!c.tags?.includes('storage') // storage (your fridge): you put things in too
   snd(ctx, 'container-open-rustle', 0.5)
 }
 
@@ -371,6 +371,13 @@ function lootAction(ctx, d) {
   const c = ctx.getObject(s.lootOpen)
   if (!c) { closeLoot(ctx); return }
   if (s.pocket) { if (d.k === 'take') liftOne(ctx, c, Number(d.i)); else if (d.k === 'all') { note(ctx, 'One thing at a time, or they\'ll feel it.'); snd(ctx, 'ui-denied-click', 0.3) } return }
+  if (d.k === 'store') { // into your own storage: one carried thing at a time
+    if (!c.tags?.includes('storage')) return
+    if (itemsOf(c.state?.items).length >= (c.state.cap ?? 30)) { note(ctx, 'It\'s full.'); snd(ctx, 'ui-denied-click', 0.35); return }
+    const tok = pullToken(ctx, String(d.t || '')); if (!tok) return
+    c.state.items = [c.state.items, tok].filter(Boolean).join(','); s.lootList = c.state.items
+    snd(ctx, 'gun-raise-cloth-rustle', 0.4); return
+  }
   let items = itemsOf(c.state?.items), fail = ''
   const own = (d.k === 'take' || d.k === 'all') ? ownerOf(ctx, c) : null
   if (own && watching(ctx, own) && !own.state.angry?.[ctx.self.id]) {
@@ -391,7 +398,7 @@ function lootAction(ctx, d) {
     items = keep
     snd(ctx, 'loot-take-all-rustle', 0.55)
   } else return
-  if (!c.tags?.includes('rubble') && !c.tags?.includes('npc') && !c.state.dead && items.join(',') !== String(c.state.items ?? '')) { // a looted container fills again in an hour
+  if (!c.tags?.includes('rubble') && !c.tags?.includes('npc') && !c.tags?.includes('storage') && !c.state.dead && items.join(',') !== String(c.state.items ?? '')) { // a looted container fills again in an hour
     if (c.state.full == null) c.state.full = c.state.items ?? ''
     c.state.refillAt = ctx.now() + REFILL_MS
   }

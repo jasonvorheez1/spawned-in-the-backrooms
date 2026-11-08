@@ -705,6 +705,14 @@ function inventory(s) {
   </div></div>`
 }
 
+function storeRows(s) { // your fridge: what you carry, one press puts one in
+  const AWK = { grey: 'almonds', green: 'almondsG', red: 'almondsR', blue: 'almondsB' }, out = []
+  for (const [c, k] of Object.entries(AWK)) if ((s[k] ?? 0) > 0) out.push([`almond:${c}`, `${AW[c]?.name ?? 'Almond Water'}`, s[k]])
+  for (const [k, n] of Object.entries(s.snacks ?? {})) if (n > 0 && SNACKS[k]) out.push([`snack:${k}`, SNACKS[k].name, n])
+  for (const [k, n] of Object.entries(s.meat ?? {})) if (n > 0 && MEAT[k]) out.push([`meat:${k}`, MEAT[k].name, n])
+  const rows = out.map(([t, nm, n]) => `<button class="it" onclick="sendAction('loot',{k:'store',t:'${t}'})"><span class="cur">&lt;</span><span class="nm">${nm}</span><span class="stat-r"><span>x${n} · PUT IN</span></span></button>`).join('')
+  return `<div class="em" style="margin-top:10px;opacity:.8">YOUR BAG</div>${rows || '<div class="em">Nothing to put in.</div>'}`
+}
 function container(s, key) {
   const items = itemsOf(s.lootList)
   const rows = items.map((t, i) => {
@@ -734,7 +742,7 @@ function container(s, key) {
       </div>
     </div>
     <div class="bd" style="margin-top:8px">
-      <div class="ls">${rows || '<div class="em">Container is empty.</div>'}</div>
+      <div class="ls">${rows || '<div class="em">Container is empty.</div>'}${s.lootStore ? storeRows(s) : ''}</div>
       ${items[0] ? detail(items[0], s, true) : '<div class="dt def"><div class="em">Nothing inside.</div></div>'}
     </div>
     <div class="ft">

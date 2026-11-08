@@ -643,18 +643,23 @@ export function pumpRack(ctx) {
   ctx.self.state.pumpAt = ctx.now()
 }
 
+export function pullToken(ctx, t) { // one carried thing out of the bag as its pickup token (drop, fridge), null if you have none
+  const s = ctx.self.state; let tok = null
+    if (t.startsWith('cloth:')) { const bag = s.clothes ? s.clothes.split(',').filter(Boolean) : [], i = bag.indexOf(t); if (i >= 0) { bag.splice(i, 1); s.clothes = bag.join(','); tok = t } }
+    else if (t.startsWith('almond:')) { const k = AW_KEY[t.slice(7)]; if (k && s[k] > 0) { s[k] -= 1; tok = t } }
+    else if (t.startsWith('meat:')) { const c = t.slice(5); if ((s.meat?.[c] ?? 0) > 0) { s.meat = { ...s.meat, [c]: s.meat[c] - 1 }; tok = t } }
+    else if (t.startsWith('snack:')) { const c = t.slice(6); if ((s.snacks?.[c] ?? 0) > 0) { s.snacks = { ...s.snacks, [c]: s.snacks[c] - 1 }; tok = c } }
+    else if (t === 'ammo' || t === 'shells') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= per) { s[t] -= per; tok = t } else s.notice = { text: `Need a full box (${per})`, at: ctx.now() } }
+    else if (t === 'bobbypin') { if (s.bobbypins > 0) { s.bobbypins -= 1; tok = 'bobbypin' } }
+  return tok
+}
+
 // the inventory's buttons (scripts/loot-ui.js): equip a weapon, drink almond water, drop a weapon at your feet, close
 function invAction(ctx, d) {
   const s = ctx.self.state
   if (d.k === 'close') { s.invOpen = false; return }
   if (d.k === 'dropItem') { // anything that isn't a weapon: taken out of the bag as its pickup token, into a canvas bag at your feet (looted back with E)
-    const t = String(d.t || ''); let tok = null
-    if (t.startsWith('cloth:')) { const bag = s.clothes ? s.clothes.split(',').filter(Boolean) : [], i = bag.indexOf(t); if (i >= 0) { bag.splice(i, 1); s.clothes = bag.join(','); tok = t } }
-    else if (t.startsWith('almond:')) { const k = AW_KEY[t.slice(7)]; if (k && s[k] > 0) { s[k] -= 1; tok = t } }
-    else if (t.startsWith('meat:')) { const c = t.slice(5); if ((s.meat?.[c] ?? 0) > 0) { s.meat = { ...s.meat, [c]: s.meat[c] - 1 }; tok = t } }
-    else if (t.startsWith('snack:')) { const c = t.slice(6); if ((s.snacks?.[c] ?? 0) > 0) { s.snacks = { ...s.snacks, [c]: s.snacks[c] - 1 }; tok = c } }
-    else if (t === 'ammo' || t === 'shells') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= per) { s[t] -= per; tok = t } else { s.notice = { text: `Need a full box (${per}) to drop`, at: ctx.now() }; return } }
-    else if (t === 'bobbypin') { if (s.bobbypins > 0) { s.bobbypins -= 1; tok = 'bobbypin' } }
+    const tok = pullToken(ctx, String(d.t || ''))
     if (!tok) return
     const f = ctx.self.feetPosition, fw = walkOf(ctx).fwd ?? { x: 0, z: -1 }, at = { x: f.x + fw.x * 0.8, z: f.z + fw.z * 0.8 }
     const near = ctx.query({ tags: ['remains'], center: { x: at.x, y: f.y, z: at.z }, radius: 1.2 }).find((r) => r.state?.name === 'Dropped bag')

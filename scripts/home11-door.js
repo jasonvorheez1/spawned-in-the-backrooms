@@ -1,4 +1,6 @@
 import TV from "./lib/data/tv-channels.yml";
+import SNACKS from "./lib/data/snacks.yml";
+import { MEAT } from "./lib/items.js";
 // Inside the green house: the front door goes back to the porch, the bed rests you.
 const RADIO = [
   { name: "pop punk on 98.7", clip: "cdn/music-early-2000s-pop-punk-fast-guitars-drums-anthem-loop.mp3" },
@@ -9,7 +11,11 @@ const TEXTS = ["u up? lol", "did u see the new episode of laguna beach", "brb mo
 export function ding(ctx, { by }) {
   ctx.self.state.busy = false; ctx.self.audio = null;
   ctx.emit("playSound", { clip: "cdn/sfx-microwave-oven-triple-beep-ding.mp3", position: ctx.self.feetPosition, volume: 0.8 });
-  const w = ctx.getObject(by)?.state; if (w) { w.hunger = Math.max(0, (w.hunger ?? 0) - 25); w.notice = { text: "Hot Pocket's done. Still frozen in the middle.", at: ctx.now() }; }
+  const w = ctx.getObject(by)?.state; if (w) {
+    const v = meat ? MEAT[meat] : SNACKS[snack], food = (meat ? v.food : v.hunger) ?? 10;
+    w.hunger = Math.min(100, (w.hunger ?? 100) + Math.round(food * 1.5)); w.hp = (w.hp ?? 0) + Math.round((v.hp ?? 0) * 1.5);
+    w.notice = { text: `Hot ${v.name.toLowerCase()}. Better warm.`, at: ctx.now() };
+  }
 }
 export const ears = {
   press: (ctx, { by }) => {
@@ -58,11 +64,16 @@ export const ears = {
       w.notice = { text: `Cold Almond Water from the fridge (${w.almond} carried)`, at: now };
       return;
     }
-    if (k === "microwave") {
-      if (ctx.self.state.busy) return; ctx.self.state.busy = true;
+    if (k === "microwave") { // heats one thing you carry: raw meat first, else a non-drink snack; hot food fills you more
+      if (ctx.self.state.busy) return;
+      const meat = Object.keys(w.meat ?? {}).find((c) => w.meat[c] > 0 && MEAT[c]);
+      const snack = !meat && Object.keys(w.snacks ?? {}).find((c) => w.snacks[c] > 0 && SNACKS[c] && !SNACKS[c].drink);
+      if (!meat && !snack) { w.notice = { text: "Nothing to heat. Bring some food.", at: now }; return; }
+      if (meat) w.meat = { ...w.meat, [meat]: w.meat[meat] - 1 }; else w.snacks = { ...w.snacks, [snack]: w.snacks[snack] - 1 };
+      ctx.self.state.busy = true;
       ctx.self.audio = { clip: "cdn/sfx-microwave-oven-running-hum-loop.mp3", loop: true, gain: 0.35, spatial: true, maxDistance: 8 };
-      ctx.after(8, "ding", { by });
-      w.notice = { text: "Nuking a Hot Pocket...", at: now };
+      ctx.after(8, "ding", { by, meat: meat || "", snack: snack || "" });
+      w.notice = { text: `Heating ${(meat ? MEAT[meat] : SNACKS[snack]).name}...`, at: now };
       return;
     }
     if (k === "phone") {
