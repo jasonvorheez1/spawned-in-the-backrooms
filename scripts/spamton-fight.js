@@ -111,7 +111,7 @@ export function onInput(ctx, input) {
     b.grazeAt = ctx.now(); b.tp = Math.min(100, (b.tp ?? 0) + n * F.grazeTp); if (ctx.random() < 0.25) b.taunt = pick(ctx, F.grazeTaunts); return
   }
   if (d.k === 'heal' && b.phase === 'choose' && (b.tp ?? 0) >= F.healCost && b.hp < F.soulHp) { // cash the TP in for health at the deal
-    b.tp -= F.healCost; b.hp = Math.min(F.soulHp, b.hp + F.healHp); play(ctx, 'chime', 0.6); b.line = 'HEH!! A [[REFUND]]?? THAT'S NOT ON THE [[MENU]]!!'; return
+    b.tp -= F.healCost; b.hp = Math.min(F.soulHp, b.hp + F.healHp); play(ctx, 'chime', 0.6); b.line = "HEH!! A [[REFUND]]?? THAT'S NOT ON THE [[MENU]]!!"; return
   }
   if (d.k === 'done' && b.phase === 'attack' && ctx.now() - b.atkAt > (F.attackSeconds - 1) * 1000) { offer(ctx, b); return }
   if (d.k === 'pick' && b.phase === 'choose' && b.opts?.includes(d.o)) {
