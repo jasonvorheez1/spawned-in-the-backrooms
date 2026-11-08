@@ -86,14 +86,19 @@ const SWING = {
 const STYLE = { table_leg: 'club', pipe_scrap: 'club', crowbar: 'club', bat: 'club', rebar: 'club', wrench: 'club', stun_baton: 'club',
   hatchet: 'chop', fire_axe: 'heavy', sledgehammer: 'heavy', knife: 'stab', screwdriver: 'stab', lineman_machete: 'slash' }
 
-function sample(frames, t) {
+const ZERO_POSE = [0, 0, 0, 0, 0, 0]
+const SAMPLE_BUF = [0, 0, 0, 0, 0, 0]
+const PUMP_BUF = [0, 0, 0, 0, 0, 0]
+
+function sample(frames, t, out) {
   t = Math.max(0, Math.min(1, t))
   let i = 1
   while (i < frames.length - 1 && frames[i][0] < t) i++
   const a = frames[i - 1], b = frames[i], u = ease((t - a[0]) / Math.max(1e-4, b[0] - a[0]))
-  const out = []
-  for (let k = 1; k < 7; k++) out.push(a[k] + (b[k] - a[k]) * Math.max(0, Math.min(1, u)))
-  return out
+  const res = out || [0, 0, 0, 0, 0, 0]
+  const clampedU = Math.max(0, Math.min(1, u))
+  for (let k = 1; k < 7; k++) res[k - 1] = a[k] + (b[k] - a[k]) * clampedU
+  return res
 }
 
 // one damped spring per channel: x, y, depth, pitch, yaw, roll
@@ -194,18 +199,18 @@ export function poseViewmodel(ctx, dt) {
   m.breath += dt
 
   // reload pose target: the pistol plays its timeline, the shotgun holds the loading roll
-  let target = [0, 0, 0, 0, 0, 0], rate = 10
+  let target = ZERO_POSE, rate = 10
   if (m.relOn && m.relKind === kind) {
     if (wp.pellets || wp.tube) {
       const start = wp.reloadStart ?? 0.4, per = wp.reloadShell ?? 0.55, ph = (m.relT - start) / per
-      if (ph < 0) { const k = ease(Math.max(0, m.relT / start)); target = SHOTGUN_LOAD.map((v) => v * k); rate = 14 }
-      else { const c = sample(SHELL_CYCLE, ph - Math.floor(ph)); target = SHOTGUN_LOAD.map((v, i) => v + c[i]); rate = 22 }
+      if (ph < 0) { const k = ease(Math.max(0, m.relT / start)); for (let i = 0; i < 6; i++) SAMPLE_BUF[i] = SHOTGUN_LOAD[i] * k; target = SAMPLE_BUF; rate = 14 }
+      else { const c = sample(SHELL_CYCLE, ph - Math.floor(ph), PUMP_BUF); for (let i = 0; i < 6; i++) SAMPLE_BUF[i] = SHOTGUN_LOAD[i] + c[i]; target = SAMPLE_BUF; rate = 22 }
     }
-    else { target = sample(m.relEmpty ? PISTOL_RELOAD_EMPTY : PISTOL_RELOAD, m.relT / (wp.reloadTime ?? 1.7)); rate = 30 }
+    else { target = sample(m.relEmpty ? PISTOL_RELOAD_EMPTY : PISTOL_RELOAD, m.relT / (wp.reloadTime ?? 1.7), SAMPLE_BUF); rate = 30 }
   }
   const fr = Math.min(1, dt * rate)
   for (let i = 0; i < 6; i++) m.off[i] += (target[i] - m.off[i]) * fr
-  const pump = (wp.pellets || wp.tube) ? sample(PUMP, m.pumpT) : [0, 0, 0, 0, 0, 0]
+  const pump = (wp.pellets || wp.tube) && m.pumpT < 1 ? sample(PUMP, m.pumpT, PUMP_BUF) : ZERO_POSE
 
   // ---- walking bob (almost none while aiming), strafe lean, breathing, sprint carry
   const speed = Math.hypot(vel.x, vel.z)
@@ -255,7 +260,7 @@ export function poseViewmodel(ctx, dt) {
     const h = 1 + 0.7 * (m.heavy ?? 0), side = (m.combo ?? 0) % 2 ? -1 : 1
     if (kind === 'fists') { d += 0.28 * e * h; x -= 0.07 * e * h * side; y += 0.03 * e; roll -= 10 * e * side; yaw += 8 * e * side }
     else {
-      const o = sample(style.f, m.swingT), g = 1 + 0.45 * (m.heavy ?? 0)
+      const o = sample(style.f, m.swingT, SAMPLE_BUF), g = 1 + 0.45 * (m.heavy ?? 0)
       x += o[0] * g * side; y += o[1] * g; d += o[2] * g; pitch += o[3] * g; yaw += o[4] * g * side; roll += o[5] * g * side
       if (style === SWING.heavy && m.swingT > 0.56 && !m.thud) { m.thud = true; ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: -0.3 }, intensity: 0.22 + 0.3 * (m.heavy ?? 0) }, { audience: { player: ctx.self.id } }) } // the slam lands
     }
