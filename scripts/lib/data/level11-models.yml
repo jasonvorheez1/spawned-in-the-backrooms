@@ -25,7 +25,8 @@ spam_alley: "/cdn/value.d3be766fad76b4b0d0dbbce94bb28194fde6587f32a9e36ada6904f2
 turnstile: "/cdn/value.62007c2a80fea7a3196cdbeb1a7c6e9a8e044d0c275450f55e13195b4ddf03b0.glb"
 trashcan: "/cdn/value.7f3b0f23d817d7de6669f46da8e24c82a9b2793fb84d658ceec35d392cbdfc71.glb" # tripo
 taxi_wheel: "/cdn/value.84b0c57de2a5b1d18f1191f15bc0761bf99c351c56f3a6958f537966dec7fd74.glb"
-taxi: "/cdn/value.2ffcf72832ec7e0ee48af85fa6c8cd7f337687af96d153b29b4bd1e1e3c262b7.glb"
+taxi: "/cdn/value.e70e7b30733d180bec589809df34cc0768d7ebebcee02ba8cfac3f29e1d0826a.glb" # tripo crown vic cab, 4.16 m long raw, wheels baked in
+taxi_old: "/cdn/value.2ffcf72832ec7e0ee48af85fa6c8cd7f337687af96d153b29b4bd1e1e3c262b7.glb"
 sedco_spot: "/cdn/value.40671e0ecae12a3420a4c3c7cc3ebc6e32db290de4f15db6b160ee1afec578ba.glb"
 sedco_monitors: "/cdn/value.83a19b1d07a18ddc1d606e4b54af05ee3e855089fa42dca4f863af16bc1f4766.glb"
 sedco_gondola: "/cdn/value.8660fde95ba4c360c8f7833fa7669e2c87ccc9304e0ba657a0c666e3c2956def.glb"

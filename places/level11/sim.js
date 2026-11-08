@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 94; // bump to rebuild the city in rooms that are already open
+const V = 95; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1046,14 +1046,13 @@ function lay(ctx) {
     physics: { body: "kinematic", collider: "box" },
     behavior: "scripts/level11-car.js",
     state: { kind: "taxi", name: "Level 11 Express Taxi", verb: "Drive Taxi" },
-    primitive: null, material: null, model: { id: MODELS.taxi, forward: "-z", offset: [0, 0.09, 0] }, // 2006 Crown Victoria cab (art/level11/street_kit.py)
+    primitive: null, material: null, scale: 1.25, model: { id: MODELS.taxi, forward: "+x", offset: [0, 0.02, 0] }, // Tripo 2006 Crown Victoria cab: 4.16 m raw x1.25 = 5.2 m, wheels in the mesh
     children: [
       { feetPosition: { x: 0, y: 0.5, z: -3.5 }, light: { kind: "point", color: "oklch(0.98 0.08 90)", intensity: 7.5, distance: 24, shadow: { enabled: false } } },
     ],
   });
 
-  for (const [w, x, z] of [["fl", -0.86, -1.45], ["fr", 0.86, -1.45], ["rl", -0.86, 1.45], ["rr", 0.86, 1.45]])
-    sp(`l11-taxi-wheel-${w}`, { parent: "l11-taxi", feetPosition: { x, y: 0, z }, primitive: null, material: null, model: { id: MODELS.taxi_wheel, forward: "-z" }, castShadow: false });
+  // the Tripo cab carries its own wheels; the old separate wheel models are retired
   sp("l11-porsche", { // a real car (scripts/level11-porsche.js): dynamic hull on four sprung wheels, 1.35x a real 911 so a critter fits
     tags: ["usable", "vehicle"],
     feetPosition: { x: -21, y: 0.3, z: 16.4 },
