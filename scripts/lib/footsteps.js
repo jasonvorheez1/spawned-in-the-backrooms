@@ -47,7 +47,7 @@ export function stepTick(ctx, w, dt, o) {
   const heavy = Math.max(0, Math.min(1, (1 - (o.bur ?? 1)) * 2))
   if (fs.air > 0.15 && -fs.minVy >= FS.land.min) { // a landing: both feet, sized to the fall
     const k = Math.min(1, (-fs.minVy - FS.land.min) / (FS.land.hard - FS.land.min))
-    play(ctx, o.clip(FS.landings[F.land] ?? FS.landings['landing-hard']), (0.35 + 0.55 * k) * (1 + heavy * 0.3), 1 - 0.06 * k - heavy * 0.04, 0)
+    play(ctx, take(ctx, o, FS.landings[F.land] ?? FS.landings["landing-hard"]), (0.35 + 0.55 * k) * (1 + heavy * 0.3), 1 - 0.06 * k - heavy * 0.04, 0)
     fs.dist = 0
   }
   fs.air = 0; fs.minVy = 0
@@ -68,7 +68,7 @@ export function stepTick(ctx, w, dt, o) {
   const y = ctx.self.feetPosition.y, dy = fs.lastY == null ? 0 : y - fs.lastY; fs.lastY = y
   const grade = Math.max(-1, Math.min(1, -dy / Math.max(0.3, stride)))
   const slopeK = 1 + (grade > 0 ? grade * FS.slope.down : -grade * FS.slope.up)
-  if (-dy > FS.stepDown && -dy < FS.land.min * 0.3) play(ctx, o.clip(FS.landings[F2.land] ?? FS.landings['landing-soft']), F2.v * 0.8 * (o.crouched ? FS.loud.crouch : 1), 1.05, 0)
+  if (-dy > FS.stepDown && -dy < FS.land.min * 0.3) play(ctx, take(ctx, o, FS.landings[F2.land] ?? FS.landings["landing-soft"]), F2.v * 0.8 * (o.crouched ? FS.loud.crouch : 1), 1.05, 0)
   const run = sp >= FS.runSpeed
   const pace = Math.min(1, sp / 7)
   const vol = slopeK * F2.v * (FS.loud.walkMin + (FS.loud.runMax - FS.loud.walkMin) * pace) * (o.crouched ? FS.loud.crouch : 1) * (1 + heavy * FS.loud.heavyMax) * (0.88 + ctx.random() * 0.24)
