@@ -950,6 +950,20 @@ function lay(ctx) {
   // ==========================================
   // 13. STREET PAYPHONE BOOTH
   // ==========================================
+  // the green house's B.N.T.G. yard sign (Shelly: a player home you buy from the B.N.T.G.); $2,500 is Savi's pick
+  sp("l11-house-sale", {
+    tags: ["usable"], feetPosition: { x: -19.8, y: 0.1, z: 48.3 }, rotation: { lookAt: { x: -10, y: 0, z: 48.3 } },
+    primitive: { kind: "scripted", script: "scripts/props11.js", params: { kind: "yardsign" } }, physics: { body: "static", collider: "box" },
+    behavior: "scripts/level11-use.js",
+    state: { kind: "house-sale", name: "B.N.T.G. Realty Sign", verb: "Ask about the house", price: 250000 },
+    ui: `<div face="front" at="0.5 0.62" width="0.86m" style="width:860px;height:560px;background:#f3ead2;color:#1c2a22;font-family:Georgia,serif;text-align:center;padding:30px 24px;box-sizing:border-box;border:14px solid #2f4a3a"><div style="font-size:150px;font-weight:bold;letter-spacing:6px;line-height:1">FOR SALE</div><div style="font-size:52px;margin-top:22px">3 bed · porch · quiet street</div><div style="font-size:92px;font-weight:bold;color:#7a1f1a;margin-top:18px">$2,500</div><div style="font-size:40px;margin-top:14px;letter-spacing:3px">B.N.T.G. REALTY</div></div>`,
+  });
+  sp("l11-house-door", {
+    tags: ["usable"], feetPosition: { x: -24.6, y: 0.9, z: 51.85 }, visible: false,
+    primitive: { kind: "box", width: 0.4, height: 2, depth: 1.2 },
+    behavior: "scripts/level11-use.js",
+    state: { kind: "house-door", name: "Front Door", verb: "Go home" },
+  });
   sp("l11-payphone", {
     tags: ["usable"],
     feetPosition: { x: -8.8, y: 0.1, z: 15.5 },

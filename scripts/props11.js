@@ -13,6 +13,17 @@ export function geometry(ctx) {
   try { const __q = ctx.quad.bind(ctx), __t = ctx.tri.bind(ctx); ctx.quad = (...a) => __q(...a.flat()); ctx.tri = (...a) => __t(...a.flat()); } catch (e) {}
   const p = ctx.params ?? {}, kind = p.kind ?? "cabinet", lod = ctx.lod ?? 1, seg = lod <= 2 ? 3 : 1;
   const w = p.w ?? 1, h = p.h ?? 1, d = p.d ?? 1;
+  if (kind === "yardsign") { // a realtor's yard sign: two round posts, a cross arm, the panel hung on two little chains. Panel centre at y 1.05, 0.9 x 0.58
+    const M = lod <= 2 ? 8 : 5, ring = (r, y, ox, oz) => Array.from({ length: M }, (_, i) => { const t = (i / M) * Math.PI * 2; return [ox + Math.cos(t) * r, y, oz + Math.sin(t) * r]; });
+    ctx.color("oklch(0.93 0.01 90)");
+    for (const x of [-0.55, 0.55]) { const a0 = ring(0.035, 0, x, 0), a1 = ring(0.035, 1.55, x, 0); prism(ctx, a0, a1); cap(ctx, a1, true); }
+    const arm = (y0, y1) => { const b = [[-0.6, y0, -0.03], [0.6, y0, -0.03], [0.6, y0, 0.03], [-0.6, y0, 0.03]], t = b.map(([x, , z]) => [x, y1, z]); prism(ctx, b, t); cap(ctx, t, true); cap(ctx, b, false); };
+    arm(1.42, 1.49);
+    ctx.color("oklch(0.35 0.01 250)"); for (const x of [-0.3, 0.3]) prism(ctx, ring(0.006, 1.34, x, 0), ring(0.006, 1.42, x, 0));
+    ctx.color("oklch(0.35 0.06 150)"); const hw = 0.45, py0 = 0.76, py1 = 1.34, z0 = -0.012, z1 = 0.012;
+    const b = [[-hw, py0, z0], [hw, py0, z0], [hw, py0, z1], [-hw, py0, z1]], t = b.map(([x, , z]) => [x, py1, z]); prism(ctx, b, t); cap(ctx, t, true); cap(ctx, b, false);
+    return;
+  }
   if (kind === "payphone") { // a 2006 street post payphone: round steel post, rounded housing, a sloped hood with a lit sign, keypad, coin slot, handset on its hook with a coiled cord. Front is -Z
     const M = lod <= 2 ? 10 : 6, ring = (r, y, n = M, ox = 0, oz = 0) => Array.from({ length: n }, (_, i) => { const t = (i / n) * Math.PI * 2; return [ox + Math.cos(t) * r, y, oz + Math.sin(t) * r]; });
     ctx.color("oklch(0.42 0.01 250)"); ctx.metalness?.(0.7); ctx.roughness?.(0.45);

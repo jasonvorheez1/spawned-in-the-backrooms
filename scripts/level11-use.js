@@ -49,6 +49,32 @@ export const ears = {
     const w = who?.state ?? {};
     const now = ctx.now();
 
+    // the green house: bought from the B.N.T.G. sign, price said and confirmed before any money moves
+    if (s.kind === "house-sale") {
+      if (!who) return;
+      const price = s.price ?? 250000, usd = `$${(price / 100).toLocaleString()}`;
+      if (w.home11) { w.sub = { who: "B.N.T.G. REALTY", t: "It's already yours. The sign stays up so the neighbours stay jealous.", at: now, d: 4500 }; return; }
+      if (!w.homeAsk || now - w.homeAsk > 8000) { w.homeAsk = now; w.sub = { who: "B.N.T.G. REALTY", t: `The green house, ${usd}. Keys, porch and the lock that actually works. Press E again to buy.`, at: now, d: 6000 }; heard(ctx, { clip: BUTTON_CLICK, position: pos, volume: 0.6, maxDistance: 10 }); return; }
+      w.homeAsk = 0;
+      if ((w.cents ?? 0) < price) { w.notice = { text: `Not enough cash. The house is ${usd}, you have $${((w.cents ?? 0) / 100).toFixed(2)}.`, at: now }; return; }
+      w.cents -= price; w.home11 = true;
+      heard(ctx, { clip: REGISTER_CHIME, position: pos, volume: 0.9, maxDistance: 14 });
+      ctx.emit("screenFlash", { color: "#fff2c8", duration: 0.4, intensity: 0.35 }, { audience: { player: who.id } });
+      w.sub = { who: "B.N.T.G. REALTY", t: "Sold. Keys are under the mat, which is a terrible place for keys, so move them.", at: now, d: 6000 };
+      w.notice = { text: `You bought the green house for ${usd}. Rest at the front door any time.`, at: now };
+      return;
+    }
+    if (s.kind === "house-door") {
+      if (!who) return;
+      if (!w.home11) { w.notice = { text: "Locked. The B.N.T.G. sign out front has the price.", at: now }; return; }
+      if (now - (w.homeRest ?? 0) < 60000) { w.notice = { text: "You just rested. Home's still here.", at: now }; return; }
+      w.homeRest = now; w.sanity = Math.min(150, (w.sanity ?? 80) + 40); w.hp = Math.max(w.hp ?? 0, (w.hp ?? 0) + 60);
+      heard(ctx, { clip: BUTTON_CLICK, position: pos, volume: 0.5, maxDistance: 8 });
+      ctx.emit("screenFlash", { color: "#000000", duration: 1.2, intensity: 0.9 }, { audience: { player: who.id } });
+      w.notice = { text: "Home. You lock the door, sit down and breathe for a while. +40 sanity, +60 HP.", at: now };
+      return;
+    }
+
     // 1. Street Payphone
     if (s.kind === "payphone") {
       heard(ctx, { clip: PAYPHONE_LIFT, position: pos, volume: 0.9, maxDistance: 14 });
