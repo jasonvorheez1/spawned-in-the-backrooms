@@ -7,7 +7,7 @@
 import bpy, bmesh, math, os, sys, random
 from mathutils import Vector
 
-D = os.path.dirname(os.path.abspath(__file__))
+D = os.environ.get("L7OUT", "/workspace/l7out"); os.makedirs(D, exist_ok=True)
 only = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else ["fort", "circle", "skeleton"]
 R = random.Random(707)
 
@@ -99,9 +99,10 @@ def render(name, ob):
 # rope, cloth, bone, metal; the sim mounts a texture on each (UVs are box-projected in metres at export).
 def fpal():
     global P1, P2, P3, P4, WD, PL, TR, CO, RP, CL, BN, MT
-    P1 = mat("paint1", (0.42, 0.45, 0.36), 0.8); P2 = mat("paint2", (0.62, 0.56, 0.44), 0.8)
-    P3 = mat("paint3", (0.30, 0.36, 0.40), 0.8); P4 = mat("paint4", (0.40, 0.22, 0.16), 0.8)
-    WD = mat("wood", (0.28, 0.19, 0.12), 0.85); PL = mat("plank", (0.32, 0.29, 0.25), 0.9)
+    # salt-faded, tar-smoked paints: dark enough to sit in the dim sea light, never pastel
+    P1 = mat("paint1", (0.16, 0.19, 0.14), 0.85); P2 = mat("paint2", (0.26, 0.21, 0.15), 0.85)
+    P3 = mat("paint3", (0.12, 0.16, 0.19), 0.85); P4 = mat("paint4", (0.24, 0.10, 0.07), 0.85)
+    WD = mat("wood", (0.17, 0.11, 0.07), 0.85); PL = mat("plank", (0.20, 0.17, 0.13), 0.9)
     TR = mat("tar", (0.02, 0.02, 0.025), 0.18, 0.1); CO = mat("corr", (0.36, 0.22, 0.13), 0.75, 0.5)
     RP = mat("rope", (0.40, 0.32, 0.20), 0.95); CL = mat("cloth", (0.34, 0.30, 0.24), 0.95)
     BN = mat("bone", (0.78, 0.74, 0.62), 0.8); MT = mat("metal", (0.25, 0.25, 0.27), 0.45, 0.85)
