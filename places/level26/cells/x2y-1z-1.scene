@@ -135,7 +135,7 @@ l26d-r5e-n:
 l26d-r5e-t0:
   feetPosition: {x: 306.8, y: -80, z: -68}
   id: l26d-r5e-t0
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
@@ -278,7 +278,7 @@ l26d-r5w-n:
 l26d-r5w-t0:
   feetPosition: {x: 293.2, y: -80, z: -68}
   id: l26d-r5w-t0
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
@@ -427,7 +427,7 @@ l26d-r6e-s:
 l26d-r6e-t0:
   feetPosition: {x: 306.8, y: -80, z: -80}
   id: l26d-r6e-t0
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
@@ -510,7 +510,7 @@ l26d-r6e-t0-cup3:
 l26d-r6e-t1:
   feetPosition: {x: 306.8, y: -80, z: -76}
   id: l26d-r6e-t1
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
@@ -621,7 +621,7 @@ l26d-r6w-s:
 l26d-r6w-t0:
   feetPosition: {x: 293.2, y: -80, z: -80}
   id: l26d-r6w-t0
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
@@ -704,7 +704,7 @@ l26d-r6w-t0-cup3:
 l26d-r6w-t1:
   feetPosition: {x: 293.2, y: -80, z: -76}
   id: l26d-r6w-t1
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
@@ -815,7 +815,7 @@ l26d-r7e-s:
 l26d-r7e-t0:
   feetPosition: {x: 306.8, y: -80, z: -92}
   id: l26d-r7e-t0
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
@@ -898,7 +898,7 @@ l26d-r7e-t0-cup3:
 l26d-r7e-t1:
   feetPosition: {x: 306.8, y: -80, z: -88}
   id: l26d-r7e-t1
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
@@ -1009,7 +1009,7 @@ l26d-r7w-s:
 l26d-r7w-t0:
   feetPosition: {x: 293.2, y: -80, z: -92}
   id: l26d-r7w-t0
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
@@ -1092,7 +1092,7 @@ l26d-r7w-t0-cup3:
 l26d-r7w-t1:
   feetPosition: {x: 293.2, y: -80, z: -88}
   id: l26d-r7w-t1
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
@@ -1203,7 +1203,7 @@ l26d-r8e-s:
 l26d-r8e-t0:
   feetPosition: {x: 306.8, y: -80, z: -104}
   id: l26d-r8e-t0
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
@@ -1286,7 +1286,7 @@ l26d-r8e-t0-cup3:
 l26d-r8e-t1:
   feetPosition: {x: 306.8, y: -80, z: -100}
   id: l26d-r8e-t1
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
@@ -1397,7 +1397,7 @@ l26d-r8w-s:
 l26d-r8w-t0:
   feetPosition: {x: 293.2, y: -80, z: -104}
   id: l26d-r8w-t0
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
@@ -1480,7 +1480,7 @@ l26d-r8w-t0-cup3:
 l26d-r8w-t1:
   feetPosition: {x: 293.2, y: -80, z: -100}
   id: l26d-r8w-t1
-  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  layout: {box: {max: {x: 2.1, y: 0.76, z: 0.55}, min: {x: -2.1, y: 0, z: -0.55}}}
   model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
   rotation: {yaw: 90}
