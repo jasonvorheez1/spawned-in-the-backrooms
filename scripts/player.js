@@ -147,13 +147,21 @@ export function gain(ctx, n) {
 // eaten food also feeds hunger (scripts/craft.js drains it)
 export function takeToken(ctx, token) {
   const r = takeToken0(ctx, token), f = CR.food[token]
-  if (r.ok && f) { const s = ctx.self.state; s.hunger = Math.min(100, (s.hunger ?? 100) + f) }
+  if (r.ok && f && !SNACKS[token]) { const s = ctx.self.state; s.hunger = Math.min(100, (s.hunger ?? 100) + f) }
   return r
 }
 function takeToken0(ctx, token) {
   const s = ctx.self.state, now = ctx.now()
   if (token.startsWith('cash:')) { s.cents = (s.cents ?? 0) + (+token.slice(5) || 1); sound(ctx, 'loot-take-all-rustle', 0.35, true); return { ok: true } } // Backdollars: a wallet, no weight
   const cw = canCarry(s, token); if (!cw.ok) return cw
+  if (SNACKS[token] && !token.startsWith('cloth:')) { // food and aid are carried, never used on pickup: I > Aid eats or uses one
+    const v = SNACKS[token]
+    s.snacks = { ...(s.snacks ?? {}), [token]: (s.snacks?.[token] ?? 0) + 1 }; s.pickedAt = now
+    const prev = s.notice && now - s.notice.at < 400 && /in your bag$/.test(s.notice.text) ? s.notice.text.replace(/ · in your bag$/, '') + ', ' : ''
+    s.notice = { text: `${prev}${v.name} · in your bag`, at: now }
+    sound(ctx, v.drink ? 'plastic-bottle-pickup-rattle' : 'loot-take-all-rustle', 0.6, true)
+    return { ok: true }
+  }
   if (token.startsWith('cloth:')) { // a garment: into the bag (player.state.clothes); I > Apparel puts it on
     if (!parseCloth(token)) return { ok: false, why: 'Rags' }
     s.clothes = [s.clothes, token].filter(Boolean).join(','); s.pickedAt = now
@@ -256,7 +264,7 @@ export function useSnack(ctx, token) { // consume one from the bag
   s.snacks = { ...s.snacks, [token]: n - 1 }
   {
     const v = SNACKS[token], mh = maxHp(s.level, s), ms = maxSan(s.level, s)
-    s.hp = Math.min(mh, (s.hp ?? mh) + v.hp * derived(s).heal); s.sanity = Math.min(ms, (s.sanity ?? ms) + v.sanity)
+    s.hp = Math.min(mh, (s.hp ?? mh) + v.hp * (v.aid ? derived(s).healMed : derived(s).heal)); s.sanity = Math.min(ms, (s.sanity ?? ms) + v.sanity)
     s.hunger = Math.max(0, Math.min(100, (s.hunger ?? 100) + v.hunger)); s.thirst = Math.max(0, Math.min(100, (s.thirst ?? 100) + v.thirst))
     if (v.drunk) { s.drunk = Math.min(100, (s.drunk ?? 0) + v.drunk); s.drunkAt = now }
     if (v.stamina) { const w = walkOf(ctx); w.stamina = Math.min(L.stamina * 2, (w.stamina ?? s.stamina ?? 0) + v.stamina) }

@@ -24,3 +24,12 @@ smirnoffice: { name: "Smirnoff Ice", info: "Malt, lemon, 2004 in a bottle", hung
 jackcoke: { name: "Jack and Coke", info: "Jack Daniel's Old No. 7 over ice, a splash of Coca-Cola", hunger: 3, thirst: 10, sanity: 18, hp: -2, color: "#8a4a1a", drink: true, drunk: 30 }
 whiskey: { name: "Jim Beam (a neat pour)", info: "Bourbon, poured by a faceling who does not blink", hunger: 0, thirst: -4, sanity: 22, hp: -4, color: "#b8702a", drink: true, drunk: 40 }
 margarita: { name: "Jose Cuervo margarita", info: "Salt rim, too much tequila", hunger: 3, thirst: 12, sanity: 16, hp: -2, color: "#c8e870", drink: true, drunk: 30 }
+# found loot that used to be eaten on pickup: now carried, eaten or used from I > Aid (johnadams2: "no item should be instantly used from loot"). Values kept from the old pickup effects.
+lobby_wafer: { name: "Lobby Wafers", info: "Stale yellow wafers from a desk drawer. Crunchy, somehow damp", hunger: 18, thirst: -3, sanity: 5, hp: 8, color: "#d4b96a" }
+ration:  { name: "M.E.G. ration", info: "A foil-wrapped field ration", hunger: 30, thirst: 0, sanity: 8, hp: 32, color: "#8a8a5a" }
+bandage: { name: "Bandage", info: "Wrap a wound. Medicine helps", hunger: 0, thirst: 0, sanity: 0, hp: 18, color: "#e8e0d0", aid: true }
+bread:   { name: "Warm Homestead Loaf", info: "Fresh bread", hunger: 30, thirst: -3, sanity: 25, hp: 40, color: "#c8963a" }
+beans:   { name: "Can of beans", info: "Cold, filling", hunger: 25, thirst: -2, sanity: 6, hp: 22, color: "#a85a3a" }
+bar:     { name: "Energy bar", info: "Chalky and sweet · stamina", hunger: 12, thirst: -2, sanity: 0, hp: 9, color: "#c8a03a", stamina: 40 }
+firstaid: { name: "First aid kit", info: "Patches you up properly. Medicine helps", hunger: 0, thirst: 0, sanity: 0, hp: 52, color: "#e83a3a", aid: true }
+royal_ration: { name: "Royal ration", info: "Level 3's rare tin. Full health, a clear head", hunger: 60, thirst: 0, sanity: 60, hp: 999, color: "#e8c83a" }
