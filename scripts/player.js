@@ -13,6 +13,7 @@ import { swing3, fire3 } from './lib/body3.js'
 import { dropLoot, rollLoot, spawnWeapon, poolOf } from './lib/loot.js'
 import { becomeCorpse } from './lib/l5-hostile.js'
 import { markKill } from './lib/witness.js'
+import { repKill } from './lib/rep.js'
 import { derived, canCarry, burden, npcMul, START, dmgMul, handling, skillsOf, spentOf, SKILLS, SKILL_MAX, dmgAfterArmor, lookOfNpc } from './lib/stats.js'
 import { parseCloth, wear, takeOff, wornRows, fullLook } from './lib/clothes.js'
 import { wMul, jamChance, isBroken, useWear, armorWearFor, cndOf, repairAmount, armorCnd, band } from './lib/condition.js'
@@ -386,7 +387,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
   }
   if (m.state.hp <= 0 && !m.state.dead) {
     m.state.dead = true
-    { const seen = markKill(ctx, m, ctx.self); if (!seen.length && s.crouch) s.notice = { text: 'Nobody saw that', at: ctx.now() } } // witnesses: scripts/lib/witness.js
+    { const seen = markKill(ctx, m, ctx.self); if ((m.tags ?? []).includes('npc')) repKill(ctx, m, ctx.self, seen); if (!seen.length && s.crouch) s.notice = { text: 'Nobody saw that', at: ctx.now() } } // witnesses: scripts/lib/witness.js
     s.kills += 1
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
     const tg = m.tags ?? [], ent = tg.includes('smiler') || tg.includes('lurker')

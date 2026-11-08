@@ -10,6 +10,7 @@ import { takeToken } from './player.js'
 import { talk as service } from './interact.js'
 import { skillsOf, SKILLS } from './lib/stats.js'
 import { describe } from './lib/items.js'
+import { repDisc, isHated, repKind, repTrade } from './lib/rep.js'
 import { addressFor, saysName } from './lib/address.js'
 import { lineFor } from './lib/personality.js'
 import { raycast } from 'builtin/physics'
@@ -201,7 +202,7 @@ function act(ctx, d) {
   if (d.k === 'choice' && d.text) { send(ctx, { id: it.id, text: d.text }); return }
   if (String(d.k).startsWith('o:')) { ctx.emit('talkopt', { by: ctx.self.id, k: String(d.k).slice(2) }, { to: it.id }); return } // an npc's own card buttons (state.offers) ring its ears.talkopt
   if (d.k === 'svc') { const before = s.sub?.at; service(ctx, it); if (s.sub?.at !== before) logLine(ctx, it, 'n', s.sub.t); return }
-  if (d.k === 'trade' && isTrader(it)) { restock(ctx, it); s.shopOpen = it.id; return }
+  if (d.k === 'trade' && isTrader(it)) { if (isHated(s, it)) { note(ctx, 'They will not deal with you. Your name is mud with their people.'); return } restock(ctx, it); s.shopOpen = it.id; return }
   if (['wave', 'gift', 'dance', 'insult'].includes(d.k)) { gesture(ctx, it, d.k); return }
   if (d.k === 'back') s.shopOpen = null
   if (d.k === 'stab') s.shopTab = ['buy', 'sell', 'repair'].includes(d.t) ? d.t : 'buy'
@@ -224,7 +225,7 @@ function gesture(ctx, it, k) {
     if (snack) { s.snacks = { ...s.snacks, [snack[0]]: snack[1] - 1 }; name = describe(snack[0])?.name ?? snack[0] }
     else if ((s.almonds ?? 0) > 0) { s.almonds -= 1; name = 'bottle of Almond Water' }
     else { note(ctx, 'You have nothing to give.'); return }
-    setRapport(ctx, it, r + 10)
+    setRapport(ctx, it, r + 10); repKind(ctx, ctx.self, it, 2, 3)
     note(ctx, `Gave ${name}.`)
     send(ctx, { id: it.id, text: `*hands you a ${name}, free*` }); return
   }
@@ -258,7 +259,7 @@ function shop(ctx, d) {
   const s = ctx.self.state, it = live(ctx, s.shopOpen)
   if (!it || !isTrader(it) || it.state?.angry?.[ctx.self.id]) { s.shopOpen = null; return }
   restock(ctx, it)
-  const t = String(d.t ?? ''), barter = skillsOf(s).barter ?? 0, disc = it.state.discount?.[keyOf(ctx.self)] ?? 0
+  const t = String(d.t ?? ''), barter = skillsOf(s).barter ?? 0, disc = (it.state.discount?.[keyOf(ctx.self)] ?? 0) + repDisc(s, it)
   const stock = { ...it.state.stock }
   if (d.k === 'buy') {
     const row = stock[t]; if (!row || row[0] < 1) { note(ctx, 'Sold out.'); return }
@@ -269,7 +270,7 @@ function shop(ctx, d) {
     const got = takeToken(ctx, t)
     if (!got?.ok) { s.cents += cents; note(ctx, got?.msg ?? (got?.why ? `Can't take it: ${got.why}` : "You can't carry that.")); return }
     stock[t] = [row[0] - 1, row[1]]; it.state.stock = stock
-    note(ctx, `Bought ${describe(t).name} for $${price}.00.`)
+    repTrade(ctx, ctx.self, it); note(ctx, `Bought ${describe(t).name} for $${price}.00.`)
   } else if (d.k === 'repair') {
     if (it.state?.role !== 'smith') { note(ctx, 'I do not repair gear. Find a smith.'); return } // a trader mends it to 100% for Backdollars (Fallout: New Vegas)
     const row = repairables(s).find((x) => x[0] === t); if (!row) { note(ctx, 'That does not need repairing.'); return }
@@ -282,7 +283,7 @@ function shop(ctx, d) {
     const row = sellables(s).find((x) => x[0] === t); if (!row || !removeOne(s, t)) return
     const pay = sellPrice(row[2], barter); s.cents = (s.cents ?? 0) + pay * 100
     if (t !== 'almond') { stock[t] = [(stock[t]?.[0] ?? 0) + 1, stock[t]?.[1] ?? Math.round(row[2] * 2)]; it.state.stock = stock }
-    note(ctx, `Sold ${describe(t).name} for $${pay}.00.`)
+    repTrade(ctx, ctx.self, it); note(ctx, `Sold ${describe(t).name} for $${pay}.00.`)
   }
 }
 

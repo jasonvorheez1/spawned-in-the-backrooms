@@ -17,7 +17,7 @@ export function markKill(ctx, victim, killer) {
   if (killer?.id) for (const id of seen) { const n = ctx.getObject(id); if (!n) continue;
     if (vf && facOf(n.state) === vf) n.state.angry = { ...(n.state.angry ?? {}), [killer.id]: true };
     n.state.sawKill = { by: killer.id, name: killer.displayName, victim: victim.state?.name ?? null, at: ctx.now() } }
-  if (killer?.state && vf && seen.length) killer.state.rep = { ...(killer.state.rep ?? {}), [vf]: (killer.state.rep?.[vf] ?? 0) - 1 }
+  // karma and reputation for the killing: scripts/lib/rep.js repKill (called by the caller with the witnesses this returns)
   victim.state.killedBy = killer?.displayName ?? "someone";
   victim.state.witnesses = seen; victim.state.corpseAt ??= ctx.now(); victim.state.sneakKill = sneaking && !seen.length;
   return seen;

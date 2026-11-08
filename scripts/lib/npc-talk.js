@@ -2,6 +2,7 @@ import { styleOf, temperOf } from './personality.js'
 import { addressFor } from './address.js'
 import { lifeOf } from './npc-life.js'
 import { plain } from './plain.js'
+import { repLine } from './rep.js'
 import LORE from './data/npc-lore.yml'
 import { vo } from './voices.js';
 // Free talk with NPCs: who they are, what the model is told, how its answer is read, the skill roll,
@@ -44,6 +45,7 @@ export function systemPrompt({ it, place, pl, rapport, following }) {
     `What you know of this place: ${lv}`, fac ? `Your people: ${fac}` : '', `Memory: ${memLine} ${seen}Bring up what you remember when it fits, the way a person would.`,
     `Faction: ${faction(it, place)}. Job: ${it.state?.role ?? 'none'}. Where you are: ${T.places[place] ?? place}.`,
     `Talking to you: a wanderer. ${nameLine} Level ${pl.state?.level ?? 1}. How good they are (0-100): speech ${sk.speech}, barter ${sk.barter}, melee ${sk.melee}, medicine ${sk.medicine}. A low number means clumsy, a high one means smooth.`,
+    repLine(pl.state ?? {}, it),
     `How you feel about them: ${rapport} on a -100..100 scale (${feel(rapport)}).${following ? ' They talked you into travelling with them and you are with them now.' : ''}`,
     `What you can do, as intent: join (agree to travel with them; only if they really earned it), leave (stop travelling with them), trade_discount (agree to better prices), gift (hand them some small supply), hostile (you are done and will fight them; only after real threats or cruelty), none.`,
     `If they try to persuade, haggle, intimidate, lie or charm you about something that matters, add check: { skill (one of ${CHECKS.join(', ')}), difficulty 20-95 } plus failReply, what you say if they blow it. The game rolls their skill + d20 against the difficulty; your reply is what you say if they pass.`,
