@@ -11,10 +11,10 @@ export function photoBase(ctx) {
 }
 export function photoFinish(ctx, c, o = {}) {
   // jpeg tone: mids pushed, blacks lifted a little (murky, never grey), colour punchy like a 2006 compact's vivid mode
-  c = grade(c, { contrast: 1.06, lift: 0.018, saturation: 1.22, gamma: 1.02 });
+  c = grade(c, { exposure: 1.15, contrast: 1.15, lift: 0.025, saturation: 1.35, gamma: 0.95 });
   // CCD clip: past ~80% the highlight runs flat warm-white instead of rolling off
   const l = dot(c, vec3(0.2126, 0.7152, 0.0722));
-  c = mix(c, vec3(1.0, 0.99, 0.96), smoothstep(0.72, 1.0, l).mul(o.clip ?? 0.45));
-  c = vignette(c, ctx.param('photoVignette', 0.7), { color: [0.02, 0.015, 0.01], roundness: 1.6, feather: 0.7 });
+  c = mix(c, vec3(1.0, 0.99, 0.95), smoothstep(0.6, 0.95, l).mul(o.clip ?? 0.75));
+  c = vignette(c, ctx.param('photoVignette', 0.5), { color: [0.02, 0.015, 0.01], roundness: 1.6, feather: 0.7 });
   return grain(c, o.grain ?? 0.07);
 }
