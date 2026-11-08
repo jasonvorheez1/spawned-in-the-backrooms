@@ -112,7 +112,7 @@ def lock(mesh, root_uv, length, width, flow=None, wave=0.0, curl=0.0, lift=0.0, 
     for k in range(sides): mesh.face([rings[0] + (k + 1) % sides, rings[0] + k, root])
     return path
 
-def cap(mesh, front=.45, side=-.1, back=-.3, vol=.02, part=None, swirl=0.0, rough=.004, nu=56, nv=22, top=1.0):
+def cap(mesh, front=.45, side=-.15, back=-.55, vol=.02, part=None, swirl=0.0, rough=.004, nu=56, nv=22, top=1.0):
     """the scalp layer: a shell over the skull down to a hairline (front at the brow, sides by the cheeks, back at the nape)"""
     rows = []
     for j in range(nv + 1):
@@ -122,14 +122,14 @@ def cap(mesh, front=.45, side=-.1, back=-.3, vol=.02, part=None, swirl=0.0, roug
             fu = (math.cos(u) + 1) / 2   # 1 front, 0 back
             line = back + (front - back) * fu ** 1.4 + (side - (back + (front - back) * .5)) * math.sin(u) ** 2 * (1 - abs(fu - .5) * 2) ** .5
             v = line + (math.pi / 2 - .01 - line) * (j / nv) ** .9
-            o = vol * (.55 + .45 * (j / nv)) * top + rough * noise.noise(Vector((u * 3, v * 3, 1.7)))
+            o = vol * min(1, (j / nv) * 3.5) ** .7 * top + .003 + rough * min(1, j / nv * 4) * noise.noise(Vector((u * 3, v * 3, 1.7)))
             if part is not None: o -= .008 * math.exp(-((u - part) / .07) ** 2) * (j / nv)
             row.append(scalp(u, v, o))
         rows.append(mesh.add(row))
     for j in range(nv):
         for i in range(nu): mesh.face([rows[j] + i, rows[j] + (i + 1) % nu, rows[j + 1] + (i + 1) % nu, rows[j + 1] + i])
     # a soft rolled edge under the hairline
-    inner = mesh.add([HC + (mesh.v[rows[0] + i] - HC) * .985 for i in range(nu)])
+    inner = mesh.add([HC + (mesh.v[rows[0] + i] - HC) * .97 for i in range(nu)])
     for i in range(nu): mesh.face([inner + i, inner + (i + 1) % nu, rows[0] + (i + 1) % nu, rows[0] + i])
 
 def ball(mesh, c, r, mat=0, sq=(1, 1, 1), bumps=0.0, seg=14, seed=0):
