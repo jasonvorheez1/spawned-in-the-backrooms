@@ -88,7 +88,7 @@ export function update(ctx, dt) {
       if (d < 1.0) { // erupt under them
         s.phase = "up"; m.at = now; m.bit = false;
         const x = o.feetPosition.x, z = o.feetPosition.z, y0 = gy(x, z);
-        o.feetPosition = { x, y: y0 - 1.6, z }; o.velocity = { x: 0, y: 0, z: 0 };
+        o.feetPosition = { x, y: y0 - 0.4, z }; o.velocity = { x: 0, y: 0, z: 0 };
         o.rotation = yawTo(p.feetPosition.x - x, p.feetPosition.z - z) + 180;
         o.visible = true; o.fx = null; m.y0 = y0; o.anim.writhe = { clip: WRITHE, loop: true, weight: 1 };
         ctx.emit("fx", { position: { x, y: y0, z }, script: ERUPT });

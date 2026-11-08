@@ -15,6 +15,14 @@ pipe-whoosh-swing:
   - "/cdn/value.a5b840f5afb7ef9617ac02a8d9e2ff3b07243ff88e3aa0cd5c99054a20162b1d.mp3"
   - "/cdn/value.55a65cbcac9404fa7d7e7347c66dc664f3969e8ba37b9b286a35e7e92ed66d07.mp3"
 heavy-pipe-hit-flesh-thud:
+  - "/cdn/value.fc2a0b5fbfcdf12bd67f963c698b2c101218140971fcbbd2e3e2472d69348e44.mp3"
+  - "/cdn/value.8be5d6c7da614833cb3166fb58dc7443a0e91a534c60d1692081c2b21e323c04.mp3"
+  - "/cdn/value.efc9ec949c4206612b0574ea76ce0594ccf05c6935f538fc922cafdad27b0b54.mp3"
+  - "/cdn/value.bad1249523f62feb1eab828144646a4531eee03d1ec96459c0656621fadf42bc.mp3"
+  - "/cdn/value.520f990902cf6d1f9eae5b48c74c7f083b5afc3ed622441e2287ee5e02c3f03f.mp3"
+  - "/cdn/value.b36b8c7e409194ce9d0c270d178da8b898650fd6674f55c9d890451af890ece7.mp3"
+  - "/cdn/value.a5c52f91cb70b1e428c6bd6930181887cf5246603b638a93a3f2e23ff3be5552.mp3"
+  - "/cdn/value.fe168e13c0f47939a22ef15534a814bef22d36dbdb4b7b02785bbb1b693af255.mp3"
   - "/cdn/value.cfc58a0b0cfdf122917ab195d01064a2ae5f076683edb408518787bb3f64c070.mp3"
   - "/cdn/value.166d77ad5c6edc0bd723f475d4bdbbaac0a79ce430063c941a559b97f935bc5f.mp3"
   - "/cdn/value.03d9df81c701820fc72d69704d359b267bf5e4fa7127f3f3c37c22a6dc8e0630.mp3"
@@ -86,3 +94,24 @@ footstep-shelly-street-run:
   - "/cdn/value.9f0ddf4605f5e40a337740a1df1f6555668b8dfa83754ac6ca8430d7c776b5a3.mp3"
   - "/cdn/value.5ab4b82e8ffdcd333698971e03c395896e9fad46e8504d9a2bbbec35b5b6e977.mp3"
   - "/cdn/value.dfe5f34f2a83d529547b947d148c219a19566b98ad4d3bef7ad78ebb6e83c4c9.mp3"
+
+# Shelly's FilmCow Recorded SFX (#77795), a small pick, Nov 8
+knife-stab-flesh-quiet:
+  - "/cdn/value.d7996263e87455eaca24ad4f634429288c9126d975f8b980c04be986ed690566.mp3"
+  - "/cdn/value.1082334965bdd7618c56c7d59d0cc0a26d1e7dd1a717252872ff68224a739a27.mp3"
+  - "/cdn/value.c799cf0ac70b640bdffa92f0275cdc6cc80c627e8ce06d8f2d6466ddf65c1982.mp3"
+  - "/cdn/value.0b209d9d0c7963c800e516ba72f8b926dc61a1533d2c199e2b19cf1ff921d725.mp3"
+  - "/cdn/value.9d01a3afbd2f5a06a8a7af620b47938c105110f09f362047d486d86892b291c0.mp3"
+  - "/cdn/value.3e5bc761d49daef5d7e2cb88769795571b523f95f64a5e2b5309210ef0c5ac7e.mp3"
+  - "/cdn/value.8d7c49639de36b077efc0563ceac4d12778caa9a4343c8cf8632a7fc1fedafc4.mp3"
+drinking-gulp-swallow:
+  - "/cdn/value.96fe05852d9975ad6720d2a9a52055b4e3c1304887a7dc4977dc8f8e594bb310.mp3"
+  - "/cdn/value.33dbb34a4a6bf1cb4e068f27f8f344f2f956dea350d6652b7f425749ade47653.mp3"
+  - "/cdn/value.a02c3ed3f6ebfc0da0079dfe25f125c9499448e68198415bfcb1688f62ef1966.mp3"
+  - "/cdn/value.d8b4849d72f9f28d923fbbd06c1eefb41dae548549044960d06970b8a134bbde.mp3"
+  - "/cdn/value.eb337f8c0a36954e116944de34fb85d3e2e1357652a7706d93adbeea1e8407ce.mp3"
+gulping-water-from-plastic-bottle:
+  - "/cdn/value.a9b0b865f7f75e733cfc4b1a799fb1da04542817e221611fba8a595d77f20880.mp3"
+  - "/cdn/value.d460f9b454f6c721db897d6eee92ed8a3b4edbf1ca315b56efde69704ea2f1c4.mp3"
+  - "/cdn/value.0f194c80d1026e275431363d51fc95c63e4abb4585becb766e8bc0a93523061d.mp3"
+  - "/cdn/value.8b38f37a15e5175d992937fb8723fd02e866b571e58c7e82e6a5c96c270473f8.mp3"
