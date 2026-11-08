@@ -74,6 +74,8 @@ body.data.materials.clear()
 for k in slots:
     m = bpy.data.materials.new(k); m.use_nodes = True
     b = m.node_tree.nodes['Principled BSDF']; b.inputs['Base Color'].default_value = (*lin(hexc(next((h for kk, h in PAL[SEX] if kk == k), COLS[k]))), 1); b.inputs['Roughness'].default_value = 0.85
+    if img is not None and k != 'eyewhite':  # keep the painted fur/face detail: every body slot samples the base's own texture (a slot name stays for tinting)
+        t = m.node_tree.nodes.new('ShaderNodeTexImage'); t.image = img; m.node_tree.links.new(t.outputs['Color'], b.inputs['Base Color'])
     body.data.materials.append(m)
 cnt = {}
 for p in body.data.polygons:
