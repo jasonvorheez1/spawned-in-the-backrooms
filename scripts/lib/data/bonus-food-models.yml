@@ -1,2 +1,9 @@
-# Tom's food as held models (the diner lane fills this): <foodKey>: { model, forward, size: [w,h,d] }
-{}
+# Tom's food as held models (Tripo, one upload each, fitted to real hand size): <foodKey>: { model, forward, size: [w,h,d] }
+# size is metres after scaling (x, y, z of the file); the label or front side of each file faces +x.
+hotdog:      { model: "/cdn/value.e72fcb93e4fd35be5b9f10525a7bb3b2a39044c8326be516e768ca2e266af3ec.glb", forward: "+x", size: [0.085, 0.063, 0.2] }
+fries:       { model: "/cdn/value.e136ccd0d9447a10220c53353bebbe8c57e6368378b6f56e758cf1c9af91c337.glb", forward: "+x", size: [0.102, 0.17, 0.101] }
+pizza:       { model: "/cdn/value.8a9ad82f4389d48439dff443733de688670cc4b32b275dbffb55d1d5f5b0c87d.glb", forward: "+x", size: [0.222, 0.058, 0.25] }
+cheezburger: { model: "/cdn/value.5a0297beac5a61c808480a636be0ae95255b9f0a6e2ee1716f1a6890171b6892.glb", forward: "+x", size: [0.12, 0.097, 0.119] }
+coke:        { model: "/cdn/value.76049399f882c4c7979ebb90a50e883f6e57232bdf576e24ca62a16449824c2d.glb", forward: "+x", size: [0.073, 0.24, 0.072] }
+lemonade:    { model: "/cdn/value.efd05436284d615c637f33e5c0f710a1afd74887ca52955dc3000619c4858277.glb", forward: "+x", size: [0.138, 0.2, 0.139] }
+water:       { model: "/cdn/value.64536361cbc71d4acb0362c3bccb3c3c772827e9fbd58c879c5cc248345750d0.glb", forward: "+x", size: [0.08, 0.24, 0.079] }
