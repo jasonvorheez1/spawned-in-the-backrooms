@@ -2,9 +2,10 @@
 // Cold oceanic cyan-teal cast, deep crushed oceanic blacks, glistening specular bloom on water ripples,
 // heavy maritime mist vignette, and fine sea-mist film grain.
 import { grade, vignette, grain, bloom } from 'builtin/postfx';
+import { photoBase, photoFinish } from './lib/photo2006.js';
 
 export function look(ctx) {
-  let c = ctx.scene;
+  let c = photoBase(ctx);
 
   // Oceanic maritime grade:
   // - Cool oceanic color temperature (-0.14) emphasizing deep naval blues and emerald seafoam.
@@ -31,5 +32,5 @@ export function look(ctx) {
   // Sea-mist grain to disperse digital banding over fog and water surfaces
   c = grain(c, 0.036);
 
-  return c;
+  return photoFinish(ctx, c);
 }

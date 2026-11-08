@@ -2,9 +2,10 @@
 // Recreates the authentic sickly-fluorescent lighting of the original Backrooms photograph.
 // Avoids heavy shader gimmicks (no artificial CRT scanlines or harsh aberration).
 import { grade, vignette, grain, bloom } from 'builtin/postfx';
+import { photoBase, photoFinish } from './lib/photo2006.js';
 
 export function look(ctx) {
-  let c = ctx.scene;
+  let c = photoBase(ctx);
 
   // Natural color grade:
   // - Slightly muted saturation to capture the drab, clinical monotony of empty office space.
@@ -31,5 +32,5 @@ export function look(ctx) {
   // Soft bloom for overhead fluorescent tubes and reflections
   c = bloom(c);
 
-  return c;
+  return photoFinish(ctx, c);
 }
