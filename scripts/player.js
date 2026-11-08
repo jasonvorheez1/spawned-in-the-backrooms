@@ -752,12 +752,15 @@ function useBowl(s) {
   if (s.equipped === 'soup_bowl' && !list.includes('soup_bowl')) s.equipped = 'fists'
   return true
 }
+const now0 = (ctx) => ctx.now()
 function soupEat(ctx) {
   const s = ctx.self.state
   if (!useBowl(s)) return
   s.hunger = Math.min(100, (s.hunger ?? 100) + 45); s.hp = Math.min(maxHp(s.level, s), (s.hp ?? 0) + 25)
   s.notice = { text: 'You slurp the soup down too gratefully to ask what the chunks are · +25 HP', at: ctx.now() }; sound(ctx, 'eating-chewing-food', 0.6, true)
 }
+// thrown soup: hits what is in front (monster or person) through the real hit path, then leaves a slick puddle where it lands (scripts/soup-slick.js)
+const SOUP_DMG = 30, SOUP_RANGE = 9 // my picks: a scalding bowl hits like a crowbar, from a throw's distance
 function soupThrow(ctx) {
   const s = ctx.self.state, now = ctx.now()
   if (now < (walkOf(ctx).nextSwing ?? 0)) return
@@ -765,23 +768,33 @@ function soupThrow(ctx) {
   walkOf(ctx).nextSwing = now + 900
   const p = ctx.self.feetPosition, f = walkOf(ctx).fwd ?? { x: 0, z: -1 }
   ctx.emit('fx', { position: { x: p.x + f.x * 0.5, y: p.y + 1.3, z: p.z + f.z * 0.5 }, script: SOUP, params: { dir: { x: f.x, y: 0.1, z: f.z } } })
-  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-water-splash-thrown-from-bottle.mp3', position: chest(ctx), volume: 0.8, maxDistance: 20 })
-  let best = null, bd = 7
-  for (const m of ctx.query({ anyTags: ['smiler', 'lurker', 'hound', 'stealer', 'moths', 'l8spider', 'l8-hostile'], radius: 7 })) {
-    if (m.state?.dead || (m.state?.hp ?? 1) <= 0) continue
+  sound(ctx, 'pipe-whoosh-swing', 0.6)
+  let best = null, bd = SOUP_RANGE
+  for (const m of ctx.query({ anyTags: ['smiler', 'lurker', 'hound', 'stealer', 'moths', 'l8spider', 'l8-hostile', 'npc'], radius: SOUP_RANGE })) {
+    if (m.id === ctx.self.id || m.state?.dead || (m.state?.hp ?? 1) <= 0) continue
     const dx = m.feetPosition.x - p.x, dz = m.feetPosition.z - p.z, d = Math.hypot(dx, dz)
-    if (d > 0.4 && (dx * f.x + dz * f.z) / d < 0.8) continue
+    if (d > 0.5 && (dx * f.x + dz * f.z) / d < 0.75) continue
     if (d < bd) { bd = d; best = m }
   }
-  if (!best) { s.notice = { text: 'The soup splatters across the stone', at: now }; return }
-  best.state.hp -= 22; best.state.stunUntil = now + 1000; best.state.splashedAt = now
-  const at = { x: best.feetPosition.x, y: best.feetPosition.y + 1, z: best.feetPosition.z }
-  ctx.emit('damageNumber', { position: at, value: 22, color: '#e8b060' })
-  ctx.emit('squash', { target: best.id, axis: 'y', intensity: 0.3, duration: 0.2 })
-  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-ceramic-bowl-shatter-on-stone.mp3', position: at, volume: 0.85, maxDistance: 22 })
-  heard(ctx, { clip: '/cdn/moodboard-gothic-horror/sfx-flesh-sizzle-steam-hiss.mp3', position: at, volume: 0.8, maxDistance: 22 })
-  ctx.emit('hitstop', { duration: 0.05 }, { audience: { player: ctx.self.id } })
-  s.notice = { text: `Scalding soup, right in the face · ${best.state?.name ?? 'it'} staggers`, at: now }
+  let land
+  if (best) {
+    hitTarget(ctx, s, best, SOUP_DMG, f, false)
+    best.state.stunUntil = now + 1400; best.state.splashedAt = now
+    const at = { x: best.feetPosition.x, y: best.feetPosition.y + 1, z: best.feetPosition.z }
+    heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-ceramic-bowl-shatter-on-stone.mp3', position: at, volume: 0.85, maxDistance: 22 })
+    heard(ctx, { clip: '/cdn/moodboard-gothic-horror/sfx-flesh-sizzle-steam-hiss.mp3', position: at, volume: 0.8, maxDistance: 22 })
+    s.notice = { text: `Scalding soup, right in the face · ${(best.state?.name ?? 'it').split(' ·')[0]} reels`, at: now }
+    land = { x: best.feetPosition.x, z: best.feetPosition.z, y: best.feetPosition.y }
+  } else {
+    const o = { x: p.x, y: p.y + 1.3, z: p.z }, dir = { x: f.x * 0.94, y: -0.34, z: f.z * 0.94 }
+    const r = raycast(ctx, o, dir, { distance: 7, physicsOnly: true, ignoreEntities: [ctx.self.id] })
+    land = r ? { x: r.position.x, y: r.position.y, z: r.position.z } : { x: p.x + f.x * 5, y: p.y, z: p.z + f.z * 5 }
+    heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-ceramic-bowl-shatter-on-stone.mp3', position: land, volume: 0.85, maxDistance: 22 })
+    s.notice = { text: 'The soup splatters across the stone. Slippery.', at: now }
+  }
+  ctx.spawn({ tags: ['soupslick'], feetPosition: { x: land.x, y: land.y + 0.02, z: land.z }, rotation: { yaw: ctx.random() * 360 }, lifetime: 30, behavior: 'scripts/soup-slick.js',
+    primitive: { kind: 'circle', radius: 1.3, segments: 20 }, pivot: 'center', castShadow: false,
+    material: { color: 'oklch(0.45 0.1 60 / 0.85)', roughness: 0.05, metalness: 0, transparent: true } })
 }
 
 function toggleLight(ctx) {
@@ -911,7 +924,8 @@ export function update(ctx, dt) {
   viewmodel(ctx, moving, sprinting)
   const v = ctx.self.velocity
   const along = intent.x * v.x + intent.z * v.z > 0 || (v.x === 0 && v.z === 0 && moving)
-  const step = (along ? PLAYER.acceleration : PLAYER.deceleration) * dt
+  if (now0(ctx) >= (w.slickAt ?? 0)) { w.slickAt = now0(ctx) + 150; w.onSlick = ctx.query({ tags: ['soupslick'], radius: 1.3, select: 'ids' }).length > 0 } // checked a few times a second, not every tick
+  const step = (along ? PLAYER.acceleration : PLAYER.deceleration) * dt * (w.onSlick ? 0.07 : 1) // soup underfoot: you skate
   const dx = intent.x - v.x, dz = intent.z - v.z, gap = Math.hypot(dx, dz), k = gap > step ? step / gap : 1
   ctx.self.velocity = { x: v.x + dx * k, y: v.y + ctx.place.gravity.y * dt, z: v.z + dz * k }
 

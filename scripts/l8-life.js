@@ -74,6 +74,7 @@ export function update(ctx, dt) {
   }
   // ---- the spiders: a nest of them where the road meets the chamber (the glyph on the wall), plus the Broodmother guarding the deep nest
   const nestC = P(312, 0, 0), bossHome = P(328, 3.2, 0);
+  const slicks = ctx.query({ tags: ["soupslick"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   const all = ctx.query({ tags: ["l8spider"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }), live = all.filter((o) => !o.state?.dead && (o.state?.hp ?? 1) > 0);
   if (now > (m.bossAt ?? 0) && !live.some((o) => o.state?.boss)) { m.bossAt = now + 180000; spiderAt(ctx, 99, bossHome, "nest", true); }
   if (now > (m.refill ?? 0) && live.length < 18) { m.refill = now + (live.length ? 14000 : 75000); const n = 18 - live.length; for (let i = 0; i < n && i < 3; i++) { const a = ctx.random() * 6.28, r = 3 + ctx.random() * 7; spiderAt(ctx, i, { x: nestC.x + Math.cos(a) * r, y: nestC.y, z: nestC.z + Math.sin(a) * r }, "nest"); } }
@@ -120,6 +121,11 @@ export function update(ctx, dt) {
       }
       if (now - (mm.chat ?? 0) > 4000) { mm.chat = now; heard(ctx, { clip: G("many-small-claws-clicking-and-chittering-in-cave"), position: p, volume: st.boss ? 0.75 : 0.5, maxDistance: 22 }); }
     } else { const wa = now / 1500 + (sp.id.length % 7); if (flat(p, home) > 5) { const dx = home.x - p.x, dz = home.z - p.z, d = Math.hypot(dx, dz) || 1; vx = (dx / d) * 1.5; vz = (dz / d) * 1.5; sp.rotation = { yaw: (Math.atan2(-dx, -dz) * 180) / Math.PI }; } else { vx = Math.cos(wa) * 0.5; vz = Math.sin(wa * 1.3) * 0.5; } }
+    if (now < (st.stunUntil ?? 0) || slicks.some((k) => flat(k.feetPosition, p) < 1.3)) { // soup: legs skid, it rolls over and scrabbles
+      if (!(now < (st.stunUntil ?? 0))) st.stunUntil = now + 1200;
+      sp.rotation = { yaw: (sp.rotation?.yaw ?? 0) + 9, pitch: Math.sin(now / 40) * 25, roll: 70 + Math.sin(now / 33) * 30 };
+      const v0 = sp.velocity ?? { x: 0, y: 0, z: 0 }; sp.velocity = { x: v0.x * 0.9, y: v0.y - 24 * dt, z: v0.z * 0.9 }; continue;
+    }
     if (now < (mm.lungeUntil ?? 0)) { const v0 = sp.velocity ?? { x: 0, y: 0, z: 0 }; sp.velocity = { x: v0.x, y: v0.y - 24 * dt, z: v0.z }; continue; }
     if (!tgt) sp.rotation = { yaw: sp.rotation?.yaw ?? 0, pitch: Math.sin(now / 400 + sp.id.length) * 2, roll: 0 }; // at rest: breathing
     sp.velocity = { x: vx, y: (sp.velocity?.y ?? 0) - 24 * dt, z: vz };
