@@ -83,7 +83,7 @@ export function collider(ctx) {
   const k = ctx.params?.kind ?? "crate";
   if (k === "oven") return [{ kind: "box", width: 1.9, height: 1.5, depth: 1.6, center: [0, 0.75, 0] }];
   if (k === "hopper") return [{ kind: "box", width: 1.1, height: 1.6, depth: 1.1, center: [0, 0.8, 0] }];
-  if (k === "sheaves") return [{ kind: "cylinder", radius: 0.5, height: 1.3, center: [0, 0.65, 0] }];
+  if (k === "sheaves") return [{ kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.5, height: 1.3, center: [0, 0.65, 0] }];
   if (k === "radio") return [{ kind: "box", width: 0.45, height: 0.25, depth: 0.3, center: [0, 0.12, 0] }];
   return [{ kind: "box", width: 0.92, height: 0.66, depth: 0.72, center: [0, 0.33, 0] }];
 }
