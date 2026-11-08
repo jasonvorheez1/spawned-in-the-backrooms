@@ -394,7 +394,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
     const tg = m.tags ?? [], ent = tg.includes('smiler') || tg.includes('lurker')
     if (ent) dropLoot(ctx, m.feetPosition, tg.includes('lurker') ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)) // only smilers and lurkers leave smiler/lurker remains
-    else if (!npc && !tg.some((g) => g === 'l5staff' || g === 'l5rat' || g === 'l7beast' || g === 'remains')) becomeCorpse(ctx, m, (m.state?.name ?? 'Body').split(' ·')[0] + "'s body", rollLoot(ctx, npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)), ctx.self.feetPosition) // anything else stays its own body, limp and searchable // an agent's own body is searched (scripts/meg-agent.js)
+    else if (!npc && !tg.some((g) => g === 'l5staff' || g === 'l5rat' || g === 'l7beast' || g === 'remains' || g === 'spamboss')) becomeCorpse(ctx, m, (m.state?.name ?? 'Body').split(' ·')[0] + "'s body", rollLoot(ctx, npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)), ctx.self.feetPosition) // anything else stays its own body, limp and searchable // an agent's own body is searched (scripts/meg-agent.js)
   }
 }
 
@@ -475,7 +475,7 @@ function swing(ctx, power = 0) {
   let cone = wp.cone || 0.4
   const radius = wp.ranged ? wp.range : wp.reach + 0.6 + power * P.reach
   const found = []
-  for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius }), ...ctx.query({ tags: ['hound'], radius }), ...ctx.query({ tags: ['stealer'], radius }), ...ctx.query({ tags: ['moths'], radius }), ...ctx.query({ tags: ['l8spider'], radius }), ...ctx.query({ tags: ['npc'], radius }), ...ctx.query({ tags: ['l61fc'], radius })]) {
+  for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius }), ...ctx.query({ tags: ['hound'], radius }), ...ctx.query({ tags: ['stealer'], radius }), ...ctx.query({ tags: ['moths'], radius }), ...ctx.query({ tags: ['l8spider'], radius }), ...ctx.query({ tags: ['npc'], radius }), ...ctx.query({ tags: ['l61fc'], radius }), ...ctx.query({ tags: ['spamboss'], radius })]) {
     if (m.state?.dead) continue
     const dx = m.feetPosition.x - p.x, dz = m.feetPosition.z - p.z, d = Math.hypot(dx, dz)
     if (d > 0.3 && (dx * f.x + dz * f.z) / d < cone) continue

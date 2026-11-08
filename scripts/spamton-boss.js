@@ -32,9 +32,9 @@ const COIN_HIT = `fx
 pop sparks burst=18..26 life=.3..0.6 v=up(2..4)+sdir()*(2..4) size=.04..0.08 acc=grav() col=hdr(4,3.2,.8) a=1>0 r=sprite(ember,add,velocity,.03)
 pop dust burst=5 on=disc(.6) life=.5..0.8 v=up(.4..0.9)+sdir()*.6 size=.4..0.7 acc=drag(1.5) col=<.9,.4,.8> a=0>.35:.4>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)`
 const VACUUM = `fx
-pop signs rate=40 on=arc(6,6.283,2) life=.6..0.9 v=<0,0,0> size=.25..0.4 acc=attract(<0,1.6,0>,40) col=hdr(.6,3,.8) a=0>.2:1>.8:1>0 r=sprite(mote,add)`
+pop signs rate=40 on=arc(6,6.283,2) life=.6..0.9 v=<0,0,0> size=.25..0.4 acc=attract(40)+drag(1) col=hdr(.6,3,.8) a=0>.2:1>.8:1>0 r=sprite(mote,add)`
 const CHARGE = `fx
-pop glow rate=60 on=sphere(1.6) life=.3..0.5 size=.15..0.3 acc=attract(<0,1.5,0>,25) col=hdr(4,1,3) a=0>.3:1>0 r=sprite(mote,add)`
+pop glow rate=60 on=sphere(1.6) life=.3..0.5 size=.15..0.3 acc=attract(25)+drag(1) col=hdr(4,1,3) a=0>.3:1>0 r=sprite(mote,add)`
 
 const pick = (ctx, a) => a[Math.floor(ctx.random() * a.length)]
 const dist2 = (a, b) => Math.hypot(a.x - b.x, a.z - b.z)

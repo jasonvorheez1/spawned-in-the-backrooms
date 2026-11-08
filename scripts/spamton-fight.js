@@ -97,9 +97,28 @@ function end(ctx, how) {
   s.spam = null
 }
 
+// the real-time fight (Shelly 11-08): the talk ends, the screen tears pink, and you land in his arena
+function toArena(ctx) {
+  const s = ctx.self.state
+  play(ctx, 'start', 0.9); play(ctx, 'laugh', 0.6)
+  ctx.emit('screenFlash', { color: '#ff2bd0', duration: 0.9, intensity: 1 }, { audience: { player: ctx.self.id } })
+  ctx.emit('screenShake', { intensity: 0.5, duration: 0.4 }, { audience: { player: ctx.self.id } })
+  pop(ctx, false); theme(ctx, null)
+  s.spam = null
+  s.clipKind = 'glitch'
+  ctx.cross(ctx.self, 'spamton#spam-in')
+}
+// in the arena: SPARE, KEEP FIGHTING and LEAVE go to Spamton himself (his state.req)
+function arenaAsk(ctx, k) {
+  const boss = ctx.getObject('spam-boss')
+  if (boss) boss.state.req = { k, by: ctx.self.id, at: ctx.now() }
+  else if (k === 'leave') ctx.cross(ctx.self, 'level11#spam-return')
+}
+
 export function onInput(ctx, input) {
   const d = input.actionData?.spam
   if (!input.pressed?.spam || !d) return
+  if (ctx.self.place === 'spamton' && ['spare', 'fight', 'leave'].includes(d.k)) { arenaAsk(ctx, d.k); return }
   const s = ctx.self.state, b = s.spam
   if (!b?.on) return
   if (d.k === 'flee') { end(ctx, 'flee'); return }
@@ -123,7 +142,7 @@ export function onInput(ctx, input) {
   if (d.k === 'pick' && b.phase === 'chat' && b.opts?.includes(d.o)) {
     b.chat = (b.chat ?? 0) + 1
     if (b.chat < F.chat.length) chat(ctx, b)
-    else { b.opts = null; attack(ctx, b) } // talk's over: the battle theme and his first attack
+    else { b.opts = null; toArena(ctx) } // talk's over: he drags you into his showroom (places/spamton, scripts/spamton-boss.js)
     return
   }
   if (d.k === 'pick' && b.phase === 'choose' && b.opts?.includes(d.o)) {
