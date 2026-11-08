@@ -11,13 +11,13 @@ soulSpeed: 150   # px/s inside a 220 px box
 attacks:
   base: [words, minitons, vacuum]
   neo: [heads, heart, pipis, words]
-intro: "HEY EVERY       !! IT'S ME, SPAMTON G. SPAMTON! WHAT'S A [[Little Sponge]] LIKE YOU DOING IN MY [[Luxury Apartment]]?"
-winLine: "[[DEAL]]!!! I'M ALL YOURS, KID! [[Pocket-Sized]] AND [[Weightless]]! I'LL MAKE YOU [[Rich]]!"
-loseLine: "WHAT'S THE MATTER? CAN'T AFFORD MY [[Specil Deal]]?"
+intro: "HEY      HEY HEY!! IT'S ME, [[Number 1 Rated Salesman1997]]!! WHAT'S A [[Little Sponge]] DOING DOWN HERE IN MY [[Penthouse Suite]]?"
+winLine: "HOCHI MAMA!! YOU GOT YOURSELF A [[Pocket Pal]], KID! FITS ANYWHERE! WEIGHS [[0 KG]]! NO REFUNDS!!!"
+loseLine: "TOO BAD!! TOO SAD!! CALL [[1-800-ROOM-0]] WHEN YOU'RE READY TO BE A [[Real Customer]]."
 deal:
-  - { yes: "TELL ME MORE", no: "WALK AWAY", line: "YOU WANNA BE A [[BIG SHOT]]? I'VE GOT A [[Once in a Lifetime]] OFFER!", ok: "NOW THAT'S A [[Customer]]! LISTEN UP!", bad: "WALK AWAY?? FROM [[Hyperlink Blocked]]?!" }
-  - { yes: "DON'T GIVE", no: "GIVE MONEY", line: "ALL I NEED IS YOUR [[Wallet]]! JUST A [[Small Deposit]]!", ok: "HEH... SMART [[Kid]]. TOO SMART.", bad: "THANK YOU FOR YOUR [[Donation]]!! NOW HOLD STILL!" }
-  - { yes: "TAKE DEAL", no: "HANG UP", line: "OK OK!! [[No Money Down]]! JUST TAKE THE [[DEAL]]!", ok: "[[DEAL]]!! WAIT, DID I JUST [[Give Away]]...", bad: "[[Hanging Up]] ON ME?? NOBODY HANGS UP ON SPAMTON!" }
-  - { yes: "DON'T BUY", no: "BUY", line: "BUT FIRST... A [[Limited Time]] UPGRADE! ONLY $$49.998!", ok: "NO?? NO [[Upsell]]?? YOU'RE KILLING ME, KID!", bad: "SOLD!!! [[Non-Refundable]]!!" }
-  - { yes: "REFUSE", no: "ACCEPT", line: "SIGN HERE, HERE AND [[Here]]. IT SAYS YOU OWE ME [[Everything]].", ok: "FINE!! FINE! NO [[Fine Print]]!", bad: "HAHAHA! READ THE [[Fine Print]] NEXT TIME!" }
-  - { yes: "YES DEAL", no: "NO DEAL", repeat: true, line: "LAST CHANCE!! ME, IN YOUR POCKET, FOR [[Free]]! DEAL??", ok: "", bad: "NO DEAL?? I'LL ASK AGAIN! DEAL??" }
+  - { yes: "TELL ME MORE", no: "WALK AWAY", line: "YOU LOOK LIKE A KID WHO WANTS TO BE A [[BIG SHOT]]. AM I RIGHT? I'M ALWAYS RIGHT.", ok: "THAT'S MY [[Valued Customer]]! LEAN IN! CLOSER! NOT THAT CLOSE.", bad: "WALK AWAY?? FROM [[Hyperlink Blocked]]??? NOBODY WALKS AWAY FROM SPAMTON!!" }
+  - { yes: "DON'T GIVE", no: "GIVE MONEY", line: "BUT FIRST I NEED A [[Small Processing Fee]]. JUST WHAT'S IN YOUR [[Wallet]]. AND YOUR SHOES.", ok: "HEH HEH... YOU'RE NO [[Sucker]], ARE YOU. I LIKE THAT. I HATE THAT.", bad: "THANK YOU FOR YOUR [[Generous Donation]]!! NOW HOLD STILL!!" }
+  - { yes: "TAKE DEAL", no: "HANG UP", line: "FINE! FINE!! [[Zero Down]]! [[Zero Interest]]! ZERO [[Questions Asked]]! JUST TAKE THE DEAL!", ok: "DEAL!!! WAIT. DID I JUST [[Lose Money]]? I NEVER [[Lose Money]].", bad: "HANGING UP?? ON ME??? THE LINE'S STILL [[Open]], KID!!" }
+  - { yes: "DON'T BUY", no: "BUY", line: "LIMITED TIME [[Upgrade Package]]! A [[Gold Plated]] ME! ONLY $$49.998 A MONTH!", ok: "NO?? NO [[Gold Plated]]??? YOU'RE KILLING ME HERE!! I'M ALREADY [[Dead Inside]]!!", bad: "[[SOLD]]!!! ALL SALES FINAL!! THAT'S WHAT THE FINAL MEANS!!" }
+  - { yes: "REFUSE", no: "ACCEPT", line: "JUST SIGN THE [[Terms And Conditions]]. IT SAYS YOU OWE ME [[Everything]] [[Forever]]. STANDARD STUFF.", ok: "OKAY!! NO [[Fine Print]]! YOU DRIVE A HARD [[Bargain]], KID!!", bad: "HAHAHA!! SHOULDA READ THE [[Fine Print]]!! IT'S VERY [[Fine]]!!" }
+  - { yes: "YES DEAL", no: "NO DEAL", repeat: true, line: "LAST OFFER!! ME. IN YOUR POCKET. FOR [[Free]]. WHAT DO YOU SAY, KID? [[DEAL]]?", ok: "", bad: "THAT'S NOT WHAT I HEARD!! I'LL ASK AGAIN!! [[DEAL]]???" }
