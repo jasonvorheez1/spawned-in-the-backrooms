@@ -43,7 +43,7 @@ def bag(rig):
     bmesh.ops.create_cube(bm, size=1.0)
     bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=9, use_grid_fill=True)
     # rounded box, open at the bottom
-    W, D, Z0, Z1, CY = 0.40, 0.36, 0.97, 1.75, 0.02
+    W, D, Z0, Z1, CY = 0.40, 0.40, 0.97, 1.75, -0.09
     random.seed(4)
     for v in bm.verts:
         x, y, z = v.co.x * 2, v.co.y * 2, v.co.z + 0.5   # -1..1, -1..1, 0..1
@@ -79,7 +79,7 @@ def bag(rig):
 def shell(rig):
     bm = bmesh.new()
     bmesh.ops.create_uvsphere(bm, u_segments=12, v_segments=9, radius=1.0)
-    C = Vector((0, 0.02, 1.37)); R = Vector((0.45, 0.43, 0.46))
+    C = Vector((0, -0.08, 1.37)); R = Vector((0.45, 0.48, 0.46))
     for v in bm.verts:
         c = v.co; v.co = Vector((c.x * R.x, c.y * R.y, c.z * R.z)) + C
     # the neck hole: drop the bottom cap
