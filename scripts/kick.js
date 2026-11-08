@@ -5,6 +5,7 @@ import { raycast } from 'builtin/physics'
 import { hitTarget } from './player.js'
 import { animate } from 'builtin/tween'
 import { attrsOf } from './lib/stats.js'
+import { foeStats } from './lib/knock.js'
 // kicking a foe (Shelly: physics, ragdoll by strength/agility). Savi's picks: power = HAR + 0.6 AGI vs the foe's heft;
 // under 0.8x heft barely moves it, up to 1.4x staggers, past that knocks it down for ~1.1 s, then it gets up
 const HEFT = { partygoer: 6, hound: 4, smiler: 10, lurker: 8, stealer: 7, l8spider: 5, npc: 6 }
@@ -114,7 +115,7 @@ function kickFoe(ctx, s, f, p) {
     bd = d; e = c
   }
   if (!e) return false
-  const at = attrsOf(s), power = at.h + 0.6 * at.a, r = power / heftOf(e), now = ctx.now()
+  const at = attrsOf(s), fs = foeStats(ctx, e), power = at.h + 0.6 * at.a, r = power / (fs.kg / 12 + (fs.a - 5) * 0.2), now = ctx.now() // its own weight, and a nimble one keeps its feet
   const tier = r < 0.8 ? 0 : r < 1.4 ? 1 : 2
   const dir = { x: f.x, z: f.z }, push = [1.2, 3.5, 7 + at.a * 0.4][tier]
   hitTarget(ctx, s, e, Math.round(4 + at.h * 1.2 + (tier === 2 ? 6 : 0)), dir, true, tier === 2 ? 1 : 0)

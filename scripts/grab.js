@@ -3,6 +3,7 @@
 // (player.js reads state.carryMul). A thrown thing hurts what it hits: NPCs take damage and turn on you, props crack.
 import { raycast } from "builtin/physics";
 import { attrsOf } from "./lib/stats.js";
+import { foeStats } from "./lib/knock.js";
 import { damageEntity } from "./lib/breakables.js";
 import { heard } from "./lib/hear.js";
 import { isTray, TRAY_KG, CLATTER } from "./lib/snacktray.js";
@@ -133,11 +134,11 @@ function grabFoe(ctx, input) {
   if (!e) return false;
   const S = ctx.self.state;
   if (!S.sheathed && S.equipped && S.equipped !== "fists") { note(ctx, "Holster your weapon (H) to grab."); return true; } // Shelly: hands free first
-  const kg = bodyKg(e), cap = power(ctx);
+  const fs = foeStats(ctx, e), kg = fs.kg, cap = power(ctx);
   if (kg > cap * 1.25) { note(ctx, `Too heavy to lift (${Math.round(kg)} kg). More Hardiness.`); heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-straining-grunt-failed-lift.mp3", position: f, volume: 0.5, maxDistance: 10 }); return true; }
   const st = e.state; st.heldBy = ctx.self.id; st.heldAt = ctx.now(); st.down = null; st.kb = null; st.stunUntil = ctx.now() + 9000;
   ses.heldFoe = e.id; ses.foeKg = kg; ses.squirmed = false;
-  ses.gripUntil = ctx.now() + 1000 * Math.max(0.8, Math.min(6, 1.5 + 3 * (cap / kg - 0.6))); // they squirm loose: a strong grip on a light body holds longest
+  ses.gripUntil = ctx.now() + 1000 * Math.max(0.8, Math.min(6, 1.5 + 3 * (cap / kg - 0.6) - (fs.h + fs.a - 10) * 0.15)); // they squirm loose: a strong grip on a light body holds longest
   ctx.self.state.carryMul = Math.max(0.45, 1 - (kg / cap) * 0.5);
   ctx.self.anim.grab = { clip: "cdn/clip-pick-up.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 }; ses.grabAnimEnd = ctx.now() + 900;
   ctx.emit("squash", { target: e.id, axis: "y", intensity: 0.25, duration: 0.2 });
