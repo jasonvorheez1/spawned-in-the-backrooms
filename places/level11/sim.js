@@ -1067,6 +1067,7 @@ function lay(ctx) {
     behavior: ["scripts/humanoid-locomotion.js", "scripts/l61-staff.js"],
     state: {
       name: "Commuter Faceling",
+      job: "route", route: W_LOOP,
       role: "survivor",
       voice: "wren",
       line: "Pardon me, heading to the commercial plaza before the streetlights turn.",
@@ -1075,12 +1076,43 @@ function lay(ctx) {
   });
 }
 
+
+// ==========================================
+// SIDEWALK WALKERS: commuters on routes; each leg is a findPath over the city's colliders (scripts/l61-staff.js waypoint()),
+// so they go round hydrants, benches and cars. Laid on their own version so a new walker never rebuilds the city.
+// ==========================================
+const WALK_V = 1;
+const W_LOOP = [{ x: -10, z: 24, dwell: 1 }, { x: -10, z: 62, dwell: 1 }, { x: -14, z: 70, dwell: 4, act: "wave" }, { x: -14, z: 30, dwell: 1 }, { x: -10, z: 19 }, { x: -10, z: -12, dwell: 3 }, { x: -14, z: 10 }];
+const E_LOOP = [{ x: 10, z: -10, dwell: 1 }, { x: 10, z: 14 }, { x: 10, z: 19 }, { x: 10, z: 55, dwell: 3 }, { x: 14, z: 66, dwell: 2 }, { x: 14, z: 22 }, { x: 14, z: -12, dwell: 2 }];
+const CROSS = [{ x: -10, z: -4, dwell: 1 }, { x: -10, z: -21 }, { x: -6, z: -24 }, { x: 6, z: -24 }, { x: 10, z: -20 }, { x: 10, z: 6, dwell: 4 }, { x: 10, z: -21 }, { x: 6, z: -24 }, { x: -6, z: -24 }, { x: -10, z: -20 }];
+const WALKERS = [
+  { id: "l11-commuter-faceling", seed: "l11-faceling1", look: { species: "cat", sex: "f", topw: "jacket", top: "#2a2a35", botw: "pants", bottom: "#202028", shoes: "boots" }, at: { x: -11.5, z: 24 }, route: W_LOOP, name: "Commuter Faceling", voice: "wren", line: "Pardon me, heading to the commercial plaza before the streetlights turn." },
+  { id: "l11-walker-1", seed: "l11-walker-1", look: { species: "dog", sex: "m", topw: "hoodie", top: "#5a3a2a", botw: "jeans", bottom: "#2a3550", shoes: "sneakers" }, at: { x: -10, z: -4 }, route: CROSS, name: "Courier", voice: "reyes", line: "Can't stop, kid. Package for the twelfth floor and the elevator's moody." },
+  { id: "l11-walker-2", seed: "l11-walker-2", look: { species: "bunny", sex: "f", topw: "blouse", top: "#d8c8a8", botw: "skirt", bottom: "#3a2a40", shoes: "flats" }, at: { x: 10, z: -10 }, route: E_LOOP, name: "Office Temp", voice: "wren", line: "Third week in the city. The coffee cart guy knows my order already. Is that bad?" },
+  { id: "l11-walker-3", seed: "l11-walker-3", look: { species: "bear", sex: "m", topw: "coat", top: "#3a3a2a", botw: "slacks", bottom: "#25252a", shoes: "boots" }, at: { x: 14, z: 40 }, route: [...E_LOOP.slice(3), ...E_LOOP.slice(0, 3)], name: "Night Shift Janitor", voice: "reyes", line: "Every block looks like the last one if you walk it long enough. Keep your map close, wanderer." },
+];
+function layWalkers(ctx) {
+  for (const w of WALKERS) {
+    const live = ctx.getObject(w.id);
+    if (live) { live.state.job = "route"; live.state.route = w.route; continue; } // keep the body, hand it the route
+    ctx.spawn(w.id, {
+      tags: ["npc", "faceling", "l11walker"],
+      feetPosition: { x: w.at.x, y: 0.35, z: w.at.z },
+      physics: "character",
+      ...critterSpec(npcLook(w.seed, w.look, "wanderer", 11)),
+      behavior: ["scripts/humanoid-locomotion.js", "scripts/l61-staff.js"],
+      state: { name: w.name, role: "survivor", voice: w.voice, line: w.line, job: "route", route: w.route, ...npcState(ctx, "faceling", 90) },
+    });
+  }
+}
+
 // Master tick simulation loop
 const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
   if (!ctx.place.players?.length) return;
   const st = ctx.place.state, now = ctx.now();
-  if ((st.builtV ?? 0) < V) { st.builtV = V; lay(ctx); }
+  if ((st.builtV ?? 0) < V) { st.builtV = V; lay(ctx); st.walkV = 0; }
+  if ((st.walkV ?? 0) < WALK_V) { st.walkV = WALK_V; layWalkers(ctx); }
   if (!mem.ringAt) mem.ringAt = now + 35000;
   tickCity(ctx, mem, heard);
 
