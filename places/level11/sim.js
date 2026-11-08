@@ -14,10 +14,11 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { layCity, layStreet, tickCity } from "../../scripts/lib/level11-city.js";
 import { terminalSpec } from "../../scripts/lib/terminal.js";
+import { layVaults } from "../../scripts/lib/level11-vaults.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 24; // bump to rebuild the city in rooms that are already open
+const V = 25; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -747,6 +748,7 @@ function lay(ctx) {
   // 9. STREET FURNITURE & LIVING DETAILS
   // ==========================================
   const street = layStreet(ctx, { sp, bx, cyl });
+  layVaults(ctx, { sp, bx, cyl }); // hackable gates -> the subway platform and the Sedco vault
 
   // First Capital Municipal Street ATM (Animated Cash Dispenser)
   sp("l11-atm", {

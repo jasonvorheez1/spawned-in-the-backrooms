@@ -18,6 +18,8 @@ const shutdown = (ctx, s) => { if (s.os && s.os.app !== 'off') s.os = { ...s.os,
 
 function unlock(ctx, s) {
   const c = ctx.getObject(s.os.id); if (c) c.state.unlocked = true
+  const opens = { 'MTA-GATE-07': 'sub', 'SEDCO-SEC-01': 'sedco', 'BETA-DISPATCH-01': 'sub' }[s.os.host] // Level 11 unlockables (scripts/l11-gate.js)
+  if (opens && !String(s.l11Access ?? '').split(',').includes(opens)) { s.l11Access = [s.l11Access, opens].filter(Boolean).join(','); gain(ctx, 40); s.os = { ...s.os, user: 'admin', lock: '', app: 'desktop' }; note(ctx, s, opens === 'sub' ? 'Access granted: the station gate under the subway stair is released.' : 'Access granted: the Sedco vault door below the street is released.'); return }
   s.os = { ...s.os, user: 'admin', lock: '', app: 'desktop' }
   gain(ctx, 30); note(ctx, s, 'Access gained. Restricted files are open.')
 }
