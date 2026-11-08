@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 64; // bump to rebuild the city in rooms that are already open
+const V = 65; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1060,8 +1060,8 @@ function lay(ctx) {
   });
   sp("l11-from-home", { feetPosition: { x: -23.0, y: 0.6, z: 51.85 }, rotation: { yaw: -90 } }); // where you step out of the house
   sp("l11-house-door", {
-    tags: ["usable"], feetPosition: { x: -24.6, y: 0.9, z: 51.85 }, visible: false,
-    primitive: { kind: "box", width: 0.4, height: 2, depth: 1.2 },
+    tags: ["usable"], feetPosition: { x: -23.45, y: 0.9, z: 51.85 }, visible: false, // just proud of the wall collider (x -23.6) so the look ray reaches it
+    primitive: { kind: "box", width: 0.2, height: 2, depth: 1.2 },
     behavior: "scripts/level11-use.js",
     state: { kind: "house-door", name: "Front Door", verb: "Go inside" },
   });
