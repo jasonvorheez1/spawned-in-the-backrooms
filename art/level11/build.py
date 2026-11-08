@@ -53,7 +53,7 @@ class Mesh:
         bm = self.bm(m); lo = [bm.verts.new((x, y, z0)) for x, y in pts]; hi = [bm.verts.new((x, y, z1)) for x, y in pts]
         bm.faces.new(lo[::-1]); bm.faces.new(hi)
         for i in range(len(pts)): j = (i + 1) % len(pts); bm.faces.new((lo[i], lo[j], hi[j], hi[i]))
-    def finish(self, name, uv=True, up=None):
+    def finish(self, name, uv=True, up=None, center=True):
         objs = []
         for m, bm in self.b.items():
             bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
@@ -69,14 +69,14 @@ class Mesh:
                         l[lay].uv = (a / TILE, b / TILE)
             me = bpy.data.meshes.new(name + "_" + m); bm.to_mesh(me); bm.free(); o = bpy.data.objects.new(name + "_" + m, me); bpy.context.collection.objects.link(o)
             o.data.materials.append(get_mat(m))
-            for p in me.polygons: p.use_smooth = m in ("leafA", "leafB", "bark", "paint", "chrome", "tire", "lamp")
+            for p in me.polygons: p.use_smooth = m in ("leafA", "leafB", "bark", "paint", "chrome", "tire", "lamp", "rope", "burlap", "corr", "rust", "plastic")
             objs.append(o)
         bpy.ops.object.select_all(action="DESELECT")
         for o in objs: o.select_set(True)
         bpy.context.view_layer.objects.active = objs[0]; bpy.ops.object.join(); ob = bpy.context.active_object; ob.name = name
         # centre on x/y, stand on z = 0
         bb = [Vector(c) for c in ob.bound_box]; cx = (min(v.x for v in bb) + max(v.x for v in bb)) / 2; cy = (min(v.y for v in bb) + max(v.y for v in bb)) / 2; zmin = min(v.z for v in bb)
-        ob.data.transform(Matrix.Translation((-cx, -cy, -zmin))); ob.location = (0, 0, 0)
+        ob.data.transform(Matrix.Translation((-cx, -cy, -zmin) if center else (0, 0, -zmin))); ob.location = (0, 0, 0)
         bpy.ops.object.select_all(action="DESELECT"); ob.select_set(True); bpy.context.view_layer.objects.active = ob
         path = os.path.join(OUT, name + ".glb"); bpy.ops.export_scene.gltf(filepath=path, export_format="GLB", use_selection=True, export_apply=True, export_yup=True, export_materials="EXPORT")
         print("exported", name, "tris", sum(len(p.vertices) - 2 for p in ob.data.polygons), "dims", tuple(round(x, 2) for x in ob.dimensions)); return ob
@@ -339,7 +339,329 @@ def box_():   # a newspaper box
     M = Mesh(); M.box("red", (0, 0, 0.5), (0.5, 0.45, 0.9)); M.box("glass", (0, 0.226, 0.65), (0.32, 0.03, 0.34)); M.box("dark", (0, 0.226, 0.34), (0.2, 0.03, 0.1)); M.box("metal", (0, 0, 0.05), (0.52, 0.47, 0.1)); M.box("chrome", (0.1, 0.23, 0.18), (0.12, 0.03, 0.04))
     ob = M.finish("l11_box"); preview("box", ob, 35, 0.2, 4); return ob
 
-FUNCS = {"glass_a": glass_a, "glass_b": glass_b, "stone": stone, "brick_a": brick_a, "brick_b": brick_b, "mall": mall, "house": house, "lamp": lamp, "hydrant": hydrant, "bench": bench, "shelter": shelter, "tree": tree, "sedan": sedan, "van": van, "bin": bin_, "box": box_}
+# ============================================================== Level 11 set dressing (replaces the primitive boxes in places/level11/sim.js)
+# worn, chamfered, real-proportioned props; same frame as the kit: front +Y, origin bottom centre (reno_office and spam_alley keep their authored origin)
+MATS.update({
+    "woodOld": ((0.3, 0.22, 0.15), 0.85, 0, 0), "rope": ((0.6, 0.52, 0.36), 0.9, 0, 0), "burlap": ((0.58, 0.5, 0.36), 0.95, 0, 0),
+    "corr": ((0.52, 0.53, 0.52), 0.55, 0.7, 0), "rust": ((0.42, 0.22, 0.1), 0.85, 0.3, 0), "olive": ((0.24, 0.27, 0.16), 0.6, 0.3, 0),
+    "door": ((0.2, 0.24, 0.28), 0.5, 0.6, 0), "plastic": ((0.85, 0.87, 0.86), 0.3, 0, 0),
+})
+SMOOTH_EXTRA = ("rope", "burlap", "corr", "rust", "plastic")
+
+def _merge(M, m, tmp, mx):
+    bm = M.bm(m); tmp.verts.index_update(); nv = [bm.verts.new(mx @ v.co) for v in tmp.verts]
+    for f in tmp.faces:
+        try: bm.faces.new([nv[v.index] for v in f.verts])
+        except ValueError: pass
+    tmp.free()
+def cbox(M, m, c, s, bev=0.015, rot=None, P=None, jit=0.0, rnd=None):
+    """a chamfered box: size s, centred c, rotated rot (XYZ radians), then carried by P"""
+    tmp = bmesh.new(); r = bmesh.ops.create_cube(tmp, size=1.0); bmesh.ops.scale(tmp, vec=s, verts=r["verts"])
+    b = min(bev, min(s) * 0.4)
+    if b > 0.0015: bmesh.ops.bevel(tmp, geom=tmp.verts[:] + tmp.edges[:], offset=b, segments=1, affect="EDGES", profile=0.5)
+    if jit and rnd:
+        for v in tmp.verts: v.co += Vector((rnd.uniform(-jit, jit), rnd.uniform(-jit, jit), rnd.uniform(-jit, jit)))
+    mx = (P or Matrix.Identity(4)) @ Matrix.Translation(c) @ (Euler(rot, "XYZ").to_matrix().to_4x4() if rot else Matrix.Identity(4))
+    _merge(M, m, tmp, mx)
+def tube(M, m, pts, r, seg=6, closed=False, caps=True):
+    bm = M.bm(m); pts = [Vector(p) for p in pts]; n = len(pts); rings = []
+    for i, p in enumerate(pts):
+        a = pts[i - 1] if (closed or i > 0) else p; b = pts[(i + 1) % n] if (closed or i < n - 1) else p
+        t = (b - a).normalized(); up = Vector((0, 0, 1)) if abs(t.z) < 0.9 else Vector((1, 0, 0)); u = t.cross(up).normalized(); w = t.cross(u)
+        rings.append([bm.verts.new(p + (u * math.cos(k * 2 * math.pi / seg) + w * math.sin(k * 2 * math.pi / seg)) * r) for k in range(seg)])
+    for i in range(n if closed else n - 1):
+        A, B = rings[i], rings[(i + 1) % n]
+        for k in range(seg): bm.faces.new((A[k], A[(k + 1) % seg], B[(k + 1) % seg], B[k]))
+    if caps and not closed: bm.faces.new(rings[0][::-1]); bm.faces.new(rings[-1])
+def rmat(cols):   # a rotation from its three column vectors
+    return Matrix(((cols[0][0], cols[1][0], cols[2][0], 0), (cols[0][1], cols[1][1], cols[2][1], 0), (cols[0][2], cols[1][2], cols[2][2], 0), (0, 0, 0, 1)))
+def turnaround(name, ob, azs=(35, 150, 260), el=0.35, dist=1.5, tgt=None):
+    sc = bpy.context.scene; sc.render.engine = "BLENDER_WORKBENCH"; sc.render.resolution_x = sc.render.resolution_y = 656
+    sc.display.shading.light = "STUDIO"; sc.display.shading.color_type = "MATERIAL"; sc.display.shading.show_cavity = True; sc.display.shading.show_shadows = True
+    sc.world = bpy.data.worlds.new("w"); sc.world.color = (0.62, 0.7, 0.8)
+    cd = bpy.data.cameras.new("c"); cam = bpy.data.objects.new("c", cd); sc.collection.objects.link(cam); sc.camera = cam; cd.lens = 35
+    d = max(ob.dimensions); t = Vector(tgt) if tgt else Vector((0, 0, ob.dimensions.z * 0.45)); files = []
+    for i, az in enumerate(azs):
+        a = math.radians(az); cam.location = t + Vector((math.sin(a) * d * dist, math.cos(a) * d * dist, d * el))
+        cam.rotation_euler = (t - cam.location).to_track_quat("-Z", "Y").to_euler(); f = "/tmp/l11proof/%s_%d.png" % (name, i); sc.render.filepath = f; bpy.ops.render.render(write_still=True); files.append(f)
+    os.system("montage %s -tile %dx1 -geometry +4+4 /tmp/l11proof/%s.png" % (" ".join(files), len(files), name))
+
+# ---- 1. a pallet barricade: seven EUR pallets stood on end and edge, braced behind, lashed with rope, a 2x4 nailed across
+def pallet(M, rnd, P):
+    """one 1.2 x 1.0 x 0.144 pallet in its own frame (x long, y wide, z up from 0); some boards missing, some greyed and crooked"""
+    W = lambda: "woodOld" if rnd.random() < 0.35 else "wood"
+    for v in (-0.45, 0, 0.45): cbox(M, W(), (0, v, 0.011), (1.2, 0.1, 0.022), 0.004, (0, 0, rnd.uniform(-0.02, 0.02)), P, 0.002, rnd)
+    for u in (-0.5275, 0, 0.5275):
+        for v in (-0.45, 0, 0.45): cbox(M, W(), (u, v, 0.061), (0.145, 0.1 if v else 0.145, 0.078), 0.006, None, P, 0.003, rnd)
+        cbox(M, W(), (u, 0, 0.111), (0.145, 1.0, 0.022), 0.004, None, P, 0.002, rnd)
+    for k, v in enumerate((-0.4275, -0.28, -0.14, 0, 0.14, 0.28, 0.4275)):
+        if 0 < k < 6 and rnd.random() < 0.12: continue                     # a board kicked out
+        w = 0.145 if k in (0, 3, 6) else 0.1
+        cbox(M, W(), (rnd.uniform(-0.01, 0.01), v, 0.133), (1.2 - rnd.uniform(0, 0.03), w, 0.022), 0.004, (rnd.uniform(-0.03, 0.03), 0, rnd.uniform(-0.015, 0.015)), P, 0.002, rnd)
+def barricade_pallets():
+    M = Mesh(); rnd = random.Random(808)
+    TALL = rmat(((0, 0, 1), (0, 1, 0), (-1, 0, 0)))     # pallet x -> up, faces +-x
+    EDGE = rmat(((0, 1, 0), (0, 0, 1), (1, 0, 0)))      # pallet x -> along y, y -> up
+    xf = 0.18
+    for y in (-1.3, 0.0, 1.3):                          # lower course: on end, 1.2 tall
+        P = Matrix.Translation((xf + 0.144, y, 0.6)) @ Euler((rnd.uniform(-0.03, 0.03), rnd.uniform(-0.04, 0.02), rnd.uniform(-0.04, 0.04)), "XYZ").to_matrix().to_4x4() @ TALL
+        pallet(M, rnd, P)
+    for y in (-0.66, 0.66):                             # upper course: on edge, to 2.2
+        P = Matrix.Translation((xf + 0.01, y, 1.21)) @ Euler((rnd.uniform(-0.04, 0.04), rnd.uniform(-0.05, 0.0), 0), "XYZ").to_matrix().to_4x4() @ Matrix.Translation((0, 0, 0.5)) @ EDGE @ Matrix.Translation((0, 0, 0))
+        pallet(M, rnd, P)
+    for y in (-0.9, 0.95):                              # braces leaning in behind
+        P = Matrix.Translation((-0.55, y, 0.02)) @ Euler((0, math.radians(24), rnd.uniform(-0.1, 0.1)), "XYZ").to_matrix().to_4x4() @ Matrix.Translation((0, 0, 0.6)) @ TALL
+        pallet(M, rnd, P)
+    # rope lashings round the lower course and over the upper one
+    x0, x1 = xf - 0.03, xf + 0.175
+    for z in (0.32, 0.95):
+        pts = [(x1, -1.86, z), (x1 + 0.01, 0, z + 0.02), (x1, 1.86, z), (x1 - 0.06, 1.9, z), (x0 + 0.03, 1.9, z), (x0, 1.86, z), (x0 - 0.01, 0, z - 0.02), (x0, -1.86, z), (x0 + 0.03, -1.9, z), (x1 - 0.06, -1.9, z)]
+        tube(M, "rope", pts, 0.012, 6, closed=True)
+    for y in (-0.7, 0.72):
+        pts = [(x1 + 0.03, y, 0.7), (x1 + 0.02, y, 2.24), (xf + 0.07, y + 0.02, 2.27), (x0 - 0.02, y, 2.24), (x0 - 0.04, y, 0.7)]
+        tube(M, "rope", pts + [(xf + 0.07, y, 0.66)], 0.012, 6, closed=True)
+    tube(M, "rope", [(x1 + 0.02, 1.86, 0.95), (x1 + 0.07, 1.9, 0.8), (x1 + 0.1, 1.95, 0.55), (x1 + 0.09, 1.93, 0.42)], 0.012, 6)   # the loose tail
+    tube(M, "rope", [(-0.5, -0.9, 0.55), (x0 - 0.01, -1.1, 0.9)], 0.011, 6); tube(M, "rope", [(-0.48, 0.95, 0.55), (x0 - 0.01, 1.2, 0.9)], 0.011, 6)
+    cbox(M, "woodOld", (x1 + 0.03, 0, 1.75), (0.045, 2.5, 0.09), 0.006, (math.radians(14), 0, 0), None, 0.004, rnd)   # a 2x4 nailed across the top course
+    ob = M.finish("l11_barricade_pallets"); turnaround("barricade_pallets", ob, (60, 150, 250)); return ob
+
+# ---- 2. corrugated sheet wall on steel posts, rust-streaked from its fixings and its foot
+def corrugated():
+    M = Mesh(); rnd = random.Random(52); L = 8.5; wav = 0.135; amp = 0.017
+    starts = [-4.25, -2.15, -0.06, 2.04]
+    for si, y0 in enumerate(starts):
+        y1 = min(4.25, y0 + 2.21); xo = 0.03 if si % 2 else 0.0; zb = rnd.uniform(0.26, 0.36); zt = rnd.uniform(2.62, 2.74); bow = rnd.uniform(-0.03, 0.03)
+        dent = (rnd.uniform(y0 + 0.4, y1 - 0.4), rnd.uniform(0.7, 1.8), rnd.uniform(0.03, 0.06)) if rnd.random() < 0.6 else None
+        nc = int((y1 - y0) / wav * 8); zs = [zb, zb + 0.18, (zb + zt) / 2 - 0.4, (zb + zt) / 2 + 0.4, zt - 0.18, zt]
+        streak = set(); 
+        for k in range(rnd.randint(2, 4)): c = rnd.randint(4, nc - 6); streak.update(range(c, c + rnd.randint(3, 7)))
+        grid = []
+        for i in range(nc + 1):
+            y = y0 + (y1 - y0) * i / nc; col = []
+            for z in zs:
+                x = xo + amp * math.sin(2 * math.pi * (y - y0) / wav) + bow * math.sin(math.pi * (z - zb) / (zt - zb))
+                if dent: x -= dent[2] * math.exp(-((y - dent[0]) ** 2 + (z - dent[1]) ** 2) / 0.12)
+                if z == zb and si == 2: x += 0.04 * max(0, (y - y1 + 0.6) / 0.6)    # a foot corner kicked out
+                col.append((x, y, z))
+            grid.append(col)
+        for i in range(nc):
+            for j in range(len(zs) - 1):
+                rust = (j == 0 and rnd.random() < 0.75) or (j == 1 and rnd.random() < 0.3) or (i in streak and j >= 3) or (i in streak and j == 2 and rnd.random() < 0.6)
+                bm = M.bm("rust" if rust else "corr"); vs = [bm.verts.new(p) for p in (grid[i][j], grid[i + 1][j], grid[i + 1][j + 1], grid[i][j + 1])]; bm.faces.new(vs)
+        for z in (zb + 0.45, zt - 0.3):                              # fixings: hex heads along the rails
+            for k in range(6): cbox(M, "metal", (xo + amp + 0.006, y0 + 0.15 + k * (y1 - y0 - 0.3) / 5, z), (0.012, 0.022, 0.022), 0.003)
+    for y in (-4.1, -2.1, 0.0, 2.1, 4.1):                           # posts behind, set in concrete pads
+        cbox(M, "metal", (-0.07, y, 1.4), (0.08, 0.08, 2.8), 0.008, (rnd.uniform(-0.02, 0.02), rnd.uniform(-0.015, 0.015), 0), None, 0.002, rnd)
+        cbox(M, "concrete", (-0.07, y, 0.06), (0.36, 0.36, 0.12), 0.04, (0, 0, rnd.uniform(0, 1)), None, 0.01, rnd)
+        cbox(M, "rust", (-0.07, y, 0.2), (0.085, 0.085, 0.18), 0.008)
+    for z in (0.75, 2.35): cbox(M, "metal", (-0.04, 0, z), (0.05, 8.4, 0.05), 0.006)
+    ob = M.finish("l11_corrugated"); turnaround("corrugated", ob, (70, 115, 250), 0.25, 0.9); return ob
+
+# ---- 3. sandbags: a shallow curved wall, two bags deep, three courses, each bag its own stuffed, tied, sagging shape
+def sandbag(M, rnd, c, yaw, L=0.58, Wd=0.3, H=0.27):
+    tmp = bmesh.new(); bmesh.ops.create_uvsphere(tmp, u_segments=12, v_segments=7, radius=1.0)
+    for v in tmp.verts:
+        x, y, z = v.co; sq = lambda a, e: math.copysign(abs(a) ** e, a)
+        x2 = sq(x, 0.38); y2 = sq(y, 0.6); z2 = z * (0.55 + 0.45 * (1 - abs(x2) ** 4))
+        if z2 < 0: z2 *= 0.55
+        v.co = Vector((x2 * L / 2, y2 * Wd / 2, z2 * H / 2 + 0.0)) + Vector((rnd.uniform(-0.008, 0.008), rnd.uniform(-0.008, 0.008), rnd.uniform(-0.01, 0.01)))
+    mx = Matrix.Translation(c) @ Euler((rnd.uniform(-0.04, 0.04), rnd.uniform(-0.05, 0.05), yaw + rnd.uniform(-0.08, 0.08)), "XYZ").to_matrix().to_4x4()
+    _merge(M, "burlap", tmp, mx)
+    e = 1 if rnd.random() < 0.5 else -1                               # the tied neck
+    M.bm("burlap"); tmp = bmesh.new(); bmesh.ops.create_cone(tmp, cap_ends=True, segments=6, radius1=0.035, radius2=0.012, depth=0.07)
+    _merge(M, "burlap", tmp, mx @ Matrix.Translation((e * (L / 2 + 0.02), 0, 0.02)) @ Euler((0, e * math.pi / 2, 0), "XYZ").to_matrix().to_4x4())
+def sandbags():
+    M = Mesh(); rnd = random.Random(14); half = 1.75; bulge = 0.35; H = 0.27
+    cx = lambda y: -bulge * (1 - (y / half) ** 2)
+    for course in range(3):
+        z = 0.12 + course * (H - 0.03)
+        for row in (-1, 1):
+            if course == 2 and row == 1 and False: continue
+            n0 = 0.29 * (course % 2) - 0.0
+            y = -half + 0.3 + n0 * (1 if row < 0 else 0.6)
+            while y <= half - 0.27:
+                slope = -2 * bulge * (-y / half ** 2); tang = Vector((slope, 1, 0)).normalized(); nrm = Vector((tang.y, -tang.x, 0))
+                p = Vector((cx(y), y, z)) + nrm * (row * 0.15) * (0.9 if course == 2 else 1)
+                sandbag(M, rnd, p, math.atan2(tang.y, tang.x), H=H + rnd.uniform(-0.02, 0.02)); y += 0.6 + rnd.uniform(-0.02, 0.03)
+    ob = M.finish("l11_sandbags"); turnaround("sandbags", ob, (250, 300, 60), 0.35, 1.0); return ob
+
+# ---- 4. the M.E.G. field table (folding steel legs, olive top, worn) and its supply crate
+def meg_table():
+    M = Mesh(); rnd = random.Random(4); Wt, Dt, Ht = 2.2, 1.2, 0.85
+    cbox(M, "olive", (0, 0, Ht - 0.02), (Wt, Dt, 0.04), 0.012)
+    for sy in (-1, 1): cbox(M, "metal", (0, sy * (Dt / 2 - 0.03), Ht - 0.07), (Wt - 0.08, 0.025, 0.06), 0.004)
+    for sx in (-1, 1): cbox(M, "metal", (sx * (Wt / 2 - 0.03), 0, Ht - 0.07), (0.025, Dt - 0.08, 0.06), 0.004)
+    for sx in (-1, 1):
+        x = sx * (Wt / 2 - 0.22)
+        tube(M, "metal", [(x, -0.5, 0.02), (x, -0.5, Ht - 0.1), (x, 0.5, Ht - 0.1), (x, 0.5, 0.02)], 0.016, 8)          # the U leg frame
+        tube(M, "metal", [(x, -0.5, 0.14), (x, 0.5, 0.14)], 0.011, 6)
+        tube(M, "metal", [(x, -0.02, Ht - 0.1), (x + sx * -0.02, 0, 0.45)], 0.01, 6)
+        tube(M, "metal", [(x - sx * 0.5, 0, Ht - 0.09), (x, 0, 0.45)], 0.012, 6)                                       # folding brace to the centre
+        cbox(M, "metal", (x - sx * 0.5, 0, Ht - 0.085), (0.08, 0.06, 0.03), 0.005)
+        for sy in (-1, 1): M.cyl("dark", (x, sy * 0.5, 0.018), 0.022, 0.036, seg=8)
+    cbox(M, "metal", (0, 0, Ht - 0.1), (Wt - 0.5, 0.05, 0.03), 0.005)
+    cbox(M, "dark", (0.62, 0.18, Ht + 0.002), (0.42, 0.3, 0.004), 0.001, (0, 0, 0.2))                                    # a scuffed rubber mat
+    ob = M.finish("l11_meg_table"); turnaround("meg_table", ob, (35, 150, 260), 0.45, 1.1); return ob
+def meg_cache():
+    M = Mesh(); rnd = random.Random(9); W, Dd, H = 0.9, 0.6, 0.55
+    cbox(M, "olive", (0, 0, 0.04 + 0.19), (W - 0.04, Dd - 0.04, 0.38), 0.02, None, None, 0.002, rnd)
+    cbox(M, "olive", (0, 0, 0.42 + 0.065), (W, Dd, 0.13), 0.022, None, None, 0.002, rnd)
+    cbox(M, "dark", (0, 0, 0.42), (W - 0.02, Dd - 0.02, 0.012), 0.002)
+    for z in (0.12, 0.3): cbox(M, "olive", (0, 0, z), (W - 0.015, Dd - 0.015, 0.03), 0.008)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            cbox(M, "metal", (sx * (W / 2 - 0.03), sy * (Dd / 2 - 0.03), 0.28), (0.07, 0.07, 0.5), 0.01)
+        cbox(M, "olive", (sx * 0.3, 0, 0.02), (0.08, Dd - 0.02, 0.04), 0.01)
+        cbox(M, "metal", (sx * 0.26, Dd / 2 - 0.005, 0.42), (0.06, 0.03, 0.09), 0.006)                     # latches
+        cbox(M, "rust", (sx * 0.26, Dd / 2 - 0.003, 0.37), (0.04, 0.02, 0.03), 0.004)
+        tube(M, "metal", [(sx * (W / 2 + 0.005), -0.1, 0.33), (sx * (W / 2 + 0.035), -0.09, 0.3), (sx * (W / 2 + 0.035), 0.09, 0.3), (sx * (W / 2 + 0.005), 0.1, 0.33)], 0.008, 6)
+    cbox(M, "trim", (0, Dd / 2 - 0.012, 0.22), (0.4, 0.006, 0.14), 0.002)                                   # the stencil plate
+    ob = M.finish("l11_meg_cache"); turnaround("meg_cache", ob, (35, 150, 260), 0.45, 1.3); return ob
+
+# ---- walls with real openings: a wall along y (axis "y", at x = pos) or along x (axis "x", at y = pos), holes [(a0, a1, z0, z1)]
+def wall(M, m, axis, p0, p1, u0, u1, z0, z1, holes, bev=0.0):
+    cuts = sorted({u0, u1, *[h[0] for h in holes], *[h[1] for h in holes]}); cuts = [c for c in cuts if u0 <= c <= u1]; cols = []
+    for a, b in zip(cuts, cuts[1:]):
+        hz = sorted((h[2], h[3]) for h in holes if h[0] <= a + 1e-6 and h[1] >= b - 1e-6); spans = []; z = z0
+        for h0, h1 in hz:
+            if h0 > z: spans.append((z, h0))
+            z = max(z, h1)
+        if z < z1: spans.append((z, z1))
+        if cols and cols[-1][2] == spans: cols[-1][1] = b
+        else: cols.append([a, b, spans])
+    for a, b, spans in cols:
+        for s0, s1 in spans:
+            if axis == "y": M.box(m, ((p0 + p1) / 2, (a + b) / 2, (s0 + s1) / 2), (abs(p1 - p0), b - a, s1 - s0))
+            else: M.box(m, ((a + b) / 2, (p0 + p1) / 2, (s0 + s1) / 2), (b - a, abs(p1 - p0), s1 - s0))
+
+# ---- 5. the renovation office: an 18 x 18 m two-storey brick block, hollow, storefront and open doorway on its east (+x) face
+FACES = {"S": (lambda u, n, z: (u, 9 + n, z), lambda su, sn, sz: (su, sn, sz)), "N": (lambda u, n, z: (u, -9 - n, z), lambda su, sn, sz: (su, sn, sz)),
+         "W": (lambda u, n, z: (-9 - n, u, z), lambda su, sn, sz: (sn, su, sz)), "E": (lambda u, n, z: (9 + n, u, z), lambda su, sn, sz: (sn, su, sz))}
+def fbox(M, m, face, u, n, z, su, sn, sz, bev=0.0):
+    P, S = FACES[face]
+    if bev: cbox(M, m, P(u, n, z), S(su, sn, sz), bev)
+    else: M.box(m, P(u, n, z), S(su, sn, sz))
+def window(M, rnd, face, u, z0, z1, w, t=0.4):
+    """a set-in double-hung window: frame, sashes, meeting rail, glass, stone sill and a soldier-course lintel"""
+    h = z1 - z0; n = -0.16
+    for s in (-1, 1): fbox(M, "trim", face, u + s * (w / 2 - 0.04), n, (z0 + z1) / 2, 0.08, 0.12, h)
+    fbox(M, "trim", face, u, n, z1 - 0.04, w, 0.12, 0.08); fbox(M, "trim", face, u, n, z0 + 0.04, w, 0.12, 0.08)
+    fbox(M, "trim", face, u, n - 0.02, (z0 + z1) / 2, w - 0.1, 0.07, 0.06); fbox(M, "trim", face, u, n - 0.02, (z0 + z1) / 2, 0.05, 0.07, h - 0.1)
+    fbox(M, "glassLit" if rnd.random() < 0.08 else "glass", face, u, n - 0.03, (z0 + z1) / 2, w - 0.1, 0.02, h - 0.1)
+    fbox(M, "trim", face, u, 0.03, z0 - 0.05, w + 0.24, 0.16, 0.1, 0.012)
+    fbox(M, "trim", face, u, 0.015, z1 + 0.13, w + 0.3, 0.06, 0.26, 0.01)
+def reno_office():
+    M = Mesh(); rnd = random.Random(7); t = 0.4; Hw = 7.6; G0, G1, U0, U1 = 1.0, 3.4, 5.2, 7.0; ww = 1.6; cols = (-6, -3, 0, 3, 6)
+    wh = [(c - ww / 2, c + ww / 2, G0, G1) for c in cols] + [(c - ww / 2, c + ww / 2, U0, U1) for c in cols]
+    wall(M, "brick", "x", 9 - t, 9, -9, 9, 0, Hw, wh); wall(M, "brick", "x", -9, -9 + t, -9, 9, 0, Hw, wh)       # south (+y), north (-y)
+    wall(M, "brick", "y", -9, -9 + t, -9 + t, 9 - t, 0, Hw, wh)                                                       # west
+    wall(M, "brick", "y", 9 - t, 9, -9 + t, 9 - t, 0, Hw, [(-8.0, 8.0, 0, 4.4)] + [(c - ww / 2, c + ww / 2, U0, U1) for c in cols])   # east: storefront below
+    for f in ("S", "N", "W", "E"):
+        for c in cols:
+            if f != "E": window(M, rnd, f, c, G0, G1, ww)
+            window(M, rnd, f, c, U0, U1, ww)
+        span = 18 if f in ("S", "N") else 18
+        if f != "E": fbox(M, "concrete", f, 0, 0.0, 0.25, span + 0.08, 0.08, 0.5, 0.01); fbox(M, "trim", f, 0, 0.0, 4.45, span + 0.06, 0.08, 0.2, 0.01)
+    # the storefront: aluminium mullions, a transom bar, kick panels, glass, the open door with its transom over
+    for y in (-8, -6, -4, -2, 0, 2, 4, 6, 8): fbox(M, "metal", "E", y, -0.2, 2.2, 0.08 if y not in (0, 2) else 0.12, 0.14, 4.4)
+    for (a, b) in ((-8, 0), (2, 8)):
+        fbox(M, "metal", "E", (a + b) / 2, -0.2, 0.2, b - a, 0.14, 0.4); fbox(M, "metal", "E", (a + b) / 2, -0.2, 3.35, b - a, 0.14, 0.08)
+        for k in range(int(b - a) // 2):
+            yc = a + 1 + 2 * k; lit = "glassLit" if rnd.random() < 0.0 else "glass"
+            fbox(M, lit, "E", yc, -0.2, 1.87, 1.92, 0.02, 2.9); fbox(M, lit, "E", yc, -0.2, 3.86, 1.92, 0.02, 0.94)
+    fbox(M, "metal", "E", 1, -0.2, 2.7, 2.0, 0.14, 0.1); fbox(M, "glass", "E", 1, -0.2, 3.55, 1.92, 0.02, 1.6); fbox(M, "metal", "E", 0, -0.2, 4.36, 18 - 2, 0.14, 0.08)
+    fbox(M, "dark", "E", 0, 0.06, 4.75, 17.6, 0.12, 0.62, 0.02); fbox(M, "trim", "E", 0, 0.12, 4.44, 18.1, 0.12, 0.08, 0.01); fbox(M, "trim", "E", 0, 0.12, 5.06, 18.1, 0.12, 0.08, 0.01)
+    for s in (-1, 1): fbox(M, "concrete", "E", s * 8.5, 0.02, 0.25, 1.06, 0.06, 0.5, 0.01)
+    # roof, cornice, parapet
+    M.box("roof", (0, 0, 7.45), (18 - 2 * t, 18 - 2 * t, 0.3))
+    cbox(M, "trim", (0, 0, Hw + 0.08), (18.24, 18.24, 0.16), 0.02); cbox(M, "trim", (0, 0, Hw + 0.29), (18.7, 18.7, 0.26), 0.05); cbox(M, "trim", (0, 0, Hw + 0.47), (18.5, 18.5, 0.1), 0.02)
+    for k in range(-17, 18):                                                                     # dentils under the corona
+        for f in ("S", "N", "W", "E"): fbox(M, "trim", f, k * 0.5, 0.17, Hw + 0.12, 0.16, 0.14, 0.12)
+    z = Hw + 0.52; ph = 0.38
+    M.box("brick", (0, 8.85, z + ph / 2), (17.9, 0.3, ph)); M.box("brick", (0, -8.85, z + ph / 2), (17.9, 0.3, ph)); M.box("brick", (8.85, 0, z + ph / 2), (0.3, 17.4, ph)); M.box("brick", (-8.85, 0, z + ph / 2), (0.3, 17.4, ph))
+    for (c, s) in (((0, 8.85), (18.0, 0.4)), ((0, -8.85), (18.0, 0.4)), ((8.85, 0), (0.4, 17.3)), ((-8.85, 0), (0.4, 17.3))): cbox(M, "trim", (c[0], c[1], z + ph + 0.04), (s[0], s[1], 0.08), 0.015)
+    M.box("roof", (0, 0, z + 0.03), (17.4, 17.4, 0.06)); cbox(M, "metal", (-3, -2, z + 0.5), (2.0, 1.4, 0.9), 0.04); M.cyl("dark", (-3, -2, z + 1.0), 0.4, 0.14, seg=12); cbox(M, "metal", (4, 3, z + 0.3), (1.0, 1.0, 0.5), 0.03)
+    # renovation: tube-and-fitting scaffold over three bays of the south face, plank decks, toe boards, and plastic over one upper window
+    sy0, sy1 = 9.35, 10.4; xs = (-7.6, -4.6, -1.6, 1.4)
+    for x in xs:
+        for y in (sy0, sy1):
+            tube(M, "metal", [(x, y, 0.02), (x, y, 7.9)], 0.024, 8); cbox(M, "metal", (x, y, 0.01), (0.15, 0.15, 0.02), 0.003)
+        cbox(M, "woodOld", (x, (sy0 + sy1) / 2, 0.03), (0.24, 1.5, 0.05), 0.008, (0, 0, rnd.uniform(-0.05, 0.05)), None, 0.004, rnd)
+        for z in (2.0, 4.6, 7.0): tube(M, "metal", [(x, sy0 - 0.25, z + 0.05), (x, sy1 + 0.1, z + 0.05)], 0.022, 8)
+    for y in (sy0, sy1):
+        for z in (2.0, 4.6, 7.0): tube(M, "metal", [(xs[0] - 0.15, y, z), (xs[-1] + 0.15, y, z)], 0.022, 8)
+    for z in (3.0, 5.6): tube(M, "metal", [(xs[0] - 0.1, sy1 + 0.05, z), (xs[-1] + 0.1, sy1 + 0.05, z)], 0.022, 8)
+    tube(M, "metal", [(xs[0], sy1 + 0.05, 0.3), (xs[2], sy1 + 0.05, 4.4)], 0.022, 8); tube(M, "metal", [(xs[2], sy1 + 0.05, 4.6), (xs[3], sy1 + 0.05, 6.9)], 0.022, 8)
+    for z in (2.1, 4.7):
+        for b in range(3):
+            for k in range(4):
+                cbox(M, "wood" if rnd.random() < 0.6 else "woodOld", (xs[b] + 1.5 + rnd.uniform(-0.1, 0.1), sy0 + 0.13 + k * 0.26, z + 0.025 + (b % 2) * 0.05), (3.25, 0.22, 0.05), 0.008, (0, 0, rnd.uniform(-0.01, 0.01)), None, 0.004, rnd)
+        cbox(M, "woodOld", ((xs[0] + xs[-1]) / 2, sy1 + 0.1, z + 0.2), (9.0, 0.04, 0.18), 0.006)
+    # plastic sheeting over the upper window at x = -3 (behind the scaffold), stapled to a batten, sagging and pleated
+    bm = M.bm("plastic"); nx, nz = 10, 8; grid = []
+    for i in range(nx + 1):
+        row = []
+        for j in range(nz + 1):
+            u = -3 - 1.15 + 2.3 * i / nx; zz = U1 + 0.35 - 2.6 * j / nz; pleat = 0.04 * math.sin(i * 1.7 + j * 0.3) * (j / nz)
+            row.append(bm.verts.new((u + 0.05 * math.sin(j * 0.9) * (j / nz), 9.08 + pleat + 0.06 * (j / nz) ** 2, zz)))
+        grid.append(row)
+    for i in range(nx):
+        for j in range(nz): bm.faces.new((grid[i][j], grid[i + 1][j], grid[i + 1][j + 1], grid[i][j + 1]))
+    cbox(M, "wood", (-3, 9.07, U1 + 0.36), (2.4, 0.04, 0.06), 0.005)
+    ob = M.finish("l11_reno_office", center=False); turnaround("reno_office", ob, (65, 150, 300), 0.35, 1.1); return ob
+
+# ---- 6. Spamton's alley: three grimy brick walls (W, E, back) with a bricked-up window, a steel back door, a drainpipe and a fire-escape ladder stub
+def spam_alley():
+    M = Mesh(); rnd = random.Random(66); W, L, H = 4.2, 13.0, 7.0; xi, xo = W / 2, W / 2 + 0.6; yb = -L / 2
+    door = (-2.0, -1.0, 0, 2.25)
+    wall(M, "brick", "y", -xo, -xi, yb - 0.6, L / 2, 0, H, [(-2.0, -0.4, 3.2, 5.0)])                          # west, the bricked-up window
+    M.box("brick", (-xi - 0.1, -1.2, 4.1), (0.2, 1.6, 1.8))
+    cbox(M, "trim", (-xi + 0.02, -1.2, 3.12), (0.12, 1.8, 0.14), 0.01); cbox(M, "trim", (-xi + 0.01, -1.2, 5.12), (0.08, 1.9, 0.24), 0.01)
+    wall(M, "brick", "y", xi, xo, yb - 0.6, L / 2, 0, H, [door])                                              # east, the door
+    M.box("brick", (0, yb - 0.3, H / 2), (W, 0.6, H))                                                        # back
+    for x0, x1 in ((-xo, -xi), (xi, xo)): cbox(M, "trim", ((x0 + x1) / 2, (yb - 0.6 + L / 2) / 2, H + 0.06), (0.7, L + 0.66, 0.12), 0.015)
+    cbox(M, "trim", (0, yb - 0.3, H + 0.06), (W + 0.02, 0.7, 0.12), 0.015)
+    for x, sx in ((-xi, 1), (xi, -1)):                                                                        # concrete footing, inside
+        M.box("concrete", (x + sx * 0.02, 0, 0.18), (0.05, L, 0.36)) if x < 0 else (M.box("concrete", (x - 0.02, (door[1] + L / 2) / 2, 0.18), (0.05, L / 2 - door[1], 0.36)), M.box("concrete", (x - 0.02, (yb + door[0]) / 2, 0.18), (0.05, door[0] - yb, 0.36)))
+    M.box("concrete", (0, yb + 0.02, 0.18), (W, 0.05, 0.36))
+    for k in range(5):                                                                                       # patched brick and grime streaks
+        cbox(M, "rust", (-xi + 0.004, rnd.uniform(-5.5, 5.5), rnd.uniform(3.0, 6.5)), (0.01, rnd.uniform(0.08, 0.2), rnd.uniform(0.8, 2.0)), 0.002)
+    # the steel back door in its reveal
+    dy = (door[0] + door[1]) / 2
+    for s in (-1, 1): cbox(M, "metal", (xi + 0.07, dy + s * 0.47, 1.12), (0.14, 0.06, 2.25), 0.008)
+    cbox(M, "metal", (xi + 0.07, dy, 2.22), (0.14, 1.0, 0.06), 0.008)
+    cbox(M, "door", (xi + 0.12, dy, 1.1), (0.05, 0.9, 2.16), 0.01)
+    for z in (0.6, 1.5): cbox(M, "door", (xi + 0.09, dy, z), (0.01, 0.82, 0.05), 0.003)
+    cbox(M, "metal", (xi + 0.09, dy, 0.17), (0.012, 0.86, 0.3), 0.003); cbox(M, "rust", (xi + 0.085, dy, 0.05), (0.01, 0.86, 0.08), 0.002)
+    cbox(M, "chrome", (xi + 0.08, dy + 0.34, 1.05), (0.03, 0.08, 0.14), 0.005); tube(M, "chrome", [(xi + 0.07, dy + 0.34, 1.0), (xi + 0.03, dy + 0.34, 1.0), (xi + 0.03, dy + 0.22, 1.0)], 0.012, 6)
+    cbox(M, "metal", (xi + 0.04, dy + 0.25, 2.12), (0.06, 0.32, 0.07), 0.008); tube(M, "metal", [(xi + 0.03, dy + 0.1, 2.12), (xi - 0.05, dy - 0.2, 2.17)], 0.012, 6)
+    cbox(M, "concrete", (xi - 0.12, dy, 0.07), (0.3, 1.3, 0.14), 0.02)                                       # the step
+    # the drainpipe down the back wall: hopper head, brackets, shoe kicked out at the foot
+    px, py = 1.55, yb + 0.12
+    cbox(M, "metal", (px, py + 0.02, 6.75), (0.28, 0.22, 0.22), 0.02); tube(M, "metal", [(px, yb + 0.02, 6.98), (px, py + 0.05, 6.98)], 0.04, 8)
+    tube(M, "metal", [(px, py, 6.65), (px, py, 0.45), (px, py + 0.08, 0.3), (px, py + 0.24, 0.2)], 0.055, 10)
+    for z in (1.4, 3.2, 5.0): cbox(M, "metal", (px, py, z), (0.13, 0.13, 0.04), 0.01); cbox(M, "rust", (px, py - 0.08, z), (0.05, 0.06, 0.03), 0.004)
+    cbox(M, "rust", (px, py + 0.01, 0.55), (0.12, 0.12, 0.25), 0.02)
+    # a fire-escape drop-ladder stub on the west wall, hanging out of reach under a cut-off landing bracket
+    lx = -xi + 0.2; ly0, ly1 = 1.7, 2.15
+    for y in (ly0, ly1): tube(M, "metal", [(lx, y, 2.6), (lx, y, 6.55)], 0.018, 6)
+    for k in range(13): tube(M, "metal", [(lx, ly0, 2.75 + k * 0.3), (lx, ly1, 2.75 + k * 0.3)], 0.011, 6, caps=False)
+    for z in (3.6, 5.4):
+        for y in (ly0, ly1): cbox(M, "metal", (-xi + 0.1, y, z), (0.2, 0.03, 0.05), 0.005)
+    cbox(M, "metal", (-xi + 0.42, (ly0 + ly1) / 2, 6.6), (0.84, 1.1, 0.05), 0.01)
+    for k in range(6): cbox(M, "dark", (-xi + 0.42, ly0 - 0.32 + k * 0.17, 6.63), (0.8, 0.04, 0.02), 0.003)
+    for y in (ly0 - 0.35, ly1 + 0.35): tube(M, "metal", [(-xi + 0.02, y, 6.0), (-xi + 0.78, y, 6.58)], 0.016, 6); tube(M, "metal", [(-xi + 0.82, y, 6.6), (-xi + 0.82, y, 7.3)], 0.015, 6)
+    tube(M, "metal", [(-xi + 0.82, ly0 - 0.35, 7.3), (-xi + 0.82, ly1 + 0.35, 7.3)], 0.015, 6)
+    cbox(M, "rust", (lx, (ly0 + ly1) / 2, 2.62), (0.05, 0.5, 0.04), 0.005)
+    # a dead air-conditioner over the door, its drip stain
+    cbox(M, "metal", (xi - 0.3, 0.6, 4.4), (0.55, 0.7, 0.45), 0.03); cbox(M, "dark", (xi - 0.58, 0.6, 4.42), (0.02, 0.6, 0.36), 0.005)
+    for s in (-1, 1): tube(M, "metal", [(xi, 0.6 + s * 0.3, 3.9), (xi - 0.5, 0.6 + s * 0.3, 4.17)], 0.015, 6)
+    cbox(M, "rust", (xi - 0.004, 0.75, 2.9), (0.01, 0.12, 2.0), 0.002)
+    ob = M.finish("l11_spam_alley", center=False); turnaround("spam_alley", ob, (20, 340, 90), 0.5, 0.9, (0, -1, 2.5)); return ob
+
+FUNCS_NEW = {"barricade_pallets": barricade_pallets, "corrugated": corrugated, "sandbags": sandbags, "meg_table": meg_table, "meg_cache": meg_cache, "reno_office": reno_office, "spam_alley": spam_alley}
+
+FUNCS = {"glass_a": glass_a, "glass_b": glass_b, "stone": stone, "brick_a": brick_a, "brick_b": brick_b, "mall": mall, "house": house, "lamp": lamp, "hydrant": hydrant, "bench": bench, "shelter": shelter, "tree": tree, "sedan": sedan, "van": van, "bin": bin_, "box": box_, **FUNCS_NEW}
 for n in only:
     bpy.ops.wm.read_factory_settings(use_empty=True)
     for m in list(bpy.data.materials): bpy.data.materials.remove(m)
