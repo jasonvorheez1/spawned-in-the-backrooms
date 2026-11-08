@@ -23,7 +23,7 @@ def group(g, ratio):
     for t in me.loop_triangles:
         for li in t.loops:
             co = me.vertices[me.loops[li].vertex_index].co; n = cn[li].vector; u = uv[li].uv; c = col[li].color
-            key = (*(round(x, 4) for x in co), *(round(x, 1) for x in n), *(round(x, 2) for x in u), *(round(x, 1) for x in c[:3]))
+            key = (*(round(x, 4) for x in co), *(round(x, 1) for x in n), *(round(x, 1) for x in c[:3]))
             if key not in seen:
                 seen[key] = len(P) // 3; P += list(co); N += list(n); U += list(u); C += list(c[:3])
             I.append(seen[key])
