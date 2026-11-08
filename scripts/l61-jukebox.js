@@ -106,7 +106,7 @@ export const ears = {
         who.state.sanity = Math.min(100, (who.state.sanity ?? 80) + 12);
         ctx.emit("damageNumber", {
           position: { x: who.feetPosition.x, y: who.feetPosition.y + 1.2, z: who.feetPosition.z },
-          text: "+12 SANITY (80s RADIO)",
+          text: "+12 SANITY",
           color: "#80ffaa",
           size: 0.95,
         }, { audience: { player: who.id } });
