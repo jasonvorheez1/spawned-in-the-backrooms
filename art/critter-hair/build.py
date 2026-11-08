@@ -22,6 +22,7 @@ TRI_CAP = 8000
 ONLY = [s for s in os.environ.get("ONLY", "").split(",") if s]
 HC = Vector((0, 0, 1.265)); DOWN = Vector((0, 0, -1))
 V = lambda x, y, z: Vector((x, y, z))
+HAT_V = .62        # hatted variants: crown flattened above this elevation (cap/beanie/tophat/partyhat brims sit about here)
 EYE_Z = 1.43       # nothing in front of the face goes below this (eye ink tops out at 1.391)
 def hdir(u, v):    # u: azimuth from the face (+Y) toward +X, v: elevation
     return V(math.sin(u) * math.cos(v), math.cos(u) * math.cos(v), math.sin(v))
@@ -58,7 +59,8 @@ class Envelope:
             rs = []
             for b in s.bvhs:
                 h = b.ray_cast(HC + d * 1.0, -d, 1.0); rs.append((h[0] - HC).length if h[0] else .3)
-            rs.sort(); s.cache[k] = (rs[int(len(rs) * .75)], rs[0])
+            rs.sort(); med = rs[len(rs) // 2]
+            s.cache[k] = (min(rs[-1], med + .03) + .004, rs[0])   # cover: outside every head (a big outlier capped at +3 cm), never sunk into fur
         return s.cache[k]
     def hug(s, d): return s.radii(d)[0]
     def sink(s, d): return s.radii(d)[1] - .015
@@ -168,7 +170,7 @@ def cap(m, front=.8, side=.2, back=-.35, vol=.02, part=None, ear_gap=.035):
             d = hdir(u, v); hp = HC + d * E.hug(d)
             _q, _i, ed = E.eb.find(hp)
             em = sstep(ear_gap * .55, ear_gap * 1.5, ed)
-            th = max(.009, vol * (.55 + .45 * max(0, math.sin(v))))   # never thinner than the fur's own bumps
+            th = max(.016, vol * (.6 + .4 * max(0, math.sin(v))))   # never thinner than the fur's own bumps
             if part is not None: th *= 1 - .45 * math.exp(-((u - part) / .07) ** 2) * sstep(.6, 1.0, v)
             k = hm * em
             r = E.sink(d) + (E.hug(d) + th - E.sink(d)) * k
@@ -524,7 +526,23 @@ def run(sex):
     E = Envelope(sex); MATS = mats()
     for name, fn in STYLES.items():
         if not name.startswith(sex + "_") or (ONLY and name not in ONLY): continue
-        m = M(); fn(m); o = finish(m, "Hair_" + name, MATS)
+        m = M(); fn(m)
+        for hat in (False, True):
+            if hat: m.v = [squash(p) for p in m.v]
+            export_one(m, name + ("-hat" if hat else ""), sex, MATS)
+
+def squash(p):
+    """hatted: above the hat line (elevation HAT_V) everything lies flat on the skull, under the hat shell; sides and back untouched"""
+    d = p - HC
+    if d.length < 1e-6: return p
+    v = math.asin(max(-1, min(1, d.normalized().z))); k = sstep(HAT_V - .18, HAT_V, v)
+    if k <= 0: return p
+    r = E.hug(d) + .006
+    return p if d.length <= r else HC + d.normalized() * (d.length + (r - d.length) * k)
+
+def export_one(m, name, sex, MATS):
+    if True:
+        o = finish(m, "Hair_" + name, MATS)
         tris = sum(len(p.vertices) - 2 for p in o.data.polygons)
         if tris > TRI_CAP:   # long styles: collapse to the cap so the GLB stays under 250 KB (welded, smooth)
             dm = o.modifiers.new("dec", "DECIMATE"); dm.ratio = TRI_CAP / tris
