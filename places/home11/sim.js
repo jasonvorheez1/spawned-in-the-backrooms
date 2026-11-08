@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 30;
+const V = 31;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -65,7 +65,17 @@ export function tick(ctx) {
   bx("h-base-bed-e", 2.13, 0.05, -4.3, 0.02, 0.12, 3.4, TRIM, { physics: "none" });
   // the bathroom (Shelly: "give this door a room too"): x 2.2..5, z -2.6..-6
   const BY = 0.1, TILE = T("white-square-ceramic-bathroom-floor-tile", 0.6, "oklch(0.95 0.01 90)"), PORC = { color: "oklch(0.97 0.006 95)", roughness: 0.25 }, CHROME = { color: "oklch(0.85 0.01 250)", metalness: 0.9, roughness: 0.2 };
-  bx("h-bath-door", 3.2, 0.05, HZ - 0.45, 0.04, 2.05, 0.82, { color: "oklch(0.93 0.015 85)", roughness: 0.5 }, { physics: "none" }); // swung open against the wall
+  // hinged doors (Shelly: "make openable and closeable doors"): a kinematic hinge at the jamb, the leaf its child; E on the leaf swings the hinge
+  const swing = (id, hx, hz, dir, w, open, name) => sp(id, { feetPosition: { x: hx, y: 0.05, z: hz }, rotation: { yaw: 0 }, physics: "kinematic", state: { open: false, openYaw: open },
+    children: [
+      { id: "leaf", tags: ["usable"], feetPosition: { x: dir * w / 2, y: 0, z: 0 }, primitive: { kind: "box", width: w - 0.02, height: 2.03, depth: 0.045 }, material: { color: "oklch(0.93 0.015 85)", roughness: 0.5 }, physics: "static", behavior: "scripts/home11-door.js", state: { kind: "door", name, verb: "Open", hinge: id } },
+      { id: "panel-a", feetPosition: { x: dir * w / 2, y: 1.15, z: 0 }, primitive: { kind: "box", width: w - 0.3, height: 0.7, depth: 0.055 }, material: { color: "oklch(0.9 0.015 85)", roughness: 0.55 } },
+      { id: "panel-b", feetPosition: { x: dir * w / 2, y: 0.2, z: 0 }, primitive: { kind: "box", width: w - 0.3, height: 0.75, depth: 0.055 }, material: { color: "oklch(0.9 0.015 85)", roughness: 0.55 } },
+      { id: "knob-a", feetPosition: { x: dir * (w - 0.1), y: 0.95, z: 0.05 }, primitive: { kind: "sphere", radius: 0.032 }, material: { color: "oklch(0.8 0.1 85)", metalness: 0.9, roughness: 0.3 } },
+      { id: "knob-b", feetPosition: { x: dir * (w - 0.1), y: 0.95, z: -0.05 }, primitive: { kind: "sphere", radius: 0.032 }, material: { color: "oklch(0.8 0.1 85)", metalness: 0.9, roughness: 0.3 } },
+    ] });
+  swing("h-bed-door", -3.5, HZ, -1, 0.98, -95, "Bedroom Door");
+  swing("h-bath-door", 3.15, HZ, 1, 0.88, 95, "Bathroom Door");
   bx("h-bath-floor", 3.6, BY, -4.3, 2.7, 0.015, 3.3, TILE, { physics: "none" });
   bx("h-bath-tile-wall", 3.6, BY, -5.9, 2.7, 1.2, 0.03, TILE, { physics: "none" }); // tiled wainscot behind the tub
   // tub along the north wall, rounded rim

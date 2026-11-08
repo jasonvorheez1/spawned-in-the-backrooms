@@ -1,3 +1,4 @@
+import { animate } from "builtin/tween";
 import TV from "./lib/data/tv-channels.yml";
 import SNACKS from "./lib/data/snacks.yml";
 import { MEAT } from "./lib/items.js";
@@ -25,6 +26,14 @@ export const ears = {
       ctx.emit("playSound", { clip: "cdn/sfx-wooden-front-door-opens-and-closes.mp3", position: ctx.self.feetPosition, volume: 0.8 });
       ctx.emit("screenFlash", { color: "#000000", duration: 0.6, intensity: 0.9 }, { audience: { player: who.id } });
       ctx.cross(who, "level11#l11-from-home");
+      return;
+    }
+    if (k === "door") {
+      const hinge = ctx.getObject(ctx.self.state.hinge); if (!hinge) return;
+      const open = !hinge.state.open; hinge.state.open = open;
+      animate(ctx, hinge, { "rotation.yaw": open ? hinge.state.openYaw : 0 }, { duration: 0.45, easing: "easeOutCubic" });
+      ctx.self.state.verb = open ? "Close" : "Open";
+      ctx.emit("playSound", { clip: open ? "cdn/sfx-interior-wooden-door-creaks-open.mp3" : "cdn/sfx-interior-wooden-door-shuts-latch-click.mp3", position: ctx.self.feetPosition, volume: 0.7 });
       return;
     }
     if (k === "tv") {
