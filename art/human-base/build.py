@@ -32,14 +32,15 @@ def male(head, body):
                 w = bump(1.18, 1.26, 1.44, 1.5, z) * (1 - smooth(0.12, 0.17, ax))
                 if y < 0.01: y = y + (0.01 - y) * 0.95 * w
                 # broader shoulders and upper back; arms ride out, not stretched
-                k = 0.18 * smooth(0.98, 1.34, z) * (1 - smooth(1.5, 1.6, z))
+                k = 0.2 * smooth(1.2, 1.42, z) * (1 - smooth(1.52, 1.6, z))
                 x = x * (1 + k) if ax <= 0.18 else x + sg * 0.18 * k
-                # waist straighter, hips narrower, seat smaller
-                x *= 1 + 0.12 * bump(0.9, 1.0, 1.12, 1.22, z)
-                x *= 1 - 0.17 * bump(0.6, 0.78, 0.94, 1.02, z) * (1 if ax < 0.22 else 0)
-                if y > 0.12: y = 0.12 + (y - 0.12) * (1 - 0.45 * bump(0.72, 0.8, 0.95, 1.02, z))
+                # the hip flare taken in, the waist filled straight
+                if ax < 0.22:
+                    x *= 1 - 0.15 * bump(0.72, 0.86, 1.04, 1.14, z)
+                    x *= 1 + 0.17 * bump(1.06, 1.16, 1.26, 1.36, z)
+                if y > 0.12: y = 0.12 + (y - 0.12) * (1 - 0.45 * bump(0.72, 0.82, 1.0, 1.08, z))
                 # thicker neck
-                nk = bump(1.45, 1.5, 1.62, 1.68, z)
+                nk = bump(1.5, 1.55, 1.62, 1.68, z)
                 x *= 1 + 0.22 * nk; y = 0.075 + (y - 0.075) * (1 + 0.12 * nk)
                 # a bit more arm and calf mass
                 if ax > 0.2 and z > 1.0: y = 0.075 + (y - 0.075) * 1.1
