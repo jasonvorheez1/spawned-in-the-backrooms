@@ -272,7 +272,7 @@ function moveAlong(ctx, me, m, goal, speed, dt) {
   // a body eases into its pace and out of it (ACCEL m/s²), so the legs ramp walk → run instead of popping, and corners round off
   const v = me.velocity ?? { x: 0, z: 0 }, slow = d < 1.2 && to === goal ? Math.max(0.35, d / 1.2) : 1;
   me.velocity = { x: ease(v.x ?? 0, ux * speed * slow, dt), y: (v.y ?? 0) - 20 * dt, z: ease(v.z ?? 0, uz * speed * slow, dt) };
-  if (Math.hypot(v.x ?? 0, v.z ?? 0) > 0.1 || d > 0.3) face(me, ux, uz, dt);
+  if (me.state.turnTo === "none" && (Math.hypot(v.x ?? 0, v.z ?? 0) > 0.1 || d > 0.3)) face(me, ux, uz, dt); // a walking body's heading is humanoid-locomotion's (turnTo "movement"); two turners fought on every sidestep
 }
 const ACCEL = 9, DECEL = 14; // m/s² (Savi's picks): a jog starts in about half a second, a stop lands in a step
 function ease(cur, want, dt) { const k = (Math.abs(want) > Math.abs(cur) ? ACCEL : DECEL) * dt, d = want - cur; return Math.abs(d) <= k ? want : cur + Math.sign(d) * k; }

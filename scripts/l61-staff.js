@@ -105,6 +105,7 @@ function waypoint(ctx, me, m, goal) {
     N.repath = now + (r?.partial ? 250 : 1500);
   }
 
+  if (N.hold && now < N.hold) return { ux: 0, uz: 0, hold: true }; // blocked (goal inside a counter, a body in the way): stand a beat instead of jittering
   let to = g;
   if (N.path) {
     // Advance index past reached points
@@ -130,9 +131,11 @@ function waypoint(ctx, me, m, goal) {
     const movedSq = (p.x - N.stuckCheck.x) ** 2 + (p.z - N.stuckCheck.z) ** 2;
     const toDistSq = (to.x - p.x) ** 2 + (to.z - p.z) ** 2;
     if (movedSq < 0.09 && toDistSq > 0.64) {
-      N.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 600 };
-      N.repath = 0;
-    }
+      N.stuckN = (N.stuckN ?? 0) + 1;
+      const nearGoal = (g.x - p.x) ** 2 + (g.z - p.z) ** 2 < 2.25;
+      if (nearGoal || N.stuckN >= 3) { N.hold = now + (nearGoal ? 4000 : 2500); N.stuckN = 0; N.side = null; N.path = null; N.repath = 0; }
+      else { N.side = { s: N.side?.s ?? (ctx.random() < 0.5 ? -1 : 1), until: now + 700 }; N.repath = 0; } // one side per jam: a coin flipped each check walked them back and forth
+    } else if (movedSq >= 0.09) N.stuckN = 0;
     N.stuckCheck = { x: p.x, z: p.z, at: now };
   }
 
@@ -224,7 +227,7 @@ function disturb(ctx, me, s, m, who, now, attacked) {
 function stepTo(ctx, me, m, goal, speed, dt) {
   const v = me.velocity ?? { x: 0, z: 0 }, w = waypoint(ctx, me, m, goal);
   me.velocity = { x: easeVal(v.x ?? 0, w.ux * speed, dt), y: (v.y ?? 0) - 20 * dt, z: easeVal(v.z ?? 0, w.uz * speed, dt) };
-  me.rotation = { yaw: turn(me.rotation?.yaw ?? 0, yawOf(w.ux, w.uz), 0.25) };
+  if (!w.hold) me.rotation = { yaw: turn(me.rotation?.yaw ?? 0, yawOf(w.ux, w.uz), 0.25) };
 }
 const faceTo = (me, at, k = 0.25) => { const p = me.feetPosition; me.rotation = { yaw: turn(me.rotation?.yaw ?? 0, yawOf(at.x - p.x, at.z - p.z), k) }; };
 // returns true when the mind holds the body this tick (dead, hostile, angry, defending, copying a crouch, turning to someone)
@@ -337,6 +340,7 @@ export function revive(ctx) {
 export function update(ctx, dt) {
   if (!ctx.place.players.length) { ctx.sleep(2); return; }
   const me = ctx.self, s = me.state, now = ctx.now();
+  if (s.turnTo !== "none") s.turnTo = "none"; // this script turns the body every tick; humanoid-locomotion turning it too was the twitch
   const m = (me.session.m ??= { i: 0, next: now + 2000 + ctx.random() * 4000 });
   const p = me.feetPosition, v = me.velocity ?? { x: 0, z: 0 };
 
