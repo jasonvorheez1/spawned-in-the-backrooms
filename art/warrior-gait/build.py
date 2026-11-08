@@ -20,9 +20,10 @@ sc = bpy.context.scene
 acts = {o: o.animation_data.action for o in W if o.animation_data and o.animation_data.action}
 f0, f1 = map(int, next(iter(acts.values())).frame_range)
 def grab(): return {m: (o.matrix_world.to_translation(), o.matrix_world.to_quaternion().normalized()) for m, o in srcs.items()}
+slots = {o: o.animation_data.action_slot for o in acts}  # layered actions: one action, a slot per joint; reassigning drops it
 for o in acts: o.animation_data.action = None
 bpy.context.view_layer.update(); wrest = grab()
-for o, a in acts.items(): o.animation_data.action = a
+for o, a in acts.items(): o.animation_data.action = a; o.animation_data.action_slot = slots[o]
 rec = {}
 for f in range(f0, f1 + 1): sc.frame_set(f); rec[f] = grab()
 for o in list(bpy.data.objects): bpy.data.objects.remove(o, do_unlink=True)
