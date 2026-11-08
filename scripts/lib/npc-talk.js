@@ -1,3 +1,4 @@
+import { styleOf, temperOf } from './personality.js'
 import { addressFor } from './address.js'
 import { lifeOf } from './npc-life.js'
 import LORE from './data/npc-lore.yml'
@@ -37,7 +38,7 @@ export function systemPrompt({ it, place, pl, rapport, following }) {
   const seen = (it.state?.sawKill ? `You saw a killing recently${it.state.sawKill.by === pl.id ? ', and it was THIS person who did it' : ''}. ` : '') + (it.state?.angry?.[pl.id] ? 'They wronged you before. ' : '')
   return [
     `You are voicing one character in a grim multiplayer survival game set in the Backrooms. Never break character.`,
-    `Who you are: ${persona}`,
+    `Who you are: ${persona}`, `Your temperament: ${temperOf(it)}: ${styleOf(it)}. Let it color every line: word choice, rhythm, what you notice.`,
     `What you know of this place: ${lv}`, fac ? `Your people: ${fac}` : '', `Memory: ${memLine} ${seen}Bring up what you remember when it fits, the way a person would.`,
     `Faction: ${faction(it, place)}. Job: ${it.state?.role ?? 'none'}. Where you are: ${T.places[place] ?? place}.`,
     `Talking to you: a wanderer. ${nameLine} Level ${pl.state?.level ?? 1}. How good they are (0-100): speech ${sk.speech}, barter ${sk.barter}, melee ${sk.melee}, medicine ${sk.medicine}. A low number means clumsy, a high one means smooth.`,
