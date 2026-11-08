@@ -347,7 +347,7 @@ function lay(ctx) {
   sp("l8-pot", {
     ...at(P(436, 1.45, 0.08)), tags: ["usable"], primitive: { kind: "cylinder", radiusTop: 0.38, radiusBottom: 0.32, height: 0.44 },
     material: { color: "oklch(0.26 0.02 250)", metalness: 0.75, roughness: 0.45 }, fx: { script: STEAM_FX }, behavior: "scripts/l8-use.js",
-    state: { kind: "soup", name: "Pot of soup", verb: "Take a bowl", info: "Hot. Do not ask what the chunks are.", tint: "#e8c070" },
+    state: { kind: "soup", name: "Pot of soup", verb: "Buy a bowl ($3)", info: "The cook's pot. Eat it, or throw it.", tint: "#e8c070" },
     children: [
       { feetPosition: { x: 0, y: 0.39, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.35, radiusBottom: 0.35, height: 0.06 }, material: { color: "oklch(0.62 0.12 75)", roughness: 0.3 } }, // broth
       { feetPosition: { x: -0.35, y: 0, z: -0.25 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.04, height: 1.45 }, rotation: { pitch: 16, roll: -18 }, material: STEEL },

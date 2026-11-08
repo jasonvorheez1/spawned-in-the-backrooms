@@ -23,9 +23,24 @@ export const ears = {
       snd("water-pour-splash-short", 0.5); w.thirst = Math.min(100, (w.thirst ?? 100) + 30);
       return say(who, "You cup the almond water in your hands. Cold, and a little bitter: harmless minerals. (Thirst +30. Do not bathe in it.)", ctx);
     }
-    if (s.kind === "soup") {
-      if (now - (cool[uid] ?? -1e9) < 90000) return say(who, "The pot is still too hot, and the ladle too busy. Give it a minute.", ctx);
-      cool[uid] = now; snd("pot-lid-clink-and-ladle-in-soup", 0.5); w.hunger = Math.min(100, (w.hunger ?? 100) + 45); w.hp = Math.min(w.maxHp ?? 1e9, (w.hp ?? 0) + 25);
+    if (s.kind === "soup") { // the cook's pot: a bowl is bought, $3 (her pick), and handed over to eat (E) or throw (Z)
+      const PRICE = 300, cook = ctx.query({ tags: ["npc"], center: pos, radius: 7 }).find((o) => !o.state?.dead && (o.state?.hp ?? 1) > 0);
+      const cn = cook?.state?.name ?? cook?.state?.displayName ?? "The cook";
+      if (!cook) return say(who, "Nobody is minding the pot. You leave it be; it isn't yours.", ctx);
+      if (now - (cool[uid] ?? -1e9) < 20000) return say(who, `${cn} slaps your hand off the ladle. "One at a time. Eat what you've got."`, ctx);
+      if ((w.cents ?? 0) < PRICE) return say(who, `${cn} covers the pot. "Three Backdollars a bowl. Come back when you've got it."`, ctx);
+      w.cents -= PRICE; cool[uid] = now; snd("pot-lid-clink-and-ladle-in-soup", 0.5);
+      const hp = who.feetPosition, f = { x: hp.x + (pos.x - hp.x) * 0.4, z: hp.z + (pos.z - hp.z) * 0.4 };
+      ctx.spawn({ tags: ["usable", "soupbowl"], feetPosition: { x: f.x, y: hp.y + 0.9, z: f.z }, lifetime: 600, behavior: "scripts/l8-use.js",
+        primitive: { kind: "cylinder", radiusTop: 0.13, radiusBottom: 0.07, height: 0.08 }, material: { color: "oklch(0.86 0.02 80)", roughness: 0.6 },
+        physics: { body: "dynamic", collider: "cylinder", mass: 0.6 },
+        state: { kind: "bowl", name: `Bowl of ${cn}'s soup`, verb: "Eat", info: "Hot. Z to pick it up and throw it.", tint: "#e8c070", mat: "ceramic", hp: 4, maxHp: 4 },
+        children: [{ feetPosition: { x: 0, y: 0.055, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.115, radiusBottom: 0.115, height: 0.015 }, material: { color: "oklch(0.62 0.12 70)", roughness: 0.25 } }] });
+      return say(who, `${cn} ladles you a bowl and pockets three Backdollars. "Eat it or wear it, it's yours now." (−$3.00)`, ctx);
+    }
+    if (s.kind === "bowl") {
+      snd("pot-lid-clink-and-ladle-in-soup", 0.4); w.hunger = Math.min(100, (w.hunger ?? 100) + 45); w.hp = Math.min(w.maxHp ?? 1e9, (w.hp ?? 0) + 25);
+      ctx.destroy(ctx.self.id);
       return say(who, "Steaming hot soup. You slurp it down too gratefully to ask what the chunks are. (Hunger +45, a little health)", ctx);
     }
     if (s.kind === "fire") {
