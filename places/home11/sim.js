@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 7;
+const V = 8;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -68,8 +68,13 @@ export function tick(ctx) {
   fit("h-bed", M.bed, -2.8, -4.7, 0, [1.65, 1.1, 2.1], { tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind: "bed", name: "Your Bed", verb: "Sleep" } });
   fit("h-dresser", M.dresser, 3.6, -5.6, 0, [1.1, 1.75, 0.5]); // tripo: oak dresser with arched mirror
   const poster = (id, tex, x, y, z, yaw) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, primitive: { kind: "plane", width: 0.6, height: 0.8 }, material: { texture: tex, roughness: 0.7 }, castShadow: false }); // tacked-up 2000s posters
-  poster("h-poster-sponge", "/cdn/value.d6647818cc1864e1a57ae459da01d37274878ab52fa91397bc0bbf8f3b07b94b.png", -4.93, 1.2, -3.2, 90);
+  poster("h-poster-sponge", "/cdn/value.d6647818cc1864e1a57ae459da01d37274878ab52fa91397bc0bbf8f3b07b94b.png", -4.93, 1.2, -1.9, 90);
   poster("h-poster-kitty", "/cdn/value.5b3fa0a1b106e04b6db787f988eda22e31496b76d9b76c508f5041e6c2192afa.png", 1.4, 1.2, -5.93, 0);
+  const hang = (id, model, x, y, z, yaw, size) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: model }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } } }); // tripo pieces off the floor: no collider
+  hang("h-fan", "/cdn/value.fe9b7013b5254e87f285b50c7bfaa2c091275f57b5479249698a7535f2894259.glb", -1.5, 2.05, 2.5, 0, [1.15, 0.8, 1.15]); // brass ceiling fan with an alabaster bowl light
+  hang("h-curtains", "/cdn/value.970a63a9bb4e3d521cd133a1ec921f884ac24ea444813ecfd0981b2fa3d37ec3.glb", -4.82, 0.75, -3.5, 0, [0.3, 1.5, 1.6]); // white mini-blinds and burgundy curtains over the bedroom window
+  hang("h-photos", "/cdn/value.572ad0fe124cdd180aec4d28d259719e1057e02d8cc6c54b996c7b22ada303e7.glb", -4.88, 1.35, 4.2, 0, [0.12, 0.6, 0.55]); // family photos and a wall clock by the front of the living room
+  fit("h-plant", "/cdn/value.5c55541c98397f0fd38ea7e850e3e15e4fd78fd4a5951439cde327b41abe9e09.glb", -4.3, 5.3, 0, [0.6, 0.85, 0.6]); // pothos on a wicker stand in the corner
   fit("h-lamp-2", M.lamp, -0.9, -5.5, 0, [0.4, 1.2, 0.4]);
   sp("h-light-bed", { feetPosition: { x: -1, y: 2.5, z: -3.5 }, light: { kind: "point", color: "oklch(0.85 0.08 65)", intensity: 1.4, distance: 7 } });
   sp("h-window", { feetPosition: { x: -4.9, y: 1.0, z: -3.5 }, primitive: { kind: "box", width: 0.05, height: 1.1, depth: 1.4 }, material: { color: "oklch(0.95 0.04 85)", emissive: "#fff1d0", emissiveIntensity: 1.2 } });
