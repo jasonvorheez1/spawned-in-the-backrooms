@@ -20,6 +20,8 @@ const KIND = {
   "l1-onward": "floor", "l2-to-l3": "floor", "l6-to-l7": "floor", "l6-to-l61": "floor", "l6-wire-trip": "floor", "l21-cave": "floor",
   "l2-back": "wall", "l3-back": "wall", "l6-back": "wall", "l7-back": "wall", "l61-to-l6": "wall", "l8-to-l21": "wall", "l21-down": "wall", "l5-to-l6": "wall",
   "l61-to-l11": "wall", "l11-to-l61": "wall", "l10-lake-deep": "water", "l10-canola-in": "glitch",
+  "l26-overboard": "water", // Level 26: jump the rail and the sea takes you to Level 7
+
 };
 export function onTriggerEnter(ctx, other) {
   if (!other?.state || other.state.level == null || !ctx.self.state.to) return;
