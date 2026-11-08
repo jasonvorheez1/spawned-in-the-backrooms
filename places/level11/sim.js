@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 42; // bump to rebuild the city in rooms that are already open
+const V = 43; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -200,6 +200,8 @@ function lay(ctx) {
   // Overhead Traffic Light Gantry at Intersection Z: 12
   cyl("l11-tlight-mast", -7.8, 0.1, 7.5, 0.16, 0.2, 5.8, IRON_RAIL);
   bx("l11-tlight-arm", 0, 5.7, 7.5, 15.5, 0.14, 0.14, IRON_RAIL);
+
+  [[-9.6, 4.6, 0], [9.6, 10.4, 180]].forEach(([x, z, yaw], k) => md(`l11-signal-pole-${k}`, "traffic_signal", x, 0.1, z, undefined, "cylinder", { rotation: { yaw }, layout: { box: { min: { x: -1.6, y: 0, z: -0.4 }, max: { x: 1.6, y: 5.2, z: 0.4 } } } }));
 
   // Blue Intersection Street Name Signs
   sp("l11-st-sign-11th", {
@@ -615,8 +617,7 @@ function lay(ctx) {
   });
 
   // Pizza Service Counter & Cutting Board
-  bx("l11-pizza-counter", MALL_X + 2.8, 0.38, MALL_Z + 7.5, 1.2, 1.1, 4.2, { ...T("worn-hardwood-grain", 1), color: "oklch(0.55 0.06 60)" });
-  bx("l11-pizza-boxes", MALL_X + 2.8, 1.5, MALL_Z + 6.2, 0.8, 0.4, 0.8, { color: "oklch(0.85 0.04 80)", roughness: 0.8 }, { physics: undefined });
+  md("l11-pizza-counter", "pizza_counter", MALL_X + 2.8, 0.38, MALL_Z + 7.5, undefined, "box", { rotation: { yaw: -90 }, layout: { box: { min: { x: -2.2, y: 0, z: -0.75 }, max: { x: 2.2, y: 2.4, z: 0.75 } } } });
 
   // Interactive Fresh Slice of Marroka Pizza
   sp("l11-pizza-slice", {
@@ -1196,23 +1197,15 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   const SCAF_X = 22.0;
   const SCAF_Z = 31.0;
 
-  // Tubular steel uprights
-  [-1.6, 1.6].forEach((dx) => {
-    [-2.2, 2.2].forEach((dz) => {
-      cyl(`l11-scaf-post-${dx}-${dz}`, SCAF_X + dx, 0.1, SCAF_Z + dz, 0.04, 0.04, 5.6, STEEL_BRUSHED);
-    });
-  });
 
   // Walkway decks (Tier 1 at y: 2.4, Tier 2 at y: 4.8)
-  bx("l11-scaf-deck1", SCAF_X, 2.4, SCAF_Z, 3.4, 0.08, 4.6, WOOD);
-  bx("l11-scaf-deck2", SCAF_X, 4.8, SCAF_Z, 3.4, 0.08, 4.6, WOOD);
+  md("l11-scaf-shed", "scaffold_shed", SCAF_X, 0.1, SCAF_Z, undefined, "mesh", { rotation: { yaw: 90 }, layout: { box: { min: { x: -2.4, y: 0, z: -1.7 }, max: { x: 2.4, y: 3.0, z: 1.7 } } } });
+  bx("l11-scaf-deck1", SCAF_X, 2.4, SCAF_Z, 3.4, 0.08, 4.6, WOOD, { visible: false });
 
   // Outer guardrails
-  bx("l11-scaf-rail1", SCAF_X - 1.6, 3.3, SCAF_Z, 0.06, 0.06, 4.4, STEEL_BRUSHED);
-  bx("l11-scaf-rail2", SCAF_X - 1.6, 5.7, SCAF_Z, 0.06, 0.06, 4.4, STEEL_BRUSHED);
+
 
   // Green safety mesh debris netting
-  bx("l11-scaf-mesh", SCAF_X - 1.65, 0.1, SCAF_Z, 0.02, 5.2, 4.2, { color: "oklch(0.35 0.12 150)", opacity: 0.65, transparent: true, roughness: 0.95 }, { physics: undefined });
 
   // Climbable scaffold ladder
   sp("l11-scaf-ladder", {
@@ -1253,18 +1246,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   const MKT_Z = 36.0;
 
   // Timber market stall frame
-  bx("l11-market-frame-l", MKT_X, 0.1, MKT_Z - 2.2, 0.12, 2.7, 0.12, WOOD);
-  bx("l11-market-frame-r", MKT_X, 0.1, MKT_Z + 2.2, 0.12, 2.7, 0.12, WOOD);
-  bx("l11-market-frame-back-l", MKT_X - 1.8, 0.1, MKT_Z - 2.2, 0.12, 3.1, 0.12, WOOD);
-  bx("l11-market-frame-back-r", MKT_X - 1.8, 0.1, MKT_Z + 2.2, 0.12, 3.1, 0.12, WOOD);
-
-  // Red & Cream striped fabric canvas canopy
-  bx("l11-market-awning", MKT_X - 0.9, 2.9, MKT_Z, 2.2, 0.08, 4.6, { color: "#b02a2a", roughness: 0.85 }, {
-    rotation: { roll: 10 },
-  });
-
-  // Market Counter Table
-  bx("l11-market-counter", MKT_X - 0.2, 0.1, MKT_Z, 0.9, 0.95, 4.2, { ...T("worn-hardwood-grain", 1), color: "oklch(0.55 0.05 60)" });
+  md("l11-market-stall", "market_stall", MKT_X - 0.8, 0.1, MKT_Z, undefined, "box", { rotation: { yaw: 90 }, layout: { box: { min: { x: -2.4, y: 0, z: -1.1 }, max: { x: 2.4, y: 3.0, z: 1.1 } } } });
 
   // Sign: B.N.T.G. Provisions Stall
   sp("l11-market-sign", {
