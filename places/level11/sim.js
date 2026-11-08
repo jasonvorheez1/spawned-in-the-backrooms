@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 82; // bump to rebuild the city in rooms that are already open
+const V = 83; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1300,6 +1300,51 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
       <div style="font-size:18px;color:#111">SPONTANEOUS INFRASTRUCTURE WORK</div>
     </div>`,
   });
+
+  // ==========================================
+  // 17b. THE U.E.C. - THEBES (Wikidot lore + Shelly's ref "The perimeter of Thebes")
+  // The south avenue is cut off by moveable chain-link fences with furniture junk piled high behind them.
+  // One gate, heavily policed. Entities are shot on sight; outsiders are turned away.
+  // ==========================================
+  {
+    const TZ = -130, TH = (k) => MODELS[`th_${k}`];
+    const THM = { fence: { forward: "-z", scale: 1 }, junk: { forward: "-z", scale: 1 }, booth: { forward: "-z", scale: 1 }, sandbag: { forward: "-z", scale: 1 }, gate: { forward: "-z", scale: 1 }, ...(MODELS.th_fit ?? {}) };
+    const piece = (id, k, x, z, yaw, box, collider = "box") => TH(k)
+      ? sp(id, { feetPosition: { x, y: 0.1, z }, rotation: { yaw }, model: { id: TH(k), forward: THM[k].forward }, scale: THM[k].scale, physics: { body: "static", collider } })
+      : bx(id, x, 0.1, z, box[0], box[1], box[2], { color: "oklch(0.6 0.01 240)", metalness: 0.6, roughness: 0.5, opacity: 0.55, transparent: true }, { rotation: { yaw } });
+    // the fence line, wall to wall, a 4 m gap for the gate
+    [3.75, 7.25, 10.75, 14.25, 17.25].forEach((ax, i) => [-1, 1].forEach((sgn) => piece(`l11-th-fence-${i}-${sgn}`, "fence", sgn * ax, TZ, 0, [3.5, 2.1, 0.12])));
+    piece("l11-th-gate", "gate", 0, TZ, 0, [4, 2.4, 0.15]);
+    // furniture junk heaped high behind the wire
+    [[-12.5, 2], [-6.5, -1.5], [6.5, 1.5], [12.5, -2]].forEach(([x, dz], i) => piece(`l11-th-junk-${i}`, "junk", x, TZ - 3.2 + dz * 0.3, i * 37 % 360, [5.5, 3.2, 3], "box"));
+    // the checkpoint outside the gate
+    piece("l11-th-booth", "booth", 5.2, TZ + 3.2, 180, [2.2, 2.6, 2.2]);
+    piece("l11-th-sandbag-0", "sandbag", -4.6, TZ + 3.4, 180, [2.2, 0.9, 0.8]);
+    piece("l11-th-sandbag-1", "sandbag", -1.6, TZ + 5.2, 160, [2.2, 0.9, 0.8]);
+    // floodlights on poles, the gate lit like a stage
+    [[-2.6, 1], [2.6, -1]].forEach(([x, k], i) => {
+      cyl(`l11-th-pole-${i}`, x, 0.1, TZ + 0.4, 0.07, 0.09, 4.6, { color: "oklch(0.35 0.01 240)", metalness: 0.7, roughness: 0.5 });
+      sp(`l11-th-flood-${i}`, { feetPosition: { x, y: 4.5, z: TZ + 0.6 }, primitive: { kind: "box", width: 0.5, height: 0.32, depth: 0.25 }, material: { color: "#d8dbe0", emissive: "#fff6e0", emissiveIntensity: 2.2 }, light: { kind: "spot", color: "oklch(0.97 0.03 90)", intensity: 9, distance: 22, angle: 50, penumbra: 0.5, aim: { x: x * 0.5, y: 0, z: TZ + 8 } }, castShadow: false });
+    });
+    // the sign wired over the gate
+    sp("l11-th-sign", {
+      feetPosition: { x: 0, y: 2.55, z: TZ + 0.1 }, rotation: { yaw: 180 },
+      primitive: { kind: "box", width: 3.6, height: 1.0, depth: 0.04 }, material: { color: "#f2efe6", roughness: 0.8 },
+      ui: `<div face="front" width="3.6m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f2efe6;color:#141414;font-family:Arial Black,Arial,sans-serif;text-align:center;border:10px solid #9b1b1b;box-sizing:border-box"><div style="font-size:120px;line-height:1;letter-spacing:6px">THEBES</div><div style="font-size:40px;margin-top:10px">U.E.C. SETTLEMENT · RESIDENTS AND PERMITS ONLY</div><div style="font-size:36px;color:#9b1b1b;margin-top:6px">ENTITIES WILL BE SHOT ON SIGHT</div></div>`,
+    });
+    // two guards on the gate, rifles out, facing the city
+    const GUARDS = [
+      ["l11-th-guard-0", -2.4, "l11-th-luke", { species: "wolf", sex: "m", topw: "megjacket", top: "#3a3e44", botw: "cargo", bottom: "#2c2c2c", shoes: "boots" }, "Gate Guard Logan · U.E.C. Thebes", "Gate's shut. If you've got a permit, show it. If you don't, the city's that way."],
+      ["l11-th-guard-1", 2.4, "l11-th-diana", { species: "fox", sex: "f", topw: "megjacket", top: "#3a3e44", botw: "cargo", bottom: "#2c2c2c", shoes: "boots" }, "Gate Guard Stewards · U.E.C. Thebes", "Nobody gets in without the council's say. And if you're carrying anything that smiles too wide, keep walking."],
+    ];
+    for (const [id, x, seed, look, name, line] of GUARDS) sp(id, {
+      tags: ["npc", "uec"], feetPosition: { x, y: 0.1, z: TZ + 1.6 }, rotation: { yaw: 0 }, physics: "character",
+      ...critterSpec(npcLook(seed, look, "guard", 11)),
+      behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
+      state: { name, role: "guard", voice: "reyes", faction: "uec", factionName: "U.E.C. Thebes", home: { x, z: TZ + 1.6 }, line, ...npcState(ctx, "agent", 140) },
+    });
+    sp("l11-th-hum", { feetPosition: { x: 0, y: 3, z: TZ - 4 }, audio: { clip: "cdn/sfx-distant-muffled-voices-and-hammering-behind-a-wall-loop.mp3", loop: true, gain: 0.16, spatial: true, maxDistance: 26 } });
+  }
 
   // ==========================================
   // 18. SCENE: BUILDING SCAFFOLDING & STREET GRAFFITI (Wikidot Lore)
