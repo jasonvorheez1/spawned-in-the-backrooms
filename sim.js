@@ -1,8 +1,20 @@
 // The world's program: the referee. Behaviors write their own rows (ctx.self.state.*); this reads what
-// changed and writes the rows everyone reads: ctx.world.state.* (shared by every place, survives a restart)
-// and ctx.place.state.*. A round, a wave, a score, a winner is a data row written here from one hand, never
-// a second script. It runs on one machine per room, on the world's clock (ctx.now()), at this cadence.
-//   for (const c of ctx.changed("place.players.*.state.score")) { … } // every row that moved since the last tick
-//   export const scopes = { "world.state.hits.*": { merge: "counter" } }; // a row many hands += n at once: no race
+// changed and writes the rows everyone reads: ctx.world.state.* and ctx.place.state.*.
 export const cadence = "1s";
 export function tick(ctx) {}
+
+// Something that falls below a place's worldBounds would respawn at the place's spawn point, which is
+// where players arrive: fallen creatures used to pile up in front of every arrival (Shelly 2026-11-08).
+// A player still respawns as normal; a creature goes back to its home, or is gone (its manager respawns it).
+export function onOutOfBounds(ctx, event) {
+  const o = ctx.self;
+  if (!o || o.tags?.includes("player") || ctx.place.players.some((p) => p.id === o.id)) return true;
+  const h = o.state?.home;
+  if (h && h.x != null && h.z != null) {
+    o.velocity = { x: 0, y: 0, z: 0 };
+    o.feetPosition = { x: h.x, y: (h.y ?? 0) + 0.3, z: h.z };
+    return false;
+  }
+  ctx.destroy(o.id);
+  return false;
+}
