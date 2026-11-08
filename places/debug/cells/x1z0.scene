@@ -37,7 +37,7 @@ dbg-anim-12:
   id: dbg-anim-12
   model: {forward: "+z", id: /cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb}
   rotation: {yaw: 90}
-  state: {clip: cdn/clip-warrior-walk-human-b70d2b69-loop.glb}
+  state: {clip: cdn/clip-warrior-walk-fit-19ae184b-loop.glb}
   tags: [dbg-gallery]
 dbg-anim-13:
   behavior: scripts/dbg-pose.js
@@ -45,7 +45,7 @@ dbg-anim-13:
   id: dbg-anim-13
   model: {forward: "+z", id: /cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb}
   rotation: {yaw: 90}
-  state: {clip: cdn/clip-warrior-run-human-b3bc7459-loop.glb}
+  state: {clip: cdn/clip-warrior-run-fit-9e58271f-loop.glb}
   tags: [dbg-gallery]
 dbg-anim-2:
   behavior: scripts/dbg-pose.js
