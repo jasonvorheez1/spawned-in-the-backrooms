@@ -461,16 +461,35 @@ function lay(ctx) {
   // Display Windows with Vintage Spotlight Display
   for (const k of [-1, 1]) bx(`l11-sedco-glass-${k < 0 ? "n" : "s"}`, SEDCO_X - SEDCO_W / 2 + 0.15, 0.4, SEDCO_Z + k * (DOOR / 2 + 1.25), 0.06, 2.6, 2.5, GLASS_TINT);
   // the shop floor (a 2006 AV/security store): counter at the back, two gondolas either side of a 3 m aisle, CCTV wall, fresnels on stands, staff door
-  const SPOT = (id, x, z, tx, tz, lit) => sp(id, { feetPosition: { x, y: 0.14, z }, rotation: { lookAt: { x: tx, y: 0.14, z: tz } }, primitive: null, material: null, model: { id: MODELS.sedco_spot, forward: "-z" }, physics: { body: "static", collider: "cylinder" },
-    children: lit ? [{ feetPosition: { x: 0, y: 1.85, z: -0.3 }, light: { kind: "point", color: "#ffe0a0", intensity: 3.5, distance: 8 } }] : undefined });
+  const SPOT = (id, x, z, tx, tz, lit, extra = {}) => sp(id, { feetPosition: { x, y: 0.14, z }, rotation: { lookAt: { x: tx, y: 0.14, z: tz } }, primitive: null, material: null, model: { id: MODELS.sedco_spot, forward: "-z" }, physics: { body: "static", collider: "cylinder" },
+    children: lit ? [{ feetPosition: { x: 0, y: 1.85, z: -0.3 }, light: { kind: "point", color: "#ffe0a0", intensity: 3.5, distance: 8 } }] : undefined, ...extra });
   SPOT("l11-sedco-spotlight1", SX0 + 0.8, SEDCO_Z - 1.9, SEDCO_X, SEDCO_Z - 3, true);
-  SPOT("l11-sedco-int-spot-0", SX0 + 1.0, SZ1 - 0.8, SEDCO_X, SEDCO_Z, false);
+  SPOT("l11-sedco-int-spot-0", SX0 + 1.0, SZ1 - 0.8, SEDCO_X, SEDCO_Z, false, {
+    tags: ["usable"],
+    behavior: "scripts/level11-use.js",
+    state: { kind: "sedco-spot", name: "Stage Fresnel Spotlight", verb: "Calibrate Spotlight" },
+  });
   SPOT("l11-sedco-int-spot-1", SX1 - 1.4, SZ0 + 0.8, SEDCO_X, SEDCO_Z + 1, false);
-  md("l11-sedco-int-counter", "sedco_counter", SX1 - 2.0, 0.14, SEDCO_Z + 0.5, { laminate: { texture: "cdn/texture-wood-grain-laminate.png", color: "#d8c8b0", roughness: 0.6 }, pkgW: { texture: "cdn/texture-white-formica-countertop.png", roughness: 0.4 } }, "box", { rotation: { yaw: 90 } });
+  md("l11-sedco-int-counter", "sedco_counter", SX1 - 2.0, 0.14, SEDCO_Z + 0.5, { laminate: { texture: "cdn/texture-wood-grain-laminate.png", color: "#d8c8b0", roughness: 0.6 }, pkgW: { texture: "cdn/texture-white-formica-countertop.png", roughness: 0.4 } }, "box", {
+    rotation: { yaw: 90 },
+    tags: ["usable"],
+    behavior: "scripts/level11-use.js",
+    state: { kind: "sedco-counter", name: "Sedco Sales Counter & Register", verb: "Search Counter" },
+  });
   for (const [i, dz] of [-2.0, 2.0].entries()) md(`l11-sedco-int-gondola-${i}`, "sedco_gondola", SEDCO_X - 1, 0.14, SEDCO_Z + dz, { peg: { texture: "cdn/texture-brown-pegboard-holes.png", repeat: [4, 2.5], roughness: 0.85 }, steel: { texture: "cdn/texture-brushed-steel.png", roughness: 0.4, metalness: 0.7 } });
-  md("l11-sedco-int-monitors", "sedco_monitors", SEDCO_X - 1, 0.14, SZ0 + 0.45, { crt: { color: "#1c2a26", emissive: "#9fc0b0", emissiveIntensity: 0.55, roughness: 0.15 }, beige: { texture: "cdn/texture-smooth-off-white-abs-plastic.png", color: "#e8dcc0", roughness: 0.55 } }, "box", { rotation: { yaw: 180 } });
-  md("l11-sedco-int-door", "sedco_door", SX1 - WT - 0.06, 0.14, SZ1 - 1.2, undefined, "box", { rotation: { yaw: 90 },
-    children: [{ feetPosition: { x: 0, y: 1.53, z: -0.055 }, primitive: { kind: "plane", width: 0.4, height: 0.14 }, material: { color: "#f2efe6" }, ui: `<div face="front" width="0.4m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f2efe6;color:#a01818;font:900 64px Arial">STAFF ONLY</div>` }] });
+  md("l11-sedco-int-monitors", "sedco_monitors", SEDCO_X - 1, 0.14, SZ0 + 0.45, { crt: { color: "#1c2a26", emissive: "#9fc0b0", emissiveIntensity: 0.55, roughness: 0.15 }, beige: { texture: "cdn/texture-smooth-off-white-abs-plastic.png", color: "#e8dcc0", roughness: 0.55 } }, "box", {
+    rotation: { yaw: 180 },
+    tags: ["usable"],
+    behavior: "scripts/level11-use.js",
+    state: { kind: "sedco-monitors", name: "CCTV Surveillance Monitor Wall", verb: "Review Camera Feeds" },
+  });
+  md("l11-sedco-int-door", "sedco_door", SX1 - WT - 0.06, 0.14, SZ1 - 1.2, undefined, "box", {
+    rotation: { yaw: 90 },
+    tags: ["usable"],
+    behavior: "scripts/level11-use.js",
+    state: { kind: "sedco-door", name: "Staff Room Door", verb: "Inspect Door" },
+    children: [{ feetPosition: { x: 0, y: 1.53, z: -0.055 }, primitive: { kind: "plane", width: 0.4, height: 0.14 }, material: { color: "#f2efe6" }, ui: `<div face="front" width="0.4m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f2efe6;color:#a01818;font:900 64px Arial">STAFF ONLY</div>` }]
+  });
 
   // Interactive Sedco Closed-Circuit Security Terminal (BackOS)
   bx("l11-sedco-desk", SEDCO_X - SEDCO_W / 2 - 1.2, 0.1, SEDCO_Z - 2.8, 0.9, 0.76, 0.75, STEEL_BRUSHED);
@@ -1337,6 +1356,27 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
       { feetPosition: { x: 0, y: 0.24, z: -0.1 }, rotation: { pitch: -35 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.04, height: 0.2 }, material: { color: "#ffffff", roughness: 0.8 } },
       // Folded Tail
       { feetPosition: { x: 0, y: 0.18, z: 0.12 }, rotation: { pitch: 45 }, primitive: { kind: "cylinder", radiusTop: 0.01, radiusBottom: 0.03, height: 0.16 }, material: { color: "#ffffff", roughness: 0.8 } },
+    ],
+  });
+
+  // B.N.T.G. North Canal Spillway Pumping Station & Water Lock Valve
+  sp("l11-canal-pump", {
+    tags: ["usable"],
+    feetPosition: { x: 22, y: 0.35, z: CANAL_Z + 10.5 },
+    rotation: { yaw: 0 },
+    primitive: { kind: "box", width: 1.1, height: 1.2, depth: 0.8 },
+    material: { ...T("smooth-cold-poured-concrete-wall", 1), color: "oklch(0.42 0.04 150)", roughness: 0.7 },
+    physics: "static",
+    behavior: "scripts/level11-use.js",
+    state: {
+      kind: "canal-pump",
+      name: "B.N.T.G. Canal Spillway Valve Station",
+      verb: "Operate Spillway Valve",
+      info: "Controls water level and Almond Water runoff between the Grand Canal and the B.N.T.G. cargo locks.",
+    },
+    children: [
+      { feetPosition: { x: 0, y: 1.2, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.28, radiusBottom: 0.28, height: 0.08 }, rotation: { pitch: 90 }, material: { color: "#c0392b" } },
+      { feetPosition: { x: 0, y: 0.7, z: 0.42 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.04 }, rotation: { pitch: 90 }, material: { color: "#f39c12" } },
     ],
   });
 

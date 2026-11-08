@@ -58,6 +58,9 @@ function describe0(token) {
   if (token === 'royal_ration') return { name: 'Royal ration', info: `Full HP · +${L3I.royal_ration.sanity} sanity · rare`, color: '#ffd36a' }
   if (token === 'firesalt') return { name: 'Firesalt', info: `Rub on a melee weapon: x${L3I.firesalt.damage} damage for ${L3I.firesalt.seconds}s`, color: '#ff8a3a' }
   if (token.startsWith('page:')) { const n = +token.slice(5); return n >= 11 && n <= 17 ? { name: `Base Alef papers (${n - 10})`, info: 'Written by someone locked in Level 2.1', color: '#e8e0a8' } : { name: `Torn notebook page (${token.slice(5)})`, info: 'Someone wrote this in a hurry', color: '#e8dcc0' } }
+  if (token === 'sedco_drive') return { name: 'Sedco Master Security Drive', info: 'Encrypted CCTV & deposit records from Sedco Spotlight · Return to Courier', color: '#00d2d3' }
+  if (token === 'crane_feather') return { name: 'Origami Lucky Crane Feather', info: "Imbued with Entity 14's calming presence · Sanity protection", color: '#ffffff' }
+  if (token === 'canal_water') return { name: 'Canal Lock Almond Water', info: 'Fresh Almond Water drawn from the Grand Canal spillway', color: '#74b9ff' }
   if (token === 'nvg') return { name: 'Night vision goggles', info: 'See in the dark of Level 6 · F · drains battery', color: '#7cf08a' }
   if (token === 'compass') return { name: 'Old compass', info: 'Senses what is near · wears out', color: '#d8b56a' }
   if (token === 'almond') return { name: 'Almond water', info: `+${L.almondHp} HP · +${L.almondSanity} sanity`, color: '#f3e7b0' }

@@ -225,6 +225,20 @@ function underwater(s) {
 <div style="position:fixed;left:50%;bottom:22%;transform:translateX(-50%);width:220px;pointer-events:none;font:11px monospace;letter-spacing:2px;color:${low ? '#ff8a6a' : '#9fe0d0'};text-align:center;${low ? 'animation:uwBreath .6s infinite' : ''}">BREATH<div style="margin-top:4px;height:6px;border:1px solid currentColor;padding:1px"><div style="height:100%;width:${b}%;background:currentColor"></div></div></div>`
 }
 
+const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+function questTracker(s) {
+  const q = s.quest
+  if (!q || !q.step) return ''
+  return `<div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;max-width:340px;background:linear-gradient(rgba(18,12,3,0.92),rgba(10,6,1,0.96));border-left:3px solid var(--a);box-shadow:0 0 10px rgba(0,0,0,0.8),inset 0 0 15px rgba(255,182,66,0.06);padding:7px 12px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:none;z-index:40;animation:hud-pop .3s ease-out">
+    <div style="display:flex;align-items:center;gap:6px;font-size:9.5px;letter-spacing:.22em;color:var(--ad)">
+      <span style="display:inline-block;width:5px;height:5px;background:var(--a);border-radius:1px"></span>
+      <span>ACTIVE OBJECTIVE</span>
+    </div>
+    <div style="font-size:13.5px;color:var(--a);font-weight:400;margin:2px 0 3px;letter-spacing:.05em">${esc(q.name).toUpperCase()}</div>
+    <div style="font-size:12px;color:#fff2d4;opacity:.92;text-transform:none;letter-spacing:.02em;line-height:1.3">${esc(q.step)}</div>
+  </div>`
+}
+
 // F3: the LAGSCOPE lag panel floats over whatever the HUD draws (builders only; players never see it)
 export default function render(ctx, player) { return renderHud(ctx, player) + lagscopeOverlay(ctx, player) + modelingStudio.render(ctx, player) }
 function renderHud(ctx, player) {
@@ -250,7 +264,7 @@ function renderHud(ctx, player) {
 
   return `${THEME}${LIVE}
 ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
-
+  ${questTracker(s)}
   ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${restUi(ctx, s)}${mahjongPanel(s, now)}
   ${chatBubbles(ctx, now, player)}
   ${sniperScope(s, wp)}

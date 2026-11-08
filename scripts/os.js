@@ -9,6 +9,7 @@ import { runCmd, mailsOf, entryById } from './lib/os.js'
 import { heard } from './lib/hear.js'
 import { skillsOf } from './lib/stats.js'
 import { initHacking, guessPassword, activateBracket } from './lib/fallout-hack.js'
+import { setSedcoStep } from './lib/level11-quests.js'
 
 const BOOT_MS = 3200
 const APPS = ['ctrl', 'desktop', 'mail', 'db', 'files', 'forum', 'term', 'about', 'notes', 'bin', 'hack']
@@ -36,6 +37,9 @@ function ctrl(ctx, s, id) {
     if (!String(s.l11Access ?? '').split(',').includes(g)) { s.l11Access = [s.l11Access, g].filter(Boolean).join(','); gain(ctx, 40) }
     s.os = { ...os, done: { ...(os.done ?? {}), [id]: true } }
     note(ctx, s, r.say ?? (key === 'sub' ? 'Gate 07 released. The station gate under the subway stair is open to you.' : 'Timelock overridden. The Sedco vault door below the street is open to you.'))
+    if (os.host === "SEDCO-SEC-01") {
+      setSedcoStep(ctx, ctx.self, 2, "Objective Complete: Sedco Security Overridden · Enter Sedco Spotlight")
+    }
     return
   }
   if (r.alarm) { // the wrong switch: the alarm screams and the terminal locks itself again

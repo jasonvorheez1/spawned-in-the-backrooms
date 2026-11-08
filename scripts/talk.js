@@ -15,6 +15,7 @@ import { recruit, adopt, dismiss, order, giveWeapon, takeWeapon, PERKS, perkOf }
 import { addressFor, saysName } from './lib/address.js'
 import { lineFor } from './lib/personality.js'
 import { raycast } from 'builtin/physics'
+import { handleDialogueQuest } from './lib/level11-quests.js'
 
 const getStartersLib = (ctx) => ((ctx.session ??= {}).startersP ??= import('./lib/npc-starters.js'))
 
@@ -117,6 +118,18 @@ function send(ctx, d) {
   if (s.talkBusy && now - s.talkBusy < 15000) return
   if (now - (ses.talkAt ?? -1e9) < T.rate * 1000) { note(ctx, `${nameOf(it)} is still answering.`); return }
   if (it.state?.angry?.[ctx.self.id]) { service(ctx, it); return }
+
+  const qRes = handleDialogueQuest(ctx, ctx.self, it, text)
+  if (qRes) {
+    s.talkBusy = 0
+    ses.talkAt = now
+    logLine(ctx, it, 'p', text)
+    say(ctx, it, qRes.reply, qRes.mood ?? 'happy')
+    logLine(ctx, it, 'n', qRes.reply)
+    getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, qRes.reply, null) })
+    return
+  }
+
   ses.talkAt = now; s.talkBusy = now
   const hist = s.talks?.[short(it)] ?? []
   const system = systemPrompt({ it, place: ctx.self.place, pl: ctx.self, rapport: rapportOf(ctx, it), following: it.state?.follow === ctx.self.id })
