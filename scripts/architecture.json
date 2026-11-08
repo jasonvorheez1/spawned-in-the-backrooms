@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2237,
-  "updatedAt": "2026-11-08T19:46:49.568Z",
+  "basedOnSpecVersion": 2241,
+  "updatedAt": "2026-11-08T19:51:21.287Z",
   "summary": "The Backrooms is a multiplayer survival RPG whose persistent player state carries progression through authored and simulation-built levels. Shared player, NPC, combat, appearance and presentation systems serve the levels; a fresh visit routes through character creation and a local bedroom noclip intro into a locally staged Level 0 ceiling-drop arrival and first-run tutorial.",
   "scriptPaths": [],
   "places": [
@@ -51,7 +51,7 @@
     "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes, skills, points, tags and sheet state; scripts/craft.js owns craft actions and costs/outputs.",
     "scripts/interact.js + scripts/lib/seat.js - focus, loot and sit state; interact.js persists configured storage contents to player.state[saveKey].",
     "scripts/talk.js owns dialogue/shop UI, rapport/trade/rep and authored-choice effects; quest libraries own quest keys/HUD/payout; scripts/l8-use.js owns Level 8 interaction flags.",
-    "scripts/main-menu.js - player menu/intake/intro/arrival/tutorial state transitions (menuOpen, madeChar, cut, arrivePending, arrive, tut); its cutscene cameras, effects and audio are local session state. scripts/critter.js renders the player's saved look and wardrobe changes.",
+    "scripts/main-menu.js - player menu/intake/intro/arrival/tutorial state transitions (menuOpen, madeChar, cut, arrivePending, arrive, tut); its cutscene cameras, effects and audio are local session state. scripts/critter.js renders the playe…",
     "places/level11/sim.js owns generated city/version and live traffic-light phase in place state (l11Light); scripts/l11-traffic.js owns each car's session speed and position updates."
   ],
   "flows": [
@@ -61,9 +61,9 @@
     "Arrival in places/intake → scripts/main-menu.js opens wardrobe creator; closing it sets madeChar and state.cut, then scripts/lib/intro-cut.js stages a 10 s bed opening and the bedroom/yellow-wall noclip scene.",
     "scripts/lib/intro-cut.js writes player pose/animation, local wall patch/FX, view camera and timed audio/screen effects; scripts/ui.js renders scripts/cutscene-ui.js keyed to state.cut and local elapsed time.",
     "After the intro's bed opening and 25 s wall sequence, intro-cut clears cutscene state, sets arrivePending and main-menu.js crosses to places/main; scripts/noclip.js fall is skipped in favour of scripts/lib/arrive-cut.js.",
-    "In places/main, main-menu.js consumes arrivePending and calls arriveTick; arrive-cut stages the local ceiling tile drop, hard landing and camera settle, then starts tut state; scripts/ui.js draws the cutscene UI during arrival and tutorial UI afterward.",
-    "scripts/lib/tutorial.js STEPS advances from prompted input or walking distance (or a timed final step); main-menu.js routes input/ticks and writes player.state.tut/tutDone; tutorial-ui.js reads tut and renders the card. Current steps omit flashlight and almond-water key hints.",
-    "scripts/main-menu.js local title/intake state → scripts/player.js suppresses weapon hands; menu and intake/cutscene cameras are local, while title theme is a local session audio object; scripts/critter.js renders player.state.look and wardrobe changes.",
+    "In places/main, main-menu.js consumes arrivePending and calls arriveTick; arrive-cut stages the local ceiling tile drop, hard landing and camera settle, then starts tut state; scripts/ui.js draws the cutscene UI during arrival and tutorial…",
+    "scripts/lib/tutorial.js STEPS advances from prompted input or walking distance (or a timed final step); main-menu.js routes input/ticks and writes player.state.tut/tutDone; tutorial-ui.js reads tut and renders the card. Current steps omit …",
+    "scripts/main-menu.js local title/intake state → scripts/player.js suppresses weapon hands; menu and intake/cutscene cameras are local, while title theme is a local session audio object; scripts/critter.js renders player.state.look and ward…",
     "Spawn room selection → scripts/routing.js pickRoom preserves accepted requestedRoomId or derives solo room from user identity; engine out-of-bounds → sim.js handles respawn/return/destruction.",
     "Level threshold trigger → scripts/level-door.js maps paired IDs and writes arrival clipKind/calls companion.bring → followers cross; player.js consumes clipKind to xfer.kind and noclip-ui renders transition.",
     "Level 11 sim cycles traffic lights into place.state.l11Light → scripts/l11-traffic.js reads phase and nearby players/cars, updates car speed/position; level sim rebuilds generated pieces and walkers using NPC_GEN appearance generation."
@@ -76,7 +76,7 @@
     "places/level21/sim.js + level21.yml + level21-geo.js - shared room blocks vary by room type, zone height, lighting, decor and deterministic layout hashes.",
     "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share service systems with varying menus and Faceling roles.",
     "scripts/lib/level11-city.js + level11-models.yml + art/level11 kits - generated buildings/props vary by seeded district/model/placement; sim adds city life, traffic, old-town tram, gable advert and canal crossings.",
-    "scripts/lib/clothes.js + scripts/lib/critter-model.js + scripts/critter.js + art/critter-cute/build.py - player/NPC looks share species/body/garment construction; species profile parameters vary cute head, muzzle and ear geometry."
+    "scripts/lib/clothes.js + scripts/lib/critter-model.js + scripts/critter.js + art/critter-cute/build.py + art/critter-heads/reshape.py - player/NPC looks share species/body/garment construction; species parameters vary head, muzzle and ears; reshape.py sculpts imported GLB heads and rebuilds cupped ears while preserving rig, slots, names and shape keys."
   ],
   "probableOrphans": [],
   "migrationNotes": [
@@ -85,6 +85,6 @@
     "The first-run tutorial steps are driven by actual input/walking and deliberately omit flashlight and almond-water key hints; keep scripts/lib/tutorial.js and main-menu input routing aligned.",
     "Level 2.1 grid is 30×30 at 4 m per cell; keep level21.js passability/room zones, maze21path.js traversal, sim geometry/hound routing aligned, and roofAt in place state across ticks.",
     "Paired transitions (Level 2.1↔2, 6↔6.1, 6.1↔11, 10↔11) are owned by level-door.js; Level 10 lake-deep trigger targets level7#l7-from-l10.",
-    "Level 10/184 use terrain10.js/terrain184.js heightmap/material queries; keep y placements and arrival/track regions aligned. Fishing uses world-space positions and place-specific water regions/surface heights; NPC_GEN is shared deterministic appearance generation and resident sims have rebuild versions."
+    "Level 10/184 use terrain10.js/terrain184.js heightmap/material queries; keep y placements and arrival/track regions aligned. Fishing uses world-space positions and place-specific water regions/surface heights; NPC_GEN is shared determinist…"
   ]
 }
