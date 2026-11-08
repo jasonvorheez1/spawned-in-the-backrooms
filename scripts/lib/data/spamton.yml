@@ -34,3 +34,30 @@ deal:
   - { yes: "DON'T BUY", no: "BUY", line: "LIMITED TIME [[Upgrade Package]]! A [[Gold Plated]] ME! ONLY $$49.998 A MONTH!", ok: "NO?? NO [[Gold Plated]]??? YOU'RE KILLING ME HERE!! I'M ALREADY [[Dead Inside]]!!", bad: "[[SOLD]]!!! ALL SALES FINAL!! THAT'S WHAT THE FINAL MEANS!!" }
   - { yes: "REFUSE", no: "ACCEPT", line: "JUST SIGN THE [[Terms And Conditions]]. IT SAYS YOU OWE ME [[Everything]] [[Forever]]. STANDARD STUFF.", ok: "OKAY!! NO [[Fine Print]]! YOU DRIVE A HARD [[Bargain]], KID!!", bad: "HAHAHA!! SHOULDA READ THE [[Fine Print]]!! IT'S VERY [[Fine]]!!" }
   - { yes: "YES DEAL", no: "NO DEAL", repeat: true, line: "LAST OFFER!! ME. IN YOUR POCKET. FOR [[Free]]. WHAT DO YOU SAY, KID? [[DEAL]]?", ok: "", bad: "THAT'S NOT WHAT I HEARD!! I'LL ASK AGAIN!! [[DEAL]]???" }
+# THE ARENA (Shelly 11-08: "talk to me, then a battle in another worldspace in real time, not undertale combat";
+# "spamton fights with money and occasionally talks to me, i can spare him after a few times"). Every number is Savi's pick.
+arena:
+  hp: 2400            # a level-15 pistol (~45 a shot) needs ~55 hits; spare comes first if you listen
+  scale: 2.2          # his standing model is 1.3 m, so ~2.9 m tall
+  orbit: 9            # metres from the centre he circles at
+  talkEvery: 3        # attacks between talks
+  talkSeconds: 9
+  spareAfter: 3       # talks heard before SPARE unlocks
+  billDmg: 9
+  coinDmg: 16
+  vacuumDmg: 7        # per half second inside his mouth's reach
+  shotDmg: 12
+  iframes: 0.35
+  attacks: [bills, rain, bills, vacuum, bigshot, rain, bills, bigshot]
+  killCash: 49.99     # kill him instead of sparing: his last [[Payment]], no pocket pal
+  talks:
+    - "HEY!! TIME OUT!! [[Commercial Break]]!! YOU HIT LIKE A [[Premium Subscriber]]."
+    - "YOU KNOW I WAS A [[Big Shot]] ONCE? HAD A [[Mansion]]. HAD [[Friends]]. HAD A [[Phone Line]] THAT RANG."
+    - "WHY ARE YOU STILL [[Listening]]?? NOBODY [[Listens]]. EVERYONE JUST [[Clicks Away]]."
+    - "...KID. I'M [[Tired]]. MAYBE THE BEST [[Deal]] IS NO DEAL. YOUR CALL, [[Valued Customer]]."
+    - "STILL HERE?? HEH. HEH HEH. YOU'RE A [[Real Customer]], AREN'T YOU."
+  interrupt: ["HEY!! NO [[Interrupting]] THE [[Pitch]]!!", "RUDE!! THAT'S A [[Late Fee]]!!", "FINE!! BACK TO [[Business]]!!"]
+  spareLine: "...A [[Pocket Pal]]? FOR ME?? HOCHI MAMA. NO REFUNDS, KID. NO [[Take Backs]]."
+  killLine: "GUESS I... WASN'T WORTH THE [[Price]]... HERE'S YOUR... [[Change]]..."
+  winLine: "TOO BAD!! TOO SAD!! COME BACK WHEN YOU'RE A [[Big Shot]]!!"
+  throwTaunts: ["[[CASH]] BACK!!", "KEEP THE [[CHANGE]]!", "FREE [[MONEY]]!!", "CATCH, [[BIG SPENDER]]!", "[[$$$]]!!"]
