@@ -12,7 +12,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { layCity, layStreet, tickCity } from "../../scripts/lib/level11-city.js";
 
 export const cadence = "1s";
-const V = 6; // bump to rebuild the city in rooms that are already open
+const V = 7; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -555,12 +555,6 @@ function lay(ctx) {
 export function onSpawn(ctx) {
   lay(ctx);
   ctx.place.state.builtV = V;
-}
-
-export function tick(ctx) {
-  if (!ctx.place.players?.length) return;
-  const st = ctx.place.state;
-  if ((st.builtV ?? 0) < V) { lay(ctx); st.builtV = V; }
 }
 
 export function update(ctx, dt) {
