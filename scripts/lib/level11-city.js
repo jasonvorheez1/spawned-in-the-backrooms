@@ -23,7 +23,7 @@ function dress(kind, u) {
 // footprint of each model, as built (width along local x, depth along local y)
 const FOOT = { glass_a: [23.6, 24.3], glass_b: [17, 17], stone: [21.2, 21.6], brick_a: [19.4, 16.4], brick_b: [12.7, 12.8], mall: [24.5, 15.3], house: [10.2, 11.7] };
 const HEIGHT = { glass_a: 101, glass_b: 105, stone: 43, brick_a: 26, brick_b: 15, mall: 7.3, house: 9.6 };
-export const RADIUS = 120; // how far out the buildings go (the road grid and the ground go on to the fog)
+export const RADIUS = 120; export const DBG = { buildings: false }; // how far out the buildings go (the road grid and the ground go on to the fog)
 const PAINT = ["#b81c28", "#2f4f8a", "#e8e4d8", "#2a2a30", "#3a6a4a", "#c8a24a", "#7a7a84", "#8a2a2a", "#d8d0b8", "#1e3a5a"];
 
 export function layCity(ctx, h) {
@@ -66,7 +66,7 @@ export function layCity(ctx, h) {
   const GAPS = [[-200, -140], [-140, -70], [-70, 0], [0, 70], [70, 140], [140, 200]];
   const KINDS = [["glass_a", "glass_b", "stone", "glass_b", "brick_a", "glass_a", "stone"], ["brick_a", "stone", "brick_b", "mall", "glass_b", "brick_a", "brick_b"], ["house", "house", "brick_b", "mall", "brick_a", "house", "house"]];
   let n = 0;
-  for (const [gx0, gx1] of GAPS) for (const [rz0, rz1, subs] of ROWS) for (const side of [0, 1]) for (let sub = 0; sub < subs; sub++) {
+  if (DBG.buildings) for (const [gx0, gx1] of GAPS) for (const [rz0, rz1, subs] of ROWS) for (const side of [0, 1]) for (let sub = 0; sub < subs; sub++) {
     const cx = side ? gx1 - 11 - 12 : gx0 + 11 + 12, depthZ = (rz1 - rz0) / subs, cz = rz0 + depthZ * (sub + 0.5), yaw = side ? -90 : 90; // west column faces west, east column faces east
     if (Math.abs(cx) <= 47 && cz > -85 && cz < 76) continue; // the centre is hand-placed (sim.js)
     if (cz < -22 && cz > -45 && true) continue; // the canal
@@ -78,6 +78,7 @@ export function layCity(ctx, h) {
   }
   // ---- hand-placed hero buildings around the old centre (the new ones the level was missing)
   const dressOf = (kind, s) => dress(kind, s);
+  if (!DBG.buildings) return { TOWER: { x: 27, z: 31 }, nBuildings: 0 };
   put("l11-hero-mall", "mall", -24, -57, -90, { materials: dressOf("mall", 0.3) });
   put("l11-hero-glass", "glass_a", 28, -58, 90, { materials: dressOf("glass_a", 0.5) });
   put("l11-hero-brick1", "brick_a", -27, 35, -90, { materials: dressOf("brick_a", 0.2) });
