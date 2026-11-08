@@ -36,7 +36,8 @@ function arriveUi(ctx, player) {
 // the tutorial Level 0's cutscenes (scripts/lib/tut0-cut.js): letterbox, captions, and the title at the end
 const T0CAP = {
   almond: [[1200, 4200, "a bottle on the desk. almond water. people down here live on it."]],
-  smiler: [[300, 2400, "the lights in this hall don't stay on."], [4200, 3200, "something at the end of the hall is smiling at you."], [9400, 2400, "smilers live in the dark. stay in the light and keep moving."]],
+  halogen: [[1500, 2200, "a wrist unit. someone's name scratched off the back."], [2400, 1400, "it still turns on."]],
+  smiler: [[300, 2400, "the light at the end of this hall is dying."], [4200, 3200, "something down there is smiling at you."], [9400, 2400, "smilers keep to dark corners. stay under the lights and keep moving."]],
   shift: [[1400, 4600, "level 0 moves when you aren't looking."], [5600, 1800, "there's no going back the way you came."]],
   final: [[600, 2400, "the carpet here is soaked through."], [3200, 3000, "and then the floor wasn't there."], [7400, 3200, "you fell for a long time. then concrete, and the sound of pipes."]],
 }

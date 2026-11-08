@@ -24,18 +24,20 @@ export const PILLARS = [[41.5, -3.5], [48.5, -3.5], [41.5, 1.5], [48.5, 1.5]]
 export const LIGHTS = [
   [-2.5, -2.5], [2.5, 2.5], [-2.5, 2.5], [2.5, -2.5],
   [0, -9], [0, -15], [-3.2, -16], [0, -21], [0, -28],
-  [7, -28, 1], [13, -28, 1], [19, -28, 1], [25, -28, 1], [31, -28, 1], [37, -28, 1],
+  [7, -28, 1], [13, -28, 1], [19, -28, 1], [25, -28, 1], [31, -28, 1], [37, -28, 2],
   [44, -30], [44, -26], [44, -18], [44, -12], [41, -5], [49, -5], [41, 2], [49, 2],
 ]
 export const BOUNDS = { x0: -6, x1: 53, z0: -34, z1: 6 }
 export const SHIFT = { x: 40, z0: -29.5, z1: -26.5 } // the wall that rises across hall C
 export const ALMOND = { x: -4.2, y: 0.76, z: -16 }   // on the alcove desk
 export const DESK = { x: -4.2, z: -16 }
+export const UNIT = { x: -4.25, y: 0.76, z: -15.55 }  // the HALOGEN wrist unit beside the bottle
 export const SMILER = { x: 36.5, z: -28 }
 export const SOFT = { x: 45, z: -1.5, r: 1.6 }       // the wet patch that gives way
 // beats, in order: where each one starts (a box the player walks into)
 export const BEATS = [
   { id: "almond", box: [-1.5, 1.5, -13.5, -11] },
+  { id: "halogen", box: [-5, -2.6, -18, -14] },
   { id: "smiler", box: [15, 22, -29.5, -26.5] },
   { id: "shift", box: [41.5, 47.5, -32, -24] },
   { id: "final", circle: SOFT },

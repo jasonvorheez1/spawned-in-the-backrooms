@@ -7,6 +7,12 @@ tut0:
   physics: {body: static, collider: mesh}
   primitive: {kind: scripted, script: scripts/tut0-geo.js}
   receiveShadow: true
+tut0-farpanel:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: tut0-farpanel
+  material: {emissiveIntensity: 0.12, roughness: 0.9}
+  primitive: {kind: scripted, params: {far: true}, script: scripts/tut0-panels-geo.js}
 tut0-hallpanels:
   castShadow: false
   feetPosition: {x: 0, y: 0, z: 0}

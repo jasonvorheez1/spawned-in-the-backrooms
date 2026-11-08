@@ -2,18 +2,17 @@
 // transitions to the game name"). Runs on the player's own machine from scripts/main-menu.js in places/tutorial0.
 // state.t0n = beats passed, state.t0cut = { id, at } while one plays; the frame and captions are scripts/cutscene-ui.js t0Ui.
 import { animate } from "builtin/tween"
-import { BEATS, SMILER, SHIFT, SOFT, ALMOND } from "./tut0.js"
+import { BEATS, SMILER, SHIFT, SOFT, ALMOND, UNIT } from "./tut0.js"
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const SMILER_MODEL = { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" } // scripts/smilers.js
-export const LEN = { almond: 6.5, smiler: 12, shift: 7.5, final: 21 }
+export const LEN = { almond: 6.5, halogen: 6, smiler: 12, shift: 7.5, final: 21 }
 const ss = (a, b, t) => { const u = Math.min(1, Math.max(0, (t - a) / (b - a))); return u * u * (3 - 2 * u) }
 const lerp = (a, b, u) => a + (b - a) * u
 const L3 = (a, b, u) => ({ x: lerp(a.x, b.x, u), y: lerp(a.y, b.y, u), z: lerp(a.z, b.z, u) })
 const me1 = (ctx) => ctx.self.id
 function snd(ctx, n, v, at) { ctx.emit("playSound", { clip: SND(n), position: at ?? ctx.self.feetPosition, volume: v, maxDistance: 40 }, { audience: { player: me1(ctx) } }) }
-function hallLights(ctx, on) {
-  for (const r of ctx.query({ tags: ["t0hall"] })) { const o = ctx.getObject(r.id); if (o?.light) o.light = { ...o.light, intensity: on ? 5 : 0 } }
-  const p = ctx.getObject("tut0-hallpanels"); if (p) p.material = { ...(p.material || {}), emissiveIntensity: on ? 2.4 : 0, color: on ? "#ffffff" : "oklch(0.35 0.01 90)" }
+function endLight(ctx, on) { // the hall's last working fixture stutters; the dead one past it never comes on
+  const o = ctx.getObject("t0-light-13"); if (o?.light) o.light = { ...o.light, intensity: on ? 5 : 0.3 }
 }
 const inBeat = (b, p) => b.circle ? Math.hypot(p.x - b.circle.x, p.z - b.circle.z) < b.circle.r * 0.8 : p.x > b.box[0] && p.x < b.box[1] && p.z > b.box[2] && p.z < b.box[3]
 
@@ -32,6 +31,7 @@ export function t0Tick(ctx, ses, st) {
   me.velocity = { x: 0, y: 0, z: 0 }
   const done = BEAT[id](ctx, c, t, once, st)
   if (!done) return true
+  if (id === "halogen") { st.creating = false; st.sheetOpen = false }
   for (const k of ["smiler", "glint", "dust"]) if (c[k]) ctx.destroy(c[k])
   me.anim.cut = null; ctx.view.camera = null; me.hidden = (me.hidden || []).filter((i) => i !== me.id)
   st.t0n = (st.t0n ?? 0) + 1; st.t0cut = null; ses.t0 = null
@@ -52,13 +52,25 @@ const BEAT = {
       : { eye: L3({ x: -1.6, y: 1.25, z: -15.2 }, { x: c.p0.x, y: 1.6, z: c.p0.z }, ss(5, 6.4, t)), aim: L3(a, { x: c.p0.x - 2, y: 1.5, z: c.p0.z - 3 }, ss(5, 6.4, t)), fov: lerp(32, 70, ss(5, 6.4, t)) }
     return t > LEN.almond
   },
-  // the hall's lights stutter and die; something at the far end smiles; it comes; the lights slam back and it's gone
+  // they pick up the wrist unit; it boots amber; the sheet opens and the scene waits on their stats (Fallout's "you're SPECIAL")
+  halogen(ctx, c, t, once, st) {
+    const me = ctx.self, u = { x: UNIT.x, y: UNIT.y + 0.03, z: UNIT.z }
+    me.rotation = { yaw: Math.atan2(-(u.x - c.p0.x), -(u.z - c.p0.z)) * 180 / Math.PI }
+    once("pick", () => { me.anim.cut = { clip: "cdn/clip-pickup.glb", weight: 4 }; snd(ctx, "soft-pda-beep-confirm", 0.3) })
+    if (t > 1.3) once("take", () => { const o = ctx.getObject("t0-unit"); if (o) o.visible = false; snd(ctx, "wrist-device-raise-click-crt-power-on", 0.8) })
+    if (t > 2.2) once("look", () => { me.anim.cut = { clip: "cdn/clip-cast.glb", weight: 4 } })
+    if (t > 3.6) once("open", () => { st.creating = true; st.sheetOpen = true; me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
+    const k = ss(0, 2.2, t)
+    ctx.view.camera = { eye: L3({ x: c.p0.x + 1.1, y: 1.7, z: c.p0.z + 1.3 }, { x: c.p0.x + 0.9, y: 1.3, z: c.p0.z - 0.4 }, k), aim: L3(u, { x: c.p0.x - 0.3, y: 1.15, z: c.p0.z - 0.3 }, ss(1.2, 3.4, t)), fov: lerp(48, 34, ss(2, 3.6, t)) }
+    return t > 4 && !st.sheetOpen
+  },
+  // the hall's last light stutters; something at the far end smiles; it comes; the lights slam back and it's gone
   smiler(ctx, c, t, once) {
     const me = ctx.self, eyeH = { x: c.p0.x - 0.6, y: 1.65, z: c.p0.z + 0.5 }, face = { x: SMILER.x, y: 1.1, z: SMILER.z }
     me.rotation = { yaw: -90 }
     once("flick", () => snd(ctx, "fluorescent-light-buzz-hum", 0.8))
-    for (const [k, at, on] of [["f1", 0.6, false], ["f2", 0.75, true], ["f3", 1.3, false], ["f4", 1.45, true], ["f5", 1.9, false], ["f6", 2.0, true]]) if (t > at) once(k, () => hallLights(ctx, on))
-    if (t > 2.6) once("dark", () => { hallLights(ctx, false); snd(ctx, "power-down-electrical-hum-cut", 0.9) })
+    for (const [k, at, on] of [["f1", 0.6, false], ["f2", 0.75, true], ["f3", 1.3, false], ["f4", 1.45, true], ["f5", 1.9, false], ["f6", 2.0, true], ["f7", 2.6, false]]) if (t > at) once(k, () => endLight(ctx, on))
+    if (t > 2.6) once("dim", () => snd(ctx, "power-down-electrical-hum-cut", 0.6))
     if (t > 3.4) once("smiler", () => {
       c.smiler = ctx.spawn({ audience: "local", scope: "session", feetPosition: { x: SMILER.x, y: 0, z: SMILER.z }, rotation: 90, scale: 1.6, model: SMILER_MODEL, children: [{ feetPosition: { x: 0, y: 0.75, z: 0 }, light: { kind: "point", color: "#f4f1e6", intensity: 0.8, distance: 3 } }] })
       ctx.getObject(c.smiler).anim.body = { clip: "cdn/clip-crouch-idle-loop.glb", loop: "loop", weight: 1 }
@@ -70,7 +82,7 @@ const BEAT = {
     })
     if (t > 8.7) once("back", () => {
       if (c.smiler) { ctx.destroy(c.smiler); c.smiler = null }
-      hallLights(ctx, true); snd(ctx, "fluorescent-light-buzz-hum", 1.0)
+      endLight(ctx, true); snd(ctx, "fluorescent-light-buzz-hum", 1.0)
       ctx.emit("screenFlash", { color: "#fff6d8", duration: 0.35, intensity: 0.9 }, { audience: { player: me.id } })
       ctx.emit("screenShake", { intensity: 0.5, duration: 0.45 }, { audience: { player: me.id } })
     })

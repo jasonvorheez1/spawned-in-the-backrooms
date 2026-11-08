@@ -25,18 +25,27 @@ export function onInput(ctx, input) {
   const s = ctx.self.state, m = mem(ctx)
   const ray = getInputRay(ctx, input); if (ray) m.ray = ray
   if (s.level == null) return
+  if (input.pressed?.sheet && s.creating) return
   if (input.pressed?.sheet) { s.sheetOpen = !s.sheetOpen && !s.lootOpen; if (s.sheetOpen) s.lvlPrompt = false; if (s.sheetOpen) s.invOpen = false; ctx.emit('playSound', { clip: s.sheetOpen ? 'cdn/moodboard-realistic-gritty/sfx-wrist-device-raise-click-crt-power-on-hum.mp3' : 'cdn/moodboard-realistic-gritty/sfx-wrist-device-lower-click-crt-power-off.mp3', volume: 0.55, bus: 'UI' }) }
   const d = input.actionData?.stat
   if (input.pressed?.stat && d && typeof d.k === 'string') spend(s, d)
 }
 
 export function spend(s, d) {
-  if (d.k === 'close') { s.sheetOpen = false; return }
+  if (d.k === 'close') { if (s.creating && ((s.apts ?? 0) > 0 || (s.tagsLeft ?? 0) > 0)) return; s.sheetOpen = false; return }
   const i = Number(d.i)
   if (d.k === 'attr' && i >= 0 && i < ATTRS.length && (s.apts ?? 0) > 0) {
     const a = attrsOf(s), key = ATTRS[i].k
     if (a[key] >= ATTR_MAX) return
     a[key] += 1; s.attr = packAttrs(a); s.apts -= 1
+  } else if (d.k === 'attrDown' && s.creating && i >= 0 && i < ATTRS.length) { // only while choosing who you are (tutorial)
+    const a = attrsOf(s), key = ATTRS[i].k
+    if (a[key] <= 1) return
+    a[key] -= 1; s.attr = packAttrs(a); s.apts = (s.apts ?? 0) + 1
+  } else if (d.k === 'untag' && s.creating && i >= 0 && i < SKILLS.length) {
+    const tg = tagsOf(s), key = SKILLS[i].k
+    if (!tg.includes(key)) return
+    s.tags = tg.filter((x) => x !== key).join(','); s.tagsLeft = (s.tagsLeft ?? 0) + 1
   } else if (d.k === 'skill' && i >= 0 && i < SKILLS.length && (s.spts ?? 0) > 0) {
     const sp = spentOf(s)
     if (skillsOf(s)[SKILLS[i].k] >= SKILL_MAX) return
