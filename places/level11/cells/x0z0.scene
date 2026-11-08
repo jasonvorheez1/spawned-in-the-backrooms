@@ -1,4 +1,82 @@
 # spawn-scene v2 yaml x0z0
+l11-footbridge-0:
+  children: [{feetPosition: {x: -1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}, {feetPosition: {x: 1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}]
+  feetPosition: {x: 42, y: 0.4422075445642904, z: -40.5}
+  id: l11-footbridge-0
+  material: {color: oklch(0.5 0.05 60), repeat: [1, 6], roughness: 0.85, texture: cdn/texture-worn-hardwood-grain.png, wrap: repeat}
+  physics: static
+  pivot: center
+  primitive: {depth: 3.08, height: 0.16, kind: box, width: 2.6}
+  rotation: {pitch: 6.549170989785125, yaw: 0}
+l11-footbridge-1:
+  children: [{feetPosition: {x: -1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}, {feetPosition: {x: 1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}]
+  feetPosition: {x: 42, y: 0.7604055960982368, z: -37.5}
+  id: l11-footbridge-1
+  material: {color: oklch(0.5 0.05 60), repeat: [1, 6], roughness: 0.85, texture: cdn/texture-worn-hardwood-grain.png, wrap: repeat}
+  physics: static
+  pivot: center
+  primitive: {depth: 3.08, height: 0.16, kind: box, width: 2.6}
+  rotation: {pitch: 5.5589183481268085, yaw: 0}
+l11-footbridge-2:
+  children: [{feetPosition: {x: -1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}, {feetPosition: {x: 1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}]
+  feetPosition: {x: 42, y: 1.0039438411640251, z: -34.5}
+  id: l11-footbridge-2
+  material: {color: oklch(0.5 0.05 60), repeat: [1, 6], roughness: 0.85, texture: cdn/texture-worn-hardwood-grain.png, wrap: repeat}
+  physics: static
+  pivot: center
+  primitive: {depth: 3.08, height: 0.16, kind: box, width: 2.6}
+  rotation: {pitch: 3.720809758661048, yaw: 0}
+l11-footbridge-3:
+  children: [{feetPosition: {x: -1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}, {feetPosition: {x: 1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}]
+  feetPosition: {x: 42, y: 1.1357457896300789, z: -31.5}
+  id: l11-footbridge-3
+  material: {color: oklch(0.5 0.05 60), repeat: [1, 6], roughness: 0.85, texture: cdn/texture-worn-hardwood-grain.png, wrap: repeat}
+  physics: static
+  pivot: center
+  primitive: {depth: 3.08, height: 0.16, kind: box, width: 2.6}
+  rotation: {pitch: 1.3081870862580018, yaw: 0}
+l11-footbridge-4:
+  children: [{feetPosition: {x: -1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}, {feetPosition: {x: 1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}]
+  feetPosition: {x: 42, y: 1.1357457896300789, z: -28.5}
+  id: l11-footbridge-4
+  material: {color: oklch(0.5 0.05 60), repeat: [1, 6], roughness: 0.85, texture: cdn/texture-worn-hardwood-grain.png, wrap: repeat}
+  physics: static
+  pivot: center
+  primitive: {depth: 3.08, height: 0.16, kind: box, width: 2.6}
+  rotation: {pitch: -1.3081870862580018, yaw: 0}
+l11-footbridge-5:
+  children: [{feetPosition: {x: -1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}, {feetPosition: {x: 1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}]
+  feetPosition: {x: 42, y: 1.0039438411640254, z: -25.5}
+  id: l11-footbridge-5
+  material: {color: oklch(0.5 0.05 60), repeat: [1, 6], roughness: 0.85, texture: cdn/texture-worn-hardwood-grain.png, wrap: repeat}
+  physics: static
+  pivot: center
+  primitive: {depth: 3.08, height: 0.16, kind: box, width: 2.6}
+  rotation: {pitch: -3.7208097586610456, yaw: 0}
+l11-footbridge-6:
+  children: [{feetPosition: {x: -1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}, {feetPosition: {x: 1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}]
+  feetPosition: {x: 42, y: 0.7604055960982369, z: -22.5}
+  id: l11-footbridge-6
+  material: {color: oklch(0.5 0.05 60), repeat: [1, 6], roughness: 0.85, texture: cdn/texture-worn-hardwood-grain.png, wrap: repeat}
+  physics: static
+  pivot: center
+  primitive: {depth: 3.08, height: 0.16, kind: box, width: 2.6}
+  rotation: {pitch: -5.5589183481268085, yaw: 0}
+l11-footbridge-7:
+  children: [{feetPosition: {x: -1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}, {feetPosition: {x: 1.3, y: 0.08, z: 0}, material: {color: oklch(0.22 0.01 250), metalness: 0.85, opacity: 1, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}, physics: static, primitive: {depth: 3.04, height: 1, kind: box, width: 0.06}}]
+  feetPosition: {x: 42, y: 0.4422075445642904, z: -19.5}
+  id: l11-footbridge-7
+  material: {color: oklch(0.5 0.05 60), repeat: [1, 6], roughness: 0.85, texture: cdn/texture-worn-hardwood-grain.png, wrap: repeat}
+  physics: static
+  pivot: center
+  primitive: {depth: 3.08, height: 0.16, kind: box, width: 2.6}
+  rotation: {pitch: -6.549170989785125, yaw: 0}
+l11-footbridge-lamp:
+  children: [{feetPosition: {x: 0, y: 2.45, z: 0}, material: {color: oklch(0.95 0.06 85), emissive: oklch(0.9 0.1 80), emissiveIntensity: 2}, primitive: {kind: sphere, radius: 0.16}}, {feetPosition: {x: 0, y: 2.4, z: 0}, light: {color: oklch(0.88 0.1 75), distance: 10, intensity: 1.6, kind: point}}]
+  feetPosition: {x: 43.25, y: 1.32, z: -30}
+  id: l11-footbridge-lamp
+  material: {color: oklch(0.22 0.01 250), metalness: 0.85, repeat: [1, 1], roughness: 0.45, texture: cdn/texture-black-wrought-iron.png, wrap: repeat}
+  primitive: {height: 2.4, kind: cylinder, radiusBottom: 0.05, radiusTop: 0.04}
 l11-mall-sign-derma:
   feetPosition: {x: -15.67, y: 3.57, z: 29.5}
   id: l11-mall-sign-derma
