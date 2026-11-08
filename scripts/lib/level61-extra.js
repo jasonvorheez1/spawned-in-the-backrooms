@@ -232,12 +232,12 @@ const FACELINGS = [
   { id: "l61-fc-liq", greet: "Evening. Almond water?", at: [-12.75, -27], face: -90, acts: ["wipe", "serve", "drink", "groove"] },
   { id: "l61-fc-slice", greet: "Slice Palace! Hot ones just out.", at: [7, -30.9], face: 180, acts: ["serve", "eat", "nod", "wipe"], gives: "pizza,pizza,coke" },
   { id: "l61-fc-burger", greet: "Welcome to Burger Bop!", at: [21, -30.1], face: 180, acts: ["grill", "serve", "wipe", "groove"], gives: "burger,burger,coke" },
-  { id: "l61-fc-a", hasTray: true, route: [[-21, -12, 3, "wipe"], [-15, -12, 3, "tray"], [-15, -18, 2.5, "groove"], [-21, -18, 3, "wipe"]] },
-  { id: "l61-fc-b", hasTray: true, route: [[21, -12, 3, "wipe"], [15, -12, 3, "tray"], [15, -18, 2.5, "groove"], [21, -18, 3, "wipe"]] },
-  { id: "l61-fc-c", route: [[-21, 12, 3, "wipe"], [-15, 12, 2.5, "groove"], [-15, 18, 3, "nod"], [-21, 18, 3, "wipe"]] },
-  { id: "l61-fc-d", route: [[21, 12, 3, "wipe"], [15, 12, 2.5, "groove"], [15, 18, 3, "nod"], [21, 18, 3, "wipe"]] },
-  { id: "l61-fc-e", route: [[-27, -6, 3, "groove"], [-27, 6, 3, "wipe"], [-21, 6, 2.5, "serve"], [-21, -6, 2.5, "nod"]] },
-  { id: "l61-fc-f", route: [[27, -6, 3, "wipe"], [27, 6, 3, "groove"], [21, 6, 2.5, "serve"], [21, -6, 2.5, "nod"]] },
+  { id: "l61-fc-a", hasTray: true, route: [[-21, -12, 3, "wipe"], [-16.2, -13.2, 3, "tray"], [-15, -18, 2.5, "groove"], [-21, -18, 3, "wipe"]] },
+  { id: "l61-fc-b", hasTray: true, route: [[21, -12, 3, "wipe"], [16.2, -13.2, 3, "tray"], [15, -18, 2.5, "groove"], [21, -18, 3, "wipe"]] },
+  { id: "l61-fc-c", route: [[-21, 12, 3, "wipe"], [-16.2, 13.2, 2.5, "groove"], [-15, 18, 3, "nod"], [-21, 18, 3, "wipe"]] },
+  { id: "l61-fc-d", route: [[21, 12, 3, "wipe"], [16.2, 13.2, 2.5, "groove"], [15, 18, 3, "nod"], [21, 18, 3, "wipe"]] },
+  { id: "l61-fc-e", route: [[-25.8, -4.8, 3, "groove"], [-25.8, 4.8, 3, "wipe"], [-21, 6, 2.5, "serve"], [-21, -6, 2.5, "nod"]] },
+  { id: "l61-fc-f", route: [[25.8, -4.8, 3, "wipe"], [25.8, 4.8, 3, "groove"], [21, 6, 2.5, "serve"], [21, -6, 2.5, "nod"]] },
   { id: "l61-fc-g", hasTray: true, route: [[-14, 19, 4, "tray"], [-14, 28, 4, "nod"]] },
 ];
 const PATRONS = [

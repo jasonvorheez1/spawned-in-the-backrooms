@@ -500,6 +500,7 @@ export function update(ctx, dt) {
   }
 
   const way = waypoint(ctx, me, m, w);
+  if (way.hold) { applyRest(me, dt); return; } // blocked: stand still, no separation-noise heading
   let ux = way.ux + (m.sep?.x ?? 0) * 1.4, uz = way.uz + (m.sep?.z ?? 0) * 1.4;
   const ul = Math.hypot(ux, uz) || 1;
   ux /= ul;
