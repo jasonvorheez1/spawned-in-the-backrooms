@@ -156,7 +156,7 @@ def cover(o):
         reach = 0.04
         if kind == 'Top' and zlo - 0.06 < c.z < zlo + 0.03: reach = 0.16   # hem down over the waistband
         if kind == 'Bot' and zhi - 0.03 < c.z < zhi + 0.04: reach = 0.16   # waistband up under the hem
-        if kind == 'Top' and zlo - 0.09 < c.z < zlo + 0.05 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1   # a closed hem ring at the waist, no skin between top and bottom
+        if kind == 'Top' and o.name != 'Top_dress' and max(zlo - 0.09, HIPS_Z - 0.02) < c.z < zlo + 0.05 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1   # a closed hem ring at the waist, no skin between top and bottom
         if kind == 'Bot' and zhi - 0.05 < c.z < zhi + 0.06 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1
         if o.name == 'Top_dress' and c.z >= HIPS_Z + 0.02: reach = max(reach, 0.12)   # the bodice covers the whole bust and midriff
         if o.name == 'Top_dress' and c.z < HIPS_Z + 0.02: reach = -1          # the skirt stays the dress's own
@@ -298,6 +298,7 @@ OUTFIT = ['Top_hoodie', 'Bot_pants', 'Shoes_sneakers', 'Hat_beanie'] if SEX == '
 shot('a_base', (0, -3.4, 1.0), [])
 shot('b_outfit', (2.2, -2.6, 1.1), OUTFIT)
 shot('c_outfit2', (-2.2, -2.6, 1.1), ['Top_dress', 'Shoes_slippers', 'Hat_bow'] if SEX == 'f' else ['Top_jacket', 'Bot_shorts', 'Shoes_boots', 'Eyew_shades'])
+shot('d_front2', (0, -3.0, 1.1), ['Top_dress', 'Shoes_slippers', 'Hat_bow'] if SEX == 'f' else ['Top_jacket', 'Bot_shorts', 'Shoes_boots', 'Eyew_shades'])
 for g in garments: g.hide_render = False
 bpy.ops.object.select_all(action='DESELECT')
 for o in [rig, body] + garments: o.select_set(True)
