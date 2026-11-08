@@ -64,14 +64,7 @@ export function update(ctx, dt) {
     if (Math.abs(diff) > 2) me.rotation = { yaw: curYaw + diff * Math.min(1, dt * 5) };
   }
 
-  // sync expressive facial morphs on her cute feline head
-  const h = ctx.getObject(me.id + "/" + HEAD_ID);
-  if (h) {
-    let expr = "smug";
-    if (now - (ses.hitAt ?? 0) < 1400) expr = "evil";
-    else if (now - (ses.fedAt ?? 0) < 3800) expr = "joy";
-    h.morph = faceMorph(expr, isBlinking, true);
-  }
+  // her own tuxedo cat model carries its face: no critter head here
 }
 
 export const ears = {
