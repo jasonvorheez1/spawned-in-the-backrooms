@@ -746,20 +746,12 @@ function container(s, key) {
   const n = owned(s).length - 1
   const carry = `Carrying ${n} weapon${n === 1 ? '' : 's'} · almond ${s.almonds ?? 0} · rounds ${s.ammo ?? 0} · shells ${s.shells ?? 0}`
 
+  const col = (title, body) => `<div style="flex:1;min-width:0"><div style="font-size:11px;letter-spacing:.2em;opacity:.7;border-bottom:1px solid currentColor;padding-bottom:4px;margin-bottom:6px">${title}</div><div class="ls" style="max-height:340px;overflow:auto">${body}</div></div>`
+  const left = col(`INSIDE · ${items.length}`, rows.replace(/<span class="stat-r">/g, '<span class="stat-r"><span style="opacity:.6">TAKE&nbsp;</span>') || '<div class="em">Empty.</div>')
+  const right = s.lootStore ? col('YOUR BAG · PUT IN', storeRows(s).replace(/^<div class="em"[^>]*>YOUR BAG<\/div>/, '')) : (items[0] ? detail(items[0], s, true) : '')
   return `<div class="pbw pb"><div class="pbp" data-modal>
-    <div class="nv-top">
-      <div class="nv-top-left">
-        <h2>${(s.lootName || 'CONTAINER').toUpperCase()}</h2>
-      </div>
-      <div class="nv-vitals">
-        <span><b>ITEMS</b>${items.length}</span>
-        <span><b>CARRIED</b>${carry}</span>
-      </div>
-    </div>
-    <div class="bd" style="margin-top:8px">
-      <div class="ls">${rows || '<div class="em">Container is empty.</div>'}</div>
-      ${items[0] ? detail(items[0], s, true) : '<div class="dt def"><div class="em">Nothing inside.</div></div>'}
-    </div>
+    <div class="nv-top"><div class="nv-top-left"><h2>${(s.lootName || 'CONTAINER').toUpperCase()}</h2></div></div>
+    <div style="display:flex;gap:18px;margin-top:8px">${left}${right}</div>
     <div class="ft">
       <span class="c">${carry}</span>
       ${items.length ? `<button onclick="sendAction('loot',{k:'all'})"><kbd>R</kbd>Take all</button>` : ''}
