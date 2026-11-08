@@ -52,6 +52,7 @@ for i in range(7):
 for o in objs:
     if o.name.endswith("_rim"):
         par=bpy.data.objects[o.name[:-4]]; mw=o.matrix_world.copy(); o.parent=par; o.matrix_world=mw
+bpy.context.view_layer.update()
 allv=[o.matrix_world@v.co for o in objs for v in o.data.vertices]
 mn=[min(v[k] for v in allv) for k in range(3)]; mx=[max(v[k] for v in allv) for k in range(3)]
 print("bounds",[round(a,3) for a in mn],[round(a,3) for a in mx])
