@@ -132,18 +132,20 @@ ANAT = dict(hipZ=0.90, legX=0.078, legY=0.12, kneeZ=0.48, ankleZ=0.085, toeY=-0.
 
 def proxy_weights(body, r):
     # Nov 8, Shelly: "feels like you weight painted them oddly". bone heat on the raw body stops at every seam (arms,
-    # neck and legs are open islands), so each island skinned on its own. now: a watertight voxel copy takes the bone
-    # heat as one solid, the real body copies its weights from the nearest point of that copy, then a light smooth.
+    # neck and legs are open islands), so each island skinned on its own. now: a copy welded at every seam takes the
+    # bone heat as one surface, the real body copies its weights from the nearest point of that copy, then a light smooth.
     px = body.copy(); px.data = body.data.copy(); px.name = "WeightProxy"; bpy.context.collection.objects.link(px)
     px.vertex_groups.clear()
     for m in list(px.modifiers): px.modifiers.remove(m)
-    rm = px.modifiers.new("vox", "REMESH"); rm.mode = "VOXEL"; rm.voxel_size = 0.009; rm.use_smooth_shade = True
-    bpy.ops.object.select_all(action="DESELECT"); px.select_set(True); bpy.context.view_layer.objects.active = px
-    bpy.ops.object.modifier_apply(modifier="vox")
+    import bmesh
+    bm = bmesh.new(); bm.from_mesh(px.data)
+    bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=0.0015)
+    bm.to_mesh(px.data); bm.free(); px.data.update()
     bpy.ops.object.select_all(action="DESELECT"); px.select_set(True); r.select_set(True)
     bpy.context.view_layer.objects.active = r
     bpy.ops.object.parent_set(type="ARMATURE_AUTO")
     print("proxy verts", len(px.data.vertices), "proxy unweighted", sum(1 for v in px.data.vertices if not v.groups))
+    assert sum(1 for v in px.data.vertices if not v.groups) < len(px.data.vertices) * 0.02, "bone heat failed on the proxy"
     body.vertex_groups.clear()
     for b in r.data.bones: body.vertex_groups.new(name=b.name)
     dt = body.modifiers.new("dt", "DATA_TRANSFER"); dt.object = px
