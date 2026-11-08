@@ -46,18 +46,10 @@ export function breakables(FY, PY) {
     // ---- Room 1 (The Floating House / Drowned Parlor) ----
     "l7-crate": { tags: ["container", "breakable"], feetPosition: { x: -2.1, y: FY, z: -1.8 }, rotation: { yaw: 12 }, model: GLB.crate, layout: fit(0.8, 0.8, 0.8), physics: { body: "static", collider: "box" }, state: { name: "Waterlogged M.E.G. crate", items: "almond,ration,wire,battery", ...brk("wood", 45) } },
     "l7-pier-crate": { tags: ["container", "breakable"], feetPosition: { x: -0.9, y: PY + 0.04, z: -32.5 }, rotation: { yaw: -20 }, model: GLB.crate, layout: fit(0.6, 0.6, 0.6), physics: { body: "static", collider: "box" }, state: { name: "Salt-crusted maritime locker", items: "weapon:fishing_rod,cloth:topw:hoodie:d49b27,almond,battery,bandage", ...brk("wood", 35) } },
-    "l7-bookcase": { tags: ["breakable"], feetPosition: { x: -2.72, y: FY, z: 0.3 }, rotation: { yaw: 0 }, model: GLB.bookcase, layout: fit(1.5, 2.3, 1.5), physics: { body: "static", collider: "box" }, state: brk("wood", 90) },
-    "l7-armchair": { tags: ["breakable"], feetPosition: { x: 1.7, y: FY, z: 0.2 }, rotation: { yaw: -115 }, model: GLB.armchair, layout: fit(0.95, 0.95, 0.95), physics: { body: "static", collider: "box" }, state: brk("wood", 50) },
-    "l7-table": { tags: ["breakable"], feetPosition: { x: 1.15, y: FY, z: -0.9 }, rotation: { yaw: 8 }, model: GLB.table, layout: fit(1.15, 0.5, 1.15), physics: { body: "static", collider: "box" }, state: brk("wood", 40) },
-    "l7-dresser": { tags: ["container", "breakable"], feetPosition: { x: 2.4, y: FY, z: -2.15 }, rotation: { yaw: 84 }, model: GLB.dresser, layout: fit(1.0, 1.1, 1.0), physics: { body: "static", collider: "box" }, state: { name: "Swollen TV cabinet", items: "almond,bandage,bobbypin", ...brk("wood", 70) } },
-    "l7-sideboard": { tags: ["container", "breakable"], feetPosition: { x: 2.42, y: FY, z: 2.2 }, rotation: { yaw: 90 }, model: GLB.sideboard, layout: fit(1.15, 1.25, 1.15), physics: { body: "static", collider: "box" }, state: { name: "Waterlogged computer cabinet", items: "ration,battery", ...brk("wood", 80) } },
     "l7-boxes": { tags: ["breakable"], feetPosition: { x: 1.25, y: FY, z: 2.45 }, rotation: { yaw: 6 }, model: GLB.boxes, layout: fit(0.8, 1.05, 0.8), physics: { body: "static", collider: "box" }, state: { items: "wire", ...brk("wood", 20) } },
     "l7-lamp": { tags: ["breakable"], feetPosition: { x: -2.5, y: FY, z: 2.3 }, rotation: { yaw: 210, roll: -9 }, model: GLB.floorlamp, layout: fit(0.9, 1.7, 0.9), physics: { body: "static", collider: "box" },
       children: [{ feetPosition: { x: 0, y: 1.45, z: 0 }, light: { kind: "point", color: "oklch(0.82 0.11 70)", intensity: 0.7, distance: 4 } }], state: brk("wood", 25) },
     "l7-plant": { tags: ["breakable"], feetPosition: { x: -1.3, y: FY, z: 2.5 }, rotation: { yaw: 40 }, model: GLB.plant, layout: fit(0.6, 0.75, 0.6), physics: { body: "static", collider: "box" }, state: brk("wood", 15) },
-    "l7-dresser-2": { tags: ["breakable"], feetPosition: { x: 2.4, y: FY + 1.08, z: -2.1 }, rotation: { yaw: 70, roll: -6 }, model: GLB.boxes, layout: fit(0.7, 0.9, 0.7), physics: { body: "static", collider: "box" }, state: { items: "ration", ...brk("wood", 20) } },
-    "l7-boxes-2": { tags: ["breakable"], feetPosition: { x: -2.35, y: FY, z: -0.95 }, rotation: { yaw: 80, roll: 3 }, model: GLB.boxes, layout: fit(0.7, 0.9, 0.7), physics: { body: "static", collider: "box" }, state: brk("wood", 20) },
-    "l7-plant-2": { tags: ["breakable"], feetPosition: { x: -2.2, y: FY + 0.8, z: -1.8 }, rotation: { yaw: 250 }, model: GLB.plant, layout: fit(0.5, 0.6, 0.5), physics: { body: "static", collider: "box" }, state: brk("wood", 15) },
     "l7-debris-1": { feetPosition: { x: -0.95, y: FY + 0.12, z: 0.9 }, rotation: { yaw: 30 }, model: GLB.debris, layout: fit(0.8, 0.45, 0.8) },
     "l7-debris-2": { feetPosition: { x: -1.5, y: FY + 0.12, z: -2.3 }, rotation: { yaw: 200 }, model: GLB.debris, layout: fit(0.65, 0.4, 0.65) },
 
@@ -86,8 +78,8 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 23;
-// 16 // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
+const V = 24;
+// 24: Wikidot canonical drowned antique entrance room (stacked bureau drawers, armoire with draped linen & silver tea service, stone hearth, turned pedestal, show-don't-tell)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
@@ -1015,33 +1007,27 @@ export function tick(ctx) {
         const l7Hex = ["2b4c5e", "1e3b4b", "d49b27", "3a4842", "1c282e", "142024", "28322c", "2b3036", "1c1e22", "141618", "d46a28", "24343e", "b88838", "c85a28", "3a4e54"];
         const suitPieces = [lk.top, lk.bottom, lk.shoec, lk.hatc, lk.neckc].filter((c) => c && l7Hex.includes(String(c).replace("#", "").toLowerCase())).length;
         if (suitPieces >= 2) {
-          p.state.notice = {
-            text: "Your insulated Level 7 dive & oilskin gear seals out the freezing abyssal brine!",
-            at: now,
-          };
+          ctx.emit("damageNumber", { position: { x: fp.x, y: fp.y + 1.2, z: fp.z }, text: "INSULATED GEAR (PROTECTED)", color: "#ffd460" }, { audience: { player: p.id } });
         } else {
           p.state.sanity = Math.max(0, (p.state.sanity ?? 100) - (suitPieces === 1 ? 2 : 4));
           p.state.hp = Math.max(5, (p.state.hp ?? 100) - (suitPieces === 1 ? 1 : 2));
-          p.state.notice = {
-            text: "The freezing abyssal water numbs your limbs! Wear Level 7 dive/oilskin armor, board a skiff, or climb onto a raft!",
-            at: now,
-          };
+          ctx.emit("screenFlash", { color: "#40a0ff", duration: 0.55, intensity: 0.35 }, { audience: { player: p.id } });
+          ctx.emit("damageNumber", { position: { x: fp.x, y: fp.y + 1.2, z: fp.z }, text: "FREEZING BRINE (-HP, -SANITY)", color: "#74d4f8" }, { audience: { player: p.id } });
         }
       }
     }
 
-    // Pierhead / deep-sea observation dread
+    // Pierhead / deep-sea observation dread: deep abyssal groan, screen shake, dread badge
     if (fp.z < -28) {
       s.thalClock ??= {};
       const last = s.thalClock[p.id] ?? 0;
       if (now - last > 90000) {
         s.thalClock[p.id] = now;
-        p.state.notice = {
-          text: "A colossal shadow moves through the black water beneath the waves. The Thing on Level 7 watches.",
-          at: now,
-        };
         p.state.sanity = Math.max(0, (p.state.sanity ?? 100) - 8);
-        ctx.emit("screenShake", { intensity: 0.18, duration: 1.2 }, { audience: { player: p.id } });
+        ctx.emit("screenShake", { intensity: 0.22, duration: 1.2 }, { audience: { player: p.id } });
+        ctx.emit("screenFlash", { color: "#040b12", duration: 0.8, intensity: 0.4 }, { audience: { player: p.id } });
+        ctx.emit("playSound", { clip: G("deep-whale-like-groan-from-far-under-dark-water"), position: { x: 0, y: -10, z: -80 }, volume: 0.8, refDistance: 40, maxDistance: 250 }, { audience: { player: p.id } });
+        ctx.emit("damageNumber", { position: { x: fp.x, y: fp.y + 1.2, z: fp.z }, text: "ABYSSAL DREAD (-8 SANITY)", color: "#c060ff" }, { audience: { player: p.id } });
       }
     }
   }
