@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 53; // bump to rebuild the city in rooms that are already open
+const V = 54; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -166,16 +166,16 @@ function lay(ctx) {
   }
 
   // Concrete Sidewalks & Beveled Curbs
-  bx("l11-sw-west-mid", -12, 0.08, 0, 7.6, 0.25, 36, SIDEWALK);
-  bx("l11-sw-west-south", -12, 0.08, 48, 7.6, 0.25, 56, SIDEWALK);
-  bx("l11-sw-west-north", -12, 0.08, -55, 7.6, 0.25, 50, SIDEWALK);
+  sp("l11-sw-west-mid", { feetPosition: { x: -12, y: 0.08, z: 0 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 36, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
+  sp("l11-sw-west-south", { feetPosition: { x: -12, y: 0.08, z: 48 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 56, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
+  sp("l11-sw-west-north", { feetPosition: { x: -12, y: 0.08, z: -55 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 50, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
   bx("l11-curb-w-mid", -8.1, 0.08, 0, 0.2, 0.28, 36, CURB_MAT);
   bx("l11-curb-w-south", -8.1, 0.08, 48, 0.2, 0.28, 56, CURB_MAT);
   bx("l11-curb-w-north", -8.1, 0.08, -55, 0.2, 0.28, 50, CURB_MAT);
 
-  bx("l11-sw-east-mid", 12, 0.08, 0, 7.6, 0.25, 36, SIDEWALK);
-  bx("l11-sw-east-south", 12, 0.08, 48, 7.6, 0.25, 56, SIDEWALK);
-  bx("l11-sw-east-north", 12, 0.08, -55, 7.6, 0.25, 50, SIDEWALK);
+  sp("l11-sw-east-mid", { feetPosition: { x: 12, y: 0.08, z: 0 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 36, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
+  sp("l11-sw-east-south", { feetPosition: { x: 12, y: 0.08, z: 48 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 56, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
+  sp("l11-sw-east-north", { feetPosition: { x: 12, y: 0.08, z: -55 }, primitive: { kind: "scripted", script: "scripts/sidewalk11.js", params: { w: 7.6, d: 50, h: 0.25 } }, material: SIDEWALK, physics: { body: "static", collider: "box" } });
   bx("l11-curb-e-mid", 8.1, 0.08, 0, 0.2, 0.28, 36, CURB_MAT);
   bx("l11-curb-e-south", 8.1, 0.08, 48, 0.2, 0.28, 56, CURB_MAT);
   bx("l11-curb-e-north", 8.1, 0.08, -55, 0.2, 0.28, 50, CURB_MAT);
@@ -672,73 +672,47 @@ function lay(ctx) {
   const RENO_W = 18;
   const RENO_D = 18;
 
-  // Real modelled shell from wisp (art/level11/build.py reno_shell)
-  md("l11-reno-shell", "reno_shell", RENO_X, 0, RENO_Z, { brick: BRICK_BLDG, concrete: SIDEWALK, trim: CURB_MAT, dark: { color: "oklch(0.25 0.01 250)" } }, "mesh");
+  // the gutted ground floor (scripts/l11-reno.js shell): block walls, a half-built stud wall, slab and beams, chamfered columns,
+  // a half-tiled T-bar grid, a round spiral duct on straps, the storefront frame on the street face (door gap z -2..0)
+  const RENO_KIT = (kind) => ({ kind: "scripted", script: "scripts/l11-reno.js", params: { kind } });
+  const RENO_PAINT = { color: "oklch(1 0 0)", roughness: 0.85 };
+  sp("l11-reno-shell", { feetPosition: { x: RENO_X, y: 0, z: RENO_Z }, primitive: RENO_KIT("shell"), material: RENO_PAINT, physics: { body: "static", collider: "mesh" } });
   bx("l11-reno-floor", RENO_X, 0.22, RENO_Z, RENO_W - 0.6, 0.1, RENO_D - 0.6, SIDEWALK);
 
-  // Large Glass Windows into Renovation Office
-  bx("l11-reno-glass-e", RENO_X + RENO_W / 2 - 0.2, 0.2, 4, 0.1, 4.2, 8, GLASS_TINT);
-  bx("l11-reno-glass-e2", RENO_X + RENO_W / 2 - 0.2, 0.2, -5, 0.1, 4.2, 6, GLASS_TINT);
-
-  // Cylindrical Concrete Columns
-  [[-29, -5], [-21, -5], [-29, 5], [-21, 5]].forEach(([cx, cz], k) => {
-    cyl(`l11-reno-col-${k}`, cx, 0.2, cz, 0.42, 0.42, 4.8, PILLAR_MAT);
-  });
-
-  // --- SUSPENDED DROP-CEILING GRID & DUCTWORK (Wikidot Image 5) ---
-  for (let gx = -31; gx <= -19; gx += 2.4) {
-    bx(`l11-reno-grid-x-${Math.round(gx)}`, gx, 4.6, RENO_Z, 0.04, 0.06, 16.0, STEEL_BRUSHED);
-  }
-  for (let gz = -7; gz <= 7; gz += 2.4) {
-    bx(`l11-reno-grid-z-${Math.round(gz)}`, RENO_X, 4.6, gz, 16.0, 0.06, 0.04, STEEL_BRUSHED);
-  }
-  // Silver Insulation Foil Blankets in Ceiling Void
-  bx("l11-reno-foil1", -26, 4.85, -2, 5.0, 0.04, 4.0, SILVER_FOIL);
-  bx("l11-reno-foil2", -23, 4.85, 3, 4.5, 0.04, 3.5, SILVER_FOIL);
-  // HVAC Ducting
-  bx("l11-reno-duct-main", RENO_X, 5.4, 0, 15.0, 0.7, 0.9, STEEL_BRUSHED);
-  bx("l11-reno-duct-branch", -27, 5.4, 3.5, 0.8, 0.6, 6.0, STEEL_BRUSHED);
+  // Large Glass Windows into Renovation Office, set in the storefront frame
+  bx("l11-reno-glass-e", RENO_X + RENO_W / 2 - 0.2, 0.2, 4, 0.03, 4.2, 8, GLASS_TINT);
+  bx("l11-reno-glass-e2", RENO_X + RENO_W / 2 - 0.2, 0.2, -5, 0.03, 4.2, 6, GLASS_TINT);
 
   // Unfinished Drywall Partition Boards
   bx("l11-drywall-stack", -28.5, 0.22, -4.5, 1.2, 2.4, 0.35, DRYWALL_MAT, { rotation: { pitch: 12 } });
   bx("l11-drywall-wall-w", -25, 0.22, -6.8, 6.5, 4.2, 0.15, DRYWALL_MAT);
-  bx("l11-reno-int-glass", -23, 0.22, 1.5, 0.08, 4.2, 6.0, GLASS_TINT);
+  bx("l11-reno-int-glass", -23, 0.22, 1.5, 0.04, 4.2, 6.0, GLASS_TINT);
 
   // Contractor Step Ladder (climbable in center of room!)
   sp("l11-reno-ladder", {
     tags: ["usable"],
-    feetPosition: { x: -25, y: 0.2, z: 0 },
-    primitive: { kind: "box", width: 0.65, height: 2.8, depth: 0.5 },
-    material: { color: "oklch(0.78 0.14 85)", metalness: 0.6, roughness: 0.35 },
+    feetPosition: { x: -25, y: 0.27, z: 0 },
+    primitive: RENO_KIT("ladder"), material: { color: "oklch(1 0 0)", metalness: 0.5, roughness: 0.4 },
+    physics: { body: "static", collider: "box" },
     behavior: "scripts/level11-use.js",
     state: { kind: "ladder", name: "Contractor Step Ladder", verb: "Climb Ladder" },
-    children: [
-      { feetPosition: { x: 0, y: 0.6, z: 0 }, primitive: { kind: "box", width: 0.55, height: 0.05, depth: 0.18 }, material: STEEL_BRUSHED },
-      { feetPosition: { x: 0, y: 1.2, z: 0 }, primitive: { kind: "box", width: 0.55, height: 0.05, depth: 0.18 }, material: STEEL_BRUSHED },
-      { feetPosition: { x: 0, y: 1.8, z: 0 }, primitive: { kind: "box", width: 0.55, height: 0.05, depth: 0.18 }, material: STEEL_BRUSHED },
-      { feetPosition: { x: 0, y: 2.4, z: 0 }, primitive: { kind: "box", width: 0.55, height: 0.05, depth: 0.18 }, material: STEEL_BRUSHED },
-    ],
   });
 
   // Construction Work Light Tripod casting bright halogen beam
   sp("l11-reno-worklight", {
-    feetPosition: { x: -23, y: 0.2, z: -3 },
-    primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.06, height: 1.8 },
-    material: { color: "oklch(0.8 0.18 85)" },
-    children: [
-      { feetPosition: { x: 0, y: 1.8, z: 0 }, primitive: { kind: "box", width: 0.45, height: 0.25, depth: 0.2 }, material: { color: "oklch(0.8 0.18 85)" } },
-      { feetPosition: { x: 0, y: 1.8, z: 0.2 }, light: { kind: "point", color: "oklch(0.98 0.08 90)", intensity: 8.5, distance: 18 } },
-    ],
+    feetPosition: { x: -23, y: 0.27, z: -3 }, rotation: { yaw: 200 },
+    primitive: RENO_KIT("worklight"), material: { color: "oklch(1 0 0)", roughness: 0.5 },
+    children: [{ feetPosition: { x: 0, y: 1.72, z: 0.2 }, light: { kind: "point", color: "oklch(0.98 0.08 90)", intensity: 8.5, distance: 18 } }],
   });
 
-  // Work Table with City Blueprints & B.R.C. Task Clipboard
-  bx("l11-reno-table", -27, 0.2, 3, 2.4, 0.85, 1.2, { ...T("worn-hardwood-grain", 1), color: "oklch(0.55 0.06 65)" });
-  bx("l11-reno-blueprints", -27, 1.06, 3, 1.6, 0.02, 0.9, { color: "oklch(0.4 0.12 240)", roughness: 0.8 }, { physics: undefined });
+  // Work Table with City Blueprints & B.R.C. Task Clipboard: plywood on sawhorses
+  sp("l11-reno-table", { feetPosition: { x: -27, y: 0.27, z: 3 }, primitive: RENO_KIT("sawhorse"), material: RENO_PAINT, physics: { body: "static", collider: "box" } });
+  bx("l11-reno-blueprints", -27, 1.13, 3, 1.6, 0.01, 0.9, { color: "oklch(0.4 0.12 240)", roughness: 0.8 }, { physics: undefined, rotation: { yaw: 4 } });
 
   // Interactive B.R.C. Work Order Clipboard
   sp("l11-reno-clipboard", {
     tags: ["usable"],
-    feetPosition: { x: -26.5, y: 1.06, z: 2.6 },
+    feetPosition: { x: -26.5, y: 1.14, z: 2.6 },
     primitive: { kind: "box", width: 0.35, height: 0.04, depth: 0.45 },
     material: { color: "oklch(0.7 0.08 70)" },
     behavior: "scripts/level11-use.js",
