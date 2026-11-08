@@ -86,7 +86,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 15; // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
+const V = 16; // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
@@ -829,7 +829,7 @@ function lay(ctx) {
   // the house hangs from the ceiling on one concrete column standing on its ridge (ridge at FY + 4.42)
   ctx.spawn("l7-hanger", { feetPosition: { x: 0, y: FY + 4.3, z: 0 }, primitive: { kind: "box", width: 1.6, height: 34 - FY - 4.3, depth: 1.6 }, material: { ...CEIL, color: "oklch(0.33 0.008 240)" }, castShadow: false });
   // the outside of the entrance room: a 2000s suburban house, vinyl lap siding, shuttered windows with mini-blinds, an asphalt-shingle gable, gutters, a dish
-  ctx.spawn("l7-house-shell", { feetPosition: { x: 0, y: FY, z: 0 }, model: { id: "/cdn/value.ac081aa1a12f24652e336e938d562efba36bf92ae865e470cfe4d5744c3cf973.glb", materials: {
+  ctx.spawn("l7-house-shell", { feetPosition: { x: 0, y: FY, z: 0 }, model: { id: "/cdn/value.ad21f35b53f1aafe0159d86fee9eb07e67a3aa1fcd646a46690ed6177cc755bb.glb", materials: {
     siding: { texture: "cdn/texture-grimy-weathered-pale-sage-vinyl-siding-paint.png", color: "oklch(0.78 0.03 110)", roughness: 0.6 },
     shingle: { texture: "cdn/texture-weathered-charcoal-asphalt-roof-shingle-granules.png", color: "oklch(0.42 0.005 250)", roughness: 0.95 },
     concrete: { texture: "cdn/texture-smooth-cold-poured-concrete-wall.png", color: "oklch(0.6 0.01 240)", roughness: 0.95 },
@@ -837,7 +837,7 @@ function lay(ctx) {
     shutter: { color: "oklch(0.32 0.05 165)", roughness: 0.6 },
     door: { color: "oklch(0.36 0.11 25)", roughness: 0.45 },
     glass: { color: "oklch(0.16 0.02 230)", roughness: 0.05, metalness: 0.3 },
-  } }, physics: { body: "static", collider: "mesh" }, receiveShadow: true });
+  } }, receiveShadow: true }); // looks only: the room's own walls carry the collision, so the doorways stay open
   ctx.spawn("l7-house-porchlight", { feetPosition: { x: 1.0, y: FY + 1.75, z: 3.6 }, light: { kind: "point", color: "oklch(0.85 0.1 75)", intensity: 1.2, distance: 6 } });
   [
     [-140, -160, 14], [120, -230, 18], [-60, -330, 22],
