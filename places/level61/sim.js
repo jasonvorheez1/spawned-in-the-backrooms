@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 43;
+const V = 44;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -174,9 +174,16 @@ function lay(ctx) {
   for (let x = -28; x <= 28; x += 4) for (const [z0, z1] of (Math.abs(x) < 5.8 ? [[-HD, -6.2], [6.2, HD]] : [[-HD, HD]])) box(`l61-brass-${bs++}`, x, -0.003, (z0 + z1) / 2, 0.035, 0.006, z1 - z0, BRASS, { physics: undefined, receiveShadow: true });
   for (let z = -20; z <= 20; z += 4) for (const [x0, x1] of (Math.abs(z) < 5.8 ? [[-HW, -6.2], [6.2, HW]] : [[-HW, HW]])) box(`l61-brass-${bs++}`, (x0 + x1) / 2, -0.003, z, x1 - x0, 0.006, 0.035, BRASS, { physics: undefined, receiveShadow: true });
 
+  // the two trim bands follow the wainscot: broken at every doorway, never across one
+  const DOORS = { "z-1": [[-21, 4], [-7, 4], [7, 4], [21, 4]], "z1": [[-14, 3], [14, 2.2]], "x-1": [[0, 1.6]], "x1": [[-9, 2.2]] };
   for (const [n, y, c] of [[0, 1.0, "oklch(0.62 0.09 190)"], [1, 1.2, "oklch(0.74 0.11 350)"]]) {
-    for (const s of [-1, 1]) box(`l61-band-z${n}${s}`, 0, y, s * (HD - 0.17), 2 * HW - 0.4, 0.12, 0.04, { color: c, roughness: 0.5 }, { physics: undefined });
-    for (const s of [-1, 1]) box(`l61-band-x${n}${s}`, s * (HW - 0.17), y, 0, 0.04, 0.12, 2 * HD - 0.4, { color: c, roughness: 0.5 }, { physics: undefined });
+    for (const [ax, sg] of [["z", -1], ["z", 1], ["x", -1], ["x", 1]]) {
+      const half = ax === "z" ? HW : HD, fixed = sg * ((ax === "z" ? HD : HW) - 0.17);
+      let a = -half + 0.2, k = 0;
+      const seg = (u, v) => { const m = (u + v) / 2, len = v - u; if (len < 0.05) return; box(`l61-band-${ax}${n}${sg}-${k++}`, ax === "z" ? m : fixed, y, ax === "z" ? fixed : m, ax === "z" ? len : 0.04, 0.12, ax === "z" ? 0.04 : len, { color: c, roughness: 0.5 }, { physics: undefined }); };
+      for (const [cc, w] of [...DOORS[ax + sg]].sort((p, q) => p[0] - q[0])) { const l = cc - w / 2; if (l > a) seg(a, l); a = Math.max(a, cc + w / 2); }
+      if (half - 0.2 > a) seg(a, half - 0.2);
+    }
   }
 
   for (let k = 0; k < 4; k++) {
