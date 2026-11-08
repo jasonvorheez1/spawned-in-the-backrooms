@@ -34,10 +34,10 @@ export function onInput(ctx, input) {
   ctx.self.anim.kick = { clip: 'cdn/clip-kick.glb', loop: false, weight: 1 }
   ctx.after(0.6, 'kickEnd')
   // first person: your leg swings up from below the screen and snaps forward, then drops away
-  const leg = ctx.spawn({ audience: 'local', scope: 'session', lifetime: 0.5, feetPosition: { attach: 'camera', x: 0.12, y: -1.1, depth: 0.55 }, rotation: { pitch: -20 }, visibleInFirstPerson: true, castShadow: false,
-    primitive: { kind: 'capsule', radius: 0.085, halfHeight: 0.32 }, material: { color: 'oklch(0.32 0.03 260)', roughness: 0.9 },
-    children: [{ feetPosition: { x: 0, y: 0.72, z: -0.08 }, primitive: { kind: 'capsule', radius: 0.08, halfHeight: 0.1 }, rotation: { pitch: 90 }, material: { color: 'oklch(0.92 0.01 90)', roughness: 0.7 } }] })
-  animate(ctx, leg, { 'feetPosition.y': [-1.1, -0.62, -0.66, -1.2], 'rotation.pitch': [-20, 62, 58, -10] }, { duration: 0.45, easing: 'easeOutCubic' })
+  const l = s.look ?? {}
+  const leg = (s.tp || l.modelUrl) ? null : ctx.spawn({ audience: 'local', scope: 'session', lifetime: 0.5, feetPosition: { attach: 'camera', x: 0.16, y: -0.35, depth: 0.25 }, rotation: { pitch: -10 }, visibleInFirstPerson: true, castShadow: false,
+    primitive: { kind: 'scripted', script: 'scripts/kick-leg-geo.js', params: { species: l.species, fur: l.fur, botw: l.botw, bottom: l.bottom, shoes: l.shoes, shoec: l.shoec } } }) // first person only: third person shows the body's own kick clip
+  if (leg) animate(ctx, leg, { 'feetPosition.y': [-0.35, 0.05, 0.02, -0.4], 'rotation.pitch': [-10, 75, 70, -5] }, { duration: 0.45, easing: 'easeOutCubic' })
   ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 0.12 }, { audience: { player: ctx.self.id } })
   if (!o) { ctx.emit('playSound', { clip: SND('cloth-whoosh-swing'), position: p, volume: 0.4 }); return }
   mem(ctx).rolls[o.id] = { vx: f.x * KICK_V, vz: f.z * KICK_V, spin: (ctx.random() - 0.5) * 720, hit: false }
