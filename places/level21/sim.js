@@ -21,7 +21,7 @@ const STEEL = { color: "oklch(0.35 0.02 250)", roughness: 0.45, metalness: 0.75 
 const WOOD = { color: "oklch(0.42 0.06 65)", roughness: 0.85 };
 
 const STEAM_FX = `fx
-pop mist rate=8 life=1.0..1.8 on=disc(.18) v=up(-.35..-0.75)+sdir()*.18 size=.14..0.28 col=rgb(.88,.90,.92) a=.25>0 sz=$size*(1+t) r=sprite(soft-disc)`;
+pop mist rate=8 life=1.0..1.8 on=disc(.18) v=up(-.35..-0.75)+sdir()*.18 size=.14..0.28 col=<.88,.9,.92> a=.25>0 sz=$size*(1>2) r=sprite(soft-disc)`;
 const CAVE_MIST_FX = `fx
 pop breath rate=12 life=1.6..2.8 on=box(.8,1.8,2.2) v=sdir()*.25 size=.32..0.65 col=rgb(.65,.78,.85) a=.22>0 sz=$size*(1>1.6) r=sprite(soft-disc)`;
 
