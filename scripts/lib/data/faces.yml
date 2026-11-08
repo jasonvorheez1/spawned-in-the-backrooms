@@ -1,3 +1,5 @@
+# FACE TYPE is the shape of the head itself: the heads carry structure keys (art/critter-cute/build.py FT_*: Round Long Broad Narrow Heart Square Snub Snout Chubby), and a type is a blend of
+# them, so a round face, a long face and a heart face are different heads, whatever they are feeling. A TRAIT (below) is only a resting mood.
 # Face variety: a trait is a resting face on top of any expression (shape-key weights added to the head's Blink Happy Sad Angry Wide Half Smile Open Frown O Blep Blush), so
 # two critters of one species no longer read alike. NPCs roll a trait, eye colour, cheek colour and nose from their own id (scripts/lib/clothes.js npcLook);
 # the critter creator's face tab offers the same lists (critter.yml: trait, eye, blush, nose).
@@ -26,6 +28,24 @@ traits:
   shy:      { w: 1, Blush: 0.4, Sad: 0.08, Half: 0.1 }
   warm:     { w: 2, Happy: 0.15, Smile: 0.2 }
   wary:     { w: 1, Angry: 0.08, Half: 0.2, Wide: 0.05 }
+# face types: w = how common among NPCs; the other keys are the head's FT_ keys, 0..1 (oval is the head as built)
+types:
+  oval:     { w: 3 }
+  round:    { w: 2, FT_Round: 1 }
+  soft:     { w: 2, FT_Round: 0.45, FT_Chubby: 0.3 }
+  chubby:   { w: 1, FT_Chubby: 1, FT_Round: 0.4 }
+  long:     { w: 1.5, FT_Long: 1 }
+  broad:    { w: 1.5, FT_Broad: 1 }
+  narrow:   { w: 1.5, FT_Narrow: 1 }
+  heart:    { w: 1.5, FT_Heart: 1 }
+  delicate: { w: 1, FT_Narrow: 0.5, FT_Heart: 0.7 }
+  sharp:    { w: 1, FT_Heart: 0.55, FT_Snout: 0.6, FT_Narrow: 0.25 }
+  square:   { w: 1.5, FT_Square: 1 }
+  strong:   { w: 1, FT_Square: 0.8, FT_Broad: 0.4, FT_Snout: 0.2 }
+  button:   { w: 1.5, FT_Snub: 1, FT_Round: 0.35 }
+  snouty:   { w: 1, FT_Snout: 1 }
+# how strongly an NPC wears its face type, rolled per id (some are mild, some plain)
+typeStrength: [0.7, 1.15]
 # how strongly an NPC wears its trait, rolled per id (Savi's pick): some faces barely show it, some wear it plainly
 strength: [0.55, 1.45]
 eye: ["#15121a", "#3a2418", "#8a6a2a", "#d4902a", "#2f9a5a", "#2aa0a0", "#3f7fd9", "#7ab8e8", "#8a4fd8", "#d4547a", "#d03a3a", "#e0b838", "#8a909a", "#6a8a2a"]

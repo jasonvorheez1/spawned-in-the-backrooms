@@ -89,13 +89,20 @@ export function faceFill(l) {
   if (own || !l.eye || l.eye === '#2b2233') o.eye = pickOf(FACES.eye, u)
   if (own || !l.blush) o.blush = pickOf(FACES.blush, u)
   if (own || !l.nose) { const n = pickOf(FACES.nose, u); o.nose = n || (own ? '' : l.nose) }
-  if (own || !l.eyes) o.eyes = pickOf(['round', 'round', 'tall', 'wide'], u) // rolled last so the older rolls keep their faces
+  if (own || !l.eyes) o.eyes = pickOf(['round', 'round', 'tall', 'wide'], u) // rolled late so the older rolls keep their faces
+  if (own || !l.ftype) { // the shape of the head: rolled after everything else, so every older roll keeps its face
+    const tn = Object.keys(FACES.types), tt = tn.reduce((a, k) => a + (FACES.types[k].w ?? 1), 0); let q = u() * tt, ft = tn[0]
+    for (const k of tn) { q -= FACES.types[k].w ?? 1; if (q <= 0) { ft = k; break } }
+    const [a, b] = FACES.typeStrength ?? [1, 1]; o.ftype = ft; o.ftstr = Math.round((a + u() * (b - a)) * 100) / 100
+  }
   return o
 }
 export function faceMorph(expr, blink, isFemale, look) {
   const f = { ...(M.faces[expr] || M.faces.smile) }
   const ff = look ? faceFill(look) : null, tr = ff ? FACES.traits[ff.trait] : null, ts = ff?.tstr ?? 1
   if (tr) for (const [k, v] of Object.entries(tr)) if (k !== 'w') f[k] = Math.min(1, (f[k] ?? 0) + v * ts)
+  const fty = ff ? FACES.types[ff.ftype] : null, fs = ff?.ftstr ?? 1 // the head's own shape: FT_ keys
+  if (fty) for (const [k, v] of Object.entries(fty)) if (k !== 'w') f[k] = Math.min(1, v * fs)
   if (isFemale && f.Blush == null) f.Blush = 0.28
   if (blink) f.Blink = 1
   return eyeClean(f, ff?.eyes ?? look?.eyes)
