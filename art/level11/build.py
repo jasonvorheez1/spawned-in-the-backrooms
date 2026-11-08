@@ -666,6 +666,7 @@ exec(open(os.path.join(D, "street_kit.py")).read())
 FUNCS_NEW = {"barricade_pallets": barricade_pallets, "corrugated": corrugated, "sandbags": sandbags, "meg_table": meg_table, "meg_cache": meg_cache, "reno_office": reno_office, "spam_alley": spam_alley}
 
 FUNCS = {"glass_a": glass_a, "glass_b": glass_b, "stone": stone, "brick_a": brick_a, "brick_b": brick_b, "mall": mall, "house": house, "lamp": lamp, "hydrant": hydrant, "bench": bench, "shelter": shelter, "tree": tree, "sedan": sedan, "van": van, "bin": bin_, "box": box_, **FUNCS_NEW, **FUNCS_ST}
+exec(open(os.path.join(D, "tower_kit.py")).read()); FUNCS.update(FUNCS_TK)
 for n in only:
     bpy.ops.wm.read_factory_settings(use_empty=True)
     for m in list(bpy.data.materials): bpy.data.materials.remove(m)
