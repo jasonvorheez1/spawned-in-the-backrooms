@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 16;
+const V = 17;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -58,7 +58,7 @@ export function tick(ctx) {
   fit("h-sofa", M.sofa, -2.4, 3.3, 90, [1.2, 1.15, 2.05]); // tripo: tan rolled-arm sofa, plaid pillows, back to the west wall facing the TV
   fit("h-recliner", M.recliner, -4.2, 1.4, -60, [0.95, 1.05, 0.95]); // tripo: leather recliner angled at the TV
   fit("h-tv", M.tv, -2.4, -0.5, 270, [0.72, 1.12, 1.1]); // tripo: silver CRT on a black glass stand, DVD and VCR on the shelves
-  sp("h-tv-screen", { tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind: "tv", name: "TV", verb: "Change channel", ch: 0 }, physics: { body: "static", collider: "box" }, feetPosition: { x: -2.4, y: 0.86, z: -0.18 }, rotation: { yaw: 0 }, primitive: { kind: "plane", width: 0.5, height: 0.38 }, material: { texture: "/cdn/value.e12ab4672a2ccf5ac1309d6f656dfa64bf207aa5ae73dfadd76b7b1eb2b10023.mp4", emissive: "#ffffff", emissiveIntensity: 0.9, roughness: 0.2 }, castShadow: false }); // archive.org: Disney Channel commercial breaks, Oct 18 2002, looping
+  sp("h-tv-screen", { tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind: "tv", name: "TV", verb: "Change channel", ch: 0 }, physics: { body: "static", collider: "box" }, feetPosition: { x: -2.4, y: 0.86, z: -0.29 }, rotation: { yaw: 180 }, primitive: { kind: "plane", width: 0.5, height: 0.38 }, material: { texture: "/cdn/value.e12ab4672a2ccf5ac1309d6f656dfa64bf207aa5ae73dfadd76b7b1eb2b10023.mp4", emissive: "#ffffff", emissiveIntensity: 0.9, roughness: 0.2 }, castShadow: false }); // archive.org: Disney Channel commercial breaks, Oct 18 2002, looping
   sp("h-tv-sound", { feetPosition: { x: -2.4, y: 0.9, z: -0.2 }, audio: { clip: "/cdn/value.a1e84936f3b37819bf6f8106656aa51133a932e421d4d2e67298fb0577c9d9fa.mp3", loop: true, gain: 0.35, spatial: true, maxDistance: 12, bus: "Ambience" } });
   sp("h-tv-glow", { feetPosition: { x: -2.4, y: 0.9, z: 0.2 }, light: { kind: "point", color: "oklch(0.8 0.06 240)", intensity: 0.5, distance: 4 } });
   fit("h-table", M.table, -2.4, 1.7, 90, [0.8, 0.5, 1.02]); // tripo: oak coffee table, remote and a magazine on it
