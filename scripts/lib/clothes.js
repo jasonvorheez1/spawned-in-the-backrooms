@@ -179,7 +179,7 @@ export function npcLook(id, look, faction, level, role) {
     if (!list.length) { if (CL.patKey[slot] && l[slot] && l[slot] !== 'none') { const r0 = rowOf(slot, l[slot], l[CL.colourKey[slot]]); if (r0 && !l[CL.patKey[slot]]) l[CL.patKey[slot]] = pickPat(r0, u) ?? '' } continue }
     const row = pickW(list, u())
     l[slot] = row.kind; if (CL.colourKey[slot]) { const cu = u(), own = row.colours[Math.floor(u() * row.colours.length)] // the top wears the accent, legs and feet go neutral, small pieces echo the accent now and then
-      l[CL.colourKey[slot]] = '#' + (row.strict ? own : slot === 'topw' ? (cu < 0.6 ? accent : own) : (slot === 'botw' || slot === 'shoes') ? (cu < 0.65 ? neutral() : own) : (cu < 0.35 ? accent : own)) }: colour variety (Shelly)
+      l[CL.colourKey[slot]] = '#' + (row.strict ? own : slot === 'topw' ? (cu < 0.6 ? accent : own) : (slot === 'botw' || slot === 'shoes') ? (cu < 0.65 ? neutral() : own) : (cu < 0.35 ? accent : own)) } // colour variety (Shelly)
     if (CL.patKey[slot]) l[CL.patKey[slot]] = pickPat(row, u, J?.pats) ?? ''
   }
   if (l.topw === 'dress') l.botw = 'none'
