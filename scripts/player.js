@@ -496,7 +496,7 @@ function tryFish(ctx, s, w, p, f, pc, power = 0) {
   if (closeHit && dir.y > -0.25 && (!inL7 || Math.hypot(p.x, p.z) < 3.1)) return false
   const now = ctx.now()
   if (now < (w.fishingUntil ?? 0)) {
-    s.notice = { text: 'Your bobber is still in the water — wait for the bite!', at: now }
+    ctx.emit('damageNumber', { position: { x: p.x, y: p.y + 1.2, z: p.z }, text: 'WAITING FOR BITE...', color: '#74c4d8' }, { audience: { player: ctx.self.id } })
     return true
   }
   const dist = 3.5 + power * 2.8
@@ -506,7 +506,7 @@ function tryFish(ctx, s, w, p, f, pc, power = 0) {
   w.fishingUntil = now + 1250
   ctx.emit('fx', { position: { x: bx, y: by, z: bz }, script: FISH_SPLASH })
   heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-water-pour-splash-short.mp3', position: { x: bx, y: by, z: bz }, volume: 0.7, maxDistance: 18 })
-  s.notice = { text: power ? 'You hurl a long deep-water cast into the swells...' : 'You cast your line into the dark water...', at: now }
+  ctx.emit('damageNumber', { position: { x: bx, y: by + 0.5, z: bz }, text: power ? 'LONG SWELL CAST' : 'LINE CAST', color: '#88ddff' }, { audience: { player: ctx.self.id } })
   ctx.after(1.1, 'fishCatch', { x: bx, y: by, z: bz, power: power || 0, deep: inL7 && bz < -22 })
   return true
 }
@@ -527,7 +527,7 @@ export function fishCatch(ctx, d) {
     ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-deep-whale-like-groan-from-far-under-dark-water.mp3', position: pos, volume: 0.75, refDistance: 40, maxDistance: 200 }, { audience: { player: ctx.self.id } })
     takeToken(ctx, 'meat:fish')
     gain(ctx, 25)
-    s.notice = { text: 'Something colossal brushes your line from the Midnight Zone! You reel back a mangled Pale Trench-Fish before the line snaps! (+Fresh fish, +25 XP)', at: now }
+    ctx.emit('damageNumber', { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: 'ABYSSAL BITE: PALE TRENCH-FISH (+25 XP)', color: '#ff6868', size: 1.3 }, { audience: { player: ctx.self.id } })
     return
   }
 
@@ -563,13 +563,14 @@ export function fishCatch(ctx, d) {
 
   const res = takeToken(ctx, tok)
   gain(ctx, xp)
-  const tag = surv >= 25 ? `[Survival ${Math.floor(surv)}] ` : ''
-  s.notice = {
-    text: res.ok
-      ? `${tag}Caught ${label}! (+${xp} XP)`
-      : `${tag}Hooked ${label}, but your pack is full! (+${xp} XP)`,
-    at: now,
-  }
+  const shortName = label.split('(')[0].replace(/^a\s+|^an\s+|^sunken\s+/i, '').trim().toUpperCase()
+  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-eerie-low-chime-level-up.mp3', position: pos, volume: 0.8, maxDistance: 16 }, { audience: { player: ctx.self.id } })
+  ctx.emit('damageNumber', {
+    position: { x: pos.x, y: pos.y + 1.2, z: pos.z },
+    text: res.ok ? `HOOKED: ${shortName} (+${xp} XP)` : `FULL PACK: LOST ${shortName} (+${xp} XP)`,
+    color: res.ok ? '#68e0d0' : '#e09060',
+    size: 1.25,
+  }, { audience: { player: ctx.self.id } })
 }
 
 // not onto you: no grudge, not hunting you, and you are behind it or crouched in the dark
