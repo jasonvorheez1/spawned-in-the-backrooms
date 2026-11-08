@@ -63,7 +63,7 @@ bpy.ops.mesh.primitive_cube_add(size=1,location=(0,0,H/2)); o=bpy.context.object
 bpy.ops.object.transform_apply(scale=True)
 md=o.modifiers.new("b","BEVEL"); md.width=0.012; md.segments=2
 bpy.context.view_layer.objects.active=o; bpy.ops.object.modifier_apply(modifier="b")
-uvl=o.data.uv_layers.new(name="UVMap")  # each face's stencil reads the right way round from outside: u runs along the viewer's right
+uvl=o.data.uv_layers[0]  # each face's stencil reads the right way round from outside: u runs along the viewer's right
 for f in o.data.polygons:
     n=f.normal; ax=max(range(3),key=lambda k:abs(n[k]))
     for li in f.loop_indices:
