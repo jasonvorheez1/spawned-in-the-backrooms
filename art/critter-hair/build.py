@@ -508,13 +508,13 @@ def proof(o, name, sex):
         L = bpy.data.lights.new("Key", "SUN"); L.energy = 3.2; lo = bpy.data.objects.new("Key", L); sc.collection.objects.link(lo)
         cd = bpy.data.cameras.new("Cam"); cd.type = "ORTHO"; cd.ortho_scale = 1.15; co = bpy.data.objects.new("Cam", cd); sc.collection.objects.link(co); sc.camera = co
     co = bpy.data.objects["Cam"]; lo = bpy.data.objects["Key"]; files = []
-    for sp in (("cat", "lop") if sex == "f" else ("bear", "rat")):
+    for sp in ("cat", "bunny", "bear"):
         before = set(x.name for x in bpy.data.objects); bpy.ops.import_scene.gltf(filepath=f"{HEADS}/{sp}_{sex}.glb")
         new = [x.name for x in bpy.data.objects if x.name not in before]
         for x in new:
             if x.startswith("Ico"): bpy.data.objects[x].hide_render = True
-        for k, a in enumerate((0.0, 1.57, 3.14)):
-            tgt = HC + V(0, 0, -.12); pos = tgt + V(math.sin(a) * 3, math.cos(a) * 3, .25); co.location = pos
+        for k, a in enumerate((0.0, 1.57, 3.14, None)):
+            tgt = HC + V(0, 0, -.12); pos = tgt + (V(0, .35, 3) if a is None else V(math.sin(a) * 3, math.cos(a) * 3, .25)); co.location = pos
             co.rotation_euler = (tgt - pos).to_track_quat("-Z", "Y").to_euler(); lo.rotation_euler = co.rotation_euler.copy(); lo.rotation_euler.x -= .4
             f = os.path.join(PROOF, f"{name}_{sp}_{k}.png"); sc.render.filepath = f; bpy.ops.render.render(write_still=True); files.append(f)
         for x in new:
@@ -549,7 +549,7 @@ def export_one(m, name, sex, MATS):
             bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier="dec")
         skin(o, E.rig)
         tris = sum(len(p.vertices) - 2 for p in o.data.polygons)
-        if os.environ.get("PROOF"): proof(o, name, sex)
+        if os.environ.get("PROOF") and not name.endswith("-hat"): proof(o, name, sex)
         bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); E.rig.select_set(True)
         bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, f"hair-{name}.glb"), use_selection=True, export_apply=False, export_skins=True,
                                   export_animations=False)
