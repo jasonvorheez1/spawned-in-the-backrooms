@@ -11,7 +11,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 export const cadence = "500ms";
-const V = 7; // 7: modeled cots, bunks and workbench (Shelly: less blocky)
+const V = 8; // 7: modeled cots, bunks and workbench (Shelly: less blocky)
 const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
 const rm = (type) => ROOMS.filter((r) => r.type === type);
 const center = (r) => cellCenter(r.x0 + (r.w - 1) / 2, r.z0 + (r.d - 1) / 2); // the middle of a room block
@@ -92,7 +92,7 @@ function lay(ctx) {
     state: { kind: "comms", name: "Base Alef lockout terminal", verb: "Read lockout logs", info: "Buffered M.E.G. dispatches from July–August 2020, recorded after the steel wall sealed Base Alef inside Level 2.1.", tint: "#7aff9a" },
     children: [{ feetPosition: { x: 0, y: 0.2, z: -0.25 }, light: { kind: "point", color: "oklch(0.75 0.16 145)", intensity: 1.1, distance: 4.5 } }],
   });
-  for (let i = 0; i < 4; i++) sp(`l21-cot-${i}`, { feetPosition: { x: bc.x - 2 + (i % 2) * 2.2, y: 0, z: bc.z + 1.2 + Math.floor(i / 2) * 2.2 }, rotation: { yaw: 90 + (i % 2 ? 4 : -3) }, model: COT, layout: { box: { min: { x: -0.95, y: 0, z: -0.4 }, max: { x: 0.95, y: 0.5, z: 0.4 } } }, physics: { body: "static", collider: "box" } });
+  for (let i = 0; i < 4; i++) sp(`l21-cot-${i}`, { feetPosition: { x: bc.x - 2 + (i % 2) * 2.2, y: 0, z: bc.z + 1.2 + Math.floor(i / 2) * 2.2 }, rotation: { yaw: (i % 2 ? 4 : -3) }, model: COT, layout: { box: { min: { x: -0.95, y: 0, z: -0.95 }, max: { x: 0.95, y: 0.55, z: 0.95 } } }, physics: { body: "static", collider: "box" } });
   spawnRemains(ctx, { x: bc.x + 2.6, z: bc.z - 1.4 }, ["ration", "bandage", "page:11", "ammo"], "Alef operative's remains");
   spawnRemains(ctx, { x: bc.x - 3.0, z: bc.z + 4.6 }, ["almond", "kit", "battery"], "Alef operative's remains");
 
@@ -113,7 +113,7 @@ function lay(ctx) {
 
   // ---- quarters, the offices, the locker room (checkered tile, grey and brown lockers), restrooms, break room, storage rooms
   const bk = rm("bunks")[0], kc = center(bk);
-  for (let i = 0; i < 6; i++) sp(`l21-bunk-${i}`, { feetPosition: { x: kc.x - 3.4 + (i % 3) * 3.4, y: 0, z: kc.z - 2.4 + Math.floor(i / 3) * 4.2 }, rotation: { yaw: 90 + ((i * 7) % 5 - 2) }, model: COT, layout: { box: { min: { x: -0.95, y: 0, z: -0.4 }, max: { x: 0.95, y: 0.5, z: 0.4 } } }, physics: { body: "static", collider: "box" } });
+  for (let i = 0; i < 6; i++) sp(`l21-bunk-${i}`, { feetPosition: { x: kc.x - 3.4 + (i % 3) * 3.4, y: 0, z: kc.z - 2.4 + Math.floor(i / 3) * 4.2 }, rotation: { yaw: ((i * 7) % 5 - 2) }, model: COT, layout: { box: { min: { x: -0.95, y: 0, z: -0.95 }, max: { x: 0.95, y: 0.55, z: 0.95 } } }, physics: { body: "static", collider: "box" } });
   spawnContainerL2(ctx, "cabinet", { x: kc.x, z: edgeOf(bk, 1) - 0.8 }, 180, { room: 72 });
   const of = rm("office")[0], oc = center(of);
   [["filing", -4], ["filing", -2.4], ["desk", 0.5], ["desk", 3]].forEach(([k, a], i) => spawnContainerL2(ctx, k, { x: oc.x + a, z: edgeOf(of, 1) - (k === "desk" ? 1.6 : 0.7) }, 180, { room: 73 + i }));
@@ -149,7 +149,7 @@ function lay(ctx) {
   // Refrigerator Paradise Workbench
   sp("l21-bench", {
     feetPosition: { x: edgeOf(fr, 2) + 0.65, y: 0.0, z: fc.z + 1.4 }, rotation: { yaw: 90 }, tags: ["bench"], physics: "static",
-    model: BENCH, layout: { box: { min: { x: -0.85, y: 0, z: -0.42 }, max: { x: 0.85, y: 1.6, z: 0.42 } } }, state: { name: "Quartermaster's workbench" },
+    model: BENCH, layout: { box: { min: { x: -0.85, y: 0, z: -0.85 }, max: { x: 0.85, y: 1.7, z: 0.85 } } }, state: { name: "Quartermaster's workbench" },
     children: [
       { feetPosition: { x: 0, y: 1.65, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.11 85)", intensity: 2.2, distance: 8 } },
     ],
