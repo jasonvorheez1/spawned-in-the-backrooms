@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 59; // bump to rebuild the city in rooms that are already open
+const V = 60; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -689,8 +689,42 @@ function lay(ctx) {
   bx("l11-reno-int-glass", -23, 0.22, 1.5, 0.04, 4.2, 6.0, GLASS_TINT);
 
   // B.N.T.G. Realty: a temporary office in the renovation building; the agent sells the green house (Shelly: "i should go to an npc for that preferably in a building")
-  sp("l11-realty-desk", { feetPosition: { x: -19.5, y: 0.32, z: -1 }, rotation: { yaw: -90 }, model: { id: "/cdn/value.53a6ef111aac797583ca330cad268f4e401bd0fe5613021c07eda571623e5ea2.glb", forward: "+z" }, physics: { body: "static", collider: "box" } });
-  sp("l11-realty-lamp", { feetPosition: { x: -19.5, y: 3.4, z: -1 }, light: { kind: "point", color: "oklch(0.95 0.05 85)", intensity: 2.4, distance: 9 } });
+  // B.N.T.G. Realty suite: a finished room carved out of the gutted floor (x -22.9..-16.4, z -5.2..3.2), entered from the glass front
+  {
+    const WALLP = { texture: "cdn/texture-sage-green-damask-wallpaper.png", repeat: [1, 1], wrap: "repeat", color: "oklch(0.92 0.02 120)", roughness: 0.9 };
+    const PANEL = { texture: "cdn/texture-dark-walnut-wood-wainscot-paneling.png", repeat: [1, 1], wrap: "repeat", color: "oklch(0.8 0.03 60)", roughness: 0.55 };
+    const CARPET = { texture: "cdn/texture-short-pile-office-carpet-deep-green.png", repeat: [1, 1], wrap: "repeat", roughness: 1 };
+    const TRIMW = { color: "oklch(0.9 0.02 85)", roughness: 0.5 };
+    const TILE = { texture: "cdn/texture-acoustic-ceiling-tile-white.png", repeat: [1, 1], wrap: "repeat", roughness: 1 };
+    const X0 = -22.9, X1 = -16.4, Z0 = -5.2, Z1 = 3.2, Y = 0.32, H = 2.9, cx = (X0 + X1) / 2, cz = (Z0 + Z1) / 2, L = X1 - X0, D = Z1 - Z0;
+    bx("l11-realty-carpet", cx, Y, cz, L, 0.02, D, CARPET, { physics: undefined });
+    for (const [id, x, z, w, d] of [["n", cx, Z0, L, 0.12], ["s", cx, Z1, L, 0.12], ["w", X0, cz, 0.12, D]]) {
+      bx(`l11-realty-wall-${id}`, x, Y, z, w, H, d, WALLP);
+      bx(`l11-realty-wains-${id}`, x, Y, z, w + (d > w ? 0.06 : 0), 1.0, d + (w > d ? 0.06 : 0), PANEL, { physics: undefined });
+      bx(`l11-realty-rail-${id}`, x, Y + 1.0, z, w + (d > w ? 0.09 : 0), 0.06, d + (w > d ? 0.09 : 0), TRIMW, { physics: undefined });
+      bx(`l11-realty-base-${id}`, x, Y, z, w + (d > w ? 0.08 : 0), 0.12, d + (w > d ? 0.08 : 0), TRIMW, { physics: undefined });
+      bx(`l11-realty-crown-${id}`, x, Y + H - 0.08, z, w + (d > w ? 0.1 : 0), 0.08, d + (w > d ? 0.1 : 0), TRIMW, { physics: undefined });
+    }
+    bx("l11-realty-ceil", cx, Y + H, cz, L, 0.06, D, TILE, { physics: undefined });
+    for (const [i, z] of [[1, -2.6], [2, 0.6]]) {
+      bx(`l11-realty-troffer-${i}`, -19.6, Y + H - 0.03, z, 1.2, 0.03, 0.6, { color: "#fff6e0", emissive: "#fff2d6", emissiveIntensity: 1.6 }, { physics: undefined });
+      sp(`l11-realty-light-${i}`, { feetPosition: { x: -19.6, y: Y + H - 0.2, z }, light: { kind: "point", color: "oklch(0.95 0.04 85)", intensity: 1.8, distance: 8 } });
+    }
+    sp("l11-realty-desk", { feetPosition: { x: -19.5, y: Y, z: -1 }, rotation: { yaw: -90 }, model: { id: "/cdn/value.53a6ef111aac797583ca330cad268f4e401bd0fe5613021c07eda571623e5ea2.glb", forward: "+z" }, physics: { body: "static", collider: "box" } });
+    const fit = (id, model, x, z, yaw, size) => sp(id, { feetPosition: { x, y: Y, z }, rotation: { yaw }, model: { id: model }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } }, physics: { body: "static", collider: "box" } });
+    fit("l11-realty-chair-1", "/cdn/value.324d9a05c6aca4bc72f791c510f751bee89cfbbc0e2104e59ad075531e70a750.glb", -17.7, -2.0, -100, [0.8, 0.95, 0.8]);
+    fit("l11-realty-chair-2", "/cdn/value.324d9a05c6aca4bc72f791c510f751bee89cfbbc0e2104e59ad075531e70a750.glb", -17.7, 0.1, -80, [0.8, 0.95, 0.8]);
+    fit("l11-realty-credenza", "/cdn/value.6b73846286fe58c95018a876f85d847e8af3c7a0187d06a8838072345f9ca49e.glb", -22.55, -1, 90, [1.6, 0.85, 0.45]);
+    fit("l11-realty-plant-1", "/cdn/value.88c7684212164aa0495a65fc294a12752ef506c35708f70485202b9366795b43.glb", -22.4, 2.7, 0, [0.6, 1.3, 0.6]);
+    fit("l11-realty-plant-2", "/cdn/value.88c7684212164aa0495a65fc294a12752ef506c35708f70485202b9366795b43.glb", -16.9, -4.7, 40, [0.5, 1.1, 0.5]);
+    fit("l11-realty-desklamp", "/cdn/value.0871d1626b929961d73cb28c05f82070ad822c5cc2e6b8deec5046248fb4086d.glb", -22.5, -0.2, 90, [0.3, 0.55, 0.3]);
+    sp("l11-realty-desklamp-glow", { feetPosition: { x: -22.4, y: Y + 1.3, z: -0.2 }, light: { kind: "point", color: "oklch(0.85 0.09 70)", intensity: 0.8, distance: 4 } });
+    // hung pictures: the house listing behind the desk, the city print on the north wall
+    sp("l11-realty-listing", { feetPosition: { x: X0 + 0.08, y: Y + 1.25, z: -1 }, rotation: { yaw: 90 }, primitive: { kind: "plane", width: 0.9, height: 1.2 }, material: { texture: "/cdn/value.1fadd79ab1f3ae48c1a9cd77004080a7542e2fef7af365ba28561e6538aa85cd.png", roughness: 0.8 } });
+    sp("l11-realty-print", { feetPosition: { x: -19.6, y: Y + 1.25, z: Z0 + 0.08 }, primitive: { kind: "plane", width: 1.6, height: 1.2 }, material: { texture: "/cdn/value.fb4fd1bce78afb472b7cbd3bd320f1cd347c29d25dd6472074d65d9cbf283692.png", roughness: 0.7 } });
+    sp("l11-realty-hum", { feetPosition: { x: -19.6, y: 2.8, z: -1 }, audio: { clip: "cdn/sfx-quiet-office-air-vent-hvac-room-tone-loop.mp3", loop: true, gain: 0.1, spatial: true, maxDistance: 8 } });
+    for (const id of ["l11-realty-lamp"]) if (ctx.place.objects[id]) ctx.destroy(id);
+  }
   sp("l11-realty-sign", { feetPosition: { x: -16.05, y: 3.0, z: -1 }, rotation: { yaw: 90 }, vector: `<svg viewBox='0 0 400 90' width='2.6m'><rect x='2' y='2' width='396' height='86' rx='6' fill='#1f3d2c' stroke='#e9dfc4' stroke-width='4'/><text x='200' y='44' text-anchor='middle' font-family='serif' font-weight='bold' font-size='34' fill='#e9dfc4'>B.N.T.G. REALTY</text><text x='200' y='74' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#e9dfc4'>homes, keys, no questions</text></svg>` });
   sp("l11-realty-agent", {
     tags: ["npc", "bntg"], feetPosition: { x: -20.25, y: 0.32, z: -1 }, rotation: { yaw: -90 }, physics: "character",
