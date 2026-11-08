@@ -36,14 +36,14 @@ export function geometry(ctx) {
   const h = (u, a) => { const n = 1 + 0.18 * Math.sin(a * 3 + 1.3) * Math.sin(a * 5 + 0.4) + 0.07 * Math.sin(a * 11); const x = Math.cos(a) * RIM * u * n, z = Math.sin(a) * RIM * u * n; return [x, soilY(x, z) - 0.006, z]; };
   for (let r = 0; r < rows; r++) for (let k = 0; k < segs; k++) {
     const u0 = r / rows, u1 = (r + 1) / rows, a0 = (k / segs) * 6.283, a1 = ((k + 1) / segs) * 6.283;
-    ctx.color(`oklch(${0.17 + u1 * 0.05} 0.03 ${50 + (k % 3) * 4})`);
+    ctx.color(`oklch(${0.3 + u1 * 0.06} 0.045 ${55 + (k % 3) * 4})`);
     ctx.quad(...h(u0, a0), ...h(u0, a1), ...h(u1, a1), ...h(u1, a0));
   }
   ctx.flat();
   const clods = lod <= 2 ? 34 : 10; // crumbs and clods, some on top of the worms
   for (let c = 0; c < clods; c++) {
     const a = R(c + 40) * 6.283, d = Math.sqrt(R(c + 41)) * RIM * 1.15, s = 0.012 + R(c + 42) * 0.03, x = Math.cos(a) * d, z = Math.sin(a) * d, y = soilY(x, z) + s * 0.2;
-    ctx.color(`oklch(${0.2 + R(c + 43) * 0.08} 0.035 55)`);
+    ctx.color(`oklch(${0.3 + R(c + 43) * 0.08} 0.045 58)`);
     const v = [[x, y + s * 0.8, z], [x + s, y, z + s * 0.3], [x - s * 0.2, y, z + s], [x - s, y, z - s * 0.2], [x + s * 0.3, y, z - s], [x, y - s * 0.4, z]];
     for (const [a1, b1] of [[1, 2], [2, 3], [3, 4], [4, 1]]) { ctx.tri(...v[0], ...v[b1], ...v[a1]); ctx.tri(...v[5], ...v[a1], ...v[b1]); }
   }
