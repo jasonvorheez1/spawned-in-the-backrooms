@@ -5,7 +5,7 @@
 // a pool of boiling tar with a B.N.T.G. dredge winch and reaching hands, a survivor camp round a fire with Carla, and the asphalt road to Level 9. Life: scripts/l8-life.js; use: scripts/l8-use.js.
 import L8 from "../../scripts/lib/data/level8.yml";
 export const cadence = "1s";
-const V = 11;
+const V = 12;
 const GLB = {
   cave: "/cdn/value.2109832add9ec72ac83009c0355494c0f9b184ad1b3bb101edb373306f8be2dc.glb",
   spider: "/cdn/value.f2baeaec87cf017372e92e66ec42fae95179b52161e15051d3253036b89b9323.glb",
