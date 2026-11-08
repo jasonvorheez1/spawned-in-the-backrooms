@@ -23,7 +23,7 @@ def smooth(a, b, x):
 
 # ---------------------------------------------------------------- the 9th Road: one long cave
 # (s, half-width, half-height): chambers and tunnels along the spine, in metres from the entrance lake
-CTRL = [(-12, 2, 1.5), (-6, 13, 6), (28, 14, 6), (48, 3.6, 2.8), (66, 10, 5.5), (95, 10, 5.5), (106, 3.2, 2.6), (112, 1.5, 1.05), (150, 1.5, 1.05), (160, 3.2, 2.6), (170, 15, 7), (204, 15, 7),
+CTRL = [(-12, 2, 1.5), (-6, 13, 6), (28, 14, 6), (48, 3.6, 2.8), (66, 10, 5.5), (95, 10, 5.5), (106, 3.2, 2.6), (112, 1.7, 1.45), (150, 1.7, 1.45), (160, 3.2, 2.6), (170, 15, 7), (204, 15, 7),
         (216, 3.5, 2.8), (230, 9, 5), (268, 9, 5), (280, 3.5, 2.8), (292, 13, 6), (336, 13, 6), (346, 3.5, 2.8), (358, 11, 6), (396, 11, 6), (406, 3.5, 2.8), (418, 14, 6.5), (456, 14, 6.5),
         (466, 3.6, 2.9), (480, 4.6, 3.6), (500, 4.6, 3.6), (506, 1.5, 1.2)]
 STATIONS = [  # name, s from, s to
@@ -122,6 +122,7 @@ def build_cave():
             off_use = (2.3 + abs(off_use) * 0.5) * (1 if off_use >= 0 else -1)
             if abs(off_use) > 0.75 * rx: continue
         ceil = fy + 0.62 * ry + ry * math.sqrt(max(0.04, 1 - (off_use / rx) ** 2)) * 1.05
+        if up and rx < 5: continue  # nothing hangs into a narrow tunnel: the walker's head needs that room
         base_y = min(14.45, ceil) if up else max(-2.35, fy - 0.15)
         cy_pos = base_y - L / 2 if up else base_y + L / 2
         if cy_pos - L / 2 < -2.48 or cy_pos + L / 2 > 14.52: continue
