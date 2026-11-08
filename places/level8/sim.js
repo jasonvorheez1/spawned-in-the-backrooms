@@ -126,9 +126,22 @@ function lay(ctx) {
   // the cave model (box min -10.91,-2.56,-455.46, max 124.61,14.62,0.40) placed by its bottom-centre with multi-zone karst materials
   sp("l8-cave", {
     feetPosition: { x: 56.85, y: -2.56, z: -227.53 }, physics: { body: "static", collider: "mesh" },
-    model: { id: GLB.cave, materials: { rock: CAVE("rock", ROCK), wet_rock: CAVE("wet", WET_ROCK), flowstone: CAVE("flow", FLOW_MAT), road_bed: CAVE("road", ROAD_MAT), biolum: BIOLUM_MAT, tar_rock: CAVE("tar", TAR_ROCK) } },
+    model: { id: GLB.cave, materials: { rock: CAVE("rock", ROCK), wet_rock: CAVE("wet", WET_ROCK), flowstone: CAVE("flow", { color: "oklch(0.58 0.045 78)" }), road_bed: CAVE("road", ROAD_MAT), biolum: BIOLUM_MAT, tar_rock: CAVE("tar", TAR_ROCK) } },
     receiveShadow: true,
   });
+
+  // caver work lamps strung along the road: warm pools between the cold dark, so the rock's grain reads (Shelly: "graphics could be much better")
+  for (let k = 0, sd = 1; k * 15 + 20 < 500; k++, sd = -sd) {
+    const at0 = 20 + k * 15, q = P(at0, sd * rxAt(at0) * 0.62), y = P(at0).y;
+    sp(`l8-worklamp-${k}`, { feetPosition: { x: q.x, y, z: q.z }, rotation: { yaw: q.yaw }, physics: "static",
+      primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.05, height: 1.7 }, material: RUST,
+      children: [
+        { feetPosition: { x: 0, y: -0.02, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.26, height: 0.06 }, material: STEEL },
+        { feetPosition: { x: 0, y: 1.62, z: 0.06 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.1, height: 0.16 }, material: STEEL },
+        { feetPosition: { x: 0, y: 1.58, z: 0.06 }, primitive: { kind: "sphere", radius: 0.055 }, material: { color: "oklch(0.95 0.08 80)", emissive: "oklch(0.92 0.12 75)", emissiveIntensity: 4 } },
+        { feetPosition: { x: 0, y: 1.5, z: 0.1 }, light: { kind: "point", color: "oklch(0.86 0.1 72)", intensity: 1.7, distance: 13 } },
+      ] });
+  }
 
   // ---- Station 1: the entrance lake and the M.E.G. diving bell that brought you down from Level 7's abyss
   const lake = P(12, 0, 0);
