@@ -12,7 +12,7 @@ SRC, SPN, OUT, PROOF = a[0], a[1], a[2], a[3]
 G = dict(brow=[((0.36, 0.80, 0.34), 0.06, 0.20)], back=[((0, -0.9, 0.2), 0.05, 0.6)])
 SP = {
  "cat":     dict(top=0.10, cheek=0.11, cheekD=(0.70, 0.45, -0.35), cheekS=0.30, muz=0.07, muzS=0.26, chin=0.05, wide=1.05,
-                 ear=dict(h=0.92, w=0.92, a=1.3, b=1.0, T=0.26, D=0.40, bend=0.0, flare=0.30, tipr=0.14)),
+                 ear=dict(h=1.0, w=0.92, a=1.3, b=1.0, T=0.26, D=0.40, bend=0.0, flare=0.30, tipr=0.14)),
  "dog":     dict(top=0.12, cheek=0.07, cheekD=(0.70, 0.45, -0.40), cheekS=0.32, muz=0.30, muzS=0.23, chin=0.08, wide=1.08,
                  ear=dict(h=1.0, w=0.62, a=2.0, b=1.6, T=0.20, D=0.30, bend=0.10, flare=0.25)),
  "fox":     dict(top=0.10, cheek=0.06, cheekD=(0.78, 0.30, -0.40), cheekS=0.30, muz=0.34, muzS=0.21, chin=0.04, wide=1.0,
