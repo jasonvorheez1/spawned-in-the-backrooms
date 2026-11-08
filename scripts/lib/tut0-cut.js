@@ -148,13 +148,13 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
   },
   // the wet patch gives: they sink through the carpet, black, the fall, then the title
   final(ctx, c, t, once, st) {
-    const me = ctx.self, at = { x: SOFT.x, y: 0, z: SOFT.z }, her = { x: 44, y: 1.15, z: -16 }, S = 5.2 // the sink starts
+    const me = ctx.self, at = { x: SOFT.x, y: 0, z: SOFT.z }, her = { x: 44, y: 1.15, z: -22.6 }, S = 5.2 // the sink starts
     if (t < S) me.feetPosition = { x: lerp(c.p0.x, at.x, ss(0, 0.8, t)), y: 0, z: lerp(c.p0.z, at.z, ss(0, 0.8, t)) }
     else me.feetPosition = { x: at.x, y: -2.6 * Math.pow(ss(S, S + 3.4, t), 1.6), z: at.z }
     me.rotation = { yaw: t < 1.8 ? (c.yaw ?? 0) : Math.atan2(-(her.x - at.x), -(her.z - at.z)) * 180 / Math.PI } // they feel watched and turn toward the hall
     // Phoebe in corridor E's mouth, the hall light behind her: a shape and a coat, her face in her own shadow
     once("phoebe", () => {
-      spawnPhoebe(ctx, "phoebe-end", { x: 44, y: 0, z: -16 }, 180, 11); me.faded = { ...(me.faded || {}), "phoebe-end": 0.45 } // facing them, half there
+      spawnPhoebe(ctx, "phoebe-end", { x: 44, y: 0, z: -22.6 }, 180, 11); me.faded = { ...(me.faded || {}), "phoebe-end": 0.35 } // facing them, half there
       for (const [i, v] of [[18, 0.15], [19, 0.6], [20, 0.6]]) { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) o.light = { ...o.light, intensity: v } } // the lamps between you and her go low
       const h = ctx.getObject("t0-light-17"); if (h?.light) h.light = { ...h.light, intensity: 9 } // the one behind her burns: a shape, no face
     })
