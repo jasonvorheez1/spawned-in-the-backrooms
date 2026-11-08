@@ -12,7 +12,7 @@ SRC, SPN, OUT, PROOF = a[0], a[1], a[2], a[3]
 G = dict(brow=[((0.36, 0.80, 0.34), 0.035, 0.22)], back=[((0, -0.9, 0.2), 0.05, 0.6)])
 SP = {
  "cat":     dict(top=0.10, cheek=0.11, cheekD=(0.70, 0.45, -0.35), cheekS=0.30, muz=0.07, muzS=0.26, chin=0.05, wide=1.05,
-                 ear=dict(h=1.0, w=0.48, a=1.0, b=1.35, T=0.20, D=0.34, bend=0.0, flare=0.30)),
+                 ear=dict(h=1.05, w=0.62, a=1.0, b=1.35, T=0.22, D=0.36, bend=0.0, flare=0.30)),
  "dog":     dict(top=0.12, cheek=0.07, cheekD=(0.70, 0.45, -0.40), cheekS=0.32, muz=0.20, muzS=0.24, chin=0.08, wide=1.08,
                  ear=dict(h=1.0, w=0.62, a=2.0, b=1.6, T=0.20, D=0.30, bend=0.10, flare=0.25)),
  "fox":     dict(top=0.10, cheek=0.06, cheekD=(0.78, 0.30, -0.40), cheekS=0.30, muz=0.24, muzS=0.20, chin=0.04, wide=1.0,
@@ -251,9 +251,11 @@ cam.data.lens = 70
 sun = bpy.data.objects.new("sun", bpy.data.lights.new("sun", "SUN")); sc.collection.objects.link(sun); sun.data.energy = 3
 tgt = C + Vector((0, 0.05, 0.08))
 files = []
-for n, dirv in enumerate([(0, 1, 0.1), (1, 0.05, 0.1), (0.7, 0.7, 0.35), (-0.6, -0.6, 0.4)]):
+earT = C + Vector((0.18, 0.0, 0.32)) * (R / 0.3166)
+for n, dirv in enumerate([(0, 1, 0.1), (1, 0.05, 0.1), (0.7, 0.7, 0.35), (-0.6, -0.6, 0.4), (0.35, 0.9, 0.5)]):
     dv = Vector(dirv).normalized()
-    cam.location = tgt + dv * 2.6
+    tgt = earT if n == 4 else C + Vector((0, 0.05, 0.08))
+    cam.location = tgt + dv * (1.1 if n == 4 else 2.6)
     cam.rotation_euler = (tgt - cam.location).to_track_quat("-Z", "Y").to_euler()
     sun.rotation_euler = (-dv).to_track_quat("-Z", "Y").to_euler()
     f = PROOF.replace(".png", f"_{n}.png"); sc.render.filepath = f; bpy.ops.render.render(write_still=True); files.append(f)
