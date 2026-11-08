@@ -163,7 +163,7 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
     const [x, z] = path[i]; if (inHub(x, z)) continue;
     const turn = i > 0 && (path[i + 1][0] - x !== x - path[i - 1][0] || path[i + 1][1] - z !== z - path[i - 1][1]);
     if (i - last < (turn ? 1 : 3)) continue; // one at every turn, else every third room
-    const tx = path[i + 1][0] - x, tz = path[i + 1][1] - z, sides = tx ? [1, 3] : [0, 2], d = sides.find((s) => hasWall(x, z, s)); if (d == null) continue;
+    const tx = path[i + 1][0] - x, tz = path[i + 1][1] - z, sides = tx ? [1, 3] : [0, 2], ix = x - path[i - 1][0], iz = z - path[i - 1][1], ahead = turn ? [0, 1, 2, 3].find((q) => NRM[q][0] === -ix && NRM[q][1] === -iz && hasWall(x, z, q)) : undefined, d = sides.find((s) => hasWall(x, z, s)) ?? ahead; if (d == null) continue; // a side wall, else at a turn the wall you walk into
     const [nx, nz] = NRM[d], right = nz * tx + -nx * tz; // the viewer's right, facing the wall
     const svg = i === path.length - 2 || arrows % 4 === 3 ? SCRIBBLE.exit : SCRIBBLE.arrow;
     scrib("chalk", x, z, d, 0.4, 1.2 + hash(x, z, 4) * 0.25, right > 0 ? svg : svg === SCRIBBLE.exit ? EXIT_LEFT : mirror(svg)); out.message--; out.chalk = (out.chalk ?? 0) + 1;
