@@ -5,6 +5,16 @@ import FACES from './data/faces.yml'
 import CL from './data/clothes.yml'
 import { rowOf, patOk } from './clothes.js'
 export const HEAD_ID = 'critter-head'
+// a head-covering mask (the Level 11 shop's bag and shell): its own GLB skinned whole to the Head bone, a second skin child; the row's `mask` names it
+export const MASK_ID = 'critter-mask'
+export const maskOf = (l) => (l?.hat && l.hat !== 'none' ? CL.rows.find((r) => r.slot === 'hat' && r.kind === l.hat && r.mask)?.mask : null) ?? null
+export const maskChild = (l, local) => { const m = maskOf(l); return m ? { id: MASK_ID, attachment: { skin: true }, model: m, ...(local ? { audience: 'local' } : {}) } : null }
+export function seatMask(ctx, o, l) {
+  const want = maskOf(l), id = o.id + '/' + MASK_ID, m = ctx.getObject(id)
+  if (!want) { if (m) ctx.destroy(id); return }
+  if (m) { if ((m.model?.id ?? m.model) !== want) m.model = want; return }
+  ctx.spawn(MASK_ID, { parent: o.id, ...maskChild(l, o.audience === 'local') })
+}
 export const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 const CLOTH = { topw: ['cloth_top', 'top'], botw: ['cloth_bottom', 'bottom'], shoes: ['cloth_shoes', 'shoec'], hat: ['cloth_hat', 'hatc'], neck: ['cloth_neck', 'neckc'] }
 export const speciesOf = (l) => M.species[l?.species] ? l.species : 'cat'
@@ -328,7 +338,7 @@ export function critterSpec(l) {
       model: headModel(l),
       morph: faceMorph(l?.expr, false, isF, l),
       jiggle: { bones: ['EarL', 'EarR'], amount: 0.58, bounce: 0.72 }
-    }],
+    }, maskChild(l)].filter(Boolean),
     material: { outline: { color: '#1d1420', width: 2.4 } },
     jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.68, bounce: 0.72 },
     ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {})
@@ -373,6 +383,7 @@ export function seatHead(ctx, obj, l) {
   const body = obj.model?.id ?? obj.model
   if (h && obj.state && obj.state.headBody !== body) { ctx.destroy(h.id ?? obj.id + '/' + HEAD_ID); h = null }
   if (obj.state && obj.state.headBody !== body) obj.state.headBody = body
+  seatMask(ctx, obj, l)
   if (!h) { ctx.spawn(HEAD_ID, { parent: obj.id, ...want }); return }
   if (!h.attachment?.skin) {
     h.primitive = null; h.attachment = { skin: true }; h.feetPosition = { x: 0, y: 0, z: 0 }; h.rotation = 0;
