@@ -391,8 +391,8 @@ function cine(ctx, s) {
   const ux = dx / d, uz = dz / d, back = Math.min(1.1, d * 0.5)
   const head = (it.bounds?.size?.y ?? 1.6) * 0.85
   ctx.view.camera = {
-    eye: { x: b.x - ux * (back + 0.9) - uz * 0.45, y: b.y + head + 0.05, z: b.z - uz * (back + 0.9) + ux * 0.45 },
-    aim: { x: b.x, y: b.y + head - 0.05, z: b.z }, fov: 42,
+    eye: { x: b.x - ux * (back + 0.9) - uz * 0.45, y: b.y + head + 0.12, z: b.z - uz * (back + 0.9) + ux * 0.45 },
+    aim: { x: b.x, y: b.y + head - 0.5, z: b.z }, fov: 42, // aimed under the chin: the face rides the top third, clear of the dialogue box
   }
 }
 
