@@ -130,6 +130,32 @@ def male(head, body):
 ANAT = dict(hipZ=0.90, legX=0.078, legY=0.12, kneeZ=0.48, ankleZ=0.085, toeY=-0.01, spineY=0.09,
             shoulder=(0.075, 1.42), arm=(0.17, 1.40), neckZ=1.55, headZ=1.64, topZ=1.94)
 
+def shoulder_blend(body, r):
+    # bone heat stops at the arm's seam (a separate mesh island), so the shoulder split. re-weight the upper body by
+    # distance to each bone: the same position always gets the same weights, so the seam's two sides move as one
+    BONES = ["Spine1", "Spine2", "Neck"] + [s + n for s in ("Left", "Right") for n in ("Shoulder", "Arm", "ForeArm", "Hand")]
+    seg = {}
+    for n in BONES:
+        b = r.data.bones[n]; seg[n] = (r.matrix_world @ b.head_local, r.matrix_world @ b.tail_local)
+    def dist(p, a, c):
+        ab = c - a; t = max(0.0, min(1.0, (p - a).dot(ab) / max(ab.length_squared, 1e-9))); return (p - (a + ab * t)).length
+    groups = {n: body.vertex_groups.get(n) or body.vertex_groups.new(name=n) for n in BONES}
+    done = 0
+    for v in body.data.vertices:
+        p = body.matrix_world @ v.co
+        if p.z < 1.18 and abs(p.x) < 0.2: continue  # below the chest, the torso keeps its heat weights
+        if p.z < 0.95: continue
+        side = "Left" if p.x > 0 else "Right"
+        cand = ["Spine1", "Spine2", "Neck"] + [side + n for n in ("Shoulder", "Arm", "ForeArm", "Hand")]
+        ws = sorted(((1.0 / max(dist(p, *seg[n]), 0.012) ** 4, n) for n in cand), reverse=True)[:3]
+        tot = sum(w for w, _ in ws)
+        for g in list(v.groups):
+            nm = body.vertex_groups[g.group].name
+            if nm in BONES: body.vertex_groups[g.group].remove([v.index])
+        for w, n in ws: groups[n].add([v.index], w / tot, "REPLACE")
+        done += 1
+    print("shoulder blend verts", done)
+
 def rig(head, body, wide):
     vs = [body.matrix_world @ v.co for v in body.data.vertices]
     tip = max(vs, key=lambda v: v.x)
@@ -175,6 +201,7 @@ def rig(head, body, wide):
     bpy.ops.object.select_all(action="DESELECT"); body.select_set(True); r.select_set(True)
     bpy.context.view_layer.objects.active = r
     bpy.ops.object.parent_set(type="ARMATURE_AUTO")
+    shoulder_blend(body, r)
     unweighted = sum(1 for v in body.data.vertices if not v.groups)
     print("body unweighted verts", unweighted)
     hg = head.vertex_groups.new(name="Head")
@@ -245,6 +272,8 @@ def build(name, is_male, height):
     proof(name, r)
     bpy.ops.object.select_all(action="DESELECT")
     for o in (r, head, body, *extra): o.select_set(True)
+    for o in list(bpy.data.objects):
+        if o.name.startswith("Icosphere"): bpy.data.objects.remove(o, do_unlink=True)
     bpy.ops.export_scene.gltf(filepath=f"{OUT}/{name}.glb", use_selection=True, export_apply=False, export_animations=False)
     print("exported", name)
 
