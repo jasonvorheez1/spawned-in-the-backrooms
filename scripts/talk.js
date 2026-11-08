@@ -84,7 +84,10 @@ function say(ctx, it, line, mood) {
   const now = ctx.now(), p = it.feetPosition, d = 1600 + line.length * 60
   ctx.self.state.sub = { who: nameOf(it), t: line, at: now, d }
   it.state.line = { t: line, at: now, d }; it.state.talkAt = now; it.state.talkTo = ctx.self.id
-  if (mood) ctx.self.state.talkMood = mood
+  if (mood) {
+    ctx.self.state.talkMood = mood
+    it.state.mood = mood
+  }
   hearAt(ctx, { clip: VO(voiceOf(it), line), position: { x: p.x, y: p.y + 1.6, z: p.z }, volume: 0.9, maxDistance: 14 }, { audience: { nearby: p, radius: 16 } })
 }
 function close(ctx) { const s = ctx.self.state; ctx.self.session.tkHp = null; ctx.self.session.tkIhp = null; s.talkWith = null; s.shopOpen = null; s.talkBusy = 0; s.talkChoices = null; ctx.self.session.talkingTo = null }
