@@ -226,5 +226,108 @@ export const ears = {
       }, { audience: { player: who.id } });
       return;
     }
+
+    // 11. Marroka Pizzeria: Fresh Hot Level 11 Pizza Slice
+    if (s.kind === "food-pizza") {
+      heard(ctx, { clip: REGISTER_CHIME, position: pos, volume: 0.9, maxDistance: 16 });
+      heard(ctx, { clip: SIZZLE, position: pos, volume: 0.8, maxDistance: 12 });
+
+      w.hunger = Math.min(100, (w.hunger ?? 80) + 45);
+      w.sanity = Math.min(100, (w.sanity ?? 80) + 30);
+      w.coffeeSpeedUntil = now + 90000; // 90s speed buff
+
+      ctx.emit("damageNumber", {
+        position: { x: pos.x, y: pos.y + 1.4, z: pos.z },
+        text: "+FRESH MARROKA PIZZA (+45 HUNGER, +30 SANITY, +SPRINT BOOST)",
+        color: "#ff9234",
+        size: 1.15,
+      }, { audience: { player: who.id } });
+
+      ctx.emit("screenFlash", { color: "#fff4e6", duration: 0.4, intensity: 0.4 }, { audience: { player: who.id } });
+      if (w) w.notice = { text: "Marroka Pizzeria: Oven-fresh thin crust with Almond Water mozzarella!", at: now };
+      return;
+    }
+
+    // 12. Sedco Spotlight Vintage CCTV Surveillance Console
+    if (s.kind === "sedco-cctv") {
+      heard(ctx, { clip: TERMINAL_CHIME, position: pos, volume: 0.85, maxDistance: 14 });
+      s.camIdx = ((s.camIdx ?? -1) + 1) % 4;
+      const CAM_FEEDS = [
+        "FEED 01 · 11th Ave & Central Boulevard [NORMAL · 0 HOSTILES]",
+        "FEED 02 · Grand Canal Promenade & Roadway Bridge [CALM · WATER STABLE]",
+        "FEED 03 · Southwestern Strip Mall & Parking Plaza [CLEAR]",
+        "FEED 04 · Grand Neoclassical Tower Skydeck Vantage [HORIZON CLEAR]",
+      ];
+      if (w) {
+        w.sub = {
+          who: "SEDCO CCTV MONITOR",
+          t: `${CAM_FEEDS[s.camIdx]}\nAll street monitors nominal. The Level 11 Effect pacifies entities.`,
+          at: now,
+          d: 5500,
+        };
+      }
+      ctx.emit("damageNumber", {
+        position: { x: pos.x, y: pos.y + 1.2, z: pos.z },
+        text: "CCTV SURVEILLANCE FEED CYCLED",
+        color: "#38ef7d",
+        size: 1.05,
+      }, { audience: { player: who.id } });
+      return;
+    }
+
+    // 13. B.R.C. (Backrooms Remodeling Company) Work Order Clipboard
+    if (s.kind === "brc-clipboard") {
+      heard(ctx, { clip: TERMINAL_CHIME, position: pos, volume: 0.7, pitch: 1.3, maxDistance: 12 });
+      const BRC_NOTES = [
+        "=== B.R.C. WORK ORDER #4409 ===\nProject: Sector 11-A Commercial Space Renovation.\nClient: The Capital Interim Council.\nStatus: 72% Complete. Concrete columns exposed, suspended ceiling grid hanging, drywall hung for office partitions.",
+        "=== B.R.C. SUPPLY NOTICE ===\nBuilding supplies perpetually noclip into the service closet when not observed. Keep work areas clear so replacements appear smoothly.",
+        "=== ARCHITECTURAL REPORT ===\nAll structures in Level 11 are indestructible monoliths of infinite concrete. The B.R.C. outfits these bare cliff-like rooms with Frontrooms furnishings so wanderers feel right at home.",
+      ];
+      s.noteIdx = ((s.noteIdx ?? -1) + 1) % BRC_NOTES.length;
+      if (w) {
+        w.sub = {
+          who: "B.R.C. WORK ORDER CLIPBOARD",
+          t: BRC_NOTES[s.noteIdx],
+          at: now,
+          d: 7000,
+        };
+      }
+      return;
+    }
+
+    // 14. First Capital Municipal ATM Machine
+    if (s.kind === "atm") {
+      heard(ctx, { clip: REGISTER_CHIME, position: pos, volume: 0.9, maxDistance: 14 });
+      w.sanity = Math.min(100, (w.sanity ?? 80) + 10);
+      ctx.emit("damageNumber", {
+        position: { x: pos.x, y: pos.y + 1.3, z: pos.z },
+        text: "+50 CAPITAL CREDITS DISPENSED",
+        color: "#2ecc71",
+        size: 1.1,
+      }, { audience: { player: who.id } });
+      if (w) {
+        w.sub = {
+          who: "FIRST CAPITAL BANK ATM",
+          t: "TRANSACTION APPROVED · DISPENSING 50 LEVEL 11 CAPITAL CREDITS · SPEND AT MARROKA PIZZERIA OR B.N.T.G. TRADERS",
+          at: now,
+          d: 5000,
+        };
+      }
+      return;
+    }
+
+    // 15. Almond Water Street Vending Machine
+    if (s.kind === "vending") {
+      heard(ctx, { clip: REGISTER_CHIME, position: pos, volume: 0.85, maxDistance: 14 });
+      w.sanity = Math.min(100, (w.sanity ?? 80) + 15);
+      w.thirst = Math.min(100, (w.thirst ?? 80) + 45);
+      ctx.emit("damageNumber", {
+        position: { x: pos.x, y: pos.y + 1.3, z: pos.z },
+        text: "+CHILLED ALMOND WATER CAN (+45 THIRST, +15 SANITY)",
+        color: "#00d2d3",
+        size: 1.1,
+      }, { audience: { player: who.id } });
+      return;
+    }
   },
 };

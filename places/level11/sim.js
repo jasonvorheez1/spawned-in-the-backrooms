@@ -1,9 +1,12 @@
 // Level 11 "The Infinite City" - Master Simulation & World Generator
 // Wikidot lore: "The City That Never Sleeps" (backrooms-wiki.wikidot.com/level-11)
-// An endless realistic Western metropolis featuring multi-lane asphalt avenues, detailed curbs,
-// crosswalks, a grand urban canal with crossing roadway bridge, neoclassical masonry high-rises,
-// modern glass towers, low-density strip malls, an office under renovation, M.E.G. Base Beta outpost,
-// drivable city taxi cab, canal boat, interactive payphone, street food cart, and peaceful Level 11 entities.
+// An endless realistic Western metropolis faithfully realizing all 5 canonical Wikidot scenes:
+// 1. Downtown Avenue Canyon with Pegasus Skyscraper banner, traffic lights & tree-lined sidewalks.
+// 2. High/Low Transition Block with classical Stone Tower, "Sedco Spotlight" storefront & open parking lot.
+// 3. Southwestern Strip Mall with blue awnings, Centro Dermatológico, IS LAB, enterable Marroka Pizzeria, & rooftop antenna.
+// 4. Grand Urban Canal with reflective water, multiple crossing bridges, waterside promenade & drivable motor skiff.
+// 5. Office Under Renovation with custom shell model, suspended drop-ceiling grid, ductwork, drywall sheets, step-ladder & B.R.C. clipboard.
+// Plus: Drivable City Taxi, M.E.G. Base Beta outpost with custom models, working street payphone, hot dog cart, docile entities, & Spamton's alley.
 
 import { heard } from "../../scripts/lib/hear.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
@@ -13,7 +16,7 @@ import { layCity, layStreet, tickCity } from "../../scripts/lib/level11-city.js"
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 16; // bump to rebuild the city in rooms that are already open
+const V = 18; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -23,13 +26,23 @@ const SIDEWALK = { ...T("stained-concrete-floor", 3), color: "oklch(0.95 0.02 85
 const CURB_MAT = { ...T("smooth-cold-poured-concrete-wall", 1), color: "oklch(0.72 0.02 85)", roughness: 0.65 };
 const STONE_TOWER = { ...T("large-grey-brick-wall-dusty-mortar", 3), color: "oklch(0.82 0.025 80)", roughness: 0.75 };
 const BRICK_BLDG = { ...T("old-red-brick-wall", 3), color: "oklch(0.58 0.1 35)", roughness: 0.8 };
+const SEDCO_BRICK = { ...T("old-red-brick-wall", 2), color: "oklch(0.46 0.08 32)", roughness: 0.88 };
 const CONCRETE_CANAL = { ...T("smooth-cold-poured-concrete-wall", 2), color: "oklch(0.65 0.02 240)", roughness: 0.6 };
 const PILLAR_MAT = { ...T("water-stained-streaked-old-poured-concrete-column", 1), color: "oklch(0.7 0.02 85)", roughness: 0.75 };
 const MARBLE_FLOOR = { ...T("black-white-checkered-marble-floor", 2), roughness: 0.25 };
 const STEEL_BRUSHED = { ...T("brushed-stainless-steel", 1), metalness: 0.85, roughness: 0.25 };
 const IRON_RAIL = { ...T("black-wrought-iron", 1), color: "oklch(0.2 0.01 250)", metalness: 0.9, roughness: 0.4 };
-const BARK_MAT = { ...T("smooth-grey-fig-tree-bark", 1), color: "oklch(0.48 0.03 60)", roughness: 0.85 };
-const LEAF_MAT = { ...T("green-baize-felt", 2), color: "oklch(0.42 0.14 135)", roughness: 0.8 };
+const STUCCO_MALL = { ...T("cream-painted-plaster-wall", 3), color: "oklch(0.92 0.03 85)", roughness: 0.85 };
+const SANDSTONE_WALL = { ...T("large-grey-brick-wall-dusty-mortar", 2), color: "oklch(0.85 0.05 75)", roughness: 0.8 };
+const BLUE_AWNING = { color: "oklch(0.45 0.22 250)", roughness: 0.85 };
+const DRYWALL_MAT = { ...T("cream-painted-plaster-wall", 2), color: "oklch(0.88 0.025 85)", roughness: 0.9 };
+const SILVER_FOIL = { color: "oklch(0.85 0.01 250)", metalness: 0.9, roughness: 0.2 };
+const TERRACOTTA_TILES = { ...T("worn-red-clay-roof-tiles", 3), color: "oklch(0.6 0.12 40)", roughness: 0.75 };
+
+const WOOD = { ...T("worn-hardwood-grain", 1.5), color: "oklch(0.62 0.05 60)", roughness: 0.9 };
+const WOOD_OLD = { ...T("worn-hardwood-grain", 1.5), color: "oklch(0.55 0.02 70)", roughness: 0.95 };
+const RUST = { ...T("rusted-corroded-steel", 1.5), roughness: 0.85 };
+const STEEL = { ...T("grimy-scratched-steel-plate", 1.5), roughness: 0.55, metalness: 0.7 };
 
 const GLASS_TINT = { color: "oklch(0.45 0.06 230)", opacity: 0.45, transparent: true, roughness: 0.05, metalness: 0.8 };
 const WATER_MAT = { color: "oklch(0.38 0.09 220)", opacity: 0.88, transparent: true, roughness: 0.06, metalness: 0.2 };
@@ -57,8 +70,6 @@ function lay(ctx) {
   const sp = (id, spec) => ctx.spawn(id, spec);
   const md = (id, kind, x, y, z, materials, collider = "box", extra = {}) =>
     sp(id, { feetPosition: { x, y, z }, model: { id: MODELS[kind], forward: "-z", materials }, physics: { body: "static", collider }, ...extra });
-  const WOOD = { ...T("worn-hardwood-grain", 1.5), color: "oklch(0.62 0.05 60)", roughness: 0.9 }, WOOD_OLD = { ...T("worn-hardwood-grain", 1.5), color: "oklch(0.55 0.02 70)", roughness: 0.95 };
-  const RUST = { ...T("rusted-corroded-steel", 1.5), roughness: 0.85 }, STEEL = { ...T("grimy-scratched-steel-plate", 1.5), roughness: 0.55, metalness: 0.7 };
   const bx = (id, x, y, z, w, h, d, material, extra = {}) =>
     sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material, physics: "static", ...extra });
   const cyl = (id, x, y, z, rT, rB, h, material, extra = {}) =>
@@ -67,7 +78,6 @@ function lay(ctx) {
   // ==========================================
   // 1. ARRIVAL MARKERS & THRESHOLDS
   // ==========================================
-  // Entrance from Level 6.1 (The Snackrooms Restaurant exit)
   sp("l11-from-l61", {
     feetPosition: { x: -28, y: 0.25, z: 12 },
     rotation: { yaw: 90 },
@@ -93,7 +103,7 @@ function lay(ctx) {
   });
 
   // ==========================================
-  // 2. THE GRAND CENTRAL AVENUE & ROAD NETWORK
+  // 2. SCENE 1: THE GRAND BOULEVARD & DOWNTOWN CANYON (Wikidot Image 1)
   // ==========================================
   // Main Boulevard: North-South from Z: -80 to Z: +80, width 16m
   bx("l11-road-north", 0, -0.05, -55, 16, 0.2, 50, ASPHALT);
@@ -103,16 +113,15 @@ function lay(ctx) {
   // Cross Street (11th Avenue): East-West across intersection Z: 12
   bx("l11-cross-street", 0, -0.05, 12, 70, 0.2, 12, ASPHALT);
 
-  // --- Real Road Markings ---
-  // Double Yellow Centerline along Central Boulevard
+  // Road Markings: Double Yellow Centerline
   for (let z = -78; z <= 72; z += 6) {
-    if (z > -36 && z < -24) continue; // canal bridge handled separately
-    if (z > 6 && z < 18) continue;   // intersection
+    if (z > -36 && z < -24) continue;
+    if (z > 6 && z < 18) continue;
     bx(`l11-line-y1-${z}`, -0.08, 0.06, z, 0.1, 0.01, 5.4, YELLOW_PAINT, { physics: undefined });
     bx(`l11-line-y2-${z}`, 0.08, 0.06, z, 0.1, 0.01, 5.4, YELLOW_PAINT, { physics: undefined });
   }
 
-  // White Dashed Lane Lines (both sides of center)
+  // White Dashed Lane Lines
   for (let z = -76; z <= 70; z += 6) {
     if ((z > -36 && z < -24) || (z > 6 && z < 18)) continue;
     bx(`l11-dash-w-l-${z}`, -4.0, 0.06, z, 0.12, 0.01, 3.0, WHITE_PAINT, { physics: undefined });
@@ -126,33 +135,82 @@ function lay(ctx) {
     }
   }
 
-  // --- Concrete Sidewalks & Beveled Curbs ---
-  // West Sidewalk
+  // Concrete Sidewalks & Beveled Curbs
   bx("l11-sw-west-mid", -12, 0.08, 0, 7.6, 0.25, 36, SIDEWALK);
   bx("l11-sw-west-south", -12, 0.08, 48, 7.6, 0.25, 56, SIDEWALK);
   bx("l11-sw-west-north", -12, 0.08, -55, 7.6, 0.25, 50, SIDEWALK);
-  // West Curb Edging
   bx("l11-curb-w-mid", -8.1, 0.08, 0, 0.2, 0.28, 36, CURB_MAT);
   bx("l11-curb-w-south", -8.1, 0.08, 48, 0.2, 0.28, 56, CURB_MAT);
   bx("l11-curb-w-north", -8.1, 0.08, -55, 0.2, 0.28, 50, CURB_MAT);
 
-  // East Sidewalk
   bx("l11-sw-east-mid", 12, 0.08, 0, 7.6, 0.25, 36, SIDEWALK);
   bx("l11-sw-east-south", 12, 0.08, 48, 7.6, 0.25, 56, SIDEWALK);
   bx("l11-sw-east-north", 12, 0.08, -55, 7.6, 0.25, 50, SIDEWALK);
-  // East Curb Edging
   bx("l11-curb-e-mid", 8.1, 0.08, 0, 0.2, 0.28, 36, CURB_MAT);
   bx("l11-curb-e-south", 8.1, 0.08, 48, 0.2, 0.28, 56, CURB_MAT);
   bx("l11-curb-e-north", 8.1, 0.08, -55, 0.2, 0.28, 50, CURB_MAT);
 
-  // Storm Drain Gutter Grates along Curb
+  // Storm Drain Gutter Grates
   for (const gz of [-45, -12, 28, 58]) {
     bx(`l11-drain-w-${gz}`, -8.0, 0.06, gz, 0.7, 0.01, 1.2, IRON_RAIL, { physics: undefined });
     bx(`l11-drain-e-${gz}`, 8.0, 0.06, gz, 0.7, 0.01, 1.2, IRON_RAIL, { physics: undefined });
   }
 
+  // --- THE ICONIC PEGASUS BANNER (Wikidot Image 1) ---
+  bx("l11-pegasus-arm-top", 16.1, 21.0, 2.0, 0.8, 0.12, 0.12, STEEL_BRUSHED);
+  bx("l11-pegasus-arm-bot", 16.1, 9.5, 2.0, 0.8, 0.12, 0.12, STEEL_BRUSHED);
+  sp("l11-pegasus-banner", {
+    feetPosition: { x: 16.0, y: 9.5, z: 2.0 },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 2.2, height: 11.5, depth: 0.06 },
+    material: { color: "#e85d04", roughness: 0.5 },
+    ui: `<div face="front" width="2.2m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#e85d04;color:#ffffff;font-family:Arial Black,Impact,sans-serif;font-weight:900;font-size:125px;writing-mode:vertical-rl;letter-spacing:18px;text-align:center">PEGASUS</div>`,
+  });
+
+  // Overhead Traffic Light Gantry at Intersection Z: 12
+  cyl("l11-tlight-mast", -7.8, 0.1, 7.5, 0.16, 0.2, 5.8, IRON_RAIL);
+  bx("l11-tlight-arm", 0, 5.7, 7.5, 15.5, 0.14, 0.14, IRON_RAIL);
+
+  // Blue Intersection Street Name Signs
+  sp("l11-st-sign-11th", {
+    feetPosition: { x: -6.5, y: 5.2, z: 7.5 },
+    primitive: { kind: "box", width: 2.0, height: 0.45, depth: 0.05 },
+    material: { color: "oklch(0.3 0.12 240)" },
+    ui: `<div face="front" width="2.0m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#155490;border:3px solid #ffffff;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:80px;letter-spacing:2px">11TH AVE</div>`,
+  });
+  sp("l11-st-sign-blvd", {
+    feetPosition: { x: -4.2, y: 5.2, z: 7.5 },
+    primitive: { kind: "box", width: 2.4, height: 0.45, depth: 0.05 },
+    material: { color: "oklch(0.3 0.12 240)" },
+    ui: `<div face="front" width="2.4m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#155490;border:3px solid #ffffff;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:75px;letter-spacing:2px">METROPOLITAN BLVD</div>`,
+  });
+
+  // 3-Aspect Signal Housings (Green, Amber, Red)
+  [-3.5, 3.5].forEach((hx, k) => {
+    sp(`l11-tlight-sig-${k}`, {
+      feetPosition: { x: hx, y: 5.1, z: 7.5 },
+      primitive: { kind: "box", width: 0.4, height: 1.1, depth: 0.3 },
+      material: { color: "oklch(0.2 0.01 250)" },
+      children: [
+        { id: "lamp-g", feetPosition: { x: 0, y: 0.35, z: 0.16 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.05 }, rotation: { pitch: 90 }, material: { color: "oklch(0.85 0.22 145)", emissive: "oklch(0.85 0.22 145)", emissiveIntensity: 3.0 } },
+        { id: "lamp-y", feetPosition: { x: 0, y: 0, z: 0.16 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.05 }, rotation: { pitch: 90 }, material: { color: "oklch(0.3 0.05 85)" } },
+        { id: "lamp-r", feetPosition: { x: 0, y: -0.35, z: 0.16 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.05 }, rotation: { pitch: 90 }, material: { color: "oklch(0.3 0.05 25)" } },
+      ],
+    });
+  });
+
+  // Pedestrian Signal Housing Boxes
+  [-7.7, 7.7].forEach((sx, k) => {
+    sp(`l11-pedsig-${k}`, {
+      feetPosition: { x: sx, y: 2.4, z: 7.5 },
+      primitive: { kind: "box", width: 0.35, height: 0.65, depth: 0.25 },
+      material: { color: "oklch(0.2 0.01 250)" },
+      ui: `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:120px;text-align:center">WALK</div>`,
+    });
+  });
+
   // ==========================================
-  // 3. THE GRAND CANAL & ROADWAY BRIDGE (Wikidot Image 4)
+  // 3. SCENE 4: THE GRAND CANAL & PROMENADE (Wikidot Image 4)
   // ==========================================
   const CANAL_Z = -30;
   const CANAL_W = 20;
@@ -163,33 +221,44 @@ function lay(ctx) {
     fx: { script: WATER_RIPPLE },
   });
 
-  // Embankment Retaining Seawalls
+  // Embankment Retaining Seawalls & Coping
   bx("l11-embank-south", 0, -2.2, CANAL_Z + CANAL_W / 2 + 0.5, 120, 4.4, 1.0, CONCRETE_CANAL);
   bx("l11-embank-north", 0, -2.2, CANAL_Z - CANAL_W / 2 - 0.5, 120, 4.4, 1.0, CONCRETE_CANAL);
-
-  // Stone Coping Capstones along Promenade
   bx("l11-cope-south", 0, 0.2, CANAL_Z + CANAL_W / 2 + 0.5, 120, 0.3, 1.3, CURB_MAT);
   bx("l11-cope-north", 0, 0.2, CANAL_Z - CANAL_W / 2 - 0.5, 120, 0.3, 1.3, CURB_MAT);
 
   // Wrought Iron Promenade Safety Railings
   for (let rx = -58; rx <= 58; rx += 5) {
-    if (rx > -12 && rx < 12) continue; // bridge opening
+    if (rx > -12 && rx < 12) continue;
     bx(`l11-rail-s-${rx}`, rx, 0.45, CANAL_Z + CANAL_W / 2 + 0.5, 4.8, 0.85, 0.06, IRON_RAIL);
     bx(`l11-rail-n-${rx}`, rx, 0.45, CANAL_Z - CANAL_W / 2 - 0.5, 4.8, 0.85, 0.06, IRON_RAIL);
   }
+
+  // Canal Life Buoys Mounted on Posts
+  [-16, 16].forEach((bxPos, k) => {
+    sp(`l11-canal-buoy-${k}`, {
+      feetPosition: { x: bxPos, y: 0.2, z: CANAL_Z + CANAL_W / 2 + 0.5 },
+      primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.04, height: 1.1 },
+      material: STEEL_BRUSHED,
+      children: [
+        { feetPosition: { x: 0, y: 0.9, z: -0.1 }, primitive: { kind: "cylinder", radiusTop: 0.32, radiusBottom: 0.32, height: 0.08 }, rotation: { pitch: 90 }, material: { color: "#e74c3c" } },
+        { feetPosition: { x: 0, y: 0.9, z: -0.1 }, primitive: { kind: "cylinder", radiusTop: 0.16, radiusBottom: 0.16, height: 0.09 }, rotation: { pitch: 90 }, material: { color: "oklch(0.2 0.01 250)" } },
+      ],
+    });
+  });
 
   // Floating Wooden Boat Dock & Stairs
   bx("l11-dock-stairs", -14, -1.2, CANAL_Z + 7.5, 2.6, 2.2, 4.0, CONCRETE_CANAL);
   bx("l11-dock-pier", -14, -2.0, CANAL_Z + 2.5, 4.5, 0.35, 6.5, { ...T("worn-hardwood-grain", 1), color: "oklch(0.5 0.06 60)", roughness: 0.85 });
 
-  // The Grand Canal Bridge (carries avenue across canal)
+  // The Grand Canal Bridge
   bx("l11-bridge-deck", 0, -0.05, CANAL_Z, 17, 0.6, CANAL_W + 4, ASPHALT);
   bx("l11-bridge-arch-w", -8.5, -2.4, CANAL_Z, 1.2, 4.2, CANAL_W + 4, CONCRETE_CANAL);
   bx("l11-bridge-arch-e", 8.5, -2.4, CANAL_Z, 1.2, 4.2, CANAL_W + 4, CONCRETE_CANAL);
   bx("l11-bridge-parapet-w", -8.4, 0.5, CANAL_Z, 0.4, 0.95, CANAL_W + 4, CURB_MAT);
   bx("l11-bridge-parapet-e", 8.4, 0.5, CANAL_Z, 0.4, 0.95, CANAL_W + 4, CURB_MAT);
 
-  // Bridge Lamps (warm lanterns lighting the bridge at dusk)
+  // Bridge Warm Lanterns
   [-7.5, 7.5].forEach((lx, k) => {
     cyl(`l11-blamp-pole-${k}`, lx, 1.4, CANAL_Z, 0.06, 0.08, 1.8, IRON_RAIL);
     sp(`l11-blamp-light-${k}`, {
@@ -199,41 +268,256 @@ function lay(ctx) {
   });
 
   // ==========================================
-  // 4-6. THE CITY (art/level11/build.py models; scripts/lib/level11-city.js): the neoclassical grand tower with its skydeck terrace, the glass towers,
-  //      the strip mall, brick apartments, houses, the road grid and the canal out to the fog. Shelly: realistic, not blocky, interesting.
+  // 4. THE CITY BACKBONE (art/level11/build.py models)
   // ==========================================
   const city = layCity(ctx, { sp, bx, cyl });
   const TOWER_X = city.TOWER.x, TOWER_Z = city.TOWER.z, SKY_Y = 35.7;
   sp("l11-ntower-lobby-light", { feetPosition: { x: TOWER_X - 10, y: 4.5, z: TOWER_Z }, light: { kind: "point", color: "oklch(0.96 0.08 85)", intensity: 6.5, distance: 16 } });
-  // the Skydeck Express call panel beside the tower's entrance, and the way back down from the terrace
+
+  // Skydeck Express call panel & observation deck
   sp("l11-elev-btn-up", { tags: ["usable"], feetPosition: { x: TOWER_X - 8.55, y: 1.3, z: TOWER_Z + 4.5 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 0.2, height: 0.34, depth: 0.08 }, material: { color: "oklch(0.85 0.18 85)", emissive: "oklch(0.85 0.18 85)", emissiveIntensity: 2.0 }, behavior: "scripts/level11-use.js", state: { kind: "elevator-up", name: "Skydeck Express Elevator", verb: "Ascend to the Skydeck", dest: { x: TOWER_X - 5, y: SKY_Y + 0.1, z: TOWER_Z + 1 } } });
   sp("l11-elev-btn-down", { tags: ["usable"], feetPosition: { x: TOWER_X + 3.0, y: SKY_Y + 1.3, z: TOWER_Z + 5.6 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 0.2, height: 0.34, depth: 0.08 }, material: { color: "oklch(0.85 0.18 85)", emissive: "oklch(0.85 0.18 85)", emissiveIntensity: 2.0 }, behavior: "scripts/level11-use.js", state: { kind: "elevator-down", name: "Lobby Express Elevator", verb: "Descend to the street", dest: { x: TOWER_X - 12, y: 0.3, z: TOWER_Z + 4.5 } } });
   sp("l11-skydeck-binoculars", { tags: ["usable"], feetPosition: { x: TOWER_X - 5.2, y: SKY_Y, z: TOWER_Z - 4.5 }, rotation: { yaw: 90 }, primitive: { kind: "cylinder", radiusTop: 0.14, radiusBottom: 0.22, height: 1.35 }, material: STEEL_BRUSHED, behavior: "scripts/level11-use.js", state: { kind: "binoculars", name: "Panoramic Observation Viewfinder", verb: "Look through Viewfinder" }, children: [{ feetPosition: { x: 0, y: 1.3, z: -0.15 }, primitive: { kind: "box", width: 0.35, height: 0.18, depth: 0.45 }, material: STEEL_BRUSHED }] });
 
   // ==========================================
-  // 7. OFFICE UNDER RENOVATION (Wikidot Image 5)
+  // 5. SCENE 2: HIGH/LOW TRANSITION BLOCK WITH "SEDCO SPOTLIGHT" & PARKING LOT (Wikidot Image 2)
   // ==========================================
-  const RENO_X = -25; // east face at x=-16, behind the sidewalk (trees stand at -13.4)
+  const SEDCO_X = 22;
+  const SEDCO_Z = 15;
+  const SEDCO_W = 10;
+  const SEDCO_H = 4.4;
+  const SEDCO_D = 8;
+
+  // Sedco Building Shell
+  bx("l11-sedco-shell", SEDCO_X, 0.1, SEDCO_Z, SEDCO_W, SEDCO_H, SEDCO_D, SEDCO_BRICK);
+  bx("l11-sedco-roof-trim", SEDCO_X, SEDCO_H + 0.1, SEDCO_Z, SEDCO_W + 0.3, 0.3, SEDCO_D + 0.3, CURB_MAT);
+  cyl("l11-sedco-vent1", SEDCO_X - 2.5, SEDCO_H + 0.25, SEDCO_Z - 1.5, 0.4, 0.35, 0.6, STEEL_BRUSHED);
+  cyl("l11-sedco-vent2", SEDCO_X + 2.0, SEDCO_H + 0.25, SEDCO_Z + 1.2, 0.4, 0.35, 0.6, STEEL_BRUSHED);
+  bx("l11-sedco-ac", SEDCO_X + 2.5, SEDCO_H + 0.25, SEDCO_Z - 1.5, 1.4, 0.9, 1.2, STEEL_BRUSHED);
+
+  // Iconic Illuminated "SEDCO SPOTLIGHT" Horizontal Neon Sign
+  sp("l11-sedco-sign", {
+    feetPosition: { x: SEDCO_X - SEDCO_W / 2 - 0.08, y: SEDCO_H - 0.7, z: SEDCO_Z },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 7.2, height: 1.0, depth: 0.14 },
+    material: { color: "#111111" },
+    ui: `<div face="front" width="7.2m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#181818;border:3px solid #ff6a00;box-sizing:border-box;color:#ff6a00;font-family:Arial Black,sans-serif;font-weight:900;font-size:105px;letter-spacing:6px;text-shadow:0 0 16px #ff6a00">SEDCO SPOTLIGHT</div>`,
+  });
+
+  // Display Windows with Vintage Spotlight Display
+  bx("l11-sedco-glass", SEDCO_X - SEDCO_W / 2 - 0.05, 0.4, SEDCO_Z, 0.1, 2.6, 5.8, GLASS_TINT);
+  cyl("l11-sedco-spotlight1", SEDCO_X - SEDCO_W / 2 + 0.8, 1.2, SEDCO_Z - 1.5, 0.22, 0.28, 0.5, STEEL_BRUSHED, {
+    rotation: { pitch: 30, yaw: -30 },
+    children: [{ feetPosition: { x: 0, y: 0.5, z: 0 }, light: { kind: "point", color: "#ffe0a0", intensity: 3.5, distance: 8 } }],
+  });
+
+  // Interactive Sedco CCTV Surveillance Console
+  sp("l11-sedco-cctv", {
+    tags: ["usable"],
+    feetPosition: { x: SEDCO_X - SEDCO_W / 2 - 1.2, y: 0.1, z: SEDCO_Z - 2.8 },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 0.65, height: 1.1, depth: 0.5 },
+    material: STEEL_BRUSHED,
+    behavior: "scripts/level11-use.js",
+    state: { kind: "sedco-cctv", name: "Sedco Closed-Circuit Security Terminal", verb: "Cycle CCTV Surveillance" },
+    children: [
+      { feetPosition: { x: 0, y: 1.1, z: 0 }, primitive: { kind: "box", width: 0.55, height: 0.42, depth: 0.35 }, material: { color: "oklch(0.2 0.01 250)" } },
+      { feetPosition: { x: 0, y: 1.1, z: 0.18 }, primitive: { kind: "box", width: 0.45, height: 0.32, depth: 0.02 }, material: { color: "oklch(0.65 0.2 145)", emissive: "oklch(0.65 0.2 145)", emissiveIntensity: 2.2 } },
+    ],
+  });
+
+  // Open Transition Parking Lot
+  const LOT_X = 14;
+  const LOT_Z = 24;
+  bx("l11-sedco-lot", LOT_X, -0.04, LOT_Z, 9.5, 0.2, 18, ASPHALT);
+
+  [-4, 0, 4].forEach((bz, k) => {
+    bx(`l11-sedco-bumper-${k}`, LOT_X - 3.5, 0.08, LOT_Z + bz, 0.3, 0.18, 2.0, CURB_MAT);
+    bx(`l11-sedco-stall-${k}`, LOT_X, 0.06, LOT_Z + bz - 1.2, 6.0, 0.01, 0.12, YELLOW_PAINT, { physics: undefined });
+  });
+
+  cyl("l11-sedco-lamp-pole", LOT_X + 3.8, 0.1, LOT_Z - 7.5, 0.12, 0.15, 6.2, IRON_RAIL);
+  bx("l11-sedco-lamp-arm", LOT_X + 2.5, 6.1, LOT_Z - 7.5, 2.8, 0.1, 0.1, IRON_RAIL);
+  sp("l11-sedco-lamp-lum", {
+    feetPosition: { x: LOT_X + 1.2, y: 6.0, z: LOT_Z - 7.5 },
+    primitive: { kind: "box", width: 0.7, height: 0.18, depth: 0.35 },
+    material: STEEL_BRUSHED,
+    light: { kind: "point", color: "oklch(0.9 0.12 85)", intensity: 5.5, distance: 20 },
+  });
+
+  // ==========================================
+  // 6. SCENE 3: SOUTHWESTERN STRIP MALL WITH BLUE AWNINGS, CLINIC, LAB, PIZZERIA & ANTENNA (Wikidot Image 3)
+  // ==========================================
+  const MALL_X = -24;
+  const MALL_Z = 36;
+  const MALL_W = 16;
+  const MALL_H = 5.2;
+  const MALL_D = 22;
+
+  // Strip Mall Building Shell
+  bx("l11-mall-shell", MALL_X, 0.1, MALL_Z, MALL_W, MALL_H, MALL_D, STUCCO_MALL);
+  bx("l11-mall-sandstone-pil1", MALL_X + MALL_W / 2 - 0.2, 0.1, MALL_Z - MALL_D / 2 + 0.5, 0.4, MALL_H, 1.2, SANDSTONE_WALL);
+  bx("l11-mall-sandstone-pil2", MALL_X + MALL_W / 2 - 0.2, 0.1, MALL_Z + MALL_D / 2 - 0.5, 0.4, MALL_H, 1.2, SANDSTONE_WALL);
+  bx("l11-mall-roof-parapet", MALL_X, MALL_H + 0.1, MALL_Z, MALL_W + 0.2, 0.4, MALL_D + 0.2, CURB_MAT);
+
+  // Raised Concrete Walkway in Front of Stores
+  bx("l11-mall-walkway", MALL_X + MALL_W / 2 + 1.2, 0.22, MALL_Z, 2.4, 0.3, MALL_D, SIDEWALK);
+
+  // Wheelchair Access Ramp with White Metal Handrails
+  bx("l11-mall-ramp-slope", MALL_X + MALL_W / 2 + 1.2, 0.08, MALL_Z - MALL_D / 2 - 2.5, 2.4, 0.16, 5.0, SIDEWALK);
+  for (const rx of [-1.1, 1.1]) {
+    cyl(`l11-mall-ramp-post1-${rx}`, MALL_X + MALL_W / 2 + 1.2 + rx, 0.1, MALL_Z - MALL_D / 2 - 4.5, 0.03, 0.03, 0.9, { color: "#ffffff" });
+    cyl(`l11-mall-ramp-post2-${rx}`, MALL_X + MALL_W / 2 + 1.2 + rx, 0.2, MALL_Z - MALL_D / 2 - 2.5, 0.03, 0.03, 0.9, { color: "#ffffff" });
+    cyl(`l11-mall-ramp-post3-${rx}`, MALL_X + MALL_W / 2 + 1.2 + rx, 0.35, MALL_Z - MALL_D / 2 - 0.5, 0.03, 0.03, 0.9, { color: "#ffffff" });
+    bx(`l11-mall-ramp-rail-${rx}`, MALL_X + MALL_W / 2 + 1.2 + rx, 0.7, MALL_Z - MALL_D / 2 - 2.5, 0.04, 0.04, 4.8, { color: "#ffffff" });
+  }
+
+  // CONTINUOUS VIVID BLUE CANVAS AWNINGS (Wikidot Image 3)
+  bx("l11-mall-awning-1", MALL_X + MALL_W / 2 + 1.0, 3.2, MALL_Z - 6.5, 2.0, 0.12, 7.0, BLUE_AWNING, { rotation: { pitch: -16 } });
+  bx("l11-mall-awning-2", MALL_X + MALL_W / 2 + 1.0, 3.2, MALL_Z, 2.0, 0.12, 5.5, BLUE_AWNING, { rotation: { pitch: -16 } });
+  bx("l11-mall-awning-3", MALL_X + MALL_W / 2 + 1.0, 3.2, MALL_Z + 6.5, 2.0, 0.12, 7.0, BLUE_AWNING, { rotation: { pitch: -16 } });
+
+  // Storefront 1: Centro Dermatológico (Left)
+  sp("l11-mall-sign-derma", {
+    feetPosition: { x: MALL_X + MALL_W / 2 + 0.05, y: 4.1, z: MALL_Z - 6.5 },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 5.5, height: 0.85, depth: 0.06 },
+    material: { color: "#ffffff" },
+    ui: `<div face="front" width="5.5m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#ffffff;border:2px solid #0066cc;color:#0066cc;font-family:Arial,sans-serif;font-weight:900;font-size:75px"><span style="color:#00aa44;font-size:95px;margin-right:12px">+</span>CENTRO DERMATOLÓGICO</div>`,
+  });
+  bx("l11-mall-glass-derma", MALL_X + MALL_W / 2 + 0.02, 0.4, MALL_Z - 6.5, 0.08, 2.6, 5.5, GLASS_TINT);
+
+  // Storefront 2: IS LAB (Center)
+  sp("l11-mall-sign-islab", {
+    feetPosition: { x: MALL_X + MALL_W / 2 + 0.05, y: 4.1, z: MALL_Z },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 4.2, height: 0.85, depth: 0.06 },
+    material: { color: "#ffffff" },
+    ui: `<div face="front" width="4.2m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#ffffff;border:2px solid #0088cc;color:#0088cc;font-family:Arial Black,sans-serif;font-weight:900;font-size:95px">IS LAB</div>`,
+  });
+  bx("l11-mall-glass-islab", MALL_X + MALL_W / 2 + 0.02, 0.4, MALL_Z, 0.08, 2.6, 4.2, GLASS_TINT);
+
+  // Storefront 3: Marroka Pizzeria (Right - Enterable!)
+  sp("l11-mall-sign-pizza", {
+    feetPosition: { x: MALL_X + MALL_W / 2 + 0.05, y: 4.1, z: MALL_Z + 6.5 },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 5.5, height: 0.85, depth: 0.06 },
+    material: { color: "#181818" },
+    ui: `<div face="front" width="5.5m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#181818;border:2px solid #c0392b;color:#ffffff;font-family:Georgia,serif;text-align:center"><div style="font-size:90px;font-style:italic;font-weight:bold;color:#f39c12">Marroka</div><div style="font-size:40px;letter-spacing:6px;color:#e74c3c">PIZZERIA & TRATTORIA</div></div>`,
+  });
+  bx("l11-mall-glass-pizza", MALL_X + MALL_W / 2 + 0.02, 0.4, MALL_Z + 8.2, 0.08, 2.6, 2.4, GLASS_TINT);
+
+  // --- ENTERABLE MARROKA PIZZERIA INTERIOR ---
+  bx("l11-pizza-floor", MALL_X + 2, 0.36, MALL_Z + 6.5, 10, 0.06, 8, TERRACOTTA_TILES);
+  bx("l11-pizza-wall-div", MALL_X + 2, 0.38, MALL_Z + 2.5, 10, 4.6, 0.2, STUCCO_MALL);
+
+  // Brick Wood-Fired Pizza Oven
+  bx("l11-pizza-oven-base", MALL_X - 1.5, 0.38, MALL_Z + 8.5, 2.4, 1.2, 2.4, BRICK_BLDG);
+  cyl("l11-pizza-oven-dome", MALL_X - 1.5, 1.58, MALL_Z + 8.5, 1.1, 1.2, 1.0, BRICK_BLDG);
+  sp("l11-pizza-oven-fire", {
+    feetPosition: { x: MALL_X - 0.4, y: 1.1, z: MALL_Z + 8.5 },
+    primitive: { kind: "cylinder", radiusTop: 0.25, radiusBottom: 0.35, height: 0.4 },
+    material: { color: "oklch(0.65 0.22 40)", emissive: "oklch(0.65 0.22 40)", emissiveIntensity: 3.5 },
+    light: { kind: "point", color: "oklch(0.75 0.2 45)", intensity: 4.5, distance: 9 },
+  });
+
+  // Pizza Service Counter & Cutting Board
+  bx("l11-pizza-counter", MALL_X + 2.8, 0.38, MALL_Z + 7.5, 1.2, 1.1, 4.2, { ...T("worn-hardwood-grain", 1), color: "oklch(0.55 0.06 60)" });
+  bx("l11-pizza-boxes", MALL_X + 2.8, 1.5, MALL_Z + 6.2, 0.8, 0.4, 0.8, { color: "oklch(0.85 0.04 80)", roughness: 0.8 }, { physics: undefined });
+
+  // Interactive Fresh Slice of Marroka Pizza
+  sp("l11-pizza-slice", {
+    tags: ["usable"],
+    feetPosition: { x: MALL_X + 2.8, y: 1.48, z: MALL_Z + 8.0 },
+    primitive: { kind: "cylinder", radiusTop: 0.28, radiusBottom: 0.3, height: 0.04 },
+    material: { color: "oklch(0.72 0.18 65)" },
+    behavior: "scripts/level11-use.js",
+    state: { kind: "food-pizza", name: "Fresh Slice of Marroka Pizza", verb: "Eat Hot Pizza Slice" },
+    children: [
+      { feetPosition: { x: 0, y: 0.04, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.24, height: 0.02 }, material: { color: "oklch(0.55 0.22 30)" } },
+    ],
+  });
+
+  // Dining Bistro Table & Chairs
+  cyl("l11-pizza-table", MALL_X + 0.5, 0.38, MALL_Z + 4.5, 0.7, 0.7, 0.85, STEEL_BRUSHED);
+  cyl("l11-pizza-chair1", MALL_X + 0.5, 0.38, MALL_Z + 3.4, 0.25, 0.25, 0.55, STEEL_BRUSHED);
+  cyl("l11-pizza-chair2", MALL_X + 0.5, 0.38, MALL_Z + 5.6, 0.25, 0.25, 0.55, STEEL_BRUSHED);
+
+  // --- ROOFTOP COMMUNICATIONS RIG (Wikidot Image 3) ---
+  cyl("l11-mall-dish-base", MALL_X + 2.0, MALL_H + 0.3, MALL_Z - 5.0, 0.12, 0.15, 0.8, STEEL_BRUSHED);
+  cyl("l11-mall-dish-bowl", MALL_X + 2.0, MALL_H + 1.1, MALL_Z - 5.0, 1.2, 0.4, 0.35, { color: "#f0f0f0", roughness: 0.4 }, {
+    rotation: { pitch: 45, yaw: -45 },
+  });
+
+  const MAST_X = MALL_X - 2.0;
+  const MAST_Z = MALL_Z + 4.0;
+  bx("l11-mall-mast-base", MAST_X, MALL_H + 0.1, MAST_Z, 1.8, 0.6, 1.8, STEEL_BRUSHED);
+  const MAST_SEGS = [
+    { y: MALL_H + 0.7, h: 3.2, col: "#d63031" },
+    { y: MALL_H + 3.9, h: 3.2, col: "#ffffff" },
+    { y: MALL_H + 7.1, h: 3.2, col: "#d63031" },
+    { y: MALL_H + 10.3, h: 3.2, col: "#ffffff" },
+    { y: MALL_H + 13.5, h: 3.2, col: "#d63031" },
+  ];
+  MAST_SEGS.forEach((seg, k) => {
+    cyl(`l11-mall-mast-seg-${k}`, MAST_X, seg.y, MAST_Z, 0.18 - k * 0.02, 0.22 - k * 0.02, seg.h, { color: seg.col, metalness: 0.7 });
+  });
+  sp("l11-mall-mast-beacon", {
+    feetPosition: { x: MAST_X, y: MALL_H + 16.8, z: MAST_Z },
+    primitive: { kind: "sphere", radius: 0.22 },
+    material: { color: "oklch(0.65 0.25 25)", emissive: "oklch(0.65 0.25 25)", emissiveIntensity: 4.5 },
+    light: { kind: "point", color: "oklch(0.65 0.25 25)", intensity: 5.0, distance: 35 },
+  });
+
+  // Strip Mall Parking Apron
+  const MALL_LOT_X = MALL_X + MALL_W / 2 + 5.5;
+  bx("l11-mall-lot", MALL_LOT_X, -0.04, MALL_Z, 6.2, 0.2, MALL_D, ASPHALT);
+  [-6, 0, 6].forEach((mz, k) => {
+    bx(`l11-mall-bumper-${k}`, MALL_LOT_X - 1.8, 0.08, MALL_Z + mz, 0.3, 0.18, 2.0, CURB_MAT);
+    bx(`l11-mall-stall-${k}`, MALL_LOT_X + 0.8, 0.06, MALL_Z + mz - 1.1, 4.5, 0.01, 0.12, WHITE_PAINT, { physics: undefined });
+  });
+
+  // ==========================================
+  // 7. SCENE 5: OFFICE UNDER RENOVATION (Wikidot Image 5)
+  // ==========================================
+  const RENO_X = -25;
   const RENO_Z = 0;
   const RENO_W = 18;
-  const RENO_D = 18; // clear of the 6.1 door barricade at z 9.5+
+  const RENO_D = 18;
 
-  // Building Shell
-  // hollow shell: four walls and a roof, so the office inside is a room you walk into
-  { const x0 = RENO_X - RENO_W / 2, x1 = RENO_X + RENO_W / 2, z0 = RENO_Z - RENO_D / 2, z1 = RENO_Z + RENO_D / 2, H = 8.5, t = 0.4;
-    // one hollow two-storey brick building (art/level11/build.py reno_office): storefront east, open door at z -2..0, scaffold and sheeting on its north face
-    md("l11-reno-shell", "reno_office", RENO_X, 0, RENO_Z, { brick: { ...BRICK_BLDG, repeat: [2.4, 2.4] }, metal: STEEL, wood: WOOD, woodOld: WOOD_OLD, concrete: { ...T("smooth-cold-poured-concrete-wall", 1.4), roughness: 0.75 } }, "mesh"); }
+  // Real modelled shell from wisp (art/level11/build.py reno_shell)
+  md("l11-reno-shell", "reno_shell", RENO_X, 0, RENO_Z, { brick: BRICK_BLDG, concrete: SIDEWALK, trim: CURB_MAT, dark: { color: "oklch(0.25 0.01 250)" } }, "mesh");
   bx("l11-reno-floor", RENO_X, 0.22, RENO_Z, RENO_W - 0.6, 0.1, RENO_D - 0.6, SIDEWALK);
 
-  // Large Glass Display Windows Showing the Renovation
-  // the storefront glass is part of the reno_office model
+  // Large Glass Windows into Renovation Office
+  bx("l11-reno-glass-e", RENO_X + RENO_W / 2 - 0.2, 0.2, 4, 0.1, 4.2, 8, GLASS_TINT);
+  bx("l11-reno-glass-e2", RENO_X + RENO_W / 2 - 0.2, 0.2, -5, 0.1, 4.2, 6, GLASS_TINT);
 
-  // Exposed Cylindrical Concrete Columns
+  // Cylindrical Concrete Columns
   [[-29, -5], [-21, -5], [-29, 5], [-21, 5]].forEach(([cx, cz], k) => {
     cyl(`l11-reno-col-${k}`, cx, 0.2, cz, 0.42, 0.42, 4.8, PILLAR_MAT);
   });
 
-  // Contractor Step Ladder (climbable!)
+  // --- SUSPENDED DROP-CEILING GRID & DUCTWORK (Wikidot Image 5) ---
+  for (let gx = -31; gx <= -19; gx += 2.4) {
+    bx(`l11-reno-grid-x-${Math.round(gx)}`, gx, 4.6, RENO_Z, 0.04, 0.06, 16.0, STEEL_BRUSHED);
+  }
+  for (let gz = -7; gz <= 7; gz += 2.4) {
+    bx(`l11-reno-grid-z-${Math.round(gz)}`, RENO_X, 4.6, gz, 16.0, 0.06, 0.04, STEEL_BRUSHED);
+  }
+  // Silver Insulation Foil Blankets in Ceiling Void
+  bx("l11-reno-foil1", -26, 4.85, -2, 5.0, 0.04, 4.0, SILVER_FOIL);
+  bx("l11-reno-foil2", -23, 4.85, 3, 4.5, 0.04, 3.5, SILVER_FOIL);
+  // HVAC Ducting
+  bx("l11-reno-duct-main", RENO_X, 5.4, 0, 15.0, 0.7, 0.9, STEEL_BRUSHED);
+  bx("l11-reno-duct-branch", -27, 5.4, 3.5, 0.8, 0.6, 6.0, STEEL_BRUSHED);
+
+  // Unfinished Drywall Partition Boards
+  bx("l11-drywall-stack", -28.5, 0.22, -4.5, 1.2, 2.4, 0.35, DRYWALL_MAT, { rotation: { pitch: 12 } });
+  bx("l11-drywall-wall-w", -25, 0.22, -6.8, 6.5, 4.2, 0.15, DRYWALL_MAT);
+  bx("l11-reno-int-glass", -23, 0.22, 1.5, 0.08, 4.2, 6.0, GLASS_TINT);
+
+  // Contractor Step Ladder (climbable in center of room!)
   sp("l11-reno-ladder", {
     tags: ["usable"],
     feetPosition: { x: -25, y: 0.2, z: 0 },
@@ -260,11 +544,21 @@ function lay(ctx) {
     ],
   });
 
-  // Work Table with City Blueprints
+  // Work Table with City Blueprints & B.R.C. Task Clipboard
   bx("l11-reno-table", -27, 0.2, 3, 2.4, 0.85, 1.2, { ...T("worn-hardwood-grain", 1), color: "oklch(0.55 0.06 65)" });
   bx("l11-reno-blueprints", -27, 1.06, 3, 1.6, 0.02, 0.9, { color: "oklch(0.4 0.12 240)", roughness: 0.8 }, { physics: undefined });
 
-  // Contractor Supply Tool Chest
+  // Interactive B.R.C. Work Order Clipboard
+  sp("l11-reno-clipboard", {
+    tags: ["usable"],
+    feetPosition: { x: -26.5, y: 1.06, z: 2.6 },
+    primitive: { kind: "box", width: 0.35, height: 0.04, depth: 0.45 },
+    material: { color: "oklch(0.7 0.08 70)" },
+    behavior: "scripts/level11-use.js",
+    state: { kind: "brc-clipboard", name: "B.R.C. Renovation Work Order", verb: "Read B.R.C. Work Order" },
+  });
+
+  // Contractor Heavy Tool Chest
   sp("l11-reno-chest", {
     tags: ["usable"],
     feetPosition: { x: -28.5, y: 0.2, z: 3 },
@@ -280,7 +574,7 @@ function lay(ctx) {
   const BARRICADE_X = -32;
   const BARRICADE_Z = 12;
 
-  // Wood Pallet Barricade across Alleyway
+  // Real modelled pallet and corrugated barricades from wisp
   md("l11-barricade-wood1", "barricade_pallets", BARRICADE_X, 0, BARRICADE_Z - 2.5, { wood: WOOD, woodOld: WOOD_OLD });
   md("l11-barricade-wood2", "barricade_pallets", BARRICADE_X, 0, BARRICADE_Z + 2.5, { wood: WOOD, woodOld: WOOD_OLD }, "box", { rotation: { yaw: 180 } });
   md("l11-barricade-corrugated", "corrugated", BARRICADE_X, 0, BARRICADE_Z, { corr: { ...STEEL, color: "oklch(0.8 0.01 240)" }, rust: RUST, metal: STEEL });
@@ -303,7 +597,6 @@ function lay(ctx) {
     ui: `<div face="front" width="1.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Georgia,serif;font-style:italic;color:#333333;text-align:center"><div style="font-size:60px;color:#c01020">For my little strawberry</div><div style="font-size:28px">Tamsin Clarke · We will never stop searching</div></div>`,
   });
 
-  // Memorial Candle Flame
   sp("l11-memorial-candle", {
     feetPosition: { x: BARRICADE_X + 0.8, y: 0.1, z: BARRICADE_Z + 1.2 },
     primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.04, height: 0.22 },
@@ -313,30 +606,56 @@ function lay(ctx) {
     ],
   });
 
-  // Dimensional Rift beyond the barricade
   sp("l11-anomalous-rift", {
     feetPosition: { x: BARRICADE_X - 6, y: 1.4, z: BARRICADE_Z },
     fx: { script: RIFT_VOID },
   });
 
   // ==========================================
-  // 9. STREET FURNITURE & REALISTIC DETAILS
+  // 9. STREET FURNITURE & LIVING DETAILS
   // ==========================================
-  // the street: lamps, trees, benches, parked cars, billboards, manholes and a subway stair (scripts/lib/level11-city.js)
   const street = layStreet(ctx, { sp, bx, cyl });
 
+  // First Capital Municipal Street ATM
+  sp("l11-atm", {
+    tags: ["usable"],
+    feetPosition: { x: 9.0, y: 0.1, z: 8.5 },
+    rotation: { yaw: -90 },
+    primitive: { kind: "box", width: 0.9, height: 1.9, depth: 0.8 },
+    material: STEEL_BRUSHED,
+    behavior: "scripts/level11-use.js",
+    state: { kind: "atm", name: "First Capital Bank ATM", verb: "Withdraw Capital Credits" },
+    children: [
+      { feetPosition: { x: 0, y: 1.2, z: 0.41 }, primitive: { kind: "box", width: 0.55, height: 0.38, depth: 0.02 }, material: { color: "#00d2d3", emissive: "#00d2d3", emissiveIntensity: 2.5 } },
+      { feetPosition: { x: 0, y: 1.7, z: 0 }, primitive: { kind: "box", width: 0.85, height: 0.25, depth: 0.75 }, material: { color: "#10ac84" } },
+    ],
+  });
+
+  // Almond Water Street Vending Machine
+  sp("l11-vending", {
+    tags: ["usable"],
+    feetPosition: { x: -8.8, y: 0.1, z: 20 },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 1.2, height: 2.1, depth: 0.95 },
+    material: { color: "oklch(0.25 0.1 230)" },
+    behavior: "scripts/level11-use.js",
+    state: { kind: "vending", name: "Almond Water Vending Machine", verb: "Buy Cold Almond Water" },
+    children: [
+      { feetPosition: { x: 0, y: 1.2, z: 0.48 }, primitive: { kind: "box", width: 0.95, height: 1.1, depth: 0.02 }, material: { color: "#2980b9", emissive: "#2980b9", emissiveIntensity: 2.0 } },
+    ],
+  });
+
   // ==========================================
-  // SPAMTON'S ALLEY (Shelly's ask): a dead-end brick alley off the east street; E on the dumpster starts his battle (scripts/spamton-fight.js)
+  // 10. SPAMTON'S ALLEY & DUMPSTER
   // ==========================================
   {
     const AX = 44, Z0 = 19, LEN = 13, W = 4.2;
     const BRICK = { ...T("grimy-red-brick-wall", 2), color: "oklch(0.42 0.07 35)", roughness: 0.92 };
     const GRIME = { ...T("stained-concrete-floor", 3), color: "oklch(0.32 0.012 80)", roughness: 0.95 };
-    // the alley's three brick walls, steel back door, drainpipe and fire-escape stub as one model (art/level11/build.py spam_alley)
     md("l11-spam-wall-back", "spam_alley", AX, 0, Z0 + LEN / 2, { brick: BRICK, metal: STEEL, rust: RUST, door: { ...STEEL, color: "oklch(0.55 0.03 250)" }, concrete: GRIME }, "mesh");
     bx("l11-spam-floor", AX, 0.04, Z0 + LEN / 2, W, 0.08, LEN, GRIME);
     bx("l11-spam-puddle", AX - 0.6, 0.085, Z0 + 5, 1.6, 0.01, 1.1, { color: "oklch(0.2 0.02 240)", roughness: 0.05, metalness: 0.3 }, { physics: undefined });
-    // the dumpster: a green steel bin with a hinged lid; state.up = the player he is fighting (the lid flies open, he stands in it)
+
     sp("l11-spamton-dumpster", {
       tags: ["usable"],
       feetPosition: { x: AX + 0.4, y: 0.08, z: Z0 + LEN - 1.1 },
@@ -350,11 +669,11 @@ function lay(ctx) {
         { id: "rim", feetPosition: { x: 0, y: 1.1, z: 0 }, primitive: { kind: "box", width: 2.08, height: 0.12, depth: 1.22 }, material: { color: "oklch(0.3 0.05 150)", metalness: 0.6, roughness: 0.5 } },
         { id: "wheel-l", feetPosition: { x: -0.8, y: -0.08, z: 0.4 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.08, height: 0.08 }, rotation: { roll: 90 }, material: { color: "#111" } },
         { id: "wheel-r", feetPosition: { x: 0.8, y: -0.08, z: 0.4 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.08, height: 0.08 }, rotation: { roll: 90 }, material: { color: "#111" } },
-        { id: "spamton", visible: false, feetPosition: { x: 0, y: 0.75, z: 0 }, model: { id: "/cdn/value.e9d590488230d5a2ed1f5feea9e1f31046fb80e5d52f61e88491b67335bc79bb.glb", forward: "+z" } }, // one of Shelly's three posed Spamtons, stood upright (art/spamton/build.py), 1.3 m, facing the alley mouth
+        { id: "spamton", visible: false, feetPosition: { x: 0, y: 0.75, z: 0 }, model: { id: "/cdn/value.e9d590488230d5a2ed1f5feea9e1f31046fb80e5d52f61e88491b67335bc79bb.glb", forward: "+z" } },
         { id: "glow", feetPosition: { x: 0, y: 1.3, z: 0 }, light: { kind: "point", color: "#ff6fd0", intensity: 0, distance: 5 } },
       ],
     });
-    // the dressing: bags, a crushed box, a buzzing caged bulb over the door that never opens
+
     for (const [i, x, z, s] of [[0, AX - 1.3, Z0 + LEN - 0.8, 0.7], [1, AX - 0.8, Z0 + LEN - 1.6, 0.55], [2, AX + 1.6, Z0 + LEN - 2.4, 0.5]])
       sp(`l11-spam-bag-${i}`, { feetPosition: { x, y: 0.08, z }, primitive: { kind: "sphere", radius: s / 2 }, scale: { x: 1.15, y: 0.85, z: 1 }, material: { color: "oklch(0.18 0.01 260)", roughness: 0.35 }, physics: "static", castShadow: false });
     bx("l11-spam-box", AX - 1.4, 0.08, Z0 + 6.5, 0.7, 0.35, 0.5, { color: "oklch(0.55 0.07 70)", roughness: 0.95 }, { rotation: { yaw: 23 }, castShadow: false });
@@ -363,27 +682,9 @@ function lay(ctx) {
       ui: `<div face="front" width="1.1m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:Arial Black,Arial,sans-serif;color:#1b1b1b;font-size:64px;text-align:center;line-height:1">NO DUMPING<br><span style="font-size:34px;color:#b01818">VIOLATORS WILL BE [[PROSECUTED]]</span></div>` });
   }
 
-  // Overhead Traffic Light Gantry at Intersection Z: 12
-  cyl("l11-tlight-mast", -7.8, 0.1, 7.5, 0.16, 0.2, 5.8, IRON_RAIL);
-  bx("l11-tlight-arm", 0, 5.7, 7.5, 15.5, 0.14, 0.14, IRON_RAIL);
-  // 3-Aspect Signal Housings (Green, Amber, Red)
-  [-3.5, 3.5].forEach((hx, k) => {
-    sp(`l11-tlight-sig-${k}`, {
-      feetPosition: { x: hx, y: 5.1, z: 7.5 },
-      primitive: { kind: "box", width: 0.4, height: 1.1, depth: 0.3 },
-      material: { color: "oklch(0.2 0.01 250)" },
-      children: [
-        { feetPosition: { x: 0, y: 0.35, z: 0.16 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.05 }, rotation: { pitch: 90 }, material: { color: "oklch(0.85 0.22 145)", emissive: "oklch(0.85 0.22 145)", emissiveIntensity: 3.0 } },
-        { feetPosition: { x: 0, y: 0, z: 0.16 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.05 }, rotation: { pitch: 90 }, material: { color: "oklch(0.3 0.05 85)" } },
-        { feetPosition: { x: 0, y: -0.35, z: 0.16 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.05 }, rotation: { pitch: 90 }, material: { color: "oklch(0.3 0.05 25)" } },
-      ],
-    });
-  });
-
   // ==========================================
-  // 10. DRIVABLE YELLOW CITY TAXI CAB ("Level 11 Express")
+  // 11. DRIVABLE YELLOW CITY TAXI CAB ("Level 11 Express")
   // ==========================================
-  // Parked at the avenue curb at X: -5.5, Z: 6
   sp("l11-taxi", {
     tags: ["usable", "vehicle", "taxi"],
     feetPosition: { x: -5.5, y: 0.08, z: 6 },
@@ -394,38 +695,29 @@ function lay(ctx) {
     primitive: { kind: "box", width: 2.2, height: 1.1, depth: 4.6 },
     material: TAXI_YELLOW,
     children: [
-      // Cabin Roof
       { feetPosition: { x: 0, y: 1.05, z: -0.2 }, primitive: { kind: "box", width: 1.9, height: 0.65, depth: 2.3 }, material: TAXI_YELLOW },
-      // Windshield & Rear Glass
       { feetPosition: { x: 0, y: 1.08, z: -1.35 }, rotation: { pitch: -28 }, primitive: { kind: "box", width: 1.82, height: 0.65, depth: 0.05 }, material: GLASS_TINT },
       { feetPosition: { x: 0, y: 1.08, z: 0.95 }, rotation: { pitch: 28 }, primitive: { kind: "box", width: 1.82, height: 0.65, depth: 0.05 }, material: GLASS_TINT },
-      // Side Windows
       { feetPosition: { x: -0.96, y: 1.08, z: -0.2 }, primitive: { kind: "box", width: 0.05, height: 0.55, depth: 2.1 }, material: GLASS_TINT },
       { feetPosition: { x: 0.96, y: 1.08, z: -0.2 }, primitive: { kind: "box", width: 0.05, height: 0.55, depth: 2.1 }, material: GLASS_TINT },
-      // Illuminated Roof TAXI Sign
       { feetPosition: { x: 0, y: 1.75, z: -0.2 }, primitive: { kind: "box", width: 0.65, height: 0.22, depth: 0.25 }, material: { color: "oklch(0.95 0.15 85)", emissive: "oklch(0.95 0.15 85)", emissiveIntensity: 2.5 } },
-      // Chrome Bumpers
       { feetPosition: { x: 0, y: 0.18, z: -2.35 }, primitive: { kind: "box", width: 2.1, height: 0.2, depth: 0.15 }, material: STEEL_BRUSHED },
       { feetPosition: { x: 0, y: 0.18, z: 2.35 }, primitive: { kind: "box", width: 2.1, height: 0.2, depth: 0.15 }, material: STEEL_BRUSHED },
-      // Headlights with Forward Light Beam
       { feetPosition: { x: -0.75, y: 0.5, z: -2.32 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.06 }, rotation: { pitch: 90 }, material: { color: "#ffffff", emissive: "#ffffff", emissiveIntensity: 3.5 } },
       { feetPosition: { x: 0.75, y: 0.5, z: -2.32 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.06 }, rotation: { pitch: 90 }, material: { color: "#ffffff", emissive: "#ffffff", emissiveIntensity: 3.5 } },
       { feetPosition: { x: 0, y: 0.5, z: -3.5 }, light: { kind: "point", color: "oklch(0.98 0.08 90)", intensity: 7.5, distance: 24, shadow: { enabled: false } } },
-      // Rear Red Taillights
       { feetPosition: { x: -0.85, y: 0.55, z: 2.32 }, primitive: { kind: "box", width: 0.28, height: 0.15, depth: 0.05 }, material: { color: "oklch(0.55 0.22 25)", emissive: "oklch(0.55 0.22 25)", emissiveIntensity: 2.0 } },
       { feetPosition: { x: 0.85, y: 0.55, z: 2.32 }, primitive: { kind: "box", width: 0.28, height: 0.15, depth: 0.05 }, material: { color: "oklch(0.55 0.22 25)", emissive: "oklch(0.55 0.22 25)", emissiveIntensity: 2.0 } },
     ],
   });
 
-  // Front Wheels (Steerable children of vehicle)
   cyl("l11-taxi-wheel-fl", -1.05, 0.28, -1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
   cyl("l11-taxi-wheel-fr", 1.05, 0.28, -1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
-  // Rear Wheels
   cyl("l11-taxi-wheel-rl", -1.05, 0.28, 1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
   cyl("l11-taxi-wheel-rr", 1.05, 0.28, 1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
 
   // ==========================================
-  // 11. CANAL WATER SKIFF (Moored at Floating Dock)
+  // 12. DRIVABLE CANAL MOTOR SKIFF
   // ==========================================
   sp("l11-boat", {
     tags: ["usable", "vehicle", "boat"],
@@ -443,7 +735,7 @@ function lay(ctx) {
   });
 
   // ==========================================
-  // 12. WORKING STREET PAYPHONE BOOTH
+  // 13. STREET PAYPHONE BOOTH
   // ==========================================
   sp("l11-payphone", {
     tags: ["usable"],
@@ -454,19 +746,16 @@ function lay(ctx) {
     behavior: "scripts/level11-use.js",
     state: { kind: "payphone", name: "Municipal Street Payphone", verb: "Answer Payphone" },
     children: [
-      // Glass Booth Panels
       { feetPosition: { x: -0.48, y: 1.1, z: 0 }, primitive: { kind: "box", width: 0.04, height: 1.8, depth: 0.9 }, material: GLASS_TINT },
       { feetPosition: { x: 0.48, y: 1.1, z: 0 }, primitive: { kind: "box", width: 0.04, height: 1.8, depth: 0.9 }, material: GLASS_TINT },
-      // Telephone Housing & Handset
       { feetPosition: { x: 0, y: 1.35, z: -0.38 }, primitive: { kind: "box", width: 0.32, height: 0.48, depth: 0.18 }, material: { color: "oklch(0.25 0.01 250)" } },
       { feetPosition: { x: 0, y: 1.45, z: -0.26 }, primitive: { kind: "box", width: 0.28, height: 0.08, depth: 0.08 }, material: { color: "oklch(0.15 0.01 250)" } },
-      // Illuminated Top Sign
       { feetPosition: { x: 0, y: 2.2, z: 0 }, primitive: { kind: "box", width: 0.9, height: 0.25, depth: 0.9 }, material: { color: "oklch(0.4 0.16 240)", emissive: "oklch(0.4 0.16 240)", emissiveIntensity: 2.0 } },
     ],
   });
 
   // ==========================================
-  // 13. AL'S LEVEL 11 HOT DOG & PRETZEL CART
+  // 14. AL'S HOT DOG & PRETZEL CART
   // ==========================================
   sp("l11-foodcart", {
     feetPosition: { x: 9.2, y: 0.1, z: 15 },
@@ -475,16 +764,13 @@ function lay(ctx) {
     material: STEEL_BRUSHED,
     fx: { script: STEAM_CART },
     children: [
-      // Umbrella
       { feetPosition: { x: 0, y: 1.8, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 1.8 }, material: STEEL_BRUSHED },
       { feetPosition: { x: 0, y: 2.7, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.1, radiusBottom: 1.4, height: 0.45 }, material: { color: "oklch(0.85 0.18 85)", roughness: 0.7 } },
-      // Condiment Bottles (Mustard / Ketchup)
       { feetPosition: { x: 0.35, y: 1.02, z: 0.4 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 0.22 }, material: { color: "oklch(0.85 0.2 85)" } },
       { feetPosition: { x: 0.35, y: 1.02, z: 0.6 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 0.22 }, material: { color: "oklch(0.55 0.22 25)" } },
     ],
   });
 
-  // Interactive Pretzel Tray
   sp("l11-food-pretzel", {
     tags: ["usable"],
     parent: "l11-foodcart",
@@ -495,7 +781,6 @@ function lay(ctx) {
     state: { kind: "food-pretzel", name: "Hot Salted Capital Pretzel", verb: "Buy Hot Pretzel" },
   });
 
-  // Interactive Hot Dog Grill
   sp("l11-food-hotdog", {
     tags: ["usable"],
     parent: "l11-foodcart",
@@ -507,17 +792,15 @@ function lay(ctx) {
   });
 
   // ==========================================
-  // 14. M.E.G. BASE BETA FORWARD OUTPOST
+  // 15. M.E.G. BASE BETA FORWARD OUTPOST
   // ==========================================
   const OUTPOST_X = 22;
   const OUTPOST_Z = -14;
 
-  // Sandbag Emplacements
   md("l11-meg-sandbag1", "sandbags", OUTPOST_X - 6, 0.1, OUTPOST_Z - 3, { burlap: { ...T("burlap-sack-weave", 2), color: "oklch(0.8 0.05 75)" } }, "box", { rotation: { yaw: 180 } });
   md("l11-meg-sandbag2", "sandbags", OUTPOST_X - 6, 0.1, OUTPOST_Z + 3, { burlap: { ...T("burlap-sack-weave", 2), color: "oklch(0.8 0.05 75)" } }, "box", { rotation: { yaw: 180 } });
-
-  // M.E.G. Command Canopy & Table
   md("l11-meg-table", "meg_table", OUTPOST_X, 0.1, OUTPOST_Z, { metal: STEEL_BRUSHED });
+
   sp("l11-meg-terminal", {
     tags: ["usable"],
     feetPosition: { x: OUTPOST_X, y: 0.95, z: OUTPOST_Z },
@@ -530,7 +813,6 @@ function lay(ctx) {
     ],
   });
 
-  // M.E.G. Supply Cache Chest
   sp("l11-meg-cache", {
     tags: ["usable"],
     feetPosition: { x: OUTPOST_X + 2.5, y: 0.1, z: OUTPOST_Z - 2 },
@@ -540,7 +822,6 @@ function lay(ctx) {
     state: { kind: "supply-chest", name: "M.E.G. Emergency Rations Crate", verb: "Salvage Supplies" },
   });
 
-  // M.E.G. Operative Vance
   sp("l11-meg-agent-vance", {
     tags: ["npc", "meg"],
     feetPosition: { x: OUTPOST_X - 4.5, y: 0.1, z: OUTPOST_Z },
@@ -561,9 +842,8 @@ function lay(ctx) {
   });
 
   // ==========================================
-  // 15. FRIENDLY LEVEL 11 ENTITIES (Level 11 Effect)
+  // 16. DOCILE LEVEL 11 ENTITIES (Level 11 Effect)
   // ==========================================
-  // Friendly Hound lying on sidewalk rug (Wikidot lore: entities become docile)
   bx("l11-hound-rug", 8.8, 0.1, -5, 1.8, 0.02, 1.4, { ...T("worn-canvas-fabric", 1), color: "oklch(0.45 0.06 60)" }, { physics: undefined });
   sp("l11-friendly-hound", {
     tags: ["usable", "pet"],
@@ -580,7 +860,6 @@ function lay(ctx) {
     },
   });
 
-  // Commuter Faceling in business trench coat walking the sidewalk
   sp("l11-commuter-faceling", {
     tags: ["npc", "faceling"],
     feetPosition: { x: -11.5, y: 0.1, z: 24 },
@@ -598,16 +877,58 @@ function lay(ctx) {
   });
 }
 
-// a place builds itself in tick, once per version (the way every other level here does); the version is written first so a throw cannot repeat the whole build every second.
-// The level's slow pulse (the payphone, the city's living parts) runs here too: a place program has one loop, tick, and no update.
-const mem = { ringAt: 0, adAt: 0 };
+// Master tick simulation loop
+const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
   if (!ctx.place.players?.length) return;
   const st = ctx.place.state, now = ctx.now();
   if ((st.builtV ?? 0) < V) { st.builtV = V; lay(ctx); }
   if (!mem.ringAt) mem.ringAt = now + 35000;
-  tickCity(ctx, mem, heard); // billboards, parked cars, far-off sirens (scripts/lib/level11-city.js)
-  if (now > mem.ringAt) { // a distant phone ring to guide wanderers
+  tickCity(ctx, mem, heard);
+
+  // Dynamic traffic light controller cycling green -> amber -> red
+  if (!mem.lightAt || now > mem.lightAt) {
+    mem.lightPhase = (mem.lightPhase + 1) % 3;
+    // 0: Green (22s), 1: Amber (4s), 2: Red (22s)
+    mem.lightAt = now + (mem.lightPhase === 1 ? 4000 : 22000);
+
+    const isGreen = mem.lightPhase === 0;
+    const isAmber = mem.lightPhase === 1;
+    const isRed = mem.lightPhase === 2;
+
+    [-3.5, 3.5].forEach((hx, k) => {
+      const sig = ctx.getObject(`l11-tlight-sig-${k}`);
+      if (sig?.children) {
+        if (sig.children[0]) {
+          sig.children[0].material = isGreen
+            ? { color: "oklch(0.85 0.22 145)", emissive: "oklch(0.85 0.22 145)", emissiveIntensity: 3.2 }
+            : { color: "oklch(0.25 0.05 145)" };
+        }
+        if (sig.children[1]) {
+          sig.children[1].material = isAmber
+            ? { color: "oklch(0.85 0.2 85)", emissive: "oklch(0.85 0.2 85)", emissiveIntensity: 3.2 }
+            : { color: "oklch(0.25 0.05 85)" };
+        }
+        if (sig.children[2]) {
+          sig.children[2].material = isRed
+            ? { color: "oklch(0.65 0.24 25)", emissive: "oklch(0.65 0.24 25)", emissiveIntensity: 3.2 }
+            : { color: "oklch(0.25 0.05 25)" };
+        }
+      }
+    });
+
+    [-7.7, 7.7].forEach((sx, k) => {
+      const pedsig = ctx.getObject(`l11-pedsig-${k}`);
+      if (pedsig) {
+        pedsig.ui = isGreen
+          ? `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:120px;text-align:center">WALK</div>`
+          : `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ff4400;font-family:Arial,sans-serif;font-weight:900;font-size:100px;text-align:center">WAIT</div>`;
+      }
+    });
+  }
+
+  // Periodic distant phone ring
+  if (now > mem.ringAt) {
     mem.ringAt = now + 45000 + ctx.random() * 30000;
     const phone = ctx.getObject("l11-payphone");
     if (phone) heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-old-payphone-mechanical-bell-ringing-loop.mp3", position: phone.feetPosition, volume: 0.75, maxDistance: 32 });

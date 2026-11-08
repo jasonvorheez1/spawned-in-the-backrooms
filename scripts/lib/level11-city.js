@@ -82,7 +82,7 @@ export function layCity(ctx, h) {
   if (!DBG.buildings) return { TOWER: { x: 27, z: 31 }, nBuildings: 0 };
   put("l11-hero-mall", "mall", -24, -57, -90, { materials: dressOf("mall", 0.3) });
   put("l11-hero-glass", "glass_a", 28, -58, 90, { materials: dressOf("glass_a", 0.5) });
-  put("l11-hero-brick1", "brick_a", -27, 35, -90, { materials: dressOf("brick_a", 0.2) });
+  put("l11-hero-brick1", "brick_a", -27, 85, -90, { materials: dressOf("brick_a", 0.2) });
   put("l11-hero-brick2", "brick_b", 31, -3, 90, { materials: dressOf("brick_b", 0.7) });
   put("l11-hero-house1", "house", -30, 57, -90, { materials: dressOf("house", 0.6) });
   put("l11-hero-mall2", "mall", 26, 62, 90, { materials: dressOf("mall", 0.8) });
