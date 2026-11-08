@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2062,
-  "updatedAt": "2026-11-08T18:00:56.632Z",
-  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Shared player, NPC, loot, combat and presentation systems support those levels; Level 11 now connects its B.N.T.G. house sale to a separate, furnished home interior. Worldwright Studio is a creator-only workbench mod whose one-run primer removes itself on completion.",
+  "basedOnSpecVersion": 2070,
+  "updatedAt": "2026-11-08T18:05:26.273Z",
+  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Shared player, NPC, loot, combat and presentation systems support those levels; Level 11 connects its B.N.T.G. house sale to a separate, furnished home interior. Worldwright Studio is a creator-only workbench mod whose one-run primer removes itself on completion.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 / The Lobby, yellow maze and safe-room hub; authored fixtures, shifting walls and hunters, with generated Manila sanctuary, M.E.G. waypoint, lore props and noclip seam.",
@@ -12,12 +12,12 @@
     "places/level6, places/level61 (3D) - Lights Out and Snackrooms; Level 6.1 food-court shops, service, vending and Camp Amber connect onward to Level 11.",
     "places/level7 (3D) - ocean, Seawatch, Fort Surrender and house/room spaces; fishing can cast to coastal or deep water; places/debug is a test atmosphere and places/spamton a basement showroom/boss arena.",
     "places/level10 (3D, Bumper Crop) - heightmapped farm and M.E.G. Outpost Bountiful: farmhouse, barn, fields, well, oven, wheat, quest NPCs and lake dock/tackle cache; lake-deep exit to Level 7 and roads to Level 11.",
-    "places/level11 and places/home11 (3D) - Infinite City districts, canal, shops and quests; B.N.T.G. Realty sells the green house, whose separate furnished interior has a front-door return and usable bed."
+    "places/level11 and places/home11 (3D) - Infinite City districts, canal, shops and quests; B.N.T.G. Realty sells the green house, whose separate 2000s-style interior has carpet/vinyl, wallpaper border, furnished living room, bed and front-door return."
   ],
   "roots": [
     "world.config.yaml - multiplayer entry at main; declares player actions, camera, player template and HUD, routing, and an eight-player cap; Backspace opens the main menu.",
     "templates/player.js - ordered player behavior chain; locomotion/player precede swim, interactions and gameplay handlers, then spamton-fight, critter, main-menu and view3.",
-    "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and eye position; scripts/view3.js toggles player.state.tp.",
+    "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and eye position; first-person eye height uses camera.yml and switches to critterEye for the player's critter model; scripts/view3.js toggles player.state.tp.",
     "places/<place>/config.yaml + sim.js + cells - place setup and placements; sims build local layouts and tick local behavior, generally sleeping when empty.",
     "sim.js - world cadence and onOutOfBounds referee; players return true for normal respawn, creatures with state.home return home, others are destroyed for manager respawn.",
     "places/level10/sim.js - lays terrain-relative Bumper Crop scenery, outpost NPCs/props, wheat, lake dock and tackle cache, exits and ambience.",
@@ -46,7 +46,7 @@
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, clothing, karma/rep and level access; owns invSel and inventory action handling.",
-    "scripts/lib/fishing.js - player.state.fishingState session (bobber id, target coordinates, water/place/depth, phase and cast power), canonical water checks, bite/reel outcome and location-based loot selection; scripts/player.js handles session timers.",
+    "scripts/lib/fishing.js - player.state.fishingState session (bobber id, target coordinates, water/place/depth, phase and cast power), canonical water checks, bite/reel outcome and location-based loot selection; scripts/player.js handles session actions/timers.",
     "scripts/bobber.js - spawned bobber's owner/water/phase state and physical float, twitch and plunge behavior; it destroys itself when its owner/session is no longer valid.",
     "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes, skills, points, tags and sheet state; initialize/migrate/spend points, derive carry/combat values and tick companion perks.",
     "scripts/craft.js - craft actions, recipe costs/outputs/skills/bench gating, payout redemption and hunger/thirst drain; scripts/swim.js owns swimming/underwater/breath and swim session controls.",
@@ -58,33 +58,33 @@
     "world.config.yaml actions → templates/player.js behavior order: locomotion/player, swim, interact/grab/rest/mahjong/talk/build/stats/craft/OS/lockpick/spamton-fight/horde, then critter, main-menu and view3; configured routing invokes scripts/routing.js.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes player.state.aimPt → player.js crosshair-aligned shots.",
     "world.config.yaml Backspace → scripts/main-menu.js; menu actions and scripts/ui.js render menu/creator; creator C uses scripts/wardrobe-ui.js to emit dress actions → scripts/critter.js writes player look/outfits.",
-    "Spawn room selection → scripts/routing.js pickRoom: accepted ctx.requestedRoomId preserves invited/portal/party rooms; otherwise derives solo room from normalized userId/username (guest fallback); engine out-of-bounds → sim.js handles respawn/destruction.",
+    "Spawn room selection → scripts/routing.js pickRoom: accepted ctx.requestedRoomId preserves invited/portal/party rooms; otherwise derives solo room from normalized userId/username (guest fallback); engine out-of-bounds → sim.js handles respawn/home/destroy policy.",
     "Level threshold trigger → scripts/level-door.js maps paired IDs, writes arrival state.clipKind and calls companion.bring → nearby followers cross; player.js consumes clipKind into state.xfer.kind and scripts/noclip-ui.js renders transition.",
     "places/level10/sim.js → terrain-relative Bumper Crop structures and usable farm props; use events enter scripts/level10-use.js ears.press, which updates player harvest/crafting/resources and quest state.",
     "Level 10 harvest chain: wheat-patch → windmill-quern → hearth-oven; Cooper dialogue invokes handleDialogueQuest10, scarecrow/cellar use records pages and quest steps, and NPCs use authored chatter.yml conversations.",
     "Level 10 lake and Level 7 sea/Level 11 canal rod casts: scripts/player.js swing path → scripts/lib/fishing.js validates canonical place-specific water, spawns scripts/bobber.js and stores fishingState → scheduled fish handlers resolve catch.",
     "Level 11 sim.js → scripts/lib/level11-city.js lays city/street from level11-models.yml and art models; assembles renovation/sidewalk and local placements, then ticks city behavior.",
-    "Level 11 l11-realty-agent dialogue → scripts/talk.js / scripts/lib/level11-quests.js asks and confirms house purchase, debits player.state.cents and writes player.state.home11; scripts/level11-use.js checks ownership at the exterior door and crosses home11#home-from-l11.",
-    "places/home11/sim.js builds the interior; its door and bed use scripts/home11-door.js ears.press: exit crosses to level11#l11-from-home, bed applies rest behavior.",
+    "Level 11 l11-realty-agent dialogue → scripts/talk.js / scripts/lib/level11-quests.js asks and confirms house purchase, debits player.state.cents and writes player.state.home11; scripts/level11-use.js checks ownership at the exterior door and routes to home11.",
+    "places/home11/sim.js builds the interior; its door and bed use scripts/home11-door.js ears.press: exit crosses to level11#l11-from-home, bed applies rest behavior; builder fits CDN furniture models into its living room, bedroom and kitchen nook.",
     "Worldwright Studio play-button primer → creator-only one-run lesson; completion writes primer-completed.json, cleans its manifest attachment/action refs and deletes tutorial-primer.js so it is not automatically replayed."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light state and red-zone variants; Level 5 carries portal/quest props and scripts/l5-rats.js runs Boiler Room Death Rat packs.",
-    "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and scripts/l4-office.js/l4-office-geo.js/l4-home.js - office plan, cubicle/phone/printer variants, resident schedules and home claims; Level 7 has its own ocean and room systems.",
+    "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and scripts/l4-office.js/l4-office-geo.js/l4-home.js - office plan, cubicle/phone/printer variants, resident schedules and home claims; Level 7 has its own ocean and room spaces.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - NPC roles, dialogue, looks and routines vary by person; meg-agent.js supplies combat/social behavior; clothing/model helpers render characters.",
     "scripts/lib/craft.js + scripts/lib/data/craft.yml - recipes vary by category, costs, skill, bench and output; canonical weapon IDs connect recipe outputs to equip/combat/condition behavior.",
     "places/level21/sim.js + level21.yml + level21-geo.js - room blocks share generated hall/room structure; room type, zone height, lighting, decor and loot vary by authored grid data and deterministic hashes.",
     "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share service systems with varying menus and Faceling roles; rebuilds queue solids first and remove stale roots incrementally.",
-    "scripts/lib/level11-city.js + scripts/lib/data/level11-models.yml + art/level11 kits, l11-masonry/mall/sedco-shell and scripts/roadwork11.js - generated city/building forms reuse models and kits with seeded district, material and placement variations.",
-    "mods/worldwright-studio/lib/ editor families - shared book/card/document infrastructure supports distinct paper, sound/arrangement/piano-roll, model-detail, animation, level and workbench editors; specialized data/view/style modules vary each editor."
+    "scripts/lib/level11-city.js + scripts/lib/data/level11-models.yml + art/level11 kits, l11-masonry/mall/sedco-shell and scripts/roadwork11.js - generated city/building forms reuse models and kits with seeded district, material and placement variation.",
+    "mods/worldwright-studio/lib/ editor families - shared book/card/document infrastructure supports distinct paper, sound/arrangement/piano-roll, model-detail, animation, level and workbench editors; specialized data/view/style modules vary each tool."
   ],
   "probableOrphans": [],
   "migrationNotes": [
     "Level 2.1 grid is 30×30 at 4 m per cell (120 m square); keep level21.js passability/room zones, maze21path.js traversal, sim geometry/hound routing aligned, and roofAt in place state so ceiling checks survive ticks.",
     "Level 2.1 ↔ Level 2, Level 6 ↔ Level 6.1, Level 6.1 ↔ Level 11, and Level 10 ↔ Level 11 paired arrivals are owned by level-door.js; Level 10's lake-deep trigger targets level7#l7-from-l10.",
     "Level 10/184 configs use terrain10.js/terrain184.js heightmap and material queries; keep terrain-relative y placements and arrival/track regions aligned with sim scenery; Level 10 wheat decoration maxDistance is 120 m with 35 m fade.",
-    "Fishing casts use world-space positions, place-specific canonical water regions and height constants (Level 7 sea/parlor, Level 10 lake/pond, Level 11 canal); keep fishing.js checks aligned with sim geometry/water surfaces; bobbers are named and session-owned.",
+    "Fishing casts use world-space positions, place-specific canonical water regions and height constants (Level 7 sea/parlor, Level 10 lake/pond, Level 11 canal); keep fishing.js checks aligned with sim geometry/water surfaces; bobbers are named per-player sessions.",
     "Level 10 quest state is player.state.wheatQ/watcherQ/cellarQ (step 99 completed), plus wheat/flour/bread resource counts and pages; quest setters synchronize the shared player.state.quest HUD slot.",
-    "House ownership is per-player player.state.home11 and costs 250000 cents ($2,500); the Level 11 exterior and home11#home-from-l11 return depend on that ownership flow. Worldwright Studio primer completion is persistent in primer-completed.json and its lesson source is removed."
+    "House ownership is per-player player.state.home11 and costs 250000 cents ($2,500); the Level 11 exterior and home11#home-from-l11 return depend on that ownership flow. places/home11/sim.js uses place.state.builtV for rebuild versioning; camera.yml critterEye (1.39 m) places the first-person eye at the player's critter pupils, scaled by effectiveScale.y."
   ]
 }
