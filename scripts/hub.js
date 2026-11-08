@@ -111,10 +111,10 @@ function rideStep(ctx, s, ses) {
     ctx.view.camera = { eye: { x: -13, y: 7.8, z: -2 }, aim: { x: -22, y: 6.5, z: -16 }, fov: 55 } }
   if (t >= RIDE.depart && r.phase < 3) { r.phase = 3; const tr = ses.rideTrain
     ctx.emit("playSound", { clip: DEPART, position: { x: TRAIN.x, y: TRAIN.y + 1.5, z: TRAIN.z }, volume: 0.8 })
-    if (tr && getObject(tr)) animate(ctx, getObject(tr), { "feetPosition.z": TRAIN.z - RIDE.slide }, { duration: RIDE.pull - RIDE.depart + 0.6, easing: "easeInQuad" }) }
+    if (tr && ctx.getObject(tr)) animate(ctx, ctx.getObject(tr), { "feetPosition.z": TRAIN.z - RIDE.slide }, { duration: RIDE.pull - RIDE.depart + 0.6, easing: "easeInQuad" }) }
   if (t >= RIDE.pull && r.phase < 4) { r.phase = 4; ctx.emit("screenFlash", { color: "#000000", duration: 0.7, intensity: 1 }, { audience: { player: me.id } }) }
   if (t >= RIDE.leave) {
-    const tr = ses.rideTrain; if (tr && getObject(tr)) destroy(tr)
+    const tr = ses.rideTrain; if (tr && ctx.getObject(tr)) ctx.destroy(tr)
     me.hidden = (me.hidden ?? []).filter((h) => h !== TRAIN.id)
     ses.ride = null; ses.rideTrain = null; s.stungUntil = 0
     if (r.keep) s.wakeAtSave = true
