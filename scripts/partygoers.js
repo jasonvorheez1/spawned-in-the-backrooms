@@ -5,7 +5,7 @@
 import { dmgAfterArmor } from "./lib/stats.js"
 import { animate } from "builtin/tween"
 const T = { sight: 14, call: 22, walk: 1.4, hunt: 3.4, reach: 1.7, biteDmg: 16, biteMs: 1000, hp: 220, // her picks: tough enough to need a mag
-  berserkAt: 100, rage: 4.6, clawReach: 2.2, clawDmg: 24, clawMs: 700, hatchOpen: 2200, hatchShut: 3200, glance: 0.8, // berserker: arms gone, chest claws out; shut hatch turns 80% of a hit
+  berserkAt: 100, rage: 4.6, clawReach: 2.2, clawDmg: 24, clawMs: 700, hatchOpen: 2200, hatchShut: 3200, glance: 0.8, // berserker: arms tuck in, chest snaps open; shut hatch turns 80% of a hit
   lungeMin: 3, lungeMax: 7, lungeWind: 450, lungeDash: 380, lungeSpeed: 10, lungeDmg: 26, lungeCd: 4200, // the pounce: a crouch tell, then a dash that knocks you back
   comboGap: 280, dodgeChance: 0.3, dodgeCd: 2500, dodgeSpeed: 6, screamSan: 6, screamSlow: 700,
   balloonReach: 1.4, stingDmg: 9, stingMs: 2500 }
@@ -47,7 +47,7 @@ export function update(ctx, dt) {
     if (s.dying) { if (now - s.dying < 2200) { p.velocity = { x: 0, y: p.velocity.y + g * dt, z: 0 }; continue }
       ctx.emit("fx", { position: { ...p.feetPosition, y: p.feetPosition.y + 1 }, script: `fx
 pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 acc=buoy(.6)+drag(1) sz=$size*(.6>2.2) col=<.05,.05,.05> a=0>.7:.5>.7:.3>0 r=sprite(smoke-puff,alpha)` })
-      ctx.emit("playSound", { clip: SND("wet-flesh-tear-and-collapse"), position: p.feetPosition, volume: 0.8 })
+      ctx.emit("playSound", { clip: SND("deflating-party-balloon-squeal-and-thud"), position: p.feetPosition, volume: 0.8 })
       ctx.destroy(p.id); continue
     }
     // berserker (lore: cut the arms, the chest carapace opens, hit it then): below half it sheds its eel arms and the hatch cycles
@@ -59,7 +59,7 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
     }
     if (!s.berserk && hp <= T.berserkAt) {
       s.berserk = true; s.hunting = true; s.hatchUntil = now + T.hatchOpen; s.hatchNext = now + T.hatchOpen + T.hatchShut
-      ctx.emit("playSound", { clip: SND("wet-flesh-tear-and-collapse"), position: p.feetPosition, volume: 1 })
+      ctx.emit("playSound", { clip: SND("deflating-party-balloon-squeal-and-thud"), position: p.feetPosition, volume: 1 })
       ctx.emit("playSound", { clip: SND("inhuman-shriek-in-a-dead-relatives-voice"), position: p.feetPosition, volume: 1 })
       ctx.emit("flash", { target: p.id, color: "#ff2020", duration: 0.4 })
       ctx.emit("fx", { position: { ...p.feetPosition, y: p.feetPosition.y + 1.3 }, script: SPLIT })
@@ -98,7 +98,7 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
     const vy = p.velocity.y + g * dt
     if (s.move && now >= (s.moveUntil ?? 0)) { // a move ends: the lunge's tell becomes its dash
       if (s.move === "windup") { s.move = "lunge"; s.moveUntil = now + T.lungeDash; s.lungeHit = false; once(p, "cdn/clip-attack.glb")
-        ctx.emit("playSound", { clip: SND("wet-teeth-bite-chomp"), position: p.feetPosition, volume: 1 }) }
+        ctx.emit("playSound", { clip: SND("teeth-snapping-chomp"), position: p.feetPosition, volume: 1 }) }
       else s.move = null
     }
     if (s.move === "scream") { p.velocity = { x: 0, y: vy, z: 0 }; gait(ctx, p, "idle"); continue }
@@ -107,14 +107,14 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
     if (s.move === "lunge") {
       p.velocity = { x: dx * T.lungeSpeed, y: vy, z: dz * T.lungeSpeed }; face(); gait(ctx, p, "run", 1.4)
       if (prey && !s.lungeHit && best < T.reach + 0.4) { s.lungeHit = true; s.move = null; s.nextBite = now + T.biteMs
-        bite(ctx, p, prey, T.lungeDmg, "fast-claw-slash-flesh")
+        bite(ctx, p, prey, T.lungeDmg, "fast-whoosh-and-rubber-smack")
         ctx.emit("impulse", { target: prey.id, impulse: { x: dx * 420, y: 160, z: dz * 420 } })
         ctx.emit("hitstop", { duration: 0.06 }, { audience: { player: prey.id } }) }
       continue
     }
     if (s.combo && now >= s.combo.at) { // the second mouth bites a beat after the first
       const c = s.combo; s.combo = null
-      if (prey && best < T.reach + 0.3) { once(p, "cdn/clip-kick.glb", 0.6); bite(ctx, p, prey, Math.round(c.dmg * 0.7), "wet-teeth-bite-chomp") }
+      if (prey && best < T.reach + 0.3) { once(p, "cdn/clip-kick.glb", 0.6); bite(ctx, p, prey, Math.round(c.dmg * 0.7), "teeth-snapping-chomp") }
     }
     if (prey && s.hunting && !s.berserk && best > T.lungeMin && best < T.lungeMax && now >= (s.lungeAt ?? 0) && now >= (s.stunUntil ?? 0)) { // the pounce, telegraphed by a crouch and a squash
       s.lungeAt = now + T.lungeCd + ctx.random() * 1500; s.move = "windup"; s.moveUntil = now + T.lungeWind
@@ -134,7 +134,7 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
     if (prey && best < reach && now >= (s.nextBite ?? 0)) {
       s.nextBite = now + (s.berserk ? T.clawMs : T.biteMs)
       once(p, s.berserk ? "cdn/clip-throw.glb" : "cdn/clip-attack.glb")
-      bite(ctx, p, prey, dmg, s.berserk ? "fast-claw-slash-flesh" : "wet-teeth-bite-chomp")
+      bite(ctx, p, prey, dmg, s.berserk ? "fast-whoosh-and-rubber-smack" : "teeth-snapping-chomp")
       if (!s.berserk) s.combo = { at: now + T.comboGap, dmg }
     }
   }
@@ -178,5 +178,5 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
 const GAS = `fx
 pop gas burst=70 on=sphere(.3) life=4..6 v=sdir()*(.6..1.6) size=.6..1.2 acc=drag(1.3)+curl(.3)+buoy(.05) sz=$size*(.5>3) col=<.75,.85,.4> a=0>.45:.4>.75:.3>0 rot=spin(.15) r=sprite(smoke-puff,alpha)`
 const SPLIT = `fx
-pop gore burst=26 on=sphere(.25) life=.6..1 v=sdir()*(2..4)+up(1.5) size=.05..0.1 acc=grav() col=<.45,.02,.02> a=1>0 floor=stick r=sprite(soft-disc,alpha)
-pop smoke burst=12 on=sphere(.3) life=1.2..2 v=up(.8)+sdir()*.4 size=.3..0.5 acc=buoy(.5)+drag(1) sz=$size*(.6>2) col=<.04,.04,.04> a=0>.6:.4>0 r=sprite(smoke-puff,alpha)`
+pop confetti burst=40 on=sphere(.25) life=1.2..2 v=sdir()*(2..4)+up(2) size=.04..0.08 spin=-8..8 acc=grav()*.35+drag(1.6) col=<1,.85,.2>..<.2,.6,1> a=1>.8:1>0 rot=$age*$spin floor=stick r=sprite(soft-disc,alpha)
+pop smoke burst=12 on=sphere(.3) life=1.2..2 v=up(.8)+sdir()*.4 size=.3..0.5 acc=buoy(.5)+drag(1) sz=$size*(.6>2) col=<.9,.85,.6> a=0>.4:.4>0 r=sprite(smoke-puff,alpha)`
