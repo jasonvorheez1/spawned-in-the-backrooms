@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 18;
+const V = 19;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb";
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -82,13 +82,12 @@ function lay(ctx) {
     ui: `<div face="front" width="${w}m" style="width:${w * 1000}px;height:${h * 1000}px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Arial,sans-serif;font-weight:900;line-height:1.05">${html}</div>`,
   });
 
-  const M_SNACK_TRIPO = "/cdn/value.648e4a264f4f3baf49c0daa926edded37545119b09d317be038c0d0261d8bc8b.glb"; // tripo snack machine, −Z front, 0.9 m under origin
+  const M_SNACK_TRIPO = "/cdn/value.476807d8db2aec3bb854b6d000cd2fdb511d419ea6ff6260eda3d5109ff0e058.glb"; // tripo snack machine, re-seated in art/l61-vend/build.py: 1.83 m, feet origin, front +z
   const vend = (id, x, z, yaw, soda, extra = {}) => sp(id, {
     feetPosition: { x, y: extra.y ?? 0, z },
     rotation: { yaw, ...(extra.rot ?? {}) },
     physics: { body: "static", collider: "box" },
-    model: soda ? { id: M_VEND, forward: "+z", materials: { cabinet: { color: "oklch(0.5 0.2 27)", roughness: 0.4, metalness: 0.35 } } } : { id: M_SNACK_TRIPO, offset: [0, -0.9, 0] },
-    ...(soda ? {} : { scale: 1.0 }),
+    model: soda ? { id: M_VEND, forward: "+z", materials: { cabinet: { color: "oklch(0.5 0.2 27)", roughness: 0.4, metalness: 0.35 } } } : { id: M_SNACK_TRIPO, forward: "+z" },
     tags: extra.dead ? [] : ["usable"],
     behavior: extra.dead ? undefined : "scripts/l61-use.js",
     state: extra.dead ? {} : { kind: "vend", sells: soda ? "soda" : "snack", name: soda ? "Soda machine" : "Snack machine", verb: "Press a button", info: soda ? "Chilled soda machine." : "Packaged snack machine." },
