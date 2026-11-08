@@ -49,7 +49,7 @@ export function t0Tick(ctx, ses, st) {
   return id === "final" ? "level1" : true
 }
 // Shelly's horror pack (scripts/lib/data/sfx-library.yml), Nov 8: "the sounds are stupid as hell": the pack carries the tutorial
-const H = { growl: "/cdn/value.eff7b4c4645715b8686565c6211d50b2b9e416267f58c3d912e5857768ad366a.mp3", grunt: "/cdn/value.d0066beac8550b339a3eec0d5532997fde8cf394856f8ad3041c909659bea09a.mp3", mbreath: "/cdn/value.783cfc4c74e9c314ae36d9305103e6e8794cf0493ca86f23facf3f4c10d25b1d.mp3", scream: "/cdn/value.e7a73d3533435fe19d5140141081aa76bfe425f66affd0fb7653cd9afc7a7844.mp3", sting1: "/cdn/value.3220d45eae556d4b712b075cd8f883e150c941f2fb8cfbd774f388eebe7c9432.mp3", sting2: "/cdn/value.8c4011cd8c3d14bfeff784df9c17be809b21b0beccfafbea8271a0bc409125bd.mp3", run: "/cdn/value.14f7bc36d15cfcd8449842041089164a319c2ca1ff4917294b7ed2156179b62f.mp3", flashoff: "/cdn/value.6d88ccc0b16b07ffd52f328835bad9d9bf3239d8146e88b2266ff673fbfbde94.mp3", buzz: "/cdn/value.eb34f5496883ceba559e80813abd255098c4a18b2f5d2dbcd6465447d4afa7f2.mp3" }
+const H = { snap: "/cdn/value.d2518fac095f995e2626438e4d8f582ed04878e448ed62ddd2e45c89e704aa57.mp3", scrape: "/cdn/value.77203ab709373e37101914a819bdb0c3c22ef5f8e40e1211d5e1e1605e64085d.mp3", moan: "/cdn/value.c3763d37a43bab87a54590b4a584b45f56ce2ecf25f4eb2c5e3d645da318cbe3.mp3", rhiss: "/cdn/value.5ff97cbae7433fbe0550c6a16411314a7c725c995893b7e33dbd5ce593baf17e.mp3", switch: "/cdn/value.30ab43703195a3d308cce6e2ea7b32a92438c9e3dff74eb60205f5b9442e02d8.mp3", doom: "/cdn/value.ce9496b9dbf80ca37ab231135330442e462480dc39cf020f0d3e654e12e13361.mp3", slowst: "/cdn/value.e41c59fc8a105919b1a1c930c25409968c1f2d41422ddc584c5625d034e0be64.mp3", cresc: "/cdn/value.d1ae3ebefefdf17be753a4c379970ea2fe9b63f0de9e0797195e92a0c4bc6743.mp3", twang: "/cdn/value.5c93f7a5f22a8eea6e6327bc6710a6be6d1551eb393575c54c144d2b2fdfe908.mp3", growl: "/cdn/value.eff7b4c4645715b8686565c6211d50b2b9e416267f58c3d912e5857768ad366a.mp3", grunt: "/cdn/value.d0066beac8550b339a3eec0d5532997fde8cf394856f8ad3041c909659bea09a.mp3", mbreath: "/cdn/value.783cfc4c74e9c314ae36d9305103e6e8794cf0493ca86f23facf3f4c10d25b1d.mp3", scream: "/cdn/value.e7a73d3533435fe19d5140141081aa76bfe425f66affd0fb7653cd9afc7a7844.mp3", sting1: "/cdn/value.3220d45eae556d4b712b075cd8f883e150c941f2fb8cfbd774f388eebe7c9432.mp3", sting2: "/cdn/value.8c4011cd8c3d14bfeff784df9c17be809b21b0beccfafbea8271a0bc409125bd.mp3", run: "/cdn/value.14f7bc36d15cfcd8449842041089164a319c2ca1ff4917294b7ed2156179b62f.mp3", flashoff: "/cdn/value.6d88ccc0b16b07ffd52f328835bad9d9bf3239d8146e88b2266ff673fbfbde94.mp3", buzz: "/cdn/value.eb34f5496883ceba559e80813abd255098c4a18b2f5d2dbcd6465447d4afa7f2.mp3" }
 // each scene's own score, cut to its length (PACE-stretched seconds in the name)
 const M = (n) => `/cdn/moodboard-realistic-gritty/music-${n}.mp3`
 const CUE = { encounter: M("horror-film-cue-28-seconds-low-cello-drone-creeping-heartbeat-pulse-rising-strings-hit-at-17-seconds-then-frantic-chase-percussion"), smiler: M("horror-film-cue-19-seconds-near-silence-sub-drone-dissonant-piano-notes-swelling-to-a-scream-of-strings-cut-dead-at-16-seconds"), halogen: M("horror-film-cue-10-seconds-cold-analog-synth-hum-mechanical-ticking-ominous-low-brass"), drawings: M("horror-film-cue-17-seconds-music-box-melody-detuned-over-distant-hum-slow-and-sad") }
@@ -109,8 +109,8 @@ const BEAT = {
     if (t < 6.4) { const u = ss(2.6, 6.2, t); me.feetPosition = { x: lerp(c.p0.x, cor.x, u), y: 0, z: lerp(c.p0.z, cor.z, u) }; me.anim.cut = u > 0 && u < 1 ? { clip: "cdn/clip-walk-loop.glb", weight: 4, loop: "loop", speed: -0.7 } : { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } }
     else if (t < 13) me.feetPosition = cor
     if (t < 12.2) me.rotation = { yaw: yawTo(me.feetPosition, E?.feetPosition ?? { x: ENC.from.x, z: ENC.from.z }) }
-    if (t > 6.2) once("bump", () => { snd(ctx, "wooden-chair-creak-scrape", 0.7); raw(ctx, GASP, 0.6); fx1(ctx, "screenShake", { intensity: 0.15, duration: 0.25 }) })
-    if (t > 7.6) once("grab", () => { me.anim.cut = { clip: "cdn/clip-pickup.glb", weight: 4 }; raw(ctx, N("wooden-table-leg-snap-break"), 0.9, legAt) })
+    if (t > 6.2) once("bump", () => { raw(ctx, H.scrape, 0.6); raw(ctx, GASP, 0.6); fx1(ctx, "screenShake", { intensity: 0.15, duration: 0.25 }) })
+    if (t > 7.6) once("grab", () => { me.anim.cut = { clip: "cdn/clip-pickup.glb", weight: 4 }; raw(ctx, H.snap, 0.9, legAt) })
     if (t > 8.4) once("hold", () => {
       if (c.leg) { ctx.destroy(c.leg); c.leg = null }
       const list = String(st.weapons ?? "").split(",").filter(Boolean); if (!list.includes("table_leg")) list.push("table_leg")
@@ -119,7 +119,7 @@ const BEAT = {
     })
     if (t > 9.3) once("lunge", () => { raw(ctx, H.growl, 1.0, { x: lunge.x, y: 1, z: lunge.z }); const e = ctx.getObject(c.ent); if (e) e.anim.body = { clip: "cdn/clip-run-loop.glb", loop: "loop", weight: 1 } })
     if (t > 9.0) once("windup", () => { raw(ctx, BREATHF, 0.8); fx1(ctx, "slowMo", { scale: 0.5, duration: 0.6 }) })
-    if (t > 9.75) once("swing", () => { me.anim.cut = { clip: "cdn/clip-attack.glb", weight: 4 }; snd(ctx, "sword-whoosh-swing", 0.6) })
+    if (t > 9.75) once("swing", () => { me.anim.cut = { clip: "cdn/clip-attack.glb", weight: 4 }; raw(ctx, H.twang, 0.4) })
     if (t > 10.2) once("hit", () => {
       const hit = { x: lunge.x, y: 1.0, z: lunge.z }
       raw(ctx, H.sting1, 1.0, hit)
@@ -161,14 +161,14 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
     me.feetPosition = L3({ x: c.p0.x, y: 0, z: c.p0.z }, sp, ss(0, 1.6, t)); me.rotation = { yaw: -90 }
     if (t < 1.6) me.anim.cut = { clip: "cdn/clip-walk-loop.glb", weight: 4, loop: "loop" }
     once("power", () => {
-      raw(ctx, N("old-machine-power-up-crt-whine-relay-clunk"), 0.9, scr)
+      raw(ctx, H.moan, 0.8, scr)
       const m = ctx.getObject("t0-halogen"); if (m) m.state = { ...(m.state || {}), on: true }
       c.glint = ctx.spawn({ audience: "local", scope: "session", feetPosition: { x: HALO.x - 0.6, y: 1.4, z: HALO.z }, light: { kind: "point", color: "#ffb347", intensity: 0, distance: 3.5 } })
       animate(ctx, c.glint, { "light.intensity": 2.2 }, { duration: 1.6, easing: "easeInQuad" })
     })
     if (t > 1.7) once("arm", () => { me.anim.cut = { clip: "cdn/clip-cast.glb", weight: 4 } })
-    if (t > 2.6) once("clamp", () => { raw(ctx, N("servo-clamp-lock-wrist-hiss"), 1.0, port); fx1(ctx, "screenShake", { intensity: 0.18, duration: 0.3 }); fx1(ctx, "screenFlash", { color: "#ffb347", duration: 0.25, intensity: 0.35 }) })
-    if (t > 3.6) once("open", () => { snd(ctx, "wrist-device-raise-click-crt-power-on", 0.8); st.creating = true; st.sheetOpen = true; me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
+    if (t > 2.6) once("clamp", () => { raw(ctx, H.rhiss, 1.0, port); fx1(ctx, "screenShake", { intensity: 0.18, duration: 0.3 }); fx1(ctx, "screenFlash", { color: "#ffb347", duration: 0.25, intensity: 0.35 }) })
+    if (t > 3.6) once("open", () => { raw(ctx, H.switch, 0.8); st.creating = true; st.sheetOpen = true; me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
     if (t < 1.6) ctx.view.camera = { eye: { x: 43.2, y: 1.7, z: -25.2 }, aim: L3({ x: 46, y: 1.3, z: -27.5 }, scr, ss(0, 1.6, t)), fov: 55 } // the machine across the room
     else if (t < 2.5) ctx.view.camera = { eye: { x: HALO.x - 1.2, y: 1.5, z: HALO.z + 0.7 }, aim: scr, fov: 30 } // the screen wakes
     else ctx.view.camera = { eye: { x: HALO.x - 1.0, y: 1.3, z: HALO.z - 0.85 }, aim: port, fov: lerp(40, 30, ss(2.5, 3.6, t)) } // the arm in the port
@@ -178,7 +178,7 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
   drawings(ctx, c, t, once) {
     const me = ctx.self, at = (n) => { const d = DRAWINGS.find((r) => r[0] === n); return { x: d[1], y: 1.45, z: d[2] } }
     me.rotation = { yaw: 180 }; me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" }
-    for (const [k, when] of [["p1", 0.3], ["p2", 3], ["p3", 5.6]]) if (t > when) once(k, () => raw(ctx, N("paper-flutter-taped-note"), 0.6))
+    for (const [k, when] of [["p1", 0.3], ["p2", 3], ["p3", 5.6]]) if (t > when) once(k, () => raw(ctx, H.switch, 0.25))
     const eye = { x: 44, y: 1.6, z: lerp(c.p0.z, -15, ss(0, 8, t)) }
     let aim, fov = 42
     if (t < 2.8) aim = at(2)
@@ -205,7 +205,7 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
     once("hum", () => { raw(ctx, H.buzz, 0.7, wall); me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
     if (t > 2.0) once("breath", () => raw(ctx, BREATH, 0.5))
     if (t > 3.0) once("whisper", () => raw(ctx, PHOEBE_WHISPER, 0.5, her)) // under the hum, from down the hall
-    if (t > 4.2) once("groan", () => snd(ctx, "deep-rumble-groan", 0.8))
+    if (t > 4.2) once("groan", () => raw(ctx, H.doom, 0.7))
     if (t > S) once("walk", () => { me.anim.cut = { clip: "cdn/clip-walk-loop.glb", weight: 4, loop: "loop", speed: 0.8 } })
     if (t > S + 2.2) once("score", () => raw(ctx, SCORE, 1.0)) // the score comes up as they touch the wall and carries the fall and the title
     if (t > S + 2.4) once("through", () => {
@@ -214,8 +214,8 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
       fx1(ctx, "shockwave", { position: wall, speed: 6, thickness: 0.5, intensity: 0.7 })
     })
     if (t > S + 2.7) once("gone", () => { me.hidden = [...(me.hidden || []), me.id]; raw(ctx, H.scream, 0.35) })
-    if (t > S + 6.2) once("thud", () => snd(ctx, "heavy-impact-thud-boom", 0.7))
-    if (t > 13.4) once("title", () => raw(ctx, N("title-reveal-massive-reverse-swell-boom"), 1.0)) // lands with the name (cutscene-ui: 13.7 s)
+    if (t > S + 6.2) once("thud", () => raw(ctx, H.slowst, 0.8))
+    if (t > 13.4) once("title", () => raw(ctx, H.cresc, 0.9)) // lands with the name (cutscene-ui: 13.7 s)
     if (t < 2) { const u = ss(0, 2, t); ctx.view.camera = { eye: { x: at.x + 0.4, y: 1.6, z: at.z + 0.6 }, aim: wall, fov: lerp(55, 32, u) } } // the wallpaper ahead, crawling
     else if (t < S) { const u = ss(2, S, t); ctx.view.camera = { eye: { x: 44.2, y: 1.5, z: 2.8 }, aim: L3({ x: 44.9, y: 1.45, z: -4 }, { x: 44.95, y: 1.4, z: -12 }, u), fov: lerp(46, 36, u) } } // from the wall: their face, oblivious, and far up the hall behind them half a shape round the corner
     else { const p = me.feetPosition, k = ss(S + 2.7, S + 3.4, t); ctx.view.camera = { eye: { x: at.x + 0.5, y: 1.75, z: lerp(Math.min(p.z - 2.2, 1.6), 4.4, k) }, aim: { x: wall.x, y: wall.y, z: wall.z + 1 }, fov: lerp(50, 80, k) } } // behind them as they press in, then the lens goes through after them

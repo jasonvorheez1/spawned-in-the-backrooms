@@ -51,7 +51,7 @@ function t0Ui(ctx, player) {
 .tt{position:fixed;left:0;right:0;top:41%;text-align:center;z-index:54;color:#f2c14e;font:400 46px/1.1 Georgia,serif;text-shadow:0 0 18px rgba(242,193,78,.35);opacity:0;animation:ttitle ${9 * PACE}s ease both;animation-delay:${d(13700)}}
 .tcr{position:fixed;left:0;right:0;top:calc(41% + 104px);text-align:center;z-index:54;color:#a89a74;font:400 11px/1 Georgia,serif;letter-spacing:.45em;opacity:0;animation:tsub ${7.4 * PACE}s ease both;animation-delay:${d(15600)}}
 .ts{position:fixed;left:0;right:0;top:calc(41% + 64px);text-align:center;z-index:54;color:#d9cfae;font:400 13px/1 Georgia,serif;letter-spacing:.5em;opacity:0;animation:tsub ${8.2 * PACE}s ease both;animation-delay:${d(14700)}}
-</style><div class="tb" style="top:0"></div><div class="tb" style="bottom:0"></div>${fin ? `<div class="tbk"></div><div class="tt">SPAWN IN THE BACKROOMS</div><div class="ts">LEVEL 1 · HABITABLE ZONE</div><div class="tcr">CREATED FOR SPAWN · BY SHELLY</div>` : ""}${caps}`
+</style><div class="tb" style="top:0"></div><div class="tb" style="bottom:0"></div>${fin ? `<div class="tbk"></div><div class="tt">SPAWN IN THE BACKROOMS</div><div class="ts">LEVEL 1 · HABITABLE ZONE</div>` : ""}${caps}`
 }
 export function t0Fade(ctx, player) {
   const f = player.state.t0fade; if (!f || ctx.now() - f > 3000) return ""
