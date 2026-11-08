@@ -49,6 +49,13 @@ recipes:
   sledge:     { cat: weapons, name: Sledgehammer,      in: { cinder: 3, steel_pipe: 1, bolts: 3 },         out: ["weapon:sledgehammer"], skill: [repair, 45],   bench: true, desc: "A cinderblock head · slow, brutal" }
   machete:    { cat: weapons, name: "Lineman's machete", in: { sheet_steel: 2, scrap_wood: 1, rust_flakes: 2 }, out: ["weapon:lineman_machete"], skill: [repair, 55], bench: true, desc: "Hammered from sheet steel" }
   baton:      { cat: weapons, name: Stun baton,        in: { steel_pipe: 1, circuit: 1, copper_coil: 1, copper_wire: 2 }, out: ["weapon:stun_baton"], skill: [science, 50], bench: true, desc: "Wired to bite" }
+  # more weapons (Savi's picks, 2026-11-08): each one's model already lies in scripts/weapon-geo.js
+  nailbat:    { cat: weapons, name: Nail bat,          in: { scrap_wood: 3, nails: 4, wire: 1 },            out: ["weapon:bat"],          skill: [repair, 10],   desc: "A turned club, nails driven through the barrel" }
+  shiv:       { cat: weapons, name: Screwdriver shiv,  in: { scrap_metal: 1, wire: 1, drywall: 1 },         out: ["weapon:screwdriver"],  skill: [repair, 5],    desc: "A long flathead ground to a point" }
+  tireiron:   { cat: weapons, name: Tire iron,         in: { steel_pipe: 1, bolts: 2, scrap_metal: 1 },     out: ["weapon:tire_iron"],    skill: [repair, 20],   bench: true, desc: "A lug wrench bent to an L, socket on one end" }
+  pbaton:     { cat: weapons, name: Side-handle baton, in: { steel_pipe: 1, scrap_metal: 1, wire: 2, bolts: 1 }, out: ["weapon:baton"],   skill: [repair, 25],   bench: true, desc: "A pipe with a cross handle, rubber-wrapped" }
+  cleaver:    { cat: weapons, name: Meat cleaver,      in: { sheet_steel: 1, scrap_wood: 1, bolts: 2 },     out: ["weapon:cleaver"],      skill: [repair, 30],   bench: true, desc: "A broad blade riveted to a wood handle" }
+  fireaxe:    { cat: weapons, name: Fire axe,          in: { sheet_steel: 2, scrap_wood: 3, bolts: 2, rust_flakes: 1 }, out: ["weapon:fire_axe"], skill: [repair, 50], bench: true, desc: "A red head on a long haft · slow, deep cuts" }
   fishing_rod: { cat: tools, name: Salvaged fishing rod, in: { scrap_wood: 2, wire: 2, nails: 1 },           out: ["weapon:fishing_rod"],  skill: [survival, 10], desc: "Cast into lakes or the sea to catch fresh fish and sunken salvage" }
   # more ammo and tools
   ammo4:      { cat: ammo,  name: Pistol rounds (bulk), in: { scrap_metal: 4, springs: 2, rust_flakes: 1 }, out: [ammo, ammo, ammo, ammo], skill: [guns, 45], bench: true, desc: "Four boxes at once" }
