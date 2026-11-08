@@ -46,6 +46,7 @@ const SCRIBBLE = {
   arrow: `<svg viewBox='0 0 200 100' width='0.9m'><g stroke='${CHALK}' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'><path d='M18 54 C60 46 110 56 170 50'/><path d='M138 22 L176 50 L136 80'/></g></svg>`,
   exit: `<svg viewBox='0 0 200 100' width='0.9m'><g stroke='${CHALK}' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'><path d='M18 58 C60 50 110 60 170 54'/><path d='M138 26 L176 54 L136 84'/></g><text x='96' y='34' text-anchor='middle' font-family='sans-serif' font-size='22' fill='${CHALK}'>EXIT</text></svg>`,
 };
+const EXIT_LEFT = `<svg viewBox='0 0 200 100' width='0.9m'><g stroke='${CHALK}' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'><path d='M182 58 C140 50 90 60 30 54'/><path d='M62 26 L24 54 L64 84'/></g><text x='104' y='34' text-anchor='middle' font-family='sans-serif' font-size='22' fill='${CHALK}'>EXIT</text></svg>`; // the word stays readable when the arrow points left
 const mirror = (svg) => svg.replace(/<svg ([^>]*)>/, "<svg $1><g transform='translate(200 0) scale(-1 1)'>").replace(/<\/svg>$/, "</g></svg>");
 
 export function layMoments(ctx) {
@@ -114,7 +115,7 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
   for (const seed of [506, 507]) { const p = pick(seed, (cx, cz) => plainZone(cx, cz)); if (p) { const c = cellCenter(p.cx, p.cz); put("holetile", { feetPosition: { x: c.x + 0.6, y: 0, z: c.z - 0.6 }, primitive: geo("holetile") }); } }
   const st = pick(508, (cx, cz) => plainZone(cx, cz)); if (st) { const c = cellCenter(st.cx, st.cz); put("stain", { feetPosition: { x: c.x - 0.5, y: 0, z: c.z + 0.4 }, primitive: geo("stain", { seed: 8 }) }); }
   // scribbles on walls
-  const msg = [["notsafe", 1.55], ["lights", 1.5], ["tally", 1.3], ["notsafe", 1.7], ["lights", 1.45], ["arrow", 1.4]];
+  const msg = [["notsafe", 1.55], ["lights", 1.5], ["tally", 1.3], ["notsafe", 1.7], ["lights", 1.45], ["tally", 1.4]];
   msg.forEach(([k, y], i) => { const p = one(520 + i, any, (cx, cz, d) => { scrib(k, cx, cz, d, (hash(cx, cz, 9) - 0.5) * 1.6, y); if (!out.msgAt) out.msgAt = { ...cellCenter(cx, cz), d }; }, 3, 15); });
   // 6 · the old wanderer's camp, with its note
   const cp = pick(601, (cx, cz) => corner(cx, cz) && plainZone(cx, cz) && hasLight(cx, cz), 4, 13);
@@ -158,12 +159,14 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
   while (Q.length) { const [x, z] = Q.shift(); if (x === EXIT.cx && z === EXIT.cz) break; for (const [dx, dz, open] of step(x, z)) { const nx = x + dx, nz = z + dz; if (!open || nx < 0 || nz < 0 || nx >= N || nz >= N || prev.has(key(nx, nz)) || hasPit(nx, nz)) continue; prev.set(key(nx, nz), [x, z]); Q.push([nx, nz]); } }
   const path = []; for (let c = prev.has(key(EXIT.cx, EXIT.cz)) ? [EXIT.cx, EXIT.cz] : null; c; c = prev.get(key(...c))) path.unshift(c);
   let last = -9, arrows = 0;
-  for (let i = 1; i < path.length - 1 && arrows < 14; i++) {
-    const [x, z] = path[i]; if (inHub(x, z) || i - last < 4) continue;
+  for (let i = 1; i < path.length - 1 && arrows < 40; i++) {
+    const [x, z] = path[i]; if (inHub(x, z)) continue;
+    const turn = i > 0 && (path[i + 1][0] - x !== x - path[i - 1][0] || path[i + 1][1] - z !== z - path[i - 1][1]);
+    if (i - last < (turn ? 1 : 3)) continue; // one at every turn, else every third room
     const tx = path[i + 1][0] - x, tz = path[i + 1][1] - z, sides = tx ? [1, 3] : [0, 2], d = sides.find((s) => hasWall(x, z, s)); if (d == null) continue;
     const [nx, nz] = NRM[d], right = nz * tx + -nx * tz; // the viewer's right, facing the wall
     const svg = i === path.length - 2 || arrows % 4 === 3 ? SCRIBBLE.exit : SCRIBBLE.arrow;
-    scrib("chalk", x, z, d, 0.4, 1.2 + hash(x, z, 4) * 0.25, right > 0 ? svg : mirror(svg)); out.message--; out.chalk = (out.chalk ?? 0) + 1;
+    scrib("chalk", x, z, d, 0.4, 1.2 + hash(x, z, 4) * 0.25, right > 0 ? svg : svg === SCRIBBLE.exit ? EXIT_LEFT : mirror(svg)); out.message--; out.chalk = (out.chalk ?? 0) + 1;
     arrows++; last = i;
     if (arrows === 3) put("papers", { feetPosition: { ...cellCenter(x, z), y: 0 }, primitive: geo("papers", { seed: 7 }) });
   }

@@ -96,8 +96,11 @@ export function handling(s, w) {
 export const reqText = (w) => (w?.req ? [w.req.h ? `HAR ${w.req.h}` : '', w.req.guns ? `GUNS ${w.req.guns}` : '', w.req.melee ? `MELEE ${w.req.melee}` : ''].filter(Boolean).join(' · ') : '')
 
 // what the attributes and skills do, as plain numbers (5 in everything and no points is about the old balance)
+// a broken mind: at 0 sanity every attribute but Luck reads 2 lower (min 1) until sanity comes back (Savi's pick)
+export const isBroken = (s) => s?.sanity != null && s.sanity <= 0
+function shaken(a, s) { if (!isBroken(s)) return a; const o = { ...a }; for (const k of Object.keys(o)) if (k !== 'l') o[k] = Math.max(1, o[k] - 2); return o }
 export function derived(s) {
-  const a = attrsOf(s), k = skillsOf(s)
+  const a = shaken(attrsOf(s), s), k = skillsOf(s)
   return {
     hpBonus: (a.e - 5) * 10,
     sanBonus: (a.n - 5) * 8,
