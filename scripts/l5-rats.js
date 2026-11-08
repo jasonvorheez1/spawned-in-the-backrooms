@@ -228,7 +228,7 @@ export function update(ctx, dt) {
             k.state.l5rats += 1;
           }
         }
-        if (now - m.deadAt > 3600000 || (now - m.deadAt > 3000 && !(r.state.items ?? "").length)) {
+        if (now - m.deadAt > 300000 || (now - m.deadAt > 3000 && !(r.state.items ?? "").length)) {
           ctx.destroy(r.id);
           delete mem[r.id];
         }
