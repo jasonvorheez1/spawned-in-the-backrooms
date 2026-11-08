@@ -8,6 +8,7 @@ import { arriveTick } from "./lib/arrive-cut.js"
 import { tutStart, tutTick, tutInput } from "./lib/tutorial.js"
 import { t0Tick } from "./lib/tut0-cut.js"
 import { animate } from "builtin/tween";
+import { toHub } from "./lib/hub.js"
 const MUSIC = "/cdn/moodboard-lowpoly-cozy/music-soft-mellow-fingerpicked-acoustic-guitar-and-warm-rhodes-early-2000s-bedroom-calm-loop.mp3"; // the drone was exhausting (johnadams2): soft and quiet instead
 const CLICK = "/cdn/moodboard-realistic-gritty/sfx-old-crt-tv-power-on-click-thunk.mp3";
 const MUSIC_GAIN = 0.12; // her pick
@@ -28,7 +29,7 @@ export function update(ctx) {
   if (!ses.menuMark) {
     ses.menuMark = true
     if (!st.madeChar && (st.xp || st.lvl || st.level || st.visits)) st.madeChar = true // a save that already played keeps its critter
-    if (place !== "intake") { st.menuOpen = true; st.menuKind = "title" }
+    if (place !== "intake" && !st.roomHop) { st.menuOpen = true; st.menuKind = "title" } // a walk between rooms (the Bonus Room) is no launch
   }
   // the intake room: the creator opens on arrival; once it closes, back out to where you came from
   if (place === "intake") {
@@ -77,7 +78,7 @@ export function onInput(ctx, input) {
   const d = input.actionData?.mmenu
   if (input.pressed?.mmenu && d) {
     ctx.emit("playSound", { clip: CLICK, volume: 0.5 }, { audience: { player: ctx.self.id } })
-    if (d.k === "start") { st.menuOpen = false; st.introFrom = ctx.self.place; ctx.cross(ctx.self, "intake") }
+    if (d.k === "start") { st.menuOpen = false; if (st.t0Done && st.madeChar && ctx.self.place !== "bonus") toHub(ctx); else if (ctx.self.place !== "bonus") { st.introFrom = ctx.self.place; ctx.cross(ctx.self, "intake") } } // after the tutorial, launch lands in the Bonus Room (johnadams2)
     if (d.k === "resume") st.menuOpen = false
   }
 }

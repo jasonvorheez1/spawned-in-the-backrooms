@@ -4,6 +4,8 @@
 import { toHub, toSolo, HOMES, HUB_PLACE } from "./lib/hub.js"
 import B from "./lib/data/bonus.yml"
 import FURN from "./lib/data/furniture.yml"
+import { parseCloth } from "./lib/clothes.js"
+export const clothName = (tok) => { const p = parseCloth(tok); return p ? `${p.row?.name ?? p.kind}` : "shirt" }
 const CASH = "/cdn/moodboard-realistic-gritty/sfx-cash-register-cha-ching-drawer.mp3"
 const NOPE = "/cdn/moodboard-realistic-gritty/sfx-ui-denied-click.mp3"
 const OFFER_MS = 15000 // her pick: how long the death card offers the mall
@@ -37,12 +39,13 @@ function buyFood(ctx, s, key) {
   tell(ctx, s, `${f.name}. ${f.line ?? "On the house's plate, not your belly. Enjoy."}`)
 }
 function buyCloth(ctx, s, i) {
-  const c = B.clothes?.[i]; if (!c) return
-  const cost = Math.round((c.price ?? 5) * 100)
+  const row = B.clothes?.[i]; if (!row) return
+  const [token, price] = row, c = { token, name: clothName(token), price }
+  const cost = Math.round((price ?? 5) * 100)
   if ((s.cents ?? 0) < cost) { ding(ctx, NOPE); return tell(ctx, s, `Not enough Backdollars for the ${c.name}.`) }
   s.cents -= cost; ding(ctx, CASH)
-  s.wardrobe = [...(s.wardrobe ?? []), c.token] // into your wardrobe, to wear anywhere
-  tell(ctx, s, `Bought the ${c.name}. It's in your wardrobe.`)
+  s.clothes = [...(s.clothes ? s.clothes.split(',').filter(Boolean) : []), token].join(',') // into your bag (I), to wear anywhere
+  tell(ctx, s, `Bought the ${c.name}. It's in your bag (I) to wear.`)
 }
 function buyFurn(ctx, s, key) {
   const f = FURN.pieces?.[key]; if (!f) return
