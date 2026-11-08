@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1767,
-  "updatedAt": "2026-11-08T14:08:27.848Z",
-  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Place sims assemble local layouts, populations and hazards around shared player, NPC, loot and combat systems; players route to personal rooms by default. The growing Level 11 city now includes a player-side Spamton boss encounter, while shared critter body LODs and scene draw/shadow tuning reduce the cost of populated levels.",
+  "basedOnSpecVersion": 1783,
+  "updatedAt": "2026-11-08T14:39:42.964Z",
+  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Place sims assemble local layouts, populations and hazards around shared player, NPC, loot and combat systems; routing gives players personal rooms by default, and Level 11 hosts a player-scoped Spamton encounter.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 / The Lobby, yellow maze and safe-room hub; each player's room is separate by default, with authored fixtures, containers, shifting walls and hunters.",
@@ -10,8 +10,8 @@
     "places/level3, places/gamma (3D) - Electrical Station and Base Gamma; seeded layouts, hazards, agents, traders, generators and lifts; Gamma includes Marlo the smith.",
     "places/level4 (3D) - Abandoned Office; office structure and residents, cubicles, claimed homes, coolers, vending, lift/stairs and Base Omega.",
     "places/level5 (3D) - Terror Hotel; authored hotel cells and sim-managed residents, creatures and interactions, including Samantha the psychic tuxedo cat and Boiler Room Death Rat packs.",
-    "places/level6, places/level61, places/level11 (3D) - Lights Out and Snackrooms connect to Level 11, The Infinite City: modelled blocks, road grid, canal, skydeck and living street props; Level 11's east-street dead-end alley contains Spamton's dumpster encounter.",
-    "places/level61 (3D) - Snackrooms food-court sim: shops, counters, dining, service and vending; Camp Amber has tent, fire, cookpot, bedrolls, chairs, supplies and volunteers.",
+    "places/level6, places/level61, places/level11 (3D) - Lights Out and Snackrooms connect to The Infinite City; Level 11 has modelled blocks, road grid, canal, skydeck, living street props and Spamton's alley dumpster.",
+    "places/level61 (3D) - Snackrooms food-court sim with shops, counters, dining, service and vending; Camp Amber has tent, fire, cookpot, bedrolls, chairs, supplies and volunteers.",
     "places/level7 (3D) - Thalassophobia; flooded Floating House, Seawatch, Fort Surrender, sea floor and diving bell; places/debug (3D) is a separate dark atmosphere and spawn."
   ],
   "roots": [
@@ -20,7 +20,7 @@
     "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and eye position; scripts/view3.js toggles player.state.tp.",
     "places/<place>/config.yaml + sim.js + cells - place setup and placements; sims build local layouts and tick local behavior, generally sleeping when their place is empty.",
     "sim.js - world cadence and onOutOfBounds referee; players return true for normal respawn, creatures with state.home return home, others are destroyed for manager respawn.",
-    "places/level61/sim.js + scripts/lib/level61-extra.js - Level 6.1 assembler; lay() replaces l61-prefixed scene roots and layExtra() adds mall, Camp Amber and staff pieces.",
+    "places/level61/sim.js + scripts/lib/level61-extra.js - Level 6.1 assembler; lay() queues a versioned rebuild in pieces, then layExtra() adds mall, Camp Amber and staff pieces.",
     "places/level11/sim.js + scripts/lib/level11-city.js - Level 11 assembler; builds the city in tick, adds modelled streets and animates street details; also lays Spamton's alley dumpster.",
     "scripts/ui.js + scripts/*-ui.js - HUD and overlays, including Spamton's local battle UI; ui.js mounts gameplay panels and builders-only LAGSCOPE F3 overlay."
   ],
@@ -28,7 +28,7 @@
     "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait and heading for player and M.E.G. NPC chains; caches measured paces in gait session by model/scale; scripts/lib/body3.js supplies weapon animation and rowing.",
     "scripts/lib/maze.js, level1.js, level2.js, level21.js through level7.js + data - per-level grids, zones, layouts and paths reused by simulations, geometry, labels and creature navigation.",
     "scripts/lib/level-kit.js + scripts/lib/npc-respawn.js - named-person management, throttling and shared NPC return timing for place sims.",
-    "scripts/lib/clothes.js, scripts/lib/critter-model.js + critter/clothes/faces data - seeded coats, face traits, blush options and rendered Blender heads/bodies/garments; critter-models.yml selects the lighter body variants reused by players and NPCs.",
+    "scripts/lib/clothes.js, scripts/lib/critter-model.js + critter/clothes/faces data - seeded coats, face traits, expressions and rendered Blender heads/bodies/garments; critter-models.yml selects lighter body variants reused by players and NPCs.",
     "scripts/lib/loot.js + scripts/lib/items.js + level data - shared item pools, rolls, remains, parsing and container helpers; art/props/build.py supplies modeled lockers/fridges.",
     "scripts/lib/condition.js + condition.yml and scripts/lib/stats.js - weapon/armor condition and derived handling/carry values used by player.js, clothes.js, loot-ui.js and NPC dialogue.",
     "scripts/lib/level11-city.js + scripts/lib/data/level11-models.yml - Level 11 layout/street builders; sim.js uses model IDs from art/level11/build.py and uploads.json.",
@@ -65,8 +65,8 @@
     "Level 11 l11-to-l61/l11-from-l61 ↔ level-door.js pair mappings ↔ Level 6.1 l61-to-l11/l11-from-l61; level11-use.js reads prop state.dest for elevator destinations.",
     "places/level21/sim.js → scripts/lib/level21.js layout, level21-geo.js geometry and chatter.js exchanges; hounds.js uses maze21path.js; l21-use.js handles set pieces and Edge Smilers.",
     "Level 11 dumpster (l11-spamton-dumpster, usable kind=spamton) → scripts/interact.js E inspection → spamton-fight.startSpamton writes player.state.spam and dumpster.state.up; scripts/spamton.js animates lid/Spamton/glow.",
-    "world.config.yaml spam action → scripts/spamton-ui.js renders local bullet-box/deal UI and sends hit/done/pick/flee → spamton-fight.onInput; delayed spamIntroOver/spamEnd handle turns and settlement, win adds key item.",
-    "scripts/ui.js mounts spamUi from player.state.spam; loot opening in scripts/interact.js consumes keyItems.spamton for +2% money or 10% backquarter and plays the laugh; loot-ui.js displays the key item."
+    "world.config.yaml spam action → scripts/spamton-ui.js renders local battle/deal UI and sends hit/done/pick/flee → spamton-fight.onInput; encounter start switches the player's local loop from talk theme to battle theme, end stops it; intro/settlement callbacks write fight phase and reward.",
+    "scripts/ui.js mounts spamUi from player.state.spam; loot opening in scripts/interact.js consumes keyItems.spamton for +2% money or 10% backquarter and plays the laugh; scripts/meg-agent.js and scripts/critter.js pass talk/hurt looks to critter-model.faceMorph for NPC visemes/flinches and player flinch faces."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light state and red-zone variants; Level 5 carries portal/quest props and scripts/l5-rats.js runs Boiler Room nest/pack cycles.",
@@ -74,9 +74,9 @@
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - NPC roles, dialogue, looks and routines vary by person; meg-agent.js supplies combat and idle social behavior.",
     "scripts/lib/craft.js + craft data - recipe category, costs, skill, bench, batch size and item family vary per recipe.",
     "places/level21/sim.js + level21.yml + level21-geo.js - room blocks share generated hall/room structure; room type, zone height, lighting, decor and loot vary by authored grid data and deterministic hashes.",
-    "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share service systems with varying menus and Faceling roles; staff routes are tuned around pillars and tray service points.",
+    "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share service systems with varying menus and Faceling roles; rebuild spawns are queued with solid pieces first and old roots are dropped after replacements land.",
     "scripts/lib/level11-city.js + art/level11/build.py - one model kit populates city blocks/landmarks with seeded building kind, colour and street placements; scripts/look-* share the 2006 camera finish but vary per-place grade.",
-    "scripts/wardrobe-ui.js + scripts/critter.js + scripts/lib/critter-model.js/critter2-geo.js - player and NPC critter looks share species/sex, face-shape and expression variation; model data maps looks to lighter LOD body variants."
+    "scripts/wardrobe-ui.js + scripts/critter.js + scripts/lib/critter-model.js/critter2-geo.js - player and NPC looks share species/sex and Blender/scripted head variants; species anatomy/markings, seeded fur and face expressions vary, with talking visemes and hurt flinches."
   ],
   "probableOrphans": [
     "scripts/lib/kemono.js"
@@ -85,8 +85,8 @@
     "Level 2.1 grid is 30×30 at 4 m per cell (120 m square); keep level21.js passability/room zones, maze21path.js traversal, sim geometry/hound routing aligned, and roofAt in place state so ceiling checks survive ticks.",
     "Keep paired arrival IDs aligned: Level 2 ↔ Level 2.1 (l2-from-l21/l21-from-l2), Level 6 ↔ Level 6.1 (l6-from-l61/l61-from-l6; wire trigger l6-wire-trip), and Level 6.1 ↔ Level 11 (l61-to-l11/l11-from-l61). Level 11 skydeck is y=35.7.",
     "Weapon condition is player.state.cnd_<weapon>; garment condition lives in player.state.look.cnd keyed by garment token and shared across same kind/colour copies; keep clothes.yml pattern IDs implemented by mat-cloth.js.",
-    "Level 6.1 lay() destroys and replaces root IDs prefixed l61-; keep service/menu/pickup/tray IDs and coordinates aligned with level61-extra.js and use handlers. Snack trays use snacktray-* IDs so they survive rebuilds; staff routes and serving points must stay clear of pillars.",
-    "Companion fields are NPC state.follow/cperk/loyal/cmd/cstance (plus waitAt and weapon handoff fields); player.session.comp holds perk timers and player.state.carryBonus is companion-derived, distinct from carryExtra; player feed/discovery keys are player-owned.",
-    "Spamton is player-scoped: the global Level 11 dumpster's state.up holds the current player ID; the player fight state and spam action are separate from its visual onSpawn/update script. Keep the fixed dumpster ID, data-driven fight numbers/deal, and keyItems.spamton loot perk aligned."
+    "Level 6.1 rebuild version is V=53: layStep queues spawn specs, prioritizes physics solids (including the floor on an empty build), replaces same IDs incrementally, then removes stale top-level l61- roots; builtV advances only when the queue and cleanup finish.",
+    "Companion fields are NPC state.follow/cperk/loyal/cmd/cstance (plus waitAt and weapon handoff fields); player.session.comp holds perk timers and player.state.carryBonus is companion-derived, distinct from carryExtra; player feed/discovery state belongs to player.js.",
+    "Spamton is player-scoped: the global Level 11 dumpster's state.up holds the current player ID; fight state and spam action are separate from its visual script. Music loops are local session audio; keep the fixed dumpster ID, fight data and local player audience aligned."
   ]
 }
