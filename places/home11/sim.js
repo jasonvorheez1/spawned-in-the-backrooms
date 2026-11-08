@@ -1,3 +1,4 @@
+import { builtSpec } from "../../scripts/lib/build-piece.js";
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
 const V = 35;
@@ -40,6 +41,11 @@ export function tick(ctx) {
   const bx = (id, x, y, z, w, h, d, material, extra = {}) => sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material, physics: "static", ...extra });
   const fit = (id, model, x, z, yaw, size, extra = {}) => sp(id, { feetPosition: { x, y: 0.1, z }, rotation: { yaw }, model: { id: model }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } }, physics: { body: "static", collider: "box" }, ...extra });
 
+  { // what the owner built here in B mode (scripts/build.js saves it to their homeKeep.built), back where they put it
+    const built = homeOwner?.state?.homeKeep?.built ?? {};
+    for (const o of Object.values(ctx.place.objects)) if (o.id?.startsWith?.("hb-") && !built[o.id]) ctx.destroy(o.id);
+    for (const [id, b] of Object.entries(built)) { const spec = builtSpec(b.kind, b, homeOwner.id); if (!spec) continue; if (ctx.place.objects[id]) ctx.destroy(id); ctx.spawn(id, spec); }
+  }
   const use = (kind, name, verb, extra = {}) => ({ tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind, name, verb, ...extra } });
   bx("h-floor", 0, 0, 0, W, 0.1, D, FLOOR);
   bx("h-carpet-living", -0.7, 0.1, 2.5, W - 1.6, 0.012, 6.6, CARPET, { physics: "none" }); // carpet to the kitchen edge

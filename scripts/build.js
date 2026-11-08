@@ -4,6 +4,7 @@
 import { heard } from "./lib/hear.js";
 import B from './lib/data/breakables.yml'
 import { raycast, overlapPoint } from 'builtin/physics'
+import { builtSpec } from './lib/build-piece.js'
 
 const piece = (s) => B.pieces[s.building] ? s.building : null
 const canPay = (s, pc) => Object.entries(pc.cost).every(([k, n]) => (s.scrap?.[k] ?? 0) >= n)
@@ -46,12 +47,14 @@ function place(ctx, s) {
   if (!canPay(s, pc)) { s.notice = 'Need ' + Object.entries(pc.cost).map(([k, n]) => n + ' ' + B.scrap[k].name).join(', '); s.noticeAt = ctx.now(); return }
   if (!at.ok) { s.notice = 'No room to build there'; s.noticeAt = ctx.now(); return }
   const sc = { ...s.scrap }; for (const [k, n] of Object.entries(pc.cost)) sc[k] -= n; s.scrap = sc
-  ctx.spawn({
-    tags: pc.bench ? ['breakable', 'built', 'bench'] : ['breakable', 'built'], feetPosition: { x: at.x, y: at.y, z: at.z }, rotation: { yaw: at.rot },
-    primitive: { kind: 'scripted', script: 'scripts/build-geo.js', params: { kind: s.building, dmg: 0 } },
-    material: { pbr: true }, physics: { body: 'static', collider: s.building === 'ramp' ? 'mesh' : 'box' },
-    state: { mat: pc.mat, hp: pc.hp, maxHp: pc.hp, name: pc.name, size: Math.max(...pc.size), by: ctx.self.id },
-  })
+  const spec = builtSpec(s.building, at, ctx.self.id)
+  if (ctx.self.place === 'home11' && s.home11) { // your own house: the piece is saved in your home's keep and rebuilt for you every visit
+    const id = 'hb-' + Math.round(ctx.now()).toString(36)
+    ctx.spawn(id, spec)
+    const k = { ...(s.homeKeep ?? {}) }, built = { ...(k.built ?? {}) }
+    if (Object.keys(built).length >= 80) { s.notice = 'Your house holds 80 built pieces'; s.noticeAt = ctx.now() }
+    else { built[id] = { kind: s.building, x: at.x, y: at.y, z: at.z, rot: at.rot }; k.built = built; s.homeKeep = k; s.notice = pc.name + ' built · saved to your home'; s.noticeAt = ctx.now() }
+  } else ctx.spawn(spec)
   heard(ctx, { clip: `/cdn/moodboard-realistic-gritty/sfx-${B.buildSound}.mp3`, position: { x: at.x, y: at.y + 1, z: at.z }, volume: 0.7, maxDistance: 20 })
   ctx.emit('fx', { position: { x: at.x, y: at.y + 0.1, z: at.z }, script: `fx
 pop dust burst=8..12 on=disc(.8) life=.5..0.9 v=up(.3..0.7)+sdir()*.4 size=.2..0.35 acc=buoy(.2)+drag(1.5) col=<.62,.55,.4> a=0>.35:.3>.7:.15>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)` })
