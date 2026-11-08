@@ -1,0 +1,21 @@
+# spawn-scene v2 yaml x0z0
+intake-hum:
+  audio: {bus: Ambience, clip: /cdn/value.4f2ca6969e3919a947a1bb8c8c957185a3a208f8fdd1d35ecd8daa87bd5495ce.mp3, gain: 0.18, loop: true, spatial: false}
+  feetPosition: {x: 0, y: 2.8, z: -1.6}
+  id: intake-hum
+intake-light-a:
+  feetPosition: {x: 0, y: 2.8, z: -1.6}
+  id: intake-light-a
+  light: {color: oklch(0.95 0.06 95), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}
+intake-light-b:
+  feetPosition: {x: 0, y: 2.8, z: 1}
+  id: intake-light-b
+  light: {color: oklch(0.95 0.06 95), distance: 8, intensity: 4, kind: point, shadow: {enabled: false}}
+intake-room:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: intake-room
+  material: {emissiveIntensity: 2.4, roughness: 0.92}
+  physics: {body: static, collider: mesh}
+  primitive: {kind: scripted, script: scripts/intake-geo.js}
+  receiveShadow: true
