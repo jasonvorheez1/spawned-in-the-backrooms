@@ -28,6 +28,7 @@ function survivor(ctx, id) {
 }
 const lit = (cx, cz) => zoneOf(cx, cz) !== "dark";
 
+const slAt = {}; // per-player sludge hiss clock, this machine's
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
   if (!(Math.abs(now - (ctx.session.wallTick ?? -1e9)) < 2000)) { ctx.session.wallTick = now; tickWalls(ctx); } // broken interior walls: holes drawn, regrown after a while (lib/breakables.js)
@@ -118,8 +119,8 @@ export function tick(ctx) {
         if (Math.hypot(f.x - h.x, f.z - h.z) < 1.15 && f.y < 0.3) {
           ps.hp -= dmgAfterArmor(ps.look, (L.sludgeHurt ?? 7) * dt);
           ps.sanity = Math.max(0, (ps.sanity ?? 0) - (L.sludgeSanity ?? 3) * dt);
-          if (!p.session?.slAt || now - p.session.slAt > 1500) {
-            p.session.slAt = now;
+          if (now - (slAt[p.id] ?? -1e9) > 1500) {
+            slAt[p.id] = now;
             heard(ctx, { maxDistance: 24, refDistance: 4, clip: GRIT("acid-sizzle-hiss"), position: f, volume: 0.5 }, { audience: { player: p.id } });
             ctx.emit("screenFlash", { color: "#25101a", duration: 0.3, intensity: 0.4 }, { audience: { player: p.id } });
             if (!p.session?.sludgeWarn) {
