@@ -687,6 +687,7 @@ export function pumpRack(ctx) {
 function invAction(ctx, d) {
   const s = ctx.self.state
   if (d.k === 'close') { s.invOpen = false; return }
+  if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc'].includes(d.t) ? d.t : 'all'; return }
   if (d.k === 'drink') { drink(ctx, d.c); return }
   if (d.k === 'eat') { const c = d.c, n = s.meat?.[c] ?? 0; if (!MEAT[c] || n <= 0) return
     s.meat = { ...s.meat, [c]: n - 1 }; s.hp = Math.min(maxHp(s.level, s), (s.hp ?? 0) + MEAT[c].hp); s.hunger = Math.min(100, (s.hunger ?? 100) + MEAT[c].food)

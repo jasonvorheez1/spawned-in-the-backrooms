@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 37;
+const V = 38;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -115,13 +115,17 @@ function lay(ctx) {
   });
 
   // Curved 1980s diner booth with red leather banquettes, formica table with chrome edging, and condiments
-  const BOOTH_GLB = "/cdn/value.2cd39502d1010b8a7f95188d8438cb40ca75672cdce4f90a67594b39add98c68.glb" // art/l61-booth/build.py: tripo booth, table pulled off the benches
-  const spawnBooth = (id, x, z, yaw) => sp(id, {
+  const BOOTH_GLB = "/cdn/value.16e718586e8a4ad9bc8fee6f9deb9a8a0783a3d7735609809865f55591915948.glb" // art/l61-booth/build.py: tripo booth, benches slid out from the table
+  // sit spots read off the build (booth-local x, z; the sitter faces the table): the side bench and the back bench
+  const BOOTH_SEATS = [{ k: "a", x: -0.76, z: 0.47, yaw: -90, w: 2, gap: 0.55 }, { k: "b", x: 0.56, z: -0.59, yaw: 180, w: 2, gap: 0.62 }];
+  const spawnBooth = (id, x, z, yaw) => { boothSeats(id, x, z, yaw); return boothBody(id, x, z, yaw); };
+  const boothSeats = (id, x, z, yaw) => { const r = (yaw * Math.PI) / 180, c = Math.cos(r), s = Math.sin(r); for (const b of BOOTH_SEATS) sp(`${id}-seat-${b.k}`, { feetPosition: { x: x + b.x * c + b.z * s, y: 0, z: z - b.x * s + b.z * c }, rotation: { yaw: yaw + b.yaw }, tags: ["seat"], state: { seat: { w: b.w, gap: b.gap, d: 0.04, y: 0.28 }, verb: "Sit", name: "Diner booth" } }); };
+  const boothBody = (id, x, z, yaw) => sp(id, {
     feetPosition: { x, y: 0, z },
     rotation: { yaw },
     physics: { body: "static", collider: "box" },
     model: BOOTH_GLB,
-    layout: { box: { min: { x: -1.1, y: 0, z: -0.9 }, max: { x: 1.1, y: 1.35, z: 0.9 } } },
+    layout: { box: { min: { x: -1.264, y: 0, z: -1.042 }, max: { x: 1.264, y: 1.35, z: 1.042 } } },
     children: [
       { feetPosition: { x: 0, y: 2.5, z: 0 }, light: { kind: "point", color: "oklch(0.92 0.08 75)", intensity: 2.2, distance: 7 } },
       { feetPosition: { x: 0, y: 2.6, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.24, height: 0.16 }, material: { color: "#1e5238", roughness: 0.4 } },
