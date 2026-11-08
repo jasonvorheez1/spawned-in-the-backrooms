@@ -17,9 +17,10 @@ export function onTriggerEnter(ctx, other) {
   const key = String(ctx.self.id).split("/").pop();
   ctx.emit("screenFlash", { color: "#000000", duration: 0.9, intensity: 1 }, { audience: { player: other.id } });
   heard(ctx, { maxDistance: 22, refDistance: 3, clip: "/cdn/moodboard-realistic-gritty/sfx-static-burst-glitch-threshold.mp3", position: other.feetPosition, volume: 0.8 }, { audience: { player: other.id } });
-  if (key === "l6-to-l61" || key === "l6-wire-trip") { // the wire: your foot catches, the floor gives, you land in a red bar that smells like fries
-    ctx.emit("screenShake", { intensity: 0.5, duration: 0.35 }, { audience: { player: other.id } });
-    other.state.notice = { text: "Your foot catches the wire. The floor gives. You land hard in a red bar that smells like fries.", at: ctx.now() };
+  if (key === "l6-to-l61" || key === "l6-wire-trip") { // Show, don't tell: floor collapse stumble, downward camera punch, splinter crash and dust impact
+    ctx.emit("screenShake", { intensity: 0.7, duration: 0.45 }, { audience: { player: other.id } });
+    ctx.emit("cameraPunch", { direction: { x: 0, y: -0.8, z: 0.3 }, intensity: 0.75 }, { audience: { player: other.id } });
+    heard(ctx, { maxDistance: 20, clip: "/cdn/moodboard-realistic-gritty/sfx-wooden-crate-break-splinter.mp3", position: other.feetPosition, volume: 0.85 }, { audience: { player: other.id } });
   }
   ctx.cross(other, PAIR[key] ?? ctx.self.state.to);
 }
