@@ -8,6 +8,7 @@ import { findPath } from "builtin/nav";
 import { raycast } from "builtin/physics";
 import FC from "./lib/data/faceling.yml";
 import {
+import { handTray } from "./lib/snacktray.js";
   WIPE_COUNTER,
   SERVE_PLATE,
   FLIP_BURGER,
@@ -398,7 +399,7 @@ export function update(ctx, dt) {
         applyRest(me, dt);
         me.rotation = { yaw: yawOf(dx, dz) };
         ctx.destroy(D.tray);
-        who.state.l61Tray = now;
+        handTray(ctx, who, D.n); // the patron takes a real tray (scripts/lib/snacktray.js)
         who.state.payout = { xp: 2, items: D.items };
         ctx.emit(
           "damageNumber",
