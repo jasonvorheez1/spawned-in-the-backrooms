@@ -1,5 +1,6 @@
 // Level 1's hounds: one manager steps the pack. They roam the halls, hunt when they see or hear you,
 // hunt harder in a Flickering, and never cross into the corridors (safe ground).
+import { knocked } from "./lib/knock.js";
 import { heard } from "./lib/hear.js";
 import { raycast } from "builtin/physics";
 import L from "./lib/data/level1.yml";
@@ -66,6 +67,7 @@ export function update(ctx, dt) {
   if (lead && lead.id !== ctx.self.id && String(ctx.self.id) > String(lead.id)) { ctx.sleep(1); return; }
   for (const h of allHounds) {
     const m = (mem[h.id] ??= {}), pos = h.feetPosition, st = h.state ?? {}, mu = npcMul(st);
+    if (knocked(ctx, h, now, dt)) continue; // kicked flat or shoved: it tumbles, no AI till it is up
     if (ctx.self.place === "level5" && !st.dead && zoneAt5(pos.x, pos.z)?.id !== "boiler") { h.feetPosition = { x: [37.5, 28.5, 40.5][Math.floor(ctx.random() * 3)], y: 0.05, z: [2.5, -0.5, -9.5][Math.floor(ctx.random() * 3)] }; m.roam = null; continue; } // level 5: the pack lives in the Boiler Room alone
     if (now >= (m.meshChk ?? 0)) { m.meshChk = now + 2000; const o = ctx.getObject(h.id); if (o && !String(o.model?.id ?? o.model ?? "").includes(MODEL.slice(5))) { o.primitive = null; o.model = { id: MODEL }; } } // the old coded body gives way to the mesh
     if (m.bleed && now >= m.bleed.next) { // the maul's wound: 2 a second for 4 s, dealt from here

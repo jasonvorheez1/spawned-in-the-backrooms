@@ -4,6 +4,7 @@
 // At 3 m the skin splits down the chest: a shriek, the screen shakes,
 // a wet red long-limbed thing unfolds, lunges and slashes twice. Each slash opens a bleed that ticks on.
 
+import { knocked } from "./lib/knock.js";
 import { heard } from "./lib/hear.js";
 import L from "./lib/data/level1.yml";
 import { zoneAt, safeZone } from "./lib/level1.js";
@@ -182,6 +183,7 @@ export function update(ctx, dt) {
     const m = (mem[e.id] ??= { ph: "skin" });
     const pos = e.feetPosition;
     const st = e.state ?? {};
+    if (knocked(ctx, e, now, dt)) continue;
     const mu = npcMul(st);
     const o = ctx.place.objects[e.id];
     if (!o) continue;

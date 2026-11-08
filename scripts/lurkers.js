@@ -2,6 +2,7 @@
 // holds it still (and pays sanity for it); look away, or break the line of sight, and it closes the gap fast.
 // They wander the halls like smilers, but never cross into the safe room. Dead lurkers are cleared here.
 
+import { knocked } from "./lib/knock.js";
 import { heard } from "./lib/hear.js";
 import { hearOf, sighting, leadOf, raise, alertFor } from "./lib/hunt.js";
 import L from "./lib/data/level0.yml";
@@ -170,6 +171,7 @@ export function update(ctx, dt) {
     const st = w.state ?? {};
     const pos = w.feetPosition;
     const mu = npcMul(st);
+    if (knocked(ctx, w, now, dt)) continue;
 
     if (st.mesh !== 3) {
       w.primitive = null;

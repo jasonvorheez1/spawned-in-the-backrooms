@@ -133,12 +133,6 @@ function kickFoe(ctx, s, f, p) {
     e.state.stunUntil = now + 1500
     e.state.down = { x: dir.x * push, z: dir.z * push, at: now, ms: 1100 }
     ctx.emit('impulse', { target: e.id, impulse: { x: dir.x * push * 45, y: 180, z: dir.z * push * 45 } })
-    if (!e.tags?.includes('partygoer')) { // the generic foe tumbles by tween; the Partygoer manager does its own fall
-      const yaw = typeof e.rotation === 'number' ? e.rotation : (e.rotation?.yaw ?? 0)
-      animate(ctx, e.id, { 'rotation.pitch': [0, -85, -85, 0] }, { duration: 1.4, easing: 'easeOutQuad' })
-      animate(ctx, e.id, { 'feetPosition.x': `+=${dir.x * push * 0.35}`, 'feetPosition.z': `+=${dir.z * push * 0.35}` }, { duration: 0.45, easing: 'easeOutCubic' })
-      e.rotation = { yaw }
-    }
     ctx.emit('damageNumber', { position: { ...hitAt, y: hitAt.y + 1 }, text: 'KNOCKDOWN', color: '#ff9a3c', size: 1.2 })
     ctx.emit('playSound', { clip: SND('brutal-kick-body-flies-and-crashes'), position: hitAt, volume: 1, maxDistance: 25 })
     ctx.emit('screenShake', { intensity: 0.3, duration: 0.2 }, { audience: { player: ctx.self.id } })

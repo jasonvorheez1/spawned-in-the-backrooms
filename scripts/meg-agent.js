@@ -1,3 +1,4 @@
+import { knocked } from "./lib/knock.js";
 import { vo } from "./lib/voices.js";
 import { social } from "./lib/npc-social.js";
 import { isVilified } from "./lib/rep.js";
@@ -381,6 +382,7 @@ export function update(ctx, dt) {
   if (m.dressed !== 4) { m.dressed = 4; if (!s.dead) dress(ctx, me); }
   // empty level or far-off NPC: sleep to save CPU (perf)
   if (!ctx.place.players.length) { ctx.sleep(2); return; }
+  if (knocked(ctx, me, now, dt)) return; // kicked flat: down a beat, then back up
   let nearPlayerDist = 1e9; const f = me.feetPosition;
   for (const p of ctx.place.players) { const d = Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z); if (d < nearPlayerDist) nearPlayerDist = d; }
   if (!s.follow && !s.target && !m.down && !m.talking) {

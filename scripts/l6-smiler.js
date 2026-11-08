@@ -4,6 +4,7 @@
 // - Eye contact: stare directly at it and it freezes rigid, locked in place.
 // - Break eye contact or turn your back, and it charges at blinding speed to lunge.
 // - Flashlights don't work in Level 6, so wanderers cannot blind or pin it with a torch beam.
+import { knocked } from "./lib/knock.js";
 import { heard } from "./lib/hear.js";
 import { raycast } from "builtin/physics";
 import { stepToward6, cellAt, cellCenter, isWalkable } from "./lib/level6path.js";
@@ -54,6 +55,7 @@ export function update(ctx, dt) {
 
   for (const w of smilers) {
     const m = (mem[w.id] ??= {}), st = w.state ?? {}, pos = w.feetPosition, mu = npcMul(st);
+    if (knocked(ctx, w, now, dt)) continue;
 
     if (st.dead || (st.hp ?? 1) <= 0) {
       if (!m.dieAt) {
