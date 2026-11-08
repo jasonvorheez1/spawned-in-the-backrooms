@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1969,
-  "updatedAt": "2026-11-08T16:43:22.478Z",
-  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Shared player, NPC, loot, combat and presentation systems support authored encounters and generated environments; Level 0 now includes lore landmarks and Level 10 has crop-dwelling worms, while Level 11's city is assembled from reusable architectural kits.",
+  "basedOnSpecVersion": 1970,
+  "updatedAt": "2026-11-08T16:44:10.115Z",
+  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Shared player, NPC, loot, combat and presentation systems support authored encounters and generated environments; Level 0 has lore landmarks, Level 10 has crop-dwelling worms, and Level 11's city is assembled from reusable architectural kits.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 / The Lobby, yellow maze and safe-room hub; authored fixtures, shifting walls and hunters, with generated Manila sanctuary, M.E.G. waypoint, lore props and noclip seam.",
@@ -20,7 +20,6 @@
     "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and eye position; scripts/view3.js toggles player.state.tp.",
     "places/<place>/config.yaml + sim.js + cells - place setup and placements; sims build local layouts and tick local behavior, generally sleeping when empty.",
     "sim.js - world cadence and onOutOfBounds referee; players return true for normal respawn, creatures with state.home return home, others are destroyed for manager respawn.",
-    "places/level10/config.yaml + places/level10/sim.js + places/level184/config.yaml + places/level184/sim.js - heightmapped farm/countryside simulation roots; Level 10's former canola threshold is presently destroyed by sim.",
     "places/level11/sim.js + scripts/lib/level11-city.js + scripts/lib/level11-vaults.js - Level 11 city, street and underground assembler; includes shop and apartment placements.",
     "places/spamton/sim.js + scripts/spamton-boss.js - dedicated arena entry; sim lays basement and lights and manages boss presence; boss runs encounter and scripts/ui.js mounts arena HUD."
   ],
@@ -32,25 +31,25 @@
     "scripts/lib/loot.js + scripts/lib/items.js + level data - shared item pools, rolls, remains, parsing and container helpers; art/props/build.py supplies modeled lockers/fridges.",
     "scripts/lib/combat.js + scripts/lib/data/combat.yml + scripts/lib/ballistics.js - shared hit/armor and firearm accuracy/projectile rules used by player and NPC combat.",
     "scripts/lib/condition.js + condition.yml, difficulty.yml and scripts/lib/stats.js - weapon/armor condition, balance multipliers and derived handling/carry values used by player, clothes, loot UI and NPC behavior.",
-    "scripts/lib/nav.js + builtin/nav - shared path search budget (3 per tick), 4-second route cache and 0.32 m body radius for meg-agent, l5-staff and l61-staff; scripts/lib/footsteps.js + footsteps.yml raycast each planted step's surface and vary take, volume and pitch by surface, slope and movement."
+    "scripts/lib/nav.js + builtin/nav - shared path search budget (3 per tick), 4-second route cache and 0.32 m body radius for meg-agent, l5-staff and l61-staff; scripts/lib/footsteps.js + footsteps.yml raycast planted steps for surface-specific sounds."
   ],
   "notableExports": [
     "sim.js - cadence, tick, onOutOfBounds; places/level21/sim.js and places/level61/sim.js - cadence and tick; places/level11/sim.js - cadence, L11_FAR, l11Lean, tick; places/spamton/sim.js - cadence, tick.",
-    "places/level10/sim.js and places/level184/sim.js - cadence, tick; scripts/terrain10.js and scripts/terrain184.js - heightAt, materialAt; scripts/barn10.js - geometry, collider; scripts/tree10.js - geometry, collider; scripts/wheat10.js - geometry.",
+    "places/level10/sim.js and places/level184/sim.js - cadence, tick; scripts/terrain10.js and scripts/terrain184.js - heightAt, materialAt; scripts/barn10.js - geometry, collider; scripts/tree10.js - geometry, collider; scripts/wheat10.js - geometry, collider.",
     "scripts/ambient-anim.js - onSpawn, update; scripts/lib/ambient.js - fan, fanHousing, cable and DRIP, DUST, MIST, SPORES, BUBBLES, RIPPLE builders/effects.",
-    "scripts/lib/level21.js - grid, room, zone, exit and height queries/constants; scripts/lib/maze21path.js - canPass21, stepToward, cellNear.",
-    "scripts/l21-use.js - updateSchedule, ears, update; scripts/level21-geo.js - geometry; scripts/lib/chatter.js - tickChatter, CHATTER.",
+    "scripts/lib/level21.js - grid, room, zone, exit and height queries/constants; scripts/lib/maze21path.js - canPass21, stepToward, cellNear; scripts/l21-use.js - updateSchedule, ears, update; scripts/level21-geo.js - geometry; scripts/lib/chatter.js - tickChatter, CHATTER.",
     "scripts/l61-use.js - MENUS, ears, landed, takeItem, vendExpire, ready, expire; scripts/lib/level61-extra.js - layExtra, faceling, person, PEOPLE, FACELING_IDS; scripts/lib/snacktray.js - tray constants and helpers.",
     "scripts/lib/level11-city.js - layCity, layStreet, tickCity; scripts/lib/level11-shop.js - SHOP, layShop; scripts/level11-elevator.js - updateSchedule, callElevator, ears, update; scripts/l11-gate.js - onSpawn, ears.",
-    "scripts/lib/level11-quests.js - QUESTS, setSedcoStep, setCraneStep, setMaintStep, finishQuest, handleDialogueQuest; scripts/lib/nav.js - NAV, navBudget, navPath; scripts/l10-worms.js - update, bleed; scripts/l11-mall.js, scripts/l11-masonry.js, scripts/l11-sedco-shell.js - geometry, collider; scripts/tex-leaves.js - meta, texture."
+    "scripts/lib/level11-quests.js - QUESTS, setSedcoStep, setCraneStep, setMaintStep, finishQuest, handleDialogueQuest; scripts/lib/nav.js - NAV, navBudget, navPath; scripts/l10-worms.js - update, bleed.",
+    "scripts/l11-mall.js, scripts/l11-masonry.js and scripts/l11-sedco-shell.js - Level 11 mall, masonry and Sedco shell builders."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, clothing, karma/rep and Level 11 l11Access; also transient movement/combat state and per-machine actor data.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, clothing, karma/rep and Level 11 l11Access; also transient movement/combat state.",
     "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes, skills, points, tags and sheet state; initialize/migrate/spend points, derive carry/combat values and tick companion perks.",
     "scripts/craft.js - craft actions, payout redemption and hunger/thirst drain; scripts/swim.js owns swimming/underwater/breath and swim session controls, timer and audio.",
     "scripts/interact.js + scripts/lib/seat.js - player focus, loot and sit state; interact.js also assigns nearby containers to NPC owners, persists warn/anger consequences, handles vehicle entry/exit, and tracks the highlighted target.",
-    "scripts/talk.js owns dialogue/shop UI state and NPC rapport, gifts, trade and rep effects; scripts/lib/level11-quests.js owns quest progress keys sedcoQ/craneQ/maintQ and player.state.quest tracker/reward writes; scripts/lib/rep.js owns karma and reputation rules.",
-    "scripts/meg-agent.js - NPC routines, attributes/nerve, loadout, combat, fear, cover, idle social coordination and transient movement/path recovery; interact.js writes NPC warned/angry memories; chatter.js writes NPC line/talkAt/talkTo and turn state.",
+    "scripts/talk.js owns dialogue/shop UI state and NPC rapport, gifts, trade and rep effects; scripts/lib/level11-quests.js owns quest progress keys sedcoQ/craneQ/maintQ and player.state.quest tracker/reward writes; scripts/lib/rep.js owns karma/reputation calculations.",
+    "scripts/meg-agent.js - NPC routines, attributes/nerve, loadout, combat, fear, cover, idle social coordination and transient movement/path recovery; interact.js writes NPC warned/angry memories; chatter.js writes NPC line/talkAt/talkTo and timers.",
     "scripts/lib/combat.js owns pure shared combat calculations; combat.yml is their tuning source; player.js applies hits while clothes.js/stats.js apply armor DR; scripts/lib/ballistics.js computes weapon spread and projectile paths.",
     "scripts/os.js owns player.state.os terminal session and per-session panel done flags; it writes player.state.l11Access from panel grants (including sedcofront); scripts/level11-elevator.js owns cab travel session/display and schedule."
   ],
@@ -58,33 +57,33 @@
     "world.config.yaml actions → templates/player.js behavior order: locomotion/player, swim, interact/grab/rest/mahjong/talk/build/stats/craft/OS/lockpick/spamton-fight/horde, then critter, main-menu and view3; configured routing invokes scripts/routing.js.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes player.state.aimPt → player.js crosshair-aligned shots.",
     "world.config.yaml Backspace → scripts/main-menu.js; menu actions and scripts/ui.js render menu/creator; creator C uses scripts/wardrobe-ui.js to emit dress actions → scripts/critter.js writes player look/outfits.",
-    "Spawn room selection → scripts/routing.js pickRoom: accepted ctx.requestedRoomId preserves invited/portal/party rooms; otherwise derives solo-<normalized userId or username> (guest fallback). Engine out-of-bounds → sim.js handles normal player respawn and creature return/destruction.",
-    "Level threshold trigger → scripts/level-door.js maps paired IDs, writes arrival state.clipKind and calls companion.bring → nearby non-waiting followers cross; player.js consumes clipKind into state.xfer.kind. Level 10's l10-canola-in / l10-from-l184 placements are currently destroyed, so its Level 184 route is blocked.",
-    "places/level10/sim.js tick lays Bumper Crop using height terrain and crop scatter; places/level10/cells/x0z0.scene starts scripts/l10-worms.js, which reads terrain height/material and exposed players, spawns underground stalkers and handles their attacks; player.js excludes l10worm from corpse conversion.",
-    "Level 11 sim.js → scripts/lib/level11-city.js layCity/layStreet builds from level11-models.yml and art/level11 models; sim calls layShop, layVaults, tickCity and tickChatter, with versioned incremental rebuild rows/cursor in ctx.session.l11q and place.state.lq.",
+    "Spawn room selection → scripts/routing.js pickRoom: accepted ctx.requestedRoomId preserves invited/portal/party rooms; otherwise derives solo-<normalized userId or username> (guest fallback). Engine out-of-bounds → sim.js handles normal player respawn and creature return/despawn.",
+    "Level threshold trigger → scripts/level-door.js maps paired IDs, writes arrival state.clipKind and calls companion.bring → nearby non-waiting followers cross; player.js consumes clipKind into state.xfer.kind. Level 10's l10-canola-in / l10-from-l184 routes are destroyed by sim.",
+    "places/level10/sim.js tick lays Bumper Crop using height terrain and crop scatter; places/level10/cells/x0z0.scene starts scripts/l10-worms.js, which reads terrain height/material and exposed players, spawns underground stalkers and handles their stalking, surfacing, biting and sinking cycle.",
+    "Level 11 sim.js → scripts/lib/level11-city.js layCity/layStreet builds from level11-models.yml and art/level11 models; sim calls layShop, layVaults, tickCity and tickChatter, with versioned incremental rebuild rows/cursor in ctx.session.",
     "Level 11 city sim → scripts/l11-masonry.js quay/arch, scripts/l11-sedco-shell.js Sedco building, and scripts/l11-mall.js strip-mall shell/awnings geometry and colliders; generated primitive placements supply architectural detailing.",
     "Level 11 BackOS terminal placements → scripts/computer.js / scripts/os.js session and scripts/os-ui.js screen; terminal grants write player.state.l11Access; SEDCO-SEC-01 also advances sedcoQ through scripts/lib/level11-quests.js.",
-    "Level 11 quest flow: scripts/talk.js openDialogue → handleDialogueQuest starts/turns in quests with Courier, Vance, Kael and Janitor; scripts/os.js and scripts/level11-use.js advance Sedco, canal-crane and maintenance objectives; quest helper owns progress and rewards.",
+    "Level 11 quest flow: scripts/talk.js openDialogue → handleDialogueQuest starts/turns in quests with Courier, Vance, Kael and Janitor; scripts/os.js and scripts/level11-use.js advance Sedco, canal-crane and maintenance objectives; quest helper updates tracker and rewards.",
     "Level 11 elevator cab/interior and landing call buttons → scripts/level11-elevator.js callElevator/update moves physical cab between y=0.3 and y=35.7; Porsche interaction parents rider and emits press to its controller.",
-    "scripts/player.js update → scripts/lib/footsteps.js stepTick raycasts surface and reads footsteps.yml for randomized clips/stride/weight/slope; Level 10 maps to field sounds. Level 0 sim lays deterministic moments → scripts/moments.js handles use; player.js reads place.state.moments.manilaAt for Manila zone, recovery and sanity drain."
+    "scripts/player.js update → scripts/lib/footsteps.js stepTick raycasts surface and reads footsteps.yml for randomized clips/stride/weight/slope; Level 10 maps to field sounds. Level 0 sim lays deterministic moments → scripts/moments.js handles tagged moment state."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light state and red-zone variants; Level 5 carries portal/quest props and scripts/l5-rats.js runs Boiler Room nest/pack cycles.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and scripts/l4-office.js/l4-office-geo.js/l4-home.js - office plan, cubicle/phone/printer variants, resident schedules and home claims; Level 7 has its own ocean and room spaces.",
-    "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - NPC roles, dialogue, looks and routines vary by person; meg-agent.js supplies combat and idle social behavior; clothes.yml/mat-cloth.js/critter-model.js render wardrobe variants.",
+    "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - NPC roles, dialogue, looks and routines vary by person; meg-agent.js supplies combat and idle social behavior; clothes.yml/mat-cloth.js/critter-model.js build varied appearance.",
     "scripts/lib/craft.js + craft data - recipe category, costs, skill, bench, batch size and item family vary per recipe.",
     "places/level21/sim.js + level21.yml + level21-geo.js - room blocks share generated hall/room structure; room type, zone height, lighting, decor and loot vary by authored grid data and deterministic hashes.",
     "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share service systems with varying menus and Faceling roles; rebuilds queue solids first and remove stale roots incrementally.",
-    "scripts/lib/level11-city.js + scripts/lib/data/level11-models.yml + art/level11 build kits and l11-masonry/mall/sedco-shell - generated city/building forms reuse model and architectural kits with seeded districts, sizes and detail variations; quests share interaction chains.",
+    "scripts/lib/level11-city.js + scripts/lib/data/level11-models.yml + art/level11 build kits and l11-masonry/mall/sedco-shell - generated city/building forms reuse model and architectural kits with seeded districts, sizes and detail variations.",
     "places/level10/sim.js + places/level184/sim.js and terrain10/terrain184.js - heightmapped fields share crop and farm-prop generators with terrain-specific scatter; Level 10's scripts/l10-worms.js adds an exposed-player stalker cycle."
   ],
   "probableOrphans": [],
   "migrationNotes": [
     "Level 2.1 grid is 30×30 at 4 m per cell (120 m square); keep level21.js passability/room zones, maze21path.js traversal, sim geometry/hound routing aligned, and roofAt in place state so ceiling checks survive ticks.",
-    "Level 2 ↔ Level 2.1, Level 6 ↔ Level 6.1, Level 6.1 ↔ Level 11, and Level 11 ↔ Level 10 paired arrival IDs are owned by level-door.js; Level 10 currently destroys l10-canola-in and l10-from-l184, so do not treat Level 184 as reachable through canola.",
-    "Level 10 and Level 184 configs use terrain10.js and terrain184.js heightmap/materialAt; keep terrain-relative y placements and arrival/track regions aligned with sim scenery. l10-lake-deep remains a floor trigger mapped to level7#l7-from-l10.",
-    "Level 0 moments are deterministic placements recorded in place.state.moments; places/main/sim.js bumps momentsV to 2 and clears tagged moments before relaying them. Manila's player zone/recovery depends on moments.manilaAt, and pages 21-23 in pages.yml back the generated lore objects.",
-    "Weapon condition is player.state.cnd_<weapon>; garment condition lives in player.state.look.cnd keyed by garment token and shared across same kind/colour copies; keep clothes.yml pattern IDs implemented by mat-cloth.js.",
-    "scripts/lib/data/combat.yml tunes scripts/lib/combat.js: armor uses DR reduced by penetration then DRe/(DRe + 0.5×damage + 8), capped at 80%; pellets are mitigated individually. Keep player hits, clothes/stats armor, and ballistics aligned."
+    "Level 2 ↔ Level 2.1, Level 6 ↔ Level 6.1, Level 6.1 ↔ Level 11, and Level 11 ↔ Level 10 paired arrival IDs are owned by level-door.js; Level 10 currently destroys l10-canola-in and l10-from-l184, so do not treat Level 184 as reachable through them.",
+    "Level 10 and Level 184 configs use terrain10.js and terrain184.js heightmap/materialAt; keep terrain-relative y placements and arrival/track regions aligned with sim scenery. l10-lake-deep remains a floor trigger mapped to level7#l7-from-lake.",
+    "Level 10 worms may be picked up mid-rise: l10-worms.js initializes absent phase time/base height, only assigns finite rise scale, and clears scale on sinking back underground.",
+    "Level 0 moments are deterministic placements recorded in place.state.moments; places/main/sim.js bumps momentsV to 2 and clears tagged moments before relaying them. Manila's player zone/recovery depends on moments.manilaAt, and pages 21-23 of its moment are linked content.",
+    "Weapon condition is player.state.cnd_<weapon>; garment condition lives in player.state.look.cnd keyed by garment token and shared across same kind/colour copies; keep clothes.yml pattern IDs implemented by mat-cloth.js."
   ]
 }
