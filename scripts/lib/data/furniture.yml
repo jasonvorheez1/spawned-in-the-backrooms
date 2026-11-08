@@ -1,2 +1,14 @@
-pieces: {}
-order: []
+# Andrew's Furniture catalog: what players buy at the Bonus Room mall and place at home from the B menu (Furniture tab).
+# size = the layout box [width x, height y, depth z] in metres after forward turns the front to -z; prices in Backdollars.
+pieces:
+  sofa:         { name: "Plaid sofa",          price: 60, model: "/cdn/value.ff13bc205536a957826e2f7fed75554c07ffe7848198e50e1d65f257cabacdd9.glb", forward: "+x", size: [2.1, 1.05, 1.01], info: "Brown and cream plaid, three seats, one of them a little sunk in. Smells faintly of popcorn." }
+  armchair:     { name: "Recliner armchair",   price: 40, model: "/cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb", forward: "+x", size: [1.04, 1.05, 0.95], info: "Burgundy microfiber recliner. The lever sticks, then it really goes." }
+  coffee_table: { name: "Oak coffee table",    price: 25, model: "/cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb", size: [1.15, 0.46, 0.59], info: "Solid oak with a magazine shelf underneath. Coasters optional, rings included." }
+  floor_lamp:   { name: "Torchiere lamp",      price: 18, model: "/cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb", forward: "+x", size: [0.51, 1.8, 0.51], info: "Brushed nickel pole, frosted glass bowl. Bounces a warm glow off the ceiling." }
+  bookshelf:    { name: "Cherry bookshelf",    price: 35, model: "/cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb", forward: "+x", size: [0.93, 1.85, 0.45], info: "Five shelves, already full of paperbacks and DVDs somebody never came back for." }
+  crt_tv:       { name: "CRT TV and stand",    price: 55, model: "/cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb", forward: "+x", size: [1.22, 1.25, 0.67], info: "A silver tube TV on a glass stand, with a DVD player and a VCR. Heavy. Worth it." }
+  double_bed:   { name: "Double bed",          price: 90, model: "/cdn/value.b0a66618043549ab8c909dcd3ba2010c3e5134b8e1434a324b78d78a7a043411.glb", forward: "+x", size: [1.98, 1.03, 2.0], info: "Wooden headboard, navy comforter, two pillows. The bed you actually sleep in." }
+  fiddle_plant: { name: "Fiddle-leaf fig",     price: 15, model: "/cdn/value.53fa6b1388302684d3e567ca755e213843bd4d5ac5ee17c0b54fa1d579c9a019.glb", forward: "+x", size: [0.87, 1.9, 0.83], info: "Big glossy leaves in a white pot. It is fake, so it will outlive all of us." }
+  dining_set:   { name: "Round dining set",    price: 70, model: "/cdn/value.b43d69457f2c3ef6551772b02d406b27f4d66f37e2fbfc8c3d01629280227983.glb", forward: "+x", size: [1.75, 0.97, 1.16], info: "A round wooden table and two chairs. Dinner for two, or cards for two." }
+  lava_lamp:    { name: "Lava lamp side table", price: 22, model: "/cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb", forward: "+x", size: [0.44, 0.95, 0.44], info: "A purple lava lamp on a little round side table with a drawer. Mesmerizing at 2 AM." }
+order: [sofa, armchair, coffee_table, floor_lamp, bookshelf, crt_tv, double_bed, fiddle_plant, dining_set, lava_lamp]
