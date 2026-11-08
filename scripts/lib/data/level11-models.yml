@@ -8,10 +8,10 @@ glass_a: "/cdn/value.45ebeae511d5630c8a31ee89821e0e89261df4155efdd3aa3cc5795400f
 glass_b: "/cdn/value.21beb76dac479519dd33a104f1f75d3e98b7cb14c950ebf0017d1feda52d38b1.glb"
 house: "/cdn/value.07925869ea8d303d6306d36687ed705cf62304f80e74e81a27d2f6f171597ea6.glb"
 hydrant: "/cdn/value.900298491adadd82d6f2f0ea33215b5dfe54fbec4db1d4a8aafe11cdb1c5d838.glb" # tripo
-lamp: "/cdn/value.4e89f1a88386c2c6018b7ee0a1f4928c407edf78d2eabce67c5d28031522a789.glb"
+lamp: "/cdn/value.52df9d798a68433363c7f3f1855d847b830579031a9f2d7a50d54b4b6ccf7633.glb" # tripo
 mall: "/cdn/value.fffd75c8c8d11fd353840904c5dab195bc2e24c9e7cede97194a3cf282959d2a.glb"
 sedan: "/cdn/value.7b64aefa6629593ca0750e9cce606b15e70e31bfb9db56fd96b82432876ba685.glb" # tripo
-shelter: "/cdn/value.2bf25da125a47cfbcdbc483ebe10520f5e3341cb90c72f0453abfee555b5a32e.glb"
+shelter: "/cdn/value.bb8473223adce529e7ea1d80b01b4a9f9011a9d749e1fb6e56d22fff1f10ca9a.glb" # tripo
 stone: "/cdn/value.59f401d5b707a6b017bd78e4d156a3a7fb3549ecd10bfffc5e113960f32a2456.glb"
 tree: "/cdn/value.1d09f8aedb459e5048d6875c3c4d0124eacba092db9c29c047e26fef78deb1ae.glb"
 van: "/cdn/value.d3b533a1d86ba45eb6f46de9f603b8b252187cfdb0f0bf155f5b65fdb966e481.glb" # tripo
@@ -37,7 +37,7 @@ payphone: "/cdn/value.2fa5dbc907edd5756d28175eb0b2ad3a0ac57741875f5cc8cffa6535ea
 newsbox: "/cdn/value.3d0d805605cf3175ca63e4c4d2475cb9a8eea55d011267cd690d70706bd27323.glb" # tripo
 mvm: "/cdn/value.8da5786295f59ec0b4ac2638be8af4b1e081a828fc8322630aa3f50bd255b499.glb"
 ibeam: "/cdn/value.81c79ef69ad2039841bf0870ad66d6d91c2e0334c8d8df6133600c950da8dc2f.glb"
-foodcart: "/cdn/value.0581dee7c4ca4d6c102ef18efbbc992f02aa8115c02fa67267ee2983e64d218a.glb"
+foodcart: "/cdn/value.046c0dfdf85f78c27b73e44ac3ead21f77778af37b4922edfc3e47f1461d0b3c.glb" # tripo
 dogwell: "/cdn/value.864b425d65e39840600eb34d2fdc92c66947477cb9382d068772127838626ab9.glb"
 column: "/cdn/value.3291460630613c913f1ee7e7049df9834ad78a4a387cfd9e8ecaa5c109c6954d.glb"
 market_stall: "/cdn/value.6c3728e77a51fda63535641303a051ae7a47011733784bef1653ad27c539e9e8.glb"
@@ -57,3 +57,5 @@ ot_ladder: /cdn/value.e3a9e57fa4cd0ebbfe56c6389249e5bf1d94d625c3faef7ff16a17500b
 ot_drywall: /cdn/value.ba597c38894dfa91904d4ae4e0f2844197a2f85722258d562f25e3fd3848612b.glb
 ot_spool: /cdn/value.ef43f5c3a0ff372a1836db93e70be3be781790d37f5306f1678ce67eccc454ea.glb
 ot_wallad: /cdn/value.76a417867c21aeefb7d8d29c151233865229e1cc7231f9d7fd2ab532cbb33f88.png
+payphone_tripo: "/cdn/value.3f1d4bfdace9e0a5bab2fd07823e1022063a15ec0ffc77e118074a8f2df30836.glb" # tripo, 1.8 m
+wchair: "/cdn/value.d537309ef5d2562d823768f21aa2702e10abfab5c13698662c95105c2a068820.glb" # tripo clinic chair

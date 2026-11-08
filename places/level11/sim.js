@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 95; // bump to rebuild the city in rooms that are already open
+const V = 96; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1105,7 +1105,7 @@ function lay(ctx) {
     tags: ["usable"],
     feetPosition: { x: -8.8, y: 0.1, z: 15.5 },
     rotation: { yaw: 90 },
-    primitive: { kind: "scripted", script: "scripts/props11.js", params: { kind: "payphone" } }, material: null, model: null, physics: { body: "static", collider: "box" }, // a 2006 street post payphone, modelled (rounded housing, hood, handset and cord)
+    primitive: null, material: null, scale: 1.15, model: { id: MODELS.payphone_tripo, forward: "+x" }, physics: { body: "static", collider: "box" }, // tripo street payphone, 1.8 m raw x1.15
     behavior: "scripts/level11-use.js",
     state: { kind: "payphone", name: "Municipal Street Payphone", verb: "Answer Payphone" },
   });
@@ -1116,7 +1116,7 @@ function lay(ctx) {
   sp("l11-foodcart", {
     feetPosition: { x: 9.2, y: 0.1, z: 15 },
     rotation: { yaw: -90 },
-    primitive: null, material: null, model: { id: MODELS.foodcart, forward: "-z" }, // Sabrett-style cart, umbrella and all
+    primitive: null, material: null, scale: 1.8, model: { id: MODELS.foodcart, forward: "+x" }, // tripo hot dog cart, 1.2 m raw x1.8 = 2.2 m with the umbrella
     fx: { script: STEAM_CART },
   });
 
