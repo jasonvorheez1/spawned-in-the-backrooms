@@ -15,7 +15,7 @@ const SCORE = "/cdn/moodboard-realistic-gritty/music-horror-film-cue-38-seconds-
 const HORN = "/cdn/moodboard-realistic-gritty/sfx-huge-ship-horn-long-low-blast-in-thick-fog.mp3"
 const WARP = "/cdn/moodboard-realistic-gritty/sfx-static-burst-glitch-threshold.mp3"
 const WHOOSH = "/cdn/moodboard-realistic-gritty/sfx-cold-wind-gust-rushing-fog-whoosh.mp3"
-const HER = { x: 2.6, y: 3.4, z: -17.3 }  // the sun deck's bow rail, beside the reversed poster
+const HER = { x: 2.6, y: 3.45, z: -17.3 }  // the sun deck's bow rail, beside the reversed poster
 const SHIP = { x: 420, y: 8, z: 0 }       // l26-ship-far, out in the fog
 const FOG = `fx
 pop fog burst=60 on=sphere(1.2) life=2.5..4 v=sdir()*(1..2.5)+up(.6) size=.8..1.6 acc=drag(1.2)+curl(.4) sz=$size*(.6>2.4) col=<.35,.75,.45> a=0>.5:.45>.7:.25>0 rot=spin(.2) r=sprite(smoke-puff,alpha)
@@ -78,7 +78,7 @@ export function l26Tick(ctx, ses, st) {
   // D, 24-31: close, from below: her, smug, looking down at you
   if (t < 31) {
     const u = ss(24, 31, t)
-    ctx.view.camera = { eye: L({ x: HER.x - 1.6, y: HER.y - 0.3, z: HER.z - 5.5 }, { x: HER.x - 1.0, y: HER.y - 0.1, z: HER.z - 4.3 }, u), aim: herHead, fov: 34 }
+    ctx.view.camera = { eye: L({ x: HER.x - 1.6, y: HER.y + 1.25, z: HER.z - 5.5 }, { x: HER.x - 1.0, y: HER.y + 1.4, z: HER.z - 4.3 }, u), aim: herHead, fov: 34 }
     once("l2", () => snd(ctx, V(L26_LINES[1][2]), 0.9, HER))
     if (t > 28.8) once("l3", () => snd(ctx, V(L26_LINES[2][2]), 0.9, HER))
     return true
@@ -91,7 +91,7 @@ export function l26Tick(ctx, ses, st) {
     })
     if (t > 31.6) once("drop", () => dropPhoebe(ctx, "phoebe-l26"))
     if (t > 33) once("l4", () => snd(ctx, V(L26_LINES[3][2]), 0.7, head))
-    ctx.view.camera = { eye: { x: HER.x - 1.0, y: HER.y - 0.1, z: HER.z - 4.3 }, aim: herHead, fov: 40 }
+    ctx.view.camera = { eye: { x: HER.x - 1.0, y: HER.y + 1.4, z: HER.z - 4.3 }, aim: herHead, fov: 40 }
     return true
   }
   // F, 36-38: back down to you, handing the view back
