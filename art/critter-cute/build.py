@@ -3,7 +3,7 @@
 # Same contract as art/critter/build.py so scripts/lib/critter-model.js wears it unchanged:
 #   critter-<m|f>.glb   rig + Body + every garment as its own skinned mesh (Top_*, Bot_*, Shoes_*, Hat_*, Eyew_*, Neck_*)
 #   critter-sp-<sp>.glb rig + one head mesh (head, face, ears, tail, extras) with shape keys
-#                       Blink Happy Sad Angry Wide Half Smile Open Frown O Blep Blush
+#                       Blink Happy Sad Angry Wide Half Smile Open Frown O Blep Blush EyeTall EyeWide | FT_Round FT_Long FT_Broad FT_Narrow FT_Heart FT_Square FT_Snub FT_Snout FT_Chubby (face types)
 # Materials are named slots the game tints: fur limb belly tip mark inner nose antler pad | eyewhite eyeink pupil mouth tongue blush |
 # cloth_top cloth_bottom cloth_shoes cloth_hat cloth_neck button metal lens gold sole
 # Blender: Z up, front +Y (glTF -Z), T-pose, the character's left is -X.
@@ -522,6 +522,30 @@ EYE_TYPES = {"EyeTall": (.84, 1.17), "EyeWide": (1.18, .82)}
 def eye_types(st):
     for k, (sx, sy) in EYE_TYPES.items(): st[k] = [(x * sx, y * sy) for x, y in st["Basis"]]
     return st
+
+# face types (the game blends these in game: scripts/lib/data/faces.yml "types"). Head space: x across, y forward, z up, centre HC; the chin is about z -.27, the eyes near z 0
+FT_KEYS = ["FT_Round", "FT_Long", "FT_Broad", "FT_Narrow", "FT_Heart", "FT_Square", "FT_Snub", "FT_Snout", "FT_Chubby"]
+def _sm(a, b, x):
+    t = max(0.0, min(1.0, (x - a) / (b - a))); return t * t * (3 - 2 * t)
+def ft_delta(key, p, bone):
+    if bone not in ("Head", "EarL", "EarR"): return Vector()
+    d = p - HC
+    if d.length > 0.6: return Vector()
+    x, y, z = d.x, d.y, d.z
+    lo = _sm(0.02, -0.2, z)            # the lower face: 0 at the eyes and above, 1 from the cheek down
+    jaw = _sm(-0.1, -0.22, z) * (1 - _sm(-0.27, -0.33, z))
+    chin = _sm(-0.15, -0.27, z)
+    front = _sm(0.04, 0.2, y)          # the front of the face (the muzzle side)
+    if key == "FT_Round":   return Vector((x * (0.07 + 0.05 * lo), -0.008 * front * lo, -0.05 * z))
+    if key == "FT_Long":    return Vector((-0.07 * x, 0.012 * front * lo, 0.09 * z - 0.012 * lo))
+    if key == "FT_Broad":   return Vector((x * (0.11 + 0.04 * lo), 0, -0.03 * z))
+    if key == "FT_Narrow":  return Vector((-0.11 * x, 0.03 * y, 0))
+    if key == "FT_Heart":   return Vector((x * (0.045 * (1 - lo) - 0.17 * chin), 0, -0.012 * chin))
+    if key == "FT_Square":  return Vector((x * 0.14 * jaw, 0.006 * front * lo, 0.014 * _sm(-0.21, -0.28, z)))
+    if key == "FT_Snub":    return Vector((0, -0.032 * front * lo, 0.004 * front * lo))
+    if key == "FT_Snout":   return Vector((0, 0.042 * front * lo, -0.004 * front * lo))
+    if key == "FT_Chubby":  return Vector((x * (0.03 + 0.10 * lo), 0.004 * lo, -0.03 * z))
+    return Vector()
 
 class HeadMesh:
     """One mesh built vertex by vertex, with a position per shape key and a bone per vertex."""
@@ -1210,6 +1234,12 @@ def build_head(name, sp, rig, F):
     for k in FACE_KEYS:
         sk = o.shape_key_add(name=k, from_mix=False)
         for i, p in H.keys[k].items(): sk.data[i].co = p
+    # face types: whole-head STRUCTURE (width, length, jaw, cheeks, muzzle), not expressions; each key is a smooth field over the head, ears included, so they move with it
+    for k in FT_KEYS:
+        sk = o.shape_key_add(name=k, from_mix=False)
+        for i, p in enumerate(H.v):
+            dv = ft_delta(k, p, H.bone[i])
+            if dv.length > 0: sk.data[i].co = p + dv
     parent_to(o, rig)
     CUR_SP = None
     return o

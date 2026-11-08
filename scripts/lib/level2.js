@@ -85,6 +85,8 @@ export const SIDE = (() => {
   return out;
 })();
 const sideIdx = new Int16Array(N * N).fill(-1); for (const r of SIDE) sideIdx[r.cz * N + r.cx] = r.i;
+export const STAIR = SIDE.find((r) => r.type === "stair") ?? null // the stairwell up to Level 2.1
+export const isStairCell = (cx, cz) => !!STAIR && STAIR.cx === cx && STAIR.cz === cz
 export const sideOf = (cx, cz) => (cx < 0 || cz < 0 || cx >= N || cz >= N ? null : SIDE[sideIdx[cz * N + cx]] ?? null);
 
 // boiling black pipe leaks: puddles under rusted wall pipes in the pipe maze and utility corridors

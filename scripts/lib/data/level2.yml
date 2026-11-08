@@ -25,8 +25,8 @@ sludge: 12           # boiling black sludge pools leaking from pipes
 sludgeHurt: 7        # hp a second standing in boiling pipe liquid
 sludgeSanity: 3      # sanity a second from the boiling fumes
 # side rooms: dead-end cells closed off by a real door. One of each type, then again, in this order.
-sideRooms: 14
-sideOrder: [boiler, locker, electrical, office, cage, break, pump, office, locker, electrical, cage, break, boiler, pump]
+sideRooms: 15          # the 15th is the stairwell up to Level 2.1, behind a steel shutter you have to break
+sideOrder: [boiler, locker, electrical, office, cage, break, pump, office, locker, electrical, cage, break, boiler, pump, stair]
 skillLockShare: 0.3  # an ordinary room door is picked shut this often (Lockpick 25 or 50)
 types:
   boiler:     { label: "BOILER ROOM",  light: "oklch(0.78 0.14 55)", containers: [toolbox, locker] }
@@ -35,6 +35,7 @@ types:
   office:     { label: "OFFICE",       light: "oklch(0.9 0.06 90)",  containers: [filing, filing, desk] }
   cage:       { label: "STORAGE",      light: "oklch(0.88 0.04 230)", lock: keycard, containers: [cagecrate, cagecrate, toolbox], bonus: 2 }
   break:      { label: "BREAK ROOM",   light: "oklch(0.9 0.08 80)",  containers: [vending, fridge] }
+  stair:      { label: "STAIRWELL",    light: "oklch(0.8 0.1 60)",  containers: [] }
   electrical: { label: "ELECTRICAL",   light: "oklch(0.8 0.1 240)",  lock: fuse, containers: [cabinet, toolbox], bonus: 1 }
 # what each container is: its name, size (w h d), how many rolls, its loot table
 containers:

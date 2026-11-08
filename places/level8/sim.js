@@ -5,7 +5,7 @@
 // a pool of boiling tar with a B.N.T.G. dredge winch and reaching hands, a survivor camp round a fire with Carla, and the asphalt road to Level 9. Life: scripts/l8-life.js; use: scripts/l8-use.js.
 import L8 from "../../scripts/lib/data/level8.yml";
 export const cadence = "1s";
-const V = 9;
+const V = 10;
 const GLB = {
   cave: "/cdn/value.2109832add9ec72ac83009c0355494c0f9b184ad1b3bb101edb373306f8be2dc.glb",
   spider: "/cdn/value.f2baeaec87cf017372e92e66ec42fae95179b52161e15051d3253036b89b9323.glb",
@@ -439,6 +439,13 @@ function lay(ctx) {
       { feetPosition: { x: 0.62, y: -1.3, z: -0.04 }, primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.06, height: 1.6 }, material: WOOD },
     ],
   });
+  // ---- the way you can come from Level 2.1: a rough concrete tunnel mouth in the hall's wall, where the cave of The Edges runs out (scripts/level-door.js)
+  const tm = P(46, -8.4, 0);
+  sp("l8-from-l21", at(P(46, -5.4, 0.1), { rotation: { yaw: P(46).yaw + 90 } }));
+  sp("l8-to-l21", { ...at(P(46, -8.9, 0)), physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.8, height: 2.6, depth: 1.8 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level21#l21-from-l8" } });
+  sp("l8-l21-frame", { ...at({ ...tm, y: tm.y + 1.15, yaw: P(46).yaw + 90 }), primitive: { kind: "box", width: 2.3, height: 2.5, depth: 0.5 }, material: { color: "oklch(0.58 0.01 100)", roughness: 0.95 } });
+  sp("l8-l21-dark", { ...at({ ...P(46, -8.75, 1.15), yaw: P(46).yaw + 90 }), primitive: { kind: "box", width: 1.5, height: 2.2, depth: 0.1 }, material: { color: "#050505" } });
+  sp("l8-l21-sign", { ...at({ ...P(46, -8.2, 2.9), yaw: P(46).yaw - 90 }), ...sign(1.7, 0.45, `<div face="front" width="1.7m" style="font-family:Arial,sans-serif;font-weight:900;color:#d8f0c0;text-align:center;line-height:1.05"><div style="font-size:62px">CONCRETE TUNNEL</div><div style="font-size:34px">back to Level 2.1</div></div>`, "oklch(0.2 0.03 150)") });
   sp("l8-life", { behavior: "scripts/l8-life.js" });
 }
 

@@ -89,7 +89,7 @@ function randomLook(ctx, cur, scope) {
   const l = plainLook(ctx, cur)
   if (scope === 'all') {
     l.species = pick(ctx, C.species); l.sex = pick(ctx, C.sex); l.fur = ctx.random() < 0.5 ? '' : pick(ctx, C.fur)
-    l.eye = pick(ctx, C.eye); l.trait = pick(ctx, C.trait); l.blush = pick(ctx, C.blush); l.nose = pick(ctx, C.nose); l.eyes = pick(ctx, C.eyes); l.marks = ctx.random() < 0.5 ? 'none' : pick(ctx, C.marks)
+    l.eye = pick(ctx, C.eye); l.ftype = pick(ctx, C.ftype); l.trait = pick(ctx, C.trait); l.blush = pick(ctx, C.blush); l.nose = pick(ctx, C.nose); l.eyes = pick(ctx, C.eyes); l.marks = ctx.random() < 0.5 ? 'none' : pick(ctx, C.marks)
     l.expr = pick(ctx, ['grin', 'smile', 'joy', 'sparkle', 'smug', 'wink', 'blep'])
   }
   return l
@@ -182,7 +182,7 @@ export function update(ctx) {
     if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
     life(ctx, face)
   }
-  const params = { species: l.species, sex: l.sex, trait: l.trait || 'placid', blush: l.blush, nose: l.nose || undefined, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks }
+  const params = { species: l.species, sex: l.sex, ftype: l.ftype || 'oval', trait: l.trait || 'placid', blush: l.blush, nose: l.nose || undefined, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks }
   if (l.fur) params.fur = l.fur
   const worn = l.modelUrl ? { url: l.modelUrl } : l.model && C.models?.[l.model] // an imported model worn instead of the critter
   for (const [k] of C.sliders) if (k !== 'headS' && k !== 'tailS' && Number(l[k]) && Number(l[k]) !== 1) params[k] = Number(l[k])

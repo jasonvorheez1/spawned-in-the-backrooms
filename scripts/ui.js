@@ -88,7 +88,7 @@ function compass(yaw) {
 
 // camp chatter: the line an npc is saying floats over its head while it lasts (chatter.js writes state.line)
 // the doorway transition: black that fades off the new level, its name in the middle
-const LEVEL_NAMES = { main: ['LEVEL 0', 'THE LOBBY'], level1: ['LEVEL 1', 'HABITABLE ZONE'], level2: ['LEVEL 2', 'PIPE DREAMS'], level3: ['LEVEL 3', 'ELECTRICAL STATION'], level4: ['LEVEL 4', 'ABANDONED OFFICE'], level5: ['LEVEL 5', 'TERROR HOTEL'], level6: ['LEVEL 6', 'LIGHTS OUT'], level7: ['LEVEL 7', 'THALASSOPHOBIA'], level8: ['LEVEL 8', 'CAVE SYSTEMS'], gamma: ['M.E.G.', 'BASE GAMMA'] }
+const LEVEL_NAMES = { main: ['LEVEL 0', 'THE LOBBY'], level1: ['LEVEL 1', 'HABITABLE ZONE'], level2: ['LEVEL 2', 'PIPE DREAMS'], level3: ['LEVEL 3', 'ELECTRICAL STATION'], level4: ['LEVEL 4', 'ABANDONED OFFICE'], level5: ['LEVEL 5', 'TERROR HOTEL'], level6: ['LEVEL 6', 'LIGHTS OUT'], level7: ['LEVEL 7', 'THALASSOPHOBIA'], level8: ['LEVEL 8', 'CAVE SYSTEMS'], level21: ['LEVEL 2.1', 'LOCKED'], gamma: ['M.E.G.', 'BASE GAMMA'] }
 function xferCard(s, now) {
   const x = s.xfer; if (!x || now - x.at > 2600) return ''
   const [a, b] = LEVEL_NAMES[x.to] ?? [String(x.to).toUpperCase(), '']
@@ -261,7 +261,7 @@ export default function render(ctx, player) {
   ${(s.firesaltUntil ?? 0) > now ? `<div style="position:absolute;left:0;right:0;text-align:center;bottom:150px;font-size:13px;color:#ff9a4a;text-shadow:0 0 6px rgba(255,120,30,.6)">Firesalt on your weapon · x1.4 melee · ${Math.ceil((s.firesaltUntil - now) / 1000)}s</div>` : ''}
   ${s.reading && PAGES[s.reading] ? `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);pointer-events:auto" data-modal>
     <div style="width:min(440px,88vw);background:#e9dfc4;color:#2a241a;padding:22px 26px 16px;font-family:'Courier New',monospace;font-size:14px;line-height:1.5;box-shadow:0 8px 30px rgba(0,0,0,.6);transform:rotate(-1.2deg);border-left:3px dashed #b9ab88">
-      <div style="font-size:11px;color:#7a6c50;margin-bottom:8px">torn page · ${s.reading} of 8</div>
+      <div style="font-size:11px;color:#7a6c50;margin-bottom:8px">${s.reading >= 11 && s.reading <= 17 ? 'Base Alef papers · ' + (s.reading - 10) + ' of 7' : 'torn page · ' + s.reading + ' of 8'}</div>
       <div style="white-space:pre-wrap">${String(PAGES[s.reading]).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/~~(.+?)~~/g, '<s style="text-decoration-thickness:3px">$1</s>')}</div>
       <div style="text-align:right;margin-top:12px"><button onclick="sendAction('inv',{k:'read',n:0})" style="background:#2a241a;color:#e9dfc4;border:0;padding:5px 14px;font-family:inherit;cursor:pointer">put it away</button></div>
     </div></div>` : ''}
