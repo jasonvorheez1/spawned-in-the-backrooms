@@ -113,7 +113,7 @@ function lay(ctx) {
 
   // ---- quarters, the offices, the locker room (checkered tile, grey and brown lockers), restrooms, break room, storage rooms
   const bk = rm("bunks")[0], kc = center(bk);
-  for (let i = 0; i < 6; i++) sp(`l21-bunk-${i}`, { feetPosition: { x: kc.x - 3.4 + (i % 3) * 3.4, y: 0, z: kc.z - 2.4 + Math.floor(i / 3) * 4.2 }, rotation: { yaw: ((i * 7) % 5 - 2) }, model: COT, layout: { box: { min: { x: -0.95, y: 0, z: -0.95 }, max: { x: 0.95, y: 0.55, z: 0.95 } } }, physics: { body: "static", collider: "box" } });
+  for (let i = 0; i < 6; i++) sp(`l21-bunk-${i}`, { feetPosition: { x: kc.x - 3.4 + (i % 3) * 3.4, y: 0.32, z: kc.z - 2.4 + Math.floor(i / 3) * 4.2 }, primitive: { kind: "box", width: 0.95, height: 0.1, depth: 1.95 }, material: { color: "oklch(0.35 0.05 30)", roughness: 0.9 }, physics: "static" });
   spawnContainerL2(ctx, "cabinet", { x: kc.x, z: edgeOf(bk, 1) - 0.8 }, 180, { room: 72 });
   const of = rm("office")[0], oc = center(of);
   [["filing", -4], ["filing", -2.4], ["desk", 0.5], ["desk", 3]].forEach(([k, a], i) => spawnContainerL2(ctx, k, { x: oc.x + a, z: edgeOf(of, 1) - (k === "desk" ? 1.6 : 0.7) }, 180, { room: 73 + i }));
