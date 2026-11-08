@@ -15,7 +15,7 @@ kinds:
   can:        { match: [can, soda, tin, cola, beans], mat: metal, kg: 0.4, hp: 999, breakAt: 4, act: crumple }
   electronic: { match: [tv, monitor, radio, computer, pc, laptop, phone, speaker, microwave, console, lamp, clock, printer, fan, keyboard, boombox], mat: junction, kg: 6, hp: 30, breakAt: 120, act: spark }
   plastic:    { match: [cup, tray, hat, bucket, plastic, cone, toy, ball], mat: fixture, kg: 0.3, hp: 999, breakAt: 99999, act: bounce }
-  metal:      { match: [barrel, bin, locker, pipe, tank, keg, toolbox, safe, cabinet, filing, shelf, cart, bike], mat: sheet_steel, kg: 20, hp: 160, breakAt: 2500, act: dent }
+  metal:      { match: [barrel, drum, bin, locker, pipe, tank, keg, toolbox, safe, cabinet, filing, shelf, cart, bike], mat: sheet_steel, kg: 20, hp: 160, breakAt: 2500, act: dent }
   wood:       { match: [chair, table, crate, pallet, desk, stool, lounger, box, drawer, door, bench, plank, bed, dresser, bookcase, sofa, couch], mat: wood, kg: 12, hp: 70, breakAt: 700, act: splinter }
 explode: { radius: 4.5, damage: 55 }
 spray:   { seconds: 2.2, thrust: 9 }

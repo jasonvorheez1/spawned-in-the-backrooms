@@ -99,6 +99,19 @@ export function tick(ctx) {
     for (const sz of [-1, 1]) for (let x = -3; x <= 2; x += 1.6) put("meg-t-bags-" + n++, "bags", x, sz * 10.5, 1.6, 1.0, 90)
     for (const sz of [-1, 1]) for (let z = 2.8; z <= 8.5; z += 1.6) put("meg-t-bags-" + n++, "bags", 15.4, sz * z, 1.6, 1.0, 0)
   }
+  if (s.l1Tripo !== 1) { s.l1Tripo = 1; // the halls' drums and box pallets as real models, each a loose thing you can hit, kick, grab and break (Shelly: less blocky)
+    const DRUM = "/cdn/value.de68d3453156f6d0341dc0143da17f0a5f60f2da731a9b018363a51fcf233712.glb", PAL = "/cdn/value.52adc0a974c9920d51033154da8dae242fd9a7271b1190ad5a9d3a0f0b9f6c1f.glb";
+    for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id]; if (o.primitive?.script === "scripts/level1-props-geo.js") o.primitive = { ...o.primitive, params: { tripo: true } }; }
+    const drum = (id, x, z, yaw) => ctx.spawn(id, { tags: ["l1prop"], feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: DRUM }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 0.9, z: 0.3 } } }, physics: { body: "static", collider: "cylinder" }, visibleRange: { max: 45 }, state: { name: "Oil Drum", loose: "metal", mat: "sheet_steel" } });
+    const pal = (id, x, z, yaw) => ctx.spawn(id, { tags: ["l1prop"], feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: PAL }, layout: { box: { min: { x: -0.6, y: 0, z: -0.6 }, max: { x: 0.6, y: 1.3, z: 0.6 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, state: { name: "Pallet of Boxes", loose: "wood", mat: "wood", items: "scrap_wood" } });
+    for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+      const zone = zoneOf(cx, cz); if (zone !== "halls" && zone !== "storage") continue;
+      const r = hash(cx, cz, 201), c = cellCenter(cx, cz), x = c.x + (hash(cx, cz, 203) - 0.5) * 3.2, z = c.z + (zone === "storage" ? 0 : (hash(cx, cz, 205) - 0.5) * 3.2), k = `l1d-${cx}-${cz}`;
+      if (r < 0.1) { drum(k + "-0", x, z, r * 3600); drum(k + "-1", x + 0.68, z + 0.1, r * 7200); if (r < 0.05) drum(k + "-2", x + 0.3, z + 0.65, r * 900); }
+      else if (r < 0.19) pal(`l1p-${cx}-${cz}`, x, z, hash(cx, cz, 209) * 180);
+    }
+    const a = cellCenter(ARRIVE.cx, ARRIVE.cz); pal("l1p-camp", a.x - 2.5, a.z + 7.4, 11); drum("l1d-camp", a.x + 5.6, a.z - 1.4, 40);
+  }
   if (s.megCamp) { // a fallen agent is replaced after a while; the new one holds no grudge
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz), at = Object.fromEntries(AGENTS.map(([id, dx, dz]) => [id, [dx, dz]]));
     keepPeople(ctx, Object.keys(at), (ctx, id) => { ctx.spawn(id, agentSpec(a, id, ...at[id])); ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, ...weaponBody("pistol") }); });

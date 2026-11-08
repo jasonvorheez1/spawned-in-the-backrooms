@@ -39,14 +39,15 @@ function cot(ctx, x, z, yaw) {
 }
 
 export function geometry(ctx) {
-  const hi = ctx.lod <= 2;
+  const hi = ctx.lod <= 2, real = !!ctx.params?.tripo; // real: drums and pallets stand as their own models (places/level1/sim.js l1Tripo)
   ctx.smooth(); ctx.roughness(0.85); ctx.metalness(0);
   // halls and storage: a drum cluster, a pallet of boxes or a fallen chunk in some cells
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const zone = zoneOf(cx, cz); if (zone !== "halls" && zone !== "storage") continue;
     const r = hash(cx, cz, 201), c = cellCenter(cx, cz), ox = (hash(cx, cz, 203) - 0.5) * 3.2, oz = zone === "storage" ? 0 : (hash(cx, cz, 205) - 0.5) * 3.2;
     const x = c.x + ox, z = c.z + oz;
-    if (r < 0.1) { const hue = ["oklch(0.45 0.13 28)", "oklch(0.42 0.1 250)", "oklch(0.5 0.1 145)"][Math.floor(hash(cx, cz, 207) * 3)]; drum(ctx, x, z, 0.9, hue); drum(ctx, x + 0.68, z + 0.1, 0.9, hue); if (r < 0.05) drum(ctx, x + 0.3, z + 0.65, 0.9, hue); }
+    if (real && r < 0.19) {}
+    else if (r < 0.1) { const hue = ["oklch(0.45 0.13 28)", "oklch(0.42 0.1 250)", "oklch(0.5 0.1 145)"][Math.floor(hash(cx, cz, 207) * 3)]; drum(ctx, x, z, 0.9, hue); drum(ctx, x + 0.68, z + 0.1, 0.9, hue); if (r < 0.05) drum(ctx, x + 0.3, z + 0.65, 0.9, hue); }
     else if (r < 0.19) pallet(ctx, x, z, hash(cx, cz, 209) * 3.14, 1 + Math.floor(hash(cx, cz, 211) * 3));
     else if (r < 0.23 && zone === "halls") { ctx.color("oklch(0.7 0.01 250)"); const k = 0.25 + hash(cx, cz, 213) * 0.3; box(ctx, x, k / 2, z, 0.5, k / 2, 0.35); box(ctx, x + 0.5, k * 0.35, z + 0.2, 0.3, k * 0.35, 0.25); }
     // ceiling ducts across the hall rows
@@ -77,6 +78,6 @@ export function geometry(ctx) {
   ctx.color("oklch(0.9 0.04 95)"); box(ctx, a.x + 1, 1.0, a.z + 8.55, 1.5, 0.72, 0.02);
   for (let i = 0; i < 5; i++) { ctx.color(sectorOf(i * 5, i * 5).band); box(ctx, a.x - 0.8 + i * 0.55, 1.2 - (i % 2) * 0.3, a.z + 8.52, 0.2, 0.12, 0.01); }
   ctx.color("oklch(0.45 0.02 250)"); box(ctx, a.x - 0.4, 0.8, a.z + 8.7, 0.05, 0.8, 0.05); box(ctx, a.x + 2.4, 0.8, a.z + 8.7, 0.05, 0.8, 0.05); // board legs
-  pallet(ctx, a.x - 2.5, a.z + 7.4, 0.2, 2); drum(ctx, a.x + 5.6, a.z - 1.4, 0.9, "oklch(0.5 0.1 145)");
+  if (!real) { pallet(ctx, a.x - 2.5, a.z + 7.4, 0.2, 2); drum(ctx, a.x + 5.6, a.z - 1.4, 0.9, "oklch(0.5 0.1 145)"); }
   ctx.color(null); ctx.roughness(null);
 }
