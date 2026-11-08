@@ -187,7 +187,7 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
   // 9 · The Noclip Wall (Exit to Level 1, Wikidot Lore)
   const ex = cellCenter(EXIT.cx, EXIT.cz);
   const NOCLIP_FX = `fx
-pop rift rate=8 burst=0 life=.6..1.2 on=box(.1,1.8,2.8) v=sdir()*.1 size=.03..0.07 col=<0,.85,.9> a=.7>0 sz=$size`;
+pop rift rate=8 burst=0 life=.6..1.2 on=box(.1,1.8,2.8) v=sdir()*.1 size=.03..0.07 col=<0,.85,.9> a=.7>0 sz=$size r=sprite(soft-disc,add)`;
   put("noclip-wall", {
     tags: ["moment", "m-noclip", "usable"],
     feetPosition: { x: -HALF + 0.05, y: 1.5, z: ex.z },
