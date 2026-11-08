@@ -4,6 +4,11 @@
 import { raycast } from 'builtin/physics'
 import { hitTarget } from './player.js'
 import { animate } from 'builtin/tween'
+import { attrsOf } from './lib/stats.js'
+// kicking a foe (Shelly: physics, ragdoll by strength/agility). Savi's picks: power = HAR + 0.6 AGI vs the foe's heft;
+// under 0.8x heft barely moves it, up to 1.4x staggers, past that knocks it down for ~1.1 s, then it gets up
+const HEFT = { partygoer: 6, hound: 4, smiler: 10, lurker: 8, stealer: 7, l8spider: 5, npc: 6 }
+const heftOf = (e) => e.state?.heft ?? Object.entries(HEFT).find(([t]) => e.tags?.includes(t))?.[1] ?? 6
 const KICK_V = 8, FRICTION = 5, PUSH_REACH = 0.95, KICK_REACH = 1.7
 const FOES = ['smiler', 'lurker', 'hound', 'stealer', 'moths', 'l8spider', 'l8-hostile', 'npc', 'entity']
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
@@ -48,6 +53,7 @@ export function onInput(ctx, input) {
     primitive: { kind: 'scripted', script: 'scripts/kick-leg-geo.js', params: { species: l.species, fur: l.fur, botw: l.botw, bottom: l.bottom, shoes: l.shoes, shoec: l.shoec } } }) // first person only: third person shows the body's own kick clip
   if (leg) animate(ctx, leg, { 'feetPosition.y': [-1.32, -0.92, -0.95, -1.37], 'rotation.pitch': [-10, 75, 70, -5] }, { duration: 0.45, easing: 'easeOutCubic' })
   ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 0.12 }, { audience: { player: ctx.self.id } })
+  if (!o && kickFoe(ctx, s, f, p)) return
   if (!o) { ctx.emit('playSound', { clip: SND('cloth-whoosh-swing'), position: p, volume: 0.4 }); return }
   mem(ctx).rolls[o.id] = { vx: f.x * KICK_V, vz: f.z * KICK_V, spin: (ctx.random() - 0.5) * 720, hit: false }
   const at = { x: o.feetPosition.x, y: o.feetPosition.y + 0.5, z: o.feetPosition.z }
@@ -97,4 +103,48 @@ export function update(ctx, dt) {
     const ns = Math.max(0, s - FRICTION * dt); r.vx = dir.x * ns; r.vz = dir.z * ns
   }
   if (sp < 0.1 && !Object.keys(m.rolls).length) ctx.sleep(0.25)
+}
+
+function kickFoe(ctx, s, f, p) {
+  let e = null, bd = 1.9
+  for (const c of ctx.query({ anyTags: FOES, radius: 2.4 })) {
+    if (c.id === ctx.self.id || c.state?.dead || (c.state?.hp ?? 1) <= 0 || c.state?.follow) continue
+    const dx = c.feetPosition.x - p.x, dz = c.feetPosition.z - p.z, d = Math.hypot(dx, dz)
+    if (d > bd || (d > 0.4 && (dx * f.x + dz * f.z) / d < 0.55)) continue
+    bd = d; e = c
+  }
+  if (!e) return false
+  const at = attrsOf(s), power = at.h + 0.6 * at.a, r = power / heftOf(e), now = ctx.now()
+  const tier = r < 0.8 ? 0 : r < 1.4 ? 1 : 2
+  const dir = { x: f.x, z: f.z }, push = [1.2, 3.5, 7 + at.a * 0.4][tier]
+  hitTarget(ctx, s, e, Math.round(4 + at.h * 1.2 + (tier === 2 ? 6 : 0)), dir, true, tier === 2 ? 1 : 0)
+  const hitAt = { x: e.feetPosition.x, y: e.feetPosition.y + 0.8, z: e.feetPosition.z }
+  if (tier === 0) { // too heavy for you: it rocks, shrugs, keeps coming
+    ctx.emit('squash', { target: e.id, axis: 'z', intensity: 0.1, duration: 0.15 })
+    ctx.emit('damageNumber', { position: { ...hitAt, y: hitAt.y + 1 }, text: 'BARELY', color: '#bbbbbb', size: 0.8 })
+    ctx.emit('playSound', { clip: SND('heavy-body-shrugs-off-kick-thud'), position: hitAt, volume: 0.7 })
+  } else if (tier === 1) { // a stagger: shoved back a step or two, arms out
+    e.state.stunUntil = now + 650
+    e.state.kb = { x: dir.x * push, z: dir.z * push, at: now, ms: 350 }
+    ctx.emit('impulse', { target: e.id, impulse: { x: dir.x * push * 30, y: 40, z: dir.z * push * 30 } })
+    ctx.emit('damageNumber', { position: { ...hitAt, y: hitAt.y + 1 }, text: 'STAGGER', color: '#ffd27a', size: 0.9 })
+    ctx.emit('playSound', { clip: SND('solid-kick-into-body-thump'), position: hitAt, volume: 0.9 })
+  } else { // knocked flat: it flies, tumbles, lies a beat, then scrambles up
+    e.state.stunUntil = now + 1500
+    e.state.down = { x: dir.x * push, z: dir.z * push, at: now, ms: 1100 }
+    ctx.emit('impulse', { target: e.id, impulse: { x: dir.x * push * 45, y: 180, z: dir.z * push * 45 } })
+    if (!e.tags?.includes('partygoer')) { // the generic foe tumbles by tween; the Partygoer manager does its own fall
+      const yaw = typeof e.rotation === 'number' ? e.rotation : (e.rotation?.yaw ?? 0)
+      animate(ctx, e.id, { 'rotation.pitch': [0, -85, -85, 0] }, { duration: 1.4, easing: 'easeOutQuad' })
+      animate(ctx, e.id, { 'feetPosition.x': `+=${dir.x * push * 0.35}`, 'feetPosition.z': `+=${dir.z * push * 0.35}` }, { duration: 0.45, easing: 'easeOutCubic' })
+      e.rotation = { yaw }
+    }
+    ctx.emit('damageNumber', { position: { ...hitAt, y: hitAt.y + 1 }, text: 'KNOCKDOWN', color: '#ff9a3c', size: 1.2 })
+    ctx.emit('playSound', { clip: SND('brutal-kick-body-flies-and-crashes'), position: hitAt, volume: 1, maxDistance: 25 })
+    ctx.emit('screenShake', { intensity: 0.3, duration: 0.2 }, { audience: { player: ctx.self.id } })
+    ctx.emit('fx', { position: { ...e.feetPosition, y: e.feetPosition.y + 0.1 }, script: `fx\npop dust burst=14..20 life=.5..0.9 v=sdir()*(1..2.5)+up(.6) size=.15..0.3 acc=buoy(.3)+drag(2) col=<.62,.55,.38> a=0>.4:.4>.7:.2>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)` })
+  }
+  ctx.emit('cameraPunch', { direction: { x: f.x, y: 0, z: f.z }, intensity: 0.2 + tier * 0.15 }, { audience: { player: ctx.self.id } })
+  ctx.emit('noise', { position: hitAt, radius: 12, kind: 'kick' }, { audience: { nearby: hitAt, radius: 12 } })
+  return true
 }

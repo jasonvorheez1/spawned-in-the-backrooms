@@ -98,6 +98,16 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
     const dx = d > 0.01 ? (target.x - p.feetPosition.x) / d : 0, dz = d > 0.01 ? (target.z - p.feetPosition.z) / d : 0
     const face = () => { p.rotation = { yaw: Math.atan2(-dx, -dz) * 180 / Math.PI } }
     const vy = p.velocity.y + g * dt
+    if (s.down) { // kicked flat: flung, tipped onto its back, then it scrambles up
+      const t = now - s.down.at, k = Math.max(0, 1 - t / 450), yaw = typeof p.rotation === "number" ? p.rotation : (p.rotation?.yaw ?? 0)
+      if (!s.down.fell) { s.down.fell = 1; s.move = null; s.combo = null; p.anim.act = { clip: "cdn/clip-fall-loop.glb", loop: true, weight: 1, blend: 0.08 }; animate(ctx, p.id, { "rotation.pitch": [0, -80] }, { duration: 0.3, easing: "easeOutQuad" }) }
+      p.velocity = { x: s.down.x * k, y: vy, z: s.down.z * k }; gait(ctx, p, "idle")
+      if (t > s.down.ms && !s.down.up) { s.down.up = 1; animate(ctx, p.id, { "rotation.pitch": [-80, 0] }, { duration: 0.35, easing: "easeOutBack" }); once(p, "cdn/clip-land.glb")
+        ctx.emit("playSound", { clip: SND("distorted-party-blower-and-giggle"), position: p.feetPosition, volume: 0.7 }) }
+      if (t > s.down.ms + 400) { s.down = null; p.rotation = { yaw, pitch: 0 }; s.stunUntil = 0 }
+      continue
+    }
+    if (s.kb) { const t = now - s.kb.at; if (t < s.kb.ms) { const k = 1 - t / s.kb.ms; p.velocity = { x: s.kb.x * k, y: vy, z: s.kb.z * k }; once(p, "cdn/clip-hit-react.glb"); continue } s.kb = null }
     if (s.move && now >= (s.moveUntil ?? 0)) { // a move ends: the lunge's tell becomes its dash
       if (s.move === "windup") { s.move = "lunge"; s.moveUntil = now + T.lungeDash; s.lungeHit = false; once(p, "cdn/clip-attack.glb")
         ctx.emit("playSound", { clip: SND("teeth-snapping-chomp"), position: p.feetPosition, volume: 1 }) }
