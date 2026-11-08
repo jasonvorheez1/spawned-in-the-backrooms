@@ -75,6 +75,7 @@ def join_all(name):
     return ob
 def export(name):
     ob = join_all(name)
+    if name == "fort_surrender": uv_box(ob)
     bpy.ops.object.select_all(action="DESELECT"); ob.select_set(True)
     path = os.path.join(D, name + ".glb")
     bpy.ops.export_scene.gltf(filepath=path, export_format="GLB", use_selection=True, export_apply=True, export_yup=True, export_materials="EXPORT")
@@ -92,85 +93,190 @@ def render(name, ob):
         sc.render.filepath = os.path.join(D, "preview_%s_%s.png" % (name, tag)); bpy.ops.render.render(write_still=True)
 
 # ---------------------------------------------------------------- Fort Surrender
-def furniture(kind, loc, yaw, tilt=0.0):
-    x, y, z = loc
-    if kind == "wardrobe":
-        w, d, h = R.uniform(0.9, 1.2), R.uniform(0.5, 0.65), R.uniform(1.8, 2.2)
-        ob = box((x, y, z + h / 2), (w, d, h), R.choice([WOOD, WOOD2, WOOD3]), rot=(tilt, 0, yaw), bevel=0.02)
-        box((x, y - d / 2 * math.cos(yaw) - 0.01, z + h / 2), (w * 0.46, 0.03, h * 0.9), WOOD3, rot=(tilt, 0, yaw))  # door panel
-    elif kind == "bed":
-        box((x, y, z + 0.35), (1.0, 2.0, 0.12), WOOD2, rot=(tilt, 0, yaw)); box((x, y + math.cos(yaw) * 1.0, z + 0.7), (1.0, 0.1, 0.8), WOOD, rot=(tilt, 0, yaw))
-    elif kind == "table":
-        box((x, y, z + 0.78), (R.uniform(1.0, 1.6), R.uniform(0.7, 0.95), 0.07), WOOD2, rot=(tilt, 0, yaw), bevel=0.01)
-        for sx in (-0.4, 0.4):
-            for sy in (-0.28, 0.28): cyl((x + sx, y + sy, z + 0.38), 0.04, 0.76, WOOD3, verts=6)
-    elif kind == "door":
-        box((x, y, z + 1.0), (0.85, 0.05, 2.0), R.choice([WOOD, WOOD2]), rot=(tilt, 0, yaw))
-    elif kind == "chair":
-        box((x, y, z + 0.45), (0.45, 0.45, 0.06), WOOD2, rot=(tilt, 0, yaw)); box((x, y + 0.2, z + 0.78), (0.45, 0.05, 0.6), WOOD, rot=(tilt, 0, yaw))
-        for sx in (-0.2, 0.2):
-            for sy in (-0.2, 0.2): cyl((x + sx, y + sy, z + 0.22), 0.025, 0.45, WOOD3, verts=6)
-    elif kind == "sofa":
-        box((x, y, z + 0.35), (1.9, 0.85, 0.5), CLOTH, rot=(tilt, 0, yaw), bevel=0.06); box((x, y + 0.38, z + 0.75), (1.9, 0.18, 0.55), CLOTH, rot=(tilt, 0, yaw), bevel=0.05)
-    elif kind == "dresser":
-        box((x, y, z + 0.5), (1.2, 0.5, 1.0), WOOD2, rot=(tilt, 0, yaw), bevel=0.02)
-        for k in range(3): box((x, y - 0.26, z + 0.2 + k * 0.3), (1.0, 0.02, 0.22), WOOD3, rot=(tilt, 0, yaw))
+# Rebuilt Nov 8 (Savi, "de ai slop"): one wall that reads as built, not a heap of floating blocks. A tarred plank palisade
+# on log posts, real furniture (panelled wardrobes, drawer chests, bed ends, doors) stacked and seated against its outside face,
+# tar run down every seam, a braced log watchtower, corrugated lean-tos. Slots by surface: paint1..4, wood, plank, tar, corr,
+# rope, cloth, bone, metal; the sim mounts a texture on each (UVs are box-projected in metres at export).
+def fpal():
+    global P1, P2, P3, P4, WD, PL, TR, CO, RP, CL, BN, MT
+    P1 = mat("paint1", (0.42, 0.45, 0.36), 0.8); P2 = mat("paint2", (0.62, 0.56, 0.44), 0.8)
+    P3 = mat("paint3", (0.30, 0.36, 0.40), 0.8); P4 = mat("paint4", (0.40, 0.22, 0.16), 0.8)
+    WD = mat("wood", (0.28, 0.19, 0.12), 0.85); PL = mat("plank", (0.32, 0.29, 0.25), 0.9)
+    TR = mat("tar", (0.02, 0.02, 0.025), 0.18, 0.1); CO = mat("corr", (0.36, 0.22, 0.13), 0.75, 0.5)
+    RP = mat("rope", (0.40, 0.32, 0.20), 0.95); CL = mat("cloth", (0.34, 0.30, 0.24), 0.95)
+    BN = mat("bone", (0.78, 0.74, 0.62), 0.8); MT = mat("metal", (0.25, 0.25, 0.27), 0.45, 0.85)
+
+def rot2(x, y, a): return (x * math.cos(a) - y * math.sin(a), x * math.sin(a) + y * math.cos(a))
+def at(o, lx, ly, z, a): dx, dy = rot2(lx, ly, a); return (o[0] + dx, o[1] + dy, z)
+def knob(p): sph(p, (0.035, 0.035, 0.035), MT, 8, 6)
+def drip(x, y, z, w, n=3):  # tar poured over a joint: a fillet and tapered runs
+    for k in range(n):
+        L = R.uniform(0.25, 0.9); ox = R.uniform(-w / 2, w / 2)
+        cyl((x + ox * 0.7, y + ox * 0.7, z - L / 2), R.uniform(0.03, 0.06), L, TR, verts=6, r2=0.008)
+
+# a piece of furniture standing with its back toward the wall: local +y is "toward the courtyard"; returns its height
+def wardrobe(o, a, z, paint):
+    w, d, h = R.uniform(0.95, 1.2), 0.58, R.uniform(1.85, 2.1)
+    box(at(o, 0, 0, z + 0.06, a), (w + 0.04, d + 0.04, 0.12), WD, rot=(0, 0, a), bevel=0.01)          # plinth
+    box(at(o, 0, 0, z + 0.12 + (h - 0.24) / 2, a), (w, d, h - 0.24), paint, rot=(0, 0, a), bevel=0.012)
+    box(at(o, 0, 0, z + h - 0.06, a), (w + 0.1, d + 0.08, 0.12), WD, rot=(0, 0, a), bevel=0.02)       # cornice
+    for s in (-1, 1):  # two doors, each with two raised panels and a knob, on the OUTSIDE face (-y)
+        cx = s * w / 4
+        for pz, ph in ((0.5, 0.55), (1.25, 0.75)):
+            box(at(o, cx, -d / 2 - 0.012, z + 0.12 + pz * (h - 0.24) / 1.95 + ph * 0.3, a), (w / 2 - 0.14, 0.025, ph * (h - 0.24) / 2.1), paint, rot=(0, 0, a), bevel=0.008)
+        knob(at(o, s * 0.05, -d / 2 - 0.04, z + h * 0.52, a))
+    return h
+def chest(o, a, z, paint):
+    w, d, h = R.uniform(1.0, 1.25), 0.5, R.uniform(0.85, 1.05)
+    box(at(o, 0, 0, z + h / 2, a), (w, d, h), paint, rot=(0, 0, a), bevel=0.012)
+    box(at(o, 0, 0, z + h + 0.025, a), (w + 0.06, d + 0.05, 0.05), WD, rot=(0, 0, a), bevel=0.01)
+    n = 3 if h > 0.95 else 2
+    for k in range(n):
+        dz = z + 0.08 + (k + 0.5) * (h - 0.12) / n
+        box(at(o, 0, -d / 2 - 0.01, dz, a), (w - 0.1, 0.022, (h - 0.12) / n - 0.05), paint, rot=(0, 0, a), bevel=0.006)
+        for s in (-1, 1): knob(at(o, s * w * 0.25, -d / 2 - 0.035, dz, a))
+    return h + 0.05
+def bedend(o, a, z, paint):  # a bed's head end stood up: two turned posts, a top rail and spindles
+    w, h = 1.15, 1.25
+    for s in (-1, 1):
+        cyl(at(o, s * w / 2, 0, z + h / 2, a), 0.05, h, WD, verts=8); sph(at(o, s * w / 2, 0, z + h + 0.03, a), (0.07, 0.07, 0.07), WD, 8, 6)
+    box(at(o, 0, 0, z + h - 0.12, a), (w, 0.06, 0.16), paint, rot=(0, 0, a), bevel=0.01)
+    box(at(o, 0, 0, z + 0.35, a), (w, 0.05, 0.12), paint, rot=(0, 0, a))
+    for k in range(7): cyl(at(o, -w / 2 + (k + 1) * w / 8, 0, z + 0.75, a), 0.018, 0.7, WD, verts=6)
+    return h
+def door(o, a, z, paint, lean=0.0):  # a four-panel door stood on end
+    box(at(o, 0, 0, z + 1.0, a), (0.84, 0.045, 2.0), paint, rot=(lean, 0, a), bevel=0.01)
+    for px in (-0.19, 0.19):
+        for pz in (0.55, 1.4):
+            box(at(o, px, -0.03, z + pz, a), (0.3, 0.02, 0.62 if pz > 1 else 0.7), paint, rot=(lean, 0, a), bevel=0.006)
+    knob(at(o, 0.32, -0.06, z + 1.0, a))
+    return 2.0
+
+def corr(loc, w, d, a, tilt, m=None):  # corrugated sheet: ridges along d
+    bpy.ops.mesh.primitive_grid_add(x_subdivisions=max(4, int(w / 0.07)), y_subdivisions=2, size=1, location=(0, 0, 0))
+    ob = bpy.context.active_object; ob.scale = (w, d, 1); bpy.ops.object.transform_apply(scale=True)
+    for v in ob.data.vertices: v.co.z = 0.02 * math.sin(v.co.x / 0.07 * math.pi)
+    sol = ob.modifiers.new("s", "SOLIDIFY"); sol.thickness = 0.01; bpy.ops.object.modifier_apply(modifier="s")
+    ob.rotation_euler = (tilt, 0, a); ob.location = loc; bpy.ops.object.transform_apply(location=True, rotation=True)
+    return finish(ob, m or CO, True)
+
 def build_fort():
-    palette()
-    Rr = 8.6  # ring radius around the courtyard; the gate faces glTF +Z (Blender -Y)
-    for ring, (rad, n, off) in enumerate([(Rr, 46, 0.0), (Rr + 0.95, 40, 0.5)]):  # two rows of heavy furniture, offset like bricks
-        for i in range(n):
-            a = (i + off) / n * math.tau
-            gx, gy = math.cos(a), math.sin(a)
-            if gy < -0.86: continue  # the gate: a gap of about 5 m across the south
-            r = rad + R.uniform(-0.25, 0.3)
-            x, y = gx * r, gy * r; yaw = a + math.pi / 2 + R.uniform(-0.12, 0.12)
-            kind = R.choice(["wardrobe", "wardrobe", "wardrobe", "wardrobe", "dresser", "dresser", "bed", "sofa", "door"])
-            furniture(kind, (x, y, 0), yaw, R.uniform(-0.05, 0.05))
-            tier = 1.9 if kind == "wardrobe" else 1.0
-            if kind != "bed" and kind != "door" and R.random() < 0.8:  # a second tier, and for some a third
-                furniture(R.choice(["wardrobe", "dresser", "wardrobe", "table"]), (x * 0.99, y * 0.99, tier), yaw + R.uniform(-0.2, 0.2), R.uniform(-0.08, 0.08))
-                if R.random() < 0.4: furniture(R.choice(["chair", "dresser", "door"]), (x * 0.99, y * 0.99, tier + 1.9), yaw + R.uniform(-0.5, 0.5), R.uniform(-0.1, 0.1))
-            if R.random() < 0.6: tar_drip((x, y, 2.0), R.uniform(0.2, 0.6), R.uniform(0.6, 2.0))
-            if R.random() < 0.5: lash((x, y, R.uniform(0.6, 1.6)), (0.5, 0.5, 0.07))
-    # infill: leaning doors and table-tops, tar-sealed, between the heavy pieces
-    for i in range(46):
-        a = R.uniform(0, math.tau)
-        if math.sin(a) < -0.84: continue
-        r = Rr + R.uniform(-1.0, 1.0)
-        furniture(R.choice(["door", "door", "table", "chair", "bed"]), (math.cos(a) * r, math.sin(a) * r, 0), a + math.pi / 2 + R.uniform(-0.6, 0.6), R.uniform(-0.25, 0.25))
-    # lean-to shanties inside the ring: a door roof on stacked crates, a bed, a hanging cloth (where the 4 to 9 live)
-    for k, a in enumerate([0.5, 1.2, 1.9, 2.6, 3.4, 4.1, 5.9]):
-        r = 6.0; x, y = math.cos(a) * r, math.sin(a) * r
-        box((x, y, 1.45), (2.4, 1.7, 0.07), WOOD2 if k % 2 else WOOD, rot=(R.uniform(-0.12, 0.12), R.uniform(-0.12, 0.12), a + math.pi / 2), bevel=0.01)
-        for sx, sy in ((-1.0, -0.7), (1.0, -0.7), (-1.0, 0.7), (1.0, 0.7)):
-            ca, sa = math.cos(a + math.pi / 2), math.sin(a + math.pi / 2)
-            cyl((x + sx * ca - sy * sa, y + sx * sa + sy * ca, 0.72), 0.05, 1.45, WOOD3, verts=6)
-        box((x, y, 0.2), (1.3, 0.8, 0.15), CLOTH, rot=(0, 0, a))  # a pallet of rags
-        box((x + 0.3, y - 0.2, 0.7), (0.5, 0.35, 0.25), RUST, rot=(0, 0, a))  # a tin, a lamp
-        tar_drip((x, y + 0.8, 1.45), 0.3, 0.9)
-    # the watchtower: stacked wardrobes lashed and tarred, a plank deck, a ladder, a rail
-    tx, ty = 0.0, 8.8
+    fpal()
+    Rr = 8.6
+    GATE = lambda ang: math.sin(ang) < -0.88          # the gate gap faces Blender -Y (world +Z, the fort pier)
+    # --- the palisade: tarred vertical planks on log posts and two wales, buried 0.6 m into the rock
+    n = int(math.tau * Rr / 0.27)
+    for i in range(n):
+        ang = i / n * math.tau
+        if GATE(ang): continue
+        x, y = math.cos(ang) * Rr, math.sin(ang) * Rr; h = R.uniform(2.5, 3.0)
+        box((x, y, -0.6 + (h + 0.6) / 2), (0.25, 0.07, h + 0.6), PL if R.random() < 0.8 else TR, rot=(R.uniform(-0.02, 0.02), 0, ang + math.pi / 2), bevel=0.01)
+    npost = 22
+    for i in range(npost):
+        ang = (i + 0.5) / npost * math.tau
+        if GATE(ang): continue
+        x, y = math.cos(ang) * (Rr - 0.16), math.sin(ang) * (Rr - 0.16)
+        cyl((x, y, 1.1), 0.11, 3.4, TR if i % 3 == 0 else WD, verts=10)
+        for wz in (0.7, 2.1):  # wale: a beam from this post to the next
+            a2 = (i + 1.5) / npost * math.tau
+            if GATE(a2): continue
+            x2, y2 = math.cos(a2) * (Rr - 0.16), math.sin(a2) * (Rr - 0.16)
+            L = math.hypot(x2 - x, y2 - y)
+            box(((x + x2) / 2, (y + y2) / 2, wz), (L + 0.1, 0.1, 0.14), WD, rot=(0, 0, math.atan2(y2 - y, x2 - x)), bevel=0.01)
+        if R.random() < 0.6: box((x, y, R.uniform(0.6, 2.2)), (0.32, 0.32, 0.06), RP, rot=(0, 0, ang), bevel=0.01)  # rope lashing
+    # tar seal along the foot, inside and out
+    for i in range(90):
+        ang = i / 90 * math.tau
+        if GATE(ang): continue
+        for rr in (Rr - 0.08, Rr + 0.12):
+            box((math.cos(ang) * rr, math.sin(ang) * rr, 0.05), (0.66, 0.16, 0.22), TR, rot=(0, 0, ang + math.pi / 2), bevel=0.05)
+    # --- furniture stacked against the OUTSIDE face, each tier seated on the one below, tar over every joint
+    paints = [P1, P2, P3, P4]
+    i, ang = 0, 0.0
+    while ang < math.tau:
+        kind = R.choice(["wardrobe", "wardrobe", "chest", "chest", "bed", "door"])
+        wdt = {"wardrobe": 1.15, "chest": 1.15, "bed": 1.2, "door": 0.9}[kind]
+        mid = ang + wdt / 2 / (Rr + 0.45)
+        ang += (wdt + R.uniform(0.02, 0.1)) / (Rr + 0.45)
+        if GATE(mid) or GATE(ang): continue
+        rr = Rr + (0.08 if kind in ("bed", "door") else 0.4)
+        o = (math.cos(mid) * rr, math.sin(mid) * rr); fa = mid - math.pi / 2  # local -y faces outward
+        paint = R.choice(paints)
+        footing = box((o[0], o[1], -0.3), (wdt * 0.9, 0.5, 0.6), TR, rot=(0, 0, fa))  # seated in tar over the rock
+        h = {"wardrobe": wardrobe, "chest": chest, "bed": bedend, "door": door}[kind](o, fa, 0.0, paint)
+        if kind in ("chest",) and R.random() < 0.75:  # a second piece sat on the first
+            h2 = (chest if R.random() < 0.5 else wardrobe)(o, fa + R.uniform(-0.05, 0.05), h, R.choice(paints))
+            box((o[0], o[1], h), (wdt * 0.95, 0.56, 0.05), TR, rot=(0, 0, fa)); drip(o[0], o[1], h, wdt)
+        elif kind == "wardrobe" and R.random() < 0.3:
+            chest(o, fa + R.uniform(-0.04, 0.04), h, R.choice(paints)); drip(o[0], o[1], h, wdt)
+        if R.random() < 0.55: drip(o[0] * 1.02, o[1] * 1.02, h * R.uniform(0.6, 1.0), wdt, 2)
+        i += 1
+    # --- the gate: two tarred logs, a lintel, a door leaf swung open, a curtain of chain and a hanging bone charm
+    for sx in (-2.6, 2.6):
+        cyl((sx, -Rr, 1.6), 0.18, 4.4, TR, verts=12)
+        sph((sx, -Rr, 3.85), (0.22, 0.22, 0.12), TR, 10, 6)
+    box((0, -Rr, 3.45), (5.8, 0.24, 0.26), WD, bevel=0.03)
+    box((0, -Rr, 3.45), (5.9, 0.28, 0.08), TR, bevel=0.02)
+    door((-2.0, -Rr - 0.5), math.radians(-60), 0.0, P2)
+    for k in range(9): cyl((-2.2 + k * 0.55, -Rr, 3.0 - (k % 3) * 0.12), 0.018, 0.75 + (k % 3) * 0.2, MT, verts=5)
+    cyl((0, -Rr - 0.05, 2.95), 0.01, 0.9, RP, verts=4); sph((0, -Rr - 0.05, 2.45), (0.12, 0.1, 0.14), BN, 10, 8)
+    # --- the watchtower: four log legs, X-braced, a planked deck at 6 m with a rail, a corrugated roof, a ladder
+    tx, ty, s = 0.0, 8.0, 1.2
+    legs = [(tx - s, ty - s), (tx + s, ty - s), (tx + s, ty + s), (tx - s, ty + s)]
+    for lx, ly in legs: cyl((lx, ly, 3.2), 0.13, 7.6, WD, verts=10); box((lx, ly, 0.0), (0.5, 0.5, 0.25), TR, bevel=0.05)
     for k in range(4):
-        for sx in (-0.7, 0.7): box((tx + sx, ty, 1.0 + k * 2.05), (1.0, 0.7, 2.0), R.choice([WOOD, WOOD2, WOOD3]), rot=(0, 0, R.uniform(-0.05, 0.05)), bevel=0.02)
-        lash((tx, ty, 1.0 + k * 2.05), (2.0, 0.8, 0.08))
-    box((tx, ty, 8.4), (3.0, 2.0, 0.12), WOOD2); box((tx, ty, 8.9), (3.0, 0.06, 0.9), WOOD3); box((tx - 1.45, ty, 8.9), (0.06, 2.0, 0.9), WOOD3)
-    box((tx + 1.6, ty - 1.2, 4.2), (0.12, 0.05, 8.4), WOOD3, rot=(0.0, 0.0, 0.0))
-    for k in range(14): box((tx + 1.6, ty - 1.25, 0.5 + k * 0.58), (0.7, 0.05, 0.05), WOOD3)
-    tar_drip((tx, ty - 0.4, 8.4), 1.6, 3.5); tar_drip((tx + 0.8, ty - 0.4, 6.0), 0.5, 3.0)
-    # the roofline: a fringe of salvaged beams and lamps; the gate: two tarred door-posts and a hanging chain
-    for sx in (-2.7, 2.7):
-        cyl((sx, -Rr - 0.4, 1.7), 0.14, 3.4, TAR, verts=8); sph((sx, -Rr - 0.4, 3.45), (0.2, 0.2, 0.2), TAR)
-    box((0, -Rr - 0.4, 3.3), (5.6, 0.14, 0.14), TAR)
-    for k in range(7): cyl((-2.4 + k * 0.8, -Rr - 0.4, 2.7), 0.025, 1.1, METAL, verts=5)  # a curtain of chains
-    # ropes between the furniture and a few stuck-in oars and bones as offerings
-    for k in range(5):
-        a = R.uniform(0.3, 2.8); x, y = math.cos(a) * (Rr + 0.8), math.sin(a) * (Rr + 0.8)
-        cyl((x, y, 1.1), 0.05, 2.2, BONE, rot=(0.2, 0.1, 0), verts=6)
-    # the courtyard floor: tarred planks laid over the rock
-    bpy.ops.mesh.primitive_circle_add(vertices=40, radius=Rr - 0.6, fill_type="NGON", location=(0, 0, 0.03))
-    fl = bpy.context.active_object; finish(fl, STONE2, False)
-    for k in range(-6, 7): box((k * 1.0, 0, 0.06), (0.9, 12.0, 0.04), WOOD3 if k % 3 else TAR)
+        (x1, y1), (x2, y2) = legs[k], legs[(k + 1) % 4]
+        if k == 0: continue  # the ladder side stays open
+        L = math.hypot(x2 - x1, y2 - y1); yaw = math.atan2(y2 - y1, x2 - x1); tilt = math.atan2(2.6, L)
+        for z0 in (0.4, 3.2):
+            for sg in (1, -1):
+                box(((x1 + x2) / 2, (y1 + y2) / 2, z0 + 1.3), (math.hypot(L, 2.6), 0.08, 0.12), WD, rot=(sg * tilt, 0, yaw) if False else (0, sg * tilt, yaw), bevel=0.01)
+        box(((x1 + x2) / 2, (y1 + y2) / 2, 3.15), (L, 0.1, 0.12), WD)
+    for k in range(10): box((tx, ty - s - 0.25 + k * 0.32, 6.0), (3.1, 0.28, 0.06), PL, rot=(0, R.uniform(-0.02, 0.02), 0), bevel=0.008)
+    for lx, ly in legs: cyl((lx, ly, 6.55), 0.06, 1.1, WD, verts=8)
+    for k in range(4):
+        (x1, y1), (x2, y2) = legs[k], legs[(k + 1) % 4]
+        box(((x1 + x2) / 2, (y1 + y2) / 2, 7.0), (math.hypot(x2 - x1, y2 - y1) + 0.1, 0.08, 0.08), WD, rot=(0, 0, math.atan2(y2 - y1, x2 - x1)))
+    door((tx + 0.5, ty + s + 0.05), 0.0, 6.03, P3)        # a door nailed up as the back wall of the crow's nest
+    chest((tx - 0.7, ty + s - 0.35), 0.0, 6.03, P1)
+    corr((tx, ty, 8.15), 3.4, 3.2, 0.0, 0.18)
+    for lx, ly in legs: cyl((lx, ly, 7.55), 0.05, 1.0, WD, verts=8)
+    for sx in (-0.28, 0.28): box((tx + sx, ty - s - 0.35, 3.0), (0.06, 0.06, 6.2), WD, rot=(0.08, 0, 0))
+    for k in range(19): box((tx, ty - s - 0.35 - k * 0.0, 0.3 + k * 0.31), (0.6, 0.05, 0.05), WD)
+    drip(tx - s, ty - s, 5.8, 0.3); drip(tx + s, ty + s, 5.8, 0.3)
+    # --- lean-tos inside the ring (the 4 to 9 sleep here): two posts, a corrugated roof sloping to the wall, a hung rag
+    for k, aa in enumerate([0.5, 1.2, 1.9, 2.6, 3.4, 4.1, 5.9]):
+        o = (math.cos(aa) * 6.3, math.sin(aa) * 6.3); fa = aa - math.pi / 2
+        for sx in (-1.0, 1.0): cyl(at(o, sx, 0.65, 0.85, fa), 0.06, 1.9, WD, verts=8)
+        corr(at(o, 0, -0.15, 1.95, fa), 2.5, 2.2, fa, -0.28)
+        box(at(o, 0, 0.65, 1.75, fa), (2.2, 0.08, 0.1), WD)
+        box(at(o, -0.6, 0.7, 1.15, fa), (0.9, 0.015, 1.1), CL, rot=(0.05, 0, fa))
+        box(at(o, 0.1, -0.2, 0.15, fa), (1.6, 0.75, 0.14), CL, rot=(0, 0, fa), bevel=0.04)
+    # --- the courtyard: salvaged planks of every length, laid with gaps, leaving the tar pit open
+    for row in range(-28, 29):
+        y = row * 0.29; x = -Rr
+        while x < Rr:
+            L = R.uniform(0.9, 2.6)
+            cx = x + L / 2
+            if cx * cx + y * y < (Rr - 0.4) ** 2 and (cx + 5.2) ** 2 + (y + 1.5) ** 2 > 3.6:
+                box((cx, y, 0.05), (L - 0.03, 0.26, 0.05), PL if R.random() < 0.85 else WD, bevel=0.006)
+            x += L
+    bpy.ops.mesh.primitive_circle_add(vertices=48, radius=Rr, fill_type="NGON", location=(0, 0, 0.01)); finish(bpy.context.active_object, TR, False)
+    # offerings: oars stood in the ground by the altar side, bound with rope
+    for k in range(4):
+        aa = 1.2 + k * 0.25; x, y = math.cos(aa) * (Rr - 0.7), math.sin(aa) * (Rr - 0.7)
+        cyl((x, y, 1.2), 0.03, 2.4, WD, verts=6); box((x, y, 2.25), (0.16, 0.03, 0.55), WD, bevel=0.01)
+
+def uv_box(ob, scale=0.5):
+    bm = bmesh.new(); bm.from_mesh(ob.data)
+    uv = bm.loops.layers.uv.verify()
+    for f in bm.faces:
+        n = f.normal; ax = max(range(3), key=lambda k: abs(n[k]))
+        for l in f.loops:
+            c = l.vert.co
+            l[uv].uv = ((c.x, c.y) if ax == 2 else (c.y, c.z) if ax == 0 else (c.x, c.z))
+            l[uv].uv = (l[uv].uv[0] * scale, l[uv].uv[1] * scale)
+    bm.to_mesh(ob.data); bm.free()
 
 # ---------------------------------------------------------------- the circular formation (Level 9)
 def build_circle():
