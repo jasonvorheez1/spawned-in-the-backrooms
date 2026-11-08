@@ -42,7 +42,7 @@ export function tick(ctx) {
     for (const id of ["l2-geo", "l2-details"]) { const o = ctx.getObject(id); if (o?.primitive && !o.primitive.params?.kit) o.primitive = { ...o.primitive, params: { ...(o.primitive.params || {}), kit: true } }; }
   }
   if (!s.seeded) {
-    s.seeded = true; s.kitV = 1; s.propsV = 1;
+    s.seeded = true; s.kitV = 1; s.propsV = 2;
     ctx.spawn("l2-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-geo.js", params: { kit: true } }, material: { roughness: 0.9 } });
     ctx.spawn("l2-details", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-details-geo.js", params: { kit: true } }, material: { roughness: 0.85 } }); spawnKit(ctx); // handrails, cables, stains; the modelled kit (scripts/lib/l2kit.js) draws walls, pipes, trays, ducts, lamps
     // tube lights: industrial white or sodium orange, uneven, some hanging crooked; dead circuits get a violet emergency lamp now and then
@@ -100,7 +100,7 @@ export function tick(ctx) {
   }
   if ((s.rev ?? 0) >= 4 && (s.snapped ?? 0) < 1) { snapContainers(ctx); s.snapped = 1; }
   if (STAIR && (s.rev ?? 0) >= 4 && !s.stairV) sideRoom(ctx, STAIR); // rooms that were laid before the stairwell existed get it now
-  if (s.seeded && (s.rev ?? 0) >= 4 && s.propsV !== 1) reprop(ctx, s); // rooms dressed before the Tripo props: re-dress them once
+  if (s.seeded && (s.rev ?? 0) >= 4 && s.propsV !== 2) reprop(ctx, s); // rooms dressed before the Tripo props: re-dress them once
   if ((s.rev ?? 0) < 4) revamp(ctx, s); // the revamp lays itself over a few ticks: rooms, doors, the hall, vents
   if (s.sludgeV !== 1) { s.sludgeV = 1; laySludge2(ctx); }
   if (s.graffitiV !== 1) { s.graffitiV = 1; layGraffiti2(ctx); }
@@ -364,5 +364,5 @@ function reprop(ctx, s) {
   for (const row of ctx.query({ radius: 9, center: { x: a.x + 3, y: 0, z: a.z } })) { const o = ctx.getObject(row.id), k = o?.primitive?.kind;
     if (k === "sphere" && o.primitive.radius === 0.08 && o.light) { const p = o.feetPosition; ctx.destroy(o.id); ctx.spawn({ ...campLantern(), feetPosition: { x: p.x, y: p.y - 0.17, z: p.z } }); }
     else if (k === "cylinder" && o.primitive.radiusTop === 0.12 && o.fx) { const p = o.feetPosition, fx = o.fx; ctx.destroy(o.id); ctx.spawn({ ...campStove(), feetPosition: p, fx }); } }
-  s.propsV = 1; delete s.propsStep;
+  s.propsV = 2; delete s.propsStep;
 }
