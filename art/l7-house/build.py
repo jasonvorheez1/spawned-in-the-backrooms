@@ -11,7 +11,7 @@ k = Kit(2003)
 SID = k.mat("siding", (0.62, 0.60, 0.50), 0.6); TRIM = k.mat("trim", (0.85, 0.85, 0.82), 0.5); SH = k.mat("shingle", (0.17, 0.17, 0.18), 0.95)
 GL = k.mat("glass", (0.05, 0.07, 0.08), 0.08, 0.2); BL = k.mat("blind", (0.80, 0.76, 0.66), 0.6); SHU = k.mat("shutter", (0.12, 0.2, 0.17), 0.6)
 CON = k.mat("concrete", (0.45, 0.44, 0.42), 0.95); GUT = k.mat("gutter", (0.82, 0.82, 0.8), 0.4, 0.3); DISH = k.mat("dish", (0.75, 0.75, 0.74), 0.4, 0.3)
-DOOR = k.mat("door", (0.36, 0.12, 0.1), 0.5); BULB = k.mat("bulb", (1, 0.85, 0.6), 0.3, 0, emit=(1, 0.8, 0.5))
+DOOR = k.mat("door", (0.36, 0.12, 0.1), 0.5); CEIL = k.mat("ceiling", (0.86, 0.84, 0.78), 0.95); BULB = k.mat("bulb", (1, 0.85, 0.6), 0.3, 0, emit=(1, 0.8, 0.5))
 H = 2.78; O = 3.22  # eave height above the floor; outer face of the siding
 DOORS = {"S": (-0.6, 0.6, 2.2), "N": (-0.8, 0.8, 2.1)}
 # windows per side: (centre along the wall, sill, width, height)
@@ -77,7 +77,7 @@ LEN = 2 * (O + RAKE); slope = HY / math.cos(PITCH)
 for sgn in (1, -1):
     # deck
     cy = sgn * HY / 2; cz = H + (O + 0.05) * 0.5 - (HY / 2) * 0.5 - 0.02 - (EAVE * 0.5) * 0 
-    k.box((0, sgn * (HY / 2), ZR - HY / 2 * 0.5 + 0.0 - 0.02), (LEN, slope, 0.05), SH, rot=(sgn * PITCH, 0, 0))
+    k.box((0, sgn * (HY / 2), ZR - HY / 2 * 0.5 + 0.0 - 0.02), (LEN, slope, 0.05), SH, rot=(-sgn * PITCH, 0, 0))
     # shingle courses: rows of tabs with random widths, each course 0.14 down-slope, slightly lifted at its butt
     n = int(slope / 0.14)
     for r in range(n):
@@ -85,7 +85,7 @@ for sgn in (1, -1):
         x = -LEN / 2 + (k.R.uniform(0, 0.3) if r % 2 else 0)
         while x < LEN / 2 - 0.05:
             w = min(k.R.uniform(0.25, 0.45), LEN / 2 - x)
-            k.box((x + w / 2, y, z), (w - 0.012, 0.16, 0.012 + k.R.uniform(0, 0.006)), SH, rot=(sgn * PITCH + sgn * 0.03, 0, 0))
+            k.box((x + w / 2, y, z), (w - 0.012, 0.16, 0.012 + k.R.uniform(0, 0.006)), SH, rot=(-sgn * PITCH - sgn * 0.03, 0, 0))
             x += w
     # fascia and a K-style gutter along the eave, a downspout at each end
     ye, ze = sgn * (HY + 0.02), ZR - slope * math.sin(PITCH) - 0.08
@@ -98,6 +98,8 @@ for sgn in (1, -1):
         k.box((x, sgn * (O + 0.2), 0.05), (0.08, 0.3, 0.06), GUT)
     # soffit under the eave
     k.box((0, sgn * (O + EAVE / 2), H - 0.0), (2 * O, EAVE, 0.02), TRIM)
+# the room's ceiling: popcorn drywall closing the attic over the walls
+k.box((0, 0, 2.73), (2 * O - 0.1, 2 * O - 0.1, 0.06), CEIL)
 # ridge cap
 k.box((0, 0, ZR + 0.06), (LEN, 0.3, 0.05), SH)
 # gable ends: a siding triangle, a louvered vent, rake boards
@@ -111,7 +113,7 @@ for xs in (1, -1):
     k.box((x + xs * 0.02, 0, H + RISE * 0.55), (0.04, 0.55, 0.55), TRIM, rot=(math.pi / 4, 0, 0))
     for j in range(5): k.box((x + xs * 0.04, 0, H + RISE * 0.55 - 0.18 + j * 0.09), (0.02, 0.36, 0.03), GUT, rot=(0, xs * 0.5, 0))
     for sgn in (1, -1):
-        k.box((xs * (O + RAKE - 0.02), sgn * HY / 2, ZR - HY / 2 * 0.5 - 0.05), (0.04, slope + 0.05, 0.2), TRIM, rot=(sgn * PITCH, 0, 0))
+        k.box((xs * (O + RAKE - 0.02), sgn * HY / 2, ZR - HY / 2 * 0.5 - 0.05), (0.04, slope + 0.05, 0.2), TRIM, rot=(-sgn * PITCH, 0, 0))
 # a satellite dish on the south slope, the 2000s on every roof
 dz = ZR - 1.4 * 0.5 + 0.05
 k.box((1.8, -1.4, dz + 0.15), (0.05, 0.05, 0.4), DISH)
