@@ -14,11 +14,13 @@ export function setDown(ctx, o) {
   let hit = raycast(ctx, eye, d, { distance: 2.4, ignoreEntities: ign });
   if (!hit || (hit.normal?.y ?? 0) < 0.6) { const hl = Math.hypot(d.x, d.z) || 1, fx = f.x + (d.x / hl) * 0.8, fz = f.z + (d.z / hl) * 0.8; hit = raycast(ctx, { x: fx, y: f.y + 1.4, z: fz }, { x: 0, y: -1, z: 0 }, { distance: 3, ignoreEntities: ign }) ?? { position: { x: fx, y: f.y, z: fz } }; }
   o.feetPosition = { x: hit.position.x, y: hit.position.y + 0.01, z: hit.position.z };
-  o.physics = TRAY_PHYS; o.velocity = { x: 0, y: 0, z: 0 };
-  if (!o.tags.includes("usable")) o.tags = [...o.tags, "usable"];
+  const tray = isTray(o);
+  o.physics = tray ? TRAY_PHYS : { body: "dynamic", collider: "box", mass: Math.max(0.3, ses.kg ?? 2), friction: 0.8, restitution: 0.05 }; o.velocity = { x: 0, y: 0, z: 0 };
+  if (tray && !o.tags.includes("usable")) o.tags = [...o.tags, "usable"];
   ses.held = null; s.carry = null; s.carryId = null; s.carryMul = 1; s.l61Hold = null; s.l61Tray = 0;
   heard(ctx, { clip: CLATTER, position: o.feetPosition, volume: 0.35, maxDistance: 10 });
 }
+const HOLD_MS = 350; // Savi's pick: shorter is a tap
 const NOT = ["wall", "gridwall", "level0", "npc", "player", "critter", "door", "remains"];
 const CAP = (h) => 12 + h * 9;        // base kg by Hardiness: 1 = 21 kg, 5 = 57, 10 = 102 (Savi's picks)
 // what you can lift right now: Hardiness is the base, Endurance and Agility add leverage, and it shrinks when you're
@@ -44,10 +46,14 @@ export function onInput(ctx, input) {
   const ses = ctx.self.session;
   if (input.axes) ses.dir = look(ctx, input);
   if (input.pressed?.interact && ses.held && !ctx.self.state.focus && !ctx.self.state.sit && !ctx.self.state.lootOpen) { const t = ctx.getObject(ses.held); if (isTray(t)) return setDown(ctx, t); } // E with nothing in focus sets a tray down
-  if (!input.pressed?.grab) return;
   const s = ctx.self.state, h = attrsOf(s).h ?? 5, held = ses.held && ctx.getObject(ses.held);
-  if (held && isTray(held) && (ses.dir?.y ?? 0) < -0.55) return setDown(ctx, held); // Z looking down at a table or the floor sets it down; otherwise it flies
-  if (held) return toss(ctx, held, h);
+  if (held) { // in hands: a tap of Z sets it down where you look, a hold (past HOLD_MS) throws it
+    if (input.pressed?.grab) ses.zDown = ctx.now();
+    if (ses.zDown && input.held?.grab && ctx.now() - ses.zDown >= HOLD_MS) { ses.zDown = null; return toss(ctx, held, h); }
+    if (ses.zDown && input.released?.grab) { const quick = ctx.now() - ses.zDown < HOLD_MS; ses.zDown = null; return quick ? setDown(ctx, held) : toss(ctx, held, h); }
+    return;
+  }
+  if (!input.pressed?.grab) return;
   ses.held = null;
   const f = ctx.self.feetPosition, eye = { x: f.x, y: f.y + 1.5, z: f.z }, d = ses.dir ?? look(ctx, input);
   const hit = raycast(ctx, eye, d, { distance: 2.6, ignoreEntities: [ctx.self.id] });
