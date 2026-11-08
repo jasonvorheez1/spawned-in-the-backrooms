@@ -44,7 +44,7 @@ export function tick(ctx) {
   { // what the owner built here in B mode (scripts/build.js saves it to their homeKeep.built), back where they put it
     const built = homeOwner?.state?.homeKeep?.built ?? {};
     for (const o of Object.values(ctx.place.objects)) if (o.id?.startsWith?.("hb-") && !built[o.id]) ctx.destroy(o.id);
-    for (const [id, b] of Object.entries(built)) { const spec = builtSpec(b.kind, b, homeOwner.id); if (!spec) continue; if (ctx.place.objects[id]) ctx.destroy(id); ctx.spawn(id, spec); }
+    for (const [id, b] of Object.entries(built)) { const spec = builtSpec(b.kind, b, homeOwner.id, { byUser: homeOwner.userId, id, owner: homeOwner.state }); if (!spec) continue; if (ctx.place.objects[id]) ctx.destroy(id); ctx.spawn(id, spec); }
   }
   const use = (kind, name, verb, extra = {}) => ({ tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind, name, verb, ...extra } });
   bx("h-floor", 0, 0, 0, W, 0.1, D, FLOOR);

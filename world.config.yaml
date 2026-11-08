@@ -124,6 +124,45 @@ inputs:
     build:
       keys:
         - b
+    bc1:
+      keys:
+        - "1"
+      touch:
+        button: false
+    bc2:
+      keys:
+        - "2"
+      touch:
+        button: false
+    bc3:
+      keys:
+        - "3"
+      touch:
+        button: false
+    bc4:
+      keys:
+        - "4"
+      touch:
+        button: false
+    bc5:
+      keys:
+        - "5"
+      touch:
+        button: false
+    bc6:
+      keys:
+        - "6"
+      touch:
+        button: false
+    bc7:
+      keys:
+        - "7"
+      touch:
+        button: false
+    buildPrev:
+      mouse: wheelUp
+      touch:
+        button: false
   axes:
     moveX:
       keys: a/d
