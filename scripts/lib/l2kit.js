@@ -96,3 +96,15 @@ export function kit(ctx, part, D) {
   for (const r of recs) ctx.instance(r);
   return { normals: nor, uvs, colors: col };
 }
+
+// lays the kit once per room (ids l2kit-<part>) and turns the old shell and details to their kit mode; safe to call again
+export const PARTS = ["wall", "pier", "corner", "ceil", "floor", "floordrain", "piperun", "tray", "duct", "lamp"];
+export function spawnKit(ctx) {
+  const geo = ctx.place.objects["l2-geo"], cut = geo?.primitive?.params?.cut ?? [];
+  for (const part of PARTS) if (!ctx.place.objects[`l2kit-${part}`])
+    ctx.spawn(`l2kit-${part}`, { tags: ["l2kit"], feetPosition: { x: 0, y: 0, z: 0 }, castShadow: false, receiveShadow: true, material: { roughness: 0.9 },
+      primitive: { kind: "scripted", script: `scripts/l2kit/${part}-geo.js`, params: part === "wall" || part === "pier" ? { cut } : {} } });
+  if (geo && !geo.primitive?.params?.kit) geo.primitive = { ...geo.primitive, params: { ...(geo.primitive?.params ?? {}), kit: true } };
+  const det = ctx.place.objects["l2-details"] ?? Object.values(ctx.place.objects).find((o) => o?.primitive?.script === "scripts/level2-details-geo.js");
+  if (det && !det.primitive?.params?.kit) det.primitive = { ...det.primitive, params: { ...(det.primitive?.params ?? {}), kit: true } };
+}

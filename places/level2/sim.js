@@ -1,3 +1,4 @@
+import { spawnKit } from "../../scripts/lib/l2kit.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { tickWalls } from "../../scripts/lib/breakables.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
@@ -37,8 +38,8 @@ export function tick(ctx) {
   tickChatter(ctx, CHATTER.level2, {"surv-wren": "wren", "surv-hollis": "hollis", "surv-mags": "mags"}); // the camp talks among itself while someone's near
   if (!s.seeded) {
     s.seeded = true;
-    ctx.spawn("l2-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-geo.js" }, material: { roughness: 0.9 } });
-    ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-details-geo.js" }, material: { roughness: 0.85 } }); // lagged pipes, conduit, ducts, caged lamps, stains
+    ctx.spawn("l2-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-geo.js", params: { kit: true } }, material: { roughness: 0.9 } });
+    ctx.spawn("l2-details", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level2-details-geo.js", params: { kit: true } }, material: { roughness: 0.85 } }); spawnKit(ctx); // handrails, cables, stains; the modelled kit (scripts/lib/l2kit.js) draws walls, pipes, trays, ducts, lamps
     // tube lights: industrial white or sodium orange, uneven, some hanging crooked; dead circuits get a violet emergency lamp now and then
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
       const c = cellCenter(cx, cz), r = hash(cx, cz, 201), z = zoneOf(cx, cz);

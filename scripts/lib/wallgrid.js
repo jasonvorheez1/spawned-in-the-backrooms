@@ -38,7 +38,7 @@ const l1 = {
 const l2closed = (cx, cz, d) => !L2.isOpen(cx, cz, d)
 const l2door = (cx, cz, d) => cx >= 0 && cz >= 0 && cx < L2.N && cz < L2.N && L2.zoneOf(cx, cz) !== 'camp' && !L2.sideOf(cx, cz) && !L2.inPipes(cx, cz) && !L2.inHall(cx, cz) && l2closed(cx, cz, d) && L2.hash(cx * 4 + d, cz, 51) <= 0.07
 const l2 = {
-  obj: 'l2-geo', script: 'scripts/level2-geo.js', N: L2.N, S: L2.S, H: L2.H, HALF: L2.HALF, T: 0.4, ext: 0.4, cols: 4, rows: 3,
+  obj: 'l2-geo', script: 'scripts/level2-geo.js', kit: ['l2kit-wall', 'l2kit-pier'], N: L2.N, S: L2.S, H: L2.H, HALF: L2.HALF, T: 0.4, ext: 0.4, cols: 4, rows: 3,
   has(axis, cx, cz) {
     if (cx < 0 || cz < 0) return false
     const d = axis === 'x' ? 0 : 1, [ox, oz] = nb(axis, cx, cz)

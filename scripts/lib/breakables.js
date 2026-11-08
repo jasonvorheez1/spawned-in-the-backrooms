@@ -76,6 +76,7 @@ export function syncWalls(ctx, gname) {
   for (const k of Object.keys(br)) { const p = k.split(':'), w = p.slice(0, 3).join(':'); (walls[w] ??= []); if (p.length === 5) walls[w].push(`${p[3]}:${p[4]}`); else walls[w].whole = true }
   const cut = Object.keys(walls).sort(), cur = (o.primitive?.params?.cut ?? []).join(',')
   if (cur !== cut.join(',')) o.primitive = { ...o.primitive, kind: 'scripted', script: G.script, params: { ...(o.primitive?.params ?? {}), cut } }
+  for (const k of G.kit ?? []) { const ko = ctx.place.objects[k]; if (ko && (ko.primitive?.params?.cut ?? []).join(',') !== cut.join(',')) ko.primitive = { ...ko.primitive, params: { ...(ko.primitive?.params ?? {}), cut } } } // the modelled kit's walls and piers follow the same cuts
   const want = new Set()
   for (const w of cut) {
     if (walls[w].whole) continue
