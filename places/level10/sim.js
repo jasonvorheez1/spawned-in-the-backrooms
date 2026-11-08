@@ -15,7 +15,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 
 export const cadence = "1s";
-const V = 10;
+const V = 11;
 const BRK = (mat, hp) => ({ mat, hp, maxHp: hp });
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BARN = (w, d, h, ridge, wall, door) => ({ primitive: { kind: "scripted", script: "scripts/barn10.js", params: { w, d, h, ridge, wall, door } }, physics: "static" });
@@ -276,14 +276,14 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   const MEG = (id, at, yaw, look, role, hp, name, voice, line) => sp(id, { tags: ["npc", "meg"], feetPosition: at, rotation: { yaw }, physics: "character",
     ...critterSpec(npcLook(id.replace("l10-meg-", "l10-"), look, role, hp)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
     state: { name, role, voice, faction: "meg", factionName: "M.E.G. Outpost Bountiful", home: { x: at.x, z: at.z }, line, ...npcState(ctx, "agent", hp * 10) } });
-  MEG("l10-meg-hale", T(-17.5, -35, 0), -60, { species: "bear", sex: "m", topw: "shirt", top: "#6b6a4a", botw: "pants", bottom: "#3b3226", shoes: "boots" }, "quarter", 12,
+  MEG("l10-meg-hale", T(-14.2, -36.5, 0), -90, { species: "bear", sex: "m", topw: "shirt", top: "#6b6a4a", botw: "pants", bottom: "#3b3226", shoes: "boots" }, "quarter", 12,
     "Quartermaster Hale · M.E.G. Outpost Bountiful", "hollis", "Everything that leaves this farm gets weighed. Everything.");
   MEG("l10-meg-wren", T(-6, -40, 0), 120, { species: "rabbit", sex: "f", topw: "tank", top: "#c9a86a", botw: "overalls", bottom: "#41587a", shoes: "boots", hat: "cap" }, "scout", 9,
     "Wren · Outpost Farmhand", "mags", "Mind your boots in the rows. And don't dig past your ankles.");
   MEG("l10-meg-sully", T(-29, -43, 0.45), 200, { species: "raccoon", sex: "m", topw: "jacket", top: "#4a5240", botw: "pants", bottom: "#2a2a26", shoes: "boots", hat: "beanie" }, "default", 10,
     "Sully · Outpost Radio Operator", "reyes", "Bountiful to Alpha, still green out here. Over.");
   // the cookfire the outpost eats around: a stone ring, split logs, stumps to sit on
-  const fire = T(-10, -44, 0);
+  const fire = T(-13, -49, 0);
   for (let i = 0; i < 9; i++) { const a = i * 0.698; sp(`l10-fire-stone-${i}`, { feetPosition: { x: fire.x + Math.cos(a) * 0.75, y: fire.y, z: fire.z + Math.sin(a) * 0.75 }, rotation: { yaw: i * 47 }, scale: { x: 1, y: 0.6, z: 0.8 }, primitive: { kind: "sphere", radius: 0.2, widthSegments: 7, heightSegments: 5 }, material: { color: "oklch(0.5 0.01 80)", roughness: 0.95 }, castShadow: false, visibleRange: { max: 60 } }); }
   for (let i = 0; i < 3; i++) sp(`l10-fire-log-${i}`, { feetPosition: { x: fire.x, y: fire.y + 0.08, z: fire.z }, rotation: { yaw: i * 60, roll: 90, pitch: 18 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.08, height: 0.9, radialSegments: 7 }, material: { color: "oklch(0.25 0.03 50)", roughness: 1 }, castShadow: false });
   [[1.9, 0.4], [-1.6, 1.1], [0.3, -2]].forEach(([dx, dz], i) => sp(`l10-fire-stump-${i}`, { tags: ["seat"], feetPosition: { x: fire.x + dx, y: fire.y, z: fire.z + dz }, primitive: { kind: "cylinder", radiusTop: 0.24, radiusBottom: 0.28, height: 0.42, radialSegments: 10 }, material: { color: "oklch(0.42 0.05 60)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.95 }, physics: "static", visibleRange: { max: 80 } }));

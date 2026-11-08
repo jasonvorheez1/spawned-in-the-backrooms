@@ -16,7 +16,7 @@ terrain:
     track-east: { kind: path, points: [[2, -40], [40, -42], [80, -38], [120, -40], [200, -44]], width: 3.8, material: dirt, edgeMaterial: grass, noise: 0.4, grade: true }
     track-west: { kind: path, points: [[-4, -120], [-50, -118], [-100, -122], [-170, -120]], width: 3.8, material: dirt, edgeMaterial: grass, noise: 0.4, grade: true }
     lake: { kind: lake, at: { x: 70, z: -95 }, radius: 26, depth: 3, bedMaterial: dirt }
-    yard: { kind: flatten, center: { x: -30, z: -40 }, height: { terrain: 0 }, shape: { kind: rectangle, width: 34, depth: 22 }, falloff: 8, material: dirt, clearScatter: true }
+    yard: { kind: flatten, center: { x: -29, z: -41 }, height: { terrain: 0 }, shape: { kind: rectangle, width: 42, depth: 26 }, falloff: 8, material: dirt, clearScatter: true }
   decorations:
     layers:
       wheat:
