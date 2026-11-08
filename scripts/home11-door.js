@@ -22,11 +22,18 @@ export const ears = {
       return;
     }
     if (k === "tv") {
-      const n = TV.channels.length, ch = ((ctx.self.state.ch ?? 0) + 1) % n, c = TV.channels[ch];
+      const n = TV.channels.length, ch = ((ctx.self.state.ch ?? 0) + 1) % (n + 1); // n = off
       ctx.self.state.ch = ch;
-      ctx.self.material = { ...ctx.self.material, texture: c.video };
-      const snd = ctx.getObject("h-tv-sound"); if (snd) snd.audio = { ...snd.audio, clip: c.audio };
+      const snd = ctx.getObject("h-tv-sound"), glow = ctx.getObject("h-tv-glow");
       ctx.emit("playSound", { clip: "cdn/sfx-old-crt-television-channel-click-static-burst.mp3", position: ctx.self.feetPosition, volume: 0.5 });
+      if (ch === n) {
+        ctx.self.visible = false; if (snd) snd.audio = null; if (glow?.light) glow.light = { ...glow.light, intensity: 0 };
+        w.notice = { text: "TV off", at: now }; return;
+      }
+      const c = TV.channels[ch];
+      ctx.self.visible = true; ctx.self.material = { ...ctx.self.material, texture: c.video };
+      if (snd) snd.audio = { ...(snd.state?.audio ?? { loop: true, gain: 0.35, spatial: true, maxDistance: 10 }), clip: c.audio };
+      if (glow?.light) glow.light = { ...glow.light, intensity: glow.state?.int ?? 0.6 };
       w.notice = { text: `CH ${ch + 1}: ${c.name}`, at: now };
       return;
     }

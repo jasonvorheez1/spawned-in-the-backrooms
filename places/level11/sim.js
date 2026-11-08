@@ -1064,7 +1064,7 @@ function lay(ctx) {
     state: { mat: "wood", needs: "home11", stayGone: true }, // no E; the owner smashes it
     ui: `<div face="front" at="0.5 0.62" width="0.86m" style="width:860px;height:560px;background:#f3ead2;color:#1c2a22;font-family:Georgia,serif;text-align:center;padding:30px 24px;box-sizing:border-box;border:14px solid #2f4a3a"><div style="font-size:150px;font-weight:bold;letter-spacing:6px;line-height:1">FOR SALE</div><div style="font-size:52px;margin-top:22px">3 bed · porch · quiet street</div><div style="font-size:92px;font-weight:bold;color:#7a1f1a;margin-top:18px">$2,500</div><div style="font-size:40px;margin-top:14px;letter-spacing:3px">B.N.T.G. REALTY</div></div>`,
   });
-  sp("l11-from-home", { feetPosition: { x: -23.0, y: 0.6, z: 51.85 }, rotation: { yaw: -90 } }); // where you step out of the house
+  sp("l11-from-home", { feetPosition: { x: -24.4, y: 1.0, z: 51.85 }, rotation: { yaw: -90 } }); // where you step out of the house
   sp("l11-house-door", {
     tags: ["usable"], feetPosition: { x: -23.45, y: 0.9, z: 51.85 }, visible: false, // just proud of the wall collider (x -23.6) so the look ray reaches it
     primitive: { kind: "box", width: 0.2, height: 2, depth: 1.2 },
