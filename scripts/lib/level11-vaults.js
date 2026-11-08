@@ -46,7 +46,7 @@ export function layVaults(ctx, { sp, bx, cyl }) {
     { feetPosition: { x: 0, y: 2.0, z: -7.52 }, primitive: { kind: "box", width: 1.6, height: 0.35, depth: 0.02 }, material: { color: "oklch(0.2 0.01 0)" }, ui: `<div face="front" width="1.6m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111;color:#e8a33a;font:900 150px Arial">14 · NOT IN SERVICE</div>` },
   ] });
   // turnstiles, benches, bins, a newspaper-strewn corner
-  for (let k = 0; k < 3; k++) sp(`l11-vault-turn-${k}`, { feetPosition: { x: 13.3 + k * 1.1, y: FY, z: 68.4 }, model: { id: MODELS.turnstile, forward: "-z" }, physics: { body: "static", collider: "box" } });
+  for (let k = 0; k < 3; k++) sp(`l11-vault-turn-${k}`, { feetPosition: { x: 13.3 + k * 1.1, y: FY, z: 68.4 }, primitive: null, material: null, model: { id: MODELS.turnstile, forward: "-z" }, physics: { body: "static", collider: "box" } });
   sp("l11-vault-mvm", { feetPosition: { x: 18.95, y: FY, z: 69.2 }, rotation: { yaw: -90 }, model: { id: MODELS.mvm, forward: "-z" }, physics: { body: "static", collider: "box" } });
   for (const [i, z] of [[0, 74], [1, 83]]) sp(`l11-vault-bench-${i}`, { feetPosition: { x: 18.9, y: FY, z }, rotation: { yaw: -90 }, model: { id: MODELS.bench, forward: "-z" }, physics: { body: "static", collider: "box" } });
   sp("l11-vault-bin", { feetPosition: { x: 18.9, y: FY, z: 78.5 }, model: { id: MODELS.bin, forward: "-z" }, physics: { body: "static", collider: "box" } });
