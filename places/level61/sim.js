@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 47;
+const V = 48;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -42,7 +42,7 @@ const M_GRILL = "/cdn/value.52e8c951e79935129fcfb50a305e01a547c4ea962c25fb44339c
 const M_JUKE = "/cdn/value.eb676c37706ec7e4c3e6457d46b4a565b82fc50d9cb775ec70525a1fe3fcad67.glb";
 const M_BACKBAR = "/cdn/value.d8c593de7c7b1406024e79601baece61757017658bcaf7b9bbd6da42ea716075.glb";
 // Liquorette's tavern set (art/liquorette/build.py): front is +Y in Blender, so forward "-z"
-const L_BACK = "/cdn/value.a187daf06bff17c55643ef0aac588b4e96b9c44c4945786fa799a31f2af8f47d.glb", L_BAR = "/cdn/value.5a499eb1ef735837567954e269e9ad617fae6023a287348669deccdac310175d.glb";
+const L_BACK = "/cdn/value.f112037691be0cd9cbb2a52a898d1a9a70f22cc834fbbae6c341215f4ff176d7.glb", L_BAR = "/cdn/value.5a499eb1ef735837567954e269e9ad617fae6023a287348669deccdac310175d.glb";
 const L_STOOL = "/cdn/value.0bbf170e907b58d9b64bfe662e63bede4a9e6a6195ea676256b89545252b6b67.glb", L_CHAIR = "/cdn/value.99cd616ba78a4e1c69efcdc0ef0050d8da906cecb5c558e97c79adfd2a3a6ab2.glb";
 const L_TABLE = "/cdn/value.33a726ced14757e5e3948ed28a5fea36e2dec90fbdeb755fcfe483434e6e6eb5.glb", L_BOILER = "/cdn/value.8ea6672f48e73b727ed727651d920b8505a90819258f886d4df6f23da68d7f30.glb";
 const M_BENCH = "/cdn/value.875f7fd721e70ac1c285cdade96da8263dc175c97f593282732e00ef66d72b83.glb";
@@ -89,7 +89,7 @@ function lay(ctx) {
     ui: `<div face="front" width="${w}m" style="width:${w * 1000}px;height:${h * 1000}px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Arial,sans-serif;font-weight:900;line-height:1.05">${html}</div>`,
   });
 
-  const M_SNACK_TRIPO = "/cdn/value.476807d8db2aec3bb854b6d000cd2fdb511d419ea6ff6260eda3d5109ff0e058.glb"; // tripo snack machine, re-seated in art/l61-vend/build.py: 1.83 m, feet origin, front +z
+  const M_SNACK_TRIPO = "/cdn/value.e910998f3d141ef9157c86bec44859cff3389f2f4add5d4144e1142133161967.glb"; // tripo snack machine, re-seated in art/l61-vend/build.py: 1.83 m, feet origin, front +z
   const vend = (id, x, z, yaw, soda, extra = {}) => sp(id, {
     feetPosition: { x, y: extra.y ?? 0, z },
     rotation: { yaw, ...(extra.rot ?? {}) },
