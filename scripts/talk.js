@@ -118,7 +118,17 @@ function send(ctx, d) {
   ses.talkAt = now; s.talkBusy = now
   const hist = s.talks?.[short(it)] ?? []
   const system = systemPrompt({ it, place: ctx.self.place, pl: ctx.self, rapport: rapportOf(ctx, it), following: it.state?.follow === ctx.self.id })
-  const message = userMessage(hist, text, ctx.self.displayName ?? 'Wanderer')
+  let message = userMessage(hist, text, ctx.self.displayName ?? 'Wanderer')
+  ses.preCheck = null
+  const pc = d.check && SKILLS.includes?.(String(d.check.skill)) !== false && d.check.skill ? { skill: String(d.check.skill).toLowerCase(), difficulty: Math.max(5, Math.min(110, Number(d.check.difficulty) || 50)) } : null
+  if (pc) { // the roll happens the moment they pick it, and the npc is told how it went
+    const c = rollCheck(ctx, s, pc), v = skillsOf(s)[pc.skill] ?? 0
+    const pct = Math.max(0, Math.min(100, Math.round((T.roll - (pc.difficulty - v) + 1) / T.roll * 100)))
+    ses.preCheck = { ok: c.ok }
+    logLine(ctx, it, 'x', `[${skn(pc.skill)} ${pct}%] ${c.ok ? 'SUCCEEDED' : 'FAILED'}`)
+    hearAt(ctx, { clip: c.ok ? 'cdn/sfx-soft-bright-two-note-success-chime.mp3' : 'cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3', volume: 0.5 })
+    message += `\n(The wanderer attempted a ${pc.skill} check and ${c.ok ? 'SUCCEEDED: you are convinced or impressed, and react warmly to it' : 'FAILED: you are unconvinced, put off or see through it'}. Do not include a check field.)`
+  }
   logLine(ctx, it, 'p', text)
   if (saysName(text, ctx.self.displayName)) (ses.toldName ??= {})[it.id] = true // they introduced themselves: the reply's memory write keeps it
   it.state.talkAt = now; it.state.talkTo = ctx.self.id
@@ -142,7 +152,8 @@ export function heard(ctx, r, pay) {
   }
   if (!o) { const line = canned(ctx); say(ctx, it, line, 'calm'); logLine(ctx, it, 'n', line); getStartersLib(ctx).then(({ getChoices }) => { s.talkChoices = getChoices(ctx, it, s, line, null) }); return }
   let { reply: line, rapportDelta: delta, intent } = o, passed = false
-  if (o.check) {
+  if (ctx.self.session.preCheck) { passed = ctx.self.session.preCheck.ok; if (!passed) { delta = Math.min(delta, T.failHit); if (intent !== 'hostile' && intent !== 'leave') intent = 'none' } ctx.self.session.preCheck = null }
+  else if (o.check) {
     const c = rollCheck(ctx, s, o.check); passed = c.ok
     logLine(ctx, it, 'x', `[${skn(o.check.skill)} ${o.check.difficulty}] ${c.ok ? 'passed' : 'failed'}`)
     if (!c.ok) { line = o.failReply || "nah. not buying that."; delta = Math.min(delta, T.failHit); if (intent !== 'hostile' && intent !== 'leave') intent = 'none' }

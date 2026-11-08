@@ -113,10 +113,12 @@ export function talkUi(ctx, player) {
   const choices = Array.isArray(s.talkChoices) ? s.talkChoices : []
   const chItems = choices.map((c, i) => {
     const txt = typeof c === 'string' ? c : c.text
-    const tag = typeof c === 'object' && c.tag ? c.tag : ''
+    const ck = typeof c === 'object' && c.check?.skill ? c.check : null
+    const pct = ck ? Math.max(0, Math.min(100, Math.round((T.roll - (ck.difficulty - (skillsOf(s)[ck.skill] ?? 0)) + 1) / T.roll * 100))) : null
+    const tag = ck ? `${ck.skill[0].toUpperCase() + ck.skill.slice(1)} ${pct}%` : typeof c === 'object' && c.tag ? c.tag : ''
     const low = tag.toLowerCase()
     const tagCls = low.includes('speech') ? 'speech' : low.includes('barter') ? 'barter' : low.includes('lore') ? 'lore' : low.includes('med') ? 'med' : low.includes('surv') ? 'surv' : 'gen'
-    return `<button class="ch" data-interactive onclick="sendAction('talk',{id:'${q(it.id)}',text:'${q(txt)}'})"><b class="n">${i + 1}.</b>${tag ? `<span class="tag ${tagCls}">[${esc(tag)}]</span>` : ''}<span class="txt">${esc(txt)}</span></button>`
+    return `<button class="ch" data-interactive onclick="sendAction('talk',{id:'${q(it.id)}',text:'${q(txt)}'${ck ? `,check:{skill:'${q(ck.skill)}',difficulty:${Number(ck.difficulty) || 50}}` : ''}})"><b class="n">${i + 1}.</b>${tag ? `<span class="tag ${tagCls}">[${esc(tag)}]</span>` : ''}<span class="txt">${esc(txt)}</span></button>`
   }).join('')
   // the strip: their line, up to four replies, then one small row: type a line, the side asks, bye
   const top = chItems.split('</button>').filter(Boolean).slice(0, 4).map((b) => b + '</button>').join('')
