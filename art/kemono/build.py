@@ -108,7 +108,11 @@ OS, NS = segs(oldRig), segs(rig)
 FALL = {'EarL': 'Head', 'EarR': 'Head', 'Tail': 'Hips', 'Tail1': 'Hips', 'Root': 'Hips'}
 def top_of(o, r):
     ws = [o.matrix_world @ v.co for v in o.data.vertices]; return max(w.z for w in ws) - (r.matrix_world @ r.data.bones['Head'].head_local).z
-HEADK = top_of(body, rig) / (OS['Head'][1] - OS['Head'][0]).length  # the old body's head is its own model: its bone spans the skull  # a head is sized by the skull, not its short bone
+def skull_w(o, r):  # widest cheek-to-cheek run under the ears
+    hz = (r.matrix_world @ r.data.bones['Head'].head_local).z; ws = [o.matrix_world @ v.co for v in o.data.vertices]
+    top = max(w.z for w in ws); zs = [hz + (top - hz) * f for f in (0.2, 0.28, 0.36)]
+    return max(max(w.x for w in ws if abs(w.z - z) < 0.01) - min(w.x for w in ws if abs(w.z - z) < 0.01) for z in zs)
+HEADK = skull_w(body, rig) / 0.58  # the old cute head is 0.58 m across (its beanie 0.62); a head is sized by the skull, not its short bone
 print('head ratio', round(HEADK, 3))
 def carry(n, p):
     h, t = OS[n]; h2, t2 = NS[n]; d, d2 = t - h, t2 - h2
