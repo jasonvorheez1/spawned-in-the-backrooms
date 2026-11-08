@@ -45,7 +45,14 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
       ctx.emit("squash", { target: p.id, axis: "y", intensity: 0.12, duration: 0.2 })
     }
   }
+  const gas = (ctx.self.session.gas ??= [])
   for (const b of ctx.query({ tags: ["l26-balloon"] })) {
+    if ((b.state.hp ?? 10) <= 0) { // popped: the ammonia sac goes up in a choking cloud for 6 s
+      gas.push({ x: b.feetPosition.x, y: b.feetPosition.y, z: b.feetPosition.z, until: now + 6000 })
+      ctx.emit("fx", { position: { ...b.feetPosition, y: b.feetPosition.y + 1.1 }, script: GAS })
+      ctx.emit("playSound", { clip: SND("balloon-pop-then-hissing-gas"), position: b.feetPosition, volume: 1 })
+      ctx.destroy(b.id); continue
+    }
     for (const pl of players) {
       const top = { x: b.feetPosition.x, z: b.feetPosition.z }
       if (flat(pl.feetPosition, top) > T.balloonReach || now < (b.state.nextSting ?? 0)) continue
@@ -58,5 +65,14 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
       ctx.emit("shake", { target: b.id, intensity: 0.3, duration: 0.5 })
     }
   }
+  for (let i = gas.length - 1; i >= 0; i--) {
+    const c = gas[i]; if (now > c.until) { gas.splice(i, 1); continue }
+    for (const pl of players) if (flat(pl.feetPosition, c) < 3 && now >= (pl.state.gasAt ?? 0)) {
+      pl.state.gasAt = now + 700; pl.state.hp -= 3
+      ctx.emit("damageNumber", { position: { ...pl.feetPosition, y: pl.feetPosition.y + 1.2 }, value: 3, color: "#d8ff80" })
+    }
+  }
   ctx.sleep(0.1)
 }
+const GAS = `fx
+pop gas burst=70 on=sphere(.3) life=4..6 v=sdir()*(.6..1.6) size=.6..1.2 acc=drag(1.3)+curl(.3)+buoy(.05) sz=$size*(.5>3) col=<.75,.85,.4> a=0>.45:.4>.75:.3>0 rot=spin(.15) r=sprite(smoke-puff,alpha)`
