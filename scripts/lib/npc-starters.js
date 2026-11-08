@@ -535,6 +535,33 @@ export const STARTERS = {
       { text: "It takes grit to hold this island together. Cut me a friendly deal?", tag: "Speech 40", check: { skill: 'speech', difficulty: 40 } },
     ],
   },
+
+  // ---- Level 11 (The Infinite City) ----
+  'l11-meg-agent-vance': {
+    greeting: "Welcome to Base Beta forward post, wanderer. Take a breath—the sun's real enough, and the air won't choke you.",
+    mood: 'calm',
+    returning: "Still patrolling the avenue? Keep an eye out on the side alleys; some streets lead to places you don't want to fall into.",
+    friendly: "Good to see another friendly face on the boulevard. Let me know if you need supplies from the chest or tactical logs from the terminal.",
+    cold: "Keep your hands off the perimeter barricades. What do you need?",
+    choices: [
+      { text: "What is this city, and why do the entities act peaceful here?", tag: "Lore" },
+      { text: "How does M.E.G. operate Base Beta across such a massive urban sprawl?", tag: "Speech 35", check: { skill: 'speech', difficulty: 35 } },
+      { text: "Any tips for navigating the road network and canal safely?", tag: "Survival 30", check: { skill: 'survival', difficulty: 30 } },
+      { text: "Can you spare any supplies for a long trek through the avenues?", tag: "Barter 30", check: { skill: 'barter', difficulty: 30 } },
+    ],
+  },
+  'l11-commuter-faceling': {
+    greeting: "Good afternoon. Quite pleasant weather for a stroll along the canal promenade, wouldn't you say?",
+    mood: 'calm',
+    returning: "Ah, hello again. Just taking care of my daily rounds before evening settles in.",
+    friendly: "Always a pleasure to see courteous passersby on the boulevard. Beautiful day in the city.",
+    cold: "Pardon me, I have appointments to keep at the commercial plaza.",
+    choices: [
+      { text: "You seem completely at ease. Don't you know we're in the Backrooms?", tag: "Speech 25", check: { skill: 'speech', difficulty: 25 } },
+      { text: "Where does this endless avenue lead?", tag: "Lore" },
+      { text: "Have you seen any anomalous rifts or strange activity nearby?", tag: "Survival 30", check: { skill: 'survival', difficulty: 30 } },
+    ],
+  },
 }
 
 // Fallback starters for generic / unlisted NPCs by faction & role
@@ -778,10 +805,16 @@ function generateGenericChoicesOld(it, s, sk) {
 
 // ---- what fits the level: a safe level (Snackrooms, Refrigerator Paradise) asks no danger questions; the hotel's rooms are asked about in the hotel
 // Survival difficulty by place (the wiki's SD class, Savi's reading); 1 = safe: no "what should I avoid", no "best weapon against them"
-const SD = { level61: 1, main: 1, level1: 1, level4: 1, level2: 2, level21: 3, level3: 4, gamma: 2, level5: 3, level6: 4, level7: 4, level8: 4, debug: 1 }
+const SD = { level61: 1, level11: 1, main: 1, level1: 1, level4: 1, level2: 2, level21: 3, level3: 4, gamma: 2, level5: 3, level6: 4, level7: 4, level8: 4, debug: 1 }
 const DANGER = /avoid|danger|deadly|entit|hound|smiler|weapon|tactic|stay alive|staying alive|survive|survived|kill|threat|hunt|flicker|dark alone|face the dark|watch out/i
 const HOTEL = /\brooms?\b.*avoid|suite|hotel|ballroom/i
 const SAFE_ASK = {
+  level11: [
+    { text: "Where can I find Al's pretzel cart and fresh almond water?", tag: "Help" },
+    { text: "How do I take the glass elevator to the rooftop skydeck?", tag: "Help" },
+    { text: "Why do the hounds and facelings behave so peacefully here?", tag: "Lore" },
+    { text: "Can you tell me about M.E.G. Base Beta and the city layout?", tag: "Lore" },
+  ],
   level61: [
     { text: "What's actually good to eat around here?", tag: "Help" },
     { text: "Who runs all these places? Do the facelings ever talk?", tag: "Lore" },

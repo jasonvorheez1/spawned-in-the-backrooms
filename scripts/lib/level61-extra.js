@@ -83,18 +83,38 @@ export function layExtra(ctx, { HW, HD, HH }) {
   sp("l61-oven-fire", { feetPosition: { x: 9.5, y: 0.7, z: -31.0 }, fx: { script: FLAME } });
   sp("l61-juke-notes", { feetPosition: { x: -26.4, y: 1.7, z: -25 }, fx: { script: JUKE } });
 
-  // ---- Level 11: the sliding glass doors (the safe way out) in the east wall, and a vestibule that is closed for restocking
+  // ---- Level 11: the sliding glass doors (the safe way out) in the east wall, opening to Level 11 The Infinite City
   const dz = -9;
   bx("l61-l11-floor", HW + 3, -0.29, dz, 6, 0.3, 6, { color: "oklch(0.8 0.01 80)", roughness: 0.4 }); bx("l61-l11-roof", HW + 3, 3.4, dz, 6, 0.3, 6, { color: "oklch(0.9 0.01 90)" });
-  bx("l61-l11-back", HW + 6, 0, dz, 0.3, 3.4, 6, PLASTER); bx("l61-l11-wn", HW + 3, 0, dz - 3, 6, 3.4, 0.3, PLASTER); bx("l61-l11-ws", HW + 3, 0, dz + 3, 6, 3.4, 0.3, PLASTER);
+  // Opening doorway in back wall leading into Level 11
+  bx("l61-l11-back-l", HW + 6, 0, dz - 1.8, 0.3, 3.4, 2.4, PLASTER);
+  bx("l61-l11-back-r", HW + 6, 0, dz + 1.8, 0.3, 3.4, 2.4, PLASTER);
+  bx("l61-l11-back-top", HW + 6, 2.8, dz, 0.3, 0.6, 1.2, PLASTER);
+  bx("l61-l11-wn", HW + 3, 0, dz - 3, 6, 3.4, 0.3, PLASTER); bx("l61-l11-ws", HW + 3, 0, dz + 3, 6, 3.4, 0.3, PLASTER);
   const glass = { color: "oklch(0.8 0.05 220)", opacity: 0.32, transparent: true, roughness: 0.05, metalness: 0.2 };
   for (const s of [-1, 1]) sp(`l61-l11-panel-${s}`, { feetPosition: { x: HW, y: 0, z: dz + s * 0.5 }, behavior: "scripts/l61-door.js", physics: { body: "kinematic", collider: "box" }, state: { slide: s * 1.0, axis: "z", home: { x: HW, z: dz + s * 0.5 }, sense: { x: HW - 1.6, z: dz } },
     primitive: { kind: "box", width: 0.06, height: 2.6, depth: 1.0 }, material: glass, children: [{ feetPosition: { x: 0, y: 1.3, z: 0 }, primitive: { kind: "box", width: 0.08, height: 0.06, depth: 1.02 }, material: { color: "oklch(0.7 0.01 250)", metalness: 0.8 } }] });
   bx("l61-l11-head", HW, 2.6, dz, 0.3, 0.8, 2.6, { color: "oklch(0.3 0.01 250)", metalness: 0.5 });
   sp("l61-l11-sign", { feetPosition: { x: HW - 0.2, y: 3.15, z: dz }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 2.4, height: 0.5, depth: 0.05 }, material: { color: "oklch(0.2 0.03 160)" },
     ui: `<div face="front" width="2.4m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;color:#e8ffe8;text-align:center"><div style="font-size:90px">RESTAURANT · LEVEL 11</div><div style="font-size:34px;color:#9fe8b0">the safe way out · automatic doors</div></div>` });
-  sp("l61-l11-closed", { feetPosition: { x: HW + 5.8, y: 1.6, z: dz }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 3, height: 1.1, depth: 0.04 }, material: { color: "oklch(0.15 0.01 250)" },
-    ui: `<div face="front" width="3m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Arial,sans-serif;color:#ffe8a8;text-align:center"><div style="font-size:120px;font-weight:900">CLOSED</div><div style="font-size:50px">restocking · back soon</div></div>` });
+  sp("l61-l11-open", { feetPosition: { x: HW + 5.85, y: 2.7, z: dz }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 2.4, height: 0.5, depth: 0.04 }, material: { color: "oklch(0.2 0.05 150)" },
+    ui: `<div face="front" width="2.4m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Arial,sans-serif;color:#a8ffc8;text-align:center"><div style="font-size:60px;font-weight:900">LEVEL 11 · INFINITE CITY</div><div style="font-size:28px;color:#ffffff">SUNLIT PROMENADE · WALK THROUGH</div></div>` });
+  // Level transition trigger to Level 11
+  sp("l61-to-l11", {
+    tags: ["door"],
+    feetPosition: { x: HW + 5.9, y: 0, z: dz },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 0.4, height: 2.8, depth: 1.6 },
+    visible: false,
+    physics: { body: "static", trigger: true },
+    behavior: "scripts/level-door.js",
+    state: { to: "level11#l11-from-l61" },
+  });
+  // Arrival marker when returning from Level 11
+  sp("l61-from-l11", {
+    feetPosition: { x: HW + 4.8, y: 0.05, z: dz },
+    rotation: { yaw: -90 },
+  });
   sp("l61-l11-light", { feetPosition: { x: HW + 3, y: 3, z: dz }, light: { kind: "point", color: "oklch(0.97 0.03 90)", intensity: 5, distance: 10 } });
 
   // ---- the bent wall: a stretch of the east wall that buckles away from the room, with the cold blue of the Blue Channel behind its cracks
