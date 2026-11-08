@@ -60,11 +60,21 @@ export function bodyModel(l) {
   }
   return { id: M.body[l.sex === 'f' ? 'f' : 'm'], materials: only(materials, M.bodyMats), parts }
 }
+export function hasBlush(l) {
+  if (!l) return false
+  if (speciesOf(l) === 'fox') return false
+  const b = l.blush
+  if (!b || b === 'none' || b === 'false' || b === false) return false
+  return true
+}
 export function headModel(l0) {
   const l = faceFill(l0), sp = M.species[speciesOf(l)];
   const isFemale = l?.sex === 'f';
   const eyeCol = l?.eye && l.eye !== '#2b2233' && l.eye !== '#000000' ? l.eye : null;
-  const blushCol = l?.blush || (isFemale ? '#ff6588' : '#ff7b94');
+  const wearsBlush = hasBlush(l);
+  const blushCol = (typeof l?.blush === 'string' && l.blush.startsWith('#'))
+    ? l.blush
+    : (isFemale ? '#ff6588' : '#ff7b94');
   return {
     id: (isFemale ? sp.headF : sp.headM) || sp.head,
     materials: only({
@@ -78,7 +88,9 @@ export function headModel(l0) {
         ...(eyeCol && (l?.glowEye || l?.species === 'samantha') ? { emissive: eyeCol, emissiveIntensity: 0.4 } : {})
       },
       iris: { color: eyeCol || '#8a5a2e', roughness: 0.75, metalness: 0 },
-      blush: speciesOf(l) === 'fox' ? { color: l?.tip || l?.belly || sp.tip || '#ffffff', visible: false, transparent: true, opacity: 0, depthWrite: false } : { color: blushCol, roughness: 0.9 }, // foxes wear no cheek blush
+      blush: wearsBlush
+        ? { color: blushCol, roughness: 0.88, metalness: 0, transparent: true, opacity: 0.82 }
+        : { color: blushCol, visible: false, transparent: true, opacity: 0, depthWrite: false },
       mouth: { color: '#44141e', roughness: 0.85 },
       tongue: { color: '#ff758c', roughness: 0.65 },
       nose: { color: l?.nose || sp.nose || '#221614', roughness: 0.32, metalness: 0.05 }
@@ -115,11 +127,41 @@ export function faceMorph(expr, blink, isFemale, look) {
   if (fty) for (const [k, v] of Object.entries(fty)) if (k !== 'w') f[k] = Math.min(1, v * fs)
   const snoutS = Number(look?.snoutS ?? ff?.snoutS)
   if (snoutS && snoutS !== 1) {
-    if (snoutS > 1.0) f.FT_Snout = Math.min(1, (f.FT_Snout ?? 0) + (snoutS - 1.0) * 1.6)
-    else if (snoutS < 1.0) f.FT_Snub = Math.min(1, (f.FT_Snub ?? 0) + (1.0 - snoutS) * 1.6)
+    if (snoutS > 1.0) f.FT_Snout = Math.min(1, (f.FT_Snout ?? 0) + (snoutS - 1.0) * 1.2)
+    else if (snoutS < 1.0) f.FT_Snub = Math.min(1, (f.FT_Snub ?? 0) + (1.0 - snoutS) * 1.2)
   }
-  if (isFemale && f.Blush == null) f.Blush = 0.32
-  if (isFemale && f.Smile == null && !['sad', 'angry', 'cry', 'scared', 'pout'].includes(expr)) f.Smile = 0.22
+
+  // --- Head silhouette smoothing: anti-oval & anti-blocky ---
+  // Soften tall/narrow weights to fix heads being too ovally
+  if (f.FT_Long) f.FT_Long = Math.min(0.38, f.FT_Long * 0.45)
+  if (f.FT_Narrow) f.FT_Narrow = Math.min(0.38, f.FT_Narrow * 0.5)
+  // Soften square / blocky jaws into rounded cute cheeks
+  if (f.FT_Square) {
+    f.FT_Square = Math.min(0.32, f.FT_Square * 0.4)
+    f.FT_Round = Math.min(1, (f.FT_Round ?? 0) + 0.25)
+  }
+  if (f.FT_Snout) f.FT_Snout = Math.min(0.42, f.FT_Snout * 0.55)
+  // Baseline soft, cute roundness for all critter heads
+  f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.35) + (isFemale ? 0.16 : 0.08))
+  f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.25) + (isFemale ? 0.14 : 0.06))
+
+  // --- Blush stickers: NOT permanent on everyone ---
+  const wearsBlush = hasBlush(ff ?? look)
+  if (wearsBlush) {
+    // If they have a blush sticker style or colour, display it cleanly
+    if (f.Blush == null || f.Blush < 0.35) f.Blush = 0.38
+  } else {
+    // If they do NOT wear a blush sticker, only emotional reactions blush
+    if (!['shy', 'love', 'kiss', 'joy', 'catmouth'].includes(expr) && !tr?.Blush) {
+      delete f.Blush
+    }
+  }
+
+  // Cute resting face warmth for friendly expressions
+  if (f.Smile == null && !['sad', 'angry', 'cry', 'scared', 'pout', 'shock', 'teary', 'unimpressed', 'grumpy'].includes(expr)) {
+    f.Smile = isFemale ? 0.25 : 0.18
+  }
+
   if (blink) f.Blink = 1
   return eyeClean(f, ff?.eyes ?? look?.eyes)
 }

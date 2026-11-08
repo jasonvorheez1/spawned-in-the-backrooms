@@ -4,50 +4,53 @@
 # two critters of one species no longer read alike. NPCs roll a trait, eye colour, cheek colour and nose from their own id (scripts/lib/clothes.js npcLook);
 # the critter creator's face tab offers the same lists (critter.yml: trait, eye, blush, nose).
 traits:
-  placid:   { w: 3 }
-  stern:    { w: 1, Angry: 0.18, Half: 0.1 }
-  sleepy:   { w: 1, Half: 0.35 }
-  wideeyed: { w: 1, Wide: 0.28 }
-  sly:      { w: 1, Half: 0.25, Smile: 0.2 }
-  gentle:   { w: 1, Sad: 0.12, Smile: 0.12, Blush: 0.1 }
-  grumpy:   { w: 1, Frown: 0.3, Half: 0.15 }
-  dreamy:   { w: 1, Half: 0.2, Happy: 0.12, Blush: 0.15 }
-  cheeky:   { w: 1, Smile: 0.25, Blep: 0.1 }
-  anxious:  { w: 1, Sad: 0.2, Wide: 0.15, Frown: 0.1 }
-  haughty:  { w: 1, Half: 0.3, Frown: 0.15 }
-  bubbly:   { w: 1, Smile: 0.3, Blush: 0.2, Wide: 0.1 }
-  tired:    { w: 1, Half: 0.45, Sad: 0.1 }
-  focused:  { w: 1, Angry: 0.1, Wide: 0.1 }
-  wry:      { w: 1, Smile: 0.15, Half: 0.2, Frown: 0.1 }
-  soft:     { w: 1, Blush: 0.3, Smile: 0.1 }
-  pouty:    { w: 1, Frown: 0.2, O: 0.12, Blush: 0.1 }
-  smug:     { w: 1, Half: 0.35, Smile: 0.28 }
-  startled: { w: 1, Wide: 0.35, O: 0.15 }
-  weary:    { w: 1, Half: 0.3, Sad: 0.2, Frown: 0.08 }
-  goofy:    { w: 1, Blep: 0.3, Wide: 0.12, Smile: 0.1 }
-  shy:      { w: 1, Blush: 0.4, Sad: 0.08, Half: 0.1 }
-  warm:     { w: 2, Happy: 0.15, Smile: 0.2 }
-  wary:     { w: 1, Angry: 0.08, Half: 0.2, Wide: 0.05 }
+  placid:   { w: 2.5, Smile: 0.15 }
+  warm:     { w: 3, Happy: 0.22, Smile: 0.28 }
+  gentle:   { w: 2.5, Smile: 0.22, Happy: 0.14 }
+  bubbly:   { w: 2.5, Smile: 0.32, Wide: 0.15 }
+  curious:  { w: 2, Wide: 0.22, Smile: 0.2 }
+  cheerful: { w: 2.5, Happy: 0.26, Smile: 0.3 }
+  perky:    { w: 2, Wide: 0.18, Smile: 0.24, Happy: 0.12 }
+  wideeyed: { w: 2, Wide: 0.25, Smile: 0.14 }
+  dreamy:   { w: 2, Happy: 0.18, Half: 0.14 }
+  cheeky:   { w: 2, Smile: 0.28, Blep: 0.12 }
+  soft:     { w: 2.5, Smile: 0.22, Happy: 0.14 }
+  shy:      { w: 1.5, Half: 0.12, Smile: 0.18 }
+  sly:      { w: 1, Half: 0.2, Smile: 0.22 }
+  smug:     { w: 1, Half: 0.25, Smile: 0.25 }
+  pouty:    { w: 0.8, Frown: 0.15, O: 0.1 }
+  sleepy:   { w: 0.8, Half: 0.25, Smile: 0.1 }
+  goofy:    { w: 1, Blep: 0.28, Wide: 0.12, Smile: 0.14 }
+  wry:      { w: 0.8, Smile: 0.16, Half: 0.15 }
+  focused:  { w: 0.8, Wide: 0.12, Smile: 0.08 }
+  stern:    { w: 0.6, Angry: 0.12, Half: 0.08 }
+  anxious:  { w: 0.6, Sad: 0.12, Wide: 0.1 }
+  grumpy:   { w: 0.5, Frown: 0.18, Half: 0.1 }
+  tired:    { w: 0.5, Half: 0.22 }
+  weary:    { w: 0.5, Half: 0.18, Sad: 0.1 }
+  haughty:  { w: 0.5, Half: 0.2, Frown: 0.1 }
+  wary:     { w: 0.5, Half: 0.15, Wide: 0.05 }
+  startled: { w: 0.5, Wide: 0.25, O: 0.12 }
 # face types: w = how common among NPCs; the other keys are the head's FT_ keys, 0..1 (oval is the head as built)
 types:
-  oval:     { w: 3 }
-  round:    { w: 2, FT_Round: 1 }
-  soft:     { w: 2, FT_Round: 0.45, FT_Chubby: 0.3 }
-  chubby:   { w: 1, FT_Chubby: 1, FT_Round: 0.4 }
-  long:     { w: 1.5, FT_Long: 1 }
-  broad:    { w: 1.5, FT_Broad: 1 }
-  narrow:   { w: 1.5, FT_Narrow: 1 }
-  heart:    { w: 1.5, FT_Heart: 1 }
-  delicate: { w: 1, FT_Narrow: 0.5, FT_Heart: 0.7 }
-  sharp:    { w: 1, FT_Heart: 0.55, FT_Snout: 0.6, FT_Narrow: 0.25 }
-  square:   { w: 1.5, FT_Square: 1 }
-  strong:   { w: 1, FT_Square: 0.8, FT_Broad: 0.4, FT_Snout: 0.2 }
-  button:   { w: 1.5, FT_Snub: 1, FT_Round: 0.35 }
-  snouty:   { w: 1, FT_Snout: 1 }
+  round:    { w: 3.5, FT_Round: 0.9, FT_Chubby: 0.3 }
+  soft:     { w: 3.0, FT_Round: 0.75, FT_Chubby: 0.45 }
+  chubby:   { w: 2.5, FT_Chubby: 0.8, FT_Round: 0.5 }
+  button:   { w: 2.5, FT_Snub: 0.6, FT_Round: 0.6, FT_Chubby: 0.3 }
+  oval:     { w: 1.0, FT_Round: 0.45, FT_Chubby: 0.2 }
+  heart:    { w: 1.2, FT_Heart: 0.5, FT_Round: 0.45, FT_Chubby: 0.2 }
+  delicate: { w: 1.0, FT_Heart: 0.4, FT_Round: 0.4, FT_Snub: 0.2 }
+  broad:    { w: 1.0, FT_Broad: 0.6, FT_Round: 0.4 }
+  square:   { w: 0.4, FT_Square: 0.35, FT_Round: 0.5, FT_Chubby: 0.3 }
+  strong:   { w: 0.4, FT_Broad: 0.5, FT_Square: 0.25, FT_Round: 0.4 }
+  snouty:   { w: 0.5, FT_Snout: 0.45, FT_Round: 0.4 }
+  sharp:    { w: 0.3, FT_Heart: 0.4, FT_Round: 0.3, FT_Snub: 0.2 }
+  long:     { w: 0.3, FT_Long: 0.3, FT_Round: 0.35 }
+  narrow:   { w: 0.3, FT_Narrow: 0.3, FT_Round: 0.35 }
 # how strongly an NPC wears its face type, rolled per id (some are mild, some plain)
-typeStrength: [0.7, 1.15]
+typeStrength: [0.75, 1.1]
 # how strongly an NPC wears its trait, rolled per id (Savi's pick): some faces barely show it, some wear it plainly
-strength: [0.55, 1.45]
+strength: [0.55, 1.25]
 eye: ["#15121a", "#3a2418", "#8a6a2a", "#d4902a", "#2f9a5a", "#2aa0a0", "#3f7fd9", "#7ab8e8", "#8a4fd8", "#d4547a", "#d03a3a", "#e0b838", "#8a909a", "#6a8a2a"]
-blush: ["#ff6285", "#ff8a9a", "#ff9f6a", "#e870b0", "#c86aa8", "#ffb0a0"]
+blush: ["none", "none", "none", "none", "none", "#ff6285", "#ff8a9a", "#ff9f6a", "#e870b0", "#c86aa8", "#ffb0a0", "heart", "star", "hash", "soft"]
 nose: ["", "#231816", "#3a2a28", "#ff5f9e", "#ff9fbd", "#c86a6a", "#e0a090", "#6a4a3a"]

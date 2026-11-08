@@ -43,26 +43,26 @@ species:
 # expressions as the head's shape keys (Blink Happy Sad Angry Wide Half Smile Open Frown O Blep Blush), 0..1
 faces:
   catmouth: { Happy: 1, Smile: .55, O: .22, Blush: .45 } # :3
-  grin: { Smile: 1, Open: .4, Blush: .25 }
-  smile: { Smile: .8, Blush: .2 }
-  beam: { Happy: 1, Smile: 1, Open: .5, Blush: .35 }
-  fang: { Smile: .7, Open: .3, Blush: .2 }
+  grin: { Smile: 1, Open: .4 }
+  smile: { Smile: .85 }
+  beam: { Happy: 1, Smile: 1, Open: .5 }
+  fang: { Smile: .75, Open: .3 }
   shock: { Wide: 1, O: 1 }
   teary: { Sad: 1, Frown: .6 }
   joy: { Happy: 1, Smile: 1, Open: .7, Blush: .4 }
-  laugh: { Happy: 1, Open: 1, Smile: .8, Blush: .3 }
-  wink: { Smile: .8, Half: .3, Blush: .25 }
-  blep: { Smile: .4, Blep: 1, Blush: .3 }
+  laugh: { Happy: 1, Open: 1, Smile: .8 }
+  wink: { Smile: .85, Half: .3 }
+  blep: { Smile: .45, Blep: 1 }
   love: { Happy: 1, Smile: 1, Blush: 1 }
-  sparkle: { Wide: .6, Smile: 1, Open: .3, Blush: .35 }
+  sparkle: { Wide: .7, Smile: 1, Open: .3 }
   kiss: { Happy: .8, O: .6, Blush: .8 }
   shy: { Half: .4, Smile: .5, Blush: 1 }
-  smug: { Half: .5, Smile: .7, Blush: .15 }
+  smug: { Half: .45, Smile: .7 }
   lidded: { Half: .7, Smile: .3 }
   sideeye: { Half: .5, Frown: .3 }
   unimpressed: { Half: .8, Frown: .5 }
-  cocky: { Half: .3, Smile: 1, Open: .2, Blush: .15 }
-  pout: { Frown: .8, Blush: .4 }
+  cocky: { Half: .3, Smile: 1, Open: .2 }
+  pout: { Frown: .8, Blush: .35 }
   evil: { Angry: 1, Smile: 1 }
   bored: { Half: .9 }
   surprised: { Wide: 1, O: .8 }

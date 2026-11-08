@@ -9,7 +9,7 @@
 // Rig: same bone names and pivots as v1 (T-pose); LidL/LidR blink lids are modelled 1/1000 size (critter.js scales them).
 
 const HC = [0, 1.335, 0];
-const RX = 0.41, RY = 0.29, RZ = 0.3;
+const RX = 0.435, RY = 0.305, RZ = 0.33;
 const EX = 0.14, EY = 1.39, LIDZ = -0.3;
 
 const BONES = {
@@ -241,10 +241,10 @@ export function geometry(ctx) {
   const CHK = sp.cheek || 1;
   const headR = (d) => {
     const [x, y, z] = d;
-    const rx = RX * (1 + 0.13 * CHK * Math.exp(-(((y + 0.38) / 0.32) ** 2)));
+    const rx = RX * (1 + 0.16 * CHK * Math.exp(-(((y + 0.34) / 0.34) ** 2)));
     let r = 1 / Math.sqrt((x / rx) ** 2 + (y / RY) ** 2 + (z / RZ) ** 2);
-    if (y > 0) r *= 1 - 0.07 * y ** 3;
-    if (y < -0.5) r *= 1 - 0.12 * (-0.5 - y) * (1 - Math.abs(x)); // tuck the chin
+    if (y > 0) r *= 1 - 0.04 * y ** 2;
+    if (y < -0.48) r *= 1 - 0.08 * (-0.48 - y) * (1 - Math.abs(x) * 0.7); // soft rounded chin, not blocky
     if (z < 0) {
       const u = x / SNW, v = (y - SNY) / SNH, q = u * u + v * v;
       if (q < 1) { const t = 1 - q; r += SNL * Math.sqrt(t) * (0.6 + 0.4 * t) * Math.min(1, -z * 2); }
@@ -285,7 +285,7 @@ export function geometry(ctx) {
     return HFUR;
   };
   {
-    const U = hi ? 44 : mid ? 28 : LOD === 3 ? 18 : 10, V = Math.round(U * 0.6);
+    const U = hi ? 56 : mid ? 36 : LOD === 3 ? 24 : 14, V = Math.round(U * 0.65);
     const pt = (i, j) => { const th = (i / U) * TAU, ph = (j / V) * Math.PI; return headPt([Math.sin(ph) * Math.cos(th), Math.cos(ph), Math.sin(ph) * Math.sin(th)]); };
     ctx.smooth();
     for (let j = 0; j < V; j++) for (let i = 0; i < U; i++) {
@@ -418,10 +418,29 @@ export function geometry(ctx) {
       stroke(curve((t) => [cu + (t - 0.5) * 0.09, by + up + (t - 0.5) * s * -tilt * 2 * (E.e === "sad" || E.m === "wobble" || E.m === "frown" || E.m === "wail" || E.m === "scream" || E.e === "down" ? -1 : 1) + 0.01 * Math.sin(Math.PI * t)], 6), [0.024, 0.012], 0.006);
     }
     if (E.tear && !low) { col("#8fd3ff"); if (E.tear === 1) fill(ellipse(cu + s * 0.06, EY - ERV - 0.01, 0.018, 0.028, 12), 0.016); else { stroke(curve((t) => [cu + s * 0.02 + s * 0.01 * Math.sin(t * 5), EY - 0.03 - t * 0.2], 8), 0.035, 0.016); } }
-    if (!low && !sp.noBlush) {
-      col(BLUSH); fill(ellipse(s * 0.24, EY - 0.115, 0.046, 0.026, hi ? 14 : 8), 0.004);
+    const hasBlushSticker = !sp.noBlush && P.blush && P.blush !== "none" && P.blush !== "false";
+    const showBlush = !low && !sp.noBlush && (hasBlushSticker || E.blush);
+    if (showBlush) {
+      const bCol = (typeof P.blush === "string" && P.blush.startsWith("#")) ? P.blush : (fem ? "#ff6588" : "#ff7b94");
+      const bStyle = P.blushStyle || (["heart", "star", "hash", "soft"].includes(P.blush) ? P.blush : (E.blush && !hasBlushSticker ? "hash" : "soft"));
+      const cx = s * 0.245, cy = EY - 0.115;
+      if (bStyle === "heart") {
+        col(bCol); fill(heartPts(cx, cy, 0.038), 0.006);
+      } else if (bStyle === "star") {
+        col(bCol); fill(starPts(cx, cy, 0.036, 4), 0.006, 1);
+      } else if (bStyle === "hash") {
+        col(mixc(bCol, "#b02a48", 0.4));
+        for (let k = -1; k <= 1; k++) {
+          stroke([[cx + k * 0.020 - 0.007, cy - 0.020], [cx + k * 0.020 + 0.007, cy + 0.018]], 0.008, 0.006);
+        }
+      } else {
+        // "soft" cute dual-tone pill blush
+        col(mixc(bCol, FUR, 0.22));
+        fill(ellipse(cx, cy, 0.050, 0.028, hi ? 18 : 10), 0.004);
+        col(bCol);
+        fill(ellipse(cx, cy, 0.036, 0.020, hi ? 16 : 8), 0.006);
+      }
     }
-    if (E.blush && !low && !sp.noBlush) { col(BLUSH); fill(ellipse(s * 0.25, EY - 0.115, 0.058, 0.032, 14), 0.008); col(mixc(BLUSH, "#a0304a", 0.5)); for (let k = -1; k <= 1; k++) stroke([[s * 0.25 + k * 0.022 - 0.008, EY - 0.135], [s * 0.25 + k * 0.022 + 0.008, EY - 0.095]], 0.007, 0.01); }
   }
   if (E.sweat && !low) { col("#8fd3ff"); fill([...ellipse(0.29, EY + 0.12, 0.025, 0.03, 12).filter((p) => p[1] <= EY + 0.12), [0.29, EY + 0.19]], 0.008); }
   if (E.hearts && !low) { col("#ff5d84"); fill(heartPts(0.3, EY + 0.2, 0.04), 0.01); fill(heartPts(-0.33, EY + 0.13, 0.03), 0.01); }
