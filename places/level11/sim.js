@@ -13,10 +13,11 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { layCity, layStreet, tickCity } from "../../scripts/lib/level11-city.js";
+import { terminalSpec } from "../../scripts/lib/terminal.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 21; // bump to rebuild the city in rooms that are already open
+const V = 22; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -215,7 +216,7 @@ function lay(ctx) {
       feetPosition: { x: sx, y: 2.4, z: 7.5 },
       primitive: { kind: "box", width: 0.35, height: 0.65, depth: 0.25 },
       material: { color: "oklch(0.2 0.01 250)" },
-      ui: `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:120px;text-align:center">WALK</div>`,
+      ui: `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:90px;text-align:center">WALK</div>`,
     });
   });
 
@@ -284,9 +285,113 @@ function lay(ctx) {
   const TOWER_X = city.TOWER.x, TOWER_Z = city.TOWER.z, SKY_Y = 35.7;
   sp("l11-ntower-lobby-light", { feetPosition: { x: TOWER_X - 10, y: 4.5, z: TOWER_Z }, light: { kind: "point", color: "oklch(0.96 0.08 85)", intensity: 6.5, distance: 16 } });
 
-  // Skydeck Express call panel & observation deck
-  sp("l11-elev-btn-up", { tags: ["usable"], feetPosition: { x: TOWER_X - 8.55, y: 1.3, z: TOWER_Z + 4.5 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 0.2, height: 0.34, depth: 0.08 }, material: { color: "oklch(0.85 0.18 85)", emissive: "oklch(0.85 0.18 85)", emissiveIntensity: 2.0 }, behavior: "scripts/level11-use.js", state: { kind: "elevator-up", name: "Skydeck Express Elevator", verb: "Ascend to the Skydeck", dest: { x: TOWER_X - 5, y: SKY_Y + 0.1, z: TOWER_Z + 1 } } });
-  sp("l11-elev-btn-down", { tags: ["usable"], feetPosition: { x: TOWER_X + 3.0, y: SKY_Y + 1.3, z: TOWER_Z + 5.6 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 0.2, height: 0.34, depth: 0.08 }, material: { color: "oklch(0.85 0.18 85)", emissive: "oklch(0.85 0.18 85)", emissiveIntensity: 2.0 }, behavior: "scripts/level11-use.js", state: { kind: "elevator-down", name: "Lobby Express Elevator", verb: "Descend to the street", dest: { x: TOWER_X - 12, y: 0.3, z: TOWER_Z + 4.5 } } });
+  // ==========================================
+  // SKYDECK PANORAMIC GLASS ELEVATOR SYSTEM
+  // ==========================================
+  // Vertical structural guide rails
+  cyl("l11-elev-guide-1", 17.35, 0.1, 34.35, 0.07, 0.07, 36.2, STEEL_BRUSHED);
+  cyl("l11-elev-guide-2", 17.35, 0.1, 36.65, 0.07, 0.07, 36.2, STEEL_BRUSHED);
+  cyl("l11-elev-guide-3", 19.65, 0.1, 34.35, 0.07, 0.07, 36.2, STEEL_BRUSHED);
+  cyl("l11-elev-guide-4", 19.65, 0.1, 36.65, 0.07, 0.07, 36.2, STEEL_BRUSHED);
+
+  // Horizontal structural bracings at 6m intervals
+  for (const yb of [6, 12, 18, 24, 30]) {
+    bx(`l11-elev-brace-n-${yb}`, 18.5, yb, 34.35, 2.3, 0.12, 0.12, STEEL_BRUSHED);
+    bx(`l11-elev-brace-s-${yb}`, 18.5, yb, 36.65, 2.3, 0.12, 0.12, STEEL_BRUSHED);
+    bx(`l11-elev-brace-e-${yb}`, 19.65, yb, 35.5, 0.12, 0.12, 2.3, STEEL_BRUSHED);
+  }
+
+  // Moving Glass Elevator Cab with interior lighting and glass panorama
+  sp("l11-elevator-cab", {
+    tags: ["usable"],
+    feetPosition: { x: 18.5, y: 0.3, z: 35.5 },
+    primitive: { kind: "box", width: 2.4, height: 0.14, depth: 2.4 },
+    material: STEEL_BRUSHED,
+    behavior: "scripts/level11-elevator.js",
+    state: { kind: "elev-cab", name: "Skydeck Panoramic Glass Elevator", verb: "Enter Elevator" },
+    children: [
+      // Roof canopy
+      { feetPosition: { x: 0, y: 2.52, z: 0 }, primitive: { kind: "box", width: 2.4, height: 0.16, depth: 2.4 }, material: STEEL_BRUSHED },
+      // 4 Sleek steel corner pillars
+      { feetPosition: { x: -1.12, y: 0.08, z: -1.12 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.06, height: 2.45 }, material: STEEL_BRUSHED },
+      { feetPosition: { x: 1.12, y: 0.08, z: -1.12 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.06, height: 2.45 }, material: STEEL_BRUSHED },
+      { feetPosition: { x: -1.12, y: 0.08, z: 1.12 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.06, height: 2.45 }, material: STEEL_BRUSHED },
+      { feetPosition: { x: 1.12, y: 0.08, z: 1.12 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.06, height: 2.45 }, material: STEEL_BRUSHED },
+      // 3 Tinted glass panoramic wall panels
+      { feetPosition: { x: 1.14, y: 0.1, z: 0 }, primitive: { kind: "box", width: 0.06, height: 2.38, depth: 2.2 }, material: GLASS_TINT },
+      { feetPosition: { x: 0, y: 0.1, z: 1.14 }, primitive: { kind: "box", width: 2.2, height: 2.38, depth: 0.06 }, material: GLASS_TINT },
+      { feetPosition: { x: 0, y: 0.1, z: -1.14 }, primitive: { kind: "box", width: 2.2, height: 2.38, depth: 0.06 }, material: GLASS_TINT },
+      // Recessed ceiling LED luminaire
+      { feetPosition: { x: 0, y: 2.42, z: 0 }, light: { kind: "point", color: "oklch(0.96 0.06 85)", intensity: 3.5, distance: 8.0 } },
+      { feetPosition: { x: 0, y: 2.48, z: 0 }, primitive: { kind: "box", width: 0.8, height: 0.04, depth: 0.8 }, material: { color: "#ffffff", emissive: "#ffffff", emissiveIntensity: 2.2 } },
+    ],
+  });
+
+  // Animated sliding glass doors
+  sp("l11-elev-door-l", {
+    feetPosition: { x: 17.34, y: 0.3, z: 34.68 },
+    primitive: { kind: "box", width: 0.06, height: 2.38, depth: 0.56 },
+    material: GLASS_TINT,
+  });
+  sp("l11-elev-door-r", {
+    feetPosition: { x: 17.34, y: 0.3, z: 36.32 },
+    primitive: { kind: "box", width: 0.06, height: 2.38, depth: 0.56 },
+    material: GLASS_TINT,
+  });
+
+  // Cab interior button panel & digital floor display
+  sp("l11-elev-btn-interior", {
+    tags: ["usable"],
+    feetPosition: { x: 19.55, y: 1.5, z: 36.0 },
+    primitive: { kind: "box", width: 0.15, height: 0.32, depth: 0.08 },
+    material: { color: "#2ecc71", emissive: "#2ecc71", emissiveIntensity: 2.5 },
+    behavior: "scripts/level11-elevator.js",
+    state: { kind: "elev-interior", name: "Elevator Panel · Next: Skydeck [14]", verb: "Ride to Skydeck [14]" },
+  });
+  sp("l11-elev-ind-cab", {
+    feetPosition: { x: 17.36, y: 2.65, z: 35.5 },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 0.48, height: 0.18, depth: 0.04 },
+    material: { color: "#000000" },
+    ui: `<div face="front" width="0.45m" style="width:100%;height:100%;background:#060d16;border:2px solid #00d2d3;box-sizing:border-box;color:#00d2d3;font-family:'Courier New',monospace;font-weight:900;font-size:26px;text-align:center;padding:4px 6px;letter-spacing:2px;text-shadow:0 0 10px #00d2d3;display:flex;align-items:center;justify-content:center">[ G ]</div>`,
+  });
+
+  // Ground Lobby Landing Call Station
+  sp("l11-elev-btn-ground", {
+    tags: ["usable"],
+    feetPosition: { x: 17.15, y: 1.3, z: 34.0 },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 0.18, height: 0.32, depth: 0.08 },
+    material: { color: "#00d2d3", emissive: "#00d2d3", emissiveIntensity: 2.5 },
+    behavior: "scripts/level11-elevator.js",
+    state: { kind: "elev-call-ground", name: "Skydeck Elevator Call Station", verb: "Call Elevator to Lobby" },
+  });
+  sp("l11-elev-ind-ground", {
+    feetPosition: { x: 17.15, y: 2.7, z: 35.5 },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 0.48, height: 0.18, depth: 0.04 },
+    material: { color: "#000000" },
+    ui: `<div face="front" width="0.45m" style="width:100%;height:100%;background:#060d16;border:2px solid #00d2d3;box-sizing:border-box;color:#00d2d3;font-family:'Courier New',monospace;font-weight:900;font-size:26px;text-align:center;padding:4px 6px;letter-spacing:2px;text-shadow:0 0 10px #00d2d3;display:flex;align-items:center;justify-content:center">[ G ]</div>`,
+  });
+
+  // Rooftop Skydeck Landing Call Station
+  sp("l11-elev-btn-roof", {
+    tags: ["usable"],
+    feetPosition: { x: 17.15, y: 36.7, z: 34.0 },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 0.18, height: 0.32, depth: 0.08 },
+    material: { color: "#00d2d3", emissive: "#00d2d3", emissiveIntensity: 2.5 },
+    behavior: "scripts/level11-elevator.js",
+    state: { kind: "elev-call-roof", name: "Skydeck Elevator Call Station", verb: "Call Elevator to Skydeck" },
+  });
+  sp("l11-elev-ind-roof", {
+    feetPosition: { x: 17.15, y: 38.1, z: 35.5 },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 0.48, height: 0.18, depth: 0.04 },
+    material: { color: "#000000" },
+    ui: `<div face="front" width="0.45m" style="width:100%;height:100%;background:#060d16;border:2px solid #00d2d3;box-sizing:border-box;color:#00d2d3;font-family:'Courier New',monospace;font-weight:900;font-size:26px;text-align:center;padding:4px 6px;letter-spacing:2px;text-shadow:0 0 10px #00d2d3;display:flex;align-items:center;justify-content:center">[ 14 ]</div>`,
+  });
+
   sp("l11-skydeck-binoculars", { tags: ["usable"], feetPosition: { x: TOWER_X - 5.2, y: SKY_Y, z: TOWER_Z - 4.5 }, rotation: { yaw: 90 }, primitive: { kind: "cylinder", radiusTop: 0.14, radiusBottom: 0.22, height: 1.35 }, material: STEEL_BRUSHED, behavior: "scripts/level11-use.js", state: { kind: "binoculars", name: "Panoramic Observation Viewfinder", verb: "Look through Viewfinder" }, children: [{ feetPosition: { x: 0, y: 1.3, z: -0.15 }, primitive: { kind: "box", width: 0.35, height: 0.18, depth: 0.45 }, material: STEEL_BRUSHED }] });
 
   // ==========================================
@@ -321,20 +426,17 @@ function lay(ctx) {
     children: [{ feetPosition: { x: 0, y: 0.5, z: 0 }, light: { kind: "point", color: "#ffe0a0", intensity: 3.5, distance: 8 } }],
   });
 
-  // Interactive Sedco CCTV Surveillance Console
-  sp("l11-sedco-cctv", {
-    tags: ["usable"],
-    feetPosition: { x: SEDCO_X - SEDCO_W / 2 - 1.2, y: 0.1, z: SEDCO_Z - 2.8 },
-    rotation: { yaw: 90 },
-    primitive: { kind: "box", width: 0.65, height: 1.1, depth: 0.5 },
-    material: STEEL_BRUSHED,
-    behavior: "scripts/level11-use.js",
-    state: { kind: "sedco-cctv", name: "Sedco Closed-Circuit Security Terminal", verb: "Cycle CCTV Surveillance" },
-    children: [
-      { feetPosition: { x: 0, y: 1.1, z: 0 }, primitive: { kind: "box", width: 0.55, height: 0.42, depth: 0.35 }, material: { color: "oklch(0.2 0.01 250)" } },
-      { feetPosition: { x: 0, y: 1.1, z: 0.18 }, primitive: { kind: "box", width: 0.45, height: 0.32, depth: 0.02 }, material: { color: "oklch(0.65 0.2 145)", emissive: "oklch(0.65 0.2 145)", emissiveIntensity: 2.2 } },
-    ],
-  });
+  // Interactive Sedco Closed-Circuit Security Terminal (BackOS)
+  bx("l11-sedco-desk", SEDCO_X - SEDCO_W / 2 - 1.2, 0.1, SEDCO_Z - 2.8, 0.9, 0.76, 0.75, STEEL_BRUSHED);
+  sp("l11-sedco-terminal", terminalSpec({
+    host: "SEDCO-SEC-01",
+    lock: "science:10",
+    name: "Sedco Closed-Circuit Security Terminal",
+    at: { x: SEDCO_X - SEDCO_W / 2 - 1.2, y: 0.86, z: SEDCO_Z - 2.8 },
+    yaw: 90,
+    tint: "#00d2d3",
+    note: "pw: spotlight",
+  }));
 
   // Open Transition Parking Lot
   const LOT_X = 14;
@@ -421,14 +523,30 @@ function lay(ctx) {
   bx("l11-pizza-floor", MALL_X + 2, 0.36, MALL_Z + 6.5, 10, 0.06, 8, TERRACOTTA_TILES);
   bx("l11-pizza-wall-div", MALL_X + 2, 0.38, MALL_Z + 2.5, 10, 4.6, 0.2, STUCCO_MALL);
 
-  // Brick Wood-Fired Pizza Oven
+  // Brick Wood-Fired Pizza Oven with Animated Flickering Embers & Hearth
   bx("l11-pizza-oven-base", MALL_X - 1.5, 0.38, MALL_Z + 8.5, 2.4, 1.2, 2.4, BRICK_BLDG);
   cyl("l11-pizza-oven-dome", MALL_X - 1.5, 1.58, MALL_Z + 8.5, 1.1, 1.2, 1.0, BRICK_BLDG);
+  bx("l11-pizza-oven-logs", MALL_X - 0.7, 0.45, MALL_Z + 8.5, 0.8, 0.22, 0.8, { color: "#301605", roughness: 0.95 });
+  bx("l11-pizza-oven-embers", MALL_X - 0.6, 0.67, MALL_Z + 8.5, 0.7, 0.12, 0.7, { color: "#ff4500", emissive: "#ff3300", emissiveIntensity: 3.5 });
   sp("l11-pizza-oven-fire", {
     feetPosition: { x: MALL_X - 0.4, y: 1.1, z: MALL_Z + 8.5 },
     primitive: { kind: "cylinder", radiusTop: 0.25, radiusBottom: 0.35, height: 0.4 },
     material: { color: "oklch(0.65 0.22 40)", emissive: "oklch(0.65 0.22 40)", emissiveIntensity: 3.5 },
-    light: { kind: "point", color: "oklch(0.75 0.2 45)", intensity: 4.5, distance: 9 },
+    light: { kind: "point", color: "oklch(0.75 0.2 45)", intensity: 4.8, distance: 9 },
+  });
+
+  // Physical Baker's Peel (slides pizzas into hearth)
+  sp("l11-pizza-peel", {
+    tags: ["usable"],
+    feetPosition: { x: MALL_X - 0.2, y: 0.38, z: MALL_Z + 9.5 },
+    rotation: { pitch: 12, yaw: 30 },
+    primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: 1.7 },
+    material: { ...T("worn-hardwood-grain", 1), color: "oklch(0.72 0.08 65)" },
+    behavior: "scripts/level11-use.js",
+    state: { kind: "pizza-peel", name: "Baker's Wood Pizza Peel", verb: "Bake Pizza in Hearth Oven" },
+    children: [
+      { feetPosition: { x: 0, y: 1.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.22, height: 0.03 }, material: { ...T("worn-hardwood-grain", 1), color: "oklch(0.75 0.08 65)" } },
+    ],
   });
 
   // Pizza Service Counter & Cutting Board
@@ -626,7 +744,7 @@ function lay(ctx) {
   // ==========================================
   const street = layStreet(ctx, { sp, bx, cyl });
 
-  // First Capital Municipal Street ATM
+  // First Capital Municipal Street ATM (Animated Cash Dispenser)
   sp("l11-atm", {
     tags: ["usable"],
     feetPosition: { x: 9.0, y: 0.1, z: 8.5 },
@@ -636,12 +754,41 @@ function lay(ctx) {
     behavior: "scripts/level11-use.js",
     state: { kind: "atm", name: "First Capital Bank ATM", verb: "Withdraw Capital Credits" },
     children: [
-      { feetPosition: { x: 0, y: 1.2, z: 0.41 }, primitive: { kind: "box", width: 0.55, height: 0.38, depth: 0.02 }, material: { color: "#00d2d3", emissive: "#00d2d3", emissiveIntensity: 2.5 } },
-      { feetPosition: { x: 0, y: 1.7, z: 0 }, primitive: { kind: "box", width: 0.85, height: 0.25, depth: 0.75 }, material: { color: "#10ac84" } },
+      // Illuminated header marquee
+      { feetPosition: { x: 0, y: 1.72, z: 0.41 }, primitive: { kind: "box", width: 0.86, height: 0.26, depth: 0.04 }, material: { color: "#000000" }, ui: `<div face="front" width="0.86m" style="width:100%;height:100%;background:#092318;border:2px solid #2ecc71;box-sizing:border-box;color:#2ecc71;font-family:Arial Black,sans-serif;font-size:28px;text-align:center;padding:4px;letter-spacing:1px;font-weight:900;display:flex;align-items:center;justify-content:center">FIRST CAPITAL BANK · ATM</div>` },
+      // Keypad & card entry slot
+      { feetPosition: { x: 0, y: 1.05, z: 0.42 }, primitive: { kind: "box", width: 0.45, height: 0.12, depth: 0.04 }, material: { color: "#111111" } },
+      // Cash dispense shutter cavity
+      { feetPosition: { x: 0, y: 0.88, z: 0.42 }, primitive: { kind: "box", width: 0.52, height: 0.14, depth: 0.06 }, material: { color: "#06120e" } },
     ],
   });
 
-  // Almond Water Street Vending Machine
+  // Dynamic ATM Screen UI
+  sp("l11-atm-screen", {
+    feetPosition: { x: 8.58, y: 1.28, z: 8.5 },
+    rotation: { yaw: -90 },
+    primitive: { kind: "box", width: 0.55, height: 0.38, depth: 0.02 },
+    material: { color: "#041512" },
+    ui: `<div face="front" width="0.55m" style="width:100%;height:100%;background:#041512;border:3px solid #00d2d3;box-sizing:border-box;color:#00d2d3;font-family:'Courier New',monospace;font-size:20px;font-weight:bold;text-align:center;padding:12px;line-height:1.3;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div style="font-size:16px;color:#10ac84">FIRST CAPITAL MUNICIPAL BANK</div>
+      <div style="font-size:24px;margin:8px 0;letter-spacing:1px;color:#fff">ATM #11-04</div>
+      <div style="font-size:17px;color:#2ecc71">INSERT CARD OR PRESS [E]</div>
+      <div style="font-size:14px;color:#888;margin-top:4px">50 CREDITS PER WITHDRAWAL</div>
+    </div>`,
+  });
+
+  // Physical Collectible Banknote Bundle (ejects to cash tray on withdrawal)
+  sp("l11-atm-cash", {
+    tags: ["usable"],
+    feetPosition: { x: 8.52, y: -20, z: 8.5 }, // starts retracted, drops into tray on dispense
+    rotation: { yaw: -90 },
+    primitive: { kind: "box", width: 0.24, height: 0.03, depth: 0.14 },
+    material: { color: "#2ecc71", emissive: "#27ae60", emissiveIntensity: 1.5 },
+    behavior: "scripts/level11-use.js",
+    state: { kind: "atm-cash", name: "Capital Credits Banknote ($50)", verb: "Take 50 Capital Credits" },
+  });
+
+  // Almond Water Street Vending Machine (Animated Illuminated Cabinet)
   sp("l11-vending", {
     tags: ["usable"],
     feetPosition: { x: -8.8, y: 0.1, z: 20 },
@@ -651,8 +798,32 @@ function lay(ctx) {
     behavior: "scripts/level11-use.js",
     state: { kind: "vending", name: "Almond Water Vending Machine", verb: "Buy Cold Almond Water" },
     children: [
-      { feetPosition: { x: 0, y: 1.2, z: 0.48 }, primitive: { kind: "box", width: 0.95, height: 1.1, depth: 0.02 }, material: { color: "#2980b9", emissive: "#2980b9", emissiveIntensity: 2.0 } },
+      // Backlit Marquee Header
+      { feetPosition: { x: 0, y: 1.88, z: 0.48 }, primitive: { kind: "box", width: 1.12, height: 0.24, depth: 0.04 }, material: { color: "#000" }, ui: `<div face="front" width="1.12m" style="width:100%;height:100%;background:#052444;border:2px solid #00d2d3;box-sizing:border-box;color:#00d2d3;font-family:Arial Black,sans-serif;font-size:32px;text-align:center;padding:4px;letter-spacing:2px;font-weight:900;display:flex;align-items:center;justify-content:center">ALMOND WATER · CHILLED</div>` },
+      // Illuminated Product Display Glass with Coils & Cans
+      { feetPosition: { x: 0, y: 1.18, z: 0.48 }, primitive: { kind: "box", width: 1.08, height: 1.02, depth: 0.04 }, material: { color: "#031526" }, ui: `<div face="front" width="1.08m" style="width:100%;height:100%;background:#02101e;border:2px solid #0984e3;box-sizing:border-box;padding:8px;display:flex;flex-direction:column;justify-content:space-around">
+        <div style="background:#0984e3;color:#fff;font-family:sans-serif;font-weight:bold;font-size:18px;text-align:center;padding:4px;border-radius:4px">ORIGINAL · RESTORES SANITY & THIRST</div>
+        <div style="display:flex;justify-content:space-around;font-family:monospace;font-size:14px;color:#00d2d3">
+          <span style="border:1px solid #00d2d3;padding:2px 8px">[01] COLD $2.50</span>
+          <span style="border:1px solid #00d2d3;padding:2px 8px">[02] SPARKLING</span>
+          <span style="border:1px solid #00d2d3;padding:2px 8px">[03] SWEET</span>
+        </div>
+        <div style="color:#74b9ff;font-family:sans-serif;font-size:13px;text-align:center">BOTTLED LOCALLY AT LEVEL 11 MUNICIPAL PLANT</div>
+      </div>` },
+      // Mechanical Can Retrieval Hopper Flap
+      { feetPosition: { x: 0, y: 0.42, z: 0.49 }, primitive: { kind: "box", width: 0.65, height: 0.28, depth: 0.08 }, material: { color: "oklch(0.2 0.01 250)" } },
     ],
+  });
+
+  // Physical Collectible Chilled Can (drops to hopper flap on purchase)
+  sp("l11-vending-can", {
+    tags: ["usable"],
+    feetPosition: { x: -8.32, y: -20, z: 20 }, // starts inside chute, drops to y: 0.42 on purchase
+    rotation: { yaw: 90 },
+    primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.22 },
+    material: { color: "#00d2d3", roughness: 0.15, metalness: 0.8, emissive: "#007a87", emissiveIntensity: 0.6 },
+    behavior: "scripts/level11-use.js",
+    state: { kind: "vending-can", name: "Chilled Can of Almond Water", verb: "Take Chilled Almond Water" },
   });
 
   // ==========================================
@@ -679,7 +850,7 @@ function lay(ctx) {
         { id: "rim", feetPosition: { x: 0, y: 1.1, z: 0 }, primitive: { kind: "box", width: 2.08, height: 0.12, depth: 1.22 }, material: { color: "oklch(0.3 0.05 150)", metalness: 0.6, roughness: 0.5 } },
         { id: "wheel-l", feetPosition: { x: -0.8, y: -0.08, z: 0.4 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.08, height: 0.08 }, rotation: { roll: 90 }, material: { color: "#111" } },
         { id: "wheel-r", feetPosition: { x: 0.8, y: -0.08, z: 0.4 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.08, height: 0.08 }, rotation: { roll: 90 }, material: { color: "#111" } },
-        { id: "spamton", visible: false, feetPosition: { x: 0, y: 0.75, z: 0 }, model: { id: "/cdn/value.aea1bb9862d472db6564fa8cb329c8ad61ec4986c8a7bc39417d6333b919a51c.glb", forward: "+z" }, mixer: { body: { clip: "talk", loop: "loop" } } },
+        { id: "spamton", visible: false, feetPosition: { x: 0, y: 0.75, z: 0 }, sprite: { texture: "/cdn/spr-cutscene-14-spamton-0-u28geao1a.webp", size: [0.95, 1.29], billboard: "yaw", filter: "pixel" } }, // Shelly's own sprite (Nov 8), not a model
         { id: "glow", feetPosition: { x: 0, y: 1.3, z: 0 }, light: { kind: "point", color: "#ff6fd0", intensity: 0, distance: 5 } },
       ],
     });
@@ -725,14 +896,17 @@ function lay(ctx) {
   cyl("l11-taxi-wheel-fr", 1.05, 0.28, -1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
   cyl("l11-taxi-wheel-rl", -1.05, 0.28, 1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
   cyl("l11-taxi-wheel-rr", 1.05, 0.28, 1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
-  sp("l11-porsche", {
-    tags: ["usable", "vehicle", "taxi"],
-    feetPosition: { x: -21, y: 0.15, z: 16.4 },
+  sp("l11-porsche", { // a real car (scripts/level11-porsche.js): dynamic hull on four sprung wheels, 1.35x a real 911 so a critter fits
+    tags: ["usable", "vehicle"],
+    feetPosition: { x: -21, y: 0.3, z: 16.4 },
     rotation: { yaw: 90 },
-    physics: { body: "kinematic", collider: "box" },
-    behavior: "scripts/level11-car.js",
-    state: { kind: "taxi", name: "1995 Porsche 911 Carrera RS", verb: "Drive Porsche" },
+    physics: { body: "dynamic", collider: "none", mass: 300, centerOfMass: [0, 0.45, 0], angularDamping: 0.4 },
+    behavior: "scripts/level11-porsche.js",
+    state: { kind: "car", name: "1995 Porsche 911 Carrera RS", verb: "Get in" },
     model: { id: "/cdn/value.d9a163ec75298c9660fd165f4d3aa796afedebd6aa6fa6c07827511611edab15.glb" },
+    layout: { box: { min: { x: -1.28, y: 0, z: -2.9 }, max: { x: 1.28, y: 1.75, z: 2.9 } } },
+    visibleRange: { max: 160 },
+    children: [{ id: "hull", feetPosition: { x: 0, y: 0.32, z: 0 }, primitive: { kind: "box", width: 2.3, height: 0.95, depth: 5.5 }, visible: false, physics: "static" }],
   });
 
   // ==========================================
@@ -820,17 +994,16 @@ function lay(ctx) {
   md("l11-meg-sandbag2", "sandbags", OUTPOST_X - 6, 0.1, OUTPOST_Z + 3, { burlap: { ...T("burlap-sack-weave", 2), color: "oklch(0.8 0.05 75)" } }, "box", { rotation: { yaw: 180 } });
   md("l11-meg-table", "meg_table", OUTPOST_X, 0.1, OUTPOST_Z, { metal: STEEL_BRUSHED });
 
-  sp("l11-meg-terminal", {
-    tags: ["usable"],
-    feetPosition: { x: OUTPOST_X, y: 0.95, z: OUTPOST_Z },
-    primitive: { kind: "box", width: 0.55, height: 0.45, depth: 0.4 },
-    material: { color: "oklch(0.3 0.01 250)" },
-    behavior: "scripts/level11-use.js",
-    state: { kind: "terminal", name: "M.E.G. Tactical Terminal", verb: "Read Level 11 Dossier" },
-    children: [
-      { feetPosition: { x: 0, y: 0.1, z: 0.2 }, primitive: { kind: "box", width: 0.45, height: 0.3, depth: 0.02 }, material: { color: "oklch(0.4 0.16 145)", emissive: "oklch(0.4 0.16 145)", emissiveIntensity: 2.2 } },
-    ],
-  });
+  // M.E.G. Base Beta Tactical BackOS Terminal
+  sp("l11-meg-terminal", terminalSpec({
+    host: "BETA-DISPATCH-01",
+    lock: "",
+    name: "M.E.G. Base Beta Tactical Terminal",
+    at: { x: OUTPOST_X, y: 0.95, z: OUTPOST_Z },
+    yaw: 180,
+    tint: "#45b649",
+    note: "pw: pegasus11",
+  }));
 
   sp("l11-meg-cache", {
     tags: ["usable"],
@@ -869,7 +1042,8 @@ function lay(ctx) {
     feetPosition: { x: 8.8, y: 0.1, z: -5 },
     rotation: { yaw: -90 },
     physics: "character",
-    model: { id: "/cdn/value.34685ffaa43d04fc4ca5c09a807d8858ec4f514bf6df96b86dcf38da41d60155.glb", forward: "+z" },
+    model: { id: "/cdn/value.180d1072a97d34551e1394960b70202777c9d0b51fb0ca67779a59e429ef6fa7.glb" },
+    anim: { main: { clip: "idle", loop: true, speed: 0.85 } },
     behavior: "scripts/level11-use.js",
     state: {
       kind: "pet-hound",
@@ -877,6 +1051,11 @@ function lay(ctx) {
       verb: "Pet Friendly Hound",
       info: "Affected by the Level 11 Effect. Completely calm and friendly, like a domestic stray dog.",
     },
+  });
+  cyl("l11-hound-bowl", 7.8, 0.1, -5, 0.22, 0.26, 0.12, STEEL_BRUSHED, {
+    children: [
+      { feetPosition: { x: 0, y: 0.08, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.2, radiusBottom: 0.2, height: 0.02 }, material: { color: "#00d2d3", roughness: 0.1, metalness: 0.3 } },
+    ],
   });
 
   sp("l11-commuter-faceling", {
@@ -888,6 +1067,7 @@ function lay(ctx) {
     behavior: ["scripts/humanoid-locomotion.js", "scripts/l61-staff.js"],
     state: {
       name: "Commuter Faceling",
+      job: "route", route: W_LOOP,
       role: "survivor",
       voice: "wren",
       line: "Pardon me, heading to the commercial plaza before the streetlights turn.",
@@ -896,12 +1076,43 @@ function lay(ctx) {
   });
 }
 
+
+// ==========================================
+// SIDEWALK WALKERS: commuters on routes; each leg is a findPath over the city's colliders (scripts/l61-staff.js waypoint()),
+// so they go round hydrants, benches and cars. Laid on their own version so a new walker never rebuilds the city.
+// ==========================================
+const WALK_V = 1;
+const W_LOOP = [{ x: -10, z: 24, dwell: 1 }, { x: -10, z: 62, dwell: 1 }, { x: -14, z: 70, dwell: 4, act: "wave" }, { x: -14, z: 30, dwell: 1 }, { x: -10, z: 19 }, { x: -10, z: -12, dwell: 3 }, { x: -14, z: 10 }];
+const E_LOOP = [{ x: 10, z: -10, dwell: 1 }, { x: 10, z: 14 }, { x: 10, z: 19 }, { x: 10, z: 55, dwell: 3 }, { x: 14, z: 66, dwell: 2 }, { x: 14, z: 22 }, { x: 14, z: -12, dwell: 2 }];
+const CROSS = [{ x: -10, z: -4, dwell: 1 }, { x: -10, z: -21 }, { x: -6, z: -24 }, { x: 6, z: -24 }, { x: 10, z: -20 }, { x: 10, z: 6, dwell: 4 }, { x: 10, z: -21 }, { x: 6, z: -24 }, { x: -6, z: -24 }, { x: -10, z: -20 }];
+const WALKERS = [
+  { id: "l11-commuter-faceling", seed: "l11-faceling1", look: { species: "cat", sex: "f", topw: "jacket", top: "#2a2a35", botw: "pants", bottom: "#202028", shoes: "boots" }, at: { x: -11.5, z: 24 }, route: W_LOOP, name: "Commuter Faceling", voice: "wren", line: "Pardon me, heading to the commercial plaza before the streetlights turn." },
+  { id: "l11-walker-1", seed: "l11-walker-1", look: { species: "dog", sex: "m", topw: "hoodie", top: "#5a3a2a", botw: "jeans", bottom: "#2a3550", shoes: "sneakers" }, at: { x: -10, z: -4 }, route: CROSS, name: "Courier", voice: "reyes", line: "Can't stop, kid. Package for the twelfth floor and the elevator's moody." },
+  { id: "l11-walker-2", seed: "l11-walker-2", look: { species: "bunny", sex: "f", topw: "blouse", top: "#d8c8a8", botw: "skirt", bottom: "#3a2a40", shoes: "flats" }, at: { x: 10, z: -10 }, route: E_LOOP, name: "Office Temp", voice: "wren", line: "Third week in the city. The coffee cart guy knows my order already. Is that bad?" },
+  { id: "l11-walker-3", seed: "l11-walker-3", look: { species: "bear", sex: "m", topw: "coat", top: "#3a3a2a", botw: "slacks", bottom: "#25252a", shoes: "boots" }, at: { x: 14, z: 40 }, route: [...E_LOOP.slice(3), ...E_LOOP.slice(0, 3)], name: "Night Shift Janitor", voice: "reyes", line: "Every block looks like the last one if you walk it long enough. Keep your map close, wanderer." },
+];
+function layWalkers(ctx) {
+  for (const w of WALKERS) {
+    const live = ctx.getObject(w.id);
+    if (live) { live.state.job = "route"; live.state.route = w.route; continue; } // keep the body, hand it the route
+    ctx.spawn(w.id, {
+      tags: ["npc", "faceling", "l11walker"],
+      feetPosition: { x: w.at.x, y: 0.35, z: w.at.z },
+      physics: "character",
+      ...critterSpec(npcLook(w.seed, w.look, "wanderer", 11)),
+      behavior: ["scripts/humanoid-locomotion.js", "scripts/l61-staff.js"],
+      state: { name: w.name, role: "survivor", voice: w.voice, line: w.line, job: "route", route: w.route, ...npcState(ctx, "faceling", 90) },
+    });
+  }
+}
+
 // Master tick simulation loop
 const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
   if (!ctx.place.players?.length) return;
   const st = ctx.place.state, now = ctx.now();
-  if ((st.builtV ?? 0) < V) { st.builtV = V; lay(ctx); }
+  if ((st.builtV ?? 0) < V) { st.builtV = V; lay(ctx); st.walkV = 0; }
+  if ((st.walkV ?? 0) < WALK_V) { st.walkV = WALK_V; layWalkers(ctx); }
   if (!mem.ringAt) mem.ringAt = now + 35000;
   tickCity(ctx, mem, heard);
 
@@ -940,8 +1151,8 @@ export function tick(ctx) {
       const pedsig = ctx.getObject(`l11-pedsig-${k}`);
       if (pedsig) {
         pedsig.ui = isGreen
-          ? `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:120px;text-align:center">WALK</div>`
-          : `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ff4400;font-family:Arial,sans-serif;font-weight:900;font-size:100px;text-align:center">WAIT</div>`;
+          ? `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:90px;text-align:center">WALK</div>`
+          : `<div face="front" width="0.35m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0a0a0a;border:2px solid #333;color:#ff4400;font-family:Arial,sans-serif;font-weight:900;font-size:90px;text-align:center">WAIT</div>`;
       }
     });
   }

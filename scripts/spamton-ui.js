@@ -146,35 +146,20 @@ if (typeof window !== 'undefined') {
   // ---- drawing
   const heartPath = (g, x, y, r) => { g.beginPath(); g.moveTo(x, y + r * 0.9); g.bezierCurveTo(x - r * 1.4, y - r * 0.1, x - r * 0.7, y - r * 1.2, x, y - r * 0.4); g.bezierCurveTo(x + r * 0.7, y - r * 1.2, x + r * 1.4, y - r * 0.1, x, y + r * 0.9) }
   // Spamton G. Spamton, the dumpster salesman: a lanky puppet in a black suit, glasses, a bow, strings from the top of the screen. s = scale, talk = mouth flapping, mood: 'idle' | 'glee' | 'pocket'
+  // Spamton G. Spamton: Shelly's own sprite (Deltarune cutscene frame, 25x34), drawn pixel-sharp, bobbing on his strings. talk = a little hop, mood 'glee' = a shake
   function drawSpamton(g, x, y, s, t, talk, mood) {
-    const jit = (Math.sin(t * 37) > 0.93) ? rnd2(-3, 3) : 0, bob = Math.sin(t * 5.2) * 3, tilt = Math.sin(t * 2.3) * 0.06 + (mood === 'glee' ? Math.sin(t * 14) * 0.05 : 0)
-    const body = (ox, col) => {
-      g.save(); g.translate(x + ox + jit, y + bob); g.scale(s, s); g.globalAlpha = col ? 0.5 : 1
-      const c = (n) => col ?? n
-      // strings to the top of the screen (he is on strings)
-      g.strokeStyle = col ?? '#cfcfcf'; g.lineWidth = 1; g.beginPath(); g.moveTo(0, -34); g.lineTo(Math.sin(t * 1.3) * 6, -170); g.moveTo(-34, 22 + Math.sin(t * 6) * 10); g.lineTo(-52, -170); g.moveTo(34, 22 + Math.cos(t * 6) * 10); g.lineTo(52, -170); g.moveTo(-14, 80); g.lineTo(-22, -170); g.moveTo(14, 80); g.lineTo(22, -170); g.stroke()
-      // legs, then the suit
-      g.fillStyle = c('#0e0e12'); g.fillRect(-16, 70, 11, 30); g.fillRect(5, 70, 11, 30); g.fillStyle = c('#ffe14d'); g.fillRect(-19, 98, 17, 6); g.fillRect(2, 98, 17, 6)
-      g.fillStyle = c('#15151c'); g.beginPath(); g.moveTo(-26, 30); g.lineTo(26, 30); g.lineTo(22, 74); g.lineTo(-22, 74); g.fill()
-      g.fillStyle = c('#fff'); g.beginPath(); g.moveTo(-7, 30); g.lineTo(7, 30); g.lineTo(3, 56); g.lineTo(-3, 56); g.fill() // shirt
-      g.fillStyle = c('#ff6fd0'); g.fillRect(-8, 32, 16, 6); g.fillRect(-2, 30, 4, 10) // bow
-      // arms on strings: hands flap when he talks
-      const lift = mood === 'glee' ? -14 : Math.sin(t * 4) * 5
-      g.strokeStyle = c('#15151c'); g.lineWidth = 7; g.beginPath(); g.moveTo(-24, 34); g.lineTo(-44, 44 + lift); g.moveTo(24, 34); g.lineTo(46, 36 - lift); g.stroke()
-      g.fillStyle = c('#fff'); g.beginPath(); g.arc(-46, 46 + lift, 7, 0, 7); g.arc(48, 38 - lift, 7, 0, 7); g.fill()
-      // the head, tilted, with the big glasses and a cheek
-      g.save(); g.translate(0, 8); g.rotate(tilt)
-      g.fillStyle = c('#f4f4f4'); g.beginPath(); g.ellipse(0, 0, 27, 31, 0, 0, 7); g.fill()
-      g.fillStyle = c('#111'); g.beginPath(); g.moveTo(-31, -12); g.quadraticCurveTo(-8, -50, 36, -22); g.lineTo(20, -14); g.quadraticCurveTo(0, -30, -24, -6); g.fill() // hair swept back
-      g.fillStyle = c('#ffe14d'); g.fillRect(-22, -6, 16, 12); g.fillStyle = c('#ff6fd0'); g.fillRect(5, -6, 16, 12) // the two lenses
-      g.fillStyle = c('#111'); g.fillRect(-14, -2, 4, 5); g.fillRect(11, -2, 4, 5); g.fillRect(-6, -2, 11, 3)
-      const glint = (Math.sin(t * 3.1) + 1) / 2; g.fillStyle = `rgba(255,255,255,${0.2 + glint * 0.7})`; g.fillRect(-20, -4, 3, 3)
-      g.fillStyle = c('#ff6fd0'); g.fillRect(-24, 12, 7, 4)
-      g.fillStyle = c('#111'); if (talk) { g.beginPath(); g.ellipse(2, 20, 11, 7 + Math.abs(Math.sin(t * 22)) * 7, 0, 0, 7); g.fill(); g.fillStyle = c('#ff6fd0'); g.fillRect(-5, 21, 14, 4) } else { g.fillRect(-9, 20, 20, 3) }
-      g.restore(); g.restore()
+    if (!S.spr && typeof Image !== 'undefined') { S.spr = new Image(); S.spr.src = '/cdn/spr-cutscene-14-spamton-0-u28geao1a.webp' }
+    const SPR = S.spr ?? {}
+    const jit = (Math.sin(t * 37) > 0.93) ? rnd2(-3, 3) : 0, bob = Math.sin(t * 5.2) * 3 + (talk ? -Math.abs(Math.sin(t * 11)) * 4 : 0), tilt = Math.sin(t * 2.3) * 0.04 + (mood === 'glee' ? Math.sin(t * 14) * 0.06 : 0)
+    const h = 138 * s, w = h * 25 / 34, top = -34 * s
+    g.save(); g.translate(x + jit, y + bob)
+    g.strokeStyle = 'rgba(207,207,207,.7)'; g.lineWidth = 1; g.beginPath(); g.moveTo(0, top); g.lineTo(Math.sin(t * 1.3) * 6, -y); g.moveTo(-w * 0.4, top + h * 0.4); g.lineTo(-w * 0.55, -y); g.moveTo(w * 0.4, top + h * 0.4); g.lineTo(w * 0.55, -y); g.stroke()
+    g.rotate(tilt); g.imageSmoothingEnabled = false
+    if (SPR.complete && SPR.naturalWidth) {
+      if (Math.sin(t * 29) > 0.85) { g.globalAlpha = 0.35; g.drawImage(SPR, -w / 2 - 4, top, w, h); g.drawImage(SPR, -w / 2 + 4, top, w, h); g.globalAlpha = 1 } // the glitch: ghosts a little apart now and then
+      g.drawImage(SPR, -w / 2, top, w, h)
     }
-    body(-3.5, '#00e0ff'); body(3.5, '#ff2bd0') // the glitch: a cyan and a magenta ghost, a little apart
-    g.globalAlpha = 1; body(0, null); g.globalAlpha = 1
+    g.restore()
   }
   const field = (g, t) => {
     g.fillStyle = '#000'; g.fillRect(0, 0, 640, 420)
