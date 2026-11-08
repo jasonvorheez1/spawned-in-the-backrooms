@@ -97,6 +97,7 @@ function send(ctx, d) {
   const system = systemPrompt({ it, place: ctx.self.place, pl: ctx.self, rapport: rapportOf(ctx, it), following: it.state?.follow === ctx.self.id })
   const message = userMessage(hist, text, ctx.self.displayName ?? 'Wanderer')
   logLine(ctx, it, 'p', text)
+  if (saysName(text, ctx.self.displayName)) (ses.toldName ??= {})[it.id] = true // they introduced themselves: the reply's memory write keeps it
   it.state.talkAt = now; it.state.talkTo = ctx.self.id
   ctx.job('llm:chat', { system, message, model: T.model }, 'heard', { id: it.id })
   // the wait for a reply is filled at once: a short thinking sound in their own voice (one of three, cached per character after first use)
@@ -123,7 +124,7 @@ export function heard(ctx, r, pay) {
   { const m0 = it.state.mem?.[key] ?? { met: 0, notes: [] }, ses2 = ctx.self.session, fresh = ses2.memWith !== it.id
     if (fresh) ses2.memWith = it.id
     const notes = o.remember ? [...(m0.notes ?? []).filter((n) => n !== o.remember), o.remember].slice(-6) : (m0.notes ?? [])
-    const named = !!m0.named || saysName(text, ctx.self.displayName)
+    const named = !!m0.named || !!ctx.self.session.toldName?.[it.id]
     it.state.mem = { ...(it.state.mem ?? {}), [key]: { met: m0.met + (fresh ? 1 : 0), notes, at: now, named } } }
   // a spoken yes to come along counts even when the model forgot to mark it: their words are the promise
   const ESCORT = /\b(follow me|stay (close|behind me)|come with me|i('ll| will| can) (walk|take|lead|escort|show) you|let'?s (go|move)|we move|lead the way|i'?m coming with you|right behind you)\b/i
