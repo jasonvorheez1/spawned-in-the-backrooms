@@ -550,44 +550,50 @@ bc-palm-6:
 bc-planter-1:
   feetPosition: {x: -4.5, y: 0, z: 22}
   id: bc-planter-1
-  layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  layout: {box: {max: {x: 1.1, y: 1.5, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
   model: {id: /cdn/value.1fba456c0c084012dfd0f08aacec2a411762878961abac4700f3755bfdbfd834.glb}
   physics: {body: static, collider: box}
+  scale: {x: 1.5, y: 1, z: 1.5}
   tags: [bonus-court]
 bc-planter-2:
   feetPosition: {x: 4.5, y: 0, z: 22}
   id: bc-planter-2
-  layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  layout: {box: {max: {x: 1.1, y: 1.5, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
   model: {id: /cdn/value.1fba456c0c084012dfd0f08aacec2a411762878961abac4700f3755bfdbfd834.glb}
   physics: {body: static, collider: box}
+  scale: {x: 1.5, y: 1, z: 1.5}
   tags: [bonus-court]
 bc-planter-3:
   feetPosition: {x: -4.5, y: 0, z: 4}
   id: bc-planter-3
-  layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  layout: {box: {max: {x: 1.1, y: 1.5, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
   model: {id: /cdn/value.1fba456c0c084012dfd0f08aacec2a411762878961abac4700f3755bfdbfd834.glb}
   physics: {body: static, collider: box}
+  scale: {x: 1.5, y: 1, z: 1.5}
   tags: [bonus-court]
 bc-planter-4:
   feetPosition: {x: 4.5, y: 0, z: 4}
   id: bc-planter-4
-  layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  layout: {box: {max: {x: 1.1, y: 1.5, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
   model: {id: /cdn/value.1fba456c0c084012dfd0f08aacec2a411762878961abac4700f3755bfdbfd834.glb}
   physics: {body: static, collider: box}
+  scale: {x: 1.5, y: 1, z: 1.5}
   tags: [bonus-court]
 bc-planter-5:
   feetPosition: {x: -4.5, y: 0, z: -24}
   id: bc-planter-5
-  layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  layout: {box: {max: {x: 1.1, y: 1.5, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
   model: {id: /cdn/value.1fba456c0c084012dfd0f08aacec2a411762878961abac4700f3755bfdbfd834.glb}
   physics: {body: static, collider: box}
+  scale: {x: 1.5, y: 1, z: 1.5}
   tags: [bonus-court]
 bc-planter-6:
   feetPosition: {x: 4.5, y: 0, z: -24}
   id: bc-planter-6
-  layout: {box: {max: {x: 1.1, y: 1.2, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  layout: {box: {max: {x: 1.1, y: 1.5, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
   model: {id: /cdn/value.1fba456c0c084012dfd0f08aacec2a411762878961abac4700f3755bfdbfd834.glb}
   physics: {body: static, collider: box}
+  scale: {x: 1.5, y: 1, z: 1.5}
   tags: [bonus-court]
 bc-plaque-1:
   feetPosition: {x: 23.93, y: 7, z: -18.85}
