@@ -27,8 +27,9 @@ export function geometry(ctx) {
     ctx.color("oklch(0.5 0.05 95)");
     tube(ctx, [[-0.3, 0.13, 0], [-0.26, 0.15, 0.01], [0, 0.16, 0], [0.26, 0.15, -0.01], [0.3, 0.13, 0]], [0.02, 0.13, 0.15, 0.13, 0.02], M, [1, 0.8]);
     ctx.color("oklch(0.3 0.03 80)");
-    for (const x of [-0.12, 0.12]) tube(ctx, [[x, 0.005, -0.16], [x, 0.13, -0.175], [x, 0.29, 0], [x, 0.13, 0.175], [x, 0.005, 0.16]], [0.012, 0.012, 0.012, 0.012, 0.012], 5);
-    if (hi) { ctx.color("oklch(0.25 0.01 250)"); tube(ctx, [[-0.22, 0.285, -0.03], [0.22, 0.285, -0.03]], [0.006, 0.006], 4); tube(ctx, [[0.0, 0.29, -0.03], [-0.02, 0.36, 0.05], [0.02, 0.4, 0.12]], [0.01, 0.01, 0.01], 5); } // zip and a carry handle flopped over
+    for (const x of [-0.12, 0.12]) { const pts = [], rs = []; for (let k = 0; k <= 12; k++) { const t = (k / 12) * Math.PI * 2; pts.push([x, 0.16 + Math.cos(t) * 0.158, Math.sin(t) * 0.158]); rs.push(0.012); } tube(ctx, pts, rs, 5); } // straps cinched round the bag
+    if (hi) { ctx.color("oklch(0.25 0.01 250)"); tube(ctx, [[-0.22, 0.307, -0.03], [0.22, 0.307, -0.03]], [0.005, 0.005], 4); } // zip
+    ctx.color("oklch(0.3 0.03 80)"); tube(ctx, [[-0.12, 0.31, 0.02], [-0.07, 0.37, 0.05], [0.07, 0.37, 0.05], [0.12, 0.31, 0.02]], [0.013, 0.013, 0.013, 0.013], 5); // carry handle between the straps
     return;
   }
   // a body, seen from above: slumped torso, head, limbs splayed. The head end points -Z.
