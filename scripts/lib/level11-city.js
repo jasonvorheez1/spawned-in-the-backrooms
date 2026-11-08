@@ -112,12 +112,11 @@ function adSign(sp, b, k, x, z, yaw) {
   const [t1, t2, bg, fg] = ADS[k];
   sp(`l11-bb-ad-${b}`, { feetPosition: { x: x + (yaw > 0 ? -0.06 : 0.06), y: 6.2, z }, rotation: { yaw }, primitive: { kind: "box", width: 7.2, height: 3.7, depth: 0.06 }, material: { color: bg }, state: { ad: k }, ui: `<div face="front" width="7.2m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Georgia,serif;background:${bg};color:${fg}"><div style="font-size:150px;font-weight:700;line-height:1">${t1}</div><div style="font-size:58px;margin-top:20px;opacity:.85">${t2}</div></div>` });
 }
-// the tripo street kit comes in at unit size: each fits a real-world box (w x h x length, metres)
-const fitBox = (w, h, d) => ({ min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } });
-const TRIPO_FIT = { sedan: fitBox(1.85, 1.45, 5.0), van: fitBox(2.0, 2.1, 5.4), newsbox: fitBox(0.55, 1.2, 0.5), bench: fitBox(1.8, 0.95, 0.7), hydrant: fitBox(0.5, 0.8, 0.5), trashcan: fitBox(0.65, 1.0, 0.65) };
+// the tripo street kit is already in metres (sedan 4.65 m, van 4.7 m long, along its own X): turned to run along the kerb, a touch up to sit with the 5.6 m taxi
+const TRIPO = { sedan: { forward: "+x", scale: 1.15 }, van: { forward: "+x", scale: 1.15 }, bench: { forward: "+x", scale: 1.1 }, newsbox: { scale: 1.1 }, hydrant: { scale: 1.1 }, trashcan: { scale: 1.1 } };
 export function layStreet(ctx, h) {
   if (!DBG.street) return { cars: [], billboards: [] };
-  const { sp, bx, cyl } = h, put = (id, kind, x, z, yaw, extra = {}, y = 0) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: extra.nophys ? undefined : { body: "static", collider: extra.collider ?? "box" }, model: { id: MODELS[kind], forward: "-z", materials: extra.materials }, ...(TRIPO_FIT[kind] ? { layout: { box: TRIPO_FIT[kind] } } : {}), ...(extra.spec ?? {}) });
+  const { sp, bx, cyl } = h, put = (id, kind, x, z, yaw, extra = {}, y = 0) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: extra.nophys ? undefined : { body: "static", collider: extra.collider ?? "box" }, model: { id: MODELS[kind], forward: TRIPO[kind]?.forward ?? "-z", materials: extra.materials }, ...(TRIPO[kind] ? { scale: TRIPO[kind].scale } : {}), ...(extra.spec ?? {}) });
   const LEN = [-66, -52, -9, 24, 40, 56, 72];
   LEN.forEach((z, i) => [-1, 1].forEach((s) => {
     put(`l11-st-lamp-${i}-${s}`, "lamp", s * 8.9, z + (s > 0 ? 3 : 0), s > 0 ? 90 : -90, { collider: "cylinder" });
