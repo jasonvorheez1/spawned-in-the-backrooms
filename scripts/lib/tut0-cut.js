@@ -50,7 +50,7 @@ export function t0Tick(ctx, ses, st) {
 }
 // Shelly's horror pack (scripts/lib/data/sfx-library.yml), Nov 8: "the sounds are stupid as hell": the pack carries the tutorial
 const H = { snap: "/cdn/value.d2518fac095f995e2626438e4d8f582ed04878e448ed62ddd2e45c89e704aa57.mp3", scrape: "/cdn/value.77203ab709373e37101914a819bdb0c3c22ef5f8e40e1211d5e1e1605e64085d.mp3", moan: "/cdn/value.c3763d37a43bab87a54590b4a584b45f56ce2ecf25f4eb2c5e3d645da318cbe3.mp3", rhiss: "/cdn/value.5ff97cbae7433fbe0550c6a16411314a7c725c995893b7e33dbd5ce593baf17e.mp3", switch: "/cdn/value.30ab43703195a3d308cce6e2ea7b32a92438c9e3dff74eb60205f5b9442e02d8.mp3", doom: "/cdn/value.ce9496b9dbf80ca37ab231135330442e462480dc39cf020f0d3e654e12e13361.mp3", slowst: "/cdn/value.e41c59fc8a105919b1a1c930c25409968c1f2d41422ddc584c5625d034e0be64.mp3", cresc: "/cdn/value.d1ae3ebefefdf17be753a4c379970ea2fe9b63f0de9e0797195e92a0c4bc6743.mp3", twang: "/cdn/value.5c93f7a5f22a8eea6e6327bc6710a6be6d1551eb393575c54c144d2b2fdfe908.mp3", growl: "/cdn/value.eff7b4c4645715b8686565c6211d50b2b9e416267f58c3d912e5857768ad366a.mp3", grunt: "/cdn/value.d0066beac8550b339a3eec0d5532997fde8cf394856f8ad3041c909659bea09a.mp3", mbreath: "/cdn/value.783cfc4c74e9c314ae36d9305103e6e8794cf0493ca86f23facf3f4c10d25b1d.mp3", scream: "/cdn/value.e7a73d3533435fe19d5140141081aa76bfe425f66affd0fb7653cd9afc7a7844.mp3", sting1: "/cdn/value.3220d45eae556d4b712b075cd8f883e150c941f2fb8cfbd774f388eebe7c9432.mp3", sting2: "/cdn/value.8c4011cd8c3d14bfeff784df9c17be809b21b0beccfafbea8271a0bc409125bd.mp3", run: "/cdn/value.14f7bc36d15cfcd8449842041089164a319c2ca1ff4917294b7ed2156179b62f.mp3", flashoff: "/cdn/value.6d88ccc0b16b07ffd52f328835bad9d9bf3239d8146e88b2266ff673fbfbde94.mp3", buzz: "/cdn/value.eb34f5496883ceba559e80813abd255098c4a18b2f5d2dbcd6465447d4afa7f2.mp3" }
-// each scene's own score, cut to its length (PACE-stretched seconds in the name)
+// each scene's own score, cut to its length (PACE-stretched seconds in the name). Synced: encounter hit t=10.0 x 1.7 = 17 s (the strings hit), smiler lights-on t=9.41 x 1.7 = 16 s (the cut dead)
 const M = (n) => `/cdn/moodboard-realistic-gritty/music-${n}.mp3`
 const CUE = { encounter: M("horror-film-cue-28-seconds-low-cello-drone-creeping-heartbeat-pulse-rising-strings-hit-at-17-seconds-then-frantic-chase-percussion"), smiler: M("horror-film-cue-19-seconds-near-silence-sub-drone-dissonant-piano-notes-swelling-to-a-scream-of-strings-cut-dead-at-16-seconds"), halogen: M("horror-film-cue-10-seconds-cold-analog-synth-hum-mechanical-ticking-ominous-low-brass"), drawings: M("horror-film-cue-17-seconds-music-box-melody-detuned-over-distant-hum-slow-and-sad") }
 const GRIN_SVG = `<svg viewBox='0 0 100 60' width='0.9m' billboard='full'><g filter='drop-shadow(0 0 3px #fffbe8)'><ellipse cx='30' cy='14' rx='7' ry='4.5' fill='#f4f1e2'/><ellipse cx='70' cy='14' rx='7' ry='4.5' fill='#f4f1e2'/><path d='M10 30 Q50 64 90 30 Q50 45 10 30 Z' fill='#f4f1e2'/><path d='M20 34 L22 42 M30 37 L31 47 M40 39 L40 50 M50 40 L50 51 M60 39 L60 50 M70 37 L69 47 M80 34 L78 42' stroke='#17150f' stroke-width='1.8'/></g></svg>`
@@ -75,7 +75,7 @@ const BEAT = {
       if (when > 8) { raw(ctx, GASP, 0.8); fx1(ctx, "cameraPunch", { direction: { x: -1, y: 0, z: 0 }, intensity: 0.6 }) }
     })
     if (t > 5) once("breathf", () => raw(ctx, BREATHF, 0.6))
-    if (t > 9.3) once("on", () => {
+    if (t > 9.41) once("on", () => {
       if (c.smiler) { ctx.destroy(c.smiler); c.smiler = null }
       for (const [i, v] of Object.entries(c.orig)) { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) o.light = { ...o.light, intensity: v } }
       raw(ctx, H.buzz, 1.0, p); fx1(ctx, "screenFlash", { color: "#fff6c8", duration: 0.2, intensity: 0.6 })
@@ -118,9 +118,9 @@ const BEAT = {
       me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" }
     })
     if (t > 9.3) once("lunge", () => { raw(ctx, H.growl, 1.0, { x: lunge.x, y: 1, z: lunge.z }); const e = ctx.getObject(c.ent); if (e) e.anim.body = { clip: "cdn/clip-run-loop.glb", loop: "loop", weight: 1 } })
-    if (t > 9.0) once("windup", () => { raw(ctx, BREATHF, 0.8); fx1(ctx, "slowMo", { scale: 0.5, duration: 0.6 }) })
-    if (t > 9.75) once("swing", () => { me.anim.cut = { clip: "cdn/clip-attack.glb", weight: 4 }; raw(ctx, H.twang, 0.4) })
-    if (t > 10.2) once("hit", () => {
+    if (t > 8.8) once("windup", () => { raw(ctx, BREATHF, 0.8); fx1(ctx, "slowMo", { scale: 0.5, duration: 0.6 }) })
+    if (t > 9.55) once("swing", () => { me.anim.cut = { clip: "cdn/clip-attack.glb", weight: 4 }; raw(ctx, H.twang, 0.4) })
+    if (t > 10.0) once("hit", () => {
       const hit = { x: lunge.x, y: 1.0, z: lunge.z }
       raw(ctx, H.sting1, 1.0, hit)
       
