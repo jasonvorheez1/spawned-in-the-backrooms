@@ -10,6 +10,7 @@ const TEX = {
   green: "cdn/texture-scratched-worn-steel.png", red: "cdn/texture-scratched-worn-steel.png", housing: "cdn/texture-scratched-worn-steel.png",
 };
 const METAL = { steel: [0.55, 0.55], green: [0.35, 0.6], red: [0.3, 0.55], galv: [0.6, 0.45], housing: [0.3, 0.6], brass: [0.8, 0.4], band: [0, 0.9], rubber: [0, 0.8], stain: [0, 0.3], paint: [0, 0.8] };
+const GAIN = { concrete: 2.2, floor: 2.3, ceil: 3, lag: 2.2, paint: 3.5, galv: 1.6, housing: 1.5 };
 const closed = (cx, cz, d) => !isOpen(cx, cz, d);
 const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]];
 const hallEdge = (cx, cz, d) => inHall(cx, cz) || inHall(cx + D4[d][0], cz + D4[d][1]);
@@ -75,21 +76,22 @@ export function kit(ctx, part, D) {
     let n = 0;
     for (const g of groups) {
       ctx.albedo(TEX[g.m] ?? null); const mr = METAL[g.m] ?? [0, 0.9]; ctx.metalness(mr[0]); ctx.roughness(mr[1]);
-      const I = g.i;
+      const I = g.i, gn = GAIN[g.m] ?? 1;
       for (let k = 0; k < I.length; k += 3) {
         const a = I[k] * 3, b = I[k + 1] * 3, c = I[k + 2] * 3, p = g.p;
         ctx.tri(p[a], p[a + 1], p[a + 2], p[b], p[b + 1], p[b + 2], p[c], p[c + 1], p[c + 2]);
-        for (const v of [I[k], I[k + 1], I[k + 2]]) { nor.push(g.n[v * 3], g.n[v * 3 + 1], g.n[v * 3 + 2]); uvs.push(g.u[v * 2], g.u[v * 2 + 1]); col.push(g.c[v * 3], g.c[v * 3 + 1], g.c[v * 3 + 2]); }
+        for (const v of [I[k], I[k + 1], I[k + 2]]) { nor.push(g.n[v * 3], g.n[v * 3 + 1], g.n[v * 3 + 2]); uvs.push(g.u[v * 2], g.u[v * 2 + 1]); col.push(Math.min(1, g.c[v * 3] * gn), Math.min(1, g.c[v * 3 + 1] * gn), Math.min(1, g.c[v * 3 + 2] * gn)); }
         n += 3;
       }
     }
     return n;
   };
-  const nHi = emit(D.hi), nLo = emit(D.lo);
+  const far = (ctx.lod ?? 1) >= 3; // far levels: the low module alone
+  const nHi = far ? 0 : emit(D.hi), nLo = emit(D.lo);
   ctx.albedo(null); ctx.metalness(null); ctx.roughness(null);
   const recs = placements(part, ctx.params);
   ctx.instances({ layout: { offset: "float32x3", yaw: "float32", scale: "float32x3" }, count: recs.length,
-    lods: [{ indices: [0, nHi], distance: 0 }, { indices: [nHi, nHi + nLo], distance: part === "lamp" || part === "tray" ? 12 : 18 }],
+    lods: far ? [{ indices: [0, nLo], distance: 0 }] : [{ indices: [0, nHi], distance: 0 }, { indices: [nHi, nHi + nLo], distance: part === "lamp" || part === "tray" ? 12 : 18 }],
     bounds: { min: [-HALF - 2, -1, -HALF - 2], max: [HALF + 2, HALL_H + 1, HALF + 2] } });
   for (const r of recs) ctx.instance(r);
   return { normals: nor, uvs, colors: col };
