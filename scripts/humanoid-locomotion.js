@@ -386,6 +386,33 @@ export function update(ctx, dt) {
     ctx.self.anim.run = { clip: runClip, loop: 'loop', weight: 0.001, blendIn: 0.2 }
     if (ctx.self.anim.sprint) ctx.self.anim.sprint = { ...ctx.self.anim.sprint, weight: 0.001 }
   }
+  // Air and landing (AAA kit's aaa-anim-3d: a one-time takeoff, a held fall, a landing that bends the knees, sized to the drop).
+  // Off the ground past AIR_GRACE (stairs and curbs never count): a rising body plays the Jump once, a falling one holds the
+  // fall loop, the gait channels hand their weight over. Back down after a real drop: the Land plays once at a weight the
+  // airtime picks, then clears itself. Memo in gait (this machine), the channels are the only writes.
+  const now = ctx.now()
+  const vy = vel.y || 0
+  if (ctx.self.grounded === false && !ctx.self.state?.swim) gait.airSince ??= now
+  else if (ctx.self.grounded) {
+    const air = gait.airSince != null ? (now - gait.airSince) / 1000 : 0
+    gait.airSince = null
+    if (gait.inAir) {
+      gait.inAir = false
+      ctx.self.anim.air = null
+      if (air > 0.35) { ctx.self.anim.land = { clip: 'cdn/clip-land.glb', loop: 'once', weight: Math.min(1, 0.45 + air * 0.6), speed: air > 0.9 ? 1 : 1.35, blendIn: 0.05 }; gait.landUntil = now + (air > 0.9 ? 520 : 360) }
+    }
+  }
+  const airborne = gait.airSince != null && now - gait.airSince > AIR_GRACE
+  if (airborne) {
+    const rising = vy > 0.8
+    const pose = rising ? { clip: 'cdn/clip-jump.glb', loop: 'once', weight: 1, blendIn: 0.08 } : { clip: 'cdn/clip-fall-loop.glb', loop: 'loop', weight: 1, blendIn: 0.25 }
+    if (!gait.inAir || gait.airRising !== rising) { ctx.self.anim.air = pose; gait.airRising = rising }
+    gait.inAir = true
+    for (const ch of ['idle', 'walk', 'run', 'sprint']) if (ctx.self.anim[ch]) ctx.self.anim[ch] = { ...ctx.self.anim[ch], weight: 0.001 }
+    if (ctx.self.anim.cute) ctx.self.anim.cute = { ...ctx.self.anim.cute, weight: 0.001 }
+  }
+  if (gait.landUntil && now > gait.landUntil) { gait.landUntil = 0; ctx.self.anim.land = null }
+  if (airborne || gait.landUntil) return
   // Standing, facing where it was told to: the clips hold their weights until the body moves or onInput
   // writes a new heading, either wakes this update.
   if (speed === 0 && (typeof targetYaw !== 'number' || gait.bodyYaw === targetYaw)) ctx.sleep()
