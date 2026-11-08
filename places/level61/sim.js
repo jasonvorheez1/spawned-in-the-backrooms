@@ -3,7 +3,8 @@
 // on each other, restrooms. Everything is free (scripts/l61-use.js, scripts/lib/data/snacks.yml). Ways out: the M.E.G.-guarded rusty steel door to Level 6, the vent that sucks you to Level 3.
 // Ways in: the tripwire in Level 6, a vending machine on Level 4. Hall x -30..30, z -22..22, roof 6 m; stores 14 wide, 10 deep off the north wall.
 export const cadence = "1s";
-const V = 1;
+const V = 2;
+const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb", M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb", M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb"; // art/snackrooms/build.py
 const SNACK = "/cdn/value.50b5fa3844cf9c705ca675660ef22ddb556c1cf0f31ad1cd69deeb8d8395df71.png", SODA = "/cdn/value.4db3afe09f392fef7c9d80e531484862384aef0ea5bcba295dc62b57197b659f.png";
 const T = (name, rep) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
 const TERRAZZO = { ...T("polished-cream-terrazzo-mall-floor-with-flecks", 0.3), color: "oklch(0.9 0.02 80)", roughness: 0.35 };
@@ -36,14 +37,13 @@ function lay(ctx) {
   };
   const sign = (id, x, y, z, yaw, w, h, html, bg) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, primitive: { kind: "box", width: w, height: h, depth: 0.08 }, material: { color: bg, roughness: 0.6 },
     ui: `<div face="front" width="${w}m" style="width:${w * 1000}px;height:${h * 1000}px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Arial,sans-serif;font-weight:900;line-height:1.05">${html}</div>` });
-  const vend = (id, x, z, yaw, soda, extra = {}) => sp(id, { feetPosition: { x, y: extra.y ?? 0, z }, rotation: { yaw, ...(extra.rot ?? {}) }, physics: "static", primitive: { kind: "box", width: 1.0, height: 1.85, depth: 0.85 }, material: { color: soda ? "oklch(0.5 0.2 27)" : "oklch(0.16 0.005 250)", roughness: 0.45, metalness: 0.3 },
+  const vend = (id, x, z, yaw, soda, extra = {}) => sp(id, { feetPosition: { x, y: extra.y ?? 0, z }, rotation: { yaw, ...(extra.rot ?? {}) }, physics: { body: "static", collider: "box" },
+    model: { id: M_VEND, forward: "+z", materials: { cabinet: { color: soda ? "oklch(0.5 0.2 27)" : "oklch(0.16 0.005 250)", roughness: 0.4, metalness: 0.35 } } },
     tags: extra.dead ? [] : ["usable"], behavior: extra.dead ? undefined : "scripts/l61-use.js",
     state: extra.dead ? {} : { kind: "vend", sells: soda ? "soda" : "snack", name: soda ? "Soda machine" : "Snack machine", verb: "Press a button", info: soda ? "Coca-Cola, Pepsi, Mountain Dew. Free, it never asks for coins." : "Doritos and the rest of 2003. Free." },
-    children: [{ feetPosition: { x: 0, y: 0.25, z: -0.43 }, primitive: { kind: "box", width: 0.96, height: 1.44, depth: 0.01 }, material: { texture: soda ? SODA : SNACK, roughness: 0.15, emissive: "oklch(0.35 0 0)", emissiveIntensity: 0.4 } }] });
-  const tableSet = (id, x, z, yaw) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", collider: "cylinder" }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.3, height: 0.72 }, material: STEEL,
-    children: [{ feetPosition: { x: 0, y: 0.72, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.62, radiusBottom: 0.62, height: 0.04 }, material: NAVY },
-      ...[0, 90, 180, 270].map((a) => { const r = (a * Math.PI) / 180; return { feetPosition: { x: Math.sin(r) * 0.95, y: 0, z: Math.cos(r) * 0.95 }, rotation: { yaw: a }, primitive: { kind: "box", width: 0.44, height: 0.45, depth: 0.42 }, material: NAVY,
-        children: [{ feetPosition: { x: 0, y: 0.45, z: 0.19 }, primitive: { kind: "box", width: 0.44, height: 0.42, depth: 0.05 }, material: NAVY }] }; })] });
+    children: [{ feetPosition: { x: 0.1, y: 0.38, z: -0.447 }, primitive: { kind: "box", width: 0.72, height: 1.32, depth: 0.01 }, material: { texture: soda ? SODA : SNACK, roughness: 0.15, emissive: "oklch(0.35 0 0)", emissiveIntensity: 0.4 } }] });
+  const tableSet = (id, x, z, yaw) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", collider: "mesh" }, model: { id: M_TABLE, forward: "+z" } });
+  const stool = (id, x, z, vinyl) => sp(id, { feetPosition: { x, y: 0, z }, physics: { body: "static", collider: "cylinder" }, model: { id: M_STOOL, forward: "+z", materials: { vinyl: { color: vinyl, roughness: 0.35 } } } });
 
   // ---- the hall: terrazzo, cream plaster with a teal and pink 80s band, a drop ceiling broken by six skylights of pure black
   box("l61-floor", 0, -0.3, 0, 2 * HW + 2, 0.3, 2 * HD + 26, TERRAZZO);
@@ -100,8 +100,7 @@ function lay(ctx) {
   // Clippers: the red bar it was found in. bar along the back, stools, bottles, a jukebox, and the wire across the floor
   box("l61-clip-bar", -21, 0, -30.2, 10, 1.05, 0.7, DARKWOOD, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "coke,coke,almond", name: "Clippers bar", verb: "Ask for a drink", info: "Red walls, wood floor. The bartender is a faceling in a bow tie." },
     children: [{ feetPosition: { x: 0, y: 1.05, z: 0 }, primitive: { kind: "box", width: 10.2, height: 0.06, depth: 0.85 }, material: { color: "oklch(0.25 0.06 30)", roughness: 0.25 } }] });
-  for (let k = 0; k < 6; k++) sp(`l61-clip-stool-${k}`, { feetPosition: { x: -25 + k * 1.6, y: 0, z: -29.2 }, physics: "static", primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.2, height: 0.72 }, material: STEEL,
-    children: [{ feetPosition: { x: 0, y: 0.72, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.22, height: 0.09 }, material: { color: "oklch(0.45 0.18 25)", roughness: 0.4 } }] });
+  for (let k = 0; k < 6; k++) stool(`l61-clip-stool-${k}`, -25 + k * 1.6, -29.2, "oklch(0.45 0.18 25)");
   for (const [n, y] of [[0, 1.4], [1, 2.0]]) sp(`l61-clip-shelf-${n}`, { feetPosition: { x: -21, y, z: -31.6 }, primitive: { kind: "box", width: 9, height: 0.05, depth: 0.3 }, material: DARKWOOD,
     children: Array.from({ length: 16 }, (_, i) => ({ feetPosition: { x: -4.2 + i * 0.56, y: 0.05, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.05, height: 0.3 + ((i * 7) % 3) * 0.05 }, material: { color: ["oklch(0.4 0.1 145)", "oklch(0.55 0.12 60)", "oklch(0.3 0.08 30)", "oklch(0.8 0.03 90)"][i % 4], roughness: 0.1, opacity: 0.85, transparent: true } })) });
   box("l61-clip-jukebox", -26.4, 0, -25, 0.9, 1.6, 0.7, { color: "oklch(0.6 0.15 60)", emissive: "oklch(0.7 0.18 50)", emissiveIntensity: 0.6, roughness: 0.3 }, { rotation: { yaw: 90 } });
@@ -124,8 +123,7 @@ function lay(ctx) {
   box("l61-burger-counter", 21, 0, -28.6, 10, 1.05, 0.8, { color: "oklch(0.92 0.02 90)", roughness: 0.3 }, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "burger", name: "Burger Bop counter", verb: "Order a burger", info: "The grill hisses. It smells exactly like 1986." },
     children: [{ feetPosition: { x: 0, y: 1.05, z: 0 }, primitive: { kind: "box", width: 10.2, height: 0.05, depth: 0.95 }, material: { color: "oklch(0.75 0.15 350)", roughness: 0.3 } }] });
   box("l61-burger-grill", 21, 0, -31.3, 4, 0.95, 1, STEEL, { audio: { clip: "cdn/sfx-burgers-sizzling-on-flat-top-griddle-loop.mp3", loop: true, gain: 0.18, spatial: true, maxDistance: 11 } });
-  for (let k = 0; k < 6; k++) sp(`l61-burger-stool-${k}`, { feetPosition: { x: 17 + k * 1.6, y: 0, z: -27.5 }, physics: "static", primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.2, height: 0.72 }, material: STEEL,
-    children: [{ feetPosition: { x: 0, y: 0.72, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.22, height: 0.09 }, material: { color: "oklch(0.7 0.13 195)", roughness: 0.4 } }] });
+  for (let k = 0; k < 6; k++) stool(`l61-burger-stool-${k}`, 17 + k * 1.6, -27.5, "oklch(0.7 0.13 195)");
   vend("l61-burger-soda", 27.3, -25, -90, true);
 
   // ---- the vending room (south, x -22..-6): rows of machines, some stacked, one toppled across the far corner
