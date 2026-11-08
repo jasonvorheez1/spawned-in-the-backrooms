@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2552,
-  "updatedAt": "2026-11-08T22:29:43.798Z",
-  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms, and the shared Bonus Room mall. `templates/player.js` composes player behaviors while place scenes and simulations provide authored spaces and local systems; Level 26's Partygoers now use a compact chibi model, and its ship art includes a procedural texture generator.",
+  "basedOnSpecVersion": 2575,
+  "updatedAt": "2026-11-08T22:33:21.509Z",
+  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place scenes and simulations supply authored environments and local systems. Level 26's SS Fun deck now has modelled pool, bar and party clutter, and its Partygoers have a substantially expanded combat manager.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with shops, arcade, fountain, court storefronts and west-balcony lounge; authored shops plus shopper/staff simulation.",
     "places/main (3D) - authored Level 0/Lobby maze; sim generates furniture/loot, safe-room almond water, shifting walls, creature ecology and versioned route-guidance moments.",
     "places/intake (3D) - bedroom character-creation space; scripts/intake-geo.js and intro cutscene support its authored room.",
     "places/tutorial0 (3D, solo ephemeral) - authored Level 0 tutorial route, staged encounter and HALOGEN; tutorial libraries drive geometry and beats.",
-    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored levels with local generation, loot and agents; Level 1 sim constructs the M.E.G. camp.",
+    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored levels with local generation, loot and agents; Level 1 sim builds the M.E.G. camp and its modelled tents, cots, table, stove, sandbags and pallets.",
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; residents, hazards, office/home systems and Boiler Room rats.",
     "places/level6, places/level7, places/level10, places/level11 (3D) - later authored/generated levels, including city/farm/venues and local simulations; Level 10's fun poster routes to Level 26.",
-    "places/level26 (3D) - SS Fun =), the Adventure cruise ship lost in green fog; deck and looping lower corridor hold chibi Partygoers/Balloons, banquet rooms, Phoebe's alternate arrival trigger and the deck cutscene."
+    "places/level26 (3D) - SS Fun =), the Adventure cruise ship lost in green fog; its sun deck now includes a tiled crimson pool, wrecked bar/lounge and modelled party litter, with Partygoers/Balloons, lower corridor, Phoebe trigger and deck cutscene."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, player/camera setup and ordered behavior composition; L maps to kick.",
@@ -22,7 +22,7 @@
     "places/intake/cells/x0z0.scene + scripts/intake-geo.js + scripts/lib/intro-cut.js - bedroom shell and waking sequence.",
     "places/tutorial0/cells/x0z0.scene + scripts/tut0-geo.js + scripts/tut0-panels-geo.js + places/tutorial0/sim.js - tutorial layout and local props.",
     "scripts/camera.js + scripts/view3.js - camera and third-person toggle; scripts/ui.js and specialized UI scripts present HUD, panels and cutscenes.",
-    "art/l26-ship/tex.py - deterministic procedural ship texture generator; writes hull paint/name decal, teak, cabin steel, smashed glass, spray tags and pizza-box textures under /workspace/l26ship/tex."
+    "art/l26-ship/hull.py + art/l26-ship/lib.py - Blender hull/deck source and mesh/material helpers for the SS Fun ship; art/l26-ship/tex.py generates its textures."
   ],
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings; used by routing and hub handlers.",
@@ -52,7 +52,7 @@
     "scripts/hub.js - local mall offer/shop/food and room-hop flags; purchases update player currencies/unlocks and mall-local held food.",
     "scripts/grab.js - carried object and carry/session fields; strength, load, health and stamina limit lifting.",
     "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes/skills/sheet; scripts/interact.js + lib/seat.js own focus, search/sit and configured storage saves.",
-    "scripts/partygoers.js - Level 26 AI state (pack hunting, berserk hatch cycles, dying/stun/gait and balloon bob/gas); scripts/player.js owns player.state.stungUntil movement lock."
+    "scripts/partygoers.js - Level 26 AI state (pack hunting, berserk hatch cycles, lunge/dodge/barrage/combo timing, stun/gait and balloon bob/gas); scripts/player.js owns player.state.stungUntil movement lock."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/spamton-fight/horde/critter/main-menu/hub/view3.",
@@ -64,7 +64,7 @@
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; weapon rarity cap is level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite.",
     "Pickup weapon/food/aid → scripts/player.js inventory; SNACKS entries enter player.state.snacks for later Aid-panel use, with medical aid healing through healMed.",
     "L input → scripts/kick.js onInput; pushes wheeled objects and rolls kicked chairs into entities via player.hitTarget; hostile-tagged targets include Partygoers and balloons.",
-    "Melee `player.js` hitTarget and `scripts/lib/ballistics.js` bullet target queries include `l8-hostile` (excluding already-covered `l8spider` for melee), so tagged hostile entities are hittable by swings and shots.",
+    "Melee player.js hitTarget and scripts/lib/ballistics.js bullet target queries include l8-hostile (excluding already-covered l8spider for melee), so tagged hostile entities are hittable by swings and shots.",
     "Level 0 places/main/sim.js calls scripts/lib/level0-moments.js; momentsV 4 replaces seeded chalk route arrows/props, with arrows following the generated shortest path to EXIT.",
     "Level 10 l10-fun-poster → scripts/level-door.js writes l26via=poster before crossing to Level 26; scripts/main-menu.js/l26Tick consumes it for below-deck arrival; l26d-phoebe-room trigger handles the separate meeting."
   ],
@@ -76,10 +76,10 @@
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
     "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml - player and NPCs share body/head/hair rendering; appearance varies by sex, style, color and look.",
-    "places/level26/cells/*.scene + scripts/partygoers.js - tagged Partygoers share the compact chibi block-head model, idle mixer and AI; balloons use a shared uploaded model with scene-specific colors and the same manager."
+    "places/level26/cells/*.scene + scripts/partygoers.js - tagged Partygoers share clean uploaded skins, idle/dance animations, upgraded pack combat and the same manager; balloon entities share an uploaded model with scene-specific colors."
   ],
   "probableOrphans": [
-    "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but has no references; Level 26 scene placements currently use an uploaded model instead."
+    "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but has no references; Level 26 scene placements and the barrage use uploaded models instead."
   ],
   "migrationNotes": [
     "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room and overflow mall rooms use bonus-N IDs. Keep routing and hub identity aligned.",
@@ -87,6 +87,6 @@
     "Level 0 place.state.momentsV is 4: its migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout.",
     "At sanity <= 0 health is not drained; scripts/lib/stats.js lowers derived attributes except Luck by 2 (minimum 1), and derived values feed combat, carry and movement.",
     "scripts/lurkers.js keeps the caught player's lurkHold separate from lurker entity frenzy/prey; post-throw frenzy lasts 7 seconds after the scream delay and bypasses gaze freeze.",
-    "Level 26 Partygoer model changes to the chibi asset use a 1.1 × 1.45 m scene hitbox (previously 1.8 × 2.15 m); keep bounds aligned with the visible body. Poster arrival still uses one-shot l26via='poster' and l26below until the Phoebe trigger sets l26seen and clears it."
+    "Level 1 sim's Tripo camp props are installed once under place.state.megTripo while the original meg-camp geometry is switched to tripo mode; keep the state guard and primitive geometry's tripo branch aligned to avoid duplicate camp pieces. Level 26 Partygoer scene colliders remain 1.1 × 1.45 m."
   ]
 }
