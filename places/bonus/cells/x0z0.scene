@@ -37,6 +37,41 @@ bc-art-4:
   material: {color: "#ffffff", roughness: 0.6, texture: /cdn/value.488da4515bdf2523e472b967ca54cc3bbf10e708ef330617f5fa1f277516445c.png}
   primitive: {height: 1.34, kind: plane, width: 1.08}
   rotation: {yaw: 180}
+bc-art-5:
+  feetPosition: {x: 23.95, y: 7.4, z: -14}
+  id: bc-art-5
+  material: {color: "#ffffff", roughness: 0.6, texture: /cdn/value.36f6859e3112a2af9094859bc599e1ed1f6de042545217169e55453061e2a95a.jpg}
+  primitive: {height: 1.34, kind: plane, width: 1.08}
+  rotation: {yaw: -90}
+  tags: [bonus-gallery]
+bc-art-6:
+  feetPosition: {x: 12, y: 7.4, z: -27.95}
+  id: bc-art-6
+  material: {color: "#ffffff", roughness: 0.6, texture: /cdn/value.490388362df83e9b33624b0f3da9e1eab4e94a2a45b6e7ec432ffc2cbbb8a45b.jpg}
+  primitive: {height: 1.34, kind: plane, width: 1.08}
+  rotation: {yaw: 0}
+  tags: [bonus-gallery]
+bc-art-7:
+  feetPosition: {x: 22, y: 7.4, z: -27.95}
+  id: bc-art-7
+  material: {color: "#ffffff", roughness: 0.6, texture: /cdn/value.9bf7a41538da81024258c76246581a87a7f235210294d7acdcf3488fa7816bbf.jpg}
+  primitive: {height: 1.34, kind: plane, width: 1.08}
+  rotation: {yaw: 0}
+  tags: [bonus-gallery]
+bc-art-8:
+  feetPosition: {x: 12, y: 7.4, z: -0.05}
+  id: bc-art-8
+  material: {color: "#ffffff", roughness: 0.6, texture: /cdn/value.02cfcab7e31a7818a530b63f6c8d5a81b1f5b623d26dd3090db71a7974c9ca75.jpg}
+  primitive: {height: 1.34, kind: plane, width: 1.08}
+  rotation: {yaw: 180}
+  tags: [bonus-gallery]
+bc-art-9:
+  feetPosition: {x: 22, y: 7.4, z: -0.05}
+  id: bc-art-9
+  material: {color: "#ffffff", roughness: 0.6, texture: /cdn/value.4f292f28ba2b15a3da9038d1bde98a28c21e995679077e9dcf65665bf00fd86e.jpg}
+  primitive: {height: 1.34, kind: plane, width: 1.08}
+  rotation: {yaw: 180}
+  tags: [bonus-gallery]
 bc-banner-1:
   castShadow: false
   children: [{feetPosition: {x: 0, y: 4.55, z: 0}, material: {color: "#f4f0f8", metalness: 0.8, roughness: 0.3}, primitive: {height: 1.7, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.03}, rotation: {roll: 90}}, {feetPosition: {x: -0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}, {feetPosition: {x: 0.7, y: 4.6, z: 0}, material: {color: "#ccc"}, primitive: {height: 3, kind: cylinder, radiusBottom: 0.006, radiusTop: 0.006}}]
@@ -241,41 +276,6 @@ bc-cab-8:
   physics: {body: static, collider: box}
   rotation: {yaw: 180}
   tags: [bonus-arcade]
-bc-canvas-1:
-  feetPosition: {x: 12.6, y: 6.7, z: -27.94}
-  id: bc-canvas-1
-  layout: {box: {max: {x: 0.035, y: 1.3, z: 0.75}, min: {x: -0.035, y: 0, z: -0.75}}}
-  model: /cdn/value.5eebf1b8ddb8f1286484b3e55ef716e3a6f3f8fcc5769d484f92ff5b8de4058f.glb
-  rotation: {yaw: -90}
-  tags: [bonus-gallery]
-bc-canvas-2:
-  feetPosition: {x: 12.6, y: 6.7, z: -0.06}
-  id: bc-canvas-2
-  layout: {box: {max: {x: 0.035, y: 1.3, z: 0.75}, min: {x: -0.035, y: 0, z: -0.75}}}
-  model: /cdn/value.6e73e86e616030abcf0df9a71bf1d8c5d404e2ecfdf33593e729ddab7cb9ec8d.glb
-  rotation: {yaw: 90}
-  tags: [bonus-gallery]
-bc-canvas-3:
-  feetPosition: {x: 21.4, y: 6.7, z: -27.94}
-  id: bc-canvas-3
-  layout: {box: {max: {x: 0.035, y: 1.3, z: 0.75}, min: {x: -0.035, y: 0, z: -0.75}}}
-  model: /cdn/value.650252b8d8133618d3845338ce0f2ac27057504730f898f22fcc96585f1982df.glb
-  rotation: {yaw: -90}
-  tags: [bonus-gallery]
-bc-canvas-4:
-  feetPosition: {x: 21.4, y: 6.7, z: -0.06}
-  id: bc-canvas-4
-  layout: {box: {max: {x: 0.035, y: 1.3, z: 0.75}, min: {x: -0.035, y: 0, z: -0.75}}}
-  model: /cdn/value.d6796497501ff215d93b4e13d4623fe698f24904de4afe08d66eb82c36d64731.glb
-  rotation: {yaw: 90}
-  tags: [bonus-gallery]
-bc-canvas-5:
-  feetPosition: {x: 23.94, y: 6.7, z: -14}
-  id: bc-canvas-5
-  layout: {box: {max: {x: 0.035, y: 1.3, z: 0.75}, min: {x: -0.035, y: 0, z: -0.75}}}
-  model: /cdn/value.0eba0c3ae8185a4ba505c96e128edce292eafae9094ffc05bd995cc74c6a9e2b.glb
-  rotation: {yaw: 180}
-  tags: [bonus-gallery]
 bc-claw-1:
   children: [{feetPosition: {x: 0, y: 1.6, z: 0}, id: lamp, light: {color: "#ffd0f0", distance: 3, intensity: 0.8, kind: point}}]
   feetPosition: {x: 22.6, y: 0.02, z: -9.2}
@@ -369,6 +369,41 @@ bc-frame-4:
   layout: {box: {max: {x: 0.09, y: 2.92, z: 1.17}, min: {x: -0.09, y: 0, z: -1.17}}}
   model: /cdn/value.b3f43a85c13096c26491084442d48abc01d8c18de5f9be67fd71f7421ab36957.glb
   rotation: {yaw: -90}
+bc-frame-5:
+  feetPosition: {x: 23.92, y: 6.35, z: -14}
+  id: bc-frame-5
+  layout: {box: {max: {x: 0.09, y: 2.92, z: 1.17}, min: {x: -0.09, y: 0, z: -1.17}}}
+  model: /cdn/value.b3f43a85c13096c26491084442d48abc01d8c18de5f9be67fd71f7421ab36957.glb
+  rotation: {yaw: 0}
+  tags: [bonus-gallery]
+bc-frame-6:
+  feetPosition: {x: 12, y: 6.35, z: -27.92}
+  id: bc-frame-6
+  layout: {box: {max: {x: 0.09, y: 2.92, z: 1.17}, min: {x: -0.09, y: 0, z: -1.17}}}
+  model: /cdn/value.b3f43a85c13096c26491084442d48abc01d8c18de5f9be67fd71f7421ab36957.glb
+  rotation: {yaw: 90}
+  tags: [bonus-gallery]
+bc-frame-7:
+  feetPosition: {x: 22, y: 6.35, z: -27.92}
+  id: bc-frame-7
+  layout: {box: {max: {x: 0.09, y: 2.92, z: 1.17}, min: {x: -0.09, y: 0, z: -1.17}}}
+  model: /cdn/value.b3f43a85c13096c26491084442d48abc01d8c18de5f9be67fd71f7421ab36957.glb
+  rotation: {yaw: 90}
+  tags: [bonus-gallery]
+bc-frame-8:
+  feetPosition: {x: 12, y: 6.35, z: -0.08}
+  id: bc-frame-8
+  layout: {box: {max: {x: 0.09, y: 2.92, z: 1.17}, min: {x: -0.09, y: 0, z: -1.17}}}
+  model: /cdn/value.b3f43a85c13096c26491084442d48abc01d8c18de5f9be67fd71f7421ab36957.glb
+  rotation: {yaw: -90}
+  tags: [bonus-gallery]
+bc-frame-9:
+  feetPosition: {x: 22, y: 6.35, z: -0.08}
+  id: bc-frame-9
+  layout: {box: {max: {x: 0.09, y: 2.92, z: 1.17}, min: {x: -0.09, y: 0, z: -1.17}}}
+  model: /cdn/value.b3f43a85c13096c26491084442d48abc01d8c18de5f9be67fd71f7421ab36957.glb
+  rotation: {yaw: -90}
+  tags: [bonus-gallery]
 bc-fstatue:
   castShadow: true
   feetPosition: {x: 0, y: 0.83, z: 12}
@@ -437,7 +472,7 @@ bc-gplaque-s:
   rotation: {yaw: 0}
   vector: "<svg viewBox='0 0 120 50' width='0.28m'><rect x='1' y='1' width='118' height='48' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='22' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Bubblegum Ionic, 1988</text><text x='60' y='38' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>Marble and plaster</text></svg>"
 bc-grug:
-  feetPosition: {x: 17, y: 5.505, z: -14}
+  feetPosition: {x: 17, y: 5.52, z: -14}
   id: bc-grug
   layout: {box: {max: {x: 3, y: 0.03, z: 3}, min: {x: -3, y: 0, z: -3}}}
   model: /cdn/value.7a52a205e6005afc81d4fb66c6bd697f8b8a470cb14e2d812ee207660fd6a48c.glb
