@@ -165,6 +165,15 @@ function moodFace(ctx, l) {
   return l.expr
 }
 
+// Shelly's Universal Animation Library: a human NPC stands its own way (arms folded, on the phone), picked once by its id; players keep the plain idle
+const NPC_IDLES = ['cdn/clip-idle-loop.glb', 'cdn/clip-ual-idle-foldarms-257968ed-loop.glb', 'cdn/clip-ual-idle-talkingphone-5737f83c-loop.glb', 'cdn/clip-ual-idle-foldarms-257968ed-loop.glb']
+function gaitFor(ctx) {
+  const ss = ctx.self.session
+  if (ss.isPlayer == null) ss.isPlayer = ctx.place.players.some((p) => p.id === ctx.self.id)
+  if (!HUMAN || ss.isPlayer) return GAIT_LIB
+  if (!ss.gaitNpc) { const h = [...String(ctx.self.id)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7); ss.gaitNpc = { ...GAIT_LIB, idle: NPC_IDLES[h % NPC_IDLES.length] } }
+  return ss.gaitNpc
+}
 export function update(ctx) {
   { const sty = setStyle(ctx.world.state.bodyStyle), ss = ctx.self.session; if (ss.style !== sty) { if (ss.style) { ss.lookKey = null; ss.key = null; ss.flair = null; ss.headSwept = false; if (sty === 'furry') ctx.self.anim.idle = null } ss.style = sty } } // the menu's BODIES: humans or furries, everyone in the room
   if (!MESH && !ctx.self.session.headSwept) { ctx.self.session.headSwept = true; dropHead(ctx, ctx.self) }
@@ -197,7 +206,7 @@ export function update(ctx) {
     if (!ctx.self.state.gaitClips) ctx.self.state.gaitClips = GAIT_LIB
   } else {
     // the Blender critter's file carries no clips of its own: its humanoid bones play the library gait; the scripted one has its own
-    if (MESH) { if (ctx.self.state.gaitClips?.walk !== GAIT_LIB.walk) ctx.self.state.gaitClips = GAIT_LIB } else if (ctx.self.state.gaitClips) delete ctx.self.state.gaitClips
+    if (MESH) { const g = gaitFor(ctx); if (ctx.self.state.gaitClips?.idle !== g.idle || ctx.self.state.gaitClips?.walk !== g.walk) ctx.self.state.gaitClips = g } else if (ctx.self.state.gaitClips) delete ctx.self.state.gaitClips
     if (HUMAN) { if (ses.flair !== 'human') { ses.flair = 'human'; ctx.self.anim.flair = null; ctx.self.anim.cute = null; ctx.self.bones = {}; ses.lids = false; ses.twitch = null } } // the human rig has no tail, ears or lids
     else {
     if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }

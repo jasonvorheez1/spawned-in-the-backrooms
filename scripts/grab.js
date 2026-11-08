@@ -107,7 +107,7 @@ function lift(ctx, o, kg, cap) {
 function toss(ctx, o, h) {
   const ses = ctx.self.session, s = ctx.self.state, d = ses.dir ?? { x: 0, y: 0, z: -1 };
   const over = ses.kg / power(ctx), speed = over > 1 ? Math.max(1.5, 4 - over) : Math.max(3, Math.min(20, 3 + (power(ctx) / ses.kg) * 2.2)); // light things fly; past your strength it tips a few feet away
-  ctx.self.anim.grab = { clip: "cdn/clip-throw.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 }; ctx.self.session.grabAnimEnd = ctx.now() + 1000;
+  ctx.self.anim.grab = { clip: "cdn/clip-ual-overhandthrow-ada55cac.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 }; ctx.self.session.grabAnimEnd = ctx.now() + 1000;
   // weight over its size is its density: under water's 1000 kg/m³ it bobs back up, over it sinks (the engine floats a dynamic body by density in a sea, lake or river)
   const bs = o.bounds?.size, vol = bs ? Math.max(0.001, bs.x * bs.y * bs.z * 0.6) : null; // 0.6: a chair or a crate is mostly air inside its box
   o.physics = vol ? { body: "dynamic", collider: "box", density: Math.max(60, Math.min(8000, ses.kg / vol)), friction: 0.7 } : { body: "dynamic", collider: "box", mass: ses.kg, friction: 0.7 };
@@ -157,7 +157,7 @@ function hurl(ctx, e, drop) {
   e.velocity = { x: dx, y: drop ? 0 : sp * 0.47, z: dz };
   ses.heldFoe = null; ses.foeKg = null; s.carryMul = 1;
   if (drop) return;
-  ctx.self.anim.grab = { clip: "cdn/clip-throw.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 }; ses.grabAnimEnd = ctx.now() + 1000;
+  ctx.self.anim.grab = { clip: "cdn/clip-ual-overhandthrow-ada55cac.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 }; ses.grabAnimEnd = ctx.now() + 1000;
   ctx.emit("cameraPunch", { direction: { x: d.x / hl, y: 0, z: d.z / hl }, intensity: 0.35 }, { audience: { player: ctx.self.id } });
   ctx.emit("damageNumber", { position: { x: e.feetPosition.x, y: e.feetPosition.y + 2, z: e.feetPosition.z }, text: r >= 1.2 ? "HURLED" : "THROWN", color: "#ffb347", size: 1 });
   heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-heavy-object-throw-whoosh.mp3", position: e.feetPosition, volume: 0.8, maxDistance: 18 });

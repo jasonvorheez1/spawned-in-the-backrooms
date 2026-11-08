@@ -118,7 +118,7 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
         ctx.emit("playSound", { clip: SND("teeth-snapping-chomp"), position: p.feetPosition, volume: 1 }) }
       else s.move = null
     }
-    if (s.move === "barrage" && now >= (s.moveUntil ?? 0)) { s.move = null; once(p, "cdn/clip-throw.glb") }
+    if (s.move === "barrage" && now >= (s.moveUntil ?? 0)) { s.move = null; once(p, "cdn/clip-ual-overhandthrow-ada55cac.glb") }
     if (s.move === "scream") { p.velocity = { x: 0, y: vy, z: 0 }; gait(ctx, p, "idle"); continue }
     if (s.move === "windup") { p.velocity = { x: 0, y: vy, z: 0 }; face(); gait(ctx, p, "idle"); continue }
     if (s.move === "dodge") { const sx = -dz * s.dodgeDir, sz = dx * s.dodgeDir; p.velocity = { x: sx * T.dodgeSpeed, y: vy, z: sz * T.dodgeSpeed }; continue }
