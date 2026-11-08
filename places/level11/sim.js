@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 70; // bump to rebuild the city in rooms that are already open
+const V = 71; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -534,7 +534,7 @@ function lay(ctx) {
   const MALL_D = 22;
 
   // Strip Mall Building Shell
-  sp("l11-mall-shell", { feetPosition: { x: MALL_X, y: 0.1, z: MALL_Z }, primitive: { kind: "scripted", script: "scripts/l11-mall.js", params: { kind: "shell", w: MALL_W, h: MALL_H, d: MALL_D } }, physics: "static" });
+  sp("l11-mall-shell", { feetPosition: { x: MALL_X, y: 0.1, z: MALL_Z }, primitive: { kind: "scripted", script: "scripts/l11-mall.js", params: { kind: "shell", w: MALL_W, h: MALL_H, d: MALL_D } }, physics: { body: "static", collider: "mesh" } });
   bx("l11-mall-sandstone-pil1", MALL_X + MALL_W / 2 - 0.2, 0.1, MALL_Z - MALL_D / 2 + 0.5, 0.4, MALL_H, 1.2, SANDSTONE_WALL);
   bx("l11-mall-sandstone-pil2", MALL_X + MALL_W / 2 - 0.2, 0.1, MALL_Z + MALL_D / 2 - 0.5, 0.4, MALL_H, 1.2, SANDSTONE_WALL);
   
@@ -586,12 +586,19 @@ function lay(ctx) {
     const CLEAR = { color: "oklch(0.86 0.02 210)", metalness: 0.1, roughness: 0.05, opacity: 0.22, transparent: true };
     const GREEN = { color: "oklch(0.55 0.11 165)", metalness: 0.1, roughness: 0.08, opacity: 0.55, transparent: true };
     for (const [k, zc, w, glass] of [["derma", MALL_Z - 6.5, 5.5, CLEAR], ["islab", MALL_Z, 4.2, GREEN], ["pizza", MALL_Z + 6.5, 5.5, CLEAR]]) {
-      bx(`l11-mall-pane-${k}`, FX - 0.04, 0.4, zc, 0.03, 2.9, w, glass, { physics: undefined });
+      const DW = 1.3, side = (w - DW) / 2; // two panes either side of an open doorway
+      bx(`l11-mall-pane-${k}`, FX - 0.04, 0.5, zc - DW / 2 - side / 2, 0.03, 2.8, side, glass);
+      bx(`l11-mall-pane-${k}-b`, FX - 0.04, 0.5, zc + DW / 2 + side / 2, 0.03, 2.8, side, glass);
+      bx(`l11-mall-door-${k}-l`, FX, 0.5, zc - DW / 2, 0.09, 2.3, 0.07, AL, { physics: undefined });
+      bx(`l11-mall-door-${k}-r`, FX, 0.5, zc + DW / 2, 0.09, 2.3, 0.07, AL, { physics: undefined });
+      bx(`l11-mall-door-${k}-head`, FX, 2.8, zc, 0.09, 0.07, DW, AL, { physics: undefined });
+      sp(`l11-mall-int-${k}`, { feetPosition: { x: MALL_X, y: 0.52, z: zc }, primitive: { kind: "scripted", script: "scripts/l11-mall.js", params: { kind: "interior", shop: k, w: MALL_W - 1.0, d: w - 0.3 } }, physics: { body: "static", collider: "mesh" } });
+      sp(`l11-mall-light-${k}`, { feetPosition: { x: MALL_X + 3, y: 3.1, z: zc }, light: { kind: "point", color: k === "pizza" ? "oklch(0.9 0.08 80)" : "oklch(0.96 0.02 220)", intensity: 2.2, distance: 11 } });
       bx(`l11-mall-frame-${k}-top`, FX, 3.3, zc, 0.08, 0.1, w, AL, { physics: undefined });
-      bx(`l11-mall-frame-${k}-sill`, FX, 0.36, zc, 0.1, 0.08, w, AL, { physics: undefined });
+      for (const sgn of [-1, 1]) bx(`l11-mall-frame-${k}-sill${sgn}`, FX, 0.46, zc + sgn * (0.65 + (w - 1.3) / 4), 0.1, 0.06, (w - 1.3) / 2, AL, { physics: undefined });
       bx(`l11-mall-frame-${k}-transom`, FX, 2.55, zc, 0.07, 0.06, w, AL, { physics: undefined });
       const n = Math.round(w / 1.4);
-      for (let i = 0; i <= n; i++) bx(`l11-mall-frame-${k}-m${i}`, FX, 0.4, zc - w / 2 + (w * i) / n, 0.08, 2.9, 0.07, AL, { physics: undefined });
+      for (let i = 0; i <= n; i++) if (Math.abs(-w / 2 + (w * i) / n) > 0.75) bx(`l11-mall-frame-${k}-m${i}`, FX, 0.4, zc - w / 2 + (w * i) / n, 0.08, 2.9, 0.07, AL, { physics: undefined });
     }
     bx("l11-mall-frost-islab", FX - 0.02, 1.0, MALL_Z, 0.02, 0.35, 4.1, { color: "oklch(0.9 0.02 165)", opacity: 0.7, transparent: true, roughness: 0.6 }, { physics: undefined });
   }
