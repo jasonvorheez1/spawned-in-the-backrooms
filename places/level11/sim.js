@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 99; // bump to rebuild the city in rooms that are already open
+const V = 100; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1701,7 +1701,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
 // SIDEWALK WALKERS: commuters on routes; each leg is a findPath over the city's colliders (scripts/l61-staff.js waypoint()),
 // so they go round hydrants, benches and cars. Laid on their own version so a new walker never rebuilds the city.
 // ==========================================
-const WALK_V = 1;
+const WALK_V = 2; // 2: NPC looks rerolled (clothes.js NPC_GEN g2)
 const W_LOOP = [{ x: -10, z: 24, dwell: 1 }, { x: -10, z: 62, dwell: 1 }, { x: -14, z: 70, dwell: 4, act: "wave" }, { x: -14, z: 30, dwell: 1 }, { x: -10, z: 19 }, { x: -10, z: -12, dwell: 3 }, { x: -14, z: 10 }];
 const E_LOOP = [{ x: 10, z: -10, dwell: 1 }, { x: 10, z: 14 }, { x: 10, z: 19 }, { x: 10, z: 55, dwell: 3 }, { x: 14, z: 66, dwell: 2 }, { x: 14, z: 22 }, { x: 14, z: -12, dwell: 2 }];
 const CROSS = [{ x: -10, z: -4, dwell: 1 }, { x: -10, z: -21 }, { x: -6, z: -24 }, { x: 6, z: -24 }, { x: 10, z: -20 }, { x: 10, z: 6, dwell: 4 }, { x: 10, z: -21 }, { x: 6, z: -24 }, { x: -6, z: -24 }, { x: -10, z: -20 }];

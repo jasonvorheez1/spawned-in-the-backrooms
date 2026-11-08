@@ -2,7 +2,7 @@
 // No light works here (scripts/player.js kills the flashlight on this place). Plan: scripts/lib/level6.js.
 import { W, H, C, HT, START, cx, cz, plan, wallRuns, NOTES } from "../../scripts/lib/level6.js";
 export const cadence = "1s";
-const V = 4;
+const V = 5;
 const CONCRETE = { color: "oklch(0.55 0.005 250)", roughness: 0.95, texture: "cdn/texture-smooth-cold-poured-concrete-wall.png", repeat: [1, 1], wrap: "repeat" };
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const WHISPERS = [G("faint-skittering-claws-on-concrete-in-dark"), G("slow-close-breathing-in-pitch-dark"), G("unintelligible-whisper-behind-ear"), G("bare-footsteps-stop-on-concrete")];

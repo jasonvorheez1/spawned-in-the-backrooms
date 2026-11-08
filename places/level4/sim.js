@@ -10,7 +10,7 @@ import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { settle, tickPeople } from "../../scripts/lib/l4-people.js";
 import { tickWalls, B as BRK } from "../../scripts/lib/breakables.js";
 export const cadence = "1s";
-const V = 1;
+const V = 2;
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const OMEGA = {
   "omega-okafor": { name: "Sgt. Okafor · M.E.G. Base Omega", role: "scout", voice: "reyes", gun: "shotgun", at: [-25.5, -22.6], yaw: 180, look: { species: "bear", sex: "m", eye: "#7a4820", belly: "#ecd0a8", nose: "#221814", topw: "jacket", top: "#b8d040", botw: "pants", bottom: "#3a3a32", shoes: "boots", shoec: "#22201c", hat: "cap", hatc: "#4a5a2a", expr: "bored" } },

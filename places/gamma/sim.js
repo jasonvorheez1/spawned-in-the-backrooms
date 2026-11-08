@@ -9,7 +9,7 @@ import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { LIGHTS } from "../../scripts/lib/gamma-layout.js";
 import { SHOPS } from "../../scripts/gamma-public-geo.js";
 export const cadence = "1s";
-const V = 2;
+const V = 3;
 const GRIT = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const CAM = "/cdn/value.9a228d2a44ac47cc422ab5bcdbbaa10b84f595f45d7cb1acd62d496a80a648bc.glb";
 const JK = (top, extra) => ({ topw: "jacket", top, botw: "pants", bottom: "#3a3a32", shoes: "boots", shoec: "#22201c", ...extra });

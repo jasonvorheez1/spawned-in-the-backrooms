@@ -15,7 +15,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 
 export const cadence = "1s";
-const V = 14;
+const V = 15;
 const BRK = (mat, hp) => ({ mat, hp, maxHp: hp });
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BARN = (w, d, h, ridge, wall, door) => ({ primitive: { kind: "scripted", script: "scripts/barn10.js", params: { w, d, h, ridge, wall, door } }, physics: "static" });

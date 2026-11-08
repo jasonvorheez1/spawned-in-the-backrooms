@@ -79,7 +79,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 26;
+const V = 27;
 // 24: Wikidot canonical drowned antique entrance room (stacked bureau drawers, armoire with draped linen & silver tea service, stone hearth, turned pedestal, show-don't-tell)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers

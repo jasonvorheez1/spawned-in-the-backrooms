@@ -10,7 +10,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 
 export const cadence = "1s";
-const V = 2;
+const V = 3;
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const plate = (text, sub, bg = "#2a1c12", fg = "#e8c983") => `<div face="front" width="1.2m" style="font-family:serif;text-align:center;color:${fg};background:${bg};border:14px solid #8a6a2a;padding:18px 10px;line-height:1.05"><div style="font-size:130px;font-weight:900;letter-spacing:10px">${text}</div>${sub ? `<div style="font-size:64px;font-style:italic;opacity:.85">${sub}</div>` : ""}</div>`;
 function fwd(yaw) { const r = (yaw * Math.PI) / 180; return { x: -Math.sin(r), z: -Math.cos(r) }; } // a yaw's front (-Z) direction
