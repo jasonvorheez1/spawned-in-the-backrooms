@@ -1,92 +1,92 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1637,
-  "updatedAt": "2026-11-08T08:01:33.619Z",
-  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Place sims assemble local spaces, populations and hazards around shared player, NPC, loot, crafting, combat and UI systems; paired doors and arrival markers connect the routes. NPC companions reuse M.E.G. agent behavior, with recruitment, perks, orders and threshold travel mediated by shared companion helpers.",
+  "basedOnSpecVersion": 1656,
+  "updatedAt": "2026-11-08T08:29:33.987Z",
+  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Place sims assemble local layouts, populations and hazards around shared player, NPC, loot, combat and UI systems; paired thresholds and arrival markers connect routes. The common critter model now serves a 28-species cast, while shared feed/status logic turns notices and player-state thresholds into the HUD message stack.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, containers, shifting walls and hunters.",
-    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Utility Halls and Locked sublevel; Level 2.1 sim builds Base Alef, Refrigerator Paradise, The Edges and their agents/set pieces.",
-    "places/level3 + places/gamma (3D) - Electrical Station and Base Gamma; seeded layouts, hazards, agents, traders, generators, lifts and checkpoint; Gamma includes Marlo the smith.",
-    "places/level4 (3D) - Abandoned Office; office plan, residents, cubicles, home-claim offices, coolers, vending, lift/stairs and Base Omega.",
-    "places/level5 + places/level6 (3D) - Terror Hotel and Lights Out; Level 5 rooms, quests and portal; Level 6 dark labyrinth and sensory hazards, with a tripwire entrance to Level 6.1.",
-    "places/level61 (3D) - The Snackrooms; sim-built mall food court with fountain/garden rotunda, dining terraces, service venues, Facelings, M.E.G. outpost and Liquorette; routes connect Levels 4, 6 and 3.",
-    "places/level7 (3D) - Thalassophobia; flooded Floating House, Seawatch, Fort Surrender, sea floor, diving bell and Level 9 hatch.",
-    "places/level8 + places/debug (3D) - Level 8 Cave Systems / 9th Road and camp route; Debug is a separate dark atmosphere and spawn."
+    "places/main (3D) - Level 0 / The Lobby, the yellow maze and safe-room hub; authored cells carry fixtures, containers, shifting walls and hunters.",
+    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored spaces plus Level 2.1's simulated rooms, zones, agents and set pieces.",
+    "places/level3, places/gamma (3D) - Electrical Station and Base Gamma; seeded layouts, hazards, agents, traders, generators and lifts; Gamma includes Marlo the smith.",
+    "places/level4 (3D) - Abandoned Office; office structure and residents, cubicles, claimed homes, coolers, vending, lift/stairs and Base Omega.",
+    "places/level5 (3D) - Terror Hotel; authored hotel cells and sim-managed residents, creatures and interactions, including Samantha the psychic tuxedo cat and her meat offering/readings.",
+    "places/level6, places/level61 (3D) - Lights Out and The Snackrooms; dark labyrinth and sensory hazards connect to the sim-built food court, Facelings, M.E.G. outpost, Camp Amber and service venues.",
+    "places/level7 (3D) - Thalassophobia; flooded Floating House, Seawatch, Fort Surrender, sea floor and diving bell.",
+    "places/debug (3D) - Separate dark atmosphere and spawn for debugging."
   ],
   "roots": [
-    "world.config.yaml - multiplayer entry at main; declares camera, player actions, player template and HUD; Backspace opens the main menu.",
-    "templates/player.js - ordered player behavior chain; locomotion/player controller precede swim, interaction and gameplay handlers, then critter, main-menu and view3.",
+    "world.config.yaml - multiplayer entry at main; declares player actions, camera, player template and HUD; Backspace opens the main menu.",
+    "templates/player.js - ordered player behavior chain; locomotion and player control precede swim, interactions and gameplay handlers, then critter, menu and view3.",
     "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and eye position; scripts/view3.js toggles player.state.tp.",
-    "places/<place>/config.yaml + sim.js + cells - place setup and authored placements; sims construct local layouts and tick local behavior, respawns and regrowth.",
-    "sim.js - world referee cadence plus onOutOfBounds; players keep normal respawn, creatures return to state.home or are destroyed for their manager to respawn.",
-    "places/level8/sim.js + art/level8/build.py - Level 8 assembler and Blender cave-road generator; cave material is scripts/mat-cave.js.",
-    "places/level61/sim.js + art/liquorette/build.py - Level 6.1 assembler; lay() replaces l61-prefixed scene objects and layExtra() adds mall/staff set pieces including Liquorette models.",
-    "scripts/ui.js + scripts/*-ui.js - HUD and overlays; ui.js also mounts builders-only LAGSCOPE panel and renders level-transfer cards via scripts/noclip-ui.js."
+    "places/<place>/config.yaml + sim.js + cells - place setup and placements; sims construct local layouts and tick local behavior, respawns and regrowth.",
+    "sim.js - world cadence and onOutOfBounds referee; player returns true for normal respawn, creatures return to state.home or are destroyed for manager respawn.",
+    "places/level61/sim.js + scripts/lib/level61-extra.js - Level 6.1 assembler; lay() replaces l61-prefixed scene roots and layExtra() adds mall, Camp Amber and staff pieces.",
+    "scripts/ui.js + scripts/*-ui.js - HUD and overlays; ui.js mounts the feed, inventory and gameplay panels, plus builders-only LAGSCOPE and transfer cards.",
+    "scripts/critter.js + scripts/lib/critter-model.js - player appearance/hand entry and common critter model construction for player and NPC bodies."
   ],
   "shared": [
-    "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait/heading for player and M.E.G. NPC chains; scripts/lib/body3.js provides weapon animation and rowing IK.",
-    "scripts/lib/maze.js, level1.js, level2.js, level21.js + data - per-level grids, zones and layouts used by simulations, geometry, player zone labels and creature navigation.",
-    "scripts/lib/level3.js through level8.js + path helpers - level plans, zone/route queries and navigation reused by place systems and creatures.",
+    "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait and heading for player and M.E.G. NPC chains; scripts/lib/body3.js supplies weapon animation and rowing IK.",
+    "scripts/lib/maze.js, level1.js, level2.js, level21.js + data - per-level grids, zones and layouts reused by simulations, geometry, zone labels and creature navigation.",
+    "scripts/lib/level3.js through level7.js + path helpers - level plans, zone/route queries and navigation reused by place systems and creatures.",
     "scripts/lib/level-kit.js + scripts/lib/npc-respawn.js - named-person management, throttling and shared NPC return timing for place sims.",
-    "scripts/lib/clothes.js, scripts/lib/critter-model.js + model/face data, scripts/mat-cloth.js - seeded avatar/NPC looks and rendered bodies/garments; art/critter-cute/build.py supplies active cute meshes selected by scripts/lib/data.",
-    "scripts/lib/loot.js + scripts/lib/items.js + level data - shared item pools, rolls, remains, parsing/descriptions and container helpers; art/props/build.py supplies modeled lockers/fridges.",
-    "scripts/lib/condition.js + condition.yml and scripts/lib/stats.js - weapon/armor condition and derived handling/carry values used by player.js, clothes.js, loot-ui.js and npc-talk.js.",
-    "scripts/lib/rep.js + scripts/lib/companion.js - faction/karma and companion recruitment/perks/orders; used by player/NPC dialogue, meg-agent.js, stats.js and level-door.js."
+    "scripts/lib/clothes.js, scripts/lib/critter-model.js + critter/clothes data, scripts/mat-cloth.js - seeded looks, rendered bodies and garments; art/critter-cute/build.py produces the cute head meshes.",
+    "scripts/lib/loot.js + scripts/lib/items.js + level data - shared item pools, rolls, remains, parsing and container helpers; art/props/build.py supplies modeled lockers/fridges.",
+    "scripts/lib/condition.js + condition.yml and scripts/lib/stats.js - weapon/armor condition and derived handling/carry values used by player.js, clothes.js, loot-ui.js and NPC dialogue.",
+    "scripts/lib/feed.js + scripts/feed-ui.js - shared state-backed message feed; scripts/stats.js supplies legacy notices and status/discovery messages, ui.js renders it."
   ],
   "notableExports": [
-    "sim.js - cadence, tick, onOutOfBounds; places/level21/sim.js and places/level8/sim.js - cadence, tick; places/level61/sim.js - cadence, tick.",
+    "sim.js - cadence, tick, onOutOfBounds; places/level21/sim.js and places/level61/sim.js - cadence and tick.",
     "scripts/ambient-anim.js - onSpawn, update; scripts/lib/ambient.js - fan, fanHousing, cable and DRIP, DUST, MIST, SPORES, BUBBLES, RIPPLE builders/effects.",
     "scripts/lib/level21.js - grid, room, zone, exit and height queries/constants; scripts/lib/maze21path.js - canPass21, stepToward, cellNear.",
     "scripts/l21-use.js - updateSchedule, ears, update; scripts/level21-geo.js - geometry; scripts/lib/chatter.js - tickChatter, CHATTER.",
     "scripts/l61-use.js - MENUS, ears, landed, takeItem, vendExpire, ready, expire; scripts/lib/level61-extra.js - layExtra, faceling, person, PEOPLE, FACELING_IDS.",
-    "scripts/l61-staff.js - ears, update; scripts/l61-jukebox.js - STATIONS, ears, tune; scripts/lib/l61-anim.js - diner gesture clips and playGesture.",
-    "scripts/lib/condition.js - CAP, band, bandColor, wMul, jamChance, drMul, useWear, armorWearFor, cndOf, repairAmount, vendorCost; scripts/lib/npc-talk.js - TALK, CHECKS, INTENTS, MOODS and dialogue/trade helpers.",
-    "scripts/lib/companion.js - PERKS, perkOf, isMine, followersOf, loyaltyScale, whyNot, recruit, adopt, dismiss, order, giveWeapon, takeWeapon; scripts/lib/rep.js - faction/reputation API; scripts/noclip-ui.js - noclipUi, CLIP_T, clipCard."
+    "scripts/lib/condition.js - CAP, band, bandColor, wMul, jamChance, drMul, wear and repair helpers; scripts/lib/npc-talk.js - TALK, CHECKS, INTENTS, MOODS and dialogue/trade helpers.",
+    "scripts/lib/companion.js - PERKS and recruitment/order/weapon APIs; scripts/lib/rep.js - faction/reputation API; scripts/noclip-ui.js - noclipUi, CLIP_T, clipCard.",
+    "scripts/lib/feed.js - LIFE, MAX, PLACE_NAMES, pushFeed, watch; scripts/feed-ui.js - feedUi; scripts/lib/critter-model.js - speciesOf, bodyModel, headModel, critterSpec, rewear and NPC appearance helpers."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, clothing, snacks and karma/rep; also maintains transient movement/combat state.",
-    "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes, skills, points, tags and sheet state; initializes/migrates and spends points; Repair skill drives derived repair values; stats.js ticks companion perks.",
-    "scripts/craft.js - craft UI/actions, payout redemption and hunger/thirst drain; Level 2.1 hot/humid thirst multiplier comes from level21.yml; scripts/swim.js owns swimming/underwater/breath and session swim controls, timer and audio.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, clothing and karma/rep; also transient movement/combat state.",
+    "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes, skills, points, tags and sheet state; initialize/migrate/spend points; derive carry and combat values, and tick companion perks.",
+    "scripts/craft.js - craft actions, payout redemption and hunger/thirst drain; scripts/swim.js owns swimming/underwater/breath and swim session controls, timer and audio.",
     "scripts/interact.js + scripts/lib/seat.js own focus, loot and sit state; scripts/lockpick.js owns pick state and pins; seats own occupancy.",
-    "scripts/talk.js owns dialogue/shop UI state and writes NPC rapport, gifts, trade and rep effects; scripts/lib/rep.js owns karma and per-group rep calculation/writes; talk-ui.js and stats-ui.js render values.",
-    "scripts/meg-agent.js - NPC routines, attributes/nerve, loadout, combat, fear, cover, idle social coordination and transient movement/path-recovery; companion state.follow/cmd/cstance changes leader, waiting and fire behavior.",
-    "scripts/lib/companion.js - companion setup, recruitment eligibility, perk effects, carried-weight bonus, loyalty and weapon handoff; NPC companion fields live on NPCs, while tick timers live in player.session.comp.",
-    "places/level21/sim.js owns build/people versions and hound manager; scripts/l21-use.js owns prop cooldowns, payouts/quests and survivor talk UI; places/level61/sim.js owns build and local population setup; l61-use/staff own service/tray state."
+    "scripts/talk.js owns dialogue/shop UI state and NPC rapport, gifts, trade and rep effects; scripts/lib/rep.js owns karma and per-group reputation calculation/writes.",
+    "scripts/meg-agent.js - NPC routines, attributes/nerve, loadout, combat, fear, cover, idle social coordination and transient movement/path recovery.",
+    "scripts/lib/companion.js - companion setup, eligibility, perks, carried-weight bonus, loyalty and weapon handoff; NPC state.follow/cperk/loyal/cmd/cstance and player.session.comp hold companion state/timers.",
+    "scripts/lib/feed.js + scripts/stats.js - player.state.feed entries and player.state.disc discoveries; stats session tracks copied notice timestamps and one-shot threshold flags."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js behavior order: locomotion/player, swim, interact/grab/rest/mahjong/talk/build/stats/craft/OS/lockpick/horde, then critter, main-menu and view3.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes player.state.aimPt → player.js crosshair-aligned shots.",
     "world.config.yaml Backspace → scripts/main-menu.js; menu actions and scripts/ui.js render menu/creator; menu hides player and supplies ctx.view.camera backdrop.",
     "Engine out-of-bounds event → sim.js onOutOfBounds: player returns true for normal respawn; creature with state.home is repositioned there, otherwise destroyed for its manager to respawn.",
-    "Level threshold trigger → scripts/level-door.js maps pair IDs, writes arrival state.clipKind and calls companion.bring → nearby followers cross with player unless ordered to wait; scripts/player.js consumes clipKind into state.xfer.kind.",
+    "Level threshold trigger → scripts/level-door.js maps pair IDs, writes arrival state.clipKind and calls companion.bring → nearby non-waiting followers cross with player; scripts/player.js consumes clipKind into state.xfer.kind.",
     "places/level21/sim.js → scripts/lib/level21.js layout, scripts/level21-geo.js geometry and chatter.js exchanges; hounds.js uses maze21path.js for pursuit; l21-use.js handles set pieces and Edge Smilers.",
-    "Level 2.1 and Level 8 sim props carry state.anim → scripts/ambient-anim.js → builtin/tween; ambient.js supplies fan/cable meshes and DRIP/DUST/MIST/RIPPLE FX.",
-    "scripts/player.js NPC kill → scripts/lib/witness.js markKill records witnesses and corpse state → scripts/lib/rep.js repKill writes player karma and witnessed faction standings; unseen kills still affect karma.",
-    "scripts/talk.js gifts/fair trades → scripts/lib/rep.js repKind/repTrade; repDisc and isHated → trader shop prices/refusal; repLine → NPC dialogue prompt; stats-ui.js reads karma/rep for K sheet.",
+    "Level 2.1 sim props carrying state.anim → scripts/ambient-anim.js → builtin/tween; ambient.js supplies fan/cable meshes and ambient FX.",
+    "scripts/player.js NPC kill → scripts/lib/witness.js markKill records witnesses and corpse state → scripts/lib/rep.js repKill writes player karma and witnessed faction standings.",
+    "scripts/talk.js gifts/fair trades → scripts/lib/rep.js repKind/repTrade; repDisc/isHated inform shop prices/refusal; repLine supplies dialogue prompt; stats-ui.js reads karma/rep.",
     "scripts/talk-ui.js exposes Recruit and follower orders → scripts/talk.js dispatches talkdo → scripts/lib/companion.js validates/adopts/orders/transfers weapons; normal dialogue join/leave also adopts/dismisses.",
-    "scripts/meg-agent.js follows state.follow, observes wait/hold commands and supplies follower combat → scripts/lib/stats.js npcMul scales gunhand damage; scripts/stats.js calls companion.tick for medic healing, mule carry bonus, mechanic wear and loyalty.",
-    "Level 2 shutter/stair → places/level2/sim.js paired door → scripts/level-door.js crosses to level21#l21-from-l2; Level 2.1 and Level 8 use paired arrival markers for tunnel/cave routes; Level 6/6.1 doors and service payout flow remain paired."
+    "scripts/meg-agent.js follows state.follow and supplies follower combat → scripts/lib/stats.js npcMul scales damage; scripts/stats.js ticks companion medic/mule/mechanic perks.",
+    "s.notice and status thresholds → scripts/stats.js copies notices and calls scripts/lib/feed.js pushFeed/watch → player.state.feed and player.state.disc; scripts/ui.js renders through feed-ui.js."
   ],
   "behaviorFamilies": [
-    "places/main/cells/* and places/level5/cells/* - authored fixtures, local sound/light state and red-zone variants; Level 5 cells also carry portal and quest props.",
-    "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look scripts - office structure, details and varied props share the office plan; Level 7 has dedicated room/ocean geometry and furnishing variants.",
-    "scripts/l4-office.js + l4-office-geo.js - cubicle islands, phones and printers vary by placement; manager schedules rings, ambience, tasks and rewards; l4-home.js handles claims and home amenities.",
+    "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light state and red-zone variants; Level 5 cells also carry portal and quest props.",
+    "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look scripts - office structure and varied cubicle/prop treatments share the office plan; Level 7 has dedicated room/ocean geometry and furnishing variants.",
+    "scripts/l4-office.js + l4-office-geo.js - cubicle islands, phones and printers vary by placement; manager schedules rings, ambience, tasks and rewards; l4-home.js handles claims and amenities.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - NPC roles, dialogue, looks and routines vary by person; meg-agent.js supplies combat and idle social behavior.",
-    "scripts/lib/craft.js + craft data - recipe category, costs, skill, bench, batch size and item family vary per recipe, including Level 8 cave materials.",
-    "places/level8/sim.js + scripts/l8-life.js + l8-use.js - coordinate-interpolated road stations share systems while hazards, harvests, caches, camp interactions, quests and payouts vary by station.",
+    "scripts/lib/craft.js + craft data - recipe category, costs, skill, bench, batch size and item family vary per recipe.",
     "places/level21/sim.js + level21.yml + level21-geo.js - room blocks share generated hall/room structure; room type, zone height, lighting, decor and loot vary by authored grid data and deterministic hashes.",
-    "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share menu/order/tray service with varying menus and Faceling roles; fountain rotunda and dining terraces use distinct set pieces."
+    "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share service systems with varying menus and Faceling roles; rotunda, dining terraces and Camp Amber use distinct set pieces.",
+    "scripts/lib/critter-model.js + scripts/lib/data/critter-models.yml + scripts/lib/clothes.js - 28 species share body/head/garment construction, varied by species meshes, fur palette, sex, seed and clothing; NPC speciesFor assigns about a third of otherwise-unspecified people from the ten recent species."
   ],
   "probableOrphans": [
     "scripts/lib/kemono.js"
   ],
   "migrationNotes": [
     "Level 2.1 grid is 30×30 at 4 m per cell (120 m square); keep level21.js passability/room zones, maze21path.js traversal, sim geometry/hound routing aligned, and roofAt in place state so ceiling checks survive tick calls.",
-    "Keep paired arrival IDs aligned: Level 2 ↔ Level 2.1 (l2-from-l21/l21-from-l2), Level 2.1 ↔ Level 8 (l21-from-l8/l8-from-l21), and Level 6 ↔ Level 6.1 (l6-from-l61/l61-from-l6); the Level 6 wire trigger also targets l61-from-l6.",
-    "Weapon condition is player.state.cnd_<weapon>; garment condition lives in player.state.look.cnd keyed by garment token, shared across same kind/colour copies; preserve those keys and keep clothes.yml pattern IDs implemented by mat-cloth.js.",
-    "Level 6.1 sim build version is V=43 and lay() replaces l61-prefixed roots; keep service/menu/pickup/tray IDs and positions aligned with scripts/lib/level61-extra.js and use handlers; Liquorette assets use model forward '-z'.",
-    "Companion ownership is NPC state.follow/cperk/loyal/cmd/cstance (with waitAt and gaveArm/armWas); player.session.comp holds perk timers and player.state.carryBonus is updated by companion.tick. Door crossing skips wait-ordered or more-than-16 m followers.",
-    "Karma and faction standing are durable player.state.karma and player.state.rep[group] values, each clamped to -100..100; rep.js derives groups from faction or NPC ID prefix (fallback Survivors), while witnessed kills alter reputation and companions react to evil karma."
+    "Keep paired arrival IDs aligned: Level 2 ↔ Level 2.1 (l2-from-l21/l21-from-l2) and Level 6 ↔ Level 6.1 (l6-from-l61/l61-from-l6); the Level 6 wire trigger also targets l61-from-l6.",
+    "Weapon condition is player.state.cnd_<weapon>; garment condition lives in player.state.look.cnd keyed by garment token and shared across same kind/colour copies; keep clothes.yml pattern IDs implemented by mat-cloth.js.",
+    "Level 6.1 lay() destroys and replaces root IDs prefixed l61-; keep local service/menu/pickup/tray IDs and coordinates aligned with level61-extra.js and use handlers; model forward may be asset-specific.",
+    "Companion fields are NPC state.follow/cperk/loyal/cmd/cstance (plus waitAt and weapon handoff fields); player.session.comp holds perk timers and player.state.carryBonus is companion-derived, distinct from carryExtra.",
+    "Feed entries are player.state.feed [{t, at, k}], capped at six and displayed for 7 seconds; player.state.disc is comma-separated discovered place IDs, and scripts/stats.js owns the notice/status watcher cadence and session flags."
   ]
 }
