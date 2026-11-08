@@ -10,9 +10,10 @@ import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { layCity, layStreet, tickCity } from "../../scripts/lib/level11-city.js";
+import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 15; // bump to rebuild the city in rooms that are already open
+const V = 16; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -54,6 +55,10 @@ function lay(ctx) {
   }
 
   const sp = (id, spec) => ctx.spawn(id, spec);
+  const md = (id, kind, x, y, z, materials, collider = "box", extra = {}) =>
+    sp(id, { feetPosition: { x, y, z }, model: { id: MODELS[kind], forward: "-z", materials }, physics: { body: "static", collider }, ...extra });
+  const WOOD = { ...T("worn-hardwood-grain", 1.5), color: "oklch(0.62 0.05 60)", roughness: 0.9 }, WOOD_OLD = { ...T("worn-hardwood-grain", 1.5), color: "oklch(0.55 0.02 70)", roughness: 0.95 };
+  const RUST = { ...T("rusted-corroded-steel", 1.5), roughness: 0.85 }, STEEL = { ...T("grimy-scratched-steel-plate", 1.5), roughness: 0.55, metalness: 0.7 };
   const bx = (id, x, y, z, w, h, d, material, extra = {}) =>
     sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material, physics: "static", ...extra });
   const cyl = (id, x, y, z, rT, rB, h, material, extra = {}) =>
@@ -216,18 +221,12 @@ function lay(ctx) {
   // Building Shell
   // hollow shell: four walls and a roof, so the office inside is a room you walk into
   { const x0 = RENO_X - RENO_W / 2, x1 = RENO_X + RENO_W / 2, z0 = RENO_Z - RENO_D / 2, z1 = RENO_Z + RENO_D / 2, H = 8.5, t = 0.4;
-    bx("l11-reno-shell", RENO_X, 0, z0 + t / 2, RENO_W, H, t, BRICK_BLDG);
-    bx("l11-reno-wall-n", RENO_X, 0, z1 - t / 2, RENO_W, H, t, BRICK_BLDG);
-    bx("l11-reno-wall-w", x0 + t / 2, 0, RENO_Z, t, H, RENO_D, BRICK_BLDG);
-    bx("l11-reno-roof", RENO_X, H - t, RENO_Z, RENO_W, t, RENO_D, BRICK_BLDG);
-    bx("l11-reno-wall-e-hdr", x1 - t / 2, 4.4, RENO_Z, t, H - 4.4, RENO_D, BRICK_BLDG);
-    bx("l11-reno-wall-e-s", x1 - t / 2, 0, z0 + 0.5, t, 4.4, 1, BRICK_BLDG);
-    bx("l11-reno-wall-e-n", x1 - t / 2, 0, z1 - 0.5, t, 4.4, 1, BRICK_BLDG); }
+    // one hollow two-storey brick building (art/level11/build.py reno_office): storefront east, open door at z -2..0, scaffold and sheeting on its north face
+    md("l11-reno-shell", "reno_office", RENO_X, 0, RENO_Z, { brick: { ...BRICK_BLDG, repeat: [2.4, 2.4] }, metal: STEEL, wood: WOOD, woodOld: WOOD_OLD, concrete: { ...T("smooth-cold-poured-concrete-wall", 1.4), roughness: 0.75 } }, "mesh"); }
   bx("l11-reno-floor", RENO_X, 0.22, RENO_Z, RENO_W - 0.6, 0.1, RENO_D - 0.6, SIDEWALK);
 
   // Large Glass Display Windows Showing the Renovation
-  bx("l11-reno-glass-e", RENO_X + RENO_W / 2 - 0.2, 0.2, 4, 0.1, 4.2, 8, GLASS_TINT);
-  bx("l11-reno-glass-e2", RENO_X + RENO_W / 2 - 0.2, 0.2, -5, 0.1, 4.2, 6, GLASS_TINT); // the 2 m gap at z -2..0 is the door
+  // the storefront glass is part of the reno_office model
 
   // Exposed Cylindrical Concrete Columns
   [[-29, -5], [-21, -5], [-29, 5], [-21, 5]].forEach(([cx, cz], k) => {
@@ -282,9 +281,9 @@ function lay(ctx) {
   const BARRICADE_Z = 12;
 
   // Wood Pallet Barricade across Alleyway
-  bx("l11-barricade-wood1", BARRICADE_X, 0, BARRICADE_Z - 2.5, 1.2, 2.2, 3.8, { ...T("worn-hardwood-grain", 1), color: "oklch(0.48 0.05 55)", roughness: 0.9 });
-  bx("l11-barricade-wood2", BARRICADE_X, 0, BARRICADE_Z + 2.5, 1.2, 2.2, 3.8, { ...T("worn-hardwood-grain", 1), color: "oklch(0.48 0.05 55)", roughness: 0.9 });
-  bx("l11-barricade-corrugated", BARRICADE_X, 0.4, BARRICADE_Z, 0.1, 2.4, 8.5, { ...T("grimy-scratched-steel-plate", 1), color: "oklch(0.5 0.04 40)", metalness: 0.7, roughness: 0.6 });
+  md("l11-barricade-wood1", "barricade_pallets", BARRICADE_X, 0, BARRICADE_Z - 2.5, { wood: WOOD, woodOld: WOOD_OLD });
+  md("l11-barricade-wood2", "barricade_pallets", BARRICADE_X, 0, BARRICADE_Z + 2.5, { wood: WOOD, woodOld: WOOD_OLD }, "box", { rotation: { yaw: 180 } });
+  md("l11-barricade-corrugated", "corrugated", BARRICADE_X, 0, BARRICADE_Z, { corr: { ...STEEL, color: "oklch(0.8 0.01 240)" }, rust: RUST, metal: STEEL });
 
   // Spray-Painted Hazard Warning Signs
   sp("l11-barricade-sign1", {
@@ -333,9 +332,8 @@ function lay(ctx) {
     const AX = 44, Z0 = 19, LEN = 13, W = 4.2;
     const BRICK = { ...T("grimy-red-brick-wall", 2), color: "oklch(0.42 0.07 35)", roughness: 0.92 };
     const GRIME = { ...T("stained-concrete-floor", 3), color: "oklch(0.32 0.012 80)", roughness: 0.95 };
-    bx("l11-spam-wall-w", AX - W / 2 - 0.3, 0, Z0 + LEN / 2, 0.6, 7, LEN, BRICK);
-    bx("l11-spam-wall-e", AX + W / 2 + 0.3, 0, Z0 + LEN / 2, 0.6, 7, LEN, BRICK);
-    bx("l11-spam-wall-back", AX, 0, Z0 + LEN + 0.3, W + 1.2, 7, 0.6, BRICK);
+    // the alley's three brick walls, steel back door, drainpipe and fire-escape stub as one model (art/level11/build.py spam_alley)
+    md("l11-spam-wall-back", "spam_alley", AX, 0, Z0 + LEN / 2, { brick: BRICK, metal: STEEL, rust: RUST, door: { ...STEEL, color: "oklch(0.55 0.03 250)" }, concrete: GRIME }, "mesh");
     bx("l11-spam-floor", AX, 0.04, Z0 + LEN / 2, W, 0.08, LEN, GRIME);
     bx("l11-spam-puddle", AX - 0.6, 0.085, Z0 + 5, 1.6, 0.01, 1.1, { color: "oklch(0.2 0.02 240)", roughness: 0.05, metalness: 0.3 }, { physics: undefined });
     // the dumpster: a green steel bin with a hinged lid; state.up = the player he is fighting (the lid flies open, he stands in it)
@@ -360,7 +358,6 @@ function lay(ctx) {
     for (const [i, x, z, s] of [[0, AX - 1.3, Z0 + LEN - 0.8, 0.7], [1, AX - 0.8, Z0 + LEN - 1.6, 0.55], [2, AX + 1.6, Z0 + LEN - 2.4, 0.5]])
       sp(`l11-spam-bag-${i}`, { feetPosition: { x, y: 0.08, z }, primitive: { kind: "sphere", radius: s / 2 }, scale: { x: 1.15, y: 0.85, z: 1 }, material: { color: "oklch(0.18 0.01 260)", roughness: 0.35 }, physics: "static", castShadow: false });
     bx("l11-spam-box", AX - 1.4, 0.08, Z0 + 6.5, 0.7, 0.35, 0.5, { color: "oklch(0.55 0.07 70)", roughness: 0.95 }, { rotation: { yaw: 23 }, castShadow: false });
-    bx("l11-spam-door", AX + W / 2 + 0.02, 0.08, Z0 + 8, 0.06, 2.2, 1.0, { color: "oklch(0.3 0.03 250)", metalness: 0.6, roughness: 0.55 });
     sp("l11-spam-bulb", { feetPosition: { x: AX + W / 2 - 0.1, y: 2.7, z: Z0 + 8 }, primitive: { kind: "sphere", radius: 0.09 }, material: { color: "#ffe9b0", emissive: "#ffcf70", emissiveIntensity: 3 }, light: { kind: "point", color: "#ffcf8a", intensity: 2.2, distance: 9 }, castShadow: false });
     sp("l11-spam-sign", { feetPosition: { x: AX - W / 2 + 0.02, y: 2.0, z: Z0 + LEN - 1 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.1, height: 0.5, depth: 0.03 }, material: { color: "oklch(0.92 0.02 90)", roughness: 0.8 },
       ui: `<div face="front" width="1.1m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:Arial Black,Arial,sans-serif;color:#1b1b1b;font-size:64px;text-align:center;line-height:1">NO DUMPING<br><span style="font-size:34px;color:#b01818">VIOLATORS WILL BE [[PROSECUTED]]</span></div>` });
@@ -516,11 +513,11 @@ function lay(ctx) {
   const OUTPOST_Z = -14;
 
   // Sandbag Emplacements
-  bx("l11-meg-sandbag1", OUTPOST_X - 6, 0.1, OUTPOST_Z - 3, 0.6, 0.85, 3.5, { ...T("burlap-sack-weave", 1), color: "oklch(0.65 0.06 70)" });
-  bx("l11-meg-sandbag2", OUTPOST_X - 6, 0.1, OUTPOST_Z + 3, 0.6, 0.85, 3.5, { ...T("burlap-sack-weave", 1), color: "oklch(0.65 0.06 70)" });
+  md("l11-meg-sandbag1", "sandbags", OUTPOST_X - 6, 0.1, OUTPOST_Z - 3, { burlap: { ...T("burlap-sack-weave", 2), color: "oklch(0.8 0.05 75)" } }, "box", { rotation: { yaw: 180 } });
+  md("l11-meg-sandbag2", "sandbags", OUTPOST_X - 6, 0.1, OUTPOST_Z + 3, { burlap: { ...T("burlap-sack-weave", 2), color: "oklch(0.8 0.05 75)" } }, "box", { rotation: { yaw: 180 } });
 
   // M.E.G. Command Canopy & Table
-  bx("l11-meg-table", OUTPOST_X, 0.1, OUTPOST_Z, 2.2, 0.85, 1.2, STEEL_BRUSHED);
+  md("l11-meg-table", "meg_table", OUTPOST_X, 0.1, OUTPOST_Z, { metal: STEEL_BRUSHED });
   sp("l11-meg-terminal", {
     tags: ["usable"],
     feetPosition: { x: OUTPOST_X, y: 0.95, z: OUTPOST_Z },
@@ -537,8 +534,8 @@ function lay(ctx) {
   sp("l11-meg-cache", {
     tags: ["usable"],
     feetPosition: { x: OUTPOST_X + 2.5, y: 0.1, z: OUTPOST_Z - 2 },
-    primitive: { kind: "box", width: 0.9, height: 0.55, depth: 0.6 },
-    material: { color: "oklch(0.4 0.08 140)", metalness: 0.7, roughness: 0.4 },
+    model: { id: MODELS.meg_cache, forward: "-z", materials: { metal: STEEL } },
+    physics: { body: "static", collider: "box" },
     behavior: "scripts/level11-use.js",
     state: { kind: "supply-chest", name: "M.E.G. Emergency Rations Crate", verb: "Salvage Supplies" },
   });

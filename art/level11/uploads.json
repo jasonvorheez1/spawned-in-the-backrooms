@@ -14,5 +14,12 @@
  "shelter": "/cdn/value.2bf25da125a47cfbcdbc483ebe10520f5e3341cb90c72f0453abfee555b5a32e.glb",
  "stone": "/cdn/value.59f401d5b707a6b017bd78e4d156a3a7fb3549ecd10bfffc5e113960f32a2456.glb",
  "tree": "/cdn/value.1d09f8aedb459e5048d6875c3c4d0124eacba092db9c29c047e26fef78deb1ae.glb",
- "van": "/cdn/value.7f2a64477622561266e8bad58e6ac75fb976be9e5faa007cdd289ddc9c435c48.glb"
+ "van": "/cdn/value.7f2a64477622561266e8bad58e6ac75fb976be9e5faa007cdd289ddc9c435c48.glb",
+ "barricade_pallets": "/cdn/value.dfba3700d5617527913501bfb8d19a1db554186ba5d7c4f370a3d604373e1dc8.glb",
+ "corrugated": "/cdn/value.dcb9771c131823f2afbf2f8353a673e1ae38181b74ac3f3f20c0217f36d25635.glb",
+ "sandbags": "/cdn/value.f68a23ab26d3358762379fcbfbe897d6f76fec96ca2ec94c804532b63da3f990.glb",
+ "meg_table": "/cdn/value.dd3c190eacb8ea0abb48c136aae6af4b30b1ac33502ed6de0342bd4f1a706b11.glb",
+ "meg_cache": "/cdn/value.425e3801e0e441533b3d2703f643ba3f3a74b0d554f3e5aad6ebe0e1545c745c.glb",
+ "reno_office": "/cdn/value.34efbb6c2fafbf2728459d8bb15389865ef7891c885561254c4a76b7d3a955c0.glb",
+ "spam_alley": "/cdn/value.d3be766fad76b4b0d0dbbce94bb28194fde6587f32a9e36ada6904f2a9e5e574.glb"
 }
