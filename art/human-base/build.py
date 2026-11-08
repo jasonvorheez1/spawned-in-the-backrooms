@@ -30,13 +30,13 @@ def male(head, body):
             if o is body:
                 # flat chest: the bust pushed back into a pec plane
                 w = bump(1.18, 1.26, 1.44, 1.5, z) * (1 - smooth(0.12, 0.17, ax))
-                if y < 0.0: y = y + (0.0 - y) * 0.85 * w
+                if y < 0.01: y = y + (0.01 - y) * 0.95 * w
                 # broader shoulders and upper back; arms ride out, not stretched
-                k = 0.13 * smooth(1.0, 1.36, z) * (1 - smooth(1.5, 1.6, z))
+                k = 0.18 * smooth(0.98, 1.34, z) * (1 - smooth(1.5, 1.6, z))
                 x = x * (1 + k) if ax <= 0.18 else x + sg * 0.18 * k
                 # waist straighter, hips narrower, seat smaller
-                x *= 1 + 0.06 * bump(0.92, 1.0, 1.12, 1.2, z)
-                x *= 1 - 0.09 * bump(0.72, 0.82, 0.95, 1.02, z) * (1 if ax < 0.2 else 0)
+                x *= 1 + 0.12 * bump(0.9, 1.0, 1.12, 1.22, z)
+                x *= 1 - 0.17 * bump(0.6, 0.78, 0.94, 1.02, z) * (1 if ax < 0.22 else 0)
                 if y > 0.12: y = 0.12 + (y - 0.12) * (1 - 0.45 * bump(0.72, 0.8, 0.95, 1.02, z))
                 # thicker neck
                 nk = bump(1.45, 1.5, 1.62, 1.68, z)
@@ -110,7 +110,7 @@ def proof(name, r):
     def shot(tag, pos):
         cam.location = pos; cam.rotation_euler = (Vector((0, 0.08, H)) - Vector(pos)).to_track_quat("-Z", "Y").to_euler()
         sc.render.filepath = f"/tmp/hb/{name}_{tag}.png"; bpy.ops.render.render(write_still=True)
-    shot("front", (0, -4.6, 1.0)); shot("side", (4.6, 0.08, 1.0))
+    shot("front", (0, -3.4, 1.0)); shot("side", (3.4, 0.08, 1.0))
     # stress pose: arm up, elbow and knee bent
     pb = r.pose.bones
     pb["LeftArm"].rotation_mode = pb["LeftForeArm"].rotation_mode = pb["RightUpLeg"].rotation_mode = pb["RightLeg"].rotation_mode = pb["RightArm"].rotation_mode = "XYZ"
@@ -123,7 +123,7 @@ def proof(name, r):
 def build(name, is_male, height):
     head, body = load()
     if is_male: male(head, body)
-    r = rig(head, body, 0.13 if is_male else 0.0)
+    r = rig(head, body, 0.18 if is_male else 0.0)
     s = height / 1.94
     r.scale = (s, s, s); bpy.ops.object.select_all(action="DESELECT")
     for o in (r, head, body): o.select_set(True)
