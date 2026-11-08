@@ -284,19 +284,19 @@ function lay(ctx) {
     },
     state: {
       kind: "jukebox",
-      name: "Retro Wurlitzer 80s Jukebox",
-      verb: "Change 80s Radio Station",
+      name: "Wurlitzer jukebox",
+      verb: "Pick a record",
       playing: true,
       stationIndex: 0,
-      info: "Connected to continuous live 80s Internet Radio (Heart 80s / SomaFM Underground 80s / 0N Classic 80s Rock). Press [E] to tune.",
+      info: "Chrome and bubble tubes. It plays whether or not anyone feeds it.",
       tint: "#ff3888",
     },
     ui: `<div face="front" width="0.75m" style="font-family:Arial,sans-serif;font-weight:900;background:#0d0d18;color:#ffffff;padding:12px;border:2px solid #ff3888;text-align:center;line-height:1.15;box-shadow:inset 0 0 15px rgba(255,255,255,0.2)">
-      <div style="font-size:22px;color:#ff6bb0;letter-spacing:1px;margin-bottom:4px">★ LIVE INTERNET SATELLITE ★</div>
-      <div style="font-size:42px;color:#ffffff;font-weight:900;border-bottom:1px solid #ff3888;padding-bottom:4px;margin-bottom:6px">HEART 80s</div>
-      <div style="font-size:24px;color:#ff6bb0;margin-bottom:6px">80s POP, NEW WAVE &amp; SYNTH</div>
-      <div style="font-size:20px;color:#88ff88;letter-spacing:2px">● LIVE BROADCASTING ●</div>
-      <div style="font-size:18px;color:#ffd700;margin-top:4px">[E: NEXT STATION / OFF]</div>
+      <div style="font-size:22px;color:#ff6bb0;letter-spacing:1px;margin-bottom:4px">★ NOW PLAYING ★</div>
+      <div style="font-size:42px;color:#ffffff;font-weight:900;border-bottom:1px solid #ff3888;padding-bottom:4px;margin-bottom:6px">A1 · SIDE A</div>
+      <div style="font-size:24px;color:#ff6bb0;margin-bottom:6px">POP HITS &amp; NEW WAVE</div>
+      <div style="font-size:20px;color:#88ff88;letter-spacing:2px">● PLAYING ●</div>
+      <div style="font-size:18px;color:#ffd700;margin-top:4px">[E: NEXT RECORD / OFF]</div>
     </div>`,
     children: [
       { feetPosition: { x: 0, y: 1.45, z: 0.5 }, light: { kind: "point", color: "oklch(0.72 0.26 340)", intensity: 4.8, distance: 16 } },
