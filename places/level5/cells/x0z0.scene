@@ -1035,6 +1035,7 @@ l5-elev-corrS:
   tags: [l5-elev]
   visibleRange: {max: 80, min: 0}
 l5-elev-corrS/object/xe5bfa1adb29c7d30/10:
+  castShadow: false
   feetPosition: {x: -0.29, y: 0.02, z: -1.02}
   id: l5-elev-corrS/object/xe5bfa1adb29c7d30/10
   material: {pbr: true}
@@ -1043,6 +1044,7 @@ l5-elev-corrS/object/xe5bfa1adb29c7d30/10:
   primitive: {kind: scripted, params: {part: leaf, side: -1, style: modern}, script: scripts/l5-elevator-geo.js}
   tags: [l5-elev-door]
 l5-elev-corrS/object/xe5bfa1adb29c7d30/11:
+  castShadow: false
   feetPosition: {x: 0.29, y: 0.02, z: -1.02}
   id: l5-elev-corrS/object/xe5bfa1adb29c7d30/11
   material: {pbr: true}
@@ -1052,7 +1054,7 @@ l5-elev-corrS/object/xe5bfa1adb29c7d30/11:
   tags: [l5-elev-door]
 l5-elev-corrS/object/xe5bfa1adb29c7d30/12:
   behavior: scripts/l5-elevator.js
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 0.885, y: 0.92, z: -0.5}
   id: l5-elev-corrS/object/xe5bfa1adb29c7d30/12
   material: {pbr: true}
@@ -1064,7 +1066,7 @@ l5-elev-corrS/object/xe5bfa1adb29c7d30/12:
   ui: "<div face=\"front\" width=\"0.34m\" style=\"width:340px;height:620px;background:#2a1a10;color:#f4c25a;font-family:serif;text-align:center;position:relative\">\n<div hidden=\"{{ state.ready }}\" style=\"position:absolute;left:0;right:0;top:8px;padding-top:220px;font-size:30px;letter-spacing:4px\">GUEST WING SOUTH<br><span style=\"font-size:22px;opacity:.7\">PRESS TO CHOOSE</span></div>\n<div hidden=\"{{ state.shut }}\" style=\"position:absolute;left:0;right:0;top:12px\"><button id=\"f1\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">1</button><button id=\"f2\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">2</button><button id=\"f3\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">3</button><button id=\"f4\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">4</button><button id=\"f5\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">5</button><button id=\"f6\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">6</button><button id=\"f7\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">7</button><button id=\"f8\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">8</button><button id=\"f9\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">9</button><button id=\"f10\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">10</button><button id=\"f11\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">11</button><button id=\"f12\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">12</button><div style=\"height:6px\"></div><button id=\"fB\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">B</button><button id=\"f13\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">13</button><button id=\"f66\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">66</button><button id=\"f382\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17;font-size:20px\">382</button></div>\n<div hidden=\"{{ state.noconfirm }}\" style=\"position:absolute;left:0;right:0;top:8px;padding:150px 20px 0;font-size:30px;line-height:1.3\">The button is warm.<br>Are you sure?<br><button id=\"yes\" style=\"margin-top:30px;width:120px;height:60px;font-size:28px;background:#7a1a12;color:#ffd9b0\">YES</button> <button id=\"no\" style=\"width:120px;height:60px;font-size:28px;background:#333;color:#ddd\">NO</button></div></div>"
   visibleRange: {max: 40, min: 0}
 l5-elev-corrS/object/xe5bfa1adb29c7d30/13:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 0, y: 2.6, z: -1.12}
   id: l5-elev-corrS/object/xe5bfa1adb29c7d30/13
   material: {pbr: true}
@@ -1075,6 +1077,7 @@ l5-elev-corrS/object/xe5bfa1adb29c7d30/13:
   ui: "<div face=\"front\" width=\"0.24m\" emissive style=\"color:#f4c25a;font-family:serif;text-align:center;font-size:90px;line-height:1;text-shadow:0 0 18px #f4c25a\">{{ state.floor }}</div>"
   visibleRange: {max: 40, min: 0}
 l5-elev-corrS/object/xe5bfa1adb29c7d30/14:
+  castShadow: false
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-corrS/object/xe5bfa1adb29c7d30/14
   light: {color: "#ffd9a0", distance: 4.5, intensity: 3, kind: point}
@@ -1091,6 +1094,7 @@ l5-elev-lobby-n:
   tags: [l5-elev]
   visibleRange: {max: 80}
 l5-elev-lobby-n/object/xe5bfa1adb29c7d30/0:
+  castShadow: false
   feetPosition: {x: -0.29, y: 0.02, z: -1}
   id: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/0
   material: {pbr: true}
@@ -1099,6 +1103,7 @@ l5-elev-lobby-n/object/xe5bfa1adb29c7d30/0:
   primitive: {kind: scripted, params: {part: leaf, side: -1, style: copper}, script: scripts/l5-elevator-geo.js}
   tags: [l5-elev-door]
 l5-elev-lobby-n/object/xe5bfa1adb29c7d30/1:
+  castShadow: false
   feetPosition: {x: 0.29, y: 0.02, z: -1}
   id: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/1
   material: {pbr: true}
@@ -1108,7 +1113,7 @@ l5-elev-lobby-n/object/xe5bfa1adb29c7d30/1:
   tags: [l5-elev-door]
 l5-elev-lobby-n/object/xe5bfa1adb29c7d30/2:
   behavior: scripts/l5-elevator.js
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 0.885, y: 0.92, z: -0.5}
   id: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/2
   material: {pbr: true}
@@ -1120,7 +1125,7 @@ l5-elev-lobby-n/object/xe5bfa1adb29c7d30/2:
   ui: "<div face=\"front\" width=\"0.34m\" style=\"width:340px;height:620px;background:#1e120a;color:#ffcf7a;font-family:serif;text-align:center;position:relative\">\n<div hidden=\"{{ state.ready }}\" style=\"position:absolute;left:0;right:0;top:8px;padding-top:220px;font-size:30px;letter-spacing:4px\">LOBBY (COPPER CAGE)<br><span style=\"font-size:22px;opacity:.7\">PRESS TO CHOOSE</span></div>\n<div hidden=\"{{ state.shut }}\" style=\"position:absolute;left:0;right:0;top:12px\"><button id=\"f1\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">1</button><button id=\"f2\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">2</button><button id=\"f3\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">3</button><button id=\"f4\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">4</button><button id=\"f5\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">5</button><button id=\"f6\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">6</button><button id=\"f7\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">7</button><button id=\"f8\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">8</button><button id=\"f9\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">9</button><button id=\"f10\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">10</button><button id=\"f11\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">11</button><button id=\"f12\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">12</button><div style=\"height:6px\"></div><button id=\"fB\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">B</button><button id=\"f13\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">13</button><button id=\"f66\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">66</button><button id=\"f382\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17;font-size:20px\">382</button></div>\n<div hidden=\"{{ state.noconfirm }}\" style=\"position:absolute;left:0;right:0;top:8px;padding:150px 20px 0;font-size:30px;line-height:1.3\">The button is warm.<br>Are you sure?<br><button id=\"yes\" style=\"margin-top:30px;width:120px;height:60px;font-size:28px;background:#7a1a12;color:#ffd9b0\">YES</button> <button id=\"no\" style=\"width:120px;height:60px;font-size:28px;background:#333;color:#ddd\">NO</button></div></div>"
   visibleRange: {max: 40, min: 0}
 l5-elev-lobby-n/object/xe5bfa1adb29c7d30/3:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 0, y: 2.66, z: -1}
   id: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/3
   material: {pbr: true}
@@ -1131,6 +1136,7 @@ l5-elev-lobby-n/object/xe5bfa1adb29c7d30/3:
   ui: "<div face=\"front\" width=\"0.3m\" emissive style=\"color:#ffcf7a;font-family:serif;text-align:center;font-size:110px;line-height:1;text-shadow:0 0 18px #ffcf7a\">{{ state.floor }}</div>"
   visibleRange: {max: 40, min: 0}
 l5-elev-lobby-n/object/xe5bfa1adb29c7d30/4:
+  castShadow: false
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/4
   light: {color: "#ffd9a0", distance: 4.5, intensity: 3, kind: point}
@@ -1147,6 +1153,7 @@ l5-elev-lobby-s:
   tags: [l5-elev]
   visibleRange: {max: 80}
 l5-elev-lobby-s/object/xe5bfa1adb29c7d30/5:
+  castShadow: false
   feetPosition: {x: -0.29, y: 0.02, z: -1.02}
   id: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/5
   material: {pbr: true}
@@ -1155,6 +1162,7 @@ l5-elev-lobby-s/object/xe5bfa1adb29c7d30/5:
   primitive: {kind: scripted, params: {part: leaf, side: -1, style: modern}, script: scripts/l5-elevator-geo.js}
   tags: [l5-elev-door]
 l5-elev-lobby-s/object/xe5bfa1adb29c7d30/6:
+  castShadow: false
   feetPosition: {x: 0.29, y: 0.02, z: -1.02}
   id: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/6
   material: {pbr: true}
@@ -1164,7 +1172,7 @@ l5-elev-lobby-s/object/xe5bfa1adb29c7d30/6:
   tags: [l5-elev-door]
 l5-elev-lobby-s/object/xe5bfa1adb29c7d30/7:
   behavior: scripts/l5-elevator.js
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 0.885, y: 0.92, z: -0.5}
   id: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/7
   material: {pbr: true}
@@ -1176,7 +1184,7 @@ l5-elev-lobby-s/object/xe5bfa1adb29c7d30/7:
   ui: "<div face=\"front\" width=\"0.34m\" style=\"width:340px;height:620px;background:#2a1a10;color:#f4c25a;font-family:serif;text-align:center;position:relative\">\n<div hidden=\"{{ state.ready }}\" style=\"position:absolute;left:0;right:0;top:8px;padding-top:220px;font-size:30px;letter-spacing:4px\">LOBBY<br><span style=\"font-size:22px;opacity:.7\">PRESS TO CHOOSE</span></div>\n<div hidden=\"{{ state.shut }}\" style=\"position:absolute;left:0;right:0;top:12px\"><button id=\"f1\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">1</button><button id=\"f2\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">2</button><button id=\"f3\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">3</button><button id=\"f4\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">4</button><button id=\"f5\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">5</button><button id=\"f6\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">6</button><button id=\"f7\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">7</button><button id=\"f8\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">8</button><button id=\"f9\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">9</button><button id=\"f10\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">10</button><button id=\"f11\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">11</button><button id=\"f12\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">12</button><div style=\"height:6px\"></div><button id=\"fB\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">B</button><button id=\"f13\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">13</button><button id=\"f66\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">66</button><button id=\"f382\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17;font-size:20px\">382</button></div>\n<div hidden=\"{{ state.noconfirm }}\" style=\"position:absolute;left:0;right:0;top:8px;padding:150px 20px 0;font-size:30px;line-height:1.3\">The button is warm.<br>Are you sure?<br><button id=\"yes\" style=\"margin-top:30px;width:120px;height:60px;font-size:28px;background:#7a1a12;color:#ffd9b0\">YES</button> <button id=\"no\" style=\"width:120px;height:60px;font-size:28px;background:#333;color:#ddd\">NO</button></div></div>"
   visibleRange: {max: 40, min: 0}
 l5-elev-lobby-s/object/xe5bfa1adb29c7d30/8:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 0, y: 2.6, z: -1.12}
   id: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/8
   material: {pbr: true}
@@ -1187,6 +1195,7 @@ l5-elev-lobby-s/object/xe5bfa1adb29c7d30/8:
   ui: "<div face=\"front\" width=\"0.24m\" emissive style=\"color:#f4c25a;font-family:serif;text-align:center;font-size:90px;line-height:1;text-shadow:0 0 18px #f4c25a\">{{ state.floor }}</div>"
   visibleRange: {max: 40, min: 0}
 l5-elev-lobby-s/object/xe5bfa1adb29c7d30/9:
+  castShadow: false
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/9
   light: {color: "#ffd9a0", distance: 4.5, intensity: 3, kind: point}
@@ -1203,6 +1212,7 @@ l5-elev-maint:
   tags: [l5-elev]
   visibleRange: {max: 80, min: 0}
 l5-elev-maint/object/xe5bfa1adb29c7d30/20:
+  castShadow: false
   feetPosition: {x: -0.29, y: 0.02, z: -1.02}
   id: l5-elev-maint/object/xe5bfa1adb29c7d30/20
   material: {pbr: true}
@@ -1211,6 +1221,7 @@ l5-elev-maint/object/xe5bfa1adb29c7d30/20:
   primitive: {kind: scripted, params: {part: leaf, side: -1, style: freight}, script: scripts/l5-elevator-geo.js}
   tags: [l5-elev-door]
 l5-elev-maint/object/xe5bfa1adb29c7d30/21:
+  castShadow: false
   feetPosition: {x: 0.29, y: 0.02, z: -1.02}
   id: l5-elev-maint/object/xe5bfa1adb29c7d30/21
   material: {pbr: true}
@@ -1220,6 +1231,7 @@ l5-elev-maint/object/xe5bfa1adb29c7d30/21:
   tags: [l5-elev-door]
 l5-elev-maint/object/xe5bfa1adb29c7d30/22:
   behavior: scripts/l5-elevator.js
+  castShadow: false
   feetPosition: {x: 0.885, y: 0.92, z: -0.5}
   id: l5-elev-maint/object/xe5bfa1adb29c7d30/22
   material: {pbr: true}
@@ -1231,7 +1243,7 @@ l5-elev-maint/object/xe5bfa1adb29c7d30/22:
   ui: "<div face=\"front\" width=\"0.34m\" style=\"width:340px;height:620px;background:#1d1b18;color:#ff9a3c;font-family:serif;text-align:center;position:relative\">\n<div hidden=\"{{ state.ready }}\" style=\"position:absolute;left:0;right:0;top:8px;padding-top:220px;font-size:30px;letter-spacing:4px\">BOILER ROOM (MAINTENANCE)<br><span style=\"font-size:22px;opacity:.7\">PRESS TO CHOOSE</span></div>\n<div hidden=\"{{ state.shut }}\" style=\"position:absolute;left:0;right:0;top:12px\"><button id=\"f1\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">1</button><button id=\"f2\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">2</button><button id=\"f3\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">3</button><button id=\"f4\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">4</button><button id=\"f5\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">5</button><button id=\"f6\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">6</button><button id=\"f7\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">7</button><button id=\"f8\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">8</button><button id=\"f9\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">9</button><button id=\"f10\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">10</button><button id=\"f11\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">11</button><button id=\"f12\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">12</button><div style=\"height:6px\"></div><button id=\"fB\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">B</button><button id=\"f13\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">13</button><button id=\"f66\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">66</button><button id=\"f382\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333;font-size:20px\">382</button></div>\n<div hidden=\"{{ state.noconfirm }}\" style=\"position:absolute;left:0;right:0;top:8px;padding:150px 20px 0;font-size:30px;line-height:1.3\">The button is warm.<br>Are you sure?<br><button id=\"yes\" style=\"margin-top:30px;width:120px;height:60px;font-size:28px;background:#7a1a12;color:#ffd9b0\">YES</button> <button id=\"no\" style=\"width:120px;height:60px;font-size:28px;background:#333;color:#ddd\">NO</button></div></div>"
   visibleRange: {max: 80, min: 0}
 l5-elev-maint/object/xe5bfa1adb29c7d30/23:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 0, y: 2.48, z: -1.08}
   id: l5-elev-maint/object/xe5bfa1adb29c7d30/23
   material: {pbr: true}
@@ -1242,6 +1254,7 @@ l5-elev-maint/object/xe5bfa1adb29c7d30/23:
   ui: "<div face=\"front\" width=\"0.24m\" emissive style=\"color:#ff9a3c;font-family:serif;text-align:center;font-size:90px;line-height:1;text-shadow:0 0 18px #ff9a3c\">{{ state.floor }}</div>"
   visibleRange: {max: 40, min: 0}
 l5-elev-maint/object/xe5bfa1adb29c7d30/24:
+  castShadow: false
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-maint/object/xe5bfa1adb29c7d30/24
   light: {color: "#ffb066", distance: 4.5, intensity: 2.2, kind: point}
@@ -1258,6 +1271,7 @@ l5-elev-salon:
   tags: [l5-elev]
   visibleRange: {max: 80, min: 0}
 l5-elev-salon/object/xe5bfa1adb29c7d30/15:
+  castShadow: false
   feetPosition: {x: -0.29, y: 0.02, z: -1}
   id: l5-elev-salon/object/xe5bfa1adb29c7d30/15
   material: {pbr: true}
@@ -1266,6 +1280,7 @@ l5-elev-salon/object/xe5bfa1adb29c7d30/15:
   primitive: {kind: scripted, params: {part: leaf, side: -1, style: copper}, script: scripts/l5-elevator-geo.js}
   tags: [l5-elev-door]
 l5-elev-salon/object/xe5bfa1adb29c7d30/16:
+  castShadow: false
   feetPosition: {x: 0.29, y: 0.02, z: -1}
   id: l5-elev-salon/object/xe5bfa1adb29c7d30/16
   material: {pbr: true}
@@ -1275,7 +1290,7 @@ l5-elev-salon/object/xe5bfa1adb29c7d30/16:
   tags: [l5-elev-door]
 l5-elev-salon/object/xe5bfa1adb29c7d30/17:
   behavior: scripts/l5-elevator.js
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 0.885, y: 0.92, z: -0.5}
   id: l5-elev-salon/object/xe5bfa1adb29c7d30/17
   material: {pbr: true}
@@ -1287,7 +1302,7 @@ l5-elev-salon/object/xe5bfa1adb29c7d30/17:
   ui: "<div face=\"front\" width=\"0.34m\" style=\"width:340px;height:620px;background:#1e120a;color:#ffcf7a;font-family:serif;text-align:center;position:relative\">\n<div hidden=\"{{ state.ready }}\" style=\"position:absolute;left:0;right:0;top:8px;padding-top:220px;font-size:30px;letter-spacing:4px\">THE SALON<br><span style=\"font-size:22px;opacity:.7\">PRESS TO CHOOSE</span></div>\n<div hidden=\"{{ state.shut }}\" style=\"position:absolute;left:0;right:0;top:12px\"><button id=\"f1\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">1</button><button id=\"f2\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">2</button><button id=\"f3\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">3</button><button id=\"f4\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">4</button><button id=\"f5\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">5</button><button id=\"f6\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">6</button><button id=\"f7\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">7</button><button id=\"f8\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">8</button><button id=\"f9\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">9</button><button id=\"f10\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">10</button><button id=\"f11\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">11</button><button id=\"f12\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">12</button><div style=\"height:6px\"></div><button id=\"fB\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">B</button><button id=\"f13\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">13</button><button id=\"f66\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">66</button><button id=\"f382\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17;font-size:20px\">382</button></div>\n<div hidden=\"{{ state.noconfirm }}\" style=\"position:absolute;left:0;right:0;top:8px;padding:150px 20px 0;font-size:30px;line-height:1.3\">The button is warm.<br>Are you sure?<br><button id=\"yes\" style=\"margin-top:30px;width:120px;height:60px;font-size:28px;background:#7a1a12;color:#ffd9b0\">YES</button> <button id=\"no\" style=\"width:120px;height:60px;font-size:28px;background:#333;color:#ddd\">NO</button></div></div>"
   visibleRange: {max: 40, min: 0}
 l5-elev-salon/object/xe5bfa1adb29c7d30/18:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 0, y: 2.66, z: -1}
   id: l5-elev-salon/object/xe5bfa1adb29c7d30/18
   material: {pbr: true}
@@ -1298,6 +1313,7 @@ l5-elev-salon/object/xe5bfa1adb29c7d30/18:
   ui: "<div face=\"front\" width=\"0.3m\" emissive style=\"color:#ffcf7a;font-family:serif;text-align:center;font-size:110px;line-height:1;text-shadow:0 0 18px #ffcf7a\">{{ state.floor }}</div>"
   visibleRange: {max: 40, min: 0}
 l5-elev-salon/object/xe5bfa1adb29c7d30/19:
+  castShadow: false
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-salon/object/xe5bfa1adb29c7d30/19
   light: {color: "#ffd9a0", distance: 4.5, intensity: 3, kind: point}
