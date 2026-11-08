@@ -1,0 +1,5 @@
+const CLIENT=require('lib/ui-level-realm.js'),STYLE=require('lib/level-style.js');
+export const VIEWER='/cdn/value.714cdcc7615b9083a4d4e9555493bfa9d4cc48361a6ce3e042891f5b12c3fb46.txt';
+const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// Parent workbench owns routing/active identity. Never copy page content into a second save lane.
+export function render(ui){const s=ui.workbench,{pages,...wire}=s;return '<style>'+STYLE.CSS+'</style><section id="wwl-host" data-interactive><div id="wwl-dom"><header class="ll-bar"><button type="button" onclick="sendAction(\'cardAct\',{op:\'backToFolder\'})">‹ Back</button><h2 class="ll-title">Level Design</h2><span role="status">Opening private layout…</span></header></div></section><script id="wwl-data" type="application/json">'+JSON.stringify({...wire,pageCount:pages?.length||0}).replace(/</g,'\\u003c')+'</script><img hidden alt="" src="data:,wwl-level-1" onerror="'+E('new Function("CONFIG",'+JSON.stringify(CLIENT.CODE)+')('+JSON.stringify({viewer:VIEWER})+')')+'">';}

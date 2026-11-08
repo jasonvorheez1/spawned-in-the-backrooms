@@ -1,0 +1,144 @@
+{
+  "menus": {
+    "File": [
+      "Import…",
+      "Export…"
+    ],
+    "Edit": [
+      "Undo",
+      "Redo",
+      "Cut",
+      "Copy",
+      "Paste",
+      "Search…",
+      "Find & Replace…",
+      "Trash…",
+      "Preferences…"
+    ],
+    "Co-op": [
+      "Allow & Deny…"
+    ],
+    "Docs": ["General info", "Story/World building", "Codex", "Sound Studio", "Asset Studio"]
+  },
+  "ownerOnlyMenus": [
+    "File",
+    "Co-op"
+  ],
+  "layout": {
+    "navWidth": 260,
+    "metaWidth": 320,
+    "minPane": 180,
+    "maxPane": 520,
+    "notepad": {
+      "w": 460,
+      "h": 560,
+      "strip": 50,
+      "bar": 46,
+      "foot": 28,
+      "rail": 48,
+      "pad": 16,
+      "railPad": 72,
+      "hazard": 96,
+      "x": 132,
+      "y": 76
+    },
+    "studio": {
+      "rightRail": { "fallback": 50, "gap": 12 },
+      "topLeft": {
+        "w": 330,
+        "h": 64
+      },
+      "menuDock": {
+        "columns": 3,
+        "buttonHeight": 44,
+        "padding": 8,
+        "gap": 4
+      },
+      "bottomRight": {
+        "w": 110,
+        "h": 96
+      }
+    },
+    "paneCenterMin": 240,
+    "paneKeyStep": 10,
+    "paneKeyLarge": 50
+  },
+  "defaultThemeId": "4",
+  "themes": {
+    "4": {
+      "id": "4",
+      "name": "Slate",
+      "builtin": true,
+      "editable": false,
+      "userCreated": false,
+      "mode": "dark",
+      "background": "colour",
+      "blurb": "Cold blue-grey slate, quiet and even — nothing in it competes with the sentence.",
+      "changes": [
+        "app chrome — panels, menubar, footer",
+        "accent, selection ring & focus",
+        "card tile banners & status bands",
+        "page paper & ink — cool bond white",
+        "rulers & guides",
+        "buttons, chips & scrollbars",
+        "search highlight"
+      ],
+      "swatch": [
+        "oklch(0.246 0.012 250)",
+        "oklch(0.78 0.105 235)",
+        "oklch(0.37 0.045 245)",
+        "oklch(0.685 0.015 96)"
+      ]
+    }
+  },
+  "chrome": {
+    "4": {
+      "mode": "dark",
+      "appBg": "oklch(0.21 0.011 250)",
+      "ink": "oklch(0.91 0.011 250)",
+      "inkDim": "oklch(0.69 0.012 250)",
+      "line": "oklch(0.34 0.014 250)",
+      "panel": "oklch(0.246 0.012 250)",
+      "panel2": "oklch(0.268 0.014 250)",
+      "center": "oklch(0.225 0.011 250)",
+      "field": "oklch(0.192 0.009 250)",
+      "hover": "oklch(0.312 0.017 250)",
+      "hoverHi": "oklch(0.352 0.021 250)",
+      "status": "oklch(0.256 0.013 250)",
+      "accent": "oklch(0.78 0.105 235)",
+      "warn": "oklch(0.70 0.160 28)",
+      "ok": "oklch(0.78 0.100 165)",
+      "lift": "oklch(0.99 0.004 250)",
+      "menubar": "oklch(0.282 0.016 250)",
+      "footer": "oklch(0.272 0.015 250)",
+      "select": "oklch(0.37 0.045 245)",
+      "selectInk": "oklch(0.97 0.010 250)",
+      "banner": "oklch(0.345 0.022 250)",
+      "banner2": "oklch(0.295 0.018 250)",
+      "bannerEdge": "oklch(0.41 0.030 248)",
+      "bannerInk": "oklch(0.91 0.025 245)",
+      "chip": "oklch(0.292 0.017 250)",
+      "chipEdge": "oklch(0.39 0.024 250)",
+      "chipInk": "oklch(0.88 0.022 245)",
+      "mark": "oklch(0.60 0.120 235)",
+      "markInk": "oklch(0.98 0.008 250)",
+      "scroll": "oklch(0.41 0.020 250)"
+    }
+  },
+  "paper": {
+    "4": {
+      "surface": "oklch(0.685 0.015 96)",
+      "surfaceHi": "oklch(0.718 0.011 98)",
+      "surfaceLo": "oklch(0.645 0.019 92)",
+      "edge": "oklch(0.57 0.020 92)",
+      "ink": "oklch(0.26 0.016 250)",
+      "inkDim": "oklch(0.44 0.014 250)",
+      "rule": "oklch(0.545 0.020 240)",
+      "ruler": "oklch(0.655 0.014 96)",
+      "rulerInk": "oklch(0.34 0.018 250)",
+      "handle": "oklch(0.52 0.130 250)",
+      "shadow": "oklch(0.16 0.010 250 / 0.45)",
+      "grain": "oklch(0.50 0.030 240 / 0.030)"
+    }
+  }
+}

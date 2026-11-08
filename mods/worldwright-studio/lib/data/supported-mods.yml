@@ -1,0 +1,34 @@
+[
+  {
+    "id": "absolute-cinema",
+    "label": "Cinema",
+    "title": "Absolute Cinema",
+    "role": "Plays staged camera sequences and cinematic cues.",
+    "knownLatest": "1.16.0",
+    "compat": "lib/shoot.js"
+  },
+  {
+    "id": "asset-library",
+    "label": "Assets",
+    "title": "Asset Library",
+    "role": "Resolves shelf references and supplies bodies and sets.",
+    "knownLatest": "1.7.0",
+    "compat": "lib/assetshelf.js"
+  },
+  {
+    "id": "atmosphere-kitchen",
+    "label": "Atmosphere",
+    "title": "Atmosphere Kitchen",
+    "role": "The mood preset picker; free-text atmosphere tags work without it.",
+    "knownLatest": "1.0.0",
+    "compat": "lib/atmokitchen.js"
+  },
+  {
+    "id": "film-kit",
+    "label": "Film",
+    "title": "Film Kit",
+    "role": "Receives the cinematic design output; separate from camera playback.",
+    "knownLatest": "1.0.0",
+    "compat": "lib/shoot.js"
+  }
+]

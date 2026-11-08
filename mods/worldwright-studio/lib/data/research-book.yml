@@ -1,0 +1,20 @@
+{
+  "id": "RESEARCH0BOOK",
+  "name": "Research",
+  "folders": [
+    "Timeline",
+    "Characters",
+    "Items",
+    "Locations",
+    "Factions",
+    "Languages",
+    "History",
+    "Mythology",
+    "Religion",
+    "Flora",
+    "Fauna",
+    "Themes",
+    "Concepts",
+    "External References"
+  ]
+}

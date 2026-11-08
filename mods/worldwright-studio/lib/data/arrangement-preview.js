@@ -1,0 +1,4 @@
+export const PREVIEW={version:14,rate:44100,channels:2,cacheBytes:100663296,batch:128,offlineWindow:8,lead:0.06,headMs:50,feedNotes:128,feedMs:200,beatsPerBar:4,sliceParts:4,packetBytes:12000,packetParts:256,bufferLead:.15,tickMs:50,requestMs:15000};
+export const CURSOR={step:.25,bar:4,tapSlop:6,labelWidth:120,followEdge:.85,followAnchor:.35,followRestMs:1200};
+// Arrangement v1 has no meter field. Explicit score meters use quarter-note beats.
+export function barSeconds(score){const meter=score.meter;const beats=score.beatsPerBar??(meter?.numerator&&meter?.denominator?meter.numerator*4/meter.denominator:PREVIEW.beatsPerBar);if(!Number.isFinite(score.bpm)||score.bpm<30||score.bpm>300||!Number.isFinite(beats)||beats<=0)throw Error('Invalid preview tempo or meter');return beats*60/score.bpm;}

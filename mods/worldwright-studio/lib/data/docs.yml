@@ -1,0 +1,180 @@
+{
+  "topics": [
+    {
+      "id": "general-info",
+      "title": "General info",
+      "body": "Worldwright Studio is a **god-mode authoring desk**. Write stories, organize a world, compose scores and prepare assets. Visitors use the authored outputs—not these editors. Start with a book or studio project, open a card, then choose its editor in **Metadata**.",
+      "sections": [
+        {
+          "id": "early-release",
+          "title": "About Worldwright Studio · early release",
+          "body": "Worldwright Studio is a creator-only writing and worldbuilding workbench for Spawn. Keep your story, game design, sound and asset documents together without turning the player experience into an editor.\n\nOrganize books, nested folders, cards, pages and sections. Follow linked references, search your work, import/export documents, and use guarded saves, Undo/Redo and Trash. Permanent Codex and Research books separate the build plan from lore and prose.\n\nSound Studio organizes soundtrack and SFX projects with native score editing, arrangements, instrument/sample controls, preview and WAV-rendering tools. Recorded piano, violin and cello presets sit alongside synth and custom-instrument workflows.\n\nAsset Studio uses Projects → Types → Files for model, pose/animation, texture/material, path, effect and level-layout documents. Linked files keep related components together. Editing depth and export support vary by tool: this is not a complete Blender replacement.\n\nCompile and Shoot connect written scene directions to staged output. Optional integrations include Absolute Cinema, Film Kit, Asset Library and Atmosphere Kitchen, installed separately. None is required to open the core studio; partner-specific functions explain what is missing.\n\nEARLY RELEASE — SUBJECT TO CHANGE. Expect bugs, unfinished editors and evolving formats and workflows. The broader camera-scene editor remains unfinished; audio/file delivery and touch behavior need wider device testing. Keep independent exports of important work.\n\nStarts empty, with built-in book/folder structure and reusable instrument presets—not the development world's books, songs, scenes or saves. Open WW Studio in god mode; players only consume authored outputs. Install name: worldwright-studio. Replaces Codex Builder; do not run both in the same world."
+        },
+        {
+          "id": "desk",
+          "title": "Desk, navigation & access",
+          "body": "**Codex, Research, Sound Studio and Asset Studio** are permanent books. Your other books remain ordinary manuscripts. Studios use **Projects → Types → Files**. Files are ordinary cards with numbered pages. Sound Studio also has a shared **Custom Instruments** folder, not a project.\n\nResize the shelf and metadata dividers, use the draggable notepad, and adjust appearance, paper and tags in **Preferences**. Editors take keyboard control; text fields keep normal typing. **Back** returns to the containing folder. **Co-op → Allow & Deny** controls shelf access; another author begins read-only, and the verified owner cannot be denied."
+        },
+        {
+          "id": "saving",
+          "title": "Save, history & recovery",
+          "body": "**Save** commits a draft; Preview, Apply, a copied tag and Export are not substitutes. Save/Discard/Cancel protects unsaved editor changes when leaving. Read-only shelves and another author’s pen can refuse a write; keep the draft and read the reason.\n\n**Undo/Redo** handles supported changes; local editor history belongs to its current draft. **Trash** restores deleted items until permanently removed. Recovery checks are separate from Trash. Avoid reloading while an unsaved draft is your only copy."
+        },
+        {
+          "id": "transfer",
+          "title": "Search, import & export",
+          "body": "Search the shelf or a scoped book; **Find & Replace** covers supported names, summaries, sections and pages.\n\n**File → Import** previews document exports, Cards JSON/ZIP, Markdown or CSV before applying. Choose **This Book** or **All books**, then **Markdown** or **Cards (.json)**. **Compile Y/N** controls inclusion in exports; excluded material stays readable. Export before a major rewrite. A document export is not a full database snapshot or a backup of external assets."
+        },
+        {
+          "id": "compatibility",
+          "title": "Mod compatibility",
+          "body": "Core writing, references, paper, private editors and local score tools need **no partner mod**. Integrations are soft links:\n\n- **Absolute Cinema:** optional staged camera-sequence and cinematic-cue playback.\n- **Asset Library:** optional asset selection, shelf references, bodies and sets. Worldwright reads the shelf; it does not maintain a second copy.\n- **Atmosphere Kitchen:** optional mood-preset picker; free-text atmosphere works without it.\n- **Film Kit:** filmmaking guidance and design hand-offs, not a camera playback runtime.\n\nMissing partners keep source references intact and report the unavailable operation. Installed status is not proof of every workflow. The status below compares the installed registry with **known release versions**, not a live catalog. Refresh after changes; ask Savi to install/update/remove a mod."
+        }
+      ]
+    },
+    {
+      "id": "story-world-building",
+      "title": "Story/World building",
+      "body": "Use manuscript books for scenes and chapters; **Research** holds reusable prose about the world. Keep one character, place or idea on its own card and reference it wherever needed. Scores belong in Sound Studio; models, textures and paths belong in Asset Studio.",
+      "sections": [
+        {
+          "id": "organization",
+          "title": "Books, cards, sections & stacks",
+          "body": "Organize nested folders for arcs, chapters or subjects. Cards carry a name, summary, status, tags, image and numbered pages; sections hold short beats or structured directions. Reorder/move cards with folders and breadcrumbs.\n\nStacks hold alternate takes. The visible **top** take and the reference **primary** are different: cycling changes the top; promoting changes which take references follow. For a finished chapter, preserve source scene cards and exclude their folder from export instead of deleting the research."
+        },
+        {
+          "id": "paper",
+          "title": "Prose & physical pages",
+          "body": "Open a card, choose **Prose / source** in Metadata, and edit its page body, header or footer. Leaving an edit zone renders Markdown and reference tags; **Save** commits it. Page controls turn or add numbered pages.\n\nPaper settings govern physical size, margins and text fit. Format changes preflight/reflow content; overflow belongs on another page, not in hidden text. **Piano Paper** changes notation sheets, not a song’s continuous timeline. Metadata also controls the card’s editor; changing it does not convert or erase its source."
+        },
+        {
+          "id": "references",
+          "title": "References, counters & text tags",
+          "body": "**`#[card-id]`** follows a card’s current name and creates backlinks. A unique name works too; ambiguous or missing references are not guessed. Trash/deleted warnings tell you why a link cannot resolve. Tags do not nest; `#[]` stays literal.\n\n- `#[count: scene; start: 10; step: 5; pad: 3]` numbers a keyed run.\n- `#[total: scene]` counts matching appearances on the page; padding is optional.\n- `#[datetime: YYYY-MM-DD HH:mm:ss]` formats time; an unfixed value refreshes and carries an asterisk.\n- `case: upper`, `lower` or `title` changes tag casing.\n- **Preferences → Tags** defines text substitutions: `#[HOUSE]`, or `#[HOUSE: Varn]` to fill `$1`. Built-in names and card-shaped IDs are reserved.\n\n`#[asset: id]`, `#[shot: id]` and `#[atmo: mood]` reference media or mood; a reference chip does not itself place or play anything."
+        },
+        {
+          "id": "compile",
+          "title": "Compile, staging & cameras",
+          "body": "A folder’s cinematic/level **designation** selects its Compile lane. Inspect the plan, warnings and affected objects before applying it; use the lane’s offered landing/forget controls. This is separate from **Compile Y/N** export inclusion. **Shoot** stages written bodies/sets and timed directions; **Render WAV** makes audio.\n\nA subject card’s **Body** supplies its model, primitive or light. In the scene’s **Set** section (also Stage, Blocking, Shoot or Scene Set), list one reference per line:\n\n```\n#[card-id] at 0, 0, 0 facing 180 scale 1\n```\n\n`hidden` excludes an entry. Without placement values: origin, facing 0°, scale 1. Unreferenced lines remain notes.\n\n```\n#[cam: low wide on card-id from left · 4s · blend 1.5 · easeInOut]\n```\n\nFraming spans extreme close, close, medium close, medium, full, wide and establishing; views include front, three quarter, left/right, behind and over the shoulder; heights include low/high/bird/dutch. Use `at x,y,z look at x,y,z` for an explicit camera. **cut**, **blend**, duration, end and linear/easeIn/easeOut/easeInOut control timing. Separate clauses with `·`, `|`, `;` or `--`. Subjects must be staged. Camera cues also support fades, shake, flash, letterbox, vignette, turbulence, titles, toasts and sound. Timed actions, navigation, dialogue and mood share the scene schedule. The broader **Camera scene editor is still queued**, not replaced by Shoot."
+        },
+        {
+          "id": "sound-cues",
+          "title": "Scene sound & two clocks",
+          "body": "```\n#[sound: /cdn/your-audio.wav speaker screen on 2 at 125ms from 0.75 to 2.125 gain 0.6]\n```\n\n**at/until** use the scene or shot clock; **from/to** trim inside the source (`start/end` are aliases). Earliest stop wins. **on**, **stop on**, pitch and gain control cues. An omitted speaker uses the cue card’s staged body; `speaker card-id` follows another body, `speaker screen` is non-spatial, and `position x,y,z range 30` fixes a source in space. Missing/ambiguous bodies warn and stay silent; prose is not automatically voiced.\n\nNative roll slices can loop; trimmed-file loops are unsupported and warn. Sound stops with its set/shoot. See Sound Studio for native scores and ordinary card links; General info covers optional playback partners."
+        }
+      ]
+    },
+    {
+      "id": "codex",
+      "title": "Codex",
+      "body": "The permanent **Codex** is the read-only plan for this world: what it is, what must hold, and what gets built next. Read it in the app; ask Savi to revise the plan when a decision changes. It is not your manuscript, asset shelf or a second project database.",
+      "sections": [
+        {
+          "id": "map",
+          "title": "Where each part belongs",
+          "body": "- **Overview:** identity, goals and the central loop.\n- **Features:** mechanics, tools and acceptance conditions.\n- **Level Design:** places, routes and spatial requirements.\n- **UI:** screens, controls and feedback.\n- **SFX / VFX:** sound and visual-effect requirements.\n- **Invariants:** boundaries that must never be broken.\n- **Build Order:** dependencies and implementation sequence.\n- **Phases:** the current stage and what unlocks the next.\n- **Notes:** unresolved questions and supporting decisions."
+        },
+        {
+          "id": "reading",
+          "title": "Read, reference & coordinate",
+          "body": "Browse Codex folders/cards/pages and follow references or search for a feature. Use card references from working documents rather than copying the plan into every scene. Summaries, sections and pages keep the plan navigable; its read-only lock applies even when other books are writable.\n\nKeep reusable lore and external references in **Research**, drafts in manuscript books, scores in **Sound Studio**, and editable assets in **Asset Studio**. Codex coordinates their intent without moving or duplicating their content."
+        },
+        {
+          "id": "status",
+          "title": "Plans are not implementation",
+          "body": "A Codex requirement, marked phase or installed mod does **not** prove a feature works. Check the actual tool’s feedback, Compile plan and recorded verification before treating a hand-off as complete. Existing content and source references remain authoritative.\n\nAsk Savi to record changed decisions, dependencies, open questions and proof of completion. Runtime/editor changes are separate from revising the plan; publishing is a separate explicit action. See General info for compatibility and Story/World building for Compile/Shoot."
+        }
+      ]
+    },
+    {
+      "id": "sound-studio",
+      "title": "Sound Studio",
+      "body": "Sound Studio opens **Projects → Types → Files**. Each project contains **Music** and **SFX**: choose **Create/edit soundtrack** or **Create/edit SFX**, then open a file. **Custom Instruments** is a shared library at the root, not a project. Files remain ordinary cards; their scores live in numbered pages. The DAW contains Arrangement, Notes and Instruments views.",
+      "sections": [
+        {
+          "id": "arrangement",
+          "title": "Projects & arrangement",
+          "body": "Open a project, choose Music or SFX, then **Arrangement**. Choose a saved note source; **+ Clip** references that score card. **+ Soundtrack / + SFX** creates a score in that type folder. Move clips between eight tracks; adjust start, length and gain, duplicate/remove, or Undo/Redo. Tempo is shared; track **M/S** mutes/solos. Play/Stop is private preview. **Notes / Instruments** opens the referenced card.\n\nSave stores a separate, numbered-page arrangement—not copies of its source notes. Missing sources warn; event-triggered notes cannot be placed on a deterministic preview clock. **Integration status:** arrangement Save/reopen, playback and tablet acceptance checks are still in progress. Automation, recording, meters and effects routing remain future DAW work."
+        },
+        {
+          "id": "notes",
+          "title": "Notes, navigation & score notation",
+          "body": "**Draw notes:** add notes, drag to move and pull the right edge to resize. **Scroll / pan:** navigate without drawing. Tracks, Snap, Zoom, Octave, velocity, fades, pauses and trigger events shape notes; the ruler sets the preview cursor. Local Undo/Redo protects edits.\n\nThe continuous roll loads neighboring numbered pages; the header count is the active page’s. Page controls and **Arrangement/Back** navigate; Metadata changes editors. Notes, chords and independent holds live in native score pages; each voice has a named Instrument metadata section. Pauses advance a track without cutting held notes. Metadata chooses the document editor; Prose/source shows the stored data."
+        },
+        {
+          "id": "instruments",
+          "title": "Piano, synth & sampled instruments",
+          "body": "Choose recorded **piano**, **bell**, **synth** or **clip** per track. **Edit synth** offers waveform, ADSR, filter/cutoff/resonance, detune, gain and pan, plus audition, patch import/export and Undo.\n\nThe **Audio editor** trims a browser-decodable recording for reuse: waveform selection, source trim, gain, envelope/loop and pitch/root-note controls. **SFX / original pitch** preserves a voice or drum; **Pitched sample** transposes from its recorded MIDI note (C4=60, A4=69). Choose audio through the shared picker, a reference or supported upload. Save reusable sample-instrument cards in the shared **Custom Instruments** folder.\n\n**Apply to track** changes the draft; **Save** commits it across the score’s numbered pages. Trimming reuses the source; it is not automatic stem separation. A recorded chord remains one transposed recording. Invalid/unsupported audio reports an error rather than switching instruments."
+        },
+        {
+          "id": "save-play",
+          "title": "Save, preview & scene cues",
+          "body": "Save writes native score pages and named Instrument metadata sections. Tempo, Fade and Trigger are saved in the score. Preview plays privately from the cursor without saving. Cue provides a test event and **Copy card link**.\n\nUse an ordinary `#[card-id]` link to reuse a saved score. For scene timing or overrides use `#[sound: card-id speaker screen at 1 gain 0.8]`. The link uses the saved document, not an unsaved draft."
+        },
+        {
+          "id": "render",
+          "title": "Render WAV & file controls",
+          "body": "**Save → Render WAV** mixes every saved numbered page, including patched synth and clip tracks. Output is WAV. The file reference belongs to that score card; source pages stay editable. **Play file** uses the recording, **Download WAV** keeps a device copy, and **Copy sound tag** reuses an uploaded result. Changes require a new render.\n\nA disabled Play file means no usable result is ready: check Save, render/upload progress and errors. A completed local WAV may still be downloadable after an upload failure; a reusable tag needs the uploaded reference. Cancel stops rendering. Per-note event triggers must be replaced with fixed timing before rendering; the whole score may still have a scene trigger. Live file-control acceptance remains under verification."
+        }
+      ]
+    },
+    {
+      "id": "asset-studio",
+      "title": "Asset Studio",
+      "body": "Asset Studio opens **Projects → Types → Files**. New projects contain Models, Poses, Object Sets, Textures, Materials, Paths, Effects and Levels. Open a file in its type folder; its document lives in **pages**, while **Metadata** chooses the editor. The viewport stays private and does not place anything in the world. Tag-linked model/texture/material file navigation is being integrated; it is not yet a completed workflow.",
+      "sections": [
+        {
+          "id": "sources",
+          "title": "Choose sources, inspect & save",
+          "body": "**Choose asset** offers the appropriate category from the optional Asset Library, project/game sources or a direct reference/upload. The source picker preserves the original reference; loading is not saving. Ungenerated model entries ask before requesting generation, show progress and verify the mesh/required joints before replacing the view.\n\nSelect a hierarchy part or joint, frame it, and use world/local transforms, numeric values and snapping. Save stores the authored document in ordinary pages. **Source** returns to those pages; **Back** returns to the folder. Undo/Redo and the shared leave guard protect drafts. Export explicitly creates a derived GLB/PNG/path or level-plan output; it does not replace the original asset."
+        },
+        {
+          "id": "pose",
+          "title": "Pose / animation",
+          "body": "Load a rigged model, select clickable joints or hierarchy nodes, and use position arrows, rotation rings, scale or numeric controls. Show/hide joints, reset selection and frame the model. Scrub time, set duration, **Key pose**, delete a key, and Play/Stop to inspect motion. Save the document or explicitly export. This is the private editor, not an in-world posing tool."
+        },
+        {
+          "id": "model",
+          "title": "Model, detail & materials",
+          "body": "Select a rigid mesh to **Add, Cut, Inflate, Smooth or Flatten** local detail. Choose sphere/box shape, radius, strength, Draft/Fine quality and new-surface color; arm the brush and stamp the selected part. Cancel pending work, protect/unprotect parts, compare **Original/Edited**, and Undo/Redo deterministic edits. Save keeps the original model reference plus its edit recipe; explicit GLB export builds the edited result.\n\nThe local SDF detail tool is not a voxel-terrain editor. Unsupported skinned/morph/instanced parts, unsafe folds, open/problematic geometry or over-budget operations are refused. Protected/untouched parts stay original. New surfaces use an explicit material fallback; seamless UV/skin transfer is not promised.\n\nTransform components, add supported shapes, and edit selected-mesh color, roughness, metalness, visibility and texture. Choose a library texture or apply your painted texture. Textured detail/export has isolated proof; live creator-device acceptance is still pending."
+        },
+        {
+          "id": "sets",
+          "title": "Object sets",
+          "body": "Compose supported components and model parts in the private viewport with hierarchy selection, transforms, snapping, visibility and materials. Frame one part or the whole assembly. Save the set document or export its supported assembled GLB. Nothing is placed in the live scene by editing; use the separate authoring/staging hand-off when you intend to place it."
+        },
+        {
+          "id": "levels",
+          "title": "Level Design",
+          "body": "Choose **Level Design** in a blank asset card’s Metadata. Build a private layout with **Room +**, blocks/floors, ramps, referenced models, point lights, spawn markers and zones. The room template has an open roof and a real doorway. Select in the viewport or hierarchy; move/rotate/scale, edit local metre/degree values, choose world/local gizmos and grid snapping, group/reparent, duplicate/delete subtrees, lock or hide objects. Inspect collision flags, colors and light intensity/range. **Frame / All** fit the selection or layout.\n\n**Save** stores the complete layout in ordinary guarded Asset Studio pages; original model references and page headers/footers stay intact. Undo/Redo and the shared Back/unsaved-draft guard apply. **Export JSON** downloads a grouped layout plan without placing anything. Models retain their original materials; named/image-derived models need explicit preview/generation permission and may remain placeholders while unavailable.\n\nUp to **256 objects** per card, including group members; grid 0.1–10 m. Spawn and zone markers describe intent, not working game logic. This editor does not yet sculpt terrain, paint vegetation, simulate a level, or deploy it into a live place. It is separate from Object set, Compile and the queued Camera scene editor. See **? Keys** for this editor’s exact shortcuts; the legacy pose/path shortcuts below are not all level tools."
+        },
+        {
+          "id": "texture",
+          "title": "2D / texture",
+          "body": "Paint/import a **512 × 512 RGBA** texture. Choose color and brush size, erase, fill and undo strokes. Imports fit without stretching. Transparent PNG export retains alpha; applying a painted texture and saving a material/model are separate operations. This is the current texture workspace, not a full layered image editor."
+        },
+        {
+          "id": "paths",
+          "title": "3D paths, effects & cameras",
+          "body": "Draw a path, append/insert/delete waypoints and edit their XYZ positions; rotate/scale **Whole path**. Scrub/play a timed trace to inspect 3D movement. Use a context model when helpful; save/export the path without spawning it.\n\n**Paths** and **Effects** remain organizational folders. Effects authoring and the broader **Camera scene editor** are queued; a folder or installed cinematic mod is not a finished editor. Written Shoot cues remain available separately."
+        },
+        {
+          "id": "keys",
+          "title": "Keyboard & touch",
+          "body": "Use the visible tools on touch; **? Keys** lists mode-specific shortcuts.\n\n- **G/R/S:** move/rotate/scale; **X/Y/Z:** constrain (repeat for local/world); Shift+axis excludes an axis for move/scale. Type a value; Shift is precision, Ctrl snaps.\n- **Enter/click:** confirm; **Esc/right-click:** cancel. Cancel a transform before Escape releases character controls.\n- **F / Home:** frame selection/all; **I:** key pose; **Space:** play/pause. **Ctrl/Cmd+S:** Save; **Ctrl/Cmd+Z / Shift+Z:** Undo/Redo.\n- Paths: **D** draw, **E** append, **Insert** midpoint, **Delete** remove. Texture: **B/E** brush/eraser, **[ / ]** brush size. Text fields retain ordinary typing."
+        }
+      ]
+    }
+  ],
+  "legacyTopics": {
+    "about": "general-info",
+    "readme": "general-info",
+    "supported-mods": "general-info",
+    "writing-paper": "story-world-building",
+    "references-tags": "story-world-building",
+    "scenes-compile": "story-world-building",
+    "piano-roll": "sound-studio",
+    "custom-instruments": "sound-studio",
+    "render-wav": "sound-studio"
+  }
+}

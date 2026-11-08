@@ -1,0 +1,17 @@
+{
+  "id": "CODEX0000BOOK",
+  "name": "Codex",
+  "locked": true,
+  "folders": [
+    "Overview",
+    "Features",
+    "Level Design",
+    "UI",
+    "SFX",
+    "VFX",
+    "Invariants",
+    "Build Order",
+    "Phases",
+    "Notes"
+  ]
+}

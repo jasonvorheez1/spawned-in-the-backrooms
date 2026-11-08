@@ -1,0 +1,32 @@
+version: 1
+maxNodes: 256
+maxKeys: 256
+maxSeconds: 120
+maxPages: 128
+maxBytes: 600000
+maxModelBytes: 30000000
+maxHistory: 30
+canvasSize: 512
+shelfPageSize: 24
+shelfQueryLength: 120
+shelfSearchDelayMs: 200
+shelfGroups:
+  pose: { label: Rigged models, kinds: [animation] }
+  model: { label: Models & rigged models, kinds: [model, animation] }
+  set: { label: Object-set sources, kinds: [model, animation, set] }
+  texture: { label: Textures & images, kinds: [image] }
+  material: { label: Textures & images, kinds: [image] }
+  path: { label: Path context models, kinds: [model, animation] }
+  level: { label: Level models & props, kinds: [model, animation] }
+  sound: { label: Audio sources, kinds: [sound] }
+  source: { label: Asset references, kinds: [model, animation, image, sound, effect, set, motion, path] }
+shelfReplyTimeoutMs: 15000
+shelfDismissGuardMs: 450
+arrival:
+  intervalMs: 15000
+  requestTimeoutMs: 20000
+  loadTimeoutMs: 60000
+  maxWatchMs: 600000
+  maxFailures: 4
+  jsonBytes: 1048576
+  modelBytes: 30000000

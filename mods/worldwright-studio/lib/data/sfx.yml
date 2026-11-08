@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "note": "Doc 15 AudioSystem — the palette. One row per interaction. A later hand retunes a sound by editing gain/pitchVary/ref here; nothing in scripts/lib/sfx.js needs touching. gain is the sound's own level BEFORE this user's master and per-category volumes multiply it. Nothing sits at 1: this is a writing desk, not a game. minGapMs is the anti-machine-gun floor for events that can fire in a burst. PRESSES ONLY (creator's ruling, 2026-08-26): every non-press row struck — cards, pages, coop, system, window slides, the refusal knock. Call sites stay wired; an unknown event is a silent no-op, so a struck sound returning is one JSON row away.",
+  "categories": ["ui"],
+  "buses": { "ui": "UI" },
+  "events": {
+    "ui.menuOpen": {
+      "ref": "cdn/sfx-brass-drawer-pull-click-open-short-dry.mp3",
+      "category": "ui",
+      "gain": 0.2,
+      "pitchVary": 0.03,
+      "what": "a menu title opens its list"
+    },
+    "ui.menuItem": {
+      "ref": "cdn/sfx-fingertip-tap-on-wood-desk-single-short-dry.mp3",
+      "category": "ui",
+      "gain": 0.16,
+      "pitchVary": 0.05,
+      "minGapMs": 40,
+      "what": "an item inside an open menu is picked"
+    },
+    "ui.buttonPress": {
+      "ref": "cdn/sfx-fingertip-tap-on-wood-desk-single-short-dry.mp3",
+      "category": "ui",
+      "gain": 0.16,
+      "pitchVary": 0.05,
+      "minGapMs": 40,
+      "what": "any chrome button that is not covered by a louder event"
+    },
+    "ui.toggleOn": {
+      "ref": "cdn/sfx-brass-latch-clicks-closed-single-short-dry.mp3",
+      "category": "ui",
+      "gain": 0.18,
+      "pitchVary": 0.02,
+      "what": "a switch/segmented control lands ON"
+    },
+    "ui.toggleOff": {
+      "ref": "cdn/sfx-brass-latch-clicks-open-single-short-dry.mp3",
+      "category": "ui",
+      "gain": 0.18,
+      "pitchVary": 0.02,
+      "what": "the same control lands OFF"
+    }
+  }
+}

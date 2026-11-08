@@ -1,0 +1,11 @@
+// The edit recipe is shared by private audition, live score transport and offline rendering.
+const CACHE='__wwsEditedInstrumentBuffers2';
+export const PROCESS={cacheBytes:67108864};
+export function region(ctx,source,s,end){
+  if(!s.reverse&&(!s.channel||s.channel==='stereo'))return {buffer:source,start:s.start,end};
+  const key=JSON.stringify([s.start,end,s.reverse,s.channel]),cache=ctx[CACHE]||(ctx[CACHE]={sources:new WeakMap(),queue:[],bytes:0});let entries=cache.sources.get(source);if(!entries){entries=new Map();cache.sources.set(source,entries);}if(entries.has(key))return entries.get(key);
+  const a=Math.floor(s.start*source.sampleRate),length=Math.max(1,Math.floor((end-s.start)*source.sampleRate)),channels=s.channel&&s.channel!=='stereo'?1:source.numberOfChannels,bytes=channels*length*4;if(bytes>PROCESS.cacheBytes)throw Error('Choose a shorter selection for reverse/channel processing (64 MB limit)');while(cache.bytes+bytes>PROCESS.cacheBytes&&cache.queue.length){const old=cache.queue.shift();old.entries.delete(old.key);cache.bytes-=old.bytes;}const b=ctx.createBuffer(channels,length,source.sampleRate),inputs=Array.from({length:source.numberOfChannels},(_,i)=>source.getChannelData(i));
+  for(let c=0;c<channels;c++){const out=b.getChannelData(c),mono=s.channel==='mono',input=inputs[s.channel==='right'?Math.min(1,source.numberOfChannels-1):s.channel==='left'||mono?0:c];for(let i=0;i<length;i++){const j=a+(s.reverse?length-1-i:i);let value=input[j]||0;if(mono&&source.numberOfChannels>1){value=0;for(let k=0;k<source.numberOfChannels;k++)value+=inputs[k][j]||0;value/=source.numberOfChannels;}out[i]=value;}}
+  const result={buffer:b,start:0,end:length/source.sampleRate};entries.set(key,result);cache.queue.push({entries,key,bytes});cache.bytes+=bytes;return result;
+}
+export function connect(ctx,input,out,s,start){let tail=input;const nodes=[];for(const [key,type]of [['highpass','highpass'],['lowpass','lowpass']])if(s[key]!=null&&(key==='highpass'?s[key]>0:s[key]<24000)){const f=ctx.createBiquadFilter();f.type=type;f.frequency.setValueAtTime(Math.min(s[key],ctx.sampleRate*.49),start);f.Q.setValueAtTime(.707,start);tail.connect(f);tail=f;nodes.push(f);}if(s.pan){const p=ctx.createStereoPanner();p.pan.setValueAtTime(s.pan,start);tail.connect(p);tail=p;nodes.push(p);}tail.connect(out);return nodes;}

@@ -1,0 +1,34 @@
+{
+  "user": {
+    "cardGrid": "medium",
+    "pageView": "grid",
+    "scrollBehavior": "smooth",
+    "fontScale": 1,
+    "paperZoom": 1,
+    "sortMode": null,
+    "searchPrefs": {
+      "scope": "all",
+      "matchCase": false,
+      "wholeWord": false
+    },
+    "audioMaster": 1,
+    "audioCategories": {},
+    "depthLabels": [
+      "Arc",
+      "Chapter",
+      "Scene",
+      "Folder"
+    ],
+    "exportIncludeDefault": true,
+    "themeId": 0,
+    "themeAdjustments": {},
+    "tutorialSeen": false
+  },
+  "room": {},
+  "book": {
+    "exportInclude": null,
+    "depthLabels": null,
+    "pageSpec": null
+  },
+  "limits": {}
+}

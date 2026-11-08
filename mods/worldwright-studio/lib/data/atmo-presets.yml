@@ -1,0 +1,197 @@
+{
+  "source": "Atmosphere Kitchen 1.0.0 | the mod's own guide skill (atmosphere-kitchen#atmosphere-kitchen), transcribed once: mood prose AND the twelve presets' AtmosphereDef values. blendSeconds is how long the shoot lane tweens the numeric leaves when a page's #[atmo:] token lands on the director's clock; the rest of a preset cuts.",
+  "presets": [
+    {
+      "id": "sunny-day",
+      "name": "Sunny Day",
+      "mood": "a blue gradient sky, warm sunlight from a high sun, drifting clouds and fog kept far back",
+      "blendSeconds": 2,
+      "atmosphere": {
+        "sky": { "kind": "gradient", "horizon": "oklch(0.92 0.03 230)", "zenith": "oklch(0.62 0.15 245)" },
+        "sun": { "rotation": { "pitch": 55, "yaw": 200 }, "light": { "color": "oklch(0.98 0.02 85)", "intensity": 2.2 } },
+        "ambient": { "light": { "color": "oklch(0.84 0.04 230)", "intensity": 0.55 } },
+        "hemisphere": { "skyColor": "oklch(0.89 0.04 225)", "groundColor": "oklch(0.5 0.08 125)", "intensity": 0.6 },
+        "fog": { "kind": "linear", "color": "oklch(0.92 0.02 230)", "near": 200, "far": 600 },
+        "clouds": { "enabled": true, "density": 0.4, "opacity": 0.7, "speed": 0.5 },
+        "stars": { "enabled": false }
+      }
+    },
+    {
+      "id": "golden-hour",
+      "name": "Golden Hour / Sunset",
+      "mood": "the sun at the horizon, gold light, long shadows, cloud lit orange",
+      "blendSeconds": 2,
+      "atmosphere": {
+        "sky": { "kind": "gradient", "horizon": "oklch(0.78 0.16 45)", "zenith": "oklch(0.50 0.12 260)" },
+        "sun": { "rotation": { "pitch": 8, "yaw": 250 }, "light": { "color": "oklch(0.85 0.15 55)", "intensity": 1.8 } },
+        "ambient": { "light": { "color": "oklch(0.70 0.08 50)", "intensity": 0.5 } },
+        "hemisphere": { "skyColor": "oklch(0.75 0.10 45)", "groundColor": "oklch(0.45 0.06 30)", "intensity": 0.5 },
+        "fog": { "kind": "linear", "color": "oklch(0.75 0.12 45)", "near": 100, "far": 400 },
+        "clouds": { "enabled": true, "density": 0.6, "opacity": 0.8, "color": "oklch(0.80 0.12 40)" },
+        "stars": { "enabled": false }
+      }
+    },
+    {
+      "id": "overcast",
+      "name": "Overcast / Cloudy",
+      "mood": "flat grey from horizon to zenith, dense cloud, soft light and fog close in",
+      "blendSeconds": 2,
+      "atmosphere": {
+        "sky": { "kind": "gradient", "horizon": "oklch(0.70 0.01 230)", "zenith": "oklch(0.55 0.01 230)" },
+        "sun": { "rotation": { "pitch": 40, "yaw": 180 }, "light": { "color": "oklch(0.85 0.01 230)", "intensity": 0.8 } },
+        "ambient": { "light": { "color": "oklch(0.75 0.02 230)", "intensity": 0.65 } },
+        "hemisphere": { "skyColor": "oklch(0.72 0.01 220)", "groundColor": "oklch(0.45 0.03 120)", "intensity": 0.5 },
+        "fog": { "kind": "linear", "color": "oklch(0.68 0.01 230)", "near": 80, "far": 300 },
+        "clouds": { "enabled": true, "density": 0.9, "opacity": 0.95, "color": "oklch(0.65 0.01 230)" },
+        "stars": { "enabled": false }
+      }
+    },
+    {
+      "id": "moonlit-night",
+      "name": "Moonlit Night",
+      "mood": "cool moonlit blue, never darkness | stars out and twinkling, floors and doorways still readable",
+      "blendSeconds": 2,
+      "atmosphere": {
+        "sky": { "kind": "gradient", "horizon": "oklch(0.25 0.06 260)", "zenith": "oklch(0.15 0.08 270)" },
+        "sun": { "rotation": { "pitch": 30, "yaw": 120 }, "light": { "color": "oklch(0.75 0.08 250)", "intensity": 0.6 } },
+        "ambient": { "light": { "color": "oklch(0.55 0.06 260)", "intensity": 0.55 } },
+        "hemisphere": { "skyColor": "oklch(0.40 0.06 260)", "groundColor": "oklch(0.30 0.04 220)", "intensity": 0.5 },
+        "fog": { "kind": "linear", "color": "oklch(0.22 0.05 260)", "near": 100, "far": 350 },
+        "clouds": { "enabled": false },
+        "stars": { "enabled": true, "density": 0.8, "brightness": 1.2, "twinkle": true }
+      }
+    },
+    {
+      "id": "horror-fog",
+      "name": "Horror Fog",
+      "mood": "cold blue-green, a low pale sun, thick exp2 fog, no clouds and no stars",
+      "blendSeconds": 2,
+      "atmosphere": {
+        "sky": { "kind": "gradient", "horizon": "oklch(0.30 0.02 200)", "zenith": "oklch(0.18 0.03 220)" },
+        "sun": { "rotation": { "pitch": 15, "yaw": 180 }, "light": { "color": "oklch(0.60 0.02 200)", "intensity": 0.4 } },
+        "ambient": { "light": { "color": "oklch(0.50 0.03 210)", "intensity": 0.55 } },
+        "hemisphere": { "skyColor": "oklch(0.35 0.02 210)", "groundColor": "oklch(0.25 0.02 180)", "intensity": 0.4 },
+        "fog": { "kind": "exp2", "color": "oklch(0.25 0.02 210)", "density": 0.025 },
+        "clouds": { "enabled": false },
+        "stars": { "enabled": false }
+      }
+    },
+    {
+      "id": "neon-night",
+      "name": "Neon Night / Cyberpunk",
+      "mood": "no sun at all | magenta ambient and violet fog carry the whole scene, a few faint stars",
+      "blendSeconds": 2,
+      "atmosphere": {
+        "sky": { "kind": "gradient", "horizon": "oklch(0.15 0.08 300)", "zenith": "oklch(0.08 0.05 280)" },
+        "sun": { "rotation": { "pitch": 0, "yaw": 0 }, "light": { "intensity": 0 } },
+        "ambient": { "light": { "color": "oklch(0.55 0.12 290)", "intensity": 0.6 } },
+        "hemisphere": { "skyColor": "oklch(0.35 0.15 300)", "groundColor": "oklch(0.25 0.10 270)", "intensity": 0.5 },
+        "fog": { "kind": "exp2", "color": "oklch(0.12 0.06 290)", "density": 0.015 },
+        "clouds": { "enabled": false },
+        "stars": { "enabled": true, "density": 0.3, "brightness": 0.8, "twinkle": true }
+      }
+    },
+    {
+      "id": "desert-heat",
+      "name": "Desert Heat",
+      "mood": "sun overhead at full strength, pale gold haze standing in for the horizon",
+      "blendSeconds": 2,
+      "atmosphere": {
+        "sky": { "kind": "gradient", "horizon": "oklch(0.88 0.06 70)", "zenith": "oklch(0.68 0.10 230)" },
+        "sun": { "rotation": { "pitch": 75, "yaw": 190 }, "light": { "color": "oklch(0.95 0.05 70)", "intensity": 2.8 } },
+        "ambient": { "light": { "color": "oklch(0.82 0.06 65)", "intensity": 0.6 } },
+        "hemisphere": { "skyColor": "oklch(0.85 0.05 65)", "groundColor": "oklch(0.55 0.10 60)", "intensity": 0.5 },
+        "fog": { "kind": "linear", "color": "oklch(0.85 0.05 65)", "near": 100, "far": 350 },
+        "clouds": { "enabled": false },
+        "stars": { "enabled": false }
+      }
+    },
+    {
+      "id": "underwater",
+      "name": "Underwater",
+      "mood": "a flat teal sky, dense blue-green fog, light falling from above",
+      "blendSeconds": 2,
+      "atmosphere": {
+        "sky": { "kind": "color", "color": "oklch(0.35 0.10 210)" },
+        "sun": { "rotation": { "pitch": 60, "yaw": 180 }, "light": { "color": "oklch(0.65 0.10 200)", "intensity": 0.6 } },
+        "ambient": { "light": { "color": "oklch(0.50 0.10 200)", "intensity": 0.6 } },
+        "hemisphere": { "skyColor": "oklch(0.45 0.10 210)", "groundColor": "oklch(0.25 0.08 190)", "intensity": 0.5 },
+        "fog": { "kind": "exp2", "color": "oklch(0.30 0.08 210)", "density": 0.04 },
+        "clouds": { "enabled": false },
+        "stars": { "enabled": false }
+      }
+    },
+    {
+      "id": "snowy-winter",
+      "name": "Snowy / Winter",
+      "mood": "pale grey-blue, a low weak sun, heavy cloud and fog close enough to hush the distance",
+      "blendSeconds": 2,
+      "atmosphere": {
+        "sky": { "kind": "gradient", "horizon": "oklch(0.85 0.01 230)", "zenith": "oklch(0.70 0.02 240)" },
+        "sun": { "rotation": { "pitch": 20, "yaw": 200 }, "light": { "color": "oklch(0.90 0.01 230)", "intensity": 1.0 } },
+        "ambient": { "light": { "color": "oklch(0.80 0.02 230)", "intensity": 0.6 } },
+        "hemisphere": { "skyColor": "oklch(0.82 0.01 230)", "groundColor": "oklch(0.65 0.01 220)", "intensity": 0.5 },
+        "fog": { "kind": "linear", "color": "oklch(0.82 0.01 230)", "near": 50, "far": 250 },
+        "clouds": { "enabled": true, "density": 0.8, "opacity": 0.9, "color": "oklch(0.80 0.01 230)" },
+        "stars": { "enabled": false }
+      }
+    },
+    {
+      "id": "enchanted-forest",
+      "name": "Enchanted Forest",
+      "mood": "green sky and green fog, dappled light, a scatter of faint green stars",
+      "blendSeconds": 2,
+      "atmosphere": {
+        "sky": { "kind": "gradient", "horizon": "oklch(0.55 0.10 150)", "zenith": "oklch(0.40 0.08 180)" },
+        "sun": { "rotation": { "pitch": 35, "yaw": 160 }, "light": { "color": "oklch(0.80 0.10 130)", "intensity": 1.2 } },
+        "ambient": { "light": { "color": "oklch(0.60 0.10 150)", "intensity": 0.55 } },
+        "hemisphere": { "skyColor": "oklch(0.55 0.08 150)", "groundColor": "oklch(0.35 0.10 130)", "intensity": 0.5 },
+        "fog": { "kind": "linear", "color": "oklch(0.45 0.08 150)", "near": 30, "far": 200 },
+        "clouds": { "enabled": false },
+        "stars": { "enabled": true, "density": 0.2, "brightness": 0.5, "twinkle": true, "color": "oklch(0.80 0.15 150)" }
+      }
+    },
+    {
+      "id": "volcanic",
+      "name": "Volcanic / Hellscape",
+      "mood": "ember orange along the horizon under a near-black zenith, smoke cloud and ember stars",
+      "blendSeconds": 2,
+      "atmosphere": {
+        "sky": { "kind": "gradient", "horizon": "oklch(0.40 0.18 30)", "zenith": "oklch(0.18 0.08 15)" },
+        "sun": { "rotation": { "pitch": 10, "yaw": 180 }, "light": { "color": "oklch(0.70 0.18 35)", "intensity": 1.0 } },
+        "ambient": { "light": { "color": "oklch(0.50 0.12 30)", "intensity": 0.55 } },
+        "hemisphere": { "skyColor": "oklch(0.40 0.15 30)", "groundColor": "oklch(0.30 0.10 20)", "intensity": 0.4 },
+        "fog": { "kind": "exp2", "color": "oklch(0.25 0.10 25)", "density": 0.02 },
+        "clouds": { "enabled": true, "density": 0.7, "opacity": 0.6, "color": "oklch(0.30 0.10 25)" },
+        "stars": { "enabled": true, "density": 0.3, "brightness": 0.6, "color": "oklch(0.70 0.20 40)" }
+      }
+    },
+    {
+      "id": "space-alien",
+      "name": "Space / Alien Planet",
+      "mood": "a near-black sky, a cyan sun, fog far out and a full field of bright stars",
+      "blendSeconds": 2,
+      "atmosphere": {
+        "sky": { "kind": "color", "color": "oklch(0.08 0.02 280)" },
+        "sun": { "rotation": { "pitch": 30, "yaw": 90 }, "light": { "color": "oklch(0.70 0.15 180)", "intensity": 1.0 } },
+        "ambient": { "light": { "color": "oklch(0.45 0.10 280)", "intensity": 0.55 } },
+        "hemisphere": { "skyColor": "oklch(0.30 0.10 280)", "groundColor": "oklch(0.20 0.08 200)", "intensity": 0.4 },
+        "fog": { "kind": "linear", "color": "oklch(0.10 0.05 280)", "near": 200, "far": 800 },
+        "clouds": { "enabled": false },
+        "stars": { "enabled": true, "density": 1.0, "brightness": 1.5, "twinkle": true }
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "id": "day-night",
+      "name": "Day/Night Cycle",
+      "mood": "dawn into noon into dusk into night, lerped between four presets over a day length you set"
+    },
+    {
+      "id": "weather",
+      "name": "Weather transition",
+      "mood": "one preset eased into another | sunny day into overcast, overcast into snow"
+    }
+  ]
+}
