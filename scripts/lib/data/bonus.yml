@@ -1,0 +1,62 @@
+# The Bonus Room (johnadams2, Nov 8): the shared vaporwave mall hub. Multiplayer here, single player everywhere else.
+# No survival here: food is eaten on the spot and never leaves, furniture unlocks into the B build menu (no weight),
+# casual clothes go in your bag, the Teleport Station takes you back to Level 0 or your homes.
+# The ONE source of coordinates the shell, the props and the people build to. Metres; floor top y 0, upper floor top y 5.5.
+room: bonus                  # the shared room every player meets in (scripts/lib/hub.js)
+place: bonus
+spawn: { x: 0, y: 0.1, z: 27, yaw: 0 }    # the south entrance, looking north (-z) down the mall
+bounds: { x: [-24, 24], z: [-32, 32] }
+floors: { ground: 0, upper: 5.5, groundCeiling: 5.0, upperCeiling: 10.5, roof: 13.5 }
+court: { x: [-10, 10], z: [-32, 32] }      # the open two-storey hall under the skylight vault
+galleries: { west: [-10, -6], east: [6, 10], z: [-28, 24], bridge: { z: [-16, -10] } }   # upper walkways at y 5.5, glass rails on the court side
+escalators: { up: { x: [-3, -0.6] }, down: { x: [0.6, 3] }, z: [-10, 0] }   # foot at z 0 (y 0), head at z -10 (y 5.5); surfaces move
+fountain: { x: 0, z: 12, r: 3.2 }
+shops:
+  diner:     { name: "Tom's Diner",        floor: ground, x: [-24, -10], z: [-24, -6], door: { x: -10, z: -15, w: 4 } }
+  clothes:   { name: "Liminal Clothes",    floor: ground, x: [-24, -10], z: [4, 22],   door: { x: -10, z: 13, w: 4 } }
+  furniture: { name: "Andrew's Furniture", floor: ground, x: [10, 24],   z: [4, 22],   door: { x: 10,  z: 13, w: 4 } }
+  arcade:    { name: "Media Fun Arcade",   floor: ground, x: [10, 24],   z: [-24, -6], door: { x: 10,  z: -15, w: 4 } }
+  station:   { name: "Teleport Station",   floor: upper,  x: [-24, -10], z: [-28, 0],  door: { x: -10, z: -13, w: 5 } }
+  gallery:   { name: "Art Gallery",        floor: upper,  x: [10, 24],   z: [-28, 0],  door: { x: 10,  z: -13, w: 5 } }
+# the people (scripts/lib/bonus-people.js): each stands at its spot; lanes leave a 1.5 m circle clear there
+people:
+  bonus-tom:    { x: -21.6, z: -15,  yaw: -90, shop: diner }      # behind the diner counter (counter front edge x -20, z -21..-9)
+  bonus-andrew: { x: 21.6,  z: 18.5, yaw: 90,  shop: furniture }  # behind the furniture counter (front edge x 20, z 16..21)
+  bonus-dawn:   { x: -21.6, z: 18.5, yaw: -90, shop: clothes }    # behind the clothes counter (front edge x -20, z 16..21)
+  bonus-rico:   { x: -19.5, y: 5.5, z: -3.5, yaw: 180, shop: station }  # beside the teleport kiosk
+# the teleport kiosk (scripts/bonus-teleport.js): its interactive plate stands here, facing +x into the station
+kiosk: { x: -20.5, y: 5.5, z: -3, yaw: -90 }
+# Tom's menu: eaten at the counter, never carried out. Prices in Backdollars (Savi's picks, tune freely).
+food:
+  hotdog:     { name: "Hot dog",              price: 3, line: "Snap, mustard, a little relish. Exactly what a mall hot dog should be." }
+  fries:      { name: "Fries",                price: 2, line: "Salty, hot, a bit limp in the middle. Perfect." }
+  pizza:      { name: "Pizza slice",          price: 4, line: "The cheese pulls a full foot before it lets go." }
+  cheezburger: { name: "Cheezburger",         price: 5, line: "Tom spells it wrong on purpose. It's still the best thing on the menu." }
+  coke:       { name: "Coca-Cola",            price: 2, drink: true, line: "Glass bottle, ice cold. The fizz bites back." }
+  lemonade:   { name: "Minute Maid Lemonade", price: 2, drink: true, line: "Sour enough to make your ears fold back." }
+  water:      { name: "Dasani water",         price: 1, drink: true, line: "Just water. Tastes like nothing, which down here is a luxury." }
+# Liminal Clothes: casual clothing, cloth tokens into the bag (scripts/lib/data/clothes.yml kinds). [token, price]
+clothes:
+  - ["cloth:topw:tee:e85d75", 6]
+  - ["cloth:topw:tee:4d96ff", 6]
+  - ["cloth:topw:tee:ffd93d:stripes", 7]
+  - ["cloth:topw:tank:ffffff", 4]
+  - ["cloth:topw:hoodie:9b5de5", 12]
+  - ["cloth:topw:hoodie:2b2b33", 12]
+  - ["cloth:topw:sweater:ff8fc7:knit", 11]
+  - ["cloth:topw:longsleeve:3d5a98:plaid", 9]
+  - ["cloth:topw:dress:9b5de5", 14]
+  - ["cloth:botw:pants:3d5a98:denim", 9]
+  - ["cloth:botw:shorts:6bcb77", 6]
+  - ["cloth:botw:skirt:e85d75", 7]
+  - ["cloth:shoes:sneakers:f4f1ea", 8]
+  - ["cloth:shoes:slippers:ff8fc7:knit", 5]
+  - ["cloth:hat:cap:e85d75", 5]
+  - ["cloth:hat:beanie:2b2b33", 5]
+  - ["cloth:hat:headphones:e85d75", 9]
+  - ["cloth:hat:bow:ff8fc7", 3]
+  - ["cloth:eyew:glasses:000000", 6]
+  - ["cloth:neck:scarf:f3c64a", 5]
+music: /cdn/level-1-toms-diner-va9au334.mp3          # the creator's mall track, everywhere in the mall
+dinerRadio: /cdn/level-1-toms-diner-ur1vbwxr.mp3     # the creator's chiptune, from the diner's radio
+arcadeMusic: /cdn/music-the-bonus-room-ost-zdv3pdaa.mp3  # the creator's Bonus Room OST, from the arcade

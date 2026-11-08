@@ -1,0 +1,16 @@
+# spawn-scene v2 yaml x0z0
+bonus-floor:
+  feetPosition: {x: 0, y: -0.3, z: 0}
+  id: bonus-floor
+  material: {color: oklch(0.97 0.02 330), repeat: [0.25, 0.25], roughness: 0.25, texture: cdn/texture-pink-and-white-checkerboard-vinyl-floor-tiles.png, wrap: repeat}
+  physics: {body: static, collider: box}
+  primitive: {depth: 64, height: 0.3, kind: box, width: 48}
+  receiveShadow: true
+bonus-music:
+  audio: {bus: Music, clip: /cdn/level-1-toms-diner-va9au334.mp3, gain: 0.22, loop: true, spatial: false}
+  feetPosition: {x: 0, y: 3, z: 0}
+  id: bonus-music
+bonus-sun:
+  feetPosition: {x: 0, y: 12, z: 0}
+  id: bonus-sun
+  light: {color: oklch(0.95 0.05 330), distance: 60, intensity: 4, kind: point}
