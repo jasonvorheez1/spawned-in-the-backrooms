@@ -16,7 +16,7 @@ import { layCity, layStreet, tickCity } from "../../scripts/lib/level11-city.js"
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 19; // bump to rebuild the city in rooms that are already open
+const V = 20; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -717,7 +717,7 @@ function lay(ctx) {
   cyl("l11-taxi-wheel-rr", 1.05, 0.28, 1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
   sp("l11-porsche", {
     tags: ["usable", "vehicle", "taxi"],
-    feetPosition: { x: -21, y: 0.05, z: 16.4 },
+    feetPosition: { x: -21, y: 0.15, z: 16.4 },
     rotation: { yaw: 90 },
     physics: { body: "kinematic", collider: "box" },
     behavior: "scripts/level11-car.js",
