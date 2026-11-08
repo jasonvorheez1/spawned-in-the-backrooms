@@ -69,7 +69,12 @@ export function startSpamton(ctx) {
   theme(ctx, 'talk')
   ctx.after(F.introSeconds, 'spamIntroOver', {})
 }
-export function spamIntroOver(ctx) { const b = ctx.self.state.spam; if (b?.on && b.phase === 'intro') { b.phase = 'talk'; offer(ctx, b) } }
+function chat(ctx, b) { // the talk before the fight: his line, two replies; the talk theme keeps playing
+  const c = F.chat[b.chat]
+  b.phase = 'chat'; b.line = c.line; b.opts = [...c.replies]
+  play(ctx, ctx.random() < 0.5 ? 'talkA' : 'talkB', 0.55)
+}
+export function spamIntroOver(ctx) { const b = ctx.self.state.spam; if (b?.on && b.phase === 'intro') { b.chat = 0; chat(ctx, b) } }
 
 function end(ctx, how) {
   const s = ctx.self.state, b = s.spam
@@ -114,6 +119,13 @@ export function onInput(ctx, input) {
     b.tp -= F.healCost; b.hp = Math.min(F.soulHp, b.hp + F.healHp); play(ctx, 'chime', 0.6); b.line = "HEH!! A [[REFUND]]?? THAT'S NOT ON THE [[MENU]]!!"; return
   }
   if (d.k === 'done' && b.phase === 'attack' && ctx.now() - b.atkAt > (F.attackSeconds - 1) * 1000) { offer(ctx, b); return }
+  if (d.o == null && Number.isInteger(d.i)) d.o = b.opts?.[d.i] // the screen sends the button's index
+  if (d.k === 'pick' && b.phase === 'chat' && b.opts?.includes(d.o)) {
+    b.chat = (b.chat ?? 0) + 1
+    if (b.chat < F.chat.length) chat(ctx, b)
+    else { b.opts = null; attack(ctx, b) } // talk's over: the battle theme and his first attack
+    return
+  }
   if (d.k === 'pick' && b.phase === 'choose' && b.opts?.includes(d.o)) {
     const st = F.deal[b.step]
     if (d.o === st.yes) {

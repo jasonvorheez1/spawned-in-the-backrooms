@@ -9,8 +9,10 @@ export function spamUi(ctx, player) {
   const b = player?.state?.spam
   if (!b?.on) return ''
   const hp = Math.max(0, Math.round(b.hp ?? 0)), tp = Math.max(0, Math.min(100, Math.round(b.tp ?? 0)))
-  const opts = b.phase === 'choose'
-    ? (b.opts ?? []).map((o, i) => `<button class="spm-opt" onclick="sendAction('spam',{k:'pick',o:'${esc(o)}'})"><span class="spm-ht">❤</span>${esc(o)}<i>[${i + 1}]</i></button>`).join('')
+  const opts = b.phase === 'chat'
+    ? (b.opts ?? []).map((o, i) => `<button class="spm-opt" onclick="sendAction('spam',{k:'pick',i:${i}})"><span class="spm-ht">❤</span>${esc(o)}<i>[${i + 1}]</i></button>`).join('')
+    : b.phase === 'choose'
+    ? (b.opts ?? []).map((o, i) => `<button class="spm-opt" onclick="sendAction('spam',{k:'pick',i:${i}})"><span class="spm-ht">❤</span>${esc(o)}<i>[${i + 1}]</i></button>`).join('')
       + (tp >= F.healCost && hp < F.soulHp ? `<button class="spm-opt spm-heal" onclick="sendAction('spam',{k:'heal'})"><span class="spm-ht" style="color:#ff9a1f">★</span>CASH IN ${F.healCost}% TP · +${F.healHp} HP<i>[3]</i></button>` : '')
     : ''
   return `
@@ -39,7 +41,7 @@ export function spamUi(ctx, player) {
   <div id="spm-talk"></div>
   <div id="spm-opts">${opts}</div>
   <div id="spm-bar"><span>YOU</span><span>HP</span><div id="spm-hp"><b></b></div><span>${hp} / ${F.soulHp}</span><span>TP</span><div id="spm-tp"><b></b></div><span style="color:#ff6fd0">DEAL ${b.step ?? 0}/${F.deal.length}</span></div>
-  <div id="spm-help">${b.phase === 'attack' ? 'WASD / ARROWS: MOVE · GRAZE BULLETS FOR TP' + (b.atk === 'heads' ? ' · SPACE: SHOOT' : '') : b.phase === 'choose' ? 'PICK YOUR WORDS. 1 / 2' : ''}</div>
+  <div id="spm-help">${b.phase === 'attack' ? 'WASD / ARROWS: MOVE · GRAZE BULLETS FOR TP' + (b.atk === 'heads' ? ' · SPACE: SHOOT' : '') : b.phase === 'choose' || b.phase === 'chat' ? 'PICK YOUR WORDS. 1 / 2' : ''}</div>
   <button id="spm-flee" onclick="sendAction('spam',{k:'flee'})">BACK AWAY</button>
   <div id="spm-vig"></div><div id="spm-scan"></div>
   <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" style="display:none" onload="window.spmInit&&spmInit()" onerror="window.spmInit&&spmInit()">
@@ -190,7 +192,7 @@ if (typeof window !== 'undefined') {
     const since = (performance.now() - S.phaseAt) / 1000
     field(g, t)
     const sh = S.shake; g.save(); if (sh > 0.3) g.translate(rnd2(-sh, sh), rnd2(-sh, sh))
-    const talking = ['choose', 'intro', 'talk'].includes(ph) && S.talk.n < S.talk.line.length + 6 || ph === 'won' || ph === 'lost'
+    const talking = ['choose', 'intro', 'talk', 'chat'].includes(ph) && S.talk.n < S.talk.line.length + 6 || ph === 'won' || ph === 'lost'
     if (ph !== 'attack') {
       let sc = 1.9 + Math.sin(since * 6) * (since < 0.5 ? 0.25 : 0.03), px = 320, py = 150
       if (ph === 'intro') sc = Math.min(1.9, 0.4 + since * 1.1) // he pops up

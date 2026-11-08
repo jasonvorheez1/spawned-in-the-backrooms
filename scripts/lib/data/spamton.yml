@@ -18,6 +18,12 @@ healHp: 20
 taunts: ["KEEP DANCING!!", "[[SALE]] ENDS SOON!", "HEH HEH HEH!!", "CAN'T [[AFFORD]] ME?", "LOOK AT YOU GO!", "[[FREE]] SAMPLES!!", "DON'T BLINK!", "ONE [[PAYMENT]] AT A TIME!"]
 hitTaunts: ["OUCH! THAT'S [[EXTRA]]!", "HAHA!! NO [[REFUNDS]]!", "SO CLOSE!!", "THAT'S GONNA [[LEAVE A MARK]]!", "WATCH THE [[FINE PRINT]]!", "[[SOLD]]!!"]
 grazeTaunts: ["HEY!! STOP [[SHOPPING AROUND]]!", "STAY STILL, [[WINDOW SHOPPER]]!", "TOO CLOSE FOR [[COMFORT]]!!"]
+# the talk before the fight (Shelly: "i wanted to talk to spamton first"): any reply moves him on; the last line starts the battle
+chat:
+  - { line: "LOOK AT YOU!! A REAL [[Paying Customer]]!! NOBODY COMES DOWN THIS ALLEY ANYMORE. NOT SINCE THE [[Big Shot]] DAYS.", replies: ["WHO ARE YOU?", "WHY ARE YOU IN A DUMPSTER?"] }
+  - { line: "ME?? I'M [[Spamton G. Spamton]]! THE G STANDS FOR [[Great Deals]]! I USED TO HAVE A [[Mansion]]. NOW I HAVE A [[Lid]].", replies: ["WHAT HAPPENED?", "NICE LID."] }
+  - { line: "I WAS A [[Little Sponge]] ONCE. LIKE YOU. THEN I GOT [[Connected]]. NOW EVERY HALLWAY IN THIS CITY IS MY [[Showroom]].", replies: ["WHAT ARE YOU SELLING?", "THAT SOUNDS SAD."] }
+  - { line: "SAD?? SAD!! I'M SELLING THE BEST DEAL OF YOUR [[Life]]: ME!! BUT YOU GOTTA [[Earn It]], KID. LET'S SEE IF YOU CAN [[Keep Up]]!!", replies: ["BRING IT.", "WAIT, WHAT?"] }
 intro: "HEY      HEY HEY!! IT'S ME, [[Number 1 Rated Salesman1997]]!! WHAT'S A [[Little Sponge]] DOING DOWN HERE IN MY [[Penthouse Suite]]?"
 winLine: "HOCHI MAMA!! YOU GOT YOURSELF A [[Pocket Pal]], KID! FITS ANYWHERE! WEIGHS [[0 KG]]! NO REFUNDS!!!"
 loseLine: "TOO BAD!! TOO SAD!! CALL [[1-800-ROOM-0]] WHEN YOU'RE READY TO BE A [[Real Customer]]."
