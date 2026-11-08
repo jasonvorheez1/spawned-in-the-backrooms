@@ -4,7 +4,7 @@ restock: 600        # seconds until a trader's shelf fills back up (Savi's pick)
 buyMul: 1.25        # price = base * (buyMul - barter/barterDiv) * (1 - discount) (Savi's pick)
 barterDiv: 200      # barter 100 takes 0.5 off the multiplier (Savi's pick)
 sellShare: 0.4      # selling pays base * sellShare * (0.75 + barter/barterDiv) (Savi's pick)
-roles: [quarter, trader]
+roles: [quarter, trader, smith]   # smith: the dedicated repair NPC (a trader that also mends weapons and armor; nobody else repairs)
 shops:
   meg-callum:
     - [ammo, 5, 4]

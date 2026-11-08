@@ -270,7 +270,8 @@ function shop(ctx, d) {
     if (!got?.ok) { s.cents += cents; note(ctx, got?.msg ?? (got?.why ? `Can't take it: ${got.why}` : "You can't carry that.")); return }
     stock[t] = [row[0] - 1, row[1]]; it.state.stock = stock
     note(ctx, `Bought ${describe(t).name} for $${price}.00.`)
-  } else if (d.k === 'repair') { // a trader mends it to 100% for Backdollars (Fallout: New Vegas)
+  } else if (d.k === 'repair') {
+    if (it.state?.role !== 'smith') { note(ctx, 'I do not repair gear. Find a smith.'); return } // a trader mends it to 100% for Backdollars (Fallout: New Vegas)
     const row = repairables(s).find((x) => x[0] === t); if (!row) { note(ctx, 'That does not need repairing.'); return }
     const price = repairPrice(row[2], row[1], barter)
     if ((s.cents ?? 0) < price * 100) { note(ctx, `Not enough Backdollars: $${price}.00`); return }

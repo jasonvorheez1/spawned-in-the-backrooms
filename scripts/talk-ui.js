@@ -37,7 +37,7 @@ const CSS = `<style>
 
 // the shop: BUY / SELL tabs, goods in sections, your Backdollars beside each price (Shelly #44597)
 function shopUi(ctx, s, it) {
-  const barter = skillsOf(s).barter ?? 0, disc = it.state?.discount?.[keyOf(ctx.self ?? {})] ?? 0, cash = s.cents ?? 0, tab = s.shopTab === 'sell' ? 'sell' : s.shopTab === 'repair' ? 'repair' : 'buy'
+  const barter = skillsOf(s).barter ?? 0, disc = it.state?.discount?.[keyOf(ctx.self ?? {})] ?? 0, cash = s.cents ?? 0, tab = s.shopTab === 'sell' ? 'sell' : s.shopTab === 'repair' && it.state?.role === 'smith' ? 'repair' : 'buy'
   const rows = tab === 'repair' ? [] : tab === 'buy'
     ? Object.entries(it.state?.stock ?? {}).map(([t, [n, base]]) => ({ t, n, p: buyPrice(base, barter, disc) }))
     : sellables(s).map(([t, n, base]) => ({ t, n, p: sellPrice(base, barter) }))
@@ -55,7 +55,7 @@ function shopUi(ctx, s, it) {
   if (!list) list = `<div class="em">${tab === 'buy' ? 'Shelves are bare. Come back later.' : 'Nothing they want.'}</div>`
   const tb = (k, l) => `<button style="${tab === k ? 'background:var(--a);color:#140f06;text-shadow:none' : ''}" onclick="sendAction('talkdo',{k:'stab',t:'${k}'})">${l}</button>`
   return `<div class="tkp"><div class="tkh"><h2>${esc(nameOf(it))}</h2><span class="f">BARTER ${barter}${disc ? ` · ${Math.round(disc * 100)}% OFF` : ''}</span><span class="r" style="color:#9fcf8a">${money(cash)}</span></div>
-    <div class="tkb">${tb('buy', 'Buy')}${tb('sell', 'Sell')}${tb('repair', 'Repair')}</div>
+    <div class="tkb">${tb('buy', 'Buy')}${tb('sell', 'Sell')}${it.state?.role === 'smith' ? tb('repair', 'Repair') : ''}</div>
     <div class="tks"><div>${list}</div></div>
     <div class="tkb"><button onclick="sendAction('talkdo',{k:'back'})">Back to talking</button><button class="lv" onclick="sendAction('talkdo',{k:'leave'})">Leave</button></div></div>`
 }

@@ -9,7 +9,7 @@ import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { LIGHTS } from "../../scripts/lib/gamma-layout.js";
 import { SHOPS } from "../../scripts/gamma-public-geo.js";
 export const cadence = "1s";
-const V = 1;
+const V = 2;
 const GRIT = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const CAM = "/cdn/value.9a228d2a44ac47cc422ab5bcdbbaa10b84f595f45d7cb1acd62d496a80a648bc.glb";
 const JK = (top, extra) => ({ topw: "jacket", top, botw: "pants", bottom: "#3a3a32", shoes: "boots", shoec: "#22201c", ...extra });
@@ -18,7 +18,7 @@ export const PEOPLE = {
   "gamma-hask":  { name: "Cpl. Hask · M.E.G. Gate Guard", role: "scout", voice: "ortiz", gun: "shotgun", at: [-4, 31], yaw: 90, look: { species: "bear", sex: "m", ...JK("#b8d040", { hat: "cap", hatc: "#4a5a2a" }), expr: "bored" } },
   "gamma-vale":  { name: "Vale · M.E.G. Scanner Tech", role: "scout", voice: "ale", gun: "pistol", at: [4, 26], yaw: -90, look: { species: "fox", sex: "f", ...JK("#c2d84a"), expr: "smile" } },
   "gamma-duke":  { name: "Duke · M.E.G. Catwalk Sniper", role: "scout", voice: "reyes", gun: "shotgun", at: [-4.6, 22], yaw: 90, look: { species: "wolf", sex: "m", ...JK("#a8c038", { hat: "beanie", hatc: "#3a4a2a" }), expr: "cocky" } },
-  "gamma-marlo": { name: "Marlo · Gunsmith", role: "trader", voice: "callum", gun: "pistol", at: [-19.5, 12], yaw: -90, look: { species: "raccoon", sex: "m", topw: "longsleeve", top: "#5a4030", botw: "pants", bottom: "#2e2a26", shoes: "boots", shoec: "#22201c", expr: "grin" } },
+  "gamma-marlo": { name: "Marlo · Gunsmith", role: "smith", voice: "callum", gun: "pistol", at: [-19.5, 12], yaw: -90, look: { species: "raccoon", sex: "m", topw: "longsleeve", top: "#5a4030", botw: "pants", bottom: "#2e2a26", shoes: "boots", shoec: "#22201c", expr: "grin" } },
   "gamma-june":  { name: "June · Almond Water Bar", role: "trader", voice: "mags", gun: "wrench", at: [14.5, -9.5], yaw: 0, look: { species: "cat", sex: "f", topw: "hoodie", top: "#6ab8c8", botw: "skirt", bottom: "#2a3040", shoes: "boots", shoec: "#2a2420", expr: "joy" } },
   "gamma-tess":  { name: "Tess · Tailor", role: "trader", voice: "wren", gun: "screwdriver", at: [-19.5, -7], yaw: -90, look: { species: "sheep", sex: "f", topw: "longsleeve", top: "#c86a9a", botw: "skirt", bottom: "#3a2a3a", shoes: "boots", shoec: "#2a2420", hat: "beanie", hatc: "#e8d8c0", expr: "lidded" } },
   "gamma-bo":    { name: "Bo · Wanderer", role: "scout", voice: "hollis", gun: "pipe_scrap", at: [-3, 3.2], yaw: 180, look: { species: "dog", sex: "m", topw: "hoodie", top: "#7a5a3a", botw: "pants", bottom: "#3a3a40", shoes: "boots", shoec: "#2a2420", expr: "smile" } },
