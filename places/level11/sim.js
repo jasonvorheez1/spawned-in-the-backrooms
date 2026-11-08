@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 91; // bump to rebuild the city in rooms that are already open
+const V = 92; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -262,8 +262,10 @@ function lay(ctx) {
   // Embankment Retaining Seawalls & Coping
   sp("l11-embank-south", { feetPosition: { x: 0, y: -2.2, z: CANAL_Z + CANAL_W / 2 + 0.5 }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "quay", L: 120, t: 1.0, H: 4.4, side: -1 } }, physics: "static" });
   sp("l11-embank-north", { feetPosition: { x: 0, y: -2.2, z: CANAL_Z - CANAL_W / 2 - 0.5 }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "quay", L: 120, t: 1.0, H: 4.4, side: 1 } }, physics: "static" });
-  bx("l11-cope-south", 0, 0.2, CANAL_Z + CANAL_W / 2 + 0.5, 120, 0.3, 1.3, CURB_MAT);
-  bx("l11-cope-north", 0, 0.2, CANAL_Z - CANAL_W / 2 - 0.5, 120, 0.3, 1.3, CURB_MAT);
+  for (const s of [-1, 1]) { // coping stops at the bridge so the avenue rolls straight across
+    bx(`l11-cope-south-${s}`, s * 34.25, 0.2, CANAL_Z + CANAL_W / 2 + 0.5, 51.5, 0.3, 1.3, CURB_MAT);
+    bx(`l11-cope-north-${s}`, s * 34.25, 0.2, CANAL_Z - CANAL_W / 2 - 0.5, 51.5, 0.3, 1.3, CURB_MAT);
+  }
 
   // Wrought Iron Promenade Safety Railings
   for (let rx = -58; rx <= 58; rx += 5) {
