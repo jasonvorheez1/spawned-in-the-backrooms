@@ -54,10 +54,10 @@ export function l26Tick(ctx, ses, st) {
     if (t > 7.2) once("noclip", () => { ctx.emit("screenFlash", { color: "#5fe08a", duration: 0.9, intensity: 1 }, me1(ctx)); snd(ctx, WARP, 0.8) })
     return true
   }
-  // B, 8-15: you, on the bow deck, the camera low on the planks and rising
+  // B, 8-15: behind you on the deck, the camera low on the planks and rising to the fog ahead
   if (t < 15) {
     const u = ss(8, 15, t)
-    ctx.view.camera = { eye: L({ x: p.x - 2.2, y: p.y + 0.25, z: p.z - 3.2 }, { x: p.x - 1.4, y: p.y + 1.2, z: p.z - 2.4 }, u), aim: L({ x: p.x, y: p.y + 0.9, z: p.z }, head, u), fov: 55 }
+    ctx.view.camera = { eye: L({ x: p.x + 1.6, y: p.y + 0.3, z: p.z + 2.4 }, { x: p.x + 0.9, y: p.y + 1.7, z: p.z + 1.6 }, u), aim: L({ x: p.x - 3, y: p.y + 0.6, z: p.z - 14 }, { x: p.x, y: p.y + 1.4, z: p.z - 12 }, u), fov: 55 } // low on the planks behind you, rising to look up the trashed deck into the fog
     return true
   }
   once("phoebe", () => spawnPhoebe(ctx, "phoebe-l26", HER, 0, 40))
