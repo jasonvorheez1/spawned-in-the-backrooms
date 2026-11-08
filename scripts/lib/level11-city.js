@@ -42,20 +42,27 @@ export function layCity(ctx, h) {
   // ---- the ground, so the city stands on something to the edge of the fog
   bx("l11-ground", 0, -0.45, 40, 620, 0.3, 700, { ...T("stained-concrete-floor", 40), color: "oklch(0.55 0.015 85)", roughness: 0.9 });
   // ---- avenues (north-south) and streets (east-west): long slabs, kerbs, sidewalks; the centre already has its own (sim.js), so these start where those stop
+  // sidewalks and kerbs stop at every crossing road, so a car drives straight through an intersection instead of hopping a kerb
+  const cutsFor = (list, half) => list.map((c) => [c - half, c + half]);
+  const spans = (a0, a1, cuts) => { const out = []; let a = a0; for (const [c0, c1] of cuts.filter(([c0, c1]) => c1 > a0 && c0 < a1).sort((p, q) => p[0] - q[0])) { if (c0 - a > 1) out.push([a, c0]); a = Math.max(a, c1); } if (a1 - a > 1) out.push([a, a1]); return out; };
+  const AVE_CUTS = X_AVE.map((x) => [x - (x === 0 ? 15.8 : 12), x + (x === 0 ? 15.8 : 12)]), ST_CUTS = cutsFor(Z_ST, 12);
   for (const ax of X_AVE) {
     if (ax === 0) { // the main avenue just continues past the old ends
-      for (const [z0, z1] of [[-250, -82], [78, 250]]) { const zc = (z0 + z1) / 2, L = z1 - z0; bx(`l11-ave0-${z0}`, 0, -0.05, zc, 16, 0.2, L, ASPH); for (const s of [-1, 1]) { bx(`l11-ave0-sw-${z0}-${s}`, s * 12, 0.08, zc, 7.6, 0.25, L, WALK); bx(`l11-ave0-kb-${z0}-${s}`, s * 8.1, 0.08, zc, 0.2, 0.28, L, CURB); } }
+      for (const [z0, z1] of [[-250, -82], [78, 250]]) { const zc = (z0 + z1) / 2, L = z1 - z0; bx(`l11-ave0-${z0}`, 0, -0.05, zc, 16, 0.2, L, ASPH); for (const s of [-1, 1]) for (const [a, b] of spans(z0, z1, ST_CUTS)) { bx(`l11-ave0-sw-${z0}-${s}-${Math.round(a)}`, s * 12, 0.08, (a + b) / 2, 7.6, 0.25, b - a, WALK); bx(`l11-ave0-kb-${z0}-${s}-${Math.round(a)}`, s * 8.1, 0.08, (a + b) / 2, 0.2, 0.28, b - a, CURB); } }
       continue;
     }
     bx(`l11-ave-${ax}`, ax, -0.05, 0, 12, 0.2, 520, ASPH);
-    for (const s of [-1, 1]) { bx(`l11-ave-sw-${ax}-${s}`, ax + s * 9, 0.08, 0, 6, 0.25, 520, WALK); bx(`l11-ave-kb-${ax}-${s}`, ax + s * 6.1, 0.08, 0, 0.2, 0.28, 520, CURB); }
+    for (const s of [-1, 1]) for (const [a, b] of spans(-260, 260, ST_CUTS)) { bx(`l11-ave-sw-${ax}-${s}-${Math.round(a)}`, ax + s * 9, 0.08, (a + b) / 2, 6, 0.25, b - a, WALK); bx(`l11-ave-kb-${ax}-${s}-${Math.round(a)}`, ax + s * 6.1, 0.08, (a + b) / 2, 0.2, 0.28, b - a, CURB); }
     for (let z = -140; z < 140; z += 28) bx(`l11-ave-ln-${ax}-${z}`, ax, 0.06, z, 0.14, 0.01, 8, YEL, { physics: undefined });
   }
   for (const zs of Z_ST) {
-    if (zs === 12) { for (const [x0, x1] of [[-250, -36], [36, 250]]) { const xc = (x0 + x1) / 2, L = x1 - x0; bx(`l11-st12-${x0}`, xc, -0.05, 12, L, 0.2, 12, ASPH); for (const s of [-1, 1]) { bx(`l11-st12-sw-${x0}-${s}`, xc, 0.08, 12 + s * 9, L, 0.25, 6, WALK); bx(`l11-st12-kb-${x0}-${s}`, xc, 0.08, 12 + s * 6.1, L, 0.28, 0.2, CURB); } } continue; }
-    bx(`l11-st-${zs}`, 0, -0.05, zs, 520, 0.2, 12, ASPH);
-    for (const s of [-1, 1]) { bx(`l11-st-sw-${zs}-${s}`, 0, 0.08, zs + s * 9, 520, 0.25, 6, WALK); bx(`l11-st-kb-${zs}-${s}`, 0, 0.08, zs + s * 6.1, 520, 0.28, 0.2, CURB); }
-    for (let x = -140; x < 140; x += 28) bx(`l11-st-ln-${zs}-${x}`, x, 0.06, zs, 8, 0.01, 0.14, YEL, { physics: undefined });
+    const runs = zs === 12 ? [[-250, -36], [36, 250]] : [[-260, 260]];
+    for (const [x0, x1] of runs) {
+      const xc = (x0 + x1) / 2, L = x1 - x0, key = zs === 12 ? `l11-st12-${x0}` : `l11-st-${zs}`;
+      bx(key, xc, -0.051, zs, L, 0.2, 12, ASPH);
+      for (const s of [-1, 1]) for (const [a, b] of spans(x0, x1, AVE_CUTS)) { bx(`${key}-sw-${s}-${Math.round(a)}`, (a + b) / 2, 0.08, zs + s * 9, b - a, 0.25, 6, WALK); bx(`${key}-kb-${s}-${Math.round(a)}`, (a + b) / 2, 0.08, zs + s * 6.1, b - a, 0.28, 0.2, CURB); }
+    }
+    if (zs !== 12) for (let x = -140; x < 140; x += 28) bx(`l11-st-ln-${zs}-${x}`, x, 0.06, zs, 8, 0.01, 0.14, YEL, { physics: undefined });
   }
   // the canal runs on past the old ends, with a bridge at every avenue
   for (const [x0, x1] of [[-250, -59], [59, 250]]) {
