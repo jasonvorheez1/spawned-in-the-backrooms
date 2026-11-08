@@ -9,7 +9,8 @@ def zrange(y):
     d = -y / 12.0; return -52 + 6 * d, 58 - 4 * d
 def half(z, y):
     d = -y / 12.0; Wy = 10 - 0.5 * d * d
-    if z < -30: Lb = 22 - 6 * d; return max(0.0, Wy * (1 - ((z + 30) / Lb) ** 2))
+    zb = -52 + 6 * d
+    if z < -36: t = max(0.0, (z - zb) / (-36 - zb)); return Wy * (1 - (1 - t) ** 2.4)
     if z > 40: Ls = 18 - 4 * d; return Wy * math.sqrt(max(0.0, 1 - ((z - 40) / Ls) ** 2))
     return Wy
 N = 90
