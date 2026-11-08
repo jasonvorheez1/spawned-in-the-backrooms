@@ -25,6 +25,12 @@ S=0.86; SH=mathutils.Vector((0.13,-0.13,0))
 for v in TV:
     if v in set(top): v.co.x=c.x+(v.co.x-c.x)*S; v.co.y=c.y+(v.co.y-c.y)*S
     v.co+=SH
+# the two benches each slide 0.22 m away from the table, along the line from the table to the bench
+for B in big[:2]:
+    bc=sum((v.co for v in B),mathutils.Vector())/len(B); d=mathutils.Vector((bc.x-c.x,bc.y-c.y,0))
+    d=mathutils.Vector((d.x,0,0)) if abs(d.x)>abs(d.y) else mathutils.Vector((0,d.y,0))
+    d.normalize(); 
+    for v in B: v.co+=d*0.22
 print("islands",len(islands),"table verts",len(TV))
 bm.to_mesh(o.data); bm.free()
 sc=bpy.context.scene; sc.render.engine="CYCLES"; sc.cycles.samples=8; sc.render.resolution_x=sc.render.resolution_y=600
