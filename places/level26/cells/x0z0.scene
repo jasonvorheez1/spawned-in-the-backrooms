@@ -1,0 +1,1985 @@
+# spawn-scene v2 yaml x0z0
+l26-bal-0:
+  children: [{feetPosition: {x: 0, y: 1.8010135728870582, z: 0}, material: {color: oklch(0.7 0.18 25), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: 9.9, y: 1, z: -36}
+  id: l26-bal-0
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 1.8010135728870582, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-bal-1:
+  children: [{feetPosition: {x: 0, y: 2.035119512786679, z: 0}, material: {color: oklch(0.75 0.15 200), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: -9.9, y: 1, z: -30}
+  id: l26-bal-1
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 2.035119512786679, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-bal-10:
+  children: [{feetPosition: {x: 0, y: 1.7197231587580049, z: 0}, material: {color: oklch(0.7 0.18 25), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: 9.9, y: 1, z: 24}
+  id: l26-bal-10
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 1.7197231587580049, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-bal-11:
+  children: [{feetPosition: {x: 0, y: 1.9871292457855911, z: 0}, material: {color: oklch(0.75 0.15 200), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: -9.9, y: 1, z: 30}
+  id: l26-bal-11
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 1.9871292457855911, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-bal-12:
+  children: [{feetPosition: {x: 0, y: 1.6812339184252705, z: 0}, material: {color: oklch(0.8 0.17 130), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: 9.9, y: 1, z: 36}
+  id: l26-bal-12
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 1.6812339184252705, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-bal-13:
+  children: [{feetPosition: {x: 0, y: 1.8984669735182391, z: 0}, material: {color: oklch(0.85 0.16 90), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: -9.9, y: 1, z: 42}
+  id: l26-bal-13
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 1.8984669735182391, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-bal-2:
+  children: [{feetPosition: {x: 0, y: 1.8536514057096334, z: 0}, material: {color: oklch(0.8 0.17 130), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: 9.9, y: 1, z: -24}
+  id: l26-bal-2
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 1.8536514057096334, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-bal-3:
+  children: [{feetPosition: {x: 0, y: 1.7191757618073262, z: 0}, material: {color: oklch(0.85 0.16 90), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: -9.9, y: 1, z: -18}
+  id: l26-bal-3
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 1.7191757618073262, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-bal-4:
+  children: [{feetPosition: {x: 0, y: 1.7870286957300403, z: 0}, material: {color: oklch(0.6 0.2 320), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: 9.9, y: 1, z: -12}
+  id: l26-bal-4
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 1.7870286957300403, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-bal-5:
+  children: [{feetPosition: {x: 0, y: 2.191289134785202, z: 0}, material: {color: oklch(0.7 0.18 25), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: -9.9, y: 1, z: -6}
+  id: l26-bal-5
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 2.191289134785202, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-bal-6:
+  children: [{feetPosition: {x: 0, y: 2.19648833488882, z: 0}, material: {color: oklch(0.75 0.15 200), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: 9.9, y: 1, z: 0}
+  id: l26-bal-6
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 2.19648833488882, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-bal-7:
+  children: [{feetPosition: {x: 0, y: 1.9794444763937242, z: 0}, material: {color: oklch(0.8 0.17 130), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: -9.9, y: 1, z: 6}
+  id: l26-bal-7
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 1.9794444763937242, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-bal-8:
+  children: [{feetPosition: {x: 0, y: 2.1233147493206497, z: 0}, material: {color: oklch(0.85 0.16 90), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: 9.9, y: 1, z: 12}
+  id: l26-bal-8
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 2.1233147493206497, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-bal-9:
+  children: [{feetPosition: {x: 0, y: 2.150991832162715, z: 0}, material: {color: oklch(0.6 0.2 320), metalness: 0.05, roughness: 0.25}, primitive: {kind: sphere, radius: 0.2}, scale: {x: 1, y: 1.18, z: 1}}]
+  feetPosition: {x: -9.9, y: 1, z: 18}
+  id: l26-bal-9
+  material: {color: oklch(0.9 0 0)}
+  primitive: {height: 2.150991832162715, kind: cylinder, radialSegments: 3, radiusBottom: 0.004, radiusTop: 0.004}
+l26-blood-0:
+  feetPosition: {x: 2, y: 0.005, z: 29}
+  id: l26-blood-0
+  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
+  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 1.4, radiusTop: 1.4}
+  scale: {x: 1, y: 1, z: 0.55}
+l26-blood-1:
+  feetPosition: {x: -3.5, y: 0.005, z: 26}
+  id: l26-blood-1
+  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
+  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 0.9, radiusTop: 0.9}
+  scale: {x: 1, y: 1, z: 0.75}
+l26-blood-2:
+  feetPosition: {x: 6.3, y: 0.005, z: 33}
+  id: l26-blood-2
+  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
+  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 1.1, radiusTop: 1.1}
+  scale: {x: 1, y: 1, z: 0.9500000000000001}
+l26-blood-3:
+  feetPosition: {x: -7, y: 0.005, z: 40}
+  id: l26-blood-3
+  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
+  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 0.8, radiusTop: 0.8}
+  scale: {x: 1, y: 1, z: 0.55}
+l26-blood-4:
+  feetPosition: {x: 1, y: 0.005, z: 22}
+  id: l26-blood-4
+  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
+  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 0.6, radiusTop: 0.6}
+  scale: {x: 1, y: 1, z: 0.75}
+l26-blood-5:
+  feetPosition: {x: -8.5, y: 0.005, z: -10}
+  id: l26-blood-5
+  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
+  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 1.2, radiusTop: 1.2}
+  scale: {x: 1, y: 1, z: 0.9500000000000001}
+l26-blood-6:
+  feetPosition: {x: 8, y: 0.005, z: -25}
+  id: l26-blood-6
+  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
+  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 0.7, radiusTop: 0.7}
+  scale: {x: 1, y: 1, z: 0.55}
+l26-blood-7:
+  feetPosition: {x: -2, y: 0.005, z: -34}
+  id: l26-blood-7
+  material: {color: oklch(0.25 0.1 25), roughness: 0.3}
+  primitive: {height: 0.01, kind: cylinder, radialSegments: 14, radiusBottom: 1, radiusTop: 1}
+  scale: {x: 1, y: 1, z: 0.75}
+l26-cabins:
+  feetPosition: {x: 0, y: 0, z: 2}
+  id: l26-cabins
+  material: {color: oklch(0.86 0.015 95), repeat: [0.4, 0.4], roughness: 0.7, texture: cdn/texture-white-painted-steel-cabin-wall-grime.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 40, height: 3.4, kind: box, width: 14}
+l26-cabins-trim:
+  feetPosition: {x: 0, y: 3.2, z: 2}
+  id: l26-cabins-trim
+  material: {color: oklch(0.32 0.09 255), roughness: 0.5}
+  primitive: {depth: 40.3, height: 0.25, kind: box, width: 14.3}
+l26-cup-11:
+  feetPosition: {x: 8.617602361281216, y: 0, z: -2.5987857564346797}
+  id: l26-cup-11
+  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
+  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
+  rotation: {roll: 90, yaw: 69.46196401001046}
+l26-cup-14:
+  feetPosition: {x: -8.167188011746475, y: 0, z: -7.3856362334385715}
+  id: l26-cup-14
+  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
+  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
+  rotation: {roll: 90, yaw: 152.62210541992548}
+l26-cup-17:
+  feetPosition: {x: 8.632487052973586, y: 0, z: 4.415771736957026}
+  id: l26-cup-17
+  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
+  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
+  rotation: {roll: 90, yaw: 248.03821301462048}
+l26-cup-2:
+  feetPosition: {x: 8.685700543171587, y: 0, z: 19.499221564037363}
+  id: l26-cup-2
+  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
+  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
+  rotation: {roll: 90, yaw: 228.9292576112455}
+l26-cup-20:
+  feetPosition: {x: 9.355115258393397, y: 0, z: -28.669791651270256}
+  id: l26-cup-20
+  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
+  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
+  rotation: {roll: 90, yaw: 294.9073590035119}
+l26-cup-23:
+  feetPosition: {x: -8.785831831389029, y: 0, z: -26.425213473115683}
+  id: l26-cup-23
+  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
+  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
+  rotation: {roll: 90, yaw: 331.87353147746694}
+l26-cup-26:
+  feetPosition: {x: -7.603167351709291, y: 0, z: 13.814567478287302}
+  id: l26-cup-26
+  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
+  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
+  rotation: {roll: 90, yaw: 83.29546103407418}
+l26-cup-29:
+  feetPosition: {x: -8.57852120780317, y: 0, z: -37.75053898792273}
+  id: l26-cup-29
+  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
+  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
+  rotation: {roll: 90, yaw: 328.67669992552914}
+l26-cup-32:
+  feetPosition: {x: -8.045553511588626, y: 0, z: -20.44949065821687}
+  id: l26-cup-32
+  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
+  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
+  rotation: {roll: 90, yaw: 203.18788863866956}
+l26-cup-35:
+  feetPosition: {x: -8.97572357029455, y: 0, z: 37.01392950071671}
+  id: l26-cup-35
+  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
+  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
+  rotation: {roll: 90, yaw: 13.341936624302498}
+l26-cup-38:
+  feetPosition: {x: 8.396600791065302, y: 0, z: -18.281191749629187}
+  id: l26-cup-38
+  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
+  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
+  rotation: {roll: 90, yaw: 145.75827420957307}
+l26-cup-5:
+  feetPosition: {x: 9.214817973046944, y: 0, z: -27.68173400018445}
+  id: l26-cup-5
+  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
+  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
+  rotation: {roll: 90, yaw: 184.6999667141121}
+l26-cup-8:
+  feetPosition: {x: 8.264503191907192, y: 0, z: -25.18385186380886}
+  id: l26-cup-8
+  material: {color: oklch(0.55 0.2 25), roughness: 0.5}
+  primitive: {height: 0.11, kind: cylinder, radialSegments: 10, radiusBottom: 0.035, radiusTop: 0.045}
+  rotation: {roll: 90, yaw: 107.15024984774658}
+l26-deck:
+  feetPosition: {x: 0, y: -0.5, z: 3}
+  id: l26-deck
+  material: {color: oklch(0.62 0.05 70), repeat: [0.5, 0.5], roughness: 0.85, texture: cdn/texture-weathered-teak-ship-deck-planks.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 90, height: 0.5, kind: box, width: 20}
+l26-deck-bow:
+  feetPosition: {x: 0, y: -0.5, z: -42}
+  id: l26-deck-bow
+  material: {color: oklch(0.62 0.05 70), repeat: [0.5, 0.5], roughness: 0.85, texture: cdn/texture-weathered-teak-ship-deck-planks.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 14.14, height: 0.5, kind: box, width: 14.14}
+  rotation: {yaw: 45}
+l26-deck-stern:
+  feetPosition: {x: 0, y: -0.5, z: 48}
+  id: l26-deck-stern
+  material: {color: oklch(0.62 0.05 70), repeat: [0.5, 0.5], roughness: 0.85, texture: cdn/texture-weathered-teak-ship-deck-planks.png, wrap: repeat}
+  physics: static
+  primitive: {height: 0.5, kind: cylinder, radialSegments: 40, radiusBottom: 10, radiusTop: 10}
+l26-door--1-1:
+  feetPosition: {x: -7.03, y: 0, z: -11.6}
+  id: l26-door--1-1
+  material: {color: oklch(0.45 0.05 60), roughness: 0.6}
+  primitive: {depth: 0.05, height: 2.1, kind: box, width: 0.9}
+  rotation: {yaw: -90}
+l26-door--1-10:
+  feetPosition: {x: -7.03, y: 0, z: 15.4}
+  id: l26-door--1-10
+  material: {color: oklch(0.45 0.05 60), roughness: 0.6}
+  primitive: {depth: 0.05, height: 2.1, kind: box, width: 0.9}
+  rotation: {yaw: -90}
+l26-door--1-4:
+  feetPosition: {x: -7.03, y: 0, z: -2.6}
+  id: l26-door--1-4
+  material: {color: oklch(0.45 0.05 60), roughness: 0.6}
+  primitive: {depth: 0.05, height: 2.1, kind: box, width: 0.9}
+  rotation: {yaw: -90}
+l26-door--1-7:
+  feetPosition: {x: -7.03, y: 0, z: 6.4}
+  id: l26-door--1-7
+  material: {color: oklch(0.45 0.05 60), roughness: 0.6}
+  primitive: {depth: 0.05, height: 2.1, kind: box, width: 0.9}
+  rotation: {yaw: -90}
+l26-door-1-1:
+  feetPosition: {x: 7.03, y: 0, z: -11.6}
+  id: l26-door-1-1
+  material: {color: oklch(0.45 0.05 60), roughness: 0.6}
+  primitive: {depth: 0.05, height: 2.1, kind: box, width: 0.9}
+  rotation: {yaw: 90}
+l26-door-1-10:
+  feetPosition: {x: 7.03, y: 0, z: 15.4}
+  id: l26-door-1-10
+  material: {color: oklch(0.45 0.05 60), roughness: 0.6}
+  primitive: {depth: 0.05, height: 2.1, kind: box, width: 0.9}
+  rotation: {yaw: 90}
+l26-door-1-4:
+  feetPosition: {x: 7.03, y: 0, z: -2.6}
+  id: l26-door-1-4
+  material: {color: oklch(0.45 0.05 60), roughness: 0.6}
+  primitive: {depth: 0.05, height: 2.1, kind: box, width: 0.9}
+  rotation: {yaw: 90}
+l26-door-1-7:
+  feetPosition: {x: 7.03, y: 0, z: 6.4}
+  id: l26-door-1-7
+  material: {color: oklch(0.45 0.05 60), roughness: 0.6}
+  primitive: {depth: 0.05, height: 2.1, kind: box, width: 0.9}
+  rotation: {yaw: 90}
+l26-funnel:
+  feetPosition: {x: 0, y: 3.4, z: 12}
+  id: l26-funnel
+  material: {color: oklch(0.45 0.16 25), roughness: 0.5}
+  physics: static
+  primitive: {height: 7, kind: cylinder, radialSegments: 32, radiusBottom: 2.4, radiusTop: 2}
+l26-funnel-top:
+  feetPosition: {x: 0, y: 10.4, z: 12}
+  id: l26-funnel-top
+  material: {color: oklch(0.15 0 0), roughness: 0.9}
+  primitive: {height: 1.2, kind: cylinder, radialSegments: 32, radiusBottom: 2.05, radiusTop: 2.05}
+l26-hat-0:
+  feetPosition: {x: -9.441529034004327, y: 0, z: -13.704070549320463}
+  id: l26-hat-0
+  material: {color: oklch(0.7 0.18 25), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 0, yaw: 75.7983324470922}
+l26-hat-12:
+  feetPosition: {x: 7.709759679115265, y: 0, z: -7.301070608804498}
+  id: l26-hat-12
+  material: {color: oklch(0.8 0.17 130), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 0, yaw: 123.88404781179692}
+l26-hat-15:
+  feetPosition: {x: -8.663320526417028, y: 0, z: 13.579674621848234}
+  id: l26-hat-15
+  material: {color: oklch(0.7 0.18 25), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 0, yaw: 83.96301172858244}
+l26-hat-18:
+  feetPosition: {x: 8.39344418774985, y: 0, z: 21.49146749241811}
+  id: l26-hat-18
+  material: {color: oklch(0.85 0.16 90), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 90, yaw: 90.40347887687548}
+l26-hat-21:
+  feetPosition: {x: -8.413607850490886, y: 0, z: -25.099985586060203}
+  id: l26-hat-21
+  material: {color: oklch(0.75 0.15 200), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 0, yaw: 28.03823608348064}
+l26-hat-24:
+  feetPosition: {x: 9.381148952330065, y: 0, z: 36.3585560798452}
+  id: l26-hat-24
+  material: {color: oklch(0.6 0.2 320), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 0, yaw: 326.794431249981}
+l26-hat-27:
+  feetPosition: {x: 8.578721666605547, y: 0, z: 19.75212685659161}
+  id: l26-hat-27
+  material: {color: oklch(0.8 0.17 130), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 0, yaw: 85.69748029378125}
+l26-hat-3:
+  feetPosition: {x: 8.08400954738446, y: 0, z: -6.564558593819179}
+  id: l26-hat-3
+  material: {color: oklch(0.85 0.16 90), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 0, yaw: 254.84448720460964}
+l26-hat-30:
+  feetPosition: {x: 9.44423406880546, y: 0, z: -36.236234638018644}
+  id: l26-hat-30
+  material: {color: oklch(0.7 0.18 25), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 90, yaw: 324.0190235171556}
+l26-hat-33:
+  feetPosition: {x: -9.138846992672814, y: 0, z: 20.859045784389153}
+  id: l26-hat-33
+  material: {color: oklch(0.85 0.16 90), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 90, yaw: 257.06784955089347}
+l26-hat-36:
+  feetPosition: {x: 9.322733710763385, y: 0, z: 45.39002560982017}
+  id: l26-hat-36
+  material: {color: oklch(0.75 0.15 200), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 0, yaw: 343.5446753462519}
+l26-hat-39:
+  feetPosition: {x: 8.717552381529265, y: 0, z: -8.479192781485242}
+  id: l26-hat-39
+  material: {color: oklch(0.6 0.2 320), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 0, yaw: 223.7439496180713}
+l26-hat-6:
+  feetPosition: {x: 8.977002886206378, y: 0, z: 16.07535576544486}
+  id: l26-hat-6
+  material: {color: oklch(0.75 0.15 200), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 0, yaw: 207.87578499311383}
+l26-hat-9:
+  feetPosition: {x: -8.189746803319895, y: 0, z: 40.729982694019554}
+  id: l26-hat-9
+  material: {color: oklch(0.6 0.2 320), roughness: 0.6}
+  primitive: {height: 0.26, kind: cone, radialSegments: 12, radius: 0.09}
+  rotation: {roll: 0, yaw: 200.65345022857815}
+l26-hull:
+  feetPosition: {x: 0, y: -12, z: 3}
+  id: l26-hull
+  material: {color: oklch(0.88 0.01 100), repeat: [0.2, 0.2], roughness: 0.6, texture: cdn/texture-white-painted-steel-ship-hull-rust-streaks.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 90, height: 11.5, kind: box, width: 20}
+l26-hull-bow:
+  feetPosition: {x: 0, y: -12, z: -42}
+  id: l26-hull-bow
+  material: {color: oklch(0.88 0.01 100), repeat: [0.2, 0.2], roughness: 0.6, texture: cdn/texture-white-painted-steel-ship-hull-rust-streaks.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 14.14, height: 11.5, kind: box, width: 14.14}
+  rotation: {yaw: 45}
+l26-hull-stern:
+  feetPosition: {x: 0, y: -12, z: 48}
+  id: l26-hull-stern
+  material: {color: oklch(0.88 0.01 100), repeat: [0.2, 0.2], roughness: 0.6, texture: cdn/texture-white-painted-steel-ship-hull-rust-streaks.png, wrap: repeat}
+  physics: static
+  primitive: {height: 11.5, kind: cylinder, radialSegments: 40, radiusBottom: 9, radiusTop: 10}
+l26-lamp--1-0:
+  feetPosition: {x: -7.15, y: 2.7, z: -15}
+  id: l26-lamp--1-0
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 2.2, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-lamp--1-1:
+  feetPosition: {x: -7.15, y: 2.7, z: -9}
+  id: l26-lamp--1-1
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 0.6, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-lamp--1-2:
+  feetPosition: {x: -7.15, y: 2.7, z: -3}
+  id: l26-lamp--1-2
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 2.2, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-lamp--1-3:
+  feetPosition: {x: -7.15, y: 2.7, z: 3}
+  id: l26-lamp--1-3
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 2.2, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-lamp--1-4:
+  feetPosition: {x: -7.15, y: 2.7, z: 9}
+  id: l26-lamp--1-4
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 2.2, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-lamp--1-5:
+  feetPosition: {x: -7.15, y: 2.7, z: 15}
+  id: l26-lamp--1-5
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 0.6, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-lamp--1-6:
+  feetPosition: {x: -7.15, y: 2.7, z: 21}
+  id: l26-lamp--1-6
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 2.2, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-lamp-1-0:
+  feetPosition: {x: 7.15, y: 2.7, z: -15}
+  id: l26-lamp-1-0
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 2.2, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-lamp-1-1:
+  feetPosition: {x: 7.15, y: 2.7, z: -9}
+  id: l26-lamp-1-1
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 2.2, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-lamp-1-2:
+  feetPosition: {x: 7.15, y: 2.7, z: -3}
+  id: l26-lamp-1-2
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 2.2, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-lamp-1-3:
+  feetPosition: {x: 7.15, y: 2.7, z: 3}
+  id: l26-lamp-1-3
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 0.6, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-lamp-1-4:
+  feetPosition: {x: 7.15, y: 2.7, z: 9}
+  id: l26-lamp-1-4
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 2.2, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-lamp-1-5:
+  feetPosition: {x: 7.15, y: 2.7, z: 15}
+  id: l26-lamp-1-5
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 2.2, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-lamp-1-6:
+  feetPosition: {x: 7.15, y: 2.7, z: 21}
+  id: l26-lamp-1-6
+  light: {color: oklch(0.9 0.1 95), distance: 9, intensity: 2.2, kind: point}
+  material: {color: oklch(0.95 0.08 95), emissive: oklch(0.95 0.08 95), emissiveIntensity: 2}
+  primitive: {kind: sphere, radius: 0.12}
+l26-mast:
+  feetPosition: {x: 0, y: 0, z: -40}
+  id: l26-mast
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  physics: static
+  primitive: {height: 9, kind: cylinder, radialSegments: 12, radiusBottom: 0.2, radiusTop: 0.12}
+l26-name:
+  feetPosition: {x: 0, y: 2.2, z: -18.03}
+  id: l26-name
+  vector: "<svg viewBox='0 0 400 60' width='9m'><text x='200' y='44' text-anchor='middle' font-family='serif' font-size='40' fill='#1b2a52' letter-spacing='8'>ADVENTURE</text><path d='M20 18 L380 40 M24 42 L376 16' stroke='#9c1a12' stroke-width='9' stroke-linecap='round'/></svg>"
+l26-pool-e:
+  feetPosition: {x: 5.25, y: 0, z: 36.5}
+  id: l26-pool-e
+  material: {color: oklch(0.8 0.03 200), roughness: 0.4}
+  physics: static
+  primitive: {depth: 10.5, height: 0.5, kind: box, width: 0.5}
+l26-pool-n:
+  feetPosition: {x: 0, y: 0, z: 31}
+  id: l26-pool-n
+  material: {color: oklch(0.8 0.03 200), roughness: 0.4}
+  physics: static
+  primitive: {depth: 0.5, height: 0.5, kind: box, width: 11}
+l26-pool-s:
+  feetPosition: {x: 0, y: 0, z: 42}
+  id: l26-pool-s
+  material: {color: oklch(0.8 0.03 200), roughness: 0.4}
+  physics: static
+  primitive: {depth: 0.5, height: 0.5, kind: box, width: 11}
+l26-pool-w:
+  feetPosition: {x: -5.25, y: 0, z: 36.5}
+  id: l26-pool-w
+  material: {color: oklch(0.8 0.03 200), roughness: 0.4}
+  physics: static
+  primitive: {depth: 10.5, height: 0.5, kind: box, width: 0.5}
+l26-pool-water:
+  feetPosition: {x: 0, y: 0.38, z: 36.5}
+  id: l26-pool-water
+  material: {color: oklch(0.3 0.13 22), kind: water, opacity: 0.97, waveIntensity: 0.15}
+  primitive: {height: 10.5, kind: plane, width: 10}
+  rotation: {pitch: -90}
+l26-pop-1:
+  feetPosition: {x: 8.258624627002806, y: 0, z: 25.172453518571544}
+  id: l26-pop-1
+  material: {color: oklch(0.85 0.16 90), roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.12}
+  scale: {x: 1, y: 0.3, z: 1.3}
+l26-pop-10:
+  feetPosition: {x: 7.717245610857962, y: 0, z: -15.026769029454687}
+  id: l26-pop-10
+  material: {color: oklch(0.8 0.17 130), roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.12}
+  scale: {x: 1, y: 0.3, z: 1.3}
+l26-pop-13:
+  feetPosition: {x: 8.629709710287726, y: 0, z: -24.093766155696365}
+  id: l26-pop-13
+  material: {color: oklch(0.7 0.18 25), roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.12}
+  scale: {x: 1, y: 0.3, z: 1.3}
+l26-pop-16:
+  feetPosition: {x: -9.326023101120267, y: 0, z: 15.350942189502966}
+  id: l26-pop-16
+  material: {color: oklch(0.85 0.16 90), roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.12}
+  scale: {x: 1, y: 0.3, z: 1.3}
+l26-pop-19:
+  feetPosition: {x: -8.26119967059288, y: 0, z: -5.119726508445908}
+  id: l26-pop-19
+  material: {color: oklch(0.75 0.15 200), roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.12}
+  scale: {x: 1, y: 0.3, z: 1.3}
+l26-pop-22:
+  feetPosition: {x: -8.864728298068385, y: 0, z: -25.8827633149376}
+  id: l26-pop-22
+  material: {color: oklch(0.6 0.2 320), roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.12}
+  scale: {x: 1, y: 0.3, z: 1.3}
+l26-pop-25:
+  feetPosition: {x: -7.620973200919559, y: 0, z: -17.143310088265366}
+  id: l26-pop-25
+  material: {color: oklch(0.8 0.17 130), roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.12}
+  scale: {x: 1, y: 0.3, z: 1.3}
+l26-pop-28:
+  feetPosition: {x: -8.347890078810924, y: 0, z: 37.11929215822336}
+  id: l26-pop-28
+  material: {color: oklch(0.7 0.18 25), roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.12}
+  scale: {x: 1, y: 0.3, z: 1.3}
+l26-pop-31:
+  feetPosition: {x: 8.730562191424221, y: 0, z: 19.067553209638014}
+  id: l26-pop-31
+  material: {color: oklch(0.85 0.16 90), roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.12}
+  scale: {x: 1, y: 0.3, z: 1.3}
+l26-pop-34:
+  feetPosition: {x: -7.820612724414381, y: 0, z: 39.1984877647825}
+  id: l26-pop-34
+  material: {color: oklch(0.75 0.15 200), roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.12}
+  scale: {x: 1, y: 0.3, z: 1.3}
+l26-pop-37:
+  feetPosition: {x: -8.096427401200135, y: 0, z: 23.123942768724604}
+  id: l26-pop-37
+  material: {color: oklch(0.6 0.2 320), roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.12}
+  scale: {x: 1, y: 0.3, z: 1.3}
+l26-pop-4:
+  feetPosition: {x: -8.967819110568529, y: 0, z: 1.3032356609139768}
+  id: l26-pop-4
+  material: {color: oklch(0.75 0.15 200), roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.12}
+  scale: {x: 1, y: 0.3, z: 1.3}
+l26-pop-7:
+  feetPosition: {x: 8.344491626855215, y: 0, z: -9.827552664944694}
+  id: l26-pop-7
+  material: {color: oklch(0.6 0.2 320), roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.12}
+  scale: {x: 1, y: 0.3, z: 1.3}
+l26-post-0-0:
+  feetPosition: {x: -10, y: 0, z: 48}
+  id: l26-post-0-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-1:
+  feetPosition: {x: -10, y: 0, z: 46}
+  id: l26-post-0-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-10:
+  feetPosition: {x: -10, y: 0, z: 28}
+  id: l26-post-0-10
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-11:
+  feetPosition: {x: -10, y: 0, z: 26}
+  id: l26-post-0-11
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-12:
+  feetPosition: {x: -10, y: 0, z: 24}
+  id: l26-post-0-12
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-13:
+  feetPosition: {x: -10, y: 0, z: 22.000000000000004}
+  id: l26-post-0-13
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-14:
+  feetPosition: {x: -10, y: 0, z: 20}
+  id: l26-post-0-14
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-15:
+  feetPosition: {x: -10, y: 0, z: 18}
+  id: l26-post-0-15
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-16:
+  feetPosition: {x: -10, y: 0, z: 16}
+  id: l26-post-0-16
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-17:
+  feetPosition: {x: -10, y: 0, z: 14}
+  id: l26-post-0-17
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-18:
+  feetPosition: {x: -10, y: 0, z: 12}
+  id: l26-post-0-18
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-19:
+  feetPosition: {x: -10, y: 0, z: 10}
+  id: l26-post-0-19
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-2:
+  feetPosition: {x: -10, y: 0, z: 44}
+  id: l26-post-0-2
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-20:
+  feetPosition: {x: -10, y: 0, z: 8}
+  id: l26-post-0-20
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-21:
+  feetPosition: {x: -10, y: 0, z: 6}
+  id: l26-post-0-21
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-22:
+  feetPosition: {x: -10, y: 0, z: 4}
+  id: l26-post-0-22
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-23:
+  feetPosition: {x: -10, y: 0, z: 2}
+  id: l26-post-0-23
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-24:
+  feetPosition: {x: -10, y: 0, z: 0}
+  id: l26-post-0-24
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-25:
+  feetPosition: {x: -10, y: 0, z: -2}
+  id: l26-post-0-25
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-26:
+  feetPosition: {x: -10, y: 0, z: -3.999999999999993}
+  id: l26-post-0-26
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-27:
+  feetPosition: {x: -10, y: 0, z: -6}
+  id: l26-post-0-27
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-28:
+  feetPosition: {x: -10, y: 0, z: -8}
+  id: l26-post-0-28
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-29:
+  feetPosition: {x: -10, y: 0, z: -10.000000000000007}
+  id: l26-post-0-29
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-3:
+  feetPosition: {x: -10, y: 0, z: 42}
+  id: l26-post-0-3
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-30:
+  feetPosition: {x: -10, y: 0, z: -12}
+  id: l26-post-0-30
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-31:
+  feetPosition: {x: -10, y: 0, z: -14}
+  id: l26-post-0-31
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-32:
+  feetPosition: {x: -10, y: 0, z: -16}
+  id: l26-post-0-32
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-33:
+  feetPosition: {x: -10, y: 0, z: -18}
+  id: l26-post-0-33
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-34:
+  feetPosition: {x: -10, y: 0, z: -20}
+  id: l26-post-0-34
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-35:
+  feetPosition: {x: -10, y: 0, z: -22}
+  id: l26-post-0-35
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-36:
+  feetPosition: {x: -10, y: 0, z: -24}
+  id: l26-post-0-36
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-37:
+  feetPosition: {x: -10, y: 0, z: -26}
+  id: l26-post-0-37
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-38:
+  feetPosition: {x: -10, y: 0, z: -28}
+  id: l26-post-0-38
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-39:
+  feetPosition: {x: -10, y: 0, z: -30}
+  id: l26-post-0-39
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-4:
+  feetPosition: {x: -10, y: 0, z: 40}
+  id: l26-post-0-4
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-40:
+  feetPosition: {x: -10, y: 0, z: -32}
+  id: l26-post-0-40
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-41:
+  feetPosition: {x: -10, y: 0, z: -34}
+  id: l26-post-0-41
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-42:
+  feetPosition: {x: -10, y: 0, z: -36}
+  id: l26-post-0-42
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-43:
+  feetPosition: {x: -10, y: 0, z: -38}
+  id: l26-post-0-43
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-44:
+  feetPosition: {x: -10, y: 0, z: -40}
+  id: l26-post-0-44
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-45:
+  feetPosition: {x: -10, y: 0, z: -42}
+  id: l26-post-0-45
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-5:
+  feetPosition: {x: -10, y: 0, z: 38}
+  id: l26-post-0-5
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-6:
+  feetPosition: {x: -10, y: 0, z: 36}
+  id: l26-post-0-6
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-7:
+  feetPosition: {x: -10, y: 0, z: 34}
+  id: l26-post-0-7
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-8:
+  feetPosition: {x: -10, y: 0, z: 32}
+  id: l26-post-0-8
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-0-9:
+  feetPosition: {x: -10, y: 0, z: 30}
+  id: l26-post-0-9
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-1-0:
+  feetPosition: {x: -10, y: 0, z: -42}
+  id: l26-post-1-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-1-1:
+  feetPosition: {x: -8.571428571428571, y: 0, z: -43.42857142857143}
+  id: l26-post-1-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-1-2:
+  feetPosition: {x: -7.142857142857143, y: 0, z: -44.857142857142854}
+  id: l26-post-1-2
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-1-3:
+  feetPosition: {x: -5.714285714285714, y: 0, z: -46.285714285714285}
+  id: l26-post-1-3
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-1-4:
+  feetPosition: {x: -4.2857142857142865, y: 0, z: -47.714285714285715}
+  id: l26-post-1-4
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-1-5:
+  feetPosition: {x: -2.8571428571428568, y: 0, z: -49.142857142857146}
+  id: l26-post-1-5
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-1-6:
+  feetPosition: {x: -1.4285714285714288, y: 0, z: -50.57142857142857}
+  id: l26-post-1-6
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-1-7:
+  feetPosition: {x: 0, y: 0, z: -52}
+  id: l26-post-1-7
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-10-0:
+  feetPosition: {x: 2.5881904510252074, y: 0, z: 57.65925826289068}
+  id: l26-post-10-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-10-1:
+  feetPosition: {x: 4.440892098500626e-16, y: 0, z: 58}
+  id: l26-post-10-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-11-0:
+  feetPosition: {x: 6.123233995736766e-16, y: 0, z: 58}
+  id: l26-post-11-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-11-1:
+  feetPosition: {x: -2.5881904510252065, y: 0, z: 57.65925826289068}
+  id: l26-post-11-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-12-0:
+  feetPosition: {x: -2.5881904510252065, y: 0, z: 57.65925826289068}
+  id: l26-post-12-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-12-1:
+  feetPosition: {x: -4.999999999999998, y: 0, z: 56.66025403784439}
+  id: l26-post-12-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-13-0:
+  feetPosition: {x: -4.999999999999998, y: 0, z: 56.66025403784439}
+  id: l26-post-13-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-13-1:
+  feetPosition: {x: -7.071067811865475, y: 0, z: 55.071067811865476}
+  id: l26-post-13-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-14-0:
+  feetPosition: {x: -7.071067811865475, y: 0, z: 55.071067811865476}
+  id: l26-post-14-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-14-1:
+  feetPosition: {x: -8.660254037844387, y: 0, z: 53}
+  id: l26-post-14-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-15-0:
+  feetPosition: {x: -8.660254037844387, y: 0, z: 53}
+  id: l26-post-15-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-15-1:
+  feetPosition: {x: -9.659258262890681, y: 0, z: 50.58819045102521}
+  id: l26-post-15-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-16-0:
+  feetPosition: {x: -9.659258262890681, y: 0, z: 50.58819045102521}
+  id: l26-post-16-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-16-1:
+  feetPosition: {x: -10, y: 0, z: 48}
+  id: l26-post-16-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-2-0:
+  feetPosition: {x: 0, y: 0, z: -52}
+  id: l26-post-2-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-2-1:
+  feetPosition: {x: 1.4285714285714284, y: 0, z: -50.57142857142857}
+  id: l26-post-2-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-2-2:
+  feetPosition: {x: 2.8571428571428568, y: 0, z: -49.142857142857146}
+  id: l26-post-2-2
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-2-3:
+  feetPosition: {x: 4.285714285714286, y: 0, z: -47.714285714285715}
+  id: l26-post-2-3
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-2-4:
+  feetPosition: {x: 5.7142857142857135, y: 0, z: -46.285714285714285}
+  id: l26-post-2-4
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-2-5:
+  feetPosition: {x: 7.142857142857143, y: 0, z: -44.857142857142854}
+  id: l26-post-2-5
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-2-6:
+  feetPosition: {x: 8.571428571428571, y: 0, z: -43.42857142857143}
+  id: l26-post-2-6
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-2-7:
+  feetPosition: {x: 10, y: 0, z: -42}
+  id: l26-post-2-7
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-0:
+  feetPosition: {x: 10, y: 0, z: -42}
+  id: l26-post-3-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-1:
+  feetPosition: {x: 10, y: 0, z: -40}
+  id: l26-post-3-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-10:
+  feetPosition: {x: 10, y: 0, z: -22}
+  id: l26-post-3-10
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-11:
+  feetPosition: {x: 10, y: 0, z: -20}
+  id: l26-post-3-11
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-12:
+  feetPosition: {x: 10, y: 0, z: -18}
+  id: l26-post-3-12
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-13:
+  feetPosition: {x: 10, y: 0, z: -16.000000000000004}
+  id: l26-post-3-13
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-14:
+  feetPosition: {x: 10, y: 0, z: -14}
+  id: l26-post-3-14
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-15:
+  feetPosition: {x: 10, y: 0, z: -12}
+  id: l26-post-3-15
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-16:
+  feetPosition: {x: 10, y: 0, z: -10}
+  id: l26-post-3-16
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-17:
+  feetPosition: {x: 10, y: 0, z: -8}
+  id: l26-post-3-17
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-18:
+  feetPosition: {x: 10, y: 0, z: -6}
+  id: l26-post-3-18
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-19:
+  feetPosition: {x: 10, y: 0, z: -4}
+  id: l26-post-3-19
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-2:
+  feetPosition: {x: 10, y: 0, z: -38}
+  id: l26-post-3-2
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-20:
+  feetPosition: {x: 10, y: 0, z: -2}
+  id: l26-post-3-20
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-21:
+  feetPosition: {x: 10, y: 0, z: 0}
+  id: l26-post-3-21
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-22:
+  feetPosition: {x: 10, y: 0, z: 2}
+  id: l26-post-3-22
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-23:
+  feetPosition: {x: 10, y: 0, z: 4}
+  id: l26-post-3-23
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-24:
+  feetPosition: {x: 10, y: 0, z: 6}
+  id: l26-post-3-24
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-25:
+  feetPosition: {x: 10, y: 0, z: 8}
+  id: l26-post-3-25
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-26:
+  feetPosition: {x: 10, y: 0, z: 9.999999999999993}
+  id: l26-post-3-26
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-27:
+  feetPosition: {x: 10, y: 0, z: 12}
+  id: l26-post-3-27
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-28:
+  feetPosition: {x: 10, y: 0, z: 14}
+  id: l26-post-3-28
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-29:
+  feetPosition: {x: 10, y: 0, z: 16.000000000000007}
+  id: l26-post-3-29
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-3:
+  feetPosition: {x: 10, y: 0, z: -36}
+  id: l26-post-3-3
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-30:
+  feetPosition: {x: 10, y: 0, z: 18}
+  id: l26-post-3-30
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-31:
+  feetPosition: {x: 10, y: 0, z: 20}
+  id: l26-post-3-31
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-32:
+  feetPosition: {x: 10, y: 0, z: 22}
+  id: l26-post-3-32
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-33:
+  feetPosition: {x: 10, y: 0, z: 24}
+  id: l26-post-3-33
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-34:
+  feetPosition: {x: 10, y: 0, z: 26}
+  id: l26-post-3-34
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-35:
+  feetPosition: {x: 10, y: 0, z: 28}
+  id: l26-post-3-35
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-36:
+  feetPosition: {x: 10, y: 0, z: 30}
+  id: l26-post-3-36
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-37:
+  feetPosition: {x: 10, y: 0, z: 32}
+  id: l26-post-3-37
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-38:
+  feetPosition: {x: 10, y: 0, z: 34}
+  id: l26-post-3-38
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-39:
+  feetPosition: {x: 10, y: 0, z: 36}
+  id: l26-post-3-39
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-4:
+  feetPosition: {x: 10, y: 0, z: -34}
+  id: l26-post-3-4
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-40:
+  feetPosition: {x: 10, y: 0, z: 38}
+  id: l26-post-3-40
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-41:
+  feetPosition: {x: 10, y: 0, z: 40}
+  id: l26-post-3-41
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-42:
+  feetPosition: {x: 10, y: 0, z: 42}
+  id: l26-post-3-42
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-43:
+  feetPosition: {x: 10, y: 0, z: 44}
+  id: l26-post-3-43
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-44:
+  feetPosition: {x: 10, y: 0, z: 46}
+  id: l26-post-3-44
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-45:
+  feetPosition: {x: 10, y: 0, z: 48}
+  id: l26-post-3-45
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-5:
+  feetPosition: {x: 10, y: 0, z: -32}
+  id: l26-post-3-5
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-6:
+  feetPosition: {x: 10, y: 0, z: -30}
+  id: l26-post-3-6
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-7:
+  feetPosition: {x: 10, y: 0, z: -28}
+  id: l26-post-3-7
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-8:
+  feetPosition: {x: 10, y: 0, z: -26}
+  id: l26-post-3-8
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-3-9:
+  feetPosition: {x: 10, y: 0, z: -24}
+  id: l26-post-3-9
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-5-0:
+  feetPosition: {x: 10, y: 0, z: 48}
+  id: l26-post-5-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-5-1:
+  feetPosition: {x: 9.659258262890683, y: 0, z: 50.588190451025206}
+  id: l26-post-5-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-6-0:
+  feetPosition: {x: 9.659258262890683, y: 0, z: 50.588190451025206}
+  id: l26-post-6-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-6-1:
+  feetPosition: {x: 8.660254037844387, y: 0, z: 53}
+  id: l26-post-6-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-7-0:
+  feetPosition: {x: 8.660254037844387, y: 0, z: 53}
+  id: l26-post-7-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-7-1:
+  feetPosition: {x: 7.0710678118654755, y: 0, z: 55.071067811865476}
+  id: l26-post-7-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-8-0:
+  feetPosition: {x: 7.0710678118654755, y: 0, z: 55.071067811865476}
+  id: l26-post-8-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-8-1:
+  feetPosition: {x: 5.000000000000001, y: 0, z: 56.66025403784438}
+  id: l26-post-8-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-9-0:
+  feetPosition: {x: 5.000000000000001, y: 0, z: 56.66025403784438}
+  id: l26-post-9-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-post-9-1:
+  feetPosition: {x: 2.5881904510252074, y: 0, z: 57.65925826289068}
+  id: l26-post-9-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 1.04, kind: cylinder, radialSegments: 6, radiusBottom: 0.035, radiusTop: 0.035}
+l26-rail-0:
+  children: []
+  feetPosition: {x: -10, y: 1, z: 3}
+  id: l26-rail-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 90, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: 0}
+l26-rail-1:
+  children: []
+  feetPosition: {x: -5, y: 1, z: -47}
+  id: l26-rail-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 14.142135623730951, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: -45}
+l26-rail-10:
+  children: []
+  feetPosition: {x: 1.294095225512604, y: 1, z: 57.829629131445344}
+  id: l26-rail-10
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010315, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: 97.50000000000004}
+l26-rail-11:
+  children: []
+  feetPosition: {x: -1.294095225512603, y: 1, z: 57.829629131445344}
+  id: l26-rail-11
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010315, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: 82.49999999999996}
+l26-rail-12:
+  children: []
+  feetPosition: {x: -3.7940952255126024, y: 1, z: 57.159756150367535}
+  id: l26-rail-12
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010297, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: 67.50000000000009}
+l26-rail-13:
+  children: []
+  feetPosition: {x: -6.035533905932736, y: 1, z: 55.865660924854936}
+  id: l26-rail-13
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.610523844401034, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: 52.49999999999998}
+l26-rail-14:
+  children: []
+  feetPosition: {x: -7.8656609248549305, y: 1, z: 54.03553390593274}
+  id: l26-rail-14
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.610523844401033, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: 37.50000000000002}
+l26-rail-15:
+  children: []
+  feetPosition: {x: -9.159756150367535, y: 1, z: 51.794095225512606}
+  id: l26-rail-15
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.610523844401026, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: 22.499999999999993}
+l26-rail-16:
+  children: []
+  feetPosition: {x: -9.82962913144534, y: 1, z: 49.294095225512606}
+  id: l26-rail-16
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.610523844401037, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: 7.500000000000026}
+l26-rail-2:
+  children: []
+  feetPosition: {x: 5, y: 1, z: -47}
+  id: l26-rail-2
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 14.142135623730951, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: -135}
+l26-rail-3:
+  children: []
+  feetPosition: {x: 10, y: 1, z: 3}
+  id: l26-rail-3
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 90, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: -180}
+l26-rail-5:
+  children: []
+  feetPosition: {x: 9.82962913144534, y: 1, z: 49.294095225512606}
+  id: l26-rail-5
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010297, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: 172.49999999999997}
+l26-rail-6:
+  children: []
+  feetPosition: {x: 9.159756150367535, y: 1, z: 51.794095225512606}
+  id: l26-rail-6
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010332, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: 157.50000000000003}
+l26-rail-7:
+  children: []
+  feetPosition: {x: 7.865660924854931, y: 1, z: 54.03553390593274}
+  id: l26-rail-7
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010324, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: 142.5}
+l26-rail-8:
+  children: []
+  feetPosition: {x: 6.035533905932738, y: 1, z: 55.86566092485493}
+  id: l26-rail-8
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010284, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: 127.49999999999991}
+l26-rail-9:
+  children: []
+  feetPosition: {x: 3.794095225512604, y: 1, z: 57.15975615036753}
+  id: l26-rail-9
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.610523844401034, kind: cylinder, radialSegments: 8, radiusBottom: 0.04, radiusTop: 0.04}
+  rotation: {pitch: 90, yaw: 112.50000000000006}
+l26-rail2-0:
+  feetPosition: {x: -10, y: 0.5, z: 3}
+  id: l26-rail2-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 90, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: 0}
+l26-rail2-1:
+  feetPosition: {x: -5, y: 0.5, z: -47}
+  id: l26-rail2-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 14.142135623730951, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: -45}
+l26-rail2-10:
+  feetPosition: {x: 1.294095225512604, y: 0.5, z: 57.829629131445344}
+  id: l26-rail2-10
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010315, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: 97.50000000000004}
+l26-rail2-11:
+  feetPosition: {x: -1.294095225512603, y: 0.5, z: 57.829629131445344}
+  id: l26-rail2-11
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010315, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: 82.49999999999996}
+l26-rail2-12:
+  feetPosition: {x: -3.7940952255126024, y: 0.5, z: 57.159756150367535}
+  id: l26-rail2-12
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010297, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: 67.50000000000009}
+l26-rail2-13:
+  feetPosition: {x: -6.035533905932736, y: 0.5, z: 55.865660924854936}
+  id: l26-rail2-13
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.610523844401034, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: 52.49999999999998}
+l26-rail2-14:
+  feetPosition: {x: -7.8656609248549305, y: 0.5, z: 54.03553390593274}
+  id: l26-rail2-14
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.610523844401033, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: 37.50000000000002}
+l26-rail2-15:
+  feetPosition: {x: -9.159756150367535, y: 0.5, z: 51.794095225512606}
+  id: l26-rail2-15
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.610523844401026, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: 22.499999999999993}
+l26-rail2-16:
+  feetPosition: {x: -9.82962913144534, y: 0.5, z: 49.294095225512606}
+  id: l26-rail2-16
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.610523844401037, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: 7.500000000000026}
+l26-rail2-2:
+  feetPosition: {x: 5, y: 0.5, z: -47}
+  id: l26-rail2-2
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 14.142135623730951, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: -135}
+l26-rail2-3:
+  feetPosition: {x: 10, y: 0.5, z: 3}
+  id: l26-rail2-3
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 90, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: -180}
+l26-rail2-5:
+  feetPosition: {x: 9.82962913144534, y: 0.5, z: 49.294095225512606}
+  id: l26-rail2-5
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010297, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: 172.49999999999997}
+l26-rail2-6:
+  feetPosition: {x: 9.159756150367535, y: 0.5, z: 51.794095225512606}
+  id: l26-rail2-6
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010332, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: 157.50000000000003}
+l26-rail2-7:
+  feetPosition: {x: 7.865660924854931, y: 0.5, z: 54.03553390593274}
+  id: l26-rail2-7
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010324, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: 142.5}
+l26-rail2-8:
+  feetPosition: {x: 6.035533905932738, y: 0.5, z: 55.86566092485493}
+  id: l26-rail2-8
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.6105238444010284, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: 127.49999999999991}
+l26-rail2-9:
+  feetPosition: {x: 3.794095225512604, y: 0.5, z: 57.15975615036753}
+  id: l26-rail2-9
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  pivot: center
+  primitive: {height: 2.610523844401034, kind: cylinder, radialSegments: 6, radiusBottom: 0.025, radiusTop: 0.025}
+  rotation: {pitch: 90, yaw: 112.50000000000006}
+l26-railc-0:
+  feetPosition: {x: -10, y: 0, z: 3}
+  id: l26-railc-0
+  physics: static
+  primitive: {depth: 90, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: 0}
+  visible: false
+l26-railc-1:
+  feetPosition: {x: -5, y: 0, z: -47}
+  id: l26-railc-1
+  physics: static
+  primitive: {depth: 14.142135623730951, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: -45}
+  visible: false
+l26-railc-10:
+  feetPosition: {x: 1.294095225512604, y: 0, z: 57.829629131445344}
+  id: l26-railc-10
+  physics: static
+  primitive: {depth: 2.6105238444010315, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: 97.50000000000004}
+  visible: false
+l26-railc-11:
+  feetPosition: {x: -1.294095225512603, y: 0, z: 57.829629131445344}
+  id: l26-railc-11
+  physics: static
+  primitive: {depth: 2.6105238444010315, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: 82.49999999999996}
+  visible: false
+l26-railc-12:
+  feetPosition: {x: -3.7940952255126024, y: 0, z: 57.159756150367535}
+  id: l26-railc-12
+  physics: static
+  primitive: {depth: 2.6105238444010297, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: 67.50000000000009}
+  visible: false
+l26-railc-13:
+  feetPosition: {x: -6.035533905932736, y: 0, z: 55.865660924854936}
+  id: l26-railc-13
+  physics: static
+  primitive: {depth: 2.610523844401034, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: 52.49999999999998}
+  visible: false
+l26-railc-14:
+  feetPosition: {x: -7.8656609248549305, y: 0, z: 54.03553390593274}
+  id: l26-railc-14
+  physics: static
+  primitive: {depth: 2.610523844401033, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: 37.50000000000002}
+  visible: false
+l26-railc-15:
+  feetPosition: {x: -9.159756150367535, y: 0, z: 51.794095225512606}
+  id: l26-railc-15
+  physics: static
+  primitive: {depth: 2.610523844401026, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: 22.499999999999993}
+  visible: false
+l26-railc-16:
+  feetPosition: {x: -9.82962913144534, y: 0, z: 49.294095225512606}
+  id: l26-railc-16
+  physics: static
+  primitive: {depth: 2.610523844401037, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: 7.500000000000026}
+  visible: false
+l26-railc-2:
+  feetPosition: {x: 5, y: 0, z: -47}
+  id: l26-railc-2
+  physics: static
+  primitive: {depth: 14.142135623730951, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: -135}
+  visible: false
+l26-railc-3:
+  feetPosition: {x: 10, y: 0, z: 3}
+  id: l26-railc-3
+  physics: static
+  primitive: {depth: 90, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: -180}
+  visible: false
+l26-railc-5:
+  feetPosition: {x: 9.82962913144534, y: 0, z: 49.294095225512606}
+  id: l26-railc-5
+  physics: static
+  primitive: {depth: 2.6105238444010297, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: 172.49999999999997}
+  visible: false
+l26-railc-6:
+  feetPosition: {x: 9.159756150367535, y: 0, z: 51.794095225512606}
+  id: l26-railc-6
+  physics: static
+  primitive: {depth: 2.6105238444010332, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: 157.50000000000003}
+  visible: false
+l26-railc-7:
+  feetPosition: {x: 7.865660924854931, y: 0, z: 54.03553390593274}
+  id: l26-railc-7
+  physics: static
+  primitive: {depth: 2.6105238444010324, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: 142.5}
+  visible: false
+l26-railc-8:
+  feetPosition: {x: 6.035533905932738, y: 0, z: 55.86566092485493}
+  id: l26-railc-8
+  physics: static
+  primitive: {depth: 2.6105238444010284, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: 127.49999999999991}
+  visible: false
+l26-railc-9:
+  feetPosition: {x: 3.794095225512604, y: 0, z: 57.15975615036753}
+  id: l26-railc-9
+  physics: static
+  primitive: {depth: 2.610523844401034, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: 112.50000000000006}
+  visible: false
+l26-ramp--1:
+  feetPosition: {x: -5.6, y: 1.55, z: 25}
+  id: l26-ramp--1
+  physics: static
+  pivot: center
+  primitive: {depth: 6.9, height: 0.3, kind: box, width: 1.6}
+  rotation: {pitch: 29.5}
+  visible: false
+l26-ramp-1:
+  feetPosition: {x: 5.6, y: 1.55, z: 25}
+  id: l26-ramp-1
+  physics: static
+  pivot: center
+  primitive: {depth: 6.9, height: 0.3, kind: box, width: 1.6}
+  rotation: {pitch: 29.5}
+  visible: false
+l26-sea:
+  feetPosition: {x: 0, y: -12, z: 0}
+  id: l26-sea
+  material: {color: oklch(0.36 0.05 170), kind: water, opacity: 0.95, waveIntensity: 0.6}
+  primitive: {height: 1400, kind: plane, width: 1400}
+  rotation: {pitch: -90}
+l26-snd-fog:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-low-eerie-fog-drone-with-distant-ship-horn-loop.mp3, gain: 0.12, loop: true, spatial: false}
+  feetPosition: {x: 0, y: 6, z: -45}
+  id: l26-snd-fog
+l26-snd-party:
+  audio: {clip: /cdn/moodboard-realistic-gritty/music-muffled-party-music-through-steel-floor-distorted-bass-loop.mp3, gain: 0.35, loop: true, maxDistance: 40, spatial: true}
+  feetPosition: {x: 0, y: -2, z: 5}
+  id: l26-snd-party
+l26-snd-sea:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-ocean-waves-against-ship-hull-loop.mp3, gain: 0.18, loop: true, spatial: false}
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l26-snd-sea
+l26-step--1-0:
+  feetPosition: {x: -5.6, y: 0, z: 27.75}
+  id: l26-step--1-0
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 0.283, kind: box, width: 1.6}
+l26-step--1-1:
+  feetPosition: {x: -5.6, y: 0, z: 27.25}
+  id: l26-step--1-1
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 0.566, kind: box, width: 1.6}
+l26-step--1-10:
+  feetPosition: {x: -5.6, y: 0, z: 22.75}
+  id: l26-step--1-10
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 3.1129999999999995, kind: box, width: 1.6}
+l26-step--1-11:
+  feetPosition: {x: -5.6, y: 0, z: 22.25}
+  id: l26-step--1-11
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 3.396, kind: box, width: 1.6}
+l26-step--1-2:
+  feetPosition: {x: -5.6, y: 0, z: 26.75}
+  id: l26-step--1-2
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 0.849, kind: box, width: 1.6}
+l26-step--1-3:
+  feetPosition: {x: -5.6, y: 0, z: 26.25}
+  id: l26-step--1-3
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 1.132, kind: box, width: 1.6}
+l26-step--1-4:
+  feetPosition: {x: -5.6, y: 0, z: 25.75}
+  id: l26-step--1-4
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 1.4149999999999998, kind: box, width: 1.6}
+l26-step--1-5:
+  feetPosition: {x: -5.6, y: 0, z: 25.25}
+  id: l26-step--1-5
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 1.698, kind: box, width: 1.6}
+l26-step--1-6:
+  feetPosition: {x: -5.6, y: 0, z: 24.75}
+  id: l26-step--1-6
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 1.9809999999999999, kind: box, width: 1.6}
+l26-step--1-7:
+  feetPosition: {x: -5.6, y: 0, z: 24.25}
+  id: l26-step--1-7
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 2.264, kind: box, width: 1.6}
+l26-step--1-8:
+  feetPosition: {x: -5.6, y: 0, z: 23.75}
+  id: l26-step--1-8
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 2.5469999999999997, kind: box, width: 1.6}
+l26-step--1-9:
+  feetPosition: {x: -5.6, y: 0, z: 23.25}
+  id: l26-step--1-9
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 2.8299999999999996, kind: box, width: 1.6}
+l26-step-1-0:
+  feetPosition: {x: 5.6, y: 0, z: 27.75}
+  id: l26-step-1-0
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 0.283, kind: box, width: 1.6}
+l26-step-1-1:
+  feetPosition: {x: 5.6, y: 0, z: 27.25}
+  id: l26-step-1-1
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 0.566, kind: box, width: 1.6}
+l26-step-1-10:
+  feetPosition: {x: 5.6, y: 0, z: 22.75}
+  id: l26-step-1-10
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 3.1129999999999995, kind: box, width: 1.6}
+l26-step-1-11:
+  feetPosition: {x: 5.6, y: 0, z: 22.25}
+  id: l26-step-1-11
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 3.396, kind: box, width: 1.6}
+l26-step-1-2:
+  feetPosition: {x: 5.6, y: 0, z: 26.75}
+  id: l26-step-1-2
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 0.849, kind: box, width: 1.6}
+l26-step-1-3:
+  feetPosition: {x: 5.6, y: 0, z: 26.25}
+  id: l26-step-1-3
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 1.132, kind: box, width: 1.6}
+l26-step-1-4:
+  feetPosition: {x: 5.6, y: 0, z: 25.75}
+  id: l26-step-1-4
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 1.4149999999999998, kind: box, width: 1.6}
+l26-step-1-5:
+  feetPosition: {x: 5.6, y: 0, z: 25.25}
+  id: l26-step-1-5
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 1.698, kind: box, width: 1.6}
+l26-step-1-6:
+  feetPosition: {x: 5.6, y: 0, z: 24.75}
+  id: l26-step-1-6
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 1.9809999999999999, kind: box, width: 1.6}
+l26-step-1-7:
+  feetPosition: {x: 5.6, y: 0, z: 24.25}
+  id: l26-step-1-7
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 2.264, kind: box, width: 1.6}
+l26-step-1-8:
+  feetPosition: {x: 5.6, y: 0, z: 23.75}
+  id: l26-step-1-8
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 2.5469999999999997, kind: box, width: 1.6}
+l26-step-1-9:
+  feetPosition: {x: 5.6, y: 0, z: 23.25}
+  id: l26-step-1-9
+  material: {color: oklch(0.55 0.03 70), roughness: 0.8}
+  primitive: {depth: 0.5, height: 2.8299999999999996, kind: box, width: 1.6}
+l26-stripe:
+  feetPosition: {x: 0, y: -2.6, z: 3}
+  id: l26-stripe
+  material: {color: oklch(0.32 0.09 255), roughness: 0.5}
+  primitive: {depth: 90.05, height: 0.7, kind: box, width: 20.12}
+l26-stripe-bow:
+  feetPosition: {x: 0, y: -2.6, z: -42}
+  id: l26-stripe-bow
+  material: {color: oklch(0.32 0.09 255), roughness: 0.5}
+  primitive: {depth: 14.22, height: 0.7, kind: box, width: 14.22}
+  rotation: {yaw: 45}
+l26-stripe-stern:
+  feetPosition: {x: 0, y: -2.6, z: 48}
+  id: l26-stripe-stern
+  material: {color: oklch(0.32 0.09 255), roughness: 0.5}
+  primitive: {height: 0.7, kind: cylinder, radialSegments: 40, radiusBottom: 9.82, radiusTop: 9.86}
+l26-sundeck:
+  feetPosition: {x: 0, y: 3.4, z: 2}
+  id: l26-sundeck
+  material: {color: oklch(0.62 0.05 70), repeat: [0.5, 0.5], roughness: 0.85, texture: cdn/texture-weathered-teak-ship-deck-planks.png, wrap: repeat}
+  physics: static
+  primitive: {depth: 40, height: 0.05, kind: box, width: 14}
+l26-table-0:
+  children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.7 0.18 25), roughness: 0.8}, primitive: {height: 0.04, kind: cylinder, radialSegments: 24, radiusBottom: 0.6, radiusTop: 0.6}}, {feetPosition: {x: 0.15, y: 0.76, z: 0.1}, material: {color: oklch(0.75 0.15 200)}, primitive: {height: 0.22, kind: cone, radialSegments: 10, radius: 0.08}}]
+  feetPosition: {x: 8.4, y: 0, z: 25}
+  id: l26-table-0
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 0.72, kind: cylinder, radialSegments: 12, radiusBottom: 0.25, radiusTop: 0.06}
+l26-table-1:
+  children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.75 0.15 200), roughness: 0.8}, primitive: {height: 0.04, kind: cylinder, radialSegments: 24, radiusBottom: 0.6, radiusTop: 0.6}}, {feetPosition: {x: 0.15, y: 0.76, z: 0.1}, material: {color: oklch(0.8 0.17 130)}, primitive: {height: 0.22, kind: cone, radialSegments: 10, radius: 0.08}}]
+  feetPosition: {x: -8.4, y: 0, z: 25}
+  id: l26-table-1
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 0.72, kind: cylinder, radialSegments: 12, radiusBottom: 0.25, radiusTop: 0.06}
+l26-table-2:
+  children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.8 0.17 130), roughness: 0.8}, primitive: {height: 0.04, kind: cylinder, radialSegments: 24, radiusBottom: 0.6, radiusTop: 0.6}}, {feetPosition: {x: 0.15, y: 0.76, z: 0.1}, material: {color: oklch(0.85 0.16 90)}, primitive: {height: 0.22, kind: cone, radialSegments: 10, radius: 0.08}}]
+  feetPosition: {x: 8.4, y: 0, z: 32}
+  id: l26-table-2
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 0.72, kind: cylinder, radialSegments: 12, radiusBottom: 0.25, radiusTop: 0.06}
+l26-table-3:
+  children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.85 0.16 90), roughness: 0.8}, primitive: {height: 0.04, kind: cylinder, radialSegments: 24, radiusBottom: 0.6, radiusTop: 0.6}}, {feetPosition: {x: 0.15, y: 0.76, z: 0.1}, material: {color: oklch(0.6 0.2 320)}, primitive: {height: 0.22, kind: cone, radialSegments: 10, radius: 0.08}}]
+  feetPosition: {x: -8.4, y: 0, z: 32}
+  id: l26-table-3
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 0.72, kind: cylinder, radialSegments: 12, radiusBottom: 0.25, radiusTop: 0.06}
+l26-table-4:
+  children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.6 0.2 320), roughness: 0.8}, primitive: {height: 0.04, kind: cylinder, radialSegments: 24, radiusBottom: 0.6, radiusTop: 0.6}}, {feetPosition: {x: 0.15, y: 0.76, z: 0.1}, material: {color: oklch(0.7 0.18 25)}, primitive: {height: 0.22, kind: cone, radialSegments: 10, radius: 0.08}}]
+  feetPosition: {x: 8.4, y: 0, z: 39}
+  id: l26-table-4
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 0.72, kind: cylinder, radialSegments: 12, radiusBottom: 0.25, radiusTop: 0.06}
+l26-table-5:
+  children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.7 0.18 25), roughness: 0.8}, primitive: {height: 0.04, kind: cylinder, radialSegments: 24, radiusBottom: 0.6, radiusTop: 0.6}}, {feetPosition: {x: 0.15, y: 0.76, z: 0.1}, material: {color: oklch(0.75 0.15 200)}, primitive: {height: 0.22, kind: cone, radialSegments: 10, radius: 0.08}}]
+  feetPosition: {x: -8.4, y: 0, z: 39}
+  id: l26-table-5
+  material: {color: oklch(0.9 0.01 100), metalness: 0.6, roughness: 0.4}
+  primitive: {height: 0.72, kind: cylinder, radialSegments: 12, radiusBottom: 0.25, radiusTop: 0.06}
+l26-win--1-0:
+  feetPosition: {x: -7.02, y: 1.5, z: -16}
+  id: l26-win--1-0
+  material: {color: oklch(0.1 0 0), emissive: oklch(0 0 0), emissiveIntensity: 0, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: -90}
+l26-win--1-1:
+  feetPosition: {x: -7.02, y: 1.5, z: -13}
+  id: l26-win--1-1
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: -90}
+l26-win--1-10:
+  feetPosition: {x: -7.02, y: 1.5, z: 14}
+  id: l26-win--1-10
+  material: {color: oklch(0.1 0 0), emissive: oklch(0 0 0), emissiveIntensity: 0, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: -90}
+l26-win--1-11:
+  feetPosition: {x: -7.02, y: 1.5, z: 17}
+  id: l26-win--1-11
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: -90}
+l26-win--1-12:
+  feetPosition: {x: -7.02, y: 1.5, z: 20}
+  id: l26-win--1-12
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: -90}
+l26-win--1-2:
+  feetPosition: {x: -7.02, y: 1.5, z: -10}
+  id: l26-win--1-2
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: -90}
+l26-win--1-3:
+  feetPosition: {x: -7.02, y: 1.5, z: -7}
+  id: l26-win--1-3
+  material: {color: oklch(0.2 0.02 90), emissive: oklch(0 0 0), emissiveIntensity: 0, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: -90}
+l26-win--1-4:
+  feetPosition: {x: -7.02, y: 1.5, z: -4}
+  id: l26-win--1-4
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: -90}
+l26-win--1-5:
+  feetPosition: {x: -7.02, y: 1.5, z: -1}
+  id: l26-win--1-5
+  material: {color: oklch(0.1 0 0), emissive: oklch(0 0 0), emissiveIntensity: 0, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: -90}
+l26-win--1-6:
+  feetPosition: {x: -7.02, y: 1.5, z: 2}
+  id: l26-win--1-6
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: -90}
+l26-win--1-7:
+  feetPosition: {x: -7.02, y: 1.5, z: 5}
+  id: l26-win--1-7
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: -90}
+l26-win--1-8:
+  feetPosition: {x: -7.02, y: 1.5, z: 8}
+  id: l26-win--1-8
+  material: {color: oklch(0.2 0.02 90), emissive: oklch(0 0 0), emissiveIntensity: 0, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: -90}
+l26-win--1-9:
+  feetPosition: {x: -7.02, y: 1.5, z: 11}
+  id: l26-win--1-9
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: -90}
+l26-win-1-0:
+  feetPosition: {x: 7.02, y: 1.5, z: -16}
+  id: l26-win-1-0
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+l26-win-1-1:
+  feetPosition: {x: 7.02, y: 1.5, z: -13}
+  id: l26-win-1-1
+  material: {color: oklch(0.1 0 0), emissive: oklch(0 0 0), emissiveIntensity: 0, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+l26-win-1-10:
+  feetPosition: {x: 7.02, y: 1.5, z: 14}
+  id: l26-win-1-10
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+l26-win-1-11:
+  feetPosition: {x: 7.02, y: 1.5, z: 17}
+  id: l26-win-1-11
+  material: {color: oklch(0.1 0 0), emissive: oklch(0 0 0), emissiveIntensity: 0, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+l26-win-1-12:
+  feetPosition: {x: 7.02, y: 1.5, z: 20}
+  id: l26-win-1-12
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+l26-win-1-2:
+  feetPosition: {x: 7.02, y: 1.5, z: -10}
+  id: l26-win-1-2
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+l26-win-1-3:
+  feetPosition: {x: 7.02, y: 1.5, z: -7}
+  id: l26-win-1-3
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+l26-win-1-4:
+  feetPosition: {x: 7.02, y: 1.5, z: -4}
+  id: l26-win-1-4
+  material: {color: oklch(0.2 0.02 90), emissive: oklch(0 0 0), emissiveIntensity: 0, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+l26-win-1-5:
+  feetPosition: {x: 7.02, y: 1.5, z: -1}
+  id: l26-win-1-5
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+l26-win-1-6:
+  feetPosition: {x: 7.02, y: 1.5, z: 2}
+  id: l26-win-1-6
+  material: {color: oklch(0.1 0 0), emissive: oklch(0 0 0), emissiveIntensity: 0, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+l26-win-1-7:
+  feetPosition: {x: 7.02, y: 1.5, z: 5}
+  id: l26-win-1-7
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+l26-win-1-8:
+  feetPosition: {x: 7.02, y: 1.5, z: 8}
+  id: l26-win-1-8
+  material: {color: oklch(0.85 0.1 95), emissive: oklch(0.85 0.1 95), emissiveIntensity: 0.6, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: 90}
+l26-win-1-9:
+  feetPosition: {x: 7.02, y: 1.5, z: 11}
+  id: l26-win-1-9
+  material: {color: oklch(0.2 0.02 90), emissive: oklch(0 0 0), emissiveIntensity: 0, metalness: 0.3, roughness: 0.2}
+  primitive: {depth: 0.04, height: 0.8, kind: box, width: 1.1}
+  rotation: {yaw: 90}
