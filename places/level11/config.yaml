@@ -6,6 +6,7 @@ defaultSpawnPoint: { x: 0, y: 0.25, z: 12 }
 defaultSpawnRotation: { yaw: 0 }
 worldBounds: { bottom: -30 }
 atmosphere:
+  look: { script: scripts/look-photo.js }
   clouds: { enabled: true, density: 0.35, speed: 0.7 }
   fog: { kind: linear, near: 55, far: 320, color: oklch(0.74 0.05 70) }
   timeOfDay: 17.3

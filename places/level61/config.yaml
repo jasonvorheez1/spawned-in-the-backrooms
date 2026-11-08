@@ -6,6 +6,7 @@ defaultSpawnPoint: { x: 0, y: 0.1, z: 14 }
 defaultSpawnRotation: { yaw: 0 }
 worldBounds: { bottom: -20 }
 atmosphere:
+  look: { script: scripts/look-photo.js }
   clouds: { enabled: false }
   fog: { kind: linear, near: 30, far: 90, color: oklch(0.86 0.03 75) }
   moon: { enabled: false, intensity: 0 }

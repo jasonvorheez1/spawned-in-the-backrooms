@@ -311,8 +311,8 @@ function lay(ctx) {
     ],
   });
   const FOUNTAIN_FX = `fx
-pop spray rate=12 on=ring(1.3,1.7) life=.7..1.2 v=up(.7..1.2)+sdir()*.18 size=.03..0.06 acc=grav() floor=die col=<.75,.9,1> a=0>.6:1>.8:.8>0 sz=$size r=sprite(soft-disc,alpha)
-pop mist rate=5 on=ring(1.2,1.6) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.22 col=<.85,.95,1> a=0>.4:.2>.4:.8>0 sz=$size*(.8>1.8) r=sprite(smoke-puff,alpha)`;
+pop spray rate=12 on=arc(1.5,6.283,.4) life=.7..1.2 v=up(.7..1.2)+sdir()*.18 size=.03..0.06 acc=grav() floor=die col=<.75,.9,1> a=0>.6:1>.8:.8>0 sz=$size r=sprite(soft-disc,alpha)
+pop mist rate=5 on=arc(1.4,6.283,.4) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.22 col=<.85,.95,1> a=0>.4:.2>.4:.8>0 sz=$size*(.8>1.8) r=sprite(smoke-puff,alpha)`;
   sp("l61-fountain-spray", {
     feetPosition: { x: 0, y: 1.32, z: 0 },
     fx: { script: FOUNTAIN_FX },
