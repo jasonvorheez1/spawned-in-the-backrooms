@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 39;
+const V = 40;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -262,7 +262,7 @@ function lay(ctx) {
   // ---- The Stores off North Wall
   const STORES = [
     [-21, "clippers", WOOD, "oklch(0.42 0.17 25)", `<div style="font-size:300px;color:#ffe0d0;font-family:serif;font-style:italic">Clippers</div><div style="font-size:90px;color:#ffb0a0">COCKTAILS · EST. 1954</div>`, "oklch(0.3 0.14 25)", "oklch(0.8 0.12 30)"],
-    [-7, "liquorette", MOSAIC, "oklch(0.26 0.1 25)", `<div style="font-size:280px;color:#f2d98a;font-family:serif">Liquorette</div><div style="font-size:80px;color:#b8e0a8">BEER · WHISKEY · ALMOND WATER</div>`, "oklch(0.2 0.04 40)", "oklch(0.85 0.1 85)"],
+    [-7, "liquorette", MOSAIC, "oklch(0.2 0.045 28)", `<div style="font-size:280px;color:#f2d98a;font-family:serif">Liquorette</div><div style="font-size:80px;color:#b8e0a8">BEER · WHISKEY · ALMOND WATER</div>`, "oklch(0.2 0.04 40)", "oklch(0.85 0.1 85)"],
     [7, "slice", { ...TERRAZZO, color: "oklch(0.85 0.04 30)" }, "oklch(0.9 0.03 90)", `<div style="font-size:250px;color:#ff4a3a">SLICE PALACE</div><div style="font-size:90px;color:#2a7a3a">PIZZA BY THE SLICE · FREE</div>`, "oklch(0.96 0.01 90)", "oklch(0.95 0.04 80)"],
     [21, "burger", CHECK, "oklch(0.7 0.11 195)", `<div style="font-size:260px;color:#ff7ab8">BURGER BOP</div><div style="font-size:90px;color:#ffffff">SHAKES · FRIES · '86 PRICES</div>`, "oklch(0.35 0.1 280)", "oklch(0.92 0.05 330)"],
   ];
@@ -363,7 +363,7 @@ function lay(ctx) {
   // pendant lamps on short cords: warm glass globes over the bar and the tables
   [[-10.2, -29.2], [-10.2, -27], [-10.2, -24.8], [-6.6, -25.2], [-2.6, -25.2], [-6.6, -29.2], [-2.6, -29.2]].forEach(([lx, lz], k) => {
     box(`l61-liq-cord-${k}`, lx, 3.0, lz, 0.015, 0.7, 0.015, { color: "oklch(0.15 0 0)" }, { physics: undefined });
-    sp(`l61-liq-lamp-${k}`, { feetPosition: { x: lx, y: 2.78, z: lz }, primitive: { kind: "sphere", radius: 0.16 }, material: { color: "oklch(0.92 0.1 80)", emissive: "oklch(0.88 0.16 75)", emissiveIntensity: 2.2, roughness: 0.2 }, light: { kind: "point", color: "oklch(0.82 0.15 65)", intensity: 2.2, distance: 6.5 } });
+    sp(`l61-liq-lamp-${k}`, { feetPosition: { x: lx, y: 2.78, z: lz }, primitive: { kind: "sphere", radius: 0.16 }, material: { color: "oklch(0.92 0.1 80)", emissive: "oklch(0.8 0.14 70)", emissiveIntensity: 1.1, roughness: 0.2 }, light: { kind: "point", color: "oklch(0.8 0.14 62)", intensity: 1.5, distance: 6 } });
   });
   // the stained glass throws its own green-gold glow over the bar
   sp("l61-liq-glass-glow", { feetPosition: { x: -12.6, y: 3.0, z: -27 }, light: { kind: "point", color: "oklch(0.86 0.15 120)", intensity: 3, distance: 7 } });
