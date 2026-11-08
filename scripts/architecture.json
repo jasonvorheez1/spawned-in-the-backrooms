@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2279,
-  "updatedAt": "2026-11-08T20:34:34.286Z",
+  "basedOnSpecVersion": 2294,
+  "updatedAt": "2026-11-08T20:46:03.452Z",
   "summary": "The Backrooms is a shared survival RPG with persistent player progression across authored and simulation-built levels. Shared player, NPC, combat, appearance and presentation systems serve the world; new players create a character, follow a locally staged Level 0 tutorial route, then enter Level 1, while later arrivals land in the main Level 0 hub.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 / The Lobby, yellow maze and safe-room hub; authored fixtures, hunters, shifting-wall moments and lore props.",
     "places/intake (3D) - standalone bedroom character-creation room; authored props plus scripts/intake-geo.js shell.",
-    "places/tutorial0 (3D, solo ephemeral) - hand-built Level 0 tutorial route from ceiling-drop room through halls to Level 1; local fixtures/lights and wrist unit.",
+    "places/tutorial0 (3D, solo ephemeral) - authored Level 0 route with entity encounter, HALOGEN machine, drawings, wet-carpet fall and local props/lights.",
     "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored spaces plus simulated Level 2.1 rooms, zones and agents.",
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; residents, hazards and Boiler Room Death Rats.",
     "places/level6, places/level61, places/level7, places/level8 (3D) - Lights Out, Snackrooms, ocean/Seawatch and Fort Surrender; food-court services, camps, caves and traders.",
@@ -21,14 +21,14 @@
     "sim.js - world cadence and out-of-bounds handling: players respawn, creatures with state.home return, others are destroyed for manager respawn.",
     "scripts/main-menu.js + scripts/main-menu-ui.js - local title/pause, character creation, intro/arrival and tutorial routing; START enters intake.",
     "places/intake/cells/x0z0.scene + scripts/intake-geo.js + scripts/lib/intro-cut.js - bedroom shell and timed player-local waking sequence after character creation.",
-    "places/tutorial0/cells/x0z0.scene + scripts/tut0-geo.js + scripts/tut0-panels-geo.js + places/tutorial0/sim.js - tutorial route assembly and local props/lights.",
-    "scripts/lib/tut0-cut.js + scripts/cutscene-ui.js + scripts/ui.js - local tutorial beats, captions/letterbox/title and HUD composition."
+    "places/tutorial0/cells/x0z0.scene + scripts/tut0-geo.js + scripts/tut0-panels-geo.js + places/tutorial0/sim.js - tutorial route geometry, blueprint and locally laid props/lights.",
+    "scripts/lib/tut0-cut.js + scripts/cutscene-ui.js + scripts/ui.js - local tutorial beat controller, captions/letterbox/title and HUD composition."
   ],
   "shared": [
     "scripts/lib/screen.js - read-only current-screen classifier and wrist-panel gate/replacer shared by player, stats, craft, rest and main-menu input handling.",
     "scripts/lib/maze.js, level1.js, level2.js, level21.js through level7.js + data - per-level grids, zones, layouts and paths reused by sims, geometry, labels and navigation.",
     "scripts/lib/level-kit.js + scripts/lib/npc-respawn.js - named-person management, throttling and shared NPC return timing for place sims.",
-    "scripts/lib/clothes.js + clothes.yml and scripts/lib/critter-model.js + critter/model, clothes and face data - shared garment/body/species/head construction for players and NPCs.",
+    "scripts/lib/clothes.js + clothes.yml and scripts/lib/critter-model.js + critter/model, clothes and face data - shared garment/body/species/head construction; Phoebe uses the look-specific eye materials and attached outfit model.",
     "scripts/lib/loot.js + scripts/lib/items.js + level data - shared item pools, rolls, remains, parsing and container helpers.",
     "scripts/lib/combat.js + combat.yml + scripts/lib/ballistics.js - shared hit/armor and firearm accuracy/projectile rules for player and NPC combat.",
     "scripts/lib/nav.js + builtin/nav; scripts/lib/footsteps.js + footsteps.yml; scripts/lib/photo2006.js - shared NPC path search, surface sound selection and photographic finishing.",
@@ -42,7 +42,7 @@
     "scripts/lib/fishing.js - water checks, fishing lifecycle and loot helpers; scripts/bobber.js - spawn, schedule, update, cleanup.",
     "scripts/player.js - player combat/progression/input and fishing handlers; scripts/lib/body3.js - swing3, fire3, stance.",
     "scripts/lib/level11-city.js - layCity, layStreet, tickCity; scripts/lib/level11-shop.js - SHOP, layShop; scripts/lib/level11-elevator.js - elevator schedule/call/ears/update; scripts/l11-traffic.js - update.",
-    "scripts/main-menu.js - update, onInput; scripts/main-menu-ui.js - mainMenu; scripts/intake-geo.js - geometry; scripts/wardrobe-ui.js - wardrobe; scripts/cutscene-ui.js - cutUi, t0Fade; scripts/lib/arrive-cut.js - arriveTick; scripts/lib/tut0-cut.js - LEN, t0Tick."
+    "scripts/main-menu.js - update, onInput; scripts/cutscene-ui.js - cutUi, t0Fade; scripts/lib/tut0-cut.js - LEN, t0Tick; scripts/lib/tut0.js - tutorial dimensions, fixtures and beat coordinates; scripts/lib/phoebe.js - PHOEBE_LOOK, spawnPhoebe, dropPhoebe."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, appearance, karma/rep and level access.",
@@ -52,19 +52,19 @@
     "scripts/interact.js + scripts/lib/seat.js - focus, loot and sit state; interact.js persists configured storage contents to player.state[saveKey].",
     "scripts/talk.js owns dialogue/shop UI, rapport/trade/rep and authored-choice effects; quest libraries own quest keys/HUD/payout; scripts/l8-use.js owns Level 8 interaction flags.",
     "scripts/main-menu.js - menu/intake/intro/arrival/tutorial route state (menuOpen, madeChar, cut, arrivePending, arrive, tut, t0n, t0cut, t0Done); intro-cut owns local beat flags/effects.",
-    "places/level11/sim.js owns generated city/version and live traffic-light phase in place state (l11Light); scripts/l11-traffic.js owns each car's session speed and position updates."
+    "scripts/lib/tut0-cut.js - tutorial encounter's one-time table_leg grant/equip and condition initialization in player state; stats.js owns subsequent character allocation."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim, interact/grab/rest/mahjong/talk/build/stats/craft/OS/lockpick/spamton-fight/horde, then critter, main-menu and view3; routing is configured there.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes player.state.aimPt → player.js crosshair-aligned shots.",
     "Fresh visit → scripts/main-menu.js sets title menu/music; START via scripts/main-menu-ui.js records introFrom and crosses to intake; wardrobe close triggers scripts/lib/intro-cut.js; completion crosses to tutorial0 unless state.t0Done, then main.",
-    "scripts/lib/intro-cut.js runs after wardrobe close on the local player: a 16-second sleeping/waking beat stages pose, camera, lamp flicker, knocks and CDN audio, then continues its bedroom-to-wall noclip sequence; its local Phoebe cameo is removed during the turn to the wall.",
+    "scripts/lib/intro-cut.js runs after wardrobe close on the local player: waking/bedroom-to-wall sequence stages pose, camera, local effects and audio; its Phoebe cameo uses scripts/lib/phoebe.js and is removed during the turn to the wall.",
     "scripts/lib/intro-cut.js writes player pose/animation, local wall patch/FX, view camera and timed audio/screen effects → scripts/ui.js renders scripts/cutscene-ui.js keyed to state.cut and elapsed local time; the intro has no captions.",
-    "Main-menu arrival routing consumes arrivePending in main or tutorial0 → scripts/lib/arrive-cut.js stages ceiling-drop landing, gasp and fast-breath sounds → scripts/lib/tutorial.js starts input/walking tutorial state tut; scripts/tutorial-ui.js reads tut.",
-    "In tutorial0, scripts/main-menu.js polls scripts/lib/tut0-cut.js t0Tick; scripts/lib/tut0.js BEATS and positions drive almond-water, HALOGEN stat creation, Smiler, shifting-wall and final-fall sequences; completion crosses to level1 and marks t0Done.",
-    "scripts/lib/tut0-cut.js writes t0cut/t0n, player pose/camera and scene effects → scripts/cutscene-ui.js renders caption hints/letterbox and final title; scripts/ui.js presents t0Fade after the ending.",
-    "The tutorial HALOGEN beat opens scripts/stats.js sheet in creating mode; stat UI sends stat actions → stats.js owns attribute lowering/tag allocation; closing is blocked until required points/tags are assigned, then the beat resumes.",
-    "scripts/lib/tut0-cut.js → scripts/lib/phoebe.js creates/destroys a local, unsaved critter for timed watcher/final-hall beats; Phoebe appearance is built through shared critter-model.js.",
+    "Main-menu arrival routing consumes arrivePending in main or tutorial0 → scripts/lib/arrive-cut.js stages ceiling-drop landing, gasp and fast-breath sounds → scripts/lib/tutorial.js starts input/walking tutorial state tut; scripts/tutorial-ui.js presents it.",
+    "In tutorial0, scripts/main-menu.js polls scripts/lib/tut0-cut.js t0Tick; scripts/lib/tut0.js BEATS trigger encounter → HALOGEN → drawings → wet-carpet final fall, then completion crosses to level1 and marks t0Done.",
+    "The encounter beat stages a local entity/table-leg struggle and grants/equips table_leg → player.state weapons/equipped/condition; the HALOGEN beat opens scripts/stats.js sheet in creating mode and waits for stat allocation to finish.",
+    "scripts/lib/tut0-cut.js writes t0cut/t0n, player pose/camera and scene effects → scripts/cutscene-ui.js renders timed captions/letterbox and final title; scripts/ui.js presents t0Fade after the ending.",
+    "scripts/lib/tut0-cut.js → scripts/lib/phoebe.js creates/destroys local unsaved Phoebe during the final-hall beat; scripts/lib/intro-cut.js also stages her intro cameo; shared critter-model.js builds her critter base and skin-attached outfit.",
     "Spawn room selection → scripts/routing.js pickRoom preserves accepted requestedRoomId or derives solo room from user identity; engine out-of-bounds → sim.js handles respawn/return/destruction.",
     "Level threshold trigger → scripts/level-door.js maps paired IDs and writes arrival clipKind/calls companion.bring → followers cross; player.js consumes clipKind to xfer.kind and noclip-ui renders transition."
   ],
@@ -76,15 +76,15 @@
     "places/level21/sim.js + level21.yml + level21-geo.js - shared room blocks vary by room type, zone height, lighting, decor and deterministic layout hashes.",
     "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share service systems with varying menus and Faceling roles.",
     "scripts/lib/level11-city.js + level11-models.yml + art/level11 kits - generated buildings/props vary by seeded district/model/placement; sim adds city life, traffic, tram, advert and canal crossings.",
-    "places/tutorial0 + scripts/lib/tut0.js + scripts/lib/tut0-cut.js - authored corridor/fixture definitions feed geometry, local sim placements and player-local timed beats; beat events/cameras vary by stage."
+    "places/tutorial0 + scripts/lib/tut0.js + scripts/lib/tut0-cut.js - shared route coordinates drive geometry, one-time props/lights and player-local staged beats, now encounter/HALOGEN/drawings/final."
   ],
   "probableOrphans": [],
   "migrationNotes": [
     "Intro from intake crosses to tutorial0 until player.state.t0Done; the tutorial final beat crosses to level1 and sets t0Done, while later intro completion routes to main. tutorial0 solo copies use names beginning tutorial0-<id>.",
-    "Tutorial beats and cameras run on the local player's main-menu behavior, not the place referee; places/tutorial0/sim.js lays its fixtures once. Keep t0Tick naming, t0cut state and HUD dispatch aligned.",
-    "scripts/lib/tut0.js is the shared coordinate source for the hand-laid path, dimensions and beat trigger boxes; keep tut0 geometry, placements and beat positions together when changing the route.",
+    "Tutorial beats and cameras run on the local player's main-menu behavior, not the place referee; places/tutorial0/sim.js lays its fixtures/props once per layout version. Keep t0Tick naming, t0cut state and HUD dispatch aligned.",
+    "scripts/lib/tut0.js is the shared coordinate source for the hand-laid path, dimensions and beat trigger boxes; keep tutorial geometry, scene placements, simulation props and beat positions together when changing the route.",
     "HALOGEN stat creation uses state.creating and state.sheetOpen; points and three skill tags must be allocated before DONE/close succeeds, and the halogen beat waits for sheet closure.",
     "scripts/lib/screen.js is derived, read-only state: priority is cutscene, menu, wardrobe, mahjong, talk, loot, wrist sheet/inventory/craft/rest, then play. Only wrist panels can replace another wrist panel; closing remains available.",
-    "tut0-cut.js LEN.final is 23 seconds; scripts/cutscene-ui.js final black/title/subtitle delays (8.6/13.7/14.7 s) are keyed to that longer fall. art/phoebe-outfit/build.py produces the skinned Phoebe outfit model; tutorial Phoebe remains a local unsaved critter."
+    "tut0-cut.js LEN.final is 23 seconds; scripts/cutscene-ui.js final black/title/subtitle timing is keyed to that longer fall. Phoebe's local unsaved base comes from critter-model.js and the CDN skin-attached outfit referenced by scripts/lib/phoebe.js; art/phoebe-outfit/build.py is its Blender source."
   ]
 }
