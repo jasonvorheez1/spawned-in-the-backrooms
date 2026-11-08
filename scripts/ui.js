@@ -159,6 +159,16 @@ function restUi(ctx, s) {
 }
 const LIVE = `<style>@keyframes hudBreath{0%,100%{opacity:.92}50%{opacity:1}}@keyframes hudIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}#hud .bl,#hud .br{animation:hudIn .5s ease-out both,hudBreath 3.2s ease-in-out .5s infinite;filter:drop-shadow(0 0 4px rgba(255,170,40,.35))}</style>`
 import { mahjongPanel } from './mahjong-ui.js'
+// under the water's skin: murky green-blue, the edges darker, the light swimming overhead, and the breath you have left
+function underwater(s) {
+  if (!s.underwater) return ''
+  const b = s.breath ?? 100, low = b <= 30
+  return `<style>@keyframes uwSway{0%{transform:translate(0,0) scale(1.05)}50%{transform:translate(-1.5%,1%) scale(1.08)}100%{transform:translate(0,0) scale(1.05)}}@keyframes uwBreath{50%{opacity:.45}}</style>
+<div style="position:fixed;inset:0;pointer-events:none;backdrop-filter:blur(2.5px) saturate(.65) hue-rotate(-12deg);-webkit-backdrop-filter:blur(2.5px) saturate(.65);background:radial-gradient(ellipse at 50% 18%,rgba(70,140,130,.18),rgba(12,42,48,.55) 55%,rgba(2,10,14,.88) 100%)"></div>
+<div style="position:fixed;inset:-5%;pointer-events:none;mix-blend-mode:screen;opacity:.22;animation:uwSway 6s ease-in-out infinite;background:repeating-radial-gradient(circle at 30% 20%,rgba(150,220,200,.18) 0 2px,transparent 3px 26px),repeating-radial-gradient(circle at 70% 10%,rgba(150,220,200,.12) 0 2px,transparent 3px 34px)"></div>
+<div style="position:fixed;left:50%;bottom:22%;transform:translateX(-50%);width:220px;pointer-events:none;font:11px monospace;letter-spacing:2px;color:${low ? '#ff8a6a' : '#9fe0d0'};text-align:center;${low ? 'animation:uwBreath .6s infinite' : ''}">BREATH<div style="margin-top:4px;height:6px;border:1px solid currentColor;padding:1px"><div style="height:100%;width:${b}%;background:currentColor"></div></div></div>`
+}
+
 export default function render(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
@@ -181,7 +191,7 @@ export default function render(ctx, player) {
 
 
   return `${THEME}${LIVE}
-<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
+${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
 
   ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${restUi(ctx, s)}${mahjongPanel(s, now)}
   ${chatBubbles(ctx, now, player)}

@@ -113,7 +113,8 @@ def skull_w(o, r):  # widest cheek-to-cheek run under the ears
     hz = (r.matrix_world @ r.data.bones['Head'].head_local).z; ws = [o.matrix_world @ v.co for v in o.data.vertices]
     top = max(w.z for w in ws); zs = [hz + (top - hz) * f for f in (0.2, 0.28, 0.36)]
     return max(max(w.x for w in ws if abs(w.z - z) < 0.01) - min(w.x for w in ws if abs(w.z - z) < 0.01) for z in zs)
-HEADK = skull_w(body, rig) / 0.58  # the old cute head is 0.58 m across (its beanie 0.62); a head is sized by the skull, not its short bone
+SKULL = skull_w(body, rig)
+HEADK = SKULL / 0.58  # the old cute head is 0.58 m across (its beanie 0.62); a head is sized by the skull, not its short bone
 print('head ratio', round(HEADK, 3))
 def carry(n, p):
     h, t = OS[n]; h2, t2 = NS[n]; d, d2 = t - h, t2 - h2
@@ -145,9 +146,15 @@ def cover(o):
     bv = BVHTree.FromPolygons([v.co.copy() for v in src.data.vertices], [list(p.vertices) for p in src.data.polygons])
     bm = bmesh.new(); bm.from_mesh(env.data); bm.transform(env.matrix_world)
     kill = []
+    zs = [v.co.z for v in src.data.vertices]; zlo, zhi = min(zs), max(zs)
+    kind = o.name.split('_')[0]
     for f in bm.faces:
-        loc, n, idx, d = bv.find_nearest(f.calc_center_median())
-        if d is None or d > 0.04: kill.append(f)
+        c = f.calc_center_median(); loc, n, idx, d = bv.find_nearest(c)
+        reach = 0.04
+        if kind == 'Top' and zlo - 0.06 < c.z < zlo + 0.03: reach = 0.16   # hem down over the waistband
+        if kind == 'Bot' and zhi - 0.03 < c.z < zhi + 0.04: reach = 0.16   # waistband up under the hem
+        if o.name == 'Top_dress' and c.z < HIPS_Z + 0.02: reach = -1          # the skirt stays the dress's own
+        if d is None or d > reach: kill.append(f)
         else: f.material_index = src.data.polygons[idx].material_index
     keep = set(bm.faces) - set(kill)
     def ring(fs, grow):
@@ -219,16 +226,16 @@ def refit(o):
         for v in me.vertices: v.co = Vector((EYE.x + (v.co.x - c.x) * k, EYEFRONT - 0.012 + (v.co.y - back) * k, EYE.z + (v.co.z - c.z) * k))
         bw = [body.matrix_world @ q.co for q in body.data.vertices]; band = [w.x for w in bw if abs(w.z - EYE.z) < 0.02]
         half = (max(band) - min(band)) / 2 if band else 0.15
-        import bmesh
+        pass
         gb = bmesh.new(); gb.from_mesh(me)
-        bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x - EYE.x) > min(half * 0.98, (max(ex) - min(ex)) / 2 + 0.045) or v.co.y > EYEFRONT + 0.06], context='VERTS')
+        bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x - EYE.x) > min(half * 0.98, (max(ex) - min(ex)) / 2 + 0.045) or v.co.y > EYEFRONT + 0.018], context='VERTS')
         gb.to_mesh(me); gb.free()
     elif kind == 'Hat' and EYE is not None:
         ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); bot = min(w.z for w in ws)
         wid = max(w.x for w in ws) - min(w.x for w in ws)
         bw = [body.matrix_world @ q.co for q in body.data.vertices]; band = [w.x for w in bw if abs(w.z - (EYE.z + 0.09)) < 0.015]
-        k = ((max(band) - min(band)) * 1.12 / wid) if band else 1
-        for v in me.vertices: v.co = Vector((EYE.x + (v.co.x - c.x) * k, c.y + (v.co.y - c.y) * k, EYE.z + 0.06 + (v.co.z - bot) * k))
+        k = (SKULL * 1.04 / wid)
+        for v in me.vertices: v.co = Vector((EYE.x + (v.co.x - c.x) * k, c.y + (v.co.y - c.y) * k, EYE.z + 0.075 + (v.co.z - bot) * k))
         sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.006
         bpy.ops.object.modifier_apply(modifier='fit')
     elif kind in ('Top', 'Bot', 'Shoes', 'Neck', 'Hat') and o.name not in LOOSE:
@@ -245,6 +252,13 @@ def refit(o):
         sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.004
         bpy.ops.object.modifier_apply(modifier='fit')
     if kind in ('Top', 'Bot', 'Shoes') and o.name not in LOOSE: cover(o)
+    if o.name == 'Top_dress':   # bodice cut from the skin (no chest gaps), the flared skirt kept, joined into one piece
+        sk = o.copy(); sk.data = o.data.copy(); bpy.context.collection.objects.link(sk)
+        gb = bmesh.new(); gb.from_mesh(sk.data)
+        bmesh.ops.delete(gb, geom=[v for v in gb.verts if v.co.z > HIPS_Z + 0.04], context='VERTS'); gb.to_mesh(sk.data); gb.free()
+        cover(o)
+        bpy.ops.object.select_all(action='DESELECT'); sk.select_set(True); o.select_set(True); bpy.context.view_layer.objects.active = o
+        bpy.ops.object.join()
     # weights off the new skin
     o.vertex_groups.clear()
     dt = o.modifiers.new('w', 'DATA_TRANSFER'); dt.object = body; dt.use_vert_data = True; dt.data_types_verts = {'VGROUP_WEIGHTS'}; dt.vert_mapping = 'POLYINTERP_NEAREST'

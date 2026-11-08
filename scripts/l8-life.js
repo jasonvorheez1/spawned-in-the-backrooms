@@ -26,7 +26,7 @@ function spiderAt(ctx, n, at, nestId, boss = false) {
   return ctx.spawn(id, {
     tags: ["l8spider", "l8-hostile"], feetPosition: { x: at.x, y: at.y + 0.1, z: at.z }, rotation: { yaw: ctx.random() * 360 }, scale: { x: sc, y: sc, z: sc },
     model: { id: SPIDER }, layout: { box: { min: { x: -0.6, y: 0, z: -0.6 }, max: { x: 0.6, y: 0.5, z: 0.6 } } }, physics: { body: "character", collider: "capsule" },
-    state: { ...npcState(ctx, "rat", boss ? 180 : 38 * sc, { xp: boss ? 55 : 18 }), kind: "spider", boss, name: boss ? "Broodmother arachnid" : "Cave spider", nest: nestId, home: { x: at.x, z: at.z } },
+    state: { ...npcState(ctx, "rat", boss ? 320 : 46 * sc, { xp: boss ? 55 : 18 }), kind: "spider", boss, name: boss ? "Broodmother arachnid" : "Cave spider", nest: nestId, home: { x: at.x, z: at.z } },
     ...(boss ? { children: [{ feetPosition: { x: 0, y: 0.45, z: -0.35 }, light: { kind: "point", color: "oklch(0.62 0.24 25)", intensity: 1.6, distance: 7 } }] } : {}),
   });
 }
@@ -59,7 +59,7 @@ export function update(ctx, dt) {
       const f = p.feetPosition, inside = Math.abs(f.x - fp.x) < 15 && Math.abs(f.z - fp.z) < 15 && f.y < F + 4;
       const head = f.y + 1.7 < surf;
       m.drown[p.id] = inside && head ? (m.drown[p.id] ?? 0) + dt : 0;
-      if (m.drown[p.id] > 12) { p.state.hp -= 7 * dt; if (!m.drowned?.[p.id] || now - m.drowned[p.id] > 4000) { (m.drowned ??= {})[p.id] = now; p.state.notice = { text: "The waters are over your head. You must swim or scramble onto the left ledges. Your chest burns.", at: now }; } }
+      if (m.drown[p.id] > 12) { if (!m.drowned?.[p.id] || now - m.drowned[p.id] > 4000) { (m.drowned ??= {})[p.id] = now; p.state.notice = { text: "The waters are over your head. You must swim or scramble onto the left ledges. Your chest burns.", at: now }; } }
       if (inside && f.y + 0.4 < surf && !(m.wet?.[p.id] > now - 60000)) { (m.wet ??= {})[p.id] = now; p.state.notice = { text: surf - f.y > 1.6 ? "The waters are at your chin." : "The water has risen past your ankles. The stepping ledges on the left wall climb above the tide.", at: now }; }
     }
   }
@@ -76,7 +76,7 @@ export function update(ctx, dt) {
   const nestC = P(312, 0, 0), bossHome = P(328, 3.2, 0);
   const all = ctx.query({ tags: ["l8spider"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }), live = all.filter((o) => !o.state?.dead && (o.state?.hp ?? 1) > 0);
   if (now > (m.bossAt ?? 0) && !live.some((o) => o.state?.boss)) { m.bossAt = now + 180000; spiderAt(ctx, 99, bossHome, "nest", true); }
-  if (now > (m.refill ?? 0) && live.length < 14) { m.refill = now + (live.length ? 20000 : 90000); const n = 14 - live.length; for (let i = 0; i < n && i < 3; i++) { const a = ctx.random() * 6.28, r = 3 + ctx.random() * 7; spiderAt(ctx, i, { x: nestC.x + Math.cos(a) * r, y: nestC.y, z: nestC.z + Math.sin(a) * r }, "nest"); } }
+  if (now > (m.refill ?? 0) && live.length < 18) { m.refill = now + (live.length ? 14000 : 75000); const n = 18 - live.length; for (let i = 0; i < n && i < 3; i++) { const a = ctx.random() * 6.28, r = 3 + ctx.random() * 7; spiderAt(ctx, i, { x: nestC.x + Math.cos(a) * r, y: nestC.y, z: nestC.z + Math.sin(a) * r }, "nest"); } }
   for (const sp of all) {
     const st = sp.state ?? {}, mm = (m.spiders[sp.id] ??= { bite: 0 });
     if (st.dead || (st.hp ?? 1) <= 0) {
@@ -88,28 +88,40 @@ export function update(ctx, dt) {
           for (let i = 0, n = 1 + Math.floor(ctx.random() * 3); i < n; i++) items.push("spider_silk");
         }
         spawnRemains(ctx, sp.feetPosition, items, st.boss ? "Broodmother remains" : "Cave spider remains");
-        sp.rotation = { yaw: sp.rotation?.yaw ?? 0, roll: 180 }; sp.velocity = { x: 0, y: 0, z: 0 };
+        { // it goes limp: a loose body thrown by the last blow, tumbling over onto its back (her pick: mass, spin)
+          const ms = st.boss ? 70 : 9, a = ctx.random() * 6.283;
+          sp.physics = { body: "dynamic", collider: "box", mass: ms, friction: 0.9, restitution: 0.1 };
+          ctx.emit("impulse", { target: sp.id, impulse: { x: Math.cos(a) * ms * 1.6, y: ms * 4.2, z: Math.sin(a) * ms * 1.6 }, angularImpulse: { x: ms * (ctx.random() - 0.5) * 1.2, y: ms * 0.4, z: ms * 1.5 } });
+        }
         heard(ctx, { clip: G("spider-skittering-squeal-and-crunch"), position: sp.feetPosition, volume: st.boss ? 0.95 : 0.7, maxDistance: 26 });
-      } else if (now - mm.dead > 6000) ctx.destroy(sp.id);
+      } else if (now - mm.dead > 25000) ctx.destroy(sp.id);
       continue;
     }
     const p = sp.feetPosition, home = st.home ?? nestC;
-    let tgt = null, bd = st.boss ? 18 : st.nest === "nest" ? 15 : 10;
+    let tgt = null, bd = st.boss ? 26 : st.nest === "nest" ? 22 : 16;
     for (const pl of players) { const d = flat(pl.feetPosition, p); if (d < bd && !(pl.feetPosition.y < P(sOf(pl.feetPosition)).y - 0.7 && sOf(pl.feetPosition) < 40)) { bd = d; tgt = pl; } } // they cannot swim
     let vx = 0, vz = 0;
     if (tgt) {
-      const dx = tgt.feetPosition.x - p.x, dz = tgt.feetPosition.z - p.z, d = Math.hypot(dx, dz) || 1, sp0 = st.boss ? 5.1 : 4.6;
+      const dx = tgt.feetPosition.x - p.x, dz = tgt.feetPosition.z - p.z, d = Math.hypot(dx, dz) || 1, sp0 = st.boss ? 6.2 : 5.8;
       if (d > 1.2) { vx = (dx / d) * sp0; vz = (dz / d) * sp0; }
-      sp.rotation = { yaw: (Math.atan2(-dx, -dz) * 180) / Math.PI };
+      const ph = sp.id.length * 1.7, rear = now - mm.bite < 260 ? -24 : 0; // scuttling: the body rocks with the legs, rears up on the bite
+      sp.rotation = { yaw: (Math.atan2(-dx, -dz) * 180) / Math.PI, pitch: rear + Math.sin(now / 55 + ph) * 5, roll: Math.cos(now / 45 + ph) * 6 };
+      if (d > 2.2 && d < 5.5 && now - (mm.lunge ?? 0) > (st.boss ? 2200 : 2800)) { // the lunge: it springs the last metres at you
+        mm.lunge = now; mm.lungeUntil = now + 380; const ls = st.boss ? 12 : 11;
+        sp.velocity = { x: (dx / d) * ls, y: 4.5, z: (dz / d) * ls };
+        heard(ctx, { clip: G("spider-skittering-squeal-and-crunch"), position: p, volume: 0.55, maxDistance: 20 });
+      }
       const reach = st.boss ? 2.1 : 1.5;
-      if (d < reach && now - mm.bite > (st.boss ? 900 : 1000)) {
-        mm.bite = now; const look = tgt.state?.look, rawDmg = (st.boss ? 13 : 7) + ctx.random() * (st.boss ? 5 : 3), dmg = Math.max(1, Math.round(dmgAfterArmor(look, rawDmg)));
-        tgt.state.hp -= dmg; tgt.state.sanity = Math.max(0, (tgt.state.sanity ?? 80) - (st.boss ? 4 : 2));
+      if (d < reach && now - mm.bite > (st.boss ? 700 : 750)) {
+        mm.bite = now; const look = tgt.state?.look, rawDmg = (st.boss ? 22 : 11) + ctx.random() * (st.boss ? 8 : 4), dmg = Math.max(1, Math.round(dmgAfterArmor(look, rawDmg)));
+        tgt.state.hp -= dmg; tgt.state.sanity = Math.max(0, (tgt.state.sanity ?? 80) - (st.boss ? 6 : 3));
         ctx.emit("damageNumber", { position: { x: tgt.feetPosition.x, y: tgt.feetPosition.y + 1.4, z: tgt.feetPosition.z }, value: dmg, color: "#ff5040" });
         ctx.emit("flash", { target: tgt.id, color: "#ffffff", duration: 0.08 }); ctx.emit("cameraPunch", { direction: { x: dx / d, y: 0, z: dz / d }, intensity: st.boss ? 0.45 : 0.3 }, { audience: { player: tgt.id } });
       }
       if (now - (mm.chat ?? 0) > 4000) { mm.chat = now; heard(ctx, { clip: G("many-small-claws-clicking-and-chittering-in-cave"), position: p, volume: st.boss ? 0.75 : 0.5, maxDistance: 22 }); }
     } else { const wa = now / 1500 + (sp.id.length % 7); if (flat(p, home) > 5) { const dx = home.x - p.x, dz = home.z - p.z, d = Math.hypot(dx, dz) || 1; vx = (dx / d) * 1.5; vz = (dz / d) * 1.5; sp.rotation = { yaw: (Math.atan2(-dx, -dz) * 180) / Math.PI }; } else { vx = Math.cos(wa) * 0.5; vz = Math.sin(wa * 1.3) * 0.5; } }
+    if (now < (mm.lungeUntil ?? 0)) { const v0 = sp.velocity ?? { x: 0, y: 0, z: 0 }; sp.velocity = { x: v0.x, y: v0.y - 24 * dt, z: v0.z }; continue; }
+    if (!tgt) sp.rotation = { yaw: sp.rotation?.yaw ?? 0, pitch: Math.sin(now / 400 + sp.id.length) * 2, roll: 0 }; // at rest: breathing
     sp.velocity = { x: vx, y: (sp.velocity?.y ?? 0) - 24 * dt, z: vz };
   }
   // ---- the pool of tar: stand too near and articulated tar-covered arms & hands rise up to drag you in

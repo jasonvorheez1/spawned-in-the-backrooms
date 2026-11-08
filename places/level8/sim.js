@@ -5,10 +5,15 @@
 // a pool of boiling tar with a B.N.T.G. dredge winch and reaching hands, a survivor camp round a fire with Carla, and the asphalt road to Level 9. Life: scripts/l8-life.js; use: scripts/l8-use.js.
 import L8 from "../../scripts/lib/data/level8.yml";
 export const cadence = "1s";
-const V = 10;
+const V = 15;
 const GLB = {
-  cave: "/cdn/value.2109832add9ec72ac83009c0355494c0f9b184ad1b3bb101edb373306f8be2dc.glb",
+  cave: "/cdn/value.6ae7c035c9583dda020bc92a7e80e75e9d3d462632234677d4a5f5a717fe311b.glb",
   spider: "/cdn/value.f2baeaec87cf017372e92e66ec42fae95179b52161e15051d3253036b89b9323.glb",
+  // Tripo props (Shelly, Nov 8: "use tipo to improve on level 8")
+  mush: "/cdn/value.d3b7d8e9110577ffa40ba0d9c1ab1dd92c464eb05dc3560a673c833a98e46fdd.glb",
+  cocoon: "/cdn/value.2a6a8eedd1ffea6228c05b641a8d9aad94f0241211e7b80b5f3b9bc853529fa7.glb",
+  tar: "/cdn/value.378791ac6389f68afbed57b1ae75094394050d6534c623bd7e658f96072246db.glb",
+  flow: "/cdn/value.fc172db4defdc02603c499ccc386d3fea6fb504d8b388408de18c1ef734f6c34.glb",
 };
 const ST = Object.fromEntries(L8.stations.map((s) => [s.name, s]));
 // a point on the road: s metres along it, side metres to the right of it (left is negative), up metres above its floor; yaw faces along the road
@@ -25,6 +30,8 @@ const FLOW_MAT = { color: "oklch(0.74 0.045 82)", roughness: 0.58, metalness: 0.
 const ROAD_MAT = { color: "oklch(0.55 0.03 75)", roughness: 0.88 };
 const BIOLUM_MAT = { color: "oklch(0.72 0.14 190)", emissive: "oklch(0.78 0.16 185)", emissiveIntensity: 2.6, roughness: 0.35 };
 const TAR_ROCK = { color: "oklch(0.14 0.015 280)", roughness: 0.16, metalness: 0.25 };
+const CAVE = (kind, m) => ({ kind: "scripted", script: "scripts/mat-cave.js", params: { kind, s: 1 }, color: m.color, metalness: m.metalness ?? 0 });
+const BOX = (w, h, d) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
 const STEEL = { color: "oklch(0.34 0.02 250)", roughness: 0.45, metalness: 0.75 };
 const RUST = { color: "oklch(0.36 0.08 42)", roughness: 0.8, metalness: 0.45 };
 const WOOD = { color: "oklch(0.38 0.06 65)", roughness: 0.88 };
@@ -57,15 +64,10 @@ FUNG.forEach((f, k) => {
   const p = P(f.s, f.side), r = 0.16 + (k % 3) * 0.05, stemH = 0.22 + (k % 3) * 0.08;
   def(`l8-glow-${k}`, 150, {
     feetPosition: { x: p.x, y: P(f.s).y + f.up, z: p.z }, rotation: { yaw: k * 53 }, tags: ["usable"], behavior: "scripts/l8-use.js",
-    primitive: { kind: "cylinder", radiusTop: r * 0.25, radiusBottom: r * 0.38, height: stemH }, material: stalkMat,
+    model: { id: GLB.mush, materials: {} }, layout: BOX(r * 3.6, r * 4.2, r * 3.6), material: { emissive: "oklch(0.7 0.14 190)", emissiveIntensity: 0.35 },
     ...(k % 4 === 0 ? { fx: { script: SPORE_FX } } : {}),
     state: { kind: "fungus", name: "Glowing fungus cluster", verb: "Pick the caps", info: "Bioluminescent caps on almond-wet rock. They bruise easily, and make a good light.", tint: "#6fe8d8" },
     children: [
-      { feetPosition: { x: 0, y: stemH - 0.03, z: 0 }, primitive: { kind: "cone", radius: r * 1.35, height: r * 0.95, radialSegments: 10 }, material: capMat },
-      { feetPosition: { x: r * 0.85, y: 0, z: r * 0.4 }, primitive: { kind: "cylinder", radiusTop: r * 0.18, radiusBottom: r * 0.26, height: stemH * 0.72 }, material: stalkMat },
-      { feetPosition: { x: r * 0.85, y: stemH * 0.7, z: r * 0.4 }, primitive: { kind: "cone", radius: r * 0.9, height: r * 0.65, radialSegments: 9 }, material: capMat },
-      { feetPosition: { x: -r * 0.7, y: 0, z: -r * 0.45 }, primitive: { kind: "cylinder", radiusTop: r * 0.15, radiusBottom: r * 0.22, height: stemH * 0.58 }, material: stalkMat },
-      { feetPosition: { x: -r * 0.7, y: stemH * 0.55, z: -r * 0.45 }, primitive: { kind: "cone", radius: r * 0.75, height: r * 0.55, radialSegments: 8 }, material: capMat },
       { feetPosition: { x: 0, y: stemH + 0.15, z: 0 }, light: { kind: "point", color: "oklch(0.72 0.15 190)", intensity: 1.05, distance: 8.5 } },
     ],
   });
@@ -76,12 +78,10 @@ FUNG.forEach((f, k) => {
   const side = (k % 2 ? 1 : -1) * (3 + (k * 5) % 6), p = P(s, side), silk = { color: "oklch(0.9 0.012 230)", roughness: 0.95 };
   def(`l8-cocoon-${k}`, 300, {
     feetPosition: { x: p.x, y: P(s).y, z: p.z }, rotation: { yaw: k * 47 }, tags: ["usable"], behavior: "scripts/l8-use.js",
-    primitive: { kind: "capsule", radius: 0.34, halfHeight: 0.52 }, material: silk,
+    model: { id: GLB.cocoon }, layout: BOX(0.8, 1.5, 0.8),
     state: { kind: "cocoon", name: "Silk cocoon", verb: "Cut open", info: "Something was wrapped tightly in this. It is not moving.", tint: "#e8eef2" },
     children: [
-      { feetPosition: { x: 0, y: 1.1, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.08, height: 3.8 }, material: { color: "oklch(0.92 0.01 230)", opacity: 0.55, transparent: true } },
-      { feetPosition: { x: 0, y: 0.35, z: 0 }, primitive: { kind: "torus", radius: 0.35, tube: 0.045 }, rotation: { pitch: 78 }, material: silk },
-      { feetPosition: { x: 0, y: 0.75, z: 0 }, primitive: { kind: "torus", radius: 0.31, tube: 0.04 }, rotation: { pitch: 102 }, material: silk },
+      { feetPosition: { x: 0, y: 1.45, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.08, height: 3.8 }, material: { color: "oklch(0.92 0.01 230)", opacity: 0.55, transparent: true } },
     ],
   });
 });
@@ -91,12 +91,10 @@ FUNG.forEach((f, k) => {
   const p = P(s, side), pitchMat = { color: "oklch(0.07 0.008 280)", roughness: 0.14, metalness: 0.25 };
   def(`l8-seep-${k}`, 120, {
     feetPosition: { x: p.x, y: P(s).y, z: p.z }, tags: ["usable"], behavior: "scripts/l8-use.js",
-    primitive: { kind: "sphere", radius: 0.46 }, scale: { x: 1.35, y: 0.42, z: 1.35 }, material: pitchMat,
+    model: { id: GLB.tar }, layout: BOX(1.5, 0.42, 1.5),
     state: { kind: "seep", name: "Tar seep", verb: "Scrape pitch", info: "Warm, black and slow. The Tar is not far below it.", tint: "#8a7a9a" },
     children: [
-      { feetPosition: { x: 0.22, y: 0.28, z: 0.12 }, primitive: { kind: "sphere", radius: 0.16 }, material: pitchMat },
-      { feetPosition: { x: -0.18, y: 0.24, z: -0.16 }, primitive: { kind: "sphere", radius: 0.13 }, material: pitchMat },
-      { feetPosition: { x: 0.05, y: 0.34, z: -0.08 }, primitive: { kind: "sphere", radius: 0.09 }, material: { color: "oklch(0.35 0.12 45)", emissive: "oklch(0.45 0.15 40)", emissiveIntensity: 1.2 } },
+      { feetPosition: { x: 0, y: 0.3, z: 0 }, light: { kind: "point", color: "oklch(0.6 0.16 40)", intensity: 0.6, distance: 4 } }, { feetPosition: { x: 0.05, y: 0.12, z: -0.08 }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: "oklch(0.35 0.12 45)", emissive: "oklch(0.45 0.15 40)", emissiveIntensity: 1.2 } },
     ],
   });
 });
@@ -106,12 +104,7 @@ FUNG.forEach((f, k) => {
   const sd = (k % 2 ? 1 : -1) * rxAt(s) * (0.3 + (k % 3) * 0.08), p = P(s, sd), h = 1.15 + (k % 4) * 0.35;
   def(`l8-flow-${k}`, 420, {
     feetPosition: { x: p.x, y: P(s).y - 0.1, z: p.z }, rotation: { yaw: k * 37 }, tags: ["breakable"], physics: "static",
-    primitive: { kind: "cone", radius: 0.5 + (k % 3) * 0.12, height: h, radialSegments: 8 }, material: FLOW_MAT, state: brk("flowstone", 150, "Flowstone"),
-    children: [
-      { feetPosition: { x: 0.42, y: 0, z: 0.2 }, primitive: { kind: "cone", radius: 0.3, height: h * 0.65, radialSegments: 7 }, material: { color: "oklch(0.78 0.035 85)", roughness: 0.65 } },
-      { feetPosition: { x: -0.35, y: 0, z: -0.28 }, primitive: { kind: "cone", radius: 0.26, height: h * 0.52, radialSegments: 7 }, material: { color: "oklch(0.82 0.03 85)", roughness: 0.65 } },
-      { feetPosition: { x: 0.12, y: 0, z: -0.38 }, primitive: { kind: "cone", radius: 0.2, height: h * 0.38, radialSegments: 6 }, material: FLOW_MAT },
-    ],
+    model: { id: GLB.flow }, layout: BOX(1.2 + (k % 3) * 0.25, h * 1.25, 1.1 + (k % 3) * 0.2), state: brk("flowstone", 150, "Flowstone"),
   });
 });
 [60, 90, 170, 230, 262, 296, 330, 360, 396, 420, 458, 476].forEach((s, k) => {
@@ -133,13 +126,26 @@ function lay(ctx) {
   // the cave model (box min -10.91,-2.56,-455.46, max 124.61,14.62,0.40) placed by its bottom-centre with multi-zone karst materials
   sp("l8-cave", {
     feetPosition: { x: 56.85, y: -2.56, z: -227.53 }, physics: { body: "static", collider: "mesh" },
-    model: { id: GLB.cave, materials: { rock: ROCK, wet_rock: WET_ROCK, flowstone: FLOW_MAT, road_bed: ROAD_MAT, biolum: BIOLUM_MAT, tar_rock: TAR_ROCK } },
+    model: { id: GLB.cave, materials: { rock: CAVE("rock", ROCK), wet_rock: CAVE("wet", WET_ROCK), flowstone: CAVE("rock", { color: "oklch(0.5 0.03 72)" }), road_bed: CAVE("road", ROAD_MAT), biolum: BIOLUM_MAT, tar_rock: CAVE("tar", TAR_ROCK) } },
     receiveShadow: true,
   });
 
+  // caver work lamps strung along the road: warm pools between the cold dark, so the rock's grain reads (Shelly: "graphics could be much better")
+  for (let k = 0, sd = 1; k * 15 + 20 < 500; k++, sd = -sd) {
+    const at0 = 20 + k * 15, q = P(at0, sd * rxAt(at0) * 0.62), y = P(at0).y;
+    sp(`l8-worklamp-${k}`, { feetPosition: { x: q.x, y, z: q.z }, rotation: { yaw: q.yaw }, physics: "static",
+      primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.05, height: 1.7 }, material: RUST,
+      children: [
+        { feetPosition: { x: 0, y: -0.02, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.26, height: 0.06 }, material: STEEL },
+        { feetPosition: { x: 0, y: 1.62, z: 0.06 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.1, height: 0.16 }, material: STEEL },
+        { feetPosition: { x: 0, y: 1.58, z: 0.06 }, primitive: { kind: "sphere", radius: 0.055 }, material: { color: "oklch(0.95 0.08 80)", emissive: "oklch(0.92 0.12 75)", emissiveIntensity: 4 } },
+        { feetPosition: { x: 0, y: 1.5, z: 0.1 }, light: { kind: "point", color: "oklch(0.86 0.1 72)", intensity: 1.7, distance: 13 } },
+      ] });
+  }
+
   // ---- Station 1: the entrance lake and the M.E.G. diving bell that brought you down from Level 7's abyss
   const lake = P(12, 0, 0);
-  sp("l8-lake", { ...at({ ...lake, y: -2.65 }), primitive: { kind: "box", width: 26, height: 2.5, depth: 38 }, material: { kind: "water", color: "oklch(0.22 0.04 230)", opacity: 0.88, waveIntensity: 0.05 } });
+  sp("l8-lake", { tags: ["swimwater"], ...at({ ...lake, y: -2.65 }), primitive: { kind: "box", width: 26, height: 2.5, depth: 38 }, material: { kind: "water", color: "oklch(0.22 0.04 230)", opacity: 0.88, waveIntensity: 0.05 } });
   sp("l8-lake-back", { ...at({ ...P(10, 0, 0), y: -1.2 }), physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 26, height: 2.4, depth: 30 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level7#l7-from-l8" } });
   sp("l8-from-l7", at(P(31, 0, 0.1)));
   // Submerged M.E.G. Diving Bell & hoist cable rising into the flooded ceiling shaft
@@ -203,7 +209,7 @@ function lay(ctx) {
 
   // ---- Station 4: the flooded cavern: rising tide (scripts/l8-life.js), parkour stepping stones, tide gauge, and the Dead Caver on the high ledge
   const fl = P(176, 0, 0);
-  sp("l8-flood", { ...at({ ...fl, y: P(176).y - 0.5 }), primitive: { kind: "box", width: 30, height: 4.5, depth: 30 }, material: { kind: "water", color: "oklch(0.2 0.04 225)", opacity: 0.86, waveIntensity: 0.04 } });
+  sp("l8-flood", { tags: ["swimwater"], ...at({ ...fl, y: P(176).y - 0.5 }), primitive: { kind: "box", width: 30, height: 4.5, depth: 30 }, material: { kind: "water", color: "oklch(0.2 0.04 225)", opacity: 0.86, waveIntensity: 0.04 } });
   // Parkour stepping pillars & scramble ledges leading up out of the floodwaters to the Dead Caver's ledge
   [[166, -3.4, 0.6, 1.8], [171, -4.8, 1.15, 2.0], [177, -5.8, 1.7, 2.2], [183, -6.2, 2.2, 2.3], [189, -6.4, 2.6, 2.4]].forEach(([s, side, h, w], k) => {
     const sp0 = P(s, side, 0);
