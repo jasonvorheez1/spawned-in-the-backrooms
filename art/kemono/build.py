@@ -156,6 +156,7 @@ def cover(o):
         reach = 0.04
         if kind == 'Bot' and c.z < zhi - 0.04 and c.z > 0.08: reach = 0.09   # the legs: no thigh through the cloth
         if kind == 'Hat': reach = 0.07
+        if kind == 'Bot' and c.z > HIPS_Z + 0.1: reach = -1   # a waistband, not overalls
         if kind == 'Top' and zlo - 0.06 < c.z < zlo + 0.03: reach = 0.16   # hem down over the waistband
         if kind == 'Bot' and zhi - 0.03 < c.z < zhi + 0.04: reach = 0.16   # waistband up under the hem
         if kind == 'Top' and o.name != 'Top_dress' and max(zlo - 0.09, HIPS_Z - 0.02) < c.z < zlo + 0.05 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1   # a closed hem ring at the waist, no skin between top and bottom
@@ -230,7 +231,7 @@ def refit(o):
     bpy.context.view_layer.objects.active = o; bpy.ops.object.select_all(action='DESELECT'); o.select_set(True)
     kind = o.name.split('_')[0]
     if kind == 'Eyew' and EYE is not None:
-        ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); back = max(w.y for w in ws); wid = max(w.x for w in ws) - min(w.x for w in ws)
+        ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); c.x = (max(w.x for w in ws) + min(w.x for w in ws)) / 2; back = max(w.y for w in ws); wid = max(w.x for w in ws) - min(w.x for w in ws)
         ex = [e.x for e in _ew]; k = max(0.6, min(1.6, (max(ex) - min(ex) + 0.07) / wid))
         for v in me.vertices: v.co = Vector((0.0 + (v.co.x - c.x) * k, EYEFRONT - 0.012 + (v.co.y - back) * k, EYE.z + (v.co.z - c.z) * k))
         bw = [body.matrix_world @ q.co for q in body.data.vertices]; band = [w.x for w in bw if abs(w.z - EYE.z) < 0.02]
@@ -240,7 +241,7 @@ def refit(o):
         bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x) > min(half * 0.98, (max(ex) - min(ex)) / 2 + 0.045) or v.co.y > EYEFRONT + 0.018 or v.co.y < EYEFRONT - 0.05], context='VERTS')   # temples cut: no arm poking out ahead of the face
         gb.to_mesh(me); gb.free()
     elif kind == 'Hat' and EYE is not None:
-        ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); bot = min(w.z for w in ws)
+        ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); c.x = (max(w.x for w in ws) + min(w.x for w in ws)) / 2; bot = min(w.z for w in ws)
         wid = max(w.x for w in ws) - min(w.x for w in ws)
         bw = [body.matrix_world @ q.co for q in body.data.vertices]; band = [w.x for w in bw if abs(w.z - (EYE.z + 0.09)) < 0.015]
         k = (SKULL * 1.04 / wid)
