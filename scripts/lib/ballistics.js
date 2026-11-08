@@ -20,7 +20,8 @@ const TARGETS = ['smiler', 'lurker', 'hound', 'stealer', 'moths', 'l8spider', 'n
 // the cone half-angle, degrees, for the next bullet: the weapon at rest, then what you are doing and what you can handle
 export function spreadDeg(ctx, s, wp, w) {
   const P = prof(wp), H = handling(s, wp), k = skillsOf(s), ads = !!s.ads
-  let d = (ads ? P.acc[1] : P.acc[0] * 0.7) * H.spread * (1.2 - 0.4 * (k.guns ?? 15) / 100)
+  let d = (ads ? P.acc[1] : P.acc[0] * 0.7) * Math.min(H.spread, 1.15) * // falling short of a gun's needs costs at most 15% (Nov 8: a fresh level-1 sheet sprayed everywhere)
+    (1.2 - 0.4 * (k.guns ?? 15) / 100)
   const v = ctx.self.velocity ?? { x: 0, y: 0, z: 0 }, sp = Math.hypot(v.x, v.z)
   d *= steady(s, attrsOf(s), ctx.now()) // Observation, how long the sights have been up, breath and nerves (data/combat.yml)
   d *= 1 + Math.min(1, sp / 6) * (ads ? 0.4 : 0.5) // moving opens it up
