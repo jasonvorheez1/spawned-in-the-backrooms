@@ -1,0 +1,54 @@
+# Level 184 "Field of Forgotten Forts" (backrooms-wiki.wikidot.com/level-184): picturesque, desolate countryside: canola and grain
+# fields, unkempt plains split by stone walls and metal fences, dilapidated farms and sheds. Reached from Level 10's canola patch.
+mode: 3d
+terrain:
+  kind: heightmap
+  seed: 184
+  generator: scripts/terrain184.js
+  materials:
+    - { id: canola, albedo: cdn/texture-terrain-bright-yellow-canola-flower-field-green-stems-soil.png, tint: "oklch(0.8 0.15 100)", textureScale: 3 }
+    - { id: wheat, albedo: cdn/texture-terrain-dry-golden-wheat-field-soil-with-straw.png, tint: "oklch(0.68 0.09 82)", textureScale: 3 }
+    - { id: barley, albedo: cdn/texture-terrain-dry-golden-wheat-field-soil-with-straw.png, tint: "oklch(0.72 0.07 95)", textureScale: 3 }
+    - { id: grass, albedo: cdn/texture-terrain-rough-overcast-meadow-grass.png, tint: "oklch(0.56 0.09 130)", textureScale: 2.5 }
+    - { id: dirt, albedo: cdn/texture-terrain-packed-brown-farm-track-dirt-tire-ruts.png, tint: "oklch(0.5 0.04 65)", textureScale: 2.5 }
+  marks:
+    track: { kind: path, points: [[0, 30], [0, 0], [-6, -40], [-18, -70], [-14, -120], [10, -170]], width: 4, material: dirt, edgeMaterial: grass, noise: 0.4, grade: true }
+    track-farm: { kind: path, points: [[-6, -40], [30, -50], [62, -78]], width: 3.6, material: dirt, edgeMaterial: grass, noise: 0.4, grade: true }
+    yard-house: { kind: flatten, center: { x: -40, z: -62 }, height: { terrain: 0 }, shape: { kind: rectangle, width: 22, depth: 18 }, falloff: 8, material: dirt, clearScatter: true }
+    yard-farm: { kind: flatten, center: { x: 66, z: -84 }, height: { terrain: 0 }, shape: { kind: rectangle, width: 30, depth: 22 }, falloff: 8, material: dirt, clearScatter: true }
+    pond: { kind: lake, at: { x: 50, z: 30 }, radius: 14, depth: 2, bedMaterial: dirt }
+  decorations:
+    layers:
+      canola:
+        items:
+          - { kind: scripted, script: scripts/wheat10.js, params: { h: 1.0, n: 6, head: 0.09 }, seed: 11, color: "oklch(0.88 0.19 100)", scale: [0.8, 1.2], randomRotation: true, wind: { force: 0.06, scale: 6, speed: 1.2 } }
+          - { kind: scripted, script: scripts/wheat10.js, params: { h: 0.85, n: 8, head: 0.05 }, seed: 12, color: "oklch(0.6 0.12 135)", scale: [0.8, 1.2], randomRotation: true, wind: { force: 0.06, scale: 6, speed: 1.2 } }
+        density: 7
+      wheat:
+        items:
+          - { kind: scripted, script: scripts/wheat10.js, params: { h: 0.95, n: 7, head: 0.13 }, seed: 1, scale: [0.85, 1.15], randomRotation: true, wind: { force: 0.06, scale: 6, speed: 1.2 } }
+        density: 6
+      barley:
+        items:
+          - { kind: scripted, script: scripts/wheat10.js, params: { h: 0.75, n: 8, head: 0.1 }, seed: 3, scale: [0.85, 1.15], randomRotation: true, wind: { force: 0.07, scale: 6, speed: 1.3 } }
+        density: 6
+      grass:
+        items:
+          - { kind: scripted, script: scripts/grass.js, scale: [0.7, 1.4], randomRotation: true, useTerrainColor: true, wind: { force: 0.05, scale: 5, speed: 1.2 } }
+        density: 26
+    bindings: { canola: [canola], wheat: [wheat], barley: [barley], grass: [grass] }
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 0, y: { terrain: 0.2 }, z: 10 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -40 }
+atmosphere:
+  look: { script: scripts/look-photo.js }
+  sky: { kind: realistic, model: hosek }
+  timeOfDay: 15.5
+  cycle: { frozen: 15.5 }
+  clouds: { enabled: true, density: 0.45, opacity: 0.8, altitude: 900, thickness: 350, speed: 1.5 }
+  fog: { kind: linear, near: 60, far: 520, color: oklch(0.86 0.02 230) }
+  wind: { direction: 200, speed: 4 }
+  moon: { enabled: false }
+  stars: { enabled: false }
+acoustics: { reverb: 0.04 }

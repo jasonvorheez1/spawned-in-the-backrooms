@@ -3,7 +3,7 @@
 //  - following the track far enough leads to Level 11 (l10-road-north at its far end, l10-road-south behind the spawn)
 //  - swimming down into the lake leads to an aquatic level: Level 7 (l10-lake-deep)
 export const cadence = "1s";
-const V = 4;
+const V = 5;
 const BRK = (mat, hp) => ({ mat, hp, maxHp: hp });
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BARN = (w, d, h, ridge, wall, door) => ({ primitive: { kind: "scripted", script: "scripts/barn10.js", params: { w, d, h, ridge, wall, door } }, physics: "static" });
@@ -50,6 +50,8 @@ function lay(ctx) {
   sp("l10-canola", { feetPosition: T(-85, -185), scatter: { bounds: { shape: "circle", radius: 11 }, count: 520, seed: 18, variation: { scale: [0.9, 1.3], yaw: [0, 360] },
     templates: [{ primitive: { kind: "scripted", script: "scripts/wheat10.js", params: { h: 1.1, n: 6, head: 0.08 }, seed: 6 }, material: { color: "oklch(0.88 0.19 100)", emissive: "oklch(0.3 0.08 100)" } },
       { primitive: { kind: "scripted", script: "scripts/wheat10.js", params: { h: 0.9, n: 8, head: 0.06 }, seed: 7 }, material: { color: "oklch(0.62 0.12 135)" } }] } });
+  sp("l10-canola-in", { ...DOOR("level184#l184-from-l10", 6, 2, 6), feetPosition: T(-85, -185, 0) }); // deep in the canola: Level 184
+  sp("l10-from-l184", { feetPosition: T(-85, -170, 0.2), rotation: { yaw: 0 } });
   // ---- the sound of the place: wind in the crop, crows far off
   sp("l10-ambience", { feetPosition: T(0, 0), audience: "local", audio: { clip: AMB, gain: 0.2, loop: true, spatial: false, bus: "Ambience" } });
 }

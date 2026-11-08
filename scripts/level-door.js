@@ -14,12 +14,13 @@ const PAIR = {
   "l6-to-l61": "level61#l61-from-l6", "l6-wire-trip": "level61#l61-from-l6", "l61-to-l6": "level6#l6-from-l61",
   "l61-to-l11": "level11#l11-from-l61", "l11-to-l61": "level61#l61-from-l11",
   "lv10-backroad": "level10#l10-from-l11", "l10-road-north": "level11#lv10-arrive", "l10-road-south": "level11#lv10-arrive", "l10-lake-deep": "level7#l7-from-l6",
+  "l10-canola-in": "level184#l184-from-l10", "l184-back": "level10#l10-from-l184",
 };
 // how each threshold noclips (scripts/noclip-ui.js clipCard): you fall through the floor, clip through a wall, or just glitch across
 const KIND = {
   "l1-onward": "floor", "l2-to-l3": "floor", "l6-to-l7": "floor", "l6-to-l61": "floor", "l6-wire-trip": "floor", "l21-cave": "floor",
   "l2-back": "wall", "l3-back": "wall", "l6-back": "wall", "l7-back": "wall", "l61-to-l6": "wall", "l8-to-l21": "wall", "l21-down": "wall", "l5-to-l6": "wall",
-  "l61-to-l11": "wall", "l11-to-l61": "wall", "l10-lake-deep": "floor",
+  "l61-to-l11": "wall", "l11-to-l61": "wall", "l10-lake-deep": "floor", "l10-canola-in": "glitch",
 };
 export function onTriggerEnter(ctx, other) {
   if (!other?.state || other.state.level == null || !ctx.self.state.to) return;
