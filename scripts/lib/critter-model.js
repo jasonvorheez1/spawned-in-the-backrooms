@@ -146,7 +146,8 @@ export function headModel(l0) {
       ...furMats(l),
       eyewhite: { color: '#fffdf8', roughness: 0.35, metalness: 0 },
       eyeink: { color: '#16101c', roughness: 0.95, metalness: 0 },
-      pupil: {
+      pupil: l?.pupil ? { color: l.pupil, roughness: 1, metalness: 0, ...(l.glowEye ? { emissive: l.pupil, emissiveIntensity: typeof l.glowEye === 'number' ? l.glowEye : 2 } : {}) } // an authored pupil (Phoebe's white, glowing; johnadams2 Nov 8): one look's own, the black rule stands for the rest
+      : {
         color: eyeCol && (l?.glowEye || l?.species === 'samantha') ? eyeCol : '#000000', // STRICT: pupils all matte black, no shines; colour rides iris
         roughness: 1,
         metalness: 0,
