@@ -48,6 +48,9 @@ atmosphere:
   cycle: { frozen: 15.5 }
   clouds: { enabled: true, density: 0.45, opacity: 0.8, altitude: 900, thickness: 350, speed: 1.5 }
   fog: { kind: linear, near: 60, far: 520, color: oklch(0.86 0.02 230) }
+  sun: { light: { intensity: 1.3, color: oklch(0.97 0.03 85), shadow: { enabled: true } } }
+  ambient: { light: { color: oklch(0.88 0.02 230), intensity: 1.1 } }
+  hemisphere: { skyColor: oklch(0.88 0.03 230), groundColor: oklch(0.55 0.06 100), intensity: 0.9 }
   wind: { direction: 200, speed: 4 }
   moon: { enabled: false }
   stars: { enabled: false }
