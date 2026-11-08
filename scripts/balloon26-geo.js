@@ -12,6 +12,7 @@ export function skeleton() {
   }
 }
 export function geometry(ctx) {
+  const Q = (a, b, c, d) => ctx.quad(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2], d[0], d[1], d[2])
   const p = ctx.params || {}, col = p.color || "#d8262c", hi = ctx.lod <= 2
   const U = hi ? 28 : 14, V = hi ? 22 : 10
   // body: a balloon profile, rounder at the crown, pinching to the neck; a faint wrinkle where the tissue breathes
@@ -25,7 +26,7 @@ export function geometry(ctx) {
   let prev = ring(0)
   for (let j = 1; j <= V; j++) {
     const cur = ring(j / V)
-    for (let i = 0; i < U; i++) { const k = (i + 1) % U; ctx.quad(prev[i], prev[k], cur[k], cur[i]) }
+    for (let i = 0; i < U; i++) { const k = (i + 1) % U; Q(prev[i], cur[i], cur[k], prev[k]) }
     prev = cur
   }
   // highlight-catching sheen patch is the material's; the knot: a puckered torus-ish collar, darker, wet
@@ -34,7 +35,7 @@ export function geometry(ctx) {
   const KU = hi ? 14 : 8, KV = 6
   for (let j = 0; j < KV; j++) for (let i = 0; i < KU; i++) {
     const pt = (ii, jj) => { const a = (ii / KU) * Math.PI * 2, b = (jj / KV) * Math.PI * 2, pucker = 1 + 0.25 * Math.sin(a * 5); const rr = (0.028 + 0.012 * Math.cos(b)) * pucker; return [Math.cos(a) * rr, ky - 0.03 + 0.016 * Math.sin(b), Math.sin(a) * rr] }
-    ctx.quad(pt(i, j), pt(i + 1, j), pt(i + 1, j + 1), pt(i, j + 1))
+    Q(pt(i, j), pt(i, j + 1), pt(i + 1, j + 1), pt(i + 1, j))
   }
   // the ribbon: a thin curled strip, glossy, its tip barbed and tinged; each 0.3 m rides its own bone
   ctx.color(p.ribbon || "#f2f2f2"); ctx.roughness(0.25)
@@ -48,7 +49,7 @@ export function geometry(ctx) {
     ctx.bone(w)
     if (t > 0.85) ctx.color(mix(p.ribbon || "#f2f2f2", "#b8ff60", (t - 0.85) / 0.15))
     const A = [cx - dx, y, cz - dz], B = [cx + dx, y, cz + dz]
-    if (a0) { ctx.quad(a0[0], a0[1], B, A); ctx.quad(a0[1], a0[0], A, B) }
+    if (a0) { Q(a0[0], a0[1], B, A); Q(a0[1], a0[0], A, B) }
     a0 = [A, B]
   }
   ctx.bone(null); ctx.color(null); ctx.roughness(null); ctx.metalness(null)
