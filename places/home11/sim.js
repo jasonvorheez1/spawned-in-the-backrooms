@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 19;
+const V = 20;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -90,7 +90,7 @@ export function tick(ctx) {
   sp("h-light-bed", { feetPosition: { x: -1, y: 2.5, z: -3.5 }, light: { kind: "point", color: "oklch(0.85 0.08 65)", intensity: 1.4, distance: 7 } });
   // things to use (Shelly: "add interactibles")
   fit("h-fridge", "/cdn/value.d0d0dc823edfbfe08bea35729295b7b5dd01a2864bcd7c46d08a7d8599993e53.glb", 4.5, 1.55, 270, [0.75, 1.75, 0.75], use("fridge", "Fridge", "Grab a drink")); // almond two-door, magnets and papers
-  hang("h-micro", "/cdn/value.1d3dc84f3f95564053f8162e486d92ab5dfd9678eb26b82aed879a7371f33bea.glb", 4.55, 1.02, 3.0, 270, [0.36, 0.28, 0.5]); sp("h-micro-use", { ...use("microwave", "Microwave", "Heat a Hot Pocket"), feetPosition: { x: 4.55, y: 1.02, z: 3.0 }, primitive: { kind: "box", width: 0.36, height: 0.28, depth: 0.5 }, material: { opacity: 0, transparent: true }, physics: { body: "static", collider: "box" } });
+  hang("h-micro", "/cdn/value.1d3dc84f3f95564053f8162e486d92ab5dfd9678eb26b82aed879a7371f33bea.glb", 4.5, 1.01, 3.4, 270, [0.36, 0.28, 0.5]); sp("h-micro-use", { ...use("microwave", "Microwave", "Heat a Hot Pocket"), feetPosition: { x: 4.5, y: 1.01, z: 3.4 }, primitive: { kind: "box", width: 0.36, height: 0.28, depth: 0.5 }, material: { opacity: 0, transparent: true }, physics: { body: "static", collider: "box" } });
   hang("h-lava", "/cdn/value.8413072e1fc1e8e8482a7d553210352afec9f63c4aca06ab7775be80044401c7.glb", 0.65, 0.86, -5.5, 0, [0.13, 0.42, 0.13]); // red lava lamp on the desk
   sp("h-lava-light", { feetPosition: { x: 0.65, y: 1.1, z: -5.4 }, light: { kind: "point", color: "oklch(0.65 0.22 25)", intensity: 0.6, distance: 2.5 } });
   sp("h-lava-use", { ...use("lamp", "Lava Lamp", "Switch", { light: "h-lava-light", int: 0.6 }), feetPosition: { x: 0.65, y: 0.86, z: -5.5 }, primitive: { kind: "box", width: 0.16, height: 0.44, depth: 0.16 }, material: { opacity: 0, transparent: true }, physics: { body: "static", collider: "box" } });
