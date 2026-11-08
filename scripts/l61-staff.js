@@ -34,6 +34,29 @@ export function update(ctx, dt) {
     if (near) me.rotation = { yaw: turn(me.rotation?.yaw ?? 0, yawOf(near.x - p.x, near.z - p.z), 0.2) };
     if (!m.gestEnd) gesture(ACT.nod); rest(); return;
   }
+  if (s.orderAt && s.orderAt > (m.seenOrder ?? 0)) { m.seenOrder = s.orderAt; gesture(ACT.serve); m.next = now + 6000; } // an order just came in: the kitchen moves
+  if (s.deliver) { // waiting on you: walk the tray over, hand it across, go back to the round
+    const D = s.deliver, who = ctx.getObject(D.who), tray = ctx.getObject(D.tray);
+    if (!who || !tray || now > D.until) { s.deliver = null; }
+    else {
+      const dx = who.feetPosition.x - p.x, dz = who.feetPosition.z - p.z, d = Math.hypot(dx, dz);
+      if (d < 1.4) {
+        s.deliver = null; me.anim.gest = null; gesture(ACT.serve); rest(); me.rotation = { yaw: yawOf(dx, dz) };
+        ctx.destroy(D.tray); who.state.l61Tray = now;
+        who.state.payout = { xp: 2, items: D.items, text: `The faceling sets your tray down in front of you. "Order ${D.n}. Enjoy." They nod and head back to work. When you are done, the tray goes in the tray return.` };
+        ctx.emit("damageNumber", { position: { x: p.x, y: p.y + 2.1, z: p.z }, text: `ORDER ${D.n}. ENJOY!`, color: "#9fffb0", size: 0.9 }, { audience: { player: who.id } });
+        heard(ctx, { clip: G("paper-plate-slid-across-counter"), position: { x: p.x, y: p.y + 1, z: p.z }, volume: 0.7, maxDistance: 12 });
+        return;
+      }
+      const sp = 1.7 * (d < 1.8 ? 0.5 : 1), ux = dx / d, uz = dz / d, ease = (c, t) => c + (t - c) * Math.min(1, 7 * dt);
+      me.velocity = { x: ease(v.x ?? 0, ux * sp), y: (v.y ?? 0) - 20 * dt, z: ease(v.z ?? 0, uz * sp) }; me.rotation = { yaw: turn(me.rotation?.yaw ?? 0, yawOf(ux, uz), 0.25) };
+      return;
+    }
+  }
+  if (s.job === "post" && s.greet && now > (m.greetAt ?? 0)) { // somebody walks up to the counter: a wave and a welcome
+    const q = ctx.place.players.find((o) => Math.hypot(o.feetPosition.x - p.x, o.feetPosition.z - p.z) < 5);
+    if (q) { m.greetAt = now + 60000; if (!m.gestEnd) gesture(GESTS[4]); ctx.emit("damageNumber", { position: { x: p.x, y: p.y + 2.1, z: p.z }, text: s.greet, color: "#ffe9a8", size: 0.85 }, { audience: { player: q.id } }); }
+  }
   if (s.job === "post") { // behind the counter: face the room, now and then wipe, serve, nod or wave
     rest(); me.rotation = { yaw: turn(me.rotation?.yaw ?? 0, s.faceYaw ?? 0, 0.1) };
     if (now > m.next && !m.gestEnd) { m.next = now + 4000 + ctx.random() * 7000; gesture(s.acts?.length ? ACT[s.acts[Math.floor(ctx.random() * s.acts.length)]] : GESTS[Math.floor(ctx.random() * GESTS.length)]); }

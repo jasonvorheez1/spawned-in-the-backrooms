@@ -5,7 +5,7 @@
 import { layExtra, faceling, person, PEOPLE, FACELING_IDS } from "../../scripts/lib/level61-extra.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
 export const cadence = "1s";
-const V = 7;
+const V = 8;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb", M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb", M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb"; // art/snackrooms/build.py
 const SNACK = "/cdn/value.50b5fa3844cf9c705ca675660ef22ddb556c1cf0f31ad1cd69deeb8d8395df71.png", SODA = "/cdn/value.4db3afe09f392fef7c9d80e531484862384aef0ea5bcba295dc62b57197b659f.png";
 const T = (name, rep) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -110,25 +110,25 @@ function lay(ctx) {
     light(`l61-${k}-l0`, cx - 3, 3.5, -HD - 5, lc, 4, 12); light(`l61-${k}-l1`, cx + 3, 3.5, -HD - 5, lc, 4, 12);
   }
   // Clippers: the red bar it was found in. bar along the back, stools, bottles, a jukebox, and the wire across the floor
-  counter("l61-clip-bar", -21, -30.2, 180, M_BAR10, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "coke,coke,almond", name: "Clippers bar", verb: "Ask for a drink", info: "Red walls, wood floor. The bartender is a faceling in a bow tie." } });
+  counter("l61-clip-bar", -21, -30.2, 180, M_BAR10, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "coke,coke,almond", name: "Clippers bar", verb: "Order what the menu shows", info: "Red walls, wood floor. The bartender is a faceling in a bow tie." } });
   for (let k = 0; k < 6; k++) stool(`l61-clip-stool-${k}`, -25 + k * 1.6, -29.2, "oklch(0.45 0.18 25)");
   for (const [n, y] of [[0, 1.4], [1, 2.0]]) sp(`l61-clip-shelf-${n}`, { feetPosition: { x: -21, y, z: -31.6 }, primitive: { kind: "box", width: 9, height: 0.05, depth: 0.3 }, material: DARKWOOD,
     children: Array.from({ length: 16 }, (_, i) => ({ feetPosition: { x: -4.2 + i * 0.56, y: 0.05, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.05, height: 0.3 + ((i * 7) % 3) * 0.05 }, material: { color: ["oklch(0.4 0.1 145)", "oklch(0.55 0.12 60)", "oklch(0.3 0.08 30)", "oklch(0.8 0.03 90)"][i % 4], roughness: 0.1, opacity: 0.85, transparent: true } })) });
   counter("l61-clip-jukebox", -26.4, -25, -90, M_JUKE, { light: { kind: "point", color: "oklch(0.8 0.15 55)", intensity: 0.8, distance: 4 } });
   box("l61-clip-wire", -21, 0.06, -23.2, 3.6, 0.015, 0.015, { color: "oklch(0.2 0 0)" }, { physics: undefined });
   // Liquorette: long dark bar down the left, back bar of glowing bottles, green-glass lamps
-  counter("l61-liq-bar", -12.2, -27, -90, M_BAR7, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "almond,almond,coke", name: "Liquorette bar", verb: "Order", info: "Almond water, cashew water, real distilled water. Pay nothing." } });
+  counter("l61-liq-bar", -12.2, -27, -90, M_BAR7, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "almond,almond,coke", name: "Liquorette bar", verb: "Order what the menu shows", info: "Almond water, cashew water, real distilled water. Pay nothing." } });
   counter("l61-liq-back", -13.6, -27, -90, M_BACKBAR);
   for (let k = 0; k < 3; k++) sp(`l61-liq-lamp-${k}`, { feetPosition: { x: -11.6, y: 2.6, z: -29.5 + k * 2.5 }, primitive: { kind: "sphere", radius: 0.18 }, material: { color: "oklch(0.6 0.14 150)", emissive: "oklch(0.7 0.16 150)", emissiveIntensity: 1.5 }, light: { kind: "point", color: "oklch(0.85 0.1 140)", intensity: 1.5, distance: 6 } });
   for (let k = 0; k < 4; k++) tableSet(`l61-liq-table-${k}`, -6 + (k % 2) * 3.4, -25.5 - Math.floor(k / 2) * 3.4, k * 20);
   // Slice Palace: counter with a warm glass case, the oven, a menu board, a soda machine
-  counter("l61-slice-counter", 7, -29.4, 180, M_PIZZA, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "pizza", name: "Slice Palace counter", verb: "Take a slice", info: "Pepperoni under a heat lamp. A faceling in a paper hat waves." } });
+  counter("l61-slice-counter", 7, -29.4, 180, M_PIZZA, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "pizza", name: "Slice Palace counter", verb: "Order what the menu shows", info: "Pepperoni under a heat lamp. A faceling in a paper hat waves." } });
   counter("l61-slice-oven", 9.5, -31.3, 180, M_OVEN);
   sign("l61-slice-menu", 4.5, 2.2, -31.8, 180, 3.2, 1.2, `<div style="font-size:120px;color:#ffd84a">MENU</div><div style="font-size:70px;color:#fff">PEPPERONI · CHEESE · SUPREME</div><div style="font-size:60px;color:#9f9">ALL SLICES FREE · FACELING STAFF</div>`, "oklch(0.2 0.02 150)");
   vend("l61-slice-soda", 12.8, -25, 90, true);
   for (let k = 0; k < 2; k++) tableSet(`l61-slice-table-${k}`, 3 + k * 4, -25.5, 0);
   // Burger Bop: diner counter with stools, the grill, a soda machine
-  counter("l61-burger-counter", 21, -28.6, 180, M_DINER, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "burger", name: "Burger Bop counter", verb: "Order a burger", info: "The grill hisses. It smells exactly like 1986." } });
+  counter("l61-burger-counter", 21, -28.6, 180, M_DINER, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "burger", name: "Burger Bop counter", verb: "Order what the menu shows", info: "The grill hisses. It smells exactly like 1986." } });
   counter("l61-burger-grill", 21, -31.3, 180, M_GRILL, { audio: { clip: "cdn/sfx-burgers-sizzling-on-flat-top-griddle-loop.mp3", loop: true, gain: 0.18, spatial: true, maxDistance: 11 } });
   for (let k = 0; k < 6; k++) stool(`l61-burger-stool-${k}`, 17 + k * 1.6, -27.5, "oklch(0.7 0.13 195)");
   vend("l61-burger-soda", 27.3, -25, 90, true);
