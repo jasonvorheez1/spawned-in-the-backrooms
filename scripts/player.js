@@ -210,6 +210,27 @@ function takeToken0(ctx, token) {
     sound(ctx, token === 'ration' ? 'plastic-bottle-pickup-rattle' : 'pickup-ammo', 0.7, true)
     return { ok: true }
   }
+  if (token === 'bread') {
+    const mh = maxHp(s.level, s), ms = maxSan(s.level, s)
+    s.hp = Math.min(mh, (s.hp ?? mh) + 40 * derived(s).heal)
+    s.sanity = Math.min(ms, (s.sanity ?? ms) + 25)
+    s.pickedAt = now; gain(ctx, 30)
+    s.notice = { text: 'Warm Homestead Loaf. Delicious fresh bread restores +40 HP and +25 Sanity!', at: now }
+    sound(ctx, 'plastic-bottle-pickup-rattle', 0.7, true)
+    return { ok: true }
+  }
+  if (token === 'wheat_sheaf') {
+    s.wheat = (s.wheat ?? 0) + 1; s.pickedAt = now
+    s.notice = { text: `Golden Wheat Sheaf (${s.wheat} carried) · Grind at the Windmill Quern`, at: now }
+    sound(ctx, 'pickup-ammo', 0.6, true)
+    return { ok: true }
+  }
+  if (token === 'flour_sack') {
+    s.flour = (s.flour ?? 0) + 1; s.pickedAt = now
+    s.notice = { text: `Sack of Fresh Flour (${s.flour} carried) · Bake at the Farmhouse Hearth`, at: now }
+    sound(ctx, 'pickup-ammo', 0.6, true)
+    return { ok: true }
+  }
   if (token === 'lobby_wafer') { // Level 0's own snack: stale yellow wafers in every third desk drawer (Savi made it up)
     const mh = maxHp(s.level, s), ms = maxSan(s.level, s), U = L2.use
     s.hp = Math.min(mh, (s.hp ?? mh) + U.waferHp * derived(s).heal); s.sanity = Math.min(ms, (s.sanity ?? ms) + U.waferSanity)
