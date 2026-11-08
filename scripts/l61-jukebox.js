@@ -5,25 +5,25 @@ import { heard } from "./lib/hear.js";
 export const STATIONS = [
   {
     id: "heart80s",
-    name: "KSNK 88.1",
+    name: "Heart 80s",
     genre: "80s Pop, New Wave & Synth",
-    url: "cdn/music-bright-1980s-synth-pop-new-wave-gated-drums-catchy-hook-loop.mp3",
+    url: "https://media-ssl.musicradio.com/Heart80sMP3",
     color: "#ff3888",
     badge: "#ff6bb0",
   },
   {
     id: "somafm80s",
-    name: "Night Shift FM",
+    name: "SomaFM Underground 80s",
     genre: "80s Synthpop, Post-Punk & Wave",
-    url: "cdn/music-moody-1980s-post-punk-synthwave-chorus-guitar-drum-machine-loop.mp3",
+    url: "https://ice6.somafm.com/u80s-128-mp3",
     color: "#00d8f0",
     badge: "#5ce6ff",
   },
   {
     id: "rock80s",
-    name: "Rock 104 The Mall",
+    name: "0N Classic 80s Rock",
     genre: "80s Arena Rock & Anthems",
-    url: "cdn/music-1980s-arena-rock-anthem-big-guitars-pounding-drums-loop.mp3",
+    url: "https://0n-classicrock.radionetz.de/0n-classicrock.mp3",
     color: "#ffaa20",
     badge: "#ffd060",
   },
@@ -71,8 +71,11 @@ export const ears = {
     const cur = STATIONS[idx];
 
     if (s.playing && cur) {
-      // Set spatial 3D audio stream
-      ctx.self.audio = {
+      // a live stream won't swap in place: drop the old one, tune the new one a beat later
+      ctx.self.audio = null;
+      s.tuneTo = idx;
+      ctx.after(0.4, "tune", { idx });
+      ctx.self.session.next = {
         clip: cur.url,
         gain: 0.65,
         loop: true,
@@ -81,6 +84,7 @@ export const ears = {
         maxDistance: 45,
         bus: "Music",
       };
+      ctx.self.session.next.clip = cur.url;
 
       // In-world UI update
       ctx.self.ui = renderDisplay(cur, true);
@@ -121,3 +125,9 @@ export const ears = {
     }
   },
 };
+
+export function tune(ctx, { idx }) {
+  const s = ctx.self.state; if (!s.playing || s.tuneTo !== idx) return;
+  const cur = STATIONS[idx];
+  ctx.self.audio = { clip: cur.url, gain: 0.65, loop: true, spatial: true, refDistance: 3.5, maxDistance: 45, bus: "Music" };
+}
