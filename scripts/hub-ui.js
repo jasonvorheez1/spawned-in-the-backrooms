@@ -1,7 +1,7 @@
 // The Bonus Room's counter menus and the after-death offer (scripts/hub.js answers every button).
 import B from "./lib/data/bonus.yml"
 import FURN from "./lib/data/furniture.yml"
-import { HOMES } from "./lib/hub.js"
+import { HOMES, lastLevel, LEVEL_NAMES } from "./lib/hub.js"
 import { parseCloth } from "./lib/clothes.js"
 const CSS = `<style>
 #hubp{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,92vw);max-height:78vh;overflow:auto;pointer-events:auto;
