@@ -80,10 +80,11 @@ def male(head, body):
             if aw[i] < 0.2 and lo <= c.z <= hi and f(i, c):
                 k = int(c.z / 0.02); bins[k] = pick(bins.get(k), c)
         return bins
+    zs = sorted(c.z for c in P); print("zrange", round(zs[0], 3), round(zs[-1], 3), "verts", len(P), "armless", sum(1 for a in aw if a < 0.2))
     half = prof(lambda i, c: True, 0.7, 1.5, lambda m, c: max(m or 0, abs(c.x)))
     def at(bins, z):
         k = int(z / 0.02); ks = [j for j in (k - 1, k, k + 1) if j in bins]
-        return sum(bins[j] for j in ks) / len(ks)
+        return sum(bins[j] for j in ks) / len(ks) if ks else 0
     wz = min((z / 100 for z in range(98, 120)), key=lambda z: at(half, z))
     ww = at(half, wz); sw = at(half, 1.42)
     print("waist", round(wz, 3), "half", round(ww, 3), "chest half", round(sw, 3), "hip half", round(max(at(half, z / 100) for z in range(80, 96)), 3))
