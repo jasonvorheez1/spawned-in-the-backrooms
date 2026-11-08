@@ -36,6 +36,7 @@ function room(ctx, r, M) {
   ctx.color(`oklch(${0.4 + h(51) * 0.2} ${0.03 + h(52) * 0.05} ${h(53) * 360})`);
   pipe(ctx, P(-IN, H - 0.3, IN - 0.15), P(E - 0.2, H - 0.3, IN - 0.15), 0.07, M); pipe(ctx, P(-IN, H - 0.5, IN - 0.15), P(E - 0.2, H - 0.5, IN - 0.15), 0.05, M);
   const t = r.type;
+  if (ctx.params?.props) return; // the room's dressing is Tripo props now (scripts/lib/l2props.js)
   if (t === "boiler") { // a squat water heater on legs, gauges, a flue into the ceiling
     ctx.color("oklch(0.5 0.08 40)"); pipe(ctx, P(0.6, 0.25, -1.4), P(0.6, 1.9, -1.4), 0.62, M + 4);
     ctx.color("oklch(0.25 0.01 250)"); for (const y of [0.5, 1.2, 1.75]) pipe(ctx, P(0.6, y, -1.4), P(0.6, y + 0.06, -1.4), 0.64, M + 4);

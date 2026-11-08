@@ -45,6 +45,10 @@ rooms:
   locker:     [[bench, 0.1, 1.7, -b], [mop, 1.5, 1.6, back], [drum, 1.5, -1.6, door]]
   pump:       [[pump, 0.15, -1.15, -b], [pump, 0.15, 1.15, +b], [canister, -0.9, 1.8, -b]]
   office:     [[chair, 1.0, 0.25, back], [shelf, 0.95, 1.85, -b], [stackchair, -1.0, -0.6, door]]
-  cage:       [[shelf, -0.4, -1.85, +b], [shelf, -0.4, 1.85, -b], [drum, 0.5, -1.6, door], [canister, 0.2, 1.5, -b]]
+  cage:       [[shelf, -0.4, -1.85, +b], [shelf, -0.4, 1.85, -b], [drum, 0.5, -1.6, door], [canister, 0.7, 1.2, -b]]
   break:      [[table, 0.2, -0.1, door], [stackchair, 0.2, -0.85, +b], [stackchair, 0.2, 0.75, -b], [counter, -0.3, 1.8, -b], [microwave, 0.3, 1.82, -b, 0.92]]
-  electrical: [[fuse, -0.85, -1.98, +b, 0.9], [fuse, 0.55, -1.98, +b, 0.9], [fuse, -0.85, 1.98, -b, 0.9], [fuse, 0.55, 1.98, -b, 0.9], [transformer, 1.0, 0, back]]
+  electrical: [[fuse, -0.85, -1.98, +b, 0.9], [fuse, 0.55, -1.98, +b, 0.9], [fuse, -0.85, 1.98, -b, 0.9], [fuse, 0.55, 1.98, -b, 0.9], [transformer, 0.6, 1.6, -b]]
+# props on the Boiler Hall floor, offsets from the hall centre (x, z) and a yaw
+hall: [[pump, 1.2, -3.7, 0], [heater, 9.2, -3.2, 90], [heater, 9.2, -2.3, 90], [drum, -9.5, 5.6, 0], [drum, -8.8, 6.0, 30], [canister, -9.6, 4.8, 0], [bench, 3.5, 6.3, 180], [shelf, -3.0, 6.6, 180]]
+# what moves: dynamic bodies (kick pushes the wheeled chair, grab lifts the light ones); the rest stand static
+dynamic: { chair: 12, stackchair: 5, mop: 6, canister: 9, drum: 38, microwave: 12 }

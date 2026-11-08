@@ -127,11 +127,12 @@ export function spawnCrateL2(ctx, p) {
   for (let i = 0; i < n; i++) items.push(rollItemL2(ctx));
   const lk = rollLock(ctx); if (lk) for (let i = 0; i < lk.bonus; i++) items.push(rollItemL2(ctx));
   const name = lk ? lk.name : ["Toolbox", "Metal crate", "Parts bin", "Wooden crate"][Math.floor(ctx.random() * 4)];
-  ctx.spawn({ tags: ["container", "crate", "breakable"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { name, items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
+  ctx.spawn({ tags: ["container", "crate", "breakable"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", visibleRange: { max: 45 }, castShadow: false, model: { id: crateModel(name), forward: PROPS.forward }, layout: fitBox(name === "Toolbox" ? PROPS.toolboxSize : PROPS.crateSize), state: { name, mat: name === "Wooden crate" ? "wood" : "metal", hp: 60, maxHp: 60, items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }
 
 // Level 2 side-room containers: a kind from level2.yml containers (locker, toolbox, vending …), rolled from its own loot table
 import L2C from "./data/level2.yml";
+import { PROPS, fitBox, containerModel, crateModel } from "./l2props.js";
 export function rollTableL2(ctx, table) {
   const T = Object.entries(L2C.tables[table] ?? {}), total = T.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
@@ -149,9 +150,9 @@ const L2MODEL = {
   fridge: { id: "/cdn/value.c531369907056aa1f04bdb183de1d8def0d01e1134bb98f4f359f69ff9bfa95a.glb", paints: ["#dcdcd6", "#d8d4c4", "#c8ccc8", "#e4e0d0"] },
 };
 export function spawnContainerL2(ctx, kind, p, yaw, opts = {}) {
-  const C0 = L2C.containers[kind], C = opts.size ? { ...C0, size: opts.size } : C0, lk = opts.noLock ? null : rollLock(ctx), M = opts.model ?? L2MODEL[kind], seed = Math.floor(ctx.random() * 1000);
+  const C0 = L2C.containers[kind], C = opts.size ? { ...C0, size: opts.size } : C0, lk = opts.noLock ? null : rollLock(ctx), M = opts.model ?? L2MODEL[kind] ?? (containerModel(kind) ? { id: containerModel(kind), tripo: true } : null), seed = Math.floor(ctx.random() * 1000);
   return ctx.spawn({ tags: ["container", "l2box"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, castShadow: false,
-    ...(M ? { model: { id: M.id, materials: { paint: { color: M.paints[seed % M.paints.length], roughness: 0.55, metalness: 0.15 } } }, layout: { box: { min: { x: -C.size[0] / 2, y: 0, z: -C.size[2] / 2 }, max: { x: C.size[0] / 2, y: C.size[1], z: C.size[2] / 2 } } } } : { primitive: { kind: "scripted", script: "scripts/l2-props-geo.js", params: { kind, seed } } }),
+    ...(M ? { model: M.tripo ? { id: M.id, forward: PROPS.forward } : { id: M.id, materials: { paint: { color: M.paints[seed % M.paints.length], roughness: 0.55, metalness: 0.15 } } }, layout: { box: { min: { x: -C.size[0] / 2, y: 0, z: -C.size[2] / 2 }, max: { x: C.size[0] / 2, y: C.size[1], z: C.size[2] / 2 } } } } : { primitive: { kind: "scripted", script: "scripts/l2-props-geo.js", params: { kind, seed } } }),
     state: { name: lk ? `${C.name} (locked)` : C.name, kind, items: fillContainerL2(ctx, kind, (opts.bonus ?? 0) + (lk ? lk.bonus : 0)), ...(lk ? { lock: lk.lock } : {}), room: opts.room ?? -1 } });
 }
 
