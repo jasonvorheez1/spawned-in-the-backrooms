@@ -5,8 +5,17 @@
 // Numbers are my picks: hp 55, bite 10-15 + 3 bleed ticks of 2, up 2.6 s, up to 3 stalking you at once.
 import { normalize } from "builtin/vec3";
 import { hit, flat, yawTo } from "./lib/l5-hostile.js";
+import { WORMS } from "./worm10-geo.js";
+// the writhe: every worm's two bones sway on their own phase, so the clump heaves and coils
+const WRITHE = (() => {
+  const tracks = {}, wave = (ph, amp) => Array.from({ length: 9 }, (_, k) => Math.round(Math.sin((k / 8) * 6.283 + ph) * amp));
+  for (let i = 0; i < WORMS; i++) {
+    tracks[`w${i}a`] = { pitch: wave(i * 1.7, 18), roll: wave(i * 2.3 + 1, 14) };
+    tracks[`w${i}b`] = { pitch: wave(i * 1.7 + 1.6, 38), yaw: wave(i * 0.9 + 0.5, 30) };
+  }
+  return { duration: 1.1, tracks };
+})();
 
-const MODEL = "/cdn/value.0eb1b12ac54b385934e3602aa8ba3ad6fb3ba3615c253cec10a03612cb8da6a6.glb";
 const SND = (w) => `/cdn/moodboard-realistic-gritty/sfx-${w}.mp3`;
 const S = {
   hp: 55, bite: [10, 15], bleed: 2, bleedTicks: 3, reach: 2.4,
@@ -49,7 +58,7 @@ export function update(ctx, dt) {
     const a = ctx.random() * 6.283, x = p.feetPosition.x + Math.cos(a) * S.start, z = p.feetPosition.z + Math.sin(a) * S.start;
     ctx.spawn({
       tags: ["l10worm", "moths"], feetPosition: { x, y: gy(x, z) - 2.4, z }, rotation: ctx.random() * 360,
-      model: { id: MODEL, offset: [0, -0.25, 0] }, layout: { box: { min: { x: -1.8, y: 0, z: -1.8 }, max: { x: 1.8, y: 2.6, z: 1.8 } } }, // rears clear over the 1.2 m wheat
+      primitive: { kind: "scripted", script: "scripts/worm10-geo.js" }, scale: 1.25, visibleRange: { max: 90 }, castShadow: false,
       physics: { body: "kinematic", collider: "capsule" }, visible: false, fx: { script: RIPPLE },
       state: { kind: "worm", name: "Field Worm", hp: S.hp, maxHp: S.hp, level: 3, phase: "stalk", prey: p.id, heardAt: now },
     });
@@ -81,7 +90,7 @@ export function update(ctx, dt) {
         const x = o.feetPosition.x, z = o.feetPosition.z, y0 = gy(x, z);
         o.feetPosition = { x, y: y0 - 1.6, z }; o.velocity = { x: 0, y: 0, z: 0 };
         o.rotation = yawTo(p.feetPosition.x - x, p.feetPosition.z - z) + 180;
-        o.visible = true; o.fx = null; m.y0 = y0;
+        o.visible = true; o.fx = null; m.y0 = y0; o.anim.writhe = { clip: WRITHE, loop: true, weight: 1 };
         ctx.emit("fx", { position: { x, y: y0, z }, script: ERUPT });
         ctx.emit("screenShake", { intensity: 0.35, duration: 0.3 }, { audience: { player: p.id } });
         play(ctx, "giant-worm-erupting-from-wet-soil-dirt-burst", { x, y: y0, z }, 0.95, 40);
@@ -98,7 +107,7 @@ export function update(ctx, dt) {
       const t = now - m.at, x = o.feetPosition.x, z = o.feetPosition.z;
       const k = Math.min(1, t / (S.rise * 1000));
       if (t < S.up) o.feetPosition = { x, y: m.y0 - 1.6 * (1 - k) - 0.15, z };
-      const sy = 1 + 0.06 * Math.sin(t / 90); if (Number.isFinite(sy)) o.scale = { x: 1, y: sy, z: 1 };
+      const sy = 1.25 * (1 + 0.07 * Math.sin(t / 90)); if (Number.isFinite(sy)) o.scale = { x: 1.25, y: sy, z: 1.25 };
       if (!m.bit && t > S.rise * 1000 && p && flat(o.feetPosition, p.feetPosition) < S.reach && exposed(ctx, p)) {
         m.bit = true;
         const at = hit(ctx, p, Math.round(rnd(ctx, S.bite[0], S.bite[1] + 0.99) - 0.49), "#ff6a50");
@@ -116,7 +125,7 @@ export function update(ctx, dt) {
       const t = now - m.at;
       o.feetPosition = { ...o.feetPosition, y: m.y0 - 0.15 - 2.2 * Math.min(1, t / (S.sink * 1000)) };
       if (t > S.sink * 1000) { // back under: it hunts you again from here
-        o.visible = false; o.scale = null; o.fx = { script: RIPPLE }; s.phase = "stalk"; s.heardAt = now;
+        o.visible = false; o.scale = 1.25; o.anim.writhe = null; o.fx = { script: RIPPLE }; s.phase = "stalk"; s.heardAt = now;
         const a = ctx.random() * 6.283; o.feetPosition = { x: o.feetPosition.x + Math.cos(a) * 6, y: m.y0 - 2.4, z: o.feetPosition.z + Math.sin(a) * 6 };
       }
     }
