@@ -2,6 +2,7 @@
 // it offers the mall after a death, opens the mall's counters (Tom's Diner, clothes, furniture, the Teleport Station)
 // and answers their buttons. Food here is just for fun and never leaves the mall.
 import { toHub, toSolo, HOMES, HUB_PLACE, lastLevel } from "./lib/hub.js"
+import { animate } from "builtin/tween"
 import B from "./lib/data/bonus.yml"
 import FOODM from "./lib/data/bonus-food-models.yml"
 import FURN from "./lib/data/furniture.yml"
@@ -17,6 +18,8 @@ const ding = (ctx, clip) => ctx.emit("playSound", { clip, volume: 0.6 }, { audie
 export function update(ctx) {
   if (ctx.self.isLocal === false) return ctx.sleep()
   const s = ctx.self.state, ses = ctx.session, inHub = ctx.self.place === HUB_PLACE
+  if (ses.ride) return rideStep(ctx, s, ses)
+  if (s.trainHid) { s.trainHid = null; ctx.self.visible = true; ctx.view.camera = null } // off the train: you're seen again
   // a death outside the mall: once you're back on your feet, the mall is offered for a few seconds
   const down = !!(s.respawnAt || s.downAt)
   if (ses.hubDown && !down && s.t0Done && !inHub) s.hubOffer = { at: ctx.now() }
@@ -75,10 +78,46 @@ export function onInput(ctx, input) {
   if (d.k === "furn") return buyFurn(ctx, s, d.v)
   if (d.k === "travel") {
     s.hubShop = null; s.hubFood = null
-    if (d.v === "level0") return toSolo(ctx, "main")
-    if (d.v === "last") { const l = lastLevel(s); if (l) { s.wakeAtSave = true; return toSolo(ctx, l, ctx.self, true) } }
+    if (ctx.session.ride) return
+    if (d.v === "level0") return board(ctx, s, "main", false)
+    if (d.v === "last") { const l = lastLevel(s); if (l) return board(ctx, s, l, true) }
     const h = HOMES.find((x) => x.key === d.v)
-    if (h && h.has(s)) return toSolo(ctx, h.to)
+    if (h && h.has(s)) return board(ctx, s, h.to, false)
     ding(ctx, NOPE); tell(ctx, s, "You haven't unlocked that home yet.")
+  }
+}
+
+// The boarding scene (Shelly: the train gets an animation and a cutscene of you getting on). Her picks: the car at bc-train, doors on its platform side (+x), ~6.5 s.
+const TRAIN = { id: "bc-train", x: -22.3, y: 5.15, z: -14, door: { x: -21.1, z: -14 }, start: { x: -18.6, z: -14 } }
+const RIDE = { walk: 1.9, board: 2.4, depart: 3.0, pull: 6.0, leave: 6.6, slide: 45 } // seconds into the scene; metres the car slides out
+const CHIME = "cdn/sfx-subway-train-door-closing-two-tone-chime-and-pneumatic-hiss.mp3"
+const DEPART = "cdn/sfx-subway-train-electric-motor-whine-accelerating-away-rails-clatter.mp3"
+function board(ctx, s, to, keep) {
+  const me = ctx.self, now = ctx.now()
+  ctx.session.ride = { to, keep, t0: now, phase: 0 }
+  s.stungUntil = now + RIDE.leave * 1000 + 500 // the scene holds your feet
+  me.feetPosition = { x: TRAIN.start.x, y: TRAIN.y + 0.35, z: TRAIN.start.z }; me.rotation = { yaw: 90 } // facing the car (-x)
+  const real = ctx.place.objects[TRAIN.id]
+  ctx.session.rideTrain = ctx.spawn({ audience: "local", scope: "session", feetPosition: { x: TRAIN.x, y: TRAIN.y, z: TRAIN.z }, rotation: { yaw: 90 }, model: real?.model ?? undefined, layout: real?.layout ?? { box: { min: { x: -7.75, y: 0, z: -1.3 }, max: { x: 7.75, y: 4, z: 1.3 } } } })
+  me.hidden = [...(me.hidden ?? []).filter((h) => h !== TRAIN.id), TRAIN.id]
+  ctx.view.camera = { eye: { x: -14.5, y: 7.4, z: -7.5 }, aim: { x: -20.8, y: 6.4, z: -14 }, fov: 50 }
+}
+function rideStep(ctx, s, ses) {
+  const r = ses.ride, t = (ctx.now() - r.t0) / 1000, me = ctx.self
+  if (t < RIDE.walk) { const k = t / RIDE.walk; me.velocity = { x: (TRAIN.door.x - TRAIN.start.x) / RIDE.walk, y: 0, z: 0 }; me.anim.walk = { clip: "cdn/clip-walk-loop.glb", weight: 1, loop: true }; void k; return }
+  if (r.phase < 1) { r.phase = 1; me.velocity = { x: 0, y: 0, z: 0 }; me.anim.walk = null }
+  if (t >= RIDE.board && r.phase < 2) { r.phase = 2; me.visible = false; s.trainHid = true
+    ctx.emit("playSound", { clip: CHIME, position: { x: TRAIN.door.x, y: TRAIN.y + 1.5, z: TRAIN.door.z }, volume: 0.7 })
+    ctx.view.camera = { eye: { x: -13, y: 7.8, z: -2 }, aim: { x: -22, y: 6.5, z: -16 }, fov: 55 } }
+  if (t >= RIDE.depart && r.phase < 3) { r.phase = 3; const tr = ses.rideTrain
+    ctx.emit("playSound", { clip: DEPART, position: { x: TRAIN.x, y: TRAIN.y + 1.5, z: TRAIN.z }, volume: 0.8 })
+    if (tr && getObject(tr)) animate(ctx, getObject(tr), { "feetPosition.z": TRAIN.z - RIDE.slide }, { duration: RIDE.pull - RIDE.depart + 0.6, easing: "easeInQuad" }) }
+  if (t >= RIDE.pull && r.phase < 4) { r.phase = 4; ctx.emit("screenFlash", { color: "#000000", duration: 0.7, intensity: 1 }, { audience: { player: me.id } }) }
+  if (t >= RIDE.leave) {
+    const tr = ses.rideTrain; if (tr && getObject(tr)) destroy(tr)
+    me.hidden = (me.hidden ?? []).filter((h) => h !== TRAIN.id)
+    ses.ride = null; ses.rideTrain = null; s.stungUntil = 0
+    if (r.keep) s.wakeAtSave = true
+    toSolo(ctx, r.to, me, r.keep)
   }
 }
