@@ -1,4 +1,5 @@
 import { vo } from "./lib/voices.js";
+import { social } from "./lib/npc-social.js";
 import { heard } from "./lib/hear.js";
 import { seatFor } from "./lib/seat.js";
 import { rollLoot, garmentsOf } from "./lib/loot.js";
@@ -475,6 +476,7 @@ export function update(ctx, dt) {
     return;
   }
   aim(me, m, null);
+  if (!lead && !m.inspect && social(ctx, me, m, now, dt, { gait, moveAlong, stop, face })) return; // idle life: small talk with a neighbour, drifting about (lib/npc-social.js)
   if (lead) { const d = flat(home, me.feetPosition); if (d > TK.join.near) { const run = d > TK.join.run; gait(me, m, run ? "run" : "walk"); moveAlong(ctx, me, m, home, d > TK.join.run * 2.5 ? (G.sprint ?? 7) : run ? G.run : G.walk, dt); return; } }
   else if (flat(home, me.feetPosition) > 1) {
     work(me, m, null); m.at = 0; m.leftAt ||= now;
