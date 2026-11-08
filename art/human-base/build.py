@@ -28,26 +28,41 @@ def male(head, body):
             x, y, z = v.co
             ax = abs(x); sg = 1 if x >= 0 else -1
             if o is body:
-                # flat chest: the bust pushed back into a pec plane
+                # flat chest, then a firm pec plane with a low edge
                 w = bump(1.18, 1.26, 1.44, 1.5, z) * (1 - smooth(0.12, 0.17, ax))
-                if y < 0.01: y = y + (0.01 - y) * 0.95 * w
-                # broader shoulders and upper back; arms ride out, not stretched
-                k = 0.2 * smooth(1.2, 1.42, z) * (1 - smooth(1.52, 1.6, z))
+                if y < 0.01: y = y + (0.01 - y) * 0.97 * w
+                pec = bump(1.27, 1.33, 1.40, 1.45, z) * bump(0.015, 0.05, 0.11, 0.15, ax)
+                if y < 0.05: y -= 0.016 * pec
+                # broad shoulders, traps and upper back
+                k = 0.34 * smooth(1.18, 1.42, z) * (1 - smooth(1.52, 1.6, z))
                 x = x * (1 + k) if ax <= 0.18 else x + sg * 0.18 * k
-                # the hip flare taken in, the waist filled straight
-                if ax < 0.22:
-                    x *= 1 - 0.15 * bump(0.72, 0.86, 1.04, 1.14, z)
-                    x *= 1 + 0.17 * bump(1.06, 1.16, 1.26, 1.36, z)
-                if y > 0.12: y = 0.12 + (y - 0.12) * (1 - 0.45 * bump(0.72, 0.82, 1.0, 1.08, z))
-                # thicker neck
-                nk = bump(1.5, 1.55, 1.62, 1.68, z)
-                x *= 1 + 0.22 * nk; y = 0.075 + (y - 0.075) * (1 + 0.12 * nk)
-                # a bit more arm and calf mass
-                if ax > 0.2 and z > 1.0: y = 0.075 + (y - 0.075) * 1.1
+                tr = bump(1.44, 1.5, 1.56, 1.62, z) * bump(0.04, 0.08, 0.16, 0.2, ax)
+                z += 0.012 * tr
+                # hips and thighs taken in hard, waist filled straight: a V, not an hourglass
+                if ax < 0.24:
+                    x *= 1 - 0.27 * bump(0.66, 0.82, 1.04, 1.14, z)
+                    x *= 1 + 0.22 * bump(1.04, 1.14, 1.26, 1.36, z)
+                # outer thigh flare off
+                if 0.45 < z < 0.86 and ax > 0.03:
+                    x = sg * (0.03 + (ax - 0.03) * (1 - 0.18 * bump(0.45, 0.6, 0.78, 0.86, z)))
+                # flatter seat
+                if y > 0.1: y = 0.1 + (y - 0.1) * (1 - 0.6 * bump(0.68, 0.8, 1.0, 1.08, z))
+                # thick neck
+                nk = bump(1.48, 1.54, 1.62, 1.68, z)
+                x *= 1 + 0.32 * nk; y = 0.075 + (y - 0.075) * (1 + 0.2 * nk)
+                # arm and calf mass
+                if ax > 0.2 and z > 1.0: y = 0.075 + (y - 0.075) * 1.22
+                if z < 0.45 and ax > 0.02:
+                    c = bump(0.12, 0.22, 0.34, 0.42, z)
+                    cx = sg * 0.078; x = cx + (x - cx) * (1 + 0.14 * c); y = 0.12 + (y - 0.12) * (1 + 0.12 * c)
             else:
-                # squarer jaw, a touch wider lower face
-                j = bump(1.58, 1.64, 1.74, 1.8, z)
-                x *= 1 + 0.07 * j
+                # square jaw and chin, heavier brow, wider lower face
+                j = bump(1.56, 1.62, 1.74, 1.8, z)
+                x *= 1 + 0.13 * j
+                ch = bump(1.55, 1.59, 1.64, 1.68, z) * (1 - smooth(0.02, 0.05, ax))
+                z -= 0.012 * ch; y -= 0.006 * ch
+                br = bump(1.79, 1.82, 1.85, 1.88, z) * (1 if y < 0.0 else 0)
+                y -= 0.006 * br
             v.co = Vector((x, y, z))
         o.data.update()
 
@@ -124,7 +139,7 @@ def proof(name, r):
 def build(name, is_male, height):
     head, body = load()
     if is_male: male(head, body)
-    r = rig(head, body, 0.18 if is_male else 0.0)
+    r = rig(head, body, 0.30 if is_male else 0.0)
     s = height / 1.94
     r.scale = (s, s, s); bpy.ops.object.select_all(action="DESELECT")
     for o in (r, head, body): o.select_set(True)
