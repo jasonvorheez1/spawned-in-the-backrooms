@@ -182,7 +182,7 @@ function lay(ctx) {
   for (let k = 0; k < 4; k++) {
     const z = -12 + k * 8, X = HW - 0.18, F = { color: "oklch(0.88 0.01 90)", metalness: 0.6, roughness: 0.35 }, np = { physics: undefined };
     // a modelled sash window (art/l61-window/build.py): casing, two sashes of three lites, deep sill; warm glass + daylight spill
-    sp(`l61-win-${k}`, { feetPosition: { x: X - 0.14, y: 1.3, z }, rotation: { yaw: -90 }, model: { id: "/cdn/value.7f1e19d42adceaf588354f40a2916f3606681fb31afdca46ad7d8d03f85f746e.glb", forward: "+z", materials: { Glass: { color: "oklch(0.95 0.05 75)", emissive: "oklch(0.93 0.07 70)", emissiveIntensity: 1.5, roughness: 0.1 } } },
+    sp(`l61-win-${k}`, { feetPosition: { x: X - 0.14, y: 1.3, z }, rotation: { yaw: -90 }, model: { id: "/cdn/value.1955fac0b54d9d89e37c8561ef6c6ceed252e01659f6e154d655cc7213ea7e16.glb", forward: "+z", materials: { Glass: { color: "oklch(0.95 0.05 75)", emissive: "oklch(0.93 0.07 70)", emissiveIntensity: 1.5, roughness: 0.1 } } },
       children: [{ feetPosition: { x: 0, y: 1.2, z: 0 }, light: { kind: "rect", color: "oklch(0.93 0.07 70)", intensity: 2.2, width: 3.0, height: 1.9, aim: "forward" } }] });
   }
 
