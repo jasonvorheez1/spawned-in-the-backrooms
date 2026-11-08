@@ -154,13 +154,15 @@ def cover(o):
     for f in bm.faces:
         c = f.calc_center_median(); loc, n, idx, d = bv.find_nearest(c)
         reach = 0.04
+        if kind == 'Bot' and c.z < zhi - 0.04 and c.z > 0.08: reach = 0.09   # the legs: no thigh through the cloth
+        if kind == 'Hat': reach = 0.07
         if kind == 'Top' and zlo - 0.06 < c.z < zlo + 0.03: reach = 0.16   # hem down over the waistband
         if kind == 'Bot' and zhi - 0.03 < c.z < zhi + 0.04: reach = 0.16   # waistband up under the hem
         if kind == 'Top' and o.name != 'Top_dress' and max(zlo - 0.09, HIPS_Z - 0.02) < c.z < zlo + 0.05 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1   # a closed hem ring at the waist, no skin between top and bottom
         if kind == 'Bot' and zhi - 0.05 < c.z < zhi + 0.06 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1
         if o.name == 'Top_dress' and c.z >= HIPS_Z + 0.02: reach = max(reach, 0.12)   # the bodice covers the whole bust and midriff
         if o.name == 'Top_dress' and c.z < HIPS_Z + 0.02: reach = -1
-        if kind == 'Top' and o.name != 'Top_dress' and c.z < HIPS_Z - 0.05 and abs(c.x) < 0.2: reach = -1   # a shirt ends at the hips: below is the legs' own (pants never show a shirt through them)          # the skirt stays the dress's own
+        if kind == 'Top' and o.name != 'Top_dress' and c.z < HIPS_Z + 0.03 and abs(c.x) < 0.2: reach = -1   # a shirt ends at the hips: below is the legs' own (pants never show a shirt through them)          # the skirt stays the dress's own
         if d is None or d > reach: kill.append(f)
         else: f.material_index = src.data.polygons[idx].material_index
     keep = set(bm.faces) - set(kill)
@@ -230,19 +232,19 @@ def refit(o):
     if kind == 'Eyew' and EYE is not None:
         ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); back = max(w.y for w in ws); wid = max(w.x for w in ws) - min(w.x for w in ws)
         ex = [e.x for e in _ew]; k = max(0.6, min(1.6, (max(ex) - min(ex) + 0.07) / wid))
-        for v in me.vertices: v.co = Vector((EYE.x + (v.co.x - c.x) * k, EYEFRONT - 0.012 + (v.co.y - back) * k, EYE.z + (v.co.z - c.z) * k))
+        for v in me.vertices: v.co = Vector((0.0 + (v.co.x - c.x) * k, EYEFRONT - 0.012 + (v.co.y - back) * k, EYE.z + (v.co.z - c.z) * k))
         bw = [body.matrix_world @ q.co for q in body.data.vertices]; band = [w.x for w in bw if abs(w.z - EYE.z) < 0.02]
         half = (max(band) - min(band)) / 2 if band else 0.15
         pass
         gb = bmesh.new(); gb.from_mesh(me)
-        bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x - EYE.x) > min(half * 0.98, (max(ex) - min(ex)) / 2 + 0.045) or v.co.y > EYEFRONT + 0.018 or v.co.y < EYEFRONT - 0.05], context='VERTS')   # temples cut: no arm poking out ahead of the face
+        bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x) > min(half * 0.98, (max(ex) - min(ex)) / 2 + 0.045) or v.co.y > EYEFRONT + 0.018 or v.co.y < EYEFRONT - 0.05], context='VERTS')   # temples cut: no arm poking out ahead of the face
         gb.to_mesh(me); gb.free()
     elif kind == 'Hat' and EYE is not None:
         ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); bot = min(w.z for w in ws)
         wid = max(w.x for w in ws) - min(w.x for w in ws)
         bw = [body.matrix_world @ q.co for q in body.data.vertices]; band = [w.x for w in bw if abs(w.z - (EYE.z + 0.09)) < 0.015]
         k = (SKULL * 1.04 / wid)
-        for v in me.vertices: v.co = Vector((EYE.x + (v.co.x - c.x) * k, c.y + (v.co.y - c.y) * k, EYE.z + 0.075 + (v.co.z - bot) * k))
+        for v in me.vertices: v.co = Vector((0.0 + (v.co.x - c.x) * k, c.y + (v.co.y - c.y) * k, EYE.z + 0.075 + (v.co.z - bot) * k))
         sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.006
         bpy.ops.object.modifier_apply(modifier='fit')
     elif kind in ('Top', 'Bot', 'Shoes', 'Neck', 'Hat') and o.name not in LOOSE:
@@ -267,7 +269,7 @@ def refit(o):
         rx = (max(w.x for w in band) - min(w.x for w in band)) / 2; ry = (max(w.y for w in band) - min(w.y for w in band)) / 2
         gb = bmesh.new(); N, R = 40, 7; rings = []
         for k in range(R + 1):
-            t = k / R; z = HIPS_Z + 0.07 - t * 0.34; f = 1.02 + 0.3 * t ** 1.4
+            t = k / R; z = HIPS_Z + 0.07 - t * 0.34; f = 1.1 + 0.32 * t ** 1.2
             ring = []
             for q in range(N):
                 a = 2 * math.pi * q / N; wob = 1 + 0.03 * math.sin(a * 6) * t   # soft folds toward the hem
