@@ -640,6 +640,7 @@ function keepWretched(ctx) {
     const o = ctx.place.objects[id];
     if (o && !o.state?.dead && (o.state?.hp ?? 1) > 0) continue;
     if (o && deadAt[id] == null) { deadAt[id] = now; ch = true; continue; }
+    if (deadAt[id] != null && now - deadAt[id] <= RETURN_MS) continue; // dead an hour (Shelly's rule), even once the body is cleared
     if (!o || now - deadAt[id] > RETURN_MS) { if (o) ctx.destroy(id); delete deadAt[id]; ch = true; spawnWretch(ctx, id); }
   }
   if (ch) s.wretchDead = deadAt;
