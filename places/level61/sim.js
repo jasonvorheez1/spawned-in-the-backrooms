@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 46;
+const V = 47;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -349,7 +349,7 @@ pop mist rate=5 on=ring(1.2,1.6) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0.22 
   // Perimeter curved diner booths
   spawnBooth("l61-booth-w0", -23, -12, 90);
   spawnBooth("l61-booth-w1", -23, 0, 90);
-  spawnBooth("l61-booth-w2", -23, 12, 90);
+  spawnBooth("l61-booth-w2", -23, 5.8, 90); // moved off Camp Amber
   spawnBooth("l61-booth-e0", 23, -12, -90);
   spawnBooth("l61-booth-e1", 23, 0, -90);
   spawnBooth("l61-booth-e2", 23, 12, -90);
