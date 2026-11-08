@@ -78,7 +78,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 25;
+const V = 26;
 // 24: Wikidot canonical drowned antique entrance room (stacked bureau drawers, armoire with draped linen & silver tea service, stone hearth, turned pedestal, show-don't-tell)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
@@ -894,7 +894,14 @@ export function tick(ctx) {
     // rooms built before the fort moved still hold its old pieces (and the worshippers, standing where it was): clear them so the new ones are laid and the people come back
     for (const id of Object.keys(ctx.place.objects)) if (/^(l7x-|l7h-|l7-(from-l8$|wall-|wainscot-|step-|back$|shaft-|ceil$|hearth$|pedestal$|wirerack$|cloth-drape$|painting$|vase|dresser-top$|fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$))/.test(id)) ctx.destroy(id);
     s.npcGone = {};
-    lay(ctx);
+    // lag pass (LAGSCOPE #137, #138): clutter gets a draw distance, and nothing under 1.2 m casts a shadow
+    const real = ctx.spawn, KEEP = /ocean|sea|island|isle|sky|fort$|lighthouse|seawatch$|sonar|vance|fauna|from-|spawn$/;
+    const small = (sp) => { const b = sp.layout?.box, pr = sp.primitive; if (b) return Math.max(b.max.x - b.min.x, b.max.y - b.min.y, b.max.z - b.min.z) < 1.2;
+      if (pr && pr.kind !== "scripted") return Math.max(pr.width ?? 0, pr.height ?? 0, pr.depth ?? 0, (pr.radius ?? pr.radiusTop ?? 0) * 2) < 1.2; return false; };
+    try { ctx.spawn = (a, b) => { const id = typeof a === "string" ? a : a?.id ?? "", sp = typeof a === "string" ? b : a;
+      if (sp && (sp.model || sp.primitive) && !KEEP.test(id)) { sp.visibleRange ??= { max: 90 }; if (small(sp)) sp.castShadow = false; }
+      return b === undefined ? real(a) : real(a, b); }; } catch (e) {}
+    try { lay(ctx); } finally { try { ctx.spawn = real; } catch (e) {} }
     s.builtV = V;
   }
 
