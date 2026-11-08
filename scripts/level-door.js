@@ -34,6 +34,7 @@ export function onTriggerEnter(ctx, other) {
     heard(ctx, { maxDistance: 20, clip: "/cdn/moodboard-realistic-gritty/sfx-wooden-crate-break-splinter.mp3", position: other.feetPosition, volume: 0.85 }, { audience: { player: other.id } });
   }
   other.state.clipKind = KIND[key] ?? "glitch";
+  if (ctx.self.state.to === "level26" && !other.state.l26seen) other.state.l26via = "poster"; // early route: lands below deck (scripts/lib/l26-cut.js)
   bring(ctx, other, PAIR[key] ?? ctx.self.state.to); // the people walking with you come through too (scripts/lib/companion.js)
   ctx.cross(other, PAIR[key] ?? ctx.self.state.to);
 }

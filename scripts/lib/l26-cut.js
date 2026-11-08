@@ -30,6 +30,12 @@ export function l26Tick(ctx, ses, st) {
   const me = ctx.self
   if (!st.l26cut) {
     if (st.l26seen) return false
+    if (st.l26via === "poster") { // the early route: a fun poster drops you below deck; she waits in the last party room (scripts/l26-phoebe-early.js)
+      st.l26via = null; me.feetPosition = { x: 300, y: -79.9, z: 2.5 }; me.rotation = { yaw: 0 }; st.l26below = true
+      snd(ctx, WARP, 0.8); ctx.emit("screenFlash", { color: "#5fe08a", duration: 1.2, intensity: 1 }, me1(ctx))
+      return false
+    }
+    if (st.l26below) return false // still down there hunting for her: the deck scene waits
     st.l26cut = { at: ctx.now() }; ses.l26 = null; ses.l26skip = null
   }
   const t = (ctx.now() - st.l26cut.at) / 1000
