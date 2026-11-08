@@ -60,7 +60,8 @@ export function onInput(ctx, input) {
   let o = hit?.id && ctx.getObject(hit.id);
   const tiny = (x) => { const b = x?.bounds?.size; return b && b.x * b.y * b.z < 0.5 && Math.max(b.x, b.y, b.z) < 1.4; };
   if (hit && !tiny(o)) { // a plush on a bed or a bottle on a dresser sits inside the furniture's box: take the small thing nearest where the look landed
-    const near = ctx.query({ center: hit.position, radius: 0.6 }).map((r) => ctx.getObject(r.id)).find((x) => x && x.id !== ctx.self.id && tiny(x) && !x.parent && !NOT.some((t) => x.tags.includes(t)));
+    let near = null, best = 0.6, P = hit.position;
+    for (const id of Object.keys(ctx.place.objects)) { const x = ctx.place.objects[id], c = x?.bounds?.center; if (!c || id === ctx.self.id || x.parent || !tiny(x) || NOT.some((t) => x.tags?.includes(t))) continue; const d = Math.hypot(c.x - P.x, c.y - P.y, c.z - P.z); if (d < best) { best = d; near = x; } }
     if (near) o = near;
   }
   const sz = o?.bounds?.size, small = sz && sz.x * sz.y * sz.z < 0.5 && Math.max(sz.x, sz.y, sz.z) < 1.4; // a radio, a lamp, a bottle: anything small enough is fair game
