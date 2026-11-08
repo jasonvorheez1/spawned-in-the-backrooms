@@ -1645,6 +1645,26 @@ def proof(tag, objs_sets):
             sc.render.filepath = os.path.join(PROOF, f"{tag}_{i}_{vi}.png"); bpy.ops.render.render(write_still=True)
     log("proofs", tag)
 
+def head_turn(heads, SEX):
+    # close head turnaround (front, 3/4, side, back-top), each lit from its camera's side: the head-shape pass checks ears and face seating here
+    sc = scene(); sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 520
+    sc.world = bpy.data.worlds.new("w"); sc.world.use_nodes = True; bg = sc.world.node_tree.nodes["Background"]; bg.inputs[0].default_value = (.8, .78, .74, 1); bg.inputs[1].default_value = 1.0
+    sc.view_settings.view_transform = "Standard"
+    cam = bpy.data.objects.new("hcam", bpy.data.cameras.new("hcam")); sc.collection.objects.link(cam); sc.camera = cam; cam.data.lens = 60
+    key = bpy.data.objects.new("hkey", bpy.data.lights.new("hkey", "AREA")); key.data.energy = 120; key.data.size = 2; sc.collection.objects.link(key)
+    tgt = V(0, 0, 1.30)
+    for name, head in heads.items():
+        for o in sc.objects:
+            if o.type == "MESH": o.hide_render = o is not head
+        for kb in head.data.shape_keys.key_blocks[1:]: kb.value = .8 if kb.name == "Smile" else 0
+        for vi, (ang, el) in enumerate(((0, 4), (35, 8), (90, 2), (160, 30))):
+            a, e = math.radians(ang), math.radians(el); dist = 1.45
+            cam.location = tgt + V(math.sin(a) * math.cos(e), math.cos(a) * math.cos(e), math.sin(e)) * dist
+            cam.rotation_euler = (tgt - cam.location).to_track_quat('-Z', 'Y').to_euler()
+            key.location = tgt + V(math.sin(a + .5) * 1.6, math.cos(a + .5) * 1.6, 1.2); key.rotation_euler = (tgt - key.location).to_track_quat('-Z', 'Y').to_euler()
+            sc.render.filepath = os.path.join(PROOF, f"ht_{SEX}_{name}_{vi}.png"); bpy.ops.render.render(write_still=True)
+        for kb in head.data.shape_keys.key_blocks[1:]: kb.value = 0
+
 FACESETS = [("smile", {"Smile": .8}), ("grin", {"Smile": 1, "Open": .4}), ("joy", {"Happy": 1, "Smile": 1, "Open": .7}), ("sad", {"Sad": 1, "Frown": .8}),
             ("angry", {"Angry": 1, "Frown": 1, "Open": .2}), ("shock", {"Wide": 1, "O": 1}), ("blink", {"Smile": .8, "Blink": 1}), ("smug", {"Half": .5, "Smile": .7}),
             ("blep", {"Smile": .4, "Blep": 1}), ("love", {"Happy": 1, "Smile": 1, "Blush": 1}), ("pout", {"Frown": .8, "Blush": .4}), ("neutral", {}),
@@ -1807,7 +1827,9 @@ def run_sex(SEX):
     if STAGE == "heads":
         heads = {name: build_head(name, sp, rig, F) for name, sp in SP.items()}
         log("heads", len(heads))
-        for name, o in heads.items(): export_head(os.path.join(OUT, f"critter-sp-{name}-{SEX}.glb"), rig, o, name)
+        if os.environ.get("HPROOF"): head_turn(heads, SEX)
+        if not os.environ.get("NOEXPORT"):
+            for name, o in heads.items(): export_head(os.path.join(OUT, f"critter-sp-{name}-{SEX}.glb"), rig, o, name)
         return
     body = build_body(F); auto_weights(body, rig); parent_to(body, rig)
     G = build_garments(F, body, rig); log("body + garments", SEX, tris(body), len(G))
