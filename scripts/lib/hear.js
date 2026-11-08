@@ -20,12 +20,13 @@ function walls(ctx, a, b) {
 // voice gate: a tab coming back from the background replays a backlog of NPC lines at once. Each listener hears one
 // voice line at a time (a gap of VOICE_GAP ms), and the same line twice inside VOICE_REPEAT ms is dropped. Savi's picks.
 const VOICE_GAP = 1800, VOICE_REPEAT = 20000, lastVoice = new Map();
-const SFX_GAP = 600, lastSfx = new Map(); // the same one-shot to the same listener within SFX_GAP ms is one sound (a holster flapping, a backlog)
+const SFX_GAP = 600, GUN_GAP = 40, lastSfx = new Map(); // the same one-shot to the same listener within SFX_GAP ms is one sound (a holster flapping, a backlog)
 function voiceOk(ctx, pid, clip) {
   if (!clip) return true;
   if (!String(clip).includes("/voice-")) {
     const k = pid + "|" + clip, t = lastSfx.get(k), now = ctx.now();
-    if (t && now - t < SFX_GAP) return false;
+    const gap = /gun|shot|shell|pump|magazine|reload|rifle|carbine|smg|slide-rack|dry-fire/.test(String(clip)) ? GUN_GAP : SFX_GAP; // a gun's own beats (a bullet every 90 ms, a shell every 550) each sound
+    if (t && now - t < gap) return false;
     lastSfx.set(k, now); if (lastSfx.size > 500) lastSfx.clear();
     return true;
   }
