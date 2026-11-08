@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 96; // bump to rebuild the city in rooms that are already open
+const V = 97; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1105,7 +1105,7 @@ function lay(ctx) {
     tags: ["usable"],
     feetPosition: { x: -8.8, y: 0.1, z: 15.5 },
     rotation: { yaw: 90 },
-    primitive: null, material: null, scale: 1.15, model: { id: MODELS.payphone_tripo, forward: "+x" }, physics: { body: "static", collider: "box" }, // tripo street payphone, 1.8 m raw x1.15
+    primitive: null, material: null, scale: 1.15, model: { id: MODELS.payphone_tripo, forward: "-x" }, physics: { body: "static", collider: "box" }, // tripo street payphone, 1.8 m raw x1.15
     behavior: "scripts/level11-use.js",
     state: { kind: "payphone", name: "Municipal Street Payphone", verb: "Answer Payphone" },
   });
