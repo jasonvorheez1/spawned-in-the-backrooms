@@ -106,8 +106,13 @@ def segs(r):
     return {b.name: (r.matrix_world @ b.head_local, r.matrix_world @ b.tail_local) for b in r.data.bones}
 OS, NS = segs(oldRig), segs(rig)
 FALL = {'EarL': 'Head', 'EarR': 'Head', 'Tail': 'Hips', 'Tail1': 'Hips', 'Root': 'Hips'}
+def top_of(o, r):
+    ws = [o.matrix_world @ v.co for v in o.data.vertices]; return max(w.z for w in ws) - (r.matrix_world @ r.data.bones['Head'].head_local).z
+HEADK = top_of(body, rig) / top_of(oldBody, oldRig)  # a head is sized by the skull, not its short bone
+print('head ratio', round(HEADK, 3))
 def carry(n, p):
     h, t = OS[n]; h2, t2 = NS[n]; d, d2 = t - h, t2 - h2
+    if n == 'Head': return h2 + (p - h) * HEADK
     L, L2 = d.length or 1e-6, d2.length or 1e-6; ax = d / L
     v = p - h; along = v.dot(ax); perp = v - ax * along
     q = d.normalized().rotation_difference(d2.normalized())
@@ -135,7 +140,7 @@ def refit(o):
         bpy.ops.object.modifier_apply(modifier='fit')
         sm = o.modifiers.new('sm', 'CORRECTIVE_SMOOTH'); sm.iterations = 6; sm.smooth_type = 'LENGTH_WEIGHTED'; sm.use_only_smooth = True
         bpy.ops.object.modifier_apply(modifier='sm')
-        sw = o.modifiers.new('fit2', 'SHRINKWRAP'); sw.target = body; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.006
+        sw = o.modifiers.new('fit2', 'SHRINKWRAP'); sw.target = body; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.01
         bpy.ops.object.modifier_apply(modifier='fit2')
     else:
         sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = body; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.01
