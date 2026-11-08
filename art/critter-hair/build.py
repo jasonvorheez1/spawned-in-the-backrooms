@@ -18,6 +18,7 @@ from mathutils.bvhtree import BVHTree
 from mathutils.kdtree import KDTree
 HEADS = "/workspace/hair/heads/heads"; RIG_FROM = "cat"
 OUT = "/workspace/hair/out"; PROOF = "/workspace/hair/proof"; os.makedirs(OUT, exist_ok=True); os.makedirs(PROOF, exist_ok=True)
+TRI_CAP = 8000
 ONLY = [s for s in os.environ.get("ONLY", "").split(",") if s]
 HC = Vector((0, 0, 1.265)); DOWN = Vector((0, 0, -1))
 V = lambda x, y, z: Vector((x, y, z))
@@ -420,7 +421,7 @@ def fins(m, n=7, height=.13, W=.045, T=.018):
 def f_bob(m):        cap(m, vol=.026); bangs(m, "blunt", 1); hem(m, .3, 7, W=.055, T=.018, seed=1, v_lo=.45)
 def f_long(m):       cap(m, vol=.026, part=0); bangs(m, "curtain", 2, n=6); front_locks(m, .56, W=.05, u=1.3, v=.5, seed=2, wave=.014); long_back(m, .7, seed=2, wave=.016)
 def f_ponytail(m):   cap(m, vol=.02, side=.05, back=-.5); bangs(m, "wispy", 3, n=6); tail(m, (math.pi, .62), .46, .11, flow=V(0, -.3, 0), seed=3)
-def f_twintails(m):  cap(m, vol=.02, back=-.4); bangs(m, "blunt", 4); [tail(m, (s * 2.0, .58), .5, .12, flow=V(s * .3, -.15, 0), seed=4 + s, locks=4) for s in (-1, 1)]
+def f_twintails(m):  cap(m, vol=.02, back=-.4); bangs(m, "blunt", 4); [tail(m, (s * 2.0, .58), .56, .12, flow=V(s * .22, -.15, 0), stiff=.7, seed=4 + s, locks=4) for s in (-1, 1)]
 def f_sidebraid(m):  cap(m, vol=.02, part=.35); bangs(m, "side", 5); braid(m, (2.0, .3), .42, flow=V(.3, .3, 0), seed=5); hem(m, .14, 5, W=.05, seed=5, u_from=2.2)
 def f_messybun(m):   cap(m, vol=.02, back=-.3); bangs(m, "wispy", 6, n=6); bun(m, (math.pi * .97, 1.05), .085, swirl=2.4); side_locks(m, 1, .22, W=.035, T=.013, seed=6, wave=.012)
 def f_spacebuns(m):  cap(m, vol=.02, part=0); bangs(m, "blunt", 7); [bun(m, (s * 2.25, .95), .075) for s in (-1, 1)]
@@ -523,7 +524,12 @@ def run(sex):
     E = Envelope(sex); MATS = mats()
     for name, fn in STYLES.items():
         if not name.startswith(sex + "_") or (ONLY and name not in ONLY): continue
-        m = M(); fn(m); o = finish(m, "Hair_" + name, MATS); skin(o, E.rig)
+        m = M(); fn(m); o = finish(m, "Hair_" + name, MATS)
+        tris = sum(len(p.vertices) - 2 for p in o.data.polygons)
+        if tris > TRI_CAP:   # long styles: collapse to the cap so the GLB stays under 250 KB (welded, smooth)
+            dm = o.modifiers.new("dec", "DECIMATE"); dm.ratio = TRI_CAP / tris
+            bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier="dec")
+        skin(o, E.rig)
         tris = sum(len(p.vertices) - 2 for p in o.data.polygons)
         if os.environ.get("PROOF"): proof(o, name, sex)
         bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); E.rig.select_set(True)
