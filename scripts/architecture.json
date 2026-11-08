@@ -1,58 +1,58 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1836,
-  "updatedAt": "2026-11-08T15:13:16.156Z",
-  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Place sims assemble local layouts, populations and hazards around shared player, NPC, loot and combat systems; Level 11's dumpster leads to a separate Spamton basement showroom and real-time boss encounter.",
+  "basedOnSpecVersion": 1864,
+  "updatedAt": "2026-11-08T15:40:47.507Z",
+  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Place sims assemble local layouts, populations and hazards around shared player, NPC, loot and combat systems; Level 11 now combines a modelled city with BackOS-gated subway and vault spaces, a physical skydeck elevator and drivable Porsche, while its dumpster still leads to Spamton's separate arena.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0 / The Lobby, yellow maze and safe-room hub; each player's room is separate by default, with authored fixtures, containers, shifting walls and hunters.",
-    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored spaces plus Level 2.1's simulated rooms, zones, agents and set pieces.",
+    "places/main (3D) - Level 0 / The Lobby, yellow maze and safe-room hub; authored fixtures, containers, shifting walls and hunters, with separate solo rooms by default.",
+    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored spaces plus Level 2.1 simulated rooms, zones, agents and set pieces.",
     "places/level3, places/gamma (3D) - Electrical Station and Base Gamma; seeded layouts, hazards, agents, traders, generators and lifts; Gamma includes Marlo the smith.",
-    "places/level4 (3D) - Abandoned Office; office structure and residents, cubicles, claimed homes, coolers, vending, lift/stairs and Base Omega.",
-    "places/level5 (3D) - Terror Hotel; authored hotel cells and sim-managed residents, creatures and interactions, including Samantha the psychic tuxedo cat and Boiler Room Death Rat packs.",
+    "places/level4, places/level5 (3D) - Abandoned Office and Terror Hotel; office structure/residents and hotel encounters, including Boiler Room Death Rat packs.",
     "places/level6, places/level61 (3D) - Lights Out and Snackrooms; Level 6.1 food-court shops, service, vending and Camp Amber connect onward to Level 11.",
-    "places/level11 (3D) - The Infinite City; modelled downtown and canonical street scenes, canal, renovation office, M.E.G. outpost, vehicles including the drivable Porsche, and Spamton at the alley dumpster.",
-    "places/spamton (3D) - Separate dark, wet-concrete basement showroom with cinderblock walls, cables, swinging bare bulb and wall work lamps; sim stages and spawns the animated Spamton boss. places/debug is a separate dark atmosphere and mod…"
+    "places/level7 (3D) - ocean and room spaces; places/debug is a separate dark test atmosphere.",
+    "places/level11 (3D) - The Infinite City; generated model-kit city and street, commuters, subway stair/platform and hackable gates to station and Sedco vault, BackOS terminals, animated street interactions, glass skydeck elevator, drivable Porsche and Spamton dumpster.",
+    "places/spamton (3D) - Separate dark wet-concrete basement showroom and animated boss arena; sim stages the room and boss, with its HUD mounted by scripts/ui.js."
   ],
   "roots": [
-    "world.config.yaml - multiplayer entry at main; declares player actions, camera, player template and HUD, plus scripts/routing.js with an eight-player cap; Backspace opens the main menu.",
+    "world.config.yaml - multiplayer entry at main; declares player actions, camera, player template and HUD, plus scripts/routing.js and an eight-player cap; Backspace opens the main menu.",
     "templates/player.js - ordered player behavior chain; locomotion/player precede swim, interactions and gameplay handlers, then spamton-fight, critter, main-menu and view3.",
     "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and eye position; scripts/view3.js toggles player.state.tp.",
-    "places/<place>/config.yaml + sim.js + cells - place setup and placements; sims build local layouts and tick local behavior, generally sleeping when their place is empty.",
+    "places/<place>/config.yaml + sim.js + cells - place setup and placements; sims build local layouts and tick local behavior, generally sleeping when empty.",
     "sim.js - world cadence and onOutOfBounds referee; players return true for normal respawn, creatures with state.home return home, others are destroyed for manager respawn.",
     "places/level61/sim.js + scripts/lib/level61-extra.js - Level 6.1 assembler; lay() queues a versioned rebuild in pieces, then layExtra() adds mall, Camp Amber and staff pieces.",
-    "places/level11/sim.js + scripts/lib/level11-city.js - Level 11 assembler; builds city in tick, lays canonical street features and modelled city/street assets, and ticks living street props.",
-    "places/spamton/sim.js + scripts/spamton-boss.js - dedicated arena entry; sim lays the basement and lights and manages boss presence, boss runs the encounter; scripts/ui.js mounts its arena HUD."
+    "places/level11/sim.js + scripts/lib/level11-city.js + scripts/lib/level11-vaults.js - Level 11 assembler for model city, street and underground systems; rebuilds incrementally in tick.",
+    "places/spamton/sim.js + scripts/spamton-boss.js - dedicated arena entry; sim lays the basement and lights and manages boss presence; boss runs encounter and scripts/ui.js mounts arena HUD."
   ],
   "shared": [
-    "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait and heading for player and M.E.G. NPC chains; caches measured paces in gait session by model/scale; scripts/lib/body3.js supplies weapon animation and rowing.",
+    "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait and heading for player and M.E.G. NPC chains; caches measured paces by model/scale; scripts/lib/body3.js supplies weapon animation and rowing.",
     "scripts/lib/maze.js, level1.js, level2.js, level21.js through level7.js + data - per-level grids, zones, layouts and paths reused by simulations, geometry, labels and creature navigation.",
     "scripts/lib/level-kit.js + scripts/lib/npc-respawn.js - named-person management, throttling and shared NPC return timing for place sims.",
-    "scripts/lib/clothes.js, scripts/lib/critter-model.js + critter/clothes/faces data - seeded coats, face traits and expressions plus rendered Blender heads/bodies/garments; critter-models.yml selects species/sex head assets reused by players and NPCs.",
+    "scripts/lib/clothes.js, scripts/lib/critter-model.js + critter/clothes/faces data - seeded coats, face traits and expressions plus rendered Blender heads/bodies/garments; critter-models.yml selects reusable species/sex head assets.",
     "scripts/lib/loot.js + scripts/lib/items.js + level data - shared item pools, rolls, remains, parsing and container helpers; art/props/build.py supplies modeled lockers/fridges.",
-    "scripts/lib/combat.js + scripts/lib/data/combat.yml - shared penetration, armor mitigation, hit variance, headshot and aim-steadying rules used by player.js, clothes.js/stats.js and ballistics.js.",
-    "scripts/lib/condition.js + condition.yml, scripts/lib/data/difficulty.yml and scripts/lib/stats.js - weapon/armor condition, balance multipliers and derived handling/carry values used by player.js, clothes.js, loot-ui.js and NPC behavior.",
-    "scripts/lib/level11-city.js + scripts/lib/data/level11-models.yml - Level 11 layout/street builders; sim uses model IDs from art/level11/build.py and uploads.json; scripts/lib/snacktray.js supplies the shared Level 6.1 tray to staff, use and grab scripts."
+    "scripts/lib/combat.js + scripts/lib/data/combat.yml + scripts/lib/ballistics.js - shared hit/armor and firearm accuracy/projectile rules used by player and NPC combat.",
+    "scripts/lib/condition.js + condition.yml, difficulty.yml and scripts/lib/stats.js - weapon/armor condition, balance multipliers and derived handling/carry values used by player, clothes, loot UI and NPC behavior.",
+    "scripts/lib/os.js + scripts/lib/data/os.yml + scripts/lib/fallout-hack.js - BackOS terminal content/commands and shared Science-lock hacking rules for scripts/os.js actions and scripts/os-ui.js display; Level 11 terminals use scripts/lib/terminal.js."
   ],
   "notableExports": [
     "sim.js - cadence, tick, onOutOfBounds; places/level21/sim.js and places/level61/sim.js - cadence and tick; places/level11/sim.js - cadence, tick; places/spamton/sim.js - cadence, tick.",
     "scripts/ambient-anim.js - onSpawn, update; scripts/lib/ambient.js - fan, fanHousing, cable and DRIP, DUST, MIST, SPORES, BUBBLES, RIPPLE builders/effects.",
     "scripts/lib/level21.js - grid, room, zone, exit and height queries/constants; scripts/lib/maze21path.js - canPass21, stepToward, cellNear.",
     "scripts/l21-use.js - updateSchedule, ears, update; scripts/level21-geo.js - geometry; scripts/lib/chatter.js - tickChatter, CHATTER.",
-    "scripts/l61-use.js - MENUS, ears, landed, takeItem, vendExpire, ready, expire; scripts/lib/level61-extra.js - layExtra, faceling, person, PEOPLE, FACELING_IDS.",
-    "scripts/l61-staff.js - ears, nickFor, revive, update; scripts/lib/snacktray.js - TRAY_MODEL, TRAY_KG, TRAY_LIFE, CLATTER, isTray, handTray.",
-    "scripts/level11-car.js and scripts/level11-boat.js - ears, control begin/end, input and update; scripts/level11-use.js - ears; scripts/lib/level11-city.js - layCity, layStreet, tickCity.",
-    "scripts/lib/combat.js - penOf, mitigated, vary, headMul, steady; scripts/spamton-fight.js - startSpamton, spamIntroOver, onInput, spamEnd; scripts/spamton-boss.js - onSpawn, update, sendBack; arena and dumpster UI scripts render their respective encounters."
+    "scripts/l61-use.js - MENUS, ears, landed, takeItem, vendExpire, ready, expire; scripts/lib/level61-extra.js - layExtra, faceling, person, PEOPLE, FACELING_IDS; scripts/lib/snacktray.js - tray constants and helpers.",
+    "scripts/level11-car.js and scripts/level11-boat.js - control/input/update; scripts/level11-use.js - ears; scripts/lib/level11-city.js - layCity, layStreet, tickCity; scripts/lib/level11-vaults.js - layVaults.",
+    "scripts/level11-elevator.js - updateSchedule, CAB_X/CAB_Z, Y_GROUND/Y_SKYDECK, callElevator, ears, update; scripts/level11-porsche.js - ears, ignite, control/input/collision/update; scripts/l11-gate.js - onSpawn, ears.",
+    "scripts/lib/fallout-hack.js - calculateLikeness, initHacking, guessPassword, activateBracket; scripts/lib/combat.js - penOf, mitigated, vary, headMul, steady; spamton-fight/boss own encounter entry and boss lifecycle."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, clothing and karma/rep; also transient movement/combat state; death respawn restores full health and 60% sanity while retaining items.",
-    "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes, skills, points, tags and sheet state; initialize/migrate/spend points; derive carry and combat values, and tick companion perks.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, clothing, karma/rep and Level 11 l11Access; also transient movement/combat state.",
+    "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes, skills, points, tags and sheet state; initialize/migrate/spend points, derive carry/combat values and tick companion perks.",
     "scripts/craft.js - craft actions, payout redemption and hunger/thirst drain; scripts/swim.js owns swimming/underwater/breath and swim session controls, timer and audio.",
-    "scripts/interact.js + scripts/lib/seat.js own focus, loot and sit state; scripts/lockpick.js owns pick state and pins; seats own occupancy.",
+    "scripts/interact.js + scripts/lib/seat.js - player focus, loot and sit state; interact.js also assigns nearby containers to NPC owners, persists warn/anger consequences, and handles entering/exiting vehicles; scripts/lockpick.js owns pick state and pins.",
     "scripts/talk.js owns dialogue/shop UI state and NPC rapport, gifts, trade and rep effects; scripts/lib/rep.js owns karma and per-group reputation calculation/writes.",
-    "scripts/meg-agent.js - NPC routines, attributes/nerve, loadout, combat, fear, cover, idle social coordination and transient movement/path recovery.",
-    "scripts/lib/combat.js owns pure shared combat calculations; scripts/lib/data/combat.yml is their tuning source, while player.js applies results to hits and clothes.js/stats.js apply armor DR.",
-    "scripts/spamton-fight.js owns player.state.spam for dumpster dialogue; scripts/spamton-boss.js owns arena boss.state.hp/talks/req and attack/animation session, and writes place.state.spam HUD; arena outcomes write player rewards/key item."
+    "scripts/meg-agent.js - NPC routines, attributes/nerve, loadout, combat, fear, cover, idle social coordination and transient movement/path recovery; interact.js writes NPC warned/angry memories for theft consequences.",
+    "scripts/lib/combat.js owns pure shared combat calculations; combat.yml is their tuning source; player.js applies hits while clothes.js/stats.js apply armor DR; scripts/lib/ballistics.js computes weapon spread and projectile paths.",
+    "scripts/os.js owns player.state.os terminal session and access progression (including l11Access); scripts/level11-elevator.js owns cab travel session/display, scripts/level11-porsche.js owns vehicle drive/control state, and scripts/spamton-boss.js owns boss encounter state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js behavior order: locomotion/player, swim, interact/grab/rest/mahjong/talk/build/stats/craft/OS/lockpick/spamton-fight/horde, then critter, main-menu and view3; configured routing invokes scripts/routing.js.",
@@ -61,21 +61,21 @@
     "Spawn room selection → scripts/routing.js pickRoom: accepted ctx.requestedRoomId preserves invited/portal/party rooms; otherwise derives solo-<normalized userId or username> (guest fallback).",
     "Engine out-of-bounds event → sim.js onOutOfBounds: player returns true for normal respawn; creature with state.home is repositioned there, otherwise destroyed for manager respawn.",
     "Level threshold trigger → scripts/level-door.js maps pair IDs, writes arrival state.clipKind and calls companion.bring → nearby non-waiting followers cross; player.js consumes clipKind into state.xfer.kind.",
-    "Level 11 sim.js → scripts/lib/level11-city.js layCity/layStreet builds city and street from level11-models.yml; tick calls tickCity for billboards, parked cars and distant siren/horn activity, alongside local landmarks and props.",
-    "Level 11 l11-to-l61/l11-from-l61 ↔ level-door.js pair mappings ↔ Level 6.1 l61-to-l11/l11-from-l61; level11-use.js handles elevator destinations and local city interactions.",
-    "Level 11 l11-spamton-dumpster → scripts/interact.js E → spamton-fight.startSpamton sets player.state.spam and dumpster.state.up; spamIntroOver feeds scripts/lib/data/spamton.yml talk/replies; finished talk transfers to spamton#spam-in.",
-    "The rigged Spamton GLB is referenced by places/level11/sim.js and places/spamton/sim.js; dumpster figure and arena boss use mixer clips for talk/idle and encounter animation, with scripts/spamton-boss.js selecting boss clips.",
-    "places/spamton/sim.js lays lit basement stage and sa-bulb with scripts/spamton-bulb.js; sim spawns scripts/spamton-boss.js for present players. Boss writes place.state.spam for scripts/spamton-arena-ui.js via scripts/ui.js; scripts/spamton-arena-ui.js sends fight decisions.",
-    "scripts/player.js resolves weapon hits through scripts/lib/combat.js (and scripts/lib/ballistics.js for real projectile shots); combat uses pen/variance and clothes/stats armor DR before targets lose HP, including tag spamboss. Arena UI decisions/outcomes route through boss/sendBack or spamton-fight to level11#spam-in."
+    "Level 11 sim.js → scripts/lib/level11-city.js layCity/layStreet builds city/street from level11-models.yml and art/level11 model IDs; tick calls tickCity for billboards, parked cars and distant sirens, plus walkers/local props; scripts/lib/level11-vaults.js lays the subway platform and Sedco vault.",
+    "Level 11 sim.js rebuild → queues specs (solids first) and spawns at most 60 per tick; removes stale l11 roots after queue completes, then persists builtV; l11Lean applies 70 m ordinary / 260 m skyline visibility and suppresses small clutter shadows.",
+    "Level 11 BackOS terminal placements from terminalSpec → scripts/computer.js / scripts/os.js session and scripts/os-ui.js screen; Science locks dispatch to fallout-hack.js guesses/brackets, and successful login/hack writes player.state.l11Access and unlocks host-mapped gates.",
+    "MTA-GATE-07 access → player.state.l11Access sub → scripts/l11-gate.js releases subway gate; station access leads to the platform and SEDCO-SEC-01 gate, while Sedco terminal access releases the separate vault gate.",
+    "Level 11 elevator cab/interior and landing call buttons → scripts/level11-elevator.js callElevator/update moves the physical cab between y=0.3 and y=35.7; player interacts with Porsche → interact.js parents rider, emits press to scripts/level11-porsche.js, whose vehicle controller drives and returns rider on exit.",
+    "Level 11 l11-spamton-dumpster → scripts/interact.js E → spamton-fight.startSpamton sets player.state.spam and dumpster.state.up; dialogue completion transfers to spamton#spam-in; arena boss/UI/combat flow remains scripts/spamton-boss.js and scripts/spamton-arena-ui.js."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light state and red-zone variants; Level 5 carries portal/quest props and scripts/l5-rats.js runs Boiler Room nest/pack cycles.",
-    "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and scripts/l4-office.js/l4-office-geo.js/l4-home.js - office plan, cubicle/phone/printer variants, resident schedules and home claims; Level 7 has its own ocean and room sim.",
+    "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and scripts/l4-office.js/l4-office-geo.js/l4-home.js - office plan, cubicle/phone/printer variants, resident schedules and home claims; Level 7 has its own ocean and room set.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - NPC roles, dialogue, looks and routines vary by person; meg-agent.js supplies combat and idle social behavior.",
     "scripts/lib/craft.js + craft data - recipe category, costs, skill, bench, batch size and item family vary per recipe.",
     "places/level21/sim.js + level21.yml + level21-geo.js - room blocks share generated hall/room structure; room type, zone height, lighting, decor and loot vary by authored grid data and deterministic hashes.",
     "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share service systems with varying menus and Faceling roles; rebuilds queue solids first and remove stale roots incrementally.",
-    "scripts/lib/level11-city.js + scripts/lib/data/level11-models.yml + art/level11/build.py - one model kit populates city blocks/landmarks with seeded building kind, colour and street placements; scripts/look-* share the 2006 camera finish.",
+    "scripts/lib/level11-city.js + scripts/lib/data/level11-models.yml + art/level11/build.py - one uploaded model kit populates city blocks/landmarks with seeded building kind, colour and street placements; l11Lean gives placed specs distance/shadow tuning.",
     "scripts/lib/combat.js + combat.yml - player and projectile combat share armor penetration, nonlinear DR mitigation, per-hit variance and aim spread modifiers; weapon class, velocity and pellets select the rules."
   ],
   "probableOrphans": [
@@ -83,10 +83,10 @@
   ],
   "migrationNotes": [
     "Level 2.1 grid is 30×30 at 4 m per cell (120 m square); keep level21.js passability/room zones, maze21path.js traversal, sim geometry/hound routing aligned, and roofAt in place state so ceiling checks survive ticks.",
-    "Keep paired arrival IDs aligned: Level 2 ↔ Level 2.1 (l2-from-l21/l21-from-l2), Level 6 ↔ Level 6.1 (l6-from-l61/l61-from-l6; wire trigger l6-wire-trip), and Level 6.1 ↔ Level 11 (l61-to-l11/l11-from-l61). Level 11 skydeck is y=35.7.",
+    "Keep paired arrival IDs aligned: Level 2 ↔ Level 2.1 (l2-from-l21/l21-from-l2), Level 6 ↔ Level 6.1 (l6-from-l61/l61-from-l6; wire trigger l6-wire-trip), and Level 6.1 ↔ Level 11 (l61-to-l11/l11-from-l61). Skydeck floor is y=35.7; elevator ground is y=0.3.",
     "Weapon condition is player.state.cnd_<weapon>; garment condition lives in player.state.look.cnd keyed by garment token and shared across same kind/colour copies; keep clothes.yml pattern IDs implemented by mat-cloth.js.",
-    "scripts/lib/data/combat.yml is the tuning source for scripts/lib/combat.js: armor uses DR reduced by pen then DRe/(DRe + 0.5×damage + 8), capped at 80%; pellets are mitigated individually. Keep player hits, clothes/stats armor, and ballistics aim/headshot calculations on these shared rules; difficulty.yml still owns broader multipliers and death has no item-loss fraction.",
-    "Level 6.1 rebuild version is V=53: layStep queues spawn specs, prioritizes physics solids (including the floor on an empty build), replaces same IDs incrementally, then removes stale top-level l61- roots; builtV advances only when the queue is done.",
-    "Critter head assets are content-addressed GLBs: art/critter-cute/upload.py regenerates uploads-heads-facetypes.txt and species head/headM/headF IDs in scripts/lib/data/critter-models.yml from out/*.glb; keep those IDs aligned when rebuilding assets."
+    "scripts/lib/data/combat.yml tunes scripts/lib/combat.js: armor uses DR reduced by penetration then DRe/(DRe + 0.5×damage + 8), capped at 80%; pellets are mitigated individually. Keep player hits, clothes/stats armor, and ballistics aligned.",
+    "Level 6.1 rebuild version is V=53: layStep queues spawn specs, prioritizes physics solids (including the floor on an empty build), replaces same IDs incrementally, then removes stale top-level l61- roots; builtV advances only when the queue finishes.",
+    "Level 11 rebuild version is V=26: preserve queued solid-first spawning (60 specs/tick), stale-root cleanup and builtV completion; vault access depends on player.state.l11Access key values sub/sedco matching scripts/os.js host mapping and gate state.key."
   ]
 }
