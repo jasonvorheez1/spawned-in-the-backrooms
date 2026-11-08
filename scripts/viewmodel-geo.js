@@ -23,8 +23,8 @@ const ball = (ctx, c, r, M, sq) => sphere(ctx, P(c), r * S, M, sq)
 export function geometry(ctx) {
   const M = ctx.lod <= 2 ? 16 : 9, P0 = ctx.params ?? {}
   if (P0.hidden) { ctx.tri(0, 0, 0, 0.0001, 0, 0, 0, 0.0001, 0); return } // a worn model's own arm holds the weapon
-  const sp = SPECIES[P0.species] ?? null, FUR = P0.fur || sp?.fur || "oklch(0.74 0.055 55)", PAD = sp?.nose && sp.nose !== "#2a1c18" ? "#ffb3c1" : "oklch(0.45 0.03 40)"
-  const sleeved = !sp || LONG.has(P0.topw), SLEEVE = sp ? (P0.top || "#7a8aa0") : "oklch(0.36 0.03 85)"
+  const HU = !!P0.human, sp = HU ? null : SPECIES[P0.species] ?? null, FUR = HU ? (P0.skin || "oklch(0.88 0.035 60)") : P0.fur || sp?.fur || "oklch(0.74 0.055 55)", PAD = sp?.nose && sp.nose !== "#2a1c18" ? "#ffb3c1" : "oklch(0.45 0.03 40)"
+  const sleeved = HU ? LONG.has(P0.topw) : !sp || LONG.has(P0.topw), SLEEVE = sp || HU ? (P0.top || "#7a8aa0") : "oklch(0.36 0.03 85)"
   ctx.smooth()
   if (P0.support) { supportHand(ctx, P0, { sp, FUR, PAD, sleeved, SLEEVE, M }); ctx.color(null); return } // the off hand on a two-handed weapon
 
@@ -32,9 +32,9 @@ export function geometry(ctx) {
   ctx.color(sleeved ? SLEEVE : FUR); ctx.roughness(0.95)
   rod(ctx, [[0.03, -0.075, 0.075], [0.06, -0.15, 0.2], [0.1, -0.26, 0.4], [0.14, -0.4, 0.62]], [0.056, 0.062, 0.07, 0.078], M, [1, 0.92])
   if (sleeved) {
-    ctx.color(sp ? mix(SLEEVE, 0.82) : "oklch(0.3 0.03 85)")
+    ctx.color(sp || P0.human ? mix(SLEEVE, 0.82) : "oklch(0.3 0.03 85)")
     rod(ctx, [[0.03, -0.066, 0.062], [0.036, -0.094, 0.1]], [0.057, 0.059], M, [1, 0.92]) // cuff, inner fold
-    ctx.color(sp ? mix(SLEEVE, 0.92) : "oklch(0.34 0.03 85)")
+    ctx.color(sp || P0.human ? mix(SLEEVE, 0.92) : "oklch(0.34 0.03 85)")
     rod(ctx, [[0.037, -0.098, 0.105], [0.042, -0.118, 0.14]], [0.06, 0.062], M, [1, 0.92]) // cuff, outer fold
   } else if (sp) { // a fur ruff at the wrist where the bare arm meets the paw
     ctx.color(mix(FUR, 1.08))
@@ -42,7 +42,7 @@ export function geometry(ctx) {
   }
 
   // ---- skin
-  const SKIN = sp ? FUR : "oklch(0.74 0.055 55)", TIP = sp ? PAD : "oklch(0.86 0.04 60)"
+  const SKIN = sp || P0.human ? FUR : "oklch(0.74 0.055 55)", TIP = sp ? PAD : P0.human ? "oklch(0.86 0.045 30)" : "oklch(0.86 0.04 60)"
   ctx.color(SKIN); ctx.roughness(sp ? 0.9 : 0.55)
   // wrist, rounder across than deep
   rod(ctx, [[0.032, -0.07, 0.07], [0.033, -0.048, 0.044]], [0.033, 0.038], M, [1, 0.8])
@@ -86,7 +86,7 @@ function supportHand(ctx, P0, C) {
   const { sp, FUR, PAD, sleeved, SLEEVE, M } = C, ax = P0.support.axis === 'y' ? 'y' : 'z', rr = (P0.support.r ?? 0.022) / S
   const a = ax === 'y' ? [0, 1, 0] : [0, 0, 1], u = ax === 'y' ? [0, 0, 1] : [-1, 0, 0], w = ax === 'y' ? [-1, 0, 0] : [0, -1, 0]
   const at = (s, R, phi) => [a[0] * s + R * (Math.cos(phi) * u[0] + Math.sin(phi) * w[0]), a[1] * s + R * (Math.cos(phi) * u[1] + Math.sin(phi) * w[1]), a[2] * s + R * (Math.cos(phi) * u[2] + Math.sin(phi) * w[2])]
-  const SKIN = sp ? FUR : "oklch(0.74 0.055 55)", TIP = sp ? PAD : "oklch(0.86 0.04 60)"
+  const SKIN = sp || P0.human ? FUR : "oklch(0.74 0.055 55)", TIP = sp ? PAD : P0.human ? "oklch(0.86 0.045 30)" : "oklch(0.86 0.04 60)"
   const d = [-0.18, -0.35, 0.75], dl = Math.hypot(...d), dn = d.map((v) => v / dl)
   const b0 = at(0, rr + 0.034, 0.75), along = (k) => [b0[0] + dn[0] * k, b0[1] + dn[1] * k, b0[2] + dn[2] * k]
   ctx.color(SKIN); ctx.roughness(sp ? 0.9 : 0.55)

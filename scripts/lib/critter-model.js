@@ -117,7 +117,10 @@ const MESH_SWAP = {
     carpetponcho: 'cape',
   }
 }
+export const HUMAN = M.human ?? null
+export const humanBody = (l) => ({ id: HUMAN[l?.sex === 'f' ? 'f' : 'm'], forward: '+z' })
 export function bodyModel(l) {
+  if (HUMAN) return humanBody(l)
   const parts = {}
   for (const p of M.parts) parts[p] = { visible: false }
   for (const [slot, pre] of Object.entries(M.slots)) { const k = MESH_SWAP[slot]?.[l[slot]] ?? l[slot]; if (k && k !== 'none' && parts[pre + '_' + k]) parts[pre + '_' + k].visible = true }
@@ -475,6 +478,7 @@ function eyeClean(f, eyes) {
 // a whole critter for a spawn (place sims): body, head child, gait clips on the library
 export const MESH = M.mesh === true
 export function critterSpec(l) {
+  if (HUMAN) return { model: humanBody(l), children: [], ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {}) }
   if (!MESH) return { primitive: { kind: 'scripted', script: 'scripts/critter2-geo.js', params: l }, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.65, bounce: 0.72 } }
   const isF = l?.sex === 'f'
   return {
@@ -527,6 +531,7 @@ export function toMesh(ctx, obj) {
 }
 // the head rides the body's skin, at its origin: an old scripted head (hung on Hips) is re-seated, a missing one spawned
 export function seatHead(ctx, obj, l) {
+  if (HUMAN) { for (const k of [HEAD_ID, MASK_ID, HAIR_ID]) if (ctx.getObject(obj.id + '/' + k)) ctx.destroy(obj.id + '/' + k); obj.jiggle = null; obj.morph = null; return } // a human body carries its own head
   const want = critterSpec(l).children[0]; let h = ctx.getObject(obj.id + '/' + HEAD_ID)
   // a head skinned to the body's old model loses its skin when the body swaps: re-spawn it on the new one
   const body = obj.model?.id ?? obj.model
@@ -545,7 +550,7 @@ export function seatHead(ctx, obj, l) {
 }
 
 // a body from an older Blender pass (not one of M.body) is out of date
-export const staleBody = (model) => !!model && !Object.values(M.body).includes(model.id ?? model)
+export const staleBody = (model) => !!model && !Object.values(M.body).includes(model.id ?? model) && !Object.values(HUMAN ?? {}).includes(model.id ?? model)
 const SPECIES = Object.keys(M.species)
 const hashOf = (str) => { let h = 2166136261; for (const c of String(str)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
 const NEWSP = ['rat', 'squirrel', 'leopard', 'jackal', 'badger', 'ferret', 'beaver', 'capybara', 'lop', 'fennec'].filter((k) => SPECIES.includes(k)), OLDSP = SPECIES.filter((k) => !NEWSP.includes(k))
