@@ -30,7 +30,7 @@ const CSS = `<style>
 #cc button:active{transform:translateY(1px)}
 #cc button.on{background:var(--a);color:var(--ink);border-color:#fff3d6;box-shadow:0 0 10px rgba(255,170,40,.45);font-weight:600}
 #cc .sws{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-#cc button.sw{width:26px;height:26px;padding:0;border:2px solid #000a;box-shadow:0 1px 3px rgba(0,0,0,.5);border-radius:3px;transition:transform .1s}
+#cc button.sw{width:26px;height:26px;padding:0;border:2px solid #000a;box-shadow:0 1px 3px rgba(0,0,0,.5);border-radius:3px;transition:transform .1s;font-size:10px;line-height:22px;text-align:center;color:#fff;overflow:hidden;font-weight:bold}
 #cc button.sw:hover{transform:scale(1.15);z-index:2}
 #cc button.sw.on{border:2px solid #fff;outline:2px solid var(--a);outline-offset:1px;transform:scale(1.08)}
 #cc .slot{border:1px solid #ffb34740;border-left:3px solid var(--a);padding:6px 10px 10px;margin-top:10px;background:oklch(0.2 0.02 78 / .7)}
@@ -54,7 +54,19 @@ const CSS = `<style>
 </style>`
 const act = (k, v = '') => `sendAction('dress',{k:'${k}',v:'${v}'})`
 const tile = (k, v, on, label) => `<button class="${on ? 'on' : ''}" onclick="${act(k, v)}">${label}</button>`
-const sw = (k, v, on) => `<button class="sw ${on ? 'on' : ''}" style="background:${v || 'conic-gradient(#f2a65a,#9a6440,#f4efe9,#6f7d93,#f2a65a)'}" title="${v || 'natural'}" onclick="${act(k, v)}"></button>`
+const sw = (k, v, on) => {
+  let bg = v || 'conic-gradient(#f2a65a,#9a6440,#f4efe9,#6f7d93,#f2a65a)';
+  let title = v || 'natural';
+  let icon = '';
+  if (k === 'blush') {
+    if (v === 'none') { bg = 'repeating-linear-gradient(45deg,#2b232a,#2b232a 4px,#633a46 4px,#633a46 8px)'; title = 'no blush'; icon = '✕'; }
+    else if (v === 'heart') { bg = '#ff6588'; title = 'heart sticker'; icon = '♥'; }
+    else if (v === 'star') { bg = '#ff9f6a'; title = 'star sticker'; icon = '★'; }
+    else if (v === 'hash') { bg = '#e870b0'; title = 'hash sticker'; icon = '///'; }
+    else if (v === 'soft') { bg = '#ff8a9a'; title = 'soft cheek'; icon = '●'; }
+  }
+  return `<button class="sw ${on ? 'on' : ''}" style="background:${bg}" title="${title}" onclick="${act(k, v)}">${icon}</button>`;
+}
 function sliderRows(rows, l) {
   return rows.map(([k, nm, lo, hi]) => {
     const v = Number(SL_LOOK[k]) || 1, pct = Math.max(0, Math.min(100, Math.round((v - lo) / (hi - lo) * 100))), mid = Math.max(0, Math.min(100, Math.round((1 - lo) / (hi - lo) * 100)))

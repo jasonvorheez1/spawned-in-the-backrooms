@@ -194,7 +194,7 @@ function bodyRoll(id, l) {
   l.marks = pick(['none', 'none', 'none', 'freckles', 'stripes', 'patch', 'heart'])
   const f = l.sex === 'f'
   l.heightS = r(0.88, 1.12); l.buildS = r(f ? 0.86 : 0.9, f ? 1.1 : 1.18)
-  l.headS = r(0.88, 1.15); l.earS = r(0.7, 1.4); l.snoutS = r(0.6, 1.5); l.tailS = r(0.7, 1.4)
+  l.headS = r(0.88, 1.15); l.earS = r(0.7, 1.4); l.snoutS = r(0.75, 1.25); l.tailS = r(0.7, 1.4)
   l.waistS = r(f ? 0.78 : 0.9, f ? 1.1 : 1.25); l.hipS = r(f ? 0.95 : 0.8, f ? 1.3 : 1.05)
   if (f) l.bustS = r(0.7, 1.3) // more random (Shelly)
   return l
