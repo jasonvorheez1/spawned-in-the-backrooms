@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 22;
+const V = 23;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb";
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -179,7 +179,13 @@ function lay(ctx) {
     for (const s of [-1, 1]) box(`l61-band-x${n}${s}`, s * (HW - 0.17), y, 0, 0.04, 0.12, 2 * HD - 0.4, { color: c, roughness: 0.5 }, { physics: undefined });
   }
 
-  for (let k = 0; k < 4; k++) box(`l61-win-${k}`, HW - 0.18, 2.6, -12 + k * 8, 0.05, 2.2, 3.2, { color: "oklch(0.96 0.05 70)", emissive: "oklch(0.95 0.07 70)", emissiveIntensity: 1.6 }, { physics: undefined });
+  for (let k = 0; k < 4; k++) {
+    const z = -12 + k * 8, X = HW - 0.18, F = { color: "oklch(0.88 0.01 90)", metalness: 0.6, roughness: 0.35 }, np = { physics: undefined };
+    box(`l61-win-${k}`, X, 1.55, z, 0.04, 2.1, 3.2, { color: "oklch(0.93 0.03 225)", emissive: "oklch(0.9 0.04 220)", emissiveIntensity: 0.9, roughness: 0.15, metalness: 0.2 }, np);
+    box(`l61-winf-${k}-t`, X - 0.04, 3.62, z, 0.1, 0.1, 3.4, F, np); box(`l61-winf-${k}-b`, X - 0.06, 1.42, z, 0.16, 0.12, 3.4, F, np);
+    for (const dz of [-1.65, -0.55, 0.55, 1.65]) box(`l61-winf-${k}-m${dz}`, X - 0.04, 1.55, z + dz, 0.08, 2.1, 0.07, F, np);
+    box(`l61-winf-${k}-h`, X - 0.04, 2.55, z, 0.06, 0.05, 3.3, F, np);
+  }
 
   // ---- The Dining Court: Cozy curved diner booths along walls + center conversation pit
   // West perimeter curved booths
@@ -214,8 +220,8 @@ function lay(ctx) {
     primitive: { kind: "cylinder", radiusTop: 1.6, radiusBottom: 1.6, height: 0.7 },
     material: { color: "oklch(0.8 0.03 70)", roughness: 0.6 },
     children: [
-      { feetPosition: { x: 0, y: 0.7, z: 0 }, primitive: { kind: "sphere", radius: 1.3 }, material: { color: "oklch(0.45 0.12 145)", roughness: 0.9 } },
-      { feetPosition: { x: 0.6, y: 1.5, z: 0.3 }, primitive: { kind: "sphere", radius: 0.8 }, material: { color: "oklch(0.5 0.13 140)", roughness: 0.9 } },
+      { feetPosition: { x: 0, y: 0.62, z: 0 }, primitive: { kind: "cylinder", radiusTop: 1.5, radiusBottom: 1.5, height: 0.06 }, material: { ...T("dark-potting-soil-with-bark-mulch", 1), color: "oklch(0.4 0.04 50)", roughness: 1 } },
+      { feetPosition: { x: 0, y: 0.66, z: 0 }, primitive: { kind: "scripted", script: "scripts/tree61.js", params: { h: 4.6 }, seed: 61 }, material: { alphaTest: 0.5, side: "double", roughness: 0.55 } },
     ],
   });
 
