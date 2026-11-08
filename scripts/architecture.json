@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2012,
-  "updatedAt": "2026-11-08T17:20:07.391Z",
-  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Shared player, NPC, loot, combat and presentation systems support those levels; Level 10's M.E.G. Outpost Bountiful includes a lakeside fishing spot, while Level 11's modeled city has a canal and skiff. Place-specific grades finish through a common 2006 compact-camera look.",
+  "basedOnSpecVersion": 2016,
+  "updatedAt": "2026-11-08T17:23:29.715Z",
+  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Shared player, NPC, loot, combat and presentation systems support those levels; Level 11's generated city now uses custom modeled roadworks alongside its architectural kits.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 / The Lobby, yellow maze and safe-room hub; authored fixtures, shifting walls and hunters, with generated Manila sanctuary, M.E.G. waypoint, lore props and noclip seam.",
@@ -11,7 +11,7 @@
     "places/level4, places/level5 (3D) - Abandoned Office and Terror Hotel; office structure/residents and hotel encounters, including Boiler Room Death Rat packs.",
     "places/level6, places/level61 (3D) - Lights Out and Snackrooms; Level 6.1 food-court shops, service, vending and Camp Amber connect onward to Level 11.",
     "places/level7 (3D) - ocean, Seawatch, Fort Surrender and house/room spaces; fishing can cast to coastal or deep water, and places/debug is a separate test atmosphere while places/spamton is a basement showroom/boss arena.",
-    "places/level10 (3D, Bumper Crop) - heightmapped farm and M.E.G. Outpost Bountiful: farmhouse, barn, fields, well, oven, wheat and quest NPCs; lake dock/tackle box, lake-deep exit to Level 7, and roads to Level 11; wheat decoration fades out beyond 120 m over stubble ground.",
+    "places/level10 (3D, Bumper Crop) - heightmapped farm and M.E.G. Outpost Bountiful: farmhouse, barn, fields, well, oven, wheat and quest NPCs; lake dock/tackle box, lake-deep exit to Level 7, and roads to Level 11; wheat decoration fades out at distance.",
     "places/level11 (3D, The Infinite City) - generated city districts, subway, Sedco Spotlight, canal promenade/bridges and skiff, Thrift Mode, skydeck elevator, apartment and quest locations; includes strip mall with parapet roof and drains."
   ],
   "roots": [
@@ -25,7 +25,7 @@
     "places/spamton/sim.js + scripts/spamton-boss.js - dedicated arena entry; sim lays basement and lights and manages boss presence; boss runs encounter and scripts/ui.js mounts arena HUD."
   ],
   "shared": [
-    "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait and heading for player and M.E.G. NPC chains; caches measured paces by model/scale; scripts/lib/body3.js also supplies weapon, rowing and fishing-cast animations.",
+    "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait and heading for player and M.E.G. NPC chains; caches measured paces by model/scale; scripts/lib/body3.js also supplies weapon, rowing and fishing-cast animation.",
     "scripts/lib/maze.js, level1.js, level2.js, level21.js through level7.js + data - per-level grids, zones, layouts and paths reused by simulations, geometry, labels and creature navigation.",
     "scripts/lib/level-kit.js + scripts/lib/npc-respawn.js - named-person management, throttling and shared NPC return timing for place sims.",
     "scripts/lib/clothes.js, scripts/lib/critter-model.js + critter/clothes/faces data - seeded coats, face traits and expressions plus rendered heads/bodies/garments; mask children are attached from garment rows.",
@@ -41,12 +41,12 @@
     "scripts/lib/fishing.js - checkFishableWater, startFishing, handleFishingClick, onFishNibble, onFishBite, getFishingLoot, finishFishingCatch, cancelFishing; scripts/bobber.js - onSpawn, updateSchedule, update, cleanup.",
     "scripts/player.js - fishNibble, fishBite, fishAutoCatch, fishCatch timer handlers; scripts/lib/body3.js - swing3, fire3, stance; scripts/lib/vmpose.js provides viewmodel poses including cast animation.",
     "scripts/lib/ambient.js - fan, fanHousing, cable and DRIP, DUST, MIST, SPORES, BUBBLES, RIPPLE builders/effects; scripts/ambient-anim.js - onSpawn, update.",
-    "scripts/lib/level11-city.js - layCity, layStreet, tickCity; scripts/lib/level11-shop.js - SHOP, layShop; scripts/level11-elevator.js - updateSchedule, callElevator, ears, update; scripts/l11-masonry.js - geometry, collider; scripts/l11-mall.js - geometry, collider; scripts/lib/photo2006.js - photoBase, photoFinish.",
+    "scripts/lib/level11-city.js - layCity, layStreet, tickCity; scripts/lib/level11-shop.js - SHOP, layShop; scripts/level11-elevator.js - updateSchedule, callElevator, ears, update; scripts/l11-masonry.js and scripts/roadwork11.js - geometry, collider.",
     "scripts/lib/level11-quests.js - QUESTS, setSedcoStep, setCraneStep, setMaintStep, finishQuest, handleDialogueQuest; scripts/lib/nav.js - NAV, navBudget, navPath; scripts/l10-worms.js - update, bleed."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, clothing, karma/rep and level access; player inventory APIs receive fishing catch rewards.",
-    "scripts/lib/fishing.js - player.state.fishingState session (bobber id, target coordinates, water/place/depth, phase and cast power), canonical water checks, bite/reel outcome and location-based loot selection; scripts/player.js handles session timers and payout.",
+    "scripts/lib/fishing.js - player.state.fishingState session (bobber id, target coordinates, water/place/depth, phase and cast power), canonical water checks, bite/reel outcome and location-based loot selection; scripts/player.js handles session timers and reward inventory writes.",
     "scripts/bobber.js - spawned bobber's owner/water/phase state and physical float, twitch and plunge behavior; it destroys itself when its owner/session is no longer valid.",
     "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes, skills, points, tags and sheet state; initialize/migrate/spend points, derive carry/combat values and tick companion perks.",
     "scripts/craft.js - craft actions, payout redemption and hunger/thirst drain; scripts/swim.js owns swimming/underwater/breath and swim session controls, timer and audio.",
@@ -58,24 +58,24 @@
     "world.config.yaml actions → templates/player.js behavior order: locomotion/player, swim, interact/grab/rest/mahjong/talk/build/stats/craft/OS/lockpick/spamton-fight/horde, then critter, main-menu and view3; configured routing invokes scripts/routing.js.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes player.state.aimPt → player.js crosshair-aligned shots.",
     "world.config.yaml Backspace → scripts/main-menu.js; menu actions and scripts/ui.js render menu/creator; creator C uses scripts/wardrobe-ui.js to emit dress actions → scripts/critter.js writes player look/outfits.",
-    "Spawn room selection → scripts/routing.js pickRoom: accepted ctx.requestedRoomId preserves invited/portal/party rooms; otherwise derives solo-<normalized userId or username> (guest fallback). Engine out-of-bounds → sim.js handles normal player respawn and creature return/destruction.",
+    "Spawn room selection → scripts/routing.js pickRoom: accepted ctx.requestedRoomId preserves invited/portal/party rooms; otherwise derives solo-<normalized userId or username> (guest fallback). Engine out-of-bounds → sim.js handles normal player respawn or creature home/despawn.",
     "Level threshold trigger → scripts/level-door.js maps paired IDs, writes arrival state.clipKind and calls companion.bring → nearby followers cross; player.js consumes clipKind into state.xfer.kind and scripts/noclip-ui.js renders transition.",
     "places/level10/sim.js → terrain-relative Bumper Crop structures and usable farm props; use events enter scripts/level10-use.js ears.press, which updates player harvest/crafting/resources and quest state.",
     "Level 10 harvest: wheat-patch adds wheat → windmill-quern converts wheat to flour → hearth-oven converts flour to bread; Cooper dialogue in scripts/talk.js invokes handleDialogueQuest10 and NPCs share authored group chatter from chatter.yml.",
-    "Level 10 lake and Level 7 sea/Level 11 canal rod casts: scripts/player.js swing path → scripts/lib/fishing.js validates canonical place-specific water, spawns scripts/bobber.js and stores fishingState → scheduled fishNibble/fishBite/fishAutoCatch handlers resolve payout.",
+    "Level 10 lake and Level 7 sea/Level 11 canal rod casts: scripts/player.js swing path → scripts/lib/fishing.js validates canonical place-specific water, spawns scripts/bobber.js and stores fishingState → scheduled fishNibble/fishBite/fishAutoCatch handlers resolve catch and inventory reward.",
     "Level 10 scarecrow/cellar interaction → level10-use.js records pages/quest steps and grants supplies; quest setters update player.state.quest HUD, notices and payout.",
     "Level 10 sim terrain/field → scripts/l10-worms.js manages worm encounters and scripts/worm10-geo.js renders them; terrain footsteps → scripts/lib/footsteps.js selects field surface clips.",
-    "Level 11 sim.js → scripts/lib/level11-city.js lays city/street from level11-models.yml and art models; sim assembles shops and mall via scripts/l11-mall.js and ticks city/chatter behavior.",
+    "Level 11 sim.js → scripts/lib/level11-city.js lays city/street from level11-models.yml and art models; assembles shops/mall and scripted roadwork placements via scripts/roadwork11.js geometry/collider, then ticks city/chatter behavior.",
     "Place look scripts → scripts/lib/photo2006.js photoBase/photoFinish; level-specific grades feed the common tone, readable shadow lift, bloom and vignette/noise finish."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light state and red-zone variants; Level 5 carries portal/quest props and scripts/l5-rats.js runs Boiler Room Death Rat packs.",
-    "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and scripts/l4-office.js/l4-office-geo.js/l4-home.js - office plan, cubicle/phone/printer variants, resident schedules and home claims; Level 7 has its own ocean and room spaces.",
-    "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - NPC roles, dialogue, looks and routines vary by person; meg-agent.js supplies combat and idle social behavior; clothes.yml/mat-cloth.js/critter-model.js vary body and garment appearance.",
+    "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and scripts/l4-office.js/l4-office-geo.js/l4-home.js - office plan, cubicle/phone/printer variants, resident schedules and home claims; Level 7 has its own ocean and room set pieces.",
+    "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - NPC roles, dialogue, looks and routines vary by person; meg-agent.js supplies combat and idle social behavior; clothes.yml/mat-cloth.js/critter-model.js render variation.",
     "scripts/lib/craft.js + craft data - recipe category, costs, skill, bench, batch size and item family vary per recipe; fishing_rod is a survival-10 tool craft recipe and also appears in Level 10's lakeside tackle cache.",
     "places/level21/sim.js + level21.yml + level21-geo.js - room blocks share generated hall/room structure; room type, zone height, lighting, decor and loot vary by authored grid data and deterministic hashes.",
     "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share service systems with varying menus and Faceling roles; rebuilds queue solids first and remove stale roots incrementally.",
-    "scripts/lib/level11-city.js + scripts/lib/data/level11-models.yml + art/level11 kits and l11-masonry/mall/sedco-shell - generated city/building forms reuse model and architectural kits with seeded district, size and detail variation; mall shell has an open parapet roof, gravel deck and drains.",
+    "scripts/lib/level11-city.js + scripts/lib/data/level11-models.yml + art/level11 kits, l11-masonry/mall/sedco-shell and scripts/roadwork11.js - generated city/building forms reuse models, architecture and roadwork kits with seeded district, size and detail variation.",
     "places/level10/config.yaml + terrain10.js - wheat/barley/stubble/grass terrain decoration layers; scripted crops fade at maxDistance 120 (35 m fade) so distant fields read as stubble ground."
   ],
   "probableOrphans": [],
@@ -83,8 +83,8 @@
     "Level 2.1 grid is 30×30 at 4 m per cell (120 m square); keep level21.js passability/room zones, maze21path.js traversal, sim geometry/hound routing aligned, and roofAt in place state so ceiling checks survive ticks.",
     "Level 2.1 ↔ Level 2, Level 6 ↔ Level 6.1, Level 6.1 ↔ Level 11, and Level 10 ↔ Level 11 paired arrivals are owned by level-door.js; Level 10's lake-deep trigger targets level7#l7-from-l10.",
     "Level 10/184 configs use terrain10.js/terrain184.js heightmap and material queries; keep terrain-relative y placements and arrival/track regions aligned with sim scenery. Level 10's wheat decoration maxDistance is 120 m with 35 m fade over stubble ground.",
-    "Fishing casts use world-space positions, place-specific canonical water regions and height constants (Level 7 sea/parlor, Level 10 lake/pond, Level 11 canal); keep fishing.js checks aligned with sim geometry/water surfaces. Bobbers are named to their owner/session.",
-    "Level 10 quest state is player.state.wheatQ/watcherQ/cellarQ (step 99 completed), plus wheat/flour/bread resource counts and pages; set*Step synchronizes the single shared player.state.quest HUD slot, so simultaneous quests can replace its active display.",
-    "Weapon condition is player.state.cnd_<weapon>; garment condition lives in player.state.look.cnd keyed by garment token and shared across same kind/colour copies; keep clothes.yml pattern IDs implemented by mat-cloth.js. Level 11 mall shell collider remains the plain building body, separate from roof details."
+    "Fishing casts use world-space positions, place-specific canonical water regions and height constants (Level 7 sea/parlor, Level 10 lake/pond, Level 11 canal); keep fishing.js checks aligned with sim geometry/water surfaces. Bobbers are named place objects tied to the player's fishingState session.",
+    "Level 10 quest state is player.state.wheatQ/watcherQ/cellarQ (step 99 completed), plus wheat/flour/bread resource counts and pages; set*Step synchronizes the single shared player.state.quest HUD slot, so simultaneous quests can replace its displayed tracker.",
+    "Weapon condition is player.state.cnd_<weapon>; garment condition lives in player.state.look.cnd keyed by garment token and shared across same kind/colour copies; keep clothes.yml pattern IDs implemented by mat-cloth.js. Level 11 sim rebuilds at V=53 and destroys old roots when primitive kind/script changes; roadwork11.js geometry and collider sizes must agree with placement params and feet positions."
   ]
 }
