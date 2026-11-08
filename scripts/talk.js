@@ -214,7 +214,7 @@ function gesture(ctx, it, k) {
   ses.gestAt = now
   const r = rapportOf(ctx, it)
   if (k === 'wave') {
-    ctx.self.anim.gest = { clip: 'cdn/clip-wave.glb', weight: 0.9, loop: false, mask: { from: 'Spine' }, blendIn: 0.15, blendOut: 0.3 }
+    ctx.self.anim.gest = { clip: 'cdn/clip-wave-loop.glb', weight: 0.9, loop: 'once', mask: { from: 'Spine' }, blendIn: 0.15, blendOut: 0.3 }
     setRapport(ctx, it, r + 2)
     send(ctx, { id: it.id, text: '*waves at you*' }); return
   }
