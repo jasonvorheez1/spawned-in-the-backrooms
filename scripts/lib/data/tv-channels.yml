@@ -1,0 +1,8 @@
+# CRT channels in the green house: archive.org clips, cut to ~3-4 min, 400px, small. E on the TV flips them.
+channels:
+  - { name: "Disney Channel, Oct 2002", video: "/cdn/value.e12ab4672a2ccf5ac1309d6f656dfa64bf207aa5ae73dfadd76b7b1eb2b10023.mp4", audio: "/cdn/value.a1e84936f3b37819bf6f8106656aa51133a932e421d4d2e67298fb0577c9d9fa.mp3" }
+  - { name: "Popeye: Patriotic Popeye", video: "/cdn/value.5f7267ae3a9683e5a7214d9b56ed84ca68724de7c85c0b23f6a632cd9438e680.mp4", audio: "/cdn/value.5e674408fe8bf991bd67f6caa68456c2f3edb3556d3eda846ae9542f123c68c3.mp3" }
+  - { name: "Popeye: Private Eye Popeye", video: "/cdn/value.27d62c202d92c0555a7bdcf1e36b188edde277d69286aa9e99f05779f02039f7.mp4", audio: "/cdn/value.56706f2b4cab96034536b025e8db9ab20fb5c9be9e81ea27413bcb1ce2117bc5.mp3" }
+  - { name: "The Lone Ranger", video: "/cdn/value.ee2a5a004becc89b4c8917fb816d771ce410a00e2fbd23e1f4bb78f1c9ed0553.mp4", audio: "/cdn/value.173d335ee59890ad4069717780588b2ee121c29e6eb8020aad803ae8567e274d.mp3" }
+  - { name: "Get Smart", video: "/cdn/value.d8b80834a85a26952744a1a0348ba1845344ce11e2181fa2c21f409fb5e79914.mp4", audio: "/cdn/value.92542ca95c6db1fccb60f285328a894910d36c52651a3fab6904d52c8c44acb9.mp3" }
+  - { name: "2000s commercials", video: "/cdn/value.1ad75931b2dadf2181f2e18e69ef95a33c546e44092d36ff47923aa6252ce021.mp4", audio: "/cdn/value.f3efea3ca8424f164f335cf7d36095357dacadab6ad287338bc7cf4ff34d443b.mp3" }
