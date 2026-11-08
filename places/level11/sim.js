@@ -679,7 +679,7 @@ function lay(ctx) {
         { id: "rim", feetPosition: { x: 0, y: 1.1, z: 0 }, primitive: { kind: "box", width: 2.08, height: 0.12, depth: 1.22 }, material: { color: "oklch(0.3 0.05 150)", metalness: 0.6, roughness: 0.5 } },
         { id: "wheel-l", feetPosition: { x: -0.8, y: -0.08, z: 0.4 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.08, height: 0.08 }, rotation: { roll: 90 }, material: { color: "#111" } },
         { id: "wheel-r", feetPosition: { x: 0.8, y: -0.08, z: 0.4 }, primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.08, height: 0.08 }, rotation: { roll: 90 }, material: { color: "#111" } },
-        { id: "spamton", visible: false, feetPosition: { x: 0, y: 0.75, z: 0 }, model: { id: "/cdn/value.aea1bb9862d472db6564fa8cb329c8ad61ec4986c8a7bc39417d6333b919a51c.glb", forward: "+z" }, mixer: { body: { clip: "talk", loop: "loop" } } },
+        { id: "spamton", visible: false, feetPosition: { x: 0, y: 0.75, z: 0 }, sprite: { texture: "/cdn/spr-cutscene-14-spamton-0-u28geao1a.webp", size: [0.95, 1.29], billboard: "yaw", filter: "nearest" } }, // Shelly's own sprite (Nov 8), not a model
         { id: "glow", feetPosition: { x: 0, y: 1.3, z: 0 }, light: { kind: "point", color: "#ff6fd0", intensity: 0, distance: 5 } },
       ],
     });
