@@ -507,12 +507,12 @@ export function geometry(ctx) {
   const waistS = SZ("waistS", 0.75, 1.35), hipS = SZ("hipS", 0.75, 1.3), bustS = SZ("bustS", 0.6, 1.3);
   const ch = sp.chunky ? 1.1 : 1;
   const RXK = fem
-    ? [[0.46, 0.14 * hipS], [0.52, 0.185 * hipS], [0.6, 0.198 * hipS], [0.68, 0.16 * lerp(1, waistS, 0.6) * ch], [0.76, 0.118 * waistS * ch], [0.85, 0.132 * ch], [0.93, 0.148 * ch], [1.0, 0.12], [1.07, 0.068]]
+    ? [[0.46, 0.142 * hipS], [0.52, 0.188 * hipS], [0.6, 0.202 * hipS], [0.68, 0.165 * lerp(1, waistS, 0.5) * ch], [0.76, 0.124 * waistS * ch], [0.85, 0.138 * ch], [0.93, 0.150 * ch], [1.0, 0.122], [1.07, 0.070]]
     : [[0.46, 0.13 * hipS], [0.52, 0.158 * hipS], [0.6, 0.165 * hipS], [0.7, 0.152 * waistS * ch], [0.78, 0.155 * waistS * ch], [0.86, 0.178 * ch], [0.94, 0.19 * ch], [1.0, 0.15], [1.07, 0.072]];
   const RZK = fem
-    ? [[0.46, 0.115], [0.52, 0.14 * hipS], [0.6, 0.142 * hipS], [0.68, 0.118], [0.76, 0.095 * waistS * ch], [0.85, 0.1 * ch], [0.93, 0.105 * ch], [1.0, 0.095], [1.07, 0.068]]
+    ? [[0.46, 0.118], [0.52, 0.144 * hipS], [0.6, 0.146 * hipS], [0.68, 0.122], [0.76, 0.100 * waistS * ch], [0.85, 0.104 * ch], [0.93, 0.108 * ch], [1.0, 0.098], [1.07, 0.070]]
     : [[0.46, 0.1], [0.52, 0.12], [0.6, 0.125], [0.7, 0.118 * ch], [0.78, 0.12 * waistS * ch], [0.86, 0.128 * ch], [0.94, 0.13 * ch], [1.0, 0.11], [1.07, 0.072]];
-  const BUST = fem ? 0.062 * bustS : 0.014, BY = fem ? 0.885 : 0.9, BX = fem ? 0.072 : 0.075;
+  const BUST = fem ? 0.088 * bustS : 0.014, BY = fem ? 0.885 : 0.9, BX = fem ? 0.072 : 0.075;
   const torsoPt = (y, a, off, bridged) => {
     const rx = prof(RXK, y) + off, rz = prof(RZK, y) + off; let x = Math.cos(a) * rx, z = Math.sin(a) * rz;
     if (z < 0) { const gy = Math.exp(-(((y - BY) / (fem ? 0.06 : 0.07)) ** 2)), dx = bridged ? Math.max(0, Math.abs(x) - BX) : Math.min(Math.abs(x - BX), Math.abs(x + BX)); z -= BUST * gy * Math.exp(-((dx / 0.058) ** 2)) * Math.min(1, -Math.sin(a) * 1.4); }
@@ -551,34 +551,38 @@ export function geometry(ctx) {
   for (const s of [-1, 1]) {
     const A = armPath(s);
     tube(A, { m: M, colFn: (t, k, p) => col(sp.limbs ? LIMB : sp.stripes && ((Math.abs(p[0]) * 14) % 1) < 0.25 && p[1] > 0.96 ? sp.stripes : FUR), up: [0, 0, -1] });
-    // hand: palm + four rounded fingers + thumb (palm faces down in the T-pose)
+    // hand: palm + three rounded fingers + opposable thumb (4 digits total, with pink paw pads)
     const hc = s * 0.555, hy = 0.962, hcol = sp.paw || LIMB;
-    col(hcol); blob([hc, hy, 0], [0.05 * armR, 0.034 * armR, 0.054 * armR], null, { seg: hi ? 14 : 8 });
-    const fz = [-0.036, -0.012, 0.012, 0.036];
-    const BEAN = sp.bean || "#ffaec0";
+    col(hcol); blob([hc, hy, 0], [0.052 * armR, 0.038 * armR, 0.056 * armR], null, { seg: hi ? 14 : 8 });
+    const fz = [-0.026, 0.0, 0.026];
+    const BEAN = sp.bean || P.pad || "#ff9fb4";
     if (!low) {
-      for (let f = 0; f < 4; f++) {
-        const z = fz[f] * armR, l = (f === 1 || f === 2 ? 0.07 : 0.058) * armR;
-        const a = [hc + s * 0.03, hy - 0.002, z], b = [hc + s * (0.03 + l), hy - 0.008, z * 1.25];
-        col(hcol); tube(path([[a, 0.0175 * armR], [lerp3(a, b, 0.6), 0.016 * armR], [b, 0.0155 * armR]], hi ? 2 : 1), { m: hi ? 8 : 6, domeA: true, domeB: true });
-        col(BEAN); blob([b[0] - s * 0.004, hy - 0.022, b[2]], [0.009 * armR, 0.004, 0.009 * armR], null, { seg: 6 });
+      for (let f = 0; f < 3; f++) {
+        const z = fz[f] * armR, l = (f === 1 ? 0.068 : 0.060) * armR;
+        const a = [hc + s * 0.03, hy - 0.002, z], b = [hc + s * (0.03 + l), hy - 0.008, z * 1.15];
+        col(hcol); tube(path([[a, 0.0185 * armR], [lerp3(a, b, 0.6), 0.017 * armR], [b, 0.016 * armR]], hi ? 2 : 1), { m: hi ? 8 : 6, domeA: true, domeB: true });
+        col(BEAN); blob([b[0] - s * 0.004, hy - 0.020, b[2]], [0.010 * armR, 0.004, 0.010 * armR], null, { seg: 6 });
       }
-      const ta = [hc - s * 0.005, hy - 0.008, -0.04 * armR], tb = [hc + s * 0.02, hy - 0.018, -0.082 * armR];
-      col(hcol); tube(path([[ta, 0.019 * armR], [tb, 0.016 * armR]], hi ? 2 : 1), { m: hi ? 8 : 6, domeA: true, domeB: true });
-      col(BEAN); blob([tb[0], hy - 0.024, tb[2]], [0.009 * armR, 0.004, 0.009 * armR], null, { seg: 6 });
-      col(BEAN); blob([hc + s * 0.004, hy - 0.034, 0], [0.026 * armR, 0.005, 0.03 * armR], null, { seg: 8 });
+      const ta = [hc - s * 0.005, hy - 0.006, -0.035 * armR], tb = [hc + s * 0.022, hy - 0.016, -0.072 * armR];
+      col(hcol); tube(path([[ta, 0.020 * armR], [tb, 0.017 * armR]], hi ? 2 : 1), { m: hi ? 8 : 6, domeA: true, domeB: true });
+      col(BEAN); blob([tb[0], hy - 0.022, tb[2]], [0.010 * armR, 0.004, 0.010 * armR], null, { seg: 6 });
+      // Sculpted 3-lobed pink metacarpal palm pad
+      col(BEAN);
+      blob([hc + s * 0.004, hy - 0.032, 0], [0.024 * armR, 0.005, 0.026 * armR], null, { seg: 8 });
+      blob([hc + s * 0.014, hy - 0.030, -0.018 * armR], [0.014 * armR, 0.004, 0.014 * armR], null, { seg: 6 });
+      blob([hc + s * 0.014, hy - 0.030, 0.018 * armR], [0.014 * armR, 0.004, 0.014 * armR], null, { seg: 6 });
     }
-    // leg + paw foot
+    // leg + paw foot with 3 distinct rounded toes and pink pads
     const L = legPath(s);
     tube(L, { m: M + 2, colFn: (t, k, p) => col(sp.limbs ? LIMB : sp.paw && p[1] < 0.15 ? sp.paw : bodyCol(p)), up: [0, 0, -1] });
     const fx = s * 0.088, fcol = sp.paw || LIMB;
     col(fcol); blob([fx, 0.06, -0.035], [0.068 * legR, 0.06, 0.108], null, { floor: 0.0, seg: hi ? 16 : 9 });
     if (!shoeOn && !low) {
-      for (const dx of [-0.038, -0.013, 0.013, 0.038]) {
-        col(fcol); blob([fx + dx * legR, 0.03, -0.128], [0.02 * legR, 0.026, 0.026], null, { floor: 0, seg: 8 });
-        col(BEAN); blob([fx + dx * legR, 0.004, -0.125], [0.013 * legR, 0.004, 0.013], null, { floor: 0, seg: 6 });
+      for (const dx of [-0.028, 0, 0.028]) {
+        col(fcol); blob([fx + dx * legR, 0.032, -0.126], [0.022 * legR, 0.026, 0.028], null, { floor: 0, seg: 8 });
+        col(BEAN); blob([fx + dx * legR, 0.004, -0.124], [0.014 * legR, 0.004, 0.014], null, { floor: 0, seg: 6 });
       }
-      col(BEAN); blob([fx, 0.002, -0.03], [0.038 * legR, 0.003, 0.048], null, { seg: 8 });
+      col(BEAN); blob([fx, 0.003, -0.03], [0.036 * legR, 0.004, 0.046], null, { seg: 8 });
     }
   }
   // tail: bushy and two-toned
