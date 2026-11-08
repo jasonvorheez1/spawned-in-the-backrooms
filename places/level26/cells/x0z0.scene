@@ -2640,7 +2640,7 @@ l26x-bar-neon:
   tags: [l26x]
   vector: "<svg viewBox='0 0 200 80' width='1.8m'><text x='100' y='62' text-anchor='middle' font-family='display' font-size='64' fill='none' stroke='#ff3a7a' stroke-width='5' filter='drop-shadow(0 0 6 #ff3a7a)'>B<tspan opacity=\"0.25\">A</tspan>R</text></svg>"
 l26x-bar-neon-bud:
-  feetPosition: {x: -0.6, y: 5.3, z: -7.3}
+  feetPosition: {x: 0.7999999999999999, y: 6.2, z: -7.3}
   id: l26x-bar-neon-bud
   rotation: {yaw: -20}
   tags: [l26x]
