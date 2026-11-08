@@ -57,12 +57,10 @@ export const ears = {
     }
     if (s.kind === "house-door") {
       if (!who) return;
-      if (!w.home11) { w.notice = { text: "Locked. The B.N.T.G. sign out front has the price.", at: now }; return; }
-      if (now - (w.homeRest ?? 0) < 60000) { w.notice = { text: "You just rested. Home's still here.", at: now }; return; }
-      w.homeRest = now; w.sanity = Math.min(150, (w.sanity ?? 80) + 40); w.hp = Math.max(w.hp ?? 0, (w.hp ?? 0) + 60);
-      heard(ctx, { clip: BUTTON_CLICK, position: pos, volume: 0.5, maxDistance: 8 });
-      ctx.emit("screenFlash", { color: "#000000", duration: 1.2, intensity: 0.9 }, { audience: { player: who.id } });
-      w.notice = { text: "Home. You lock the door, sit down and breathe for a while. +40 sanity, +60 HP.", at: now };
+      if (!w.home11) { w.notice = { text: "Locked. Mara at B.N.T.G. Realty has the keys.", at: now }; return; }
+      heard(ctx, { clip: "cdn/sfx-wooden-front-door-opens-and-closes.mp3", position: pos, volume: 0.8, maxDistance: 12 });
+      ctx.emit("screenFlash", { color: "#000000", duration: 0.6, intensity: 0.9 }, { audience: { player: who.id } });
+      ctx.cross(who, "home11#home-from-l11");
       return;
     }
 
