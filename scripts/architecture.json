@@ -1,24 +1,24 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2409,
-  "updatedAt": "2026-11-08T21:26:40.479Z",
+  "basedOnSpecVersion": 2415,
+  "updatedAt": "2026-11-08T21:28:02.496Z",
   "summary": "The Backrooms is a survival RPG built around authored maze levels, player-specific Backrooms rooms, and a shared Bonus Room mall. The player template composes combat, interaction, appearance, UI and routing behaviors; place scenes and simulations supply level layouts, NPCs and local systems.",
   "scriptPaths": [],
   "places": [
-    "places/bonus (3D) - shared vaporwave mall: diner, clothing/furniture counters, arcade, gallery, fountain, teleport station; sim adds staff, five walking shoppers and two balcony loungers.",
-    "places/main (3D) - authored Level 0 / Lobby maze and hub; placed fixtures, sound/light, hunters and lore props.",
+    "places/bonus (3D) - shared vaporwave mall: diner, clothing/furniture counters, arcade, gallery, fountain and teleport station; sim adds staff, shoppers and balcony loungers.",
+    "places/main (3D) - authored Level 0 / Lobby maze and hub; sim generates office furniture and sunken props, stairs, shifting walls, moments, loot and smilers/lurkers.",
     "places/intake (3D) - bedroom character-creation space; scripts/intake-geo.js and intro cutscene support its authored room.",
     "places/tutorial0 (3D, solo ephemeral) - authored Level 0 tutorial route, staged encounter, HALOGEN and local props/lights; tut0 coordinate/data libraries drive generated detail.",
     "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored levels plus simulated 2.1 rooms, zones and agents.",
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; residents, hazards, office/home systems and Boiler Room Death Rats.",
-    "places/level6, places/level7, places/level10, places/level11, places/level21 and other numbered places - authored or generated later levels, city, farm and venues; some place directories are not shown in the abbreviated tree.",
-    "places/debug, places/spamton (3D) - test/modeling scene and separate Spamton basement/boss space; places/bonus/cells/x0z0.scene is the mall's authored layout."
+    "places/level6, places/level7, places/level10, places/level11 (3D) - later authored or generated levels, including city/farm/venues and their local simulations.",
+    "places/debug, places/spamton (3D) - modeling/test scene and separate Spamton basement/boss space."
   ],
   "roots": [
     "world.config.yaml - multiplayer entry, configured player actions/HUD, routing, player cap and menu action.",
     "templates/player.js + templates/camera.js; scripts/camera.js - ordered player behavior/camera entries; view3 enables third-person mode.",
-    "places/<place>/config.yaml + cells/*.scene + sim.js - place config and authored placements, with sim scripts adding local generated/ticked behavior.",
-    "sim.js - world cadence and out-of-bounds recovery/destruction; place sims own place-specific spawning and updates.",
+    "places/<place>/config.yaml + cells/*.scene + sim.js - place configuration and authored placements, with sim scripts adding local generated/ticked behavior.",
+    "sim.js - world cadence and out-of-bounds recovery/destruction; places/main/sim.js - Level 0 generation, loot/ecology and place-state timers.",
     "scripts/main-menu.js + scripts/main-menu-ui.js - local title/pause, character creation, arrival and tutorial routing.",
     "places/intake/cells/x0z0.scene + scripts/intake-geo.js + scripts/lib/intro-cut.js - bedroom shell and waking sequence.",
     "places/tutorial0/cells/x0z0.scene + scripts/tut0-geo.js + scripts/tut0-panels-geo.js + places/tutorial0/sim.js - tutorial layout and props from scripts/lib/tut0.js.",
@@ -30,19 +30,19 @@
     "scripts/lib/screen.js - read-only screen classifier and wrist-panel gates shared by player, stats, craft, rest and menu inputs.",
     "scripts/lib/maze.js and scripts/lib/level*.js + level data - grids, zones, layouts and paths reused by place sims, geometry and navigation.",
     "scripts/lib/level-kit.js + scripts/lib/npc-respawn.js - place-sim NPC management, throttling and return timing.",
-    "scripts/lib/clothes.js + clothes.yml + critter.yml + hair.yml + scripts/lib/critter-model.js - garment/look rules, NPC look rolls, critter body/head/hair models shared by player creator and NPC spawns.",
+    "scripts/lib/clothes.js + clothes.yml + critter.yml + hair.yml + scripts/lib/critter-model.js - garment/look rules, NPC look rolls and critter models shared by creator and NPC spawns.",
     "scripts/lib/loot.js + items.js + level data; combat.js + combat.yml + ballistics.js - common item/container and player/NPC damage/weapon rules.",
     "scripts/lib/nav.js + builtin/nav; footsteps.js + footsteps.yml; level quest libraries - reusable navigation, surface sounds and quest definitions for NPC/talk/place systems."
   ],
   "notableExports": [
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist.",
-    "sim.js - cadence, tick, onOutOfBounds; places/bonus/sim.js - cadence, tick; level11/21/61 sims supply their respective place generators/ticks.",
+    "sim.js - cadence, tick, onOutOfBounds; places/bonus/sim.js - cadence, tick; level11/21/61 sims supply their respective generators/ticks.",
+    "places/main/sim.js - cadence, tick.",
     "scripts/lib/critter-model.js - MESH, critterSpec, bodyModel, headModel, hairOf, hairChild, seatHair, seatHead, rewear and appearance helpers.",
     "scripts/lib/clothes.js - SLOTS, fullLook, wear/takeOff/stripTo, rollCloth, npcLook, plainLook and armor/clothing helpers.",
     "scripts/grab.js - setDown, onInput, update; scripts/build.js - onInput, update; scripts/hub.js - clothName, update, onInput.",
     "scripts/lib/hub.js - HUB_ROOM, HUB_PLACE, isHubRoom, soloRoom, HOMES, toHub, toSolo; scripts/routing.js - pickRoom.",
-    "scripts/bonus-counter.js - ears.press; scripts/hub-ui.js - hubUi; scripts/cutscene-ui.js - cutUi, t0Fade; scripts/lib/tut0-cut.js - t0Tick.",
-    "scripts/player.js - progression/combat/input handlers; scripts/lib/level11-city.js - layCity/layStreet/tickCity; level quest libraries expose quest APIs."
+    "scripts/bonus-counter.js - ears.press; scripts/hub-ui.js - hubUi; scripts/cutscene-ui.js - cutUi, t0Fade; scripts/lib/tut0-cut.js - t0Tick; scripts/player.js owns progression/combat/input handlers."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, appearance, karma/rep and level access.",
@@ -52,7 +52,7 @@
     "scripts/lib/fishing.js + scripts/bobber.js - fishing session/outcome and spawned float state.",
     "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes, skills, points, tags and sheet state; interact.js + lib/seat.js own focus, loot, sit and configured storage saves.",
     "scripts/talk.js and quest libraries - dialogue/shop UI, rapport/trade/rep, authored effects, quest keys/HUD/payout; scripts/l8-use.js owns Level 8 interaction flags.",
-    "scripts/main-menu.js + scripts/lib/intro-cut.js + scripts/lib/tut0-cut.js - menu/arrival/tutorial and cutscene beat state; NPC looks are derived by clothes.js and persisted on player/NPC look state."
+    "places/main/sim.js - places/main place.state generation/version flags and respawn timers for Level 0 furniture, stairs, moments, breaks and creatures."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim, interact/grab/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/spamton-fight/horde/critter/main-menu/hub/view3; routing is configured there.",
@@ -65,8 +65,8 @@
     "Diner purchase → scripts/hub.js writes hubFood, spawns short-lived food model attached to RightHand and emits sound; UI/diner models read hubFood; the held object is session-scoped and mall-local.",
     "Mall scene + scripts/lib/data/bonus.yml → places/bonus/sim.js spawns staff and NPCs; five shoppers use scripts/mall-shopper.js waypoint paths/idle pauses; npcLook/critterSpec supply their appearance.",
     "Mall furniture unlock in player.state.furn → build-piece.js furn_ rows/tabs → scripts/build.js B-mode places models; homeKeep.built is rebuilt by home11 sim using the same specs.",
-    "Main-menu arrivalPending in main/tutorial0 → scripts/lib/arrive-cut.js stages landing → scripts/lib/tutorial.js starts route; tutorial main-menu behavior polls tut0-cut.js → cutscene-ui.js captions/fade and ui.js presents t0Fade.",
-    "Level threshold trigger → scripts/level-door.js pairs IDs/writes arrival clipKind/calls companion.bring → followers cross; player.js consumes clipKind to xfer.kind and noclip-ui renders transition."
+    "Level 0 places/main/sim.js initializes generated desk drawers as containers with weighted contents, clears legacy loose ammo and no longer seeds floor ammo; container/body loot remains the ammo source.",
+    "Main-menu arrivalPending in main/tutorial0 → scripts/lib/arrive-cut.js stages landing → scripts/lib/tutorial.js starts route; tutorial main-menu behavior polls tut0-cut.js → cutscene-ui.js captions/fade and ui.js presents t0Fade; level-door transfers use clipKind/xfer.kind."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js - one authored mall with counters/landmarks and data-driven shop content; sim spawns four fixed staff, five waypoint shoppers and two static balcony friends.",
@@ -81,8 +81,8 @@
   "probableOrphans": [],
   "migrationNotes": [
     "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room, and overflow mall rooms use bonus-N IDs. Keep routing and hub identity aligned.",
-    "Mall transactions are local/non-survival: hubFood and the attached food model are temporary mall presentation, not inventory or hunger; the spawned model is session-scoped with a short lifetime.",
     "Furniture bought in mall unlocks player.state.furn; B-mode uses furn_<key>; home builds persist in homeKeep.built and home sim reconstructs shared build-piece specs. Keep stored rows compatible.",
+    "Level 0's places/main/sim.js deskV conversion makes ordinary desks loot containers and clears old floor ammo once; desks have weighted contents without ammo, so retain container/body ammo sourcing and the room-state migration guard.",
     "scripts/lib/tut0.js is shared route-coordinate source for geometry, scene placements, simulation props and beat positions; tutorial cutscene runs in the player's main-menu behavior, not place referee.",
     "Critter hair styles are sex-prefixed keys from critter.yml and models in hair.yml, skinned to Head as child id critter-hair; masks suppress hair. npcLook hashes ID for stable hair/style colour, so keep key naming/data consistent.",
     "scripts/lib/screen.js remains derived/read-only: priority cutscene > menu > wardrobe > mahjong > talk > loot > wrist sheet/inventory/craft/rest > play; only wrist panels replace another wrist panel."
