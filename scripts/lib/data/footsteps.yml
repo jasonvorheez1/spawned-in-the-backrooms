@@ -9,6 +9,7 @@ match:
   - [terrazzo, "terrazzo"]
   - [checker, "checker|linoleum"]
   - [tile, "tile|vinyl|ceramic|porcelain|marble"]
+  - [snow, "snow|ice"]
   - [hotel, "plush|hotel"]
   - [office, "office-carpet|carpet-tile|low-pile"]
   - [carpet, "carpet|rug|canvas|fabric|velvet"]
@@ -27,23 +28,34 @@ side: 0.13           # each foot sounds this far left or right of centre
 scuffAfter: 0.25     # a stop after this much walking ends on a scuff
 land: { min: 3.2, hard: 8 }   # fall speed (m/s) for a landing sound, and for the loudest one
 hearRange: 18        # other players hear your steps this far, walls muffle them
+# Shelly's FOOTSTEPS pack (Nicola Fabro, royalty-free licence): every step picks a take, never the same one twice running
+pack:
+  concrete: [/cdn/value.59c942ed9a267bce098a390d11cc4bd39e136c197a3ce797d7e9d06f8455f985.mp3, /cdn/value.a08cd5b50f88e680b05f3398f7bc4da2c5ca5c567694d20b18bd403950f52f6d.mp3, /cdn/value.ddf2543c938c331c5518a6dad3e2b610d025dd911845716518f4011d950087f9.mp3, /cdn/value.0a86067c3db4f442eb112151dbfc9ac3b5cc276b25f010d7229ff33b418eb063.mp3, /cdn/value.1aef8a5eeb90aba2f081146593f6b9e818d1072a3a9df76324ee3bf2b5dcb671.mp3, /cdn/value.704fc6e4006249c801115936199bb7dd387759d15efd92fb35a55ce435f9b6c0.mp3, /cdn/value.14752c4d7e59e77cf98cb02c403a25b290bbd6493fa7302567287144e1d8d801.mp3]
+  stone: [/cdn/value.f8e92c2d22dfcd6c99cc3a6ff1ac34095267cc4f13c9b517ec735d92fc9928a5.mp3, /cdn/value.3d860893c92039778efa76e47c8261bb30b1cdde8e6a80249ad710e58f97a34b.mp3, /cdn/value.a505ea5dfe66f5313ea5815aef6499de93cdd0022f2ed727db20745fe15ccf6c.mp3, /cdn/value.d7f9846afcde4c30cb613cb16f763dd65e8e67cbf22de4dced249f5b7f69916a.mp3, /cdn/value.3fb0337b8563324ae08ae3fa41400df4ee01d6b241881498ff5becf335d2975d.mp3, /cdn/value.eb480ac93297286a9947f099d1faa2c0af0051b8361349581a625c8e08fd644d.mp3]
+  grass: [/cdn/value.b78e0365e41f5dba8159930b21d4ffb7589fa200f0affabb77c2336787ba41d0.mp3, /cdn/value.9d3375176f75a993ba0723f0586881de77c980afb0740369ed59c4529f65b9ce.mp3, /cdn/value.b1d699fb712613537cfd594d7b7faed6a0a9c4a98df5d3b211d4a9c5019d13d4.mp3, /cdn/value.c9e9f5c6f15cc48c7ee02f553d33ea0856173c3f2ca0b7782d5dbca0dea9596e.mp3, /cdn/value.85b00a2c2fd2bee0aa9da79851f365314486381a08576107f294a6ea6f5ba679.mp3, /cdn/value.92a592a94b18eaf1ee45fdedaee4d707a71e629fb6c102698d8e2dd81eed2b8f.mp3, /cdn/value.0f9f4a216df838aee77641fe3d5d15333f1b117f254c9b10f7acbde0ef4d491e.mp3, /cdn/value.2c369308c2396f7c9e90e91a9870100c2da1957979be5ff21379f6c8db26aab1.mp3, /cdn/value.3934d8adf12f737f7a401443dc15a5425a97d5890b6156a80b0ef2eb45e1be6d.mp3, /cdn/value.4a171591684acd745a30ee90f397ee2c02c75cc7bd709db5cd7940ec51bb2795.mp3]
+  grassRun: [/cdn/value.e03cec4d281cbded5d3e7b0c71ead7c1ceca23d686aacabe004539d9de7b4bb1.mp3, /cdn/value.0aa88dc9424ab6680b25e3f0790605f3a1eb531f10fcc5b6cd94e025072e5e91.mp3, /cdn/value.c17905eaa74da71f7cfdecb286bf4ee0b907761385b09b8d872605d96174dc8f.mp3, /cdn/value.c38534b06433e7c3ccfebce116a7bd1b8e63a5704f13429077bace5d6625e1d6.mp3, /cdn/value.05f09f905c2ec1d8a319013b8a9b78534077c1dbbead8ffbccea4f7d55603065.mp3, /cdn/value.56baebff4b7ecd61b8c6131781f6c845dc0f73a6dc1a5bb3f1d1f3a4815610e5.mp3, /cdn/value.fc739069bcd4306033655580d6f080b630263a013715036200b3a74b2f130bf0.mp3, /cdn/value.1e973ea0721cbe9769b13f97090a9eeb7042d6ace1424fce7e95553be033d7ab.mp3]
+  wood: [/cdn/value.7ef4c3c5d1559ae769df51cfda5081f3cb9ba64324845de76448ea671f80f626.mp3, /cdn/value.516875a96d76b86f51e67ec09c83d91d9634157d3353e0f9044128a36b20a3f9.mp3, /cdn/value.723da2fd80a37277cfe3c8392f51332759a733dbf6343b14ab80386fca2cc6c2.mp3, /cdn/value.11fe0ddf91092cddf5a6df0fc0a375bc74e06c82128b9ed024ebf2dbcaeea4b4.mp3, /cdn/value.debe2bf8a69b0eb48de7f278e1d6aa634303ca179bcdbce536a8db08c2bbbd54.mp3, /cdn/value.f93ba505c7169aa289e5130397265d636b9f460857e87cf9222218c029da0906.mp3, /cdn/value.fb848b7f457dc27c365d0b548da2507581bfed2a7c6929b6dd198f18f2581b25.mp3]
+  woodSoft: [/cdn/value.b780c8e66f9f310c01dc200b18863c1e7e97c3e22b2a1ade73da3348cbbba4f3.mp3, /cdn/value.ebf844ca347d7b42baef0b5aa923917afcf482b437e7e7fb0b45306758bede9f.mp3, /cdn/value.3d0dc8705c7fbd5a9847f3369feeccbad29daa5c3d82f95eb84638dee60d0808.mp3, /cdn/value.794cadf07ae1e9d67f841d77ec15509363b3f3e8a44623f1b084ff2fd6e9c598.mp3]
+  water: [/cdn/value.f9e6b8687c9548cef263ae2900fec9c3f5951ab1e3796706f358b20d4da6fc15.mp3, /cdn/value.53fecc3d58a9f4d8b1aecca77386d7ec2753d8ff02dd7c1500291356d57a6c01.mp3, /cdn/value.3ef0e390e3dc220da2a647498f3807f34f799acf8b06b3235ae128de599f82d2.mp3, /cdn/value.0fef2252e60460cbaecce45204af4566bc162602ced04b5f4f27e3e9afccc2a0.mp3, /cdn/value.1a115d67d0088e6d5db5f940be88114cf75e406d9fa489582f911c7222ed2988.mp3, /cdn/value.c77c0b40c1d854ad581a80bdb241ed212f91467f081846c6bf8dca97b32064e8.mp3]
+  snow: [/cdn/value.167a4e955386cfa3e27a5100db06836bb5bbfabdf7a502517ef791cac6084b8c.mp3, /cdn/value.e94296b9bd1b2a44efefcacfe8881aed5cb96d9d75c49ce5836a8790d32ac91c.mp3, /cdn/value.574725a7ac439a943dcaf0e04c7787aa52ed87c906a73ddaebe83085071dd2b2.mp3, /cdn/value.c643cd8f2b9165572854f9d681fa24878ddeaa4e963aceed2c68239c054ce330.mp3, /cdn/value.042c1145fc996235f43ef772d8b201bd2c267e2130ea90cef50d6ceb05713816.mp3, /cdn/value.b5e982eff509b2adfc1cc5acdeb67bc0bdc556c697a37229c86e8937f88d8817.mp3, /cdn/value.840d76dee6f12c44c8d4458f57c48c7c3c3654d2c6a6e078505c3f652a7c574f.mp3]
 surfaces:
   carpet:   { walk: footstep-damp-carpet-squelch-soft, run: footstep-damp-carpet-run, v: 0.2, land: landing-soft }
   hotel:    { walk: footstep-shoe-on-thick-plush-hotel-hallway-carpet-single-step, run: footstep-shoe-running-on-thick-hotel-carpet-single-step, v: 0.2, land: landing-soft }
   office:   { walk: footstep-shoe-on-low-pile-office-carpet-tile-single-step, run: footstep-shoe-running-on-low-pile-office-carpet-single-step, v: 0.2, land: landing-soft }
-  concrete: { walk: footstep-shelly-street-walk, run: footstep-shelly-street-run, v: 0.3, land: landing-hard }
-  asphalt:  { walk: footstep-shelly-street-walk, run: footstep-shelly-street-run, v: 0.3, land: landing-hard }
+  concrete: { walk: "@concrete", run: "@concrete", v: 0.3, land: landing-hard }
+  asphalt:  { walk: "@stone", run: "@stone", v: 0.3, land: landing-hard }
   tile:     { walk: footstep-sneaker-on-vinyl-school-floor-tile-single-step, run: footstep-sneaker-running-on-vinyl-floor-tile-single-step, v: 0.11, land: landing-hard }
   terrazzo: { walk: footstep-sneaker-on-polished-mall-terrazzo-floor-squeak-single-step, run: footstep-sneaker-running-on-polished-mall-floor-single-step, v: 0.09, land: landing-hard }
   checker:  { walk: footstep-boot-on-worn-checkered-linoleum-locker-room-single-step, run: footstep-boot-running-on-worn-linoleum-tile-single-step, v: 0.11, land: landing-hard }
   gravel:   { walk: footstep-boot-crunch-on-loose-cave-gravel-single-step, run: footstep-boot-running-on-loose-cave-gravel-single-step, v: 0.26, land: landing-gravel }
   field:    { walk: footstep-sneaker-swishing-through-dry-wheat-stalks-soft-crunch-single-step-v2, run: footstep-sneaker-running-through-dry-wheat-field-swish-single-step-v2, v: 0.13, land: landing-soil }
-  soil:     { walk: footstep-sneaker-on-packed-dry-farm-soil-soft-dull-thud-single-step-v2, run: footstep-sneaker-running-on-packed-dry-farm-soil-single-step-v2, v: 0.14, land: landing-soil }
-  grass:    { walk: footstep-boot-on-short-damp-lawn-grass-single-step, run: footstep-boot-running-on-damp-lawn-grass-single-step, v: 0.2, land: landing-soft }
-  wood:     { walk: footstep-boot-on-wet-wooden-floorboards-creak-single-step, run: footstep-boot-running-on-wet-wooden-floorboards-single-step, v: 0.24, land: landing-wood }
+  soil:     { walk: "@grass", run: "@grassRun", v: 0.16, land: landing-soil }
+  grass:    { walk: "@grass", run: "@grassRun", v: 0.22, land: landing-soft }
+  wood:     { walk: "@wood", run: "@wood", v: 0.24, land: landing-wood }
   metal:    { walk: footstep-boot-on-steel-diamond-plate-floor-clank-single-step, run: footstep-boot-running-on-steel-diamond-plate-floor-single-step, v: 0.24, land: landing-metal }
+  snow:     { walk: "@snow", run: "@snow", v: 0.25, land: landing-soft }
   wet:      { walk: footstep-soaked-carpet-deep-squelch, run: footstep-soaked-carpet-deep-squelch, v: 0.4, land: landing-water }
-  water:    { walk: footstep-boot-splash-in-shallow-ankle-deep-puddle-single-step, run: footstep-boot-running-splash-through-shallow-puddle-single-step, v: 0.3, land: landing-water }
+  water:    { walk: "@water", run: "@water", v: 0.3, land: landing-water }
 landings:
   landing-soft:   body-landing-thump-feet-on-thick-carpet-after-jump
   landing-hard:   body-landing-feet-slap-on-concrete-after-jump-with-shoe-scuff

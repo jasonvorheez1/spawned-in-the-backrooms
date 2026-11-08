@@ -2,6 +2,14 @@
 // loudness from speed, crouch and how much you carry, a scuff when you stop, a landing sized to the fall. Friends hear you.
 import { raycast } from 'builtin/physics'
 import FS from './data/footsteps.yml'
+// a clip name, or "@kind": a take from the pack, never the one this kind played last
+const lastTake = {}
+function take(ctx, o, name) {
+  if (typeof name !== 'string' || name[0] !== '@') return o.clip(name)
+  const list = FS.pack?.[name.slice(1)]; if (!list?.length) return o.clip('footstep-damp-carpet-squelch-soft')
+  let i = Math.floor(ctx.random() * list.length); if (list.length > 1 && i === lastTake[name]) i = (i + 1) % list.length
+  lastTake[name] = i; return list[i]
+}
 const RX = FS.match.map(([k, re]) => [k, new RegExp(re, 'i')])
 
 function texWords(o) {
@@ -65,7 +73,7 @@ export function stepTick(ctx, w, dt, o) {
   const pace = Math.min(1, sp / 7)
   const vol = slopeK * F2.v * (FS.loud.walkMin + (FS.loud.runMax - FS.loud.walkMin) * pace) * (o.crouched ? FS.loud.crouch : 1) * (1 + heavy * FS.loud.heavyMax) * (0.88 + ctx.random() * 0.24)
   const pitch = 1 + fs.foot * FS.pitch.foot + (ctx.random() * 2 - 1) * FS.pitch.jitter + heavy * FS.pitch.heavy
-  play(ctx, o.clip(run ? F2.run : F2.walk), vol, pitch, fs.foot)
+  play(ctx, take(ctx, o, run ? F2.run : F2.walk), vol, pitch, fs.foot)
 }
 function strideOf(o, sp) {
   const S = FS.stride
