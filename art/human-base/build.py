@@ -226,6 +226,8 @@ def build(name, is_male, height):
     if not is_male:
         extra.append(garment(body, r, "Bra", lambda c, a: 1.25 < c.z < 1.42 and a < 0.3, (0.07, 0.07, 0.08, 1), cuts=(1.25, 1.42)))
         extra.append(garment(body, r, "Shorts", lambda c, a: 0.82 < c.z < 1.07 and a < 0.3, (0.08, 0.1, 0.16, 1), cuts=(0.82, 1.07)))
+    if is_male:  # 16+: plain trunks on him too (Shelly #94829 asked the same floor for her)
+        extra.append(garment(body, r, "Shorts", lambda c, a: 0.80 < c.z < 1.08 and a < 0.3, (0.09, 0.11, 0.17, 1), cuts=(0.80, 1.08)))
     s = height / 1.94
     r.scale = (s, s, s); bpy.ops.object.select_all(action="DESELECT")
     for o in (r, head, body, *extra): o.select_set(True)
