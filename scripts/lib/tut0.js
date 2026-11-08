@@ -34,11 +34,16 @@ export const DESK = { x: -4.2, z: -16 }
 export const UNIT = { x: -4.25, y: 0.76, z: -15.55 }  // the HALOGEN wrist unit beside the bottle
 export const SMILER = { x: 36.5, z: -28 }
 export const SOFT = { x: 45, z: -1.5, r: 1.6 }       // the wet patch that gives way
+// the first entity (johnadams2, Nov 8: "i get cornered, i improvise with a table leg nearby and knock it down and run"): room B
+export const ENC = { from: { x: 9, z: -28 }, corner: { x: -3.0, z: -30.0 }, desk: { x: -2.9, z: -29.6 }, leg: { x: -1.7, z: -30.4 } }
+// the HALOGEN issue machine, Backrooms Robotics, against room D's east wall facing the room
+export const HALO = { x: 47.35, z: -27.5, yaw: -90, stand: { x: 46.3, z: -27.5 } }
+// the drawings someone taped up in corridor E and room F: [n, x, z, yaw, size]; they point at the wet spot
+export const DRAWINGS = [[2, 42.53, -19.5, 90, 0.8], [1, 45.47, -16.2, -90, 0.8], [3, 42.53, -12.4, 90, 0.8], [4, 45, 3.97, 180, 1.1]]
 // beats, in order: where each one starts (a box the player walks into)
 export const BEATS = [
-  { id: "almond", box: [-1.5, 1.5, -13.5, -11] },
-  { id: "halogen", box: [-5, -2.6, -18, -14] },
-  { id: "smiler", box: [15, 22, -29.5, -26.5] },
-  { id: "shift", box: [41.5, 47.5, -32, -24] },
+  { id: "encounter", box: [-1.5, 1.5, -27.2, -25.2] },
+  { id: "halogen", box: [43.5, 46.8, -30, -25] },
+  { id: "drawings", box: [42.5, 45.5, -22, -20.4] },
   { id: "final", circle: SOFT },
 ]
