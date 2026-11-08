@@ -474,9 +474,10 @@ bc-gplaque-s:
 bc-grug:
   feetPosition: {x: 17, y: 5.518, z: -14}
   id: bc-grug
+  layout: {box: {max: {x: 3, y: 0.31, z: 3}, min: {x: -3, y: 0, z: -3}}}
   model: /cdn/value.7a52a205e6005afc81d4fb66c6bd697f8b8a470cb14e2d812ee207660fd6a48c.glb
   receiveShadow: true
-  scale: 1
+  scale: {x: 1, y: 0.1, z: 1}
   tags: [bonus-gallery]
 bc-gsculpt:
   castShadow: true
