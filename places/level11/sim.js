@@ -17,7 +17,7 @@ import { terminalSpec } from "../../scripts/lib/terminal.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 23; // bump to rebuild the city in rooms that are already open
+const V = 24; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -65,8 +65,11 @@ pop pulse rate=4 on=point() life=1.2..1.8 v=up(.2) size=.3..0.6 col=hdr(0.2,0.8,
 // big skyline pieces stay in view far off; everything else stops drawing past 70 m (fog has eaten it by then)
 export const L11_FAR = /^l11-(b|ntower|hero|tower|skydeck|bb)/
 export function l11Lean(id, spec) {
-  if (!spec || spec.visibleRange) return spec
-  const o = { ...spec, visibleRange: { max: L11_FAR.test(id) ? 260 : 70 } }
+  if (!spec) return spec
+  const kids = Array.isArray(spec.children) ? spec.children.map((c) => l11Lean(id, c)) : spec.children // children carry their own range and shadow (lagscope #109-113: l11-taxi/child, payphone/child...)
+  if (spec.visibleRange) return kids === spec.children ? spec : { ...spec, children: kids }
+  const o = { ...spec, children: kids, visibleRange: { max: L11_FAR.test(id) ? 260 : 70 } }
+  if (!kids) delete o.children
   const pr = spec.primitive
   if (pr && pr.kind === "box" && Math.max(pr.width ?? 1, pr.height ?? 1, pr.depth ?? 1) < 1.2 && spec.castShadow === undefined) o.castShadow = false
   if (pr && pr.kind === "cylinder" && (pr.height ?? 1) < 1.2 && spec.castShadow === undefined) o.castShadow = false
