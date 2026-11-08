@@ -5,7 +5,7 @@
 import { N, S, H, HALF, isOpen, openings, zoneOf, roomAt, ROOMS, hash, cellCenter, heightOf, isEdge, laneCell, DOWN, CAVE, LANE, EDGE_X } from "./lib/level21.js";
 import { slab, tube, prism } from "./lib/shapes.js";
 
-const FLOOR = "cdn/texture-grimy-wet-utility-concrete-floor.png", WALL = "cdn/texture-chalky-stained-concrete-wall.png", CEIL = "cdn/texture-dirty-concrete-ceiling-slab.png", RUSTY = "cdn/texture-scratched-worn-steel.png", WOOD = "cdn/texture-worn-hardwood-grain.png";
+const FLOOR = "cdn/texture-grimy-wet-utility-concrete-floor.png", WALL = "cdn/texture-chalky-stained-concrete-wall.png", BLOCK = "cdn/texture-painted-white-cinder-block-wall-smooth.png", VINYL = "cdn/texture-worn-grey-vinyl-composition-floor-tile.png", TILE = "cdn/texture-acoustic-drop-ceiling-tiles-water-stained.png", CEIL = "cdn/texture-dirty-concrete-ceiling-slab.png", RUSTY = "cdn/texture-scratched-worn-steel.png", WOOD = "cdn/texture-worn-hardwood-grain.png";
 const T = 0.18; // half wall thickness: the walls of this level are thin
 const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]];
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [Math.abs(x1 - x0) / 2, Math.abs(y1 - y0) / 2, Math.abs(z1 - z0) / 2]);
@@ -183,15 +183,18 @@ export function geometry(ctx) {
   // ---- floors and ceilings, a cell at a time: tiles in the locker rooms, carpet runners in some halls, poured concrete in The Edges
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const x0 = cx * S - HALF, z0 = cz * S - HALF, z = zoneOf(cx, cz), h = heightOf(cx, cz), r = hash(cx, cz, 5);
-    ctx.albedo(FLOOR);
+    ctx.albedo(isEdge(cx, cz) ? FLOOR : VINYL);
     if (TILED.has(z)) { // black and grey vinyl, in 1 m squares like a school
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j; ctx.color((i + j + cx + cz) % 2 ? "oklch(0.28 0.01 270)" : "oklch(0.78 0.01 250)"); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
     } else if (z === "edge" || z === "edgecave") { ctx.color("oklch(0.72 0.035 105)"); ctx.quad(x0, 0, z0, x0, 0, z0 + S, x0 + S, 0, z0 + S, x0 + S, 0, z0); }
     else if (z === "fridges") {
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j; ctx.color((i + j) % 2 ? "oklch(0.86 0.015 95)" : "oklch(0.76 0.025 195)"); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
     }
-    else { ctx.color(r < 0.18 ? "oklch(0.42 0.025 220)" : r < 0.3 ? "oklch(0.5 0.02 60)" : "oklch(0.6 0.012 80)"); ctx.quad(x0, 0, z0, x0, 0, z0 + S, x0 + S, 0, z0 + S, x0 + S, 0, z0); } // a threadbare carpet, or bare grime
-    ctx.albedo(CEIL); ctx.color(isEdge(cx, cz) ? "oklch(0.32 0.01 150)" : z === "fridges" || z === "restroom" ? "oklch(0.88 0.01 90)" : "oklch(0.78 0.012 85)");
+    else { // bare vinyl tile in 1 m squares, two close tones with grime between them; some cells carry a threadbare teal carpet instead
+      ctx.albedo(null); const base = r < 0.18 ? [0.6, 0.04, 200] : r < 0.3 ? [0.7, 0.03, 60] : [0.86, 0.02, 85];
+      for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j, tone = base[0] + (((i + j + cx * 3 + cz) % 2) ? 0.03 : -0.02) + (hash(cx * 4 + i, cz * 4 + j, 9) - 0.5) * 0.05; ctx.color(`oklch(${tone} ${base[1]} ${base[2]})`); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
+    } // a threadbare carpet, or bare grime
+    ctx.albedo(isEdge(cx, cz) ? CEIL : TILE); ctx.color(isEdge(cx, cz) ? "oklch(0.38 0.01 150)" : z === "fridges" || z === "restroom" ? "oklch(0.95 0.01 90)" : "oklch(0.9 0.014 90)");
     ctx.quad(x0, h, z0, x0 + S, h, z0, x0 + S, h, z0 + S, x0, h, z0 + S);
   }
 
@@ -225,11 +228,15 @@ export function geometry(ctx) {
       } else {
         ctx.albedo(WALL); ctx.color(isEdge(cx, cz) || isEdge(nx, nz) ? "oklch(0.93 0.008 95)" : "oklch(0.9 0.014 95)"); ctx.roughness(0.9);
         if (d === 0) {
-          box(ctx, xe - T, xe + T, 0, h, z0 - T, z0 + S + T);
-          ctx.albedo(null); ctx.color("oklch(0.24 0.01 250)"); box(ctx, xe - T - 0.012, xe + T + 0.012, 0, 0.11, z0 - T, z0 + S + T); // vinyl baseboard
+          ctx.albedo(null); ctx.color("oklch(0.6 0.04 165)"); box(ctx, xe - T, xe + T, 0, 1.12, z0 - T, z0 + S + T); // the lower wall: satin institutional green
+          ctx.albedo(BLOCK); ctx.color(isEdge(cx, cz) || isEdge(nx, nz) ? "oklch(0.97 0.006 95)" : "oklch(0.95 0.016 92)"); box(ctx, xe - T, xe + T, 1.12, h, z0 - T, z0 + S + T);
+          ctx.albedo(null); ctx.color("oklch(0.85 0.02 90)"); box(ctx, xe - T - 0.025, xe + T + 0.025, 1.08, 1.17, z0 - T, z0 + S + T); // chair rail
+          ctx.color("oklch(0.24 0.01 250)"); box(ctx, xe - T - 0.02, xe + T + 0.02, 0, 0.12, z0 - T, z0 + S + T); // vinyl baseboard
         } else {
-          box(ctx, x0 - T, x0 + S + T, 0, h, ze - T, ze + T);
-          ctx.albedo(null); ctx.color("oklch(0.24 0.01 250)"); box(ctx, x0 - T, x0 + S + T, 0, 0.11, ze - T - 0.012, ze + T + 0.012); // vinyl baseboard
+          ctx.albedo(null); ctx.color("oklch(0.6 0.04 165)"); box(ctx, x0 - T, x0 + S + T, 0, 1.12, ze - T, ze + T);
+          ctx.albedo(BLOCK); ctx.color(isEdge(cx, cz) || isEdge(nx, nz) ? "oklch(0.97 0.006 95)" : "oklch(0.95 0.016 92)"); box(ctx, x0 - T, x0 + S + T, 1.12, h, ze - T, ze + T);
+          ctx.albedo(null); ctx.color("oklch(0.85 0.02 90)"); box(ctx, x0 - T, x0 + S + T, 1.08, 1.17, ze - T - 0.025, ze + T + 0.025);
+          ctx.color("oklch(0.24 0.01 250)"); box(ctx, x0 - T, x0 + S + T, 0, 0.12, ze - T - 0.02, ze + T + 0.02);
         }
       }
     }
