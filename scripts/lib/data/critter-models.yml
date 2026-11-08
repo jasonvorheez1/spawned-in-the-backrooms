@@ -42,33 +42,39 @@ species:
   fennec: { head: "/cdn/value.dea8ae27332bff2043b732104cebf569c878dd668ece3ccc84f54c0ccc68f7f9.glb", headM: "/cdn/value.dea8ae27332bff2043b732104cebf569c878dd668ece3ccc84f54c0ccc68f7f9.glb", headF: "/cdn/value.de25da596c51bce7bda4b901b05df752d7858f16ce138735c27aa044ef4b597b.glb", fur: "#e8c898", belly: "#ffffff", nose: "#2a1c18", tip: "#fff4e0", mark: "#7a5a38", inner: "#f8d4c0", mats: [eyewhite, eyeink, pupil, iris, mouth, tongue, blush, fur, belly, tip, nose, mark, inner, antler] }
 # expressions as the head's shape keys (Blink Happy Sad Angry Wide Half Smile Open Frown O Blep Blush), 0..1
 faces:
-  catmouth: { Happy: 1, Smile: .55, O: .22, Blush: .45 } # :3
-  grin: { Smile: 1, Open: .4 }
-  smile: { Smile: .85 }
-  beam: { Happy: 1, Smile: 1, Open: .5 }
-  fang: { Smile: .75, Open: .3 }
-  shock: { Wide: 1, O: 1 }
-  teary: { Sad: 1, Frown: .6 }
-  joy: { Happy: 1, Smile: 1, Open: .7, Blush: .4 }
-  laugh: { Happy: 1, Open: 1, Smile: .8 }
-  wink: { Smile: .85, Half: .3 }
-  blep: { Smile: .45, Blep: 1 }
-  love: { Happy: 1, Smile: 1, Blush: 1 }
-  sparkle: { Wide: .7, Smile: 1, Open: .3 }
-  kiss: { Happy: .8, O: .6, Blush: .8 }
-  shy: { Half: .4, Smile: .5, Blush: 1 }
-  smug: { Half: .45, Smile: .7 }
-  lidded: { Half: .7, Smile: .3 }
-  sideeye: { Half: .5, Frown: .3 }
-  unimpressed: { Half: .8, Frown: .5 }
-  cocky: { Half: .3, Smile: 1, Open: .2 }
-  pout: { Frown: .8, Blush: .35 }
-  evil: { Angry: 1, Smile: 1 }
-  bored: { Half: .9 }
-  surprised: { Wide: 1, O: .8 }
-  scared: { Wide: 1, Sad: .5, Frown: .6, O: .3 }
-  sad: { Sad: 1, Frown: .8 }
-  cry: { Sad: 1, Frown: 1, Open: .4 }
-  angry: { Angry: 1, Frown: 1, Open: .2 }
-  dizzy: { Half: .5, O: .5 }
-  sleepy: { Half: 1, Blink: .6 }
+  catmouth: { Happy: 1, Smile: .75, O: .25, Blush: .5 } # :3
+  grin: { Smile: 1, Open: .35, Happy: .2 }
+  smile: { Smile: .9, Happy: .15 }
+  beam: { Happy: 1, Smile: 1, Open: .55, Blush: .35 }
+  fang: { Smile: .85, Open: .3, Angry: .1, Happy: .2 }
+  shock: { Wide: 1, O: .9, Open: .35, Sad: .2 }
+  teary: { Sad: 1, Half: .25, Frown: .7, O: .15, Blush: .2 }
+  joy: { Happy: 1, Smile: 1, Open: .75, Blush: .5 }
+  laugh: { Happy: 1, Open: 1, Smile: .85, Blush: .3 }
+  wink: { Happy: .7, Half: .45, Smile: .95, Open: .2 }
+  blep: { Smile: .45, Blep: 1, Half: .2 }
+  love: { Happy: 1, Smile: 1, Blush: 1, Open: .25 }
+  sparkle: { Wide: .9, Smile: 1, Open: .4, Happy: .2, Blush: .3 }
+  kiss: { Happy: .9, O: .75, Blush: .85 }
+  shy: { Sad: .25, Half: .45, Smile: .5, Blush: 1 }
+  smug: { Half: .6, Smile: .85, Angry: .15, Open: .15 }
+  lidded: { Half: .8, Smile: .35 }
+  sideeye: { Half: .6, Frown: .35, Angry: .25 }
+  unimpressed: { Half: .8, Frown: .5, Angry: .2 }
+  cocky: { Half: .4, Smile: 1, Open: .3, Angry: .2 }
+  pout: { Frown: .85, O: .25, Sad: .3, Blush: .45 }
+  evil: { Angry: 1, Smile: 1, Open: .35 }
+  bored: { Half: .9, Frown: .25 }
+  surprised: { Wide: .85, O: .6, Smile: .2 }
+  scared: { Wide: 1, Sad: .6, Frown: .6, O: .4 }
+  sad: { Sad: 1, Frown: .85, Half: .15 }
+  cry: { Sad: 1, Frown: 1, Open: .55, O: .3 }
+  angry: { Angry: 1, Frown: 1, Open: .25 }
+  dizzy: { Half: .5, Sad: .3, O: .5, Frown: .3 }
+  sleepy: { Half: .95, Blink: .4, O: .15 }
+  curious: { Wide: .65, Smile: .45, Half: .15 }
+  nervous: { Wide: .5, Sad: .35, Frown: .3, Blush: .45, O: .2 }
+  flustered: { Wide: .75, Happy: .3, O: .45, Blush: 1 }
+  determined: { Angry: .65, Smile: .45, Half: .2 }
+  disgusted: { Angry: .5, Frown: .8, Half: .4 }
+  relieved: { Happy: .65, Smile: .75, Half: .3 }
