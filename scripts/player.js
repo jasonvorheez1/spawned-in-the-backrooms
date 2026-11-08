@@ -1184,6 +1184,8 @@ function tickStats(ctx, t, moving) {
   if (w.lastPlace && w.lastPlace !== ctx.self.place) { const kind = s.clipKind; s.clipKind = undefined; s.xfer = { at: now, to: ctx.self.place, ...(kind ? { kind } : {}) } }
   if (ctx.self.place === 'level6' && w.light) { ctx.destroy(w.light); w.light = null; s.light = false } // the dark swallows it
   w.lastPlace = ctx.self.place
+  // a carnivorous balloon's ribbon (scripts/partygoers.js): paralysed where you stand till it lets go
+  if (now < (s.stungUntil ?? 0)) { const v = ctx.self.velocity; ctx.self.velocity = { x: 0, y: v.y, z: 0 }; return }
   // down: the body lies where it fell (third person, scripts/camera.js), then you wake at the nearest checkpoint
   if (w.respawnAt) {
     if (now < w.respawnAt) { const v = ctx.self.velocity; ctx.self.velocity = { x: 0, y: v.y, z: 0 }; return }
