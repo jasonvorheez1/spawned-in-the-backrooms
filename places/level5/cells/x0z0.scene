@@ -3592,7 +3592,7 @@ l5-light-33:
 l5-light-34:
   feetPosition: {x: 6, y: 7.8, z: 0}
   id: l5-light-34
-  light: {color: oklch(0.86 0.09 75), distance: 20, intensity: 14, kind: point, shadow: {enabled: true}}
+  light: {color: oklch(0.86 0.09 75), distance: 20, intensity: 14, kind: point, shadow: {enabled: false}}
   state: {kind: chandelier}
   tags: [l5-light, l5-fix-chandelier]
 l5-light-35:
