@@ -29,7 +29,13 @@ def walls(M, plan, ys, mats, uvscale=(16, 4), skip=None, inner=False):
             if skip and skip(plan[i], plan[i + 1], ys[j], ys[j + 1]): continue
             q = [ids[j][i], ids[j][i + 1], ids[j + 1][i + 1], ids[j + 1][i]]
             if inner: q = q[::-1]
-            uv = [(us[i] / uvscale[0], ys[j] / uvscale[1]), (us[i + 1] / uvscale[0], ys[j] / uvscale[1]), (us[i + 1] / uvscale[0], ys[j + 1] / uvscale[1]), (us[i] / uvscale[0], ys[j + 1] / uvscale[1])]
+            ax, az = plan[i + 1][0] - plan[i][0], plan[i + 1][1] - plan[i][1]
+            nx, nz = plan[i][2], plan[i][3]
+            sg = -1.0 if (ax * nz - az * nx) < 0 else 1.0
+            if inner: sg = -sg
+            u0, u1 = sg * us[i], sg * us[i + 1]
+            uv = [(u0 / uvscale[0], ys[j] / uvscale[1]), (u1 / uvscale[0], ys[j] / uvscale[1]), (u1 / uvscale[0], ys[j + 1] / uvscale[1]), (u0 / uvscale[0], ys[j + 1] / uvscale[1])]
+            uv_old = [(us[i] / uvscale[0], ys[j] / uvscale[1]), (us[i + 1] / uvscale[0], ys[j] / uvscale[1]), (us[i + 1] / uvscale[0], ys[j + 1] / uvscale[1]), (us[i] / uvscale[0], ys[j + 1] / uvscale[1])]
             M.f(q, mats[j] if isinstance(mats, list) else mats, uv)
     return ids
 def cap(M, plan, y, m, up=True, uvs=4.0):
