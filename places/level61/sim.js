@@ -54,7 +54,6 @@ const STEAM_FX = `fx
 pop mist rate=6 life=1.2..2.0 on=disc(.08) v=up(.35..0.75)+sdir()*.08 size=.08..0.2 col=<.92,.92,.95> a=.3>0 sz=$size*(1>2) r=sprite(soft-disc)`;
 
 function lay(ctx) {
-  for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l61-/.test(id) && !id.includes("/")) ctx.destroy(id);
   const sp = (id, spec) => ctx.spawn(id, spec);
   const box = (id, x, y, z, w, h, d, material, extra = {}) => sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material, physics: "static", ...extra });
   const light = (id, x, y, z, color, intensity, distance) => sp(id, { feetPosition: { x, y, z }, light: { kind: "point", color, intensity, distance, shadow: { enabled: false } } });
@@ -873,6 +872,27 @@ pop mist rate=5 on=arc(1.4,6.283,.4) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0
   sign("l61-welcome", 0, 3.8, HD - 0.2, 0, 5, 1.0, `<div style="font-size:150px;color:#ff7ab8;font-style:italic">The Snackrooms</div><div style="font-size:70px;color:#5ad8e0">EAT · DRINK · STAY AS LONG AS YOU LIKE</div>`, "oklch(0.22 0.06 280)");
 }
 
+// perf: a rebuild is queued and laid ~90 rows a tick. Each row replaces its old self in place (same id),
+// so the old mall stands until its new piece lands; the leftovers are cleared at the end. One pass of ~1100 froze ~100-250 ms.
+let layQ = null, layDrop = null;
+function layStep(ctx) {
+  if (!layQ) {
+    layQ = [];
+    const q = new Proxy(ctx, { get: (t, k) => k === "spawn" ? (id, spec) => { layQ.push([id, spec]); return id; } : (typeof t[k] === "function" ? t[k].bind(t) : t[k]) });
+    lay(q);
+    const keep = new Set(layQ.map(([id]) => id));
+    layDrop = Object.keys(ctx.place.objects ?? {}).filter((id) => /^l61-/.test(id) && !id.includes("/") && !keep.has(id));
+    layQ.reverse();
+    return false;
+  }
+  for (let n = 0; n < 90 && layQ.length; n++) { const [id, spec] = layQ.pop(); ctx.spawn(id, spec); }
+  if (layQ.length) return false;
+  for (let n = 0; n < 120 && layDrop.length; n++) ctx.destroy(layDrop.pop());
+  if (layDrop.length) return false;
+  layQ = layDrop = null;
+  return true;
+}
+
 // perf: a few hundred rows a tick, not the whole mall at once (one pass of ~1100 cost ~100 ms)
 let slimQ = null;
 function slim(ctx, st) {
@@ -893,11 +913,7 @@ function slim(ctx, st) {
 export function tick(ctx) {
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const st = ctx.place.state;
-  if ((st.builtV ?? 0) < V) {
-    lay(ctx);
-    st.builtV = V;
-    st.crewV = 0;
-  }
+  if ((st.builtV ?? 0) < V) { if (layStep(ctx)) { st.builtV = V; st.crewV = 0; } else return; }
   if ((st.crewV ?? 0) < 2) { // 2: facelings learn names, mimic, keep a temper (scripts/l61-staff.js)
     st.crewV = 2;
     for (const id of FACELING_IDS) faceling(ctx, id);
