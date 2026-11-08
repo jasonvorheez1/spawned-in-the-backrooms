@@ -32,10 +32,10 @@ export const ears = {
       const ask = (s.ask ??= {});
       if (!(now - (ask[uid] ?? -1e9) < 10000)) { ask[uid] = now; return say(who, `${cn} looks up from the ladle. "Soup's three Backdollars a bowl. You want one?" (Press again to pay $3.00)`, ctx); }
       delete ask[uid]; w.cents -= PRICE; cool[uid] = now; snd("pot-lid-clink-and-ladle-in-soup", 0.5);
-      w.soup = (w.soup ?? 0) + 1; // an item: eat it or throw it from the inventory (scripts/player.js)
-      return say(who, `${cn} ladles you a bowl and pockets three Backdollars. "Eat it or wear it, it's yours now." (−$3.00 · Bowl of soup in your inventory: eat it, or throw it)`, ctx);
+      w.weapons = [...(w.weapons ? w.weapons.split(',') : []), 'soup_bowl'].join(','); // held like a weapon: equip it, click throws, Q eats (scripts/player.js)
+      return say(who, `${cn} ladles you a bowl and pockets three Backdollars. "Eat it or wear it, it's yours now." (−$3.00 · Bowl of soup in your inventory: equip it, click to throw, Q to eat)`, ctx);
     }
-    if (s.kind === "bowl") { w.soup = (w.soup ?? 0) + 1; ctx.destroy(ctx.self.id); return say(who, "You pick up the bowl of soup. (In your inventory: eat it, or throw it)", ctx); }
+    if (s.kind === "bowl") { w.weapons = [...(w.weapons ? w.weapons.split(",") : []), "soup_bowl"].join(","); ctx.destroy(ctx.self.id); return say(who, "You pick up the bowl of soup. (In your inventory: equip it, click to throw, Q to eat)", ctx); }
     if (s.kind === "fire") {
       if (now - (cool[uid] ?? -1e9) < 40000) return say(who, "You are already as dry as the cave allows.", ctx);
       cool[uid] = now; w.sanity = Math.min(100, (w.sanity ?? 80) + 12); w.hp = Math.min(w.maxHp ?? 1e9, (w.hp ?? 0) + 10);

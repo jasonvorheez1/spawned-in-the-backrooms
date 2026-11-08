@@ -278,6 +278,7 @@ export function onInput(ctx, input) {
     if (sv.invOpen || sv.lootOpen) { if (sv.chargeAt) sv.chargeAt = 0 } // a click on a menu is no swing
     else if (ctx.self.state.building) { if (sv.chargeAt) sv.chargeAt = 0 }
     else if (ctx.self.state.sheathed) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) { toggleHolster(ctx); walkOf(ctx).nextSwing = ctx.now() + 450 } } // holstered: a click draws (fallout), it never hits
+    else if (sv.equipped === 'soup_bowl') { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) soupThrow(ctx) } // the bowl: a click throws it
     else if (aw.ranged) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack || (aw.auto && input.held.attack)) swing(ctx) }
     else {
       if (input.pressed.attack && !sv.chargeAt && ctx.now() >= (walkOf(ctx).nextSwing ?? 0)) { sv.chargeAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.3, true) }
@@ -289,7 +290,7 @@ export function onInput(ctx, input) {
   }
   if (input.pressed.inventory) { const sv = ctx.self.state; sv.invOpen = !sv.invOpen && !sv.lootOpen; sound(ctx, 'flashlight-switch-click', 0.35, true) }
   if (input.pressed.inv && input.actionData?.inv) invAction(ctx, input.actionData.inv)
-  if (input.pressed.drink) drink(ctx)
+  if (input.pressed.drink) { if (ctx.self.state.equipped === 'soup_bowl') soupEat(ctx); else drink(ctx) } // holding the soup, Q eats it
   if (input.pressed.splash) splash(ctx)
   if (input.pressed.compass) useCompass(ctx)
   if (input.pressed.cycleWeapon && !ctx.self.state.building) cycleWeapon(ctx)
@@ -641,9 +642,7 @@ function invAction(ctx, d) {
     s.meat = { ...s.meat, [c]: n - 1 }; s.hp = Math.min(maxHp(s.level, s), (s.hp ?? 0) + MEAT[c].hp); s.hunger = Math.min(100, (s.hunger ?? 100) + MEAT[c].food)
     s.notice = { text: `You eat the ${MEAT[c].name.toLowerCase()} · +${MEAT[c].hp} HP`, at: ctx.now() }; sound(ctx, 'eating-chewing-food', 0.6, true); return }
   if (d.k === 'splash') { s.invOpen = false; splash(ctx); return }
-  if (d.k === 'soupEat') { if ((s.soup ?? 0) <= 0) return; s.soup -= 1
-    s.hunger = Math.min(100, (s.hunger ?? 100) + 45); s.hp = Math.min(maxHp(s.level, s), (s.hp ?? 0) + 25)
-    s.notice = { text: 'You slurp the soup down too gratefully to ask what the chunks are · +25 HP', at: ctx.now() }; sound(ctx, 'eating-chewing-food', 0.6, true); return }
+  if (d.k === 'soupEat') { soupEat(ctx); return }
   if (d.k === 'soupThrow') { s.invOpen = false; soupThrow(ctx); return }
   if (d.k === 'firesalt') { // rub a pinch on the blade or head: melee hits burn harder for a while
     if ((s.firesalt ?? 0) <= 0 || W[s.equipped]?.ranged || s.equipped === 'fists') { s.notice = { text: 'Hold a melee weapon to rub firesalt on it', at: ctx.now() }; return }
@@ -746,10 +745,24 @@ const SOUP = `fx
 pop broth burst=45..60 life=.35..0.7 v=<%dir|0,0,-1>*(4..7)+sdir()*(.8..1.6)+up(1.2) size=.03..0.06 acc=grav()+drag(.5) col=<.78,.55,.22> a=.9>0 floor=stick r=sprite(soft-disc,alpha,velocity,.02)
 pop chunks burst=6..9 life=.5..0.9 v=<%dir|0,0,-1>*(3..5)+up(1.5..2.5) size=.05..0.08 acc=grav() col=<.45,.3,.18> a=1 floor=stick r=sprite(soft-disc,alpha)
 pop steam burst=8 life=.6..1.1 v=<%dir|0,0,-1>*(1.5..2.5)+up(.8) size=.25..0.4 acc=buoy(.6)+drag(2) col=<.92,.9,.84> a=0>.35:.25>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)`
+// the bowl lives in s.weapons like any weapon; one used is one gone, and the empty hand falls back to fists
+function useBowl(s) {
+  const list = owned(s).slice(1), i = list.indexOf('soup_bowl'); if (i < 0) return false
+  list.splice(i, 1); s.weapons = list.join(',')
+  if (s.equipped === 'soup_bowl' && !list.includes('soup_bowl')) s.equipped = 'fists'
+  return true
+}
+function soupEat(ctx) {
+  const s = ctx.self.state
+  if (!useBowl(s)) return
+  s.hunger = Math.min(100, (s.hunger ?? 100) + 45); s.hp = Math.min(maxHp(s.level, s), (s.hp ?? 0) + 25)
+  s.notice = { text: 'You slurp the soup down too gratefully to ask what the chunks are · +25 HP', at: ctx.now() }; sound(ctx, 'eating-chewing-food', 0.6, true)
+}
 function soupThrow(ctx) {
   const s = ctx.self.state, now = ctx.now()
-  if ((s.soup ?? 0) <= 0) { s.notice = { text: 'No soup to throw', at: now }; return }
-  s.soup -= 1
+  if (now < (walkOf(ctx).nextSwing ?? 0)) return
+  if (!useBowl(s)) { s.notice = { text: 'No soup to throw', at: now }; return }
+  walkOf(ctx).nextSwing = now + 900
   const p = ctx.self.feetPosition, f = walkOf(ctx).fwd ?? { x: 0, z: -1 }
   ctx.emit('fx', { position: { x: p.x + f.x * 0.5, y: p.y + 1.3, z: p.z + f.z * 0.5 }, script: SOUP, params: { dir: { x: f.x, y: 0.1, z: f.z } } })
   heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-water-splash-thrown-from-bottle.mp3', position: chest(ctx), volume: 0.8, maxDistance: 20 })

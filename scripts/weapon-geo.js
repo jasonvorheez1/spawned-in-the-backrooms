@@ -402,6 +402,16 @@ const builders = {
     bar(ctx, 0, B - 0.014, 0.0145, 0.03, -0.17, -0.1, 0.005); // the stock, adjustable
     plain(ctx, "oklch(0.14 0.01 60)", 0.95); bar(ctx, 0, B - 0.014, 0.0155, 0.036, -0.175, -0.165, 0.004); // butt pad
   },
+  soup_bowl(ctx, M, hi) { // a chipped enamel camp bowl of brown soup, held from below
+    plain(ctx, "oklch(0.86 0.02 90)", 0.35);
+    rod(ctx, [[0, Y - 0.01, 0.06], [0, Y + 0.005, 0.06], [0, Y + 0.035, 0.06], [0, Y + 0.06, 0.06]], [0.035, 0.055, 0.075, 0.085], M); // the bowl
+    plain(ctx, "oklch(0.32 0.06 250)", 0.4);
+    rod(ctx, [[0, Y + 0.058, 0.06], [0, Y + 0.064, 0.06]], [0.088, 0.088], M); // blue enamel rim
+    plain(ctx, "oklch(0.5 0.1 60)", 0.25);
+    rod(ctx, [[0, Y + 0.062, 0.06], [0, Y + 0.066, 0.06]], [0.08, 0.08], M); // the soup
+    plain(ctx, "oklch(0.42 0.08 45)", 0.6);
+    for (const [cx, cz] of [[0.025, 0.05], [-0.03, 0.075], [0.005, 0.09]]) rod(ctx, [[cx, Y + 0.064, cz], [cx, Y + 0.072, cz]], [0.012, 0.009], 6); // chunks. do not ask
+  },
   fishing_rod(ctx, M, hi) { // Salvaged fiberglass & cork spinning rod: cork handle, brass & steel reel, line guides, red-and-white bobber & barbed hook
     plain(ctx, "oklch(0.18 0.01 250)", 0.85);
     rod(ctx, [[0, Y, -0.025], [0, Y, 0.005]], [0.015, 0.016], M); // rubber butt cap
@@ -454,7 +464,7 @@ const SCRIPTED = { // grip and head along +Z, and the radius there, for the kind
   cleaver: { grip: [0.0, 0.13, 0.0155], head: [0.14, 0.33, 0.01] },
   revolver: { grip: [0.02, 0.1, 0.016], head: [0.2, 0.3, 0.03], mag: [0.2, 0.3, -0.03] }, coach_gun: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.6, 0.0135] },
   lever_rifle: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.6, 0.011] }, hunting_rifle: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.7, 0.012] },
-  carbine: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.5, 0.021] }, fishing_rod: { grip: [0.0, 0.28, 0.015], head: [0.7, 1.22, 0.005] },
+  carbine: { grip: [0.0, 0.1, 0.02], head: [0.3, 0.5, 0.021] }, fishing_rod: { grip: [0.0, 0.28, 0.015], head: [0.7, 1.22, 0.005] }, soup_bowl: { grip: [0.0, 0.06, 0.06], head: [0.0, 0.12, 0.08] },
   pistol: { grip: [0.02, 0.06, 0.016], head: [0.08, 0.2, 0.016], mag: [0.018, 0.05, -0.085] }, shotgun: { grip: [0.44, 0.6, 0.03], head: [0.62, 0.8, 0.02] },
 };
 // where the shaft is at z: [x, y, r]
