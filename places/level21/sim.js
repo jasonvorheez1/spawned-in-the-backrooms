@@ -10,8 +10,9 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
+import { fan, fanHousing, cable, DRIP, DUST, MIST } from "../../scripts/lib/ambient.js";
 export const cadence = "500ms";
-const V = 6;
+const V = 7;
 const rm = (type) => ROOMS.filter((r) => r.type === type);
 const center = (r) => cellCenter(r.x0 + (r.w - 1) / 2, r.z0 + (r.d - 1) / 2); // the middle of a room block
 const edgeOf = (r, d) => { const c = center(r); return d === 0 ? c.x + (r.w * S) / 2 : d === 2 ? c.x - (r.w * S) / 2 : d === 1 ? c.z + (r.d * S) / 2 : c.z - (r.d * S) / 2; };
@@ -57,6 +58,7 @@ function lay(ctx) {
     const col = z === "edge" || z === "edgecave" ? "oklch(0.93 0.05 150)" : r < 0.07 ? "oklch(0.9 0.1 70)" : "oklch(0.97 0.012 200)", along = isOpen(cx, cz, 1) && !isOpen(cx, cz, 0) ? 90 : 0;
     const spec = { feetPosition: { x: c.x, y: h - 0.1, z: c.z }, rotation: { yaw: along }, primitive: { kind: "box", width: 1.2, height: 0.06, depth: 0.2 }, material: { color: col, emissive: col, emissiveIntensity: 2.4 } };
     if (hash(cx, cz, 203) < 0.1 && z !== "edge") sp(`l21-lamp-${cx}-${cz}`, { ...spec, fx: { script: `fx\npop flick n=1 r=light(<.9,.95,1>,flick(5,.5)*5,9)` } });
+    else if (hash(cx, cz, 207) < 0.07 && z === "hall") sp(`l21-lamp-${cx}-${cz}`, { ...spec, behavior: "scripts/ambient-anim.js", state: { anim: { kind: "sway", deg: 4, sec: 3.1 + hash(cx, cz, 208), axis: "roll", phase: hash(cx, cz, 209) } }, light: { kind: "point", color: col, intensity: 5, distance: 11, shadow: { enabled: false } } }); // a tube hanging from one chain, swinging in the draught
     else sp(`l21-lamp-${cx}-${cz}`, { ...spec, light: { kind: "point", color: col, intensity: z === "edge" ? 7 : 5, distance: z === "edge" ? 16 : 11, shadow: { enabled: false } } });
     // Occasional hissing ceiling steam leak in the hot storage halls
     if (z === "hall" && hash(cx, cz, 209) < 0.045) sp(`l21-steam-${cx}-${cz}`, { feetPosition: { x: c.x + 0.9, y: h - 0.28, z: c.z }, fx: { script: STEAM_FX } });
@@ -206,6 +208,26 @@ function lay(ctx) {
     ],
   });
   sp("l21-life", { behavior: "scripts/l21-use.js" });
+
+  // ---- things that move: fans turning in the big rooms, loose cables swinging, drips from the pipes, dust in the light, damp breath over The Edges
+  for (const r of ROOMS) {
+    if (!["base", "fridges", "restroom", "lockers", "break", "explo", "office"].includes(r.type)) continue;
+    const c = center(r), y = (r.type === "base" ? H + 0.5 : H) - 0.06, spots = r.type === "base" ? [[-3.5, 0], [3.5, 0]] : r.type === "fridges" ? [[-4, 0], [4, 0]] : [[0, 0]];
+    spots.forEach(([a, b], k) => { sp(`l21-fanh-${r.i}-${k}`, fanHousing({ x: c.x + a, y: y + 0.01, z: c.z + b })); sp(`l21-fan-${r.i}-${k}`, fan({ x: c.x + a, y, z: c.z + b }, 0.7 + hash(r.i, k, 33) * 0.5, hash(r.i, k, 34))); });
+    sp(`l21-dust-${r.i}`, { feetPosition: { x: c.x, y: 1.2, z: c.z }, fx: { script: DUST } });
+  }
+  let nCab = 0;
+  for (let cx = 1; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
+    const z = zoneOf(cx, cz), c = cellCenter(cx, cz); if (z !== "hall") continue;
+    const q = hash(cx, cz, 701);
+    if (q < 0.09) { nCab++; sp(`l21-cable-${cx}-${cz}`, cable({ x: c.x + (hash(cx, cz, 702) - 0.5) * 1.6, y: H - 0.04, z: c.z + (hash(cx, cz, 703) - 0.5) * 1.6 }, Math.floor(q * 1000), 0.5 + hash(cx, cz, 704) * 0.7)); }
+    else if (q < 0.15) sp(`l21-drip-${cx}-${cz}`, { feetPosition: { x: c.x + (hash(cx, cz, 705) - 0.5) * 2.4, y: H - 0.2, z: c.z + (hash(cx, cz, 706) - 0.5) * 2.4 }, fx: { script: DRIP } });
+  }
+  for (let cx = EDGE_X; cx < N - 1; cx += 2) for (let cz = LANE.z0; cz < LANE.z0 + LANE.d; cz++) {
+    const c = cellCenter(cx, cz);
+    if (hash(cx, cz, 711) < 0.45) sp(`l21-edrip-${cx}-${cz}`, { feetPosition: { x: c.x + (hash(cx, cz, 712) - 0.5) * 3, y: L.edgeHeight - 0.3, z: c.z + (hash(cx, cz, 713) - 0.5) * 3 }, fx: { script: DRIP } });
+    if (hash(cx, cz, 714) < 0.4) sp(`l21-mist-${cx}-${cz}`, { feetPosition: { x: c.x, y: 0.25, z: c.z }, fx: { script: MIST } });
+  }
 }
 
 export function tick(ctx) {

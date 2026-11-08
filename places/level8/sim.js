@@ -4,9 +4,10 @@
 // a cavern that floods to the chin with parkour ledges and a dead caver in an orange caving suit, Hyperspace Lane (glowing fungi, resonance altar and light guides), a spider nest,
 // a pool of boiling tar with a B.N.T.G. dredge winch and reaching hands, a survivor camp round a fire with Carla, and the asphalt road to Level 9. Life: scripts/l8-life.js; use: scripts/l8-use.js.
 import L8 from "../../scripts/lib/data/level8.yml";
+import { DRIP, RIPPLE } from "../../scripts/lib/ambient.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "1s";
-const V = 16;
+const V = 17;
 const GLB = {
   cave: "/cdn/value.6ae7c035c9583dda020bc92a7e80e75e9d3d462632234677d4a5f5a717fe311b.glb",
   spider: "/cdn/value.f2baeaec87cf017372e92e66ec42fae95179b52161e15051d3253036b89b9323.glb",
@@ -64,10 +65,10 @@ const FUNG = [...Array(22).keys()].map((k) => ({ s: 218 + k * 2.4, side: (k % 2 
 FUNG.forEach((f, k) => {
   const p = P(f.s, f.side), r = 0.16 + (k % 3) * 0.05, stemH = 0.22 + (k % 3) * 0.08;
   def(`l8-glow-${k}`, 150, {
-    feetPosition: { x: p.x, y: P(f.s).y + f.up, z: p.z }, rotation: { yaw: k * 53 }, tags: ["usable"], behavior: "scripts/l8-use.js",
+    feetPosition: { x: p.x, y: P(f.s).y + f.up, z: p.z }, rotation: { yaw: k * 53 }, tags: ["usable"], behavior: ["scripts/l8-use.js", "scripts/ambient-anim.js"],
     model: { id: GLB.mush, materials: {} }, layout: BOX(r * 3.6, r * 4.2, r * 3.6), material: { emissive: "oklch(0.7 0.14 190)", emissiveIntensity: 0.35 },
     ...(k % 4 === 0 ? { fx: { script: SPORE_FX } } : {}),
-    state: { kind: "fungus", name: "Glowing fungus cluster", verb: "Pick the caps", info: "Bioluminescent caps on almond-wet rock. They bruise easily, and make a good light.", tint: "#6fe8d8" },
+    state: { anim: { kind: "pulse", amp: 1.07, sec: 2.2 + (k % 5) * 0.4, phase: (k % 7) / 7 }, kind: "fungus", name: "Glowing fungus cluster", verb: "Pick the caps", info: "Bioluminescent caps on almond-wet rock. They bruise easily, and make a good light.", tint: "#6fe8d8" },
     children: [
       { feetPosition: { x: 0, y: stemH + 0.15, z: 0 }, light: { kind: "point", color: "oklch(0.72 0.15 190)", intensity: 1.05, distance: 8.5 } },
     ],
@@ -78,9 +79,9 @@ FUNG.forEach((f, k) => {
 [292, 300, 308, 318, 326, 334, 342].forEach((s, k) => {
   const side = (k % 2 ? 1 : -1) * (3 + (k * 5) % 6), p = P(s, side), silk = { color: "oklch(0.9 0.012 230)", roughness: 0.95 };
   def(`l8-cocoon-${k}`, 300, {
-    feetPosition: { x: p.x, y: P(s).y, z: p.z }, rotation: { yaw: k * 47 }, tags: ["usable"], behavior: "scripts/l8-use.js",
+    feetPosition: { x: p.x, y: P(s).y, z: p.z }, rotation: { yaw: k * 47 }, tags: ["usable"], behavior: ["scripts/l8-use.js", "scripts/ambient-anim.js"],
     model: { id: GLB.cocoon }, layout: BOX(0.8, 1.5, 0.8),
-    state: { kind: "cocoon", name: "Silk cocoon", verb: "Cut open", info: "Something was wrapped tightly in this. It is not moving.", tint: "#e8eef2" },
+    state: { anim: { kind: "sway", deg: 2.4, sec: 3.4 + (k % 4) * 0.5, axis: "pitch", phase: (k % 5) / 5 }, kind: "cocoon", name: "Silk cocoon", verb: "Cut open", info: "Something was wrapped tightly in this. It is not moving.", tint: "#e8eef2" },
     children: [
       { feetPosition: { x: 0, y: 1.45, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.08, height: 3.8 }, material: { color: "oklch(0.92 0.01 230)", opacity: 0.55, transparent: true } },
     ],
@@ -305,6 +306,7 @@ function lay(ctx) {
   for (let k = 0; k < 14; k++) {
     const s = 286 + k * 4.5, side = ((k * 7) % 11) - 5, up = 1.6 + (k % 4) * 1.0, w = 3.4 + (k % 3);
     sp(`l8-web-${k}`, {
+      behavior: "scripts/ambient-anim.js", state: { anim: { kind: "sway", deg: 3.2, sec: 4.2 + (k % 5) * 0.6, axis: "pitch", phase: (k % 9) / 9 } },
       ...at({ ...P(s, side, up), yaw: P(s).yaw + k * 23 }), primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: w * 1.3 }, rotation: { yaw: P(s).yaw + k * 23, roll: 52 }, material: webMat,
       children: [
         { feetPosition: { x: 0, y: 1.2, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: w * 1.3 }, rotation: { roll: -104 }, material: webMat },
@@ -516,6 +518,9 @@ function lay(ctx) {
   sp("l8-l21-frame", { ...at({ ...tm, y: tm.y + 1.15, yaw: P(46).yaw + 90 }), primitive: { kind: "box", width: 2.3, height: 2.5, depth: 0.5 }, material: { color: "oklch(0.58 0.01 100)", roughness: 0.95 } });
   sp("l8-l21-dark", { ...at({ ...P(46, -8.75, 1.15), yaw: P(46).yaw + 90 }), primitive: { kind: "box", width: 1.5, height: 2.2, depth: 0.1 }, material: { color: "#050505" } });
   sp("l8-l21-sign", { ...at({ ...P(46, -8.2, 2.9), yaw: P(46).yaw - 90 }), ...sign(1.7, 0.45, `<div face="front" width="1.7m" style="font-family:Arial,sans-serif;font-weight:900;color:#d8f0c0;text-align:center;line-height:1.05"><div style="font-size:62px">CONCRETE TUNNEL</div><div style="font-size:34px">back to Level 2.1</div></div>`, "oklch(0.2 0.03 150)") });
+  // ---- the cave drips: beads of water fall from the roof along the road, and ripple the almond pools
+  [44, 72, 124, 170, 198, 226, 258, 292, 318, 352, 396, 432, 460].forEach((s, k) => { const sd = ((k * 3) % 7) - 3, q = P(s, sd * 0.6), st = L8.stations.find((z) => s >= z.s0 && s <= z.s1); sp(`l8-drip-${k}`, { feetPosition: { x: q.x, y: P(s).y + Math.max(2.4, (st?.ry ?? 3) * 1.15), z: q.z }, fx: { script: DRIP } }); });
+  [[56, 3], [86, -4], [170, 5], [232, 4], [296, -5], [360, 5], [424, -5]].forEach(([s, side], i) => { const q = P(s, side, 0.12); sp(`l8-ripple-${i}`, { feetPosition: { x: q.x, y: q.y, z: q.z }, fx: { script: RIPPLE } }); });
   sp("l8-life", { behavior: "scripts/l8-life.js" });
 }
 
