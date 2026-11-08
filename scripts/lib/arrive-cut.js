@@ -6,6 +6,8 @@ import { animate } from "builtin/tween"
 import { raycast } from "builtin/physics"
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const END = 18
+const GASP = "/cdn/value.1f5d195f954552c9304c8d13f9177b97b62b100316d004215a918c9282445aad.mp3"   // Shelly's horror pack: Gasp.wav
+const BREATHF = "/cdn/value.92bf175ed8ff7226b4ca07fa700883e57e814e1ef5cefa26e09a4a8eac38b2b6.mp3" // Breathing_fast.wav
 const DUST = `fx
 pop dust burst=40..55 on=disc(.35) life=.9..1.8 v=sdir()*(.6..1.6)+up(.3..0.7) size=.18..0.34 acc=drag(2.2)+buoy(.15) col=<.62,.55,.36> a=0>.45:.3>.6:.15>0 sz=$size*(.6>2.2) rot=spin(.3) r=sprite(smoke-puff,alpha)
 pop fibers burst=18..26 on=disc(.25) life=.6..1.1 v=sdir()*(1..2.2)+up(1..2) size=.02..0.04 acc=grav()*.7+drag(1) col=<.7,.6,.35> a=1>.6:1>0 floor=stick r=sprite(soft-disc,alpha)`
@@ -45,9 +47,10 @@ export function arriveTick(ctx, ses, st) {
     ctx.emit("fx", { position: { ...p0, y: y0 + 0.05 }, script: DUST }, { audience: { player: me.id } })
   })
   if (t > 4.9) once("daze", () => { me.anim.cut = { clip: "cdn/clip-sit-floor-loop.glb", weight: 4, loop: "loop" } })
+  if (t > 5.2) once("gasp", () => ctx.emit("playSound", { clip: GASP, position: { ...p0, y: y0 + 0.6 }, volume: 0.7 }, { audience: { player: me.id } }))
+  if (t > 6.2) once("breath", () => ctx.emit("playSound", { clip: BREATHF, position: { ...p0, y: y0 + 0.6 }, volume: 0.45 }, { audience: { player: me.id } }))
   if (t > 8.6) once("stand", () => { me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
-  if (t > 11.6) once("shrug", () => { me.anim.cut = { clip: "cdn/clip-shrug.glb", weight: 4 } })
-  if (t > 13.2) once("idle2", () => { me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
+    if (t > 13.2) once("idle2", () => { me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
   // the ceiling tile: it rattles, grit sifts down, then it drops ahead of them and cracks on the carpet
   once("tile", () => {
     c.tile = ctx.spawn({ audience: "local", scope: "session", feetPosition: tileAt, pivot: "center", primitive: { kind: "box", width: 0.6, height: 0.025, depth: 0.6 }, material: { color: "#d9cfae", roughness: 0.95 } })
