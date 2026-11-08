@@ -104,7 +104,7 @@ const CONCRETE = new Set(['level1', 'level2', 'level3', 'gamma', 'level6', 'leve
 function floorOf(ctx) {
   const pl = ctx.self.place
   if (pl === 'level8') return 'gravel'
-  if (pl === 'level10') return 'grass'
+  if (pl === 'level10') return 'field'
   if (pl === 'level7') return 'wood'
   if (pl === 'level61') return 'terrazzo'
   if (pl === 'level4') return 'office'

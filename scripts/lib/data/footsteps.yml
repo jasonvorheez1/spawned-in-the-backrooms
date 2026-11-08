@@ -1,6 +1,7 @@
 # Footsteps (Nov 8, Shelly: "improve footstep technology + make it more dynamic"). Every number is Savi's pick.
 # The floor is read under your feet (a short ray down): the object's state.floor, else its texture's words, else the level's default.
 # Nov 8: Shelly, "level 6.1 footsteps are horrendously loud": hard mall floors (terrazzo, tile, linoleum) cut to under half.
+# Nov 8: Shelly, "level 10's footsteps are horrid": Level 10 reads its terrain (wheat, barley, stubble → field; dirt → soil), quieter takes.
 # Order matters: the first word that matches wins.
 match:
   - [metal, "steel|metal|diamond|grate|iron|aluminum"]
@@ -11,7 +12,9 @@ match:
   - [hotel, "plush|hotel"]
   - [office, "office-carpet|carpet-tile|low-pile"]
   - [carpet, "carpet|rug|canvas|fabric|velvet"]
-  - [gravel, "gravel|dirt|soil|sand|rubble|mud"]
+  - [field, "wheat|barley|stubble|straw|canola|crop"]
+  - [soil, "dirt|soil|mud|farm-track|ruts"]
+  - [gravel, "gravel|sand|rubble"]
   - [grass, "grass|lawn|moss|turf"]
   - [asphalt, "asphalt|road|street|tarmac"]
   - [concrete, "concrete|sidewalk|stone|brick|plaster|cement|pavement|curb"]
@@ -34,6 +37,8 @@ surfaces:
   terrazzo: { walk: footstep-sneaker-on-polished-mall-terrazzo-floor-squeak-single-step, run: footstep-sneaker-running-on-polished-mall-floor-single-step, v: 0.09, land: landing-hard }
   checker:  { walk: footstep-boot-on-worn-checkered-linoleum-locker-room-single-step, run: footstep-boot-running-on-worn-linoleum-tile-single-step, v: 0.11, land: landing-hard }
   gravel:   { walk: footstep-boot-crunch-on-loose-cave-gravel-single-step, run: footstep-boot-running-on-loose-cave-gravel-single-step, v: 0.26, land: landing-gravel }
+  field:    { walk: footstep-sneaker-swishing-through-dry-wheat-stalks-soft-crunch-single-step-v2, run: footstep-sneaker-running-through-dry-wheat-field-swish-single-step-v2, v: 0.13, land: landing-soil }
+  soil:     { walk: footstep-sneaker-on-packed-dry-farm-soil-soft-dull-thud-single-step-v2, run: footstep-sneaker-running-on-packed-dry-farm-soil-single-step-v2, v: 0.14, land: landing-soil }
   grass:    { walk: footstep-boot-on-short-damp-lawn-grass-single-step, run: footstep-boot-running-on-damp-lawn-grass-single-step, v: 0.2, land: landing-soft }
   wood:     { walk: footstep-boot-on-wet-wooden-floorboards-creak-single-step, run: footstep-boot-running-on-wet-wooden-floorboards-single-step, v: 0.24, land: landing-wood }
   metal:    { walk: footstep-boot-on-steel-diamond-plate-floor-clank-single-step, run: footstep-boot-running-on-steel-diamond-plate-floor-single-step, v: 0.24, land: landing-metal }
@@ -45,5 +50,6 @@ landings:
   landing-gravel: body-landing-feet-crunch-into-loose-gravel-after-jump
   landing-wood:   body-landing-feet-thud-on-hollow-wooden-floorboards-after-jump
   landing-metal:  body-landing-boots-clang-on-steel-plate-floor-after-jump
+  landing-soil:   body-landing-feet-soft-thud-on-packed-dry-farm-soil-after-jump
   landing-water:  body-landing-feet-splash-into-shallow-water-after-jump
 scuff: shoe-sole-short-scuff-stop-on-floor

@@ -18,7 +18,10 @@ export function surfaceUnder(ctx, fallback) {
   if (!h) return fallback
   const o = h.id ? ctx.getObject(h.id) : null
   let words = texWords(o)
-  if (!words.trim() && !o) words = String(ctx.place.terrain?.materialAt?.(p.x, p.z) ?? '')
+  if (!words.trim() && !o) { // terrain: its material, or the heaviest of a blend
+    const m = ctx.place.terrain?.materialAt?.(p.x, p.z)
+    words = m && typeof m === 'object' ? (Object.entries(m).sort((a, b) => b[1] - a[1])[0]?.[0] ?? '') : String(m ?? '')
+  }
   if (words === 'water') return 'water'
   for (const [k, re] of RX) if (re.test(words)) return k
   return fallback
