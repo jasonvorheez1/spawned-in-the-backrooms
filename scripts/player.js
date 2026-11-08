@@ -31,7 +31,7 @@ import { zoneAt as zoneAt3 } from './lib/level3.js'
 import { zoneAt as zoneAt4, DRAIN4 } from './lib/level4.js'
 import { zoneAt as zoneAt5, DRAIN5 } from './lib/level5.js'
 import L3 from './lib/data/level3.yml'
-const zoneHere = (ctx, x, z) => ctx.self.place === 'spamton' ? 'spam_arena' : ctx.self.place === 'level7' ? (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 70, z + 95) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea') : ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : ctx.self.place === 'level4' ? 'l4_' + zoneAt4(x, z, ctx.self.state.home) : ctx.self.place === 'level5' ? 'l5_' + (zoneAt5(x, z)?.id ?? 'lobby') : ctx.self.place === 'level6' ? 'l6_halls' : ctx.self.place === 'level61' ? 'l61_court' : ctx.self.place === 'level11' ? 'l11_city' : ctx.self.place === 'level8' ? 'l8_cave' : ctx.self.place === 'level21' ? 'l21_' + zoneAt21(x, z) : zoneAt(x, z)
+const zoneHere = (ctx, x, z) => ctx.self.place === 'spamton' ? 'spam_arena' : ctx.self.place === 'level7' ? (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 70, z + 95) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea') : ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : ctx.self.place === 'level4' ? 'l4_' + zoneAt4(x, z, ctx.self.state.home) : ctx.self.place === 'level5' ? 'l5_' + (zoneAt5(x, z)?.id ?? 'lobby') : ctx.self.place === 'level6' ? 'l6_halls' : ctx.self.place === 'level61' ? 'l61_court' : ctx.self.place === 'level11' ? 'l11_city' : ctx.self.place === 'level10' ? 'l10_fields' : ctx.self.place === 'level8' ? 'l8_cave' : ctx.self.place === 'level21' ? 'l21_' + zoneAt21(x, z) : zoneAt(x, z)
 
 import SOUNDS from './lib/data/sounds.yml'
 import { stepTick } from './lib/footsteps.js'
@@ -104,6 +104,7 @@ const CONCRETE = new Set(['level1', 'level2', 'level3', 'gamma', 'level6', 'leve
 function floorOf(ctx) {
   const pl = ctx.self.place
   if (pl === 'level8') return 'gravel'
+  if (pl === 'level10') return 'grass'
   if (pl === 'level7') return 'wood'
   if (pl === 'level61') return 'terrazzo'
   if (pl === 'level4') return 'office'
@@ -1097,7 +1098,7 @@ function tickStats(ctx, t, moving) {
   const det = s.crouch ? detection(ctx, p, w) : null
   if ((s.detect ?? null) !== det) s.detect = det
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
-  let drain = (ctx.self.place === 'level61' || ctx.self.place === 'level11' ? 0 : ctx.self.place === 'level7' ? (zone === 'l7_sea' || zone === 'l7_ocean' ? 0.75 : 0.22) : ctx.self.place === 'level6' ? (w.nvg ? 0.32 : 1.15) : ctx.self.place === 'level4' ? DRAIN4[zone.slice(3)] : ctx.self.place === 'level5' ? (DRAIN5[zone.slice(3)] ?? 0.8) / 60 * 4 : ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : (ctx.self.place === 'level3' || ctx.self.place === 'gamma') ? L3.sanityDrain[zone.slice(3)] : ctx.self.place === 'level8' ? 0.14 : ctx.self.place === 'level21' ? L21.sanityDrain[zone.slice(4)] : L.sanityDrain[zone]) ?? 0.12
+  let drain = (ctx.self.place === 'level61' || ctx.self.place === 'level11' || ctx.self.place === 'level10' ? 0 : ctx.self.place === 'level7' ? (zone === 'l7_sea' || zone === 'l7_ocean' ? 0.75 : 0.22) : ctx.self.place === 'level6' ? (w.nvg ? 0.32 : 1.15) : ctx.self.place === 'level4' ? DRAIN4[zone.slice(3)] : ctx.self.place === 'level5' ? (DRAIN5[zone.slice(3)] ?? 0.8) / 60 * 4 : ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : (ctx.self.place === 'level3' || ctx.self.place === 'gamma') ? L3.sanityDrain[zone.slice(3)] : ctx.self.place === 'level8' ? 0.14 : ctx.self.place === 'level21' ? L21.sanityDrain[zone.slice(4)] : L.sanityDrain[zone]) ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4
   if (ctx.self.place === 'level5' && s.l5room && zone.slice(3) === s.l5room && ctx.now() < (s.l5until ?? 0)) drain = -0.6 // a rented Homely Hotel suite: your own room, the hotel can't reach you (scripts/l5-resident.js)
   if (drain > 0 && ctx.now() < (s.blueUntil ?? 0)) drain = 0 // blue almond water: the halls can't get in

@@ -1,0 +1,57 @@
+# Level 10 "Bumper Crop" (backrooms-wiki.wikidot.com/level-10): endless wheat and barley under a leaden sky, plots split by hedgerows,
+# empty brick barns and sheds, clear lakes, dirt tracks with a grass strip down the middle. Built by places/level10/sim.js.
+mode: 3d
+terrain:
+  kind: heightmap
+  seed: 1010
+  generator: scripts/terrain10.js
+  materials:
+    - { id: wheat, albedo: cdn/texture-terrain-dry-golden-wheat-field-soil-with-straw.png, tint: "oklch(0.66 0.09 82)", textureScale: 3 }
+    - { id: stubble, albedo: cdn/texture-terrain-harvested-wheat-stubble-field-golden-straw-rows.png, tint: "oklch(0.72 0.08 80)", textureScale: 3 }
+    - { id: barley, albedo: cdn/texture-terrain-dry-golden-wheat-field-soil-with-straw.png, tint: "oklch(0.7 0.07 95)", textureScale: 3 }
+    - { id: grass, albedo: cdn/texture-terrain-rough-overcast-meadow-grass.png, tint: "oklch(0.5 0.07 130)", textureScale: 2.5 }
+    - { id: dirt, albedo: cdn/texture-terrain-packed-brown-farm-track-dirt-tire-ruts.png, tint: "oklch(0.5 0.04 65)", textureScale: 2.5 }
+  marks:
+    track-main: { kind: path, points: [[0, 70], [0, 20], [2, -40], [-4, -120], [3, -200], [0, -280]], width: 4.2, material: dirt, edgeMaterial: grass, noise: 0.4, grade: true }
+    track-east: { kind: path, points: [[2, -40], [40, -42], [80, -38], [120, -40], [200, -44]], width: 3.8, material: dirt, edgeMaterial: grass, noise: 0.4, grade: true }
+    track-west: { kind: path, points: [[-4, -120], [-50, -118], [-100, -122], [-170, -120]], width: 3.8, material: dirt, edgeMaterial: grass, noise: 0.4, grade: true }
+    lake: { kind: lake, at: { x: 70, z: -95 }, radius: 26, depth: 3, bedMaterial: dirt }
+    yard: { kind: flatten, center: { x: -30, z: -40 }, height: { terrain: 0 }, shape: { kind: rectangle, width: 34, depth: 22 }, falloff: 8, material: dirt, clearScatter: true }
+  decorations:
+    layers:
+      wheat:
+        items:
+          - { kind: scripted, script: scripts/wheat10.js, params: { h: 0.95, n: 7, head: 0.13 }, seed: 1, scale: [0.85, 1.15], randomRotation: true, wind: { force: 0.06, scale: 6, speed: 1.2 } }
+          - { kind: scripted, script: scripts/wheat10.js, params: { h: 1.05, n: 6, head: 0.14 }, seed: 2, scale: [0.85, 1.15], randomRotation: true, wind: { force: 0.06, scale: 6, speed: 1.2 } }
+        density: 7
+      barley:
+        items:
+          - { kind: scripted, script: scripts/wheat10.js, params: { h: 0.75, n: 8, head: 0.1 }, seed: 3, scale: [0.85, 1.15], randomRotation: true, wind: { force: 0.07, scale: 6, speed: 1.3 } }
+        density: 7
+      stubble:
+        items:
+          - { kind: scripted, script: scripts/wheat10.js, params: { h: 0.16, n: 9, head: 0 }, seed: 4, scale: [0.8, 1.2], randomRotation: true }
+        density: 3
+      grass:
+        items:
+          - { kind: scripted, script: scripts/grass.js, scale: [0.6, 1.1], randomRotation: true, useTerrainColor: true, wind: { force: 0.05, scale: 5, speed: 1.2 } }
+        density: 22
+    bindings: { wheat: [wheat], barley: [barley], stubble: [stubble], grass: [grass] }
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 0, y: { terrain: 0.2 }, z: 30 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -40 }
+atmosphere:
+  look: { script: scripts/look-photo.js }
+  sky: { kind: realistic, model: hosek }
+  timeOfDay: 13
+  cycle: { frozen: 13 }
+  clouds: { enabled: true, density: 0.86, opacity: 0.95, altitude: 600, thickness: 500, speed: 1.2, color: "#8e9296" }
+  fog: { kind: linear, near: 40, far: 420, color: oklch(0.78 0.01 240) }
+  sun: { light: { intensity: 0.75, color: oklch(0.92 0.01 240), shadow: { enabled: true } } }
+  ambient: { light: { color: oklch(0.82 0.01 240), intensity: 0.9 } }
+  hemisphere: { skyColor: oklch(0.85 0.01 240), groundColor: oklch(0.5 0.05 80), intensity: 0.8 }
+  wind: { direction: 200, speed: 5 }
+  moon: { enabled: false }
+  stars: { enabled: false }
+acoustics: { reverb: 0.05 }

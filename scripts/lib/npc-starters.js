@@ -860,7 +860,7 @@ function generateGenericChoicesOld(it, s, sk) {
 
 // ---- what fits the level: a safe level (Snackrooms, Refrigerator Paradise) asks no danger questions; the hotel's rooms are asked about in the hotel
 // Survival difficulty by place (the wiki's SD class, Savi's reading); 1 = safe: no "what should I avoid", no "best weapon against them"
-const SD = { level61: 1, level11: 1, main: 1, level1: 1, level4: 1, level2: 2, level21: 3, level3: 4, gamma: 2, level5: 3, level6: 4, level7: 4, level8: 4, debug: 1 }
+const SD = { level61: 1, level11: 1, level10: 1, main: 1, level1: 1, level4: 1, level2: 2, level21: 3, level3: 4, gamma: 2, level5: 3, level6: 4, level7: 4, level8: 4, debug: 1 }
 const DANGER = /avoid|danger|deadly|entit|hound|smiler|weapon|tactic|stay alive|staying alive|survive|survived|kill|threat|hunt|flicker|dark alone|face the dark|watch out/i
 const HOTEL = /\brooms?\b.*avoid|suite|hotel|ballroom/i
 const SAFE_ASK = {
