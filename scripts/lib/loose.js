@@ -113,7 +113,7 @@ export function kickLoose(ctx, f, s) {
     const dx = t.feetPosition.x - p.x, dz = t.feetPosition.z - p.z, d = Math.hypot(dx, dz)
     if (d > bd || (d > 0.3 && (dx * f.x + dz * f.z) / d < 0.55)) continue
     const k = looseOf(o); if (!k || k.kg > 30) continue
-    const b = o.bounds?.size; if (b && b.x * b.y * b.z > 1.5) continue
+    const b = o.bounds?.size; if (b && b.x * b.y * b.z > 2.5) continue // her pick: a pallet stack (2.2 m³ box, 12 kg) still goes; a sofa doesn't
     best = o; bd = d
   }
   if (!best) return false
