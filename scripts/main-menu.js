@@ -2,6 +2,7 @@
 // START walks you into the intake room (places/intake), where the critter creator opens; closing it walks you back
 // to the place you came from. Backspace mid-game opens the same screen as a pause with RESUME.
 // The title theme plays on this machine alone through the title and the intake room, and fades when you step out.
+import { cutTick } from "./lib/intro-cut.js"
 import { animate } from "builtin/tween";
 const MUSIC = "/cdn/moodboard-lowpoly-cozy/music-soft-mellow-fingerpicked-acoustic-guitar-and-warm-rhodes-early-2000s-bedroom-calm-loop.mp3"; // the drone was exhausting (johnadams2): soft and quiet instead
 const CLICK = "/cdn/moodboard-realistic-gritty/sfx-old-crt-tv-power-on-click-thunk.mp3";
@@ -27,10 +28,11 @@ export function update(ctx) {
   }
   // the intake room: the creator opens on arrival; once it closes, back out to where you came from
   if (place === "intake") {
-    if (!ses.inIntake) { ses.inIntake = true; ses.leftIntake = false; st.menuOpen = false; st.wardrobeOpen = true; st.wrMenu = true; st.wrTab = "body" }
-    else if (!st.wardrobeOpen && !ses.leftIntake) { ses.leftIntake = true; st.madeChar = true; ctx.cross(ctx.self, st.introFrom && st.introFrom !== "intake" ? st.introFrom : "main") }
+    if (!ses.inIntake) { ses.inIntake = true; ses.leftIntake = false; if (st.cut) { st.cut = null; ses.cut = null; ctx.view.camera = null }; st.menuOpen = false; st.wardrobeOpen = true; st.wrMenu = true; st.wrTab = "body" }
+    else if (!st.wardrobeOpen && !ses.leftIntake && !st.cut) { ses.leftIntake = true; st.madeChar = true; st.cut = ctx.now(); ses.cut = null } // the intro plays first (scripts/lib/intro-cut.js)
+    if (st.cut && cutTick(ctx, ses, st)) { music(ctx, false); ctx.cross(ctx.self, "main"); return } // the intro always lands you in Level 0
   } else ses.inIntake = false
-  const playing = music(ctx, (st.menuOpen && st.menuKind === "title") || place === "intake")
+  const playing = music(ctx, (st.menuOpen && st.menuKind === "title") || (place === "intake" && !st.cut))
   // behind the title the camera slowly looks around the halls from head height; gone the moment it closes
   if (st.menuOpen) {
     const p = ctx.self.feetPosition, t = ctx.now() / 1000
