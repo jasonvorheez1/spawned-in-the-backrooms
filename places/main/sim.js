@@ -4,7 +4,7 @@ import { MODEL as SMILER_MODEL, SCALE as SMILER_SCALE } from "../../scripts/smil
 // Level 0's referee: keeps almond water on the floor and smilers in the dark.
 import L from "../../scripts/lib/data/level0.yml";
 const MID = (L.hub[0] + L.hub[1]) / 2; // the safe room's centre cell
-import W from "../../scripts/lib/weapons.js";
+import W, { rarityCap, rarityIdx } from "../../scripts/lib/weapons.js";
 import { spawnAlmond, spawnAmmo, spawnShells, spawnWeapon, rollWeapon, rollCash } from "../../scripts/lib/loot.js";
 import { spawnFurniture, pickKind, wallSpot0 } from "../../scripts/lib/furniture.js";
 import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ, EXIT } from "../../scripts/lib/maze.js";
@@ -138,6 +138,11 @@ export function tick(ctx) {
     });
     s.tableAlmondV = 1;
   }
+  if (s.floorGateV !== 1 && ctx.place.players.length) { // floor weapons above the player's level go, the refill brings fitting ones
+    const cap = rarityCap(Math.max(1, ...ctx.place.players.map((p) => p.state?.level ?? 1)));
+    for (const w of ctx.query({ tags: ["weapon"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (w.state?.kind && rarityIdx(w.state.kind) > cap) ctx.destroy(w.id);
+    s.floorGateV = 1;
+  }
   if (s.deskV !== 1) { // once per room: sweep loose ammo, turn the desks already standing into drawers
     for (const a of ctx.query({ tags: ["ammo"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(a.id);
     for (const d of ctx.query({ tags: ["furniture", "desk"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
@@ -154,7 +159,7 @@ export function tick(ctx) {
     const fill = s.weaponsSeeded ? 1 : W.pickups - weapons;
     for (let i = 0; i < fill; i++) {
       const c = cell(ctx);
-      if (c) spawnWeapon(ctx, c, rollWeapon(ctx));
+      if (c) spawnWeapon(ctx, c, rollWeapon(ctx, "l0", rarityCap(Math.max(1, ...ctx.place.players.map((p) => p.state?.level ?? 1)))));
     }
     s.weaponsSeeded = true;
     s.nextWeapon = now + (W.pickupRespawn * 1000) / 4;
