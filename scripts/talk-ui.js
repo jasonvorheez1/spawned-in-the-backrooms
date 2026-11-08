@@ -107,7 +107,7 @@ export function talkUi(ctx, player) {
     : shown ? (shown[0] === 'x' ? `<div class="chk" id="c${lastN}">${esc(shown[1])}</div>` : `<div class="now" id="n${lastN}-${log.length}" style="color:${col}"><i>${who.toUpperCase()}</i>${esc(shown[1])}</div>`)
     : `<div class="now" style="opacity:.6"><i>${who.toUpperCase()}</i>…</div>`
   const SYS = { svc: SVC[role], trade: 'Let me see what you have to trade.', leave: 'Goodbye.' }
-  const sys = [SVC[role] ? ['svc', `[${role === 'medic' ? 'Medicine' : 'Ask'}]`, SVC[role] + '.'] : null, isTrader(it) ? ['trade', '[Barter]', SYS.trade] : null, ...(it.state?.offers ?? []).map(([k, tx]) => [k, '', tx]), ['leave', '', SYS.leave]].filter(Boolean)
+  const sys = [['wave', '', 'Wave'], ['gift', '', 'Gift'], ['dance', '', 'Dance'], ['insult', '', 'Insult'], SVC[role] ? ['svc', `[${role === 'medic' ? 'Medicine' : 'Ask'}]`, SVC[role] + '.'] : null, isTrader(it) ? ['trade', '[Barter]', SYS.trade] : null, ...(it.state?.offers ?? []).map(([k, tx]) => [k, '', tx]), ['leave', '', SYS.leave]].filter(Boolean)
   const opts = ''
   const send = `const i=document.getElementById('tkin');if(i&&i.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:i.value});i.value=''}`
   const choices = Array.isArray(s.talkChoices) ? s.talkChoices : []
