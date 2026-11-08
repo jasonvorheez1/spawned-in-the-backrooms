@@ -15,6 +15,7 @@ function box(ctx, x0, y0, z0, x1, y1, z1) {
 }
 
 export function geometry(ctx) {
+  try { const __q = ctx.quad.bind(ctx), __t = ctx.tri.bind(ctx); ctx.quad = (...a) => __q(...a.flat()); ctx.tri = (...a) => __t(...a.flat()); } catch (e) {} // __flat: corners as [x,y,z] arrays
   ctx.roughness(0.95);
 
   // 1. Wooden Cross Stake

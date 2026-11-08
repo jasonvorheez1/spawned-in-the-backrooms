@@ -17,6 +17,7 @@ function box(ctx, x0, y0, z0, x1, y1, z1) {
 }
 
 export function geometry(ctx) {
+  try { const __q = ctx.quad.bind(ctx), __t = ctx.tri.bind(ctx); ctx.quad = (...a) => __q(...a.flat()); ctx.tri = (...a) => __t(...a.flat()); } catch (e) {} // __flat: corners as [x,y,z] arrays
   const W = 13.0, D = 8.5, H = 4.8, R = 7.6, t = 0.3;
   const PW = 13.0, PD = 2.8, PH = 0.45; // Porch dimensions
 

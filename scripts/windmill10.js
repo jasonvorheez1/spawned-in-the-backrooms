@@ -15,6 +15,7 @@ function octPoints(r, y) {
 }
 
 export function geometry(ctx) {
+  try { const __q = ctx.quad.bind(ctx), __t = ctx.tri.bind(ctx); ctx.quad = (...a) => __q(...a.flat()); ctx.tri = (...a) => __t(...a.flat()); } catch (e) {} // __flat: corners as [x,y,z] arrays
   const R_BASE = 3.2, R_MID = 2.6, R_TOP = 2.0;
   const H_BALC = 5.8, H_TOP = 11.5, H_ROOF = 14.2;
 

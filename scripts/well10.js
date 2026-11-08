@@ -6,6 +6,7 @@ const ROOF = "cdn/texture-grey-corrugated-asbestos-cement-roof-sheets-lichen.png
 const HARDWOOD = "cdn/texture-worn-hardwood-grain.png";
 
 export function geometry(ctx) {
+  try { const __q = ctx.quad.bind(ctx), __t = ctx.tri.bind(ctx); ctx.quad = (...a) => __q(...a.flat()); ctx.tri = (...a) => __t(...a.flat()); } catch (e) {} // __flat: corners as [x,y,z] arrays
   const R_OUT = 0.95, R_IN = 0.72, H_WELL = 0.85, SIDES = 12;
   const ptsOut = [], ptsIn = [];
   for (let i = 0; i < SIDES; i++) {

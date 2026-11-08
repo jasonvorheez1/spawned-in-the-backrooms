@@ -4,6 +4,7 @@ const ROOF = "cdn/texture-grey-corrugated-asbestos-cement-roof-sheets-lichen.png
 const METAL = "cdn/texture-flaking-rusted-sheet-metal-orange-brown.png";
 
 export function geometry(ctx) {
+  try { const __q = ctx.quad.bind(ctx), __t = ctx.tri.bind(ctx); ctx.quad = (...a) => __q(...a.flat()); ctx.tri = (...a) => __t(...a.flat()); } catch (e) {} // __flat: corners as [x,y,z] arrays
   const R = 3.2, H = 10.5, H_ROOF = 13.0, SIDES = 16;
   const pts = [];
   for (let i = 0; i < SIDES; i++) {
