@@ -1,0 +1,44 @@
+{
+  "name": "lagscope",
+  "displayName": "LAGSCOPE",
+  "description": "Watches every player's machine for lag: fps and stutters, game-thread freezes (scripts, physics), drawing dips, heavy models and objects with no draw distance, particles, physics bodies, looping sounds, broken scripts, spawn bursts and objects piling up, with ping kept apart; 1.6 adds plant beds, models with no far LOD, GPU memory, render scale, chatty rooms, whole-place sounds and heavy downloads. Each cause is named with a suggested fix. Reports save in your game's database, can post to Discord, and one button sends them all to your Savi. Made by yui ♥",
+  "tags": [
+    "performance",
+    "debug",
+    "tools",
+    "discord"
+  ],
+  "visibility": "public",
+  "version": "1.6.0",
+  "inputs": {
+    "actions": {
+      "act": {},
+      "panel": {
+        "keys": [
+          "f3"
+        ]
+      }
+    }
+  },
+  "attach": [
+    {
+      "target": {
+        "kind": "player"
+      },
+      "behavior": "watch.js"
+    },
+    {
+      "target": {
+        "kind": "god"
+      },
+      "behavior": "god.js"
+    }
+  ],
+  "tab": {
+    "id": "panel",
+    "label": "LAGSCOPE",
+    "icon": "📡",
+    "render": "panel.js"
+  },
+  "icon": "/cdn/value.cf8a9eb9e460dc690f4ddf86c9f5599f00ffdb2003bf17c4f35df426b56e8159.png"
+}
