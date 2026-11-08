@@ -176,7 +176,23 @@ def head_r(d):
                 if pq < 1.0:
                     pw = L * 0.35 * ((1.0 - pq) ** 1.6) * max(0.0, min(1.0, (d.y - 0.05) * 2.8))
                     muz = max(muz, pw)
-    return r * (1.0 + cheek_swell + chin_tuck) + muz
+    # ---- cranial profile (Nov 9 head pass): brow, flat crown, cheek flare, ruff, jaw, occiput; per-species knobs in SP ----
+    ax = abs(d.x); front = max(0.0, d.y)
+    sidew = ax / (ax + abs(d.y) * .8 + 1e-6)
+    top = max(0.0, d.z - .40)
+    skull = -sp.get("flat", .10) * top * top * 1.6
+    zb = .31
+    skull += sp.get("brow", .035) * math.exp(-((d.z - zb) / .075) ** 2) * math.exp(-((ax - .33) / .19) ** 2) * front ** .6
+    skull -= .018 * math.exp(-((d.z - .26) / .13) ** 2) * math.exp(-((d.y - .05) / .30) ** 2) * sidew ** 2      # temple: skull narrows behind the brow
+    skull += sp.get("flare", .040) * math.exp(-((d.z + .15) / .15) ** 2) * sidew ** 1.5 * math.exp(-((d.y - .25) / .45) ** 2)
+    ru = sp.get("ruff", 0.0)
+    if ru:
+        phi = math.atan2(d.z + .16, d.y + .10)
+        tuft = max(0.0, math.cos(phi * 6.0)) ** 2
+        skull += ru * math.exp(-((d.z + .20) / .18) ** 2) * sidew ** 2 * (.45 + .55 * tuft) * math.exp(-((d.y + .02) / .32) ** 2)
+    skull += sp.get("jaw", 0.0) * math.exp(-((d.z + .40) / .18) ** 2) * sidew * (.5 + .5 * front)
+    skull += .030 * math.exp(-((d.y + .72) / .35) ** 2) * math.exp(-((d.z - .10) / .40) ** 2)
+    return r * (1.0 + cheek_swell + chin_tuck + skull) + muz
 def head_pt(d, out=0.0): d = d.normalized(); return HC + d * (head_r(d) + out)
 
 def build_rig():
@@ -808,16 +824,16 @@ def build_garments(F, body, rig):
 # ================= heads =================
 EYE_U, EYE_V = .365, .048
 SP = {  # ears, tail, extras, muzzle(belly patch), nose dot, whiskers
- "cat":      dict(snoutK=2.1, snoutW=.25, whiskdots=True, fur="#f2a65a", belly="#fff1dc", tip="#fff1dc", nose="#ff8fa3", inner="#ffb8c6", ears=("point", 1.05), tail="cat", ex=["eartip"], muzzle=True, snout=.024, whisk=True, catnose=True, fang=True, fluff=True, mark="#d9843a", marks=["tabby"]),
- "dog":      dict(snoutK=2.3, snoutW=.25, bridge=.55, blaze=True, nosetip=True, chin=True, fur="#c98b55", belly="#fbe8cf", tip="#fbe8cf", nose="#2a1c18", inner="#f6d4be", mark="#8a5a36", ears=("flop", 1.05), tail="dog", ex=["earmark", "brows"], muzzle=True, snout=.034, marks=["eyespot"]),
- "fox":      dict(snoutK=2.4, snoutW=.23, bridge=.60, fur="#f07a2e", belly="#ffffff", tip="#ffffff", nose="#231816", inner="#f8d2bd", mark="#2c1c18", ears=("point", 1.28), tail="bushy", ex=["eartip", "cheekbelly"], muzzle=True, snout=.034, whisk=True, catnose=True, fang=True, fluff=True),
- "bunny":    dict(snoutK=2.0, snoutW=.22, fur="#f4efe9", belly="#ffffff", tip="#ffffff", nose="#ff9fb4", inner="#ffc2d1", ears=("long", 1.05), tail="pom", ex=["buck"], muzzle=True, snout=.022, catnose=True, cheek=1.2, marks=["pinkcheeks"]),
- "bear":     dict(snoutK=2.3, snoutW=.28, bridge=.35, chin=True, fur="#9a6440", belly="#e8c79e", tip="#e8c79e", nose="#2a1c18", inner="#d8a682", mark="#6e4329", ears=("round", 1.05), tail="stub", ex=[], muzzle=True, snout=.032, wide=1.05, cheek=1.18),
+ "cat":      dict(flare=.075, brow=.030, flat=.09, snoutK=2.1, snoutW=.25, whiskdots=True, fur="#f2a65a", belly="#fff1dc", tip="#fff1dc", nose="#ff8fa3", inner="#ffb8c6", ears=("point", 1.05), tail="cat", ex=["eartip"], muzzle=True, snout=.024, whisk=True, catnose=True, fang=True, fluff=True, mark="#d9843a", marks=["tabby"]),
+ "dog":      dict(brow=.045, flat=.13, jaw=.035, wide=1.05, snoutK=2.3, snoutW=.25, bridge=.55, blaze=True, nosetip=True, chin=True, fur="#c98b55", belly="#fbe8cf", tip="#fbe8cf", nose="#2a1c18", inner="#f6d4be", mark="#8a5a36", ears=("flop", 1.05), tail="dog", ex=["earmark", "brows"], muzzle=True, snout=.034, marks=["eyespot"]),
+ "fox":      dict(ruff=.07, cheek=.95, flare=.02, brow=.03, snoutK=2.4, snoutW=.23, bridge=.60, fur="#f07a2e", belly="#ffffff", tip="#ffffff", nose="#231816", inner="#f8d2bd", mark="#2c1c18", ears=("point", 1.28), tail="bushy", ex=["eartip", "cheekbelly"], muzzle=True, snout=.034, whisk=True, catnose=True, fang=True, fluff=True),
+ "bunny":    dict(flare=.08, cheek=1.32, flat=.06, brow=.022, snoutK=2.0, snoutW=.22, fur="#f4efe9", belly="#ffffff", tip="#ffffff", nose="#ff9fb4", inner="#ffc2d1", ears=("long", 1.05), tail="pom", ex=["buck"], muzzle=True, snout=.022, catnose=True, marks=["pinkcheeks"]),
+ "bear":     dict(flat=.22, jaw=.06, brow=.03, snoutK=2.3, snoutW=.28, bridge=.35, chin=True, fur="#9a6440", belly="#e8c79e", tip="#e8c79e", nose="#2a1c18", inner="#d8a682", mark="#6e4329", ears=("round", 1.05), tail="stub", ex=[], muzzle=True, snout=.032, wide=1.05, cheek=1.18),
  "deer":     dict(snoutK=2.3, snoutW=.23, bridge=.55, nosetip=True, chin=True, fur="#a8703f", belly="#f1d4ae", tip="#ffffff", nose="#2a1612", inner="#f8ded2", mark="#4a2a1c", antler="#e9d8b4", ears=("leaf", 1.05), tail="stub", ex=["antlers", "spots"], muzzle=True, snout=.032),
  "reindeer": dict(snoutK=2.3, snoutW=.24, bridge=.52, chin=True, fur="#8a5a3a", belly="#f1e0c8", tip="#f6efe4", nose="#e0404c", inner="#edd2c0", mark="#4a2e20", antler="#efe0bd", ears=("leaf", .95), tail="stub", ex=["bigantlers", "cheekbelly"], muzzle=True, snout=.034, bignose=True),
- "mouse":    dict(snoutK=2.0, snoutW=.20, fur="#b9b3c2", belly="#f6eef4", tip="#f6eef4", nose="#ff8fa3", inner="#ffc2d1", ears=("round", 1.55), tail="thin", ex=["buck"], muzzle=True, snout=.022, whisk=True, catnose=True, marks=["pinkcheeks"]),
- "wolf":     dict(snoutK=2.4, snoutW=.24, bridge=.62, saddle=True, fur="#4f6f9f", belly="#a9bfdc", tip="#a9bfdc", nose="#16141c", inner="#b8cce6", mark="#26406c", ears=("point", 1.3), tail="bushy", ex=["eartip", "cheekbelly", "brows"], muzzle=True, snout=.036, catnose=True, fang=True, fluff=True),
- "raccoon":  dict(snoutK=2.2, snoutW=.22, bridge=.38, fur="#8b8a92", belly="#e9e6ea", tip="#2a2830", nose="#1c1a20", inner="#ded8e2", mark="#2c2a32", ears=("point", .9), tail="ringed", ex=["mask", "cheekbelly", "eartip"], muzzle=True, snout=.030, whisk=True, catnose=True, fang=True, fluff=True),
+ "mouse":    dict(flare=.07, cheek=1.26, brow=.022, snoutK=2.0, snoutW=.20, fur="#b9b3c2", belly="#f6eef4", tip="#f6eef4", nose="#ff8fa3", inner="#ffc2d1", ears=("round", 1.55), tail="thin", ex=["buck"], muzzle=True, snout=.022, whisk=True, catnose=True, marks=["pinkcheeks"]),
+ "wolf":     dict(ruff=.08, brow=.045, flat=.13, snoutK=2.4, snoutW=.24, bridge=.62, saddle=True, fur="#4f6f9f", belly="#a9bfdc", tip="#a9bfdc", nose="#16141c", inner="#b8cce6", mark="#26406c", ears=("point", 1.3), tail="bushy", ex=["eartip", "cheekbelly", "brows"], muzzle=True, snout=.036, catnose=True, fang=True, fluff=True),
+ "raccoon":  dict(ruff=.08, brow=.035, snoutK=2.2, snoutW=.22, bridge=.38, fur="#8b8a92", belly="#e9e6ea", tip="#2a2830", nose="#1c1a20", inner="#ded8e2", mark="#2c2a32", ears=("point", .9), tail="ringed", ex=["mask", "cheekbelly", "eartip"], muzzle=True, snout=.030, whisk=True, catnose=True, fang=True, fluff=True),
  "panda":    dict(snoutK=2.0, snoutW=.26, fur="#f7f3ee", belly="#ffffff", tip="#2b2530", nose="#1c1a20", inner="#eee8e2", mark="#2b2530", ears=("round", 1.05), tail="stub", ex=["patches"], muzzle=False, snout=.026, earmark=True, wide=1.05, cheek=1.18),
  "pig":      dict(snoutK=2.1, snoutW=.25, fur="#ffb3c1", belly="#ffd9e0", tip="#ffd9e0", nose="#ff8ca2", inner="#ffd4dc", ears=("pig", 1.05), tail="curly", ex=["snout"], muzzle=False, snout=.028, nonose=True, cheek=1.16, marks=["pinkcheeks"]),
  "sheep":    dict(snoutK=2.4, snoutW=.24, bridge=.35, fur="#f6f1e7", belly="#ffffff", tip="#ffffff", nose="#2a1c18", inner="#8a7f8c", mark="#5d5560", ears=("flop", .8), tail="pom", ex=["wool"], muzzle=False, snout=.024, catnose=True, earmark=True),
@@ -1403,77 +1419,48 @@ def build_ear(H, kind, sc, side, inner_mat, sp):
     has_tip = "eartip" in sp["ex"]
     tip_mat = "mark" if sp.get("mark") else "tip"
 
-    # Build a 3D cupped grid ear with soft rim, concave inner dish, and arched rounded tip
-    R, C = 14, 10
-    if kind == "point":
-        H_len = .205 * sc
-        w_fn = lambda t: .092 * sc * (math.sin(math.pi * (.12 + .84 * (1.0 - t))) ** .68) * ((1.0 - t * .86) ** .52)
-        cup_d = .022 * sc; th_base = .020
-    elif kind == "long":
-        H_len = .36 * sc
-        w_fn = lambda t: .064 * sc * (math.sin(math.pi * (.08 + .88 * t)) ** .58)
-        cup_d = .022 * sc; th_base = .022
-    elif kind == "flop":
-        H_len = .23 * sc
-        w_fn = lambda t: .072 * sc * (math.sin(math.pi * (.10 + .86 * t)) ** .55)
-        cup_d = -.016 * sc; th_base = .018
-    elif kind == "leaf":
-        H_len = .20 * sc
-        w_fn = lambda t: .066 * sc * (math.sin(math.pi * (.10 + .86 * t)) ** .65)
-        cup_d = .020 * sc; th_base = .018
-    elif kind == "pig":
-        H_len = .145 * sc
-        w_fn = lambda t: .068 * sc * (math.sin(math.pi * (.14 + .82 * (1.0 - t))) ** .65) * ((1.0 - t * .82) ** .5)
-        cup_d = .018 * sc; th_base = .018
-    elif kind == "fluffy":
-        H_len = .175 * sc
-        w_fn = lambda t: .102 * sc * (math.sin(math.pi * (.12 + .82 * t)) ** .52)
-        cup_d = .022 * sc; th_base = .022
-    else:  # round
-        H_len = .145 * sc
-        w_fn = lambda t: .088 * sc * (math.sin(math.pi * (.12 + .82 * t)) ** .52)
-        cup_d = .020 * sc; th_base = .020
-
-    f_grid, b_grid = [], []
+    # cupped ear: closed rounded cross-section per row (rim bevel), inner bowl with a soft lip, base flaring out of the skull
+    R, M = 16, 20
+    curl = .055 if kind == "long" else 0.0
+    rings = []
     for i in range(R + 1):
         t = i / R
-        w = max(.004, w_fn(t))
-        bend = (.026 * math.sin(math.pi * t) if kind == "flop" else .012 * math.sin(math.pi * t))
-        rf, rb = [], []
-        for j in range(C + 1):
-            u_ = j / C * 2.0 - 1.0
-            rim = 1.0 - u_ * u_
-            x = u_ * w
-            # Round off the top contour so the tip is a smooth dome arch rather than a flat horizontal cut
-            tip_arch = 1.0 - .14 * (t ** 2) * (u_ * u_)
-            y = (t * H_len * tip_arch - .016)
-            taper = (1.0 - .55 * (t ** 2)) * (.35 + .65 * rim)
-            zf = bend - cup_d * rim * math.sin(math.pi * min(1.0, t * 1.12)) + th_base * .35 * (1.0 - .55 * rim) * taper
-            zb = bend - cup_d * .35 * rim * math.sin(math.pi * min(1.0, t * 1.12)) - th_base * (.65 + .35 * rim) * taper
-            p_f = root + side_v * x + up * y + fwd * zf
-            p_b = root + side_v * x + up * y + fwd * zb
-            rf.append(H.add_v(p_f, bone))
-            rb.append(H.add_v(p_b, bone))
-        f_grid.append(rf); b_grid.append(rb)
-
+        w = max(.005, w_fn(min(t, .985))) * (1.0 + .38 * (1.0 - t) ** 4)
+        th = th_base * (1.0 - .55 * t ** 1.5) + .004
+        bend = (.026 * math.sin(math.pi * t) if kind == "flop" else .010 * math.sin(math.pi * t)) - curl * t * t
+        cup = cup_d * math.sin(math.pi * min(1.0, .05 + t * 1.05))
+        y = t * H_len - .03
+        ring = []
+        for k in range(M):
+            ang = 2 * math.pi * k / M
+            ca, sa = math.cos(ang), math.sin(ang)
+            xr = math.copysign(abs(ca) ** .72, ca)
+            x = w * xr
+            q = abs(xr)
+            bowl = max(0.0, 1.0 - (q / .80) ** 2)
+            z = th * sa
+            if sa > 0:
+                z -= (cup + th * .55) * bowl * sa
+                z += th * .45 * math.exp(-((q - .82) / .11) ** 2) * sa
+            else:
+                z -= cup * .55 * bowl
+            ring.append(H.add_v(root + side_v * x + up * y + fwd * (z + bend), bone))
+        rings.append(ring)
+    tipp = H.add_v(root + side_v * 0 + up * (H_len * 1.012 - .03) + fwd * (.010 * 0 - curl * 1.02 + (0 if kind != "flop" else 0)), bone)
+    basep = H.add_v(root - up * .035, bone)
+    def zmat(t_mid, ang):
+        sa = math.sin(ang); q = abs(math.cos(ang)) ** .72
+        if kind != "flop" and sa > .2 and q < .70 and .07 < t_mid < .84: return inner_mat
+        return tip_mat if (has_tip and t_mid > .72) else outer_mat
     for i in range(R):
         t_mid = (i + .5) / R
-        for j in range(C):
-            u_mid = abs((j + .5) / C * 2.0 - 1.0)
-            is_inner = (kind != "flop") and (u_mid < .64) and (.08 < t_mid < .78)
-            f_mat = inner_mat if is_inner else (tip_mat if (has_tip and t_mid > .72) else outer_mat)
-            b_mat = tip_mat if (has_tip and t_mid > .72) else outer_mat
-            f_quad = (f_grid[i][j], f_grid[i][j + 1], f_grid[i + 1][j + 1], f_grid[i + 1][j])
-            b_quad = (b_grid[i][j + 1], b_grid[i][j], b_grid[i + 1][j], b_grid[i + 1][j + 1])
-            H.face(f_quad, f_mat)
-            H.face(b_quad, b_mat)
-        rim_mat = tip_mat if (has_tip and t_mid > .72) else outer_mat
-        H.face((f_grid[i][0], f_grid[i + 1][0], b_grid[i + 1][0], b_grid[i][0]), rim_mat)
-        H.face((f_grid[i + 1][C], f_grid[i][C], b_grid[i][C], b_grid[i + 1][C]), rim_mat)
-    cap_top_mat = tip_mat if has_tip else outer_mat
-    for j in range(C):
-        H.face((f_grid[R][j], f_grid[R][j + 1], b_grid[R][j + 1], b_grid[R][j]), cap_top_mat)
-        H.face((b_grid[0][j], b_grid[0][j + 1], f_grid[0][j + 1], f_grid[0][j]), outer_mat)
+        for k in range(M):
+            k2 = (k + 1) % M
+            H.face((rings[i][k], rings[i + 1][k], rings[i + 1][k2], rings[i][k2]), zmat(t_mid, 2 * math.pi * (k + .5) / M))
+    for k in range(M):
+        k2 = (k + 1) % M
+        H.face((rings[R][k2], rings[R][k], tipp), tip_mat if has_tip else outer_mat)
+        H.face((rings[0][k], rings[0][k2], basep), outer_mat)
     return root
 
 # ---- tails ----
