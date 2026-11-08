@@ -3,6 +3,7 @@ import T from './lib/data/talk.yml'
 import { nameOf, keyOf, isTrader, faction, buyPrice, sellPrice, sellables, repairables, repairPrice, SECTIONS, sectionOf, money } from './lib/npc-talk.js'
 import { band, bandColor } from './lib/condition.js'
 import { repDisc, standing, tierOf, tierColor } from './lib/rep.js'
+import { PERKS, perkOf, isMine } from './lib/companion.js'
 import { describe } from './lib/items.js'
 import { skillsOf } from './lib/stats.js'
 
@@ -114,7 +115,7 @@ export function talkUi(ctx, player) {
     : shown ? (shown[0] === 'x' ? `<div class="chk" id="c${lastN}">${esc(shown[1])}</div>` : `<div class="now" id="n${lastN}-${log.length}" style="color:${col}"><i>${who.toUpperCase()}</i>${esc(shown[1])}</div>`)
     : `<div class="now" style="opacity:.6"><i>${who.toUpperCase()}</i>…</div>`
   const SYS = { svc: SVC[role], trade: 'Let me see what you have to trade.', leave: 'Goodbye.' }
-  const sys = [['wave', '', 'Wave'], ['gift', '', 'Give gift'], ['dance', '', 'Dance'], ['insult', '', 'Insult'], SVC[role] ? ['svc', `[${role === 'medic' ? 'Medicine' : 'Ask'}]`, SVC[role] + '.'] : null, isTrader(it) ? ['trade', '[Barter]', SYS.trade] : null, ...(it.state?.offers ?? []).map(([k, tx]) => [k, '', tx]), ['leave', '', SYS.leave]].filter(Boolean)
+  const sys = [['wave', '', 'Wave'], ['gift', '', 'Give gift'], ['dance', '', 'Dance'], ['insult', '', 'Insult'], SVC[role] ? ['svc', `[${role === 'medic' ? 'Medicine' : 'Ask'}]`, SVC[role] + '.'] : null, isTrader(it) ? ['trade', '[Barter]', SYS.trade] : null, ...(isMine(it, player) ? [[it.state.cmd === 'wait' ? 'cfollow' : 'cwait', '', it.state.cmd === 'wait' ? 'Follow me' : 'Wait here'], [it.state.cstance === 'hold' ? 'cfree' : 'chold', '', it.state.cstance === 'hold' ? 'Free fire' : 'Hold fire'], ['cgive', '', 'Give weapon'], it.state.gaveArm ? ['ctake', '', 'Take weapon'] : null, ['cdismiss', '', 'Dismiss']] : (isTrader(it) || ['smith'].includes(role) ? [] : [['crecruit', '', 'Recruit']])), ...(it.state?.offers ?? []).map(([k, tx]) => [k, '', tx]), ['leave', '', SYS.leave]].filter(Boolean)
   const opts = ''
   const send = `const i=document.getElementById('tkin');if(i&&i.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:i.value});i.value=''}`
   const choices = Array.isArray(s.talkChoices) ? s.talkChoices : []
@@ -132,7 +133,7 @@ export function talkUi(ctx, player) {
   const small = sys.map(([k, tag, tx]) => `<button data-interactive onclick="sendAction('talkdo',{k:'${q(k)}'})">${esc(k === 'leave' ? 'Bye' : k === 'trade' ? 'Trade' : k === 'svc' ? (SVC[role] ?? 'Ask') : (tx || k).slice(0, 22))}</button>`).join('')
   const kd = `if(event.key==='Escape'){sendAction('talkdo',{k:'leave'})}else if(event.target.id!=='tkin'&&event.key>='1'&&event.key<='9'){const c=document.querySelectorAll('.tc .ch');const b=c[parseInt(event.key)-1];if(b)b.click()}`
   return `${CINE}<div class="tc" data-modal tabindex="0" onkeydown="${kd}">
-    <div class="low ${s.talkBusy ? 'busy' : ''}"><div class="who">${who} · ${esc(it.state?.temper ?? '')}${it.state?.title ? ' · ' + esc(it.state.title) : ''} · hp ${Math.max(0, Math.round(it.state?.hp ?? 0))}/${Math.round(it.state?.maxHp ?? 100)}</div><div class="sub">${now}</div>
+    <div class="low ${s.talkBusy ? 'busy' : ''}"><div class="who">${who} · ${esc(it.state?.temper ?? '')}${isMine(it, player) ? ` · ${PERKS[perkOf(it)]?.name ?? ''} · loyalty ${Math.round(it.state.loyal ?? 50)}` : ''}${it.state?.title ? ' · ' + esc(it.state.title) : ''} · hp ${Math.max(0, Math.round(it.state?.hp ?? 0))}/${Math.round(it.state?.maxHp ?? 100)}</div><div class="sub">${now}</div>
       <div class="choices">${top}</div>
       <div class="row" data-interactive><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" placeholder="say something… (enter)" onkeydown="event.stopPropagation();if(event.key==='Enter'&&this.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:this.value});this.value=''}"/>${small}<span class="feel" style="color:${col}">${feel(r)}</span></div>
     </div></div>`

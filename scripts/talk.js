@@ -11,6 +11,7 @@ import { talk as service } from './interact.js'
 import { skillsOf, SKILLS } from './lib/stats.js'
 import { describe } from './lib/items.js'
 import { repDisc, isHated, repKind, repTrade } from './lib/rep.js'
+import { recruit, adopt, dismiss, order, giveWeapon, takeWeapon, PERKS, perkOf } from './lib/companion.js'
 import { addressFor, saysName } from './lib/address.js'
 import { lineFor } from './lib/personality.js'
 import { raycast } from 'builtin/physics'
@@ -174,9 +175,9 @@ export function heard(ctx, r, pay) {
     const mine = ctx.query({ tags: ['npc'] }).filter((q) => q.state?.follow === ctx.self.id).length
     if (r1 < T.join.rapport && !passed && o.intent !== 'join' && !ESCORT.test(line ?? '')) {}
     else if (mine >= T.join.max) logLine(ctx, it, 'x', `${T.join.max} people already follow you`)
-    else { it.state.follow = ctx.self.id; logLine(ctx, it, 'x', `${who} is coming with you`); note(ctx, `${who} is coming with you.`) }
+    else { adopt(ctx.self, it); logLine(ctx, it, 'x', `${who} is coming with you`); note(ctx, `${who} is coming with you. ${PERKS[perkOf(it)]?.name}: ${PERKS[perkOf(it)]?.info}.`) }
   }
-  if (intent === 'leave' && it.state.follow === ctx.self.id) { it.state.follow = null; logLine(ctx, it, 'x', `${who} stopped following you`) }
+  if (intent === 'leave' && it.state.follow === ctx.self.id) { dismiss(ctx, ctx.self, it); logLine(ctx, it, 'x', `${who} stopped following you`) }
   if (intent === 'trade_discount' && isTrader(it) && (r1 >= T.discount.rapport || passed)) {
     const old = it.state.discount?.[key] ?? 0, disc = Math.min(T.discount.max, Math.max(old, r1 * T.discount.per + (passed ? T.discount.check : 0)))
     it.state.discount = { ...(it.state.discount ?? {}), [key]: Math.round(disc * 100) / 100 }
@@ -188,7 +189,7 @@ export function heard(ctx, r, pay) {
   }
   if (intent === 'hostile' && r1 <= T.hostile) {
     it.state.angry = { ...(it.state.angry ?? {}), [ctx.self.id]: true }; it.state.fresh = { ...(it.state.fresh ?? {}), [ctx.self.id]: true }
-    if (it.state.follow === ctx.self.id) it.state.follow = null
+    if (it.state.follow === ctx.self.id) dismiss(ctx, ctx.self, it)
     say(ctx, it, line, 'angry'); logLine(ctx, it, 'n', line); logLine(ctx, it, 'x', `${who} turns on you`); close(ctx); return
   }
   if (r1 < 0 && it.state.follow === ctx.self.id) { it.state.follow = null; logLine(ctx, it, 'x', `${who} stopped following you`) }
@@ -204,6 +205,13 @@ function act(ctx, d) {
   if (d.k === 'svc') { const before = s.sub?.at; service(ctx, it); if (s.sub?.at !== before) logLine(ctx, it, 'n', s.sub.t); return }
   if (d.k === 'trade' && isTrader(it)) { if (isHated(s, it)) { note(ctx, 'They will not deal with you. Your name is mud with their people.'); return } restock(ctx, it); s.shopOpen = it.id; return }
   if (['wave', 'gift', 'dance', 'insult'].includes(d.k)) { gesture(ctx, it, d.k); return }
+  if (String(d.k).startsWith('c') && ['crecruit', 'cwait', 'cfollow', 'chold', 'cfree', 'cgive', 'ctake', 'cdismiss'].includes(d.k)) { // a companion's orders (scripts/lib/companion.js)
+    if (d.k === 'crecruit') { const bad = recruit(ctx, ctx.self, it); note(ctx, bad || `${nameOf(it)} is coming with you. ${PERKS[perkOf(it)]?.name}: ${PERKS[perkOf(it)]?.info}.`); if (!bad) logLine(ctx, it, 'x', `${nameOf(it)} is coming with you`); return }
+    if (d.k === 'cdismiss') { dismiss(ctx, ctx.self, it); note(ctx, `${nameOf(it)} stays here.`); logLine(ctx, it, 'x', `${nameOf(it)} stopped following you`); return }
+    if (d.k === 'cgive') { note(ctx, giveWeapon(ctx, ctx.self, it)); return }
+    if (d.k === 'ctake') { note(ctx, takeWeapon(ctx, ctx.self, it)); return }
+    note(ctx, order(ctx, ctx.self, it, { cwait: 'wait', cfollow: 'follow', chold: 'hold', cfree: 'free' }[d.k])); return
+  }
   if (d.k === 'back') s.shopOpen = null
   if (d.k === 'stab') s.shopTab = ['buy', 'sell', 'repair'].includes(d.t) ? d.t : 'buy'
 }

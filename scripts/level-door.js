@@ -2,6 +2,7 @@
 // behind a short black transition (scripts/ui.js draws it from player.state.xfer).
 // Each door's partner: the arrival marker its sim lays just inside the door you come through.
 import { heard } from "./lib/hear.js";
+import { bring } from "./lib/companion.js";
 const PAIR = {
   "l1-back": "main#main-from-l1", "l1-onward": "level2#l2-from-l1",
   "l2-back": "level1#l1-from-l2", "l2-to-l3": "level3#l3-from-l2",
@@ -28,5 +29,6 @@ export function onTriggerEnter(ctx, other) {
     heard(ctx, { maxDistance: 20, clip: "/cdn/moodboard-realistic-gritty/sfx-wooden-crate-break-splinter.mp3", position: other.feetPosition, volume: 0.85 }, { audience: { player: other.id } });
   }
   other.state.clipKind = KIND[key] ?? "glitch";
+  bring(ctx, other, PAIR[key] ?? ctx.self.state.to); // the people walking with you come through too (scripts/lib/companion.js)
   ctx.cross(other, PAIR[key] ?? ctx.self.state.to);
 }

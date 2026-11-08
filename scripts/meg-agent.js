@@ -426,9 +426,10 @@ export function update(ctx, dt) {
   let lead = s.follow ? ctx.place.players.find((p) => p.id === s.follow) : null;
   if (s.follow) { if (lead) m.lostAt = 0; else m.lostAt ||= now; if (s.angry?.[s.follow] || (!lead && now - m.lostAt > 20000)) { s.follow = null; lead = null; } }
   // a day's work (state.rounds: stops with a dwell, a chore clip, a thing to face): the post moves stop to stop
-  const stop0 = !lead && s.rounds?.length ? s.rounds[(s.ri ?? 0) % s.rounds.length] : null;
-  const home = lead ? lead.feetPosition : (stop0 ?? s.home ?? me.feetPosition);
-  const t = pickTarget(ctx, me, m);
+  const waiting = !!(s.follow && s.cmd === "wait" && s.waitAt); if (waiting) lead = null; // told to wait: stays on the spot, still fights what comes at it
+  const stop0 = !lead && !s.follow && s.rounds?.length ? s.rounds[(s.ri ?? 0) % s.rounds.length] : null;
+  const home = lead ? lead.feetPosition : (waiting ? s.waitAt : (stop0 ?? s.home ?? me.feetPosition));
+  const t = s.follow && s.cstance === "hold" ? null : pickTarget(ctx, me, m); // hold fire: a companion that is told so starts nothing
   const tid = t && flat(t.feetPosition, home) < G.leash ? t.id : null;
   if (tid !== (m.barkT ?? null)) {
     const prev = m.barkT ? ctx.getObject(m.barkT) : null, prevDead = prev && (prev.state?.dead || (prev.state?.hp ?? 1) <= 0);
