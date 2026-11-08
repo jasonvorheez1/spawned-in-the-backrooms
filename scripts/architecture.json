@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2656,
-  "updatedAt": "2026-11-08T22:51:37.121Z",
-  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors while scenes and place simulations supply authored environments and local systems; shared breakables and loose-item systems handle environmental damage and physics interactions. The mall's Teleport Station can return a player to their last saved Backrooms level and position.",
+  "basedOnSpecVersion": 2670,
+  "updatedAt": "2026-11-08T22:57:59.690Z",
+  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors while scenes and place simulations supply authored environments and local systems; shared build, breakable and loose-item systems cover construction and physics interactions. Mall transit routes players to Backrooms destinations, now with a short train-boarding scene.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with shops, arcade, fountain, court storefronts and west-balcony lounge; authored shops plus shopper/staff simulation.",
@@ -27,7 +27,7 @@
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings; used by routing and hub handlers and defines last-level selection/names.",
     "scripts/lib/loot.js + items.js + weapons.js/weapons.yml - common loot spawning, container rolls, remains, place pools and weapon definitions/rarity reused by search and combat.",
-    "scripts/lib/build-piece.js + breakables.yml + furniture.yml - canonical build specs/models shared by B-mode and home reconstruction.",
+    "scripts/lib/build-piece.js + breakables.yml + furniture.yml - canonical build specs/models shared by B-mode and home reconstruction; CRT TV builds attach scripts/built-tv.js.",
     "scripts/lib/screen.js - derived read-only panel classifier and wrist gates shared by player, stats, craft, rest and menu input.",
     "scripts/lib/maze.js and scripts/lib/level*.js + level data - grids, zones, layouts and paths reused by place sims, geometry and navigation.",
     "scripts/lib/clothes.js + clothes.yml + critter.yml + hair.yml + scripts/lib/critter-model.js - wardrobe/look rules and player/NPC critter models; shared renderer also supports creator appearance.",
@@ -35,14 +35,14 @@
     "scripts/lib/loose.js + scripts/lib/data/loose.yml - name-matched material, mass, hit points, impact thresholds and break acts; shared by grab, kick and breakables."
   ],
   "notableExports": [
-    "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollItem, spawnCrate, rollLoot and level-specific loot helpers.",
-    "scripts/lib/weapons.js - rarityIdx, rarityCap; weapon registry default export.",
+    "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollItem, spawnCrate, rollLoot and level-specific loot helpers; scripts/lib/weapons.js - rarityIdx, rarityCap and weapon registry.",
     "scripts/grab.js - setDown, onInput, update, looseSpent; carrying, throwing and scheduled extinguisher-jet expiry. scripts/kick.js - onInput, kickEnd, update.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget and fishing handlers.",
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
     "sim.js - cadence, tick, onOutOfBounds; places/main/sim.js and places/bonus/sim.js - cadence, tick.",
     "scripts/partygoers.js - update; manager for tagged Partygoers and Carnivorous Balloons on Level 26. scripts/lib/knock.js - knocked, foeStats.",
-    "scripts/lib/loose.js - looseOf, arm, impact, breakIt, kickLoose, track, stepFlights; scripts/lib/breakables.js - classOf, damageEntity, strike, wall and rubble helpers; scripts/lib/l2kit.js - placements, unpack, kit, PARTS, spawnKit."
+    "scripts/lib/loose.js - looseOf, arm, impact, breakIt, kickLoose, track, stepFlights; scripts/lib/breakables.js - classOf, damageEntity, strike, wall and rubble helpers; scripts/lib/l2kit.js - placements, unpack, kit, PARTS, spawnKit.",
+    "scripts/built-tv.js - ears; E cycles the build-menu CRT through shared TV channels and off."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards and level access; saved place/position and one-shot wakeAtSave position restoration.",
@@ -51,8 +51,8 @@
     "scripts/lib/knock.js - shared physics/timing recovery for down/kb and thrown/overboard records; enemy managers retain AI state and pause it while held or recovering.",
     "scripts/lurkers.js - player.state.lurkHold while caught and lurker entity grab/frenzy/prey state; release clears the player's hold.",
     "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim.",
-    "scripts/hub.js - local mall offer/shop/food and room-hop flags; purchases debit player currencies/unlocks and mall-local held food.",
-    "scripts/partygoers.js - Level 26 AI state (pack hunting, berserk hatch cycles, lunge/dodge/barrage/combo timing, stun/gait and balloon bob/gas); scripts/player.js owns player.state.stungUntil movement lock."
+    "scripts/hub.js - mall offer/shop/food and room-hop flags plus player trainHid/stungUntil; session.ride/rideTrain holds the transient transit scene and spawned train.",
+    "scripts/partygoers.js - Level 26 AI state (pack hunting, berserk hatch cycles, lunge/dodge/barrage/combo timing, stun/gait and balloon bob/gas); partygoers and scripts/hub.js write player.state.stungUntil, which scripts/player.js enforces as a movement lock."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/spamton-fight/horde/critter/main-menu/hub/view3.",
@@ -61,7 +61,7 @@
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done.",
     "scripts/lib/hub.js toHub/toSolo → room/place crossings; roomHop distinguishes intentional crossings from launch/resume.",
     "Death recovery → scripts/hub.js hubOffer → hub-ui.js; mall counters write hubShop → hub handler/UI; purchases debit cents and grant configured stock.",
-    "Teleport Station UI in scripts/hub-ui.js renders lastLevel(s) from scripts/lib/hub.js; travel 'last' is handled by scripts/hub.js, which calls toSolo with keepPos and sets wakeAtSave; player.js restores saved feetPosition on arrival.",
+    "Teleport Station UI in scripts/hub-ui.js renders lastLevel(s) from scripts/lib/hub.js; travel requests reach scripts/hub.js, which boards the player via the bc-train scene, hides the placed car, animates a session train and then calls toSolo. 'last' sets wakeAtSave/keepPos and player.js restores saved feetPosition on arrival.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; found weapon rarity cap is level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickup weapons/food/aid enters player.js inventory.",
     "L input → scripts/kick.js tries foe kick then loose.js kickLoose; Z input → scripts/grab.js picks/carries/throws eligible bodies and calls loose.js arm/track/impact; flight tracking lives in player session and detects hard stops.",
     "scripts/lib/breakables.js strike/damageEntity → loose.js breakIt for matched loose props, otherwise generic rubble; loose.yml supplies material/hp/act rules, with breakAt as impact-energy threshold; explosions emit damage/noise/shockwave.",
@@ -70,23 +70,24 @@
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js - authored mall shops/landmarks with data-driven stock and simulated staff, waypoint shoppers and balcony loungers.",
-    "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence and rebuild path.",
+    "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence and rebuild path; CRT TV builds add matching screen, sound and glow children.",
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props and Boiler Room Death Rat packs.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml + art/critter-hair/build.py - player and NPCs share body/head/hair rendering; generated style meshes vary in form.",
+    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml + art/critter-hair/build.py - player and NPC critter rendering; generated styles have normal and hat-compressed hair meshes, with head/ear-fit envelope shaping.",
     "art/level2/{build,compact,encode,pack}.py + scripts/lib/l2kit-data/* + scripts/lib/l2kit.js - module meshes are compact-packed and decoded into runtime instances; optional UV data, otherwise triplanar projection.",
     "scripts/lib/data/loose.yml + scripts/lib/loose.js + grab.js/kick.js/breakables.js - matched physics props share impact tracking and material-specific acts: shatter/spill, splinter, spark, spray, explosion, pop, splat, dent or bounce."
   ],
   "probableOrphans": [
-    "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but has no references; Level 26 scene placements and barrage use uploaded models instead."
+    "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but has no references; Level 26 scene placements and barrage use uploaded models instead.",
+    "scripts/hairtest-rig.js - header marks it as a temporary hair lane test rig; no tree/package references found."
   ],
   "migrationNotes": [
     "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room and overflow mall rooms use bonus-N IDs. Keep routing and hub identity aligned.",
-    "Teleport Station last-level travel derives from savePlace (excluding bonus, intake and debug; tutorial0 maps to main); keepPos preserves the current savePos and wakeAtSave restores it only when the arriving place matches.",
+    "Teleport Station 'last' travel derives from savePlace (excluding bonus, intake and debug; tutorial0 maps to main); keepPos preserves savePos and wakeAtSave restores it only when the arriving place matches. The boarding scene is coupled to bonus object bc-train and its coordinates; preserve cleanup of the spawned train, visibility and camera on transfer.",
     "Found-item rarity gates apply only to found weapon tokens; ownership/use of existing weapons and non-weapon loot is not level-gated. Search gating excludes storage and NPC containers.",
     "Level 0 place.state.momentsV is 4: its migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout.",
     "At sanity <= 0 health is not drained; scripts/lib/stats.js lowers derived attributes except Luck by 2 (minimum 1), and derived values feed combat, carry and movement.",
-    "scripts/lib/knock.js consumes transient down/kb records and thrown-body flight/overboard state; enemy managers must call knocked() before AI and exclude heldBy bodies. loose.yml breakAt uses joules: 0.5 × kg × speed²."
+    "scripts/lib/knock.js consumes transient down/kb records and thrown-body flight/overboard state; enemy managers must call knocked() before AI and exclude heldBy bodies. loose.yml breakAt uses joules: 0.5 × kg × speed²; loose.js kick volume ceiling is 2.5 m³, admitting the Level 1 pallet stack."
   ]
 }
