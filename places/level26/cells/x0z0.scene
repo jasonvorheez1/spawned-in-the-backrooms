@@ -2663,8 +2663,9 @@ l26x-bar-neon:
   tags: [l26x]
   vector: "<svg viewBox='0 0 200 80' width='1.8m'><text x='100' y='62' text-anchor='middle' font-family='display' font-size='64' fill='none' stroke='#ff3a7a' stroke-width='5' filter='drop-shadow(0 0 6 #ff3a7a)'>B<tspan opacity=\"0.25\">A</tspan>R</text></svg>"
 l26x-bar-neon-bud:
-  feetPosition: {x: -4.1, y: 5, z: -7.95}
+  feetPosition: {x: -0.6, y: 5.3, z: -7.3}
   id: l26x-bar-neon-bud
+  rotation: {yaw: -20}
   tags: [l26x]
   vector: "<svg viewBox='0 0 200 80' width='1.1m'><text x='100' y='62' text-anchor='middle' font-family='display' font-size='64' fill='none' stroke='#ff2a2a' stroke-width='5' filter='drop-shadow(0 0 6 #ff2a2a)'>Budweiser</text></svg>"
 l26x-bar-neon-glow:
@@ -2677,7 +2678,7 @@ l26x-bar-shelf-0:
   id: l26x-bar-shelf-0
   model: /cdn/value.fad73e651c24b9939f20e0b24af833241e9456de8ee5e52a4b5481c2f2a13ebb.glb
   physics: {body: static, collider: box}
-  rotation: {yaw: 90}
+  rotation: {yaw: -90}
   scale: 2.2
   tags: [l26x]
 l26x-bar-shelf-1:
@@ -2685,7 +2686,7 @@ l26x-bar-shelf-1:
   id: l26x-bar-shelf-1
   model: /cdn/value.fad73e651c24b9939f20e0b24af833241e9456de8ee5e52a4b5481c2f2a13ebb.glb
   physics: {body: static, collider: box}
-  rotation: {yaw: 90}
+  rotation: {yaw: -90}
   scale: 2.2
   tags: [l26x]
 l26x-bar-stool-0:
