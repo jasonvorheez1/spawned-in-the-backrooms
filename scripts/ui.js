@@ -1,4 +1,6 @@
 import { overlay as lagscopeOverlay } from '../mods/lagscope/panel.js'
+import * as modelingStudio from '../mods/modeling-studio/hud.js'
+export { m3dPvDown, m3dPvWheel, m3dPvReset, m3dPvTool, m3dPvDraft, m3dPvEdit, m3dPvClear, m3dTkMeasure, m3dTkDown, m3dTkWheel, m3dTkReset, m3dMpvMove, m3dMpvSize, m3dDraft, m3dPose, m3dPick, m3dPreview, m3dUpload, m3dAsk, m3dClearRefs, m3dGuide } from '../mods/modeling-studio/hud.js'
 // Level 0 "The Lobby" HUD
 // Clean, minimal, and atmospheric.
 // Designed with quiet restraint: unobstructed sightlines, crisp typography, and non-intrusive status readouts.
@@ -224,7 +226,7 @@ function underwater(s) {
 }
 
 // F3: the LAGSCOPE lag panel floats over whatever the HUD draws (builders only; players never see it)
-export default function render(ctx, player) { return renderHud(ctx, player) + lagscopeOverlay(ctx, player) }
+export default function render(ctx, player) { return renderHud(ctx, player) + lagscopeOverlay(ctx, player) + modelingStudio.render(ctx, player) }
 function renderHud(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
