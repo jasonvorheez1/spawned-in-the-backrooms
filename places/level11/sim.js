@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 45; // bump to rebuild the city in rooms that are already open
+const V = 46; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -534,11 +534,10 @@ function lay(ctx) {
   const MALL_D = 22;
 
   // Strip Mall Building Shell
-  bx("l11-mall-shell", MALL_X, 0.1, MALL_Z, MALL_W, MALL_H, MALL_D, STUCCO_MALL);
+  sp("l11-mall-shell", { feetPosition: { x: MALL_X, y: 0.1, z: MALL_Z }, primitive: { kind: "scripted", script: "scripts/l11-mall.js", params: { kind: "shell", w: MALL_W, h: MALL_H, d: MALL_D } }, physics: "static" });
   bx("l11-mall-sandstone-pil1", MALL_X + MALL_W / 2 - 0.2, 0.1, MALL_Z - MALL_D / 2 + 0.5, 0.4, MALL_H, 1.2, SANDSTONE_WALL);
   bx("l11-mall-sandstone-pil2", MALL_X + MALL_W / 2 - 0.2, 0.1, MALL_Z + MALL_D / 2 - 0.5, 0.4, MALL_H, 1.2, SANDSTONE_WALL);
-  bx("l11-mall-roof-parapet", MALL_X, MALL_H + 0.1, MALL_Z, MALL_W + 0.2, 0.4, MALL_D + 0.2, CURB_MAT);
-
+  
   // Raised Concrete Walkway in Front of Stores
   bx("l11-mall-walkway", MALL_X + MALL_W / 2 + 1.2, 0.22, MALL_Z, 2.4, 0.3, MALL_D, SIDEWALK);
 
@@ -552,9 +551,9 @@ function lay(ctx) {
   }
 
   // CONTINUOUS VIVID BLUE CANVAS AWNINGS (Wikidot Image 3)
-  bx("l11-mall-awning-1", MALL_X + MALL_W / 2 + 1.0, 3.2, MALL_Z - 6.5, 2.0, 0.12, 7.0, BLUE_AWNING, { rotation: { pitch: -16 } });
-  bx("l11-mall-awning-2", MALL_X + MALL_W / 2 + 1.0, 3.2, MALL_Z, 2.0, 0.12, 5.5, BLUE_AWNING, { rotation: { pitch: -16 } });
-  bx("l11-mall-awning-3", MALL_X + MALL_W / 2 + 1.0, 3.2, MALL_Z + 6.5, 2.0, 0.12, 7.0, BLUE_AWNING, { rotation: { pitch: -16 } });
+  sp("l11-mall-awning-1", { feetPosition: { x: MALL_X + MALL_W / 2, y: 3.75, z: MALL_Z - 6.5 }, primitive: { kind: "scripted", script: "scripts/l11-mall.js", params: { kind: "awning", p: 2.0, d: 7.0, r: 0.85 } } });
+  sp("l11-mall-awning-2", { feetPosition: { x: MALL_X + MALL_W / 2, y: 3.75, z: MALL_Z }, primitive: { kind: "scripted", script: "scripts/l11-mall.js", params: { kind: "awning", p: 2.0, d: 5.5, r: 0.85 } } });
+  sp("l11-mall-awning-3", { feetPosition: { x: MALL_X + MALL_W / 2, y: 3.75, z: MALL_Z + 6.5 }, primitive: { kind: "scripted", script: "scripts/l11-mall.js", params: { kind: "awning", p: 2.0, d: 7.0, r: 0.85 } } });
 
   // Storefront 1: Centro Dermatológico (Left)
   sp("l11-mall-sign-derma", {
