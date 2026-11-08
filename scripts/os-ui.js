@@ -79,6 +79,18 @@ const CSS = `<style>
 #os .props b{font-weight:400;color:#444}
 #os .chg{font:12px/1.5 monospace;background:#fffbe6;border:1px solid #b89a00;padding:8px;margin-top:8px}
 #os textarea{flex:1;border:0;outline:0;resize:none;font:13px/1.5 'Courier New',monospace;padding:12px 14px;background:#fefdf6;color:#181610;box-shadow:inset 0 0 25px rgba(184,154,0,0.1)}
+#os .hack-wrap{flex:1;background:#0d0902;color:#ffbe1a;font-family:'Courier New',Consolas,monospace;font-size:13px;line-height:1.35;padding:12px 16px;display:flex;flex-direction:column;min-height:0;box-shadow:inset 0 0 50px rgba(0,0,0,0.8),inset 0 0 20px rgba(255,190,26,0.12)}
+#os .hack-hdr{border-bottom:2px solid #ffbe1a66;padding-bottom:8px;margin-bottom:8px}
+#os .hack-grid{flex:1;display:flex;gap:14px;min-height:0;overflow:hidden}
+#os .hack-col{display:flex;flex-direction:column;justify-content:space-between;font-family:'Courier New',Consolas,monospace;font-size:12.5px;letter-spacing:0.04em}
+#os .hack-line{white-space:pre}
+#os .hack-addr{color:#b8860b;margin-right:6px;user-select:none;font-weight:bold}
+#os .hack-word,#os .hack-bracket{cursor:pointer;padding:0 1px;border-radius:1px}
+#os .hack-word:hover,#os .hack-bracket:hover{background:#ffbe1a;color:#000;font-weight:900;box-shadow:0 0 8px #ffbe1a}
+#os .hack-log{flex:1;min-width:210px;border-left:1px solid #ffbe1a44;padding-left:12px;display:flex;flex-direction:column;justify-content:flex-end;font-size:11.5px;line-height:1.45;overflow:hidden}
+#os .hack-cursor{margin-top:6px;color:#ffc857;animation:osln 0.6s infinite alternate}
+#os .hack-footer{margin-top:8px;padding-top:6px;border-top:1px solid #ffbe1a44;display:flex;justify-content:space-between;align-items:center}
+#os .hack-lockout{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
 </style>`
 
 const ICONS = [['mail', '✉', 'Backmail'], ['db', '📚', 'The Database'], ['files', '🗂', 'BACKDRIVE'], ['forum', '💬', 'Backdoor'], ['term', '⌨', 'Terminal'], ['notes', '📝', 'Notepad'], ['bin', '🗑', 'Recycle Bin'], ['about', '💾', 'This Computer']]
@@ -107,6 +119,76 @@ export function osUi(ctx, player) {
       <div style="margin:12px 0 4px;font-size:12px">Password:</div><input id="pw" type="password" data-interactive autocomplete="off" maxlength="40" onkeydown="if(event.key==='Enter')${A({ k: 'pw', v: '__PW__' }).replace("'__PW__'", 'this.value')}">
       ${os.err ? `<div style="color:#a00;font-size:12px;margin-top:6px">${esc(os.err)}</div>` : ''}
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="btn" onclick="${A({ k: 'hack' })}">Hack...</button><button class="btn" onclick="${A({ k: 'login' })}">Guest</button><button class="btn" onclick="${A({ k: 'close' })}">Shut down</button></div></div>`)}</div>`
+  } else if (os.app === 'hack' && os.hack) {
+    const h = os.hack
+    if (h.lockedOut && now >= h.lockedUntil) {
+      h.lockedOut = false
+      h.attempts = h.maxAttempts
+      h.log.push('> SYSTEM REBOOT COMPLETE.')
+      h.log.push('> LOCKOUT CLEARED. PROCEED.')
+    }
+    const isLockedOut = h.lockedOut && h.lockedUntil > now
+    const lockoutSec = Math.max(0, Math.ceil((h.lockedUntil - now) / 1000))
+
+    const renderTok = (t) => {
+      if (t.type === 'text') return `<span>${esc(t.text)}</span>`
+      if (t.type === 'word') {
+        if (h.dudsRemoved.includes(t.word)) return `<span style="opacity:0.25">${esc('.'.repeat(t.word.length))}</span>`
+        return `<span class="hack-word" onclick="${A({ k: 'hack_guess', v: t.word })}">${esc(t.word)}</span>`
+      }
+      if (t.type === 'bracket') {
+        if (h.bracketsUsed.includes(t.bracketId)) return `<span style="opacity:0.25">${esc('.'.repeat(t.text.length))}</span>`
+        return `<span class="hack-bracket" onclick="${A({ k: 'hack_bracket', v: t.bracketId })}">${esc(t.text)}</span>`
+      }
+      return ''
+    }
+
+    const renderLine = (l) => `<div class="hack-line"><span class="hack-addr">${esc(l.addr)}</span> ${l.tokens.map(renderTok).join('')}</div>`
+
+    const col0 = h.lines.slice(0, 16)
+    const col1 = h.lines.slice(16, 32)
+    const attemptsBlocks = Array.from({ length: h.maxAttempts }, (_, i) => i < h.attempts ? '■' : '□').join(' ')
+
+    let mainContent = ''
+    if (isLockedOut) {
+      mainContent = `<div class="hack-lockout">
+        <div style="font-size:24px;font-weight:900;letter-spacing:2px;color:#ff4444;margin-bottom:12px">TERMINAL LOCKED OUT</div>
+        <div style="font-size:15px;color:#ffbe1a;margin-bottom:8px">SECURITY TAMPER PROTOCOL ENGAGED</div>
+        <div style="font-size:13px;opacity:0.8;margin-bottom:16px">PLEASE CONTACT SYSTEM ADMINISTRATOR</div>
+        <div style="font-size:18px;color:#ffc857;letter-spacing:1px">SYSTEM REBOOT IN: ${lockoutSec}s</div>
+        <button class="btn" style="margin-top:20px" onclick="${A({ k: 'hack_abort' })}">Return to Login</button>
+      </div>`
+    } else {
+      mainContent = `
+        <div class="hack-grid">
+          <div class="hack-col">${col0.map(renderLine).join('')}</div>
+          <div class="hack-col">${col1.map(renderLine).join('')}</div>
+          <div class="hack-log">
+            <div style="font-weight:bold;margin-bottom:6px;border-bottom:1px solid #ffbe1a44;padding-bottom:4px">STATUS MONITOR</div>
+            ${h.log.slice(-10).map((msg) => `<div>${esc(msg)}</div>`).join('')}
+            <div class="hack-cursor">> <span>_</span></div>
+          </div>
+        </div>
+        <div class="hack-footer">
+          <div style="font-size:11.5px;opacity:0.85">> SELECT CANDIDATE PASSWORD OR BRACKETS (...) [...] {...} <...> TO PURGE DUDS</div>
+          <button class="btn" onclick="${A({ k: 'hack_abort' })}">Abort Intrusion</button>
+        </div>
+      `
+    }
+
+    body = `<div class="hack-wrap">
+      <div class="hack-hdr">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><b>ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL</b><br><span style="font-size:11px;opacity:0.85">BACK OS(TM) OBJECT-94 INTRUSION SYSTEM</span></div>
+          <div style="text-align:right">HOST: <b>${esc(os.host)}</b><br><span style="font-size:11px;color:#ffc857">[SCIENCE ${h.scienceNeed} LOCK]</span></div>
+        </div>
+        <div style="margin-top:8px;font-size:14px;font-weight:700;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center">
+          <span>${h.attempts} ATTEMPT(S) LEFT: <span style="letter-spacing:3px">${attemptsBlocks}</span></span>
+          <span style="font-size:12px;opacity:0.8">PASSWORD LENGTH: ${h.wordLength}</span>
+        </div>
+      </div>
+      ${mainContent}
+    </div>`
   } else {
     let win = ''
     if (os.app === 'mail') {

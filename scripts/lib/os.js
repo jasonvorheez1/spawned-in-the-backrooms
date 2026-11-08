@@ -53,7 +53,7 @@ export function runCmd(os, line, who) {
     const lock = os.lock || ''
     if (!lock.startsWith('science:')) return out('hack: nothing here to hack. try login.')
     const need = Number(lock.split(':')[1]), have = skillsOf(who?.state ?? {}).science ?? 0
-    return have >= need ? { out: [`[Science ${have}/${need}] reading the login service...`, 'found a debug door. you are in.'], act: 'unlock' } : out(`hack: access denied. needs Science ${need}. you have ${have}.`)
+    return have >= need ? { out: [`[Science ${have}/${need}] launching terminal intrusion protocol...`], act: 'open:hack' } : out(`hack: access denied. needs Science ${need}. you have ${have}.`)
   }
   if (c === 'login') {
     const pw = passwordOf(os.host)

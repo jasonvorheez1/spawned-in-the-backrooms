@@ -5,9 +5,12 @@ import { takeToken, gain } from './player.js'
 import { spawnCrate } from './lib/loot.js'
 import { ROOMS } from './lib/level4.js'
 import { runCmd, mailsOf, entryById } from './lib/os.js'
+import { heard } from './lib/hear.js'
+import { skillsOf } from './lib/stats.js'
+import { initHacking, guessPassword, activateBracket } from './lib/fallout-hack.js'
 
 const BOOT_MS = 3200
-const APPS = ['desktop', 'mail', 'db', 'files', 'forum', 'term', 'about', 'notes', 'bin']
+const APPS = ['desktop', 'mail', 'db', 'files', 'forum', 'term', 'about', 'notes', 'bin', 'hack']
 const OFF_MS = 2200 // the shut-down screen, then you stand
 const seen = (s, key, id) => String(s[key] ?? '').split(',').includes(id)
 const mark = (s, key, id) => { s[key] = [s[key], id].filter(Boolean).join(',') }
@@ -39,9 +42,52 @@ function act(ctx, s, d) {
     s.os = { ...os, err: 'Incorrect password.' }; return
   }
   if (d.k === 'hack') {
-    const r = runCmd(os, 'hack', ctx.self)
-    if (r.act === 'unlock') return unlock(ctx, s)
-    s.os = { ...os, err: r.out[0] }; return
+    if (os.user === 'admin') return
+    const lock = os.lock || ''
+    if (!lock.startsWith('science:')) {
+      s.os = { ...os, err: 'Nothing here to hack. Try login.' }
+      return
+    }
+    const need = Number(lock.split(':')[1] || 10)
+    const have = skillsOf(ctx.self.state ?? {}).science ?? 0
+    if (have < need) {
+      s.os = { ...os, err: `[Science ${have}/${need}] Access Denied. Insufficient Science skill.` }
+      return
+    }
+    s.os = {
+      ...os,
+      app: 'hack',
+      err: '',
+      hack: initHacking(os.host, need, have, Math.floor(ctx.random() * 1000000))
+    }
+    return
+  }
+  if (d.k === 'hack_guess' && os.hack) {
+    const res = guessPassword(os.hack, d.v, ctx.now())
+    if (res.result === 'win') {
+      heard(ctx, { clip: 'cdn/sfx-soft-bright-two-note-success-chime.mp3', position: ctx.self.feetPosition, volume: 0.8 }, { audience: { player: ctx.self.id } })
+      unlock(ctx, s)
+      return
+    }
+    if (res.result === 'miss') {
+      heard(ctx, { clip: 'cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3', position: ctx.self.feetPosition, volume: 0.65 }, { audience: { player: ctx.self.id } })
+      ctx.emit('screenShake', { intensity: 0.08, duration: 0.15 }, { audience: { player: ctx.self.id } })
+    } else if (res.result === 'lockout') {
+      heard(ctx, { clip: 'cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3', position: ctx.self.feetPosition, volume: 0.95 }, { audience: { player: ctx.self.id } })
+      ctx.emit('screenShake', { intensity: 0.22, duration: 0.35 }, { audience: { player: ctx.self.id } })
+    }
+    s.os = { ...os }
+    return
+  }
+  if (d.k === 'hack_bracket' && os.hack) {
+    activateBracket(os.hack, d.v, ctx.now())
+    heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-brass-elevator-button-click.mp3', position: ctx.self.feetPosition, volume: 0.75, pitch: 1.3 }, { audience: { player: ctx.self.id } })
+    s.os = { ...os }
+    return
+  }
+  if (d.k === 'hack_abort') {
+    s.os = { ...os, app: os.lock && os.user !== 'admin' ? 'login' : 'desktop' }
+    return
   }
   if (d.k === 'mail') {
     const m = mailsOf(os.host, os.user === 'admin').find((x) => x.id === d.id); if (!m) return
@@ -74,6 +120,12 @@ function act(ctx, s, d) {
     s.os = { ...os, term }
     if (r.act === 'unlock') unlock(ctx, s)
     else if (r.act === 'logout') shutdown(ctx, s)
+    else if (r.act === 'open:hack') {
+      const lock = os.lock || ''
+      const need = Number(lock.split(':')[1] || 10)
+      const have = skillsOf(ctx.self.state ?? {}).science ?? 0
+      s.os = { ...os, app: 'hack', err: '', hack: initHacking(os.host, need, have, Math.floor(ctx.random() * 1000000)) }
+    }
     else if (r.act?.startsWith('open:')) s.os = { ...s.os, app: r.act.slice(5), sel: '' }
   }
 }
