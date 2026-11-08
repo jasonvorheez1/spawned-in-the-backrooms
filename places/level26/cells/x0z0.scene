@@ -198,6 +198,38 @@ l26-cabins-trim:
   id: l26-cabins-trim
   material: {color: oklch(0.32 0.09 255), roughness: 0.5}
   primitive: {depth: 40.3, height: 0.25, kind: box, width: 14.3}
+l26-cb-0:
+  children: [{feetPosition: {x: 0, y: 1.15, z: 0}, material: {color: oklch(0.55 0.2 25), metalness: 0.05, roughness: 0.2}, primitive: {kind: sphere, radius: 0.32}, scale: {x: 1, y: 1.2, z: 1}}, {feetPosition: {x: 0, y: 1.1, z: 0}, material: {color: oklch(0.55 0.2 25)}, primitive: {height: 0.08, kind: cone, radius: 0.05}, rotation: {pitch: 180}}]
+  feetPosition: {x: -8.8, y: 0, z: 12}
+  id: l26-cb-0
+  material: {color: oklch(0.55 0.2 25), roughness: 0.4}
+  primitive: {height: 1.2, kind: cylinder, radialSegments: 5, radiusBottom: 0.02, radiusTop: 0.012}
+  state: {}
+  tags: [l26-balloon]
+l26-cb-1:
+  children: [{feetPosition: {x: 0, y: 1.15, z: 0}, material: {color: oklch(0.7 0.17 140), metalness: 0.05, roughness: 0.2}, primitive: {kind: sphere, radius: 0.32}, scale: {x: 1, y: 1.2, z: 1}}, {feetPosition: {x: 0, y: 1.1, z: 0}, material: {color: oklch(0.7 0.17 140)}, primitive: {height: 0.08, kind: cone, radius: 0.05}, rotation: {pitch: 180}}]
+  feetPosition: {x: 8.8, y: 0, z: -12}
+  id: l26-cb-1
+  material: {color: oklch(0.55 0.2 25), roughness: 0.4}
+  primitive: {height: 1.2, kind: cylinder, radialSegments: 5, radiusBottom: 0.02, radiusTop: 0.012}
+  state: {}
+  tags: [l26-balloon]
+l26-cb-2:
+  children: [{feetPosition: {x: 0, y: 1.15, z: 0}, material: {color: oklch(0.6 0.2 320), metalness: 0.05, roughness: 0.2}, primitive: {kind: sphere, radius: 0.32}, scale: {x: 1, y: 1.2, z: 1}}, {feetPosition: {x: 0, y: 1.1, z: 0}, material: {color: oklch(0.6 0.2 320)}, primitive: {height: 0.08, kind: cone, radius: 0.05}, rotation: {pitch: 180}}]
+  feetPosition: {x: -5.8, y: 0, z: 44}
+  id: l26-cb-2
+  material: {color: oklch(0.55 0.2 25), roughness: 0.4}
+  primitive: {height: 1.2, kind: cylinder, radialSegments: 5, radiusBottom: 0.02, radiusTop: 0.012}
+  state: {}
+  tags: [l26-balloon]
+l26-cb-3:
+  children: [{feetPosition: {x: 0, y: 1.15, z: 0}, material: {color: oklch(0.75 0.15 200), metalness: 0.05, roughness: 0.2}, primitive: {kind: sphere, radius: 0.32}, scale: {x: 1, y: 1.2, z: 1}}, {feetPosition: {x: 0, y: 1.1, z: 0}, material: {color: oklch(0.75 0.15 200)}, primitive: {height: 0.08, kind: cone, radius: 0.05}, rotation: {pitch: 180}}]
+  feetPosition: {x: 3, y: 3.4, z: -6.5}
+  id: l26-cb-3
+  material: {color: oklch(0.55 0.2 25), roughness: 0.4}
+  primitive: {height: 1.2, kind: cylinder, radialSegments: 5, radiusBottom: 0.02, radiusTop: 0.012}
+  state: {}
+  tags: [l26-balloon]
 l26-cup-11:
   feetPosition: {x: 8.617602361281216, y: 0, z: -2.5987857564346797}
   id: l26-cup-11
@@ -621,6 +653,55 @@ l26-overboard:
   primitive: {depth: 300, height: 2, kind: box, width: 300}
   state: {to: level7}
   visible: false
+l26-pack:
+  behavior: scripts/partygoers.js
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: l26-pack
+l26-pg-0:
+  feetPosition: {x: -8.5, y: 0, z: 34}
+  id: l26-pg-0
+  layout: {box: {max: {x: 0.5, y: 2.3, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
+  model: {forward: "+x", id: /cdn/value.e639a65be612a689782e2b055d2088e2fd0c3cfece525869ee208d6093401aa2.glb}
+  physics: {body: character, collider: capsule}
+  rotation: {yaw: 90}
+  state: {home: {x: -8.5, y: 0, z: 34}, hp: 90}
+  tags: [partygoer, l8-hostile]
+l26-pg-1:
+  feetPosition: {x: 8.4, y: 0, z: 38}
+  id: l26-pg-1
+  layout: {box: {max: {x: 0.5, y: 2.3, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
+  model: {forward: "+x", id: /cdn/value.e639a65be612a689782e2b055d2088e2fd0c3cfece525869ee208d6093401aa2.glb}
+  physics: {body: character, collider: capsule}
+  rotation: {yaw: -90}
+  state: {home: {x: 8.4, y: 0, z: 38}, hp: 90}
+  tags: [partygoer, l8-hostile]
+l26-pg-2:
+  feetPosition: {x: -8.3, y: 0, z: -4}
+  id: l26-pg-2
+  layout: {box: {max: {x: 0.5, y: 2.3, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
+  model: {forward: "+x", id: /cdn/value.e639a65be612a689782e2b055d2088e2fd0c3cfece525869ee208d6093401aa2.glb}
+  physics: {body: character, collider: capsule}
+  rotation: {yaw: 0}
+  state: {home: {x: -8.3, y: 0, z: -4}, hp: 90}
+  tags: [partygoer, l8-hostile]
+l26-pg-3:
+  feetPosition: {x: -8.6, y: 0, z: -6}
+  id: l26-pg-3
+  layout: {box: {max: {x: 0.5, y: 2.3, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
+  model: {forward: "+x", id: /cdn/value.e639a65be612a689782e2b055d2088e2fd0c3cfece525869ee208d6093401aa2.glb}
+  physics: {body: character, collider: capsule}
+  rotation: {yaw: 0}
+  state: {home: {x: -8.6, y: 0, z: -6}, hp: 90}
+  tags: [partygoer, l8-hostile]
+l26-pg-4:
+  feetPosition: {x: 8.5, y: 0, z: -30}
+  id: l26-pg-4
+  layout: {box: {max: {x: 0.5, y: 2.3, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
+  model: {forward: "+x", id: /cdn/value.e639a65be612a689782e2b055d2088e2fd0c3cfece525869ee208d6093401aa2.glb}
+  physics: {body: character, collider: capsule}
+  rotation: {yaw: 180}
+  state: {home: {x: 8.5, y: 0, z: -30}, hp: 90}
+  tags: [partygoer, l8-hostile]
 l26-pool-e:
   feetPosition: {x: 5.25, y: 0, z: 36.5}
   id: l26-pool-e
