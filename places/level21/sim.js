@@ -10,7 +10,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
 export const cadence = "500ms";
-const V = 2;
+const V = 5;
 const rm = (type) => ROOMS.filter((r) => r.type === type);
 const center = (r) => cellCenter(r.x0 + (r.w - 1) / 2, r.z0 + (r.d - 1) / 2); // the middle of a room block
 const edgeOf = (r, d) => { const c = center(r); return d === 0 ? c.x + (r.w * S) / 2 : d === 2 ? c.x - (r.w * S) / 2 : d === 1 ? c.z + (r.d * S) / 2 : c.z - (r.d * S) / 2; };
@@ -36,6 +36,7 @@ function lay(ctx) {
   const sp = (id, spec) => ctx.spawn(id, spec);
   // a rebuild (V bumped): take down what the last build laid
   for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l21-/.test(id) && !id.includes("/") && !PEOPLE[id]) ctx.destroy(id);
+  for (const tag of ["l2box", "container", "weapon", "crate", "remains"]) for (const o of ctx.query({ tags: [tag], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id); // the loot of the last build goes too: it was laid under auto ids
   sp("l21-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level21-geo.js" }, material: { roughness: 0.88 } });
 
   // ---- lamps: white fluorescent tubes, a few flickering; The Edges are lit down the lane and almost nowhere else

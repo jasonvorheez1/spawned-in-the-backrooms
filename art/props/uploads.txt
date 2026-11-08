@@ -1,0 +1,2 @@
+locker 201 /cdn/value.c6241c9ef9004df7d80aae0e234ed284e1f3e9ea13a77cc4183bbf4f92977eca.glb
+fridge 201 /cdn/value.c531369907056aa1f04bdb183de1d8def0d01e1134bb98f4f359f69ff9bfa95a.glb

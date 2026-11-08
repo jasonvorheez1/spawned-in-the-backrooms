@@ -134,10 +134,15 @@ export function fillContainerL2(ctx, kind, bonus = 0) {
   for (let i = 0; i < n; i++) items.push(rollTableL2(ctx, C.table));
   return items.join(",");
 }
+// containers modelled in Blender (art/props/build.py): the lockers and fridges are real objects with louvres, handles and rounded edges; the rest still draw as scripted boxes
+const L2MODEL = {
+  locker: { id: "/cdn/value.c6241c9ef9004df7d80aae0e234ed284e1f3e9ea13a77cc4183bbf4f92977eca.glb", paints: ["#8c8c84", "#7d8a7c", "#9a9484", "#6f7a86", "#8a6a4a", "#a8a8a2"] },
+  fridge: { id: "/cdn/value.c531369907056aa1f04bdb183de1d8def0d01e1134bb98f4f359f69ff9bfa95a.glb", paints: ["#dcdcd6", "#d8d4c4", "#c8ccc8", "#e4e0d0"] },
+};
 export function spawnContainerL2(ctx, kind, p, yaw, opts = {}) {
-  const C = L2C.containers[kind], lk = opts.noLock ? null : rollLock(ctx);
+  const C = L2C.containers[kind], lk = opts.noLock ? null : rollLock(ctx), M = L2MODEL[kind], seed = Math.floor(ctx.random() * 1000);
   return ctx.spawn({ tags: ["container", "l2box"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: { yaw }, physics: { body: "static", collider: "box" },
-    primitive: { kind: "scripted", script: "scripts/l2-props-geo.js", params: { kind, seed: Math.floor(ctx.random() * 1000) } },
+    ...(M ? { model: { id: M.id, materials: { paint: { color: M.paints[seed % M.paints.length], roughness: 0.55, metalness: 0.15 } } }, layout: { box: { min: { x: -C.size[0] / 2, y: 0, z: -C.size[2] / 2 }, max: { x: C.size[0] / 2, y: C.size[1], z: C.size[2] / 2 } } } } : { primitive: { kind: "scripted", script: "scripts/l2-props-geo.js", params: { kind, seed } } }),
     state: { name: lk ? `${C.name} (locked)` : C.name, kind, items: fillContainerL2(ctx, kind, (opts.bonus ?? 0) + (lk ? lk.bonus : 0)), ...(lk ? { lock: lk.lock } : {}), room: opts.room ?? -1 } });
 }
 
