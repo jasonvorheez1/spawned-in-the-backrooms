@@ -7,12 +7,11 @@
 import { heard } from './lib/hear.js'
 import B from './lib/data/breakables.yml'
 import { raycast, overlapPoint, getInputRay } from 'builtin/physics'
-import { builtSpec, pieceOf, furnOrder, furnModel } from './lib/build-piece.js'
+import { builtSpec, pieceOf, furnModel, tabsFor } from './lib/build-piece.js'
 
 const BASE = B.tabs, REACH = B.buildReach ?? 7, CAP = B.buildCap ?? 250
 const isTool = (k) => !!B.tools?.[k]
 // the tabs this player sees: the scrap tabs, then Furniture holding what they own from the mall
-export function tabsFor(s) { const own = furnOrder().filter((k) => (s.furn?.[k] ?? 0) > 0).map((k) => 'furn_' + k); return own.length ? [...BASE, { name: 'Furniture', pieces: own }] : BASE }
 const valid = (k) => !!(pieceOf(k) || isTool(k))
 const tabOf = (s, k) => Math.max(0, tabsFor(s).findIndex((t) => t.pieces.includes(k)))
 const has = (s, k) => s.scrap?.[k] ?? 0

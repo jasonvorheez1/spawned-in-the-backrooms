@@ -9,6 +9,7 @@ export function pieceOf(kind) {
   if (typeof kind === 'string' && kind.startsWith('furn_')) { const f = F.pieces?.[kind.slice(5)]; if (f) return { name: f.name, mat: 'wood', hp: 150, size: f.size ?? [1, 1, 1], snap: 'free', furn: kind.slice(5), model: f.model, forward: f.forward, cost: {} } }
   return null
 }
+export function tabsFor(s) { const own = furnOrder().filter((k) => (s.furn?.[k] ?? 0) > 0).map((k) => 'furn_' + k); return own.length ? [...B.tabs, { name: 'Furniture', pieces: own }] : B.tabs }
 export const furnOrder = () => F.order ?? Object.keys(F.pieces ?? {})
 export function furnModel(pc) { const [w, h, d] = pc.size; return { model: { id: pc.model, ...(pc.forward ? { forward: pc.forward } : {}) }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } } } }
 const rad = (d) => d * Math.PI / 180

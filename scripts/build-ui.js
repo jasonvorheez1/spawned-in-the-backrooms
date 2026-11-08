@@ -1,8 +1,7 @@
 // The build menu (B), in the Pip-Boy amber of scripts/loot-ui.js: tabs on 1-7, the pieces in this tab with their cost,
 // why the ghost is red, and what a tool is aimed at.
 import B from './lib/data/breakables.yml'
-import { pieceOf } from './lib/build-piece.js'
-import { tabsFor } from './build.js'
+import { pieceOf, tabsFor } from './lib/build-piece.js'
 const CSS = `<style>#bm{position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 14px);top:50%;transform:translateY(-50%);width:300px;max-width:42vw;background:rgba(10,7,2,.9);border:1px solid rgba(255,182,66,.45);padding:8px 10px;color:#ffb642;font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;text-transform:uppercase;text-shadow:0 0 2px rgba(255,160,30,.45);pointer-events:none;font-size:13px}
 #bm h3{margin:0 0 5px;font-weight:400;font-size:17px;border-bottom:2px solid #ffb642;padding-bottom:3px;display:flex;justify-content:space-between}#bm h3 small{font-size:10px;opacity:.7;align-self:flex-end}
 #bm .tb{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px}#bm .tb span{font-size:9.5px;padding:1px 4px;border:1px solid rgba(255,182,66,.3);color:rgba(255,182,66,.55)}#bm .tb span.on{border-color:#ffb642;color:#ffb642;background:rgba(255,182,66,.12)}#bm .tb b{font-weight:400;margin-right:3px;opacity:.7}
