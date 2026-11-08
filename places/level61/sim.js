@@ -2,8 +2,10 @@
 // Navy cafeteria tables, snack bars from every era (Clippers, the 1950s red bar where it was found; Liquorette; Slice Palace; Burger Bop), a room of vending machines piled
 // on each other, restrooms. Everything is free (scripts/l61-use.js, scripts/lib/data/snacks.yml). Ways out: the M.E.G.-guarded rusty steel door to Level 6, the vent that sucks you to Level 3.
 // Ways in: the tripwire in Level 6, a vending machine on Level 4. Hall x -30..30, z -22..22, roof 6 m; stores 14 wide, 10 deep off the north wall.
+import { layExtra, faceling, person, PEOPLE, FACELING_IDS } from "../../scripts/lib/level61-extra.js";
+import { keepPeople } from "../../scripts/lib/level-kit.js";
 export const cadence = "1s";
-const V = 6;
+const V = 7;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb", M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb", M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb"; // art/snackrooms/build.py
 const SNACK = "/cdn/value.50b5fa3844cf9c705ca675660ef22ddb556c1cf0f31ad1cd69deeb8d8395df71.png", SODA = "/cdn/value.4db3afe09f392fef7c9d80e531484862384aef0ea5bcba295dc62b57197b659f.png";
 const T = (name, rep) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -53,7 +55,11 @@ function lay(ctx) {
   const stool = (id, x, z, vinyl) => sp(id, { feetPosition: { x, y: 0, z }, physics: { body: "static", collider: "cylinder" }, model: { id: M_STOOL, forward: "+z", materials: { vinyl: { color: vinyl, roughness: 0.35 } } } });
 
   // ---- the hall: terrazzo, cream plaster with a teal and pink 80s band, a drop ceiling broken by six skylights of pure black
-  box("l61-floor", 0, -0.3, 0, 2 * HW + 2, 0.3, 2 * HD + 26, TERRAZZO);
+  // the floor is four slabs round a square hole: the conversation pit, two steps down (the wiki: a circular dip in the middle with benches round it)
+  box("l61-floor-w", -19, -0.3, 0, 24, 0.3, 2 * HD + 26, TERRAZZO); box("l61-floor-e", 19, -0.3, 0, 24, 0.3, 2 * HD + 26, TERRAZZO);
+  box("l61-floor-n", 0, -0.3, -21, 14, 0.3, 28, TERRAZZO); box("l61-floor-s", 0, -0.3, 21, 14, 0.3, 28, TERRAZZO);
+  for (const s of [-1, 1]) { box(`l61-step-z${s}`, 0, -0.6, s * 6.25, 14, 0.3, 1.5, { ...TERRAZZO, color: "oklch(0.8 0.04 350)" }); box(`l61-step-x${s}`, s * 6.25, -0.6, 0, 1.5, 0.3, 11, { ...TERRAZZO, color: "oklch(0.8 0.04 190)" }); }
+  box("l61-pit-floor", 0, -0.9, 0, 11, 0.3, 11, { ...TERRAZZO, color: "oklch(0.55 0.1 30)" });
   box("l61-roof", 0, HH, 0, 2 * HW, 0.3, 2 * HD, CEIL);
   for (const [i, sx] of [-18, 0, 18].entries()) for (const [j, sz] of [-9, 9].entries()) {
     const k = `${i}${j}`;
@@ -64,7 +70,7 @@ function lay(ctx) {
   wallZ("l61-wn", -HD, -HW, HW, [[-21, 4, 3.2], [-7, 4, 3.2], [7, 4, 3.2], [21, 4, 3.2]], HH, PLASTER);
   wallZ("l61-ws", HD, -HW, HW, [[-14, 3, 3], [14, 2.2, 2.6]], HH, PLASTER);
   wallX("l61-ww", -HW, -HD, HD, [[0, 1.6, 2.3]], HH, PLASTER);
-  wallX("l61-we", HW, -HD, HD, [], HH, PLASTER);
+  wallX("l61-we", HW, -HD, HD, [[-9, 2.2, 2.7]], HH, PLASTER);
   for (const [n, y, c] of [[0, 1.0, "oklch(0.62 0.09 190)"], [1, 1.2, "oklch(0.74 0.11 350)"]]) {
     for (const s of [-1, 1]) box(`l61-band-z${n}${s}`, 0, y, s * (HD - 0.17), 2 * HW - 0.4, 0.12, 0.04, { color: c, roughness: 0.5 }, { physics: undefined });
     for (const s of [-1, 1]) box(`l61-band-x${n}${s}`, s * (HW - 0.17), y, 0, 0.04, 0.12, 2 * HD - 0.4, { color: c, roughness: 0.5 }, { physics: undefined });
@@ -75,12 +81,11 @@ function lay(ctx) {
   // ---- the court: navy tables in loose rows, the round sunken-look pit with benches, planters, the ceiling speakers playing 80s hits
   let t = 0;
   for (let x = -24; x <= 24; x += 6) for (let z = -15; z <= 15; z += 6) {
-    if (Math.hypot(x, z) < 8) continue;
+    if (Math.abs(x) < 9 && Math.abs(z) < 9) continue; // the pit
     tableSet(`l61-table-${t++}`, x + Math.sin(x * 3.1 + z) * 0.6, z + Math.cos(x + z * 2.3) * 0.5, (x * 37 + z * 11) % 40);
   }
-  sp("l61-pit", { feetPosition: { x: 0, y: 0.005, z: 0 }, primitive: { kind: "cylinder", radiusTop: 6, radiusBottom: 6, height: 0.02 }, material: { color: "oklch(0.45 0.08 30)", roughness: 0.9 } });
-  for (let k = 0; k < 8; k++) { const a = (k / 8) * Math.PI * 2; sp(`l61-pbench-${k}`, { feetPosition: { x: Math.sin(a) * 5.2, y: 0, z: Math.cos(a) * 5.2 }, rotation: { yaw: (a * 180) / Math.PI }, physics: { body: "static", collider: "box" }, model: { id: M_BENCH, forward: "+z" } }); }
-  sp("l61-planter", { feetPosition: { x: 0, y: 0, z: 0 }, physics: "static", primitive: { kind: "cylinder", radiusTop: 1.6, radiusBottom: 1.6, height: 0.7 }, material: { color: "oklch(0.8 0.03 70)", roughness: 0.6 },
+  for (let k = 0; k < 8; k++) { const a = (k / 8) * Math.PI * 2; sp(`l61-pbench-${k}`, { feetPosition: { x: Math.sin(a) * 4.4, y: -0.6, z: Math.cos(a) * 4.4 }, rotation: { yaw: (a * 180) / Math.PI }, physics: { body: "static", collider: "box" }, model: { id: M_BENCH, forward: "+z" } }); }
+  sp("l61-planter", { feetPosition: { x: 0, y: -0.6, z: 0 }, physics: "static", primitive: { kind: "cylinder", radiusTop: 1.6, radiusBottom: 1.6, height: 0.7 }, material: { color: "oklch(0.8 0.03 70)", roughness: 0.6 },
     children: [{ feetPosition: { x: 0, y: 0.7, z: 0 }, primitive: { kind: "sphere", radius: 1.3 }, material: { color: "oklch(0.45 0.12 145)", roughness: 0.9 } }, { feetPosition: { x: 0.6, y: 1.5, z: 0.3 }, primitive: { kind: "sphere", radius: 0.8 }, material: { color: "oklch(0.5 0.13 140)", roughness: 0.9 } }] });
   for (const [k, [x, z]] of [[-27, -18], [27, -18], [-27, 18], [27, 18], [-10, 19], [10, 19]].entries()) sp(`l61-pot-${k}`, { feetPosition: { x, y: 0, z }, physics: "static", primitive: { kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.35, height: 0.6 }, material: { color: "oklch(0.55 0.08 40)" },
     children: [{ feetPosition: { x: 0, y: 0.6, z: 0 }, primitive: { kind: "cone", radius: 0.5, height: 1.8 }, material: { color: "oklch(0.42 0.11 150)", roughness: 0.9 } }] });
@@ -169,10 +174,13 @@ function lay(ctx) {
   // arrivals: the hall, and where Level 4's vending machine drops you
   sp("l61-arrive", { feetPosition: { x: 0, y: 0.1, z: 14 }, rotation: { yaw: 0 } });
   sp("l61-from-l4", { feetPosition: { x: -14, y: 0.1, z: 18.5 }, rotation: { yaw: 0 } });
+  layExtra(ctx, { HW, HD, HH });
   sign("l61-welcome", 0, 3.8, HD - 0.2, 0, 5, 1.0, `<div style="font-size:150px;color:#ff7ab8;font-style:italic">The Snackrooms</div><div style="font-size:70px;color:#5ad8e0">EAT · DRINK · STAY AS LONG AS YOU LIKE</div>`, "oklch(0.22 0.06 280)");
 }
 
 export function tick(ctx) {
   const st = ctx.place.state;
-  if ((st.builtV ?? 0) < V) { lay(ctx); st.builtV = V; }
+  if ((st.builtV ?? 0) < V) { lay(ctx); st.builtV = V; st.crewV = 0; }
+  if ((st.crewV ?? 0) < 1) { st.crewV = 1; for (const id of FACELING_IDS) faceling(ctx, id); for (const id of PEOPLE) person(ctx, id); }
+  keepPeople(ctx, PEOPLE, person); // the Faceling crew is the level's own: a fallen one is replaced the next time the level is rebuilt
 }
