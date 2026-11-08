@@ -144,7 +144,7 @@ export function headModel(l0) {
     id: (isFemale ? sp.headF : sp.headM) || sp.head,
     materials: only({
       ...furMats(l),
-      eyewhite: { color: '#fffdf8', roughness: 0.35, metalness: 0 },
+      eyewhite: { color: l?.sclera || '#fffdf8', roughness: 0.35, metalness: 0 }, // l.sclera: one look's own (Phoebe's black)
       eyeink: { color: '#16101c', roughness: 0.95, metalness: 0 },
       pupil: l?.pupil ? { color: l.pupil, roughness: 1, metalness: 0, ...(l.glowEye ? { emissive: l.pupil, emissiveIntensity: typeof l.glowEye === 'number' ? l.glowEye : 2 } : {}) } // an authored pupil (Phoebe's white, glowing; johnadams2 Nov 8): one look's own, the black rule stands for the rest
       : {
