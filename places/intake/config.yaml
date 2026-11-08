@@ -1,19 +1,19 @@
-# the intake room: where START puts you together before the halls (johnadams2, Nov 8)
+# the intake room: a 2000s bedroom where you make your critter before the halls (johnadams2, Nov 8)
 mode: 3d
 terrain:
   kind: "off"
 atmosphere:
   clouds: {enabled: false}
-  fog: {kind: linear, near: 12, far: 40, color: oklch(0.52 0.06 90)}
-  look: {script: scripts/look-default.js, params: {bloomThreshold: 0.72, bloomStrength: 0.55}}
+  fog: {kind: linear, near: 30, far: 80, color: oklch(0.7 0.02 80)}
+  look: {script: scripts/look-default.js, params: {bloomThreshold: 0.8, bloomStrength: 0.4}}
   moon: {enabled: false, intensity: 0}
-  sky: {kind: color, color: oklch(0.08 0.02 85)}
+  sky: {kind: color, color: oklch(0.85 0.02 240)}
   stars: {enabled: false}
-  timeOfDay: 0
+  timeOfDay: 14
   wind: {direction: 0, speed: 0}
   ambient:
-    light: {color: oklch(0.85 0.07 95), intensity: 0.55}
-  hemisphere: {groundColor: oklch(0.48 0.06 75), intensity: 0.35, skyColor: oklch(0.88 0.07 95)}
+    light: {color: oklch(0.9 0.03 80), intensity: 0.45}
+  hemisphere: {groundColor: oklch(0.5 0.04 70), intensity: 0.35, skyColor: oklch(0.92 0.02 240)}
 defaultSpawnPoint: {x: 0, y: 0.05, z: 0}
 defaultSpawnRotation: 0
 gravity: {x: 0, y: -24, z: 0}

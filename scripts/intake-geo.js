@@ -1,9 +1,10 @@
-// the intake room: one closed-off Level 0 room where a new wanderer is put together before the halls.
-// carpet, chevron wallpaper, drop ceiling, two buzzing panels, a shut door behind you, water stains. Spawn at 0,0,0 facing -Z.
-const WALLPAPER = "/cdn/value.00a4e744acf9ab763779bbb0cc7f26fb1dd20aeafc69448c536939cd7212caeb.png";
-const CARPET = "cdn/texture-damp-beige-berber-office-carpet.png";
-const CEILING = "cdn/texture-white-acoustic-drop-ceiling-tile-grid.png";
-const X0 = -3.5, X1 = 3.5, Z0 = -5, Z1 = 2.5, H = 3;
+// the intake room (johnadams2, Nov 8): a 2000s bedroom you make yourself in. Periwinkle paint, berber carpet,
+// popcorn ceiling, white trim, a window east, the bedroom door behind you. Spawn 0,0,0 facing -Z.
+const PAINT = "cdn/texture-eggshell-painted-drywall-light-orange-peel.png";
+const CARPET = "cdn/texture-beige-berber-loop-carpet-slightly-worn.png";
+const CEILING = "cdn/texture-white-popcorn-acoustic-ceiling-texture.png";
+const X0 = -3, X1 = 3, Z0 = -4, Z1 = 2.5, H = 2.6;
+const WZ0 = -2.1, WZ1 = -0.9, WY0 = 0.95, WY1 = 2.05; // the window in the east wall
 function face(ctx, a, b, c, d, n) {
   const ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2], vx = c[0] - a[0], vy = c[1] - a[1], vz = c[2] - a[2];
   const cx = uy * vz - uz * vy, cy = uz * vx - ux * vz, cz = ux * vy - uy * vx;
@@ -18,50 +19,50 @@ function box(ctx, x0, y0, z0, x1, y1, z1) {
   face(ctx, [x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [x1, y0, z1], [1, 0, 0]);
 }
 export function geometry(ctx) {
-  // carpet, a darker damp patch by the back corner
-  ctx.albedo(CARPET); ctx.color("oklch(0.98 0.01 90)");
+  const near = (ctx.lod ?? 1) <= 2;
+  ctx.albedo(CARPET); ctx.color("oklch(0.9 0.02 80)"); ctx.roughness(0.98);
   face(ctx, [X0, 0, Z0], [X0, 0, Z1], [X1, 0, Z1], [X1, 0, Z0], [0, 1, 0]);
-  ctx.color("oklch(0.72 0.04 75)");
-  face(ctx, [-3.4, 0.004, -4.9], [-3.4, 0.004, -3.1], [-1.9, 0.004, -3.1], [-1.9, 0.004, -4.9], [0, 1, 0]);
-  // ceiling
-  ctx.albedo(CEILING); ctx.color("oklch(0.97 0.015 95)");
+  ctx.albedo(CEILING); ctx.color("oklch(0.96 0.005 90)");
   face(ctx, [X0, H, Z0], [X1, H, Z0], [X1, H, Z1], [X0, H, Z1], [0, -1, 0]);
-  // walls, inward faces, with thickness so the collider holds
-  ctx.albedo(WALLPAPER); ctx.color("oklch(0.98 0.01 90)");
-  box(ctx, X0 - 0.2, 0, Z0 - 0.2, X1 + 0.2, H, Z0);      // front
-  box(ctx, X0 - 0.2, 0, Z1, X1 + 0.2, H, Z1 + 0.2);      // back
-  box(ctx, X0 - 0.2, 0, Z0, X0, H, Z1);                  // left
-  box(ctx, X1, 0, Z0, X1 + 0.2, H, Z1);                  // right
-  // water stains bleeding down from the ceiling
-  ctx.albedo(null); ctx.roughness(0.95);
-  ctx.color("oklch(0.55 0.07 70 / 0.5)");
-  face(ctx, [-2.6, 1.2, Z0 + 0.006], [-1.5, 1.2, Z0 + 0.006], [-1.3, H, Z0 + 0.006], [-2.9, H, Z0 + 0.006], [0, 0, 1]);
-  face(ctx, [X1 - 0.006, 1.7, -1.2], [X1 - 0.006, 1.7, 0.2], [X1 - 0.006, H, 0.5], [X1 - 0.006, H, -1.5], [-1, 0, 0]);
-  // baseboards
-  ctx.color("oklch(0.72 0.05 85)"); ctx.roughness(0.6);
-  box(ctx, X0, 0, Z0, X1, 0.1, Z0 + 0.03); box(ctx, X0, 0, Z1 - 0.03, -0.6, 0.1, Z1); box(ctx, 0.6, 0, Z1 - 0.03, X1, 0.1, Z1);
-  box(ctx, X0, 0, Z0, X0 + 0.03, 0.1, Z1); box(ctx, X1 - 0.03, 0, Z0, X1, 0.1, Z1);
-  // the shut door behind you: frame, slab, lever
-  ctx.color("oklch(0.62 0.05 75)"); ctx.roughness(0.55);
-  box(ctx, -0.6, 0, Z1 - 0.06, -0.52, 2.15, Z1); box(ctx, 0.52, 0, Z1 - 0.06, 0.6, 2.15, Z1); box(ctx, -0.6, 2.07, Z1 - 0.06, 0.6, 2.15, Z1);
-  ctx.color("oklch(0.55 0.06 60)"); ctx.roughness(0.7);
-  box(ctx, -0.52, 0.01, Z1 - 0.04, 0.52, 2.07, Z1 - 0.01);
-  ctx.color("oklch(0.75 0.01 90)"); ctx.metalness(0.8); ctx.roughness(0.35);
-  box(ctx, 0.3, 0.98, Z1 - 0.09, 0.44, 1.02, Z1 - 0.04);
-  ctx.metalness(null);
-  // a dead outlet on the left wall
-  ctx.color("oklch(0.9 0.02 90)"); ctx.roughness(0.5);
-  box(ctx, X0, 0.3, -2.06, X0 + 0.015, 0.42, -1.98);
-  // light panels: frame, then the lit diffuser
-  for (const [mx, mz] of [[0, -1.6], [0, 1.0]]) {
-    ctx.color("oklch(0.85 0.01 90)");
-    box(ctx, mx - 0.65, H - 0.04, mz - 0.35, mx + 0.65, H, mz + 0.35);
-    ctx.emissive([2.4, 2.25, 1.8]); ctx.color("#fffaf0");
-    face(ctx, [mx - 0.6, H - 0.045, mz - 0.3], [mx + 0.6, H - 0.045, mz - 0.3], [mx + 0.6, H - 0.045, mz + 0.3], [mx - 0.6, H - 0.045, mz + 0.3], [0, -1, 0]);
-    ctx.emissive(null);
+  ctx.albedo(PAINT); ctx.color("oklch(0.8 0.05 265)"); ctx.roughness(0.85); // periwinkle, a 2003 paint-chip blue
+  box(ctx, X0 - 0.2, 0, Z0 - 0.2, X1 + 0.2, H, Z0);
+  box(ctx, X0 - 0.2, 0, Z1, X1 + 0.2, H, Z1 + 0.2);
+  box(ctx, X0 - 0.2, 0, Z0, X0, H, Z1);
+  // east wall with its window hole
+  box(ctx, X1, 0, Z0, X1 + 0.2, H, WZ0); box(ctx, X1, 0, WZ1, X1 + 0.2, H, Z1);
+  box(ctx, X1, 0, WZ0, X1 + 0.2, WY0, WZ1); box(ctx, X1, WY1, WZ0, X1 + 0.2, H, WZ1);
+  ctx.albedo(null);
+  // daylight in the glass: a soft overcast afternoon, too bright to see past
+  ctx.emissive([1.6, 1.7, 1.85]); ctx.color("#eef3ff");
+  face(ctx, [X1 + 0.12, WY0, WZ0], [X1 + 0.12, WY0, WZ1], [X1 + 0.12, WY1, WZ1], [X1 + 0.12, WY1, WZ0], [-1, 0, 0]);
+  ctx.emissive(null);
+  // trim: window casing, sill, sash bar, baseboards, door casing (all white semi-gloss)
+  ctx.color("oklch(0.95 0.01 90)"); ctx.roughness(0.4);
+  box(ctx, X1 - 0.03, WY0 - 0.06, WZ0 - 0.07, X1 + 0.01, WY1 + 0.06, WZ0);
+  box(ctx, X1 - 0.03, WY0 - 0.06, WZ1, X1 + 0.01, WY1 + 0.06, WZ1 + 0.07);
+  box(ctx, X1 - 0.03, WY1, WZ0, X1 + 0.01, WY1 + 0.06, WZ1);
+  box(ctx, X1 - 0.09, WY0 - 0.03, WZ0 - 0.1, X1 + 0.01, WY0, WZ1 + 0.1);
+  box(ctx, X1 + 0.1, (WY0 + WY1) / 2 - 0.02, WZ0, X1 + 0.13, (WY0 + WY1) / 2 + 0.02, WZ1);
+  box(ctx, X0, 0, Z0, X1, 0.11, Z0 + 0.018);
+  box(ctx, X0, 0, Z1 - 0.018, -0.55, 0.11, Z1); box(ctx, 0.55, 0, Z1 - 0.018, X1, 0.11, Z1);
+  box(ctx, X0, 0, Z0, X0 + 0.018, 0.11, Z1);
+  box(ctx, X1 - 0.018, 0, Z0, X1, 0.11, Z1);
+  box(ctx, -0.6, 0, Z1 - 0.025, -0.52, 2.12, Z1); box(ctx, 0.52, 0, Z1 - 0.025, 0.6, 2.12, Z1); box(ctx, -0.6, 2.04, Z1 - 0.025, 0.6, 2.12, Z1);
+  // crown moulding
+  if (near) { box(ctx, X0, H - 0.06, Z0, X1, H, Z0 + 0.04); box(ctx, X0, H - 0.06, Z1 - 0.04, X1, H, Z1); box(ctx, X0, H - 0.06, Z0, X0 + 0.04, H, Z1); box(ctx, X1 - 0.04, H - 0.06, Z0, X1, H, Z1); }
+  // the six-panel door, shut, brass knob
+  ctx.color("oklch(0.93 0.012 85)"); ctx.roughness(0.45);
+  box(ctx, -0.52, 0.01, Z1 - 0.045, 0.52, 2.04, Z1 - 0.005);
+  if (near) {
+    ctx.color("oklch(0.89 0.012 85)");
+    for (const [y0, y1] of [[0.12, 0.8], [0.9, 1.45], [1.55, 1.95]]) for (const [x0, x1] of [[-0.42, -0.06], [0.06, 0.42]]) box(ctx, x0, y0, Z1 - 0.055, x1, y1, Z1 - 0.045);
+    ctx.color("oklch(0.78 0.11 85)"); ctx.metalness(0.9); ctx.roughness(0.3);
+    box(ctx, 0.36, 0.93, Z1 - 0.1, 0.42, 0.99, Z1 - 0.045);
+    ctx.metalness(null);
+    // light switch and an outlet
+    ctx.color("oklch(0.95 0.015 90)"); ctx.roughness(0.4);
+    box(ctx, 0.75, 1.15, Z1 - 0.012, 0.83, 1.27, Z1);
+    box(ctx, X0, 0.3, -2.0, X0 + 0.012, 0.42, -1.93);
   }
-  // one ceiling tile missing over the far corner
-  ctx.color("oklch(0.12 0.01 80)");
-  face(ctx, [2.2, H - 0.01, -4.6], [2.8, H - 0.01, -4.6], [2.8, H - 0.01, -4.0], [2.2, H - 0.01, -4.0], [0, -1, 0]);
   ctx.roughness(null);
 }

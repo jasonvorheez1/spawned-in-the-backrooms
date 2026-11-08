@@ -1,21 +1,115 @@
 # spawn-scene v2 yaml x0z0
-intake-hum:
-  audio: {bus: Ambience, clip: /cdn/value.4f2ca6969e3919a947a1bb8c8c957185a3a208f8fdd1d35ecd8daa87bd5495ce.mp3, gain: 0.18, loop: true, spatial: false}
-  feetPosition: {x: 0, y: 2.8, z: -1.6}
-  id: intake-hum
-intake-light-a:
-  feetPosition: {x: 0, y: 2.8, z: -1.6}
-  id: intake-light-a
-  light: {color: oklch(0.95 0.06 95), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}}
-intake-light-b:
-  feetPosition: {x: 0, y: 2.8, z: 1}
-  id: intake-light-b
-  light: {color: oklch(0.95 0.06 95), distance: 8, intensity: 4, kind: point, shadow: {enabled: false}}
 intake-room:
   castShadow: false
   feetPosition: {x: 0, y: 0, z: 0}
   id: intake-room
-  material: {emissiveIntensity: 2.4, roughness: 0.92}
+  material: {emissiveIntensity: 1, roughness: 0.9}
   physics: {body: static, collider: mesh}
   primitive: {kind: scripted, script: scripts/intake-geo.js}
   receiveShadow: true
+ir-bed:
+  feetPosition: {x: -1.95, y: 0, z: 0.75}
+  id: ir-bed
+  layout: {box: {max: {x: 0.825, y: 1.1, z: 1.05}, min: {x: -0.825, y: 0, z: -1.05}}}
+  model: {id: /cdn/value.4c61843b2bcb94ee80364a2a654397ea5d979690794ce7e085addb70cfb31aae.glb}
+  physics: {body: static, collider: box}
+  rotation: 90
+ir-blowup:
+  feetPosition: {x: -2.2, y: 0, z: -2.35}
+  id: ir-blowup
+  layout: {box: {max: {x: 0.475, y: 0.75, z: 0.45}, min: {x: -0.475, y: 0, z: -0.45}}}
+  model: {id: /cdn/value.afa0c785ed6f8de02e08eba83bb07a5b8b9afdb7a0cd08c5469c281133c00d57.glb}
+  physics: {body: static, collider: box}
+  rotation: 60
+ir-boombox:
+  feetPosition: {x: -2.75, y: 0, z: 2.1}
+  id: ir-boombox
+  layout: {box: {max: {x: 0.1, y: 0.36, z: 0.25}, min: {x: -0.1, y: 0, z: -0.25}}}
+  model: {id: /cdn/value.b65239e4484936755ff171a40f1ea0104ad73cf5d0d2b21261bab60345e000f9.glb}
+  physics: {body: static, collider: box}
+  rotation: 90
+ir-ceiling-light:
+  feetPosition: {x: 0, y: 2.52, z: -0.8}
+  id: ir-ceiling-light
+  light: {color: oklch(0.93 0.06 75), distance: 9, intensity: 3.2, kind: point, shadow: {enabled: true}}
+  material: {color: "#fff4e0", emissive: "#ffe7c2", emissiveIntensity: 1.6, roughness: 0.3}
+  primitive: {kind: sphere, radius: 0.2}
+  scale: {x: 1, y: 0.4, z: 1}
+ir-coke:
+  feetPosition: {x: 2.55, y: 0.76, z: 0.6}
+  id: ir-coke
+  layout: {box: {max: {x: 0.033, y: 0.12, z: 0.033}, min: {x: -0.033, y: 0, z: -0.033}}}
+  model: {id: /cdn/value.8dbfe9caef376c3d74354e97aa627d7a842fdc981ef4f60ddfd2c24d34aea0fd.glb}
+  rotation: 20
+ir-curtains:
+  feetPosition: {x: 2.9, y: 0.7, z: -1.5}
+  id: ir-curtains
+  layout: {box: {max: {x: 0.15, y: 1.6, z: 0.85}, min: {x: -0.15, y: 0, z: -0.85}}}
+  model: {id: /cdn/value.970a63a9bb4e3d521cd133a1ec921f884ac24ea444813ecfd0981b2fa3d37ec3.glb}
+  rotation: 180
+ir-desk:
+  feetPosition: {x: 2.35, y: 0, z: 1.15}
+  id: ir-desk
+  layout: {box: {max: {x: 0.65, y: 1.35, z: 0.6}, min: {x: -0.65, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.c19a3a1207063b8231b343d67d98657a158515407d7c01b6c2286a1bd2d5c18c.glb}
+  physics: {body: static, collider: box}
+  rotation: 90
+ir-dresser:
+  feetPosition: {x: -1.55, y: 0, z: -3.74}
+  id: ir-dresser
+  layout: {box: {max: {x: 0.225, y: 1.6, z: 0.475}, min: {x: -0.225, y: 0, z: -0.475}}}
+  model: {id: /cdn/value.05e39c76bde213827151738e055d8ee1b7af522032767812cb1e662f75992599.glb}
+  physics: {body: static, collider: box}
+  rotation: 90
+ir-dvds:
+  feetPosition: {x: -2.7, y: 0, z: -0.55}
+  id: ir-dvds
+  layout: {box: {max: {x: 0.1, y: 0.3, z: 0.075}, min: {x: -0.1, y: 0, z: -0.075}}}
+  model: {id: /cdn/value.854240d4e72d45668e1d95134e4600a44ca99ac98485d362c0b6c023f2f128b6.glb}
+  rotation: 80
+ir-ipod:
+  feetPosition: {x: -1.35, y: 0.83, z: -3.72}
+  id: ir-ipod
+  layout: {box: {max: {x: 0.05, y: 0.15, z: 0.05}, min: {x: -0.05, y: 0, z: -0.05}}}
+  model: {id: /cdn/value.d4492ec79dc96b8f287d8aad99b6b5ea0866070d9e08500ba2b9bf5d30e73875.glb}
+  rotation: 0
+ir-kitty:
+  feetPosition: {x: -2.55, y: 0.52, z: 0.75}
+  id: ir-kitty
+  layout: {box: {max: {x: 0.15, y: 0.32, z: 0.13}, min: {x: -0.15, y: 0, z: -0.13}}}
+  model: {id: /cdn/value.a9f9d3c6172c17966216abe7310be269dde6da0bf1b828779638c4c7152f6575.glb}
+  rotation: 90
+ir-lamp:
+  feetPosition: {x: -2.6, y: 0, z: -3.55}
+  id: ir-lamp
+  layout: {box: {max: {x: 0.25, y: 1.6, z: 0.25}, min: {x: -0.25, y: 0, z: -0.25}}}
+  model: {id: /cdn/value.0871d1626b929961d73cb28c05f82070ad822c5cc2e6b8deec5046248fb4086d.glb}
+  physics: {body: static, collider: box}
+  rotation: 0
+ir-lamp-light:
+  feetPosition: {x: -2.6, y: 1.45, z: -3.55}
+  id: ir-lamp-light
+  light: {color: oklch(0.88 0.1 70), distance: 4, intensity: 1.4, kind: point, shadow: {enabled: false}}
+ir-lava:
+  feetPosition: {x: 2.6, y: 0.76, z: 1.65}
+  id: ir-lava
+  layout: {box: {max: {x: 0.065, y: 0.42, z: 0.065}, min: {x: -0.065, y: 0, z: -0.065}}}
+  model: {id: /cdn/value.8413072e1fc1e8e8482a7d553210352afec9f63c4aca06ab7775be80044401c7.glb}
+  rotation: 0
+ir-plant:
+  feetPosition: {x: 2.6, y: 0, z: -3.55}
+  id: ir-plant
+  layout: {box: {max: {x: 0.275, y: 0.8, z: 0.275}, min: {x: -0.275, y: 0, z: -0.275}}}
+  model: {id: /cdn/value.5c55541c98397f0fd38ea7e850e3e15e4fd78fd4a5951439cde327b41abe9e09.glb}
+  physics: {body: static, collider: box}
+  rotation: 0
+ir-rug:
+  feetPosition: {x: 0.1, y: 0, z: -1.3}
+  id: ir-rug
+  layout: {box: {max: {x: 1.2, y: 0.02, z: 0.85}, min: {x: -1.2, y: 0, z: -0.85}}}
+  model: {id: /cdn/value.455dde0ca22a985f649dee005f80bad45966342485d248a0fa95d86fb0a2d2c3.glb}
+  rotation: 0
+ir-window-light:
+  feetPosition: {x: 2.6, y: 1.5, z: -1.5}
+  id: ir-window-light
+  light: {color: oklch(0.95 0.02 240), distance: 6, intensity: 2.2, kind: point, shadow: {enabled: false}}
