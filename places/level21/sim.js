@@ -14,7 +14,7 @@ import { fan, fanHousing, cable, DRIP, DUST, MIST } from "../../scripts/lib/ambi
 import { terminalSpec } from "../../scripts/lib/terminal.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "500ms";
-const V = 14; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist; 14: survey road flares, freezer frost, blast sparks, sandbags, show-don't-tell
+const V = 15; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist; 14: survey road flares, freezer frost, blast sparks, sandbags, show-don't-tell
 const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
 const rm = (type) => ROOMS.filter((r) => r.type === type);
 const center = (r) => cellCenter(r.x0 + (r.w - 1) / 2, r.z0 + (r.d - 1) / 2); // the middle of a room block
@@ -146,8 +146,12 @@ function lay(ctx) {
   [["filing", -4], ["filing", -2.4], ["desk", 0.5], ["desk", 3]].forEach(([k, a], i) => spawnContainerL2(ctx, k, { x: oc.x + a, z: edgeOf(of, 1) - (k === "desk" ? 1.6 : 0.7) }, 180, { room: 73 + i }));
   spawnRemains(ctx, { x: oc.x - 1, z: oc.z + 1 }, ["bar", "keycard", "page:13"], "Alef administrator's remains");
   const lk = rm("lockers")[0], lc = center(lk);
-  for (let i = 0; i < 6; i++) spawnContainerL2(ctx, "locker", { x: lc.x - 4.8 + i * 1.0, z: edgeOf(lk, 3) + 0.45 }, 0, { noLock: i % 3 === 0, room: 80 }); // the brown ones, in a row
-  for (let i = 0; i < 4; i++) spawnContainerL2(ctx, "locker", { x: edgeOf(lk, 0) - 0.45, z: lc.z - 3.6 + i * 1.0 }, 90, { noLock: false, room: 81 }); // and the grey ones, padlocked
+  // the ref's two kinds: a long row of tall brown perforated lockers, shoulder to shoulder, and banks of grey six-tier box lockers
+  const VENT = { id: "/cdn/value.b8e3419a87b05bec8b066f3103daee6b0726b980c7aede0c36ffbf208bc02ae2.glb", paints: ["#3b2a20", "#432f23", "#36261c", "#4a3426"] };
+  const BOXL = { id: "/cdn/value.441b77290ec0c2949a34dfde8f17c29c43443b39ae05f3b1914924257234d008.glb", paints: ["#b9b6ab", "#c2bfb3", "#aeaba0"] };
+  for (let i = 0; i < 12; i++) spawnContainerL2(ctx, "locker", { x: lc.x - 5 + i * 0.43, z: edgeOf(lk, 3) + 0.3 }, 0, { noLock: i % 3 === 0, room: 80, model: VENT, size: [0.42, 1.95, 0.54] });
+  for (let i = 0; i < 9; i++) spawnContainerL2(ctx, "locker", { x: edgeOf(lk, 0) - 0.27, z: lc.z - 4.2 + i * 0.39 }, 90, { noLock: i % 4 === 1, room: 81, model: BOXL, size: [0.38, 1.85, 0.48] });
+  for (let i = 0; i < 5; i++) spawnContainerL2(ctx, "locker", { x: lc.x - 2.2 + i * 0.39, z: lc.z - 1.2 }, 180, { noLock: i % 2 === 0, room: 81, model: BOXL, size: [0.38, 1.85, 0.48] }); // a freestanding grey bank, back to the bench
   spawnRemains(ctx, { x: lc.x, z: lc.z }, ["bandage", "almond", "page:14"], "Operative's remains");
   const rr = rm("restroom")[0]; spawnContainerL2(ctx, "cabinet", { x: center(rr).x, z: edgeOf(rr, 1) - 0.6 }, 180, { room: 82 });
   const br = rm("break")[0]; spawnContainerL2(ctx, "vending", { x: edgeOf(br, 0) - 0.6, z: center(br).z - 2 }, 90, { room: 83 }); spawnContainerL2(ctx, "fridge", { x: edgeOf(br, 0) - 0.5, z: center(br).z + 1 }, 90, { room: 84 });
