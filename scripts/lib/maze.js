@@ -71,7 +71,7 @@ import { L5_NAMES } from './level5.js'
 import { L21_NAMES } from './level21.js'
 export const ZONE_NAMES = {
   ...L3_NAMES, ...L4_NAMES, ...L5_NAMES, ...L21_NAMES, l8_cave: "Level 8 · Cave Systems",
-  l6_halls: "Level 6 · Lights Out", l7_room1: "Level 7 · The Floating House", l7_pier: "Level 7 · Entrance Pier", l7_seawatch: "Level 7 · M.E.G. Outpost Seawatch", l7_fort: "Level 7 · Fort Surrender", l7_sea: "Level 7 · The Abyssal Ocean", l7_ocean: "Level 7 · The Abyssal Ocean", hub: "The Safe Room", halls: "The Yellow Halls", arches: "Arch Rooms", pillars: "Pillar Field",
+  l6_halls: "Level 6 · Lights Out", l7_room1: "Level 7 · The Floating House", l7_pier: "Level 7 · Entrance Pier", l7_seawatch: "Level 7 · M.E.G. Outpost Seawatch", l7_fort: "Level 7 · Fort Surrender", l7_sea: "Level 7 · The Abyssal Ocean", l7_ocean: "Level 7 · The Abyssal Ocean", manila: "The Manila Room", hub: "The Safe Room", halls: "The Yellow Halls", arches: "Arch Rooms", pillars: "Pillar Field",
   holes: "The Pits", red: "Red Room", dark: "Blackout Zone", expanse: "The Expanse", offices: "Abandoned Offices",
   l1_halls: "Level 1 · The Halls", l1_storage: "Level 1 · Storage Racks", l1_corridors: "Level 1 · The Corridors", l1_camp: "Level 1 · M.E.G. Waypoint", l1_pipes: "Level 1 · The Pipeworks", l1_void: "Level 1 · The Halls",
 };

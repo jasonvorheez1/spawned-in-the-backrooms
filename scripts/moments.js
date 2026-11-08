@@ -9,13 +9,13 @@ const PICKUP = G + "sfx-payphone-handset-lifted-off-metal-hook-clunk.mp3";
 const WHISPER = "cdn/voice-dry-breathy-close-whispering-stranger-saying-" + encodeURIComponent("you walked past the way out twice. it moved again. don't trust the lights.") + ".mp3";
 const FAR = [G + "sfx-distant-heavy-door-slam-echo-down-empty-hallway.mp3", G + "sfx-distant-slow-footsteps-on-damp-carpet-echo.mp3", G + "sfx-distant-fluorescent-tube-pop-and-glass-tinkle-echo.mp3"];
 const DRIP = G + "sfx-slow-water-drips-into-shallow-puddle-loop.mp3";
-export { DRIP };
+export { DRIP, STATIC };
 
 export const ears = {
   press: (ctx, { by }) => {
     const s = ctx.self.state, who = ctx.getObject(by), now = ctx.now();
+    const pos = { ...ctx.self.worldFeetPosition, y: 1.6 };
     if (s.kind === "payphone") {
-      const pos = { ...ctx.self.worldFeetPosition, y: 1.6 };
       if (now < (s.quietUntil ?? 0)) { heard(ctx, { clip: STATIC, position: pos, volume: 0.35, maxDistance: 8 }); if (who) who.state.notice = { text: "Dial tone. Nothing else.", at: now }; return; }
       s.quietUntil = now + 150000; ctx.self.audio = null; ctx.self.session.ring = false;
       heard(ctx, { clip: PICKUP, position: pos, volume: 0.6, maxDistance: 12 });
@@ -24,6 +24,62 @@ export const ears = {
       if (who) who.state.notice = { text: "…static… a whisper: “don't trust the lights.”", at: now };
     } else if (s.kind === "note" && who) {
       who.state.notice = { text: s.text, at: now };
+    } else if (s.kind === "cassette" && who) {
+      heard(ctx, { clip: PICKUP, position: pos, volume: 0.8, maxDistance: 12 });
+      heard(ctx, { clip: STATIC, position: pos, volume: 0.65, maxDistance: 10 });
+      who.state.sanity = Math.min(100, (who.state.sanity ?? 80) + 20);
+      who.state.sub = {
+        who: "MANILA CASSETTE RECORDING",
+        t: "“Day 19... If you're listening to this, you made it into the Manila Room. Breathe easy for a minute. The hum doesn't drill into your skull in here, and the carpet is dry. Don't touch the stagnant floor water outside, and follow the chalk arrows west. The wall that flickers is the only way out to Level 1. — Investigator Harris”",
+        at: now,
+        d: 8500,
+      };
+      ctx.emit("damageNumber", {
+        position: { x: pos.x, y: pos.y + 0.8, z: pos.z },
+        text: "+20 SANITY (MANILA SANCTUARY LOG)",
+        color: "#ffd36a",
+        size: 1.1,
+      }, { audience: { player: who.id } });
+    } else if (s.kind === "damp-carpet" && who) {
+      heard(ctx, { clip: DRIP, position: pos, volume: 0.85, maxDistance: 10 });
+      who.state.sub = {
+        who: "CARPET MOISTURE HAZARD",
+        t: "Saturated Carpet: Lukewarm stagnant fluid smelling of damp mildew and machine oil. Chemical tests confirm fungal mold spores and industrial grease. Ingestion causes acute poisoning. Drink only sealed Almond Water.",
+        at: now,
+        d: 6500,
+      };
+      if (who.state.sanity > 5) who.state.sanity -= 2;
+    } else if (s.kind === "peeling-wallpaper" && who) {
+      heard(ctx, { clip: G + "sfx-clothing-rustle-getting-up-from-seat.mp3", position: pos, volume: 0.8, maxDistance: 10 });
+      const WALL_NOTES = [
+        "Behind the peeling yellow wallpaper: Damp grey drywall marked with faint pencil: 'Room 409? Mom, if you're looking for me, I went west.'",
+        "Behind the peeling yellow wallpaper: Raw copper wiring and buzzing conduits embedded directly into the plaster. A low 60Hz hum vibrates against your fingers.",
+        "Behind the peeling yellow wallpaper: Scratched into the gypsum: 'DON'T SLEEP ON THE CARPET. THE WALLS SHIFT WHEN YOU BLINK.'",
+        "Behind the peeling yellow wallpaper: A faded surveyor arrow in blue ink pointing toward the outer perimeter.",
+      ];
+      s.idx = ((s.idx ?? -1) + 1) % WALL_NOTES.length;
+      who.state.sub = {
+        who: "PEELING WALLPAPER",
+        t: WALL_NOTES[s.idx],
+        at: now,
+        d: 6500,
+      };
+    } else if (s.kind === "meg-board" && who) {
+      heard(ctx, { clip: G + "sfx-clothing-rustle-getting-up-from-seat.mp3", position: pos, volume: 0.7, maxDistance: 10 });
+      who.state.sub = {
+        who: "M.E.G. WAYPOINT ALPHA-0",
+        t: "=== M.E.G. SURVEY BULLETIN #0-01 ===\nSTATUS: Temporary Waypoint Alpha-0.\nADVISORY FOR WANDERERS:\n• CARPET: Liquid is non-potable industrial runoff; do not ingest.\n• HUM SPIKE: When fluorescent buzzing spikes in volume, keep moving to reduce sanity decay.\n• ENTITY 3 (SMILERS): Maintain direct eye contact while slowly backing away. Do not run.\n• EXIT: Follow chalk arrows west. Noclip through the discolored wall to Level 1.",
+        at: now,
+        d: 9000,
+      };
+    } else if (s.kind === "noclip-wall" && who) {
+      heard(ctx, { clip: STATIC, position: pos, volume: 0.8, maxDistance: 10 });
+      who.state.sub = {
+        who: "ANOMALOUS NOCLIP BOUNDARY",
+        t: "The wallpaper here is cold to the touch and flickers with static. Pushing through the wall will noclip you directly to Level 1 ('Lurking Danger'). Walk into the wall to proceed.",
+        at: now,
+        d: 6000,
+      };
     }
   },
 };

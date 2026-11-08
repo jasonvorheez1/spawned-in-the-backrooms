@@ -315,7 +315,7 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
   </div>` : `<div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:100px;animation:hud-fade 3.5s forwards;pointer-events:none">
     <div style="font-size:22px;letter-spacing:0.12em">${ZONE_NAMES[zone] ?? (LEVEL_NAMES[player.place]?.[1] ?? 'THE LOBBY').toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}</div>
     <div class="muted" style="font-size:12px;margin-top:2px">
-      ${zone === 'hub' ? 'Sanity stabilizes here. Nothing follows.' : zone === 'dark' ? 'Total blackout. Watch the corners.' : zone === 'red' ? 'Severe sanity decay.' : zone === 'l5_housekeeping' ? 'M.E.G. Outpost Housekeeping. Sanity and health recover here.' : zone === 'l5_boiler' ? 'The Boiler Room. Extreme heat and heavy sanity drain.' : zone === 'l5_beverly' ? 'The Beverly Room. Hypnotic ballroom music echoes.' : ''}
+      ${zone === 'manila' ? 'The Manila Room. The fluorescent hum softens. Sanity recovers.' : zone === 'hub' ? 'Sanity stabilizes here. Nothing follows.' : zone === 'dark' ? 'Total blackout. Watch the corners.' : zone === 'red' ? 'Severe sanity decay.' : zone === 'l5_housekeeping' ? 'M.E.G. Outpost Housekeeping. Sanity and health recover here.' : zone === 'l5_boiler' ? 'The Boiler Room. Extreme heat and heavy sanity drain.' : zone === 'l5_beverly' ? 'The Beverly Room. Hypnotic ballroom music echoes.' : ''}
     </div>
   </div>`}
 
@@ -345,7 +345,7 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
   ${(s.firesaltUntil ?? 0) > now ? `<div style="position:absolute;left:0;right:0;text-align:center;bottom:150px;font-size:13px;color:#ff9a4a;text-shadow:0 0 6px rgba(255,120,30,.6)">Firesalt on your weapon · x1.4 melee · ${Math.ceil((s.firesaltUntil - now) / 1000)}s</div>` : ''}
   ${s.reading && PAGES[s.reading] ? `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);pointer-events:auto" data-modal>
     <div style="width:min(440px,88vw);background:#e9dfc4;color:#2a241a;padding:22px 26px 16px;font-family:'Courier New',monospace;font-size:14px;line-height:1.5;box-shadow:0 8px 30px rgba(0,0,0,.6);transform:rotate(-1.2deg);border-left:3px dashed #b9ab88">
-      <div style="font-size:11px;color:#7a6c50;margin-bottom:8px">${s.reading >= 11 && s.reading <= 17 ? 'Base Alef papers · ' + (s.reading - 10) + ' of 7' : 'torn page · ' + s.reading + ' of 8'}</div>
+      <div style="font-size:11px;color:#7a6c50;margin-bottom:8px">${s.reading >= 21 && s.reading <= 23 ? 'Level 0 field document · ' + (s.reading - 20) + ' of 3' : s.reading >= 11 && s.reading <= 17 ? 'Base Alef papers · ' + (s.reading - 10) + ' of 7' : 'torn page · ' + s.reading + ' of 8'}</div>
       <div style="white-space:pre-wrap">${String(PAGES[s.reading]).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/~~(.+?)~~/g, '<s style="text-decoration-thickness:3px">$1</s>')}</div>
       <div style="text-align:right;margin-top:12px"><button onclick="sendAction('inv',{k:'read',n:0})" style="background:#2a241a;color:#e9dfc4;border:0;padding:5px 14px;font-family:inherit;cursor:pointer">put it away</button></div>
     </div></div>` : ''}
