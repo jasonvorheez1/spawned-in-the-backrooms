@@ -52,7 +52,7 @@ sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 8; sc.r
 w = bpy.data.worlds.new("w"); w.color = (0.8, 0.8, 0.8); sc.world = w
 import math
 os.makedirs("/tmp/spm/proof", exist_ok=True)
-for name, pos in (("front", (0, -3, 0.7)), ("side", (3, 0, 0.7))):
+for name, pos in (("front", (0, -3, 0.7)), ("side", (3, 0, 0.7)), ("back", (0, 3, 0.7)), ("left", (-3, 0, 0.7))):
     cam = bpy.data.objects.new(name, bpy.data.cameras.new(name)); sc.collection.objects.link(cam); cam.location = pos
     d = Vector((0, 0, 0.65)) - Vector(pos); cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
     L = bpy.data.objects.new("L" + name, bpy.data.lights.new("L" + name, "SUN")); sc.collection.objects.link(L); L.rotation_euler = cam.rotation_euler; L.data.energy = 2
