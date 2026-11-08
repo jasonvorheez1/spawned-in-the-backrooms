@@ -1,7 +1,8 @@
 # Level 2 kit, compaction pass: each module (from build.py's json, /workspace/l2kit/src/<part>.json) welded,
 # decimated per RATIO, re-normalled by angle, and written to /workspace/l2kit/out/<part>.json for encode.py.
 import bpy, bmesh, json, math, os, sys
-RATIO = {"piperun": (1, 1), "tray": (1, 1), "wall": (1, 1)}
+RATIO = {"piperun": (1, 0.6), "tray": (1, 1), "wall": (1, 1)}  # per module (hi, lo); planar concrete never decimates: the baked runoff turns to sawteeth
+MAT_RATIO = {"piperun": {"steel": 0.45, "green": 0.55, "red": 0.55, "lag": 0.75}}  # hi groups by material: the long round pipes give up segments, bands and stains keep theirs
 SRC, OUT = "/workspace/l2kit/src", "/workspace/l2kit/out"
 os.makedirs(OUT, exist_ok=True)
 parts = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [f[:-5] for f in os.listdir(SRC)]
@@ -31,6 +32,6 @@ def group(g, ratio):
     return {"m": g["m"], "p": P, "n": N, "u": U, "c": C, "i": I}
 for part in parts:
     d = json.load(open(f"{SRC}/{part}.json")); rh, rl = RATIO.get(part, (1, 1))
-    out = {"hi": [group(g, rh) for g in d["hi"]], "lo": [group(g, rl) for g in d["lo"]]}
+    out = {"hi": [group(g, MAT_RATIO.get(part, {}).get(g["m"], rh)) for g in d["hi"]], "lo": [group(g, 1 if g["m"] in ("band", "stain", "brass") else rl) for g in d["lo"]]}
     json.dump(out, open(f"{OUT}/{part}.json", "w"))
     for k in ("hi", "lo"): print(part, k, sum(len(g["p"]) // 3 for g in d[k]), "->", sum(len(g["p"]) // 3 for g in out[k]), "verts,", sum(len(g["i"]) for g in out[k]) // 3, "tris")
