@@ -1405,7 +1405,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     sp("l11-ot-off-hum", { feetPosition: { x: OX, y: 3.6, z: OZ }, audio: { clip: "cdn/sfx-empty-concrete-office-floor-fluorescent-tube-buzz-and-ventilation-drone-loop.mp3", loop: true, gain: 0.14, spatial: true, maxDistance: 18 } });
     // a second crossing over the canal: a white steel footbridge, west of the road bridge
     const CZ = -30;
-    fit("l11-canal-footbridge", "footbridge", -36, 0.32, CZ, 0, 4.4, "mesh"); // spans the canal north to south
+    fit("l11-canal-footbridge", "footbridge", -36, 0.32, CZ, 45, 5.2, "mesh"); // spans the canal north to south
   }
 
   // ==========================================
