@@ -872,7 +872,7 @@ pop mist rate=5 on=arc(1.4,6.283,.4) life=1.2..2.0 v=up(.3)+sdir()*.1 size=.1..0
   sign("l61-welcome", 0, 3.8, HD - 0.2, 0, 5, 1.0, `<div style="font-size:150px;color:#ff7ab8;font-style:italic">The Snackrooms</div><div style="font-size:70px;color:#5ad8e0">EAT · DRINK · STAY AS LONG AS YOU LIKE</div>`, "oklch(0.22 0.06 280)");
 }
 
-// perf: a rebuild is queued and laid ~90 rows a tick. Each row replaces its old self in place (same id),
+// perf: a rebuild is queued and laid ~250 rows a tick (cadence 1s). Each row replaces its old self in place (same id),
 // so the old mall stands until its new piece lands; the leftovers are cleared at the end. One pass of ~1100 froze ~100-250 ms.
 let layQ = null, layDrop = null;
 function layStep(ctx) {
@@ -882,10 +882,14 @@ function layStep(ctx) {
     lay(q);
     const keep = new Set(layQ.map(([id]) => id));
     layDrop = Object.keys(ctx.place.objects ?? {}).filter((id) => /^l61-/.test(id) && !id.includes("/") && !keep.has(id));
+    // what you stand on and bump into goes first; a fresh room (no floor yet) gets all of that this very tick
+    const solid = ([, sp]) => !!sp.physics && sp.physics !== "none";
+    layQ = [...layQ.filter(solid), ...layQ.filter((r) => !solid(r))];
+    if (!ctx.getObject("l61-floor-main")) { while (layQ.length && solid(layQ[0])) { const [id, sp] = layQ.shift(); ctx.spawn(id, sp); } }
     layQ.reverse();
     return false;
   }
-  for (let n = 0; n < 90 && layQ.length; n++) { const [id, spec] = layQ.pop(); ctx.spawn(id, spec); }
+  for (let n = 0; n < 250 && layQ.length; n++) { const [id, spec] = layQ.pop(); ctx.spawn(id, spec); }
   if (layQ.length) return false;
   for (let n = 0; n < 120 && layDrop.length; n++) ctx.destroy(layDrop.pop());
   if (layDrop.length) return false;
