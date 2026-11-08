@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 38;
+const V = 39;
 const M_TABLE = "/cdn/value.37bc916755294f1e83c29bbcb3a608074b6069e8c1dc9a683f1e9bbfaedbd705.glb"; // art/l61-table/build.py + turn.py: chairs pushed out, seats facing the table
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -26,6 +26,7 @@ const BRASS = { color: "oklch(0.78 0.11 85)", metalness: 0.9, roughness: 0.25 };
 const WOOD = { ...T("worn-hardwood-grain", 0.6), color: "oklch(0.55 0.08 55)", roughness: 0.6 };
 const DARKWOOD = { ...T("worn-hardwood-grain", 0.6), color: "oklch(0.3 0.05 40)", roughness: 0.5 };
 const CHECK = { ...T("black-and-white-checkerboard-vinyl-floor-tiles", 0.5), roughness: 0.4 };
+const MOSAIC = { ...T("blue-and-grey-victorian-mosaic-floor-tiles-with-diamond-pattern", 0.5), color: "oklch(0.7 0.03 250)", roughness: 0.35 };
 const BATH = { ...T("white-square-ceramic-bathroom-wall-tiles", 1), color: "oklch(0.95 0.01 220)", roughness: 0.3 };
 const STEEL = { color: "oklch(0.7 0.01 250)", metalness: 0.8, roughness: 0.3 };
 const NAVY = { color: "oklch(0.3 0.1 262)", roughness: 0.45 };
@@ -40,6 +41,10 @@ const M_OVEN = "/cdn/value.22485741e0731ddfcae9cc3ac5261175b727fc9dad7e75df605b3
 const M_GRILL = "/cdn/value.52e8c951e79935129fcfb50a305e01a547c4ea962c25fb44339c09ac673636a4.glb";
 const M_JUKE = "/cdn/value.eb676c37706ec7e4c3e6457d46b4a565b82fc50d9cb775ec70525a1fe3fcad67.glb";
 const M_BACKBAR = "/cdn/value.d8c593de7c7b1406024e79601baece61757017658bcaf7b9bbd6da42ea716075.glb";
+// Liquorette's tavern set (art/liquorette/build.py): front is +Y in Blender, so forward "-z"
+const L_BACK = "/cdn/value.a187daf06bff17c55643ef0aac588b4e96b9c44c4945786fa799a31f2af8f47d.glb", L_BAR = "/cdn/value.5a499eb1ef735837567954e269e9ad617fae6023a287348669deccdac310175d.glb";
+const L_STOOL = "/cdn/value.0bbf170e907b58d9b64bfe662e63bede4a9e6a6195ea676256b89545252b6b67.glb", L_CHAIR = "/cdn/value.99cd616ba78a4e1c69efcdc0ef0050d8da906cecb5c558e97c79adfd2a3a6ab2.glb";
+const L_TABLE = "/cdn/value.33a726ced14757e5e3948ed28a5fea36e2dec90fbdeb755fcfe483434e6e6eb5.glb", L_BOILER = "/cdn/value.8ea6672f48e73b727ed727651d920b8505a90819258f886d4df6f23da68d7f30.glb";
 const M_BENCH = "/cdn/value.875f7fd721e70ac1c285cdade96da8263dc175c97f593282732e00ef66d72b83.glb";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
@@ -257,7 +262,7 @@ function lay(ctx) {
   // ---- The Stores off North Wall
   const STORES = [
     [-21, "clippers", WOOD, "oklch(0.42 0.17 25)", `<div style="font-size:300px;color:#ffe0d0;font-family:serif;font-style:italic">Clippers</div><div style="font-size:90px;color:#ffb0a0">COCKTAILS · EST. 1954</div>`, "oklch(0.3 0.14 25)", "oklch(0.8 0.12 30)"],
-    [-7, "liquorette", CHECK, "oklch(0.3 0.06 40)", `<div style="font-size:280px;color:#f2d98a;font-family:serif">Liquorette</div><div style="font-size:80px;color:#b8e0a8">BEER · WHISKEY · ALMOND WATER</div>`, "oklch(0.2 0.04 40)", "oklch(0.85 0.1 85)"],
+    [-7, "liquorette", MOSAIC, "oklch(0.26 0.1 25)", `<div style="font-size:280px;color:#f2d98a;font-family:serif">Liquorette</div><div style="font-size:80px;color:#b8e0a8">BEER · WHISKEY · ALMOND WATER</div>`, "oklch(0.2 0.04 40)", "oklch(0.85 0.1 85)"],
     [7, "slice", { ...TERRAZZO, color: "oklch(0.85 0.04 30)" }, "oklch(0.9 0.03 90)", `<div style="font-size:250px;color:#ff4a3a">SLICE PALACE</div><div style="font-size:90px;color:#2a7a3a">PIZZA BY THE SLICE · FREE</div>`, "oklch(0.96 0.01 90)", "oklch(0.95 0.04 80)"],
     [21, "burger", CHECK, "oklch(0.7 0.11 195)", `<div style="font-size:260px;color:#ff7ab8">BURGER BOP</div><div style="font-size:90px;color:#ffffff">SHAKES · FRIES · '86 PRICES</div>`, "oklch(0.35 0.1 280)", "oklch(0.92 0.05 330)"],
   ];
@@ -334,18 +339,42 @@ function lay(ctx) {
   sign("l61-juke-neon", -26.4, 2.7, -25, -90, 1.9, 0.5, `<div style="font-size:68px;letter-spacing:2px;color:#00f0ff;text-shadow:0 0 12px #00d8f0">JUKEBOX HITS</div><div style="font-size:26px;color:#ff3888;text-shadow:0 0 10px #ff3888">80s INTERNET RADIO · LIVE</div>`, "rgba(10,12,20,0.85)");
   box("l61-clip-wire", -21, 0.06, -23.2, 3.6, 0.015, 0.015, { color: "oklch(0.2 0 0)" }, { physics: undefined });
 
-  // 2. Liquorette: Long dark bar, glowing backbar, green glass lamps
-  counter("l61-liq-bar", -12.2, -27, -90, M_BAR7, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "almond,corona,millerlite,margarita,whiskey,jackcoke", name: "Liquorette bar", verb: "Order what the menu shows", info: "Liquorette drink counter." } });
-  counter("l61-liq-back", -13.6, -27, -90, M_BACKBAR);
-  for (let k = 0; k < 3; k++) {
-    sp(`l61-liq-lamp-${k}`, {
-      feetPosition: { x: -11.6, y: 2.6, z: -29.5 + k * 2.5 },
-      primitive: { kind: "sphere", radius: 0.18 },
-      material: { color: "oklch(0.6 0.14 150)", emissive: "oklch(0.7 0.16 150)", emissiveIntensity: 1.5 },
-      light: { kind: "point", color: "oklch(0.85 0.1 140)", intensity: 1.5, distance: 6 },
-    });
-  }
-  for (let k = 0; k < 4; k++) tableSet(`l61-liq-table-${k}`, -6.4 + (k % 2) * 4.2, -25.2 - Math.floor(k / 2) * 4.0, k * 20);
+  // 2. Liquorette: an old-world tavern. A carved arched back bar with stained glass and a clock, a long panelled bar with a brass rail, bentwood stools and chairs,
+  //    wooden tables, a mosaic floor, wood-panelled walls, a coffered ceiling, pendant lamps, a copper boiler. (Shelly: massively overhaul it from a photo of an old bar)
+  const prop = (id, m, x, z, yaw, extra = {}, y = 0) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: { body: "static", collider: extra.collider ?? "box" }, model: { id: m, forward: "-z" }, ...extra.spec });
+  prop("l61-liq-bar", L_BAR, -11.8, -27, -90, { spec: { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "almond,corona,millerlite,margarita,whiskey,jackcoke", name: "Liquorette bar", verb: "Order what the menu shows", info: "Liquorette drink counter." } } });
+  prop("l61-liq-back", L_BACK, -13.45, -27, -90);
+  prop("l61-liq-boiler", L_BOILER, -12.1, -29.75, -90, { collider: "cylinder" }, 1.1);
+  sp("l61-liq-boiler-steam", { feetPosition: { x: -12.1, y: 2.35, z: -29.75 }, fx: { script: STEAM_FX } });
+  for (let k = 0; k < 6; k++) sp(`l61-liq-stool-${k}`, { feetPosition: { x: -10.85, y: 0, z: -29.55 + k * 1.05 }, rotation: { yaw: 90 }, tags: ["seat", "chair"], physics: { body: "static", collider: "cylinder" }, model: { id: L_STOOL, forward: "-z" }, state: { seat: { w: 1, d: 0.0, y: 0.62 }, verb: "Sit", name: "Bar stool" } });
+  const TABLES = [[-6.6, -25.2], [-2.6, -25.2], [-6.6, -29.2], [-2.6, -29.2]];
+  TABLES.forEach(([tx, tz], k) => {
+    sp(`l61-liq-table-${k}`, { feetPosition: { x: tx, y: 0, z: tz }, rotation: { yaw: k * 17 }, physics: { body: "static", collider: "box" }, model: { id: L_TABLE, forward: "-z" } });
+    for (const [dx, yaw, n] of [[-0.78, -90, "w"], [0.78, 90, "e"]]) sp(`l61-liq-chair-${k}${n}`, { feetPosition: { x: tx + dx, y: 0, z: tz + (k % 2 ? 0.05 : -0.05) }, rotation: { yaw }, tags: ["seat", "chair"], physics: { body: "static", collider: "box" }, model: { id: L_CHAIR, forward: "-z" }, state: { seat: { w: 1, d: 0.02, y: 0.3 }, verb: "Sit", name: "Tavern chair" } });
+    sp(`l61-liq-candle-${k}`, { feetPosition: { x: tx + 0.05, y: 0.86, z: tz + 0.05 }, light: { kind: "point", color: "oklch(0.85 0.16 70)", intensity: 0.9, distance: 3.5 }, primitive: { kind: "sphere", radius: 0.012 }, material: { color: "#ffcc66", emissive: "#ffb040", emissiveIntensity: 4 } });
+  });
+  // wood-panelled walls: a dado of dark wood with a brass-edged rail, round the back and both sides (the open side faces the hall)
+  const dado = (id, x, z, w, d) => { box(id, x, 0, z, w, 1.25, d, DARKWOOD); box(`${id}-rail`, x, 1.25, z, w + (d < w ? 0 : 0.06), 0.07, d + (d < w ? 0.06 : 0), WOOD); };
+  dado("l61-liq-dado-b", -7, -31.9, 13.6, 0.1); dado("l61-liq-dado-l", -13.86, -27.1, 0.1, 9.7); dado("l61-liq-dado-r", -0.14, -27.1, 0.1, 9.7);
+  // a coffered ceiling: dark beams across the plaster
+  box("l61-liq-ceil", -7, 3.88, -27.1, 13.7, 0.12, 9.8, { color: "oklch(0.22 0.04 30)", roughness: 0.8 });
+  for (let k = 0; k < 5; k++) box(`l61-liq-beam-${k}`, -12 + k * 3, 3.7, -27.1, 0.22, 0.2, 9.8, DARKWOOD, { physics: undefined });
+  for (let k = 0; k < 3; k++) box(`l61-liq-xbeam-${k}`, -7, 3.7, -23.9 - k * 3.2, 13.7, 0.2, 0.2, DARKWOOD, { physics: undefined });
+  // pendant lamps on short cords: warm glass globes over the bar and the tables
+  [[-10.2, -29.2], [-10.2, -27], [-10.2, -24.8], [-6.6, -25.2], [-2.6, -25.2], [-6.6, -29.2], [-2.6, -29.2]].forEach(([lx, lz], k) => {
+    box(`l61-liq-cord-${k}`, lx, 3.0, lz, 0.015, 0.7, 0.015, { color: "oklch(0.15 0 0)" }, { physics: undefined });
+    sp(`l61-liq-lamp-${k}`, { feetPosition: { x: lx, y: 2.78, z: lz }, primitive: { kind: "sphere", radius: 0.16 }, material: { color: "oklch(0.92 0.1 80)", emissive: "oklch(0.88 0.16 75)", emissiveIntensity: 2.2, roughness: 0.2 }, light: { kind: "point", color: "oklch(0.82 0.15 65)", intensity: 2.2, distance: 6.5 } });
+  });
+  // the stained glass throws its own green-gold glow over the bar
+  sp("l61-liq-glass-glow", { feetPosition: { x: -12.6, y: 3.0, z: -27 }, light: { kind: "point", color: "oklch(0.86 0.15 120)", intensity: 3, distance: 7 } });
+  // a back door into the dark, a lamp glowing over it, tin signs and portraits on the walls
+  box("l61-liq-door", -2.6, 0, -31.92, 1.3, 2.3, 0.1, { color: "oklch(0.1 0.02 30)", roughness: 0.9 });
+  box("l61-liq-doorf-l", -3.32, 0, -31.86, 0.14, 2.45, 0.2, DARKWOOD); box("l61-liq-doorf-r", -1.88, 0, -31.86, 0.14, 2.45, 0.2, DARKWOOD); box("l61-liq-doorf-t", -2.6, 2.3, -31.86, 1.58, 0.16, 0.2, DARKWOOD);
+  sp("l61-liq-doorlamp", { feetPosition: { x: -2.6, y: 2.75, z: -31.7 }, primitive: { kind: "sphere", radius: 0.1 }, material: { color: "#ffb347", emissive: "#ff9a2a", emissiveIntensity: 3 }, light: { kind: "point", color: "oklch(0.8 0.17 55)", intensity: 2.6, distance: 5 } });
+  sign("l61-liq-tin", -5.2, 1.8, -31.85, 0, 0.75, 0.75, `<div style="width:92%;height:92%;border-radius:50%;background:#b3231d;border:14px solid #e8d8b0;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-size:92px;color:#f2e6c0;font-family:serif">ALMOND</div><div style="font-size:84px;color:#f2e6c0;font-family:serif">WATER</div></div>`, "oklch(0.2 0.04 40)");
+  sign("l61-liq-portrait", -0.3, 1.9, -26.5, -90, 0.9, 1.1, `<div style="font-size:70px;color:#d8c9a0;font-family:serif;font-style:italic;text-align:center">The<br>Proprietor</div><div style="font-size:36px;color:#9a8a68;font-family:serif;margin-top:10px">EST. 1954</div>`, "oklch(0.14 0.03 40)");
+  sign("l61-liq-hours", -0.3, 1.9, -29.2, -90, 0.9, 0.6, `<div style="font-size:64px;color:#f2d98a;font-family:serif">OPEN</div><div style="font-size:30px;color:#b8e0a8;font-family:serif">ALL HOURS · NO TAB</div>`, "oklch(0.14 0.04 30)");
+  sp("l61-liq-murmur", { feetPosition: { x: -7, y: 1.5, z: -27 }, audio: { clip: "cdn/sfx-quiet-tavern-murmur-with-glasses-clinking-room-tone-loop.mp3", loop: true, gain: 0.16, spatial: true, maxDistance: 12 } });
 
   // 3. Slice Palace: Pizza warming case, oven, menu board, soda machine
   counter("l61-slice-counter", 7, -29.4, 180, M_PIZZA, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "pizza", name: "Slice Palace counter", verb: "Order what the menu shows", info: "Slice Palace pizza counter." } });
