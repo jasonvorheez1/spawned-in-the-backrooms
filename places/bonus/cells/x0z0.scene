@@ -21,3 +21,17 @@ bonus-sun:
   feetPosition: {x: 0, y: 12, z: 0}
   id: bonus-sun
   light: {color: oklch(0.95 0.05 330), distance: 60, intensity: 4, kind: point}
+bs-clothes:
+  feetPosition: {x: -17, y: 0, z: 13}
+  id: bs-clothes
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 18, height: 4.5, kind: box, width: 14}
+  tags: [blueprint]
+bs-furniture:
+  feetPosition: {x: 17, y: 0, z: 13}
+  id: bs-furniture
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 18, height: 4.5, kind: box, width: 14}
+  tags: [blueprint]
