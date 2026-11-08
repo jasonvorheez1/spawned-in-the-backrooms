@@ -24,7 +24,8 @@ export function tickChatter(ctx, list, voices) {
   const near = ctx.place.players.some((p) => objs.some((o) => Math.hypot(p.feetPosition.x - o.feetPosition.x, p.feetPosition.z - o.feetPosition.z) < C.hear));
   if (!near) { s.chatNext = now + 3000; return; }
   const heardBy = (w) => { const o = ctx.place.objects[w]; return o && ctx.place.players.some((p) => Math.hypot(p.feetPosition.x - o.feetPosition.x, p.feetPosition.z - o.feetPosition.z) < C.hear) }
-  const ok = list.map((ex, k) => k).filter((k) => list[k].every(([w]) => alive(ctx.place.objects[w])) && heardBy(list[k][0][0]) && k !== s.chatLast); // only a talk someone can hear starts
+  const nearEachOther = (ex) => { const o0 = ctx.place.objects[ex[0][0]]; return o0 && ex.every(([w]) => { const o = ctx.place.objects[w]; return o && Math.hypot(o0.feetPosition.x - o.feetPosition.x, o0.feetPosition.z - o.feetPosition.z) < (C.maxSpread ?? 32) }) }
+  const ok = list.map((ex, k) => k).filter((k) => list[k].every(([w]) => alive(ctx.place.objects[w])) && heardBy(list[k][0][0]) && nearEachOther(list[k]) && k !== s.chatLast); // only a talk someone can hear starts
   if (!ok.length) { s.chatNext = now + 10000; return; }
   const k = ok[Math.floor(ctx.random() * ok.length)], [who, line] = list[k][0];
   say(ctx, ctx.place.objects[who], list[k], 0, voices);

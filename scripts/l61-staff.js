@@ -345,7 +345,7 @@ export function update(ctx, dt) {
   const p = me.feetPosition, v = me.velocity ?? { x: 0, z: 0 };
 
   // Tiered distance sleeping for staff when no active orders/deliveries
-  if (!s.deliver && !s.orderAt && !(m.react && now < m.react) && !s.hostile && s.mood !== "defend") {
+  if (!s.deliver && !s.orderAt && !(m.react && now < m.react) && !s.hostile && s.mood !== "defend" && !(s.talkAt && now - s.talkAt < 8000)) {
     let nearDistSq = Infinity;
     for (const q of ctx.place.players) {
       const qp = q.feetPosition;
@@ -355,6 +355,22 @@ export function update(ctx, dt) {
     }
     if (nearDistSq > 45 * 45) { ctx.sleep(2); return; }
     if (nearDistSq > 28 * 28 && s.job === "post") { ctx.sleep(0.2); dt += 0.2; }
+  }
+
+  // Held in conversation: while a player is talking to this NPC, or during camp chatter
+  const listener = !s.dead && ctx.place.players ? ctx.place.players.find((pl) => pl.state?.talkWith === me.id && Math.hypot(pl.feetPosition.x - p.x, pl.feetPosition.z - p.z) < 7) : null;
+  const chatterTo = s.talkTo && now - (s.talkAt ?? 0) < 6000 && ctx.place.objects ? ctx.place.objects[s.talkTo] : null;
+  if (listener) {
+    applyRest(me, dt);
+    const lp = listener.feetPosition;
+    if (lp) me.rotation = { yaw: turn(me.rotation?.yaw ?? 0, yawOf(lp.x - p.x, lp.z - p.z), 0.2) };
+    return;
+  }
+  if (chatterTo) {
+    applyRest(me, dt);
+    const cp = chatterTo.feetPosition;
+    if (cp) me.rotation = { yaw: turn(me.rotation?.yaw ?? 0, yawOf(cp.x - p.x, cp.z - p.z), 0.2) };
+    return;
   }
 
   if (m.gestEnd && now > m.gestEnd) {

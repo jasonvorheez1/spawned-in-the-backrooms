@@ -16,6 +16,7 @@ import { layCity, layStreet, tickCity } from "../../scripts/lib/level11-city.js"
 import { terminalSpec } from "../../scripts/lib/terminal.js";
 import { layVaults } from "../../scripts/lib/level11-vaults.js";
 import { layShop } from "../../scripts/lib/level11-shop.js";
+import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
@@ -1447,6 +1448,15 @@ function layWalkers(ctx) {
   }
 }
 
+const L11_VOICES = {
+  "l11-meg-agent-vance": "reyes",
+  "l11-trader-kael": "reyes",
+  "l11-commuter-faceling": "wren",
+  "l11-walker-1": "reyes",
+  "l11-walker-2": "wren",
+  "l11-walker-3": "reyes",
+};
+
 // Master tick simulation loop
 const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
@@ -1474,6 +1484,7 @@ export function tick(ctx) {
   if ((st.walkV ?? 0) < WALK_V) { st.walkV = WALK_V; layWalkers(ctx); }
   if (!mem.ringAt) mem.ringAt = now + 35000;
   tickCity(ctx, mem, heard);
+  tickChatter(ctx, CHATTER.level11, L11_VOICES);
 
   // Dynamic traffic light controller cycling green -> amber -> red
   if (!mem.lightAt || now > mem.lightAt) {
