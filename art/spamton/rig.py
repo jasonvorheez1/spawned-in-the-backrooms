@@ -232,9 +232,9 @@ def hurt(f, T=12):
     legs_dangle(0, 48, P); P["Thigh.L"] = {"rot": (-25 * k, 0, 0)}; P["Thigh.R"] = {"rot": (-15 * k, 0, 0)}; return P
 def defeated(f, T=45):
     d = ob(f, 4, 0, 1, 8, 1.0); s2 = ob(f, 18, 0, 1, 27, 0)
-    P = {"Hips": {"loc": (0, -0.03 * d, -0.11 * d - 0.03 * s2), "rot": (14 * d, 0, 6 * d)}}
-    P["Spine"] = {"rot": (18 * d + 8 * s2, 0, 0)}; P["Chest"] = {"rot": (16 * d + 10 * s2, 0, 5 * d)}
-    P["Neck"] = {"rot": (20 * d, 0, 0)}; P["Head"] = {"rot": (35 * d + 10 * s2, 22 * d, 0)}
+    P = {"Hips": {"loc": (0, -0.03 * d, -0.11 * d - 0.03 * s2), "rot": (6 * d, 0, 4 * d)}}
+    P["Spine"] = {"rot": (8 * d + 4 * s2, 0, 0)}; P["Chest"] = {"rot": (8 * d + 5 * s2, 0, 4 * d)}
+    P["Neck"] = {"rot": (12 * d, 0, 0)}; P["Head"] = {"rot": (22 * d + 6 * s2, 18 * d, 0)}
     for s, sg in (("L", 1), ("R", -1)):
         P[f"Shoulder.{s}"] = {"rot": (0, -sg * 8 * d, 0)}
         P[f"UpperArm.{s}"] = {"aim": (sg * (0.3 - 0.15 * d), -0.1 - 0.25 * d, -1)}
