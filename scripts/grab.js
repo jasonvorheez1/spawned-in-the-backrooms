@@ -16,7 +16,7 @@ export function setDown(ctx, o) {
   o.feetPosition = { x: hit.position.x, y: hit.position.y + 0.01, z: hit.position.z };
   o.physics = TRAY_PHYS; o.velocity = { x: 0, y: 0, z: 0 };
   if (!o.tags.includes("usable")) o.tags = [...o.tags, "usable"];
-  ses.held = null; s.carry = null; s.carryMul = 1; s.l61Hold = null; s.l61Tray = 0;
+  ses.held = null; s.carry = null; s.carryId = null; s.carryMul = 1; s.l61Hold = null; s.l61Tray = 0;
   heard(ctx, { clip: CLATTER, position: o.feetPosition, volume: 0.35, maxDistance: 10 });
 }
 const NOT = ["wall", "gridwall", "level0", "npc", "player", "critter", "door", "remains"];
@@ -74,6 +74,7 @@ function lift(ctx, o, kg, cap) {
   spill(ctx, o);
   ses.held = o.id; ses.kg = kg; ses.phys = o.physics; o.physics = "none";
   if (isTray(o)) { s.l61Hold = o.id; s.l61Tray = ctx.now(); ses.phys = TRAY_PHYS; o.tags = o.tags.filter((t) => t !== "usable"); } // the tray is yours again: the return rack takes it
+  s.carryId = o.id; // a tote reads what is in your hands
   s.carry = o.state?.name ?? "something"; s.carryMul = kg > cap ? Math.max(0.15, 0.4 - (kg / cap - 1) * 0.12) : Math.max(0.45, 1 - (kg / cap) * 0.6);
   heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-furniture-lift-wood-creak-scrape.mp3", position: { x: f.x, y: f.y + 1, z: f.z }, volume: 0.45, maxDistance: 12 });
 }
@@ -87,7 +88,7 @@ function toss(ctx, o, h) {
   o.velocity = { x: d.x * speed, y: d.y * speed + 2, z: d.z * speed };
   ses.flying = { id: o.id, at: ctx.now(), speed, kg: ses.kg, hit: {}, tray: isTray(o) };
   if (isTray(o)) { o.physics = TRAY_PHYS; s.l61Hold = null; s.l61Tray = 0; }
-  ses.held = null; s.carry = null; s.carryMul = 1;
+  ses.held = null; s.carry = null; s.carryId = null; s.carryMul = 1;
   const f = ctx.self.feetPosition;
   heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-heavy-object-throw-whoosh.mp3", position: { x: f.x, y: f.y + 1.4, z: f.z }, volume: 0.5, maxDistance: 14 });
 }
@@ -102,7 +103,7 @@ export function update(ctx) {
         ses.held = t.id; ses.kg = t.state?.carryKg ?? TRAY_KG; ses.phys = TRAY_PHYS; t.physics = "none"; s.carry = "Food tray"; s.carryMul = 1; s.l61Tray ||= ctx.now(); } } }
   if (ses.held) { // carried: in front of the chest, along the look
     const o = ctx.getObject(ses.held);
-    if (!o || ctx.self.state.dead) { if (ctx.self.state.l61Hold === ses.held) { ctx.self.state.l61Hold = null; ctx.self.state.l61Tray = 0; } ses.held = null; ctx.self.state.carry = null; ctx.self.state.carryMul = 1; if (o) o.physics = ses.phys ?? "static"; }
+    if (!o || ctx.self.state.dead) { if (ctx.self.state.l61Hold === ses.held) { ctx.self.state.l61Hold = null; ctx.self.state.l61Tray = 0; } ses.held = null; ctx.self.state.carry = null; ctx.self.state.carryId = null; ctx.self.state.carryMul = 1; if (o) o.physics = ses.phys ?? "static"; }
     else if (isTray(o)) { const f = ctx.self.feetPosition, d = ses.dir ?? { x: 0, y: 0, z: -1 }, hl = Math.hypot(d.x, d.z) || 1; o.feetPosition = { x: f.x + (d.x / hl) * 0.5, y: f.y + 0.85, z: f.z + (d.z / hl) * 0.5 }; o.rotation = { yaw: Math.atan2(-d.x, -d.z) * 57.2958 }; } // held level in both hands at the belly
     else { const f = ctx.self.feetPosition, d = ses.dir ?? { x: 0, y: 0, z: -1 }; o.feetPosition = { x: f.x + d.x * 1.1, y: f.y + 0.7 + d.y * 0.6, z: f.z + d.z * 1.1 }; o.rotation = { yaw: Math.atan2(-d.x, -d.z) * 57.2958 }; }
   }

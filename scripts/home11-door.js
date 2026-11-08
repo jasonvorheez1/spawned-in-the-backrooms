@@ -28,18 +28,19 @@ export const ears = {
       ctx.cross(who, "level11#l11-from-home");
       return;
     }
-    if (k === "pack") { // into the tote: the thing leaves the room whole, its spec kept so it comes back exactly as it was
-      const st = ctx.place.state, o = ctx.self, n = Object.keys(st.packed ?? {}).length;
-      if (n >= 12) { w.notice = { text: "The tote's full.", at: now }; return; }
-      const spec = { tags: o.tags, behavior: "scripts/home11-door.js", state: { ...o.state }, model: o.model, layout: o.layout, rotation: { yaw: o.rotation?.yaw ?? 0 } };
-      st.packed = { ...(st.packed ?? {}), [o.id]: spec };
-      ctx.emit("playSound", { clip: "cdn/sfx-plastic-storage-bin-item-dropped-in-rustle.mp3", position: o.feetPosition, volume: 0.6 });
-      w.notice = { text: `Packed the ${o.state.name}. Tote: ${n + 1}/12`, at: now };
-      ctx.destroy(o.id); return;
-    }
-    if (k === "tote") { // E sets the newest packed thing down at your feet, a step ahead
+    if (k === "tote") { // carrying something (Z): E drops it in. Empty hands: E takes the newest thing out, a step ahead
       const st = ctx.place.state, ids = Object.keys(st.packed ?? {});
-      if (!ids.length) { w.notice = { text: "The tote's empty. Press E on small stuff to pack it.", at: now }; return; }
+      const o = w.carryId && ctx.getObject(w.carryId);
+      if (o) {
+        if (ids.length >= 12) { w.notice = { text: "The tote's full.", at: now }; return; }
+        const spec = { tags: (o.tags ?? []).filter((t) => t !== "breakable"), state: { ...o.state }, model: o.model, primitive: o.primitive, material: o.material, layout: o.layout, physics: { body: "static", collider: "box" }, rotation: { yaw: o.rotation?.yaw ?? 0 } };
+        st.packed = { ...(st.packed ?? {}), [o.id]: spec };
+        w.carry = null; w.carryId = null; w.carryMul = 1;
+        ctx.destroy(o.id);
+        ctx.emit("playSound", { clip: "cdn/sfx-plastic-storage-bin-item-dropped-in-rustle.mp3", position: ctx.self.feetPosition, volume: 0.6 });
+        w.notice = { text: `Put the ${spec.state?.name ?? "thing"} in the tote. ${ids.length + 1}/12`, at: now }; return;
+      }
+      if (!ids.length) { w.notice = { text: "The tote's empty. Lift something with Z and bring it here.", at: now }; return; }
       const id = ids[ids.length - 1], spec = st.packed[id], p = who.feetPosition, yaw = who.camera?.rotation?.yaw ?? 0, r = (yaw * Math.PI) / 180;
       const at = { x: p.x - Math.sin(r) * 0.9, y: p.y, z: p.z - Math.cos(r) * 0.9 };
       const rest = { ...st.packed }; delete rest[id]; st.packed = rest;
