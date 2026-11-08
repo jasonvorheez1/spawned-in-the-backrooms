@@ -4,7 +4,7 @@
 import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
 const SCRIPT = 'scripts/critter2-geo.js'
-import { bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, seatHead, HEAD_ID, maskChild, seatMask, hairChild, seatHair } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
+import { bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, seatHead, HEAD_ID, maskChild, seatMask, hairChild, seatHair } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
 const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 import { weaponBody, HOLD } from './lib/weapon-look.js'
@@ -166,6 +166,7 @@ function moodFace(ctx, l) {
 }
 
 export function update(ctx) {
+  { const sty = setStyle(ctx.world.state.bodyStyle), ss = ctx.self.session; if (ss.style !== sty) { if (ss.style) { ss.lookKey = null; ss.key = null; ss.flair = null; ss.headSwept = false; if (sty === 'furry') ctx.self.anim.idle = null } ss.style = sty } } // the menu's BODIES: humans or furries, everyone in the room
   if (!MESH && !ctx.self.session.headSwept) { ctx.self.session.headSwept = true; dropHead(ctx, ctx.self) }
   if (!ctx.self.state.look) ctx.self.state.look = randomLook(ctx, { ...C.default }, 'clothes') // a new critter: regular clothes only (saved looks are never touched)
   const ses = ctx.self.session, rawLook = ctx.self.state.look
@@ -211,7 +212,7 @@ export function update(ctx) {
     for (const [k] of C.sliders) if (k !== 'headS' && k !== 'tailS' && (l.sex === 'f' || (k !== 'hipS' && k !== 'bustS')) && Number(l[k]) && Number(l[k]) !== 1) params[k] = Number(l[k])
     ses.cachedParams = params
     ses.cachedWorn = worn
-    ses.lookKey = JSON.stringify(MESH ? { ...params, expr: 0 } : params) + (worn ? '|' + worn.url : '') + (HUMAN ? '|human3' : '')
+    ses.lookKey = JSON.stringify(MESH ? { ...params, expr: 0 } : params) + (worn ? '|' + worn.url : '') + (HUMAN ? '|human3' : '|furry')
     ses.lastFace = face
   }
   const key = ses.lookKey

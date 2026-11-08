@@ -117,7 +117,8 @@ const MESH_SWAP = {
     carpetponcho: 'cape',
   }
 }
-export const HUMAN = M.human ?? null
+export let HUMAN = M.human ?? null // live: the menu's BODIES setting flips it (setStyle)
+export function setStyle(v) { const h = v === 'furry' ? null : (M.human ?? null); if (h !== HUMAN) HUMAN = h; return v === 'furry' ? 'furry' : 'human' }
 const SKIN = ['#f6dcc8', '#efcfb4', '#e2b896', '#c99a74', '#a7764f', '#7d5436'] // her picks: pale to deep
 export const skinOf = (l) => l?.skin || SKIN[[...String(l?.fur || l?.species || '')].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % SKIN.length]
 export const humanBody = (l) => { const c = skinOf(l), skin = { color: c, roughness: 0.62, metalness: 0 }; return { id: HUMAN[l?.sex === 'f' ? 'f' : 'm'], forward: '+z', materials: { Body_Skin: skin, Head_Skin: skin } } }
@@ -552,7 +553,7 @@ export function seatHead(ctx, obj, l) {
 }
 
 // a body from an older Blender pass (not one of M.body) is out of date
-export const staleBody = (model) => !!model && !Object.values(M.body).includes(model.id ?? model) && !Object.values(HUMAN ?? {}).includes(model.id ?? model)
+export const staleBody = (model) => !!model && !Object.values(M.body).includes(model.id ?? model) && !Object.values(M.human ?? {}).includes(model.id ?? model)
 const SPECIES = Object.keys(M.species)
 const hashOf = (str) => { let h = 2166136261; for (const c of String(str)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
 const NEWSP = ['rat', 'squirrel', 'leopard', 'jackal', 'badger', 'ferret', 'beaver', 'capybara', 'lop', 'fennec'].filter((k) => SPECIES.includes(k)), OLDSP = SPECIES.filter((k) => !NEWSP.includes(k))

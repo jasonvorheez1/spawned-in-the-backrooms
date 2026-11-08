@@ -1,4 +1,5 @@
 // the title (johnadams2, Nov 8): the name and one START over the live halls. Nothing else.
+// one setting under it: BODIES flips every character between humans and furries (Shelly, Nov 8)
 // Backspace mid-game shows the same screen as a pause, its one button RESUME.
 const CSS = `<style>
 #mm{position:fixed;inset:0;pointer-events:auto;background:linear-gradient(0deg,rgba(6,5,2,.78) 0,rgba(6,5,2,.35) 38%,rgba(6,5,2,0) 62%),radial-gradient(ellipse 110% 90% at 50% 45%,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%);font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#f3eedf;animation:mm-in 1.4s ease-out both}
@@ -13,6 +14,7 @@ export function mainMenu(ctx, player) {
   const k = pause ? "resume" : "start"
   return `${CSS}<div id="mm" data-modal><div class="col">
     <h1>The Backrooms</h1>
-    <button onclick="sendAction('mmenu',{k:'${k}'},{relockPointer:true})">${pause ? "RESUME" : "START"}</button>
+    <button onclick="sendAction('mmenu',{k:'${k}'},{relockPointer:true})">${pause ? "RESUME" : "START"}</button><br>
+    <button style="font-size:clamp(12px,1vw,15px);margin-top:2vh" onclick="sendAction('mmenu',{k:'style'})">BODIES: ${(player.state?.bodyStyle ?? ctx.world.state?.bodyStyle) === "furry" ? "FURRY" : "HUMAN"}</button>
   </div></div>`
 }
