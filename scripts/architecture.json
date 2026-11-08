@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2197,
-  "updatedAt": "2026-11-08T19:33:14.569Z",
-  "summary": "The Backrooms is a multiplayer survival RPG whose persistent player state carries progression through authored and simulation-built levels. Shared player, NPC, combat, appearance and presentation systems serve the levels; a title-to-intake flow now places character creation in a separate 2000s bedroom before the Level 0 noclip intro.",
+  "basedOnSpecVersion": 2198,
+  "updatedAt": "2026-11-08T19:34:09.468Z",
+  "summary": "The Backrooms is a multiplayer survival RPG whose persistent player state carries progression through authored and simulation-built levels. Shared player, NPC, combat, appearance and presentation systems serve the levels; fresh visits open a title over the live halls, then route character creation through a separate 2000s bedroom and a local noclip intro into Level 0.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 / The Lobby, yellow maze and safe-room hub; authored fixtures, shifting-wall moments, hunters and lore props.",
@@ -20,7 +20,7 @@
     "places/<place>/config.yaml + cells + sim.js - place setup and placements; sims build local layouts and tick local behavior.",
     "sim.js - world cadence and out-of-bounds handling: players respawn, creatures with state.home return, other creatures are destroyed for manager respawn.",
     "scripts/main-menu.js + scripts/main-menu-ui.js - local title/pause behavior, title music and menu UI; START routes into intake.",
-    "places/intake/cells/x0z0.scene + scripts/intake-geo.js - bedroom fixtures and scripted room shell; scripts/lib/intro-cut.js stages the post-creator noclip scene.",
+    "places/intake/cells/x0z0.scene + scripts/intake-geo.js - bedroom fixtures and scripted room shell; scripts/lib/intro-cut.js stages the post-creator noclip scene and scripts/cutscene-ui.js draws its letterbox/fades.",
     "places/level11/sim.js + scripts/lib/level11-city.js - generated city/street assembly, old-town detail, shops, Realty, house exterior and Thebes.",
     "places/home11/sim.js + scripts/home11-door.js - versioned interior builder/restoration and home exit, doors, storage and furnishings."
   ],
@@ -42,7 +42,7 @@
     "scripts/player.js - player combat/progression/input and fishing handlers; scripts/lib/body3.js - swing3, fire3, stance.",
     "scripts/lib/level11-city.js - layCity, layStreet, tickCity; scripts/lib/level11-shop.js - SHOP, layShop; scripts/lib/level11-elevator.js - elevator schedule/call/ears/update.",
     "scripts/main-menu.js - update, onInput; scripts/main-menu-ui.js - mainMenu; scripts/intake-geo.js - geometry; scripts/wardrobe-ui.js - wardrobe.",
-    "scripts/lib/clothes.js - fullLook, cloth token/wear/armor helpers, npcLook, plainLook; scripts/lib/critter-model.js - bodyModel, headModel, faceFill, faceMorph, critterSpec and rig/model helpers."
+    "scripts/cutscene-ui.js - cutUi; scripts/lib/intro-cut.js - cutTick; scripts/lib/clothes.js - fullLook, cloth token/wear/armor helpers, npcLook, plainLook; scripts/lib/critter-model.js - bodyModel, headModel, faceFill, faceMorph, critterSpec and rig/model helpers."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, appearance, karma/rep and level access.",
@@ -51,22 +51,22 @@
     "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes, skills, points, tags and sheet state; scripts/craft.js owns craft actions and costs/outputs.",
     "scripts/interact.js + scripts/lib/seat.js - focus, loot and sit state; interact.js persists configured storage contents to player.state[saveKey].",
     "scripts/talk.js owns dialogue/shop UI, rapport/trade/rep and authored-choice effects; quest libraries own quest keys/HUD/payout; scripts/l8-use.js owns Level 8 interaction flags.",
-    "scripts/main-menu.js - player menu/intake/intro state transitions (menuOpen, menuKind, madeChar, cut) and local session camera/music lifecycle; scripts/critter.js updates creator look/outfits.",
+    "scripts/main-menu.js - player menu/intake/intro state transitions (menuOpen, menuKind, madeChar, cut, introFrom) and local session camera/music/cutscene state; scripts/critter.js updates creator look/outfits.",
     "places/home11/sim.js owns builtV and live fridge/tote/moved state; scripts/build.js writes player.state.homeKeep.built and home11-door.js/grab.js mirror home furnishings."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim, interact/grab/rest/mahjong/talk/build/stats/craft/OS/lockpick/spamton-fight/horde, then critter, main-menu and view3; routing is configured there.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes player.state.aimPt → player.js crosshair-aligned shots.",
-    "Backspace → scripts/main-menu.js toggles pause; scripts/main-menu-ui.js renders RESUME. Fresh title START → ctx.cross intake; main-menu.js opens creator, and scripts/wardrobe-ui.js dress actions → scripts/critter.js update player look/outfits.",
-    "Closing creator in places/intake → scripts/main-menu.js starts scripts/lib/intro-cut.js; cutscene animates the player at the bedroom wall, then crosses to places/main for the Level 0 arrival.",
-    "scripts/main-menu.js local title/intake state → scripts/player.js suppresses weapon hands; menu and intake cameras are local, while title theme is a local session audio object.",
+    "Fresh visit → scripts/main-menu.js sets menuOpen/menuKind=title and local hall camera/music; START via scripts/main-menu-ui.js records introFrom and crosses to intake; Backspace opens pause and RESUME closes it.",
+    "Arrival in places/intake → scripts/main-menu.js opens wardrobe creator; closing it sets madeChar and state.cut, then scripts/lib/intro-cut.js walks the player to the bedroom wall and locally stages the yellow-paper noclip scene.",
+    "scripts/lib/intro-cut.js writes player pose/animation, local wall patch/FX, view camera and timed audio/screen effects; scripts/ui.js renders scripts/cutscene-ui.js when state.cut is set, whose letterbox/fades/subtitle timing is keyed to that timestamp.",
+    "At the end of the ~25 s intro, intro-cut clears cutscene effects/state and returns true → main-menu.js crosses to places/main; scripts/noclip.js handles the Level 0 arrival fall.",
+    "scripts/main-menu.js local title/intake state → scripts/player.js suppresses weapon hands; menu and intake/cutscene cameras are local, while title theme is a local session audio object.",
     "Spawn room selection → scripts/routing.js pickRoom preserves accepted requestedRoomId or derives solo room from user identity; engine out-of-bounds → sim.js handles respawn/return/destruction.",
     "Level threshold trigger → scripts/level-door.js maps paired IDs and writes arrival clipKind/calls companion.bring → followers cross; player.js consumes clipKind to xfer.kind and noclip-ui renders transition.",
     "places/level10/sim.js → terrain-relative farm, NPCs and usable props; scripts/level10-use.js ears.press updates harvesting, crafting/resources and quest state.",
     "Level 7/10/11 rod casts: scripts/player.js → scripts/lib/fishing.js validates place-specific water, spawns scripts/bobber.js and stores fishingState → scheduled handlers resolve catches.",
-    "NPC dialogue: scripts/lib/npc-starters.js supplies authored choices → scripts/talk.js matches them, rolls optional skill checks and applies reply/heal/recruit/discount effects; unmatched text goes to the LLM path.",
-    "scripts/talk.js dispatches Level 11, 10, 8, then 21 dialogue quest handlers; quest libraries write quest flags/HUD, notices/feed and payout. Level 8 turn-ins read flags produced by scripts/l8-use.js.",
-    "Level 11 Realty dialogue → scripts/talk.js / scripts/lib/level11-quests.js writes home11; places/level11/sim.js spawns shop interiors and Thebes guards; places/home11/sim.js restores owner state and home11-door.js handles interactions."
+    "NPC dialogue: scripts/lib/npc-starters.js supplies authored choices → scripts/talk.js matches them, rolls optional skill checks and applies reply/heal/recruit/discount effects; unmatched text goes to the LLM path. talk.js dispatches Level 11/10/8/21 quest handlers → quest flags/HUD, notices/feed and rewards; Level 8 turn-ins read l8-use flags, while Level 11 Realty dialogue writes home11."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and red-zone variants; Level 5 has portal/quest props and scripts/l5-rats.js Boiler Room Death Rat packs.",
@@ -80,11 +80,11 @@
   ],
   "probableOrphans": [],
   "migrationNotes": [
-    "Title START enters places/intake; wardrobe close there triggers the intro cutscene and final cross to main. Keep intake room geometry, the cutscene wall/stand coordinates and the creator/menu state transition aligned.",
+    "Title START enters places/intake; closing wardrobe starts the ~25 s local intro and always crosses to places/main (introFrom records the source but is not used as the return destination). Keep creator/menu state transitions aligned.",
+    "The intro depends on places/intake back-wall geometry: WALL=(1.0,2.5), STAND=(1.0,1.95), and its staged camera/hand effects use the same wall coordinates; scripts/noclip.js owns the subsequent Level 0 fall.",
     "Level 2.1 grid is 30×30 at 4 m per cell; keep level21.js passability/room zones, maze21path.js traversal, sim geometry/hound routing aligned, and roofAt in place state across ticks.",
     "Paired transitions (Level 2.1↔2, 6↔6.1, 6.1↔11, 10↔11) are owned by level-door.js; Level 10 lake-deep trigger targets level7#l7-from-l10.",
     "Level 10/184 use terrain10.js/terrain184.js heightmap/material queries; keep y placements and arrival/track regions aligned. Fishing uses world-space positions and place-specific water regions/surface heights.",
-    "Level 11 city sim V=95 rebuilds open-room features; model axes, measured scales and placements live across level11-models.yml and sim.js. Canal bridges, quay coping and shop interior collision geometry are coupled to street placement.",
-    "NPC clothing and face variation is seeded by identity; preserve explicitly authored look fields and the role/species mappings when changing clothes.js, critter-model.js or their data."
+    "Level 11 city sim V=95 rebuilds open-room features; model axes, measured scales and placements live across level11-models.yml and sim.js. Canal bridges, quay coping and shop interior collision geometry are coupled to street placement; NPC clothing/face variation is identity-seeded, so preserve authored look fields and role/species mappings."
   ]
 }
