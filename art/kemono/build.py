@@ -262,12 +262,12 @@ def refit(o):
     if o.name == 'Top_dress':   # bodice cut from the skin, then a flared skirt lathed round the hips (the carried sheet tore)
         cover(o)
         ev = [env.matrix_world @ v.co for v in env.data.vertices]
-        band = [w for w in ev if abs(w.z - HIPS_Z) < 0.03]
+        band = [w for w in ev if abs(w.z - HIPS_Z) < 0.03 and abs(w.x) < 0.22]   # the hips alone, never the hands hanging beside them
         cx = (max(w.x for w in band) + min(w.x for w in band)) / 2; cy = (max(w.y for w in band) + min(w.y for w in band)) / 2
         rx = (max(w.x for w in band) - min(w.x for w in band)) / 2; ry = (max(w.y for w in band) - min(w.y for w in band)) / 2
         gb = bmesh.new(); N, R = 40, 7; rings = []
         for k in range(R + 1):
-            t = k / R; z = HIPS_Z + 0.05 - t * 0.36; f = 1.06 + 0.42 * t ** 1.3
+            t = k / R; z = HIPS_Z + 0.07 - t * 0.34; f = 1.02 + 0.3 * t ** 1.4
             ring = []
             for q in range(N):
                 a = 2 * math.pi * q / N; wob = 1 + 0.03 * math.sin(a * 6) * t   # soft folds toward the hem
@@ -320,6 +320,7 @@ OUTFIT = ['Top_hoodie', 'Bot_pants', 'Shoes_sneakers', 'Hat_beanie'] if SEX == '
 shot('a_base', (0, -3.4, 1.0), [])
 shot('b_outfit', (2.2, -2.6, 1.1), OUTFIT)
 shot('c_outfit2', (-2.2, -2.6, 1.1), ['Top_dress', 'Shoes_slippers', 'Hat_bow'] if SEX == 'f' else ['Top_jacket', 'Bot_shorts', 'Shoes_boots', 'Eyew_shades'])
+shot('e_bot', (0, -3.0, 1.1), ['Bot_pants'] if SEX == 'm' else ['Top_tee'])
 shot('d_front2', (0, -3.0, 1.1), ['Top_dress', 'Shoes_slippers', 'Hat_bow'] if SEX == 'f' else ['Top_jacket', 'Bot_shorts', 'Shoes_boots', 'Eyew_shades'])
 for g in garments: g.hide_render = False
 bpy.ops.object.select_all(action='DESELECT')
