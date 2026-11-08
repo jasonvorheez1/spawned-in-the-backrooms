@@ -16,7 +16,7 @@ const SAL_LINES = [
   "Welcome to The Snackrooms, friend! Grab a stool and rest your feet.",
   "Help yourself to whatever's in the coolers or under the domes. It restocks every morning.",
   "If you came from Level 6, take a minute to breathe. The dark can't reach you in here.",
-  "We've got the 80s satellite station running on the jukebox. Drop a dime in if you want to switch it.",
+  "Jukebox in the corner still works. Hit it if you want a different record.",
   "Watch that steel service door by the west wall. That's a one-way ticket right back into the dark.",
 ];
 
