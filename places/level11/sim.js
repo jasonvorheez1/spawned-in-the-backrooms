@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 41; // bump to rebuild the city in rooms that are already open
+const V = 42; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1514,7 +1514,7 @@ export function tick(ctx) {
     const end = Math.min(q.rows.length, i + LAY_STEP);
     for (; i < end; i++) {
       const [id, spec] = q.rows[i], old = ctx.place.objects[id];
-      if (old && (!!old.model !== !!spec.model || !!old.primitive !== !!spec.primitive)) { ctx.destroy(id); break; } // a box row turned model: clear it, lay it fresh next tick
+      if (old && (!!old.model !== !!spec.model || !!old.primitive !== !!spec.primitive || (!spec.children && ctx.place.objects[id + "/child-0"]))) { ctx.destroy(id); break; } // a box row turned model: clear it, lay it fresh next tick
       ctx.spawn(id, spec);
     }
     lq.i = i;
