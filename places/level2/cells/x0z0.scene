@@ -1,4 +1,148 @@
 # spawn-scene v2 yaml x0z0
+l2-sd-bandl:
+  feetPosition: {x: 25.39, y: 1.1, z: -42.5}
+  id: l2-sd-bandl
+  material: {color: oklch(0.45 0.07 160)}
+  primitive: {depth: 4.6, height: 0.18, kind: box, width: 0.04}
+  rotation: {yaw: -180}
+l2-sd-bandr:
+  feetPosition: {x: 29.61, y: 1.1, z: -42.5}
+  id: l2-sd-bandr
+  material: {color: oklch(0.45 0.07 160)}
+  primitive: {depth: 4.6, height: 0.18, kind: box, width: 0.04}
+  rotation: {yaw: -180}
+l2-sd-lamp0:
+  feetPosition: {x: 29.5, y: 2.5, z: -40.699999999999996}
+  id: l2-sd-lamp0
+  material: {color: oklch(0.95 0.05 90), emissive: oklch(0.95 0.08 85), emissiveIntensity: 3}
+  primitive: {kind: sphere, radius: 0.07}
+l2-sd-lamp0-l:
+  feetPosition: {x: 29.1, y: 2.4, z: -40.699999999999996}
+  id: l2-sd-lamp0-l
+  light: {color: oklch(0.9 0.08 85), distance: 8, intensity: 3, kind: point}
+l2-sd-lamp1:
+  feetPosition: {x: 25.5, y: 4.3, z: -42.9}
+  id: l2-sd-lamp1
+  material: {color: oklch(0.95 0.05 90), emissive: oklch(0.95 0.08 85), emissiveIntensity: 3}
+  primitive: {kind: sphere, radius: 0.07}
+l2-sd-lamp1-l:
+  feetPosition: {x: 25.9, y: 4.2, z: -42.9}
+  id: l2-sd-lamp1-l
+  light: {color: oklch(0.9 0.08 85), distance: 8, intensity: 2.5, kind: point}
+l2-sd-nose-0:
+  feetPosition: {x: 27.5, y: 0.23, z: -40.519999999999996}
+  id: l2-sd-nose-0
+  material: {color: oklch(0.78 0.15 90), roughness: 0.6}
+  primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
+  rotation: {yaw: -180}
+l2-sd-nose-1:
+  feetPosition: {x: 27.5, y: 0.48, z: -40.82}
+  id: l2-sd-nose-1
+  material: {color: oklch(0.78 0.15 90), roughness: 0.6}
+  primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
+  rotation: {yaw: -180}
+l2-sd-nose-10:
+  feetPosition: {x: 27.5, y: 2.73, z: -43.519999999999996}
+  id: l2-sd-nose-10
+  material: {color: oklch(0.78 0.15 90), roughness: 0.6}
+  primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
+  rotation: {yaw: -180}
+l2-sd-nose-11:
+  feetPosition: {x: 27.5, y: 2.98, z: -43.82}
+  id: l2-sd-nose-11
+  material: {color: oklch(0.78 0.15 90), roughness: 0.6}
+  primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
+  rotation: {yaw: -180}
+l2-sd-nose-12:
+  feetPosition: {x: 27.5, y: 3.23, z: -44.12}
+  id: l2-sd-nose-12
+  material: {color: oklch(0.78 0.15 90), roughness: 0.6}
+  primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
+  rotation: {yaw: -180}
+l2-sd-nose-2:
+  feetPosition: {x: 27.5, y: 0.73, z: -41.12}
+  id: l2-sd-nose-2
+  material: {color: oklch(0.78 0.15 90), roughness: 0.6}
+  primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
+  rotation: {yaw: -180}
+l2-sd-nose-3:
+  feetPosition: {x: 27.5, y: 0.98, z: -41.42}
+  id: l2-sd-nose-3
+  material: {color: oklch(0.78 0.15 90), roughness: 0.6}
+  primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
+  rotation: {yaw: -180}
+l2-sd-nose-4:
+  feetPosition: {x: 27.5, y: 1.23, z: -41.72}
+  id: l2-sd-nose-4
+  material: {color: oklch(0.78 0.15 90), roughness: 0.6}
+  primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
+  rotation: {yaw: -180}
+l2-sd-nose-5:
+  feetPosition: {x: 27.5, y: 1.48, z: -42.019999999999996}
+  id: l2-sd-nose-5
+  material: {color: oklch(0.78 0.15 90), roughness: 0.6}
+  primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
+  rotation: {yaw: -180}
+l2-sd-nose-6:
+  feetPosition: {x: 27.5, y: 1.73, z: -42.32}
+  id: l2-sd-nose-6
+  material: {color: oklch(0.78 0.15 90), roughness: 0.6}
+  primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
+  rotation: {yaw: -180}
+l2-sd-nose-7:
+  feetPosition: {x: 27.5, y: 1.98, z: -42.62}
+  id: l2-sd-nose-7
+  material: {color: oklch(0.78 0.15 90), roughness: 0.6}
+  primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
+  rotation: {yaw: -180}
+l2-sd-nose-8:
+  feetPosition: {x: 27.5, y: 2.23, z: -42.92}
+  id: l2-sd-nose-8
+  material: {color: oklch(0.78 0.15 90), roughness: 0.6}
+  primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
+  rotation: {yaw: -180}
+l2-sd-nose-9:
+  feetPosition: {x: 27.5, y: 2.48, z: -43.22}
+  id: l2-sd-nose-9
+  material: {color: oklch(0.78 0.15 90), roughness: 0.6}
+  primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
+  rotation: {yaw: -180}
+l2-sd-pipe0:
+  feetPosition: {x: 27.5, y: 0, z: -40.65}
+  id: l2-sd-pipe0
+  material: {color: oklch(0.55 0.03 70), metalness: 0.5, roughness: 0.5}
+  spline: {kind: pipe, points: [[1.95, 2.9, 0.5], [1.95, 5.9, -4.1]], width: 0.14}
+l2-sd-pipe1:
+  feetPosition: {x: 27.5, y: 0, z: -40.65}
+  id: l2-sd-pipe1
+  material: {color: oklch(0.45 0.16 25), metalness: 0.5, roughness: 0.5}
+  spline: {kind: pipe, points: [[1.95, 3.15, 0.5], [1.95, 6.15, -4.1]], width: 0.09}
+l2-sd-rail:
+  feetPosition: {x: 27.5, y: 0, z: -40.65}
+  id: l2-sd-rail
+  material: {color: oklch(0.35 0.03 150), metalness: 0.6, roughness: 0.4}
+  spline: {kind: pipe, points: [[-1, 0.9416666666666667, 0.25], [-1, 1.3583333333333334, -0.25], [-1, 1.775, -0.75], [-1, 2.191666666666667, -1.25], [-1, 2.6083333333333334, -1.75], [-1, 3.025, -2.25], [-1, 3.441666666666667, -2.75], [-1, 3.8583333333333334, -3.25], [-1, 4.15, -3.75]], width: 0.05}
+l2-sd-shutter:
+  feetPosition: {x: 29.05, y: 0.02, z: -41.6}
+  id: l2-sd-shutter
+  material: {color: oklch(0.38 0.02 250), metalness: 0.65, roughness: 0.5}
+  primitive: {depth: 2, height: 0.07, kind: box, width: 1.1}
+  rotation: {yaw: -172}
+  ui: "<div face=\"top\" width=\"1.1m\" style=\"font-family:Arial;font-weight:900;text-align:center;color:#e6dcc0\"><div style=\"background:repeating-linear-gradient(45deg,#d8a820 0 28px,#1a1a1a 28px 56px);height:70px\"></div><div style=\"font-size:80px;margin-top:30px\">SUBLEVEL 2.1</div><div style=\"font-size:40px;color:#e8a098\">ACCESS SUSPENDED</div></div>"
+l2-sd-sign:
+  feetPosition: {x: 29.62, y: 1.4, z: -41.5}
+  id: l2-sd-sign
+  material: {color: oklch(0.62 0.015 85)}
+  primitive: {depth: 0.01, height: 0.5, kind: box, width: 1.1}
+  rotation: {lookAt: {x: 27.5, y: 1.4, z: -41.5}}
+  ui: "<div face=\"front\" width=\"1.1m\" style=\"font-family:Arial;font-weight:900;color:#2a3a2c;text-align:center;font-size:120px;line-height:1\">SUBLEVEL 2.1 ↑<div style=\"font-size:44px\">M.E.G. BASE ALEF</div></div>"
+l2-sd-tube:
+  audio: {clip: cdn/sfx-fluorescent-tube-electrical-buzz-flicker-loop.mp3, gain: 0.15, loop: true, maxDistance: 9}
+  feetPosition: {x: 27.5, y: 6.5, z: -44.4}
+  id: l2-sd-tube
+  material: {color: white, emissive: oklch(0.97 0.03 100), emissiveIntensity: 3}
+  primitive: {depth: 0.14, height: 0.06, kind: box, width: 1.2}
+  rotation: {yaw: -180}
 wp-z_4_4:
   castShadow: false
   feetPosition: {x: -37.5, y: 0, z: -35}
