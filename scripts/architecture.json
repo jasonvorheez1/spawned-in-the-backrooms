@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2632,
-  "updatedAt": "2026-11-08T22:43:30.873Z",
+  "basedOnSpecVersion": 2653,
+  "updatedAt": "2026-11-08T22:50:57.911Z",
   "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors while scenes and place simulations supply authored environments and local systems; Level 2's Blender-built modular kit is packed for runtime, and shared breakables/loose-item systems handle environmental damage and physics interactions.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with shops, arcade, fountain, court storefronts and west-balcony lounge; authored shops plus shopper/staff simulation.",
     "places/main (3D) - authored Level 0/Lobby maze; sim generates furniture/loot, safe-room almond water, shifting walls, creature ecology and versioned route-guidance moments.",
     "places/intake (3D) + places/tutorial0 (solo ephemeral 3D) - bedroom character-creation/waking space and authored Level 0 tutorial route with staged encounter and HALOGEN.",
-    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored levels with local generation, loot and agents; Level 2 uses generated modelled tunnel modules over its retained collider shell.",
+    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored levels with local generation, loot and agents; Level 1 has modeled loose drums/pallets and Level 2's modeled kit overlays its collider shell.",
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; residents, hazards, office/home systems and Boiler Room rats.",
     "places/level6, places/level7, places/level10, places/level11 (3D) - later authored/generated levels including city, farm and venues; Level 10's fun poster routes to Level 26.",
-    "places/level26 (3D) - SS Fun =), Adventure liner lost in green fog; scene places bespoke modeled hull/cabin meshes alongside bridge, funnel, deck, pool, wrecked bar/restaurant, Partygoers and balloons.",
+    "places/level26 (3D) - SS Fun =), Adventure liner lost in green fog; scene places bespoke hull/cabin meshes alongside bridge, funnel, deck, pool, wrecked bar/restaurant, Partygoers and balloons; lifeboats hang clear above the side walkway.",
     "places/debug, places/spamton, places/level2, places/level21 and remaining configured places - auxiliary debug/fight spaces and continuing Backrooms routes; all are 3D except tutorial0's solo ephemeral instance."
   ],
   "roots": [
@@ -30,7 +30,7 @@
     "scripts/lib/build-piece.js + breakables.yml + furniture.yml - canonical build specs/models shared by B-mode and home reconstruction.",
     "scripts/lib/screen.js - derived read-only panel classifier and wrist gates shared by player, stats, craft, rest and menu input.",
     "scripts/lib/maze.js and scripts/lib/level*.js + level data - grids, zones, layouts and paths reused by place sims, geometry and navigation.",
-    "scripts/lib/clothes.js + clothes.yml + critter.yml + hair.yml + scripts/lib/critter-model.js - wardrobe/look rules and player/NPC critter models.",
+    "scripts/lib/clothes.js + clothes.yml + critter.yml + hair.yml + scripts/lib/critter-model.js - wardrobe/look rules and player/NPC critter models; scripts/critter.js passes hair style and colour into the shared renderer, including creator preview.",
     "scripts/lib/l2kit.js - Level 2 model-instance drawing/decoding from scripts/lib/l2kit-data, used by scripts/l2kit/*-geo.js; scripts/lib/knock.js - kicked/thrown-body recovery shared by enemy managers.",
     "scripts/lib/loose.js + scripts/lib/data/loose.yml - name-matched material, mass, hit points, impact thresholds and break acts; shared by grab, kick and breakables."
   ],
@@ -61,12 +61,12 @@
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done.",
     "scripts/lib/hub.js toHub/toSolo → room/place crossings; roomHop distinguishes intentional crossings from launch/resume.",
     "Death recovery → scripts/hub.js hubOffer → hub-ui.js; local mall counters write hubShop → hub handler and hub-ui menus; purchases debit cents and grant configured stock.",
-    "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; found weapon rarity cap is level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickup weapons/food/aid enters player.js inventory and snacks/aid panels.",
+    "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; found weapon rarity cap is level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickup weapons/food/aid enters player.js inventory and snacks/aid update needs.",
     "L input → scripts/kick.js tries foe kick then loose.js kickLoose; Z input → scripts/grab.js picks/carries/throws eligible bodies and calls loose.js arm/track/impact; flight tracking lives in player session and detects hard stops.",
-    "scripts/lib/breakables.js strike/damageEntity → loose.js breakIt for matched loose props, otherwise generic rubble; loose.yml supplies match/material/hp/act rules and breakAt is the landing/impact energy threshold.",
-    "Extinguisher breakIt → ctx.after(..., 'looseSpent') → scripts/grab.js looseSpent clears its jet and marks the can spent; explosion acts emit damage/noise/shockwave to nearby entities.",
-    "Melee player.js hitTarget and scripts/lib/ballistics.js bullet target queries include l8-hostile (excluding already-covered l8spider for melee), so tagged hostile entities are hittable by swings and shots.",
-    "Level 2 places/level2/sim.js → scripts/lib/l2kit.js spawnKit and per-part scripts/l2kit/*-geo.js visuals; breakables.syncWalls updates wall cuts while scripts/level2-geo.js retains the full original collider shell."
+    "scripts/lib/breakables.js strike/damageEntity → loose.js breakIt for matched loose props, otherwise generic rubble; loose.yml supplies material/hp/act rules, with breakAt as impact-energy threshold; explosions emit damage/noise/shockwave.",
+    "places/level1/sim.js l1Tripo migration spawns modeled oil drums and box pallets as l1prop entities; scripts/lib/data/loose.yml matches their metal/wood material and scripts/lib/loose.js, grab/kick and combat handle their interactions.",
+    "Level 2 places/level2/sim.js → scripts/lib/l2kit.js spawnKit and per-part scripts/l2kit/*-geo.js visuals; existing seeded rooms with kitV != 1 are upgraded and l2-geo/l2-details visuals switched to kit while scripts/level2-geo.js retains the collider shell; breakables.syncWalls updates wall cuts.",
+    "Melee player.js hitTarget and scripts/lib/ballistics.js bullet target queries include l8-hostile (excluding already-covered l8spider for melee), so tagged hostile entities are hittable by swings and shots."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js - authored mall shops/landmarks with data-driven stock and simulated staff, waypoint shoppers and balcony loungers.",
@@ -74,9 +74,9 @@
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props and Boiler Room Death Rat packs.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml + art/critter-hair/build.py - player and NPCs share body/head/hair rendering; style meshes vary in form, with long backs, face-framing locks, multi-lock tails and…",
-    "art/level2/{build,compact,encode,pack}.py + scripts/lib/l2kit-data/* + scripts/lib/l2kit.js - module meshes are compact-packed and decoded into runtime instances; optional UV data, otherwise triplanar projection; seeded layout and visual-only collider shell remain separate.",
-    "scripts/lib/data/loose.yml + scripts/lib/loose.js + grab.js/kick.js/breakables.js - matched physics props share impact tracking and material-specific acts: shatter/spill, splinter, spark, spray, explosion, pop, splat, dent or bounce."
+    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml + art/critter-hair/build.py - player and NPCs share body/head/hair rendering; generated style meshes vary in form, with long backs, face-framing locks, multi-lock tails and a triangle cap for long styles.",
+    "art/level2/{build,compact,encode,pack}.py + scripts/lib/l2kit-data/* + scripts/lib/l2kit.js - module meshes are compact-packed and decoded into runtime instances; optional UV data, otherwise triplanar projection; seeded layout, material/brightness floors and far LOD copies vary by module.",
+    "scripts/lib/data/loose.yml + scripts/lib/loose.js + grab.js/kick.js/breakables.js - matched physics props share impact tracking and material-specific acts: shatter/spill, splinter, spark, spray, explosion, pop, splat, dent or bounce; Level 1's real drum/pallet models replace the procedural stand-ins."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but has no references; Level 26 scene placements and the barrage use uploaded models instead."
@@ -87,6 +87,6 @@
     "Level 0 place.state.momentsV is 4: its migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout.",
     "At sanity <= 0 health is not drained; scripts/lib/stats.js lowers derived attributes except Luck by 2 (minimum 1), and derived values feed combat, carry and movement.",
     "scripts/lib/knock.js consumes transient down/kb records and thrown-body flight/overboard state; enemy managers must call knocked() before AI and exclude heldBy bodies. loose.yml breakAt uses joules: 0.5 × kg × speed²; keep kg and velocity units aligned.",
-    "Level 2's modelled kit is visual only: scripts/level2-geo.js retains the original full collider shell; keep kit visuals, seeded scripts/lib/level2.js layout and breakables.syncWalls cut handling aligned. l2kit-data modules are packed output from art/level2/encode.py; edit source geometry/pipeline and regenerate, not packed modules by hand."
+    "Level 2's modelled kit is visual only: scripts/level2-geo.js retains the original full collider shell; sim upgrades seeded rooms once via kitV and toggles legacy shell visuals. Keep kit visuals, seeded scripts/lib/level2.js layout and breakables.syncWalls cut handling aligned."
   ]
 }
