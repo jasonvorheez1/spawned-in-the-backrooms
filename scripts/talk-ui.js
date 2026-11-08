@@ -107,7 +107,7 @@ export function talkUi(ctx, player) {
     : shown ? (shown[0] === 'x' ? `<div class="chk" id="c${lastN}">${esc(shown[1])}</div>` : `<div class="now" id="n${lastN}-${log.length}" style="color:${col}"><i>${who.toUpperCase()}</i>${esc(shown[1])}</div>`)
     : `<div class="now" style="opacity:.6"><i>${who.toUpperCase()}</i>…</div>`
   const SYS = { svc: SVC[role], trade: 'Let me see what you have to trade.', leave: 'Goodbye.' }
-  const sys = [['wave', '', 'Wave'], ['gift', '', 'Gift'], ['dance', '', 'Dance'], ['insult', '', 'Insult'], SVC[role] ? ['svc', `[${role === 'medic' ? 'Medicine' : 'Ask'}]`, SVC[role] + '.'] : null, isTrader(it) ? ['trade', '[Barter]', SYS.trade] : null, ...(it.state?.offers ?? []).map(([k, tx]) => [k, '', tx]), ['leave', '', SYS.leave]].filter(Boolean)
+  const sys = [['wave', '', 'Wave'], ['gift', '', 'Give gift'], ['dance', '', 'Dance'], ['insult', '', 'Insult'], SVC[role] ? ['svc', `[${role === 'medic' ? 'Medicine' : 'Ask'}]`, SVC[role] + '.'] : null, isTrader(it) ? ['trade', '[Barter]', SYS.trade] : null, ...(it.state?.offers ?? []).map(([k, tx]) => [k, '', tx]), ['leave', '', SYS.leave]].filter(Boolean)
   const opts = ''
   const send = `const i=document.getElementById('tkin');if(i&&i.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:i.value});i.value=''}`
   const choices = Array.isArray(s.talkChoices) ? s.talkChoices : []
@@ -122,7 +122,7 @@ export function talkUi(ctx, player) {
   }).join('')
   // the strip: their line, up to four replies, then one small row: type a line, the side asks, bye
   const top = chItems.split('</button>').filter(Boolean).slice(0, 4).map((b) => b + '</button>').join('')
-  const small = sys.map(([k, tag, tx]) => `<button data-interactive onclick="sendAction('talkdo',{k:'${q(k)}'})">${esc(k === 'leave' ? 'Bye' : k === 'trade' ? 'Trade' : k === 'svc' ? (SVC[role] ?? 'Ask') : tx.slice(0, 22))}</button>`).join('')
+  const small = sys.map(([k, tag, tx]) => `<button data-interactive onclick="sendAction('talkdo',{k:'${q(k)}'})">${esc(k === 'leave' ? 'Bye' : k === 'trade' ? 'Trade' : k === 'svc' ? (SVC[role] ?? 'Ask') : (tx || k).slice(0, 22))}</button>`).join('')
   const kd = `if(event.key==='Escape'){sendAction('talkdo',{k:'leave'})}else if(event.target.id!=='tkin'&&event.key>='1'&&event.key<='9'){const c=document.querySelectorAll('.tc .ch');const b=c[parseInt(event.key)-1];if(b)b.click()}`
   return `${CINE}<div class="tc" data-modal tabindex="0" onkeydown="${kd}">
     <div class="low ${s.talkBusy ? 'busy' : ''}"><div class="who">${who} · ${esc(it.state?.temper ?? '')}${it.state?.title ? ' · ' + esc(it.state.title) : ''} · hp ${Math.max(0, Math.round(it.state?.hp ?? 0))}/${Math.round(it.state?.maxHp ?? 100)}</div><div class="sub">${now}</div>
