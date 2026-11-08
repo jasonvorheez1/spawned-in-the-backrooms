@@ -63,17 +63,47 @@ scrap:
   pitch:       { name: Tar pitch,       kg: 0.4, color: "#2a2630" }
 # what B mode builds. size: [w, h, d] in metres (the ghost and the collider); cost in scrap
 pieces:
-  plank_wall:  { name: Plank wall,       mat: wood,  hp: 140, size: [2, 2.4, 0.16], cost: { scrap_wood: 4, nails: 2 } }
-  metal_wall:  { name: Metal sheet wall, mat: metal, hp: 260, size: [2, 2.4, 0.12], cost: { scrap_metal: 4, wire: 1 } }
-  barricade:   { name: Barricade,        mat: wood,  hp: 90,  size: [2, 1.2, 0.5],  cost: { scrap_wood: 3, nails: 2 } }
+  plank_wall:  { name: Plank wall,       mat: wood,  hp: 140, size: [2, 2.4, 0.16], snap: edge, up: metal_wall, cost: { scrap_wood: 4, nails: 2 } }
+  metal_wall:  { name: Metal sheet wall, mat: metal, hp: 260, size: [2, 2.4, 0.12], snap: edge, up: brick_wall, cost: { scrap_metal: 4, wire: 1 } }
+  barricade:   { name: Barricade,        mat: wood,  hp: 90,  size: [2, 1.2, 0.5], snap: free, up: steel_barricade,  cost: { scrap_wood: 3, nails: 2 } }
   crate:       { name: Crate,            mat: wood,  hp: 60,  size: [1, 1, 1],      cost: { scrap_wood: 3, nails: 1 } }
-  steel_barricade: { name: Steel barricade, mat: metal, hp: 380, size: [2, 1.3, 0.4], cost: { scrap_metal: 3, bolts: 4, gears: 1 } }
+  steel_barricade: { name: Steel barricade, mat: metal, hp: 380, size: [2, 1.3, 0.4], snap: free, up: rebar_barricade, cost: { scrap_metal: 3, bolts: 4, gears: 1 } }
   ramp:        { name: Ramp,             mat: wood,  hp: 120, size: [1.2, 1, 2],    cost: { scrap_wood: 5, nails: 3 } }
   workbench:   { name: Workbench,        mat: wood,  hp: 120, size: [1.6, 1.0, 0.8], bench: true, cost: { scrap_wood: 6, nails: 4, bolts: 2 } }
-  brick_wall:  { name: Brick wall,       mat: brick,    hp: 480, size: [2, 2.4, 0.24], cost: { bricks: 8, mortar_dust: 3 } }
+  brick_wall:  { name: Brick wall,       mat: brick,    hp: 480, size: [2, 2.4, 0.24], snap: edge, cost: { bricks: 8, mortar_dust: 3 } }
   rebar_barricade: { name: Rebar concrete barricade, mat: concrete, hp: 700, size: [2, 1.2, 0.6], cost: { rubble: 6, rebar_rod: 3, mortar_dust: 2 } }
-  pipe_grate:  { name: Pipe grate,       mat: pipe,     hp: 300, size: [2, 2.2, 0.12], cost: { steel_pipe: 5, brass_valve: 1, bolts: 2 } }
+  pipe_grate:  { name: Pipe grate,       mat: pipe,     hp: 300, size: [2, 2.2, 0.12], snap: edge, cost: { steel_pipe: 5, brass_valve: 1, bolts: 2 } }
+  # base building overhaul (Nov 8): a 2 m snap kit. snap: cell (centre of a 2 m square), edge (on a square's side, turns itself), stairs (two squares), free (0.5 m grid, R turns). up: what Upgrade turns it into.
+  foundation_wood:     { name: Timber foundation,   mat: wood,     hp: 300,  size: [2, 0.3, 2],    snap: cell, up: foundation_concrete, cost: { scrap_wood: 6, nails: 3 } }
+  foundation_concrete: { name: Concrete foundation, mat: concrete, hp: 900,  size: [2, 0.3, 2],    snap: cell, cost: { rubble: 6, mortar_dust: 3, rebar_rod: 1 } }
+  floor_wood:          { name: Plank floor,         mat: wood,     hp: 160,  size: [2, 0.12, 2],   snap: cell, up: floor_metal, cost: { scrap_wood: 4, nails: 2 } }
+  floor_metal:         { name: Steel deck floor,    mat: metal,    hp: 320,  size: [2, 0.12, 2],   snap: cell, cost: { scrap_metal: 4, bolts: 3 } }
+  half_wall:           { name: Half wall,           mat: wood,     hp: 90,   size: [2, 1.2, 0.16], snap: edge, cost: { scrap_wood: 2, nails: 1 } }
+  doorway_wood:        { name: Doorway,             mat: wood,     hp: 130,  size: [2, 2.4, 0.16], snap: edge, collider: mesh, cost: { scrap_wood: 4, nails: 2 } }
+  window_wood:         { name: Window wall,         mat: wood,     hp: 120,  size: [2, 2.4, 0.16], snap: edge, collider: mesh, cost: { scrap_wood: 4, nails: 2, wire: 1 } }
+  door_wood:           { name: Plank door,          mat: wood,     hp: 140,  size: [1, 2.1, 0.08], snap: edge, door: true, up: door_metal, cost: { scrap_wood: 3, nails: 2, springs: 1 } }
+  door_metal:          { name: Steel door,          mat: metal,    hp: 380,  size: [1, 2.1, 0.08], snap: edge, door: true, cost: { scrap_metal: 4, bolts: 3, springs: 1 } }
+  stairs_wood:         { name: Stairs,              mat: wood,     hp: 200,  size: [1.8, 2.4, 4],  snap: stairs, collider: mesh, cost: { scrap_wood: 8, nails: 4 } }
+  spikes:              { name: Spike strip,         mat: wood,     hp: 80,   size: [2, 0.5, 1],    snap: free, trap: 30, cost: { scrap_wood: 3, nails: 6 } }
+  storage_locker:      { name: Storage locker,      mat: metal,    hp: 200,  size: [0.9, 1.9, 0.55], snap: free, store: true, cost: { scrap_metal: 5, bolts: 2 } }
+  lamp:                { name: Work lamp,           mat: metal,    hp: 60,   size: [0.4, 1.7, 0.4], snap: free, light: true, cost: { scrap_metal: 2, wire: 2, fuse: 1 } }
 order: [plank_wall, metal_wall, brick_wall, barricade, steel_barricade, rebar_barricade, pipe_grate, crate, ramp, workbench]
+# the B menu: number keys pick a tab, X / the wheel the piece in it. tools are not pieces: a click uses them on what you look at.
+tabs:
+  - { name: Foundations, pieces: [foundation_wood, foundation_concrete] }
+  - { name: Walls, pieces: [plank_wall, metal_wall, brick_wall, half_wall] }
+  - { name: Floors, pieces: [floor_wood, floor_metal, stairs_wood, ramp] }
+  - { name: Doors, pieces: [doorway_wood, door_wood, door_metal, window_wood] }
+  - { name: Defense, pieces: [barricade, steel_barricade, rebar_barricade, pipe_grate, spikes] }
+  - { name: Utility, pieces: [workbench, storage_locker, lamp, crate] }
+  - { name: Tools, pieces: [tool_repair, tool_upgrade, tool_demolish] }
+tools:
+  tool_repair:   { name: Repair,   info: Mends what you look at. Costs half its parts for a full mend. }
+  tool_upgrade:  { name: Upgrade,  info: Rebuilds it one tier up. Costs the new piece. }
+  tool_demolish: { name: Demolish, info: Takes your own piece down. You get half its parts back. }
+buildReach: 7          # her pick: metres from the eye a piece can go
+buildCap: 250          # her pick: pieces one player keeps outside their home
+
 
 # Level 0 walls are voxels: 4 across x 3 high, each its own hp; a chunk with nothing under it and nothing beside it falls too.
 voxel: { cols: 4, rows: 3 }
