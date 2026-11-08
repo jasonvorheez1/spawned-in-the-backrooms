@@ -13,11 +13,11 @@ G = dict(brow=[((0.36, 0.80, 0.34), 0.035, 0.22)], back=[((0, -0.9, 0.2), 0.05, 
 SP = {
  "cat":     dict(top=0.10, cheek=0.11, cheekD=(0.70, 0.45, -0.35), cheekS=0.30, muz=0.07, muzS=0.26, chin=0.05, wide=1.05,
                  ear=dict(h=1.05, w=0.62, a=1.0, b=1.35, T=0.22, D=0.36, bend=0.0, flare=0.30)),
- "dog":     dict(top=0.12, cheek=0.07, cheekD=(0.70, 0.45, -0.40), cheekS=0.32, muz=0.20, muzS=0.24, chin=0.08, wide=1.08,
+ "dog":     dict(top=0.12, cheek=0.07, cheekD=(0.70, 0.45, -0.40), cheekS=0.32, muz=0.30, muzS=0.23, chin=0.08, wide=1.08,
                  ear=dict(h=1.0, w=0.62, a=2.0, b=1.6, T=0.20, D=0.30, bend=0.10, flare=0.25)),
- "fox":     dict(top=0.10, cheek=0.06, cheekD=(0.78, 0.30, -0.40), cheekS=0.30, muz=0.24, muzS=0.20, chin=0.04, wide=1.0,
+ "fox":     dict(top=0.10, cheek=0.06, cheekD=(0.78, 0.30, -0.40), cheekS=0.30, muz=0.34, muzS=0.21, chin=0.04, wide=1.0,
                  ear=dict(h=1.1, w=0.44, a=1.0, b=1.0, T=0.19, D=0.36, bend=0.0, flare=0.30)),
- "wolf":    dict(top=0.12, cheek=0.07, cheekD=(0.78, 0.30, -0.40), cheekS=0.30, muz=0.24, muzS=0.21, chin=0.06, wide=1.04,
+ "wolf":    dict(top=0.12, cheek=0.07, cheekD=(0.78, 0.30, -0.40), cheekS=0.30, muz=0.34, muzS=0.22, chin=0.06, wide=1.04,
                  ear=dict(h=1.05, w=0.48, a=1.0, b=1.1, T=0.24, D=0.32, bend=0.0, flare=0.32)),
  "bunny":   dict(top=0.08, cheek=0.13, cheekD=(0.66, 0.45, -0.40), cheekS=0.30, muz=0.06, muzS=0.22, chin=0.04, wide=1.02,
                  ear=dict(h=1.0, w=0.40, a=2.0, b=2.0, T=0.20, D=0.34, bend=0.12, flare=0.25)),
@@ -25,7 +25,7 @@ SP = {
                  ear=dict(h=1.0, w=0.95, a=2.0, b=2.0, T=0.16, D=0.30, bend=0.0, flare=0.22)),
  "bear":    dict(top=0.16, cheek=0.09, cheekD=(0.72, 0.40, -0.40), cheekS=0.34, muz=0.12, muzS=0.26, chin=0.09, wide=1.10,
                  ear=dict(h=1.0, w=0.95, a=2.0, b=2.0, T=0.20, D=0.30, bend=0.0, flare=0.25)),
- "raccoon": dict(top=0.10, cheek=0.10, cheekD=(0.80, 0.25, -0.35), cheekS=0.26, muz=0.20, muzS=0.20, chin=0.04, wide=1.04,
+ "raccoon": dict(top=0.10, cheek=0.10, cheekD=(0.80, 0.25, -0.35), cheekS=0.26, muz=0.30, muzS=0.21, chin=0.04, wide=1.04,
                  ear=dict(h=1.0, w=0.62, a=1.4, b=1.5, T=0.20, D=0.32, bend=0.0, flare=0.28)),
 }[SPN]
 
