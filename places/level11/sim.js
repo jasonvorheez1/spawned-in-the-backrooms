@@ -61,13 +61,23 @@ const RIFT_VOID = `fx
 pop void rate=18 on=sphere(.8) life=.8..1.6 v=sdir()*.2+up(.15) size=.04..0.12 col=hdr(0.4,1.8,2.8) a=0>.8:1>0 sz=$size*flick(14,.4) r=sprite(soft-disc,add)
 pop pulse rate=4 on=point() life=1.2..1.8 v=up(.2) size=.3..0.6 col=hdr(0.2,0.8,2.2) a=0>.5:.5>0 sz=$size*(.5>2) r=sprite(smoke-puff,alpha)`;
 
+// big skyline pieces stay in view far off; everything else stops drawing past 70 m (fog has eaten it by then)
+export const L11_FAR = /^l11-(b|ntower|hero|tower|skydeck|bb)/
+export function l11Lean(id, spec) {
+  if (!spec || spec.visibleRange) return spec
+  const o = { ...spec, visibleRange: { max: L11_FAR.test(id) ? 260 : 70 } }
+  const pr = spec.primitive
+  if (pr && pr.kind === "box" && Math.max(pr.width ?? 1, pr.height ?? 1, pr.depth ?? 1) < 1.2 && spec.castShadow === undefined) o.castShadow = false
+  if (pr && pr.kind === "cylinder" && (pr.height ?? 1) < 1.2 && spec.castShadow === undefined) o.castShadow = false
+  return o
+}
 function lay(ctx) {
   // Clear any existing level11 entities
   for (const id of Object.keys(ctx.place.objects ?? {})) {
     if (/^l11-/.test(id) && !id.includes("/")) ctx.destroy(id);
   }
 
-  const sp = (id, spec) => ctx.spawn(id, spec);
+  const sp = (id, spec) => ctx.spawn(id, l11Lean(id, spec)); // perf (Nov 8, lagscope #105-108): every row gets a draw distance, small clutter casts no shadow
   const md = (id, kind, x, y, z, materials, collider = "box", extra = {}) =>
     sp(id, { feetPosition: { x, y, z }, model: { id: MODELS[kind], forward: "-z", materials }, physics: { body: "static", collider }, ...extra });
   const bx = (id, x, y, z, w, h, d, material, extra = {}) =>
