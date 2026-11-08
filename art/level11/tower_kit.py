@@ -174,19 +174,19 @@ def house():
     L = (W / 2 + 0.55) / math.cos(pitch); Dr = D + 0.9
     for sx in (-1, 1):
         cx = sx * (W / 2 + 0.55) / 2; cz = z1 + rh - ((W / 2 + 0.55) / 2) * math.tan(pitch) + 0.1
-        M.box("shingle", (cx, 0, cz), (L, Dr, 0.12), rot=(0, -sx * pitch, 0))
+        M.box("shingle", (cx, 0, cz), (L, Dr, 0.12), rot=(0, sx * pitch, 0))
         n = int(L / 0.32)
         for k in range(n):
             t = (k + 0.5) / n; px = sx * (W / 2 + 0.55) * (1 - t); pz = z1 + rh - (W / 2 + 0.55) * (1 - t) * math.tan(pitch) + 0.1 + 0.08 + (W / 2 + 0.55) * math.tan(pitch) * 0 
             px = sx * (W / 2 + 0.55) * t; pz = z1 + rh - (W / 2 + 0.55) * t * math.tan(pitch) + 0.19
-            M.box("shingle", (px, 0, pz), (0.34, Dr - 0.02, 0.035), rot=(0, -sx * pitch, 0))
+            M.box("shingle", (px, 0, pz), (0.34, Dr - 0.02, 0.035), rot=(0, sx * pitch, 0))
         ex = sx * (W / 2 + 0.55); ez = z1 + rh - (W / 2 + 0.55) * math.tan(pitch) + 0.05
         M.box("trim", (ex, 0, ez), (0.05, Dr, 0.22)); M.cyl("white", (ex + sx * 0.08, 0, ez - 0.02), 0.07, Dr, seg=6, rot=(math.pi / 2, 0, 0))
         for sy in (-1, 1): M.cyl("white", (ex + sx * 0.08, sy * (Dr / 2 - 0.15), (ez + F) / 2 - 0.2), 0.045, ez - F, seg=6)
     M.box("shingle", (0, 0, z1 + rh + 0.2), (0.36, Dr + 0.04, 0.12))
     for sy in (1, -1):
         for sx in (-1, 1):   # raking boards along the gable edges
-            M.box("trim", (sx * (W / 2 + 0.55) / 2, sy * (Dr / 2 + 0.02), z1 + rh - ((W / 2 + 0.55) / 2) * math.tan(pitch) + 0.02), (L, 0.06, 0.26), rot=(0, -sx * pitch, 0))
+            M.box("trim", (sx * (W / 2 + 0.55) / 2, sy * (Dr / 2 + 0.02), z1 + rh - ((W / 2 + 0.55) / 2) * math.tan(pitch) + 0.02), (L, 0.06, 0.26), rot=(0, sx * pitch, 0))
     # chimney on the -x side, brick with a cap
     M.box("brick", (-W / 2 - 0.35, -1.6, (z1 + rh + 1.0) / 2), (0.7, 1.1, z1 + rh + 1.0)); M.box("concrete", (-W / 2 - 0.35, -1.6, z1 + rh + 1.05), (0.85, 1.25, 0.12))
     M.cyl("metal", (-W / 2 - 0.35, -1.6, z1 + rh + 1.3), 0.12, 0.4, seg=8)
