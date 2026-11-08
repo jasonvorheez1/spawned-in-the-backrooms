@@ -33,20 +33,20 @@ const DUMMIES = [ // two shop-window mannequins, mask + hoodie
 ];
 
 export function layShop(ctx, { sp }) {
-  const { x, y, z } = SHOP, at = (dx, dz, dy = 0) => ({ x: x + dx, y: y + dy, z: z + dz });
+  const { x, y, z } = SHOP, F = y + 0.3, at = (dx, dz, dy = 0) => ({ x: x + dx, y: y + dy, z: z + dz });
   sp("l11-tm-shop", { tags: ["l11-shop"], feetPosition: at(0, 0), model: { id: M.shell, forward: "+z", materials: SHELL_MATS }, physics: { body: "static", collider: "mesh" }, state: { name: "Thrift Mode" } });
   sp("l11-tm-sign", { feetPosition: { x, y: y + 3.35, z: z - 2.83 }, vector: `<svg viewBox='0 0 700 90' width='6.6m'><text x='350' y='66' text-anchor='middle' font-family='serif' font-style='italic' font-weight='bold' font-size='70' fill='#f1e3bf' stroke='#3a2a14' stroke-width='2'>Thrift Mode</text><path d='M210 78 Q350 90 490 78' stroke='#c2402e' stroke-width='5' fill='none'/></svg>` });
   sp("l11-tm-hours", { feetPosition: { x: x + 1.2, y: y + 1.55, z: z - 2.73 }, vector: `<svg viewBox='0 0 120 60' width='0.42m'><rect x='2' y='2' width='116' height='56' rx='4' fill='#efe9dc' stroke='#222' stroke-width='3'/><text x='60' y='26' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='20' fill='#b0281c'>OPEN</text><text x='60' y='48' text-anchor='middle' font-family='sans-serif' font-size='12' fill='#222'>used &amp; new · 24 hr</text></svg>` });
   sp("l11-tm-light", { feetPosition: at(0, 0.3, 2.9), light: { kind: "point", color: "oklch(0.95 0.04 90)", intensity: 2.2, distance: 10 } });
-  RACKS.forEach(([rx, rz, yaw, cols], i) => sp(`l11-tm-rack-${i}`, { feetPosition: { x: rx, y, z: rz }, rotation: { yaw }, model: { id: M.rack, forward: "+z", materials: { chrome: { color: "oklch(0.8 0 0)", metalness: 1, roughness: 0.25 }, ...Object.fromEntries(cols.map((c, j) => [`g${j}`, cloth(c)])) } }, physics: { body: "static", collider: "box" } }));
-  sp("l11-tm-counter", { feetPosition: { x: x + 2.4, y, z: z + 1.4 }, model: { id: M.counter, forward: "+z" }, physics: { body: "static", collider: "box" } });
+  RACKS.forEach(([rx, rz, yaw, cols], i) => sp(`l11-tm-rack-${i}`, { feetPosition: { x: rx, y: F, z: rz }, rotation: { yaw }, model: { id: M.rack, forward: "+z", materials: { chrome: { color: "oklch(0.8 0 0)", metalness: 1, roughness: 0.25 }, ...Object.fromEntries(cols.map((c, j) => [`g${j}`, cloth(c)])) } }, physics: { body: "static", collider: "box" } }));
+  sp("l11-tm-counter", { feetPosition: { x: x + 2.4, y: F, z: z + 1.4 }, model: { id: M.counter, forward: "+z" }, physics: { body: "static", collider: "box" } });
   for (const [id, dx, look] of DUMMIES) sp(id, {
-    tags: ["l11-shop"], feetPosition: { x: dx, y, z: z - 2.1 }, rotation: { yaw: 0 }, physics: { body: "static", collider: "capsule" },
+    tags: ["l11-shop"], feetPosition: { x: dx, y: F, z: z - 2.1 }, rotation: { yaw: 0 }, physics: { body: "static", collider: "capsule" },
     ...critterSpec(fullLook({ species: "cat", sex: dx < x ? "f" : "m", botw: "pants", bottom: "#3d4a66", shoes: "sneakers", tint: "#dcd8d0", ...look })),
     state: { name: "Mannequin", info: "Shop window display." },
   });
   sp("l11-tm-clerk", {
-    tags: ["npc", "l11-shop"], feetPosition: { x: x + 2.4, y, z: z + 2.15 }, rotation: { yaw: 0 }, physics: "character",
+    tags: ["npc", "l11-shop"], feetPosition: { x: x + 2.4, y: F, z: z + 2.15 }, rotation: { yaw: 0 }, physics: "character",
     ...critterSpec(npcLook("l11-tm-clerk", { species: "raccoon", sex: "f", topw: "tee", top: "#1d2540", topp: "jerry", botw: "pants", bottom: "#2b2b33", shoes: "sneakers", eyew: "glasses" }, "trader", 11)),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
     state: {
