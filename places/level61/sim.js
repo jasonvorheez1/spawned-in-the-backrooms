@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 15;
+const V = 16;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb";
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -219,12 +219,19 @@ function lay(ctx) {
     });
   }
 
-  for (const [k, [x, z]] of [[-15, -12], [15, -12], [-15, 12], [15, 12]].entries()) {
+  // ceiling speakers across the hall, all on Heart 80s (Shelly's pick); a grille ring with a dark cone so it reads as a speaker
+  const HEART = "https://media-ssl.musicradio.com/Heart80sMP3"
+  const SPK = [[-20, -14], [0, -14], [20, -14], [-20, 0], [20, 0], [-20, 14], [0, 14], [20, 14]]
+  for (const [k, [x, z]] of SPK.entries()) {
     sp(`l61-speaker-${k}`, {
-      feetPosition: { x, y: HH - 0.1, z },
-      primitive: { kind: "cylinder", radiusTop: 0.25, radiusBottom: 0.25, height: 0.06 },
-      material: { color: "oklch(0.92 0.01 90)" },
-      audio: { clip: "cdn/music-upbeat-1980s-shopping-mall-synth-pop-soft-rock-through-ceiling-speakers-loop.mp3", loop: true, gain: 0.05, spatial: true, maxDistance: 18, bus: "Music" },
+      feetPosition: { x, y: HH - 0.08, z },
+      primitive: { kind: "cylinder", radiusTop: 0.3, radiusBottom: 0.3, height: 0.05 },
+      material: { color: "oklch(0.9 0.01 90)", roughness: 0.6 },
+      children: [
+        { feetPosition: { x: 0, y: -0.02, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.22, height: 0.03 }, material: { color: "oklch(0.32 0.01 90)", roughness: 0.9 } },
+        { feetPosition: { x: 0, y: -0.03, z: 0 }, primitive: { kind: "torus", radius: 0.22, tube: 0.015 }, rotation: { pitch: 90 }, material: { color: "oklch(0.75 0.01 90)", metalness: 0.6, roughness: 0.4 } },
+      ],
+      audio: { clip: HEART, loop: true, gain: 0.07, spatial: true, maxDistance: 16, bus: "Music" },
     });
   }
 
