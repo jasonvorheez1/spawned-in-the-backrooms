@@ -1201,6 +1201,8 @@ function tickStats(ctx, t, moving) {
   if (!ctx.session.wokeAt) {
     ctx.session.wokeAt = now
     const sp = s.savePos
+    if (s.wakeAtSave && sp && s.savePlace === ctx.self.place) { s.wakeAtSave = null; ctx.self.feetPosition = { x: sp.x, y: sp.y + 0.1, z: sp.z }; return } // the station's last-level ride: back where you stood
+    s.wakeAtSave = null
     if (ctx.self.place === 'bonus' || s.roomHop) { /* the mall and room hops land where their door puts you (scripts/lib/hub.js) */ }
     else if (sp && s.savePlace && s.savePlace !== 'bonus' && s.savePlace !== ctx.self.place) { ctx.cross(ctx.self, s.savePlace); return }
     if (sp && s.savePlace === ctx.self.place) { ctx.self.feetPosition = { x: sp.x, y: sp.y + 0.1, z: sp.z }; return }

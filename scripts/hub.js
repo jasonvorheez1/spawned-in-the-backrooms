@@ -1,7 +1,7 @@
 // The Bonus Room (johnadams2, Nov 8): the shared vaporwave mall hub. This behavior rides every player:
 // it offers the mall after a death, opens the mall's counters (Tom's Diner, clothes, furniture, the Teleport Station)
 // and answers their buttons. Food here is just for fun and never leaves the mall.
-import { toHub, toSolo, HOMES, HUB_PLACE } from "./lib/hub.js"
+import { toHub, toSolo, HOMES, HUB_PLACE, lastLevel } from "./lib/hub.js"
 import B from "./lib/data/bonus.yml"
 import FOODM from "./lib/data/bonus-food-models.yml"
 import FURN from "./lib/data/furniture.yml"
@@ -76,6 +76,7 @@ export function onInput(ctx, input) {
   if (d.k === "travel") {
     s.hubShop = null; s.hubFood = null
     if (d.v === "level0") return toSolo(ctx, "main")
+    if (d.v === "last") { const l = lastLevel(s); if (l) { s.wakeAtSave = true; return toSolo(ctx, l, ctx.self, true) } }
     const h = HOMES.find((x) => x.key === d.v)
     if (h && h.has(s)) return toSolo(ctx, h.to)
     ding(ctx, NOPE); tell(ctx, s, "You haven't unlocked that home yet.")

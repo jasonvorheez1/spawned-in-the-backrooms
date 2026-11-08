@@ -12,6 +12,9 @@ export const HOMES = [
   { key: "home11", name: "Your house", where: "Infinite City", has: (s) => !!s.home11, to: "home11#home-from-l11" },
 ]
 // into the mall: s.roomHop tells the menu and the save-resume this was a walk, not a launch
+// the station's "last level" row: the level a player last stood in, by its place id
+export const LEVEL_NAMES = { main: "Level 0 · The Lobby", tutorial0: "Level 0 · The Lobby", level1: "Level 1 · Habitable Zone", level2: "Level 2 · Pipe Dreams", level3: "Level 3 · Electrical Station", gamma: "Base Gamma", level4: "Level 4 · Abandoned Office", level5: "Level 5 · Terror Hotel", level6: "Level 6 · Lights Out", level7: "Level 7 · Thalassophobia", level8: "Level 8 · Cave System", level10: "Level 10 · The Bumper Crop", level11: "Level 11 · Infinite City", level21: "Level 21 · Locked", level26: "Level 26 · SS Fun =)", level61: "Level 61", level184: "Level 184", home11: "Your house" }
+export const lastLevel = (s) => (s.savePlace && s.savePlace !== HUB_PLACE && s.savePlace !== "intake" && s.savePlace !== "debug" ? (s.savePlace === "tutorial0" ? "main" : s.savePlace) : null)
 export function toHub(ctx, who = ctx.self) {
   const s = who.state
   if (isHubRoom(ctx.getRoomId?.())) return ctx.cross(who, HUB_PLACE)
@@ -21,9 +24,9 @@ export function toHub(ctx, who = ctx.self) {
   return r
 }
 // back into your own Backrooms, at a place's door (where = "main", "home11#home-from-l11")
-export function toSolo(ctx, where, who = ctx.self) {
+export function toSolo(ctx, where, who = ctx.self, keepPos = false) {
   const s = who.state, room = soloRoom(who.userId), place = where.split("#")[0]
-  s.savePlace = place; s.savePos = null // wake where the door puts you, not where you last stood
+  if (!keepPos) { s.savePlace = place; s.savePos = null } // wake where the door puts you, not where you last stood
   if (ctx.getRoomId?.() === room) return ctx.cross(who, where)
   s.roomHop = room
   const r = ctx.cross(who, `world:${ctx.world.id}/room:${room}+${where}`)
