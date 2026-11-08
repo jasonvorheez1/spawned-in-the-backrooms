@@ -12,7 +12,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { layCity, layStreet, tickCity } from "../../scripts/lib/level11-city.js";
 
 export const cadence = "1s";
-const V = 9; // bump to rebuild the city in rooms that are already open
+const V = 10; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -520,7 +520,7 @@ function lay(ctx) {
   // Friendly Hound lying on sidewalk rug (Wikidot lore: entities become docile)
   bx("l11-hound-rug", 8.8, 0.1, -5, 1.8, 0.02, 1.4, { ...T("worn-canvas-fabric", 1), color: "oklch(0.45 0.06 60)" }, { physics: undefined });
   sp("l11-friendly-hound", {
-    tags: ["usable", "hound"],
+    tags: ["usable", "pet"],
     feetPosition: { x: 8.8, y: 0.1, z: -5 },
     rotation: { yaw: -90 },
     physics: "character",
@@ -552,34 +552,18 @@ function lay(ctx) {
   });
 }
 
-// a place builds itself in tick, once per version (the way every other level here does); the version is written first so a throw cannot repeat the whole build every second
+// a place builds itself in tick, once per version (the way every other level here does); the version is written first so a throw cannot repeat the whole build every second.
+// The level's slow pulse (the payphone, the city's living parts) runs here too: a place program has one loop, tick, and no update.
+const mem = { ringAt: 0, adAt: 0 };
 export function tick(ctx) {
   if (!ctx.place.players?.length) return;
-  const st = ctx.place.state;
+  const st = ctx.place.state, now = ctx.now();
   if ((st.builtV ?? 0) < V) { st.builtV = V; lay(ctx); }
-}
-
-export function update(ctx, dt) {
-  // Level 11 continuous environment pulse
-  const now = ctx.now();
-  const mem = (ctx.self.session.l11 ??= {
-    bellAt: now + 12000,
-    ringAt: now + 35000,
-  });
-
+  if (!mem.ringAt) mem.ringAt = now + 35000;
   tickCity(ctx, mem, heard); // billboards, parked cars, far-off sirens (scripts/lib/level11-city.js)
-
-  // Periodic distant phone ring to guide wanderers
-  if (now > mem.ringAt) {
+  if (now > mem.ringAt) { // a distant phone ring to guide wanderers
     mem.ringAt = now + 45000 + ctx.random() * 30000;
     const phone = ctx.getObject("l11-payphone");
-    if (phone) {
-      heard(ctx, {
-        clip: "/cdn/moodboard-realistic-gritty/sfx-old-payphone-mechanical-bell-ringing-loop.mp3",
-        position: phone.feetPosition,
-        volume: 0.75,
-        maxDistance: 32,
-      });
-    }
+    if (phone) heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-old-payphone-mechanical-bell-ringing-loop.mp3", position: phone.feetPosition, volume: 0.75, maxDistance: 32 });
   }
 }
