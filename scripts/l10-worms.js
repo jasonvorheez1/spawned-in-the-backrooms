@@ -93,11 +93,12 @@ export function update(ctx, dt) {
       if (now - (m.rumble ?? 0) > 1400) { m.rumble = now; play(ctx, "wet-soil-churning-underground-burrowing-rumble", { x: nx, y: gy(nx, nz), z: nz }, 0.5, 22); }
       continue;
     }
+    if ((s.phase === "up" || s.phase === "sink") && (m.at == null || m.y0 == null)) { m.at ??= now; m.y0 ??= gy(o.feetPosition.x, o.feetPosition.z); } // a machine that picked this worm up mid-rise
     if (s.phase === "up") {
       const t = now - m.at, x = o.feetPosition.x, z = o.feetPosition.z;
       const k = Math.min(1, t / (S.rise * 1000));
       if (t < S.up) o.feetPosition = { x, y: m.y0 - 1.6 * (1 - k) - 0.15, z };
-      o.scale = { x: 1, y: 1 + 0.06 * Math.sin(t / 90), z: 1 };
+      const sy = 1 + 0.06 * Math.sin(t / 90); if (Number.isFinite(sy)) o.scale = { x: 1, y: sy, z: 1 };
       if (!m.bit && t > S.rise * 1000 && p && flat(o.feetPosition, p.feetPosition) < S.reach && exposed(ctx, p)) {
         m.bit = true;
         const at = hit(ctx, p, Math.round(rnd(ctx, S.bite[0], S.bite[1] + 0.99) - 0.49), "#ff6a50");
@@ -115,7 +116,7 @@ export function update(ctx, dt) {
       const t = now - m.at;
       o.feetPosition = { ...o.feetPosition, y: m.y0 - 0.15 - 2.2 * Math.min(1, t / (S.sink * 1000)) };
       if (t > S.sink * 1000) { // back under: it hunts you again from here
-        o.visible = false; o.fx = { script: RIPPLE }; s.phase = "stalk"; s.heardAt = now;
+        o.visible = false; o.scale = null; o.fx = { script: RIPPLE }; s.phase = "stalk"; s.heardAt = now;
         const a = ctx.random() * 6.283; o.feetPosition = { x: o.feetPosition.x + Math.cos(a) * 6, y: m.y0 - 2.4, z: o.feetPosition.z + Math.sin(a) * 6 };
       }
     }
