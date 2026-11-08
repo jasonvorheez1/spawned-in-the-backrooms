@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 67; // bump to rebuild the city in rooms that are already open
+const V = 68; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -563,7 +563,6 @@ function lay(ctx) {
     material: { color: "#e9eef2", roughness: 0.4 },
     ui: `<div face="front" width="4.6m" style="width:100%;height:100%;background:#fff"><img src="/cdn/value.a4659ffdbe2739ef5037fe9ae5acaf3f02bb949cf11b5b0bd914940d0ea6d298.png" style="width:100%;height:100%;object-fit:fill"></div>`,
   });
-  bx("l11-mall-glass-derma", MALL_X + MALL_W / 2 + 0.02, 0.4, MALL_Z - 6.5, 0.08, 2.6, 5.5, GLASS_TINT);
 
   // Storefront 2: IS LAB (Center)
   sp("l11-mall-sign-islab", { // a backlit box sign, its face toward the street (+X)
@@ -573,7 +572,6 @@ function lay(ctx) {
     material: { color: "#e9eef2", roughness: 0.4 },
     ui: `<div face="front" width="4.2m" style="width:100%;height:100%;background:#fff"><img src="/cdn/value.0b4a4ce24244c5eda36fc29774505e1a9e45e11c61d55faa2854be3791c3e751.png" style="width:100%;height:100%;object-fit:fill"></div>`,
   });
-  bx("l11-mall-glass-islab", MALL_X + MALL_W / 2 + 0.02, 0.4, MALL_Z, 0.08, 2.6, 4.2, GLASS_TINT);
 
   // Storefront 3: Marroka Pizzeria (Right - Enterable!)
   sp("l11-mall-sign-pizza", { // a backlit box sign, its face toward the street (+X)
@@ -583,7 +581,20 @@ function lay(ctx) {
     material: { color: "#e9eef2", roughness: 0.4 },
     ui: `<div face="front" width="4.6m" style="width:100%;height:100%;background:#fff"><img src="/cdn/value.84d3cf5aa956aa729dd601b744605f186624a542c7ceefe9d8d35e746f6b5290.png" style="width:100%;height:100%;object-fit:fill"></div>`,
   });
-  bx("l11-mall-glass-pizza", MALL_X + MALL_W / 2 + 0.02, 0.4, MALL_Z + 8.2, 0.08, 2.6, 2.4, GLASS_TINT);
+  { // shopfront glazing like the photo: clear panes in white aluminum frames, the lab's glass tinted green with a frosted band
+    const FX = MALL_X + MALL_W / 2 + 0.06, AL = { color: "oklch(0.94 0.005 250)", metalness: 0.6, roughness: 0.35 };
+    const CLEAR = { color: "oklch(0.86 0.02 210)", metalness: 0.1, roughness: 0.05, opacity: 0.22, transparent: true };
+    const GREEN = { color: "oklch(0.55 0.11 165)", metalness: 0.1, roughness: 0.08, opacity: 0.55, transparent: true };
+    for (const [k, zc, w, glass] of [["derma", MALL_Z - 6.5, 5.5, CLEAR], ["islab", MALL_Z, 4.2, GREEN], ["pizza", MALL_Z + 6.5, 5.5, CLEAR]]) {
+      bx(`l11-mall-pane-${k}`, FX - 0.04, 0.4, zc, 0.03, 2.9, w, glass, { physics: undefined });
+      bx(`l11-mall-frame-${k}-top`, FX, 3.3, zc, 0.08, 0.1, w, AL, { physics: undefined });
+      bx(`l11-mall-frame-${k}-sill`, FX, 0.36, zc, 0.1, 0.08, w, AL, { physics: undefined });
+      bx(`l11-mall-frame-${k}-transom`, FX, 2.55, zc, 0.07, 0.06, w, AL, { physics: undefined });
+      const n = Math.round(w / 1.4);
+      for (let i = 0; i <= n; i++) bx(`l11-mall-frame-${k}-m${i}`, FX, 0.4, zc - w / 2 + (w * i) / n, 0.08, 2.9, 0.07, AL, { physics: undefined });
+    }
+    bx("l11-mall-frost-islab", FX - 0.02, 1.0, MALL_Z, 0.02, 0.35, 4.1, { color: "oklch(0.9 0.02 165)", opacity: 0.7, transparent: true, roughness: 0.6 }, { physics: undefined });
+  }
 
   // --- CLINIC + LAB INTERIORS (Shelly's photo: Centro Dermatológico, isi LAB) ---
   {
