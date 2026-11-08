@@ -136,15 +136,35 @@ export function rollCloth(ctx, regular = false, level) {
 }
 // an NPC dressed from its faction's leveled list, the same every time for the same id: species, fur, face and a signature
 // agency top (the M.E.G. lime) stay; everything else is rolled from what that faction wears at that level
+const hashOf = (str) => { let h = 2166136261; for (const c of String(str)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
+const NEWSP = ['rat', 'squirrel', 'leopard', 'jackal', 'badger', 'ferret', 'beaver', 'capybara', 'lop', 'fennec'].filter((k) => C.species.includes(k))
+const OLDSP = C.species.filter((k) => !NEWSP.includes(k))
+const speciesFor = (id) => (NEWSP.length && hashOf(id + ':sp2') % 100 < 34 ? NEWSP[hashOf(id + ':sp3') % NEWSP.length] : OLDSP[hashOf(id + ':sp') % OLDSP.length])
+
 export function npcLook(id, look, faction, level, role) {
   const F = CL.leveled.factions[faction] ?? CL.leveled.factions.wanderer
-  const J = F.rows.length ? CL.leveled.roles?.[role] : null // a job's wardrobe (bespoke factions keep their own clothes)
+  const J = F.rows.length ? (CL.leveled.roles?.[role] ?? CL.leveled.roles?.[faction]) : null // a job's wardrobe (bespoke factions keep their own clothes)
   let h = 2166136261; for (const c of String(id)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) }
   const h0 = h >>> 0
   const u = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 100000) / 100000 }
   const base = fullLook(look), l = { ...base }
+
+  // If look did not specify sex, roll 50/50 from seed so we don't end up with 100% male NPCs
+  if (!look?.sex) l.sex = (hashOf(id + ':sex') % 100 < 50) ? 'f' : 'm'
+
+  // If look did not specify species, roll across all 30 species so we don't end up with 100% cats
+  if (!look?.species) l.species = speciesFor(id)
+
+  l.role = role || (['guard', 'medic', 'trader', 'scout', 'quarter', 'scavenger', 'clerk', 'captain', 'keeper', 'psychic', 'pilgrim'].includes(faction) ? faction : (look?.role ?? 'survivor'))
+  l.faction = faction || (look?.faction ?? 'wanderer')
+
   const keepTop = rowOf('topw', base.topw, base.top)?.rarity === 'agency'
+  const keepClothes = look?.clothesOwn || look?.wearOwn
+
   for (const slot of SLOTS) {
+    if (keepClothes) continue
+    // If look explicitly provided an authored garment for this slot, preserve it
+    if (look && look[slot] !== undefined && look[slot] !== 'none') continue
     if (slot === 'topw' && keepTop) continue
     const extra = J?.extra?.[slot] ?? F.extra?.[slot]
     if (extra !== undefined && u() > extra) { l[slot] = 'none'; continue }
@@ -156,11 +176,11 @@ export function npcLook(id, look, faction, level, role) {
     if (CL.patKey[slot]) l[CL.patKey[slot]] = pickPat(row, u, J?.pats) ?? ''
   }
   if (l.topw === 'dress') l.botw = 'none'
-  if (F.rows.length && l.neck === 'none' && u() < 0.24) { // some NPCs just wear a scarf, a cape, a bow tie or a bell collar, whatever the faction's list says
+  if (F.rows.length && l.neck === 'none' && !look?.neck && u() < 0.24) { // some NPCs just wear a scarf, a cape, a bow tie or a bell collar, whatever the faction's list says
     const row = CL.rows.find((r) => r.id === ['scarf', 'cape', 'cape', 'bowtie', 'bell', 'cape'][Math.floor(u() * 6)])
     if (row) { l.neck = row.kind; l.neckc = '#' + row.colours[Math.floor(u() * row.colours.length)] }
   }
-  if (!look?.bodyOwn) bodyRoll(id, l) // a fresh body per NPC: fur, markings, height, build, proportions (species and sex stay: their stories name them)
+  if (!look?.bodyOwn) bodyRoll(id, l, look) // a fresh body per NPC: fur, markings, height, build, proportions (species and sex stay: their stories name them)
   l.fseed = h0 // the face (scripts/lib/critter-model.js faceFill) rolls from the id, so it never changes with the clothes
   if (!look?.trait) l.trait = '' // fullLook gave the player default; an NPC rolls its own
   return l
@@ -188,16 +208,21 @@ const COMMON = ['e8c890', 'd89060', '7a4a30', '5a5a6a', 'a89080', 'f0e0c8', 'c87
 const PASTEL = ['ffb3cf', '9fd3ff', 'b8e986', 'c9a0ff', 'ffe066', 'ffc8a0', 'a0e8d8', 'e8a0e0', 'f8f0a0', 'a8c0ff']
 // dyes a plain garment may come in: Savi's picks, wide on purpose
 const DYES = ['e85d75', 'ff9f43', 'ffd93d', '6bcb77', '4d96ff', '3d5a98', '9b5de5', 'ff8fc7', '5ec7c7', 'c0392b', '2f6b4a', '7a3b5e', 'd4a24a', '4a5a8a', 'a8d8a0', 'f2c4a0', '1f3a5a', '8a2a2a', 'e0e070', '6a4a8a', '2aa08a', 'ff6a3a', 'b0b8c8', '5a3a2a', 'f4f1ea', '2b2b33']
-function bodyRoll(id, l) {
+function bodyRoll(id, l, look) {
   let h = 2166136261; for (const c of String(id) + '|body') { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) }
   const u = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 100000) / 100000 }, pick = (a) => a[Math.floor(u() * a.length)], r = (a, b) => Math.round((a + u() * (b - a)) * 100) / 100
   const nat = NATURAL[l.species] ?? NATURAL.cat
-  l.fur = '#' + (u() < 0.22 ? pick(PASTEL) : pick([...nat, ...COMMON]))
-  l.marks = pick(['none', 'none', 'none', 'freckles', 'stripes', 'patch', 'heart'])
+  if (!look?.fur) l.fur = '#' + (u() < 0.22 ? pick(PASTEL) : pick([...nat, ...COMMON]))
+  if (!look?.marks) l.marks = pick(['none', 'none', 'none', 'freckles', 'stripes', 'patch', 'heart'])
   const f = l.sex === 'f'
-  l.heightS = r(0.88, 1.12); l.buildS = r(f ? 0.86 : 0.9, f ? 1.1 : 1.18)
-  l.headS = r(0.88, 1.15); l.earS = r(0.7, 1.4); l.snoutS = r(0.75, 1.25); l.tailS = r(0.7, 1.4)
-  l.waistS = r(f ? 0.78 : 0.9, f ? 1.1 : 1.25); l.hipS = r(f ? 0.95 : 0.8, f ? 1.3 : 1.05)
-  if (f) l.bustS = r(0.7, 1.3) // more random (Shelly)
+  if (!look?.heightS) l.heightS = r(0.88, 1.12)
+  if (!look?.buildS) l.buildS = r(f ? 0.86 : 0.9, f ? 1.1 : 1.18)
+  if (!look?.headS) l.headS = r(0.88, 1.15)
+  if (!look?.earS) l.earS = r(0.75, 1.35)
+  if (!look?.snoutS) l.snoutS = r(0.75, 1.25)
+  if (!look?.tailS) l.tailS = r(0.7, 1.4)
+  if (!look?.waistS) l.waistS = r(f ? 0.78 : 0.9, f ? 1.1 : 1.25)
+  if (!look?.hipS) l.hipS = r(f ? 0.95 : 0.8, f ? 1.3 : 1.05)
+  if (f && !look?.bustS) l.bustS = r(0.7, 1.3) // more random (Shelly)
   return l
 }

@@ -72,7 +72,38 @@ function furMats(l) {
 }
 const only = (m, keys) => { const o = {}; for (const k of keys || []) if (m[k]) o[k] = m[k]; return o }
 // a garment whose Blender piece doesn't sit on the big cute heads wears its nearest kin (the cap's brim lands on the snout); the look and its loot keep the real name
-const MESH_SWAP = { hat: { cap: 'beanie' } }
+const MESH_SWAP = {
+  topw: {
+    vest: 'jacket',
+    blazer: 'jacket',
+    megjacket: 'jacket',
+    blouse: 'longsleeve',
+    coat: 'jacket',
+    shirt: 'longsleeve',
+    officeshirt: 'longsleeve',
+    wirehood: 'hoodie',
+    padjacket: 'jacket',
+  },
+  botw: {
+    cargo: 'pants',
+    slacks: 'pants',
+    jeans: 'pants',
+    canvasskirt: 'longskirt',
+  },
+  shoes: {
+    flats: 'slippers',
+    heels: 'boots',
+    steeltoe: 'boots',
+  },
+  hat: {
+    cap: 'beanie',
+    beret: 'beanie',
+    padbeanie: 'beanie',
+  },
+  neck: {
+    carpetponcho: 'cape',
+  }
+}
 export function bodyModel(l) {
   const parts = {}
   for (const p of M.parts) parts[p] = { visible: false }
@@ -113,7 +144,7 @@ export function headModel(l0) {
     id: (isFemale ? sp.headF : sp.headM) || sp.head,
     materials: only({
       ...furMats(l),
-      eyewhite: { color: '#fffdf8', roughness: 0.82, metalness: 0 },
+      eyewhite: { color: '#fffdf8', roughness: 0.35, metalness: 0 },
       eyeink: { color: '#16101c', roughness: 0.95, metalness: 0 },
       pupil: {
         color: eyeCol && (l?.glowEye || l?.species === 'samantha') ? eyeCol : '#000000', // STRICT: pupils all matte black, no shines; colour rides iris
@@ -121,13 +152,13 @@ export function headModel(l0) {
         metalness: 0,
         ...(eyeCol && (l?.glowEye || l?.species === 'samantha') ? { emissive: eyeCol, emissiveIntensity: 0.4 } : {})
       },
-      iris: { color: eyeCol || '#8a5a2e', roughness: 0.75, metalness: 0 },
+      iris: { color: eyeCol || '#8a5a2e', roughness: 0.22, metalness: 0.05 },
       blush: wearsBlush
         ? { color: blushCol, roughness: 0.88, metalness: 0, transparent: true, opacity: 0.82 }
         : { color: blushCol, visible: false, transparent: true, opacity: 0, depthWrite: false },
-      mouth: { color: '#44141e', roughness: 0.85 },
-      tongue: { color: '#ff758c', roughness: 0.65 },
-      nose: { color: l?.nose || icon.nose || sp.nose || '#221614', roughness: 0.32, metalness: 0.05 }
+      mouth: { color: '#44141e', roughness: 0.82 },
+      tongue: { color: '#ff758c', roughness: 0.45 },
+      nose: { color: l?.nose || icon.nose || sp.nose || '#221614', roughness: 0.28, metalness: 0.05 }
     }, sp.mats)
   }
 }
@@ -136,27 +167,91 @@ export function headModel(l0) {
 function rngOf(l) { let h = 2166136261; for (const c of String(l.fseed ?? `${l.species}|${l.sex}|${l.fur}|${l.top}|${l.bottom}`)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 100000) / 100000 } }
 const pickOf = (a, u) => a[Math.floor(u() * a.length)]
 export function faceFill(l) {
-  if (!l || l.trait || l.vary === false) return l
-  const u = rngOf(l), names = Object.keys(FACES.traits), tot = names.reduce((a, k) => a + (FACES.traits[k].w ?? 1), 0)
-  let r = u() * tot, trait = names[0]; for (const k of names) { r -= FACES.traits[k].w ?? 1; if (r <= 0) { trait = k; break } }
-  const [s0, s1] = FACES.strength ?? [1, 1]
-  const o = { ...l, trait, tstr: Math.round((s0 + u() * (s1 - s0)) * 100) / 100 }
+  if (!l || l.vary === false) return l
+  const u = rngOf(l)
   const own = l.fseed != null && l.faceOwn !== true // an NPC rolls its whole face from its id (a bespoke resident sets faceOwn to keep theirs)
-  if (own || !l.eye || l.eye === '#2b2233') o.eye = pickOf(FACES.eye, u)
-  if (own || !l.blush) o.blush = pickOf(FACES.blush, u)
+  const o = { ...l }
+
+  // 1. Role-based personality weighting for resting traits
+  const role = String(l.role || '').toLowerCase()
+  const names = Object.keys(FACES.traits)
+  const traitWeights = { ...FACES.traits }
+
+  if (['guard', 'scout', 'captain'].includes(role)) {
+    for (const k of ['alert', 'focused', 'stern', 'stoic', 'wary', 'resolute']) {
+      if (traitWeights[k]) traitWeights[k] = { ...traitWeights[k], w: (traitWeights[k].w ?? 1) * 2.5 }
+    }
+  } else if (['medic'].includes(role)) {
+    for (const k of ['gentle', 'warm', 'focused', 'soft', 'weary', 'resolute']) {
+      if (traitWeights[k]) traitWeights[k] = { ...traitWeights[k], w: (traitWeights[k].w ?? 1) * 2.5 }
+    }
+  } else if (['trader', 'quarter'].includes(role)) {
+    for (const k of ['wry', 'cheeky', 'warm', 'smug', 'cheerful', 'perky']) {
+      if (traitWeights[k]) traitWeights[k] = { ...traitWeights[k], w: (traitWeights[k].w ?? 1) * 2.5 }
+    }
+  } else if (['scavenger', 'survivor'].includes(role)) {
+    for (const k of ['wary', 'tired', 'weary', 'stoic', 'alert', 'wistful', 'mellow']) {
+      if (traitWeights[k]) traitWeights[k] = { ...traitWeights[k], w: (traitWeights[k].w ?? 1) * 2.2 }
+    }
+  }
+
+  // Pick trait if not already specified
+  if (!o.trait) {
+    const tot = names.reduce((a, k) => a + (traitWeights[k]?.w ?? 1), 0)
+    let r = u() * tot, trait = names[0]
+    for (const k of names) {
+      r -= traitWeights[k]?.w ?? 1
+      if (r <= 0) { trait = k; break }
+    }
+    o.trait = trait
+  }
+  if (!o.tstr) {
+    const [s0, s1] = FACES.strength ?? [0.55, 1.25]
+    o.tstr = Math.round((s0 + u() * (s1 - s0)) * 100) / 100
+  }
+
+  // 2. Eyes, blush, nose
+  if (own || !o.eye || o.eye === '#2b2233') o.eye = pickOf(FACES.eye, u)
+  if (own || !o.blush) o.blush = pickOf(FACES.blush, u)
   const icon = ICONIC[speciesOf(l)] || {}
   if (icon.nose) o.nose = icon.nose
-  else if (own || !l.nose) { const n = pickOf(FACES.nose, u); o.nose = n || (own ? '' : l.nose) }
-  if (own || !l.eyes) o.eyes = pickOf(['round', 'round', 'tall', 'wide'], u) // rolled late so the older rolls keep their faces
-  if (own || !l.ftype) { // the shape of the head: rolled after everything else, so every older roll keeps its face
-    const tn = Object.keys(FACES.types), tt = tn.reduce((a, k) => a + (FACES.types[k].w ?? 1), 0); let q = u() * tt, ft = tn[0]
-    for (const k of tn) { q -= FACES.types[k].w ?? 1; if (q <= 0) { ft = k; break } }
-    const [a, b] = FACES.typeStrength ?? [1, 1]; o.ftype = ft; o.ftstr = Math.round((a + u() * (b - a)) * 100) / 100
+  else if (own || !o.nose) {
+    const n = pickOf(FACES.nose, u)
+    o.nose = n || (own ? '' : o.nose)
   }
+
+  // Eye shape harmonized with trait
+  if (own || !o.eyes) {
+    const tr = o.trait || ''
+    if (['wideeyed', 'curious', 'bubbly', 'startled', 'alert'].includes(tr)) {
+      o.eyes = u() < 0.7 ? 'wide' : 'round'
+    } else if (['dreamy', 'soft', 'gentle', 'wistful', 'sleepy'].includes(tr)) {
+      o.eyes = u() < 0.65 ? 'tall' : 'round'
+    } else {
+      o.eyes = pickOf(['round', 'round', 'tall', 'wide'], u)
+    }
+  }
+
+  // 3. Head shape (FT_ keys)
+  if (own || !o.ftype || o.ftype === 'round') {
+    const tn = Object.keys(FACES.types)
+    const tt = tn.reduce((a, k) => a + (FACES.types[k].w ?? 1), 0)
+    let q = u() * tt, ft = tn[0]
+    for (const k of tn) {
+      q -= FACES.types[k].w ?? 1
+      if (q <= 0) { ft = k; break }
+    }
+    const [a, b] = FACES.typeStrength ?? [0.75, 1.1]
+    o.ftype = ft
+    o.ftstr = Math.round((a + u() * (b - a)) * 100) / 100
+  }
+
   return o
 }
+
 export function faceMorph(expr, blink, isFemale, look) {
-  const f = { ...(M.faces[expr] || M.faces.smile) }
+  const isNeutral = !expr || expr === 'neutral' || expr === 'resting'
+  const f = isNeutral ? {} : { ...(M.faces[expr] || {}) }
   const ff = look ? faceFill(look) : null, tr = ff ? FACES.traits[ff.trait] : null, ts = ff?.tstr ?? 1
   if (tr) for (const [k, v] of Object.entries(tr)) if (k !== 'w') f[k] = Math.min(1, (f[k] ?? 0) + v * ts)
   const fty = ff ? FACES.types[ff.ftype] : null, fs = ff?.ftstr ?? 1 // the head's own shape: FT_ keys
@@ -195,22 +290,30 @@ export function faceMorph(expr, blink, isFemale, look) {
   // --- Species Anatomical Snout & Head Profiles ---
   // Each animal species establishes its authentic cranial and snout profile
   const spName = speciesOf(ff ?? look)
-  if (['wolf', 'fox', 'jackal', 'dog'].includes(spName)) {
+  if (['wolf', 'dog', 'fox', 'jackal', 'fennec'].includes(spName)) {
     // Canines & Vulpines: distinct muzzle/snout, sleek cheeks, alert tapering jaw
     if (spName === 'wolf') {
-      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.54) + (isFemale ? 0.04 : 0.12))
+      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.52) + (isFemale ? 0.04 : 0.10))
       f.FT_Broad = Math.min(0.32, Math.max(f.FT_Broad ?? 0, 0.18))
+      f.FT_Round = Math.min(0.38, (f.FT_Round ?? 0) * 0.65)
+      f.FT_Chubby = Math.min(0.28, (f.FT_Chubby ?? 0) * 0.55)
     } else if (spName === 'fox' || spName === 'jackal') {
-      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.48) + (isFemale ? 0.04 : 0.10))
-      f.FT_Narrow = Math.min(0.35, Math.max(f.FT_Narrow ?? 0, 0.22))
+      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.46) + (isFemale ? 0.04 : 0.08))
+      f.FT_Narrow = Math.min(0.32, Math.max(f.FT_Narrow ?? 0, 0.20))
       f.FT_Heart = Math.min(0.42, Math.max(f.FT_Heart ?? 0, 0.30))
+      f.FT_Round = Math.min(0.36, (f.FT_Round ?? 0) * 0.65)
+    } else if (spName === 'fennec') {
+      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.38))
+      f.FT_Heart = Math.min(0.48, Math.max(f.FT_Heart ?? 0, 0.34))
+      f.FT_Snub = Math.min(0.32, Math.max(f.FT_Snub ?? 0, 0.20))
+      f.FT_Round = Math.min(0.42, (f.FT_Round ?? 0) * 0.70)
     } else {
       // Dog
-      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.44) + (isFemale ? 0.04 : 0.08))
-      f.FT_Broad = Math.min(0.28, Math.max(f.FT_Broad ?? 0, 0.16))
+      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.42) + (isFemale ? 0.04 : 0.08))
+      f.FT_Broad = Math.min(0.26, Math.max(f.FT_Broad ?? 0, 0.16))
+      f.FT_Round = Math.min(0.48, Math.max(f.FT_Round ?? 0, 0.25))
+      f.FT_Chubby = Math.min(0.36, Math.max(f.FT_Chubby ?? 0, 0.20))
     }
-    f.FT_Round = Math.min(0.35, (f.FT_Round ?? 0) * 0.6)
-    f.FT_Chubby = Math.min(0.28, (f.FT_Chubby ?? 0) * 0.5)
   } else if (['deer', 'reindeer'].includes(spName)) {
     // Cervids: graceful tapered heart-shaped muzzle with slender snout
     f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.38))
@@ -221,33 +324,33 @@ export function faceMorph(expr, blink, isFemale, look) {
   } else if (spName === 'pig') {
     // Suids: prominent forward snout disc, round cheeks
     f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.60))
-    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.32))
-    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.24))
+    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.36))
+    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.28))
   } else if (['bear', 'capybara', 'badger'].includes(spName)) {
     // Heavy / broad skulls: wide jaw, blunt muzzle, sturdy cute cheeks
     if (spName === 'capybara') {
-      f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.60))
-      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.40))
-      f.FT_Square = Math.min(0.35, Math.max(f.FT_Square ?? 0, 0.28))
+      f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.58))
+      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.38))
+      f.FT_Square = Math.min(0.32, Math.max(f.FT_Square ?? 0, 0.25))
     } else if (spName === 'bear') {
-      f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.54))
+      f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.52))
       f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.34))
-      f.FT_Square = Math.min(0.30, Math.max(f.FT_Square ?? 0, 0.20))
+      f.FT_Square = Math.min(0.28, Math.max(f.FT_Square ?? 0, 0.18))
     } else {
-      f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.48))
-      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.32))
+      f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.46))
+      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.34))
     }
     f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.32))
-    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.25))
+    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.28))
   } else if (['bunny', 'lop', 'hamster', 'mouse', 'squirrel'].includes(spName)) {
     // Lagomorphs & small rodents: cute snub muzzle, chubby puffy cheeks
     f.FT_Snub = Math.min(1, Math.max(f.FT_Snub ?? 0, 0.48))
-    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.42) + (isFemale ? 0.12 : 0.05))
-    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.40) + (isFemale ? 0.12 : 0.05))
+    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.44) + (isFemale ? 0.12 : 0.05))
+    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.42) + (isFemale ? 0.12 : 0.05))
   } else if (['rat', 'ferret', 'otter', 'beaver'].includes(spName)) {
     // Sleek rodents & mustelids: streamlined muzzle, balanced cheeks
     f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, spName === 'rat' ? 0.34 : 0.30))
-    f.FT_Round = Math.min(0.42, Math.max(f.FT_Round ?? 0, 0.24))
+    f.FT_Round = Math.min(0.42, Math.max(f.FT_Round ?? 0, 0.26))
     f.FT_Chubby = Math.min(0.32, (f.FT_Chubby ?? 0) * 0.6)
     if (spName === 'otter' || spName === 'beaver') f.FT_Broad = Math.min(0.32, Math.max(f.FT_Broad ?? 0, 0.18))
   } else if (spName === 'koala') {
@@ -255,11 +358,39 @@ export function faceMorph(expr, blink, isFemale, look) {
     f.FT_Broad = Math.min(1, Math.max(f.FT_Broad ?? 0, 0.48))
     f.FT_Snub = Math.min(1, Math.max(f.FT_Snub ?? 0, 0.32))
     f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.36))
+  } else if (['lion', 'tiger', 'leopard'].includes(spName)) {
+    // Big Cats: broader powerful muzzle and jaw structure
+    f.FT_Broad = Math.min(0.42, Math.max(f.FT_Broad ?? 0, 0.28))
+    f.FT_Snout = Math.min(0.40, Math.max(f.FT_Snout ?? 0, 0.26) + (isFemale ? 0.02 : 0.06))
+    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.36))
+    f.FT_Square = Math.min(0.22, Math.max(f.FT_Square ?? 0, 0.14))
+  } else if (spName === 'raccoon') {
+    // Raccoon: triangular bandit muzzle with wide cheek tufts
+    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.36) + (isFemale ? 0.03 : 0.07))
+    f.FT_Broad = Math.min(0.40, Math.max(f.FT_Broad ?? 0, 0.26))
+    f.FT_Heart = Math.min(0.35, Math.max(f.FT_Heart ?? 0, 0.20))
+    f.FT_Chubby = Math.min(0.38, Math.max(f.FT_Chubby ?? 0, 0.22))
+  } else if (spName === 'panda') {
+    // Giant Panda: big round dome head with deep chubby cheeks
+    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.54))
+    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.48))
+    f.FT_Broad = Math.min(0.42, Math.max(f.FT_Broad ?? 0, 0.30))
+  } else if (spName === 'sheep') {
+    // Sheep: gentle roman snout with soft fluffy cheeks
+    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.32))
+    f.FT_Round = Math.min(0.50, Math.max(f.FT_Round ?? 0, 0.36))
+    f.FT_Chubby = Math.min(0.45, Math.max(f.FT_Chubby ?? 0, 0.28))
+  } else if (spName === 'skunk') {
+    // Skunk: sleek muzzle and rounded crown
+    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.34))
+    f.FT_Heart = Math.min(0.35, Math.max(f.FT_Heart ?? 0, 0.24))
+    f.FT_Round = Math.min(0.45, Math.max(f.FT_Round ?? 0, 0.30))
   } else {
-    // Felids (cat, tiger, leopard, lion, redpanda, etc.): cute kemono roundness
-    if (f.FT_Snout) f.FT_Snout = Math.min(0.35, f.FT_Snout * 0.55)
-    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.38) + (isFemale ? 0.16 : 0.08))
-    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.28) + (isFemale ? 0.14 : 0.06))
+    // Felids & others (cat, redpanda): cute kemono roundness
+    if (f.FT_Snout) f.FT_Snout = Math.min(0.28, f.FT_Snout * 0.50)
+    f.FT_Round = Math.min(1, Math.max(f.FT_Round ?? 0, 0.42) + (isFemale ? 0.16 : 0.08))
+    f.FT_Chubby = Math.min(1, Math.max(f.FT_Chubby ?? 0, 0.34) + (isFemale ? 0.14 : 0.06))
+    f.FT_Snub = Math.min(0.35, Math.max(f.FT_Snub ?? 0, 0.22))
   }
 
   // --- Interactive Snout Slider Scaling (snoutS: 0.3..1.8) ---
@@ -307,8 +438,9 @@ export function faceMorph(expr, blink, isFemale, look) {
   }
 
   // Cute resting face warmth for friendly expressions
-  if (f.Smile == null && !['sad', 'angry', 'cry', 'scared', 'pout', 'shock', 'teary', 'unimpressed', 'grumpy', 'disgusted', 'bored'].includes(expr)) {
-    f.Smile = isFemale ? 0.25 : 0.18
+  const negExprs = ['sad', 'angry', 'cry', 'scared', 'pout', 'shock', 'teary', 'unimpressed', 'grumpy', 'disgusted', 'bored', 'stoic', 'stern', 'tired', 'weary', 'resolute']
+  if (f.Smile == null && !negExprs.includes(expr) && !negExprs.includes(ff?.trait)) {
+    f.Smile = isFemale ? 0.22 : 0.16
   }
 
   if (blink) f.Blink = 1
@@ -410,14 +542,21 @@ export function buildFor(id, sex) {
   const a = (hashOf(id + ':h') % 1000) / 1000, b = (hashOf(id + ':w') % 1000) / 1000
   const h = +(0.86 + a * 0.28 - (sex === 'f' ? 0.03 : 0)).toFixed(3), w = +(0.88 + b * 0.28).toFixed(3)
   const c = (hashOf(id + ':b') % 1000) / 1000, d = (hashOf(id + ':hd') % 1000) / 1000, e = (hashOf(id + ':tl') % 1000) / 1000
+  const ear = +(0.82 + ((hashOf(id + ':ear') % 1000) / 1000) * 0.38).toFixed(2)
   // female critters have curvy bodies with breasts: 0.25..0.95; head 0.92..1.1; tail curl 0.7..1.3
   const bust = +(0.25 + Math.pow(c, 0.85) * 0.70).toFixed(2), head = +(0.92 + d * 0.18).toFixed(3), curl = +(0.7 + e * 0.6).toFixed(2)
-  return sex === 'f' ? { v: 2, h, w, bust, head, curl } : { v: 2, h, w, head, curl } // stable per npc
+  return sex === 'f' ? { v: 2, h, w, bust, head, curl, ear } : { v: 2, h, w, head, curl, ear } // stable per npc
 }
 // the resting pose every npc keeps under its other bone writes: its head size and an S-curve in the tail (up off the hips, tip curling back)
-export function baseBones(b) {
-  const k = b?.curl ?? 1, hs = b?.head ?? 1
-  return { Head: { scale: hs }, Tail: { rotate: [-28 * k, 0, 0] }, Tail1: { rotate: [34 * k, 0, 0] } }
+export function baseBones(b, l) {
+  const k = b?.curl ?? 1, hs = b?.head ?? l?.headS ?? 1
+  const es = b?.ear ?? l?.earS ?? 1
+  const bones = { Head: { scale: hs }, Tail: { rotate: [-28 * k, 0, 0] }, Tail1: { rotate: [34 * k, 0, 0] } }
+  if (es && Math.abs(es - 1) > 0.02) {
+    bones.EarL = { scale: es }
+    bones.EarR = { scale: es }
+  }
+  return bones
 }
 // the body's Bust morph: female critters have natural curvy breasts (base 0.38), modulated by bust / bustS
 export function bustMorph(l) { return _bust(l) }

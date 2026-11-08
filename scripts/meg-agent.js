@@ -464,11 +464,11 @@ export function update(ctx, dt) {
   // head morph sync: articulates speech, smiles when waving, winces when hit, blinks naturally
   if (!s.dead && (m.headChk ?? 0) < now) {
     const isFem = (s.wear?.sex ?? s.look?.sex) === "f";
-    const baseExpr = s.wear?.expr || s.look?.expr || "smile";
+    const baseExpr = s.wear?.expr || s.look?.expr || "neutral";
     let curExpr = baseExpr;
     if (now - (m.hitAt ?? 0) < 650 || now - (m.fearAt ?? 0) < 1600) curExpr = "scared";
     else if (now - (m.wavedAt ?? 0) < 2200) curExpr = "catmouth"; // :3 on hello
-    else if (talking) curExpr = "smile";
+    else if (talking) curExpr = s.mood === "angry" ? "angry" : s.mood === "scared" ? "scared" : s.mood === "annoyed" ? "unimpressed" : s.mood === "happy" ? "joy" : (baseExpr !== "neutral" ? baseExpr : "smile");
     else if (m.aimAt) curExpr = "cocky";
     if (curExpr !== m.lastExpr || isBlinking !== m.lastBlink || talking) {
       m.lastExpr = curExpr;
