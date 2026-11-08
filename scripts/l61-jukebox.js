@@ -1,6 +1,7 @@
 // Level 6.1 "The Snackrooms" - Interactive 80s Internet Radio Jukebox
 // Streams live HTTPS internet radio stations directly in 3D spatial audio
 import { heard } from "./lib/hear.js";
+import { GROOVE_80S } from "./lib/l61-anim.js";
 
 export const STATIONS = [
   {
@@ -101,9 +102,14 @@ export const ears = {
         size: 1.15,
       });
 
-      // Listening boost: small sanity reward
+      // Listening boost: small sanity reward & 80s music groove animation
       if (who?.state) {
         who.state.sanity = Math.min(100, (who.state.sanity ?? 80) + 12);
+        if (who?.anim) {
+          who.anim.groove = { clip: GROOVE_80S, loop: "loop", weight: 0.85, blendIn: 0.3, blendOut: 0.4, mask: { from: "Spine" } };
+          who.session = who.session ?? {};
+          who.session.grooveEnd = ctx.now() + 10000;
+        }
         ctx.emit("damageNumber", {
           position: { x: who.feetPosition.x, y: who.feetPosition.y + 1.2, z: who.feetPosition.z },
           text: "+12 SANITY",
@@ -115,6 +121,7 @@ export const ears = {
       // Turn off
       ctx.self.audio = null;
       ctx.self.ui = renderDisplay(null, false);
+      if (who?.anim?.groove) who.anim.groove = null;
       heard(ctx, { clip: G("radio-dial-click-static"), position: { x: pos.x, y: pos.y + 1, z: pos.z }, volume: 0.6, maxDistance: 10 });
       ctx.emit("damageNumber", {
         position: { x: pos.x, y: pos.y + 1.5, z: pos.z },
