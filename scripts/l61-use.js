@@ -45,6 +45,18 @@ export const ears = {
     const tell = (text, color = "#ffe9a8") => ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.6, z: pos.z }, text, color, size: 0.95 }, { audience: { player: who.id } });
     const snd = (n, v = 0.7, d = 14) => heard(ctx, { clip: G(n), position: { x: pos.x, y: pos.y + 0.8, z: pos.z }, volume: v, maxDistance: d });
 
+    if (s.kind === "stew") { // Camp Amber's pot: the price is said first, E again within 10 s pays it (the 9th Road soup flow, scripts/l8-use.js)
+      const PRICE = 200, ask = (s.ask ??= {});
+      if (now - (cool[uid] ?? -1e9) < 15000) return tell("Eat what you've got first.");
+      if (!(now - (ask[uid] ?? -1e9) < 10000)) { s.ask = { ...ask, [uid]: now }; return tell("Camp stew, $2 backdollars. Buy?  (E again to pay $2.00)"); }
+      if ((w.cents ?? 0) < PRICE) { s.ask = { ...ask, [uid]: 0 }; return tell("Two backdollars a bowl. You're short.", "#ff9a7a"); }
+      s.ask = { ...ask, [uid]: 0 }; s.cool = { ...cool, [uid]: now }; w.cents -= PRICE;
+      w.weapons = [...(w.weapons ? w.weapons.split(",") : []), "soup_bowl"].join(","); // the bowl: equip it, Q eats, click throws (scripts/player.js)
+      snd("pot-lid-clink-and-ladle-in-soup", 0.55, 10);
+      return tell("-$2.00  +BOWL OF CAMP STEW", "#ffcf60");
+    }
+    if (s.kind === "bedroll") { w.waitOpen = true; w.waitBed = true; return; } // the rest cycle (scripts/rest.js): a bedroll counts as a bed, so the hours give back HP and sanity
+
     if (s.kind === "menu") { // Physical menu board flip: highlight active selection
       const key = s.key ?? keyOf(ctx.self.id) ?? "burger", M = MENUS[key], sel = (((s.sel ?? {})[uid] ?? -1) + 1) % M.length, [nm] = M[sel];
       s.sel = { ...(s.sel ?? {}), [uid]: sel };
