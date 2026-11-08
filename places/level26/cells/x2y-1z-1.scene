@@ -95,7 +95,7 @@ l26d-cw-1-end:
   primitive: {depth: 9.299999999999997, height: 2.7, kind: box, width: 0.15}
 l26d-loop:
   behavior: scripts/l26-lift.js
-  feetPosition: {x: 300, y: -80, z: -102}
+  feetPosition: {x: 300, y: -80, z: -109}
   id: l26d-loop
   physics: {body: static, trigger: true}
   primitive: {depth: 0.4, height: 2.6, kind: box, width: 3}
@@ -110,6 +110,20 @@ l26d-pg-1:
   rotation: {yaw: 0}
   state: {home: {x: 300.3, y: -80, z: -66}, hp: 90}
   tags: [partygoer, l8-hostile]
+l26d-phoebe-candle:
+  children: [{feetPosition: {x: 0, y: 0.15, z: 0}, light: {color: oklch(0.8 0.15 70), distance: 4, intensity: 0.8, kind: point}}]
+  feetPosition: {x: 309.2, y: -79.24, z: -102.2}
+  id: l26d-phoebe-candle
+  material: {color: oklch(0.95 0.02 90)}
+  primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.02, radiusTop: 0.02}
+l26d-phoebe-room:
+  behavior: scripts/l26-phoebe-early.js
+  feetPosition: {x: 306.5, y: -80, z: -102}
+  id: l26d-phoebe-room
+  physics: {body: static, trigger: true}
+  primitive: {depth: 10.5, height: 2.4, kind: box, width: 7.5}
+  state: {seat: {x: 310, y: -80, z: -102}, yaw: 90}
+  visible: false
 l26d-r5e-back:
   feetPosition: {x: 310.8, y: -80, z: -66}
   id: l26d-r5e-back
