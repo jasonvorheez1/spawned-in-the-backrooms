@@ -6,7 +6,7 @@ export function update(ctx, dt) {
   const m = (s.session.m ??= { v: CRUISE });
   const p = s.feetPosition;
   let want = CRUISE;
-  const light = ctx.place.state.l11Light ?? 0; // 0 green, 1 amber, 2 red (sim.js)
+  const light = Number.isFinite(ctx.place.state.l11Light) ? ctx.place.state.l11Light : 0; // 0 green, 1 amber, 2 red (sim.js)
   const toLine = (STOP[dir] - p.z) * dir;
   if (light !== 0 && toLine > -0.5 && toLine < 14) want = Math.min(want, Math.max(0, (toLine - 0.5) * 0.9));
   for (const q of ctx.place.players) { // someone in the lane ahead: ease off, stop short

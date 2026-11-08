@@ -1771,7 +1771,7 @@ export function tick(ctx) {
 
   // Dynamic traffic light controller cycling green -> amber -> red
   if (!mem.lightAt || now > mem.lightAt) {
-    mem.lightPhase = (mem.lightPhase + 1) % 3;
+    mem.lightPhase = ((mem.lightPhase ?? 2) + 1) % 3;
     // 0: Green (22s), 1: Amber (4s), 2: Red (22s)
     mem.lightAt = now + (mem.lightPhase === 1 ? 4000 : 22000);
     ctx.place.state.l11Light = mem.lightPhase; // the moving cars read this to stop
