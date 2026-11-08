@@ -269,7 +269,7 @@ function lay(ctx) {
 
   // Wrought Iron Promenade Safety Railings
   for (let rx = -58; rx <= 58; rx += 5) {
-    if (rx > -12 && rx < 12) continue;
+    if ((rx > -12 && rx < 12) || rx === 42) continue; // 42: the iron footbridge (l11-footbridge)
     bx(`l11-rail-s-${rx}`, rx, 0.45, CANAL_Z + CANAL_W / 2 + 0.5, 4.8, 0.85, 0.06, IRON_RAIL);
     bx(`l11-rail-n-${rx}`, rx, 0.45, CANAL_Z - CANAL_W / 2 - 0.5, 4.8, 0.85, 0.06, IRON_RAIL);
   }
