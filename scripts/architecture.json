@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1355,
-  "updatedAt": "2026-11-08T01:19:26.333Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0 through Level 8, Base Gamma and a debug room. Place simulations and authored cells assemble local environments; shared player, combat, NPC, loot, crafting and UI systems carry individual progression across them. Level 8 supplies the 9th Road cave loop, while seeded critter looks use Blender-generated species/sex meshes and shared gameplay systems.",
+  "basedOnSpecVersion": 1365,
+  "updatedAt": "2026-11-08T01:32:35.283Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Levels 0–8, Base Gamma and a debug room. Place simulations and authored cells assemble local environments; shared player, combat, NPC, loot, crafting and UI systems carry individual progression across them. Level 8's 9th Road is assembled from a Blender cave model plus interactive local systems; an offline kemono rig/garment conversion pipeline has also been added alongside the established critter character generators.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, containers, breakable furniture, shifting walls and hunters.",
@@ -10,19 +10,19 @@
     "places/level4 (3D) - Abandoned Office; office plan, residents, cubicle systems, fountains, vending, lift/stairs and Base Omega.",
     "places/level5 (3D) - Terror Hotel; Main Hall, guest rooms, Beverly and Boiler rooms, rentals, mahjong, rat packs, Level 6 portal and Ines's goggles quest.",
     "places/level6 (3D) - Lights Out; seeded dark concrete labyrinth, survivor notes/props, shifting wall, auditory hazards, hounds and Smiler; stairs link Levels 5 and 7.",
-    "places/level7 (3D) - Thalassophobia; flooded 2000s Floating House, Seawatch, Fort Surrender and its five named worshippers, sea-floor/seamount, camps, diving bell and inert Level 9 hatch; crew have distinct clothing looks.",
-    "places/level8 (3D) - Cave Systems / 9th Road; one colliding Blender karst tube from entrance lake through hall, flooded cavern, Hyperspace Lane, spider nest, tar pool and 9th Road camp to the asphalt glow.",
-    "places/debug + places/level8/config.yaml - debug 3D room; Level 8 has dark fog/sky, no terrain or moon, deep reverb and its own spawn."
+    "places/level7 (3D) - Thalassophobia; flooded Floating House, Seawatch, Fort Surrender and its worshippers, sea-floor/seamount, camps, diving bell and inert Level 9 hatch.",
+    "places/level8 (3D) - Cave Systems / 9th Road; colliding karst tube with lake, flood cavern and scramble ledges, Hyperspace Lane, spider nest/Broodmother, boiling tar dredge, survivor camp, radio and exit glow.",
+    "places/debug (3D) - debug room; Level 8's separate config supplies dark fog/sky, no terrain or moon, deep reverb and its own spawn."
   ],
   "roots": [
     "world.config.yaml - multiplayer entry at main; declares camera, player actions, player template and HUD renderer; Backspace opens the main menu.",
     "templates/player.js - ordered player behavior chain; locomotion precedes movement and gameplay handlers run before critter, main-menu and view3.",
     "templates/camera.js + scripts/camera.js - camera entry; owns presented yaw/pitch and eye position, including seated/talk views and collision-limited third person; scripts/view3.js toggles player.state.tp.",
-    "places/<place>/sim.js + config.yaml/cells - place setup and authored placements; sims build local layouts, manage respawns/regrowth and tick local behavior; Level 8 uses scripts/l8-life.js and scripts/l8-use.js.",
+    "places/<place>/sim.js + config.yaml/cells - place setup and authored placements; sims build local layouts, manage respawns/regrowth and tick local behavior.",
     "scripts/ui.js and *-ui.js renderers - HUD and overlays, including main menu, wardrobe, mahjong, loot, talk/trade, build, stats, craft and OS panels.",
-    "scripts/main-menu.js + scripts/main-menu-ui.js - local player menu and Continue/Character actions; fresh profiles enter the creator, returning profiles the menu; menu tick supplies hidden-player camera backdrop.",
-    "places/level7/config.yaml + scripts/look-level7.js + scripts/terrain7.js - Level 7 atmosphere, ocean/islands and local setup; sim delegates house and fort details to scripts/lib/level7-house.js and level7-extras.js.",
-    "places/level8/sim.js + art/level8/build.py - Level 8 place assembler and Blender cave-road generator; sim lays model, stations, harvestables, camp and route triggers."
+    "scripts/main-menu.js + scripts/main-menu-ui.js - local player menu and Continue/Character actions; fresh profiles enter creator, returning profiles the menu; menu tick supplies hidden-player camera backdrop.",
+    "places/level7/config.yaml + scripts/look-level7.js + scripts/terrain7.js - Level 7 atmosphere, ocean/islands and local setup; sim delegates house and fort details to shared Level 7 builders.",
+    "places/level8/sim.js + art/level8/build.py - Level 8 assembler and Blender cave-road generator; art/kemono/build.py is a separate offline rig-and-garment conversion entry, not a runtime place system."
   ],
   "shared": [
     "scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - shared avatar gait/heading; player and M.E.G. NPC chains run it before their controllers; scripts/lib/body3.js supplies weapon animation and rowing IK.",
@@ -30,7 +30,7 @@
     "scripts/lib/level3.js + Level 3 data + scripts/lib/maze3path.js - Electrical Station grid, zones, openings, routes and hazards used by geometry, sim, creatures and visits.",
     "scripts/lib/level4.js, level5.js, level6.js + scripts/lib/level6path.js - office/hotel plans and sanity, Level 6 grid and path queries shared by geometry, simulation and player behavior.",
     "scripts/lib/level-kit.js + scripts/lib/npc-respawn.js - named-person management, throttling and shared NPC return timing for place sims and Level 7 fauna.",
-    "scripts/lib/clothes.js, scripts/lib/critter-model.js + face/model data, and scripts/mat-cloth.js - seeded NPC/player looks, rendered critter bodies and garment patterns; art/critter-cute/build.py generates the enabled species/sex head and body meshes listed by scripts/lib/data/critter-models.yml.",
+    "scripts/lib/clothes.js, scripts/lib/critter-model.js + face/model data, and scripts/mat-cloth.js - seeded NPC/player looks, rendered critter bodies and garment patterns.",
     "scripts/lib/craft.js + scripts/lib/data/craft.yml - recipe readiness, batch capacity and category list shared by craft actions and UI; includes Level 8 resource recipes.",
     "scripts/lib/personality.js + scripts/lib/address.js - seeded temperament, dialogue style/reactions and how NPCs address players; reused by talk.js, npc-talk.js and meg-agent.js."
   ],
@@ -52,7 +52,7 @@
     "scripts/build.js + player.js - player scrap and build/buildRot/buildLast selection; session holds preview ghost and forward direction.",
     "scripts/interact.js + scripts/lib/seat.js own interaction/focus/loot and sit state; scripts/lockpick.js owns pick state and pins; seats own occupancy.",
     "scripts/talk.js + scripts/meg-agent.js - NPC dialogue memory/rapport/shop/follow state; meg-agent owns routines, temperament-shaped attributes/nerve, loadout, combat, fear/want, cover and corpse inspection.",
-    "places/level8/sim.js owns Level 8 build version, camp initialization and shared regrow deadlines; l8-life.js session data owns flood/spider/tar/hazard timing; l8-use.js writes player payouts, quest flags, effects and route progress."
+    "places/level8/sim.js owns Level 8 build version, camp initialization and shared regrow deadlines; l8-life.js session data owns flood/spider/boss/tar/hazard timing; l8-use.js writes player payouts, quest flags, effects and route progress."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered handlers: locomotion before movement; interact, grab, rest, mahjong, talk, build, noclip, stats, craft, OS, lockpick and horde before critter, main-menu and view3.",
@@ -62,11 +62,11 @@
     "scripts/player.js writes state.xfer and xpPop → scripts/ui.js transition card and XP display; lvlPrompt prompts K and stats.js clears it when opening the sheet.",
     "interact.js on NPC → player.state.talkWith; talk-ui.js submits choices/text/trade → talk.js and NPC ears; dialogue stores per-player NPC memory/rapport, and follow intent → meg-agent.js companion pursuit/return.",
     "talk.js/NPC dialogue → address.js and personality.js → seeded personal address and temperament-specific lines; talk.js detects a name introduction and stores named memory; meg-agent.js applies temperament stat/nerve shaping.",
-    "places/level7/sim.js lays Level 7 and l7-use.js handles its props; the diving-bell press → ctx.cross('level8#l8-from-l7').",
-    "places/level8/sim.js lays 9th Road and l8-life.js manager; Level 8 lake trigger with state.to → level7#l7-from-l8; l8-from-l7/l8-from-camp markers feed player checkpoint selection.",
-    "scripts/l8-use.js E/trigger handlers → lake-to-Level-7 route, one-time crawl loop, asphalt glow return-to-camp, Carla/kazoo and camp board; interaction updates player.state.",
+    "places/level7/sim.js lays Level 7 and l7-use.js handles its props; diving-bell press → ctx.cross('level8#l8-from-l7').",
+    "places/level8/sim.js lays the 9th Road; lake trigger with state.to → level7#l7-from-l8; l8-from-l7/l8-from-camp markers feed player checkpoint selection.",
+    "scripts/l8-use.js E/trigger handlers → lake route, one-time crawl loop, asphalt-glow return-to-camp, Carla/kazoo and camp board; altar heals/restores sanity, dredge pays out pitch/loot, radio cycles survey logs.",
     "Level 8 fungus/cocoon/seep handlers and breakables → player.state.payout → scripts/craft.js redemption; sim.js records missing DEFS deadlines and respawns caps, silk cocoons, seeps and stone.",
-    "scripts/l8-life.js 0.1s update → flood surface/drowning, moving guides, regenerating hostile spiders/remains, tar-hand pull/damage/shore return and distant rumble/scream effects."
+    "scripts/l8-life.js 0.1s update → flood/drowning, guides, regenerating cave spiders and Broodmother/remains, articulated tar hands/pull/damage and distant rumble/scream effects."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures, red-zone variants, flicker-wall details and local sound/light state; Level 5 cells include portal and quest props.",
@@ -75,17 +75,16 @@
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - NPC rounds, talk, faction, role, voice, looks and routines vary by person; meg-agent.js supplies shared combat behavior.",
     "scripts/lib/craft.js + data/craft.yml - shared category/recipe handling; category, scrap cost, skill, bench requirement, batch size and item family vary by recipe, including Level 8 cave materials.",
     "scripts/lib/npc-talk.js + shops.yml/talk.yml + scripts/lib/personality.js/address.js - dialogue, trade, seeded temperament and address vary by persona, stock, rapport and player name; Backdollars are the trade currency.",
-    "places/level8/sim.js + scripts/l8-life.js + scripts/l8-use.js - road stations share coordinate interpolation, while hazards, harvest regrowth, caches, quests and interaction payouts vary by resource/encounter.",
-    "art/critter-cute/build.py + scripts/lib/data/critter-models.yml - species and sex select distinct heads/body meshes; snout length/width/bridges and fur-edged layered markings vary by species, consumed by shared critter-model.js rendering."
+    "places/level8/sim.js + scripts/l8-life.js + scripts/l8-use.js - road stations share coordinate interpolation, while harvest regrowth, flood traversal, boss/hazards, caches, camp interactions, quests and payouts vary by station/encounter.",
+    "art/critter-cute/build.py + scripts/lib/data/critter-models.yml - species and sex select distinct heads/body meshes; snout and markings vary by species, consumed by shared critter-model.js rendering."
   ],
   "probableOrphans": [],
   "migrationNotes": [
-    "Grid contracts differ: Level 0 is 56×56 at 4 m; Level 1 30×30 at 8 m; Level 2 24×24 at 5 m; Level 3 26×26 at 4 m; Level 4 64×64 m with 8 m offices; Level 5 is 96×60 m; Level 6 is 27×41 cells at 1.8 m and 2.4 m high.",
+    "Grid contracts differ: Level 0 is 56×56 at 4 m; Level 1 30×30 at 8 m; Level 2 24×24 at 5 m; Level 3 26×26 at 4 m; Level 4 is 64×64 m with 8 m offices; Level 5 is 96×60 m; Level 6 is 27×41 cells at 1.8 m and 2.4 m high.",
     "Level 6 builtV is 3; moving trigger/prop sites must match scripts/lib/level6.js plan(), its shift wall toggles only outside 7 m, and it suppresses/destroys the flashlight/torch on entry. Keep stair markers l6-from-l7/l7-from-l6 paired.",
     "Level 5 Ines quest progress is player.state.nvgQ (1 asked, 2 case, 3 goggles, 4 complete); the north portal leads to Level 6 and its auxiliary bulkhead remains welded shut.",
-    "Level 7 terrain centers are (0,0), (46,-120), (-70,-95), (4,8); floating-house model is visual-only around its own colliding walls.",
-    "Level 7 rebuild is gated by builtV=22 and clears l7x-/l7h- details; hatch at (-150, terrain, 0) is inert; diving bell is the Level 8 route, paired with Level 8's l8-from-l7/l7-from-l8 arrival markers.",
-    "Level 8 sim build gate is V=8; road position P(s, side, up) is interpolated from scripts/lib/data/level8.yml stations, and harvest regrow delays are seconds. Keep DEFS and spawned l8 IDs coordinated with rebuild cleanup; flashlight intensity is adjusted locally.",
-    "Cute critter meshes are enabled in scripts/lib/data/critter-models.yml; art/critter-cute/build.py outputs species/sex heads and bodies, so generated GLBs and manifest headM/headF/body entries and material names must stay aligned."
+    "Level 7 terrain centers are (0,0), (46,-120), (-70,-95), (4,8); floating-house model is visual-only around its own colliding walls. builtV=22 clears l7x-/l7h- details; hatch at (-150, terrain, 0) is inert; keep paired Level 8 arrival markers.",
+    "Level 8 sim rebuild gate is V=9; road P(s,side,up) interpolates scripts/lib/data/level8.yml stations, regrow delays are seconds, and spawned l8 IDs must stay coordinated with rebuild cleanup/DEFS. The Blender road model is colliding; spider/boss model path is shared by sim and l8-life.",
+    "art/kemono/build.py converts sex-specific rigged base + old critter body into kemono-<sex>.glb and refits old garments; preserve -Y facing, Hips at 0.64 m, critter bone names and garment skin weights. The uploaded kemono-female-rig, kemono-male-rig and base-male assets are not referenced by runtime files yet."
   ]
 }
