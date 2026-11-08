@@ -7,7 +7,7 @@ import { terminalSpec } from "./terminal.js";
 import MODELS from "./data/level11-models.yml";
 const SUB = { x: 13.6, z: 60.5 }, FY = -2.6; // the platform floor's top
 const TILE = { color: "oklch(0.78 0.03 95)", roughness: 0.55 }, GRIME = { color: "oklch(0.42 0.03 80)", roughness: 0.9 };
-const WALL = { color: "oklch(0.72 0.05 160)", roughness: 0.7 }, STEEL = { color: "oklch(0.45 0.01 250)", metalness: 0.7, roughness: 0.4 };
+const WALL = { texture: "cdn/texture-grimy-cream-ceramic-subway-tile-wall.png", wrap: "repeat", repeat: [0.6, 0.6], color: "oklch(0.93 0.02 90)", roughness: 0.35 }, STEEL = { color: "oklch(0.45 0.01 250)", metalness: 0.7, roughness: 0.4 };
 const DARK = { color: "oklch(0.16 0.01 250)", roughness: 0.9 }, VAULT = { color: "oklch(0.55 0.02 80)", metalness: 0.8, roughness: 0.35 };
 const LAMP = (id, x, z, c = "oklch(0.92 0.06 120)", i = 2.2) => ({ feetPosition: { x, y: FY + 2.3, z }, primitive: { kind: "box", width: 1.2, height: 0.08, depth: 0.2 }, material: { color: c, emissive: c, emissiveIntensity: 2 }, light: { kind: "point", color: c, intensity: i, distance: 9 } });
 export function layVaults(ctx, { sp, bx, cyl }) {
@@ -29,6 +29,16 @@ export function layVaults(ctx, { sp, bx, cyl }) {
   bx("l11-vault-wall-n", 13.3, FY - 1, 89.1, 13, 3.6, 0.2, WALL);
   for (const [x, w] of [[9.55, 5.3], [17.65, 4.1]]) bx(`l11-vault-wall-s-${x}`, x, FY - 1, 67, w, 3.6, 0.2, WALL);
   bx("l11-vault-ceil", 13.3, -0.42, 78, 13, 0.15, 22.4, DARK);
+  // 2006 IRT tile: a maroon band at shoulder height and a mosaic cap, riveted girders on painted columns under the slab
+  const BAND = { color: "oklch(0.42 0.11 25)", roughness: 0.4 }, CAP = { color: "oklch(0.55 0.08 75)", roughness: 0.45 };
+  for (const [id, x, z, w, d] of [["w", 7.02, 78, 0.02, 22], ["e", 19.58, 78, 0.02, 22], ["n", 13.3, 88.98, 12.8, 0.02]]) {
+    bx(`l11-vault-band-${id}`, x, FY + 1.45, z, w, 0.22, d, BAND, { physics: undefined });
+    bx(`l11-vault-cap-${id}`, x, FY + 0.0, z, w, 0.28, d, CAP, { physics: undefined });
+  }
+  for (const [i, z] of [68.5, 72.5, 76.5, 80.5, 84.5, 88.3].entries()) {
+    sp(`l11-vault-girder-${i}`, { feetPosition: { x: 13.3, y: -0.62, z }, model: { id: MODELS.ibeam, forward: "-z" } });
+    if (i > 0 && i < 5) sp(`l11-vault-col-${i}`, { feetPosition: { x: 12.4, y: FY, z }, model: { id: MODELS.column, forward: "-z" }, physics: { body: "static", collider: "box" } });
+  }
   for (let z = 70; z <= 86; z += 5.3) sp(`l11-vault-lamp-${z}`, LAMP(z, 15.3, z, z === 80.6 ? "oklch(0.6 0.08 120)" : undefined, z === 80.6 ? 0.8 : 2.2));
   // the dead train in the pit: one long car, doors open onto nothing
   bx("l11-vault-train", 9, FY - 1.0, 79, 3.2, 2.9, 15, { color: "oklch(0.62 0.02 250)", metalness: 0.6, roughness: 0.45 }, { children: [
@@ -36,7 +46,8 @@ export function layVaults(ctx, { sp, bx, cyl }) {
     { feetPosition: { x: 0, y: 2.0, z: -7.52 }, primitive: { kind: "box", width: 1.6, height: 0.35, depth: 0.02 }, material: { color: "oklch(0.2 0.01 0)" }, ui: `<div face="front" width="1.6m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111;color:#e8a33a;font:900 150px Arial">14 · NOT IN SERVICE</div>` },
   ] });
   // turnstiles, benches, bins, a newspaper-strewn corner
-  for (let k = 0; k < 3; k++) bx(`l11-vault-turn-${k}`, 13.3 + k * 1.1, FY, 68.4, 0.25, 1.0, 0.9, STEEL);
+  for (let k = 0; k < 3; k++) sp(`l11-vault-turn-${k}`, { feetPosition: { x: 13.3 + k * 1.1, y: FY, z: 68.4 }, model: { id: MODELS.turnstile, forward: "-z" }, physics: { body: "static", collider: "box" } });
+  sp("l11-vault-mvm", { feetPosition: { x: 18.95, y: FY, z: 69.2 }, rotation: { yaw: -90 }, model: { id: MODELS.mvm, forward: "-z" }, physics: { body: "static", collider: "box" } });
   for (const [i, z] of [[0, 74], [1, 83]]) sp(`l11-vault-bench-${i}`, { feetPosition: { x: 18.9, y: FY, z }, rotation: { yaw: -90 }, model: { id: MODELS.bench, forward: "-z" }, physics: { body: "static", collider: "box" } });
   sp("l11-vault-bin", { feetPosition: { x: 18.9, y: FY, z: 78.5 }, model: { id: MODELS.bin, forward: "-z" }, physics: { body: "static", collider: "box" } });
   sp("l11-vault-crate-plat", { tags: ["usable"], feetPosition: { x: 17.8, y: FY, z: 87.6 }, model: { id: MODELS.meg_cache, forward: "-z", materials: { metal: STEEL } }, physics: { body: "static", collider: "box" }, behavior: "scripts/level11-use.js", state: { kind: "supply-chest", name: "Abandoned Commuter Locker", verb: "Search" } });

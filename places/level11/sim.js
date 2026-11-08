@@ -18,7 +18,7 @@ import { layVaults } from "../../scripts/lib/level11-vaults.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 29; // bump to rebuild the city in rooms that are already open
+const V = 30; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -448,10 +448,17 @@ function lay(ctx) {
 
   // Display Windows with Vintage Spotlight Display
   for (const k of [-1, 1]) bx(`l11-sedco-glass-${k < 0 ? "n" : "s"}`, SEDCO_X - SEDCO_W / 2 + 0.15, 0.4, SEDCO_Z + k * (DOOR / 2 + 1.25), 0.06, 2.6, 2.5, GLASS_TINT);
-  cyl("l11-sedco-spotlight1", SEDCO_X - SEDCO_W / 2 + 0.8, 1.2, SEDCO_Z - 1.5, 0.22, 0.28, 0.5, STEEL_BRUSHED, {
-    rotation: { pitch: 30, yaw: -30 },
-    children: [{ feetPosition: { x: 0, y: 0.5, z: 0 }, light: { kind: "point", color: "#ffe0a0", intensity: 3.5, distance: 8 } }],
-  });
+  // the shop floor (a 2006 AV/security store): counter at the back, two gondolas either side of a 3 m aisle, CCTV wall, fresnels on stands, staff door
+  const SPOT = (id, x, z, tx, tz, lit) => sp(id, { feetPosition: { x, y: 0.14, z }, rotation: { lookAt: { x: tx, y: 0.14, z: tz } }, model: { id: MODELS.sedco_spot, forward: "-z" }, physics: { body: "static", collider: "cylinder" },
+    children: lit ? [{ feetPosition: { x: 0, y: 1.85, z: -0.3 }, light: { kind: "point", color: "#ffe0a0", intensity: 3.5, distance: 8 } }] : undefined });
+  SPOT("l11-sedco-spotlight1", SX0 + 0.8, SEDCO_Z - 1.9, SEDCO_X, SEDCO_Z - 3, true);
+  SPOT("l11-sedco-int-spot-0", SX0 + 1.0, SZ1 - 0.8, SEDCO_X, SEDCO_Z, false);
+  SPOT("l11-sedco-int-spot-1", SX1 - 1.4, SZ0 + 0.8, SEDCO_X, SEDCO_Z + 1, false);
+  md("l11-sedco-int-counter", "sedco_counter", SX1 - 2.0, 0.14, SEDCO_Z + 0.5, undefined, "box", { rotation: { yaw: 90 } });
+  for (const [i, dz] of [[0, -2.0], [1, 2.0]].entries()) md(`l11-sedco-int-gondola-${i}`, "sedco_gondola", SEDCO_X - 1, 0.14, SEDCO_Z + dz, undefined);
+  md("l11-sedco-int-monitors", "sedco_monitors", SEDCO_X - 1, 0.14, SZ0 + 0.45, { crt: { color: "#1c2a26", emissive: "#9fc0b0", emissiveIntensity: 0.55, roughness: 0.15 } }, "box", { rotation: { yaw: 180 } });
+  md("l11-sedco-int-door", "sedco_door", SX1 - WT - 0.06, 0.14, SZ1 - 1.2, undefined, "box", { rotation: { yaw: 90 },
+    children: [{ feetPosition: { x: 0, y: 1.53, z: -0.055 }, primitive: { kind: "plane", width: 0.4, height: 0.14 }, material: { color: "#f2efe6" }, ui: `<div face="front" width="0.4m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f2efe6;color:#a01818;font:900 64px Arial">STAFF ONLY</div>` }] });
 
   // Interactive Sedco Closed-Circuit Security Terminal (BackOS)
   bx("l11-sedco-desk", SEDCO_X - SEDCO_W / 2 - 1.2, 0.1, SEDCO_Z - 2.8, 0.9, 0.76, 0.75, STEEL_BRUSHED);

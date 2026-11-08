@@ -114,10 +114,10 @@ export function layStreet(ctx, h) {
     bx(`l11-st-grate-${i}-${s}`, x, 0.09, zz, 1.7, 0.01, 1.7, { color: "oklch(0.3 0.04 70)", metalness: 0.8, roughness: 0.45 }, { physics: undefined });
   }));
   for (const [i, [x, z]] of [[-8.6, 3], [8.6, 11], [-8.6, 62], [8.6, -12], [8.6, 48]].entries()) put(`l11-st-hyd-${i}`, "hydrant", x, z, x < 0 ? -90 : 90, { collider: "cylinder" });
-  for (const [i, [x, z]] of [[-8.7, -10], [8.7, 26], [-8.7, 21], [8.7, -64], [-8.7, 70]].entries()) put(`l11-st-bin-${i}`, "bin", x, z, 0, { collider: "cylinder" });
+  for (const [i, [x, z]] of [[-8.7, -10], [8.7, 26], [-8.7, 21], [8.7, -64], [-8.7, 70]].entries()) put(`l11-st-bin-${i}`, "trashcan", x, z, 0, { collider: "cylinder" });
   for (const [i, [x, z]] of [[-15, 30], [-15, 46], [15, -67.5], [15, 18.5]].entries()) put(`l11-st-bench-${i}`, "bench", x, z, x < 0 ? -90 : 90);
   put("l11-st-shelter", "shelter", 14.4, 48, 90); put("l11-st-shelter2", "shelter", -14.4, -8, -90);
-  for (const [i, [x, z]] of [[-9.2, 33], [9.2, 15.5], [9.2, 47], [-9.2, 5]].entries()) put(`l11-st-nbox-${i}`, "box", x, z, x < 0 ? -90 : 90, { collider: "box" });
+  for (const [i, [x, z]] of [[-9.2, 33], [9.2, 15.5], [9.2, 47], [-9.2, 5]].entries()) put(`l11-st-nbox-${i}`, "newsbox", x, z, x < 0 ? -90 : 90, { collider: "box", materials: { nbox: { color: ["#1d4fa0", "#c8231e", "#e7e2d2", "#2f7a3a"][i] } } });
   // parked cars along the kerbs, tinted at random; a few vans
   const SLOTS = []; for (let z = -76; z <= 76; z += 7.5) { if ((z > -48 && z < -14) || (z > 4 && z < 20)) continue; SLOTS.push([-6.95, z], [6.95, z]); }
   const cars = [];
