@@ -18,7 +18,7 @@ import { layVaults } from "../../scripts/lib/level11-vaults.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 28; // bump to rebuild the city in rooms that are already open
+const V = 29; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -427,6 +427,10 @@ function lay(ctx) {
     bx(`l11-sedco-troffer-${i}${j}`, SEDCO_X + dx, SEDCO_H - 0.13, SEDCO_Z + dz, 1.2, 0.03, 0.6, { color: "#fffbe8", emissive: "#fff4d0", emissiveIntensity: 1.4 }, { physics: undefined });
   }
   for (const [i, dx] of [-2.5, 1.5].entries()) sp(`l11-sedco-lamp-${i}`, { feetPosition: { x: SEDCO_X + dx, y: SEDCO_H - 0.6, z: SEDCO_Z }, light: { kind: "point", color: "#fff1d0", intensity: 2.2, distance: 9 } });
+  // the front door: locked glass, released from the Sedco security panel (Storefront doors > UNLOCK); slides down into its slot
+  sp("l11-sedco-door", { tags: ["usable"], feetPosition: { x: SX0 + WT / 2, y: 0.14, z: SEDCO_Z }, rotation: { yaw: 90 }, primitive: { kind: "box", width: DOOR, height: 2.75, depth: 0.08 }, material: GLASS_TINT, physics: { body: "kinematic", collider: "box" }, behavior: "scripts/l11-gate.js",
+    state: { key: "sedcofront", host: "SEDCO-SEC-01", name: "Sedco Spotlight", verb: "Locked:", info: "after hours. SEDCO-SEC-01 controls it", drop: 2.8 },
+    children: [{ feetPosition: { x: 0, y: 1.0, z: -0.08 }, primitive: { kind: "box", width: 1.2, height: 0.05, depth: 0.05 }, material: STEEL_BRUSHED }, { feetPosition: { x: 0, y: 1.6, z: -0.05 }, primitive: { kind: "plane", width: 0.5, height: 0.18 }, material: { color: "#111" }, ui: `<div face="front" width="0.5m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#d33;font:900 70px Arial;background:#111">CLOSED</div>` }] });
   sp("l11-sedco-door-mat", { feetPosition: { x: SX0 + 0.9, y: 0.15, z: SEDCO_Z }, primitive: { kind: "box", width: 1.2, height: 0.02, depth: 1.6 }, material: { color: "oklch(0.25 0.02 30)", roughness: 1 } });
   bx("l11-sedco-roof-trim", SEDCO_X, SEDCO_H + 0.1, SEDCO_Z, SEDCO_W + 0.3, 0.3, SEDCO_D + 0.3, CURB_MAT);
   cyl("l11-sedco-vent1", SEDCO_X - 2.5, SEDCO_H + 0.25, SEDCO_Z - 1.5, 0.4, 0.35, 0.6, STEEL_BRUSHED);

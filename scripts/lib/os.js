@@ -73,7 +73,7 @@ export const CTRL = {
   sedco: { title: 'Sedco Closed-Circuit Security', rows: [
     { id: 'cctv', label: 'CCTV loop, cams 1-9', act: 'RECORD', say: 'The cameras start recording. Smile.' },
     { id: 'shut', label: 'Lobby shutters', act: 'LOWER', say: 'A shutter rattles down somewhere upstairs.' },
-    { id: 'lift', label: 'Service elevator', act: 'LOCK', say: 'The elevator locks at B1.' },
+    { id: 'front', label: 'Storefront doors', act: 'UNLOCK', ok: true, grant: 'sedcofront', say: 'The storefront door unlocks with a heavy clunk.' },
     { id: 'vault', label: 'Vault B2 timelock', act: 'OVERRIDE', ok: true },
     { id: 'silent', label: 'Silent alarm', act: 'ARM', alarm: true } ] },
 }

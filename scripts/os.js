@@ -32,9 +32,10 @@ function ctrl(ctx, s, id) {
   const os = s.os, key = OPENS[os.host], C = CTRL[key], r = C?.rows.find((x) => x.id === id)
   if (!r || os.user !== 'admin') return
   if (r.ok) {
-    if (!String(s.l11Access ?? '').split(',').includes(key)) { s.l11Access = [s.l11Access, key].filter(Boolean).join(','); gain(ctx, 40) }
+    const g = r.grant ?? key
+    if (!String(s.l11Access ?? '').split(',').includes(g)) { s.l11Access = [s.l11Access, g].filter(Boolean).join(','); gain(ctx, 40) }
     s.os = { ...os, done: { ...(os.done ?? {}), [id]: true } }
-    note(ctx, s, key === 'sub' ? 'Gate 07 released. The station gate under the subway stair is open to you.' : 'Timelock overridden. The Sedco vault door below the street is open to you.')
+    note(ctx, s, r.say ?? (key === 'sub' ? 'Gate 07 released. The station gate under the subway stair is open to you.' : 'Timelock overridden. The Sedco vault door below the street is open to you.'))
     return
   }
   if (r.alarm) { // the wrong switch: the alarm screams and the terminal locks itself again
