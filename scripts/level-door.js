@@ -14,7 +14,6 @@ const PAIR = {
   "l6-to-l61": "level61#l61-from-l6", "l6-wire-trip": "level61#l61-from-l6", "l61-to-l6": "level6#l6-from-l61",
   "l61-to-l11": "level11#l11-from-l61", "l11-to-l61": "level61#l61-from-l11",
   "lv10-backroad": "level10#l10-from-l11", "l10-road-north": "level11#lv10-arrive", "l10-road-south": "level11#lv10-arrive", "l10-lake-deep": "level7#l7-from-l6",
-  "l10-canola-in": "level184#l184-from-l10", "l184-back": "level10#l10-from-l184",
 };
 // how each threshold noclips (scripts/noclip-ui.js clipCard): you fall through the floor, clip through a wall, or just glitch across
 const KIND = {
