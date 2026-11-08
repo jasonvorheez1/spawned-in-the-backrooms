@@ -102,7 +102,9 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
     const vy = p.velocity.y + g * dt
     if (knockedHold(ctx, p, now, dt)) continue
     if (s.down) { // kicked flat: flung, tipped onto its back, then it scrambles up
-      const t = now - s.down.at, k = Math.max(0, 1 - t / 450); if (s.down.fly || s.down.y0 != null) { knocked(ctx, p, now, dt); if (s.down?.fly && now - s.down.at < 260) continue }, yaw = typeof p.rotation === "number" ? p.rotation : (p.rotation?.yaw ?? 0)
+      if (s.down.fly && knocked(ctx, p, now, dt)) continue
+      if (!s.down) continue
+      const t = now - s.down.at, k = Math.max(0, 1 - t / 450), yaw = typeof p.rotation === "number" ? p.rotation : (p.rotation?.yaw ?? 0)
       if (!s.down.fell) { s.down.fell = 1; s.move = null; s.combo = null; p.anim.act = { clip: "cdn/clip-fall-loop.glb", loop: true, weight: 1, blend: 0.08 }; animate(ctx, p.id, { "rotation.pitch": [0, -80] }, { duration: 0.3, easing: "easeOutQuad" }) }
       p.velocity = { x: s.down.x * k, y: vy, z: s.down.z * k }; gait(ctx, p, "idle")
       if (t > s.down.ms && !s.down.up) { s.down.up = 1; animate(ctx, p.id, { "rotation.pitch": [-80, 0] }, { duration: 0.35, easing: "easeOutBack" }); once(p, "cdn/clip-land.glb")

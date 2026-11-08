@@ -131,10 +131,13 @@ function grabFoe(ctx, input) {
     bd = dist; e = c;
   }
   if (!e) return false;
+  const S = ctx.self.state;
+  if (!S.sheathed && S.equipped && S.equipped !== "fists") { note(ctx, "Holster your weapon (H) to grab."); return true; } // Shelly: hands free first
   const kg = bodyKg(e), cap = power(ctx);
   if (kg > cap * 1.25) { note(ctx, `Too heavy to lift (${Math.round(kg)} kg). More Hardiness.`); heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-straining-grunt-failed-lift.mp3", position: f, volume: 0.5, maxDistance: 10 }); return true; }
   const st = e.state; st.heldBy = ctx.self.id; st.heldAt = ctx.now(); st.down = null; st.kb = null; st.stunUntil = ctx.now() + 9000;
-  ses.heldFoe = e.id; ses.foeKg = kg;
+  ses.heldFoe = e.id; ses.foeKg = kg; ses.squirmed = false;
+  ses.gripUntil = ctx.now() + 1000 * Math.max(0.8, Math.min(6, 1.5 + 3 * (cap / kg - 0.6))); // they squirm loose: a strong grip on a light body holds longest
   ctx.self.state.carryMul = Math.max(0.45, 1 - (kg / cap) * 0.5);
   ctx.self.anim.grab = { clip: "cdn/clip-pick-up.glb", loop: "once", weight: 1, blendIn: 0.1, blendOut: 0.3 }; ses.grabAnimEnd = ctx.now() + 900;
   ctx.emit("squash", { target: e.id, axis: "y", intensity: 0.25, duration: 0.2 });
@@ -161,6 +164,16 @@ export function update(ctx) {
   const ses = ctx.self.session;
   if (ses.heldFoe) { const e = ctx.getObject(ses.heldFoe), f = ctx.self.feetPosition, d = ses.dir ?? { x: 0, y: 0, z: -1 }, hl = Math.hypot(d.x, d.z) || 1;
     if (!e || e.state?.dead || e.state?.heldBy !== ctx.self.id) { ses.heldFoe = null; ctx.self.state.carryMul = 1; }
+    else if (ctx.now() > (ses.gripUntil ?? 0)) { // broke free: it shoves off you and lands a hit
+      e.state.heldBy = null; e.state.stunUntil = 0; ses.heldFoe = null; ctx.self.state.carryMul = 1;
+      e.feetPosition = { x: f.x + (d.x / hl) * 1.4, y: f.y, z: f.z + (d.z / hl) * 1.4 };
+      ctx.self.state.hp = Math.max(1, (ctx.self.state.hp ?? 100) - 6);
+      ctx.emit("cameraPunch", { direction: { x: -d.x / hl, y: 0, z: -d.z / hl }, intensity: 0.5 }, { audience: { player: ctx.self.id } });
+      ctx.emit("damageNumber", { position: { x: e.feetPosition.x, y: e.feetPosition.y + 2, z: e.feetPosition.z }, text: "BROKE FREE", color: "#ff6a5a", size: 1 });
+      heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-body-wrenches-free-and-shoves.mp3", position: f, volume: 0.8, maxDistance: 14 });
+      note(ctx, "It broke free.");
+    }
+    else if (ctx.now() > (ses.gripUntil ?? 0) - 900 && !ses.squirmed) { ses.squirmed = true; ctx.emit("shake", { target: e.id, intensity: 0.15, duration: 0.8 }); note(ctx, "It's slipping! Throw it!"); }
     else { e.feetPosition = { x: f.x + (d.x / hl) * 1.0, y: f.y + 0.6, z: f.z + (d.z / hl) * 1.0 }; e.velocity = { x: 0, y: 0, z: 0 }; e.rotation = { yaw: Math.atan2(-d.x, -d.z) * 57.2958 + 180, pitch: -20 }; } }
   if (ses.heave && ctx.now() >= ses.heave.until) { const o = ctx.getObject(ses.heave.id), kg = ses.heave.kg; ses.heave = null; if (o) lift(ctx, o, kg, power(ctx)); else ctx.self.state.carryMul = 1; }
   { const s = ctx.self.state; // a food tray handed over by the Snackrooms counter or a waiter (player.state.l61Hold) comes into the hands here
