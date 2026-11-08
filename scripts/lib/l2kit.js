@@ -80,7 +80,7 @@ export function unpack(D) {
     if (o < len) by[o++] = n >> 16; if (o < len) by[o++] = (n >> 8) & 255; if (o < len) by[o++] = n & 255;
   }
   let at = 0; const u16 = () => { const v = by[at] | (by[at + 1] << 8); at += 2; return v; };
-  const out = { hi: [], lo: [], uv: D.uv };
+  const out = { hi: [], lo: [], uv: D.uv, far: D.far ?? 0 };
   for (const h of D.g) {
     const [lv, m, nv, ni, x0, y0, z0, x1, y1, z1, u0, v0, u1, v1] = h, p = new Array(nv * 3), n = new Array(nv * 3), c = new Array(nv * 3), i = new Array(ni);
     const lo = [x0, y0, z0], sp = [(x1 - x0) / 65535, (y1 - y0) / 65535, (z1 - z0) / 65535];
@@ -118,11 +118,16 @@ export function kit(ctx, part, packed) {
     return n;
   };
   const far = (ctx.lod ?? 1) >= 3; // far levels: the low module alone
-  const nHi = far ? 0 : emit(D.hi), nLo = emit(D.lo);
+  // a module packed with no low copy (D.far) draws its leading D.far groups (the long pipes) as its low level
+  const lo = D.lo.length ? D.lo : D.hi.slice(0, D.far);
+  let nHi, nLo;
+  if (D.lo.length) { nHi = far ? 0 : emit(D.hi); nLo = emit(D.lo); }
+  else if (far) { nHi = 0; nLo = emit(lo); }
+  else { nLo = emit(lo); nHi = nLo + emit(D.hi.slice(D.far)); }
   ctx.albedo(null); ctx.metalness(null); ctx.roughness(null);
   const recs = placements(part, ctx.params);
   ctx.instances({ layout: { offset: "float32x3", yaw: "float32", scale: "float32x3" }, count: recs.length,
-    lods: far ? [{ indices: [0, nLo], distance: 0 }] : [{ indices: [0, nHi], distance: 0 }, { indices: [nHi, nHi + nLo], distance: part === "lamp" || part === "tray" ? 12 : 18 }],
+    lods: far ? [{ indices: [0, nLo], distance: 0 }] : !D.lo.length ? [{ indices: [0, nHi], distance: 0 }, { indices: [0, nLo], distance: 18 }] : [{ indices: [0, nHi], distance: 0 }, { indices: [nHi, nHi + nLo], distance: part === "lamp" || part === "tray" ? 12 : 18 }],
     bounds: { min: [-HALF - 2, -1, -HALF - 2], max: [HALF + 2, HALL_H + 1, HALF + 2] } });
   for (const r of recs) ctx.instance(r);
   return D.uv ? { normals: nor, uvs, colors: col } : { normals: nor, colors: col, uvProjection: "triplanar" };

@@ -4,6 +4,8 @@
 # Per group, little-endian: positions u16x3 (group box), normals octahedral u8x2, colour rgb565 u16, [uv u16x2], indices u16.
 import json, os, base64, struct, math
 COMPACT = ["piperun", "tray", "wall"]
+# a module with no low copy draws its leading FAR groups as the far level (the long pipes; brackets, bands and stains drop)
+FAR = {"piperun": ["lag", "green", "red"]}
 def oct(n):
     x, y, z = n; s = abs(x) + abs(y) + abs(z) or 1; x, y, z = x / s, y / s, z / s
     if z < 0: x, y = (1 - abs(y)) * (1 if x >= 0 else -1), (1 - abs(x)) * (1 if y >= 0 else -1)
@@ -13,6 +15,7 @@ for part in sorted(f[:-5] for f in os.listdir("/workspace/l2kit/src")):
     uv = part not in COMPACT
     d = json.load(open(f"/workspace/l2kit/{'out' if not uv else 'src'}/{part}.json"))
     heads, buf = [], bytearray()
+    if part in FAR: d = {"hi": sorted(d["hi"], key=lambda g: FAR[part].index(g["m"]) if g["m"] in FAR[part] else 9), "lo": []}
     for lv, k in enumerate(("hi", "lo")):
         for g in d[k]:
             nv, ni = len(g["p"]) // 3, len(g["i"])
@@ -29,6 +32,6 @@ for part in sorted(f[:-5] for f in os.listdir("/workspace/l2kit/src")):
             buf += struct.pack(f"<{ni}H", *g["i"])
             heads.append(h)
     js = (f"// Level 2 kit module \"{part}\", packed by art/level2/encode.py (decoder: unpack in scripts/lib/l2kit.js). Do not hand-edit.\n"
-          f"export default {{ uv: {'true' if uv else 'false'}, g: {json.dumps(heads, separators=(',', ':'))}, b: \"{base64.b64encode(bytes(buf)).decode()}\" }};\n")
+          f"export default {{ uv: {'true' if uv else 'false'}, far: {len(FAR.get(part, []))}, g: {json.dumps(heads, separators=(',', ':'))}, b: \"{base64.b64encode(bytes(buf)).decode()}\" }};\n")
     open(f"scripts/lib/l2kit-data/{part}.js", "w").write(js)
     print(part, len(js))
