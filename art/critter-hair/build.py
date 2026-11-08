@@ -164,7 +164,7 @@ def wave_path(path, amp, freq, ph, axis=None):
     return out
 
 # ---------------- the cap: the skull shell ----------------
-def cap(m, front=.8, side=.2, back=-.35, vol=.02, part=None, ear_gap=.035):
+def cap(m, front=.64, side=.2, back=-.35, vol=.02, part=None, ear_gap=.035):
     """the shell over the skull: hairline at elevation front/side/back (radians), thickness vol, sinks under fur past
     the hairline and round every ear base so the hair parts round the ears; part=azimuth of a soft part line"""
     NU, NV = 56, 30; grid = []; w = []
@@ -213,7 +213,7 @@ def hem(m, length, per_side=7, W=.05, T=.016, u_from=1.25, v_lo=.42, v_hi=.95, w
             if wave: path = wave_path(path, wave, max(.8, ln / .35), rnd.random() * 6.28)
             clump(m, path, W * (1 - .1 * L), T, tip=.42, blunt=blunt)
 
-def bangs(m, kind="blunt", seed=0, n=7, stop=EYE_Z + .02, W=.05, T=.017, span=.62, root_v=1.18):
+def bangs(m, kind="blunt", seed=0, n=9, stop=EYE_Z + .02, W=.06, T=.018, span=.92, root_v=.98):   # Nov 8: wider, fuller, rooted lower: the old fringe left the forehead bare ("looks like theyre balding")
     """fringe clumps sitting ON the forehead: root under the cap, flow over the brow, rounded tips above the eyes.
     kind: blunt (even), wispy (alternating, pointier), side (all swept to +x), curtain (parted, to both temples),
     spiky (short stiff up-forward points), swoop (one big sideways sweep)"""
