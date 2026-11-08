@@ -3,6 +3,7 @@
 // Their arms end in toothed mouths: a bite every 1.3 s. Tagged l8-hostile so every weapon and kick hits them.
 // Balloons: stationary. Step within reach of the ribbon and it stings: damage, and you're rooted a beat.
 import { dmgAfterArmor } from "./lib/stats.js"
+import { animate } from "builtin/tween"
 const T = { sight: 9, call: 16, walk: 1.1, hunt: 2.3, reach: 1.6, biteDmg: 7, biteMs: 1300, hp: 90, // her picks
   berserkAt: 45, rage: 3.1, clawReach: 2.1, clawDmg: 13, clawMs: 850, hatchOpen: 2200, hatchShut: 3200, glance: 0.8, // berserker: arms gone, chest claws out; shut hatch turns 80% of a hit
 
@@ -84,7 +85,13 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
     }
   }
   const gas = (ctx.self.session.gas ??= [])
+  const bobbed = (ctx.self.session.bob ??= {})
   for (const b of ctx.query({ tags: ["l26-balloon"] })) {
+    if (!bobbed[b.id]) { // they ride the air currents (lore: no legs, only drafts): a slow bob and a lazy turn, each on its own beat
+      bobbed[b.id] = 1; const ph = (b.id.length * 0.37) % 1
+      animate(ctx, b.id, { "feetPosition.y": "+=0.18" }, { duration: 2.2 + ph, easing: "easeInOutSine", direction: "alternate", loop: true })
+      animate(ctx, b.id, { "rotation.yaw": "+=40" }, { duration: 5 + ph * 3, easing: "easeInOutSine", direction: "alternate", loop: true })
+    }
     if ((b.state.hp ?? 10) <= 0) { // popped: the ammonia sac goes up in a choking cloud for 6 s
       gas.push({ x: b.feetPosition.x, y: b.feetPosition.y, z: b.feetPosition.z, until: now + 6000 })
       ctx.emit("fx", { position: { ...b.feetPosition, y: b.feetPosition.y + 1.1 }, script: GAS })
@@ -100,7 +107,9 @@ pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 
       ctx.emit("damageNumber", { position: at, value: T.stingDmg, color: "#c8ff60" })
       ctx.emit("playSound", { clip: SND("wet-whip-crack-and-sizzle"), position: at, volume: 0.8 })
       ctx.emit("screenFlash", { color: "#b8ff70", duration: 0.35, intensity: 0.4 }, { audience: { player: pl.id } })
-      ctx.emit("shake", { target: b.id, intensity: 0.3, duration: 0.5 })
+      ctx.emit("shake", { target: b.id, intensity: 0.5, duration: 0.6 })
+      ctx.emit("squash", { target: b.id, axis: "y", intensity: 0.3, duration: 0.35 })
+      ctx.emit("cameraPunch", { direction: { x: pl.feetPosition.x - b.feetPosition.x, y: 0, z: pl.feetPosition.z - b.feetPosition.z }, intensity: 0.35 }, { audience: { player: pl.id } })
     }
   }
   for (let i = gas.length - 1; i >= 0; i--) {
