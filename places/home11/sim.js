@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 4;
+const V = 5;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -54,11 +54,11 @@ export function tick(ctx) {
   sp("home-from-l11", { feetPosition: { x: 0, y: 0.1, z: 4.6 }, rotation: { yaw: 0 } });
 
   // living room
-  fit("h-rug", M.rug, -2.2, 2.5, 90, [2.6, 0.02, 1.9], { physics: undefined });
-  fit("h-sofa", M.sofa, -4.3, 2.5, 90, [2.1, 0.95, 0.95]); // beige microfibre three-seater, back to the wall
-  fit("h-recliner", M.recliner, -2.6, 0.3, 150, [0.95, 1.05, 0.95]); // leather recliner angled at the TV
-  fit("h-tv", M.tv, 1.0, 0.0, 0, [1.2, 1.2, 0.55]); // silver CRT on a black glass stand, DVD and VCR on the shelves // CRT on a veneer stand, VCR under it
-  fit("h-table", M.table, -2.2, 2.5, 90, [1.1, 0.48, 0.7]);
+  fit("h-rug", M.rug, -1.6, 2.5, 90, [2.6, 0.02, 1.9], { physics: undefined });
+  fit("h-sofa", M.sofa, -4.35, 2.5, 0, [1.2, 1.15, 2.05]); // tripo: tan rolled-arm sofa, plaid pillows, back to the west wall facing the TV
+  fit("h-recliner", M.recliner, -2.3, 0.1, -35, [0.95, 1.05, 0.95]); // tripo: leather recliner angled at the TV
+  fit("h-tv", M.tv, 2.7, 2.5, 180, [0.72, 1.12, 1.1]); // tripo: silver CRT on a black glass stand, DVD and VCR on the shelves
+  fit("h-table", M.table, -2.6, 2.5, 0, [0.8, 0.5, 1.02]); // tripo: oak coffee table, remote and a magazine on it
   fit("h-shelf", M.bookshelf, -4.6, 4.2, 90, [1.6, 2.0, 0.4]);
   fit("h-lamp-1", M.lamp, 3.9, 0.3, 0, [0.5, 1.6, 0.5]);
   fit("h-kitchen", M.kitchen, 3.7, 4.4, -90, [2.6, 1.0, 0.7]);
