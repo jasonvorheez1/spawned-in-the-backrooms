@@ -127,6 +127,6 @@ export function talkUi(ctx, player) {
   return `${CINE}<div class="tc" data-modal tabindex="0" onkeydown="${kd}">
     <div class="low ${s.talkBusy ? 'busy' : ''}"><div class="who">${who} · ${esc(it.state?.temper ?? '')}${it.state?.title ? ' · ' + esc(it.state.title) : ''} · hp ${Math.max(0, Math.round(it.state?.hp ?? 0))}/${Math.round(it.state?.maxHp ?? 100)}</div><div class="sub">${now}</div>
       <div class="choices">${top}</div>
-      <form class="row" data-interactive onsubmit="event.preventDefault();${send}"><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" placeholder="say something…"/>${small}<span class="feel" style="color:${col}">${feel(r)}</span></form>
+      <div class="row" data-interactive><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" placeholder="say something… (enter)" onkeydown="event.stopPropagation();if(event.key==='Enter'&&this.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:this.value});this.value=''}"/>${small}<span class="feel" style="color:${col}">${feel(r)}</span></div>
     </div></div>`
 }
