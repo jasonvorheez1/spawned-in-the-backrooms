@@ -201,7 +201,7 @@ def armchair():
         md.superq("velvet", Tw((cx - 0.02, FY + 0.42, cz + s * 0.37)), (0.39, 0.2, 0.065), 0.3, 0.3, 20, 10)
         md.superq("velvet", Tw((cx + 0.0, FY + 0.64, cz + s * 0.39)), (0.41, 0.065, 0.085), 0.7, 0.45, 24, 10)
         md.superq("velvet", Tw((cx + 0.405, FY + 0.6, cz + s * 0.39)), (0.02, 0.09, 0.08), 0.8, 0.8, 12, 6)
-    for k in range(9): md.superq("brass", Tw((cx + 0.41, FY + 0.15 + 0.0, cz - 0.32 + k * 0.08)), (0.006, 0.006, 0.006), 0.8, 0.8, 6, 3)
+    for k in range(9): md.superq("brass", Tw((cx + 0.398, FY + 0.27, cz - 0.32 + k * 0.08)), (0.006, 0.006, 0.006), 0.8, 0.8, 6, 3)
     return done(md)
 
 def table():
