@@ -1,9 +1,10 @@
 // Level 8 karst rock (Shelly, Nov 8: "the graphics for level 8 could be much better"). The cave model has no UVs, so the rock is
 // drawn in world space: layered limestone strata, worley fractures, damp streaks running down, mineral stain, and a bump from
 // the same height field so every wall has grain under a lamp. params: { kind: rock|wet|flow|road|tar, s: scale }
-import { materialColor, positionWorld, positionView, normalView, float, vec3, abs, fract, mix, smoothstep, sin, max, min, dFdx, dFdy, cross, dot, sign, normalize, mx_fractal_noise_float, mx_worley_noise_float, mx_noise_float } from "builtin/tsl";
+import { texture, normalWorld, pow, materialColor, positionWorld, positionView, normalView, float, vec3, abs, fract, mix, smoothstep, sin, max, min, dFdx, dFdy, cross, dot, sign, normalize, mx_fractal_noise_float, mx_worley_noise_float, mx_noise_float } from "builtin/tsl";
 import { MeshStandardNodeMaterial } from "builtin/three";
 
+const oneMinusS = (x) => float(1).sub(x);
 export function material(ctx) {
   const m = new MeshStandardNodeMaterial();
   const kind = String(ctx.params.kind ?? "rock"), S = Number(ctx.params.s ?? 1);
@@ -15,13 +16,24 @@ export function material(ctx) {
   const fine = mx_noise_float(p.mul(9)).mul(0.5).add(0.5);
   const crack = smoothstep(0.0, 0.07, mx_worley_noise_float(p.mul(0.9).add(vec3(warp, 0, warp)))); // 0 in a fracture
   const drip = smoothstep(0.55, 0.85, mx_fractal_noise_float(vec3(p.x.mul(2.2), p.y.mul(0.15), p.z.mul(2.2))).mul(0.5).add(0.5)); // vertical damp streaks
-  const base = materialColor;
-  let col = base.mul(float(0.62).add(big.mul(0.5)).add(strata.mul(0.14)).add(fine.mul(0.1)));
+  // a photographed rock texture laid triplanar (the model has no UVs), at two scales so it never reads as a repeat
+  const TEX = { rock: "cdn/texture-dark-wet-limestone-cave-wall-rough.png", wet: "cdn/texture-dark-wet-limestone-cave-wall-rough.png", flow: "cdn/texture-pale-calcite-flowstone-rippled-cave.png", road: "cdn/texture-damp-cracked-asphalt-with-cave-grit.png", tar: "cdn/texture-dark-wet-limestone-cave-wall-rough.png" }[kind] ?? "cdn/texture-dark-wet-limestone-cave-wall-rough.png";
+  const T = ctx.texture(TEX);
+  const w0 = pow(abs(normalWorld), vec3(4, 4, 4)), w = w0.div(w0.x.add(w0.y).add(w0.z));
+  const tri = (sc) => texture(T, p.zy.mul(sc)).rgb.mul(w.x).add(texture(T, p.xz.mul(sc)).rgb.mul(w.y)).add(texture(T, p.xy.mul(sc)).rgb.mul(w.z));
+  const photo = mix(tri(0.45), tri(0.13), 0.4);
+  const lum = photo.x.mul(0.3).add(photo.y.mul(0.55)).add(photo.z.mul(0.15));
+  const base = mix(materialColor.mul(lum.mul(2.2)), photo.mul(materialColor.mul(2.4)), 0.45);
+  let col = base.mul(float(0.7).add(big.mul(0.4)).add(strata.mul(0.12)).add(fine.mul(0.06)));
   col = mix(col, col.mul(vec3(1.12, 0.9, 0.7)), smoothstep(0.55, 0.8, big).mul(0.5)); // iron stain
   col = mix(col, col.mul(0.45), drip.mul(0.55)); // wet run-off
   col = col.mul(float(0.35).add(crack.mul(0.65)));
-  let rough = float(0.92).sub(drip.mul(0.5));
-  let h = big.mul(0.6).add(mid.mul(0.5)).add(strata.mul(0.25)).add(fine.mul(0.12)).add(crack.mul(0.6));
+  const vein = oneMinusS(smoothstep(0.0, 0.025, mx_worley_noise_float(p.mul(2.6).add(vec3(0, warp, 0))))).mul(smoothstep(0.6, 0.75, mid)); // calcite veins
+  col = mix(col, vec3(0.78, 0.74, 0.64), vein.mul(kind === "road" || kind === "tar" ? 0 : 0.55));
+  const low = smoothstep(1.6, -0.4, positionWorld.y).mul(smoothstep(0.5, 0.75, big)).mul(w.y.oneMinus().mul(0.6).add(0.4)); // damp moss and algae where the floor meets the wall
+  col = mix(col, col.mul(vec3(0.55, 0.85, 0.5)), low.mul(kind === "road" ? 0.25 : 0.6));
+  let rough = float(0.88).sub(drip.mul(0.55)).sub(low.mul(0.3)).sub(lum.mul(0.15));
+  let h = lum.mul(1.4).add(big.mul(0.6)).add(mid.mul(0.5)).add(strata.mul(0.25)).add(fine.mul(0.12)).add(crack.mul(0.6));
   let bumpK = 0.9;
   if (kind === "wet") { rough = float(0.22).add(fine.mul(0.2)); col = col.mul(0.85); bumpK = 0.6; }
   if (kind === "flow") { col = mix(col, base.mul(1.15), 0.35); rough = float(0.45).add(mid.mul(0.25)); h = strata.mul(0.8).add(fine.mul(0.15)); bumpK = 0.5; }
