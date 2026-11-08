@@ -589,7 +589,9 @@ function inventory(s) {
     ${s.bobbypins ? `<div class="it"><span class="cur">&gt;</span><span class="nm">Bobby pins</span><span class="stat-r">${s.bobbypins}</span>${detail('bobbypin', s, false)}</div>` : ''}
     ${s.pages ? String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="cur">&gt;</span><span class="nm" style="color:#e8dcc0">Torn page ${+n}</span><span class="stat-r">READ</span></button>`).join('') : ''}` || '<div class="em">No miscellaneous items.</div>'
 
+  const keyRows = (s.keyItems ?? []).includes('spamton') ? `<div class="it on" title="Can't be dropped. Weighs nothing."><span class="cur">&gt;</span><span class="nm" style="color:#ff6fd0">[[SPAMTON G. SPAMTON]]</span><span class="stat-r"><span>0 kg</span><span style="color:#ffe14d">LOOT $$ +</span></span><div style="font-size:11px;opacity:.75;padding-left:18px">A [[Big Shot]] riding in your pocket. 10% chance of a backquarter in any loot, +2% on money you find.</div></div>` : ''
   const SECS = {
+    key: ['Key items', keyRows],
     weapons: ['Weapons', weapons],
     apparel: ['Apparel', app],
     aid: ['Aid', aid],
