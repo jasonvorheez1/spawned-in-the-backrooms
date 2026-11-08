@@ -75,6 +75,7 @@ function say(ctx, line, extra = {}) { hud(ctx, { line, lineAt: ctx.now(), ...ext
 function music(ctx, which) { const a = ctx.self.audio; if (a?.clip === THEME[which]) return; ctx.self.audio = { clip: THEME[which], loop: true, gain: 0.38, spatial: false, bus: 'Music' } }
 
 export function onSpawn(ctx) {
+  ctx.self.scale = 1 // a spared shrink-into-your-pocket must never carry into the next fight
   const st = ctx.self.state
   st.hp = A.hp; st.max = A.hp; st.talks = 0; st.req = null; st.startedAt = ctx.now()
   ctx.self.session.b = null
