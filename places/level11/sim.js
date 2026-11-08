@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 44; // bump to rebuild the city in rooms that are already open
+const V = 45; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -254,8 +254,8 @@ function lay(ctx) {
   });
 
   // Embankment Retaining Seawalls & Coping
-  bx("l11-embank-south", 0, -2.2, CANAL_Z + CANAL_W / 2 + 0.5, 120, 4.4, 1.0, CONCRETE_CANAL);
-  bx("l11-embank-north", 0, -2.2, CANAL_Z - CANAL_W / 2 - 0.5, 120, 4.4, 1.0, CONCRETE_CANAL);
+  sp("l11-embank-south", { feetPosition: { x: 0, y: -2.2, z: CANAL_Z + CANAL_W / 2 + 0.5 }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "quay", L: 120, t: 1.0, H: 4.4, side: -1 } }, physics: "static" });
+  sp("l11-embank-north", { feetPosition: { x: 0, y: -2.2, z: CANAL_Z - CANAL_W / 2 - 0.5 }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "quay", L: 120, t: 1.0, H: 4.4, side: 1 } }, physics: "static" });
   bx("l11-cope-south", 0, 0.2, CANAL_Z + CANAL_W / 2 + 0.5, 120, 0.3, 1.3, CURB_MAT);
   bx("l11-cope-north", 0, 0.2, CANAL_Z - CANAL_W / 2 - 0.5, 120, 0.3, 1.3, CURB_MAT);
 
@@ -285,8 +285,8 @@ function lay(ctx) {
 
   // The Grand Canal Bridge
   bx("l11-bridge-deck", 0, -0.05, CANAL_Z, 17, 0.6, CANAL_W + 4, ASPHALT);
-  bx("l11-bridge-arch-w", -8.5, -2.4, CANAL_Z, 1.2, 4.2, CANAL_W + 4, CONCRETE_CANAL);
-  bx("l11-bridge-arch-e", 8.5, -2.4, CANAL_Z, 1.2, 4.2, CANAL_W + 4, CONCRETE_CANAL);
+  sp("l11-bridge-arch-w", { feetPosition: { x: -8.5, y: -2.4, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "arch", L: CANAL_W + 4, t: 1.2, H: 4.2, S: CANAL_W - 3, r: 2.9 } }, physics: "static" });
+  sp("l11-bridge-arch-e", { feetPosition: { x: 8.5, y: -2.4, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "arch", L: CANAL_W + 4, t: 1.2, H: 4.2, S: CANAL_W - 3, r: 2.9 } }, physics: "static" });
   bx("l11-bridge-parapet-w", -8.4, 0.5, CANAL_Z, 0.4, 0.95, CANAL_W + 4, CURB_MAT);
   bx("l11-bridge-parapet-e", 8.4, 0.5, CANAL_Z, 0.4, 0.95, CANAL_W + 4, CURB_MAT);
 

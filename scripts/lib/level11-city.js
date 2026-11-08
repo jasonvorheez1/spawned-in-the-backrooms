@@ -61,10 +61,10 @@ export function layCity(ctx, h) {
   for (const [x0, x1] of [[-250, -59], [59, 250]]) {
     const xc = (x0 + x1) / 2, L = x1 - x0;
     bx(`l11-canal-bed-${x0}`, xc, -4.5, CANAL_Z, L, 0.4, 24, CANAL); bx(`l11-canal-water-${x0}`, xc, -2.2, CANAL_Z, L, 0.08, 20, { color: "oklch(0.38 0.09 220)", opacity: 0.88, transparent: true, roughness: 0.06, metalness: 0.2 });
-    for (const s of [-1, 1]) { bx(`l11-canal-wall-${x0}-${s}`, xc, -2.2, CANAL_Z + s * 10.5, L, 4.4, 1.0, CANAL); bx(`l11-canal-cope-${x0}-${s}`, xc, 0.2, CANAL_Z + s * 10.5, L, 0.3, 1.3, CURB); }
+    for (const s of [-1, 1]) { sp(`l11-canal-wall-${x0}-${s}`, { feetPosition: { x: xc, y: -2.2, z: CANAL_Z + s * 10.5 }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "quay", L, t: 1.0, H: 4.4, side: -s } }, physics: "static" }); bx(`l11-canal-cope-${x0}-${s}`, xc, 0.2, CANAL_Z + s * 10.5, L, 0.3, 1.3, CURB); }
   }
   for (const ax of X_AVE) if (ax !== 0) {
-    bx(`l11-bridge-${ax}`, ax, -0.05, CANAL_Z, 13, 0.6, 24, ASPH); for (const s of [-1, 1]) { bx(`l11-bridge-par-${ax}-${s}`, ax + s * 6.4, 0.5, CANAL_Z, 0.4, 0.95, 24, CURB); bx(`l11-bridge-arch-${ax}-${s}`, ax + s * 6.4, -2.4, CANAL_Z, 1.2, 4.2, 24, CANAL); }
+    bx(`l11-bridge-${ax}`, ax, -0.05, CANAL_Z, 13, 0.6, 24, ASPH); for (const s of [-1, 1]) { bx(`l11-bridge-par-${ax}-${s}`, ax + s * 6.4, 0.5, CANAL_Z, 0.4, 0.95, 24, CURB); sp(`l11-bridge-arch-${ax}-${s}`, { feetPosition: { x: ax + s * 6.4, y: -2.4, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "arch", L: 24, t: 1.2, H: 4.2, S: 17, r: 2.9 } }, physics: "static" }); }
   }
 
   // ---- the lots: blocks between the roads, buildings facing outward to the avenues, density thinning with distance from downtown
