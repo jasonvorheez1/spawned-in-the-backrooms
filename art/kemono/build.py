@@ -148,11 +148,17 @@ def cover(o):
     kill = []
     zs = [v.co.z for v in src.data.vertices]; zlo, zhi = min(zs), max(zs)
     kind = o.name.split('_')[0]
+    _bz = zlo if kind == 'Top' else zhi
+    _bx = [abs(v.co.x) for v in src.data.vertices if abs(v.co.z - _bz) < 0.05]
+    BANDX = min(max(_bx) if _bx else 0.2, 0.24)
     for f in bm.faces:
         c = f.calc_center_median(); loc, n, idx, d = bv.find_nearest(c)
         reach = 0.04
         if kind == 'Top' and zlo - 0.06 < c.z < zlo + 0.03: reach = 0.16   # hem down over the waistband
         if kind == 'Bot' and zhi - 0.03 < c.z < zhi + 0.04: reach = 0.16   # waistband up under the hem
+        if kind == 'Top' and zlo - 0.09 < c.z < zlo + 0.05 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1   # a closed hem ring at the waist, no skin between top and bottom
+        if kind == 'Bot' and zhi - 0.05 < c.z < zhi + 0.06 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1
+        if o.name == 'Top_dress' and c.z >= HIPS_Z + 0.02: reach = max(reach, 0.12)   # the bodice covers the whole bust and midriff
         if o.name == 'Top_dress' and c.z < HIPS_Z + 0.02: reach = -1          # the skirt stays the dress's own
         if d is None or d > reach: kill.append(f)
         else: f.material_index = src.data.polygons[idx].material_index
@@ -228,7 +234,7 @@ def refit(o):
         half = (max(band) - min(band)) / 2 if band else 0.15
         pass
         gb = bmesh.new(); gb.from_mesh(me)
-        bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x - EYE.x) > min(half * 0.98, (max(ex) - min(ex)) / 2 + 0.045) or v.co.y > EYEFRONT + 0.018], context='VERTS')
+        bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x - EYE.x) > min(half * 0.98, (max(ex) - min(ex)) / 2 + 0.045) or v.co.y > EYEFRONT + 0.018 or v.co.y < EYEFRONT - 0.05], context='VERTS')   # temples cut: no arm poking out ahead of the face
         gb.to_mesh(me); gb.free()
     elif kind == 'Hat' and EYE is not None:
         ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); bot = min(w.z for w in ws)
