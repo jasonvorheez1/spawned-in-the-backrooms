@@ -954,7 +954,7 @@ function lay(ctx) {
     tags: ["usable"],
     feetPosition: { x: -8.8, y: 0.1, z: 15.5 },
     rotation: { yaw: 90 },
-    primitive: null, material: null, model: { id: MODELS.payphone, forward: "-z" }, // a 2006 Verizon post payphone
+    primitive: { kind: "scripted", script: "scripts/props11.js", params: { kind: "payphone" } }, material: null, model: null, physics: { body: "static", collider: "box" }, // a 2006 street post payphone, modelled (rounded housing, hood, handset and cord)
     behavior: "scripts/level11-use.js",
     state: { kind: "payphone", name: "Municipal Street Payphone", verb: "Answer Payphone" },
   });
