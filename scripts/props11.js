@@ -30,7 +30,7 @@ export function geometry(ctx) {
     ctx.color("oklch(0.55 0.02 250)"); q(-0.09, 1.04, 0.09, 1.12); // coin return
     ctx.color("oklch(0.35 0.02 160)"); q(-0.09, 1.52, 0.09, 1.66); // little readout window
     // hood: a canopy that leans out over the caller, with a backlit blue sign band
-    const hy = 1.78, hood0 = [[-0.3, hy, 0.14], [0.3, hy, 0.14], [0.3, hy + 0.22, 0.14], [-0.3, hy + 0.22, 0.14]];
+    const hy = 1.7, hood0 = [[-0.3, hy, 0.14], [0.3, hy, 0.14], [0.3, hy + 0.22, 0.14], [-0.3, hy + 0.22, 0.14]];
     ctx.color("oklch(0.45 0.13 255)"); ctx.emissive?.("oklch(0.45 0.13 255)", 0.6);
     ctx.quad([-0.3, hy, -0.24], [0.3, hy, -0.24], [0.3, hy + 0.18, -0.2], [-0.3, hy + 0.18, -0.2]); // sign face
     ctx.emissive?.(null, 0); ctx.color("oklch(0.3 0.03 255)");
