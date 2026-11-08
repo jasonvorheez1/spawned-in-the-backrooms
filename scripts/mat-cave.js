@@ -20,7 +20,7 @@ export function material(ctx) {
   const TEX = { rock: "cdn/texture-dark-wet-limestone-cave-wall-rough.png", wet: "cdn/texture-dark-wet-limestone-cave-wall-rough.png", flow: "cdn/texture-pale-calcite-flowstone-rippled-cave.png", road: "cdn/texture-damp-cracked-asphalt-with-cave-grit.png", tar: "cdn/texture-dark-wet-limestone-cave-wall-rough.png" }[kind] ?? "cdn/texture-dark-wet-limestone-cave-wall-rough.png";
   const T = ctx.texture(TEX);
   const w0 = pow(abs(normalWorld), vec3(4, 4, 4)), w = w0.div(w0.x.add(w0.y).add(w0.z));
-  const tri = (sc) => texture(T, p.zy.mul(sc)).rgb.mul(w.x).add(texture(T, p.xz.mul(sc)).rgb.mul(w.y)).add(texture(T, p.xy.mul(sc)).rgb.mul(w.z));
+  const tri = (sc) => T.sample(p.zy.mul(sc)).rgb.mul(w.x).add(T.sample(p.xz.mul(sc)).rgb.mul(w.y)).add(T.sample(p.xy.mul(sc)).rgb.mul(w.z));
   const photo = mix(tri(0.45), tri(0.13), 0.4);
   const lum = photo.x.mul(0.3).add(photo.y.mul(0.55)).add(photo.z.mul(0.15));
   const base = mix(materialColor.mul(lum.mul(2.2)), photo.mul(materialColor.mul(2.4)), 0.45);
