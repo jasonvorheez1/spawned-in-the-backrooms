@@ -89,14 +89,25 @@ const STEPS = {
   tile: { walk: 'footstep-sneaker-on-vinyl-school-floor-tile-single-step', run: 'footstep-sneaker-running-on-vinyl-floor-tile-single-step', v: 0.22 },
   gravel: { walk: 'footstep-boot-crunch-on-loose-cave-gravel-single-step', run: 'footstep-boot-running-on-loose-cave-gravel-single-step', v: 0.26 },
   wood: { walk: 'footstep-boot-on-wet-wooden-floorboards-creak-single-step', run: 'footstep-boot-running-on-wet-wooden-floorboards-single-step', v: 0.24 },
+  hotel: { walk: 'footstep-shoe-on-thick-plush-hotel-hallway-carpet-single-step', run: 'footstep-shoe-running-on-thick-hotel-carpet-single-step', v: 0.2 },
+  office: { walk: 'footstep-shoe-on-low-pile-office-carpet-tile-single-step', run: 'footstep-shoe-running-on-low-pile-office-carpet-single-step', v: 0.2 },
+  terrazzo: { walk: 'footstep-sneaker-on-polished-mall-terrazzo-floor-squeak-single-step', run: 'footstep-sneaker-running-on-polished-mall-floor-single-step', v: 0.24 },
+  checker: { walk: 'footstep-boot-on-worn-checkered-linoleum-locker-room-single-step', run: 'footstep-boot-running-on-worn-linoleum-tile-single-step', v: 0.23 },
+  metal: { walk: 'footstep-boot-on-steel-diamond-plate-floor-clank-single-step', run: 'footstep-boot-running-on-steel-diamond-plate-floor-single-step', v: 0.24 },
 }
 const CONCRETE = new Set(['level1', 'level2', 'level3', 'gamma', 'level6', 'debug'])
 function floorOf(ctx) {
   const pl = ctx.self.place
   if (pl === 'level8') return 'gravel'
   if (pl === 'level7') return 'wood'
+  if (pl === 'level61') return 'terrazzo'
+  if (pl === 'level5') return 'plush'
+  if (pl === 'level4') return 'office'
   if (CONCRETE.has(pl)) return 'concrete'
-  if (pl === 'level21') { const z = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z); return z === 'l21_edge' || z === 'l21_edgecave' ? 'concrete' : 'tile' }
+  if (pl === 'level21') { const z = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z); return z === 'l21_edge' || z === 'l21_edgecave' ? 'concrete' : z === 'l21_lockers' || z === 'l21_restroom' ? 'checker' : 'tile' }
+  if (pl === 'level61') return 'terrazzo'
+  if (pl === 'level4') return 'office'
+  if (pl === 'level5') { const z = String(zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z) ?? ''); return /boil|furnace|pipe|engine/.test(z) ? 'metal' : 'hotel' }
   return 'carpet'
 }
 function sound(ctx, name, volume = 0.7, mine = false) {
@@ -203,6 +214,7 @@ function takeToken0(ctx, token) {
     const v = SNACKS[token], mh = maxHp(s.level, s), ms = maxSan(s.level, s)
     s.hp = Math.min(mh, (s.hp ?? mh) + v.hp * derived(s).heal); s.sanity = Math.min(ms, (s.sanity ?? ms) + v.sanity)
     s.hunger = Math.max(0, Math.min(100, (s.hunger ?? 100) + v.hunger)); s.thirst = Math.max(0, Math.min(100, (s.thirst ?? 100) + v.thirst))
+    if (v.drunk) { s.drunk = Math.min(100, (s.drunk ?? 0) + v.drunk); s.drunkAt = now }
     if (v.stamina) { const w = walkOf(ctx); w.stamina = Math.min(L.stamina * 2, (w.stamina ?? s.stamina ?? 0) + v.stamina) }
     s.pickedAt = now; s.notice = { text: `${v.name}. ${v.drink ? `Thirst +${v.thirst}` : `Hunger +${v.hunger}`}`, at: now }
     sound(ctx, v.drink ? 'plastic-bottle-pickup-rattle' : 'loot-take-all-rustle', 0.7, true)
@@ -928,7 +940,7 @@ export function update(ctx, dt) {
   if (ctx.self.parent) return
   const w = walkOf(ctx), s = ctx.self.state
   w.stamina ??= s.stamina; w.battery ??= s.battery
-  const dir = w.dir ?? { x: 0, z: 0 }, pressing = dir.x !== 0 || dir.z !== 0
+  let dir = w.dir ?? { x: 0, z: 0 }, pressing = dir.x !== 0 || dir.z !== 0
   { // pressed into a wall: the keys say go, the feet stay put. after a beat you stop running (no drain, no steps, no bob)
     const f = ctx.self.feetPosition, lf = w.lastFp, mv = lf && dt > 0 ? Math.hypot(f.x - lf.x, f.z - lf.z) / dt : 9
     w.lastFp = { x: f.x, z: f.z }
@@ -951,6 +963,10 @@ export function update(ctx, dt) {
   const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
   const speed = (w.walkMode && !sprinting ? 0.5 : 1) * (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (s.carryMul ?? 1) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * dv.speed * (w.bur ??= burden(s))
+  const drunk = Math.max(0, (s.drunk ?? 0) - (nowS - (s.drunkAt ?? nowS)) * 0.4) // sobers 0.4 a second
+  if (s.drunk && drunk <= 0) s.drunk = 0
+  const sway = drunk > 15 && moving ? Math.sin(nowS * 1.3) * Math.min(0.5, drunk / 160) : 0 // past a couple of drinks the walk drifts
+  if (sway) dir = { x: dir.x * Math.cos(sway) - dir.z * Math.sin(sway), y: dir.y, z: dir.x * Math.sin(sway) + dir.z * Math.cos(sway) }
   const intent = { x: dir.x * speed * (moving || !pressing ? 1 : 0.35), z: dir.z * speed * (moving || !pressing ? 1 : 0.35) } // stuck on a wall: a gentle lean, still enough to slide off a corner
   viewmodel(ctx, moving, sprinting)
   const v = ctx.self.velocity
@@ -968,7 +984,7 @@ export function update(ctx, dt) {
       w.stepClock = 0
       const fl = floorOf(ctx), F = STEPS[fl]
       const clip = w.wet ? 'footstep-soaked-carpet-deep-squelch' : sprinting ? F.run : F.walk
-      sound(ctx, clip, (w.wet ? 0.4 : sprinting ? F.v * 1.4 : F.v) * (crouched ? 0.3 : 1), true)
+      sound(ctx, clip, (w.wet ? 0.4 : sprinting ? F.v * 1.4 : F.v) * (crouched ? 0.3 : 1) * (0.85 + Math.random() * 0.3), true) // each step a touch louder or softer: no machine-gun repeat
     }
   } else {
     w.stepClock = 0.22

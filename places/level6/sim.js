@@ -2,7 +2,7 @@
 // No light works here (scripts/player.js kills the flashlight on this place). Plan: scripts/lib/level6.js.
 import { W, H, C, HT, START, cx, cz, plan, wallRuns, NOTES } from "../../scripts/lib/level6.js";
 export const cadence = "1s";
-const V = 3;
+const V = 4;
 const CONCRETE = { color: "oklch(0.55 0.005 250)", roughness: 0.95, texture: "cdn/texture-smooth-cold-poured-concrete-wall.png", repeat: [1, 1], wrap: "repeat" };
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const WHISPERS = [G("faint-skittering-claws-on-concrete-in-dark"), G("slow-close-breathing-in-pitch-dark"), G("unintelligible-whisper-behind-ear"), G("bare-footsteps-stop-on-concrete")];
@@ -78,7 +78,37 @@ function lay2(ctx) {
   // 5 · Emmanuel disappeared down this hall: his pack, still zipped. he meant to come back for it
   if (E(5)) { pack(ctx, "l6-p-emmanuel", "backpack", at(E(5), 0.3), -40, "Emmanuel's pack", "almond,almond,battery,bandage,bobbypin"); prop(ctx, "l6-shoe-emm", "shoe", at(E(5), -0.9), 15);
     spot(ctx, "l6-s-emmanuel", at(E(5), -1.5), { text: "One shoe. Laces still tied.", every: 300 }); }
-  // 6 · this hallway just ends. nothing, and that is the point
+  // 6 · the tripwire noclip into Level 6.1 "The Snackrooms" (canonical Wikidot lore)
+  if (E(6)) {
+    const p61 = at(E(6), 0.3);
+    ctx.spawn("l6-to-l61", {
+      tags: ["door"],
+      feetPosition: { x: p61.x, y: -0.1, z: p61.z },
+      physics: { body: "static", trigger: true },
+      primitive: { kind: "box", width: 1.4, height: 1.8, depth: 1.4 },
+      visible: false,
+      behavior: "scripts/level-door.js",
+      state: { to: "level61#l61-from-l6" },
+    });
+    ctx.spawn("l6-from-l61", { feetPosition: { x: p61.x, y: 0.1, z: p61.z }, rotation: { yaw: 0 } });
+    // Visuals: loose dangling tripwire across floor + warm golden light crack + faint muffled 80s music
+    ctx.spawn("l6-wire-61", {
+      feetPosition: { x: p61.x, y: 0.02, z: p61.z },
+      primitive: { kind: "cylinder", radiusTop: 0.018, radiusBottom: 0.018, height: 1.4 },
+      rotation: { pitch: 90, yaw: 35 },
+      material: { color: "#111111", roughness: 0.8 },
+      children: [
+        { feetPosition: { x: 0, y: 0.01, z: 0 }, primitive: { kind: "box", width: 0.9, height: 0.02, depth: 0.1 }, material: { color: "#ffeedd", emissive: "#ffeedd", emissiveIntensity: 2.8 } },
+        { feetPosition: { x: 0, y: 0.08, z: 0 }, light: { kind: "point", color: "oklch(0.92 0.12 75)", intensity: 1.2, distance: 4.5 } },
+      ],
+      audio: { clip: "https://media-ssl.musicradio.com/Heart80sMP3", loop: true, gain: 0.15, spatial: true, maxDistance: 10 },
+    });
+    ctx.spawn("l6-wire-note", {
+      feetPosition: { x: cx(E(6).i) - E(6).dx * (C / 2 - 0.02), y: 1.45, z: cz(E(6).j) - E(6).dz * (C / 2 - 0.02) },
+      rotation: { lookAt: { x: cx(E(6).i) + E(6).dx * C, y: 1.45, z: cz(E(6).j) + E(6).dz * C } },
+      vector: chalk("music under the floor? watch the wire"),
+    });
+  }
   // 7 · Jack didn't come back: his jacket, his light. pockets heavier than they should be
   if (E(7)) { pack(ctx, "l6-p-jack", "jacket", at(E(7), 0.3), 80, "Jack's jacket", "battery,battery,ammo,cash:25"); prop(ctx, "l6-t-jack", "torch", at(E(7), -0.4), 160);
     spot(ctx, "l6-s-jack", at(E(7), -1.2), { text: "His flashlight. The switch is still on.", san: 3, every: 300 }); }
@@ -140,8 +170,8 @@ function lay3(ctx) {
   if (!ctx.getObject("l6-smiler-mgr")) {
     ctx.spawn("l6-smiler-mgr", { behavior: "scripts/l6-smiler.js" });
   }
-  if (!ctx.getObject("l6-smiler-1") && E(6)) {
-    const smPos = at(E(6), 1.2);
+  if (!ctx.getObject("l6-smiler-1") && E(4)) {
+    const smPos = at(E(4), 1.2);
     ctx.spawn("l6-smiler-1", {
       tags: ["smiler", "l6-smiler", "hostile"],
       feetPosition: { x: smPos.x, y: 0.05, z: smPos.z },

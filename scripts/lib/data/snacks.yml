@@ -7,3 +7,20 @@ doritos: { name: "Doritos Nacho Cheese", info: "Orange dust on your fingers for 
 coolranch: { name: "Doritos Cool Ranch", info: "The blue bag. Nobody knows what ranch is cool about it", hunger: 22, thirst: -6, sanity: 5, hp: 6, color: "#3a9ae8" }
 pizza:   { name: "Slice of pepperoni pizza", info: "Hot from Slice Palace. Free, like everything here", hunger: 34, thirst: -4, sanity: 8, hp: 10, color: "#e8a03a" }
 burger:  { name: "Burger Bop cheeseburger", info: "Wrapped in waxed paper. A faceling made it with care", hunger: 45, thirst: -5, sanity: 8, hp: 14, color: "#c87a3a" }
+# more 2000s sodas and drinks (Shelly: "the drinks should be real world based")
+sprite:  { name: "Sprite", info: "Green bottle, lemon-lime. Obey your thirst", hunger: 3, thirst: 30, sanity: 5, hp: 2, color: "#3ac86a", drink: true }
+drpepper: { name: "Dr Pepper", info: "23 flavors. Maroon can, 2002", hunger: 4, thirst: 27, sanity: 6, hp: 3, color: "#8a1a2a", drink: true }
+vault:   { name: "Vault", info: "Drinks like a soda, kicks like an energy drink. Gone by 2011 · stamina", hunger: 3, thirst: 25, sanity: 4, hp: 2, color: "#5ad83a", drink: true, stamina: 35 }
+redbull: { name: "Red Bull (8.4 oz)", info: "The skinny silver-blue can · stamina", hunger: 2, thirst: 18, sanity: 3, hp: 2, color: "#3a5ae8", drink: true, stamina: 55 }
+snapple: { name: "Snapple Peach Iced Tea", info: "Glass bottle. Read the cap fact: it is wrong", hunger: 4, thirst: 32, sanity: 7, hp: 3, color: "#f0a050", drink: true }
+gatorade: { name: "Gatorade Fruit Punch", info: "Is it in you? Red, salty-sweet", hunger: 3, thirst: 40, sanity: 4, hp: 4, color: "#e83a4a", drink: true }
+sobe:    { name: "SoBe Lizard Fuel", info: "Lizard on the bottle, ginseng on the label", hunger: 5, thirst: 28, sanity: 6, hp: 3, color: "#e8c83a", drink: true }
+cherrycoke: { name: "Cherry Coke", info: "The red-and-purple can", hunger: 4, thirst: 28, sanity: 6, hp: 3, color: "#a01a3a", drink: true }
+# alcohol (Shelly: "alchohol too"): calms the nerves, then the floor tilts. drunk = how much it adds (Savi's pick)
+budweiser: { name: "Budweiser (longneck)", info: "King of Beers. Brown bottle, red label", hunger: 6, thirst: 14, sanity: 12, hp: 0, color: "#c8302a", drink: true, drunk: 18 }
+corona:  { name: "Corona Extra", info: "Clear bottle. A lime wedge someone pushed in", hunger: 5, thirst: 16, sanity: 12, hp: 0, color: "#f0d870", drink: true, drunk: 18 }
+millerlite: { name: "Miller Lite", info: "Great taste, less filling. Blue and white can", hunger: 4, thirst: 16, sanity: 10, hp: 0, color: "#3a6ad8", drink: true, drunk: 14 }
+smirnoffice: { name: "Smirnoff Ice", info: "Malt, lemon, 2004 in a bottle", hunger: 4, thirst: 14, sanity: 12, hp: 0, color: "#c8d8e8", drink: true, drunk: 16 }
+jackcoke: { name: "Jack and Coke", info: "Jack Daniel's Old No. 7 over ice, a splash of Coca-Cola", hunger: 3, thirst: 10, sanity: 18, hp: -2, color: "#8a4a1a", drink: true, drunk: 30 }
+whiskey: { name: "Jim Beam (a neat pour)", info: "Bourbon, poured by a faceling who does not blink", hunger: 0, thirst: -4, sanity: 22, hp: -4, color: "#b8702a", drink: true, drunk: 40 }
+margarita: { name: "Jose Cuervo margarita", info: "Salt rim, too much tequila", hunger: 3, thirst: 12, sanity: 16, hp: -2, color: "#c8e870", drink: true, drunk: 30 }

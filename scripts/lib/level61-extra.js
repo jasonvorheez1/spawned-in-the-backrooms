@@ -120,8 +120,8 @@ export function layExtra(ctx, { HW, HD, HH }) {
   // ---- a real restaurant's furniture: menu boards you flip through, a register, the "now serving" board, a tray return, condiments and a half-eaten tray on the tables, a wet-floor sign
   const MENU_AT = { clip: [-24.4, 1.12, -29.7, 180], liq: [-11.7, 1.12, -23.2, -90], slice: [4.4, 1.04, -28.8, 180], burger: [17.6, 1.04, -28.2, 180] };
   const STORE_X = { clip: -21, liq: -7, slice: 7, burger: 21 }, MENUS = {
-    clip: [["Coca-Cola float", "2.25"], ["Almond water, iced", "1.50"], ["Chips and a Coke", "2.75"], ["Cool Ranch basket", "2.95"]],
-    liq: [["Almond water", "3.00"], ["Cashew water", "3.50"], ["Pepsi, over ice", "2.00"], ["Bar snacks", "2.50"]],
+    clip: [["Budweiser", "3.00"], ["Jack and Coke", "4.50"], ["Smirnoff Ice", "3.75"], ["Coca-Cola float", "2.25"], ["Chips and a Coke", "2.75"]],
+    liq: [["Almond water", "3.00"], ["Corona with lime", "4.00"], ["Margarita", "5.50"], ["Miller Lite", "3.00"], ["Whiskey, neat", "5.00"], ["Bar snacks", "2.50"]],
     slice: [["Pepperoni slice", "3.25"], ["2 cheese + Coke", "6.25"], ["Supreme slice", "5.00"]],
     burger: [["Cheeseburger", "4.50"], ["Bop meal", "7.95"], ["Fries + Coke", "3.25"]],
   };

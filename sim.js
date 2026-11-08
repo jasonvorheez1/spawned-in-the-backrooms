@@ -8,7 +8,7 @@ export function tick(ctx) {}
 // A player still respawns as normal; a creature goes back to its home, or is gone (its manager respawns it).
 export function onOutOfBounds(ctx, event) {
   const o = ctx.self;
-  if (!o || o.tags?.includes("player") || ctx.place.players.some((p) => p.id === o.id)) return true;
+  if (!o || o.tags?.includes("player") || o.tags?.includes("helper") || String(o.id).startsWith("player/") || ctx.place.players.some((p) => p.id === o.id)) return true;
   const h = o.state?.home;
   if (h && h.x != null && h.z != null) {
     o.velocity = { x: 0, y: 0, z: 0 };

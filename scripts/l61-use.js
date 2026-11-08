@@ -4,13 +4,14 @@
 //   and when you are done you carry the dirty tray to the TRAY RETURN (kind "return"). Food tokens: scripts/lib/data/snacks.yml.
 import { heard } from "./lib/hear.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
-const POOL = { snack: ["doritos", "doritos", "coolranch"], soda: ["coke", "coke", "pepsi", "dew", "dew"] };
-const LINE = { coke: "A glass Coca-Cola clunks down, sweating cold.", pepsi: "A Pepsi rolls into the tray. Blue globe can.", dew: "Mountain Dew. Neon green. You can feel your heart already.", doritos: "A crinkly bag of Doritos.", coolranch: "Cool Ranch. The bag is louder than you are.", almond: "A cold bottle of almond water, sweating.", pizza: "A slice of pepperoni pizza.", burger: "A cheeseburger in waxed paper." };
+const POOL = { snack: ["doritos", "doritos", "coolranch"], soda: ["coke", "coke", "pepsi", "dew", "sprite", "drpepper", "cherrycoke", "vault", "redbull", "snapple", "gatorade", "sobe"] };
+const LINE = { coke: "A glass Coca-Cola clunks down, sweating cold.", pepsi: "A Pepsi rolls into the tray. Blue globe can.", dew: "Mountain Dew. Neon green. You can feel your heart already.", doritos: "Doritos Nacho Cheese drop off the coil.", coolranch: "Cool Ranch. The blue bag.", pizza: "A faceling slides you a hot slice on a paper plate.", burger: "A faceling wraps a cheeseburger and pushes it across. It waves.", almond: "Almond water, poured over ice. On the house.", sprite: "A green Sprite bottle thunks into the tray.", drpepper: "Dr Pepper. Maroon can, cold.", cherrycoke: "Cherry Coke rolls out.", vault: "Vault. The can is sweating.", redbull: "A skinny Red Bull can clatters down.", snapple: "Snapple peach tea. The cap pops.", gatorade: "Fruit punch Gatorade.", sobe: "SoBe Lizard Fuel. The lizard stares at you.", budweiser: "The faceling pops a Budweiser longneck and slides it down the bar.", corona: "A Corona, lime pushed in with one finger.", millerlite: "Miller Lite, cracked open.", smirnoffice: "Smirnoff Ice. It does not ask how old you are.", jackcoke: "Jack and Coke over ice. Heavy on the Jack.", whiskey: "Jim Beam, neat. The faceling waits for you to drink it.", margarita: "A margarita with a salt rim, far too strong." };
+LINE.almond ??= "A cold bottle of almond water, sweating."; LINE.pizza ??= "A slice of pepperoni pizza."; LINE.burger ??= "A cheeseburger in waxed paper.";
 const COOL = 20000;
 // what each restaurant serves: [name, what you get, the price the board crosses out]
 export const MENUS = {
-  clip: [["Coca-Cola float", ["coke"], "2.25"], ["Almond water, iced", ["almond"], "1.50"], ["Chips and a Coke", ["doritos", "coke"], "2.75"], ["Cool Ranch basket", ["coolranch", "pepsi"], "2.95"]],
-  liq: [["Almond water", ["almond"], "3.00"], ["Cashew water", ["almond"], "3.50"], ["Pepsi, over ice", ["pepsi"], "2.00"], ["Bar snacks", ["doritos", "coolranch"], "2.50"]],
+  clip: [["Budweiser, ice cold", ["budweiser"], "3.00"], ["Jack and Coke", ["jackcoke"], "4.50"], ["Smirnoff Ice", ["smirnoffice"], "3.75"], ["Coca-Cola float", ["coke"], "2.25"], ["Chips and a Coke", ["doritos", "coke"], "2.75"]],
+  liq: [["Almond water", ["almond"], "3.00"], ["Corona with lime", ["corona"], "4.00"], ["Margarita", ["margarita"], "5.50"], ["Miller Lite", ["millerlite"], "3.00"], ["Whiskey, neat", ["whiskey"], "5.00"], ["Bar snacks", ["doritos", "coolranch"], "2.50"]],
   slice: [["Pepperoni slice", ["pizza"], "3.25"], ["Two cheese slices and a Coke", ["pizza", "coke"], "6.25"], ["Supreme slice", ["pizza", "pizza"], "5.00"]],
   burger: [["Cheeseburger", ["burger"], "4.50"], ["Bop meal: burger, chips, shake", ["burger", "doritos", "dew"], "7.95"], ["Fries and a Coke", ["doritos", "coke"], "3.25"]],
 };
