@@ -16,25 +16,25 @@ bc-arcade-sign:
 bc-art-1:
   feetPosition: {x: 23.95, y: 7.4, z: -20}
   id: bc-art-1
-  material: {color: "#ffffff"}
+  material: {color: "#ffffff", roughness: 0.6, texture: /cdn/value.3310bfdd2aff8b41c134c330454d5dc3638e952b8a4008f04f69b38378951491.png}
   primitive: {height: 1.34, kind: plane, width: 1.08}
   rotation: {yaw: -90}
 bc-art-2:
   feetPosition: {x: 23.95, y: 7.4, z: -8}
   id: bc-art-2
-  material: {color: "#ffffff"}
+  material: {color: "#ffffff", roughness: 0.6, texture: /cdn/value.8316c2cb0b4681ca7044eceb302199d791a3ee13b5ad9002e1b216a71c6ca7f3.png}
   primitive: {height: 1.34, kind: plane, width: 1.08}
   rotation: {yaw: -90}
 bc-art-3:
   feetPosition: {x: 17, y: 7.4, z: -27.95}
   id: bc-art-3
-  material: {color: "#ffffff"}
+  material: {color: "#ffffff", roughness: 0.6, texture: /cdn/value.95f7065e5c6f77714d1e42426709d09e81efd9c1748e094c899cdac33193f7f9.png}
   primitive: {height: 1.34, kind: plane, width: 1.08}
   rotation: {yaw: 0}
 bc-art-4:
   feetPosition: {x: 17, y: 7.4, z: -0.05}
   id: bc-art-4
-  material: {color: "#ffffff"}
+  material: {color: "#ffffff", roughness: 0.6, texture: /cdn/value.488da4515bdf2523e472b967ca54cc3bbf10e708ef330617f5fa1f277516445c.png}
   primitive: {height: 1.34, kind: plane, width: 1.08}
   rotation: {yaw: 180}
 bc-bench-1:
