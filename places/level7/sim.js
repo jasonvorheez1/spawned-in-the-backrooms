@@ -915,6 +915,10 @@ export function tick(ctx) {
   const now = ctx.now();
   tickChatter(ctx, CHATTER.level7, { "l7-vance": "reyes", "l7-jude": "hollis", "l7-mara": "mags", "l7-ezra": "reyes", "l7-ines": "mags", "l7-tobit": "hollis" }); // the fort talks among itself, Vance talks to his radio
 
+  if (!s.lag139) { s.lag139 = 1; // lag pass (#139): what stood before the build pass keeps its old spec, so set it on the handles
+    const KEEP = /ocean|sea|island|isle|sky|fort$|lighthouse|seawatch$|sonar|vance|fauna|from-|spawn$|dory|boat/;
+    for (const [id, o] of Object.entries(ctx.place.objects)) { if (!/^l7/.test(id) || KEEP.test(id)) continue;
+      try { o.visibleRange = { max: 90 }; if (/stain|bone|skeleton|crate|bottle|can|mound|shell|rope|net/.test(id)) o.castShadow = false; } catch (e) {} } }
   if (!s.lag138) { s.lag138 = 1; s.smashed = {}; for (const [id, spec] of Object.entries(breakables(FY, PY))) if (!ctx.place.objects[id]) ctx.spawn(id, spec); } // re-lay what the failed build pass left out
   // Smashed props grow back after 60 min, never in someone's face
   if (every(ctx, "regrow", 5000)) {
