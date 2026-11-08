@@ -23,6 +23,7 @@ function dress(kind, u) {
 // footprint of each model, as built (width along local x, depth along local y)
 const FOOT = { glass_a: [23.6, 24.3], glass_b: [17, 17], stone: [21.2, 21.6], brick_a: [19.4, 16.4], brick_b: [12.7, 12.8], mall: [24.5, 15.3], house: [10.2, 11.7] };
 const HEIGHT = { glass_a: 101, glass_b: 105, stone: 43, brick_a: 26, brick_b: 15, mall: 7.3, house: 9.6 };
+export const RADIUS = 120; // how far out the buildings go (the road grid and the ground go on to the fog)
 const PAINT = ["#b81c28", "#2f4f8a", "#e8e4d8", "#2a2a30", "#3a6a4a", "#c8a24a", "#7a7a84", "#8a2a2a", "#d8d0b8", "#1e3a5a"];
 
 export function layCity(ctx, h) {
@@ -42,13 +43,13 @@ export function layCity(ctx, h) {
     }
     bx(`l11-ave-${ax}`, ax, -0.05, 0, 12, 0.2, 520, ASPH);
     for (const s of [-1, 1]) { bx(`l11-ave-sw-${ax}-${s}`, ax + s * 9, 0.08, 0, 6, 0.25, 520, WALK); bx(`l11-ave-kb-${ax}-${s}`, ax + s * 6.1, 0.08, 0, 0.2, 0.28, 520, CURB); }
-    for (let z = -240; z < 240; z += 14) bx(`l11-ave-ln-${ax}-${z}`, ax, 0.06, z, 0.14, 0.01, 6, YEL, { physics: undefined });
+    for (let z = -140; z < 140; z += 28) bx(`l11-ave-ln-${ax}-${z}`, ax, 0.06, z, 0.14, 0.01, 8, YEL, { physics: undefined });
   }
   for (const zs of Z_ST) {
     if (zs === 12) { for (const [x0, x1] of [[-250, -36], [36, 250]]) { const xc = (x0 + x1) / 2, L = x1 - x0; bx(`l11-st12-${x0}`, xc, -0.05, 12, L, 0.2, 12, ASPH); for (const s of [-1, 1]) { bx(`l11-st12-sw-${x0}-${s}`, xc, 0.08, 12 + s * 9, L, 0.25, 6, WALK); bx(`l11-st12-kb-${x0}-${s}`, xc, 0.08, 12 + s * 6.1, L, 0.28, 0.2, CURB); } } continue; }
     bx(`l11-st-${zs}`, 0, -0.05, zs, 520, 0.2, 12, ASPH);
     for (const s of [-1, 1]) { bx(`l11-st-sw-${zs}-${s}`, 0, 0.08, zs + s * 9, 520, 0.25, 6, WALK); bx(`l11-st-kb-${zs}-${s}`, 0, 0.08, zs + s * 6.1, 520, 0.28, 0.2, CURB); }
-    for (let x = -240; x < 240; x += 14) bx(`l11-st-ln-${zs}-${x}`, x, 0.06, zs, 6, 0.01, 0.14, YEL, { physics: undefined });
+    for (let x = -140; x < 140; x += 28) bx(`l11-st-ln-${zs}-${x}`, x, 0.06, zs, 8, 0.01, 0.14, YEL, { physics: undefined });
   }
   // the canal runs on past the old ends, with a bridge at every avenue
   for (const [x0, x1] of [[-250, -59], [59, 250]]) {
@@ -70,7 +71,7 @@ export function layCity(ctx, h) {
     if (Math.abs(cx) <= 47 && cz > -85 && cz < 76) continue; // the centre is hand-placed (sim.js)
     if (cz < -22 && cz > -45 && true) continue; // the canal
     const d = Math.hypot(cx, cz - 20), tier = d < 120 ? 0 : d < 190 ? 1 : 2, u = hs(Math.round(cx), Math.round(cz), 3), kind = KINDS[tier][Math.floor(hs(Math.round(cx), Math.round(cz), 7) * KINDS[tier].length)];
-    if (d > 245) continue;
+    if (d > RADIUS) continue;
     const dr = dress(kind, hs(Math.round(cx), Math.round(cz), 11));
     if (kind === "house") { for (const k of [-1, 1]) put(`l11-b-${n++}`, kind, cx, cz + k * Math.min(7.5, depthZ / 4 + 3), yaw, { materials: dress(kind, hs(n, 2, 5)) }); }
     else put(`l11-b-${n++}`, kind, cx, cz, yaw, { materials: dr });
