@@ -10,6 +10,7 @@ import { ZONE_NAMES } from './lib/maze.js'
 import { wardrobe } from './wardrobe-ui.js'
 import { mainMenu } from './main-menu-ui.js'
 import { cutUi } from './cutscene-ui.js'
+import { tutUi } from './tutorial-ui.js'
 import { pickUi } from './lockpick-ui.js'
 import { spamUi } from './spamton-ui.js'
 import { spamArenaUi } from './spamton-arena-ui.js'
@@ -271,7 +272,7 @@ export default function render(ctx, player) { return renderHud(ctx, player) + la
 function renderHud(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
-  if (s.cut) return cutUi(ctx, player)
+  if (s.cut || s.arrive || s.arrivePending) return cutUi(ctx, player)
   if (s.menuOpen) return mainMenu(ctx, player)
   if (s.wardrobeOpen) return `${THEME}<div id="hud" style="position:fixed;inset:0;pointer-events:none">${wardrobe(ctx, player)}</div>`
   if (s.mj?.seats) return `${THEME}${LIVE}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">${mahjongPanel(s, ctx.now())}${chatBubbles(ctx, ctx.now(), player)}</div>` // at the mahjong table: only the game and who's talking
@@ -293,7 +294,7 @@ function renderHud(ctx, player) {
   return `${THEME}${LIVE}
 ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
   ${questTracker(s)}
-  ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${restUi(ctx, s)}${mahjongPanel(s, now)}
+  ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${tutUi(s, now)}${restUi(ctx, s)}${mahjongPanel(s, now)}
   ${chatBubbles(ctx, now, player)}
   ${sniperScope(s, wp)}
   <!-- Center Point (hidden during ADS for true ironsights aiming) -->

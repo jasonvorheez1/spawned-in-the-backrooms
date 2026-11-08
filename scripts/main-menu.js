@@ -3,6 +3,8 @@
 // to the place you came from. Backspace mid-game opens the same screen as a pause with RESUME.
 // The title theme plays on this machine alone through the title and the intake room, and fades when you step out.
 import { cutTick } from "./lib/intro-cut.js"
+import { arriveTick } from "./lib/arrive-cut.js"
+import { tutStart, tutTick, tutInput } from "./lib/tutorial.js"
 import { animate } from "builtin/tween";
 const MUSIC = "/cdn/moodboard-lowpoly-cozy/music-soft-mellow-fingerpicked-acoustic-guitar-and-warm-rhodes-early-2000s-bedroom-calm-loop.mp3"; // the drone was exhausting (johnadams2): soft and quiet instead
 const CLICK = "/cdn/moodboard-realistic-gritty/sfx-old-crt-tv-power-on-click-thunk.mp3";
@@ -32,6 +34,10 @@ export function update(ctx) {
     else if (!st.wardrobeOpen && !ses.leftIntake && !st.cut) { ses.leftIntake = true; st.madeChar = true; st.cut = ctx.now(); ses.cut = null } // the intro plays first (scripts/lib/intro-cut.js)
     if (st.cut && cutTick(ctx, ses, st)) { music(ctx, false); ctx.cross(ctx.self, "main"); return } // the intro always lands you in Level 0
   } else ses.inIntake = false
+  // Level 0 after the intro: the ceiling drop (scripts/lib/arrive-cut.js), then the tutorial (scripts/lib/tutorial.js)
+  if (place === "main" && st.arrivePending && !st.menuOpen) { st.arrivePending = false; st.arrive = ctx.now(); ses.arr = null }
+  if (st.arrive) { if (place !== "main") { st.arrive = null; ses.arr = null; ctx.view.camera = null; return } if (arriveTick(ctx, ses, st)) tutStart(ctx, st); return }
+  if (st.tut) tutTick(ctx, st)
   const playing = music(ctx, (st.menuOpen && st.menuKind === "title") || (place === "intake" && !st.cut))
   // behind the title the camera slowly looks around the halls from head height; gone the moment it closes
   if (st.menuOpen) {
@@ -45,11 +51,13 @@ export function update(ctx) {
   }
   if (ses.mmCam) { ses.mmCam = null; ctx.view.camera = null; ctx.self.hidden = (ctx.self.hidden || []).filter((i) => i !== ctx.self.id) }
   if (playing || place === "intake") return // the theme is still fading, or the room is waiting on the creator
+  if (st.tut) return ctx.sleep(0.25) // the tutorial's walking step polls
   ctx.sleep()
 }
 
 export function onInput(ctx, input) {
   const st = ctx.self.state
+  if (st.tut) tutInput(ctx, st, input)
   if (input.pressed?.mainmenu && !st.talkWith && !st.mj?.seats && ctx.self.place !== "intake") {
     st.menuOpen = !st.menuOpen
     if (st.menuOpen) { st.menuKind = "pause"; st.wardrobeOpen = false; st.wrMenu = false }
