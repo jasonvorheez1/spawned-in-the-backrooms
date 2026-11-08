@@ -1348,7 +1348,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     floor: "/cdn/value.530ae8b88219c78fd76bd72a38e08bfd2feaedc34c0ff9b80e3e72d8def289a7.glb", // 12 tris
     stoop: "/cdn/value.fe9768df75103e8dc063cd0cdd2431962754bab5fe4e89b5bf13e11be63a9e4f.glb", // 456 tris
     rail: "/cdn/value.bab60998b05d8ad63dbc5c8a9b42f10e62d61088081f25af8195e327bde0f39b.glb", // 1252 tris
-    armchair: "/cdn/value.cb9615064b601b080920c80f9c7d52728b4495f38a5229f0a77b4903179c6c97.glb", // 6384 tris
+    armchair: "/cdn/value.489be19551f9d119c874b6c82431e8dc8f8cfc2b2e28eeb3bda07604979a5295.glb", // 6384 tris
     table: "/cdn/value.e1941be0f86353a27cd90194795fe9f47c65004f156ea640ab78c2644a8af9a6.glb", // 1812 tris
     radio: "/cdn/value.d956a0d365c6a08548a02b734591e6ac957d50c649ef5ae107692450a2d58678.glb", // 848 tris
     radiator: "/cdn/value.950ca1b89a4aaff1f8c4f9287542eccc7742aaddee4908d127d77cc2cd8564f5.glb", // 6056 tris
