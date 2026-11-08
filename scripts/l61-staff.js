@@ -6,6 +6,7 @@
 import { heard } from "./lib/hear.js";
 import { findPath } from "builtin/nav";
 import { raycast } from "builtin/physics";
+import FC from "./lib/data/faceling.yml";
 import {
   WIPE_COUNTER,
   SERVE_PLATE,
@@ -158,6 +159,13 @@ export const ears = {
     const tell = (text, color = "#ffe9a8") =>
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 2.0, z: pos.z }, text, color, size: 0.9 }, { audience: { player: who.id } });
 
+    if (me.tags?.includes("l61fc")) {
+      if (s.dead) return;
+      if (s.hostile || s.mood === "angry" || s.mood === "defend") { tell("(it stares at you. no plate.)", "#ff9a7a"); return; }
+      s.met = { ...(s.met ?? {}), [uid]: (s.met?.[uid] ?? 0) + 1 };
+      const n = nickFor(s, who);
+      if (n) tell(pickOf(ctx, FC.greetNick).replace("{n}", n));
+    }
     if (now - (cool[uid] ?? -1e9) < 25000) {
       tell("(they point at the machines. you have already eaten.)", "#c8d0e0");
       return;
@@ -176,6 +184,154 @@ export const ears = {
   },
 };
 
+// ---- the Facelings' own minds (Entity 9, "The 11 Effect"): mimicry, waving, names they learn, temper, closing ranks. Numbers: scripts/lib/data/faceling.yml
+const pickOf = (ctx, a) => a[Math.floor(ctx.random() * a.length)];
+const hashPick = (key, a) => { let h = 7; for (const c of String(key)) h = (h * 31 + c.charCodeAt(0)) | 0; return a[Math.abs(h) % a.length]; };
+const uidOf = (q) => q.userId ?? q.id;
+const CROUCH = "cdn/clip-crouch-idle-loop.glb", WAVE = "cdn/clip-wave-loop.glb";
+function say(ctx, me, text, color, to) {
+  const p = me.feetPosition;
+  ctx.emit("damageNumber", { position: { x: p.x, y: p.y + 2.2, z: p.z }, text, color, size: 0.9 }, to ? { audience: { player: to } } : undefined);
+}
+export function nickFor(s, q) {
+  const uid = uidOf(q);
+  if (s.nick?.[uid]) return s.nick[uid];
+  if ((s.met?.[uid] ?? 0) < FC.nickAfter) return null;
+  const sp = q.state?.look?.species, n = hashPick(uid + (s.name ?? ""), FC.nicks[sp] ?? FC.nicks.any);
+  s.nick = { ...(s.nick ?? {}), [uid]: n };
+  return n;
+}
+function goHostile(ctx, me, s, whoId, now, line) {
+  s.hostile = whoId; s.mood = "hostile"; s.hostileAt = now; me.anim.gest = null;
+  if (line) say(ctx, me, line, "#ff5a4a");
+}
+// a player disturbed this one: the first time it stops, stares and warns; the second time it turns hostile. An attack calls the others within reach.defend
+function disturb(ctx, me, s, m, who, now, attacked) {
+  if (!who || s.dead) return;
+  const uid = uidOf(who), t = { ...(s.temper ?? {}) };
+  t[uid] = (t[uid] ?? 0) + 1; s.temper = t; s.calmAt = now + FC.temper.calm * 1000;
+  if (t[uid] >= 2 || s.hostile === who.id) goHostile(ctx, me, s, who.id, now, s.hostile ? null : pickOf(ctx, FC.hostile));
+  else { s.mood = "angry"; s.stareAt = who.id; m.stareEnd = now + FC.temper.stare * 1000; me.anim.gest = null; m.gestEnd = 0; say(ctx, me, pickOf(ctx, FC.warn), "#ffb35a"); }
+  if (!attacked) return;
+  for (const o of ctx.query({ tags: ["l61fc"], center: me.feetPosition, radius: FC.reach.defend })) {
+    if (o.id === me.id || o.state?.dead || o.state?.hostile) continue;
+    const h = ctx.getObject(o.id); if (!h) continue;
+    if (s.hostile) goHostile(ctx, h, h.state, who.id, now, pickOf(ctx, FC.defend));
+    else { h.state.mood = "defend"; h.state.defends = me.id; h.state.stareAt = who.id; h.state.hostileAt = now; }
+  }
+}
+function stepTo(ctx, me, m, goal, speed, dt) {
+  const v = me.velocity ?? { x: 0, z: 0 }, w = waypoint(ctx, me, m, goal);
+  me.velocity = { x: easeVal(v.x ?? 0, w.ux * speed, dt), y: (v.y ?? 0) - 20 * dt, z: easeVal(v.z ?? 0, w.uz * speed, dt) };
+  me.rotation = { yaw: turn(me.rotation?.yaw ?? 0, yawOf(w.ux, w.uz), 0.25) };
+}
+const faceTo = (me, at, k = 0.25) => { const p = me.feetPosition; me.rotation = { yaw: turn(me.rotation?.yaw ?? 0, yawOf(at.x - p.x, at.z - p.z), k) }; };
+// returns true when the mind holds the body this tick (dead, hostile, angry, defending, copying a crouch, turning to someone)
+function social(ctx, me, s, m, now, dt) {
+  const p = me.feetPosition;
+  if (s.hp == null) s.hp = FC.hp;
+  m.hp0 ??= s.hp;
+  if (s.dead || s.hp <= 0) { // down: an hour later it stands up again (Shelly: killed NPCs return after an hour)
+    if (!s.dead || !m.downed) {
+      m.downed = true; s.dead = true; s.hostile = null; s.mood = null;
+      me.anim.gest = { clip: "cdn/clip-die.glb", weight: 4, loop: "once", clampWhenFinished: true };
+      ctx.after(3600, "revive", {});
+    }
+    applyRest(me, dt); return true;
+  }
+  if (s.hp < m.hp0) { // struck: by a swing, a shot or something thrown
+    const by = Object.keys(s.fresh ?? {})[0];
+    const who = (by && ctx.place.players.find((q) => q.id === by)) || ctx.place.players.reduce((a, q) => (!a || (q.feetPosition.x - p.x) ** 2 + (q.feetPosition.z - p.z) ** 2 < (a.feetPosition.x - p.x) ** 2 + (a.feetPosition.z - p.z) ** 2 ? q : a), null);
+    m.hp0 = s.hp; s.fresh = null;
+    disturb(ctx, me, s, m, who, now, true);
+  }
+  if (s.hostile) {
+    const q = ctx.place.players.find((o) => o.id === s.hostile);
+    if (!q || q.state?.dead || (q.state?.hp ?? 1) <= 0 || now - (s.hostileAt ?? 0) > FC.temper.forget * 1000) { // gone, dead, or long enough: grudges drop
+      s.hostile = null; s.mood = null; s.defends = null; if (q && ((q.state?.hp ?? 1) <= 0 || q.state?.dead)) s.temper = {};
+      me.anim.gest = null; return false;
+    }
+    const qp = q.feetPosition, d = Math.hypot(qp.x - p.x, qp.z - p.z);
+    if (d > FC.temper.reach) { stepTo(ctx, me, m, qp, FC.temper.run, dt); return true; }
+    applyRest(me, dt); faceTo(me, qp, 0.4);
+    if (now > (m.swingAt ?? 0)) {
+      m.swingAt = now + FC.temper.swing * 1000;
+      playGesture(me, m, now, ["cdn/clip-attack.glb", 900, 4]);
+      q.state.hp -= FC.temper.hit;
+      ctx.emit("damageNumber", { position: { x: qp.x, y: qp.y + 1.6, z: qp.z }, value: FC.temper.hit, color: "#ff5a4a" });
+      ctx.emit("cameraPunch", { direction: { x: (qp.x - p.x) / (d || 1), y: 0, z: (qp.z - p.z) / (d || 1) }, intensity: 0.35 }, { audience: { player: q.id } });
+      heard(ctx, { clip: G("heavy-pipe-hit-flesh-thud"), position: { x: qp.x, y: qp.y + 1, z: qp.z }, volume: 0.6, maxDistance: 14 });
+    }
+    return true;
+  }
+  if (s.mood === "defend") { // a sibling was hit: drop the work, stand over the one who did it
+    const q = ctx.place.players.find((o) => o.id === s.stareAt), friend = s.defends && ctx.getObject(s.defends);
+    if (!q || now - (s.hostileAt ?? 0) > 20000) { s.mood = null; s.defends = null; s.stareAt = null; return false; }
+    if (friend?.state?.hostile === q.id) { goHostile(ctx, me, s, q.id, now, pickOf(ctx, FC.defend)); return true; }
+    const qp = q.feetPosition;
+    if ((qp.x - p.x) ** 2 + (qp.z - p.z) ** 2 > 3.2) stepTo(ctx, me, m, qp, FC.temper.run * 0.8, dt);
+    else { applyRest(me, dt); faceTo(me, qp); }
+    return true;
+  }
+  if (s.mood === "angry") {
+    const q = ctx.place.players.find((o) => o.id === s.stareAt);
+    if (q && now < (m.stareEnd ?? 0)) { applyRest(me, dt); faceTo(me, q.feetPosition, 0.3); return true; }
+    if (now > (s.calmAt ?? 0)) { s.mood = null; s.stareAt = null; s.temper = {}; } // a single bump is forgiven in time
+    else if (now >= (m.stareEnd ?? 0) && m.stareEnd) { m.stareEnd = 0; } // back to work, still remembering
+  }
+  // the scan: a few times a second, only with a player in reach.notice
+  if (now >= (m.socAt ?? 0)) {
+    m.socAt = now + FC.every.social * 1000;
+    let q = null, d2 = FC.reach.notice ** 2;
+    for (const o of ctx.place.players) { const op = o.feetPosition; if (!op) continue; const e = (op.x - p.x) ** 2 + (op.z - p.z) ** 2; if (e < d2) { d2 = e; q = o; } }
+    m.near = q ? q.id : null;
+    if (q) {
+      const qp = q.feetPosition, d = Math.sqrt(d2), uid = uidOf(q), L = m.lastQ;
+      const speed = L && L.id === q.id ? Math.hypot(qp.x - L.x, qp.z - L.z) / Math.max(0.05, (now - L.at) / 1000) : 0;
+      m.lastQ = { id: q.id, x: qp.x, z: qp.z, at: now };
+      const working = !!(m.gestEnd || m.arrived || s.job === "post" || s.deliver);
+      if (d < FC.reach.shove && speed > FC.shoveSpeed && working && now > (m.shoveAt ?? 0)) { // barged straight through it while it worked
+        m.shoveAt = now + FC.every.shove * 1000;
+        ctx.emit("squash", { target: me.id, axis: "y", intensity: 0.2, duration: 0.2 });
+        disturb(ctx, me, s, m, q, now, false);
+        return true;
+      }
+      if (d < FC.reach.mimic) { // mimicry: it copies what you just did, now and then
+        const crouch = !!q.state?.crouch;
+        if (crouch && !m.crouch && now > (m.mimicAt ?? 0) && ctx.random() < FC.mimicChance) {
+          m.mimicAt = now + FC.every.mimic * 1000; m.crouch = now + FC.crouchHold * 1000;
+          me.anim.gest = { clip: CROUCH, loop: "loop", weight: 4, blendIn: 0.3, blendOut: 0.3 }; m.gestEnd = m.crouch;
+        }
+        if (m.crouch && (!crouch || now > m.crouch)) { m.crouch = 0; me.anim.gest = null; m.gestEnd = 0; }
+        const emo = (q.state?.face?.until ?? 0) + "|" + (q.anim?.gest?.clip ?? "");
+        if (m.emoSeen !== undefined && emo !== m.emoSeen && now > (m.mimicAt ?? 0) && ctx.random() < FC.mimicChance) {
+          m.mimicAt = now + FC.every.mimic * 1000; m.faceUntil = now + 2600; m.faceId = q.id;
+          playGesture(me, m, now, [WAVE, 2200, 0.9]);
+        }
+        m.emoSeen = emo;
+      } else if (m.crouch) { m.crouch = 0; me.anim.gest = null; m.gestEnd = 0; }
+      const idle = !s.deliver && !m.gestEnd && s.mood !== "angry";
+      if (d < FC.reach.wave && idle && now - ((m.waved ??= {})[uid] ?? -1e9) > FC.every.wave * 1000) { // waving at whoever passes
+        m.waved[uid] = now; m.faceUntil = now + 2400; m.faceId = q.id;
+        playGesture(me, m, now, [WAVE, 2200, 0.9]);
+        const n = nickFor(s, q);
+        if (n) say(ctx, me, pickOf(ctx, FC.greetNick).replace("{n}", n), "#ffe9a8", q.id);
+      }
+    } else if (m.crouch) { m.crouch = 0; me.anim.gest = null; m.gestEnd = 0; }
+  }
+  if (m.crouch || (m.faceUntil && now < m.faceUntil)) {
+    const q = ctx.place.players.find((o) => o.id === (m.faceId ?? m.near));
+    applyRest(me, dt); if (q) faceTo(me, q.feetPosition, 0.2);
+    return true;
+  }
+  return false;
+}
+export function revive(ctx) {
+  const s = ctx.self.state, m = (ctx.self.session.m ??= {});
+  s.dead = false; s.hp = FC.hp; s.mood = null; s.hostile = null; s.temper = {};
+  m.hp0 = s.hp; m.downed = false; ctx.self.anim.gest = null;
+}
+
 export function update(ctx, dt) {
   if (!ctx.place.players.length) { ctx.sleep(2); return; }
   const me = ctx.self, s = me.state, now = ctx.now();
@@ -183,7 +339,7 @@ export function update(ctx, dt) {
   const p = me.feetPosition, v = me.velocity ?? { x: 0, z: 0 };
 
   // Tiered distance sleeping for staff when no active orders/deliveries
-  if (!s.deliver && !s.orderAt && !(m.react && now < m.react)) {
+  if (!s.deliver && !s.orderAt && !(m.react && now < m.react) && !s.hostile && s.mood !== "defend") {
     let nearDistSq = Infinity;
     for (const q of ctx.place.players) {
       const qp = q.feetPosition;
@@ -199,6 +355,7 @@ export function update(ctx, dt) {
     me.anim.gest = null;
     m.gestEnd = 0;
   }
+  if (me.tags?.includes("l61fc") && social(ctx, me, s, m, now, dt)) return;
 
   // Somebody took a plate: turn to them, finish serving gesture
   if (m.react && now < m.react) {
