@@ -147,8 +147,9 @@ if (typeof window !== 'undefined') {
   const heartPath = (g, x, y, r) => { g.beginPath(); g.moveTo(x, y + r * 0.9); g.bezierCurveTo(x - r * 1.4, y - r * 0.1, x - r * 0.7, y - r * 1.2, x, y - r * 0.4); g.bezierCurveTo(x + r * 0.7, y - r * 1.2, x + r * 1.4, y - r * 0.1, x, y + r * 0.9) }
   // Spamton G. Spamton, the dumpster salesman: a lanky puppet in a black suit, glasses, a bow, strings from the top of the screen. s = scale, talk = mouth flapping, mood: 'idle' | 'glee' | 'pocket'
   // Spamton G. Spamton: Shelly's own sprite (Deltarune cutscene frame, 25x34), drawn pixel-sharp, bobbing on his strings. talk = a little hop, mood 'glee' = a shake
-  const SPR = (S.spr ??= Object.assign(new Image(), { src: '/cdn/spr-cutscene-14-spamton-0-u28geao1a.webp' }))
   function drawSpamton(g, x, y, s, t, talk, mood) {
+    if (!S.spr && typeof Image !== 'undefined') { S.spr = new Image(); S.spr.src = '/cdn/spr-cutscene-14-spamton-0-u28geao1a.webp' }
+    const SPR = S.spr ?? {}
     const jit = (Math.sin(t * 37) > 0.93) ? rnd2(-3, 3) : 0, bob = Math.sin(t * 5.2) * 3 + (talk ? -Math.abs(Math.sin(t * 11)) * 4 : 0), tilt = Math.sin(t * 2.3) * 0.04 + (mood === 'glee' ? Math.sin(t * 14) * 0.06 : 0)
     const h = 138 * s, w = h * 25 / 34, top = -34 * s
     g.save(); g.translate(x + jit, y + bob)
