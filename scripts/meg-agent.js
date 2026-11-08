@@ -468,13 +468,21 @@ export function update(ctx, dt) {
     let curExpr = baseExpr;
     if (now - (m.hitAt ?? 0) < 650 || now - (m.fearAt ?? 0) < 1600) curExpr = "scared";
     else if (now - (m.wavedAt ?? 0) < 2200) curExpr = "catmouth"; // :3 on hello
-    else if (talking) curExpr = Math.floor(now / 220) % 2 === 0 ? "beam" : "smile";
+    else if (talking) curExpr = "smile";
     else if (m.aimAt) curExpr = "cocky";
-    if (curExpr !== m.lastExpr || isBlinking !== m.lastBlink) {
+    if (curExpr !== m.lastExpr || isBlinking !== m.lastBlink || talking) {
       m.lastExpr = curExpr;
       m.lastBlink = isBlinking;
       const headObj = ctx.getObject(me.id + "/" + HEAD_ID); // read fresh: a head rebuilt or gone never takes a stale write
-      if (headObj) headObj.morph = faceMorph(curExpr, isBlinking, isFem, s.wear ?? s.look);
+      if (headObj) {
+        const lookData = { ...(s.wear ?? s.look) };
+        if (talking) {
+          lookData.talking = true;
+          lookData.talkTime = now / 1000;
+        }
+        if (now - (m.hitAt ?? 0) < 650) lookData.hurt = true;
+        headObj.morph = faceMorph(curExpr, isBlinking, isFem, lookData);
+      }
       else m.headChk = now + 30000; // no head on this body: stop asking for 30 s
     }
   }

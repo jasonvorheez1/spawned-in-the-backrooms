@@ -12,7 +12,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { layCity, layStreet, tickCity } from "../../scripts/lib/level11-city.js";
 
 export const cadence = "1s";
-const V = 13; // bump to rebuild the city in rooms that are already open
+const V = 14; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -208,27 +208,36 @@ function lay(ctx) {
   // ==========================================
   // 7. OFFICE UNDER RENOVATION (Wikidot Image 5)
   // ==========================================
-  const RENO_X = -22;
+  const RENO_X = -25; // east face at x=-16, behind the sidewalk (trees stand at -13.4)
   const RENO_Z = 0;
   const RENO_W = 18;
-  const RENO_D = 22;
+  const RENO_D = 18; // clear of the 6.1 door barricade at z 9.5+
 
   // Building Shell
-  bx("l11-reno-shell", RENO_X, 0, RENO_Z, RENO_W, 8.5, RENO_D, BRICK_BLDG);
+  // hollow shell: four walls and a roof, so the office inside is a room you walk into
+  { const x0 = RENO_X - RENO_W / 2, x1 = RENO_X + RENO_W / 2, z0 = RENO_Z - RENO_D / 2, z1 = RENO_Z + RENO_D / 2, H = 8.5, t = 0.4;
+    bx("l11-reno-shell", RENO_X, 0, z0 + t / 2, RENO_W, H, t, BRICK_BLDG);
+    bx("l11-reno-wall-n", RENO_X, 0, z1 - t / 2, RENO_W, H, t, BRICK_BLDG);
+    bx("l11-reno-wall-w", x0 + t / 2, 0, RENO_Z, t, H, RENO_D, BRICK_BLDG);
+    bx("l11-reno-roof", RENO_X, H - t, RENO_Z, RENO_W, t, RENO_D, BRICK_BLDG);
+    bx("l11-reno-wall-e-hdr", x1 - t / 2, 4.4, RENO_Z, t, H - 4.4, RENO_D, BRICK_BLDG);
+    bx("l11-reno-wall-e-s", x1 - t / 2, 0, z0 + 0.5, t, 4.4, 1, BRICK_BLDG);
+    bx("l11-reno-wall-e-n", x1 - t / 2, 0, z1 - 0.5, t, 4.4, 1, BRICK_BLDG); }
   bx("l11-reno-floor", RENO_X, 0.22, RENO_Z, RENO_W - 0.6, 0.1, RENO_D - 0.6, SIDEWALK);
 
   // Large Glass Display Windows Showing the Renovation
-  bx("l11-reno-glass-e", RENO_X + RENO_W / 2, 0.2, RENO_Z, 0.1, 4.2, 16, GLASS_TINT);
+  bx("l11-reno-glass-e", RENO_X + RENO_W / 2 - 0.2, 0.2, 4, 0.1, 4.2, 8, GLASS_TINT);
+  bx("l11-reno-glass-e2", RENO_X + RENO_W / 2 - 0.2, 0.2, -5, 0.1, 4.2, 6, GLASS_TINT); // the 2 m gap at z -2..0 is the door
 
   // Exposed Cylindrical Concrete Columns
-  [[-26, -5], [-18, -5], [-26, 5], [-18, 5]].forEach(([cx, cz], k) => {
+  [[-29, -5], [-21, -5], [-29, 5], [-21, 5]].forEach(([cx, cz], k) => {
     cyl(`l11-reno-col-${k}`, cx, 0.2, cz, 0.42, 0.42, 4.8, PILLAR_MAT);
   });
 
   // Contractor Step Ladder (climbable!)
   sp("l11-reno-ladder", {
     tags: ["usable"],
-    feetPosition: { x: -22, y: 0.2, z: 0 },
+    feetPosition: { x: -25, y: 0.2, z: 0 },
     primitive: { kind: "box", width: 0.65, height: 2.8, depth: 0.5 },
     material: { color: "oklch(0.78 0.14 85)", metalness: 0.6, roughness: 0.35 },
     behavior: "scripts/level11-use.js",
@@ -243,7 +252,7 @@ function lay(ctx) {
 
   // Construction Work Light Tripod casting bright halogen beam
   sp("l11-reno-worklight", {
-    feetPosition: { x: -20, y: 0.2, z: -3 },
+    feetPosition: { x: -23, y: 0.2, z: -3 },
     primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.06, height: 1.8 },
     material: { color: "oklch(0.8 0.18 85)" },
     children: [
@@ -253,13 +262,13 @@ function lay(ctx) {
   });
 
   // Work Table with City Blueprints
-  bx("l11-reno-table", -24, 0.2, 3, 2.4, 0.85, 1.2, { ...T("worn-hardwood-grain", 1), color: "oklch(0.55 0.06 65)" });
-  bx("l11-reno-blueprints", -24, 1.06, 3, 1.6, 0.02, 0.9, { color: "oklch(0.4 0.12 240)", roughness: 0.8 }, { physics: undefined });
+  bx("l11-reno-table", -27, 0.2, 3, 2.4, 0.85, 1.2, { ...T("worn-hardwood-grain", 1), color: "oklch(0.55 0.06 65)" });
+  bx("l11-reno-blueprints", -27, 1.06, 3, 1.6, 0.02, 0.9, { color: "oklch(0.4 0.12 240)", roughness: 0.8 }, { physics: undefined });
 
   // Contractor Supply Tool Chest
   sp("l11-reno-chest", {
     tags: ["usable"],
-    feetPosition: { x: -25.5, y: 0.2, z: 3 },
+    feetPosition: { x: -28.5, y: 0.2, z: 3 },
     primitive: { kind: "box", width: 0.9, height: 0.55, depth: 0.5 },
     material: { color: "oklch(0.45 0.15 25)", metalness: 0.8, roughness: 0.35 },
     behavior: "scripts/level11-use.js",

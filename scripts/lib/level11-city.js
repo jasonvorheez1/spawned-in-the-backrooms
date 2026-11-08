@@ -109,12 +109,13 @@ export function layStreet(ctx, h) {
   }));
   [-64, -48, -8, 26, 38, 52, 66].forEach((z, i) => [-1, 1].forEach((s) => {
     const x = s * 13.4, zz = z + (s > 0 ? 4 : 0), u = hs(i, s, 1);
+    if (Math.hypot(x - 13.6, zz - 60.5) < 6) return; // the subway stairs stand here (SUB)
     put(`l11-st-tree-${i}-${s}`, "tree", x, zz, u * 360, { collider: "cylinder", materials: { leafA: { color: `oklch(${0.4 + u * 0.08} 0.13 ${125 + u * 25})` }, leafB: { color: `oklch(${0.48 + u * 0.08} 0.14 ${120 + u * 20})` } } });
     bx(`l11-st-grate-${i}-${s}`, x, 0.09, zz, 1.7, 0.01, 1.7, { color: "oklch(0.3 0.04 70)", metalness: 0.8, roughness: 0.45 }, { physics: undefined });
   }));
   for (const [i, [x, z]] of [[-8.6, 3], [8.6, 11], [-8.6, 62], [8.6, -12], [8.6, 48]].entries()) put(`l11-st-hyd-${i}`, "hydrant", x, z, x < 0 ? -90 : 90, { collider: "cylinder" });
   for (const [i, [x, z]] of [[-8.7, -10], [8.7, 26], [-8.7, 21], [8.7, -64], [-8.7, 70]].entries()) put(`l11-st-bin-${i}`, "bin", x, z, 0, { collider: "cylinder" });
-  for (const [i, [x, z]] of [[-15, 30], [-15, 46], [15, -62], [15, 18.5]].entries()) put(`l11-st-bench-${i}`, "bench", x, z, x < 0 ? -90 : 90);
+  for (const [i, [x, z]] of [[-15, 30], [-15, 46], [15, -67.5], [15, 18.5]].entries()) put(`l11-st-bench-${i}`, "bench", x, z, x < 0 ? -90 : 90);
   put("l11-st-shelter", "shelter", 14.4, 48, 90); put("l11-st-shelter2", "shelter", -14.4, -8, -90);
   for (const [i, [x, z]] of [[-9.2, 33], [9.2, 15.5], [9.2, 47], [-9.2, 5]].entries()) put(`l11-st-nbox-${i}`, "box", x, z, x < 0 ? -90 : 90, { collider: "box" });
   // parked cars along the kerbs, tinted at random; a few vans
