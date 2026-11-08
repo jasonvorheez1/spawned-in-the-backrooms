@@ -99,7 +99,7 @@ for sgn in (1, -1):
     # soffit under the eave
     k.box((0, sgn * (O + EAVE / 2), H - 0.0), (2 * O, EAVE, 0.02), TRIM)
 # the room's ceiling: popcorn drywall closing the attic over the walls
-k.box((0, 0, 2.73), (2 * O - 0.1, 2 * O - 0.1, 0.06), CEIL)
+k.box((0, 0, 2.99), (2 * O - 0.1, 2 * O - 0.1, 0.06), CEIL)
 # ridge cap
 k.box((0, 0, ZR + 0.06), (LEN, 0.3, 0.05), SH)
 # gable ends: a siding triangle, a louvered vent, rake boards
