@@ -105,11 +105,6 @@ const EXPR = {
   disgusted: { e: "heavy", m: "wobble", b: -0.7 },
   relieved: { e: "happy", m: "smile", b: -0.2 },
 };
-  cocky: { e: "half", m: "smirkfang", b: 0.6, uneven: true }, pout: { e: "open", m: "pout", b: -0.8, blush: true }, evil: { e: "angry", m: "evil", b: -1 },
-  bored: { e: "heavy", m: "flatslant", b: 0 }, surprised: { e: "wide", m: "o", b: 1 }, scared: { e: "wide", m: "scream", b: -0.9, sweat: true },
-  sad: { e: "sad", m: "frown", b: -0.9 }, cry: { e: "cryshut", m: "wail", b: -1, tear: 2 }, angry: { e: "angry", m: "shout", b: -1 },
-  dizzy: { e: "spiral", m: "wobble", b: 0.3 }, sleepy: { e: "shut", m: "o-small", b: 0 },
-};
 
 const sub3 = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 const add3 = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
