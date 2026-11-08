@@ -134,6 +134,44 @@ _ew = [body.matrix_world @ p.center for p in body.data.polygons if slots[p.mater
 EYE = (sum(_ew, Vector()) / len(_ew)) if _ew else None
 EYEFRONT = min(w.y for w in _ew) if _ew else None
 LOOSE = ('Top_dress', 'Bot_skirt', 'Bot_longskirt', 'Neck_cape', 'Eyew_glasses', 'Eyew_shades') 
+def cover(o):
+    # tight cloth is cut from the envelope itself where the carried garment lies, so it fits by construction; the old
+    # garment only lends its coverage, its material per face and its UVs
+    import bmesh
+    from mathutils.bvhtree import BVHTree
+    src = o.copy(); src.data = o.data.copy(); bpy.context.collection.objects.link(src)
+    bv = BVHTree.FromPolygons([v.co.copy() for v in src.data.vertices], [list(p.vertices) for p in src.data.polygons])
+    bm = bmesh.new(); bm.from_mesh(env.data); bm.transform(env.matrix_world)
+    kill = []
+    for f in bm.faces:
+        loc, n, idx, d = bv.find_nearest(f.calc_center_median())
+        if d is None or d > 0.03: kill.append(f)
+        else: f.material_index = src.data.polygons[idx].material_index
+    bmesh.ops.delete(bm, geom=kill, context='FACES')
+    for isl in []: pass
+    # drop crumbs: islands under 12 faces
+    seen = set()
+    for f in list(bm.faces):
+        if f in seen or not f.is_valid: continue
+        stack, isl = [f], []
+        while stack:
+            g = stack.pop()
+            if g in seen: continue
+            seen.add(g); isl.append(g)
+            for e in g.edges:
+                for h in e.link_faces:
+                    if h not in seen: stack.append(h)
+        if len(isl) < 12: bmesh.ops.delete(bm, geom=isl, context='FACES')
+    for v in bm.verts: v.co += v.normal * 0.005
+    nm = bpy.data.meshes.new(o.name); bm.to_mesh(nm); bm.free()
+    for m in o.data.materials: nm.materials.append(m)
+    if not nm.uv_layers: nm.uv_layers.new(name=src.data.uv_layers[0].name if src.data.uv_layers else 'UVMap')
+    o.data = nm
+    bpy.context.view_layer.objects.active = o; bpy.ops.object.select_all(action='DESELECT'); o.select_set(True)
+    if src.data.uv_layers:
+        dt = o.modifiers.new('uv', 'DATA_TRANSFER'); dt.object = src; dt.use_loop_data = True; dt.data_types_loops = {'UV'}; dt.loop_mapping = 'POLYINTERP_NEAREST'
+        bpy.ops.object.modifier_apply(modifier='uv')
+    bpy.data.objects.remove(src, do_unlink=True)
 def refit(o):
     me = o.data; mw = o.matrix_world.copy()
     if me.shape_keys: o.shape_key_clear()
@@ -165,6 +203,7 @@ def refit(o):
     else:
         sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.004
         bpy.ops.object.modifier_apply(modifier='fit')
+    if kind in ('Top', 'Bot', 'Shoes') and o.name not in LOOSE: cover(o)
     # weights off the new skin
     o.vertex_groups.clear()
     dt = o.modifiers.new('w', 'DATA_TRANSFER'); dt.object = body; dt.use_vert_data = True; dt.data_types_verts = {'VGROUP_WEIGHTS'}; dt.vert_mapping = 'POLYINTERP_NEAREST'
