@@ -8,8 +8,8 @@ function texWords(o) {
   if (!o) return ''
   if (o.state?.floor) return String(o.state.floor)
   if (o.material?.kind === 'water') return 'water'
-  let w = String(o.material?.texture ?? '') + ' ' + String(o.material?.kind ?? '')
-  const ms = o.model?.materials; if (ms) for (const m of Object.values(ms)) w += ' ' + String(m?.texture ?? '')
+  let w = String(o.material?.texture ?? '') + ' ' + String(o.material?.map ?? '') + ' ' + String(o.material?.kind ?? '')
+  const ms = o.model?.materials; if (ms) for (const m of Object.values(ms)) w += ' ' + String(m?.texture ?? '') + ' ' + String(m?.map ?? '')
   return w
 }
 export function surfaceUnder(ctx, fallback) {

@@ -27,8 +27,8 @@ surfaces:
   carpet:   { walk: footstep-damp-carpet-squelch-soft, run: footstep-damp-carpet-run, v: 0.2, land: landing-soft }
   hotel:    { walk: footstep-shoe-on-thick-plush-hotel-hallway-carpet-single-step, run: footstep-shoe-running-on-thick-hotel-carpet-single-step, v: 0.2, land: landing-soft }
   office:   { walk: footstep-shoe-on-low-pile-office-carpet-tile-single-step, run: footstep-shoe-running-on-low-pile-office-carpet-single-step, v: 0.2, land: landing-soft }
-  concrete: { walk: footstep-boot-heel-on-bare-concrete-floor-single-step, run: footstep-boot-running-on-bare-concrete-floor-single-step, v: 0.22, land: landing-hard }
-  asphalt:  { walk: footstep-sneaker-on-gritty-city-asphalt-sidewalk-single-step, run: footstep-sneaker-running-on-gritty-city-asphalt-single-step, v: 0.22, land: landing-hard }
+  concrete: { walk: footstep-shelly-street-walk, run: footstep-shelly-street-run, v: 0.3, land: landing-hard }
+  asphalt:  { walk: footstep-shelly-street-walk, run: footstep-shelly-street-run, v: 0.3, land: landing-hard }
   tile:     { walk: footstep-sneaker-on-vinyl-school-floor-tile-single-step, run: footstep-sneaker-running-on-vinyl-floor-tile-single-step, v: 0.22, land: landing-hard }
   terrazzo: { walk: footstep-sneaker-on-polished-mall-terrazzo-floor-squeak-single-step, run: footstep-sneaker-running-on-polished-mall-floor-single-step, v: 0.24, land: landing-hard }
   checker:  { walk: footstep-boot-on-worn-checkered-linoleum-locker-room-single-step, run: footstep-boot-running-on-worn-linoleum-tile-single-step, v: 0.23, land: landing-hard }

@@ -68,3 +68,21 @@ fluorescent-buzz-surge-loud:
   - "/cdn/value.a22dc301166bc70b11c89b5d31adaa099e40efec4f9557b786d8f12905492604.mp3"
 fluorescent-light-buzz-hum-loop:
   - "/cdn/value.4f2ca6969e3919a947a1bb8c8c957185a3a208f8fdd1d35ecd8daa87bd5495ce.mp3"
+
+# Shelly's horror pack (Character/Footsteps_walking.wav, Footsteps_ running.wav), cut into single steps, Nov 8
+footstep-shelly-street-walk:
+  - "/cdn/value.b3483ce79c66b3be57a062dd709ed2b239a119e8b65a94317aba6b05fc7e4a74.mp3"
+  - "/cdn/value.cdf48b16cf3bd19dc4c3d77aacba29cbaea354e3cd26c270cef2fc098f72c7f1.mp3"
+  - "/cdn/value.4e34b6b1e7e51533f1697aa5f014b614c340c4deb92f7f79ef466f93181978ad.mp3"
+  - "/cdn/value.68e736c842c411da9bb2449902ea4dd527dfed267ae938c2404c6fcd427554af.mp3"
+  - "/cdn/value.026819ca91948e0c83bf316b71f5cd2089b450d07bf97fd120473d2a2bdccde3.mp3"
+  - "/cdn/value.a415ffa4003ca102c3d7da66f7fc6f6bb8630c755d55212cfb82361e190e8964.mp3"
+footstep-shelly-street-run:
+  - "/cdn/value.41354c2151a2a4874eb564a57efbd2e12916a831c85053e7a62776e7241f87e0.mp3"
+  - "/cdn/value.a56d4ada27d943e7664103cdf0405d437a12761ed8d0fadd85e578d4a29d605b.mp3"
+  - "/cdn/value.ceb35263460c17d3b1114d8057263e0c7948317ee3074953e9264da44d20742f.mp3"
+  - "/cdn/value.f658724b0740e87aba8af26c4333a7d58ee1e6023806f355a5fb5e6bac23cefb.mp3"
+  - "/cdn/value.5a6841a8481476fb3cfe4b53355f54eaf690d2dd1bae4a5ce95df0a7894f9945.mp3"
+  - "/cdn/value.9f0ddf4605f5e40a337740a1df1f6555668b8dfa83754ac6ca8430d7c776b5a3.mp3"
+  - "/cdn/value.5ab4b82e8ffdcd333698971e03c395896e9fad46e8504d9a2bbbec35b5b6e977.mp3"
+  - "/cdn/value.dfe5f34f2a83d529547b947d148c219a19566b98ad4d3bef7ad78ebb6e83c4c9.mp3"
