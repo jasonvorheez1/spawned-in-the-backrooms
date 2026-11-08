@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 12;
+const V = 13;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb";
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -440,8 +440,8 @@ function lay(ctx) {
     sp("l61-meg-sign", { feetPosition: { x: X + 0.18, y: 2.5, z: 0 }, rotation: { yaw: -90 }, primitive: { kind: "box", width: 1.7, height: 0.62, depth: 0.02 }, material: { color: "oklch(0.9 0.03 90)", metalness: 0.3, roughness: 0.55 },
       ui: `<div face="front" width="1.7m" style="width:1700px;height:620px;box-sizing:border-box;border:22px solid #8a1c14;outline:6px solid #e9e1c8;outline-offset:-40px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Courier New',monospace;font-weight:700;color:#1d1b17;background:linear-gradient(180deg,rgba(0,0,0,0) 70%,rgba(110,60,20,.25) 100%)"><div style="font-size:66px;letter-spacing:10px;color:#8a1c14">M.E.G. · RESTRICTED</div><div style="font-size:120px;letter-spacing:6px;margin:6px 0">LEVEL 6</div><div style="font-size:40px;letter-spacing:4px">NO ENTRY WITHOUT CLEARANCE</div><div style="position:absolute;left:46px;top:46px;width:26px;height:26px;border-radius:50%;background:#5c5850"></div><div style="position:absolute;right:46px;top:46px;width:26px;height:26px;border-radius:50%;background:#5c5850"></div><div style="position:absolute;left:46px;bottom:46px;width:26px;height:26px;border-radius:50%;background:#5c5850"></div><div style="position:absolute;right:46px;bottom:46px;width:26px;height:26px;border-radius:50%;background:#5c5850"></div></div>` });
     // caged bulb over the door
-    box("l61-meg-cage", X + 0.35, 2.75, 0, 0.18, 0.2, 0.18, { color: "oklch(0.2 0 0)", metalness: 0.7, roughness: 0.5 }, nf);
-    sp("l61-meg-bulb", { feetPosition: { x: X + 0.4, y: 2.68, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.09 70)", intensity: 3, distance: 9 } });
+    box("l61-meg-cage", X + 0.35, 3.25, 0, 0.18, 0.2, 0.18, { color: "oklch(0.2 0 0)", metalness: 0.7, roughness: 0.5 }, nf);
+    sp("l61-meg-bulb", { feetPosition: { x: X + 0.4, y: 3.2, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.09 70)", intensity: 3, distance: 9 } });
     // yellow-black hazard line on the terrazzo
     for (let i = 0; i < 16; i++) box(`l61-meg-haz-${i}`, X + 3.6, 0.005, -3.75 + i * 0.5, 0.25, 0.01, 0.5, { color: i % 2 ? "oklch(0.2 0 0)" : "oklch(0.8 0.16 90)", roughness: 0.7 }, nf);
     // sandbag walls either side of the lane, three rows, staggered
