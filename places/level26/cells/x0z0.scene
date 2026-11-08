@@ -1722,22 +1722,6 @@ l26-railc-9:
   primitive: {depth: 2.610523844401034, height: 1, kind: box, width: 0.1}
   rotation: {yaw: 112.50000000000006}
   visible: false
-l26-ramp--1:
-  feetPosition: {x: -5.6, y: 1.55, z: 25}
-  id: l26-ramp--1
-  physics: static
-  pivot: center
-  primitive: {depth: 6.9, height: 0.3, kind: box, width: 1.6}
-  rotation: {pitch: 29.5}
-  visible: false
-l26-ramp-1:
-  feetPosition: {x: 5.6, y: 1.55, z: 25}
-  id: l26-ramp-1
-  physics: static
-  pivot: center
-  primitive: {depth: 6.9, height: 0.3, kind: box, width: 1.6}
-  rotation: {pitch: 29.5}
-  visible: false
 l26-sea:
   feetPosition: {x: 0, y: -12, z: 0}
   id: l26-sea
