@@ -152,11 +152,11 @@ const L7_NPCS = {
     at: [-70.0, 11.0, -97.5],
     yaw: 0,
     rounds: [
-      { x: -70.0, y: 11.0, z: -97.5, dwell: 24, act: null, look: { , topw: "longsleeve", top: "#b8a888", topp: "weave", botw: "longskirt", bottom: "#4a3e30", botp: "weave", shoes: "boots", shoec: "#3a2c22", neck: "cape", neckc: "#7a2e24" } },
+      { x: -70.0, y: 11.0, z: -97.5, dwell: 24, act: null, look: { x: -70.0, z: -101.0 } },
       { x: -67.5, y: 11.0, z: -92.5, dwell: 15, act: null, look: { x: -60.0, z: -80.0 } },
       { x: -72.5, y: 11.0, z: -95.0, dwell: 18, act: null, look: { x: -83.0, z: -115.0 } },
     ],
-    look: { species: "deer", sex: "m", eye: "#5ae0d0", belly: "#d8cbb8", nose: "#1e1816", topw: "apron", top: "#1c282e", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#141618", neck: "cape", neckc: "#3a4e54", expr: "calm" },
+    look: { species: "deer", sex: "m", eye: "#5ae0d0", belly: "#d8cbb8", nose: "#1e1816", topw: "longsleeve", top: "#b8a888", topp: "weave", botw: "longskirt", bottom: "#4a3e30", botp: "weave", shoes: "boots", shoec: "#3a2c22", neck: "cape", neckc: "#7a2e24", expr: "calm" },
   },
   "l7-ezra": {
     name: "Ezra · Fort Surrender Watch",
@@ -169,11 +169,11 @@ const L7_NPCS = {
     yaw: 0,
     nerve: "frenzied",
     rounds: [
-      { x: -66.0, y: 11.0, z: -86.0, dwell: 20, act: null, look: { , topw: "sweater", top: "#5a6a5e", topp: "knit", botw: "pants", bottom: "#4e4434", botp: "weave", shoes: "boots", shoec: "#2a2420", neck: "scarf", neckc: "#7a3a2a" } },
+      { x: -66.0, y: 11.0, z: -86.0, dwell: 20, act: null, look: { x: -70.0, z: -93.0 } },
       { x: -72.0, y: 11.0, z: -86.0, dwell: 20, act: null, look: { x: -70.0, z: -93.0 } },
       { x: -70.0, y: 11.0, z: -84.0, dwell: 14, act: null, look: { x: -70.0, z: -93.0 } },
     ],
-    look: { species: "wolf", sex: "m", eye: "#d84a4a", belly: "#d8cbb8", nose: "#1e1816", topw: "apron", top: "#1c282e", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#141618", neck: "scarf", neckc: "#0a0a0c" },
+    look: { species: "wolf", sex: "m", eye: "#d84a4a", belly: "#d8cbb8", nose: "#1e1816", topw: "sweater", top: "#5a6a5e", topp: "knit", botw: "pants", bottom: "#4e4434", botp: "weave", shoes: "boots", shoec: "#2a2420", neck: "scarf", neckc: "#7a3a2a" },
   },
   "l7-ines": {
     name: "Sister Ines · Fort Surrender Tar-Bearer",
@@ -186,10 +186,10 @@ const L7_NPCS = {
     yaw: 0,
     nerve: "steady",
     rounds: [
-      { x: -75.0, y: 11.0, z: -97.0, dwell: 25, act: null, look: { , topw: "longsleeve", top: "#a8987a", topp: "gingham", botw: "overalls", bottom: "#5a4a36", shoes: "boots", shoec: "#2e2620", neck: "scarf", neckc: "#3e6a6a" } },
+      { x: -75.0, y: 11.0, z: -97.0, dwell: 25, act: null, look: { x: -70.0, z: -93.0 } },
       { x: -73.0, y: 11.0, z: -92.0, dwell: 18, act: null, look: { x: -70.0, z: -93.0 } },
     ],
-    look: { species: "sheep", sex: "f", eye: "#e0d048", belly: "#d8cbb8", nose: "#1e1816", topw: "apron", top: "#1c282e", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#141618", neck: "scarf", neckc: "#0a0a0c" },
+    look: { species: "sheep", sex: "f", eye: "#e0d048", belly: "#d8cbb8", nose: "#1e1816", topw: "longsleeve", top: "#a8987a", topp: "gingham", botw: "overalls", bottom: "#5a4a36", shoes: "boots", shoec: "#2e2620", neck: "scarf", neckc: "#3e6a6a" },
   },
   "l7-tobit": {
     name: "Tobit · Fort Surrender Watch",
@@ -202,10 +202,10 @@ const L7_NPCS = {
     yaw: 0,
     nerve: "frenzied",
     rounds: [
-      { x: -64.0, y: 11.0, z: -98.0, dwell: 22, act: null, look: { , topw: "jacket", top: "#6e5c44", topp: "canvas", botw: "pants", bottom: "#3e4a44", botp: "weave", shoes: "boots", shoec: "#241e1a", hat: "beanie", hatc: "#6a3a2a", neck: "none" } },
+      { x: -64.0, y: 11.0, z: -98.0, dwell: 22, act: null, look: { x: -70.0, z: -93.0 } },
       { x: -67.0, y: 11.0, z: -102.0, dwell: 16, act: null, look: { x: -70.0, z: -93.0 } },
     ],
-    look: { species: "bear", sex: "m", eye: "#d84a4a", belly: "#d8cbb8", nose: "#1e1816", topw: "apron", top: "#1c282e", botw: "overalls", bottom: "#28322c", shoes: "boots", shoec: "#141618", neck: "scarf", neckc: "#0a0a0c" },
+    look: { species: "bear", sex: "m", eye: "#d84a4a", belly: "#d8cbb8", nose: "#1e1816", topw: "jacket", top: "#6e5c44", topp: "canvas", botw: "pants", bottom: "#3e4a44", botp: "weave", shoes: "boots", shoec: "#241e1a", hat: "beanie", hatc: "#6a3a2a", neck: "none" },
   },
   "l7-mara": {
     name: "Sister Mara · Fort Surrender Trader",
