@@ -232,6 +232,54 @@ def side_locks(m, per=1, length=.3, W=.05, T=.017, u=1.3, v=.45, blunt=0.0, seed
             if wave: path = wave_path(path, wave, 1.0, rnd.random() * 6.28)
             clump(m, path, W, T, tip=.4, blunt=blunt)
 
+def taper(path, xk=.68, end_y=-.16, pull=.6, z0=None, z1=.86, minx=.0):
+    """long hair below the skull narrows: x draws in toward the shoulders, y toward the back of the neck, so the
+    front and side profiles taper to the tips instead of hanging as a block (no helmet, no flare)"""
+    z0 = HC.z - .03 if z0 is None else z0; out = []
+    for p in path:
+        f = sstep(z0, z1, p.z)
+        x = p.x * (1 - (1 - xk) * f)
+        if minx and abs(p.x) >= minx: x = math.copysign(max(abs(x), minx), p.x)
+        y = p.y + (end_y - p.y) * pull * f if p.y < end_y else p.y
+        out.append(keep_off(V(x, y, p.z), .012, None))
+    sm = [out[0]] + [(out[i - 1] + out[i] * 2 + out[i + 1]) / 4 for i in range(1, len(out) - 1)] + [out[-1]]
+    return sm
+
+def long_back(m, length=.66, groups=(1.75, 2.12, 2.48, 2.84), per=3, W=.05, T=.017, v_root=.62, seed=0, wave=0.0, blunt=0.0, fill=.24):
+    """long hair down the back in separate clumps: per side, groups of locks rooted under the cap behind the ears, hugging
+    the skull to its widest point, then falling and tapering; each group's locks gather at their tips, the groups stay apart
+    and the innermost pair leaves a gap at the nape; a short underlayer (fill) hides the scalp between the groups up top"""
+    rnd = random.Random(seed)
+    for sgn in (-1, 1):
+        for gi, gu in enumerate(groups):
+            inner = gi == len(groups) - 1
+            gl = length * (1 - .06 * gi) * (1 + (rnd.random() - .5) * .08)
+            for k in range(per):
+                du = (k - (per - 1) / 2) * .13
+                u = sgn * (gu + du); v = v_root + .12 * (gu - groups[0]) / 1.2 + rnd.uniform(-.03, .03)
+                d = hdir(u, v); p0 = HC + d * (E.hug(d) + T * .4)
+                fwd = (hdir(u, v - .1) - hdir(u, v)).normalized()
+                off = T + .005 + (.008 if k == (per - 1) // 2 else 0)
+                path = drape(p0, fwd, gl * (1 - .07 * abs(k - (per - 1) / 2)), off, stiff=.86, hug=.008, free_z=HC.z - .02, steps=14)
+                if wave: path = wave_path(path, wave, max(.8, gl / .35), rnd.random() * 6.28)
+                # the group's locks gather toward its middle as they fall
+                gx = HC + hdir(sgn * gu, v) * .3
+                path = [p + (V(gx.x, p.y, p.z) - p) * .45 * sstep(HC.z, HC.z - .3, p.z) * (1 if per > 1 else 0) for p in path]
+                path = taper(path, xk=.7, end_y=-.15, pull=.55, minx=.055 if inner else 0)
+                clump(m, path, W * (1 - .08 * abs(k - (per - 1) / 2)), T, tip=.4, blunt=blunt)
+    if fill:   # the underlayer: shorter soft locks across the back, ending above the neck so the nape shows between the clumps
+        hem(m, fill, per_side=5, W=W * 1.05, T=T * .9, u_from=1.7, v_lo=.3, v_hi=.55, seed=seed + 50, layers=1, stiff=.86)
+
+def front_locks(m, length=.5, W=.05, T=.017, u=1.32, v=.5, blunt=0.0, seed=0, wave=0.0):
+    """face-framing locks before the ears: fall close past the cheeks, tips drawn in toward the collarbone"""
+    rnd = random.Random(seed)
+    for sgn in (-1, 1):
+        uu = sgn * u; d = hdir(uu, v); p0 = HC + d * (E.hug(d) + T * .4)
+        path = drape(p0, (hdir(uu, v - .1) - hdir(uu, v)).normalized(), length, T + .006, stiff=.9, hug=.008, steps=12)
+        if wave: path = wave_path(path, wave, 1.0, rnd.random() * 6.28)
+        path = taper(path, xk=.72, end_y=.0, pull=0, z0=HC.z - .08, z1=.9)
+        clump(m, path, W, T, tip=.4, blunt=blunt)
+
 # ---------------- tails, buns, braids, spikes ----------------
 def tie(m, c, axis, R=.03, r=.011, mat=1):
     """a hairtie: a soft torus round a tail or bun root"""
@@ -370,18 +418,18 @@ def fins(m, n=7, height=.13, W=.045, T=.018):
 
 # ---------------- styles: one function each ----------------
 def f_bob(m):        cap(m, vol=.026); bangs(m, "blunt", 1); hem(m, .3, 7, W=.055, T=.018, seed=1, v_lo=.45)
-def f_long(m):       cap(m, vol=.024, part=0); bangs(m, "curtain", 2, n=6); side_locks(m, 1, .62, W=.055, u=1.32, v=.5, seed=2, wave=.018); hem(m, .66, 8, W=.058, T=.018, seed=2, wave=.022, free_z=1.05)
-def f_ponytail(m):   cap(m, vol=.02, side=.05, back=-.5); bangs(m, "wispy", 3, n=6); tail(m, (math.pi, .62), .46, .09, flow=V(0, -.3, 0), seed=3)
-def f_twintails(m):  cap(m, vol=.02, back=-.4); bangs(m, "blunt", 4); [tail(m, (s * 2.0, .58), .5, .09, flow=V(s * .35, -.15, 0), seed=4 + s) for s in (-1, 1)]
+def f_long(m):       cap(m, vol=.026, part=0); bangs(m, "curtain", 2, n=6); front_locks(m, .56, W=.05, u=1.3, v=.5, seed=2, wave=.014); long_back(m, .7, seed=2, wave=.016)
+def f_ponytail(m):   cap(m, vol=.02, side=.05, back=-.5); bangs(m, "wispy", 3, n=6); tail(m, (math.pi, .62), .46, .11, flow=V(0, -.3, 0), seed=3)
+def f_twintails(m):  cap(m, vol=.02, back=-.4); bangs(m, "blunt", 4); [tail(m, (s * 2.0, .58), .5, .12, flow=V(s * .3, -.15, 0), seed=4 + s, locks=4) for s in (-1, 1)]
 def f_sidebraid(m):  cap(m, vol=.02, part=.35); bangs(m, "side", 5); braid(m, (2.0, .3), .42, flow=V(.3, .3, 0), seed=5); hem(m, .14, 5, W=.05, seed=5, u_from=2.2)
 def f_messybun(m):   cap(m, vol=.02, back=-.3); bangs(m, "wispy", 6, n=6); bun(m, (math.pi * .97, 1.05), .085, swirl=2.4); side_locks(m, 1, .22, W=.035, T=.013, seed=6, wave=.012)
 def f_spacebuns(m):  cap(m, vol=.02, part=0); bangs(m, "blunt", 7); [bun(m, (s * 2.25, .95), .075) for s in (-1, 1)]
 def f_pixie(m):      cap(m, vol=.028, side=.15, back=-.15); bangs(m, "side", 8, n=6); hem(m, .1, 6, W=.05, T=.016, seed=8, stiff=.9)
 def f_wavy(m):       cap(m, vol=.028, part=.3); bangs(m, "side", 9); side_locks(m, 1, .5, W=.055, seed=9, wave=.03); hem(m, .55, 8, W=.058, seed=9, wave=.035)
 def f_curly(m):      cap(m, vol=.04); bangs(m, "wispy", 10, n=6, T=.02); hem(m, .32, 8, W=.06, T=.022, seed=10, wave=.03)
-def f_hime(m):       cap(m, vol=.02, part=0); bangs(m, "blunt", 11, W=.055); side_locks(m, 1, .34, W=.05, u=1.28, v=.42, blunt=.7, seed=11); hem(m, .6, 8, W=.058, seed=11, blunt=.4, u_from=1.6)
-def f_sidetail(m):   cap(m, vol=.02, part=-.35, back=-.4); bangs(m, "side", 12); tail(m, (2.1, .7), .44, .09, flow=V(.4, -.2, 0), seed=12)
-def f_twinbraids(m): cap(m, vol=.018, part=0, back=-.3); bangs(m, "wispy", 13); [braid(m, (s * 2.0, .25), .44, flow=V(s * .2, .2, 0), seed=13 + s) for s in (-1, 1)]
+def f_hime(m):       cap(m, vol=.022, part=0); bangs(m, "blunt", 11, W=.055); front_locks(m, .36, W=.05, u=1.28, v=.42, blunt=.7, seed=11); long_back(m, .64, groups=(1.8, 2.2, 2.6, 2.92), per=2, W=.058, seed=11, blunt=.45, fill=.26)
+def f_sidetail(m):   cap(m, vol=.02, part=-.35, back=-.4); bangs(m, "side", 12); tail(m, (2.1, .7), .44, .11, flow=V(.4, -.2, 0), seed=12)
+def f_twinbraids(m): cap(m, vol=.018, part=0, back=-.3); bangs(m, "wispy", 13); [braid(m, (s * 2.0, .25), .46, R=.04, flow=V(s * .2, .2, 0), seed=13 + s) for s in (-1, 1)]
 def f_curtainmid(m): cap(m, vol=.024, part=0); bangs(m, "curtain", 14, n=6); hem(m, .4, 7, W=.056, seed=14)
 def f_wolfcut(m):    cap(m, vol=.035); bangs(m, "wispy", 15); spikes(m, 9, .09, 15, v0=.7, v1=1.2, W=.045, T=.02, back=.9); hem(m, .34, 7, W=.05, seed=15, wave=.02)
 def f_afropuff(m):   cap(m, vol=.016, back=-.3); ball(m, scalp(math.pi * .92, 1.05, .13), .15, (1, 1, .88), lobes=7, amp=.06, seg=18); tie(m, scalp(math.pi * .92, 1.05, .015), hdir(math.pi * .92, 1.05), .07, .013)
