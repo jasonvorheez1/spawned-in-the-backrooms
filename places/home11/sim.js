@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 31;
+const V = 32;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -30,7 +30,8 @@ export function tick(ctx) {
   const fr = ctx.place.objects["h-fridge"];
   if (st.builtV === V) { if (fr && owner && !fr.state.loaded) { fr.state.items = owner.state.homeFridge; fr.state.loaded = true; } return; } // the owner's saved fridge fills it once they're home
   const fridgeKeep = ctx.place.objects["h-fridge"]?.state?.items; // what you stored survives a rebuild
-  const sp = (id, spec) => { if (ctx.place.objects[id]) ctx.destroy(id); ctx.spawn(id, spec); };
+  const packed = st.packed ?? {}, moved = st.moved ?? {}; // the tote's contents and where you set things down: kept in this home's own state
+  const sp = (id, spec) => { if (ctx.place.objects[id]) ctx.destroy(id); if (packed[id]) return; const m = moved[id]; ctx.spawn(id, m ? { ...spec, feetPosition: m.p, rotation: { yaw: m.yaw } } : spec); };
   const bx = (id, x, y, z, w, h, d, material, extra = {}) => sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material, physics: "static", ...extra });
   const fit = (id, model, x, z, yaw, size, extra = {}) => sp(id, { feetPosition: { x, y: 0.1, z }, rotation: { yaw }, model: { id: model }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } }, physics: { body: "static", collider: "box" }, ...extra });
 
@@ -126,7 +127,8 @@ export function tick(ctx) {
   poster("h-poster-pika", "/cdn/value.70e29ede116e97ae449b47d1c7365397318d37affe52789dcbbdfcf72a654c5c.png", -0.5, 1.1, -5.89, 0); // Pokemon, bedroom
   poster("h-calendar", "/cdn/value.ecf1cb61cb71e7905bd7a69c33c76ed9569c3b22dfdd90550b8b8914beb50f2c.png", 4.89, 1.15, 4.6, -90); // March 2004, kitchen
   poster("h-poster-kitty", "/cdn/value.5b3fa0a1b106e04b6db787f988eda22e31496b76d9b76c508f5041e6c2192afa.png", 1.4, 1.2, -5.89, 0);
-  const hang = (id, model, x, y, z, yaw, size) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: model }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } } }); // tripo pieces off the floor: no collider
+  const nice = (id) => id.replace(/^h-/, "").replace(/-\d+$/, "").replace(/-/g, " ");
+  const hang = (id, model, x, y, z, yaw, size) => sp(id, { tags: ["usable", "homeprop"], behavior: "scripts/home11-door.js", state: { kind: "pack", name: nice(id), verb: "Pack in tote" }, feetPosition: { x, y, z }, rotation: { yaw }, model: { id: model }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } } }); // tripo pieces off the floor: no collider
   hang("h-fan", "/cdn/value.fe9b7013b5254e87f285b50c7bfaa2c091275f57b5479249698a7535f2894259.glb", -2.4, 2.05, 1.7, 0, [1.15, 0.8, 1.15]); // brass ceiling fan with an alabaster bowl light
   hang("h-curtains", "/cdn/value.970a63a9bb4e3d521cd133a1ec921f884ac24ea444813ecfd0981b2fa3d37ec3.glb", -4.82, 0.75, -3.5, 0, [0.3, 1.5, 1.6]); // white mini-blinds and burgundy curtains over the bedroom window
   hang("h-photos", "/cdn/value.572ad0fe124cdd180aec4d28d259719e1057e02d8cc6c54b996c7b22ada303e7.glb", -4.88, 1.35, 4.2, 0, [0.12, 0.6, 0.55]); // family photos and a wall clock by the front of the living room
