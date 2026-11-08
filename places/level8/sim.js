@@ -5,9 +5,9 @@
 // a pool of boiling tar with a B.N.T.G. dredge winch and reaching hands, a survivor camp round a fire with Carla, and the asphalt road to Level 9. Life: scripts/l8-life.js; use: scripts/l8-use.js.
 import L8 from "../../scripts/lib/data/level8.yml";
 export const cadence = "1s";
-const V = 13;
+const V = 14;
 const GLB = {
-  cave: "/cdn/value.2109832add9ec72ac83009c0355494c0f9b184ad1b3bb101edb373306f8be2dc.glb",
+  cave: "/cdn/value.6ae7c035c9583dda020bc92a7e80e75e9d3d462632234677d4a5f5a717fe311b.glb",
   spider: "/cdn/value.f2baeaec87cf017372e92e66ec42fae95179b52161e15051d3253036b89b9323.glb",
   // Tripo props (Shelly, Nov 8: "use tipo to improve on level 8")
   mush: "/cdn/value.d3b7d8e9110577ffa40ba0d9c1ab1dd92c464eb05dc3560a673c833a98e46fdd.glb",
