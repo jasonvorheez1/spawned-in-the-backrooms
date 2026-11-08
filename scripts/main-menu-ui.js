@@ -1,5 +1,5 @@
 // main menu: a HALOGEN-amber title over the live world, left-hand list, Backspace to return later
-const PLACE = { main: 'LEVEL 0 · THE LOBBY', level1: 'LEVEL 1 · HABITABLE ZONE', level2: 'LEVEL 2 · PIPE DREAMS', level3: 'LEVEL 3 · ELECTRICAL STATION', gamma: 'M.E.G. BASE GAMMA', level4: 'LEVEL 4 · ABANDONED OFFICE', level5: 'LEVEL 5 · TERROR HOTEL', level6: 'LEVEL 6 · LIGHTS OUT', level7: 'LEVEL 7 · THALASSOPHOBIA', debug: 'DEBUG ROOM' }
+const PLACE = { main: 'LEVEL 0 · THE LOBBY', level1: 'LEVEL 1 · HABITABLE ZONE', level2: 'LEVEL 2 · PIPE DREAMS', level3: 'LEVEL 3 · ELECTRICAL STATION', gamma: 'M.E.G. BASE GAMMA', level4: 'LEVEL 4 · ABANDONED OFFICE', level5: 'LEVEL 5 · TERROR HOTEL', level6: 'LEVEL 6 · LIGHTS OUT', level7: 'LEVEL 7 · THALASSOPHOBIA', level8: 'LEVEL 8 · CAVE SYSTEMS', debug: 'DEBUG ROOM' }
 const CSS = `<style>
 #mm{position:fixed;inset:0;pointer-events:auto;background:linear-gradient(90deg,rgba(10,7,2,.92) 0,rgba(10,7,2,.75) 34%,rgba(10,7,2,.15) 70%,rgba(10,7,2,0));color:#ffb642;font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase}
 #mm .col{position:absolute;left:7vw;top:50%;transform:translateY(-50%);max-width:min(520px,80vw)}

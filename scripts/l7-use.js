@@ -155,7 +155,9 @@ export const ears = {
         };
         return;
       }
-      say(who, "Through the diving bell's porthole, pitch-black tar stalactites and bleached bones descend into Level 8 ('Cave System'). The pressure gauge is pinned in the red.", ctx);
+      say(who, "You climb into the bell and haul the hatch down. The cable pays out; through the porthole, pitch-black tar stalactites and bleached bones slide past. The water closes over the glass. You come up in a lake in the dark, soaked and shivering.", ctx);
+      ctx.emit("screenFlash", { color: "#020a10", duration: 1.6, intensity: 1 }, { audience: { player: by } });
+      ctx.cross(who, "level8#l8-from-l7");
     }
   },
 };

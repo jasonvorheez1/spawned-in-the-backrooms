@@ -86,7 +86,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 16; // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
+const V = 17; // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
@@ -708,7 +708,7 @@ function lay(ctx) {
   // Rusted Submersible Diving Bell & Level 8 Tar Cavern Winch on the North Cliff (x: -81, y: 4.2, z: -113)
   ctx.spawn("l7-diving-bell", {
     tags: ["usable"],
-    feetPosition: { x: -81.0, y: 4.2, z: -113.0 },
+    feetPosition: { x: -81.0, y: { terrain: 0.05 }, z: -113.0 },
     rotation: { yaw: 160 },
     physics: "static",
     primitive: { kind: "scripted", script: "scripts/l7-ocean-geo.js", params: { kind: "divingbell" } },
@@ -719,7 +719,7 @@ function lay(ctx) {
       verb: "Haul Abyssal Winch Cable",
       info: "Hangs over the skeletal tar cave mouth to Level 8",
       tint: "#58f2c8",
-      c: { x: -81.0, y: 5.2, z: -113.0 },
+      c: { x: -81.0, y: 11.4, z: -113.0 },
     },
     children: [
       { feetPosition: { x: 0, y: 1.5, z: 0 }, light: { kind: "point", color: "oklch(0.8 0.18 175)", intensity: 2.5, distance: 12 } },
@@ -760,6 +760,7 @@ function lay(ctx) {
     ctx.spawn(`l7-skeleton-${k}`, { feetPosition: { x, z, y: { terrain: 0.02 } }, rotation: { yaw: k * 61 }, scale: 1.0 + (k % 3) * 0.12, model: { id: GLB.skeleton } });
   });
 
+  ctx.spawn("l7-from-l8", { feetPosition: { x: -79.0, y: { terrain: 0.4 }, z: -110.5 }, rotation: { yaw: 20 } }); // where Level 8's lake sends you back: beside the diving bell
   layExtras(ctx, GLB, fit);
   layHouse(ctx, FY); // the entrance room as a 2000s living room
 
@@ -891,7 +892,7 @@ export function tick(ctx) {
   if ((s.builtV ?? 0) < V) {
     for (const id of Object.keys(ctx.place.objects)) if (GONE.includes(id) || /^l7-(plank|post)-/.test(id)) ctx.destroy(id);
     // rooms built before the fort moved still hold its old pieces (and the worshippers, standing where it was): clear them so the new ones are laid and the people come back
-    for (const id of Object.keys(ctx.place.objects)) if (/^(l7x-|l7h-|l7-(wall-|wainscot-|ceil$|hearth$|pedestal$|wirerack$|cloth-drape$|painting$|vase|dresser-top$|fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$))/.test(id)) ctx.destroy(id);
+    for (const id of Object.keys(ctx.place.objects)) if (/^(l7x-|l7h-|l7-(diving-bell$|from-l8$|wall-|wainscot-|ceil$|hearth$|pedestal$|wirerack$|cloth-drape$|painting$|vase|dresser-top$|fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$))/.test(id)) ctx.destroy(id);
     s.npcGone = {};
     lay(ctx);
     s.builtV = V;

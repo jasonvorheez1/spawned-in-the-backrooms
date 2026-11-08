@@ -24,6 +24,8 @@ materials:
   tile:     { name: Glazed tile, hp: 90, wallHp: 200, mul: { blunt: 1.3, edged: 0.7, firearm: 0.5 }, toolMul: { smash: 1.6, chop: 1.1 }, breakSound: ceramic-tile-shatter-crumble, dust: [0.82, 0.7, 0.5], drops: [[tile_shard, 1, 3], [mortar_dust, 0, 1], [bricks, 0, 1]] }
   junction: { name: Junction box, hp: 80, mul: { blunt: 1.0, edged: 0.6, firearm: 0.8 }, toolMul: { mech: 1.8 }, breakSound: electrical-box-sparks-pop, dust: [0.55, 0.57, 0.58], sparks: true, drops: [[wire, 1, 2], [fuse, 0, 2], [circuit, 0, 1], [scrap_metal, 0, 1]] }
   machine:  { name: Machine,  hp: 110, mul: { blunt: 0.8, edged: 0.4, firearm: 0.5 }, sound: metal-sheet-clang-hit,    dust: [0.6, 0.6, 0.62], drops: [[scrap_metal, 1, 3], [wire, 0, 2]] }
+  flowstone: { name: Flowstone, hp: 150, mul: { blunt: 0.9, edged: 0.25, firearm: 0.3 }, toolMul: { smash: 1.8, pry: 1.2 }, breakSound: concrete-slab-crack-crumble, sound: concrete-chip-impact-crack, dust: [0.86, 0.82, 0.7], drops: [[flowstone, 2, 4], [rubble, 0, 2]] }
+  ironstone: { name: Ironstone, hp: 230, mul: { blunt: 0.7, edged: 0.2, firearm: 0.3 }, toolMul: { smash: 1.9, pry: 1.2 }, breakSound: concrete-slab-crack-crumble, sound: concrete-chip-impact-crack, dust: [0.5, 0.34, 0.28], drops: [[ironstone, 2, 3], [rust_flakes, 1, 2]] }
   fixture:  { name: Fixture,  hp: 25,  mul: { blunt: 1.4, edged: 1.0, firearm: 1.2 }, sound: metal-sheet-clang-hit,    dust: [0.95, 0.95, 0.85], drops: [[wire, 1, 2], [scrap_metal, 0, 1]] }
 breakSound: debris-collapse-crumble
 buildSound: hammer-nail-wood-build
@@ -52,6 +54,13 @@ scrap:
   mortar_dust: { name: Mortar dust, kg: 0.2, color: "#cfc8b8" }
   copper_wire: { name: Copper wire, kg: 0.1, color: "#e8904a" }
   tile_shard:  { name: Tile shard,  kg: 0.2, color: "#d8b878" }
+  # Level 8, Cave Systems: what the 9th Road gives (flowstone and ironstone from the rock, glow caps from the Lane, silk and chitin from the nest, pitch from the tar)
+  flowstone:   { name: Flowstone shard, kg: 1.0, color: "#e0d6b8" }
+  ironstone:   { name: Ironstone ore,   kg: 1.5, color: "#9a5a44" }
+  glow_cap:    { name: Glow cap,        kg: 0.1, color: "#6fe8d8" }
+  spider_silk: { name: Spider silk,     kg: 0.05, color: "#e8eef2" }
+  chitin:      { name: Chitin plate,    kg: 0.3, color: "#3a302a" }
+  pitch:       { name: Tar pitch,       kg: 0.4, color: "#2a2630" }
 # what B mode builds. size: [w, h, d] in metres (the ghost and the collider); cost in scrap
 pieces:
   plank_wall:  { name: Plank wall,       mat: wood,  hp: 140, size: [2, 2.4, 0.16], cost: { scrap_wood: 4, nails: 2 } }
@@ -78,9 +87,15 @@ tools:
   lineman_machete: chop
   sledgehammer: smash
   stun_baton: mech
+  pickaxe: smash
 # harvest[material][tool class]: mul scales the base drops (rolled per item, 7dtd-style), rare are [token, chance %, min, max]
 # rolled one by one. A machine smashed with the wrong tool loses its parts; the right one strips them.
 harvest:
+  flowstone:
+    smash: { mul: 1.4, rare: [[ironstone, 18, 1, 1], [mortar_dust, 30, 1, 2]] }
+  ironstone:
+    smash: { mul: 1.5, rare: [[bolts, 25, 1, 3], [copper_wire, 10, 1, 1]] }
+    pry:   { mul: 1.1, rare: [[bolts, 15, 1, 2]] }
   machine:
     mech:  { mul: 1.6, rare: [[gears, 45, 1, 2], [springs, 35, 1, 3], [fuse, 25, 1, 2], [circuit, 22, 1, 1], [copper_coil, 18, 1, 1], [bolts, 60, 2, 5], [motor, 6, 1, 1]] }
     pry:   { mul: 1.2, rare: [[bolts, 40, 1, 3], [springs, 15, 1, 1], [gears, 10, 1, 1]] }

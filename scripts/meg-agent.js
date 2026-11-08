@@ -69,7 +69,7 @@ const HIT = `fx
 pop blood burst=10 life=.4..0.7 v=sdir()*(1..2.4)+up(.6) size=.04..0.08 acc=grav() col=<.35,.05,.04> a=1>0 floor=stick r=sprite(soft-disc,alpha)`;
 const FOES = ["hound", "stealer"];
 // what a fighter takes on: every creature of the halls (the hotel's own staff, l5staff, are not for shooting). A civilian only fights what is on top of them.
-const HOSTILE = ["hound", "stealer", "smiler", "lurker", "moths"];
+const HOSTILE = ["hound", "stealer", "smiler", "lurker", "moths", "l8spider"];
 const CROUCH = "cdn/clip-crouch-idle-loop.glb";
 const DEAD = (o) => !o || o.state?.dead || (o.state?.hp ?? 1) <= 0;
 const corpseOf = (o) => !!o && DEAD(o) && !o.tags?.includes?.("l5staff") && HOSTILE.some((g) => o.tags?.includes?.(g));

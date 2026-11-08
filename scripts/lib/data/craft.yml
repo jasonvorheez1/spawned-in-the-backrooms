@@ -52,4 +52,19 @@ recipes:
   # more ammo and tools
   ammo4:      { cat: ammo,  name: Pistol rounds (bulk), in: { scrap_metal: 4, springs: 2, rust_flakes: 1 }, out: [ammo, ammo, ammo, ammo], skill: [guns, 45], bench: true, desc: "Four boxes at once" }
   valve:      { cat: tools, name: Valve wheel,       in: { brass_valve: 1, bolts: 1 },                     out: [valve],                 skill: [repair, 15],   bench: true, desc: "Opens a PUMP ROOM door" }
+  # Level 8, Cave Systems: the 9th Road's own resources become light, bandages, armor, a pickaxe and building stone
+  glowcell:   { cat: tools, name: Glow-cap cell,     in: { glow_cap: 3, pitch: 1 },                        out: [battery],          skill: [science, 10],  desc: "Bioluminescent charge: recharges the flashlight" }
+  glowcell2:  { cat: tools, name: Glow-cap cells (bulk), in: { glow_cap: 8, pitch: 2, spider_silk: 1 },     out: [battery, battery, battery], skill: [science, 25], bench: true, desc: "Three batteries from one jar of caps" }
+  silkbandage: { cat: aid, name: Silk bandages,      in: { spider_silk: 2 },                              out: [bandage, bandage], skill: [medicine, 8],  desc: "Two bandages from spider silk" }
+  glowsalve:  { cat: aid, name: Glow-cap salve,      in: { glow_cap: 2, spider_silk: 1, pitch: 1 },        out: [firstaid],         skill: [medicine, 25], desc: "Pitch, silk and caps pressed into a proper kit" }
+  ironkit:    { cat: aid, name: Ironstone repair kit, in: { ironstone: 2, spider_silk: 1, rust_flakes: 1 }, out: [kit],             skill: [repair, 15],   desc: "Mends the weapon in your hand" }
+  smelt:      { cat: tools, name: Smelt ironstone,   in: { ironstone: 2, pitch: 1 },                       out: [scrap_metal, scrap_metal, bolts, nails], skill: [repair, 20], bench: true, desc: "Pitch-fired ore becomes scrap metal, bolts and nails" }
+  limeburn:   { cat: tools, name: Burn flowstone to lime, in: { flowstone: 2, pitch: 1 },                  out: [mortar_dust, mortar_dust, rubble], skill: [survival, 15], bench: true, desc: "Mortar and rubble for brick and rebar barricades" }
+  flowpick:   { cat: weapons, name: Flowstone pickaxe, in: { flowstone: 3, ironstone: 2, scrap_wood: 2 },  out: ["weapon:pickaxe"],  skill: [repair, 25],   bench: true, desc: "A pickaxe: it breaks flowstone and ironstone properly" }
+  chitinknife: { cat: weapons, name: Chitin knife,   in: { chitin: 2, spider_silk: 1 },                    out: ["weapon:knife"],    skill: [repair, 10],   desc: "A knife ground from a spider's plate, grip wrapped in silk" }
+  chitinhatchet: { cat: weapons, name: Chitin hatchet, in: { chitin: 3, flowstone: 1, scrap_wood: 2, spider_silk: 1 }, out: ["weapon:hatchet"], skill: [repair, 30], bench: true, desc: "A hatchet with a chitin blade" }
+  silkcloak:  { cat: armor, name: Silk caving cloak, in: { spider_silk: 6, wire: 1 },                      out: ["cloth:neck:cape:dfe6ea"], skill: [survival, 15], desc: "Neck · pale as a web, warm as a blanket" }
+  chitinhelm: { cat: armor, name: Chitin caving helm, in: { chitin: 3, spider_silk: 2, pitch: 1 },        out: ["cloth:hat:cap:3a302a"], skill: [survival, 25], bench: true, desc: "Hat · a spider's carapace on a caver's cap" }
+  chitinplate: { cat: armor, name: Chitin plate vest, in: { chitin: 6, spider_silk: 3, pitch: 2 },        out: ["cloth:topw:apron:2a2420"], skill: [survival, 35], bench: true, desc: "Top · overlapping plates, the best armor on the Road" }
+  pitchboots: { cat: armor, name: Pitch-soled boots, in: { pitch: 2, chitin: 1, spider_silk: 1 },         out: ["cloth:shoes:boots:1a1820"], skill: [survival, 25], bench: true, desc: "Shoes · they grip wet rock" }
   compass:    { cat: tools, name: Old compass,       in: { copper_wire: 1, scrap_metal: 1, tile_shard: 1 }, out: [compass],              skill: [science, 35],  bench: true, desc: "Senses what is near · wears out" }
