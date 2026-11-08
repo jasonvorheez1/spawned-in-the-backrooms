@@ -81,6 +81,19 @@ level8:
   - [[l8-ivo, "the lane hummed a whole chord today."], [l8-wen, "my lights tune it."], [l8-ivo, "your lights are mushrooms, wen."], [l8-wen, "tuned mushrooms."]]
   - [[l8-hobb, "blackjaw was at the tar again."], [l8-marit, "drinking it?"], [l8-hobb, "drinking it."], [l8-marit, "...then he won't need us much longer."]]
   - [[l8-marit, "spider bite count this week: four."], [l8-hobb, "who?"], [l8-marit, "ivo, ivo, ivo and a stranger."], [l8-ivo, "they like me."]]
+level21:
+  # Refrigerator Paradise: Ned manages the quartermaster supplies, Goknar keeps watch
+  - - ["l21-ned", "How many cartons of Saltines we got left, Goknar?"]
+    - ["l21-goknar", "Roughly four thousand sleeves. Enough to outlive our grandchildren."]
+    - ["l21-ned", "Good. Because I'm never eating another can of cold beans."]
+  - - ["l21-goknar", "Hear that scratching behind the east wall?"]
+    - ["l21-ned", "Just the Smilers down in The Edges. Keep the lights on and they stay back."]
+    - ["l21-goknar", "I checked the breakers this morning. Voltage is holding."]
+  - - ["l21-ned", "Copper coil on the condenser is dripping clean water again."]
+    - ["l21-goknar", "Coldest water in the Backrooms. Makes this place feel almost civilized."]
+  - - ["l21-goknar", "Nobody go near that specimen jar in Exploration."]
+    - ["l21-ned", "Admin Memo #13. Don't worry, nobody's stupid enough to eat glowing purple berries."]
+    - ["l21-goknar", "You'd be surprised what people eat when the hunger sets in."]
 # combat barks: what anyone in a camp shouts mid-fight, picked at random per moment
 barks:
   move: ["right. back to it.", "where was i.", "okay. next thing.", "legs, don't fail me now.", "one more lap.", "hm. what was i doing.", "coffee would be nice.", "that's a lap.", "feet hurt.", "next stop.", "where'd i leave that wrench."]

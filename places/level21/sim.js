@@ -10,8 +10,9 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { weaponBody } from "../../scripts/lib/weapon-look.js";
+import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "500ms";
-const V = 8; // 7: modeled cots, bunks and workbench (Shelly: less blocky)
+const V = 9; // 8: stairwell props; 9: memo13, blast crater, usable survivor chatter
 const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
 const rm = (type) => ROOMS.filter((r) => r.type === type);
 const center = (r) => cellCenter(r.x0 + (r.w - 1) / 2, r.z0 + (r.d - 1) / 2); // the middle of a room block
@@ -35,9 +36,16 @@ function person(ctx, id) {
   const g = PEOPLE[id], r = rm("fridges")[0], c = center(r);
   const look = { species: g.sp, sex: g.sex, eye: g.eye, topw: "jacket", top: g.top, botw: "pants", bottom: "#33332a", shoes: "boots", shoec: "#2a2018" };
   const x = c.x + g.at[0], z = c.z + g.at[1];
-  ctx.spawn(id, { tags: ["npc", "l21-npc"], feetPosition: { x, y: 0.05, z }, rotation: { yaw: 0 }, physics: "character", ...critterSpec(npcLook(id, look, "survivor", 8)),
-    behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-    state: { name: g.name, role: "survivor", voice: g.voice, faction: "alef", factionName: "the Base Alef survivors of Level 2.1, locked out since July 2020", rounds: [{ x, y: 0.05, z, dwell: 40, act: null, look: { x: c.x, z: c.z } }], ri: 0, nerve: "steady", home: { x, z }, ...npcState(ctx, "agent", 80) } });
+  const shortName = g.name.split(" ")[0];
+  ctx.spawn(id, {
+    tags: ["npc", "l21-npc", "usable"], feetPosition: { x, y: 0.05, z }, rotation: { yaw: 0 }, physics: "character", ...critterSpec(npcLook(id, look, "survivor", 8)),
+    behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js", "scripts/l21-use.js"],
+    state: {
+      name: g.name, role: "survivor", voice: g.voice, faction: "alef", factionName: "the Base Alef survivors of Level 2.1, locked out since July 2020",
+      rounds: [{ x, y: 0.05, z, dwell: 40, act: null, look: { x: c.x, z: c.z } }], ri: 0, nerve: "steady", home: { x, z }, ...npcState(ctx, "agent", 80),
+      kind: id === "l21-ned" ? "ned" : "goknar", verb: `Talk to ${shortName}`, info: `A survivor in Refrigerator Paradise.`, tint: id === "l21-ned" ? "#e8c070" : "#7aff9a"
+    }
+  });
   ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: g.gun }, ...weaponBody(g.gun) });
 }
 
@@ -100,6 +108,10 @@ function lay(ctx) {
   const exc = center(ex);
   [["cagecrate", -2.2, -2], ["cagecrate", -2.2, 0], ["lockbox", 2, -2.2], ["toolbox", 2, 0.4], ["cabinet", 0, 2.4]].forEach(([k, a, b], i) => spawnContainerL2(ctx, k, { x: exc.x + a, z: exc.z + b }, i % 2 ? 90 : -90, { bonus: 1, room: 71 }));
   spawnRemains(ctx, { x: exc.x + 1.4, z: exc.z + 3.6 }, ["firstaid", "battery", "battery", "page:12"], "Alef operative's remains");
+  sp("l21-memo13", {
+    feetPosition: { x: exc.x + 0.65, y: 0.88, z: exc.z - 0.6 }, rotation: { pitch: -15 },
+    ...sign(0.48, 0.62, `<div face="front" width="0.48m" style="font-family:Arial,sans-serif;color:#181818;background:#f5edd0;padding:8px;line-height:1.15;border:2px solid #8b7355"><div style="font-size:26px;font-weight:900;color:#a81010;border-bottom:2px solid #a81010;margin-bottom:4px;text-align:center">ADMIN MEMO #13</div><div style="font-size:16px;margin-bottom:4px"><b>SUBJECT:</b> Specimen #09</div><div style="font-size:15px;color:#333">Under NO circumstances are the crimson berries to be ingested. Severe hallucinogenic and mutational risks observed. Violators will forfeit ration quotas.</div></div>`, "oklch(0.85 0.08 85)"),
+  });
   sp("l21-berries", {
     feetPosition: { x: exc.x, y: 0.0, z: exc.z - 0.6 }, tags: ["usable"], physics: "static", behavior: "scripts/l21-use.js",
     primitive: { kind: "box", width: 0.85, height: 0.88, depth: 0.65 }, material: STEEL,
@@ -144,6 +156,7 @@ function lay(ctx) {
     state: { kind: "cooler", name: "Freezer-coil water collector", verb: "Drink cold coil water", info: "Ned rigged copper tubing from the freezer condensers into a 5-gallon jug. Ice-cold, clean water.", tint: "#74d4f8" },
     children: [
       { feetPosition: { x: 0, y: 0.85, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.19, radiusBottom: 0.21, height: 0.52 }, material: { color: "oklch(0.65 0.14 230)", opacity: 0.72, transparent: true, roughness: 0.15 } },
+      { feetPosition: { x: -0.16, y: 1.15, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.014, radiusBottom: 0.014, height: 0.95 }, rotation: { pitch: 18 }, material: { color: "#b87333", metalness: 0.85, roughness: 0.3 } },
     ],
   });
   // Refrigerator Paradise Workbench
@@ -179,6 +192,14 @@ function lay(ctx) {
   // ---- The Edges: John Banks's last note, his interactive T-handle blasting plunger & dynamite crate, and the fallen survey operative
   const jbX = cellCenter(EDGE_X - 1, LANE.z0 + 1).x + 1.9, jbZ = cellCenter(0, LANE.z0 - 1).z + 0.2;
   sp("l21-note-banks", { feetPosition: { x: jbX, y: 1.6, z: jbZ }, rotation: { yaw: 0 }, ...sign(0.7, 0.5, `<div face="front" width="0.7m" style="font-family:'Courier New',monospace;color:#2a2418;background:#e8dca0;font-size:34px;line-height:1.15;padding:10px;text-align:left">DEPTH ~5 m<br>6 STICKS<br>SOLID CONCRETE<br>"now or never"<br>— J.B.</div>`, "oklch(0.85 0.1 95)") });
+  sp("l21-blast-crater", {
+    feetPosition: { x: jbX + 0.45, y: 3.2, z: jbZ + 0.55 },
+    primitive: { kind: "cylinder", radiusTop: 1.15, radiusBottom: 1.25, height: 0.14 }, material: { color: "#141414", roughness: 0.96 },
+    children: [
+      { feetPosition: { x: 0, y: -0.85, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.008, radiusBottom: 0.008, height: 1.7 }, material: { color: "#d04020" } },
+      { feetPosition: { x: 0.12, y: -0.65, z: 0.08 }, primitive: { kind: "cylinder", radiusTop: 0.008, radiusBottom: 0.008, height: 1.3 }, material: { color: "#202020" } },
+    ],
+  });
   sp("l21-blaster", {
     feetPosition: { x: jbX + 0.45, y: 0.0, z: jbZ + 0.55 }, tags: ["usable"], physics: "static", behavior: "scripts/l21-use.js",
     primitive: { kind: "box", width: 0.42, height: 0.48, depth: 0.36 }, material: { color: "oklch(0.45 0.12 45)", roughness: 0.8 },
@@ -212,10 +233,17 @@ export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); s.peopleV = 0; }
   if (!ctx.getObject("l21-life")) ctx.spawn("l21-life", { behavior: "scripts/l21-use.js" });
-  if (!s.peopleV) { s.peopleV = 1; for (const id of Object.keys(PEOPLE)) if (!ctx.getObject(id)) person(ctx, id); }
+  if (!s.peopleV || s.peopleV < 2) {
+    s.peopleV = 2;
+    for (const id of Object.keys(PEOPLE)) {
+      if (ctx.place.objects[id] || ctx.getObject(id)) ctx.destroy(id);
+      person(ctx, id);
+    }
+  }
   if (now - roofAt > 2000) { roofAt = now; // nobody stands on the ceiling: anyone above head height goes back to their spot on the floor
     for (const id of Object.keys(PEOPLE)) { const o = ctx.getObject(id); if (o && o.feetPosition.y > 1.5) { const h = o.state.home ?? o.feetPosition; o.feetPosition = { x: h.x, y: 0.05, z: h.z }; o.velocity = { x: 0, y: 0, z: 0 }; } } }
   keepPeople(ctx, Object.keys(PEOPLE), person);
+  tickChatter(ctx, CHATTER.level21, { "l21-goknar": "reyes", "l21-ned": "hollis" });
   // hounds roam the halls and The Edges, kept topped up (scripts/hounds.js steps the pack; scripts/lib/maze21path.js steers them)
   if (!s.packMgr || !(s.packMgr in ctx.place.objects)) s.packMgr = ctx.spawn({ behavior: "scripts/hounds.js" });
   if (!s.houndAt) s.houndAt = now; // the first pack comes a while after the room starts

@@ -1,6 +1,7 @@
 // Level 2.1 "Locked": interactive set-pieces (Saltine stockpile, freezer-coil water collector, Base Alef lockout terminal, Exploration Wing forbidden berries,
 // John Banks's blasting plunger, Quartermaster errand board) and the Smilers that prowl The Edges (places/level21/sim.js).
 import { heard } from "./lib/hear.js";
+import { vo } from "./lib/voices.js";
 import { raycast } from "builtin/physics";
 import L from "./lib/data/level21.yml";
 import { N, EDGE_X, LANE, cellAt, cellCenter, openings, isEdge } from "./lib/level21.js";
@@ -12,6 +13,17 @@ export const updateSchedule = { every: { seconds: 0.1 } };
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const H = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 const say = (who, text, ctx) => { if (who?.state) who.state.notice = { text, at: ctx.now() }; };
+
+const GOKNAR = [
+  "Stay alert. The hounds keep testing the perimeter doors.",
+  "Don't wander into The Edges without a heavy weapon and fresh batteries.",
+  "Whatever you do, don't look a Smiler in the teeth. Freeze, keep your light on it, and back away slow."
+];
+const NED = [
+  "Help yourself to the Saltines on the table. We've got enough cartons to survive the apocalypse.",
+  "Freezer coils keep sweating clean water. Drink as much as you need.",
+  "Check the errand board if you want Backdollars and gear. We always need copper wire and relays."
+];
 
 const ALEF_LOGS = [
   "ALEF LOG [11 JUL 2020 · 03:18]: \"Wilson here. A solid steel shutter just dropped across the Level 2 stairwell. Blowtorches barely scratch it. All 53 of us are sealed in.\"",
@@ -28,52 +40,102 @@ export const ears = {
     const snd = (n, v = 0.6) => heard(ctx, { clip: G(n), position: { x: pos.x, y: pos.y + 0.8, z: pos.z }, volume: v, maxDistance: 14 });
 
     if (s.kind === "saltines") {
-      if (now - (cool[uid] ?? -1e9) < 40000) return say(who, "Your mouth is still dry from the last sleeve of Saltines. Give it a moment.", ctx);
-      cool[uid] = now; snd("plastic-bottle-pickup-rattle", 0.45);
+      if (now - (cool[uid] ?? -1e9) < 40000) {
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: "MOUTH DRY", color: "#e8b060", size: 0.9 }, { audience: { player: who.id } });
+        return;
+      }
+      cool[uid] = now;
+      snd("container-open-rustle", 0.6);
       w.hunger = Math.min(100, (w.hunger ?? 100) + 38);
       w.sanity = Math.min(100, (w.sanity ?? 80) + 8);
       w.thirst = Math.max(5, (w.thirst ?? 100) - 4);
-      w.payout = { xp: 10, items: ["bar"], text: "You tear open a fresh sleeve of Saltine crackers and stuff a handful in your pocket. Dry, salty, and miraculously crisp. (Hunger +38, Sanity +8, +Ration Bar)" };
+      w.payout = { xp: 10, items: ["bar"] };
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.5, z: pos.z }, text: "+38 HUNGER", color: "#60f090", size: 1.1 }, { audience: { player: who.id } });
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+8 SANITY", color: "#80ffaa", size: 0.9 }, { audience: { player: who.id } });
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 0.9, z: pos.z }, text: "+RATION BAR", color: "#f2d870", size: 1.0 }, { audience: { player: who.id } });
       return;
     }
 
     if (s.kind === "cooler") {
-      if (now - (cool[uid] ?? -1e9) < 30000) return say(who, "The copper drip-line needs half a minute to refill the jug.", ctx);
-      cool[uid] = now; snd("water-pour-splash-short", 0.55);
+      if (now - (cool[uid] ?? -1e9) < 30000) {
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: "REFILLING JUG...", color: "#60b0e0", size: 0.9 }, { audience: { player: who.id } });
+        return;
+      }
+      cool[uid] = now;
+      snd("water-pour-splash-short", 0.65);
       w.thirst = Math.min(100, (w.thirst ?? 100) + 42);
       w.hp = Math.min(w.maxHp ?? 100, (w.hp ?? 80) + 10);
-      return say(who, "You drink ice-cold condensation water distilled off the freezer coils. The oppressive heat of the halls fades for a moment. (Thirst +42, Health +10)", ctx);
+      ctx.emit("flash", { target: who.id, color: "#40d8ff", duration: 0.35 });
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.4, z: pos.z }, text: "+42 THIRST", color: "#50d0ff", size: 1.1 }, { audience: { player: who.id } });
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: "+10 HP", color: "#ff8080", size: 0.9 }, { audience: { player: who.id } });
+      return;
     }
 
     if (s.kind === "comms") {
-      snd("plastic-bottle-pickup-rattle", 0.35);
+      heard(ctx, { clip: G("old-computer-boot-startup-chime"), position: pos, volume: 0.65, maxDistance: 12 });
+      heard(ctx, { clip: G("walkie-talkie-radio-click-static-burst"), position: pos, volume: 0.45, maxDistance: 8 });
       const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
-      return say(who, ALEF_LOGS[n % ALEF_LOGS.length], ctx);
+      const log = ALEF_LOGS[n % ALEF_LOGS.length];
+      const header = log.match(/ALEF LOG \[[^\]]+\]/)?.[0] ?? "ALEF LOG";
+      const body = log.replace(/^ALEF LOG \[[^\]]+\]:\s*"/, '').replace(/"$/, '');
+      // Show, don't tell: physically update the CRT terminal screen UI in 3D space
+      ctx.self.ui = `<div face="front" width="0.9m" style="font-family:monospace;color:#7aff9a;font-size:24px;text-align:left;line-height:1.2;padding:10px;background:rgba(2,18,5,0.92);border:2px solid #3fa860"><div style="font-size:26px;color:#afffca;border-bottom:1px solid #3fa860;margin-bottom:6px;font-weight:bold">${header}</div>${body}</div>`;
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 0.6, z: pos.z }, text: `LOG #${n % ALEF_LOGS.length + 1} READ`, color: "#7aff9a", size: 0.9 }, { audience: { player: who.id } });
+      return;
     }
 
     if (s.kind === "berries") {
-      if (now - (cool[uid] ?? -1e9) < 60000) return say(who, "The specimen jar's remaining berries are still coalescing in the cold brine.", ctx);
-      cool[uid] = now; snd("water-pour-splash-short", 0.4);
+      if (now - (cool[uid] ?? -1e9) < 60000) {
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "JAR EMPTY", color: "#e88090", size: 0.9 }, { audience: { player: who.id } });
+        return;
+      }
+      cool[uid] = now;
+      snd("water-pour-splash-short", 0.45);
       if (ctx.random() < 0.65) {
+        // Show, don't tell: sweet juice rush with crimson/cyan pulse and rising chord chime
         w.hp = Math.min(w.maxHp ?? 100, (w.hp ?? 80) + 40);
         w.hunger = Math.min(100, (w.hunger ?? 80) + 40);
         w.thirst = Math.min(100, (w.thirst ?? 80) + 40);
         w.sanity = Math.min(100, (w.sanity ?? 80) + 10);
-        w.payout = { xp: 20, items: ["almond"], text: "You ignore Administration Memo #13 and swallow a handful of the crimson exploration berries. Sweet, icy juice floods your veins! (HP +40, Hunger +40, Thirst +40, +Almond Water)" };
+        w.payout = { xp: 20, items: ["almond"] };
+        ctx.emit("screenFlash", { color: "#ff2060", duration: 0.6, intensity: 0.7 }, { audience: { player: who.id } });
+        heard(ctx, { clip: G("level-up-jingle-retro-terminal-chime-rising-three-notes"), position: pos, volume: 0.75, maxDistance: 12 });
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.7, z: pos.z }, text: "+40 HP & RESTORE", color: "#60ff90", size: 1.2 }, { audience: { player: who.id } });
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.4, z: pos.z }, text: "+ALMOND WATER", color: "#60d0ff", size: 1.0 }, { audience: { player: who.id } });
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: "+20 XP", color: "#ffd700", size: 1.1 }, { audience: { player: who.id } });
       } else {
+        // Show, don't tell: toxic hallucinogenic distortion with purple screen warping, camera punch, and whispers
         w.sanity = Math.max(5, (w.sanity ?? 80) - 12);
-        ctx.emit("screenFlash", { color: "#6a1890", duration: 0.9, intensity: 0.65 }, { audience: { player: who.id } });
-        w.payout = { xp: 18, items: ["battery", "bandage"], text: "The berries taste like copper and static. The walls ripple for a second—and when your vision clears, you spot supplies tucked behind the specimen tray! (Sanity -12, +Battery, +Bandage)" };
+        w.payout = { xp: 18, items: ["battery", "bandage"] };
+        ctx.emit("screenFlash", { color: "#8010c0", duration: 1.2, intensity: 0.8 }, { audience: { player: who.id } });
+        ctx.emit("cameraPunch", { direction: { x: 0.35, y: -0.2, z: 0.25 }, intensity: 0.45 }, { audience: { player: who.id } });
+        heard(ctx, { clip: G("low-whisper-breath-swell-unsettling"), position: pos, volume: 0.85, maxDistance: 14 }, { audience: { player: who.id } });
+        heard(ctx, { clip: G("static-burst-glitch-threshold"), position: pos, volume: 0.6, maxDistance: 12 });
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.5, z: pos.z }, text: "-12 SANITY", color: "#c060ff", size: 1.1 }, { audience: { player: who.id } });
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+BATTERY & BANDAGE", color: "#f2d870", size: 1.0 }, { audience: { player: who.id } });
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 0.9, z: pos.z }, text: "+18 XP", color: "#ffd700", size: 1.0 }, { audience: { player: who.id } });
       }
       return;
     }
 
     if (s.kind === "blaster") {
-      if (now - (cool[uid] ?? -1e9) < 55000) return say(who, "The dynamo capacitor in Banks's plunger box is still recharging.", ctx);
-      cool[uid] = now; snd("pickup-ammo", 0.6);
-      ctx.emit("screenShake", { intensity: 0.25, duration: 0.45 }, { audience: { player: who.id } });
+      if (now - (cool[uid] ?? -1e9) < 55000) {
+        snd("locked-trunk-latch-rattle", 0.5);
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: "PLUNGER LOCKED", color: "#e89050", size: 0.9 }, { audience: { player: who.id } });
+        return;
+      }
+      cool[uid] = now;
+      // Show, don't tell: heavy detonation rumble on the ceiling, sparks flash, camera shake and rock clatter
+      heard(ctx, { clip: G("wrist-device-lower-click-crt-power-off"), position: pos, volume: 0.8, maxDistance: 16 });
+      heard(ctx, { clip: G("deep-rock-rumble-from-far-underground"), position: { x: pos.x, y: pos.y + 3, z: pos.z }, volume: 0.9, maxDistance: 40 });
+      heard(ctx, { clip: G("heavy-wooden-object-smash-impact-thud"), position: pos, volume: 0.75, maxDistance: 24 });
+      ctx.emit("flash", { target: who.id, color: "#ffe080", duration: 0.2 });
+      ctx.emit("screenShake", { intensity: 0.4, duration: 0.6 }, { audience: { player: who.id } });
+      ctx.emit("cameraPunch", { direction: { x: 0, y: -0.3, z: 0.2 }, intensity: 0.4 }, { audience: { player: who.id } });
       const pick = ["ammo", "shells", "battery", "kit"][Math.floor(ctx.random() * 4)];
-      w.payout = { xp: 15, items: [pick, "bandage"], text: "You Pop open John Banks's demolition chest and depress the T-handle plunger—sparks pop across the blasted concrete ceiling above, and you salvage spare gear from the crate! (+15 XP)" };
+      w.payout = { xp: 15, items: [pick, "bandage"] };
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.3, z: pos.z }, text: `+${pick.toUpperCase()} & BANDAGE`, color: "#f2d870", size: 1.1 }, { audience: { player: who.id } });
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.0, z: pos.z }, text: "+15 XP", color: "#ffd700", size: 1.2 }, { audience: { player: who.id } });
       return;
     }
 
@@ -86,19 +148,41 @@ export const ears = {
         { name: "Scout The Edges", need: null, xp: 140, items: ["firstaid", "ammo", "cash:4500"], text: "Venture past the white block rooms deep into The Edges (toward the Level 8 cave mouth) and report back." },
       ];
       const lap = Math.floor((w.l21q ?? 0) / Q.length), qi = (w.l21q ?? 0) % Q.length, q = Q[qi];
-      if (!q.need && (w.l21Scouted ?? 0) < 1 && lap > 0) { w.l21q = (w.l21q ?? 0) + 1; return say(who, "Quartermaster Board: 'Scout The Edges' is already logged in the survey book.", ctx); }
+      if (!q.need && (w.l21Scouted ?? 0) < 1 && lap > 0) {
+        w.l21q = (w.l21q ?? 0) + 1;
+        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "ALREADY LOGGED", color: "#e8c070", size: 0.9 }, { audience: { player: who.id } });
+        return;
+      }
       const mul = 1 + lap, need = q.need ? Object.fromEntries(Object.entries(q.need).map(([k, n]) => [k, n * mul])) : null, sc = w.scrap ?? {};
       const NAME = { wire: "copper wire", metal: "scrap metal", tape: "duct tape", electronics: "electronics" };
       const have = need ? Object.entries(need).every(([k, n]) => (sc[k] ?? 0) >= n) : (w.l21Scouted ?? 0) >= 1;
       if (!have) {
-        const list = need ? Object.entries(need).map(([k, n]) => `${sc[k] ?? 0}/${n} ${NAME[k]}`).join(", ") : "not yet scouted";
-        return say(who, `ALEF ERRAND ${qi + 1}${lap ? ` (round ${lap + 1})` : ""}: ${q.name}. ${q.text} Progress: ${list}.`, ctx);
+        const list = need ? Object.entries(need).map(([k, n]) => `${sc[k] ?? 0}/${n} ${NAME[k]}`).join(", ") : "explore further east";
+        return say(who, `ERRAND: ${q.name} (${list})`, ctx);
       }
       if (need) { const left = { ...sc }; for (const [k, n] of Object.entries(need)) left[k] = (left[k] ?? 0) - n; w.scrap = left; }
       w.l21q = (w.l21q ?? 0) + 1; snd("pickup-ammo", 0.65);
       const xp = Math.round(q.xp * (1 + lap * 0.5));
-      w.payout = { xp, items: q.items, text: `ERRAND COMPLETE: ${q.name}. Ned nods over a box of Saltines and hands over your share from the quartermaster lockbox. (+${xp} XP)` };
+      w.payout = { xp, items: q.items };
+      const line = "Good work on that salvage. That keeps the freezers running.";
+      heard(ctx, { clip: vo("hollis", line), position: pos, volume: 0.9, maxDistance: 16 });
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.5, z: pos.z }, text: `+${xp} XP`, color: "#ffd700", size: 1.3 }, { audience: { player: who.id } });
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: `ERRAND DONE: ${q.name.toUpperCase()}`, color: "#80ffaa", size: 1.0 }, { audience: { player: who.id } });
       return;
+    }
+
+    if (s.kind === "goknar") {
+      const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
+      const line = GOKNAR[n % GOKNAR.length];
+      heard(ctx, { clip: vo("reyes", line), position: pos, volume: 1.0, maxDistance: 14 });
+      return say(who, `Goknar: "${line}"`, ctx);
+    }
+
+    if (s.kind === "ned") {
+      const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
+      const line = NED[n % NED.length];
+      heard(ctx, { clip: vo("hollis", line), position: pos, volume: 1.0, maxDistance: 14 });
+      return say(who, `Ned: "${line}"`, ctx);
     }
   },
 };
@@ -148,14 +232,110 @@ export function update(ctx, dt) {
   const now = ctx.now(), mem = (ctx.self.session.m ??= { respawnAt: 0 });
   const players = ctx.place.players.filter((p) => (p.state?.hp ?? 1) > 0 && !(p.state?.downAt && now - p.state.downAt < 4500));
 
-  // Track if any player has scouted deep into The Edges (for the Quartermaster board errand)
+  // Show, don't tell: discovery chime and golden floating badge when entering deep uncharted caves
   for (const p of players) {
     const { cx } = cellAt(p.feetPosition.x, p.feetPosition.z);
     if (cx >= EDGE_X + 4 && !p.state.l21Scouted) {
       p.state.l21Scouted = 1;
-      p.state.notice = { text: "You have scouted deep into The Edges. Ned and Goknar at Refrigerator Paradise will pay for this survey report.", at: now };
+      heard(ctx, { clip: G("eerie-low-chime-level-up"), position: p.feetPosition, volume: 0.85, maxDistance: 20 }, { audience: { player: p.id } });
+      ctx.emit("damageNumber", { position: { x: p.feetPosition.x, y: p.feetPosition.y + 1.8, z: p.feetPosition.z }, text: "THE EDGES: SCOUTED (+140 XP)", color: "#ffd700", size: 1.3 }, { audience: { player: p.id } });
     }
   }
+
+  // Keep L.smilers active inside The Edges (cx >= EDGE_X)
+  const all = ctx.query({ tags: ["l21-smiler"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+  const live = all.filter((w) => !w.state?.dead && (w.state?.hp ?? 1) > 0);
+  if (now > mem.respawnAt && live.length < (L.smilers ?? 3)) {
+    mem.respawnAt = now + 45000;
+    for (let i = live.length; i < (L.smilers ?? 3); i++) spawnEdgeSmiler(ctx, i);
+  }
+
+  for (const w of all) {
+    const m = (mem[w.id] ??= {}), st = w.state ?? {}, pos = w.feetPosition, mu = npcMul(st);
+    if (st.dead || (st.hp ?? 1) <= 0) {
+      if (!m.dieAt) {
+        m.dieAt = now; w.velocity = { x: 0, y: -1, z: 0 };
+        w.anim.act = { clip: CLIP.death, loop: "once", blend: "override", weight: 4, clampWhenFinished: true };
+        heard(ctx, { clip: H("shadow-creature-dissolve-hiss"), position: pos, volume: 0.9, maxDistance: 30 });
+      } else if (!m.gone && now - m.dieAt > 1700) {
+        m.gone = true;
+        ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.3, z: pos.z }, script: POOF });
+        ctx.destroy(w.id);
+      }
+      continue;
+    }
+
+    // Acquire target in The Edges (or players holding a flashlight near The Edges)
+    if (now >= (m.look ?? 0)) {
+      m.look = now + 350 + ctx.random() * 200;
+      let best = null, bd = Infinity;
+      for (const p of players) {
+        const pp = p.feetPosition, pc = cellAt(pp.x, pp.z);
+        if (pc.cx < EDGE_X - 2) continue; // Smilers stay in and around The Edges
+        const d = Math.hypot(pp.x - pos.x, pp.z - pos.z);
+        const range = p.state?.light ? 16 : 11;
+        if (d < range && d < bd && hasSight(ctx, pos, pp, w.id, p.id)) { best = p; bd = d; }
+      }
+      if (best && !m.prey) heard(ctx, { clip: H("smiler-wet-giggle-hiss-stalking"), position: pos, volume: 0.9, maxDistance: 28 });
+      m.prey = best?.id ?? null;
+    }
+
+    const prey = m.prey ? players.find((p) => p.id === m.prey) : null;
+    let goal = null, speed = 1.35, frozen = false;
+    if (prey) {
+      goal = prey.feetPosition;
+      const pd = Math.hypot(goal.x - pos.x, goal.z - pos.z);
+      const yaw = prey.camera?.rotation?.yaw;
+      if (yaw != null) {
+        const r = (yaw * Math.PI) / 180, fx = -Math.sin(r), fz = -Math.cos(r);
+        const tx = pos.x - goal.x, tz = pos.z - goal.z, tl = Math.hypot(tx, tz) || 1;
+        const staring = (fx * tx + fz * tz) / tl > 0.82;
+        if (staring && prey.state?.light && pd < 13) {
+          frozen = true; speed = 0;
+          if (!m.lit) { m.lit = true; w.anim.act = { clip: CLIP.recoil, loop: "once", blend: "override", weight: 4 }; heard(ctx, { clip: H("smiler-light-flinch-shriek"), position: pos, volume: 0.8, maxDistance: 22 }); }
+        } else {
+          m.lit = false;
+          speed = staring ? 1.6 : pd < 9 ? 5.6 : 3.6;
+        }
+      }
+      if (!frozen && pd < 1.65 && now > (m.biteAt ?? 0)) {
+        m.biteAt = now + 1700;
+        w.anim.act = { clip: CLIP["lunge-bite"], loop: "once", blend: "override", weight: 4 };
+        heard(ctx, { clip: H("smiler-lunge-snap-shriek"), position: pos, volume: 1, maxDistance: 25 });
+        const dmg = Math.max(1, Math.round(dmgAfterArmor(prey.state.look, 20 * mu.dmg)));
+        prey.state.hp -= dmg;
+        prey.state.sanity = Math.max(0, (prey.state.sanity ?? 80) - 9);
+        ctx.emit("damageNumber", { position: { x: goal.x, y: goal.y + 1.3, z: goal.z }, value: dmg, color: "#ff3830" });
+        ctx.emit("screenShake", { intensity: 0.45, duration: 0.28 }, { audience: { player: prey.id } });
+      }
+    } else {
+      if (!m.roam || now > (m.roamUntil ?? 0) || Math.hypot(pos.x - m.roam.x, pos.z - m.roam.z) < 0.6) {
+        const rx = EDGE_X + Math.floor(ctx.random() * (N - EDGE_X));
+        const rz = Math.floor(ctx.random() * N);
+        m.roam = cellCenter(rx, rz);
+        m.roamUntil = now + 6000;
+      }
+      goal = m.roam;
+    }
+
+    if (frozen) {
+      if (m.mode !== "freeze") { m.mode = "freeze"; w.anim.body = { clip: CLIP.freeze, loop: "loop", speed: 0.6 }; }
+      w.velocity = { x: 0, y: (w.velocity?.y ?? 0) - 20 * dt, z: 0 };
+      continue;
+    }
+
+    const sight = prey && hasSight(ctx, pos, prey.feetPosition, w.id, prey.id);
+    const way = !sight && goal ? stepToward(pos.x, pos.z, goal.x, goal.z, 25) : null;
+    const tgt = way && way.cells > 0 ? way.next : goal;
+    const dx = tgt.x - pos.x, dz = tgt.z - pos.z, d = Math.hypot(dx, dz) || 1;
+    let vx = (dx / d) * speed, vz = (dz / d) * speed;
+    if (cellAt(pos.x + vx * 0.4, pos.z + vz * 0.4).cx < EDGE_X - 1) { vx = 0; vz = 0; m.roam = null; } // keep within The Edges
+    w.velocity = { x: vx, y: (w.velocity?.y ?? 0) - 20 * dt, z: vz };
+    if (vx || vz) w.rotation = { yaw: (Math.atan2(-vx, -vz) * 180) / Math.PI };
+    const mode = Math.hypot(vx, vz) > 0.1 ? "skitter" : "idle";
+    if (m.mode !== mode) { m.mode = mode; w.anim.body = { clip: CLIP[mode], loop: "loop", speed: speed > 3 ? 1.5 : 1 }; }
+  }
+}
 
   // Keep L.smilers active inside The Edges (cx >= EDGE_X)
   const all = ctx.query({ tags: ["l21-smiler"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
