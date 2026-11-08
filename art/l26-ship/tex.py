@@ -69,7 +69,7 @@ dec = Image.new("RGBA", (DW, DH), (0, 0, 0, 0)); dd = ImageDraw.Draw(dec)
 f = ImageFont.truetype(FB, 170)
 txt = "ADVENTURE"; x = int(0.6 * PM)
 for ch in txt:
-    dd.text((x, 90), ch, font=f, fill=(14, 14, 16, 255)); x += int(dd.textlength(ch, font=f) + 0.06 * PM)
+    dd.text((x, 40), ch, font=f, fill=(14, 14, 16, 255)); x += int(dd.textlength(ch, font=f) + 0.06 * PM)
 adv_end = x
 def spray(img, pts, w, col=(196, 18, 16), drips=True):
     lay = Image.new("RGBA", img.size, (0, 0, 0, 0)); ld = ImageDraw.Draw(lay)
@@ -91,12 +91,12 @@ def spray(img, pts, w, col=(196, 18, 16), drips=True):
     res = Image.alpha_composite(Image.fromarray(oa), lay.filter(ImageFilter.GaussianBlur(1.2)))
     img.alpha_composite(res)
 # two crude cross-out strokes and a zig-zag through ADVENTURE
-spray(dec, [(10, 210), (adv_end * 0.3, 175), (adv_end * 0.62, 200), (adv_end, 150)], 26)
-spray(dec, [(30, 120), (adv_end * 0.45, 165), (adv_end * 0.8, 125), (adv_end - 10, 175)], 22)
-zz = [(40 + i * (adv_end - 80) / 14, 110 + (i % 2) * 140 + R.uniform(-15, 15)) for i in range(15)]
+spray(dec, [(10, 160), (adv_end * 0.3, 125), (adv_end * 0.62, 150), (adv_end, 100)], 26)
+spray(dec, [(30, 70), (adv_end * 0.45, 115), (adv_end * 0.8, 75), (adv_end - 10, 125)], 22)
+zz = [(40 + i * (adv_end - 80) / 14, 60 + (i % 2) * 140 + R.uniform(-15, 15)) for i in range(15)]
 spray(dec, zz, 14, drips=False)
 # "SS Fun =)" sprayed beside it, hand-drawn strokes (bigger, wobbly)
-sx = adv_end + 0.5 * PM; lay = Image.new("RGBA", (DW, DH), (0, 0, 0, 0))
+sx = 5.2 * PM; lay = Image.new("RGBA", (DW, DH), (0, 0, 0, 0))
 fs = ImageFont.truetype(FS, 175)
 cur = sx
 for ch in "SS Fun =)":
@@ -105,7 +105,7 @@ for ch in "SS Fun =)":
     m = m.rotate(R.uniform(-9, 9), resample=Image.BICUBIC).filter(ImageFilter.GaussianBlur(2.5))
     ma = (np.asarray(m, float) > 120).astype(np.uint8) * 255
     col = Image.new("RGBA", (260, 300), (205, 20, 18, 255)); col.putalpha(Image.fromarray(ma))
-    yoff = int(R.uniform(140, 175)); lay.alpha_composite(col, (int(cur), yoff))
+    yoff = int(R.uniform(270, 295)); lay.alpha_composite(col, (int(cur), yoff))
     # drips under each glyph
     ld = ImageDraw.Draw(lay)
     for k in range(R.randint(1, 3)):
