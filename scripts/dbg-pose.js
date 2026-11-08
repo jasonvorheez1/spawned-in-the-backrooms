@@ -3,6 +3,6 @@ export function onSpawn(ctx) { pose(ctx) }
 export function update(ctx) { if (!ctx.self.session.posed) pose(ctx); ctx.sleep() }
 function pose(ctx) {
   const s = ctx.self.state; if (!s?.clip) return
-  ctx.self.anim.base = { clip: s.clip, loop: "loop", weight: 1 }
+  ctx.self.anim.idle = { clip: s.clip, loop: true, weight: 1 }
   ctx.self.session.posed = true
 }
