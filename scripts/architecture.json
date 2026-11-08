@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2150,
-  "updatedAt": "2026-11-08T18:56:02.728Z",
-  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Shared player, NPC, loot, combat and presentation systems support those levels; Level 11 Realty leads to a separately built green-house interior with owner-saved furnishings, storage and player-built pieces.",
+  "basedOnSpecVersion": 2153,
+  "updatedAt": "2026-11-08T18:59:08.502Z",
+  "summary": "The Backrooms is a multiplayer survival RPG with persistent player progression across authored and simulation-built levels. Shared player, NPC, loot, combat and presentation systems support those levels; authored NPC dialogue now also routes into level-specific quests for Levels 8, 10, 11 and 2.1.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 / The Lobby, yellow maze and safe-room hub; authored fixtures, shifting walls, hunters and sanctuary/lore props.",
@@ -32,17 +32,17 @@
     "scripts/lib/combat.js + combat.yml + scripts/lib/ballistics.js - shared hit/armor and firearm accuracy/projectile rules for player and NPC combat.",
     "scripts/lib/condition.js + condition.yml, difficulty.yml and scripts/lib/stats.js - weapon/armor condition, balance and derived handling/carry values.",
     "scripts/lib/nav.js + builtin/nav; scripts/lib/footsteps.js + footsteps.yml - shared NPC path search and surface-clip selection; scripts/lib/photo2006.js supplies photographic finishing.",
-    "scripts/lib/data/tv-channels.yml + snacks.yml + scripts/lib/items.js - home CRT media and microwave food definitions; scripts/lib/build-piece.js builds the shared piece spec for scripts/build.js and places/home11/sim.js."
+    "scripts/lib/level8-quests.js, level10-quests.js, level11-quests.js and level21-quests.js - dialogue quest definitions, player-step/HUD updates, and completion rewards; scripts/talk.js dispatches their handlers."
   ],
   "notableExports": [
     "sim.js - cadence, tick, onOutOfBounds; places/level21/sim.js and places/level61/sim.js - cadence, tick; places/level11/sim.js - cadence, L11_FAR, l11Lean, tick.",
     "places/home11/sim.js - cadence, tick; scripts/home11-door.js - ding and ears.press; scripts/grab.js - setDown, onInput, update; scripts/build.js - onInput, update; scripts/lib/build-piece.js - builtSpec.",
     "places/level10/sim.js and places/level184/sim.js - cadence, tick; scripts/terrain10.js and terrain184.js - heightAt, materialAt; barn/farmhouse/props builders supply geometry.",
+    "scripts/lib/level8-quests.js - QUESTS8, setCarlaStep, setSpiderStep, setKarstStep, finishQuest8, handleDialogueQuest8; scripts/lib/level21-quests.js - QUESTS21, setSaltineStep, setEdgesStep, finishQuest21, handleDialogueQuest21.",
     "scripts/lib/level10-quests.js - quest definitions/setters/dialogue; scripts/lib/fishing.js - water checks, fishing lifecycle and loot helpers; scripts/bobber.js - spawn, schedule, update, cleanup.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, pullToken, useSnack, onInput and fishing handlers; scripts/lib/body3.js - swing3, fire3, stance.",
     "scripts/lib/ambient.js - fan, fanHousing, cable and atmosphere/effect builders; scripts/ambient-anim.js - onSpawn, update.",
-    "scripts/lib/level11-city.js - layCity, layStreet, tickCity; scripts/lib/level11-shop.js - SHOP, layShop; scripts/lib/level11-elevator.js - elevator schedule/call/ears/update.",
-    "scripts/l11-mall.js - geometry for mall shell, awning and shop interiors; scripts/loot-ui.js - lootUi; scripts/interact.js - openLoot, talk, ears, onInput, update."
+    "scripts/lib/level11-city.js - layCity, layStreet, tickCity; scripts/lib/level11-shop.js - SHOP, layShop; scripts/lib/level11-elevator.js - elevator schedule/call/ears/update; scripts/talk.js - openDialogue, heard, stopDance, onInput, update."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo/condition, needs, money, visits, combat/rewards, clothing, karma/rep and level access.",
@@ -51,8 +51,8 @@
     "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes, skills, points, tags and sheet state; initialize/migrate/spend points and derive carry/combat values.",
     "scripts/craft.js - craft actions, recipe costs/outputs/skills/bench gating, payout redemption and needs drain; scripts/swim.js owns swim/breath session state.",
     "scripts/interact.js + scripts/lib/seat.js - focus, loot and sit state; interact.js owns loot UI and persists configured storage contents to player.state[saveKey].",
-    "scripts/talk.js owns dialogue/shop UI and NPC rapport/trade/rep; quest libraries own quest-step keys and synchronize the shared quest HUD/payout state.",
-    "places/home11/sim.js owns builtV and live fridge/tote/moved state; scripts/build.js writes player.state.homeKeep.built for pieces placed in home11, while home11-door.js/grab.js mirror packed/moved furnishings to homeKeep and fridge contents sync through player.state.homeFridge."
+    "scripts/talk.js owns dialogue/shop UI, rapport/trade/rep, and authored-choice heal/recruit/discount effects; level quest libraries own their quest keys/HUD/payout path, while scripts/l8-use.js also writes Level 8 interaction flags and direct-use rewards.",
+    "places/home11/sim.js owns builtV and live fridge/tote/moved state; scripts/build.js writes player.state.homeKeep.built for pieces placed in home11, while home11-door.js/grab.js mirror packed/moved furnishings to homeKeep and fridge contents to homeFridge."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim, interact/grab/rest/mahjong/talk/build/stats/craft/OS/lockpick/spamton-fight/horde, then critter, main-menu and view3; routing is configured there.",
@@ -62,11 +62,11 @@
     "Level threshold trigger → scripts/level-door.js maps paired IDs and writes arrival clipKind/calls companion.bring → followers cross; player.js consumes clipKind to xfer.kind and noclip-ui renders transition.",
     "places/level10/sim.js → terrain-relative farm, NPCs and usable props; scripts/level10-use.js ears.press updates harvesting, crafting/resources and quest state.",
     "Level 7/10/11 rod casts: scripts/player.js → scripts/lib/fishing.js validates place-specific water, spawns scripts/bobber.js and stores fishingState → scheduled handlers resolve catches.",
-    "Level 11 Realty dialogue → scripts/talk.js / scripts/lib/level11-quests.js debits cents and writes home11; scripts/level11-use.js checks ownership at exterior door → enters home11.",
-    "places/level11/sim.js spawns scripts/l11-mall.js shell and per-shop interiors plus placed storefront signs; the mall builder varies clinic, lab and bakery geometry by shop kind.",
-    "places/home11/sim.js builds/rebuilds the home and restores the resident's homeFridge/homeKeep; home door ears.press handles exits, doors, tote, bed, appliances and entertainment.",
-    "scripts/build.js B-mode click validates placement and spends scrap, then calls scripts/lib/build-piece.js; in home11 it writes kind/position/rotation to player.state.homeKeep.built and spawns the piece, while other places spawn an unsaved piece.",
-    "scripts/grab.js Z picks up breakables or sufficiently small props and writes carryId/carry/carryMul; held Z tap sets down or hold throws; at home, the tote handler packs/unpacks furnishings and home11/sim restores packed/moved state plus hb-* pieces from the owner's homeKeep."
+    "NPC dialogue: scripts/lib/npc-starters.js supplies authored choices → scripts/talk.js matches them, rolls optional skill checks and applies reply/heal/recruit/discount effects; unmatched text goes to the LLM path.",
+    "scripts/talk.js checks Level 11, 10, 8, then 21 dialogue quest handlers; quest libraries write their quest flags/HUD, notices/feed and payout. Level 8 turn-ins read interaction flags produced by scripts/l8-use.js.",
+    "scripts/l8-use.js ears.press handles Level 8 props: kazoo pickup writes player.state.kazoo, loop writes l8Loops, and the Carla interaction can reward/deliver; level8-quests.js provides parallel dialogue start/turn-in handling.",
+    "Level 11 Realty dialogue → scripts/talk.js / scripts/lib/level11-quests.js debits cents and writes home11; places/level11/sim.js spawns scripts/l11-mall.js shop interiors; scripts/level11-use.js checks ownership at exterior door → enters home11.",
+    "places/home11/sim.js builds/rebuilds the home and restores owner state; home11-door.js handles home interactions. scripts/build.js uses build-piece.js and saves home11 pieces; scripts/grab.js carries and places objects, with home tote/moved state mirrored by home handlers."
   ],
   "behaviorFamilies": [
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and red-zone variants; Level 5 has portal/quest props and scripts/l5-rats.js Boiler Room Death Rat packs.",
@@ -75,8 +75,8 @@
     "scripts/lib/craft.js + scripts/lib/data/craft.yml - recipes vary by category, cost, skill, bench and output; canonical weapon IDs connect crafting to equip/combat/condition.",
     "places/level21/sim.js + level21.yml + level21-geo.js - shared room blocks vary by room type, zone height, lighting, decor and deterministic layout hashes.",
     "places/level61/sim.js + scripts/lib/level61-extra.js + l61-use/staff/diner/jukebox scripts - food-court venues share service systems with varying menus and Faceling roles.",
-    "scripts/lib/level11-city.js + level11-models.yml + art/level11 kits - generated buildings vary by seeded district/material/placement; sidewalks and kerbs vary into spans that leave street crossings open; scripts/l11-mall.js varies shop interiors by kind.",
-    "scripts/lib/build-piece.js - one canonical built-spec builder reused by scripts/build.js and places/home11/sim.js; B.pieces kind controls dimensions, material, health and bench tags while saved home placement supplies position/rotation."
+    "scripts/lib/level11-city.js + level11-models.yml + art/level11 kits - generated buildings vary by seeded district/material/placement; sidewalks and kerbs leave street crossings open; scripts/l11-mall.js varies interiors by shop kind.",
+    "scripts/lib/npc-starters.js + scripts/talk.js - authored NPC choices vary by character and can add skill checks/service effects; level8-quests.js and level21-quests.js add character-specific quests alongside Level 10/11 dialogue quests."
   ],
   "probableOrphans": [],
   "migrationNotes": [
@@ -84,7 +84,7 @@
     "Paired transitions (Level 2.1↔2, 6↔6.1, 6.1↔11, 10↔11) are owned by level-door.js; Level 10 lake-deep trigger targets level7#l7-from-l10.",
     "Level 10/184 use terrain10.js/terrain184.js heightmap/material queries; keep y placements and arrival/track regions aligned; Level 10 wheat maxDistance is 120 m with 35 m fade.",
     "Fishing uses world-space positions and canonical place-specific water regions/surface heights; keep fishing.js checks aligned with sim geometry; bobbers are named spawned objects.",
-    "Level 10 quest steps live in player.state.wheatQ/watcherQ/cellarQ plus resource counts/pages; setters synchronize player.state.quest HUD slot.",
-    "Home builder is V=35; retain h-fridge.state.items and mirror place.state.packed/moved into the resident player's homeKeep keyed by owner; built pieces are stored in homeKeep.built (max 80), identified by hb-* IDs, and must use builtSpec from B.pieces when home11 rebuilds them."
+    "Level 10 quest steps live in player.state.wheatQ/watcherQ/cellarQ plus resource counts/pages; setters synchronize player.state.quest HUD slot. Level 8 and 21 dialogue quests also share player.state.quest and write their own carlaQ/spiderQ/karstQ and saltineQ/edgesQ keys.",
+    "Home builder is V=35; retain h-fridge.state.items and mirror place.state.packed/moved into the resident player's homeKeep keyed by owner; built pieces are stored in homeKeep.built (max 80), identified by hb-* IDs, and must use builtSpec from build-piece.js."
   ]
 }
