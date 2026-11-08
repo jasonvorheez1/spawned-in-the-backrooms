@@ -998,7 +998,7 @@ export function update(ctx, dt) {
     const interval = sprinting ? 0.32 : crouched ? 0.7 : 0.48
     if (w.stepClock >= interval) {
       w.stepClock = 0
-      const fl = floorOf(ctx), F = STEPS[fl]
+      const fl = floorOf(ctx), F = STEPS[fl] ?? STEPS.carpet ?? Object.values(STEPS)[0]
       const clip = w.wet ? 'footstep-soaked-carpet-deep-squelch' : sprinting ? F.run : F.walk
       sound(ctx, clip, (w.wet ? 0.4 : sprinting ? F.v * 1.4 : F.v) * (crouched ? 0.3 : 1) * (0.85 + Math.random() * 0.3), true) // each step a touch louder or softer: no machine-gun repeat
     }
