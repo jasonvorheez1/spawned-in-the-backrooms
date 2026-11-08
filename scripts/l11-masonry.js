@@ -46,6 +46,22 @@ export function geometry(ctx) {
     ctx.albedo(TEX); ctx.color("oklch(0.32 0.03 160)"); box(x0 - 0.01, 0, -L / 2, x1 + 0.01, 0.5, -S / 2); box(x0 - 0.01, 0, S / 2, x1 + 0.01, 0.5, L / 2);
     return;
   }
+  if (p.kind === "parapet") { // a stone balustrade along Z: plinth, turned balusters, coping, end piers. feet at the bottom, height H, length L
+    const { L, t, H } = p, lod = ctx.lod ?? 1, x0 = -t / 2, x1 = t / 2;
+    ctx.albedo(STONE); ctx.color("oklch(0.66 0.015 80)");
+    box(x0, 0, -L / 2, x1, 0.18, L / 2); // plinth
+    box(x0 - 0.05, H - 0.14, -L / 2, x1 + 0.05, H, L / 2); // coping
+    ctx.color("oklch(0.6 0.015 75)");
+    for (const z of [-L / 2 + 0.25, L / 2 - 0.25]) box(x0 - 0.06, 0, z - 0.25, x1 + 0.06, H + 0.12, z + 0.25); // end piers
+    if (lod >= 4) { ctx.color("oklch(0.55 0.015 75)"); box(x0 + 0.05, 0.18, -L / 2 + 0.5, x1 - 0.05, H - 0.14, L / 2 - 0.5); return; }
+    ctx.color("oklch(0.7 0.015 80)");
+    const n = lod <= 2 ? 8 : 5, prof = [[0.18, 0.06], [0.26, 0.05], [0.42, 0.1], [0.58, 0.05], [H - 0.2, 0.045], [H - 0.14, 0.07]];
+    for (let z = -L / 2 + 0.75; z < L / 2 - 0.6; z += 0.32) {
+      const rings = prof.map(([y, r]) => Array.from({ length: n }, (_, j) => { const a = (j / n) * 6.2832; return [Math.cos(a) * r, y, z + Math.sin(a) * r]; }));
+      for (let i = 0; i < rings.length - 1; i++) for (let j = 0; j < n; j++) { const k = (j + 1) % n; ctx.quad(...rings[i][j], ...rings[i][k], ...rings[i + 1][k], ...rings[i + 1][j]); }
+    }
+    return;
+  }
   // quay
   const { L, t, H, side } = p, f = (side * t) / 2;
   ctx.albedo(TEX); ctx.color("oklch(0.62 0.02 240)"); box(-L / 2, 0, -t / 2, L / 2, H, t / 2);
@@ -71,5 +87,6 @@ export function collider(ctx) {
       { kind: "box", width: p.t, height: p.H - p.r, depth: p.S, center: [0, p.r + (p.H - p.r) / 2, 0] },
     ];
   }
+  if (p.kind === "parapet") return [{ kind: "box", width: p.t, height: p.H, depth: p.L, center: [0, p.H / 2, 0] }];
   return { kind: "box", width: p.L, height: p.H, depth: p.t, center: [0, p.H / 2, 0] };
 }

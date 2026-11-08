@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 49; // bump to rebuild the city in rooms that are already open
+const V = 50; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -287,8 +287,8 @@ function lay(ctx) {
   bx("l11-bridge-deck", 0, -0.05, CANAL_Z, 17, 0.6, CANAL_W + 4, ASPHALT);
   sp("l11-bridge-arch-w", { feetPosition: { x: -8.5, y: -2.4, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "arch", L: CANAL_W + 4, t: 1.2, H: 4.2, S: CANAL_W - 3, r: 2.9 } }, physics: "static" });
   sp("l11-bridge-arch-e", { feetPosition: { x: 8.5, y: -2.4, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "arch", L: CANAL_W + 4, t: 1.2, H: 4.2, S: CANAL_W - 3, r: 2.9 } }, physics: "static" });
-  bx("l11-bridge-parapet-w", -8.4, 0.5, CANAL_Z, 0.4, 0.95, CANAL_W + 4, CURB_MAT);
-  bx("l11-bridge-parapet-e", 8.4, 0.5, CANAL_Z, 0.4, 0.95, CANAL_W + 4, CURB_MAT);
+  sp("l11-bridge-parapet-w", { feetPosition: { x: -8.4, y: 0.5, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "parapet", L: CANAL_W + 4, t: 0.4, H: 0.95 } }, physics: "static" });
+  sp("l11-bridge-parapet-e", { feetPosition: { x: 8.4, y: 0.5, z: CANAL_Z }, primitive: { kind: "scripted", script: "scripts/l11-masonry.js", params: { kind: "parapet", L: CANAL_W + 4, t: 0.4, H: 0.95 } }, physics: "static" });
 
   // Bridge Warm Lanterns
   [-7.5, 7.5].forEach((lx, k) => {
