@@ -5,7 +5,7 @@ import { critterSpec } from "./critter-model.js"
 export const PHOEBE_LOOK = {
   species: "cat", sex: "f", fur: "#d9824a", belly: "#f3d9c4", tip: "#f3d9c4", nose: "#c86f6a", eye: "#1a1214",
   topw: "jacket", top: "#d29a2c", botw: "longskirt", bottom: "#17141a", shoes: "boots", shoec: "#121014",
-  neck: "bowtie", neckc: "#a8202a", expr: "smile",
+  neck: "cape", neckc: "#c8922a", expr: "smile",
 }
 // a local, unsaved watcher: spawned on the viewer's own machine for one beat, gone after `life` seconds
 export function spawnPhoebe(ctx, id, at, yaw, life) {
