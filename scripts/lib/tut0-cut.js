@@ -6,9 +6,10 @@ import { BEATS, SOFT, ENC, HALO, DRAWINGS, PACE } from "./tut0.js"
 import { spawnPhoebe, dropPhoebe } from "./phoebe.js"
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const SMILER_MODEL = { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" } // scripts/smilers.js
-export const LEN = { encounter: 16.5, halogen: 6, drawings: 10, final: 23 }
+export const LEN = { encounter: 16.5, smiler: 11, halogen: 6, drawings: 10, final: 23 }
 const GASP = "/cdn/value.1f5d195f954552c9304c8d13f9177b97b62b100316d004215a918c9282445aad.mp3"   // Shelly's horror pack: Gasp.wav
 const BREATHF = "/cdn/value.92bf175ed8ff7226b4ca07fa700883e57e814e1ef5cefa26e09a4a8eac38b2b6.mp3" // Breathing_fast.wav
+const PHOEBE_WHISPER = `/cdn/voice-soft-breathy-young-woman-whispering-amused-saying-${encodeURIComponent("Found another one.")}.mp3`
 const BREATH = "/cdn/value.60bf2d4498f8ed4068160ee05c1cfd064e645f3eb921729cf5a8fd3f1d127754.mp3"  // Breathing_slow.wav
 function raw(ctx, ref, v, at) { ctx.emit("playSound", { clip: ref, position: at ?? ctx.self.feetPosition, volume: v, maxDistance: 400 }, { audience: { player: ctx.self.id } }) }
 const ss = (a, b, t) => { const u = Math.min(1, Math.max(0, (t - a) / (b - a))); return u * u * (3 - 2 * u) }
@@ -46,7 +47,38 @@ export function t0Tick(ctx, ses, st) {
   st.t0n = (st.t0n ?? 0) + 1; st.t0cut = null; ses.t0 = null
   return id === "final" ? "level1" : true
 }
+const GRIN_SVG = `<svg viewBox='0 0 100 60' width='0.9m' billboard='full'><g filter='drop-shadow(0 0 3px #fffbe8)'><ellipse cx='30' cy='14' rx='7' ry='4.5' fill='#f4f1e2'/><ellipse cx='70' cy='14' rx='7' ry='4.5' fill='#f4f1e2'/><path d='M10 30 Q50 64 90 30 Q50 45 10 30 Z' fill='#f4f1e2'/><path d='M20 34 L22 42 M30 37 L31 47 M40 39 L40 50 M50 40 L50 51 M60 39 L60 50 M70 37 L69 47 M80 34 L78 42' stroke='#17150f' stroke-width='1.8'/></g></svg>`
 const BEAT = {
+  // hall C: the panels die one by one from the far end toward them; in the black, a grin. It comes closer in jumps. The lights bang back on: nothing there
+  smiler(ctx, c, t, once) {
+    const me = ctx.self, x0 = c.p0.x, z = -28
+    const p = { x: lerp(x0, x0 - 2.2, ss(4.2, 9, t)), y: 0, z: c.p0.z }
+    me.feetPosition = p; me.rotation = { yaw: -90 }
+    me.anim.cut = t > 4.2 && t < 9 ? { clip: "cdn/clip-walk-loop.glb", weight: 4, loop: "loop", speed: -0.6 } : { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" }
+    c.orig ??= {}
+    ;[13, 12, 11, 10, 9].forEach((i, k) => { if (t > 0.7 + k * 0.6) once("die" + i, () => {
+      const o = ctx.getObject(`t0-light-${i}`); if (o?.light) { c.orig[i] = o.light.intensity; o.light = { ...o.light, intensity: 0 } }
+      raw(ctx, N("fluorescent-tube-pop-and-die-click-buzz-cut"), 0.8, o?.feetPosition ?? p)
+    }) })
+    const spots = [[4.0, 13], [6.3, 7.5], [8.1, 3.6]] // [when, metres ahead of where they started]
+    for (const [when, ahead] of spots) if (t > when) once("grin" + when, () => {
+      if (c.smiler) ctx.destroy(c.smiler)
+      c.smiler = ctx.spawn({ audience: "local", scope: "session", lifetime: 30, feetPosition: { x: x0 + ahead, y: 1.45, z }, vector: GRIN_SVG, children: [{ feetPosition: { x: 0, y: 0, z: 0 }, light: { kind: "point", color: "#fffbe8", intensity: 0.25, distance: 1.6 } }] })
+      raw(ctx, N(when < 5 ? "low-wet-clicking-chuckle-in-darkness" : "sharp-horror-sting-whoosh-close"), when < 5 ? 0.7 : 0.9, { x: x0 + ahead, y: 1.4, z })
+      if (when > 5) fx1(ctx, "screenShake", { intensity: when > 8 ? 0.35 : 0.18, duration: 0.3 })
+      if (when > 8) { raw(ctx, GASP, 0.8); fx1(ctx, "cameraPunch", { direction: { x: -1, y: 0, z: 0 }, intensity: 0.6 }) }
+    })
+    if (t > 5) once("breathf", () => raw(ctx, BREATHF, 0.6))
+    if (t > 9.3) once("on", () => {
+      if (c.smiler) { ctx.destroy(c.smiler); c.smiler = null }
+      for (const [i, v] of Object.entries(c.orig)) { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) o.light = { ...o.light, intensity: v } }
+      raw(ctx, N("fluorescent-lights-slam-back-on-heavy-relay-clunk-hum"), 1.0, p); fx1(ctx, "screenFlash", { color: "#fff6c8", duration: 0.2, intensity: 0.6 })
+    })
+    const head = { x: p.x, y: 1.6, z: p.z }
+    ctx.view.camera = { eye: head, aim: { x: p.x + 10, y: 1.45, z }, fov: t < 4 ? 62 : lerp(62, 44, ss(4, 8.4, t)) }
+    if (t > LEN.smiler) return true
+    return false
+  },
   // unarmed. something crawls out of hall C; they back into the corner; the broken desk; a leg on the floor; one swing; run
   encounter(ctx, c, t, once, st) {
     const me = ctx.self, cor = { x: ENC.corner.x, y: 0, z: ENC.corner.z }, legAt = { x: ENC.leg.x, y: 0.05, z: ENC.leg.z }
@@ -156,7 +188,7 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
     const wall = { x: 45, y: 1.35, z: 4 }, past = { x: 45, y: 0, z: 4.6 }
     if (t < S) me.feetPosition = { x: lerp(c.p0.x, at.x, ss(0, 0.8, t)), y: 0, z: lerp(c.p0.z, at.z, ss(0, 0.8, t)) }
     else me.feetPosition = L3(at, past, ss(S, S + 3.0, t))
-    me.rotation = { yaw: t < 1.8 || t >= S ? 180 : Math.atan2(-(her.x - at.x), -(her.z - at.z)) * 180 / Math.PI } // the wall, then the feeling of being watched, then the wall again
+    me.rotation = { yaw: 180 } // eyes on the wall the whole time: they never know she's there
     once("phoebe", () => {
       spawnPhoebe(ctx, "phoebe-end", { x: her.x, y: 0, z: her.z }, 180, 11 * PACE) // half of her round the corridor mouth's east corner, the rest behind the wall, watching
       for (const [i, v] of [[18, 0.15], [19, 0.6], [20, 0.6]]) { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) o.light = { ...o.light, intensity: v } }
@@ -165,6 +197,7 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
     if (t > 4.9) once("phoebeGone", () => dropPhoebe(ctx, "phoebe-end")) // gone in the cut, never seen leaving
     once("hum", () => { raw(ctx, N("electrical-static-crackle-buzzing-inside-wall"), 0.7, wall); me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
     if (t > 2.0) once("breath", () => raw(ctx, BREATH, 0.5))
+    if (t > 3.0) once("whisper", () => raw(ctx, PHOEBE_WHISPER, 0.5, her)) // under the hum, from down the hall
     if (t > 4.2) once("groan", () => snd(ctx, "deep-rumble-groan", 0.8))
     if (t > S) once("walk", () => { me.anim.cut = { clip: "cdn/clip-walk-loop.glb", weight: 4, loop: "loop", speed: 0.8 } })
     if (t > S + 2.2) once("score", () => raw(ctx, SCORE, 1.0)) // the score comes up as they touch the wall and carries the fall and the title
@@ -177,7 +210,7 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
     if (t > S + 6.2) once("thud", () => snd(ctx, "heavy-impact-thud-boom", 0.7))
     if (t > 13.4) once("title", () => raw(ctx, N("title-reveal-massive-reverse-swell-boom"), 1.0)) // lands with the name (cutscene-ui: 13.7 s)
     if (t < 2) { const u = ss(0, 2, t); ctx.view.camera = { eye: { x: at.x + 0.4, y: 1.6, z: at.z + 0.6 }, aim: wall, fov: lerp(55, 32, u) } } // the wallpaper ahead, crawling
-    else if (t < S) { const u = ss(2, S, t); ctx.view.camera = { eye: { x: at.x + 0.35, y: 1.62, z: at.z - 0.45 }, aim: L3({ x: her.x - 0.6, y: 1.3, z: her.z }, { x: her.x - 0.15, y: her.y, z: her.z }, u), fov: lerp(30, 17, u) } } // over their shoulder down the hall: someone, half round the corner
+    else if (t < S) { const u = ss(2, S, t); ctx.view.camera = { eye: { x: 44.2, y: 1.5, z: 2.8 }, aim: L3({ x: 44.9, y: 1.45, z: -4 }, { x: 44.95, y: 1.4, z: -12 }, u), fov: lerp(46, 36, u) } } // from the wall: their face, oblivious, and far up the hall behind them half a shape round the corner
     else { const p = me.feetPosition, k = ss(S + 2.7, S + 3.4, t); ctx.view.camera = { eye: { x: at.x + 0.5, y: 1.75, z: lerp(Math.min(p.z - 2.2, 1.6), 4.4, k) }, aim: { x: wall.x, y: wall.y, z: wall.z + 1 }, fov: lerp(50, 80, k) } } // behind them as they press in, then the lens goes through after them
     if (t > LEN.final) { st.t0Done = true; st.t0fade = ctx.now(); return true }
     return false
