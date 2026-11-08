@@ -105,6 +105,16 @@ export const ears = {
       return;
     }
 
+    // 4B. THE WOODEN DOOR IN THE FLOOR OF THE CIRCULAR FORMATION (Level 9; Tiny's lair)
+    if (s.kind === "hatch") {
+      snd(ctx, { x: -150, y: -21, z: 0 }, "heavy-wooden-knock-on-hollow-door-underwater", 0.8, 40);
+      ctx.emit("screenShake", { intensity: 0.3, duration: 1.2 }, { audience: { player: by } });
+      ctx.emit("playSound", { clip: G("deep-whale-like-groan-from-far-under-dark-water"), position: { x: -150, y: -21, z: 0 }, volume: 0.9, refDistance: 40, maxDistance: 300 }, { audience: { player: by } });
+      who.state.sanity = Math.max(0, (who.state.sanity ?? 80) - 6);
+      say(who, "You pull at the iron ring. The door does not give. Something heavy turns over on the other side and the water round the pillars goes still. (Sanity -6)", ctx);
+      return;
+    }
+
     // 5. ALTAR OF THE DEEP / LEVIATHAN RIBCAGE SHRINE (Fort Surrender Summit)
     if (s.kind === "altar") {
       const done = (s.blessedBy ??= {})[uid];
@@ -113,7 +123,7 @@ export const ears = {
       ctx.emit("screenShake", { intensity: 0.16, duration: 1.0 }, { audience: { player: by } });
       ctx.emit(
         "playSound",
-        { clip: G("deep-whale-like-groan-from-far-under-dark-water"), position: { x: -110, y: -8, z: -250 }, volume: 0.8, refDistance: 80, maxDistance: 400 },
+        { clip: G("deep-whale-like-groan-from-far-under-dark-water"), position: { x: -85, y: -8, z: -115 }, volume: 0.8, refDistance: 80, maxDistance: 400 },
         { audience: { player: by } }
       );
       if (!done) {

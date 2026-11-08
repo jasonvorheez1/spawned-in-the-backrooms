@@ -12,6 +12,7 @@
 
 import { keepPeople, every } from "../../scripts/lib/level-kit.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
+import { layExtras } from "../../scripts/lib/level7-extras.js";
 export const cadence = "2s";
 
 // Tripo models for the props (Savi, Nov 7): each fits a layout box; breakables take tag + { mat, hp, maxHp } (lib/breakables.js)
@@ -88,7 +89,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 12; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
+const V = 13; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
 
 const CONCRETE = {
@@ -781,6 +782,8 @@ function lay(ctx) {
     ctx.spawn(`l7-skeleton-${k}`, { feetPosition: { x, z, y: { terrain: 0.02 } }, rotation: { yaw: k * 61 }, scale: 1.0 + (k % 3) * 0.12, model: { id: GLB.skeleton } });
   });
 
+  layExtras(ctx, GLB, fit);
+
   // =========================================================================
   // 5. DUAL ABYSSAL TITANS: ENTITY 20 ("THE THING ON LEVEL 7") & "TINY"
   // =========================================================================
@@ -897,7 +900,7 @@ export function tick(ctx) {
   if ((s.builtV ?? 0) < V) {
     for (const id of Object.keys(ctx.place.objects)) if (GONE.includes(id) || /^l7-(plank|post)-/.test(id)) ctx.destroy(id);
     // rooms built before the fort moved still hold its old pieces (and the worshippers, standing where it was): clear them so the new ones are laid and the people come back
-    for (const id of Object.keys(ctx.place.objects)) if (/^l7-(fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$)/.test(id)) ctx.destroy(id);
+    for (const id of Object.keys(ctx.place.objects)) if (/^(l7x-|l7-(fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$))/.test(id)) ctx.destroy(id);
     s.npcGone = {};
     lay(ctx);
     s.builtV = V;
@@ -910,7 +913,7 @@ export function tick(ctx) {
   }
 
   const now = ctx.now();
-  tickChatter(ctx, CHATTER.level7, { "l7-vance": "reyes", "l7-jude": "hollis", "l7-mara": "mags" }); // the fort talks among itself, Vance talks to his radio
+  tickChatter(ctx, CHATTER.level7, { "l7-vance": "reyes", "l7-jude": "hollis", "l7-mara": "mags", "l7-ezra": "reyes", "l7-ines": "mags", "l7-tobit": "hollis" }); // the fort talks among itself, Vance talks to his radio
 
   // Smashed props grow back after 60 min, never in someone's face
   if (every(ctx, "regrow", 5000)) {

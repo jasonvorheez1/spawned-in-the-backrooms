@@ -7,6 +7,7 @@ export const ISLES = [
   { x: 0, z: 0, r: 26, top: 4, flat: 0.38 },      // the entrance rock
   { x: 46, z: -120, r: 34, top: 7, flat: 0.25 },  // the near island
   { x: -70, z: -95, r: 55, top: 11, flat: 0.3 }, // the nearest island to the entrance (the wiki: Fort Surrender stands on it)
+  { x: 4, z: 8, r: 46, top: -7, flat: 0.12 },      // the tall mountain on the sea floor almost directly below the entrance (the way down to Level 8)
 ];
 export function heightAt(ctx) {
   const { x, z, noise, seedOffset } = ctx;
