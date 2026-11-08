@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 71; // bump to rebuild the city in rooms that are already open
+const V = 72; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1349,7 +1349,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   // "A high density city street jam packed with people and stalls for various foodstuffs."
   // "The Capital is the main residential hub for the entirety of Level 11."
   const MKT_X = -13.8;
-  const MKT_Z = 36.0;
+  const MKT_Z = 50.5; // moved off the mall front (Shelly: "move that fruit stand somewhere else")
 
   // Timber market stall frame
   md("l11-market-stall", "market_stall", MKT_X - 0.8, 0.1, MKT_Z, undefined, "box", { rotation: { yaw: 0 }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 3.3, z: 6 } } } });
