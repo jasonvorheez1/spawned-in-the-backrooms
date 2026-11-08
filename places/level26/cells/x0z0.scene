@@ -362,14 +362,15 @@ l26-exit-poster:
 l26-funnel:
   feetPosition: {x: 0, y: 3.4, z: 12}
   id: l26-funnel
-  material: {color: oklch(0.45 0.16 25), roughness: 0.5}
-  physics: static
-  primitive: {height: 7, kind: cylinder, radialSegments: 32, radiusBottom: 2.4, radiusTop: 2}
+  layout: {box: {max: {x: 2.5, y: 8.2, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
+  model: {id: /cdn/value.ab379a19695d40b22c7444489a16651fd6d853ff263d29c2ec4a937e7421fba2.glb}
+  physics: {body: static, collider: cylinder}
 l26-funnel-top:
   feetPosition: {x: 0, y: 10.4, z: 12}
   id: l26-funnel-top
   material: {color: oklch(0.15 0 0), roughness: 0.9}
   primitive: {height: 1.2, kind: cylinder, radialSegments: 32, radiusBottom: 2.05, radiusTop: 2.05}
+  visible: false
 l26-graffiti:
   feetPosition: {x: 0, y: 0.4, z: -18.06}
   id: l26-graffiti
