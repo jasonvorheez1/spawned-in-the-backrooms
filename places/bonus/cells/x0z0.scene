@@ -1054,6 +1054,58 @@ bd-table-4:
   physics: {body: static, collider: box}
   receiveShadow: true
   tags: [bonus-diner]
+bl-arm-1:
+  feetPosition: {x: -8, y: 5.5, z: 12.2}
+  id: bl-arm-1
+  layout: {box: {max: {x: 0.52, y: 1.05, z: 0.475}, min: {x: -0.52, y: 0, z: -0.475}}}
+  model: {forward: "+x", id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
+  physics: static
+  rotation: {yaw: 180}
+bl-arm-2:
+  feetPosition: {x: -8, y: 5.5, z: 15.8}
+  id: bl-arm-2
+  layout: {box: {max: {x: 0.52, y: 1.05, z: 0.475}, min: {x: -0.52, y: 0, z: -0.475}}}
+  model: {forward: "+x", id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
+  physics: static
+  rotation: {yaw: 0}
+bl-glow:
+  feetPosition: {x: -9.4, y: 7.6, z: 14}
+  id: bl-glow
+  light: {color: "#ff7ad9", distance: 6, intensity: 1.6, kind: point}
+bl-lamp:
+  feetPosition: {x: -9.5, y: 5.5, z: 12.3}
+  id: bl-lamp
+  layout: {box: {max: {x: 0.255, y: 1.8, z: 0.255}, min: {x: -0.255, y: 0, z: -0.255}}}
+  model: {forward: "+x", id: /cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb}
+  physics: static
+  rotation: {yaw: 0}
+bl-lava:
+  feetPosition: {x: -9.5, y: 5.5, z: 15.7}
+  id: bl-lava
+  layout: {box: {max: {x: 0.22, y: 0.95, z: 0.22}, min: {x: -0.22, y: 0, z: -0.22}}}
+  model: {forward: "+x", id: /cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb}
+  physics: static
+  rotation: {yaw: 0}
+bl-rug:
+  castShadow: false
+  feetPosition: {x: -8.4, y: 5.51, z: 14}
+  id: bl-rug
+  material: {color: oklch(0.62 0.16 330), roughness: 1}
+  primitive: {depth: 4.2, height: 0.01, kind: box, width: 2.6}
+bl-sofa:
+  feetPosition: {x: -9.4, y: 5.5, z: 14}
+  id: bl-sofa
+  layout: {box: {max: {x: 1.05, y: 1.05, z: 0.505}, min: {x: -1.05, y: 0, z: -0.505}}}
+  model: {forward: "+x", id: /cdn/value.ff13bc205536a957826e2f7fed75554c07ffe7848198e50e1d65f257cabacdd9.glb}
+  physics: static
+  rotation: {yaw: 90}
+bl-table:
+  feetPosition: {x: -8.2, y: 5.5, z: 14}
+  id: bl-table
+  layout: {box: {max: {x: 0.575, y: 0.46, z: 0.295}, min: {x: -0.575, y: 0, z: -0.295}}}
+  model: /cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb
+  physics: static
+  rotation: {yaw: 90}
 bm-deco:
   castShadow: false
   feetPosition: {x: -1.04, y: 0, z: 0}
