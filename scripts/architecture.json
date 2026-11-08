@@ -1,27 +1,28 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2463,
-  "updatedAt": "2026-11-08T21:47:34.602Z",
-  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms and the shared Bonus Room mall. The player template composes movement, combat, loot, interaction and routing behaviors; place scenes and simulations supply authored spaces and local systems, with Level 0 moments and creature ecology seeded by its sim.",
+  "basedOnSpecVersion": 2489,
+  "updatedAt": "2026-11-08T22:03:23.584Z",
+  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms and the shared Bonus Room mall. The player template composes movement, combat, loot, interaction and routing behaviors; place scenes and simulations supply authored spaces and local systems, with Level 0 moments and creature ecology seeded by its sim. Level 26, the SS Fun =), adds a ship-and-fog chapter with Partygoers, Carnivorous Balloons and a first-arrival Phoebe cutscene.",
   "scriptPaths": [],
   "places": [
-    "places/bonus (3D) - shared vaporwave mall with shops, arcade, fountain, court storefronts and west-balcony lounge; the expanded Art Gallery has framed art, sculpture island, rug and lighting.",
+    "places/bonus (3D) - shared vaporwave mall with shops, arcade, fountain, court storefronts and west-balcony lounge; authored shops plus shopper/staff simulation.",
     "places/main (3D) - authored Level 0/Lobby maze; sim generates furniture/loot, safe-room almond water, shifting walls, creature ecology and versioned route-guidance moments.",
     "places/intake (3D) - bedroom character-creation space; scripts/intake-geo.js and intro cutscene support its authored room.",
     "places/tutorial0 (3D, solo ephemeral) - authored Level 0 tutorial route, staged encounter and HALOGEN; tutorial libraries drive geometry and beats.",
-    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored levels with local generation, loot and agents.",
+    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; authored levels with local generation, loot and agents; Level 1's fun poster leads to Level 26.",
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; residents, hazards, office/home systems and Boiler Room rats.",
-    "places/level6, places/level7, places/level10, places/level11 (3D) - later authored/generated levels, including city/farm/venues and local simulations.",
-    "places/debug, places/spamton (3D) - modeling/test scene and separate Spamton basement/boss space."
+    "places/level6, places/level7, places/level10, places/level11 (3D) - later authored/generated levels, including city/farm/venues and local simulations; Level 7 receives Level 26's overboard crossing.",
+    "places/level26 (3D) - SS Fun =), the Adventure cruise ship lost in green fog; party decks, sea, Partygoers and Carnivorous Balloons across two scene cells."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, player/camera setup and ordered behavior composition; L maps to kick.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - place settings, authored placements and local generated/ticked behavior.",
     "sim.js - world cadence and out-of-bounds recovery; places/main/sim.js - Level 0 generation, loot/ecology and place-state timers.",
-    "scripts/main-menu.js + scripts/main-menu-ui.js - title/pause, character creation, arrival and tutorial routing.",
+    "scripts/main-menu.js + scripts/main-menu-ui.js - title/pause, character creation, arrival and tutorial routing; also starts the first-visit Level 26 cutscene.",
     "places/intake/cells/x0z0.scene + scripts/intake-geo.js + scripts/lib/intro-cut.js - bedroom shell and waking sequence.",
     "places/tutorial0/cells/x0z0.scene + scripts/tut0-geo.js + scripts/tut0-panels-geo.js + places/tutorial0/sim.js - tutorial layout and local props.",
-    "scripts/camera.js + scripts/view3.js - camera and third-person toggle; scripts/ui.js and specialized UI scripts present HUD and panels."
+    "places/level26/config.yaml + places/level26/cells/*.scene + scripts/partygoers.js - SS Fun environment, authored ship props and ship entity manager.",
+    "scripts/camera.js + scripts/view3.js - camera and third-person toggle; scripts/ui.js and specialized UI scripts present HUD and panels/cutscenes."
   ],
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings; used by routing and hub handlers.",
@@ -36,12 +37,12 @@
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollItem, spawnCrate, rollLoot, dropLoot and level-specific loot helpers.",
     "scripts/lib/weapons.js - rarityIdx, rarityCap; weapon registry default export.",
-    "scripts/kick.js - onInput, kickEnd, update; wheeled-object shove/kick behavior and lurker release.",
-    "scripts/kick-leg-geo.js - geometry; first-person kick-leg render geometry.",
+    "scripts/kick.js - onInput, kickEnd, update; wheeled-object shove/kick behavior; scripts/kick-leg-geo.js - geometry.",
     "scripts/player.js - takeToken, hitTarget and player progression/combat/input handlers.",
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
     "sim.js - cadence, tick, onOutOfBounds; places/main/sim.js and places/bonus/sim.js - cadence, tick.",
-    "scripts/lib/stats.js - isBroken, derived, canCarry, burden; scripts/lib/critter-model.js - critter appearance/model helpers."
+    "scripts/partygoers.js - update; manager for Partygoer and Carnivorous Balloon entities on Level 26.",
+    "scripts/lib/l26-cut.js - L26_LEN, L26_LINES, l26Tick; scripts/cutscene-ui.js - cutUi, t0Fade."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards and level access; found snacks/aid are state inventory.",
@@ -51,7 +52,7 @@
     "scripts/hub.js - local mall offer/shop/food and room-hop flags; purchases update player currencies/unlocks and mall-local held food.",
     "scripts/grab.js - carried object and carry/session fields; strength, load, health and stamina limit lifting.",
     "scripts/stats.js + scripts/lib/stats.js - HALOGEN attributes/skills/sheet; scripts/interact.js + lib/seat.js own focus, search/sit and configured storage saves.",
-    "places/main/sim.js - places/main place.state generation/version flags, Level 0 spawn/refill and creature/wall recovery timers."
+    "scripts/partygoers.js owns Level 26 entity AI state; scripts/player.js applies player.state.stungUntil movement lock for balloon stings; scripts/lib/l26-cut.js controls player.state.l26cut/l26seen cutscene state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/spamton-fight/horde/critter/main-menu/hub/view3.",
@@ -61,11 +62,11 @@
     "scripts/lib/hub.js toHub/toSolo → room/place crossings; roomHop distinguishes intentional crossings from launch/resume.",
     "Death recovery → scripts/hub.js hubOffer → hub-ui.js; local mall counters write hubShop → hub handler and hub-ui menus; purchases debit cents and grant configured stock.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; weapon rarity cap is level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite.",
-    "Level 0 floor weapon seeding/refill → places/main/sim.js + loot.rollWeapon(pool, cap); floorGateV removes over-cap legacy floor weapons once per room.",
     "Pickup weapon/food/aid → scripts/player.js inventory; SNACKS entries enter player.state.snacks for later Aid-panel use, with medical aid healing through healMed.",
     "L input → scripts/kick.js onInput; pushes nearby wheeled chairs and rolls kicked chairs into entities via player.hitTarget; hit chair/creature stuns and emits local/nearby effects.",
     "Lurker catch → scripts/lurkers.js writes player.state.lurkHold; after throw entity frenzy temporarily ignores watched gaze and pursues prey before gaze-freeze behavior resumes.",
-    "Level 0 places/main/sim.js calls scripts/lib/level0-moments.js; momentsV 4 replaces seeded chalk route arrows/props, with arrows following the generated shortest path to EXIT."
+    "Level 0 places/main/sim.js calls scripts/lib/level0-moments.js; momentsV 4 replaces seeded chalk route arrows/props, with arrows following the generated shortest path to EXIT.",
+    "Level 1 l1-fun-poster trigger → scripts/level-door.js transfers to level26; its l26-overboard water door transfers to Level 7. First level26 visit → scripts/main-menu.js/l26Tick spawns Phoebe and locks player motion, cutscene-ui.js captions L26_LINES, hold jump skips, then l26seen prevents replay."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js - authored mall shops/landmarks with data-driven stock; sim adds staff, waypoint shoppers and balcony loungers.",
@@ -75,15 +76,15 @@
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
     "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml - player and NPCs share body/head/hair rendering; appearance varies by sex, style, color and look.",
-    "scripts/lib/level0-moments.js + places/main/sim.js - deterministic authored-in-code Level 0 moments and shortest-route chalk guidance; seeded layout varies with maze cells."
+    "places/level26/cells/*.scene + scripts/partygoers.js - one manager handles tagged Partygoers (pack-call/chase/bite) and Carnivorous Balloons (stationary ribbon sting) with per-entity state variation."
   ],
   "probableOrphans": [],
   "migrationNotes": [
     "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room and overflow mall rooms use bonus-N IDs. Keep routing and hub identity aligned.",
     "Found-item rarity gates apply only to found weapon tokens; ownership/use of existing weapons and non-weapon loot is not level-gated. Search gating excludes storage and NPC containers.",
-    "Level 0 place.state.momentsV is now 4: its migration deletes old tagged moment entities before relaying them; preserve the deterministic route/arrow direction logic when changing moment layout.",
+    "Level 0 place.state.momentsV is 4: its migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout.",
     "At sanity <= 0 health is not drained; scripts/lib/stats.js lowers derived attributes except Luck by 2 (minimum 1), and derived values feed combat, carry and movement.",
     "scripts/lurkers.js keeps the caught player's lurkHold separate from lurker entity frenzy/prey; post-throw frenzy lasts 7 seconds after the scream delay and bypasses gaze freeze.",
-    "scripts/lib/data/main-quest.yml defines The Front Door, Levels 1-5, as authored quest data only; it is not wired into play."
+    "scripts/lib/data/main-quest.yml is optional, not wired, and now defines Lost and Found: Dana K.'s HALOGEN mystery across Levels 1-5; Phoebe is reserved for the Level 26 arrival, not this quest."
   ]
 }
