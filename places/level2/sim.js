@@ -172,9 +172,9 @@ pop ember rate=3 on=disc(.4) life=1..2 v=up(.6..1.2)+sdir()*.2 size=.015..0.03 a
 function stairRoom(ctx, r, P, [nx, nz]) {
   ctx.place.state.stairV = 1;
   const yaw = Math.atan2(-nx, -nz) * 180 / Math.PI, E = S / 2;
-  const step = (id, a, h, spec = {}) => ctx.spawn(id, { feetPosition: P(a, 0, 0), rotation: { yaw }, physics: "static", primitive: { kind: "box", width: 1.7, height: h, depth: 0.3 }, material: { color: "oklch(0.42 0.015 60)", roughness: 0.9 }, ...spec });
+  const step = (id, a, h, spec = {}) => ctx.spawn(id, { feetPosition: P(a, 0, 0), rotation: { yaw }, physics: "static", primitive: { kind: "box", width: 1.7, height: h, depth: 0.3 }, material: { color: "oklch(0.56 0.012 80)", texture: "cdn/texture-worn-poured-concrete-stair-tread.png", repeat: [2, 1], roughness: 0.9 }, ...spec });
   for (let i = 0; i < 13; i++) step(`l2-stair-${i}`, 1.85 - i * 0.3, (i + 1) * 0.25);
-  const wall = (id, a, b, w, d) => ctx.spawn(id, { feetPosition: { ...P(a, b), y: 3.0 }, rotation: { yaw }, physics: "static", primitive: { kind: "box", width: w, height: 3.7, depth: d }, material: { color: "oklch(0.3 0.012 70)", roughness: 0.95 } });
+  const wall = (id, a, b, w, d) => ctx.spawn(id, { feetPosition: { ...P(a, b), y: 3.0 }, rotation: { yaw }, physics: "static", primitive: { kind: "box", width: w, height: 3.7, depth: d }, material: { color: "oklch(0.62 0.015 85)", texture: "cdn/texture-painted-cinderblock-wall-scuffed.png", wrap: "repeat", repeat: [1.2, 1.2], roughness: 0.9 } });
   wall("l2-stair-wb", -2.28, 0, 4.9, 0.3); wall("l2-stair-wl", 0, -2.28, 0.3, 4.9); wall("l2-stair-wr", 0, 2.28, 0.3, 4.9); wall("l2-stair-wf", E - 0.1, 0, 4.9, 0.3);
   ctx.spawn("l2-stair-roof", { feetPosition: { ...P(0, 0), y: 6.7 }, rotation: { yaw }, physics: "static", primitive: { kind: "box", width: 5, height: 0.25, depth: 5 }, material: { color: "oklch(0.2 0.01 60)", roughness: 1 } });
   ctx.spawn("l2-stair-lamp", { feetPosition: P(-1.0, 0, 5.6), light: { kind: "point", color: "oklch(0.75 0.14 70)", intensity: 5, distance: 9 } });
