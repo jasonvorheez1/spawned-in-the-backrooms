@@ -3,7 +3,7 @@
 // on each other, restrooms. Everything is free (scripts/l61-use.js, scripts/lib/data/snacks.yml). Ways out: the M.E.G.-guarded rusty steel door to Level 6, the vent that sucks you to Level 3.
 // Ways in: the tripwire in Level 6, a vending machine on Level 4. Hall x -30..30, z -22..22, roof 6 m; stores 14 wide, 10 deep off the north wall.
 export const cadence = "1s";
-const V = 4;
+const V = 5;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb", M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb", M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb"; // art/snackrooms/build.py
 const SNACK = "/cdn/value.50b5fa3844cf9c705ca675660ef22ddb556c1cf0f31ad1cd69deeb8d8395df71.png", SODA = "/cdn/value.4db3afe09f392fef7c9d80e531484862384aef0ea5bcba295dc62b57197b659f.png";
 const T = (name, rep) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -17,6 +17,11 @@ const BATH = { ...T("white-square-ceramic-bathroom-wall-tiles", 1), color: "oklc
 const STEEL = { color: "oklch(0.7 0.01 250)", metalness: 0.8, roughness: 0.3 };
 const NAVY = { color: "oklch(0.3 0.1 262)", roughness: 0.45 };
 const RUST = { ...T("scratched-worn-steel", 1), color: "oklch(0.42 0.06 45)", metalness: 0.6, roughness: 0.7 };
+const M_BAR10 = "/cdn/value.f3a001b67df5932f6ab0edbee786a4fea656bbdcc4bb95fe0f8f89c834188b40.glb";
+const M_BAR7 = "/cdn/value.602e0fd20886f20e7f9d268884aef45fc50293aee2da336124007503cceab7d6.glb";
+const M_DINER = "/cdn/value.631d37b72621a949554ab06521366b4f7678149304b4c5ace1bc3159e9c132e8.glb";
+const M_PIZZA = "/cdn/value.5c22a5f388991c20883c8482eda6ba0363d6e555148ac75b329dc228b4f20dc5.glb";
+const M_BENCH = "/cdn/value.875f7fd721e70ac1c285cdade96da8263dc175c97f593282732e00ef66d72b83.glb";
 const MUSIC = "cdn/music-upbeat-1980s-shopping-mall-synth-pop-soft-rock-through-ceiling-speakers-loop.mp3";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const HW = 30, HD = 22, HH = 6;
@@ -43,6 +48,7 @@ function lay(ctx) {
     state: extra.dead ? {} : { kind: "vend", sells: soda ? "soda" : "snack", name: soda ? "Soda machine" : "Snack machine", verb: "Press a button", info: soda ? "Coca-Cola, Pepsi, Mountain Dew. Free, it never asks for coins." : "Doritos and the rest of 2003. Free." },
     children: [{ feetPosition: { x: 0.1, y: 0.38, z: -0.447 }, primitive: { kind: "box", width: 0.72, height: 1.32, depth: 0.01 }, material: { texture: soda ? SODA : SNACK, roughness: 0.15, emissive: "oklch(0.35 0 0)", emissiveIntensity: 0.4 } }] });
   const tableSet = (id, x, z, yaw) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", collider: "mesh" }, model: { id: M_TABLE, forward: "+z" } });
+  const counter = (id, x, z, yaw, m, extra) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", collider: "box" }, model: { id: m, forward: "+z" }, ...extra });
   const stool = (id, x, z, vinyl) => sp(id, { feetPosition: { x, y: 0, z }, physics: { body: "static", collider: "cylinder" }, model: { id: M_STOOL, forward: "+z", materials: { vinyl: { color: vinyl, roughness: 0.35 } } } });
 
   // ---- the hall: terrazzo, cream plaster with a teal and pink 80s band, a drop ceiling broken by six skylights of pure black
@@ -72,7 +78,7 @@ function lay(ctx) {
     tableSet(`l61-table-${t++}`, x + Math.sin(x * 3.1 + z) * 0.6, z + Math.cos(x + z * 2.3) * 0.5, (x * 37 + z * 11) % 40);
   }
   sp("l61-pit", { feetPosition: { x: 0, y: 0.005, z: 0 }, primitive: { kind: "cylinder", radiusTop: 6, radiusBottom: 6, height: 0.02 }, material: { color: "oklch(0.45 0.08 30)", roughness: 0.9 } });
-  for (let k = 0; k < 8; k++) { const a = (k / 8) * Math.PI * 2; box(`l61-pbench-${k}`, Math.sin(a) * 5.2, 0, Math.cos(a) * 5.2, 2.6, 0.45, 0.6, WOOD, { rotation: { yaw: (a * 180) / Math.PI } }); }
+  for (let k = 0; k < 8; k++) { const a = (k / 8) * Math.PI * 2; sp(`l61-pbench-${k}`, { feetPosition: { x: Math.sin(a) * 5.2, y: 0, z: Math.cos(a) * 5.2 }, rotation: { yaw: (a * 180) / Math.PI }, physics: { body: "static", collider: "box" }, model: { id: M_BENCH, forward: "+z" } }); }
   sp("l61-planter", { feetPosition: { x: 0, y: 0, z: 0 }, physics: "static", primitive: { kind: "cylinder", radiusTop: 1.6, radiusBottom: 1.6, height: 0.7 }, material: { color: "oklch(0.8 0.03 70)", roughness: 0.6 },
     children: [{ feetPosition: { x: 0, y: 0.7, z: 0 }, primitive: { kind: "sphere", radius: 1.3 }, material: { color: "oklch(0.45 0.12 145)", roughness: 0.9 } }, { feetPosition: { x: 0.6, y: 1.5, z: 0.3 }, primitive: { kind: "sphere", radius: 0.8 }, material: { color: "oklch(0.5 0.13 140)", roughness: 0.9 } }] });
   for (const [k, [x, z]] of [[-27, -18], [27, -18], [-27, 18], [27, 18], [-10, 19], [10, 19]].entries()) sp(`l61-pot-${k}`, { feetPosition: { x, y: 0, z }, physics: "static", primitive: { kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.35, height: 0.6 }, material: { color: "oklch(0.55 0.08 40)" },
@@ -98,30 +104,26 @@ function lay(ctx) {
     light(`l61-${k}-l0`, cx - 3, 3.5, -HD - 5, lc, 4, 12); light(`l61-${k}-l1`, cx + 3, 3.5, -HD - 5, lc, 4, 12);
   }
   // Clippers: the red bar it was found in. bar along the back, stools, bottles, a jukebox, and the wire across the floor
-  box("l61-clip-bar", -21, 0, -30.2, 10, 1.05, 0.7, DARKWOOD, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "coke,coke,almond", name: "Clippers bar", verb: "Ask for a drink", info: "Red walls, wood floor. The bartender is a faceling in a bow tie." },
-    children: [{ feetPosition: { x: 0, y: 1.05, z: 0 }, primitive: { kind: "box", width: 10.2, height: 0.06, depth: 0.85 }, material: { color: "oklch(0.25 0.06 30)", roughness: 0.25 } }] });
+  counter("l61-clip-bar", -21, -30.2, 180, M_BAR10, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "coke,coke,almond", name: "Clippers bar", verb: "Ask for a drink", info: "Red walls, wood floor. The bartender is a faceling in a bow tie." } });
   for (let k = 0; k < 6; k++) stool(`l61-clip-stool-${k}`, -25 + k * 1.6, -29.2, "oklch(0.45 0.18 25)");
   for (const [n, y] of [[0, 1.4], [1, 2.0]]) sp(`l61-clip-shelf-${n}`, { feetPosition: { x: -21, y, z: -31.6 }, primitive: { kind: "box", width: 9, height: 0.05, depth: 0.3 }, material: DARKWOOD,
     children: Array.from({ length: 16 }, (_, i) => ({ feetPosition: { x: -4.2 + i * 0.56, y: 0.05, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.05, height: 0.3 + ((i * 7) % 3) * 0.05 }, material: { color: ["oklch(0.4 0.1 145)", "oklch(0.55 0.12 60)", "oklch(0.3 0.08 30)", "oklch(0.8 0.03 90)"][i % 4], roughness: 0.1, opacity: 0.85, transparent: true } })) });
   box("l61-clip-jukebox", -26.4, 0, -25, 0.9, 1.6, 0.7, { color: "oklch(0.6 0.15 60)", emissive: "oklch(0.7 0.18 50)", emissiveIntensity: 0.6, roughness: 0.3 }, { rotation: { yaw: 90 } });
   box("l61-clip-wire", -21, 0.06, -23.2, 3.6, 0.015, 0.015, { color: "oklch(0.2 0 0)" }, { physics: undefined });
   // Liquorette: long dark bar down the left, back bar of glowing bottles, green-glass lamps
-  box("l61-liq-bar", -12.2, 0, -27, 0.8, 1.1, 7, DARKWOOD, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "almond,almond,coke", name: "Liquorette bar", verb: "Order", info: "Almond water, cashew water, real distilled water. Pay nothing." },
-    children: [{ feetPosition: { x: 0, y: 1.1, z: 0 }, primitive: { kind: "box", width: 0.95, height: 0.06, depth: 7.2 }, material: { color: "oklch(0.35 0.07 45)", roughness: 0.2 } }] });
+  counter("l61-liq-bar", -12.2, -27, -90, M_BAR7, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "almond,almond,coke", name: "Liquorette bar", verb: "Order", info: "Almond water, cashew water, real distilled water. Pay nothing." } });
   sp("l61-liq-back", { feetPosition: { x: -13.6, y: 0, z: -27 }, physics: "static", primitive: { kind: "box", width: 0.5, height: 2.6, depth: 7 }, material: DARKWOOD,
     children: [0, 1, 2].map((r) => ({ feetPosition: { x: 0.26, y: 1.0 + r * 0.55, z: 0 }, primitive: { kind: "box", width: 0.05, height: 0.32, depth: 6.6 }, material: { color: ["oklch(0.7 0.14 70)", "oklch(0.55 0.13 145)", "oklch(0.65 0.15 40)"][r], emissive: ["oklch(0.6 0.14 70)", "oklch(0.5 0.13 145)", "oklch(0.55 0.15 40)"][r], emissiveIntensity: 0.8, roughness: 0.1 } })) });
   for (let k = 0; k < 3; k++) sp(`l61-liq-lamp-${k}`, { feetPosition: { x: -11.6, y: 2.6, z: -29.5 + k * 2.5 }, primitive: { kind: "sphere", radius: 0.18 }, material: { color: "oklch(0.6 0.14 150)", emissive: "oklch(0.7 0.16 150)", emissiveIntensity: 1.5 }, light: { kind: "point", color: "oklch(0.85 0.1 140)", intensity: 1.5, distance: 6 } });
   for (let k = 0; k < 4; k++) tableSet(`l61-liq-table-${k}`, -6 + (k % 2) * 3.4, -25.5 - Math.floor(k / 2) * 3.4, k * 20);
   // Slice Palace: counter with a warm glass case, the oven, a menu board, a soda machine
-  box("l61-slice-counter", 7, 0, -29.4, 9, 1.0, 0.9, { color: "oklch(0.55 0.18 28)", roughness: 0.4 }, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "pizza", name: "Slice Palace counter", verb: "Take a slice", info: "Pepperoni under a heat lamp. A faceling in a paper hat waves." },
-    children: [{ feetPosition: { x: -1.5, y: 1.0, z: 0 }, primitive: { kind: "box", width: 4, height: 0.5, depth: 0.7 }, material: { color: "oklch(0.95 0.06 75)", emissive: "oklch(0.75 0.14 60)", emissiveIntensity: 0.8, opacity: 0.6, transparent: true, roughness: 0.05 } }] });
+  counter("l61-slice-counter", 7, -29.4, 180, M_PIZZA, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "pizza", name: "Slice Palace counter", verb: "Take a slice", info: "Pepperoni under a heat lamp. A faceling in a paper hat waves." } });
   box("l61-slice-oven", 9.5, 0, -31.3, 3, 2.2, 1, STEEL);
   sign("l61-slice-menu", 4.5, 2.2, -31.8, 180, 3.2, 1.2, `<div style="font-size:120px;color:#ffd84a">MENU</div><div style="font-size:70px;color:#fff">PEPPERONI · CHEESE · SUPREME</div><div style="font-size:60px;color:#9f9">ALL SLICES FREE · FACELING STAFF</div>`, "oklch(0.2 0.02 150)");
   vend("l61-slice-soda", 12.8, -25, 90, true);
   for (let k = 0; k < 2; k++) tableSet(`l61-slice-table-${k}`, 3 + k * 4, -25.5, 0);
   // Burger Bop: diner counter with stools, the grill, a soda machine
-  box("l61-burger-counter", 21, 0, -28.6, 10, 1.05, 0.8, { color: "oklch(0.92 0.02 90)", roughness: 0.3 }, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "burger", name: "Burger Bop counter", verb: "Order a burger", info: "The grill hisses. It smells exactly like 1986." },
-    children: [{ feetPosition: { x: 0, y: 1.05, z: 0 }, primitive: { kind: "box", width: 10.2, height: 0.05, depth: 0.95 }, material: { color: "oklch(0.75 0.15 350)", roughness: 0.3 } }] });
+  counter("l61-burger-counter", 21, -28.6, 180, M_DINER, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "burger", name: "Burger Bop counter", verb: "Order a burger", info: "The grill hisses. It smells exactly like 1986." } });
   box("l61-burger-grill", 21, 0, -31.3, 4, 0.95, 1, STEEL, { audio: { clip: "cdn/sfx-burgers-sizzling-on-flat-top-griddle-loop.mp3", loop: true, gain: 0.18, spatial: true, maxDistance: 11 } });
   for (let k = 0; k < 6; k++) stool(`l61-burger-stool-${k}`, 17 + k * 1.6, -27.5, "oklch(0.7 0.13 195)");
   vend("l61-burger-soda", 27.3, -25, 90, true);
