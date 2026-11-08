@@ -36,6 +36,7 @@ function voiceOk(ctx, pid, clip) {
   return true;
 }
 export function heard(ctx, p, opts) {
+  if (p && 'clip' in p && !p.clip) return null; // a voice line with no words: the subtitle carries it
   const pos = p?.position;
   if (!pos || !ctx.place?.players) return ctx.emit("playSound", p, opts);
   const max = p.maxDistance ?? 30, aud = opts?.audience, only = aud?.player ?? null;

@@ -274,7 +274,7 @@ function lay(ctx) {
 
   // 1. Clippers: Red 1950s bar, stools, back shelves, and the interactive Wurlitzer 80s Internet Radio Jukebox
   counter("l61-clip-bar", -21, -30.2, 180, M_BAR10, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "budweiser,budweiser,jackcoke,whiskey,smirnoffice,coke", name: "Clippers bar", verb: "Order what the menu shows", info: "Clippers drink counter." } });
-  for (let k = 0; k < 6; k++) stool(`l61-clip-stool-${k}`, -25 + k * 1.6, -29.2, "oklch(0.45 0.18 25)");
+  for (let k = 0; k < 5; k++) stool(`l61-clip-stool-${k}`, -25 + k * 2.0, -29.2, "oklch(0.45 0.18 25)");
   for (const [n, y] of [[0, 1.4], [1, 2.0]]) {
     sp(`l61-clip-shelf-${n}`, {
       feetPosition: { x: -21, y, z: -31.6 },
@@ -354,7 +354,7 @@ function lay(ctx) {
   // 4. Burger Bop: Curved diner counter, sizzling grill, revolving stools, fresh coffee urn, cherry pie cloche & Chef Sal
   counter("l61-burger-counter", 21, -28.6, 180, M_DINER, { tags: ["usable"], behavior: "scripts/l61-use.js", state: { kind: "counter", gives: "burger", name: "Burger Bop counter", verb: "Order what the menu shows", info: "Burger Bop diner counter." } });
   counter("l61-burger-grill", 21, -31.3, 180, M_GRILL, { audio: { clip: "cdn/sfx-burgers-sizzling-on-flat-top-griddle-loop.mp3", loop: true, gain: 0.18, spatial: true, maxDistance: 11 } });
-  for (let k = 0; k < 6; k++) stool(`l61-burger-stool-${k}`, 17 + k * 1.6, -27.5, "oklch(0.7 0.13 195)");
+  for (let k = 0; k < 5; k++) stool(`l61-burger-stool-${k}`, 17 + k * 2.0, -27.5, "oklch(0.7 0.13 195)");
   vend("l61-burger-soda", 27.3, -25, 90, true);
 
   // Fresh hot coffee urn on the counter
