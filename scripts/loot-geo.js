@@ -25,11 +25,11 @@ export function geometry(ctx) {
   if (kind === "sack") { // a dropped canvas duffel lying on its side: a rounded tube, end caps, two straps and a zip line
     ctx.smooth(); ctx.roughness(0.95); const M = hi ? 14 : 7;
     ctx.color("oklch(0.5 0.05 95)");
-    tube(ctx, [[-0.3, 0.13, 0], [-0.26, 0.15, 0.01], [0, 0.16, 0], [0.26, 0.15, -0.01], [0.3, 0.13, 0]], [0.02, 0.13, 0.15, 0.13, 0.02], M, [1, 0.8]);
+    tube(ctx, [[-0.3, 0.14, 0], [-0.27, 0.15, 0.005], [0, 0.15, 0], [0.27, 0.15, -0.005], [0.3, 0.14, 0]], [0.03, 0.13, 0.15, 0.13, 0.03], M);
     ctx.color("oklch(0.3 0.03 80)");
-    for (const x of [-0.12, 0.12]) { const pts = [], rs = []; for (let k = 0; k <= 12; k++) { const t = (k / 12) * Math.PI * 2; pts.push([x, 0.16 + Math.cos(t) * 0.158, Math.sin(t) * 0.158]); rs.push(0.012); } tube(ctx, pts, rs, 5); } // straps cinched round the bag
-    if (hi) { ctx.color("oklch(0.25 0.01 250)"); tube(ctx, [[-0.22, 0.307, -0.03], [0.22, 0.307, -0.03]], [0.005, 0.005], 4); } // zip
-    ctx.color("oklch(0.3 0.03 80)"); tube(ctx, [[-0.12, 0.31, 0.02], [-0.07, 0.37, 0.05], [0.07, 0.37, 0.05], [0.12, 0.31, 0.02]], [0.013, 0.013, 0.013, 0.013], 5); // carry handle between the straps
+    for (const x of [-0.12, 0.12]) { const pts = [], rs = []; for (let k = 0; k <= 12; k++) { const t = (k / 12) * Math.PI * 2; pts.push([x, 0.15 + Math.cos(t) * 0.153, Math.sin(t) * 0.153]); rs.push(0.012); } tube(ctx, pts, rs, 5); } // straps cinched round the bag
+    if (hi) { ctx.color("oklch(0.25 0.01 250)"); tube(ctx, [[-0.22, 0.298, -0.03], [0.22, 0.298, -0.03]], [0.005, 0.005], 4); } // zip
+    ctx.color("oklch(0.3 0.03 80)"); tube(ctx, [[-0.12, 0.3, 0.03], [-0.07, 0.36, 0.05], [0.07, 0.36, 0.05], [0.12, 0.3, 0.03]], [0.013, 0.013, 0.013, 0.013], 5); // carry handle between the straps
     return;
   }
   // a body, seen from above: slumped torso, head, limbs splayed. The head end points -Z.
