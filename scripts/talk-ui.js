@@ -71,6 +71,7 @@ const CINE = `<style>
 .tc .old{font-size:13px;color:var(--ad);opacity:.7}
 .tc .now{font-size:19px;line-height:1.4;color:#ffc25a;text-shadow:0 0 6px rgba(255,160,30,.45);animation:nvType .9s steps(40) both}
 .tc .now i{display:none}
+.tc .who{font:11px monospace;letter-spacing:.12em;color:#c9a24a;opacity:.75;margin-bottom:4px;text-transform:uppercase}
 .tc .chk{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#c6f060;animation:tkin .4s both}
 .tc .dots span{animation:tkdot 1s infinite}.tc .dots span:nth-child(2){animation-delay:.2s}.tc .dots span:nth-child(3){animation-delay:.4s}
 .tc .choices{display:flex;flex-direction:column;gap:1px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--ad) transparent}
@@ -122,7 +123,7 @@ export function talkUi(ctx, player) {
   const small = sys.map(([k, tag, tx]) => `<button data-interactive onclick="sendAction('talkdo',{k:'${q(k)}'})">${esc(k === 'leave' ? 'Bye' : k === 'trade' ? 'Trade' : k === 'svc' ? (SVC[role] ?? 'Ask') : tx.slice(0, 22))}</button>`).join('')
   const kd = `if(event.key==='Escape'){sendAction('talkdo',{k:'leave'})}else if(event.target.id!=='tkin'&&event.key>='1'&&event.key<='9'){const c=document.querySelectorAll('.tc .ch');const b=c[parseInt(event.key)-1];if(b)b.click()}`
   return `${CINE}<div class="tc" data-modal tabindex="0" onkeydown="${kd}">
-    <div class="low ${s.talkBusy ? 'busy' : ''}"><div class="sub">${now}</div>
+    <div class="low ${s.talkBusy ? 'busy' : ''}"><div class="who">${who} · ${esc(it.state?.temper ?? '')}${it.state?.title ? ' · ' + esc(it.state.title) : ''} · hp ${Math.max(0, Math.round(it.state?.hp ?? 0))}/${Math.round(it.state?.maxHp ?? 100)}</div><div class="sub">${now}</div>
       <div class="choices">${top}</div>
       <form class="row" data-interactive onsubmit="event.preventDefault();${send}"><em>&gt;</em><input id="tkin" data-interactive maxlength="${T.maxText}" autocomplete="off" placeholder="say something…"/>${small}<span class="feel" style="color:${col}">${feel(r)}</span></form>
     </div></div>`
