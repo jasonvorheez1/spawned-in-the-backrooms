@@ -3,6 +3,7 @@
 // and answers their buttons. Food here is just for fun and never leaves the mall.
 import { toHub, toSolo, HOMES, HUB_PLACE } from "./lib/hub.js"
 import B from "./lib/data/bonus.yml"
+import FOODM from "./lib/data/bonus-food-models.yml"
 import FURN from "./lib/data/furniture.yml"
 import { parseCloth } from "./lib/clothes.js"
 export const clothName = (tok) => { const p = parseCloth(tok); return p ? `${p.row?.name ?? p.kind}` : "shirt" }
@@ -36,6 +37,13 @@ function buyFood(ctx, s, key) {
   if ((s.cents ?? 0) < cost) { ding(ctx, NOPE); return tell(ctx, s, `Not enough Backdollars for ${f.name}.`) }
   s.cents -= cost; ding(ctx, CASH)
   s.hubFood = { key, at: ctx.now() } // held in your hand while you're in the mall; ui.js and the diner's models read it
+  const m = FOODM[key]
+  if (m) { // the food in your hand for a few bites, then gone: nothing leaves the mall
+    const ses = ctx.session; if (ses.hubHeld && ctx.getObject(ses.hubHeld)) ctx.destroy(ses.hubHeld)
+    const [w, h, d] = m.size
+    ses.hubHeld = ctx.spawn({ parent: ctx.self.id, attachment: { bone: "RightHand" }, feetPosition: { x: 0, y: 0.04, z: 0.06 }, model: { id: m.model, forward: m.forward }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, visibleInFirstPerson: true, lifetime: 9, scope: "session" })
+  }
+  ctx.emit("playSound", { clip: f.drink ? "/cdn/moodboard-realistic-gritty/sfx-soda-bottle-gulp-swallow-ahh.mp3" : "/cdn/moodboard-realistic-gritty/sfx-crunchy-food-bite-chew.mp3", position: ctx.self.feetPosition, volume: 0.7 })
   tell(ctx, s, `${f.name}. ${f.line ?? "On the house's plate, not your belly. Enjoy."}`)
 }
 function buyCloth(ctx, s, i) {
