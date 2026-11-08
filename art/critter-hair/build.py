@@ -112,7 +112,7 @@ def lock(mesh, root_uv, length, width, flow=None, wave=0.0, curl=0.0, lift=0.0, 
     for k in range(sides): mesh.face([rings[0] + (k + 1) % sides, rings[0] + k, root])
     return path
 
-def cap(mesh, front=.45, side=-.15, back=-.55, vol=.02, part=None, swirl=0.0, rough=.004, nu=56, nv=22, top=1.0):
+def cap(mesh, front=.45, side=-.15, back=-.55, vol=.02, part=None, swirl=0.0, rough=.004, nu=56, nv=22, top=1.0, nape=14):
     """the scalp layer: a shell over the skull down to a hairline (front at the brow, sides by the cheeks, back at the nape)"""
     rows = []
     for j in range(nv + 1):
@@ -131,6 +131,14 @@ def cap(mesh, front=.45, side=-.15, back=-.55, vol=.02, part=None, swirl=0.0, ro
     # a soft rolled edge under the hairline
     inner = mesh.add([HC + (mesh.v[rows[0] + i] - HC) * .97 for i in range(nu)])
     for i in range(nu): mesh.face([inner + i, inner + (i + 1) % nu, rows[0] + (i + 1) % nu, rows[0] + i])
+    if nape:
+        rnd = random.Random(777 + int(back * 100))
+        for k in range(nape):
+            u = math.pi * .45 + math.pi * 1.1 * (k + .5) / nape
+            u = u if u <= math.pi else u - 2 * math.pi
+            fu = (math.cos(u) + 1) / 2
+            line = back + (front - back) * fu ** 1.4
+            lock(mesh, (u, line + .14), .09 + .05 * rnd.random(), .05, flow=hdir(u, 0) * .35 + V(0, 0, -1), seed=900 + k, stiff=.4, flat=.45, taper=.85)
 
 def ball(mesh, c, r, mat=0, sq=(1, 1, 1), bumps=0.0, seg=14, seed=0):
     rows = []
@@ -155,7 +163,7 @@ def band(mesh, c, axis, r, w=.012):
 
 def braid(mesh, path, w, mat=0):
     """a three-strand braid: slanted plump links stepping down a path"""
-    L = sum((path[i + 1] - path[i]).length for i in range(len(path) - 1)); n = max(4, int(L / (w * 1.3)))
+    L = sum((path[i + 1] - path[i]).length for i in range(len(path) - 1)); n = max(6, int(L / (w * .62)))
     def at(t):
         s = t * L
         for i in range(len(path) - 1):
@@ -164,8 +172,8 @@ def braid(mesh, path, w, mat=0):
             s -= seg
     for k in range(n):
         t = (k + .5) / n; c, fw = at(t); side = fw.cross(c - HC).normalized() if fw.cross(c - HC).length > 1e-4 else V(1, 0, 0)
-        ww = w * (1 - .45 * t)
-        ball(mesh, c + side * ww * .35 * (1 if k % 2 else -1), ww * .62, mat, (1, 1, 1.25), seg=6)
+        ww = w * (1 - .3 * t)
+        ball(mesh, c + side * ww * .28 * (1 if k % 2 else -1), ww * .7, mat, (1, 1, 1.35), seg=7)
 
 # ---------------- the styles ----------------
 def spread(n, u0, u1, v): return [(u0 + (u1 - u0) * (i + .5) / n, v) for i in range(n)]
