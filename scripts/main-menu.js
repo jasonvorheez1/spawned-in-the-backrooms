@@ -3,9 +3,9 @@
 // to the place you came from. Backspace mid-game opens the same screen as a pause with RESUME.
 // The title theme plays on this machine alone through the title and the intake room, and fades when you step out.
 import { animate } from "builtin/tween";
-const MUSIC = "/cdn/moodboard-realistic-gritty/music-backrooms-title-theme-slow-detuned-synth-pad-drone-tape-warble.mp3";
+const MUSIC = "/cdn/moodboard-lowpoly-cozy/music-soft-mellow-fingerpicked-acoustic-guitar-and-warm-rhodes-early-2000s-bedroom-calm-loop.mp3"; // the drone was exhausting (johnadams2): soft and quiet instead
 const CLICK = "/cdn/moodboard-realistic-gritty/sfx-old-crt-tv-power-on-click-thunk.mp3";
-const MUSIC_GAIN = 0.45; // her pick
+const MUSIC_GAIN = 0.12; // her pick
 
 function music(ctx, want) {
   const ses = ctx.session, have = ses.mmMusic && ctx.getObject(ses.mmMusic)
