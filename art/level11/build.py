@@ -662,9 +662,10 @@ def spam_alley():
     cbox(M, "rust", (xi - 0.004, 0.75, 2.9), (0.01, 0.12, 2.0), 0.002)
     ob = M.finish("l11_spam_alley", center=False); turnaround("spam_alley", ob, (20, 340, 90), 0.5, 0.9, (0, -1, 2.5)); return ob
 
+exec(open(os.path.join(D, "street_kit.py")).read())
 FUNCS_NEW = {"barricade_pallets": barricade_pallets, "corrugated": corrugated, "sandbags": sandbags, "meg_table": meg_table, "meg_cache": meg_cache, "reno_office": reno_office, "spam_alley": spam_alley}
 
-FUNCS = {"glass_a": glass_a, "glass_b": glass_b, "stone": stone, "brick_a": brick_a, "brick_b": brick_b, "mall": mall, "house": house, "lamp": lamp, "hydrant": hydrant, "bench": bench, "shelter": shelter, "tree": tree, "sedan": sedan, "van": van, "bin": bin_, "box": box_, **FUNCS_NEW}
+FUNCS = {"glass_a": glass_a, "glass_b": glass_b, "stone": stone, "brick_a": brick_a, "brick_b": brick_b, "mall": mall, "house": house, "lamp": lamp, "hydrant": hydrant, "bench": bench, "shelter": shelter, "tree": tree, "sedan": sedan, "van": van, "bin": bin_, "box": box_, **FUNCS_NEW, **FUNCS_ST}
 for n in only:
     bpy.ops.wm.read_factory_settings(use_empty=True)
     for m in list(bpy.data.materials): bpy.data.materials.remove(m)
