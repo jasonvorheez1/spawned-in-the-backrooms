@@ -57,6 +57,7 @@ export const ears = {
     if (s.kind === "vend") {
       if (now < (s.next ?? 0)) { say(who, "The coil's empty. It hums, restocking from nowhere.", ctx); return; }
       s.next = now + 150000; snd(ctx, "vending-machine-clunk-item-drop", 0.8); const r = ctx.random();
+      if (r < 0.2) { say(who, "You press B4. The glass gives like water and pulls you in. You smell fries.", ctx); ctx.cross(who, "level61#l61-from-l4"); return; } // Level 6.1's way in (wiki: any button on a Level 4 vending machine)
       if (r < 0.45) { who.state.almonds = (who.state.almonds ?? 0) + 1; say(who, "A bottle of almond water thunks down. +1", ctx); }
       else if (r < 0.85) { who.state.hunger = Math.min(100, (who.state.hunger ?? 100) + 30); say(who, "A granola bar from a brand that never existed. Hunger +30.", ctx); }
       else say(who, "The coil turns. Nothing falls. Something behind the glass waves.", ctx);

@@ -179,11 +179,21 @@ function lay3(ctx) {
   }
 }
 
+// Level 6.1's way in: a wire strung low across a dead end. trip on it and you fall through the floor into The Snackrooms
+function laySnack(ctx) {
+  const { ends } = plan(), e = ends[NOTES.length + 3] ?? ends[ends.length - 1]; if (!e) return;
+  const x = cx(e.i), z = cz(e.j), yaw = e.dx ? 90 : 0;
+  ctx.spawn("l6-wire", { feetPosition: { x, y: 0.1, z }, rotation: { yaw }, primitive: { kind: "box", width: C, height: 0.012, depth: 0.012 }, material: { color: "oklch(0.3 0.01 60)", metalness: 0.6 } });
+  ctx.spawn("l6-wire-trip", { tags: ["door"], feetPosition: { x, y: 0, z }, rotation: { yaw }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: C, height: 0.4, depth: 0.3 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level61#l61-from-l6" } });
+  ctx.spawn("l6-from-l61", { feetPosition: { x: x - e.dx * 1.6, y: 0.1, z: z - e.dz * 1.6 }, rotation: { yaw: 0 } });
+  ctx.spawn("l6-wire-note", { feetPosition: { x: x + e.dx * (C / 2 - 0.02), y: 1.45, z: z + e.dz * (C / 2 - 0.02) }, rotation: { lookAt: { x: x - e.dx * C, y: 1.45, z: z - e.dz * C } }, vector: chalk("i smell fries. why do i smell fries") });
+}
 export function tick(ctx) {
   const st = ctx.place.state;
   if ((st.builtV ?? 0) < 1) lay(ctx);
   if ((st.builtV ?? 0) < 2) lay2(ctx);
   if ((st.builtV ?? 0) < 3) { lay3(ctx); st.builtV = V; }
+  if ((st.snackV ?? 0) < 1) { laySnack(ctx); st.snackV = 1; }
   // "this changed overnight?": the wall moves only while nobody stands near enough to see it go
   const w = ctx.place.objects["l6-shift"];
   if (w && ctx.now() > (st.shiftAt ?? 0)) {

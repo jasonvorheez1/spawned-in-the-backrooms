@@ -1,0 +1,18 @@
+mode: 3d
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 0, y: 0.1, z: 14 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -20 }
+atmosphere:
+  clouds: { enabled: false }
+  fog: { kind: linear, near: 30, far: 90, color: oklch(0.86 0.03 75) }
+  moon: { enabled: false, intensity: 0 }
+  sky: { kind: color, color: oklch(0.05 0 0) }
+  stars: { enabled: false }
+  timeOfDay: 12
+  wind: { direction: 0, speed: 0 }
+  ambient: { light: { color: oklch(0.96 0.025 80), intensity: 0.6 } }
+  hemisphere: { skyColor: oklch(0.97 0.03 80), groundColor: oklch(0.55 0.04 60), intensity: 0.5 }
+acoustics: { reverb: 0.35 }
