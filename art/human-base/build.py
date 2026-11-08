@@ -46,46 +46,51 @@ def male(head, body):
     aw, lw = arm_leg_weights(head, body)
     SH = 0.04  # arms ride out this far with the broader shoulders
     old = [v.co.copy() for v in body.data.vertices]
+    # pass 1, the big frame: shoulders out, waist and hips in, arms carried. smoothed after, so no lumps at the joins
     for i, v in enumerate(body.data.vertices):
-        x, y, z = v.co; ax = abs(x); sg = 1 if x >= 0 else -1
-        A = aw[i]; L = lw[i]; T = 1 - A
-        # flat chest, a firm pec plane
-        w = bump(1.18, 1.26, 1.44, 1.5, z) * (1 - smooth(0.12, 0.17, ax)) * T
-        if y < 0.01: y = y + (0.01 - y) * 0.95 * w
-        pec = bump(1.28, 1.33, 1.40, 1.45, z) * bump(0.015, 0.05, 0.11, 0.15, ax) * T
-        if y < 0.03: y -= 0.012 * pec
-        # broad shoulders and lats: the torso scaled out, the arms carried rigidly
+        x, y, z = v.co; sg = 1 if x >= 0 else -1
+        A = aw[i]; T = 1 - A
         sh = bump(1.12, 1.34, 1.5, 1.58, z)
         x = x * (1 + 0.26 * sh * T) + sg * SH * A
-        # waist straight, hips and thighs in: a V, not an hourglass
-        x *= 1 + 0.12 * bump(1.06, 1.14, 1.24, 1.32, z) * T
-        x *= 1 - 0.2 * bump(0.5, 0.82, 1.04, 1.16, z) * T
-        # flatter seat
-        if y > 0.1: y = 0.1 + (y - 0.1) * (1 - 0.5 * bump(0.7, 0.82, 1.0, 1.1, z) * T)
-        # thick neck
-        nk = bump(1.48, 1.53, 1.6, 1.66, z)
-        x *= 1 + 0.28 * nk; y = 0.075 + (y - 0.075) * (1 + 0.16 * nk)
-        # arm and calf mass
-        if A > 0.5: y = 0.075 + (y - 0.075) * (1 + 0.16 * A)
-        if L > 0.5 and z < 0.45:
-            c = bump(0.12, 0.22, 0.34, 0.42, z); cx = sg * 0.078
-            x = cx + (x - cx) * (1 + 0.12 * c); y = 0.12 + (y - 0.12) * (1 + 0.1 * c)
+        x *= 1 + 0.1 * bump(1.06, 1.14, 1.24, 1.32, z) * T
+        x *= 1 - 0.3 * bump(0.55, 0.8, 1.02, 1.14, z) * T
+        if y > 0.1: y = 0.1 + (y - 0.1) * (1 - 0.55 * bump(0.68, 0.82, 1.0, 1.12, z) * T)
         v.co = Vector((x, y, z))
-    # smooth the displacement field over the welded surface: the big shape stays, every lump goes
     key = lambda c: (round(c.x, 4), round(c.y, 4), round(c.z, 4))
     grp = {}; gid = []
     for c in old: gid.append(grp.setdefault(key(c), len(grp)))
     n = len(grp); nb = [set() for _ in range(n)]
     for e in body.data.edges:
-        a, b = gid[e.vertices[0]], gid[e.vertices[1]]
-        if a != b: nb[a].add(b); nb[b].add(a)
-    D = [Vector() for _ in range(n)]; cnt = [0] * n
+        p0, p1 = gid[e.vertices[0]], gid[e.vertices[1]]
+        if p0 != p1: nb[p0].add(p1); nb[p1].add(p0)
+    def relax(iters):
+        D = [Vector() for _ in range(n)]; cnt = [0] * n
+        for i, v in enumerate(body.data.vertices):
+            D[gid[i]] += v.co - old[i]; cnt[gid[i]] += 1
+        D = [d / c for d, c in zip(D, cnt)]
+        for _ in range(iters):
+            D = [(D[g] + sum((D[k] for k in nb[g]), Vector())) / (1 + len(nb[g])) if nb[g] else D[g] for g in range(n)]
+        for i, v in enumerate(body.data.vertices): v.co = old[i] + D[gid[i]]
+    relax(25)
+    # pass 2, the local shapes on top: a flat chest with a pec plane, thick neck, arm and calf mass
     for i, v in enumerate(body.data.vertices):
-        D[gid[i]] += v.co - old[i]; cnt[gid[i]] += 1
-    D = [d / c for d, c in zip(D, cnt)]
-    for _ in range(25):
-        D = [(D[g] + sum((D[k] for k in nb[g]), Vector())) / (1 + len(nb[g])) if nb[g] else D[g] for g in range(n)]
-    for i, v in enumerate(body.data.vertices): v.co = old[i] + D[gid[i]]
+        x, y, z = v.co; ax = abs(x); sg = 1 if x >= 0 else -1
+        A = aw[i]; L = lw[i]; T = 1 - A
+        w = bump(1.16, 1.24, 1.44, 1.5, z) * (1 - smooth(0.13, 0.19, ax)) * T
+        if y < 0.015: y = y + (0.015 - y) * w
+        pec = bump(1.3, 1.35, 1.41, 1.46, z) * bump(0.015, 0.05, 0.1, 0.14, ax) * T
+        y -= 0.008 * pec
+        nk = bump(1.48, 1.53, 1.6, 1.66, z) * T
+        x *= 1 + 0.25 * nk; y = 0.075 + (y - 0.075) * (1 + 0.14 * nk)
+        if A > 0.5: y = 0.075 + (y - 0.075) * (1 + 0.12 * A)
+        if L > 0.5 and z < 0.45:
+            c = bump(0.12, 0.22, 0.34, 0.42, z); cx = sg * 0.08
+            x = cx + (x - cx) * (1 + 0.1 * c); y = 0.12 + (y - 0.12) * (1 + 0.08 * c)
+        v.co = Vector((x, y, z))
+    old2 = old; old = [v.co.copy() for v in body.data.vertices]
+    # a light relax of pass 2 alone, so the chest edge and neck blend in
+    D0 = [Vector() for _ in range(n)]
+    relax(4); old = old2
     for v in head.data.vertices:
         x, y, z = v.co
         x *= 1 + 0.08 * bump(1.56, 1.62, 1.74, 1.8, z)  # squarer, wider jaw
