@@ -39,8 +39,8 @@ export function cutTick(ctx, ses, st) {
   if (t > 10.6) once("bleed", () => {
     sound(ctx, "electric-hum-buzz-rising", 0.55)
     c.patch = ctx.spawn({ audience: "local", scope: "session", feetPosition: { x: WALL.x, y: y0 + 1.25, z: WALL.z - 0.012 }, rotation: 180, pivot: "center", scale: 0.05,
-      primitive: { kind: "plane", width: 1.6, height: 2.4 }, material: { texture: "cdn/texture-aged-yellow-chevron-wallpaper-damp-stained.png", color: "#e8d27a", emissive: "#6a5418", emissiveIntensity: 0.6, transparent: true, opacity: 0.95, roughness: 0.9 } })
-    animate(ctx, c.patch, { scale: [0.05, 0.35, 1] }, { duration: 6, easing: "easeInOutSine" })
+      primitive: { kind: "plane", width: 1.6, height: 2.4 }, material: { texture: "cdn/texture-aged-yellow-chevron-wallpaper-damp-stained.png", color: "#e8d27a", emissive: "#3a2c0a", emissiveIntensity: 0.25, transparent: true, opacity: 0.95, roughness: 0.9 } })
+    animate(ctx, c.patch, { scale: [0.05, 0.3, 0.7] }, { duration: 6, easing: "easeInOutSine" })
     c.fx = ctx.spawn({ audience: "local", scope: "session", feetPosition: { x: WALL.x, y: y0 + 1.3, z: WALL.z - 0.05 }, rotation: { yaw: 0, pitch: 90 }, fx: { script: RIPPLE } })
   })
   if (t > 13.4) once("glitch", () => { sound(ctx, "static-burst-glitch", 0.7); ctx.emit("screenShake", { intensity: 0.15, duration: 0.6 }, { audience: { player: me.id } }) })
@@ -50,10 +50,10 @@ export function cutTick(ctx, ses, st) {
   const head = { x, y: y0 + 1.15, z }, aimWall = { x: WALL.x, y: y0 + 1.3, z: WALL.z }
   let cam
   if (t < 6.5) { const u = t / 6.5; cam = { eye: { x: lerp(-2.5, -2.1, u), y: y0 + 0.9, z: lerp(-3.3, -2.9, u) }, aim: head, fov: 46 } }            // wide from the corner: the room, them wandering
-  else if (t < 10) { const u = (t - 6.5) / 3.5; cam = { eye: { x: x - 0.55, y: y0 + 1.55, z: z - lerp(1.3, 1.05, u) }, aim: aimWall, fov: 40 } }   // over the shoulder: the wall
+  else if (t < 10) { const u = (t - 6.5) / 3.5; cam = { eye: { x: x - 0.9, y: y0 + 1.75, z: z - lerp(1.9, 1.6, u) }, aim: aimWall, fov: 44 } }   // over the shoulder: the wall
   else if (t < 15.5) { const u = (t - 10) / 5.5; cam = { eye: { x: 2.55, y: y0 + 1.25, z: lerp(1.3, 1.6, u) }, aim: { x: 1.0, y: y0 + 1.2, z: 2.25 }, fov: lerp(38, 28, u) } } // profile: the palm, the yellow spreading
-  else if (t < 20.6) { const u = (t - 15.5) / 5.1; cam = { eye: { x: 0.85, y: y0 + 1.35, z: lerp(0.7, 1.5, u) }, aim: aimWall, fov: lerp(50, 32, u) } } // behind: they sink in, we push after them
-  else { const u = (t - 20.6) / (END - 20.6); cam = { eye: { x: 1.0, y: y0 + 1.3, z: lerp(1.5, 2.35, u) }, aim: aimWall, fov: lerp(32, 20, u) } }     // into the wallpaper
+  else if (t < 20.6) { const u = (t - 15.5) / 5.1; cam = { eye: { x: 0.55, y: y0 + 1.45, z: lerp(-0.6, 0.6, u) }, aim: aimWall, fov: lerp(56, 40, u) } } // behind: they sink in, we push after them
+  else { const u = (t - 20.6) / (END - 20.6); cam = { eye: { x: 1.0, y: y0 + 1.3, z: lerp(0.8, 2.3, u) }, aim: aimWall, fov: lerp(40, 22, u) } }     // into the wallpaper
   ctx.view.camera = cam
   if (t < END) return false
   // over: clean up and send them through; the Level 0 fall (scripts/noclip.js) plays on arrival
