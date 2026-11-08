@@ -50,8 +50,24 @@ export function geometry(ctx) {
   for (const y of [1.6, 3.2]) { box(X0 - 0.015, y - 0.02, Z0, X0, y + 0.02, Z1); box(X0, y - 0.02, Z0 - 0.015, X1, y + 0.02, Z0); box(X0, y - 0.02, Z1, X1, y + 0.02, Z1 + 0.015); }
   // cornice band and coping that overhang the walls
   ctx.albedo(STUCCO); ctx.color("oklch(0.8 0.035 80)"); box(X0 - 0.18, h - 0.55, Z0 - 0.18, X1 + 0.25, h - 0.2, Z1 + 0.18);
-  ctx.color("oklch(0.72 0.03 75)"); box(X0 - 0.1, h - 0.2, Z0 - 0.1, X1 + 0.15, h + 0.45, Z1 + 0.1);
-  ctx.color("oklch(0.62 0.02 70)"); box(X0 - 0.14, h + 0.45, Z0 - 0.14, X1 + 0.2, h + 0.52, Z1 + 0.14);
+  // parapet: a ring of low walls with a metal coping cap, not a solid lid
+  const T = 0.25, PX0 = X0 - 0.1, PX1 = X1 + 0.15, PZ0 = Z0 - 0.1, PZ1 = Z1 + 0.1, PT = h + 0.45;
+  ctx.color("oklch(0.72 0.03 75)");
+  box(PX0, h - 0.2, PZ0, PX1, PT, PZ0 + T); box(PX0, h - 0.2, PZ1 - T, PX1, PT, PZ1);
+  box(PX0, h - 0.2, PZ0 + T, PX0 + T, PT, PZ1 - T); box(PX1 - T, h - 0.2, PZ0 + T, PX1, PT, PZ1 - T);
+  ctx.albedo(null); ctx.color("oklch(0.6 0.01 240)");
+  const C = 0.04; // the cap overhangs both faces
+  box(PX0 - C, PT, PZ0 - C, PX1 + C, PT + 0.06, PZ0 + T + C); box(PX0 - C, PT, PZ1 - T - C, PX1 + C, PT + 0.06, PZ1 + C);
+  box(PX0 - C, PT, PZ0 + T + C, PX0 + T + C, PT + 0.06, PZ1 - T - C); box(PX1 - T - C, PT, PZ0 + T + C, PX1 + C, PT + 0.06, PZ1 - T - C);
+  // the deck: dark tar-and-gravel, a lighter flashing strip up the inside of the parapet, two drains
+  ctx.color("oklch(0.36 0.012 70)"); ctx.quad(PX0 + T, h + 0.01, PZ1 - T, PX1 - T, h + 0.01, PZ1 - T, PX1 - T, h + 0.01, PZ0 + T, PX0 + T, h + 0.01, PZ0 + T);
+  ctx.color("oklch(0.5 0.01 70)");
+  box(PX0 + T, h, PZ0 + T, PX1 - T, h + 0.18, PZ0 + T + 0.02); box(PX0 + T, h, PZ1 - T - 0.02, PX1 - T, h + 0.18, PZ1 - T);
+  box(PX0 + T, h, PZ0 + T, PX0 + T + 0.02, h + 0.18, PZ1 - T); box(PX1 - T - 0.02, h, PZ0 + T, PX1 - T, h + 0.18, PZ1 - T);
+  ctx.color("oklch(0.18 0.01 70)"); for (const z of [Z0 + 1.2, Z1 - 1.2]) box(X0 + 0.25, h + 0.012, z - 0.12, X0 + 0.49, h + 0.03, z + 0.12);
+  // patched seams in the membrane
+  ctx.color("oklch(0.31 0.01 70)"); for (let z = Z0 + 4; z < Z1 - 2; z += 4.5) box(X0 + 0.4, h + 0.012, z - 0.15, X1 - 0.4, h + 0.02, z + 0.15);
+  ctx.albedo(STUCCO);
   // downspouts on the back wall
   ctx.albedo(null); ctx.color("oklch(0.55 0.02 90)");
   for (const z of [Z0 + 1.2, 0, Z1 - 1.2]) { box(X0 - 0.16, 0.1, z - 0.06, X0 - 0.04, h - 0.2, z + 0.06); box(X0 - 0.3, 0.05, z - 0.08, X0 - 0.04, 0.15, z + 0.08); }

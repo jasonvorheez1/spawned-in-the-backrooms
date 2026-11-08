@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 51; // bump to rebuild the city in rooms that are already open
+const V = 52; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -194,7 +194,7 @@ function lay(ctx) {
     rotation: { yaw: 90 },
     primitive: { kind: "box", width: 2.2, height: 11.5, depth: 0.06 },
     material: { color: "#e85d04", roughness: 0.5 },
-    ui: `<div face="front" width="2.2m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#e85d04;color:#ffffff;font-family:Arial Black,Impact,sans-serif;font-weight:900;font-size:125px;writing-mode:vertical-rl;letter-spacing:18px;text-align:center">PEGASUS</div>`,
+    ui: `<div face="front" width="2.2m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#e85d04;color:#ffffff;font-family:Arial Black,Impact,sans-serif;font-weight:900;font-size:125px;flex-direction:column;line-height:1.05;text-align:center"><span>P</span><span>E</span><span>G</span><span>A</span><span>S</span><span>U</span><span>S</span></div>`,
   });
 
   // Overhead Traffic Light Gantry at Intersection Z: 12
