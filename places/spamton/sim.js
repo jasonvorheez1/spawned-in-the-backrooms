@@ -1,43 +1,40 @@
 // Spamton's arena: lays the stage once, and stands him up fresh whenever someone is in here (scripts/spamton-boss.js fights).
 export const cadence = "250ms";
-const V = 1;
+const V = 2;
 const BOSS_MODEL = "/cdn/value.e9d590488230d5a2ed1f5feea9e1f31046fb80e5d52f61e88491b67335bc79bb.glb";
 const PINK = "oklch(0.7 0.27 345)", YEL = "oklch(0.9 0.19 100)", CYAN = "oklch(0.8 0.14 200)";
 const glow = (c, i = 2.2) => ({ color: c, emissive: c, emissiveIntensity: i, roughness: 0.4 });
 
 function lay(ctx) {
   const sp = (id, spec) => ctx.spawn(id, spec);
-  // the stage: a black glass disc, a pink grid across it, a yellow rim, invisible walls past it
-  sp("sa-floor", { feetPosition: { x: 0, y: -0.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: 24, radiusBottom: 24, height: 0.4, radialSegments: 64 }, material: { color: "oklch(0.12 0.02 330)", roughness: 0.15, metalness: 0.6 }, physics: "static" });
-  for (let i = -6; i <= 6; i++) {
-    const half = Math.sqrt(Math.max(0, 24 * 24 - (i * 3.6) ** 2)) * 2 - 0.4;
-    sp(`sa-gx${i}`, { feetPosition: { x: i * 3.6, y: 0.005, z: 0 }, primitive: { kind: "box", width: 0.07, height: 0.01, depth: half }, material: glow(PINK, 1.6), castShadow: false });
-    sp(`sa-gz${i}`, { feetPosition: { x: 0, y: 0.006, z: i * 3.6 }, primitive: { kind: "box", width: half, height: 0.01, depth: 0.07 }, material: glow(PINK, 1.6), castShadow: false });
-  }
+  // v1's neon stage goes (Shelly 11-08: "too ai generated visually")
+  for (const id of Object.keys(ctx.place.objects)) if (/^sa-(gx|gz|rim|pillar|sign|plight|drift|fill)/.test(id)) ctx.destroy(id);
+  // his showroom: a flooded-looking concrete basement under the city, round like a pit, a low ceiling lost in the dark
+  sp("sa-floor", { feetPosition: { x: 0, y: -0.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: 24, radiusBottom: 24, height: 0.4, radialSegments: 64 },
+    material: { texture: "cdn/texture-wet-stained-cracked-concrete-basement-floor-with-oil-puddles.png", wrap: "repeat", repeat: [0.25, 0.25], color: "oklch(0.55 0.01 90)", roughness: 0.35, metalness: 0.1 }, physics: "static" });
+  sp("sa-walls", { feetPosition: { x: 0, y: -0.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: 24.6, radiusBottom: 24.6, height: 10, radialSegments: 64, openEnded: true },
+    material: { texture: "cdn/texture-water-stained-old-cinderblock-basement-wall-peeling-paint.png", wrap: "repeat", repeat: [0.33, 0.33], color: "oklch(0.5 0.015 100)", roughness: 0.9, side: "back" } });
+  sp("sa-ceiling", { feetPosition: { x: 0, y: 9.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: 24.6, radiusBottom: 24.6, height: 0.3, radialSegments: 48 }, material: { color: "oklch(0.12 0.01 90)", roughness: 1 } });
   const N = 36;
   for (let k = 0; k < N; k++) {
-    const a = (k / N) * Math.PI * 2, x = Math.sin(a) * 23.6, z = Math.cos(a) * 23.6, yaw = (a * 180) / Math.PI;
-    sp(`sa-rim${k}`, { feetPosition: { x, y: 0, z }, rotation: { yaw }, primitive: { kind: "box", width: 4.2, height: 0.35, depth: 0.5 }, material: glow(k % 2 ? YEL : PINK, 1.4), physics: "static" });
+    const a = (k / N) * Math.PI * 2, yaw = (a * 180) / Math.PI;
     sp(`sa-wall${k}`, { visible: false, feetPosition: { x: Math.sin(a) * 24.4, y: 0, z: Math.cos(a) * 24.4 }, rotation: { yaw }, primitive: { kind: "box", width: 4.4, height: 8, depth: 0.6 }, physics: "static" });
   }
-  // pillars out in the dark, each topped with a spinning-sign look: a price tag in neon
-  const TAGS = ["$$DEALS$", "BIG SHOT", "$49.998", "[[HYPERLINK BLOCKED]]", "KROMER", "$VALUES$", "1-800-ROOM-0", "NOW'S YOUR CHANCE"];
-  for (let k = 0; k < 8; k++) {
-    const a = (k / 8) * Math.PI * 2 + 0.2, x = Math.sin(a) * 32, z = Math.cos(a) * 32, yaw = (a * 180) / Math.PI + 180;
-    const c = [PINK, YEL, CYAN][k % 3];
-    sp(`sa-pillar${k}`, { feetPosition: { x, y: -2, z }, primitive: { kind: "box", width: 1.6, height: 16 + (k % 3) * 4, depth: 1.6 }, material: { color: "oklch(0.15 0.03 330)", roughness: 0.3, metalness: 0.7 } });
-    sp(`sa-sign${k}`, { feetPosition: { x: x * 0.97, y: 9 + (k % 3) * 2, z: z * 0.97 }, rotation: { yaw }, vector: `<svg viewBox='0 0 400 90' width='9m'><rect x='4' y='4' width='392' height='82' rx='10' fill='none' stroke='${k % 2 ? "#ffe14d" : "#ff2bd0"}' stroke-width='6' filter='drop-shadow(0 0 8 ${k % 2 ? "#ffe14d" : "#ff2bd0"})'/><text x='200' y='60' text-anchor='middle' font-family='display' font-size='44' fill='#ffffff' filter='drop-shadow(0 0 6 #ff2bd0)'>${TAGS[k].replace(/&/g, "&amp;")}</text></svg>` });
-    sp(`sa-plight${k}`, { feetPosition: { x: x * 0.8, y: 7, z: z * 0.8 }, light: { kind: "point", color: c, intensity: 2.2, distance: 26 } });
+  // cables: dozens of old phone and power lines sagging down out of the ceiling, the strings he dances on among them
+  for (let k = 0; k < 26; k++) {
+    const a = ctx.random() * 6.283, r = 3 + ctx.random() * 19, len = 2.5 + ctx.random() * 5.5
+    sp(`sa-cable${k}`, { feetPosition: { x: Math.sin(a) * r, y: 9.4 - len, z: Math.cos(a) * r }, rotation: { roll: (ctx.random() - 0.5) * 8, pitch: (ctx.random() - 0.5) * 8 },
+      primitive: { kind: "cylinder", radiusTop: 0.018, radiusBottom: 0.018, height: len, radialSegments: 5 }, material: { color: k % 5 === 0 ? "oklch(0.35 0.08 25)" : "oklch(0.13 0.005 90)", roughness: 0.6 }, castShadow: false });
   }
-  // strings from the dark above the centre: he is a puppet, and the strings are what he hangs from
-  for (let k = 0; k < 3; k++) sp(`sa-string${k}`, { feetPosition: { x: (k - 1) * 0.6, y: 6, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.012, radiusBottom: 0.012, height: 40 }, material: glow("oklch(0.95 0.02 330)", 0.6), castShadow: false });
-  sp("sa-key", { light: { kind: "spot", color: "oklch(0.95 0.08 95)", intensity: 6, distance: 40, angle: 40, penumbra: 0.6, aim: { x: 0, y: 0, z: 0 }, shadow: { enabled: true } }, feetPosition: { x: 0, y: 18, z: 6 } });
-  sp("sa-fill", { light: { kind: "point", color: PINK, intensity: 3, distance: 30 }, feetPosition: { x: 0, y: 4, z: 0 } });
+  for (let k = 0; k < 3; k++) sp(`sa-string${k}`, { feetPosition: { x: (k - 1) * 0.6, y: 3, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.008, radiusBottom: 0.008, height: 6.4, radialSegments: 4 }, material: { color: "oklch(0.8 0.01 90)", roughness: 0.5 }, castShadow: false });
+  // one bare bulb on a cord over the middle, swinging (scripts/spamton-bulb.js), plus a dim cold fill so the edges read
+  sp("sa-bulbcord", { feetPosition: { x: 0, y: 5.6, z: 3 }, primitive: { kind: "cylinder", radiusTop: 0.01, radiusBottom: 0.01, height: 3.8 }, material: { color: "oklch(0.1 0 0)" }, castShadow: false });
+  sp("sa-bulb", { feetPosition: { x: 0, y: 5.45, z: 3 }, primitive: { kind: "sphere", radius: 0.09 }, material: { color: "oklch(0.98 0.05 90)", emissive: "oklch(0.95 0.12 85)", emissiveIntensity: 6 }, castShadow: false,
+    light: { kind: "point", color: "oklch(0.9 0.1 80)", intensity: 7, distance: 30, shadow: { enabled: true } }, behavior: "scripts/spamton-bulb.js" });
+  sp("sa-key", { feetPosition: { x: 0, y: 9, z: 6 }, light: { kind: "spot", color: "oklch(0.75 0.03 220)", intensity: 1.2, distance: 40, angle: 70, penumbra: 0.9, aim: { x: 0, y: 0, z: -4 } } });
   sp("spam-in", { feetPosition: { x: 0, y: 0.1, z: 15 }, rotation: { yaw: 0 } });
-  // floating money drifting in the dark around the stage
-  sp("sa-drift", { feetPosition: { x: 0, y: 0, z: 0 }, fx: { script: `fx
-pop bills n=?mobile:40|90 on=arc(33,6.283,14) life=6..10 v=up(.2..0.6)+sdir()*.2 size=.25..0.4 acc=curl(.3)*.6 col=<.45,1.2,.55> a=0>.15:.9>.85:.9>0 rot=spin(1.5) r=sprite(soft-disc,alpha)
-pop dollars n=?mobile:14|30 on=arc(27,6.283,14) life=4..7 v=up(.6..1.2) size=.4..0.7 col=hdr(2.4,2.1,.4) a=0>.2:.8>.8:.8>0 r=sprite(mote,add)` } });
+  sp("sa-dust", { feetPosition: { x: 0, y: 0, z: 0 }, fx: { script: `fx
+pop motes n=?mobile:60|140 on=box(<36,7,36>) life=6..12 v=sdir()*.05 size=.015..0.03 acc=curl(.2)*.15 col=<1,.92,.75> a=0>.2:.5>.8:.5>0 r=sprite(mote,alpha)` } });
 }
 
 export function tick(ctx) {
