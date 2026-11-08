@@ -6,7 +6,7 @@ import { blur, chromaticAberration, vignette, grain, grade } from 'builtin/postf
 import { vec3, dot, smoothstep, mix } from 'builtin/tsl';
 export function photoBase(ctx) {
   const low = ctx.quality === 'low';
-  const soft = blur(ctx.scene, 0.35);
+  const soft = blur(ctx.scene, 0.05);
   return low ? soft : chromaticAberration(soft, 0.0012);
 }
 export function photoFinish(ctx, c, o = {}) {
