@@ -160,7 +160,12 @@ const CSS = `<style>
   border-left: 1px solid var(--al); padding-left: 16px; position: relative;
 }
 .it:hover .dt, .def { display: flex }
-.pbp:has(.ls .it:hover) .def { display: none }
+.pbp:not(.inv):has(.ls .it:hover) .def { display: none }
+.it.sel { background: rgba(255,182,66,.16); box-shadow: inset 3px 0 0 var(--ab) }
+.acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 10px }
+.acts .act { font: inherit; font-size: 12px; letter-spacing: .1em; padding: 6px 12px; cursor: pointer; color: #16140e; background: var(--a); border: 1px solid var(--ab); box-shadow: 2px 2px 0 #000 }
+.acts .act:hover { background: var(--ab) }
+.acts .act:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 #000 }
 
 .dt-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px }
 .dt-header h4 { font-size: 18px; font-weight: 400; margin: 0; letter-spacing: .04em; color: var(--ab) }
@@ -226,6 +231,8 @@ const CSS = `<style>
 @media (max-width: 640px) {
   .ls { flex: 1 1 auto }
   .dt, .def { display: none !important }
+  .pbp.inv .bd { flex-direction: column }
+  .pbp.inv .dt.def { display: flex !important }
   .nv-vitals { display: none }
   .nv-mode-tabs { display: none }
 }
@@ -468,6 +475,38 @@ function detail(t, s, def) {
   return ''
 }
 
+
+// the inventory's right pane: the picked item (click a row), else what you hold; its verbs are buttons here, a double-click on a row does the first
+function pane(s, sel, eqKey) {
+  const own = owned(s), bag = s.clothes ? s.clothes.split(',').filter(Boolean) : [], on = wornTokens(s.look)
+  const btn = (lab, d, key) => `<button class="act" onclick="sendAction('inv',${JSON.stringify(d).replace(/"/g, "'")})">${key ? `<kbd>${key}</kbd>` : ''}${lab}</button>`
+  let card = '', acts = []
+  if (W[sel]?.damage != null && own.includes(sel)) {
+    card = detail(sel, s, true)
+    if (sel !== eqKey) acts.push(btn('EQUIP', { k: 'equip', w: sel }))
+    if (sel !== 'fists') acts.push(btn('DROP ONE', { k: 'drop', w: sel }))
+  } else if (sel.startsWith('cloth:') && (bag.includes(sel) || on.includes(sel))) {
+    card = detail(sel, s, true); const p = parseCloth(sel)
+    acts.push(on.includes(sel) ? btn('TAKE OFF', { k: 'unwear', w: p?.slot }) : btn('WEAR', { k: 'wear', w: sel }))
+  } else if (sel.startsWith('almond:')) {
+    const c = sel.slice(7), key = { grey: 'almonds', green: 'almondsG', red: 'almondsR', blue: 'almondsB' }[c]
+    if (s[key] > 0) { card = detail(sel, s, true); acts.push(btn('DRINK', { k: 'drink', c })) }
+  } else if (sel.startsWith('meat:') && (s.meat?.[sel.slice(5)] ?? 0) > 0 && MEAT[sel.slice(5)]) {
+    const m = MEAT[sel.slice(5)]
+    card = `<div class="dt def"><div class="dt-header"><h4 style="color:${m.color}">${m.name}</h4><span class="dt-rarity">AID</span></div><div class="art-box">${SVG_AID}</div><div class="g">${cell('HP', '+' + m.hp)}${cell('HUNGER', '+' + (m.food ?? 0))}${cell('CARRIED', s.meat[sel.slice(5)], true)}</div></div>`
+    acts.push(btn('EAT', { k: 'eat', c: sel.slice(5) }))
+  } else if (sel.startsWith('snack:') && (s.snacks?.[sel.slice(6)] ?? 0) > 0 && SNACKS[sel.slice(6)]) {
+    const v = SNACKS[sel.slice(6)]
+    card = `<div class="dt def"><div class="dt-header"><h4>${v.name}</h4><span class="dt-rarity">${v.drink ? 'DRINK' : 'FOOD'}</span></div><div class="art-box">${SVG_AID}</div><div class="g">${v.drink ? cell('THIRST', '+' + v.thirst) : cell('HUNGER', '+' + v.hunger)}${cell('CARRIED', s.snacks[sel.slice(6)], true)}</div></div>`
+    acts.push(btn(v.drink ? 'DRINK' : 'EAT', { k: 'snack', c: sel.slice(6) }))
+  } else if ((sel === 'ammo' || sel === 'shells') && s[sel] > 0) card = detail(sel, s, true)
+  else if (sel === 'bobbypin' && s.bobbypins > 0) card = detail(sel, s, true)
+  if (!card) { card = detail(eqKey, s, true); acts = eqKey !== 'fists' ? [btn('DROP ONE', { k: 'drop', w: eqKey })] : [] }
+  const bar = acts.length ? `<div class="acts">${acts.join('')}</div>` : ''
+  const i = card.lastIndexOf('</div>')
+  return i < 0 ? card : card.slice(0, i) + bar + card.slice(i)
+}
+
 // Full repair bench tab
 function repairSec(s) {
   const sk = (s.skl ? String(s.skl).split(',').map(Number)[7] : 15) || 15
@@ -500,7 +539,7 @@ function repairSec(s) {
 
 function inventory(s) {
   const lv = s.level ?? 1, eqKey = s.equipped ?? 'fists'
-  const sortMode = s.invSort ?? 'name'
+  const sortMode = s.invSort ?? 'name', sel = s.invSel || eqKey
 
   // Weapons list
   let weaponKeys = (W.order ?? []).filter((k) => owned(s).includes(k))
@@ -513,10 +552,8 @@ function inventory(s) {
     const w = W[k], on = k === eqKey, cnt = owned(s).filter((x) => x === k).length
     const c = cndOf(s, k)
     const ammoStat = w.ranged ? `${s['loaded_' + k] ?? 0}/${s[w.ammoType ?? 'ammo'] ?? 0}` : `DAM ${w.damage}`
-    const inner = `<span class="cur">&gt;</span><span class="eq-tag">EQ</span><span class="nm">${w.name}${cnt > 1 ? ` ×${cnt}` : ''}</span><span class="stat-r"><span>${ammoStat}</span>${k !== 'fists' ? cndMini(c) : ''}</span>${detail(k, s, false)}`
-    return !on
-      ? `<button class="it" onclick="sendAction('inv',{k:'equip',w:'${k}'})">${inner}</button>`
-      : `<div class="it on">${inner}</div>`
+    const inner = `<span class="cur">&gt;</span><span class="eq-tag">EQ</span><span class="nm">${w.name}${cnt > 1 ? ` ×${cnt}` : ''}</span><span class="stat-r"><span>${ammoStat}</span>${k !== 'fists' ? cndMini(c) : ''}</span>`
+    return `<button class="it${on ? ' on' : ''}${sel === k ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${k}'})" ondblclick="sendAction('inv',{k:'equip',w:'${k}'})">${inner}</button>`
   }).join('')
 
   // Aid list
@@ -528,21 +565,21 @@ function inventory(s) {
   ]
   const anyAw = AWK.some(([, k]) => s[k])
   const aid0 = anyAw ? AWK.filter(([, k]) => s[k]).map(([c, k, nm, col]) => `
-    <button class="it" onclick="sendAction('inv',{k:'drink',c:'${c}'})">
+    <button class="it${sel === 'almond:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'almond:${c}'})" ondblclick="sendAction('inv',{k:'drink',c:'${c}'})">
       <span class="cur">&gt;</span><span class="nm" style="color:${col}">${nm}</span>
       <span class="stat-r"><span>×${s[k]}</span><span style="color:#9ee08a">+${AW[c]?.hp ?? 25} HP</span></span>
-      ${detail('almond:' + c, s, false)}
+      
     </button>`).join('') + `<button class="it" onclick="sendAction('inv',{k:'splash'})"><span class="cur">&gt;</span><span class="nm">Splash a bottle</span><span class="stat-r">[ J ]</span></button>` : ''
 
   const meatRows = Object.entries(s.meat ?? {}).filter(([c, n]) => n > 0 && MEAT[c]).map(([c, n]) => `
-    <button class="it" onclick="sendAction('inv',{k:'eat',c:'${c}'})">
+    <button class="it${sel === 'meat:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'meat:${c}'})" ondblclick="sendAction('inv',{k:'eat',c:'${c}'})">
       <span class="cur">&gt;</span><span class="nm" style="color:${MEAT[c].color}">${MEAT[c].name}</span>
       <span class="stat-r"><span>×${n}</span><span style="color:#9ee08a">+${MEAT[c].hp} HP</span></span>
     </button>`).join('')
 
   const snackRows = Object.entries(s.snacks ?? {}).filter(([c, n]) => n > 0 && SNACKS[c]).map(([c, n]) => {
     const v = SNACKS[c]
-    return `<button class="it" onclick="sendAction('inv',{k:'snack',c:'${c}'})">
+    return `<button class="it${sel === 'snack:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'snack:${c}'})" ondblclick="sendAction('inv',{k:'snack',c:'${c}'})">
       <span class="cur">&gt;</span><span class="nm">${v.name}</span>
       <span class="stat-r"><span>×${n}</span><span>${v.drink ? `THI +${v.thirst}` : `HUN +${v.hunger}`}</span></span>
     </button>`
@@ -560,35 +597,34 @@ function inventory(s) {
   const app = on.map((t) => {
     const p = parseCloth(t); if (!p) return ''
     const c = armorCnd(s.look, t)
-    return `<button class="it on" onclick="sendAction('inv',{k:'unwear',w:'${p.slot}'})">
+    return `<button class="it on${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})" ondblclick="sendAction('inv',{k:'unwear',w:'${p.slot}'})">
       <span class="cur">&gt;</span><span class="eq-tag">EQ</span>
       <span class="nm">${p.row.name}</span>
       <span class="stat-r"><span>DR ${p.row.dr}</span>${cndMini(c)}</span>
-      ${detail(t, s, false)}
+      
     </button>`
   }).join('') + [...new Set(bag)].map((t) => {
     const p = parseCloth(t); if (!p) return ''
     const n = bag.filter((x) => x === t).length, c = armorCnd(s.look, t)
-    return `<button class="it" onclick="sendAction('inv',{k:'wear',w:'${t}'})">
+    return `<button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})" ondblclick="sendAction('inv',{k:'wear',w:'${t}'})">
       <span class="cur">&gt;</span><span class="nm">${p.row.name}${n > 1 ? ` ×${n}` : ''}</span>
       <span class="stat-r"><span>DR ${p.row.dr}</span>${cndMini(c)}</span>
-      ${detail(t, s, false)}
+      
     </button>`
   }).join('') || '<div class="em">No apparel carried.</div>'
 
   // Ammo list
   const ammo = ['ammo', 'shells'].filter((t) => s[t]).map((t) => `
-    <div class="it">
+    <button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})">
       <span class="cur">&gt;</span>
       <span class="nm">${t === 'ammo' ? 'Pistol rounds (9mm)' : 'Shotgun shells (12ga)'}</span>
       <span class="stat-r"><span>×${s[t]}</span></span>
-      ${detail(t, s, false)}
-    </div>`).join('') || '<div class="em">Out of ammunition.</div>'
+    </button>`).join('') || '<div class="em">Out of ammunition.</div>'
 
   // Misc list
   const misc = `${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="cur">&gt;</span><span class="nm" style="color:#d8b56a">Old compass</span><span class="stat-r">${s.compass} reads</span></button>` : ''}
     ${s.firesalt > 0 ? `<button class="it" onclick="sendAction('inv',{k:'firesalt'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff8a3a">Firesalt</span><span class="stat-r">${s.firesalt} pinches</span></button>` : ''}
-    ${s.bobbypins ? `<div class="it"><span class="cur">&gt;</span><span class="nm">Bobby pins</span><span class="stat-r">${s.bobbypins}</span>${detail('bobbypin', s, false)}</div>` : ''}
+    ${s.bobbypins ? `<div class="it${sel === 'bobbypin' ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'bobbypin'})"><span class="cur">&gt;</span><span class="nm">Bobby pins</span><span class="stat-r">${s.bobbypins}</span></div>` : ''}
     ${s.pages ? String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="cur">&gt;</span><span class="nm" style="color:#e8dcc0">${+n === 24 ? 'Field doc 24' : +n >= 21 && +n <= 23 ? 'Field doc ' + (+n - 20) : +n >= 11 && +n <= 17 ? 'Alef papers ' + (+n - 10) : 'Torn page ' + +n}</span><span class="stat-r">READ</span></button>`).join('') : ''}` || '<div class="em">No miscellaneous items.</div>'
 
   const keyRows = (s.keyItems ?? []).includes('spamton') ? `<div class="it on" title="Can't be dropped. Weighs nothing."><span class="cur">&gt;</span><span class="nm" style="color:#ff6fd0">[[SPAMTON G. SPAMTON]]</span><span class="stat-r"><span>0 kg</span><span style="color:#ffe14d">LOOT $$ +</span></span><div style="font-size:11px;opacity:.75;padding-left:18px">A [[Big Shot]] riding in your pocket. 10% chance of a backquarter in any loot, +2% on money you find.</div></div>` : ''
@@ -618,22 +654,22 @@ function inventory(s) {
   const dropBtn = eqKey !== 'fists' ? `<button onclick="sendAction('inv',{k:'drop',w:'${eqKey}'})"><kbd>X</kbd>Drop ${eq.name}</button>` : ''
   const cashStr = `$${((s.cents ?? 0) / 100).toFixed(2)}`
 
-  return `<div class="pbw pb"><div class="pbp" data-modal>
+  return `<div class="pbw pb"><div class="pbp inv" data-modal>
     <!-- Pip-Boy 3000 Header Bar -->
     <div class="nv-top">
       <div class="nv-top-left">
-        <h2>PIP-BOY 3000</h2>
+        <h2>HALOGEN&trade; · ITEMS</h2>
         <div class="nv-mode-tabs">
           <button class="nv-mode-btn" onclick="sendAction('inv',{k:'sheet'})">STATS</button>
           <button class="nv-mode-btn on">ITEMS</button>
-          <button class="nv-mode-btn" onclick="sendAction('inv',{k:'tab',t:'misc'})">DATA</button>
+          <button class="nv-mode-btn" onclick="sendAction('inv',{k:'tab',t:'misc'})">NOTES</button>
         </div>
       </div>
       <div class="nv-vitals">
         <span><b>HP</b>${Math.round(s.hp ?? 0)}/${maxHp(lv, s)}</span>
         <span><b>DR</b>${wornDR(s.look)}</span>
         <span class="${isOver ? 'warn' : ''}"><b>WG</b>${kg.toFixed(1)}/${cap}</span>
-        <span><b>CAPS</b>${cashStr}</span>
+        <span><b>CASH</b>${cashStr}</span>
       </div>
     </div>
 
@@ -658,13 +694,12 @@ function inventory(s) {
     <!-- Main 2-column body: List (left) + Detail (right) -->
     <div class="bd">
       <div class="ls">${list}</div>
-      ${detail(eqKey, s, true)}
+      ${pane(s, sel, eqKey)}
     </div>
 
     <!-- Footer action bar -->
     <div class="ft">
       <span class="c">${s.kills ?? 0} confirmed kills · Level ${lv}</span>
-      ${dropBtn}
       <button onclick="sendAction('inv',{k:'close'})"><kbd>I</kbd>Close</button>
     </div>
   </div></div>`
