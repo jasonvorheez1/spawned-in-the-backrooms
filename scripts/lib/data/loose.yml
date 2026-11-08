@@ -1,0 +1,22 @@
+# Loose things: what each kind is made of and what it does when it's hit, kicked, thrown or shot.
+# match: words in its id or name. breakAt: impact energy (0.5 x kg x speed^2, J) that breaks it when it lands or hits.
+# hp: what swings and shots chew through. act: the one thing it does when it breaks (scripts/lib/loose.js).
+# All numbers are Savi's picks.
+kinds:
+  propane:    { match: [propane, gas_can, gascan, gas-can, jerrycan, fuel], mat: metal, kg: 9, hp: 30, breakAt: 260, act: explode }
+  extinguisher: { match: [extinguisher], mat: metal, kg: 6, hp: 40, breakAt: 220, act: spray }
+  popper:     { match: [popper, cracker, firework], mat: fixture, kg: 0.1, hp: 1, breakAt: 1, act: confetti }
+  balloon:    { match: [balloon], mat: fixture, kg: 0.02, hp: 1, breakAt: 0.2, act: pop }
+  candle:     { match: [candle], mat: fixture, kg: 0.3, hp: 5, breakAt: 6, act: snuff }
+  cake:       { match: [cake, pie, pizza, sandwich, burger], mat: fixture, kg: 1.2, hp: 4, breakAt: 6, act: splat }
+  bottle:     { match: [bottle, wine, beer, whiskey, vodka, jar, flask, almond], mat: glass, kg: 0.8, hp: 6, breakAt: 9, act: spill }
+  glass:      { match: [glass, mirror, window, bulb, vase, aquarium], mat: glass, kg: 1.5, hp: 8, breakAt: 12, act: shatter }
+  ceramic:    { match: [plate, mug, bowl, teapot, pot, toilet, sink, dish, ceramic], mat: tile, kg: 1, hp: 10, breakAt: 14, act: shatter }
+  can:        { match: [can, soda, tin, cola, beans], mat: metal, kg: 0.4, hp: 999, breakAt: 4, act: crumple }
+  electronic: { match: [tv, monitor, radio, computer, pc, laptop, phone, speaker, microwave, console, lamp, clock, printer, fan, keyboard, boombox], mat: junction, kg: 6, hp: 30, breakAt: 120, act: spark }
+  plastic:    { match: [cup, tray, hat, bucket, plastic, cone, toy, ball], mat: fixture, kg: 0.3, hp: 999, breakAt: 99999, act: bounce }
+  metal:      { match: [barrel, bin, locker, pipe, tank, keg, toolbox, safe, cabinet, filing, shelf, cart, bike], mat: sheet_steel, kg: 20, hp: 160, breakAt: 2500, act: dent }
+  wood:       { match: [chair, table, crate, pallet, desk, stool, lounger, box, drawer, door, bench, plank, bed, dresser, bookcase, sofa, couch], mat: wood, kg: 12, hp: 70, breakAt: 700, act: splinter }
+explode: { radius: 4.5, damage: 55 }
+spray:   { seconds: 2.2, thrust: 9 }
+kick:    { reach: 1.6, speed: 7 }

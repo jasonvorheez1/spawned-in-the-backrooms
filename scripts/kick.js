@@ -6,6 +6,7 @@ import { hitTarget } from './player.js'
 import { animate } from 'builtin/tween'
 import { attrsOf } from './lib/stats.js'
 import { foeStats } from './lib/knock.js'
+import { kickLoose, stepFlights } from './lib/loose.js'
 // kicking a foe (Shelly: physics, ragdoll by strength/agility). Savi's picks: power = HAR + 0.6 AGI vs the foe's heft;
 // under 0.8x heft barely moves it, up to 1.4x staggers, past that knocks it down for ~1.1 s, then it gets up
 const HEFT = { partygoer: 6, hound: 4, smiler: 10, lurker: 8, stealer: 7, l8spider: 5, npc: 6 }
@@ -55,6 +56,7 @@ export function onInput(ctx, input) {
   if (leg) animate(ctx, leg, { 'feetPosition.y': [-1.32, -0.92, -0.95, -1.37], 'rotation.pitch': [-10, 75, 70, -5] }, { duration: 0.45, easing: 'easeOutCubic' })
   ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 0.12 }, { audience: { player: ctx.self.id } })
   if (!o && kickFoe(ctx, s, f, p)) return
+  if (!o && kickLoose(ctx, f, s)) return
   if (!o) { ctx.emit('playSound', { clip: SND('cloth-whoosh-swing'), position: p, volume: 0.4 }); return }
   mem(ctx).rolls[o.id] = { vx: f.x * KICK_V, vz: f.z * KICK_V, spin: (ctx.random() - 0.5) * 720, hit: false }
   const at = { x: o.feetPosition.x, y: o.feetPosition.y + 0.5, z: o.feetPosition.z }

@@ -6,6 +6,7 @@ import B from './data/breakables.yml'
 import { attrsOf, skillsOf } from './stats.js'
 import { baseOf } from './weapons.js'
 import { raycast } from 'builtin/physics'
+import { looseOf, arm, breakIt } from './loose.js'
 import { N, S, H, HALF, wallX, wallZ, isArchWall, inHub, EXIT } from './maze.js'
 import { GRIDS, gridOfObj, wallFrame } from './wallgrid.js'
 export { B }
@@ -175,9 +176,12 @@ export function damageEntity(ctx, o, dmg, at, normal, kind) {
     if ((o.primitive.params?.dmg ?? 0) !== step && left > 0) o.primitive = { ...o.primitive, params: { ...o.primitive.params, dmg: step } }
   }
   if (left <= 0 && !o.state.broke) {
+    const k = looseOf(o), own = k ? breakIt(ctx, o, k, at, normal) : false // a loose thing breaks its own way (lib/loose.js)
+    if (own === 'keep') return true
     o.state.broke = true
     const fp = o.feetPosition, big = (o.state.size ?? 1) > 1.5
-    crumble(ctx, { x: fp.x, y: fp.y + 0.6, z: fp.z }, mat, big)
+    if (!k || k.act === 'splinter' || k.act === 'dent') crumble(ctx, { x: fp.x, y: fp.y + 0.6, z: fp.z }, mat, big)
+    if (k && !['splinter', 'dent', 'spark'].includes(k.act)) { wreck(ctx, o); return true } // shards, spills and confetti leave no rubble pile
     const rare = rollDrops(ctx, mat, kind), items = [...rare, ...(o.state.items ? String(o.state.items).split(',').filter(Boolean) : [])]
     spawnRubble(ctx, { x: fp.x, y: fp.y + 0.02, z: fp.z }, items, o.state.items ? (o.state.name ?? 'Wreck') : mat === 'machine' ? `${o.state.name ?? 'Machine'} parts` : 'Rubble')
     const good = rare.filter((t) => !['scrap_metal', 'scrap_wood', 'drywall', 'nails', 'wire', 'rubble', 'rust_flakes', 'mortar_dust', 'bricks', 'cinder', 'tile_shard'].includes(t))
@@ -319,6 +323,7 @@ export function strike(ctx, s, wp, kind, base, fwd, pitch = 0) {
   const o = ctx.getObject(hit.id)
   let t = o
   while (t && !t.tags?.includes('breakable') && t.parent?.id) t = ctx.getObject(t.parent.id)
+  if (t && !t.tags?.includes('breakable') && o && !o.parent && arm(o)) t = o // any loose thing can be struck
   if (!t?.tags?.includes('breakable') || t.state?.broke) return false
   if (t.state?.needs && !s?.[t.state.needs]) return false // e.g. the B.N.T.G. yard sign: only its house's owner may break it
   const m = B.materials[t.state?.mat ?? 'wood'] ?? B.materials.wood

@@ -4,6 +4,7 @@
 import { raycast } from "builtin/physics";
 import { attrsOf } from "./lib/stats.js";
 import { foeStats } from "./lib/knock.js";
+import { arm, track, stepFlights, impact as looseImpact } from "./lib/loose.js";
 import { damageEntity } from "./lib/breakables.js";
 import { heard } from "./lib/hear.js";
 import { isTray, TRAY_KG, CLATTER } from "./lib/snacktray.js";
@@ -79,7 +80,7 @@ export function onInput(ctx, input) {
   }
   const sz = o?.bounds?.size, small = sz && sz.x * sz.y * sz.z < 0.5 && Math.max(sz.x, sz.y, sz.z) < 1.4; // a radio, a lamp, a bottle: anything small enough is fair game
   if (!o || !(o.tags?.includes("breakable") || small) || NOT.some((t) => o.tags.includes(t)) || o.parent || o.tags.includes("l5-elev-panel") || o.tags.includes("l5-sealed")) { note(ctx, "Nothing to pick up."); return; }
-  if (!o.tags.includes("breakable")) { o.tags = [...o.tags, "breakable"]; o.state.mat ??= "fixture"; o.state.hp ??= 30; o.state.maxHp ??= o.state.hp; } // picked up once, it can be smashed too
+  if (!arm(o) && !o.tags.includes("breakable")) { o.tags = [...o.tags, "breakable"]; o.state.mat ??= "fixture"; o.state.hp ??= 30; o.state.maxHp ??= o.state.hp; } // picked up once, it can be smashed too
   const kg = massOf(o), cap = power(ctx);
   const over = kg / cap; // past 1 it's a struggle; past 3 nobody moves it
   if (over > 3) { note(ctx, `It won't budge. ${Math.round(kg)} kg.`); heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-strained-grunt-lifting-heavy.mp3", position: eye, volume: 0.5, maxDistance: 10 }); return; }
@@ -112,6 +113,7 @@ function toss(ctx, o, h) {
   o.physics = vol ? { body: "dynamic", collider: "box", density: Math.max(60, Math.min(8000, ses.kg / vol)), friction: 0.7 } : { body: "dynamic", collider: "box", mass: ses.kg, friction: 0.7 };
   o.velocity = { x: d.x * speed, y: d.y * speed + 2, z: d.z * speed };
   ses.flying = { id: o.id, at: ctx.now(), speed, kg: ses.kg, hit: {}, tray: isTray(o) };
+  if (!isTray(o)) track(ctx, o, ses.kg); // lands hard: it breaks its own way (lib/loose.js)
   if (isTray(o)) { o.physics = TRAY_PHYS; s.l61Hold = null; s.l61Tray = 0; }
   ses.held = null; s.carry = null; s.carryId = null; s.carryMul = 1;
   const f = ctx.self.feetPosition;
@@ -188,6 +190,7 @@ export function update(ctx) {
     else if (isTray(o)) { const f = ctx.self.feetPosition, d = ses.dir ?? { x: 0, y: 0, z: -1 }, hl = Math.hypot(d.x, d.z) || 1; o.feetPosition = { x: f.x + (d.x / hl) * 0.5, y: f.y + 0.85, z: f.z + (d.z / hl) * 0.5 }; o.rotation = { yaw: Math.atan2(-d.x, -d.z) * 57.2958 }; } // held level in both hands at the belly
     else { const f = ctx.self.feetPosition, d = ses.dir ?? { x: 0, y: 0, z: -1 }; o.feetPosition = { x: f.x + d.x * 1.1, y: f.y + 0.7 + d.y * 0.6, z: f.z + d.z * 1.1 }; o.rotation = { yaw: Math.atan2(-d.x, -d.z) * 57.2958 }; }
   }
+  stepFlights(ctx);
   const fl = ses.flying; if (!fl) return;
   const o = ctx.getObject(fl.id), age = ctx.now() - fl.at;
   const v = o?.velocity ?? { x: 0, y: 0, z: 0 }, sp = Math.hypot(v.x, v.y, v.z);
@@ -212,6 +215,7 @@ export function update(ctx) {
     }
     const dmg = Math.round(4 + sp * Math.sqrt(fl.kg) * 0.9), at = { x: p.x, y: p.y + 0.3, z: p.z }, n = sp > 0 ? { x: -v.x / sp, y: 0, z: -v.z / sp } : { x: 0, y: 1, z: 0 };
     const h = ctx.getObject(t.id); if (!h) continue;
+    if (!fl.tray && sp > 3) looseImpact(ctx, o, sp, fl.kg, at); // what you threw takes the hit too
     if (h.tags.includes("breakable") && !h.tags.includes("npc")) damageEntity(ctx, h, dmg, at, n, "thrown");
     else {
       h.state.hp = (h.state.hp ?? 40) - dmg;
@@ -238,3 +242,5 @@ function spill(ctx, o) {
   for (const q of ctx.query({ center: b.center, radius: r })) { const it = ctx.getObject(q.id), f = q.feetPosition;
     if (f.y >= b.max.y - 0.15 && f.y <= b.max.y + 0.4 && f.x >= b.min.x - 0.1 && f.x <= b.max.x + 0.1 && f.z >= b.min.z - 0.1 && f.z <= b.max.z + 0.1) fall(it); }
 }
+// an extinguisher's jet runs dry: the cloud stops and it's an empty can (lib/loose.js spray)
+export function looseSpent(ctx, { id }) { const o = ctx.getObject(id); if (o) { o.fx = null; o.state.broke = true; o.state.loose = "plastic"; } }
