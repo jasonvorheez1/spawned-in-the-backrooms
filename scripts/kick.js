@@ -31,13 +31,22 @@ export function onInput(ctx, input) {
   if (!input.pressed?.kick) return
   const s = ctx.self.state; if (s.menuOpen || s.lootOpen || s.sit || s.sheetOpen) return
   const f = fwd(ctx), o = wheeledNear(ctx, KICK_REACH, f), p = ctx.self.feetPosition
+  const hold = s.lurkHold, lk = hold && ctx.getObject(hold.by)
+  if (lk) { // grabbed: the kick lands on the lurker, it lets go and reels
+    s.lurkHold = null; s.crouch = false
+    hitTarget(ctx, s, lk, 12, { x: lk.feetPosition.x - p.x, y: 0, z: lk.feetPosition.z - p.z }, true, 1)
+    lk.state.stunUntil = ctx.now() + 1500
+    ctx.emit('playSound', { clip: SND('office-chair-kicked-casters-rolling'), position: lk.feetPosition, volume: 0.6 })
+    ctx.emit('squash', { target: lk.id, axis: 'z', intensity: 0.25, duration: 0.2 })
+    ctx.emit('cameraPunch', { direction: { x: f.x, y: 0, z: f.z }, intensity: 0.3 }, { audience: { player: ctx.self.id } })
+  }
   ctx.self.anim.kick = { clip: 'cdn/clip-kick.glb', loop: false, weight: 1 }
   ctx.after(0.6, 'kickEnd')
   // first person: your leg swings up from below the screen and snaps forward, then drops away
   const l = s.look ?? {}
-  const leg = (s.tp || l.modelUrl) ? null : ctx.spawn({ audience: 'local', scope: 'session', lifetime: 0.5, feetPosition: { attach: 'camera', x: 0.16, y: -0.35, depth: 0.25 }, rotation: { pitch: -10 }, visibleInFirstPerson: true, castShadow: false,
+  const leg = (s.tp || l.modelUrl) ? null : ctx.spawn({ audience: 'local', scope: 'session', lifetime: 0.5, feetPosition: { attach: 'camera', x: 0.16, y: -1.32, depth: 0.25 }, rotation: { pitch: -10 }, visibleInFirstPerson: true, castShadow: false,
     primitive: { kind: 'scripted', script: 'scripts/kick-leg-geo.js', params: { species: l.species, fur: l.fur, botw: l.botw, bottom: l.bottom, shoes: l.shoes, shoec: l.shoec } } }) // first person only: third person shows the body's own kick clip
-  if (leg) animate(ctx, leg, { 'feetPosition.y': [-0.35, 0.05, 0.02, -0.4], 'rotation.pitch': [-10, 75, 70, -5] }, { duration: 0.45, easing: 'easeOutCubic' })
+  if (leg) animate(ctx, leg, { 'feetPosition.y': [-1.32, -0.92, -0.95, -1.37], 'rotation.pitch': [-10, 75, 70, -5] }, { duration: 0.45, easing: 'easeOutCubic' })
   ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 0.12 }, { audience: { player: ctx.self.id } })
   if (!o) { ctx.emit('playSound', { clip: SND('cloth-whoosh-swing'), position: p, volume: 0.4 }); return }
   mem(ctx).rolls[o.id] = { vx: f.x * KICK_V, vz: f.z * KICK_V, spin: (ctx.random() - 0.5) * 720, hit: false }

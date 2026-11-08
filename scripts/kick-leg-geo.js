@@ -10,16 +10,16 @@ export function geometry(ctx) {
   ctx.smooth()
   // thigh then shin, a slight bend at the knee
   ctx.color(pants ? CLOTH : FUR)
-  tube(ctx, [[0, 0.05, 0.02], [0, -0.25, 0.0], [0, -0.48, -0.03]], [0.115, 0.1, 0.085], M)
-  sphere(ctx, [0, -0.48, -0.03], 0.088, M)
+  tube(ctx, [[0, 1.02, 0.02], [0, 0.72, 0], [0, 0.49, -0.03]], [0.115, 0.1, 0.085], M)
+  sphere(ctx, [0, 0.49, -0.03], 0.088, M)
   ctx.color(pants && P.botw !== "capris" ? CLOTH : FUR)
-  tube(ctx, [[0, -0.48, -0.03], [0, -0.68, -0.01], [0, -0.84, 0.0]], [0.085, 0.072, 0.062], M)
+  tube(ctx, [[0, 0.49, -0.03], [0, 0.29, -0.01], [0, 0.13, 0]], [0.085, 0.072, 0.062], M)
   // foot: a shoe in its colour with a white sole, or a soft paw
   if (shoe) {
-    ctx.color(P.shoec || "#c0392b"); sphere(ctx, [0, -0.9, -0.06], 0.075, M, [1, 0.8, 1.7])
-    ctx.color(P.shoes === "boots" ? "#2a2420" : "#ffffff"); sphere(ctx, [0, -0.95, -0.06], 0.078, M, [1.05, 0.32, 1.75])
+    ctx.color(P.shoec || "#c0392b"); sphere(ctx, [0, 0.07, -0.06], 0.075, M, [1, 0.8, 1.7])
+    ctx.color(P.shoes === "boots" ? "#2a2420" : "#ffffff"); sphere(ctx, [0, 0.02, -0.06], 0.078, M, [1.05, 0.32, 1.75])
   } else {
-    ctx.color(FUR); sphere(ctx, [0, -0.9, -0.05], 0.07, M, [1, 0.75, 1.6])
+    ctx.color(FUR); sphere(ctx, [0, 0.07, -0.05], 0.07, M, [1, 0.75, 1.6])
   }
   ctx.color(null)
 }

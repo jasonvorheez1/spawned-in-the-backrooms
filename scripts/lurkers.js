@@ -100,6 +100,7 @@ function held(ctx, dt) {
   const drop = () => {
     if (ctx.self.isLocal) ctx.view.camera = null;
     ctx.self.session.lh = null;
+    if (ctx.self.state.crouch) ctx.self.state.crouch = false; // let go: you stand back up
     const b = ctx.self.behavior;
     if (Array.isArray(b)) ctx.self.behavior = b.filter((x) => x !== ME);
   };
