@@ -246,7 +246,7 @@ def refit(o):
         bw = [body.matrix_world @ q.co for q in body.data.vertices]; band = [w.x for w in bw if abs(w.z - (EYE.z + 0.09)) < 0.015]
         k = (SKULL * 1.04 / wid)
         for v in me.vertices: v.co = Vector((0.0 + (v.co.x - c.x) * k, c.y + (v.co.y - c.y) * k, EYE.z + 0.075 + (v.co.z - bot) * k))
-        sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.006
+        sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.022   # clear of the fur tufts, no chips
         bpy.ops.object.modifier_apply(modifier='fit')
     elif kind in ('Top', 'Bot', 'Shoes', 'Neck', 'Hat') and o.name not in LOOSE:
         sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'
@@ -262,15 +262,19 @@ def refit(o):
         sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.004
         bpy.ops.object.modifier_apply(modifier='fit')
     if kind in ('Top', 'Bot', 'Shoes') and o.name not in LOOSE: cover(o)
-    if o.name == 'Top_dress':   # bodice cut from the skin, then a flared skirt lathed round the hips (the carried sheet tore)
-        cover(o)
+    SKL = {'Top_dress': (0.34, 0.3), 'Bot_skirt': (0.24, 0.22), 'Bot_longskirt': (0.5, 0.36)}
+    if o.name in ('Bot_skirt', 'Bot_longskirt'):   # the carried sheet tore: the skirt is lathed whole round her hips
+        import bmesh as _bm
+        _g = _bm.new(); _g.from_mesh(o.data); _bm.ops.delete(_g, geom=list(_g.verts), context='VERTS'); _g.to_mesh(o.data); _g.free()
+    if o.name in SKL:   # bodice cut from the skin, then a flared skirt lathed round the hips (the carried sheet tore)
+        if o.name == 'Top_dress': cover(o)
         ev = [env.matrix_world @ v.co for v in env.data.vertices]
         band = [w for w in ev if abs(w.z - HIPS_Z) < 0.03 and abs(w.x) < 0.22]   # the hips alone, never the hands hanging beside them
         cx = (max(w.x for w in band) + min(w.x for w in band)) / 2; cy = (max(w.y for w in band) + min(w.y for w in band)) / 2
         rx = (max(w.x for w in band) - min(w.x for w in band)) / 2; ry = (max(w.y for w in band) - min(w.y for w in band)) / 2
         gb = bmesh.new(); N, R = 40, 7; rings = []
         for k in range(R + 1):
-            t = k / R; z = HIPS_Z + 0.07 - t * 0.34; f = 1.1 + 0.32 * t ** 1.2
+            t = k / R; z = HIPS_Z + 0.07 - t * SKL[o.name][0]; f = 1.1 + SKL[o.name][1] * t ** 1.2
             ring = []
             for q in range(N):
                 a = 2 * math.pi * q / N; wob = 1 + 0.03 * math.sin(a * 6) * t   # soft folds toward the hem
