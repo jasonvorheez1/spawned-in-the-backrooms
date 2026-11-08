@@ -225,11 +225,14 @@ function shoot(ctx, me, t, A = WP.pistol) {
 // a shove away from other people so crowds slide past each other, and a stuck check that sidesteps and repaths.
 const clearLine = (ctx, me, a, b) => { const dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz); if (d < 0.3) return true;
   const h = raycast(ctx, { x: a.x, y: a.y + 0.5, z: a.z }, { x: dx / d, y: 0, z: dz / d }, { distance: d, radius: 0.3, ignoreEntities: [me.id], bodies: "static", physicsOnly: true }); return !h; };
+// at most two path searches a tick across every agent on this machine: a crowd that loses its target together no longer pays them all in one tick (the 37 ms spikes); the rest ask next tick
+let PB_AT = -1, PB_N = 0;
+const pathBudget = (now) => { if (now !== PB_AT) { PB_AT = now; PB_N = 0; } return PB_N++ < 2; };
 function moveAlong(ctx, me, m, goal, speed, dt) {
   const p = me.feetPosition, now = ctx.now();
   const fin = (q, y0) => ({ x: Number.isFinite(q?.x) ? q.x : p.x, y: Number.isFinite(q?.y) ? q.y : y0, z: Number.isFinite(q?.z) ? q.z : p.z });
   goal = fin(goal, Number.isFinite(p.y) ? p.y : 0);
-  if (!m.path || now > m.repath || flat(goal, m.pathGoal ?? goal) > 2) {
+  if ((!m.path || now > m.repath || flat(goal, m.pathGoal ?? goal) > 2) && pathBudget(now)) {
     const r = findPath(ctx, fin(p, goal.y), goal, {});
     if (r?.points?.length) { m.path = r.points; m.i = 0; m.pathGoal = { ...goal }; m.seeAt = 0; }
     else if (!r?.partial && clearLine(ctx, me, p, goal)) { m.path = [goal]; m.i = 0; m.pathGoal = { ...goal }; }
