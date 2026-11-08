@@ -18,7 +18,7 @@ export const updateSchedule = { every: { seconds: 0.1 } } // 10 Hz: the hands fo
 const EYES_SHUT = ['joy', 'laugh', 'kiss', 'dizzy']
 function applyBones(ctx) {
   const ses = ctx.self.session, b = {}
-  if (MESH) { const h = ctx.getObject(ctx.self.id + '/' + HEAD_ID); if (h && ses.face) h.morph = faceMorph(ses.face, ses.lids, lookOf(ctx)?.sex === 'f', lookOf(ctx)) } // the blink is the head's Blink key
+  if (MESH) { const h = ctx.getObject(ctx.self.id + '/' + HEAD_ID); if (h && ses.face) { const lk = ses.cachedLook ?? lookOf(ctx); h.morph = faceMorph(ses.face, ses.lids, lk?.sex === 'f', lk) } } // the blink is the head's Blink key
   else if (ses.lids) { b.LidL = { scale: LID_SCALE }; b.LidR = { scale: LID_SCALE } }
   if (ses.twitch) b[ses.twitch] = { rotate: [0, 0, ses.twitchDir * 24] }
   if (ses.headS && ses.headS !== 1) b.Head = { scale: ses.headS }
@@ -157,7 +157,14 @@ function moodFace(ctx, l) {
 export function update(ctx) {
   if (!MESH && !ctx.self.session.headSwept) { ctx.self.session.headSwept = true; dropHead(ctx, ctx.self) }
   if (!ctx.self.state.look) ctx.self.state.look = randomLook(ctx, { ...C.default }, 'clothes') // a new critter: regular clothes only (saved looks are never touched)
-  const l = lookOf(ctx), face = moodFace(ctx, l), ses = ctx.self.session
+  const ses = ctx.self.session, rawLook = ctx.self.state.look
+  let l = ses.cachedLook
+  if (!l || rawLook !== ses.lastLookRef) {
+    ses.lastLookRef = rawLook
+    l = ses.cachedLook = lookOf(ctx)
+    ses.lookKey = null
+  }
+  const face = moodFace(ctx, l)
   ses.face = face
   { // third person: a flinch when hurt; a gun in the hands is aimed or carried ready, and an aimed body faces where the camera looks
     const s3 = ctx.self.state, now3 = ctx.now(), hp3 = s3.hp ?? 100
@@ -182,13 +189,20 @@ export function update(ctx) {
     if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
     life(ctx, face)
   }
-  const params = { species: l.species, sex: l.sex, ftype: l.ftype || 'oval', trait: l.trait || 'placid', blush: l.blush, nose: l.nose || undefined, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks }
-  if (l.fur) params.fur = l.fur
-  const worn = l.modelUrl ? { url: l.modelUrl } : l.model && C.models?.[l.model] // an imported model worn instead of the critter
-  for (const [k] of C.sliders) if (k !== 'headS' && k !== 'tailS' && Number(l[k]) && Number(l[k]) !== 1) params[k] = Number(l[k])
-  const key = JSON.stringify(MESH ? { ...params, expr: 0 } : params) + (worn ? '|' + worn.url : '') // on the Blender critter the face is a morph, not a rebuild
+  if (ses.lookKey == null || (!MESH && ses.lastFace !== face)) {
+    const params = { species: l.species, sex: l.sex, ftype: l.ftype || 'oval', trait: l.trait || 'placid', blush: l.blush, nose: l.nose || undefined, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks }
+    if (l.fur) params.fur = l.fur
+    const worn = l.modelUrl ? { url: l.modelUrl } : l.model && C.models?.[l.model] // an imported model worn instead of the critter
+    for (const [k] of C.sliders) if (k !== 'headS' && k !== 'tailS' && Number(l[k]) && Number(l[k]) !== 1) params[k] = Number(l[k])
+    ses.cachedParams = params
+    ses.cachedWorn = worn
+    ses.lookKey = JSON.stringify(MESH ? { ...params, expr: 0 } : params) + (worn ? '|' + worn.url : '')
+    ses.lastFace = face
+  }
+  const key = ses.lookKey
   if (key !== ses.key) {
     ses.key = key
+    const params = ses.cachedParams, worn = ses.cachedWorn
     if (worn) { ctx.self.primitive = null; ctx.self.model = worn.url; dropHead(ctx, ctx.self) }
     else if (MESH) {
       ctx.self.primitive = null
@@ -201,6 +215,7 @@ export function update(ctx) {
     }
     else { ctx.self.model = null; ctx.self.primitive = { kind: 'scripted', script: SCRIPT, params } }
   }
+  const worn = ses.cachedWorn
   if (MESH && !worn && ses.headFace !== face) { ses.headFace = face; applyBones(ctx) }
   const hs = Number(l.headS) || 1, ts = Number(l.tailS) || 1
   if (!worn && (hs !== (ses.headS || 1) || ts !== (ses.tailS || 1))) { ses.headS = hs; ses.tailS = ts; applyBones(ctx) }

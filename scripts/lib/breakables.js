@@ -92,10 +92,16 @@ export function syncWalls(ctx, gname) {
 // the sims call this: broken walls grow back after regrowMinutes (never with someone in the gap), then the mesh follows
 // props the levels lay without a material (containers, Level 2 boxes, Level 3 live junction boxes) join the breakables here
 const PROP_MAT = { 'live-box': 'junction', l2box: 'sheet_steel', container: 'wood', ...(B.props ?? {}) }
+const PROP_TAGS = Object.keys(PROP_MAT)
 const L2_MAT = { toolbox: 'sheet_steel', locker: 'sheet_steel', vending: 'sheet_steel', cabinet: 'sheet_steel', valvebox: 'pipe', pipebox: 'pipe', crate: 'wood', pallet: 'wood', desk: 'wood' }
 export function sweepProps(ctx) {
-  for (const t of Object.keys(PROP_MAT)) for (const o of ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+  const now = ctx.now()
+  if (ctx.place.state.propsSweptAt && now - ctx.place.state.propsSweptAt < 30000) return
+  ctx.place.state.propsSweptAt = now
+  for (const o of ctx.query({ anyTags: PROP_TAGS, radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
     const st = o.state ?? {}
+    const t = o.tags?.find((tag) => PROP_MAT[tag])
+    if (!t) continue
     if (o.tags?.includes('breakable') && st.mat && st.hp != null && !(t === 'live-box' && st.mat === 'machine')) continue
     const h = ctx.getObject(o.id); if (!h) continue
     const mat = t === 'live-box' ? 'junction' : t === 'l2box' ? (L2_MAT[st.kind] ?? 'sheet_steel') : (st.mat ?? PROP_MAT[t])
@@ -185,19 +191,36 @@ function wreck(ctx, o) {
   if (o.tags?.includes('rubble') || o.lifetime) { ctx.destroy(o.id); return }
   o.state.wreck = { at: ctx.now(), tags: [...(o.tags ?? [])], physics: o.physics ?? null, items: o.state.items ?? null }
   o.tags = ['wreck']; o.visible = false; o.physics = 'none'
+  const wr = (ctx.place.state.wrecks ??= [])
+  if (!wr.includes(o.id)) wr.push(o.id)
 }
 // the sims call this every few seconds: wrecks whose hour is up stand again, never with someone standing in them
 export function regrowWrecks(ctx) {
+  let wr = ctx.place.state.wrecks
+  if (!wr) {
+    const found = []
+    for (const r of ctx.query({ tags: ['wreck'], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
+      found.push(r.id)
+    }
+    wr = ctx.place.state.wrecks = found
+  }
+  if (!wr.length) return
   const now = ctx.now()
-  for (const r of ctx.query({ tags: ['wreck'], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
-    const w = r.state?.wreck; if (!w || now - w.at < REGROW_MS) continue
-    const f = r.feetPosition; if (ctx.place.players.some((p) => Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z) < 2)) continue
-    const o = ctx.getObject(r.id); if (!o) continue
+  const remaining = []
+  for (const id of wr) {
+    const o = ctx.getObject(id)
+    if (!o || !o.tags?.includes('wreck')) continue
+    const w = o.state?.wreck
+    if (!w) continue
+    if (now - w.at < REGROW_MS) { remaining.push(id); continue }
+    const f = o.feetPosition
+    if (f && ctx.place.players.some((p) => Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z) < 2)) { remaining.push(id); continue }
     o.tags = w.tags; o.physics = w.physics; o.visible = true
     const st = { ...o.state }; delete st.wreck; delete st.broke; st.hp = st.maxHp ?? B.materials[st.mat ?? 'wood']?.hp ?? 60
     if (st.full != null) { st.items = st.full; st.refillAt = 0; st.scavved = false } else if (w.items != null) st.items = w.items
     o.state = st
   }
+  ctx.place.state.wrecks = remaining
 }
 // a hole at body height is a doorway: what hangs over it comes down, and once a column is open floor to top
 // the column beside it (toward the wall's middle) gives way too, so the gap is wide enough to walk through

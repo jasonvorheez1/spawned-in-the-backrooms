@@ -20,6 +20,16 @@ const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
 import { rollItem, rollItemL1, rollItemL2, spotCloth, poolOf } from './lib/loot.js'
 
 const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc', 'door', 'bench', 'usable', 'seat'] // usable: anything with its own press ear (state.name/verb/info) // what can be looked at and used
+const BIG_KINDS = new Set(['container', 'npc', 'door', 'bench', 'usable', 'seat'])
+function kindOf(tags) {
+  if (!tags) return null
+  if (tags.includes('seat')) return 'seat'
+  for (let i = 0; i < KINDS.length; i++) {
+    const k = KINDS[i]
+    if (k !== 'seat' && tags.includes(k)) return k
+  }
+  return null
+}
 const REACH = 3.0 // metres from the eye
 const OPEN_RANGE = 4.5 // a container you walk away from closes
 const mem = (ctx) => (ctx.self.session.interact ??= { ray: null, last: -1e9, acc: 0, key: '', focus: null, hl: 0 })
@@ -34,29 +44,29 @@ function note(ctx, text) { ctx.self.state.notice = { text, at: ctx.now() } }
 function findFocus(ctx, ray) {
   const o = ray.origin, d = ray.direction
   let best = null, bestAng = 1e9
-  for (const tag of KINDS) {
-    const big = tag === 'container' || tag === 'npc' || tag === 'door' || tag === 'bench' || tag === 'usable' || tag === 'seat'
-    for (const it of ctx.query({ tags: [tag], radius: REACH + 1 })) {
-      if (it.state?.taken) continue
-      if (tag === 'usable' && it.tags?.includes?.('seat')) continue // a seat that's also usable is sat in, never pressed
-      // a usable hung on a parent (the boiler door's panel) reads local feet: aim at its world spot, mid-height for a door
-      const wp = !it.state?.c && tag === 'usable' ? ctx.getObject(it.id)?.worldFeetPosition : null
-      const p = it.state?.c ?? (wp ? { x: wp.x, y: wp.y + (it.state?.kind === 'boilerdoor' ? 0.9 : 0), z: wp.z } : it.feetPosition)
-      let lift = it.state?.c ? 0 : big ? 0.28 : 0.1
-      if (tag === 'npc' && !it.state?.dead && (it.state?.hp ?? 1) > 0) { // a standing person is a whole body: the look ray picks the height it crosses at their spot, shins to head
-        const top = Math.max(1.1, (it.state?.build?.h ?? 1) * 1.55), hd = Math.hypot(d.x, d.z) || 1e-3
-        const along = ((p.x - o.x) * d.x + (p.z - o.z) * d.z) / hd // horizontal metres to their spot along the look
-        lift = Math.max(0.3, Math.min(top, o.y + d.y / hd * along - p.y))
-      }
-      const vx = p.x - o.x, vy = p.y + lift - o.y, vz = p.z - o.z
-      const dist = Math.hypot(vx, vy, vz)
-      if (dist > REACH || dist < 0.05) continue
-      const ang = Math.acos(Math.max(-1, Math.min(1, (vx * d.x + vy * d.y + vz * d.z) / dist)))
-      if (ang > Math.max(0.075, Math.atan((big ? 0.55 : 0.3) / dist)) || ang >= bestAng) continue
-      const wall = raycast(ctx, o, { x: vx / dist, y: vy / dist, z: vz / dist }, { distance: dist - 0.05, physicsOnly: true, ignoreEntities: [it.id, ctx.self.id], bodies: 'static' })
-      if (wall && ((tag !== 'usable' && tag !== 'seat' && tag !== 'door') || dist - wall.distance > 0.6)) continue // a usable set into furniture (a desk's computer) is reached through its own desk's shell
-      best = { id: it.id, tag }; bestAng = ang
+  for (const it of ctx.query({ anyTags: KINDS, radius: REACH + 1 })) {
+    if (it.state?.taken) continue
+    const tag = kindOf(it.tags)
+    if (!tag) continue
+    if (tag === 'usable' && it.tags?.includes?.('seat')) continue // a seat that's also usable is sat in, never pressed
+    const big = BIG_KINDS.has(tag)
+    // a usable hung on a parent (the boiler door's panel) reads local feet: aim at its world spot, mid-height for a door
+    const wp = !it.state?.c && tag === 'usable' ? ctx.getObject(it.id)?.worldFeetPosition : null
+    const p = it.state?.c ?? (wp ? { x: wp.x, y: wp.y + (it.state?.kind === 'boilerdoor' ? 0.9 : 0), z: wp.z } : it.feetPosition)
+    let lift = it.state?.c ? 0 : big ? 0.28 : 0.1
+    if (tag === 'npc' && !it.state?.dead && (it.state?.hp ?? 1) > 0) { // a standing person is a whole body: the look ray picks the height it crosses at their spot, shins to head
+      const top = Math.max(1.1, (it.state?.build?.h ?? 1) * 1.55), hd = Math.hypot(d.x, d.z) || 1e-3
+      const along = ((p.x - o.x) * d.x + (p.z - o.z) * d.z) / hd // horizontal metres to their spot along the look
+      lift = Math.max(0.3, Math.min(top, o.y + d.y / hd * along - p.y))
     }
+    const vx = p.x - o.x, vy = p.y + lift - o.y, vz = p.z - o.z
+    const dist = Math.hypot(vx, vy, vz)
+    if (dist > REACH || dist < 0.05) continue
+    const ang = Math.acos(Math.max(-1, Math.min(1, (vx * d.x + vy * d.y + vz * d.z) / dist)))
+    if (ang > Math.max(0.075, Math.atan((big ? 0.55 : 0.3) / dist)) || ang >= bestAng) continue
+    const wall = raycast(ctx, o, { x: vx / dist, y: vy / dist, z: vz / dist }, { distance: dist - 0.05, physicsOnly: true, ignoreEntities: [it.id, ctx.self.id], bodies: 'static' })
+    if (wall && ((tag !== 'usable' && tag !== 'seat' && tag !== 'door') || dist - wall.distance > 0.6)) continue // a usable set into furniture (a desk's computer) is reached through its own desk's shell
+    best = { id: it.id, tag }; bestAng = ang
   }
   return best
 }
