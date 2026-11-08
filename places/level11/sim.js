@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 100; // bump to rebuild the city in rooms that are already open
+const V = 101; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1364,8 +1364,8 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     const RAIL = { color: "oklch(0.55 0.01 250)", metalness: 0.9, roughness: 0.35 };
     // the avenue between the 84 and 156 cross streets is laid in setts with two tram tracks; cars still drive it
     const AX = -140, Z0 = 92, Z1 = 150, ZM = (Z0 + Z1) / 2, L = Z1 - Z0;
-    bx("l11-ot-cobble", AX, 0.02, ZM, 11.6, 0.06, L, COBBLE, { physics: "none" });
-    [-2.2, 2.2].forEach((tx, t) => [-0.72, 0.72].forEach((rx, r) => bx(`l11-ot-rail-${t}-${r}`, AX + tx + rx, 0.06, ZM, 0.08, 0.05, L, RAIL, { physics: "none" })));
+    bx("l11-ot-cobble", AX, 0.155, ZM, 11.6, 0.06, L, COBBLE, { physics: "none" });
+    [-2.2, 2.2].forEach((tx, t) => [-0.72, 0.72].forEach((rx, r) => bx(`l11-ot-rail-${t}-${r}`, AX + tx + rx, 0.2, ZM, 0.08, 0.05, L, RAIL, { physics: "none" })));
     // green cast-iron wire poles both kerbs, every 14 m, arms reaching over the tracks; the wires sag between them
     for (let i = 0, z = Z0 + 4; z <= Z1 - 4; z += 14, i++) {
       fit(`l11-ot-pole-w-${i}`, "trampole", AX - 6.6, 0.15, z, 0, 2.9, "cylinder");
@@ -1376,8 +1376,9 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     const OX = -164, OZ = 136, OW = 22, OD = 26, OH = 4.6;
     const SLAB = { ...T("water-stained-streaked-old-poured-concrete-column", 2), color: "oklch(0.66 0.015 80)", roughness: 0.9 };
     // the painted gable: the office's south end wall rises bare above it, the old advert fading on it, read from the avenue walking north
-    bx("l11-ot-gable", OX, 0.1, OZ - OD / 2 - 0.45, OW, 24, 0.5, SEDCO_BRICK); // a firewall left standing when its building came down, taller than the brick block in front
-    sp("l11-ot-ad", { feetPosition: { x: OX + 4.5, y: 15.2, z: OZ - OD / 2 - 0.72 }, rotation: { yaw: 180 }, primitive: { kind: "plane", width: 5.6, height: 8.4 }, material: { texture: MODELS.ot_wallad, roughness: 0.95 } });
+    bx("l11-ot-gable", OX, 0.1, OZ - OD / 2 - 0.45, OW, 24, 0.5, { texture: "cdn/texture-weathered-pale-grey-lime-render-wall-with-damp-streaks.png", repeat: [3, 3], wrap: "repeat", color: "oklch(0.8 0.015 80)", roughness: 0.95 });
+    bx("l11-ot-chimney", OX - 6, 24.1, OZ - OD / 2 - 0.45, 1.6, 2.6, 1.1, SEDCO_BRICK); // the old stack still on the firewall // a firewall left standing when its building came down, taller than the brick block in front
+    sp("l11-ot-ad", { feetPosition: { x: OX + 1.5, y: 14.5, z: OZ - OD / 2 - 0.72 }, rotation: { yaw: 180 }, primitive: { kind: "plane", width: 10.4, height: 15.6 }, material: { texture: MODELS.ot_wallad, roughness: 0.95, opacity: 0.88, transparent: true } }); // painted straight on the render, faded, filling the wall
     sp("l11-ot-gable-lamp", { feetPosition: { x: OX + 9.5, y: 15.4, z: OZ - OD / 2 - 1.0 }, primitive: { kind: "sphere", radius: 0.16 }, material: { color: "#fff2d0", emissive: "#ffd890", emissiveIntensity: 2 }, light: { kind: "point", color: "oklch(0.9 0.08 75)", intensity: 2, distance: 12 } });
     bx("l11-ot-off-floor", OX, 0.02, OZ, OW, 0.14, OD, SLAB);
     bx("l11-ot-off-roof", OX, OH, OZ, OW, 0.5, OD, SLAB);
@@ -1404,7 +1405,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     sp("l11-ot-off-hum", { feetPosition: { x: OX, y: 3.6, z: OZ }, audio: { clip: "cdn/sfx-empty-concrete-office-floor-fluorescent-tube-buzz-and-ventilation-drone-loop.mp3", loop: true, gain: 0.14, spatial: true, maxDistance: 18 } });
     // a second crossing over the canal: a white steel footbridge, west of the road bridge
     const CZ = -30;
-    fit("l11-canal-footbridge", "footbridge", -36, 0.32, CZ, -45, 5.2, "mesh");
+    fit("l11-canal-footbridge", "footbridge", -36, 0.32, CZ, 90, 3.6, "mesh"); // spans the canal north to south
   }
 
   // ==========================================
