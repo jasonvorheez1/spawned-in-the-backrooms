@@ -12,7 +12,7 @@ pop motes rate=?mobile:20|45 on=disc(.55) life=.7..1.4 v=sdir()*.25+<0,0,-0.3> s
 pop glow n=1 r=light(<1,.86,.45>,5,4)`
 const END = 25            // the old scene's length; it now runs after a 10 s bed opening (PRE)
 const PRE = 10
-const BED = { x: -1.95, y: 0.55, z: 0.75 } // places/intake ir-bed, on the mattress
+const BED = { x: -1.95, y: 0.42, z: 0.75 } // places/intake ir-bed, on the mattress
 const UP = { x: -0.85, z: 0.75 }          // beside the bed, where they stand up
 const ss = (a, b, t) => { const u = Math.min(1, Math.max(0, (t - a) / (b - a))); return u * u * (3 - 2 * u) }
 const lerp = (a, b, u) => a + (b - a) * u
