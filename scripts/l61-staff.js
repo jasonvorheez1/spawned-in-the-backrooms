@@ -314,6 +314,7 @@ function social(ctx, me, s, m, now, dt) {
       const idle = !s.deliver && !m.crouch && !(m.faceUntil && now < m.faceUntil) && s.mood !== "angry"; // a chore gesture gives way to a wave
       if (d < FC.reach.wave && idle && now - ((m.waved ??= {})[uid] ?? -1e9) > FC.every.wave * 1000) { // waving at whoever passes
         m.waved[uid] = now; m.faceUntil = now + 2400; m.faceId = q.id;
+        s.lastWave = { uid, at: now };
         playGesture(me, m, now, [WAVE, 2600, 4]);
         const n = nickFor(s, q);
         if (n) say(ctx, me, pickOf(ctx, FC.greetNick).replace("{n}", n), "#ffe9a8", q.id);
