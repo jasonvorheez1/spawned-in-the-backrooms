@@ -18,7 +18,7 @@ import { tokenOf, describe, itemsOf } from './lib/items.js'
 import { takeToken, maxHp, maxSan, pullToken } from './player.js'
 import { derived, skillsOf, SKILLS } from './lib/stats.js'
 const SKN = Object.fromEntries(SKILLS.map((k) => [k.k, k.name]))
-import { rollItem, rollItemL1, rollItemL2, spotCloth, poolOf } from './lib/loot.js'
+import { rollItem, rollItemL1, rollItemL2, spotCloth, poolOf, gateItems } from './lib/loot.js'
 
 const KINDS = ['almond', 'weapon', 'ammo', 'shells', 'container', 'npc', 'door', 'bench', 'usable', 'seat'] // usable: anything with its own press ear (state.name/verb/info) // what can be looked at and used
 const BIG_KINDS = new Set(['container', 'npc', 'door', 'bench', 'usable', 'seat'])
