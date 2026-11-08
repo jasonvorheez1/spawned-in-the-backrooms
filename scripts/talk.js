@@ -18,6 +18,8 @@ import { lineFor } from './lib/personality.js'
 import { raycast } from 'builtin/physics'
 import { handleDialogueQuest } from './lib/level11-quests.js'
 import { handleDialogueQuest10 } from './lib/level10-quests.js'
+import { handleDialogueQuest8 } from './lib/level8-quests.js'
+import { handleDialogueQuest21 } from './lib/level21-quests.js'
 
 const getStartersLib = (ctx) => ((ctx.session ??= {}).startersP ??= import('./lib/npc-starters.js'))
 
@@ -122,7 +124,10 @@ function send(ctx, d) {
   if (now - (ses.talkAt ?? -1e9) < T.rate * 1000) { note(ctx, `${nameOf(it)} is still answering.`); return }
   if (it.state?.angry?.[ctx.self.id]) { service(ctx, it); return }
 
-  const qRes = handleDialogueQuest(ctx, ctx.self, it, text) ?? handleDialogueQuest10(ctx, ctx.self, it, text)
+  const qRes = handleDialogueQuest(ctx, ctx.self, it, text)
+    ?? handleDialogueQuest10(ctx, ctx.self, it, text)
+    ?? handleDialogueQuest8(ctx, ctx.self, it, text)
+    ?? handleDialogueQuest21(ctx, ctx.self, it, text)
   if (qRes) {
     s.talkBusy = 0
     ses.talkAt = now
@@ -133,6 +138,62 @@ function send(ctx, d) {
     return
   }
 
+  getStartersLib(ctx).then((lib) => {
+    const id = short(it)
+    const starter = lib.STARTERS?.[id]
+    const choices = [...(s.talkChoices ?? []), ...(starter?.choices ?? [])]
+    const matched = choices.find((c) => c && (c.text === text || (c.text && text.startsWith(c.text.slice(0, 24)))))
+    if (matched && matched.reply) {
+      s.talkBusy = 0
+      ses.talkAt = now
+      let passed = true
+      const pc = (d.check || matched.check) && SKILLS.some((x) => x.k === String((d.check || matched.check).skill).toLowerCase())
+        ? { skill: String((d.check || matched.check).skill).toLowerCase(), difficulty: Number((d.check || matched.check).difficulty) || 35 }
+        : null
+      if (pc) {
+        const c = rollCheck(ctx, s, pc), v = skillsOf(s)[pc.skill] ?? 0
+        passed = c.ok
+        const pct = Math.max(0, Math.min(100, Math.round((T.roll - (pc.difficulty - v) + 1) / T.roll * 100)))
+        logLine(ctx, it, 'x', `[${skn(pc.skill)} ${pct}%] ${passed ? 'SUCCEEDED' : 'FAILED'}`)
+        hearAt(ctx, { clip: passed ? 'cdn/sfx-soft-bright-two-note-success-chime.mp3' : 'cdn/sfx-dull-low-wooden-thunk-fail-buzz.mp3', volume: 0.5 })
+      }
+      logLine(ctx, it, 'p', text)
+      const replyText = passed ? matched.reply : (matched.failReply || "nah. not buying that.")
+      const mood = passed ? (matched.mood ?? 'calm') : 'annoyed'
+      say(ctx, it, replyText, mood)
+      logLine(ctx, it, 'n', replyText)
+
+      // Service effects: heal, recruit, discount
+      const delta = passed ? (pc ? 8 : 4) : -3
+      setRapport(ctx, it, clamp(rapportOf(ctx, it) + delta, -100, 100))
+      if (passed && matched.heal) {
+        s.hp = Math.min(s.maxHp ?? 100, (s.hp ?? 80) + 25)
+        s.sanity = Math.min(100, (s.sanity ?? 80) + 15)
+        hearAt(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-bandage-wrap-cloth.mp3", volume: 0.6 })
+        ctx.emit("damageNumber", { position: { x: it.feetPosition.x, y: it.feetPosition.y + 1.6, z: it.feetPosition.z }, text: "+25 HP  +15 SANITY", color: "#60ff90", size: 1.1 }, { audience: { player: ctx.self.id } })
+      }
+      if (passed && matched.recruit && it.state.follow !== ctx.self.id) {
+        const mine = ctx.query({ tags: ['npc'] }).filter((q) => q.state?.follow === ctx.self.id).length
+        if (mine < T.join.max) {
+          adopt(ctx.self, it)
+          logLine(ctx, it, 'x', `${nameOf(it)} is coming with you`)
+          note(ctx, `${nameOf(it)} is coming with you. ${PERKS[perkOf(it)]?.name}: ${PERKS[perkOf(it)]?.info}.`)
+        }
+      }
+      if (passed && matched.discount && isTrader(it)) {
+        const key = keyOf(ctx.self)
+        it.state.discount = { ...(it.state.discount ?? {}), [key]: 0.15 }
+        logLine(ctx, it, 'x', `${nameOf(it)} knocks 15% off for you`)
+      }
+      s.talkChoices = lib.getChoices(ctx, it, s, replyText, null)
+      return
+    }
+
+    dispatchLlm(ctx, it, text, s, ses, now, d)
+  })
+}
+
+function dispatchLlm(ctx, it, text, s, ses, now, d) {
   ses.talkAt = now; s.talkBusy = now
   const hist = s.talks?.[short(it)] ?? []
   const system = systemPrompt({ it, place: ctx.self.place, pl: ctx.self, rapport: rapportOf(ctx, it), following: it.state?.follow === ctx.self.id })
