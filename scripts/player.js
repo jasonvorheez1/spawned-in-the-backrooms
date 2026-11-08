@@ -81,6 +81,23 @@ function decode(hex) { const v = new Uint8Array(N * N); for (let i = 0; i < hex.
 function encode(v) { let s = ''; for (let i = 0; i < v.length; i += 4) s += (v[i] | (v[i + 1] << 1) | (v[i + 2] << 2) | (v[i + 3] << 3)).toString(16); return s }
 
 function chest(ctx) { const p = ctx.self.feetPosition; return { x: p.x, y: p.y + 1.3, z: p.z } }
+// what's underfoot, by place and room: each floor its own step, walk and run
+const STEPS = {
+  carpet: { walk: 'footstep-damp-carpet-squelch-soft', run: 'footstep-damp-carpet-run', v: 0.2 },
+  concrete: { walk: 'footstep-boot-heel-on-bare-concrete-floor-single-step', run: 'footstep-boot-running-on-bare-concrete-floor-single-step', v: 0.22 },
+  tile: { walk: 'footstep-sneaker-on-vinyl-school-floor-tile-single-step', run: 'footstep-sneaker-running-on-vinyl-floor-tile-single-step', v: 0.22 },
+  gravel: { walk: 'footstep-boot-crunch-on-loose-cave-gravel-single-step', run: 'footstep-boot-running-on-loose-cave-gravel-single-step', v: 0.26 },
+  wood: { walk: 'footstep-boot-on-wet-wooden-floorboards-creak-single-step', run: 'footstep-boot-running-on-wet-wooden-floorboards-single-step', v: 0.24 },
+}
+const CONCRETE = new Set(['level1', 'level2', 'level3', 'gamma', 'level6', 'debug'])
+function floorOf(ctx) {
+  const pl = ctx.self.place
+  if (pl === 'level8') return 'gravel'
+  if (pl === 'level7') return 'wood'
+  if (CONCRETE.has(pl)) return 'concrete'
+  if (pl === 'level21') { const z = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z); return z === 'l21_edge' || z === 'l21_edgecave' ? 'concrete' : 'tile' }
+  return 'carpet'
+}
 function sound(ctx, name, volume = 0.7, mine = false) {
   heard(ctx, { clip: SND(name), position: chest(ctx), volume, maxDistance: 30 }, mine ? { audience: { player: ctx.self.id } } : undefined)
 }
@@ -270,7 +287,7 @@ export function onInput(ctx, input) {
   if (input.pressed.jump && ctx.self.grounded && !ctx.self.parent) {
     const v = ctx.self.velocity
     ctx.self.velocity = { x: v.x, y: PLAYER.jumpSpeed, z: v.z }
-    sound(ctx, 'footstep-damp-carpet-squelch-soft', 0.4, true)
+    sound(ctx, STEPS[floorOf(ctx)].walk, 0.4, true)
   }
   {
     // melee: hold to wind up, release to swing (a heavy past power.min); a gun fires on the press
@@ -935,8 +952,9 @@ export function update(ctx, dt) {
     const interval = sprinting ? 0.32 : crouched ? 0.7 : 0.48
     if (w.stepClock >= interval) {
       w.stepClock = 0
-      const clip = w.wet ? 'footstep-soaked-carpet-deep-squelch' : sprinting ? 'footstep-damp-carpet-run' : 'footstep-damp-carpet-squelch-soft'
-      sound(ctx, clip, (w.wet ? 0.4 : sprinting ? 0.28 : 0.2) * (crouched ? 0.3 : 1), true)
+      const fl = floorOf(ctx), F = STEPS[fl]
+      const clip = w.wet ? 'footstep-soaked-carpet-deep-squelch' : sprinting ? F.run : F.walk
+      sound(ctx, clip, (w.wet ? 0.4 : sprinting ? F.v * 1.4 : F.v) * (crouched ? 0.3 : 1), true)
     }
   } else {
     w.stepClock = 0.22
