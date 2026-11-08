@@ -379,7 +379,8 @@ export function update(ctx, dt) {
     }
 
     // Frozen under a gaze, or executing a grab
-    if (m.watched || m.grab || now < (m.screamEnd ?? 0)) {
+    const rage = now < (m.frenzy ?? 0);
+    if ((m.watched && !rage) || m.grab || now < (m.screamEnd ?? 0)) {
       vx = 0;
       vz = 0;
     } else if ((vx || vz) && Math.floor(now / 170) % 3 === 2) {
@@ -408,6 +409,8 @@ export function update(ctx, dt) {
       if (!h || h.by !== w.id || now - m.grab.at > 4200) {
         m.grab = null;
         m.screamEnd = now + 1500;
+        m.frenzy = now + 1500 + 7000; // after the throw: it comes after you for 7 s, your gaze can't freeze it (johnadams2: it should chase after the grab)
+        m.prey = m.prey ?? gp?.id ?? null;
         m.bite = now + L.lurkerBiteCooldown * 1000 + 2500;
       }
     }
@@ -416,7 +419,7 @@ export function update(ctx, dt) {
       playAnim(w, m, "Grab", false);
     } else if (now < (m.screamEnd ?? 0)) {
       playAnim(w, m, "Scream", false);
-    } else if (m.watched) {
+    } else if (m.watched && now >= (m.frenzy ?? 0)) {
       playAnim(w, m, m.pose ?? "PoseReach", false);
     } else {
       playAnim(w, m, prey || m.last || vx || vz || m.next ? "Creep" : "Idle", true);
