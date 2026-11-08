@@ -47,7 +47,9 @@ export function spamUi(ctx, player) {
 }
 
 if (typeof window !== 'undefined') {
-  const S = (window._spm = window._spm || { raf: null, keys: {}, seed: -1, soul: { x: 110, y: 110 }, bullets: [], shots: [], fx: [], t0: 0, last: 0, inv: 0, sentDone: 0, rnd: null, spawnT: 0, extra: {}, shake: 0, flash: 0, graze: 0, grazeSent: 0, shotT: 0, talk: { line: '', n: 0, at: 0 }, lastHp: -1, lastN: -1, enter: 0, phaseAt: 0, lastPhase: '' })
+  const S = (window._spm = Object.assign({ raf: null, keys: {}, seed: -1, soul: { x: 110, y: 110 }, bullets: [], shots: [], fx: [], t0: 0, last: 0, inv: 0, sentDone: 0, rnd: null, spawnT: 0, extra: {}, shake: 0, flash: 0, graze: 0, grazeSent: 0, shotT: 0, talk: { line: '', n: 0, at: 0 }, lastHp: -1, lastN: -1, enter: 0, phaseAt: 0, lastPhase: '' }, window._spm || {}))
+  for (const k of ['bullets', 'shots', 'fx']) if (!Array.isArray(S[k])) S[k] = [] // a page that ran an older screen kept its own scratch
+  if (!S.keys) S.keys = {}; if (!S.extra) S.extra = {}; if (!S.soul) S.soul = { x: 110, y: 110 }; if (!S.talk) S.talk = { line: '', n: 0, at: 0 }
   const W = 220, CX = 320 - W / 2, CY = 150 - W / 2 + 40 // the box on the canvas
   const WORDS = ['$VALUES$', '$$DEALS$', '$"CHEAP"', '$$49.998', '$$REAL$$', '$PRICES$', 'BARGAIN$', '$VAULES$']
   const mul = (r) => { let a = r >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296 } }
