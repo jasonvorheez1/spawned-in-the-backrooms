@@ -11,9 +11,9 @@ const M = {
 };
 export const SHOP = { x: -23, y: 0.1, z: 22 }; // floor centre; the glass front faces the street at z 19.2
 const SHELL_MATS = {
-  brick: { color: "oklch(0.42 0.07 35)", roughness: 0.95 },
-  plaster: { color: "oklch(0.86 0.025 85)", roughness: 0.95 },
-  floor: { color: "oklch(0.5 0.07 60)", roughness: 0.55 },
+  brick: { texture: "cdn/texture-weathered-red-brick-wall.png", wrap: "repeat", repeat: [0.7, 0.7], color: "oklch(0.92 0.02 40)", roughness: 0.95 },
+  plaster: { texture: "cdn/texture-painted-plaster-wall.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.97 0.02 85)", roughness: 0.95 },
+  floor: { texture: "cdn/texture-worn-oak-floorboards.png", wrap: "repeat", repeat: [0.6, 0.6], color: "oklch(0.95 0.02 70)", roughness: 0.55 },
   ceiling: { color: "oklch(0.9 0.01 90)", roughness: 1 },
   frame: { color: "oklch(0.7 0.005 250)", metalness: 0.8, roughness: 0.35 },
   glass: { color: "oklch(0.75 0.03 200)", opacity: 0.22, transparent: true, roughness: 0.05, metalness: 0.1 },
