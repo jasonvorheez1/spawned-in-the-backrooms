@@ -17,6 +17,10 @@ export function setDown(ctx, o) {
   const tray = isTray(o);
   o.physics = tray ? TRAY_PHYS : { body: "dynamic", collider: "box", mass: Math.max(0.3, ses.kg ?? 2), friction: 0.8, restitution: 0.05 }; o.velocity = { x: 0, y: 0, z: 0 };
   if (tray && !o.tags.includes("usable")) o.tags = [...o.tags, "usable"];
+  if (o.tags.includes("homeprop") && ctx.self.place === "home11" && ctx.self.state.home11) { // your house remembers where you set it, on your own save
+    const hs = ctx.place.state; hs.moved = { ...(hs.moved ?? {}), [o.id]: { p: { ...o.feetPosition }, yaw: o.rotation?.yaw ?? 0 } };
+    ctx.self.state.homeKeep = { packed: hs.packed ?? {}, moved: hs.moved };
+  }
   ses.held = null; s.carry = null; s.carryId = null; s.carryMul = 1; s.l61Hold = null; s.l61Tray = 0;
   heard(ctx, { clip: CLATTER, position: o.feetPosition, volume: 0.35, maxDistance: 10 });
 }

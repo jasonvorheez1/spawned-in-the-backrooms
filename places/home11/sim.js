@@ -28,6 +28,11 @@ export function tick(ctx) {
   const st = ctx.place.state;
   const owner = ctx.place.players.find((p) => p.state?.home11 && typeof p.state.homeFridge === "string");
   const fr = ctx.place.objects["h-fridge"];
+  const homeOwner = ctx.place.players.find((p) => p.state?.home11);
+  if (homeOwner && st.keepFor !== homeOwner.userId) { // this house wears its owner's own save: the tote's contents and where they set things
+    const k = homeOwner.state.homeKeep ?? {};
+    st.packed = k.packed ?? {}; st.moved = k.moved ?? {}; st.keepFor = homeOwner.userId; st.builtV = 0;
+  }
   if (st.builtV === V) { if (fr && owner && !fr.state.loaded) { fr.state.items = owner.state.homeFridge; fr.state.loaded = true; } return; } // the owner's saved fridge fills it once they're home
   const fridgeKeep = ctx.place.objects["h-fridge"]?.state?.items; // what you stored survives a rebuild
   const packed = st.packed ?? {}, moved = st.moved ?? {}; // the tote's contents and where you set things down: kept in this home's own state

@@ -38,6 +38,7 @@ export const ears = {
         w.carry = null; w.carryId = null; w.carryMul = 1;
         ctx.destroy(o.id);
         ctx.emit("playSound", { clip: "cdn/sfx-plastic-storage-bin-item-dropped-in-rustle.mp3", position: ctx.self.feetPosition, volume: 0.6 });
+        if (w.home11) w.homeKeep = { packed: st.packed, moved: st.moved ?? {} }; // rides the owner's save
         w.notice = { text: `Put the ${spec.state?.name ?? "thing"} in the tote. ${ids.length + 1}/12`, at: now }; return;
       }
       if (!ids.length) { w.notice = { text: "The tote's empty. Lift something with Z and bring it here.", at: now }; return; }
@@ -47,6 +48,7 @@ export const ears = {
       st.moved = { ...(st.moved ?? {}), [id]: { p: at, yaw: spec.rotation?.yaw ?? 0 } };
       ctx.spawn(id, { ...spec, feetPosition: at });
       ctx.emit("playSound", { clip: "cdn/sfx-plastic-storage-bin-item-dropped-in-rustle.mp3", position: at, volume: 0.6 });
+      if (w.home11) w.homeKeep = { packed: st.packed, moved: st.moved };
       w.notice = { text: `Set out the ${spec.state?.name ?? "thing"}. Tote: ${ids.length - 1}/12`, at: now }; return;
     }
     if (k === "door") {
