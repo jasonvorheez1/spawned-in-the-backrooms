@@ -133,15 +133,23 @@ def head_r(d):
     cheek_swell = .095 * ck * math.exp(-((d.z + .24) / .28) ** 2) * side * front_bias
     # gentle chin tuck underneath so the jaw meets the neck cleanly
     chin_tuck = -.035 * max(0.0, -d.z - .52) * (1.0 - abs(d.x) * .7)
-    # 3D plush muzzle cushion on the lower-front face (strictly below the eye bridge so eyes sit on a pure ellipsoid)
-    muz_len = sp.get("snout", .026 if sp.get("muzzle") else .016)
+    # a real snout (Shelly: "massively overhaul snouts"): a forward loaf under the eyes, flat-fronted, its length per species;
+    # long-faced species (dog, fox, wolf, deer) carry a narrow nose bridge up between the eyes so the snout grows out of the face
+    L = sp.get("snout", .026 if sp.get("muzzle") else .016) * sp.get("snoutK", 2.3)
+    sw = sp.get("snoutW", .27) * wd
     muz = 0.0
-    if d.y > 0.05 and d.z < -0.105:
-        mu = d.x / (.33 * wd)
-        mv = (d.z + .27) / .165
+    if d.y > 0.05 and d.z < -0.075:
+        mu = d.x / sw
+        mv = (d.z + .215) / (.14 if d.z > -.215 else .15)
         q = mu * mu + mv * mv
         if q < 1.0:
-            muz = muz_len * ((1.0 - q) ** 1.75) * min(1.0, (d.y - .05) * 3.0)
+            muz = L * ((1.0 - q ** 1.45) ** 1.55) * min(1.0, (d.y - .05) * 3.0)
+    br = sp.get("bridge", 0.0)
+    if br and d.y > 0.3 and -0.2 < d.z < .12:
+        bu = d.x / .085
+        bv = max(0.0, (d.z + .2) / .32)
+        if abs(bu) < 1.0:
+            muz = max(muz, L * br * (1.0 - bv) ** 1.3 * (1.0 - bu * bu) ** 1.6)
     return r * (1.0 + cheek_swell + chin_tuck) + muz
 def head_pt(d, out=0.0): d = d.normalized(); return HC + d * (head_r(d) + out)
 
@@ -485,26 +493,26 @@ def build_garments(F, body, rig):
 # ================= heads =================
 EYE_U, EYE_V = .365, .048
 SP = {  # ears, tail, extras, muzzle(belly patch), nose dot, whiskers
- "cat":      dict(fur="#f2a65a", belly="#fff1dc", tip="#fff1dc", nose="#ff8fa3", inner="#ffb8c6", ears=("point", 1.05), tail="cat", ex=["eartip"], muzzle=True, snout=.022, whisk=True, catnose=True, fang=True, fluff=True, mark="#d9843a", marks=["tabby"]),
- "dog":      dict(fur="#c98b55", belly="#fbe8cf", tip="#fbe8cf", nose="#2a1c18", inner="#f6d4be", mark="#8a5a36", ears=("flop", 1.05), tail="dog", ex=["earmark", "brows"], muzzle=True, snout=.038, marks=["eyespot"]),
- "fox":      dict(fur="#f07a2e", belly="#ffffff", tip="#ffffff", nose="#231816", inner="#f8d2bd", mark="#2c1c18", ears=("point", 1.28), tail="bushy", ex=["eartip", "cheekbelly"], muzzle=True, snout=.038, whisk=True, catnose=True, fang=True, fluff=True),
- "bunny":    dict(fur="#f4efe9", belly="#ffffff", tip="#ffffff", nose="#ff9fb4", inner="#ffc2d1", ears=("long", 1.05), tail="pom", ex=["buck"], muzzle=True, snout=.020, catnose=True, cheek=1.18, marks=["pinkcheeks"]),
- "bear":     dict(fur="#9a6440", belly="#e8c79e", tip="#e8c79e", nose="#2a1c18", inner="#d8a682", mark="#6e4329", ears=("round", 1.05), tail="stub", ex=[], muzzle=True, snout=.036, wide=1.05, cheek=1.16),
- "deer":     dict(fur="#a8703f", belly="#f1d4ae", tip="#ffffff", nose="#2a1612", inner="#f8ded2", mark="#4a2a1c", antler="#e9d8b4", ears=("leaf", 1.05), tail="stub", ex=["antlers", "spots"], muzzle=True, snout=.034),
- "reindeer": dict(fur="#8a5a3a", belly="#f1e0c8", tip="#f6efe4", nose="#e0404c", inner="#edd2c0", mark="#4a2e20", antler="#efe0bd", ears=("leaf", .95), tail="stub", ex=["bigantlers", "cheekbelly"], muzzle=True, snout=.038, bignose=True),
- "mouse":    dict(fur="#b9b3c2", belly="#f6eef4", tip="#f6eef4", nose="#ff8fa3", inner="#ffc2d1", ears=("round", 1.55), tail="thin", ex=["buck"], muzzle=True, snout=.022, whisk=True, catnose=True, marks=["pinkcheeks"]),
- "wolf":     dict(fur="#4f6f9f", belly="#a9bfdc", tip="#a9bfdc", nose="#16141c", inner="#b8cce6", mark="#26406c", ears=("point", 1.3), tail="bushy", ex=["eartip", "cheekbelly", "brows"], muzzle=True, snout=.040, catnose=True, fang=True, fluff=True),
- "raccoon":  dict(fur="#8b8a92", belly="#e9e6ea", tip="#2a2830", nose="#1c1a20", inner="#ded8e2", mark="#2c2a32", ears=("point", .9), tail="ringed", ex=["mask", "cheekbelly", "eartip"], muzzle=True, snout=.032, whisk=True, catnose=True, fang=True, fluff=True),
- "panda":    dict(fur="#f7f3ee", belly="#ffffff", tip="#2b2530", nose="#1c1a20", inner="#eee8e2", mark="#2b2530", ears=("round", 1.05), tail="stub", ex=["patches"], muzzle=False, snout=.026, earmark=True, wide=1.05, cheek=1.18),
- "pig":      dict(fur="#ffb3c1", belly="#ffd9e0", tip="#ffd9e0", nose="#ff8ca2", inner="#ffd4dc", ears=("pig", 1.05), tail="curly", ex=["snout"], muzzle=False, snout=.024, nonose=True, cheek=1.16, marks=["pinkcheeks"]),
- "sheep":    dict(fur="#f6f1e7", belly="#ffffff", tip="#ffffff", nose="#2a1c18", inner="#8a7f8c", mark="#5d5560", ears=("flop", .8), tail="pom", ex=["wool"], muzzle=False, snout=.022, catnose=True, earmark=True),
- "lion":     dict(fur="#ebb04e", belly="#fbe3b0", tip="#a3592a", nose="#8a4a2a", inner="#f0d4a8", mark="#a3592a", ears=("round", .9), tail="lion", ex=["mane"], muzzle=True, snout=.034, catnose=True, fang=True, fluff=True),
- "tiger":    dict(fur="#f08a24", belly="#fff6ea", tip="#2a1c18", nose="#ff8fa3", inner="#fff0dc", mark="#2a1c18", ears=("round", .98), tail="ringed", ex=["stripes", "cheekbelly", "eartip"], muzzle=True, snout=.032, whisk=True, catnose=True, fang=True, fluff=True),
- "redpanda": dict(fur="#c4532a", belly="#f4ece2", tip="#7a2e16", nose="#1c1a20", inner="#fff0e4", mark="#2b1a14", ears=("point", .95), tail="ringed", ex=["cheeks", "brows", "tears"], muzzle=True, snout=.026, catnose=True, fang=True, fluff=True),
- "skunk":    dict(fur="#2e2c36", belly="#f4f1ea", tip="#f4f1ea", nose="#16141c", inner="#eeeaf4", mark="#f4f1ea", ears=("round", .95), tail="skunk", ex=["stripe"], muzzle=True, snout=.028, catnose=True),
- "hamster":  dict(fur="#e8b77a", belly="#fff4e0", tip="#fff4e0", nose="#ff8fa3", inner="#ffc2d1", ears=("round", .95), tail="stub", ex=["cheekbelly", "buck"], muzzle=True, snout=.020, whisk=True, catnose=True, cheek=1.42, wide=1.05, marks=["pinkcheeks"]),
- "otter":    dict(fur="#7a5236", belly="#e8d2b4", tip="#e8d2b4", nose="#2a1c18", inner="#dec4ac", mark="#5a3a24", ears=("round", .68), tail="otter", ex=["cheekbelly"], muzzle=True, snout=.030, whisk=True, catnose=True, cheek=1.14),
- "koala":    dict(fur="#9a9aa4", belly="#ececf0", tip="#ececf0", nose="#2a2830", inner="#f4f4f6", ears=("fluffy", 1.15), tail="none", ex=["cheekbelly"], muzzle=False, snout=.024, bignose=True, wide=1.04, cheek=1.2),
+ "cat":      dict(snoutK=2.1, snoutW=.25, whiskdots=True, fur="#f2a65a", belly="#fff1dc", tip="#fff1dc", nose="#ff8fa3", inner="#ffb8c6", ears=("point", 1.05), tail="cat", ex=["eartip"], muzzle=True, snout=.022, whisk=True, catnose=True, fang=True, fluff=True, mark="#d9843a", marks=["tabby"]),
+ "dog":      dict(snoutK=2.6, snoutW=.26, bridge=.55, blaze=True, nosetip=True, chin=True, fur="#c98b55", belly="#fbe8cf", tip="#fbe8cf", nose="#2a1c18", inner="#f6d4be", mark="#8a5a36", ears=("flop", 1.05), tail="dog", ex=["earmark", "brows"], muzzle=True, snout=.038, marks=["eyespot"]),
+ "fox":      dict(snoutK=2.7, snoutW=.22, bridge=.65, fur="#f07a2e", belly="#ffffff", tip="#ffffff", nose="#231816", inner="#f8d2bd", mark="#2c1c18", ears=("point", 1.28), tail="bushy", ex=["eartip", "cheekbelly"], muzzle=True, snout=.038, whisk=True, catnose=True, fang=True, fluff=True),
+ "bunny":    dict(snoutK=2.0, snoutW=.22, fur="#f4efe9", belly="#ffffff", tip="#ffffff", nose="#ff9fb4", inner="#ffc2d1", ears=("long", 1.05), tail="pom", ex=["buck"], muzzle=True, snout=.020, catnose=True, cheek=1.18, marks=["pinkcheeks"]),
+ "bear":     dict(snoutK=2.6, snoutW=.30, bridge=.35, chin=True, fur="#9a6440", belly="#e8c79e", tip="#e8c79e", nose="#2a1c18", inner="#d8a682", mark="#6e4329", ears=("round", 1.05), tail="stub", ex=[], muzzle=True, snout=.036, wide=1.05, cheek=1.16),
+ "deer":     dict(snoutK=2.6, snoutW=.23, bridge=.6, nosetip=True, chin=True, fur="#a8703f", belly="#f1d4ae", tip="#ffffff", nose="#2a1612", inner="#f8ded2", mark="#4a2a1c", antler="#e9d8b4", ears=("leaf", 1.05), tail="stub", ex=["antlers", "spots"], muzzle=True, snout=.034),
+ "reindeer": dict(snoutK=2.5, snoutW=.25, bridge=.55, chin=True, fur="#8a5a3a", belly="#f1e0c8", tip="#f6efe4", nose="#e0404c", inner="#edd2c0", mark="#4a2e20", antler="#efe0bd", ears=("leaf", .95), tail="stub", ex=["bigantlers", "cheekbelly"], muzzle=True, snout=.038, bignose=True),
+ "mouse":    dict(snoutK=2.4, snoutW=.2, fur="#b9b3c2", belly="#f6eef4", tip="#f6eef4", nose="#ff8fa3", inner="#ffc2d1", ears=("round", 1.55), tail="thin", ex=["buck"], muzzle=True, snout=.022, whisk=True, catnose=True, marks=["pinkcheeks"]),
+ "wolf":     dict(snoutK=2.7, snoutW=.24, bridge=.7, saddle=True, fur="#4f6f9f", belly="#a9bfdc", tip="#a9bfdc", nose="#16141c", inner="#b8cce6", mark="#26406c", ears=("point", 1.3), tail="bushy", ex=["eartip", "cheekbelly", "brows"], muzzle=True, snout=.040, catnose=True, fang=True, fluff=True),
+ "raccoon":  dict(snoutK=2.5, snoutW=.21, bridge=.4, fur="#8b8a92", belly="#e9e6ea", tip="#2a2830", nose="#1c1a20", inner="#ded8e2", mark="#2c2a32", ears=("point", .9), tail="ringed", ex=["mask", "cheekbelly", "eartip"], muzzle=True, snout=.032, whisk=True, catnose=True, fang=True, fluff=True),
+ "panda":    dict(snoutK=2.0, snoutW=.28, fur="#f7f3ee", belly="#ffffff", tip="#2b2530", nose="#1c1a20", inner="#eee8e2", mark="#2b2530", ears=("round", 1.05), tail="stub", ex=["patches"], muzzle=False, snout=.026, earmark=True, wide=1.05, cheek=1.18),
+ "pig":      dict(snoutK=1.6, snoutW=.24, fur="#ffb3c1", belly="#ffd9e0", tip="#ffd9e0", nose="#ff8ca2", inner="#ffd4dc", ears=("pig", 1.05), tail="curly", ex=["snout"], muzzle=False, snout=.024, nonose=True, cheek=1.16, marks=["pinkcheeks"]),
+ "sheep":    dict(snoutK=2.4, snoutW=.24, bridge=.35, fur="#f6f1e7", belly="#ffffff", tip="#ffffff", nose="#2a1c18", inner="#8a7f8c", mark="#5d5560", ears=("flop", .8), tail="pom", ex=["wool"], muzzle=False, snout=.022, catnose=True, earmark=True),
+ "lion":     dict(snoutK=2.4, snoutW=.30, bridge=.3, whiskdots=True, chin=True, fur="#ebb04e", belly="#fbe3b0", tip="#a3592a", nose="#8a4a2a", inner="#f0d4a8", mark="#a3592a", ears=("round", .9), tail="lion", ex=["mane"], muzzle=True, snout=.034, catnose=True, fang=True, fluff=True),
+ "tiger":    dict(snoutK=2.3, snoutW=.29, bridge=.25, whiskdots=True, fur="#f08a24", belly="#fff6ea", tip="#2a1c18", nose="#ff8fa3", inner="#fff0dc", mark="#2a1c18", ears=("round", .98), tail="ringed", ex=["stripes", "cheekbelly", "eartip"], muzzle=True, snout=.032, whisk=True, catnose=True, fang=True, fluff=True),
+ "redpanda": dict(snoutK=2.2, snoutW=.24, fur="#c4532a", belly="#f4ece2", tip="#7a2e16", nose="#1c1a20", inner="#fff0e4", mark="#2b1a14", ears=("point", .95), tail="ringed", ex=["cheeks", "brows", "tears"], muzzle=True, snout=.026, catnose=True, fang=True, fluff=True),
+ "skunk":    dict(snoutK=2.4, snoutW=.22, bridge=.35, fur="#2e2c36", belly="#f4f1ea", tip="#f4f1ea", nose="#16141c", inner="#eeeaf4", mark="#f4f1ea", ears=("round", .95), tail="skunk", ex=["stripe"], muzzle=True, snout=.028, catnose=True),
+ "hamster":  dict(snoutK=1.8, snoutW=.22, fur="#e8b77a", belly="#fff4e0", tip="#fff4e0", nose="#ff8fa3", inner="#ffc2d1", ears=("round", .95), tail="stub", ex=["cheekbelly", "buck"], muzzle=True, snout=.020, whisk=True, catnose=True, cheek=1.42, wide=1.05, marks=["pinkcheeks"]),
+ "otter":    dict(snoutK=2.2, snoutW=.30, whiskdots=True, chin=True, fur="#7a5236", belly="#e8d2b4", tip="#e8d2b4", nose="#2a1c18", inner="#dec4ac", mark="#5a3a24", ears=("round", .68), tail="otter", ex=["cheekbelly"], muzzle=True, snout=.030, whisk=True, catnose=True, cheek=1.14),
+ "koala":    dict(snoutK=1.6, snoutW=.24, fur="#9a9aa4", belly="#ececf0", tip="#ececf0", nose="#2a2830", inner="#f4f4f6", ears=("fluffy", 1.15), tail="none", ex=["cheekbelly"], muzzle=False, snout=.024, bignose=True, wide=1.04, cheek=1.2),
 }
 if ONLY: SP = {k: v for k, v in SP.items() if k in ONLY.split(",")}
 F_HEAD = False
@@ -844,81 +852,132 @@ def rot2d(pts, ang, cx=0.0, cy=0.0):
     ca, sa = math.cos(ang), math.sin(ang)
     return [(cx + (x - cx) * ca - (y - cy) * sa, cy + (x - cx) * sa + (y - cy) * ca) for x, y in pts]
 
+def furdisc(w, h, N=44, R=5, tufts=11, amp=.13, seed=0, cx=0, cy=0, ang=0.0):
+    """a fur-edged patch: the outer rim breaks into soft pointed tufts, so a marking reads as fur, not a sticker"""
+    rnd = random.Random(seed * 7919 + int(w * 1e4) + int(h * 1e3))
+    jit = [rnd.random() - .5 for _ in range(N)]
+    rr = []
+    for i in range(N):
+        t = 2 * math.pi * i / N
+        spike = (1.0 - abs(math.sin(tufts * t / 2 + seed))) ** 3.5
+        rr.append(1.0 - amp * .55 + amp * 1.25 * spike + amp * .35 * jit[i])
+    pts = [(cx, cy)]
+    for r in range(1, R + 1):
+        k = r / R; kk = k ** 2.2
+        for i in range(N):
+            t = 2 * math.pi * i / N
+            m = k * (1.0 + (rr[i] - 1.0) * kk)
+            x, y = w * m * math.cos(t), h * m * math.sin(t)
+            ca, sa = math.cos(ang), math.sin(ang)
+            pts.append((cx + x * ca - y * sa, cy + x * sa + y * ca))
+    faces = [(0, 1 + i, 1 + (i + 1) % N) for i in range(N)]
+    for r in range(1, R):
+        a, b = 1 + (r - 1) * N, 1 + r * N
+        faces += [(a + i, a + (i + 1) % N, b + (i + 1) % N, b + i) for i in range(N)]
+    return pts, faces
+
+def stroke(path, w, n=14, root=False):
+    """a tapered brush stroke along a polyline (local metres): pointed at both ends, or wide at the root"""
+    seg = [0.0]
+    for i in range(1, len(path)): seg.append(seg[-1] + math.dist(path[i], path[i - 1]))
+    tot = seg[-1] or 1.0
+    def at(d):
+        for i in range(1, len(path)):
+            if seg[i] >= d:
+                f = (d - seg[i - 1]) / max(1e-9, seg[i] - seg[i - 1])
+                return (path[i - 1][0] + (path[i][0] - path[i - 1][0]) * f, path[i - 1][1] + (path[i][1] - path[i - 1][1]) * f)
+        return path[-1]
+    P = [at(tot * i / (n - 1)) for i in range(n)]
+    top, bot = [], []
+    for i, (x, y) in enumerate(P):
+        a, b = P[max(0, i - 1)], P[min(n - 1, i + 1)]
+        tx, ty = b[0] - a[0], b[1] - a[1]; L_ = math.hypot(tx, ty) or 1.0
+        nx, ny = -ty / L_, tx / L_
+        t = i / (n - 1)
+        ww = w * ((1 - t) ** .7 if root else math.sin(math.pi * t) ** .65) + w * .04
+        top.append((x + nx * ww, y + ny * ww)); bot.append((x - nx * ww, y - ny * ww))
+    return top + bot, strip(n)
+
 def build_markings(H, sp):
+    """face patterns, Shelly: 'make the critters' face patterns actually decent'. Every patch is fur-edged and layered
+    (a soft outer tone, a crisp inner one), stripes are tapered brush strokes, each species gets its own read."""
     ex = sp["ex"]; marks = sp.get("marks", [])
-    # Layer 1 (out = .0010): Sweeping lower-cheek belly fur patches
+    def patch(u, v, out, w, h, mat, seed=0, ang=0.0, tufts=11, amp=.13, N=44):
+        pts, f = furdisc(w, h, N, 5, tufts, amp, seed, ang=ang); add_decal(H, u, v, out, {"Basis": pts}, f, mat)
+    def line(u, v, out, path, w, mat, root=False):
+        pts, f = stroke(path, w, 14, root); add_decal(H, u, v, out, {"Basis": pts}, f, mat)
+
+    # Layer 1 (.0010): pale cheek ruffs and brow fur
     if "cheekbelly" in ex:
         for s in (-1, 1):
-            cp, cf = disc(.112, .068, 28, 5)
-            cp = rot2d(cp, -s * .16)
-            add_decal(H, s * .54, -.26, .0010, {"Basis": cp}, cf, "belly")
+            patch(s * .55, -.25, .0010, .118, .074, "belly", seed=3 + s, ang=-s * .2, tufts=9, amp=.2)
     if "cheeks" in ex:
         for s in (-1, 1):
-            cp, cf = disc(.072, .050, 24, 4)
-            cp = rot2d(cp, -s * .14)
-            add_decal(H, s * .72, -.22, .0010, {"Basis": cp}, cf, "belly")
+            patch(s * .72, -.20, .0010, .078, .056, "belly", seed=5 + s, ang=-s * .15, tufts=8, amp=.18)
     if "mask" in ex:
-        # Raccoon soft cream brow band framing the top of the dark bandit mask
         for s in (-1, 1):
-            bp, bf = disc(.086, .040, 24, 4)
-            bp = rot2d(bp, -s * .18)
-            add_decal(H, s * .38, .25, .0013, {"Basis": bp}, bf, "belly")
+            patch(s * .36, .27, .0012, .092, .040, "belly", seed=9 + s, ang=-s * .18, tufts=10, amp=.22)
+    if sp.get("blaze"):   # dog / skunk: a pale blaze climbing the nose bridge to the brow
+        line(0, -.02, .0012, [(0, -.03), (0, .06), (0, .16)], .022, "belly", root=True)
 
-    # Layer 2 (out = .0020): Dark/colored eye-area markings (mask, patches, eyespot, stripes, spots)
+    # Layer 2 (.0020): darker eye and forehead marks
     if "mask" in ex:
-        # Raccoon bandit mask: center bridge + sweeping eye-mask lobes
-        mb_p, mb_f = disc(.055, .042, 20, 4)
-        add_decal(H, 0, .02, .0018, {"Basis": mb_p}, mb_f, "mark")
+        patch(0, .02, .0018, .05, .046, "mark", seed=11, tufts=7, amp=.12)
         for s in (-1, 1):
-            mp, mf = disc(.112, .084, 28, 5)
-            mp = rot2d(mp, -s * .18)
-            add_decal(H, s * .39, .03, .0020, {"Basis": mp}, mf, "mark")
+            patch(s * .39, .02, .0020, .118, .09, "mark", seed=12 + s, ang=-s * .2, tufts=12, amp=.16)
     if "patches" in ex:
-        # Panda classic large tilted oval eye patches framing the eyes
         for s in (-1, 1):
-            pp, pf = disc(.114, .130, 32, 6)
-            pp = rot2d(pp, s * .22)
-            add_decal(H, s * (EYE_U + .02), EYE_V - .015, .0020, {"Basis": pp}, pf, "mark")
+            patch(s * (EYE_U + .02), EYE_V - .03, .0020, .112, .136, "mark", seed=14 + s, ang=s * .3, tufts=10, amp=.1)
     if "eyespot" in marks:
-        # Dog warm brown patch generously framing one eye
-        ep, ef = disc(.110, .122, 32, 6)
-        ep = rot2d(ep, .14)
-        add_decal(H, EYE_U + .02, EYE_V + .01, .0020, {"Basis": ep}, ef, "mark")
-    if "tabby" in marks or "stripes" in ex:
-        # 3 sleek tapered forehead stripes + 2 sleek tapered cheek stripes per side
-        for du, vc, w_, h_, ang in ((-.20, .70, .016, .058, .16), (0.0, .73, .018, .068, 0.0), (.20, .70, .016, .058, -.16)):
-            sp_p, sp_f = disc(w_, h_, 18, 3)
-            sp_p = rot2d(sp_p, ang)
-            add_decal(H, du, vc, .0022, {"Basis": sp_p}, sp_f, "mark")
+        patch(EYE_U + .03, EYE_V + .02, .0020, .112, .126, "mark", seed=17, ang=.14, tufts=9, amp=.17)
+        patch(-.62, .62, .0020, .07, .05, "mark", seed=18, ang=.5, tufts=8, amp=.2)   # a second splash high on the other side
+    if sp.get("saddle"):   # wolf: a dark widow's peak cap over the forehead
+        pts, f = furdisc(.16, .1, 44, 5, 13, .18, 21)
+        pts = [(x, y + .06 * max(0.0, 1 - abs(x) / .05) * (1 if y < 0 else 0)) for x, y in pts]
+        add_decal(H, 0, .78, .0020, {"Basis": pts}, f, "mark")
+    if "tabby" in marks:
+        # the tabby M on the forehead, three strokes, and swept cheek stripes
+        line(0, .66, .0022, [(-.05, -.02), (-.035, .04), (-.012, -.005), (0, .05), (.012, -.005), (.035, .04), (.05, -.02)], .009, "mark")
+        line(0, .80, .0022, [(0, -.04), (0, .05)], .011, "mark")
+        for du in (-.13, .13):
+            line(du, .82, .0022, [(0, -.035), (du * .1, .04)], .009, "mark")
         for s in (-1, 1):
-            for vc, u0, ln_, ang in ((.02, .96, .054, -s * .12), (-.11, .98, .048, -s * .18)):
-                ck_p, ck_f = disc(ln_, .013, 18, 3)
-                ck_p = rot2d(ck_p, ang)
-                add_decal(H, s * u0, vc, .0022, {"Basis": ck_p}, ck_f, "mark")
+            for vc, ln_, bend in ((.02, .07, .012), (-.1, .06, .008)):
+                line(s * .9, vc, .0022, [(s * ln_ * .5, 0), (0, bend), (-s * ln_ * .5, .002)], .011, "mark", root=False)
+    if "stripes" in ex:
+        # tiger: bold tapered forehead bars, curling cheek strokes, two pale brow spots
+        for du, h_, lean in ((-.24, .07, .2), (-.12, .085, .08), (0, .1, 0), (.12, .085, -.08), (.24, .07, -.2)):
+            line(du, .72, .0022, [(-lean * .1, -h_ * .5), (0, 0), (lean * .15, h_ * .5)], .013, "mark")
+        for s in (-1, 1):
+            for vc, ln_, k_ in ((.06, .085, .02), (-.06, .095, .025), (-.18, .07, .015)):
+                line(s * .86, vc, .0022, [(s * ln_ * .55, -k_), (s * ln_ * .1, k_ * .4), (-s * ln_ * .45, 0)], .014, "mark", root=True)
+            patch(s * .26, .40, .0022, .03, .022, "belly", seed=30 + s, tufts=6, amp=.15)
     if "stripe" in ex:
-        sk_p, sk_f = disc(.044, .165, 24, 5)
-        add_decal(H, 0, .76, .0022, {"Basis": sk_p}, sk_f, "tip")
+        line(0, .5, .0022, [(0, -.16), (0, 0), (0, .2)], .045, "tip", root=False)
     if "spots" in ex:
-        for su, sv, sr in ((-.25, .68, .018), (.23, .71, .017), (-.10, .85, .015), (.12, .90, .015), (-.33, .87, .014), (.31, .89, .014)):
-            dp, df = disc(sr, sr * .85, 14, 2)
-            add_decal(H, su, sv, .0022, {"Basis": dp}, df, "tip")
+        rnd = random.Random(7)
+        for su, sv, sr in ((-.25, .68, .019), (.23, .71, .018), (-.10, .86, .016), (.12, .9, .016), (-.34, .87, .014), (.32, .89, .015), (-.42, .62, .012), (.43, .64, .012)):
+            patch(su, sv, .0022, sr, sr * (.75 + .2 * rnd.random()), "tip", seed=int(sr * 1e4), ang=rnd.random(), tufts=5, amp=.12, N=20)
 
-    # Layer 3 (out = .0028): Plush belly muzzle cushion patch (sits cleanly in front of eye patches/masks)
+    # Layer 3 (.0028): the muzzle's pale fur, covering the whole snout and running up under the cheeks
     if sp.get("muzzle"):
-        mp, mf = disc(.105, .068, 32, 6)
-        add_decal(H, 0, -.265, .0028, {"Basis": mp}, mf, "belly")
+        patch(0, -.24, .0028, .118, .1, "belly", seed=40, tufts=14, amp=.12)
+    if sp.get("chin"):   # deer / bear / otter: a pale chin under the mouth
+        patch(0, -.40, .0029, .06, .04, "belly", seed=41, tufts=8, amp=.15)
 
-    # Layer 4 (out = .0032): Red panda tear-tracks & cute oval cream brow puffs
+    # Layer 4 (.0032): small top details
+    if sp.get("nosetip"):   # deer, reindeer, dog: the dark leather around the nose spreads onto the snout tip
+        patch(0, -.17, .0032, .05, .034, "mark", seed=50, tufts=9, amp=.16)
+    if sp.get("whiskdots"):
+        for s in (-1, 1):
+            for a_, b_ in ((.035, .0), (.055, -.012), (.04, -.026), (.065, .012)):
+                pts, f = disc(.0055, .0055, 10, 2); add_decal(H, s * .2, -.22, .0034, {"Basis": [(x + s * a_, y + b_) for x, y in pts]}, f, "mark")
     if "tears" in ex:
         for s in (-1, 1):
-            tp, tf = disc(.028, .072, 24, 5)
-            tp = rot2d(tp, s * .25)
-            add_decal(H, s * .33, -.16, .0032, {"Basis": tp}, tf, "mark")
+            line(s * .33, -.14, .0032, [(0, .07), (s * .008, 0), (s * .02, -.07)], .022, "mark", root=True)
     if "brows" in ex:
         for s in (-1, 1):
-            bp, bf = disc(.034, .020, 18, 3)
-            bp = rot2d(bp, -s * .20)
-            add_decal(H, s * .29, .45, .0032, {"Basis": bp}, bf, "belly")
+            patch(s * .29, .46, .0032, .036, .021, "belly", seed=60 + s, ang=-s * .2, tufts=6, amp=.18, N=24)
 
 # ---- 3D sculpted cupped ears with clean rounded tips and optional two-tone tips ----
 def build_ear(H, kind, sc, side, inner_mat, sp):
