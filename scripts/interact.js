@@ -125,6 +125,19 @@ function closeLoot(ctx) {
 
 const REFILL_MS = 60 * 60000 // Shelly: looted containers refill after an hour
 function refill(ctx, c) { const st = c?.state; if (st?.full != null && st.refillAt && ctx.now() >= st.refillAt) { st.items = st.full; st.refillAt = 0; st.scavved = false } }
+// Spamton (a key item won in Level 11): money already in the loot pays 2% more (at least 1¢); no money, a 10% chance of a backquarter. His laugh says it fired. (Savi's reading of Shelly's rule)
+const SPAM_LAUGH = '/cdn/snd-spamton-laugh-glitch-sfx-7vvbohql.mp3'
+function spamtonPerk(ctx, c) {
+  const s = ctx.self.state
+  if (!(s.keyItems ?? []).includes('spamton')) return
+  const items = String(c.state.items ?? '').split(',').filter(Boolean)
+  let fired = false
+  if (items.some((t) => t.startsWith('cash:'))) {
+    c.state.items = items.map((t) => t.startsWith('cash:') ? 'cash:' + Math.max((+t.slice(5) || 1) + 1, Math.round((+t.slice(5) || 1) * 1.02)) : t).join(',')
+    fired = true
+  } else if (ctx.random() < 0.1) { c.state.items = [...items, 'cash:25'].join(','); fired = true }
+  if (fired) { ctx.emit('playSound', { clip: SPAM_LAUGH, volume: 0.55 }, { audience: { player: ctx.self.id } }); note(ctx, '[[SPAMTON]]: A [[Deal]] FOR YOU, KID!') }
+}
 export function openLoot(ctx, c) {
   const s = ctx.self.state
   refill(ctx, c)
@@ -140,6 +153,7 @@ export function openLoot(ctx, c) {
     if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : ctx.self.place === 'level3' ? rollItemL3(ctx) : rollItem(ctx, poolOf(ctx.self.place)))].filter(Boolean).join(',')
     const cl = spotCloth(ctx, derived(s).clothFind) // Observation (Perception) spots a wearable tucked in the junk
     if (cl) c.state.items = [c.state.items, cl].filter(Boolean).join(',')
+    spamtonPerk(ctx, c)
   }
   s.lootOpen = c.id; s.lootName = c.state?.name ?? 'Container'; s.lootList = c.state?.items ?? ''; s.focus = null
   snd(ctx, 'container-open-rustle', 0.5)
