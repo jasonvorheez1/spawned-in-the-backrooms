@@ -1,0 +1,70 @@
+// Level 6.1 "The Snackrooms" - Diner & Food Court interactions
+import { heard } from "./lib/hear.js";
+
+const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
+const H = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
+const VO = (who, line) => `/cdn/voice-${who}-saying-${encodeURIComponent(line)}.mp3`;
+
+const SAL_LINES = [
+  "Welcome to The Snackrooms, friend! Grab a stool and rest your feet.",
+  "Help yourself to whatever's in the coolers or under the domes. It restocks every morning.",
+  "If you came from Level 6, take a minute to breathe. The dark can't reach you in here.",
+  "We've got the 80s satellite station running on the jukebox. Drop a dime in if you want to switch it.",
+  "Watch that steel service door by the west wall. That's a one-way ticket right back into the dark.",
+];
+
+export const ears = {
+  press: (ctx, { by }) => {
+    const s = ctx.self.state, who = ctx.getObject(by);
+    const pos = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
+    const w = who?.state ?? {};
+
+    // 1. Fresh Hot Diner Coffee Urn
+    if (s.kind === "coffee") {
+      heard(ctx, { clip: G("water-pour-splash-short"), position: { x: pos.x, y: pos.y + 0.5, z: pos.z }, volume: 0.7, maxDistance: 10 });
+      w.thirst = Math.min(100, (w.thirst ?? 80) + 35);
+      w.sanity = Math.min(100, (w.sanity ?? 80) + 20);
+      w.coffeeSpeedUntil = ctx.now() + 35000;
+      ctx.emit("screenFlash", { color: "#ffeedd", duration: 0.4, intensity: 0.5 }, { audience: { player: who.id } });
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+HOT DINER COFFEE (+20 SANITY)", color: "#f2d870", size: 1.1 }, { audience: { player: who.id } });
+      return;
+    }
+
+    // 2. Fresh Baked Pie / Donut Dome
+    if (s.kind === "pie") {
+      heard(ctx, { clip: G("pickup-ammo"), position: { x: pos.x, y: pos.y + 0.5, z: pos.z }, volume: 0.6, maxDistance: 10 });
+      w.hunger = Math.min(100, (w.hunger ?? 80) + 35);
+      w.hp = Math.min(w.maxHp ?? 100, (w.hp ?? 80) + 15);
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+WARM PIE SLICE (+35 HUNGER, +15 HP)", color: "#ff88a0", size: 1.1 }, { audience: { player: who.id } });
+      return;
+    }
+
+    // 3. Almond Water Vending Machine
+    if (s.kind === "vending-almond") {
+      heard(ctx, { clip: G("container-open-rustle"), position: { x: pos.x, y: pos.y + 0.8, z: pos.z }, volume: 0.7, maxDistance: 12 });
+      w.thirst = Math.min(100, (w.thirst ?? 80) + 40);
+      w.sanity = Math.min(100, (w.sanity ?? 80) + 15);
+      w.payout = { xp: 15, items: ["almond"] };
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.4, z: pos.z }, text: "+ALMOND WATER (COLD)", color: "#60d0ff", size: 1.1 }, { audience: { player: who.id } });
+      return;
+    }
+
+    // 4. Retro Snack Vending Machine
+    if (s.kind === "vending-snack") {
+      heard(ctx, { clip: G("container-open-rustle"), position: { x: pos.x, y: pos.y + 0.8, z: pos.z }, volume: 0.7, maxDistance: 12 });
+      w.hunger = Math.min(100, (w.hunger ?? 80) + 40);
+      w.payout = { xp: 15, items: ["bar", "chips"] };
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.4, z: pos.z }, text: "+SNACK PACK (+40 HUNGER)", color: "#ffd060", size: 1.1 }, { audience: { player: who.id } });
+      return;
+    }
+
+    // 5. Sal the Diner Faceling / Chef
+    if (s.kind === "sal") {
+      s.lineIdx = ((s.lineIdx ?? -1) + 1) % SAL_LINES.length;
+      const line = SAL_LINES[s.lineIdx];
+      heard(ctx, { clip: VO("reyes", line), position: { x: pos.x, y: pos.y + 1.6, z: pos.z }, volume: 0.9, maxDistance: 16 });
+      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 2.1, z: pos.z }, text: `SAL: "${line}"`, color: "#ffe490", size: 1.05 });
+      return;
+    }
+  },
+};
