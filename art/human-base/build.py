@@ -44,7 +44,8 @@ def arm_leg_weights(head, body):
 
 def male(head, body):
     aw, lw = arm_leg_weights(head, body)
-    SH = 0.045  # arms ride out this far with the broader shoulders
+    SH = 0.04  # arms ride out this far with the broader shoulders
+    old = [v.co.copy() for v in body.data.vertices]
     for i, v in enumerate(body.data.vertices):
         x, y, z = v.co; ax = abs(x); sg = 1 if x >= 0 else -1
         A = aw[i]; L = lw[i]; T = 1 - A
@@ -55,12 +56,10 @@ def male(head, body):
         if y < 0.03: y -= 0.012 * pec
         # broad shoulders and lats: the torso scaled out, the arms carried rigidly
         sh = bump(1.12, 1.34, 1.5, 1.58, z)
-        x = x * (1 + 0.3 * sh * T) + sg * SH * A
+        x = x * (1 + 0.26 * sh * T) + sg * SH * A
         # waist straight, hips and thighs in: a V, not an hourglass
         x *= 1 + 0.12 * bump(1.06, 1.14, 1.24, 1.32, z) * T
-        x *= 1 - 0.25 * bump(0.74, 0.88, 1.04, 1.14, z) * T
-        if L > 0.3 and 0.4 < z < 0.95:
-            cx = sg * 0.078; x = cx + (x - cx) * (1 - 0.14 * bump(0.4, 0.55, 0.8, 0.95, z))
+        x *= 1 - 0.2 * bump(0.5, 0.82, 1.04, 1.16, z) * T
         # flatter seat
         if y > 0.1: y = 0.1 + (y - 0.1) * (1 - 0.5 * bump(0.7, 0.82, 1.0, 1.1, z) * T)
         # thick neck
@@ -72,6 +71,21 @@ def male(head, body):
             c = bump(0.12, 0.22, 0.34, 0.42, z); cx = sg * 0.078
             x = cx + (x - cx) * (1 + 0.12 * c); y = 0.12 + (y - 0.12) * (1 + 0.1 * c)
         v.co = Vector((x, y, z))
+    # smooth the displacement field over the welded surface: the big shape stays, every lump goes
+    key = lambda c: (round(c.x, 4), round(c.y, 4), round(c.z, 4))
+    grp = {}; gid = []
+    for c in old: gid.append(grp.setdefault(key(c), len(grp)))
+    n = len(grp); nb = [set() for _ in range(n)]
+    for e in body.data.edges:
+        a, b = gid[e.vertices[0]], gid[e.vertices[1]]
+        if a != b: nb[a].add(b); nb[b].add(a)
+    D = [Vector() for _ in range(n)]; cnt = [0] * n
+    for i, v in enumerate(body.data.vertices):
+        D[gid[i]] += v.co - old[i]; cnt[gid[i]] += 1
+    D = [d / c for d, c in zip(D, cnt)]
+    for _ in range(25):
+        D = [(D[g] + sum((D[k] for k in nb[g]), Vector())) / (1 + len(nb[g])) if nb[g] else D[g] for g in range(n)]
+    for i, v in enumerate(body.data.vertices): v.co = old[i] + D[gid[i]]
     for v in head.data.vertices:
         x, y, z = v.co
         x *= 1 + 0.08 * bump(1.56, 1.62, 1.74, 1.8, z)  # squarer, wider jaw
