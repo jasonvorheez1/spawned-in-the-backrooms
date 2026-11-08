@@ -126,7 +126,7 @@ env = body.copy(); env.data = body.data.copy(); env.name = 'Envelope'; bpy.conte
 for m in list(env.modifiers): env.modifiers.remove(m)
 env.parent = None; env.matrix_world = body.matrix_world.copy()
 bpy.context.view_layer.objects.active = env; bpy.ops.object.select_all(action='DESELECT'); env.select_set(True)
-rm = env.modifiers.new('rm', 'REMESH'); rm.mode = 'VOXEL'; rm.voxel_size = 0.018; bpy.ops.object.modifier_apply(modifier='rm')
+rm = env.modifiers.new('rm', 'REMESH'); rm.mode = 'VOXEL'; rm.voxel_size = 0.012; bpy.ops.object.modifier_apply(modifier='rm')
 sm0 = env.modifiers.new('sm', 'SMOOTH'); sm0.factor = 0.8; sm0.iterations = 6; bpy.ops.object.modifier_apply(modifier='sm')
 dp = env.modifiers.new('dp', 'DISPLACE'); dp.strength = 0.012; dp.mid_level = 0; bpy.ops.object.modifier_apply(modifier='dp')
 # the eyes: where glasses sit
@@ -147,8 +147,24 @@ def cover(o):
         loc, n, idx, d = bv.find_nearest(f.calc_center_median())
         if d is None or d > 0.03: kill.append(f)
         else: f.material_index = src.data.polygons[idx].material_index
-    bmesh.ops.delete(bm, geom=kill, context='FACES')
-    for isl in []: pass
+    keep = set(bm.faces) - set(kill)
+    def ring(fs, grow):
+        out = set(fs)
+        for f in (bm.faces if grow else fs):
+            nb = {h for e in f.edges for h in e.link_faces}
+            if grow and f not in fs and len(nb & fs) >= 2: out.add(f)
+            if not grow and any(h not in fs for h in nb if h is not f): out.discard(f)
+        return out
+    for _ in range(3): keep = ring(keep, True)   # close pinholes and slits
+    for _ in range(2): keep = ring(keep, False)
+    for _ in range(2):   # material by neighbour majority: no stray patches
+        for f in keep:
+            votes = {}
+            for e in f.edges:
+                for h in e.link_faces:
+                    if h in keep: votes[h.material_index] = votes.get(h.material_index, 0) + 1
+            f.material_index = max(votes, key=votes.get)
+    bmesh.ops.delete(bm, geom=[f for f in bm.faces if f not in keep], context='FACES')
     # drop crumbs: islands under 12 faces
     seen = set()
     for f in list(bm.faces):
@@ -162,6 +178,14 @@ def cover(o):
                 for h in e.link_faces:
                     if h not in seen: stack.append(h)
         if len(isl) < 12: bmesh.ops.delete(bm, geom=isl, context='FACES')
+    for _ in range(6):   # straight hems: boundary verts relax along the boundary
+        bm.verts.ensure_lookup_table(); mv = {}
+        for v in bm.verts:
+            if v.is_boundary:
+                nb = [e.other_vert(v) for e in v.link_edges if e.is_boundary]
+                if len(nb) == 2: mv[v] = (v.co * 0.4 + (nb[0].co + nb[1].co) * 0.3)
+        for v, c in mv.items(): v.co = c
+    bm.normal_update()
     for v in bm.verts: v.co += v.normal * 0.005
     nm = bpy.data.meshes.new(o.name); bm.to_mesh(nm); bm.free()
     for m in o.data.materials: nm.materials.append(m)
