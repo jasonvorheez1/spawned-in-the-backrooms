@@ -236,7 +236,23 @@ export function geometry(ctx) {
     let r = 1 / Math.sqrt((x / rx) ** 2 + (y / RY) ** 2 + (z / RZ) ** 2);
     if (y > 0) r *= 1 - 0.07 * y ** 3;
     if (y < -0.5) r *= 1 - 0.12 * (-0.5 - y) * (1 - Math.abs(x)); // tuck the chin
-    if (z < 0) { const u = x / SNW, v = (y - SNY) / SNH, q = u * u + v * v; if (q < 1) { const t = 1 - q; r += SNL * Math.sqrt(t) * (0.6 + 0.4 * t) * Math.min(1, -z * 2); } }
+    if (z < 0) {
+      const u = x / SNW, v = (y - SNY) / SNH, q = u * u + v * v;
+      if (q < 1) { const t = 1 - q; r += SNL * Math.sqrt(t) * (0.6 + 0.4 * t) * Math.min(1, -z * 2); }
+      if (sp.whisk || sp.catnose || sp.snout == null || sp.snout < 0.12) {
+        const padX = 0.14 * SNW;
+        for (const s of [-1, 1]) {
+          const pu = (x - s * padX) / (SNW * 0.52), pv = (y - (SNY - 0.02)) / (SNH * 0.65), pq = pu * pu + pv * pv;
+          if (pq < 1) r += SNL * 0.38 * ((1 - pq) ** 1.5) * Math.min(1, -z * 2.2);
+        }
+      }
+      if (sp.snout && sp.snout >= 0.12) {
+        const bu = x / (SNW * 0.38), bv = (y - SNY) / (SNH * 1.6);
+        if (Math.abs(bu) < 1 && bv >= 0 && bv <= 1) {
+          r += SNL * 0.45 * (1 - bu * bu) * Math.sin(bv * Math.PI) * Math.min(1, -z * 2);
+        }
+      }
+    }
     return r;
   };
   const headPt = (d, off = 0) => add3(HC, mul3(d, headR(d) + off));

@@ -113,6 +113,11 @@ export function faceMorph(expr, blink, isFemale, look) {
   if (tr) for (const [k, v] of Object.entries(tr)) if (k !== 'w') f[k] = Math.min(1, (f[k] ?? 0) + v * ts)
   const fty = ff ? FACES.types[ff.ftype] : null, fs = ff?.ftstr ?? 1 // the head's own shape: FT_ keys
   if (fty) for (const [k, v] of Object.entries(fty)) if (k !== 'w') f[k] = Math.min(1, v * fs)
+  const snoutS = Number(look?.snoutS ?? ff?.snoutS)
+  if (snoutS && snoutS !== 1) {
+    if (snoutS > 1.0) f.FT_Snout = Math.min(1, (f.FT_Snout ?? 0) + (snoutS - 1.0) * 1.6)
+    else if (snoutS < 1.0) f.FT_Snub = Math.min(1, (f.FT_Snub ?? 0) + (1.0 - snoutS) * 1.6)
+  }
   if (isFemale && f.Blush == null) f.Blush = 0.32
   if (isFemale && f.Smile == null && !['sad', 'angry', 'cry', 'scared', 'pout'].includes(expr)) f.Smile = 0.22
   if (blink) f.Blink = 1
