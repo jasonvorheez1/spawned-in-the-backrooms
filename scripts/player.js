@@ -647,6 +647,7 @@ export function pumpRack(ctx) {
 function invAction(ctx, d) {
   const s = ctx.self.state
   if (d.k === 'close') { s.invOpen = false; return }
+  if (d.k === 'sel') { s.invSel = String(d.t || '').slice(0, 80); return }
   if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc'].includes(d.t) ? d.t : 'all'; return }
   if (d.k === 'sort') { s.invSort = ['name', 'dam', 'wg', 'cnd'].includes(d.s) ? d.s : 'name'; return }
   if (d.k === 'sheet') { s.invOpen = false; s.sheetOpen = true; return }
