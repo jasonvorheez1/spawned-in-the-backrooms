@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 63; // bump to rebuild the city in rooms that are already open
+const V = 64; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -721,13 +721,15 @@ function lay(ctx) {
     bx("l11-realty-header", DX, 2.6, -1, 0.14, 0.12, 2.0, AL, { physics: undefined });
     bx("l11-realty-transom", DX, 2.72, -1, 0.03, 1.68, 1.9, GLASS_TINT, { physics: undefined });
     bx("l11-realty-threshold", DX, 0.2, -1, 0.3, 0.03, 1.9, AL, { physics: undefined });
-    sp("l11-realty-door", { feetPosition: { x: DX + 0.45, y: 0.24, z: -0.08 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 0.9, height: 2.32, depth: 0.04 }, material: GLASS_TINT, physics: { body: "static", collider: "box" },
+    sp("l11-realty-door", { tags: ["usable"], feetPosition: { x: DX, y: 0.24, z: -1 }, rotation: { yaw: 90 }, pivot: [0, 0.5, 0.5], primitive: { kind: "box", width: 1.86, height: 2.32, depth: 0.04 }, material: GLASS_TINT, physics: "kinematic",
+      behavior: "scripts/l5-hall-door.js", state: { name: "B.N.T.G. Realty", verb: "Open", info: "Glass door", open: false, openYaw: -90, baseYaw: 90 },
       children: [
-        { feetPosition: { x: 0, y: 0, z: 0 }, primitive: { kind: "box", width: 0.94, height: 0.1, depth: 0.06 }, material: AL },
-        { feetPosition: { x: 0, y: 2.24, z: 0 }, primitive: { kind: "box", width: 0.94, height: 0.08, depth: 0.06 }, material: AL },
-        { feetPosition: { x: 0.43, y: 0, z: 0 }, primitive: { kind: "box", width: 0.06, height: 2.32, depth: 0.06 }, material: AL },
-        { feetPosition: { x: -0.43, y: 0, z: 0 }, primitive: { kind: "box", width: 0.06, height: 2.32, depth: 0.06 }, material: AL },
-        { feetPosition: { x: 0.3, y: 1.0, z: 0.06 }, primitive: { kind: "cylinder", radiusTop: 0.015, radiusBottom: 0.015, height: 0.35 }, material: { color: "oklch(0.8 0.01 90)", metalness: 0.9, roughness: 0.2 } },
+        { feetPosition: { x: 0, y: 0, z: 0 }, primitive: { kind: "box", width: 1.9, height: 0.1, depth: 0.06 }, material: AL },
+        { feetPosition: { x: 0, y: 2.24, z: 0 }, primitive: { kind: "box", width: 1.9, height: 0.08, depth: 0.06 }, material: AL },
+        { feetPosition: { x: 0.92, y: 0, z: 0 }, primitive: { kind: "box", width: 0.06, height: 2.32, depth: 0.06 }, material: AL },
+        { feetPosition: { x: -0.92, y: 0, z: 0 }, primitive: { kind: "box", width: 0.06, height: 2.32, depth: 0.06 }, material: AL },
+        { feetPosition: { x: 0.75, y: 1.0, z: 0.06 }, primitive: { kind: "cylinder", radiusTop: 0.015, radiusBottom: 0.015, height: 0.35 }, material: { color: "oklch(0.8 0.01 90)", metalness: 0.9, roughness: 0.2 } },
+        { feetPosition: { x: 0.75, y: 1.0, z: -0.06 }, primitive: { kind: "cylinder", radiusTop: 0.015, radiusBottom: 0.015, height: 0.35 }, material: { color: "oklch(0.8 0.01 90)", metalness: 0.9, roughness: 0.2 } },
       ] });
     sp("l11-realty-door-decal", { feetPosition: { x: DX - 0.05, y: 2.75, z: -1 }, rotation: { yaw: 90 }, primitive: { kind: "plane", width: 1.6, height: 0.3 }, material: { color: "#ffffff", opacity: 0 },
       ui: `<div face="front" width="1.6m" style="width:1600px;height:300px;display:flex;align-items:center;justify-content:center;color:#e9e2c8;font-family:Georgia,serif;font-size:120px;letter-spacing:12px">B.N.T.G.</div>` });
