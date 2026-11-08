@@ -1,7 +1,7 @@
 # spawn-scene v2 yaml x0z0
 l5-ambrose:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.79934f170ef9260304b202ef4205824dba9052af0c9475c6b8846522d9c15e91.glb, materials: {belly: {color: "#ebd5ed", metalness: 0, roughness: 0.88}, blush: {color: "#c86aa8", emissive: "#ff4065", emissiveIntensity: 0.15, roughness: 0.85}, eyeink: {color: "#161214", roughness: 0.85}, eyewhite: {color: "#fffdfa", roughness: 0.4}, fur: {color: "#c9a0ff", metalness: 0, roughness: 0.82}, inner: {color: "#f8d2bd", metalness: 0, roughness: 0.9}, iris: {color: "#8a6a2a", roughness: 0.25}, mark: {color: "#9377b9", metalness: 0, roughness: 0.82}, mouth: {color: "#661625", roughness: 0.9}, nose: {color: "#e0a090", metalness: 0.05, roughness: 0.35}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#776296", metalness: 0, roughness: 0.82}, tongue: {color: "#ff7b95", roughness: 0.6}}}, morph: {Blush: 0.25, EyeWide: 1, Half: 0.2425, Open: 0.4, Smile: 1}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.79934f170ef9260304b202ef4205824dba9052af0c9475c6b8846522d9c15e91.glb, materials: {belly: {color: "#ebd5ed", metalness: 0, roughness: 0.88}, blush: {color: "#c86aa8", emissive: "#ff4065", emissiveIntensity: 0.15, roughness: 0.85}, eyeink: {color: "#161214", roughness: 0.85}, eyewhite: {color: "#fffdfa", roughness: 0.4}, fur: {color: "#c9a0ff", metalness: 0, roughness: 0.82}, inner: {color: "#f8d2bd", metalness: 0, roughness: 0.9}, iris: {color: "#8a6a2a", roughness: 0.25}, mark: {color: "#9377b9", metalness: 0, roughness: 0.82}, mouth: {color: "#661625", roughness: 0.9}, nose: {color: "#e0a090", metalness: 0.05, roughness: 0.35}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#776296", metalness: 0, roughness: 0.82}, tongue: {color: "#ff7b95", roughness: 0.6}}}, morph: {Blush: 0.25, EyeWide: 1, Half: 0.2425, Open: 0.4, Smile: 1}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: -44.1, y: 0, z: 3.2}
   id: l5-ambrose
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -19,6 +19,7 @@ l5-ball-banner:
   tags: [l5-ball]
   vector: "<svg viewBox='0 0 480 200' width='3.4m'><g transform='rotate(-1.6 240 100)'><rect x='6' y='10' width='468' height='182' fill='#8a6e48'/><rect x='6' y='10' width='468' height='60' fill='#937650'/><rect x='6' y='70' width='468' height='62' fill='#7e6440'/><rect x='6' y='132' width='468' height='60' fill='#8d7049'/><path d='M6 70 H474 M6 132 H474' stroke='#4a3a24' stroke-width='3'/><path d='M60 30 q30 6 60 0 M300 96 q40 -5 80 2 M150 160 q50 6 110 -2' stroke='#6a5434' stroke-width='2' fill='none'/><circle cx='22' cy='26' r='4' fill='#2e2a24'/><circle cx='458' cy='26' r='4' fill='#2e2a24'/><circle cx='22' cy='176' r='4' fill='#2e2a24'/><circle cx='458' cy='178' r='4' fill='#2e2a24'/><text x='236' y='104' font-family='display' font-size='84' fill='#1d1c1a' text-anchor='middle' transform='rotate(1 236 100)'>M.E.G.</text><path d='M166 106 v18 M214 108 v26 M300 106 v14' stroke='#1d1c1a' stroke-width='3'/><text x='240' y='162' font-family='sans-serif' font-size='27' fill='#e8e2d2' text-anchor='middle' transform='rotate(-0.8 240 160)'>HOUSEKEEPING · KNOCK FIRST</text><rect x='-4' y='2' width='70' height='22' fill='#b8b4a8' opacity='0.85' transform='rotate(-24 30 14)'/><rect x='414' y='170' width='72' height='22' fill='#b8b4a8' opacity='0.85' transform='rotate(-20 450 180)'/><text x='402' y='186' font-family='sans-serif' font-size='13' fill='#7a1a14' transform='rotate(-6 402 186)'>no rats past here!</text></g></svg>"
 l5-ball-barcart:
+  castShadow: false
   feetPosition: {x: -0.95, y: 0, z: -20.6}
   id: l5-ball-barcart
   material: {pbr: true}
@@ -27,6 +28,7 @@ l5-ball-barcart:
   rotation: {yaw: -90}
   state: {hp: 70, items: "almond,royal_ration,bar", kind: cart, mat: wood, maxHp: 70, name: Bar cart}
   tags: [container, furniture, lootfurn, breakable, l5-ball]
+  visibleRange: {max: 40, min: 0}
 l5-ball-boilersign:
   feetPosition: {x: 17.82, y: 1.9, z: 16.25}
   id: l5-ball-boilersign
@@ -42,6 +44,7 @@ l5-ball-cart-0:
   rotation: {yaw: 20}
   state: {hp: 110, items: "bandage,bobbypin,beans", kind: cart, mat: metal, maxHp: 110, name: Linen cart}
   tags: [container, furniture, lootfurn, breakable, l5-ball]
+  visibleRange: {max: 80, min: 0}
 l5-ball-cart-1:
   feetPosition: {x: 12.2, y: 0, z: 16.8}
   id: l5-ball-cart-1
@@ -51,6 +54,7 @@ l5-ball-cart-1:
   rotation: {yaw: -15}
   state: {hp: 110, items: "almond,bar", kind: cart, mat: metal, maxHp: 110, name: Linen cart}
   tags: [container, furniture, lootfurn, breakable, l5-ball]
+  visibleRange: {max: 80, min: 0}
 l5-ball-chand-0:
   castShadow: false
   feetPosition: {x: 0, y: 9, z: -6}
@@ -58,6 +62,7 @@ l5-ball-chand-0:
   material: {pbr: true}
   primitive: {kind: scripted, params: {part: chandelier, size: 1.1}, script: scripts/l5-ball-geo.js}
   tags: [l5-ball, l5-chandelier]
+  visibleRange: {max: 80, min: 0}
 l5-ball-chand-1:
   castShadow: false
   feetPosition: {x: 12, y: 9, z: -6}
@@ -65,6 +70,7 @@ l5-ball-chand-1:
   material: {pbr: true}
   primitive: {kind: scripted, params: {part: chandelier, size: 1.1}, script: scripts/l5-ball-geo.js}
   tags: [l5-ball, l5-chandelier]
+  visibleRange: {max: 80, min: 0}
 l5-ball-chand-2:
   castShadow: false
   feetPosition: {x: 0, y: 9, z: 6}
@@ -72,6 +78,7 @@ l5-ball-chand-2:
   material: {pbr: true}
   primitive: {kind: scripted, params: {part: chandelier, size: 1.1}, script: scripts/l5-ball-geo.js}
   tags: [l5-ball, l5-chandelier]
+  visibleRange: {max: 80, min: 0}
 l5-ball-chand-3:
   castShadow: false
   feetPosition: {x: 12, y: 9, z: 6}
@@ -79,6 +86,7 @@ l5-ball-chand-3:
   material: {pbr: true}
   primitive: {kind: scripted, params: {part: chandelier, size: 1.1}, script: scripts/l5-ball-geo.js}
   tags: [l5-ball, l5-chandelier]
+  visibleRange: {max: 80, min: 0}
 l5-ball-chand-4:
   castShadow: false
   feetPosition: {x: 6, y: 9, z: 0}
@@ -86,6 +94,7 @@ l5-ball-chand-4:
   material: {pbr: true}
   primitive: {kind: scripted, params: {part: chandelier, size: 1.7}, script: scripts/l5-ball-geo.js}
   tags: [l5-ball, l5-chandelier]
+  visibleRange: {max: 80, min: 0}
 l5-ball-chand-5:
   castShadow: false
   feetPosition: {x: 6, y: 4.5, z: -18}
@@ -93,6 +102,7 @@ l5-ball-chand-5:
   material: {pbr: true}
   primitive: {kind: scripted, params: {part: chandelier, size: 0.62}, script: scripts/l5-ball-geo.js}
   tags: [l5-ball, l5-chandelier]
+  visibleRange: {max: 80, min: 0}
 l5-ball-cig:
   feetPosition: {x: 5.66, y: 0.77, z: -0.4}
   fx: {script: "fx\npop wisp rate=flick(.3,.5)*3 on=point() life=3..5 v=up(.12..0.2)+sdir()*.03 size=.03..0.05 acc=curl(.4)*.15+buoy(.05)+drag(.6) sz=$size*(1>5) col=<.55,.53,.5> a=0>.15:.25>.6:.12>0 rot=spin(.1) r=sprite(smoke-puff,alpha)"}
@@ -107,6 +117,7 @@ l5-ball-coatcheck:
   rotation: {yaw: -90}
   state: {hp: 90, items: "bobbypin,ammo,battery", kind: counter, mat: wood, maxHp: 90, name: Coat check}
   tags: [container, furniture, lootfurn, breakable, l5-ball]
+  visibleRange: {max: 80, min: 0}
 l5-ball-fire:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-fireplace-crackle-loop.mp3, gain: 0.35, loop: true, maxDistance: 12, spatial: true}
   feetPosition: {x: 6, y: 0.26, z: -23.5}
@@ -123,6 +134,7 @@ l5-ball-hk:
   receiveShadow: true
   tags: [l5-ball]
 l5-ball-instcase:
+  castShadow: false
   feetPosition: {x: 17.1, y: 0.45, z: -9.4}
   id: l5-ball-instcase
   material: {pbr: true}
@@ -131,6 +143,7 @@ l5-ball-instcase:
   rotation: {yaw: 90}
   state: {hp: 50, items: "ammo,tape,bobbypin", kind: case, mat: wood, maxHp: 50, name: Instrument case}
   tags: [container, furniture, lootfurn, breakable, l5-ball]
+  visibleRange: {max: 40, min: 0}
 l5-ball-locker-0:
   feetPosition: {x: 14.4, y: 0, z: 12.5}
   id: l5-ball-locker-0
@@ -140,6 +153,7 @@ l5-ball-locker-0:
   rotation: {yaw: 180}
   state: {hp: 160, items: "ammo,ammo,bandage,battery", kind: locker, lock: "lockpick:25", mat: metal, maxHp: 160, name: M.E.G. supply locker}
   tags: [container, furniture, lootfurn, breakable, l5-ball]
+  visibleRange: {max: 80, min: 0}
 l5-ball-locker-1:
   feetPosition: {x: 15.35, y: 0, z: 12.5}
   id: l5-ball-locker-1
@@ -149,6 +163,7 @@ l5-ball-locker-1:
   rotation: {yaw: 180}
   state: {hp: 160, items: "meat:fish,ration,almond", kind: locker, mat: metal, maxHp: 160, name: M.E.G. supply locker}
   tags: [container, furniture, lootfurn, breakable, l5-ball]
+  visibleRange: {max: 80, min: 0}
 l5-ball-locker-2:
   feetPosition: {x: 16.3, y: 0, z: 12.5}
   id: l5-ball-locker-2
@@ -158,6 +173,7 @@ l5-ball-locker-2:
   rotation: {yaw: 180}
   state: {hp: 160, items: "firstaid,tape,shells", kind: locker, lock: "lockpick:50", mat: metal, maxHp: 160, name: M.E.G. supply locker}
   tags: [container, furniture, lootfurn, breakable, l5-ball]
+  visibleRange: {max: 80, min: 0}
 l5-ball-mahjong:
   behavior: scripts/l5-ball.js
   feetPosition: {x: 6, y: 0, z: 0}
@@ -167,6 +183,7 @@ l5-ball-mahjong:
   primitive: {kind: scripted, params: {part: mahjong}, script: scripts/l5-ball-geo.js}
   state: {info: Somebody left mid-turn. Their hand is still fanned open., kind: mahjong, name: Mahjong table, tint: "#9fd8b0", verb: Touch}
   tags: [usable, l5-ball]
+  visibleRange: {max: 80, min: 0}
 l5-ball-mirror:
   feetPosition: {x: 6, y: 2.275, z: -23.74}
   id: l5-ball-mirror
@@ -174,6 +191,7 @@ l5-ball-mirror:
   primitive: {height: 1.19, kind: plane, width: 1.9}
   rotation: 0
   tags: [l5-ball]
+  visibleRange: {max: 80, min: 0}
 l5-ball-placard-n:
   feetPosition: {x: 6, y: 3.73, z: -11.84}
   id: l5-ball-placard-n
@@ -200,6 +218,7 @@ l5-ball-portrait-0:
   rotation: {yaw: 90}
   state: {hp: 20, mat: wood, maxHp: 20}
   tags: [l5-ball, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-ball-portrait-1:
   feetPosition: {x: -1.81, y: 1.68, z: -14.8}
   id: l5-ball-portrait-1
@@ -208,6 +227,7 @@ l5-ball-portrait-1:
   rotation: {yaw: 90}
   state: {hp: 20, mat: wood, maxHp: 20}
   tags: [l5-ball, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-ball-portrait-2:
   feetPosition: {x: 2, y: 1.68, z: -23.81}
   id: l5-ball-portrait-2
@@ -216,6 +236,7 @@ l5-ball-portrait-2:
   rotation: {yaw: 0}
   state: {hp: 20, mat: wood, maxHp: 20}
   tags: [l5-ball, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-ball-portrait-3:
   feetPosition: {x: 10, y: 1.68, z: -23.81}
   id: l5-ball-portrait-3
@@ -224,6 +245,7 @@ l5-ball-portrait-3:
   rotation: {yaw: 0}
   state: {hp: 20, mat: wood, maxHp: 20}
   tags: [l5-ball, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-ball-room:
   castShadow: false
   feetPosition: {x: 0, y: 0, z: 0}
@@ -251,6 +273,7 @@ l5-ball-sideboard:
   rotation: {yaw: 180}
   state: {hp: 90, items: "meat:steak,meat:chicken,beans", kind: sideboard, mat: wood, maxHp: 90, name: Banquet sideboard}
   tags: [container, furniture, lootfurn, breakable, l5-ball]
+  visibleRange: {max: 80, min: 0}
 l5-ball-smoke-0:
   feetPosition: {x: 6.2, y: 0.48, z: -19.52}
   fx: {script: "fx\npop wisp rate=flick(.25,.5)*2.5 on=point() life=4..6 v=up(.1..0.18)+sdir()*.03 size=.03..0.05 acc=curl(.35)*.15+buoy(.04)+drag(.5) sz=$size*(1>6) col=<.6,.57,.52> a=0>.12:.22>.6:.1>0 rot=spin(.08) r=sprite(smoke-puff,alpha)"}
@@ -292,6 +315,7 @@ l5-boil-arcade:
   rotation: {yaw: 45}
   state: {hp: 120, info: LEVEL 40, kind: sealed, mat: machine, maxHp: 120, name: Arcade cabinet, sound: old-arcade-coin-slot-rattle, text: "LEVEL 40 · The screen flickers INSERT COIN. Nothing happens.", tint: "#ff8a3c", verb: Play}
   tags: [l5-boiler, usable, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-boil-cage-0:
   castShadow: false
   feetPosition: {x: 22, y: 5.1000000000000005, z: -22}
@@ -300,6 +324,7 @@ l5-boil-cage-0:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-1:
   castShadow: false
   feetPosition: {x: 22, y: 5.1000000000000005, z: -11}
@@ -308,6 +333,7 @@ l5-boil-cage-1:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-10:
   castShadow: false
   feetPosition: {x: 38, y: 5.1000000000000005, z: -22}
@@ -316,6 +342,7 @@ l5-boil-cage-10:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-11:
   castShadow: false
   feetPosition: {x: 38, y: 5.1000000000000005, z: -11}
@@ -324,6 +351,7 @@ l5-boil-cage-11:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-12:
   castShadow: false
   feetPosition: {x: 38, y: 5.1000000000000005, z: 0}
@@ -332,6 +360,7 @@ l5-boil-cage-12:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-13:
   castShadow: false
   feetPosition: {x: 38, y: 5.1000000000000005, z: 11}
@@ -340,6 +369,7 @@ l5-boil-cage-13:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-14:
   castShadow: false
   feetPosition: {x: 38, y: 5.1000000000000005, z: 22}
@@ -348,6 +378,7 @@ l5-boil-cage-14:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-2:
   castShadow: false
   feetPosition: {x: 22, y: 5.1000000000000005, z: 0}
@@ -356,6 +387,7 @@ l5-boil-cage-2:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-3:
   castShadow: false
   feetPosition: {x: 22, y: 5.1000000000000005, z: 11}
@@ -364,6 +396,7 @@ l5-boil-cage-3:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-4:
   castShadow: false
   feetPosition: {x: 22, y: 5.1000000000000005, z: 22}
@@ -372,6 +405,7 @@ l5-boil-cage-4:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-5:
   castShadow: false
   feetPosition: {x: 30, y: 5.1000000000000005, z: -22}
@@ -380,6 +414,7 @@ l5-boil-cage-5:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-6:
   castShadow: false
   feetPosition: {x: 30, y: 5.1000000000000005, z: -11}
@@ -388,6 +423,7 @@ l5-boil-cage-6:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-7:
   castShadow: false
   feetPosition: {x: 30, y: 5.1000000000000005, z: 0}
@@ -396,6 +432,7 @@ l5-boil-cage-7:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-8:
   castShadow: false
   feetPosition: {x: 30, y: 5.1000000000000005, z: 11}
@@ -404,6 +441,7 @@ l5-boil-cage-8:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-cage-9:
   castShadow: false
   feetPosition: {x: 30, y: 5.1000000000000005, z: 22}
@@ -412,6 +450,7 @@ l5-boil-cage-9:
   primitive: {kind: scripted, params: {kind: cage}, script: scripts/l5-boiler-props.js}
   state: {hp: 25, mat: fixture, maxHp: 25, name: Caged bulb}
   tags: [l5-boiler, l5-fixture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-desk:
   castShadow: true
   feetPosition: {x: 20, y: 0, z: 23.5}
@@ -456,6 +495,7 @@ l5-boil-leak-0-pool:
   primitive: {kind: scripted, params: {kind: puddle}, script: scripts/l5-boiler-props.js}
   rotation: {yaw: 0}
   tags: [l5-boiler]
+  visibleRange: {max: 80, min: 0}
 l5-boil-leak-1:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-slow-water-drips-into-puddle-echoing-loop.mp3, gain: 0.3, loop: true, maxDistance: 9, spatial: true}
   feetPosition: {x: 31.5, y: 4.8, z: -0.5}
@@ -469,6 +509,7 @@ l5-boil-leak-1-pool:
   primitive: {kind: scripted, params: {kind: puddle}, script: scripts/l5-boiler-props.js}
   rotation: {yaw: 67}
   tags: [l5-boiler]
+  visibleRange: {max: 80, min: 0}
 l5-boil-leak-2:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-slow-water-drips-into-puddle-echoing-loop.mp3, gain: 0.3, loop: true, maxDistance: 9, spatial: true}
   feetPosition: {x: 37.5, y: 4.7, z: 14.5}
@@ -482,6 +523,7 @@ l5-boil-leak-2-pool:
   primitive: {kind: scripted, params: {kind: puddle}, script: scripts/l5-boiler-props.js}
   rotation: {yaw: 134}
   tags: [l5-boiler]
+  visibleRange: {max: 80, min: 0}
 l5-boil-leak-3:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-slow-water-drips-into-puddle-echoing-loop.mp3, gain: 0.3, loop: true, maxDistance: 9, spatial: true}
   feetPosition: {x: 25.5, y: 5.15, z: 11.5}
@@ -495,6 +537,7 @@ l5-boil-leak-3-pool:
   primitive: {kind: scripted, params: {kind: puddle}, script: scripts/l5-boiler-props.js}
   rotation: {yaw: 201}
   tags: [l5-boiler]
+  visibleRange: {max: 80, min: 0}
 l5-boil-leak-4:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-slow-water-drips-into-puddle-echoing-loop.mp3, gain: 0.3, loop: true, maxDistance: 9, spatial: true}
   feetPosition: {x: 40.5, y: 5.2, z: -21.5}
@@ -508,6 +551,7 @@ l5-boil-leak-4-pool:
   primitive: {kind: scripted, params: {kind: puddle}, script: scripts/l5-boiler-props.js}
   rotation: {yaw: 268}
   tags: [l5-boiler]
+  visibleRange: {max: 80, min: 0}
 l5-boil-locker:
   castShadow: true
   feetPosition: {x: 43.6, y: 0, z: -25.45}
@@ -518,6 +562,7 @@ l5-boil-locker:
   rotation: {yaw: 180}
   state: {hp: 220, items: "ammo,ammo,firesalt,battery,meat:rat,weapon:smg", kind: locker, lock: "lockpick:50", mat: metal, maxHp: 220, name: Foreman's locker}
   tags: [l5-boiler, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-boil-m0:
   castShadow: true
   feetPosition: {x: 22.5, y: 0, z: -24.5}
@@ -650,6 +695,7 @@ l5-boil-m19:
   rotation: {yaw: -90}
   state: {hp: 180, mat: metal, maxHp: 180, name: Coal bunker}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-boil-m2:
   castShadow: true
   feetPosition: {x: 36, y: 0, z: -23}
@@ -716,6 +762,7 @@ l5-boil-m24:
   rotation: {yaw: 0}
   state: {hp: 180, mat: metal, maxHp: 180, name: Coal bunker}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-boil-m3:
   castShadow: true
   feetPosition: {x: 19.5, y: 0, z: -18.5}
@@ -760,6 +807,7 @@ l5-boil-m6:
   rotation: {yaw: -90}
   state: {hp: 180, mat: metal, maxHp: 180, name: Coal bunker}
   tags: [l5-boiler, l5-boil-machine, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-boil-m7:
   castShadow: true
   feetPosition: {x: 42, y: 0, z: -14}
@@ -802,7 +850,7 @@ l5-boil-pipes:
   receiveShadow: true
   tags: [l5-boiler]
 l5-boil-tools-0:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 18.6, y: 0, z: -7}
   id: l5-boil-tools-0
   material: {pbr: true}
@@ -811,8 +859,9 @@ l5-boil-tools-0:
   rotation: {yaw: 90}
   state: {hp: 60, items: "tape,bobbypin", kind: toolbox, mat: metal, maxHp: 60, name: Toolbox}
   tags: [l5-boiler, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-tools-1:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 45.4, y: 0, z: 8.5}
   id: l5-boil-tools-1
   material: {pbr: true}
@@ -821,6 +870,7 @@ l5-boil-tools-1:
   rotation: {yaw: -90}
   state: {hp: 60, items: "battery,tape", kind: toolbox, mat: metal, maxHp: 60, name: Toolbox}
   tags: [l5-boiler, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-boil-tools-2:
   castShadow: true
   feetPosition: {x: 31.5, y: 0, z: -25.55}
@@ -837,37 +887,42 @@ l5-boil-vent-0:
   material: {pbr: true}
   primitive: {kind: scripted, params: {kind: grate}, script: scripts/l5-boiler-props.js}
   tags: [l5-boiler, l5-boil-vent]
+  visibleRange: {max: 80, min: 0}
 l5-boil-vent-1:
   feetPosition: {x: 25.5, y: 0, z: 1.5}
   id: l5-boil-vent-1
   material: {pbr: true}
   primitive: {kind: scripted, params: {kind: grate}, script: scripts/l5-boiler-props.js}
   tags: [l5-boiler, l5-boil-vent]
+  visibleRange: {max: 80, min: 0}
 l5-boil-vent-2:
   feetPosition: {x: 34.5, y: 0, z: 14.5}
   id: l5-boil-vent-2
   material: {pbr: true}
   primitive: {kind: scripted, params: {kind: grate}, script: scripts/l5-boiler-props.js}
   tags: [l5-boiler, l5-boil-vent]
+  visibleRange: {max: 80, min: 0}
 l5-boil-vent-3:
   feetPosition: {x: 40.5, y: 0, z: -9.5}
   id: l5-boil-vent-3
   material: {pbr: true}
   primitive: {kind: scripted, params: {kind: grate}, script: scripts/l5-boiler-props.js}
   tags: [l5-boiler, l5-boil-vent]
+  visibleRange: {max: 80, min: 0}
 l5-boil-vent-4:
   feetPosition: {x: 25.5, y: 0, z: 20.5}
   id: l5-boil-vent-4
   material: {pbr: true}
   primitive: {kind: scripted, params: {kind: grate}, script: scripts/l5-boiler-props.js}
   tags: [l5-boiler, l5-boil-vent]
+  visibleRange: {max: 80, min: 0}
 l5-boilerdoor-ball:
-  children: [{behavior: scripts/l5-door.js, children: [{feetPosition: {x: -0.08, y: 1, z: 0.55}, id: bar-w, material: {color: oklch(0.55 0.15 35), metalness: 0.6, roughness: 0.4}, primitive: {depth: 0.7, height: 0.05, kind: box, width: 0.05}}, {feetPosition: {x: 0.08, y: 1, z: 0.55}, id: bar-e, material: {color: oklch(0.55 0.15 35), metalness: 0.6, roughness: 0.4}, primitive: {depth: 0.7, height: 0.05, kind: box, width: 0.05}}, {feetPosition: {x: 0, y: 0.02, z: 0}, id: kick, material: {color: oklch(0.3 0.02 60), metalness: 0.85, roughness: 0.35}, primitive: {depth: 2.12, height: 0.3, kind: box, width: 0.11}}, {feetPosition: {x: -0.06, y: 1.6, z: 0}, id: sign, rotation: {yaw: -90}, ui: "<div face=\"front\" class=\"px-4 py-2 bg-yellow-500 text-black font-bold text-center\" style=\"font-size:70px;width:900px\">⚠ DANGER · STAFF ONLY</div>"}], feetPosition: {x: 0, y: 0, z: 1.1}, id: panel, material: {color: oklch(0.36 0.025 60), metalness: 0.75, roughness: 0.55}, physics: {body: kinematic, collider: box}, primitive: {depth: 2.14, height: 2.55, kind: box, width: 0.09}, state: {hinge: l5-boilerdoor-ball, info: "Locked · Harlan's key or Lockpick 25", kind: boilerdoor, name: Boiler Room door, open: false, swing: 95, tint: "#e0823c", verb: Unbolt, yaw0: 0}, tags: [usable]}]
+  children: [{behavior: scripts/l5-door.js, children: [{castShadow: false, feetPosition: {x: -0.08, y: 1, z: 0.55}, id: bar-w, material: {color: oklch(0.55 0.15 35), metalness: 0.6, roughness: 0.4}, primitive: {depth: 0.7, height: 0.05, kind: box, width: 0.05}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: 0.08, y: 1, z: 0.55}, id: bar-e, material: {color: oklch(0.55 0.15 35), metalness: 0.6, roughness: 0.4}, primitive: {depth: 0.7, height: 0.05, kind: box, width: 0.05}, visibleRange: {max: 40, min: 0}}, {feetPosition: {x: 0, y: 0.02, z: 0}, id: kick, material: {color: oklch(0.3 0.02 60), metalness: 0.85, roughness: 0.35}, primitive: {depth: 2.12, height: 0.3, kind: box, width: 0.11}, visibleRange: {max: 80, min: 0}}, {feetPosition: {x: -0.06, y: 1.6, z: 0}, id: sign, rotation: {yaw: -90}, ui: "<div face=\"front\" class=\"px-4 py-2 bg-yellow-500 text-black font-bold text-center\" style=\"font-size:70px;width:900px\">⚠ DANGER · STAFF ONLY</div>"}], feetPosition: {x: 0, y: 0, z: 1.1}, id: panel, material: {color: oklch(0.36 0.025 60), metalness: 0.75, roughness: 0.55}, physics: {body: kinematic, collider: box}, primitive: {depth: 2.14, height: 2.55, kind: box, width: 0.09}, state: {hinge: l5-boilerdoor-ball, info: "Locked · Harlan's key or Lockpick 25", kind: boilerdoor, name: Boiler Room door, open: false, swing: 95, tint: "#e0823c", verb: Unbolt, yaw0: 0}, tags: [usable]}]
   feetPosition: {x: 18, y: 0, z: -1.1}
   id: l5-boilerdoor-ball
   rotation: {yaw: 0}
 l5-boilerdoor-hk:
-  children: [{behavior: scripts/l5-door.js, children: [{feetPosition: {x: -0.08, y: 1, z: 0.55}, id: bar-w, material: {color: oklch(0.55 0.15 35), metalness: 0.6, roughness: 0.4}, primitive: {depth: 0.7, height: 0.05, kind: box, width: 0.05}}, {feetPosition: {x: 0.08, y: 1, z: 0.55}, id: bar-e, material: {color: oklch(0.55 0.15 35), metalness: 0.6, roughness: 0.4}, primitive: {depth: 0.7, height: 0.05, kind: box, width: 0.05}}, {feetPosition: {x: 0, y: 0.02, z: 0}, id: kick, material: {color: oklch(0.3 0.02 60), metalness: 0.85, roughness: 0.35}, primitive: {depth: 2.12, height: 0.3, kind: box, width: 0.11}}, {feetPosition: {x: -0.06, y: 1.6, z: 0}, id: sign, rotation: {yaw: -90}, ui: "<div face=\"front\" class=\"px-4 py-2 bg-yellow-500 text-black font-bold text-center\" style=\"font-size:70px;width:900px\">⚠ DANGER · STAFF ONLY</div>"}], feetPosition: {x: 0, y: 0, z: 1.1}, id: panel, material: {color: oklch(0.36 0.025 60), metalness: 0.75, roughness: 0.55}, physics: {body: kinematic, collider: box}, primitive: {depth: 2.14, height: 2.55, kind: box, width: 0.09}, state: {hinge: l5-boilerdoor-hk, info: "Locked · Harlan's key or Lockpick 25", kind: boilerdoor, name: Boiler Room door, open: false, swing: 95, tint: "#e0823c", verb: Unbolt, yaw0: 0}, tags: [usable]}]
+  children: [{behavior: scripts/l5-door.js, children: [{castShadow: false, feetPosition: {x: -0.08, y: 1, z: 0.55}, id: bar-w, material: {color: oklch(0.55 0.15 35), metalness: 0.6, roughness: 0.4}, primitive: {depth: 0.7, height: 0.05, kind: box, width: 0.05}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: 0.08, y: 1, z: 0.55}, id: bar-e, material: {color: oklch(0.55 0.15 35), metalness: 0.6, roughness: 0.4}, primitive: {depth: 0.7, height: 0.05, kind: box, width: 0.05}, visibleRange: {max: 40, min: 0}}, {feetPosition: {x: 0, y: 0.02, z: 0}, id: kick, material: {color: oklch(0.3 0.02 60), metalness: 0.85, roughness: 0.35}, primitive: {depth: 2.12, height: 0.3, kind: box, width: 0.11}, visibleRange: {max: 80, min: 0}}, {feetPosition: {x: -0.06, y: 1.6, z: 0}, id: sign, rotation: {yaw: -90}, ui: "<div face=\"front\" class=\"px-4 py-2 bg-yellow-500 text-black font-bold text-center\" style=\"font-size:70px;width:900px\">⚠ DANGER · STAFF ONLY</div>"}], feetPosition: {x: 0, y: 0, z: 1.1}, id: panel, material: {color: oklch(0.36 0.025 60), metalness: 0.75, roughness: 0.55}, physics: {body: kinematic, collider: box}, primitive: {depth: 2.14, height: 2.55, kind: box, width: 0.09}, state: {hinge: l5-boilerdoor-hk, info: "Locked · Harlan's key or Lockpick 25", kind: boilerdoor, name: Boiler Room door, open: false, swing: 95, tint: "#e0823c", verb: Unbolt, yaw0: 0}, tags: [usable]}]
   feetPosition: {x: 18, y: 0, z: 17}
   id: l5-boilerdoor-hk
   rotation: {yaw: 0}
@@ -878,7 +933,7 @@ l5-corpse-crew:
   tags: [l5-corpse-crew]
 l5-dolores:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.024b96c74631af9ed1835de73d25b82c14ee641980370c3cef3fb4edeeca00e1.glb, materials: {belly: {color: "#f6e3c2", metalness: 0, roughness: 0.88}, blush: {color: "#ff6285", emissive: "#ff4065", emissiveIntensity: 0.22, roughness: 0.85}, eyeink: {color: "#161214", roughness: 0.85}, eyewhite: {color: "#fffdfa", roughness: 0.4}, fur: {color: "#e8c890", metalness: 0, roughness: 0.82}, inner: {color: "#ffd4dc", metalness: 0, roughness: 0.9}, iris: {color: "#8a909a", roughness: 0.25}, mark: {color: "#756047", metalness: 0, roughness: 0.82}, mouth: {color: "#661625", roughness: 0.9}, nose: {color: "#ff9fbd", metalness: 0.05, roughness: 0.35}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#927a5a", metalness: 0, roughness: 0.82}, tongue: {color: "#ff7b95", roughness: 0.6}}}, morph: {Blush: 0.25, EyeWide: 1, Half: 0.42, Open: 0.4, Smile: 1}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.024b96c74631af9ed1835de73d25b82c14ee641980370c3cef3fb4edeeca00e1.glb, materials: {belly: {color: "#f6e3c2", metalness: 0, roughness: 0.88}, blush: {color: "#ff6285", emissive: "#ff4065", emissiveIntensity: 0.22, roughness: 0.85}, eyeink: {color: "#161214", roughness: 0.85}, eyewhite: {color: "#fffdfa", roughness: 0.4}, fur: {color: "#e8c890", metalness: 0, roughness: 0.82}, inner: {color: "#ffd4dc", metalness: 0, roughness: 0.9}, iris: {color: "#8a909a", roughness: 0.25}, mark: {color: "#756047", metalness: 0, roughness: 0.82}, mouth: {color: "#661625", roughness: 0.9}, nose: {color: "#ff9fbd", metalness: 0.05, roughness: 0.35}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#927a5a", metalness: 0, roughness: 0.82}, tongue: {color: "#ff7b95", roughness: 0.6}}}, morph: {Blush: 0.25, EyeWide: 1, Half: 0.42, Open: 0.4, Smile: 1}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: -12.6, y: 0, z: 20.2}
   id: l5-dolores
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -900,6 +955,7 @@ l5-door-6:
   rotation: {yaw: 90}
   state: {info: It won't open, kind: sealed, name: LEVEL 6, sound: null, text: "LEVEL 6 (Auxiliary Bulkhead) · Welded shut by boiler steam. Scratched into the rust: 'Use the main north portal at z:6 — and don't go in without night vision!'", tint: "#b89b6a", verb: Try the door}
   tags: [usable, l5-sealed]
+  visibleRange: {max: 80, min: 0}
 l5-door-63:
   behavior: scripts/l5-door.js
   feetPosition: {x: 17.720000000000002, y: 0, z: -8}
@@ -910,6 +966,7 @@ l5-door-63:
   rotation: {yaw: 90}
   state: {info: It won't open, kind: sealed, name: LEVEL 63, sound: null, text: "LEVEL 63 · Birdsong behind this one. Leaves under the door. Locked fast.", tint: "#b89b6a", verb: Try the door}
   tags: [usable, l5-sealed]
+  visibleRange: {max: 80, min: 0}
 l5-door-78:
   behavior: scripts/l5-door.js
   feetPosition: {x: 45.72, y: 0, z: -20}
@@ -920,6 +977,7 @@ l5-door-78:
   rotation: {yaw: 90}
   state: {info: It won't open, kind: sealed, name: LEVEL 78, sound: metal-valve-wheel-creak, text: "LEVEL 78 · An airlock. The wheel won't turn without pressure.", tint: "#b89b6a", verb: Try the door}
   tags: [usable, l5-sealed]
+  visibleRange: {max: 80, min: 0}
 l5-door-9:
   behavior: scripts/l5-door.js
   feetPosition: {x: -38, y: 0, z: -12.72}
@@ -930,6 +988,7 @@ l5-door-9:
   rotation: {yaw: 180}
   state: {info: It won't open, kind: sealed, name: LEVEL 9, sound: null, text: "LEVEL 9 · A dark wooden door. Cold air under it. It won't give.", tint: "#b89b6a", verb: Try the door}
   tags: [usable, l5-sealed]
+  visibleRange: {max: 80, min: 0}
 l5-door-98:
   behavior: scripts/l5-door.js
   feetPosition: {x: -30.279999999999998, y: 0, z: 6.5}
@@ -940,6 +999,7 @@ l5-door-98:
   rotation: {yaw: 90}
   state: {info: It won't open, kind: sealed, name: LEVEL 98, sound: null, text: "LEVEL 98 · A metal door, warm to the touch. Bolted from the other side.", tint: "#b89b6a", verb: Try the door}
   tags: [usable, l5-sealed]
+  visibleRange: {max: 80, min: 0}
 l5-elev-corrS:
   behavior: scripts/l5-elevator.js
   feetPosition: {x: -7.15, y: 0, z: 11.5}
@@ -950,6 +1010,7 @@ l5-elev-corrS:
   rotation: {yaw: 90}
   state: {cx: -7.15, cz: 11.5, floor: "3", home: "3", idx: 2, kids: {ind: l5-elev-corrS/object/xe5bfa1adb29c7d30/13, lamp: l5-elev-corrS/object/xe5bfa1adb29c7d30/14, leafL: l5-elev-corrS/object/xe5bfa1adb29c7d30/10, leafR: l5-elev-corrS/object/xe5bfa1adb29c7d30/11, panel: l5-elev-corrS/object/xe5bfa1adb29c7d30/12}, lampI: 3, open: false, phase: idle, role: cab, style: modern, yaw: 90}
   tags: [l5-elev]
+  visibleRange: {max: 80, min: 0}
 l5-elev-corrS/object/xe5bfa1adb29c7d30/10:
   feetPosition: {x: -0.29, y: 0.02, z: -1.02}
   id: l5-elev-corrS/object/xe5bfa1adb29c7d30/10
@@ -968,6 +1029,7 @@ l5-elev-corrS/object/xe5bfa1adb29c7d30/11:
   tags: [l5-elev-door]
 l5-elev-corrS/object/xe5bfa1adb29c7d30/12:
   behavior: scripts/l5-elevator.js
+  castShadow: false
   feetPosition: {x: 0.885, y: 0.92, z: -0.5}
   id: l5-elev-corrS/object/xe5bfa1adb29c7d30/12
   material: {pbr: true}
@@ -977,7 +1039,9 @@ l5-elev-corrS/object/xe5bfa1adb29c7d30/12:
   state: {cab: l5-elev-corrS, closed: true, info: "Floors 1–12. The hotel says nothing about the others.", name: Guest Wing South elevator, noconfirm: true, ready: false, role: panel, shut: true, tint: "#f4c25a", verb: Choose floor}
   tags: [usable, l5-elev-panel]
   ui: "<div face=\"front\" width=\"0.34m\" style=\"width:340px;height:620px;background:#2a1a10;color:#f4c25a;font-family:serif;text-align:center;position:relative\">\n<div hidden=\"{{ state.ready }}\" style=\"position:absolute;left:0;right:0;top:8px;padding-top:220px;font-size:30px;letter-spacing:4px\">GUEST WING SOUTH<br><span style=\"font-size:22px;opacity:.7\">PRESS TO CHOOSE</span></div>\n<div hidden=\"{{ state.shut }}\" style=\"position:absolute;left:0;right:0;top:12px\"><button id=\"f1\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">1</button><button id=\"f2\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">2</button><button id=\"f3\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">3</button><button id=\"f4\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">4</button><button id=\"f5\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">5</button><button id=\"f6\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">6</button><button id=\"f7\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">7</button><button id=\"f8\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">8</button><button id=\"f9\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">9</button><button id=\"f10\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">10</button><button id=\"f11\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">11</button><button id=\"f12\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">12</button><div style=\"height:6px\"></div><button id=\"fB\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">B</button><button id=\"f13\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">13</button><button id=\"f66\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">66</button><button id=\"f382\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17;font-size:20px\">382</button></div>\n<div hidden=\"{{ state.noconfirm }}\" style=\"position:absolute;left:0;right:0;top:8px;padding:150px 20px 0;font-size:30px;line-height:1.3\">The button is warm.<br>Are you sure?<br><button id=\"yes\" style=\"margin-top:30px;width:120px;height:60px;font-size:28px;background:#7a1a12;color:#ffd9b0\">YES</button> <button id=\"no\" style=\"width:120px;height:60px;font-size:28px;background:#333;color:#ddd\">NO</button></div></div>"
+  visibleRange: {max: 40, min: 0}
 l5-elev-corrS/object/xe5bfa1adb29c7d30/13:
+  castShadow: false
   feetPosition: {x: 0, y: 2.6, z: -1.12}
   id: l5-elev-corrS/object/xe5bfa1adb29c7d30/13
   material: {pbr: true}
@@ -986,6 +1050,7 @@ l5-elev-corrS/object/xe5bfa1adb29c7d30/13:
   state: {floor: "3"}
   tags: [l5-elev-ind]
   ui: "<div face=\"front\" width=\"0.24m\" emissive style=\"color:#f4c25a;font-family:serif;text-align:center;font-size:90px;line-height:1;text-shadow:0 0 18px #f4c25a\">{{ state.floor }}</div>"
+  visibleRange: {max: 40, min: 0}
 l5-elev-corrS/object/xe5bfa1adb29c7d30/14:
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-corrS/object/xe5bfa1adb29c7d30/14
@@ -1019,6 +1084,7 @@ l5-elev-lobby-n/object/xe5bfa1adb29c7d30/1:
   tags: [l5-elev-door]
 l5-elev-lobby-n/object/xe5bfa1adb29c7d30/2:
   behavior: scripts/l5-elevator.js
+  castShadow: false
   feetPosition: {x: 0.885, y: 0.92, z: -0.5}
   id: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/2
   material: {pbr: true}
@@ -1028,7 +1094,9 @@ l5-elev-lobby-n/object/xe5bfa1adb29c7d30/2:
   state: {cab: l5-elev-lobby-n, closed: true, info: "Floors 1–12. The hotel says nothing about the others.", name: Lobby (copper cage) elevator, noconfirm: true, ready: false, role: panel, shut: true, tint: "#ffcf7a", verb: Choose floor}
   tags: [usable, l5-elev-panel]
   ui: "<div face=\"front\" width=\"0.34m\" style=\"width:340px;height:620px;background:#1e120a;color:#ffcf7a;font-family:serif;text-align:center;position:relative\">\n<div hidden=\"{{ state.ready }}\" style=\"position:absolute;left:0;right:0;top:8px;padding-top:220px;font-size:30px;letter-spacing:4px\">LOBBY (COPPER CAGE)<br><span style=\"font-size:22px;opacity:.7\">PRESS TO CHOOSE</span></div>\n<div hidden=\"{{ state.shut }}\" style=\"position:absolute;left:0;right:0;top:12px\"><button id=\"f1\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">1</button><button id=\"f2\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">2</button><button id=\"f3\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">3</button><button id=\"f4\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">4</button><button id=\"f5\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">5</button><button id=\"f6\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">6</button><button id=\"f7\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">7</button><button id=\"f8\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">8</button><button id=\"f9\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">9</button><button id=\"f10\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">10</button><button id=\"f11\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">11</button><button id=\"f12\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">12</button><div style=\"height:6px\"></div><button id=\"fB\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">B</button><button id=\"f13\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">13</button><button id=\"f66\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">66</button><button id=\"f382\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17;font-size:20px\">382</button></div>\n<div hidden=\"{{ state.noconfirm }}\" style=\"position:absolute;left:0;right:0;top:8px;padding:150px 20px 0;font-size:30px;line-height:1.3\">The button is warm.<br>Are you sure?<br><button id=\"yes\" style=\"margin-top:30px;width:120px;height:60px;font-size:28px;background:#7a1a12;color:#ffd9b0\">YES</button> <button id=\"no\" style=\"width:120px;height:60px;font-size:28px;background:#333;color:#ddd\">NO</button></div></div>"
+  visibleRange: {max: 40, min: 0}
 l5-elev-lobby-n/object/xe5bfa1adb29c7d30/3:
+  castShadow: false
   feetPosition: {x: 0, y: 2.66, z: -1}
   id: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/3
   material: {pbr: true}
@@ -1037,6 +1105,7 @@ l5-elev-lobby-n/object/xe5bfa1adb29c7d30/3:
   state: {floor: "1"}
   tags: [l5-elev-ind]
   ui: "<div face=\"front\" width=\"0.3m\" emissive style=\"color:#ffcf7a;font-family:serif;text-align:center;font-size:110px;line-height:1;text-shadow:0 0 18px #ffcf7a\">{{ state.floor }}</div>"
+  visibleRange: {max: 40, min: 0}
 l5-elev-lobby-n/object/xe5bfa1adb29c7d30/4:
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-lobby-n/object/xe5bfa1adb29c7d30/4
@@ -1070,6 +1139,7 @@ l5-elev-lobby-s/object/xe5bfa1adb29c7d30/6:
   tags: [l5-elev-door]
 l5-elev-lobby-s/object/xe5bfa1adb29c7d30/7:
   behavior: scripts/l5-elevator.js
+  castShadow: false
   feetPosition: {x: 0.885, y: 0.92, z: -0.5}
   id: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/7
   material: {pbr: true}
@@ -1079,7 +1149,9 @@ l5-elev-lobby-s/object/xe5bfa1adb29c7d30/7:
   state: {cab: l5-elev-lobby-s, closed: true, info: "Floors 1–12. The hotel says nothing about the others.", name: Lobby elevator, noconfirm: true, ready: false, role: panel, shut: true, tint: "#f4c25a", verb: Choose floor}
   tags: [usable, l5-elev-panel]
   ui: "<div face=\"front\" width=\"0.34m\" style=\"width:340px;height:620px;background:#2a1a10;color:#f4c25a;font-family:serif;text-align:center;position:relative\">\n<div hidden=\"{{ state.ready }}\" style=\"position:absolute;left:0;right:0;top:8px;padding-top:220px;font-size:30px;letter-spacing:4px\">LOBBY<br><span style=\"font-size:22px;opacity:.7\">PRESS TO CHOOSE</span></div>\n<div hidden=\"{{ state.shut }}\" style=\"position:absolute;left:0;right:0;top:12px\"><button id=\"f1\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">1</button><button id=\"f2\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">2</button><button id=\"f3\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">3</button><button id=\"f4\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">4</button><button id=\"f5\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">5</button><button id=\"f6\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">6</button><button id=\"f7\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">7</button><button id=\"f8\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">8</button><button id=\"f9\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">9</button><button id=\"f10\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">10</button><button id=\"f11\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">11</button><button id=\"f12\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">12</button><div style=\"height:6px\"></div><button id=\"fB\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">B</button><button id=\"f13\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">13</button><button id=\"f66\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">66</button><button id=\"f382\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17;font-size:20px\">382</button></div>\n<div hidden=\"{{ state.noconfirm }}\" style=\"position:absolute;left:0;right:0;top:8px;padding:150px 20px 0;font-size:30px;line-height:1.3\">The button is warm.<br>Are you sure?<br><button id=\"yes\" style=\"margin-top:30px;width:120px;height:60px;font-size:28px;background:#7a1a12;color:#ffd9b0\">YES</button> <button id=\"no\" style=\"width:120px;height:60px;font-size:28px;background:#333;color:#ddd\">NO</button></div></div>"
+  visibleRange: {max: 40, min: 0}
 l5-elev-lobby-s/object/xe5bfa1adb29c7d30/8:
+  castShadow: false
   feetPosition: {x: 0, y: 2.6, z: -1.12}
   id: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/8
   material: {pbr: true}
@@ -1088,6 +1160,7 @@ l5-elev-lobby-s/object/xe5bfa1adb29c7d30/8:
   state: {floor: "2"}
   tags: [l5-elev-ind]
   ui: "<div face=\"front\" width=\"0.24m\" emissive style=\"color:#f4c25a;font-family:serif;text-align:center;font-size:90px;line-height:1;text-shadow:0 0 18px #f4c25a\">{{ state.floor }}</div>"
+  visibleRange: {max: 40, min: 0}
 l5-elev-lobby-s/object/xe5bfa1adb29c7d30/9:
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-lobby-s/object/xe5bfa1adb29c7d30/9
@@ -1103,6 +1176,7 @@ l5-elev-maint:
   rotation: {yaw: 90}
   state: {cx: 44.85, cz: 0, floor: "5", home: "5", idx: 4, kids: {ind: l5-elev-maint/object/xe5bfa1adb29c7d30/23, lamp: l5-elev-maint/object/xe5bfa1adb29c7d30/24, leafL: l5-elev-maint/object/xe5bfa1adb29c7d30/20, leafR: l5-elev-maint/object/xe5bfa1adb29c7d30/21, panel: l5-elev-maint/object/xe5bfa1adb29c7d30/22}, lampI: 2.2, open: false, phase: idle, role: cab, style: freight, yaw: 90}
   tags: [l5-elev]
+  visibleRange: {max: 80, min: 0}
 l5-elev-maint/object/xe5bfa1adb29c7d30/20:
   feetPosition: {x: -0.29, y: 0.02, z: -1.02}
   id: l5-elev-maint/object/xe5bfa1adb29c7d30/20
@@ -1130,7 +1204,9 @@ l5-elev-maint/object/xe5bfa1adb29c7d30/22:
   state: {cab: l5-elev-maint, closed: true, info: "Floors 1–12. The hotel says nothing about the others.", name: Boiler Room (maintenance) elevator, noconfirm: true, ready: false, role: panel, shut: true, tint: "#ff9a3c", verb: Choose floor}
   tags: [usable, l5-elev-panel]
   ui: "<div face=\"front\" width=\"0.34m\" style=\"width:340px;height:620px;background:#1d1b18;color:#ff9a3c;font-family:serif;text-align:center;position:relative\">\n<div hidden=\"{{ state.ready }}\" style=\"position:absolute;left:0;right:0;top:8px;padding-top:220px;font-size:30px;letter-spacing:4px\">BOILER ROOM (MAINTENANCE)<br><span style=\"font-size:22px;opacity:.7\">PRESS TO CHOOSE</span></div>\n<div hidden=\"{{ state.shut }}\" style=\"position:absolute;left:0;right:0;top:12px\"><button id=\"f1\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">1</button><button id=\"f2\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">2</button><button id=\"f3\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">3</button><button id=\"f4\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">4</button><button id=\"f5\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">5</button><button id=\"f6\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">6</button><button id=\"f7\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">7</button><button id=\"f8\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">8</button><button id=\"f9\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">9</button><button id=\"f10\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">10</button><button id=\"f11\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">11</button><button id=\"f12\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">12</button><div style=\"height:6px\"></div><button id=\"fB\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">B</button><button id=\"f13\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">13</button><button id=\"f66\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333\">66</button><button id=\"f382\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:#c9b030;color:#111;border:3px solid #333;font-size:20px\">382</button></div>\n<div hidden=\"{{ state.noconfirm }}\" style=\"position:absolute;left:0;right:0;top:8px;padding:150px 20px 0;font-size:30px;line-height:1.3\">The button is warm.<br>Are you sure?<br><button id=\"yes\" style=\"margin-top:30px;width:120px;height:60px;font-size:28px;background:#7a1a12;color:#ffd9b0\">YES</button> <button id=\"no\" style=\"width:120px;height:60px;font-size:28px;background:#333;color:#ddd\">NO</button></div></div>"
+  visibleRange: {max: 80, min: 0}
 l5-elev-maint/object/xe5bfa1adb29c7d30/23:
+  castShadow: false
   feetPosition: {x: 0, y: 2.48, z: -1.08}
   id: l5-elev-maint/object/xe5bfa1adb29c7d30/23
   material: {pbr: true}
@@ -1139,6 +1215,7 @@ l5-elev-maint/object/xe5bfa1adb29c7d30/23:
   state: {floor: "5"}
   tags: [l5-elev-ind]
   ui: "<div face=\"front\" width=\"0.24m\" emissive style=\"color:#ff9a3c;font-family:serif;text-align:center;font-size:90px;line-height:1;text-shadow:0 0 18px #ff9a3c\">{{ state.floor }}</div>"
+  visibleRange: {max: 40, min: 0}
 l5-elev-maint/object/xe5bfa1adb29c7d30/24:
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-maint/object/xe5bfa1adb29c7d30/24
@@ -1154,6 +1231,7 @@ l5-elev-salon:
   rotation: {yaw: 90}
   state: {cx: 12.85, cz: -18, floor: "4", home: "4", idx: 3, kids: {ind: l5-elev-salon/object/xe5bfa1adb29c7d30/18, lamp: l5-elev-salon/object/xe5bfa1adb29c7d30/19, leafL: l5-elev-salon/object/xe5bfa1adb29c7d30/15, leafR: l5-elev-salon/object/xe5bfa1adb29c7d30/16, panel: l5-elev-salon/object/xe5bfa1adb29c7d30/17}, lampI: 3, open: false, phase: idle, role: cab, style: copper, yaw: 90}
   tags: [l5-elev]
+  visibleRange: {max: 80, min: 0}
 l5-elev-salon/object/xe5bfa1adb29c7d30/15:
   feetPosition: {x: -0.29, y: 0.02, z: -1}
   id: l5-elev-salon/object/xe5bfa1adb29c7d30/15
@@ -1172,6 +1250,7 @@ l5-elev-salon/object/xe5bfa1adb29c7d30/16:
   tags: [l5-elev-door]
 l5-elev-salon/object/xe5bfa1adb29c7d30/17:
   behavior: scripts/l5-elevator.js
+  castShadow: false
   feetPosition: {x: 0.885, y: 0.92, z: -0.5}
   id: l5-elev-salon/object/xe5bfa1adb29c7d30/17
   material: {pbr: true}
@@ -1181,7 +1260,9 @@ l5-elev-salon/object/xe5bfa1adb29c7d30/17:
   state: {cab: l5-elev-salon, closed: true, info: "Floors 1–12. The hotel says nothing about the others.", name: The Salon elevator, noconfirm: true, ready: false, role: panel, shut: true, tint: "#ffcf7a", verb: Choose floor}
   tags: [usable, l5-elev-panel]
   ui: "<div face=\"front\" width=\"0.34m\" style=\"width:340px;height:620px;background:#1e120a;color:#ffcf7a;font-family:serif;text-align:center;position:relative\">\n<div hidden=\"{{ state.ready }}\" style=\"position:absolute;left:0;right:0;top:8px;padding-top:220px;font-size:30px;letter-spacing:4px\">THE SALON<br><span style=\"font-size:22px;opacity:.7\">PRESS TO CHOOSE</span></div>\n<div hidden=\"{{ state.shut }}\" style=\"position:absolute;left:0;right:0;top:12px\"><button id=\"f1\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">1</button><button id=\"f2\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">2</button><button id=\"f3\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">3</button><button id=\"f4\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">4</button><button id=\"f5\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">5</button><button id=\"f6\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">6</button><button id=\"f7\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">7</button><button id=\"f8\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">8</button><button id=\"f9\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">9</button><button id=\"f10\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">10</button><button id=\"f11\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">11</button><button id=\"f12\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">12</button><div style=\"height:6px\"></div><button id=\"fB\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">B</button><button id=\"f13\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">13</button><button id=\"f66\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17\">66</button><button id=\"f382\" style=\"width:66px;height:52px;margin:5px;border-radius:50%;font-size:26px;background:radial-gradient(#fff3c4,#c8973b);color:#3a240c;border:3px solid #6b4a17;font-size:20px\">382</button></div>\n<div hidden=\"{{ state.noconfirm }}\" style=\"position:absolute;left:0;right:0;top:8px;padding:150px 20px 0;font-size:30px;line-height:1.3\">The button is warm.<br>Are you sure?<br><button id=\"yes\" style=\"margin-top:30px;width:120px;height:60px;font-size:28px;background:#7a1a12;color:#ffd9b0\">YES</button> <button id=\"no\" style=\"width:120px;height:60px;font-size:28px;background:#333;color:#ddd\">NO</button></div></div>"
+  visibleRange: {max: 40, min: 0}
 l5-elev-salon/object/xe5bfa1adb29c7d30/18:
+  castShadow: false
   feetPosition: {x: 0, y: 2.66, z: -1}
   id: l5-elev-salon/object/xe5bfa1adb29c7d30/18
   material: {pbr: true}
@@ -1190,6 +1271,7 @@ l5-elev-salon/object/xe5bfa1adb29c7d30/18:
   state: {floor: "4"}
   tags: [l5-elev-ind]
   ui: "<div face=\"front\" width=\"0.3m\" emissive style=\"color:#ffcf7a;font-family:serif;text-align:center;font-size:110px;line-height:1;text-shadow:0 0 18px #ffcf7a\">{{ state.floor }}</div>"
+  visibleRange: {max: 40, min: 0}
 l5-elev-salon/object/xe5bfa1adb29c7d30/19:
   feetPosition: {x: 0, y: 2.25, z: 0}
   id: l5-elev-salon/object/xe5bfa1adb29c7d30/19
@@ -1217,6 +1299,7 @@ l5-gate-84:
   rotation: {yaw: 0}
   state: {info: It won't open, kind: sealed, name: LEVEL 84, sound: null, text: "LEVEL 84 · A tall wooden gate. Barred. It hasn't opened in years.", tint: "#b89b6a", verb: Try the door}
   tags: [usable, l5-sealed]
+  visibleRange: {max: 80, min: 0}
 l5-geo:
   castShadow: false
   feetPosition: {x: 0, y: 0, z: 0}
@@ -1233,6 +1316,7 @@ l5-hall-cart:
   rotation: {pitch: 0, yaw: 62}
   state: {hp: 120, items: "meat:chicken,almond", kind: cart, mat: metal, maxHp: 120, name: Room-service cart (under the cloche)}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-corrN-console0:
   feetPosition: {x: -21, y: 0, z: -10.4}
   id: l5-hall-corrN-console0
@@ -1241,6 +1325,7 @@ l5-hall-corrN-console0:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-corrN-console1:
   feetPosition: {x: -14.4, y: 0, z: -10.4}
   id: l5-hall-corrN-console1
@@ -1249,7 +1334,9 @@ l5-hall-corrN-console1:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-corrN-urn:
+  castShadow: false
   feetPosition: {x: -6.4, y: 0, z: -11.5}
   id: l5-hall-corrN-urn
   physics: static
@@ -1257,6 +1344,7 @@ l5-hall-corrN-urn:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 120, mat: metal, maxHp: 120}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-corrS-console0:
   feetPosition: {x: -22, y: 0, z: 10.4}
   id: l5-hall-corrS-console0
@@ -1265,6 +1353,7 @@ l5-hall-corrS-console0:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-corrS-console1:
   feetPosition: {x: -14, y: 0, z: 10.4}
   id: l5-hall-corrS-console1
@@ -1273,13 +1362,16 @@ l5-hall-corrS-console1:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-crossN-art:
+  castShadow: false
   feetPosition: {x: -15.92, y: 1.5, z: -6.5}
   id: l5-hall-crossN-art
   primitive: {kind: scripted, params: {h: 0.95, kind: painting, seed: 71, style: portrait, w: 0.7}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-crossN-console:
   feetPosition: {x: -18.6, y: 0, z: -6.5}
   id: l5-hall-crossN-console
@@ -1288,6 +1380,7 @@ l5-hall-crossN-console:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-crossS-console:
   feetPosition: {x: -18.6, y: 0, z: 6.5}
   id: l5-hall-crossS-console
@@ -1296,7 +1389,9 @@ l5-hall-crossS-console:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-crossS-urn:
+  castShadow: false
   feetPosition: {x: -16.3, y: 0, z: 6.9}
   id: l5-hall-crossS-urn
   physics: static
@@ -1304,6 +1399,7 @@ l5-hall-crossS-urn:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 120, mat: metal, maxHp: 120}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-cubbies:
   feetPosition: {x: -45.62, y: 0, z: 3.2}
   id: l5-hall-cubbies
@@ -1312,6 +1408,7 @@ l5-hall-cubbies:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-frontdesk:
   feetPosition: {x: -42.6, y: 0, z: 3.2}
   id: l5-hall-frontdesk
@@ -1320,222 +1417,293 @@ l5-hall-frontdesk:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, items: "bobbypin,battery,almond", kind: desk, lock: "lockpick:30", mat: wood, maxHp: 60, name: Front desk drawers}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-fx-0:
   feetPosition: {x: -38, y: 6.6, z: -6}
   id: l5-hall-fx-0
   primitive: {kind: scripted, params: {drop: 0.9, kind: chandelier}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 80, min: 0}
 l5-hall-fx-1:
   feetPosition: {x: -38, y: 6.6, z: 6}
   id: l5-hall-fx-1
   primitive: {kind: scripted, params: {drop: 0.9, kind: chandelier}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 80, min: 0}
 l5-hall-fx-10:
+  castShadow: false
   feetPosition: {x: -15, y: 2.3, z: -10.2}
   id: l5-hall-fx-10
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-11:
+  castShadow: false
   feetPosition: {x: -15, y: 2.3, z: 12.8}
   id: l5-hall-fx-11
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-12:
+  castShadow: false
   feetPosition: {x: -9, y: 2.3, z: -10.2}
   id: l5-hall-fx-12
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-13:
+  castShadow: false
   feetPosition: {x: -9, y: 2.3, z: 12.8}
   id: l5-hall-fx-13
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-14:
+  castShadow: false
   feetPosition: {x: -24, y: 2.3, z: -12.8}
   id: l5-hall-fx-14
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-15:
+  castShadow: false
   feetPosition: {x: -24, y: 2.3, z: 10.2}
   id: l5-hall-fx-15
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-16:
+  castShadow: false
   feetPosition: {x: -18, y: 2.3, z: -12.8}
   id: l5-hall-fx-16
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-17:
+  castShadow: false
   feetPosition: {x: -18, y: 2.3, z: 10.2}
   id: l5-hall-fx-17
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-18:
+  castShadow: false
   feetPosition: {x: -12, y: 2.3, z: -12.8}
   id: l5-hall-fx-18
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-19:
+  castShadow: false
   feetPosition: {x: -12, y: 2.3, z: 10.2}
   id: l5-hall-fx-19
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-2:
+  castShadow: false
   feetPosition: {x: -27, y: 4.4, z: 0}
   id: l5-hall-fx-2
   primitive: {kind: scripted, params: {drop: 0.6, kind: pendant}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-20:
+  castShadow: false
   feetPosition: {x: -17.5, y: 3.3, z: -6.5}
   id: l5-hall-fx-20
   primitive: {kind: scripted, params: {drop: 0.3, kind: flush}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-21:
+  castShadow: false
   feetPosition: {x: -17.5, y: 3.3, z: 6.5}
   id: l5-hall-fx-21
   primitive: {kind: scripted, params: {drop: 0.3, kind: flush}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-22:
+  castShadow: false
   feetPosition: {x: -20, y: 2.7, z: -17}
   id: l5-hall-fx-22
   primitive: {kind: scripted, params: {drop: 0.5, kind: lamp}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-23:
+  castShadow: false
   feetPosition: {x: -16, y: 2.7, z: -17}
   id: l5-hall-fx-23
   primitive: {kind: scripted, params: {drop: 0.5, kind: lamp}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-24:
+  castShadow: false
   feetPosition: {x: -12, y: 2.7, z: -17}
   id: l5-hall-fx-24
   primitive: {kind: scripted, params: {drop: 0.5, kind: lamp}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-25:
+  castShadow: false
   feetPosition: {x: -28, y: 2.7, z: 17}
   id: l5-hall-fx-25
   primitive: {kind: scripted, params: {drop: 0.5, kind: lamp}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-26:
+  castShadow: false
   feetPosition: {x: -24, y: 2.7, z: 17}
   id: l5-hall-fx-26
   primitive: {kind: scripted, params: {drop: 0.5, kind: lamp}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-27:
+  castShadow: false
   feetPosition: {x: -20, y: 2.7, z: 17}
   id: l5-hall-fx-27
   primitive: {kind: scripted, params: {drop: 0.5, kind: lamp}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-28:
+  castShadow: false
   feetPosition: {x: -16, y: 2.7, z: 17}
   id: l5-hall-fx-28
   primitive: {kind: scripted, params: {drop: 0.5, kind: lamp}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-29:
+  castShadow: false
   feetPosition: {x: -24.5, y: 2.9, z: -6.5}
   id: l5-hall-fx-29
   primitive: {kind: scripted, params: {drop: 0.5, kind: lamp}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-3:
+  castShadow: false
   feetPosition: {x: -21, y: 4.4, z: 0}
   id: l5-hall-fx-3
   primitive: {kind: scripted, params: {drop: 0.6, kind: pendant}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-30:
+  castShadow: false
   feetPosition: {x: -11, y: 2.9, z: -6.5}
   id: l5-hall-fx-30
   primitive: {kind: scripted, params: {drop: 0.5, kind: lamp}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-31:
+  castShadow: false
   feetPosition: {x: -24.5, y: 2.9, z: 6.5}
   id: l5-hall-fx-31
   primitive: {kind: scripted, params: {drop: 0.5, kind: lamp}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-32:
+  castShadow: false
   feetPosition: {x: -11, y: 2.9, z: 6.5}
   id: l5-hall-fx-32
   primitive: {kind: scripted, params: {drop: 0.5, kind: lamp}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-33:
+  castShadow: false
   feetPosition: {x: -26, y: 3.2, z: -17}
   id: l5-hall-fx-33
   primitive: {kind: scripted, params: {drop: 0.4, kind: lamp}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-34:
+  castShadow: false
   feetPosition: {x: -10, y: 3.3, z: 17}
   id: l5-hall-fx-34
   primitive: {kind: scripted, params: {drop: 0.3, kind: flush}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-35:
+  castShadow: false
   feetPosition: {x: -8, y: 3.2, z: -17}
   id: l5-hall-fx-35
   primitive: {kind: scripted, params: {drop: 0.4, kind: bulb}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-4:
+  castShadow: false
   feetPosition: {x: -15, y: 4.4, z: 0}
   id: l5-hall-fx-4
   primitive: {kind: scripted, params: {drop: 0.6, kind: pendant}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-5:
+  castShadow: false
   feetPosition: {x: -9, y: 4.4, z: 0}
   id: l5-hall-fx-5
   primitive: {kind: scripted, params: {drop: 0.6, kind: pendant}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-6:
+  castShadow: false
   feetPosition: {x: -27, y: 2.3, z: -10.2}
   id: l5-hall-fx-6
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-7:
+  castShadow: false
   feetPosition: {x: -27, y: 2.3, z: 12.8}
   id: l5-hall-fx-7
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-8:
+  castShadow: false
   feetPosition: {x: -21, y: 2.3, z: -10.2}
   id: l5-hall-fx-8
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-fx-9:
+  castShadow: false
   feetPosition: {x: -21, y: 2.3, z: 12.8}
   id: l5-hall-fx-9
   primitive: {kind: scripted, params: {drop: 1.3, kind: sconce}, script: scripts/l5-hall-fix.js}
   rotation: {pitch: 0, yaw: 0}
   tags: [l5-hall, l5-hall-fix]
+  visibleRange: {max: 40, min: 0}
 l5-hall-gal-art0:
   feetPosition: {x: -22.5, y: 1.9, z: 2.825}
   id: l5-hall-gal-art0
@@ -1543,6 +1711,7 @@ l5-hall-gal-art0:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gal-art1:
   feetPosition: {x: -12.4, y: 1.9, z: 2.825}
   id: l5-hall-gal-art1
@@ -1550,13 +1719,16 @@ l5-hall-gal-art1:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gal-art2:
+  castShadow: false
   feetPosition: {x: -14.5, y: 1.8, z: 2.825}
   id: l5-hall-gal-art2
   primitive: {kind: scripted, params: {h: 0.95, kind: painting, seed: 61, style: portrait, w: 0.7}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-gal-cab0:
   feetPosition: {x: -27, y: 0, z: 2.57}
   id: l5-hall-gal-cab0
@@ -1565,6 +1737,7 @@ l5-hall-gal-cab0:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, items: almond, kind: cabinet, mat: wood, maxHp: 60, name: China cabinet}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gal-cab1:
   feetPosition: {x: -8.5, y: 0, z: 2.57}
   id: l5-hall-gal-cab1
@@ -1573,6 +1746,7 @@ l5-hall-gal-cab1:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, items: "bandage,bar", kind: cabinet, lock: "lockpick:15", mat: wood, maxHp: 60, name: China cabinet}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gal-shelf0:
   feetPosition: {x: -27.6, y: 0, z: -2.59}
   id: l5-hall-gal-shelf0
@@ -1581,6 +1755,7 @@ l5-hall-gal-shelf0:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gal-shelf1:
   feetPosition: {x: -25.8, y: 0, z: -2.59}
   id: l5-hall-gal-shelf1
@@ -1589,6 +1764,7 @@ l5-hall-gal-shelf1:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gal-shelf2:
   feetPosition: {x: -22.2, y: 0, z: -2.59}
   id: l5-hall-gal-shelf2
@@ -1597,6 +1773,7 @@ l5-hall-gal-shelf2:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gal-shelf3:
   feetPosition: {x: -13.4, y: 0, z: -2.59}
   id: l5-hall-gal-shelf3
@@ -1605,6 +1782,7 @@ l5-hall-gal-shelf3:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gal-shelf4:
   feetPosition: {x: -9.8, y: 0, z: -2.59}
   id: l5-hall-gal-shelf4
@@ -1613,6 +1791,7 @@ l5-hall-gal-shelf4:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gal-shelf5:
   feetPosition: {x: -8, y: 0, z: -2.59}
   id: l5-hall-gal-shelf5
@@ -1621,7 +1800,9 @@ l5-hall-gal-shelf5:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gal-side0a:
+  castShadow: false
   feetPosition: {x: -23.95, y: 0, z: 2.6}
   id: l5-hall-gal-side0a
   physics: static
@@ -1629,6 +1810,7 @@ l5-hall-gal-side0a:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-gal-side0b:
   feetPosition: {x: -21.05, y: 0, z: 2.6}
   id: l5-hall-gal-side0b
@@ -1637,7 +1819,9 @@ l5-hall-gal-side0b:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gal-side1a:
+  castShadow: false
   feetPosition: {x: -13.85, y: 0, z: 2.6}
   id: l5-hall-gal-side1a
   physics: static
@@ -1645,6 +1829,7 @@ l5-hall-gal-side1a:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-gal-side1b:
   feetPosition: {x: -10.95, y: 0, z: 2.6}
   id: l5-hall-gal-side1b
@@ -1653,6 +1838,7 @@ l5-hall-gal-side1b:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gal-sofa0:
   feetPosition: {x: -22.5, y: 0, z: 2.35}
   id: l5-hall-gal-sofa0
@@ -1661,6 +1847,7 @@ l5-hall-gal-sofa0:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gal-sofa1:
   feetPosition: {x: -12.4, y: 0, z: 2.35}
   id: l5-hall-gal-sofa1
@@ -1669,6 +1856,7 @@ l5-hall-gal-sofa1:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-gclock:
   feetPosition: {x: -42, y: 0, z: -12.6}
   id: l5-hall-gclock
@@ -1677,6 +1865,7 @@ l5-hall-gclock:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-hatstand:
   feetPosition: {x: -43.6, y: 0, z: 6.6}
   id: l5-hall-hatstand
@@ -1685,7 +1874,9 @@ l5-hall-hatstand:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-k-chair00:
+  castShadow: false
   feetPosition: {x: -11.85, y: 0, z: 15.65}
   id: l5-hall-k-chair00
   physics: static
@@ -1693,7 +1884,9 @@ l5-hall-k-chair00:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-k-chair01:
+  castShadow: false
   feetPosition: {x: -10.95, y: 0, z: 15.65}
   id: l5-hall-k-chair01
   physics: static
@@ -1701,7 +1894,9 @@ l5-hall-k-chair01:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-k-chair02:
+  castShadow: false
   feetPosition: {x: -11.85, y: 0, z: 17.15}
   id: l5-hall-k-chair02
   physics: static
@@ -1709,7 +1904,9 @@ l5-hall-k-chair02:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-k-chair03:
+  castShadow: false
   feetPosition: {x: -10.95, y: 0, z: 17.15}
   id: l5-hall-k-chair03
   physics: static
@@ -1717,7 +1914,9 @@ l5-hall-k-chair03:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-k-chair10:
+  castShadow: false
   feetPosition: {x: -8.35, y: 0, z: 15.65}
   id: l5-hall-k-chair10
   physics: static
@@ -1725,7 +1924,9 @@ l5-hall-k-chair10:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-k-chair11:
+  castShadow: false
   feetPosition: {x: -7.45, y: 0, z: 15.65}
   id: l5-hall-k-chair11
   physics: static
@@ -1733,7 +1934,9 @@ l5-hall-k-chair11:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-k-chair12:
+  castShadow: false
   feetPosition: {x: -8.35, y: 0, z: 17.15}
   id: l5-hall-k-chair12
   physics: static
@@ -1741,7 +1944,9 @@ l5-hall-k-chair12:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-k-chair13:
+  castShadow: false
   feetPosition: {x: -7.45, y: 0, z: 17.15}
   id: l5-hall-k-chair13
   physics: static
@@ -1749,6 +1954,7 @@ l5-hall-k-chair13:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-k-counterL:
   feetPosition: {x: -12.93, y: 0, z: 20.465}
   id: l5-hall-k-counterL
@@ -1757,6 +1963,7 @@ l5-hall-k-counterL:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, items: "beans,ration", kind: counter, mat: wood, maxHp: 60, name: Pantry counter}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-k-counterR:
   feetPosition: {x: -7.42, y: 0, z: 20.465}
   id: l5-hall-k-counterR
@@ -1765,6 +1972,7 @@ l5-hall-k-counterR:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, items: "weapon:knife,tape", kind: counter, mat: wood, maxHp: 60, name: Prep counter drawers}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-k-icebox:
   feetPosition: {x: -11.38, y: 0, z: 20.49}
   id: l5-hall-k-icebox
@@ -1773,6 +1981,7 @@ l5-hall-k-icebox:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 120, items: "meat:steak,almond", kind: icebox, mat: metal, maxHp: 120, name: Icebox}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-k-prep:
   feetPosition: {x: -13.465, y: 0, z: 17.2}
   id: l5-hall-k-prep
@@ -1781,6 +1990,7 @@ l5-hall-k-prep:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, items: "bar,beans", kind: counter, mat: wood, maxHp: 60, name: Prep table}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-k-range:
   feetPosition: {x: -9.5, y: 0, z: 20.44}
   id: l5-hall-k-range
@@ -1789,6 +1999,7 @@ l5-hall-k-range:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 120, mat: metal, maxHp: 120}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-k-table0:
   feetPosition: {x: -11.4, y: 0, z: 16.4}
   id: l5-hall-k-table0
@@ -1797,6 +2008,7 @@ l5-hall-k-table0:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-k-table1:
   feetPosition: {x: -7.9, y: 0, z: 16.4}
   id: l5-hall-k-table1
@@ -1805,6 +2017,7 @@ l5-hall-k-table1:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-leaf-room-n3:
   behavior: scripts/l5-hall-door.js
   feetPosition: {x: -20, y: 0, z: -13.09}
@@ -1923,6 +2136,7 @@ l5-hall-lib-arm:
   rotation: {pitch: 0, yaw: -135}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-desk:
   feetPosition: {x: -23.2, y: 0, z: -19.2}
   id: l5-hall-lib-desk
@@ -1931,6 +2145,7 @@ l5-hall-lib-desk:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: "battery,tape", kind: desk, lock: "lockpick:35", mat: wood, maxHp: 60, name: Society desk}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-ladder0:
   feetPosition: {x: -27.4, y: 0, z: -20.45}
   id: l5-hall-lib-ladder0
@@ -1939,6 +2154,7 @@ l5-hall-lib-ladder0:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-ladder1:
   feetPosition: {x: -29.45, y: 0, z: -17.2}
   id: l5-hall-lib-ladder1
@@ -1947,6 +2163,7 @@ l5-hall-lib-ladder1:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-lectern:
   feetPosition: {x: -23.4, y: 0, z: -14.3}
   id: l5-hall-lib-lectern
@@ -1955,6 +2172,7 @@ l5-hall-lib-lectern:
   rotation: {pitch: 0, yaw: 135}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-map:
   feetPosition: {x: -26, y: 0, z: -17.3}
   id: l5-hall-lib-map
@@ -1963,6 +2181,7 @@ l5-hall-lib-map:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-shelf0:
   feetPosition: {x: -29.03, y: 0, z: -20.59}
   id: l5-hall-lib-shelf0
@@ -1971,6 +2190,7 @@ l5-hall-lib-shelf0:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-shelf1:
   feetPosition: {x: -27.4, y: 0, z: -20.59}
   id: l5-hall-lib-shelf1
@@ -1979,6 +2199,7 @@ l5-hall-lib-shelf1:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-shelf2:
   feetPosition: {x: -24.6, y: 0, z: -20.59}
   id: l5-hall-lib-shelf2
@@ -1987,6 +2208,7 @@ l5-hall-lib-shelf2:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-shelf3:
   feetPosition: {x: -22.97, y: 0, z: -20.59}
   id: l5-hall-lib-shelf3
@@ -1995,6 +2217,7 @@ l5-hall-lib-shelf3:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-shelfE0:
   feetPosition: {x: -22.41, y: 0, z: -18.2}
   id: l5-hall-lib-shelfE0
@@ -2003,6 +2226,7 @@ l5-hall-lib-shelfE0:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-shelfE1:
   feetPosition: {x: -22.41, y: 0, z: -16.5}
   id: l5-hall-lib-shelfE1
@@ -2011,6 +2235,7 @@ l5-hall-lib-shelfE1:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-shelfW0:
   feetPosition: {x: -29.59, y: 0, z: -18.2}
   id: l5-hall-lib-shelfW0
@@ -2019,6 +2244,7 @@ l5-hall-lib-shelfW0:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-shelfW1:
   feetPosition: {x: -29.59, y: 0, z: -16.5}
   id: l5-hall-lib-shelfW1
@@ -2027,14 +2253,18 @@ l5-hall-lib-shelfW1:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lib-tomes:
+  castShadow: false
   feetPosition: {x: -25.4, y: 0.82, z: -17.2}
   id: l5-hall-lib-tomes
   primitive: {kind: scripted, params: {kind: tomes, seed: 7}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 20}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-lobby-arm0:
+  castShadow: false
   feetPosition: {x: -39.9, y: 0, z: -7.6}
   id: l5-hall-lobby-arm0
   physics: static
@@ -2042,7 +2272,9 @@ l5-hall-lobby-arm0:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-lobby-arm1:
+  castShadow: false
   feetPosition: {x: -39.9, y: 0, z: 7.6}
   id: l5-hall-lobby-arm1
   physics: static
@@ -2050,6 +2282,7 @@ l5-hall-lobby-arm1:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-lobby-cab:
   feetPosition: {x: -33.5, y: 0, z: 12.57}
   id: l5-hall-lobby-cab
@@ -2058,6 +2291,7 @@ l5-hall-lobby-cab:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, items: "almond,tape", kind: cabinet, mat: wood, maxHp: 60, name: Curio cabinet}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lobby-ctable0:
   feetPosition: {x: -37, y: 0, z: -7.6}
   id: l5-hall-lobby-ctable0
@@ -2066,6 +2300,7 @@ l5-hall-lobby-ctable0:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lobby-ctable1:
   feetPosition: {x: -37, y: 0, z: 7.6}
   id: l5-hall-lobby-ctable1
@@ -2074,6 +2309,7 @@ l5-hall-lobby-ctable1:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lobby-rug:
   feetPosition: {x: -37.5, y: 0, z: 0}
   id: l5-hall-lobby-rug
@@ -2082,6 +2318,7 @@ l5-hall-lobby-rug:
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
 l5-hall-lobby-side0:
+  castShadow: false
   feetPosition: {x: -39.9, y: 0, z: -8.55}
   id: l5-hall-lobby-side0
   physics: static
@@ -2089,7 +2326,9 @@ l5-hall-lobby-side0:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-lobby-side1:
+  castShadow: false
   feetPosition: {x: -39.9, y: 0, z: 8.55}
   id: l5-hall-lobby-side1
   physics: static
@@ -2097,6 +2336,7 @@ l5-hall-lobby-side1:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-lobby-sofa0a:
   feetPosition: {x: -37, y: 0, z: -5.9}
   id: l5-hall-lobby-sofa0a
@@ -2105,6 +2345,7 @@ l5-hall-lobby-sofa0a:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lobby-sofa0b:
   feetPosition: {x: -37, y: 0, z: -9.3}
   id: l5-hall-lobby-sofa0b
@@ -2113,6 +2354,7 @@ l5-hall-lobby-sofa0b:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lobby-sofa1a:
   feetPosition: {x: -37, y: 0, z: 5.9}
   id: l5-hall-lobby-sofa1a
@@ -2121,6 +2363,7 @@ l5-hall-lobby-sofa1a:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lobby-sofa1b:
   feetPosition: {x: -37, y: 0, z: 9.3}
   id: l5-hall-lobby-sofa1b
@@ -2129,6 +2372,7 @@ l5-hall-lobby-sofa1b:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-lobby-table:
   feetPosition: {x: -37, y: 0, z: 0}
   id: l5-hall-lobby-table
@@ -2137,6 +2381,7 @@ l5-hall-lobby-table:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-mgr:
   behavior: scripts/l5-hall-lay.js
   feetPosition: {x: -38, y: -3, z: 0}
@@ -2152,6 +2397,7 @@ l5-hall-palm0:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-palm1:
   feetPosition: {x: -31, y: 0, z: 3.4}
   id: l5-hall-palm1
@@ -2160,6 +2406,7 @@ l5-hall-palm1:
   rotation: {pitch: 0, yaw: 40}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-palm2:
   feetPosition: {x: -45.3, y: 0, z: -10.6}
   id: l5-hall-palm2
@@ -2168,6 +2415,7 @@ l5-hall-palm2:
   rotation: {pitch: 0, yaw: 80}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-palm3:
   feetPosition: {x: -45.3, y: 0, z: 10.6}
   id: l5-hall-palm3
@@ -2176,6 +2424,7 @@ l5-hall-palm3:
   rotation: {pitch: 0, yaw: 120}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-palm4:
   feetPosition: {x: -31.2, y: 0, z: -8.6}
   id: l5-hall-palm4
@@ -2184,6 +2433,7 @@ l5-hall-palm4:
   rotation: {pitch: 0, yaw: 160}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-palm5:
   feetPosition: {x: -31.2, y: 0, z: 9.3}
   id: l5-hall-palm5
@@ -2192,72 +2442,95 @@ l5-hall-palm5:
   rotation: {pitch: 0, yaw: 200}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-plaque-room-n3:
+  castShadow: false
   feetPosition: {x: -19.13, y: 1.5, z: -12.91}
   id: l5-hall-plaque-room-n3
   primitive: {kind: scripted, params: {kind: placard, label: "217", "no": "217", text: "217"}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 180}
   tags: [l5-hall]
+  visibleRange: {max: 40, min: 0}
 l5-hall-plaque-room-n4:
+  castShadow: false
   feetPosition: {x: -15.129999999999999, y: 1.5, z: -12.91}
   id: l5-hall-plaque-room-n4
   primitive: {kind: scripted, params: {kind: placard, label: "1408", "no": "1408", text: "1408"}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 180}
   tags: [l5-hall]
+  visibleRange: {max: 40, min: 0}
 l5-hall-plaque-room-n5:
+  castShadow: false
   feetPosition: {x: -11.129999999999999, y: 1.5, z: -12.91}
   id: l5-hall-plaque-room-n5
   primitive: {kind: scripted, params: {kind: placard, label: "9", "no": "9", text: "9"}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 180}
   tags: [l5-hall]
+  visibleRange: {max: 40, min: 0}
 l5-hall-plaque-room-s1:
+  castShadow: false
   feetPosition: {x: -27.13, y: 1.5, z: 12.91}
   id: l5-hall-plaque-room-s1
   primitive: {kind: scripted, params: {kind: placard, label: "313", "no": "313", text: "313"}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 0}
   tags: [l5-hall]
+  visibleRange: {max: 40, min: 0}
 l5-hall-plaque-room-s2:
+  castShadow: false
   feetPosition: {x: -23.13, y: 1.5, z: 12.91}
   id: l5-hall-plaque-room-s2
   primitive: {kind: scripted, params: {kind: placard, label: "66", "no": "66", text: "66"}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 0}
   tags: [l5-hall]
+  visibleRange: {max: 40, min: 0}
 l5-hall-plaque-room-s3:
+  castShadow: false
   feetPosition: {x: -19.13, y: 1.5, z: 12.91}
   id: l5-hall-plaque-room-s3
   primitive: {kind: scripted, params: {kind: placard, label: "1932", "no": "1932", text: "1932"}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 0}
   tags: [l5-hall]
+  visibleRange: {max: 40, min: 0}
 l5-hall-plaque-room-s4:
+  castShadow: false
   feetPosition: {x: -15.129999999999999, y: 1.5, z: 12.91}
   id: l5-hall-plaque-room-s4
   primitive: {kind: scripted, params: {kind: placard, label: "4½", "no": "4½", text: "4½"}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 0}
   tags: [l5-hall]
+  visibleRange: {max: 40, min: 0}
 l5-hall-plaque-suite-ne:
+  castShadow: false
   feetPosition: {x: -10.129999999999999, y: 1.5, z: -10.09}
   id: l5-hall-plaque-suite-ne
   primitive: {kind: scripted, params: {kind: placard, label: "12A", "no": "12A", text: "12A"}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 0}
   tags: [l5-hall]
+  visibleRange: {max: 40, min: 0}
 l5-hall-plaque-suite-nw:
+  castShadow: false
   feetPosition: {x: -24.13, y: 1.5, z: -10.09}
   id: l5-hall-plaque-suite-nw
   primitive: {kind: scripted, params: {kind: placard, label: "800", "no": "800", text: "800"}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 0}
   tags: [l5-hall]
+  visibleRange: {max: 40, min: 0}
 l5-hall-plaque-suite-se:
+  castShadow: false
   feetPosition: {x: -10.129999999999999, y: 1.5, z: 10.09}
   id: l5-hall-plaque-suite-se
   primitive: {kind: scripted, params: {kind: placard, label: "0", "no": "0", text: "0"}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 180}
   tags: [l5-hall]
+  visibleRange: {max: 40, min: 0}
 l5-hall-plaque-suite-sw:
+  castShadow: false
   feetPosition: {x: -24.13, y: 1.5, z: 10.09}
   id: l5-hall-plaque-suite-sw
   primitive: {kind: scripted, params: {kind: placard, label: "237", "no": "237", text: "237"}, script: scripts/l5-hall-fix.js}
   rotation: {yaw: 180}
   tags: [l5-hall]
+  visibleRange: {max: 40, min: 0}
 l5-hall-portrait-n0:
   feetPosition: {x: -35.2, y: 1.7, z: -12.825}
   id: l5-hall-portrait-n0
@@ -2265,6 +2538,7 @@ l5-hall-portrait-n0:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-portrait-n1:
   feetPosition: {x: -40.8, y: 1.7, z: -12.825}
   id: l5-hall-portrait-n1
@@ -2272,6 +2546,7 @@ l5-hall-portrait-n1:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-portrait-s0:
   feetPosition: {x: -34, y: 1.7, z: 12.825}
   id: l5-hall-portrait-s0
@@ -2279,6 +2554,7 @@ l5-hall-portrait-s0:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-portrait-s1:
   feetPosition: {x: -38, y: 1.7, z: 12.825}
   id: l5-hall-portrait-s1
@@ -2286,6 +2562,7 @@ l5-hall-portrait-s1:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-portrait-s2:
   feetPosition: {x: -42, y: 1.7, z: 12.825}
   id: l5-hall-portrait-s2
@@ -2293,14 +2570,18 @@ l5-hall-portrait-s2:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n3-art:
+  castShadow: false
   feetPosition: {x: -19.65, y: 1.78, z: -20.825}
   id: l5-hall-room-n3-art
   primitive: {kind: scripted, params: {h: 0.6, kind: painting, seed: 10, style: landscape, w: 0.9}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-n3-bag:
+  castShadow: false
   feetPosition: {x: -18.525, y: 0, z: -14.75}
   id: l5-hall-room-n3-bag
   physics: static
@@ -2308,6 +2589,7 @@ l5-hall-room-n3-bag:
   rotation: {pitch: 0, yaw: 100}
   state: {hp: 30, items: "almond,battery", kind: luggage, mat: leather, maxHp: 30, name: Half-packed suitcase}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-n3-bed:
   feetPosition: {x: -19.65, y: 0, z: -19.77}
   id: l5-hall-room-n3-bed
@@ -2316,6 +2598,7 @@ l5-hall-room-n3-bed:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n3-chair:
   feetPosition: {x: -21.375, y: 0, z: -18.7}
   id: l5-hall-room-n3-chair
@@ -2324,6 +2607,7 @@ l5-hall-room-n3-chair:
   rotation: {pitch: 0, yaw: -65}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n3-dresser:
   feetPosition: {x: -18.46, y: 0, z: -16}
   id: l5-hall-room-n3-dresser
@@ -2332,7 +2616,9 @@ l5-hall-room-n3-dresser:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: "ration,bobbypin", kind: dresser, mat: wood, maxHp: 60, name: Dresser}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n3-night:
+  castShadow: false
   feetPosition: {x: -20.65, y: 0, z: -20.59}
   id: l5-hall-room-n3-night
   physics: static
@@ -2340,6 +2626,7 @@ l5-hall-room-n3-night:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-n3-rug:
   feetPosition: {x: -20, y: 0, z: -17.6}
   id: l5-hall-room-n3-rug
@@ -2347,6 +2634,7 @@ l5-hall-room-n3-rug:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n3-wardrobe:
   feetPosition: {x: -21.5, y: 0, z: -16.4}
   id: l5-hall-room-n3-wardrobe
@@ -2355,6 +2643,7 @@ l5-hall-room-n3-wardrobe:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, items: "almond,bandage", kind: wardrobe, mat: wood, maxHp: 60, name: Wardrobe}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n3-window:
   feetPosition: {x: -21.845, y: 0.85, z: -19}
   id: l5-hall-room-n3-window
@@ -2362,14 +2651,18 @@ l5-hall-room-n3-window:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n4-art:
+  castShadow: false
   feetPosition: {x: -15.3, y: 1.78, z: -20.825}
   id: l5-hall-room-n4-art
   primitive: {kind: scripted, params: {h: 0.6, kind: painting, seed: 11, style: landscape, w: 0.9}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-n4-bag:
+  castShadow: false
   feetPosition: {x: -17.475, y: 0, z: -14.75}
   id: l5-hall-room-n4-bag
   physics: static
@@ -2377,6 +2670,7 @@ l5-hall-room-n4-bag:
   rotation: {pitch: 0, yaw: -100}
   state: {hp: 30, items: ammo, kind: luggage, mat: leather, maxHp: 30, name: Suitcase}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-n4-bed:
   feetPosition: {x: -15.3, y: 0, z: -19.77}
   id: l5-hall-room-n4-bed
@@ -2385,6 +2679,7 @@ l5-hall-room-n4-bed:
   rotation: {pitch: 0, yaw: -180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n4-chair:
   feetPosition: {x: -14.625, y: 0, z: -18.7}
   id: l5-hall-room-n4-chair
@@ -2393,6 +2688,7 @@ l5-hall-room-n4-chair:
   rotation: {pitch: 0, yaw: 65}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n4-dresser:
   feetPosition: {x: -17.54, y: 0, z: -16}
   id: l5-hall-room-n4-dresser
@@ -2401,7 +2697,9 @@ l5-hall-room-n4-dresser:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, items: "beans,bar", kind: dresser, mat: wood, maxHp: 60, name: Dresser}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n4-night:
+  castShadow: false
   feetPosition: {x: -16.3, y: 0, z: -20.59}
   id: l5-hall-room-n4-night
   physics: static
@@ -2409,7 +2707,9 @@ l5-hall-room-n4-night:
   rotation: {pitch: 0, yaw: -180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-n4-radiotable:
+  castShadow: false
   feetPosition: {x: -16.95, y: 0, z: -20.4}
   id: l5-hall-room-n4-radiotable
   physics: static
@@ -2417,6 +2717,7 @@ l5-hall-room-n4-radiotable:
   rotation: {pitch: 0, yaw: -180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-n4-rug:
   feetPosition: {x: -16, y: 0, z: -17.6}
   id: l5-hall-room-n4-rug
@@ -2424,6 +2725,7 @@ l5-hall-room-n4-rug:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n4-wardrobe:
   feetPosition: {x: -14.5, y: 0, z: -16.4}
   id: l5-hall-room-n4-wardrobe
@@ -2432,6 +2734,7 @@ l5-hall-room-n4-wardrobe:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: firstaid, kind: wardrobe, lock: "lockpick:25", mat: wood, maxHp: 60, name: Wardrobe}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n4-window:
   feetPosition: {x: -14.155, y: 0.85, z: -19}
   id: l5-hall-room-n4-window
@@ -2439,14 +2742,18 @@ l5-hall-room-n4-window:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n5-art:
+  castShadow: false
   feetPosition: {x: -11.65, y: 1.78, z: -20.825}
   id: l5-hall-room-n5-art
   primitive: {kind: scripted, params: {h: 0.6, kind: painting, seed: 8, style: landscape, w: 0.9}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-n5-bag:
+  castShadow: false
   feetPosition: {x: -10.525, y: 0, z: -14.75}
   id: l5-hall-room-n5-bag
   physics: static
@@ -2454,6 +2761,7 @@ l5-hall-room-n5-bag:
   rotation: {pitch: 0, yaw: 100}
   state: {hp: 30, items: "bar,bobbypin", kind: luggage, mat: leather, maxHp: 30, name: Suitcase}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-n5-bed:
   feetPosition: {x: -11.65, y: 0, z: -19.77}
   id: l5-hall-room-n5-bed
@@ -2462,6 +2770,7 @@ l5-hall-room-n5-bed:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n5-chair:
   feetPosition: {x: -13.375, y: 0, z: -18.7}
   id: l5-hall-room-n5-chair
@@ -2470,6 +2779,7 @@ l5-hall-room-n5-chair:
   rotation: {pitch: 0, yaw: -65}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n5-dresser:
   feetPosition: {x: -10.46, y: 0, z: -16}
   id: l5-hall-room-n5-dresser
@@ -2478,14 +2788,18 @@ l5-hall-room-n5-dresser:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: bandage, kind: dresser, mat: wood, maxHp: 60, name: Dresser}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n5-letter:
+  castShadow: false
   feetPosition: {x: -11.65, y: 0.67, z: -20.375}
   id: l5-hall-room-n5-letter
   primitive: {kind: scripted, params: {kind: letter}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 192}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-n5-night:
+  castShadow: false
   feetPosition: {x: -12.65, y: 0, z: -20.59}
   id: l5-hall-room-n5-night
   physics: static
@@ -2493,6 +2807,7 @@ l5-hall-room-n5-night:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-n5-rug:
   feetPosition: {x: -12, y: 0, z: -17.6}
   id: l5-hall-room-n5-rug
@@ -2500,6 +2815,7 @@ l5-hall-room-n5-rug:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n5-wardrobe:
   feetPosition: {x: -13.5, y: 0, z: -16.4}
   id: l5-hall-room-n5-wardrobe
@@ -2508,6 +2824,7 @@ l5-hall-room-n5-wardrobe:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, items: "tape,almond", kind: wardrobe, mat: wood, maxHp: 60, name: Wardrobe}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-n5-window:
   feetPosition: {x: -13.845, y: 0.85, z: -19}
   id: l5-hall-room-n5-window
@@ -2515,14 +2832,18 @@ l5-hall-room-n5-window:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s1-art:
+  castShadow: false
   feetPosition: {x: -28.35, y: 1.78, z: 20.825}
   id: l5-hall-room-s1-art
   primitive: {kind: scripted, params: {h: 0.6, kind: painting, seed: 10, style: landscape, w: 0.9}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s1-bag:
+  castShadow: false
   feetPosition: {x: -26.525, y: 0, z: 14.75}
   id: l5-hall-room-s1-bag
   physics: static
@@ -2530,6 +2851,7 @@ l5-hall-room-s1-bag:
   rotation: {pitch: 0, yaw: 100}
   state: {hp: 30, items: ration, kind: luggage, mat: leather, maxHp: 30, name: Suitcase}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s1-bed:
   feetPosition: {x: -28.35, y: 0, z: 19.77}
   id: l5-hall-room-s1-bed
@@ -2538,13 +2860,16 @@ l5-hall-room-s1-bed:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s1-cage:
+  castShadow: false
   feetPosition: {x: -26.335, y: 0.86, z: 16}
   id: l5-hall-room-s1-cage
   primitive: {kind: scripted, params: {kind: birdcage}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 120}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s1-chair:
   feetPosition: {x: -29.375, y: 0, z: 18.7}
   id: l5-hall-room-s1-chair
@@ -2553,7 +2878,9 @@ l5-hall-room-s1-chair:
   rotation: {pitch: 0, yaw: -65}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s1-dresser:
+  castShadow: false
   feetPosition: {x: -26.46, y: 0, z: 16}
   id: l5-hall-room-s1-dresser
   physics: static
@@ -2561,7 +2888,9 @@ l5-hall-room-s1-dresser:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: "battery,kit", kind: dresser, mat: wood, maxHp: 60, name: Dresser}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s1-night:
+  castShadow: false
   feetPosition: {x: -27.35, y: 0, z: 20.59}
   id: l5-hall-room-s1-night
   physics: static
@@ -2569,6 +2898,7 @@ l5-hall-room-s1-night:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s1-rug:
   feetPosition: {x: -28, y: 0, z: 17.6}
   id: l5-hall-room-s1-rug
@@ -2576,6 +2906,7 @@ l5-hall-room-s1-rug:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s1-wardrobe:
   feetPosition: {x: -29.5, y: 0, z: 16.4}
   id: l5-hall-room-s1-wardrobe
@@ -2584,6 +2915,7 @@ l5-hall-room-s1-wardrobe:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, items: "almond,almond", kind: wardrobe, mat: wood, maxHp: 60, name: Wardrobe}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s1-window:
   feetPosition: {x: -29.845, y: 0.85, z: 19}
   id: l5-hall-room-s1-window
@@ -2591,14 +2923,18 @@ l5-hall-room-s1-window:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s2-art:
+  castShadow: false
   feetPosition: {x: -24.35, y: 1.78, z: 20.825}
   id: l5-hall-room-s2-art
   primitive: {kind: scripted, params: {h: 0.6, kind: painting, seed: 9, style: landscape, w: 0.9}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s2-bag:
+  castShadow: false
   feetPosition: {x: -25.475, y: 0, z: 14.75}
   id: l5-hall-room-s2-bag
   physics: static
@@ -2606,6 +2942,7 @@ l5-hall-room-s2-bag:
   rotation: {pitch: 0, yaw: -100}
   state: {hp: 30, items: shells, kind: luggage, mat: leather, maxHp: 30, name: Suitcase}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s2-bed:
   feetPosition: {x: -24.35, y: 0, z: 19.77}
   id: l5-hall-room-s2-bed
@@ -2614,6 +2951,7 @@ l5-hall-room-s2-bed:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s2-chair:
   feetPosition: {x: -22.625, y: 0, z: 18.7}
   id: l5-hall-room-s2-chair
@@ -2622,6 +2960,7 @@ l5-hall-room-s2-chair:
   rotation: {pitch: 0, yaw: 65}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s2-dresser:
   feetPosition: {x: -25.54, y: 0, z: 16}
   id: l5-hall-room-s2-dresser
@@ -2630,7 +2969,9 @@ l5-hall-room-s2-dresser:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, items: "bandage,almond", kind: dresser, mat: wood, maxHp: 60, name: Dresser}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s2-night:
+  castShadow: false
   feetPosition: {x: -23.35, y: 0, z: 20.59}
   id: l5-hall-room-s2-night
   physics: static
@@ -2638,6 +2979,7 @@ l5-hall-room-s2-night:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s2-rug:
   feetPosition: {x: -24, y: 0, z: 17.6}
   id: l5-hall-room-s2-rug
@@ -2645,7 +2987,9 @@ l5-hall-room-s2-rug:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s2-teatable:
+  castShadow: false
   feetPosition: {x: -22.575, y: 0, z: 19.75}
   id: l5-hall-room-s2-teatable
   physics: static
@@ -2653,6 +2997,7 @@ l5-hall-room-s2-teatable:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s2-wardrobe:
   feetPosition: {x: -22.5, y: 0, z: 16.4}
   id: l5-hall-room-s2-wardrobe
@@ -2661,6 +3006,7 @@ l5-hall-room-s2-wardrobe:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: "bar,beans", kind: wardrobe, lock: "lockpick:40", mat: wood, maxHp: 60, name: Wardrobe}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s2-window:
   feetPosition: {x: -22.155, y: 0.85, z: 19}
   id: l5-hall-room-s2-window
@@ -2668,14 +3014,18 @@ l5-hall-room-s2-window:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s3-art:
+  castShadow: false
   feetPosition: {x: -20.35, y: 1.78, z: 20.825}
   id: l5-hall-room-s3-art
   primitive: {kind: scripted, params: {h: 0.6, kind: painting, seed: 11, style: landscape, w: 0.9}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s3-bag:
+  castShadow: false
   feetPosition: {x: -18.525, y: 0, z: 14.75}
   id: l5-hall-room-s3-bag
   physics: static
@@ -2683,6 +3033,7 @@ l5-hall-room-s3-bag:
   rotation: {pitch: 0, yaw: 100}
   state: {hp: 30, items: "bobbypin,bobbypin", kind: luggage, mat: leather, maxHp: 30, name: Suitcase}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s3-bed:
   feetPosition: {x: -20.35, y: 0, z: 19.77}
   id: l5-hall-room-s3-bed
@@ -2691,6 +3042,7 @@ l5-hall-room-s3-bed:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s3-chair:
   feetPosition: {x: -21.375, y: 0, z: 18.7}
   id: l5-hall-room-s3-chair
@@ -2699,6 +3051,7 @@ l5-hall-room-s3-chair:
   rotation: {pitch: 0, yaw: -65}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s3-dresser:
   feetPosition: {x: -18.46, y: 0, z: 16}
   id: l5-hall-room-s3-dresser
@@ -2707,14 +3060,18 @@ l5-hall-room-s3-dresser:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: "almond,ration", kind: dresser, mat: wood, maxHp: 60, name: Dresser}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s3-letter:
+  castShadow: false
   feetPosition: {x: -21.425, y: 0, z: 14.9}
   id: l5-hall-room-s3-letter
   primitive: {kind: scripted, params: {kind: letter}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 40}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s3-night:
+  castShadow: false
   feetPosition: {x: -19.35, y: 0, z: 20.59}
   id: l5-hall-room-s3-night
   physics: static
@@ -2722,6 +3079,7 @@ l5-hall-room-s3-night:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s3-rug:
   feetPosition: {x: -20, y: 0, z: 17.6}
   id: l5-hall-room-s3-rug
@@ -2729,13 +3087,16 @@ l5-hall-room-s3-rug:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s3-tw:
+  castShadow: false
   feetPosition: {x: -21.605, y: 0.74, z: 19.6}
   id: l5-hall-room-s3-tw
   primitive: {kind: scripted, params: {kind: typewriter}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s3-wardrobe:
   feetPosition: {x: -21.5, y: 0, z: 16.4}
   id: l5-hall-room-s3-wardrobe
@@ -2744,6 +3105,7 @@ l5-hall-room-s3-wardrobe:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, items: tape, kind: wardrobe, mat: wood, maxHp: 60, name: Wardrobe}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s3-window:
   feetPosition: {x: -21.845, y: 0.85, z: 19}
   id: l5-hall-room-s3-window
@@ -2751,7 +3113,9 @@ l5-hall-room-s3-window:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s3-wtable:
+  castShadow: false
   feetPosition: {x: -21.6, y: 0, z: 19.6}
   id: l5-hall-room-s3-wtable
   physics: static
@@ -2759,14 +3123,18 @@ l5-hall-room-s3-wtable:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s4-art:
+  castShadow: false
   feetPosition: {x: -16.7, y: 1.78, z: 20.825}
   id: l5-hall-room-s4-art
   primitive: {kind: scripted, params: {h: 0.6, kind: painting, seed: 9, style: landscape, w: 0.9}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s4-bag:
+  castShadow: false
   feetPosition: {x: -17.475, y: 0, z: 14.75}
   id: l5-hall-room-s4-bag
   physics: static
@@ -2774,6 +3142,7 @@ l5-hall-room-s4-bag:
   rotation: {pitch: 0, yaw: -100}
   state: {hp: 30, items: "meat:sardines,bar", kind: luggage, lock: "lockpick:20", mat: leather, maxHp: 30, name: Suitcase}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s4-bed:
   feetPosition: {x: -16.7, y: 0, z: 19.77}
   id: l5-hall-room-s4-bed
@@ -2782,6 +3151,7 @@ l5-hall-room-s4-bed:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s4-chair:
   feetPosition: {x: -14.625, y: 0, z: 18.7}
   id: l5-hall-room-s4-chair
@@ -2790,6 +3160,7 @@ l5-hall-room-s4-chair:
   rotation: {pitch: 0, yaw: 65}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 2}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s4-dresser:
   feetPosition: {x: -17.54, y: 0, z: 16}
   id: l5-hall-room-s4-dresser
@@ -2798,7 +3169,9 @@ l5-hall-room-s4-dresser:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, items: "almond,bandage", kind: dresser, mat: wood, maxHp: 60, name: Dresser}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s4-night:
+  castShadow: false
   feetPosition: {x: -15.7, y: 0, z: 20.59}
   id: l5-hall-room-s4-night
   physics: static
@@ -2806,6 +3179,7 @@ l5-hall-room-s4-night:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s4-rug:
   feetPosition: {x: -16, y: 0, z: 17.6}
   id: l5-hall-room-s4-rug
@@ -2813,13 +3187,16 @@ l5-hall-room-s4-rug:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s4-turned:
+  castShadow: false
   feetPosition: {x: -14.225, y: 0, z: 14.9}
   id: l5-hall-room-s4-turned
   primitive: {kind: scripted, params: {h: 0.8, kind: painting, seed: 99, style: portrait, w: 0.6}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: -12, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-room-s4-wardrobe:
   feetPosition: {x: -14.5, y: 0, z: 16.4}
   id: l5-hall-room-s4-wardrobe
@@ -2828,6 +3205,7 @@ l5-hall-room-s4-wardrobe:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: firesalt, kind: wardrobe, mat: wood, maxHp: 60, name: Wardrobe}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-room-s4-window:
   feetPosition: {x: -14.155, y: 0.85, z: 19}
   id: l5-hall-room-s4-window
@@ -2835,6 +3213,7 @@ l5-hall-room-s4-window:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-runner:
   feetPosition: {x: -18, y: 0, z: 0}
   id: l5-hall-runner
@@ -2850,6 +3229,7 @@ l5-hall-stairs:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-ne-art:
   feetPosition: {x: -14.325, y: 1.85, z: -3.175}
   id: l5-hall-suite-ne-art
@@ -2857,7 +3237,9 @@ l5-hall-suite-ne-art:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-ne-bags:
+  castShadow: false
   feetPosition: {x: -12.425, y: 0, z: -3.375}
   id: l5-hall-suite-ne-bags
   physics: static
@@ -2865,6 +3247,7 @@ l5-hall-suite-ne-bags:
   rotation: {pitch: 0, yaw: 8}
   state: {hp: 30, items: battery, kind: luggage, mat: leather, maxHp: 30, name: Steamer trunk}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-ne-bed:
   feetPosition: {x: -14.325, y: 0, z: -4.23}
   id: l5-hall-suite-ne-bed
@@ -2873,7 +3256,9 @@ l5-hall-suite-ne-bed:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-ne-ctable:
+  castShadow: false
   feetPosition: {x: -14.325, y: 0, z: -7.4}
   id: l5-hall-suite-ne-ctable
   physics: static
@@ -2881,6 +3266,7 @@ l5-hall-suite-ne-ctable:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-ne-desk:
   feetPosition: {x: -7.675, y: 0, z: -3.52}
   id: l5-hall-suite-ne-desk
@@ -2889,7 +3275,9 @@ l5-hall-suite-ne-desk:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, items: "almond,almond", kind: desk, lock: "lockpick:30", mat: wood, maxHp: 60, name: Writing desk}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-ne-deskchair:
+  castShadow: false
   feetPosition: {x: -7.675, y: 0, z: -4.075}
   id: l5-hall-suite-ne-deskchair
   physics: static
@@ -2897,7 +3285,9 @@ l5-hall-suite-ne-deskchair:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-ne-night1:
+  castShadow: false
   feetPosition: {x: -15.58, y: 0, z: -3.41}
   id: l5-hall-suite-ne-night1
   physics: static
@@ -2905,7 +3295,9 @@ l5-hall-suite-ne-night1:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-ne-night2:
+  castShadow: false
   feetPosition: {x: -13.025, y: 0, z: -3.41}
   id: l5-hall-suite-ne-night2
   physics: static
@@ -2913,6 +3305,7 @@ l5-hall-suite-ne-night2:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-ne-palm:
   feetPosition: {x: -6.475, y: 0, z: -3.7}
   id: l5-hall-suite-ne-palm
@@ -2921,6 +3314,7 @@ l5-hall-suite-ne-palm:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-ne-rug:
   feetPosition: {x: -11, y: 0, z: -6.4}
   id: l5-hall-suite-ne-rug
@@ -2928,6 +3322,7 @@ l5-hall-suite-ne-rug:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-ne-sofa:
   feetPosition: {x: -15.35, y: 0, z: -7.4}
   id: l5-hall-suite-ne-sofa
@@ -2936,7 +3331,9 @@ l5-hall-suite-ne-sofa:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-ne-stool:
+  castShadow: false
   feetPosition: {x: -6.925, y: 0, z: -6.4}
   id: l5-hall-suite-ne-stool
   physics: static
@@ -2944,6 +3341,7 @@ l5-hall-suite-ne-stool:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, mat: wood, maxHp: 60, name: Stool, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-ne-vanity:
   feetPosition: {x: -6.45, y: 0, z: -6.4}
   id: l5-hall-suite-ne-vanity
@@ -2952,6 +3350,7 @@ l5-hall-suite-ne-vanity:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: "kit,tape", kind: vanity, mat: wood, maxHp: 60, name: Vanity}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-ne-wardrobe:
   feetPosition: {x: -6.5, y: 0, z: -8.35}
   id: l5-hall-suite-ne-wardrobe
@@ -2960,6 +3359,7 @@ l5-hall-suite-ne-wardrobe:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: "bar,beans", kind: wardrobe, mat: wood, maxHp: 60, name: Wardrobe}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-ne-window:
   feetPosition: {x: -15.845, y: 0.85, z: -4.9}
   id: l5-hall-suite-ne-window
@@ -2967,6 +3367,7 @@ l5-hall-suite-ne-window:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-nw-art:
   feetPosition: {x: -28.325, y: 1.85, z: -3.175}
   id: l5-hall-suite-nw-art
@@ -2974,7 +3375,9 @@ l5-hall-suite-nw-art:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-nw-bags:
+  castShadow: false
   feetPosition: {x: -26.425, y: 0, z: -3.375}
   id: l5-hall-suite-nw-bags
   physics: static
@@ -2982,6 +3385,7 @@ l5-hall-suite-nw-bags:
   rotation: {pitch: 0, yaw: 8}
   state: {hp: 30, items: "ammo,shells", kind: luggage, mat: leather, maxHp: 30, name: Steamer trunk}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-nw-bed:
   feetPosition: {x: -28.325, y: 0, z: -4.23}
   id: l5-hall-suite-nw-bed
@@ -2990,7 +3394,9 @@ l5-hall-suite-nw-bed:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-nw-ctable:
+  castShadow: false
   feetPosition: {x: -28.325, y: 0, z: -7.4}
   id: l5-hall-suite-nw-ctable
   physics: static
@@ -2998,6 +3404,7 @@ l5-hall-suite-nw-ctable:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-nw-desk:
   feetPosition: {x: -20.675, y: 0, z: -3.52}
   id: l5-hall-suite-nw-desk
@@ -3006,7 +3413,9 @@ l5-hall-suite-nw-desk:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, items: "almond,ration,battery", kind: desk, lock: "lockpick:45", mat: wood, maxHp: 60, name: Writing desk}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-nw-deskchair:
+  castShadow: false
   feetPosition: {x: -20.675, y: 0, z: -4.075}
   id: l5-hall-suite-nw-deskchair
   physics: static
@@ -3014,7 +3423,9 @@ l5-hall-suite-nw-deskchair:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-nw-night1:
+  castShadow: false
   feetPosition: {x: -29.58, y: 0, z: -3.41}
   id: l5-hall-suite-nw-night1
   physics: static
@@ -3022,7 +3433,9 @@ l5-hall-suite-nw-night1:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-nw-night2:
+  castShadow: false
   feetPosition: {x: -27.025, y: 0, z: -3.41}
   id: l5-hall-suite-nw-night2
   physics: static
@@ -3030,6 +3443,7 @@ l5-hall-suite-nw-night2:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-nw-palm:
   feetPosition: {x: -19.475, y: 0, z: -3.7}
   id: l5-hall-suite-nw-palm
@@ -3038,6 +3452,7 @@ l5-hall-suite-nw-palm:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-nw-rug:
   feetPosition: {x: -25, y: 0, z: -6.4}
   id: l5-hall-suite-nw-rug
@@ -3045,6 +3460,7 @@ l5-hall-suite-nw-rug:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-nw-sofa:
   feetPosition: {x: -29.35, y: 0, z: -7.4}
   id: l5-hall-suite-nw-sofa
@@ -3053,7 +3469,9 @@ l5-hall-suite-nw-sofa:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-nw-stool:
+  castShadow: false
   feetPosition: {x: -19.925, y: 0, z: -6.4}
   id: l5-hall-suite-nw-stool
   physics: static
@@ -3061,6 +3479,7 @@ l5-hall-suite-nw-stool:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, mat: wood, maxHp: 60, name: Stool, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-nw-vanity:
   feetPosition: {x: -19.45, y: 0, z: -6.4}
   id: l5-hall-suite-nw-vanity
@@ -3069,6 +3488,7 @@ l5-hall-suite-nw-vanity:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: "firstaid,bobbypin", kind: vanity, mat: wood, maxHp: 60, name: Vanity}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-nw-wardrobe:
   feetPosition: {x: -19.5, y: 0, z: -8.35}
   id: l5-hall-suite-nw-wardrobe
@@ -3077,6 +3497,7 @@ l5-hall-suite-nw-wardrobe:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: royal_ration, kind: wardrobe, mat: wood, maxHp: 60, name: Wardrobe}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-nw-window:
   feetPosition: {x: -29.845, y: 0.85, z: -4.9}
   id: l5-hall-suite-nw-window
@@ -3084,6 +3505,7 @@ l5-hall-suite-nw-window:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-se-art:
   feetPosition: {x: -14.325, y: 1.85, z: 3.175}
   id: l5-hall-suite-se-art
@@ -3091,7 +3513,9 @@ l5-hall-suite-se-art:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-se-bags:
+  castShadow: false
   feetPosition: {x: -12.425, y: 0, z: 3.375}
   id: l5-hall-suite-se-bags
   physics: static
@@ -3099,6 +3523,7 @@ l5-hall-suite-se-bags:
   rotation: {pitch: 0, yaw: 188}
   state: {hp: 30, items: "shells,battery", kind: luggage, mat: leather, maxHp: 30, name: Steamer trunk}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-se-bed:
   feetPosition: {x: -14.325, y: 0, z: 4.23}
   id: l5-hall-suite-se-bed
@@ -3107,7 +3532,9 @@ l5-hall-suite-se-bed:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-se-ctable:
+  castShadow: false
   feetPosition: {x: -14.325, y: 0, z: 7.4}
   id: l5-hall-suite-se-ctable
   physics: static
@@ -3115,6 +3542,7 @@ l5-hall-suite-se-ctable:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-se-desk:
   feetPosition: {x: -7.675, y: 0, z: 3.52}
   id: l5-hall-suite-se-desk
@@ -3123,7 +3551,9 @@ l5-hall-suite-se-desk:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, items: "royal_ration,almond", kind: desk, lock: "lockpick:60", mat: wood, maxHp: 60, name: Writing desk}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-se-deskchair:
+  castShadow: false
   feetPosition: {x: -7.675, y: 0, z: 4.075}
   id: l5-hall-suite-se-deskchair
   physics: static
@@ -3131,7 +3561,9 @@ l5-hall-suite-se-deskchair:
   rotation: {pitch: 0, yaw: 360}
   state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-se-night1:
+  castShadow: false
   feetPosition: {x: -15.58, y: 0, z: 3.41}
   id: l5-hall-suite-se-night1
   physics: static
@@ -3139,7 +3571,9 @@ l5-hall-suite-se-night1:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-se-night2:
+  castShadow: false
   feetPosition: {x: -13.025, y: 0, z: 3.41}
   id: l5-hall-suite-se-night2
   physics: static
@@ -3147,6 +3581,7 @@ l5-hall-suite-se-night2:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-se-palm:
   feetPosition: {x: -6.475, y: 0, z: 3.7}
   id: l5-hall-suite-se-palm
@@ -3155,6 +3590,7 @@ l5-hall-suite-se-palm:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-se-rug:
   feetPosition: {x: -11, y: 0, z: 6.4}
   id: l5-hall-suite-se-rug
@@ -3162,6 +3598,7 @@ l5-hall-suite-se-rug:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-se-sofa:
   feetPosition: {x: -15.35, y: 0, z: 7.4}
   id: l5-hall-suite-se-sofa
@@ -3170,7 +3607,9 @@ l5-hall-suite-se-sofa:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-se-stool:
+  castShadow: false
   feetPosition: {x: -6.925, y: 0, z: 6.4}
   id: l5-hall-suite-se-stool
   physics: static
@@ -3178,6 +3617,7 @@ l5-hall-suite-se-stool:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, mat: wood, maxHp: 60, name: Stool, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-se-vanity:
   feetPosition: {x: -6.45, y: 0, z: 6.4}
   id: l5-hall-suite-se-vanity
@@ -3186,6 +3626,7 @@ l5-hall-suite-se-vanity:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: "bobbypin,tape", kind: vanity, mat: wood, maxHp: 60, name: Vanity}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-se-wardrobe:
   feetPosition: {x: -6.5, y: 0, z: 8.35}
   id: l5-hall-suite-se-wardrobe
@@ -3194,6 +3635,7 @@ l5-hall-suite-se-wardrobe:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: beans, kind: wardrobe, mat: wood, maxHp: 60, name: Wardrobe}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-se-window:
   feetPosition: {x: -15.845, y: 0.85, z: 4.9}
   id: l5-hall-suite-se-window
@@ -3201,6 +3643,7 @@ l5-hall-suite-se-window:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-sw-art:
   feetPosition: {x: -28.325, y: 1.85, z: 3.175}
   id: l5-hall-suite-sw-art
@@ -3208,7 +3651,9 @@ l5-hall-suite-sw-art:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-sw-bags:
+  castShadow: false
   feetPosition: {x: -26.425, y: 0, z: 3.375}
   id: l5-hall-suite-sw-bags
   physics: static
@@ -3216,6 +3661,7 @@ l5-hall-suite-sw-bags:
   rotation: {pitch: 0, yaw: 188}
   state: {hp: 30, items: ammo, kind: luggage, mat: leather, maxHp: 30, name: Steamer trunk}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-sw-bed:
   feetPosition: {x: -28.325, y: 0, z: 4.23}
   id: l5-hall-suite-sw-bed
@@ -3224,7 +3670,9 @@ l5-hall-suite-sw-bed:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-sw-ctable:
+  castShadow: false
   feetPosition: {x: -28.325, y: 0, z: 7.4}
   id: l5-hall-suite-sw-ctable
   physics: static
@@ -3232,6 +3680,7 @@ l5-hall-suite-sw-ctable:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-sw-desk:
   feetPosition: {x: -20.675, y: 0, z: 3.52}
   id: l5-hall-suite-sw-desk
@@ -3240,7 +3689,9 @@ l5-hall-suite-sw-desk:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, items: "ration,bandage", kind: desk, mat: wood, maxHp: 60, name: Writing desk}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-sw-deskchair:
+  castShadow: false
   feetPosition: {x: -20.675, y: 0, z: 4.075}
   id: l5-hall-suite-sw-deskchair
   physics: static
@@ -3248,7 +3699,9 @@ l5-hall-suite-sw-deskchair:
   rotation: {pitch: 0, yaw: 360}
   state: {hp: 60, mat: wood, maxHp: 60, name: Hotel chair, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-sw-night1:
+  castShadow: false
   feetPosition: {x: -29.58, y: 0, z: 3.41}
   id: l5-hall-suite-sw-night1
   physics: static
@@ -3256,7 +3709,9 @@ l5-hall-suite-sw-night1:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-sw-night2:
+  castShadow: false
   feetPosition: {x: -27.025, y: 0, z: 3.41}
   id: l5-hall-suite-sw-night2
   physics: static
@@ -3264,6 +3719,7 @@ l5-hall-suite-sw-night2:
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-sw-palm:
   feetPosition: {x: -19.475, y: 0, z: 3.7}
   id: l5-hall-suite-sw-palm
@@ -3272,6 +3728,7 @@ l5-hall-suite-sw-palm:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-sw-rug:
   feetPosition: {x: -25, y: 0, z: 6.4}
   id: l5-hall-suite-sw-rug
@@ -3279,6 +3736,7 @@ l5-hall-suite-sw-rug:
   rotation: {pitch: 0, yaw: 0}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-sw-sofa:
   feetPosition: {x: -29.35, y: 0, z: 7.4}
   id: l5-hall-suite-sw-sofa
@@ -3287,7 +3745,9 @@ l5-hall-suite-sw-sofa:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60, name: Velvet sofa, seat: {d: 0.15, gap: 0.62, w: 3}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-sw-stool:
+  castShadow: false
   feetPosition: {x: -19.925, y: 0, z: 6.4}
   id: l5-hall-suite-sw-stool
   physics: static
@@ -3295,6 +3755,7 @@ l5-hall-suite-sw-stool:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, mat: wood, maxHp: 60, name: Stool, seat: {d: 0.04, gap: 0.62, w: 1}, verb: Sit}
   tags: [l5-hall, furniture, breakable, seat, usable]
+  visibleRange: {max: 40, min: 0}
 l5-hall-suite-sw-vanity:
   feetPosition: {x: -19.45, y: 0, z: 6.4}
   id: l5-hall-suite-sw-vanity
@@ -3303,6 +3764,7 @@ l5-hall-suite-sw-vanity:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: almond, kind: vanity, mat: wood, maxHp: 60, name: Vanity}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-sw-wardrobe:
   feetPosition: {x: -19.5, y: 0, z: 8.35}
   id: l5-hall-suite-sw-wardrobe
@@ -3311,6 +3773,7 @@ l5-hall-suite-sw-wardrobe:
   rotation: {pitch: 0, yaw: 90}
   state: {hp: 60, items: firstaid, kind: wardrobe, mat: wood, maxHp: 60, name: Wardrobe}
   tags: [l5-hall, container, furniture, lootfurn, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-hall-suite-sw-window:
   feetPosition: {x: -29.845, y: 0.85, z: 4.9}
   id: l5-hall-suite-sw-window
@@ -3318,9 +3781,10 @@ l5-hall-suite-sw-window:
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, mat: wood, maxHp: 60}
   tags: [l5-hall, furniture, breakable]
+  visibleRange: {max: 80, min: 0}
 l5-harlan:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.496ed1318603080d4fcbb7455baf9897f459ceea16ee9bc824dedb190bf9e6aa.glb, materials: {belly: {color: "#d6cbbf"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#5a3e2a"}, mark: {color: "#423025"}, nose: {color: "#2a1c18"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#d6cbbf"}}}, morph: {Frown: 0.5, Half: 0.8}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.496ed1318603080d4fcbb7455baf9897f459ceea16ee9bc824dedb190bf9e6aa.glb, materials: {belly: {color: "#d6cbbf"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#5a3e2a"}, mark: {color: "#423025"}, nose: {color: "#2a1c18"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#d6cbbf"}}}, morph: {Frown: 0.5, Half: 0.8}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: 13, y: 0, z: 22.4}
   id: l5-harlan
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -3333,9 +3797,11 @@ l5-harlan:
   tags: [npc, l5res, l5-hk]
 l5-harlan/object/x595cd23e2238773d/0:
   attachment: {bone: RightHand}
+  castShadow: false
   id: l5-harlan/object/x595cd23e2238773d/0
   parent: l5-harlan
   primitive: {kind: scripted, params: {kind: smg}, script: scripts/weapon-geo.js}
+  visibleRange: {max: 40, min: 0}
 l5-heat:
   audience: all
   behavior: scripts/l5-heat.js
@@ -3344,7 +3810,7 @@ l5-heat:
   tags: [l5-boiler, manager]
 l5-imani:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.c311c03fa9b4cbfde4f98fa7c1e3b5d43972575487e3dc4e801b0735138ee2bc.glb, materials: {belly: {color: "#e6d1b3"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#d4a45e"}, mark: {color: "#896944"}, nose: {color: "#8a4a2a"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e6d1b3"}}}, morph: {Half: 0.3, Open: 0.2, Smile: 1}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.c311c03fa9b4cbfde4f98fa7c1e3b5d43972575487e3dc4e801b0735138ee2bc.glb, materials: {belly: {color: "#e6d1b3"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#d4a45e"}, mark: {color: "#896944"}, nose: {color: "#8a4a2a"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e6d1b3"}}}, morph: {Half: 0.3, Open: 0.2, Smile: 1}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: 6, y: 0, z: 14.2}
   id: l5-imani
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -3358,9 +3824,11 @@ l5-imani:
   tags: [npc, l5res, l5-hk]
 l5-imani/object/x595cd23e2238773d/3:
   attachment: {bone: RightHand}
+  castShadow: false
   id: l5-imani/object/x595cd23e2238773d/3
   parent: l5-imani
   primitive: {kind: scripted, params: {kind: smg}, script: scripts/weapon-geo.js}
+  visibleRange: {max: 40, min: 0}
 l5-l6-bulb:
   feetPosition: {x: 45.2, y: 2.75, z: 6}
   id: l5-l6-bulb
@@ -3374,13 +3842,16 @@ l5-l6-door:
   physics: static
   primitive: {depth: 0.1, height: 2.1, kind: box, width: 1.1}
   rotation: {yaw: 90}
+  visibleRange: {max: 80, min: 0}
 l5-l6-frame:
   feetPosition: {x: 45.769999999999996, y: 0, z: 6}
   id: l5-l6-frame
   material: {color: oklch(0.18 0.005 240), roughness: 0.8}
   primitive: {depth: 0.06, height: 2.3, kind: box, width: 1.35}
   rotation: {yaw: 90}
+  visibleRange: {max: 80, min: 0}
 l5-l6-locker:
+  castShadow: false
   feetPosition: {x: 45.1, y: 0.01, z: 4.3}
   id: l5-l6-locker
   physics: static
@@ -3388,18 +3859,21 @@ l5-l6-locker:
   rotation: {yaw: -90}
   state: {hp: 60, items: "battery,battery,almond,almond,ration,bobbypin", lock: "lockpick:35", mat: wood, maxHp: 60, name: Explorer's drop box}
   tags: [container, breakable]
+  visibleRange: {max: 40, min: 0}
 l5-l6-note:
   feetPosition: {x: 45.699999999999996, y: 1, z: 7.05}
   id: l5-l6-note
   rotation: {yaw: 90}
   vector: "<svg viewBox='0 0 200 120' width='0.45m'><rect width='200' height='120' fill='#e8e0c8'/><text x='100' y='40' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>your light won't work</text><text x='100' y='65' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>feel the left wall</text><text x='100' y='90' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>listen for waves</text></svg>"
 l5-l6-plate:
+  castShadow: false
   feetPosition: {x: 45.68, y: 2.3, z: 6}
   id: l5-l6-plate
   material: {color: oklch(0.15 0.01 240)}
   primitive: {depth: 0.03, height: 0.36, kind: box, width: 1.2}
   rotation: {yaw: 90}
   ui: "<div face=\"front\" width=\"1.2m\" style=\"font-family:serif;text-align:center;color:#c9c4b8;background:#121418;border:14px solid #3a3e44;padding:18px 10px;line-height:1.05\"><div style=\"font-size:130px;font-weight:900;letter-spacing:10px\">LEVEL 6</div><div style=\"font-size:64px;font-style:italic;opacity:.85\">▼ lights out</div></div>"
+  visibleRange: {max: 40, min: 0}
 l5-lift3:
   behavior: scripts/level-door.js
   feetPosition: {x: -44.800000000000004, y: 0, z: -2.4492935982947065e-17}
@@ -3410,17 +3884,20 @@ l5-lift3:
   state: {to: level3#l3-from-l5}
   tags: [door]
   visible: false
+  visibleRange: {max: 80, min: 0}
 l5-lift3-lamp:
   feetPosition: {x: -44.400000000000006, y: 2.9, z: -4.898587196589413e-17}
   id: l5-lift3-lamp
   light: {color: oklch(0.82 0.1 70), distance: 6, intensity: 2.2, kind: point}
 l5-lift3-plate:
+  castShadow: false
   feetPosition: {x: -45.14, y: 2.55, z: -3.673940397442059e-18}
   id: l5-lift3-plate
   material: {color: oklch(0.25 0.04 50)}
   primitive: {depth: 0.03, height: 0.36, kind: box, width: 1.2}
   rotation: {yaw: -90}
   ui: "<div face=\"front\" width=\"1.2m\" style=\"font-family:serif;text-align:center;color:#e8c983;background:#2a1c12;border:14px solid #8a6a2a;padding:18px 10px;line-height:1.05\"><div style=\"font-size:130px;font-weight:900;letter-spacing:10px\">LEVEL 3</div><div style=\"font-size:64px;font-style:italic;opacity:.85\">▼ electrical station</div></div>"
+  visibleRange: {max: 40, min: 0}
 l5-light-0:
   feetPosition: {x: -38, y: 6.6, z: -6}
   id: l5-light-0
@@ -3751,7 +4228,7 @@ l5-lobby:
   rotation: {yaw: -90}
 l5-millie:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.436740c4291dbdda1dcb292e385a017e50042ca420654a6f54211b6b0578dc16.glb, materials: {belly: {color: "#dfbfad"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#b4542a"}, mark: {color: "#653b2a"}, nose: {color: "#1c1a20"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#713f2a"}}}, morph: {Open: 0.4, Smile: 1}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.436740c4291dbdda1dcb292e385a017e50042ca420654a6f54211b6b0578dc16.glb, materials: {belly: {color: "#dfbfad"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#b4542a"}, mark: {color: "#653b2a"}, nose: {color: "#1c1a20"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#713f2a"}}}, morph: {Open: 0.4, Smile: 1}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: 3, y: 0, z: -20.4}
   id: l5-millie
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -3765,7 +4242,8 @@ l5-millie:
   tags: [npc, l5res, l5-orig]
 l5-nvg-case:
   behavior: scripts/l5-goggles.js
-  children: [{feetPosition: {x: 0, y: 0.22, z: 0}, material: {color: oklch(0.2 0 0), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.05, height: 0.04, kind: box, width: 0.2}}, {feetPosition: {x: 0, y: 0.3, z: 0}, light: {color: oklch(0.8 0.15 145), distance: 2.5, intensity: 0.25, kind: point}}]
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.22, z: 0}, material: {color: oklch(0.2 0 0), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.05, height: 0.04, kind: box, width: 0.2}, visibleRange: {max: 40, min: 0}}, {feetPosition: {x: 0, y: 0.3, z: 0}, light: {color: oklch(0.8 0.15 145), distance: 2.5, intensity: 0.25, kind: point}}]
   feetPosition: {x: 31.5, y: 0, z: 23.4}
   id: l5-nvg-case
   material: {color: oklch(0.45 0.09 75), metalness: 0.6, roughness: 0.55}
@@ -3774,9 +4252,10 @@ l5-nvg-case:
   rotation: {yaw: 25}
   state: {info: "INES · M.E.G. MAINT.", kind: case, name: Ines's goggle case, verb: Check}
   tags: [usable]
+  visibleRange: {max: 40, min: 0}
 l5-nvg-den:
   behavior: scripts/l5-goggles.js
-  children: [{feetPosition: {x: 0.3, y: 0.03, z: 0}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 0}}, {feetPosition: {x: 0.4206632030064687, y: 0.03, z: 0.3543197279807301}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.2, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 47}}, {feetPosition: {x: 0.1359737143201928, y: 0.03, z: 0.7883597839907681}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 94}}, {feetPosition: {x: -0.15145383137995713, y: 0.03, z: 0.25896280999466215}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.2, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 141}}, {feetPosition: {x: -0.518222287367762, y: 0.03, z: 0.1842434825857478}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 188}}, {feetPosition: {x: -0.7491653498326372, y: 0.03, z: -0.2806265821516959}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.2, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 235}}, {feetPosition: {x: -0.14707824640221007, y: 0.03, z: -0.2614727317240763}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 282}}, {feetPosition: {x: 0.10258180318241619, y: 0.03, z: -0.5403489369433829}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.2, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 329}}, {feetPosition: {x: 0.6204527028081998, y: 0.03, z: -0.5050133102978572}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 376}}, {feetPosition: {x: -0.9, y: 0, z: 0.4}, layout: {box: {max: {x: 0.4, y: 0.35, z: 0.9}, min: {x: -0.4, y: 0, z: -0.9}}}, model: {id: /cdn/value.03b3fdc79fbd59839dde8183a19d878e352ce04fa4f5b9fa111f4cec94a36f76.glb}, rotation: {yaw: 70}}, {feetPosition: {x: 0.5, y: 0, z: -0.5}, material: {color: oklch(0.3 0.03 50), roughness: 0.9}, primitive: {height: 0.35, kind: cylinder, radiusBottom: 0.14, radiusTop: 0.12}, rotation: {roll: 80, yaw: 20}}, {feetPosition: {x: 0, y: 0.08, z: 0}, id: glint, light: {color: oklch(0.8 0.2 145), distance: 3, intensity: 0.5, kind: point}, material: {color: oklch(0.25 0.02 140), emissive: oklch(0.8 0.2 145), emissiveIntensity: 1.5, metalness: 0.6}, primitive: {depth: 0.08, height: 0.06, kind: box, width: 0.18}}]
+  children: [{castShadow: false, feetPosition: {x: 0.3, y: 0.03, z: 0}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 0}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: 0.4206632030064687, y: 0.03, z: 0.3543197279807301}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.2, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 47}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: 0.1359737143201928, y: 0.03, z: 0.7883597839907681}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 94}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: -0.15145383137995713, y: 0.03, z: 0.25896280999466215}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.2, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 141}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: -0.518222287367762, y: 0.03, z: 0.1842434825857478}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 188}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: -0.7491653498326372, y: 0.03, z: -0.2806265821516959}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.2, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 235}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: -0.14707824640221007, y: 0.03, z: -0.2614727317240763}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 282}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: 0.10258180318241619, y: 0.03, z: -0.5403489369433829}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.2, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 329}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: 0.6204527028081998, y: 0.03, z: -0.5050133102978572}, material: {color: oklch(0.86 0.04 85), roughness: 0.7}, primitive: {halfHeight: 0.12, kind: capsule, radius: 0.03}, rotation: {roll: 90, yaw: 376}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: -0.9, y: 0, z: 0.4}, layout: {box: {max: {x: 0.4, y: 0.35, z: 0.9}, min: {x: -0.4, y: 0, z: -0.9}}}, model: {id: /cdn/value.03b3fdc79fbd59839dde8183a19d878e352ce04fa4f5b9fa111f4cec94a36f76.glb}, rotation: {yaw: 70}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: 0.5, y: 0, z: -0.5}, material: {color: oklch(0.3 0.03 50), roughness: 0.9}, primitive: {height: 0.35, kind: cylinder, radiusBottom: 0.14, radiusTop: 0.12}, rotation: {roll: 80, yaw: 20}, visibleRange: {max: 40, min: 0}}, {feetPosition: {x: 0, y: 0.08, z: 0}, id: glint, light: {color: oklch(0.8 0.2 145), distance: 3, intensity: 0.5, kind: point}, material: {color: oklch(0.25 0.02 140), emissive: oklch(0.8 0.2 145), emissiveIntensity: 1.5, metalness: 0.6}, primitive: {depth: 0.08, height: 0.06, kind: box, width: 0.18}}]
   feetPosition: {x: 44, y: 0, z: 1}
   id: l5-nvg-den
   material: {color: oklch(0.22 0.03 40), roughness: 1}
@@ -3784,37 +4263,46 @@ l5-nvg-den:
   primitive: {height: 0.06, kind: cylinder, radiusBottom: 1.3, radiusTop: 1.1}
   state: {info: "bones · scrap · something green", kind: den, name: Hound den, verb: Search}
   tags: [usable]
+  visibleRange: {max: 80, min: 0}
 l5-nvg-drag-0:
-  children: [{feetPosition: {x: 0.22, y: 0, z: 0}, material: {color: oklch(0.15 0.02 30), roughness: 1}, primitive: {depth: 1.2, height: 0.004, kind: box, width: 0.06}}]
+  children: [{castShadow: false, feetPosition: {x: 0.22, y: 0, z: 0}, material: {color: oklch(0.15 0.02 30), roughness: 1}, primitive: {depth: 1.2, height: 0.004, kind: box, width: 0.06}, visibleRange: {max: 40, min: 0}}]
   feetPosition: {x: 32.4, y: 0.012, z: 22.4}
   id: l5-nvg-drag-0
   material: {color: oklch(0.15 0.02 30), roughness: 1}
   primitive: {depth: 1.4, height: 0.004, kind: box, width: 0.08}
   rotation: {yaw: 60}
+  visibleRange: {max: 80, min: 0}
 l5-nvg-drag-1:
-  children: [{feetPosition: {x: 0.22, y: 0, z: 0}, material: {color: oklch(0.15 0.02 30), roughness: 1}, primitive: {depth: 1.2, height: 0.004, kind: box, width: 0.06}}]
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0.22, y: 0, z: 0}, material: {color: oklch(0.15 0.02 30), roughness: 1}, primitive: {depth: 1.2, height: 0.004, kind: box, width: 0.06}, visibleRange: {max: 40, min: 0}}]
   feetPosition: {x: 33.5, y: 0.012, z: 21}
   id: l5-nvg-drag-1
   material: {color: oklch(0.15 0.02 30), roughness: 1}
   primitive: {depth: 1.4, height: 0.004, kind: box, width: 0.08}
   rotation: {yaw: 55}
+  visibleRange: {max: 40, min: 0}
 l5-nvg-drag-2:
-  children: [{feetPosition: {x: 0.22, y: 0, z: 0}, material: {color: oklch(0.15 0.02 30), roughness: 1}, primitive: {depth: 1.2, height: 0.004, kind: box, width: 0.06}}]
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0.22, y: 0, z: 0}, material: {color: oklch(0.15 0.02 30), roughness: 1}, primitive: {depth: 1.2, height: 0.004, kind: box, width: 0.06}, visibleRange: {max: 40, min: 0}}]
   feetPosition: {x: 42.6, y: 0.012, z: 2.6}
   id: l5-nvg-drag-2
   material: {color: oklch(0.15 0.02 30), roughness: 1}
   primitive: {depth: 1.4, height: 0.004, kind: box, width: 0.08}
   rotation: {yaw: 50}
+  visibleRange: {max: 40, min: 0}
 l5-nvg-drag-3:
-  children: [{feetPosition: {x: 0.22, y: 0, z: 0}, material: {color: oklch(0.15 0.02 30), roughness: 1}, primitive: {depth: 1.2, height: 0.004, kind: box, width: 0.06}}]
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0.22, y: 0, z: 0}, material: {color: oklch(0.15 0.02 30), roughness: 1}, primitive: {depth: 1.2, height: 0.004, kind: box, width: 0.06}, visibleRange: {max: 40, min: 0}}]
   feetPosition: {x: 41.4, y: 0.012, z: 4.2}
   id: l5-nvg-drag-3
   material: {color: oklch(0.15 0.02 30), roughness: 1}
   primitive: {depth: 1.4, height: 0.004, kind: box, width: 0.08}
   rotation: {yaw: 55}
+  visibleRange: {max: 40, min: 0}
 l5-nvg-drop:
   behavior: scripts/l5-goggles.js
-  children: [{feetPosition: {x: 0, y: 0.85, z: -0.255}, material: {color: oklch(0.15 0 0), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.02, height: 0.05, kind: box, width: 0.45}}, {feetPosition: {x: 0, y: 0.55, z: -0.256}, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 80' width='0.5m'><rect width='200' height='80' fill='#f0f0e8'/><text x='100' y='34' text-anchor='middle' font-family='sans-serif' font-size='26' fill='#1a3a7a'>M.E.G.</text><text x='100' y='62' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>RETURNS · DROP HERE</text></svg>"}]
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.85, z: -0.255}, material: {color: oklch(0.15 0 0), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.02, height: 0.05, kind: box, width: 0.45}, visibleRange: {max: 40, min: 0}}, {feetPosition: {x: 0, y: 0.55, z: -0.256}, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 80' width='0.5m'><rect width='200' height='80' fill='#f0f0e8'/><text x='100' y='34' text-anchor='middle' font-family='sans-serif' font-size='26' fill='#1a3a7a'>M.E.G.</text><text x='100' y='62' text-anchor='middle' font-family='sans-serif' font-size='16' fill='#222'>RETURNS · DROP HERE</text></svg>"}]
   feetPosition: {x: 45.2, y: 0, z: -19.6}
   id: l5-nvg-drop
   material: {color: oklch(0.4 0.06 240), metalness: 0.6, roughness: 0.55}
@@ -3823,9 +4311,11 @@ l5-nvg-drop:
   rotation: {yaw: -90}
   state: {info: Maintenance returns, kind: drop, name: M.E.G. drop box, verb: Hand in}
   tags: [usable]
+  visibleRange: {max: 40, min: 0}
 l5-nvg-radio:
   behavior: scripts/l5-goggles.js
-  children: [{feetPosition: {x: 0, y: 0.9, z: 0}, material: {color: oklch(0.3 0.04 130), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.22, height: 0.26, kind: box, width: 0.42}}, {feetPosition: {x: 0.14, y: 1.16, z: 0}, material: {color: oklch(0.25 0 0), metalness: 0.6, roughness: 0.55}, primitive: {height: 0.5, kind: cylinder, radiusBottom: 0.008, radiusTop: 0.008}}, {feetPosition: {x: -0.1, y: 1, z: -0.115}, light: {color: oklch(0.75 0.15 40), distance: 2, intensity: 0.4, kind: point}, material: {color: oklch(0.7 0.2 30), emissive: oklch(0.7 0.22 30), emissiveIntensity: 3}, primitive: {kind: sphere, radius: 0.02}}, {feetPosition: {x: 0, y: 1, z: -0.112}, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 60' width='0.36m'><rect x='0' y='0' width='200' height='60' fill='#e8d78a'/><text x='100' y='26' text-anchor='middle' font-family='sans-serif' font-size='20' fill='#222'>BOILER CH.2</text><text x='100' y='50' text-anchor='middle' font-family='sans-serif' font-size='14' fill='#222'>ask for Ines</text></svg>"}]
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.9, z: 0}, material: {color: oklch(0.3 0.04 130), metalness: 0.6, roughness: 0.55}, primitive: {depth: 0.22, height: 0.26, kind: box, width: 0.42}, visibleRange: {max: 40, min: 0}}, {castShadow: false, feetPosition: {x: 0.14, y: 1.16, z: 0}, material: {color: oklch(0.25 0 0), metalness: 0.6, roughness: 0.55}, primitive: {height: 0.5, kind: cylinder, radiusBottom: 0.008, radiusTop: 0.008}, visibleRange: {max: 40, min: 0}}, {feetPosition: {x: -0.1, y: 1, z: -0.115}, light: {color: oklch(0.75 0.15 40), distance: 2, intensity: 0.4, kind: point}, material: {color: oklch(0.7 0.2 30), emissive: oklch(0.7 0.22 30), emissiveIntensity: 3}, primitive: {kind: sphere, radius: 0.02}}, {feetPosition: {x: 0, y: 1, z: -0.112}, rotation: {yaw: 180}, vector: "<svg viewBox='0 0 200 60' width='0.36m'><rect x='0' y='0' width='200' height='60' fill='#e8d78a'/><text x='100' y='26' text-anchor='middle' font-family='sans-serif' font-size='20' fill='#222'>BOILER CH.2</text><text x='100' y='50' text-anchor='middle' font-family='sans-serif' font-size='14' fill='#222'>ask for Ines</text></svg>"}]
   feetPosition: {x: 16.6, y: 0, z: 15.4}
   id: l5-nvg-radio
   material: {color: oklch(0.35 0.03 140), metalness: 0.6, roughness: 0.55}
@@ -3834,9 +4324,10 @@ l5-nvg-radio:
   rotation: {yaw: 90}
   state: {info: "Ines · stuck in the Cold Room", kind: radio, name: M.E.G. field radio, verb: Talk}
   tags: [usable]
+  visibleRange: {max: 40, min: 0}
 l5-odette:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.d206916575ccbe6d031f0934134d27d2acea05a26d027868fc5ec32e3031a56b.glb, materials: {belly: {color: "#e1c3ab", metalness: 0, roughness: 0.88}, blush: {color: "#ff6285", emissive: "#ff4065", emissiveIntensity: 0.22, roughness: 0.85}, eyeink: {color: "#161214", roughness: 0.85}, eyewhite: {color: "#fffdfa", roughness: 0.4}, fur: {color: "#c87040", metalness: 0, roughness: 0.82}, inner: {color: "#8a7f8c", metalness: 0, roughness: 0.9}, iris: {color: "#2aa0a0", roughness: 0.25}, mark: {color: "#7b4930", metalness: 0, roughness: 0.82}, mouth: {color: "#661625", roughness: 0.9}, nose: {color: "#2a1c18", metalness: 0.05, roughness: 0.35}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e1c3ab", metalness: 0, roughness: 0.82}, tongue: {color: "#ff7b95", roughness: 0.6}}}, morph: {Blush: 0.619, EyeTall: 1, Open: 0.4, Smile: 1}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.d206916575ccbe6d031f0934134d27d2acea05a26d027868fc5ec32e3031a56b.glb, materials: {belly: {color: "#e1c3ab", metalness: 0, roughness: 0.88}, blush: {color: "#ff6285", emissive: "#ff4065", emissiveIntensity: 0.22, roughness: 0.85}, eyeink: {color: "#161214", roughness: 0.85}, eyewhite: {color: "#fffdfa", roughness: 0.4}, fur: {color: "#c87040", metalness: 0, roughness: 0.82}, inner: {color: "#8a7f8c", metalness: 0, roughness: 0.9}, iris: {color: "#2aa0a0", roughness: 0.25}, mark: {color: "#7b4930", metalness: 0, roughness: 0.82}, mouth: {color: "#661625", roughness: 0.9}, nose: {color: "#2a1c18", metalness: 0.05, roughness: 0.35}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e1c3ab", metalness: 0, roughness: 0.82}, tongue: {color: "#ff7b95", roughness: 0.6}}}, morph: {Blush: 0.619, EyeTall: 1, Open: 0.4, Smile: 1}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: -24.5, y: 0, z: -6.6}
   id: l5-odette
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -3858,7 +4349,7 @@ l5-people:
   visible: false
 l5-pip:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.aedfeb0d9ee23900c4664425e5c04ed6e620e5bdeaa9e6a4b3061988393ac921.glb, materials: {belly: {color: "#e2d5c5"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#b9aca0"}, inner: {color: "#ffc2d1"}, mark: {color: "#c9bcaf"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#6a5e58"}}}, morph: {Happy: 1, Open: 0.5, Smile: 1}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.aedfeb0d9ee23900c4664425e5c04ed6e620e5bdeaa9e6a4b3061988393ac921.glb, materials: {belly: {color: "#e2d5c5"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#b9aca0"}, inner: {color: "#ffc2d1"}, mark: {color: "#c9bcaf"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#6a5e58"}}}, morph: {Happy: 1, Open: 0.5, Smile: 1}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: -36, y: 0, z: -7}
   id: l5-pip
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -3877,6 +4368,7 @@ l5-play-lib-fill:
 l5-radio-ball:
   audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
   behavior: scripts/l5-door.js
+  castShadow: false
   feetPosition: {x: 15.5, y: 0.95, z: -10.6}
   id: l5-radio-ball
   material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
@@ -3885,9 +4377,11 @@ l5-radio-ball:
   rotation: {yaw: 0}
   state: {info: "A polonaise, from the Beverly Room's bandstand. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
   tags: [usable, l5-radio]
+  visibleRange: {max: 40, min: 0}
 l5-radio-boiler:
   audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
   behavior: scripts/l5-door.js
+  castShadow: false
   feetPosition: {x: 20, y: 1.2, z: 23.5}
   id: l5-radio-boiler
   material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
@@ -3896,9 +4390,11 @@ l5-radio-boiler:
   rotation: {yaw: -90}
   state: {info: "A polonaise, from the Boiler Room's foreman's desk. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
   tags: [usable, l5-radio]
+  visibleRange: {max: 40, min: 0}
 l5-radio-desk:
   audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
   behavior: scripts/l5-door.js
+  castShadow: false
   feetPosition: {x: -42.6, y: 1.12, z: 3.2}
   id: l5-radio-desk
   material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
@@ -3907,9 +4403,11 @@ l5-radio-desk:
   rotation: {yaw: -90}
   state: {info: "A polonaise, from the front desk. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
   tags: [usable, l5-radio]
+  visibleRange: {max: 40, min: 0}
 l5-radio-hk:
   audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
   behavior: scripts/l5-door.js
+  castShadow: false
   feetPosition: {x: 16.8, y: 0.95, z: 22.8}
   id: l5-radio-hk
   material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
@@ -3918,9 +4416,11 @@ l5-radio-hk:
   rotation: {yaw: 180}
   state: {info: "A polonaise, from Housekeeping. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
   tags: [usable, l5-radio]
+  visibleRange: {max: 40, min: 0}
 l5-radio-kitchen:
   audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
   behavior: scripts/l5-door.js
+  castShadow: false
   feetPosition: {x: -7, y: 1, z: 20.4}
   id: l5-radio-kitchen
   material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
@@ -3929,9 +4429,11 @@ l5-radio-kitchen:
   rotation: {yaw: 180}
   state: {info: "A polonaise, from Homely Hotel's dining room. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
   tags: [usable, l5-radio]
+  visibleRange: {max: 40, min: 0}
 l5-radio-room:
   audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
   behavior: scripts/l5-door.js
+  castShadow: false
   feetPosition: {x: -15, y: 0.7, z: -20.4}
   id: l5-radio-room
   material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
@@ -3940,9 +4442,11 @@ l5-radio-room:
   rotation: {yaw: 0}
   state: {info: "A polonaise, from Room 1408. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
   tags: [usable, l5-radio]
+  visibleRange: {max: 40, min: 0}
 l5-radio-salon:
   audio: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}
   behavior: scripts/l5-door.js
+  castShadow: false
   feetPosition: {x: 0.2, y: 0.8, z: -22.6}
   id: l5-radio-salon
   material: {color: oklch(0.42 0.08 50), roughness: 0.4, texture: cdn/texture-worn-hardwood-grain.png}
@@ -3951,6 +4455,7 @@ l5-radio-salon:
   rotation: {yaw: 0}
   state: {info: "A polonaise, from the Originals' salon. Nobody tuned it.", kind: radio, name: Valve radio, "on": true, tint: "#e8c983", track: {bus: music, clip: /cdn/music-violin-polonaise-classical-dance-zqs6sbbs.mp3, gain: 0.55, loop: true, maxDistance: 16, refDistance: 2, spatial: true}, verb: Switch off}
   tags: [usable, l5-radio]
+  visibleRange: {max: 40, min: 0}
 l5-rats:
   behavior: scripts/l5-rats.js
   feetPosition: {x: 32, y: 0, z: 0}
@@ -3969,6 +4474,7 @@ l5-samantha:
   state: {faction: The Beverly Room, headBody: /cdn/value.05b6fcdb02ae0489f79f366c2285414facaa51f7639114b24430fb4ac82f5455.glb, hp: 1000, info: A very small cat. She is looking at you., maxHp: 1000, name: Samantha, offers: [["o:feed", Offer meat], ["o:refuse", Refuse]], role: psychic, tint: "#7dff9a", trespass: {}, verb: Talk, warned: {}, wear: {blush: "#ff6285", botp: velvet, bottom: "#ff8fc7", botw: none, buildS: 1.15, bustS: 1, earS: 0.84, expr: grin, eye: "#2b2233", eyes: round, eyew: none, fseed: 1505621034, fur: "#484050", hat: flower, hatc: "#4a5a8a", hatp: "", headS: 1.11, heightS: 0.9, hipS: 0.84, marks: none, model: "", neck: scarf, neckc: "#f3c64a", neckp: knit, nose: "", shoec: "#f2c4a0", shoep: knit, shoes: slippers, snoutS: 1.32, tailS: 0.73, top: "#5a3a2a", topp: floral, topw: dress, trait: "", waistS: 1.06}}
   tags: [npc, samantha, usable, entity26]
 l5-seat-card0:
+  castShadow: false
   feetPosition: {x: 2.2750079443027404, y: 0, z: -14.630052574806783}
   id: l5-seat-card0
   primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
@@ -3976,7 +4482,9 @@ l5-seat-card0:
   state: {name: Gilt chair, seat: {d: 0, w: 1}}
   tags: [seat]
   visible: false
+  visibleRange: {max: 40, min: 0}
 l5-seat-card1:
+  castShadow: false
   feetPosition: {x: 0.8937517567824427, y: 0, z: -13.802622567341803}
   id: l5-seat-card1
   primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
@@ -3984,7 +4492,9 @@ l5-seat-card1:
   state: {name: Gilt chair, seat: {d: 0, w: 1}}
   tags: [seat]
   visible: false
+  visibleRange: {max: 40, min: 0}
 l5-seat-card2:
+  castShadow: false
   feetPosition: {x: 0.5249947735064114, y: 0, z: -15.369953853350529}
   id: l5-seat-card2
   primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
@@ -3992,7 +4502,9 @@ l5-seat-card2:
   state: {name: Gilt chair, seat: {d: 0, w: 1}}
   tags: [seat]
   visible: false
+  visibleRange: {max: 40, min: 0}
 l5-seat-card3:
+  castShadow: false
   feetPosition: {x: 1.7699570674216956, y: 0, z: -15.875003867571303}
   id: l5-seat-card3
   primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
@@ -4000,7 +4512,9 @@ l5-seat-card3:
   state: {name: Gilt chair, seat: {d: 0, w: 1}}
   tags: [seat]
   visible: false
+  visibleRange: {max: 40, min: 0}
 l5-seat-mahjong0:
+  castShadow: false
   feetPosition: {x: 5.999997428756427, y: 0, z: -0.6999999999952776}
   id: l5-seat-mahjong0
   primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
@@ -4008,7 +4522,9 @@ l5-seat-mahjong0:
   state: {name: Gilt stool, seat: {d: 0, w: 1}}
   tags: [seat]
   visible: false
+  visibleRange: {max: 40, min: 0}
 l5-seat-mahjong1:
+  castShadow: false
   feetPosition: {x: 6.7, y: 0, z: 0}
   id: l5-seat-mahjong1
   primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
@@ -4016,7 +4532,9 @@ l5-seat-mahjong1:
   state: {name: Gilt stool, seat: {d: 0, w: 1}}
   tags: [seat]
   visible: false
+  visibleRange: {max: 40, min: 0}
 l5-seat-mahjong2:
+  castShadow: false
   feetPosition: {x: 6, y: 0, z: 0.7}
   id: l5-seat-mahjong2
   primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
@@ -4024,7 +4542,9 @@ l5-seat-mahjong2:
   state: {name: Gilt stool, seat: {d: 0, w: 1}}
   tags: [seat]
   visible: false
+  visibleRange: {max: 40, min: 0}
 l5-seat-mahjong3:
+  castShadow: false
   feetPosition: {x: 5.30000000001889, y: 0, z: -0.000005142487144339649}
   id: l5-seat-mahjong3
   primitive: {depth: 0.42, height: 0.48, kind: box, width: 0.42}
@@ -4032,12 +4552,13 @@ l5-seat-mahjong3:
   state: {name: Gilt stool, seat: {d: 0, w: 1}}
   tags: [seat]
   visible: false
+  visibleRange: {max: 40, min: 0}
 l5-staff:
   behavior: scripts/l5-staff.js
   feetPosition: {x: -18, y: 0, z: 0}
   id: l5-staff
 l5-staff-bellhop:
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.93e9304a82b9f2572ed4ff4ba92df1db2c4babbd1ffb55a36ea3e796b7e3dc12.glb, materials: {belly: {color: "#a9bfdc"}, blush: {color: "#060606", metalness: 0, roughness: 1}, eyeink: {color: "#060606", metalness: 0, roughness: 1}, eyewhite: {color: "#060606", metalness: 0, roughness: 1}, fur: {color: "#060606"}, mark: {color: "#060606", metalness: 0, roughness: 1}, mouth: {color: "#060606", metalness: 0, roughness: 1}, nose: {color: "#060606", metalness: 0, roughness: 1}, pupil: {color: "#060606", metalness: 0, roughness: 1}, tip: {color: "#060606", metalness: 0, roughness: 1}, tongue: {color: "#060606", metalness: 0, roughness: 1}}}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.93e9304a82b9f2572ed4ff4ba92df1db2c4babbd1ffb55a36ea3e796b7e3dc12.glb, materials: {belly: {color: "#a9bfdc"}, blush: {color: "#060606", metalness: 0, roughness: 1}, eyeink: {color: "#060606", metalness: 0, roughness: 1}, eyewhite: {color: "#060606", metalness: 0, roughness: 1}, fur: {color: "#060606"}, mark: {color: "#060606", metalness: 0, roughness: 1}, mouth: {color: "#060606", metalness: 0, roughness: 1}, nose: {color: "#060606", metalness: 0, roughness: 1}, pupil: {color: "#060606", metalness: 0, roughness: 1}, tip: {color: "#060606", metalness: 0, roughness: 1}, tongue: {color: "#060606", metalness: 0, roughness: 1}}}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: -22.8, y: 0.02, z: -12.55}
   id: l5-staff-bellhop
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -4050,7 +4571,7 @@ l5-staff-bellhop:
   state: {attr: "6,7,6,5,8,5,4", hp: 176, info: A faceling in a bellhop's coat. It still carries a room key nobody gave it. It only moves when you look away., kind: staff, maxHp: 176, mode: post, name: The Bellhop, title: Swift, verb: Look, xp: 80}
   tags: [moths, l5staff, l5-hostile, usable, faceling]
 l5-staff-maid:
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.b5ba6340a943f30bf2772d5b6c93a6523798452a5ccdc376816b237606e649ad.glb, materials: {belly: {color: "#fff1dc"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f2a65a"}, mark: {color: "#d9843a"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#fff1dc"}}}, morph: {Open: 0.4, Smile: 1}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.b5ba6340a943f30bf2772d5b6c93a6523798452a5ccdc376816b237606e649ad.glb, materials: {belly: {color: "#fff1dc"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f2a65a"}, mark: {color: "#d9843a"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#fff1dc"}}}, morph: {Open: 0.4, Smile: 1}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: -13.5, y: 0.02, z: 12.55}
   id: l5-staff-maid
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -4062,7 +4583,7 @@ l5-staff-maid:
   state: {disguised: true, hp: 160, info: One of the hotel staff. Polite. Very still., kind: staff, maxHp: 160, mode: post, name: The Chambermaid, verb: Look}
   tags: [moths, l5staff, l5-hostile, usable, faceling]
 l5-staff-porter:
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.79934f170ef9260304b202ef4205824dba9052af0c9475c6b8846522d9c15e91.glb, materials: {belly: {color: "#ffffff"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f07a2e"}, mark: {color: "#2c1c18"}, nose: {color: "#231816"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#ffffff"}}}, morph: {Open: 0.4, Smile: 1}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.79934f170ef9260304b202ef4205824dba9052af0c9475c6b8846522d9c15e91.glb, materials: {belly: {color: "#ffffff"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#f07a2e"}, mark: {color: "#2c1c18"}, nose: {color: "#231816"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#ffffff"}}}, morph: {Open: 0.4, Smile: 1}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: -6.55, y: 0.02, z: -11.5}
   id: l5-staff-porter
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -4083,6 +4604,7 @@ l5-stairs-up:
   state: {to: level4#l4-from-l5}
   tags: [door]
   visible: false
+  visibleRange: {max: 80, min: 0}
 l5-stairs-up-lamp:
   feetPosition: {x: -8, y: 2.9, z: -20}
   id: l5-stairs-up-lamp
@@ -4094,6 +4616,7 @@ l5-stairs-up-plate:
   primitive: {depth: 0.03, height: 0.36, kind: box, width: 1.2}
   rotation: {yaw: 180}
   ui: "<div face=\"front\" width=\"1.2m\" style=\"font-family:serif;text-align:center;color:#e8c983;background:#2a1c12;border:14px solid #8a6a2a;padding:18px 10px;line-height:1.05\"><div style=\"font-size:130px;font-weight:900;letter-spacing:10px\">LEVEL 4</div><div style=\"font-size:64px;font-style:italic;opacity:.85\">▲ abandoned office</div></div>"
+  visibleRange: {max: 80, min: 0}
 l5-to-l6:
   behavior: scripts/level-door.js
   feetPosition: {x: 45.349999999999994, y: 0, z: 6}
@@ -4104,9 +4627,10 @@ l5-to-l6:
   state: {to: level6#l6-from-l5}
   tags: [door]
   visible: false
+  visibleRange: {max: 80, min: 0}
 l5-tobias:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.43c1427f34c45c4356a682d359e3c1d9009830432ed20ba8f7a0d0332015d2a6.glb, materials: {belly: {color: "#e8e2da"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#7a7470"}, mark: {color: "#5c5451"}, nose: {color: "#1c1a20"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#554d4a"}}}, morph: {Frown: 0.3, Half: 0.5}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.43c1427f34c45c4356a682d359e3c1d9009830432ed20ba8f7a0d0332015d2a6.glb, materials: {belly: {color: "#e8e2da"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#7a7470"}, mark: {color: "#5c5451"}, nose: {color: "#1c1a20"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#554d4a"}}}, morph: {Frown: 0.3, Half: 0.5}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: -3.4, y: 0, z: 22.6}
   id: l5-tobias
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -4119,12 +4643,14 @@ l5-tobias:
   tags: [npc, l5res, l5-hk]
 l5-tobias/object/x595cd23e2238773d/2:
   attachment: {bone: RightHand}
+  castShadow: false
   id: l5-tobias/object/x595cd23e2238773d/2
   model: {id: /cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb, offset: [0, -0.064, 0]}
   parent: l5-tobias
+  visibleRange: {max: 40, min: 0}
 l5-vanderholt:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.912806c11c0383f0abee4647d5fd0f29d67c59af03b26f81f114c47260339e75.glb, materials: {belly: {color: "#e9bf95"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#d8822e"}, mark: {color: "#e9bf95"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e9bf95"}}}, morph: {Half: 0.5, Smile: 0.7}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.912806c11c0383f0abee4647d5fd0f29d67c59af03b26f81f114c47260339e75.glb, materials: {belly: {color: "#e9bf95"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#d8822e"}, mark: {color: "#e9bf95"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e9bf95"}}}, morph: {Half: 0.5, Smile: 0.7}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: 3, y: 0.02, z: -20}
   id: l5-vanderholt
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -4137,7 +4663,7 @@ l5-vanderholt:
   tags: [npc, l5res, l5-orig]
 l5-vesna:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.e5324b109eba65a4ebeca641151f68f13e5c82ba531d8d6b3d2761cf8bf2f486.glb, materials: {antler: {color: "#e9d8b4"}, belly: {color: "#f3e3ce"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#a87a4e"}, mark: {color: "#664b37"}, nose: {color: "#2a1612"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#6b4f39"}}}, morph: {Half: 0.5, Smile: 0.7}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.e5324b109eba65a4ebeca641151f68f13e5c82ba531d8d6b3d2761cf8bf2f486.glb, materials: {antler: {color: "#e9d8b4"}, belly: {color: "#f3e3ce"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#a87a4e"}, mark: {color: "#664b37"}, nose: {color: "#2a1612"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#6b4f39"}}}, morph: {Half: 0.5, Smile: 0.7}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: 14.6, y: 0, z: 15.4}
   id: l5-vesna
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -4151,12 +4677,14 @@ l5-vesna:
   tags: [npc, l5res, l5-hk]
 l5-vesna/object/x595cd23e2238773d/1:
   attachment: {bone: RightHand}
+  castShadow: false
   id: l5-vesna/object/x595cd23e2238773d/1
   model: {id: /cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb, offset: [0, -0.064, 0]}
   parent: l5-vesna
+  visibleRange: {max: 40, min: 0}
 l5-wat:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.ecce1e1490a06674369554980ddc66fba91e26f5d6af26ec59ad9faa18d700ac.glb, materials: {belly: {color: "#e6d1b7"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#d9a466"}, inner: {color: "#ffc2d1"}, mark: {color: "#664d37"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e6d1b7"}}}, morph: {Half: 0.5, O: 0.5}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.ecce1e1490a06674369554980ddc66fba91e26f5d6af26ec59ad9faa18d700ac.glb, materials: {belly: {color: "#e6d1b7"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#d9a466"}, inner: {color: "#ffc2d1"}, mark: {color: "#664d37"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#e6d1b7"}}}, morph: {Half: 0.5, O: 0.5}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: 13, y: 0, z: -16}
   id: l5-wat
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -4170,7 +4698,7 @@ l5-wat:
   tags: [npc, l5res, l5-orig]
 l5-whitlock:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.2cd659a66f73ed90b210a5f46e6ec6687f4f4617a65b382320c0d1a372053680.glb, materials: {belly: {color: "#d3ccc7", metalness: 0, roughness: 0.88}, blush: {color: "#ffb0a0", emissive: "#ff4065", emissiveIntensity: 0.15, roughness: 0.85}, eyeink: {color: "#161214", roughness: 0.85}, eyewhite: {color: "#fffdfa", roughness: 0.4}, fur: {color: "#5a5a6a", metalness: 0, roughness: 0.82}, inner: {color: "#b8cce6", metalness: 0, roughness: 0.9}, iris: {color: "#d03a3a", roughness: 0.25}, mark: {color: "#8d8a91", metalness: 0, roughness: 0.82}, mouth: {color: "#661625", roughness: 0.9}, nose: {color: "#c86a6a", metalness: 0.05, roughness: 0.35}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#d3ccc7", metalness: 0, roughness: 0.82}, tongue: {color: "#ff7b95", roughness: 0.6}}}, morph: {Blush: 0.25, Frown: 0.06559999999999999, Half: 0.24599999999999997, Open: 0.4, Sad: 0.164, Smile: 1}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.2cd659a66f73ed90b210a5f46e6ec6687f4f4617a65b382320c0d1a372053680.glb, materials: {belly: {color: "#d3ccc7", metalness: 0, roughness: 0.88}, blush: {color: "#ffb0a0", emissive: "#ff4065", emissiveIntensity: 0.15, roughness: 0.85}, eyeink: {color: "#161214", roughness: 0.85}, eyewhite: {color: "#fffdfa", roughness: 0.4}, fur: {color: "#5a5a6a", metalness: 0, roughness: 0.82}, inner: {color: "#b8cce6", metalness: 0, roughness: 0.9}, iris: {color: "#d03a3a", roughness: 0.25}, mark: {color: "#8d8a91", metalness: 0, roughness: 0.82}, mouth: {color: "#661625", roughness: 0.9}, nose: {color: "#c86a6a", metalness: 0.05, roughness: 0.35}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#d3ccc7", metalness: 0, roughness: 0.82}, tongue: {color: "#ff7b95", roughness: 0.6}}}, morph: {Blush: 0.25, Frown: 0.06559999999999999, Half: 0.24599999999999997, Open: 0.4, Sad: 0.164, Smile: 1}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: 7, y: 0, z: -20.4}
   id: l5-whitlock
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
@@ -4183,7 +4711,7 @@ l5-whitlock:
   tags: [npc, l5res, l5-orig]
 l5-zelda:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js, scripts/l5-resident.js]
-  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.0a341d60ed49d8102effdb4700b36df293e648fd71310921888b5ed849ec09f9.glb, materials: {belly: {color: "#a29c99"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#2a2428"}, mark: {color: "#352824"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#322725"}}}, morph: {Half: 0.3, Smile: 0.8}}]
+  children: [{attachment: {skin: true}, id: critter-head, model: {id: /cdn/value.0a341d60ed49d8102effdb4700b36df293e648fd71310921888b5ed849ec09f9.glb, materials: {belly: {color: "#a29c99"}, eyewhite: {color: "#fffaf2", roughness: 0.9}, fur: {color: "#2a2428"}, mark: {color: "#352824"}, nose: {color: "#ff8fa3"}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#322725"}}}, morph: {Half: 0.3, Smile: 0.8}, visibleRange: {max: 80, min: 0}}]
   feetPosition: {x: 5, y: 0, z: -17.6}
   id: l5-zelda
   jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
