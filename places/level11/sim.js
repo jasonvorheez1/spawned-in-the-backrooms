@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 69; // bump to rebuild the city in rooms that are already open
+const V = 70; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -557,7 +557,7 @@ function lay(ctx) {
 
   // Storefront 1: Centro Dermatológico (Left)
   sp("l11-mall-sign-derma", { // a backlit box sign, its face toward the street (+X)
-    feetPosition: { x: MALL_X + MALL_W / 2 + 0.08, y: 3.57, z: MALL_Z - 6.5 },
+    feetPosition: { x: MALL_X + MALL_W / 2 + 0.33, y: 3.57, z: MALL_Z - 6.5 },
     rotation: { yaw: 90 },
     primitive: { kind: "box", width: 4.6, height: 1.53, depth: 0.12 },
     material: { texture: "/cdn/value.a4659ffdbe2739ef5037fe9ae5acaf3f02bb949cf11b5b0bd914940d0ea6d298.png", color: "#ffffff", roughness: 0.35, emissive: "#ffffff", emissiveIntensity: 0.35, emissiveMap: "/cdn/value.a4659ffdbe2739ef5037fe9ae5acaf3f02bb949cf11b5b0bd914940d0ea6d298.png" },
@@ -566,7 +566,7 @@ function lay(ctx) {
 
   // Storefront 2: IS LAB (Center)
   sp("l11-mall-sign-islab", { // a backlit box sign, its face toward the street (+X)
-    feetPosition: { x: MALL_X + MALL_W / 2 + 0.08, y: 3.7, z: MALL_Z },
+    feetPosition: { x: MALL_X + MALL_W / 2 + 0.33, y: 3.7, z: MALL_Z },
     rotation: { yaw: 90 },
     primitive: { kind: "box", width: 4.2, height: 1.4, depth: 0.12 },
     material: { texture: "/cdn/value.0b4a4ce24244c5eda36fc29774505e1a9e45e11c61d55faa2854be3791c3e751.png", color: "#ffffff", roughness: 0.35, emissive: "#ffffff", emissiveIntensity: 0.35, emissiveMap: "/cdn/value.0b4a4ce24244c5eda36fc29774505e1a9e45e11c61d55faa2854be3791c3e751.png" },
@@ -575,7 +575,7 @@ function lay(ctx) {
 
   // Storefront 3: Marroka Pizzeria (Right - Enterable!)
   sp("l11-mall-sign-pizza", { // a backlit box sign, its face toward the street (+X)
-    feetPosition: { x: MALL_X + MALL_W / 2 + 0.08, y: 3.57, z: MALL_Z + 6.5 },
+    feetPosition: { x: MALL_X + MALL_W / 2 + 0.33, y: 3.57, z: MALL_Z + 6.5 },
     rotation: { yaw: 90 },
     primitive: { kind: "box", width: 4.6, height: 1.53, depth: 0.12 },
     material: { texture: "/cdn/value.84d3cf5aa956aa729dd601b744605f186624a542c7ceefe9d8d35e746f6b5290.png", color: "#ffffff", roughness: 0.35, emissive: "#ffffff", emissiveIntensity: 0.35, emissiveMap: "/cdn/value.84d3cf5aa956aa729dd601b744605f186624a542c7ceefe9d8d35e746f6b5290.png" },
