@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 26;
+const V = 27;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -50,6 +50,18 @@ export function tick(ctx) {
   bx("h-wall-mid-l", -3.25, 0, -1, 3.5, H, 0.12, PAPER); // bedroom partition with a doorway
   bx("h-wall-mid-r", 3.25, 0, -1, 3.5, H, 0.12, PAPER);
   bx("h-wall-mid-top", 0, 2.1, -1, 3, H - 2.1, 0.12, PAPER);
+  // the hallway (Shelly: "add a hallway"): z -1..-2.6, living room doorway in the middle, bedroom door at the west end, bath door at the east
+  const HZ = -2.6;
+  bx("h-hall-wall-l", -4.75, 0, HZ, 0.5, H, 0.12, PAPER);
+  bx("h-hall-wall-r", 0.75, 0, HZ, 8.5, H, 0.12, PAPER);
+  bx("h-hall-wall-top", -4.0, 2.1, HZ, 1.0, H - 2.1, 0.12, PAPER);
+  for (const [id, x, w] of [["h-case-l", -4.52, 0.05], ["h-case-r", -3.48, 0.05]]) bx(id, x, 0, HZ, w, 2.12, 0.16, TRIM, { physics: "none" }); // bedroom door casing
+  bx("h-case-top", -4.0, 2.08, HZ, 1.1, 0.06, 0.16, TRIM, { physics: "none" });
+  for (const [id, z] of [["h-base-hall-s", HZ + 0.07], ["h-base-hall-n", HZ - 0.07]]) bx(id, 0.75, 0.05, z, 8.5, 0.12, 0.02, TRIM, { physics: "none" });
+  bx("h-hall-runner", -0.4, 0.112, -1.8, 7.6, 0.01, 0.9, { color: "oklch(0.42 0.09 30)", roughness: 0.95 }, { physics: "none" }); // a worn burgundy runner down the hall
+  bx("h-bath-door", 4.9, 0.05, -1.8, 0.06, 2.05, 0.85, { color: "oklch(0.93 0.015 85)", roughness: 0.5 }); // six-panel bath door, shut
+  sp("h-bath-knob", { feetPosition: { x: 4.84, y: 1.0, z: -1.5 }, primitive: { kind: "sphere", radius: 0.035 }, material: { color: "oklch(0.8 0.1 85)", metalness: 0.9, roughness: 0.3 } });
+  sp("h-light-hall", { feetPosition: { x: -1.2, y: 2.55, z: -1.8 }, primitive: { kind: "cylinder", radiusTop: 0.17, radiusBottom: 0.12, height: 0.12 }, material: { color: "oklch(0.97 0.02 90)", emissive: "oklch(0.9 0.05 85)", emissiveIntensity: 0.6 }, light: { kind: "point", color: "oklch(0.88 0.07 70)", intensity: 1.0, distance: 6 } }); // frosted flush-mount dome
   for (const [id, x, z, w, d] of [["h-base-w", -4.9, 0, 0.04, D], ["h-base-e", 4.9, 0, 0.04, D], ["h-base-n", 0, -5.9, W, 0.04]]) bx(id, x, 0.05, z, w, 0.12, d, TRIM, { physics: "none" });
 
   // the front door: back out to the porch
@@ -93,7 +105,7 @@ export function tick(ctx) {
   hang("h-coke1", "/cdn/value.8dbfe9caef376c3d74354e97aa627d7a842fdc981ef4f60ddfd2c24d34aea0fd.glb", 1.75, 0.86, -5.0, 0, [0.066, 0.12, 0.066]); // coke can by the keyboard
   hang("h-coke2", "/cdn/value.8dbfe9caef376c3d74354e97aa627d7a842fdc981ef4f60ddfd2c24d34aea0fd.glb", -1.62, 0.46, -5.62, 40, [0.066, 0.12, 0.066]); // another on the boombox
   fit("h-lamp-2", M.lamp, -0.9, -5.5, 0, [0.4, 1.2, 0.4], use("lamp", "Lamp", "Switch", { light: "h-lamp-2-light", int: 0.8 }));
-  sp("h-light-bed", { feetPosition: { x: -1, y: 2.5, z: -3.5 }, light: { kind: "point", color: "oklch(0.85 0.08 65)", intensity: 1.4, distance: 7 } });
+  sp("h-light-bed", { feetPosition: { x: -1, y: 2.5, z: -4.3 }, light: { kind: "point", color: "oklch(0.85 0.08 65)", intensity: 1.4, distance: 7 } });
   // things to use (Shelly: "add interactibles")
   fit("h-fridge", "/cdn/value.d0d0dc823edfbfe08bea35729295b7b5dd01a2864bcd7c46d08a7d8599993e53.glb", 4.5, 1.55, 270, [0.75, 1.75, 0.75], { tags: ["container", "storage"], state: { name: "Fridge", cap: 30, saveKey: "homeFridge", loaded: !!owner, items: owner ? owner.state.homeFridge : (fridgeKeep ?? "coke,snapple,almond:grey,pizza") } }); // almond two-door, magnets and papers
   hang("h-micro", "/cdn/value.1d3dc84f3f95564053f8162e486d92ab5dfd9678eb26b82aed879a7371f33bea.glb", 4.45, 0.9, 3.4, 270, [0.36, 0.28, 0.5]); sp("h-micro-use", { ...use("microwave", "Microwave", "Heat your food"), feetPosition: { x: 4.45, y: 0.9, z: 3.4 }, primitive: { kind: "box", width: 0.36, height: 0.28, depth: 0.5 }, material: { opacity: 0, transparent: true }, physics: { body: "static", collider: "box" } });
@@ -103,7 +115,7 @@ export function tick(ctx) {
   hang("h-ipod", "/cdn/value.d4492ec79dc96b8f287d8aad99b6b5ea0866070d9e08500ba2b9bf5d30e73875.glb", 3.8, 0.93, -5.42, 0, [0.1, 0.15, 0.1]); // white iPod on its dock, dresser top
   hang("h-razr", "/cdn/value.726b4ce1eb3fc52d4e35252d822b6f420f37c4c28ce628366a59b8cb7449f3e8.glb", -2.55, 0.62, -4.35, 30, [0.06, 0.1, 0.12]); sp("h-razr-use", { ...use("phone", "Razr", "Check texts"), feetPosition: { x: -2.55, y: 0.6, z: -4.35 }, primitive: { kind: "box", width: 0.2, height: 0.12, depth: 0.2 }, material: { opacity: 0, transparent: true } });
   hang("h-dvds", "/cdn/value.854240d4e72d45668e1d95134e4600a44ca99ac98485d362c0b6c023f2f128b6.glb", -3.25, 0.1, -0.55, 10, [0.2, 0.3, 0.15]); // DVD stack by the TV stand
-  fit("h-blowup", "/cdn/value.afa0c785ed6f8de02e08eba83bb07a5b8b9afdb7a0cd08c5469c281133c00d57.glb", 2.6, -2.4, 200, [0.95, 0.75, 0.9]); // lime inflatable chair in the bedroom
+  fit("h-blowup", "/cdn/value.afa0c785ed6f8de02e08eba83bb07a5b8b9afdb7a0cd08c5469c281133c00d57.glb", 3.9, -3.5, 230, [0.95, 0.75, 0.9]); // lime inflatable chair in the bedroom
   sp("h-lamp-1-light", { feetPosition: { x: -3.75, y: 1.55, z: 3.6 }, light: { kind: "point", color: "oklch(0.88 0.09 70)", intensity: 0.9, distance: 4 } });
   sp("h-lamp-2-light", { feetPosition: { x: -0.9, y: 1.15, z: -5.5 }, light: { kind: "point", color: "oklch(0.88 0.09 70)", intensity: 0.8, distance: 4 } });
   sp("h-window", { feetPosition: { x: -4.9, y: 1.0, z: -3.5 }, primitive: { kind: "box", width: 0.05, height: 1.1, depth: 1.4 }, material: { color: "oklch(0.95 0.04 85)", emissive: "#fff1d0", emissiveIntensity: 1.2 } });
