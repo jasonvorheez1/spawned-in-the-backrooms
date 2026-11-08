@@ -250,7 +250,6 @@ def rig(head, body, wide):
     bpy.context.view_layer.objects.active = r
     bpy.ops.object.parent_set(type="ARMATURE_AUTO")
     shoulder_blend(body, r)
-    shoulder_weights(body, r)
     unweighted = sum(1 for v in body.data.vertices if not v.groups)
     print("body unweighted verts", unweighted)
     hg = head.vertex_groups.new(name="Head")
@@ -312,6 +311,7 @@ def build(name, is_male, height):
         extra.append(garment(body, r, "Shorts", lambda c, a: 0.82 < c.z < 1.07 and a < 0.3, (0.08, 0.1, 0.16, 1), cuts=(0.82, 1.07)))
     if is_male:  # 16+: plain trunks on him too (Shelly #94829 asked the same floor for her)
         extra.append(garment(body, r, "Shorts", lambda c, a: 0.80 < c.z < 1.08 and a < 0.3, (0.09, 0.11, 0.17, 1), cuts=(0.80, 1.08)))
+    shoulder_weights(body, r)  # after the garments, so the bra and shorts keep their own cut
     s = height / 1.94
     r.scale = (s, s, s); bpy.ops.object.select_all(action="DESELECT")
     for o in (r, head, body, *extra): o.select_set(True)
