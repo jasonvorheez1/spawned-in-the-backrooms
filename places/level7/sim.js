@@ -829,7 +829,7 @@ function lay(ctx) {
   // the house hangs from the ceiling on one concrete column standing on its ridge (ridge at FY + 4.42)
   ctx.spawn("l7-hanger", { feetPosition: { x: 0, y: FY + 4.3, z: 0 }, primitive: { kind: "box", width: 1.6, height: 34 - FY - 4.3, depth: 1.6 }, material: { ...CEIL, color: "oklch(0.33 0.008 240)" }, castShadow: false });
   // the outside of the entrance room: a 2000s suburban house, vinyl lap siding, shuttered windows with mini-blinds, an asphalt-shingle gable, gutters, a dish
-  ctx.spawn("l7-house-shell", { feetPosition: { x: 0, y: FY, z: 0 }, model: { id: "/cdn/value.ad21f35b53f1aafe0159d86fee9eb07e67a3aa1fcd646a46690ed6177cc755bb.glb", offset: [0, -1.58, 0], materials: { // the foundation hangs 1.58 m below the floor line
+  ctx.spawn("l7-house-shell", { feetPosition: { x: 0, y: FY, z: 0 }, model: { id: "/cdn/value.ad21f35b53f1aafe0159d86fee9eb07e67a3aa1fcd646a46690ed6177cc755bb.glb", offset: [0, -1.6, -0.985], materials: { // the foundation hangs 1.6 m below the floor line; the front stoop shifts the bounds centre 0.985 m
     siding: { texture: "cdn/texture-grimy-weathered-pale-sage-vinyl-siding-paint.png", color: "oklch(0.78 0.03 110)", roughness: 0.6 },
     shingle: { texture: "cdn/texture-weathered-charcoal-asphalt-roof-shingle-granules.png", color: "oklch(0.42 0.005 250)", roughness: 0.95 },
     concrete: { texture: "cdn/texture-smooth-cold-poured-concrete-wall.png", color: "oklch(0.6 0.01 240)", roughness: 0.95 },
