@@ -1,0 +1,120 @@
+# What the player can say to an npc: pools the choice list draws from (scripts/lib/npc-starters.js).
+# Each npc gets its own seeded mix (id + how many times you've talked), lines you've already said drop out.
+personal:
+  - { text: "What did you do before you ended up here?", tag: Lore }
+  - { text: "Do you ever think about going home?", tag: Chat }
+  - { text: "What do you miss most from out there?", tag: Chat }
+  - { text: "You came in alone, or with someone?", tag: Lore }
+  - { text: "How do you keep track of the days?", tag: Chat }
+  - { text: "What's your name, if you don't mind me asking?", tag: Chat }
+  - { text: "You sleep alright down here?", tag: Chat }
+  - { text: "Got anyone waiting on you somewhere?", tag: Chat }
+  - { text: "What keeps you going?", tag: Chat }
+  - { text: "Do you have a favorite spot in this place?", tag: Chat }
+  - { text: "What's the strangest thing you've seen?", tag: Lore }
+  - { text: "You seem calm. How?", tag: Chat }
+  - { text: "Is that tail always that fluffy or is it the humidity?", tag: Chat }
+  - { text: "Where'd you get that outfit?", tag: Chat }
+  - { text: "You hear any news from the other levels?", tag: Lore }
+  - { text: "Who do you trust down here?", tag: Lore }
+  - { text: "What's the worst job you've ever had?", tag: Chat }
+  - { text: "Do you remember the day you no-clipped?", tag: Lore }
+  - { text: "Ever met someone who made it out?", tag: Lore }
+  - { text: "You hungry? You look hungry.", tag: Chat }
+mood:
+  - { text: "You okay? You look tired.", tag: Chat }
+  - { text: "Rough day?", tag: Chat }
+  - { text: "Mind if I sit with you a while?", tag: Chat }
+  - { text: "Tell me something good. Anything.", tag: Chat }
+  - { text: "Want to hear a joke? It's bad.", tag: Chat }
+  - { text: "I'm just going to stand here a sec, if that's fine.", tag: Chat }
+role:
+  trader:
+    - { text: "What's selling these days?", tag: Help }
+    - { text: "What's the one thing you'll never sell?", tag: Lore }
+    - { text: "Who's your best customer?", tag: Chat }
+    - { text: "Where do you even get this stuff?", tag: Lore }
+  medic:
+    - { text: "How bad do people come in here?", tag: Lore }
+    - { text: "Where'd you learn to patch people up?", tag: Lore }
+    - { text: "What do you do when the bandages run out?", tag: Help }
+  scout:
+    - { text: "Which way have you not mapped yet?", tag: Help }
+    - { text: "What's the farthest you've walked?", tag: Lore }
+    - { text: "Got a map I could look at?", tag: Help }
+  quarter:
+    - { text: "How strict are you on the ledger?", tag: Chat }
+    - { text: "What's running short?", tag: Help }
+  guard:
+    - { text: "How long's your shift?", tag: Chat }
+    - { text: "What's actually behind that door?", tag: Lore }
+    - { text: "Anyone ever try to rush past you?", tag: Lore }
+    - { text: "What does it take to get clearance?", tag: Help }
+  chef:
+    - { text: "What's the special today?", tag: Help }
+    - { text: "Who taught you to cook?", tag: Lore }
+  survivor:
+    - { text: "How'd you find this place?", tag: Lore }
+    - { text: "You staying here, or just passing through?", tag: Chat }
+    - { text: "Need a hand with anything?", tag: Help }
+place:
+  main:
+    - { text: "Does the humming ever stop?", tag: Lore }
+    - { text: "Do the walls really move when nobody's looking?", tag: Lore }
+    - { text: "How do you tell one hallway from another?", tag: Help }
+  level1:
+    - { text: "Where do the supply crates come from?", tag: Lore }
+    - { text: "Is it always this wet?", tag: Chat }
+    - { text: "Who keeps the lights on here?", tag: Lore }
+  level2:
+    - { text: "How hot do the pipes get?", tag: Help }
+    - { text: "Where does the shutter go?", tag: Lore }
+  level21:
+    - { text: "Who painted the warning marks on the walls?", tag: Lore }
+    - { text: "Does the fridge room ever empty out?", tag: Lore }
+    - { text: "How far do the Edges go?", tag: Lore }
+  level3:
+    - { text: "Does the station ever go quiet?", tag: Lore }
+    - { text: "Who maintains the generators?", tag: Lore }
+  level4:
+    - { text: "Does anyone ever answer those phones?", tag: Lore }
+    - { text: "Is there an office nobody's claimed?", tag: Help }
+    - { text: "Where's the water cooler that actually works?", tag: Help }
+  level5:
+    - { text: "Is the band always playing?", tag: Lore }
+    - { text: "Can I trust the staff here?", tag: Lore }
+  level6:
+    - { text: "How do you stand the dark?", tag: Chat }
+    - { text: "Did you hear that?", tag: Chat }
+  level61:
+    - { text: "What's actually good to eat around here?", tag: Help }
+    - { text: "Do the facelings ever talk?", tag: Lore }
+    - { text: "Is the food really free? What's the catch?", tag: Lore }
+    - { text: "What's playing on the jukebox? I swear I know this song.", tag: Chat }
+    - { text: "Where are the restrooms, and the way back out?", tag: Help }
+    - { text: "How did you end up in the Snackrooms?", tag: Lore }
+    - { text: "Which counter has the best fries?", tag: Help }
+    - { text: "Have you ever gone through the glass doors?", tag: Lore }
+    - { text: "Who's the Guild of Many? I keep hearing about them.", tag: Lore }
+    - { text: "Does the skylight ever show anything?", tag: Lore }
+  level7:
+    - { text: "How deep does the water go?", tag: Lore }
+    - { text: "Have you seen what's under the house?", tag: Lore }
+  level8:
+    - { text: "Where's the road actually lead?", tag: Lore }
+    - { text: "Is the lake safe to swim?", tag: Help }
+closers:
+  - { text: "Alright. Take care of yourself.", tag: Farewell }
+  - { text: "I'll leave you to it.", tag: Farewell }
+  - { text: "See you around.", tag: Farewell }
+  - { text: "Thanks. I mean it.", tag: Farewell }
+  - { text: "Good talk. Later.", tag: Farewell }
+  - { text: "Understood. I'll keep that in mind.", tag: Acknowledge }
+followups:
+  - { text: "Wait, what do you mean?", tag: Reply }
+  - { text: "Huh. Tell me more about that.", tag: Reply }
+  - { text: "You're serious?", tag: Reply }
+  - { text: "That doesn't sound good.", tag: Reply }
+  - { text: "How'd you figure that out?", tag: Reply }
+  - { text: "Okay, that's actually kind of funny.", tag: Reply }
+  - { text: "Sorry. That sounds hard.", tag: Reply }

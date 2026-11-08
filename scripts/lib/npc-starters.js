@@ -1,4 +1,5 @@
 // Conversation starters and dynamic choice generation for all NPCs.
+import ASKS from "./data/talk-asks.yml";
 // Starters are delivered when dialogue opens; choices give the player contextual,
 // clickable RPG dialogue prompts (with Speech, Barter, Survival, Medicine checks).
 import { skillsOf } from './stats.js'
@@ -689,15 +690,38 @@ function generateFollowUpChoices(ctx, it, s, line, entry, sk) {
     }
   }
 
-  // Polite wrap-up option
-  if (out.length < 4) {
-    out.push({ text: "Understood. I'll keep that in mind out there.", tag: "Acknowledge" })
-  }
-
-  return out.slice(0, 4)
+  // a reaction to what they just said, then a closer, each drawn for this npc and this turn
+  const seed = seedOf(it, s, line.length)
+  if (out.length < 3) out.unshift(draw(ASKS.followups, seed, 1, asked(it, s))[0])
+  if (out.length < 4) out.push(draw(ASKS.closers, seed + 7, 1, asked(it, s))[0])
+  return out.filter(Boolean).slice(0, 4)
 }
 
+// a seeded pick: the same npc on the same visit offers the same lines; another npc, another visit, other lines
+function hash(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) } return h >>> 0 }
+function seedOf(it, s, extra = 0) { const id = short(it); return hash(id) + (s?.talks?.[id]?.length ?? 0) * 7919 + extra }
+function asked(it, s) { return new Set((s?.talks?.[short(it)] ?? []).filter((r) => r[0] === 'p').map((r) => r[1])) }
+function draw(pool, seed, n, skip) {
+  const list = (pool ?? []).filter((c) => !skip?.has(c.text)), out = [], src = list.length ? list : (pool ?? [])
+  let k = seed
+  while (out.length < n && out.length < src.length) { k = (Math.imul(k, 1103515245) + 12345) >>> 0; const c = src[k % src.length]; if (!out.includes(c)) out.push(c) }
+  return out
+}
 function generateGenericChoices(it, s, sk) {
+  const role = String(it.state?.role ?? 'survivor').toLowerCase(), place = String(it.place ?? 'main')
+  const seed = seedOf(it, s), skip = asked(it, s)
+  const roleKey = isTrader(it) ? 'trader' : role
+  const picks = [
+    ...draw(ASKS.role?.[roleKey] ?? ASKS.role.survivor, seed, 1, skip),
+    ...draw(ASKS.place?.[place] ?? [], seed + 3, 1, skip),
+    ...draw([...ASKS.personal, ...ASKS.mood], seed + 5, 1, skip),
+  ]
+  if (sk.speech >= 30 || hash(short(it)) % 3 === 0) picks.push({ text: draw([{ text: "You look like someone who knows their way around. Let's cooperate." }, { text: "We should watch each other's backs." }, { text: "I could use a friend down here." }], seed + 9, 1)[0].text, tag: `Speech ${sk.speech}`, check: { skill: 'speech', difficulty: 40 } })
+  else picks.push(draw(ASKS.closers, seed + 11, 1, skip)[0])
+  if (isTrader(it) && !picks.some((p) => /trade|sell/i.test(p.text))) picks[0] = { text: "What have you got for trade?", tag: "Help" }
+  return picks.filter(Boolean).slice(0, 4)
+}
+function generateGenericChoicesOld(it, s, sk) {
   const role = it.state?.role
   const out = []
 
@@ -754,8 +778,8 @@ function fitPlace(ctx, it, list) {
     if (sd <= 1 && DANGER.test(c.text)) return false
     return true
   })
-  const pool = SAFE_ASK[place] ?? (sd <= 1 ? SAFE_ASK.default : [])
-  let k = Math.floor((ctx.now?.() ?? 0) / 7000) % Math.max(1, pool.length)
+  const pool = ASKS.place?.[place] ?? SAFE_ASK[place] ?? (sd <= 1 ? SAFE_ASK.default : [])
+  let k = hash(short(it)) % Math.max(1, pool.length)
   while (out.length < 4 && pool.length) {
     const c = pool[k++ % pool.length]
     if (out.some((o) => o.text === c.text)) { if (out.length + 1 > pool.length) break; if (k > pool.length * 2) break; continue }
