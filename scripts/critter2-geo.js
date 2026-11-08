@@ -269,7 +269,7 @@ export function geometry(ctx) {
     const rx = RX * (1 + 0.16 * CHK * Math.exp(-(((y + 0.34) / 0.34) ** 2)));
     let r = 1 / Math.sqrt((x / rx) ** 2 + (y / RY) ** 2 + (z / RZ) ** 2);
     if (y > 0) r *= 1 - 0.04 * y ** 2;
-    if (y < -0.48) r *= 1 - 0.08 * (-0.48 - y) * (1 - Math.abs(x) * 0.7); // soft rounded chin, not blocky
+    if (y < -0.48 && z > -0.35) r *= 1 - 0.08 * (-0.48 - y) * (1 - Math.abs(x) * 0.7) * Math.min(1, (z + 0.35) * 3); // soft rounded chin, not blocky, preserving front jaw
     if (z < 0) {
       const u = x / SNW, v = (y - SNY) / SNH, q = u * u + v * v;
       if (q < 1) { const t = 1 - q; r += SNL * Math.sqrt(t) * (0.65 + 0.35 * t) * Math.min(1, -z * 2.1); }
@@ -290,11 +290,12 @@ export function geometry(ctx) {
           r += SNL * 0.50 * (1 - bu * bu) * Math.sin(bv * Math.PI) * Math.min(1, -z * 2.1);
         }
       }
-      // Lower mandibular support: subtle chin contour supporting the muzzle
-      const cu = x / (SNW * 0.48), cv = (y - (SNY - SNH * 0.65)) / (SNH * 0.55);
-      if (cu * cu + cv * cv < 1 && y < SNY - 0.04) {
-        const ct = 1 - (cu * cu + cv * cv);
-        r += SNL * 0.28 * Math.sqrt(ct) * Math.min(1, -z * 1.8);
+      // Lower mandibular support: anatomical chin shelf supporting the lower jaw and open mouth
+      const cu = x / (SNW * 0.56), cv = (y - (SNY - SNH * 0.72)) / (SNH * 0.88);
+      const cq = cu * cu + cv * cv;
+      if (cq < 1 && y < SNY - 0.02) {
+        const ct = 1 - cq;
+        r += SNL * 0.58 * Math.sqrt(ct) * (0.65 + 0.35 * ct) * Math.min(1, -z * 2.2);
       }
     }
     return r;
@@ -508,13 +509,59 @@ export function geometry(ctx) {
       for (let i = 0; i <= n; i++) { const u = -1 + (2 * i) / n, x = u * w; topP.push([x, MY + top0 + curv * u * u + (opt.skew || 0) * u]); }
       for (let i = n; i >= 0; i--) { const u = -1 + (2 * i) / n, x = u * w; botP.push([x, MY + top0 + curv * u * u + (opt.skew || 0) * u - depth * Math.pow(Math.max(0, 1 - u * u), opt.sq || 0.5)]); }
       const poly = [...topP, ...botP.slice(1, -1)];
-      col(MOUTH); fill(poly, 0.005, 2);
-      if (opt.tongue !== false) { col(TONGUE); const tp = []; for (let i = 0; i <= 10; i++) { const u = -0.62 + (1.24 * i) / 10; tp.push([u * w, MY + top0 + curv * u * u - depth * Math.pow(Math.max(0, 1 - u * u), opt.sq || 0.5) * 0.92]); } for (let i = 10; i >= 0; i--) { const u = -0.62 + (1.24 * i) / 10; tp.push([u * w, MY + top0 + curv * u * u - depth * (0.45 + 0.12 * (1 - Math.abs(u) / 0.62))]); } fill(tp, 0.007, 1); }
+      // Project bottom vertices forward along mandibular arch so mouth cavity does not cave into the throat
+      const mSurf = (x, y, off) => {
+        const drop = Math.max(0, (MY - y) / (depth || 0.06));
+        const chinFwd = drop * (0.016 + SNL * 0.12);
+        return surf(x, y, off + chinFwd);
+      };
+      const mFill = (pts, off, rings = 2) => {
+        let c = [0, 0]; for (const p of pts) { c[0] += p[0] / pts.length; c[1] += p[1] / pts.length; }
+        const L = (r, p) => mSurf(lerp(c[0], p[0], r), lerp(c[1], p[1], r), off);
+        const ctr = mSurf(c[0], c[1], off);
+        for (let r = 1; r <= rings; r++) for (let k = 0; k < pts.length; k++) {
+          const p = pts[k], q = pts[(k + 1) % pts.length];
+          if (r === 1) T(ctr, L(1 / rings, p), L(1 / rings, q), HC);
+          else Q(L((r - 1) / rings, p), L(r / rings, p), L(r / rings, q), L((r - 1) / rings, q), HC);
+        }
+      };
+      col(MOUTH); mFill(poly, 0.005, 2);
+      if (opt.tongue !== false) {
+        col(TONGUE); const tp = [];
+        for (let i = 0; i <= 10; i++) { const u = -0.62 + (1.24 * i) / 10; tp.push([u * w, MY + top0 + curv * u * u - depth * Math.pow(Math.max(0, 1 - u * u), opt.sq || 0.5) * 0.92]); }
+        for (let i = 10; i >= 0; i--) { const u = -0.62 + (1.24 * i) / 10; tp.push([u * w, MY + top0 + curv * u * u - depth * (0.45 + 0.12 * (1 - Math.abs(u) / 0.62))]); }
+        mFill(tp, 0.007, 1);
+      }
       col(WHITE);
-      if (opt.teeth) { for (let i = 0; i < 6; i++) { const u0 = -0.8 + i * 0.32, x = u0 * w, y = MY + top0 + curv * u0 * u0; T(surf(x - 0.012, y - 0.002, 0.008), surf(x + 0.012, y - 0.002, 0.008), surf(x, y - 0.024, 0.008), HC); } }
-      else if (opt.fangs !== false && (sp.fangs || opt.fangs)) for (const s of [-1, 1]) { const u0 = s * 0.55, x = u0 * w, y = MY + top0 + curv * u0 * u0; T(surf(x - 0.012, y - 0.003, 0.008), surf(x + 0.012, y - 0.003, 0.008), surf(x, y - 0.026, 0.008), HC); }
-      if (sp.buck && opt.buck !== false) { const y = MY + top0; fill([[-0.02, y - 0.002], [0.02, y - 0.002], [0.02, y - 0.03], [-0.02, y - 0.03]], 0.008, 1); col(INK); stroke([[0, y], [0, y - 0.03]], 0.004, 0.009); }
-      col(INK); stroke(poly, 0.012, 0.011, true);
+      if (opt.teeth) { for (let i = 0; i < 6; i++) { const u0 = -0.8 + i * 0.32, x = u0 * w, y = MY + top0 + curv * u0 * u0; T(mSurf(x - 0.012, y - 0.002, 0.008), mSurf(x + 0.012, y - 0.002, 0.008), mSurf(x, y - 0.024, 0.008), HC); } }
+      else if (opt.fangs !== false && (sp.fangs || opt.fangs)) for (const s of [-1, 1]) { const u0 = s * 0.55, x = u0 * w, y = MY + top0 + curv * u0 * u0; T(mSurf(x - 0.012, y - 0.003, 0.008), mSurf(x + 0.012, y - 0.003, 0.008), mSurf(x, y - 0.026, 0.008), HC); }
+      if (sp.buck && opt.buck !== false) { const y = MY + top0; mFill([[-0.02, y - 0.002], [0.02, y - 0.002], [0.02, y - 0.03], [-0.02, y - 0.03]], 0.008, 1); col(INK); stroke([[0, y], [0, y - 0.03]], 0.004, 0.009); }
+      // Lip stroke: outline mouth with forward chin support
+      col(INK);
+      const mStroke = (pts, ww, off) => {
+        const nPts = pts.length, mL = [], mRr = [];
+        for (let i = 0; i < nPts; i++) {
+          const a = pts[(i - 1 + nPts) % nPts], b = pts[(i + 1) % nPts];
+          let tx = b[0] - a[0], ty = b[1] - a[1]; const l = Math.hypot(tx, ty) || 1; tx /= l; ty /= l;
+          mL.push(mSurf(pts[i][0] - ty * ww / 2, pts[i][1] + tx * ww / 2, off));
+          mRr.push(mSurf(pts[i][0] + ty * ww / 2, pts[i][1] - tx * ww / 2, off));
+        }
+        for (let i = 0; i < nPts; i++) { const j = (i + 1) % nPts; Q(mL[i], mL[j], mRr[j], mRr[i], HC); }
+      };
+      mStroke(poly, 0.012, 0.011);
+      // Soft lower lip rim shadow beneath open mouth
+      const botY = MY + top0 - depth;
+      col(mixc(FUR, "#000000", 0.35));
+      const lipPts = [];
+      for (let i = 0; i <= 8; i++) {
+        const u = -0.55 + (1.1 * i) / 8;
+        lipPts.push([u * w * 0.72, botY - 0.008 - 0.005 * (1 - u * u)]);
+      }
+      for (let i = 0; i < lipPts.length - 1; i++) {
+        const p1 = mSurf(lipPts[i][0], lipPts[i][1], 0.006), p2 = mSurf(lipPts[i + 1][0], lipPts[i + 1][1], 0.006);
+        const p1b = mSurf(lipPts[i][0], lipPts[i][1] - 0.006, 0.005), p2b = mSurf(lipPts[i + 1][0], lipPts[i + 1][1] - 0.006, 0.005);
+        Q(p1, p2, p2b, p1b, HC);
+      }
     };
     const line = (pts, w = 0.013) => { col(INK); stroke(pts, w, 0.006); };
     const catW = (w, up) => line(curve((t) => { const u = -1 + 2 * t; return [u * w, MY + up * Math.abs(u) ** 1.2 - 0.022 * Math.sin(Math.PI * Math.abs(u)) * (1 - 0.3 * Math.abs(u))]; }, hi ? 20 : 10));

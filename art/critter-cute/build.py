@@ -133,8 +133,8 @@ def head_r(d):
     side = (abs(d.x) / (abs(d.x) + abs(d.y) * .65 + 1e-6)) ** .85
     front_bias = max(0.0, 0.55 + 0.45 * d.y)
     cheek_swell = .095 * ck * math.exp(-((d.z + .24) / .28) ** 2) * side * front_bias
-    # gentle chin tuck underneath so the jaw meets the neck cleanly
-    chin_tuck = -.035 * max(0.0, -d.z - .52) * (1.0 - abs(d.x) * .7)
+    # gentle chin tuck underneath so the jaw meets the neck cleanly (only underside, not front jaw)
+    chin_tuck = -.035 * max(0.0, -d.z - .52) * (1.0 - abs(d.x) * .7) * max(0.0, 1.0 - max(0.0, d.y - 0.05) * 2.5)
     # 3D sculpted animal muzzle / snout loaf
     L = sp.get("snout", .026 if sp.get("muzzle") else .016) * sp.get("snoutK", 2.1)
     sw = sp.get("snoutW", .26) * wd
@@ -154,6 +154,18 @@ def head_r(d):
                 fwd = math.sin(max(0.0, min(1.0, (d.y - 0.05) / 0.50)) * (math.pi / 2))
                 profile = (1.0 - q) ** 1.6
                 muz = L * profile * fwd
+        # Mandibular chin shelf supporting the lower jaw and mouth cavity
+        z_chin_ctr = -0.38
+        z_chin_top = -0.26
+        z_chin_bot = -0.56
+        if z_chin_bot < d.z < z_chin_top:
+            v_c = (d.z - z_chin_ctr) / (z_chin_top - z_chin_ctr if d.z > z_chin_ctr else z_chin_ctr - z_chin_bot)
+            u_c = d.x / max(0.01, sw * 0.65)
+            qc = u_c * u_c + v_c * v_c
+            if qc < 1.0:
+                fwd_c = math.sin(max(0.0, min(1.0, (d.y - 0.05) / 0.45)) * (math.pi / 2))
+                chin_shelf = L * 0.58 * ((1.0 - qc) ** 1.4) * fwd_c
+                muz = max(muz, chin_shelf)
         # Twin plush whisker cushions / pads (kemono :3 muzzle lobes for cats, foxes, dogs, rodents)
         if sp.get("catnose") or sp.get("whisk"):
             pad_x = 0.065 * wd
@@ -895,7 +907,9 @@ def add_decal(H, u, v, out, states, faces, matname, bone="Head", outs=None):
         if k == "Basis": continue
         pts = states.get(k, states["Basis"])
         k_out = outs.get(k, out) if outs else out
-        for i, (a, b) in zip(base, pts): H.keys[k][i] = decal_pt(u, v, a, b, k_out)
+        for i, (a, b) in zip(base, pts):
+            b_boost = max(0.0, -b) * 0.12 if (k in ("Open", "O") and k_out > 0) else 0.0
+            H.keys[k][i] = decal_pt(u, v, a, b, k_out + b_boost)
     def area(f, pts): return sum(pts[f[i]][0] * pts[f[(i + 1) % len(f)]][1] - pts[f[(i + 1) % len(f)]][0] * pts[f[i]][1] for i in range(len(f)))
     order = [states["Basis"]] + [v_ for k, v_ in states.items() if k != "Basis"]
     for f in faces:
@@ -1149,7 +1163,7 @@ def build_face(H, sp):
             else:
                 # Smooth U-shaped lower lip curve (compensating for kemono :3 center peak on the bottom edge)
                 kem_comp = (-.012 * math.exp(-((t / .26) ** 2)) + .008 * math.sin(math.pi * abs(t))) if is_kemono else 0.0
-                top.append((x * .88, y)); bot.append((x * .88, y + kem_comp - .046 * ((1 - t * t) ** .65)))
+                top.append((x * .88, y)); bot.append((x * .88, y + kem_comp - .042 * ((1 - t * t) ** .65)))
         return top + bot
     add_decal(H, 0, MV, -.0028, {
         "Basis": fill(lineB, False), "Smile": fill(lineS, False), "Frown": fill(lineF, False),
@@ -1588,6 +1602,18 @@ def build_head(name, sp, rig, F):
     for k in FACE_KEYS:
         sk = o.shape_key_add(name=k, from_mix=False)
         for i, p in H.keys[k].items(): sk.data[i].co = p
+        # For Open and O, add subtle lower jaw displacement to the base head mesh so the skull drops with the mouth
+        if k in ("Open", "O"):
+            scale = 1.0 if k == "Open" else 0.65
+            for i, p in enumerate(H.v):
+                if H.bone[i] == "Head" and i not in H.keys[k]:
+                    d = p - HC
+                    if d.y > 0.06 and -0.48 < d.z < -0.22 and abs(d.x) < 0.16:
+                        jaw_w = math.cos((d.x / 0.16) * (math.pi / 2))
+                        jaw_z = math.sin(max(0.0, min(1.0, (d.z - (-0.48)) / 0.26)) * math.pi)
+                        drop = jaw_w * jaw_z * scale
+                        if drop > 0.01:
+                            sk.data[i].co = p + Vector((0, 0.006 * drop, -0.012 * drop))
     # face types: whole-head STRUCTURE (width, length, jaw, cheeks, muzzle), not expressions; each key is a smooth field over the head, ears included, so they move with it
     for k in FT_KEYS:
         sk = o.shape_key_add(name=k, from_mix=False)

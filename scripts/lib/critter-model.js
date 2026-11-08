@@ -265,6 +265,23 @@ export function faceMorph(expr, blink, isFemale, look) {
     }
   }
 
+  // --- Open Mouth & Speech Anatomical Compensation ---
+  // When critters open their mouth (laughing, speaking, shouting, smiling wide),
+  // reinforce the lower jaw and forward snout projection to prevent the mouth
+  // cavity from feeling hollow or caved into the skull.
+  const openAmt = Math.max(f.Open ?? 0, (f.O ?? 0) * 0.8)
+  if (openAmt > 0.04) {
+    // 1. Maintain forward muzzle and mandibular volume under open-mouth tension
+    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, (f.FT_Snout ?? 0) + openAmt * 0.14))
+    // 2. Prevent narrow/long face types from over-stretching the open mouth cavity inward
+    if (f.FT_Narrow) f.FT_Narrow = Math.max(0, f.FT_Narrow * (1 - openAmt * 0.45))
+    if (f.FT_Long) f.FT_Long = Math.max(0, f.FT_Long * (1 - openAmt * 0.35))
+    // 3. Support lower jaw width so open mouth feels full and cute
+    f.FT_Round = Math.min(1, (f.FT_Round ?? 0) + openAmt * 0.10)
+    // 4. Cap extreme mouth opening to keep lower lip cleanly within mandibular shelf
+    if (f.Open > 0.88) f.Open = 0.88
+  }
+
   // --- Blush stickers: NOT permanent on everyone ---
   const wearsBlush = hasBlush(ff ?? look)
   if (wearsBlush) {
