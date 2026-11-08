@@ -16,7 +16,7 @@ staminaDrain: 25   # per second sprinting: a full bar is ~4.8 s of sprint
 staminaRegen: 8.5   # per second resting
 windedAt: 30       # her pick: run AP to 0 and you can't sprint again until it's back to this
 windedRegen: 0.6   # regen multiplier while winded
-sanityDrain: { expanse: 0.18, offices: 0.1, halls: 0.12, arches: 0.06, pillars: 0.12, holes: 0.15, red: 0.9, dark: 0.6, hub: -4 }
+sanityDrain: { expanse: 0.18, offices: 0.1, halls: 0.12, arches: 0.06, pillars: 0.12, holes: 0.15, red: 0.9, dark: 0.6, hub: -4, manila: -2.5 }
 insanityHurt: 4    # hp per second at 0 sanity
 almondHp: 24
 almondSanity: 30

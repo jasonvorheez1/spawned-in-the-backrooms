@@ -31,7 +31,7 @@ import { zoneAt as zoneAt3 } from './lib/level3.js'
 import { zoneAt as zoneAt4, DRAIN4 } from './lib/level4.js'
 import { zoneAt as zoneAt5, DRAIN5 } from './lib/level5.js'
 import L3 from './lib/data/level3.yml'
-const zoneHere = (ctx, x, z) => ctx.self.place === 'spamton' ? 'spam_arena' : ctx.self.place === 'level7' ? (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 70, z + 95) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea') : ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : ctx.self.place === 'level4' ? 'l4_' + zoneAt4(x, z, ctx.self.state.home) : ctx.self.place === 'level5' ? 'l5_' + (zoneAt5(x, z)?.id ?? 'lobby') : ctx.self.place === 'level6' ? 'l6_halls' : ctx.self.place === 'level61' ? 'l61_court' : ctx.self.place === 'level11' ? 'l11_city' : ctx.self.place === 'level10' ? 'l10_fields' : ctx.self.place === 'level8' ? 'l8_cave' : ctx.self.place === 'level21' ? 'l21_' + zoneAt21(x, z) : zoneAt(x, z)
+const zoneHere = (ctx, x, z) => ctx.self.place === 'spamton' ? 'spam_arena' : ctx.self.place === 'level7' ? (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 70, z + 95) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea') : ctx.self.place === 'level1' ? 'l1_' + zoneAt1(x, z) : ctx.self.place === 'level2' ? 'l2_' + zoneAt2(x, z) : ctx.self.place === 'level3' ? 'l3_' + zoneAt3(x, z) : ctx.self.place === 'gamma' ? 'l3_gamma' : ctx.self.place === 'level4' ? 'l4_' + zoneAt4(x, z, ctx.self.state.home) : ctx.self.place === 'level5' ? 'l5_' + (zoneAt5(x, z)?.id ?? 'lobby') : ctx.self.place === 'level6' ? 'l6_halls' : ctx.self.place === 'level61' ? 'l61_court' : ctx.self.place === 'level11' ? 'l11_city' : ctx.self.place === 'level10' ? 'l10_fields' : ctx.self.place === 'level8' ? 'l8_cave' : ctx.self.place === 'level21' ? 'l21_' + zoneAt21(x, z) : (ctx.place?.state?.moments?.manilaAt && Math.abs(x - ctx.place.state.moments.manilaAt.x) < 5.8 && Math.abs(z - ctx.place.state.moments.manilaAt.z) < 5.8 ? 'manila' : zoneAt(x, z))
 
 import SOUNDS from './lib/data/sounds.yml'
 import { stepTick } from './lib/footsteps.js'
@@ -1111,7 +1111,7 @@ function tickStats(ctx, t, moving) {
   if (s.sanity < 0) s.sanity = 0
   if (s.god) { if (s.sanity < ms) s.sanity = ms; const gh = maxHp(s.level, s); if ((s.hp ?? gh) < gh) s.hp = gh; if (s.dead) s.dead = false } // god mode (creator's testing switch): topped up every tick
   if (s.sanity <= 0) s.hp -= L.insanityHurt * t
-  if (zone === 'hub' || zone === 'l4_home' || zone === 'l5_housekeeping' || zone === 'l5_kitchen') { s.hp = Math.min(mh, s.hp + 3 * t); w.battery = Math.min(L.battery, w.battery + 15 * t) }
+  if (zone === 'hub' || zone === 'manila' || zone === 'l4_home' || zone === 'l5_housekeeping' || zone === 'l5_kitchen') { s.hp = Math.min(mh, s.hp + 3 * t); w.battery = Math.min(L.battery, w.battery + 15 * t) }
   if (s.hp > mh) s.hp = mh
 
   // Level 6 Wikidot sensory deprivation auditory decay: paranoia whispers and phantom footsteps

@@ -110,7 +110,13 @@ export function tick(ctx) {
       n++;
     }
   }
-  if (s.momentsV !== 1) { s.momentsV = 1; s.moments = layMoments(ctx); }
+  if (s.momentsV !== 2) {
+    if (s.momentsV) {
+      for (const m of ctx.query({ tags: ["moment"] })) ctx.destroy(m.id);
+    }
+    s.momentsV = 2;
+    s.moments = layMoments(ctx);
+  }
   shift(ctx, s, now);
   if (!s.furnished) { s.furnished = true; furnish(ctx); }
   if (s.sunkV !== 1) { s.sunkV = 1; sink(ctx); }
