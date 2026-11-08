@@ -51,7 +51,12 @@ export function onInput(ctx, input) {
   ses.held = null;
   const f = ctx.self.feetPosition, eye = { x: f.x, y: f.y + 1.5, z: f.z }, d = ses.dir ?? look(ctx, input);
   const hit = raycast(ctx, eye, d, { distance: 2.6, ignoreEntities: [ctx.self.id] });
-  const o = hit?.id && ctx.getObject(hit.id);
+  let o = hit?.id && ctx.getObject(hit.id);
+  const tiny = (x) => { const b = x?.bounds?.size; return b && b.x * b.y * b.z < 0.5 && Math.max(b.x, b.y, b.z) < 1.4; };
+  if (hit && !tiny(o)) { // a plush on a bed or a bottle on a dresser sits inside the furniture's box: take the small thing nearest where the look landed
+    const near = ctx.query({ center: hit.position, radius: 0.6 }).map((r) => ctx.getObject(r.id)).find((x) => x && x.id !== ctx.self.id && tiny(x) && !x.parent && !NOT.some((t) => x.tags.includes(t)));
+    if (near) o = near;
+  }
   const sz = o?.bounds?.size, small = sz && sz.x * sz.y * sz.z < 0.5 && Math.max(sz.x, sz.y, sz.z) < 1.4; // a radio, a lamp, a bottle: anything small enough is fair game
   if (!o || !(o.tags?.includes("breakable") || small) || NOT.some((t) => o.tags.includes(t)) || o.parent || o.tags.includes("l5-elev-panel") || o.tags.includes("l5-sealed")) { note(ctx, "Nothing to pick up."); return; }
   if (!o.tags.includes("breakable")) { o.tags = [...o.tags, "breakable"]; o.state.mat ??= "fixture"; o.state.hp ??= 30; o.state.maxHp ??= o.state.hp; } // picked up once, it can be smashed too
