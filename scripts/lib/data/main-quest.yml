@@ -1,0 +1,72 @@
+# Main quest "The Front Door" (johnadams2 asked for it 2026-11-08). Written, not wired yet.
+# Spine: the HALOGEN on your wrist was Backrooms Robotics' mapping unit, and its last owner was close to a way out.
+# Three powers want it: M.E.G. (share the map), Backrooms Robotics (recall the unit), Phoebe (her own reasons).
+# Each step: level it happens in, the tracker line the HUD shows.
+key: mainQ
+name: The Front Door
+chapters:
+  - id: signal
+    name: Lost Signal
+    level: main
+    steps:
+      - "Your HALOGEN is pinging. Follow the chalk arrows"
+      - "Find the camp of the wanderer who drew them"
+      - "Read Dana's note at the camp"
+      - "Take the exit to Level 1"
+    beat: "Dana's note: 'the unit knows the way out, it just won't say it. charge it.' The camp is cold for weeks. Her HALOGEN serial matches yours."
+  - id: alpha
+    name: Base Alpha
+    level: level1
+    steps:
+      - "Find the M.E.G. outpost in the Habitable Zone"
+      - "Let the M.E.G. technician scan your HALOGEN"
+      - "The memory is locked. Find a Robotics power cell in Pipe Dreams"
+    beat: "The technician recognises the serial: Dana was M.E.G., she stole the unit from Robotics. M.E.G. wants what's on it."
+  - id: pipes
+    name: Steam and Static
+    level: level2
+    steps:
+      - "Find the Robotics maintenance locker in the pipe halls"
+      - "Pick the lock or find the key on a dead technician"
+      - "Take the power cell and get out of the heat"
+    beat: "Phoebe watches you from a catwalk, smiling, and is gone when you look up again."
+  - id: station
+    name: Live Wire
+    level: level3
+    steps:
+      - "Bring the cell to a working charging bay in the Electrical Station"
+      - "Survive the blackout while the HALOGEN charges"
+      - "Watch Dana's recording"
+    beat: "Dana's log: Robotics built the HALOGENs to map exits, found one, and sealed it. The unit's last route points at their office. Robotics drones now know where you are."
+  - id: office
+    name: Regional Office
+    level: level4
+    steps:
+      - "Find the Backrooms Robotics office in the Abandoned Office"
+      - "Get past the security doors"
+      - "Copy the FRONT DOOR route file from the server room"
+    beat: "The file is half a map. The other half was handed to the Terror Hotel's manager as a bribe."
+  - id: hotel
+    name: Check-In
+    level: level5
+    steps:
+      - "Ask at the Terror Hotel front desk about the manager"
+      - "Go down to the Boiler Room"
+      - "Meet the woman waiting by the furnace"
+    beat: "Phoebe, face to face for the first time. She already has the other half. She offers it free, if you take her with you."
+  - id: choice
+    name: Three Hands Out
+    level: level7
+    steps:
+      - "Rest at the house and decide who gets the whole map"
+    beat: "M.E.G. radios, Robotics leaves a note on the door, Phoebe sits on the porch swing. Choose."
+  - id: door
+    name: The Front Door
+    level: level11
+    steps:
+      - "Follow the route through the city to the Robotics tower"
+      - "Open the Front Door"
+    endings:
+      meg: "You hand the map to M.E.G. The door is guarded, studied and shared. You stay, a name on their wall of founders."
+      robotics: "You return the unit. Robotics pays well and the door is sealed again. You get the suite, the cash and the quiet."
+      phoebe: "You open it with Phoebe. Behind it is a hallway, wallpapered yellow. She laughs. 'Told you he'd be worth waiting for.'"
