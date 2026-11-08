@@ -1,261 +1,388 @@
-# Critter hair (Shelly, Nov 8: "at least 18 different hairs for females and 12 for males"). Each style is its own GLB skinned
-# whole to the Head bone of the critter rig, so it rides the head like the head GLB does (attachment skin in game).
-# Grown over the real head mesh (BVH of Head_<sp>, ears excluded) so a hairline hugs the skull and locks flow round it.
-# Slots: hair (tinted by the look's hair colour), hairtie (bands, clips). Run:
-#   blender -b --factory-startup --python-exit-code 1 --python art/critter-hair/build.py   (env ONLY=f_bob,m_crop  PROOF=1)
-import bpy, bmesh, math, os, random
-from mathutils import Vector, Matrix, noise
+# Critter hair (Shelly, Nov 8: "at least 18 different hairs for females and 12 for males"; Nov rebuild: soft clumps, no sawtooth).
+# Each style is its own GLB skinned whole to the Head bone of the critter rig (attachment skin in game), slots:
+#   hair (tinted by the look's hair colour), hairtie (bands, ties).
+# The hair grows over an ENVELOPE of every species' head of that sex (ears excluded), so one GLB fits them all:
+#   hug radius = 75th percentile skull radius per direction, sink radius = smallest skull - 1.5 cm (a hairline melts into fur).
+#   Ears: the cap sinks under the fur round every species' ear base (the hairline parts round them) and every lock is pushed off them.
+# Building blocks (all smooth tubes with rounded tips, no strand noise):
+#   cap()      the skull shell, hairline mask + ear parting          drape()   a lock's path: hugs the skull, then falls with gravity
+#   clump()    one flat soft lock (ribbon tube, rounded tip)         hem()     the back/side fringe: 5-9 clumps per side, two overlapping layers
+#   bangs()    rounded clumps ON the forehead, stopping above the eyes   tail()  a fat teardrop tail rooted in a hairtie
+#   bun() / puff()  lobed balls with a tie    braid()  overlapping beads + tie + tuft    spikes() / fins()  stiff rounded clumps
+# One function per style at the bottom (STYLES). A later pass (hat squash) can add a shape key on the finished mesh in finish().
+# Run:  blender -b --factory-startup --python-exit-code 1 --python art/critter-hair/build.py   (env ONLY=f_bob,m_crop  PROOF=1)
+# Heads: spawn fetch each species' headF/headM (scripts/lib/data/critter-models.yml) into HEADS/<species>_<f|m>.glb.
+import bpy, bmesh, math, os, random, glob
+from mathutils import Vector
 from mathutils.bvhtree import BVHTree
-HEADS = {"f": "/workspace/shop/headF.glb", "m": "/workspace/shop/value.de385f3a252d2dba941dd3db0bc84d2eba7c85f616d69643cdd6db2c1d02cf35.glb"}
+from mathutils.kdtree import KDTree
+HEADS = "/workspace/hair/heads/heads"; RIG_FROM = "cat"
 OUT = "/workspace/hair/out"; PROOF = "/workspace/hair/proof"; os.makedirs(OUT, exist_ok=True); os.makedirs(PROOF, exist_ok=True)
 ONLY = [s for s in os.environ.get("ONLY", "").split(",") if s]
-HC = Vector((0, 0, 1.265))
-EARS = [Vector((-0.104, 0.151, 1.446)), Vector((0.104, 0.151, 1.446))]
+HC = Vector((0, 0, 1.265)); DOWN = Vector((0, 0, -1))
 V = lambda x, y, z: Vector((x, y, z))
-def hdir(u, v): return V(math.sin(u) * math.cos(v), math.cos(u) * math.cos(v), math.sin(v))
+EYE_Z = 1.43       # nothing in front of the face goes below this (eye ink tops out at 1.391)
+def hdir(u, v):    # u: azimuth from the face (+Y) toward +X, v: elevation
+    return V(math.sin(u) * math.cos(v), math.cos(u) * math.cos(v), math.sin(v))
+def sstep(a, b, x): t = max(0.0, min(1.0, (x - a) / (b - a))); return t * t * (3 - 2 * t)
 
-# ---------------- the head as a surface ----------------
-class Head:
-    def __init__(s, path):
-        bpy.ops.wm.read_factory_settings(use_empty=True)
-        bpy.ops.import_scene.gltf(filepath=path)
-        s.rig = next(o for o in bpy.context.scene.objects if o.type == "ARMATURE")
-        s.mesh = next(o for o in bpy.context.scene.objects if o.type == "MESH" and o.parent == s.rig)
-        for o in list(bpy.context.scene.objects):
-            if o not in (s.rig, s.mesh): bpy.data.objects.remove(o)
-        me = s.mesh.data; gi = {g.index: g.name for g in s.mesh.vertex_groups}
-        def ear(v): return any(gi.get(g.group, "").startswith("Ear") and g.weight > .3 for g in v.groups)
-        keep = set(i for i, v in enumerate(me.vertices) if not ear(v))
-        vs = [s.mesh.matrix_world @ v.co for v in me.vertices]
-        polys = [list(p.vertices) for p in me.polygons if all(i in keep for i in p.vertices)]
-        s.bvh = BVHTree.FromPolygons(vs, polys)
+# ---------------- the envelope of every head of one sex ----------------
+class Envelope:
+    def __init__(s, sex):
+        s.bvhs = []; ears = []; s.base = []
+        for f in sorted(glob.glob(f"{HEADS}/*_{sex}.glb")):
+            bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=f)
+            ob = next(o for o in bpy.context.scene.objects if o.type == "MESH" and o.vertex_groups and not o.name.startswith("Ico"))
+            me = ob.data; gi = {g.index: g.name for g in ob.vertex_groups}
+            vs = [ob.matrix_world @ v.co for v in me.vertices]
+            ear = [any(gi.get(g.group, "").startswith("Ear") and g.weight > .3 for g in v.groups) for v in me.vertices]
+            polys = [list(p.vertices) for p in me.polygons if not any(ear[i] for i in p.vertices) and all(vs[i].z > .95 for i in p.vertices)]
+            bvh = BVHTree.FromPolygons(vs, polys); s.bvhs.append(bvh)
+            for i, v in enumerate(vs):
+                if ear[i]:
+                    ears.append(v); ears.append(V(-v.x, v.y, v.z))
+                    n = bvh.find_nearest(v)
+                    if n[0] is not None and n[3] < .02: s.base += [v, V(-v.x, v.y, v.z)]
+        s.ear = KDTree(len(ears)); [s.ear.insert(p, i) for i, p in enumerate(ears)]; s.ear.balance()
+        s.eb = KDTree(len(s.base)); [s.eb.insert(p, i) for i, p in enumerate(s.base)]; s.eb.balance()
         s.cache = {}
-    def r(s, d):
-        d = d.normalized(); k = (round(d.x, 3), round(d.y, 3), round(d.z, 3))
-        if k in s.cache: return s.cache[k]
-        hit = s.bvh.ray_cast(HC + d * 1.2, -d, 1.2)
-        rr = (hit[0] - HC).length if hit[0] else .27
-        s.cache[k] = rr; return rr
-    def pt(s, d, out=0.0): d = d.normalized(); return HC + d * (s.r(d) + out)
-
-H = None
-def scalp(u, v, out): return H.pt(hdir(u, v), out)
+        bpy.ops.wm.read_factory_settings(use_empty=True)
+        bpy.ops.import_scene.gltf(filepath=f"{HEADS}/{RIG_FROM}_{sex}.glb")
+        s.rig = next(o for o in bpy.context.scene.objects if o.type == "ARMATURE")
+        for o in list(bpy.context.scene.objects):
+            if o is not s.rig: bpy.data.objects.remove(o)
+    def radii(s, d):
+        d = d.normalized(); k = (round(d.x, 2), round(d.y, 2), round(d.z, 2))
+        if k not in s.cache:
+            rs = []
+            for b in s.bvhs:
+                h = b.ray_cast(HC + d * 1.0, -d, 1.0); rs.append((h[0] - HC).length if h[0] else .3)
+            rs.sort(); s.cache[k] = (rs[int(len(rs) * .75)], rs[0])
+        return s.cache[k]
+    def hug(s, d): return s.radii(d)[0]
+    def sink(s, d): return s.radii(d)[1] - .015
+E = None
+def scalp(u, v, out=0.0): d = hdir(u, v); return HC + d * (E.hug(d) + out)
 
 # ---------------- mesh builder ----------------
 class M:
     def __init__(s): s.v = []; s.f = []; s.m = []
-    def add(s, pts): b = len(s.v); s.v += pts; return b
+    def add(s, pts): b = len(s.v); s.v += [p.copy() for p in pts]; return b
     def face(s, idx, mat=0): s.f.append(idx); s.m.append(mat)
-    def obj(s, name, mats):
-        me = bpy.data.meshes.new(name); me.from_pydata([tuple(p) for p in s.v], [], s.f); me.update()
-        for p, m in zip(me.polygons, s.m): p.material_index = m; p.use_smooth = True
-        o = bpy.data.objects.new(name, me); bpy.context.collection.objects.link(o)
-        for m in mats: me.materials.append(m)
-        return o
 
-def push_out(p, off):
-    d = p - HC
-    if d.length < 1e-4: return p
-    want = H.r(d) + off
-    if d.z > -.36 and d.length < want: p = HC + d.normalized() * want
-    for e in EARS: # ears: a capsule up and out from each root
-        a, b = e - V(0, 0, .05), e + (e - HC).normalized() * .2
-        ab = b - a; t = max(0, min(1, (p - a).dot(ab) / ab.length_squared)); c = a + ab * t; q = p - c
-        if q.length < .06: p = c + (q.normalized() if q.length > 1e-4 else V(e.x, 0, 0).normalized()) * .06
-    if p.z < 1.02: # neck and shoulders: keep a little out from the body
-        rr = math.hypot(p.x, p.y + .01); lim = .12 if p.z > .93 else .2
+def keep_off(p, off, hug=None, eyes=True):
+    """push a point out of the skull envelope (and off the ears, the neck, the eyes); hug pulls it back if it floats"""
+    d = p - HC; r = E.hug(d) + off
+    if d.length < r: p = HC + d.normalized() * r
+    elif hug is not None and d.length > r + hug: p = HC + d.normalized() * (r + hug)
+    for _ in range(2):
+        q, _i, dist = E.ear.find(p)
+        if q is not None and dist < off + .012:
+            a = (p - q); a = a.normalized() if a.length > 1e-5 else V(math.copysign(1, p.x), -.3, 0).normalized()
+            p = q + a * (off + .012)
+    if p.z < 1.02:   # neck and shoulders
+        rr = math.hypot(p.x, p.y + .01); lim = .13 + .06 * sstep(.97, .86, p.z)
         if rr < lim: k = lim / max(rr, 1e-4); p = V(p.x * k, (p.y + .01) * k - .01, p.z)
+    if eyes and p.z < EYE_Z and p.y > .08 and abs(p.x) < .32:   # never over the eyes: slide behind the cheek
+        p = V(p.x, .08, p.z)
     return p
 
-def lock(mesh, root_uv, length, width, flow=None, wave=0.0, curl=0.0, lift=0.0, seed=0, flat=.45, taper=.85, out=.012, steps=None, stiff=.25, tipcurl=0.0, sides=6):
-    """a clump of hair: a flattened tapered tube from a scalp point, falling round the head"""
-    rnd = random.Random(seed); u, v = root_uv
-    n = hdir(u, v); p = scalp(u, v, out * .3)
-    down = V(0, 0, -1)
-    tang = (down - n * down.dot(n)); tang = tang.normalized() if tang.length > 1e-3 else V(0, -1, 0)
-    d = (flow.normalized() if flow is not None else tang) + n * lift
-    d.normalize()
-    N = steps or max(6, int(length / .022)); step = length / N
-    path = [p.copy()]; frames = []
-    ph = rnd.random() * 6.28
-    for i in range(N):
-        t = (i + 1) / N
-        g = (down - d * down.dot(d)) * (stiff * (.6 + t))
-        d = (d + g).normalized()
-        q = p + d * step
-        if wave: q += hdir(u + math.pi / 2, 0) * math.sin(t * 9 + ph) * wave * step * 2.2
-        if curl or (tipcurl and t > .65):
-            c = curl + (tipcurl * (t - .65) / .35 if t > .65 else 0)
-            ax = d.cross(V(0, 0, 1)); ax = ax.normalized() if ax.length > 1e-3 else V(1, 0, 0)
-            q += (ax * math.cos(t * 14 + ph) + d.cross(ax) * math.sin(t * 14 + ph)) * c * .03
-        q = push_out(q, out + .004 * (1 - t))
-        d = (q - p).normalized() if (q - p).length > 1e-5 else d
-        path.append(q); p = q
-    rings = []
-    for i, c in enumerate(path):
-        t = i / N
-        fw = (path[min(i + 1, N)] - path[max(i - 1, 0)]); fw = fw.normalized() if fw.length > 1e-5 else V(0, 0, -1)
-        nn = (c - HC); nn = (nn - fw * nn.dot(fw)); nn = nn.normalized() if nn.length > 1e-4 else V(0, -1, 0)
-        side = fw.cross(nn).normalized()
-        w = width * (1 - taper * t ** 1.6) * (1 + .15 * math.sin(t * 3.14))
-        rg = []
-        for k in range(sides):
-            a = k / sides * 6.2832
-            rg.append(c + side * math.cos(a) * w + nn * math.sin(a) * w * flat)
-        rings.append(mesh.add(rg))
-    for i in range(N):
-        a, b = rings[i], rings[i + 1]
-        for k in range(sides): mesh.face([a + k, a + (k + 1) % sides, b + (k + 1) % sides, b + k])
-    tip = mesh.add([path[-1] + (path[-1] - path[-2]).normalized() * .01])
-    for k in range(sides): mesh.face([rings[-1] + k, rings[-1] + (k + 1) % sides, tip])
-    root = mesh.add([path[0] - (path[1] - path[0]).normalized() * .006])
-    for k in range(sides): mesh.face([rings[0] + (k + 1) % sides, rings[0] + k, root])
-    return path
+def drape(p0, d0, length, off, stiff=.82, hug=.01, free_z=1.0, steps=10, stop_z=None, eyes=True):
+    """a lock's centre line: leaves p0 along d0, bends to gravity, hugs the skull above free_z, then hangs free"""
+    p = p0.copy(); d = d0.normalized(); pts = [p.copy()]; st = length / steps
+    for k in range(steps):
+        d = (d * stiff + DOWN * (1 - stiff)).normalized()
+        q = keep_off(p + d * st, off, hug if p.z > free_z else None, eyes)
+        if (q - p).length > 1e-5: d = (q - p).normalized()
+        p = q; pts.append(p.copy())
+        if stop_z is not None and p.z < stop_z: break
+    return pts
 
-def cap(mesh, front=.45, side=-.15, back=-.55, vol=.02, part=None, swirl=0.0, rough=.004, nu=56, nv=22, top=1.0, nape=14):
-    """the scalp layer: a shell over the skull down to a hairline (front at the brow, sides by the cheeks, back at the nape)"""
-    rows = []
-    for j in range(nv + 1):
-        row = []
-        for i in range(nu):
-            u = -math.pi + i / nu * 2 * math.pi
-            fu = (math.cos(u) + 1) / 2   # 1 front, 0 back
-            line = back + (front - back) * fu ** 1.4 + (side - (back + (front - back) * .5)) * math.sin(u) ** 2 * (1 - abs(fu - .5) * 2) ** .5
-            v = line + (math.pi / 2 - .01 - line) * (j / nv) ** .9
-            o = vol * min(1, (j / nv) * 3.5) ** .7 * top + .003 + rough * min(1, j / nv * 4) * noise.noise(Vector((u * 3, v * 3, 1.7)))
-            if part is not None: o -= .008 * math.exp(-((u - part) / .07) ** 2) * (j / nv)
-            row.append(scalp(u, v, o))
-        rows.append(mesh.add(row))
-    for j in range(nv):
-        for i in range(nu): mesh.face([rows[j] + i, rows[j] + (i + 1) % nu, rows[j + 1] + (i + 1) % nu, rows[j + 1] + i])
-    # a soft rolled edge under the hairline
-    inner = mesh.add([HC + (mesh.v[rows[0] + i] - HC) * .97 for i in range(nu)])
-    for i in range(nu): mesh.face([inner + i, inner + (i + 1) % nu, rows[0] + (i + 1) % nu, rows[0] + i])
-    if nape:
-        rnd = random.Random(777 + int(back * 100))
-        for k in range(nape):
-            u = math.pi * .45 + math.pi * 1.1 * (k + .5) / nape
-            u = u if u <= math.pi else u - 2 * math.pi
-            fu = (math.cos(u) + 1) / 2
-            line = back + (front - back) * fu ** 1.4
-            lock(mesh, (u, line + .14), .09 + .05 * rnd.random(), .05, flow=hdir(u, 0) * .35 + V(0, 0, -1), seed=900 + k, stiff=.4, flat=.45, taper=.85)
+def tube(m, path, rw, rt, up=None, K=8, mat=0, lobes=0, lobe_amp=0.0, twist=0.0):
+    """a smooth closed tube along path; rw/rt: half width/thickness per point (0 at the ends closes a rounded pole)"""
+    n = len(path); rings = []
+    for i, p in enumerate(path):
+        t = (path[min(i + 1, n - 1)] - path[max(i - 1, 0)]); t = t.normalized() if t.length > 1e-6 else V(0, 0, -1)
+        nr = (up if up is not None else (p - HC)); side = t.cross(nr)
+        if side.length < 1e-4: side = t.orthogonal()
+        side.normalize(); nn = side.cross(t).normalized()
+        if rw[i] < 1e-4: rings.append(m.add([p])); continue
+        ring = []
+        for k in range(K):
+            a = 2 * math.pi * k / K + twist * i
+            f = 1 + lobe_amp * math.cos(lobes * a) if lobes else 1
+            ring.append(p + side * math.cos(a) * rw[i] * f + nn * math.sin(a) * rt[i] * f)
+        rings.append(m.add(ring))
+    for i in range(n - 1):
+        a, b = rings[i], rings[i + 1]; pa, pb = rw[i] < 1e-4, rw[i + 1] < 1e-4
+        for k in range(K):
+            k2 = (k + 1) % K
+            if pa and pb: continue
+            if pa: m.face([a, b + k, b + k2], mat)
+            elif pb: m.face([a + k, b, a + k2], mat)
+            else: m.face([a + k, b + k, b + k2, a + k2], mat)
 
-def ball(mesh, c, r, mat=0, sq=(1, 1, 1), bumps=0.0, seg=14, seed=0):
-    rows = []
-    for j in range(seg + 1):
-        th = j / seg * math.pi; row = []
-        for i in range(seg * 2):
-            ph = i / (seg * 2) * 6.2832
-            d = V(math.sin(th) * math.cos(ph), math.sin(th) * math.sin(ph), math.cos(th))
-            rr = r * (1 + bumps * noise.noise(d * 3.5 + V(seed, 0, 0)) + .04 * math.sin(ph * 6 + th * 4))
-            row.append(c + V(d.x * sq[0], d.y * sq[1], d.z * sq[2]) * rr)
-        rows.append(mesh.add(row))
-    s2 = seg * 2
-    for j in range(seg):
-        for i in range(s2): mesh.face([rows[j] + i, rows[j + 1] + i, rows[j + 1] + (i + 1) % s2, rows[j] + (i + 1) % s2], mat)
-
-def band(mesh, c, axis, r, w=.012):
-    axis = axis.normalized(); a = axis.cross(V(0, 0, 1)); a = a.normalized() if a.length > .01 else V(1, 0, 0); b = axis.cross(a)
-    rings = []
-    for s in (-1, 1):
-        rings.append(mesh.add([c + axis * s * w + (a * math.cos(k / 12 * 6.2832) + b * math.sin(k / 12 * 6.2832)) * r for k in range(12)]))
-    for k in range(12): mesh.face([rings[0] + k, rings[0] + (k + 1) % 12, rings[1] + (k + 1) % 12, rings[1] + k], 1)
-
-def braid(mesh, path, w, mat=0):
-    """a three-strand braid: slanted plump links stepping down a path"""
-    L = sum((path[i + 1] - path[i]).length for i in range(len(path) - 1)); n = max(6, int(L / (w * .62)))
-    def at(t):
-        s = t * L
-        for i in range(len(path) - 1):
-            seg = (path[i + 1] - path[i]).length
-            if s <= seg or i == len(path) - 2: return path[i].lerp(path[i + 1], min(1, s / max(seg, 1e-5))), (path[i + 1] - path[i]).normalized()
-            s -= seg
-    for k in range(n):
-        t = (k + .5) / n; c, fw = at(t); side = fw.cross(c - HC).normalized() if fw.cross(c - HC).length > 1e-4 else V(1, 0, 0)
-        ww = w * (1 - .3 * t)
-        ball(mesh, c + side * ww * .28 * (1 if k % 2 else -1), ww * .7, mat, (1, 1, 1.35), seg=7)
-
-# ---------------- the styles ----------------
-def spread(n, u0, u1, v): return [(u0 + (u1 - u0) * (i + .5) / n, v) for i in range(n)]
-def bangs(m, kind, seed, length=.17):
-    if kind == "blunt":
-        for i, (u, v) in enumerate(spread(11, -.62, .62, 1.0)): lock(m, (u, v), length + .02, .042, flow=V(math.sin(u) * .2, 1, -1.1), seed=seed + i, stiff=.5, flat=.35, taper=.3)
-    elif kind == "side":
-        for i, (u, v) in enumerate(spread(8, -.5, .55, 1.05)): lock(m, (u, v), length + .04 * (u + .5), .045, flow=V(1.1, .6, -.6), seed=seed + i, stiff=.35, flat=.35)
-    elif kind == "curtain":
-        for i, (u, v) in enumerate(spread(8, -.6, .6, 1.08)): s = 1 if u > 0 else -1; lock(m, (u, v), length + .06, .045, flow=V(s * 1.2, .5, -.7), seed=seed + i, stiff=.3, flat=.35)
-    elif kind == "wispy":
-        for i, (u, v) in enumerate(spread(9, -.55, .55, .98)): lock(m, (u, v), length - .02 + .04 * random.Random(seed + i).random(), .03, flow=V(math.sin(u) * .5, 1, -1), seed=seed + i, stiff=.45, flat=.4)
-    elif kind == "swoop":
-        for i, (u, v) in enumerate(spread(7, -.45, .45, 1.1)): lock(m, (u, v), .2, .05, flow=V(1, .7, .25), lift=.25, seed=seed + i, stiff=.12, flat=.4, tipcurl=.5)
-    elif kind == "spiky":
-        for i, (u, v) in enumerate(spread(6, -.5, .5, 1.05)): lock(m, (u, v), .12, .04, flow=V(math.sin(u) * .6, 1, -.4), lift=.4, seed=seed + i, stiff=.15, taper=.95)
-
-def curtain_back(m, length, seed, n=16, width=.055, wave=0.0, curl=0.0, tipcurl=0.0, u0=.75, v=.55, flat=.42):
-    """the fall: locks round the crown and back, hanging to `length`"""
+def lock_profile(n, W, T, tip=.4, root=.12, blunt=0.0):
+    """half widths along a lock: rounded root (sunk under the cap), full body, a rounded taper to the tip"""
+    rw, rt = [], []
     for i in range(n):
-        u = u0 + (2 * math.pi - 2 * u0) * (i + .5) / n
-        vv = v + .12 * random.Random(seed + i).random()
-        lock(m, (u, vv), length * (.9 + .15 * random.Random(seed * 3 + i).random()), width, seed=seed + i, wave=wave, curl=curl, tipcurl=tipcurl, flat=flat)
-    for s in (-1, 1): # side locks framing the face, behind the cheeks
-        for k in range(2): lock(m, (s * (1.05 + k * .22), .5), length * (.85 - k * .05), width * .95, seed=seed + 50 + k + (s > 0) * 9, wave=wave, curl=curl, tipcurl=tipcurl, flat=flat)
+        t = i / (n - 1)
+        if i == 0 or i == n - 1: rw.append(0); rt.append(0); continue
+        a = math.sin(min(1, t / root) * math.pi / 2) if t < root else 1
+        if t > 1 - tip:
+            x = (t - (1 - tip)) / tip
+            a *= math.sqrt(max(0, 1 - x ** (2 + 6 * blunt))) ** .7
+        rw.append(W * max(a, .15)); rt.append(T * max(a, .25))
+    return rw, rt
 
-def tail(m, root_uv, length, width, seed, flow=V(0, -1, 0), wave=0.0, curl=0.0, n=7, lift=.6, tie=True):
-    u, v = root_uv; base = scalp(u, v, .03)
-    if tie: band(m, base, (base - HC), .045)
-    for k in range(n):
-        a = k / n * 6.28; du, dv = math.cos(a) * .07, math.sin(a) * .05
-        lock(m, (u + du, v + dv), length, width, flow=flow, lift=lift, seed=seed + k, wave=wave, curl=curl, stiff=.22, out=.03)
+def clump(m, path, W, T, tip=.45, blunt=0.0, mat=0, K=8):
+    """one soft flat lock along a path: the unit of every hem, bang and fringe"""
+    if len(path) < 3: return
+    # resample so the tube has an even ring spacing and a pole cap at both ends
+    pts = [path[0] - (path[1] - path[0]).normalized() * T * .5] + path + [path[-1] + (path[-1] - path[-2]).normalized() * T]
+    rw, rt = lock_profile(len(pts), W, T, tip, blunt=blunt)
+    tube(m, pts, rw, rt, K=K, mat=mat)
 
-def bun(m, uv, r, seed, tie=True):
-    c = scalp(uv[0], uv[1], r * .75)
-    ball(m, c, r, 0, (1, 1, .9), bumps=.12, seed=seed)
-    if tie: band(m, scalp(uv[0], uv[1], .015), c - HC, r * .55)
-    return c
+def wave_path(path, amp, freq, ph, axis=None):
+    """a gentle S wave sideways along a path, growing from the root"""
+    out = []; n = len(path)
+    for i, p in enumerate(path):
+        t = i / max(1, n - 1)
+        t_dir = (path[min(i + 1, n - 1)] - path[max(i - 1, 0)]).normalized()
+        side = axis or t_dir.cross(p - HC).normalized()
+        out.append(keep_off(p + side * amp * t * math.sin(freq * t * math.pi * 2 + ph), .012, None))
+    return out
 
-def spikes(m, n, length, seed, v0=.75):
+# ---------------- the cap: the skull shell ----------------
+def cap(m, front=.8, side=.2, back=-.35, vol=.02, part=None, ear_gap=.035):
+    """the shell over the skull: hairline at elevation front/side/back (radians), thickness vol, sinks under fur past
+    the hairline and round every ear base so the hair parts round the ears; part=azimuth of a soft part line"""
+    NU, NV = 56, 30; grid = []; w = []
+    for j in range(NV + 1):
+        v = -.75 + (math.pi / 2 + .75) * j / NV; row = []; wrow = []
+        for i in range(NU):
+            u = -math.pi + 2 * math.pi * i / NU; au = abs(u)
+            line = (front + (side - front) * sstep(0, math.pi / 2, au)) if au < math.pi / 2 else (side + (back - side) * sstep(math.pi / 2, math.pi, au))
+            hm = sstep(line - .025, line + .06, v)
+            d = hdir(u, v); hp = HC + d * E.hug(d)
+            _q, _i, ed = E.eb.find(hp)
+            em = sstep(ear_gap * .55, ear_gap * 1.5, ed)
+            th = max(.009, vol * (.55 + .45 * max(0, math.sin(v))))   # never thinner than the fur's own bumps
+            if part is not None: th *= 1 - .45 * math.exp(-((u - part) / .07) ** 2) * sstep(.6, 1.0, v)
+            k = hm * em
+            r = E.sink(d) + (E.hug(d) + th - E.sink(d)) * k
+            row.append(HC + d * r); wrow.append(k)
+        grid.append(row); w.append(wrow)
+    base = len(m.v); m.v += [p for row in grid for p in row]; top = m.add([HC + V(0, 0, 1) * (E.hug(V(0, 0, 1)) + vol)])
+    for j in range(NV):
+        for i in range(NU):
+            i2 = (i + 1) % NU
+            if max(w[j][i], w[j][i2], w[j + 1][i], w[j + 1][i2]) < .02: continue
+            m.face([base + j * NU + i, base + j * NU + i2, base + (j + 1) * NU + i2, base + (j + 1) * NU + i])
+    for i in range(NU): m.face([base + NV * NU + i, base + NV * NU + (i + 1) % NU, top])
+
+# ---------------- hems, bangs ----------------
+def hem(m, length, per_side=7, W=.05, T=.016, u_from=1.25, v_lo=.42, v_hi=.95, wave=0.0, stiff=.85, seed=0, layers=2, blunt=0.0, spread=0.0, free_z=1.0):
+    """the back and side fringe: per_side clumps each side from behind the ear (u_from) to the nape, two layers that overlap
+    so no scalp shows; each a soft lock with a rounded tip; lengths vary gently, never a sawtooth"""
     rnd = random.Random(seed)
-    for i in range(n):
-        u = rnd.uniform(-math.pi, math.pi); v = rnd.uniform(v0, 1.45)
-        if min(abs(u - .6), abs(u + .6)) < .3 and v > .55 and v < 1.05: continue
-        nn = hdir(u, v); lock(m, (u, v), length * rnd.uniform(.7, 1.2), .05, flow=nn + V(0, -.3, .5), lift=1, seed=seed + i, stiff=.05, taper=.97, flat=.7, steps=6)
+    if length < .16: layers = 1; W *= 1.15; T *= .8   # a short hem is one soft row, never a braided band
+    for L in range(layers):
+        n = per_side * 2; shift = .5 * L
+        for k in range(n + (0 if L else 1)):
+            t = (k + shift) / n                      # 0..1 across the back, side to side
+            u = (u_from + (2 * math.pi - 2 * u_from) * t)
+            ub = u if u <= math.pi else u - 2 * math.pi
+            back = abs(abs(ub) - math.pi) / (math.pi - u_from)   # 1 at the side, 0 at the nape
+            v = v_hi + (v_lo - v_hi) * back
+            ln = length * (1 - .14 * L) * (1 + (rnd.random() - .5) * .14) * (1 - .1 * back * (1 - min(1, length / .3)))
+            off = T + .004 + L * T * 1.1
+            d = hdir(ub, v); p0 = HC + d * (E.hug(d) + T * .4)
+            fwd = (hdir(ub, v - .1) - hdir(ub, v)).normalized() + V(math.sin(ub), math.cos(ub), 0) * spread
+            path = drape(p0, fwd, ln, off, stiff=stiff, hug=.008, free_z=free_z, steps=max(6, min(10, int(ln / .035))))
+            if wave: path = wave_path(path, wave, max(.8, ln / .35), rnd.random() * 6.28)
+            clump(m, path, W * (1 - .1 * L), T, tip=.42, blunt=blunt)
 
-def S(cap_kw=None, **kw): return dict(cap=cap_kw or {}, **kw)
-STYLES = {
-  # ---- female: 18 ----
-  "f_bob":        lambda m: (cap(m, vol=.03), bangs(m, "blunt", 1), curtain_back(m, .26, 10, n=18, width=.06, tipcurl=.6)),
-  "f_long":       lambda m: (cap(m, vol=.025, part=0), bangs(m, "curtain", 2), curtain_back(m, .62, 20, n=18, width=.06)),
-  "f_ponytail":   lambda m: (cap(m, vol=.018, back=.1, side=.05), bangs(m, "wispy", 3), tail(m, (math.pi, .85), .48, .05, 30, wave=.15)),
-  "f_twintails":  lambda m: (cap(m, vol=.02, back=.0), bangs(m, "blunt", 4), [tail(m, (s * 2.1, .65), .55, .05, 40 + s, flow=V(s * .8, -.4, -.3), lift=.4) for s in (-1, 1)]),
-  "f_sidebraid":  lambda m: (cap(m, vol=.02, back=.05, part=.3), bangs(m, "side", 5), braid(m, lock(M(), (2.5, .3), .5, .05, flow=V(.6, .2, -1), seed=55, stiff=.4, out=.05), .07)),
-  "f_messybun":   lambda m: (cap(m, vol=.02, back=.15, side=.1, rough=.01), bangs(m, "wispy", 6, .14), bun(m, (math.pi * .97, 1.2), .1, 60), [lock(m, (s * 1.25, .4), .2, .025, seed=61 + s, wave=.3) for s in (-1, 1)]),
-  "f_spacebuns":  lambda m: (cap(m, vol=.02, back=.05, part=0), bangs(m, "blunt", 7, .15), [bun(m, (s * 2.0, 1.15), .085, 70 + s) for s in (-1, 1)]),
-  "f_pixie":      lambda m: (cap(m, vol=.03, back=-.05, side=.1, rough=.012), bangs(m, "side", 8, .12), curtain_back(m, .12, 80, n=12, width=.06, v=.45)),
-  "f_wavy":       lambda m: (cap(m, vol=.03, part=.25), bangs(m, "side", 9), curtain_back(m, .55, 90, n=18, width=.065, wave=.5)),
-  "f_curly":      lambda m: (cap(m, vol=.045, rough=.015), bangs(m, "wispy", 10, .13), curtain_back(m, .32, 100, n=20, width=.06, curl=.9, flat=.8)),
-  "f_hime":       lambda m: (cap(m, vol=.02, part=0), bangs(m, "blunt", 11, .19), [lock(m, (s * (1.0 + k * .12), .45), .3, .055, seed=112 + k + s * 5, stiff=.6, flat=.35, taper=.15) for s in (-1, 1) for k in range(2)], curtain_back(m, .6, 113, n=16, width=.06, u0=1.3)),
-  "f_sidetail":   lambda m: (cap(m, vol=.02, back=.05, part=-.3), bangs(m, "side", 12), tail(m, (2.2, .75), .45, .05, 120, flow=V(.8, -.4, -.2), wave=.2, lift=.4)),
-  "f_twinbraids": lambda m: (cap(m, vol=.018, back=-.1, part=0), bangs(m, "wispy", 13), [braid(m, lock(M(), (s * 2.3, .1), .45, .05, flow=V(s * .3, .4, -1), seed=130 + s, stiff=.5, out=.05), .065) for s in (-1, 1)]),
-  "f_curtainmid": lambda m: (cap(m, vol=.025, part=0), bangs(m, "curtain", 14, .2), curtain_back(m, .38, 140, n=18, width=.06, tipcurl=.4)),
-  "f_wolfcut":    lambda m: (cap(m, vol=.04, rough=.015), bangs(m, "wispy", 15, .16), spikes(m, 10, .1, 150, v0=.9), curtain_back(m, .34, 151, n=16, width=.05, wave=.4)),
-  "f_afropuff":   lambda m: (cap(m, vol=.02, back=.1, side=.05, rough=.008), ball(m, scalp(math.pi * .92, 1.15, .14), .16, 0, (1, 1, .85), bumps=.18, seed=160, seg=16), band(m, scalp(math.pi * .92, 1.15, .02), hdir(math.pi * .92, 1.15), .08)),
-  "f_halfup":     lambda m: (cap(m, vol=.025, part=.2), bangs(m, "curtain", 17), bun(m, (math.pi, 1.0), .07, 170), curtain_back(m, .5, 171, n=16, width=.06, wave=.25, v=.3)),
-  "f_ringlets":   lambda m: (cap(m, vol=.025, back=0), bangs(m, "blunt", 18, .16), [tail(m, (s * 2.05, .75), .45, .055, 180 + s * 3, flow=V(s * .6, -.2, -.6), curl=1.4, n=5, lift=.3) for s in (-1, 1)]),
-  # ---- male: 12 ----
-  "m_crop":       lambda m: (cap(m, front=.6, side=.15, back=-.15, vol=.022, rough=.006), bangs(m, "wispy", 201, .07)),
-  "m_spiky":      lambda m: (cap(m, front=.6, side=.15, back=-.15, vol=.025), spikes(m, 26, .14, 210, v0=.55), bangs(m, "spiky", 211)),
-  "m_sidepart":   lambda m: (cap(m, front=.6, side=.12, back=-.18, vol=.03, part=-.45), bangs(m, "swoop", 220)),
-  "m_fluffy":     lambda m: (cap(m, front=.5, side=.05, back=-.2, vol=.045, rough=.016), bangs(m, "wispy", 230, .13), curtain_back(m, .12, 231, n=14, width=.055, v=.4, curl=.4)),
-  "m_undercut":   lambda m: (cap(m, front=.65, side=.6, back=.55, vol=.04, rough=.006), cap(m, front=.6, side=.15, back=-.2, vol=.006, rough=0), bangs(m, "swoop", 240)),
-  "m_mohawk":     lambda m: (cap(m, front=.6, side=.15, back=-.2, vol=.004, rough=0), [lock(m, (u, 1.0 + .45 * math.cos(u)), .16, .05, flow=hdir(u, 1.2) + V(0, -.2, .4), lift=1, seed=250 + i, stiff=.04, taper=.95, flat=.3, steps=6) for i, u in enumerate([math.pi * (k / 8 - .5) * 2 for k in range(9)]) if abs(u) > 2.2 or abs(u) < .3]),
-  "m_manbun":     lambda m: (cap(m, front=.55, back=.1, side=.1, vol=.018, part=0), bun(m, (math.pi, 1.05), .075, 260)),
-  "m_shaggy":     lambda m: (cap(m, front=.5, side=0, back=-.25, vol=.035, rough=.012), bangs(m, "wispy", 270, .16), curtain_back(m, .24, 271, n=16, width=.055, wave=.35)),
-  "m_curtains":   lambda m: (cap(m, front=.55, side=.05, back=-.2, vol=.028, part=0), bangs(m, "curtain", 280, .15), curtain_back(m, .16, 281, n=14, width=.055, v=.45)),
-  "m_buzz":       lambda m: (cap(m, front=.62, side=.2, back=-.12, vol=.009, rough=.002),),
-  "m_slick":      lambda m: (cap(m, front=.62, side=.15, back=-.18, vol=.03), [lock(m, (u, 1.05), .3, .05, flow=V(0, -1, .2), lift=.5, seed=300 + i, stiff=.15, flat=.3) for i, u in enumerate([(k / 6 - .5) * 1.1 for k in range(7)])]),
-  "m_curlytop":   lambda m: (cap(m, front=.6, side=.25, back=-.1, vol=.012, rough=.003), [ball(m, scalp(u, v, .035), .045, 0, bumps=.25, seg=7, seed=310 + i) for i, (u, v) in enumerate([(random.Random(i).uniform(-math.pi, math.pi), random.Random(i * 7).uniform(.55, 1.5)) for i in range(70)]) if not (min(abs(u - .6), abs(u + .6)) < .28 and .55 < v < 1.05)]),
-}
+def bangs(m, kind="blunt", seed=0, n=7, stop=EYE_Z + .02, W=.05, T=.017, span=.62, root_v=1.18):
+    """fringe clumps sitting ON the forehead: root under the cap, flow over the brow, rounded tips above the eyes.
+    kind: blunt (even), wispy (alternating, pointier), side (all swept to +x), curtain (parted, to both temples),
+    spiky (short stiff up-forward points), swoop (one big sideways sweep)"""
+    rnd = random.Random(seed)
+    for k in range(n):
+        t = (k / (n - 1)) * 2 - 1 if n > 1 else 0
+        u = t * span; v = root_v - .08 * abs(t)
+        d = hdir(u, v); p0 = HC + d * (E.hug(d) + T * .3)
+        fwd = (hdir(u, v - .1) - hdir(u, v)).normalized(); sd = V(math.cos(u), -math.sin(u), 0)
+        st = stop + .025 * abs(t) ** 2; ln = .3; tip = .5; w = W; blunt = .3
+        if kind == "wispy": st += (.025 if k % 2 else 0) + rnd.random() * .01; tip = .6; w = W * .85; blunt = 0
+        elif kind == "side": fwd = (fwd + sd * .9).normalized(); st += .03 * (t + 1); blunt = .1
+        elif kind == "curtain": fwd = (fwd + sd * 1.3 * (1 if t >= 0 else -1)).normalized(); st += .05 * (1 - abs(t)); tip = .55; blunt = 0
+        elif kind == "spiky": st = stop + .07 + .02 * (k % 2); fwd = (fwd + V(0, 0, .5)).normalized(); tip = .7; blunt = 0
+        elif kind == "swoop": fwd = (fwd + sd * 1.6).normalized(); st = stop + .05 + .05 * (1 - t); w = W * 1.15; blunt = 0
+        path = drape(p0, fwd, ln, T + .006, stiff=.93, hug=.006, free_z=0, steps=10, stop_z=st)
+        clump(m, path, w, T, tip=tip, blunt=blunt)
 
+def side_locks(m, per=1, length=.3, W=.05, T=.017, u=1.3, v=.45, blunt=0.0, seed=0, wave=0.0):
+    """face-framing locks that fall close behind the cheeks"""
+    rnd = random.Random(seed)
+    for s in (-1, 1):
+        for k in range(per):
+            uu = s * (u + .14 * k); d = hdir(uu, v + .1 * k); p0 = HC + d * (E.hug(d) + T * .4)
+            path = drape(p0, (hdir(uu, v - .1) - hdir(uu, v)).normalized(), length * (1 - .12 * k), T + .006 + k * .012, stiff=.9, hug=.008, steps=10)
+            if wave: path = wave_path(path, wave, 1.0, rnd.random() * 6.28)
+            clump(m, path, W, T, tip=.4, blunt=blunt)
+
+# ---------------- tails, buns, braids, spikes ----------------
+def tie(m, c, axis, R=.03, r=.011, mat=1):
+    """a hairtie: a soft torus round a tail or bun root"""
+    axis = axis.normalized(); a = axis.orthogonal().normalized(); b = axis.cross(a); NU, NV = 14, 6; base = len(m.v)
+    for i in range(NU):
+        th = 2 * math.pi * i / NU; ctr = c + (a * math.cos(th) + b * math.sin(th)) * R
+        rad = (a * math.cos(th) + b * math.sin(th))
+        for j in range(NV):
+            ph = 2 * math.pi * j / NV; m.v.append(ctr + rad * math.cos(ph) * r + axis * math.sin(ph) * r)
+    for i in range(NU):
+        for j in range(NV):
+            i2, j2 = (i + 1) % NU, (j + 1) % NV
+            m.face([base + i * NV + j, base + i2 * NV + j, base + i2 * NV + j2, base + i * NV + j2], mat)
+
+def tail(m, uv, length=.42, W=.09, flow=None, out=.04, stiff=.78, seed=0, curl=0.0, tie_r=.03):
+    """a fat teardrop tail: tie on the skull, swells to W/2 radius about a third down, rounded point; hangs with gravity"""
+    u, v = uv; n = hdir(u, v); root = HC + n * (E.hug(n) + .006)
+    tie(m, root + n * .012, n, R=tie_r, r=.012)
+    p0 = root + n * .03; d0 = (n * .9 + (flow or V(0, 0, 0)) + DOWN * .2).normalized()
+    N = 14; st = length / N; pts = [root - n * .01, p0.copy()]; p = p0.copy(); d = d0
+    prof = []
+    for k in range(N):
+        t = (k + 1) / N
+        r = W / 2 * (math.sin(min(1, t / .35) * math.pi / 2) * .62 + .38 if t < .35 else math.cos((t - .35) / .65 * math.pi / 2) ** .75)
+        d = (d * stiff + DOWN * (1 - stiff)).normalized()
+        q = keep_off(p + d * st, max(r, .02) + .008, None)
+        if curl: q = q + V(math.cos(t * 7 + seed), math.sin(t * 7 + seed), 0) * curl * t * st
+        d = (q - p).normalized(); p = q; pts.append(p.copy()); prof.append(r)
+    pts.append(p + d * .012)
+    rw = [0, tie_r * .8] + [max(.0, x) for x in prof[:-1]] + [W * .06, 0]
+    rw = rw[:len(pts)]; rw[-1] = 0
+    rt = [x * .92 for x in rw]
+    tube(m, pts, rw, rt, K=12, lobes=4, lobe_amp=.07, twist=.12)
+
+def ball(m, c, R, scl=(1, 1, 1), lobes=5, amp=.06, seg=14, mat=0, swirl=0.0):
+    """a smooth lobed ball (bun, puff, curl)"""
+    base = len(m.v); NU, NV = seg, max(6, seg // 2)
+    m.v.append(c + V(0, 0, -R * scl[2]))
+    for j in range(1, NV):
+        ph = -math.pi / 2 + math.pi * j / NV
+        for i in range(NU):
+            th = 2 * math.pi * i / NU
+            f = 1 + amp * math.cos(lobes * (th + swirl * ph)) * math.cos(ph)
+            m.v.append(c + V(math.cos(th) * math.cos(ph) * scl[0], math.sin(th) * math.cos(ph) * scl[1], math.sin(ph) * scl[2]) * R * f)
+    m.v.append(c + V(0, 0, R * scl[2])); topi = len(m.v) - 1
+    for i in range(NU): m.face([base, base + 1 + (i + 1) % NU, base + 1 + i], mat)
+    for j in range(NV - 2):
+        for i in range(NU):
+            a = base + 1 + j * NU; b = a + NU; i2 = (i + 1) % NU
+            m.face([a + i, a + i2, b + i2, b + i], mat)
+    last = base + 1 + (NV - 2) * NU
+    for i in range(NU): m.face([last + i, last + (i + 1) % NU, topi], mat)
+
+def bun(m, uv, R=.075, swirl=1.6, with_tie=True):
+    """a twisted bun seated on the skull with a tie at its base"""
+    n = hdir(*uv); root = HC + n * E.hug(n)
+    ball(m, root + n * (R * .82), R, (1, 1, .9), lobes=5, amp=.08, swirl=swirl)
+    if with_tie: tie(m, root + n * .012, n, R=R * .55, r=.011)
+
+def braid(m, uv, length=.42, R=.034, flow=None, seed=0):
+    """a braid: overlapping slanted beads down a hanging path, a tie and a rounded tuft at the end"""
+    n = hdir(*uv); root = HC + n * (E.hug(n) + R * .7)
+    path = drape(root, (n * .5 + (flow or V(0, 0, 0)) + DOWN).normalized(), length, R + .01, stiff=.75, hug=None, steps=10)
+    beads = 9; pts = path
+    for k in range(beads):
+        t = k / (beads - 1) * .9; f = t * (len(pts) - 1); i = min(int(f), len(pts) - 2); p = pts[i].lerp(pts[i + 1], f - i)
+        r = R * (1 - .3 * t)
+        ball(m, p, r, (1.05, 1.05, .8), lobes=0, amp=0, seg=10)
+    end = pts[-1]; tie(m, end + V(0, 0, .012), V(0, 0, 1), R=R * .55, r=.009)
+    clump(m, [end, end + V(0, 0, -.03), end + V(0, 0, -.06)], R * .9, R * .8, tip=.6)
+
+def spikes(m, n=12, length=.12, seed=0, v0=.6, v1=1.45, u_span=2.6, W=.045, T=.03, back=.6):
+    """stiff rounded spikes over the crown, swept back"""
+    rnd = random.Random(seed)
+    for k in range(n):
+        u = (rnd.random() * 2 - 1) * u_span; v = v0 + (v1 - v0) * rnd.random()
+        d = hdir(u, v); p0 = HC + d * (E.hug(d) + .005)
+        _q, _i, ed = E.eb.find(p0)
+        if ed < .07: continue
+        aim = (d + V(0, -back, .2)).normalized()
+        path = [p0]
+        for s in range(1, 6): path.append(keep_off(p0 + aim * length * s / 5 + DOWN * .02 * (s / 5) ** 2, .006 + T * (1 - s / 6), None))
+        clump(m, path, W, T, tip=.75)
+
+def fins(m, n=7, height=.13, W=.045, T=.018):
+    """a mohawk: a row of fat swept-back fins on the centre line, forehead over the crown to the nape"""
+    for k in range(n):
+        t = k / (n - 1); e = hdir(0, 1.15 + (math.pi + .15 - 1.15) * t)   # past pi/2 the elevation walks down the back
+        p0 = HC + e * (E.hug(e) + .004)
+        aim = (e + V(0, -.45, .1)).normalized(); h = height * (1 - .35 * abs(t - .4))
+        path = [p0 + aim * h * s / 6 + DOWN * .02 * (s / 6) ** 2 for s in range(7)]
+        tube(m, path, *lock_profile(7, W, T, tip=.6), up=V(1, 0, 0), K=8)
+
+# ---------------- styles: one function each ----------------
+def f_bob(m):        cap(m, vol=.026); bangs(m, "blunt", 1); hem(m, .3, 7, W=.055, T=.018, seed=1, v_lo=.45)
+def f_long(m):       cap(m, vol=.024, part=0); bangs(m, "curtain", 2, n=6); side_locks(m, 1, .62, W=.055, u=1.32, v=.5, seed=2, wave=.018); hem(m, .66, 8, W=.058, T=.018, seed=2, wave=.022, free_z=1.05)
+def f_ponytail(m):   cap(m, vol=.02, side=.05, back=-.5); bangs(m, "wispy", 3, n=6); tail(m, (math.pi, .62), .46, .09, flow=V(0, -.3, 0), seed=3)
+def f_twintails(m):  cap(m, vol=.02, back=-.4); bangs(m, "blunt", 4); [tail(m, (s * 2.0, .58), .5, .09, flow=V(s * .35, -.15, 0), seed=4 + s) for s in (-1, 1)]
+def f_sidebraid(m):  cap(m, vol=.02, part=.35); bangs(m, "side", 5); braid(m, (2.0, .3), .42, flow=V(.3, .3, 0), seed=5); hem(m, .14, 5, W=.05, seed=5, u_from=2.2)
+def f_messybun(m):   cap(m, vol=.02, back=-.3); bangs(m, "wispy", 6, n=6); bun(m, (math.pi * .97, 1.05), .085, swirl=2.4); side_locks(m, 1, .22, W=.035, T=.013, seed=6, wave=.012)
+def f_spacebuns(m):  cap(m, vol=.02, part=0); bangs(m, "blunt", 7); [bun(m, (s * 2.25, .95), .075) for s in (-1, 1)]
+def f_pixie(m):      cap(m, vol=.028, side=.15, back=-.15); bangs(m, "side", 8, n=6); hem(m, .1, 6, W=.05, T=.016, seed=8, stiff=.9)
+def f_wavy(m):       cap(m, vol=.028, part=.3); bangs(m, "side", 9); side_locks(m, 1, .5, W=.055, seed=9, wave=.03); hem(m, .55, 8, W=.058, seed=9, wave=.035)
+def f_curly(m):      cap(m, vol=.04); bangs(m, "wispy", 10, n=6, T=.02); hem(m, .32, 8, W=.06, T=.022, seed=10, wave=.03)
+def f_hime(m):       cap(m, vol=.02, part=0); bangs(m, "blunt", 11, W=.055); side_locks(m, 1, .34, W=.05, u=1.28, v=.42, blunt=.7, seed=11); hem(m, .6, 8, W=.058, seed=11, blunt=.4, u_from=1.6)
+def f_sidetail(m):   cap(m, vol=.02, part=-.35, back=-.4); bangs(m, "side", 12); tail(m, (2.1, .7), .44, .09, flow=V(.4, -.2, 0), seed=12)
+def f_twinbraids(m): cap(m, vol=.018, part=0, back=-.3); bangs(m, "wispy", 13); [braid(m, (s * 2.0, .25), .44, flow=V(s * .2, .2, 0), seed=13 + s) for s in (-1, 1)]
+def f_curtainmid(m): cap(m, vol=.024, part=0); bangs(m, "curtain", 14, n=6); hem(m, .4, 7, W=.056, seed=14)
+def f_wolfcut(m):    cap(m, vol=.035); bangs(m, "wispy", 15); spikes(m, 9, .09, 15, v0=.7, v1=1.2, W=.045, T=.02, back=.9); hem(m, .34, 7, W=.05, seed=15, wave=.02)
+def f_afropuff(m):   cap(m, vol=.016, back=-.3); ball(m, scalp(math.pi * .92, 1.05, .13), .15, (1, 1, .88), lobes=7, amp=.06, seg=18); tie(m, scalp(math.pi * .92, 1.05, .015), hdir(math.pi * .92, 1.05), .07, .013)
+def f_halfup(m):     cap(m, vol=.024, part=.2); bangs(m, "curtain", 17, n=6); bun(m, (math.pi, .95), .06); hem(m, .5, 7, W=.056, seed=17, wave=.02)
+def f_ringlets(m):
+    cap(m, vol=.024); bangs(m, "blunt", 18); hem(m, .16, 6, W=.05, seed=18)
+    for s in (-1, 1):
+        for k, u in enumerate((1.55, 1.95, 2.35)):
+            n = hdir(s * u, .25 + .1 * k); root = HC + n * (E.hug(n) + .01); pts = []
+            for i in range(26):
+                t = i / 25; a = t * 6 * math.pi + k
+                ax = root + n * .03 + DOWN * (.36 - .05 * k) * t
+                pts.append(keep_off(ax + (V(n.x, n.y, 0).normalized() * math.cos(a) + V(-n.y, n.x, 0).normalized() * math.sin(a)) * .024, .02, None))
+            clump(m, pts, .02, .018, tip=.25)
+def m_crop(m):       cap(m, front=.82, side=.25, back=-.15, vol=.02); bangs(m, "wispy", 201, n=6, stop=EYE_Z + .06, T=.014); hem(m, .07, 5, W=.045, T=.012, seed=201, stiff=.9)
+def m_spiky(m):      cap(m, front=.82, side=.25, back=-.15, vol=.02); spikes(m, 18, .13, 210, v0=.45, v1=1.4); bangs(m, "spiky", 211, n=5)
+def m_sidepart(m):   cap(m, front=.82, side=.22, back=-.18, vol=.026, part=-.45); bangs(m, "swoop", 220, n=6); hem(m, .08, 5, W=.045, T=.013, seed=220, stiff=.9)
+def m_fluffy(m):     cap(m, front=.75, side=.15, back=-.25, vol=.04); bangs(m, "wispy", 230, n=6, T=.02); hem(m, .15, 6, W=.055, T=.02, seed=231, stiff=.88)
+def m_undercut(m):   cap(m, front=.82, side=.0, back=-.3, vol=.006); cap(m, front=.8, side=.75, back=.7, vol=.035); bangs(m, "swoop", 240, n=6, root_v=1.25)
+def m_mohawk(m):     cap(m, front=.82, side=.25, back=-.25, vol=.005); fins(m, 9, .12, W=.06)
+def m_manbun(m):     cap(m, front=.78, side=.15, back=-.25, vol=.018, part=0); bun(m, (math.pi, 1.0), .065)
+def m_shaggy(m):     cap(m, front=.75, side=.1, back=-.25, vol=.032); bangs(m, "wispy", 270, n=6); hem(m, .22, 7, W=.052, seed=271, wave=.018)
+def m_curtains(m):   cap(m, front=.78, side=.15, back=-.2, vol=.026, part=0); bangs(m, "curtain", 280, n=6); hem(m, .13, 6, W=.05, seed=281, stiff=.88)
+def m_buzz(m):       cap(m, front=.85, side=.3, back=-.12, vol=.008)
+def m_slick(m):
+    """slicked back: wide flat locks laid on the scalp from the hairline over the crown, tips tucked at the back"""
+    cap(m, front=.85, side=.22, back=-.18, vol=.022)
+    for k in range(7):
+        u = (k / 6 - .5) * 1.2
+        path = [scalp(u * (1 - .3 * t), .95 + 1.4 * t, .012 + .006 * math.sin(t * math.pi)) for t in [i / 10 for i in range(11)]]
+        clump(m, path, .055, .015, tip=.4)
+def m_curlytop(m):
+    cap(m, front=.82, side=.3, back=-.1, vol=.01)
+    rnd = random.Random(310)
+    for i in range(30):
+        u = rnd.uniform(-2.9, 2.9); v = rnd.uniform(.8, 1.5)
+        p = scalp(u, v, .028); _q, _i, ed = E.eb.find(p)
+        if ed > .07: ball(m, p, .042, lobes=4, amp=.1, seg=10, swirl=1.0)
+
+STYLES = {f.__name__: f for f in (f_afropuff, f_bob, f_curly, f_curtainmid, f_halfup, f_hime, f_long, f_messybun, f_pixie, f_ponytail,
+          f_ringlets, f_sidebraid, f_sidetail, f_spacebuns, f_twinbraids, f_twintails, f_wavy, f_wolfcut,
+          m_buzz, m_crop, m_curlytop, m_curtains, m_fluffy, m_manbun, m_mohawk, m_shaggy, m_sidepart, m_slick, m_spiky, m_undercut)}
+
+# ---------------- materials, skin, proof, export ----------------
 def mats():
     h = bpy.data.materials.new("hair"); h.use_nodes = True; b = h.node_tree.nodes["Principled BSDF"]
     b.inputs["Base Color"].default_value = (.32, .17, .09, 1); b.inputs["Roughness"].default_value = .55
@@ -263,37 +390,56 @@ def mats():
     b.inputs["Base Color"].default_value = (.85, .2, .35, 1); b.inputs["Roughness"].default_value = .4
     return [h, t]
 
+def finish(m, name, MATS):
+    """the mesh object: welded, normals outward, smooth shaded (a hat-squash shape key would be added here)"""
+    me = bpy.data.meshes.new(name); me.from_pydata([tuple(p) for p in m.v], [], m.f); me.update()
+    for p, mi in zip(me.polygons, m.m): p.material_index = mi
+    bm = bmesh.new(); bm.from_mesh(me); bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces); bm.to_mesh(me); bm.free()
+    for p in me.polygons: p.use_smooth = True
+    o = bpy.data.objects.new(name, me); bpy.context.collection.objects.link(o)
+    for mt in MATS: me.materials.append(mt)
+    return o
+
 def skin(ob, rig):
     g = ob.vertex_groups.new(name="Head"); g.add(list(range(len(ob.data.vertices))), 1.0, "REPLACE")
     ob.parent = rig; md = ob.modifiers.new("skin", "ARMATURE"); md.object = rig
 
-def proof(objs, name):
-    sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 300
-    sc.render.film_transparent = False
+def proof(o, name, sex):
+    """front / side / back on two species, one row per style"""
+    sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 10; sc.render.resolution_x = sc.render.resolution_y = 260
     if not sc.world: sc.world = bpy.data.worlds.new("w")
-    sc.world.use_nodes = True; sc.world.node_tree.nodes["Background"].inputs[0].default_value = (.5, .5, .52, 1)
-    if "Key" not in bpy.data.objects:
-        L = bpy.data.lights.new("Key", "SUN"); L.energy = 3; lo = bpy.data.objects.new("Key", L); sc.collection.objects.link(lo); lo.rotation_euler = (.9, .2, 2.6)
-        cd = bpy.data.cameras.new("Cam"); cd.lens = 50; co = bpy.data.objects.new("Cam", cd); sc.collection.objects.link(co); sc.camera = co
-    co = bpy.data.objects["Cam"]; files = []
-    for k, a in enumerate((0.0, 1.57, 2.6)):
-        pos = HC + V(math.sin(a) * 1.9, math.cos(a) * 1.9, .1) + V(0, 0, -.12); co.location = pos
-        co.rotation_euler = (HC + V(0, 0, -.12) - pos).to_track_quat("-Z", "Y").to_euler()
-        bpy.data.objects["Key"].rotation_euler = (.9, .2, 3.14 - a * .7)
-        f = os.path.join(PROOF, f"{name}_{k}.png"); sc.render.filepath = f; bpy.ops.render.render(write_still=True); files.append(f)
+    sc.world.use_nodes = True; sc.world.node_tree.nodes["Background"].inputs[0].default_value = (.55, .55, .58, 1)
+    if "Cam" not in bpy.data.objects:
+        L = bpy.data.lights.new("Key", "SUN"); L.energy = 3.2; lo = bpy.data.objects.new("Key", L); sc.collection.objects.link(lo)
+        cd = bpy.data.cameras.new("Cam"); cd.type = "ORTHO"; cd.ortho_scale = 1.15; co = bpy.data.objects.new("Cam", cd); sc.collection.objects.link(co); sc.camera = co
+    co = bpy.data.objects["Cam"]; lo = bpy.data.objects["Key"]; files = []
+    for sp in (("cat", "lop") if sex == "f" else ("bear", "rat")):
+        before = set(x.name for x in bpy.data.objects); bpy.ops.import_scene.gltf(filepath=f"{HEADS}/{sp}_{sex}.glb")
+        new = [x.name for x in bpy.data.objects if x.name not in before]
+        for x in new:
+            if x.startswith("Ico"): bpy.data.objects[x].hide_render = True
+        for k, a in enumerate((0.0, 1.57, 3.14)):
+            tgt = HC + V(0, 0, -.12); pos = tgt + V(math.sin(a) * 3, math.cos(a) * 3, .25); co.location = pos
+            co.rotation_euler = (tgt - pos).to_track_quat("-Z", "Y").to_euler(); lo.rotation_euler = co.rotation_euler.copy(); lo.rotation_euler.x -= .4
+            f = os.path.join(PROOF, f"{name}_{sp}_{k}.png"); sc.render.filepath = f; bpy.ops.render.render(write_still=True); files.append(f)
+        for x in new:
+            if x in bpy.data.objects: bpy.data.objects.remove(bpy.data.objects[x])
     return files
 
 def run(sex):
-    global H
-    H = Head(HEADS[sex]); MATS = mats()
+    global E
+    E = Envelope(sex); MATS = mats()
     for name, fn in STYLES.items():
         if not name.startswith(sex + "_") or (ONLY and name not in ONLY): continue
-        m = M(); fn(m); o = m.obj("Hair_" + name, MATS); skin(o, H.rig)
+        m = M(); fn(m); o = finish(m, "Hair_" + name, MATS); skin(o, E.rig)
         tris = sum(len(p.vertices) - 2 for p in o.data.polygons)
-        if os.environ.get("PROOF"): proof([o], name)
-        bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); H.rig.select_set(True)
-        bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, f"hair-{name}.glb"), use_selection=True, export_apply=False, export_skins=True, export_animations=False)
-        print("HAIR", name, "tris", tris)
+        if os.environ.get("PROOF"): proof(o, name, sex)
+        bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); E.rig.select_set(True)
+        bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, f"hair-{name}.glb"), use_selection=True, export_apply=False, export_skins=True,
+                                  export_animations=False)
+        print("HAIR", name, "tris", tris, "kb", os.path.getsize(os.path.join(OUT, f"hair-{name}.glb")) // 1024)
         bpy.data.objects.remove(o)
 
-for sx in ("f", "m"): run(sx)
+for sx in ("f", "m"):
+    if not ONLY or any(s.startswith(sx + "_") for s in ONLY): run(sx)
