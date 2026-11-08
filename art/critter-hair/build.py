@@ -246,25 +246,50 @@ def tie(m, c, axis, R=.03, r=.011, mat=1):
             i2, j2 = (i + 1) % NU, (j + 1) % NV
             m.face([base + i * NV + j, base + i2 * NV + j, base + i2 * NV + j2, base + i * NV + j2], mat)
 
-def tail(m, uv, length=.42, W=.09, flow=None, out=.04, stiff=.78, seed=0, curl=0.0, tie_r=.03):
-    """a fat teardrop tail: tie on the skull, swells to W/2 radius about a third down, rounded point; hangs with gravity"""
+def frame(t, out):
+    """a side/normal pair across a path tangent t, side facing away from 'out' (the head's outward)"""
+    a = out - t * out.dot(t)
+    if a.length < 1e-4: a = t.orthogonal()
+    a.normalize(); return a, t.cross(a).normalized()
+
+def tail(m, uv, length=.42, W=.12, flow=None, out=.04, stiff=.78, seed=0, curl=0.0, tie_r=.03, locks=4, s_amp=.03):
+    """a full teardrop tail: a hairtie on the skull, then 3-5 soft locks wound round a core that swell together to W
+    across a third of the way down and gather to a rounded point; the centre line hangs with gravity in a gentle S"""
+    rnd = random.Random(seed)
     u, v = uv; n = hdir(u, v); root = HC + n * (E.hug(n) + .006)
-    tie(m, root + n * .012, n, R=tie_r, r=.012)
-    p0 = root + n * .03; d0 = (n * .9 + (flow or V(0, 0, 0)) + DOWN * .2).normalized()
-    N = 14; st = length / N; pts = [root - n * .01, p0.copy()]; p = p0.copy(); d = d0
-    prof = []
+    tie(m, root + n * .014, n, R=tie_r, r=.013)
+    hz = V(n.x, n.y, 0); hz = hz.normalized() if hz.length > 1e-4 else V(0, -1, 0)
+    sway = V(-hz.y, hz.x, 0)                                  # the S bends across the hang, seen from front and side
+    p = root + n * .03; d = (n * .9 + (flow or V(0, 0, 0)) + DOWN * .25).normalized()
+    N = 16; st = length / N; C = [root - n * .012, root + n * .016, p.copy()]; R = [0, tie_r * .85, tie_r * .95]
+    def prof(t):
+        if t < .3: return tie_r * .95 + (W / 2 - tie_r * .95) * math.sin(t / .3 * math.pi / 2)
+        return W / 2 * max(0.0, math.cos((t - .3) / .7 * math.pi / 2)) ** .8
     for k in range(N):
-        t = (k + 1) / N
-        r = W / 2 * (math.sin(min(1, t / .35) * math.pi / 2) * .62 + .38 if t < .35 else math.cos((t - .35) / .65 * math.pi / 2) ** .75)
+        t = (k + 1) / N; r = prof(t)
         d = (d * stiff + DOWN * (1 - stiff)).normalized()
-        q = keep_off(p + d * st, max(r, .02) + .008, None)
-        if curl: q = q + V(math.cos(t * 7 + seed), math.sin(t * 7 + seed), 0) * curl * t * st
-        d = (q - p).normalized(); p = q; pts.append(p.copy()); prof.append(r)
-    pts.append(p + d * .012)
-    rw = [0, tie_r * .8] + [max(.0, x) for x in prof[:-1]] + [W * .06, 0]
-    rw = rw[:len(pts)]; rw[-1] = 0
-    rt = [x * .92 for x in rw]
-    tube(m, pts, rw, rt, K=12, lobes=4, lobe_amp=.07, twist=.12)
+        q = p + d * st + sway * s_amp * (math.cos(t * 2 * math.pi) - math.cos((t - 1 / N) * 2 * math.pi)) * .5
+        q = keep_off(q, max(r, .02) + .01, None)
+        d = (q - p).normalized(); p = q; C.append(p.copy()); R.append(r)
+    C.append(p + d * .015); R.append(0)
+    # core: fills the clump so no gap shows between the locks
+    tube(m, C, [x * .72 for x in R], [x * .7 for x in R], K=10)
+    # the locks: each wound a little round the core, its own taper, tips ending at slightly different lengths
+    for j in range(locks):
+        a0 = 2 * math.pi * j / locks + rnd.uniform(-.3, .3); tw = rnd.uniform(.5, .9); end = rnd.uniform(.86, 1.0)
+        pts, rw, rt = [], [], []
+        for i in range(1, len(C) - 1):
+            tt = (C[min(i + 1, len(C) - 1)] - C[i - 1]).normalized(); sa, sb = frame(tt, hz)
+            f = (i - 1) / (len(C) - 3)
+            if f > end: break
+            a = a0 + tw * f * math.pi
+            off = R[i] * .48 * sstep(0, .12, f)
+            pts.append(C[i] + (sa * math.cos(a) + sb * math.sin(a)) * off)
+            g = math.sin(min(1, f / .08) * math.pi / 2) * (math.cos(max(0, f - end + .25) / .25 * math.pi / 2) ** .6 if f > end - .25 else 1)
+            rw.append(max(R[i] * .6 * g, .004)); rt.append(max(R[i] * .5 * g, .004))
+        pts.append(pts[-1] + (pts[-1] - pts[-2]).normalized() * .01); rw.append(0); rt.append(0)
+        pts.insert(0, pts[0] - n * .01); rw.insert(0, 0); rt.insert(0, 0)
+        tube(m, pts, rw, rt, K=8)
 
 def ball(m, c, R, scl=(1, 1, 1), lobes=5, amp=.06, seg=14, mat=0, swirl=0.0):
     """a smooth lobed ball (bun, puff, curl)"""
@@ -291,17 +316,35 @@ def bun(m, uv, R=.075, swirl=1.6, with_tie=True):
     ball(m, root + n * (R * .82), R, (1, 1, .9), lobes=5, amp=.08, swirl=swirl)
     if with_tie: tie(m, root + n * .012, n, R=R * .55, r=.011)
 
-def braid(m, uv, length=.42, R=.034, flow=None, seed=0):
-    """a braid: overlapping slanted beads down a hanging path, a tie and a rounded tuft at the end"""
+def braid(m, uv, length=.42, R=.036, flow=None, seed=0, lobes=12):
+    """a three-strand plait: slanted lobes alternating left and right down a hanging path (the chevrons of a braid),
+    over a thin core; a tie and a rounded tuft at the end"""
     n = hdir(*uv); root = HC + n * (E.hug(n) + R * .7)
-    path = drape(root, (n * .5 + (flow or V(0, 0, 0)) + DOWN).normalized(), length, R + .01, stiff=.75, hug=None, steps=10)
-    beads = 9; pts = path
-    for k in range(beads):
-        t = k / (beads - 1) * .9; f = t * (len(pts) - 1); i = min(int(f), len(pts) - 2); p = pts[i].lerp(pts[i + 1], f - i)
-        r = R * (1 - .3 * t)
-        ball(m, p, r, (1.05, 1.05, .8), lobes=0, amp=0, seg=10)
-    end = pts[-1]; tie(m, end + V(0, 0, .012), V(0, 0, 1), R=R * .55, r=.009)
-    clump(m, [end, end + V(0, 0, -.03), end + V(0, 0, -.06)], R * .9, R * .8, tip=.6)
+    path = drape(root, (n * .5 + (flow or V(0, 0, 0)) + DOWN).normalized(), length, R + .012, stiff=.75, hug=None, steps=12)
+    L = [0.0]
+    for i in range(1, len(path)): L.append(L[-1] + (path[i] - path[i - 1]).length)
+    def at(sd):
+        sd = max(0, min(L[-1], sd))
+        for i in range(1, len(L)):
+            if L[i] >= sd:
+                f = (sd - L[i - 1]) / max(1e-6, L[i] - L[i - 1]); return path[i - 1].lerp(path[i], f), (path[i] - path[i - 1]).normalized()
+        return path[-1], (path[-1] - path[-2]).normalized()
+    tie(m, root - n * .004, n, R=R * .75, r=.011)
+    core = [at(L[-1] * k / 12)[0] for k in range(13)]
+    tube(m, [core[0] - n * .01] + core + [core[-1] + DOWN * .01], [0] + [R * .45] * 13 + [0], [0] + [R * .4] * 13 + [0], K=8)
+    span = L[-1] * .93
+    for k in range(lobes):
+        sd = span * (k + .5) / lobes; c, t = at(sd); r = R * (1 - .28 * k / lobes)
+        hz = V(c.x - HC.x, c.y - HC.y, 0); hz = hz.normalized() if hz.length > 1e-4 else V(1, 0, 0)
+        sa, sb = frame(t, hz); s = 1 if k % 2 else -1          # sa: outward (seen), sb: across
+        step = span / lobes
+        a = c - t * step * .75 + sb * s * r * .75 + sa * r * .05
+        mid = c + sb * s * r * .12 + sa * r * .32
+        b = c + t * step * .6 - sb * s * r * .45 + sa * r * .1
+        pts = [a - (mid - a).normalized() * .004, a, a.lerp(mid, .5), mid, mid.lerp(b, .5), b, b + (b - mid).normalized() * .004]
+        tube(m, pts, [0, r * .5, r * .66, r * .7, r * .62, r * .42, 0], [0, r * .4, r * .5, r * .55, r * .5, r * .34, 0], K=8)
+    end, t = at(L[-1]); tie(m, end - t * .004, t, R=R * .5, r=.009)
+    clump(m, [end, end + t * .03 + DOWN * .01, end + t * .055 + DOWN * .03], R * .85, R * .75, tip=.6)
 
 def spikes(m, n=12, length=.12, seed=0, v0=.6, v1=1.45, u_span=2.6, W=.045, T=.03, back=.6):
     """stiff rounded spikes over the crown, swept back"""
