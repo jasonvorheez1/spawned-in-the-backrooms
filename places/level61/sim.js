@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 21;
+const V = 22;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb";
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -254,7 +254,7 @@ function lay(ctx) {
   ];
 
   for (const [cx, k, floor, wall, html, bg, lc] of STORES) {
-    const wm = { ...PLASTER, color: wall }, z0 = -HD - 0.15, z1 = -HD - 10;
+    const wm = { ...T("faded-cream-1980s-damask-vinyl-wallpaper-with-pinstripes", 0.7), color: wall, roughness: 0.7 }, z0 = -HD - 0.15, z1 = -HD - 10;
     box(`l61-${k}-floor`, cx, -0.29, (z0 + z1) / 2, 14, 0.3, 10, floor);
     box(`l61-${k}-roof`, cx, 4, (z0 + z1) / 2, 14, 0.3, 10, { ...CEIL, color: "oklch(0.88 0.01 90)" });
     box(`l61-${k}-back`, cx, 0, z1, 14, 4, 0.3, wm);
