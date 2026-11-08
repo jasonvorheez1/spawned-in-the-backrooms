@@ -90,7 +90,7 @@ export function layCity(ctx, h) {
   put("l11-hero-brick1", "brick_a", -27, 85, -90, { materials: dressOf("brick_a", 0.2) });
   put("l11-hero-brick2", "brick_b", 31, -3, 90, { materials: dressOf("brick_b", 0.7) });
   put("l11-hero-house1", "house", -30, 51.85, -90,  // its own lot between the mall (z<47) and the glass tower (z>56.7)
-    { materials: dressOf("house", 0.6) });
+    { materials: dressOf("house", 0.6), collider: "mesh" });
   put("l11-hero-mall2", "mall", 26, 62, 90, { materials: dressOf("mall", 0.8) });
   put("l11-hero-glass2", "glass_b", -28, 64, -90, { materials: dressOf("glass_b", 0.1), spec: { scale: 0.85 } }); // slimmer, so it clears the house and the street
   const TOWER = { x: 27, z: 31 }; put("l11-ntower", "stone", TOWER.x, TOWER.z, 90, { materials: dressOf("stone", 0.4) });
