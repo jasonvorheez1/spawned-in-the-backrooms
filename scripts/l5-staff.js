@@ -5,7 +5,7 @@
 import { heard } from "./lib/hear.js";
 import { E, SND, isSafe, flat, yawTo, prey, aloneOf, hit, claimRemains } from "./lib/l5-hostile.js";
 import { npcState } from "./lib/stats.js";
-import { findPath } from "builtin/nav";
+import { navPath } from "./lib/nav.js";
 import { raycast } from "builtin/physics";
 import { zoneId, becomeCorpse, killerOf } from "./lib/l5-hostile.js";
 import { critterSpec } from "./lib/critter-model.js";
@@ -287,8 +287,8 @@ export function update(ctx, dt) {
     if (goal && sp) {
       // Pathfinding along hotel corridors
       if (!m.path || now - (m.pathAt ?? 0) > (m.repathMs ?? 1000) || flat(m.pathGoal ?? goal, goal) > 1.5) {
-        const r = findPath(ctx, { x: pos.x, y: pos.y ?? 0, z: pos.z }, { x: goal.x, y: goal.y ?? pos.y ?? 0, z: goal.z });
-        if (r?.points?.length) {
+        const r = navPath(ctx, { x: pos.x, y: pos.y ?? 0, z: pos.z }, { x: goal.x, y: goal.y ?? pos.y ?? 0, z: goal.z });
+        if (r?.wait) { /* this tick's search budget is spent: keep walking the old path */ } else if (r?.points?.length) {
           m.path = r.points;
           m.pathAt = now;
           m.pathGoal = { ...goal };

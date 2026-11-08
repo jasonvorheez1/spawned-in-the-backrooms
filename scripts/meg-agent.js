@@ -10,7 +10,7 @@ import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
-import { findPath } from "builtin/nav";
+import { navPath } from "./lib/nav.js";
 import { raycast } from "builtin/physics";
 import { animate } from "builtin/tween";
 import G from "./lib/data/meg.yml";
@@ -232,8 +232,8 @@ function moveAlong(ctx, me, m, goal, speed, dt) {
   const p = me.feetPosition, now = ctx.now();
   const fin = (q, y0) => ({ x: Number.isFinite(q?.x) ? q.x : p.x, y: Number.isFinite(q?.y) ? q.y : y0, z: Number.isFinite(q?.z) ? q.z : p.z });
   goal = fin(goal, Number.isFinite(p.y) ? p.y : 0);
-  if ((!m.path || now > m.repath || flat(goal, m.pathGoal ?? goal) > 2) && pathBudget(now)) {
-    const r = findPath(ctx, fin(p, goal.y), goal, {});
+  const r = (!m.path || now > m.repath || flat(goal, m.pathGoal ?? goal) > 2) ? navPath(ctx, fin(p, goal.y), goal) : null;
+  if (r && !r.wait) { // shared search budget (scripts/lib/nav.js): a spent tick keeps the old path and asks next tick
     if (r?.points?.length) { m.path = r.points; m.i = 0; m.pathGoal = { ...goal }; m.seeAt = 0; }
     else if (!r?.partial && clearLine(ctx, me, p, goal)) { m.path = [goal]; m.i = 0; m.pathGoal = { ...goal }; }
     else m.path = null;

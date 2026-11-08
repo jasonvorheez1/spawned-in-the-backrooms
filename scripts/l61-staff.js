@@ -4,7 +4,7 @@
 // state.job: "post" (counter staff / seated patrons) | "route" (clearing tables, carrying trays, restocking), state.route = [{ x, z, dwell, act }].
 
 import { heard } from "./lib/hear.js";
-import { findPath } from "builtin/nav";
+import { navPath } from "./lib/nav.js";
 import { raycast } from "builtin/physics";
 import FC from "./lib/data/faceling.yml";
 import {
@@ -97,12 +97,14 @@ function waypoint(ctx, me, m, goal) {
   // Repath when goal shifts or path has expired
   const goalShifted = N.goal ? (g.x - N.goal.x) ** 2 + (g.z - N.goal.z) ** 2 > 1 : true;
   if (!N.path || now > (N.repath ?? 0) || goalShifted) {
-    const r = findPath(ctx, { x: p.x, y: p.y ?? 0, z: p.z }, g, { radius: 0.3 });
+    const r = navPath(ctx, { x: p.x, y: p.y ?? 0, z: p.z }, g);
+    if (!r?.wait) {
     N.path = r?.points?.length ? r.points : null;
     N.i = 0;
     N.goal = g;
     N.seeAt = 0;
     N.repath = now + (r?.partial ? 250 : 1500);
+    }
   }
 
   if (N.hold && now < N.hold) return { ux: 0, uz: 0, hold: true }; // blocked (goal inside a counter, a body in the way): stand a beat instead of jittering
