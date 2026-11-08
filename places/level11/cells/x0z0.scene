@@ -1,4 +1,25 @@
 # spawn-scene v2 yaml x0z0
+l11-mall-sign-derma:
+  feetPosition: {x: -15.67, y: 3.57, z: 29.5}
+  id: l11-mall-sign-derma
+  material: {color: "#ffffff", emissive: "#ffffff", emissiveIntensity: 0.35, emissiveMap: /cdn/value.a4659ffdbe2739ef5037fe9ae5acaf3f02bb949cf11b5b0bd914940d0ea6d298.png, roughness: 0.35, texture: /cdn/value.a4659ffdbe2739ef5037fe9ae5acaf3f02bb949cf11b5b0bd914940d0ea6d298.png}
+  primitive: {depth: 0.12, height: 1.53, kind: box, width: 4.6}
+  rotation: {yaw: 90}
+  tags: [l11]
+l11-mall-sign-islab:
+  feetPosition: {x: -15.67, y: 3.7, z: 36}
+  id: l11-mall-sign-islab
+  material: {color: "#ffffff", emissive: "#ffffff", emissiveIntensity: 0.35, emissiveMap: /cdn/value.0b4a4ce24244c5eda36fc29774505e1a9e45e11c61d55faa2854be3791c3e751.png, roughness: 0.35, texture: /cdn/value.0b4a4ce24244c5eda36fc29774505e1a9e45e11c61d55faa2854be3791c3e751.png}
+  primitive: {depth: 0.12, height: 1.4, kind: box, width: 4.2}
+  rotation: {yaw: 90}
+  tags: [l11]
+l11-mall-sign-pizza:
+  feetPosition: {x: -15.67, y: 3.57, z: 42.5}
+  id: l11-mall-sign-pizza
+  material: {color: "#ffffff", emissive: "#ffffff", emissiveIntensity: 0.35, emissiveMap: /cdn/value.84d3cf5aa956aa729dd601b744605f186624a542c7ceefe9d8d35e746f6b5290.png, roughness: 0.35, texture: /cdn/value.84d3cf5aa956aa729dd601b744605f186624a542c7ceefe9d8d35e746f6b5290.png}
+  primitive: {depth: 0.12, height: 1.53, kind: box, width: 4.6}
+  rotation: {yaw: 90}
+  tags: [l11]
 spam-return:
   feetPosition: {x: 44.3, y: 0.15, z: 27.3}
   id: spam-return
