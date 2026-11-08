@@ -6,6 +6,7 @@ o=[o for o in bpy.context.scene.objects if o.type=="MESH"][0]
 bpy.context.view_layer.objects.active=o; o.select_set(True)
 bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
 bm=bmesh.new(); bm.from_mesh(o.data)
+bmesh.ops.remove_doubles(bm,verts=bm.verts,dist=0.002)
 seen=set(); islands=[]
 for v in bm.verts:
     if v in seen: continue
@@ -16,13 +17,20 @@ for v in bm.verts:
             b=e.other_vert(a)
             if b not in seen: seen.add(b); st.append(b)
     islands.append(I)
-# backrests run along +y (back bench) and -x (side bench); the table stays, both benches slide outward so a body fits
-PUSH=0.2; mb=ms=0
+# welded, each bench is whole: the table stays, the back bench slides +y and the side bench -x so a body fits
+PUSH=0.2
+big=sorted(islands,key=len,reverse=True)
+for I in big[:12]:
+    xs=[v.co.x for v in I]; ys=[v.co.y for v in I]; zs=[v.co.z for v in I]
+    print("isl",len(I),"x",round(min(xs),2),round(max(xs),2),"y",round(min(ys),2),round(max(ys),2),"z",round(min(zs),2),round(max(zs),2))
+mb=ms=0
 for I in islands:
+    xs=[v.co.x for v in I]; ys=[v.co.y for v in I]
     c=sum((v.co for v in I),mathutils.Vector())/len(I)
+    w=max(xs)-min(xs); h=max(ys)-min(ys)
     d=mathutils.Vector((0,0,0))
-    if c.y>0.3: d.y=PUSH; mb+=1
-    if c.x<-0.38: d.x=-PUSH; ms+=1
+    if c.y>0.25 and w>h*0.6: d.y=PUSH; mb+=1        # back bench: wide along x, at the back
+    elif c.x<-0.3: d.x=-PUSH; ms+=1                  # side bench: along y, on the left
     if d.length:
         for v in I: v.co+=d
 print("islands",len(islands),"back",mb,"side",ms)
