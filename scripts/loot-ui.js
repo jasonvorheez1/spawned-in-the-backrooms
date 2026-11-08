@@ -722,7 +722,7 @@ function container(s, key) {
     else if (t.startsWith('cloth:')) c = armorCnd(s.look, t)
     return `<button class="it" onclick="sendAction('loot',{k:'take',i:${i}})">
       <span class="cur">&gt;</span>
-      <span class="nm" style="color:${t.startsWith('weapon:') ? d.color : 'inherit'}">${d.name}</span>
+      <span class="nm" style="color:${t.startsWith('weapon:') ? d.color : 'inherit'}">${t.startsWith('almond:') && AW[t.slice(7)]?.name ? AW[t.slice(7)].name : d.name}</span>
       <span class="stat-r">${t.startsWith('weapon:') || t.startsWith('cloth:') ? cndMini(c) : ''}<span>${t === 'ammo' ? `+${W.ammo.perPickup}` : t === 'shells' ? `+${W.shells.perPickup}` : ''}</span></span>
       ${detail(t, s, false)}
     </button>`
