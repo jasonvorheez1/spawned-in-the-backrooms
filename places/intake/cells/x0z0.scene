@@ -35,6 +35,13 @@ ir-ceiling-light:
   material: {color: "#fff4e0", emissive: "#ffe7c2", emissiveIntensity: 1.6, roughness: 0.3}
   primitive: {kind: sphere, radius: 0.2}
   scale: {x: 1, y: 0.4, z: 1}
+ir-closet:
+  feetPosition: {x: 0.85, y: 0, z: -3.68}
+  id: ir-closet
+  layout: {box: {max: {x: 0.65, y: 2.05, z: 0.32}, min: {x: -0.65, y: 0, z: -0.32}}}
+  model: {id: /cdn/value.f9149dd202e038732657415827a7b4cde83cdcf3a88d3a34659b387a3c4da6f0.glb}
+  physics: {body: static, collider: box}
+  rotation: 180
 ir-coke:
   feetPosition: {x: 2.55, y: 0.76, z: 0.6}
   id: ir-coke
@@ -103,6 +110,18 @@ ir-plant:
   model: {id: /cdn/value.5c55541c98397f0fd38ea7e850e3e15e4fd78fd4a5951439cde327b41abe9e09.glb}
   physics: {body: static, collider: box}
   rotation: 0
+ir-poster-band:
+  feetPosition: {x: -2.985, y: 1.6, z: 0.75}
+  id: ir-poster-band
+  material: {roughness: 0.55, texture: /cdn/value.7fbc7f76e85a46a6f5ec8fc9b339d9a60e85b09df4080d8e0e45ff1ef484963f.png}
+  primitive: {height: 0.93, kind: plane, width: 0.62}
+  rotation: 90
+ir-poster-skate:
+  feetPosition: {x: -1.7, y: 1.5, z: 2.485}
+  id: ir-poster-skate
+  material: {roughness: 0.4, texture: /cdn/value.fc8b3fdee4d10f2ff1765a04453781ff852562caf1533f7fef648ed9f8dd533e.png}
+  primitive: {height: 0.9, kind: plane, width: 0.6}
+  rotation: 180
 ir-rug:
   feetPosition: {x: 0.1, y: 0, z: -1.3}
   id: ir-rug
