@@ -89,6 +89,11 @@ const STEPS = {
   tile: { walk: 'footstep-sneaker-on-vinyl-school-floor-tile-single-step', run: 'footstep-sneaker-running-on-vinyl-floor-tile-single-step', v: 0.22 },
   gravel: { walk: 'footstep-boot-crunch-on-loose-cave-gravel-single-step', run: 'footstep-boot-running-on-loose-cave-gravel-single-step', v: 0.26 },
   wood: { walk: 'footstep-boot-on-wet-wooden-floorboards-creak-single-step', run: 'footstep-boot-running-on-wet-wooden-floorboards-single-step', v: 0.24 },
+  hotel: { walk: 'footstep-shoe-on-thick-plush-hotel-hallway-carpet-single-step', run: 'footstep-shoe-running-on-thick-hotel-carpet-single-step', v: 0.2 },
+  office: { walk: 'footstep-shoe-on-low-pile-office-carpet-tile-single-step', run: 'footstep-shoe-running-on-low-pile-office-carpet-single-step', v: 0.2 },
+  terrazzo: { walk: 'footstep-sneaker-on-polished-mall-terrazzo-floor-squeak-single-step', run: 'footstep-sneaker-running-on-polished-mall-floor-single-step', v: 0.24 },
+  checker: { walk: 'footstep-boot-on-worn-checkered-linoleum-locker-room-single-step', run: 'footstep-boot-running-on-worn-linoleum-tile-single-step', v: 0.23 },
+  metal: { walk: 'footstep-boot-on-steel-diamond-plate-floor-clank-single-step', run: 'footstep-boot-running-on-steel-diamond-plate-floor-single-step', v: 0.24 },
 }
 const CONCRETE = new Set(['level1', 'level2', 'level3', 'gamma', 'level6', 'debug'])
 function floorOf(ctx) {
@@ -96,7 +101,10 @@ function floorOf(ctx) {
   if (pl === 'level8') return 'gravel'
   if (pl === 'level7') return 'wood'
   if (CONCRETE.has(pl)) return 'concrete'
-  if (pl === 'level21') { const z = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z); return z === 'l21_edge' || z === 'l21_edgecave' ? 'concrete' : 'tile' }
+  if (pl === 'level21') { const z = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z); return z === 'l21_edge' || z === 'l21_edgecave' ? 'concrete' : z === 'l21_lockers' || z === 'l21_restroom' ? 'checker' : 'tile' }
+  if (pl === 'level61') return 'terrazzo'
+  if (pl === 'level4') return 'office'
+  if (pl === 'level5') { const z = String(zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z) ?? ''); return /boil|furnace|pipe|engine/.test(z) ? 'metal' : 'hotel' }
   return 'carpet'
 }
 function sound(ctx, name, volume = 0.7, mine = false) {
@@ -968,7 +976,7 @@ export function update(ctx, dt) {
       w.stepClock = 0
       const fl = floorOf(ctx), F = STEPS[fl]
       const clip = w.wet ? 'footstep-soaked-carpet-deep-squelch' : sprinting ? F.run : F.walk
-      sound(ctx, clip, (w.wet ? 0.4 : sprinting ? F.v * 1.4 : F.v) * (crouched ? 0.3 : 1), true)
+      sound(ctx, clip, (w.wet ? 0.4 : sprinting ? F.v * 1.4 : F.v) * (crouched ? 0.3 : 1) * (0.85 + Math.random() * 0.3), true) // each step a touch louder or softer: no machine-gun repeat
     }
   } else {
     w.stepClock = 0.22
