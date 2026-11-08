@@ -55,7 +55,9 @@ export function update(ctx, dt) {
   // is the model's own, so a walk poses the model and leaves the box and the eye where they are. A thing
   // you drive and do not sit on keeps its scale.
   const height = body.id === ctx.player?.id ? 2 * body.bounds?.obb.halfExtents.y : undefined
-  const eyeHeight = finiteNumber(CAMERA.eyeHeight, 1.6) * (height > 0 ? height / BODY_HEIGHT : finiteNumber(body.effectiveScale?.y, 1))
+  // a critter body: the eye is its pupils (critter2-geo.js EY = 1.39 m on the model), not a share of a height its ears stretch
+  const critter = body.id === ctx.player?.id && (ctx.self.session.critterId === body.id ? ctx.self.session.critter : (ctx.self.session.critterId = body.id, ctx.self.session.critter = !!ctx.getObject(body.id + '/critter-head')))
+  const eyeHeight = critter ? finiteNumber(CAMERA.critterEye, 1.39) * finiteNumber(body.effectiveScale?.y, 1) : finiteNumber(CAMERA.eyeHeight, 1.6) * (height > 0 ? height / BODY_HEIGHT : finiteNumber(body.effectiveScale?.y, 1))
   const sat = body.id === ctx.player?.id && body.state?.sit && body.state.sit.phase !== 'up'
   const crouchWant = sat ? 0.7 : !seated && body.id === ctx.player?.id && body.state?.crouch ? 0.62 : 1
   const ck = (ctx.self.session.crouchK ??= 1), crouchK = ck + (crouchWant - ck) * Math.min(1, dt * (sat || ck < 0.69 ? 4.5 : 10))
