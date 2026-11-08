@@ -5,6 +5,20 @@ import { raycast } from "builtin/physics";
 import { attrsOf } from "./lib/stats.js";
 import { damageEntity } from "./lib/breakables.js";
 import { heard } from "./lib/hear.js";
+import { isTray, TRAY_KG, CLATTER } from "./lib/snacktray.js";
+const TRAY_PHYS = { body: "dynamic", collider: "box", mass: TRAY_KG, friction: 0.8, restitution: 0.1 };
+// a Level 6.1 food tray set down along the look: on the table/counter/floor the look ray meets, it stays as a dynamic thing anyone can see and take
+export function setDown(ctx, o) {
+  const ses = ctx.self.session, s = ctx.self.state, f = ctx.self.feetPosition, d = ses.dir ?? { x: 0, y: -0.5, z: -1 };
+  const eye = { x: f.x, y: f.y + 1.5, z: f.z }, ign = [ctx.self.id, o.id];
+  let hit = raycast(ctx, eye, d, { distance: 2.4, ignoreEntities: ign });
+  if (!hit || (hit.normal?.y ?? 0) < 0.6) { const hl = Math.hypot(d.x, d.z) || 1, fx = f.x + (d.x / hl) * 0.8, fz = f.z + (d.z / hl) * 0.8; hit = raycast(ctx, { x: fx, y: f.y + 1.4, z: fz }, { x: 0, y: -1, z: 0 }, { distance: 3, ignoreEntities: ign }) ?? { position: { x: fx, y: f.y, z: fz } }; }
+  o.feetPosition = { x: hit.position.x, y: hit.position.y + 0.01, z: hit.position.z };
+  o.physics = TRAY_PHYS; o.velocity = { x: 0, y: 0, z: 0 };
+  if (!o.tags.includes("usable")) o.tags = [...o.tags, "usable"];
+  ses.held = null; s.carry = null; s.carryMul = 1; s.l61Hold = null; s.l61Tray = 0;
+  heard(ctx, { clip: CLATTER, position: o.feetPosition, volume: 0.35, maxDistance: 10 });
+}
 const NOT = ["wall", "gridwall", "level0", "npc", "player", "critter", "door", "remains"];
 const CAP = (h) => 12 + h * 9;        // base kg by Hardiness: 1 = 21 kg, 5 = 57, 10 = 102 (Savi's picks)
 // what you can lift right now: Hardiness is the base, Endurance and Agility add leverage, and it shrinks when you're
@@ -29,8 +43,10 @@ const massOf = (o) => { if (o.state?.carryKg) return o.state.carryKg; const b = 
 export function onInput(ctx, input) {
   const ses = ctx.self.session;
   if (input.axes) ses.dir = look(ctx, input);
+  if (input.pressed?.interact && ses.held && !ctx.self.state.focus && !ctx.self.state.sit && !ctx.self.state.lootOpen) { const t = ctx.getObject(ses.held); if (isTray(t)) return setDown(ctx, t); } // E with nothing in focus sets a tray down
   if (!input.pressed?.grab) return;
   const s = ctx.self.state, h = attrsOf(s).h ?? 5, held = ses.held && ctx.getObject(ses.held);
+  if (held && isTray(held) && (ses.dir?.y ?? 0) < -0.55) return setDown(ctx, held); // Z looking down at a table or the floor sets it down; otherwise it flies
   if (held) return toss(ctx, held, h);
   ses.held = null;
   const f = ctx.self.feetPosition, eye = { x: f.x, y: f.y + 1.5, z: f.z }, d = ses.dir ?? look(ctx, input);
@@ -57,6 +73,7 @@ function lift(ctx, o, kg, cap) {
   const ses = ctx.self.session, s = ctx.self.state, f = ctx.self.feetPosition;
   spill(ctx, o);
   ses.held = o.id; ses.kg = kg; ses.phys = o.physics; o.physics = "none";
+  if (isTray(o)) { s.l61Hold = o.id; s.l61Tray = ctx.now(); ses.phys = TRAY_PHYS; o.tags = o.tags.filter((t) => t !== "usable"); } // the tray is yours again: the return rack takes it
   s.carry = o.state?.name ?? "something"; s.carryMul = kg > cap ? Math.max(0.15, 0.4 - (kg / cap - 1) * 0.12) : Math.max(0.45, 1 - (kg / cap) * 0.6);
   heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-furniture-lift-wood-creak-scrape.mp3", position: { x: f.x, y: f.y + 1, z: f.z }, volume: 0.45, maxDistance: 12 });
 }
@@ -68,7 +85,8 @@ function toss(ctx, o, h) {
   const bs = o.bounds?.size, vol = bs ? Math.max(0.001, bs.x * bs.y * bs.z * 0.6) : null; // 0.6: a chair or a crate is mostly air inside its box
   o.physics = vol ? { body: "dynamic", collider: "box", density: Math.max(60, Math.min(8000, ses.kg / vol)), friction: 0.7 } : { body: "dynamic", collider: "box", mass: ses.kg, friction: 0.7 };
   o.velocity = { x: d.x * speed, y: d.y * speed + 2, z: d.z * speed };
-  ses.flying = { id: o.id, at: ctx.now(), speed, kg: ses.kg, hit: {} };
+  ses.flying = { id: o.id, at: ctx.now(), speed, kg: ses.kg, hit: {}, tray: isTray(o) };
+  if (isTray(o)) { o.physics = TRAY_PHYS; s.l61Hold = null; s.l61Tray = 0; }
   ses.held = null; s.carry = null; s.carryMul = 1;
   const f = ctx.self.feetPosition;
   heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-heavy-object-throw-whoosh.mp3", position: { x: f.x, y: f.y + 1.4, z: f.z }, volume: 0.5, maxDistance: 14 });
@@ -77,20 +95,39 @@ export function update(ctx) {
   if (ctx.self.anim?.grab && ctx.now() > (ctx.self.session.grabAnimEnd ?? 0)) ctx.self.anim.grab = null; // a once-clip left at weight 1 freezes the body in its last frame
   const ses = ctx.self.session;
   if (ses.heave && ctx.now() >= ses.heave.until) { const o = ctx.getObject(ses.heave.id), kg = ses.heave.kg; ses.heave = null; if (o) lift(ctx, o, kg, power(ctx)); else ctx.self.state.carryMul = 1; }
+  { const s = ctx.self.state; // a food tray handed over by the Snackrooms counter or a waiter (player.state.l61Hold) comes into the hands here
+    if (s.l61Hold && ses.held !== s.l61Hold && !ses.heave) { const t = ctx.getObject(s.l61Hold);
+      if (!t) { s.l61Hold = null; s.l61Tray = 0; }
+      else { const old = ses.held && ctx.getObject(ses.held); if (old) { old.physics = ses.phys ?? "static"; if (isTray(old) && !old.tags.includes("usable")) old.tags = [...old.tags, "usable"]; }
+        ses.held = t.id; ses.kg = t.state?.carryKg ?? TRAY_KG; ses.phys = TRAY_PHYS; t.physics = "none"; s.carry = "Food tray"; s.carryMul = 1; s.l61Tray ||= ctx.now(); } } }
   if (ses.held) { // carried: in front of the chest, along the look
     const o = ctx.getObject(ses.held);
-    if (!o || ctx.self.state.dead) { ses.held = null; ctx.self.state.carry = null; ctx.self.state.carryMul = 1; if (o) o.physics = ses.phys ?? "static"; }
+    if (!o || ctx.self.state.dead) { if (ctx.self.state.l61Hold === ses.held) { ctx.self.state.l61Hold = null; ctx.self.state.l61Tray = 0; } ses.held = null; ctx.self.state.carry = null; ctx.self.state.carryMul = 1; if (o) o.physics = ses.phys ?? "static"; }
+    else if (isTray(o)) { const f = ctx.self.feetPosition, d = ses.dir ?? { x: 0, y: 0, z: -1 }, hl = Math.hypot(d.x, d.z) || 1; o.feetPosition = { x: f.x + (d.x / hl) * 0.5, y: f.y + 0.85, z: f.z + (d.z / hl) * 0.5 }; o.rotation = { yaw: Math.atan2(-d.x, -d.z) * 57.2958 }; } // held level in both hands at the belly
     else { const f = ctx.self.feetPosition, d = ses.dir ?? { x: 0, y: 0, z: -1 }; o.feetPosition = { x: f.x + d.x * 1.1, y: f.y + 0.7 + d.y * 0.6, z: f.z + d.z * 1.1 }; o.rotation = { yaw: Math.atan2(-d.x, -d.z) * 57.2958 }; }
   }
   const fl = ses.flying; if (!fl) return;
   const o = ctx.getObject(fl.id), age = ctx.now() - fl.at;
-  if (!o || age > 2500) { ses.flying = null; return; }
-  const v = o.velocity ?? { x: 0, y: 0, z: 0 }, sp = Math.hypot(v.x, v.y, v.z);
-  if (age > 300 && sp < 1.2) { ses.flying = null; return; }
+  const v = o?.velocity ?? { x: 0, y: 0, z: 0 }, sp = Math.hypot(v.x, v.y, v.z);
+  if (!o || age > 2500 || (age > 300 && sp < 1.2)) { // landed: a tray clatters down and can be picked up again
+    if (o && fl.tray) { if (!o.tags.includes("usable")) o.tags = [...o.tags, "usable"]; heard(ctx, { clip: CLATTER, position: o.feetPosition, volume: 0.55, maxDistance: 16 }); }
+    ses.flying = null; return;
+  }
   const p = o.feetPosition;
-  for (const t of ctx.query({ anyTags: ["npc", "critter", "breakable", "enemy", "l61fc"], center: p, radius: 1.3 })) {
+  for (const t of ctx.query({ anyTags: fl.tray ? ["npc", "critter", "breakable", "enemy", "l61fc", "player"] : ["npc", "critter", "breakable", "enemy", "l61fc"], center: p, radius: 1.3 })) {
     if (t.id === o.id || fl.hit[t.id] || t.id === ctx.self.id) continue;
     fl.hit[t.id] = true;
+    if (fl.tray) { // plastic: a clatter and a small knock, no real harm
+      const h = ctx.getObject(t.id); if (!h || h.tags.includes("snacktray")) continue;
+      const n = sp > 0 ? { x: v.x / sp, y: 0, z: v.z / sp } : { x: 0, y: 0, z: -1 }, at = { x: p.x, y: p.y + 0.3, z: p.z };
+      if (h.tags.includes("breakable") && !h.tags.includes("npc") && !h.tags.includes("player")) damageEntity(ctx, h, 2, at, { x: -n.x, y: 0, z: -n.z }, "thrown");
+      else { ctx.emit("impulse", { target: h.id, impulse: { x: n.x * 70, y: 25, z: n.z * 70 } }); ctx.emit("squash", { target: h.id, axis: "y", intensity: 0.2, duration: 0.2 });
+        if (!h.tags.includes("player")) { h.state.hp = (h.state.hp ?? 40) - 1; ctx.emit("damageNumber", { position: { x: p.x, y: p.y + 1.2, z: p.z }, value: 1 }); }
+        else ctx.emit("cameraPunch", { direction: n, intensity: 0.3 }, { audience: { player: h.id } }); }
+      heard(ctx, { clip: CLATTER, position: at, volume: 0.9, maxDistance: 22 });
+      o.velocity = { x: v.x * -0.25, y: Math.max(0.5, v.y * 0.3), z: v.z * -0.25 }; // bounces off whoever it hit
+      continue;
+    }
     const dmg = Math.round(4 + sp * Math.sqrt(fl.kg) * 0.9), at = { x: p.x, y: p.y + 0.3, z: p.z }, n = sp > 0 ? { x: -v.x / sp, y: 0, z: -v.z / sp } : { x: 0, y: 1, z: 0 };
     const h = ctx.getObject(t.id); if (!h) continue;
     if (h.tags.includes("breakable") && !h.tags.includes("npc")) damageEntity(ctx, h, dmg, at, n, "thrown");
