@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 75; // bump to rebuild the city in rooms that are already open
+const V = 76; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -607,7 +607,7 @@ function lay(ctx) {
   {
     const FX = MALL_X + MALL_W / 2 - 0.3, Y0 = 0.36;
     const fit = (id, model, x, z, yaw, size) => sp(id, { feetPosition: { x, y: Y0, z }, rotation: { yaw }, model: { id: model }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } }, physics: { body: "static", collider: "box" } });
-    const CHAIR = "/cdn/value.324d9a05c6aca4bc72f791c510f751bee89cfbbc0e2104e59ad075531e70a750.glb", PLANT = "/cdn/value.88c7684212164aa0495a65fc294a12752ef506c35708f70485202b9366795b43.glb", DESK = "/cdn/value.53a6ef111aac797583ca330cad268f4e401bd0fe5613021c07eda571623e5ea2.glb", CAB = "/cdn/value.6b73846286fe58c95018a876f85d847e8af3c7a0187d06a8838072345f9ca49e.glb";
+    const CHAIR = "/cdn/value.59da33e3f4850a0af05bd48a4fca8fe649c4dfc3c46bc5e1fba075fbc78ac8a9.glb" /* tripo: chrome + blue vinyl waiting chair */, RECEPTION = "/cdn/value.2c088503b2d0bc2059170d8cfd3c309ff0c962ab60e22a79372dd44229ef85be.glb" /* tripo: curved mint reception desk */, PLANT = "/cdn/value.88c7684212164aa0495a65fc294a12752ef506c35708f70485202b9366795b43.glb", DESK = "/cdn/value.53a6ef111aac797583ca330cad268f4e401bd0fe5613021c07eda571623e5ea2.glb", CAB = "/cdn/value.6b73846286fe58c95018a876f85d847e8af3c7a0187d06a8838072345f9ca49e.glb";
     const VINYL = { texture: "cdn/texture-white-speckled-clinic-vinyl-floor.png", repeat: [1, 1], wrap: "repeat", roughness: 0.6 };
     const WHITE = { color: "oklch(0.95 0.008 95)", roughness: 0.85 };
     // floors and the wall between clinic and lab, the lab's back wall
@@ -619,7 +619,7 @@ function lay(ctx) {
       sp(`l11-${k}-light`, { feetPosition: { x: MALL_X + 2, y: 3.6, z }, light: { kind: "point", color: "oklch(0.97 0.01 230)", intensity: 1.6, distance: 9 } });
     }
     // clinic: reception desk facing the door, waiting row by the glass, a plant, a cabinet
-    sp("l11-derma-desk", { feetPosition: { x: MALL_X - 1.5, y: Y0, z: MALL_Z - 6.5 }, rotation: { yaw: 90 }, model: { id: DESK, forward: "+z" }, physics: { body: "static", collider: "box" } });
+    fit("l11-derma-desk", RECEPTION, MALL_X - 1.5, MALL_Z - 6.5, 90, [2.6, 1.15, 1.3]);
     for (const [i, z] of [[1, -8.5], [2, -7.4], [3, -5.0]]) fit(`l11-derma-chair-${i}`, CHAIR, FX - 1.2, MALL_Z + z, -90, [0.75, 0.9, 0.75]);
     fit("l11-derma-plant", PLANT, FX - 1.0, MALL_Z - 4.0, 0, [0.55, 1.2, 0.55]);
     fit("l11-derma-cab", CAB, MALL_X - 4.6, MALL_Z - 6.5, 90, [1.6, 0.85, 0.45]);
@@ -679,6 +679,10 @@ function lay(ctx) {
       { feetPosition: { x: 0, y: 0.04, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.24, height: 0.02 }, material: { color: "oklch(0.55 0.22 30)" } },
     ],
   });
+
+  // tripo pastry display case against the divider, its glass toward the shop
+  sp("l11-pizza-case", { feetPosition: { x: MALL_X + 3.0, y: 0.38, z: MALL_Z + 3.15 }, rotation: { yaw: 0 }, model: { id: "/cdn/value.a619c121b4e830206d2c59969fdebd9d2a47dac9189109031f381cc44c28a2b3.glb" }, layout: { box: { min: { x: -0.95, y: 0, z: -0.42 }, max: { x: 0.95, y: 1.3, z: 0.42 } } }, physics: { body: "static", collider: "box" } });
+  sp("l11-pizza-case-light", { feetPosition: { x: MALL_X + 3.0, y: 1.25, z: MALL_Z + 3.4 }, light: { kind: "point", color: "oklch(0.95 0.04 85)", intensity: 0.6, distance: 2.5 } });
 
   // Dining Bistro Table & Chairs
   cyl("l11-pizza-table", MALL_X + 0.5, 0.38, MALL_Z + 4.5, 0.7, 0.7, 0.85, STEEL_BRUSHED);
