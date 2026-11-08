@@ -67,6 +67,20 @@ level7:
   - [[l7-vance, "the fort lit three lanterns tonight. that's one more than last week. noting it."]]
   - [[l7-vance, "dive tank's holding. rope's holding. nerves are... adequate."]]
   - [[l7-vance, "something big moved under the dory line. didn't surface. good. stay down there."]]
+level8:
+  # the 9th Road camp: Hobb keeps the fire, Wen trades, Ivo surveys, Marit stitches, Carla cooks
+  - [[l8-hobb, "torch count."], [l8-wen, "eleven."], [l8-hobb, "it was twelve this morning."], [l8-wen, "it was twelve until someone went for a walk."], [l8-ivo, "...i brought it back."]]
+  - [[l8-ivo, "the asphalt's warm again. past the camp."], [l8-marit, "roads don't get warm, ivo."], [l8-ivo, "this one does. like something drove it."], [l8-marit, "nobody's driven anything down here."], [l8-ivo, "then who laid it?"]]
+  - [[l8-carla-kid, "soup's three bucks."], [l8-hobb, "you charged me four."], [l8-carla-kid, "you said it was bad."], [l8-hobb, "...fair."]]
+  - [[l8-marit, "the choir was singing again last night."], [l8-wen, "i heard."], [l8-marit, "lull used to sing on shift. same song."], [l8-wen, "don't go back there, marit."], [l8-marit, "i'm not going. i'm just saying it's the same song."]]
+  - [[l8-wen, "broodmother's bigger."], [l8-hobb, "you say that every week."], [l8-wen, "and every week i'm right."]]
+  - [[l8-ivo, "dell's map ends at the tar."], [l8-marit, "because dell ended at the flood."], [l8-ivo, "i know. i'm finishing it for her."], [l8-marit, "finish it from here. with a light on."]]
+  - [[l8-hobb, "anyone new comes in, tell 'em. light off past the hall."], [l8-carla-kid, "why off?"], [l8-hobb, "the lightless hate it."], [l8-carla-kid, "then why do we keep ours on?"], [l8-hobb, "'cause we're not them."]]
+  - [[l8-wen, "dredge brought up another hand."], [l8-ivo, "attached to anything?"], [l8-wen, "a ring."], [l8-ivo, "keep it?"], [l8-wen, "sold it. it was warm."]]
+  - [[l8-carla-kid, "can spiders swim?"], [l8-marit, "no."], [l8-carla-kid, "good. i'm gonna live in the lake."], [l8-marit, "the lake's freezing, carla."], [l8-carla-kid, "spiders are worse."]]
+  - [[l8-ivo, "the lane hummed a whole chord today."], [l8-wen, "my lights tune it."], [l8-ivo, "your lights are mushrooms, wen."], [l8-wen, "tuned mushrooms."]]
+  - [[l8-hobb, "blackjaw was at the tar again."], [l8-marit, "drinking it?"], [l8-hobb, "drinking it."], [l8-marit, "...then he won't need us much longer."]]
+  - [[l8-marit, "spider bite count this week: four."], [l8-hobb, "who?"], [l8-marit, "ivo, ivo, ivo and a stranger."], [l8-ivo, "they like me."]]
 # combat barks: what anyone in a camp shouts mid-fight, picked at random per moment
 barks:
   move: ["right. back to it.", "where was i.", "okay. next thing.", "legs, don't fail me now.", "one more lap.", "hm. what was i doing.", "coffee would be nice.", "that's a lap.", "feet hurt.", "next stop.", "where'd i leave that wrench."]

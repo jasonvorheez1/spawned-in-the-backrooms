@@ -138,7 +138,7 @@ function pickTarget(ctx, me, m) {
     bd = d; best = f;
   }
   if (me.state.nerve === "frenzied" && !me.state.mjguest) { // anyone close enough: npc or player
-    for (const n of ctx.query({ tags: ["npc"], radius: 12 })) { if (n.state?.dead || (n.state?.hp ?? 1) <= 0) continue; const d = flat(n.feetPosition, p); if (d < bd) { bd = d; best = n; } }
+    for (const n of ctx.query({ tags: ["npc"], radius: 12 })) { if (n.state?.dead || (n.state?.hp ?? 1) <= 0 || (me.state.faction && n.state?.faction === me.state.faction)) continue; const d = flat(n.feetPosition, p); if (d < bd) { bd = d; best = n; } }
     for (const pl of ctx.place.players) { if ((pl.state?.hp ?? 1) <= 0) continue; const d = flat(pl.feetPosition, p); if (d < Math.min(bd, 12)) { bd = d; best = pl; } }
   }
   // a player who attacked the camp: this agent's grudge, or a neighbour's
@@ -290,7 +290,7 @@ function aim(me, m, t) {
 const VOICES = { "meg-ale": "ale", "meg-ortiz": "ortiz", "meg-callum": "callum", "surv-wren": "wren", "surv-hollis": "hollis", "surv-mags": "mags" };
 const BVO = (who, line) => vo(who, line)
 export function bark(ctx, o, kind, force) {
-  const pool = CHAT.barks?.[kind], now = ctx.now(), st = o?.state;
+  const pool = o?.state?.barks?.[kind] ?? CHAT.barks?.[kind], now = ctx.now(), st = o?.state;
   if (!pool?.length || !st) return;
   if (!force && now - (st.line?.at ?? -1e9) < 3500) return;
   const t = pool[Math.floor(ctx.random() * pool.length)], d = 1300 + t.length * 55, who = st.voice ?? VOICES[o.id] ?? `${String(o.id).split('/').pop()}#${(o.state?.wear?.sex ?? o.state?.look?.sex) === 'f' ? 'f' : 'm'}`;

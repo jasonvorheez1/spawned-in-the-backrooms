@@ -4,6 +4,7 @@
 // a cavern that floods to the chin with parkour ledges and a dead caver in an orange caving suit, Hyperspace Lane (glowing fungi, resonance altar and light guides), a spider nest,
 // a pool of boiling tar with a B.N.T.G. dredge winch and reaching hands, a survivor camp round a fire with Carla, and the asphalt road to Level 9. Life: scripts/l8-life.js; use: scripts/l8-use.js.
 import L8 from "../../scripts/lib/data/level8.yml";
+import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 export const cadence = "1s";
 const V = 15;
 const GLB = {
@@ -460,6 +461,9 @@ export function tick(ctx) {
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); }
   if (!ctx.getObject("l8-life")) ctx.spawn("l8-life", { behavior: "scripts/l8-life.js" });
   if (!s.campV) { s.campV = 1; spawnCamp(ctx); }
+  if ((s.denV ?? 0) < DEN_V) { s.denV = DEN_V; layDens(ctx); }
+  keepWretched(ctx);
+  tickChatter(ctx, CHATTER.level8, { "l8-hobb": "hollis", "l8-wen": "mags", "l8-ivo": "reyes", "l8-marit": "wren", "l8-carla-kid": "penny" }); // the camp talks among itself
   // what was harvested grows back: caps in a couple of minutes, cocoons and stone in a few more
   const now = ctx.now(), gone = { ...(s.regrow ?? {}) };
   let ch = false;
@@ -491,5 +495,82 @@ function spawnCamp(ctx) {
       });
       if (g.gun) ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: g.gun }, ...weaponBody(g.gun) });
     }
+  });
+}
+
+// ---- the Lightless (Shelly: "parts of the map where theres insane people trying to kill you"): wanderers the dark got into. Two dens off the road:
+// the Choir in a side pocket of the hall, the Tar-Drinkers past the dredge. Frenzied nerve (scripts/meg-agent.js): they go for anyone close, never each other.
+// A warning scrawl stands on the road before each den. Killed, they stay dead an hour (Shelly's rule), then the den fills again.
+const DEN_V = 1, RETURN_MS = 3600000;
+const DENS = {
+  choir: { s: 84, side: -5.5, warn: 70, scrawl: "THE DARK SINGS<br>WE SING BACK", tint: "oklch(0.55 0.2 25)" },
+  tar: { s: 414, side: 9, warn: 402, scrawl: "DRINK THE TAR<br>AND YOU WONT<br>NEED LIGHT", tint: "oklch(0.5 0.16 300)" },
+};
+const WRETCH = {
+  "l8x-choir-1": { den: "choir", name: "Hymn-Mouth", sp: "rat", sex: "m", gun: "pipe_scrap", at: [0, 0], top: "#4a3a2a" },
+  "l8x-choir-2": { den: "choir", name: "Sister Lull", sp: "cat", sex: "f", gun: "knife", at: [2.2, 1.4], top: "#5a2a2a" },
+  "l8x-choir-3": { den: "choir", name: "The Quiet One", sp: "goat", sex: "m", gun: "hatchet", at: [-2, 1.8], top: "#2a2a2a" },
+  "l8x-tar-1": { den: "tar", name: "Blackjaw", sp: "bear", sex: "m", gun: "sledgehammer", at: [0, 0], top: "#1a1a1a" },
+  "l8x-tar-2": { den: "tar", name: "Old Ink", sp: "raccoon", sex: "f", gun: "lineman_machete", at: [2.4, -1.2], top: "#2a1f2a" },
+  "l8x-tar-3": { den: "tar", name: "Spit", sp: "fox", sex: "m", gun: "rebar", at: [-2.3, 1], top: "#3a2a1a" },
+};
+const WRETCH_BARKS = {
+  spot: ["oh, a bright one.", "you brought a light. give it.", "shh shh shh. there you are.", "it told us you'd come.", "fresh. fresh!"],
+  hostile: ["hold still and it won't hurt. much.", "the dark wants your eyes.", "sing with us!", "no lights. NO LIGHTS."],
+  hit: ["hahaha! again!", "that's it, that's it.", "it doesn't hurt down here.", "ow. OW. ha."],
+  kill: ["quiet now.", "shhh. shhh.", "it'll like that one."],
+  move: ["the walls breathe if you listen.", "nine roads. nine. NINE.", "who turned the dark on.", "humming. always humming."],
+  death: ["finally dark...", "it's... warm...", "the song..."],
+  clear: ["gone. gone gone gone.", "more will come. they always come."],
+};
+function layDens(ctx) {
+  for (const [k, d] of Object.entries(DENS)) {
+    const c = P(d.s, d.side, 0), w = P(d.warn, d.side > 0 ? 3.5 : -3.5, 0), id = (n) => `l8d-${k}-${n}`;
+    ctx.spawn(id("fire"), { feetPosition: { x: c.x, y: c.y, z: c.z }, fx: { script: FIRE_FX }, light: { kind: "point", color: d.tint, intensity: 1.6, distance: 11 }, audio: { clip: "cdn/ambience-many-voices-muttering-and-humming-tunelessly-in-a-stone-cave-loop.mp3", gain: 0.22, loop: true, spatial: true, maxDistance: 22 } });
+    ctx.spawn(id("ring"), { feetPosition: { x: c.x, y: c.y, z: c.z }, primitive: { kind: "torus", radius: 0.55, tube: 0.13, radialSegments: 6, tubularSegments: 10 }, rotation: { pitch: 90 }, pivot: "center", material: { color: "oklch(0.18 0.01 60)", roughness: 0.9 }, physics: "static" });
+    for (let i = 0; i < 4; i++) { // bedrolls kicked into a circle, stained
+      const a = (i / 4) * Math.PI * 2 + 0.4, r = 2.4;
+      ctx.spawn(id(`roll${i}`), { feetPosition: { x: c.x + Math.cos(a) * r, y: c.y, z: c.z + Math.sin(a) * r }, rotation: { yaw: (-a * 180) / Math.PI + 90 }, primitive: { kind: "capsule", radius: 0.16, halfHeight: 0.7 }, pivot: "center", scale: { x: 1, y: 1, z: 0.6 }, material: { color: ["oklch(0.32 0.05 60)", "oklch(0.28 0.04 30)", "oklch(0.3 0.03 140)", "oklch(0.25 0.02 260)"][i], roughness: 0.95 } });
+    }
+    for (let i = 0; i < 9; i++) { // a pile of picked bones by the fire
+      const a = i * 2.4, r = 0.25 + (i % 3) * 0.12;
+      ctx.spawn(id(`bone${i}`), { feetPosition: { x: c.x + 1.3 + Math.cos(a) * r, y: c.y + 0.05 + (i % 2) * 0.06, z: c.z - 1 + Math.sin(a) * r }, rotation: { yaw: i * 47, roll: 90 }, pivot: "center", primitive: { kind: "capsule", radius: 0.035, halfHeight: 0.16 + (i % 3) * 0.05 }, material: { color: "oklch(0.86 0.03 85)", roughness: 0.7 } });
+    }
+    ctx.spawn(id("skull"), { feetPosition: { x: c.x + 1.3, y: c.y + 0.12, z: c.z - 1 }, primitive: { kind: "sphere", radius: 0.12 }, scale: { x: 1, y: 0.9, z: 1.2 }, material: { color: "oklch(0.84 0.03 80)", roughness: 0.6 } });
+    ctx.spawn(id("smash"), { feetPosition: { x: c.x - 1.5, y: c.y, z: c.z - 1.5 }, primitive: { kind: "box", width: 0.5, height: 0.3, depth: 0.4 }, rotation: { yaw: 20, roll: 12 }, material: { color: "oklch(0.3 0.02 250)", roughness: 0.6, metalness: 0.5 } }); // smashed flashlights: no lights here
+    for (let i = 0; i < 5; i++) ctx.spawn(id(`torch${i}`), { feetPosition: { x: c.x - 1.4 + i * 0.18, y: c.y + 0.32, z: c.z - 1.5 + (i % 2) * 0.1 }, rotation: { yaw: i * 70, roll: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.03, height: 0.2 }, material: { color: "oklch(0.25 0.02 250)", roughness: 0.4, metalness: 0.6 } });
+    ctx.spawn(id("wall"), { feetPosition: { x: c.x, y: c.y + 1.2, z: c.z }, rotation: { yaw: c.yaw + (d.side > 0 ? -90 : 90) }, vector: `<svg viewBox='0 0 200 80' width='4.2m'><text x='100' y='30' text-anchor='middle' font-family='display' font-size='20' fill='${d.tint}' opacity='0.85'>${d.scrawl.split("<br>")[0]}</text><text x='100' y='58' text-anchor='middle' font-family='display' font-size='16' fill='${d.tint}' opacity='0.7'>${d.scrawl.split("<br>").slice(1).join(" ")}</text></svg>`, billboard: "none" });
+    ctx.spawn(id("warn"), { feetPosition: { x: w.x, y: w.y, z: w.z }, rotation: { yaw: w.yaw + 180 }, primitive: { kind: "box", width: 1.1, height: 0.75, depth: 0.04 }, pivot: "feet", material: WOOD,
+      ui: `<div face="front" width="1.05m" style="font-family:Arial,sans-serif;font-weight:900;font-size:120px;line-height:1;color:#c23a2a;text-align:center">TURN<br>BACK<div style="font-size:52px;color:#e8d8b0">they hear your light</div></div>` });
+    ctx.spawn(id("warnpost"), { feetPosition: { x: w.x, y: w.y - 1.1, z: w.z }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 1.2 }, material: WOOD });
+  }
+  // the warning board stands on its post
+  for (const k of Object.keys(DENS)) { const b = ctx.place.objects[`l8d-${k}-warn`]; if (b) b.feetPosition = { ...b.feetPosition, y: b.feetPosition.y + 1.1 }; }
+}
+function keepWretched(ctx) {
+  const s = ctx.place.state, now = ctx.now();
+  if (now < (s.wretchAt ?? 0)) return; s.wretchAt = now + 5000;
+  const deadAt = { ...(s.wretchDead ?? {}) }; let ch = false;
+  for (const id of Object.keys(WRETCH)) {
+    const o = ctx.place.objects[id];
+    if (o && !o.state?.dead && (o.state?.hp ?? 1) > 0) continue;
+    if (o && deadAt[id] == null) { deadAt[id] = now; ch = true; continue; }
+    if (!o || now - deadAt[id] > RETURN_MS) { if (o) ctx.destroy(id); delete deadAt[id]; ch = true; spawnWretch(ctx, id); }
+  }
+  if (ch) s.wretchDead = deadAt;
+}
+function spawnWretch(ctx, id) {
+  const g = WRETCH[id], d = DENS[g.den];
+  Promise.all([import("../../scripts/lib/critter-model.js"), import("../../scripts/lib/clothes.js"), import("../../scripts/lib/stats.js"), import("../../scripts/lib/weapon-look.js")]).then(([{ critterSpec }, { npcLook }, { npcState }, { weaponBody }]) => {
+    if (ctx.place.objects[id]) return;
+    const c = P(d.s, d.side, 0), x = c.x + g.at[0], z = c.z + g.at[1];
+    const look = { species: g.sp, sex: g.sex, eye: "#0a0a0a", topw: "sweater", top: g.top, botw: "pants", bottom: "#221e18", shoes: "boots", shoec: "#141010" };
+    ctx.spawn(id, {
+      tags: ["npc", "l8-npc", "l8-hostile", "wretched"], feetPosition: { x, y: c.y + 0.3, z }, rotation: { yaw: ctx.random() * 360 }, physics: "character", ...critterSpec(npcLook(id, look, "survivor", 8)),
+      behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
+      state: { ...npcState(ctx, "agent", 75), name: `${g.name} · the Lightless`, role: "survivor", faction: "lightless", factionName: "the Lightless: wanderers on the 9th Road whom the dark got into", nerve: "frenzied", arm: g.gun, barks: WRETCH_BARKS,
+        rounds: [{ x, y: c.y + 0.3, z, dwell: 30, act: null, look: { x: c.x, z: c.z } }], ri: 0, home: { x, z } },
+    });
+    ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: g.gun }, ...weaponBody(g.gun) });
   });
 }
