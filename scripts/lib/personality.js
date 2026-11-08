@@ -26,3 +26,9 @@ export function lineFor(it, kind, call) {
   return pool[h].replaceAll('{u}', call)
 }
 export const styleOf = (it) => TEMPERS[temperOf(it)].style
+// temperament shapes the body too: attribute nudges (applied once over the rolled attr) and the nerve it leans to
+export const TEMPER_STATS = {
+  warm: { e: 1, g: 1 }, gruff: { h: 2, e: 1, g: -1 }, nervous: { a: 2, h: -1, o: 1 }, cocky: { a: 1, g: 1, l: 1, n: -1 },
+  cold: { o: 2, n: 1, g: -1 }, chatty: { g: 2, n: -1 }, devout: { e: 2, n: 1, l: -1 }, weary: { e: 1, n: 1, a: -1 },
+}
+export const TEMPER_NERVE = { gruff: 'brave', nervous: 'coward', cocky: 'brave', cold: 'steady', devout: 'brave' }
