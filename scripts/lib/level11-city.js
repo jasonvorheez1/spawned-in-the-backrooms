@@ -1,0 +1,153 @@
+// Level 11 "The Infinite City": the modelled city (Shelly: make it realistic, not blocky, interesting; wiki: backrooms-wiki.wikidot.com/level-11).
+// Real buildings with window grids (art/level11/build.py), a road grid and canal running out to the fog, density that thins from skyscrapers to suburb,
+// street furniture, parked cars that shuffle between kerbs when nobody watches, billboards that change their ads, steaming manholes, a subway stair.
+// places/level11/sim.js calls layCity (the far city and the street dressing) and tickCity (the living parts) from its own lay/update.
+import MODELS from "./data/level11-models.yml";
+
+const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
+const TEX = {
+  brick: { ...T("old-red-brick-wall", 2.4), roughness: 0.85 }, stone: { ...T("large-grey-brick-wall-dusty-mortar", 1.5), roughness: 0.78 },
+  concrete: { ...T("smooth-cold-poured-concrete-wall", 1.4), roughness: 0.75 }, plaster: { ...T("cream-painted-plaster-wall", 1.4), roughness: 0.85 },
+};
+const hs = (a, b = 0, c = 0) => { let h = 2166136261 ^ (a * 374761393) ^ (b * 668265263) ^ (c * 1274126177); h = Math.imul(h ^ (h >>> 15), 2246822519); h = Math.imul(h ^ (h >>> 13), 3266489917); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
+const hue = (u, l = 0.62, c = 0.08) => `oklch(${l} ${c} ${Math.round(u * 360)})`;
+// what colour each kind of building is dressed in, per lot
+function dress(kind, u) {
+  const ld = 0.55 + u * 0.3;
+  if (kind === "brick_a" || kind === "brick_b") return { brick: { ...TEX.brick, color: `oklch(${0.5 + u * 0.15} ${0.09 + u * 0.05} ${28 + u * 14})` }, concrete: { ...TEX.concrete, color: "oklch(0.7 0.01 80)" } };
+  if (kind === "mall") return { brick: { ...TEX.brick, color: `oklch(${0.52 + u * 0.14} 0.08 ${40 + u * 30})` }, concrete: { ...TEX.concrete, color: "oklch(0.72 0.01 80)" } };
+  if (kind === "stone") return { stone: { ...TEX.stone, color: `oklch(${0.8 + u * 0.06} 0.025 ${80 + u * 20})` }, concrete: { ...TEX.concrete, color: "oklch(0.7 0.01 80)" } };
+  if (kind === "house") return { stone: { ...TEX.plaster, color: hue(u, 0.78, 0.045) }, concrete: { ...TEX.concrete, color: "oklch(0.6 0.01 80)" }, roof: { color: `oklch(${0.26 + u * 0.1} 0.03 ${20 + u * 40})`, roughness: 0.9 } };
+  return { concrete: { ...TEX.concrete, color: "oklch(0.68 0.012 240)" } }; // glass towers: the glass stays as modelled
+}
+// footprint of each model, as built (width along local x, depth along local y)
+const FOOT = { glass_a: [23.6, 24.3], glass_b: [17, 17], stone: [21.2, 21.6], brick_a: [19.4, 16.4], brick_b: [12.7, 12.8], mall: [24.5, 15.3], house: [10.2, 11.7] };
+const HEIGHT = { glass_a: 101, glass_b: 105, stone: 43, brick_a: 26, brick_b: 15, mall: 7.3, house: 9.6 };
+const PAINT = ["#b81c28", "#2f4f8a", "#e8e4d8", "#2a2a30", "#3a6a4a", "#c8a24a", "#7a7a84", "#8a2a2a", "#d8d0b8", "#1e3a5a"];
+
+export function layCity(ctx, h) {
+  const { sp, bx } = h, put = (id, kind, x, z, yaw, extra = {}, y = 0) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: { body: "static", collider: extra.collider ?? "box" }, model: { id: MODELS[kind], forward: "-z", materials: extra.materials }, ...(extra.spec ?? {}) });
+  const ASPH = { ...T("cracked-dark-asphalt-road", 6), color: "oklch(0.27 0.01 250)", roughness: 0.88 }, WALK = { ...T("stained-concrete-floor", 4), color: "oklch(0.76 0.02 85)", roughness: 0.75 };
+  const CANAL = { ...T("smooth-cold-poured-concrete-wall", 2), color: "oklch(0.62 0.02 240)", roughness: 0.65 }, CURB = { ...T("smooth-cold-poured-concrete-wall", 1), color: "oklch(0.72 0.02 85)", roughness: 0.65 };
+  const YEL = { color: "oklch(0.84 0.18 88)", roughness: 0.45 };
+  const X_AVE = [-140, -70, 0, 70, 140], Z_ST = [-160, -92, 12, 84, 156, 228], CANAL_Z = -30, ROAD_Z = [12, 84, 156, -92, -160, 228];
+
+  // ---- the ground, so the city stands on something to the edge of the fog
+  bx("l11-ground", 0, -0.45, 40, 620, 0.3, 700, { ...T("stained-concrete-floor", 40), color: "oklch(0.55 0.015 85)", roughness: 0.9 });
+  // ---- avenues (north-south) and streets (east-west): long slabs, kerbs, sidewalks; the centre already has its own (sim.js), so these start where those stop
+  for (const ax of X_AVE) {
+    if (ax === 0) { // the main avenue just continues past the old ends
+      for (const [z0, z1] of [[-250, -82], [78, 250]]) { const zc = (z0 + z1) / 2, L = z1 - z0; bx(`l11-ave0-${z0}`, 0, -0.05, zc, 16, 0.2, L, ASPH); for (const s of [-1, 1]) { bx(`l11-ave0-sw-${z0}-${s}`, s * 12, 0.08, zc, 7.6, 0.25, L, WALK); bx(`l11-ave0-kb-${z0}-${s}`, s * 8.1, 0.08, zc, 0.2, 0.28, L, CURB); } }
+      continue;
+    }
+    bx(`l11-ave-${ax}`, ax, -0.05, 0, 12, 0.2, 520, ASPH);
+    for (const s of [-1, 1]) { bx(`l11-ave-sw-${ax}-${s}`, ax + s * 9, 0.08, 0, 6, 0.25, 520, WALK); bx(`l11-ave-kb-${ax}-${s}`, ax + s * 6.1, 0.08, 0, 0.2, 0.28, 520, CURB); }
+    for (let z = -240; z < 240; z += 14) bx(`l11-ave-ln-${ax}-${z}`, ax, 0.06, z, 0.14, 0.01, 6, YEL, { physics: undefined });
+  }
+  for (const zs of Z_ST) {
+    if (zs === 12) { for (const [x0, x1] of [[-250, -36], [36, 250]]) { const xc = (x0 + x1) / 2, L = x1 - x0; bx(`l11-st12-${x0}`, xc, -0.05, 12, L, 0.2, 12, ASPH); for (const s of [-1, 1]) { bx(`l11-st12-sw-${x0}-${s}`, xc, 0.08, 12 + s * 9, L, 0.25, 6, WALK); bx(`l11-st12-kb-${x0}-${s}`, xc, 0.08, 12 + s * 6.1, L, 0.28, 0.2, CURB); } } continue; }
+    bx(`l11-st-${zs}`, 0, -0.05, zs, 520, 0.2, 12, ASPH);
+    for (const s of [-1, 1]) { bx(`l11-st-sw-${zs}-${s}`, 0, 0.08, zs + s * 9, 520, 0.25, 6, WALK); bx(`l11-st-kb-${zs}-${s}`, 0, 0.08, zs + s * 6.1, 520, 0.28, 0.2, CURB); }
+    for (let x = -240; x < 240; x += 14) bx(`l11-st-ln-${zs}-${x}`, x, 0.06, zs, 6, 0.01, 0.14, YEL, { physics: undefined });
+  }
+  // the canal runs on past the old ends, with a bridge at every avenue
+  for (const [x0, x1] of [[-250, -59], [59, 250]]) {
+    const xc = (x0 + x1) / 2, L = x1 - x0;
+    bx(`l11-canal-bed-${x0}`, xc, -4.5, CANAL_Z, L, 0.4, 24, CANAL); bx(`l11-canal-water-${x0}`, xc, -2.2, CANAL_Z, L, 0.08, 20, { color: "oklch(0.38 0.09 220)", opacity: 0.88, transparent: true, roughness: 0.06, metalness: 0.2 });
+    for (const s of [-1, 1]) { bx(`l11-canal-wall-${x0}-${s}`, xc, -2.2, CANAL_Z + s * 10.5, L, 4.4, 1.0, CANAL); bx(`l11-canal-cope-${x0}-${s}`, xc, 0.2, CANAL_Z + s * 10.5, L, 0.3, 1.3, CURB); }
+  }
+  for (const ax of X_AVE) if (ax !== 0) {
+    bx(`l11-bridge-${ax}`, ax, -0.05, CANAL_Z, 13, 0.6, 24, ASPH); for (const s of [-1, 1]) { bx(`l11-bridge-par-${ax}-${s}`, ax + s * 6.4, 0.5, CANAL_Z, 0.4, 0.95, 24, CURB); bx(`l11-bridge-arch-${ax}-${s}`, ax + s * 6.4, -2.4, CANAL_Z, 1.2, 4.2, 24, CANAL); }
+  }
+
+  // ---- the lots: blocks between the roads, buildings facing outward to the avenues, density thinning with distance from downtown
+  const ROWS = [[-149, -103, 2], [-81, -45, 1], [-17, 1, 1], [23, 73, 2], [95, 145, 2], [167, 217, 2]];
+  const GAPS = [[-200, -140], [-140, -70], [-70, 0], [0, 70], [70, 140], [140, 200]];
+  const KINDS = [["glass_a", "glass_b", "stone", "glass_b", "brick_a", "glass_a", "stone"], ["brick_a", "stone", "brick_b", "mall", "glass_b", "brick_a", "brick_b"], ["house", "house", "brick_b", "mall", "brick_a", "house", "house"]];
+  let n = 0;
+  for (const [gx0, gx1] of GAPS) for (const [rz0, rz1, subs] of ROWS) for (const side of [0, 1]) for (let sub = 0; sub < subs; sub++) {
+    const cx = side ? gx1 - 11 - 12 : gx0 + 11 + 12, depthZ = (rz1 - rz0) / subs, cz = rz0 + depthZ * (sub + 0.5), yaw = side ? -90 : 90; // west column faces west, east column faces east
+    if (Math.abs(cx) <= 47 && cz > -85 && cz < 76) continue; // the centre is hand-placed (sim.js)
+    if (cz < -22 && cz > -45 && true) continue; // the canal
+    const d = Math.hypot(cx, cz - 20), tier = d < 120 ? 0 : d < 190 ? 1 : 2, u = hs(Math.round(cx), Math.round(cz), 3), kind = KINDS[tier][Math.floor(hs(Math.round(cx), Math.round(cz), 7) * KINDS[tier].length)];
+    if (d > 245) continue;
+    const dr = dress(kind, hs(Math.round(cx), Math.round(cz), 11));
+    if (kind === "house") { for (const k of [-1, 1]) put(`l11-b-${n++}`, kind, cx, cz + k * Math.min(7.5, depthZ / 4 + 3), yaw, { materials: dress(kind, hs(n, 2, 5)) }); }
+    else put(`l11-b-${n++}`, kind, cx, cz, yaw, { materials: dr });
+  }
+  // ---- hand-placed hero buildings around the old centre (the new ones the level was missing)
+  const dressOf = (kind, s) => dress(kind, s);
+  put("l11-hero-mall", "mall", -24, -57, -90, { materials: dressOf("mall", 0.3) });
+  put("l11-hero-glass", "glass_a", 28, -58, 90, { materials: dressOf("glass_a", 0.5) });
+  put("l11-hero-brick1", "brick_a", -27, 35, -90, { materials: dressOf("brick_a", 0.2) });
+  put("l11-hero-brick2", "brick_b", 31, -3, 90, { materials: dressOf("brick_b", 0.7) });
+  put("l11-hero-house1", "house", -30, 57, -90, { materials: dressOf("house", 0.6) });
+  put("l11-hero-mall2", "mall", 26, 62, 90, { materials: dressOf("mall", 0.8) });
+  put("l11-hero-glass2", "glass_b", -28, 64, -90, { materials: dressOf("glass_b", 0.1) });
+  const TOWER = { x: 27, z: 31 }; put("l11-ntower", "stone", TOWER.x, TOWER.z, 90, { materials: dressOf("stone", 0.4) });
+  return { TOWER, nBuildings: n };
+}
+
+// ---- the street: lamps, trees, hydrants, bins, benches, a bus shelter, newsboxes, parked cars, manholes, a subway stair, billboards (around the avenue's old extent)
+export function layStreet(ctx, h) {
+  const { sp, bx, cyl } = h, put = (id, kind, x, z, yaw, extra = {}, y = 0) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: extra.nophys ? undefined : { body: "static", collider: extra.collider ?? "box" }, model: { id: MODELS[kind], forward: "-z", materials: extra.materials }, ...(extra.spec ?? {}) });
+  const LEN = [-66, -52, -9, 24, 40, 56, 72];
+  LEN.forEach((z, i) => [-1, 1].forEach((s) => {
+    put(`l11-st-lamp-${i}-${s}`, "lamp", s * 8.9, z + (s > 0 ? 3 : 0), s > 0 ? 90 : -90, { collider: "cylinder" });
+    if (i % 2 === 0) sp(`l11-st-lamp-light-${i}-${s}`, { feetPosition: { x: s * 6.9, y: 6.6, z: z + (s > 0 ? 3 : 0) }, light: { kind: "point", color: "oklch(0.93 0.14 80)", intensity: 5, distance: 17, shadow: { enabled: false } } });
+  }));
+  [-64, -48, -8, 26, 38, 52, 66].forEach((z, i) => [-1, 1].forEach((s) => {
+    const x = s * 13.4, zz = z + (s > 0 ? 4 : 0), u = hs(i, s, 1);
+    put(`l11-st-tree-${i}-${s}`, "tree", x, zz, u * 360, { collider: "cylinder", materials: { leafA: { color: `oklch(${0.4 + u * 0.08} 0.13 ${125 + u * 25})` }, leafB: { color: `oklch(${0.48 + u * 0.08} 0.14 ${120 + u * 20})` } } });
+    bx(`l11-st-grate-${i}-${s}`, x, 0.09, zz, 1.7, 0.01, 1.7, { color: "oklch(0.3 0.04 70)", metalness: 0.8, roughness: 0.45 }, { physics: undefined });
+  }));
+  for (const [i, [x, z]] of [[-8.6, 3], [8.6, 11], [-8.6, 62], [8.6, -12], [8.6, 48]].entries()) put(`l11-st-hyd-${i}`, "hydrant", x, z, x < 0 ? -90 : 90, { collider: "cylinder" });
+  for (const [i, [x, z]] of [[-8.7, -10], [8.7, 26], [-8.7, 21], [8.7, -64], [-8.7, 70]].entries()) put(`l11-st-bin-${i}`, "bin", x, z, 0, { collider: "cylinder" });
+  for (const [i, [x, z]] of [[-15, 30], [-15, 46], [15, -62], [15, 18.5]].entries()) put(`l11-st-bench-${i}`, "bench", x, z, x < 0 ? -90 : 90);
+  put("l11-st-shelter", "shelter", 14.4, 48, 90); put("l11-st-shelter2", "shelter", -14.4, -8, -90);
+  for (const [i, [x, z]] of [[-9.2, 33], [9.2, 15.5], [9.2, 47], [-9.2, 5]].entries()) put(`l11-st-nbox-${i}`, "box", x, z, x < 0 ? -90 : 90, { collider: "box" });
+  // parked cars along the kerbs, tinted at random; a few vans
+  const SLOTS = []; for (let z = -76; z <= 76; z += 7.5) { if ((z > -48 && z < -14) || (z > 4 && z < 20)) continue; SLOTS.push([-6.95, z], [6.95, z]); }
+  const cars = [];
+  SLOTS.forEach(([x, z], i) => {
+    if (hs(i, 4, 9) < 0.5) return;
+    const kind = hs(i, 5, 2) < 0.22 ? "van" : "sedan", yaw = x < 0 ? (hs(i, 6, 3) < 0.5 ? 0 : 180) : (hs(i, 6, 3) < 0.5 ? 0 : 180), col = PAINT[Math.floor(hs(i, 7, 4) * PAINT.length)];
+    put(`l11-car-${i}`, kind, x, z + (hs(i, 8, 5) - 0.5) * 1.6, yaw, { materials: { paint: { color: col, roughness: 0.35, metalness: 0.2 } }, spec: { tags: ["l11car"] } }); cars.push(`l11-car-${i}`);
+  });
+  // manholes that steam, and a subway stair going down
+  const STEAM = `fx
+pop steam rate=14 on=disc(.35) life=1.6..2.6 v=up(.9..1.5)+sdir()*.12 size=.18..0.4 acc=drag(1.1)+buoy(.25) col=<.9,.9,.93> a=.3>0 sz=$size*(1>2.6) r=sprite(smoke-puff,alpha)`;
+  for (const [i, [x, z]] of [[3.4, 32], [-3.6, -8], [2.4, 66], [-3, -60]].entries()) { cyl(`l11-manhole-${i}`, x, 0.06, z, 0.5, 0.5, 0.04, { color: "oklch(0.2 0.01 250)", metalness: 0.7, roughness: 0.5 }, { physics: undefined }); sp(`l11-manhole-steam-${i}`, { feetPosition: { x, y: 0.15, z }, fx: { script: STEAM } }); }
+  const SUB = { x: 13.6, z: 60.5 };
+  bx("l11-sub-well", SUB.x, -1.6, SUB.z, 3.0, 3.2, 4.0, { color: "oklch(0.1 0.01 250)" }, { physics: undefined });
+  for (let k = 0; k < 7; k++) bx(`l11-sub-step-${k}`, SUB.x, -0.1 - k * 0.38, SUB.z - 1.6 + k * 0.5, 2.2, 0.12, 0.5, { color: "oklch(0.5 0.02 250)", roughness: 0.8 });
+  for (const s of [-1, 1]) { bx(`l11-sub-rail-${s}`, SUB.x + s * 1.2, 0.5, SUB.z, 0.07, 0.9, 4.0, { color: "oklch(0.25 0.1 150)", metalness: 0.6, roughness: 0.4 }); cyl(`l11-sub-post-${s}`, SUB.x + s * 1.2, 0.1, SUB.z - 2.1, 0.07, 0.07, 2.6, { color: "oklch(0.25 0.1 150)", metalness: 0.6 }); sp(`l11-sub-globe-${s}`, { feetPosition: { x: SUB.x + s * 1.2, y: 2.9, z: SUB.z - 2.1 }, primitive: { kind: "sphere", radius: 0.2 }, material: { color: "oklch(0.8 0.2 145)", emissive: "oklch(0.8 0.2 145)", emissiveIntensity: 2.4 }, light: { kind: "point", color: "oklch(0.85 0.2 145)", intensity: 2.5, distance: 8 } }); }
+  sp("l11-sub-sign", { feetPosition: { x: SUB.x, y: 2.5, z: SUB.z - 2.1 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.6, height: 0.5, depth: 0.06 }, material: { color: "oklch(0.2 0.02 250)" }, ui: `<div face="front" width="1.6m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;font-size:240px;letter-spacing:8px;color:#fff;background:#1a6b3a">SUBWAY</div>` });
+  // billboards on stilts that change their ads when nobody is looking
+  const ADS = [["ALMOND WATER", "3 for $1 · it's what you came for", "#1e5a3a", "#f2e6a8"], ["THE CITY NEVER SLEEPS", "Neither do we · Open all hours", "#0e1a3a", "#ffd24a"], ["VISIT LEVEL 37", "Beautiful beaches · Book today", "#0d6c8a", "#fff2c8"], ["M.E.G. IS HIRING", "See the world's other worlds · Ask any agent", "#3a4a28", "#d8f0a0"], ["DON'T LOOK UP", "Brought to you by nobody", "#2a2a2e", "#d84a3a"]];
+  const bb = [];
+  [[-17.5, 74, -90], [17.5, -74, 90]].forEach(([x, z, yaw], b) => {
+    for (const sz of [-3.6, 3.6]) cyl(`l11-bb-post-${b}-${sz}`, x, 0, z + sz, 0.18, 0.22, 7.0, { color: "oklch(0.3 0.01 250)", metalness: 0.8, roughness: 0.5 });
+    bx(`l11-bb-back-${b}`, x + (yaw > 0 ? 0.1 : -0.1), 6.6, z, 0.2, 5.6, 11.2, { color: "oklch(0.25 0.01 250)", metalness: 0.7, roughness: 0.5 });
+    ADS.forEach(([t1, t2, bg, fg], k) => sp(`l11-bb-ad-${b}-${k}`, { feetPosition: { x: x + (yaw > 0 ? -0.06 : 0.06), y: 6.4, z }, rotation: { yaw }, visible: k === 0, primitive: { kind: "box", width: 10.8, height: 5.0, depth: 0.06 }, material: { color: bg }, ui: `<div face="front" width="10.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Georgia,serif;background:${bg};color:${fg}"><div style="font-size:220px;font-weight:700;line-height:1">${t1}</div><div style="font-size:84px;margin-top:30px;opacity:.85">${t2}</div></div>` }));
+    bb.push(b);
+  });
+  // the city's hum
+  sp("l11-ambience", { feetPosition: { x: 0, y: 3, z: 10 }, audio: { clip: "cdn/sfx-large-city-street-ambience-distant-traffic-hum-and-wind-loop.mp3", loop: true, gain: 0.22, spatial: false, bus: "Ambience" } });
+  return { cars, nAds: ADS.length, billboards: bb };
+}
+
+// ---- the living parts: ads change, parked cars move kerb to kerb, a siren or a horn a long way off
+export function tickCity(ctx, mem, heard) {
+  const now = ctx.now(), pls = ctx.place.players;
+  const nearAny = (p, r) => pls.some((q) => Math.hypot(q.feetPosition.x - p.x, q.feetPosition.z - p.z) < r);
+  if (!mem.adAt) { mem.adAt = now + 20000; mem.carAt = now + 30000; mem.farAt = now + 25000; mem.ad = [0, 0]; }
+  if (now > mem.adAt) { mem.adAt = now + 45000;
+    for (const b of [0, 1]) { const o = ctx.getObject(`l11-bb-ad-${b}-${mem.ad[b]}`); if (o && nearAny(o.feetPosition, 55)) continue; const next = (mem.ad[b] + 1) % 5; const a = ctx.getObject(`l11-bb-ad-${b}-${mem.ad[b]}`), c = ctx.getObject(`l11-bb-ad-${b}-${next}`); if (a && c) { a.visible = false; c.visible = true; mem.ad[b] = next; } } }
+  if (now > mem.carAt) { mem.carAt = now + 35000 + ctx.random() * 30000;
+    const cars = ctx.query({ tags: ["l11car"] }); if (cars.length > 3) { const a = cars[Math.floor(ctx.random() * cars.length)], b = cars[Math.floor(ctx.random() * cars.length)];
+      if (a.id !== b.id && !nearAny(a.feetPosition, 45) && !nearAny(b.feetPosition, 45)) { const pa = a.feetPosition, pb = b.feetPosition; a.feetPosition = { x: pb.x, y: pb.y, z: pb.z }; b.feetPosition = { x: pa.x, y: pa.y, z: pa.z }; } } }
+  if (now > mem.farAt) { mem.farAt = now + 40000 + ctx.random() * 50000;
+    const pl = pls[0]; if (pl) { const a = ctx.random() * Math.PI * 2, p = { x: pl.feetPosition.x + Math.cos(a) * 90, y: 4, z: pl.feetPosition.z + Math.sin(a) * 90 };
+      heard(ctx, { clip: ctx.random() < 0.5 ? "/cdn/moodboard-realistic-gritty/sfx-distant-police-siren-passing-far-away-in-a-city.mp3" : "/cdn/moodboard-realistic-gritty/sfx-two-car-horns-honking-far-away-city-street.mp3", position: p, volume: 0.5, maxDistance: 160 }); } }
+}

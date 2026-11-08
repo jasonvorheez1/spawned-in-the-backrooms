@@ -106,8 +106,8 @@ export const ears = {
       ctx.emit("screenFlash", { color: "#ffffff", duration: 0.7, intensity: 0.6 }, { audience: { player: who.id } });
 
       // Teleport up to Skydeck observation terrace
-      who.feetPosition = { x: 0, y: 44.2, z: 28 };
-      who.rotation = { yaw: 180 };
+      who.feetPosition = s.dest ?? { x: 22, y: 35.8, z: 31 };
+      who.rotation = { yaw: 90 };
 
       if (w) {
         w.notice = {
@@ -124,8 +124,8 @@ export const ears = {
       ctx.emit("screenFlash", { color: "#ffffff", duration: 0.7, intensity: 0.6 }, { audience: { player: who.id } });
 
       // Teleport back to ground floor lobby
-      who.feetPosition = { x: 0, y: 0.25, z: 28 };
-      who.rotation = { yaw: 0 };
+      who.feetPosition = s.dest ?? { x: 15, y: 0.3, z: 35 };
+      who.rotation = { yaw: 90 };
 
       if (w) {
         w.notice = {

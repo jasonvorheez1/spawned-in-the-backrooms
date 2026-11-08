@@ -9,8 +9,10 @@ import { heard } from "../../scripts/lib/hear.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
+import { layCity, layStreet, tickCity } from "../../scripts/lib/level11-city.js";
 
 export const cadence = "1s";
+const V = 2; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -192,136 +194,16 @@ function lay(ctx) {
   });
 
   // ==========================================
-  // 4. THE NEOCLASSICAL GRAND TOWER (Wikidot Image 2)
+  // 4-6. THE CITY (art/level11/build.py models; scripts/lib/level11-city.js): the neoclassical grand tower with its skydeck terrace, the glass towers,
+  //      the strip mall, brick apartments, houses, the road grid and the canal out to the fog. Shelly: realistic, not blocky, interesting.
   // ==========================================
-  // 14-story grand limestone tower with arched lower levels, multi-tier cornices, and rooftop water tower
-  const TOWER_X = 22;
-  const TOWER_Z = 28;
-  const TOWER_W = 20;
-  const TOWER_D = 20;
-  const TOWER_H = 44;
-
-  // Base Pedestal (Lower 2 stories with high arched portico)
-  bx("l11-ntower-base", TOWER_X, 0, TOWER_Z, TOWER_W, 8.5, TOWER_D, STONE_TOWER);
-  bx("l11-ntower-cornice1", TOWER_X, 8.3, TOWER_Z, TOWER_W + 0.8, 0.5, TOWER_D + 0.8, CURB_MAT);
-
-  // Mid Tower (Floors 3-10)
-  bx("l11-ntower-shaft", TOWER_X, 8.8, TOWER_Z, TOWER_W - 0.8, 25, TOWER_D - 0.8, STONE_TOWER);
-  bx("l11-ntower-cornice2", TOWER_X, 33.6, TOWER_Z, TOWER_W + 0.4, 0.6, TOWER_D + 0.4, CURB_MAT);
-
-  // Upper Tower & Attic
-  bx("l11-ntower-upper", TOWER_X, 34.2, TOWER_Z, TOWER_W - 1.6, 8.5, TOWER_D - 1.6, STONE_TOWER);
-  bx("l11-ntower-cornice-top", TOWER_X, 42.5, TOWER_Z, TOWER_W - 0.8, 0.8, TOWER_D - 0.8, CURB_MAT);
-
-  // Rooftop Balustrade & Skydeck
-  bx("l11-ntower-skydeck", TOWER_X, 43.1, TOWER_Z, TOWER_W - 2.2, 0.25, TOWER_D - 2.2, SIDEWALK);
-  bx("l11-ntower-parapet-w", TOWER_X - 9.0, 43.3, TOWER_Z, 0.4, 1.1, TOWER_D - 2.6, CURB_MAT);
-  bx("l11-ntower-parapet-e", TOWER_X + 9.0, 43.3, TOWER_Z, 0.4, 1.1, TOWER_D - 2.6, CURB_MAT);
-  bx("l11-ntower-parapet-n", TOWER_X, 43.3, TOWER_Z - 9.0, TOWER_W - 2.6, 1.1, 0.4, CURB_MAT);
-  bx("l11-ntower-parapet-s", TOWER_X, 43.3, TOWER_Z + 9.0, TOWER_W - 2.6, 1.1, 0.4, CURB_MAT);
-
-  // Rooftop Water Tower on Steel Stanchions
-  cyl("l11-watertower-vat", TOWER_X + 4.5, 46.8, TOWER_Z + 4.5, 1.9, 1.9, 3.2, { ...T("worn-hardwood-grain", 1), color: "oklch(0.48 0.05 55)", roughness: 0.85 });
-  cyl("l11-watertower-cone", TOWER_X + 4.5, 50.0, TOWER_Z + 4.5, 0.1, 2.05, 1.1, { color: "oklch(0.35 0.04 50)", roughness: 0.7 });
-  // Stanchion Legs
-  for (const [dx, dz] of [[-1.4, -1.4], [1.4, -1.4], [-1.4, 1.4], [1.4, 1.4]]) {
-    cyl(`l11-wt-leg-${dx}-${dz}`, TOWER_X + 4.5 + dx, 44.2, TOWER_Z + 4.5 + dz, 0.07, 0.09, 2.8, STEEL_BRUSHED);
-  }
-
-  // Grand Arched Portico Columns on Ground Level Facing West Avenue
-  for (const pz of [24, 28, 32]) {
-    cyl(`l11-ntower-col-${pz}`, TOWER_X - 10.3, 0.2, pz, 0.42, 0.48, 7.2, CURB_MAT);
-  }
-
-  // Ground Floor Lobby Interior (Walkable entrance)
-  bx("l11-ntower-lobby-floor", TOWER_X - 4, 0.22, TOWER_Z, 11, 0.1, 14, MARBLE_FLOOR);
-  sp("l11-ntower-lobby-light", {
-    feetPosition: { x: TOWER_X - 4, y: 4.5, z: TOWER_Z },
-    light: { kind: "point", color: "oklch(0.96 0.08 85)", intensity: 6.5, distance: 16 },
-  });
-
-  // Skydeck Glass Elevator (Ground Floor Call)
-  bx("l11-elev-frame", TOWER_X - 1.5, 0.2, TOWER_Z, 2.2, 3.2, 2.2, STEEL_BRUSHED);
-  sp("l11-elev-btn-up", {
-    tags: ["usable"],
-    feetPosition: { x: TOWER_X - 2.6, y: 1.3, z: TOWER_Z },
-    primitive: { kind: "box", width: 0.18, height: 0.28, depth: 0.08 },
-    material: { color: "oklch(0.85 0.18 85)", emissive: "oklch(0.85 0.18 85)", emissiveIntensity: 2.0 },
-    behavior: "scripts/level11-use.js",
-    state: { kind: "elevator-up", name: "Skydeck Express Elevator", verb: "Ascend to Skydeck (Floor 14)" },
-  });
-
-  // Skydeck Elevator (Rooftop Call to Descend)
-  sp("l11-elev-btn-down", {
-    tags: ["usable"],
-    feetPosition: { x: TOWER_X - 2.6, y: 44.5, z: TOWER_Z },
-    primitive: { kind: "box", width: 0.18, height: 0.28, depth: 0.08 },
-    material: { color: "oklch(0.85 0.18 85)", emissive: "oklch(0.85 0.18 85)", emissiveIntensity: 2.0 },
-    behavior: "scripts/level11-use.js",
-    state: { kind: "elevator-down", name: "Lobby Express Elevator", verb: "Descend to Ground Floor Lobby" },
-  });
-
-  // Panoramic Observation Binoculars on Skydeck Ledge
-  sp("l11-skydeck-binoculars", {
-    tags: ["usable"],
-    feetPosition: { x: TOWER_X - 8.2, y: 44.2, z: TOWER_Z },
-    rotation: { yaw: 90 },
-    primitive: { kind: "cylinder", radiusTop: 0.14, radiusBottom: 0.22, height: 1.35 },
-    material: STEEL_BRUSHED,
-    behavior: "scripts/level11-use.js",
-    state: { kind: "binoculars", name: "Panoramic Observation Viewfinder", verb: "Look through Viewfinder" },
-    children: [
-      { feetPosition: { x: 0, y: 1.3, z: -0.15 }, primitive: { kind: "box", width: 0.35, height: 0.18, depth: 0.45 }, material: STEEL_BRUSHED },
-    ],
-  });
-
-  // ==========================================
-  // 5. MODERN GLASS & STEEL ATRIUM TOWER (Wikidot Image 1 & 4)
-  // ==========================================
-  const MTOWER_X = 24;
-  const MTOWER_Z = -54;
-  const MTOWER_W = 22;
-  const MTOWER_D = 22;
-  const MTOWER_H = 54;
-
-  bx("l11-mtower-core", MTOWER_X, 0, MTOWER_Z, MTOWER_W, MTOWER_H, MTOWER_D, { color: "oklch(0.25 0.01 250)", roughness: 0.8 });
-  bx("l11-mtower-glass-w", MTOWER_X - MTOWER_W / 2 - 0.08, 0, MTOWER_Z, 0.1, MTOWER_H, MTOWER_D - 0.4, GLASS_TINT);
-  bx("l11-mtower-glass-s", MTOWER_X, 0, MTOWER_Z + MTOWER_D / 2 + 0.08, MTOWER_W - 0.4, MTOWER_H, 0.1, GLASS_TINT);
-
-  // Vertical Stainless Steel Mullions
-  for (let z = MTOWER_Z - 8; z <= MTOWER_Z + 8; z += 3.2) {
-    bx(`l11-mmull-v-${z}`, MTOWER_X - MTOWER_W / 2 - 0.12, 0, z, 0.1, MTOWER_H, 0.12, STEEL_BRUSHED);
-  }
-
-  // ==========================================
-  // 6. LOW-DENSITY COMMERCIAL PLAZA & STRIP MALL (Wikidot Image 3)
-  // ==========================================
-  const STRIP_X = -24;
-  const STRIP_Z = -50;
-  const STRIP_W = 20;
-  const STRIP_D = 32;
-
-  // Main 2-story commercial building
-  bx("l11-strip-main", STRIP_X, 0, STRIP_Z, STRIP_W, 9.5, STRIP_D, BRICK_BLDG);
-  bx("l11-strip-parapet", STRIP_X, 9.3, STRIP_Z, STRIP_W + 0.3, 0.6, STRIP_D + 0.3, CURB_MAT);
-
-  // Strip Mall Colorful Canvas Awnings (Royal Blue & Forest Green)
-  for (const [az, col] of [[STRIP_Z - 8, "oklch(0.45 0.16 250)"], [STRIP_Z + 4, "oklch(0.42 0.14 140)"]]) {
-    sp(`l11-strip-awning-${az}`, {
-      feetPosition: { x: STRIP_X + STRIP_W / 2 + 0.9, y: 3.4, z: az },
-      rotation: { pitch: 18 },
-      primitive: { kind: "box", width: 1.8, height: 0.06, depth: 8.5 },
-      material: { color: col, roughness: 0.9 },
-    });
-  }
-
-  // Concrete Plaza Ramps & Tubular Metal Railings
-  bx("l11-strip-ramp", STRIP_X + 11.5, 0, STRIP_Z, 3.2, 0.3, 18, SIDEWALK);
-  bx("l11-strip-ramp-rail", STRIP_X + 13.0, 0.4, STRIP_Z, 0.06, 0.85, 17.5, IRON_RAIL);
-
-  // Rooftop Satellite Dishes & HVAC Units
-  cyl("l11-strip-sat1", STRIP_X - 3, 9.8, STRIP_Z - 5, 1.2, 0.08, 0.4, STEEL_BRUSHED, { rotation: { pitch: 42, yaw: 35 } });
-  bx("l11-strip-hvac", STRIP_X + 2, 9.5, STRIP_Z + 6, 2.4, 1.6, 2.8, STEEL_BRUSHED);
+  const city = layCity(ctx, { sp, bx, cyl });
+  const TOWER_X = city.TOWER.x, TOWER_Z = city.TOWER.z, SKY_Y = 35.7;
+  sp("l11-ntower-lobby-light", { feetPosition: { x: TOWER_X - 10, y: 4.5, z: TOWER_Z }, light: { kind: "point", color: "oklch(0.96 0.08 85)", intensity: 6.5, distance: 16 } });
+  // the Skydeck Express call panel beside the tower's entrance, and the way back down from the terrace
+  sp("l11-elev-btn-up", { tags: ["usable"], feetPosition: { x: TOWER_X - 8.55, y: 1.3, z: TOWER_Z + 4.5 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 0.2, height: 0.34, depth: 0.08 }, material: { color: "oklch(0.85 0.18 85)", emissive: "oklch(0.85 0.18 85)", emissiveIntensity: 2.0 }, behavior: "scripts/level11-use.js", state: { kind: "elevator-up", name: "Skydeck Express Elevator", verb: "Ascend to the Skydeck", dest: { x: TOWER_X - 5, y: SKY_Y + 0.1, z: TOWER_Z + 1 } } });
+  sp("l11-elev-btn-down", { tags: ["usable"], feetPosition: { x: TOWER_X + 3.0, y: SKY_Y + 1.3, z: TOWER_Z + 5.6 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 0.2, height: 0.34, depth: 0.08 }, material: { color: "oklch(0.85 0.18 85)", emissive: "oklch(0.85 0.18 85)", emissiveIntensity: 2.0 }, behavior: "scripts/level11-use.js", state: { kind: "elevator-down", name: "Lobby Express Elevator", verb: "Descend to the street", dest: { x: TOWER_X - 12, y: 0.3, z: TOWER_Z + 4.5 } } });
+  sp("l11-skydeck-binoculars", { tags: ["usable"], feetPosition: { x: TOWER_X - 5.2, y: SKY_Y, z: TOWER_Z - 4.5 }, rotation: { yaw: 90 }, primitive: { kind: "cylinder", radiusTop: 0.14, radiusBottom: 0.22, height: 1.35 }, material: STEEL_BRUSHED, behavior: "scripts/level11-use.js", state: { kind: "binoculars", name: "Panoramic Observation Viewfinder", verb: "Look through Viewfinder" }, children: [{ feetPosition: { x: 0, y: 1.3, z: -0.15 }, primitive: { kind: "box", width: 0.35, height: 0.18, depth: 0.45 }, material: STEEL_BRUSHED }] });
 
   // ==========================================
   // 7. OFFICE UNDER RENOVATION (Wikidot Image 5)
@@ -432,44 +314,8 @@ function lay(ctx) {
   // ==========================================
   // 9. STREET FURNITURE & REALISTIC DETAILS
   // ==========================================
-  // Street Trees in Sidewalk Planter Grates
-  for (const tz of [-48, -16, 32, 60]) {
-    [-11.5, 11.5].forEach((tx, k) => {
-      // Bronze Tree Grate in Sidewalk
-      bx(`l11-tgrate-${tx}-${tz}`, tx, 0.09, tz, 1.8, 0.01, 1.8, { color: "oklch(0.35 0.08 70)", metalness: 0.8, roughness: 0.4 }, { physics: undefined });
-      // Cylindrical Trunk with branches
-      cyl(`l11-tree-trunk-${tx}-${tz}`, tx, 0.1, tz, 0.18, 0.22, 3.2, BARK_MAT);
-      // Multi-tier Leaf Canopy
-      sp(`l11-tree-leaves1-${tx}-${tz}`, {
-        feetPosition: { x: tx, y: 3.2, z: tz },
-        primitive: { kind: "sphere", radius: 1.6 },
-        material: LEAF_MAT,
-        physics: undefined,
-      });
-      sp(`l11-tree-leaves2-${tx}-${tz}`, {
-        feetPosition: { x: tx, y: 4.2, z: tz },
-        primitive: { kind: "sphere", radius: 1.2 },
-        material: LEAF_MAT,
-        physics: undefined,
-      });
-    });
-  }
-
-  // Cast-Iron Streetlamps with warm glowing lanterns
-  for (const lz of [-52, -18, 22, 54]) {
-    [-7.8, 7.8].forEach((lx, k) => {
-      cyl(`l11-slamp-base-${lx}-${lz}`, lx, 0.1, lz, 0.22, 0.28, 0.6, IRON_RAIL);
-      cyl(`l11-slamp-pole-${lx}-${lz}`, lx, 0.7, lz, 0.07, 0.09, 3.8, IRON_RAIL);
-      bx(`l11-slamp-arm-${lx}-${lz}`, lx + (lx < 0 ? 0.6 : -0.6), 4.4, lz, 1.2, 0.06, 0.06, IRON_RAIL, { physics: undefined });
-      // Lantern Head & Point Light
-      sp(`l11-slamp-head-${lx}-${lz}`, {
-        feetPosition: { x: lx + (lx < 0 ? 1.0 : -1.0), y: 4.3, z: lz },
-        primitive: { kind: "box", width: 0.35, height: 0.4, depth: 0.35 },
-        material: { color: "oklch(0.92 0.15 85)", emissive: "oklch(0.92 0.15 85)", emissiveIntensity: 2.5 },
-        light: { kind: "point", color: "oklch(0.92 0.15 85)", intensity: 5.2, distance: 15, shadow: { enabled: false } },
-      });
-    });
-  }
+  // the street: lamps, trees, benches, parked cars, billboards, manholes and a subway stair (scripts/lib/level11-city.js)
+  const street = layStreet(ctx, { sp, bx, cyl });
 
   // Overhead Traffic Light Gantry at Intersection Z: 12
   cyl("l11-tlight-mast", -7.8, 0.1, 7.5, 0.16, 0.2, 5.8, IRON_RAIL);
@@ -487,24 +333,6 @@ function lay(ctx) {
       ],
     });
   });
-
-  // Red Cast-Iron Fire Hydrants
-  [-7.7, 7.7].forEach((hx, k) => {
-    sp(`l11-hydrant-${k}`, {
-      feetPosition: { x: hx, y: 0.1, z: 2.5 + k * 8 },
-      primitive: { kind: "cylinder", radiusTop: 0.15, radiusBottom: 0.18, height: 0.75 },
-      material: { color: "oklch(0.55 0.22 27)", roughness: 0.4 },
-      children: [
-        { feetPosition: { x: 0, y: 0.75, z: 0 }, primitive: { kind: "sphere", radius: 0.15 }, material: { color: "oklch(0.55 0.22 27)" } },
-        { feetPosition: { x: 0, y: 0.4, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.06, height: 0.5 }, rotation: { roll: 90 }, material: { color: "oklch(0.75 0.12 85)", metalness: 0.8 } },
-      ],
-    });
-  });
-
-  // Municipal Trash Cans with Dome Swinging Lids
-  for (const [bx_pos, bz_pos] of [[-7.6, -10], [7.6, 26]]) {
-    cyl(`l11-trash-${bz_pos}`, bx_pos, 0.1, bz_pos, 0.32, 0.28, 0.9, { color: "oklch(0.3 0.05 140)", metalness: 0.6, roughness: 0.5 });
-  }
 
   // ==========================================
   // 10. DRIVABLE YELLOW CITY TAXI CAB ("Level 11 Express")
@@ -726,6 +554,13 @@ function lay(ctx) {
 
 export function onSpawn(ctx) {
   lay(ctx);
+  ctx.place.state.builtV = V;
+}
+
+export function tick(ctx) {
+  if (!ctx.place.players?.length) return;
+  const st = ctx.place.state;
+  if ((st.builtV ?? 0) < V) { lay(ctx); st.builtV = V; }
 }
 
 export function update(ctx, dt) {
@@ -735,6 +570,8 @@ export function update(ctx, dt) {
     bellAt: now + 12000,
     ringAt: now + 35000,
   });
+
+  tickCity(ctx, mem, heard); // billboards, parked cars, far-off sirens (scripts/lib/level11-city.js)
 
   // Periodic distant phone ring to guide wanderers
   if (now > mem.ringAt) {
