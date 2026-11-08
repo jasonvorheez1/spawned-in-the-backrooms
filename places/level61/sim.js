@@ -3,7 +3,7 @@
 // on each other, restrooms. Everything is free (scripts/l61-use.js, scripts/lib/data/snacks.yml). Ways out: the M.E.G.-guarded rusty steel door to Level 6, the vent that sucks you to Level 3.
 // Ways in: the tripwire in Level 6, a vending machine on Level 4. Hall x -30..30, z -22..22, roof 6 m; stores 14 wide, 10 deep off the north wall.
 export const cadence = "1s";
-const V = 2;
+const V = 3;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb", M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb", M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb"; // art/snackrooms/build.py
 const SNACK = "/cdn/value.50b5fa3844cf9c705ca675660ef22ddb556c1cf0f31ad1cd69deeb8d8395df71.png", SODA = "/cdn/value.4db3afe09f392fef7c9d80e531484862384aef0ea5bcba295dc62b57197b659f.png";
 const T = (name, rep) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -131,11 +131,11 @@ function lay(ctx) {
   box("l61-vend-roof", -14, 4, (vz0 + vz1) / 2, 16, 0.3, 10, CEIL);
   box("l61-vend-back", -14, 0, vz1, 16, 4, 0.3, PLASTER); box("l61-vend-wl", -22, 0, (vz0 + vz1) / 2, 0.3, 4, 10, PLASTER); box("l61-vend-wr", -6, 0, (vz0 + vz1) / 2, 0.3, 4, 10, PLASTER);
   sign("l61-vend-sign", -14, 3.4, HD - 0.2, 0, 3.6, 0.9, `<div style="font-size:140px;color:#ffffff">VENDING</div><div style="font-size:70px;color:#ffe08a">FREE · TAKE WHAT YOU NEED · M.E.G.</div>`, "oklch(0.35 0.12 260)");
-  for (let k = 0; k < 7; k++) vend(`l61-vend-b${k}`, -20.5 + k * 2.1, vz1 - 0.6, 180, k % 2 === 1);
+  for (let k = 0; k < 7; k++) vend(`l61-vend-b${k}`, -20.5 + k * 2.1, vz1 - 0.6, 0, k % 2 === 1);
   for (let k = 0; k < 4; k++) vend(`l61-vend-l${k}`, -21.3, vz0 + 2 + k * 1.6, -90, k % 2 === 0);
   for (let k = 0; k < 3; k++) vend(`l61-vend-r${k}`, -6.7, vz0 + 2 + k * 1.6, 90, k !== 1);
-  vend("l61-vend-pile0", -18.4, vz1 - 0.7, 172, false, { y: 1.85, dead: true, rot: { roll: 6 } });
-  vend("l61-vend-pile1", -14.2, vz1 - 0.6, 186, true, { y: 1.85, dead: true });
+  vend("l61-vend-pile0", -18.4, vz1 - 0.7, -8, false, { y: 1.85, dead: true, rot: { roll: 6 } });
+  vend("l61-vend-pile1", -14.2, vz1 - 0.6, 6, true, { y: 1.85, dead: true });
   vend("l61-vend-fall", -8.4, vz1 - 1.8, 130, true, { y: 0.45, dead: true, rot: { pitch: 90 } });
   light("l61-vend-l0", -17, 3.6, HD + 5, "oklch(0.95 0.02 230)", 5, 12); light("l61-vend-l1", -11, 3.6, HD + 5, "oklch(0.95 0.02 230)", 5, 12);
   sp("l61-vend-hum", { feetPosition: { x: -14, y: 1.5, z: HD + 6 }, audio: { clip: G("vending-machine-compressor-hum-loop"), loop: true, gain: 0.15, spatial: true, maxDistance: 12 } });
