@@ -31,6 +31,22 @@ dbg-anim-11:
   rotation: {yaw: 180}
   state: {clip: cdn/clip-ual-treechopping-d55e5d3a-loop.glb}
   tags: [dbg-gallery]
+dbg-anim-12:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 87.6, y: 0, z: -4.8}
+  id: dbg-anim-12
+  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  rotation: {yaw: 90}
+  state: {clip: cdn/clip-warrior-walk-ab76f58e-loop.glb}
+  tags: [dbg-gallery]
+dbg-anim-13:
+  behavior: scripts/dbg-pose.js
+  feetPosition: {x: 89.5, y: 0, z: -4.8}
+  id: dbg-anim-13
+  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  rotation: {yaw: 90}
+  state: {clip: cdn/clip-warrior-run-b403b96b-loop.glb}
+  tags: [dbg-gallery]
 dbg-anim-2:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 93.3, y: 0, z: -7.5}
@@ -111,6 +127,14 @@ dbg-anim-label-11:
   feetPosition: {x: 110.4, y: 2.15, z: -7.5}
   id: dbg-anim-label-11
   vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>CHOP</text></svg>"
+dbg-anim-label-12:
+  feetPosition: {x: 87.6, y: 2.15, z: -4.8}
+  id: dbg-anim-label-12
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>WARRIOR WALK</text></svg>"
+dbg-anim-label-13:
+  feetPosition: {x: 89.5, y: 2.15, z: -4.8}
+  id: dbg-anim-label-13
+  vector: "<svg viewBox='0 0 200 40' width='1.6m' billboard='yaw'><rect x='0' y='0' width='200' height='40' rx='6' fill='#1a160e' fill-opacity='0.85'/><text x='100' y='27' text-anchor='middle' font-family='sans-serif' font-size='18' fill='#ffd9a0'>WARRIOR RUN</text></svg>"
 dbg-anim-label-2:
   feetPosition: {x: 93.3, y: 2.15, z: -7.5}
   id: dbg-anim-label-2
@@ -164,6 +188,18 @@ dbg-anim-plinth-10:
 dbg-anim-plinth-11:
   feetPosition: {x: 110.4, y: -0.05, z: -7.5}
   id: dbg-anim-plinth-11
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-anim-plinth-12:
+  feetPosition: {x: 87.6, y: -0.05, z: -4.8}
+  id: dbg-anim-plinth-12
+  material: {color: oklch(0.32 0.03 80), roughness: 0.7}
+  physics: static
+  primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
+dbg-anim-plinth-13:
+  feetPosition: {x: 89.5, y: -0.05, z: -4.8}
+  id: dbg-anim-plinth-13
   material: {color: oklch(0.32 0.03 80), roughness: 0.7}
   physics: static
   primitive: {height: 0.06, kind: cylinder, radiusBottom: 0.6, radiusTop: 0.55}
