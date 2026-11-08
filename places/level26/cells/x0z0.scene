@@ -681,8 +681,8 @@ l26-pack:
 l26-pg-0:
   feetPosition: {x: -8.5, y: 0, z: 34}
   id: l26-pg-0
-  layout: {box: {max: {x: 0.5, y: 2.3, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
-  model: {forward: "+x", id: /cdn/value.e639a65be612a689782e2b055d2088e2fd0c3cfece525869ee208d6093401aa2.glb}
+  layout: {box: {max: {x: 0.9, y: 2.15, z: 0.9}, min: {x: -0.9, y: 0, z: -0.9}}}
+  model: {forward: "+x", id: /cdn/value.1c1a92509ad2ac3c2c4d4ba1a1d2453069b3ffb2346278d64abd0df0aca585c2.glb}
   physics: {body: character, collider: capsule}
   rotation: {yaw: 90}
   state: {home: {x: -8.5, y: 0, z: 34}, hp: 90}
@@ -690,8 +690,8 @@ l26-pg-0:
 l26-pg-1:
   feetPosition: {x: 8.4, y: 0, z: 38}
   id: l26-pg-1
-  layout: {box: {max: {x: 0.5, y: 2.3, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
-  model: {forward: "+x", id: /cdn/value.e639a65be612a689782e2b055d2088e2fd0c3cfece525869ee208d6093401aa2.glb}
+  layout: {box: {max: {x: 0.9, y: 2.15, z: 0.9}, min: {x: -0.9, y: 0, z: -0.9}}}
+  model: {forward: "+x", id: /cdn/value.1c1a92509ad2ac3c2c4d4ba1a1d2453069b3ffb2346278d64abd0df0aca585c2.glb}
   physics: {body: character, collider: capsule}
   rotation: {yaw: -90}
   state: {home: {x: 8.4, y: 0, z: 38}, hp: 90}
@@ -699,8 +699,8 @@ l26-pg-1:
 l26-pg-2:
   feetPosition: {x: -8.3, y: 0, z: -4}
   id: l26-pg-2
-  layout: {box: {max: {x: 0.5, y: 2.3, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
-  model: {forward: "+x", id: /cdn/value.e639a65be612a689782e2b055d2088e2fd0c3cfece525869ee208d6093401aa2.glb}
+  layout: {box: {max: {x: 0.9, y: 2.15, z: 0.9}, min: {x: -0.9, y: 0, z: -0.9}}}
+  model: {forward: "+x", id: /cdn/value.1c1a92509ad2ac3c2c4d4ba1a1d2453069b3ffb2346278d64abd0df0aca585c2.glb}
   physics: {body: character, collider: capsule}
   rotation: {yaw: 0}
   state: {home: {x: -8.3, y: 0, z: -4}, hp: 90}
@@ -708,8 +708,8 @@ l26-pg-2:
 l26-pg-3:
   feetPosition: {x: -8.6, y: 0, z: -6}
   id: l26-pg-3
-  layout: {box: {max: {x: 0.5, y: 2.3, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
-  model: {forward: "+x", id: /cdn/value.e639a65be612a689782e2b055d2088e2fd0c3cfece525869ee208d6093401aa2.glb}
+  layout: {box: {max: {x: 0.9, y: 2.15, z: 0.9}, min: {x: -0.9, y: 0, z: -0.9}}}
+  model: {forward: "+x", id: /cdn/value.1c1a92509ad2ac3c2c4d4ba1a1d2453069b3ffb2346278d64abd0df0aca585c2.glb}
   physics: {body: character, collider: capsule}
   rotation: {yaw: 0}
   state: {home: {x: -8.6, y: 0, z: -6}, hp: 90}
@@ -717,8 +717,8 @@ l26-pg-3:
 l26-pg-4:
   feetPosition: {x: 8.5, y: 0, z: -30}
   id: l26-pg-4
-  layout: {box: {max: {x: 0.5, y: 2.3, z: 0.5}, min: {x: -0.5, y: 0, z: -0.5}}}
-  model: {forward: "+x", id: /cdn/value.e639a65be612a689782e2b055d2088e2fd0c3cfece525869ee208d6093401aa2.glb}
+  layout: {box: {max: {x: 0.9, y: 2.15, z: 0.9}, min: {x: -0.9, y: 0, z: -0.9}}}
+  model: {forward: "+x", id: /cdn/value.1c1a92509ad2ac3c2c4d4ba1a1d2453069b3ffb2346278d64abd0df0aca585c2.glb}
   physics: {body: character, collider: capsule}
   rotation: {yaw: 180}
   state: {home: {x: 8.5, y: 0, z: -30}, hp: 90}
