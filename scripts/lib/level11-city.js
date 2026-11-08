@@ -23,10 +23,11 @@ function dress(kind, u) {
 // footprint of each model, as built (width along local x, depth along local y)
 const FOOT = { glass_a: [23.6, 24.3], glass_b: [17, 17], stone: [21.2, 21.6], brick_a: [19.4, 16.4], brick_b: [12.7, 12.8], mall: [24.5, 15.3], house: [10.2, 11.7] };
 const HEIGHT = { glass_a: 101, glass_b: 105, stone: 43, brick_a: 26, brick_b: 15, mall: 7.3, house: 9.6 };
-export const RADIUS = 120; export const DBG = { buildings: false }; // how far out the buildings go (the road grid and the ground go on to the fog)
+export const RADIUS = 120; export const DBG = { buildings: false, city: false, street: false }; // how far out the buildings go (the road grid and the ground go on to the fog)
 const PAINT = ["#b81c28", "#2f4f8a", "#e8e4d8", "#2a2a30", "#3a6a4a", "#c8a24a", "#7a7a84", "#8a2a2a", "#d8d0b8", "#1e3a5a"];
 
 export function layCity(ctx, h) {
+  if (!DBG.city) return { TOWER: { x: 27, z: 31 }, nBuildings: 0 };
   const { sp, bx } = h, put = (id, kind, x, z, yaw, extra = {}, y = 0) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: { body: "static", collider: extra.collider ?? "box" }, model: { id: MODELS[kind], forward: "-z", materials: extra.materials }, ...(extra.spec ?? {}) });
   const ASPH = { ...T("cracked-dark-asphalt-road", 6), color: "oklch(0.27 0.01 250)", roughness: 0.88 }, WALK = { ...T("stained-concrete-floor", 4), color: "oklch(0.76 0.02 85)", roughness: 0.75 };
   const CANAL = { ...T("smooth-cold-poured-concrete-wall", 2), color: "oklch(0.62 0.02 240)", roughness: 0.65 }, CURB = { ...T("smooth-cold-poured-concrete-wall", 1), color: "oklch(0.72 0.02 85)", roughness: 0.65 };
@@ -99,6 +100,7 @@ function adSign(sp, b, k, x, z, yaw) {
   sp(`l11-bb-ad-${b}`, { feetPosition: { x: x + (yaw > 0 ? -0.06 : 0.06), y: 6.2, z }, rotation: { yaw }, primitive: { kind: "box", width: 7.2, height: 3.7, depth: 0.06 }, material: { color: bg }, state: { ad: k }, ui: `<div face="front" width="7.2m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Georgia,serif;background:${bg};color:${fg}"><div style="font-size:150px;font-weight:700;line-height:1">${t1}</div><div style="font-size:58px;margin-top:20px;opacity:.85">${t2}</div></div>` });
 }
 export function layStreet(ctx, h) {
+  if (!DBG.street) return { cars: [], billboards: [] };
   const { sp, bx, cyl } = h, put = (id, kind, x, z, yaw, extra = {}, y = 0) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: extra.nophys ? undefined : { body: "static", collider: extra.collider ?? "box" }, model: { id: MODELS[kind], forward: "-z", materials: extra.materials }, ...(extra.spec ?? {}) });
   const LEN = [-66, -52, -9, 24, 40, 56, 72];
   LEN.forEach((z, i) => [-1, 1].forEach((s) => {
