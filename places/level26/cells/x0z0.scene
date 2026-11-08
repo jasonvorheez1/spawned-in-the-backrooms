@@ -2110,17 +2110,31 @@ l26-srailc-2:
   rotation: {yaw: -180}
   visible: false
 l26-srailc-3:
-  feetPosition: {x: -5.8, y: 3.4, z: 22}
+  feetPosition: {x: -4.1, y: 3.4, z: 22}
   id: l26-srailc-3
   physics: static
-  primitive: {depth: 2.4000000000000004, height: 1, kind: box, width: 0.1}
+  primitive: {depth: 1.4, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: -90}
+  visible: false
+l26-srailc-3b:
+  feetPosition: {x: -6.7, y: 3.4, z: 22}
+  id: l26-srailc-3b
+  physics: static
+  primitive: {depth: 0.6, height: 1, kind: box, width: 0.1}
   rotation: {yaw: -90}
   visible: false
 l26-srailc-4:
-  feetPosition: {x: 5.8, y: 3.4, z: 22}
+  feetPosition: {x: 4.1, y: 3.4, z: 22}
   id: l26-srailc-4
   physics: static
-  primitive: {depth: 2.4000000000000004, height: 1, kind: box, width: 0.1}
+  primitive: {depth: 1.4, height: 1, kind: box, width: 0.1}
+  rotation: {yaw: -90}
+  visible: false
+l26-srailc-4b:
+  feetPosition: {x: 6.7, y: 3.4, z: 22}
+  id: l26-srailc-4b
+  physics: static
+  primitive: {depth: 0.6, height: 1, kind: box, width: 0.1}
   rotation: {yaw: -90}
   visible: false
 l26-srailc-5:
