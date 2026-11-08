@@ -16,6 +16,7 @@ import { addressFor, saysName } from './lib/address.js'
 import { lineFor } from './lib/personality.js'
 import { raycast } from 'builtin/physics'
 import { handleDialogueQuest } from './lib/level11-quests.js'
+import { handleDialogueQuest10 } from './lib/level10-quests.js'
 
 const getStartersLib = (ctx) => ((ctx.session ??= {}).startersP ??= import('./lib/npc-starters.js'))
 
@@ -119,7 +120,7 @@ function send(ctx, d) {
   if (now - (ses.talkAt ?? -1e9) < T.rate * 1000) { note(ctx, `${nameOf(it)} is still answering.`); return }
   if (it.state?.angry?.[ctx.self.id]) { service(ctx, it); return }
 
-  const qRes = handleDialogueQuest(ctx, ctx.self, it, text)
+  const qRes = handleDialogueQuest(ctx, ctx.self, it, text) ?? handleDialogueQuest10(ctx, ctx.self, it, text)
   if (qRes) {
     s.talkBusy = 0
     ses.talkAt = now

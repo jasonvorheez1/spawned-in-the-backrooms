@@ -617,6 +617,34 @@ export const STARTERS = {
       { text: "Got any advice for surviving the streets when darkness falls?", tag: "Survival 35", check: { skill: 'survival', difficulty: 35 } },
     ],
   },
+
+  // ---- Level 10 (M.E.G. Outpost Bountiful) ----
+  'l10-meg-cooper': {
+    greeting: "Welcome to M.E.G. Outpost Bountiful, wanderer! Smell that? That's real honest sourdough baking. Breathe the open air—there's no ceiling above you here.",
+    mood: 'happy',
+    returning: "Back from the wheat fields? Grab a warm slice and tell me what the horizon looks like today.",
+    friendly: "Always a pleasure, friend! The harvest is coming along great thanks to folks like you.",
+    cold: "Watch where you step in the barley rows. We don't waste grain here.",
+    choices: [
+      { text: "Can you teach me how to harvest wheat and bake bread?", tag: "Help" },
+      { text: "I'd like to help Outpost Bountiful with the harvest.", tag: "Survival 25", check: { skill: 'survival', difficulty: 25 } },
+      { text: "How did M.E.G. establish an agricultural outpost in the Backrooms?", tag: "Lore" },
+      { text: "Let's trade for fresh rations and supplies.", tag: "Barter 30", check: { skill: 'barter', difficulty: 30 } },
+    ],
+  },
+  'l10-meg-maeve': {
+    greeting: "Greetings. Mind the specimen jars. I'm cataloging anomalous grain growth and soil composition for M.E.G. Research Wing.",
+    mood: 'calm',
+    returning: "Back from the plots? Did you notice any spatial distortions near the perimeter fences?",
+    friendly: "Good to see you again! Your field observations have been remarkably helpful.",
+    cold: "Please avoid touching the microscope slides. State your query.",
+    choices: [
+      { text: "What can you tell me about the anomalous scarecrows in the fields?", tag: "Lore" },
+      { text: "I can investigate the eastern scarecrow for your research.", tag: "Medicine 30", check: { skill: 'medicine', difficulty: 30 } },
+      { text: "Is the wheat here safe for human consumption?", tag: "Science 35", check: { skill: 'science', difficulty: 35 } },
+      { text: "Where does the road lead if I follow it to the horizon?", tag: "Help" },
+    ],
+  },
 }
 
 // Fallback starters for generic / unlisted NPCs by faction & role
@@ -737,6 +765,18 @@ function rawChoices(ctx, it, s, lastNpcReply, replyObj) {
       qChoices.push({ text: "How are the maintenance rounds? Need assistance with the infrastructure?", tag: "Quest Start" })
     } else if (s?.maintQ === 4) {
       qChoices.push({ text: "The compressor is bypassed and the apartment 11-B utilities are running smooth.", tag: "Quest Turn-In" })
+    }
+  } else if (id === 'l10-meg-cooper') {
+    if (!s?.wheatQ) {
+      qChoices.push({ text: "I'd like to help Outpost Bountiful with the harvest. Need another hand?", tag: "Quest Start" })
+    } else if (s?.wheatQ === 5 && (s?.bread ?? 0) >= 1) {
+      qChoices.push({ text: "I've baked a fresh Homestead Loaf for the caravan at the hearth oven!", tag: "Quest Turn-In" })
+    }
+  } else if (id === 'l10-meg-maeve') {
+    if (!s?.watcherQ) {
+      qChoices.push({ text: "I can investigate the strange scarecrows in the eastern barley for your research.", tag: "Quest Start" })
+    } else if (s?.watcherQ === 3) {
+      qChoices.push({ text: "I found Document 24 in the scarecrow's coat: 'The Watchers of Level 10'.", tag: "Quest Turn-In" })
     }
   }
 
@@ -894,6 +934,12 @@ const SAFE_ASK = {
     { text: "How do I take the glass elevator to the rooftop skydeck?", tag: "Help" },
     { text: "Why do the hounds and facelings behave so peacefully here?", tag: "Lore" },
     { text: "Can you tell me about M.E.G. Base Beta and the city layout?", tag: "Lore" },
+  ],
+  level10: [
+    { text: "How does M.E.G. Outpost Bountiful harvest all this wheat?", tag: "Lore" },
+    { text: "Where can I draw pure Almond Water from the aquifer?", tag: "Help" },
+    { text: "Have you noticed the scarecrows turning in the barley fields?", tag: "Survival 25", check: { skill: 'survival', difficulty: 25 } },
+    { text: "Can you teach me how to mill flour and bake bread at the hearth?", tag: "Help" },
   ],
   level61: [
     { text: "What's actually good to eat around here?", tag: "Help" },
