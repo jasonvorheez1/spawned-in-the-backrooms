@@ -8,21 +8,25 @@ const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep
 const TEX = {
   brick: { ...T("old-red-brick-wall", 2.4), roughness: 0.85 }, stone: { ...T("large-grey-brick-wall-dusty-mortar", 1.5), roughness: 0.78 },
   concrete: { ...T("smooth-cold-poured-concrete-wall", 1.4), roughness: 0.75 }, plaster: { ...T("cream-painted-plaster-wall", 1.4), roughness: 0.85 },
+  siding: { ...T("white-vinyl-lap-siding", 1.2), roughness: 0.7 }, shingle: { ...T("dark-asphalt-roof-shingles", 1.5), roughness: 0.95 },
+  wood: { ...T("weathered-painted-wood-planks", 1.2), roughness: 0.8 }, metal: { ...T("rusty-galvanized-sheet-metal", 1), roughness: 0.6, metalness: 0.4 },
 };
+// the tower kit's shared slots (art/level11/tower_kit.py): stone trim, tar roofs, painted wood, galvanised metal
+const KIT = { trim: { ...TEX.stone, color: "oklch(0.95 0.02 85)" }, roof: { ...T("tar-paper-roof", 2), color: "oklch(0.7 0.01 80)", roughness: 0.95 }, wood: { ...TEX.wood, color: "oklch(0.78 0.06 55)" }, metal: { ...TEX.metal, color: "oklch(0.8 0.01 240)" } };
 const hs = (a, b = 0, c = 0) => { let h = 2166136261 ^ (a * 374761393) ^ (b * 668265263) ^ (c * 1274126177); h = Math.imul(h ^ (h >>> 15), 2246822519); h = Math.imul(h ^ (h >>> 13), 3266489917); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 const hue = (u, l = 0.62, c = 0.08) => `oklch(${l} ${c} ${Math.round(u * 360)})`;
 // what colour each kind of building is dressed in, per lot
 function dress(kind, u) {
   const ld = 0.55 + u * 0.3;
-  if (kind === "brick_a" || kind === "brick_b") return { brick: { ...TEX.brick, color: `oklch(${0.72 + u * 0.14} ${0.07 + u * 0.05} ${30 + u * 14})` }, concrete: { ...TEX.concrete, color: "oklch(0.88 0.01 80)" } };
+  if (kind === "brick_a" || kind === "brick_b") return { brick: { ...TEX.brick, color: `oklch(${0.72 + u * 0.14} ${0.07 + u * 0.05} ${30 + u * 14})` }, concrete: { ...TEX.concrete, color: "oklch(0.88 0.01 80)" }, ...KIT };
   if (kind === "mall") return { brick: { ...TEX.brick, color: `oklch(${0.74 + u * 0.12} 0.07 ${40 + u * 30})` }, concrete: { ...TEX.concrete, color: "oklch(0.72 0.01 80)" } };
   if (kind === "stone") return { stone: { ...TEX.stone, color: `oklch(${0.9 + u * 0.05} 0.02 ${80 + u * 20})` }, concrete: { ...TEX.concrete, color: "oklch(0.88 0.01 80)" } };
-  if (kind === "house") return { stone: { ...TEX.plaster, color: hue(u, 0.78, 0.045) }, concrete: { ...TEX.concrete, color: "oklch(0.6 0.01 80)" }, roof: { color: `oklch(${0.26 + u * 0.1} 0.03 ${20 + u * 40})`, roughness: 0.9 } };
+  if (kind === "house") return { ...KIT, siding: { ...TEX.siding, color: hue(u, 0.86, 0.05) }, shingle: { ...TEX.shingle, color: `oklch(${0.62 + u * 0.15} 0.02 ${20 + u * 40})` }, trim: { ...TEX.plaster, color: "oklch(0.97 0.01 90)" }, concrete: { ...TEX.concrete, color: "oklch(0.7 0.01 80)" }, door: { ...TEX.wood, color: `oklch(0.6 0.12 ${u > 0.5 ? 25 : 250})` } };
   return { concrete: { ...TEX.concrete, color: "oklch(0.68 0.012 240)" } }; // glass towers: the glass stays as modelled
 }
 // footprint of each model, as built (width along local x, depth along local y)
-const FOOT = { glass_a: [23.6, 24.3], glass_b: [17, 17], stone: [21.2, 21.6], brick_a: [19.4, 16.4], brick_b: [12.7, 12.8], mall: [24.5, 15.3], house: [10.2, 11.7] };
-const HEIGHT = { glass_a: 101, glass_b: 105, stone: 43, brick_a: 26, brick_b: 15, mall: 7.3, house: 9.6 };
+const FOOT = { glass_a: [23.6, 24.3], glass_b: [17, 17], stone: [21.2, 21.6], brick_a: [19.7, 16.1], brick_b: [13.7, 13.1], mall: [24.5, 15.3], house: [9.5, 12.8] };
+const HEIGHT = { glass_a: 101, glass_b: 105, stone: 43, brick_a: 37.6, brick_b: 20.2, mall: 7.3, house: 11.1 };
 export const RADIUS = 190; export const DBG = { buildings: true, city: true, street: true }; // how far out the buildings go (the road grid and the ground go on to the fog)
 const PAINT = ["#b81c28", "#2f4f8a", "#e8e4d8", "#2a2a30", "#3a6a4a", "#c8a24a", "#7a7a84", "#8a2a2a", "#d8d0b8", "#1e3a5a"];
 
@@ -84,9 +88,10 @@ export function layCity(ctx, h) {
   put("l11-hero-glass", "glass_a", 28, -58, 90, { materials: dressOf("glass_a", 0.5) });
   put("l11-hero-brick1", "brick_a", -27, 85, -90, { materials: dressOf("brick_a", 0.2) });
   put("l11-hero-brick2", "brick_b", 31, -3, 90, { materials: dressOf("brick_b", 0.7) });
-  put("l11-hero-house1", "house", -30, 57, -90, { materials: dressOf("house", 0.6) });
+  put("l11-hero-house1", "house", -30, 51.85, -90,  // its own lot between the mall (z<47) and the glass tower (z>56.7)
+    { materials: dressOf("house", 0.6) });
   put("l11-hero-mall2", "mall", 26, 62, 90, { materials: dressOf("mall", 0.8) });
-  put("l11-hero-glass2", "glass_b", -28, 64, -90, { materials: dressOf("glass_b", 0.1) });
+  put("l11-hero-glass2", "glass_b", -28, 64, -90, { materials: dressOf("glass_b", 0.1), spec: { scale: 0.85 } }); // slimmer, so it clears the house and the street
   const TOWER = { x: 27, z: 31 }; put("l11-ntower", "stone", TOWER.x, TOWER.z, 90, { materials: dressOf("stone", 0.4) });
   return { TOWER, nBuildings: n };
 }
