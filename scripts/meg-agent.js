@@ -238,14 +238,14 @@ function gait(me, m, kind) { m.gait = kind; }
 // two-handed aim: both hands reach for the target's chest, followed every frame; written only when the target changes
 // the pistol: on the right hip while calm, in the right hand while fighting
 function holster(ctx, me, m, drawn) {
-  if (m.drawn === drawn) return;
+  if (m.drawn === drawn && m.holsterV === 2) return;
   const gun = (me.children ?? []).map((c) => (typeof c === "string" ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) : c)).find((c) => c && !String(c.id).endsWith("/" + HEAD_ID) && (c.model || c.primitive)); // the gun, never the head
-  if (!gun) return; m.drawn = drawn;
+  if (!gun) return; m.drawn = drawn; m.holsterV = 2;
   const ranged = !!(WP[me.state.arm ?? gun.state?.kind ?? "pistol"] ?? WP.pistol).ranged;
   // calm: a gun rides slung across the back; a melee weapon is put away out of sight. a fight brings either to the right hand
   gun.visible = drawn || ranged;
   gun.attachment = drawn ? { bone: "RightHand" } : { bone: "Spine2" };
-  gun.feetPosition = drawn ? { x: 0, y: 0, z: 0 } : { x: 0, y: 0.05, z: -0.17 };
+  gun.feetPosition = drawn ? { x: 0, y: 0, z: 0 } : { x: 0, y: 0.02, z: 0.2 }; // +z of Spine2 is the back on these rigs; -z sat it on the chest
   gun.rotation = drawn ? { yaw: 0, pitch: 0, roll: 0 } : { yaw: 0, pitch: -90, roll: 35 };
   if ((ranged || drawn) && ctx.now() - (m.holsterSnd ?? 0) > 1500 && (m.holsterSnd = ctx.now())) heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-gun-holster-leather.mp3", position: me.feetPosition, volume: 0.5, maxDistance: 15 });
 }
