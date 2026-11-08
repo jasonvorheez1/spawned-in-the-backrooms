@@ -100,6 +100,9 @@ function floorOf(ctx) {
   const pl = ctx.self.place
   if (pl === 'level8') return 'gravel'
   if (pl === 'level7') return 'wood'
+  if (pl === 'level61') return 'terrazzo'
+  if (pl === 'level5') return 'plush'
+  if (pl === 'level4') return 'office'
   if (CONCRETE.has(pl)) return 'concrete'
   if (pl === 'level21') { const z = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z); return z === 'l21_edge' || z === 'l21_edgecave' ? 'concrete' : z === 'l21_lockers' || z === 'l21_restroom' ? 'checker' : 'tile' }
   if (pl === 'level61') return 'terrazzo'
