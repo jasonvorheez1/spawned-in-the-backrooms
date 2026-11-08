@@ -16,7 +16,7 @@ export function geometry(ctx) {
   const p = P(ctx), box = boxer(ctx), lod = ctx.lod ?? 1;
   if (p.kind === "awning") {
     const { p: pr, d, r } = p, N = lod >= 4 ? 3 : 10;
-    ctx.albedo(CANVAS); ctx.color("oklch(0.62 0.13 255)");
+    ctx.albedo(CANVAS); ctx.color("oklch(0.7 0.19 255)");
     // the canvas: a quarter curve from the wall (x=0, y=0) out to (pr, -r), both sides drawn
     const pt = (t) => [pr * Math.sin((t * Math.PI) / 2), -r * (1 - Math.cos((t * Math.PI) / 2))];
     for (let i = 0; i < N; i++) {
@@ -26,10 +26,10 @@ export function geometry(ctx) {
     }
     // valance: a hanging skirt at the front edge, darker hem
     const [fx, fy] = pt(1);
-    ctx.color("oklch(0.56 0.13 255)"); box(fx - 0.01, fy - 0.28, -d / 2, fx + 0.02, fy, d / 2);
+    ctx.color("oklch(0.62 0.19 255)"); box(fx - 0.01, fy - 0.28, -d / 2, fx + 0.02, fy, d / 2);
     ctx.color("oklch(0.9 0.02 250)"); box(fx - 0.012, fy - 0.3, -d / 2, fx + 0.022, fy - 0.26, d / 2);
     // end caps (both sides)
-    ctx.color("oklch(0.58 0.13 255)");
+    ctx.color("oklch(0.64 0.19 255)");
     for (const z of [-d / 2, d / 2]) for (let i = 0; i < N; i++) {
       const [x0, y0] = pt(i / N), [x1, y1] = pt((i + 1) / N);
       ctx.tri(0, -r, z, x0, y0, z, x1, y1, z); ctx.tri(0, -r, z, x1, y1, z, x0, y0, z);
@@ -41,7 +41,7 @@ export function geometry(ctx) {
     return;
   }
   const { w, h, d } = p, X0 = -w / 2, X1 = w / 2, Z0 = -d / 2, Z1 = d / 2;
-  ctx.albedo(STUCCO); ctx.color("oklch(0.86 0.03 85)"); box(X0, 0, Z0, X1, h, Z1);
+  ctx.albedo(STUCCO); ctx.color("oklch(0.95 0.012 90)"); box(X0, 0, Z0, X1, h, Z1);
   // dark plinth
   ctx.color("oklch(0.5 0.02 70)"); box(X0 - 0.04, 0, Z0 - 0.04, X1 + 0.04, 0.45, Z1 + 0.04);
   // control-joint reveals on the long side walls and the back

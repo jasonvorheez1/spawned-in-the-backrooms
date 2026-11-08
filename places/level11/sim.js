@@ -556,32 +556,32 @@ function lay(ctx) {
   sp("l11-mall-awning-3", { feetPosition: { x: MALL_X + MALL_W / 2, y: 3.75, z: MALL_Z + 6.5 }, primitive: { kind: "scripted", script: "scripts/l11-mall.js", params: { kind: "awning", p: 2.0, d: 7.0, r: 0.85 } } });
 
   // Storefront 1: Centro Dermatológico (Left)
-  sp("l11-mall-sign-derma", {
-    feetPosition: { x: MALL_X + MALL_W / 2 + 0.05, y: 4.1, z: MALL_Z - 6.5 },
-    rotation: { yaw: -90 },
-    primitive: { kind: "box", width: 5.5, height: 0.85, depth: 0.06 },
-    material: { color: "#ffffff" },
-    ui: `<div face="front" width="5.5m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#ffffff;border:2px solid #0066cc;color:#0066cc;font-family:Arial,sans-serif;font-weight:900;font-size:75px"><span style="color:#00aa44;font-size:95px;margin-right:12px">+</span>CENTRO DERMATOLÓGICO</div>`,
+  sp("l11-mall-sign-derma", { // a backlit box sign, its face toward the street (+X)
+    feetPosition: { x: MALL_X + MALL_W / 2 + 0.08, y: 3.57, z: MALL_Z - 6.5 },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 4.6, height: 1.53, depth: 0.12 },
+    material: { color: "#e9eef2", roughness: 0.4 },
+    ui: `<div face="front" width="4.6m" style="width:100%;height:100%;background:#fff"><img src="/cdn/value.a4659ffdbe2739ef5037fe9ae5acaf3f02bb949cf11b5b0bd914940d0ea6d298.png" style="width:100%;height:100%;object-fit:fill"></div>`,
   });
   bx("l11-mall-glass-derma", MALL_X + MALL_W / 2 + 0.02, 0.4, MALL_Z - 6.5, 0.08, 2.6, 5.5, GLASS_TINT);
 
   // Storefront 2: IS LAB (Center)
-  sp("l11-mall-sign-islab", {
-    feetPosition: { x: MALL_X + MALL_W / 2 + 0.05, y: 4.1, z: MALL_Z },
-    rotation: { yaw: -90 },
-    primitive: { kind: "box", width: 4.2, height: 0.85, depth: 0.06 },
-    material: { color: "#ffffff" },
-    ui: `<div face="front" width="4.2m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#ffffff;border:2px solid #0088cc;color:#0088cc;font-family:Arial Black,sans-serif;font-weight:900;font-size:95px">IS LAB</div>`,
+  sp("l11-mall-sign-islab", { // a backlit box sign, its face toward the street (+X)
+    feetPosition: { x: MALL_X + MALL_W / 2 + 0.08, y: 3.7, z: MALL_Z },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 4.2, height: 1.4, depth: 0.12 },
+    material: { color: "#e9eef2", roughness: 0.4 },
+    ui: `<div face="front" width="4.2m" style="width:100%;height:100%;background:#fff"><img src="/cdn/value.0b4a4ce24244c5eda36fc29774505e1a9e45e11c61d55faa2854be3791c3e751.png" style="width:100%;height:100%;object-fit:fill"></div>`,
   });
   bx("l11-mall-glass-islab", MALL_X + MALL_W / 2 + 0.02, 0.4, MALL_Z, 0.08, 2.6, 4.2, GLASS_TINT);
 
   // Storefront 3: Marroka Pizzeria (Right - Enterable!)
-  sp("l11-mall-sign-pizza", {
-    feetPosition: { x: MALL_X + MALL_W / 2 + 0.05, y: 4.1, z: MALL_Z + 6.5 },
-    rotation: { yaw: -90 },
-    primitive: { kind: "box", width: 5.5, height: 0.85, depth: 0.06 },
-    material: { color: "#181818" },
-    ui: `<div face="front" width="5.5m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#181818;border:2px solid #c0392b;color:#ffffff;font-family:Georgia,serif;text-align:center"><div style="font-size:90px;font-style:italic;font-weight:bold;color:#f39c12">Marroka</div><div style="font-size:40px;letter-spacing:6px;color:#e74c3c">PIZZERIA & TRATTORIA</div></div>`,
+  sp("l11-mall-sign-pizza", { // a backlit box sign, its face toward the street (+X)
+    feetPosition: { x: MALL_X + MALL_W / 2 + 0.08, y: 3.57, z: MALL_Z + 6.5 },
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 4.6, height: 1.53, depth: 0.12 },
+    material: { color: "#e9eef2", roughness: 0.4 },
+    ui: `<div face="front" width="4.6m" style="width:100%;height:100%;background:#fff"><img src="/cdn/value.84d3cf5aa956aa729dd601b744605f186624a542c7ceefe9d8d35e746f6b5290.png" style="width:100%;height:100%;object-fit:fill"></div>`,
   });
   bx("l11-mall-glass-pizza", MALL_X + MALL_W / 2 + 0.02, 0.4, MALL_Z + 8.2, 0.08, 2.6, 2.4, GLASS_TINT);
 
