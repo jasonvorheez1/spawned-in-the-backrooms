@@ -15,7 +15,7 @@ export const tokenOf = (tag, o) => (tag === 'weapon' ? 'weapon:' + (o?.state?.ki
 // what a token is called and what it does, for the prompt and the loot menu
 export function describe(token) {
   const d = describe0(token)
-  const kg = token.startsWith('cash:') ? 0 : token.startsWith('meat:') ? 0.3 : ['ration', 'bandage', 'battery', 'kit', 'bobbypin', 'compass', 'nvg', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('book:') || token.startsWith('page:') ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
+  const kg = token.startsWith('cash:') ? 0 : token.startsWith('meat:') ? 0.3 : ['ration', 'bandage', 'battery', 'kit', 'akit', 'bobbypin', 'compass', 'nvg', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('book:') || token.startsWith('page:') ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : tokenWeight(token)
   return kg ? { ...d, info: d.info + ` · ${kg.toFixed(1)} kg` } : d
 }
 // Level 2's finds: eaten, wrapped or taped on the spot, or keys you carry (fuse, valve wheel, keycard) that open its doors
@@ -31,7 +31,7 @@ const L2_DESC = {
   beans: () => ({ name: 'Canned beans', info: `+${L2.use.beansHp} HP · +${L2.use.beansSanity} sanity`, color: '#d9a35a' }),
   bar: () => ({ name: 'Energy bar', info: `+${L2.use.barHp} HP · stamina`, color: '#e8c44a' }),
   firstaid: () => ({ name: 'First aid kit', info: `+${L2.use.firstaidHp} HP`, color: '#f05a4f' }),
-  tape: () => ({ name: 'Duct tape', info: `Patches your weapon +${L2.use.tapeRepair}%`, color: '#b8c0c8' }),
+  tape: () => ({ name: 'Duct tape', info: 'Patches a weapon +15%, never past 45% (I menu > REPAIR)', color: '#b8c0c8' }),
   fuse: () => ({ name: 'Fuse', info: 'Opens an ELECTRICAL door', color: '#7fc8ff' }),
   valve: () => ({ name: 'Valve wheel', info: 'Opens a PUMP ROOM door', color: '#e05a3a' }),
   keycard: () => ({ name: 'Keycard', info: 'Opens a STORAGE cage', color: '#9ff0b0' }),
@@ -67,7 +67,8 @@ function describe0(token) {
   if (token === 'bandage') return { name: 'Bandage', info: `+${L1.bandageHp} HP`, color: '#f2f2ee' }
   if (token === 'battery') return { name: 'Battery', info: `+${L1.batteryCharge}% light`, color: '#9fd3ff' }
   if (token === 'bobbypin' || token === 'pin' || token === 'bobby_pin') return { name: 'Bobby pin', info: 'Picks locks · snaps under strain', color: '#c8c4b8' }
-  if (token === 'kit') return { name: 'Repair kit', info: 'Mends your weapon', color: '#d9b27a' }
+  if (token === 'kit') return { name: 'Weapon repair kit', info: 'Mends a weapon (I menu > REPAIR) · up to your Repair skill', color: '#d9b27a' }
+  if (token === 'akit') return { name: 'Armor repair kit', info: 'Mends every piece you wear · up to your Repair skill', color: '#9fb89a' }
   if (token.startsWith('book:')) { const k = SKILLS.find((x) => x.k === token.slice(5)); return { name: `Skill book: ${k?.name ?? '?'}`, info: `+3 ${k?.name ?? ''}`, color: '#7fd1a8' } }
   if (token.startsWith('cloth:')) { // a garment: "cloth:<slot>:<kind>:<hex>"
     const p = parseCloth(token)

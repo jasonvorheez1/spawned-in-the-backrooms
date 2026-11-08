@@ -62,9 +62,11 @@ button.it{cursor:pointer}
 const owned = (s) => ['fists', ...(s.weapons ? s.weapons.split(',').filter(Boolean) : [])]
 import { derived as dv } from './lib/stats.js'
 import { parseCloth, wornTokens, wornDR, fullLook, SLOTS, SLOT_NAME, rowOf, CLOTHES } from './lib/clothes.js'
+import { cndOf, armorCnd, band, bandColor, wMul, drMul, repairAmount } from './lib/condition.js'
 const worn = (s, slot) => { const l = fullLook(s.look), c = CLOTHES.colourKey[slot]; return rowOf(slot, l[slot], c ? l[c] : '') }
 const maxHp = (lv, s) => L.hp + (lv - 1) * L.perLevel.hp + (s?.attr ? dv(s).hpBonus : 0)
 const maxSan = (lv, s) => L.sanity + (lv - 1) * L.perLevel.sanity + (s?.attr ? dv(s).sanBonus : 0)
+const cndTxt = (c) => `<b style="color:${bandColor(c)}">${Math.round(c)}% ${band(c)}</b>`
 const cell = (k, v, wide) => `<div${wide ? ' class="w"' : ''}><span>${k}</span>${v}</div>`
 
 // the right-hand pane for one item token; s = the player's state (to compare against what they hold)
@@ -77,7 +79,7 @@ function detail(t, s, def) {
     const cmp = k !== (s.equipped ?? 'fists') && d ? ` <i class="${d > 0 ? 'up' : 'dn'}" style="font-style:normal">${d > 0 ? '▲' : '▼'}${Math.abs(d)}</i>` : ''
     const lvOk = true
     return `<div class="${cls}"><h4>${w.name}</h4><div class="r" style="color:${r?.color ?? 'var(--ad)'}">${r?.label ?? 'STANDARD'}${w.ranged ? ' · FIREARM' : ' · MELEE'}</div><div class="g">
-      ${cell('DAM', `${w.damage}${cmp}`)}${cell('SPD', `${(1 / w.cooldown).toFixed(1)}/S`)}
+      ${cell('DAM', `${w.damage}${cmp}`)}${cell('SPD', `${(1 / w.cooldown).toFixed(1)}/S`)}${k !== 'fists' ? cell('CND', cndTxt(cndOf(s, k)) + ` · x${wMul(cndOf(s, k)).toFixed(2)} DAM`, true) : ''}
       ${cell(w.ranged ? 'RNG' : 'REACH', `${w.ranged ? w.range : w.reach}M`)}${cell('AP', w.stamina)}
       ${w.ranged ? cell('MAG', `${s['loaded_' + k] ?? 0}/${w.magSize}`) + cell(w.ammoType === 'shells' ? 'SHELLS' : 'ROUNDS', s[w.ammoType ?? 'ammo'] ?? 0) : ''}
 </div></div>`
@@ -88,7 +90,7 @@ function detail(t, s, def) {
     const cmp = d ? ` <i class="${d > 0 ? 'up' : 'dn'}" style="font-style:normal">${d > 0 ? '▲' : '▼'}${Math.abs(d)}</i>` : ''
     return `<div class="${cls}"><h4>${p.row.name}</h4><div class="r" style="color:${r.color ?? 'var(--ad)'}">${(r.label ?? '').toUpperCase()} · APPAREL</div><div class="g">
       ${cell('DR', `${p.row.dr}${cmp}`)}${cell('SLOT', SLOT_NAME[p.slot].toUpperCase())}${cell('WG', `${p.row.kg}KG`)}${cell('COLOR', `<span style="display:inline-block;width:12px;height:12px;background:#${p.colour};border:1px solid var(--ad)"></span>`)}
-      ${cell('WORN', cur ? `${cur.name} · DR ${cur.dr}` : 'NOTHING', true)}</div></div>`
+      ${cell('CND', cndTxt(armorCnd(s.look, t)) + ` · DR x${drMul(armorCnd(s.look, t)).toFixed(2)}`, true)}${cell('WORN', cur ? `${cur.name} · DR ${cur.dr}` : 'NOTHING', true)}</div></div>`
   }
   if (t.startsWith('almond:')) { const c = t.slice(7), a = AW[c], key = { grey: 'almonds', green: 'almondsG', red: 'almondsR', blue: 'almondsB' }[c]
     return `<div class="${cls}"><h4>${a.name}</h4><div class="r" style="color:${a.color}">AID</div><div class="g">${cell('HP', `+${a.hp}`)}${cell('SAN', `+${a.sanity}`)}${cell('CARRIED', s[key] ?? 0)}${cell('NOTE', a.note, true)}</div></div>` }
@@ -104,12 +106,35 @@ function detail(t, s, def) {
 }
 
 const HALRAISE = `<style>@keyframes halRaiseI{0%{transform:perspective(900px) translateY(45%) rotateX(38deg) scale(.82);opacity:0;filter:brightness(3) blur(3px)}55%{transform:perspective(900px) translateY(-2%) rotateX(-4deg);opacity:1;filter:brightness(1.6)}72%{filter:brightness(.6)}78%{filter:brightness(1.4)}100%{transform:none;filter:none}}.halinv .pbp{animation:halRaiseI .55s cubic-bezier(.2,.9,.25,1) both;position:relative}.halinv .pbp::before{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(rgba(0,0,0,.18) 0 1px,transparent 1px 3px);z-index:2}</style>`
+// REPAIR (Fallout: New Vegas): every worn-down weapon and garment with the ways to mend it. Kits, tape and a spare copy; a trader does the rest.
+function repairSec(s) {
+  const btn = (lab, m, t, tip) => `<button title="${tip}" style="margin-left:6px;padding:1px 7px;font:inherit;font-size:.78em;cursor:pointer" onclick="sendAction('inv',{k:'repair',m:'${m}',t:'${t}'})">${lab}</button>`
+  const kits = s.kits ?? 0, tapes = s.tapes ?? 0, akits = s.akits ?? 0
+  const rows = []
+  for (const k of [...new Set(owned(s))].filter((x) => x !== 'fists')) {
+    const c = cndOf(s, k), n = owned(s).filter((x) => x === k).length
+    if (c >= 99.5) continue
+    rows.push(`<div class="it"><span class="eq"></span><span class="nm">${W[k].name}</span><span class="n" style="color:${bandColor(c)}">${Math.round(c)}% ${band(c)}${kits ? btn('KIT', 'kit', 'w:' + k, 'Weapon repair kit') : ''}${tapes && c < 45 ? btn('TAPE', 'tape', 'w:' + k, 'Duct tape: +15, never past 45%') : ''}${n > 1 ? btn('SPARE', 'spare', 'w:' + k, 'Strip your spare copy for parts') : ''}</span></div>`)
+  }
+  const bag = s.clothes ? s.clothes.split(',').filter(Boolean) : []
+  for (const t of wornTokens(s.look)) {
+    const p = parseCloth(t), c = armorCnd(s.look, t); if (!p || c >= 99.5) continue
+    rows.push(`<div class="it"><span class="eq"></span><span class="nm">${p.row.name}</span><span class="n" style="color:${bandColor(c)}">${Math.round(c)}% ${band(c)}${bag.includes(t) ? btn('SPARE', 'spare', 'a:' + t, 'Stitch it up from your spare') : ''}</span></div>`)
+  }
+  for (const t of [...new Set(bag)]) {
+    const p = parseCloth(t), c = armorCnd(s.look, t), n = bag.filter((x) => x === t).length; if (!p || c >= 99.5 || n < 2 || wornTokens(s.look).includes(t)) continue
+    rows.push(`<div class="it"><span class="eq"></span><span class="nm">${p.row.name} ×${n}</span><span class="n" style="color:${bandColor(c)}">${Math.round(c)}% ${band(c)}${btn('SPARE', 'spare', 'a:' + t, 'Stitch it up from your spare')}</span></div>`)
+  }
+  const stock = `<div class="it"><span class="eq"></span><span class="nm">Repair kits</span><span class="n">weapon ${kits} · armor ${akits} · tape ${tapes}${akits && wornTokens(s.look).length ? btn('MEND ARMOR', 'akit', '', 'Mend every piece you wear') : ''}</span></div>`
+  if (!rows.length && !kits && !akits && !tapes) return ''
+  return `<div class="sec">Repair</div>${stock}${rows.join('') || '<div class="em">Everything is in shape.</div>'}`
+}
 function inventory(s) {
   const lv = s.level ?? 1, eqKey = s.equipped ?? 'fists'
   const weapons = (W.order ?? []).filter((k) => owned(s).includes(k)).map((k) => {
     const w = W[k], on = k === eqKey, ok = true
     const cnt = owned(s).filter((x) => x === k).length
-    const inner = `<span class="eq"></span><span class="nm">${w.name}${cnt > 1 ? ` ×${cnt}` : ''}</span><span class="n">${ok ? (w.ranged ? `${s['loaded_' + k] ?? 0}/${s[w.ammoType ?? 'ammo'] ?? 0}` : '') : `LV ${w.minLevel}`}</span>${detail(k, s, false)}`
+    const inner = `<span class="eq"></span><span class="nm">${w.name}${cnt > 1 ? ` ×${cnt}` : ''}</span><span class="n">${ok ? (w.ranged ? `${s['loaded_' + k] ?? 0}/${s[w.ammoType ?? 'ammo'] ?? 0}` : '') : `LV ${w.minLevel}`}${k !== 'fists' && cndOf(s, k) < 99.5 ? ` <i style="font-style:normal;color:${bandColor(cndOf(s, k))}">${Math.round(cndOf(s, k))}%</i>` : ''}</span>${detail(k, s, false)}`
     return ok && !on ? `<button class="it" onclick="sendAction('inv',{k:'equip',w:'${k}'})">${inner}</button>` : `<div class="it${on ? ' on' : ''}${ok ? '' : ' lock'}">${inner}</div>`
   }).join('')
   const AWK = [['grey', 'almonds', 'Grey almond water', '#b9bcb4'], ['green', 'almondsG', 'Green almond water', '#7fcf6a'], ['red', 'almondsR', 'Red almond water', '#d0574a'], ['blue', 'almondsB', 'Blue almond water', '#6f9be0']]
@@ -120,14 +145,14 @@ function inventory(s) {
   const aid = aid0 + meatRows + snackRows
   const ammo = ['ammo', 'shells'].filter((t) => s[t]).map((t) => `<div class="it"><span class="eq"></span><span class="nm">${t === 'ammo' ? 'Pistol rounds' : 'Shotgun shells'}</span><span class="n">${s[t]}</span>${detail(t, s, false)}</div>`).join('') || '<div class="em">None.</div>'
   const on = wornTokens(s.look), bag = (s.clothes ? s.clothes.split(',').filter(Boolean) : [])
-  const app = on.map((t) => { const p = parseCloth(t); return `<button class="it on" onclick="sendAction('inv',{k:'unwear',w:'${p.slot}'})"><span class="eq"></span><span class="nm">${p.row.name}</span><span class="n">DR ${p.row.dr}</span>${detail(t, s, false)}</button>` }).join('')
+  const app = on.map((t) => { const p = parseCloth(t); return `<button class="it on" onclick="sendAction('inv',{k:'unwear',w:'${p.slot}'})"><span class="eq"></span><span class="nm">${p.row.name}</span><span class="n">DR ${Math.round(p.row.dr * drMul(armorCnd(s.look, t)) * 10) / 10}${armorCnd(s.look, t) < 99.5 ? ` <i style="font-style:normal;color:${bandColor(armorCnd(s.look, t))}">${Math.round(armorCnd(s.look, t))}%</i>` : ''}</span>${detail(t, s, false)}</button>` }).join('')
     + [...new Set(bag)].map((t) => { const p = parseCloth(t); if (!p) return ''; const n = bag.filter((x) => x === t).length
       return `<button class="it" onclick="sendAction('inv',{k:'wear',w:'${t}'})"><span class="eq"></span><span class="nm">${p.row.name}${n > 1 ? ` ×${n}` : ''}</span><span class="n">DR ${p.row.dr}</span>${detail(t, s, false)}</button>` }).join('') || '<div class="em">Nothing on.</div>'
   const eq = W[eqKey] ?? W.fists
   const drop = eqKey !== 'fists' ? `<button onclick="sendAction('inv',{k:'drop',w:'${eqKey}'})">Drop ${eq.name}</button>` : ''
   return HALRAISE + `<div class="pbw pb halinv"><div class="pbp" data-modal>
     <div class="hd"><h2>HALOGEN&trade; · INVENTORY</h2><div class="st"><span><b>LVL</b>${lv}</span><span><b>HP</b>${Math.round(s.hp ?? 0)}/${maxHp(lv, s)}</span><span><b>SAN</b>${Math.round(s.sanity ?? 0)}/${maxSan(lv, s)}</span><span><b>XP</b>${s.xp ?? 0}/${L.xpBase * lv}</span><span><b>DR</b>${wornDR(s.look)}</span></div></div>
-    <div class="bd"><div class="ls"><div class="sec">Weapons</div>${weapons}<div class="sec">Aid</div>${aid}${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="eq"></span><span class="nm" style="color:#d8b56a">Old compass</span><span class="n">${s.compass} reads</span></button>` : ''}${s.firesalt > 0 ? `<button class="it" onclick="sendAction('inv',{k:'firesalt'})"><span class="eq"></span><span class="nm" style="color:#ff8a3a">Firesalt · Rub on weapon</span><span class="n">${s.firesalt}</span></button>` : ''}<div class="sec">Ammo</div>${ammo}<div class="sec">Apparel</div>${app}${s.pages ? `<div class="sec">Notes</div>${String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="eq"></span><span class="nm" style="color:#e8dcc0">Torn notebook page ${+n}</span><span class="n">read</span></button>`).join('')}` : ''}</div>${detail(eqKey, s, true)}</div>
+    <div class="bd"><div class="ls"><div class="sec">Weapons</div>${weapons}${repairSec(s)}<div class="sec">Aid</div>${aid}${s.compass > 0 ? `<button class="it" onclick="sendAction('inv',{k:'compass'})"><span class="eq"></span><span class="nm" style="color:#d8b56a">Old compass</span><span class="n">${s.compass} reads</span></button>` : ''}${s.firesalt > 0 ? `<button class="it" onclick="sendAction('inv',{k:'firesalt'})"><span class="eq"></span><span class="nm" style="color:#ff8a3a">Firesalt · Rub on weapon</span><span class="n">${s.firesalt}</span></button>` : ''}<div class="sec">Ammo</div>${ammo}<div class="sec">Apparel</div>${app}${s.pages ? `<div class="sec">Notes</div>${String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="eq"></span><span class="nm" style="color:#e8dcc0">Torn notebook page ${+n}</span><span class="n">read</span></button>`).join('')}` : ''}</div>${detail(eqKey, s, true)}</div>
     <div class="ft"><span class="c">${s.kills ?? 0} kills</span>${drop}<button onclick="sendAction('inv',{k:'close'})"><kbd>I</kbd>Close</button></div>
   </div></div>`
 }

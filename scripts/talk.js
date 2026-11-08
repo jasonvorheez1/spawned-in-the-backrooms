@@ -5,7 +5,7 @@ import CANNED from './lib/data/canned-talk.yml'
 // Traders open a shop from the card. Numbers: lib/data/talk.yml, lib/data/shops.yml.
 import { heard as hearAt } from "./lib/hear.js";
 import T from './lib/data/talk.yml'
-import { nameOf, keyOf, isTrader, voiceOf, VO, systemPrompt, userMessage, parseReply, rollCheck, freshStock, buyPrice, sellPrice, sellables, removeOne, SHOPS } from './lib/npc-talk.js'
+import { nameOf, keyOf, isTrader, voiceOf, VO, systemPrompt, userMessage, parseReply, rollCheck, freshStock, buyPrice, sellPrice, sellables, removeOne, SHOPS, repairables, repairPrice } from './lib/npc-talk.js'
 import { takeToken } from './player.js'
 import { talk as service } from './interact.js'
 import { skillsOf, SKILLS } from './lib/stats.js'
@@ -204,7 +204,7 @@ function act(ctx, d) {
   if (d.k === 'trade' && isTrader(it)) { restock(ctx, it); s.shopOpen = it.id; return }
   if (['wave', 'gift', 'dance', 'insult'].includes(d.k)) { gesture(ctx, it, d.k); return }
   if (d.k === 'back') s.shopOpen = null
-  if (d.k === 'stab') s.shopTab = ['buy', 'sell'].includes(d.t) ? d.t : 'buy'
+  if (d.k === 'stab') s.shopTab = ['buy', 'sell', 'repair'].includes(d.t) ? d.t : 'buy'
 }
 
 // the small social moves beside the talk box: each moves rapport, plays on the body, and the npc answers it in its own words
@@ -270,6 +270,13 @@ function shop(ctx, d) {
     if (!got?.ok) { s.cents += cents; note(ctx, got?.msg ?? (got?.why ? `Can't take it: ${got.why}` : "You can't carry that.")); return }
     stock[t] = [row[0] - 1, row[1]]; it.state.stock = stock
     note(ctx, `Bought ${describe(t).name} for $${price}.00.`)
+  } else if (d.k === 'repair') { // a trader mends it to 100% for Backdollars (Fallout: New Vegas)
+    const row = repairables(s).find((x) => x[0] === t); if (!row) { note(ctx, 'That does not need repairing.'); return }
+    const price = repairPrice(row[2], row[1], barter)
+    if ((s.cents ?? 0) < price * 100) { note(ctx, `Not enough Backdollars: $${price}.00`); return }
+    s.cents -= price * 100
+    if (t.startsWith('weapon:')) s['cnd_' + t.slice(7)] = 100; else s.look = { ...s.look, cnd: { ...(s.look?.cnd ?? {}), [t]: 100 } }
+    note(ctx, `Repaired ${describe(t).name} for $${price}.00.`)
   } else if (d.k === 'sell') {
     const row = sellables(s).find((x) => x[0] === t); if (!row || !removeOne(s, t)) return
     const pay = sellPrice(row[2], barter); s.cents = (s.cents ?? 0) + pay * 100

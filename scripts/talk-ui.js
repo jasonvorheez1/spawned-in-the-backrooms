@@ -1,6 +1,7 @@
 // The conversation card and the trader's shop (scripts/talk.js writes the state they read).
 import T from './lib/data/talk.yml'
-import { nameOf, keyOf, isTrader, faction, buyPrice, sellPrice, sellables, SECTIONS, sectionOf, money } from './lib/npc-talk.js'
+import { nameOf, keyOf, isTrader, faction, buyPrice, sellPrice, sellables, repairables, repairPrice, SECTIONS, sectionOf, money } from './lib/npc-talk.js'
+import { band, bandColor } from './lib/condition.js'
 import { describe } from './lib/items.js'
 import { skillsOf } from './lib/stats.js'
 
@@ -36,8 +37,8 @@ const CSS = `<style>
 
 // the shop: BUY / SELL tabs, goods in sections, your Backdollars beside each price (Shelly #44597)
 function shopUi(ctx, s, it) {
-  const barter = skillsOf(s).barter ?? 0, disc = it.state?.discount?.[keyOf(ctx.self ?? {})] ?? 0, cash = s.cents ?? 0, tab = s.shopTab === 'sell' ? 'sell' : 'buy'
-  const rows = tab === 'buy'
+  const barter = skillsOf(s).barter ?? 0, disc = it.state?.discount?.[keyOf(ctx.self ?? {})] ?? 0, cash = s.cents ?? 0, tab = s.shopTab === 'sell' ? 'sell' : s.shopTab === 'repair' ? 'repair' : 'buy'
+  const rows = tab === 'repair' ? [] : tab === 'buy'
     ? Object.entries(it.state?.stock ?? {}).map(([t, [n, base]]) => ({ t, n, p: buyPrice(base, barter, disc) }))
     : sellables(s).map(([t, n, base]) => ({ t, n, p: sellPrice(base, barter) }))
   let list = ''
@@ -46,10 +47,15 @@ function shopUi(ctx, s, it) {
     list += `<h4>${title}</h4>` + here.map(({ t, n, p }) => { const d = describe(t), no = tab === 'buy' && (n < 1 || p * 100 > cash)
       return `<button class="${no ? 'no' : ''}" onclick="sendAction('shop',{k:'${tab}',t:'${q(t)}'})" title="${esc(d.info ?? '')}"><span style="color:${d.color}">${esc(d.name)}</span><span style="opacity:.55">${tab === 'buy' ? (n < 1 ? 'SOLD OUT' : n + ' left') : '×' + n}</span><span class="c">${tab === 'sell' ? '+' : ''}$${p}.00</span></button>` }).join('')
   }
+  if (tab === 'repair') {
+    list = repairables(s).map(([t, c, base]) => { const d = describe(t), p = repairPrice(base, c, barter), no = p * 100 > cash
+      return `<button class="${no ? 'no' : ''}" onclick="sendAction('shop',{k:'repair',t:'${q(t)}'})" title="Brings it back to 100%"><span style="color:${d.color}">${esc(d.name)}</span><span style="color:${bandColor(c)}">${Math.round(c)}% ${band(c)}</span><span class="c">$${p}.00</span></button>` }).join('')
+    if (!list) list = '<div class="em">Nothing of yours needs repairing.</div>'
+  }
   if (!list) list = `<div class="em">${tab === 'buy' ? 'Shelves are bare. Come back later.' : 'Nothing they want.'}</div>`
   const tb = (k, l) => `<button style="${tab === k ? 'background:var(--a);color:#140f06;text-shadow:none' : ''}" onclick="sendAction('talkdo',{k:'stab',t:'${k}'})">${l}</button>`
   return `<div class="tkp"><div class="tkh"><h2>${esc(nameOf(it))}</h2><span class="f">BARTER ${barter}${disc ? ` · ${Math.round(disc * 100)}% OFF` : ''}</span><span class="r" style="color:#9fcf8a">${money(cash)}</span></div>
-    <div class="tkb">${tb('buy', 'Buy')}${tb('sell', 'Sell')}</div>
+    <div class="tkb">${tb('buy', 'Buy')}${tb('sell', 'Sell')}${tb('repair', 'Repair')}</div>
     <div class="tks"><div>${list}</div></div>
     <div class="tkb"><button onclick="sendAction('talkdo',{k:'back'})">Back to talking</button><button class="lv" onclick="sendAction('talkdo',{k:'leave'})">Leave</button></div></div>`
 }

@@ -1,0 +1,23 @@
+# Weapon and armor condition (Fallout: New Vegas style). Every number is a pick for the rebalance of Nov 8.
+# A weapon's condition (state cnd_<key>) and a worn garment's (look.cnd[token]) run 0..100.
+# Weapons: damage is dmgFloor of itself at 0 and full at 100; under jamBelow a gun can jam (jamMax at 1) and a blunt/blade slips;
+#   at 0 it is BROKEN and will not swing or fire until repaired.
+# Armor: the DR a piece gives is drFloor of itself at 0 and full at 100; at 0 it is ruined and gives nothing.
+dmgFloor: 0.5
+jamBelow: 45
+jamMax: 0.3
+drFloor: 0.2
+bands: [[90, PRISTINE], [70, GOOD], [50, FAIR], [25, POOR], [1, RUINED], [0, BROKEN]]
+# armor wear: each point of damage that got past the armor wears the worn pieces by this much in total,
+# shared out by slot; heavier armor (more DR) wears slower: x(1 - dr * heavy), at least heavyMin.
+armorWear: 0.34
+slotShare: { topw: 0.38, botw: 0.24, hat: 0.13, shoes: 0.11, neck: 0.08, eyew: 0.06 }
+heavy: 0.045
+heavyMin: 0.55
+# repair
+repair:
+  tape: { weapon: 15, cap: 45 }               # duct tape: a quick patch, never past 45
+  kit: { base: 30, perSkill: 0.3 }            # weapon repair kit
+  akit: { base: 24, perSkill: 0.25 }          # armor repair kit: every worn piece
+  spare: { donor: 55, perSkill: 0.15 }        # merge a spare copy: the donor is a worn one, so it adds its condition
+  vendor: { perPoint: 0.006, min: 1 }         # a trader repairs to 100 for this share of the item's price per missing point (cents)

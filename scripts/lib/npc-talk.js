@@ -10,7 +10,8 @@ import { vo } from './voices.js';
 import T from './data/talk.yml'
 import SH from './data/shops.yml'
 import W from './weapons.js'
-import { parseCloth } from './clothes.js'
+import { parseCloth, wornTokens } from './clothes.js'
+import { cndOf, armorCnd, vendorCost } from './condition.js'
 import { skillsOf } from './stats.js'
 
 export const TALK = T, SHOPS = SH
@@ -100,6 +101,15 @@ export function sectionOf(t) {
   if (t.startsWith('meat:') || t === 'almond' || ['ration', 'royal_ration', 'beans', 'bar', 'lobby_wafer'].includes(t)) return 'food'
   return 'gear'
 }
+// what a trader will repair for you (Fallout: New Vegas): every worn-down weapon and garment you have, with its condition and base value in $
+export function repairables(s) {
+  const P = SH.sell, out = [], seen = new Set()
+  for (const k of csv(s.weapons)) { if (k === 'fists' || !W[k] || seen.has(k)) continue; seen.add(k); const c = cndOf(s, k); if (c < 99.5) out.push(['weapon:' + k, c, (P.weapon[W[k].rarity] ?? P.weapon.common) * 2]) }
+  for (const t of [...wornTokens(s.look), ...csv(s.clothes)]) { const p = parseCloth(t); if (!p || seen.has(t)) continue; seen.add(t); const c = armorCnd(s.look, t); if (c < 99.5) out.push([t, c, (P.cloth[p.row.rarity] ?? P.cloth.common) * 2]) }
+  return out
+}
+// dollars for a trader to bring it back to 100; Barter takes up to a quarter off
+export const repairPrice = (base, c, barter) => Math.max(1, Math.round(vendorCost(base, c) * (1 - Math.min(0.25, barter / 400))))
 export const money = (c) => '$' + (Math.max(0, c ?? 0) / 100).toFixed(2)
 export function sellables(s) {
   const out = [], P = SH.sell

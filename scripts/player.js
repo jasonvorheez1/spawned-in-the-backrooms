@@ -14,7 +14,8 @@ import { dropLoot, rollLoot, spawnWeapon, poolOf } from './lib/loot.js'
 import { becomeCorpse } from './lib/l5-hostile.js'
 import { markKill } from './lib/witness.js'
 import { derived, canCarry, burden, npcMul, START, dmgMul, handling, skillsOf, spentOf, SKILLS, SKILL_MAX, dmgAfterArmor, lookOfNpc } from './lib/stats.js'
-import { parseCloth, wear, takeOff } from './lib/clothes.js'
+import { parseCloth, wear, takeOff, wornRows, fullLook } from './lib/clothes.js'
+import { wMul, jamChance, isBroken, useWear, armorWearFor, cndOf, repairAmount, armorCnd, band } from './lib/condition.js'
 import { weaponBody, HOLD, MESHGRIP } from './lib/weapon-look.js'
 import { zoneAt, cellAt, cellCenter, N, HALF, EXIT } from './lib/maze.js'
 import { zoneAt as zoneAt1 } from './lib/level1.js'
@@ -245,13 +246,11 @@ function takeToken1(ctx, token) {
     sound(ctx, token === 'firstaid' ? 'pickup-ammo' : 'plastic-bottle-pickup-rattle', 0.7, true)
     return { ok: true }
   }
-  if (token === 'tape') { // duct tape: a quick patch on the weapon in your hand
-    const k = s.equipped, cap = derived(s).repairCap, c = s['cnd_' + k] ?? 100
-    if (!k || k === 'fists') return { ok: false, msg: 'Nothing to tape up: you are holding your fists' }
-    if (c >= cap - 0.5) return { ok: false, msg: 'Your weapon does not need taping' }
-    s['cnd_' + k] = Math.min(cap, c + L2.use.tapeRepair); s.pickedAt = now
-    s.notice = { text: `Taped your ${W[k]?.name?.toLowerCase() ?? 'weapon'} to ${Math.round(s['cnd_' + k])}%`, at: now }
-    sound(ctx, 'bandage-wrap-cloth', 0.6, true)
+  if (token === 'tape' || token === 'kit' || token === 'akit') { // repair items are carried (I menu > REPAIR): weapon kit, armor kit, duct tape
+    const key = { tape: 'tapes', kit: 'kits', akit: 'akits' }[token]
+    s[key] = (s[key] ?? 0) + 1; s.pickedAt = now
+    s.notice = { text: `${{ tape: 'Duct tape', kit: 'Weapon repair kit', akit: 'Armor repair kit' }[token]} (${s[key]} carried) · use it in the inventory (I)`, at: now }
+    sound(ctx, 'pickup-ammo', 0.5, true)
     return { ok: true }
   }
   if (token === 'fuse' || token === 'valve' || token === 'keycard') { // Level 2 keys: carried until a door takes one
@@ -283,15 +282,6 @@ function takeToken1(ctx, token) {
     const sp = spentOf(s); sp[i] += 3; s.skl = sp.join(',')
     s.pickedAt = now; s.notice = { text: `You read the book: ${SKILLS[i].name} +3`, at: now }; gain(ctx, L.xpAlmond)
     sound(ctx, 'pickup-weapon', 0.5, true)
-    return { ok: true }
-  }
-  if (token === 'kit') { // a repair kit mends the weapon in your hand, up to what your Repair skill can manage
-    const k = s.equipped, cap = derived(s).repairCap, c = s['cnd_' + k] ?? 100
-    if (k === 'fists') return { ok: false, msg: 'Nothing to repair: you are holding your fists' }
-    if (c >= cap - 0.5) return { ok: false, msg: c >= 99.5 ? `Your ${W[k].name.toLowerCase()} is in perfect shape` : `Repair ${Math.round(cap)}: that is as good as you can make it` }
-    s['cnd_' + k] = Math.min(cap, c + 40 + skillsOf(s).repair * 0.3)
-    s.pickedAt = now; s.notice = { text: `Repaired your ${W[k].name.toLowerCase()} to ${Math.round(s['cnd_' + k])}%`, at: now }
-    sound(ctx, 'pickup-ammo', 0.6, true)
     return { ok: true }
   }
   if (token.startsWith('weapon:')) {
@@ -411,6 +401,8 @@ function swing(ctx, power = 0) {
   if (s.building) return // B mode: the click places a piece (scripts/build.js)
   if (now < (w.nextSwing ?? 0) || (s.downAt && now - s.downAt < 1200)) return
   const wp = weaponOf(s)
+  if (s.equipped !== 'fists' && isBroken(cndOf(s, s.equipped))) { w.nextSwing = now + 700; if (now - (w.brokeSay ?? 0) > 2500) { w.brokeSay = now; s.notice = { text: `Your ${wp.name.toLowerCase()} is BROKEN: repair it in the inventory (I)`, at: now } } return }
+  if (s.equipped !== 'fists' && !s.reloading && ctx.random() < jamChance(cndOf(s, s.equipped)) * (wp.ranged ? 1 : 0.5)) { w.nextSwing = now + 650; s.notice = { text: wp.ranged ? `JAM: your ${wp.name.toLowerCase()} will not cycle (${band(cndOf(s, s.equipped))})` : `Your ${wp.name.toLowerCase()} slips in your hand (${band(cndOf(s, s.equipped))})`, at: now }; sound(ctx, 'flashlight-switch-click', 0.5, true); return }
   if (wp.ranged) power = 0
   const Hd = handling(s, wp) // what the weapon asks of you: too heavy for your Hardiness costs stamina and swing speed (scripts/lib/stats.js)
   if (power && (w.stamina ?? s.stamina) < wp.stamina * Hd.stam * P.stamina) power = 0 // too tired to put weight behind it: a light swing
@@ -447,12 +439,12 @@ function swing(ctx, power = 0) {
   s.swingHeavy = Math.round(power * 100) / 100
   s.swingAt = now
   { const st = (w.combo3 ??= { n: 0, at: 0 }); st.n = now - st.at > 1100 ? 0 : st.n + 1; st.at = now; if (wp.ranged) fire3(ctx); else swing3(ctx, s.equipped, power, st.n) } // the body's own swing, for the third-person camera and everyone else
-  if (s.equipped !== 'fists') s['cnd_' + s.equipped] = Math.max(0, (s['cnd_' + s.equipped] ?? 100) - (wp.ranged ? 0.3 : 0.6) * (wp.wear ?? 1) * derived(s).wear) // weapons wear with use; Repair slows it
+  if (s.equipped !== 'fists') s['cnd_' + s.equipped] = Math.max(0, (s['cnd_' + s.equipped] ?? 100) - useWear(wp) * derived(s).wear) // weapons wear with use; Repair slows it
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   if (wp.ranged) { // real bullets: spread, drop and drag down each pellet's path (scripts/lib/ballistics.js)
     let pc = ctx.self.camera?.rotation?.pitch ?? 0; if (Math.abs(pc) > 1.6) pc = pc * Math.PI / 180
     const eye = { x: p.x, y: p.y + (s.crouch ? 1.0 : 1.45), z: p.z }, crit = ctx.random() < derived(s).crit
-    const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100) * (crit ? 1.75 : 1)
+    const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? 1.75 : 1)
     let fv = f, pv = pc // in third person the shot goes from your eye to the point under the crosshair (scripts/camera.js keeps it in state.aimPt)
     if (s.tp && s.aimPt) { const dx = s.aimPt.x - eye.x, dy = s.aimPt.y - eye.y, dz = s.aimPt.z - eye.z, hh = Math.hypot(dx, dz); if (hh > 1.2) { fv = { x: dx / hh, z: dz / hh }; pv = Math.atan2(dy, hh) } }
     const res = fireBullets(ctx, s, wp, w, eye, fv, pv, base)
@@ -488,17 +480,17 @@ function swing(ctx, power = 0) {
   if (!found.length) { // nothing alive in reach: the swing or shot lands on the world (walls, furniture, crates, what was built)
     let pc = ctx.self.camera?.rotation?.pitch ?? 0; if (Math.abs(pc) > 1.6) pc = pc * Math.PI / 180
     if (baseOf(s.equipped) === 'fishing_rod' && tryFish(ctx, s, w, p, f, pc, power)) return
-    const sb = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100)
+    const sb = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * wMul(cndOf(s, s.equipped))
     strike(ctx, s, wp, s.equipped, sb, f, pc)
     return
   }
   const dv = derived(s), crit = ctx.random() < dv.crit
   if (wp.sneak && !wp.ranged) { found.sort((x, y) => x.d - y.d); if (unaware(ctx, s, found[0].m)) { // a blade in the back: x3, and the halls don't hear it
-    const m = found[0].m, dmg = Math.round((wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100) * wp.sneak)
+    const m = found[0].m, dmg = Math.round((wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * wp.sneak)
     ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: `SNEAK CRIT x${wp.sneak}`, color: '#ff3a3a', size: 1.3 })
     ctx.emit('hitstop', { duration: 0.04 }, { audience: { player: ctx.self.id } }); s.lastSneak = { id: m.id, dmg, at: now }
     sound(ctx, 'knife-stab-flesh-quiet', 0.6, true); hitTarget(ctx, s, m, dmg, f, false); return } }
-  const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * dmgMul(s, wp) * (0.5 + 0.5 * (s['cnd_' + s.equipped] ?? 100) / 100) * (crit ? 1.75 : 1) * (!wp.ranged && (s.firesaltUntil ?? 0) > ctx.now() ? L3I.firesalt.damage : 1)
+  const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? 1.75 : 1) * (!wp.ranged && (s.firesaltUntil ?? 0) > ctx.now() ? L3I.firesalt.damage : 1)
   if (crit) ctx.emit('damageNumber', { position: { x: found[0].m.feetPosition.x, y: found[0].m.feetPosition.y + 2, z: found[0].m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
   if (wp.pellets) {
     // a spread of pellets: everything in the cone is hit, hard up close and weak at range
@@ -710,6 +702,7 @@ function invAction(ctx, d) {
     sound(ctx, 'gun-raise-cloth-rustle', 0.5, true); return
   }
   if (d.k === 'read') { s.reading = parseInt(d.n) || null; s.invOpen = false; return }
+  if (d.k === 'repair') { repairAction(ctx, d); return }
   if (d.k === 'compass') { s.invOpen = false; useCompass(ctx); return }
   const k = String(d.w || '')
   if (d.k === 'wear' || d.k === 'unwear') { // clothes: wearing one swaps out what was in that slot (back into the bag); unwear strips it
@@ -731,6 +724,51 @@ function invAction(ctx, d) {
     const f = ctx.self.feetPosition, fw = walkOf(ctx).fwd ?? { x: 0, z: -1 }
     spawnWeapon(ctx, { x: f.x + fw.x * 0.9, z: f.z + fw.z * 0.9 }, k)
     sound(ctx, 'pickup-weapon', 0.5, true)
+  }
+}
+
+// armor wears with every hit that gets through: the pieces you have on lose condition, heavier armor slower
+function wearArmor(ctx, drop) {
+  const s = ctx.self.state, rows = wornRows(s.look); if (!rows.length) return
+  const cnd = { ...(s.look.cnd ?? {}) }, gone = [], dw = armorWearFor(rows, drop, derived(s).wear)
+  for (const r of rows) { const was = cnd[r.token] ?? r.cnd, now = Math.max(0, Math.round((was - dw[r.token]) * 10) / 10); cnd[r.token] = now; if (was >= 0.5 && now < 0.5) gone.push(parseCloth(r.token)?.row?.name ?? 'armor') }
+  s.look = { ...s.look, cnd }
+  if (gone.length) s.notice = { text: `Your ${gone[0].toLowerCase()} is ruined: it gives no protection until repaired`, at: ctx.now() }
+}
+// REPAIR (inventory): d.m = kit | tape | akit | spare, d.t = "w:<weapon>" or "a:<cloth token>"
+function repairAction(ctx, d) {
+  const s = ctx.self.state, now = ctx.now(), sk = skillsOf(s).repair, cap = derived(s).repairCap, m = String(d.m || ''), tg = String(d.t || '')
+  const say = (text) => { s.notice = { text, at: now } }
+  if (m === 'akit') {
+    if (!(s.akits > 0)) return say('You have no armor repair kit')
+    const rows = wornRows(s.look), amt = repairAmount.akit(sk), cnd = { ...(s.look?.cnd ?? {}) }; let did = 0
+    for (const r of rows) if (r.cnd < cap - 0.5) { cnd[r.token] = Math.min(cap, Math.round((r.cnd + amt) * 10) / 10); did++ }
+    if (!did) return say(rows.length ? `Repair ${Math.round(cap)}: your armor is as good as you can make it` : 'You are not wearing any armor')
+    s.akits -= 1; s.look = { ...s.look, cnd }; say(`Mended ${did} piece${did > 1 ? 's' : ''} of armor`); sound(ctx, 'pickup-ammo', 0.6, true); return
+  }
+  if (tg.startsWith('w:')) {
+    const k = tg.slice(2), wp = W[k]; if (!wp || k === 'fists' || !owned(s).includes(k)) return
+    const c = cndOf(s, k), lim = m === 'tape' ? Math.min(cap, repairAmount.tapeCap()) : cap
+    if (c >= 99.5) return say(`Your ${wp.name.toLowerCase()} is in perfect shape`)
+    if (c >= lim - 0.5) return say(m === 'tape' ? 'Tape cannot hold it any better than that' : `Repair ${Math.round(cap)}: that is as good as you can make it`)
+    let amt
+    if (m === 'tape') { if (!(s.tapes > 0)) return say('You have no duct tape'); amt = repairAmount.tape(); s.tapes -= 1 }
+    else if (m === 'kit') { if (!(s.kits > 0)) return say('You have no repair kit'); amt = repairAmount.kit(sk); s.kits -= 1 }
+    else if (m === 'spare') {
+      const list = owned(s).slice(1); if (list.filter((x) => x === k).length < 2) return say(`You need a second ${wp.name.toLowerCase()} to cannibalise`)
+      list.splice(list.indexOf(k), 1); s.weapons = list.join(','); amt = repairAmount.spare(sk)
+    } else return
+    s['cnd_' + k] = Math.min(lim, Math.round((c + amt) * 10) / 10); say(`${m === 'spare' ? 'Stripped a spare to repair' : m === 'tape' ? 'Taped' : 'Repaired'} your ${wp.name.toLowerCase()} to ${Math.round(s['cnd_' + k])}%`)
+    sound(ctx, m === 'tape' ? 'bandage-wrap-cloth' : 'pickup-ammo', 0.6, true); return
+  }
+  if (tg.startsWith('a:') && m === 'spare') {
+    const t = tg.slice(2), p = parseCloth(t); if (!p) return
+    const bag = s.clothes ? s.clothes.split(',').filter(Boolean) : [], on = wornRows(s.look).some((r) => r.token === t), n = bag.filter((x) => x === t).length
+    if (!(on ? n >= 1 : n >= 2)) return say(`You need a second ${p.row.name.toLowerCase()} to cannibalise`)
+    const c = armorCnd(s.look, t); if (c >= 99.5) return say(`Your ${p.row.name.toLowerCase()} is in perfect shape`); if (c >= cap - 0.5) return say(`Repair ${Math.round(cap)}: that is as good as you can make it`)
+    bag.splice(bag.indexOf(t), 1); s.clothes = bag.join(',')
+    s.look = { ...s.look, cnd: { ...(s.look?.cnd ?? {}), [t]: Math.min(cap, Math.round((c + repairAmount.spare(sk)) * 10) / 10) } }
+    say(`Stitched your ${p.row.name.toLowerCase()} up from a spare`); sound(ctx, 'gun-raise-cloth-rustle', 0.5, true)
   }
 }
 
@@ -960,6 +998,7 @@ export function update(ctx, dt) {
   if (ctx.self.parent) return
   const w = walkOf(ctx), s = ctx.self.state
   w.stamina ??= s.stamina; w.battery ??= s.battery
+  { const hp0 = w.hpSeen ?? s.hp; if (typeof s.hp === 'number' && hp0 - s.hp >= 2 && s.look) wearArmor(ctx, hp0 - s.hp); w.hpSeen = s.hp } // a hit that got through wears what you have on (lib/condition.js)
   let dir = w.dir ?? { x: 0, z: 0 }, pressing = dir.x !== 0 || dir.z !== 0
   { // pressed into a wall: the keys say go, the feet stay put. after a beat you stop running (no drain, no steps, no bob)
     const f = ctx.self.feetPosition, lf = w.lastFp, mv = lf && dt > 0 ? Math.hypot(f.x - lf.x, f.z - lf.z) / dt : 9
