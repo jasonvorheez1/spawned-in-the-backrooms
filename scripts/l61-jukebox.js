@@ -107,8 +107,7 @@ export const ears = {
         who.state.sanity = Math.min(100, (who.state.sanity ?? 80) + 12);
         if (who?.anim) {
           who.anim.groove = { clip: GROOVE_80S, loop: "loop", weight: 0.85, blendIn: 0.3, blendOut: 0.4, mask: { from: "Spine" } };
-          who.session = who.session ?? {};
-          who.session.grooveEnd = ctx.now() + 10000;
+          who.state.grooveEnd = ctx.now() + 10000; // player.js clears the groove after this
         }
         ctx.emit("damageNumber", {
           position: { x: who.feetPosition.x, y: who.feetPosition.y + 1.2, z: who.feetPosition.z },
