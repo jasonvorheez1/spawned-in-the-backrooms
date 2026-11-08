@@ -7,6 +7,7 @@ import { cutTick } from "./lib/intro-cut.js"
 import { arriveTick } from "./lib/arrive-cut.js"
 import { tutStart, tutTick, tutInput } from "./lib/tutorial.js"
 import { t0Tick } from "./lib/tut0-cut.js"
+import { l26Tick } from "./lib/l26-cut.js"
 import { animate } from "builtin/tween";
 import { toHub } from "./lib/hub.js"
 const MUSIC = "/cdn/moodboard-lowpoly-cozy/music-soft-mellow-fingerpicked-acoustic-guitar-and-warm-rhodes-early-2000s-bedroom-calm-loop.mp3"; // the drone was exhausting (johnadams2): soft and quiet instead
@@ -49,6 +50,8 @@ export function update(ctx) {
     if (r === "level1") { st.tut = null; ctx.cross(ctx.self, "level1"); return }
     if (r) return
   } else ses.inT0 = false
+  // Level 26: the first time aboard, the ship in the fog and Phoebe at the rail (scripts/lib/l26-cut.js)
+  if (place === "level26" && !st.menuOpen && (st.l26cut || !st.l26seen)) { if (l26Tick(ctx, ses, st)) return ctx.sleep(0) }
   if (st.tut) tutTick(ctx, st)
   const playing = music(ctx, (st.menuOpen && st.menuKind === "title") || (place === "intake" && !st.cut))
   // behind the title the camera slowly looks around the halls from head height; gone the moment it closes

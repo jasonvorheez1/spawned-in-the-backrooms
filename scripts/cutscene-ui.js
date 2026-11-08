@@ -1,6 +1,7 @@
 import { PACE } from "./lib/tut0.js"
 // letterbox and fades over the intro (scripts/lib/intro-cut.js); timed off state.cut so a re-render picks up where it was
 export function cutUi(ctx, player) {
+  if (player.state.l26cut) return l26Ui(ctx, player)
   if (player.state.t0cut) return t0Ui(ctx, player)
   if (player.state.arrive || player.state.arrivePending) return arriveUi(ctx, player)
   const e = ctx.now() - (player.state.cut || ctx.now())
@@ -56,4 +57,20 @@ function t0Ui(ctx, player) {
 export function t0Fade(ctx, player) {
   const f = player.state.t0fade; if (!f || ctx.now() - f > 3000) return ""
   return `<style>@keyframes t0f{from{opacity:1}to{opacity:0}}</style><div style="position:fixed;inset:0;background:#000;z-index:60;pointer-events:none;animation:t0f 2.6s ease-in both;animation-delay:${f - ctx.now()}ms"></div>`
+}
+
+// Level 26 (scripts/lib/l26-cut.js): letterbox, Phoebe's lines as captions, the level's name over the fog
+import { L26_LINES } from "./lib/l26-cut.js"
+function l26Ui(ctx, player) {
+  const e = ctx.now() - player.state.l26cut.at, d = (s) => `${s * 1000 - e}ms`
+  const caps = L26_LINES.map(([at, len, txt]) => `<div class="lc" style="animation-duration:${len * 1000}ms;animation-delay:${d(at)}"><span style="color:#e8a65a">PHOEBE</span> &nbsp;${txt}</div>`).join("")
+  return `<style>
+@keyframes lb{from{height:0}to{height:11vh}} @keyframes lc{0%{opacity:0}12%{opacity:.92}85%{opacity:.92}100%{opacity:0}}
+@keyframes lt{0%{opacity:0;letter-spacing:.6em;filter:blur(6px)}25%{opacity:1;letter-spacing:.3em;filter:blur(0)}80%{opacity:1}100%{opacity:0}}
+.lb{position:fixed;left:0;right:0;height:11vh;background:#000;z-index:50;animation:lb .8s ease-out both}
+.lc{position:fixed;left:0;right:0;bottom:14vh;text-align:center;z-index:53;color:#f2ead8;font:400 17px/1.4 Georgia,serif;letter-spacing:.05em;text-shadow:1px 1px 3px #000;opacity:0;animation-name:lc;animation-fill-mode:both}
+.lt{position:fixed;left:0;right:0;top:40%;text-align:center;z-index:54;color:#cfe8c0;font:400 44px/1.1 Georgia,serif;text-shadow:0 0 18px rgba(120,220,140,.35);opacity:0;animation:lt 6s ease both;animation-delay:${d(1.5)}}
+.ls{position:fixed;left:0;right:0;top:calc(40% + 60px);text-align:center;z-index:54;color:#e05a4a;font:400 14px/1 Georgia,serif;letter-spacing:.5em;opacity:0;animation:lt 5.4s ease both;animation-delay:${d(2.4)}}
+.lk{position:fixed;right:28px;bottom:3vh;z-index:55;color:#8a8a7a;font:400 11px/1 Georgia,serif;letter-spacing:.2em}
+</style><div class="lb" style="top:0"></div><div class="lb" style="bottom:0"></div><div class="lt">LEVEL 26</div><div class="ls">THE SS FUN =)</div>${caps}<div class="lk">HOLD SPACE TO SKIP</div>`
 }

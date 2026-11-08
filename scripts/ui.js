@@ -274,7 +274,7 @@ export default function render(ctx, player) { return renderHud(ctx, player) + la
 function renderHud(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
-  if (s.cut || s.arrive || s.arrivePending || (s.t0cut && !s.sheetOpen)) return cutUi(ctx, player)
+  if (s.cut || s.l26cut || s.arrive || s.arrivePending || (s.t0cut && !s.sheetOpen)) return cutUi(ctx, player)
   if (s.menuOpen) return mainMenu(ctx, player)
   if (s.wardrobeOpen) return `${THEME}<div id="hud" style="position:fixed;inset:0;pointer-events:none">${wardrobe(ctx, player)}</div>`
   if (s.mj?.seats) return `${THEME}${LIVE}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">${mahjongPanel(s, ctx.now())}${chatBubbles(ctx, ctx.now(), player)}</div>` // at the mahjong table: only the game and who's talking
