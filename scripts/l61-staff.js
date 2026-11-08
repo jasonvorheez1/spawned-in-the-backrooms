@@ -8,7 +8,6 @@ import { findPath } from "builtin/nav";
 import { raycast } from "builtin/physics";
 import FC from "./lib/data/faceling.yml";
 import {
-import { handTray } from "./lib/snacktray.js";
   WIPE_COUNTER,
   SERVE_PLATE,
   FLIP_BURGER,
@@ -19,6 +18,7 @@ import { handTray } from "./lib/snacktray.js";
   DINER_LOUNGE,
   RELIEF_SIGH,
 } from "./lib/l61-anim.js";
+import { handTray } from "./lib/snacktray.js";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 
