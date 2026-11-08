@@ -147,7 +147,7 @@ export function layStreet(ctx, h) {
         behavior: "scripts/level11-use.js",
         state: { kind: "parked-car", name: `Parked ${kind === "van" ? "Municipal Van" : "Sedan"}`, verb: "Disengage Parking Brake" },
       },
-    }); cars.push(`l11-car-${i}`);
+    }, 0.14); // wheels on the asphalt, not sunk into it cars.push(`l11-car-${i}`);
   });
   // manholes that steam, and a subway stair going down
   const STEAM = `fx
