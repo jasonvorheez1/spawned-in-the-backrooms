@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 84; // bump to rebuild the city in rooms that are already open
+const V = 85; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1344,6 +1344,61 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
       state: { name, role: "guard", voice: "reyes", faction: "uec", factionName: "U.E.C. Thebes", home: { x, z: TZ + 1.6 }, line, ...npcState(ctx, "agent", 140) },
     });
     sp("l11-th-hum", { feetPosition: { x: 0, y: 3, z: TZ - 4 }, audio: { clip: "cdn/sfx-distant-muffled-voices-and-hammering-behind-a-wall-loop.mp3", loop: true, gain: 0.16, spatial: true, maxDistance: 26 } });
+  }
+
+  // ==========================================
+  // 17b. OLD TOWN (Wikidot refs: the cobbled tram street, the B.N.T.G. painted gable, a stripped office floor) + a second canal crossing
+  // ==========================================
+  {
+    const OT = (k) => MODELS[`ot_${k}`];
+    const fit = (id, k, x, y, z, yaw, box, collider = "box", extra = {}) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: OT(k), forward: "+x" }, layout: { box: { min: { x: -box[0] / 2, y: 0, z: -box[2] / 2 }, max: { x: box[0] / 2, y: box[1], z: box[2] / 2 } } }, physics: collider ? { body: "static", collider } : undefined, ...extra });
+    const COBBLE = { ...T("worn-grey-granite-cobblestone-street-setts", 1), repeat: [5, 24], color: "oklch(0.62 0.02 70)", roughness: 0.9 };
+    const RAIL = { color: "oklch(0.55 0.01 250)", metalness: 0.9, roughness: 0.35 };
+    // the avenue between the 84 and 156 cross streets is laid in setts with two tram tracks; cars still drive it
+    const AX = -140, Z0 = 92, Z1 = 150, ZM = (Z0 + Z1) / 2, L = Z1 - Z0;
+    bx("l11-ot-cobble", AX, 0.02, ZM, 11.6, 0.06, L, COBBLE, { physics: "none" });
+    [-2.2, 2.2].forEach((tx, t) => [-0.72, 0.72].forEach((rx, r) => bx(`l11-ot-rail-${t}-${r}`, AX + tx + rx, 0.06, ZM, 0.08, 0.05, L, RAIL, { physics: "none" })));
+    // green cast-iron wire poles both kerbs, every 14 m, arms reaching over the tracks; the wires sag between them
+    for (let i = 0, z = Z0 + 4; z <= Z1 - 4; z += 14, i++) {
+      fit(`l11-ot-pole-w-${i}`, "trampole", AX - 6.6, 0.15, z, 0, [1.9, 7.2, 0.5], "cylinder");
+      fit(`l11-ot-pole-e-${i}`, "trampole", AX + 6.6, 0.15, z, 180, [1.9, 7.2, 0.5], "cylinder");
+    }
+    [-2.2, 2.2].forEach((tx, t) => sp(`l11-ot-wire-${t}`, { feetPosition: { x: AX + tx, y: 6.55, z: Z0 + 4 }, spline: { kind: "powerline", points: [[0, 0, 0], [0, -0.25, 21], [0, 0, 42], [0, -0.25, 49]], width: 0.025 } }));
+    // the painted gable: a bare brick end wall on the corner lot with the old advert fading on it
+    const GX = -152.4, GZ = 120.5;
+    bx("l11-ot-gable", GX - 6, 0.1, GZ, 12, 11, 0.5, SEDCO_BRICK);
+    sp("l11-ot-gable-roof", { feetPosition: { x: GX - 6, y: 11.1, z: GZ }, primitive: { kind: "extrude", shape: [[-6, 0], [6, 0], [0, 3.4]], depth: 0.5 }, material: SEDCO_BRICK, physics: "static" });
+    sp("l11-ot-ad", { feetPosition: { x: GX - 6.6, y: 2.4, z: GZ + 0.27 }, primitive: { kind: "plane", width: 5.6, height: 8.4 }, material: { texture: MODELS.ot_wallad, roughness: 0.95, opacity: 0.93, transparent: true } });
+    sp("l11-ot-gable-lamp", { feetPosition: { x: GX - 0.8, y: 4.2, z: GZ + 0.5 }, primitive: { kind: "sphere", radius: 0.16 }, material: { color: "#fff2d0", emissive: "#ffd890", emissiveIntensity: 2 }, light: { kind: "point", color: "oklch(0.9 0.08 75)", intensity: 2, distance: 12 } });
+    // the stripped office: a concrete shell behind the gable, open to the avenue, ducts and foil overhead, the drywall half up
+    const OX = -164, OZ = 136, OW = 22, OD = 26, OH = 4.6;
+    const SLAB = { ...T("water-stained-streaked-old-poured-concrete-column", 2), color: "oklch(0.66 0.015 80)", roughness: 0.9 };
+    bx("l11-ot-off-floor", OX, 0.02, OZ, OW, 0.14, OD, SLAB);
+    bx("l11-ot-off-roof", OX, OH, OZ, OW, 0.5, OD, SLAB);
+    bx("l11-ot-off-wall-w", OX - OW / 2, 0.1, OZ, 0.4, OH, OD, SEDCO_BRICK);
+    bx("l11-ot-off-wall-n", OX, 0.1, OZ + OD / 2, OW, OH, 0.4, SEDCO_BRICK);
+    bx("l11-ot-off-wall-s", OX, 0.1, OZ - OD / 2, OW, OH, 0.4, SEDCO_BRICK);
+    // the avenue face: brick piers with the openings left bare
+    [-12, -6, 0, 6, 12].forEach((dz, i) => bx(`l11-ot-off-pier-${i}`, OX + OW / 2, 0.1, OZ + dz, 0.6, OH, 0.9, SEDCO_BRICK));
+    bx("l11-ot-off-lintel", OX + OW / 2, OH - 0.7, OZ, 0.6, 0.7, OD, SEDCO_BRICK);
+    // the frame inside: raw columns on a 6 m grid
+    [-5.5, 0.5, 6.5].forEach((dx, i) => [-6, 0, 6].forEach((dz, j) => cyl(`l11-ot-off-col-${i}-${j}`, OX + dx, 0.1, OZ + dz, 0.32, 0.32, OH - 0.1, PILLAR_MAT)));
+    // the foil-wrapped duct runs under the slab and the bare tubes that light it
+    [-4, 4].forEach((dx, i) => sp(`l11-ot-off-duct-${i}`, { feetPosition: { x: OX + dx, y: OH - 0.55, z: OZ }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.3, radiusBottom: 0.3, height: OD - 1.2, radialSegments: 20 }, material: SILVER_FOIL }));
+    [-6, 0, 6].forEach((dz, i) => sp(`l11-ot-off-tube-${i}`, { feetPosition: { x: OX, y: OH - 0.32, z: OZ + dz }, primitive: { kind: "box", width: 3, height: 0.06, depth: 0.12 }, material: { color: "#f4f6f0", emissive: "#f4f8ff", emissiveIntensity: 1.6 }, light: { kind: "point", color: "oklch(0.96 0.02 220)", intensity: 1.6, distance: 11 } }));
+    // half-hung drywall: a studded partition with the boards stopping short
+    for (let k = 0; k < 9; k++) bx(`l11-ot-off-stud-${k}`, OX - 1 + k * 0.6, 0.15, OZ + 9.5, 0.09, OH - 0.15, 0.06, WOOD, { physics: k % 4 ? "none" : "static" });
+    bx("l11-ot-off-board-0", OX - 1.5, 0.15, OZ + 9.55, 1.2, 2.4, 0.03, DRYWALL_MAT);
+    bx("l11-ot-off-board-1", OX - 0.3, 0.15, OZ + 9.55, 1.2, 2.4, 0.03, DRYWALL_MAT);
+    // the work left where it stopped
+    fit("l11-ot-off-ladder", "ladder", OX + 4.5, 0.1, OZ - 3.5, 25, [0.75, 2.5, 1.4]);
+    fit("l11-ot-off-drywall", "drywall", OX - 6.5, 0.1, OZ + 4, 90, [3.4, 1.2, 2.0]);
+    fit("l11-ot-off-spool-0", "spool", OX - 7.5, 0.1, OZ - 7.5, 0, [1.2, 1.1, 1.0], "cylinder");
+    fit("l11-ot-off-spool-1", "spool", OX - 6.1, 0.1, OZ - 8.4, 70, [0.9, 0.8, 0.75], "cylinder");
+    sp("l11-ot-off-hum", { feetPosition: { x: OX, y: 3.6, z: OZ }, audio: { clip: "cdn/sfx-empty-concrete-office-floor-fluorescent-tube-buzz-and-ventilation-drone-loop.mp3", loop: true, gain: 0.14, spatial: true, maxDistance: 18 } });
+    // a second crossing over the canal: a white steel footbridge, west of the road bridge
+    const CZ = -30;
+    fit("l11-canal-footbridge", "footbridge", -36, 0.32, CZ, 90, [4.2, 2.4, 26], "mesh");
   }
 
   // ==========================================
