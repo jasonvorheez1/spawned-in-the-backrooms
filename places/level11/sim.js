@@ -18,7 +18,7 @@ import { layVaults } from "../../scripts/lib/level11-vaults.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 27; // bump to rebuild the city in rooms that are already open
+const V = 28; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -409,7 +409,23 @@ function lay(ctx) {
   const SEDCO_D = 8;
 
   // Sedco Building Shell
-  bx("l11-sedco-shell", SEDCO_X, 0.1, SEDCO_Z, SEDCO_W, SEDCO_H, SEDCO_D, SEDCO_BRICK);
+  // Sedco Building Shell: walkable (Shelly: "make sedco spotlight an actual enterable building"). Walls, not a block; the
+  // front (-X, the sign side) is glass with a door gap at the centre; inside a showroom floor under drop-ceiling light.
+  const SX0 = SEDCO_X - SEDCO_W / 2, SX1 = SEDCO_X + SEDCO_W / 2, SZ0 = SEDCO_Z - SEDCO_D / 2, SZ1 = SEDCO_Z + SEDCO_D / 2, WT = 0.3, DOOR = 1.6;
+  bx("l11-sedco-wall-back", SX1 - WT / 2, 0.1, SEDCO_Z, WT, SEDCO_H, SEDCO_D, SEDCO_BRICK);
+  bx("l11-sedco-wall-n", SEDCO_X, 0.1, SZ0 + WT / 2, SEDCO_W, SEDCO_H, WT, SEDCO_BRICK);
+  bx("l11-sedco-wall-s", SEDCO_X, 0.1, SZ1 - WT / 2, SEDCO_W, SEDCO_H, WT, SEDCO_BRICK);
+  bx("l11-sedco-pier-n", SX0 + WT / 2, 0.1, SZ0 + 0.55, WT, SEDCO_H, 1.1, SEDCO_BRICK);
+  bx("l11-sedco-pier-s", SX0 + WT / 2, 0.1, SZ1 - 0.55, WT, SEDCO_H, 1.1, SEDCO_BRICK);
+  bx("l11-sedco-header", SX0 + WT / 2, 3.0, SEDCO_Z, WT, SEDCO_H - 2.9, SEDCO_D, SEDCO_BRICK);
+  for (const k of [-1, 1]) bx(`l11-sedco-sill-${k < 0 ? "n" : "s"}`, SX0 + WT / 2, 0.1, SEDCO_Z + k * (DOOR / 2 + 1.25), WT, 0.3, 2.5, SEDCO_BRICK);
+  bx("l11-sedco-floor", SEDCO_X, 0.1, SEDCO_Z, SEDCO_W - WT, 0.04, SEDCO_D - WT, { color: "oklch(0.62 0.02 80)", roughness: 0.35 }); // waxed vinyl tile
+  bx("l11-sedco-ceiling", SEDCO_X, SEDCO_H - 0.1, SEDCO_Z, SEDCO_W, 0.2, SEDCO_D, { color: "oklch(0.86 0.01 90)", roughness: 0.9 });
+  for (const [i, dx] of [[0, -2.5], [1, 1.5]].values()) for (const [j, dz] of [[0, -2], [1, 2]].values()) {
+    bx(`l11-sedco-troffer-${i}${j}`, SEDCO_X + dx, SEDCO_H - 0.13, SEDCO_Z + dz, 1.2, 0.03, 0.6, { color: "#fffbe8", emissive: "#fff4d0", emissiveIntensity: 1.4 }, { physics: undefined });
+  }
+  for (const [i, dx] of [-2.5, 1.5].entries()) sp(`l11-sedco-lamp-${i}`, { feetPosition: { x: SEDCO_X + dx, y: SEDCO_H - 0.6, z: SEDCO_Z }, light: { kind: "point", color: "#fff1d0", intensity: 2.2, distance: 9 } });
+  sp("l11-sedco-door-mat", { feetPosition: { x: SX0 + 0.9, y: 0.15, z: SEDCO_Z }, primitive: { kind: "box", width: 1.2, height: 0.02, depth: 1.6 }, material: { color: "oklch(0.25 0.02 30)", roughness: 1 } });
   bx("l11-sedco-roof-trim", SEDCO_X, SEDCO_H + 0.1, SEDCO_Z, SEDCO_W + 0.3, 0.3, SEDCO_D + 0.3, CURB_MAT);
   cyl("l11-sedco-vent1", SEDCO_X - 2.5, SEDCO_H + 0.25, SEDCO_Z - 1.5, 0.4, 0.35, 0.6, STEEL_BRUSHED);
   cyl("l11-sedco-vent2", SEDCO_X + 2.0, SEDCO_H + 0.25, SEDCO_Z + 1.2, 0.4, 0.35, 0.6, STEEL_BRUSHED);
@@ -425,7 +441,7 @@ function lay(ctx) {
   });
 
   // Display Windows with Vintage Spotlight Display
-  bx("l11-sedco-glass", SEDCO_X - SEDCO_W / 2 - 0.05, 0.4, SEDCO_Z, 0.1, 2.6, 5.8, GLASS_TINT);
+  for (const k of [-1, 1]) bx(`l11-sedco-glass-${k < 0 ? "n" : "s"}`, SEDCO_X - SEDCO_W / 2 + 0.15, 0.4, SEDCO_Z + k * (DOOR / 2 + 1.25), 0.06, 2.6, 2.5, GLASS_TINT);
   cyl("l11-sedco-spotlight1", SEDCO_X - SEDCO_W / 2 + 0.8, 1.2, SEDCO_Z - 1.5, 0.22, 0.28, 0.5, STEEL_BRUSHED, {
     rotation: { pitch: 30, yaw: -30 },
     children: [{ feetPosition: { x: 0, y: 0.5, z: 0 }, light: { kind: "point", color: "#ffe0a0", intensity: 3.5, distance: 8 } }],
