@@ -2928,3 +2928,223 @@ l26x-pool-skin:
   rotation: {yaw: 10}
   scale: 0.32
   tags: [l26x]
+l26x-rest-cake:
+  feetPosition: {x: 4.8, y: 0.8, z: -24.5}
+  id: l26x-rest-cake
+  model: /cdn/value.ba2d59f12c7002ece3df1c05db7ab8056fcafeded6bdac37c6a26549c15246cf.glb
+  rotation: {roll: 6, yaw: 200}
+  scale: 0.42
+  tags: [l26x]
+l26x-rest-candles:
+  feetPosition: {x: 4.8, y: 1.1, z: -24.5}
+  fx: {script: "fx\npop flame n=6 at=disc(.09).c(.0) size=.025..0.035 sz=$size*flick(9,.35) col=hdr(4,2.4,.8) a=.95 r=sprite(flame-wisp,add)\npop glow n=1 at=point() g=flick(7,.3) r=light(<1,.6,.28>,$g*1.6,4)"}
+  id: l26x-rest-candles
+  tags: [l26x]
+l26x-rest-chair-0-0:
+  feetPosition: {x: -3.1, y: 0.24, z: -29}
+  id: l26x-rest-chair-0-0
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  rotation: {pitch: -88, yaw: 0}
+  tags: [l26x]
+l26x-rest-chair-0-1:
+  feetPosition: {x: -5.133965293509736, y: 0, z: -27.403062671699583}
+  id: l26x-rest-chair-0-1
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  rotation: {yaw: 240.7}
+  tags: [l26x]
+l26x-rest-chair-0-2:
+  feetPosition: {x: -4.861852108809945, y: 0, z: -30.176627292758344}
+  id: l26x-rest-chair-0-2
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  rotation: {yaw: 31.399999999999977}
+  tags: [l26x]
+l26x-rest-chair-1-0:
+  feetPosition: {x: 1.4001970961969852, y: 0, z: -28.91252439400415}
+  id: l26x-rest-chair-1-0
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  rotation: {yaw: 186.672}
+  tags: [l26x]
+l26x-rest-chair-1-1:
+  feetPosition: {x: 0.7272503098597048, y: 0, z: -31.169558047042987}
+  id: l26x-rest-chair-1-1
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  rotation: {yaw: 337.372}
+  tags: [l26x]
+l26x-rest-chair-1-2:
+  feetPosition: {x: 3.313054690272077, y: 0.24, z: -31.198529618653954}
+  id: l26x-rest-chair-1-2
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  rotation: {pitch: -88, yaw: 336.072}
+  tags: [l26x]
+l26x-rest-chair-2-0:
+  feetPosition: {x: 3.6087042785960546, y: 0, z: -22.770602849497937}
+  id: l26x-rest-chair-2-0
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  rotation: {yaw: 213.918}
+  tags: [l26x]
+l26x-rest-chair-2-1:
+  feetPosition: {x: 4.120829855548957, y: 0.24, z: -25.94869869706794}
+  id: l26x-rest-chair-2-1
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  rotation: {pitch: -88, yaw: 243.618}
+  tags: [l26x]
+l26x-rest-chair-2-2:
+  feetPosition: {x: 5.895467097001542, y: 0, z: -24.40024109369578}
+  id: l26x-rest-chair-2-2
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  rotation: {yaw: 155.31799999999998}
+  tags: [l26x]
+l26x-rest-chair-3-0:
+  feetPosition: {x: -3.1364898704106015, y: 0.24, z: -23.00948798911918}
+  id: l26x-rest-chair-3-0
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  rotation: {pitch: -88, yaw: 171}
+  tags: [l26x]
+l26x-rest-chair-3-1:
+  feetPosition: {x: -1.0062467403027415, y: 0, z: -25.144210832888238}
+  id: l26x-rest-chair-3-1
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  rotation: {yaw: 51.69999999999999}
+  tags: [l26x]
+l26x-rest-chair-3-2:
+  feetPosition: {x: -0.8266378967483927, y: 0, z: -21.930131417841356}
+  id: l26x-rest-chair-3-2
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  rotation: {yaw: 202.4000000000001}
+  tags: [l26x]
+l26x-rest-cloth-0:
+  castShadow: false
+  feetPosition: {x: -3.5, y: 0.01, z: -28.5}
+  id: l26x-rest-cloth-0
+  material: {color: oklch(0.93 0.01 90), roughness: 0.9, side: double}
+  primitive: {height: 0.9, kind: plane, width: 1.3}
+  rotation: {pitch: -90, yaw: 25}
+  tags: [l26x, decal]
+l26x-rest-cloth-1:
+  castShadow: false
+  feetPosition: {x: 2.3, y: 0.011, z: -30}
+  id: l26x-rest-cloth-1
+  material: {color: oklch(0.93 0.01 90), roughness: 0.9, side: double}
+  primitive: {height: 0.9, kind: plane, width: 1.3}
+  rotation: {pitch: -90, yaw: 65}
+  tags: [l26x, decal]
+l26x-rest-cloth-2:
+  castShadow: false
+  feetPosition: {x: 5.5, y: 0.012, z: -24}
+  id: l26x-rest-cloth-2
+  material: {color: oklch(0.93 0.01 90), roughness: 0.9, side: double}
+  primitive: {height: 0.9, kind: plane, width: 1.3}
+  rotation: {pitch: -90, yaw: 35}
+  tags: [l26x, decal]
+l26x-rest-cloth-3:
+  castShadow: false
+  feetPosition: {x: -1.1, y: 0.013000000000000001, z: -22.7}
+  id: l26x-rest-cloth-3
+  material: {color: oklch(0.93 0.01 90), roughness: 0.9, side: double}
+  primitive: {height: 0.9, kind: plane, width: 1.3}
+  rotation: {pitch: -90, yaw: 25}
+  tags: [l26x, decal]
+l26x-rest-cup-0:
+  feetPosition: {x: 1.2, y: 0.8, z: -30.3}
+  id: l26x-rest-cup-0
+  model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  rotation: {yaw: 20}
+  scale: 0.12
+  tags: [l26x]
+l26x-rest-cup-1:
+  feetPosition: {x: -3.4, y: 0.05, z: -28.1}
+  id: l26x-rest-cup-1
+  model: /cdn/value.030349bcce852013ef4c1c1c7fc967b4e391a662871ad52a5da989fe2da67bf7.glb
+  rotation: {roll: 90, yaw: 80}
+  scale: 0.12
+  tags: [l26x]
+l26x-rest-frosting:
+  castShadow: false
+  feetPosition: {x: 0.3, y: 0.014, z: -27.6}
+  id: l26x-rest-frosting
+  material: {color: oklch(0.9 0.08 350), depthWrite: false, texture: /cdn/value.f8c9c480a1631a3993011cf27c1f70024fb83041d76113ce8b5df7fe8760f2cf.png, transparent: true}
+  primitive: {height: 0.9, kind: plane, width: 1.4}
+  rotation: {pitch: -90, yaw: 30}
+  tags: [l26x, decal]
+l26x-rest-stain-0:
+  castShadow: false
+  feetPosition: {x: -3.45, y: 0.016, z: -28.55}
+  id: l26x-rest-stain-0
+  material: {color: oklch(0.6 0.06 30), depthWrite: false, texture: /cdn/value.f6f110264a75cad3318ccfc112fce7a42d502fa821b53b74035c6e6ac5ec86d9.png, transparent: true}
+  primitive: {height: 0.7, kind: plane, width: 0.9}
+  rotation: {pitch: -90, yaw: 60}
+  tags: [l26x, decal]
+l26x-rest-stain-1:
+  castShadow: false
+  feetPosition: {x: 2.35, y: 0.017, z: -30.05}
+  id: l26x-rest-stain-1
+  material: {color: oklch(0.6 0.06 30), depthWrite: false, texture: /cdn/value.f8c9c480a1631a3993011cf27c1f70024fb83041d76113ce8b5df7fe8760f2cf.png, transparent: true}
+  primitive: {height: 0.7, kind: plane, width: 0.9}
+  rotation: {pitch: -90, yaw: 100}
+  tags: [l26x, decal]
+l26x-rest-stain-2:
+  castShadow: false
+  feetPosition: {x: 5.55, y: 0.018000000000000002, z: -24.05}
+  id: l26x-rest-stain-2
+  material: {color: oklch(0.6 0.06 30), depthWrite: false, texture: /cdn/value.f6f110264a75cad3318ccfc112fce7a42d502fa821b53b74035c6e6ac5ec86d9.png, transparent: true}
+  primitive: {height: 0.7, kind: plane, width: 0.9}
+  rotation: {pitch: -90, yaw: 70}
+  tags: [l26x, decal]
+l26x-rest-stain-3:
+  castShadow: false
+  feetPosition: {x: -1.05, y: 0.019, z: -22.75}
+  id: l26x-rest-stain-3
+  material: {color: oklch(0.6 0.06 30), depthWrite: false, texture: /cdn/value.f8c9c480a1631a3993011cf27c1f70024fb83041d76113ce8b5df7fe8760f2cf.png, transparent: true}
+  primitive: {height: 0.7, kind: plane, width: 0.9}
+  rotation: {pitch: -90, yaw: 60}
+  tags: [l26x, decal]
+l26x-rest-table-0:
+  feetPosition: {x: -4.2, y: 0, z: -29}
+  id: l26x-rest-table-0
+  model: /cdn/value.5cfa9f1c4624b48594f690463b974b84649a55b44ad1a8af2f24746e644221d2.glb
+  physics: static
+  rotation: {yaw: 0}
+  scale: 1
+  tags: [l26x]
+l26x-rest-table-1:
+  feetPosition: {x: 1.6, y: 0, z: -30.5}
+  id: l26x-rest-table-1
+  model: /cdn/value.5cfa9f1c4624b48594f690463b974b84649a55b44ad1a8af2f24746e644221d2.glb
+  physics: static
+  rotation: {yaw: 40}
+  scale: 1
+  tags: [l26x]
+l26x-rest-table-2:
+  feetPosition: {x: 4.8, y: 0, z: -24.5}
+  id: l26x-rest-table-2
+  model: /cdn/value.5cfa9f1c4624b48594f690463b974b84649a55b44ad1a8af2f24746e644221d2.glb
+  physics: static
+  rotation: {yaw: 10}
+  scale: 1
+  tags: [l26x]
+l26x-rest-table-3:
+  feetPosition: {x: -1.8, y: 0.5, z: -23.2}
+  id: l26x-rest-table-3
+  model: /cdn/value.5cfa9f1c4624b48594f690463b974b84649a55b44ad1a8af2f24746e644221d2.glb
+  rotation: {roll: 88, yaw: 0}
+  scale: 1
+  tags: [l26x]
+l26x-rest-trolley:
+  feetPosition: {x: -0.6, y: 0.21, z: -27.2}
+  id: l26x-rest-trolley
+  model: /cdn/value.914b20617e567604e9f61f8cabe70714e8644f070acb29e130cc78e59d371c4c.glb
+  rotation: {roll: 85, yaw: 65}
+  scale: 1.1
+  tags: [l26x]
