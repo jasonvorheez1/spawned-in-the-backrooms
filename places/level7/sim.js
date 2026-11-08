@@ -86,7 +86,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 17; // 17: walkable stairs back to Level 6
+const V = 18; // 18: walkable stairs back to Level 6
 // 16 // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
@@ -892,7 +892,7 @@ export function tick(ctx) {
   if ((s.builtV ?? 0) < V) {
     for (const id of Object.keys(ctx.place.objects)) if (GONE.includes(id) || /^l7-(plank|post)-/.test(id)) ctx.destroy(id);
     // rooms built before the fort moved still hold its old pieces (and the worshippers, standing where it was): clear them so the new ones are laid and the people come back
-    for (const id of Object.keys(ctx.place.objects)) if (/^(l7x-|l7h-|l7-(wall-|wainscot-|ceil$|hearth$|pedestal$|wirerack$|cloth-drape$|painting$|vase|dresser-top$|fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$))/.test(id)) ctx.destroy(id);
+    for (const id of Object.keys(ctx.place.objects)) if (/^(l7x-|l7h-|l7-(wall-|wainscot-|step-|back$|ceil$|hearth$|pedestal$|wirerack$|cloth-drape$|painting$|vase|dresser-top$|fort|ft-step|palisade|brazier-fort|still$|shrine$|diving-bell$|cult-chest|boat-from-fort|boulder-1[23]$|jude$|mara$|ezra$|ines$|tobit$))/.test(id)) ctx.destroy(id);
     s.npcGone = {};
     lay(ctx);
     s.builtV = V;
