@@ -1,0 +1,15 @@
+# spawn-scene v2 yaml x0z0
+sa-floor:
+  feetPosition: {x: 0, y: -0.4, z: 0}
+  id: sa-floor
+  material: {color: oklch(0.12 0.02 330), metalness: 0.6, roughness: 0.15}
+  physics: static
+  primitive: {height: 0.4, kind: cylinder, radialSegments: 64, radiusBottom: 24, radiusTop: 24}
+sa-key:
+  feetPosition: {x: 0, y: 18, z: 6}
+  id: sa-key
+  light: {aim: {x: 0, y: 0, z: 0}, angle: 40, color: oklch(0.95 0.08 95), distance: 40, intensity: 6, kind: spot, penumbra: 0.6, shadow: {enabled: true}}
+spam-in:
+  feetPosition: {x: 0, y: 0.1, z: 15}
+  id: spam-in
+  rotation: {yaw: 0}
