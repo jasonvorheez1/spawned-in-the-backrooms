@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 15;
+const V = 16;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -54,16 +54,16 @@ export function tick(ctx) {
   sp("home-from-l11", { feetPosition: { x: 0, y: 0.1, z: 4.6 }, rotation: { yaw: 0 } });
 
   // living room
-  fit("h-rug", M.rug, -1.6, 2.5, 90, [2.6, 0.02, 1.9], { physics: undefined });
-  fit("h-sofa", M.sofa, -4.35, 2.5, 0, [1.2, 1.15, 2.05]); // tripo: tan rolled-arm sofa, plaid pillows, back to the west wall facing the TV
-  fit("h-recliner", M.recliner, -2.3, 0.1, -35, [0.95, 1.05, 0.95]); // tripo: leather recliner angled at the TV
-  fit("h-tv", M.tv, 2.7, 2.5, 180, [0.72, 1.12, 1.1]); // tripo: silver CRT on a black glass stand, DVD and VCR on the shelves
-  sp("h-tv-screen", { tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind: "tv", name: "TV", verb: "Change channel", ch: 0 }, physics: { body: "static", collider: "box" }, feetPosition: { x: 2.38, y: 0.86, z: 2.5 }, rotation: { yaw: 90 }, primitive: { kind: "plane", width: 0.5, height: 0.38 }, material: { texture: "/cdn/value.e12ab4672a2ccf5ac1309d6f656dfa64bf207aa5ae73dfadd76b7b1eb2b10023.mp4", emissive: "#ffffff", emissiveIntensity: 0.9, roughness: 0.2 }, castShadow: false }); // archive.org: Disney Channel commercial breaks, Oct 18 2002, looping
-  sp("h-tv-sound", { feetPosition: { x: 2.4, y: 0.9, z: 2.5 }, audio: { clip: "/cdn/value.a1e84936f3b37819bf6f8106656aa51133a932e421d4d2e67298fb0577c9d9fa.mp3", loop: true, gain: 0.35, spatial: true, maxDistance: 12, bus: "Ambience" } });
-  sp("h-tv-glow", { feetPosition: { x: 2.1, y: 0.9, z: 2.5 }, light: { kind: "point", color: "oklch(0.8 0.06 240)", intensity: 0.5, distance: 4 } });
-  fit("h-table", M.table, -2.6, 2.5, 0, [0.8, 0.5, 1.02]); // tripo: oak coffee table, remote and a magazine on it
+  fit("h-rug", M.rug, -2.4, 1.6, 0, [2.6, 0.02, 1.9], { physics: undefined });
+  fit("h-sofa", M.sofa, -2.4, 3.3, 90, [1.2, 1.15, 2.05]); // tripo: tan rolled-arm sofa, plaid pillows, back to the west wall facing the TV
+  fit("h-recliner", M.recliner, -4.2, 1.4, -60, [0.95, 1.05, 0.95]); // tripo: leather recliner angled at the TV
+  fit("h-tv", M.tv, -2.4, -0.5, 270, [0.72, 1.12, 1.1]); // tripo: silver CRT on a black glass stand, DVD and VCR on the shelves
+  sp("h-tv-screen", { tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind: "tv", name: "TV", verb: "Change channel", ch: 0 }, physics: { body: "static", collider: "box" }, feetPosition: { x: -2.4, y: 0.86, z: -0.18 }, rotation: { yaw: 0 }, primitive: { kind: "plane", width: 0.5, height: 0.38 }, material: { texture: "/cdn/value.e12ab4672a2ccf5ac1309d6f656dfa64bf207aa5ae73dfadd76b7b1eb2b10023.mp4", emissive: "#ffffff", emissiveIntensity: 0.9, roughness: 0.2 }, castShadow: false }); // archive.org: Disney Channel commercial breaks, Oct 18 2002, looping
+  sp("h-tv-sound", { feetPosition: { x: -2.4, y: 0.9, z: -0.2 }, audio: { clip: "/cdn/value.a1e84936f3b37819bf6f8106656aa51133a932e421d4d2e67298fb0577c9d9fa.mp3", loop: true, gain: 0.35, spatial: true, maxDistance: 12, bus: "Ambience" } });
+  sp("h-tv-glow", { feetPosition: { x: -2.4, y: 0.9, z: 0.2 }, light: { kind: "point", color: "oklch(0.8 0.06 240)", intensity: 0.5, distance: 4 } });
+  fit("h-table", M.table, -2.4, 1.7, 90, [0.8, 0.5, 1.02]); // tripo: oak coffee table, remote and a magazine on it
   fit("h-shelf", M.bookshelf, -4.6, 4.2, 90, [1.6, 2.0, 0.4]);
-  fit("h-lamp-1", M.lamp, 3.9, 0.3, 0, [0.5, 1.6, 0.5]);
+  fit("h-lamp-1", M.lamp, -3.75, 3.6, 0, [0.5, 1.6, 0.5]);
   fit("h-kitchen", M.kitchen, 4.5, 3.4, 90, [0.95, 0.92, 1.0]); // tripo: honey oak sink base, brass knobs, beige laminate top, against the east wall
   sp("h-light-living", { feetPosition: { x: 0, y: 2.6, z: 2.5 }, light: { kind: "point", color: "oklch(0.92 0.07 75)", intensity: 2.2, distance: 9 } });
 
@@ -74,11 +74,11 @@ export function tick(ctx) {
   poster("h-poster-sponge", "/cdn/value.d6647818cc1864e1a57ae459da01d37274878ab52fa91397bc0bbf8f3b07b94b.png", -4.93, 1.2, -1.9, 90);
   poster("h-poster-kitty", "/cdn/value.5b3fa0a1b106e04b6db787f988eda22e31496b76d9b76c508f5041e6c2192afa.png", 1.4, 1.2, -5.93, 0);
   const hang = (id, model, x, y, z, yaw, size) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: model }, layout: { box: { min: { x: -size[0] / 2, y: 0, z: -size[2] / 2 }, max: { x: size[0] / 2, y: size[1], z: size[2] / 2 } } } }); // tripo pieces off the floor: no collider
-  hang("h-fan", "/cdn/value.fe9b7013b5254e87f285b50c7bfaa2c091275f57b5479249698a7535f2894259.glb", -1.5, 2.05, 2.5, 0, [1.15, 0.8, 1.15]); // brass ceiling fan with an alabaster bowl light
+  hang("h-fan", "/cdn/value.fe9b7013b5254e87f285b50c7bfaa2c091275f57b5479249698a7535f2894259.glb", -2.4, 2.05, 1.7, 0, [1.15, 0.8, 1.15]); // brass ceiling fan with an alabaster bowl light
   hang("h-curtains", "/cdn/value.970a63a9bb4e3d521cd133a1ec921f884ac24ea444813ecfd0981b2fa3d37ec3.glb", -4.82, 0.75, -3.5, 0, [0.3, 1.5, 1.6]); // white mini-blinds and burgundy curtains over the bedroom window
   hang("h-photos", "/cdn/value.572ad0fe124cdd180aec4d28d259719e1057e02d8cc6c54b996c7b22ada303e7.glb", -4.88, 1.35, 4.2, 0, [0.12, 0.6, 0.55]); // family photos and a wall clock by the front of the living room
   fit("h-plant", "/cdn/value.5c55541c98397f0fd38ea7e850e3e15e4fd78fd4a5951439cde327b41abe9e09.glb", -4.3, 5.3, 0, [0.6, 0.85, 0.6]); // pothos on a wicker stand in the corner
-  hang("h-wii", "/cdn/value.45d3abcae444b2dc2d981a3a199513b6d2eca018818ad98ff4aaf0a799b7d642.glb", 2.75, 0.1, 1.75, 180, [0.35, 0.32, 0.3]); // white wii, sensor bar and two wiimotes beside the TV stand
+  hang("h-wii", "/cdn/value.45d3abcae444b2dc2d981a3a199513b6d2eca018818ad98ff4aaf0a799b7d642.glb", -1.65, 0.1, -0.6, 270, [0.35, 0.32, 0.3]); // white wii, sensor bar and two wiimotes beside the TV stand
   hang("h-kitty", "/cdn/value.a9f9d3c6172c17966216abe7310be269dde6da0bf1b828779638c4c7152f6575.glb", -2.3, 0.62, -5.2, 160, [0.3, 0.32, 0.26]); // hello kitty plush propped on the pillows
   hang("h-boombox", "/cdn/value.b65239e4484936755ff171a40f1ea0104ad73cf5d0d2b21261bab60345e000f9.glb", -1.5, 0.1, -5.6, 180, [0.5, 0.36, 0.2]); // pink CD boombox by the bed
   fit("h-pcdesk", "/cdn/value.c19a3a1207063b8231b343d67d98657a158515407d7c01b6c2286a1bd2d5c18c.glb", 1.2, -5.25, 180, [1.3, 1.35, 1.2]); // beige tower, CRT monitor and swivel chair against the north wall
