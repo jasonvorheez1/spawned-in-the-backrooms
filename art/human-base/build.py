@@ -22,49 +22,61 @@ def load():
     head.name, body.name = "Head", "Body"
     return head, body
 
-def male(head, body):
+def arm_leg_weights(head, body):
+    # rig the untouched base once to learn which verts are arm and leg, then throw that rig away
+    r = rig(head, body, 0.0)
+    gi = {g.index: g.name for g in body.vertex_groups}
+    ARM = ("Arm", "ForeArm", "Hand"); LEG = ("UpLeg", "Leg", "Foot", "ToeBase")
+    aw, lw = [], []
+    for v in body.data.vertices:
+        a = l = 0.0
+        for g in v.groups:
+            n = gi[g.group]
+            for side in ("Left", "Right"):
+                if n in [side + x for x in ARM]: a += g.weight
+                if n in [side + x for x in LEG]: l += g.weight
+        aw.append(min(1.0, a)); lw.append(min(1.0, l))
     for o in (head, body):
-        for v in o.data.vertices:
-            x, y, z = v.co
-            ax = abs(x); sg = 1 if x >= 0 else -1
-            if o is body:
-                # flat chest, then a firm pec plane with a low edge
-                w = bump(1.18, 1.26, 1.44, 1.5, z) * (1 - smooth(0.12, 0.17, ax))
-                if y < 0.01: y = y + (0.01 - y) * 0.97 * w
-                pec = bump(1.27, 1.33, 1.40, 1.45, z) * bump(0.015, 0.05, 0.11, 0.15, ax)
-                if y < 0.05: y -= 0.016 * pec
-                # broad shoulders, traps and upper back
-                k = 0.34 * smooth(1.18, 1.42, z) * (1 - smooth(1.52, 1.6, z))
-                x = x * (1 + k) if ax <= 0.18 else x + sg * 0.18 * k
-                tr = bump(1.44, 1.5, 1.56, 1.62, z) * bump(0.04, 0.08, 0.16, 0.2, ax)
-                z += 0.012 * tr
-                # hips and thighs taken in hard, waist filled straight: a V, not an hourglass
-                if ax < 0.24:
-                    x *= 1 - 0.27 * bump(0.66, 0.82, 1.04, 1.14, z)
-                    x *= 1 + 0.22 * bump(1.04, 1.14, 1.26, 1.36, z)
-                # outer thigh flare off
-                if 0.45 < z < 0.86 and ax > 0.03:
-                    x = sg * (0.03 + (ax - 0.03) * (1 - 0.18 * bump(0.45, 0.6, 0.78, 0.86, z)))
-                # flatter seat
-                if y > 0.1: y = 0.1 + (y - 0.1) * (1 - 0.6 * bump(0.68, 0.8, 1.0, 1.08, z))
-                # thick neck
-                nk = bump(1.48, 1.54, 1.62, 1.68, z)
-                x *= 1 + 0.32 * nk; y = 0.075 + (y - 0.075) * (1 + 0.2 * nk)
-                # arm and calf mass
-                if ax > 0.2 and z > 1.0: y = 0.075 + (y - 0.075) * 1.22
-                if z < 0.45 and ax > 0.02:
-                    c = bump(0.12, 0.22, 0.34, 0.42, z)
-                    cx = sg * 0.078; x = cx + (x - cx) * (1 + 0.14 * c); y = 0.12 + (y - 0.12) * (1 + 0.12 * c)
-            else:
-                # square jaw and chin, heavier brow, wider lower face
-                j = bump(1.56, 1.62, 1.74, 1.8, z)
-                x *= 1 + 0.13 * j
-                ch = bump(1.55, 1.59, 1.64, 1.68, z) * (1 - smooth(0.02, 0.05, ax))
-                z -= 0.012 * ch; y -= 0.006 * ch
-                br = bump(1.79, 1.82, 1.85, 1.88, z) * (1 if y < 0.0 else 0)
-                y -= 0.006 * br
-            v.co = Vector((x, y, z))
-        o.data.update()
+        for m in list(o.modifiers): o.modifiers.remove(m)
+        o.vertex_groups.clear(); o.parent = None
+    bpy.data.objects.remove(r, do_unlink=True)
+    return aw, lw
+
+def male(head, body):
+    aw, lw = arm_leg_weights(head, body)
+    SH = 0.03  # arms ride out this far with the broader shoulders
+    for i, v in enumerate(body.data.vertices):
+        x, y, z = v.co; ax = abs(x); sg = 1 if x >= 0 else -1
+        A = aw[i]; L = lw[i]; T = 1 - A
+        # flat chest, a firm pec plane
+        w = bump(1.18, 1.26, 1.44, 1.5, z) * (1 - smooth(0.12, 0.17, ax)) * T
+        if y < 0.01: y = y + (0.01 - y) * 0.95 * w
+        pec = bump(1.28, 1.33, 1.40, 1.45, z) * bump(0.015, 0.05, 0.11, 0.15, ax) * T
+        if y < 0.03: y -= 0.012 * pec
+        # broad shoulders and lats: the torso scaled out, the arms carried rigidly
+        sh = bump(1.12, 1.34, 1.5, 1.58, z)
+        x = x * (1 + 0.2 * sh * T) + sg * SH * A
+        # waist straight, hips and thighs in: a V, not an hourglass
+        x *= 1 + 0.08 * bump(1.06, 1.14, 1.24, 1.32, z) * T
+        x *= 1 - 0.16 * bump(0.76, 0.9, 1.04, 1.13, z) * T
+        if L > 0.3 and 0.4 < z < 0.95:
+            cx = sg * 0.078; x = cx + (x - cx) * (1 - 0.14 * bump(0.4, 0.55, 0.8, 0.95, z))
+        # flatter seat
+        if y > 0.1: y = 0.1 + (y - 0.1) * (1 - 0.5 * bump(0.7, 0.82, 1.0, 1.1, z) * T)
+        # thick neck
+        nk = bump(1.48, 1.53, 1.6, 1.66, z)
+        x *= 1 + 0.28 * nk; y = 0.075 + (y - 0.075) * (1 + 0.16 * nk)
+        # arm and calf mass
+        if A > 0.5: y = 0.075 + (y - 0.075) * (1 + 0.16 * A)
+        if L > 0.5 and z < 0.45:
+            c = bump(0.12, 0.22, 0.34, 0.42, z); cx = sg * 0.078
+            x = cx + (x - cx) * (1 + 0.12 * c); y = 0.12 + (y - 0.12) * (1 + 0.1 * c)
+        v.co = Vector((x, y, z))
+    for v in head.data.vertices:
+        x, y, z = v.co
+        x *= 1 + 0.08 * bump(1.56, 1.62, 1.74, 1.8, z)  # squarer, wider jaw
+        v.co = Vector((x, y, z))
+    body.data.update(); head.data.update()
 
 ANAT = dict(hipZ=0.90, legX=0.078, legY=0.12, kneeZ=0.48, ankleZ=0.085, toeY=-0.01, spineY=0.09,
             shoulder=(0.075, 1.42), arm=(0.17, 1.40), neckZ=1.55, headZ=1.64, topZ=1.94)
@@ -139,7 +151,7 @@ def proof(name, r):
 def build(name, is_male, height):
     head, body = load()
     if is_male: male(head, body)
-    r = rig(head, body, 0.30 if is_male else 0.0)
+    r = rig(head, body, 0.18 if is_male else 0.0)
     s = height / 1.94
     r.scale = (s, s, s); bpy.ops.object.select_all(action="DESELECT")
     for o in (r, head, body): o.select_set(True)
