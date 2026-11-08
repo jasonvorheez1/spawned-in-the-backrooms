@@ -5,7 +5,7 @@ from mathutils import Vector, noise
 BODY = "/workspace/shop/value.72a8b9bf28216baab5b949a31bbff68251f892d11e4ca39e3b68c27ef0557e76.glb"
 HEAD = "/workspace/shop/value.de385f3a252d2dba941dd3db0bc84d2eba7c85f616d69643cdd6db2c1d02cf35.glb"
 OUT = "/workspace/shop/out"; os.makedirs(OUT, exist_ok=True)
-TEX = os.path.dirname(os.path.abspath(__file__))
+TEX = "/workspace/shop"
 
 def reset():
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -103,7 +103,7 @@ def proof(name, ob):
     w = bpy.data.worlds.new("w"); w.color = (0.5, 0.5, 0.52); sc.world = w
     L = bpy.data.lights.new("k", "SUN"); L.energy = 3; lo = bpy.data.objects.new("k", L); lo.rotation_euler = (0.9, 0, -0.5); sc.collection.objects.link(lo)
     cam = bpy.data.objects.new("c", bpy.data.cameras.new("c")); sc.collection.objects.link(cam); sc.camera = cam
-    for i, (pos) in enumerate([(0.9, -2.0, 1.5), (-1.6, 0.9, 1.6)]):
+    for i, (pos) in enumerate([(0.9, 2.0, 1.5), (-1.6, -0.9, 1.6)]):
         cam.location = pos
         d = Vector((0, 0, 1.2)) - Vector(pos); cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
         sc.render.filepath = f"/tmp/proof/{name}_{i}.png"; bpy.ops.render.render(write_still=True)
