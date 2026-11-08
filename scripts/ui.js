@@ -9,6 +9,7 @@ import W from './lib/weapons.js'
 import { ZONE_NAMES } from './lib/maze.js'
 import { wardrobe } from './wardrobe-ui.js'
 import { mainMenu } from './main-menu-ui.js'
+import { hubUi } from './hub-ui.js'
 import { cutUi, t0Fade } from './cutscene-ui.js'
 import { tutUi } from './tutorial-ui.js'
 import { pickUi } from './lockpick-ui.js'
@@ -386,5 +387,5 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>
 
-</div>${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
+</div>${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
 }
