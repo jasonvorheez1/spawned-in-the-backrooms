@@ -6,13 +6,220 @@ bc-arcade:
   physics: none
   primitive: {depth: 18, height: 4.5, kind: box, width: 14}
   tags: [blueprint]
+bc-bench-1:
+  feetPosition: {x: -4.5, y: 0, z: 24.05}
+  id: bc-bench-1
+  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
+  model: {forward: "+z", id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 180}
+  tags: [bonus-court]
+bc-bench-2:
+  feetPosition: {x: 4.5, y: 0, z: 24.05}
+  id: bc-bench-2
+  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
+  model: {forward: "+z", id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 180}
+  tags: [bonus-court]
+bc-bench-3:
+  feetPosition: {x: -4.5, y: 0, z: 6.05}
+  id: bc-bench-3
+  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
+  model: {forward: "+z", id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 180}
+  tags: [bonus-court]
+bc-bench-4:
+  feetPosition: {x: 4.5, y: 0, z: 6.05}
+  id: bc-bench-4
+  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
+  model: {forward: "+z", id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 180}
+  tags: [bonus-court]
+bc-bench-5:
+  feetPosition: {x: -4.5, y: 0, z: -21.95}
+  id: bc-bench-5
+  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
+  model: {forward: "+z", id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 180}
+  tags: [bonus-court]
+bc-bench-6:
+  feetPosition: {x: 4.5, y: 0, z: -21.95}
+  id: bc-bench-6
+  layout: {box: {max: {x: 0.95, y: 1.1, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
+  model: {forward: "+z", id: /cdn/value.45e95889611ed3b530e2e62e3631d60d02abd46bbbd8e44a8740c4b2f1db91f0.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 180}
+  tags: [bonus-court]
+bc-directory:
+  feetPosition: {x: 0, y: 0, z: -31.5}
+  id: bc-directory
+  layout: {box: {max: {x: 0.6, y: 2.4, z: 0.2}, min: {x: -0.6, y: 0, z: -0.2}}}
+  model: {forward: "-x", id: /cdn/value.d498b705ca9b103ef3759c93502b6ddbd2a61de3f859d7d315c8431ec012663b.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 180}
+  tags: [bonus-court]
+bc-fern-1:
+  feetPosition: {x: -3.9, y: 0, z: 1.3}
+  id: bc-fern-1
+  layout: {box: {max: {x: 0.6, y: 1.15, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.a41e07083c64a904524ac6b1166e1ab516d22c60eea2021d36a0a252dbea4520.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 0}
+  tags: [bonus-court]
+bc-fern-2:
+  feetPosition: {x: 3.9, y: 0, z: 1.3}
+  id: bc-fern-2
+  layout: {box: {max: {x: 0.6, y: 1.15, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.a41e07083c64a904524ac6b1166e1ab516d22c60eea2021d36a0a252dbea4520.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 77}
+  tags: [bonus-court]
+bc-fern-3:
+  feetPosition: {x: -3.9, y: 0, z: -1.6}
+  id: bc-fern-3
+  layout: {box: {max: {x: 0.6, y: 1.15, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.a41e07083c64a904524ac6b1166e1ab516d22c60eea2021d36a0a252dbea4520.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 154}
+  tags: [bonus-court]
+bc-fern-4:
+  feetPosition: {x: 3.9, y: 0, z: -1.6}
+  id: bc-fern-4
+  layout: {box: {max: {x: 0.6, y: 1.15, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
+  model: {id: /cdn/value.a41e07083c64a904524ac6b1166e1ab516d22c60eea2021d36a0a252dbea4520.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 231}
+  tags: [bonus-court]
 bc-fountain:
+  children: [{feetPosition: {x: 0, y: 0.6, z: 0}, id: statue, layout: {box: {max: {x: 0.6, y: 2.5, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}, model: {forward: "+z", id: /cdn/value.230f8a809bb4151e629f63be75354d1b39a79297ff3f5301bc63e64478b30ea3.glb}}, {feetPosition: {x: 0, y: 0.53, z: 0}, id: water, material: {color: "#7fd6e6", kind: water, opacity: 0.8, waveIntensity: 0.3}, primitive: {height: 0.02, kind: cylinder, radialSegments: 48, radiusBottom: 2.85, radiusTop: 2.85}}, {feetPosition: {x: 0, y: 0.55, z: 0}, fx: {script: "fx\npop jet rate=flick(.6,.25)*70 on=disc(.25).c(2.6) life=.7..1.1 v=up(3.2..4.2)+sdir()*.35 size=.04..0.08 acc=grav()*.9+drag(.4) col=<.85,.95,1> a=.7>.5:.6>0 sz=$size r=sprite(droplet,alpha,velocity,.03)\npop ring rate=?mobile:30|60 on=arc().c(.6) life=.5..0.8 v=radial(.7..1.1)+up(1.4..2) size=.03..0.06 acc=grav()+drag(.3) col=<.8,.92,1> a=.6>0 sz=$size r=sprite(droplet,alpha,velocity,.03)\npop mist on=@jet?.25 life=1..1.8 v=up(.2) size=.3..0.6 acc=buoy(.2)+drag(1.2) col=<.9,.95,1> a=0>.12:.3>.7:.1>0 sz=$size*(.6>1.6) r=sprite(smoke-puff,alpha)"}, id: spray}, {audio: {clip: cdn/sfx-mall-fountain-water-splashing-loop.mp3, gain: 0.25, loop: true, maxDistance: 18, spatial: true}, feetPosition: {x: 0, y: 0.6, z: 0}, id: splash}]
   feetPosition: {x: 0, y: 0, z: 12}
   id: bc-fountain
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 6.4, height: 3, kind: box, width: 6.4}
-  tags: [blueprint]
+  layout: {box: {max: {x: 3.2, y: 3, z: 3.2}, min: {x: -3.2, y: 0, z: -3.2}}}
+  model: {id: /cdn/value.29e31cf4ce8c8a880444f23fd03e52b01692f53420b7d7ecf32dda9168bf9035.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-court]
+bc-palm-1:
+  feetPosition: {x: -4.5, y: 1, z: 22}
+  id: bc-palm-1
+  layout: {box: {max: {x: 2.5, y: 5.6, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
+  model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
+  rotation: {yaw: 0}
+  tags: [bonus-court]
+bc-palm-2:
+  feetPosition: {x: 4.5, y: 1, z: 22}
+  id: bc-palm-2
+  layout: {box: {max: {x: 2.5, y: 6.1, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
+  model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
+  rotation: {yaw: 61}
+  tags: [bonus-court]
+bc-palm-3:
+  feetPosition: {x: -4.5, y: 1, z: 4}
+  id: bc-palm-3
+  layout: {box: {max: {x: 2.5, y: 6.6, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
+  model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
+  rotation: {yaw: 122}
+  tags: [bonus-court]
+bc-palm-4:
+  feetPosition: {x: 4.5, y: 1, z: 4}
+  id: bc-palm-4
+  layout: {box: {max: {x: 2.5, y: 5.6, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
+  model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
+  rotation: {yaw: 183}
+  tags: [bonus-court]
+bc-palm-5:
+  feetPosition: {x: -4.5, y: 1, z: -24}
+  id: bc-palm-5
+  layout: {box: {max: {x: 2.5, y: 6.1, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
+  model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
+  rotation: {yaw: 244}
+  tags: [bonus-court]
+bc-palm-6:
+  feetPosition: {x: 4.5, y: 1, z: -24}
+  id: bc-palm-6
+  layout: {box: {max: {x: 2.5, y: 6.6, z: 2.5}, min: {x: -2.5, y: 0, z: -2.5}}}
+  model: {id: /cdn/value.cb44b20d3bb0ff1a7580c4a0b29d239d93be099e2ccff4357fe93ab2693e6cd9.glb}
+  rotation: {yaw: 305}
+  tags: [bonus-court]
+bc-planter-1:
+  feetPosition: {x: -4.5, y: 0, z: 22}
+  id: bc-planter-1
+  layout: {box: {max: {x: 1.1, y: 1.6, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.ae6b57a4fa824584931cd189f8f5ccf78a17abd3d69dcb8c9666751daf801d45.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-court]
+bc-planter-2:
+  feetPosition: {x: 4.5, y: 0, z: 22}
+  id: bc-planter-2
+  layout: {box: {max: {x: 1.1, y: 1.6, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.ae6b57a4fa824584931cd189f8f5ccf78a17abd3d69dcb8c9666751daf801d45.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-court]
+bc-planter-3:
+  feetPosition: {x: -4.5, y: 0, z: 4}
+  id: bc-planter-3
+  layout: {box: {max: {x: 1.1, y: 1.6, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.ae6b57a4fa824584931cd189f8f5ccf78a17abd3d69dcb8c9666751daf801d45.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-court]
+bc-planter-4:
+  feetPosition: {x: 4.5, y: 0, z: 4}
+  id: bc-planter-4
+  layout: {box: {max: {x: 1.1, y: 1.6, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.ae6b57a4fa824584931cd189f8f5ccf78a17abd3d69dcb8c9666751daf801d45.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-court]
+bc-planter-5:
+  feetPosition: {x: -4.5, y: 0, z: -24}
+  id: bc-planter-5
+  layout: {box: {max: {x: 1.1, y: 1.6, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.ae6b57a4fa824584931cd189f8f5ccf78a17abd3d69dcb8c9666751daf801d45.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-court]
+bc-planter-6:
+  feetPosition: {x: 4.5, y: 0, z: -24}
+  id: bc-planter-6
+  layout: {box: {max: {x: 1.1, y: 1.6, z: 1.1}, min: {x: -1.1, y: 0, z: -1.1}}}
+  model: {id: /cdn/value.ae6b57a4fa824584931cd189f8f5ccf78a17abd3d69dcb8c9666751daf801d45.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-court]
+bc-trash-1:
+  feetPosition: {x: -5.8, y: 0, z: 14}
+  id: bc-trash-1
+  layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
+  model: {forward: "+z", id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-court]
+bc-trash-2:
+  feetPosition: {x: 5.8, y: 0, z: 14}
+  id: bc-trash-2
+  layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
+  model: {forward: "+z", id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-court]
+bc-trash-3:
+  feetPosition: {x: -5.8, y: 0, z: -20}
+  id: bc-trash-3
+  layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
+  model: {forward: "+z", id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-court]
+bc-trash-4:
+  feetPosition: {x: 5.8, y: 0, z: -20}
+  id: bc-trash-4
+  layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
+  model: {forward: "+z", id: /cdn/value.f7829b4b996cc980cd95616eb8997c22c9b7804c091864013b2a112cbc05287b.glb}
+  physics: {body: static, collider: box}
+  tags: [bonus-court]
+bc-wordmark:
+  feetPosition: {x: 0, y: 9, z: 30}
+  id: bc-wordmark
+  rotation: {yaw: 180}
+  tags: [bonus-court]
+  vector: "<svg viewBox='0 0 800 160' width='8m'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#ff4fd8'/><stop offset='1' stop-color='#ff8ad0'/></linearGradient></defs>\n<rect x='6' y='6' width='788' height='148' rx='22' fill='none' stroke='#38f4ff' stroke-width='7' filter='drop-shadow(0 0 10px #38f4ff)'/>\n<text x='400' y='112' text-anchor='middle' font-family='display' font-size='96' font-style='italic' fill='none' stroke='url(#g)' stroke-width='7' filter='drop-shadow(0 0 14px #ff4fd8)'>BONUS ROOM</text>\n<text x='400' y='112' text-anchor='middle' font-family='display' font-size='96' font-style='italic' fill='#ffe8fb' opacity='0.35'>BONUS ROOM</text></svg>"
 bd-diner:
   feetPosition: {x: -17, y: 0, z: -15}
   id: bd-diner
