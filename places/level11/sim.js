@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 36; // bump to rebuild the city in rooms that are already open
+const V = 37; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1341,81 +1341,111 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   const APT_D = 8.0;
   const APT_H = 3.6;
 
-  // Exterior Stoop & Steps
-  bx("l11-apt-stoop", APT_X + APT_W / 2 + 1.2, -0.04, APT_Z, 2.4, 0.45, 2.2, SIDEWALK);
-  for (const s of [-1, 1]) {
-    bx(`l11-apt-stoop-rail-${s}`, APT_X + APT_W / 2 + 1.2, 0.45, APT_Z + s * 1.0, 2.2, 0.85, 0.06, IRON_RAIL);
-  }
+  // Real Blender models (art/l11-apartment/build.py): built in world coordinates, so each sits at its own world feet with no turn.
+  // Floor top y 0.32, open east doorway at x -39.5 (mesh collider keeps the doorway, the door leaf stands open against the inside north wall).
+  const APT_M = {
+    shell: "/cdn/value.17c259e44002a5323a56b01733a4d227b9e11ddc98e248457b025595f5033c13.glb", // 8664 tris
+    floor: "/cdn/value.530ae8b88219c78fd76bd72a38e08bfd2feaedc34c0ff9b80e3e72d8def289a7.glb", // 12 tris
+    stoop: "/cdn/value.fe9768df75103e8dc063cd0cdd2431962754bab5fe4e89b5bf13e11be63a9e4f.glb", // 456 tris
+    rail: "/cdn/value.bab60998b05d8ad63dbc5c8a9b42f10e62d61088081f25af8195e327bde0f39b.glb", // 1252 tris
+    armchair: "/cdn/value.cb9615064b601b080920c80f9c7d52728b4495f38a5229f0a77b4903179c6c97.glb", // 6384 tris
+    table: "/cdn/value.e1941be0f86353a27cd90194795fe9f47c65004f156ea640ab78c2644a8af9a6.glb", // 1812 tris
+    radio: "/cdn/value.d956a0d365c6a08548a02b734591e6ac957d50c649ef5ae107692450a2d58678.glb", // 848 tris
+    radiator: "/cdn/value.950ca1b89a4aaff1f8c4f9287542eccc7742aaddee4908d127d77cc2cd8564f5.glb", // 6056 tris
+    counter: "/cdn/value.301c531760c14fb2d96e9c8ec54af281b24c5c06fc1e4be3c5ba8ad279708de3.glb", // 3028 tris
+    sink: "/cdn/value.18a480ae5d52befed00dc4387541120951cbceea53c08a0f8783f3c54bb55b06.glb", // 1228 tris
+    bed: "/cdn/value.bbb131df37a157d3a350b610fec1a89a205b93e7532cabfbe2e676b2a98f802f.glb", // 5816 tris
+    bookshelf: "/cdn/value.1eb5a4d0d74feb46ccccd20ebf5c2f0ea69a16afd52c50bb36f6566d9513bf46.glb", // 2504 tris
+    floorlamp: "/cdn/value.7d76f4495138c0fe29b3eff6b210f8716c98a3efa9f0b877a01352cee0a1255b.glb", // 616 tris
+    pendant: "/cdn/value.3d0956944dc04c4e4fc8bcad1c0342ed7cb079d26caa035077a3811de5a1dcd1.glb", // 440 tris
+    rug: "/cdn/value.455dde0ca22a985f649dee005f80bad45966342485d248a0fa95d86fb0a2d2c3.glb", // 2208 tris
+    picture: "/cdn/value.cd86b7692f547b7047b915e29c7369bd1a0e9da5c6ae2f71710d550c98aa72c8.glb", // 940 tris
+  };
+  const AP = {
+    shell: [-44.4503, -0.05, 58.0],
+    floor: [-44.5, 0.0, 58.0],
+    stoop: [-38.47, -0.05, 58.0],
+    rail: [-38.409, 0.107, 57.06],
+    armchair: [-46.9105, 0.32, 58.3],
+    table: [-46.9, 0.32, 57.25],
+    radio: [-47.0075, 0.972, 57.25],
+    radiator: [-44.4235, 0.3, 54.3],
+    counter: [-42.5, 0.32, 61.5331],
+    sink: [-42.3, 1.014, 61.5784],
+    bed: [-48.275, 0.32, 61.27],
+    bookshelf: [-49.1625, 0.32, 55.4],
+    floorlamp: [-47.65, 0.32, 59.25],
+    pendant: [-44.5, 2.82, 58.0],
+    rug: [-45.7998, 0.324, 58.0],
+    picture: [-47.3, 1.585, 54.172],
+  };
+  const at = (k, dx = 0, dz = 0) => ({ x: AP[k][0] + dx, y: AP[k][1], z: AP[k][2] + dz });
+  const tx = (name, color, more = {}) => ({ texture: `cdn/texture-${name}.png`, wrap: "repeat", repeat: [1, 1], color, ...more });
+  const GLOW = (c, i) => ({ color: c, emissive: c, emissiveIntensity: i });
+  const AM = {
+    brick: tx("grimy-red-brick-wall", "oklch(0.72 0.03 40)", { roughness: 0.95 }),
+    plaster: tx("cream-painted-plaster-wall", "oklch(0.96 0.03 90)", { roughness: 0.9 }),
+    ceiling: tx("painted-plaster-wall", "oklch(0.93 0.015 90)", { roughness: 0.95 }),
+    paint: tx("painted-plaster-wall", "oklch(0.95 0.012 95)", { roughness: 0.6 }),
+    concrete: tx("smooth-cold-poured-concrete-wall", "oklch(0.88 0.01 80)", { roughness: 0.95 }),
+    stone: tx("water-stained-streaked-old-poured-concrete-column", "oklch(0.9 0.015 80)", { roughness: 0.9 }),
+    trim: tx("worn-hardwood-grain", "oklch(0.62 0.07 55)", { roughness: 0.55 }),
+    wainscot: tx("worn-hardwood-grain", "oklch(0.58 0.08 50)", { roughness: 0.55 }),
+    wood: tx("worn-hardwood-grain", "oklch(0.6 0.08 50)", { roughness: 0.5 }),
+    floor: tx("worn-oak-floorboards", "oklch(0.8 0.05 65)", { roughness: 0.6 }),
+    brass: tx("brushed-stainless-steel", "oklch(0.78 0.11 80)", { metalness: 1, roughness: 0.35 }),
+    steel: tx("brushed-stainless-steel", "oklch(0.95 0 0)", { metalness: 1, roughness: 0.3 }),
+    iron: tx("black-wrought-iron", "oklch(0.6 0 0)", { metalness: 0.6, roughness: 0.6 }),
+    pipe: tx("rusted-corroded-steel", "oklch(0.75 0.02 50)", { metalness: 0.5, roughness: 0.75 }),
+    radpaint: tx("grimy-scratched-steel-plate", "oklch(0.95 0.03 95)", { metalness: 0.4, roughness: 0.55 }),
+    rubber: tx("grimy-scratched-steel-plate", "oklch(0.35 0 0)", { roughness: 0.9 }),
+    glass: { color: "oklch(0.75 0.03 220)", opacity: 0.32, transparent: true, roughness: 0.05, metalness: 0.2 },
+    bulb: GLOW("#ffe2a8", 3.2),
+    velvet: tx("green-velvet-upholstery", "oklch(0.75 0.08 150)", { roughness: 0.95 }),
+    cloth: tx("burlap-sack-weave", "oklch(0.75 0.05 75)", { roughness: 0.95 }),
+    bakelite: tx("worn-hardwood-grain", "oklch(0.35 0.04 45)", { roughness: 0.3 }),
+    dial: { ...GLOW("#ffb142", 2.4), emissive: "#ff9f1a" },
+    cabinet: tx("painted-plaster-wall", "oklch(0.86 0.06 150)", { roughness: 0.55 }),
+    counter: tx("worn-cream-formica-countertop", "oklch(0.97 0.02 90)", { roughness: 0.4 }),
+    ceramic: tx("painted-plaster-wall", "oklch(0.97 0.01 90)", { roughness: 0.2 }),
+    coffee: { color: "#1c0f06", roughness: 0.08 },
+    blanket: tx("red-wool-blanket-weave", "oklch(0.8 0.05 25)", { roughness: 0.95 }),
+    linen: tx("worn-canvas-fabric", "oklch(0.97 0.01 90)", { roughness: 0.9 }),
+    book_a: tx("worn-canvas-fabric", "oklch(0.45 0.14 28)", { roughness: 0.75 }),
+    book_b: tx("worn-canvas-fabric", "oklch(0.45 0.1 150)", { roughness: 0.75 }),
+    book_c: tx("worn-canvas-fabric", "oklch(0.4 0.1 260)", { roughness: 0.75 }),
+    pages: tx("worn-canvas-fabric", "oklch(0.93 0.03 90)", { roughness: 0.9 }),
+    shade: { ...tx("worn-canvas-fabric", "oklch(0.95 0.05 85)"), emissive: "#ffcf80", emissiveIntensity: 0.55, roughness: 0.9 },
+    rug: { texture: "cdn/texture-persian-rug-woven-pattern.png", color: "oklch(0.92 0.02 60)", roughness: 0.95 },
+    fringe: tx("worn-canvas-fabric", "oklch(0.9 0.03 85)", { roughness: 0.95 }),
+  };
+  const slots = (...ks) => Object.fromEntries(ks.map((k) => [k, AM[k]]));
+  const am = (id, k, sl, collider, extra = {}) =>
+    sp(id, { feetPosition: at(k), model: { id: APT_M[k], forward: "-z", materials: slots(...sl) }, ...(collider ? { physics: { body: "static", collider } } : {}), ...extra });
+  const USE = (kind, name, verb) => ({ tags: ["usable"], behavior: "scripts/level11-use.js", state: { kind, name, verb } });
 
-  // Apartment Shell & Walls
-  bx("l11-apt-floor", APT_X, 0.22, APT_Z, APT_W - 0.4, 0.1, APT_D - 0.4, { ...T("worn-hardwood-grain", 2), color: "oklch(0.62 0.06 65)", roughness: 0.65 });
-  bx("l11-apt-rug", APT_X - 1.5, 0.28, APT_Z, 4.5, 0.02, 3.8, { ...T("worn-canvas-fabric", 2), color: "oklch(0.48 0.14 30)", roughness: 0.9 }, { physics: undefined });
-
-  // Plaster walls with cream paint
-  bx("l11-apt-wall-w", APT_X - APT_W / 2, 0.22, APT_Z, 0.2, APT_H, APT_D, STUCCO_MALL);
-  bx("l11-apt-wall-n", APT_X, 0.22, APT_Z + APT_D / 2, APT_W, APT_H, 0.2, STUCCO_MALL);
-  bx("l11-apt-wall-s", APT_X, 0.22, APT_Z - APT_D / 2, APT_W, APT_H, 0.2, STUCCO_MALL);
-  // Front wall with doorway
-  bx("l11-apt-wall-e1", APT_X + APT_W / 2, 0.22, APT_Z - 2.4, 0.2, APT_H, 3.2, BRICK_BLDG);
-  bx("l11-apt-wall-e2", APT_X + APT_W / 2, 0.22, APT_Z + 2.4, 0.2, APT_H, 3.2, BRICK_BLDG);
-  bx("l11-apt-wall-etop", APT_X + APT_W / 2, 2.62, APT_Z, 0.2, 1.2, 1.6, BRICK_BLDG);
-  bx("l11-apt-ceil", APT_X, APT_H + 0.1, APT_Z, APT_W, 0.2, APT_D, { color: "oklch(0.85 0.01 250)" });
-
-  // Warm Living Room Armchair & Table
-  bx("l11-apt-chair", APT_X - 2.4, 0.26, APT_Z, 1.0, 0.85, 1.0, { color: "oklch(0.38 0.08 140)", roughness: 0.85 });
-  cyl("l11-apt-table", APT_X - 0.8, 0.26, APT_Z, 0.5, 0.5, 0.65, WOOD);
-
-  // Tabletop Vacuum-Tube Radio
-  sp("l11-apt-radio", {
-    tags: ["usable"],
-    feetPosition: { x: APT_X - 0.8, y: 0.91, z: APT_Z },
-    primitive: { kind: "box", width: 0.42, height: 0.28, depth: 0.25 },
-    material: { ...T("worn-hardwood-grain", 1), color: "oklch(0.45 0.08 55)" },
-    behavior: "scripts/level11-use.js",
-    state: { kind: "apt-radio", name: "Capital Vacuum-Tube Radio", verb: "Tune Radio" },
-    children: [
-      { feetPosition: { x: 0, y: 0.14, z: 0.13 }, primitive: { kind: "box", width: 0.24, height: 0.12, depth: 0.02 }, material: { color: "#ffb142", emissive: "#ff9f1a", emissiveIntensity: 2.2 } },
-    ],
-  });
-
-  // Working Cast Iron Steam Radiator (Autonomous Utilities)
-  sp("l11-apt-radiator", {
-    tags: ["usable"],
-    feetPosition: { x: APT_X - APT_W / 2 + 0.6, y: 0.26, z: APT_Z - 2.8 },
-    primitive: { kind: "box", width: 0.35, height: 0.85, depth: 1.4 },
-    material: { color: "oklch(0.7 0.02 85)", metalness: 0.8, roughness: 0.4 },
-    behavior: "scripts/level11-use.js",
-    state: { kind: "apt-radiator", name: "Autonomous Steam Radiator", verb: "Warm Hands at Radiator" },
-    children: [
-      ...[-0.5, -0.25, 0, 0.25, 0.5].map((rz) => ({
-        feetPosition: { x: 0, y: 0.42, z: rz },
-        primitive: { kind: "box", width: 0.32, height: 0.75, depth: 0.14 },
-        material: { color: "oklch(0.7 0.02 85)", metalness: 0.8, roughness: 0.4 },
-      })),
-    ],
-  });
-
-  // Kitchenette Counter & Working Sink Tap (Pure Municipal Almond Water)
-  bx("l11-apt-counter", APT_X + 2.2, 0.26, APT_Z + 2.4, 2.6, 0.95, 1.1, { ...T("cream-painted-plaster-wall", 1), color: "oklch(0.9 0.02 85)" });
-  sp("l11-apt-sink", {
-    tags: ["usable"],
-    feetPosition: { x: APT_X + 2.2, y: 1.21, z: APT_Z + 2.4 },
-    primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.02, height: 0.28 },
-    material: STEEL_BRUSHED,
-    behavior: "scripts/level11-use.js",
-    state: { kind: "apt-tap", name: "Kitchen Tap (Pure Almond Water)", verb: "Drink Municipal Tap Water" },
-    children: [
-      { feetPosition: { x: 0, y: 0.26, z: -0.08 }, rotation: { pitch: -60 }, primitive: { kind: "cylinder", radiusTop: 0.015, radiusBottom: 0.015, height: 0.16 }, material: STEEL_BRUSHED },
-    ],
-  });
-
-  // Cozy Ceiling Pendant Light
-  sp("l11-apt-light", {
-    feetPosition: { x: APT_X, y: APT_H - 0.2, z: APT_Z },
-    primitive: { kind: "sphere", radius: 0.15 },
-    material: { color: "#fff2cc", emissive: "#ffeaa7", emissiveIntensity: 2.8 },
-    light: { kind: "point", color: "oklch(0.95 0.1 85)", intensity: 4.8, distance: 12 },
-  });
+  // Shell, floor, stoop and railings
+  am("l11-apt-shell", "shell", ["brick", "plaster", "ceiling", "concrete", "stone", "trim", "paint", "wainscot", "brass", "glass", "iron", "bulb", "pipe"], "mesh");
+  am("l11-apt-floor", "floor", ["floor"], "box");
+  am("l11-apt-stoop", "stoop", ["concrete"], "mesh");
+  sp("l11-apt-stoop-rail--1", { feetPosition: at("rail"), model: { id: APT_M.rail, forward: "-z", materials: slots("iron") }, physics: { body: "static", collider: "box" } });
+  sp("l11-apt-stoop-rail-1", { feetPosition: at("rail", 0, 1.88), model: { id: APT_M.rail, forward: "-z", materials: slots("iron") }, physics: { body: "static", collider: "box" } });
+  // Lived-in furnishings
+  am("l11-apt-rug", "rug", ["rug", "fringe"], null);
+  am("l11-apt-chair", "armchair", ["wood", "velvet", "brass"], "box");
+  am("l11-apt-table", "table", ["wood", "ceramic", "coffee"], "box");
+  am("l11-apt-bed", "bed", ["wood", "linen", "blanket"], "box");
+  am("l11-apt-bookshelf", "bookshelf", ["wood", "book_a", "book_b", "book_c", "pages"], "box");
+  am("l11-apt-floorlamp", "floorlamp", ["brass", "bulb", "shade"], "box");
+  am("l11-apt-counter", "counter", ["rubber", "cabinet", "steel", "counter", "wood", "iron", "ceramic"], "mesh");
+  am("l11-apt-picture-0", "picture", ["wood", "brass"], null, { model: { id: APT_M.picture, forward: "-z", materials: { ...slots("wood", "brass"), canvas: { texture: "cdn/texture-oil-painting-countryside-landscape.png", roughness: 0.7 } } } });
+  sp("l11-apt-picture-1", { feetPosition: { x: -45.6, y: 1.585, z: 61.828 }, rotation: { yaw: 180 }, model: { id: APT_M.picture, forward: "-z", materials: { ...slots("wood", "brass"), canvas: { texture: "cdn/texture-oil-painting-harbor-boats.png", roughness: 0.7 } } } });
+  // The three working appliances keep their use contract (scripts/level11-use.js)
+  am("l11-apt-radio", "radio", ["wood", "bakelite", "cloth", "brass", "dial"], "box", USE("apt-radio", "Capital Vacuum-Tube Radio", "Tune Radio"));
+  am("l11-apt-radiator", "radiator", ["radpaint", "pipe", "brass", "iron"], "box", USE("apt-radiator", "Autonomous Steam Radiator", "Warm Hands at Radiator"));
+  am("l11-apt-sink", "sink", ["steel", "rubber", "ceramic"], "box", USE("apt-tap", "Kitchen Tap (Pure Almond Water)", "Drink Municipal Tap Water"));
+  // Fabric-shade pendant with its bulb's light
+  am("l11-apt-light", "pendant", ["brass", "iron", "bulb", "shade"], null, { light: { kind: "point", color: "oklch(0.92 0.09 75)", intensity: 4.8, distance: 12 } });
 }
 
 
