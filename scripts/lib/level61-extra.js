@@ -123,8 +123,9 @@ export function layExtra(ctx, { HW, HD, HH }) {
 
   // ---- Camp Amber's outpost by the steel door: a canopy, a table, a pot, a sign
   const AMB = { tent: "/cdn/value.79763a3b24e6a50bd727fcb9440f40e85f5dcc874ec498f22299b122ae6d2f7f.glb", kitchen: "/cdn/value.a913b60b5860de57e7072069c2b3384708d80abc5c3df3ac13c9341b06c3e2fe.glb", chair: "/cdn/value.dff365a352c2ff6fff83265ff883004e863a291bbb23c1e952adebe1bd96caaa.glb", bed: "/cdn/value.635524f2594f1ed2764d403655620f2d338b78b42bf046d268d365abe5a6ffc9.glb", lamp: "/cdn/value.4c87f2d28b86fe9703caf37d92b67726f5d8598e312f590bcfb50bfc5ac15971.glb", sign: "/cdn/value.8d91b7a86ee85043865bb9edbc59b58442aff8d9fe34a8569ca9e3a8538c8cd7.glb" };
-  const amb = (id, key, x, z, yaw, box, extra = {}) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: AMB[key], forward: "+z" }, layout: { box }, physics: "static", ...extra });
-  amb("l61-amber-tent", "tent", -26.6, 12, 90, { min: { x: -1.5, y: 0, z: -1.3 }, max: { x: 1.5, y: 2.1, z: 1.3 } });
+  const AK = 1.6; // critters stand ~1.6-2 m with big heads: camp gear is sized to them, not to a human
+  const amb = (id, key, x, z, yaw, box, extra = {}) => sp(id, { feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: AMB[key], forward: "+z" }, layout: { box: { min: { x: box.min.x * AK, y: 0, z: box.min.z * AK }, max: { x: box.max.x * AK, y: box.max.y * AK, z: box.max.z * AK } } }, physics: "static", ...extra });
+  amb("l61-amber-tent", "tent", -26.6, 12, 90, { min: { x: -1.6, y: 0, z: -1.6 }, max: { x: 1.6, y: 1.7, z: 1.6 } });
   amb("l61-amber-pot", "kitchen", -23.4, 13.4, -90, { min: { x: -0.8, y: 0, z: -0.4 }, max: { x: 0.8, y: 1.3, z: 0.4 } }, { fx: { script: SMOKE } });
   amb("l61-amber-chair-0", "chair", -24.2, 10.2, 30, { min: { x: -0.32, y: 0, z: -0.25 }, max: { x: 0.32, y: 0.9, z: 0.25 } });
   amb("l61-amber-chair-1", "chair", -22.9, 11.1, -60, { min: { x: -0.32, y: 0, z: -0.25 }, max: { x: 0.32, y: 0.9, z: 0.25 } });
@@ -132,9 +133,9 @@ export function layExtra(ctx, { HW, HD, HH }) {
   amb("l61-amber-bed-1", "bed", -28.3, 9.6, -8, { min: { x: -0.4, y: 0, z: -1 }, max: { x: 0.4, y: 0.25, z: 1 } }, { physics: undefined });
   amb("l61-amber-lamp-0", "lamp", -24.9, 13.6, 0, { min: { x: -0.1, y: 0, z: -0.1 }, max: { x: 0.1, y: 0.32, z: 0.1 } }, { physics: undefined, children: [{ feetPosition: { x: 0, y: 0.2, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.12 70)", intensity: 1.6, distance: 6 } }] });
   amb("l61-amber-lamp-1", "lamp", -25.3, 10.1, 0, { min: { x: -0.1, y: 0, z: -0.1 }, max: { x: 0.1, y: 0.32, z: 0.1 } }, { physics: undefined, children: [{ feetPosition: { x: 0, y: 0.2, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.12 70)", intensity: 1.6, distance: 6 } }] });
-  amb("l61-amber-signpost", "sign", -22.4, 11, 90, { min: { x: -1, y: 0, z: -0.05 }, max: { x: 1, y: 2.6, z: 0.05 } }, { physics: undefined });
-  sp("l61-amber-sign", { feetPosition: { x: -22.36, y: 1.75, z: 11 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.3, height: 0.62, depth: 0.01 }, material: { color: "oklch(0.32 0.04 55)", roughness: 0.9 },
-    ui: `<div face="front" width="1.3m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:700;color:#f2d79a;text-align:center"><div style="font-size:120px;letter-spacing:6px">CAMP AMBER</div><div style="font-size:40px;color:#e8c890">new here? sit down, eat</div></div>` });
+  amb("l61-amber-signpost", "sign", -22.4, 11, 90, { min: { x: -1, y: 0, z: -1 }, max: { x: 1, y: 1.7, z: 1 } }, { physics: undefined });
+  sp("l61-amber-sign", { feetPosition: { x: -22.36, y: 1.9, z: 11 }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.9, height: 0.85, depth: 0.01 }, material: { color: "oklch(0.32 0.04 55)", roughness: 0.9 },
+    ui: `<div face="front" width="1.9m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:700;color:#f2d79a;text-align:center"><div style="font-size:120px;letter-spacing:6px">CAMP AMBER</div><div style="font-size:40px;color:#e8c890">new here? sit down, eat</div></div>` });
 
   // ---- a real restaurant's furniture: menu boards you flip through, a register, the "now serving" board, a tray return, condiments and a half-eaten tray on the tables, a wet-floor sign
   const MENU_AT = { clip: [-24.4, 1.05, -30.2, 180], liq: [-12.2, 1.1, -24.3, -90], slice: [4.6, 1.48, -29.4, 180], burger: [17.6, 1.05, -28.4, 180] }; // each stands on its counter top (raycast tops: clip 1.05, liq 1.1, slice 1.48, burger 1.05)
