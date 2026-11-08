@@ -197,8 +197,11 @@ export function update(ctx) {
   } else {
     // the Blender critter's file carries no clips of its own: its humanoid bones play the library gait; the scripted one has its own
     if (MESH) { if (ctx.self.state.gaitClips?.walk !== GAIT_LIB.walk) ctx.self.state.gaitClips = GAIT_LIB } else if (ctx.self.state.gaitClips) delete ctx.self.state.gaitClips
+    if (HUMAN) { if (ses.flair !== 'human') { ses.flair = 'human'; ctx.self.anim.flair = null; ctx.self.anim.cute = null; ctx.self.bones = {}; ses.lids = false; ses.twitch = null } } // the human rig has no tail, ears or lids
+    else {
     if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
     life(ctx, face)
+    }
   }
   if (ses.lookKey == null || ses.lookVer !== 'human1' || (!MESH && ses.lastFace !== face)) {
     ses.lookVer = 'human1' // a body built before the human swap rebuilds once
@@ -232,9 +235,9 @@ export function update(ctx) {
   }
   const worn = ses.cachedWorn
   if (worn && ctx.getObject(ctx.self.id + '/' + HEAD_ID)) dropHead(ctx, ctx.self) // a worn body never keeps the critter head, whoever put it back
-  if (MESH && !worn && ses.headFace !== face) { ses.headFace = face; applyBones(ctx) }
+  if (MESH && !HUMAN && !worn && ses.headFace !== face) { ses.headFace = face; applyBones(ctx) }
   const hs = Number(l.headS) || 1, ts = Number(l.tailS) || 1
-  if (!worn && (hs !== (ses.headS || 1) || ts !== (ses.tailS || 1))) { ses.headS = hs; ses.tailS = ts; applyBones(ctx) }
+  if (!worn && !HUMAN && (hs !== (ses.headS || 1) || ts !== (ses.tailS || 1))) { ses.headS = hs; ses.tailS = ts; applyBones(ctx) }
 
   // held weapon in third person: attached to RightHand bone so other players and third-person camera see it
   const eq = ctx.self.state.equipped ?? 'fists'
