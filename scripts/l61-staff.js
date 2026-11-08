@@ -4,6 +4,8 @@
 // state.job: "post" (counter staff / seated patrons) | "route" (clearing tables, carrying trays, restocking), state.route = [{ x, z, dwell, act }].
 
 import { heard } from "./lib/hear.js";
+import { findPath } from "builtin/nav";
+import { raycast } from "builtin/physics";
 import {
   WIPE_COUNTER,
   SERVE_PLATE,
@@ -44,6 +46,31 @@ const GESTS = [
 
 const yawOf = (dx, dz) => (Math.atan2(-dx, -dz) * 180) / Math.PI;
 const turn = (cur, want, k) => { let d = ((want - cur + 540) % 360) - 180; return cur + d * k; };
+
+// navmesh walking: a path from builtin/nav around booths, tables and counters, smoothed by line of sight,
+// re-asked every 1.5 s or when the goal moves; a stuck body sidesteps and repaths. Returns the point to head for now.
+const clearLine = (ctx, me, a, b) => { const dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz); if (d < 0.3) return true;
+  return !raycast(ctx, { x: a.x, y: (a.y ?? 0) + 0.5, z: a.z }, { x: dx / d, y: 0, z: dz / d }, { distance: d, radius: 0.3, ignoreEntities: [me.id], bodies: "static", physicsOnly: true }); };
+function waypoint(ctx, me, m, goal) {
+  const p = me.feetPosition, now = ctx.now(), N = (m.nav ??= {});
+  const g = { x: goal.x, y: goal.y ?? p.y ?? 0, z: goal.z };
+  if (!N.path || now > (N.repath ?? 0) || Math.hypot(g.x - N.goal.x, g.z - N.goal.z) > 1) {
+    const r = findPath(ctx, { x: p.x, y: p.y ?? 0, z: p.z }, g, { radius: 0.3 });
+    N.path = r?.points?.length ? r.points : null; N.i = 0; N.goal = g; N.seeAt = 0;
+    N.repath = now + (r?.partial ? 250 : 1500);
+  }
+  let to = g;
+  if (N.path) {
+    while (N.i < N.path.length - 1 && Math.hypot(N.path[N.i].x - p.x, N.path[N.i].z - p.z) < 0.6) N.i++;
+    if (now > N.seeAt) { N.seeAt = now + 300; for (let k = Math.min(N.path.length - 1, N.i + 4); k > N.i; k--) if (clearLine(ctx, me, p, N.path[k])) { N.i = k; break; } }
+    to = N.path[N.i] ?? g;
+  }
+  N.sk ??= { x: p.x, z: p.z, at: now };
+  if (now - N.sk.at > 1200) { if (Math.hypot(p.x - N.sk.x, p.z - N.sk.z) < 0.3 && Math.hypot(to.x - p.x, to.z - p.z) > 0.8) { N.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 600 }; N.repath = 0; } N.sk = { x: p.x, z: p.z, at: now }; }
+  let dx = to.x - p.x, dz = to.z - p.z; const d = Math.hypot(dx, dz) || 1; dx /= d; dz /= d;
+  if (N.side && now < N.side.until) { const s = N.side.s, ox = dx; dx = dx * 0.4 - dz * s * 0.9; dz = dz * 0.4 + ox * s * 0.9; }
+  return { ux: dx, uz: dz };
+}
 
 export const ears = {
   press: (ctx, { by }) => {
@@ -115,7 +142,7 @@ export function update(ctx, dt) {
         heard(ctx, { clip: G("paper-plate-slid-across-counter"), position: { x: p.x, y: p.y + 1, z: p.z }, volume: 0.7, maxDistance: 12 });
         return;
       }
-      const sp = 1.7 * (d < 1.8 ? 0.5 : 1), ux = dx / d, uz = dz / d, ease = (c, t) => c + (t - c) * Math.min(1, 7 * dt);
+      const { ux, uz } = waypoint(ctx, me, m, who.feetPosition), sp = 1.7 * (d < 1.8 ? 0.5 : 1), ease = (c, t) => c + (t - c) * Math.min(1, 7 * dt);
       me.velocity = { x: ease(v.x ?? 0, ux * sp), y: (v.y ?? 0) - 20 * dt, z: ease(v.z ?? 0, uz * sp) }; me.rotation = { yaw: turn(me.rotation?.yaw ?? 0, yawOf(ux, uz), 0.25) };
       return;
     }
@@ -149,7 +176,7 @@ export function update(ctx, dt) {
       if (w.act && ACT[w.act]) gesture(ACT[w.act]);
       else if (ctx.random() < 0.5) gesture(GESTS[Math.floor(ctx.random() * GESTS.length)]);
     }
-    if (now - m.arrived > (w.dwell ?? 2) * 1000) { m.i++; m.arrived = 0; }
+    if (now - m.arrived > (w.dwell ?? 2) * 1000) { m.i++; m.arrived = 0; m.nav = null; }
     return;
   }
 
@@ -172,7 +199,8 @@ export function update(ctx, dt) {
     m.sep = { x: sx, z: sz };
   }
 
-  let ux = dx / d + (m.sep?.x ?? 0) * 1.4, uz = dz / d + (m.sep?.z ?? 0) * 1.4;
+  const way = waypoint(ctx, me, m, w);
+  let ux = way.ux + (m.sep?.x ?? 0) * 1.4, uz = way.uz + (m.sep?.z ?? 0) * 1.4;
   const ul = Math.hypot(ux, uz) || 1;
   ux /= ul;
   uz /= ul;
