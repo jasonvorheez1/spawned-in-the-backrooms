@@ -14,7 +14,7 @@ flickerHounds: 4          # extra hounds that hunt during a flicker
 hounds: 4
 houndHp: 45
 houndSpeed: 7.0           # outruns a walk (6), a sprint (8) still escapes
-houndSight: 20
+houndSight: 23
 houndHear: 26             # a sprinting wanderer is heard this far
 houndBite: 14
 houndCooldown: 1.0
@@ -38,9 +38,9 @@ landmarks: 6              # M.E.G. cloths: almond water + a note
 xpCell: 3
 xpArrive: 60
 # wanderer in level 1 (her picks)
-rationHp: 45
+rationHp: 32
 rationSanity: 8
-bandageHp: 25
+bandageHp: 18
 batteryCharge: 60
 flickerSanity: 0.6        # extra sanity per second in the halls while the lights are out
 flickerWarn: 4            # seconds of stutter before the black

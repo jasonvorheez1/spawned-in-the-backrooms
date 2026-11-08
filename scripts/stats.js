@@ -3,6 +3,7 @@
 // scripts/stats-ui.js). The effects themselves are applied where they matter: scripts/player.js (damage, speed,
 // stamina, reload, carry weight), the creatures' scripts (their own attributes) and scripts/interact.js (Scavenge).
 import { tick as tickCompanions } from './lib/companion.js'
+import D from './lib/data/difficulty.yml'
 import { pushFeed, watch } from './lib/feed.js'
 import { gain } from './player.js'
 import W from './lib/weapons.js'
@@ -94,7 +95,7 @@ export function update(ctx, dt) {
   const dv = derived(s)
   tickCompanions(ctx, ctx.self) // perks and loyalty of whoever walks with you (scripts/lib/companion.js)
   if (s.hp > 0 && dv.hpRegen > 0 && !(s.downAt && ctx.now() - s.downAt < 3000)) { // slow regeneration, only up to 70% of max
-    const cap = (100 + (s.level - 1) * 10 + dv.hpBonus) * 0.7
+    const cap = (100 + (s.level - 1) * 10 + dv.hpBonus) * D.regenCap // data/difficulty.yml
     if (s.hp < cap) s.hp = Math.min(cap, s.hp + dv.hpRegen * dt)
   }
   m.acc += dt

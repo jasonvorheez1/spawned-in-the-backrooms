@@ -13,6 +13,7 @@
 // Attributes live in player.state.attr as "5,5,5,5,5,5,5" (1 to 10); skills in player.state.skl as the points spent
 // (13 numbers), tagged skills in player.state.tags ("guns,sneak,lockpick").
 import W from './weapons.js'
+import D from './data/difficulty.yml'
 import { wornDR, afterDR, parseCloth } from './clothes.js'
 
 export const ATTRS = [
@@ -103,7 +104,7 @@ export function derived(s) {
     staMax: 100 + (a.a - 5) * 8,
     staRegen: 1 + (a.a - 5) * 0.05,
     hpRegen: Math.max(0, (a.e - 4) * 0.12), // hp per second out of a fight
-    carry: 30 + a.h * 5 + (s?.carryBonus ?? 0) + (s?.carryExtra ?? 0), // carryExtra: a fixed per-player grant (Shelly asked 999999)
+    carry: D.carryBase + a.h * D.carryPerH + (s?.carryBonus ?? 0) + (s?.carryExtra ?? 0), // carryExtra: a fixed per-player grant (Shelly asked 999999)
     speed: 1 + (a.a - 5) * 0.025,
     swing: 1 - (a.a - 5) * 0.03 - (k.unarmed - 15) * 0.0015,
     reload: Math.max(0.5, 1 - (a.a - 5) * 0.03 - (k.guns - 15) * 0.002),
@@ -114,8 +115,8 @@ export function derived(s) {
     clothFind: 0.5 + a.o * 0.07 + a.l * 0.03, // Observation (Perception) spots the wearable, Luck helps: x1 at O5 L5, x1.35 at O10 (Savi's pick)
     dr: wornDR(s?.look), // damage resistance from worn clothes (scripts/lib/data/clothes.yml)
     sneak: Math.max(0.35, 1 - (k.sneak - 15) * 0.0065),
-    heal: 1 + (k.survival - 15) * 0.006, // almond water, rations
-    healMed: 1 + (k.medicine - 15) * 0.008, // bandages and the medic
+    heal: D.healMul * (1 + (k.survival - 15) * 0.006), // almond water, rations
+    healMed: D.healMul * (1 + (k.medicine - 15) * 0.008), // bandages and the medic
     drain: Math.max(0.4, 1 - (a.n - 5) * 0.04 - (k.survival - 15) * 0.002),
     wear: Math.max(0.5, 1.2 - k.repair * 0.007), // weapon wear per use
     repairCap: Math.min(100, 50 + k.repair / 2), // a kit cannot repair past this condition
@@ -154,7 +155,8 @@ export function canCarry(s, token) {
 export const burden = (s) => { const cap = derived(s).carry, now = carried(s); return now <= cap ? 1 : Math.max(0.5, 1 - (now - cap) / cap) }
 
 // ---- armor: one rule for every hit on a critter (player or NPC) from what it wears. look = player.state.look or an NPC's look
-export const dmgAfterArmor = (look, dmg) => afterDR(wornDR(look), dmg)
+// every hit on someone goes through here: enemyDmg turns what creatures and people do up (the player hitting an npc opts out: scripts/player.js)
+export const dmgAfterArmor = (look, dmg, scale = true) => afterDR(wornDR(look), scale ? dmg * D.enemyDmg : dmg)
 // an NPC's look: its state.look, else the params its critter body was drawn from
 export const lookOfNpc = (o) => o?.state?.look ?? o?.state?.wear ?? (o?.primitive?.params?.species && o?.primitive?.params?.topw ? o.primitive.params : null) // either critter body's params carry the worn slots
 
@@ -182,6 +184,6 @@ export function npcMul(st) {
 // state for a new creature: its hp scaled by hardiness and its own attributes and title
 export function npcState(ctx, kind, baseHp, extra = {}) {
   const r = rollNpc(ctx, kind), m = npcMul({ attr: r.attr })
-  const hp = Math.max(1, Math.round(baseHp * m.hp))
+  const hp = Math.max(1, Math.round(baseHp * m.hp * D.enemyHp)) // data/difficulty.yml
   return { hp, maxHp: hp, attr: r.attr, title: r.title, ...extra }
 }

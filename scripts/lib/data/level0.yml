@@ -12,13 +12,13 @@ sanity: 100
 stamina: 100
 walkSpeed: 4.6    # her pick (was 6): walking no longer outruns anything
 sprintSpeed: 7.4  # her pick (was 8): beats a chase only while AP lasts
-staminaDrain: 21   # per second sprinting: a full bar is ~4.8 s of sprint
-staminaRegen: 10   # per second resting
+staminaDrain: 25   # per second sprinting: a full bar is ~4.8 s of sprint
+staminaRegen: 8.5   # per second resting
 windedAt: 30       # her pick: run AP to 0 and you can't sprint again until it's back to this
 windedRegen: 0.6   # regen multiplier while winded
 sanityDrain: { expanse: 0.18, offices: 0.1, halls: 0.12, arches: 0.06, pillars: 0.12, holes: 0.15, red: 0.9, dark: 0.6, hub: -4 }
-insanityHurt: 3    # hp per second at 0 sanity
-almondHp: 35
+insanityHurt: 4    # hp per second at 0 sanity
+almondHp: 24
 almondSanity: 30
 almondRefill: 5   # the debug heal pad tops you up to this. No carry limit on any item (Shelly, 2026-11-07)
 battery: 100
@@ -26,10 +26,10 @@ batteryDrain: 1.2  # per second while the flashlight is on
 xpPerCell: 3        # paid once per xpCellsPer new squares explored (Shelly: xp came too easy, 2026-11-07)
 xpCellsPer: 10
 xpAlmond: 5
-xpKill: 45
+xpKill: 36
 xpExit: 150
-xpBase: 60         # xp to next level = xpBase * level
-perLevel: { hp: 10, sanity: 6, damage: 3 }
+xpBase: 72         # xp to next level = xpBase * level
+perLevel: { hp: 10, sanity: 6, damage: 1.6 }   # Nov 8 hard: damage was 3 a level; levels made you a god
 damage: 14
 swingCooldown: 0.55
 reach: 2.8
@@ -38,7 +38,7 @@ smilers: 6  # was 11; shelly: enemies spawn too much
 smilerHp: 60
 stalkSpeed: 3.2
 chargeSpeed: 6.6   # her pick (was 4.6): faster than your walk, slower than your sprint
-smilerSight: 22
+smilerSight: 25
 smilerSightLit: 1.8      # her pick: a lit flashlight is seen this many times farther
 smilerSightDark: 0.5     # her pick: light off, they only notice you this close
 stareCone: 18            # her pick: degrees off your aim that still counts as eye contact
@@ -46,9 +46,9 @@ stareSpeed: 0.35         # her pick: a stared-down smiler creeps at this many m/
 biteDamage: 12
 biteSanity: 10
 biteCooldown: 1.2
-smilerRespawn: 150
-almonds: 90
-almondRespawn: 60
+smilerRespawn: 120
+almonds: 65
+almondRespawn: 110
 # the lurkers: pale things that freeze while watched and rush when you look away
 lurkers: 3  # was 6
 lurkerHp: 35
@@ -59,7 +59,7 @@ hearGun: 34        # her pick: m a gunshot carries
 callRange: 24      # her pick: m a hunter that spots you calls the others within this
 smilerGlimpse: 6   # her pick: m a moving wanderer is noticed even in the dark
 hearWalk: 6        # m a walking one is heard (crouching is silent)
-chaseMemory: 12    # s a hunter keeps after losing sight, heading where you were going
+chaseMemory: 16    # s a hunter keeps after losing sight, heading where you were going
 leadSeconds: 1.6   # how far ahead along your path it guesses
 lurkerSight: 28
 lurkerWatchCos: 0.5  # how squarely you must face one to hold it still

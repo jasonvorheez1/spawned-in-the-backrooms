@@ -14,6 +14,7 @@ import { dropLoot, rollLoot, spawnWeapon, poolOf } from './lib/loot.js'
 import { becomeCorpse } from './lib/l5-hostile.js'
 import { markKill } from './lib/witness.js'
 import { repKill } from './lib/rep.js'
+import D from './lib/data/difficulty.yml'
 import { derived, canCarry, burden, npcMul, START, dmgMul, handling, skillsOf, spentOf, SKILLS, SKILL_MAX, dmgAfterArmor, lookOfNpc } from './lib/stats.js'
 import { parseCloth, wear, takeOff, wornRows, fullLook } from './lib/clothes.js'
 import { wMul, jamChance, isBroken, useWear, armorWearFor, cndOf, repairAmount, armorCnd, band } from './lib/condition.js'
@@ -365,7 +366,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0) {
     ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 1.7, z: m.feetPosition.z }, text: 'ALLY', color: '#9fd7ff', size: 0.8 }, { audience: { player: ctx.self.id } })
     return
   }
-  if (npc) dmg = dmgAfterArmor(lookOfNpc(m), dmg) // an agent's or survivor's clothes soak the hit like yours do
+  if (npc) dmg = dmgAfterArmor(lookOfNpc(m), dmg, false) // an agent's or survivor's clothes soak the hit like yours do
   m.state.hp -= dmg
   if (npc || m.tags?.includes('l61fc')) { m.state.angry = { ...(m.state.angry ?? {}), [ctx.self.id]: true }; m.state.fresh = { ...(m.state.fresh ?? {}), [ctx.self.id]: true } } // the camp remembers who shot first; a fresh shot spreads even after a pardon
   const hit = { x: m.feetPosition.x, y: m.feetPosition.y + 1.5, z: m.feetPosition.z }
@@ -453,7 +454,7 @@ function swing(ctx, power = 0) {
   if (wp.ranged) { // real bullets: spread, drop and drag down each pellet's path (scripts/lib/ballistics.js)
     let pc = ctx.self.camera?.rotation?.pitch ?? 0; if (Math.abs(pc) > 1.6) pc = pc * Math.PI / 180
     const eye = { x: p.x, y: p.y + (s.crouch ? 1.0 : 1.45), z: p.z }, crit = ctx.random() < derived(s).crit
-    const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? 1.75 : 1)
+    const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? D.crit : 1)
     let fv = f, pv = pc // in third person the shot goes from your eye to the point under the crosshair (scripts/camera.js keeps it in state.aimPt)
     if (s.tp && s.aimPt) { const dx = s.aimPt.x - eye.x, dy = s.aimPt.y - eye.y, dz = s.aimPt.z - eye.z, hh = Math.hypot(dx, dz); if (hh > 1.2) { fv = { x: dx / hh, z: dz / hh }; pv = Math.atan2(dy, hh) } }
     const res = fireBullets(ctx, s, wp, w, eye, fv, pv, base)
@@ -499,7 +500,7 @@ function swing(ctx, power = 0) {
     ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: `SNEAK CRIT x${wp.sneak}`, color: '#ff3a3a', size: 1.3 })
     ctx.emit('hitstop', { duration: 0.04 }, { audience: { player: ctx.self.id } }); s.lastSneak = { id: m.id, dmg, at: now }
     sound(ctx, 'knife-stab-flesh-quiet', 0.6, true); hitTarget(ctx, s, m, dmg, f, false); return } }
-  const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? 1.75 : 1) * (!wp.ranged && (s.firesaltUntil ?? 0) > ctx.now() ? L3I.firesalt.damage : 1)
+  const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? D.crit : 1) * (!wp.ranged && (s.firesaltUntil ?? 0) > ctx.now() ? L3I.firesalt.damage : 1)
   if (crit) ctx.emit('damageNumber', { position: { x: found[0].m.feetPosition.x, y: found[0].m.feetPosition.y + 2, z: found[0].m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
   if (wp.pellets) {
     // a spread of pellets: everything in the cone is hit, hard up close and weak at range
@@ -1234,7 +1235,14 @@ function tickStats(ctx, t, moving) {
       const id = ctx.self.id
       for (const k of ['angry', 'fresh', 'warned']) if (n.state?.[k]?.[id]) { const o = { ...n.state[k] }; delete o[id]; n.state[k] = o }
     }
-    s.hp = mh; s.sanity = Math.round(ms * 0.6)
+    // dying costs now (data/difficulty.yml death): you get up weak, poorer, with less ammo, hungry and thirsty, and your gear is hurt
+    s.hp = Math.max(1, Math.round(mh * D.death.hpFrac)); s.sanity = Math.round(ms * D.death.sanityFrac)
+    { const lost = Math.round((s.cents ?? 0) * D.death.cash); if (lost > 0) s.cents -= lost
+      s.ammo = Math.floor((s.ammo ?? 0) * (1 - D.death.ammo)); s.shells = Math.floor((s.shells ?? 0) * (1 - D.death.ammo))
+      s.hunger = Math.max(5, (s.hunger ?? 100) - D.death.needs); s.thirst = Math.max(5, (s.thirst ?? 100) - D.death.needs)
+      const k = s.equipped; if (k && k !== 'fists') s['cnd_' + k] = Math.max(1, cndOf(s, k) - D.death.weaponCnd)
+      if (s.look) { const cnd = { ...(s.look.cnd ?? {}) }; for (const r of wornRows(s.look)) cnd[r.token] = Math.max(1, Math.round((cnd[r.token] ?? r.cnd) - D.death.armorCnd)); s.look = { ...s.look, cnd } }
+      s.notice = { text: `You come to, weak and light-handed${lost > 0 ? ` ($${(lost / 100).toFixed(2)} lost)` : ''}. Your gear took a beating.`, at: ctx.now() } }
     sound(ctx, 'static-burst-glitch', 0.95, true)
     ctx.emit('screenFlash', { color: '#5a0000', duration: 0.5, intensity: 0.6 }, { audience: { player: ctx.self.id } })
     // the body goes limp and is knocked back off its feet; the camera pulls out to watch (scripts/camera.js)

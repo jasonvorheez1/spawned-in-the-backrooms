@@ -7,11 +7,11 @@ rarities:
   uncommon: { label: UNCOMMON, color: '#7fd1a0' }
   rare:     { label: RARE,     color: '#f0a040' }
   elite:    { label: ELITE,    color: '#d38cff' }
-dropChance: { weapon: 0.18, almond: 0.35, ammo: 0.15, shells: 0.08 }  # per smiler kill
+dropChance: { weapon: 0.13, almond: 0.25, ammo: 0.10, shells: 0.06 }  # Nov 8 hard  # per smiler kill
 # Ranged weapons spend ammo, not much stamina, and need a clear line to the target. Ammo is scarce on purpose.
-ammo: { perPickup: 6, floor: 18, respawn: 120 }  # floor: ammo boxes lying in the maze at once
-crates: { count: 32, respawn: 100 }  # supply crates in the maze to search (1 to 3 items each)
-shells: { perPickup: 2, floor: 9, respawn: 180 }  # shotgun shells: scarcer than pistol ammo
+ammo: { perPickup: 6, floor: 13, respawn: 170 }  # floor: ammo boxes lying in the maze at once
+crates: { count: 26, respawn: 150 }  # supply crates in the maze to search (1 to 3 items each)
+shells: { perPickup: 2, floor: 6, respawn: 240 }  # shotgun shells: scarcer than pistol ammo
 fists:      { name: Fists,      damage: 4,  levelScale: 0.3, cooldown: 0.45, reach: 1.9, stamina: 5,  minLevel: 1 }
 table_leg:  { name: Table leg,  damage: 10, levelScale: 0.8, cooldown: 0.5,  reach: 2.4, stamina: 8,  minLevel: 1, rarity: common, weight: 10, xp: 5, color: "oklch(0.55 0.08 60)",  length: 0.7, req: { h: 3 } , wear: 1.2 }
 pipe_scrap: { name: Pipe scrap, damage: 16, levelScale: 1,   cooldown: 0.6,  reach: 2.6, stamina: 10, minLevel: 2, rarity: common, weight: 8, xp: 5, color: "oklch(0.6 0.02 250)",  length: 0.8, req: { h: 4 } }

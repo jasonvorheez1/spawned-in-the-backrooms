@@ -1,12 +1,12 @@
 # Crafting and survival: every tuned number. (7 Days to Die: scrap into tools, a workbench, hunger and thirst. Fallout: skills gate recipes.)
 # needs: hunger and thirst run 0..100. Both fall with time (faster sprinting); at 0 you waste away (never to death: hp stops at 1).
 needs:
-  thirstPerSec: 0.045      # about 37 minutes from full to empty
-  hungerPerSec: 0.028      # about 60 minutes
+  thirstPerSec: 0.058      # about 37 minutes from full to empty
+  hungerPerSec: 0.037      # about 60 minutes
   sprintMul: 1.7
   low: 25                  # under this you are weak: sanity drains faster
   lowSanity: 0.08          # extra sanity per second while a need is low
-  starveHp: 0.9            # hp per second at 0 (stops at 1)
+  starveHp: 1.2            # hp per second at 0 (stops at 1)
   almondThirst: 40         # one almond water drunk
 # food: what each eaten token gives back to hunger (it is eaten where you pick it up)
 food:

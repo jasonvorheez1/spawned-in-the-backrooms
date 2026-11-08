@@ -56,4 +56,4 @@ tables:
   food:   { beans: 8, bar: 9, almond: 7, ration: 2, keycard: 1 }
   cage:   { bobbypin: 4, firstaid: 5, ammo: 6, shells: 4, weapon: 7, kit: 4, book: 3, battery: 3, almond: 2 }
 # what the new items do
-use: { waferHp: 8, waferSanity: 5, beansHp: 30, beansSanity: 6, barHp: 12, barStamina: 40, firstaidHp: 70, tapeRepair: 18 }
+use: { waferHp: 8, waferSanity: 5, beansHp: 22, beansSanity: 6, barHp: 9, barStamina: 40, firstaidHp: 52, tapeRepair: 18 }

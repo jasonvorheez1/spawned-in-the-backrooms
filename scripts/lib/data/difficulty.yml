@@ -1,0 +1,23 @@
+# The difficulty pass (Shelly, Nov 8: "make the game harder, weapon damage is too much, but don't just do that"). Every number is a pick; one place to turn the whole game up or down.
+# The same pass also lives in the per-level data files (level0/1/2.yml, craft.yml, weapons.yml, shops.yml): a tag "Nov 8 hard" marks those lines.
+# Fights: enemies are tougher and hit harder, but levelling stops making you a god (perLevel damage in level0.yml fell from 3 to 1.6) and crits are smaller.
+enemyHp: 1.3        # every creature and person's hit points (scripts/lib/stats.js npcState)
+enemyDmg: 1.25      # every hit that lands on someone (scripts/lib/stats.js dmgAfterArmor), before armor
+crit: 1.5           # a critical hit's multiplier (it was 1.75)
+# Recovery: hurt stays hurt for longer
+healMul: 0.75       # almond water, rations, bandages, first aid heal this much of what they say (scripts/lib/stats.js derived)
+regenCap: 0.5       # out-of-fight regeneration stops at this share of your max hp (it was 0.7)
+# Gear wears out faster and costs more to keep up
+wearMul: 1.4        # weapon condition lost per use (scripts/lib/condition.js)
+# Dying costs something now (it used to cost nothing): you get up weak, lighter, and your gear is hurt
+death:
+  hpFrac: 0.6       # hp you get up with (it was full)
+  sanityFrac: 0.5   # sanity you get up with (it was 0.6)
+  cash: 0.25        # share of your Backdollars lost
+  ammo: 0.25        # share of your rounds and shells lost
+  needs: 15         # hunger and thirst lost: you wake up weak
+  weaponCnd: 12     # condition points your weapon loses
+  armorCnd: 10      # and each worn garment
+# Carrying
+carryBase: 26       # kg: carryBase + hardiness * carryPerH (it was 30 + 5 each)
+carryPerH: 4.5
