@@ -211,7 +211,7 @@ export function update(ctx) {
   if (key !== ses.key) {
     ses.key = key
     const params = ses.cachedParams, worn = ses.cachedWorn
-    if (worn) { ctx.self.primitive = null; ctx.self.model = worn.url; dropHead(ctx, ctx.self) }
+    if (worn) { ctx.self.primitive = null; ctx.self.model = wornModel(worn); dropHead(ctx, ctx.self); ctx.self.jiggle = null }
     else if (MESH) {
       ctx.self.primitive = null
       ctx.self.model = bodyModel(params)
@@ -224,6 +224,7 @@ export function update(ctx) {
     else { ctx.self.model = null; ctx.self.primitive = { kind: 'scripted', script: SCRIPT, params } }
   }
   const worn = ses.cachedWorn
+  if (worn && ctx.getObject(ctx.self.id + '/' + HEAD_ID)) dropHead(ctx, ctx.self) // a worn body never keeps the critter head, whoever put it back
   if (MESH && !worn && ses.headFace !== face) { ses.headFace = face; applyBones(ctx) }
   const hs = Number(l.headS) || 1, ts = Number(l.tailS) || 1
   if (!worn && (hs !== (ses.headS || 1) || ts !== (ses.tailS || 1))) { ses.headS = hs; ses.tailS = ts; applyBones(ctx) }
@@ -258,9 +259,9 @@ export function update(ctx) {
     const params = ses.cachedParams, worn = ses.cachedWorn
     if (!params) return
     const isF = params.sex === 'f'
-    const look = worn ? { model: worn.url } : MESH ? { model: bodyModel(params), morph: bustMorph(params) ?? undefined, children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel({ ...params, vary: false }), morph: faceMorph(face, false, isF, params), audience: 'local' }, maskChild(params, true)].filter(Boolean) } : { primitive: { kind: 'scripted', script: SCRIPT, params } }
+    const look = worn ? { model: wornModel(worn) } : MESH ? { model: bodyModel(params), morph: bustMorph(params) ?? undefined, children: [{ id: HEAD_ID, attachment: { skin: true }, model: headModel({ ...params, vary: false }), morph: faceMorph(face, false, isF, params), audience: 'local' }, maskChild(params, true)].filter(Boolean) } : { primitive: { kind: 'scripted', script: SCRIPT, params } }
     if (!mirror) { ses.mirror = ctx.spawn({ audience: 'local', feetPosition: pos, rotation: rot, ...look, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.6, bounce: 0.6 }, light: { kind: 'point', color: '#fff2d8', intensity: 2, distance: 4 } }); const m = ctx.getObject(ses.mirror); if (m) { m.anim.idle = { clip: worn || MESH ? GAIT_LIB.idle : 'Idle', loop: 'loop', weight: 1 }; if (!worn) flair(m, face) } }
-    else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { if (worn) { mirror.primitive = null; mirror.model = worn.url; mirror.anim.flair = null; mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else if (MESH) { mirror.primitive = null; mirror.model = bodyModel(params); mirror.morph = bustMorph(params) ?? null; wearHead(ctx, mirror, params); flair(mirror, face) } else { mirror.model = null; mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
+    else { mirror.feetPosition = pos; mirror.rotation = rot; if (ses.mirrorKey !== key) { if (worn) { mirror.primitive = null; mirror.model = wornModel(worn); dropHead(ctx, mirror); mirror.anim.flair = null; mirror.anim.idle = { clip: GAIT_LIB.idle, loop: 'loop', weight: 1 } } else if (MESH) { mirror.primitive = null; mirror.model = bodyModel(params); mirror.morph = bustMorph(params) ?? null; wearHead(ctx, mirror, params); flair(mirror, face) } else { mirror.model = null; mirror.primitive = { kind: 'scripted', script: SCRIPT, params }; flair(mirror, face) } }
       if (MESH && !worn) { const mh = ctx.getObject(mirror.id + '/' + HEAD_ID); if (mh) mh.morph = faceMorph(face, false, isF, params) }
       mirror.bones = { ...(hs !== 1 ? { Head: { scale: hs } } : {}), ...(ts !== 1 ? { Tail: { scale: ts } } : {}) } }
     ses.mirrorKey = key
@@ -287,6 +288,8 @@ export function update(ctx) {
   }
 }
 
+// a player's own .plymodel (Tower Unite) arrives built facing +Z: turned half round onto the game's forward (johnadams2: it walked backwards)
+function wornModel(w) { return w.url && /^\/cdn\/value\./.test(w.url) && !w.model ? { id: w.url, forward: '+z' } : w.url }
 function dropHead(ctx, o) { if (ctx.getObject(o.id + '/' + HEAD_ID)) ctx.destroy(o.id + '/' + HEAD_ID) }
 // the species head (face, ears, tail) rides the body's rig as a skinned child; restyled when the look changes
 function wearHead(ctx, o, l) {
