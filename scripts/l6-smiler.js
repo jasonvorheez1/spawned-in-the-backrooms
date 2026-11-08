@@ -46,6 +46,7 @@ function hasClearSight(ctx, a, b, ignoreId, targetId) {
 }
 
 export function update(ctx, dt) {
+  if (!ctx.place.players.length) { ctx.sleep(2); return; } // nobody in this level: rest
   const now = ctx.now();
   const mem = (ctx.self.session.m ??= {});
   const players = ctx.place.players.filter((p) => !(p.state?.downAt && now - p.state.downAt < 4500));

@@ -47,6 +47,7 @@ function spawnTarHand(ctx, id, x, y, z, yaw) {
 }
 
 export function update(ctx, dt) {
+  if (!ctx.place.players.length) { ctx.sleep(2); return; } // nobody in this level: rest
   const me = ctx.self, now = ctx.now(), m = (me.session.m ??= { spiders: {}, tar: {}, drown: {}, next: now + 40000 }), S = me.state;
   const players = ctx.place.players.filter((p) => (p.state?.hp ?? 1) > 0);
   // ---- the flood: the water in the third cavern climbs past the ankles, the knees and the chin, holds, and drains

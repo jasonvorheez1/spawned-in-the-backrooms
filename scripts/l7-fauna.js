@@ -42,6 +42,7 @@ function spawnCrawler(ctx, i) {
   });
 }
 export function update(ctx, dt) {
+  if (!ctx.place.players.length) { ctx.sleep(2); return; } // nobody in this level: rest
   const now = ctx.now(), mem = (ctx.self.session.m ??= {}), st = ctx.self.state;
   const players = ctx.place.players.filter((p) => (p.state?.hp ?? 1) > 0 && !p.state?.dead);
   // ---- the crawlers: keep each shore's crawler, an hour after one dies a new one comes ----

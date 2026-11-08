@@ -234,6 +234,7 @@ function spawnEdgeSmiler(ctx, idx) {
 
 export function update(ctx, dt) {
   if (ctx.self.id !== "l21-life") return;
+  if (!ctx.place.players.length) { ctx.sleep(2); return; } // nobody in this level: rest
   const now = ctx.now(), mem = (ctx.self.session.m ??= { respawnAt: 0 });
   const players = ctx.place.players.filter((p) => (p.state?.hp ?? 1) > 0 && !(p.state?.downAt && now - p.state.downAt < 4500));
 
