@@ -85,6 +85,7 @@ def male(head, body):
     def at(bins, z):
         k = int(z / 0.02); ks = [j for j in (k - 1, k, k + 1) if j in bins]
         return sum(bins[j] for j in ks) / len(ks) if ks else 0
+    print("PROF", " ".join(f"{k*0.02:.2f}:{half[k]:.3f}" for k in sorted(half)))
     wz = min((z / 100 for z in range(98, 120)), key=lambda z: at(half, z))
     ww = at(half, wz); sw = at(half, 1.42)
     print("waist", round(wz, 3), "half", round(ww, 3), "chest half", round(sw, 3), "hip half", round(max(at(half, z / 100) for z in range(80, 96)), 3))
