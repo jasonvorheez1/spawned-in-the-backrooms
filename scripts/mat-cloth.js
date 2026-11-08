@@ -90,6 +90,51 @@ export function material(ctx) {
     const cr = mx_worley_noise_float(p.mul(22));
     col = base.mul(float(0.85).add(smoothstep(0.0, 0.15, cr).mul(0.18)));
     rough = 0.35;
+  } else if (pat === "houndstooth") {
+    const gu = fract(u.mul(14)), gv = fract(v.mul(14));
+    const mu = step(0.5, gu), mv = step(0.5, gv);
+    const fu = fract(gu.mul(2)), fv = fract(gv.mul(2));
+    const d1 = step(fu, fv);
+    const q0 = mu.mul(mv);
+    const q_diag = step(0.5, abs(mu.sub(mv))).mul(d1);
+    const h = q0.add(q_diag).min(1);
+    col = mix(base.mul(0.35), vec3(0.95, 0.94, 0.90), h);
+    col = col.mul(float(0.92).add(fine.mul(0.12)));
+  } else if (pat === "fairisle") {
+    const row = fract(v.mul(8)), col_x = fract(u.mul(16));
+    const band1 = band(v.mul(8), 0.35);
+    const star = abs(col_x.sub(0.5)).add(abs(row.sub(0.5)));
+    const star_motif = smoothstep(0.35, 0.28, star);
+    const dots = band(v.mul(24), 0.12).mul(band(u.mul(24), 0.12));
+    const motif = star_motif.mul(band1).max(dots);
+    col = mix(base, vec3(0.96, 0.94, 0.88), motif.mul(0.85));
+    col = mix(col, base.mul(0.45), band(v.mul(16), 0.08).mul(motif.oneMinus()));
+    col = col.mul(float(0.80).add(fine.mul(0.3)));
+    rough = 0.95;
+  } else if (pat === "corduroy") {
+    const wale = abs(sin(u.mul(70)));
+    const soft = smoothstep(0.15, 0.85, wale);
+    col = base.mul(float(0.70).add(soft.mul(0.38)));
+    rough = 0.82;
+  } else if (pat === "quilted") {
+    const d1 = fract(u.add(v).mul(12)).sub(0.5);
+    const d2 = fract(u.sub(v).mul(12)).sub(0.5);
+    const seam = min(abs(d1), abs(d2));
+    const puff = max(float(0.0), float(0.25).sub(d1.mul(d1).add(d2.mul(d2)))).mul(3.5);
+    col = base.mul(float(0.72).add(smoothstep(0.02, 0.08, seam).mul(0.22)).add(puff.mul(0.25)));
+    rough = 0.65;
+  } else if (pat === "ditsy") {
+    const cell = vec2(u.mul(28), v.mul(28)), g = fract(cell).sub(0.5);
+    const r = g.length();
+    const ang = g.y.atan2(g.x);
+    const petal = abs(sin(ang.mul(2.5))).mul(0.14).add(0.08);
+    const jit = mx_noise_float(floor(cell).mul(5.7)).mul(0.5).add(0.5);
+    const flower = smoothstep(petal.add(0.02), petal, r);
+    const eye = smoothstep(0.05, 0.03, r);
+    const leaf = smoothstep(0.12, 0.08, g.add(vec2(0.15, 0.12)).length());
+    col = mix(col, vec3(0.42, 0.65, 0.38), leaf.mul(0.8));
+    col = mix(col, mix(vec3(0.98, 0.88, 0.92), vec3(1.0, 0.92, 0.70), jit), flower.mul(0.95));
+    col = mix(col, vec3(0.92, 0.65, 0.20), eye);
   } else { // weave: a plain fabric
     const wv = abs(sin(u.mul(300))).mul(0.5).add(abs(sin(v.mul(300))).mul(0.5));
     col = base.mul(float(0.9).add(wv.mul(0.1)).add(fine.mul(0.04)));

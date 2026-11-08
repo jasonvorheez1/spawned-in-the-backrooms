@@ -70,7 +70,9 @@ def set_mat(o, name, col="#ffffff", rough=0.9, metal=0.0):
     o.data.materials.clear(); o.data.materials.append(mat(name, col, rough, metal)); return o
 def join(objs, name):
     objs = [o for o in objs if o]
-    sel(*objs); bpy.ops.object.join(); o = bpy.context.active_object; o.name = o.data.name = name; return o
+    sel(*objs); bpy.ops.object.join(); o = bpy.context.active_object; o.name = o.data.name = name
+    recalc(o); smooth(o)
+    return o
 def rigid(o, bone):
     o.vertex_groups.clear(); g = o.vertex_groups.new(name=bone); g.add(list(range(len(o.data.vertices))), 1.0, 'REPLACE')
 def prim_sphere(c, r, scale=(1, 1, 1), seg=24, ring=14):
@@ -222,17 +224,24 @@ def parent_to(o, rig):
     o.parent = rig; md = o.modifiers.new("Armature", "ARMATURE"); md.object = rig
 
 # ================= body =================
-def torso_shapes(mb, F, inflate=0.0, lo=0.0, hi=9.0, sleeves=None, legs=None, bust=True):
+def torso_shapes(mb, F, inflate=0.0, lo=0.0, hi=9.0, sleeves=None, legs=None, bust=True, crotch=True):
     i = inflate
     if lo <= .65 <= hi:
-        if F:
-            ell(mb, (0, -.006, .668), .140 + i, .095 + i, .084 + i)                                           # smooth high-hip flare from waist
-            ell(mb, (0, -.008, .622), .156 + i, .106 + i, .094 + i)                                           # wide curvy female hips & pelvis
-            ell(mb, (0, .016, .662), .094 + i, .078 + i, .074 + i)                                            # soft lower tummy curve
-            for s in (-1, 1): ell(mb, (.054 * s, -.058, .606), .076 + i, .076 + i, .082 + i)                  # twin sculpted rounded glutes/seat
+        if crotch:
+            if F:
+                ell(mb, (0, -.006, .668), .140 + i, .095 + i, .084 + i)                                           # smooth high-hip flare from waist
+                ell(mb, (0, -.008, .622), .156 + i, .106 + i, .094 + i)                                           # wide curvy female hips & pelvis
+                ell(mb, (0, .016, .662), .094 + i, .078 + i, .074 + i)                                            # soft lower tummy curve
+                for s in (-1, 1): ell(mb, (.054 * s, -.058, .606), .076 + i, .076 + i, .082 + i)                  # twin sculpted rounded glutes/seat
+            else:
+                ell(mb, (0, -.006, .645), .114 + i, .090 + i, .088 + i)                                           # sturdy male pelvis
+                for s in (-1, 1): ell(mb, (.046 * s, -.044, .612), .058 + i, .056 + i, .068 + i)                  # male seat
         else:
-            ell(mb, (0, -.006, .645), .114 + i, .090 + i, .088 + i)                                           # sturdy male pelvis
-            for s in (-1, 1): ell(mb, (.046 * s, -.044, .612), .058 + i, .056 + i, .068 + i)                  # male seat
+            # Tops: horizontal tubular hem around hips without dipping into the crotch
+            if F:
+                ell(mb, (0, -.006, .682), .138 + i, .094 + i, .040 + i)
+            else:
+                ell(mb, (0, -.006, .678), .116 + i, .090 + i, .038 + i)
     if lo <= .77 <= hi:
         if F: ell(mb, (0, -.005, .768), .096 + i, .074 + i, .080 + i)                                         # smooth curvy hourglass female waist
         else: ell(mb, (0, 0, .768), .104 + i, .082 + i, .088 + i)                                             # tapered male waist
@@ -349,13 +358,13 @@ def build_body(F):
 # ---- garments: soft shells a little bigger than the body part they cover ----
 def mb_part(name, fn, voxel=.0055, target=5200):
     mb, o = mball("G" + name.replace("_", ""), voxel); fn(mb); return mb_mesh(o, voxel, 2, target, name)
-def lathe(name, prof, segs=40, ruffle=0.0, flare_front=0.0, cy=-0.006):
+def lathe(name, prof, segs=48, ruffle=0.0, flare_front=0.0, flare_x=1.12, cy=-0.006):
     bm = bmesh.new(); rings = []
     for (r, z) in prof:
         ring = []
         for j in range(segs):
-            a = j / segs * 2 * math.pi; rr = r * (1 + ruffle * math.sin(a * 8) * (1 if z < prof[0][1] - .05 else 0))
-            ring.append(bm.verts.new((math.cos(a) * rr * 1.04, cy + math.sin(a) * rr * (0.93 + flare_front), z)))
+            a = j / segs * 2 * math.pi; rr = r * (1 + ruffle * math.sin(a * 8) * (1 if z < prof[0][1] - .04 else 0))
+            ring.append(bm.verts.new((math.cos(a) * rr * flare_x, cy + math.sin(a) * rr * (0.93 + flare_front), z)))
         rings.append(ring)
     for i in range(len(rings) - 1):
         for j in range(segs): bm.faces.new((rings[i][j], rings[i][(j + 1) % segs], rings[i + 1][(j + 1) % segs], rings[i + 1][j]))
@@ -365,61 +374,229 @@ def lathe(name, prof, segs=40, ruffle=0.0, flare_front=0.0, cy=-0.006):
 
 def build_garments(F, body, rig):
     G = {}
+    TOP_INFLATE = {"tee": .020, "tank": .018, "longsleeve": .020, "pajamas": .021, "sweater": .024, "hoodie": .024, "jacket": .027, "dress": .018, "apron": None}
+    TOP_LO = {"tee": .64, "tank": .65, "longsleeve": .64, "pajamas": .64, "sweater": .64, "hoodie": .64, "jacket": .64, "dress": .72, "apron": None}
     def top(kind):
         def fn(mb):
             sl = {"tee": .25, "tank": None, "longsleeve": .49, "hoodie": .49, "sweater": .48, "jacket": .49, "pajamas": .49, "dress": .22, "apron": None}[kind]
-            torso_shapes(mb, F, .015, .73 if kind == "dress" else .68, 9, sleeves=sl)
+            inf = TOP_INFLATE[kind]
+            lo_z = TOP_LO[kind]
+            torso_shapes(mb, F, inf, lo_z, 9, sleeves=sl, crotch=False)
             if kind == "sweater":
-                for s in (-1, 1): ball(mb, (.48 * s, 0, .953), .048)
-            if kind == "hoodie": ell(mb, (0, -.09, 1.02), .13, .075, .07)
+                for s in (-1, 1): ball(mb, (.48 * s, 0, .953), .048 + inf)
+            if kind == "hoodie":
+                ell(mb, (0, -.095, 1.02), .135 + inf, .080 + inf, .075 + inf)
+                ell(mb, (0, -.030, 1.00), .110 + inf, .060 + inf, .050 + inf)
         return fn
     for kind in ("tee", "tank", "longsleeve", "hoodie", "sweater", "jacket", "pajamas"):
         g = mb_part("Top_" + kind, top(kind)); set_mat(g, "cloth_top", "#e85d75")
         extra = []
-        if kind == "jacket":
-            c = prim_torus((0, 0, 1.0), .066, .02, (0, 0, 0), 24, 8); set_mat(c, "cloth_top"); extra.append(c)
-            z = prim_cyl((0, .148 if F else .114, .81), .006, .24, (math.radians(8 if F else 0), 0, 0), 8); set_mat(z, "metal", "#c8c8d0", .4, .8); extra.append(z)
-        if kind in ("pajamas", "jacket"):
-            for zz in (.9, .82, .74):
-                by = (.146 if zz > .80 else .105) if F else (.114 if kind == "pajamas" else .118)
-                b = prim_sphere((0, by, zz), .012, (1, .6, 1), 10, 6); set_mat(b, "button", "#f4f1ea", .5); extra.append(b)
-        if kind == "hoodie":
+        if kind == "tee":
+            # ribbed crewneck collar
+            c = prim_torus((0, .012, .942), .066, .009, (math.radians(14), 0, 0), 28, 8); set_mat(c, "cloth_top"); extra.append(c)
+            # sleeve hem cuffs
             for s in (-1, 1):
-                d = prim_cyl((.030 * s, .136 if F else .114, .895), .0045, .095, (math.radians(-18 if F else -4), 0, 0), 6); set_mat(d, "button", "#f4f1ea"); extra.append(d)
+                cf = prim_cyl((.25 * s, 0, .953), .040, .018, (0, math.pi / 2, 0), 16); set_mat(cf, "cloth_top"); extra.append(cf)
+            # waist hem band
+            hm = prim_torus((0, -.004, .655), .114 if F else .116, .010, (0, 0, 0), 32, 8)
+            hm.scale = (1.14 if F else 1.02, .88 if F else .92, 1.0); set_mat(hm, "cloth_top"); extra.append(hm)
+            # chest patch pocket
+            pk = prim_sphere((-.052, .132 if F else .115, .845), .028, (1, .25, 1.1), 12, 6); set_mat(pk, "cloth_top"); extra.append(pk)
+        elif kind == "tank":
+            # scoop neck ribbed binding
+            nb = prim_torus((0, .016, .932), .072, .008, (math.radians(15), 0, 0), 28, 8); set_mat(nb, "cloth_top"); extra.append(nb)
+            # armhole binding rings
+            for s in (-1, 1):
+                ab = prim_torus((.105 * s, 0, .935), .046, .007, (0, math.pi / 2, 0), 24, 8); set_mat(ab, "cloth_top"); extra.append(ab)
+            # waist hem band
+            hm = prim_torus((0, -.004, .665), .110 if F else .112, .008, (0, 0, 0), 32, 8)
+            hm.scale = (1.14 if F else 1.02, .88 if F else .92, 1.0); set_mat(hm, "cloth_top"); extra.append(hm)
+        elif kind == "longsleeve":
+            # crewneck collar ribbing
+            c = prim_torus((0, .012, .942), .066, .009, (math.radians(14), 0, 0), 28, 8); set_mat(c, "cloth_top"); extra.append(c)
+            # ribbed wrist cuffs
+            for s in (-1, 1):
+                cf = prim_cyl((.485 * s, 0, .955), .035, .026, (0, math.pi / 2, 0), 16); set_mat(cf, "cloth_top"); extra.append(cf)
+            # waist hem band
+            hm = prim_torus((0, -.004, .655), .114 if F else .116, .010, (0, 0, 0), 32, 8)
+            hm.scale = (1.14 if F else 1.02, .88 if F else .92, 1.0); set_mat(hm, "cloth_top"); extra.append(hm)
+        elif kind == "hoodie":
+            # hood cowl opening rim wrapping collar
+            hrim = prim_torus((0, -.015, .985), .078, .016, (math.radians(-8), 0, 0), 28, 8); set_mat(hrim, "cloth_top"); extra.append(hrim)
+            # sleek 3D kangaroo front pouch pocket
+            kp = prim_sphere((0, .136 if F else .120, .715), .052, (1.45, .22, .72), 18, 10); set_mat(kp, "cloth_top"); extra.append(kp)
+            # pocket side entry welts
+            for s in (-1, 1):
+                w = prim_cyl((.066 * s, .130 if F else .116, .715), .006, .038, (0, math.radians(24 * s), 0), 10); set_mat(w, "cloth_top"); extra.append(w)
+            # ribbed waist hem band
+            hm = prim_torus((0, -.004, .655), .114 if F else .116, .012, (0, 0, 0), 32, 8)
+            hm.scale = (1.14 if F else 1.02, .88 if F else .92, 1.0); set_mat(hm, "cloth_top"); extra.append(hm)
+            # ribbed wrist cuffs
+            for s in (-1, 1):
+                cf = prim_cyl((.485 * s, 0, .955), .038, .032, (0, math.pi / 2, 0), 16); set_mat(cf, "cloth_top"); extra.append(cf)
+            # dangling cords with silver metallic aglets
+            for s in (-1, 1):
+                str_, _ = tube(f"hstr_{s}", [(.030 * s, .135 if F else .116, .915), (.036 * s, .140 if F else .122, .860), (.038 * s, .138 if F else .120, .800)], [.0045, .0045, .004], 8)
+                set_mat(str_, "button", "#f4f1ea"); extra.append(str_)
+                ag = prim_cyl((.038 * s, .138 if F else .120, .795), .005, .018, (0, 0, 0), 8); set_mat(ag, "metal", "#c8c8d0", .3, .85); extra.append(ag)
+        elif kind == "sweater":
+            # chunky rolled turtleneck collar
+            sc = prim_torus((0, .01, .950), .068, .015, (math.radians(10), 0, 0), 28, 10); set_mat(sc, "cloth_top"); extra.append(sc)
+            # chunky ribbed waist hem
+            hm = prim_torus((0, -.004, .655), .114 if F else .116, .013, (0, 0, 0), 32, 8)
+            hm.scale = (1.14 if F else 1.02, .88 if F else .92, 1.0); set_mat(hm, "cloth_top"); extra.append(hm)
+            # chunky ribbed wrist cuffs
+            for s in (-1, 1):
+                cf = prim_cyl((.480 * s, 0, .954), .040, .034, (0, math.pi / 2, 0), 16); set_mat(cf, "cloth_top"); extra.append(cf)
+        elif kind == "jacket":
+            # folded collar and lapels
+            c = prim_torus((0, 0, .995), .072, .016, (0, 0, 0), 28, 8); set_mat(c, "cloth_top"); extra.append(c)
+            for s in (-1, 1):
+                lap = prim_sphere((.045 * s, .142 if F else .122, .925), .034, (.9, .3, 1.2), 12, 8)
+                lap.rotation_euler = (math.radians(-14), 0, math.radians(-18 * s)); set_mat(lap, "cloth_top"); extra.append(lap)
+            # center metallic zipper placket
+            z = prim_cyl((0, .148 if F else .118, .825), .0065, .23, (math.radians(8 if F else 0), 0, 0), 8); set_mat(z, "metal", "#c8c8d0", .35, .85); extra.append(z)
+            z_slide = prim_sphere((0, .155 if F else .124, .850), .012, (.8, 1.4, 1.2), 10, 6); set_mat(z_slide, "metal", "#c8c8d0", .3, .9); extra.append(z_slide)
+            z_pull = prim_cyl((0, .160 if F else .128, .832), .004, .024, (math.radians(12), 0, 0), 8); set_mat(z_pull, "metal", "#c8c8d0", .3, .9); extra.append(z_pull)
+            # twin flap chest pockets with snap rivets
+            for s in (-1, 1):
+                fl = prim_sphere((.070 * s, .140 if F else .120, .855), .030, (1.3, .3, .5), 12, 6); set_mat(fl, "cloth_top"); extra.append(fl)
+                sn = prim_sphere((.070 * s, .148 if F else .128, .850), .007, seg=8, ring=6); set_mat(sn, "metal", "#c8c8d0", .3, .9); extra.append(sn)
+                wp = prim_cyl((.075 * s, .126 if F else .114, .730), .0065, .042, (0, math.radians(28 * s), 0), 8); set_mat(wp, "cloth_top"); extra.append(wp)
+            # bottom hem band & wrist cuffs
+            hm = prim_torus((0, -.004, .650), .116 if F else .120, .011, (0, 0, 0), 32, 8)
+            hm.scale = (1.14 if F else 1.02, .88 if F else .92, 1.0); set_mat(hm, "cloth_top"); extra.append(hm)
+            for s in (-1, 1):
+                cf = prim_cyl((.485 * s, 0, .955), .038, .026, (0, math.pi / 2, 0), 16); set_mat(cf, "cloth_top"); extra.append(cf)
+        elif kind == "pajamas":
+            # classic notched pajama collar & lapels
+            c = prim_torus((0, 0, .985), .066, .013, (math.radians(6), 0, 0), 24, 8); set_mat(c, "cloth_top"); extra.append(c)
+            for s in (-1, 1):
+                lap = prim_sphere((.042 * s, .138 if F else .116, .915), .030, (.9, .25, 1.1), 12, 6)
+                lap.rotation_euler = (math.radians(-12), 0, math.radians(-16 * s)); set_mat(lap, "cloth_top"); extra.append(lap)
+            # front buttons
+            for zz in (.90, .84, .78, .72):
+                by = (.150 if zz > .80 else .108) if F else .116
+                b = prim_sphere((0, by, zz), .011, (1, .55, 1), 10, 6); set_mat(b, "button", "#f4f1ea", .4); extra.append(b)
+            # breast pocket
+            pk = prim_sphere((-.056, .136 if F else .116, .835), .026, (1.1, .25, 1.1), 12, 6); set_mat(pk, "cloth_top"); extra.append(pk)
+            # relaxed sleeve cuffs
+            for s in (-1, 1):
+                cf = prim_cyl((.485 * s, 0, .955), .036, .024, (0, math.pi / 2, 0), 16); set_mat(cf, "cloth_top"); extra.append(cf)
         G["Top_" + kind] = join([g] + extra, "Top_" + kind) if extra else g
-    # dress: a fitted curvy bodice and a flared A-line bell skirt
+
+    # dress: fitted curvy bodice with scoop neckline trim, puff sleeve cuffs, cinched waist sash/belt, and flared tiered ruffle skirt
     bod = mb_part("Top_dress", top("dress")); set_mat(bod, "cloth_top")
-    sk = lathe("DressSkirt", [(.096 if F else .122, .765), (.182 if F else .165, .645), (.255, .50), (.315, .36)], ruffle=.03, flare_front=.04 if F else .0); set_mat(sk, "cloth_top")
-    G["Top_dress"] = join([bod, sk], "Top_dress")
-    # apron: a fitted bib over the bust and a front skirt panel with a pocket
+    nt = prim_torus((0, .014, .928), .066, .007, (math.radians(12), 0, 0), 28, 8); set_mat(nt, "cloth_top")
+    sl_cuffs = []
+    for s in (-1, 1):
+        cf = prim_cyl((.22 * s, 0, .953), .038, .016, (0, math.pi / 2, 0), 16); set_mat(cf, "cloth_top"); sl_cuffs.append(cf)
+    belt = prim_torus((0, -.004, .745), .104 if F else .110, .010, (0, 0, 0), 32, 8)
+    belt.scale = (1.14 if F else 1.02, .88 if F else .92, 1.0); set_mat(belt, "cloth_top")
+    bow_lobes = [prim_sphere((.028 * s, .118 if F else .105, .745), .022, (1, .4, .6), 10, 6) for s in (-1, 1)]
+    bow_knot = prim_sphere((0, .122 if F else .108, .745), .012, seg=8, ring=6)
+    for o_ in bow_lobes + [bow_knot]: set_mat(o_, "cloth_top")
+    sk = lathe("DressSkirt", [(.112 if F else .122, .760), (.155 if F else .145, .700), (.210 if F else .185, .610), (.275, .480), (.335, .340)], segs=48, ruffle=.032, flare_front=.04 if F else .0, flare_x=1.18 if F else 1.06); set_mat(sk, "cloth_top")
+    rim = prim_torus((0, -.006, .340), .335, .008, (0, 0, 0), 48, 8); rim.scale = (1.18 if F else 1.06, .93 + (.04 if F else 0), 1.0); set_mat(rim, "cloth_top")
+    G["Top_dress"] = join([bod, nt] + sl_cuffs + [belt] + bow_lobes + [bow_knot, sk, rim], "Top_dress")
+
+    # apron: a fitted bib over the bust, cross-back straps, divided kangaroo utility pocket, and waist tie bow
     def apron(mb):
         ell(mb, (0, .092, .84), .085, .026, .09); ell(mb, (0, .112 if F else .102, .62), .145, .034, .125)
         if F:
             for s in (-1, 1): ell(mb, (.054 * s, .092, .858), .064, .068, .058, rot=(math.radians(-8), 0, math.radians(-10 * s)))
-        for s in (-1, 1): cap(mb, (.06 * s, .092 if F else .075, .9), (.09 * s, -.02, 1.0), .013)
+        for s in (-1, 1):
+            cap(mb, (.06 * s, .092 if F else .075, .9), (.09 * s, -.02, 1.0), .013)
+            cap(mb, (.09 * s, -.02, 1.0), (-.06 * s, -.09, .74), .012)
     ap = mb_part("Top_apron", apron); set_mat(ap, "cloth_top")
-    pk = prim_sphere((0, .144 if F else .134, .6), .05, (1.2, .25, .7), 16, 8); set_mat(pk, "button", "#f4f1ea")
-    G["Top_apron"] = join([ap, pk], "Top_apron")
-    # bottoms
+    pk = prim_sphere((0, .144 if F else .134, .60), .052, (1.25, .25, .72), 16, 8); set_mat(pk, "cloth_top")
+    pk_div = prim_cyl((0, .152 if F else .142, .60), .003, .07, (0, 0, 0), 6); set_mat(pk_div, "button", "#f4f1ea")
+    sash = prim_torus((0, -.005, .73), .102 if F else .110, .009, (0, 0, 0), 32, 8); set_mat(sash, "cloth_top")
+    rear_bow = [prim_sphere((.030 * s, -.105 if F else -.095, .73), .024, (1, .4, .65), 10, 6) for s in (-1, 1)]
+    rear_tails = [prim_cyl((.024 * s, -.108 if F else -.098, .67), .007, .11, (math.radians(10), math.radians(12 * s), 0), 8) for s in (-1, 1)]
+    for o_ in rear_bow + rear_tails: set_mat(o_, "cloth_top")
+    G["Top_apron"] = join([ap, pk, pk_div, sash] + rear_bow + rear_tails, "Top_apron")
+
+    # bottoms: pants, shorts, pjpants, overalls, skirt, longskirt
     def pants(knee):
         def fn(mb):
-            torso_shapes(mb, F, .016, .6, .78, legs=knee, bust=False)
+            torso_shapes(mb, F, .012, .6, .78, legs=knee, bust=False)
         return fn
     for kind, knee in (("pants", .13), ("pjpants", .12), ("shorts", .44)):
-        g = mb_part("Bot_" + kind, pants(knee)); set_mat(g, "cloth_bottom", "#3d5a98"); G["Bot_" + kind] = g
+        g = mb_part("Bot_" + kind, pants(knee)); set_mat(g, "cloth_bottom", "#3d5a98")
+        extra = []
+        if kind == "pants":
+            # sculpted waistband
+            wb = prim_torus((0, -.005, .748), .100 if F else .105, .009, (0, 0, 0), 32, 8)
+            wb.scale = (1.05 if F else 1.0, .86 if F else .90, 1.0); set_mat(wb, "cloth_bottom"); extra.append(wb)
+            # front fly placket and waist button
+            fly = prim_cyl((0, .102 if F else .094, .705), .004, .065, (math.radians(8), 0, 0), 8); set_mat(fly, "cloth_bottom"); extra.append(fly)
+            wb_btn = prim_sphere((0, .108 if F else .100, .748), .008, (1, .6, 1), 8, 6); set_mat(wb_btn, "metal", "#c8c8d0", .35, .85); extra.append(wb_btn)
+            # belt loops
+            for bx, by, rot in ((-.058, .096, 10), (.058, .096, -10), (-.108, 0, 0), (.108, 0, 0), (0, -.096, 0)):
+                bl = prim_cyl((bx, by, .748), .0035, .022, (0, math.radians(rot), 0), 6); set_mat(bl, "cloth_bottom"); extra.append(bl)
+            # twin back patch pockets
+            for s in (-1, 1):
+                bk = prim_sphere((.052 * s, -.090 if F else -.076, .615), .038, (1.1, .25, 1.2), 12, 6); set_mat(bk, "cloth_bottom"); extra.append(bk)
+            # rolled ankle cuffs
+            for s in (-1, 1):
+                cuff = prim_torus((.090 * s, -.004, .145), .046, .012, (0, 0, 0), 20, 8); set_mat(cuff, "cloth_bottom"); extra.append(cuff)
+        elif kind == "shorts":
+            # waistband with button and belt loops
+            wb = prim_torus((0, -.005, .748), .100 if F else .105, .009, (0, 0, 0), 32, 8)
+            wb.scale = (1.05 if F else 1.0, .86 if F else .90, 1.0); set_mat(wb, "cloth_bottom"); extra.append(wb)
+            wb_btn = prim_sphere((0, .108 if F else .100, .748), .008, (1, .6, 1), 8, 6); set_mat(wb_btn, "metal", "#c8c8d0", .35, .85); extra.append(wb_btn)
+            for bx, by, rot in ((-.058, .096, 10), (.058, .096, -10), (0, -.096, 0)):
+                bl = prim_cyl((bx, by, .748), .0035, .022, (0, math.radians(rot), 0), 6); set_mat(bl, "cloth_bottom"); extra.append(bl)
+            # rolled thigh hem cuffs
+            for s in (-1, 1):
+                cuff = prim_torus((.090 * s, 0, .450), .058 if F else .056, .012, (0, 0, 0), 24, 8); set_mat(cuff, "cloth_bottom"); extra.append(cuff)
+                bk = prim_sphere((.052 * s, -.090 if F else -.076, .615), .036, (1.1, .25, 1.2), 12, 6); set_mat(bk, "cloth_bottom"); extra.append(bk)
+        elif kind == "pjpants":
+            # gathered elastic waistband + front drawstring
+            wb = prim_torus((0, -.005, .748), .100 if F else .104, .008, (0, 0, 0), 32, 8)
+            wb.scale = (1.05 if F else 1.0, .86 if F else .90, 1.0); set_mat(wb, "cloth_bottom"); extra.append(wb)
+            ds = prim_sphere((0, .106 if F else .098, .748), .009, seg=8, ring=6); set_mat(ds, "button", "#f4f1ea"); extra.append(ds)
+            for s in (-1, 1):
+                cf = prim_torus((.090 * s, -.004, .140), .046, .011, (0, 0, 0), 20, 8); set_mat(cf, "cloth_bottom"); extra.append(cf)
+        G["Bot_" + kind] = join([g] + extra, "Bot_" + kind) if extra else g
+
     def overalls(mb):
-        torso_shapes(mb, F, .018, .6, .78, legs=.14, bust=False)
-        ell(mb, (0, .085 if F else .08, .81), .092, .032, .09)
+        torso_shapes(mb, F, .026, .6, .78, legs=.14, bust=False)
+        ell(mb, (0, .092 if F else .088, .81), .096, .036, .09)
         if F:
-            for s in (-1, 1): ell(mb, (.054 * s, .090, .858), .064, .066, .056, rot=(math.radians(-8), 0, math.radians(-10 * s)))
-        for s in (-1, 1): cap(mb, (.06 * s, .105 if F else .088, .88), (.08 * s, -.05, .97), .014)
+            for s in (-1, 1): ell(mb, (.054 * s, .100, .858), .070, .072, .062, rot=(math.radians(-8), 0, math.radians(-10 * s)))
+        for s in (-1, 1):
+            cap(mb, (.06 * s, .114 if F else .096, .88), (.08 * s, -.05, .97), .016)
+            cap(mb, (.08 * s, -.05, .97), (.04 * s, -.09, .74), .015)
     ov = mb_part("Bot_overalls", overalls); set_mat(ov, "cloth_bottom")
-    bt = [prim_sphere((.06 * s, .135 if F else .105, .88), .012, (1, .6, 1), 10, 6) for s in (-1, 1)]
-    for b in bt: set_mat(b, "gold", "#e8c35a", .35, .9)
-    G["Bot_overalls"] = join([ov] + bt, "Bot_overalls")
-    for kind, prof in (("skirt", [(.102 if F else .125, .76), (.184 if F else .165, .64), (.235, .48)]), ("longskirt", [(.102 if F else .125, .76), (.184 if F else .165, .62), (.225, .4), (.265, .15)])):
-        g = lathe("Bot_" + kind, prof, ruffle=.02 if kind == "skirt" else 0, flare_front=.03 if F else 0); set_mat(g, "cloth_bottom"); g.name = g.data.name = "Bot_" + kind; G["Bot_" + kind] = g
-    # shoes
+    ov_extra = []
+    # front bib patch pocket
+    pk = prim_sphere((0, .130 if F else .116, .800), .046, (1.2, .25, .85), 12, 6); set_mat(pk, "cloth_bottom"); ov_extra.append(pk)
+    # brass suspender buckles and button rivets
+    for s in (-1, 1):
+        bk = prim_torus((.06 * s, .140 if F else .112, .885), .016, .004, (math.radians(12), 0, 0), 16, 6); set_mat(bk, "gold", "#e8c35a", .35, .9); ov_extra.append(bk)
+        bt = prim_sphere((.06 * s, .143 if F else .113, .880), .010, (1, .6, 1), 10, 6); set_mat(bt, "gold", "#e8c35a", .35, .9); ov_extra.append(bt)
+        rv = prim_sphere((.128 * s, 0, .720), .008, seg=8, ring=6); set_mat(rv, "gold", "#e8c35a", .35, .9); ov_extra.append(rv)
+        cuff = prim_torus((.090 * s, -.004, .155), .048, .013, (0, 0, 0), 20, 8); set_mat(cuff, "cloth_bottom"); ov_extra.append(cuff)
+    G["Bot_overalls"] = join([ov] + ov_extra, "Bot_overalls")
+
+    # skirts: flared pleated skirt and flowing tiered long skirt
+    # skirt:
+    wb_sk = prim_torus((0, -.005, .750), .102 if F else .108, .010, (0, 0, 0), 32, 8)
+    wb_sk.scale = (1.14 if F else 1.02, .88 if F else .92, 1.0); set_mat(wb_sk, "cloth_bottom")
+    sk = lathe("Bot_skirt_body", [(.106 if F else .114, .750), (.155 if F else .145, .700), (.212 if F else .185, .610), (.265, .475)], segs=48, ruffle=.032, flare_front=.03 if F else 0, flare_x=1.18 if F else 1.06); set_mat(sk, "cloth_bottom")
+    rim_sk = prim_torus((0, -.006, .475), .265, .007, (0, 0, 0), 48, 8); rim_sk.scale = (1.18 if F else 1.06, .93 + (.03 if F else 0), 1.0); set_mat(rim_sk, "cloth_bottom")
+    G["Bot_skirt"] = join([wb_sk, sk, rim_sk], "Bot_skirt")
+
+    # longskirt:
+    wb_lsk = prim_torus((0, -.005, .750), .102 if F else .108, .010, (0, 0, 0), 32, 8)
+    wb_lsk.scale = (1.14 if F else 1.02, .88 if F else .92, 1.0); set_mat(wb_lsk, "cloth_bottom")
+    lsk = lathe("Bot_longskirt_body", [(.106 if F else .114, .750), (.155 if F else .145, .700), (.205 if F else .180, .610), (.245, .450), (.275, .280), (.300, .140)], segs=48, ruffle=.022, flare_front=.025 if F else 0, flare_x=1.18 if F else 1.06); set_mat(lsk, "cloth_bottom")
+    rim_lsk = prim_torus((0, -.006, .140), .300, .007, (0, 0, 0), 48, 8); rim_lsk.scale = (1.18 if F else 1.06, .93 + (.025 if F else 0), 1.0); set_mat(rim_lsk, "cloth_bottom")
+    G["Bot_longskirt"] = join([wb_lsk, lsk, rim_lsk], "Bot_longskirt")
+
+    # shoes: sneakers with rubber toe cap, sidewall stripe, padded tongue & laces; boots with thick lugged treads & eyelets; slippers with fluffy collar, 3D animal ears & inner pads
     def shoe(kind):
         def fn(mb):
             for s in (-1, 1):
@@ -429,17 +606,50 @@ def build_garments(F, body, rig):
     for kind in ("sneakers", "boots", "slippers"):
         g = mb_part("Shoes_" + kind, shoe(kind)); set_mat(g, "cloth_shoes", "#f4f1ea")
         ex = []
-        if kind != "slippers":
+        if kind == "sneakers":
             for s in (-1, 1):
-                so = prim_sphere((.090 * s, .042, .012), .07, (1, 1.58, .22), 20, 8); set_mat(so, "sole", "#3a3440"); ex.append(so)
-        else:
-            for s in (-1, 1):
+                # rubber toe cap
+                tc = prim_sphere((.090 * s, .112, .036), .042, (1.0, .85, .75), 14, 8); set_mat(tc, "button", "#f4f1ea", .5); ex.append(tc)
+                # rubber sole
+                so = prim_sphere((.090 * s, .042, .012), .071, (1.02, 1.62, .24), 22, 10); set_mat(so, "sole", "#2a2430", .85); ex.append(so)
+                stripe = prim_torus((.090 * s, .042, .022), .072, .004, (0, 0, 0), 24, 6); stripe.scale = (1.02, 1.62, 1.0); set_mat(stripe, "button", "#f4f1ea"); ex.append(stripe)
+                # padded tongue & collar rim
+                tongue = prim_sphere((.090 * s, .056, .072), .034, (.85, .8, .6), 10, 6); set_mat(tongue, "cloth_shoes"); ex.append(tongue)
+                collar = prim_torus((.090 * s, .005, .080), .042, .007, (math.radians(-10), 0, 0), 16, 6); set_mat(collar, "button", "#f4f1ea"); ex.append(collar)
+                # laces
+                for lz, ly in ((.045, .082), (.058, .068), (.070, .054)):
+                    lace = prim_cyl((.090 * s, ly, lz), .004, .040, (0, math.pi / 2, 0), 8); set_mat(lace, "button", "#f4f1ea"); ex.append(lace)
                 for e in (-1, 1):
-                    ea = prim_sphere((.090 * s + .03 * e, .12, .11), .025, (1, .5, 1.3), 12, 8); set_mat(ea, "cloth_shoes"); ex.append(ea)
+                    loop = prim_sphere((.090 * s + .014 * e, .050, .078), .012, (.8, .4, .4), 8, 6); set_mat(loop, "button", "#f4f1ea"); ex.append(loop)
+        elif kind == "boots":
+            for s in (-1, 1):
+                # chunky lugged sole
+                so = prim_sphere((.090 * s, .042, .012), .072, (1.04, 1.64, .28), 22, 10); set_mat(so, "sole", "#221c20", .85); ex.append(so)
+                ht = prim_cyl((.090 * s, -.025, .004), .048, .012, (0, 0, 0), 10); set_mat(ht, "sole"); ex.append(ht)
+                tt = prim_cyl((.090 * s, .075, .004), .048, .012, (0, 0, 0), 10); set_mat(tt, "sole"); ex.append(tt)
+                # reinforced toe cap and heel cup
+                tc = prim_sphere((.090 * s, .108, .036), .044, (1.02, .85, .80), 14, 8); set_mat(tc, "cloth_shoes"); ex.append(tc)
+                hc = prim_sphere((.090 * s, -.028, .045), .048, (.95, .8, .95), 14, 8); set_mat(hc, "cloth_shoes"); ex.append(hc)
+                collar = prim_torus((.090 * s, -.004, .248), .052, .012, (0, 0, 0), 20, 8); set_mat(collar, "sole"); ex.append(collar)
+                # speed hooks and heavy duty laces
+                for lz in (.11, .15, .19):
+                    for e in (-1, 1):
+                        hk = prim_sphere((.090 * s + .022 * e, .036, lz), .005, seg=6, ring=4); set_mat(hk, "metal", "#c8c8d0", .35, .85); ex.append(hk)
+                    lace = prim_cyl((.090 * s, .036, lz), .0035, .042, (0, math.pi / 2, 0), 6); set_mat(lace, "sole"); ex.append(lace)
+        else: # slippers
+            for s in (-1, 1):
+                collar = prim_torus((.090 * s, .018, .072), .046, .011, (math.radians(-12), 0, 0), 20, 8); set_mat(collar, "cloth_shoes"); ex.append(collar)
+                for e in (-1, 1):
+                    ea = prim_sphere((.090 * s + .030 * e, .118, .112), .026, (1, .45, 1.3), 12, 8); set_mat(ea, "cloth_shoes"); ex.append(ea)
+                    in_ea = prim_sphere((.090 * s + .030 * e, .124, .112), .018, (.7, .25, 1.0), 10, 6); set_mat(in_ea, "pad", "#ff9fb4", .6); ex.append(in_ea)
+                nz = prim_sphere((.090 * s, .138, .054), .012, (1, .8, .8), 8, 6); set_mat(nz, "pad", "#ff9fb4", .6); ex.append(nz)
+                so = prim_sphere((.090 * s, .042, .010), .068, (1, 1.55, .16), 18, 8); set_mat(so, "sole", "#3a3440"); ex.append(so)
         G["Shoes_" + kind] = join([g] + ex, "Shoes_" + kind)
+
     for nm, g in G.items():
         if F and (nm.startswith("Top_") or nm == "Bot_overalls"): add_bust_key(g)
         copy_weights(g, body); parent_to(g, rig)
+
     # hats, glasses and neckwear ride one bone
     R = HR[2]
     def dome(cut, rr=.296):
@@ -447,36 +657,71 @@ def build_garments(F, body, rig):
         bm = bmesh.new(); bm.from_mesh(o.data); bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.z < cut], context='VERTS'); bm.to_mesh(o.data); bm.free()
         so = o.modifiers.new("so", "SOLIDIFY"); so.thickness = .01; sel(o); bpy.ops.object.modifier_apply(modifier="so"); recalc(o); return o
     H = {}
-    b = dome(HC.z + .1); set_mat(b, "cloth_hat", "#e85d75"); cf = prim_torus((0, 0, HC.z + .105), .27, .028); cf.scale = (1.04, 1, 1); set_mat(cf, "cloth_hat")
-    pom = prim_sphere((0, 0, HC.z + .31), .05, seg=16, ring=10); set_mat(pom, "cloth_hat"); H["Hat_beanie"] = join([b, cf, pom], "Hat_beanie")
-    c = dome(HC.z + .09, .294); set_mat(c, "cloth_hat"); br = prim_sphere((0, .25, HC.z + .1), .17, (1, .82, .07), 24, 10); br.rotation_euler = (math.radians(-12), 0, 0); set_mat(br, "cloth_hat")
-    H["Hat_cap"] = join([c, br], "Hat_cap")
-    cr = prim_cyl((0, 0, HC.z + .29), .12, .08, verts=32); set_mat(cr, "gold", "#e8c35a", .3, .9)
-    sp = [prim_cyl((math.cos(a) * .115, math.sin(a) * .115, HC.z + .35), .03, .07, verts=8, r2=0.0) for a in [i / 5 * 2 * math.pi for i in range(5)]]
+    # beanie: chunky fold-up ribbed brim, slouchy crown, fluffy pom-pom
+    b = dome(HC.z + .1); set_mat(b, "cloth_hat", "#e85d75")
+    cf = prim_torus((0, 0, HC.z + .105), .272, .032, (0, 0, 0), 32, 10); cf.scale = (1.04, 1, 1); set_mat(cf, "cloth_hat")
+    pom = prim_sphere((0, 0, HC.z + .315), .055, seg=18, ring=12); set_mat(pom, "cloth_hat")
+    H["Hat_beanie"] = join([b, cf, pom], "Hat_beanie")
+
+    # cap: curved visor, crown button, back opening
+    c = dome(HC.z + .09, .294); set_mat(c, "cloth_hat")
+    br = prim_sphere((0, .26, HC.z + .105), .175, (1.02, .85, .08), 28, 12); br.rotation_euler = (math.radians(-14), 0, 0); set_mat(br, "cloth_hat")
+    btn = prim_sphere((0, 0, HC.z + .292), .016, (1, 1, .6), 10, 6); set_mat(btn, "cloth_hat")
+    H["Hat_cap"] = join([c, br, btn], "Hat_cap")
+
+    # crown: gold base band with top and bottom filigree rims, 5 scalloped peak cones with finial orbs, and inset gem jewels
+    cr = prim_cyl((0, 0, HC.z + .285), .122, .065, verts=32); set_mat(cr, "gold", "#e8c35a", .25, .95)
+    rim_b = prim_torus((0, 0, HC.z + .255), .124, .008, seg=32, mseg=6); set_mat(rim_b, "gold")
+    rim_t = prim_torus((0, 0, HC.z + .315), .124, .008, seg=32, mseg=6); set_mat(rim_t, "gold")
+    sp = [prim_cyl((math.cos(a) * .118, math.sin(a) * .118, HC.z + .355), .028, .075, verts=10, r2=0.0) for a in [i / 5 * 2 * math.pi for i in range(5)]]
     for s_ in sp: set_mat(s_, "gold")
-    gem = prim_sphere((0, .12, HC.z + .29), .02, (1, .5, 1), 10, 6); set_mat(gem, "cloth_hat")
-    H["Hat_crown"] = join([cr] + sp + [gem], "Hat_crown")
+    orbs = [prim_sphere((math.cos(a) * .118, math.sin(a) * .118, HC.z + .395), .011, seg=8, ring=6) for a in [i / 5 * 2 * math.pi for i in range(5)]]
+    for ob in orbs: set_mat(ob, "gold")
+    gems = [prim_sphere((math.cos(a) * .126, math.sin(a) * .126, HC.z + .285), .016, (1, .6, 1), 10, 6) for a in [i / 5 * 2 * math.pi + math.pi / 5 for i in range(5)]]
+    for gm in gems: set_mat(gm, "cloth_hat")
+    H["Hat_crown"] = join([cr, rim_b, rim_t] + sp + orbs + gems, "Hat_crown")
+
+    # bow: volumetric ribbon lobes with natural center pinch, knot, and draped notched tails
     bc = head_pt(head_dir(.55, .62), .01)
-    lobes = [prim_sphere(tuple(bc + V(dx, 0, dz)), .06, (1, .55, .75), 16, 10) for dx, dz in ((-.06, .03), (.06, -.03))]
-    knot = prim_sphere(tuple(bc), .028, seg=12, ring=8)
-    for o_ in lobes + [knot]: set_mat(o_, "cloth_hat")
-    H["Hat_bow"] = join(lobes + [knot], "Hat_bow")
+    lobes = [prim_sphere(tuple(bc + V(dx, 0, dz)), .062, (1.05, .55, .78), 18, 12) for dx, dz in ((-.062, .03), (.062, -.03))]
+    knot = prim_sphere(tuple(bc), .030, (1, .8, 1), 14, 10)
+    tail_l = prim_cyl(tuple(bc + V(-.035, .01, -.075)), .016, .11, (math.radians(14), math.radians(-22), 0), 10)
+    tail_r = prim_cyl(tuple(bc + V(.035, .01, -.075)), .016, .11, (math.radians(14), math.radians(22), 0), 10)
+    for o_ in lobes + [knot, tail_l, tail_r]: set_mat(o_, "cloth_hat")
+    H["Hat_bow"] = join(lobes + [knot, tail_l, tail_r], "Hat_bow")
+
+    # flower: 5 layered blooming petals, gold stamen center, green leaf accent
     fc = head_pt(head_dir(-.5, .6), .01)
-    pet = [prim_sphere(tuple(fc + V(math.cos(a) * .045, .01, math.sin(a) * .045)), .035, (1, .5, 1), 12, 8) for a in [i / 5 * 2 * math.pi for i in range(5)]]
+    pet = [prim_sphere(tuple(fc + V(math.cos(a) * .048, .01, math.sin(a) * .048)), .038, (1, .45, 1.05), 14, 10) for a in [i / 5 * 2 * math.pi for i in range(5)]]
     for o_ in pet: set_mat(o_, "cloth_hat")
-    mid = prim_sphere(tuple(fc + V(0, .02, 0)), .025, (1, .6, 1), 12, 8); set_mat(mid, "gold")
-    H["Hat_flower"] = join(pet + [mid], "Hat_flower")
-    band = prim_torus((0, 0, HC.z + .02), .305, .016, (math.pi / 2, 0, math.pi / 2), 32, 8); set_mat(band, "metal", "#3a3440", .5, .5)
+    mid = prim_sphere(tuple(fc + V(0, .022, 0)), .028, (1, .6, 1), 14, 10); set_mat(mid, "gold")
+    leaf = prim_sphere(tuple(fc + V(-.042, .005, -.035)), .032, (1.4, .25, .6), 10, 6); set_mat(leaf, "cloth_hat")
+    H["Hat_flower"] = join(pet + [mid, leaf], "Hat_flower")
+
+    # headphones: leatherette headband, metallic slider brackets, earcup shells with plush ear cushion rings
+    band = prim_torus((0, 0, HC.z + .02), .308, .015, (math.pi / 2, 0, math.pi / 2), 32, 8); set_mat(band, "metal", "#c8c8d0", .35, .85)
     bm = bmesh.new(); bm.from_mesh(band.data); bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.z < HC.z + .02], context='VERTS'); bm.to_mesh(band.data); bm.free()
-    cups = [prim_cyl((.3 * s, 0, HC.z), .085, .06, (0, math.pi / 2, 0), 24) for s in (-1, 1)]
-    for o_ in cups: set_mat(o_, "cloth_hat")
-    H["Hat_headphones"] = join([band] + cups, "Hat_headphones")
-    ph = prim_cyl((.05, 0, HC.z + .38), .1, .26, (0, math.radians(12), 0), 24, 0.0); set_mat(ph, "cloth_hat")
-    pp = prim_sphere((.08, 0, HC.z + .52), .03, seg=12, ring=8); set_mat(pp, "gold")
-    H["Hat_partyhat"] = join([ph, pp], "Hat_partyhat")
-    th = prim_cyl((0, 0, HC.z + .36), .13, .2, verts=32); tb = prim_cyl((0, 0, HC.z + .26), .21, .015, verts=32); rb = prim_cyl((0, 0, HC.z + .29), .132, .04, verts=32)
-    set_mat(th, "cloth_hat"); set_mat(tb, "cloth_hat"); set_mat(rb, "gold"); H["Hat_tophat"] = join([th, tb, rb], "Hat_tophat")
-    # eyewear: round frames over the big eyes
+    hparts = [band]
+    for s in (-1, 1):
+        brk = prim_cyl((.305 * s, 0, HC.z + .06), .012, .05, (0, 0, 0), 8); set_mat(brk, "metal", "#c8c8d0", .35, .85); hparts.append(brk)
+        cup = prim_cyl((.305 * s, 0, HC.z), .088, .042, (0, math.pi / 2, 0), 24); set_mat(cup, "cloth_hat"); hparts.append(cup)
+        cush = prim_torus((.290 * s, 0, HC.z), .074, .018, (0, math.pi / 2, 0), 24, 8); set_mat(cush, "button", "#2a2430", .8); hparts.append(cush)
+    H["Hat_headphones"] = join(hparts, "Hat_headphones")
+
+    # party hat: cone with zigzag gold bottom trim and fluffy pom topper
+    ph = prim_cyl((.05, 0, HC.z + .38), .105, .26, (0, math.radians(12), 0), 24, 0.0); set_mat(ph, "cloth_hat")
+    pp = prim_sphere((.08, 0, HC.z + .52), .034, seg=14, ring=10); set_mat(pp, "gold")
+    rim_ph = prim_torus((.05, 0, HC.z + .255), .108, .012, (0, math.radians(12), 0), 24, 6); set_mat(rim_ph, "gold")
+    H["Hat_partyhat"] = join([ph, pp, rim_ph], "Hat_partyhat")
+
+    # tophat: flared stovepipe crown, curved satin brim, rich hatband ribbon with gold buckle
+    th = prim_cyl((0, 0, HC.z + .36), .142, .20, verts=32, r2=.125); set_mat(th, "cloth_hat")
+    tb = prim_cyl((0, 0, HC.z + .26), .220, .016, verts=32); set_mat(tb, "cloth_hat")
+    rb = prim_cyl((0, 0, HC.z + .288), .130, .042, verts=32); set_mat(rb, "cloth_top")
+    bkl = prim_torus((0, .132, HC.z + .288), .018, .004, (math.pi / 2, 0, 0), 14, 6); set_mat(bkl, "gold")
+    H["Hat_tophat"] = join([th, tb, rb, bkl], "Hat_tophat")
+
+    # eyewear: round stylish frames over eyes with nose pads, bridge, and temple arms reaching back to ears
     for kind in ("glasses", "shades"):
         parts = []
         for s in (-1, 1):
@@ -484,21 +729,52 @@ def build_garments(F, body, rig):
             rg = prim_torus(tuple(c_), .085, .009, (0, 0, 0), 32, 8); rg.rotation_mode = 'QUATERNION'; rg.rotation_quaternion = Vector((0, 0, 1)).rotation_difference(d); set_mat(rg, "metal", "#3a3440", .4, .6); parts.append(rg)
             if kind == "shades":
                 ln = prim_cyl(tuple(c_), .08, .006, (0, 0, 0), 32); ln.rotation_mode = 'QUATERNION'; ln.rotation_quaternion = Vector((0, 0, 1)).rotation_difference(d); set_mat(ln, "lens", "#1a1820", .2, .3); parts.append(ln)
+            # temple arms reaching toward the ears
+            arm_start = c_ + V(s * .085, -.02, 0)
+            arm, _ = tube(f"temple_{kind}_{s}", [arm_start, arm_start + V(s * .02, -.16, .01), arm_start + V(s * .03, -.28, -.01)], [.005, .005, .004], 6)
+            set_mat(arm, "metal", "#3a3440", .4, .6); parts.append(arm)
         a_, b_ = head_pt(head_dir(-.17, EYE_V + .05), .035), head_pt(head_dir(.17, EYE_V + .05), .035)
         br_, _ = tube("bridge", [a_, (a_ + b_) / 2 + V(0, .012, .01), b_], [.007, .007, .007], 6); set_mat(br_, "metal"); parts.append(br_)
         H["Eyew_" + kind] = join(parts, "Eyew_" + kind)
     for nm, o_ in H.items(): rigid(o_, "Head"); parent_to(o_, rig); G[nm] = o_
+
     # neckwear on the chest bone
     N_ = {}
-    sc = prim_torus((0, 0, 1.0), .062, .03, (0, 0, 0), 32, 12); tl, _ = tube("st", [(.03, .07, .99), (.05, .1, .9), (.045, .11, .82)], [.025, .024, .02], 10)
-    set_mat(sc, "cloth_neck", "#f3c64a"); set_mat(tl, "cloth_neck"); N_["Neck_scarf"] = join([sc, tl], "Neck_scarf")
-    wings = [prim_sphere((.04 * s, .07, .985), .035, (1, .4, .65), 12, 8) for s in (-1, 1)]; kn = prim_sphere((0, .075, .985), .016, seg=10, ring=6)
-    for o_ in wings + [kn]: set_mat(o_, "cloth_neck")
-    N_["Neck_bowtie"] = join(wings + [kn], "Neck_bowtie")
-    co = prim_torus((0, 0, 1.0), .052, .011, (0, 0, 0), 32, 8); set_mat(co, "cloth_neck"); bl = prim_sphere((0, .07, .965), .026, seg=16, ring=10); set_mat(bl, "gold")
-    N_["Neck_bell"] = join([co, bl], "Neck_bell")
-    def cape(mb): ell(mb, (0, -.105, .74), .19, .02, .26); ell(mb, (0, -.02, .99), .1, .085, .03)
-    cp = mb_part("Neck_cape", cape); set_mat(cp, "cloth_neck"); N_["Neck_cape"] = cp
+    # scarf: double-wrap neck volume + layered drape tail with fringed tassels
+    sc1 = prim_torus((0, 0, 1.002), .066, .026, (0, 0, 0), 32, 12); set_mat(sc1, "cloth_neck", "#f3c64a")
+    sc2 = prim_torus((0, .01, .985), .070, .020, (math.radians(8), 0, 0), 28, 10); set_mat(sc2, "cloth_neck")
+    tl, _ = tube("st", [(.03, .07, .99), (.052, .115, .90), (.048, .125, .81)], [.028, .026, .022], 12); set_mat(tl, "cloth_neck")
+    tassels = []
+    for ti in (-2, -1, 0, 1, 2):
+        tas = prim_cyl((.048 + ti * .007, .125, .785), .003, .035, (0, 0, 0), 6); set_mat(tas, "cloth_neck"); tassels.append(tas)
+    N_["Neck_scarf"] = join([sc1, sc2, tl] + tassels, "Neck_scarf")
+
+    # bowtie: pleated wings with folded fabric center knot and full ribbon collar
+    wings = [prim_sphere((.042 * s, .076, .985), .038, (1, .42, .68), 14, 10) for s in (-1, 1)]
+    kn = prim_sphere((0, .080, .985), .018, (1, .9, 1.1), 12, 8)
+    band = prim_torus((0, 0, .990), .054, .008, (0, 0, 0), 32, 8)
+    for o_ in wings + [kn, band]: set_mat(o_, "cloth_neck")
+    N_["Neck_bowtie"] = join(wings + [kn, band], "Neck_bowtie")
+
+    # bell: stitched collar strap, metal belt buckle, shiny gold jingle bell with sound slit
+    co = prim_torus((0, 0, 1.0), .054, .012, (0, 0, 0), 32, 8); set_mat(co, "cloth_neck")
+    bkl = prim_torus((.048, -.025, 1.0), .014, .003, (0, math.pi / 2, 0), 12, 6); set_mat(bkl, "metal")
+    bl = prim_sphere((0, .072, .962), .028, seg=18, ring=12); set_mat(bl, "gold")
+    bl_rim = prim_torus((0, .072, .962), .029, .004, seg=18, mseg=6); set_mat(bl_rim, "gold")
+    bl_ring = prim_torus((0, .065, .984), .008, .0025, (0, math.pi / 2, 0), 10, 6); set_mat(bl_ring, "gold")
+    bl_slit = prim_sphere((0, .082, .950), .007, (1, 1, .4), 8, 6); set_mat(bl_slit, "sole")
+    N_["Neck_bell"] = join([co, bkl, bl, bl_rim, bl_ring, bl_slit], "Neck_bell")
+
+    # cape: elegant mantle around shoulders, flowing folds down back, gold brooch clasp at throat
+    def cape(mb):
+        ell(mb, (0, -.105, .74), .195, .026, .26)
+        ell(mb, (0, -.020, .99), .105, .085, .035)
+    cp = mb_part("Neck_cape", cape); set_mat(cp, "cloth_neck")
+    med = prim_sphere((0, .085, .975), .018, (1, .4, 1), 12, 8); set_mat(med, "gold")
+    chains = [prim_cyl((.030 * s, .078, .980), .004, .045, (0, math.radians(25 * s), 0), 8) for s in (-1, 1)]
+    for ch in chains: set_mat(ch, "gold")
+    N_["Neck_cape"] = join([cp, med] + chains, "Neck_cape")
+
     for nm, o_ in N_.items(): rigid(o_, "Spine01" if nm == "Neck_cape" else "Spine02"); parent_to(o_, rig); G[nm] = o_
     return G
 
@@ -1303,14 +1579,7 @@ def proof(tag, objs_sets):
     sc.render.resolution_x = 900; sc.render.resolution_y = 900
     sc.world = bpy.data.worlds.new("w"); sc.world.use_nodes = True; bg = sc.world.node_tree.nodes["Background"]; bg.inputs[0].default_value = (.82, .78, .72, 1); bg.inputs[1].default_value = .9
     sc.view_settings.view_transform = "Standard"
-    try:
-        sc.render.use_freestyle = True; sc.render.line_thickness_mode = 'ABSOLUTE'; sc.render.line_thickness = 2.2
-        ls = sc.view_layers[0].freestyle_settings.linesets.new("ink")
-        if not ls.linestyle: ls.linestyle = bpy.data.linestyles.new("inkstyle")
-        ls.select_by_visibility = True; ls.select_by_edge_types = True
-        ls.select_silhouette = True; ls.select_border = False; ls.select_crease = False
-        ls.linestyle.color = (.11, .08, .13); ls.linestyle.thickness = 2.4
-    except Exception as e: log("freestyle off", e)
+    sc.render.use_freestyle = False
     cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam); sc.camera = cam; cam.data.lens = 55
     for nm_, loc, en in (("k", (1.5, 3, 3), 400), ("f", (-2, 2.5, 1.5), 220), ("b", (0, -3, 2.5), 250)):
         L = bpy.data.objects.new(nm_, bpy.data.lights.new(nm_, "AREA")); L.data.energy = en; L.data.size = 3; L.location = loc; sc.collection.objects.link(L)
