@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 10;
+const V = 11;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -76,6 +76,9 @@ export function tick(ctx) {
   hang("h-photos", "/cdn/value.572ad0fe124cdd180aec4d28d259719e1057e02d8cc6c54b996c7b22ada303e7.glb", -4.88, 1.35, 4.2, 0, [0.12, 0.6, 0.55]); // family photos and a wall clock by the front of the living room
   fit("h-plant", "/cdn/value.5c55541c98397f0fd38ea7e850e3e15e4fd78fd4a5951439cde327b41abe9e09.glb", -4.3, 5.3, 0, [0.6, 0.85, 0.6]); // pothos on a wicker stand in the corner
   hang("h-wii", "/cdn/value.45d3abcae444b2dc2d981a3a199513b6d2eca018818ad98ff4aaf0a799b7d642.glb", 2.75, 0.1, 1.75, 180, [0.35, 0.32, 0.3]); // white wii, sensor bar and two wiimotes beside the TV stand
+  hang("h-kitty", "/cdn/value.a9f9d3c6172c17966216abe7310be269dde6da0bf1b828779638c4c7152f6575.glb", -2.3, 0.62, -5.2, 160, [0.3, 0.32, 0.26]); // hello kitty plush propped on the pillows
+  hang("h-boombox", "/cdn/value.b65239e4484936755ff171a40f1ea0104ad73cf5d0d2b21261bab60345e000f9.glb", -1.5, 0.1, -5.6, 180, [0.5, 0.36, 0.2]); // pink CD boombox by the bed
+  fit("h-pcdesk", "/cdn/value.c19a3a1207063b8231b343d67d98657a158515407d7c01b6c2286a1bd2d5c18c.glb", 1.2, -5.25, 180, [1.3, 1.35, 1.2]); // beige tower, CRT monitor and swivel chair against the north wall
   fit("h-lamp-2", M.lamp, -0.9, -5.5, 0, [0.4, 1.2, 0.4]);
   sp("h-light-bed", { feetPosition: { x: -1, y: 2.5, z: -3.5 }, light: { kind: "point", color: "oklch(0.85 0.08 65)", intensity: 1.4, distance: 7 } });
   sp("h-window", { feetPosition: { x: -4.9, y: 1.0, z: -3.5 }, primitive: { kind: "box", width: 0.05, height: 1.1, depth: 1.4 }, material: { color: "oklch(0.95 0.04 85)", emissive: "#fff1d0", emissiveIntensity: 1.2 } });
