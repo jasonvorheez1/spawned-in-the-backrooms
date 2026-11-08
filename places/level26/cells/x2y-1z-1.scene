@@ -133,68 +133,68 @@ l26d-r5e-n:
   physics: static
   primitive: {depth: 0.15, height: 2.7, kind: box, width: 9.4}
 l26d-r5e-t0:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 306.8, y: -79.28, z: -68}
+  feetPosition: {x: 306.8, y: -80, z: -68}
   id: l26d-r5e-t0
-  material: {color: oklch(0.6 0.18 50), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r5e-t0-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.22, y: -80, z: -67.15}
   id: l26d-r5e-t0-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 170}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.08715574443340302, x: 0, y: 0.9961947202682495, z: 0}
 l26d-r5e-t0-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.22, y: -80, z: -68.85}
   id: l26d-r5e-t0-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -10}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9961947202682495, x: 0, y: -0.08715574443340302, z: 0}
 l26d-r5e-t0-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.34, y: -80, z: -67.15}
   id: l26d-r5e-t0-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 169}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.09584575146436691, x: 0, y: 0.9953961968421936, z: 0}
 l26d-r5e-t0-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.34, y: -80, z: -68.85}
   id: l26d-r5e-t0-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -11}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9953961968421936, x: 0, y: -0.09584575146436691, z: 0}
 l26d-r5e-t0-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.26, y: -80, z: -67.15}
   id: l26d-r5e-t0-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 168}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.10452846437692642, x: 0, y: 0.9945219159126282, z: 0}
 l26d-r5e-t0-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.26, y: -80, z: -68.85}
   id: l26d-r5e-t0-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -12}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9945219159126282, x: 0, y: -0.10452846437692642, z: 0}
 l26d-r5e-t0-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.38, y: -80, z: -67.15}
   id: l26d-r5e-t0-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 167}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.11320321261882782, x: 0, y: 0.9935718774795532, z: 0}
 l26d-r5e-t0-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.38, y: -80, z: -68.85}
   id: l26d-r5e-t0-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -13}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9935718774795532, x: 0, y: -0.11320321261882782, z: 0}
 l26d-r5e-t0-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -68.3}
   id: l26d-r5e-t0-cup0
@@ -216,33 +216,33 @@ l26d-r5e-t0-cup3:
   material: {color: oklch(0.7 0.18 50)}
   primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
 l26d-r5e-t1-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.22, y: -80, z: -64.85}
   id: l26d-r5e-t1-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -10}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9961947202682495, x: 0, y: -0.08715574443340302, z: 0}
 l26d-r5e-t1-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.34, y: -80, z: -64.85}
   id: l26d-r5e-t1-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -11}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9953961968421936, x: 0, y: -0.09584575146436691, z: 0}
 l26d-r5e-t1-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.26, y: -80, z: -64.85}
   id: l26d-r5e-t1-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -12}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9945219159126282, x: 0, y: -0.10452846437692642, z: 0}
 l26d-r5e-t1-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.38, y: -80, z: -64.85}
   id: l26d-r5e-t1-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -13}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9935718774795532, x: 0, y: -0.11320321261882782, z: 0}
 l26d-r5e-t1-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -64.3}
   id: l26d-r5e-t1-cup0
@@ -276,68 +276,68 @@ l26d-r5w-n:
   physics: static
   primitive: {depth: 0.15, height: 2.7, kind: box, width: 9.4}
 l26d-r5w-t0:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 293.2, y: -79.28, z: -68}
+  feetPosition: {x: 293.2, y: -80, z: -68}
   id: l26d-r5w-t0
-  material: {color: oklch(0.72 0.17 140), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r5w-t0-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.62, y: -80, z: -67.15}
   id: l26d-r5w-t0-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 170}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.08715574443340302, x: 0, y: 0.9961947202682495, z: 0}
 l26d-r5w-t0-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.62, y: -80, z: -68.85}
   id: l26d-r5w-t0-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -10}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9961947202682495, x: 0, y: -0.08715574443340302, z: 0}
 l26d-r5w-t0-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.74, y: -80, z: -67.15}
   id: l26d-r5w-t0-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 169}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.09584575146436691, x: 0, y: 0.9953961968421936, z: 0}
 l26d-r5w-t0-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.74, y: -80, z: -68.85}
   id: l26d-r5w-t0-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -11}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9953961968421936, x: 0, y: -0.09584575146436691, z: 0}
 l26d-r5w-t0-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.66, y: -80, z: -67.15}
   id: l26d-r5w-t0-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 168}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.10452846437692642, x: 0, y: 0.9945219159126282, z: 0}
 l26d-r5w-t0-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.66, y: -80, z: -68.85}
   id: l26d-r5w-t0-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -12}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9945219159126282, x: 0, y: -0.10452846437692642, z: 0}
 l26d-r5w-t0-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.78, y: -80, z: -67.15}
   id: l26d-r5w-t0-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 167}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.11320321261882782, x: 0, y: 0.9935718774795532, z: 0}
 l26d-r5w-t0-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.78, y: -80, z: -68.85}
   id: l26d-r5w-t0-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -13}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9935718774795532, x: 0, y: -0.11320321261882782, z: 0}
 l26d-r5w-t0-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -68.3}
   id: l26d-r5w-t0-cup0
@@ -359,33 +359,33 @@ l26d-r5w-t0-cup3:
   material: {color: oklch(0.7 0.18 50)}
   primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
 l26d-r5w-t1-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.62, y: -80, z: -64.85}
   id: l26d-r5w-t1-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -10}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9961947202682495, x: 0, y: -0.08715574443340302, z: 0}
 l26d-r5w-t1-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.74, y: -80, z: -64.85}
   id: l26d-r5w-t1-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -11}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9953961968421936, x: 0, y: -0.09584575146436691, z: 0}
 l26d-r5w-t1-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.66, y: -80, z: -64.85}
   id: l26d-r5w-t1-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -12}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9945219159126282, x: 0, y: -0.10452846437692642, z: 0}
 l26d-r5w-t1-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.78, y: -80, z: -64.85}
   id: l26d-r5w-t1-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -13}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9935718774795532, x: 0, y: -0.11320321261882782, z: 0}
 l26d-r5w-t1-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -64.3}
   id: l26d-r5w-t1-cup0
@@ -425,68 +425,68 @@ l26d-r6e-s:
   physics: static
   primitive: {depth: 0.15, height: 2.7, kind: box, width: 9.4}
 l26d-r6e-t0:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 306.8, y: -79.28, z: -80}
+  feetPosition: {x: 306.8, y: -80, z: -80}
   id: l26d-r6e-t0
-  material: {color: oklch(0.72 0.17 140), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r6e-t0-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.3, y: -80, z: -79.15}
   id: l26d-r6e-t0-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 183}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.026176948100328445, x: 0, y: -0.9996573328971863, z: 0}
 l26d-r6e-t0-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.3, y: -80, z: -80.85}
   id: l26d-r6e-t0-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 3}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9996573328971863, x: 0, y: 0.026176948100328445, z: 0}
 l26d-r6e-t0-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.22, y: -80, z: -79.15}
   id: l26d-r6e-t0-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 182}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.017452405765652657, x: 0, y: -0.9998477101325989, z: 0}
 l26d-r6e-t0-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.22, y: -80, z: -80.85}
   id: l26d-r6e-t0-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 2}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9998477101325989, x: 0, y: 0.017452405765652657, z: 0}
 l26d-r6e-t0-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.34, y: -80, z: -79.15}
   id: l26d-r6e-t0-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 181}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.008726535364985466, x: 0, y: -0.9999619126319885, z: 0}
 l26d-r6e-t0-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.34, y: -80, z: -80.85}
   id: l26d-r6e-t0-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 1}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9999619126319885, x: 0, y: 0.008726535364985466, z: 0}
 l26d-r6e-t0-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.26, y: -80, z: -79.15}
   id: l26d-r6e-t0-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 180}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 6.123234262925839e-17, x: 0, y: 1, z: 0}
 l26d-r6e-t0-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.26, y: -80, z: -80.85}
   id: l26d-r6e-t0-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 0}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 1, x: 0, y: 0, z: 0}
 l26d-r6e-t0-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -80.3}
   id: l26d-r6e-t0-cup0
@@ -508,68 +508,68 @@ l26d-r6e-t0-cup3:
   material: {color: oklch(0.7 0.18 50)}
   primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
 l26d-r6e-t1:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 306.8, y: -79.28, z: -76}
+  feetPosition: {x: 306.8, y: -80, z: -76}
   id: l26d-r6e-t1
-  material: {color: oklch(0.7 0.13 220), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r6e-t1-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.3, y: -80, z: -75.15}
   id: l26d-r6e-t1-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 183}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.026176948100328445, x: 0, y: -0.9996573328971863, z: 0}
 l26d-r6e-t1-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.3, y: -80, z: -76.85}
   id: l26d-r6e-t1-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 3}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9996573328971863, x: 0, y: 0.026176948100328445, z: 0}
 l26d-r6e-t1-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.22, y: -80, z: -75.15}
   id: l26d-r6e-t1-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 182}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.017452405765652657, x: 0, y: -0.9998477101325989, z: 0}
 l26d-r6e-t1-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.22, y: -80, z: -76.85}
   id: l26d-r6e-t1-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 2}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9998477101325989, x: 0, y: 0.017452405765652657, z: 0}
 l26d-r6e-t1-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.34, y: -80, z: -75.15}
   id: l26d-r6e-t1-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 181}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.008726535364985466, x: 0, y: -0.9999619126319885, z: 0}
 l26d-r6e-t1-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.34, y: -80, z: -76.85}
   id: l26d-r6e-t1-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 1}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9999619126319885, x: 0, y: 0.008726535364985466, z: 0}
 l26d-r6e-t1-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.26, y: -80, z: -75.15}
   id: l26d-r6e-t1-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 180}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 6.123234262925839e-17, x: 0, y: 1, z: 0}
 l26d-r6e-t1-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.26, y: -80, z: -76.85}
   id: l26d-r6e-t1-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 0}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 1, x: 0, y: 0, z: 0}
 l26d-r6e-t1-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -76.3}
   id: l26d-r6e-t1-cup0
@@ -619,68 +619,68 @@ l26d-r6w-s:
   physics: static
   primitive: {depth: 0.15, height: 2.7, kind: box, width: 9.4}
 l26d-r6w-t0:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 293.2, y: -79.28, z: -80}
+  feetPosition: {x: 293.2, y: -80, z: -80}
   id: l26d-r6w-t0
-  material: {color: oklch(0.72 0.17 140), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r6w-t0-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.7, y: -80, z: -79.15}
   id: l26d-r6w-t0-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 183}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.026176948100328445, x: 0, y: -0.9996573328971863, z: 0}
 l26d-r6w-t0-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.7, y: -80, z: -80.85}
   id: l26d-r6w-t0-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 3}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9996573328971863, x: 0, y: 0.026176948100328445, z: 0}
 l26d-r6w-t0-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.62, y: -80, z: -79.15}
   id: l26d-r6w-t0-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 182}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.017452405765652657, x: 0, y: -0.9998477101325989, z: 0}
 l26d-r6w-t0-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.62, y: -80, z: -80.85}
   id: l26d-r6w-t0-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 2}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9998477101325989, x: 0, y: 0.017452405765652657, z: 0}
 l26d-r6w-t0-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.74, y: -80, z: -79.15}
   id: l26d-r6w-t0-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 181}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.008726535364985466, x: 0, y: -0.9999619126319885, z: 0}
 l26d-r6w-t0-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.74, y: -80, z: -80.85}
   id: l26d-r6w-t0-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 1}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9999619126319885, x: 0, y: 0.008726535364985466, z: 0}
 l26d-r6w-t0-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.66, y: -80, z: -79.15}
   id: l26d-r6w-t0-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 180}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 6.123234262925839e-17, x: 0, y: 1, z: 0}
 l26d-r6w-t0-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.66, y: -80, z: -80.85}
   id: l26d-r6w-t0-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 0}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 1, x: 0, y: 0, z: 0}
 l26d-r6w-t0-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -80.3}
   id: l26d-r6w-t0-cup0
@@ -702,68 +702,68 @@ l26d-r6w-t0-cup3:
   material: {color: oklch(0.7 0.18 50)}
   primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
 l26d-r6w-t1:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 293.2, y: -79.28, z: -76}
+  feetPosition: {x: 293.2, y: -80, z: -76}
   id: l26d-r6w-t1
-  material: {color: oklch(0.7 0.13 220), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r6w-t1-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.7, y: -80, z: -75.15}
   id: l26d-r6w-t1-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 183}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.026176948100328445, x: 0, y: -0.9996573328971863, z: 0}
 l26d-r6w-t1-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.7, y: -80, z: -76.85}
   id: l26d-r6w-t1-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 3}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9996573328971863, x: 0, y: 0.026176948100328445, z: 0}
 l26d-r6w-t1-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.62, y: -80, z: -75.15}
   id: l26d-r6w-t1-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 182}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.017452405765652657, x: 0, y: -0.9998477101325989, z: 0}
 l26d-r6w-t1-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.62, y: -80, z: -76.85}
   id: l26d-r6w-t1-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 2}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9998477101325989, x: 0, y: 0.017452405765652657, z: 0}
 l26d-r6w-t1-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.74, y: -80, z: -75.15}
   id: l26d-r6w-t1-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 181}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.008726535364985466, x: 0, y: -0.9999619126319885, z: 0}
 l26d-r6w-t1-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.74, y: -80, z: -76.85}
   id: l26d-r6w-t1-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 1}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9999619126319885, x: 0, y: 0.008726535364985466, z: 0}
 l26d-r6w-t1-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.66, y: -80, z: -75.15}
   id: l26d-r6w-t1-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 180}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 6.123234262925839e-17, x: 0, y: 1, z: 0}
 l26d-r6w-t1-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.66, y: -80, z: -76.85}
   id: l26d-r6w-t1-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 0}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 1, x: 0, y: 0, z: 0}
 l26d-r6w-t1-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -76.3}
   id: l26d-r6w-t1-cup0
@@ -813,68 +813,68 @@ l26d-r7e-s:
   physics: static
   primitive: {depth: 0.15, height: 2.7, kind: box, width: 9.4}
 l26d-r7e-t0:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 306.8, y: -79.28, z: -92}
+  feetPosition: {x: 306.8, y: -80, z: -92}
   id: l26d-r7e-t0
-  material: {color: oklch(0.72 0.17 140), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r7e-t0-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.38, y: -80, z: -91.15}
   id: l26d-r7e-t0-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 166}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.12186934053897858, x: 0, y: 0.9925461411476135, z: 0}
 l26d-r7e-t0-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.38, y: -80, z: -92.85}
   id: l26d-r7e-t0-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -14}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9925461411476135, x: 0, y: -0.12186934053897858, z: 0}
 l26d-r7e-t0-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.3, y: -80, z: -91.15}
   id: l26d-r7e-t0-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 165}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.13052618503570557, x: 0, y: 0.9914448857307434, z: 0}
 l26d-r7e-t0-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.3, y: -80, z: -92.85}
   id: l26d-r7e-t0-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -15}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9914448857307434, x: 0, y: -0.13052618503570557, z: 0}
 l26d-r7e-t0-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.22, y: -80, z: -91.15}
   id: l26d-r7e-t0-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 194}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.12186934053897858, x: 0, y: -0.9925461411476135, z: 0}
 l26d-r7e-t0-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.22, y: -80, z: -92.85}
   id: l26d-r7e-t0-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 14}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9925461411476135, x: 0, y: 0.12186934053897858, z: 0}
 l26d-r7e-t0-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.34, y: -80, z: -91.15}
   id: l26d-r7e-t0-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 193}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.11320321261882782, x: 0, y: -0.9935718774795532, z: 0}
 l26d-r7e-t0-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.34, y: -80, z: -92.85}
   id: l26d-r7e-t0-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 13}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9935718774795532, x: 0, y: 0.11320321261882782, z: 0}
 l26d-r7e-t0-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -92.3}
   id: l26d-r7e-t0-cup0
@@ -896,68 +896,68 @@ l26d-r7e-t0-cup3:
   material: {color: oklch(0.7 0.18 50)}
   primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
 l26d-r7e-t1:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 306.8, y: -79.28, z: -88}
+  feetPosition: {x: 306.8, y: -80, z: -88}
   id: l26d-r7e-t1
-  material: {color: oklch(0.7 0.13 220), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r7e-t1-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.38, y: -80, z: -87.15}
   id: l26d-r7e-t1-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 166}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.12186934053897858, x: 0, y: 0.9925461411476135, z: 0}
 l26d-r7e-t1-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.38, y: -80, z: -88.85}
   id: l26d-r7e-t1-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -14}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9925461411476135, x: 0, y: -0.12186934053897858, z: 0}
 l26d-r7e-t1-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.3, y: -80, z: -87.15}
   id: l26d-r7e-t1-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 165}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.13052618503570557, x: 0, y: 0.9914448857307434, z: 0}
 l26d-r7e-t1-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.3, y: -80, z: -88.85}
   id: l26d-r7e-t1-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -15}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9914448857307434, x: 0, y: -0.13052618503570557, z: 0}
 l26d-r7e-t1-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.22, y: -80, z: -87.15}
   id: l26d-r7e-t1-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 194}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.12186934053897858, x: 0, y: -0.9925461411476135, z: 0}
 l26d-r7e-t1-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.22, y: -80, z: -88.85}
   id: l26d-r7e-t1-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 14}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9925461411476135, x: 0, y: 0.12186934053897858, z: 0}
 l26d-r7e-t1-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.34, y: -80, z: -87.15}
   id: l26d-r7e-t1-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 193}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.11320321261882782, x: 0, y: -0.9935718774795532, z: 0}
 l26d-r7e-t1-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.34, y: -80, z: -88.85}
   id: l26d-r7e-t1-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 13}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9935718774795532, x: 0, y: 0.11320321261882782, z: 0}
 l26d-r7e-t1-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -88.3}
   id: l26d-r7e-t1-cup0
@@ -1007,68 +1007,68 @@ l26d-r7w-s:
   physics: static
   primitive: {depth: 0.15, height: 2.7, kind: box, width: 9.4}
 l26d-r7w-t0:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 293.2, y: -79.28, z: -92}
+  feetPosition: {x: 293.2, y: -80, z: -92}
   id: l26d-r7w-t0
-  material: {color: oklch(0.6 0.18 50), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r7w-t0-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.78, y: -80, z: -91.15}
   id: l26d-r7w-t0-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 166}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.12186934053897858, x: 0, y: 0.9925461411476135, z: 0}
 l26d-r7w-t0-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.78, y: -80, z: -92.85}
   id: l26d-r7w-t0-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -14}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9925461411476135, x: 0, y: -0.12186934053897858, z: 0}
 l26d-r7w-t0-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.7, y: -80, z: -91.15}
   id: l26d-r7w-t0-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 165}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.13052618503570557, x: 0, y: 0.9914448857307434, z: 0}
 l26d-r7w-t0-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.7, y: -80, z: -92.85}
   id: l26d-r7w-t0-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -15}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9914448857307434, x: 0, y: -0.13052618503570557, z: 0}
 l26d-r7w-t0-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.62, y: -80, z: -91.15}
   id: l26d-r7w-t0-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 194}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.12186934053897858, x: 0, y: -0.9925461411476135, z: 0}
 l26d-r7w-t0-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.62, y: -80, z: -92.85}
   id: l26d-r7w-t0-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 14}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9925461411476135, x: 0, y: 0.12186934053897858, z: 0}
 l26d-r7w-t0-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.74, y: -80, z: -91.15}
   id: l26d-r7w-t0-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 193}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.11320321261882782, x: 0, y: -0.9935718774795532, z: 0}
 l26d-r7w-t0-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.74, y: -80, z: -92.85}
   id: l26d-r7w-t0-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 13}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9935718774795532, x: 0, y: 0.11320321261882782, z: 0}
 l26d-r7w-t0-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -92.3}
   id: l26d-r7w-t0-cup0
@@ -1090,68 +1090,68 @@ l26d-r7w-t0-cup3:
   material: {color: oklch(0.7 0.18 50)}
   primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
 l26d-r7w-t1:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 293.2, y: -79.28, z: -88}
+  feetPosition: {x: 293.2, y: -80, z: -88}
   id: l26d-r7w-t1
-  material: {color: oklch(0.2 0.02 300), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r7w-t1-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.78, y: -80, z: -87.15}
   id: l26d-r7w-t1-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 166}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.12186934053897858, x: 0, y: 0.9925461411476135, z: 0}
 l26d-r7w-t1-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.78, y: -80, z: -88.85}
   id: l26d-r7w-t1-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -14}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9925461411476135, x: 0, y: -0.12186934053897858, z: 0}
 l26d-r7w-t1-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.7, y: -80, z: -87.15}
   id: l26d-r7w-t1-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 165}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.13052618503570557, x: 0, y: 0.9914448857307434, z: 0}
 l26d-r7w-t1-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.7, y: -80, z: -88.85}
   id: l26d-r7w-t1-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -15}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9914448857307434, x: 0, y: -0.13052618503570557, z: 0}
 l26d-r7w-t1-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.62, y: -80, z: -87.15}
   id: l26d-r7w-t1-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 194}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.12186934053897858, x: 0, y: -0.9925461411476135, z: 0}
 l26d-r7w-t1-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.62, y: -80, z: -88.85}
   id: l26d-r7w-t1-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 14}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9925461411476135, x: 0, y: 0.12186934053897858, z: 0}
 l26d-r7w-t1-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.74, y: -80, z: -87.15}
   id: l26d-r7w-t1-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 193}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.11320321261882782, x: 0, y: -0.9935718774795532, z: 0}
 l26d-r7w-t1-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.74, y: -80, z: -88.85}
   id: l26d-r7w-t1-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 13}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9935718774795532, x: 0, y: 0.11320321261882782, z: 0}
 l26d-r7w-t1-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -88.3}
   id: l26d-r7w-t1-cup0
@@ -1201,68 +1201,68 @@ l26d-r8e-s:
   physics: static
   primitive: {depth: 0.15, height: 2.7, kind: box, width: 9.4}
 l26d-r8e-t0:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 306.8, y: -79.28, z: -104}
+  feetPosition: {x: 306.8, y: -80, z: -104}
   id: l26d-r8e-t0
-  material: {color: oklch(0.6 0.18 50), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r8e-t0-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.26, y: -80, z: -103.15}
   id: l26d-r8e-t0-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 179}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.008726535364985466, x: 0, y: 0.9999619126319885, z: 0}
 l26d-r8e-t0-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.26, y: -80, z: -104.85}
   id: l26d-r8e-t0-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -1}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9999619126319885, x: 0, y: -0.008726535364985466, z: 0}
 l26d-r8e-t0-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.38, y: -80, z: -103.15}
   id: l26d-r8e-t0-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 178}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.017452405765652657, x: 0, y: 0.9998477101325989, z: 0}
 l26d-r8e-t0-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.38, y: -80, z: -104.85}
   id: l26d-r8e-t0-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -2}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9998477101325989, x: 0, y: -0.017452405765652657, z: 0}
 l26d-r8e-t0-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.3, y: -80, z: -103.15}
   id: l26d-r8e-t0-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 177}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.026176948100328445, x: 0, y: 0.9996573328971863, z: 0}
 l26d-r8e-t0-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.3, y: -80, z: -104.85}
   id: l26d-r8e-t0-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -3}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9996573328971863, x: 0, y: -0.026176948100328445, z: 0}
 l26d-r8e-t0-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.22, y: -80, z: -103.15}
   id: l26d-r8e-t0-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 176}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.03489949554204941, x: 0, y: 0.9993908405303955, z: 0}
 l26d-r8e-t0-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.22, y: -80, z: -104.85}
   id: l26d-r8e-t0-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -4}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9993908405303955, x: 0, y: -0.03489949554204941, z: 0}
 l26d-r8e-t0-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -104.3}
   id: l26d-r8e-t0-cup0
@@ -1284,68 +1284,68 @@ l26d-r8e-t0-cup3:
   material: {color: oklch(0.7 0.18 50)}
   primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
 l26d-r8e-t1:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 306.8, y: -79.28, z: -100}
+  feetPosition: {x: 306.8, y: -80, z: -100}
   id: l26d-r8e-t1
-  material: {color: oklch(0.2 0.02 300), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r8e-t1-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.26, y: -80, z: -99.15}
   id: l26d-r8e-t1-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 179}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.008726535364985466, x: 0, y: 0.9999619126319885, z: 0}
 l26d-r8e-t1-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 305.26, y: -80, z: -100.85}
   id: l26d-r8e-t1-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -1}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9999619126319885, x: 0, y: -0.008726535364985466, z: 0}
 l26d-r8e-t1-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.38, y: -80, z: -99.15}
   id: l26d-r8e-t1-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 178}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.017452405765652657, x: 0, y: 0.9998477101325989, z: 0}
 l26d-r8e-t1-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 306.38, y: -80, z: -100.85}
   id: l26d-r8e-t1-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -2}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9998477101325989, x: 0, y: -0.017452405765652657, z: 0}
 l26d-r8e-t1-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.3, y: -80, z: -99.15}
   id: l26d-r8e-t1-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 177}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.026176948100328445, x: 0, y: 0.9996573328971863, z: 0}
 l26d-r8e-t1-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 307.3, y: -80, z: -100.85}
   id: l26d-r8e-t1-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -3}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9996573328971863, x: 0, y: -0.026176948100328445, z: 0}
 l26d-r8e-t1-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.22, y: -80, z: -99.15}
   id: l26d-r8e-t1-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 176}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.03489949554204941, x: 0, y: 0.9993908405303955, z: 0}
 l26d-r8e-t1-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 308.22, y: -80, z: -100.85}
   id: l26d-r8e-t1-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -4}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9993908405303955, x: 0, y: -0.03489949554204941, z: 0}
 l26d-r8e-t1-cup0:
   feetPosition: {x: 305.3, y: -79.23, z: -100.3}
   id: l26d-r8e-t1-cup0
@@ -1395,68 +1395,68 @@ l26d-r8w-s:
   physics: static
   primitive: {depth: 0.15, height: 2.7, kind: box, width: 9.4}
 l26d-r8w-t0:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 293.2, y: -79.28, z: -104}
+  feetPosition: {x: 293.2, y: -80, z: -104}
   id: l26d-r8w-t0
-  material: {color: oklch(0.72 0.17 140), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r8w-t0-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.66, y: -80, z: -103.15}
   id: l26d-r8w-t0-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 179}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.008726535364985466, x: 0, y: 0.9999619126319885, z: 0}
 l26d-r8w-t0-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.66, y: -80, z: -104.85}
   id: l26d-r8w-t0-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -1}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9999619126319885, x: 0, y: -0.008726535364985466, z: 0}
 l26d-r8w-t0-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.78, y: -80, z: -103.15}
   id: l26d-r8w-t0-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 178}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.017452405765652657, x: 0, y: 0.9998477101325989, z: 0}
 l26d-r8w-t0-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.78, y: -80, z: -104.85}
   id: l26d-r8w-t0-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -2}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9998477101325989, x: 0, y: -0.017452405765652657, z: 0}
 l26d-r8w-t0-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.7, y: -80, z: -103.15}
   id: l26d-r8w-t0-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 177}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.026176948100328445, x: 0, y: 0.9996573328971863, z: 0}
 l26d-r8w-t0-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.7, y: -80, z: -104.85}
   id: l26d-r8w-t0-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -3}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9996573328971863, x: 0, y: -0.026176948100328445, z: 0}
 l26d-r8w-t0-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.62, y: -80, z: -103.15}
   id: l26d-r8w-t0-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 176}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.03489949554204941, x: 0, y: 0.9993908405303955, z: 0}
 l26d-r8w-t0-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.62, y: -80, z: -104.85}
   id: l26d-r8w-t0-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -4}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9993908405303955, x: 0, y: -0.03489949554204941, z: 0}
 l26d-r8w-t0-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -104.3}
   id: l26d-r8w-t0-cup0
@@ -1478,68 +1478,68 @@ l26d-r8w-t0-cup3:
   material: {color: oklch(0.7 0.18 50)}
   primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.03, radiusTop: 0.04}
 l26d-r8w-t1:
-  children: [{feetPosition: {x: -1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}, {feetPosition: {x: 1.7, y: -0.72, z: 0}, material: {color: oklch(0.3 0.01 60)}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.04, radiusTop: 0.04}}]
-  feetPosition: {x: 293.2, y: -79.28, z: -100}
+  feetPosition: {x: 293.2, y: -80, z: -100}
   id: l26d-r8w-t1
-  material: {color: oklch(0.7 0.13 220), roughness: 0.6}
+  layout: {box: {max: {x: 0.55, y: 0.76, z: 2.1}, min: {x: -0.55, y: 0, z: -2.1}}}
+  model: {id: /cdn/value.335c1ebd627bab3a0cbecbd04fa4c681a2253974faf3ac1768228affed3c2056.glb}
   physics: static
-  primitive: {depth: 1.1, height: 0.05, kind: box, width: 4.2}
+  rotation: {yaw: 90}
 l26d-r8w-t1-c0a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.66, y: -80, z: -99.15}
   id: l26d-r8w-t1-c0a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 179}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.008726535364985466, x: 0, y: 0.9999619126319885, z: 0}
 l26d-r8w-t1-c0b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 291.66, y: -80, z: -100.85}
   id: l26d-r8w-t1-c0b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -1}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9999619126319885, x: 0, y: -0.008726535364985466, z: 0}
 l26d-r8w-t1-c1a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.78, y: -80, z: -99.15}
   id: l26d-r8w-t1-c1a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 178}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.017452405765652657, x: 0, y: 0.9998477101325989, z: 0}
 l26d-r8w-t1-c1b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 292.78, y: -80, z: -100.85}
   id: l26d-r8w-t1-c1b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -2}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9998477101325989, x: 0, y: -0.017452405765652657, z: 0}
 l26d-r8w-t1-c2a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.7, y: -80, z: -99.15}
   id: l26d-r8w-t1-c2a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 177}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.026176948100328445, x: 0, y: 0.9996573328971863, z: 0}
 l26d-r8w-t1-c2b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 293.7, y: -80, z: -100.85}
   id: l26d-r8w-t1-c2b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -3}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9996573328971863, x: 0, y: -0.026176948100328445, z: 0}
 l26d-r8w-t1-c3a:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.62, y: -80, z: -99.15}
   id: l26d-r8w-t1-c3a
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: 176}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.03489949554204941, x: 0, y: 0.9993908405303955, z: 0}
 l26d-r8w-t1-c3b:
-  children: [{feetPosition: {x: 0, y: 0.45, z: 0.19}, material: {color: oklch(0.95 0.01 100), roughness: 0.4}, primitive: {depth: 0.04, height: 0.45, kind: box, width: 0.42}}]
   feetPosition: {x: 294.62, y: -80, z: -100.85}
   id: l26d-r8w-t1-c3b
-  material: {color: oklch(0.95 0.01 100), roughness: 0.4}
-  primitive: {depth: 0.42, height: 0.45, kind: box, width: 0.42}
-  rotation: {yaw: -4}
+  layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
+  physics: static
+  rotation: {w: 0.9993908405303955, x: 0, y: -0.03489949554204941, z: 0}
 l26d-r8w-t1-cup0:
   feetPosition: {x: 291.7, y: -79.23, z: -100.3}
   id: l26d-r8w-t1-cup0
