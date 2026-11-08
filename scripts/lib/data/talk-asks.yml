@@ -103,6 +103,15 @@ place:
   level8:
     - { text: "Where's the road actually lead?", tag: Lore }
     - { text: "Is the lake safe to swim?", tag: Help }
+  level11:
+    - { text: "What exactly is the 'Level 11 Effect' that calms entities down?", tag: Lore }
+    - { text: "Is it true there are 45,000 survivors living across the Capital?", tag: Lore }
+    - { text: "Where do the spontaneous roadworks and scaffolding come from?", tag: Lore }
+    - { text: "Why do the streetlamps cycle day and night in sync with the sky?", tag: Lore }
+    - { text: "Can you actually drive the parked cars, or do they just roll?", tag: Help }
+    - { text: "Is the tap water in the apartments safe to drink?", tag: Help }
+    - { text: "Where can I find the B.N.T.G. market stalls for fresh produce?", tag: Help }
+    - { text: "How do I safely reach M.E.G. Base Beta from here?", tag: Help }
 closers:
   - { text: "Alright. Take care of yourself.", tag: Farewell }
   - { text: "I'll leave you to it.", tag: Farewell }
