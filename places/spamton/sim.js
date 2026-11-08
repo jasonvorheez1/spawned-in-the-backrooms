@@ -1,7 +1,7 @@
 // Spamton's arena: lays the stage once, and stands him up fresh whenever someone is in here (scripts/spamton-boss.js fights).
 export const cadence = "250ms";
 const V = 3;
-const BOSS_MODEL = "/cdn/value.e9d590488230d5a2ed1f5feea9e1f31046fb80e5d52f61e88491b67335bc79bb.glb";
+const BOSS_MODEL = "/cdn/value.aea1bb9862d472db6564fa8cb329c8ad61ec4986c8a7bc39417d6333b919a51c.glb";
 const PINK = "oklch(0.7 0.27 345)", YEL = "oklch(0.9 0.19 100)", CYAN = "oklch(0.8 0.14 200)";
 const glow = (c, i = 2.2) => ({ color: c, emissive: c, emissiveIntensity: i, roughness: 0.4 });
 
