@@ -156,11 +156,11 @@ def cover(o):
         reach = 0.04
         if kind == 'Bot' and c.z < zhi - 0.04 and c.z > 0.08: reach = 0.09   # the legs: no thigh through the cloth
         if kind == 'Hat': reach = 0.07
-        if kind == 'Bot' and c.z > HIPS_Z + 0.1: reach = -1   # a waistband, not overalls
         if kind == 'Top' and zlo - 0.06 < c.z < zlo + 0.03: reach = 0.16   # hem down over the waistband
         if kind == 'Bot' and zhi - 0.03 < c.z < zhi + 0.04: reach = 0.16   # waistband up under the hem
         if kind == 'Top' and o.name != 'Top_dress' and max(zlo - 0.09, HIPS_Z - 0.02) < c.z < zlo + 0.05 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1   # a closed hem ring at the waist, no skin between top and bottom
         if kind == 'Bot' and zhi - 0.05 < c.z < zhi + 0.06 and abs(c.x) < BANDX + 0.03 and d is not None and d < 0.3: reach = 1
+        if kind == 'Bot' and c.z > HIPS_Z + 0.1: reach = -1   # a waistband, not overalls
         if o.name == 'Top_dress' and c.z >= HIPS_Z + 0.02: reach = max(reach, 0.12)   # the bodice covers the whole bust and midriff
         if o.name == 'Top_dress' and c.z < HIPS_Z + 0.02: reach = -1
         if kind == 'Top' and o.name != 'Top_dress' and c.z < HIPS_Z + 0.03 and abs(c.x) < 0.2: reach = -1   # a shirt ends at the hips: below is the legs' own (pants never show a shirt through them)          # the skirt stays the dress's own
