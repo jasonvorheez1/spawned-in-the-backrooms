@@ -327,6 +327,11 @@ function press(ctx) {
   }
   if (f.tag === 'usable' && it.state?.kind === 'boilerdoor' && !it.state.open && !s.l5boilerKey && !ctx.query({ tags: ['npc'], radius: 60 }).some((q) => /harlan$/.test(q.id) && q.state?.follow === ctx.self.id) && (s.feetPosition?.x ?? ctx.self.feetPosition.x) < (it.worldFeetPosition?.x ?? 0) && (skillsOf(s).lockpick ?? 0) >= 25 && (s.bobbypins ?? 6) > 0) { startPick(ctx, it, 25, 'boiler'); m.key = ''; return } // no key: pick it (scripts/lockpick.js), else the door says what it wants
   if (f.tag === 'usable' && it.state?.kind === 'spamton') { if (!(s.keyItems ?? []).includes('spamton')) startSpamton(ctx); else note(ctx, 'Just trash now. Spamton rides in your pocket.'); m.key = ''; return }
+  if (f.tag === 'usable' && it.tags?.includes?.('vehicle')) { // the rider seats itself (rider writes rider), the hull takes the wheel
+    ctx.emit('press', { by: ctx.self.id }, { to: f.id })
+    ctx.self.parent = f.id; ctx.self.feetPosition = { ...(it.state?.seat ?? { x: -0.48, y: 0.32, z: 0.25 }) }; ctx.self.rotation = { yaw: 0 }
+    ctx.self.velocity = { x: 0, y: 0, z: 0 }; m.carAt = ctx.now(); m.key = ''; return
+  }
   if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); if (it.tags?.includes?.('l5-elev-panel')) s.elevPanel = f.id; m.key = ''; return } // an elevator plate opens a clickable floor list (ui.js)
   if (f.tag === 'seat') { if (sitDown(ctx, it) && it.state?.boat) ctx.emit('press', { by: ctx.self.id }, { to: it.id }); m.key = ''; return } // a boat's seat also takes the oars
   if (f.tag === 'bench') { s.craftOpen = 'bench'; s.craftBench = f.id; return }
@@ -402,6 +407,16 @@ export function onInput(ctx, input) {
 }
 
 export function update(ctx, dt) {
+  { // in a car the wheel went back (E inside, or the car let go): step out beside the driver's door
+    const car = ctx.self.parent, mm = mem(ctx)
+    if (car?.tags?.includes?.('vehicle') && car.controller !== ctx.self.id && ctx.now() - (mm.carAt ?? 0) > 1200) {
+      const y = (car.rotation?.w !== undefined ? 2 * Math.atan2(car.rotation.y, car.rotation.w) : (car.rotation?.yaw ?? 0) * Math.PI / 180)
+      const c = car.feetPosition, side = -1.9
+      ctx.self.parent = null
+      ctx.self.feetPosition = { x: c.x + Math.cos(y) * side, y: c.y + 0.2, z: c.z - Math.sin(y) * side }
+      ctx.self.velocity = { x: 0, y: 0, z: 0 }
+    }
+  }
   if (ctx.self.isLocal !== false && ctx.now() - (ctx.self.session.wreckAt ?? 0) > 5000) { ctx.self.session.wreckAt = ctx.now(); try { regrowWrecks(ctx) } catch (e) { ctx.log('[wreck] ' + e) } } // smashed props near a player stand again after their hour
   const m = mem(ctx), s = ctx.self.state
   if (s.focus && ctx.getObject(s.focus.id)?.place !== ctx.self.place) { s.focus = null; m.focus = null; m.key = '' } // a prompt left behind in another level (or a thing gone) clears
