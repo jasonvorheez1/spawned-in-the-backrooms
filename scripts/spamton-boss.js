@@ -6,7 +6,8 @@
 import { animate } from 'builtin/tween'
 import { eulerFromRotation } from 'builtin/vec3'
 import F from './lib/data/spamton.yml'
-const A = F.arena
+import D from './lib/data/difficulty.yml'
+const A = { ...F.arena, hp: Math.round(F.arena.hp * (D.enemyHp ?? 1)) } // the difficulty pass reaches him too
 
 // his clips (art/spamton/rig.py): the rig lane maps these names to what the engine resolves
 const CLIPS = { idle: "idle", talk: "talk", laugh: "laugh", throw: "throw", vacuum: "vacuum", charge: "charge", hurt: "hurt", defeated: "defeated", spared: "spared" }
@@ -118,6 +119,7 @@ function hurtPlayer(ctx, pl, dmg, pos) {
   if (now - m.hurtAt < A.iframes * 1000) return
   if (pl.state.downAt && now - pl.state.downAt < 3000) return
   m.hurtAt = now
+  dmg = Math.round(dmg * (D.enemyDmg ?? 1))
   pl.state.hp -= dmg
   const chest = { x: pl.feetPosition.x, y: pl.feetPosition.y + 1.3, z: pl.feetPosition.z }
   ctx.emit('damageNumber', { position: chest, value: dmg, color: '#ff4fd8' })
