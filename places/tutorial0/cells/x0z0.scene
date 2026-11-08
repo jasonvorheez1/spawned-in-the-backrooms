@@ -1,0 +1,26 @@
+# spawn-scene v2 yaml x0z0
+tut0:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: tut0
+  material: {emissiveIntensity: 2.4, roughness: 0.92}
+  physics: {body: static, collider: mesh}
+  primitive: {kind: scripted, script: scripts/tut0-geo.js}
+  receiveShadow: true
+tut0-hallpanels:
+  castShadow: false
+  feetPosition: {x: 0, y: 0, z: 0}
+  id: tut0-hallpanels
+  material: {emissiveIntensity: 2.4, roughness: 0.9}
+  primitive: {kind: scripted, script: scripts/tut0-panels-geo.js}
+tut0-hum:
+  audio: {bus: Ambience, clip: /cdn/moodboard-realistic-gritty/sfx-fluorescent-light-buzz-hum.mp3, gain: 0.14, loop: true, spatial: false}
+  feetPosition: {x: 0, y: 2, z: 0}
+  id: tut0-hum
+tut0-shift:
+  castShadow: false
+  feetPosition: {x: 40, y: -3.2, z: -28}
+  id: tut0-shift
+  material: {color: oklch(0.98 0.01 90), roughness: 0.92, texture: /cdn/value.00a4e744acf9ab763779bbb0cc7f26fb1dd20aeafc69448c536939cd7212caeb.png}
+  physics: kinematic
+  primitive: {depth: 3.2, height: 3, kind: box, width: 0.2}

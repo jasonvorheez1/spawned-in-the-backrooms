@@ -1,0 +1,42 @@
+atmosphere:
+  clouds:
+    enabled: false
+  fog:
+    far: 54
+    kind: linear
+    near: 12
+    color: oklch(0.52 0.06 90)
+  look:
+    script: scripts/look-default.js
+    params:
+      bloomThreshold: 0.72
+      bloomStrength: 0.55
+  moon:
+    intensity: 0
+    enabled: false
+  sky:
+    kind: color
+    color: oklch(0.08 0.02 85)
+  stars:
+    enabled: false
+  timeOfDay: 0
+  wind:
+    direction: 0
+    speed: 0
+  ambient:
+    light: {color: oklch(0.85 0.07 95), intensity: 0.55}
+  hemisphere:
+    groundColor: oklch(0.48 0.06 75)
+    intensity: 0.35
+    skyColor: oklch(0.88 0.07 95)
+defaultSpawnPoint: { x: 0, y: 0.05, z: 0 }
+defaultSpawnRotation: { yaw: 0 }
+instance: solo
+persistence: ephemeral
+gravity:
+  x: 0
+  y: -24
+  z: 0
+mode: 3d
+terrain:
+  kind: "off"
