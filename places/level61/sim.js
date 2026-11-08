@@ -427,7 +427,7 @@ function lay(ctx) {
   // ---- Exits and Outposts
   // Rusty steel door to Level 6 with M.E.G. outpost
   box("l61-meg-door", -HW + 0.2, 0, 0, 0.1, 2.2, 1.5, RUST, { physics: undefined });
-  sign("l61-meg-sign", -HW + 0.25, 2.6, 0, -90, 2.6, 0.7, `<div style="font-size:110px;color:#e8e0c0">M.E.G. LEVEL 6 ACCESS OUTPOST</div><div style="font-size:70px;color:#ff8a6a">AUTHORIZED PERSONNEL · SCREAMING IS NORMAL</div>`, "oklch(0.25 0.04 150)");
+  sign("l61-meg-sign", -HW + 0.25, 2.6, 0, -90, 2.6, 0.7, `<div style="font-size:110px;color:#e8e0c0">M.E.G. CHECKPOINT · LEVEL 6</div><div style="font-size:70px;color:#ff8a6a">NO ENTRY WITHOUT CLEARANCE · REPORT TO THE GUARD</div>`, "oklch(0.25 0.04 150)");
   for (let k = 0; k < 2; k++) box(`l61-meg-sand-${k}`, -HW + 1.6, 0, k ? 2.2 : -2.2, 0.8, 0.9, 1.6, { color: "oklch(0.62 0.05 80)", roughness: 1 });
   sp("l61-meg-scream", { feetPosition: { x: -HW + 0.5, y: 1.2, z: 0 }, audio: { clip: G("distant-muffled-screaming-behind-heavy-steel-door-loop"), loop: true, gain: 0.12, spatial: true, maxDistance: 9 } });
   sp("l61-to-l6", { tags: ["door"], feetPosition: { x: -HW + 0.45, y: 0, z: 0 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.5, height: 2.2, depth: 1.4 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level6#l6-from-l61" } });

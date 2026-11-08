@@ -5,25 +5,25 @@ import { heard } from "./lib/hear.js";
 export const STATIONS = [
   {
     id: "heart80s",
-    name: "Heart 80s",
+    name: "KSNK 88.1",
     genre: "80s Pop, New Wave & Synth",
-    url: "https://media-ssl.musicradio.com/Heart80sMP3",
+    url: "cdn/music-bright-1980s-synth-pop-new-wave-gated-drums-catchy-hook-loop.mp3",
     color: "#ff3888",
     badge: "#ff6bb0",
   },
   {
     id: "somafm80s",
-    name: "SomaFM Underground 80s",
+    name: "Night Shift FM",
     genre: "80s Synthpop, Post-Punk & Wave",
-    url: "https://ice6.somafm.com/u80s-128-mp3",
+    url: "cdn/music-moody-1980s-post-punk-synthwave-chorus-guitar-drum-machine-loop.mp3",
     color: "#00d8f0",
     badge: "#5ce6ff",
   },
   {
     id: "rock80s",
-    name: "0N Classic 80s Rock",
+    name: "Rock 104 The Mall",
     genre: "80s Arena Rock & Anthems",
-    url: "https://0n-classicrock.radionetz.de/0n-classicrock.mp3",
+    url: "cdn/music-1980s-arena-rock-anthem-big-guitars-pounding-drums-loop.mp3",
     color: "#ffaa20",
     badge: "#ffd060",
   },
@@ -36,15 +36,15 @@ function renderDisplay(station, playing) {
     return `<div face="front" width="0.75m" style="font-family:'Courier New',monospace;font-weight:900;background:#0d0d12;color:#555566;padding:12px;border:2px solid #222233;text-align:center;line-height:1.2">
       <div style="font-size:32px;color:#884444;margin-bottom:6px">JUKEBOX STANDBY</div>
       <div style="font-size:22px;color:#444455">[PRESS E TO INSERT COIN]</div>
-      <div style="font-size:18px;color:#333344;margin-top:6px">WURLITZER · 80s LIVE SATELLITE</div>
+      <div style="font-size:18px;color:#333344;margin-top:6px">WURLITZER · 3 STATIONS</div>
     </div>`;
   }
 
   return `<div face="front" width="0.75m" style="font-family:Arial,sans-serif;font-weight:900;background:#0d0d18;color:#ffffff;padding:12px;border:2px solid ${station.color};text-align:center;line-height:1.15;box-shadow:inset 0 0 15px rgba(255,255,255,0.2)">
-    <div style="font-size:22px;color:${station.badge};letter-spacing:1px;margin-bottom:4px">★ LIVE INTERNET SATELLITE ★</div>
+    <div style="font-size:22px;color:${station.badge};letter-spacing:1px;margin-bottom:4px">★ NOW PLAYING ★</div>
     <div style="font-size:42px;color:#ffffff;font-weight:900;border-bottom:1px solid ${station.color};padding-bottom:4px;margin-bottom:6px">${station.name.toUpperCase()}</div>
     <div style="font-size:24px;color:${station.badge};margin-bottom:6px">${station.genre.toUpperCase()}</div>
-    <div style="font-size:20px;color:#88ff88;letter-spacing:2px">● LIVE BROADCASTING ●</div>
+    <div style="font-size:20px;color:#88ff88;letter-spacing:2px">● ON AIR ●</div>
     <div style="font-size:18px;color:#ffd700;margin-top:4px">[E: NEXT STATION / OFF]</div>
   </div>`;
 }
@@ -79,7 +79,7 @@ export const ears = {
         spatial: true,
         refDistance: 3.5,
         maxDistance: 45,
-        bus: "music",
+        bus: "Music",
       };
 
       // In-world UI update
