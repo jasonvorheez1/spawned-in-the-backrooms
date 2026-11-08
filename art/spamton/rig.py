@@ -40,8 +40,8 @@ TORSO_AXIS = Vector((-0.17, -0.03))
 cls = {}
 for n, isl in enumerate(islands):
     c, lo, hi = info(isl); hd = (c.xy - TORSO_AXIS).length
-    if hi.z < 0.27: k = "leg" if len(isl) > 100 else "sole"
-    elif hi.z < 0.6 and hd > 0.3 and len(isl) < 110: k = "hand"
+    if hi.z < 0.6 and hd > 0.3 and len(isl) < 110: k = "hand"
+    elif hi.z < 0.27: k = "leg" if len(isl) > 100 else "sole"
     elif hi.z < 0.6 and hd > 0.15: k = "arm"
     elif hi.z < 0.6: k = "torso"
     else: k = "head"
