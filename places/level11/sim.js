@@ -901,29 +901,14 @@ function lay(ctx) {
     physics: { body: "kinematic", collider: "box" },
     behavior: "scripts/level11-car.js",
     state: { kind: "taxi", name: "Level 11 Express Taxi", verb: "Drive Taxi" },
-    primitive: { kind: "box", width: 2.2, height: 1.1, depth: 4.6 },
-    material: TAXI_YELLOW,
+    model: { id: MODELS.taxi, forward: "-z", offset: [0, 0.09, 0] }, // 2006 Crown Victoria cab (art/level11/street_kit.py)
     children: [
-      { feetPosition: { x: 0, y: 1.05, z: -0.2 }, primitive: { kind: "box", width: 1.9, height: 0.65, depth: 2.3 }, material: TAXI_YELLOW },
-      { feetPosition: { x: 0, y: 1.08, z: -1.35 }, rotation: { pitch: -28 }, primitive: { kind: "box", width: 1.82, height: 0.65, depth: 0.05 }, material: GLASS_TINT },
-      { feetPosition: { x: 0, y: 1.08, z: 0.95 }, rotation: { pitch: 28 }, primitive: { kind: "box", width: 1.82, height: 0.65, depth: 0.05 }, material: GLASS_TINT },
-      { feetPosition: { x: -0.96, y: 1.08, z: -0.2 }, primitive: { kind: "box", width: 0.05, height: 0.55, depth: 2.1 }, material: GLASS_TINT },
-      { feetPosition: { x: 0.96, y: 1.08, z: -0.2 }, primitive: { kind: "box", width: 0.05, height: 0.55, depth: 2.1 }, material: GLASS_TINT },
-      { feetPosition: { x: 0, y: 1.75, z: -0.2 }, primitive: { kind: "box", width: 0.65, height: 0.22, depth: 0.25 }, material: { color: "oklch(0.95 0.15 85)", emissive: "oklch(0.95 0.15 85)", emissiveIntensity: 2.5 } },
-      { feetPosition: { x: 0, y: 0.18, z: -2.35 }, primitive: { kind: "box", width: 2.1, height: 0.2, depth: 0.15 }, material: STEEL_BRUSHED },
-      { feetPosition: { x: 0, y: 0.18, z: 2.35 }, primitive: { kind: "box", width: 2.1, height: 0.2, depth: 0.15 }, material: STEEL_BRUSHED },
-      { feetPosition: { x: -0.75, y: 0.5, z: -2.32 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.06 }, rotation: { pitch: 90 }, material: { color: "#ffffff", emissive: "#ffffff", emissiveIntensity: 3.5 } },
-      { feetPosition: { x: 0.75, y: 0.5, z: -2.32 }, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 0.06 }, rotation: { pitch: 90 }, material: { color: "#ffffff", emissive: "#ffffff", emissiveIntensity: 3.5 } },
       { feetPosition: { x: 0, y: 0.5, z: -3.5 }, light: { kind: "point", color: "oklch(0.98 0.08 90)", intensity: 7.5, distance: 24, shadow: { enabled: false } } },
-      { feetPosition: { x: -0.85, y: 0.55, z: 2.32 }, primitive: { kind: "box", width: 0.28, height: 0.15, depth: 0.05 }, material: { color: "oklch(0.55 0.22 25)", emissive: "oklch(0.55 0.22 25)", emissiveIntensity: 2.0 } },
-      { feetPosition: { x: 0.85, y: 0.55, z: 2.32 }, primitive: { kind: "box", width: 0.28, height: 0.15, depth: 0.05 }, material: { color: "oklch(0.55 0.22 25)", emissive: "oklch(0.55 0.22 25)", emissiveIntensity: 2.0 } },
     ],
   });
 
-  cyl("l11-taxi-wheel-fl", -1.05, 0.28, -1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
-  cyl("l11-taxi-wheel-fr", 1.05, 0.28, -1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
-  cyl("l11-taxi-wheel-rl", -1.05, 0.28, 1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
-  cyl("l11-taxi-wheel-rr", 1.05, 0.28, 1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
+  for (const [w, x, z] of [["fl", -0.86, -1.45], ["fr", 0.86, -1.45], ["rl", -0.86, 1.45], ["rr", 0.86, 1.45]])
+    sp(`l11-taxi-wheel-${w}`, { parent: "l11-taxi", feetPosition: { x, y: 0, z }, model: { id: MODELS.taxi_wheel, forward: "-z" }, castShadow: false });
   sp("l11-porsche", { // a real car (scripts/level11-porsche.js): dynamic hull on four sprung wheels, 1.35x a real 911 so a critter fits
     tags: ["usable", "vehicle"],
     feetPosition: { x: -21, y: 0.3, z: 16.4 },
@@ -962,17 +947,9 @@ function lay(ctx) {
     tags: ["usable"],
     feetPosition: { x: -8.8, y: 0.1, z: 15.5 },
     rotation: { yaw: 90 },
-    primitive: { kind: "box", width: 1.0, height: 2.3, depth: 1.0 },
-    material: STEEL_BRUSHED,
+    model: { id: MODELS.payphone, forward: "-z" }, // a 2006 Verizon post payphone
     behavior: "scripts/level11-use.js",
     state: { kind: "payphone", name: "Municipal Street Payphone", verb: "Answer Payphone" },
-    children: [
-      { feetPosition: { x: -0.48, y: 1.1, z: 0 }, primitive: { kind: "box", width: 0.04, height: 1.8, depth: 0.9 }, material: GLASS_TINT },
-      { feetPosition: { x: 0.48, y: 1.1, z: 0 }, primitive: { kind: "box", width: 0.04, height: 1.8, depth: 0.9 }, material: GLASS_TINT },
-      { feetPosition: { x: 0, y: 1.35, z: -0.38 }, primitive: { kind: "box", width: 0.32, height: 0.48, depth: 0.18 }, material: { color: "oklch(0.25 0.01 250)" } },
-      { feetPosition: { x: 0, y: 1.45, z: -0.26 }, primitive: { kind: "box", width: 0.28, height: 0.08, depth: 0.08 }, material: { color: "oklch(0.15 0.01 250)" } },
-      { feetPosition: { x: 0, y: 2.2, z: 0 }, primitive: { kind: "box", width: 0.9, height: 0.25, depth: 0.9 }, material: { color: "oklch(0.4 0.16 240)", emissive: "oklch(0.4 0.16 240)", emissiveIntensity: 2.0 } },
-    ],
   });
 
   // ==========================================
@@ -981,23 +958,15 @@ function lay(ctx) {
   sp("l11-foodcart", {
     feetPosition: { x: 9.2, y: 0.1, z: 15 },
     rotation: { yaw: -90 },
-    primitive: { kind: "box", width: 1.4, height: 0.95, depth: 2.2 },
-    material: STEEL_BRUSHED,
+    model: { id: MODELS.foodcart, forward: "-z" }, // Sabrett-style cart, umbrella and all
     fx: { script: STEAM_CART },
-    children: [
-      { feetPosition: { x: 0, y: 1.8, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.03, radiusBottom: 0.03, height: 1.8 }, material: STEEL_BRUSHED },
-      { feetPosition: { x: 0, y: 2.7, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.1, radiusBottom: 1.4, height: 0.45 }, material: { color: "oklch(0.85 0.18 85)", roughness: 0.7 } },
-      { feetPosition: { x: 0.35, y: 1.02, z: 0.4 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 0.22 }, material: { color: "oklch(0.85 0.2 85)" } },
-      { feetPosition: { x: 0.35, y: 1.02, z: 0.6 }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 0.22 }, material: { color: "oklch(0.55 0.22 25)" } },
-    ],
   });
 
   sp("l11-food-pretzel", {
     tags: ["usable"],
     parent: "l11-foodcart",
-    feetPosition: { x: 0.1, y: 0.96, z: -0.4 },
-    primitive: { kind: "box", width: 0.5, height: 0.15, depth: 0.5 },
-    material: { color: "oklch(0.7 0.12 65)" },
+    feetPosition: { x: 0.1, y: 0.97, z: -0.25 },
+    model: { id: MODELS.pretzels, forward: "-z" },
     behavior: "scripts/level11-use.js",
     state: { kind: "food-pretzel", name: "Hot Salted Capital Pretzel", verb: "Buy Hot Pretzel" },
   });
@@ -1005,9 +974,8 @@ function lay(ctx) {
   sp("l11-food-hotdog", {
     tags: ["usable"],
     parent: "l11-foodcart",
-    feetPosition: { x: 0.1, y: 0.96, z: 0.3 },
-    primitive: { kind: "box", width: 0.5, height: 0.15, depth: 0.6 },
-    material: { color: "oklch(0.45 0.15 28)" },
+    feetPosition: { x: 0.1, y: 0.97, z: 0.4 },
+    model: { id: MODELS.dogwell, forward: "-z" },
     behavior: "scripts/level11-use.js",
     state: { kind: "food-hotdog", name: "New York Style Street Dog", verb: "Order Street Dog" },
   });
