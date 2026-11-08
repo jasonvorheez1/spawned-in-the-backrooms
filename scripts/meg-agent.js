@@ -553,25 +553,25 @@ export function update(ctx, dt) {
   }
   stop(me, dt); gait(me, m, "idle"); m.path = null; m.leftAt = 0;
   // at the post: turn to whoever walks up, wave once (not at someone the camp is at war with)
-  let near = null, best = 7;
-  for (const pl of ctx.place.players) { const d = flat(pl.feetPosition, me.feetPosition); if (d < best) { best = d; near = pl; } }
+  let close = null, best = 7;
+  for (const pl of ctx.place.players) { const d = flat(pl.feetPosition, me.feetPosition); if (d < best) { best = d; close = pl; } }
   const chatTo = s.talkTo && now - (s.talkAt ?? 0) < 6000 ? ctx.place.objects[s.talkTo] : null; // mid-conversation with another npc
   if (stop0) {
     m.at ||= now;
-    const busy = (near && best < 3) || chatTo || talking;
+    const busy = (close && best < 3) || chatTo || talking;
     let act = busy ? null : stop0.act ?? null;
     if (act && /sit/.test(act) && !s.sit) act = null; // the sit clip only plays seated (state.sit); on the floor it lies flat like a corpse
     work(me, m, act);
-    if (!busy && !near && stop0.look) face(me, stop0.look.x - me.feetPosition.x, stop0.look.z - me.feetPosition.z, dt);
+    if (!busy && !close && stop0.look) face(me, stop0.look.x - me.feetPosition.x, stop0.look.z - me.feetPosition.z, dt);
     if (!busy && now - m.at > (stop0.dwell ?? 10) * 1000) { s.ri = ((s.ri ?? 0) + 1) % s.rounds.length; m.at = 0; if (ctx.random() < 0.08) bark(ctx, me, "move"); }
   }
-  if (chatTo && !(near && best < 3)) { face(me, chatTo.feetPosition.x - me.feetPosition.x, chatTo.feetPosition.z - me.feetPosition.z, dt); ctx.sleep(0.1); return; }
-  if (!near) {
+  if (chatTo && !(close && best < 3)) { face(me, chatTo.feetPosition.x - me.feetPosition.x, chatTo.feetPosition.z - me.feetPosition.z, dt); ctx.sleep(0.1); return; }
+  if (!close) {
     if (now > (m.glance ?? 0)) { m.glance = now + 5000 + ctx.random() * 5000; animate(ctx, me.id, { "bones.Head.yaw": [0, (ctx.random() - 0.5) * 80, 0] }, { duration: 2.8, easing: "easeInOutSine" }); } // a glance down the halls
     ctx.sleep(0.5); return;
   }
-  face(me, near.feetPosition.x - me.feetPosition.x, near.feetPosition.z - me.feetPosition.z, dt);
-  if (!m.waved[near.id] && best < 5 && !s.angry?.[near.id]) { m.waved[near.id] = true; m.wavedAt = now; me.anim.wave = { clip: "cdn/clip-wave-loop.glb", loop: "once", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } }; }
+  face(me, close.feetPosition.x - me.feetPosition.x, close.feetPosition.z - me.feetPosition.z, dt);
+  if (!m.waved[close.id] && best < 5 && !s.angry?.[close.id]) { m.waved[close.id] = true; m.wavedAt = now; me.anim.wave = { clip: "cdn/clip-wave-loop.glb", loop: "once", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } }; }
 }
 function work(me, m, clip) {
   if (m.work === clip) return; m.work = clip;
