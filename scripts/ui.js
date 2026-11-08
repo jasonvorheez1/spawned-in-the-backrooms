@@ -162,7 +162,7 @@ function sniperScope(s, wp) {
 
 // camp chatter: the line an npc is saying floats over its head while it lasts (chatter.js writes state.line)
 // the doorway transition: black that fades off the new level, its name in the middle
-const LEVEL_NAMES = { main: ['LEVEL 0', 'THE LOBBY'], level1: ['LEVEL 1', 'HABITABLE ZONE'], level2: ['LEVEL 2', 'PIPE DREAMS'], level3: ['LEVEL 3', 'ELECTRICAL STATION'], level4: ['LEVEL 4', 'ABANDONED OFFICE'], level5: ['LEVEL 5', 'TERROR HOTEL'], level6: ['LEVEL 6', 'LIGHTS OUT'], level61: ['LEVEL 6.1', 'THE SNACKROOMS'], level11: ['LEVEL 11', 'THE INFINITE CITY'], level10: ['LEVEL 10', 'BUMPER CROP'], level7: ['LEVEL 7', 'THALASSOPHOBIA'], level8: ['LEVEL 8', 'CAVE SYSTEMS'], level21: ['LEVEL 2.1', 'LOCKED'], gamma: ['M.E.G.', 'BASE GAMMA'], spamton: ['[[NOWHERE]]', "SPAMTON'S BASEMENT"] }
+const LEVEL_NAMES = { bonus: ['THE BONUS ROOM', 'THE BONUS ROOM'], main: ['LEVEL 0', 'THE LOBBY'], level1: ['LEVEL 1', 'HABITABLE ZONE'], level2: ['LEVEL 2', 'PIPE DREAMS'], level3: ['LEVEL 3', 'ELECTRICAL STATION'], level4: ['LEVEL 4', 'ABANDONED OFFICE'], level5: ['LEVEL 5', 'TERROR HOTEL'], level6: ['LEVEL 6', 'LIGHTS OUT'], level61: ['LEVEL 6.1', 'THE SNACKROOMS'], level11: ['LEVEL 11', 'THE INFINITE CITY'], level10: ['LEVEL 10', 'BUMPER CROP'], level7: ['LEVEL 7', 'THALASSOPHOBIA'], level8: ['LEVEL 8', 'CAVE SYSTEMS'], level21: ['LEVEL 2.1', 'LOCKED'], gamma: ['M.E.G.', 'BASE GAMMA'], spamton: ['[[NOWHERE]]', "SPAMTON'S BASEMENT"] }
 function xferCard(s, now) {
   const x = s.xfer; if (!x || now - x.at > 2600) return ''
   const to = String(x.to ?? '').startsWith('tutorial0') ? 'main' : x.to // a solo tutorial copy is still Level 0
@@ -280,7 +280,7 @@ function renderHud(ctx, player) {
   if (s.mj?.seats) return `${THEME}${LIVE}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">${mahjongPanel(s, ctx.now())}${chatBubbles(ctx, ctx.now(), player)}</div>` // at the mahjong table: only the game and who's talking
   const now = ctx.now(), lv = s.level, mh = maxHp(lv, s), ms = maxSan(lv, s)
   const hpF = Math.max(0, s.hp / mh), sanF = Math.max(0, s.sanity / ms)
-  const zone = s.zone ?? 'hub'
+  const zone = player.place === 'bonus' ? 'bonus' : (s.zone ?? 'hub')
   const acts = ctx.world.inputs?.actions ?? {}
   const lab = (n, d) => acts[n]?.label ?? d
   const down = s.downAt && now - s.downAt < 3500
@@ -346,7 +346,7 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
   </div>` : `<div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:100px;animation:hud-fade 3.5s forwards;pointer-events:none">
     <div style="font-size:22px;letter-spacing:0.12em">${ZONE_NAMES[zone] ?? (LEVEL_NAMES[player.place]?.[1] ?? 'THE LOBBY').toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}</div>
     <div class="muted" style="font-size:12px;margin-top:2px">
-      ${zone === 'manila' ? 'The Manila Room. The fluorescent hum softens. Sanity recovers.' : zone === 'hub' ? 'Sanity stabilizes here. Nothing follows.' : zone === 'dark' ? 'Total blackout. Watch the corners.' : zone === 'red' ? 'Severe sanity decay.' : zone === 'l5_housekeeping' ? 'M.E.G. Outpost Housekeeping. Sanity and health recover here.' : zone === 'l5_boiler' ? 'The Boiler Room. Extreme heat and heavy sanity drain.' : zone === 'l5_beverly' ? 'The Beverly Room. Hypnotic ballroom music echoes.' : ''}
+      ${zone === 'bonus' ? 'You feel safe. Everyone lands here.' : zone === 'manila' ? 'The Manila Room. The fluorescent hum softens. Sanity recovers.' : zone === 'hub' ? 'Sanity stabilizes here. Nothing follows.' : zone === 'dark' ? 'Total blackout. Watch the corners.' : zone === 'red' ? 'Severe sanity decay.' : zone === 'l5_housekeeping' ? 'M.E.G. Outpost Housekeeping. Sanity and health recover here.' : zone === 'l5_boiler' ? 'The Boiler Room. Extreme heat and heavy sanity drain.' : zone === 'l5_beverly' ? 'The Beverly Room. Hypnotic ballroom music echoes.' : ''}
     </div>
   </div>`}
 
