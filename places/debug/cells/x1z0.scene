@@ -3,7 +3,7 @@ dbg-anim-0:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 89.5, y: 0, z: -7.5}
   id: dbg-anim-0
-  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  model: {forward: "+z", id: /cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-idle-loop.glb}
   tags: [dbg-gallery]
@@ -11,7 +11,7 @@ dbg-anim-1:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 91.4, y: 0, z: -7.5}
   id: dbg-anim-1
-  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  model: {forward: "+z", id: /cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-walk-loop.glb}
   tags: [dbg-gallery]
@@ -19,7 +19,7 @@ dbg-anim-10:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 108.5, y: 0, z: -7.5}
   id: dbg-anim-10
-  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  model: {forward: "+z", id: /cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-ual-walk-carry-adbb76cf-loop.glb}
   tags: [dbg-gallery]
@@ -27,7 +27,7 @@ dbg-anim-11:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 110.4, y: 0, z: -7.5}
   id: dbg-anim-11
-  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  model: {forward: "+z", id: /cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-ual-treechopping-d55e5d3a-loop.glb}
   tags: [dbg-gallery]
@@ -35,23 +35,23 @@ dbg-anim-12:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 87.6, y: 0, z: -4.8}
   id: dbg-anim-12
-  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  model: {forward: "+z", id: /cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb}
   rotation: {yaw: 90}
-  state: {clip: cdn/clip-warrior-walk-ab76f58e-loop.glb}
+  state: {clip: cdn/clip-warrior-walk-human-b70d2b69-loop.glb}
   tags: [dbg-gallery]
 dbg-anim-13:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 89.5, y: 0, z: -4.8}
   id: dbg-anim-13
-  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  model: {forward: "+z", id: /cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb}
   rotation: {yaw: 90}
-  state: {clip: cdn/clip-warrior-run-b403b96b-loop.glb}
+  state: {clip: cdn/clip-warrior-run-human-b3bc7459-loop.glb}
   tags: [dbg-gallery]
 dbg-anim-2:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 93.3, y: 0, z: -7.5}
   id: dbg-anim-2
-  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  model: {forward: "+z", id: /cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-run-loop.glb}
   tags: [dbg-gallery]
@@ -59,7 +59,7 @@ dbg-anim-3:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 95.2, y: 0, z: -7.5}
   id: dbg-anim-3
-  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  model: {forward: "+z", id: /cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-pistol-w1-stand-fire-single-40b6bdfc-loop.glb}
   tags: [dbg-gallery]
@@ -67,7 +67,7 @@ dbg-anim-4:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 97.1, y: 0, z: -7.5}
   id: dbg-anim-4
-  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  model: {forward: "+z", id: /cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-pistol-w1-walk-aim-f-loop-ipc-c02edbce-loop.glb}
   tags: [dbg-gallery]
@@ -75,7 +75,7 @@ dbg-anim-5:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 99, y: 0, z: -7.5}
   id: dbg-anim-5
-  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  model: {forward: "+z", id: /cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-pistol-w1-jog-aim-f-loop-ipc-66839d46-loop.glb}
   tags: [dbg-gallery]
@@ -83,7 +83,7 @@ dbg-anim-6:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 100.9, y: 0, z: -7.5}
   id: dbg-anim-6
-  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  model: {forward: "+z", id: /cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-pistol-w1-crouchwalk-aim-f-loop-ipc-5b4132eb-loop.glb}
   tags: [dbg-gallery]
@@ -91,7 +91,7 @@ dbg-anim-7:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 102.8, y: 0, z: -7.5}
   id: dbg-anim-7
-  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  model: {forward: "+z", id: /cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-ual-sword-regular-combo-fe7524ef-loop.glb}
   tags: [dbg-gallery]
@@ -99,7 +99,7 @@ dbg-anim-8:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 104.7, y: 0, z: -7.5}
   id: dbg-anim-8
-  model: {forward: "+z", id: /cdn/value.22f123efb7a0cdf7b35d226b79587be7e31ed93617b125af4f09eca8cc99cee3.glb}
+  model: {forward: "+z", id: /cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-ual-sword-block-f2918589-loop.glb}
   tags: [dbg-gallery]
@@ -107,7 +107,7 @@ dbg-anim-9:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 106.6, y: 0, z: -7.5}
   id: dbg-anim-9
-  model: {forward: "+z", id: /cdn/value.1049850df9ee61e334a0195842dabf9c40076129dbb79fff9545b5a268046dd1.glb}
+  model: {forward: "+z", id: /cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-ual-zombie-walk-fwd-065f2615-loop.glb}
   tags: [dbg-gallery]
