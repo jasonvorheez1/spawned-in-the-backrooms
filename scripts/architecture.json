@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 1351,
-  "updatedAt": "2026-11-08T01:07:00.695Z",
-  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0 through Level 8, Base Gamma and a debug room. Place simulations and authored cells assemble local environments; shared player, combat, NPC, loot, crafting and UI systems carry individual progression across them. Level 8 adds the 9th Road cave and its hazards, harvest/crafting loop and survivor camp; NPC dialogue and reactions now vary by temperament and personal address.",
+  "basedOnSpecVersion": 1355,
+  "updatedAt": "2026-11-08T01:19:26.333Z",
+  "summary": "The Backrooms is a shared multiplayer survival RPG spanning Level 0 through Level 8, Base Gamma and a debug room. Place simulations and authored cells assemble local environments; shared player, combat, NPC, loot, crafting and UI systems carry individual progression across them. Level 8 supplies the 9th Road cave loop, while seeded critter looks use Blender-generated species/sex meshes and shared gameplay systems.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze and safe-room hub; authored cells, containers, breakable furniture, shifting walls and hunters.",
@@ -10,7 +10,7 @@
     "places/level4 (3D) - Abandoned Office; office plan, residents, cubicle systems, fountains, vending, lift/stairs and Base Omega.",
     "places/level5 (3D) - Terror Hotel; Main Hall, guest rooms, Beverly and Boiler rooms, rentals, mahjong, rat packs, Level 6 portal and Ines's goggles quest.",
     "places/level6 (3D) - Lights Out; seeded dark concrete labyrinth, survivor notes/props, shifting wall, auditory hazards, hounds and Smiler; stairs link Levels 5 and 7.",
-    "places/level7 (3D) - Thalassophobia; flooded 2000s Floating House, Seawatch, Fort Surrender, sea-floor/seamount, camps, diving bell and unopenable Level 9 hatch.",
+    "places/level7 (3D) - Thalassophobia; flooded 2000s Floating House, Seawatch, Fort Surrender and its five named worshippers, sea-floor/seamount, camps, diving bell and inert Level 9 hatch; crew have distinct clothing looks.",
     "places/level8 (3D) - Cave Systems / 9th Road; one colliding Blender karst tube from entrance lake through hall, flooded cavern, Hyperspace Lane, spider nest, tar pool and 9th Road camp to the asphalt glow.",
     "places/debug + places/level8/config.yaml - debug 3D room; Level 8 has dark fog/sky, no terrain or moon, deep reverb and its own spawn."
   ],
@@ -30,7 +30,7 @@
     "scripts/lib/level3.js + Level 3 data + scripts/lib/maze3path.js - Electrical Station grid, zones, openings, routes and hazards used by geometry, sim, creatures and visits.",
     "scripts/lib/level4.js, level5.js, level6.js + scripts/lib/level6path.js - office/hotel plans and sanity, Level 6 grid and path queries shared by geometry, simulation and player behavior.",
     "scripts/lib/level-kit.js + scripts/lib/npc-respawn.js - named-person management, throttling and shared NPC return timing for place sims and Level 7 fauna.",
-    "scripts/lib/clothes.js, scripts/lib/critter-model.js + face/model data, and scripts/mat-cloth.js - seeded NPC/player looks, rendered critter bodies and garment patterns.",
+    "scripts/lib/clothes.js, scripts/lib/critter-model.js + face/model data, and scripts/mat-cloth.js - seeded NPC/player looks, rendered critter bodies and garment patterns; art/critter-cute/build.py generates the enabled species/sex head and body meshes listed by scripts/lib/data/critter-models.yml.",
     "scripts/lib/craft.js + scripts/lib/data/craft.yml - recipe readiness, batch capacity and category list shared by craft actions and UI; includes Level 8 resource recipes.",
     "scripts/lib/personality.js + scripts/lib/address.js - seeded temperament, dialogue style/reactions and how NPCs address players; reused by talk.js, npc-talk.js and meg-agent.js."
   ],
@@ -69,22 +69,23 @@
     "scripts/l8-life.js 0.1s update → flood surface/drowning, moving guides, regenerating hostile spiders/remains, tar-hand pull/damage/shore return and distant rumble/scream effects."
   ],
   "behaviorFamilies": [
-    "places/main/cells/* - authored fluorescent fixtures and red-zone variants; selected cells add flicker-wall markings, sound and local light state; Level 5 cells hold portal and quest props.",
-    "places/level4/cells/x0z0.scene + level4-geo.js, level4-detail-geo.js, l4-prop-geo.js and look-level4.js - office structure, detail, varied props and post-processing share the Level 4 plan; Level 7 has dedicated room/ocean geo.",
+    "places/main/cells/* and places/level5/cells/* - authored fixtures, red-zone variants, flicker-wall details and local sound/light state; Level 5 cells include portal and quest props.",
+    "places/level4/cells/x0z0.scene + level4-geo.js, level4-detail-geo.js, l4-prop-geo.js and look-level4.js - office structure, details, varied props and post-processing share the Level 4 plan; Level 7 has dedicated room/ocean geo.",
     "scripts/l4-office.js + l4-office-geo.js - cubicle islands, phones and printers vary by placement; manager schedules rings, ambience, tasks and rewards.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - NPC rounds, talk, faction, role, voice, looks and routines vary by person; meg-agent.js supplies shared combat behavior.",
     "scripts/lib/craft.js + data/craft.yml - shared category/recipe handling; category, scrap cost, skill, bench requirement, batch size and item family vary by recipe, including Level 8 cave materials.",
-    "scripts/lib/npc-talk.js + shops.yml/talk.yml - shared dialogue/trader interface varies by persona, stock, barter, discount and item section; uses Backdollars.",
-    "scripts/lib/personality.js + address.js - NPC wording/reactions vary by seeded temperament, faction/role and learned player name; temperament also nudges stats and nerve.",
-    "places/level8/sim.js + scripts/l8-life.js + scripts/l8-use.js - road stations share coordinate interpolation, while hazards, harvest regrowth, caches, quests and interaction payouts vary by resource/encounter; Level 7 sim delegates house and fort details to level7-house.js and level7-extras.js."
+    "scripts/lib/npc-talk.js + shops.yml/talk.yml + scripts/lib/personality.js/address.js - dialogue, trade, seeded temperament and address vary by persona, stock, rapport and player name; Backdollars are the trade currency.",
+    "places/level8/sim.js + scripts/l8-life.js + scripts/l8-use.js - road stations share coordinate interpolation, while hazards, harvest regrowth, caches, quests and interaction payouts vary by resource/encounter.",
+    "art/critter-cute/build.py + scripts/lib/data/critter-models.yml - species and sex select distinct heads/body meshes; snout length/width/bridges and fur-edged layered markings vary by species, consumed by shared critter-model.js rendering."
   ],
   "probableOrphans": [],
   "migrationNotes": [
     "Grid contracts differ: Level 0 is 56×56 at 4 m; Level 1 30×30 at 8 m; Level 2 24×24 at 5 m; Level 3 26×26 at 4 m; Level 4 64×64 m with 8 m offices; Level 5 is 96×60 m; Level 6 is 27×41 cells at 1.8 m and 2.4 m high.",
-    "Level 6 builtV is 3; moving trigger/prop sites must keep endpoint coordinates aligned to scripts/lib/level6.js plan(); its shift wall toggles only outside a 7 m player radius. Level 6 suppresses the flashlight and destroys carried torch on arrival; NVG is local camera light.",
+    "Level 6 builtV is 3; moving trigger/prop sites must match scripts/lib/level6.js plan(), its shift wall toggles only outside 7 m, and it suppresses/destroys the flashlight/torch on entry. Keep stair markers l6-from-l7/l7-from-l6 paired.",
     "Level 5 Ines quest progress is player.state.nvgQ (1 asked, 2 case, 3 goggles, 4 complete); the north portal leads to Level 6 and its auxiliary bulkhead remains welded shut.",
-    "Level 6/7 stair marker IDs l6-from-l7/l7-from-l6 must remain paired. Level 7 terrain centers are (0,0), (46,-120), (-70,-95), (4,8); floating-house model is visual-only around its own colliding walls.",
-    "Level 7 rebuild is gated by builtV=22 and clears l7x-/l7h- details; the hatch at (-150, terrain, 0) is inert, and diving bell is the Level 8 route. Keep l8-from-l7 paired with Level 7's l7-from-l8 arrival marker.",
-    "Level 8 sim build gate is V=8; road position P(s, side, up) is interpolated from scripts/lib/data/level8.yml stations, and harvest regrow delays are seconds. Keep DEFS and spawned l8 IDs coordinated with rebuild cleanup; flashlight intensity/range and battery drain are deliberately reduced/increased on Level 8 (2.2x drain)."
+    "Level 7 terrain centers are (0,0), (46,-120), (-70,-95), (4,8); floating-house model is visual-only around its own colliding walls.",
+    "Level 7 rebuild is gated by builtV=22 and clears l7x-/l7h- details; hatch at (-150, terrain, 0) is inert; diving bell is the Level 8 route, paired with Level 8's l8-from-l7/l7-from-l8 arrival markers.",
+    "Level 8 sim build gate is V=8; road position P(s, side, up) is interpolated from scripts/lib/data/level8.yml stations, and harvest regrow delays are seconds. Keep DEFS and spawned l8 IDs coordinated with rebuild cleanup; flashlight intensity is adjusted locally.",
+    "Cute critter meshes are enabled in scripts/lib/data/critter-models.yml; art/critter-cute/build.py outputs species/sex heads and bodies, so generated GLBs and manifest headM/headF/body entries and material names must stay aligned."
   ]
 }
