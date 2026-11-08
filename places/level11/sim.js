@@ -1476,7 +1476,7 @@ export function tick(ctx) {
   if (lq) {
     let q = ctx.session.l11q;
     if (!q || q.v !== V) { lay(ctx); q = ctx.session.l11q; } // a fresh machine (or a new version) rebuilds the list; the cursor carries on
-    q.rows.sort((a, b) => (a[1].physics && a[1].physics !== "none" ? 0 : 1) - (b[1].physics && b[1].physics !== "none" ? 0 : 1));
+    if (lq.rows || lq.keep) { delete lq.rows; delete lq.keep; } // an older build's list, carried in shared state, is dropped
     if (!q.sorted) { q.rows.sort((a, b) => (a[1].physics && a[1].physics !== "none" ? 0 : 1) - (b[1].physics && b[1].physics !== "none" ? 0 : 1)); q.sorted = true; }
     let i = lq.i ?? 0;
     const end = Math.min(q.rows.length, i + LAY_STEP);
