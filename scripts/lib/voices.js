@@ -43,5 +43,8 @@ const hash = (s) => { let h = 7; for (const c of String(s)) h = (h * 31 + c.char
 const MEN = POOL.filter((v) => /-man-|-man$|old-man/.test(v)), WOMEN = POOL.filter((v) => /woman/.test(v))
 // a key 'npc-id' or 'npc-id#f' / '#m': a cast voice by name, else one from the pool by id, the right sex when known
 export const throatOf = (who) => { const [k, sx] = String(who).split('#'); return T[k] ?? (sx === 'f' ? WOMEN : sx === 'm' ? MEN : POOL)[hash(k) % (sx === 'f' ? WOMEN : sx === 'm' ? MEN : POOL).length] }
-const slug = (line, n = 180) => String(line ?? '').slice(0, n).replace(/[^a-z ]/gi, '').trim().toLowerCase().replace(/ +/g, '-')
-export const vo = (who, line, n) => `/cdn/voice-${throatOf(who)}-saying-${slug(line, n)}.mp3`
+const NUM = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+const slug = (line, n = 180) => String(line ?? '').slice(0, n).replace(/\d/g, (d) => ' ' + NUM[d] + ' ').replace(/[^a-z ]/gi, ' ').trim().toLowerCase().replace(/ +/g, '-')
+// a line with no real word in it (empty, "hmm", "...", a stray symbol) makes the voice maker fill in its own test words: those stay silent, the subtitle still shows
+const real = (sl) => sl.split('-').some((w) => w.length >= 3 && /[aeiouy]/.test(w) && !/^(hmm+|mmm*|uhh*|umm*|hm+|ahh*|ohh*|erm*)$/.test(w))
+export const vo = (who, line, n) => { const sl = slug(line, n); return real(sl) ? `/cdn/voice-${throatOf(who)}-saying-${sl}.mp3` : null }
