@@ -83,6 +83,11 @@ export function update(ctx, dt) {
   const mem = (ctx.self.session.m ??= {});
   const packs = (S.packs ??= {});
   const hunt = prey(ctx, now);
+  // nobody near any rat: the pack holds still and the manager naps (Shelly: zones you're not in shouldn't work)
+  { const ps = ctx.place.players, rats = ctx.query({ tags: ["l5rat"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
+    const near = ps.some((p) => rats.some((r) => Math.hypot(r.feetPosition.x - p.feetPosition.x, r.feetPosition.z - p.feetPosition.z) < 40));
+    if (!near && !S.flick) { if (!mem.napped) { mem.napped = true; for (const r of rats) { const o = ctx.getObject(r.id); if (o) o.velocity = { x: 0, y: 0, z: 0 }; } } ctx.sleep(1.5); return; }
+    mem.napped = false; }
 
   // Screaming event lamp flicker
   if (S.flick) {
@@ -219,6 +224,7 @@ export function update(ctx, dt) {
         if (!m.deadAt) {
           m.deadAt = now;
           setGait(r, m, "still");
+          { const o = ctx.getObject(r.id); if (o) { o.velocity = { x: 0, y: 0, z: 0 }; o.physics = "none"; } } // a body costs no physics
           becomeCorpse(ctx, r, "Death Rat", ["meat:rat"], killerOf(ctx, pos)?.feetPosition);
           heard(ctx, { maxDistance: 32, refDistance: 5, clip: SND("rat-death-squeal"), position: pos, volume: 0.8 });
           ctx.emit("fx", { position: { ...pos, y: 0.15 }, script: BLOOD });
