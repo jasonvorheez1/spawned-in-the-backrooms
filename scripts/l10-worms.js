@@ -10,8 +10,8 @@ import { WORMS } from "./worm10-geo.js";
 const WRITHE = (() => {
   const tracks = {}, wave = (ph, amp) => Array.from({ length: 9 }, (_, k) => Math.round(Math.sin((k / 8) * 6.283 + ph) * amp));
   for (let i = 0; i < WORMS; i++) {
-    tracks[`w${i}a`] = { pitch: wave(i * 1.7, 18), roll: wave(i * 2.3 + 1, 14) };
-    tracks[`w${i}b`] = { pitch: wave(i * 1.7 + 1.6, 38), yaw: wave(i * 0.9 + 0.5, 30) };
+    tracks[`w${i}a`] = { yaw: wave(i * 1.7, 16), pitch: wave(i * 2.3 + 1, 4) };
+    tracks[`w${i}b`] = { yaw: wave(i * 1.7 + 1.6, 34), pitch: wave(i * 0.9 + 0.5, 10) };
   }
   return { duration: 1.1, tracks };
 })();
@@ -58,7 +58,7 @@ export function update(ctx, dt) {
     const a = ctx.random() * 6.283, x = p.feetPosition.x + Math.cos(a) * S.start, z = p.feetPosition.z + Math.sin(a) * S.start;
     ctx.spawn({
       tags: ["l10worm", "moths"], feetPosition: { x, y: gy(x, z) - 2.4, z }, rotation: ctx.random() * 360,
-      primitive: { kind: "scripted", script: "scripts/worm10-geo.js" }, scale: 1.25, visibleRange: { max: 90 }, castShadow: false,
+      primitive: { kind: "scripted", script: "scripts/worm10-geo.js" }, scale: 1, visibleRange: { max: 60 }, castShadow: false,
       physics: { body: "kinematic", collider: "capsule" }, visible: false, fx: { script: RIPPLE },
       state: { kind: "worm", name: "Field Worm", hp: S.hp, maxHp: S.hp, level: 3, phase: "stalk", prey: p.id, heardAt: now },
     });
@@ -106,8 +106,8 @@ export function update(ctx, dt) {
     if (s.phase === "up") {
       const t = now - m.at, x = o.feetPosition.x, z = o.feetPosition.z;
       const k = Math.min(1, t / (S.rise * 1000));
-      if (t < S.up) o.feetPosition = { x, y: m.y0 - 1.6 * (1 - k) - 0.15, z };
-      const sy = 1.25 * (1 + 0.07 * Math.sin(t / 90)); if (Number.isFinite(sy)) o.scale = { x: 1.25, y: sy, z: 1.25 };
+      if (t < S.up) o.feetPosition = { x, y: m.y0 - 0.3 * (1 - k), z };
+      
       if (!m.bit && t > S.rise * 1000 && p && flat(o.feetPosition, p.feetPosition) < S.reach && exposed(ctx, p)) {
         m.bit = true;
         const at = hit(ctx, p, Math.round(rnd(ctx, S.bite[0], S.bite[1] + 0.99) - 0.49), "#ff6a50");
@@ -125,7 +125,7 @@ export function update(ctx, dt) {
       const t = now - m.at;
       o.feetPosition = { ...o.feetPosition, y: m.y0 - 0.15 - 2.2 * Math.min(1, t / (S.sink * 1000)) };
       if (t > S.sink * 1000) { // back under: it hunts you again from here
-        o.visible = false; o.scale = 1.25; o.anim.writhe = null; o.fx = { script: RIPPLE }; s.phase = "stalk"; s.heardAt = now;
+        o.visible = false; o.scale = 1; o.anim.writhe = null; o.fx = { script: RIPPLE }; s.phase = "stalk"; s.heardAt = now;
         const a = ctx.random() * 6.283; o.feetPosition = { x: o.feetPosition.x + Math.cos(a) * 6, y: m.y0 - 2.4, z: o.feetPosition.z + Math.sin(a) * 6 };
       }
     }
