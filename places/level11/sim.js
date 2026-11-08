@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 81; // bump to rebuild the city in rooms that are already open
+const V = 82; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1032,7 +1032,7 @@ function lay(ctx) {
   // ==========================================
   sp("l11-taxi", {
     tags: ["usable", "vehicle", "taxi"],
-    feetPosition: { x: -5.5, y: 0.08, z: 6 },
+    feetPosition: { x: -6.95, y: 0.08, z: -8.5 }, // parked at the west kerb, out of the intersection
     rotation: { yaw: 0 },
     physics: { body: "kinematic", collider: "box" },
     behavior: "scripts/level11-car.js",
@@ -1226,7 +1226,7 @@ function lay(ctx) {
   // ==========================================
   // "A handful of cars and a simulated roadworks site."
   // "Roadworks and city maintenance appear spontaneously, alongside scaffolding, graffiti, waste bins, etc."
-  const RW_X = -4.5;
+  const RW_X = -6.6; // tucked into the parking lane against the west kerb, the driving lanes stay open
   const RW_Z = 52.0;
 
   // Steel trench excavation plate over asphalt cut

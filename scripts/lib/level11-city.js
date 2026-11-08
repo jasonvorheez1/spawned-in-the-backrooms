@@ -134,7 +134,7 @@ export function layStreet(ctx, h) {
   put("l11-st-shelter", "shelter", 14.4, 48, 90); put("l11-st-shelter2", "shelter", -14.4, -8, -90);
   for (const [i, [x, z]] of [[-9.2, 33], [9.2, 15.5], [9.2, 47], [-9.2, 5]].entries()) put(`l11-st-nbox-${i}`, "newsbox", x, z, x < 0 ? -90 : 90, { collider: "box", materials: { nbox: { color: ["#1d4fa0", "#c8231e", "#e7e2d2", "#2f7a3a"][i] } } });
   // parked cars along the kerbs, tinted at random; a few vans
-  const SLOTS = []; for (let z = -76; z <= 76; z += 7.5) { if ((z > -48 && z < -14) || (z > 4 && z < 20)) continue; SLOTS.push([-6.95, z], [6.95, z]); }
+  const SLOTS = []; for (let z = -76; z <= 76; z += 7.5) { if ((z > -48 && z < -14) || (z > 4 && z < 20)) continue; if (!(Math.abs(z - 52) < 5 || Math.abs(z + 8.5) < 4)) SLOTS.push([-6.95, z]); SLOTS.push([6.95, z]); } // the west kerb leaves room for the roadworks (z 52) and the taxi (z -8.5)
   const cars = [];
   SLOTS.forEach(([x, z], i) => {
     if (hs(i, 4, 9) < 0.5) return;
