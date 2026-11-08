@@ -94,7 +94,7 @@ const CSS = `<style>
 </style>`
 
 const ICONS = [['mail', '✉', 'Backmail'], ['db', '📚', 'The Database'], ['files', '🗂', 'BACKDRIVE'], ['forum', '💬', 'Backdoor'], ['term', '⌨', 'Terminal'], ['notes', '📝', 'Notepad'], ['bin', '🗑', 'Recycle Bin'], ['about', '💾', 'This Computer']]
-const TITLE = { mail: 'Backmail', db: 'The Database', files: 'BACKDRIVE', forum: 'Backdoor Forum', term: 'Terminal', about: 'System Properties', notes: 'Notepad', bin: 'Recycle Bin' }
+const TITLE = { ctrl: 'Security Panel', mail: 'Backmail', db: 'The Database', files: 'BACKDRIVE', forum: 'Backdoor Forum', term: 'Terminal', about: 'System Properties', notes: 'Notepad', bin: 'Recycle Bin' }
 
 function chrome(title, inner) {
   return `<div class="win"><div class="tb">${LOGO(0.38)}<span>${esc(title)}</span><button onclick="${A({ k: 'app', v: 'desktop' })}" title="Minimize">_</button><button class="close" onclick="${A({ k: 'app', v: 'desktop' })}" title="Close">✕</button></div>${inner}</div>`
@@ -205,6 +205,9 @@ export function osUi(ctx, player) {
     } else if (os.app === 'term') {
       const lines = (os.term?.length ? os.term : [`${O.version}`, `${esc(os.host)} · type help`]).map((l) => `<div>${esc(l)}</div>`).join('')
       win = chrome(`Terminal · ${os.host}${admin ? ' · admin' : ''}`, `<div class="body" style="flex-direction:column;background:#000"><div class="term">${lines}</div><div class="q">${['help', 'ls', 'whoami', 'entities', 'hack', 'blink'].map((c) => `<button onclick="${A({ k: 'cmd', v: c })}">${c}</button>`).join('')}</div><div class="cmd"><span style="color:#ffbe1a;padding:6px 0 6px 10px;font:13px monospace">&gt;</span><input id="tin" data-interactive autocomplete="off" maxlength="120" autofocus onkeydown="if(event.key==='Enter'){${A({ k: 'cmd', v: '__V__' }).replace("'__V__'", 'this.value')};this.value=''}"></div></div>`)
+    } else if (os.app === 'ctrl' && CTRL[OPENS[os.host]]) {
+      const C = CTRL[OPENS[os.host]]
+      win = chrome(C.title, `<div class="body"><div class="rd"><div class="meta">${admin ? 'admin session. every switch is logged.' : 'read-only'}</div>${C.rows.map((r) => `<div style="display:flex;align-items:center;gap:10px;margin:6px 0;padding:6px 8px;border:2px inset #c0c0c0;background:#fff"><b style="flex:1">${esc(r.label)}</b><span class="meta">${os.done?.[r.id] ? 'DONE' : 'READY'}</span><button ${admin ? '' : 'disabled'} onclick="${A({ k: 'ctrl', v: r.id })}">${esc(r.act)}</button></div>`).join('')}</div></div>`)
     } else if (os.app === 'about') {
       const A0 = O.about, days = 11402 + Math.floor(now / 86400000), seat = A0.users[hashN(os.host) % (A0.users.length - 1)]
       win = chrome('System Properties', `<div class="body"><div class="rd"><div style="display:flex;gap:18px;align-items:flex-start">${LOGO(1.6)}<div style="flex:1"><h3>${esc(O.version)}</h3><div class="meta">${esc(A0.origin)}</div>
@@ -217,7 +220,7 @@ export function osUi(ctx, player) {
       const bs = binOf(), f = bs.find((x) => x.name === os.sel) ?? null
       win = chrome('Recycle Bin', `<div class="body">${list(bs, os.sel, 'bin', { id: (x) => x.name, html: (x) => `🗑 ${esc(x.name)}` })}<div class="rd">${f ? `<h3>${esc(f.name)}</h3><div class="meta">Deleted by: (unknown) · Not emptied</div><div style="white-space:pre-wrap;font-family:monospace">${esc(f.text)}</div>` : `<div class="meta">${bs.length} items. Nobody has emptied it. Emptying is disabled.</div>`}</div></div>`)
     }
-    const apps = ICONS.map(([k, g, n]) => `<button class="ic" onclick="${A({ k: 'app', v: k })}"><span class="g">${g}</span>${esc(n)}</button>`).join('')
+    const apps = (CTRL[OPENS[os.host]] ? `<button class="ic" onclick="${A({ k: 'app', v: 'ctrl' })}"><span class="g">🔒</span>Security Panel</button>` : '') + ICONS.map(([k, g, n]) => `<button class="ic" onclick="${A({ k: 'app', v: k })}"><span class="g">${g}</span>${esc(n)}</button>`).join('')
     const tw = os.app !== 'desktop' ? `<div class="tw">${esc(TITLE[os.app] ?? '')}</div>` : ''
     const menu = os.menu ? `<div class="smenu"><div class="side">Back OS 95</div><div class="items">${ICONS.map(([k, g, n]) => `<button onclick="${A({ k: 'app', v: k })}">${g} ${esc(n)}</button>`).join('')}<hr><button onclick="${A({ k: 'off' })}">⏻ Shut Down...</button></div></div>` : ''
     body = `<div class="desk">${menu}<div class="area">${win || `<div class="icons">${apps}</div>`}</div><div class="task"><div class="st" onclick="${A({ k: 'menu' })}" style="${os.menu ? 'border-style:inset' : ''}">${LOGO(0.34)} Start</div>${tw}<div class="clk">15:40</div></div></div>`

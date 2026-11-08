@@ -10,7 +10,7 @@ import { skillsOf } from './lib/stats.js'
 import { initHacking, guessPassword, activateBracket } from './lib/fallout-hack.js'
 
 const BOOT_MS = 3200
-const APPS = ['desktop', 'mail', 'db', 'files', 'forum', 'term', 'about', 'notes', 'bin', 'hack']
+const APPS = ['ctrl', 'desktop', 'mail', 'db', 'files', 'forum', 'term', 'about', 'notes', 'bin', 'hack']
 const OFF_MS = 2200 // the shut-down screen, then you stand
 const seen = (s, key, id) => String(s[key] ?? '').split(',').includes(id)
 const mark = (s, key, id) => { s[key] = [s[key], id].filter(Boolean).join(',') }
@@ -19,12 +19,47 @@ const close = (ctx, s) => { s.os = null; s.osClosedAt = ctx.now() }
 // leaving is in-world: Start > Shut Down (or E, or the terminal's shutdown) plays the power-off, then you stand up
 const shutdown = (ctx, s) => { if (s.os && s.os.app !== 'off') s.os = { ...s.os, app: 'off', menu: false, at: ctx.now() } }
 
+// Level 11 unlockables (Shelly: "hacking some stuff and pressing the right thing can unlock some stuff"): getting in is half of it.
+// The security panel holds a row of switches; one releases the door, the harmless ones just do their thing, the alarm locks you out.
+export const CTRL = {
+  sub: { title: 'MTA Station Control · Gate 07', rows: [
+    { id: 'light', label: 'Platform lighting', act: 'CYCLE', say: 'The platform lights stutter off and on. Nothing else moves.' },
+    { id: 'fare', label: 'Fare gates', act: 'FREE ENTRY', say: 'Turnstiles click to free entry. The steel gate stays shut.' },
+    { id: 'rail', label: 'Third rail, track 2', act: 'ENERGIZE', say: 'Somewhere below, the rail hums. Better not walk the tracks.' },
+    { id: 'gate', label: 'Gate 07 maglock', act: 'RELEASE', ok: true },
+    { id: 'alarm', label: 'Station alarm', act: 'TEST', alarm: true } ] },
+  sedco: { title: 'Sedco Closed-Circuit Security', rows: [
+    { id: 'cctv', label: 'CCTV loop, cams 1-9', act: 'RECORD', say: 'The cameras start recording. Smile.' },
+    { id: 'shut', label: 'Lobby shutters', act: 'LOWER', say: 'A shutter rattles down somewhere upstairs.' },
+    { id: 'lift', label: 'Service elevator', act: 'LOCK', say: 'The elevator locks at B1.' },
+    { id: 'vault', label: 'Vault B2 timelock', act: 'OVERRIDE', ok: true },
+    { id: 'silent', label: 'Silent alarm', act: 'ARM', alarm: true } ] },
+}
+const OPENS = { 'MTA-GATE-07': 'sub', 'SEDCO-SEC-01': 'sedco', 'BETA-DISPATCH-01': 'sub' }
 function unlock(ctx, s) {
   const c = ctx.getObject(s.os.id); if (c) c.state.unlocked = true
-  const opens = { 'MTA-GATE-07': 'sub', 'SEDCO-SEC-01': 'sedco', 'BETA-DISPATCH-01': 'sub' }[s.os.host] // Level 11 unlockables (scripts/l11-gate.js)
-  if (opens && !String(s.l11Access ?? '').split(',').includes(opens)) { s.l11Access = [s.l11Access, opens].filter(Boolean).join(','); gain(ctx, 40); s.os = { ...s.os, user: 'admin', lock: '', app: 'desktop' }; note(ctx, s, opens === 'sub' ? 'Access granted: the station gate under the subway stair is released.' : 'Access granted: the Sedco vault door below the street is released.'); return }
-  s.os = { ...s.os, user: 'admin', lock: '', app: 'desktop' }
-  gain(ctx, 30); note(ctx, s, 'Access gained. Restricted files are open.')
+  const opens = OPENS[s.os.host]
+  s.os = { ...s.os, user: 'admin', lock: '', app: opens ? 'ctrl' : 'desktop' }
+  gain(ctx, 30); note(ctx, s, opens ? 'Admin access. The security panel is open.' : 'Access gained. Restricted files are open.')
+}
+function ctrl(ctx, s, id) {
+  const os = s.os, key = OPENS[os.host], C = CTRL[key], r = C?.rows.find((x) => x.id === id)
+  if (!r || os.user !== 'admin') return
+  if (r.ok) {
+    if (!String(s.l11Access ?? '').split(',').includes(key)) { s.l11Access = [s.l11Access, key].filter(Boolean).join(','); gain(ctx, 40) }
+    s.os = { ...os, done: { ...(os.done ?? {}), [id]: true } }
+    note(ctx, s, key === 'sub' ? 'Gate 07 released. The station gate under the subway stair is open to you.' : 'Timelock overridden. The Sedco vault door below the street is open to you.')
+    return
+  }
+  if (r.alarm) { // the wrong switch: the alarm screams and the terminal locks itself again
+    const c = ctx.getObject(os.id); if (c) { delete c.state.unlocked; c.state.lock = c.state.lock || 'science:10' }
+    note(ctx, s, 'ALARM. The terminal locks you out. You\'ll have to break in again.')
+    ctx.emit('screenShake', { intensity: 0.25, duration: 0.3 }, { audience: { player: ctx.self.id } })
+    ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-building-security-alarm-bell-ringing-short.mp3', position: ctx.self.feetPosition, volume: 0.8, maxDistance: 40 })
+    shutdown(ctx, s); return
+  }
+  s.os = { ...os, done: { ...(os.done ?? {}), [id]: true } }
+  note(ctx, s, r.say)
 }
 
 function act(ctx, s, d) {
@@ -34,6 +69,7 @@ function act(ctx, s, d) {
   if (d.k === 'menu') { s.os = { ...os, menu: !os.menu }; return }
   if (os.app === 'boot') return
   if (d.k === 'app' && APPS.includes(d.v) && os.app !== 'login') { s.os = { ...os, app: d.v, sel: '', q: '', menu: false }; return }
+  if (d.k === 'ctrl') return ctrl(ctx, s, String(d.v || ''))
   if (d.k === 'cat') { s.os = { ...os, cat: String(d.v || ''), sel: '' }; return }
   if (d.k === 'pw' || d.k === 'login') { // the login screen: guest, or a password
     if (d.k === 'login' || !d.v) { s.os = { ...os, app: 'desktop' }; return }
