@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 5;
+const V = 6;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -10,10 +10,10 @@ const BORDER = T("country-ivy-wallpaper-border-strip", 1, "oklch(0.95 0.02 110)"
 const CEIL = T("white-popcorn-acoustic-ceiling-texture", 0.8, "oklch(0.96 0.005 90)");
 const TRIM = { color: "oklch(0.9 0.02 85)", roughness: 0.6 };
 const M = {
-  bed: "/cdn/value.635524f2594f1ed2764d403655620f2d338b78b42bf046d268d365abe5a6ffc9.glb",
+  bed: "/cdn/value.4c61843b2bcb94ee80364a2a654397ea5d979690794ce7e085addb70cfb31aae.glb",
   armchair: "/cdn/value.324d9a05c6aca4bc72f791c510f751bee89cfbbc0e2104e59ad075531e70a750.glb",
   bookshelf: "/cdn/value.1eb5a4d0d74feb46ccccd20ebf5c2f0ea69a16afd52c50bb36f6566d9513bf46.glb",
-  dresser: "/cdn/value.6b73846286fe58c95018a876f85d847e8af3c7a0187d06a8838072345f9ca49e.glb",
+  dresser: "/cdn/value.05e39c76bde213827151738e055d8ee1b7af522032767812cb1e662f75992599.glb",
   tv: "/cdn/value.b06d0c09b1cda983be988ee780d72e0a4105b28ed612b279c94d5cd545017813.glb",
   sofa: "/cdn/value.0feff3db97a7d03c96c612e304e76e62ee1a577e754a9073a4ca0d3ddfb2c023.glb",
   kitchen: "/cdn/value.a913b60b5860de57e7072069c2b3384708d80abc5c3df3ac13c9341b06c3e2fe.glb",
@@ -65,8 +65,8 @@ export function tick(ctx) {
   sp("h-light-living", { feetPosition: { x: 0, y: 2.6, z: 2.5 }, light: { kind: "point", color: "oklch(0.92 0.07 75)", intensity: 2.2, distance: 9 } });
 
   // bedroom: the bed is where you rest
-  fit("h-bed", M.bed, -2.8, -4.4, 0, [1.6, 0.9, 2.2], { tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind: "bed", name: "Your Bed", verb: "Sleep" } });
-  fit("h-dresser", M.dresser, 3.8, -5.4, 0, [1.4, 1.0, 0.5]);
+  fit("h-bed", M.bed, -2.8, -4.7, 0, [1.65, 1.1, 2.1], { tags: ["usable"], behavior: "scripts/home11-door.js", state: { kind: "bed", name: "Your Bed", verb: "Sleep" } });
+  fit("h-dresser", M.dresser, 3.6, -5.6, 0, [1.1, 1.75, 0.5]); // tripo: oak dresser with arched mirror
   fit("h-lamp-2", M.lamp, -0.9, -5.5, 0, [0.4, 1.2, 0.4]);
   sp("h-light-bed", { feetPosition: { x: -1, y: 2.5, z: -3.5 }, light: { kind: "point", color: "oklch(0.85 0.08 65)", intensity: 1.4, distance: 7 } });
   sp("h-window", { feetPosition: { x: -4.9, y: 1.0, z: -3.5 }, primitive: { kind: "box", width: 0.05, height: 1.1, depth: 1.4 }, material: { color: "oklch(0.95 0.04 85)", emissive: "#fff1d0", emissiveIntensity: 1.2 } });
