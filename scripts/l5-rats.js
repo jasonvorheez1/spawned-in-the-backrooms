@@ -133,7 +133,7 @@ export function update(ctx, dt) {
 
     // Up a vent / back down
     if (P.phase === "nest" && now >= P.next && live.length) {
-      const v = R.vents[Math.floor(ctx.random() * R.vents.length)];
+      const VS = R.vents.filter((q) => !isSafe(q.x, q.z)); const v = VS.length ? VS[Math.floor(ctx.random() * VS.length)] : null; if (!v) { P.next = now + 60000; continue; }
       packs[pk.id] = {
         phase: "out",
         vent: v,
@@ -207,6 +207,13 @@ export function update(ctx, dt) {
       const pos = r.feetPosition;
       const st = r.state ?? {};
       const vy = (r.velocity?.y ?? 0) - 18 * dt;
+      // safe zones: no rats, no rat bodies (creator's rule)
+      if (isSafe(pos.x, pos.z)) {
+        if (st.dead || (st.hp ?? 1) <= 0) { ctx.destroy(r.id); delete mem[r.id]; continue; }
+        const o = ctx.getObject(r.id);
+        if (o) { o.feetPosition = { x: pk.nest.x + (ctx.random() - 0.5), y: 0.05, z: pk.nest.z + (ctx.random() - 0.5) }; o.velocity = { x: 0, y: 0, z: 0 }; }
+        mem[r.id] = {}; continue;
+      }
 
       if (st.dead || (st.hp ?? 1) <= 0) {
         if (!m.deadAt) {
