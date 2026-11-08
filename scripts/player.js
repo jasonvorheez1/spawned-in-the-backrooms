@@ -213,7 +213,8 @@ function takeToken0(ctx, token) {
   if (SNACKS[token]) { // Level 6.1's real snacks: into the bag (player.state.snacks); the inventory eats or drinks them
     const v = SNACKS[token]
     s.snacks = { ...(s.snacks ?? {}), [token]: (s.snacks?.[token] ?? 0) + 1 }; s.pickedAt = now
-    s.notice = { text: `${v.name} · in your bag`, at: now }
+    const prev = s.notice && now - s.notice.at < 400 && /in your bag$/.test(s.notice.text) ? s.notice.text.replace(/ · in your bag$/, '') + ', ' : ''
+    s.notice = { text: `${prev}${v.name} · in your bag`, at: now }
     sound(ctx, v.drink ? 'plastic-bottle-pickup-rattle' : 'loot-take-all-rustle', 0.6, true)
     return { ok: true }
   }
