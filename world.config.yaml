@@ -76,6 +76,7 @@ inputs:
       keys:
         - e
     loot: {}
+    spam: {}
     grab:
       keys:
         - z
