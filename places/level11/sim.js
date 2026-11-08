@@ -18,7 +18,7 @@ import { layVaults } from "../../scripts/lib/level11-vaults.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 25; // bump to rebuild the city in rooms that are already open
+const V = 26; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
