@@ -1,6 +1,6 @@
 // The green house, inside (Shelly: "give it a new interior worldspace when entering"). Living room front, bedroom back, kitchen nook.
 export const cadence = "1s";
-const V = 9;
+const V = 10;
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
 const FLOOR = T("worn-oak-floorboards", 0.6, "oklch(0.92 0.03 70)");
 const CARPET = T("beige-berber-loop-carpet-slightly-worn", 0.7, "oklch(0.9 0.02 80)"); // 2000s wall-to-wall in the living room and bedroom
@@ -16,7 +16,7 @@ const M = {
   dresser: "/cdn/value.05e39c76bde213827151738e055d8ee1b7af522032767812cb1e662f75992599.glb",
   tv: "/cdn/value.b06d0c09b1cda983be988ee780d72e0a4105b28ed612b279c94d5cd545017813.glb",
   sofa: "/cdn/value.0feff3db97a7d03c96c612e304e76e62ee1a577e754a9073a4ca0d3ddfb2c023.glb",
-  kitchen: "/cdn/value.a913b60b5860de57e7072069c2b3384708d80abc5c3df3ac13c9341b06c3e2fe.glb",
+  kitchen: "/cdn/value.9caf2cbe22f44c137564612f993d6658276fc78b2bc181a2ad9d9355fd71aeed.glb",
   lamp: "/cdn/value.0871d1626b929961d73cb28c05f82070ad822c5cc2e6b8deec5046248fb4086d.glb",
   rug: "/cdn/value.455dde0ca22a985f649dee005f80bad45966342485d248a0fa95d86fb0a2d2c3.glb",
   table: "/cdn/value.a749a8b797903df85e052391facf77d67915ec4b704e8f32b969e139f78b6719.glb",
@@ -61,7 +61,7 @@ export function tick(ctx) {
   fit("h-table", M.table, -2.6, 2.5, 0, [0.8, 0.5, 1.02]); // tripo: oak coffee table, remote and a magazine on it
   fit("h-shelf", M.bookshelf, -4.6, 4.2, 90, [1.6, 2.0, 0.4]);
   fit("h-lamp-1", M.lamp, 3.9, 0.3, 0, [0.5, 1.6, 0.5]);
-  fit("h-kitchen", M.kitchen, 3.7, 4.4, -90, [2.6, 1.0, 0.7]);
+  fit("h-kitchen", M.kitchen, 4.5, 3.4, 90, [0.95, 0.92, 1.0]); // tripo: honey oak sink base, brass knobs, beige laminate top, against the east wall
   sp("h-light-living", { feetPosition: { x: 0, y: 2.6, z: 2.5 }, light: { kind: "point", color: "oklch(0.92 0.07 75)", intensity: 2.2, distance: 9 } });
 
   // bedroom: the bed is where you rest
