@@ -3,7 +3,7 @@
 //  - following the track far enough leads to Level 11 (l10-road-north at its far end, l10-road-south behind the spawn)
 //  - swimming down into the lake leads to an aquatic level: Level 7 (l10-lake-deep)
 export const cadence = "1s";
-const V = 2;
+const V = 3;
 const BRK = (mat, hp) => ({ mat, hp, maxHp: hp });
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BARN = (w, d, h, ridge, wall, door) => ({ primitive: { kind: "scripted", script: "scripts/barn10.js", params: { w, d, h, ridge, wall, door } }, physics: "static" });
@@ -50,7 +50,6 @@ function lay(ctx) {
   sp("l10-ambience", { feetPosition: T(0, 0), audience: "local", audio: { clip: AMB, gain: 0.2, loop: true, spatial: false, bus: "Ambience" } });
 }
 export function tick(ctx) {
-  if (!ctx.place.players?.length) return;
   const s = ctx.place.state;
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); }
 }
