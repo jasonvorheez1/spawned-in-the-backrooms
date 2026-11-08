@@ -1455,6 +1455,7 @@ const L11_VOICES = {
   "l11-walker-1": "reyes",
   "l11-walker-2": "wren",
   "l11-walker-3": "reyes",
+  "l11-tm-clerk": "wren", // Dee at Thrift Mode
 };
 
 // Master tick simulation loop
