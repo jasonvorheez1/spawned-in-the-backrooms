@@ -200,5 +200,118 @@ def sedco_door():   # back-wall steel door in its frame, push bar, STAFF ONLY pl
     M.box("chrome", (0, .06, 1.0), (.7, .04, .05)); M.box("white", (0, .046, 1.6), (.4, .005, .14)); M.box("dark", (.38, .05, 1.95), (.08, .02, .1))
     ob = M.finish("l11_sedco_door"); turnaround("sedco_door", ob, (25, 150, 330), .2, 1.3); return ob
 
+# ---- Sedco v2 (steer: pegboard gondolas, printed boxed goods, rounded curved-screen CRTs, a real register)
+MATS.update({
+    "peg": ((0.42, 0.3, 0.19), 0.85, 0, 0), "pegHole": ((0.03, 0.025, 0.02), 0.9, 0, 0), "tag": ((0.95, 0.94, 0.86), 0.6, 0, 0),
+    "pkgR": ((0.62, 0.06, 0.05), 0.45, 0, 0), "pkgK": ((0.05, 0.05, 0.06), 0.4, 0, 0), "pkgW": ((0.88, 0.88, 0.84), 0.5, 0, 0),
+    "pkgS": ((0.6, 0.62, 0.64), 0.35, 0.6, 0), "pkgO": ((0.85, 0.4, 0.05), 0.45, 0, 0), "pkgG": ((0.1, 0.35, 0.18), 0.45, 0, 0),
+    "beige": ((0.72, 0.68, 0.58), 0.45, 0, 0), "keys": ((0.3, 0.3, 0.3), 0.5, 0, 0), "vfd": ((0.2, 0.9, 0.6), 0.3, 0, 1.2), "crtGlow": ((0.35, 0.55, 0.8), 0.15, 0, 0.9),
+})
+def rrect(w, h, r, n=4):
+    pts = []
+    for (cx, cz, a0) in ((w / 2 - r, h / 2 - r, 0), (-w / 2 + r, h / 2 - r, 90), (-w / 2 + r, -h / 2 + r, 180), (w / 2 - r, -h / 2 + r, 270)):
+        for k in range(n + 1):
+            a = math.radians(a0 + 90 * k / n); pts.append((cx + math.cos(a) * r, cz + math.sin(a) * r))
+    return pts
+def crt(M, c, w, h, d, case="beige", scr="crtGlow", rot_z=0.0):
+    """a CRT facing +y: rounded bezel, tapered tube back, a bulged screen; c = centre of the front face"""
+    P = Matrix.Translation(c) @ Matrix.Rotation(rot_z, 4, "Z"); r = min(w, h) * .12
+    pts = [P @ Vector((x, -.0, z)) for x, z in rrect(w, h, r)] + [P @ Vector((x * .97, -.05 * d, z * .97)) for x, z in rrect(w, h, r)]
+    M.hull(case, pts)
+    back = [P @ Vector((x * .62, -d * .55, z * .62 - h * .04)) for x, z in rrect(w, h, r)] + [P @ Vector((x * .4, -d, z * .4 - h * .06)) for x, z in rrect(w, h, r * .7)]
+    M.hull(case, [P @ Vector((x * .9, -.05 * d, z * .9)) for x, z in rrect(w, h, r)] + back)
+    sw, sh = w * .8, h * .76; N = 6; bm = M.bm(scr); g = []
+    for i in range(N + 1):
+        row = []
+        for j in range(N + 1):
+            u = i / N - .5; v = j / N - .5; bul = (1 - (2 * u) ** 2) * (1 - (2 * v) ** 2) * min(sw, sh) * .06
+            row.append(bm.verts.new(P @ Vector((u * sw, .004 + bul, v * sh - h * .02))))
+        g.append(row)
+    for i in range(N):
+        for j in range(N): bm.faces.new((g[i][j], g[i + 1][j], g[i + 1][j + 1], g[i][j + 1]))
+    M.box("black", (P @ Vector((w * .36, .006, -h * .43)))[:], (w * .06, .01, h * .03))
+    M.box("vfd", (P @ Vector((w * .28, .007, -h * .43)))[:], (.012, .01, .012))
+PKG = ("pkgR", "pkgK", "pkgW", "pkgS", "pkgO", "pkgG", "printBox")
+def product(M, rnd, c, s, face=1):
+    """a retail box: body colour, a printed front (brand band, white window with the product shot, logo chip), a lid seam"""
+    body = rnd.choice(PKG); cbox(M, body, c, s, .004); f = c[1] + face * (s[1] / 2 + .0015)
+    band = rnd.choice([p for p in PKG if p != body] + ["umbY", "tag"])
+    M.box(band, (c[0], f, c[2] + s[2] * .36), (s[0] * .96, .003, s[2] * .2))
+    M.box("pkgW" if body != "pkgW" else "pkgK", (c[0] - s[0] * .08, f, c[2] - s[2] * .08), (s[0] * .62, .003, s[2] * .42))
+    M.box(rnd.choice(("crtGlow", "pkgS", "pkgK")), (c[0] - s[0] * .08, f + face * .001, c[2] - s[2] * .08), (s[0] * .44, .003, s[2] * .28))
+    M.box("umbY", (c[0] + s[0] * .34, f, c[2] - s[2] * .3), (s[0] * .18, .003, s[2] * .12))
+def sedco_gondola():   # 2.4 m double-sided gondola: pegboard spine, three shelf levels with price rails, boxed goods, pegged blister packs
+    M = Mesh(); rnd = random.Random(11); L = 2.4; H = 1.62
+    cbox(M, "steel", (0, 0, .07), (L, .92, .14), .01); cbox(M, "pkgK", (0, 0, .015), (L - .04, .88, .03), .005)
+    for s in (-1, 1): cbox(M, "steel", (s * (L / 2 - .02), 0, H / 2), (.05, .08, H), .008)
+    cbox(M, "steel", (0, 0, H - .02), (L, .1, .04), .008)
+    for s in (-1, 1):
+        cbox(M, "peg", (0, s * .03, .2 + (H - .25) / 2), (L - .08, .018, H - .25), .002)
+        for i in range(44):
+            for j in range(26):
+                x = -L / 2 + .1 + i * .051; z = .26 + j * .051
+                if z > H - .08: continue
+                M.box("pegHole", (x, s * .0405, z), (.008, .002, .008))
+        for zz in (.14, .58, 1.0):
+            sh = .4 if zz < .2 else .36
+            cbox(M, "steel", (0, s * (.04 + sh / 2), zz + .012), (L - .08, sh, .024), .004)
+            for k in range(2): M.box("steel", (-L / 2 + .3 + k * (L - .6), s * (.04 + sh / 2), zz - .04), (.02, sh * .9, .06))
+            cbox(M, "pkgK", (0, s * (.045 + sh), zz + .01), (L - .08, .012, .04), .003)
+            x = -L / 2 + .08; t = 0
+            while x < L / 2 - .3:
+                M.box("tag", (x + .07, s * (.052 + sh), zz + .01), (.07, .002, .028)); M.box("pkgR", (x + .07, s * (.053 + sh), zz + .018), (.05, .002, .006)); x += rnd.uniform(.35, .55)
+            if zz > 1.2: continue
+            lim = .42 if zz < .2 else .36; x = -L / 2 + .07
+            while x < L / 2 - .2:
+                w = rnd.uniform(.16, .5) if zz < .2 else rnd.uniform(.12, .38); w = min(w, L / 2 - .06 - x)
+                if w < .1: break
+                h = rnd.uniform(.18, lim) if zz < .2 else rnd.uniform(.12, .34); d = min(sh - .03, rnd.uniform(.18, sh - .03))
+                product(M, rnd, (x + w / 2, s * (.05 + sh - d / 2), zz + .024 + h / 2), (w, d, h), s)
+                if rnd.random() < .35 and h < .25:
+                    h2 = rnd.uniform(.08, .16); product(M, rnd, (x + w / 2, s * (.05 + sh - d / 2), zz + .024 + h + h2 / 2 + .002), (w * .9, d * .9, h2), s)
+                x += w + rnd.uniform(.01, .03)
+        for i in range(7):
+            x = -L / 2 + .2 + i * .33; z = 1.48
+            tube(M, "steel", [(x, s * .04, z), (x, s * .2, z), (x, s * .2, z + .02)], .003, 4)
+            for k in range(2):
+                cbox(M, "pkgW", (x, s * (.07 + k * .05), z - .1), (.12, .012, .17), .002); M.box(rnd.choice(PKG[:3] + ("pkgO",)), (x, s * (.077 + k * .05), z - .06), (.11, .002, .06))
+                cbox(M, "pkgS", (x, s * (.08 + k * .05), z - .13), (.06, .02, .07), .006)
+        cbox(M, "umbB", (0, s * .06, H + .07), (L - .1, .012, .14), .003); M.box("umbY", (-L / 2 + .3, s * .067, H + .07), (.4, .002, .1))
+    ob = M.finish("l11_sedco_gondola"); turnaround("sedco_gondola", ob, (30, 120, 220), .45, 1.1); return ob
+def sedco_monitors():   # 3 x 5 wall of beige 14" CRTs on a steel rack, rounded bezels, curved lit screens
+    M = Mesh(); cbox(M, "steel", (0, 0, .6), (2.6, .5, .05), .005); cbox(M, "pkgK", (0, -.05, .3), (2.6, .4, .6), .01)
+    for k in range(4): M.box("steel", (-1.25 + k * .833, .16, .3), (.02, .02, .56))
+    rnd = random.Random(4)
+    for r in range(3):
+        cbox(M, "steel", (0, 0, 1.03 + r * .44), (2.6, .5, .025), .004)
+        for c in range(5):
+            x = -1.04 + c * .52; z = .65 + r * .44 + .2
+            crt(M, (x, .22, z), .44, .36, .4, case=("beige" if rnd.random() < .7 else "pkgK"), scr="crt", rot_z=rnd.uniform(-.06, .06))
+            M.box("tag", (x, .25, .62 + r * .44 + .01), (.08, .003, .03))
+    for s in (-1, 1): cbox(M, "steel", (s * 1.29, 0, .9 + .4), (.04, .5, 1.8), .006)
+    for s in (-1, 1): tube(M, "pkgK", [(s * .9, -.2, 1.9), (s * .5, -.24, 1.4), (s * .7, -.22, .7)], .008, 5, caps=True)
+    ob = M.finish("l11_sedco_monitors"); turnaround("sedco_monitors", ob, (25, 150, 330), .3, 1.1); return ob
+def sedco_counter():   # L sales counter: laminate top, kick plate, cash register with key grid and pole display, monitor, receipt printer, impulse rack
+    M = Mesh()
+    cbox(M, "laminate", (0, 0, .47), (2.6, .62, .94), .012); cbox(M, "pkgK", (0, .312, .06), (2.6, .02, .12), .003)
+    for i in range(5): M.box("steel", (-1.04 + i * .52, .311, .5), (.012, .004, .78))
+    cbox(M, "laminate", (1.05, -.75, .47), (.62, .9, .94), .012); cbox(M, "pkgW", (0, 0, .96), (2.7, .72, .04), .012); cbox(M, "pkgW", (1.05, -.75, .96), (.72, 1.0, .04), .012)
+    M.box("steel", (0, .36, .96), (2.7, .004, .045))
+    # register: drawer base, sloped keyboard, key grid, printer hump, rear pole display
+    cbox(M, "beige", (-.5, -.05, 1.03), (.44, .42, .1), .012); M.box("pkgK", (-.5, .163, 1.03), (.3, .004, .02))
+    M.hull("beige", [(-.72, .15, 1.08), (-.28, .15, 1.08), (-.72, -.12, 1.08), (-.28, -.12, 1.08), (-.72, .15, 1.1), (-.28, .15, 1.1), (-.72, -.12, 1.2), (-.28, -.12, 1.2)])
+    for i in range(8):
+        for j in range(5):
+            u = -.68 + i * .05; v = .12 - j * .05; zz = 1.1 + (.12 - v) / .27 * .1 + .008
+            M.box("keys" if (i + j) % 5 else "pkgR", (u, v, zz), (.036, .036, .012), rot=(math.atan2(.1, .27), 0, 0))
+    cbox(M, "beige", (-.5, -.2, 1.15), (.4, .14, .14), .02); M.box("pkgW", (-.38, -.2, 1.225), (.08, .06, .004))
+    M.cyl("pkgK", (-.5, -.22, 1.32), .015, .22, seg=8); cbox(M, "pkgK", (-.5, -.22, 1.47), (.24, .06, .08), .015); M.box("vfd", (-.5, -.188, 1.47), (.2, .004, .04)); M.box("vfd", (-.5, -.252, 1.47), (.2, .004, .04))
+    crt(M, (.05, .02, 1.17), .32, .26, .3, case="beige", scr="crt", rot_z=math.pi * .9); cbox(M, "beige", (.05, -.1, 1.0), (.22, .22, .04), .008)
+    cbox(M, "pkgK", (.45, -.08, 1.04), (.14, .18, .12), .02); M.box("pkgW", (.45, -.02, 1.1), (.06, .002, .1), rot=(.3, 0, 0))
+    cbox(M, "pkgK", (.8, 0, 1.0), (.42, .16, .04), .005); rnd = random.Random(8)
+    tube(M, "steel", [(.62, .4, .7), (.62, .44, .9), (1.18, .44, .9), (1.18, .4, .7)], .006, 5)
+    for i in range(6): product(M, rnd, (.66 + i * .09, .45, .8), (.07, .03, .12), 1)
+    ob = M.finish("l11_sedco_counter"); turnaround("sedco_counter", ob, (30, 150, 240), .45, 1.3); return ob
+
 FUNCS_ST = {"taxi": taxi, "taxi_wheel": taxi_wheel, "foodcart": foodcart, "dogwell": dogwell, "pretzels": pretzels, "trashcan": trashcan, "newsbox": newsbox, "turnstile": turnstile,
     "payphone": payphone, "mvm": mvm, "ibeam": ibeam, "column": column, "sedco_counter": sedco_counter, "sedco_gondola": sedco_gondola, "sedco_monitors": sedco_monitors, "sedco_spot": sedco_spot, "sedco_door": sedco_door}
