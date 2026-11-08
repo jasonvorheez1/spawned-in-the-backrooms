@@ -145,7 +145,7 @@ def cover(o):
     kill = []
     for f in bm.faces:
         loc, n, idx, d = bv.find_nearest(f.calc_center_median())
-        if d is None or d > 0.03: kill.append(f)
+        if d is None or d > 0.04: kill.append(f)
         else: f.material_index = src.data.polygons[idx].material_index
     keep = set(bm.faces) - set(kill)
     def ring(fs, grow):
@@ -155,8 +155,9 @@ def cover(o):
             if grow and f not in fs and len(nb & fs) >= 2: out.add(f)
             if not grow and any(h not in fs for h in nb if h is not f): out.discard(f)
         return out
-    for _ in range(3): keep = ring(keep, True)   # close pinholes and slits
-    for _ in range(2): keep = ring(keep, False)
+    G = 6 if o.name.startswith('Bot') else 3
+    for _ in range(G): keep = ring(keep, True)   # close pinholes, slits and the crotch
+    for _ in range(G - 1): keep = ring(keep, False)
     for _ in range(2):   # material by neighbour majority: no stray patches
         for f in keep:
             votes = {}
@@ -214,6 +215,20 @@ def refit(o):
         ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); back = max(w.y for w in ws); wid = max(w.x for w in ws) - min(w.x for w in ws)
         ex = [e.x for e in _ew]; k = max(0.6, min(1.6, (max(ex) - min(ex) + 0.07) / wid))
         for v in me.vertices: v.co = Vector((EYE.x + (v.co.x - c.x) * k, EYEFRONT - 0.012 + (v.co.y - back) * k, EYE.z + (v.co.z - c.z) * k))
+        bw = [body.matrix_world @ q.co for q in body.data.vertices]; band = [w.x for w in bw if abs(w.z - EYE.z) < 0.02]
+        half = (max(band) - min(band)) / 2 if band else 0.15
+        import bmesh
+        gb = bmesh.new(); gb.from_mesh(me)
+        bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x - EYE.x) > half * 0.98 or v.co.y > EYEFRONT + 0.06], context='VERTS')
+        gb.to_mesh(me); gb.free()
+    elif kind == 'Hat' and EYE is not None:
+        ws = [v.co for v in me.vertices]; c = sum(ws, Vector()) / len(ws); bot = min(w.z for w in ws)
+        wid = max(w.x for w in ws) - min(w.x for w in ws)
+        bw = [body.matrix_world @ q.co for q in body.data.vertices]; band = [w.x for w in bw if abs(w.z - (EYE.z + 0.09)) < 0.015]
+        k = ((max(band) - min(band)) * 1.12 / wid) if band else 1
+        for v in me.vertices: v.co = Vector((EYE.x + (v.co.x - c.x) * k, c.y + (v.co.y - c.y) * k, EYE.z + 0.06 + (v.co.z - bot) * k))
+        sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'; sw.wrap_mode = 'OUTSIDE'; sw.offset = 0.006
+        bpy.ops.object.modifier_apply(modifier='fit')
     elif kind in ('Top', 'Bot', 'Shoes', 'Neck', 'Hat') and o.name not in LOOSE:
         sw = o.modifiers.new('fit', 'SHRINKWRAP'); sw.target = env; sw.wrap_method = 'NEAREST_SURFACEPOINT'
         sw.wrap_mode = 'OUTSIDE' if kind in ('Hat', 'Neck') or o.name in ('Top_hoodie', 'Top_jacket', 'Top_sweater', 'Bot_overalls') else 'ON_SURFACE'
