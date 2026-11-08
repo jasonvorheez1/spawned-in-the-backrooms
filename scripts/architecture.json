@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2724,
-  "updatedAt": "2026-11-08T23:20:18.866Z",
-  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes supply local environments, while shared systems handle loot, building, breakables, and loose-item physics.",
+  "basedOnSpecVersion": 2731,
+  "updatedAt": "2026-11-08T23:23:05.591Z",
+  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes supply local environments, while shared systems handle loot, building, breakables, loose-item physics and player/NPC avatar rendering.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with authored shops and landmarks, simulated staff, shoppers and balcony loungers.",
@@ -30,9 +30,9 @@
     "scripts/lib/build-piece.js + breakables.yml + furniture.yml - canonical build specs/models shared by B-mode and home reconstruction; CRT TV builds attach scripts/built-tv.js.",
     "scripts/lib/screen.js - derived read-only panel classifier and wrist gates shared by player, stats, craft, rest and menu input.",
     "scripts/lib/maze.js and scripts/lib/level*.js + level data - grids, zones, layouts and paths reused by place sims, geometry and navigation.",
-    "scripts/lib/clothes.js + clothes.yml + critter.yml + hair.yml + scripts/lib/critter-model.js - wardrobe/look rules and player/NPC critter models; hair.yml maps 18 female and 12 male head-skinned styles plus matching hatted variants, using shared hair tint.",
+    "scripts/lib/clothes.js + clothes.yml + critter.yml + hair.yml + scripts/lib/critter-model.js - wardrobe/look rules and player/NPC avatars; critter-models.yml selects sex-specific human bodies (with the legacy critter mesh path retained).",
     "scripts/lib/l2kit.js - Level 2 model-instance drawing/decoding from l2kit-data, used by scripts/l2kit/*-geo.js; scripts/lib/knock.js provides enemy-manager recovery helpers.",
-    "scripts/lib/l2props.js + scripts/lib/data/l2props.yml - real-size Tripo prop definitions, fitted colliders, room/hall dressing and container/crate models; Level 2 sim and loot reuse them. scripts/lib/loose.js + loose.yml serve shared prop physics."
+    "scripts/lib/l2props.js + scripts/lib/data/l2props.yml - real-size Tripo prop definitions, fitted colliders, room/hall dressing and container/crate models; Level 2 sim and loot reuse them. scripts/lib/loose.js + loose.yml serve shared prop physics and break rules."
   ],
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 container/loot helpers; scripts/lib/weapons.js - rarityIdx, rarityCap and weapon registry.",
@@ -42,7 +42,7 @@
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
     "sim.js - cadence, tick, onOutOfBounds; places/main/sim.js and places/bonus/sim.js - cadence, tick.",
     "scripts/partygoers.js - update; manager for tagged Partygoers and Carnivorous Balloons on Level 26. scripts/lib/knock.js - knocked, foeStats.",
-    "scripts/lib/loose.js - looseOf, arm, impact, breakIt, kickLoose, track, stepFlights; scripts/lib/breakables.js - classOf, damageEntity, strike and wall/rubble helpers; scripts/lib/l2kit.js - placements, unpack, kit, PARTS, spawnKit."
+    "scripts/lib/loose.js - looseOf, arm, impact, breakIt, kickLoose, track, stepFlights; scripts/lib/breakables.js - classOf, damageEntity, strike and wall/rubble helpers; scripts/lib/l2kit.js - placements, unpack, kit, PARTS, spawnKit; scripts/lib/critter-model.js - HUMAN, humanBody, seatHead, staleBody."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards and level access; saved place/position and one-shot wakeAtSave restoration.",
@@ -65,8 +65,8 @@
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickups enter player.js inventory.",
     "L input → scripts/kick.js tries foe kick then loose.js kickLoose; Z input → scripts/grab.js picks/carries/throws eligible bodies and calls loose.js arm/track/impact; flight tracking detects hard stops.",
     "scripts/lib/breakables.js strike/damageEntity → loose.js breakIt for matched loose props, otherwise generic rubble; loose.yml supplies material/hp/act rules and joule breakAt thresholds; explosions emit damage/noise/shockwave.",
-    "places/level2/sim.js calls scripts/lib/l2props.js to dress side rooms and Boiler Hall; l2props.yml supplies meshes/size/material/hp and dynamic types; loot.js spawns Tripo containers/crates while retaining loot state.",
-    "Level 2 propsV re-dress → sim removes partial old l2prop entities, batches room dressing then hall/container/camp model migration; scripts/level2-rooms-geo.js omits old room dressing when props=true, leaving structural geometry."
+    "scripts/critter.js avatar behavior → scripts/lib/critter-model.js reads critter-models.yml; HUMAN selects the sex-specific full-head human body for player, mirror and NPC, while the renderer handles human gait and clears legacy critter head/flair state.",
+    "places/level2/sim.js calls scripts/lib/l2props.js to dress side rooms and Boiler Hall; l2props.yml supplies meshes/size/material/hp and dynamic types; loot.js spawns Tripo containers/crates; propsV re-dresses old rooms in batches while preserving loot state and level2-rooms-geo.js omits duplicate dressing."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js - authored mall shops/landmarks with data-driven stock and simulated staff, waypoint shoppers and balcony loungers.",
@@ -74,7 +74,7 @@
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props and Boiler Room Death Rat packs.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml + art/critter-hair/build.py - player/NPC critter renderer uses shared species head envelopes and Head-bone-skinned styles; forehead-covering bangs and lower hairline are regenerated into standard and flattened hatted GLBs, then selected/tinted by look.",
+    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml - shared player/NPC appearance rules; critter-models.yml selects sex-specific human GLBs for body and head, while older critter mesh/head helpers remain the alternate path.",
     "art/level2/{build,compact,encode,pack}.py + scripts/lib/data/l2kit-data/* + scripts/lib/l2kit.js - module meshes are compact-packed and decoded into runtime instances; optional UV data, otherwise triplanar projection.",
     "scripts/lib/data/l2props.yml + scripts/lib/l2props.js + places/level2/sim.js + scripts/lib/loot.js - data-driven Tripo props/containers fitted to metre dimensions and tagged for shared breakable, kick and grab systems; room type and prop kind vary the dressing."
   ],
@@ -84,10 +84,10 @@
   ],
   "migrationNotes": [
     "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room and overflow mall rooms use bonus-N IDs. Keep routing and hub identity aligned.",
-    "Teleport Station 'last' travel derives from savePlace (excluding bonus, intake and debug; tutorial0 maps to main); keepPos preserves savePos and wakeAtSave restores it only when the arriving place matches; transit depends on bc-train asset…",
+    "Teleport Station 'last' travel derives from savePlace (excluding bonus, intake and debug; tutorial0 maps to main); keepPos preserves savePos and wakeAtSave restores it only when the arriving place matches; transit depends on bc-train asset.",
     "Found-item rarity gates apply only to found weapon tokens; existing weapon ownership/use and non-weapon loot are not level-gated. Search gating excludes storage and NPC containers.",
     "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout.",
     "Level 2 l2props.yml sizes are metres; fitBox places the mesh collider from floor y=0. propsV re-dresses pre-existing rooms in batches and preserves container/crate loot while changing visuals; room geometry remains the collider shell.",
-    "Level 26 lower decks sit at y=-80, so places/level26/config.yaml worldBounds.bottom must remain below that (currently -110) to avoid out-of-bounds recovery; sanity <=0 does not drain health and stats lowers derived attributes except Luck."
+    "Level 26 lower decks sit at y=-80, so worldBounds.bottom must remain below that; sanity <=0 does not drain health and stats lowers derived attributes except Luck. HUMAN bodies include their own head: seatHead removes critter head/mask/hair children and the human rig has no tail, ears or lids; keep human1 look rebuilding and shared gait clips aligned."
   ]
 }
