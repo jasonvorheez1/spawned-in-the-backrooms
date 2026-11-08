@@ -7,7 +7,7 @@ import { rowOf, patOk } from './clothes.js'
 import HAIR from './data/hair.yml'
 // hair: its own GLB skinned whole to the Head bone (scripts/lib/data/hair.yml), tinted by the look's hairc; a mask hides it
 export const HAIR_ID = 'critter-hair'
-export const hairOf = (l) => (l?.hair && l.hair !== 'none' && HAIR.styles[l.hair] && !maskOf(l) ? HAIR.styles[l.hair] : null)
+export const hairOf = (l) => (l?.hair && l.hair !== 'none' && HAIR.styles[l.hair] && !maskOf(l) ? ((l.hat && l.hat !== 'none' && HAIR.hatted?.[l.hair]) || HAIR.styles[l.hair]) : null)
 const hairModel = (l) => ({ id: hairOf(l), materials: { hair: { color: l.hairc || '#5a3a26' } } })
 export const hairChild = (l, local) => hairOf(l) ? { id: HAIR_ID, attachment: { skin: true }, model: hairModel(l), ...(local ? { audience: 'local' } : {}) } : null
 export function seatHair(ctx, o, l) {
