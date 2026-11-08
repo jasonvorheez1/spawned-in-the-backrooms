@@ -14,9 +14,9 @@ const hue = (u, l = 0.62, c = 0.08) => `oklch(${l} ${c} ${Math.round(u * 360)})`
 // what colour each kind of building is dressed in, per lot
 function dress(kind, u) {
   const ld = 0.55 + u * 0.3;
-  if (kind === "brick_a" || kind === "brick_b") return { brick: { ...TEX.brick, color: `oklch(${0.5 + u * 0.15} ${0.09 + u * 0.05} ${28 + u * 14})` }, concrete: { ...TEX.concrete, color: "oklch(0.7 0.01 80)" } };
-  if (kind === "mall") return { brick: { ...TEX.brick, color: `oklch(${0.52 + u * 0.14} 0.08 ${40 + u * 30})` }, concrete: { ...TEX.concrete, color: "oklch(0.72 0.01 80)" } };
-  if (kind === "stone") return { stone: { ...TEX.stone, color: `oklch(${0.8 + u * 0.06} 0.025 ${80 + u * 20})` }, concrete: { ...TEX.concrete, color: "oklch(0.7 0.01 80)" } };
+  if (kind === "brick_a" || kind === "brick_b") return { brick: { ...TEX.brick, color: `oklch(${0.72 + u * 0.14} ${0.07 + u * 0.05} ${30 + u * 14})` }, concrete: { ...TEX.concrete, color: "oklch(0.88 0.01 80)" } };
+  if (kind === "mall") return { brick: { ...TEX.brick, color: `oklch(${0.74 + u * 0.12} 0.07 ${40 + u * 30})` }, concrete: { ...TEX.concrete, color: "oklch(0.72 0.01 80)" } };
+  if (kind === "stone") return { stone: { ...TEX.stone, color: `oklch(${0.9 + u * 0.05} 0.02 ${80 + u * 20})` }, concrete: { ...TEX.concrete, color: "oklch(0.88 0.01 80)" } };
   if (kind === "house") return { stone: { ...TEX.plaster, color: hue(u, 0.78, 0.045) }, concrete: { ...TEX.concrete, color: "oklch(0.6 0.01 80)" }, roof: { color: `oklch(${0.26 + u * 0.1} 0.03 ${20 + u * 40})`, roughness: 0.9 } };
   return { concrete: { ...TEX.concrete, color: "oklch(0.68 0.012 240)" } }; // glass towers: the glass stays as modelled
 }
@@ -29,7 +29,7 @@ const PAINT = ["#b81c28", "#2f4f8a", "#e8e4d8", "#2a2a30", "#3a6a4a", "#c8a24a",
 export function layCity(ctx, h) {
   if (!DBG.city) return { TOWER: { x: 27, z: 31 }, nBuildings: 0 };
   const { sp, bx } = h, put = (id, kind, x, z, yaw, extra = {}, y = 0) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, physics: { body: "static", collider: extra.collider ?? "box" }, model: { id: MODELS[kind], forward: "-z", materials: extra.materials }, ...(extra.spec ?? {}) });
-  const ASPH = { ...T("cracked-dark-asphalt-road", 6), color: "oklch(0.27 0.01 250)", roughness: 0.88 }, WALK = { ...T("stained-concrete-floor", 4), color: "oklch(0.76 0.02 85)", roughness: 0.75 };
+  const ASPH = { ...T("cracked-dark-asphalt-road", 6), color: "oklch(0.4 0.01 250)", roughness: 0.88 }, WALK = { ...T("stained-concrete-floor", 4), color: "oklch(0.95 0.02 85)", roughness: 0.75 };
   const CANAL = { ...T("smooth-cold-poured-concrete-wall", 2), color: "oklch(0.62 0.02 240)", roughness: 0.65 }, CURB = { ...T("smooth-cold-poured-concrete-wall", 1), color: "oklch(0.72 0.02 85)", roughness: 0.65 };
   const YEL = { color: "oklch(0.84 0.18 88)", roughness: 0.45 };
   const X_AVE = [-140, -70, 0, 70, 140], Z_ST = [-160, -92, 12, 84, 156, 228], CANAL_Z = -30, ROAD_Z = [12, 84, 156, -92, -160, 228];

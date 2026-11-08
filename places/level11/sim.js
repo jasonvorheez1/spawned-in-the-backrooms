@@ -12,13 +12,13 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { layCity, layStreet, tickCity } from "../../scripts/lib/level11-city.js";
 
 export const cadence = "1s";
-const V = 10; // bump to rebuild the city in rooms that are already open
+const V = 11; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
 
-const ASPHALT = { ...T("cracked-dark-asphalt-road", 4), color: "oklch(0.28 0.01 250)", roughness: 0.85 };
-const SIDEWALK = { ...T("stained-concrete-floor", 3), color: "oklch(0.78 0.02 85)", roughness: 0.7 };
+const ASPHALT = { ...T("cracked-dark-asphalt-road", 4), color: "oklch(0.4 0.01 250)", roughness: 0.85 };
+const SIDEWALK = { ...T("stained-concrete-floor", 3), color: "oklch(0.95 0.02 85)", roughness: 0.7 };
 const CURB_MAT = { ...T("smooth-cold-poured-concrete-wall", 1), color: "oklch(0.72 0.02 85)", roughness: 0.65 };
 const STONE_TOWER = { ...T("large-grey-brick-wall-dusty-mortar", 3), color: "oklch(0.82 0.025 80)", roughness: 0.75 };
 const BRICK_BLDG = { ...T("old-red-brick-wall", 3), color: "oklch(0.58 0.1 35)", roughness: 0.8 };

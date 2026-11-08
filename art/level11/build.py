@@ -12,7 +12,7 @@ TILE = 3.0
 # ---- materials: flat colours here, the game dresses the textured ones by name
 MATS = {
     "stone": ((0.78, 0.74, 0.66), 0.8, 0, 0), "brick": ((0.55, 0.22, 0.14), 0.85, 0, 0), "concrete": ((0.62, 0.61, 0.58), 0.85, 0, 0), "trim": ((0.86, 0.83, 0.76), 0.7, 0, 0),
-    "glass": ((0.07, 0.1, 0.13), 0.08, 0.6, 0), "glassLit": ((1.0, 0.82, 0.5), 0.2, 0, 2.2), "glassBlue": ((0.2, 0.34, 0.42), 0.06, 0.7, 0), "metal": ((0.35, 0.36, 0.38), 0.45, 0.8, 0), "dark": ((0.04, 0.04, 0.045), 0.7, 0.3, 0),
+    "glass": ((0.07, 0.1, 0.13), 0.08, 0.6, 0), "glassLit": ((1.0, 0.82, 0.5), 0.2, 0, 0.9), "glassBlue": ((0.2, 0.34, 0.42), 0.06, 0.7, 0), "metal": ((0.35, 0.36, 0.38), 0.45, 0.8, 0), "dark": ((0.04, 0.04, 0.045), 0.7, 0.3, 0),
     "roof": ((0.18, 0.17, 0.17), 0.9, 0, 0), "wood": ((0.38, 0.24, 0.13), 0.7, 0, 0), "awnA": ((0.18, 0.28, 0.55), 0.9, 0, 0), "awnB": ((0.2, 0.42, 0.24), 0.9, 0, 0), "awnC": ((0.62, 0.16, 0.14), 0.9, 0, 0),
     "leafA": ((0.2, 0.42, 0.16), 0.85, 0, 0), "leafB": ((0.3, 0.5, 0.18), 0.85, 0, 0), "bark": ((0.26, 0.2, 0.15), 0.9, 0, 0), "paint": ((0.7, 0.1, 0.08), 0.35, 0.2, 0), "tire": ((0.03, 0.03, 0.03), 0.9, 0, 0),
     "chrome": ((0.8, 0.8, 0.82), 0.2, 1.0, 0), "lamp": ((1.0, 0.86, 0.55), 0.3, 0, 3.0), "red": ((0.8, 0.08, 0.06), 0.4, 0.1, 0), "white": ((0.9, 0.9, 0.88), 0.5, 0, 0), "green": ((0.12, 0.3, 0.18), 0.55, 0.3, 0), "tail": ((0.9, 0.05, 0.04), 0.3, 0, 1.2),
@@ -89,7 +89,7 @@ def preview(name, ob, az=35, el=0.28, dist=1.6):
     cam.rotation_euler = (t - cam.location).to_track_quat("-Z", "Y").to_euler(); sc.render.filepath = os.path.join(OUT, "preview_%s.png" % name); bpy.ops.render.render(write_still=True)
 
 # ---- facade helpers
-def face_windows(M, rnd, face, w, d, z0, floors, fh, bay, ww, wh, sill, mat_pane="glass", lit=0.22, frame="trim", lintel=True, skip_floors=(), cols_skip=(), proud=0.0):
+def face_windows(M, rnd, face, w, d, z0, floors, fh, bay, ww, wh, sill, mat_pane="glass", lit=0.16, frame="trim", lintel=True, skip_floors=(), cols_skip=(), proud=0.0):
     """windows on one face: face '+y','-y','+x','-x' of a w x d box centred on the origin; rows start at z0, one per floor"""
     span = w if face in ("+y", "-y") else d; n = max(1, int(span // bay)); step = span / n
     for fl in range(floors):
