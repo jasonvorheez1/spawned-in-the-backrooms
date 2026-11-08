@@ -1,0 +1,8 @@
+# spawn-scene v2 yaml x3z0
+l26-ship-far:
+  children: [{feetPosition: {x: 0, y: 34, z: 0}, light: {color: oklch(0.92 0.14 95), distance: 60, intensity: 40, kind: point}}]
+  feetPosition: {x: 420, y: -19, z: 0}
+  id: l26-ship-far
+  layout: {box: {max: {x: 80, y: 60, z: 80}, min: {x: -80, y: 0, z: -80}}}
+  model: {forward: "+x", id: /cdn/value.4628248e0665f734ced54100623ea8538b7b97c27d04ebeec9db20c846ea4f7e.glb}
+  rotation: {yaw: 90}
