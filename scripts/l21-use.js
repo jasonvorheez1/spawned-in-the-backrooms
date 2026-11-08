@@ -336,3 +336,4 @@ export function update(ctx, dt) {
     if (m.mode !== mode) { m.mode = mode; w.anim.body = { clip: CLIP[mode], loop: "loop", speed: speed > 3 ? 1.5 : 1 }; }
   }
 }
+}
