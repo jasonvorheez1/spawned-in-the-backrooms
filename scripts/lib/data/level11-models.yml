@@ -8,7 +8,7 @@ glass_a: "/cdn/value.45ebeae511d5630c8a31ee89821e0e89261df4155efdd3aa3cc5795400f
 glass_b: "/cdn/value.21beb76dac479519dd33a104f1f75d3e98b7cb14c950ebf0017d1feda52d38b1.glb"
 house: "/cdn/value.07925869ea8d303d6306d36687ed705cf62304f80e74e81a27d2f6f171597ea6.glb"
 hydrant: "/cdn/value.900298491adadd82d6f2f0ea33215b5dfe54fbec4db1d4a8aafe11cdb1c5d838.glb" # tripo
-lamp: "/cdn/value.52df9d798a68433363c7f3f1855d847b830579031a9f2d7a50d54b4b6ccf7633.glb" # tripo
+lamp: "/cdn/value.66d8a0216822059ef20a3e2bd32b1dc0ddec103def333262ae6aab2198effdeb.glb" # tripo, decimated 46.6k -> ~5k tris
 mall: "/cdn/value.fffd75c8c8d11fd353840904c5dab195bc2e24c9e7cede97194a3cf282959d2a.glb"
 sedan: "/cdn/value.7b64aefa6629593ca0750e9cce606b15e70e31bfb9db56fd96b82432876ba685.glb" # tripo
 shelter: "/cdn/value.bb8473223adce529e7ea1d80b01b4a9f9011a9d749e1fb6e56d22fff1f10ca9a.glb" # tripo
