@@ -158,6 +158,9 @@ export function openLoot(ctx, c) {
     if (cl) c.state.items = [c.state.items, cl].filter(Boolean).join(',')
     spamtonPerk(ctx, c)
   }
+  if (!c.tags?.includes('storage') && !c.tags?.includes('npc') && c.state.items) { // nothing rarer than this player's level allows (lib/weapons.js rarityCap)
+    const g = gateItems(ctx, c.state.items, s.level ?? 1, poolOf(ctx.self.place)); if (g !== c.state.items) c.state.items = g
+  }
   const own = ownerOf(ctx, c)
   s.lootOpen = c.id; s.lootName = (own ? `${c.state.ownerName ?? 'Someone'}'s · ` : '') + (c.state?.name ?? 'Container'); s.lootList = c.state?.items ?? ''; s.focus = null; s.lootStore = !!c.tags?.includes('storage') // storage (your fridge): you put things in too
   snd(ctx, 'container-open-rustle', 0.5)

@@ -130,6 +130,14 @@ export function tick(ctx) {
   }
   shift(ctx, s, now);
   if (!s.furnished) { s.furnished = true; furnish(ctx); }
+  if (s.tableAlmondV !== 1) { // the four bottles on the safe room table were set dressing; now they're real almond water you can take
+    const MODEL = "/cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb";
+    [[-5.01, -3.99], [-4.78, -3.89], [-4.42, -4.12], [-4.15, -4.02]].forEach(([x, z], i) => {
+      const d = ctx.place.objects["hub/table/child-" + (5 + i)]; if (d) d.visible = false;
+      ctx.spawn("hub-almond-" + i, { tags: ["almond"], feetPosition: { x, y: 0.74, z }, castShadow: false, model: MODEL, layout: { box: { min: { x: -0.08, y: 0, z: -0.08 }, max: { x: 0.08, y: 0.32, z: 0.08 } } } });
+    });
+    s.tableAlmondV = 1;
+  }
   if (s.deskV !== 1) { // once per room: sweep loose ammo, turn the desks already standing into drawers
     for (const a of ctx.query({ tags: ["ammo"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(a.id);
     for (const d of ctx.query({ tags: ["furniture", "desk"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) {
