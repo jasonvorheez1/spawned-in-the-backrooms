@@ -269,7 +269,16 @@ export function geometry(ctx) {
       ctx.color(["oklch(0.68 0.04 80)", "oklch(0.64 0.05 70)", "oklch(0.72 0.03 85)"][(k + cx) % 3]);
       run(c, d, h - 0.14 - (k % 2) * 0.06, (k - 2) * 0.17, 0.07);
     }
-    if (hash(cx, cz, 15) < 0.18) { ctx.color("oklch(0.48 0.18 28)"); const d = isOpen(cx, cz, 0) ? 0 : 1; run(c, d, h - 0.32, 1.1, 0.1); } // red fire sprinkler main
+    if (hash(cx, cz, 15) < 0.3) { // red fire sprinkler main: fat, flanged, hung on rods, a sprinkler head dropping off it
+      const d = isOpen(cx, cz, 0) ? 0 : 1, y = h - 0.42, off = 1.1;
+      ctx.color("oklch(0.45 0.19 27)"); ctx.metalness(0.3); ctx.roughness(0.45); run(c, d, y, off, 0.14);
+      for (const t of [0.05, 0.95]) { const p = d === 0 ? [c.x + S * t, y, c.z + off] : [c.x + off, y, c.z + S * t]; const q = d === 0 ? [p[0] + 0.07, y, p[2]] : [p[0], y, p[2] + 0.07]; pipe(ctx, p, q, 0.19, M + 2); } // flange collars
+      ctx.color("oklch(0.3 0.01 250)"); ctx.metalness(0.6);
+      const m = d === 0 ? [c.x + S / 2, y, c.z + off] : [c.x + off, y, c.z + S / 2];
+      pipe(ctx, [m[0], y + 0.14, m[2]], [m[0], h, m[2]], 0.012, 4); // hanger rod
+      ctx.color("oklch(0.75 0.12 85)"); pipe(ctx, [m[0], y - 0.14, m[2]], [m[0], y - 0.24, m[2]], 0.02, 5); // brass sprinkler head
+      ctx.metalness(0.2); ctx.roughness(0.7);
+    }
   }
 
   // ---- doors, janitorial props (fire extinguishers, fuse boxes, mop buckets, vents), and EXIT signs in the halls
@@ -282,10 +291,17 @@ export function geometry(ctx) {
       const rDoor = hash(cx * 4 + d, cz, 51);
       if (rDoor <= 0.16) {
         ctx.albedo(null); ctx.roughness(0.7);
-        plate(-0.55, 0.55, 0, 2.2, 0.04, "oklch(0.88 0.02 90)"); // the frame
-        plate(-0.47, 0.47, 0, 2.12, 0.07, hash(cx, cz, 53) < 0.8 ? "oklch(0.62 0.13 58)" : "oklch(0.55 0.04 150)"); // orange wood or green steel leaf
-        plate(0.3, 0.4, 0.95, 1.02, 0.12, "oklch(0.7 0.01 250)"); // lever handle
-        if (hash(cx, cz, 57) < 0.5) plate(-0.2, 0.2, 1.4, 1.7, 0.08, "oklch(0.1 0.005 250)"); // narrow wire-glass window
+        const wood = hash(cx, cz, 53) < 0.8, leaf = wood ? "oklch(0.6 0.12 62)" : "oklch(0.55 0.04 150)";
+        plate(-0.6, -0.5, 0, 2.24, 0.06, "oklch(0.32 0.02 60)"); plate(0.5, 0.6, 0, 2.24, 0.06, "oklch(0.32 0.02 60)"); plate(-0.6, 0.6, 2.14, 2.26, 0.06, "oklch(0.32 0.02 60)"); // hollow-metal frame, dark brown enamel
+        plate(-0.5, 0.5, 0, 2.14, 0.035, "oklch(0.06 0.005 60)"); // the shadow gap round the leaf
+        plate(-0.47, 0.47, 0.01, 2.11, 0.05, leaf); // the leaf
+        if (wood) for (let g = 0; g < 7; g++) plate(-0.45 + g * 0.13, -0.44 + g * 0.13, 0.05, 2.08, 0.054, "oklch(0.54 0.11 58)"); // grain streaks
+        plate(-0.45, 0.45, 0.02, 0.24, 0.056, "oklch(0.62 0.015 250)"); // scuffed steel kick plate
+        for (const y of [0.25, 1.05, 1.85]) plate(-0.47, -0.43, y, y + 0.12, 0.065, "oklch(0.55 0.01 250)"); // hinge knuckles
+        plate(0.28, 0.36, 0.92, 1.08, 0.065, "oklch(0.6 0.01 250)"); plate(0.18, 0.36, 0.97, 1.01, 0.1, "oklch(0.75 0.01 250)"); // lever rose and handle
+        if (hash(cx, cz, 57) < 0.5) { plate(-0.16, 0.16, 1.35, 1.8, 0.06, "oklch(0.75 0.01 250)"); plate(-0.12, 0.12, 1.39, 1.76, 0.065, "oklch(0.12 0.01 220)"); } // wire-glass vision lite
+        if (hash(cx, cz, 59) < 0.35) { ctx.emissive("oklch(0.6 0.25 28)"); plate(-0.2, 0.2, 2.34, 2.5, 0.1, "oklch(0.55 0.22 28)"); ctx.emissive(null); } // EXIT sign over it
+        if (hash(cx, cz, 61) < 0.5) plate(0.62, 0.74, 1.3, 1.46, 0.05, "oklch(0.5 0.2 28)"); // fire alarm pull
       } else if (rDoor < 0.22) {
         // Wall-mounted red fire extinguisher on bracket
         const p = [fx - nx * 0.12, fz - nz * 0.12];
