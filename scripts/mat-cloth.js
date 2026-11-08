@@ -4,7 +4,7 @@
 import { materialColor, positionGeometry, vec2, vec3, float, abs, fract, floor, sin, mix, smoothstep, step, max, min, mx_noise_float, mx_fractal_noise_float, mx_worley_noise_float } from "builtin/tsl";
 import { MeshStandardNodeMaterial } from "builtin/three";
 
-// the printed pieces: picture, centre on the torso (bind-pose metres, front = +z), square size; split = the other half's colour; x = sleeve marks
+// the printed pieces: picture, centre on the torso (bind-pose metres, front = -z: the critter faces -z), square size; split = the other half's colour; x = sleeve marks
 const PRINTS = {
   pgsmile: { tex: "/cdn/value.b7652a767b44728f013f67d62067f01ff29e190eebcbb6d97a0245474eecf35d.png", at: [0, 0.87], size: 0.34, x: true },
   pgcoat: { tex: "/cdn/value.b7652a767b44728f013f67d62067f01ff29e190eebcbb6d97a0245474eecf35d.png", at: [0.08, 0.93], size: 0.16, x: true },
@@ -157,8 +157,8 @@ export function material(ctx) {
       }
     }
     const T = ctx.texture(P.tex);
-    const pu = q.x.sub(P.at[0]).div(P.size).add(0.5), pv = q.y.sub(P.at[1]).div(P.size).add(0.5);
-    const inside = step(0.0, pu).mul(step(pu, 1.0)).mul(step(0.0, pv)).mul(step(pv, 1.0)).mul(smoothstep(0.02, 0.06, q.z));
+    const pu = float(P.at[0]).sub(q.x).div(P.size).add(0.5), pv = q.y.sub(P.at[1]).div(P.size).add(0.5);
+    const inside = step(0.0, pu).mul(step(pu, 1.0)).mul(step(0.0, pv)).mul(step(pv, 1.0)).mul(smoothstep(0.02, 0.06, q.z.negate()));
     const t = T.sample(vec2(pu, pv));
     col = mix(col, t.rgb.mul(float(0.88).add(fine.mul(0.12))), t.a.mul(inside));
   } else { // weave: a plain fabric

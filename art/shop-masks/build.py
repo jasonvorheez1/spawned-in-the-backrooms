@@ -43,7 +43,7 @@ def bag(rig):
     bmesh.ops.create_cube(bm, size=1.0)
     bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=9, use_grid_fill=True)
     # rounded box, open at the bottom
-    W, D, Z0, Z1, CY = 0.43, 0.38, 0.96, 1.80, 0.02
+    W, D, Z0, Z1, CY = 0.40, 0.36, 0.97, 1.75, 0.02
     random.seed(4)
     for v in bm.verts:
         x, y, z = v.co.x * 2, v.co.y * 2, v.co.z + 0.5   # -1..1, -1..1, 0..1
@@ -69,6 +69,7 @@ def bag(rig):
     bmesh.ops.delete(bm, geom=bottom, context="FACES")
     bm.normal_update()
     uv_front(bm, (-W, W, -D + CY, D + CY, Z0, Z1), -0.6)
+    bmesh.ops.rotate(bm, verts=bm.verts, cent=Vector((0, 0, 0)), matrix=__import__("mathutils").Matrix.Rotation(math.pi, 3, "Z"))  # the critter body faces +Y here
     me = bpy.data.meshes.new("MaskBag"); bm.to_mesh(me); ob = bpy.data.objects.new("MaskBag", me)
     bpy.context.collection.objects.link(ob); me.materials.append(mat("mask_bag", "mask-bag.png"))
     for p in me.polygons: p.use_smooth = True
@@ -88,6 +89,7 @@ def shell(rig):
     bmesh.ops.rotate(bm, verts=bm.verts, cent=C, matrix=__import__("mathutils").Matrix.Rotation(math.radians(15), 3, "Z"))
     bm.normal_update()
     uv_front(bm, (C.x - R.x, C.x + R.x, C.y - R.y, C.y + R.y, C.z - R.z, C.z + R.z), -0.2)
+    bmesh.ops.rotate(bm, verts=bm.verts, cent=Vector((0, 0, 0)), matrix=__import__("mathutils").Matrix.Rotation(math.pi, 3, "Z"))  # the critter body faces +Y here
     me = bpy.data.meshes.new("MaskShell"); bm.to_mesh(me); ob = bpy.data.objects.new("MaskShell", me)
     bpy.context.collection.objects.link(ob); me.materials.append(mat("mask_shell", "mask-pooper.png"))
     for p in me.polygons: p.use_smooth = False
