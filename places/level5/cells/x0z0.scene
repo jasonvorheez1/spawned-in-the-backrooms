@@ -3961,19 +3961,13 @@ l5-samantha:
   feetPosition: {x: 3, y: 0, z: 2.5}
   id: l5-samantha
   layout: {box: {max: {x: 0.2, y: 0.45, z: 0.45}, min: {x: -0.2, y: 0, z: -0.45}}}
-  model: {forward: "+z", id: /cdn/value.05b6fcdb02ae0489f79f366c2285414facaa51f7639114b24430fb4ac82f5455.glb}
+  model: {forward: "-z", id: /cdn/value.05b6fcdb02ae0489f79f366c2285414facaa51f7639114b24430fb4ac82f5455.glb}
+  morph: null
   physics: {body: kinematic, collider: box}
   rotation: {yaw: -130}
   scale: {x: 1.15, y: 0.9, z: 1.15}
   state: {faction: The Beverly Room, headBody: /cdn/value.05b6fcdb02ae0489f79f366c2285414facaa51f7639114b24430fb4ac82f5455.glb, hp: 1000, info: A very small cat. She is looking at you., maxHp: 1000, name: Samantha, offers: [["o:feed", Offer meat], ["o:refuse", Refuse]], role: psychic, tint: "#7dff9a", trespass: {}, verb: Talk, warned: {}, wear: {blush: "#ff6285", botp: velvet, bottom: "#ff8fc7", botw: none, buildS: 1.15, bustS: 1, earS: 0.84, expr: grin, eye: "#2b2233", eyes: round, eyew: none, fseed: 1505621034, fur: "#484050", hat: flower, hatc: "#4a5a8a", hatp: "", headS: 1.11, heightS: 0.9, hipS: 0.84, marks: none, model: "", neck: scarf, neckc: "#f3c64a", neckp: knit, nose: "", shoec: "#f2c4a0", shoep: knit, shoes: slippers, snoutS: 1.32, tailS: 0.73, top: "#5a3a2a", topp: floral, topw: dress, trait: "", waistS: 1.06}}
   tags: [npc, samantha, usable, entity26]
-l5-samantha/critter-head:
-  attachment: {skin: true}
-  id: l5-samantha/critter-head
-  jiggle: {amount: 0.55, bones: [EarL, EarR], bounce: 0.7}
-  model: {id: /cdn/value.b5ba6340a943f30bf2772d5b6c93a6523798452a5ccdc376816b237606e649ad.glb, materials: {belly: {color: "#a89d99", metalness: 0, roughness: 0.88}, blush: {color: "#c86aa8", emissive: "#ff4065", emissiveIntensity: 0.15, roughness: 0.85}, eyeink: {color: "#161214", roughness: 0.85}, eyewhite: {color: "#fffdfa", roughness: 0.4}, fur: {color: "#484050", metalness: 0, roughness: 0.82}, inner: {color: "#ffb8c6", metalness: 0, roughness: 0.9}, iris: {color: "#7ab8e8", roughness: 0.25}, mark: {color: "#847a7e", metalness: 0, roughness: 0.82}, mouth: {color: "#661625", roughness: 0.9}, nose: {color: "#6a4a3a", metalness: 0.05, roughness: 0.35}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#a89d99", metalness: 0, roughness: 0.82}, tongue: {color: "#ff7b95", roughness: 0.6}}}
-  morph: {Blush: 0.25, Open: 0.4, Smile: 1, Wide: 0.24080000000000001}
-  parent: l5-samantha
 l5-seat-card0:
   feetPosition: {x: 2.2750079443027404, y: 0, z: -14.630052574806783}
   id: l5-seat-card0
