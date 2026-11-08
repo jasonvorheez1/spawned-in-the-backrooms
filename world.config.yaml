@@ -139,3 +139,6 @@ nametag: ui/nametag.js
 authoring:
   starter:
     id: 3d
+routing:
+  script: scripts/routing.js
+  maxPlayers: 8
