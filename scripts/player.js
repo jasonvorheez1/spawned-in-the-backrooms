@@ -398,7 +398,7 @@ function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pellets =
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
     const tg = m.tags ?? [], ent = tg.includes('smiler') || tg.includes('lurker')
     if (ent) dropLoot(ctx, m.feetPosition, tg.includes('lurker') ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)) // only smilers and lurkers leave smiler/lurker remains
-    else if (!npc && !tg.some((g) => g === 'l5staff' || g === 'l5rat' || g === 'l7beast' || g === 'remains' || g === 'spamboss')) becomeCorpse(ctx, m, (m.state?.name ?? 'Body').split(' ·')[0] + "'s body", rollLoot(ctx, npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)), ctx.self.feetPosition) // anything else stays its own body, limp and searchable // an agent's own body is searched (scripts/meg-agent.js)
+    else if (!npc && !tg.some((g) => g === 'l5staff' || g === 'l5rat' || g === 'l10worm' || g === 'l7beast' || g === 'remains' || g === 'spamboss')) becomeCorpse(ctx, m, (m.state?.name ?? 'Body').split(' ·')[0] + "'s body", rollLoot(ctx, npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)), ctx.self.feetPosition) // anything else stays its own body, limp and searchable // an agent's own body is searched (scripts/meg-agent.js)
   }
 }
 
