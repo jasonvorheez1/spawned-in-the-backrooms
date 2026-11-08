@@ -226,7 +226,7 @@ def refit(o):
         for v in me.vertices: v.co = Vector((EYE.x + (v.co.x - c.x) * k, EYEFRONT - 0.012 + (v.co.y - back) * k, EYE.z + (v.co.z - c.z) * k))
         bw = [body.matrix_world @ q.co for q in body.data.vertices]; band = [w.x for w in bw if abs(w.z - EYE.z) < 0.02]
         half = (max(band) - min(band)) / 2 if band else 0.15
-        import bmesh
+        pass
         gb = bmesh.new(); gb.from_mesh(me)
         bmesh.ops.delete(gb, geom=[v for v in gb.verts if abs(v.co.x - EYE.x) > min(half * 0.98, (max(ex) - min(ex)) / 2 + 0.045) or v.co.y > EYEFRONT + 0.018], context='VERTS')
         gb.to_mesh(me); gb.free()
