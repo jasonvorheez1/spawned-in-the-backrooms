@@ -86,7 +86,7 @@ export function breakables(FY, PY) {
   return R;
 }
 
-const V = 21; // 21: walkable stairs back to Level 6
+const V = 22
 // 16 // 15: the floating house's outside, a 2000s house built in Blender (art/l7-house/build.py)
 const V_OLD = 14; // 12: Fort Surrender moved to the nearest island, new fort, circle and skeletons
 const GONE = ["l7-tide-s", "l7-lantern", "l7-ring", "l7-boat", "l7-chair", "l7-bulb"]; // v1 leftovers
