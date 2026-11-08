@@ -446,7 +446,7 @@ def corrugated():
             grid.append(col)
         for i in range(nc):
             for j in range(len(zs) - 1):
-                rust = (j == 0 and rnd.random() < 0.75) or (j == 1 and rnd.random() < 0.3) or (i in streak and j >= 3) or (i in streak and j == 2 and rnd.random() < 0.6)
+                rust = (j == 0) or (j == 1 and rnd.random() < 0.3) or (i in streak and j >= 3) or (i in streak and j == 2 and rnd.random() < 0.6)
                 bm = M.bm("rust" if rust else "corr"); vs = [bm.verts.new(p) for p in (grid[i][j], grid[i + 1][j], grid[i + 1][j + 1], grid[i][j + 1])]; bm.faces.new(vs)
         for z in (zb + 0.45, zt - 0.3):                              # fixings: hex heads along the rails
             for k in range(6): cbox(M, "metal", (xo + amp + 0.006, y0 + 0.15 + k * (y1 - y0 - 0.3) / 5, z), (0.012, 0.022, 0.022), 0.003)
@@ -471,7 +471,7 @@ def sandbag(M, rnd, c, yaw, L=0.58, Wd=0.3, H=0.27):
     M.bm("burlap"); tmp = bmesh.new(); bmesh.ops.create_cone(tmp, cap_ends=True, segments=6, radius1=0.035, radius2=0.012, depth=0.07)
     _merge(M, "burlap", tmp, mx @ Matrix.Translation((e * (L / 2 + 0.02), 0, 0.02)) @ Euler((0, e * math.pi / 2, 0), "XYZ").to_matrix().to_4x4())
 def sandbags():
-    M = Mesh(); rnd = random.Random(14); half = 1.75; bulge = 0.35; H = 0.27
+    M = Mesh(); rnd = random.Random(14); half = 1.75; bulge = 0.35; H = 0.33
     cx = lambda y: -bulge * (1 - (y / half) ** 2)
     for course in range(3):
         z = 0.12 + course * (H - 0.03)
