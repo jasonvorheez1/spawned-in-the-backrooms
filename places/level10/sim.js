@@ -15,7 +15,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 
 export const cadence = "1s";
-const V = 11;
+const V = 12;
 const BRK = (mat, hp) => ({ mat, hp, maxHp: hp });
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BARN = (w, d, h, ridge, wall, door) => ({ primitive: { kind: "scripted", script: "scripts/barn10.js", params: { w, d, h, ridge, wall, door } }, physics: "static" });
@@ -25,7 +25,15 @@ const AMB = "cdn/ambience-wind-through-ripe-wheat-field-overcast-countryside-dis
 const WIND_CREAK = "cdn/moodboard-realistic-gritty/sfx-wood-creak-heavy-timber-settling.mp3";
 
 function lay(ctx) {
-  const sp = (id, spec) => { if (ctx.getObject(id)) ctx.destroy(id); ctx.spawn(id, spec); };
+  const BIG = /farmhouse|barn|stable|shed|silo$|windmill|tree|hedge|scarecrow|fence|flagpole|sign-city|outpost-sign/;
+  const SMALL = /stone|log|stump|lamp|radio|hopper|crate|flag$|patch|oven|well|bin|fire$|sign-post|cellar/;
+  const sp = (id, spec) => {
+    if (ctx.getObject(id)) ctx.destroy(id);
+    const drawn = spec.primitive || spec.model;
+    if (drawn && !spec.scatter && !spec.visibleRange && !/npc/.test(String(spec.tags))) spec.visibleRange = { max: BIG.test(id) ? 320 : 110 };
+    if (drawn && SMALL.test(id) && spec.castShadow === undefined) spec.castShadow = false;
+    ctx.spawn(id, spec);
+  };
 
   // ==========================================
   // 1. ARRIVALS AND LEVEL EXITS
@@ -77,8 +85,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
     tags: ["usable"],
     feetPosition: T(-28, -42.2, 0.48),
     rotation: { yaw: 180 },
-    primitive: { kind: "box", width: 0.45, height: 0.25, depth: 0.3 },
-    material: { color: "oklch(0.35 0.02 240)", roughness: 0.6 },
+    primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "radio" } },
     behavior: "scripts/level10-use.js",
     state: { kind: "outpost-radio", name: "M.E.G. Agrarian Shortwave Radio", verb: "Tune Radio" },
   });
@@ -88,8 +95,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
     tags: ["usable"],
     feetPosition: T(-16, -38, 0),
     rotation: { yaw: -90 },
-    primitive: { kind: "box", width: 1.8, height: 1.6, depth: 1.5 },
-    material: { color: "oklch(0.55 0.06 40)", roughness: 0.85 },
+    primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "oven" } }, physics: "static",
     light: { kind: "point", color: "oklch(0.88 0.18 55)", intensity: 2.2, distance: 6 },
     behavior: "scripts/level10-use.js",
     state: { kind: "hearth-oven", name: "Outpost Hearth Oven", verb: "Bake Homestead Bread" },
@@ -150,8 +156,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   sp("l10-silo-hopper", {
     tags: ["usable"],
     feetPosition: T(-42, -18.5, 0),
-    primitive: { kind: "box", width: 1.1, height: 0.9, depth: 1.1 },
-    material: { color: "oklch(0.5 0.03 50)", roughness: 0.8 },
+    primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "hopper" } }, physics: "static",
     behavior: "scripts/level10-use.js",
     state: { kind: "silo-hopper", name: "Grain Discharge Chute", verb: "Inspect Grain Reserves" },
   });
@@ -184,8 +189,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
   const wheatPatch = (id, x, z) => sp(id, {
     tags: ["usable", "wheat-patch"],
     feetPosition: T(x, z, 0),
-    primitive: { kind: "box", width: 2.4, height: 1.2, depth: 2.4 },
-    material: { color: "oklch(0.85 0.16 85)", roughness: 0.9 },
+    primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "sheaves" } }, physics: "static",
     behavior: "scripts/level10-use.js",
     state: { kind: "wheat-patch", name: "Ripe Golden Wheat Patch", verb: "Reap Wheat Sheaf" },
   });
@@ -310,9 +314,8 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
   // Supply crates & Tool chests
   const crate = (id, x, z, name, items, yaw = 0) => sp(id, {
     tags: ["container", "breakable"], feetPosition: T(x, z, 0.06), rotation: { yaw },
-    model: "/cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb",
-    layout: { box: { min: { x: -0.45, y: 0, z: -0.35 }, max: { x: 0.45, y: 0.7, z: 0.35 } } },
-    physics: { body: "static", collider: "box" },
+    primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "crate" }, seed: x * 31 + z },
+    physics: "static",
     state: { name, items, ...BRK("wood", 40) },
   });
   crate("l10-barn-bin", -54, -57, "Grain feed bin", "wheat_sheaf,wheat_sheaf,ration,almond", 10);
