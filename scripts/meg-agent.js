@@ -195,7 +195,8 @@ function moveAlong(ctx, me, m, goal, speed, dt) {
     if (r?.points?.length) { m.path = r.points; m.i = 0; m.pathGoal = { ...goal }; m.seeAt = 0; }
     else if (!r?.partial && clearLine(ctx, me, p, goal)) { m.path = [goal]; m.i = 0; m.pathGoal = { ...goal }; }
     else m.path = null;
-    m.repath = now + (r?.partial ? 250 : 1500);
+    if (r?.points?.length || r?.partial) m.fails = 0; else m.fails = Math.min(4, (m.fails ?? 0) + 1); // no way through: ask less and less often
+    m.repath = now + (r?.partial ? 250 : (1500 + ctx.random() * 700) * (1 + (m.fails ?? 0))); // jitter keeps a crowd from all asking on the same tick
   }
   if (!m.path && !clearLine(ctx, me, p, goal)) {
     stop(me, dt);
@@ -208,10 +209,12 @@ function moveAlong(ctx, me, m, goal, speed, dt) {
     if (now > (m.seeAt ?? 0)) { m.seeAt = now + 300; // a few looks a second: skip ahead to the farthest corner in plain sight
       for (let k = Math.min(m.path.length - 1, m.i + 4); k > m.i; k--) if (clearLine(ctx, me, p, m.path[k])) { m.i = k; break; } }
     to = m.path[m.i] ?? goal;
+    // the way ahead has closed since the path was made (a door shut, something set down): ask again now, not in a second
+    if (now > (m.blockAt ?? 0)) { m.blockAt = now + 400; if (flat(to, p) < 4 && flat(to, p) > 0.9 && !clearLine(ctx, me, p, to)) { m.blocked = (m.blocked ?? 0) + 1; if (m.blocked === 2) m.repath = 0; } else m.blocked = 0; }
   }
   // stuck: trying to move but barely moved in a second: sidestep for a beat, then a fresh path
   m.sk ??= { x: p.x, z: p.z, at: now };
-  if (now - m.sk.at > 1000) { const moved = Math.hypot(p.x - m.sk.x, p.z - m.sk.z); if (moved < 0.25 * speed && flat(to, p) > 0.8) { m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 600 }; m.repath = 0; } m.sk = { x: p.x, z: p.z, at: now }; }
+  if (now - m.sk.at > 1000) { const moved = Math.hypot(p.x - m.sk.x, p.z - m.sk.z); if (moved < 0.25 * speed && flat(to, p) > 0.8) { m.stuckN = (m.stuckN ?? 0) + 1; m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 600 + Math.min(m.stuckN, 4) * 250 }; m.repath = 0; if (m.stuckN >= 4) { m.path = null; m.stuckN = 0; m.repath = now + 2500; } } else if (moved >= 0.25 * speed) m.stuckN = 0; m.sk = { x: p.x, z: p.z, at: now }; }
   let dx = to.x - p.x, dz = to.z - p.z, d = Math.hypot(dx, dz) || 1;
   let ux = dx / d, uz = dz / d;
   if (m.side && now < m.side.until) { const s = m.side.s; ux = ux * 0.4 + -uz * s * 0.9; uz = uz * 0.4 + (dx / d) * s * 0.9; }
