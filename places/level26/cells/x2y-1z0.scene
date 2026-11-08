@@ -182,7 +182,7 @@ l26d-pg-0:
   id: l26d-pg-0
   layout: {box: {max: {x: 0.55, y: 1.45, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
   mixer: {base: {clip: cdn/clip-idle-loop.glb, loop: true, weight: 1}}
-  model: {forward: "+x", id: /cdn/value.42f5bedd66fcac564db4abac1161a08ebd01e368342333955a3e38bf4caee95b.glb}
+  model: {forward: "+x", id: /cdn/value.26b362d316413677eaf77a390fda1afb0b1651baf57b6c1c3ba429dc3447fa2d.glb}
   physics: {body: character, collider: capsule}
   rotation: {yaw: 0}
   state: {home: {x: 300, y: -80, z: -30}, hp: 90}
@@ -192,7 +192,7 @@ l26d-pg-2:
   id: l26d-pg-2
   layout: {box: {max: {x: 0.55, y: 1.45, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
   mixer: {base: {clip: cdn/clip-idle-loop.glb, loop: true, weight: 1}}
-  model: {forward: "+x", id: /cdn/value.42f5bedd66fcac564db4abac1161a08ebd01e368342333955a3e38bf4caee95b.glb}
+  model: {forward: "+x", id: /cdn/value.26b362d316413677eaf77a390fda1afb0b1651baf57b6c1c3ba429dc3447fa2d.glb}
   physics: {body: character, collider: capsule}
   rotation: {yaw: 0}
   state: {home: {x: 294, y: -80, z: -42}, hp: 90}
