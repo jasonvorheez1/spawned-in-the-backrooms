@@ -122,8 +122,6 @@ export function update(ctx, dt) {
   for (const wh of C.wheels) {
     const key = "w" + wh.id;
     const origin = toWorld(ctx, { x: wh.x, y: C.rayTop, z: wh.z });
-    const hit = ctx.raycast
-      ? null : null; // (placeholder, never used)
     const r = rayDown(ctx, origin, up);
     if (!r) { car.forces[key] = null; continue; }
     touching++;

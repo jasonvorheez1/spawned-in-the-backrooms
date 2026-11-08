@@ -725,14 +725,17 @@ function lay(ctx) {
   cyl("l11-taxi-wheel-fr", 1.05, 0.28, -1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
   cyl("l11-taxi-wheel-rl", -1.05, 0.28, 1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
   cyl("l11-taxi-wheel-rr", 1.05, 0.28, 1.35, 0.32, 0.32, 0.25, { color: "oklch(0.2 0.01 250)", roughness: 0.9 }, { rotation: { roll: 90 }, parent: "l11-taxi" });
-  sp("l11-porsche", {
-    tags: ["usable", "vehicle", "taxi"],
-    feetPosition: { x: -21, y: 0.15, z: 16.4 },
+  sp("l11-porsche", { // a real car (scripts/level11-porsche.js): dynamic hull on four sprung wheels, 1.35x a real 911 so a critter fits
+    tags: ["usable", "vehicle"],
+    feetPosition: { x: -21, y: 0.3, z: 16.4 },
     rotation: { yaw: 90 },
-    physics: { body: "kinematic", collider: "box" },
-    behavior: "scripts/level11-car.js",
-    state: { kind: "taxi", name: "1995 Porsche 911 Carrera RS", verb: "Drive Porsche" },
+    physics: { body: "dynamic", collider: "none", mass: 300, centerOfMass: [0, 0.45, 0], angularDamping: 0.4 },
+    behavior: "scripts/level11-porsche.js",
+    state: { kind: "car", name: "1995 Porsche 911 Carrera RS", verb: "Get in" },
     model: { id: "/cdn/value.d9a163ec75298c9660fd165f4d3aa796afedebd6aa6fa6c07827511611edab15.glb" },
+    layout: { box: { min: { x: -1.28, y: 0, z: -2.9 }, max: { x: 1.28, y: 1.75, z: 2.9 } } },
+    visibleRange: { max: 160 },
+    children: [{ id: "hull", feetPosition: { x: 0, y: 0.32, z: 0 }, primitive: { kind: "box", width: 2.3, height: 0.95, depth: 5.5 }, visible: false, physics: "static" }],
   });
 
   // ==========================================
