@@ -37,6 +37,7 @@ terrain:
           - { kind: scripted, script: scripts/grass.js, scale: [0.6, 1.1], randomRotation: true, useTerrainColor: true, wind: { force: 0.05, scale: 5, speed: 1.2 } }
         density: 22
     bindings: { wheat: [wheat], barley: [barley], stubble: [stubble], grass: [grass] }
+    settings: { maxDistance: 120, fadeDistance: 35 }  # AAA perf pass: past 120 m the straw-textured ground reads as the field
 gravity: { x: 0, y: -24, z: 0 }
 defaultSpawnPoint: { x: 0, y: { terrain: 0.2 }, z: 30 }
 defaultSpawnRotation: { yaw: 0 }
