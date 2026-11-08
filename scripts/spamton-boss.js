@@ -4,8 +4,31 @@
 // Your bullets and swings hit him through scripts/player.js (tag 'spamboss'), stepping state.hp down.
 // The HUD reads ctx.place.state.spam, written here when it changes. Shelly's Spamton sounds play here (his fight) and nowhere else.
 import { animate } from 'builtin/tween'
+import { eulerFromRotation } from 'builtin/vec3'
 import F from './lib/data/spamton.yml'
 const A = F.arena
+
+// his clips (art/spamton/rig.py): the rig lane maps these names to what the engine resolves
+const CLIPS = { idle: "idle", talk: "talk", laugh: "laugh", throw: "throw", vacuum: "vacuum", charge: "charge", hurt: "hurt", defeated: "defeated", spared: "spared" }
+const ONCE = { throw: 0.6, hurt: 0.4, defeated: 1.5 }
+function play(ctx, name) {
+  const m = mem(ctx)
+  if (m.clip === name) return
+  m.clip = name
+  ctx.self.anim.body = { clip: CLIPS[name], loop: !ONCE[name], blend: 0.12 }
+  if (ONCE[name] && name !== 'defeated') m.clipUntil = ctx.now() + ONCE[name] * 1000
+  else m.clipUntil = 0
+}
+// a marionette's body on top of whatever clip plays: a tilt he snaps to and holds, a sway on the strings
+function puppet(ctx, f, wild = 1) {
+  const m = mem(ctx), now = ctx.now(), t = now / 1000
+  ctx.self.rotation = { lookAt: { x: f.x, y: ctx.self.feetPosition.y, z: f.z } }
+  const e = eulerFromRotation(ctx.self.rotation)
+  if (now > (m.jerkAt ?? 0)) { m.jerkAt = now + 350 + ctx.random() * 700; m.jerkRoll = (ctx.random() * 2 - 1) * 14 * wild; m.jerkPitch = (ctx.random() * 2 - 1) * 6 * wild }
+  m.roll = (m.roll ?? 0) + ((m.jerkRoll ?? 0) - (m.roll ?? 0)) * 0.45
+  m.pitch = (m.pitch ?? 0) + ((m.jerkPitch ?? 0) - (m.pitch ?? 0)) * 0.45
+  ctx.self.rotation = { yaw: e.yaw + Math.sin(t * 5.3) * 4 * wild, pitch: m.pitch + Math.sin(t * 2.1) * 2, roll: m.roll + Math.sin(t * 3.2) * 5 * wild }
+}
 
 const SND = {
   start: '/cdn/spamton-battle-start-glitch-303uhnhm.mp3',
@@ -144,7 +167,7 @@ const ATK = {
       m.step++
       const from = hand(ctx), d = aimAt(from, pl)
       for (let i = -2; i <= 2; i++) throwBill(ctx, from, turn(d, i * 9 + (k === 1 ? 4.5 : 0)), 15, A.billDmg)
-      sound(ctx, 'small', 0.7)
+      sound(ctx, 'small', 0.7); play(ctx, 'throw')
       if (k === 0) hud(ctx, { taunt: pick(ctx, A.throwTaunts), tauntAt: ctx.now() })
     } } },
   rain: { len: 4.0, step(ctx, pl, t, m) { // coins from the dark: one on you, five around you, twice
@@ -153,7 +176,7 @@ const ATK = {
       const f = pl.feetPosition
       dropCoin(ctx, { x: f.x, z: f.z })
       for (let i = 0; i < 5; i++) { const a = ctx.random() * 6.283, r = 2.2 + ctx.random() * 4; dropCoin(ctx, { x: f.x + Math.cos(a) * r, z: f.z + Math.sin(a) * r }) }
-      sound(ctx, 'heavy', 0.6)
+      sound(ctx, 'heavy', 0.6); play(ctx, 'laugh')
       if (k === 0) hud(ctx, { taunt: 'MAKE IT [[RAIN]]!!', tauntAt: ctx.now() })
     } } },
   vacuum: { len: 4.0, begin(ctx) { ctx.self.fx = { script: VACUUM }; sound(ctx, 'boost', 0.9); hud(ctx, { taunt: 'COME TO [[DADDY]]... I MEAN [[DEALS]]!!', tauntAt: ctx.now() }) },
@@ -172,7 +195,7 @@ const ATK = {
         if (k === 0) ctx.self.fx = null
         const from = { ...hand(ctx), y: ctx.self.feetPosition.y + 1.3 }, n = 22, gap = Math.floor(ctx.random() * n)
         for (let i = 0; i < n; i++) { if (Math.abs(i - gap) <= 1 || Math.abs(i - gap) === n - 1) continue; const a = (i / n) * 6.283 + k * 0.14; throwBill(ctx, from, { x: Math.sin(a), y: -0.04, z: Math.cos(a) }, 11, A.shotDmg) }
-        sound(ctx, 'crit', 0.85)
+        sound(ctx, 'crit', 0.85); play(ctx, 'throw')
         ctx.emit('shockwave', { position: from, speed: 10, thickness: 0.4, intensity: 0.5 })
       } },
     end(ctx) { ctx.self.fx = null } },
@@ -204,6 +227,7 @@ function finish(ctx, how, pl) {
   clearProj(ctx); ctx.self.fx = null; if (pl) pl.forces.spamVac = null
   setPhase(ctx, how)
   hud(ctx, { over: true, taunt: null })
+  play(ctx, how === 'spared' ? 'spared' : how === 'killed' ? 'defeated' : 'laugh')
   if (how === 'spared') {
     say(ctx, A.spareLine)
     sound(ctx, 'laugh', 0.8); sound(ctx, 'chime', 0.9)
@@ -258,19 +282,21 @@ export function update(ctx, dt) {
     if (hp <= 0) { hud(ctx, { hp: 0 }); finish(ctx, 'killed', pl); return }
     if (now - m.writeAt > 150) { m.writeAt = now; hud(ctx, { hp: Math.max(0, Math.round(hp)) }) } else m.dirty = true
     if (dropped && m.phase === 'talk' && now - m.phaseAt > 400) backToFight(ctx, pick(ctx, A.interrupt))
+    if (dropped && m.phase === 'fight' && !m.atk && now - (m.flinchAt ?? 0) > 900) { m.flinchAt = now; play(ctx, 'hurt'); ctx.emit('squash', { target: ctx.self.id, axis: 'z', intensity: 0.12, duration: 0.15 }) }
     if (dropped && ctx.random() < 0.08) sound(ctx, 'laugh', 0.5)
   } else if (m.dirty && now - m.writeAt > 150) { m.dirty = false; m.writeAt = now; hud(ctx, { hp: Math.max(0, Math.round(hp)) }) }
   // you fell: he wins this one
   if (pl.state.downAt && pl.state.downAt > (st.startedAt ?? 0)) { finish(ctx, 'won', pl); return }
 
   const b = ctx.self.feetPosition, t = now / 1000, f = pl.feetPosition
+  if (m.clipUntil && now > m.clipUntil) { m.clipUntil = 0; m.clip = null }
   if (m.phase === 'intro') {
-    ctx.self.rotation = { lookAt: { x: f.x, y: b.y, z: f.z } }
+    puppet(ctx, f, 1.3); if (!m.clipUntil) play(ctx, 'laugh')
     if (now - m.phaseAt > 2600) { backToFight(ctx); hud(ctx, { line: null }) }
     return
   }
   if (m.phase === 'talk') {
-    ctx.self.rotation = { lookAt: { x: f.x, y: b.y, z: f.z }, include: ['yaw'] }
+    puppet(ctx, f, 0.6); if (!m.clipUntil) play(ctx, 'talk')
     if (now - m.phaseAt > A.talkSeconds * 1000) backToFight(ctx, pick(ctx, ["TIME'S UP!! [[ACT NOW]]!!", 'NO ANSWER?? NO [[PROBLEM]]!!']))
     return
   }
@@ -280,7 +306,8 @@ export function update(ctx, dt) {
   if (!still) m.ang += dt * (0.32 + (1 - hp / A.hp) * 0.25)
   const r = A.orbit, x = Math.sin(m.ang) * r, z = Math.cos(m.ang) * r
   ctx.self.feetPosition = { x, y: 0.5 + Math.sin(t * 2.4) * 0.35, z }
-  ctx.self.rotation = { lookAt: { x: f.x, y: 0.5, z: f.z } }
+  puppet(ctx, f, 1)
+  if (!m.clipUntil) play(ctx, m.atk === 'vacuum' ? 'vacuum' : m.atk === 'bigshot' && now - m.atkSince < 1000 ? 'charge' : 'idle')
 
   if (!m.atk && now >= m.next) {
     // every few attacks, he stops to talk
