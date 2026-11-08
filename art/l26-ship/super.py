@@ -196,16 +196,16 @@ def build_super():
     for s in (1, -1): parts.append(sphere(f"navyard{s}", (s * 1.35, 10.32, 1.6), 0.08, navw))
     parts.append(cyl("radarpost", (0, 6.58, 4.6), 0.12, 0.6, frame, 10))
     parts.append(rbox("radar", (0, 7.25, 4.6), (2.4, 0.16, 0.22), frame, 0.05, yaw=25))
-    # lifeboats on davits
+    # lifeboats on davits, hung clear above the side walkway (bottom ~3.1 m)
     orng = mat("lifeboat_orange", (0.95, 0.32, 0.03), rough=0.45)
     for s in (1, -1):
         for zc in (-7.0, 11.0):
-            parts.append(sphere(f"lbh{s}{zc}", (s * 8.4, 2.55, zc), 1.0, white, (1.05, 0.55, 3.1), 24, 12))
-            parts.append(sphere(f"lbt{s}{zc}", (s * 8.4, 2.75, zc), 1.0, orng, (1.0, 0.75, 2.95), 24, 12))
-            parts.append(rbox(f"lbr{s}{zc}", (s * 8.4, 2.62, zc), (2.12, 0.08, 5.0), frame, 0.03))
+            parts.append(sphere(f"lbh{s}{zc}", (s * 8.4, 3.65, zc), 1.0, white, (1.05, 0.55, 3.1), 24, 12))
+            parts.append(sphere(f"lbt{s}{zc}", (s * 8.4, 3.85, zc), 1.0, orng, (1.0, 0.75, 2.95), 24, 12))
+            parts.append(rbox(f"lbr{s}{zc}", (s * 8.4, 3.72, zc), (2.12, 0.08, 5.0), frame, 0.03))
             for dz in (-2.3, 2.3):
-                parts.append(tube(f"dav{s}{zc}{dz}", [(s * 7.1, 3.4, zc + dz), (s * 7.2, 4.4, zc + dz), (s * 7.6, 4.85, zc + dz), (s * 8.45, 4.75, zc + dz)], 0.09, white, 3))
-                parts.append(tube(f"fall{s}{zc}{dz}", [(s * 8.45, 4.7, zc + dz), (s * 8.4, 3.45, zc + dz * 0.9)], 0.015, frame, 1))
+                parts.append(tube(f"dav{s}{zc}{dz}", [(s * 7.1, 3.4, zc + dz), (s * 7.2, 5.4, zc + dz), (s * 7.6, 5.95, zc + dz), (s * 8.45, 5.85, zc + dz)], 0.09, white, 3))
+                parts.append(tube(f"fall{s}{zc}{dz}", [(s * 8.45, 5.8, zc + dz), (s * 8.4, 4.55, zc + dz * 0.9)], 0.015, frame, 1))
     return parts
 def rail_path_main(side):
     pts = []
