@@ -189,9 +189,9 @@ export function npcLook(id, look, faction, level, role) {
   }
   if (!look?.bodyOwn) bodyRoll(sid, l, look) // a fresh body per NPC: fur, markings, height, build, proportions (species and sex stay: their stories name them)
   if (!look?.hair && (!l.hair || l.hair === 'none')) { // hair, spread by id (Shelly): most people wear some, a few go bare
-    const hs = l.sex === 'f' ? HC.hairF : HC.hairM, r = hashOf(id + ':hair')
+    const hs = l.sex === 'f' ? C.hairF : C.hairM, r = hashOf(id + ':hair')
     l.hair = r % 100 < (l.sex === 'f' ? 92 : 80) ? hs[(r >>> 7) % hs.length] : 'none'
-    l.hairc = HC.hairc[(hashOf(id + ':hairc') >>> 3) % HC.hairc.length]
+    l.hairc = C.hairc[(hashOf(id + ':hairc') >>> 3) % HC.hairc.length]
   }
   l.fseed = h0 // the face (scripts/lib/critter-model.js faceFill) rolls from the id, so it never changes with the clothes
   if (!look?.trait) l.trait = '' // fullLook gave the player default; an NPC rolls its own
