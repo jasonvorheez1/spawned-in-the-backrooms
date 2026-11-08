@@ -1002,7 +1002,8 @@ function plyArm(ctx, w) {
 
 export function update(ctx, dt) {
   { const st = ctx.self.state; if (st.reloading && (st.equipped !== st.reloading || !st.reloadAt || ctx.now() - st.reloadAt > 9000)) { st.reloading = ''; st.reloadTok = (st.reloadTok ?? 0) + 1 } } // a reload stranded by a swap, a page reload or a lost timer clears itself
-  { const s0 = ctx.self.state, ses = ctx.self.session; const pl = ctx.self.place, fz = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z)
+  const fp = ctx.self.feetPosition, fz = zoneHere(ctx, fp.x, fp.z)
+  { const s0 = ctx.self.state, ses = ctx.self.session; const pl = ctx.self.place
     const hot = pl === 'level2' ? (fz === 'l2_pipes' ? 75 : fz === 'l2_hall' ? 55 : 30) : pl === 'level21' ? (fz === 'l21_edge' || fz === 'l21_edgecave' ? 0 : fz === 'l21_fridges' ? 0 : 45) : pl === 'level3' || pl === 'gamma' ? 35 : 0 // how hot each place runs, in degrees on the meter
     if (hot > 0) { ses.heatF = (ses.heatF ?? s0.heat ?? 0) + Math.sign(hot - (ses.heatF ?? s0.heat ?? 0)) * Math.min(Math.abs(hot - (ses.heatF ?? s0.heat ?? 0)), 2 * dt); const n = Math.round(ses.heatF); if (n !== Math.round(s0.heat ?? 0)) s0.heat = n }
     else if ((s0.heat ?? 0) > 0 && pl !== 'level5') { ses.heatF = Math.max(0, (ses.heatF ?? s0.heat) - 5 * dt); const n = Math.round(ses.heatF); if (n !== Math.round(s0.heat)) s0.heat = n } else ses.heatF = undefined } // heat only lives in the Boiler Room: carried out of Level 5 it cools 5°/s (eased in session, written per whole degree)
@@ -1013,8 +1014,8 @@ export function update(ctx, dt) {
   { const hp0 = w.hpSeen ?? s.hp; if (typeof s.hp === 'number' && hp0 - s.hp >= 2 && s.look) wearArmor(ctx, hp0 - s.hp); w.hpSeen = s.hp } // a hit that got through wears what you have on (lib/condition.js)
   let dir = w.dir ?? { x: 0, z: 0 }, pressing = dir.x !== 0 || dir.z !== 0
   { // pressed into a wall: the keys say go, the feet stay put. after a beat you stop running (no drain, no steps, no bob)
-    const f = ctx.self.feetPosition, lf = w.lastFp, mv = lf && dt > 0 ? Math.hypot(f.x - lf.x, f.z - lf.z) / dt : 9
-    w.lastFp = { x: f.x, z: f.z }
+    const lf = w.lastFp, mv = lf && dt > 0 ? Math.hypot(fp.x - lf.x, fp.z - lf.z) / dt : 9
+    w.lastFp = { x: fp.x, z: fp.z }
     w.stuckT = pressing && mv < 0.5 ? (w.stuckT ?? 0) + dt : 0
   }
   const moving = pressing && w.stuckT < 0.2
@@ -1026,14 +1027,13 @@ export function update(ctx, dt) {
   const sprinting = w.sprint && moving && w.stamina > 1 && !w.winded && !s.ads && !crouched && !over
   const dv = w.dv ??= derived(s) // the sheet's numbers, re-derived 4x a second in the stats beat, not three times a tick
   const nowS = ctx.now(), green = nowS < (s.greenUntil ?? 0), tired = nowS < (s.tiredUntil ?? 0) // green almond water: sprint longer; red: heavy limbs
-  const zh = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z)
-  const l2Hot = ctx.self.place === 'level2' && (zh === 'l2_pipes' || zh === 'l2_hall')
+  const l2Hot = ctx.self.place === 'level2' && (fz === 'l2_pipes' || fz === 'l2_hall')
   if (l2Hot && nowS - (s.heatWarnAt ?? 0) > 45000) {
     s.heatWarnAt = nowS
     s.notice = { text: 'Suffocating heat (110°F) radiates from the pipes — stamina drains faster.', at: nowS }
   }
   w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain * (green ? AW.green.staminaMul : 1) * (l2Hot ? 1.25 : 1) : L.staminaRegen * dv.staRegen * (tired ? 0.3 : 1) * (w.winded ? (L.windedRegen ?? 0.6) : 1) * (l2Hot ? 0.68 : 1) * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
-  const fp = ctx.self.feetPosition, inArch = zoneHere(ctx, fp.x, fp.z) === 'arches'
+  const inArch = fz === 'arches'
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
   const speed = (w.walkMode && !sprinting ? 0.5 : 1) * (sprinting ? L.sprintSpeed : L.walkSpeed) * (w.wet ? L.wetCarpetSpeed : 1) * (s.ads ? 0.55 : 1) * (s.carryMul ?? 1) * (crouched ? L.crouchSpeed ?? 0.45 : 1) * dv.speed * (w.bur ??= burden(s))
   const drunk = Math.max(0, (s.drunk ?? 0) - (nowS - (s.drunkAt ?? nowS)) * 0.4) // sobers 0.4 a second
@@ -1068,11 +1068,12 @@ export function update(ctx, dt) {
 }
 
 const HOSTILE = ['smiler', 'lurker', 'hound', 'stealer', 'deathmoth', 'moth']
+const HOSTILE_AND_NPC = [...HOSTILE, 'npc']
 function detection(ctx, p, w) {
   const me = ctx.self.id, sneak = skillsOf(ctx.self.state).sneak ?? 0
   const reach = (w.light ? 16 : 10) * (1 - Math.min(0.5, sneak / 200)) // a lit flashlight gives you away from further off
   let seen = false
-  for (const o of ctx.query({ anyTags: [...HOSTILE, 'npc'], radius: 24 })) {
+  for (const o of ctx.query({ anyTags: HOSTILE_AND_NPC, radius: 24 })) {
     const st = o.state ?? {}; if (st.dead || (st.hp ?? 1) <= 0) continue
     const q = o.feetPosition, dx = p.x - q.x, dz = p.z - q.z, d = Math.hypot(dx, dz)
     const hostile = !o.tags?.includes('npc') || st.angry?.[me]

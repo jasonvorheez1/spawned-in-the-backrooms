@@ -16,6 +16,8 @@ import G from './lib/data/meg.yml'
 const HIT = { smiler: L0.biteDamage, lurker: L0.lurkerBite, hound: L1.houndBite, stealer: L1.stealerHit, npc: G.playerShot }
 
 const FOES = [['smiler', 'Smiler'], ['lurker', 'Lurker'], ['hound', 'Hound'], ['stealer', 'Stranger'], ['npc', 'M.E.G. agent']]
+const FOE_TAGS = FOES.map(([tag]) => tag)
+const FOE_MAP = Object.fromEntries(FOES)
 const mem = (ctx) => (ctx.self.session.stats ??= { ray: null, acc: 0, key: '' })
 
 export function onInput(ctx, input) {
@@ -49,8 +51,11 @@ export function spend(s, d) {
 function look(ctx, ray) {
   const o = ray.origin, dir = ray.direction
   let best = null, bestAng = 1e9
-  for (const [tag, label] of FOES) for (const c of ctx.query({ tags: [tag], radius: 30 })) {
+  for (const c of ctx.query({ anyTags: FOE_TAGS, radius: 30 })) {
     if (c.state?.dead) continue
+    const tag = c.tags?.find((t) => FOE_MAP[t])
+    if (!tag) continue
+    const label = FOE_MAP[tag]
     const p = c.feetPosition, vx = p.x - o.x, vy = p.y + 1.0 - o.y, vz = p.z - o.z, dist = Math.hypot(vx, vy, vz)
     if (dist < 0.3 || dist > 28) continue
     const ang = Math.acos(Math.max(-1, Math.min(1, (vx * dir.x + vy * dir.y + vz * dir.z) / dist)))
