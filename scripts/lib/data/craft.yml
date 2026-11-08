@@ -49,7 +49,7 @@ recipes:
   sledge:     { cat: weapons, name: Sledgehammer,      in: { cinder: 3, steel_pipe: 1, bolts: 3 },         out: ["weapon:sledgehammer"], skill: [repair, 45],   bench: true, desc: "A cinderblock head · slow, brutal" }
   machete:    { cat: weapons, name: "Lineman's machete", in: { sheet_steel: 2, scrap_wood: 1, rust_flakes: 2 }, out: ["weapon:lineman_machete"], skill: [repair, 55], bench: true, desc: "Hammered from sheet steel" }
   baton:      { cat: weapons, name: Stun baton,        in: { steel_pipe: 1, circuit: 1, copper_coil: 1, copper_wire: 2 }, out: ["weapon:stun_baton"], skill: [science, 50], bench: true, desc: "Wired to bite" }
-  fishing_rod: { cat: tools, name: Salvaged fishing rod, in: { scrap_wood: 2, wire: 2, nails: 1 },           out: ["weapon:fishing_rod"],  skill: [survival, 10], desc: "Swing at water on Level 7 to catch fish and sunken salvage" }
+  fishing_rod: { cat: tools, name: Salvaged fishing rod, in: { scrap_wood: 2, wire: 2, nails: 1 },           out: ["weapon:fishing_rod"],  skill: [survival, 10], desc: "Cast into lakes or the sea to catch fresh fish and sunken salvage" }
   # more ammo and tools
   ammo4:      { cat: ammo,  name: Pistol rounds (bulk), in: { scrap_metal: 4, springs: 2, rust_flakes: 1 }, out: [ammo, ammo, ammo, ammo], skill: [guns, 45], bench: true, desc: "Four boxes at once" }
   valve:      { cat: tools, name: Valve wheel,       in: { brass_valve: 1, bolts: 1 },                     out: [valve],                 skill: [repair, 15],   bench: true, desc: "Opens a PUMP ROOM door" }

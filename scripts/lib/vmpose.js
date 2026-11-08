@@ -82,9 +82,16 @@ const SWING = {
   heavy: { dur: 0.64, f: [
     [0, 0, 0, 0, 0, 0, 0], [0.3, 0.06, 0.26, -0.18, 80, 0, -8], [0.46, 0.06, 0.28, -0.2, 86, 0, -8],
     [0.56, -0.04, -0.2, 0.24, -80, 6, 5], [0.64, -0.04, -0.25, 0.2, -90, 6, 5], [0.8, -0.02, -0.12, 0.1, -40, 3, 2], [1, 0, 0, 0, 0, 0, 0]] },
+  cast: { dur: 0.65, f: [
+    [0, 0, 0, 0, 0, 0, 0],
+    [0.22, 0.04, 0.14, -0.16, 52, -12, 12],
+    [0.44, 0.05, 0.18, -0.22, 68, -8, 10],
+    [0.66, -0.02, -0.12, 0.28, -55, 6, -14],
+    [0.82, -0.01, -0.08, 0.18, -32, 4, -8],
+    [1, 0, 0, 0, 0, 0, 0]] },
 }
 const STYLE = { table_leg: 'club', pipe_scrap: 'club', crowbar: 'club', bat: 'club', rebar: 'club', wrench: 'club', stun_baton: 'club',
-  hatchet: 'chop', fire_axe: 'heavy', sledgehammer: 'heavy', knife: 'stab', screwdriver: 'stab', lineman_machete: 'slash' }
+  hatchet: 'chop', fire_axe: 'heavy', sledgehammer: 'heavy', knife: 'stab', screwdriver: 'stab', lineman_machete: 'slash', fishing_rod: 'cast' }
 
 const ZERO_POSE = [0, 0, 0, 0, 0, 0]
 const SAMPLE_BUF = [0, 0, 0, 0, 0, 0]
@@ -270,6 +277,23 @@ export function poseViewmodel(ctx, dt) {
     const k = ease(m.wind), full = m.wind > 0.97 ? 1 : 0, tr = full ? Math.sin(m.breath * 70) : 0
     if (kind === 'fists') { d -= 0.22 * k; x += 0.1 * k; y -= 0.06 * k; roll += 28 * k + tr * 2; yaw -= 18 * k; pitch += 10 * k }
     else { pitch += 30 * k + tr * 1.5; yaw -= 25 * k; roll -= 20 * k + tr * 2; x += 0.14 * k; y += 0.14 * k; d -= 0.14 * k }
+  }
+
+  // active fishing line in the water: elevated waiting angle, sudden strike dip, or reel-in haul
+  if (baseOf(kind) === 'fishing_rod' && ps.fishingState) {
+    const fs = ps.fishingState;
+    if (fs.phase === 'bite') {
+      const biteShake = Math.sin(m.breath * 38) * 3;
+      pitch -= 18; y -= 0.07; roll += biteShake; yaw += biteShake * 0.4;
+    } else if (fs.phase === 'reeling') {
+      pitch += 24; y += 0.08; d -= 0.06;
+    } else if (fs.phase === 'nibble') {
+      const nibbleShake = Math.sin(m.breath * 24) * 1.5;
+      pitch += 12 + nibbleShake; y += 0.02; roll -= 4;
+    } else {
+      const gentleSway = Math.sin(m.breath * 2.2) * 1.4;
+      pitch += 16 + gentleSway; y += 0.03; roll -= 5;
+    }
   }
 
   // raising a freshly equipped weapon: up from below the frame, a little past, and settle

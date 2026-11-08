@@ -6,13 +6,14 @@ import W, { baseOf } from './weapons.js'
 const RAD = Math.PI / 180
 // how each weapon is swung (the same families as scripts/lib/vmpose.js): bone keys over the swing, seconds
 const STYLE = { table_leg: 'club', pipe_scrap: 'club', crowbar: 'club', bat: 'club', rebar: 'club', wrench: 'club', stun_baton: 'club', golf_club: 'club', tire_iron: 'club', baton: 'club',
-  hatchet: 'chop', cleaver: 'chop', fire_axe: 'heavy', sledgehammer: 'heavy', pickaxe: 'heavy', knife: 'stab', screwdriver: 'stab', lineman_machete: 'slash' }
+  hatchet: 'chop', cleaver: 'chop', fire_axe: 'heavy', sledgehammer: 'heavy', pickaxe: 'heavy', knife: 'stab', screwdriver: 'stab', lineman_machete: 'slash', fishing_rod: 'cast' }
 const SWING = {
   club: { d: 0.5, arm: [0, -95, 40, 0], yaw: [0, -22, 28, 0], fore: [0, -40, 10, 0], spine: [0, 25, -20, 0] },
   slash: { d: 0.42, arm: [0, -70, 12, 0], yaw: [0, -55, 55, 0], fore: [0, -25, 10, 0], spine: [0, 35, -32, 0] },
   stab: { d: 0.32, arm: [0, -25, -70, 0], yaw: [0, -8, 6, 0], fore: [0, -85, 5, 0], spine: [0, 8, -6, 0] },
   chop: { d: 0.5, arm: [0, -115, 55, 0], yaw: [0, -10, 12, 0], fore: [0, -50, 15, 0], spine: [0, 12, -14, 0] },
   heavy: { d: 0.8, arm: [0, -160, 70, 0], yaw: [0, 0, 6, 0], fore: [0, -70, 20, 0], spine: [0, 10, -10, 0], pitch: [0, -14, 20, 0] },
+  cast: { d: 0.65, arm: [0, -135, 25, -10, 0], yaw: [0, -12, 10, -4, 0], fore: [0, -75, -15, -30, 0], spine: [0, -12, 16, 4, 0], pitch: [0, -12, 15, 2, 0] },
 }
 const spineOf = (me) => (me.model ? 'bones.Spine02' : 'bones.Spine2')
 
@@ -44,6 +45,24 @@ export function stance(ctx) {
   if (s.rowHands && now - s.rowHands.at < 500 && s.sit) {
     const h = s.rowHands, pt = (a) => ({ x: a[0], y: a[1], z: a[2] })
     return { bones: { RightHand: { reach: { to: pt(h.r), blendIn: 0.1, blendOut: 0.3 } }, LeftHand: { reach: { to: pt(h.l), blendIn: 0.1, blendOut: 0.3 } } }, aiming: false }
+  }
+  // active fishing stance: both hands holding the rod elevated over water, facing the cast
+  if (s.fishingState && !s.sheathed && !s.sit && !s.downAt) {
+    const cam = me.camera?.rotation ?? null;
+    const yaw = (cam?.yaw ?? 0) * RAD;
+    const f = { x: -Math.sin(yaw), z: -Math.cos(yaw) }, r = { x: Math.cos(yaw), z: -Math.sin(yaw) }, p = me.feetPosition, y0 = p.y + (s.crouch ? 1.0 : 1.4);
+    const isBite = s.fishingState.phase === 'bite';
+    const isReel = s.fishingState.phase === 'reeling';
+    const pc = isBite ? -0.32 : isReel ? 0.38 : 0.18;
+    const c = Math.cos(pc), sn = Math.sin(pc);
+    const at = (fwd, side, up) => ({ x: p.x + f.x * c * fwd + r.x * side, y: y0 + sn * fwd + up, z: p.z + f.z * c * fwd + r.z * side });
+    return {
+      bones: {
+        RightHand: { reach: { to: at(0.48, 0.12, isBite ? -0.1 : 0.04), blendIn: 0.12, blendOut: 0.25 } },
+        LeftHand: { reach: { to: at(0.68, 0.05, isBite ? -0.06 : 0.18), blendIn: 0.12, blendOut: 0.25 } }
+      },
+      aiming: true
+    };
   }
   const wp = W[s.equipped ?? 'fists']
   if (!wp?.ranged || s.sheathed || s.sit || s.downAt || s.os || s.talkWith || s.mj?.seats || s.building || s.reloading) return null

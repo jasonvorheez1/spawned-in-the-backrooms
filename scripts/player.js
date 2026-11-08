@@ -8,6 +8,7 @@ import W, { baseOf } from './lib/weapons.js'
 import { raycast } from 'builtin/physics'
 import BRK from './lib/data/breakables.yml'
 import { strike } from './lib/breakables.js'
+import { startFishing, handleFishingClick, onFishNibble, onFishBite, finishFishingCatch, cancelFishing } from './lib/fishing.js'
 import { fire as fireBullets, show as showBullets } from './lib/ballistics.js'
 import { swing3, fire3 } from './lib/body3.js'
 import { dropLoot, rollLoot, spawnWeapon, poolOf } from './lib/loot.js'
@@ -319,7 +320,7 @@ function takeToken1(ctx, token) {
     if (W[k].cnd != null && !owned(s).slice(0, -1).includes(k)) s['cnd_' + k] = W[k].cnd // a rusty find comes worn, an M.E.G. one pristine
     if (usable(s, k) && W[k].damage > weaponOf(s).damage) s.equipped = k
     s.pickedAt = now; s.gotWeapon = W[k].name
-    if (baseOf(k) === 'fishing_rod') s.notice = { text: 'Salvaged fishing rod · Hold it and swing (attack) at water to cast your line and fish!', at: now }
+    if (baseOf(k) === 'fishing_rod') s.notice = { text: 'Salvaged fishing rod · Cast into Level 10\'s lake, Level 11\'s canal, or Level 7\'s sea to fish!', at: now }
     gain(ctx, W[k].xp ?? L.xpAlmond)
     sound(ctx, 'pickup-weapon', 0.7, true)
     return { ok: true }
@@ -350,6 +351,7 @@ export function onInput(ctx, input) {
     if (sv.invOpen || sv.lootOpen) { if (sv.chargeAt) sv.chargeAt = 0 } // a click on a menu is no swing
     else if (ctx.self.state.building) { if (sv.chargeAt) sv.chargeAt = 0 }
     else if (ctx.self.state.sheathed) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) { toggleHolster(ctx); walkOf(ctx).nextSwing = ctx.now() + 450 } } // holstered: a click draws (fallout), it never hits
+    else if (sv.fishingState) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) handleFishingClick(ctx, sv, walkOf(ctx)) }
     else if (sv.equipped === 'soup_bowl') { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack) soupThrow(ctx) } // the bowl: a click throws it
     else if (aw.ranged) { if (sv.chargeAt) sv.chargeAt = 0; if (input.pressed.attack || (aw.auto && input.held.attack)) swing(ctx) }
     else {
@@ -513,17 +515,20 @@ function swing(ctx, power = 0) {
   if (!wp.ranged) sound(ctx, 'pipe-whoosh-swing', wp.quiet ? 0.3 : power ? 0.9 : 0.55)
   if (!found.length) { // nothing alive in reach: the swing or shot lands on the world (walls, furniture, crates, what was built)
     let pc = ctx.self.camera?.rotation?.pitch ?? 0; if (Math.abs(pc) > 1.6) pc = pc * Math.PI / 180
-    if (baseOf(s.equipped) === 'fishing_rod' && tryFish(ctx, s, w, p, f, pc, power)) return
+    if (baseOf(s.equipped) === 'fishing_rod' && startFishing(ctx, s, w, p, f, pc, power)) return
     const sb = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * wMul(cndOf(s, s.equipped))
     strike(ctx, s, wp, s.equipped, sb, f, pc)
     return
   }
   const dv = derived(s), crit = ctx.random() < dv.crit
-  if (wp.sneak && !wp.ranged) { found.sort((x, y) => x.d - y.d); if (unaware(ctx, s, found[0].m)) { // a blade in the back: x3, and the halls don't hear it
-    const m = found[0].m, dmg = Math.round((wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * wp.sneak)
-    ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: `SNEAK CRIT x${wp.sneak}`, color: '#ff3a3a', size: 1.3 })
-    ctx.emit('hitstop', { duration: 0.04 }, { audience: { player: ctx.self.id } }); s.lastSneak = { id: m.id, dmg, at: now }
-    sound(ctx, 'knife-stab-flesh-quiet', 0.6, true); hitTarget(ctx, s, m, dmg, f, false, 0, penOf(wp, s.equipped)); return } }
+  if (wp.sneak && !wp.ranged) {
+    found.sort((x, y) => x.d - y.d); if (unaware(ctx, s, found[0].m)) { // a blade in the back: x3, and the halls don't hear it
+      const m = found[0].m, dmg = Math.round((wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * wp.sneak)
+      ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: `SNEAK CRIT x${wp.sneak}`, color: '#ff3a3a', size: 1.3 })
+      ctx.emit('hitstop', { duration: 0.04 }, { audience: { player: ctx.self.id } }); s.lastSneak = { id: m.id, dmg, at: now }
+      sound(ctx, 'knife-stab-flesh-quiet', 0.6, true); hitTarget(ctx, s, m, dmg, f, false, 0, penOf(wp, s.equipped)); return
+    }
+  }
   const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * heavyMul * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? D.crit : 1) * (!wp.ranged && (s.firesaltUntil ?? 0) > ctx.now() ? L3I.firesalt.damage : 1)
   if (crit) ctx.emit('damageNumber', { position: { x: found[0].m.feetPosition.x, y: found[0].m.feetPosition.y + 2, z: found[0].m.feetPosition.z }, text: 'CRIT', color: '#ff5a3a', size: 1.2 })
   if (wp.pellets) {
@@ -536,105 +541,26 @@ function swing(ctx, power = 0) {
   if (power) { const m = found[0].m, d = found[0].d || 1; ctx.emit('impulse', { target: m.id, impulse: { x: f.x * 260 * power, y: 60 * power, z: f.z * 260 * power } }) } // a heavy shoves them back
 }
 
-const FISH_SPLASH = `fx
-pop drops burst=28..40 life=.35..0.65 v=up(1.8..3.4)+sdir()*(0.8..2.0) size=.025..0.055 acc=grav()+drag(.5) col=<.78,.9,.96> a=.85>0 floor=die r=sprite(soft-disc,alpha,velocity,.02)
-pop foam burst=8..12 on=disc(.35) life=.4..0.75 v=sdir()*(.4..0.9) size=.18..0.32 acc=drag(2.2) col=<.88,.95,.98> a=0>.4:.3>0 sz=$size*(.7>1.6) r=sprite(smoke-puff,alpha)`
+export function fishNibble(ctx, d) {
+  onFishNibble(ctx, d?.id)
+}
 
-const L7_FISH_ARMOR = [
-  ['cloth:topw:hoodie:d49b27', 'Storm oilskin foulie'],
-  ['cloth:botw:overalls:28322c', 'Tar-caulked deck waders'],
-  ['cloth:shoes:boots:1c1e22', 'Lead-ballast diving boots'],
-  ['cloth:hat:beanie:d46a28', "Sou'wester storm watch cap"],
-  ['cloth:hat:cap:b88838', 'Brass-rimmed dive hood'],
-  ['cloth:neck:cape:c85a28', 'Cork lifebelt mantle'],
-  ['cloth:topw:apron:1c282e', 'Abyssal tar-scale hauberk'],
-]
+export function fishBite(ctx, d) {
+  onFishBite(ctx, d?.id)
+}
 
-function tryFish(ctx, s, w, p, f, pc, power = 0) {
-  const inL7 = ctx.self.place === 'level7'
-  if (!inL7 && !w.wet) return false
-  // If aiming directly at a close wall/crate within 2.0m inside Room 1, let strike() hit it unless looking downward at floodwater
-  const eye = { x: p.x, y: p.y + (s.crouch ? 1.0 : 1.45), z: p.z }
-  const cp = Math.cos(pc), dir = { x: f.x * cp, y: Math.sin(pc), z: f.z * cp }
-  const closeHit = raycast(ctx, eye, dir, { distance: 2.1, physicsOnly: true, ignoreEntities: [ctx.self.id], bodies: 'static' })
-  if (closeHit && dir.y > -0.25 && (!inL7 || Math.hypot(p.x, p.z) < 3.1)) return false
-  const now = ctx.now()
-  if (now < (w.fishingUntil ?? 0)) {
-    ctx.emit('damageNumber', { position: { x: p.x, y: p.y + 1.2, z: p.z }, text: 'WAITING FOR BITE...', color: '#74c4d8' }, { audience: { player: ctx.self.id } })
-    return true
+export function fishAutoCatch(ctx, d) {
+  const s = ctx.self.state
+  if (s?.fishingState && s.fishingState.id === d?.id) {
+    finishFishingCatch(ctx, s, s.fishingState, false)
   }
-  const dist = 3.5 + power * 2.8
-  const bx = p.x + f.x * dist, bz = p.z + f.z * dist
-  const inParlor = inL7 && Math.hypot(p.x, p.z) < 3.3 && p.y > 3.5
-  const by = inParlor ? 4.18 : inL7 ? 0.08 : p.y + 0.05
-  w.fishingUntil = now + 1250
-  ctx.emit('fx', { position: { x: bx, y: by, z: bz }, script: FISH_SPLASH })
-  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-water-pour-splash-short.mp3', position: { x: bx, y: by, z: bz }, volume: 0.7, maxDistance: 18 })
-  ctx.emit('damageNumber', { position: { x: bx, y: by + 0.5, z: bz }, text: power ? 'LONG SWELL CAST' : 'LINE CAST', color: '#88ddff' }, { audience: { player: ctx.self.id } })
-  ctx.after(1.1, 'fishCatch', { x: bx, y: by, z: bz, power: power || 0, deep: inL7 && bz < -22 })
-  return true
 }
 
 export function fishCatch(ctx, d) {
-  const s = ctx.self.state, now = ctx.now()
-  if (!s || s.dead) return
-  const pos = { x: d?.x ?? ctx.self.feetPosition.x, y: d?.y ?? 0.08, z: d?.z ?? ctx.self.feetPosition.z }
-  ctx.emit('fx', { position: pos, script: FISH_SPLASH })
-  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-water-splash-thrown-from-bottle.mp3', position: pos, volume: 0.75, maxDistance: 18 })
-  const surv = skillsOf(s).survival ?? 0
-  const bonus = surv * 0.003 + (d?.power ?? 0) * 0.09 + (d?.deep ? 0.07 : 0) + (derived(s).scav ?? 0) * 0.15
-  const raw = ctx.random(), r = raw + bonus
-
-  // Rare Abyssal Leviathan tug in Level 7's deep water (~6% chance)
-  if (d?.deep && raw < 0.06) {
-    ctx.emit('screenShake', { intensity: 0.22, duration: 0.9 }, { audience: { player: ctx.self.id } })
-    ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-deep-whale-like-groan-from-far-under-dark-water.mp3', position: pos, volume: 0.75, refDistance: 40, maxDistance: 200 }, { audience: { player: ctx.self.id } })
-    takeToken(ctx, 'meat:fish')
-    gain(ctx, 25)
-    ctx.emit('damageNumber', { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: 'ABYSSAL BITE: PALE TRENCH-FISH (+25 XP)', color: '#ff6868', size: 1.3 }, { audience: { player: ctx.self.id } })
-    return
+  const s = ctx.self.state
+  if (s?.fishingState) {
+    finishFishingCatch(ctx, s, s.fishingState, false)
   }
-
-  let tok = 'meat:fish', label = 'a Pale Abyssal Fish (+14 HP, +25 Food)', xp = 16
-  if (r > 1.02) {
-    const pick = L7_FISH_ARMOR[Math.floor(ctx.random() * L7_FISH_ARMOR.length)]
-    tok = pick[0]; label = `sunken ${pick[1]} (Level 7 Armor!)`; xp = 35
-  } else if (r > 0.86) {
-    const pool = [
-      ['almond:blue', 'a drifting bottle of Blue Almond Water'],
-      ['firesalt', 'a crystallized cluster of Abyssal Fire Salt'],
-      ['battery', 'a wax-sealed waterproof Battery'],
-      ['shells', 'an oiled pouch of Shotgun Shells'],
-      ['ammo', 'a salvaged tin of Pistol Rounds'],
-    ]
-    const pick = pool[Math.floor(ctx.random() * pool.length)]
-    tok = pick[0]; label = pick[1]; xp = 22
-  } else if (r > 0.42) {
-    if (ctx.random() < 0.72) {
-      tok = 'meat:fish'; label = 'a Blind Cave-Carp (+14 HP, +25 Food)'; xp = 16
-    } else {
-      tok = 'almond'; label = 'a barnacled bottle of Almond Water'; xp = 15
-    }
-  } else {
-    const pool = [
-      ['meat:sardines', 'a sealed tin of Drowned Sardines (+7 HP, +14 Food)'],
-      ['meat:fish', 'a silver Trench-Smelt (+14 HP, +25 Food)'],
-      ['bobbypin', 'a tangled bundle of Bobby Pins'],
-    ]
-    const pick = pool[Math.floor(ctx.random() * pool.length)]
-    tok = pick[0]; label = pick[1]; xp = 12
-  }
-
-  const res = takeToken(ctx, tok)
-  gain(ctx, xp)
-  const shortName = label.split('(')[0].replace(/^a\s+|^an\s+|^sunken\s+/i, '').trim().toUpperCase()
-  heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-eerie-low-chime-level-up.mp3', position: pos, volume: 0.8, maxDistance: 16 }, { audience: { player: ctx.self.id } })
-  ctx.emit('damageNumber', {
-    position: { x: pos.x, y: pos.y + 1.2, z: pos.z },
-    text: res.ok ? `HOOKED: ${shortName} (+${xp} XP)` : `FULL PACK: LOST ${shortName} (+${xp} XP)`,
-    color: res.ok ? '#68e0d0' : '#e09060',
-    size: 1.25,
-  }, { audience: { player: ctx.self.id } })
 }
 
 // not onto you: no grudge, not hunting you, and you are behind it or crouched in the dark
@@ -725,9 +651,11 @@ function invAction(ctx, d) {
   if (d.k === 'sort') { s.invSort = ['name', 'dam', 'wg', 'cnd'].includes(d.s) ? d.s : 'name'; return }
   if (d.k === 'sheet') { s.invOpen = false; s.sheetOpen = true; return }
   if (d.k === 'drink') { drink(ctx, d.c); return }
-  if (d.k === 'eat') { const c = d.c, n = s.meat?.[c] ?? 0; if (!MEAT[c] || n <= 0) return
+  if (d.k === 'eat') {
+    const c = d.c, n = s.meat?.[c] ?? 0; if (!MEAT[c] || n <= 0) return
     s.meat = { ...s.meat, [c]: n - 1 }; s.hp = Math.min(maxHp(s.level, s), (s.hp ?? 0) + MEAT[c].hp); s.hunger = Math.min(100, (s.hunger ?? 100) + MEAT[c].food)
-    s.notice = { text: `You eat the ${MEAT[c].name.toLowerCase()} · +${MEAT[c].hp} HP`, at: ctx.now() }; sound(ctx, 'eating-chewing-food', 0.6, true); return }
+    s.notice = { text: `You eat the ${MEAT[c].name.toLowerCase()} · +${MEAT[c].hp} HP`, at: ctx.now() }; sound(ctx, 'eating-chewing-food', 0.6, true); return
+  }
   if (d.k === 'splash') { s.invOpen = false; splash(ctx); return }
   if (d.k === 'soupEat') { soupEat(ctx); return }
   if (d.k === 'snack') { useSnack(ctx, String(d.c || '')); return }
@@ -926,9 +854,11 @@ function soupThrow(ctx) {
     heard(ctx, { clip: '/cdn/moodboard-realistic-gritty/sfx-ceramic-bowl-shatter-on-stone.mp3', position: land, volume: 0.85, maxDistance: 22 })
     s.notice = { text: 'The soup splatters across the stone. Slippery.', at: now }
   }
-  ctx.spawn({ tags: ['soupslick'], feetPosition: { x: land.x, y: land.y + 0.02, z: land.z }, rotation: { yaw: ctx.random() * 360 }, lifetime: 30, behavior: 'scripts/soup-slick.js',
+  ctx.spawn({
+    tags: ['soupslick'], feetPosition: { x: land.x, y: land.y + 0.02, z: land.z }, rotation: { yaw: ctx.random() * 360 }, lifetime: 30, behavior: 'scripts/soup-slick.js',
     primitive: { kind: 'circle', radius: 1.3, segments: 20 }, pivot: 'center', castShadow: false,
-    material: { color: 'oklch(0.45 0.1 60 / 0.85)', roughness: 0.05, metalness: 0, transparent: true } })
+    material: { color: 'oklch(0.45 0.1 60 / 0.85)', roughness: 0.05, metalness: 0, transparent: true }
+  })
 }
 
 function toggleLight(ctx) {
@@ -998,8 +928,10 @@ function viewmodel(ctx, moving, sprinting) {
     if (wp.two && !ply) child.push({ feetPosition: { x: 0, y: wp.two[0], z: wp.two[1] }, castShadow: false, audience: 'local', primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: { ...arm, support: { axis: gun ? 'z' : 'y', r: wp.two[2] } } } })
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
     if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: 0.02, y: -1.62, z: 0.62 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
-    w.vm = ctx.spawn({ feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
-      primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: arm, ...(wp.muzzle ? { sockets: { muzzle: wp.muzzle } } : {}) }, children: child })
+    w.vm = ctx.spawn({
+      feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
+      primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: arm, ...(wp.muzzle ? { sockets: { muzzle: wp.muzzle } } : {}) }, children: child
+    })
     w.vmKind = armKey
   }
   w.plyWant = !!ply
@@ -1031,10 +963,12 @@ function plyArm(ctx, w) {
 export function update(ctx, dt) {
   { const st = ctx.self.state; if (st.reloading && (st.equipped !== st.reloading || !st.reloadAt || ctx.now() - st.reloadAt > 9000)) { st.reloading = ''; st.reloadTok = (st.reloadTok ?? 0) + 1 } } // a reload stranded by a swap, a page reload or a lost timer clears itself
   const fp = ctx.self.feetPosition, fz = zoneHere(ctx, fp.x, fp.z)
-  { const s0 = ctx.self.state, ses = ctx.self.session; const pl = ctx.self.place
+  {
+    const s0 = ctx.self.state, ses = ctx.self.session; const pl = ctx.self.place
     const hot = pl === 'level2' ? (fz === 'l2_pipes' ? 75 : fz === 'l2_hall' ? 55 : 30) : pl === 'level21' ? (fz === 'l21_edge' || fz === 'l21_edgecave' ? 0 : fz === 'l21_fridges' ? 0 : 45) : pl === 'level3' || pl === 'gamma' ? 35 : 0 // how hot each place runs, in degrees on the meter
     if (hot > 0) { ses.heatF = (ses.heatF ?? s0.heat ?? 0) + Math.sign(hot - (ses.heatF ?? s0.heat ?? 0)) * Math.min(Math.abs(hot - (ses.heatF ?? s0.heat ?? 0)), 2 * dt); const n = Math.round(ses.heatF); if (n !== Math.round(s0.heat ?? 0)) s0.heat = n }
-    else if ((s0.heat ?? 0) > 0 && pl !== 'level5') { ses.heatF = Math.max(0, (ses.heatF ?? s0.heat) - 5 * dt); const n = Math.round(ses.heatF); if (n !== Math.round(s0.heat)) s0.heat = n } else ses.heatF = undefined } // heat only lives in the Boiler Room: carried out of Level 5 it cools 5°/s (eased in session, written per whole degree)
+    else if ((s0.heat ?? 0) > 0 && pl !== 'level5') { ses.heatF = Math.max(0, (ses.heatF ?? s0.heat) - 5 * dt); const n = Math.round(ses.heatF); if (n !== Math.round(s0.heat)) s0.heat = n } else ses.heatF = undefined
+  } // heat only lives in the Boiler Room: carried out of Level 5 it cools 5°/s (eased in session, written per whole degree)
   ensure(ctx)
   if (ctx.self.parent) return
   const w = walkOf(ctx), s = ctx.self.state
@@ -1081,6 +1015,10 @@ export function update(ctx, dt) {
   stepTick(ctx, w, dt, { moving, sprinting, crouched, wet: w.wet, bur: w.bur ?? 1, fallback: floorOf(ctx), clip: SND })
 
   w.acc = (w.acc ?? 0) + dt
+  if (s.fishingState) {
+    const fs = s.fishingState, dist = Math.hypot(ctx.self.feetPosition.x - fs.bx, ctx.self.feetPosition.z - fs.bz)
+    if (dist > 22 || s.sheathed || baseOf(s.equipped) !== 'fishing_rod' || s.dead || s.downAt) cancelFishing(ctx, s, 'lost')
+  }
   if (w.acc >= 0.25) { w.dv = derived(s); w.bur = burden(s); w.vmCheck = true; tickStats(ctx, w.acc, moving); w.acc = 0 }
 }
 
@@ -1094,7 +1032,7 @@ function detection(ctx, p, w) {
     const st = o.state ?? {}; if (st.dead || (st.hp ?? 1) <= 0) continue
     const q = o.feetPosition, dx = p.x - q.x, dz = p.z - q.z, d = Math.hypot(dx, dz)
     const hostile = !o.tags?.includes('npc') || st.angry?.[me]
-    if (hostile && (st.target === me || st.prey === me || st.hunting === me || st.chase === me) ) return 'danger'
+    if (hostile && (st.target === me || st.prey === me || st.hunting === me || st.chase === me)) return 'danger'
     if (d > reach) continue
     const r = ctx.getObject(o.id)?.rotation, yaw = ((typeof r === 'number' ? r : r?.yaw) ?? 0) * Math.PI / 180
     const facing = (-Math.sin(yaw) * dx - Math.cos(yaw) * dz) / (d || 1) // 1 = looking straight at you

@@ -15,7 +15,7 @@ import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 
 export const cadence = "1s";
-const V = 13;
+const V = 14;
 const BRK = (mat, hp) => ({ mat, hp, maxHp: hp });
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BARN = (w, d, h, ridge, wall, door) => ({ primitive: { kind: "scripted", script: "scripts/barn10.js", params: { w, d, h, ridge, wall, door } }, physics: "static" });
@@ -323,6 +323,26 @@ pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo
   crate("l10-stable-bin", -58, -103, "Tack box", "bandage,ration,cloth:topw:jacket:5a4630", 90);
   crate("l10-shed-a-box", 36, -150, "Nail box", "wire,tape,bobbypin", 0);
   crate("l10-cellar-chest", -34, -56, "Cellar reserve cache", "ration,ration,battery,almond", 0);
+  crate("l10-lake-tackle", 43.5, -95.6, "Weathered Lakeside Tackle Box", "weapon:fishing_rod,wire,bobbypin,almond", 0);
+
+  // Lakeside Fishing Dock (Extending from west bank into the lake)
+  sp("l10-dock-planks", {
+    feetPosition: T(45.5, -95, 0.08),
+    rotation: { yaw: 90 },
+    primitive: { kind: "box", width: 2.8, height: 0.14, depth: 6.2 },
+    material: { color: "oklch(0.48 0.06 65)", roughness: 0.9 },
+    physics: "static",
+  });
+  for (const px of [43.5, 47.5]) {
+    for (const pz of [-93.8, -96.2]) {
+      sp(`l10-dock-post-${px}-${pz}`, {
+        feetPosition: { x: px, y: -1.2, z: pz },
+        primitive: { kind: "cylinder", radiusTop: 0.08, radiusBottom: 0.1, height: 2.4 },
+        material: { color: "oklch(0.36 0.04 60)", roughness: 0.9 },
+        physics: "static",
+      });
+    }
+  }
 
   // Lurking entity inside the distant abandoned Shed B
   sp("l10-shed-stealer", {
