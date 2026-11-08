@@ -57,7 +57,7 @@ export function tick(ctx) {
     ctx.spawn("spam-boss", {
       tags: ["spamboss"], audience: "all",
       feetPosition: { x: 0, y: 0.4, z: -9 }, scale: 2.2,
-      model: { id: BOSS_MODEL, forward: "+z" }, scale: 1,
+      model: { id: BOSS_MODEL, forward: "+z" },
       physics: { body: "kinematic", collider: "box" },
       behavior: "scripts/spamton-boss.js",
       state: { name: "Spamton G. Spamton" },
