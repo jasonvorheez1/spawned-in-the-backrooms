@@ -86,11 +86,14 @@ def pizza(name, L, D, H):  # red-tiled counter, steel top, a curved warm glass c
     cw = L * 0.45; cx = -L / 2 + cw / 2 + 0.2
     put(box(cw, D - 0.1, 0.02, cx, 0, H), S)
     for k in range(3): bpy.ops.mesh.primitive_cylinder_add(vertices=24, radius=0.2, depth=0.03, location=(cx - cw / 3 + k * cw / 3, 0.05, H + 0.04)); put(bpy.context.object, P)
-    bpy.ops.mesh.primitive_cylinder_add(vertices=32, radius=(D - 0.1) / 2, depth=cw, location=(cx, 0, H + 0.02)); g = bpy.context.object; g.rotation_euler = (0, math.pi / 2, 0)
-    bpy.ops.object.transform_apply(rotation=True); bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="DESELECT"); bpy.ops.object.mode_set(mode="OBJECT")
-    for v in g.data.vertices: v.select = v.co.z < -0.01
-    bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.delete(type="VERT"); bpy.ops.object.mode_set(mode="OBJECT"); g.location.z = H + 0.02; put(g, G)
-    put(box(cw, 0.04, 0.03, cx, 0.05, H + (D - 0.1) / 2 - 0.02), Lm)
+    ch = 0.42; gd = D - 0.12
+    put(box(cw, 0.008, ch, cx, -gd / 2, H + 0.02), G); put(box(cw, 0.008, ch, cx, gd / 2, H + 0.02), G)
+    for x in (cx - cw / 2, cx + cw / 2): put(box(0.008, gd, ch, x, 0, H + 0.02), G)
+    put(box(cw, gd, 0.008, cx, 0, H + 0.02 + ch), G)
+    for x in (cx - cw / 2, cx + cw / 2):
+        for y in (-gd / 2, gd / 2): put(box(0.025, 0.025, ch + 0.02, x, y, H + 0.02), S)
+    put(bevel(box(cw + 0.04, gd + 0.04, 0.03, cx, 0, H + 0.03 + ch), 0.008), S)
+    put(box(cw - 0.1, 0.04, 0.02, cx, 0, H + ch - 0.01), Lm)
     put(bevel(box(0.4, 0.35, 0.3, L / 2 - 0.6, 0.05, H), 0.01), S)   # register
     finish(name, max(3.0, L * 0.7), H + 0.4, L)
 
