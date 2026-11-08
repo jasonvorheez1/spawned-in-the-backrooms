@@ -169,17 +169,23 @@ export function layExtra(ctx, { HW, HD, HH }) {
 
 // ---- the people: Facelings, the staff, the guards and the pickets
 const FACELINGS = [
-  { id: "l61-fc-clip", greet: "Welcome to Clippers!", at: [-21, -31.4], face: 180, acts: ["wipe", "serve", "nod"], line: "A faceling slides a cold glass across the red bar. It was already pouring." },
-  { id: "l61-fc-liq", greet: "Evening. Almond water?", at: [-14.7, -27], face: -90, acts: ["wipe", "serve"], line: "A faceling sets down an almond water without a word, as if it had been waiting for you." },
-  { id: "l61-fc-slice", greet: "Slice Palace! Hot ones just out.", at: [7, -30.9], face: 180, acts: ["serve", "nod"], gives: "pizza,pizza,coke", line: "A faceling hands you a slice on a paper plate. It is still too hot to hold, and perfect." },
-  { id: "l61-fc-burger", greet: "Welcome to Burger Bop!", at: [21, -30.1], face: 180, acts: ["serve", "wipe"], gives: "burger,burger,coke", line: "A faceling flips something on the grill and presses the burger into your hands. No charge." },
-  { id: "l61-fc-a", route: [[-21, -12, 2, "wipe"], [-15, -12, 2, "wipe"], [-15, -18, 3, "nod"], [-21, -18, 2, "wipe"]] },
-  { id: "l61-fc-b", route: [[21, -12, 2, "wipe"], [15, -12, 2, "wipe"], [15, -18, 3, "nod"], [21, -18, 2, "wipe"]] },
-  { id: "l61-fc-c", route: [[-21, 12, 2, "wipe"], [-15, 12, 2, "wipe"], [-15, 18, 3, "nod"], [-21, 18, 2, "wipe"]] },
-  { id: "l61-fc-d", route: [[21, 12, 2, "wipe"], [15, 12, 2, "wipe"], [15, 18, 3, "nod"], [21, 18, 2, "wipe"]] },
-  { id: "l61-fc-e", route: [[-27, -6, 2.5, "laugh"], [-27, 6, 2.5, "wipe"], [-21, 6, 2, "wipe"], [-21, -6, 2, "nod"]] },
-  { id: "l61-fc-f", route: [[27, -6, 2.5, "wipe"], [27, 6, 2.5, "laugh"], [21, 6, 2, "wipe"], [21, -6, 2, "nod"]] },
-  { id: "l61-fc-g", route: [[-14, 19, 4, "serve"], [-14, 28, 5, "nod"]] },
+const FACELINGS = [
+  { id: "l61-fc-clip", greet: "Welcome to Clippers!", at: [-21, -31.4], face: 180, acts: ["wipe", "serve", "groove", "drink"], line: "A faceling slides a cold glass across the red bar. It was already pouring." },
+  { id: "l61-fc-liq", greet: "Evening. Almond water?", at: [-14.7, -27], face: -90, acts: ["wipe", "serve", "drink", "groove"], line: "A faceling sets down an almond water without a word, as if it had been waiting for you." },
+  { id: "l61-fc-slice", greet: "Slice Palace! Hot ones just out.", at: [7, -30.9], face: 180, acts: ["serve", "eat", "nod", "wipe"], gives: "pizza,pizza,coke", line: "A faceling hands you a slice on a paper plate. It is still too hot to hold, and perfect." },
+  { id: "l61-fc-burger", greet: "Welcome to Burger Bop!", at: [21, -30.1], face: 180, acts: ["grill", "serve", "wipe", "groove"], gives: "burger,burger,coke", line: "A faceling flips something on the grill and presses the burger into your hands. No charge." },
+  { id: "l61-fc-a", hasTray: true, route: [[-21, -12, 3, "wipe"], [-15, -12, 3, "tray"], [-15, -18, 2.5, "groove"], [-21, -18, 3, "wipe"]] },
+  { id: "l61-fc-b", hasTray: true, route: [[21, -12, 3, "wipe"], [15, -12, 3, "tray"], [15, -18, 2.5, "groove"], [21, -18, 3, "wipe"]] },
+  { id: "l61-fc-c", route: [[-21, 12, 3, "wipe"], [-15, 12, 2.5, "groove"], [-15, 18, 3, "nod"], [-21, 18, 3, "wipe"]] },
+  { id: "l61-fc-d", route: [[21, 12, 3, "wipe"], [15, 12, 2.5, "groove"], [15, 18, 3, "nod"], [21, 18, 3, "wipe"]] },
+  { id: "l61-fc-e", route: [[-27, -6, 3, "groove"], [-27, 6, 3, "wipe"], [-21, 6, 2.5, "serve"], [-21, -6, 2.5, "nod"]] },
+  { id: "l61-fc-f", route: [[27, -6, 3, "wipe"], [27, 6, 3, "groove"], [21, 6, 2.5, "serve"], [21, -6, 2.5, "nod"]] },
+  { id: "l61-fc-g", hasTray: true, route: [[-14, 19, 4, "tray"], [-14, 28, 4, "nod"]] },
+];
+const PATRONS = [
+  { id: "l61-patron-w", name: "Diner Regular", at: [-22.3, 0], face: 90, acts: ["lounge", "drink", "groove"], look: { species: "cat", sex: "f", topw: "sweater", top: "#904050", botw: "pants", bottom: "#202028", shoes: "sneakers" } },
+  { id: "l61-patron-e", name: "Wandering Survivor", at: [22.3, 0], face: -90, acts: ["eat", "relief", "groove"], look: { species: "fox", sex: "m", topw: "jacket", top: "#305040", botw: "cargo", bottom: "#282820", shoes: "boots" } },
+  { id: "l61-patron-bar", name: "Clippers Patron", at: [-23.4, -29.2], face: 0, acts: ["drink", "groove", "nod"], look: { species: "dog", sex: "m", topw: "tee", top: "#d09030", botw: "pants", bottom: "#182030", shoes: "sneakers" } },
 ];
 const HUMANS = {
   "l61-guard-a": { name: "M.E.G. Guard · Level 6 door", voice: "reyes", faction: "guard", look: { species: "wolf", sex: "m", topw: "megjacket", top: "#4a5a3a", botw: "cargo", bottom: "#3a3a30", shoes: "boots" }, gun: "carbine", at: [-27.6, -2.4], face: -90 },
@@ -190,7 +196,7 @@ const HUMANS = {
   "l61-guild-b": { name: "Guild of Many member", voice: "mags", faction: "pilgrim", look: { species: "cat", sex: "m", topw: "jacket", top: "#5a5a6a", botw: "pants", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, 1], face: 90, sign: "MANY, NOT ONE" },
   "l61-guild-c": { name: "Guild of Many member", voice: "wren", faction: "pilgrim", look: { species: "deer", sex: "f", topw: "sweater", top: "#5a5a6a", botw: "pants", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, 4], face: 90, sign: "WE ARE NOT HARMFUL" },
 };
-export const PEOPLE = Object.keys(HUMANS);
+export const PEOPLE = [...Object.keys(HUMANS), ...PATRONS.map((p) => p.id)];
 export const FACELING_IDS = FACELINGS.map((f) => f.id);
 
 export function faceling(ctx, id) {
@@ -199,11 +205,36 @@ export function faceling(ctx, id) {
   const look = { ...npcLook("l61fc" + i, { species: ["cat", "wolf", "fox", "bear", "bunny", "dog"][i % 6], sex: i % 2 ? "f" : "m", topw: "apron", top: "#f4f1ea", botw: "pants", bottom: "#2a2a30", shoes: "sneakers", hat: "beanie", hatc: "#f4f1ea" }, "trader", 6), fur: "#060606", vary: false, eye: "#000000" };
   ctx.spawn(id, { tags: ["l61npc", "usable", "faceling"], feetPosition: { x: at.x, y: 0.05, z: at.z }, rotation: { yaw: f.face ?? 0 }, physics: "character", ...faceless(critterSpec(look)),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/l61-staff.js"],
-    state: { name: "Faceling (Entity 9)", verb: "Take a plate", info: "A friendly, featureless worker in an apron. They cook, clean and serve, and nothing here costs a thing.", tint: "#f4f1ea", kind: "faceling", job: f.route ? "route" : "post", faceYaw: f.face, greet: f.greet, acts: f.acts, gives: f.gives, line: f.line, route: f.route?.map(([x, z, dwell, act]) => ({ x, z, dwell, act })), pace: 1.15 + (i % 3) * 0.15 } });
+    state: { name: "Faceling (Entity 9)", verb: "Take a plate", info: "A friendly, featureless worker in an apron. They cook, clean and serve, and nothing here costs a thing.", tint: "#f4f1ea", kind: "faceling", job: f.route ? "route" : "post", faceYaw: f.face, greet: f.greet, acts: f.acts, gives: f.gives, line: f.line, route: f.route?.map(([x, z, dwell, act]) => ({ x, z, dwell, act })), pace: 1.15 + (i % 3) * 0.15, hasTray: f.hasTray } });
   if (f.route && f.route.length > 2) ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, primitive: { kind: "box", width: 0.34, height: 0.02, depth: 0.24 }, material: { color: "oklch(0.88 0.01 90)", metalness: 0.4 }, children: [{ feetPosition: { x: 0.05, y: 0.02, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.05 }, material: { color: "oklch(0.7 0.14 40)" } }] });
 }
 
 export function person(ctx, id) {
+  const patron = PATRONS.find((p) => p.id === id);
+  if (patron) {
+    const x = patron.at[0], z = patron.at[1];
+    ctx.spawn(id, {
+      tags: ["npc", "patron", "usable"],
+      feetPosition: { x, y: 0.05, z },
+      rotation: { yaw: patron.face },
+      physics: "character",
+      ...critterSpec(npcLook(id, patron.look, "survivor", 8)),
+      behavior: ["scripts/humanoid-locomotion.js", "scripts/l61-staff.js"],
+      state: {
+        name: patron.name,
+        role: "survivor",
+        job: "post",
+        faceYaw: patron.face,
+        acts: patron.acts,
+        info: "A weary survivor resting in the comfort of The Snackrooms diner.",
+        verb: "Greet",
+        home: { x, z },
+        ...npcState(ctx, "survivor", 100),
+      },
+    });
+    return;
+  }
+
   const g = HUMANS[id]; if (!g) return;
   const x = g.at[0], z = g.at[1];
   ctx.spawn(id, { tags: ["npc", "l61-npc"], feetPosition: { x, y: 0.05, z }, rotation: { yaw: g.face }, physics: "character", ...critterSpec(npcLook(id, g.look, g.faction, 8)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
