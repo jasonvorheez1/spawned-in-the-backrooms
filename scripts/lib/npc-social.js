@@ -13,24 +13,25 @@ const alive = (o) => !!o && !o.state?.dead && (o.state?.hp ?? 1) > 0;
 const WANTS_OF = (w) => String(w).replace(/^to /, "");
 // ordinary exchanges: [0 = the one who started it, 1 = the other]
 const TALK = [
-  [[0, "you eat yet today?"], [1, "half a ration. you?"], [0, "water. mostly water."]],
-  [[0, "hear that? the hum changed."], [1, "it does that. don't count it."], [0, "i count everything. that's the problem."]],
-  [[0, "if you could go back up, what's the first thing you'd do?"], [1, "sit in a chair that doesn't hum."], [0, "yeah. same."]],
-  [[0, "new faces came through earlier. nervous ones."], [1, "they all are, the first week."], [0, "we were too."]],
-  [[0, "my feet are killing me."], [1, "try standing in boots two sizes small."], [0, "why are they two sizes small?"], [1, "it's what the crate had."]],
-  [[0, "what day do you think it is?"], [1, "tuesday. i've decided it's always tuesday."]],
-  [[0, "i keep thinking i hear someone behind the wall."], [1, "don't answer it."], [0, "i wasn't going to."]],
-  [[0, "you sleep at all?"], [1, "in pieces."], [0, "that's what i do. in pieces."]],
-  [[0, "i found a bar of something in my pocket. don't know whose."], [1, "eat it."], [0, "yeah. yeah, okay."]],
-  [[0, "somebody should write all this down."], [1, "somebody is. i've seen the notebooks."], [0, "good. somebody should read them too."]],
+  [[0, "you eat yet?"], [1, "half a ration."], [0, "that's not eating."], [1, "it's what there was."]],
+  [[0, "hear that? the hum went up."], [1, "it does that."], [0, "it didn't do it yesterday."], [1, "you weren't listening yesterday."]],
+  [[0, "what day is it?"], [1, "tuesday."], [0, "it was tuesday last time."], [1, "then it's tuesday."]],
+  [[0, "my boots are wet through."], [1, "again?"], [0, "still. i never dried them."]],
+  [[0, "new ones came in this morning."], [1, "how many?"], [0, "two. one's already crying."], [1, "give it a day."]],
+  [[0, "you sleep?"], [1, "some."], [0, "me too. some."]],
+  [[0, "i found half a bar in my coat. don't know whose."], [1, "eat it."], [0, "it's got a bite out of it."], [1, "eat the other half."]],
+  [[0, "that pipe's knocking again."], [1, "it's the pressure."], [0, "that's what you said last time."], [1, "and it was."]],
+  [[0, "who's got watch?"], [1, "not me. i did last night."], [0, "so me."], [1, "so you."]],
+  [[0, "there's a stain on the wall that wasn't there."], [1, "which wall?"], [0, "never mind. it's gone."]],
+  [[0, "you got a spare lighter?"], [1, "no. you owe me one."], [0, "i do not."], [1, "you do."]],
 ];
 const exchangeFor = (a, b) => {
-  const A = lifeOf(a.id), B = lifeOf(b.id), r = Math.random();
-  if (r < 0.2) return [[0, `do you ever think about ${WANTS_OF(A.want)}?`], [1, "every day. don't make me say it out loud."], [0, "no. i won't."]];
-  if (r < 0.34) return [[0, `you ever see ${A.fear} up close?`], [1, "no. and i'd like to keep it that way."], [0, "me neither. that's the whole plan."]];
-  if (r < 0.46) return [[0, `you're the one who ${B.quirk}, aren't you?`], [1, "...you noticed."], [0, "everybody noticed."]];
-  if (r < 0.54 && temperOf(a) === "nervous") return [[0, "okay but what if the lights don't come back on?"], [1, "they always come back on."], [0, "always. right. always."]];
-  if (r < 0.6 && temperOf(a) === "cocky") return [[0, "i could've taken that hound alone, you know."], [1, "you hid behind a pillar."], [0, "tactically."]];
+  const A = lifeOf(a.id), r = Math.random();
+  if (r < 0.17) return [[0, `i want ${A.want} so bad today.`], [1, "today? you said that last week too."], [0, "i say it most weeks."]];
+  if (r < 0.3) return [[0, `i thought i saw ${A.fear} earlier.`], [1, "did you?"], [0, "no. probably not."], [1, "okay."]];
+  if (r < 0.37 && temperOf(a) === "nervous") return [[0, "what if the lights don't come back?"], [1, "they always come back."], [0, "they did last time. that's all i know."]];
+  if (r < 0.43 && temperOf(a) === "cocky") return [[0, "i could've taken that hound alone."], [1, "you were behind a pillar."], [0, "it was a good pillar."]];
+  if (r < 0.48 && temperOf(a) === "gruff") return [[0, "you're in my spot."], [1, "your spot?"], [0, "i've stood there a month."], [1, "stand somewhere else."]];
   return TALK[Math.floor(Math.random() * TALK.length)];
 };
 

@@ -1,19 +1,20 @@
-# premade replies an npc falls back on when the ai reply fails; picked by what the player said and how safe the level is
+# premade replies an npc falls back on when the ai reply fails; picked by what the player said and how safe the level is.
+# Kept short and a bit flat, the way someone talks to a stranger: no summing up, no advice nobody asked for.
 safe: [main, level1, level4, level5, level61, gamma]
 hello:
-  any: ["hey. you look like you walked a long way.", "oh, hi. didn't hear you come up.", "hey there. you new around here?", "evening. or morning. hard to tell down here."]
+  any: ["hey.", "oh. hi.", "you're new.", "didn't hear you come up.", "hey. you walk far?", "morning. i think."]
 place:
-  safe: ["it's quiet here, mostly. people keep to themselves.", "honestly? this is one of the better spots. food, light, nobody chasing you.", "you can catch your breath here. most do."]
-  danger: ["keep your voice down. things listen here.", "don't stay in one spot too long, that's my advice.", "i've lost people on this level. watch the dark corners."]
+  safe: ["it's quiet. people mind their own.", "better than most. there's food.", "nobody's chased me in a week. that's the whole review."]
+  danger: ["don't talk loud here.", "i've lost people on this level.", "i wouldn't stand there."]
 danger:
-  safe: ["nothing here'll hurt you, far as i know. it's the next level you worry about.", "here? you're fine. just don't wander off through the wrong door."]
-  danger: ["if you hear something behind you, don't look. just move.", "stay near the lights. that's the only rule that's kept me alive."]
+  safe: ["here? you're fine. it's the next level that gets you.", "nothing in here bites. the doors are another story."]
+  danger: ["if something's behind you, don't turn round. walk.", "stay where the lights are."]
 trade:
-  any: ["i might have a few things. show me what you've got.", "depends what you're after. backbucks talk.", "i'll trade, sure. just don't lowball me."]
+  any: ["depends what you've got.", "maybe. show me.", "i'll look. don't expect much."]
 you:
-  any: ["me? just trying to get by like everyone else.", "long story. maybe another time.", "been down here longer than i'd like to say."]
+  any: ["me? nobody. i just stayed.", "long story and a bad one.", "been here longer than i should say."]
 bye:
-  any: ["take care out there.", "see you around. hopefully.", "alright. don't get lost."]
+  any: ["yeah. go on.", "see you.", "mind your feet."]
 other:
-  safe: ["huh. can't say i've thought about it.", "maybe. hard to say.", "ha. sure, why not.", "i hear you."]
-  danger: ["not now. keep your eyes open.", "talk later. this isn't the place.", "mm. let's just get through this first."]
+  safe: ["huh. never thought about it.", "no idea, honestly.", "ha. sure.", "ask someone else."]
+  danger: ["not now.", "later. eyes open.", "mm. quiet."]

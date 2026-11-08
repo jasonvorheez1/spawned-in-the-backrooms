@@ -10,4 +10,4 @@ export function lifeOf(id) {
 export const FEAR_TAGS = { hounds: ['hound'], smilers: ['smiler'], facelings: ['faceling', 'staff-faceling'], 'the sound behind the walls': ['lurker'], 'the dark when the lights die': ['lurker', 'smiler'] }
 export const FEAR_LINES = ["no no no, not that.", "stay back. stay BACK.", "oh god. move, move.", "i can't. i can't do this again."]
 // a line now and then when a player is near, from what they want
-export const WANT_LINES = (w) => [`...if i could just find ${w.replace(/^to /, '')}.`, `someday. ${w}. someday.`, `all i want is ${w.replace(/^to /, 'to ')}.`]
+export const WANT_LINES = (w) => [`i just want ${w}.`, `not asking for much. ${w}.`, `some days it's all i think about. ${w}.`]

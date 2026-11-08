@@ -1,6 +1,7 @@
 import { styleOf, temperOf } from './personality.js'
 import { addressFor } from './address.js'
 import { lifeOf } from './npc-life.js'
+import { plain } from './plain.js'
 import LORE from './data/npc-lore.yml'
 import { vo } from './voices.js';
 // Free talk with NPCs: who they are, what the model is told, how its answer is read, the skill roll,
@@ -46,7 +47,7 @@ export function systemPrompt({ it, place, pl, rapport, following }) {
     `What you can do, as intent: join (agree to travel with them; only if they really earned it), leave (stop travelling with them), trade_discount (agree to better prices), gift (hand them some small supply), hostile (you are done and will fight them; only after real threats or cruelty), none.`,
     `If they try to persuade, haggle, intimidate, lie or charm you about something that matters, add check: { skill (one of ${CHECKS.join(', ')}), difficulty 20-95 } plus failReply, what you say if they blow it. The game rolls their skill + d20 against the difficulty; your reply is what you say if they pass.`,
     `How you talk: like someone who's been stuck down here a long time, not a writer. Usually one or two short lines. Fragments are fine. Trail off, change the subject, answer a question with a question, or don't answer at all if you don't want to. Say the specific thing (which hallway, whose boots, what the soup cost you), never the general one. Use your own little habits of speech and repeat them. You can be wrong, petty, distracted, funny or curt.`,
-    `Never sound like an assistant or a narrator: no "I understand", "great question", "feel free", "stay safe out there", "it's important to", "in the Backrooms, ...", no tidy summaries, no offering help unprompted, no flowery description, no em-dashes, no ending on a moral. Don't explain lore they didn't ask about. Never mention games, numbers, rapport, skills or rolls.`,
+    `Never sound like an assistant or a narrator: no "I understand", "great question", "feel free", "stay safe out there", "it's important to", "in the Backrooms, ...", no tidy summaries, no offering help unprompted, no flowery description, no em-dashes or semicolons, no ending on a moral. Also never: *actions* or (stage directions), similes or metaphors you would not really say out loud, a list of three things, "not X, but Y" turns, announcing your feelings ("I feel..."), repeating or rephrasing what they just said back to them, starting every line with Ah/Oh/Well, ending every line with a question, or wrapping up with a punchline. One plain idea a line. People down here are usually flat, specific and a bit short with strangers; warmth shows in what they do, not in saying they're glad. Don't explain lore they didn't ask about. Never mention games, numbers, rapport, skills or rolls.`,
     `Choices are what THIS wanderer might say next to you, in their voice, short (under 8 words), fitting this place and this moment: if the level is safe, nobody asks what to avoid. Mix one practical, one personal, one blunt or odd.`,
     `Answer with JSON only: {"reply":"...","mood":"calm|happy|annoyed|angry|scared","rapportDelta":-30..30,"intent":"none|join|leave|trade_discount|gift|hostile","check":{"skill":"speech","difficulty":50},"failReply":"...","remember":"one short fact worth keeping about them from this exchange, or empty","choices":["brief follow-up player prompt 1","brief follow-up player prompt 2","brief follow-up player prompt 3"]} (check, failReply and choices only when appropriate).`,
   ].join('\n')
@@ -57,7 +58,7 @@ export function userMessage(history, text, who) {
   return `${lines.length ? 'The conversation so far:\n' + lines.join('\n') + '\n\n' : ''}${who} says: ${text}\n\nYour JSON:`
 }
 
-const clean = (t) => String(t ?? '').replace(/\s+/g, ' ').replace(/^["']|["']$/g, '').trim().slice(0, 260)
+const clean = (t) => plain(String(t ?? '').replace(/\s+/g, ' ').replace(/^["']|["']$/g, '').trim()).slice(0, 260)
 // whatever the model said, only these fields in these ranges come out
 export function parseReply(text) {
   let o = null
