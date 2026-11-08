@@ -100,10 +100,10 @@ export function landed(ctx, p) {
   const s = ctx.self.state, t = s.tray?.[p.uid]; const pos = ctx.self.feetPosition;
   heard(ctx, { clip: G("vending-machine-clunk-item-drop"), position: { x: pos.x, y: pos.y + 0.3, z: pos.z }, volume: 0.85, maxDistance: 14 });
   if (t && t.item === p.item) s.tray = { ...s.tray, [p.uid]: { ...t, down: true } };
-  ctx.after(80, "expire", p);
+  ctx.after(80, "vendExpire", p);
 }
 export function takeItem(ctx, p) { if (ctx.getObject(p.id)) ctx.destroy(p.id); }
-export function expire(ctx, p) { const t = ctx.self.state.tray?.[p.uid]; if (t && t.item === p.item) { const n = { ...ctx.self.state.tray }; delete n[p.uid]; ctx.self.state.tray = n; } }
+export function vendExpire(ctx, p) { const t = ctx.self.state.tray?.[p.uid]; if (t && t.item === p.item) { const n = { ...ctx.self.state.tray }; delete n[p.uid]; ctx.self.state.tray = n; } }
 
 // the kitchen is done: the bell dings, the board counts up, the tray is on the pickup counter
 export function ready(ctx, p) {
