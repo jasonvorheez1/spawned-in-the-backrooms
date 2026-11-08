@@ -385,7 +385,7 @@ export function onInput(ctx, input) {
   if (input.pressed.flashlight) toggleLight(ctx)
 }
 
-function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pellets = 1) {
+export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pellets = 1) {
   dmg = Math.max(1, Math.round(vary(ctx, dmg))) // every hit rolls its own 90% to 110% (data/combat.yml)
   if (s.studied && m.tags?.some((tg) => s.studied.split(',').some((k) => tg.includes(k)))) dmg = Math.round(dmg * 1.1) // read its Database page
   const npc = m.tags?.includes('npc')

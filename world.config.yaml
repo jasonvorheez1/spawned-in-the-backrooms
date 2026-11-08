@@ -67,6 +67,11 @@ inputs:
       mouse: wheelDown
       touch:
         button: false
+    kick:
+      keys:
+        - l
+      touch:
+        button: false
     holster:
       keys:
         - h
