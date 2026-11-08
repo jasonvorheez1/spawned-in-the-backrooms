@@ -207,12 +207,13 @@ function lay(ctx) {
   sp("l21-life", { behavior: "scripts/l21-use.js" });
 }
 
+let roofAt = 0; // this machine's clock for the ceiling check
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); s.peopleV = 0; }
   if (!ctx.getObject("l21-life")) ctx.spawn("l21-life", { behavior: "scripts/l21-use.js" });
   if (!s.peopleV) { s.peopleV = 1; for (const id of Object.keys(PEOPLE)) if (!ctx.getObject(id)) person(ctx, id); }
-  if (now - (ctx.self.session.roofAt ?? 0) > 2000) { ctx.self.session.roofAt = now; // nobody stands on the ceiling: anyone above head height goes back to their spot on the floor
+  if (now - roofAt > 2000) { roofAt = now; // nobody stands on the ceiling: anyone above head height goes back to their spot on the floor
     for (const id of Object.keys(PEOPLE)) { const o = ctx.getObject(id); if (o && o.feetPosition.y > 1.5) { const h = o.state.home ?? o.feetPosition; o.feetPosition = { x: h.x, y: 0.05, z: h.z }; o.velocity = { x: 0, y: 0, z: 0 }; } } }
   keepPeople(ctx, Object.keys(PEOPLE), person);
   // hounds roam the halls and The Edges, kept topped up (scripts/hounds.js steps the pack; scripts/lib/maze21path.js steers them)
