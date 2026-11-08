@@ -151,7 +151,7 @@ function lay(ctx) {
   const BOXL = { id: "/cdn/value.441b77290ec0c2949a34dfde8f17c29c43443b39ae05f3b1914924257234d008.glb", paints: ["#b9b6ab", "#c2bfb3", "#aeaba0"] };
   for (let i = 0; i < 12; i++) spawnContainerL2(ctx, "locker", { x: lc.x - 5 + i * 0.43, z: edgeOf(lk, 3) + 0.3 }, 0, { noLock: i % 3 === 0, room: 80, model: VENT, size: [0.42, 1.95, 0.54] });
   for (let i = 0; i < 9; i++) spawnContainerL2(ctx, "locker", { x: edgeOf(lk, 0) - 0.27, z: lc.z - 4.2 + i * 0.39 }, 90, { noLock: i % 4 === 1, room: 81, model: BOXL, size: [0.38, 1.85, 0.48] });
-  for (let i = 0; i < 5; i++) spawnContainerL2(ctx, "locker", { x: lc.x - 2.2 + i * 0.39, z: lc.z - 1.2 }, 180, { noLock: i % 2 === 0, room: 81, model: BOXL, size: [0.38, 1.85, 0.48] }); // a freestanding grey bank, back to the bench
+  for (let i = 0; i < 5; i++) spawnContainerL2(ctx, "locker", { x: lc.x - 2.2 + i * 0.39, z: lc.z + 3.4 }, 180, { noLock: i % 2 === 0, room: 81, model: BOXL, size: [0.38, 1.85, 0.48] }); // a freestanding grey bank, back to the bench
   spawnRemains(ctx, { x: lc.x, z: lc.z }, ["bandage", "almond", "page:14"], "Operative's remains");
   const rr = rm("restroom")[0]; spawnContainerL2(ctx, "cabinet", { x: center(rr).x, z: edgeOf(rr, 1) - 0.6 }, 180, { room: 82 });
   const br = rm("break")[0]; spawnContainerL2(ctx, "vending", { x: edgeOf(br, 0) - 0.6, z: center(br).z - 2 }, 90, { room: 83 }); spawnContainerL2(ctx, "fridge", { x: edgeOf(br, 0) - 0.5, z: center(br).z + 1 }, 90, { room: 84 });
