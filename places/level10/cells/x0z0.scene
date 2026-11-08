@@ -1,0 +1,7 @@
+# spawn-scene v2 yaml x0z0
+l10-worms:
+  behavior: scripts/l10-worms.js
+  feetPosition: {x: 0, y: 0, z: -60}
+  id: l10-worms
+  state: {}
+  visible: false
