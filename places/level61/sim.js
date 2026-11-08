@@ -10,7 +10,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 export const cadence = "1s";
-const V = 11;
+const V = 12;
 const M_TABLE = "/cdn/value.5c13c3baf678446267c70befcd2ff0bc5fcb6627960162c3ef037241bae2eeb5.glb";
 const M_VEND = "/cdn/value.4eab9e798b9d50b4a15a489b3ef9281b80533de62f779d90a920e866c8f73942.glb";
 const M_STOOL = "/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb";
@@ -427,8 +427,62 @@ function lay(ctx) {
   // ---- Exits and Outposts
   // Rusty steel door to Level 6 with M.E.G. outpost
   box("l61-meg-door", -HW + 0.2, 0, 0, 0.1, 2.2, 1.5, RUST, { physics: undefined });
-  sign("l61-meg-sign", -HW + 0.25, 2.6, 0, -90, 2.6, 0.7, `<div style="font-size:110px;color:#e8e0c0">M.E.G. CHECKPOINT · LEVEL 6</div><div style="font-size:70px;color:#ff8a6a">NO ENTRY WITHOUT CLEARANCE · REPORT TO THE GUARD</div>`, "oklch(0.25 0.04 150)");
-  for (let k = 0; k < 2; k++) box(`l61-meg-sand-${k}`, -HW + 1.6, 0, k ? 2.2 : -2.2, 0.8, 0.9, 1.6, { color: "oklch(0.62 0.05 80)", roughness: 1 });
+  // the outpost: framed steel door, enamel plate, booth, barrier arm, sandbags, fence, desk, crates
+  {
+    const X = -HW, OLIVE = { color: "oklch(0.38 0.05 125)", roughness: 0.85 }, SAND = { ...T("rough-burlap-sack-weave", 2), color: "oklch(0.64 0.05 80)", roughness: 1 };
+    const PAINT = { color: "oklch(0.32 0.02 140)", metalness: 0.5, roughness: 0.6 }, PLY = { ...T("worn-plywood-sheet", 1), color: "oklch(0.62 0.06 70)", roughness: 0.9 };
+    const nf = { physics: undefined };
+    // door frame, push bar, kick plate
+    box("l61-meg-jamb-a", X + 0.2, 0, -0.85, 0.22, 2.35, 0.14, PAINT); box("l61-meg-jamb-b", X + 0.2, 0, 0.85, 0.22, 2.35, 0.14, PAINT);
+    box("l61-meg-head", X + 0.2, 2.2, 0, 0.22, 0.16, 1.84, PAINT);
+    box("l61-meg-bar", X + 0.3, 1.0, 0, 0.06, 0.06, 1.1, STEEL, nf); box("l61-meg-kick", X + 0.26, 0.02, 0, 0.02, 0.28, 1.4, STEEL, nf);
+    // enamel plate: cream steel, stencilled, four bolts, a rust bleed
+    sp("l61-meg-sign", { feetPosition: { x: X + 0.18, y: 2.5, z: 0 }, rotation: { yaw: -90 }, primitive: { kind: "box", width: 1.7, height: 0.62, depth: 0.02 }, material: { color: "oklch(0.9 0.03 90)", metalness: 0.3, roughness: 0.55 },
+      ui: `<div face="front" width="1.7m" style="width:1700px;height:620px;box-sizing:border-box;border:22px solid #8a1c14;outline:6px solid #e9e1c8;outline-offset:-40px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Courier New',monospace;font-weight:700;color:#1d1b17;background:linear-gradient(180deg,rgba(0,0,0,0) 70%,rgba(110,60,20,.25) 100%)"><div style="font-size:66px;letter-spacing:10px;color:#8a1c14">M.E.G. · RESTRICTED</div><div style="font-size:120px;letter-spacing:6px;margin:6px 0">LEVEL 6</div><div style="font-size:40px;letter-spacing:4px">NO ENTRY WITHOUT CLEARANCE</div><div style="position:absolute;left:46px;top:46px;width:26px;height:26px;border-radius:50%;background:#5c5850"></div><div style="position:absolute;right:46px;top:46px;width:26px;height:26px;border-radius:50%;background:#5c5850"></div><div style="position:absolute;left:46px;bottom:46px;width:26px;height:26px;border-radius:50%;background:#5c5850"></div><div style="position:absolute;right:46px;bottom:46px;width:26px;height:26px;border-radius:50%;background:#5c5850"></div></div>` });
+    // caged bulb over the door
+    box("l61-meg-cage", X + 0.35, 2.75, 0, 0.18, 0.2, 0.18, { color: "oklch(0.2 0 0)", metalness: 0.7, roughness: 0.5 }, nf);
+    sp("l61-meg-bulb", { feetPosition: { x: X + 0.4, y: 2.68, z: 0 }, light: { kind: "point", color: "oklch(0.85 0.09 70)", intensity: 3, distance: 9 } });
+    // yellow-black hazard line on the terrazzo
+    for (let i = 0; i < 16; i++) box(`l61-meg-haz-${i}`, X + 3.6, 0.005, -3.75 + i * 0.5, 0.25, 0.01, 0.5, { color: i % 2 ? "oklch(0.2 0 0)" : "oklch(0.8 0.16 90)", roughness: 0.7 }, nf);
+    // sandbag walls either side of the lane, three rows, staggered
+    for (const sd of [-1, 1]) for (let r = 0; r < 3; r++) for (let i = 0; i < 4; i++) {
+      const z = sd * (1.35 + i * 0.55 + (r % 2) * 0.27);
+      if (Math.abs(z) > 3.6) continue;
+      sp(`l61-meg-bag-${sd}-${r}-${i}`, { feetPosition: { x: X + 3.1 + (r % 2) * 0.04, y: 0.12 + r * 0.21, z }, rotation: { pitch: 90, yaw: 4 * Math.sin(i * 3 + r) }, primitive: { kind: "capsule", radius: 0.12, halfHeight: 0.16 }, scale: { x: 1.5, y: 1, z: 0.85 }, material: SAND, physics: r === 0 ? { body: "static", collider: "box" } : undefined });
+    }
+    // barrier arm: striped pole on a post, lowered half across
+    box("l61-meg-armpost", X + 4.2, 0, -1.6, 0.18, 1.0, 0.18, PAINT);
+    for (let i = 0; i < 6; i++) box(`l61-meg-arm-${i}`, X + 4.2, 0.92, -1.35 + i * 0.25, 0.07, 0.07, 0.25, { color: i % 2 ? "oklch(0.95 0.01 90)" : "oklch(0.5 0.2 27)", roughness: 0.5 }, nf);
+    // guard booth: plywood, window band, roof, lamp inside
+    const bx0 = X + 1.6, bz0 = -5.6;
+    box("l61-meg-booth-b", bx0, 0, bz0 - 0.9, 2.2, 2.3, 0.08, PLY); box("l61-meg-booth-l", bx0 - 1.1, 0, bz0, 0.08, 2.3, 1.8, PLY); box("l61-meg-booth-r", bx0 + 1.1, 0, bz0, 0.08, 2.3, 1.8, PLY);
+    box("l61-meg-booth-f", bx0, 0, bz0 + 0.9, 2.2, 1.05, 0.08, PLY); box("l61-meg-booth-ft", bx0, 1.95, bz0 + 0.9, 2.2, 0.35, 0.08, PLY);
+    box("l61-meg-booth-glass", bx0, 1.05, bz0 + 0.9, 2.1, 0.9, 0.02, { color: "oklch(0.85 0.02 200 / 0.25)", transparent: true, opacity: 0.25, roughness: 0.05, metalness: 0.1 }, nf);
+    box("l61-meg-booth-roof", bx0, 2.3, bz0, 2.4, 0.08, 2.0, PAINT);
+    box("l61-meg-booth-sill", bx0, 1.02, bz0 + 0.98, 2.2, 0.04, 0.22, PLY, nf);
+    sp("l61-meg-booth-lamp", { feetPosition: { x: bx0, y: 2.1, z: bz0 }, light: { kind: "point", color: "oklch(0.9 0.06 80)", intensity: 2, distance: 5 } });
+    // desk: logbook, clipboard, radio crackling, mug, folding chair
+    box("l61-meg-desk", X + 2.4, 0, 4.2, 1.4, 0.74, 0.7, { color: "oklch(0.5 0.01 250)", metalness: 0.6, roughness: 0.5 });
+    box("l61-meg-log", X + 2.2, 0.74, 4.1, 0.32, 0.03, 0.24, { color: "oklch(0.35 0.08 25)", roughness: 0.8 }, nf);
+    box("l61-meg-clip", X + 2.7, 0.74, 4.3, 0.22, 0.012, 0.3, { color: "oklch(0.55 0.05 60)" }, nf);
+    sp("l61-meg-radio", { feetPosition: { x: X + 2.9, y: 0.74, z: 4.0 }, primitive: { kind: "box", width: 0.18, height: 0.24, depth: 0.08 }, material: { color: "oklch(0.18 0 0)", roughness: 0.6 },
+      audio: { clip: G("military-handheld-radio-static-chatter-squelch-loop"), loop: true, gain: 0.08, spatial: true, maxDistance: 7 } });
+    box("l61-meg-mug", X + 1.9, 0.74, 4.35, 0.08, 0.1, 0.08, { color: "oklch(0.9 0.01 90)" }, nf);
+    box("l61-meg-chair-s", X + 2.4, 0.42, 4.95, 0.42, 0.04, 0.42, PAINT, nf); box("l61-meg-chair-b", X + 2.4, 0.46, 5.15, 0.42, 0.45, 0.04, PAINT, nf);
+    // olive crates stacked by the wall
+    box("l61-meg-crate-0", X + 0.6, 0, 3.2, 0.9, 0.55, 0.6, OLIVE); box("l61-meg-crate-1", X + 0.6, 0.55, 3.25, 0.8, 0.5, 0.55, OLIVE); box("l61-meg-crate-2", X + 0.6, 0, 4.0, 0.9, 0.55, 0.6, OLIVE);
+    // corkboard with pinned notices
+    box("l61-meg-cork", X + 0.17, 1.3, 3.6, 0.03, 0.8, 1.1, { color: "oklch(0.55 0.07 60)", roughness: 1 }, nf);
+    [[3.3, 1.75, "CLEARANCE LIST"], [3.75, 1.65, "ESCORT ONLY"], [3.5, 1.4, "MISSING"], [3.9, 1.4, "SHIFT ROTA"]].forEach(([z, y, t], k) =>
+      sp(`l61-meg-note-${k}`, { feetPosition: { x: X + 0.19, y, z }, rotation: { yaw: -90, roll: (k % 2 ? 3 : -4) }, primitive: { kind: "box", width: 0.26, height: 0.32, depth: 0.004 }, material: { color: "oklch(0.95 0.02 95)", roughness: 1 },
+        ui: `<div face="front" width="0.26m" style="width:260px;height:320px;padding:14px;box-sizing:border-box;font-family:'Courier New',monospace;color:#2a2622;font-size:22px;font-weight:700">${t}<div style="margin-top:12px;height:3px;background:#3335"></div><div style="margin-top:14px;height:3px;background:#3335"></div><div style="margin-top:14px;height:3px;background:#3335;width:70%"></div><div style="margin-top:14px;height:3px;background:#3335;width:85%"></div></div>` }));
+    // chain-link fence runs: posts, top and mid rails
+    for (const sd of [-1, 1]) {
+      for (let i = 0; i < 3; i++) box(`l61-meg-fp-${sd}-${i}`, X + 1.0 + i * 1.4, 0, sd * 7.0, 0.06, 2.0, 0.06, STEEL);
+      box(`l61-meg-fr-${sd}`, X + 2.4, 1.95, sd * 7.0, 2.9, 0.04, 0.04, STEEL, nf); box(`l61-meg-fm-${sd}`, X + 2.4, 1.0, sd * 7.0, 2.9, 0.04, 0.04, STEEL, nf);
+      box(`l61-meg-mesh-${sd}`, X + 2.4, 0.05, sd * 7.0, 2.8, 1.9, 0.01, { texture: "cdn/texture-chain-link-fence-galvanized-diamond-mesh.png", repeat: [5, 3], wrap: "repeat", transparent: true, alphaTest: 0.4, metalness: 0.6, roughness: 0.5 });
+    }
+  }
   sp("l61-meg-scream", { feetPosition: { x: -HW + 0.5, y: 1.2, z: 0 }, audio: { clip: G("distant-muffled-screaming-behind-heavy-steel-door-loop"), loop: true, gain: 0.12, spatial: true, maxDistance: 9 } });
   sp("l61-to-l6", { tags: ["door"], feetPosition: { x: -HW + 0.45, y: 0, z: 0 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.5, height: 2.2, depth: 1.4 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level6#l6-from-l61" } });
   sp("l61-from-l6", { feetPosition: { x: -HW + 2.6, y: 0.1, z: 0 }, rotation: { yaw: -90 } });
