@@ -590,8 +590,8 @@ function spawnCamp(ctx) {
 
 // ---- the Lightless (Shelly: "parts of the map where theres insane people trying to kill you"): wanderers the dark got into. Two dens off the road:
 // the Choir in a side pocket of the hall, the Tar-Drinkers past the dredge. Frenzied nerve (scripts/meg-agent.js): they go for anyone close, never each other.
-// A warning scrawl stands on the road before each den. Killed, they stay dead an hour (Shelly's rule), then the den fills again.
-const DEN_V = 1, RETURN_MS = 3600000;
+Killed, they stay dead an hour (Shelly's rule), then the den fills again.
+const DEN_V = 2, RETURN_MS = 3600000;
 const DENS = {
   choir: { s: 84, side: -5.5, warn: 70, scrawl: "THE DARK SINGS<br>WE SING BACK", tint: "oklch(0.55 0.2 25)" },
   tar: { s: 414, side: 9, warn: 402, scrawl: "DRINK THE TAR<br>AND YOU WONT<br>NEED LIGHT", tint: "oklch(0.5 0.16 300)" },
@@ -614,8 +614,9 @@ const WRETCH_BARKS = {
   clear: ["gone. gone gone gone.", "more will come. they always come."],
 };
 function layDens(ctx) {
+  for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l8d-/.test(id) && !id.includes("/")) ctx.destroy(id); // a re-lay clears the last one
   for (const [k, d] of Object.entries(DENS)) {
-    const c = P(d.s, d.side, 0), w = P(d.warn, d.side > 0 ? 3.5 : -3.5, 0), id = (n) => `l8d-${k}-${n}`;
+    const c = P(d.s, d.side, 0), id = (n) => `l8d-${k}-${n}`;
     ctx.spawn(id("fire"), { feetPosition: { x: c.x, y: c.y, z: c.z }, fx: { script: FIRE_FX }, light: { kind: "point", color: d.tint, intensity: 1.6, distance: 11 }, audio: { clip: "cdn/ambience-many-voices-muttering-and-humming-tunelessly-in-a-stone-cave-loop.mp3", gain: 0.22, loop: true, spatial: true, maxDistance: 22 } });
     ctx.spawn(id("ring"), { feetPosition: { x: c.x, y: c.y, z: c.z }, primitive: { kind: "torus", radius: 0.55, tube: 0.13, radialSegments: 6, tubularSegments: 10 }, rotation: { pitch: 90 }, pivot: "center", material: { color: "oklch(0.18 0.01 60)", roughness: 0.9 }, physics: "static" });
     for (let i = 0; i < 4; i++) { // bedrolls kicked into a circle, stained
@@ -629,13 +630,7 @@ function layDens(ctx) {
     ctx.spawn(id("skull"), { feetPosition: { x: c.x + 1.3, y: c.y + 0.12, z: c.z - 1 }, primitive: { kind: "sphere", radius: 0.12 }, scale: { x: 1, y: 0.9, z: 1.2 }, material: { color: "oklch(0.84 0.03 80)", roughness: 0.6 } });
     ctx.spawn(id("smash"), { feetPosition: { x: c.x - 1.5, y: c.y, z: c.z - 1.5 }, primitive: { kind: "box", width: 0.5, height: 0.3, depth: 0.4 }, rotation: { yaw: 20, roll: 12 }, material: { color: "oklch(0.3 0.02 250)", roughness: 0.6, metalness: 0.5 } }); // smashed flashlights: no lights here
     for (let i = 0; i < 5; i++) ctx.spawn(id(`torch${i}`), { feetPosition: { x: c.x - 1.4 + i * 0.18, y: c.y + 0.32, z: c.z - 1.5 + (i % 2) * 0.1 }, rotation: { yaw: i * 70, roll: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.03, height: 0.2 }, material: { color: "oklch(0.25 0.02 250)", roughness: 0.4, metalness: 0.6 } });
-    ctx.spawn(id("wall"), { feetPosition: { x: c.x, y: c.y + 1.2, z: c.z }, rotation: { yaw: c.yaw + (d.side > 0 ? -90 : 90) }, vector: `<svg viewBox='0 0 200 80' width='4.2m'><text x='100' y='30' text-anchor='middle' font-family='display' font-size='20' fill='${d.tint}' opacity='0.85'>${d.scrawl.split("<br>")[0]}</text><text x='100' y='58' text-anchor='middle' font-family='display' font-size='16' fill='${d.tint}' opacity='0.7'>${d.scrawl.split("<br>").slice(1).join(" ")}</text></svg>`, billboard: "none" });
-    ctx.spawn(id("warn"), { feetPosition: { x: w.x, y: w.y, z: w.z }, rotation: { yaw: w.yaw + 180 }, primitive: { kind: "box", width: 1.1, height: 0.75, depth: 0.04 }, pivot: "feet", material: WOOD,
-      ui: `<div face="front" width="1.05m" style="font-family:Arial,sans-serif;font-weight:900;font-size:120px;line-height:1;color:#c23a2a;text-align:center">TURN<br>BACK<div style="font-size:52px;color:#e8d8b0">they hear your light</div></div>` });
-    ctx.spawn(id("warnpost"), { feetPosition: { x: w.x, y: w.y - 1.1, z: w.z }, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.05, height: 1.2 }, material: WOOD });
   }
-  // the warning board stands on its post
-  for (const k of Object.keys(DENS)) { const b = ctx.place.objects[`l8d-${k}-warn`]; if (b) b.feetPosition = { ...b.feetPosition, y: b.feetPosition.y + 1.1 }; }
 }
 function keepWretched(ctx) {
   const s = ctx.place.state, now = ctx.now();
