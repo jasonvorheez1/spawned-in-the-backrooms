@@ -135,7 +135,7 @@ export function lay(ctx) {
 
   // The Beverly Room Concert Grand Piano on Stage
   if (!ctx.getObject("l5-piano")) {
-    ctx.spawn("l5-piano", {
+    ctx.spawn("l5-piano", { visibleRange: { min: 0, max: 80 }, 
       tags: ["usable"],
       feetPosition: { x: 15.5, y: 0, z: -10.6 },
       rotation: { yaw: 45 },
@@ -149,7 +149,7 @@ export function lay(ctx) {
   // Lobby Front Desk, Service Bell, and Brass Luggage Carts
   // Lobby service bell and brass luggage carts (the Main Hall's own desk stands; the old duplicate desk is gone)
   if (!ctx.getObject("l5-front-bell")) {
-    ctx.spawn("l5-front-bell", {
+    ctx.spawn("l5-front-bell", { visibleRange: { min: 0, max: 40 }, castShadow: false, 
       tags: ["usable"],
       feetPosition: { x: -42.35, y: 1.12, z: 1.9 },
       primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.06 },
@@ -157,7 +157,7 @@ export function lay(ctx) {
       behavior: "scripts/l5-door.js",
       state: { kind: "bell", name: "Service bell", verb: "Ring", info: "Polished brass desk bell", tint: "#f2c14e" },
     });
-    for (const [id, x, z, yaw] of [["l5-cart-lobby-n", -43.6, -3.9, 15], ["l5-cart-lobby-s", -41.5, 10.8, -20]]) ctx.spawn(id, {
+    for (const [id, x, z, yaw] of [["l5-cart-lobby-n", -43.6, -3.9, 15], ["l5-cart-lobby-s", -41.5, 10.8, -20]]) ctx.spawn(id, { visibleRange: { min: 0, max: 80 }, 
       feetPosition: { x, y: 0, z }, rotation: { yaw },
       physics: { body: "static", collider: "box" },
       primitive: { kind: "scripted", script: "scripts/level5-props-geo.js", params: { kind: "luggage_cart" } },
@@ -192,7 +192,7 @@ export function lay(ctx) {
         { feetPosition: { x: 0.45, y: 0.95, z: -0.2 }, primitive: { kind: "box", width: 0.22, height: 0.08, depth: 0.1 }, material: { color: "oklch(0.48 0.16 145)", roughness: 0.15 }, light: { kind: "point", color: "oklch(0.85 0.1 135)", intensity: 1.8, distance: 4.5 } },
       ],
     });
-    ctx.spawn("l5-lib-cabinet", {
+    ctx.spawn("l5-lib-cabinet", { visibleRange: { min: 0, max: 80 }, 
       tags: ["container"],
       feetPosition: { x: -22.37, y: 0, z: -14 },
       rotation: { yaw: -90 },
@@ -209,7 +209,7 @@ export function lay(ctx) {
 
   // M.E.G. Outpost Housekeeping Workbench
   if (!ctx.getObject("l5-hk-workbench")) {
-    ctx.spawn("l5-hk-workbench", {
+    ctx.spawn("l5-hk-workbench", { visibleRange: { min: 0, max: 80 }, 
       tags: ["bench"],
       feetPosition: { x: 5, y: 0, z: 22.8 },
       rotation: { yaw: 180 },
@@ -237,7 +237,7 @@ export function lay(ctx) {
 
   // Homely Hotel Kitchen Pantry Crate (Fresh meat for Samantha)
   if (!ctx.getObject("l5-pantry-crate")) {
-    ctx.spawn("l5-pantry-crate", {
+    ctx.spawn("l5-pantry-crate", { visibleRange: { min: 0, max: 40 }, castShadow: false, 
       tags: ["container"],
       feetPosition: { x: -8, y: 0, z: 19.5 },
       rotation: { yaw: 0 },
@@ -290,7 +290,7 @@ export function lay(ctx) {
     });
 
     if (roomId === "room-n4" && !ctx.getObject("l5-loot-1408")) {
-      ctx.spawn("l5-loot-1408", {
+      ctx.spawn("l5-loot-1408", { visibleRange: { min: 0, max: 40 }, castShadow: false, 
         tags: ["container"],
         feetPosition: { x: -16, y: 0, z: -19 },
         rotation: { yaw: 0 },
@@ -305,7 +305,7 @@ export function lay(ctx) {
       });
     }
     if (roomId === "suite-sw" && !ctx.getObject("l5-loot-237")) {
-      ctx.spawn("l5-loot-237", {
+      ctx.spawn("l5-loot-237", { visibleRange: { min: 0, max: 40 }, castShadow: false, 
         tags: ["container"],
         feetPosition: { x: -25, y: 0, z: 6 },
         rotation: { yaw: 0 },
@@ -330,7 +330,14 @@ function breakablesOnce(ctx) {
     o.tags = [...o.tags, "breakable", "furniture"]; o.state.mat = mat; o.state.hp = mat === "fixture" ? 25 : 60; o.state.maxHp = o.state.hp;
   }
 }
+// draw distance + shadows for runtime-spawned props, also on rooms built before this rule
+const L5_TUNE = { "l5-piano": 80, "l5-lib-cabinet": 80, "l5-hk-workbench": 80, "l5-cart-lobby-n": 80, "l5-cart-lobby-s": 80, "l5-front-bell": 40, "l5-pantry-crate": 40, "l5-loot-1408": 40, "l5-loot-237": 40 };
+function retuneL5(ctx) {
+  for (const sid of ["suite-ne", "suite-nw", "suite-se", "suite-sw", "room-n5", "room-s4"]) { L5_TUNE[`l5-people-trunk-${sid}`] = 40; L5_TUNE[`l5-people-rack-${sid}`] = 40; }
+  for (const [id, max] of Object.entries(L5_TUNE)) { const o = ctx.getObject(id); if (!o || o.visibleRange) continue; o.visibleRange = { min: 0, max }; if (max <= 40) o.castShadow = false; }
+}
 export function tick(ctx) {
+  if (!ctx.session.l5Tuned) { retuneL5(ctx); ctx.session.l5Tuned = true; }
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   breakablesOnce(ctx);
   const s = ctx.place.state;
