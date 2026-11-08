@@ -1,6 +1,7 @@
 // The tutorial Level 0 (johnadams2, Nov 8): one hand-laid route from the ceiling drop to Level 1.
 // Read by scripts/tut0-geo.js (the mesh), places/tutorial0/sim.js (props, lights) and scripts/lib/tut0-cut.js (the beats).
 export const H = 3
+export const PACE = 1.4 // every tutorial scene plays this many times slower than its authored seconds (Shelly, Nov 8: "the pacing is too fast")
 // [axis, p, a, b]: axis "x" = a wall at x = p running z a..b; axis "z" = at z = p running x a..b
 export const WALLS = [
   // the drop room

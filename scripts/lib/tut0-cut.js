@@ -33,7 +33,7 @@ export function t0Tick(ctx, ses, st) {
     if (!b || !inBeat(b, p)) return false
     st.t0cut = { id: b.id, at: ctx.now() }; ses.t0 = null
   }
-  const id = st.t0cut.id, t = (ctx.now() - st.t0cut.at) / 1000
+  const id = st.t0cut.id, t = (ctx.now() - st.t0cut.at) / 1000 / PACE
   const c = (ses.t0 ??= { p0: { x: p.x, y: p.y || 0, z: p.z }, yaw: me.rotation?.yaw ?? 0, did: {} })
   const once = (k, fn) => { if (!c.did[k]) { c.did[k] = true; fn() } }
   if (id !== "final" || t < 3) { me.feetPosition = c.p0 }
@@ -148,13 +148,13 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
   },
   // the wet patch gives: they sink through the carpet, black, the fall, then the title
   final(ctx, c, t, once, st) {
-    const me = ctx.self, at = { x: SOFT.x, y: 0, z: SOFT.z }, her = { x: 44, y: 1.15, z: -22.6 }, S = 5.2 // the sink starts
+    const me = ctx.self, at = { x: SOFT.x, y: 0, z: SOFT.z }, her = { x: 45.55, y: 1.15, z: -23.35 }, S = 5.2 // the sink starts
     if (t < S) me.feetPosition = { x: lerp(c.p0.x, at.x, ss(0, 0.8, t)), y: 0, z: lerp(c.p0.z, at.z, ss(0, 0.8, t)) }
     else me.feetPosition = { x: at.x, y: -2.6 * Math.pow(ss(S, S + 3.4, t), 1.6), z: at.z }
     me.rotation = { yaw: t < 1.8 ? (c.yaw ?? 0) : Math.atan2(-(her.x - at.x), -(her.z - at.z)) * 180 / Math.PI } // they feel watched and turn toward the hall
     // Phoebe in corridor E's mouth, the hall light behind her: a shape and a coat, her face in her own shadow
     once("phoebe", () => {
-      spawnPhoebe(ctx, "phoebe-end", { x: 44, y: 0, z: -22.6 }, 180, 11); me.faded = { ...(me.faded || {}), "phoebe-end": 0.35 } // facing them, half there
+      spawnPhoebe(ctx, "phoebe-end", { x: 45.55, y: 0, z: -23.35 }, 180, 11 * PACE) // half of her round the corridor mouth's east corner, the rest behind the wall, watching
       for (const [i, v] of [[18, 0.15], [19, 0.6], [20, 0.6]]) { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) o.light = { ...o.light, intensity: v } } // the lamps between you and her go low
       const h = ctx.getObject("t0-light-17"); if (h?.light) h.light = { ...h.light, intensity: 9 } // the one behind her burns: a shape, no face
     })
@@ -168,7 +168,7 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
     if (t > S + 6.2) once("thud", () => snd(ctx, "heavy-impact-thud-boom", 0.7))
     if (t > 13.4) once("title", () => raw(ctx, N("title-reveal-massive-reverse-swell-boom"), 1.0)) // lands with the name (cutscene-ui: 13.7 s)
     if (t < 2) { const u = ss(0, 2, t); ctx.view.camera = { eye: L3({ x: at.x + 2.6, y: 1.7, z: at.z + 2.4 }, { x: at.x + 1.9, y: 0.6, z: at.z + 1.6 }, u), aim: { x: at.x, y: lerp(1.2, 0.5, u), z: at.z }, fov: 50 } } // the soaked carpet under their feet
-    else if (t < S) { const u = ss(2, S, t); ctx.view.camera = { eye: { x: at.x + 0.35, y: 1.62, z: at.z + 0.45 }, aim: L3({ x: her.x + 0.4, y: 1.3, z: her.z }, her, u), fov: lerp(30, 17, u) } } // over their shoulder, a long lens down the hall: someone standing there
+    else if (t < S) { const u = ss(2, S, t); ctx.view.camera = { eye: { x: at.x + 0.35, y: 1.62, z: at.z + 0.45 }, aim: L3({ x: her.x - 0.6, y: 1.3, z: her.z }, { x: her.x - 0.15, y: her.y, z: her.z }, u), fov: lerp(30, 17, u) } } // over their shoulder, a long lens down the hall: someone standing there
     else ctx.view.camera = { eye: { x: at.x + 1.6, y: lerp(0.6, 2.2, ss(S, S + 3.4, t)), z: at.z + 1.3 }, aim: { x: at.x, y: lerp(0.4, 0, ss(S, S + 3.4, t)), z: at.z }, fov: lerp(50, 64, ss(S, S + 3.4, t)) }
     if (t > LEN.final) { st.t0Done = true; st.t0fade = ctx.now(); return true }
     return false
