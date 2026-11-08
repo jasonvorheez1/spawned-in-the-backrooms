@@ -53,8 +53,11 @@ def build_hull():
         u0, u1 = i * 0.5, (i + 1) * 0.5
         M.f([it[i], it[i + 1], ib[i + 1], ib[i]], hp, [(0.2, 0.995), (0.2, 0.995), (0.2, 0.99), (0.2, 0.99)])
     # teak deck at y=0
-    dk = [M.v(p) for p in inner_bot[:-1]]
-    M.f(dk, teak, [(p[0] / 4, -p[2] / 4) for p in inner_bot[:-1]])
+    pts = []
+    for p in inner_bot:
+        if not pts or math.dist(p, pts[-1]) > 0.01: pts.append(p)
+    while len(pts) > 2 and math.dist(pts[0], pts[-1]) < 0.01: pts.pop()
+    M.f([M.v(p) for p in pts], teak, [(p[0] / 4, -p[2] / 4) for p in pts])
     hull = M.build("hull", angle=1.0)
     parts = [hull]
     # name decals on both bow flanks: ADVENTURE crossed out, SS Fun =) sprayed under it
@@ -64,8 +67,8 @@ def build_hull():
         for jy in range(9):
             row = []; ur = []
             for iz in range(25):
-                z = -30 - 18 * iz / 24
-                top = h_edge(z) - 0.45; y = top - 6 * jy / 8
+                z = -25 - 18 * iz / 24
+                top = h_edge(z) - 0.4; y = top - 5.6 * jy / 8
                 x = half(z, y); dx = (half(z + 0.05, y) - half(z - 0.05, y)) / 0.1
                 n = (1, dx); ln = math.hypot(*n); off = 0.035
                 row.append((side * (x + off / ln), y, z - off * (-dx) / ln * 0 + off * dx / ln * 0))
@@ -95,4 +98,11 @@ def build_hull():
             for dz in (-0.25, 0.25):
                 parts.append(cyl(f"bol{side}{z}{dz}", (x, 0, z + dz), 0.13, 0.45, gm, 14))
                 parts.append(cyl(f"bolcap{side}{z}{dz}", (x, 0.45, z + dz), 0.17, 0.05, gm, 14))
+    # cowl vents on the foredeck
+    vm = mat("vent_white", (0.8, 0.8, 0.76), rough=0.45); vin = mat("vent_inner", (0.05, 0.05, 0.05), rough=0.9)
+    for side in (1, -1):
+        x, z = side * 3.2, -27.5
+        parts.append(cyl(f"vb{side}", (x, 0, z), 0.32, 1.5, vm, 20))
+        parts.append(tube(f"vc{side}", [(x, 1.4, z), (x, 1.75, z - 0.05), (x, 1.95, z - 0.3), (x, 2.0, z - 0.55)], 0.36, vm, 4))
+        parts.append(sphere(f"vm{side}", (x, 2.0, z - 0.6), 0.36, vin, (1, 1, 0.12)))
     return parts

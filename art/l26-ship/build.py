@@ -4,7 +4,7 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 from lib import *
 import hull, super as sup
 hp = hull.build_hull(); hobj = join(hp, "ship_hull")
-sp = sup.build_super() + sup.build_rails(); sobj = join(sp, "ship_super")
+sp = sup.build_super(); sobj = join(sp, "ship_super")
 os.makedirs("/workspace/l26ship/out", exist_ok=True)
 export([hobj], "/workspace/l26ship/out/hull.glb"); export([sobj], "/workspace/l26ship/out/super.glb")
 for o in (hobj, sobj): print(o.name, "tris", sum(len(p.vertices) - 2 for p in o.data.polygons), "bbox", [tuple(round(c, 2) for c in v) for v in (o.bound_box[0], o.bound_box[6])])

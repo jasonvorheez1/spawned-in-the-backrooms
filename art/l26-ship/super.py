@@ -190,22 +190,6 @@ def build_super():
     for s in (1, -1): parts.append(sphere(f"navyard{s}", (s * 1.35, 10.32, 1.6), 0.08, navw))
     parts.append(cyl("radarpost", (0, 6.58, 4.6), 0.12, 0.6, frame, 10))
     parts.append(rbox("radar", (0, 7.25, 4.6), (2.4, 0.16, 0.22), frame, 0.05, yaw=25))
-    # raked funnel: faded red, cruise-line band, black top
-    red = mat("funnel_red", (0.48, 0.11, 0.08), rough=0.65)
-    band = mat("funnel_band", (0.85, 0.85, 0.8), rough=0.5)
-    navy = mat("funnel_navy", (0.03, 0.06, 0.18), rough=0.5)
-    blk = mat("funnel_black", (0.02, 0.02, 0.02), rough=0.6)
-    F = Mesh(); hs = [0, 2.5, 3.5, 3.75, 4.05, 4.3, 6.0, 7.0]; fm = [red, red, band, navy, band, red, blk]
-    rings = []
-    for h in hs:
-        t = h / 7.0; rx = 1.8 - 0.25 * t; rz = 3.0 - 0.5 * t; cz = 12 + 1.8 * t
-        ring = [(rx * math.cos(2 * math.pi * i / 40), 3.4 + h, cz + rz * math.sin(2 * math.pi * i / 40)) for i in range(41)]
-        rings.append(ring)
-    rid = [[F.v(p) for p in r] for r in rings]
-    for j in range(len(hs) - 1):
-        for i in range(40): F.f([rid[j][i + 1], rid[j][i], rid[j + 1][i], rid[j + 1][i + 1]], fm[j])
-    t = 1.0; F.f([F.v((1.55 * math.cos(2 * math.pi * i / 40) * 0.97, 10.2, 13.8 + 2.5 * math.sin(2 * math.pi * i / 40) * 0.97)) for i in range(40)], voidm)
-    parts.append(F.build("funnel", angle=1.0))
     # lifeboats on davits
     orng = mat("lifeboat_orange", (0.95, 0.32, 0.03), rough=0.45)
     for s in (1, -1):
