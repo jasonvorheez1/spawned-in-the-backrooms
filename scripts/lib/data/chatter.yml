@@ -67,6 +67,20 @@ level7:
   - [[l7-vance, "the fort lit three lanterns tonight. that's one more than last week. noting it."]]
   - [[l7-vance, "dive tank's holding. rope's holding. nerves are... adequate."]]
   - [[l7-vance, "something big moved under the dory line. didn't surface. good. stay down there."]]
+level10:
+  # Outpost Bountiful: Cooper runs it, Maeve studies it, Hale counts it, Wren works it, Sully talks to nobody on the radio
+  - [[l10-meg-cooper, "loaves are up. who's on the caravan tally?"], [l10-meg-hale, "me. forty-one loaves, nine sacks."], [l10-meg-cooper, "i baked forty-two."], [l10-meg-hale, "then somebody ate one."], [l10-meg-wren, "...it was warm."]]
+  - [[l10-meg-wren, "dug a post hole by the east fence. deeper than i meant."], [l10-meg-maeve, "how deep?"], [l10-meg-wren, "deep enough it started moving."], [l10-meg-maeve, "fill it. now. and bring me a sample next time."]]
+  - [[l10-meg-maeve, "the eastern scarecrow is facing the house again."], [l10-meg-cooper, "it faced the road yesterday."], [l10-meg-maeve, "nobody turned it."], [l10-meg-cooper, "then nobody tell wren."], [l10-meg-wren, "i'm standing right here."]]
+  - [[l10-meg-sully, "bountiful to alpha. clear skies, ripe wheat, nothing on the horizon. over."], [l10-meg-sully, "...alpha? anybody?"], [l10-meg-sully, "fine. i'll log it myself."]]
+  - [[l10-meg-hale, "barn roof leaks on the north bay."], [l10-meg-cooper, "put a bucket under it."], [l10-meg-hale, "i put six. it's a lot of roof."]]
+  - [[l10-meg-wren, "you ever wonder who planted all this?"], [l10-meg-cooper, "every day."], [l10-meg-wren, "and?"], [l10-meg-cooper, "and then i harvest it anyway."]]
+  - [[l10-meg-maeve, "soil reads normal. moisture normal. ph normal."], [l10-meg-hale, "so it's fine."], [l10-meg-maeve, "nothing is that normal, hale."]]
+  - [[l10-meg-sully, "picked up music on the shortwave last night."], [l10-meg-wren, "what kind?"], [l10-meg-sully, "a fiddle. real slow."], [l10-meg-wren, "from where?"], [l10-meg-sully, "the antenna was pointed at the ground."]]
+  - [[l10-meg-cooper, "wren, the well rope's fraying."], [l10-meg-wren, "i'll splice it after the barley."], [l10-meg-cooper, "the well's more important than barley."], [l10-meg-wren, "tell that to the barley."]]
+  - [[l10-meg-hale, "a wanderer paid in backbucks again."], [l10-meg-cooper, "money's money."], [l10-meg-hale, "money's paper. bread is bread. i know which one i'd eat."]]
+  - [[l10-meg-maeve, "the worms surfaced near the lake at dawn."], [l10-meg-sully, "how many?"], [l10-meg-maeve, "i stopped counting at a few hundred."], [l10-meg-sully, "logging it as 'a few hundred.'"]]
+  - [[l10-meg-wren, "the fire's nice tonight."], [l10-meg-cooper, "every night's nice out here. that's the trick of it."], [l10-meg-wren, "what trick?"], [l10-meg-cooper, "you stop looking for the catch."]]
 level8:
   # the 9th Road camp: Hobb keeps the fire, Wen trades, Ivo surveys, Marit stitches, Carla cooks
   - [[l8-hobb, "torch count."], [l8-wen, "eleven."], [l8-hobb, "it was twelve this morning."], [l8-wen, "it was twelve until someone went for a walk."], [l8-ivo, "...i brought it back."]]

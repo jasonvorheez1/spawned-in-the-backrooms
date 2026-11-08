@@ -12,9 +12,10 @@
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
+import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 
 export const cadence = "1s";
-const V = 9;
+const V = 10;
 const BRK = (mat, hp) => ({ mat, hp, maxHp: hp });
 const T = (x, z, up = 0) => ({ x, z, y: { terrain: up } });
 const BARN = (w, d, h, ridge, wall, door) => ({ primitive: { kind: "scripted", script: "scripts/barn10.js", params: { w, d, h, ridge, wall, door } }, physics: "static" });
@@ -271,6 +272,33 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
     },
   });
 
+  // the rest of the outpost's people: who keeps the stores, who works the rows, who keeps the radio
+  const MEG = (id, at, yaw, look, role, hp, name, voice, line) => sp(id, { tags: ["npc", "meg"], feetPosition: at, rotation: { yaw }, physics: "character",
+    ...critterSpec(npcLook(id.replace("l10-meg-", "l10-"), look, role, hp)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
+    state: { name, role, voice, faction: "meg", factionName: "M.E.G. Outpost Bountiful", home: { x: at.x, z: at.z }, line, ...npcState(ctx, "agent", hp * 10) } });
+  MEG("l10-meg-hale", T(-17.5, -35, 0), -60, { species: "bear", sex: "m", topw: "shirt", top: "#6b6a4a", botw: "pants", bottom: "#3b3226", shoes: "boots" }, "quarter", 12,
+    "Quartermaster Hale · M.E.G. Outpost Bountiful", "hollis", "Everything that leaves this farm gets weighed. Everything.");
+  MEG("l10-meg-wren", T(-6, -40, 0), 120, { species: "rabbit", sex: "f", topw: "tank", top: "#c9a86a", botw: "overalls", bottom: "#41587a", shoes: "boots", hat: "cap" }, "scout", 9,
+    "Wren · Outpost Farmhand", "mags", "Mind your boots in the rows. And don't dig past your ankles.");
+  MEG("l10-meg-sully", T(-29, -43, 0.45), 200, { species: "raccoon", sex: "m", topw: "jacket", top: "#4a5240", botw: "pants", bottom: "#2a2a26", shoes: "boots", hat: "beanie" }, "default", 10,
+    "Sully · Outpost Radio Operator", "reyes", "Bountiful to Alpha, still green out here. Over.");
+  // the cookfire the outpost eats around: a stone ring, split logs, stumps to sit on
+  const fire = T(-10, -44, 0);
+  for (let i = 0; i < 9; i++) { const a = i * 0.698; sp(`l10-fire-stone-${i}`, { feetPosition: { x: fire.x + Math.cos(a) * 0.75, y: fire.y, z: fire.z + Math.sin(a) * 0.75 }, rotation: { yaw: i * 47 }, scale: { x: 1, y: 0.6, z: 0.8 }, primitive: { kind: "sphere", radius: 0.2, widthSegments: 7, heightSegments: 5 }, material: { color: "oklch(0.5 0.01 80)", roughness: 0.95 }, castShadow: false, visibleRange: { max: 60 } }); }
+  for (let i = 0; i < 3; i++) sp(`l10-fire-log-${i}`, { feetPosition: { x: fire.x, y: fire.y + 0.08, z: fire.z }, rotation: { yaw: i * 60, roll: 90, pitch: 18 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.08, height: 0.9, radialSegments: 7 }, material: { color: "oklch(0.25 0.03 50)", roughness: 1 }, castShadow: false });
+  [[1.9, 0.4], [-1.6, 1.1], [0.3, -2]].forEach(([dx, dz], i) => sp(`l10-fire-stump-${i}`, { tags: ["seat"], feetPosition: { x: fire.x + dx, y: fire.y, z: fire.z + dz }, primitive: { kind: "cylinder", radiusTop: 0.24, radiusBottom: 0.28, height: 0.42, radialSegments: 10 }, material: { color: "oklch(0.42 0.05 60)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.95 }, physics: "static", visibleRange: { max: 80 } }));
+  sp("l10-fire", { feetPosition: { x: fire.x, y: fire.y + 0.05, z: fire.z }, fx: { script: `fx
+pop flame rate=flick(.45,.2)*50 on=disc(.25) life=.5..0.9 v=up(1.4)+cone(22)*(.3..0.8) size=.2..0.38 acc=curl(.5)*1.2+buoy(2.2)+drag(1.5) sz=$size*(.5>.25:1>.7:.7>.14) col=hdr(4.6,3.4,1.4)>.3:hdr(3.2,1.4,.3)>.65:hdr(1.8,.5,.1)>hdr(.6,.12,.03) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)
+pop embers rate=4 on=disc(.25) life=.7..1.4 v=up(2.2)+cone(30)*(.4..1.2) size=.02..0.05 acc=curl(.8)+grav()*.45+drag(.5) col=hdr(5,2.8,.8)>hdr(1,.22,.04) a=(0>.08:1>.65:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)
+pop smoke on=@flame?.2 inh=p;v:$v*.4 life=2..3.2 size=.18..0.3 acc=buoy(.9)+curl(.35)*.5+drag(.8) sz=$size*(.7>3.2) col=<.3,.28,.26>><.15,.15,.16> a=0>.25:.3>.7:.2>0 r=sprite(smoke-puff,alpha)
+pop glow n=1 at=disc(.2).c(.45) glo=fire()*(#flame/35)~ r=light(<1,.55,.24>,$glo*22,10)` },
+    audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-small-campfire-wood-crackling-popping-loop.mp3", gain: 0.25, loop: true, spatial: true, maxDistance: 14 } });
+  // the M.E.G. flag over the yard
+  const fl = T(-20, -33, 0);
+  sp("l10-flagpole", { feetPosition: fl, primitive: { kind: "cylinder", radiusTop: 0.04, radiusBottom: 0.06, height: 7, radialSegments: 8 }, material: { color: "oklch(0.7 0.01 250)", metalness: 0.7, roughness: 0.4 }, physics: "static" });
+  sp("l10-flag", { feetPosition: { x: fl.x + 0.8, y: fl.y + 6.0, z: fl.z }, primitive: { kind: "plane", width: 1.6, height: 0.95, widthSegments: 8 }, material: { color: "oklch(0.32 0.06 250)", side: "double", roughness: 0.9 }, castShadow: false,
+    vector: "<svg viewBox='0 0 160 95' width='1.6m'><rect width='160' height='95' fill='#1f2c45'/><circle cx='80' cy='44' r='26' fill='none' stroke='#e8dcb0' stroke-width='4'/><text x='80' y='53' font-family='sans-serif' font-size='24' font-weight='700' text-anchor='middle' fill='#e8dcb0'>MEG</text><text x='80' y='88' font-family='sans-serif' font-size='10' text-anchor='middle' fill='#e8dcb0'>OUTPOST BOUNTIFUL</text></svg>" });
+
   // ==========================================
   // 9. THE BIG BRICK BARN, STABLE & SHEDS
   // ==========================================
@@ -370,4 +398,5 @@ export function tick(ctx) {
     s.builtV = V;
     lay(ctx);
   }
+  if (ctx.place.players?.length) tickChatter(ctx, CHATTER.level10 ?? [], { "l10-meg-cooper": "reyes", "l10-meg-maeve": "elena", "l10-meg-hale": "hollis", "l10-meg-wren": "mags", "l10-meg-sully": "reyes" }); // the outpost talks among itself
 }
