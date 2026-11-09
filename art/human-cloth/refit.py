@@ -141,9 +141,10 @@ for o in bpy.data.objects:
     shapes = [bm.verts.layers.shape[k] for k in bm.verts.layers.shape.keys()]
     lim = FIT[o.name]; delta = {}; skin = {}
     top = o.name.startswith("Top_") or o.name == "Under_top"
+    HEM = min(v.co.z for v in bm.verts) + 0.2 if top else -9  # a top's lowest 20 cm: the hem that hangs past the hips
     for v in bm.verts:
         co, n, d, w = skin_at(v.co)
-        low = top and v.co.z < CROTCH + 0.06
+        low = top and v.co.z < HEM
         if low:  # a top's hem below the crotch hangs from the hips as a tube: no leg weights, no pull into the crotch
             hw = sum(x for g, x in w.items() if "Leg" in g or "Foot" in g)
             w = {g: x for g, x in w.items() if not ("Leg" in g or "Foot" in g)}; w["Hips"] = w.get("Hips", 0) + hw
@@ -170,7 +171,7 @@ for o in bpy.data.objects:
         ring = {}
         def key(v): return (int((v.co.z - 0.0) / 0.012), int((math.atan2(v.co.y - cy, v.co.x) + math.pi) / (2 * math.pi) * 36) % 36)
         def rad(v): return math.hypot(v.co.x, v.co.y - cy)
-        lowv = [v for v in bm.verts if v.co.z < CROTCH + 0.1]
+        lowv = [v for v in bm.verts if v.co.z < HEM]
         for v in lowv: k = key(v); ring[k] = max(ring.get(k, 0), rad(v))
         fixed = 0
         for v in lowv:
