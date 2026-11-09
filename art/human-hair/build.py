@@ -44,9 +44,6 @@ head = next(o for o in bpy.data.objects if o.type == "MESH" and o.name.startswit
 H = head_dims(rig, head); print("head", {k: round(v, 3) for k, v in H.items()})
 for o in list(bpy.data.objects):
     if o.type == "MESH": o.hide_render = True; o.hide_set(True)
-hairM = bpy.data.materials.new("hair")  # one tintable slot; the pack's own grey texture under the look's colour
-scalpM = bpy.data.materials.new("scalp")
-for m in (hairM, scalpM): m.use_nodes = True
 def borrow(dst, src):
     t = dst.node_tree; t.nodes.clear()
     for n in src.node_tree.nodes: pass
@@ -80,8 +77,8 @@ def export(k, hatted):
     keep = []
     for kind, o in made[k]:
         c = o.copy(); c.data = o.data.copy(); bpy.context.scene.collection.objects.link(c)
-        sl = c.data.materials[0]; sl.name  # rename slot materials to the engine's tint names
-        c.data.materials.clear(); c.data.materials.append(bpy.data.materials.get(f"{kind}_{k}"))
+        first = next(o2 for kd, o2 in made[k] if kd == kind)  # one material per kind: the engine tints the slot named hair
+        c.data.materials.clear(); c.data.materials.append(first.data.materials[0])
         if hatted:
             bm = bmesh.new(); bm.from_mesh(c.data)
             line = H["top"] - 0.075  # the brim: what's above sits inside the hat
@@ -97,8 +94,8 @@ def export(k, hatted):
     rig.select_set(True)
     # materials named for the tint: hair / scalp
     saved = []
-    for c in keep:
-        m = c.data.materials[0]; saved.append((m, m.name)); m.name = "hair" if m.name.startswith("hair") else "scalp"
+    for m in {c.data.materials[0] for c in keep}:
+        saved.append((m, m.name)); m.name = "hair" if m.name.startswith("hair") else "scalp"
     p = f"{OUT}/{SEX}_p{k}{'_hat' if hatted else ''}.glb"
     bpy.ops.export_scene.gltf(filepath=p, use_selection=True, export_apply=False, export_animations=False, export_image_format="JPEG", export_jpeg_quality=85)
     for m, n in saved: m.name = n
