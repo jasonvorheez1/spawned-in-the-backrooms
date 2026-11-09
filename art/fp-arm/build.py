@@ -184,15 +184,17 @@ def build(sex, side):
     S = V((0, 1, 0)); S = (S - A * S.dot(A)).normalized()  # thumb side: up
     N = A.cross(S) * (-1 if side == "R" else 1)            # back of hand: outward (right for the right hand)
     gA, gS, gN = [g2b(*x) for x in (A, S, N)]
-    src = mu.Matrix((a, s, n)).transposed(); dst = src.copy()   # the arm stays as NV lays it before the camera; only the fist moves to the origin
+    hg = hinge if hinge.dot(s) > 0 else -hinge          # the curled fingers' tube axis, index end up: the grip runs through it
+    fw = (a - hg * a.dot(hg)).normalized()               # knuckles forward, square to the grip
+    G = g2b(0, 0.96, -0.28).normalized(); F = g2b(0, 0, -1); F = (F - G * F.dot(G)).normalized()   # a pistol grip's rake, barrel forward
+    src = mu.Matrix((fw, hg, fw.cross(hg))).transposed(); dst = mu.Matrix((F, G, F.cross(G))).transposed()   # NV's wrist and elbow bend ride along
     R = dst @ src.inverted()
     M = mu.Matrix.Translation(V((0, 0, 0))) @ R.to_4x4() @ mu.Matrix.Translation(-fist)
     if side == "L":   # mirror the right arm's mesh first, then lay it
         Mi = mu.Matrix.Scale(-1, 4, V((1, 0, 0)))
         fistM = Mi @ fist
         aM, sM, nM = [V((-x.x, x.y, x.z)) for x in (a, s, n)]
-        R = mu.Matrix.Identity(3)
-        M = R.to_4x4() @ mu.Matrix.Translation(-fistM) @ Mi
+        M = Mi @ M
     me.transform(M)
     if side == "L": me.flip_normals()
     for p in me.polygons: p.use_smooth = True
