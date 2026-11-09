@@ -121,7 +121,7 @@ l26d-pg-1:
   tags: [partygoer, l8-hostile]
 l26d-phoebe-candle:
   children: [{feetPosition: {x: 0, y: 0.15, z: 0}, light: {color: oklch(0.8 0.15 70), distance: 4, intensity: 0.8, kind: point}}]
-  feetPosition: {x: 309.2, y: -79.24, z: -102.2}
+  feetPosition: {x: 306.85, y: -79.24, z: -103.2}
   id: l26d-phoebe-candle
   material: {color: oklch(0.95 0.02 90)}
   primitive: {height: 0.1, kind: cylinder, radiusBottom: 0.02, radiusTop: 0.02}
