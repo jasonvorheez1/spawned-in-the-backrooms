@@ -19,7 +19,7 @@ function lay(ctx) {
   };
   // vestibule and the way home
   put("z-vest", 0, 4, 0, { kind: "room", w: 6, d: 6, doors: [{ side: "n", at: 0 }, { side: "s", at: 0 }], seed: 1 });
-  door("z-d-vest", 0, 1, 0, "auto"); door("z-d-home", 0, 7, 0, "stuck");
+  door("z-d-vest", 0, 1, 0, "auto"); door("z-d-home", 0, 7, 0, "auto"); // the way home always opens (Shelly, Nov 9: "i cant leave level 0.1")
   ctx.spawn("l01-back", { feetPosition: { x: 0, y: 0, z: 7.35 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.4, height: 2.2, depth: 0.3 }, visible: false, behavior: "scripts/zenith-hatch.js", state: { to: "main" } });
   ctx.spawn("l01-from-main", { feetPosition: { x: 0, y: 0.1, z: 5.6 }, rotation: { yaw: 0 } });
   ctx.spawn("z-vest-sign", { feetPosition: { x: 0, y: 2.55, z: 1.32 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 3, height: 0.5, depth: 0.03 }, material: { color: "#e9eae6" }, ui: `<div face="front" width="3m" style="color:#2a4a52;font:800 64px Arial;text-align:center;line-height:1.25">ZENITH STATION<br><span style="font-size:40px;letter-spacing:5px">HABITATION RING · SECTOR 7-C</span></div>` });
