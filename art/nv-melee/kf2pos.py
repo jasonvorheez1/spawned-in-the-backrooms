@@ -91,6 +91,7 @@ for fi in range(nf):
             A, B = f"Bip01 {s} {a}", f"Bip01 {s} {b}"
             if A in W or A in S:
                 v = tuple(y - x for x, y in zip(world(A)[0], world(B)[0])); loc[f"{s}{a}"] = [round(c, 5) for c in qrot(inv, v)]
+    for s in "LR": loc[f"{s}HandPos"] = [round(c, 4) for c in qrot(inv, tuple(y - x for x, y in zip(world("Bip01 Neck")[0], world(f"Bip01 {s} Hand")[0])))]
     frames[-1]["_neck"] = loc
     if fi == 0:
         def lp(n): return qrot(inv, tuple(y - x for x, y in zip(world("Bip01 Neck")[0], world(n)[0])))

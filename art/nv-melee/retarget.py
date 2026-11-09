@@ -14,6 +14,7 @@ for s, L in (("Left", "L"), ("Right", "R")):
                 s+"ForeArm": (f"Bip01 {L} Forearm", f"Bip01 {L} Hand"), s+"Hand": (f"Bip01 {L} Hand", f"Bip01 {L} Finger2")})
 PAR = {"Spine": "Hips", "Spine1": "Spine", "Spine2": "Spine1", "Neck": "Spine2", "Head": "Neck"}
 for s in ("Left", "Right"): PAR.update({s+"Shoulder": "Spine2", s+"Arm": s+"Shoulder", s+"ForeArm": s+"Arm", s+"Hand": s+"ForeArm"})
+ARM = {s+b: s[0]+k for s in ("Left", "Right") for b, k in (("Shoulder", "Clavicle"), ("Arm", "UpperArm"), ("ForeArm", "Forearm"), ("Hand", "Hand"))}  # spine holds rest
 ORDER = ["Spine", "Spine1", "Spine2", "Neck", "Head"] + [s+b for s in ("Left", "Right") for b in ("Shoulder", "Arm", "ForeArm", "Hand")]
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=hum)
@@ -32,12 +33,19 @@ sc = bpy.context.scene; sc.render.fps = 30
 for f in files:
     J = json.load(open(f)); F = J["frames"]; stem = os.path.splitext(os.path.basename(f))[0]
     act = bpy.data.actions.new(stem); rig.animation_data_create(); rig.animation_data.action = act
+    # neck frame -> our upright chest: up is the neck bone; forward is where the hands work (always in front in FP)
+    up = Vector(J["axes"]["up"]).normalized()
+    hands = sum((Vector(fr["_neck"][k]) for fr in F for k in ("LHandPos", "RHandPos")), Vector())
+    fwd = (hands - hands.project(up)).normalized(); left = up.cross(fwd)
+    Lm = Matrix((left, -fwd, up))  # rows: neck-local -> world X(left) , Y(back), Z(up)
+    sideR = Lm @ Vector(F[0]["_neck"]["RHandPos"])
+    print("map", stem, "R hand x", round(sideR.x, 2))
     for fi, fr in enumerate(F):
         delta = {"Hips": Quaternion()}
         for m in ORDER:
-            d = delta[PAR[m]].copy(); s = SRC.get(m)
-            if s and s[0] in fr and s[1] in fr:
-                d1 = (G @ (Vector(fr[s[1]]) - Vector(fr[s[0]]))).normalized()
+            d = delta[PAR[m]].copy(); key = ARM.get(m)
+            if key and key in fr["_neck"]:
+                d1 = (Lm @ Vector(fr["_neck"][key])).normalized()
                 h0 = d @ (ht[m] - hp[m]).normalized()
                 d = h0.rotation_difference(d1) @ d
             delta[m] = d
