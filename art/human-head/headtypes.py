@@ -29,31 +29,34 @@ def sm(a, b, x): t = np.clip((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t
 def bump(a, b, c, e, x): return sm(a, b, x) * (1 - sm(c, e, x))
 # u: 0 neck .. .18 chin .. .47 eyes .. 1 crown; f: 1 at the face, 0 at the back of the skull
 def field(x, y, z, skull_only):
-    u = (z - z0) / Hh; f = 1 - sm(cy - 0.03, cy + 0.04, y); neck = sm(0.12, 0.2, u)
-    jaw = bump(0.15, 0.22, 0.34, 0.42, u) * neck; cheek = bump(0.36, 0.42, 0.5, 0.56, u); temple = bump(0.5, 0.58, 0.72, 0.8, u)
-    crown = sm(0.6, 1.0, u); chin = bump(0.12, 0.17, 0.24, 0.3, u) * f * neck; brow = bump(0.53, 0.56, 0.6, 0.64, u) * f
-    zero = np.zeros_like(x)
+    u = (z - z0) / Hh; f = 1 - sm(cy - 0.03, cy + 0.04, y); neck = sm(0.1, 0.2, u)
+    # eyes sit at u .40-.56: every band stays off them; ears ride rigidly with the cheek edge (x clamped)
+    xe = np.sign(x) * np.minimum(np.abs(x), 0.095)
+    jaw = bump(0.14, 0.2, 0.3, 0.37, u) * neck; cheek = bump(0.3, 0.35, 0.39, 0.43, u); temple = bump(0.58, 0.64, 0.78, 0.86, u)
+    crown = sm(0.6, 1.0, u); chin = bump(0.1, 0.16, 0.22, 0.28, u) * f * neck; brow = bump(0.55, 0.58, 0.61, 0.65, u) * f
+    face = 0 if skull_only else 1; zero = np.zeros_like(x)
     def v(dx, dy, dz): return np.stack([dx + zero, dy + zero, dz + zero], 1)
+    taper = 1 - sm(0.0, 0.04, np.abs(x))
     out = {}
-    # SQUARE: broad flat jaw, squared chin, heavy brow, flatter crown
-    out['HT_Square'] = v(x * (0.2 * jaw + 0.05 * cheek) * (0 if skull_only else 1) + x * 0.04 * temple,
-                         (-0.008 * brow - 0.004 * chin) * (0 if skull_only else 1), -(z - z0 - 0.82 * Hh).clip(0) * 0.25 * crown)
-    # LONG: taller skull and face, narrow cheeks, chin dropped forward
-    out['HT_Long'] = v(x * (-0.09 * cheek - 0.08 * jaw - 0.03 * temple) * (0 if skull_only else 1) - x * 0.03 * temple * skull_only,
-                       -0.006 * chin * (0 if skull_only else 1), 0.11 * Hh * sm(0.45, 1.0, u) - (0 if skull_only else 1) * 0.045 * Hh * chin)
-    # ANGULAR: high cheekbones out, hollows under them, narrow pointed chin pushed forward, brow ridge
-    hollow = bump(0.24, 0.3, 0.36, 0.4, u) * (1 - sm(0.0, 0.03, -np.abs(x) + 0.03)) * neck
-    out['HT_Angular'] = v(x * (0.13 * cheek - 0.1 * hollow - 0.14 * jaw * (1 - sm(0.02, 0.06, np.abs(x))) * 0 - 0.12 * jaw) * (0 if skull_only else 1),
-                          (-0.012 * chin - 0.007 * brow + 0.004 * hollow * f) * (0 if skull_only else 1), -0.012 * chin * (0 if skull_only else 1))
-    # BROAD: a wide heavy skull: everything above the neck wider and deeper, short face
-    out['HT_Broad'] = v(x * 0.15 * neck, (y - cy) * 0.08 * neck, -0.03 * Hh * sm(0.5, 1, u) + (0 if skull_only else 1) * 0.02 * Hh * chin)
-    # ROUND: full cheeks, soft short chin, round crown
-    out['HT_Round'] = v(x * (0.14 * cheek + 0.12 * jaw + 0.05 * temple) * (0 if skull_only else 1) + x * 0.05 * temple * skull_only,
-                        (y - cy) * 0.05 * crown + (0 if skull_only else 1) * 0.004 * chin, (0 if skull_only else 1) * 0.03 * Hh * chin)
-    # HEART: wide temples and brow, narrow tapering jaw to a small pointed chin
-    taper = (1 - sm(0.0, 0.05, np.abs(x)))
-    out['HT_Heart'] = v(x * (0.12 * temple + 0.06 * cheek * 0 - 0.2 * jaw - 0.25 * chin) * (0 if skull_only else 1) + x * 0.12 * temple * skull_only,
-                        -0.008 * chin * taper * (0 if skull_only else 1), 0.01 * Hh * chin * (0 if skull_only else 1))
+    # SQUARE: broad flat jaw, squared chin, heavier brow, flatter crown
+    out['HT_Square'] = v(xe * (0.16 * jaw + 0.06 * cheek) * face + xe * 0.04 * temple,
+                         (-0.007 * brow - 0.004 * chin) * face, -(z - z0 - 0.82 * Hh).clip(0) * 0.25 * crown)
+    # LONG: taller skull, narrow cheeks and jaw, chin dropped lower
+    out['HT_Long'] = v(xe * (-0.07 * cheek - 0.07 * jaw) * face - xe * 0.03 * temple,
+                       -0.004 * chin * face, 0.1 * Hh * sm(0.6, 1.0, u) - 0.05 * Hh * chin * face * (1 - sm(0.2, 0.3, u)) - 0.05 * Hh * (1 - neck) * face * 0)
+    # ANGULAR: high cheekbones out, a lean narrow jaw, chin forward, brow ridge
+    out['HT_Angular'] = v(xe * (0.09 * cheek - 0.08 * jaw) * face,
+                          (-0.008 * chin - 0.006 * brow - 0.004 * cheek * f) * face, -0.008 * chin * face)
+    # BROAD: a wide heavy skull: wider and deeper above the neck, shorter crown
+    out['HT_Broad'] = v(xe * 0.1 * neck, (y - cy) * 0.06 * neck, -0.03 * Hh * sm(0.6, 1, u))
+    # ROUND: full cheeks and jaw, soft short chin, round crown
+    out['HT_Round'] = v(xe * (0.1 * cheek + 0.1 * jaw) * face + xe * 0.04 * temple,
+                        (y - cy) * 0.04 * crown + 0.003 * chin * face, 0.025 * Hh * chin * face)
+    # HEART: wide temples, narrow tapering jaw to a small chin
+    out['HT_Heart'] = v(xe * (0.08 * temple * 1 - 0.13 * jaw - 0.1 * chin * face) * 1 + xe * 0 ,
+                        -0.005 * chin * taper * face, 0.008 * Hh * chin * face)
+    if skull_only:
+        for k in out: out[k][:, 0] = np.where(True, out[k][:, 0], 0)
     return out
 KEYS = ['HT_Square', 'HT_Long', 'HT_Angular', 'HT_Broad', 'HT_Round', 'HT_Heart']
 def apply(mesh, skull_only):
