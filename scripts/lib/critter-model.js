@@ -14,7 +14,7 @@ export const humanHairOf = (l) => {
   const n = typeof l.hair === 'number' ? l.hair : (HAIR.humanPick?.[l.hair] ?? (Number.isFinite(Number(l.hair)) ? Number(l.hair) : null))
   const hat = Boolean(l.hat && l.hat !== 'none')
   const set = HAIR.human?.[l.sex === 'f' ? 'f' : 'm']
-  const row = n == null ? null : set?.[hat && n >= 14 ? (HAIR_HATCUT[n] ?? 0) : n]
+  const row = n == null ? null : set?.[hat && (n in HAIR_HATCUT) ? HAIR_HATCUT[n] : n]
   return row ? (hat ? row.hat : row.free) : null
 }
 export const hairOf = (l) => {

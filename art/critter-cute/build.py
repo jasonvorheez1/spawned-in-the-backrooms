@@ -129,10 +129,14 @@ def head_r(d):
     wd = sp.get("wide", 1.0)
     r = 1 / math.sqrt((d.x / (HR[0] * wd)) ** 2 + (d.y / HR[1]) ** 2 + (d.z / HR[2]) ** 2)
     # plush lower-cheek pouches (wider & softer around the lower sides and front-cheeks)
-    ck = sp.get("cheek", 1.18 if sp.get("fluff") else 1.05)
     side = (abs(d.x) / (abs(d.x) + abs(d.y) * .65 + 1e-6)) ** .85
     front_bias = max(0.0, 0.55 + 0.45 * d.y)
-    cheek_swell = .095 * ck * math.exp(-((d.z + .24) / .28) ** 2) * side * front_bias
+    if sp.get("human"):
+        ck_h = 0.060 if F_HEAD else 0.042
+        cheek_swell = ck_h * math.exp(-((d.z + .24) / .28) ** 2) * side * front_bias
+    else:
+        ck = sp.get("cheek", 1.18 if sp.get("fluff") else 1.05)
+        cheek_swell = .095 * ck * math.exp(-((d.z + .24) / .28) ** 2) * side * front_bias
     # gentle chin tuck underneath so the jaw meets the neck cleanly (only underside, not front jaw)
     chin_tuck = -.035 * max(0.0, -d.z - .52) * (1.0 - abs(d.x) * .7) * max(0.0, 1.0 - max(0.0, d.y - 0.05) * 2.5)
     # 3D sculpted animal muzzle or human facial contour
@@ -145,12 +149,15 @@ def head_r(d):
         if d.y > 0.04:
             # Human chin projection (mental protuberance)
             if -0.48 < d.z < -0.32:
-                u_c = d.x / 0.11
-                v_c = (d.z - (-0.40)) / 0.075
+                w_chin = 0.13 if not F_HEAD else 0.11
+                h_chin = 0.080 if not F_HEAD else 0.075
+                u_c = d.x / w_chin
+                v_c = (d.z - (-0.40)) / h_chin
                 q_c = u_c * u_c + v_c * v_c
                 if q_c < 1.0:
                     fwd_c = math.sin(max(0.0, min(1.0, (d.y - 0.04) / 0.40)) * (math.pi / 2))
-                    muz += 0.018 * ((1.0 - q_c) ** 1.5) * fwd_c
+                    amp_c = 0.022 if not F_HEAD else 0.018
+                    muz += amp_c * ((1.0 - q_c) ** 1.5) * fwd_c
             # Subtle cheekbone (zygomatic) fullness
             if -0.16 < d.z < 0.04:
                 for s in (-1, 1):
@@ -202,7 +209,8 @@ def head_r(d):
     top = max(0.0, d.z - .40)
     skull = -sp.get("flat", .16) * top * top * 1.8
     zb = .31
-    skull += sp.get("brow", .035) * math.exp(-((d.z - zb) / .075) ** 2) * math.exp(-((ax - .33) / .19) ** 2) * front ** .6
+    brow_val = (0.042 if (sp.get("human") and not F_HEAD) else (0.025 if sp.get("human") else sp.get("brow", .035)))
+    skull += brow_val * math.exp(-((d.z - zb) / .075) ** 2) * math.exp(-((ax - .33) / .19) ** 2) * front ** .6
     skull -= .018 * math.exp(-((d.z - .26) / .13) ** 2) * math.exp(-((d.y - .05) / .30) ** 2) * sidew ** 2      # temple: skull narrows behind the brow
     skull += sp.get("flare", .040) * math.exp(-((d.z + .15) / .15) ** 2) * sidew ** 1.5 * math.exp(-((d.y - .25) / .45) ** 2)
     ru = sp.get("ruff", 0.0)
@@ -210,9 +218,23 @@ def head_r(d):
         phi = math.atan2(d.z + .16, d.y + .10)
         tuft = max(0.0, math.cos(phi * 6.0)) ** 2
         skull += ru * math.exp(-((d.z + .20) / .18) ** 2) * sidew ** 2 * (.45 + .55 * tuft) * math.exp(-((d.y + .02) / .32) ** 2)
-    skull += sp.get("jaw", 0.0) * math.exp(-((d.z + .40) / .18) ** 2) * sidew * (.5 + .5 * front)
-    skull -= .13 * max(0.0, -d.y) ** 2                                                                   # shorter back of the skull: no ball
-    skull += .035 * math.exp(-((d.z + .47) / .085) ** 2) * math.exp(-(d.x / .14) ** 2) * front ** 1.5           # a defined little chin
+    if sp.get("human"):
+        if not F_HEAD:
+            skull += .028 * math.exp(-((d.z + .36) / .16) ** 2) * sidew * (.4 + .6 * front)
+        else:
+            skull += .012 * math.exp(-((d.z + .38) / .16) ** 2) * sidew * (.3 + .5 * front)
+    else:
+        skull += sp.get("jaw", 0.0) * math.exp(-((d.z + .40) / .18) ** 2) * sidew * (.5 + .5 * front)
+    if not sp.get("human"):
+        skull -= .13 * max(0.0, -d.y) ** 2                                                                   # shorter back of the skull: no ball
+    else:
+        skull += .025 * math.exp(-((d.z - .05) / .32) ** 2) * max(0.0, -d.y) ** 1.2                        # rounded human occiput: hair wigs sit flush without hollow gap
+    if not sp.get("human"):
+        skull += .035 * math.exp(-((d.z + .47) / .085) ** 2) * math.exp(-(d.x / .14) ** 2) * front ** 1.5           # a defined little chin
+    elif not F_HEAD:
+        skull += .040 * math.exp(-((d.z + .47) / .080) ** 2) * math.exp(-(d.x / .16) ** 2) * front ** 1.4           # masculine chin
+    else:
+        skull += .025 * math.exp(-((d.z + .47) / .075) ** 2) * math.exp(-(d.x / .12) ** 2) * front ** 1.6           # delicate feminine chin
     skull -= .05 * max(0.0, -d.z - .45) * max(0.0, .9 - front) * (1.0 - .5 * ax)                                # throat tucks in under the jaw
     return r * (1.0 + cheek_swell + chin_tuck + skull) + muz
 def head_pt(d, out=0.0): d = d.normalized(); return HC + d * (head_r(d) + out)
@@ -1631,16 +1653,16 @@ def build_tufts(H, sp):
         hair_mat = "mark"
         b_c = head_pt(head_dir(0, 1.15), -.012)
         n_c = (b_c - HC).normalized(); f_c = V(0, .36, .92).normalized()
-        spike(H, b_c, n_c * .046 + f_c * .030, n_c * .038 + f_c * .042 + V(0, 0, -.035), .028, hair_mat)
+        spike(H, b_c, n_c * .030 + f_c * .018, n_c * .024 + f_c * .022 + V(0, 0, -.020), .020, hair_mat)
         for s in (-1, 1):
             # Left & Right bangs
             b_s = head_pt(head_dir(s * .16, 1.12), -.012)
             n_s = (b_s - HC).normalized()
-            spike(H, b_s, n_s * .042 + f_c * .024 + V(s * .014, 0, 0), n_s * .034 + f_c * .036 + V(s * .020, 0, -.040), .024, hair_mat)
+            spike(H, b_s, n_s * .026 + f_c * .016 + V(s * .010, 0, 0), n_s * .022 + f_c * .020 + V(s * .012, 0, -.022), .018, hair_mat)
             # Temple locks framing the face in front of the human ears
             b_t = head_pt(head_dir(s * 1.32, 0.05), -.015)
             d_side = Vector((s * .88, .22, -.40)).normalized()
-            spike(H, b_t, d_side * .045 + V(0, 0, -.030), d_side * .038 + V(0, 0, -.045), .020, hair_mat)
+            spike(H, b_t, d_side * .030 + V(0, 0, -.022), d_side * .024 + V(0, 0, -.028), .015, hair_mat)
         return
     if "mane" not in sp["ex"] and "wool" not in sp["ex"]:
         # Soft kemono crown fluff: gentle curved tuft on the crown
