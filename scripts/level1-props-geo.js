@@ -74,10 +74,6 @@ export function geometry(ctx) {
   ctx.color("oklch(0.5 0.05 70)"); box(ctx, a.x + 3, 0.4, a.z + 3.4, 0.9, 0.04, 0.45); for (const [dx, dz] of [[-0.8, -0.35], [0.8, -0.35], [-0.8, 0.35], [0.8, 0.35]]) box(ctx, a.x + 3 + dx, 0.2, a.z + 3.4 + dz, 0.04, 0.2, 0.04);
   ctx.color("oklch(0.6 0.15 120)"); box(ctx, a.x + 2.7, 0.52, a.z + 3.4, 0.2, 0.08, 0.14); // a tin box
   ctx.color("oklch(0.4 0.02 250)"); box(ctx, a.x + 3.4, 0.5, a.z + 3.4, 0.08, 0.1, 0.08); // lantern body
-  ctx.color("oklch(0.55 0.06 70)"); box(ctx, a.x + 1, 1.0, a.z + 8.6, 1.6, 0.8, 0.04); // map board on the camp's far side
-  ctx.color("oklch(0.9 0.04 95)"); box(ctx, a.x + 1, 1.0, a.z + 8.55, 1.5, 0.72, 0.02);
-  for (let i = 0; i < 5; i++) { ctx.color(sectorOf(i * 5, i * 5).band); box(ctx, a.x - 0.8 + i * 0.55, 1.2 - (i % 2) * 0.3, a.z + 8.52, 0.2, 0.12, 0.01); }
-  ctx.color("oklch(0.45 0.02 250)"); box(ctx, a.x - 0.4, 0.8, a.z + 8.7, 0.05, 0.8, 0.05); box(ctx, a.x + 2.4, 0.8, a.z + 8.7, 0.05, 0.8, 0.05); // board legs
   if (!real) { pallet(ctx, a.x - 2.5, a.z + 7.4, 0.2, 2); drum(ctx, a.x + 5.6, a.z - 1.4, 0.9, "oklch(0.5 0.1 145)"); }
   ctx.color(null); ctx.roughness(null);
 }

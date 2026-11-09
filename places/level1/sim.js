@@ -12,6 +12,8 @@ import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ONWARD, ARRIVE, has
 import { spawnAlmond } from "../../scripts/lib/loot.js";
 import { spawnFurniture, pickKind, wallSpot1, sizeOf } from "../../scripts/lib/furniture.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
+const L1M = { door: "/cdn/value.020545cb36957131cc5f5eab3f6c2c38511e55076fb5e5542b93aff45e424288.glb", wall: "/cdn/value.1aa1542440b2b55ab177731e12bade8dfdb7ca60226cb2b55ff2491a998298fe.glb", board: "/cdn/value.1ed44cd9733b0a1d469ee47af7a8f609fcaee84b4aef6828e976544608979e8b.glb", wallDx: 0, boardYaw: 180 }; // Blender builds: art/level1/build.py
+
 export const cadence = "250ms";
 const LAMP_ON = 9;
 // the M.E.G. agents are critters like the players: lime hi-vis jackets, the agency's look
@@ -73,9 +75,16 @@ export function tick(ctx) {
   }
   if (!s.l2door) { s.l2door = true; // the pipeworks: a green door in the east wall, down into Level 2
     ctx.spawn("l1-onward", { feetPosition: { x: ONWARD.x - 0.3, y: 0, z: ONWARD.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2.4, depth: 1.6 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level2" } });
-    ctx.spawn("l1-onward-door", { feetPosition: { x: ONWARD.x + 0.45, y: 0, z: ONWARD.z }, physics: "static", primitive: { kind: "box", width: 0.12, height: 2.25, depth: 1.25 }, material: { color: "oklch(0.82 0.03 85)", metalness: 0.3, roughness: 0.75 }, visibleRange: { max: 45 }, castShadow: false,
+    ctx.spawn("l1-onward-door", { feetPosition: { x: ONWARD.x + 0.45, y: 0, z: ONWARD.z }, physics: { body: "static", collider: "box" }, model: { id: L1M.door }, visibleRange: { max: 60 }, castShadow: false });
       ui: '<div face="left" width="1.25m" style="height:2250px;position:relative"><div style="position:absolute;left:330px;top:300px;width:560px;height:520px;background:#0a0c0c;border:30px solid #6a6a60;background-image:repeating-linear-gradient(45deg,transparent 0 60px,#555 60px 66px),repeating-linear-gradient(-45deg,transparent 0 60px,#555 60px 66px)"></div><div style="position:absolute;left:0;right:0;top:950px;text-align:center;font-size:520px;font-weight:900;color:#2a241c;opacity:.8;font-family:display">2</div><div style="position:absolute;right:90px;top:1180px;width:90px;height:220px;background:#3a3832;border-radius:20px"></div><div style="position:absolute;left:0;right:0;bottom:0;height:300px;background:linear-gradient(transparent,#3a2e1e99)"></div></div>' });
     ctx.spawn({ feetPosition: { x: ONWARD.x - 0.6, y: 2.6, z: ONWARD.z }, visibleRange: { max: 35 }, light: { kind: "point", color: "oklch(0.8 0.12 150)", intensity: 2.5, distance: 7, shadow: { enabled: false } } });
+  }
+  if ((s.envV ?? 0) < 1) { s.envV = 1; // env pass (Nov 9): modelled fire door, back wall breach and map board replace the box versions
+    const d = ctx.place.objects["l1-onward-door"];
+    if (d) { d.ui = null; d.primitive = null; d.model = { id: L1M.door }; d.physics = { body: "static", collider: "box" }; d.visibleRange = { max: 60 }; }
+    if (!ctx.place.objects["l1-backwall"]) ctx.spawn("l1-backwall", { feetPosition: { x: BACK.x - 0.2 + L1M.wallDx, y: 0, z: BACK.z }, physics: "static", model: { id: L1M.wall }, receiveShadow: true, castShadow: false });
+    const a = cellCenter(ARRIVE.cx, ARRIVE.cz);
+    if (!ctx.place.objects["l1-mapboard"]) ctx.spawn("l1-mapboard", { feetPosition: { x: a.x + 1, y: 0, z: a.z + 8.6 }, rotation: { yaw: L1M.boardYaw }, physics: { body: "static", collider: "box" }, model: { id: L1M.board }, visibleRange: { max: 50 }, castShadow: false });
   }
   if (!s.megCamp) { s.megCamp = true; // the M.E.G. waypoint: the camp, its fire, its lamps, and three agents
     if (ctx.place.objects["meg-cloth"]) ctx.destroy("meg-cloth");

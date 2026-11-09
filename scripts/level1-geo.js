@@ -80,7 +80,6 @@ export function geometry(ctx) {
   }
   // the flickering wall home: a warped panel of level 0 wallpaper on a freestanding wall
   const b = BACK;
-  ctx.color("oklch(0.8 0.012 250)"); box(ctx, b.x - 0.3, b.x - 0.1, 0, H, b.z - 2.4, b.z + 2.4);
-  ctx.color("oklch(0.8 0.12 92)"); ctx.emissive("oklch(0.55 0.1 92)"); box(ctx, b.x - 0.1, b.x, 0.05, 2.6, b.z - 1.2, b.z + 1.2); ctx.emissive(null);
+  void b; // the wall itself is the modelled l1-backwall (art/level1/build.py), spawned by places/level1/sim.js
   ctx.color(null); ctx.roughness(null);
 }
