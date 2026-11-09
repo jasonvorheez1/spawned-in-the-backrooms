@@ -25,10 +25,10 @@ export const hairOf = (l) => {
   return (l.hat && l.hat !== 'none' && HAIR.hatted?.[l.hair]) || HAIR.styles[l.hair] || null
 }
 const hairMats = (c) => ({
-  hair: { color: c, roughness: 0.8 },
-  scalp: { color: c, roughness: 0.85 },
-  scalp_cap: { color: c, roughness: 0.85 },
-  hairtie: { color: '#e85d75', roughness: 0.5 }
+  hair: { color: c, roughness: 0.58, metalness: 0.02 },
+  scalp: { color: c, roughness: 0.75, metalness: 0 },
+  scalp_cap: { color: c, roughness: 0.75, metalness: 0 },
+  hairtie: { color: '#e85d75', roughness: 0.45, metalness: 0.05 }
 })
 const hairModel = (l) => {
   const want = hairOf(l)

@@ -1069,10 +1069,17 @@ def build_face(H, sp):
                 a_in.append((xx, arc(xx))); a_out.append((xx, arc(xx) + sgn * .0075 * (1 - (xx / ew) ** 6)))
             st[k] = a_in + a_out
         add_decal(H, u, EYE_V, .0088, eye_types(st), ring_faces(N), "eyeink")
-        # the big matte black pupil, a little toward the nose and down (no specular shines!)
-        pw, ph = .046, .060; pc = (-s * .015, -.016)
+        # vibrant colored iris ring framing the matte black pupil (color rides iris per look.eye)
+        iw, ih = .056, .072; ic = (-s * .015, -.016)
+        pts_i, ff_i = disc(iw, ih, N, 6, *ic)
+        st_i = {"Basis": pts_i, "Wide": [(ic[0] + (x - ic[0]) * .80, ic[1] + (y - ic[1]) * .80) for x, y in pts_i],
+                "Half": [(x, min(y, cut - .002)) for x, y in pts_i], "Sad": [(x, y + .012) for x, y in pts_i], "Angry": [(x - s * .004, y - .006) for x, y in pts_i]}
+        for k in ("Blink", "Happy"): st_i[k] = eyeT(pts_i, k)
+        add_decal(H, u, EYE_V, .0096, eye_types(st_i), ff_i, "iris")
+        # the big matte black pupil, centered inside the iris (CRITICAL: strictly matte black, roughness 1.0, #000000!)
+        pw, ph = .042, .054; pc = (-s * .015, -.016)
         pts, ff = disc(pw, ph, N, 6, *pc)
-        st = {"Basis": pts, "Wide": [(pc[0] + (x - pc[0]) * .78, pc[1] + (y - pc[1]) * .78) for x, y in pts],
+        st = {"Basis": pts, "Wide": [(pc[0] + (x - pc[0]) * .76, pc[1] + (y - pc[1]) * .76) for x, y in pts],
               "Half": [(x, min(y, cut - .004)) for x, y in pts], "Sad": [(x, y + .012) for x, y in pts], "Angry": [(x - s * .004, y - .006) for x, y in pts]}
         for k in ("Blink", "Happy"): st[k] = eyeT(pts, k)
         add_decal(H, u, EYE_V, .0105, eye_types(st), ff, "pupil")
@@ -1097,6 +1104,24 @@ def build_face(H, sp):
                     out_ += nb + [(tp_[0] - mx + nmx, tp_[1] - my + nmy)]
                 st[k] = out_
             add_decal(H, u, EYE_V, .0092, eye_types(st), lf, "eyeink")
+        else:
+            # Clean masculine anime eyelid contour wing at the upper outer eye corner
+            lp, lf = [], []
+            a = math.radians(26 if s > 0 else 154); r0 = (ew + .008, eh + .008)
+            bx, by = r0[0] * math.cos(a), r0[1] * math.sin(a); nx_, ny_ = math.cos(a), math.sin(a)
+            tx, ty = -ny_, nx_; ln_ = .014
+            base = [(bx + tx * .005, by + ty * .005), (bx - tx * .005, by - ty * .005)]
+            tip = (bx + nx_ * ln_ + s * .003, by + ny_ * ln_ + .003)
+            lp = base + [tip]; lf = [(0, 1, 2)]
+            st = {"Basis": lp}
+            for k in ("Wide", "Half", "Sad", "Angry", "Blink", "Happy"):
+                b0, b1, tp_ = lp[0], lp[1], lp[2]
+                if k == "Half": nb = [(b0[0], min(b0[1], cut + .012)), (b1[0], min(b1[1], cut + .012))]
+                else: nb = eyeT([b0, b1], k)
+                if k in ("Blink", "Happy"): nb = [(nb[0][0] + s * .003, nb[0][1] + .002), (nb[1][0], nb[1][1] - .002)]
+                mx, my = (b0[0] + b1[0]) / 2, (b0[1] + b1[1]) / 2; nmx, nmy = (nb[0][0] + nb[1][0]) / 2, (nb[0][1] + nb[1][1]) / 2
+                st[k] = nb + [(tp_[0] - mx + nmx, tp_[1] - my + nmy)]
+            add_decal(H, u, EYE_V, .0092, eye_types(st), lf, "eyeink")
         # expressive eyebrows: soft resting arch that morphs across expressions
         M_ = 10; xs = [-.048 + .096 * i / (M_ - 1) for i in range(M_)]
         def brow(fy, th=.0048):
@@ -1110,13 +1135,23 @@ def build_face(H, sp):
         is_human = bool(sp.get("human"))
         if is_human and not F_HEAD:
             st_b = {
-                "Basis": brow(lambda x: eh + .024 - .006 * (x / .048) ** 2, .0056),
-                "Smile": brow(lambda x: eh + .028 - .007 * (x / .048) ** 2, .0056),
-                "Happy": brow(lambda x: eh + .032 - .008 * (x / .048) ** 2, .0056),
-                "Wide":  brow(lambda x: eh + .040 - .010 * (x / .048) ** 2, .0060),
-                "Half":  brow(lambda x: eh + .018 - .003 * (x / .048) ** 2, .0056),
-                "Sad":   brow(lambda x: eh + .028 + .026 * (0.35 - s * x / .096) - .005 * (x / .048) ** 2, .0062),
-                "Angry": brow(lambda x: eh + .020 - .038 * (0.40 - s * x / .096) - .004 * (x / .048) ** 2, .0065),
+                "Basis": brow(lambda x: eh + .023 - .005 * (x / .048) ** 2, .0060),
+                "Smile": brow(lambda x: eh + .027 - .006 * (x / .048) ** 2, .0060),
+                "Happy": brow(lambda x: eh + .031 - .007 * (x / .048) ** 2, .0060),
+                "Wide":  brow(lambda x: eh + .038 - .008 * (x / .048) ** 2, .0064),
+                "Half":  brow(lambda x: eh + .017 - .003 * (x / .048) ** 2, .0060),
+                "Sad":   brow(lambda x: eh + .027 + .024 * (0.35 - s * x / .096) - .005 * (x / .048) ** 2, .0064),
+                "Angry": brow(lambda x: eh + .019 - .036 * (0.40 - s * x / .096) - .004 * (x / .048) ** 2, .0068),
+            }
+        elif is_human and F_HEAD:
+            st_b = {
+                "Basis": brow(lambda x: eh + .026 - .008 * (x / .048) ** 2, .0040),
+                "Smile": brow(lambda x: eh + .031 - .009 * (x / .048) ** 2, .0042),
+                "Happy": brow(lambda x: eh + .035 - .010 * (x / .048) ** 2, .0043),
+                "Wide":  brow(lambda x: eh + .042 - .011 * (x / .048) ** 2, .0046),
+                "Half":  brow(lambda x: eh + .018 - .004 * (x / .048) ** 2, .0040),
+                "Sad":   brow(lambda x: eh + .030 + .028 * (0.35 - s * x / .096) - .005 * (x / .048) ** 2, .0048),
+                "Angry": brow(lambda x: eh + .021 - .034 * (0.40 - s * x / .096) - .004 * (x / .048) ** 2, .0050),
             }
         else:
             st_b = {
@@ -1129,14 +1164,16 @@ def build_face(H, sp):
                 "Angry": brow(lambda x: eh + .022 - .034 * (0.40 - s * x / .096) - .004 * (x / .048) ** 2, .0055),
             }
         add_decal(H, u, EYE_V, .0090, eye_types(st_b), strip(M_), "eyeink")
-        # blush: positioned on the plush outer-lower cheek (cleanly clear of the eye ring)
+        # blush: positioned on the cheeks
         bp, bf = disc(.044, .023, 20, 3)
         bp_small = [(.35 * x, .35 * y) for x, y in bp]
+        blush_u = s * (.56 if is_human else .68)
+        blush_v = -.18 if is_human else -.23
         if F_HEAD or "pinkcheeks" in sp.get("marks", []):
             bp_big = [(1.18 * x, 1.18 * y) for x, y in bp]
-            add_decal(H, s * .68, -.23, .0050, {"Basis": bp, "Blush": bp_big}, bf, "blush")
+            add_decal(H, blush_u, blush_v, .0050, {"Basis": bp, "Blush": bp_big}, bf, "blush")
         else:
-            add_decal(H, s * .68, -.23, .0050, {"Basis": bp_small, "Blush": bp}, bf, "blush", outs={"Basis": -.008, "Blush": .0050})
+            add_decal(H, blush_u, blush_v, .0050, {"Basis": bp_small, "Blush": bp}, bf, "blush", outs={"Basis": -.008, "Blush": .0050})
         # sleek tapered whiskers outside the cheek blush
         if sp.get("whisk"):
             for k_, (vy, ang) in enumerate(((-.18, .08), (-.24, -.02), (-.30, -.12))):
@@ -1158,11 +1195,17 @@ def build_face(H, sp):
             add_decal(H, 0, -.185, .0268, {"Basis": np_}, nf, "eyeink")
     elif sp.get("human"):
         # Sculpted 3D cute human nose: refined bridge and soft rounded tip
-        nh = .018; nw = .020
+        nh = .020 if not F_HEAD else .016
+        nw = .022 if not F_HEAD else .018
+        h_max = .0185 if not F_HEAD else .015
         def human_n(x, y):
             u_ = y / nh
             return (x * (1.0 + 0.18 * u_), y - 0.12 * abs(x) * (1.0 if y < 0 else 0.3))
-        add_dome(H, 0, NV, nw, nh, .017, "nose", N=22, R=5, shape_fn=human_n, base_out=-.002)
+        add_dome(H, 0, NV, nw, nh, h_max, "nose", N=22, R=5, shape_fn=human_n, base_out=-.002)
+        # Delicate nostril wing creases
+        for s in (-1, 1):
+            np_, nf = disc(.0035, .0055, 10, 2, s * .011, -.005)
+            add_decal(H, 0, NV, h_max + .0005, {"Basis": np_}, nf, "eyeink")
         # Delicate nostril wing creases
         for s in (-1, 1):
             np_, nf = disc(.0035, .0055, 10, 2, s * .011, -.005)
@@ -1233,6 +1276,10 @@ def build_face(H, sp):
     add_decal(H, 0, MV, .0088, {
         "Basis": band(lineB), "Smile": band(lineS), "Frown": band(lineF), "Open": band(lineB), "O": oring()
     }, strip(M_), "eyeink", outs={"Basis": .0088, "Smile": .0088, "Frown": .0088, "Open": .0175, "O": .0175})
+    if is_human and F_HEAD:
+        # Soft anime lower lip tone adding natural depth and warmth
+        lp_shade, lf_shade = disc(.018, .007, 14, 2, 0, -.013)
+        add_decal(H, 0, MV, .0084, {"Basis": lp_shade, "Smile": [(x * 1.12, y) for x, y in lp_shade]}, lf_shade, "blush")
 
     # philtrum connecting nose tip to upper lip peak
     if "snout" not in sp["ex"] and not (sp.get("bignose") and "bigantlers" not in sp["ex"]):
