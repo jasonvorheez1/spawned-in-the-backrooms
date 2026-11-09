@@ -1,4 +1,6 @@
 import { raycast } from 'builtin/physics'
+import { humanBody } from './lib/critter-model.js'
+function vmSkin(hex) { const n = parseInt(String(hex ?? '#efcfb4').slice(1), 16), k = 0.72; return '#' + [16, 8, 0].map((b) => Math.round(((n >> b) & 255) * k).toString(16).padStart(2, '0')).join('') } // as scripts/player.js's viewmodel arm
 // Ladder climbing, every level. A ladder is any object tagged "ladder" with state.ladder = { h, yaw, mat }:
 // its feet at the foot of the rungs, yaw = the way a climber faces it (forward = into the ladder), h = rise to the top step-off.
 // Walk into it holding W: you take hold. W climbs, S climbs down, Space lets go and drops you back. At the top, W steps you off onto
@@ -130,10 +132,12 @@ function hands(ctx, m, dir) {
   if (s.tp) { if (m.fp) { ctx.destroy(m.fp); m.fp = null } return }
   const sx = s.look?.sex === 'f' || s.look?.sex == null ? 'f' : 'm'
   if (!m.fp) {
+    let skinM = null; try { const hb = humanBody(s.look ?? {}); if (hb?.materials?.Body_Skin) skinM = { Body_Skin: { ...hb.materials.Body_Skin, color: vmSkin(hb.materials.Body_Skin.color), roughness: 0.78, metalness: 0, emissive: '#000000' } } } catch (e) {}
+    const arm = skinM ? { id: FP_ARM[sx].R, materials: skinM } : FP_ARM[sx].R
     m.fp = ctx.spawn({ parent: me.id, feetPosition: { x: 0, y: 1.6, z: -0.42 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
       children: [
-        { id: 'r', feetPosition: { x: 0.2, y: -0.40, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, model: FP_ARM[sx].R, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
-        { id: 'l', feetPosition: { x: -0.2, y: -0.40, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, scale: { x: -1, y: 1, z: 1 }, model: FP_ARM[sx].R, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
+        { id: 'r', feetPosition: { x: 0.2, y: -0.40, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, model: arm, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
+        { id: 'l', feetPosition: { x: -0.2, y: -0.40, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, scale: { x: -1, y: 1, z: 1 }, model: arm, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
       ] })
     m.fpR = m.fp + '/r'; m.fpL = m.fp + '/l'
   }
