@@ -209,7 +209,7 @@ for o in bpy.data.objects:
         bm.normal_update()
         # the cloth is two walls, a face and a lining facing inward: the lining sits 8 mm under the face, or the two fight and read as crumples
         lining = {v for v in hv if v.normal.dot(Vector((v.co.x, v.co.y - cy, 0)).normalized()) < 0}
-        for it in range(4):  # relax heights too, so vertical crumples open out; the bottom ring keeps its line
+        for it in range(12):  # relax heights too, so vertical crumples open out; the bottom ring keeps its line
             if it:
                 nz = {}
                 for v in hv:
