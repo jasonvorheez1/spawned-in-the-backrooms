@@ -224,6 +224,10 @@ for o in bpy.data.objects:
             if abs(v.co.x) < 0.12 and v.co.z < CROTCH + 0.012 + 0.05 * (1 - abs(v.co.x) / 0.12):
                 dz = CROTCH + 0.012 + 0.05 * (1 - abs(v.co.x) / 0.12) - v.co.z; v.co.z += dz
                 for L in shapes: v[L].z += dz
+        # what stays of the bow lies flat (faces turned up or down at the fly): those go, the front panel hanging straight stays
+        bm.normal_update()
+        bow = [f for f in bm.faces if abs(f.calc_center_median().x) < 0.11 and f.calc_center_median().z < CROTCH + 0.08 and abs(f.normal.z) > 0.55]
+        bmesh.ops.delete(bm, geom=bow, context="FACES_ONLY")
         # then every hem vertex sits ON the hung tube, in or out: folds and crumples have nowhere to be
         fixed = 0
         hv = [v for v in bm.verts if v.co.z < HEM + 0.04]
