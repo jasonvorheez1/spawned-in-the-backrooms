@@ -966,6 +966,17 @@ export function tick(ctx) {
     }
     s.fortPathV = 1;
   }
+  if ((s.fortPathV ?? 0) < 2) { // the old gate ramp sat 1.5 m over the new slope after the turn: one even ramp, wharf (1.2) to the gate lip (11.75)
+    for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("l7f-gate-ramp")) ctx.destroy(id);
+    ctx.destroy("l7-ft-ramp");
+    const xz = (k) => ({ x: -48.5 - 1.35 * k, z: -66.5 - 1.65 * k });
+    const a = xz(-1.55), b = xz(12.3), A = { ...a, y: 1.2 }, B = { ...b, y: 11.75 };
+    const d = { x: B.x - A.x, y: B.y - A.y, z: B.z - A.z }, len = Math.hypot(d.x, d.y, d.z), hz = Math.hypot(d.x, d.z);
+    const f = { x: d.x / len, y: d.y / len, z: d.z / len }, drop = 0.15 * hz / len;
+    ctx.spawn("l7-ft-ramp", { feetPosition: { x: (A.x + B.x) / 2, y: (A.y + B.y) / 2 - drop, z: (A.z + B.z) / 2 }, pivot: "center",
+      rotation: rotationFromDirection(f), primitive: { kind: "box", width: 2.8, height: 0.3, depth: len + 0.4 }, physics: "static", visible: false });
+    s.fortPathV = 2;
+  }
   if (!ctx.getObject("l7-fauna")) ctx.spawn("l7-fauna", { behavior: "scripts/l7-fauna.js" }); // tidecrawlers on the shores, the Deep in open water
   // Ensure NPCs come back home after respawn window via level-kit
   if (every(ctx, "people", 5000)) {
