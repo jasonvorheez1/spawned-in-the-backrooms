@@ -1876,3 +1876,14 @@ l26d-shoeprint-n2:
   receiveShadow: true
   rotation: {pitch: -90, yaw: 0}
   scale: 1.35
+l26d-stow-nest:
+  behavior: scripts/l26-stow-nest.js
+  castShadow: true
+  feetPosition: {x: 300, y: -80, z: -106.2}
+  id: l26d-stow-nest
+  layout: {box: {max: {x: 0.45, y: 0.4, z: 0.95}, min: {x: -0.45, y: 0, z: -0.95}}}
+  model: {id: /cdn/value.58531c95b0be08e4ae746b46050f7710e424fcdfdfdc293b145e382dc1a1c4ff.glb}
+  physics: none
+  rotation: {yaw: 90}
+  state: {name: Damp bedroll, verb: Search}
+  tags: [usable, l26x]
