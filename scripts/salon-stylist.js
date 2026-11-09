@@ -3,7 +3,7 @@
 // the right hand snipping in an arc beside the head with the shears, the left holding a lock at the crown.
 // Every change the sitter makes in the menu gets a snip flurry, falling clippings and a line. Done or standing up sends her home.
 const HOME = { x: 14.2, z: 1.0, yaw: 180 }
-const WALK = 1.3, BEHIND = 0.72, HEAD_Y = 1.32 // Savi's picks: head height of a sitter above the chair's feet, measured on the 1.84 m body
+const WALK = 1.3, BEHIND = 0.5, SIDE = 0.42, HEAD_Y = 1.45 // Savi's picks: head height of a sitter above the chair's feet, measured on the 1.84 m body
 const SNIP = "/cdn/moodboard-realistic-gritty/sfx-steel-hair-shears-snip-close-crisp.mp3"
 const THROAT = "voice-warm-friendly-thirties-woman-hairstylist"
 const say = (line) => `/cdn/${THROAT}-saying-${encodeURIComponent(line)}.mp3`
@@ -70,7 +70,7 @@ export function update(ctx, dt) {
     return
   }
   const { ch, p } = c, y = yawOf(ch.rotation), f = fwd(y), r = { x: -f.z, z: f.x }
-  const spot = { x: ch.feetPosition.x - f.x * BEHIND + r.x * 0.1, z: ch.feetPosition.z - f.z * BEHIND + r.z * 0.1 }
+  const spot = { x: ch.feetPosition.x - f.x * BEHIND + r.x * SIDE, z: ch.feetPosition.z - f.z * BEHIND + r.z * SIDE }
   if (ses.on !== ch.id) { ses.on = ch.id; ses.sat = false; ses.look = lookKey(p.state.look); ses.flurry = 0; letGo(ctx); me.anim.flourish = null
     ctx.emit("playSound", { clip: say(pick(ctx, HELLO)), position: { ...me.feetPosition, y: me.feetPosition.y + 1.6 }, bus: "Voice", volume: 0.9, maxDistance: 14, mode: "restart" }) }
   if (!walkTo(ctx, spot.x, spot.z, y, dt)) return
