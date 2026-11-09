@@ -5,7 +5,7 @@ import bpy, sys, math, mathutils as mu, os
 V = mu.Vector
 SRC = {"f": "/workspace/arm/f.glb", "m": "/workspace/arm/m.glb"}
 OUT = "/workspace/arm/out"; os.makedirs(OUT, exist_ok=True)
-R_CURL = 0.019   # finger curl radius: a fist around a ~3 cm grip
+R_CURL = 0.014   # finger curl radius: a tight fist around the grip
 def g2b(x, y, z): return V((x, -z, y))  # glTF frame -> Blender frame
 def build(sex, side):
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -42,14 +42,14 @@ def build(sex, side):
     hand = [q for q in P.values() if q[4] > 0.3 and q[1] > -0.01]
     Tmax = max(q[1] for q in hand)
     wrist_half = max(abs(q[3]) for q in hand if 0.0 < q[1] < 0.15 * Tmax)
-    k = 0.5 * Tmax
+    k = 0.42 * Tmax
     print(sex, "hand len", round(Tmax, 3), "wrist half", round(wrist_half, 3))
     for i, (p, t, h, l, hw) in P.items():
         thumb = l > wrist_half * 1.15 and 0.12 * Tmax < t < k + 0.03 and hw > 0.3
         if thumb:   # fold the thumb down over the fingers: about the hand axis, then toward the knuckles
             piv = W + s * wrist_half
-            q = mu.Quaternion(a, math.radians(-70)) @ (p - piv) + piv
-            q = mu.Quaternion(n, math.radians(-25)) @ (q - piv) + piv
+            q = mu.Quaternion(a, math.radians(-95)) @ (p - piv) + piv
+            q = mu.Quaternion(n, math.radians(-40)) @ (q - piv) + piv
             P[i] = (q,) + P[i][1:]
         elif t > k and hw > 0.3:   # bend the fingers around a cylinder under the palm
             u = t - k; th = min(u / R_CURL, math.radians(235)); rho = R_CURL + h
