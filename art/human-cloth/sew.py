@@ -57,13 +57,17 @@ sb = bmesh.new(); sb.from_mesh(body.data)
 bmesh.ops.remove_doubles(sb, verts=sb.verts[:], dist=1e-5)
 bmesh.ops.triangulate(sb, faces=sb.faces[:]); sb.verts.ensure_lookup_table(); sb.faces.ensure_lookup_table()
 dl = sb.verts.layers.deform.active; KB = sb.verts.layers.shape.get("Bust")
-bvh = BVHTree.FromBMesh(sb); gnames = {g.index: g.name for g in body.vertex_groups}
+bvh = BVHTree.FromBMesh(sb)
+MW = body.matrix_world.copy(); MI = MW.inverted()
+sw = sb.copy(); sw.transform(MW); bvhW = BVHTree.FromBMesh(sw)
+print("MW", [list(map(lambda x: round(x, 3), r)) for r in MW])
+gnames = {g.index: g.name for g in body.vertex_groups}
 done = {}
 for name, (ease, cuts) in PLAN.items():
     old = bpy.data.objects.get(name)
     if not old: continue
     mat = old.data.materials[0]
-    bm = bmesh.new(); bm.from_mesh(body.data); bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-5)
+    bm = bmesh.new(); bm.from_mesh(body.data); bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-5); bm.transform(MW)
     # region: generous box around the cuts, then the cuts make it exact after easing
     zs = [c[0].z for c in cuts if abs(c[1].z) > 0.5]; lo, hi = min(zs) - 0.04, max(zs) + 0.06
     kill = [v for v in bm.verts if not (lo < v.co.z < hi)]
@@ -78,7 +82,7 @@ for name, (ease, cuts) in PLAN.items():
             new = {v: v.co + (sum((w.co for w in nb), Vector()) / len(nb) - v.co) * f for v, nb in adj.items() if len(nb) > 2}
             for v, c in new.items(): v.co = c
         for v in bm.verts:                                   # never inside the skin, never looser than planned x1.6
-            co, n, fi, d = bvh.find_nearest(v.co)
+            co, n, fi, d = bvhW.find_nearest(v.co)
             out = (v.co - co).dot(n)
             need = max(0.003, E[v] * 0.7)
             if out < need: v.co = v.co + n * (need - out)
@@ -104,6 +108,7 @@ for name, (ease, cuts) in PLAN.items():
     # rolled edge: boundary loops nudged outward and slightly in, so hems read as turned cloth
     bm.normal_update()
     for v in [v for v in bm.verts if v.is_boundary]: v.co += v.normal * 0.0015
+    bm.transform(MI); bm.normal_update()
     me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free()
     n = bpy.data.objects.new(name + "_n", me); bpy.context.collection.objects.link(n); n.matrix_world = body.matrix_world
     me.materials.append(mat)
