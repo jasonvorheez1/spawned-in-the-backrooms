@@ -1173,7 +1173,7 @@ function lay(ctx) {
     feetPosition: { x: OUTPOST_X - 4.5, y: 0.1, z: OUTPOST_Z },
     rotation: { yaw: -90 },
     physics: "character",
-    ...critterSpec(npcLook("l11-vance", { species: "wolf", sex: "m", topw: "megjacket", top: "#4a5a3a", botw: "cargo", bottom: "#3a3a30", shoes: "boots" }, "guard", 11)),
+    ...critterSpec(npcLook("l11-vance", { species: "human", sex: "m", topw: "megjacket", top: "#4a5a3a", botw: "cargo", bottom: "#3a3a30", shoes: "boots" }, "guard", 11)),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
     state: {
       name: "Specialist Vance · M.E.G. Base Beta",
@@ -1217,7 +1217,7 @@ function lay(ctx) {
     feetPosition: { x: -11.5, y: 0.1, z: 24 },
     rotation: { yaw: 180 },
     physics: "character",
-    ...critterSpec(npcLook("l11-faceling1", { species: "cat", sex: "f", topw: "jacket", top: "#2a2a35", botw: "pants", bottom: "#202028", shoes: "boots" }, "wanderer", 11)),
+    ...critterSpec(npcLook("l11-faceling1", { species: "faceling", sex: "f", topw: "jacket", top: "#2a2a35", botw: "pants", bottom: "#202028", shoes: "boots" }, "wanderer", 11)),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/l61-staff.js"],
     state: {
       name: "Commuter Faceling",
@@ -1707,22 +1707,22 @@ const W_LOOP = [{ x: -10, z: 24, dwell: 1 }, { x: -10, z: 62, dwell: 1 }, { x: -
 const E_LOOP = [{ x: 10, z: -10, dwell: 1 }, { x: 10, z: 14 }, { x: 10, z: 19 }, { x: 10, z: 55, dwell: 3 }, { x: 14, z: 66, dwell: 2 }, { x: 14, z: 22 }, { x: 14, z: -12, dwell: 2 }];
 const CROSS = [{ x: -10, z: -4, dwell: 1 }, { x: -10, z: -21 }, { x: -6, z: -24 }, { x: 6, z: -24 }, { x: 10, z: -20 }, { x: 10, z: 6, dwell: 4 }, { x: 10, z: -21 }, { x: 6, z: -24 }, { x: -6, z: -24 }, { x: -10, z: -20 }];
 const WALKERS = [
-  { id: "l11-commuter-faceling", seed: "l11-faceling1", look: { species: "cat", sex: "f", trait: "gentle", topw: "jacket", top: "#2a2a35", botw: "pants", bottom: "#202028", shoes: "boots" }, at: { x: -11.5, z: 24 }, route: W_LOOP, name: "Commuter Faceling", voice: "wren", line: "Pardon me, heading to the commercial plaza before the streetlights turn." },
-  { id: "l11-walker-1", seed: "l11-walker-1", look: { species: "dog", sex: "m", trait: "perky", topw: "hoodie", top: "#5a3a2a", botw: "jeans", bottom: "#2a3550", shoes: "sneakers" }, at: { x: -10, z: -4 }, route: CROSS, name: "Courier", voice: "reyes", line: "Can't stop, kid. Package for the twelfth floor and the elevator's moody." },
-  { id: "l11-walker-2", seed: "l11-walker-2", look: { species: "bunny", sex: "f", trait: "dreamy", topw: "blouse", top: "#d8c8a8", botw: "skirt", bottom: "#3a2a40", shoes: "flats" }, at: { x: 10, z: -10 }, route: E_LOOP, name: "Office Temp", voice: "wren", line: "Third week in the city. The coffee cart guy knows my order already. Is that bad?" },
-  { id: "l11-walker-3", seed: "l11-walker-3", look: { species: "bear", sex: "m", trait: "weary", topw: "coat", top: "#3a3a2a", botw: "slacks", bottom: "#25252a", shoes: "boots" }, at: { x: 14, z: 40 }, route: [...E_LOOP.slice(3), ...E_LOOP.slice(0, 3)], name: "Night Shift Janitor", voice: "reyes", line: "Every block looks like the last one if you walk it long enough. Keep your map close, wanderer." },
+  { id: "l11-commuter-faceling", seed: "l11-faceling1", look: { species: "faceling", sex: "f", trait: "gentle", topw: "jacket", top: "#2a2a35", botw: "pants", bottom: "#202028", shoes: "boots" }, at: { x: -11.5, z: 24 }, route: W_LOOP, name: "Commuter Faceling", voice: "wren", line: "Pardon me, heading to the commercial plaza before the streetlights turn." },
+  { id: "l11-walker-1", seed: "l11-walker-1", look: { species: "human", sex: "m", trait: "perky", topw: "hoodie", top: "#5a3a2a", botw: "jeans", bottom: "#2a3550", shoes: "sneakers" }, at: { x: -10, z: -4 }, route: CROSS, name: "Courier", voice: "reyes", line: "Can't stop, kid. Package for the twelfth floor and the elevator's moody." },
+  { id: "l11-walker-2", seed: "l11-walker-2", look: { species: "human", sex: "f", trait: "dreamy", topw: "sweater", top: "#d8c8a8", botw: "pants", bottom: "#3a2a40", shoes: "sneakers" }, at: { x: 10, z: -10 }, route: E_LOOP, name: "Office Temp", voice: "wren", line: "Third week in the city. The coffee cart guy knows my order already. Is that bad?" },
+  { id: "l11-walker-3", seed: "l11-walker-3", look: { species: "human", sex: "m", trait: "cynical", topw: "jacket", top: "#3a3a2a", botw: "pants", bottom: "#25252a", shoes: "boots" }, at: { x: 14, z: 40 }, route: [...E_LOOP.slice(3), ...E_LOOP.slice(0, 3)], name: "Night Shift Janitor", voice: "reyes", line: "Every block looks like the last one if you walk it long enough. Keep your map close, wanderer." },
 ];
 function layWalkers(ctx) {
   for (const w of WALKERS) {
     const live = ctx.getObject(w.id);
     if (live) { live.state.job = "route"; live.state.route = w.route; continue; } // keep the body, hand it the route
     ctx.spawn(w.id, {
-      tags: ["npc", "faceling", "l11walker"],
+      tags: ["npc", "l11walker", ...(w.id.includes("faceling") ? ["faceling"] : [])],
       feetPosition: { x: w.at.x, y: 0.35, z: w.at.z },
       physics: "character",
       ...critterSpec(npcLook(w.seed, w.look, "wanderer", 11)),
       behavior: ["scripts/humanoid-locomotion.js", "scripts/l61-staff.js"],
-      state: { name: w.name, role: "survivor", voice: w.voice, line: w.line, job: "route", route: w.route, ...npcState(ctx, "faceling", 90) },
+      state: { name: w.name, role: "survivor", voice: w.voice, line: w.line, job: "route", route: w.route, ...npcState(ctx, w.id.includes("faceling") ? "faceling" : "survivor", 90) },
     });
   }
 }

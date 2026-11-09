@@ -83,6 +83,8 @@ Object.assign(SPECIES, {
   capybara: { fur: "#a07848", belly: "#d8b88a", nose: "#2a1c18", ears: "round", earL: 0.09, earW: 0.95, tail: "stub", snout: 0.15, snoutW: 0.12, muzzle: true, chunky: true, earIn: "#d8a888", bridge: true },
   lop: { ...SPECIES.bunny, fur: "#d8c4a8", ears: "flop", earL: 0.3 },
   fennec: { ...SPECIES.fox, fur: "#e8c898", earL: 0.5, earTip: "#7a5a38", snout: 0.12, bridge: true },
+  human: { fur: "#f0d5be", belly: "#fff0e4", nose: "#e8a898", ears: "human", earL: 0.11, tail: "none", snout: 0, human: true, muzzle: false, earIn: "#f4c2b0" },
+  faceling: { fur: "#ebd4c2", belly: "#fff0e4", nose: "#e8a898", ears: "human", earL: 0.11, tail: "none", snout: 0, human: true, muzzle: false, faceless: true, earIn: "#f4c2b0" },
 });
 
 // expressions: eyes, mouth, brows, extras
@@ -605,7 +607,8 @@ export function geometry(ctx) {
     WO = (p) => { const t = clamp((p[1] - 1.5) / 0.1, 0, 1); return { Head: 1 - t, [s < 0 ? "EarL" : "EarR"]: t }; };
     const type = sp.ears, wM = sp.earW || 1;
     let ctrl, front = norm3([s * 0.15, 0.1, -1]), w0 = 0.085 * wM, th = 0.03;
-    if (type === "point") { const b = headPt(norm3([s * 0.55, 0.78, -0.05]), -0.04); ctrl = [[b, [w0 * 1.15, th]], [add3(b, [s * EL * 0.18, EL * 0.45, 0]), [w0 * 0.85, th * 0.9]], [add3(b, [s * EL * 0.32, EL * 0.85, 0.01]), [w0 * 0.3, th * 0.6]], [add3(b, [s * EL * 0.36, EL, 0.015]), [0.008, 0.006]]]; }
+    if (type === "human") { const b = headPt(norm3([s * 0.95, 0.05, -0.05]), -0.04); ctrl = [[b, [0.035, th]], [add3(b, [s * 0.03, EL * 0.4, 0]), [0.045, th]], [add3(b, [s * 0.04, EL * 0.8, 0]), [0.035, th]], [add3(b, [s * 0.03, EL * 1.05, 0]), [0.015, 0.01]]]; front = norm3([s * 0.1, 0.95, -0.2]); }
+    else if (type === "point") { const b = headPt(norm3([s * 0.55, 0.78, -0.05]), -0.04); ctrl = [[b, [w0 * 1.15, th]], [add3(b, [s * EL * 0.18, EL * 0.45, 0]), [w0 * 0.85, th * 0.9]], [add3(b, [s * EL * 0.32, EL * 0.85, 0.01]), [w0 * 0.3, th * 0.6]], [add3(b, [s * EL * 0.36, EL, 0.015]), [0.008, 0.006]]]; }
     else if (type === "long") { const b = headPt(norm3([s * 0.3, 0.92, 0]), -0.04); ctrl = [[b, [0.045, th]], [add3(b, [s * 0.03, EL * 0.35, 0]), [0.07, th]], [add3(b, [s * 0.08, EL * 0.8, 0.02]), [0.06, th * 0.8]], [add3(b, [s * 0.1, EL, 0.03]), [0.012, 0.01]]]; }
     else if (type === "round") { const b = headPt(norm3([s * 0.62, 0.72, 0.02]), -0.05); w0 = 0.09 * wM * (0.6 + EL * 3); ctrl = [[b, [w0 * 0.85, th]], [add3(b, [s * EL * 0.25, EL * 0.55, 0]), [w0, th]], [add3(b, [s * EL * 0.4, EL * 0.95, 0]), [w0 * 0.55, th * 0.8]], [add3(b, [s * EL * 0.45, EL * 1.1, 0]), [0.01, 0.01]]]; }
     else if (type === "leaf") { const b = headPt(norm3([s * 0.85, 0.42, 0.05]), -0.04); ctrl = [[b, [0.04, th]], [add3(b, [s * EL * 0.4, EL * 0.14, 0]), [0.075, th]], [add3(b, [s * EL * 0.85, EL * 0.22, 0.01]), [0.04, th * 0.8]], [add3(b, [s * EL, EL * 0.24, 0.015]), [0.008, 0.008]]]; front = norm3([s * 0.2, 0.9, -0.6]); }
@@ -722,7 +725,7 @@ export function geometry(ctx) {
     }
   }
   // tail: bushy and two-toned
-  {
+  if (sp.tail !== "none") {
     const tS = sp.tail;
     WO = (p) => { const t = clamp((p[2] - 0.13) / 0.25, 0, 1); return { Hips: Math.max(0, 0.3 - t), Tail: 1 - t, Tail1: t }; };
     let ctrl = null, tipFrom = 0.68, ringed = false;

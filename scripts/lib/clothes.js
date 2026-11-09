@@ -138,8 +138,16 @@ export function rollCloth(ctx, regular = false, level) {
 // agency top (the M.E.G. lime) stay; everything else is rolled from what that faction wears at that level
 const hashOf = (str) => { let h = 2166136261; for (const c of String(str)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
 const NEWSP = ['rat', 'squirrel', 'leopard', 'jackal', 'badger', 'ferret', 'beaver', 'capybara', 'lop', 'fennec'].filter((k) => C.species.includes(k))
-const OLDSP = C.species.filter((k) => !NEWSP.includes(k))
-const speciesFor = (id) => (NEWSP.length && hashOf(id + ':sp2') % 100 < 34 ? NEWSP[hashOf(id + ':sp3') % NEWSP.length] : OLDSP[hashOf(id + ':sp') % OLDSP.length])
+const OLDSP = C.species.filter((k) => !NEWSP.includes(k) && !['human', 'faceling'].includes(k))
+export const speciesFor = (id, faction, role) => {
+  const h = hashOf(id + ':sp')
+  if (['meg', 'guard', 'officer'].includes(faction) || ['guard', 'scout', 'captain'].includes(role)) {
+    if (h % 100 < 50) return 'human'
+  } else if (['survivor', 'wanderer', 'bntg', 'civ'].includes(faction)) {
+    if (h % 100 < 25) return 'human'
+  }
+  return NEWSP.length && hashOf(id + ':sp2') % 100 < 34 ? NEWSP[hashOf(id + ':sp3') % NEWSP.length] : OLDSP[h % OLDSP.length]
+}
 
 // bump NPC_GEN to reroll every NPC's clothes, fur, body and face at once (sex and species stay: stories and pronouns name them)
 export const NPC_GEN = 'g2'
@@ -158,8 +166,8 @@ export function npcLook(id, look, faction, level, role) {
   // If look did not specify sex, roll 50/50 from seed so we don't end up with 100% male NPCs
   if (!look?.sex) l.sex = (hashOf(id + ':sex') % 100 < 50) ? 'f' : 'm'
 
-  // If look did not specify species, roll across all 30 species so we don't end up with 100% cats
-  if (!look?.species) l.species = speciesFor(id)
+  // If look did not specify species, roll across species
+  if (!look?.species) l.species = speciesFor(id, faction, role)
 
   l.role = role || (['guard', 'medic', 'trader', 'scout', 'quarter', 'scavenger', 'clerk', 'captain', 'keeper', 'psychic', 'pilgrim'].includes(faction) ? faction : (look?.role ?? 'survivor'))
   l.faction = faction || (look?.faction ?? 'wanderer')
@@ -189,9 +197,13 @@ export function npcLook(id, look, faction, level, role) {
   }
   if (!look?.bodyOwn) bodyRoll(sid, l, look) // a fresh body per NPC: fur, markings, height, build, proportions (species and sex stay: their stories name them)
   if (!look?.hair && (!l.hair || l.hair === 'none')) { // hair, spread by id (Shelly): most people wear some, a few go bare
-    const hs = l.sex === 'f' ? C.hairF : C.hairM, r = hashOf(id + ':hair')
-    l.hair = r % 100 < (l.sex === 'f' ? 92 : 80) ? hs[(r >>> 7) % hs.length] : 'none'
-    l.hairc = C.hairc[(hashOf(id + ':hairc') >>> 3) % C.hairc.length]
+    if (l.species === 'faceling') {
+      l.hair = 'none'
+    } else {
+      const hs = l.sex === 'f' ? C.hairF : C.hairM, r = hashOf(id + ':hair')
+      l.hair = r % 100 < (l.sex === 'f' ? 92 : 80) ? hs[(r >>> 7) % hs.length] : 'none'
+      l.hairc = C.hairc[(hashOf(id + ':hairc') >>> 3) % C.hairc.length]
+    }
   }
   l.fseed = h0 // the face (scripts/lib/critter-model.js faceFill) rolls from the id, so it never changes with the clothes
   if (!look?.trait) l.trait = '' // fullLook gave the player default; an NPC rolls its own
@@ -215,7 +227,9 @@ const NATURAL = { cat: ['f2a65a', 'c98b55', '3b3440', 'f4efe9', 'b9b3c2', '9a644
   panda: ['f4efe9'], pig: ['ffb3cf', 'f0a0a8', 'e8c0b0'], sheep: ['f4efe9', 'e8e0d0', '3b3440'], lion: ['e0a850', 'c98b55'], tiger: ['f07a2e', 'f4efe9'], redpanda: ['c8502a', 'b04a2a'], skunk: ['3b3440', '2b2633'],
   hamster: ['f2a65a', 'e8c090', 'f4efe9'], otter: ['7a5236', '9a6440', '6a4630'], koala: ['8a909a', 'b9b3c2'],
   rat: ['8a8078', '6a5a50', 'f4efe9', '3b3440'], squirrel: ['b8683a', '8a5a3a', '9a9aa4', 'c98b55'], leopard: ['e8b24a', 'd89a3a', '3b3440'], jackal: ['c89a5a', 'b08a5a', '8a8278'], badger: ['5c5864', '7a7480', '3b3440'],
-  ferret: ['c9a47c', '8a6a4a', 'f4efe9'], beaver: ['7a4a2c', '9a6440', '6a4630'], capybara: ['a07848', '8a6a40', 'b08a5a'], lop: ['d8c4a8', 'f4efe9', '9a8478', 'c98b55'], fennec: ['e8c898', 'f0d8b0', 'd8b888'] }
+  ferret: ['c9a47c', '8a6a4a', 'f4efe9'], beaver: ['7a4a2c', '9a6440', '6a4630'], capybara: ['a07848', '8a6a40', 'b08a5a'], lop: ['d8c4a8', 'f4efe9', '9a8478', 'c98b55'], fennec: ['e8c898', 'f0d8b0', 'd8b888'],
+  human: ['fde2cb', 'fae1dc', 'f3cfad', 'dfa273', 'c68652', '8d5524', '53341b', '362114'],
+  faceling: ['ebd4c2', 'f3cfad', 'fae1dc', 'dfa273', 'c68652', '8d5524'] }
 const COMMON = ['e8c890', 'd89060', '7a4a30', '5a5a6a', 'a89080', 'f0e0c8', 'c87040', '484050']
 const PASTEL = ['ffb3cf', '9fd3ff', 'b8e986', 'c9a0ff', 'ffe066', 'ffc8a0', 'a0e8d8', 'e8a0e0', 'f8f0a0', 'a8c0ff']
 // dyes a plain garment may come in: Savi's picks, wide on purpose
@@ -228,17 +242,18 @@ function bodyRoll(id, l, look) {
   let h = 2166136261; for (const c of String(id) + '|body') { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) }
   const u = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 100000) / 100000 }, pick = (a) => a[Math.floor(u() * a.length)], r = (a, b) => Math.round((a + u() * (b - a)) * 100) / 100
   const j = (v, d = 0.05) => Math.round((v + (u() * 2 - 1) * d) * 100) / 100
+  const isHumanoid = ['human', 'faceling'].includes(l.species)
   const nat = NATURAL[l.species] ?? NATURAL.cat
-  if (!look?.fur) l.fur = '#' + (u() < 0.12 ? pick(PASTEL) : u() < 0.75 ? pick(nat) : pick(COMMON))
-  if (!look?.marks) l.marks = SPECIES_MARKS[l.species] ? pick(SPECIES_MARKS[l.species]) : pick(['none', 'none', 'none', 'none', 'freckles', 'stripes', 'patch', 'heart'])
+  if (!look?.fur) l.fur = '#' + (!isHumanoid && u() < 0.12 ? pick(PASTEL) : u() < 0.75 ? pick(nat) : pick(isHumanoid ? nat : COMMON))
+  if (!look?.marks) l.marks = isHumanoid ? 'none' : SPECIES_MARKS[l.species] ? pick(SPECIES_MARKS[l.species]) : pick(['none', 'none', 'none', 'none', 'freckles', 'stripes', 'patch', 'heart'])
   const f = l.sex === 'f', [kind, build, waist, hip, bust, tall] = pick(f ? BODY_F : BODY_M)
   l.bodyType = kind
   if (!look?.heightS) l.heightS = j(tall, 0.06)
   if (!look?.buildS) l.buildS = j(build)
   if (!look?.headS) l.headS = r(0.9, 1.12)
-  if (!look?.earS) l.earS = r(0.8, 1.3)
-  if (!look?.snoutS) l.snoutS = r(0.8, 1.2)
-  if (!look?.tailS) l.tailS = r(0.75, 1.35)
+  if (!look?.earS) l.earS = isHumanoid ? 1.0 : r(0.8, 1.3)
+  if (!look?.snoutS) l.snoutS = isHumanoid ? 1.0 : r(0.8, 1.2)
+  if (!look?.tailS) l.tailS = isHumanoid ? 0.0 : r(0.75, 1.35)
   if (!look?.waistS) l.waistS = j(waist)
   if (!look?.hipS) l.hipS = j(hip)
   if (f && !look?.bustS) l.bustS = j(bust, 0.15) // still random (Shelly), centred on the body type

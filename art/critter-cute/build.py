@@ -135,12 +135,32 @@ def head_r(d):
     cheek_swell = .095 * ck * math.exp(-((d.z + .24) / .28) ** 2) * side * front_bias
     # gentle chin tuck underneath so the jaw meets the neck cleanly (only underside, not front jaw)
     chin_tuck = -.035 * max(0.0, -d.z - .52) * (1.0 - abs(d.x) * .7) * max(0.0, 1.0 - max(0.0, d.y - 0.05) * 2.5)
-    # 3D sculpted animal muzzle / snout loaf
+    # 3D sculpted animal muzzle or human facial contour
     L = sp.get("snout", .026 if sp.get("muzzle") else .016) * sp.get("snoutK", 2.1)
     sw = sp.get("snoutW", .26) * wd
     br = sp.get("bridge", 0.0)
     muz = 0.0
-    if d.y > 0.05:
+    if sp.get("human"):
+        # Human facial planes: NO animal muzzle or snout protrusion
+        if d.y > 0.04:
+            # Human chin projection (mental protuberance)
+            if -0.48 < d.z < -0.32:
+                u_c = d.x / 0.11
+                v_c = (d.z - (-0.40)) / 0.075
+                q_c = u_c * u_c + v_c * v_c
+                if q_c < 1.0:
+                    fwd_c = math.sin(max(0.0, min(1.0, (d.y - 0.04) / 0.40)) * (math.pi / 2))
+                    muz += 0.018 * ((1.0 - q_c) ** 1.5) * fwd_c
+            # Subtle cheekbone (zygomatic) fullness
+            if -0.16 < d.z < 0.04:
+                for s in (-1, 1):
+                    u_z = (d.x - s * 0.14) / 0.09
+                    v_z = (d.z - (-0.06)) / 0.09
+                    q_z = u_z * u_z + v_z * v_z
+                    if q_z < 1.0:
+                        fwd_z = math.sin(max(0.0, min(1.0, (d.y - 0.04) / 0.40)) * (math.pi / 2))
+                        muz = max(muz, 0.012 * ((1.0 - q_z) ** 1.4) * fwd_z)
+    elif d.y > 0.05:
         # Kemono animal muzzle: forward projection centered around the nose and mouth (z ~ -0.22)
         z_ctr = -0.22
         z_top = -0.08 + (0.10 * br if br else 0.0)
@@ -857,6 +877,9 @@ SP = {  # ears, tail, extras, muzzle(belly patch), nose dot, whiskers
  "capybara": dict(snoutK=2.5, snoutW=.30, bridge=.30, fur="#a07848", belly="#d8b88a", tip="#a07848", nose="#2a1c18", inner="#d8a888", mark="#6e4c2a", ears=("round", .6), tail="none", ex=[], muzzle=False, snout=.034, bignose=True, wide=1.08, cheek=1.15),
  "lop":      dict(snoutK=2.0, snoutW=.22, fur="#d8c4a8", belly="#ffffff", tip="#ffffff", nose="#ff9fb4", inner="#ffc2d1", mark="#a89070", ears=("flop", 1.25), tail="pom", ex=["buck"], muzzle=True, snout=.022, catnose=True, cheek=1.2, marks=["pinkcheeks"]),
  "fennec":   dict(snoutK=1.9, snoutW=.20, fur="#e8c898", belly="#ffffff", tip="#fff4e0", nose="#2a1c18", inner="#f8d4c0", mark="#7a5a38", ears=("point", 1.95), tail="bushy", ex=["eartip"], muzzle=True, snout=.026, whisk=True, catnose=True, fang=True, fluff=True),
+ # ---- Human & Faceling species ----
+ "human":    dict(human=True, snout=0.0, wide=1.0, cheek=1.05, fur="#f0d5be", belly="#fff0e4", tip="#fff0e4", nose="#e8a898", inner="#f4c2b0", mark="#2e201c", ears=("human", 1.0), tail="none", ex=[]),
+ "faceling": dict(human=True, faceless=True, snout=0.0, wide=1.0, cheek=1.05, fur="#ebd4c2", belly="#fff0e4", tip="#fff0e4", nose="#e8a898", inner="#f4c2b0", mark="#3c2a22", ears=("human", 1.0), tail="none", ex=[]),
 }
 if ONLY: SP = {k: v for k, v in SP.items() if k in ONLY.split(",")}
 F_HEAD = False
@@ -987,6 +1010,7 @@ def strip(n): return [(i, i + 1, n + i + 1, n + i) for i in range(n - 1)]
 def ring_faces(n): return [(i, (i + 1) % n, n + (i + 1) % n, n + i) for i in range(n)]
 
 def build_face(H, sp):
+    if sp.get("faceless"): return
     N = 32; ew, eh = .074, .090          # signature big tall oval eyes (Dandy's World / rubberhose style, no shines!)
     cut = eh * .18                        # the half-lid line
     for s in (-1, 1):
@@ -1061,15 +1085,27 @@ def build_face(H, sp):
                 y = fy(x)
                 top.append((x, y + t)); bot.append((x, y - t))
             return top + bot
-        st_b = {
-            "Basis": brow(lambda x: eh + .026 - .009 * (x / .048) ** 2, .0042),
-            "Smile": brow(lambda x: eh + .031 - .010 * (x / .048) ** 2, .0044),
-            "Happy": brow(lambda x: eh + .035 - .011 * (x / .048) ** 2, .0045),
-            "Wide":  brow(lambda x: eh + .042 - .012 * (x / .048) ** 2, .0048),
-            "Half":  brow(lambda x: eh + .018 - .004 * (x / .048) ** 2, .0042),
-            "Sad":   brow(lambda x: eh + .030 + .028 * (0.35 - s * x / .096) - .005 * (x / .048) ** 2, .0052),
-            "Angry": brow(lambda x: eh + .022 - .034 * (0.40 - s * x / .096) - .004 * (x / .048) ** 2, .0055),
-        }
+        is_human = bool(sp.get("human"))
+        if is_human and not F_HEAD:
+            st_b = {
+                "Basis": brow(lambda x: eh + .024 - .006 * (x / .048) ** 2, .0056),
+                "Smile": brow(lambda x: eh + .028 - .007 * (x / .048) ** 2, .0056),
+                "Happy": brow(lambda x: eh + .032 - .008 * (x / .048) ** 2, .0056),
+                "Wide":  brow(lambda x: eh + .040 - .010 * (x / .048) ** 2, .0060),
+                "Half":  brow(lambda x: eh + .018 - .003 * (x / .048) ** 2, .0056),
+                "Sad":   brow(lambda x: eh + .028 + .026 * (0.35 - s * x / .096) - .005 * (x / .048) ** 2, .0062),
+                "Angry": brow(lambda x: eh + .020 - .038 * (0.40 - s * x / .096) - .004 * (x / .048) ** 2, .0065),
+            }
+        else:
+            st_b = {
+                "Basis": brow(lambda x: eh + .026 - .009 * (x / .048) ** 2, .0042),
+                "Smile": brow(lambda x: eh + .031 - .010 * (x / .048) ** 2, .0044),
+                "Happy": brow(lambda x: eh + .035 - .011 * (x / .048) ** 2, .0045),
+                "Wide":  brow(lambda x: eh + .042 - .012 * (x / .048) ** 2, .0048),
+                "Half":  brow(lambda x: eh + .018 - .004 * (x / .048) ** 2, .0042),
+                "Sad":   brow(lambda x: eh + .030 + .028 * (0.35 - s * x / .096) - .005 * (x / .048) ** 2, .0052),
+                "Angry": brow(lambda x: eh + .022 - .034 * (0.40 - s * x / .096) - .004 * (x / .048) ** 2, .0055),
+            }
         add_decal(H, u, EYE_V, .0090, eye_types(st_b), strip(M_), "eyeink")
         # blush: positioned on the plush outer-lower cheek (cleanly clear of the eye ring)
         bp, bf = disc(.044, .023, 20, 3)
@@ -1098,6 +1134,17 @@ def build_face(H, sp):
         for s in (-1, 1):
             np_, nf = disc(.011, .016, 14, 2, s * .020, -.002)
             add_decal(H, 0, -.185, .0268, {"Basis": np_}, nf, "eyeink")
+    elif sp.get("human"):
+        # Sculpted 3D cute human nose: refined bridge and soft rounded tip
+        nh = .018; nw = .020
+        def human_n(x, y):
+            u_ = y / nh
+            return (x * (1.0 + 0.18 * u_), y - 0.12 * abs(x) * (1.0 if y < 0 else 0.3))
+        add_dome(H, 0, NV, nw, nh, .017, "nose", N=22, R=5, shape_fn=human_n, base_out=-.002)
+        # Delicate nostril wing creases
+        for s in (-1, 1):
+            np_, nf = disc(.0035, .0055, 10, 2, s * .011, -.005)
+            add_decal(H, 0, NV, .0175, {"Basis": np_}, nf, "eyeink")
     elif not sp.get("nonose"):
         if sp.get("bignose") and "bigantlers" not in sp["ex"]:
             # Koala's signature tall rounded dark leathery nose
@@ -1128,16 +1175,23 @@ def build_face(H, sp):
     M_ = 19; ts = [-1 + 2 * i / (M_ - 1) for i in range(M_)]
     MV = -.295 if "snout" not in sp["ex"] and not (sp.get("bignose") and "bigantlers" not in sp["ex"]) else -.34
     is_kemono = bool(sp.get("catnose"))
+    is_human = bool(sp.get("human"))
     w0, w1 = (.042, .060) if is_kemono else (.040, .058)
     def lineB(t):
         if is_kemono:
             a = abs(t)
             return (t * w0, .0055 * math.exp(-((t / .24) ** 2)) - .0095 * math.sin(math.pi * a) + .004 * (t ** 2))
+        if is_human:
+            a = abs(t)
+            return (t * w0, -0.006 * (1.0 - t * t) + 0.003 * math.cos(math.pi * t * 2.0) * (1.0 - a))
         return (t * w0, -.009 * (1 - t * t))
     def lineS(t):
         if is_kemono:
             a = abs(t)
             return (t * w1, .0065 * math.exp(-((t / .24) ** 2)) - .015 * math.sin(math.pi * a) + .010 * (t ** 2))
+        if is_human:
+            a = abs(t)
+            return (t * w1, -0.016 * (1.0 - t * t) + 0.005 * t * t + 0.002 * (1.0 - a))
         return (t * w1, -.020 * (1 - t * t) + .006 * t * t)
     def lineF(t):
         return (t * .040, .014 * (1 - t * t) - .005)
@@ -1389,7 +1443,13 @@ def build_markings(H, sp):
 def build_ear(H, kind, sc, side, inner_mat, sp):
     u, v = side * EAR_UV[0], EAR_UV[1]
     root = head_pt(head_dir(u, v), -.020); nrm = (root - HC).normalized(); right = Vector((side, 0, 0))
-    if kind == "flop":
+    if kind == "human":
+        # Human ear situated naturally on the side of the head at temple/eye level
+        root = head_pt(head_dir(side * 1.50, -0.05), -.010)
+        up = Vector((side * 0.08, -0.04, 0.98)).normalized()
+        fwd = Vector((side * 0.14, 0.98, 0.04)).normalized()
+        fwd = (fwd - up * fwd.dot(up)).normalized()
+    elif kind == "flop":
         # Start high on the temple and flare outward + downward so the floppy ear drapes cleanly outside the cheek
         root = head_pt(head_dir(side * .84, .68), .004)
         up = Vector((side * .56, .10, -.82)).normalized()
@@ -1443,6 +1503,10 @@ def build_ear(H, kind, sc, side, inner_mat, sp):
         H_len = .145 * sc
         w_fn = lambda t: .068 * sc * (math.sin(math.pi * (.14 + .82 * (1.0 - t))) ** .65) * ((1.0 - t * .82) ** .5)
         cup_d = .018 * sc; th_base = .018
+    elif kind == "human":
+        H_len = .115 * sc
+        w_fn = lambda t: .054 * sc * (math.sin(math.pi * (.15 + .80 * t)) ** .65)
+        cup_d = .016 * sc; th_base = .014
     elif kind == "fluffy":
         H_len = .175 * sc
         w_fn = lambda t: .102 * sc * (math.sin(math.pi * (.12 + .82 * t)) ** .52)
@@ -1560,6 +1624,22 @@ def spike(H, base, d1, d2, r, matname, bone="Head"):
     o, _ = tube("spike", [base, base + d1, base + d1 + d2], [r, r * .58, r * .10], 8); H.add_obj(o, matname, bone)
 
 def build_tufts(H, sp):
+    if sp.get("human"):
+        # Stylish sculpted 3D anime hair bangs and side-locks for human heads
+        hair_mat = "mark"
+        b_c = head_pt(head_dir(0, 1.15), -.012)
+        n_c = (b_c - HC).normalized(); f_c = V(0, .36, .92).normalized()
+        spike(H, b_c, n_c * .046 + f_c * .030, n_c * .038 + f_c * .042 + V(0, 0, -.035), .028, hair_mat)
+        for s in (-1, 1):
+            # Left & Right bangs
+            b_s = head_pt(head_dir(s * .16, 1.12), -.012)
+            n_s = (b_s - HC).normalized()
+            spike(H, b_s, n_s * .042 + f_c * .024 + V(s * .014, 0, 0), n_s * .034 + f_c * .036 + V(s * .020, 0, -.040), .024, hair_mat)
+            # Temple locks framing the face in front of the human ears
+            b_t = head_pt(head_dir(s * 1.32, 0.05), -.015)
+            d_side = Vector((s * .88, .22, -.40)).normalized()
+            spike(H, b_t, d_side * .045 + V(0, 0, -.030), d_side * .038 + V(0, 0, -.045), .020, hair_mat)
+        return
     if "mane" not in sp["ex"] and "wool" not in sp["ex"]:
         # Soft kemono crown fluff: gentle curved tuft on the crown
         b = head_pt(head_dir(0, 1.30), -.014)

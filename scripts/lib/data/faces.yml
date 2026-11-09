@@ -36,6 +36,8 @@ traits:
   mellow:   { w: 1.5, Half: 0.16, Smile: 0.12 }
   wistful:  { w: 1.0, Sad: 0.10, Half: 0.14, Smile: 0.08 }
   resolute: { w: 1.0, Angry: 0.10, Wide: 0.10, Smile: 0.06 }
+  cynical:  { w: 0.8, Half: 0.22, Frown: 0.10, Angry: 0.08 }
+  keen:     { w: 1.0, Wide: 0.15, Smile: 0.10, Half: 0.06 }
 # face types: w = how common among NPCs; the other keys are the head's FT_ keys, 0..1 (oval is the head as built)
 types:
   round:    { w: 3.5, FT_Round: 0.9, FT_Chubby: 0.3 }

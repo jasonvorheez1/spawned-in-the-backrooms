@@ -246,13 +246,13 @@ const PATRONS = [
   { id: "l61-patron-bar", name: "Clippers Patron", at: [-23.4, -29.2], face: 0, acts: ["drink", "groove", "nod"], look: { species: "dog", sex: "m", topw: "tee", top: "#d09030", botw: "pants", bottom: "#182030", shoes: "sneakers" } },
 ];
 const HUMANS = {
-  "l61-guard-a": { name: "M.E.G. Guard · Level 6 door", voice: "reyes", faction: "guard", look: { species: "wolf", sex: "m", topw: "megjacket", top: "#4a5a3a", botw: "cargo", bottom: "#3a3a30", shoes: "boots" }, gun: "carbine", at: [-27.6, -2.4], face: -90 },
-  "l61-guard-b": { name: "M.E.G. Guard · Level 6 door", voice: "mags", faction: "guard", look: { species: "bear", sex: "f", topw: "megjacket", top: "#4a5a3a", botw: "cargo", bottom: "#3a3a30", shoes: "boots" }, gun: "carbine", at: [-27.6, 2.4], face: -90 },
-  "l61-amber-a": { name: "Camp Amber volunteer", voice: "wren", faction: "trader", look: { species: "fox", sex: "f", topw: "sweater", top: "#d89a3a", botw: "pants", bottom: "#4a3a2a", shoes: "boots" }, gun: "knife", at: [-23.6, 15.8], face: 0 },
-  "l61-amber-b": { name: "Camp Amber volunteer", voice: "penny", faction: "trader", look: { species: "bunny", sex: "m", topw: "hoodie", top: "#c87a2a", botw: "pants", bottom: "#4a3a2a", shoes: "sneakers" }, gun: "crowbar", at: [-21.9, 12.6], face: 90 },
-  "l61-guild-a": { name: "Guild of Many member", voice: "hollis", faction: "pilgrim", look: { species: "sheep", sex: "f", topw: "hoodie", top: "#5a5a6a", botw: "longskirt", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, -2], face: 90, bedroll: true },
-  "l61-guild-b": { name: "Guild of Many member", voice: "mags", faction: "pilgrim", look: { species: "cat", sex: "m", topw: "jacket", top: "#5a5a6a", botw: "pants", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, 1], face: 90, lantern: true },
-  "l61-guild-c": { name: "Guild of Many member", voice: "wren", faction: "pilgrim", look: { species: "deer", sex: "f", topw: "sweater", top: "#5a5a6a", botw: "pants", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, 4], face: 90, canteen: true },
+  "l61-guard-a": { name: "M.E.G. Guard · Level 6 door", voice: "reyes", faction: "guard", look: { species: "human", sex: "m", topw: "megjacket", top: "#4a5a3a", botw: "cargo", bottom: "#3a3a30", shoes: "boots" }, gun: "carbine", at: [-27.6, -2.4], face: -90 },
+  "l61-guard-b": { name: "M.E.G. Guard · Level 6 door", voice: "mags", faction: "guard", look: { species: "human", sex: "f", topw: "megjacket", top: "#4a5a3a", botw: "cargo", bottom: "#3a3a30", shoes: "boots" }, gun: "carbine", at: [-27.6, 2.4], face: -90 },
+  "l61-amber-a": { name: "Camp Amber volunteer", voice: "wren", faction: "trader", look: { species: "human", sex: "f", topw: "sweater", top: "#d89a3a", botw: "pants", bottom: "#4a3a2a", shoes: "boots" }, gun: "knife", at: [-23.6, 15.8], face: 0 },
+  "l61-amber-b": { name: "Camp Amber volunteer", voice: "penny", faction: "trader", look: { species: "human", sex: "m", topw: "hoodie", top: "#c87a2a", botw: "pants", bottom: "#4a3a2a", shoes: "sneakers" }, gun: "crowbar", at: [-21.9, 12.6], face: 90 },
+  "l61-guild-a": { name: "Guild of Many member", voice: "hollis", faction: "pilgrim", look: { species: "human", sex: "f", topw: "hoodie", top: "#5a5a6a", botw: "longskirt", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, -2], face: 90, bedroll: true },
+  "l61-guild-b": { name: "Guild of Many member", voice: "mags", faction: "pilgrim", look: { species: "human", sex: "m", topw: "jacket", top: "#5a5a6a", botw: "pants", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, 1], face: 90, lantern: true },
+  "l61-guild-c": { name: "Guild of Many member", voice: "wren", faction: "pilgrim", look: { species: "human", sex: "f", topw: "sweater", top: "#5a5a6a", botw: "pants", bottom: "#3a3a4a", shoes: "boots" }, gun: "bat", at: [-12, 4], face: 90, canteen: true },
 };
 export const PEOPLE = [...Object.keys(HUMANS), ...PATRONS.map((p) => p.id)];
 export const FACELING_IDS = FACELINGS.map((f) => f.id);
@@ -260,8 +260,8 @@ export const FACELING_IDS = FACELINGS.map((f) => f.id);
 export function faceling(ctx, id) {
   const f = FACELINGS.find((q) => q.id === id); if (!f) return;
   const i = FACELINGS.indexOf(f), at = f.at ? { x: f.at[0], z: f.at[1] } : { x: f.route[0][0], z: f.route[0][1] };
-  const look = { ...npcLook("l61fc" + i, { species: ["cat", "wolf", "fox", "bear", "bunny", "dog"][i % 6], sex: i % 2 ? "f" : "m", topw: "apron", top: "#f4f1ea", botw: "pants", bottom: "#2a2a30", shoes: "sneakers", hat: "beanie", hatc: "#f4f1ea" }, "trader", 6), fur: "#060606", vary: false, eye: "#000000" };
-  ctx.spawn(id, { tags: ["l61npc", "usable", "faceling", "l61fc"], feetPosition: { x: at.x, y: 0.05, z: at.z }, rotation: { yaw: f.face ?? 0 }, physics: "character", ...faceless(critterSpec(look)),
+  const look = npcLook("l61fc" + i, { species: "faceling", sex: i % 2 ? "f" : "m", topw: "apron", top: "#f4f1ea", botw: "pants", bottom: "#2a2a30", shoes: "sneakers", hat: "beanie", hatc: "#f4f1ea" }, "trader", 6);
+  ctx.spawn(id, { tags: ["l61npc", "usable", "faceling", "l61fc"], feetPosition: { x: at.x, y: 0.05, z: at.z }, rotation: { yaw: f.face ?? 0 }, physics: "character", ...critterSpec(look),
     behavior: ["scripts/humanoid-locomotion.js", "scripts/l61-staff.js"],
     state: { name: "Faceling", verb: "Take a plate", info: "Food court staff.", tint: "#f4f1ea", kind: "faceling", job: f.route ? "route" : "post", faceYaw: f.face, greet: f.greet, acts: f.acts, gives: f.gives, route: f.route?.map(([x, z, dwell, act]) => ({ x, z, dwell, act })), pace: 1.15 + (i % 3) * 0.15, hasTray: f.hasTray, hp: 60, met: {}, nick: {}, temper: {}, mood: null, hostile: null } });
   if (f.route && f.route.length > 2) ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, primitive: { kind: "box", width: 0.34, height: 0.02, depth: 0.24 }, material: { color: "oklch(0.88 0.01 90)", metalness: 0.4 }, children: [{ feetPosition: { x: 0.05, y: 0.02, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.07, radiusBottom: 0.07, height: 0.05 }, material: { color: "oklch(0.7 0.14 40)" } }] });
