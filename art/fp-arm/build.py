@@ -128,6 +128,7 @@ def build(sex, side):
         rc = [sum(r) / len(r) for r in rings]
         while len(rc) < 4: rc.append(rc[-1] + 0.01)
         L0 = min(u.values()); L1 = max(u.values()); FL = L1 - L0 + 0.007
+        print('FINGER', fi, len(c), 'len', round(L1-L0,4), 'width', round(float(np.sqrt(np.linalg.eigh(X.T @ X)[0][1]/len(c))),4), 'ANG', [round(x) for x in ANG])
         J = (L0 - 0.007, L0 - 0.007 + FL * 0.46, L0 - 0.007 + FL * 0.72)   # knuckle, middle, tip joints by real phalanx proportions (the ring scan merged on a dense mesh)
         ax = f.cross(n).normalized(); hinge += ax
         def axpt(x):   # the finger's centre line at u=x, nudged to the palm side
