@@ -19,3 +19,10 @@ l7-boat-to-pier:
   rotation: {roll: -2, yaw: -12}
   state: {boat: true, home: {x: 35.6, yaw: -12, z: -91.5}, name: Seawatch dory, seat: {d: 0.35, y: 0.3}, verb: Get in}
   tags: [seat, boat]
+l7w-lantern-1:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: 0.22, z: 0}, light: {color: oklch(0.86 0.15 70), distance: 12, intensity: 2.2, kind: point, shadow: {enabled: false}, visibleRange: {max: 35}}}]
+  feetPosition: {x: -45.6, y: 1.98, z: -65.3}
+  id: l7w-lantern-1
+  primitive: {kind: scripted, params: {kind: lantern}, script: scripts/l7-ocean-geo.js}
+  visibleRange: {max: 40}

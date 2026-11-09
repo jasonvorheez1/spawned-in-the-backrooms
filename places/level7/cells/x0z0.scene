@@ -1,0 +1,39 @@
+# spawn-scene v2 yaml x0z0
+l7w-boxes-0:
+  feetPosition: {x: -45.95, y: 1.12, z: -58.4}
+  id: l7w-boxes-0
+  layout: {box: {max: {x: 0.35, y: 0.9, z: 0.35}, min: {x: -0.35, y: 0, z: -0.35}}}
+  model: /cdn/value.03043a5c4b3b53a18930a0c88c7326a0dc9d5b573d956151044390dfab77c966.glb
+  physics: static
+  rotation: {yaw: 70}
+l7w-buoy-0:
+  feetPosition: {x: -45.75, y: 1.12, z: -62.2}
+  id: l7w-buoy-0
+  layout: {box: {max: {x: 0.35, y: 0.7, z: 0.35}, min: {x: -0.35, y: 0, z: -0.35}}}
+  model: /cdn/value.d5523049085d74c40e3d4beced2fa139b38ef940839ffff99aae7f482aeff80c.glb
+  rotation: {roll: 80, yaw: 30}
+l7w-crate-0:
+  feetPosition: {x: -48.05, y: 1.12, z: -62.6}
+  id: l7w-crate-0
+  layout: {box: {max: {x: 0.375, y: 0.75, z: 0.375}, min: {x: -0.375, y: 0, z: -0.375}}}
+  model: /cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb
+  physics: static
+  rotation: {yaw: 14}
+l7w-crate-1:
+  feetPosition: {x: -48.1, y: 1.87, z: -62.5}
+  id: l7w-crate-1
+  layout: {box: {max: {x: 0.275, y: 0.55, z: 0.275}, min: {x: -0.275, y: 0, z: -0.275}}}
+  model: /cdn/value.f486431ac39339f8b882a258015ef61fde74d5aebc0c828678d0af923f2d02d9.glb
+  physics: static
+  rotation: {yaw: -22}
+l7w-lantern-0:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: 0.22, z: 0}, light: {color: oklch(0.86 0.15 70), distance: 12, intensity: 2.2, kind: point, shadow: {enabled: false}, visibleRange: {max: 35}}}]
+  feetPosition: {x: -48.4, y: 1.98, z: -60.2}
+  id: l7w-lantern-0
+  primitive: {kind: scripted, params: {kind: lantern}, script: scripts/l7-ocean-geo.js}
+  visibleRange: {max: 40}
+l7w-snd-lap:
+  audio: {clip: /cdn/moodboard-realistic-gritty/sfx-sea-water-lapping-and-sloshing-against-wooden-pier-pilings-loop.mp3, gain: 0.25, loop: true, maxDistance: 18, refDistance: 3, spatial: true}
+  feetPosition: {x: -47, y: 0.5000000000000001, z: -60}
+  id: l7w-snd-lap
