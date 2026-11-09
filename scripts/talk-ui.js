@@ -398,7 +398,7 @@ export function talkUi(ctx, player) {
       <!-- Freeform Text Command Line -->
       <div class="tc-prompt-bar" data-interactive>
         <span class="tc-prompt-glyph">PROMPT &gt;</span>
-        <input id="tkin" class="tc-prompt-inp" data-interactive maxlength="${T.maxText}" autocomplete="off" placeholder="Type a custom inquiry or message..." onkeydown="if(event.key==='Enter'&&this.value.trim()){event.stopPropagation();sendAction('talk',{id:'${q(it.id)}',text:this.value});this.value=''}else if(event.key==='Escape'){this.blur()}else{event.stopPropagation()}"/>
+        <input id="tkin" class="tc-prompt-inp" data-interactive maxlength="${T.maxText}" autocomplete="off" placeholder="Type a custom inquiry or message..." onkeydown="if(event.key==='Enter'&&this.value.trim()){event.stopPropagation();sendAction('talk',{id:'${q(it.id)}',text:this.value});this.value=''}else if(event.key==='Escape'){this.blur()}else if(!this.value&&event.key>='1'&&event.key<='5'){event.preventDefault();event.stopPropagation();const b=document.querySelectorAll('.tc-choice')[parseInt(event.key)-1];if(b)b.click()}else{event.stopPropagation()}"/>
         <button class="tc-send-btn" data-interactive onclick="const i=document.getElementById('tkin');if(i&&i.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:i.value});i.value=''}">Send [↵]</button>
       </div>
 
