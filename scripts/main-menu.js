@@ -87,4 +87,13 @@ export function onInput(ctx, input) {
     if (d.k === "resume") st.menuOpen = false
     if (d.k === "style") { st.bodyStyle = (st.bodyStyle ?? ctx.world.state.bodyStyle) === "furry" ? "human" : "furry"; ctx.world.state.bodyStyle = st.bodyStyle } // BODIES: the player's pick, saved; the room's characters follow it
   }
+  holdTime(ctx, st)
+}
+
+// solo pause (Shelly, Nov 9: "when im in solo play i should be able to pause the game"): the pause menu holds the whole place, every body, timer and effect,
+// while you're the only one in it; the Bonus Room is shared and never stops
+function holdTime(ctx, st) {
+  const solo = ctx.self.place !== "bonus" && (ctx.place.playerCount ?? 1) <= 1
+  const want = st.menuOpen && st.menuKind === "pause" && solo ? 0 : 1
+  if ((ctx.place.timeScale ?? 1) !== want) ctx.place.timeScale = want
 }
