@@ -133,7 +133,7 @@ export function geometry(ctx) {
       ctx.albedo(null); const base = r < 0.18 ? [0.6, 0.04, 200] : r < 0.3 ? [0.7, 0.03, 60] : [0.86, 0.02, 85];
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j, tone = base[0] + (((i + j + cx * 3 + cz) % 2) ? 0.03 : -0.02) + (hash(cx * 4 + i, cz * 4 + j, 9) - 0.5) * 0.05; ctx.color(`oklch(${tone} ${base[1]} ${base[2]})`); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
     } // a threadbare carpet, or bare grime
-    ctx.roughness(0.88); ctx.albedo(z === "edge" ? ROCKROOF : isEdge(cx, cz) ? CEIL : TILE); ctx.color(isEdge(cx, cz) ? (z === "edge" ? "oklch(0.5 0.006 240)" : "oklch(0.38 0.01 150)") : z === "fridges" || z === "restroom" ? "oklch(0.95 0.01 90)" : "oklch(0.9 0.014 90)");
+    ctx.roughness(0.88); ctx.albedo(z === "edge" ? null : isEdge(cx, cz) ? CEIL : TILE); ctx.color(isEdge(cx, cz) ? (z === "edge" ? "oklch(0.56 0.008 240)" : "oklch(0.38 0.01 150)") : z === "fridges" || z === "restroom" ? "oklch(0.95 0.01 90)" : "oklch(0.9 0.014 90)");
     ctx.quad(x0, h, z0, x0 + S, h, z0, x0 + S, h, z0 + S, x0, h, z0 + S);
   }
 
