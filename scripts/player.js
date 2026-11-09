@@ -1,4 +1,5 @@
 import { powerKnock } from './lib/knock.js'
+import SNK from "./lib/data/sneak.yml"
 import { attrsOf as attrsOfS } from './lib/stats.js'
 // The wanderer: walk/sprint on stamina, sanity that the halls eat, a flashlight on battery,
 // almond water, swings at smilers, xp and levels. Every number lives in lib/data/level0.yml.
@@ -1109,15 +1110,17 @@ const HOSTILE_AND_NPC = [...HOSTILE, 'npc']
 const _rayEye = { x: 0, y: 0, z: 0 }
 const _rayDir = { x: 0, y: 0, z: 0 }
 const _rayOpt = { distance: 10, physicsOnly: true, bodies: 'static', ignoreEntities: [] }
-function detection(ctx, p, w) {
-  const me = ctx.self.id, sneak = skillsOf(ctx.self.state).sneak ?? 0
-  const reach = (w.light ? 16 : 10) * (1 - Math.min(0.5, sneak / 200)) // a lit flashlight gives you away from further off
-  let seen = false
+// sneaking, FNV-style: every watcher with a clear look fills an awareness meter (w.aware 0..1) at a rate set by distance,
+// how squarely it faces you, light, dark and whether you move; nobody looking, it drains. [CAUTION] while it fills, [DETECTED] or [DANGER] once full.
+function detection(ctx, p, w, t, moving) {
+  const me = ctx.self.id, s = ctx.self.state, sneak = skillsOf(s).sneak ?? 0
+  const reach = (w.light ? 16 : 10) * (1 - Math.min(0.5, sneak / 200)) * (s.dark ? SNK.darkMul : 1)
+  let rate = 0, hostileSees = false, hunted = false
   for (const o of ctx.query({ anyTags: HOSTILE_AND_NPC, radius: 24 })) {
     const st = o.state ?? {}; if (st.dead || (st.hp ?? 1) <= 0) continue
     const q = o.feetPosition, dx = p.x - q.x, dz = p.z - q.z, d = Math.hypot(dx, dz)
     const hostile = !o.tags?.includes('npc') || st.angry?.[me]
-    if (hostile && (st.target === me || st.prey === me || st.hunting === me || st.chase === me)) return 'danger'
+    if (hostile && (st.target === me || st.prey === me || st.hunting === me || st.chase === me)) { hunted = true; break }
     if (d > reach) continue
     const r = ctx.getObject(o.id)?.rotation, yaw = ((typeof r === 'number' ? r : r?.yaw) ?? 0) * Math.PI / 180
     const facing = (-Math.sin(yaw) * dx - Math.cos(yaw) * dz) / (d || 1) // 1 = looking straight at you
@@ -1129,10 +1132,16 @@ function detection(ctx, p, w) {
     _rayOpt.distance = n - 0.3
     _rayOpt.ignoreEntities = [o.id, me]
     if (raycast(ctx, _rayEye, _rayDir, _rayOpt)) continue
-    if (hostile && d < reach * 0.6) return 'danger'
-    seen = true
+    const near = 1 - d / reach, k = (SNK.fillMin + (SNK.fillRate - SNK.fillMin) * near * near) * (d < 1.6 ? 1 : 0.5 + 0.5 * Math.max(0, facing)) * (moving ? 1 : SNK.stillMul)
+    if (k > rate) rate = k
+    if (hostile) hostileSees = true
   }
-  return seen ? 'detected' : 'hidden'
+  if (hunted) { w.aware = 1; return 'danger' }
+  w.aware = Math.max(0, Math.min(1, (w.aware ?? 0) + (rate > 0 ? rate : -SNK.decay) * t))
+  const lit = Math.round(w.aware * 10) / 10
+  if (s.aware !== lit) s.aware = lit
+  if (w.aware >= 1) return hostileSees ? 'danger' : 'detected'
+  return w.aware > SNK.caution ? 'caution' : 'hidden'
 }
 
 function tickStats(ctx, t, moving) {
@@ -1144,7 +1153,7 @@ function tickStats(ctx, t, moving) {
   const zone = zoneHere(ctx, p.x, p.z)
   if (zone !== s.zone) s.zone = zone
   // sneaking: who can see you, written only when the answer changes (the HUD's [HIDDEN] / [DETECTED] / [DANGER])
-  const det = s.crouch ? detection(ctx, p, w) : null
+  const det = s.crouch ? detection(ctx, p, w, t, moving) : (w.aware = 0, null)
   if ((s.detect ?? null) !== det) s.detect = det
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
   let drain = (ctx.self.place === 'level61' || ctx.self.place === 'level11' || ctx.self.place === 'level10' ? 0 : ctx.self.place === 'level7' ? (zone === 'l7_sea' || zone === 'l7_ocean' ? 0.75 : 0.22) : ctx.self.place === 'level6' ? (w.nvg ? 0.32 : 1.15) : ctx.self.place === 'level4' ? DRAIN4[zone.slice(3)] : ctx.self.place === 'level5' ? (DRAIN5[zone.slice(3)] ?? 0.8) / 60 * 4 : ctx.self.place === 'level2' ? L2.sanityDrain[zone.slice(3)] : (ctx.self.place === 'level3' || ctx.self.place === 'gamma') ? L3.sanityDrain[zone.slice(3)] : ctx.self.place === 'level8' ? 0.14 : ctx.self.place === 'level21' ? L21.sanityDrain[zone.slice(4)] : L.sanityDrain[zone]) ?? 0.12

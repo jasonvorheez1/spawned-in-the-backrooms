@@ -53,6 +53,9 @@ const THEME = `<style>@keyframes hud-pop{from{opacity:0;transform:translateY(6px
 .sneak { position:absolute; left:0; right:0; top:calc(50% - 64px); text-align:center; font-size:20px; letter-spacing:.14em; pointer-events:none; text-shadow:0 0 4px #000,0 2px 2px #000; animation:snk .25s ease-out }
 .sneak-hidden { color:var(--a); opacity:.85 }
 .sneak-detected { color:#ffd84a }
+.sneak-caution { color:#ffb347 }
+.sneak-bar { width:120px; height:3px; margin:5px auto 0; background:rgba(0,0,0,.45); border:1px solid currentColor; opacity:.8 }
+.sneak-bar i { display:block; height:100%; background:currentColor; transition:width .25s linear }
 .sneak-danger { color:#ff4a36; animation:snk .25s ease-out, snkp .7s ease-in-out infinite }
 @keyframes snk { from { transform:scale(1.35); opacity:0 } }
 @keyframes snkp { 50% { opacity:.55 } }
@@ -310,7 +313,7 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
   ${chatBubbles(ctx, now, player)}
   ${sniperScope(s, wp)}
   <!-- Center Point (hidden during ADS for true ironsights aiming) -->
-  ${s.ads ? '' : '<div class="dot-crosshair"></div>'}${s.crouch ? `<div class="sneak sneak-${s.detect ?? 'hidden'}" id="sn-${s.detect ?? 'hidden'}">[${(s.detect ?? 'hidden').toUpperCase()}]</div>` : ''}
+  ${s.ads ? '' : '<div class="dot-crosshair"></div>'}${s.crouch ? `<div class="sneak sneak-${s.detect ?? 'hidden'}" id="sn-${s.detect ?? 'hidden'}">[${(s.detect ?? 'hidden').toUpperCase()}]<div class="sneak-bar"><i style="width:${Math.round((s.detect === 'danger' ? 1 : s.aware ?? 0) * 100)}%"></i></div></div>` : ''}
   ${s.chargeAt && !W[s.equipped ?? 'fists']?.ranged ? `<style>@keyframes pwrfill{from{stroke-dashoffset:113}to{stroke-dashoffset:0}}@keyframes pwrfull{0%,100%{opacity:1}50%{opacity:.45}}</style><svg id="pwr${s.chargeAt}" width="44" height="44" viewBox="0 0 44 44" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-90deg)"><circle cx="22" cy="22" r="18" fill="none" stroke="rgba(20,16,8,.6)" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="#ffb347" stroke-width="3" stroke-dasharray="113" style="filter:drop-shadow(0 0 3px rgba(255,170,40,.9));animation:pwrfill ${(W.power?.charge ?? 0.9)}s linear forwards, pwrfull .25s ${(W.power?.charge ?? 0.9)}s steps(2) infinite"/></svg>` : ''}
 
   <!-- Subtle Sanity Edge Vignette (gently narrows peripheral vision as sanity drops) -->
