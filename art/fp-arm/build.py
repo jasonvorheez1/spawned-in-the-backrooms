@@ -121,9 +121,10 @@ def build(sex, side):
     # fist centre: the curled finger mass
     pts2 = [((q[0] - W).dot(a), (q[0] - W).dot(n)) for i, q in P.items() if q[4] > 0.3 and abs((q[0] - W).dot(s) - idx.dot(s) + W.dot(s)) < 0.03]
     best = (-1, 0, 0)
-    for ti in range(0, 70):
-        for hi in range(0, 50):
+    for ti in range(-10, 50):
+        for hi in range(0, 40):
             t0, h0 = ti * 0.001, -hi * 0.001
+            if not (any(y > h0 and abs(x - t0) < 0.012 for x, y in pts2) and any(y < h0 and abs(x - t0) < 0.012 for x, y in pts2) and any(x > t0 and abs(y - h0) < 0.012 for x, y in pts2)): continue   # walled above, below and in front
             dmin = min(math.hypot(t0 - x, h0 - y) for x, y in pts2)
             if dmin > best[0]: best = (dmin, t0, h0)
     print(sex, "grip hole r", round(best[0], 4), "at", best[1:], "fit", round(best[0], 4))
