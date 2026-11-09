@@ -17,7 +17,7 @@ rooms:
   - { x0: 7,  z0: 16, w: 3, d: 3, type: bunks }      # quarters
   - { x0: 3,  z0: 5,  w: 3, d: 3, type: office }     # administration
   - { x0: 11, z0: 14, w: 3, d: 3, type: lockers }    # the checkered locker room
-  - { x0: 11, z0: 18, w: 2, d: 2, type: restroom }
+  - { x0: 11, z0: 17, w: 2, d: 2, type: restroom }  # right off the locker room, like the photo: sink through a doorway
   - { x0: 13, z0: 3,  w: 5, d: 4, type: fridges }    # Refrigerator Paradise
   - { x0: 16, z0: 10, w: 2, d: 2, type: store }
   - { x0: 5,  z0: 23, w: 3, d: 2, type: store }

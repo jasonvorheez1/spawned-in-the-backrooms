@@ -36,6 +36,7 @@ export const ROOMS = L.rooms.map((r, i) => ({ ...r, i }));
   // the lane: three cells wide, open all the way to the east wall
   for (let x = EDGE_X; x < N; x++) for (let z = LANE.z0; z < LANE.z0 + LANE.d; z++) { if (x < N - 1) link(x, z, 0); if (z < LANE.z0 + LANE.d - 1) link(x, z, 1); }
   link(L.arrive[0], L.arrive[1], 0); // the landing opens into the base atrium
+  link(11, 16, 1); link(13, 16, 1); // the locker room photo: the restroom doorway and the back hall, both off its far wall
 })();
 export const isOpen = (cx, cz, d) => cx >= 0 && cz >= 0 && cx < N && cz < N && !!(open[cz * N + cx] & DIRS[d][2]);
 export const openings = (cx, cz) => [0, 1, 2, 3].filter((d) => isOpen(cx, cz, d));
