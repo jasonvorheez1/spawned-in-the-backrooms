@@ -73,10 +73,17 @@ def finish(o):
     o.parent = rig; mod = o.modifiers.new("skin", "ARMATURE"); mod.object = rig
 
 CAPMAT = None
+def capmat():
+    global CAPMAT
+    if CAPMAT is None:
+        CAPMAT = bpy.data.materials.new("scalp_cap"); CAPMAT.use_nodes = True
+        b = CAPMAT.node_tree.nodes["Principled BSDF"]; b.inputs["Base Color"].default_value = (0.42, 0.40, 0.38, 1); b.inputs["Roughness"].default_value = 0.85
+    return CAPMAT
 def make_cap(hatted, mat):
     # a painted scalp under every cut: the head's crown and back, pushed out 4 mm, so no skin shows between strands (Andrew's bald patches, Nov 9)
     global CAPMAT
-    if mat is None:
+    mat = capmat()
+    if False:
         if CAPMAT is None:
             CAPMAT = bpy.data.materials.new("scalp_cap"); CAPMAT.use_nodes = True
             CAPMAT.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.09, 0.06, 0.04, 1)
@@ -111,7 +118,7 @@ def export(k, hatted):
     for kind, o in made[k]:
         c = o.copy(); c.data = o.data.copy(); bpy.context.scene.collection.objects.link(c)
         first = next(o2 for kd, o2 in made[k] if kd == kind)  # one material per kind: the engine tints the slot named hair
-        c.data.materials.clear(); c.data.materials.append(first.data.materials[0])
+        c.data.materials.clear(); c.data.materials.append(capmat() if kind == "scalp" else first.data.materials[0])  # the pack's scalp texture is skin-toned: tinted it read as bald patches
         if hatted:
             bm = bmesh.new(); bm.from_mesh(c.data)
             line = H["top"] - 0.075  # the brim: what's above sits inside the hat
