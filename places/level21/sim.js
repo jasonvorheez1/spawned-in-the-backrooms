@@ -129,7 +129,7 @@ function lay(ctx) {
   // ---- the rock vault from the tunnel photo: four 9 m Blender stretches (art/level21/edgevault.py) down the lane's north side, rising from the floor and curving into the roof
   const VAULT = ["/cdn/value.7f23537f28502dcf9e8eefee13cbc7daeab46345e1cd787474a0f0b40fee50e2.glb", "/cdn/value.2aec8d36a7b47be02fa536ad5fdcff5984ce5c81e7c60aa74f8da5121521b068.glb"], VOFF = [[-0.05, -0.164, 3.075], [-0.05, -0.197, 3.075]];
   const vx0 = EDGE_X * S - HALF, vz = LANE.z0 * S - HALF;
-  for (let k = 0; k < 4; k++) sp(`l21-vault-${k}`, { feetPosition: { x: vx0 + 4.5 + k * 9, y: 0, z: vz }, visibleRange: { max: 80 }, castShadow: false, receiveShadow: true, physics: { body: "static", collider: "mesh" }, model: { id: VAULT[k % 2], offset: VOFF[k % 2] } });
+  for (let k = 0; k < 4; k++) sp(`l21-vault-${k}`, { feetPosition: { x: vx0 + 4.5 + k * 9, y: 0, z: vz }, visibleRange: { max: 80 }, castShadow: false, receiveShadow: true, physics: { body: "static", collider: "mesh" }, model: { id: VAULT[0], offset: VOFF[0], materials: { rock: { texture: "cdn/texture-grey-blasted-granite-tunnel-rock.png", color: "oklch(0.62 0.006 250)", roughness: 0.92 } } } });
 
   // ---- the photo's green EXIT signs, hung from the ceiling down the length of The Edges, both faces lit
   for (let cx = EDGE_X + 1; cx < N; cx += 4) { const c = cellCenter(cx, LANE.z0 + 1), h = heightOf(cx, LANE.z0 + 1), face = (f) => `<div face="${f}" emissive style="width:0.42m;height:0.16m;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;font-size:110px;color:#eafff0;background:#118a3a">EXIT</div>`;
