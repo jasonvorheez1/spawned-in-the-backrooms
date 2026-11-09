@@ -67,7 +67,7 @@ front = list(EYE | IRIS); fkd = kdtree.KDTree(len(front))
 for i, v in enumerate(front): fkd.insert(Vector((W(v).x, 0, W(v).z)), i)
 fkd.balance()
 def front_y(x, z):
-    hits = fkd.find_range(Vector((x, 0, z)), 0.006) or [fkd.find(Vector((x, 0, z)))]
+    hits = fkd.find_range(Vector((x, 0, z)), 0.012) or [fkd.find(Vector((x, 0, z)))]
     return min(W(front[h[1]]).y for h in hits)
 def nearest_eye(x, z):
     return front[fkd.find(Vector((x, 0, z)))[1]]
@@ -84,8 +84,9 @@ for v0 in LASH:
     cz = sum(W(v).z for v in isl) / len(isl); cx = sum(W(v).x for v in isl) / len(isl); sd = 1 if cx > 0 else -1
     xc = min(max(cx, sides[sd][2]), sides[sd][3])
     if cz > (sides[sd][0](xc) + sides[sd][1](xc)) / 2: UPLASH.update(isl)
+LB = {sd: contour([v for v in LASH if (W(v).x > 0) == (sd > 0)]) for sd in (1, -1)}
 print("lash", len(LASH), "upper", len(UPLASH))
-C, R = 14, 7
+C, R = 16, 9
 lids = []  # (vert, side, x, row)
 for s in (1, -1):
     top, bot, x0, x1 = sides[s]; m = 0.0012
@@ -109,7 +110,7 @@ def lid_pos(s, x, j, frac):
     t, b = top(xc) + 0.0006, bot(xc)
     if frac <= 0: return Vector((x, front_y(xc, t) + 0.006, t - 0.0004 * j))
     z = t - (t - b + 0.0012) * frac * j / (R - 1)
-    return Vector((x, front_y(xc, z) - 0.0016 - 0.0008 * math.sin(math.pi * j / (R - 1)), z))
+    return Vector((x, front_y(xc, z) - 0.0024 - 0.0008 * math.sin(math.pi * j / (R - 1)), z))
 for nv, s, x, j, e in lids:
     rest = lid_pos(s, x, j, 0); nv.co = MW.inverted() @ rest
     for k, L in keyl.items():
@@ -126,8 +127,8 @@ for name, frac in (("X_Blink", 1.0), ("X_Squint", 0.45)):
     for v in LASH:
         p = W(v); s = 1 if p.x > 0 else -1; top, bot, x0, x1 = sides[s]; xc = min(max(p.x, x0), x1)
         if v not in UPLASH: continue  # lower lash islands stay
-        cx = (x0 + x1) / 2; hw = (x1 - x0) / 2; u = min(1.0, abs(p.x - cx) / hw)
-        put(L, v, Vector((0, -0.0018 * frac, -EH[s] * frac * 0.9 * (1 - 0.6 * u * u))))
+        lb = LB[s][1](min(max(p.x, LB[s][2]), LB[s][3]))
+        put(L, v, Vector((0, -0.0022 * frac, -(lb - bot(xc) + 0.0006) * frac)))
     if frac < 1:
         for v in bm.verts:
             if v in EYE or v in LASH or v in IRIS: continue
