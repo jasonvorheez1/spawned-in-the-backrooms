@@ -200,7 +200,7 @@ for name, (ease, cuts) in PLAN.items():
         bmesh.ops.delete(bm, geom=gone, context="FACES")
         bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
         for v in bm.verts:
-            if v.is_boundary and v.co.z > NECK - 0.09:
+            if v.is_boundary and v.co.z > NECK - 0.09 and rr(v.co) < 1.45:   # the neckline's own rim only: a seam elsewhere on the shoulder was yanked to the collar and tore the back
                 k = rr(v.co); a = math.atan2((v.co.y - cy) / ry, v.co.x / rx)
                 v.co.x, v.co.y = math.cos(a) * rx, cy + math.sin(a) * ry
     bmesh.ops.dissolve_degenerate(bm, dist=0.002, edges=bm.edges[:])
