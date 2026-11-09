@@ -18,7 +18,7 @@ ANKLE = 0.075 * (NECK / 1.276)
 def smooth(x, a, b): t = min(1, max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t)
 def band(x, edge, w): return 1 - smooth(abs(x - edge), w * 0.6, w)  # 1 inside a band of width w at edge
 # garment plans: ease(p) in metres; cuts: (point, normal) keeps the side the normal points away from. Savi's picks
-def top(hem, cuff, loose, rib):
+def top(hem, cuff, loose, rib, drape=0.985):
     def ease(p):
         ax = abs(p.x); e = loose
         if ax > 0.16: e = loose * 1.15 + 0.004 * smooth(ax, ELBOW, cuff)           # sleeves a little fuller toward the cuff
@@ -31,6 +31,7 @@ def top(hem, cuff, loose, rib):
     cuts = [(Vector((0, 0, hem)), Vector((0, 0, -1))),
             (Vector((0, B["Neck"].y, NECK - 0.012)), Vector((0, -0.18, 1)).normalized())]
     cuts += [(Vector((s * cuff, 0, 0)), Vector((s, 0, 0))) for s in (1, -1)]
+    ease.drape = drape
     return ease, cuts
 def bottom(hem, waist, loose, cuffrib):
     def ease(p):
@@ -41,11 +42,11 @@ def bottom(hem, waist, loose, cuffrib):
         return e
     return ease, [(Vector((0, 0, hem)), Vector((0, 0, -1))), (Vector((0, 0, waist)), Vector((0, 0.18, 1)).normalized())]
 PLAN = {
-    "Top_hoodie":     top(HIP + 0.045, WRIST, 0.022, True),
-    "Top_sweater":    top(HIP + 0.06, WRIST, 0.016, True),
-    "Top_longsleeve": top(HIP + 0.07, WRIST + 0.005, 0.009, False),
-    "Top_pajamas":    top(HIP + 0.055, WRIST - 0.01, 0.018, False),
-    "Top_tee":        top(HIP + 0.075, B["LeftArm"].x + 0.11, 0.010, False),
+    "Top_hoodie":     top(HIP + 0.045, WRIST, 0.022, True, 0.997),
+    "Top_sweater":    top(HIP + 0.06, WRIST, 0.016, True, 0.993),
+    "Top_longsleeve": top(HIP + 0.07, WRIST + 0.005, 0.009, False, 0.975),
+    "Top_pajamas":    top(HIP + 0.055, WRIST - 0.01, 0.018, False, 0.996),
+    "Top_tee":        top(HIP + 0.075, B["LeftArm"].x + 0.11, 0.010, False, 0.982),
     "Bot_pants":      bottom(ANKLE + 0.01, WAIST + 0.02, 0.012, False),
     "Bot_pjpants":    bottom(ANKLE + 0.02, WAIST + 0.02, 0.02, True),
     "Bot_shorts":     bottom(KNEE + 0.1, WAIST + 0.02, 0.014, False),
@@ -84,9 +85,30 @@ for name, (ease, cuts) in PLAN.items():
         for v in bm.verts:                                   # never inside the skin, never looser than planned x1.6
             co, n, fi, d = bvhW.find_nearest(v.co)
             out = (v.co - co).dot(n)
-            need = max(0.003, E[v] * 0.7)
+            need = max(0.004, E[v] * 0.7)
             if out < need: v.co = v.co + n * (need - out)
             elif out > E[v] * 1.6 + 0.004: v.co = v.co - n * (out - E[v] * 1.6 - 0.004)
+    if hasattr(ease, "drape"):                               # cloth falls from the chest: each slice no narrower than the one above x drape
+        cy = B["Spine1"].y; BINS = 72; cells = {}
+        for v in bm.verts:
+            if abs(v.co.x) > 0.15 or v.co.z > B["Spine2"].z + 0.04: continue
+            ang = math.atan2(v.co.y - cy, v.co.x); r = math.hypot(v.co.x, v.co.y - cy)
+            cells.setdefault((int((ang + math.pi) / (2 * math.pi) * BINS) % BINS, int(v.co.z / 0.008)), []).append((v, ang, r))
+        zis = sorted({k[1] for k in cells}, reverse=True); prev = {}
+        for zi in zis:
+            for b in range(BINS):
+                c = cells.get((b, zi))
+                if not c: continue
+                tgt = max(max(r for _, _, r in c), prev.get(b, 0) * ease.drape); prev[b] = tgt
+                for v, ang, r in c:
+                    if r < tgt: v.co.x, v.co.y = math.cos(ang) * tgt, cy + math.sin(ang) * tgt
+        for it in range(3):
+            for f in (0.5, -0.52):
+                new = {v: v.co + (sum((w.co for w in nb), Vector()) / len(nb) - v.co) * f for v, nb in adj.items() if len(nb) > 2}
+                for v, c in new.items(): v.co = c
+            for v in bm.verts:
+                co, n, fi, d = bvhW.find_nearest(v.co); out = (v.co - co).dot(n)
+                if out < 0.004: v.co = v.co + n * (0.004 - out)
     for co, no in cuts:                                      # straight hems
         bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=co, plane_no=no, clear_outer=True)
     bmesh.ops.dissolve_degenerate(bm, dist=0.002, edges=bm.edges[:])
@@ -114,7 +136,7 @@ for name, (ease, cuts) in PLAN.items():
     me.materials.append(mat)
     for p in me.polygons: p.use_smooth = True
     bpy.ops.object.select_all(action="DESELECT"); n.select_set(True); bpy.context.view_layer.objects.active = n
-    sd = n.modifiers.new("t", "SOLIDIFY"); sd.thickness = THICK; sd.offset = -1; sd.use_even_offset = False; sd.use_rim = True
+    sd = n.modifiers.new("t", "SOLIDIFY"); sd.thickness = THICK; sd.offset = 1; sd.use_even_offset = False; sd.use_rim = True
     bpy.ops.object.modifier_apply(modifier="t")
     ss = n.modifiers.new("s", "SUBSURF"); ss.levels = 1; bpy.ops.object.modifier_apply(modifier="s")
     # skin + Bust key from the body at the nearest point
