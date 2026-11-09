@@ -237,7 +237,7 @@ export function geometry(ctx) {
     box(ctx, mx - hx - 0.05, H - 0.04, mz - hz - 0.05, mx + hx + 0.05, H, mz + hz + 0.05); // frame
     if (lit) {
       const boost = inHub(cx, cz) ? 1.15 : 1.0;
-      ctx.emissive(zone === "red" ? [3.0, 0.25, 0.18] : [2.4 * boost, 2.25 * boost, 1.8 * boost]);
+      ctx.emissive(zone === "red" ? [3.0, 0.25, 0.18] : [1.55 * boost, 1.45 * boost, 1.15 * boost]);
     }
     ctx.color(lit ? (zone === "red" ? "#ff4a3a" : "#fffaf0") : "oklch(0.45 0.01 90)");
     face(ctx, [mx - hx, H - 0.045, mz - hz], [mx + hx, H - 0.045, mz - hz], [mx + hx, H - 0.045, mz + hz], [mx - hx, H - 0.045, mz + hz], [0, -1, 0]);
