@@ -377,7 +377,7 @@ const FIX = {
   stair: "/cdn/value.2fc266851ba0826982af9d80d704e390d10316e214b0ce362a851ee748c3aae4.glb",   // 13-step cast flight, origin = step 0 centre, climbs -Z
 };
 const glow = (col, k = 3) => ({ color: col, emissive: col, emissiveIntensity: k });
-function fixtures(ctx) {
+export function fixtures(ctx) {
   const all = { radius: 1e5, center: { x: 0, y: 0, z: 0 } };
   for (const row of ctx.query(all)) {
     const o = ctx.getObject(row.id), k = o?.primitive?.kind; if (!o || !k || o.model) continue;
