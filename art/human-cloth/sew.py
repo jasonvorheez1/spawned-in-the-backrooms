@@ -379,19 +379,19 @@ for name, (ease, cuts) in PLAN.items():
     n.parent = old.parent; n.matrix_parent_inverse = old.matrix_parent_inverse.copy()
     bpy.data.objects.remove(old); n.name = name; me.name = name
     done[name] = sum(len(p.vertices) - 2 for p in me.polygons)
-# armpit tuck: under any top the body's armpit skin sinks 22 mm, so a raised arm never pokes it out through the cloth. the game sets C_Pit = 1 while a top is worn
+# armpit tuck: under any top the body's armpit skin sinks 32 mm, so a raised arm never pokes it out through the cloth. the game sets C_Pit = 1 while a top is worn
 _bm = bmesh.new(); _bm.from_mesh(body0.data); _bm.verts.ensure_lookup_table(); _bm.normal_update()
 _W = body0.matrix_world; _N = _W.to_3x3().inverted().transposed()
 if not body0.data.shape_keys: body0.shape_key_add(name="Basis", from_mix=False)
 _k = body0.shape_key_add(name="C_Pit", from_mix=False); _basis = body0.data.shape_keys.reference_key
-_pits = [Vector((sx * (abs(B["LeftArm"].x) - 0.01), B["LeftArm"].y, B["LeftArm"].z - 0.06)) for sx in (1, -1)]
+_pits = [Vector((sx * (abs(B["LeftArm"].x) - 0.01), B["LeftArm"].y + 0.03, B["LeftArm"].z - 0.06)) for sx in (1, -1)]
 _moved = 0
 for v in _bm.verts:
     w = _W @ v.co
-    f = max(1 - smooth((w - c).length, 0.07, 0.13) for c in _pits)
+    f = max(1 - smooth((w - c).length, 0.085, 0.13) for c in _pits)
     if f <= 0: continue
     nw = (_N @ v.normal).normalized()
-    _k.data[v.index].co = _basis.data[v.index].co + _W.inverted().to_3x3() @ (-nw * 0.022 * f); _moved += 1
+    _k.data[v.index].co = _basis.data[v.index].co + _W.inverted().to_3x3() @ (-nw * 0.032 * f); _moved += 1
 _bm.free(); print("C_Pit verts", _moved)
 bpy.data.objects.remove(body); print("SEWN", done)
 bpy.ops.export_scene.gltf(filepath=dst, export_format="GLB", export_morph=True, export_skins=True, export_animations=False)
