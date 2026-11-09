@@ -58,8 +58,8 @@ function sink(ctx) {
     const tilt = (ctx.random() - 0.5) * 36, roll = (ctx.random() - 0.5) * 28;
     const id = ctx.spawn({ tags: ["furniture", "sunken", "breakable", kind], feetPosition: { x, y: -depth, z }, rotation: { yaw: ctx.random() * 360, pitch: tilt, roll }, visibleRange: { max: 46 }, castShadow: false, physics: { body: "static", collider: "box" }, model: fmodel(kind), state: { name: "Sunken " + kind, mat: kind === "chair" ? "wood" : "metal", hp: 60, maxHp: 60 } }); // Z heaves it out of the carpet (grab.js), a swing breaks it
     // the carpet slumps into a wet dark ring where it went down
-    ctx.spawn({ tags: ["sunken-stain"], feetPosition: { x, y: 0.012, z }, rotation: { pitch: -90 }, castShadow: false, visibleRange: { max: 30 }, primitive: { kind: "circle", radius: 0.9 + h * 0.5, segments: 20 }, material: { color: "oklch(0.2 0.03 70 / 0.55)", transparent: true, roughness: 0.35, depthWrite: false }, receiveShadow: true, castShadow: false, visibleRange: { max: 34 } });
-    ctx.spawn({ tags: ["sunken-stain"], feetPosition: { x, y: 0.014, z }, rotation: { pitch: -90 }, castShadow: false, visibleRange: { max: 30 }, primitive: { kind: "circle", radius: 0.45 + h * 0.3, segments: 16 }, material: { color: "oklch(0.13 0.02 70 / 0.7)", transparent: true, roughness: 0.2, depthWrite: false }, castShadow: false, visibleRange: { max: 34 } });
+    ctx.spawn({ tags: ["sunken-stain"], feetPosition: { x, y: 0.012, z }, rotation: { pitch: -90 }, castShadow: false, visibleRange: { max: 30 }, primitive: { kind: "circle", radius: 0.9 + h * 0.5, segments: 20 }, material: { color: "oklch(0.2 0.03 70 / 0.55)", transparent: true, roughness: 0.35, depthWrite: false }, receiveShadow: true });
+    ctx.spawn({ tags: ["sunken-stain"], feetPosition: { x, y: 0.014, z }, rotation: { pitch: -90 }, castShadow: false, visibleRange: { max: 30 }, primitive: { kind: "circle", radius: 0.45 + h * 0.3, segments: 16 }, material: { color: "oklch(0.13 0.02 70 / 0.7)", transparent: true, roughness: 0.2, depthWrite: false } });
     n++;
   }
 }
