@@ -11,25 +11,25 @@ export const PLACE_NAMES = {
 };
 export const qid = (name) => String(name ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export function setQuest(s, id, q) {
-  const cur = s.quests ?? {}, old = cur[id];
-  if (old && old.step === q.step && old.name === q.name && JSON.stringify(old.mark ?? null) === JSON.stringify(q.mark ?? old.mark ?? null)) return false;
-  s.quests = { ...cur, [id]: { name: q.name, step: q.step, mark: q.mark ?? old?.mark ?? null, main: !!(q.main ?? old?.main), at: Date.now() } };
+  const cur = s.quests ?? {}, old = cur[id], mark = q.mark === undefined ? old?.mark ?? null : q.mark, main = !!(q.main ?? old?.main);
+  if (old && old.step === q.step && old.name === q.name && !!old.main === main && JSON.stringify(old.mark ?? null) === JSON.stringify(mark)) return false;
+  s.quests = { ...cur, [id]: { name: q.name, step: q.step, mark, main, at: Date.now() } };
   const tr = (s.qtrack ?? []).filter((k) => s.quests[k]);
   if (!old && !tr.includes(id)) { if (q.main) { tr.unshift(id); tr.length = Math.min(tr.length, MAX_TRACK); } else if (tr.length < MAX_TRACK) tr.push(id); } // a new quest is tracked while a slot is free; the main quest always takes one
   s.qtrack = tr;
   return !old;
 }
-export function endQuest(s, id, doneText) {
+export function endQuest(s, id, doneText, outcome = "completed") {
   const old = s.quests?.[id];
   if (old) {
     const { [id]: gone, ...rest } = s.quests; s.quests = rest;
     s.qtrack = (s.qtrack ?? []).filter((k) => k !== id);
     if (doneText !== false) {
       const place = old.mark?.place ?? null;
-      s.qdone = { ...(s.qdone ?? {}), [id]: { name: old.name, text: typeof doneText === "string" ? doneText : "Completed", place, main: !!old.main, at: Date.now() } };
+      s.qdone = { ...(s.qdone ?? {}), [id]: { name: old.name, text: typeof doneText === "string" ? doneText : "Completed", place, main: !!old.main, outcome, at: Date.now() } };
     }
   } else if (typeof doneText === "string" && id) {
-    s.qdone = { ...(s.qdone ?? {}), [id]: { name: s.qdone?.[id]?.name ?? id, text: doneText, at: Date.now() } };
+    s.qdone = { ...(s.qdone ?? {}), [id]: { name: s.qdone?.[id]?.name ?? id, text: doneText, outcome, at: Date.now() } };
   }
 }
 export const tracked = (s) => (s?.qtrack ?? []).filter((id) => s.quests?.[id]).slice(0, MAX_TRACK).map((id, i) => ({ id, ...s.quests[id], tint: TINT[i] }));

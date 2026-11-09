@@ -294,7 +294,9 @@ function questTracker(s, player, ctx) {
 function journalUi(s, player, ctx) {
   if (!s.jrnOpen) return ''
   const all = Object.entries(s.quests ?? {}).map(([id, q]) => ({ id, ...q })).sort((a, b) => (b.main ? 1 : 0) - (a.main ? 1 : 0) || (b.at ?? 0) - (a.at ?? 0))
-  const done = Object.entries(s.qdone ?? {}).map(([id, q]) => ({ id, ...q })).sort((a, b) => (b.at ?? 0) - (a.at ?? 0))
+  const finished = Object.entries(s.qdone ?? {}).map(([id, q]) => ({ id, ...q })).sort((a, b) => (b.at ?? 0) - (a.at ?? 0))
+  const failed = finished.filter((q) => q.outcome === 'failed' || (!q.outcome && /\bfailed\b/i.test(q.text ?? '')))
+  const done = finished.filter((q) => !failed.includes(q))
   const tr = tracked(s)
   const here = player?.place ?? ctx?.place?.id ?? 'main'
   const row = (q) => {
@@ -336,6 +338,7 @@ function journalUi(s, player, ctx) {
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px"><span style="font-size:15px;letter-spacing:.25em;color:#ffb642">JOURNAL</span><span style="font-size:10px;letter-spacing:.18em;color:rgba(255,182,66,0.55)">TRACKING ${tr.length} OF ${MAX_TRACK}</span></div>
     ${all.length ? all.map(row).join('') : '<div style="font-size:12px;color:rgba(255,182,66,0.55);text-transform:none;padding:10px 0">No active quests. Press P or Esc to close.</div>'}
     ${done.length ? `<div style="display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 8px;border-top:1px solid rgba(255,182,66,0.22);padding-top:10px"><span style="font-size:12px;letter-spacing:.2em;color:#85c478">COMPLETED (${done.length})</span></div>${done.map(doneRow).join('')}` : ''}
+    ${failed.length ? `<div style="margin:16px 0 8px;border-top:1px solid rgba(255,182,66,0.22);padding-top:10px;font-size:12px;letter-spacing:.2em;color:#e8a49a">FAILED (${failed.length})</div>${failed.map((q) => `<div style="border-left:3px solid #d78176;padding:7px 10px;margin-bottom:6px;text-transform:none;color:#e8c3b7;font-size:12px"><b>${esc(q.name)}</b><div>${esc(q.text ?? 'Failed')}</div></div>`).join('')}` : ''}
   </div></div>`
 }
 

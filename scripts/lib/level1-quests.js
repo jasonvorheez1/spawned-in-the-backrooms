@@ -81,7 +81,7 @@ export function l1Choice(ctx, it, s, list) {
     if (r === 1 && (s.cents ?? 0) >= 1000) add.push(opt("rVossTip"));
     if (r === 3 && !s.rAleDead && s.rAleTalked && s.rAleTalked !== "lift") add.push(opt("rVossSell", "Quest"));
   } else if (id === "meg-ale") {
-    if (r === 2) { add.push(opt("rAleSpeech")); add.push(opt("rAleBarter")); add.push(opt("rAleThreat")); }
+    if (r === 2) { add.push(opt("rAleSpeech")); if ((s.cents ?? 0) >= 2000) add.push(opt("rAleBarter")); add.push(opt("rAleThreat")); }
   }
   for (let i = add.length - 1; i >= 0; i--) if (failed[Object.keys(C).find((k) => C[k] === add[i].text)]) add.splice(i, 1);
   if (!add.length) return list;
@@ -91,13 +91,13 @@ export function l1Choice(ctx, it, s, list) {
 // ---- steps, rewards, standing
 function note(ctx, p, text, kind = "info") { const s = p.state, now = ctx.now(); s.notice = { text, at: now }; pushFeed(s, text, now, kind); }
 function ding(ctx, p, clip = CHIME, v = 0.7) { const pos = p.worldFeetPosition ?? p.feetPosition; if (pos) heard(ctx, { clip, position: pos, volume: v, maxDistance: 16 }, { audience: { player: p.id } }); }
-export function setStep1(ctx, p, q, step, text, doneSummary) {
+export function setStep1(ctx, p, q, step, text, doneSummary, outcome) {
   const Q = QUESTS1[q], s = p?.state; if (!Q || !s) return;
   if ((s[Q.key] ?? 0) >= step && step !== 99) return;
   s[Q.key] = step;
   const id = Q.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   if (Q.tips[step]) setQuest(s, id, { name: Q.name, step: Q.tips[step], mark: Q.marks[step] ?? null });
-  else endQuest(s, id, doneSummary ?? text);
+  else endQuest(s, id, doneSummary ?? text, outcome);
   if (text) note(ctx, p, text); ding(ctx, p);
 }
 // friends pay better: Liked +25 %, Accepted +10 % on the giver's faction (her pick)
@@ -143,12 +143,13 @@ export function handleDialogueQuest1(ctx, p, it, text) {
     return { reply: "Ale came in yesterday with a cut across her palm. Tin lid, clean edge. She told me it was a door. Doors don't do that.", mood: "calm" };
   }
   if (id === "meg-ale" && r === 2 && (k === "rAleSpeech" || k === "rAleBarter" || k === "rAleThreat")) {
+    if (k === "rAleBarter" && (s.cents ?? 0) < 2000) return { reply: "Come back when you've got the twenty.", mood: "annoyed" };
     if (!roll(ctx, p, it, k)) {
       if (k === "rAleThreat") { addRep(s, "meg", -2); return { reply: "Tell him. He'll ask you where your proof is, and you'll have nothing. Walk.", mood: "angry" }; }
       return { reply: k === "rAleBarter" ? "Twenty? Cute. I don't sell my reasons." : "No idea what you're talking about. Go count something.", mood: "annoyed" };
     }
     s.rAleTalked = k;
-    if (k === "rAleBarter") s.cents = Math.max(0, (s.cents ?? 0) - 2000);
+    if (k === "rAleBarter") s.cents -= 2000;
     setStep1(ctx, p, "rations", 3, k === "rAleBarter" ? "Paid Ale $20. The cans stop walking." : "Ale admitted it. The cans go to a family hiding in the east halls.");
     return { reply: k === "rAleBarter" ? "Fine. Deal. It stops. Don't make that face, they were going to a good cause." : "There's a family in the east halls. Two kids. M.E.G. won't take them in without papers. So yeah, Callum's short. Tell him or don't.", mood: "calm" };
   }
@@ -171,8 +172,9 @@ export function handleDialogueQuest1(ctx, p, it, text) {
 
   // ---------------- B.N.T.G.: buy the name, or sell Ale out
   if (id === "bntg-voss" && k === "rVossTip" && r === 1) {
+    if ((s.cents ?? 0) < 1000) return { reply: "Come back with the ten.", mood: "annoyed" };
     if (!roll(ctx, p, it, k)) return { reply: "Information costs more than a smile. Come back with a better offer.", mood: "calm" };
-    s.cents = Math.max(0, (s.cents ?? 0) - 1000); addRep(s, "bntg", 2);
+    s.cents -= 1000; addRep(s, "bntg", 2);
     setStep1(ctx, p, "rations", 2, "Paid Voss $10: Ale's been trading tins in the east halls.");
     return { reply: "Ten. Pleasure. Ale's been swapping tins in the east halls. Not to me, which is the part that annoys me.", mood: "happy" };
   }
@@ -215,7 +217,7 @@ export function questLift1(ctx, p, it) {
 export function questKill1(ctx, p, victim) {
   const s = p?.state, id = who(victim); if (!s) return;
   if (id === "meg-ale" && (s.rationsQ === 1 || s.rationsQ === 2)) { s.rAleDead = true; setStep1(ctx, p, "rations", 3, "Callum's crate tags are in Ale's pocket."); }
-  if (id === "meg-callum" && (s.rationsQ ?? 0) > 0 && (s.rationsQ ?? 0) < 99) setStep1(ctx, p, "rations", 99, "Short Rations failed: Callum is dead.");
+  if (id === "meg-callum" && (s.rationsQ ?? 0) > 0 && (s.rationsQ ?? 0) < 99) setStep1(ctx, p, "rations", 99, "Short Rations failed: Callum is dead.", undefined, "failed");
   if (id === "meg-callum" && s.waterQ === 1) setStep1(ctx, p, "water", 2, "Took the purification tablets from Callum's body.");
-  if (id === "meg-ortiz" && (s.waterQ ?? 0) > 0 && (s.waterQ ?? 0) < 99) setStep1(ctx, p, "water", 99, "Bad Water failed: Dr. Ortiz is dead.");
+  if (id === "meg-ortiz" && (s.waterQ ?? 0) > 0 && (s.waterQ ?? 0) < 99) setStep1(ctx, p, "water", 99, "Bad Water failed: Dr. Ortiz is dead.", undefined, "failed");
 }
