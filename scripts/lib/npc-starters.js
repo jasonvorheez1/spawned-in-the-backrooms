@@ -1,4 +1,5 @@
 // Conversation starters and dynamic choice generation for all NPCs.
+import { zenithChoice } from './zenith-quest.js'
 import ASKS from "./data/talk-asks.yml";
 // Starters are delivered when dialogue opens; choices give the player contextual,
 // clickable RPG dialogue prompts (with Speech, Barter, Survival, Medicine checks).
@@ -2513,7 +2514,7 @@ export function getStarter(ctx, it, s) {
 
 export function getChoices(ctx, it, s, lastNpcReply, replyObj) {
   const list = withChecks(ctx, it, fitPlace(ctx, it, rawChoices(ctx, it, s, lastNpcReply, replyObj)))
-  return realtyChoice(ctx, it, s, list)
+  return zenithChoice(ctx, it, s, realtyChoice(ctx, it, s, list))
 }
 
 // Mara at B.N.T.G. Realty always has the house on the table (scripts/lib/level11-quests.js answers it)

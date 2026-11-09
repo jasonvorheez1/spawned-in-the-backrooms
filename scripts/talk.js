@@ -20,6 +20,7 @@ import { handleDialogueQuest } from './lib/level11-quests.js'
 import { handleDialogueQuest10 } from './lib/level10-quests.js'
 import { handleDialogueQuest8 } from './lib/level8-quests.js'
 import { handleDialogueQuest21 } from './lib/level21-quests.js'
+import { handleDialogueQuestZ } from './lib/zenith-quest.js'
 
 const getStartersLib = (ctx) => ((ctx.session ??= {}).startersP ??= import('./lib/npc-starters.js'))
 
@@ -131,6 +132,7 @@ function send(ctx, d) {
     ?? handleDialogueQuest10(ctx, ctx.self, it, text)
     ?? handleDialogueQuest8(ctx, ctx.self, it, text)
     ?? handleDialogueQuest21(ctx, ctx.self, it, text)
+    ?? handleDialogueQuestZ(ctx, ctx.self, it, text)
   if (qRes) {
     s.talkBusy = 0
     ses.talkAt = now

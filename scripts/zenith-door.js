@@ -31,8 +31,8 @@ export function update(ctx) {
     return;
   }
   let near = false;
-  for (const pl of ctx.place.players) { const f = pl.feetPosition; if (Math.hypot(f.x - p.x, f.z - p.z) < 2.7 && Math.abs(f.y - p.y) < 2.5) { near = true; break; } }
-  if (!near) for (const b of ctx.query({ tags: ["zbot"], center: p, radius: 1.8 })) { near = true; break; }
+  for (const pl of ctx.place.players) { const f = pl.feetPosition; if (s.needs && !pl.state?.[s.needs]) continue; if (Math.hypot(f.x - p.x, f.z - p.z) < 2.7 && Math.abs(f.y - p.y) < 2.5) { near = true; break; } }
+  if (!near && !s.needs) for (const b of ctx.query({ tags: ["zbot"], center: p, radius: 1.8 })) { near = true; break; }
   if (near === !!ses.open) return;
   ses.open = near;
   place(ctx, near ? 1 : 0, near ? 0.55 : 0.7);

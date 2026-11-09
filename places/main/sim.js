@@ -13,6 +13,7 @@ const PAPER = { texture: "/cdn/value.00a4e744acf9ab763779bbb0cc7f26fb1dd20aeafc6
 import B from "../../scripts/lib/data/breakables.yml";
 import { syncLevel0 } from "../../scripts/lib/breakables.js";
 import { layMoments } from "../../scripts/lib/level0-moments.js";
+import { layZenithEntry } from "../../scripts/lib/zenith-quest.js";
 export const cadence = "1s";
 // office furniture: breakable props scattered through the halls (desk, chair, shelf: [mat, hp])
 // Blender-built office pieces (art/office-furniture/build.py), front +Z
@@ -123,6 +124,7 @@ function shift(ctx, s, now) {
 export function tick(ctx) {
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state, now = ctx.now();
+  layZenithEntry(ctx); // Level 0.1: Kade and the B.N.T.G. bulkhead in the safe room
   if (!s.almondTidy) { s.almondTidy = 1; for (const o of ctx.query({ tags: ["almond"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const p = o.feetPosition ?? { x: 0, y: 0, z: 0 }; if (p.y < 0.15 && !(false)) ctx.destroy(o.id); } } // loose floor bottles cleared once: almond water lives in containers and drops now
   if (!s.arrive2) { s.arrive2 = true; const ex = cellCenter(EXIT.cx, EXIT.cz); ctx.spawn("main-from-l1", { feetPosition: { x: -HALF + 2.4, y: 0.1, z: ex.z }, rotation: { yaw: -90 } }); } // Level 1's way back lets you out by the flickering wall
   if (!s.stairsSeeded) {
