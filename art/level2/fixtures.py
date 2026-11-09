@@ -36,7 +36,16 @@ def torus(R, r, at, rot=(0, 0, 0), m="cage"):
 def sphere(r, at, m, scale=(1, 1, 1)):
     bpy.ops.mesh.primitive_uv_sphere_add(segments=24, ring_count=12, radius=r, location=at); o = bpy.context.object; o.scale = scale
     bpy.ops.object.transform_apply(scale=True); return put(o, m)
+def boxuv(o, k=1.0):  # world-metre box projection so tiled CDN textures read at true scale
+    me = o.data; uv = me.uv_layers.get("UVMap") or me.uv_layers.new(name="UVMap")
+    for p in me.polygons:
+        n = p.normal; ax = max(range(3), key=lambda i: abs(n[i]))
+        for li in p.loop_indices:
+            co = o.matrix_world @ me.vertices[me.loops[li].vertex_index].co
+            u, v = [(co.y, co.z), (co.x, co.z), (co.x, co.y)][ax]; uv.data[li].uv = (u * k, v * k)
 def export(name):
+    for o in bpy.data.objects:
+        if o.type == "MESH": boxuv(o)
     for o in bpy.data.objects:
         for md in list(o.modifiers):
             bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=md.name)
