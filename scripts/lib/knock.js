@@ -49,16 +49,25 @@ export function foeStats(ctx, e) {
   return { h: a.h, a: a.a, kg: st.kg }
 }
 
-// a heavy melee swing past RAG.power ragdolls what it hits; heavier bodies fly less (Savi's picks)
-export const RAG = { power: 0.7, ms: 1600, speed: 7 }
-export function powerKnock(ctx, e, f, power) {
-  const st = e.state; if (!st || st.dead || (st.hp ?? 1) <= 0 || st.down || st.heldBy) return false
-  if (power < RAG.power) return false
-  const { kg } = foeStats(ctx, e), sp = RAG.speed * power * Math.min(1.4, 80 / Math.max(30, kg))
+// a heavy melee swing ragdolls what it hits when the striker's Hardiness (strength) beats the target's Endurance (Shelly).
+// Savi's picks: the charge needed = 0.65 + 0.06 x (END - HAR), clamped 0.35..1.05 (over 1 = it can't be dropped, it staggers);
+// a bigger margin flings it farther and keeps it down longer.
+export const RAG = { base: 0.65, per: 0.06, min: 0.35, ms: 1100, msPer: 220, speed: 6 }
+export function powerKnock(ctx, e, f, power, atk) {
+  const st = e.state; if (!st || st.dead || (st.hp ?? 1) <= 0 || st.down || st.heldBy) return 0
+  const { kg } = foeStats(ctx, e), end = attrsOf(st).e, str = atk?.h ?? 5
+  const need = Math.max(RAG.min, Math.min(1.05, RAG.base + RAG.per * (end - str)))
   const n = Math.hypot(f.x, f.z) || 1
-  st.stunUntil = ctx.now() + RAG.ms + 500
-  st.down = { x: Math.round(f.x / n * sp * 100) / 100, z: Math.round(f.z / n * sp * 100) / 100, at: ctx.now(), ms: RAG.ms, rag: 1, kg }
-  return true
+  if (power < need) { // not enough: a stagger shove instead
+    const sp = 2.5 * power
+    st.kb = { x: f.x / n * sp, z: f.z / n * sp, at: ctx.now(), ms: 300 }
+    return -1
+  }
+  const edge = Math.max(0, str - end), sp = RAG.speed * power * (1 + edge * 0.08) * Math.min(1.4, 80 / Math.max(30, kg))
+  const ms = Math.round(RAG.ms + RAG.msPer * Math.max(0, edge) + (power - need) * 800)
+  st.stunUntil = ctx.now() + ms + 500
+  st.down = { x: Math.round(f.x / n * sp * 100) / 100, z: Math.round(f.z / n * sp * 100) / 100, at: ctx.now(), ms, rag: 1, kg }
+  return 1
 }
 // the killing blow's push, for a body that dies as a ragdoll
 export function deathRag(e) {
