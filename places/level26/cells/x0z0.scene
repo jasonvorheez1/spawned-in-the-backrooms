@@ -98,6 +98,110 @@ l26-bridge:
   physics: static
   primitive: {depth: 7, height: 3, kind: box, width: 10}
   visible: false
+l26-c23-lamp:
+  feetPosition: {x: 5.6, y: 2.6, z: -13.6}
+  id: l26-c23-lamp
+  light: {color: oklch(0.85 0.08 75), distance: 5, intensity: 1.2, kind: point, shadow: {enabled: false}}
+l26-c23-plate:
+  feetPosition: {x: 6.99, y: 1.62, z: -12.15}
+  id: l26-c23-plate
+  material: {color: oklch(0.72 0.09 80), metalness: 0.85, roughness: 0.35}
+  physics: none
+  primitive: {depth: 0.02, height: 0.16, kind: box, width: 0.26}
+  rotation: {yaw: -90}
+  tags: [l26x]
+  ui: "<div face=\"front\" width=\"0.26m\" style=\"font-size:120px;font-family:serif;color:#2a2010;text-align:center;line-height:160px\">23</div>"
+l26-c23-print-0:
+  castShadow: false
+  feetPosition: {x: 5.75, y: 0.012, z: -12.95}
+  id: l26-c23-print-0
+  material: {color: oklch(0.2 0.02 70 / 0.55), roughness: 0.15, transparent: true}
+  physics: none
+  primitive: {height: 0.28, kind: plane, width: 0.11}
+  receiveShadow: false
+  rotation: {pitch: -90, roll: 0, yaw: 62}
+  tags: [l26x]
+l26-c23-print-1:
+  castShadow: false
+  feetPosition: {x: 5.45, y: 0.012, z: -13.35}
+  id: l26-c23-print-1
+  material: {color: oklch(0.2 0.02 70 / 0.55), roughness: 0.15, transparent: true}
+  physics: none
+  primitive: {height: 0.28, kind: plane, width: 0.11}
+  receiveShadow: false
+  rotation: {pitch: -90, roll: 0, yaw: 78}
+  tags: [l26x]
+l26-c23-print-2:
+  castShadow: false
+  feetPosition: {x: 5.85, y: 0.012, z: -13.8}
+  id: l26-c23-print-2
+  material: {color: oklch(0.2 0.02 70 / 0.55), roughness: 0.15, transparent: true}
+  physics: none
+  primitive: {height: 0.28, kind: plane, width: 0.11}
+  receiveShadow: false
+  rotation: {pitch: -90, roll: 0, yaw: 62}
+  tags: [l26x]
+l26-c23-print-3:
+  castShadow: false
+  feetPosition: {x: 6.2, y: 0.012, z: -13.45}
+  id: l26-c23-print-3
+  material: {color: oklch(0.2 0.02 70 / 0.55), roughness: 0.15, transparent: true}
+  physics: none
+  primitive: {height: 0.28, kind: plane, width: 0.11}
+  receiveShadow: false
+  rotation: {pitch: -90, roll: 0, yaw: 78}
+  tags: [l26x]
+l26-c23-print-4:
+  castShadow: false
+  feetPosition: {x: 6.55, y: 0.012, z: -13.75}
+  id: l26-c23-print-4
+  material: {color: oklch(0.2 0.02 70 / 0.55), roughness: 0.15, transparent: true}
+  physics: none
+  primitive: {height: 0.28, kind: plane, width: 0.11}
+  receiveShadow: false
+  rotation: {pitch: -90, roll: 0, yaw: 62}
+  tags: [l26x]
+l26-c23-print-5:
+  castShadow: false
+  feetPosition: {x: 7, y: 0.012, z: -13.5}
+  id: l26-c23-print-5
+  material: {color: oklch(0.2 0.02 70 / 0.55), roughness: 0.15, transparent: true}
+  physics: none
+  primitive: {height: 0.28, kind: plane, width: 0.11}
+  receiveShadow: false
+  rotation: {pitch: -90, roll: 0, yaw: 78}
+  tags: [l26x]
+l26-c23-print-6:
+  castShadow: false
+  feetPosition: {x: 7.45, y: 0.012, z: -13.8}
+  id: l26-c23-print-6
+  material: {color: oklch(0.2 0.02 70 / 0.55), roughness: 0.15, transparent: true}
+  physics: none
+  primitive: {height: 0.28, kind: plane, width: 0.11}
+  receiveShadow: false
+  rotation: {pitch: -90, roll: 0, yaw: 62}
+  tags: [l26x]
+l26-c23-print-7:
+  castShadow: false
+  feetPosition: {x: 7.85, y: 0.012, z: -13.45}
+  id: l26-c23-print-7
+  material: {color: oklch(0.2 0.02 70 / 0.55), roughness: 0.15, transparent: true}
+  physics: none
+  primitive: {height: 0.28, kind: plane, width: 0.11}
+  receiveShadow: false
+  rotation: {pitch: -90, roll: 0, yaw: 78}
+  tags: [l26x]
+l26-cabin23:
+  behavior: scripts/l26-cabin23.js
+  castShadow: true
+  feetPosition: {x: 5.6, y: 0.5, z: -12.55}
+  id: l26-cabin23
+  layout: {box: {max: {x: 0.26, y: 0.36, z: 0.2}, min: {x: -0.26, y: 0, z: -0.2}}}
+  model: {id: /cdn/value.27ee10044c9d6ba4d5c17282876f94271366b56470ee45f22c6b8ddb47b324da.glb}
+  physics: none
+  rotation: {yaw: -100}
+  state: {name: Hard-shell case, verb: Open}
+  tags: [usable, l26x]
 l26-cabins:
   castShadow: true
   feetPosition: {x: 0, y: 0, z: 0}
