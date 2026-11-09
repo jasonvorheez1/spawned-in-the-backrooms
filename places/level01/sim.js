@@ -44,8 +44,9 @@ function lay(ctx) {
   door("z-d-gal", 0, -48, 0, "auto");
   put("z-window", 0, -64, 0, { kind: "window", w: 24, h: 7, broken: [4, 13, 14, 22] });
   light("z-gal-light", 0, 5.5, -54, "#cfe2ff", 4, 22);
-  ctx.spawn("z-shell", { feetPosition: { x: 0, y: 0, z: -340 }, primitive: geo({ kind: "shell", r: 262 }) });
-  ctx.spawn("z-core", { feetPosition: { x: 0, y: 0, z: -340 }, primitive: geo({ kind: "core" }) });
+  ctx.spawn("z-shell", { feetPosition: { x: 0, y: -262, z: -340 }, primitive: { kind: "sphere", radius: 262, widthSegments: 64, heightSegments: 32 }, material: { color: "#3a3d40", metalness: 0.6, roughness: 0.7, side: "double" } });
+  ctx.spawn("z-core", { feetPosition: { x: 0, y: -220, z: -340 }, primitive: { kind: "cylinder", radiusTop: 14, radiusBottom: 14, height: 440, radialSegments: 48 }, material: { color: "#cfd4d8", emissive: "#ffe2b0", emissiveIntensity: 1.6, metalness: 0.4, roughness: 0.5 } });
+  for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; ctx.spawn("z-rib" + i, { feetPosition: { x: Math.cos(a) * 130, y: -60 + (i % 3) * 50, z: -340 + Math.sin(a) * 130 }, rotation: { yaw: -a * 57.3 }, primitive: { kind: "box", width: 6, height: 4, depth: 240 }, material: { color: "#55595d", metalness: 0.7, roughness: 0.6 } }); }
   ctx.spawn("z-core-glow", { feetPosition: { x: 0, y: 40, z: -320 }, light: { kind: "point", color: "#ffe2b0", intensity: 900, distance: 420 } });
   // furniture: [kind, roomX, roomZ, rx, rz, yaw, params]
   const F = [
@@ -60,7 +61,7 @@ function lay(ctx) {
     ["growbed", 7.6, -17, 1, -2.7, 0, { dead: 0.1 }], ["growbed", 7.6, -17, 1, 0, 0, { over: 1, dead: 0.2 }], ["growbed", 7.6, -17, 1, 2.7, 0, { dead: 0.85, lampOff: 1 }],
     ["treadmill", 7.6, -29, 0.8, -2.6, 0, { on: 1 }], ["treadmill", 7.6, -29, 2.1, -2.6, 0, {}], ["treadmill", 7.6, -29, 3.4, -2.6, 0, {}], ["locker", 7.6, -29, 1.5, 3.95, 180, { n: 3 }], ["crate", 7.6, -29, 3.6, 1.2, 0, { w: 1.4, h: 0.45, d: 0.5, skin: "rubber" }],
     ["pipes", 7.6, -39, 4.6, -3.2, -90, {}], ["pipes", 7.6, -39, 4.6, 0.2, -90, {}], ["rack", 7.6, -39, 4.5, 2.6, -90, { on: 0 }], ["crate", 7.6, -39, 0.6, -2.8, 15, {}], ["crate", 7.6, -39, 1.9, -3.1, -8, { skin: "steel" }], ["crate", 7.6, -39, 1.2, -2.9, 30, { w: 0.8, h: 0.6, d: 0.6 }, 0.8],
-    ["desk", 0, -56, -6, -6.3, 0, { on: 0.7 }], ["desk", 0, -56, 6, -6.3, 0, { on: 0, cracked: 1 }], ["chair", 0, -56, -6, -5.4, 0, {}], ["debris", 0, -56, 0, -6, 0, { w: 8, d: 3, n: 40 }],
+    ["desk", 0, -56, -6, -6.3, 0, { on: 0.7 }], ["desk", 0, -56, 6, -6.3, 0, { on: 0, cracked: 1 }], ["chair", 0, -56, -6, -5.4, 0, {}], ["crate", 0, -56, -1.5, -6.6, 22, { w: 0.9, h: 0.5, d: 0.6, skin: "steel" }], ["crate", 0, -56, 1.2, -6.4, -35, { w: 0.7, h: 0.4, d: 0.5 }],
   ];
   F.forEach(([kind, cx, cz, rx, rz, yaw, p, y], i) => { put(`z-f${i}`, cx + rx, cz + rz, yaw, { kind, seed: i, ...p }, { y: y ?? 0, physics: kind === "debris" ? "none" : "static" }); n++; });
   // the drive Kade wants: a bay on the control room's island desk
