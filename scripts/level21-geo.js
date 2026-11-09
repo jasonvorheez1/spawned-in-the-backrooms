@@ -64,11 +64,7 @@ function dressRooms(ctx, M) {
       ctx.emissive(null);
       // Base Alef's 4 cots are modeled pieces now (places/level21/sim.js, COT)
     } else if (r.type === "bunks") {
-      // Quarters: 6 full double-decker bunk beds matching the 6 physics colliders in sim.js
-      for (let i = 0; i < 6; i++) {
-        const bx = c.x - 3.4 + (i % 3) * 3.4, bz = c.z - 2.4 + Math.floor(i / 3) * 4.2;
-        bunkBed(ctx, bx, bz, M);
-      }
+      // Quarters: 6 steel bunks are Blender models now (places/level21/sim.js, L21M.bunk)
     } else if (r.type === "explo") {
       // Exploration Wing: its racks, bench and lanterns are Tripo props now (places/level21/sim.js, dress21)
     } else if (r.type === "office") {
@@ -84,12 +80,7 @@ function dressRooms(ctx, M) {
       // its shelving, desks and chairs are Tripo props now (dress21)
     } else if (r.type === "lockers") {
       // Checkered Locker Room: 2 long hardwood locker benches down the middle, coat hooks, and a yellow mop bucket
-      for (const dz of [-1.2, 1.4]) {
-        ctx.albedo(WOOD); ctx.color("oklch(0.58 0.07 62)"); ctx.metalness(0); ctx.roughness(0.8);
-        box(ctx, c.x - 2.6, c.x + 1.8, 0.42, 0.48, c.z + dz - 0.24, c.z + dz + 0.24);
-        ctx.albedo(RUSTY); ctx.color("oklch(0.3 0.01 250)"); ctx.metalness(0.7);
-        for (const dx of [-2.2, -0.4, 1.4]) pipe(ctx, [c.x + dx, 0, c.z + dz], [c.x + dx, 0.42, c.z + dz], 0.04, 6);
-      }
+      // its two benches are Blender models now (sim.js, L21M.lbench)
       // the mop bucket is a Tripo prop now (dress21)
     } else if (r.type === "break") {
       // Break Room: tables, chairs, counter and microwave are Tripo props now (dress21)
@@ -97,17 +88,7 @@ function dressRooms(ctx, M) {
       // Storage Rooms: shelving, drums and tanks are Tripo props now (dress21)
     } else if (r.type === "fridges") {
       // Refrigerator Paradise: central survivor sorting table piled with gold-and-red boxes of Saltine crackers!
-      ctx.albedo(WOOD); ctx.color("oklch(0.52 0.06 62)"); ctx.metalness(0); ctx.roughness(0.8);
-      box(ctx, c.x - 2.4, c.x + 1.2, 0.74, 0.8, c.z - 0.85, c.z + 0.85);
-      ctx.albedo(RUSTY); ctx.color("oklch(0.32 0.015 250)"); ctx.metalness(0.65);
-      for (const [dx, dz] of [[-2.2, -0.7], [1.0, -0.7], [-2.2, 0.7], [1.0, 0.7]]) pipe(ctx, [c.x + dx, 0, c.z + dz], [c.x + dx, 0.74, c.z + dz], 0.04, 6);
-      // Stacked Saltine cracker boxes on the table and atop the fridges
-      ctx.albedo(null); ctx.metalness(0); ctx.roughness(0.65);
-      for (let k = 0; k < 9; k++) {
-        const bx = c.x - 1.9 + (k % 5) * 0.62, bz = c.z - 0.45 + Math.floor(k / 5) * 0.48, bh = 0.18 + (k % 3) * 0.08;
-        ctx.color(k % 2 ? "oklch(0.82 0.14 85)" : "oklch(0.58 0.2 30)");
-        box(ctx, bx - 0.16, bx + 0.16, 0.8, 0.8 + bh, bz - 0.12, bz + 0.12);
-      }
+      // the sorting table and its Saltine cartons are a Blender model now (sim.js, L21M.table)
     }
   }
 }
