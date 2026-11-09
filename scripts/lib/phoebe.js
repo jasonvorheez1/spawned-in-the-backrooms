@@ -23,7 +23,7 @@ function humanPhoebe() {
 }
 // a local, unsaved watcher: spawned on the viewer's own machine for one beat, gone after `life` seconds
 const OUTFIT = "/cdn/value.e43b3c8653d59ec8a87df263e493204dce99174142ce49d7deb6f7ae68473092.glb"
-export function spawnPhoebe(ctx, id, at, yaw, life) {
+export function spawnPhoebe(ctx, id, at, yaw, life, pose) {
   if (ctx.getObject(id)) return id
   const human = !!HUMAN
   const spec = human ? humanPhoebe() : furrySpec(PHOEBE_LOOK) // BODIES human: her human self; furry: the ginger cat in her fitted outfit
@@ -33,5 +33,8 @@ export function spawnPhoebe(ctx, id, at, yaw, life) {
     children: [...(spec.children || []), ...(human ? [] : [{ id: "phoebe-outfit", attachment: { skin: true }, model: OUTFIT }])],
     state: { cutPose: true },
   })
+  const h = ctx.getObject(id) // never a bind pose: she holds a clip from her first frame (Shelly: "t posing phoebe")
+  if (h) h.anim.pose = { clip: pose ?? (human ? "cdn/clip-idle-female-loop.glb" : "cdn/clip-idle-loop.glb"), loop: true, weight: 1 }
+  return id
 }
 export function dropPhoebe(ctx, id) { if (ctx.getObject(id)) ctx.destroy(id) }

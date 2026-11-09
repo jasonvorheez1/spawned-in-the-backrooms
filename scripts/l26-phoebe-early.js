@@ -4,11 +4,11 @@
 import { spawnPhoebe, dropPhoebe } from "./lib/phoebe.js"
 import { setDinaStep } from "./lib/dina-quest.js"
 const V = (w) => `/cdn/voice-soft-breathy-young-woman-whispering-amused-saying-${encodeURIComponent(w)}.mp3`
-const LINES = [
-  [0, "You found the stairs before they found you. Huh."],
-  [4.5, "Most people get the deck first. The fog, the big reveal. You skipped my entrance."],
-  [10, "Fine. Sit if you want. The cake isn't cake."],
-  [15, "I can't stay. Find the poster that looks wrong, stray."],
+const LINES = [ // she points nobodies at trouble; the drive is not hers (main-story: someone got it first)
+  [0, "You followed the prints. Mike did too, you know."],
+  [4.5, "Somebody beat you to Dina's case. Wasn't me. I don't carry things."],
+  [10, "They went out through a poster. One of the posters on this ship looks wrong."],
+  [15, "Find it before they come back for the cake, stray."],
 ]
 const FOG = `fx
 pop fog burst=60 on=sphere(1.2) life=2.5..4 v=sdir()*(1..2.5)+up(.6) size=.8..1.6 acc=drag(1.2)+curl(.4) sz=$size*(.6>2.4) col=<.35,.75,.45> a=0>.5:.45>.7:.25>0 rot=spin(.2) r=sprite(smoke-puff,alpha)
@@ -18,7 +18,7 @@ export function onTriggerEnter(ctx, other) {
   const quest = pl.state.dinaQ === 4 // the drive's trail: she waits here once more for whoever followed the prints
   if (pl.state.l26seen && !quest) return
   const s = ctx.self.state; s.busy = true; s.who = pl.id
-  spawnPhoebe(ctx, "phoebe-l26-early", s.seat, s.yaw, 24)
+  spawnPhoebe(ctx, "phoebe-l26-early", s.seat, s.yaw, 24, "cdn/clip-sit-female-loop.glb") // seated at the table's end chair
   LINES.forEach(([t], i) => ctx.after(t + 0.6, "line", { i }))
   ctx.after(19.5, "gone", {})
   pl.state.l26seen = true; pl.state.l26below = false
