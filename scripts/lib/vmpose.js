@@ -253,6 +253,7 @@ export function poseViewmodel(ctx, dt) {
   let pitch = (gun ? 0 : -14) + m.sp[3] + m.swayY * 140 * sway + brP + m.off[3] + pump[3]
   let yaw = (gun ? 0 : -6) - m.swayX * 140 * sway + m.sp[4] + brYaw + m.off[4] + pump[4]
   let roll = (gun ? 0 : -14) - m.swayX * 70 * sway + m.sp[5] - m.lean * 1.4 * sway + m.off[5] + pump[5]
+  if (gun && ads[3]) pitch += ads[3] * a // weapons.yml ads[3]: the muzzle lifts so the rear sight and the bead stack on the crosshair (a sight line that falls toward the muzzle)
 
   // too heavy for your Hardiness: the gun sags and the muzzle wanders in your hands
   if (hd.hold > 0 && (gun || kind !== 'fists')) { const wob = Math.sin(m.breath * 1.3) * Math.cos(m.breath * 0.8); y -= hd.hold * 0.035 * (1 - 0.5 * m.ads); pitch -= hd.hold * 5; yaw += wob * hd.hold * 2.2; roll += Math.sin(m.breath * 1.9) * hd.hold * 2 }
