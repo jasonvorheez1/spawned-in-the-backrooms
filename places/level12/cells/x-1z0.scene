@@ -1,0 +1,8 @@
+# spawn-scene v2 yaml x-1z0
+l12-junk-8:
+  castShadow: true
+  feetPosition: {x: -80.39726579630948, y: 0, z: -2.9818765615122493}
+  id: l12-junk-8
+  model: {id: /cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb}
+  physics: static
+  rotation: {pitch: 0, roll: 0, yaw: 0.2673239540308714}
