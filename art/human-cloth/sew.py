@@ -250,6 +250,12 @@ for name, (ease, cuts) in PLAN.items():
     me.materials.append(mat)
     sb2 = bmesh.new(); sb2.from_mesh(me)                     # the centre seam tears where decimate meets the mirror: weld and patch small holes
     bmesh.ops.remove_doubles(sb2, verts=sb2.verts[:], dist=0.0025)
+    _z = [v.co.z for v in sb2.verts]; _hz, _mz = min(_z), (min(_z) + max(_z)) * 0.5
+    for _ in range(3):                                       # the centre slit runs into the hem, so no closed hole is there to fill: stitch its two lips together
+        _sv = [v for v in sb2.verts if v.is_boundary and abs(v.co.x) < 0.012 and _hz + 0.004 < v.co.z < _mz]
+        if len(_sv) < 2: break
+        bmesh.ops.remove_doubles(sb2, verts=_sv, dist=0.014)
+    print("SLIT", name, len([v for v in sb2.verts if v.is_boundary and abs(v.co.x) < 0.012 and _hz + 0.004 < v.co.z < _mz]))
     bmesh.ops.holes_fill(sb2, edges=[e for e in sb2.edges if e.is_boundary], sides=40)
     bmesh.ops.recalc_face_normals(sb2, faces=sb2.faces[:]); sb2.to_mesh(me); sb2.free()
     for p in me.polygons: p.use_smooth = True
