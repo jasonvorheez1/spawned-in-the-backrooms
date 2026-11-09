@@ -137,15 +137,27 @@ for name, (ease, cuts) in PLAN.items():
         for v in rv:
             a_ = math.atan2(v.co.y - cy, v.co.x); r = max(rad[v], math.hypot(v.co.x, v.co.y - cy) * 0.98)
             v.co.x, v.co.y = math.cos(a_) * r, cy + math.sin(a_) * r
+        def bin_of(co): return ((math.atan2(co.y - cy, co.x) + math.pi) / (2 * math.pi) * NB) % NB
+        T = [0.0] * NB
+        for v in rv:                                         # the start ring's radius per angle, gaps filled from neighbours
+            b_ = int(bin_of(v.co)); T[b_] = max(T[b_], math.hypot(v.co.x, v.co.y - cy))
+        for _ in range(NB):
+            if all(T): break
+            T = [t if t else max(T[i - 1], T[(i + 1) % NB]) for i, t in enumerate(T)]
+        def at(T, co):
+            f = bin_of(co); i = int(f) % NB; w = f - int(f); return T[i] * (1 - w) + T[(i + 1) % NB] * w
         for k in range(1, steps + 1):
             zz = z + (hem - z) * k / steps
             ex = bmesh.ops.extrude_edge_only(bm, edges=ring)
             nv = [g for g in ex["geom"] if isinstance(g, bmesh.types.BMVert)]
             ring = [g for g in ex["geom"] if isinstance(g, bmesh.types.BMEdge) and all(v in nv for v in g.verts)]
-            H = hull(zz - 0.006, zz + 0.006); band_e = ease(Vector((0, 0, zz)))
+            H = hull(zz - 0.008, zz + 0.008); e_ = max(0.006, ease(Vector((0, 0, zz))))
+            T = [max(T[i] * ease.drape, H[i] + e_) for i in range(NB)]
+            for _ in range(6):                               # cloth bridges the dip between the thighs: a hull, then a blur
+                T = [max(T[i], (T[i - 2] + T[(i + 2) % NB]) * 0.5) for i in range(NB)]
+                T = [(T[i - 1] + 2 * T[i] + T[(i + 1) % NB]) * 0.25 for i in range(NB)]
             for v in nv:
-                a_ = math.atan2(v.co.y - cy, v.co.x); r = math.hypot(v.co.x, v.co.y - cy); b_ = int((a_ + math.pi) / (2 * math.pi) * NB) % NB
-                r2 = max(r * ease.drape, H[b_] + max(0.005, band_e))
+                a_ = math.atan2(v.co.y - cy, v.co.x); r2 = at(T, v.co)
                 v.co = Vector((math.cos(a_) * r2, cy + math.sin(a_) * r2, zz))
         bm.normal_update()
     for co, no in cuts:                                      # straight hems
