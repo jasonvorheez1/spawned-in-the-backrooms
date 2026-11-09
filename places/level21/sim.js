@@ -413,6 +413,7 @@ export function tick(ctx) {
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state, now = ctx.now();
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); dress21(ctx); s.peopleV = 0; }
+  if ((s.vaultTintV ?? 0) < 1) { s.vaultTintV = 1; for (let k = 0; k < 4; k++) { const o = ctx.place.objects[`l21-vault-${k}`]; if (o?.model?.materials?.rock) o.model = { ...o.model, materials: { rock: { ...o.model.materials.rock, color: "oklch(0.80 0.012 80)" } } } } } // the Edges stone without its blue cast, in rooms already built
   if (!ctx.getObject("l21-life")) ctx.spawn("l21-life", { behavior: "scripts/l21-use.js" });
   if (!s.peopleV || s.peopleV < 2) {
     s.peopleV = 2;
