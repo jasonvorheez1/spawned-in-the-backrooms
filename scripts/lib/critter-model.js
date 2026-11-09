@@ -752,3 +752,38 @@ export function restylePlace(ctx, place) {
   for (const id in P.objects) { if (skip.has(id) || id.startsWith('player/')) continue; const o = P.objects[id]; if (!o || o.audience === 'local') continue; if (restyle(ctx, o)) n++ }
   return n
 }
+
+// ---- human faces (Shelly Nov 9 #116046): expressions and lip sync on the body's X_ keys (art/human-face/expressions.py)
+// an expression name (critter-models.yml faces) becomes X_ weights; a spoken line becomes a mouth that follows its letters
+const X_MAP = { Smile: ['X_Smile', 1], Frown: ['X_Frown', 1], Open: ['X_Open', 0.7], O: ['X_Round', 1], Wide: ['X_BrowUp', 1], Angry: ['X_BrowAngry', 1], Sad: ['X_BrowSad', 1], Half: ['X_Squint', 0.55], Happy: ['X_Squint', 0.8], Blink: ['X_Blink', 1] }
+export const X_KEYS = ['X_Blink', 'X_Squint', 'X_Open', 'X_Wide', 'X_Round', 'X_Smile', 'X_Frown', 'X_BrowUp', 'X_BrowAngry', 'X_BrowSad']
+const VIS = (ch) => { // one letter's mouth: [open, wide, round]
+  if ('a'.includes(ch)) return [0.85, 0.15, 0]
+  if ('ei'.includes(ch)) return [0.38, 0.9, 0]
+  if ('y'.includes(ch)) return [0.3, 0.7, 0]
+  if ('o'.includes(ch)) return [0.55, 0, 0.9]
+  if ('uwq'.includes(ch)) return [0.2, 0, 1]
+  if ('mbp'.includes(ch)) return [0, 0, 0]
+  if ('fv'.includes(ch)) return [0.1, 0.35, 0]
+  if ('lnt dszckgjrhx'.includes(ch) && ch !== ' ') return [0.25, 0.3, 0]
+  return null // a space or a mark: the mouth rests
+}
+export const LINE_MS = 62 // one letter's time, near the voice clips' pace
+// mouth at time t (ms) into a line: eased between this letter and the next; null once the line is spoken
+export function mouthAt(text, t) {
+  const s = String(text ?? '').toLowerCase(), n = s.length
+  if (!n || t < 0) return null
+  const fi = t / LINE_MS
+  if (fi >= n) return null
+  const i = Math.floor(fi), u = fi - i, a = VIS(s[i]) ?? [0, 0, 0], b = VIS(s[i + 1] ?? ' ') ?? [0, 0, 0], k = u * u * (3 - 2 * u)
+  const pause = /[.,!?;:]/.test(s[i]) ? 0 : 1
+  return [0, 1, 2].map((j) => (a[j] + (b[j] - a[j]) * k) * pause)
+}
+export function humanFace(expr, blink, mouth) {
+  const f = {}, src = !expr || expr === 'neutral' || expr === 'resting' ? {} : (M.faces[expr] || {})
+  for (const [k, v] of Object.entries(src)) { const t = X_MAP[k]; if (t) f[t[0]] = Math.min(1, (f[t[0]] ?? 0) + v * t[1]) }
+  if (blink) f.X_Blink = 1
+  if (mouth) { f.X_Open = Math.min(1, (f.X_Open ?? 0) * 0.3 + mouth[0]); f.X_Wide = mouth[1]; f.X_Round = mouth[2]; if (f.X_Smile) f.X_Smile *= 0.6 }
+  for (const k of X_KEYS) f[k] = Math.round((f[k] ?? 0) * 100) / 100
+  return f
+}

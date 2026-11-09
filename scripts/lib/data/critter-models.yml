@@ -9,7 +9,8 @@ mesh: true
 # head types (Shelly Nov 9 #107659): HT_Square/Long/Angular/Broad/Round/Heart keys on head, hats and eyewear (art/human-head/headtypes.py)
 # Nov 9 (johnadams2 "improve the clothings", "rig more natural"): both bodies post-processed by art/human-cloth/refit.py: finger bones, body-weighted garments, straight-hung top hems
 # shoulders (Nov 9, Shelly "work on the rig"): refit bodies run through art/human-base/shoulders.py; pipeline: build.py -> refit.py -> shoulders.py
-human: { m: "/cdn/value.a72d639444162250d9952ce8abf7c92aa06a6085f867c5cda3dabffd461b8809.glb", f: "/cdn/value.4ea845d5772c35f3c8923973f3078cb9153a7ef21e0ae2f8776f7643c0b519cb.glb" }
+# faces (Shelly Nov 9 #116046): bodies re-exported through art/human-face/expressions.py with X_ expression and talk keys; before: m a72d639444162250d9952ce8abf7c92aa06a6085f867c5cda3dabffd461b8809 f 4ea845d5772c35f3c8923973f3078cb9153a7ef21e0ae2f8776f7643c0b519cb
+human: { m: "/cdn/value.0f804808a2834486f121cadfec8de8784cfdbead3a5d0939ca0e6f027bd8526d.glb", f: "/cdn/value.6f11c2c9ec0cbb44c796db314811f269b1c5cdc19a5f7f34c42ecd221208fe48.glb" }
 body: { m: "/cdn/value.72a8b9bf28216baab5b949a31bbff68251f892d11e4ca39e3b68c27ef0557e76.glb", f: "/cdn/value.234a83fd493cd046995cd5526a69249cd845b14a19372cdf61be068d24fc5d56.glb" }
 bodyMats: [fur, limb, pad, cloth_top, cloth_bottom, cloth_shoes, cloth_hat, cloth_neck, button, metal, lens, gold, sole]
 slots: { topw: Top, botw: Bot, shoes: Shoes, hat: Hat, eyew: Eyew, neck: Neck }
