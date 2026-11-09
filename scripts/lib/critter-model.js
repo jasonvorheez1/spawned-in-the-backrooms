@@ -7,26 +7,54 @@ import { rowOf, patOk } from './clothes.js'
 import HAIR from './data/hair.yml'
 // hair: its own GLB skinned whole to the Head bone (scripts/lib/data/hair.yml), tinted by the look's hairc; a mask hides it
 export const HAIR_ID = 'critter-hair'
-export const hairOf = (l) => (l?.hair && l.hair !== 'none' && HAIR.styles[l.hair] && !maskOf(l) ? ((l.hat && l.hat !== 'none' && HAIR.hatted?.[l.hair]) || HAIR.styles[l.hair]) : null)
-const hairModel = (l) => ({ id: hairOf(l), materials: { hair: { color: l.hairc || '#5a3a26' } } })
-export const hairChild = (l, local) => hairOf(l) ? { id: HAIR_ID, attachment: { skin: true }, model: hairModel(l), ...(local ? { audience: 'local' } : {}) } : null
+const HAIR_HATCUT = { 14: 0, 15: 1, 16: 2 }
+export const humanHairOf = (l) => {
+  if (!l?.hair || l.hair === 'none' || maskOf(l)) return null
+  if (speciesOf(l) === 'faceling') return null
+  const n = typeof l.hair === 'number' ? l.hair : (HAIR.humanPick?.[l.hair] ?? (Number.isFinite(Number(l.hair)) ? Number(l.hair) : null))
+  const hat = Boolean(l.hat && l.hat !== 'none')
+  const set = HAIR.human?.[l.sex === 'f' ? 'f' : 'm']
+  const row = n == null ? null : set?.[hat && n >= 14 ? (HAIR_HATCUT[n] ?? 0) : n]
+  return row ? (hat ? row.hat : row.free) : null
+}
+export const hairOf = (l) => {
+  if (!l?.hair || l.hair === 'none' || maskOf(l)) return null
+  const sp = speciesOf(l)
+  if (sp === 'faceling') return null
+  if (sp === 'human' || HUMAN) return humanHairOf(l)
+  return (l.hat && l.hat !== 'none' && HAIR.hatted?.[l.hair]) || HAIR.styles[l.hair] || null
+}
+const hairMats = (c) => ({
+  hair: { color: c, roughness: 0.8 },
+  scalp: { color: c, roughness: 0.85 },
+  scalp_cap: { color: c, roughness: 0.85 },
+  hairtie: { color: '#e85d75', roughness: 0.5 }
+})
+const hairModel = (l) => {
+  const want = hairOf(l)
+  return want ? { id: want, materials: hairMats(l?.hairc || '#5a3a26') } : null
+}
+export const hairChild = (l, local) => {
+  const want = hairOf(l)
+  return want ? { id: HAIR_ID, attachment: { skin: true }, model: hairModel(l), ...(local ? { audience: 'local' } : {}) } : null
+}
+export function seatHumanHair(ctx, o, l) {
+  if (speciesOf(l) === 'faceling') { const id = o.id + '/' + HAIR_ID; if (ctx.getObject(id)) ctx.destroy(id); return }
+  if (l && !l.hair) { const ks = Object.keys(HAIR.humanPick ?? {}).filter((k) => k[0] === (l.sex === 'f' ? 'f' : 'm')); let h = 7; for (const c of String(o.id)) h = (h * 31 + c.charCodeAt(0)) >>> 0; const cs = ['#2a1d16', '#4a3122', '#6b4a2e', '#1a1a1a', '#8a6a3c', '#b08a52']; l = { ...l, hair: ks[h % ks.length], hairc: l.hairc || cs[(h >>> 4) % cs.length] } }
+  const want = humanHairOf(l), id = o.id + '/' + HAIR_ID, h = ctx.getObject(id)
+  if (!want) { if (h) ctx.destroy(id); return }
+  const c = l.hairc || '#5a3a26', m = { id: want, materials: hairMats(c) }
+  if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== c) h.model = m; return }
+  ctx.spawn(HAIR_ID, { parent: o.id, id: HAIR_ID, attachment: { skin: true }, model: m, ...(o.audience === 'local' ? { audience: 'local' } : {}) })
+}
 export function seatHair(ctx, o, l) {
+  if (speciesOf(l) === 'faceling') { const id = o.id + '/' + HAIR_ID; if (ctx.getObject(id)) ctx.destroy(id); return }
+  if (speciesOf(l) === 'human' || HUMAN) return seatHumanHair(ctx, o, l)
   const want = hairOf(l), id = o.id + '/' + HAIR_ID, h = ctx.getObject(id)
   if (!want) { if (h) ctx.destroy(id); return }
   const m = hairModel(l)
   if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== m.materials.hair.color) h.model = m; return }
   ctx.spawn(HAIR_ID, { parent: o.id, ...hairChild(l, o.audience === 'local') })
-}
-// the human body's hair: the pack style its look picks, on the body's own sex, the brim cut when a hat sits on it; the scalp takes the hair's colour
-const HAIR_HATCUT = { 14: 0, 15: 1, 16: 2 }
-export const humanHairOf = (l) => { if (!l?.hair || l.hair === 'none' || maskOf(l)) return null; const n = HAIR.humanPick?.[l.hair]; const hat = l.hat && l.hat !== 'none', set = HAIR.human?.[l.sex === 'f' ? 'f' : 'm'], row = n == null ? null : set?.[hat && n >= 14 ? HAIR_HATCUT[n] ?? 0 : n]; return row ? (hat ? row.hat : row.free) : null } // the Tripo cuts (14-16) tore under a brim and hung a strand over the face (Dolores, Nov 9): under a hat they wear the pack's under-brim cut
-export function seatHumanHair(ctx, o, l) {
-  if (l && !l.hair) { const ks = Object.keys(HAIR.humanPick ?? {}).filter((k) => k[0] === (l.sex === 'f' ? 'f' : 'm')); let h = 7; for (const c of String(o.id)) h = (h * 31 + c.charCodeAt(0)) >>> 0; const cs = ['#2a1d16', '#4a3122', '#6b4a2e', '#1a1a1a', '#8a6a3c', '#b08a52']; l = { ...l, hair: ks[h % ks.length], hairc: l.hairc || cs[(h >>> 4) % cs.length] } }
-  const want = humanHairOf(l), id = o.id + '/' + HAIR_ID, h = ctx.getObject(id)
-  if (!want) { if (h) ctx.destroy(id); return }
-  const c = l.hairc || '#5a3a26', m = { id: want, materials: { hair: { color: c }, scalp: { color: c } } }
-  if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== c) h.model = m; return }
-  ctx.spawn(HAIR_ID, { parent: o.id, id: HAIR_ID, attachment: { skin: true }, model: m, ...(o.audience === 'local' ? { audience: 'local' } : {}) })
 }
 export const HEAD_ID = 'critter-head'
 // a head-covering mask (the Level 11 shop's bag and shell): its own GLB skinned whole to the Head bone, a second skin child; the row's `mask` names it
@@ -91,8 +119,14 @@ function furMats(l) {
     inner: { color: innerCol, roughness: 0.9, metalness: 0 },
     nose: { color: noseCol, roughness: 0.35, metalness: 0.05 }
   }
-  if (l.marks === 'none' && !['human', 'faceling'].includes(spName)) mark = fur // markings off: animal cheek dots wear fur; humans keep hair
-  if (mark) m.mark = { color: mark, roughness: 0.82, metalness: 0 }
+  if (spName === 'faceling' || (spName === 'human' && (l.marks === 'none' || (l.hair && l.hair !== 'none')))) {
+    m.mark = { color: fur, visible: false, transparent: true, opacity: 0, depthWrite: false }
+  } else if (l.marks === 'none') {
+    mark = fur
+    m.mark = { color: mark, roughness: 0.82, metalness: 0 }
+  } else if (mark || spName === 'human') {
+    m.mark = { color: (spName === 'human' ? (l.hairc || mark || '#2e201c') : mark), roughness: 0.82, metalness: 0 }
+  }
   if (antlerCol) m.antler = { color: antlerCol, roughness: 0.65, metalness: 0.05 }
   return m
 }
@@ -548,7 +582,15 @@ function eyeClean(f, eyes) {
 // a whole critter for a spawn (place sims): body, head child, gait clips on the library
 export const MESH = M.mesh === true
 export function critterSpec(l) {
-  if (HUMAN) return { model: humanBody(l), morph: humanMorph(l), children: [], ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {}) }
+  if (HUMAN) {
+    const hc = hairChild(l)
+    return {
+      model: humanBody(l),
+      morph: humanMorph(l),
+      children: hc ? [hc] : [],
+      ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {})
+    }
+  }
   if (!MESH) return { primitive: { kind: 'scripted', script: 'scripts/critter2-geo.js', params: l }, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.65, bounce: 0.72 } }
   const isF = l?.sex === 'f'
   return {

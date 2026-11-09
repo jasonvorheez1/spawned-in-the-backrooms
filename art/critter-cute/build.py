@@ -1625,6 +1625,8 @@ def spike(H, base, d1, d2, r, matname, bone="Head"):
 
 def build_tufts(H, sp):
     if sp.get("human"):
+        if sp.get("faceless"):
+            return
         # Stylish sculpted 3D anime hair bangs and side-locks for human heads
         hair_mat = "mark"
         b_c = head_pt(head_dir(0, 1.15), -.012)
