@@ -26,3 +26,10 @@ l7w-lantern-1:
   id: l7w-lantern-1
   primitive: {kind: scripted, params: {kind: lantern}, script: scripts/l7-ocean-geo.js}
   visibleRange: {max: 40}
+l7w-stair:
+  feetPosition: {x: -57, y: 1.1, z: -77}
+  id: l7w-stair
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 24, height: 11, kind: box, width: 20}
+  tags: [blueprint]
