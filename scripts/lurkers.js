@@ -53,6 +53,18 @@ function neighbor(ctx, pos) {
 }
 
 // roam: a patrol leg several rooms long, often drifting toward the nearest wanderer's part of the maze, with a listening pause at each stop
+// search: after losing a wanderer, sweep a few rooms around the spot they vanished before going back to patrol
+function searchTarget(ctx, pos, at) {
+  for (let t = 0; t < 6; t++) {
+    const c = cellAt(at.x + (ctx.random() * 2 - 1) * 9, at.z + (ctx.random() * 2 - 1) * 9);
+    const cx = Math.max(0, Math.min(N - 1, c.cx)), cz = Math.max(0, Math.min(N - 1, c.cz));
+    if (inHub(cx, cz) || hasPit(cx, cz)) continue;
+    const g = cellCenter(cx, cz);
+    if (stepToward0(pos.x, pos.z, g.x, g.z, 25)) return g;
+  }
+  return null;
+}
+
 function roamTarget(ctx, pos, players) {
   let near = null, nd = 70;
   for (const p of players) { const d = Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z); if (d < nd) { nd = d; near = p; } }
@@ -293,6 +305,7 @@ export function update(ctx, dt) {
           raise(ctx, best);
         }
         m.last = sighting(best, now);
+        m.search = null;
         m.heard = false;
         m.lead = null;
       }
@@ -315,6 +328,9 @@ export function update(ctx, dt) {
           m.lead = null;
           m.last = { ...m.last, x: goal.x, z: goal.z };
         } else {
+          m.search = { x: m.last.x, z: m.last.z, left: 3 };
+          m.next = null;
+          m.restUntil = 0;
           m.last = null;
           m.lead = null;
         }
@@ -322,12 +338,14 @@ export function update(ctx, dt) {
     } else {
       if (m.next && Math.hypot(m.next.x - pos.x, m.next.z - pos.z) < 0.6 && !m.restUntil) m.restUntil = now + 2000 + ctx.random() * 3000;
       if (!m.next || now > (m.nextBy ?? 0) || (m.restUntil && now > m.restUntil)) {
-        m.next = roamTarget(ctx, pos, players);
+        const sg = m.search && m.search.left-- > 0 ? searchTarget(ctx, pos, m.search) : null;
+        if (!sg) m.search = null;
+        m.next = sg ?? roamTarget(ctx, pos, players);
         m.nextBy = now + 25000;
         m.restUntil = 0;
       }
       goal = m.restUntil ? pos : m.next;
-      speed = m.restUntil ? 0 : 1.7;
+      speed = m.restUntil ? 0 : m.search ? L.lurkerSpeed * 0.4 : 1.7;
     }
 
     const sight = prey && checkClearThrottled(ctx, m, now, eye, { x: prey.feetPosition.x, y: prey.feetPosition.y + 1.5, z: prey.feetPosition.z }, [w.id, prey.id], prey.id);
