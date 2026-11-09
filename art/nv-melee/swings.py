@@ -29,7 +29,7 @@ for arg in sys.argv[1:]:
         ang = 2*math.atan2(math.sqrt(sum(c*c for c in ax)), w); n = norm(ax) if ang > 1e-6 else [0, 0, 0]
         if ang > math.pi: ang -= 2*math.pi
         e = [math.degrees(ang)*c for c in n]
-        rows.append([round(i/(len(F)-1), 3), round(dp[0]*U, 3), round(dp[1]*U, 3), round(dp[2]*U, 3), round(e[0], 1), round(e[1], 1), round(-e[2], 1)])
+        rows.append([round(i/(len(F)-1), 3), round(-dp[0]*U, 3), round(dp[1]*U, 3), round(dp[2]*U, 3), round(-e[0], 1), round(e[1], 1), round(-e[2], 1)])  # x and pitch flip: checked against the hand-authored club/heavy (lift = pitch up, sweep right to left)
     keep = [r for i, r in enumerate(rows) if i % 2 == 0 or i == len(rows)-1]
     keep[-1] = [1, 0, 0, 0, 0, 0, 0]  # settle home to the carried pose
     out[name] = {"dur": round(J["duration"], 3), "f": keep}
