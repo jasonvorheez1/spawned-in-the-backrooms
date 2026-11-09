@@ -1,11 +1,11 @@
 # art/weapon-split/fitgun.py: a long gun's first-person composite offline, built exactly as player.js builds it:
 # outer node (Q_GUN, at 0,0.01,0.02) > inner (GUN_FIX q, at) > the mesh stood on its box bottom-centre (+ offset y),
 # the right fist at FP_SEAT, the left fist at (-0.01, two[0], two[1]). Prints the grip/pump probes; renders side, top, fp.
-# args after --: gun.glb offy  qx qy qz qw  ax ay az  twoY twoZ  out.png [rest x y depth pitch yaw roll]
+# args after --: gun.glb offy  qx qy qz qw  ax ay az  twoY twoZ twoX  out.png [rest x y depth pitch yaw roll]
 import bpy, sys, math, mathutils as mu
 a = sys.argv[sys.argv.index("--") + 1:]
-GLB, OFFY = a[0], float(a[1]); Q = [float(v) for v in a[2:6]]; AT = [float(v) for v in a[6:9]]; TWO = [float(v) for v in a[9:11]]; OUT = a[11]
-POSE = [float(v) for v in a[12:18]] if len(a) >= 18 else [0.19, -0.17, 0.44, 0, 0, 0]
+GLB, OFFY = a[0], float(a[1]); Q = [float(v) for v in a[2:6]]; AT = [float(v) for v in a[6:9]]; TWO = [float(v) for v in a[9:12]]; OUT = a[12]
+POSE = [float(v) for v in a[13:19]] if len(a) >= 19 else [0.19, -0.17, 0.44, 0, 0, 0]
 G = lambda x, y, z: mu.Vector((x, -z, y))
 GQ = lambda x, y, z, w: mu.Quaternion((w, x, -z, y))
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -23,7 +23,7 @@ mn = mu.Vector([min(p[i] for p in pts) for i in range(3)]); mx = mu.Vector([max(
 bc = mu.Vector(((mn.x + mx.x) / 2, (mn.y + mx.y) / 2, mn.z))
 for o in gun:
     if o.parent is None: o.location -= bc; o.location.z += OFFY; o.parent = inner
-for path, at in (("/workspace/wpn/armR_m.glb", G(0, 0.039, 0.096)), ("/workspace/wpn/armL_m.glb", G(-0.01, TWO[0], TWO[1]))):
+for path, at in (("/workspace/wpn/armR_m.glb", G(0, 0.039, 0.096)), ("/workspace/wpn/armL_m.glb", G(TWO[2], TWO[0], TWO[1]))):
     for o in imp(path):
         if o.parent is None: o.location = at; o.parent = root
 skin = bpy.data.materials.new("skin"); skin.diffuse_color = (0.9, 0.75, 0.65, 1)
