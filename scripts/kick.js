@@ -4,6 +4,7 @@
 import { raycast } from 'builtin/physics'
 import { hitTarget } from './player.js'
 import { animate } from 'builtin/tween'
+import { HUMAN, humanBody } from './lib/critter-model.js'
 import { attrsOf } from './lib/stats.js'
 import { foeStats } from './lib/knock.js'
 import { kickLoose, stepFlights } from './lib/loose.js'
@@ -52,10 +53,12 @@ export function onInput(ctx, input) {
   // first person: your leg swings up from below the screen and snaps forward, then drops away
   const l = s.look ?? {}
   // an empty hip joint rides the camera; the leg hangs 1.02 m below it, so turning the hip swings the foot up into view
-  const leg = (s.tp || l.modelUrl) ? null : ctx.spawn({ audience: 'local', scope: 'session', lifetime: 0.5, feetPosition: { attach: 'camera', x: 0.14, y: -0.32, depth: 0.12 }, rotation: { pitch: -10 }, visibleInFirstPerson: true,
-    children: [{ feetPosition: { x: 0, y: -1.02, z: 0 }, visibleInFirstPerson: true, castShadow: false, audience: 'local',
-      primitive: { kind: 'scripted', script: 'scripts/kick-leg-geo.js', params: { species: l.species, fur: l.fur, botw: l.botw, bottom: l.bottom, shoes: l.shoes, shoec: l.shoec } } }] }) // first person only: third person shows the body's own kick clip
-  if (leg) animate(ctx, leg, { 'rotation.pitch': [-10, 82, 76, -10] }, { duration: 0.45, easing: 'easeOutCubic' }) // swings from the hip (pivot top): the foot rises into the bottom of the view
+  // one piece on the camera, its top (the hip) the pivot: the leg hangs below the view and swings up and forward into it
+  const hb = !l.modelUrl && HUMAN ? humanBody(l) : null, skin = hb?.materials?.Body_Skin?.color
+  const leg = s.tp ? null : ctx.spawn({ audience: 'local', scope: 'session', lifetime: 0.55, feetPosition: { attach: 'camera', x: 0.16, y: -1.38, depth: 0.1 }, pivot: 'top', rotation: { pitch: -8 },
+    visibleInFirstPerson: true, castShadow: false,
+    primitive: { kind: 'scripted', script: 'scripts/kick-leg-geo.js', params: { species: hb ? null : l.species, fur: skin || l.fur, botw: l.botw, bottom: l.bottom, shoes: l.shoes, shoec: l.shoec } } })
+  if (leg) animate(ctx, leg, { 'rotation.pitch': [-8, 78, 72, -8] }, { duration: 0.5, easing: 'easeOutCubic' })
   ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 0.12 }, { audience: { player: ctx.self.id } })
   if (!o && kickFoe(ctx, s, f, p)) return
   if (!o && kickLoose(ctx, f, s)) return
