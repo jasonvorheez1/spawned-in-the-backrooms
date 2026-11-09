@@ -22,10 +22,17 @@ function texWords(o) {
 }
 export function surfaceUnder(ctx, fallback, at) {
   const p = at ?? ctx.self.feetPosition
-  const h = raycast(ctx, { x: p.x, y: p.y + 0.3, z: p.z }, { x: 0, y: -1, z: 0 }, { distance: 1.0, ignoreEntities: [ctx.self.id], physicsOnly: true })
+  // what's drawn under the foot first (a rug with no collider lies on the floor), then the collider you stand on
+  const from = { x: p.x, y: p.y + 0.3, z: p.z }, down = { x: 0, y: -1, z: 0 }
+  const g = raycast(ctx, from, down, { distance: 0.45, ignoreEntities: [ctx.self.id], hits: 'geometry' })
+  const go = g?.id ? ctx.getObject(g.id) : null
+  const gw = go ? texWords(go) + ' ' + String(go.id ?? '') : ''
+  if (gw.trim()) for (const [k, re] of RX) if (re.test(gw)) return k
+  const h = raycast(ctx, from, down, { distance: 1.0, ignoreEntities: [ctx.self.id], physicsOnly: true })
   if (!h) return fallback
   const o = h.id ? ctx.getObject(h.id) : null
   let words = texWords(o)
+  if (o && !words.trim()) words = String(o.id ?? '')
   if (!words.trim() && !o) { // terrain: its material, or the heaviest of a blend
     const m = ctx.place.terrain?.materialAt?.(p.x, p.z)
     words = m && typeof m === 'object' ? (Object.entries(m).sort((a, b) => b[1] - a[1])[0]?.[0] ?? '') : String(m ?? '')
