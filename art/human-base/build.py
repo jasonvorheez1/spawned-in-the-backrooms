@@ -1061,6 +1061,8 @@ def proof(name, r, extra):
         for o in extra: o.hide_render = o.name not in names
     wear(("Under_bottom", "Under_top")); shot("front", (0, -3.4, 0.95)); shot("face", (0.25, -0.8, 1.5), (0, 0.02, 1.5), 85)
     wear(SHOW[name]); shot("dressed", (2.0, -2.8, 1.0))
+    # Nov 9: Andrew's outfit (longsleeve, pants, scarf) front and close at the neck, the look Shelly saw tear
+    wear(("Top_longsleeve", "Bot_pants", "Shoes_sneakers", "Neck_scarf", "Under_bottom", "Under_top")); shot("andrew", (0, -3.0, 1.0)); shot("andrew_neck", (0.35, -1.0, 1.38), (0, 0.04, 1.35), 70)
     pb = r.pose.bones
     for b in pb: b.rotation_mode = "XYZ"
     pb["LeftArm"].rotation_euler = (0, 0, math.radians(-75)); pb["LeftForeArm"].rotation_euler = (math.radians(80), 0, 0)
