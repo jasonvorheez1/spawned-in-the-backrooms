@@ -11,7 +11,7 @@ NAMES = {"long_straight_anime_hair_with_": "t_long", "short_spiky_anime_hair__ma
          "messy_medium_anime_hair__male_": "t_messy", "anime_bob_cut_hair_with_blunt_": "t_bob", "anime_high_ponytail_hair_with_": "t_ponytail",
          "anime_silver_long_hair_with_": "t_silver",
          "anime_soft_bob": "t_softbob", "anime_soft_twintails": "t_s_twintails", "anime_soft_ponytail": "t_s_ponytail",
-         "anime_soft_wolfcut": "t_s_wolfcut", "anime_soft_wavy": "t_s_wavy"}  # johnadams2 Nov 9: soft clumped wavy bob off his bob sheet (/cdn/image-u06qves5w.webp)  # johnadams2 Nov 9: long silver curtain from his reference (/cdn/image-u60fav89f.webp)
+         "anime_soft_wolfcut": "t_s_wolfcut", "anime_soft_wavy": "t_s_wavy", "anime_soft_pixie": "t_s_pixie", "anime_soft_hime": "t_s_hime", "anime_soft_messybun": "t_s_messybun", "anime_soft_sidebraid": "t_s_sidebraid"}  # johnadams2 Nov 9: soft clumped wavy bob off his bob sheet (/cdn/image-u06qves5w.webp)  # johnadams2 Nov 9: long silver curtain from his reference (/cdn/image-u60fav89f.webp)
 # per style: overall width against the skull width, crown lift over the head top, shift back (m) — tuned from the proof renders
 FIT = {"t_bob": (1.42, 0.03, 0.01), "t_long": (1.45, 0.03, 0.02), "t_messy": (1.6, 0.035, 0.01), "t_ponytail": (1.5, 0.03, 0.03),
        "t_spiky": (1.55, 0.04, 0.01), "t_twintails": (2.9, 0.03, 0.01)}
@@ -51,7 +51,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     lo, hi = (0.12, 0.88) if key.startswith("t_s_") else (0.03, 0.97)  # the soft wigs: ties and flyaways off the crown don't set the size
     cw = q([v.x for v in crown], hi) - q([v.x for v in crown], lo)
     cys = sorted(v.y for v in crown); ccx = (q([v.x for v in crown], 0.97) + q([v.x for v in crown], 0.03)) / 2; ccy = (cys[0] + cys[-1]) / 2
-    W = {"t_s_twintails": 1.15, "t_s_ponytail": 1.22, "t_s_wolfcut": 1.3, "t_s_wavy": 1.12, "t_twintails": 1.05, "t_long": 1.1, "t_silver": 1.1}.get(key, 1.18)
+    W = {"t_s_pixie": 1.12, "t_s_hime": 1.12, "t_s_messybun": 1.15, "t_s_sidebraid": 1.12, "t_s_twintails": 1.15, "t_s_ponytail": 1.22, "t_s_wolfcut": 1.3, "t_s_wavy": 1.12, "t_twintails": 1.05, "t_long": 1.1, "t_silver": 1.1}.get(key, 1.18)
     s = (2 * rx * W) / max(cw, 1e-4)
     # the crown band is the top 18%, so its width runs a little under the skull's: the push-out below seats whatever lands inside
     M = Matrix.Translation(Vector((0, cy + 0.004, top + 0.014))) @ Matrix.Scale(s, 4) @ Matrix.Translation(Vector((-ccx, -ccy, -t)))
