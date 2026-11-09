@@ -159,7 +159,12 @@ export function update(ctx, dt) {
     const back = { x: Math.sin(yw) * Math.cos(pt), y: -Math.sin(pt), z: Math.cos(yw) * Math.cos(pt) }, right = { x: Math.cos(yw), z: -Math.sin(yw) }
     let sh = tc.sh; const hs = raycast(ctx, pivot, { x: right.x, y: 0, z: right.z }, { distance: sh + 0.25, radius: 0.12, physicsOnly: true, ignoreEntities: [ctx.player.id] }); if (hs) sh = Math.max(0, hs.distance - 0.25)
     const from = { x: pivot.x + right.x * sh, y: pivot.y + 0.1, z: pivot.z + right.z * sh }
-    const hit = raycast(ctx, from, back, { distance: wantD + 0.3, radius: 0.22, physicsOnly: true, ignoreEntities: [ctx.player.id] })
+    let hit = raycast(ctx, from, back, { distance: wantD + 0.3, radius: 0.22, physicsOnly: true, ignoreEntities: [ctx.player.id] })
+    if (hit && hit.distance < wantD * 0.7 && back.y > 0.05) { // looking down under a low ceiling: the eye slides back along it instead of collapsing into your head
+      const hl = Math.hypot(back.x, back.z) || 1, flat = { x: back.x / hl, y: 0.12, z: back.z / hl }, fl = Math.hypot(flat.x, flat.y, flat.z)
+      const fb = { x: flat.x / fl, y: flat.y / fl, z: flat.z / fl }, h2 = raycast(ctx, from, fb, { distance: wantD + 0.3, radius: 0.22, physicsOnly: true, ignoreEntities: [ctx.player.id] })
+      if (!h2 || h2.distance > hit.distance + 0.2) { back.x = fb.x; back.y = fb.y; back.z = fb.z; hit = h2 }
+    }
     const free = hit ? Math.max(0.25, hit.distance - 0.3) : wantD
     tc.d = free < tc.d ? free : tc.d + (free - tc.d) * Math.min(1, dt * 2.5) // pushed in at once, eased back out
     const e0 = ctx.self.feetPosition, k = tc.k * tc.k * (3 - 2 * tc.k), dist = tc.d * tc.k
