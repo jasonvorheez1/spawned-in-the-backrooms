@@ -140,7 +140,7 @@ function lay(ctx) {
 
   // ---- the photo's green EXIT signs, hung from the ceiling down the length of The Edges, both faces lit
   for (let cx = EDGE_X + 1; cx < N; cx += 4) { const c = cellCenter(cx, LANE.z0 + 1), h = heightOf(cx, LANE.z0 + 1), face = (f) => `<div face="${f}" emissive width="0.42m" height="0.16m" style="display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;font-size:110px;color:#eafff0;background:#118a3a">EXIT</div>`;
-    sp(`l21-edge-exit-${cx}`, { tags: ["l21-sign"], feetPosition: { x: c.x, y: h - 0.85, z: c.z - 0.3 }, rotation: { yaw: 90 }, castShadow: false, primitive: { kind: "box", width: 0.44, height: 0.18, depth: 0.06 }, material: { color: "oklch(0.9 0.01 240)", emissive: "oklch(0.6 0.18 150)", emissiveIntensity: 0.6 }, ui: face("front") + face("back") }); }
+    sp(`l21-edge-exit-${cx}`, { tags: ["l21-sign"], feetPosition: { x: c.x, y: h - 0.85, z: c.z - 0.3 }, rotation: { yaw: 90 }, castShadow: false, primitive: { kind: "box", width: 0.44, height: 0.18, depth: 0.06 }, material: { color: "oklch(0.9 0.01 240)", emissive: "oklch(0.6 0.18 150)", emissiveIntensity: 0.6 }, ui: face("front"), children: [{ id: "back", feetPosition: { x: 0, y: 0, z: 0 }, rotation: { yaw: 180 }, castShadow: false, primitive: { kind: "box", width: 0.43, height: 0.17, depth: 0.05 }, material: { color: "oklch(0.9 0.01 240)" }, ui: face("front") }] }); }
 
   // ---- the way down and the way east (the breathing cave mouth to Level 8)
   sp("l21-from-l2", { feetPosition: { x: DOWN.x + 2.4, y: 0.1, z: DOWN.z }, rotation: { yaw: -90 } });
