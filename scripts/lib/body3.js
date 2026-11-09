@@ -1,79 +1,129 @@
-// The player's own body as others (and the third-person camera) see it: how it stands with a weapon in its hands, and the swing, the punch and the kick of a shot.
-// The first-person arm is scripts/lib/vmpose.js; this is the same weapons seen from outside. IK reach points the hands (so no rig axis is guessed); the swings are bone tweens.
+// A body's weapon work as others (and the third-person camera) see it: players and NPCs alike, human or furry.
+// Shelly's clips by family (scripts/lib/data/combat-anims.yml) play on anim channels with an upper-body mask so the legs keep the gait;
+// IK reach seats the hands only where no clip can: a long gun's stock at the shoulder and the left hand on its foregrip. The first-person arm is scripts/lib/vmpose.js.
 import { animate } from 'builtin/tween'
 import W, { baseOf } from './weapons.js'
+import CA from './data/combat-anims.yml'
 
 const RAD = Math.PI / 180
-// how each weapon is swung (the same families as scripts/lib/vmpose.js): bone keys over the swing, seconds
-const STYLE = { table_leg: 'club', pipe_scrap: 'club', crowbar: 'club', bat: 'club', rebar: 'club', wrench: 'club', stun_baton: 'club', golf_club: 'club', tire_iron: 'club', baton: 'club',
-  hatchet: 'chop', cleaver: 'chop', fire_axe: 'heavy', sledgehammer: 'heavy', pickaxe: 'heavy', knife: 'stab', screwdriver: 'stab', lineman_machete: 'slash', fishing_rod: 'cast' }
-const SWING = {
-  club: { d: 0.5, arm: [0, -95, 40, 0], yaw: [0, -22, 28, 0], fore: [0, -40, 10, 0], spine: [0, 25, -20, 0] },
-  slash: { d: 0.42, arm: [0, -70, 12, 0], yaw: [0, -55, 55, 0], fore: [0, -25, 10, 0], spine: [0, 35, -32, 0] },
-  stab: { d: 0.32, arm: [0, -25, -70, 0], yaw: [0, -8, 6, 0], fore: [0, -85, 5, 0], spine: [0, 8, -6, 0] },
-  chop: { d: 0.5, arm: [0, -115, 55, 0], yaw: [0, -10, 12, 0], fore: [0, -50, 15, 0], spine: [0, 12, -14, 0] },
-  heavy: { d: 0.8, arm: [0, -160, 70, 0], yaw: [0, 0, 6, 0], fore: [0, -70, 20, 0], spine: [0, 10, -10, 0], pitch: [0, -14, 20, 0] },
-  cast: { d: 0.65, arm: [0, -135, 25, -10, 0], yaw: [0, -12, 10, -4, 0], fore: [0, -75, -15, -30, 0], spine: [0, -12, 16, 4, 0], pitch: [0, -12, 15, 2, 0] },
+const FAM = {}
+for (const [f, ks] of Object.entries(CA.families ?? {})) for (const k of ks) FAM[k] = f
+// which family a weapon plays: the table first, then what the weapon is (ranged two-handed = long gun)
+export function famOf(kind) {
+  const base = baseOf(kind ?? 'fists'), wp = W[kind] ?? W[base] ?? {}
+  if (FAM[base]) return FAM[base]
+  if (wp.ranged) return wp.two ? 'long' : 'pistol'
+  if (base === 'fishing_rod') return 'cast'
+  return 'club'
 }
-const spineOf = (me) => (me.model ? 'bones.Spine02' : 'bones.Spine2')
+const MASK = { upper: { from: 'Spine' }, full: undefined }
+// one table row onto one channel; returns the seconds until its blow lands
+export function play(me, ch, row, o = {}) {
+  if (!row?.clip) return 0
+  const speed = (row.speed ?? 1) * (o.speed ?? 1)
+  const lead = o.lead ?? CA.lead ?? 0.12
+  const start = row.time ?? (row.hit != null ? Math.max(0, row.hit - lead * speed) : 0) // skip the wind-up so the blow lands `lead` after the click
+  const loop = row.loop && !row.once ? 'loop' : 'once'
+  me.anim[ch] = { clip: row.clip, weight: row.weight ?? 4, loop, speed, time: start, mask: MASK[row.mask ?? 'upper'], blendIn: row.blendIn ?? 0.1, blendOut: row.blendOut ?? 0.25, ...(row.clamp ? { clampWhenFinished: true } : {}) }
+  if (row.cut || loop === 'once') { const ss = me.session; (ss.cut3 ??= {})[ch] = o.now + 1000 * (row.cut ?? Math.max(0.3, 2.6 - start) / speed) }
+  return row.hit != null ? (row.hit - start) / speed : 0
+}
+// release channels whose take is over (a cut row, a once clip): call each tick from the body's owner
+export function tick3(me, now) {
+  const c = me.session.cut3; if (!c) return
+  for (const ch in c) if (now >= c[ch]) { if (me.anim[ch]) me.anim[ch] = null; delete c[ch] }
+}
+const ALT = (me, a, b) => { const ss = me.session, ch = ss.alt3 === a ? b : a; ss.alt3 = ch; if (me.anim[ch === a ? b : a]) me.anim[ch === a ? b : a] = null; return ch } // a repeat of the same clip restarts on the other channel
 
-// a melee swing or a punch, called the moment the blow is thrown (scripts/player.js); `combo` alternates the side
-export function swing3(ctx, kind, heavy, combo) {
-  const me = ctx.self, base = baseOf(kind), sp = spineOf(me)
-  if (kind === 'fists') { // alternate hands; a power punch winds up further
-    const hand = combo % 2 ? 'Left' : 'Right', k = 1 + 0.5 * heavy
-    animate(ctx, me.id, { [`bones.${hand}Arm.pitch`]: [0, -30 * k, -75 * k, 0], [`bones.${hand}ForeArm.pitch`]: [0, -90, -5, 0], [`${sp}.yaw`]: [0, (hand === 'Left' ? -1 : 1) * 14, (hand === 'Left' ? 1 : -1) * 18, 0] }, { duration: 0.32 + 0.12 * heavy })
-    return
+// a melee swing or a punch, the moment it is thrown (scripts/player.js, scripts/meg-agent.js); combo walks the family's combo rows. Returns seconds to the blow.
+export function swing3(ctx, kind, heavy, combo, me = ctx.self) {
+  const fam = famOf(kind), now = ctx.now()
+  if (fam === 'cast') { // the fishing cast stays a keyed throw: no clip in the packs casts a rod
+    const sp = me.model ? 'bones.Spine02' : 'bones.Spine2'
+    animate(ctx, me.id, { 'bones.RightArm.pitch': [0, -135, 25, -10, 0], 'bones.RightForeArm.pitch': [0, -75, -15, -30, 0], [`${sp}.pitch`]: [0, -12, 16, 4, 0] }, { duration: 0.65 })
+    return 0.35
   }
-  const S = SWING[STYLE[base]] ?? SWING.club, side = combo % 2 ? -1 : 1, k = 1 + 0.35 * heavy
-  const keys = { 'bones.RightArm.pitch': S.arm.map((v) => v * k), 'bones.RightArm.yaw': S.yaw.map((v) => v * side), 'bones.RightForeArm.pitch': S.fore, [`${sp}.yaw`]: S.spine.map((v) => v * side) }
-  if (S.pitch) keys[`${sp}.pitch`] = S.pitch
-  animate(ctx, me.id, keys, { duration: S.d * (1 + 0.45 * heavy) })
+  const M = CA.melee[fam] ?? CA.melee.club, rows = M.combo ?? []
+  const row = heavy > 0.3 && M.heavy ? M.heavy : rows[(combo ?? 0) % Math.max(1, rows.length)]
+  return play(me, ALT(me, 'melee0', 'melee1'), row, { now, speed: heavy > 0.3 ? 1 : 1 })
 }
-// the shot's kick through the shoulders
-export function fire3(ctx) {
-  const me = ctx.self
-  animate(ctx, me.id, { [`${spineOf(me)}.pitch`]: [0, 6, 0], 'bones.RightArm.pitch': [0, 10, 0] }, { duration: 0.18 })
+// the shot: the family's fire take once, and a short kick through the shoulders
+export function fire3(ctx, me = ctx.self, kind) {
+  const fam = famOf(kind ?? me.state.arm ?? me.state.equipped), G = CA.gun[fam] ?? CA.gun.pistol, now = ctx.now()
+  const row = me.state.crouch ? G.fireCrouch ?? G.fire : G.fire
+  play(me, ALT(me, 'fire0', 'fire1'), row, { now })
+  const k = row.recoil ?? 6, sp = me.model ? 'bones.Spine02' : 'bones.Spine2'
+  animate(ctx, me.id, { [`${sp}.pitch`]: [0, k * 0.6, 0], 'bones.RightArm.pitch': [0, k, 0] }, { duration: 0.16 })
+}
+// a reload or flourish take (Gunplay), once
+export function handle3(ctx, me = ctx.self, what = 'reload', kind) {
+  const G = CA.gun[famOf(kind ?? me.state.arm ?? me.state.equipped)] ?? CA.gun.pistol
+  play(me, 'reload', G[what], { now: ctx.now() })
+}
+// a common take by name (hit, knockdown, getup, throw, block)
+export function react3(ctx, me, what) { return play(me, what === 'hit' ? 'hit' : 'react', CA.common[what], { now: ctx.now() }) }
+
+// the gun's aim channel and its pitch pose: mode ready | aim | aimWalk | aimJog | aimCrouch | aimCrouchWalk | null; pitch radians, up positive.
+// Written only when the mode or the 6-degree pitch step changes, so a held aim costs no traffic.
+export function aimPose(me, fam, mode, pitch = 0) {
+  const ss = me.session, G = CA.gun[fam]
+  const key = mode && G ? fam + mode : null
+  if (ss.aim3 !== key) { ss.aim3 = key; me.anim.aim = key ? { ...chan(G[mode] ?? G.aim) } : null; ss.aimP3 = null }
+  const step = key && mode !== 'ready' ? Math.round(pitch / RAD / 6) * 6 : 0
+  if (ss.aimP3 !== step) {
+    ss.aimP3 = step
+    if (!step) { if (me.anim.aimp) me.anim.aimp = null }
+    else {
+      const crouch = /Crouch/.test(mode), row = step > 0 ? (crouch ? G.upCrouch : G.up) : (crouch ? G.downCrouch : G.down)
+      const k = Math.min(0.92, Math.abs(step) / 90), w = (G[mode]?.weight ?? 4) * k / (1 - k) // a lerp between the level aim and the 90-degree pose
+      me.anim.aimp = { ...chan(row), weight: Math.min(40, w), blendIn: 0.12, blendOut: 0.2 }
+    }
+  }
+}
+const chan = (r) => ({ clip: r.clip, weight: r.weight ?? 4, loop: r.loop ? 'loop' : 'once', speed: r.speed ?? 1, mask: MASK[r.mask ?? 'upper'], blendIn: r.blendIn ?? 0.15, blendOut: r.blendOut ?? 0.3 })
+export const aimMode = (me, aiming, crouch) => { const v = me.velocity ?? {}, sp = Math.hypot(v.x ?? 0, v.z ?? 0); return !aiming ? 'ready' : crouch ? (sp > 0.4 ? 'aimCrouchWalk' : 'aimCrouch') : sp > 3.2 ? 'aimJog' : sp > 0.4 ? 'aimWalk' : 'aim' }
+// the long gun's hands: stock at the right shoulder along the look, left hand on the foregrip of the held body (or out along the barrel)
+export function longHands(me, held, yaw, pitch, aiming, crouch, len = 0.62) {
+  const f = { x: -Math.sin(yaw), z: -Math.cos(yaw) }, r = { x: Math.cos(yaw), z: -Math.sin(yaw) }, p = me.feetPosition, sc = me.scale?.y ?? 1, y0 = p.y + (crouch ? 1.0 : 1.38) * sc
+  const pc = aiming ? pitch : -0.5, c = Math.cos(pc), sn = Math.sin(pc)
+  const at = (fwd, side, up) => ({ x: p.x + f.x * c * fwd + r.x * side, y: y0 + sn * fwd + up, z: p.z + f.z * c * fwd + r.z * side })
+  const R = aiming ? at(0.3, 0.13, -0.04) : at(0.26, 0.2, -0.32)
+  const L = held ? { object: held, offset: { x: 0, y: 0, z: -len } } : (aiming ? at(0.3 + len, 0.0, -0.06) : at(0.26 + len * 0.8, 0.02, -0.32))
+  const pole = { x: p.x - r.x * 0.6, y: y0 - 0.6, z: p.z - r.z * 0.6 }
+  return { RightHand: { reach: { to: R, blendIn: 0.15, blendOut: 0.25 } }, LeftHand: { reach: { to: L, pole, blendIn: 0.18, blendOut: 0.25 } } }
 }
 
 const pitchOf = (cam) => { let p = cam?.pitch ?? 0; if (Math.abs(p) > 1.6) p *= RAD; return p }
-// what the hands do while the player is not mid-swing: a gun is aimed (both hands out along the look) or carried low and ready; null leaves the arms to the gait.
-// returns bones for ctx.self.bones (scripts/critter.js merges them); `aiming` also tells the body to face the camera.
+// the player's hands each tick (scripts/critter.js merges the bones it returns): aim/ready clips for guns, IK only for a long gun's grip, the rows and the rod.
+// `aiming` also tells the body to face the camera.
 export function stance(ctx) {
   const me = ctx.self, s = me.state, now = ctx.now()
+  tick3(me, now)
   // rowing the dory (scripts/l7-dory.js writes where the oar handles are): both hands on the handles, whatever is equipped
   if (s.rowHands && now - s.rowHands.at < 500 && s.sit) {
+    aimPose(me, null, null)
     const h = s.rowHands, pt = (a) => ({ x: a[0], y: a[1], z: a[2] })
     return { bones: { RightHand: { reach: { to: pt(h.r), blendIn: 0.1, blendOut: 0.3 } }, LeftHand: { reach: { to: pt(h.l), blendIn: 0.1, blendOut: 0.3 } } }, aiming: false }
   }
   // active fishing stance: both hands holding the rod elevated over water, facing the cast
   if (s.fishingState && !s.sheathed && !s.sit && !s.downAt) {
-    const cam = me.camera?.rotation ?? null;
-    const yaw = (cam?.yaw ?? 0) * RAD;
-    const f = { x: -Math.sin(yaw), z: -Math.cos(yaw) }, r = { x: Math.cos(yaw), z: -Math.sin(yaw) }, p = me.feetPosition, y0 = p.y + (s.crouch ? 1.0 : 1.4);
-    const isBite = s.fishingState.phase === 'bite';
-    const isReel = s.fishingState.phase === 'reeling';
-    const pc = isBite ? -0.32 : isReel ? 0.38 : 0.18;
-    const c = Math.cos(pc), sn = Math.sin(pc);
-    const at = (fwd, side, up) => ({ x: p.x + f.x * c * fwd + r.x * side, y: y0 + sn * fwd + up, z: p.z + f.z * c * fwd + r.z * side });
-    return {
-      bones: {
-        RightHand: { reach: { to: at(0.48, 0.12, isBite ? -0.1 : 0.04), blendIn: 0.12, blendOut: 0.25 } },
-        LeftHand: { reach: { to: at(0.68, 0.05, isBite ? -0.06 : 0.18), blendIn: 0.12, blendOut: 0.25 } }
-      },
-      aiming: true
-    };
+    aimPose(me, null, null)
+    const cam = me.camera?.rotation ?? null, yaw = (cam?.yaw ?? 0) * RAD
+    const f = { x: -Math.sin(yaw), z: -Math.cos(yaw) }, r = { x: Math.cos(yaw), z: -Math.sin(yaw) }, p = me.feetPosition, y0 = p.y + (s.crouch ? 1.0 : 1.4)
+    const isBite = s.fishingState.phase === 'bite', isReel = s.fishingState.phase === 'reeling'
+    const pc = isBite ? -0.32 : isReel ? 0.38 : 0.18, c = Math.cos(pc), sn = Math.sin(pc)
+    const at = (fwd, side, up) => ({ x: p.x + f.x * c * fwd + r.x * side, y: y0 + sn * fwd + up, z: p.z + f.z * c * fwd + r.z * side })
+    return { bones: { RightHand: { reach: { to: at(0.48, 0.12, isBite ? -0.1 : 0.04), blendIn: 0.12, blendOut: 0.25 } }, LeftHand: { reach: { to: at(0.68, 0.05, isBite ? -0.06 : 0.18), blendIn: 0.12, blendOut: 0.25 } } }, aiming: true }
   }
-  const wp = W[s.equipped ?? 'fists']
-  if (!wp?.ranged || s.sheathed || s.sit || s.downAt || s.os || s.talkWith || s.mj?.seats || s.building || s.reloading) return null
+  const wp = W[s.equipped ?? 'fists'], ss = me.session
+  // a reload plays Gunplay's handling once per reload
+  if (s.reloading && wp?.ranged) { if (!ss.rel3) { ss.rel3 = true; handle3(ctx, me, 'reload', s.equipped) } } else ss.rel3 = false
+  if (!wp?.ranged || s.sheathed || s.sit || s.downAt || s.os || s.talkWith || s.mj?.seats || s.building) { aimPose(me, null, null); return null }
   const cam = me.camera?.rotation ?? null; if (!cam) return null
-  const yaw = (cam.yaw ?? 0) * RAD, pitch = pitchOf(cam)
-  const aiming = !!s.ads || now - (s.swingAt ?? 0) < 1400
-  const f = { x: -Math.sin(yaw), z: -Math.cos(yaw) }, r = { x: Math.cos(yaw), z: -Math.sin(yaw) }, p = me.feetPosition, y0 = p.y + (s.crouch ? 1.0 : 1.4)
-  const pc = aiming ? pitch : -0.45, c = Math.cos(pc), sn = Math.sin(pc) // ready: muzzle down at about 25 degrees
-  const at = (fwd, side, up) => ({ x: p.x + f.x * c * fwd + r.x * side, y: y0 + sn * fwd + up, z: p.z + f.z * c * fwd + r.z * side })
-  const two = !!wp.two || baseOf(s.equipped) === 'pistol' || baseOf(s.equipped) === 'revolver'
-  const b = { RightHand: { reach: { to: aiming ? at(0.62, 0.1, -0.06) : at(0.38, 0.16, -0.3), blendIn: 0.12, blendOut: 0.25 } } }
-  if (two) b.LeftHand = { reach: { to: aiming ? at(wp.two ? 1.0 : 0.66, wp.two ? -0.04 : 0.02, -0.06) : at(wp.two ? 0.58 : 0.4, 0.0, -0.3), blendIn: 0.15, blendOut: 0.25 } }
-  return { bones: b, aiming }
+  const fam = famOf(s.equipped), yaw = (cam.yaw ?? 0) * RAD, pitch = pitchOf(cam)
+  const aiming = !s.reloading && (!!s.ads || now - (s.swingAt ?? 0) < 1400)
+  aimPose(me, fam, s.reloading ? 'ready' : aimMode(me, aiming, s.crouch), pitch)
+  if (fam !== 'long') return { bones: null, aiming }
+  const len = (wp.length ?? 0.9) * 0.55
+  return { bones: longHands(me, ss.heldObj, yaw, pitch, aiming, s.crouch, len), aiming }
 }
