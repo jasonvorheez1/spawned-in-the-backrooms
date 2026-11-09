@@ -962,7 +962,7 @@ function viewmodel(ctx, moving, sprinting) {
     else if (wp.two && !ply) child.push({ feetPosition: { x: 0, y: wp.two[0], z: wp.two[1] }, castShadow: false, audience: 'local', primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: { ...arm, support: { axis: gun ? 'z' : 'y', r: wp.two[2] } } } })
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
     // human: the body turned to face the look, its right shoulder just right of and below the eye (female shoulder 1.19 m, male scaled by height)
-    if (fpa) child.push({ id: 'fparm-r', model: { id: fpa.R, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }) // her own right arm (art/fp-arm), its fist closed on the grip at the viewmodel's origin
+    if (fpa) child.push({ id: 'fparm-r', feetPosition: s.vmTune?.aat ?? FP_AT, rotation: s.vmTune?.arot ?? FP_ROT, model: { id: fpa.R, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }) // her own right arm (art/fp-arm), its fist closed on the grip at the viewmodel's origin
     else if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: 0.02, y: -1.62, z: 0.62 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
     w.vm = ctx.spawn({
       feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
@@ -985,6 +985,7 @@ const HUMAN_ARM = { f: { q: { x: -0.4041, y: 0.3447, z: 0.8277, w: 0.1811 }, at:
 const FP_ARM = {
   f: { R: '/cdn/value.1deb22fd3065c2c526b422b55fabdde41992e41b40f7a31633a22bace78cabe0.glb', L: '/cdn/value.6850dc026a36e91fb051d2e36f2097c1db9c225ec4d01ddc912564bdc8a9f594.glb' },
   m: { R: '/cdn/value.bb20e01e1ea52ac6d15f2666875e24c0fc82adde427270734aa04f79594b271c.glb', L: '/cdn/value.ff20a5f74ed7b4dd7605a973045bf51332f41168a2e4af0d52755b5d58fd1b25.glb' } }
+const FP_AT = { x: 0, y: 0, z: 0 }, FP_ROT = { yaw: 0, pitch: 0, roll: 0 } // the right arm's seat on the grip, tuned in game
 function wp_two(kind) { return W[kind]?.two ? { y: W[kind].two[0], z: W[kind].two[1] } : null }
 function plyArm(ctx, w) {
   const body = ctx.getObject(w.vm + '/plyarm') ?? ctx.getObject('plyarm') ?? (ctx.getObject(w.vm)?.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).find((c) => c?.model)
