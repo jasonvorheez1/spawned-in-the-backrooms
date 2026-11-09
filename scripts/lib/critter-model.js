@@ -46,7 +46,7 @@ export function seatHumanHair(ctx, o, l) {
   const want = humanHairOf(l), id = o.id + '/' + HAIR_ID, h = ctx.getObject(id)
   if (!want) { if (h) ctx.destroy(id); return }
   const c = l.hairc || '#5a3a26', m = { id: want, materials: hairMats(c) }
-  if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== c) h.model = m; return }
+  if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== c || h.model?.materials?.scalp_cap?.color !== m.materials.scalp_cap.color) h.model = m; return }
   ctx.spawn(HAIR_ID, { parent: o.id, id: HAIR_ID, attachment: { skin: true }, model: m, ...(o.audience === 'local' ? { audience: 'local' } : {}) })
 }
 export function seatHair(ctx, o, l) {
