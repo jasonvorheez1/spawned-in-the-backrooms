@@ -137,14 +137,14 @@ function hands(ctx, m, dir) {
     const arm = skinM ? { id: FP_ARM[sx].R, materials: skinM } : FP_ARM[sx].R
     m.fp = ctx.spawn({ parent: me.id, feetPosition: { x: 0, y: 1.6, z: -0.42 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
       children: [
-        { id: 'r', feetPosition: { x: 0.2, y: -0.40, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, model: arm, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
-        { id: 'l', feetPosition: { x: -0.2, y: -0.40, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, scale: { x: -1, y: 1, z: 1 }, model: arm, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
+        { id: 'r', feetPosition: { x: 0.2, y: -0.24, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, model: arm, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
+        { id: 'l', feetPosition: { x: -0.2, y: -0.24, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, scale: { x: -1, y: 1, z: 1 }, model: arm, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
       ] })
     m.fpR = m.fp + '/r'; m.fpL = m.fp + '/l'
   }
   // a hand reaches up a rung while the other pulls down, swapping every rung; at rest both hold where they are
   const a = Math.sin(m.ph * Math.PI * 2), lift = 0.11
   const R = ctx.getObject(m.fpR), Lh = ctx.getObject(m.fpL)
-  if (R) R.feetPosition = { x: 0.2, y: -0.40 + a * lift, z: -Math.max(0, a) * 0.04 }
-  if (Lh) Lh.feetPosition = { x: -0.2, y: -0.40 - a * lift, z: -Math.max(0, -a) * 0.04 }
+  if (R) R.feetPosition = { x: 0.2, y: -0.24 + a * lift, z: -Math.max(0, a) * 0.04 }
+  if (Lh) Lh.feetPosition = { x: -0.2, y: -0.24 - a * lift, z: -Math.max(0, -a) * 0.04 }
 }
