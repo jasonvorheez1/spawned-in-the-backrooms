@@ -101,7 +101,7 @@ export function tick(ctx) {
   if ((s.rev ?? 0) >= 4 && (s.snapped ?? 0) < 1) { snapContainers(ctx); s.snapped = 1; }
   if (STAIR && (s.rev ?? 0) >= 4 && !s.stairV) sideRoom(ctx, STAIR); // rooms that were laid before the stairwell existed get it now
   if (s.seeded && (s.rev ?? 0) >= 4 && s.propsV !== 2) reprop(ctx, s); // rooms dressed before the Tripo props: re-dress them once
-  if ((s.rev ?? 0) >= 4 && (s.fixV ?? 0) < 2) { s.fixV = 2; fixtures(ctx); } // the modelled fixtures (art/level2/fixtures.py) take over the old box/sphere lamps, slicks and stair in place
+  if ((s.rev ?? 0) >= 4 && (s.fixV ?? 0) < 3) { s.fixV = 3; fixtures(ctx); } // the modelled fixtures (art/level2/fixtures.py) take over the old box/sphere lamps, slicks and stair in place
   if ((s.rev ?? 0) < 4) revamp(ctx, s); // the revamp lays itself over a few ticks: rooms, doors, the hall, vents
   if (s.sludgeV !== 1) { s.sludgeV = 1; laySludge2(ctx); }
   if (s.graffitiV !== 1) { s.graffitiV = 1; layGraffiti2(ctx); }
@@ -374,7 +374,7 @@ const FIX = {
   cage: "/cdn/value.b201791a75f305bd8da544a2a461e20ae5579553e5ae54f4e25b372aa3ed2bb0.glb",    // caged bulkhead, origin at its ceiling base, hangs 0.2 m
   pendant: "/cdn/value.65225b5a9c36531dd8ad538ee2b29cb342bd1b60421dd0f9ad00883e29367128.glb", // enamel high-bay, origin at the ceiling, 1.0 m drop
   sludge: "/cdn/value.ec6c30896b81cc9609dc193653fec102fb68e369f802a75ac5e60c4255b239ba.glb",  // domed black slick, origin on the floor
-  stair: "/cdn/value.c87f6a52dd9d4f2f53a70e152aa3054234d843a2548da341d84992f8597a1fb6.glb",   // 13-step cast flight, origin = step 0 centre, climbs -Z
+  stair: "/cdn/value.9f7a807b370ffa640ec97dfb742ddc524fd40f6bd7f10cb03b47f388ef414e97.glb",   // 13-step cast flight, origin = step 0 centre, climbs -Z
 };
 const glow = (col, k = 3) => ({ color: col, emissive: col, emissiveIntensity: k });
 export function fixtures(ctx) {
@@ -395,7 +395,7 @@ export function fixtures(ctx) {
   if (s0 && !ctx.getObject("l2-stair-flight")) {
     const q = s0.rotation ?? {}, yaw = (q.yaw ?? (q.w != null ? 2 * Math.atan2(q.y, q.w) * 180 / Math.PI : 0)) + 180; // the steps climb along their own +Z; the flight climbs along -Z
     ctx.spawn("l2-stair-flight", { feetPosition: { ...s0.feetPosition }, rotation: { yaw }, visibleRange: { max: 45 }, castShadow: false, receiveShadow: true,
-      model: { id: FIX.stair, offset: [0, 0, -1.052], materials: { concrete: { texture: "cdn/texture-worn-poured-concrete-stair-tread.png", wrap: "repeat", repeat: [1.5, 1.5], color: "oklch(0.92 0.01 80)", roughness: 0.9 } } } });
+      model: { id: FIX.stair, offset: [0, 0, -1.775], materials: { concrete: { texture: "cdn/texture-worn-poured-concrete-stair-tread.png", wrap: "repeat", repeat: [1.5, 1.5], color: "oklch(0.92 0.01 80)", roughness: 0.9 } } } });
     for (let i = 0; i < 13; i++) { const b = ctx.getObject(`l2-stair-${i}`); if (b) b.visible = false; const n = ctx.getObject(`l2-sd-nose-${i}`); if (n) n.visible = false; } // the boxes stay as the walkable colliders
   }
 }
