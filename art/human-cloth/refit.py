@@ -183,38 +183,36 @@ for o in bpy.data.objects:
             rows[k] = row; prev = row
         for _ in range(3): rows = {k: [(r[(i - 1) % NB] + 2 * r[i] + r[(i + 1) % NB]) / 4 for i in range(NB)] for k, r in rows.items()}
         rowAt = lambda z: rows[min(ks, key=lambda k: abs(k - zk(z)))]  # nearest slice that has cloth
-        fixed = 0
-        for v in lowv:
-            x, y = v.co.x, v.co.y - cy; r = math.hypot(x, y)
-            if r < 1e-5: continue
-            tr = rowAt(v.co.z)[ak(x, y)] + 0.002
-            wv = max(0.0, min(1.0, (HEM + 0.04 - v.co.z) / 0.05))  # eases in from the fitted waist
-            if tr > r:
-                s_ = 1 + (tr / r - 1) * wv; dv = Vector((x * s_ - x, y * s_ - y, 0))
-                if dv.length > 0.001: fixed += 1
-                v.co += dv
-                for L in shapes: v[L] += dv
-        # faces the cut carried across between the legs: inside the hung tube, they read as a pouch from outside and flaps from below
+        # faces the cut carried across between the legs sit deep inside the hung tube: a pouch from outside, flaps from below. cut them first
         inner = []
         for f in bm.faces:
             c = f.calc_center_median()
             if c.z > HEM + 0.02: continue
             x, y = c.x, c.y - cy; r = math.hypot(x, y)
-            row = rowAt(c.z)
-            if row and r < 0.8 * row[ak(x, y)]: inner.append(f)
+            if r < 0.8 * rowAt(c.z)[ak(x, y)]: inner.append(f)
         bmesh.ops.delete(bm, geom=inner, context="FACES_ONLY")
-        # iron: the crease the old crotch fold left on the front relaxes over its neighbours, then sits back on the hung ring
-        zone = [v for v in bm.verts if v.co.z < HEM + 0.02 and v.link_faces and not v.is_boundary]
-        for _ in range(6):
-            new = {}
-            for v in zone:
-                nb_ = [e.other_vert(v).co for e in v.link_edges if e.other_vert(v).link_faces]
-                if nb_:
-                    m = sum(nb_, Vector()) / len(nb_); c = v.co * 0.4 + m * 0.6; c.z = v.co.z; new[v] = c  # sideways only: the hem keeps its length
-            for v, c in new.items():
-                x, y = c.x, c.y - cy; r = math.hypot(x, y); tr = rowAt(c.z)[ak(x, y)]
-                if r > 1e-5 and r < tr: c.x, c.y = x * tr / r, cy + y * tr / r
-                dv = c - v.co; v.co = c
+        for v in [v for v in bm.verts if not v.link_faces]: bm.verts.remove(v)
+        # then every hem vertex sits ON the hung tube, in or out: folds and crumples have nowhere to be
+        fixed = 0
+        hv = [v for v in bm.verts if v.co.z < HEM + 0.04]
+        for it in range(4):  # relax heights too, so vertical crumples open out; the bottom ring keeps its line
+            if it:
+                nz = {}
+                for v in hv:
+                    if v.is_boundary: continue
+                    nb_ = [e.other_vert(v).co.z for e in v.link_edges]
+                    if nb_: nz[v] = v.co.z * 0.5 + sum(nb_) / len(nb_) * 0.5
+                for v, z in nz.items():
+                    dz = z - v.co.z; v.co.z = z
+                    for L in shapes: v[L].z += dz
+            for v in hv:
+                x, y = v.co.x, v.co.y - cy; r = math.hypot(x, y)
+                if r < 1e-5: continue
+                tr = rowAt(v.co.z)[ak(x, y)] + 0.002
+                wv = max(0.0, min(1.0, (HEM + 0.04 - v.co.z) / 0.06))  # eases in from the fitted waist
+                s_ = 1 + (tr / r - 1) * wv; dv = Vector((x * s_ - x, y * s_ - y, 0))
+                if it == 0 and dv.length > 0.001: fixed += 1
+                v.co += dv
                 for L in shapes: v[L] += dv
         print("hem", o.name, "hung out", fixed, "inner faces cut", len(inner))
     moved = sum(1 for x in delta.values() if x.length > 0.002)
