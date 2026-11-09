@@ -62,7 +62,7 @@ stations = [12.8, 15.6, 18.4]
 for sx in stations:  # north wall: vanity, arched bulb mirror, styling chair facing it
     box(sx, 3.62, 0, 1.6, 0.55, 0.82, "lacquer", 0.03); box(sx, 3.6, 0.82, 1.7, 0.6, 0.05, "marble", 0.02)
     arch(sx, 3.85, 0.9, 1.1, 1.75, 0.04, "lacquer", 0, True)
-    m = arch(sx, 3.83, 0.95, 0.98, 1.65, 0.02, "mirror"); 
+    m = arch(sx, 3.815, 0.95, 0.98, 1.65, 0.02, "mirror"); 
     cyl(sx - 0.55, 3.55, 0.87, 0.06, 0.18, "teal"); cyl(sx + 0.5, 3.6, 0.87, 0.04, 0.24, "vinyl"); sph(sx + 0.3, 3.55, 0.92, 0.05, "chrome")
     chair(sx, 2.2, math.pi)
 # south wall: two hood dryers
@@ -97,7 +97,7 @@ for px, pz in ((10.8, 3.4), (23.2, 3.4), (23.2, -5.4)):
     cyl(px, pz, 0, 0.26, 0.55, "lacquer", 0.03); cyl(px, pz, 0.5, 0.23, 0.04, "soil")
     for k in range(9):
         a = k * 2.4; sph(px + 0.18 * math.cos(a) * (k % 3) / 2, pz + 0.18 * math.sin(a) * (k % 3) / 2, 0.75 + (k % 4) * 0.18, 0.2, "plant", (1, 0.45, 1.6))
-cyl(16.0, 0.0, 0, 2.2, 0.012, "teal", 0.004, 64)
+cyl(16.0, 0.0, 0.003, 2.2, 0.012, "teal", 0.004, 64)
 bpy.ops.object.select_all(action="SELECT"); bpy.context.view_layer.objects.active = bpy.data.objects["desk"]
 bpy.ops.object.convert(target="MESH"); bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM"); bpy.ops.object.join(); salon = bpy.context.object; salon.name = "salon"
 bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
