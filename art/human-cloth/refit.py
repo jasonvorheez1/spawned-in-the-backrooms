@@ -202,7 +202,6 @@ for o in bpy.data.objects:
             x, y = c.x, c.y - cy; r = math.hypot(x, y)
             if r < 0.9 * rowAt(c.z)[ak(x, y)]: inner.append(f)
         bmesh.ops.delete(bm, geom=inner, context="FACES_ONLY")
-        for v in [v for v in bm.verts if not v.link_faces]: bm.verts.remove(v)
         # then every hem vertex sits ON the hung tube, in or out: folds and crumples have nowhere to be
         fixed = 0
         hv = [v for v in bm.verts if v.co.z < HEM + 0.04]
