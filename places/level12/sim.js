@@ -85,7 +85,7 @@ export function tick(ctx) {
   const st = ctx.place.state;
   if (st.v !== V) { st.v = V; lay(ctx); }
   // the clock's minute hand: one turn per clock hour, on the room's clock so every machine agrees
-  if (!st.clockOn) { st.clockOn = true; const h = ctx.place.objects["l12-hand-m"]; if (h) animate(ctx, h, { "rotation.roll": [0, -360] }, { duration: R.hour, loop: true, easing: "linear" }); }
+  if (!ctx.session.clock12) { const h = ctx.place.objects["l12-hand-m"]; if (h) { ctx.session.clock12 = true; animate(ctx, h, { "rotation.roll": [0, -360] }, { duration: R.hour, loop: true, easing: "linear" }); } }
   for (const p of ctx.place.players) {
     const s = p.state; const r = s.r12 ?? {};
     const seated = s.sit?.id && s.sit.id === st.chair && s.sit.phase !== "up";
