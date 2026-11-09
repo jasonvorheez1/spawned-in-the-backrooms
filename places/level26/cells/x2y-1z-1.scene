@@ -119,6 +119,36 @@ l26d-pg-1:
   rotation: {yaw: 0}
   state: {home: {x: 300.3, y: -80, z: -66}, hp: 90}
   tags: [partygoer, l8-hostile]
+l26d-pg-r5w:
+  feetPosition: {x: 292, y: -80, z: -66}
+  id: l26d-pg-r5w
+  layout: {box: {max: {x: 0.55, y: 1.45, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
+  mixer: {base: {clip: cdn/clip-idle-loop.glb, loop: true, weight: 1}}
+  model: {forward: "+x", id: /cdn/value.26b362d316413677eaf77a390fda1afb0b1651baf57b6c1c3ba429dc3447fa2d.glb}
+  physics: {body: character, collider: capsule}
+  rotation: {yaw: -90}
+  state: {home: {x: 292, y: -80, z: -66}, hp: 90}
+  tags: [partygoer, l8-hostile]
+l26d-pg-r6e:
+  feetPosition: {x: 308, y: -80, z: -78}
+  id: l26d-pg-r6e
+  layout: {box: {max: {x: 0.55, y: 1.45, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
+  mixer: {base: {clip: cdn/clip-idle-loop.glb, loop: true, weight: 1}}
+  model: {forward: "+x", id: /cdn/value.26b362d316413677eaf77a390fda1afb0b1651baf57b6c1c3ba429dc3447fa2d.glb}
+  physics: {body: character, collider: capsule}
+  rotation: {yaw: 90}
+  state: {home: {x: 308, y: -80, z: -78}, hp: 90}
+  tags: [partygoer, l8-hostile]
+l26d-pg-r7w:
+  feetPosition: {x: 292, y: -80, z: -90}
+  id: l26d-pg-r7w
+  layout: {box: {max: {x: 0.55, y: 1.45, z: 0.55}, min: {x: -0.55, y: 0, z: -0.55}}}
+  mixer: {base: {clip: cdn/clip-idle-loop.glb, loop: true, weight: 1}}
+  model: {forward: "+x", id: /cdn/value.26b362d316413677eaf77a390fda1afb0b1651baf57b6c1c3ba429dc3447fa2d.glb}
+  physics: {body: character, collider: capsule}
+  rotation: {yaw: -90}
+  state: {home: {x: 292, y: -80, z: -90}, hp: 90}
+  tags: [partygoer, l8-hostile]
 l26d-phoebe-candle:
   children: [{feetPosition: {x: 0, y: 0.15, z: 0}, light: {color: oklch(0.8 0.15 70), distance: 4, intensity: 0.8, kind: point}}]
   feetPosition: {x: 306.85, y: -79.24, z: -103.2}
