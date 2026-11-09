@@ -1,0 +1,10 @@
+# sneaking (Savi's picks, Shelly asked to improve sneaking)
+crouchStill: 0.45    # how far creatures see you crouched and still, x their normal sight
+crouchMove: 0.7      # crouched and moving
+darkMul: 0.6         # standing in a dead/dark patch
+lightMul: 1.6        # your flashlight on
+fillRate: 1.1        # awareness per second at point blank, full view (1 = they've got you)
+fillMin: 0.25        # at the edge of their reach
+stillMul: 0.45       # fill speed when you don't move
+decay: 0.35          # awareness lost per second while nobody sees you
+caution: 0.08        # above this the HUD shows [CAUTION]

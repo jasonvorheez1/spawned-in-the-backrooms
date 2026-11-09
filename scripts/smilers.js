@@ -5,6 +5,7 @@
 
 import { knocked, deathRag } from "./lib/knock.js";
 import { heard } from "./lib/hear.js";
+import { crouchMul } from "./lib/sneak.js";
 import { hearOf, sighting, leadOf, raise, alertFor } from "./lib/hunt.js";
 import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter as cellMid, openPoint, hasPillar, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
@@ -13,7 +14,7 @@ import { stepToward as stepToward0 } from "./lib/maze0path.js";
 import { raycast } from "builtin/physics";
 import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
 
-const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
+const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1) * crouchMul(p); // sneak skill, and a crouch hides you (scripts/lib/sneak.js)
 
 export const MODEL = {
   id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb",
