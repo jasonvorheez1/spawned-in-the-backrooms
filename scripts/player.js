@@ -918,6 +918,8 @@ function toggleLight(ctx) {
 // First person: the local player's own arm and held weapon, riding the camera. Only this machine sees it.
 const Q_MELEE = { x: -0.5, y: 0.5, z: 0.5, w: 0.5 } // its length up, its blade forward
 const Q_ID = { x: 0, y: 0, z: 0, w: 1 } // the pistol mesh already points its muzzle down -Z
+// the viewmodel sits a hand from the eye under the troffers: its skin is drawn a shade deeper so it reads as skin, not a white glare
+function vmSkin(hex) { const n = parseInt(String(hex ?? '#efcfb4').slice(1), 16), k = 0.72; return '#' + [16, 8, 0].map((b) => Math.round(((n >> b) & 255) * k).toString(16).padStart(2, '0')).join('') }
 const Q_GUN = { x: 0, y: 1, z: 0, w: 0 } // yaw 180: lays the mesh's +Z barrel forward (-Z) in camera space
 // The Tripo shotgun mesh lies tilted ~35 deg muzzle-up (butt at its origin, trigger at mesh (0,-0.08,0.33)).
 // Inside the Q_GUN frame (yaw 180), a child pitch of 35 levels it to point straight forward (-Z).
@@ -943,7 +945,7 @@ function viewmodel(ctx, moving, sprinting) {
   w.vmEq = kind; w.vmCheck = false
   const hb = !l.modelUrl && HUMAN ? humanBody(l) : null // human bodies: Shelly's own model's arm holds the weapon (her rule: first-person arms come from her model or a PLYMODEL)
   const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '')
-  const arm = hb ? { hidden: true } : ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v21' + JSON.stringify(s.vmTune ?? null)
+  const arm = hb ? { hidden: true } : ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v22' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     w.plyRig = null
@@ -957,7 +959,7 @@ function viewmodel(ctx, moving, sprinting) {
         ? { feetPosition: s.vmTune?.mat ?? { x: MESHGRIP[bk].at[0], y: MESHGRIP[bk].at[1], z: MESHGRIP[bk].at[2] }, rotation: s.vmTune?.mrot ?? { x: MESHGRIP[bk].q[0], y: MESHGRIP[bk].q[1], z: MESHGRIP[bk].q[2], w: MESHGRIP[bk].q[3] }, castShadow: false, ...weaponBody(kind), audience: 'local' }
         : { feetPosition: s.vmTune?.mat ?? { x: 0, y: -g, z: 0 }, rotation: s.vmTune?.mrot ?? Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
     // a two-handed weapon: the off hand rides the viewmodel too, on the fore-end (guns, ahead of the trigger hand) or up the haft (melee), at weapons.yml two: [up, forward-is-negative, radius]
-    const fpa = hb ? FP_ARM[l.sex === 'f' ? 'f' : 'm'] : null, skinM = hb ? { Body_Skin: { color: hb.materials.Body_Skin.color } } : null
+    const fpa = hb ? FP_ARM[l.sex === 'f' ? 'f' : 'm'] : null, skinM = hb ? { Body_Skin: { ...hb.materials.Body_Skin, color: vmSkin(hb.materials.Body_Skin.color), roughness: 0.78, metalness: 0, emissive: '#000000' } } : null
     if (wp.two && fpa) child.push({ id: 'fparm-l', feetPosition: { x: (wp.two[3] ?? -0.01) - FP_BC[l.sex === 'f' ? 'f' : 'm'].x, y: wp.two[0] + FP_BC[l.sex === 'f' ? 'f' : 'm'].y, z: wp.two[1] + FP_BC[l.sex === 'f' ? 'f' : 'm'].z }, model: { id: fpa.L, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }) // her own left arm, fist closed on the fore-end
     else if (wp.two && !ply) child.push({ feetPosition: { x: 0, y: wp.two[0], z: wp.two[1] }, castShadow: false, audience: 'local', primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: { ...arm, support: { axis: gun ? 'z' : 'y', r: wp.two[2] } } } })
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
