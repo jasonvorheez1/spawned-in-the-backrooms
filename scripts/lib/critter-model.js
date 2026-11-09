@@ -25,10 +25,11 @@ export const hairOf = (l) => {
   if (sp === 'human' || HUMAN) return humanHairOf(l)
   return (l.hat && l.hat !== 'none' && HAIR.hatted?.[l.hair]) || HAIR.styles[l.hair] || null
 }
+const rootOf = (c) => { const m = String(c).match(/^#?([0-9a-f]{6})$/i); if (!m) return c; const n = parseInt(m[1], 16); return '#' + [16, 8, 0].map((b) => Math.round(((n >> b) & 255) * 0.42).toString(16).padStart(2, '0')).join('') }
 const hairMats = (c) => ({
   hair: { color: c, roughness: 0.58, metalness: 0.02 },
-  scalp: { color: c, roughness: 0.75, metalness: 0 },
-  scalp_cap: { color: c, roughness: 0.75, metalness: 0 },
+  scalp: { color: rootOf(c), roughness: 0.9, metalness: 0 }, // the scalp and cap read as hair in shadow at the roots, never a flat bright shell through the strands (Shelly: "this is ugly fix hairs")
+  scalp_cap: { color: rootOf(c), roughness: 0.9, metalness: 0 },
   hairtie: { color: '#e85d75', roughness: 0.45, metalness: 0.05 }
 })
 const hairModel = (l) => {
