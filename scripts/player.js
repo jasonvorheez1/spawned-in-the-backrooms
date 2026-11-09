@@ -115,6 +115,7 @@ function floorOf(ctx) {
   if (pl === 'level26' || pl === 'home11') return 'wood' // a ship's deck, a home's boards
   if (pl === 'intake') return 'hotel' // a bedroom's dry plush carpet
   if (pl === 'spamton') return 'metal'
+  if (pl === 'level184') return 'grass'
   if (CONCRETE.has(pl)) return 'concrete'
   if (pl === 'level21') { const z = zoneHere(ctx, ctx.self.feetPosition.x, ctx.self.feetPosition.z); return z === 'l21_edge' || z === 'l21_edgecave' ? 'concrete' : z === 'l21_lockers' || z === 'l21_restroom' ? 'checker' : 'tile' }
   if (pl === 'level61') return 'terrazzo'
