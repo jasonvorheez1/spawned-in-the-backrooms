@@ -3,6 +3,7 @@
 import bpy, sys, math, mathutils as mu
 a = sys.argv[sys.argv.index("--") + 1:]
 ARM, SEAT, OUT = a[0], mu.Vector([float(v) for v in a[1:4]]), a[4]
+POSE = [float(v) for v in a[5:11]] if len(a) >= 11 else [0.19, -0.17, 0.44, 0, 0, 0]   # rest x, y, depth, pitch, yaw, roll (vmpose)
 G = lambda x, y, z: mu.Vector((x, -z, y))           # glTF -> Blender
 bpy.ops.wm.read_factory_settings(use_empty=True)
 def imp(path, at):
@@ -25,6 +26,18 @@ def shot(name, eye, look, fov):
 l = bpy.data.lights.new("l", "SUN"); l.energy = 3.5; lo = bpy.data.objects.new("l", l); sc.collection.objects.link(lo); lo.rotation_euler = (0.6, 0.3, 0.4)
 w = bpy.data.worlds.new("w"); sc.world = w; w.color = (0.35, 0.33, 0.28)
 grip = G(0, 0.039, 0.096)
+root = bpy.data.objects.new("vm", None); sc.collection.objects.link(root)
+for o in list(bpy.data.objects):
+    if o.parent is None and o is not root and o.type != "LIGHT": o.parent = root
+px, py, pd, pp, pyw, pr = POSE
+root.rotation_mode = "YXZ"; root.rotation_euler = (math.radians(pp), math.radians(pr), math.radians(pyw))  # Blender: x=pitch, y(-z gl)=roll, z(up)=yaw
+root.location = G(px, py, -pd); bpy.context.view_layer.update()
+sc.render.filepath = ""
+cam = bpy.data.cameras.new("fp"); cam.sensor_fit = "VERTICAL"; cam.angle = math.radians(55)
+co = bpy.data.objects.new("fp", cam); sc.collection.objects.link(co); co.location = (0, 0, 0); co.rotation_euler = (math.radians(90), 0, 0); sc.camera = co
+sc.render.filepath = OUT.replace(".png", "_fp.png"); bpy.ops.render.render(write_still=True)
+if len(a) >= 11: raise SystemExit
+
 shot("eye", G(-0.2, 0.2, 0.42), G(-0.2, 0.2, -1), 55)          # the player's view
 shot("side", grip + G(0.5, 0, 0), grip, 30)                     # from the right
 shot("left", grip + G(-0.5, 0.05, 0), grip, 30)                 # from the left: fingers and thumb
