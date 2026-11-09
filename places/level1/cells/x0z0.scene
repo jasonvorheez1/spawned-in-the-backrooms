@@ -1,11 +1,42 @@
 # spawn-scene v2 yaml x0z0
 dina-camp:
+  castShadow: false
   feetPosition: {x: 22.3, y: 0, z: 38.4}
   id: dina-camp
-  material: {kind: scripted, script: engine/blueprint}
+  model: {id: /cdn/value.c1ab6af454c9cffacdd4b02b920024ad86b7abc6de2100994d519b6b1459fe7f.glb}
+  physics: {body: static, collider: mesh}
+  receiveShadow: true
+dina-diary:
+  behavior: scripts/dina-diary.js
+  castShadow: false
+  feetPosition: {x: 22.446, y: 0.347, z: 38.527}
+  id: dina-diary
+  model: {id: /cdn/value.c8f54f0374c3d60de71e16d2beef8306886095b4d2a9dbb4642648706fa9529b.glb}
   physics: none
-  primitive: {depth: 2.6, height: 1.6, kind: box, width: 2.8}
-  tags: [blueprint]
+  rotation: {yaw: 25}
+  state: {name: Dina's diary, verb: Read}
+  tags: [usable]
+dina-lantern:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: 0.16, z: 0}, id: flame, light: {color: oklch(0.8 0.12 70), distance: 7, intensity: 1.4, kind: point, shadow: {enabled: false}}}]
+  feetPosition: {x: 23.47, y: 0, z: 38.5}
+  id: dina-lantern
+  model: {id: /cdn/value.6573fa2f4f3f2dc585e4a4fd269849ea1f17585c7f9ca9ac2e934546acdd598f.glb}
+  physics: none
+dina-radio:
+  audio: {clip: cdn/moodboard-realistic-gritty/sfx-shortwave-radio-static-hiss-with-faint-warbling-tones-loop.mp3, gain: 0.5, loop: true, maxDistance: 34, spatial: true}
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: 0.34, z: -0.12}, id: glow, light: {color: oklch(0.78 0.14 65), distance: 2.5, intensity: 0.5, kind: point}}]
+  feetPosition: {x: 21.55, y: 0, z: 37.2}
+  id: dina-radio
+  model: {id: /cdn/value.cfec526c4a998af568ac373df79772da89efb155e26028bfa6c96e3413e5fa8b.glb}
+  physics: none
+dina-satchel:
+  castShadow: false
+  feetPosition: {x: 21.25, y: 0, z: 38.6}
+  id: dina-satchel
+  model: {id: /cdn/value.d88351e571e391acecb993d86cbc1ca25017a4a11ae7c592ce0909c762c9db34.glb}
+  physics: none
 meg-ale:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js]
   feetPosition: {x: 6.6, y: 0, z: 3.4}
