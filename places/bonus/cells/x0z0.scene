@@ -1359,14 +1359,6 @@ bonus-ctr-furn:
   state: {c: {x: 19.4, y: 1.15, z: 18.5}, info: "", kind: furniture, name: Andrew's Furniture, tint: "#ff71ce", verb: Browse}
   tags: [usable]
   visible: false
-bonus-ctr-salon:
-  feetPosition: {x: 12, y: 0, z: -2.4}
-  id: bonus-ctr-salon
-  physics: {body: static, collider: box, trigger: true}
-  primitive: {depth: 1.6, height: 1.2, kind: box, width: 1.6}
-  state: {c: {x: 12, y: 1.15, z: -2.4}, info: "", kind: salon, name: Glow Up Salon, verb: Get a makeover}
-  tags: [usable]
-  visible: false
 bonus-ctr-station:
   behavior: scripts/bonus-counter.js
   feetPosition: {x: -19.6, y: 5.5, z: -3}
@@ -1383,10 +1375,75 @@ bonus-music:
 bonus-salon:
   feetPosition: {x: 17, y: 0, z: -1}
   id: bonus-salon
-  model: {id: /cdn/value.ec2d06fc1a5af1f62053ac1b27ccef135cb141abf2c5c0f4d76e7e68600e5544.glb}
+  model: {id: /cdn/value.d36b6596aed3bf582643bca0804168e30045996130cf3397b3217bf69f773c95.glb, offset: [-0.367, -0.003, 0.1]}
   physics: {body: static, collider: mesh}
   receiveShadow: true
   tags: [bonus-mall]
+bonus-salon-chair-1:
+  castShadow: true
+  feetPosition: {x: 12.8, y: 0, z: 2.2}
+  id: bonus-salon-chair-1
+  layout: {box: {max: {x: 0.36, y: 1.25, z: 0.475}, min: {x: -0.36, y: 0, z: -0.475}}}
+  model: {id: /cdn/value.af73f38a4652489738efd29e3102b18c292f9391917b983c743e409cb1ba55f9.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  state: {name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  tags: [bonus-mall, salon-prop, seat]
+bonus-salon-chair-2:
+  castShadow: true
+  feetPosition: {x: 15.6, y: 0, z: 2.2}
+  id: bonus-salon-chair-2
+  layout: {box: {max: {x: 0.36, y: 1.25, z: 0.475}, min: {x: -0.36, y: 0, z: -0.475}}}
+  model: {id: /cdn/value.af73f38a4652489738efd29e3102b18c292f9391917b983c743e409cb1ba55f9.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  state: {name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  tags: [bonus-mall, salon-prop, seat]
+bonus-salon-chair-3:
+  castShadow: true
+  feetPosition: {x: 18.4, y: 0, z: 2.2}
+  id: bonus-salon-chair-3
+  layout: {box: {max: {x: 0.36, y: 1.25, z: 0.475}, min: {x: -0.36, y: 0, z: -0.475}}}
+  model: {id: /cdn/value.af73f38a4652489738efd29e3102b18c292f9391917b983c743e409cb1ba55f9.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  state: {name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  tags: [bonus-mall, salon-prop, seat]
+bonus-salon-desk:
+  castShadow: true
+  feetPosition: {x: 12.1, y: 0, z: -2.4}
+  id: bonus-salon-desk
+  layout: {box: {max: {x: 0.95, y: 1.05, z: 0.5}, min: {x: -0.95, y: 0, z: -0.5}}}
+  model: {id: /cdn/value.e4d6086c0257aa1f63f0f8ac5c56d4ffcb43f8bca9d3b8674fc1ff105fc3502b.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  tags: [bonus-mall, salon-prop]
+bonus-salon-dryer-1:
+  castShadow: true
+  feetPosition: {x: 13.5, y: 0, z: -4.95}
+  id: bonus-salon-dryer-1
+  layout: {box: {max: {x: 0.36, y: 1.55, z: 0.475}, min: {x: -0.36, y: 0, z: -0.475}}}
+  model: {id: /cdn/value.ddb54abf18c55dbf27d7af03bf68d32dc8dd9295348696f67e0dd2c44ca33e78.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  state: {name: Dryer chair, seat: {d: 0.05, y: 0.12}}
+  tags: [bonus-mall, salon-prop, seat]
+bonus-salon-dryer-2:
+  castShadow: true
+  feetPosition: {x: 16.3, y: 0, z: -4.95}
+  id: bonus-salon-dryer-2
+  layout: {box: {max: {x: 0.36, y: 1.55, z: 0.475}, min: {x: -0.36, y: 0, z: -0.475}}}
+  model: {id: /cdn/value.ddb54abf18c55dbf27d7af03bf68d32dc8dd9295348696f67e0dd2c44ca33e78.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  state: {name: Dryer chair, seat: {d: 0.05, y: 0.12}}
+  tags: [bonus-mall, salon-prop, seat]
 bonus-salon-light-a:
   feetPosition: {x: 15, y: 3.3, z: 1}
   id: bonus-salon-light-a
@@ -1395,11 +1452,91 @@ bonus-salon-light-b:
   feetPosition: {x: 21.8, y: 3.3, z: -1}
   id: bonus-salon-light-b
   light: {color: oklch(0.95 0.04 80), distance: 9, intensity: 2.5, kind: point}
+bonus-salon-plant-1:
+  castShadow: true
+  feetPosition: {x: 10.8, y: 0, z: 3.45}
+  id: bonus-salon-plant-1
+  layout: {box: {max: {x: 0.35, y: 1.45, z: 0.35}, min: {x: -0.35, y: 0, z: -0.35}}}
+  model: {id: /cdn/value.fa0deceaea26c570f5c0dad725222a72998e350a847ea106fba91634d11ebbdc.glb}
+  physics: {body: static, collider: cylinder}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [bonus-mall, salon-prop]
+bonus-salon-plant-2:
+  castShadow: true
+  feetPosition: {x: 23.2, y: 0, z: 3.4}
+  id: bonus-salon-plant-2
+  layout: {box: {max: {x: 0.35, y: 1.45, z: 0.35}, min: {x: -0.35, y: 0, z: -0.35}}}
+  model: {id: /cdn/value.fa0deceaea26c570f5c0dad725222a72998e350a847ea106fba91634d11ebbdc.glb}
+  physics: {body: static, collider: cylinder}
+  receiveShadow: true
+  rotation: {yaw: 70}
+  tags: [bonus-mall, salon-prop]
+bonus-salon-plant-3:
+  castShadow: true
+  feetPosition: {x: 23.2, y: 0, z: -5.35}
+  id: bonus-salon-plant-3
+  layout: {box: {max: {x: 0.35, y: 1.45, z: 0.35}, min: {x: -0.35, y: 0, z: -0.35}}}
+  model: {id: /cdn/value.fa0deceaea26c570f5c0dad725222a72998e350a847ea106fba91634d11ebbdc.glb}
+  physics: {body: static, collider: cylinder}
+  receiveShadow: true
+  rotation: {yaw: 140}
+  tags: [bonus-mall, salon-prop]
+bonus-salon-shelf-1:
+  castShadow: true
+  feetPosition: {x: 19.4, y: 0, z: -5.62}
+  id: bonus-salon-shelf-1
+  layout: {box: {max: {x: 0.575, y: 1.75, z: 0.19}, min: {x: -0.575, y: 0, z: -0.19}}}
+  model: {id: /cdn/value.46d80755d855c5535290fea8d75a5658cdf88fa6dce42923dc581fca86d9ea8c.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  tags: [bonus-mall, salon-prop]
+bonus-salon-shelf-2:
+  castShadow: true
+  feetPosition: {x: 21.4, y: 0, z: -5.62}
+  id: bonus-salon-shelf-2
+  layout: {box: {max: {x: 0.575, y: 1.75, z: 0.19}, min: {x: -0.575, y: 0, z: -0.19}}}
+  model: {id: /cdn/value.46d80755d855c5535290fea8d75a5658cdf88fa6dce42923dc581fca86d9ea8c.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  tags: [bonus-mall, salon-prop]
 bonus-salon-sign:
   feetPosition: {x: 9.9, y: 3.35, z: -1}
   id: bonus-salon-sign
   rotation: {yaw: -90}
   vector: "<svg viewBox='0 0 400 80' width='5m' billboard='none'><text x='200' y='58' text-anchor='middle' font-family='display' font-size='56' font-style='italic' fill='#ff71ce' filter='drop-shadow(0 0 6px #ff71ce)'>Glow Up Salon</text></svg>"
+bonus-salon-vanity-1:
+  castShadow: true
+  feetPosition: {x: 12.8, y: 0, z: 3.68}
+  id: bonus-salon-vanity-1
+  layout: {box: {max: {x: 0.775, y: 2.15, z: 0.3}, min: {x: -0.775, y: 0, z: -0.3}}}
+  model: {id: /cdn/value.97637d66d8205e0ce9bc23f1aa815cb958b5a1b1effaf9007a9343a87925b211.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [bonus-mall, salon-prop]
+bonus-salon-vanity-2:
+  castShadow: true
+  feetPosition: {x: 15.6, y: 0, z: 3.68}
+  id: bonus-salon-vanity-2
+  layout: {box: {max: {x: 0.775, y: 2.15, z: 0.3}, min: {x: -0.775, y: 0, z: -0.3}}}
+  model: {id: /cdn/value.97637d66d8205e0ce9bc23f1aa815cb958b5a1b1effaf9007a9343a87925b211.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [bonus-mall, salon-prop]
+bonus-salon-vanity-3:
+  castShadow: true
+  feetPosition: {x: 18.4, y: 0, z: 3.68}
+  id: bonus-salon-vanity-3
+  layout: {box: {max: {x: 0.775, y: 2.15, z: 0.3}, min: {x: -0.775, y: 0, z: -0.3}}}
+  model: {id: /cdn/value.97637d66d8205e0ce9bc23f1aa815cb958b5a1b1effaf9007a9343a87925b211.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [bonus-mall, salon-prop]
 bs-clothes:
   children: [{castShadow: true, feetPosition: {x: -3.379999999999999, y: 0, z: 3.8299999999999983}, id: till0, layout: {box: {max: {x: 0.83, y: 1.66, z: 0.695}, min: {x: -0.83, y: 0, z: -0.695}}}, model: {forward: "+x", id: /cdn/value.8ed0671599b80106dbe39acfbc2afdbfdfd3bb861b9e17120716d8ae01fc1b04.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: -90}, scale: {x: 1, y: 0.72, z: 0.55}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: -3.379999999999999, y: 0, z: 5.5}, id: till1, layout: {box: {max: {x: 0.83, y: 1.66, z: 0.695}, min: {x: -0.83, y: 0, z: -0.695}}}, model: {forward: "+x", id: /cdn/value.8ed0671599b80106dbe39acfbc2afdbfdfd3bb861b9e17120716d8ae01fc1b04.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: -90}, scale: {x: 1, y: 0.72, z: 0.55}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: -3.379999999999999, y: 0, z: 7.170000000000002}, id: till2, layout: {box: {max: {x: 0.83, y: 1.66, z: 0.695}, min: {x: -0.83, y: 0, z: -0.695}}}, model: {forward: "+x", id: /cdn/value.8ed0671599b80106dbe39acfbc2afdbfdfd3bb861b9e17120716d8ae01fc1b04.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: -90}, scale: {x: 1, y: 0.72, z: 0.55}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: -5.600000000000001, y: 0, z: -8.2}, id: fit0, layout: {box: {max: {x: 1.07, y: 2.3, z: 0.57}, min: {x: -1.07, y: 0, z: -0.57}}}, model: {forward: "+x", id: /cdn/value.ed318abc905e0e566a458007aa8278b22090d4f46519742651143576a531dc75.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 180}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: -3.3000000000000007, y: 0, z: -8.2}, id: fit1, layout: {box: {max: {x: 1.07, y: 2.3, z: 0.57}, min: {x: -1.07, y: 0, z: -0.57}}}, model: {forward: "+x", id: /cdn/value.ed318abc905e0e566a458007aa8278b22090d4f46519742651143576a531dc75.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 180}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: -6.600000000000001, y: 0, z: 1.4000000000000004}, id: mirror, layout: {box: {max: {x: 0.305, y: 1.8, z: 0.175}, min: {x: -0.305, y: 0, z: -0.175}}}, model: {forward: "+x", id: /cdn/value.becf01776728599e603825d9ce016b69efad3548f068a4ab788f32214aeb1e53.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: -90}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: -0.6000000000000014, y: 0, z: 8.600000000000001}, id: shelf0, layout: {box: {max: {x: 0.75, y: 2.1, z: 0.31}, min: {x: -0.75, y: 0, z: -0.31}}}, model: {forward: "+x", id: /cdn/value.63a7b2710e474b73b6c14549cc5e2b2d04af7a8d4b538380ad2c75c4b0e14164.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 0}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: 1.0999999999999996, y: 0, z: 8.600000000000001}, id: shelf1, layout: {box: {max: {x: 0.75, y: 2.1, z: 0.31}, min: {x: -0.75, y: 0, z: -0.31}}}, model: {forward: "+x", id: /cdn/value.63a7b2710e474b73b6c14549cc5e2b2d04af7a8d4b538380ad2c75c4b0e14164.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 0}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: 2.8000000000000007, y: 0, z: 8.600000000000001}, id: shelf2, layout: {box: {max: {x: 0.75, y: 2.1, z: 0.31}, min: {x: -0.75, y: 0, z: -0.31}}}, model: {forward: "+x", id: /cdn/value.63a7b2710e474b73b6c14549cc5e2b2d04af7a8d4b538380ad2c75c4b0e14164.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 0}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: -6.600000000000001, y: 0, z: -5.4}, id: shelf3, layout: {box: {max: {x: 0.75, y: 2.1, z: 0.31}, min: {x: -0.75, y: 0, z: -0.31}}}, model: {forward: "+x", id: /cdn/value.63a7b2710e474b73b6c14549cc5e2b2d04af7a8d4b538380ad2c75c4b0e14164.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: -90}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: -6.600000000000001, y: 0, z: -3.8000000000000007}, id: shelf4, layout: {box: {max: {x: 0.75, y: 2.1, z: 0.31}, min: {x: -0.75, y: 0, z: -0.31}}}, model: {forward: "+x", id: /cdn/value.63a7b2710e474b73b6c14549cc5e2b2d04af7a8d4b538380ad2c75c4b0e14164.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: -90}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: 2.5999999999999996, y: 0, z: -6}, id: rack0, layout: {box: {max: {x: 0.72, y: 1.75, z: 0.48}, min: {x: -0.72, y: 0, z: -0.48}}}, model: {forward: "+x", id: /cdn/value.9f92855e2095c7bab1dcc001db369203b2aad75e2d723f7ffa7ec55e743153b6.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 0}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: -0.8000000000000007, y: 0, z: -5.6}, id: rack1, layout: {box: {max: {x: 0.72, y: 1.75, z: 0.48}, min: {x: -0.72, y: 0, z: -0.48}}}, model: {forward: "+x", id: /cdn/value.9f92855e2095c7bab1dcc001db369203b2aad75e2d723f7ffa7ec55e743153b6.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 0}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: 3.4000000000000004, y: 0, z: 5.399999999999999}, id: rack2, layout: {box: {max: {x: 0.72, y: 1.75, z: 0.48}, min: {x: -0.72, y: 0, z: -0.48}}}, model: {forward: "+x", id: /cdn/value.9f92855e2095c7bab1dcc001db369203b2aad75e2d723f7ffa7ec55e743153b6.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 0}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: 0.3999999999999986, y: 0, z: 5.199999999999999}, id: round0, layout: {box: {max: {x: 0.68, y: 1.5, z: 0.715}, min: {x: -0.68, y: 0, z: -0.715}}}, model: {forward: "+x", id: /cdn/value.f337e2732a784bd4f7f4108f5384af838082a15b57adc9ccfe8f321b3342cf87.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 30}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: -2.6000000000000014, y: 0, z: -3.1999999999999993}, id: round1, layout: {box: {max: {x: 0.68, y: 1.5, z: 0.715}, min: {x: -0.68, y: 0, z: -0.715}}}, model: {forward: "+x", id: /cdn/value.f337e2732a784bd4f7f4108f5384af838082a15b57adc9ccfe8f321b3342cf87.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: 0}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: 5.800000000000001, y: 0, z: -3.5999999999999996}, id: mq0, layout: {box: {max: {x: 0.305, y: 1.8, z: 0.21}, min: {x: -0.305, y: 0, z: -0.21}}}, model: {forward: "+x", id: /cdn/value.80e9fca45dd3ffdaa87a885c805c99515eceda292b1f09c5ce3e2cbcc029ebd7.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: -90}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: 5.800000000000001, y: 0, z: 3.6000000000000014}, id: mq1, layout: {box: {max: {x: 0.305, y: 1.8, z: 0.21}, min: {x: -0.305, y: 0, z: -0.21}}}, model: {forward: "+x", id: /cdn/value.80e9fca45dd3ffdaa87a885c805c99515eceda292b1f09c5ce3e2cbcc029ebd7.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: -90}, tags: [bonus-prop]}, {castShadow: true, feetPosition: {x: -6.199999999999999, y: 0, z: -0.8000000000000007}, id: mq2, layout: {box: {max: {x: 0.305, y: 1.8, z: 0.21}, min: {x: -0.305, y: 0, z: -0.21}}}, model: {forward: "+x", id: /cdn/value.80e9fca45dd3ffdaa87a885c805c99515eceda292b1f09c5ce3e2cbcc029ebd7.glb}, physics: {body: static, collider: box}, receiveShadow: true, rotation: {yaw: -90}, tags: [bonus-prop]}, {feetPosition: {x: 0.5, y: 0.003, z: 0}, id: rug, material: {pbr: true, roughness: 0.95, texture: cdn/texture-pastel-pink-and-lavender-shag-rug.png}, primitive: {height: 0.012, kind: cylinder, radialSegments: 48, radiusBottom: 1.9, radiusTop: 1.9}, receiveShadow: true, rotation: {yaw: 0}}, {feetPosition: {x: 0, y: 4.55, z: -5}, id: light0, light: {color: oklch(0.9 0.07 70), distance: 13, intensity: 2.4, kind: point}}, {feetPosition: {x: 0, y: 4.55, z: 5}, id: light1, light: {color: oklch(0.9 0.07 70), distance: 13, intensity: 2.4, kind: point}}, {feetPosition: {x: 7.3, y: 4.1, z: 0}, id: sign, rotation: {yaw: 90}, vector: "<svg viewBox='0 0 600 110' width='3.9m'><rect x='4' y='4' width='592' height='102' rx='18' fill='#2a1638' stroke='#7ff3ff' stroke-width='5' filter='drop-shadow(0 0 8 #49e6ff)'/><text x='300' y='74' font-family='display' font-size='62' fill='#ff8fd0' text-anchor='middle' filter='drop-shadow(0 0 10 #ff4fb2)'>LIMINAL CLOTHES</text><path d='M60 90 H540' stroke='#7ff3ff' stroke-width='3' stroke-dasharray='40 10'/></svg>"}]
   feetPosition: {x: -17, y: 0, z: 13}
