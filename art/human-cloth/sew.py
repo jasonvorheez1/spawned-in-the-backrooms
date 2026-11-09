@@ -252,6 +252,20 @@ for name, (ease, cuts) in PLAN.items():
     bmesh.ops.holes_fill(sb2, edges=[e for e in sb2.edges if e.is_boundary], sides=40)
     bmesh.ops.recalc_face_normals(sb2, faces=sb2.faces[:]); sb2.to_mesh(me); sb2.free()
     for p in me.polygons: p.use_smooth = True
+    fb = bmesh.new(); fb.from_mesh(me); fb.verts.ensure_lookup_table()   # final clearance: what decimate pulled under the skin rises, as a smooth swell, not per-vertex dents
+    D = {}
+    for v in fb.verts:
+        co, nn, fi, d = bvhSkinL.find_nearest(v.co); out = (v.co - co).dot(nn)
+        D[v] = nn * max(0.0, 0.006 - out)
+    for _ in range(4):
+        N = {}
+        for v in fb.verts:
+            nb = [e.other_vert(v) for e in v.link_edges]
+            avg = sum((D[w] for w in nb), Vector()) / max(1, len(nb)); c = D[v].lerp(avg, 0.5)
+            N[v] = c if c.length >= D[v].length else D[v]
+        D = N
+    for v in fb.verts: v.co += D[v]
+    fb.to_mesh(me); fb.free()
     # skin + Bust key from the body at the nearest point
     n.shape_key_add(name="Basis", from_mix=False); kb = n.shape_key_add(name="Bust", from_mix=False) if KB else None
     groups = {}
