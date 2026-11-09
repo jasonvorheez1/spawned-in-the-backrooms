@@ -181,6 +181,13 @@ export const humanBody = (l) => {
     Body_Skin: skin, Head_Skin: skin, under: { color: '#2b2a30', roughness: 0.85, metalness: 0 },
     Iris: { color: eye, roughness: 0.25, metalness: 0 }, Brow: { color: hairc, roughness: 0.9, metalness: 0 }, Lash: { color: '#2a2024', roughness: 0.9, metalness: 0 } } }
 }
+// FACE SHAPE → the human head: [lead head type, keys set outright]
+const FT_HEAD = {
+  round: ['HT_Round'], soft: ['HT_Round', { JawNarrow: 0.4, JawWide: 0 }], chubby: ['HT_Round', { CheekFull: 0.9 }], button: ['HT_Heart', { NoseBig: 0, ChinLong: 0 }],
+  oval: ['HT_Long', { FaceLong: 0.2 }], heart: ['HT_Heart'], delicate: ['HT_Heart', { JawNarrow: 0.8, JawWide: 0, BrowHeavy: 0 }], broad: ['HT_Broad'],
+  chiseled: ['HT_Angular', { CheekFull: 0, ChinLong: 0.6 }], plump: ['HT_Round', { CheekFull: 0.7 }], pixie: ['HT_Heart', { ChinLong: 0.5, JawNarrow: 0.7, JawWide: 0 }], noble: ['HT_Long', { NoseBig: 0.6, ChinLong: 0.5 }],
+  square: ['HT_Square'], strong: ['HT_Square', { BrowHeavy: 0.8 }], sharp: ['HT_Angular', { JawNarrow: 0.6, JawWide: 0 }], long: ['HT_Long', { FaceLong: 0.6 }], narrow: ['HT_Long', { JawNarrow: 0.9, JawWide: 0 }],
+}
 const H_KEYS = ['JawWide', 'JawNarrow', 'ChinLong', 'NoseBig', 'CheekFull', 'BrowHeavy', 'FaceLong', 'HeadRound']
 export function humanMorph(l) {
   let h = [...String(l?.fseed ?? l?.id ?? l?.name ?? ((l?.skin || '') + (l?.eye || '') + (l?.hair || '') + (l?.hairc || '')))].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 2166136261)
@@ -192,8 +199,10 @@ export function humanMorph(l) {
   // the head type: a whole skull and face shape, one per person, a second softly mixed in so no two match
   const T = m ? ['HT_Square', 'HT_Square', 'HT_Angular', 'HT_Angular', 'HT_Broad', 'HT_Long', 'HT_Round', 'HT_Heart'] : ['HT_Heart', 'HT_Heart', 'HT_Round', 'HT_Round', 'HT_Long', 'HT_Angular', 'HT_Square', 'HT_Broad']
   for (const k of new Set(T)) o[k] = 0
-  const a = T[Math.floor(u() * T.length)], b = T[Math.floor(u() * T.length)]
+  const FT = FT_HEAD[l?.ftype] // the creator's FACE SHAPE pick leads the skull; the seed still mixes a second in (johnadams2 Nov 9: face gen)
+  const a0 = T[Math.floor(u() * T.length)], b = T[Math.floor(u() * T.length)], a = FT?.[0] ?? a0
   o[a] = Math.round((0.6 + u() * 0.4) * 100) / 100; if (b !== a) o[b] = Math.round(u() * 0.35 * 100) / 100
+  if (FT?.[1]) for (const [k, v] of Object.entries(FT[1])) o[k] = v
   if (o.HT_Long > 0.4) o.FaceLong *= 0.4; if (o.HT_Round > 0.4) o.HeadRound *= 0.4 // no doubled stretch
   o.HeadRound = Math.round(o.HeadRound * 0.4 * 100) / 100; o.CheekFull = Math.round(o.CheekFull * 0.45 * 100) / 100; if (o.HT_Broad) o.HT_Broad = Math.round(o.HT_Broad * 0.45 * 100) / 100; if (o.HT_Round) o.HT_Round = Math.round(o.HT_Round * 0.6 * 100) / 100; if (o.JawWide) o.JawWide = Math.min(o.JawWide, m ? 0.6 : 0.2) // human proportions: no wide, round critter skulls
   return o // the human bodies carry no Bust key: their curves are built into the female mesh
