@@ -769,8 +769,8 @@ def dress(head, body, r, is_male, aw):
     G("Shoes_slippers", lambda f: FOOT(f, 0.075), "cloth_shoes", 0.01, 0.01, cuts=(0.075,))
     # hanging cloth: skirts, the dress's skirt, apron bib's skirt, cape
     cy = 0.1
-    add(out, ring_piece("Bot_skirt", body, aw, "cloth_bottom", 1.05, 0.62, 0.08, 0.012, cy), r, skirt_w(1.05, 0.62))
-    add(out, ring_piece("Bot_longskirt", body, aw, "cloth_bottom", 1.05, 0.16, 0.13, 0.012, cy, rows=20), r, skirt_w(1.05, 0.16))
+    add(out, ring_piece("Bot_skirt", body, aw, "cloth_bottom", 1.05, 0.62, 0.08, 0.024, cy), r, skirt_w(1.05, 0.62))
+    add(out, ring_piece("Bot_longskirt", body, aw, "cloth_bottom", 1.05, 0.16, 0.13, 0.024, cy, rows=20), r, skirt_w(1.05, 0.16))
     dsk = ring_piece("dsk", body, aw, "cloth_top", 0.94, 0.52, 0.1, 0.017, cy)
     weighted(dsk, r, skirt_w(0.94, 0.52)); dr = join("Top_dress", [dr, dsk]); out[out.index(next(o for o in out if o.name.startswith("Top_dress")))] = dr
     ask = ring_piece("ask", body, aw, "cloth_top", 0.95, 0.5, 0.05, 0.022, cy, arc=(-math.pi * 0.86, -math.pi * 0.14), rows=12, seg=20)
