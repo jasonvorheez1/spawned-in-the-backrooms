@@ -52,6 +52,22 @@ function neighbor(ctx, pos) {
   return cellCenter(a, b);
 }
 
+// roam: a patrol leg several rooms long, often drifting toward the nearest wanderer's part of the maze, with a listening pause at each stop
+function roamTarget(ctx, pos, players) {
+  let near = null, nd = 70;
+  for (const p of players) { const d = Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z); if (d < nd) { nd = d; near = p; } }
+  for (let t = 0; t < 6; t++) {
+    const base = near && ctx.random() < 0.6 ? near.feetPosition : pos;
+    const spread = base === pos ? 18 : 10;
+    const c = cellAt(base.x + (ctx.random() * 2 - 1) * spread, base.z + (ctx.random() * 2 - 1) * spread);
+    const cx = Math.max(0, Math.min(N - 1, c.cx)), cz = Math.max(0, Math.min(N - 1, c.cz));
+    if (inHub(cx, cz) || hasPit(cx, cz)) continue;
+    const g = cellCenter(cx, cz);
+    if (stepToward0(pos.x, pos.z, g.x, g.z, 25)) return g;
+  }
+  return neighbor(ctx, pos);
+}
+
 function act(w, clip, extra) {
   w.anim.act = { clip: CLIP[clip] ?? clip, loop: "once", blend: "override", weight: 4, time: 0, ...extra };
 }
@@ -252,12 +268,14 @@ export function update(ctx, dt) {
         }
       }
     } else {
-      if (!m.next || Math.hypot(m.next.x - pos.x, m.next.z - pos.z) < 0.5 || now > (m.nextBy ?? 0)) {
-        m.next = neighbor(ctx, pos);
-        m.nextBy = now + 6000;
+      if (m.next && Math.hypot(m.next.x - pos.x, m.next.z - pos.z) < 0.6 && !m.restUntil) m.restUntil = now + 1500 + ctx.random() * 2500;
+      if (!m.next || now > (m.nextBy ?? 0) || (m.restUntil && now > m.restUntil)) {
+        m.next = roamTarget(ctx, pos, players);
+        m.nextBy = now + 25000;
+        m.restUntil = 0;
       }
-      goal = m.next;
-      speed = 1.3;
+      goal = m.restUntil ? pos : m.next;
+      speed = m.restUntil ? 0 : 2.1;
     }
 
     if (lit !== !!m.lit) {
@@ -270,7 +288,7 @@ export function update(ctx, dt) {
 
     const sight = prey && checkSightThrottled(ctx, m, now, pos, prey.feetPosition, w.id, prey.id);
     let way = null;
-    if ((prey || m.last) && !sight) {
+    if ((prey || m.last || m.next) && !sight) {
       way = stepToward0(pos.x, pos.z, goal.x, goal.z, 25);
     }
 
