@@ -1,6 +1,7 @@
 # Shelly's anime base (female, as uploaded) + a male built off the same mesh. Both rigged on Mixamo names.
 import bpy, math, sys
-from mathutils import Matrix, Vector
+from mathutils import Matrix, Vector, noise
+import heapq
 OUT = "/workspace/human"
 def smooth(a, b, x):
     t = max(0.0, min(1.0, (x - a) / (b - a))); return t * t * (3 - 2 * t)
@@ -333,6 +334,7 @@ def garment(body, r, name, keep, color, cuts=(), push=0.005):
     gone = [f for f in bm.faces if not keep(f.calc_center_median(), max(armw(v) for v in f.verts))]
     bmesh.ops.delete(bm, geom=gone, context="FACES")
     for v in bm.verts: v.co += v.normal * push
+    tailor(bm, name)
     bm.to_mesh(o.data); bm.free()
     m = bpy.data.materials.new(name); m.use_nodes = True
     bsdf = m.node_tree.nodes["Principled BSDF"]; bsdf.inputs["Base Color"].default_value = color; bsdf.inputs["Roughness"].default_value = 0.75
@@ -567,6 +569,8 @@ def ring_piece(name, body, aw, mname, z0, z1, flare, slack, cy, arc=None, rows=1
         prof.append((z, list(acc), j / rows))
     bm = bmesh.new(); grid = []
     a0, a1 = arc if arc else (-math.pi, math.pi)
+    fa, fn_ = FOLDS.get(name, (0.014, 14)) if name in FOLDS or name in ("dsk", "ask") else (0.0, 0)
+    if fa: seg = max(seg, fn_ * 6 if arc else fn_ * 5); rows = max(rows, 26)
     closed = arc is None; ns = seg if closed else seg + 1
     for z, R, t in prof:
         row = []
@@ -574,6 +578,10 @@ def ring_piece(name, body, aw, mname, z0, z1, flare, slack, cy, arc=None, rows=1
             a = a0 + (a1 - a0) * i / seg
             k = (a + math.pi) / (2 * math.pi) * nb; k0 = int(k) % nb; f = k - int(k)
             rr = R[k0] * (1 - f) + R[(k0 + 1) % nb] * f + slack + flare * t ** 1.3
+            if fa:  # drape: soft folds that open toward the hem, each a little different
+                u = (a - a0) / (a1 - a0) if arc else (a + math.pi) / (2 * math.pi)
+                ph = fn_ * u * 2 * math.pi + 0.9 * math.sin(u * 17.0 + t * 2.0)
+                rr += fa * (t ** 1.15) * (0.5 + 0.5 * math.sin(ph)) ** 1.6
             row.append(bm.verts.new((math.cos(a) * rr, cy + math.sin(a) * rr, z)))
         grid.append(row)
     for j in range(rows):
@@ -581,6 +589,7 @@ def ring_piece(name, body, aw, mname, z0, z1, flare, slack, cy, arc=None, rows=1
             a, b = grid[j][i], grid[j][(i + 1) % ns]; c, d = grid[j + 1][(i + 1) % ns], grid[j + 1][i]
             bm.faces.new((a, b, c, d))
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    bm.normal_update(); tailor(bm, name)
     o = mesh_obj(name, bm, mname)
     if thick: solidify(o, thick)
     return o
@@ -636,11 +645,77 @@ def join(name, objs):
     for o in objs: o.select_set(True)
     bpy.context.view_layer.objects.active = objs[0]; bpy.ops.object.join(); o = bpy.context.object; o.name = name; return o
 
+FOLDS = {"Neck_cape": (0.032, 9), "Bot_skirt": (0.011, 16), "Bot_longskirt": (0.02, 13)}
+TAILOR = {  # per garment: fold depth (m), hem band width, ribbed band, seams, extra details
+    "Top_tee": dict(fold=0.0035, hem=0.014, seam=1), "Top_tank": dict(fold=0.003, hem=0.01, seam=1),
+    "Top_longsleeve": dict(fold=0.004, hem=0.014, seam=1), "Top_pajamas": dict(fold=0.005, hem=0.016, seam=1),
+    "Top_sweater": dict(fold=0.004, hem=0.03, rib=1, seam=1), "Top_hoodie": dict(fold=0.0045, hem=0.032, rib=1, seam=1),
+    "Top_jacket": dict(fold=0.005, hem=0.02, seam=1, placket=1), "Top_dress": dict(fold=0.003, hem=0.012, seam=1),
+    "Top_apron": dict(fold=0.0025, hem=0.012), "Top_plate": dict(hem=0.012, lames=(1.15, 1.22, 1.29), keel=1),
+    "Bot_pants": dict(fold=0.0045, hem=0.018, seam=1), "Bot_shorts": dict(fold=0.0035, hem=0.016, seam=1),
+    "Bot_pjpants": dict(fold=0.0055, hem=0.016), "Bot_overalls": dict(fold=0.004, hem=0.016, seam=1),
+    "Bot_skirt": dict(hem=0.014), "Bot_longskirt": dict(hem=0.016), "Neck_cape": dict(hem=0.016), "dsk": dict(hem=0.012), "ask": dict(hem=0.012),
+    "Shoes_sneakers": dict(hem=0.008, sole=0.026), "Shoes_boots": dict(fold=0.002, hem=0.022, sole=0.03), "Shoes_slippers": dict(hem=0.01, sole=0.02),
+    "Strap_a": dict(hem=0.004), "Strap_b": dict(hem=0.004),
+    "Under_top": dict(hem=0.006), "Under_bottom": dict(hem=0.008)}
+def tailor(bm, name):
+    T = next((v for k, v in TAILOR.items() if name.startswith(k)), None)
+    if not T: return
+    E = [e.calc_length() for e in bm.edges]
+    if T.get("fold") and E and sum(E) / len(E) > 0.011 and len(bm.faces) < 26000:
+        bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=1, use_grid_fill=True)
+    bm.verts.ensure_lookup_table(); bm.normal_update()
+    hem = T.get("hem", 0); cap = hem * 1.8 + 0.006
+    dist = {}; pq = []
+    for v in bm.verts:
+        if v.is_boundary: dist[v] = 0.0; pq.append((0.0, v.index))
+    heapq.heapify(pq)
+    while pq:
+        d, i = heapq.heappop(pq); v = bm.verts[i]
+        if d > dist.get(v, 9) or d > cap: continue
+        for e in v.link_edges:
+            w = e.other_vert(v); nd = d + e.calc_length()
+            if nd < dist.get(w, 9): dist[w] = nd; heapq.heappush(pq, (nd, w.index))
+    fold = T.get("fold", 0)
+    for v in bm.verts:
+        c = v.co; x, y, z = c.x, c.y, c.z; d = 0.0
+        arm = abs(x) > 0.2 and z > 1.0
+        if fold:
+            if arm: n = noise.noise(Vector((x * 34, y * 11 + 3.1, z * 13 + 1.7)))
+            elif z < 0.95: n = noise.noise(Vector((x * 9 + 5.2, y * 9, z * 36)))
+            else: n = noise.noise(Vector((x * 24 + 2.3, y * 24, z * 5.5 + 0.4)))
+            ridge = 1.0 - abs(n) * 2.2  # crests where the field crosses zero
+            k = 1.0
+            if z < 0.95: k = 0.55 + 0.9 * math.exp(-((z - 0.47) / 0.07) ** 2) + 0.9 * math.exp(-((z - 0.14) / 0.06) ** 2) + 0.6 * math.exp(-((z - 0.9) / 0.05) ** 2)
+            elif arm: k = 0.6 + 0.8 * math.exp(-((abs(x) - 0.44) / 0.06) ** 2)
+            d += fold * k * max(-0.3, min(1.0, ridge))
+        bd = dist.get(v, 9)
+        if hem and bd < hem: d += 0.0024 + (0.0018 * (0.5 + 0.5 * math.sin(250 * ((y + z) if arm else (x + y))))) * T.get("rib", 0)
+        elif hem and bd < hem + 0.005: d -= 0.0011  # stitch line
+        if T.get("seam"):
+            if abs(x) > 0.09 and not arm and abs(y - 0.1) < 0.0035 and z > 0.2: d -= 0.0013
+            if abs(abs(x) - 0.185) < 0.0035 and z > 1.28: d -= 0.0012
+        if T.get("placket") and y < 0.07 and abs(x) < 0.0035: d -= 0.0016
+        if T.get("placket") and y < 0.07 and 0.0035 <= abs(x) < 0.014: d += 0.0008
+        if T.get("sole"):
+            if z < T["sole"]: d += 0.003
+            elif z < T["sole"] + 0.004: d -= 0.0012
+        for L in T.get("lames", ()):
+            if y < 0.1 and abs(z - L) < 0.0035: d -= 0.0028
+        if T.get("keel") and y < 0.06 and abs(x) < 0.012 and z > 1.12: d += 0.0025 * (1 - abs(x) / 0.012)
+        if d: v.co += v.normal * d
+
+def bevel_rim(o, w=0.0028):
+    bv = o.modifiers.new("bev", "BEVEL"); bv.width = w; bv.segments = 2; bv.limit_method = "ANGLE"; bv.angle_limit = math.radians(50)
+    bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); bpy.context.view_layer.objects.active = o
+    bpy.ops.object.modifier_move_to_index(modifier="bev", index=0); bpy.ops.object.modifier_apply(modifier="bev")
+    for p in o.data.polygons: p.use_smooth = True
+
 def dress(head, body, r, is_male, aw):
     C = lambda h: (*[int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)], 1)
     for n, c in (("cloth_top", "#c9c2b4"), ("cloth_bottom", "#3b4a63"), ("cloth_shoes", "#e8e4dc"), ("cloth_hat", "#8a2f2f"), ("cloth_neck", "#7d5a8c"), ("under", "#2b2a30")):
         mat(n, C(c), 0.8)
-    mat("metal", C("#2a2a30"), 0.35, 0.8); mat("lens", C("#1a1824"), 0.1, 0.5); mat("gold", C("#e8c35a"), 0.3, 0.9)
+    mat("metal", C("#2a2a30"), 0.35, 0.8); mat("strap", C("#3b2a1f"), 0.62); mat("button", C("#d9d2c2"), 0.4); mat("lens", C("#1a1824"), 0.1, 0.5); mat("gold", C("#e8c35a"), 0.3, 0.9)
     out = []
     G = lambda *a, **k: out.append(garment(body, r, *a, **k)) or out[-1]
     TORSO = lambda f, lo, hi: f["arm"] < 0.5 and f["leg"] < 0.6 and lo < f["z"] < hi
@@ -659,11 +734,19 @@ def dress(head, body, r, is_male, aw):
     hd = G("Top_hoodie", lambda f: (TORSO(f, 0.95, 1.6) and NECK(f, -0.01)) or SLV(f, 0.98), "cloth_top", 0.015, 0.006, cuts=(0.95, 1.505, 1.535), armcuts=(0.98,))
     jk = G("Top_jacket", lambda f: (TORSO(f, 0.95, 1.6) and NECK(f, -0.01)) or SLV(f, 0.96), "cloth_top", 0.02, 0.006, cuts=(0.95, 1.505, 1.535), armcuts=(0.96,))
     dr = G("Top_dress", lambda f: (TORSO(f, 0.92, 1.6) and NECK(f, 0.02) and (f["ax"] < 0.11 or f["z"] < 1.41)), "cloth_top", 0.009, cuts=(0.92, 1.41, 1.475, 1.505))
+    pl = G("Top_plate", lambda f: TORSO(f, 0.98, 1.6) and NECK(f, 0.035) and f["ax"] < 0.14, "cloth_top", 0.024, 0.009, cuts=(0.98, 1.46, 1.49))
+    sa = garment(body, r, "Strap_a", lambda f: TORSO(f, 0.98, 1.6) and NECK(f, 0.0) and abs(f["ax"] - 0.105) < 0.017 and f["z"] > 1.33, "strap", 0.035, 0.005)
+    sb = garment(body, r, "Strap_b", lambda f: TORSO(f, 0.98, 1.6) and 1.07 < f["z"] < 1.115, "strap", 0.035, 0.005, cuts=(1.07, 1.115))
+    for o in (pl, sa, sb): bevel_rim(o)
+    fy = lambda z: min(v.co.y for v in body.data.vertices if abs(v.co.x) < 0.015 and abs(v.co.z - z) < 0.012)
+    bk = prim("buckle", "cube", "metal", (0, fy(1.092) - 0.043, 1.092), scale=(0.022, 0.006, 0.018)); bevel_rim(bk, 0.003)
+    weighted(bk, r, lambda co: {"Spine": 1.0})
+    out[out.index(pl)] = join("Top_plate", [pl, sa, sb, bk])
     ap = G("Top_apron", lambda f: TORSO(f, 0.92, 1.42) and f["y"] < 0.075 and f["ax"] < 0.12, "cloth_top", 0.017, cuts=(0.92, 1.42))
     # bottoms
     PANT = lambda f, lo, hi=1.0: f["arm"] < 0.3 and lo < f["z"] < hi and (f["leg"] > 0.2 or f["z"] > 0.7)
-    G("Bot_pants", lambda f: PANT(f, 0.1), "cloth_bottom", 0.006, cuts=(0.1, 1.0))
-    G("Bot_shorts", lambda f: PANT(f, 0.64), "cloth_bottom", 0.006, cuts=(0.64, 1.0))
+    G("Bot_pants", lambda f: PANT(f, 0.1), "cloth_bottom", 0.009, cuts=(0.1, 1.0))
+    G("Bot_shorts", lambda f: PANT(f, 0.64), "cloth_bottom", 0.009, cuts=(0.64, 1.0))
     G("Bot_pjpants", lambda f: PANT(f, 0.09, 1.01), "cloth_bottom", 0.008, cuts=(0.09, 1.01))
     G("Bot_overalls", lambda f: PANT(f, 0.11) or (TORSO(f, 0.95, 1.36) and f["y"] < 0.07 and f["ax"] < 0.1) or (TORSO(f, 0.95, 1.52) and 0.05 < f["ax"] < 0.08),
       "cloth_bottom", 0.012, cuts=(0.11, 1.36, 1.52))
@@ -683,14 +766,26 @@ def dress(head, body, r, is_male, aw):
     def capew(co):
         t = max(0.0, min(1.0, (1.5 - co.z) / 0.95))
         return {"Spine2": max(0, 1 - 2 * t), "Spine": max(0, 1 - abs(t - 0.5) * 2), "Hips": max(0, 2 * t - 1)}
-    add(out, ring_piece("Neck_cape", body, aw, "cloth_neck", 1.5, 0.55, 0.12, 0.03, cy, arc=(math.pi * 0.06, math.pi * 0.94), rows=16, seg=22), r, capew)
     NW = lambda co: {"Neck": 0.5, "Spine2": 0.5}
     nk = body_radii(body, aw, 1.52, 0.075)
     nr = min(sorted(nk)[len(nk) // 2], 0.062)
+    cp = ring_piece("Neck_cape", body, aw, "cloth_neck", 1.5, 0.55, 0.12, 0.03, cy, arc=(math.pi * 0.02, math.pi * 0.98), rows=16, seg=22)
+    cc = torus("capecol", nr + 0.03, 0.013, "cloth_neck", (0, 0.08, 1.5), scale=(1.1, 1.15, 0.9))
+    fyc = (0.08 - (nr + 0.03) * 1.15)
+    k1 = prim("clasp", "cylinder", "gold", (0.03, fyc - 0.004, 1.49), rot=(math.pi / 2, 0, 0), vertices=16, radius=0.011, depth=0.006)
+    k2 = prim("clasp", "cylinder", "gold", (-0.03, fyc - 0.004, 1.49), rot=(math.pi / 2, 0, 0), vertices=16, radius=0.011, depth=0.006)
+    capew2 = lambda co: {"Neck": 0.4, "Spine2": 0.6} if co.z > 1.47 else capew(co)
+    add(out, join("Neck_cape", [cp, cc, k1, k2]), r, capew2)
     # hood collapsed at the nape, on the hoodie
     hood = torus("hood", nr + 0.035, 0.03, "cloth_top", (0, 0.085, 1.52), scale=(1.0, 1.15, 0.9))
     bm = bmesh.new(); bm.from_mesh(hood.data); bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.y < 0.05], context="VERTS"); bm.to_mesh(hood.data); bm.free()
     weighted(hood, r, NW); i = out.index(hd); out[i] = join("Top_hoodie", [hd, hood])
+    fy2 = lambda z: min(v.co.y for v in body.data.vertices if abs(v.co.x) < 0.015 and abs(v.co.z - z) < 0.012)
+    bts = []
+    for z in ((1.0, 1.1, 1.2, 1.3) if is_male else (1.0, 1.1, 1.2)):
+        b = prim("btn", "uv_sphere", "button", (0.014, fy2(z) - 0.027, z), scale=(0.0075, 0.003, 0.0075), segments=12, ring_count=6)
+        weighted(b, r, (lambda zz: (lambda co: {"Spine": 1.0} if zz < 1.12 else {"Spine1": 1.0}))(z)); bts.append(b)
+    i = out.index(jk); jk = join("Top_jacket", [jk, *bts]); out[i] = jk
     col = torus("col", nr + 0.03, 0.012, "cloth_top", (0, 0.08, 1.525), scale=(1.05, 1.1, 1.0)); weighted(col, r, NW); i = out.index(jk); out[i] = join("Top_jacket", [jk, col])
     # neck pieces
     sc = torus("Neck_scarf", nr + 0.022, 0.022, "cloth_neck", (0, 0.075, 1.52), scale=(1.0, 1.1, 1.0))
@@ -863,8 +958,8 @@ def bust_field_scaled(body, s):
         return d
     return fn
 
-SHOW = {"human_male": ("Top_jacket", "Bot_pants", "Shoes_boots", "Hat_cap", "Under_bottom"),
-        "human_female": ("Top_tee", "Bot_skirt", "Shoes_sneakers", "Hat_beanie", "Under_bottom", "Under_top")}
+SHOW = {"human_male": ("Top_plate", "Neck_cape", "Bot_pants", "Shoes_boots", "Under_bottom"),
+        "human_female": ("Top_jacket", "Bot_skirt", "Shoes_sneakers", "Under_bottom", "Under_top")}
 def proof(name, r, extra):
     sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 24
     sc.render.resolution_x, sc.render.resolution_y = 520, 760
