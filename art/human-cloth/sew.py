@@ -371,7 +371,7 @@ for name, (ease, cuts) in PLAN.items():
     dtm = n.modifiers.new("dt", "DATA_TRANSFER"); dtm.object = body0; dtm.use_vert_data = True
     dtm.data_types_verts = {"VGROUP_WEIGHTS"}; dtm.vert_mapping = "POLYINTERP_NEAREST"; dtm.layers_vgroup_select_src = "ALL"; dtm.layers_vgroup_select_dst = "NAME"
     bpy.ops.object.modifier_apply(modifier="dt")
-    bpy.ops.object.mode_set(mode="WEIGHT_PAINT"); bpy.ops.object.vertex_group_smooth(group_select_mode="ALL", factor=0.5, repeat=3)
+    bpy.ops.object.mode_set(mode="WEIGHT_PAINT"); bpy.ops.object.vertex_group_smooth(group_select_mode="ALL", factor=0.15, repeat=1)
     bpy.ops.object.vertex_group_normalize_all(lock_active=False); bpy.ops.object.vertex_group_clean(group_select_mode="ALL", limit=0.01)
     bpy.ops.object.mode_set(mode="OBJECT")
     if name.startswith("Top_"):                              # underarm: the cloth bridges the pit, so arm and torso weights meet in a cliff and a raised arm splits it. blend them wide there
