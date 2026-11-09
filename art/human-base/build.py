@@ -561,6 +561,8 @@ def body_radii(body, aw, z, cy, nb=36):
 
 def ring_piece(name, body, aw, mname, z0, z1, flare, slack, cy, arc=None, rows=14, seg=40, thick=0.004):
     # a hanging cloth (skirt, dress skirt, cape, apron) as rings following the widest body below its top + flare
+    fa, fn_ = FOLDS.get(name, (0.014, 14)) if name in FOLDS or name in ("dsk", "ask") else (0.0, 0)
+    if fa: seg = max(seg, fn_ * 6 if arc else fn_ * 5); rows = max(rows, 26)
     nb = 36; prof = []; acc = None
     for j in range(rows + 1):
         z = z0 + (z1 - z0) * j / rows
@@ -569,8 +571,6 @@ def ring_piece(name, body, aw, mname, z0, z1, flare, slack, cy, arc=None, rows=1
         prof.append((z, list(acc), j / rows))
     bm = bmesh.new(); grid = []
     a0, a1 = arc if arc else (-math.pi, math.pi)
-    fa, fn_ = FOLDS.get(name, (0.014, 14)) if name in FOLDS or name in ("dsk", "ask") else (0.0, 0)
-    if fa: seg = max(seg, fn_ * 6 if arc else fn_ * 5); rows = max(rows, 26)
     closed = arc is None; ns = seg if closed else seg + 1
     for z, R, t in prof:
         row = []
