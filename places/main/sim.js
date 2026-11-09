@@ -6,7 +6,7 @@ import { MODEL as SMILER_MODEL, SCALE as SMILER_SCALE } from "../../scripts/smil
 import L from "../../scripts/lib/data/level0.yml";
 const MID = (L.hub[0] + L.hub[1]) / 2; // the safe room's centre cell
 import W, { rarityCap, rarityIdx } from "../../scripts/lib/weapons.js";
-import { spawnAlmond, spawnAmmo, spawnShells, spawnWeapon, rollWeapon, rollCash } from "../../scripts/lib/loot.js";
+import { spawnAlmond, spawnWeapon, rollWeapon, rollCash } from "../../scripts/lib/loot.js";
 import { spawnFurniture, pickKind, wallSpot0 } from "../../scripts/lib/furniture.js";
 import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ, EXIT } from "../../scripts/lib/maze.js";
 const PAPER = { texture: "/cdn/value.00a4e744acf9ab763779bbb0cc7f26fb1dd20aeafc69448c536939cd7212caeb.png", color: "oklch(0.98 0.01 90)", repeat: [1, 1] };
@@ -210,12 +210,9 @@ export function tick(ctx) {
     s.cratesSeeded = true;
     s.nextCrate = now + (W.crates.respawn * 1000);
   }
-  const shells = ctx.query({ tags: ["shells"] }).length;
-  if (shells < W.shells.floor && now >= (s.nextShells ?? 0)) {
-    const fill = s.shellsSeeded ? 1 : W.shells.floor - shells;
-    for (let i = 0; i < fill; i++) { const c = cell(ctx); if (c) spawnShells(ctx, c); }
-    s.shellsSeeded = true;
-    s.nextShells = now + (W.shells.respawn * 1000) / 4;
+  if (!s.shellsSwept) { // no loose ammo on the floors (Shelly, Nov 9: "no random shotgun shells or the likes lying on floors"): sweep what lies there, never refill
+    for (const a of ctx.query({ anyTags: ["shells", "ammo"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(a.id);
+    s.shellsSwept = true;
   }
   const lurkers = ctx.query({ tags: ["lurker"], radius: 1e5, center: { x: 0, y: 0, z: 0 } }).filter((m) => !m.state?.dead).length;
   if (lurkers < L.lurkers && now >= (s.nextLurker ?? 0)) {
