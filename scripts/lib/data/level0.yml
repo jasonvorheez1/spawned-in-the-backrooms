@@ -52,7 +52,8 @@ almondRespawn: 110
 # the lurkers: pale things that freeze while watched and rush when you look away
 lurkers: 3  # was 6
 lurkerHp: 35
-lurkerSpeed: 6.6   # lurch speed; with the stop-motion hold it averages ~6.2 m/s
+lurkerSpeed: 5.6   # her pick (was 6.6): faster than your walk, slower than your sprint (Shelly: i cant outsprint them)
+lurkerSprintCap: 0.85  # her pick: a fast lurker tops out at 85% of your sprint
 hearSprint: 16     # her pick: m a sprinting wanderer is heard through walls
 hearFight: 14      # her pick: m a swing or a smash carries
 hearGun: 34        # her pick: m a gunshot carries

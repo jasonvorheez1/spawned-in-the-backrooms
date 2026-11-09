@@ -446,8 +446,10 @@ export function update(ctx, dt) {
     let vz = 0;
     const near = way && way.cells > 0 ? 0.35 : prey ? 1.1 : 0.3;
     if (d > near) {
-      vx = ux * speed * mu.speed;
-      vz = uz * speed * mu.speed;
+      const cap = (L.sprintSpeed ?? 7.4) * (L.lurkerSprintCap ?? 0.85); // never faster than your sprint (Shelly: i cant outsprint them)
+      const sp = Math.min(speed * mu.speed, cap);
+      vx = ux * sp;
+      vz = uz * sp;
     }
 
     // Frozen under a gaze, or executing a grab
