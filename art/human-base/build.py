@@ -859,7 +859,7 @@ def dress(head, body, r, is_male, aw):
     pet = [prim(f"pt{i}", "uv_sphere", "cloth_hat", (fx - 0.02 * abs(math.cos(a)) * 0.2, H["cy"] - 0.02 + math.cos(a) * 0.016, fz + math.sin(a) * 0.016), radius=0.012, segments=10, ring_count=6, scale=(0.6, 1, 1)) for i, a in enumerate([k * 1.2566 for k in range(5)])]
     ctr = prim("fc", "uv_sphere", "gold", (fx - 0.006, H["cy"] - 0.02, fz), radius=0.008, segments=10, ring_count=6)
     add(out, join("Hat_flower", [*pet, ctr]), r, HW)
-    band = torus("Hat_headphones", 1.0, 0.012, "metal", (0, H["cy"], H["cz"]), rot=(0, math.pi / 2, 0), scale=(1, H["rx"] + O, H["rz"] + O))
+    band = torus("Hat_headphones", 1.0, 0.012, "metal", (0, H["cy"], H["cz"]), rot=(math.pi / 2, 0, 0), scale=(H["rx"] + O, H["rz"] + O, 1))  # ring in the XZ plane, ear to ear; the old Y-turn stood a 1 m hoop front-to-back
     bm = bmesh.new(); bm.from_mesh(band.data); bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.z < H["cz"] - 0.01], context="VERTS"); bm.to_mesh(band.data); bm.free()
     cups = [prim(f"cup{s}", "cylinder", "cloth_hat", (s * (H["rx"] + 0.02), H["cy"] + 0.015, H["cz"] - 0.035), rot=(0, math.pi / 2, 0), vertices=24, radius=0.04, depth=0.035) for s in (1, -1)]
     add(out, join("Hat_headphones", [band, *cups]), r, HW)
