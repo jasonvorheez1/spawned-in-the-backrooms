@@ -102,7 +102,7 @@ l26-c23-door-in:
   castShadow: false
   feetPosition: {x: 6.8, y: 0, z: -11.6}
   id: l26-c23-door-in
-  layout: {box: {max: {x: 0.5, y: 2.1, z: 0.05}, min: {x: -0.5, y: 0, z: -0.05}}}
+  layout: {box: {max: {x: 0.6, y: 2.1, z: 0.5}, min: {x: -0.6, y: 0, z: -0.5}}}
   model: {id: /cdn/value.7fffc49f5214191d16cc2948adc700d133eca1fd8656a541739d38b8a7300433.glb}
   receiveShadow: true
   rotation: {yaw: 90}
