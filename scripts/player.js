@@ -1031,7 +1031,17 @@ export function update(ctx, dt) {
   const fp = ctx.self.feetPosition, fz = zoneHere(ctx, fp.x, fp.z)
   {
     const s0 = ctx.self.state, ses = ctx.self.session; const pl = ctx.self.place
-    const hot = pl === 'level2' ? (fz === 'l2_pipes' ? 75 : fz === 'l2_hall' ? 55 : 30) : pl === 'level21' ? (fz === 'l21_edge' || fz === 'l21_edgecave' ? 0 : fz === 'l21_fridges' ? 0 : 45) : pl === 'level3' || pl === 'gamma' ? 35 : 0 // how hot each place runs, in degrees on the meter
+    const zx = fp.x, zz = fp.z, inRoom = (cx) => pl === 'level01' && Math.abs(zx - cx) < 5 && zz > -43 && zz < -35 // Zenith's failing climate rooms (Shelly, Nov 9)
+    const zHot = inRoom(7.6), zCold = inRoom(-7.6)
+    { // cold: the frozen wash room. 0..100 on player.state.cold, eased in session, written per whole degree; it thaws 6°/s outside
+      const want = zCold ? 85 : 0, c0 = ses.coldF ?? s0.cold ?? 0
+      if (want > 0 || c0 > 0) { const c = want > c0 ? Math.min(want, c0 + 3 * dt) : Math.max(0, c0 - 6 * dt); ses.coldF = c; const n = Math.round(c); if (n !== Math.round(s0.cold ?? 0)) s0.cold = n }
+    }
+    if ((zHot && (s0.heat ?? 0) >= 70) || (zCold && (s0.cold ?? 0) >= 70)) { // past 70 it bites: 2 hp every 2 s (Savi's pick)
+      const nowH = ctx.now(); if (nowH - (ses.climateHurtAt ?? 0) > 2000) { ses.climateHurtAt = nowH; s0.hp -= 2; ctx.emit('screenFlash', { color: zHot ? '#ff6a2a' : '#9fd8ff', duration: 0.3, intensity: 0.15 }, { audience: { player: ctx.self.id } }) }
+      if (nowH - (ses.climateSayAt ?? 0) > 30000) { ses.climateSayAt = nowH; s0.notice = { text: zHot ? 'The air burns your lungs. Get out of the heat.' : 'Your fingers stop working. Get out of the cold.', at: nowH } }
+    }
+    const hot = zHot ? 85 : pl === 'level2' ? (fz === 'l2_pipes' ? 75 : fz === 'l2_hall' ? 55 : 30) : pl === 'level21' ? (fz === 'l21_edge' || fz === 'l21_edgecave' ? 0 : fz === 'l21_fridges' ? 0 : 45) : pl === 'level3' || pl === 'gamma' ? 35 : 0 // how hot each place runs, in degrees on the meter
     if (hot > 0) { ses.heatF = (ses.heatF ?? s0.heat ?? 0) + Math.sign(hot - (ses.heatF ?? s0.heat ?? 0)) * Math.min(Math.abs(hot - (ses.heatF ?? s0.heat ?? 0)), 2 * dt); const n = Math.round(ses.heatF); if (n !== Math.round(s0.heat ?? 0)) s0.heat = n }
     else if ((s0.heat ?? 0) > 0 && pl !== 'level5') { ses.heatF = Math.max(0, (ses.heatF ?? s0.heat) - 5 * dt); const n = Math.round(ses.heatF); if (n !== Math.round(s0.heat)) s0.heat = n } else ses.heatF = undefined
   } // heat only lives in the Boiler Room: carried out of Level 5 it cools 5°/s (eased in session, written per whole degree)

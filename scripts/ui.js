@@ -317,6 +317,7 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
     ${s.xfer && now - (s.xfer.at ?? 0) < 9000 ? `<style>@keyframes brboot{0%{opacity:0}8%,80%{opacity:.9}100%{opacity:0;visibility:hidden}}</style><div id="brb${s.xfer.at}" style="position:fixed;left:22px;bottom:256px;font-size:11px;letter-spacing:.08em;color:oklch(0.82 0.1 85);animation:brboot 6.5s 2.4s both">&gt; HALOGEN v4.1 · vitals linked · do not remove unit · <i>we're always with you.</i></div>` : ''}
     ${bar('HP', s.hp, mh, hpF < 0.3 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.ceil(s.hp)}/${mh}`)}
     ${bar(`SAN <span style="opacity:.7">· ${sanWord}</span>`, s.sanity, ms, sanF < 0.25 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.ceil(s.sanity)}%`)}
+    ${(s.cold ?? 0) > 0 ? bar(`COLD <span style="opacity:.7">· ${s.cold >= 70 ? 'freezing' : s.cold >= 40 ? 'shivering' : 'chilly'}</span>`, s.cold, 100, s.cold >= 70 ? 'oklch(0.72 0.14 235)' : 'oklch(0.82 0.08 220)') : ''}
     ${(s.heat ?? 0) > 0 ? bar(`HEAT <span style="opacity:.7">· ${s.heat >= 70 ? 'scalding' : s.heat >= 40 ? 'sweltering' : 'warm'}</span>`, s.heat, 100, s.heat >= 70 ? 'oklch(0.66 0.22 30)' : s.heat >= 40 ? 'oklch(0.75 0.17 55)' : 'oklch(0.82 0.14 80)', `${Math.round(s.heat)}°`) : ''}
     ${compass(((player.camera?.rotation?.yaw ?? 0) % 360 + 360) % 360)}
     <div style="font-size:11px;margin-top:4px;opacity:.85">LV ${lv} · XP ${s.xp}/${L.xpBase * lv}</div>
