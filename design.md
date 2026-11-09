@@ -145,3 +145,12 @@ Optional, never forced. Story is Savi's draft. Your HALOGEN keeps flashing an ow
 - 2026-11-09: Shelly showed the female jacket spreading into a wide ring at the waist. The garment fitter was treating sleeve vertices as torso landmarks. Torso width now comes from the body trunk and the neckline follows the neck bone, with a shoulder-bound assertion and a regression check across all four body variants. Covered underwear is hidden with the corresponding skin region so it cannot protrude. Verified with lowered arms and Bust at 0.5.
 
 - 2026-11-09: Shelly requested fixes to breasts and upper fitting. Upper garments now follow a smooth chest envelope and share the body Bust deformation, with drape below the bust and a body-centred neck opening. The female underwear top covers the full bust and uses higher arm openings. Invalid bust inputs fall back to the existing default size. Body anatomy, head, rig, item slots and stats are preserved.
+
+## Main story (planning, 2026-11-09, with Shelly)
+- Tone: NV-like freedom and sequence breaks, not NV beat for beat. Player is a nobody.
+- Opening: noclip into Level 0 with nothing. Phoebe (Entity 607, not evil, playful, enigmatic) appears in the intro only, then is gone.
+- Early game (Levels 1-5): survive, small errands (Kade / B.N.T.G. flight recorder). The nobody gets pulled into faction business without choosing it.
+- Midgame: political war between factions (M.E.G., B.N.T.G., others TBD). Zenith Station (Level 0.1) proposed as a prize (Savi's pick, not confirmed).
+- The Hub: unnumbered, accessed regularly as a transit level, not the endgame (Shelly).
+- Endgame: The Mind Palace (unnumbered, Shelly's pick). Built from what the player actually met; unmet things are blank. Body lies comatose in the war outside while the player decides in their head.
+- Savi ideas awaiting Shelly: Phoebe in the Mind Palace only if the player truly met her; a minor named person from brief wikidot notes as a key figure (not found yet).
