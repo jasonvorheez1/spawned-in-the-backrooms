@@ -644,20 +644,20 @@ def dress(head, body, r, is_male, aw):
     out = []
     G = lambda *a, **k: out.append(garment(body, r, *a, **k)) or out[-1]
     TORSO = lambda f, lo, hi: f["arm"] < 0.5 and f["leg"] < 0.6 and lo < f["z"] < hi
-    NECK = lambda f, d=0.0: f["z"] < (1.495 - d if f["y"] < 0.06 else 1.525 - d)
+    NECK = lambda f, d=0.0: f["z"] < (1.53 - d if f["y"] < 0.06 else 1.555 - d)  # Nov 9: neckline up onto the neck base, no bare shoulders
     SLV = lambda f, s: f["arm"] >= 0.5 and f["t"] < s and f["hand"] < 0.4
-    hemt = 0.985
+    hemt = 1.0
     # underwear: nobody is naked by default
     if not is_male: G("Under_top", lambda f: TORSO(f, 1.27, 1.43), "under", 0.003, 0.002, cuts=(1.27, 1.43))
     G("Under_bottom", lambda f: f["arm"] < 0.3 and 0.8 < f["z"] < 1.04, "under", 0.003, 0.002, cuts=(0.8, 1.04))
     # tops
-    G("Top_tee", lambda f: (TORSO(f, hemt, 1.6) and NECK(f)) or SLV(f, 0.4), "cloth_top", 0.009, cuts=(hemt, 1.495, 1.525), armcuts=(0.4,))
+    G("Top_tee", lambda f: (TORSO(f, hemt, 1.6) and NECK(f)) or SLV(f, 0.4), "cloth_top", 0.009, cuts=(hemt, 1.53, 1.555), armcuts=(0.4,))
     G("Top_tank", lambda f: TORSO(f, hemt, 1.6) and NECK(f, 0.04) and (f["ax"] < 0.105 or f["z"] < 1.39), "cloth_top", 0.009, cuts=(hemt, 1.39, 1.455, 1.485))
-    G("Top_longsleeve", lambda f: (TORSO(f, hemt, 1.6) and NECK(f)) or SLV(f, 0.97), "cloth_top", 0.009, cuts=(hemt, 1.495, 1.525), armcuts=(0.97,))
-    G("Top_pajamas", lambda f: (TORSO(f, 0.95, 1.6) and NECK(f, 0.01)) or SLV(f, 0.95), "cloth_top", 0.011, cuts=(0.95, 1.485, 1.515), armcuts=(0.95,))
+    G("Top_longsleeve", lambda f: (TORSO(f, hemt, 1.6) and NECK(f)) or SLV(f, 0.97), "cloth_top", 0.009, cuts=(hemt, 1.53, 1.555), armcuts=(0.97,))
+    G("Top_pajamas", lambda f: (TORSO(f, 0.95, 1.6) and NECK(f, 0.01)) or SLV(f, 0.95), "cloth_top", 0.011, cuts=(0.95, 1.52, 1.545), armcuts=(0.95,))
     sw = G("Top_sweater", lambda f: (TORSO(f, 0.95, 1.6) and f["z"] < 1.56) or SLV(f, 0.97), "cloth_top", 0.013, 0.006, cuts=(0.95, 1.56), armcuts=(0.97,))
-    hd = G("Top_hoodie", lambda f: (TORSO(f, 0.95, 1.6) and NECK(f, -0.01)) or SLV(f, 0.98), "cloth_top", 0.015, 0.006, cuts=(0.95, 1.505, 1.535), armcuts=(0.98,))
-    jk = G("Top_jacket", lambda f: (TORSO(f, 0.95, 1.6) and NECK(f, -0.01)) or SLV(f, 0.96), "cloth_top", 0.02, 0.006, cuts=(0.95, 1.505, 1.535), armcuts=(0.96,))
+    hd = G("Top_hoodie", lambda f: (TORSO(f, 0.95, 1.6) and NECK(f, -0.01)) or SLV(f, 0.98), "cloth_top", 0.015, 0.006, cuts=(0.95, 1.54, 1.565), armcuts=(0.98,))
+    jk = G("Top_jacket", lambda f: (TORSO(f, 0.95, 1.6) and NECK(f, -0.01)) or SLV(f, 0.96), "cloth_top", 0.02, 0.006, cuts=(0.95, 1.54, 1.565), armcuts=(0.96,))
     dr = G("Top_dress", lambda f: (TORSO(f, 0.92, 1.6) and NECK(f, 0.02) and (f["ax"] < 0.11 or f["z"] < 1.41)), "cloth_top", 0.009, cuts=(0.92, 1.41, 1.475, 1.505))
     ap = G("Top_apron", lambda f: TORSO(f, 0.92, 1.42) and f["y"] < 0.075 and f["ax"] < 0.12, "cloth_top", 0.017, cuts=(0.92, 1.42))
     # bottoms
@@ -674,8 +674,8 @@ def dress(head, body, r, is_male, aw):
     G("Shoes_slippers", lambda f: FOOT(f, 0.075), "cloth_shoes", 0.01, 0.01, cuts=(0.075,))
     # hanging cloth: skirts, the dress's skirt, apron bib's skirt, cape
     cy = 0.1
-    add(out, ring_piece("Bot_skirt", body, aw, "cloth_bottom", 0.97, 0.6, 0.07, 0.012, cy), r, skirt_w(0.97, 0.6))
-    add(out, ring_piece("Bot_longskirt", body, aw, "cloth_bottom", 0.97, 0.16, 0.13, 0.012, cy, rows=20), r, skirt_w(0.97, 0.16))
+    add(out, ring_piece("Bot_skirt", body, aw, "cloth_bottom", 1.05, 0.62, 0.08, 0.012, cy), r, skirt_w(1.05, 0.62))
+    add(out, ring_piece("Bot_longskirt", body, aw, "cloth_bottom", 1.05, 0.16, 0.13, 0.012, cy, rows=20), r, skirt_w(1.05, 0.16))
     dsk = ring_piece("dsk", body, aw, "cloth_top", 0.94, 0.52, 0.1, 0.017, cy)
     weighted(dsk, r, skirt_w(0.94, 0.52)); dr = join("Top_dress", [dr, dsk]); out[out.index(next(o for o in out if o.name.startswith("Top_dress")))] = dr
     ask = ring_piece("ask", body, aw, "cloth_top", 0.95, 0.5, 0.05, 0.022, cy, arc=(-math.pi * 0.86, -math.pi * 0.14), rows=12, seg=20)
