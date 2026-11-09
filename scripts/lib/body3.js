@@ -9,8 +9,8 @@ const RAD = Math.PI / 180
 const FAM = {}
 for (const [f, ks] of Object.entries(CA.families ?? {})) for (const k of ks) FAM[k] = f
 // which family a weapon plays: the table first, then what the weapon is (ranged two-handed = long gun)
-// a long gun's mesh runs along its own +Z; in the Mixamo right hand that is turned level along the fingers
-export const heldRot = (kind) => famOf(kind) === 'long' ? { rotation: { pitch: -90 } } : {}
+// every held weapon's shaft runs along its own +Y from the grip, which is the Mixamo hand's finger axis: no turn needed (kept for callers)
+export const heldRot = (kind) => ({})
 export function famOf(kind) {
   const base = baseOf(kind ?? 'fists'), wp = W[kind] ?? W[base] ?? {}
   if (FAM[base]) return FAM[base]
@@ -90,10 +90,10 @@ export function longHands(me, held, yaw, pitch, aiming, crouch, len = 0.62) {
   const pc = aiming ? pitch : -0.5, c = Math.cos(pc), sn = Math.sin(pc)
   const at = (fwd, side, up) => ({ x: p.x + f.x * c * fwd + r.x * side, y: y0 + sn * fwd + up, z: p.z + f.z * c * fwd + r.z * side })
   const R = aiming ? at(0.3, 0.13, -0.04) : at(0.26, 0.2, -0.32)
-  const L = held ? { object: held, offset: { x: 0, y: 0, z: len * 0.8 } } : (aiming ? at(0.3 + len, 0.0, -0.06) : at(0.26 + len * 0.8, 0.02, -0.32))
+  const L = aiming ? at(0.3 + len, 0.0, -0.06) : at(0.26 + len * 0.8, 0.02, -0.32)
   const pole = { x: p.x - r.x * 0.6, y: y0 - 0.6, z: p.z - r.z * 0.6 }
   // aiming, the pistol-stance clip already squares the right hand along the look; only the left hand is solved, onto the foregrip
-  return { RightHand: { reach: aiming ? null : { to: R, blendIn: 0.15, blendOut: 0.25 } }, LeftHand: { reach: { to: L, pole, blendIn: 0.18, blendOut: 0.25 } } }
+  return { RightHand: { reach: aiming ? null : { to: R, blendIn: 0.15, blendOut: 0.25 } }, LeftHand: { reach: held ? { object: held, offset: { x: 0, y: len * 0.85, z: 0 }, pole, blendIn: 0.18, blendOut: 0.25 } : { to: L, pole, blendIn: 0.18, blendOut: 0.25 } } }
 }
 
 const pitchOf = (cam) => { let p = cam?.pitch ?? 0; if (Math.abs(p) > 1.6) p *= RAD; return p }
