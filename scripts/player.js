@@ -603,7 +603,7 @@ function startReload(ctx) {
   if ((s['loaded_' + k] ?? 0) >= wp.magSize || (s[wp.ammoType ?? 'ammo'] ?? 0) <= 0) return
   const tok = (s.reloadTok ?? 0) + 1
   s.reloadTok = tok; s.reloadAt = ctx.now() // the token lives in state, so a page reload or a machine change never strands a reload
-  s.reloading = k; s.ads = false
+  s.reloading = k; s.ads = false; s.reloadDur = (wp.reloadTime ?? 1.7) * derived(s).reload // the viewmodel plays its timeline over the real length
   if (wp.pellets || wp.tube) ctx.after(wp.reloadStart ?? 0.4, 'reloadStep', { k, tok }) // a shell, or a cartridge into a tube or box magazine, one at a time
   else {
     sound(ctx, 'pistol-magazine-eject-click', 0.6, true)

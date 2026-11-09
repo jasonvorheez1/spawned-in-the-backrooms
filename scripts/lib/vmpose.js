@@ -220,7 +220,7 @@ export function poseViewmodel(ctx, dt) {
       if (ph < 0) { const k = ease(Math.max(0, m.relT / start)); for (let i = 0; i < 6; i++) SAMPLE_BUF[i] = SHOTGUN_LOAD[i] * k; target = SAMPLE_BUF; rate = 14 }
       else { const c = sample(SHELL_CYCLE, ph - Math.floor(ph), PUMP_BUF); for (let i = 0; i < 6; i++) SAMPLE_BUF[i] = SHOTGUN_LOAD[i] + c[i]; target = SAMPLE_BUF; rate = 22 }
     }
-    else { target = sample(m.relEmpty ? PISTOL_RELOAD_EMPTY : PISTOL_RELOAD, m.relT / (wp.reloadTime ?? 1.7), SAMPLE_BUF); rate = 30 }
+    else { target = sample(m.relEmpty ? PISTOL_RELOAD_EMPTY : PISTOL_RELOAD, m.relT / (ps.reloadDur || wp.reloadTime || 1.7), SAMPLE_BUF); rate = 30 }
   }
   const fr = Math.min(1, dt * rate)
   for (let i = 0; i < 6; i++) m.off[i] += (target[i] - m.off[i]) * fr
@@ -333,7 +333,7 @@ function partsPose(ctx, ps, kind, dt, m) {
   let back = m.shotT < 0.03 ? m.shotT / 0.03 : Math.max(0, 1 - (m.shotT - 0.03) / 0.07) // 10 cm/s snap back, spring home
   let magDown = 0, magHide = false
   if (m.relOn) {
-    const t = m.relT / ((W[kind] ?? {}).reloadTime ?? 1.7)
+    const t = m.relT / (ps.reloadDur || (W[kind] ?? {}).reloadTime || 1.7)
     if (t > 0.17 && t < 0.3) magDown = (t - 0.17) / 0.13
     else if (t >= 0.3 && t < 0.48) { magDown = 1; magHide = true }
     else if (t >= 0.48 && t < 0.56) magDown = 1 - (t - 0.48) / 0.08
