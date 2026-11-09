@@ -101,6 +101,7 @@ export function tick(ctx) {
   if ((s.rev ?? 0) >= 4 && (s.snapped ?? 0) < 1) { snapContainers(ctx); s.snapped = 1; }
   if (STAIR && (s.rev ?? 0) >= 4 && !s.stairV) sideRoom(ctx, STAIR); // rooms that were laid before the stairwell existed get it now
   if (s.seeded && (s.rev ?? 0) >= 4 && s.propsV !== 2) reprop(ctx, s); // rooms dressed before the Tripo props: re-dress them once
+  if ((s.rev ?? 0) >= 4 && s.fixV !== 1) { s.fixV = 1; fixtures(ctx); } // the modelled fixtures (art/level2/fixtures.py) take over the old box/sphere lamps, slicks and stair in place
   if ((s.rev ?? 0) < 4) revamp(ctx, s); // the revamp lays itself over a few ticks: rooms, doors, the hall, vents
   if (s.sludgeV !== 1) { s.sludgeV = 1; laySludge2(ctx); }
   if (s.graffitiV !== 1) { s.graffitiV = 1; layGraffiti2(ctx); }
@@ -365,4 +366,35 @@ function reprop(ctx, s) {
     if (k === "sphere" && o.primitive.radius === 0.08 && o.light) { const p = o.feetPosition; ctx.destroy(o.id); ctx.spawn({ ...campLantern(), feetPosition: { x: p.x, y: p.y - 0.17, z: p.z } }); }
     else if (k === "cylinder" && o.primitive.radiusTop === 0.12 && o.fx) { const p = o.feetPosition, fx = o.fx; ctx.destroy(o.id); ctx.spawn({ ...campStove(), feetPosition: p, fx }); } }
   s.propsV = 2; delete s.propsStep;
+}
+
+// Modelled fixtures (art/level2/fixtures.py). Swaps each old primitive in place: ids, tags, lights, fx, audio and colliders stay.
+const FIX = {
+  tube: "/cdn/value.2a244e0ca690f287ea88e0bfaf9cbdde6dc9a3154e33b637e00aed500562d340.glb",    // twin-T8 batten, origin top of body, hanger rods 0.245 m up
+  cage: "/cdn/value.b201791a75f305bd8da544a2a461e20ae5579553e5ae54f4e25b372aa3ed2bb0.glb",    // caged bulkhead, origin at its ceiling base, hangs 0.2 m
+  pendant: "/cdn/value.65225b5a9c36531dd8ad538ee2b29cb342bd1b60421dd0f9ad00883e29367128.glb", // enamel high-bay, origin at the ceiling, 1.0 m drop
+  sludge: "/cdn/value.ec6c30896b81cc9609dc193653fec102fb68e369f802a75ac5e60c4255b239ba.glb",  // domed black slick, origin on the floor
+  stair: "/cdn/value.2fc266851ba0826982af9d80d704e390d10316e214b0ce362a851ee748c3aae4.glb",   // 13-step cast flight, origin = step 0 centre, climbs -Z
+};
+const glow = (col, k = 3) => ({ color: col, emissive: col, emissiveIntensity: k });
+function fixtures(ctx) {
+  const all = { radius: 1e5, center: { x: 0, y: 0, z: 0 } };
+  for (const row of ctx.query(all)) {
+    const o = ctx.getObject(row.id), k = o?.primitive?.kind; if (!o || !k || o.model) continue;
+    const p = o.feetPosition, t = row.tags ?? [];
+    if (t.includes("l2lamp") && k === "box") { const col = o.material?.emissive ?? "oklch(0.95 0.02 200)";
+      o.feetPosition = { x: p.x, y: H - 0.245, z: p.z }; o.model = { id: FIX.tube, materials: { tube: glow(col, 2.4) } }; o.primitive = null; }
+    else if (t.includes("l2violet") && k === "box") { o.feetPosition = { x: p.x, y: H, z: p.z }; o.model = { id: FIX.cage, materials: { glass: glow("oklch(0.55 0.26 300)", 2.5) } }; o.primitive = null; }
+    else if (t.includes("l2sludge") && k === "circle") { o.rotation = { yaw: (p.x * 37 + p.z * 11) % 360 }; o.feetPosition = { x: p.x, y: 0.002, z: p.z }; o.model = { id: FIX.sludge }; o.primitive = null; o.material = null; }
+    else if (k === "sphere" && o.primitive.radius === 0.07 && !o.id.startsWith("l2-sd-") && o.material?.emissive) { const col = o.material.emissive;
+      o.feetPosition = { x: p.x, y: p.y + 0.2, z: p.z }; o.model = { id: FIX.cage, materials: { glass: glow(col, 3) } }; o.primitive = null; o.material = null; }
+    else if (k === "cylinder" && o.primitive.radiusTop === 0.15 && o.primitive.radiusBottom === 0.35 && o.light) { o.feetPosition = { x: p.x, y: p.y + 0.6, z: p.z }; o.model = { id: FIX.pendant, materials: { glass: glow("oklch(0.85 0.14 65)", 2.5) } }; o.primitive = null; o.material = null; }
+  }
+  const s0 = ctx.getObject("l2-stair-0");
+  if (s0 && !ctx.getObject("l2-stair-flight")) {
+    const yaw = (s0.rotation?.yaw ?? 0) + 180; // the steps climb along their own +Z; the flight climbs along -Z
+    ctx.spawn("l2-stair-flight", { feetPosition: { ...s0.feetPosition }, rotation: { yaw }, visibleRange: { max: 45 }, castShadow: false, receiveShadow: true,
+      model: { id: FIX.stair, materials: { concrete: { texture: "cdn/texture-worn-poured-concrete-stair-tread.png", wrap: "repeat", repeat: [1.5, 1.5], color: "oklch(0.92 0.01 80)", roughness: 0.9 } } } });
+    for (let i = 0; i < 13; i++) { const b = ctx.getObject(`l2-stair-${i}`); if (b) b.visible = false; const n = ctx.getObject(`l2-sd-nose-${i}`); if (n) n.visible = false; } // the boxes stay as the walkable colliders
+  }
 }
