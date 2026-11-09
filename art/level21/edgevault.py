@@ -4,7 +4,7 @@
 import bpy, bmesh, math, os, sys
 from mathutils import Vector, noise
 L = 9.0; OUT = "/workspace/out"; os.makedirs(OUT, exist_ok=True)
-PROF = [(-0.25, -0.05), (0.35, 0.0), (0.7, 0.7), (0.95, 1.6), (0.85, 2.5), (1.15, 3.25), (1.9, 3.95), (2.9, 4.38), (4.0, 4.56), (5.0, 4.64)]  # (offset into the tunnel, height)
+PROF = [(-0.25, -0.05), (0.35, 0.0), (0.7, 0.7), (0.95, 1.6), (0.85, 2.5), (1.15, 3.25), (1.9, 3.95), (2.9, 4.3), (4.0, 4.5), (5.2, 4.66), (6.4, 4.8)]  # (offset into the tunnel, height)
 
 def prof(t):  # catmull-rom along the profile, t in 0..1
     n = len(PROF) - 1; f = t * n; i = min(int(f), n - 1); u = f - i
@@ -26,7 +26,7 @@ def build(v, seed):
             ridge = abs(noise.noise(Vector((P.x * 0.7, P.y * 0.7, P.z * 2.6)))) * -0.12  # horizontal drill-blast ledges
             fine = noise.noise(P * 4.0) * 0.03
             fade = min(1.0, t / 0.08) * min(1.0, (1 - t) / 0.12)
-            d = (big + mid + ridge + fine) * fade
+            d = (big * (1 - 0.55 * t) + mid + ridge + fine) * fade
             off = p.x + nrm2.x * d; h = p.y + nrm2.y * d
             row.append(bm.verts.new((x, -off, h))); disp.append(d)
         grid.append(row)
@@ -38,8 +38,8 @@ def build(v, seed):
     col = me.color_attributes.new("Col", "FLOAT_COLOR", "POINT")
     for k, vt in enumerate(me.vertices):
         d = disp[k]; z = vt.co.z; m = noise.noise(vt.co * 1.7 + Vector((seed, 0, 0)))
-        g = 0.47 + d * 0.45 + m * 0.05 + min(z, 1.2) * 0.03; g = max(0.18, min(0.66, g))
-        col.data[k].color = (g * 0.98, g, g * 1.03, 1)
+        g = 0.3 + d * 0.35 + m * 0.04 + min(z, 1.2) * 0.02; g = max(0.12, min(0.42, g))
+        col.data[k].color = (g * 0.96, g, g * 1.06, 1)
     for f in me.polygons: f.use_smooth = True
     # make sure faces look into the tunnel (-Y)
     if sum(p.normal.y for p in me.polygons) > 0:
@@ -48,7 +48,7 @@ def build(v, seed):
     vc = nt.nodes.new("ShaderNodeVertexColor"); vc.layer_name = "Col"; nt.links.new(vc.outputs["Color"], bsdf.inputs["Base Color"])
     bsdf.inputs["Roughness"].default_value = 0.93; ob.data.materials.append(mat)
     bpy.ops.object.select_all(action="DESELECT"); ob.select_set(True); bpy.context.view_layer.objects.active = ob
-    bpy.ops.export_scene.gltf(filepath=f"{OUT}/edgevault_{v}.glb", use_selection=True, export_apply=True)
+    bpy.ops.export_scene.gltf(filepath=f"{OUT}/edgevault2_{v}.glb", use_selection=True, export_apply=True)
     return ob
 
 for v, s in (("a", 1), ("b", 2)): ob = build(v, s)
