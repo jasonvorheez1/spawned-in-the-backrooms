@@ -1,4 +1,4 @@
-# almond water bottle, lightened: 14.5k tris -> ~1.2k, textures to 512 (lagscope: 45 copies carried 63% of nearby tris)
+# almond water bottle, lightened: 14.5k tris -> ~3k, textures to 512 (lagscope: 45 copies carried 63% of nearby tris)
 import bpy, math
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath="/workspace/art/almond-lod/src.glb")
@@ -16,7 +16,7 @@ tot=0
 for o in list(bpy.context.scene.objects):
     if o.type=='MESH':
         n=sum(len(p.vertices)-2 for p in o.data.polygons)
-        m=o.modifiers.new("d",'DECIMATE'); m.ratio=min(1.0,1200/max(n,1))
+        m=o.modifiers.new("d",'DECIMATE'); m.ratio=min(1.0,3000/max(n,1))
         bpy.context.view_layer.objects.active=o; bpy.ops.object.modifier_apply(modifier="d")
         for p in o.data.polygons: p.use_smooth=True
         tot+=sum(len(p.vertices)-2 for p in o.data.polygons)
