@@ -202,7 +202,7 @@ for o in bpy.data.objects:
             c = f.calc_center_median()
             if c.z > HEM + 0.02: continue
             x, y = c.x, c.y - cy; r = math.hypot(x, y)
-            if r < 0.5 * rowAt(c.z)[ak(x, y)] or (abs(c.x) < 0.11 and c.z < CROTCH + 0.035): inner.append(f)  # the flap between the legs goes as one straight cut just over the crotch; the r test alone (0.9) split the belly open, and nothing left a bow knotted at the fly
+            if r < 0.5 * rowAt(c.z)[ak(x, y)] and c.z < CROTCH + 0.02: inner.append(f)  # the flap between the legs goes as one straight cut just over the crotch; the r test alone (0.9) split the belly open, and nothing left a bow knotted at the fly
         bmesh.ops.delete(bm, geom=inner, context="FACES_ONLY")
         # the cut leaves teeth: faces hanging by one edge go, then the hem's edge loop is eased level so it reads as a sewn hem
         for _ in range(4):
