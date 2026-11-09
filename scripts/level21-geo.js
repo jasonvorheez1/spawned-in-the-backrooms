@@ -217,9 +217,9 @@ export function geometry(ctx) {
       }
       if (laneCell(cx, cz) && cz === LANE.z0) { // the photo's rock: the left wall rolls over into a rough rock haunch where it meets the roof
         const zl = c.z - S / 2; ctx.albedo(null); ctx.metalness(0); ctx.roughness(0.95); ctx.color("oklch(0.6 0.012 240)");
-        tube(ctx, [[c.x - 0.3, h - 0.35, zl + 0.5], [c.x + S / 2, h - 0.45, zl + 0.65], [c.x + S + 0.3, h - 0.35, zl + 0.5]], [1.7, 1.9, 1.7], 14, [1, 0.7], 0.22, cx * 7 + 3, 3);
+        tube(ctx, [[c.x - 0.3, h - 0.25, zl + 2.3], [c.x + S / 2, h - 0.35, zl + 2.5], [c.x + S + 0.3, h - 0.25, zl + 2.3]], [1.6, 1.8, 1.6], 14, [1, 0.6], 0.22, cx * 7 + 3, 3);
         ctx.color("oklch(0.52 0.01 240)");
-        tube(ctx, [[c.x - 0.3, h - 0.05, zl + 2.2], [c.x + S + 0.3, h - 0.05, zl + 2.4]], [0.9, 0.9], 12, [1, 0.45], 0.25, cx * 7 + 5, 3);
+        tube(ctx, [[c.x - 0.3, h + 0.05, zl + 4.0], [c.x + S + 0.3, h + 0.05, zl + 4.2]], [0.9, 0.9], 12, [1, 0.4], 0.25, cx * 7 + 5, 3);
         ctx.color("oklch(0.72 0.01 230)"); ctx.metalness(0.72); ctx.roughness(0.38);
       }
       if (laneCell(cx, cz) && cz === LANE.z0 + LANE.d - 1 && !isOpen(cx, cz, 1)) { // the photo's right wall: a steel cabinet, a small window, a wall ladder, an electrical box with conduit
