@@ -524,7 +524,7 @@ def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=(), 
     gi = {g.index: g.name for g in o.vertex_groups}
     for v in bm.verts:  # the shoulder's blend band: linear skinning shrinks an offset where arm and torso rotations mix, so the skin poked through a lowered sleeve; give that band more room
         wa = sum(x for g, x in v[dl].items() if gi[g] in ("LeftArm", "RightArm"))
-        v.co += v.normal * (push + 0.012 * max(0.0, 1 - abs(2 * wa - 1)) * max(0.0, v.normal.z))  # the cap only: an underarm push tore the sleeve's seam
+        v.co += v.normal * (push + 0.012 * max(0.0, 1 - abs(2 * wa - 1)) + 0.006 * min(1.0, wa))  # the upper arm's back showed skin through the sleeve
     bm.to_mesh(o.data); bm.free()
     o.data.materials.clear(); o.data.materials.append(MATS[mname])
     if thick:
