@@ -199,6 +199,24 @@ for name, (ease, cuts) in PLAN.items():
     big = max(len(c) for c in comps)
     for c in comps:
         if len(c) < big * 0.03: bmesh.ops.delete(bm, geom=c, context="VERTS")
+    # folds (the armpit crush): faces flipped against their neighbours get relaxed flat, then held outside the skin
+    for it in range(3):
+        bm.normal_update()
+        bad = set()
+        for e in bm.edges:
+            if len(e.link_faces) == 2 and e.link_faces[0].normal.dot(e.link_faces[1].normal) < 0.2: bad.update(e.verts)
+        if not bad: break
+        for _ in range(3): bad |= {e.other_vert(v) for v in list(bad) for e in v.link_edges}
+        for _ in range(10):
+            new = {}
+            for v in bad:
+                nb = [e.other_vert(v) for e in v.link_edges]
+                if v.is_boundary: nb = [w for w in nb if w.is_boundary] or nb
+                new[v] = sum((w.co for w in nb), Vector()) / len(nb)
+            for v, c in new.items(): v.co = c
+        for v in bad:
+            co, nn, fi, d = bvhW.find_nearest(v.co); out = (v.co - co).dot(nn)
+            if out < 0.005: v.co = v.co + nn * (0.005 - out)
     # rolled edge: boundary loops nudged outward and slightly in, so hems read as turned cloth
     bm.normal_update()
     for v in [v for v in bm.verts if v.is_boundary]: v.co += v.normal * 0.0015
