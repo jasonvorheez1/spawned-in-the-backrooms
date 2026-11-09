@@ -159,6 +159,7 @@ export function humanMorph(l) {
   const a = T[Math.floor(u() * T.length)], b = T[Math.floor(u() * T.length)]
   o[a] = Math.round((0.6 + u() * 0.4) * 100) / 100; if (b !== a) o[b] = Math.round(u() * 0.35 * 100) / 100
   if (o.HT_Long > 0.4) o.FaceLong *= 0.4; if (o.HT_Round > 0.4) o.HeadRound *= 0.4 // no doubled stretch
+  o.HeadRound = Math.round(o.HeadRound * 0.4 * 100) / 100; o.CheekFull = Math.round(o.CheekFull * 0.45 * 100) / 100; if (o.HT_Broad) o.HT_Broad = Math.round(o.HT_Broad * 0.45 * 100) / 100; if (o.HT_Round) o.HT_Round = Math.round(o.HT_Round * 0.6 * 100) / 100; if (o.JawWide) o.JawWide = Math.min(o.JawWide, m ? 0.6 : 0.2) // human proportions: no wide, round critter skulls
   return o // the human bodies carry no Bust key: their curves are built into the female mesh
 }
 export function bodyModel(l) {
