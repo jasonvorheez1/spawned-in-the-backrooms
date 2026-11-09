@@ -7,6 +7,7 @@ export { m3dPvDown, m3dPvWheel, m3dPvReset, m3dPvTool, m3dPvDraft, m3dPvEdit, m3
 import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
 import { ZONE_NAMES } from './lib/maze.js'
+import { questMark, yawTo } from './lib/quest-mark.js'
 import { wardrobe } from './wardrobe-ui.js'
 import { salon } from './salon-ui.js'
 import { mainMenu } from './main-menu-ui.js'
@@ -99,6 +100,13 @@ function compass(yaw) {
   const res = `<div class="cmp"><i></i>${h}</div>`
   COMPASS_CACHE[y] = res
   return res
+}
+// the objective's pip on the compass: inside the strip it slides with your view, past its edge it pins there as an arrow
+function questPip(ctx, player, yaw) {
+  const t = questMark(ctx, player), p = player.feetPosition; if (!t || !p) return ''
+  const o = ((Math.round(yawTo(p, t)) - Math.round(yaw)) % 360 + 540) % 360 - 180, a = Math.abs(o)
+  const x = a < 75 ? 50 + o / 75 * 50 : (o < 0 ? 0 : 100), edge = a >= 75
+  return `<div style="position:absolute;left:28px;width:300px;bottom:6px;height:22px;pointer-events:none"><div style="position:absolute;left:${x}%;top:-9px;transform:translateX(-50%);color:#ffc44d;font-size:${edge ? 13 : 12}px;text-shadow:0 0 6px #ffb040,0 1px 2px #000">${edge ? (o < 0 ? '◀' : '▶') : '◆'}</div></div>`
 }
 
 const CND_CACHE = { key: '', html: '' }
@@ -320,6 +328,7 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
     ${(s.cold ?? 0) > 0 ? bar(`COLD <span style="opacity:.7">· ${s.cold >= 70 ? 'freezing' : s.cold >= 40 ? 'shivering' : 'chilly'}</span>`, s.cold, 100, s.cold >= 70 ? 'oklch(0.72 0.14 235)' : 'oklch(0.82 0.08 220)') : ''}
     ${(s.heat ?? 0) > 0 ? bar(`HEAT <span style="opacity:.7">· ${s.heat >= 70 ? 'scalding' : s.heat >= 40 ? 'sweltering' : 'warm'}</span>`, s.heat, 100, s.heat >= 70 ? 'oklch(0.66 0.22 30)' : s.heat >= 40 ? 'oklch(0.75 0.17 55)' : 'oklch(0.82 0.14 80)', `${Math.round(s.heat)}°`) : ''}
     ${compass(((player.camera?.rotation?.yaw ?? 0) % 360 + 360) % 360)}
+    ${questPip(ctx, player, ((player.camera?.rotation?.yaw ?? 0) % 360 + 360) % 360)}
     <div style="font-size:11px;margin-top:4px;opacity:.85">LV ${lv} · XP ${s.xp}/${L.xpBase * lv}</div>
   </div>
 
