@@ -134,14 +134,14 @@ function driveBay(ctx) {
     ] });
 }
 // modeled furniture (art/zfurn/build.py) over the kit's code-shape desks and chairs; ids, breakable state and colliders kept
-const FURNV = 3;
+const FURNV = 4;
 const FURN = {
   desk: { id: "/cdn/value.e3215f58bcdde6d876cea7966507245a59de5ecef0103689e913a695d05207f6.glb", forward: "+z" },
   chair: { id: "/cdn/value.ae5e296c6ba88216876102ddfc99d58c663b522c6cc4fe32321f3718ab60cee1.glb", forward: "+z" },
   locker: { id: "/cdn/value.29ec98b54befe86ea8ee16b78be156c08419c5e5c78259a6e16b895e71d47404.glb", forward: "+z", offset: [0, 0, -0.25] },
   rack: { id: "/cdn/value.0feb94aed216f72bcd2e7a4bea3f75143041feb7122e58b511dddcb56490c99c.glb", forward: "+z" },
   labbench: { id: "/cdn/value.2c02c22663991e744f9c29c21ba8fca7ab09529b1df91b1313be88d4c05b97ec.glb", forward: "+z" },
-  pod: { id: "/cdn/value.4cdb00ae0fcc6bdfb9e39fe40017283699d22b0a49cf125a53d6c2a51c9fe01e.glb", forward: "+z", offset: [0, 0, -0.04] },
+  pod: { id: "/cdn/value.4cdb00ae0fcc6bdfb9e39fe40017283699d22b0a49cf125a53d6c2a51c9fe01e.glb", forward: "-z", offset: [0, 0, 0.04] },
 };
 const LOCKER4 = "/cdn/value.b513967746ce4201f7b4fcaff0b615fd6923554b07d2053bcb65d6d69a7e4689.glb";
 function furnModel(kind, p) {
