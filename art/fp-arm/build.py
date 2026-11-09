@@ -48,6 +48,7 @@ def build(sex, side):
             u = t - k; th = min(u / R_CURL, math.radians(235)); rho = R_CURL + h
             nt = k + rho * math.sin(th); nh = -R_CURL + rho * math.cos(th)
             P[i] = (W + a * nt + n * nh + s * l,) + P[i][1:]
+    print('moved', sum(1 for i in P if (P[i][0] - mw @ me.vertices[i].co).length > 1e-4), 'of', len(P), 'k', round(k,3))
     for i, q in P.items(): me.vertices[i].co = mw.inverted() @ q[0]
     import bmesh
     bm = bmesh.new(); bm.from_mesh(me)
