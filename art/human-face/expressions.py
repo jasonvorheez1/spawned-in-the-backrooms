@@ -54,67 +54,79 @@ iris_kd = kdtree.KDTree(len(IRIS)); ilist = list(IRIS)
 for i, v in enumerate(ilist): iris_kd.insert(Vector((W(v).x, 0, W(v).z)), i)
 iris_kd.balance()
 
-# --- lids: a copy of each eye-white island in the skin slot, folded up behind the lash at rest
-skin_uv = None; ec = sum((W(v) for v in EYE), Vector()) / len(EYE)
-best = 1e9
+# --- lids: a clean skin-slot grid patch per eye, folded flat behind the upper lash at rest, drawn down over the eye on X_Blink/X_Squint
+skin_uv = None; ec = sum((W(v) for v in EYE), Vector()) / len(EYE); best = 1e9
 for f in bm.faces:
     if f.material_index != SK: continue
     for l in f.loops:
         p = W(l.vert); d = abs(p.x - (ec.x + 0.05)) + abs(p.z - (ec.z + 0.04)) + abs(p.y + 0.0)
         if d < best: best, skin_uv = d, l[uvl].uv.copy()
-lid_src = {}
-eye_faces = [f for f in bm.faces if f.material_index == mats.index("Eye")]
-vmap = {}
-for v in EYE:
-    nv = bm.verts.new(v.co); vmap[v] = nv; lid_src[nv] = v
-    for k, L in keyl.items(): nv[L] = v[L].copy()
-    if dl: nv[dl] = v[dl]
-for f in eye_faces:
-    try:
-        nf = bm.faces.new([vmap[v] for v in f.verts]); nf.material_index = SK; nf.smooth = f.smooth
-        for l in nf.loops: l[uvl].uv = skin_uv
-    except ValueError: pass
+front = list(EYE | IRIS); fkd = kdtree.KDTree(len(front))
+for i, v in enumerate(front): fkd.insert(Vector((W(v).x, 0, W(v).z)), i)
+fkd.balance()
+def front_y(x, z):
+    hits = fkd.find_range(Vector((x, 0, z)), 0.006) or [fkd.find(Vector((x, 0, z)))]
+    return min(W(front[h[1]]).y for h in hits)
+def nearest_eye(x, z):
+    return front[fkd.find(Vector((x, 0, z)))[1]]
+C, R = 14, 7
+lids = []  # (vert, side, x, row)
+for s in (1, -1):
+    top, bot, x0, x1 = sides[s]; m = 0.0012
+    grid = []
+    for j in range(R):
+        row = []
+        for i in range(C):
+            x = (x0 - m) + (x1 - x0 + 2 * m) * i / (C - 1)
+            nv = bm.verts.new((0, 0, 0)); e = nearest_eye(x, top(x))
+            if dl: nv[dl] = e[dl]
+            row.append(nv); lids.append((nv, s, x, j, e))
+        grid.append(row)
+    for j in range(R - 1):
+        for i in range(C - 1):
+            q = [grid[j][i], grid[j][i + 1], grid[j + 1][i + 1], grid[j + 1][i]]
+            if s < 0: q.reverse()
+            f = bm.faces.new(q); f.material_index = SK; f.smooth = True
+            for l in f.loops: l[uvl].uv = skin_uv
+def lid_pos(s, x, j, frac):
+    top, bot, x0, x1 = sides[s]; xc = min(max(x, x0), x1)
+    t, b = top(xc) + 0.0006, bot(xc)
+    if frac <= 0: return Vector((x, front_y(xc, t) + 0.006, t - 0.0004 * j))
+    z = t - (t - b + 0.0012) * frac * j / (R - 1)
+    return Vector((x, front_y(xc, z) - 0.0016 - 0.0008 * math.sin(math.pi * j / (R - 1)), z))
+for nv, s, x, j, e in lids:
+    rest = lid_pos(s, x, j, 0)
+    for k, L in keyl.items():
+        nv[L] = (MW.inverted() @ rest) + (e[L] - e[basisL])
 bm.normal_update()
-
 def addkey(name):
     return keyl[name]
 def put(L, v, dw):  # dw: world-space offset from basis
     v[L] = v[basisL] + MI @ dw
-
-# rest: lids folded to the top contour, pushed into the socket (all existing keys follow their eye vertex)
-for nv, e in lid_src.items():
-    p = W(e); top = sides[1 if p.x > 0 else -1][0](p.x)
-    rest = Vector((p.x, p.y + 0.004, top - 0.0008))
-    for k, L in keyl.items(): nv[L] = MI @ (rest - MW.translation) + (e[L] - e[basisL]) if False else (MW.inverted() @ rest) + (e[L] - e[basisL])
-def lid_closed(e, frac):
-    p = W(e); s = 1 if p.x > 0 else -1; top = sides[s][0](p.x); bot = sides[s][1](p.x)
-    i = iris_kd.find(Vector((p.x, 0, p.z))); iy = W(ilist[i[1]]).y if i[2] < 0.004 else p.y
-    zt = top - (top - p.z) * frac if frac < 1 else p.z
-    return Vector((p.x, min(p.y, iy) - 0.0022, zt)), top, bot
-for name, frac, lashk in (("X_Blink", 1.0, 0.86), ("X_Squint", 0.5, 0.42)):
+for name, frac in (("X_Blink", 1.0), ("X_Squint", 0.45)):
     L = addkey(name)
-    for nv, e in lid_src.items():
-        q, _, _ = lid_closed(e, frac); put(L, nv, q - W(nv))
+    for nv, s, x, j, e in lids:
+        put(L, nv, lid_pos(s, x, j, frac) - lid_pos(s, x, j, 0))
     for v in LASH:
-        p = W(v); s = 1 if p.x > 0 else -1; x0, x1 = sides[s][2], sides[s][3]; cx = (x0 + x1) / 2; hw = (x1 - x0) / 2
-        u = min(1.0, abs(p.x - cx) / hw); h = EH[s] * (1 - 0.55 * u * u)
-        put(L, v, Vector((0, -0.0012 * frac, -h * lashk)))
-    if frac < 1:  # a squint lifts the cheek under the eye a touch
+        p = W(v); s = 1 if p.x > 0 else -1; top, bot, x0, x1 = sides[s]; xc = min(max(p.x, x0), x1)
+        if p.z < bot(xc) + 0.4 * (top(xc) - bot(xc)): continue  # lower lash stays
+        put(L, v, Vector((0, -0.0018 * frac, -(top(xc) - bot(xc) + 0.0012) * frac * 0.97)))
+    if frac < 1:
         for v in bm.verts:
-            if v in lid_src or v in EYE or v in LASH: continue
-            p = W(v); s = 1 if p.x > 0 else -1; x0, x1 = sides[s][2], sides[s][3]; bot = sides[s][1](min(max(p.x, x0), x1))
-            if x0 - 0.01 < p.x < x1 + 0.01 and bot - 0.025 < p.z < bot + 0.002 and p.y < 0.03:
-                put(L, v, Vector((0, -0.0006, 0.0025 * ss(bot - 0.025, bot - 0.004, p.z))))
-
+            if v in EYE or v in LASH or v in IRIS: continue
+            p = W(v); s = 1 if p.x > 0 else -1; top, bot, x0, x1 = sides[s]
+            if x0 - 0.01 < p.x < x1 + 0.01 and p.y < 0.03:
+                bz = bot(min(max(p.x, x0), x1))
+                if bz - 0.025 < p.z < bz + 0.002: put(L, v, Vector((0, -0.0006, 0.003 * ss(bz - 0.025, bz - 0.004, p.z))))
 # --- mouth
 mp = [W(v) for v in MOUTH]
 xc = max(abs(p.x) for p in mp); zc = sum(p.z for p in mp) / len(mp)
-front = [W(v) for v in bm.verts if v not in lid_src and abs(W(v).x) < 0.004 and abs(W(v).z - zc) < 0.012 and W(v).y < 0]
+front = [W(v) for v in bm.verts if abs(W(v).x) < 0.004 and abs(W(v).z - zc) < 0.012 and W(v).y < 0]
 zline = zc
 if front:
     fr = sorted(front, key=lambda p: p.y)[:6]; zline = sum(p.z for p in fr) / len(fr)
 print("mouth xc", round(xc, 4), "zc", round(zc, 4), "zline", round(zline, 4))
-FACE = [v for v in bm.verts if v not in lid_src and v not in EYE and v not in IRIS and v not in LASH and v not in BROW]
+FACE = [v for v in bm.verts if v not in EYE and v not in IRIS and v not in LASH and v not in BROW]
 def mouthw(p, rx, rz):
     return math.exp(-((p.x / rx) ** 2 + ((p.z - zline) / rz) ** 2))
 L = addkey("X_Open")
@@ -127,7 +139,7 @@ for v in FACE:
         wz = ss(-0.002, 0.004, zline - p.z) if v not in TEETH and v not in MOUTH else 1
         wfar = 1 - ss(0.05, 0.075, zline - p.z)  # the neck stays
         w = wx * wz * (0.35 + 0.65 * wfar) if p.z > 1.44 else 0
-        put(L, v, Vector((0, 0.002 * w, -0.0095 * w)))
+        put(L, v, Vector((0, 0.0025 * w, -0.0125 * w)))
     elif p.z < zline + 0.012 and abs(p.x) < 0.03:
         w = wx * (1 - ss(0.002, 0.012, p.z - zline))
         put(L, v, Vector((0, 0, 0.0016 * w)))
@@ -141,7 +153,7 @@ for v in FACE:
     p = W(v); w = mouthw(p, 0.028, 0.014)
     if w < 0.02: continue
     put(L, v, Vector((-p.x * 0.32 * w, -0.0035 * w, (zline - p.z) * 0.15 * w)))
-for name, dz, dx, dy in (("X_Smile", 0.0032, 0.0016, 0.0016), ("X_Frown", -0.0028, 0.0, 0.0)):
+for name, dz, dx, dy in (("X_Smile", 0.0048, 0.0024, 0.0022), ("X_Frown", -0.004, 0.0004, 0.0)):
     L = addkey(name)
     for v in FACE:
         p = W(v)
@@ -151,7 +163,7 @@ for name, dz, dx, dy in (("X_Smile", 0.0032, 0.0016, 0.0016), ("X_Frown", -0.002
             if w > 0.02 and (p.x > 0) == (s > 0): put(L, v, Vector((s * dx * w, dy * w, dz * w)))
 # --- brows
 bx = max(abs(W(v).x) for v in BROW); bz = sum(W(v).z for v in BROW) / len(BROW)
-for name, f in (("X_BrowUp", lambda t: 0.0035), ("X_BrowAngry", lambda t: -0.0038 * (1 - t) + 0.0008 * t), ("X_BrowSad", lambda t: 0.0034 * (1 - t) - 0.0006 * t)):
+for name, f in (("X_BrowUp", lambda t: 0.0055), ("X_BrowAngry", lambda t: -0.0055 * (1 - t) + 0.0012 * t), ("X_BrowSad", lambda t: 0.0052 * (1 - t) - 0.0010 * t)):
     L = addkey(name)
     for v in BROW:
         p = W(v); t = min(1, abs(p.x) / bx); put(L, v, Vector((0, 0, f(t))))
