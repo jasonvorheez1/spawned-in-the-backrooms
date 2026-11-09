@@ -160,3 +160,8 @@ Optional, never forced. Story is Savi's draft. Your HALOGEN keeps flashing an ow
 - 2026-11-09 Shelly: A. River (M.E.G. Senior Archivist, wrote ~63% of the database, became data after Level 404; connected to Mike). Dina's undelivered package = River's backup drive, the full map of every way in and out: the factions' war prize. In the Mind Palace River is the one real person who can reach in, and she gets the player out.
 - 2026-11-09 Shelly: Mike Sunderland is River's sister (as in Backrooms [REDACTED]). Phoebe's last nobody was River's sister, so the drive is family to both.
 - 2026-11-09 Shelly: SS Fun (Level 26) is story: Dina vanished crossing on it; her diary's last page is a cabin number. First real glimpse of Phoebe at the party, gone before you reach her. The cabin holds the drive's empty case: someone beat you to it, the war's first move.
+
+## Level 1 talk quests (2026-11-09, Shelly: 3+ stages, alternate routes, a unique weapon, factions tied in)
+- Short Rations (Callum): find the thief (Survival check at the crates, or ask Ortiz) → deal with Ale (Speech/Barter/Speech-threat, pickpocket her, or kill her) → report the truth (Lucky Thirteen revolver, M.E.G. +10) or cover for her (Speech check, Survivors +8, karma). Killing Ale: paid, M.E.G. -4, no gun.
+- Bad Water (Ortiz): get tablets from Callum (Medicine or Barter check, or pickpocket, or kill) → bring to Ortiz → return later. M.E.G. +8.
+- Callum's Lucky Thirteen: revolver variant `lucky13`, unique: never rolled as loot.

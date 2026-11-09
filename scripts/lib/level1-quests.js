@@ -4,7 +4,8 @@
 // answered here (handleDialogueQuest1), and the two non-talk routes ring in from interact.js (a lift) and player.js (a kill).
 // Every number is Savi's pick.
 import { rollCheck } from "./npc-talk.js";
-import { addRep, addKarma } from "./rep.js";
+import { addRep, addKarma, GROUPS } from "./rep.js";
+const NAMES = Object.fromEntries(Object.entries(GROUPS).map(([k, v]) => [k, v.name]));
 import { setQuest, endQuest } from "./quests.js";
 import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
@@ -96,7 +97,7 @@ export function setStep1(ctx, p, q, step, text) {
 function finish(ctx, p, q, { xp = 100, cents = 0, items = [], text, rep = [] }) {
   const s = p.state, msgs = [text];
   setStep1(ctx, p, q, 99);
-  for (const [g, d] of rep) msgs.push(g === "karma" ? addKarma(s, d) : addRep(s, g, d));
+  for (const [g, d] of rep) { if (!d) continue; const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d); msgs.push(tier || `${g === "karma" ? "Karma" : NAMES[g] ?? g} ${d > 0 ? "+" : ""}${d}`); }
   s.cents = (s.cents ?? 0) + cents;
   s.payout = { xp, items, text }; // scripts/craft.js hands these over on the player's own machine
   note(ctx, p, msgs.filter(Boolean).join(" · "), "good"); ding(ctx, p, FANFARE, 0.85);
