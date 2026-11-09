@@ -182,11 +182,12 @@ for o in bpy.data.objects:
             if prev: row = [max(row[i], prev[i]) for i in range(NB)]
             rows[k] = row; prev = row
         for _ in range(3): rows = {k: [(r[(i - 1) % NB] + 2 * r[i] + r[(i + 1) % NB]) / 4 for i in range(NB)] for k, r in rows.items()}
+        rowAt = lambda z: rows[min(ks, key=lambda k: abs(k - zk(z)))]  # nearest slice that has cloth
         fixed = 0
         for v in lowv:
             x, y = v.co.x, v.co.y - cy; r = math.hypot(x, y)
             if r < 1e-5: continue
-            tr = rows[min(max(zk(v.co.z), ks[0]), ks[-1])][ak(x, y)] + 0.002
+            tr = rowAt(v.co.z)[ak(x, y)] + 0.002
             wv = max(0.0, min(1.0, (HEM + 0.04 - v.co.z) / 0.05))  # eases in from the fitted waist
             if tr > r:
                 s_ = 1 + (tr / r - 1) * wv; dv = Vector((x * s_ - x, y * s_ - y, 0))
@@ -199,7 +200,7 @@ for o in bpy.data.objects:
             c = f.calc_center_median()
             if c.z > HEM + 0.02: continue
             x, y = c.x, c.y - cy; r = math.hypot(x, y)
-            row = rows.get(min(max(zk(c.z), ks[0]), ks[-1]))
+            row = rowAt(c.z)
             if row and r < 0.8 * row[ak(x, y)]: inner.append(f)
         bmesh.ops.delete(bm, geom=inner, context="FACES_ONLY")
         # iron: the crease the old crotch fold left on the front relaxes over its neighbours, then sits back on the hung ring
@@ -210,7 +211,7 @@ for o in bpy.data.objects:
                 nb_ = [e.other_vert(v).co for e in v.link_edges if e.other_vert(v).link_faces]
                 if nb_: new[v] = v.co * 0.4 + (sum(nb_, Vector()) / len(nb_)) * 0.6
             for v, c in new.items():
-                x, y = c.x, c.y - cy; r = math.hypot(x, y); tr = rows[min(max(zk(c.z), ks[0]), ks[-1])][ak(x, y)]
+                x, y = c.x, c.y - cy; r = math.hypot(x, y); tr = rowAt(c.z)[ak(x, y)]
                 if r > 1e-5 and r < tr: c.x, c.y = x * tr / r, cy + y * tr / r
                 dv = c - v.co; v.co = c
                 for L in shapes: v[L] += dv
