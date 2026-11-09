@@ -69,15 +69,7 @@ function dressRooms(ctx, M) {
         bunkBed(ctx, bx, bz, M);
       }
     } else if (r.type === "explo") {
-      // Exploration Wing: heavy steel gear racks on north wall & central specimen/map table
-      ctx.albedo(RUSTY); ctx.color("oklch(0.38 0.02 250)"); ctx.metalness(0.65); ctx.roughness(0.5);
-      for (const sx of [-3.2, -1.2, 1.2, 3.2]) pipe(ctx, [c.x + sx, 0, zN + 0.35], [c.x + sx, 2.2, zN + 0.35], 0.03, 5);
-      for (const y of [0.5, 1.2, 1.9]) box(ctx, c.x - 3.3, c.x + 3.3, y, y + 0.04, zN + 0.04, zN + 0.65);
-      ctx.albedo(null); ctx.metalness(0); ctx.roughness(0.85);
-      for (let k = 0; k < 5; k++) {
-        ctx.color(["oklch(0.48 0.1 55)", "oklch(0.38 0.06 145)", "oklch(0.55 0.14 80)"][k % 3]);
-        box(ctx, c.x - 2.9 + k * 1.2, c.x - 2.1 + k * 1.2, 0.54, 0.92, zN + 0.1, zN + 0.58);
-      }
+      // Exploration Wing: its racks, bench and lanterns are Tripo props now (places/level21/sim.js, dress21)
     } else if (r.type === "office") {
       // Administration: corkboard with memos on north wall, bookshelf of binders on west wall, scattered floor papers
       ctx.albedo(WOOD); ctx.color("oklch(0.58 0.08 62)"); ctx.metalness(0); ctx.roughness(0.85);
@@ -88,14 +80,7 @@ function dressRooms(ctx, M) {
         ctx.color(i === 2 ? "oklch(0.78 0.14 85)" : "oklch(0.92 0.015 90)");
         box(ctx, px - 0.14, px + 0.14, py - 0.16, py + 0.16, zN + 0.05, zN + 0.065);
       }
-      // Bookshelf on west wall
-      ctx.albedo(RUSTY); ctx.color("oklch(0.36 0.02 250)"); ctx.metalness(0.6);
-      for (const y of [0.4, 0.95, 1.5, 2.05]) box(ctx, xW, xW + 0.42, y, y + 0.035, c.z - 2.2, c.z + 1.8);
-      ctx.albedo(null); ctx.metalness(0);
-      for (let i = 0; i < 12; i++) {
-        ctx.color(["oklch(0.48 0.14 28)", "oklch(0.38 0.09 245)", "oklch(0.32 0.04 150)"][i % 3]);
-        box(ctx, xW + 0.05, xW + 0.36, 0.99, 1.32, c.z - 2.0 + i * 0.28, c.z - 1.86 + i * 0.28);
-      }
+      // its shelving, desks and chairs are Tripo props now (dress21)
     } else if (r.type === "lockers") {
       // Checkered Locker Room: 2 long hardwood locker benches down the middle, coat hooks, and a yellow mop bucket
       for (const dz of [-1.2, 1.4]) {
@@ -104,56 +89,11 @@ function dressRooms(ctx, M) {
         ctx.albedo(RUSTY); ctx.color("oklch(0.3 0.01 250)"); ctx.metalness(0.7);
         for (const dx of [-2.2, -0.4, 1.4]) pipe(ctx, [c.x + dx, 0, c.z + dz], [c.x + dx, 0.42, c.z + dz], 0.04, 6);
       }
-      // Yellow janitorial mop bucket & wringer in the corner
-      ctx.albedo(null); ctx.metalness(0.1); ctx.roughness(0.5); ctx.color("oklch(0.78 0.16 90)");
-      pipe(ctx, [xW + 0.65, 0.05, zS - 0.65], [xW + 0.65, 0.46, zS - 0.65], 0.24, 8);
-      ctx.color("oklch(0.55 0.06 65)"); pipe(ctx, [xW + 0.65, 0.2, zS - 0.65], [xW + 0.4, 1.45, zS - 0.5], 0.02, 5);
-    } else if (r.type === "restroom") {
-      // Restroom: 3 toilet stalls along the east wall, sink vanity counter & mirrors along the west wall
-      ctx.albedo(WALL); ctx.color("oklch(0.82 0.015 210)"); ctx.metalness(0.1); ctx.roughness(0.6);
-      for (let k = 0; k < 3; k++) {
-        const sz = zN + 1.1 + k * 1.8;
-        box(ctx, xE - 1.45, xE, 0.15, 2.05, sz, sz + 0.05); // stall divider
-        ctx.color("oklch(0.55 0.04 195)");
-        box(ctx, xE - 1.45, xE - 1.4, 0.15, 1.95, sz - 0.85, sz - 0.12); // stall door
-        // Porcelain toilet inside stall
-        ctx.albedo(null); ctx.color("oklch(0.95 0.005 240)"); ctx.roughness(0.25);
-        pipe(ctx, [xE - 0.55, 0, sz - 0.48], [xE - 0.55, 0.42, sz - 0.48], 0.22, 8);
-        box(ctx, xE - 0.32, xE - 0.04, 0.42, 0.88, sz - 0.72, sz - 0.24);
-        ctx.albedo(WALL); ctx.color("oklch(0.82 0.015 210)");
-      }
-      // West wall sink counter & mirrors
-      ctx.albedo(null); ctx.color("oklch(0.88 0.01 230)"); ctx.roughness(0.35);
-      box(ctx, xW, xW + 0.62, 0.78, 0.88, zN + 0.8, zS - 0.8);
-      for (const sz of [c.z - 1.2, c.z + 0.8]) {
-        ctx.color("oklch(0.96 0.005 240)"); box(ctx, xW + 0.12, xW + 0.52, 0.86, 0.92, sz - 0.32, sz + 0.32); // sink basin
-        ctx.color("oklch(0.75 0.015 230)"); ctx.metalness(0.85); ctx.roughness(0.15);
-        box(ctx, xW + 0.02, xW + 0.05, 1.12, 1.98, sz - 0.38, sz + 0.38); // mirror
-        ctx.metalness(0);
-      }
+      // the mop bucket is a Tripo prop now (dress21)
     } else if (r.type === "break") {
-      // Break Room: cafeteria table with 4 chairs, counter with sink and microwave
-      ctx.albedo(null); ctx.color("oklch(0.84 0.015 90)"); ctx.roughness(0.5);
-      box(ctx, c.x - 0.85, c.x + 0.45, 0.72, 0.77, c.z - 1.2, c.z + 1.2);
-      ctx.albedo(RUSTY); ctx.color("oklch(0.3 0.01 250)"); ctx.metalness(0.7);
-      for (const dz of [-0.8, 0.8]) pipe(ctx, [c.x - 0.2, 0, c.z + dz], [c.x - 0.2, 0.72, c.z + dz], 0.045, 6);
-      ctx.albedo(null); ctx.metalness(0); ctx.color("oklch(0.52 0.14 32)");
-      for (const [dx, dz] of [[-1.15, -0.6], [-1.15, 0.6], [0.75, -0.6], [0.75, 0.6]]) {
-        box(ctx, c.x + dx - 0.22, c.x + dx + 0.22, 0.42, 0.47, c.z + dz - 0.22, c.z + dz + 0.22);
-      }
-      // Kitchenette counter along north wall
-      ctx.albedo(WOOD); ctx.color("oklch(0.48 0.05 60)");
-      box(ctx, xW + 0.2, xE - 0.8, 0, 0.88, zN, zN + 0.62);
-      ctx.albedo(null); ctx.color("oklch(0.22 0.01 250)");
-      box(ctx, c.x - 0.4, c.x + 0.25, 0.88, 1.22, zN + 0.08, zN + 0.5); // microwave
+      // Break Room: tables, chairs, counter and microwave are Tripo props now (dress21)
     } else if (r.type === "store") {
-      // Storage Rooms: industrial wire shelving & chemical drums on wooden pallets
-      ctx.albedo(WOOD); ctx.color("oklch(0.55 0.07 65)"); ctx.metalness(0);
-      box(ctx, xW + 0.35, xW + 1.55, 0, 0.12, zN + 0.35, zN + 1.55); // pallet
-      ctx.albedo(null); ctx.roughness(0.45);
-      for (const [dx, dz, col] of [[0.65, 0.65, "oklch(0.42 0.12 245)"], [1.2, 0.65, "oklch(0.42 0.12 245)"], [0.9, 1.2, "oklch(0.68 0.15 85)"]]) {
-        ctx.color(col); pipe(ctx, [xW + dx, 0.12, zN + dz], [xW + dx, 0.98, zN + dz], 0.26, 8);
-      }
+      // Storage Rooms: shelving, drums and tanks are Tripo props now (dress21)
     } else if (r.type === "fridges") {
       // Refrigerator Paradise: central survivor sorting table piled with gold-and-red boxes of Saltine crackers!
       ctx.albedo(WOOD); ctx.color("oklch(0.52 0.06 62)"); ctx.metalness(0); ctx.roughness(0.8);

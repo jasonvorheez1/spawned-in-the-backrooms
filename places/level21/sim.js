@@ -13,8 +13,9 @@ import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { fan, fanHousing, cable, DRIP, DUST, MIST } from "../../scripts/lib/ambient.js";
 import { terminalSpec } from "../../scripts/lib/terminal.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
+import { spawnProp } from "../../scripts/lib/l2props.js";
 export const cadence = "500ms";
-const V = 16; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist; 14: survey road flares, freezer frost, blast sparks, sandbags, show-don't-tell
+const V = 17; // 17: Tripo props dress the rooms and halls (dress21), DANGER signs at dead ends; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist; 14: survey road flares, freezer frost, blast sparks, sandbags, show-don't-tell
 const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
 const rm = (type) => ROOMS.filter((r) => r.type === type);
 const center = (r) => cellCenter(r.x0 + (r.w - 1) / 2, r.z0 + (r.d - 1) / 2); // the middle of a room block
@@ -105,7 +106,7 @@ function lay(ctx) {
   };
   // a rebuild (V bumped): take down what the last build laid
   for (const id of Object.keys(ctx.place.objects ?? {})) if (/^l21-/.test(id) && !id.includes("/") && !PEOPLE[id] && !/^l21-smiler/.test(id)) ctx.destroy(id);
-  for (const tag of ["l2box", "container", "weapon", "crate", "remains"]) for (const o of ctx.query({ tags: [tag], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id); // the loot of the last build goes too: it was laid under auto ids
+  for (const tag of ["l2box", "container", "weapon", "crate", "remains", "l2prop"]) for (const o of ctx.query({ tags: [tag], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id); // the loot of the last build goes too: it was laid under auto ids
   sp("l21-geo", { feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, receiveShadow: true, castShadow: false, primitive: { kind: "scripted", script: "scripts/level21-geo.js" }, material: { roughness: 0.88 } });
 
   // ---- lamps: white fluorescent tubes, a few flickering; The Edges are lit down the lane and almost nowhere else
@@ -333,10 +334,70 @@ function lay(ctx) {
   }
 }
 
+
+// ---- Tripo props (scripts/lib/data/l2props.yml): the wiki's storage sublevel, "janitorial supplies and standard work equipment" in every hall,
+// furnished rooms in real meshes; a red DANGER placard on the door at the end of a dead-end hall, as in the wiki's photo of The Halls
+const yawOf = (dx, dz) => Math.atan2(-dx, -dz) * 180 / Math.PI; // the yaw that turns a front (-Z) toward (dx, dz)
+const D4W = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+const HALL_KIT = ["mop", "mop", "drum", "canister", "shelf", "shelf", "stackchair", "drum", "fuse"]; // weighted: mop buckets and shelving most
+function dress21(ctx) {
+  const W = 0.18, put = (k, x, z, face, y) => spawnProp(ctx, k, { x, z, y }, yawOf(face[0], face[1]));
+  for (const r of ROOMS) {
+    const c = center(r), xW = edgeOf(r, 2) + W, xE = edgeOf(r, 0) - W, zN = edgeOf(r, 3) + W, zS = edgeOf(r, 1) - W;
+    const S_ = [0, 1], N_ = [0, -1], E_ = [1, 0], W_ = [-1, 0];
+    if (r.type === "break") {
+      for (const dz of [-2.2, 1.6]) { put("table", c.x - 0.2, c.z + dz, S_); for (const [ox, oz, f] of [[-0.45, -0.7, S_], [0.45, -0.7, S_], [-0.45, 0.7, N_], [0.45, 0.7, N_]]) put("stackchair", c.x - 0.2 + ox, c.z + dz + oz, f); }
+      put("counter", c.x - 1.5, zN + 0.32, S_); put("counter", c.x + 0.8, zN + 0.32, S_); put("microwave", c.x + 0.6, zN + 0.3, S_, 0.93);
+      put("chair", xE - 0.8, zS - 0.9, [-0.7, -0.7]);
+    } else if (r.type === "store") {
+      const n = Math.max(2, Math.floor((xE - xW) / 1.55));
+      for (let i = 0; i < n; i++) { const x = xW + 0.85 + i * 1.5; if (x > xE - 0.7) break; put("shelf", x, zN + 0.26, S_); if (r.d > 2 || i % 2) put("shelf", x, zS - 0.26, N_); }
+      put("drum", xE - 0.5, c.z - 0.6, W_); put("drum", xE - 0.55, c.z + 0.1, W_); put("canister", xE - 0.45, c.z + 0.7, W_);
+      put("mop", xW + 0.45, c.z, E_); put("stackchair", c.x + 0.4, c.z + 0.3, [0.4, -1]);
+    } else if (r.type === "office") {
+      for (const [dx, dz] of [[-2.6, -1.8], [1.6, -1.8], [-2.6, 2.2], [1.6, 2.2]]) { put("table", c.x + dx, c.z + dz, S_); put("chair", c.x + dx, c.z + dz + 0.75, N_); }
+      for (const dz of [-2.4, -0.9, 0.6]) put("shelf", xW + 0.26, c.z + dz, E_);
+      put("stackchair", xE - 0.7, zN + 0.7, [-1, 1]);
+    } else if (r.type === "explo") {
+      for (const dx of [-3.2, -1.6, 0, 1.6, 3.2]) put("shelf", c.x + dx, zN + 0.26, S_);
+      put("bench", c.x, c.z + 1.0, N_); put("lantern", c.x - 0.5, c.z + 1.0, N_, 0.9); put("stove", c.x + 0.4, c.z + 1.05, N_, 0.9);
+      put("stackchair", c.x - 0.6, c.z + 1.8, N_); put("canister", xE - 0.45, zS - 0.5, W_);
+    } else if (r.type === "lockers") {
+      put("mop", xW + 0.6, zS - 0.6, [1, -1]); put("canister", xW + 0.5, zS - 1.3, E_);
+    } else if (r.type === "base") {
+      // Alef's abandoned mess: two tables, a chair knocked over on its side, a cold camp stove and lantern
+      put("table", c.x - 1.6, c.z - 1.2, S_); put("table", c.x + 1.4, c.z - 1.0, S_);
+      put("stackchair", c.x - 1.6, c.z - 0.5, N_); put("stackchair", c.x + 1.4, c.z - 0.3, N_); put("chair", c.x + 2.6, c.z + 2.6, [-1, -0.3]);
+      put("stove", c.x - 1.4, c.z - 1.2, S_, 0.77); put("lantern", c.x + 1.2, c.z - 1.1, S_, 0.77);
+      put("drum", xE - 0.6, zN + 0.6, W_); put("drum", xE - 0.6, zN + 1.3, W_);
+    } else if (r.type === "bunks") {
+      put("stackchair", c.x + 5.0, c.z, W_); put("lantern", c.x + 5.0, c.z, W_, 0.48);
+    }
+  }
+  // the halls: one piece of janitorial kit against a blank wall in about one cell of six, never in a doorway
+  for (let cx = 0; cx < EDGE_X; cx++) for (let cz = 0; cz < N; cz++) {
+    if (zoneOf(cx, cz) !== "hall") continue;
+    const c = cellCenter(cx, cz), opens = openings(cx, cz);
+    if (opens.length === 1) { // a dead end: the DANGER door the wiki photographed
+      const d = [0, 1, 2, 3].find((k) => k !== opens[0] && k === (opens[0] + 2) % 4), [nx, nz] = D4W[d], w = S / 2 - W - 0.06;
+      if (hash(cx, cz, 731) < 0.55) ctx.spawn(`l21-danger-${cx}-${cz}`, { tags: ["l21-sign"], feetPosition: { x: c.x + nx * w, y: 1.35, z: c.z + nz * w }, rotation: { yaw: yawOf(-nx, -nz) }, visibleRange: { max: 30 }, castShadow: false,
+        primitive: { kind: "box", width: 0.5, height: 0.34, depth: 0.012 }, material: { color: "oklch(0.95 0.01 90)", roughness: 0.6 },
+        ui: `<div face="front" class="w-full h-full flex flex-col" style="width:500px;height:340px;background:#f2efe6;border:10px solid #111"><div style="background:#c8102e;color:#fff;font:900 92px sans-serif;text-align:center;letter-spacing:6px;padding:8px 0">DANGER</div><div style="color:#111;font:800 44px sans-serif;text-align:center;padding-top:26px;line-height:1.15">AUTHORIZED<br>PERSONNEL ONLY</div></div>` });
+    }
+    if (hash(cx, cz, 733) > 0.17) continue;
+    const walls = [0, 1, 2, 3].filter((d) => !isOpen(cx, cz, d)); if (!walls.length) continue;
+    const d = walls[Math.floor(hash(cx, cz, 734) * walls.length)], [nx, nz] = D4W[d], tx = -nz, tz = nx;
+    const kind = HALL_KIT[Math.floor(hash(cx, cz, 735) * HALL_KIT.length)], K = PROPS_SIZE(kind), off = S / 2 - W - K / 2 - 0.05, along = (hash(cx, cz, 736) - 0.5) * 2.2;
+    put(kind, c.x + nx * off + tx * along, c.z + nz * off + tz * along, [-nx, -nz], kind === "fuse" ? 0.95 : undefined);
+    if (kind === "drum" && hash(cx, cz, 737) < 0.5) put("canister", c.x + nx * (off - 0.05) + tx * (along + 0.55), c.z + nz * (off - 0.05) + tz * (along + 0.55), [-nx, -nz]);
+  }
+}
+const PROPS_SIZE = (k) => ({ mop: 0.45, drum: 0.6, canister: 0.32, shelf: 0.45, stackchair: 0.5, fuse: 0.24 })[k] ?? 0.6;
+
 export function tick(ctx) {
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state, now = ctx.now();
-  if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); s.peopleV = 0; }
+  if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); dress21(ctx); s.peopleV = 0; }
   if (!ctx.getObject("l21-life")) ctx.spawn("l21-life", { behavior: "scripts/l21-use.js" });
   if (!s.peopleV || s.peopleV < 2) {
     s.peopleV = 2;
