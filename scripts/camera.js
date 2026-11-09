@@ -189,11 +189,11 @@ export function update(ctx, dt) {
     const wp = ctx.player.worldFeetPosition ?? ctx.player.feetPosition, r0 = ctx.player.worldRotation ?? ctx.player.rotation
     const by = (typeof r0 === 'number' ? r0 : r0?.yaw ?? 0) * Math.PI / 180, a = by + 0.75 + (ps.wrSpin || 0) * Math.PI / 180
     const b = { x: wp.x, y: wp.y + 1.0, z: wp.z } // chest of the seated body
-    const out = { x: b.x - Math.sin(a) * 1.75, y: b.y + 0.35, z: b.z - Math.cos(a) * 1.75 } // in front: forward is (-sin, -cos)
+    const out = { x: b.x - Math.sin(a) * 2.5, y: b.y + 0.45, z: b.z - Math.cos(a) * 2.5 } // in front: forward is (-sin, -cos)
     const k = sk.k * sk.k * (3 - 2 * sk.k), e0 = ctx.self.feetPosition
     ctx.self.feetPosition = { x: e0.x + (out.x - e0.x) * k, y: e0.y + (out.y - e0.y) * k, z: e0.z + (out.z - e0.z) * k }
     // aim a little to the body's right of centre so the body sits clear of the menu on the left of the screen
-    const rx = Math.cos(a), rz = -Math.sin(a), tgt = { x: b.x - rx * 0.45, y: b.y + 0.05, z: b.z - rz * 0.45 }
+    const rx = Math.cos(a), rz = -Math.sin(a), tgt = { x: b.x + rx * 0.75, y: b.y + 0.1, z: b.z + rz * 0.75 }
     const dx = tgt.x - out.x, dy = tgt.y - out.y, dz = tgt.z - out.z
     const look = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
     if (rot) { const dyaw = ((look.yaw - rot.yaw + 540) % 360) - 180; rot = { yaw: rot.yaw + dyaw * k, pitch: rot.pitch + (look.pitch - rot.pitch) * k } } else rot = look
