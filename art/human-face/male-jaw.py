@@ -14,15 +14,14 @@ def ss(a, b, x):
 def jaw(p):  # gltf space: +y up, +z face front; chin ~1.47, mouth 1.53, eyes 1.61
     x, y, z = p[:, 0], p[:, 1], p[:, 2]
     ax = np.abs(x); sgn = np.sign(x)
-    face = ss(-0.17, -0.09, z)                       # back of skull and neck seam stay put
-    band = ss(1.455, 1.49, y) * (1 - ss(1.55, 1.60, y))
-    lo = 0.008 + 0.016 * ss(1.505, 1.53, y)          # mouth corners barely move
-    lat = ss(lo, lo + 0.024, ax)
-    D = 0.024 * (1 - ss(1.49, 1.58, y)) + 0.004
-    gon = np.exp(-(((y - 1.535) / 0.025) ** 2 + ((z + 0.075) / 0.04) ** 2)) * 0.010   # the jaw angle
+    face = ss(-0.19, -0.06, z)                       # back of skull and neck seam stay put
+    band = ss(1.45, 1.50, y) * (1 - ss(1.53, 1.63, y))   # long soft fade up the cheek: no crease
+    lat = ss(0.006, 0.05, ax)                         # the centre line stays, the sides fill out
+    D = 0.013 * (1 - ss(1.50, 1.60, y))
+    gon = np.exp(-(((y - 1.53) / 0.03) ** 2 + ((z + 0.07) / 0.05) ** 2)) * 0.006   # the jaw angle
     d = np.zeros_like(p)
     d[:, 0] = sgn * (D * lat * band + gon * lat) * face
-    d[:, 1] = -0.003 * lat * band * face * (1 - ss(1.50, 1.54, y))   # a flatter, lower jaw line
+    d[:, 1] = -0.002 * lat * band * face * (1 - ss(1.50, 1.54, y))   # a flatter, lower jaw line
     return d
 
 def chin(p):
@@ -38,8 +37,26 @@ def chin(p):
 
 KEYS = {'M_Jaw': jaw, 'M_Chin': chin}
 
+def trim_lashes(g):
+    # the base's flared, winged lashes read feminine (Shelly #121141): each lash vertex is pulled 70% onto
+    # the nearest point of the eyeball's upper half, leaving a thin dark lid line; blink keys still ride it
+    for m in g.j['meshes']:
+        if 'X_Blink' not in m.get('extras', {}).get('targetNames', []): continue
+        mats = {g.j['materials'][pr['material']]['name']: pr for pr in m['primitives'] if 'material' in pr}
+        if 'Lash' not in mats or 'Eye' not in mats: continue
+        e = g.get(mats['Eye']['attributes']['POSITION']).astype(np.float64)
+        e = e[e[:, 1] > np.median(e[:, 1])]
+        pr = mats['Lash']; acc = pr['attributes']['POSITION']
+        p = g.get(acc).astype(np.float64)
+        near = e[np.argmin(((p[:, None, :] - e[None, :, :]) ** 2).sum(2), axis=1)]
+        q = near + (p - near) * 0.3
+        pr['attributes']['POSITION'] = g.add(q.astype('<f4'))
+        return True
+    return False
+
 def run(src_path, dst_path):
     g = GLB(open(src_path, 'rb').read())
+    print('lashes trimmed', trim_lashes(g))
     done = 0
     for m in g.j['meshes']:
         tn = m.get('extras', {}).get('targetNames', [])
