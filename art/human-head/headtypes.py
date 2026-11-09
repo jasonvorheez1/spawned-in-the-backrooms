@@ -55,10 +55,16 @@ def field(x, y, z, skull_only):
     # HEART: wide temples, narrow tapering jaw to a small chin
     out['HT_Heart'] = v(xe * (0.08 * temple * 1 - 0.13 * jaw - 0.1 * chin * face) * 1 + xe * 0 ,
                         -0.005 * chin * taper * face, 0.008 * Hh * chin * face)
+    # BURLY: broad muscular jaw, squared chin, heavy brow ridge, thicker neck base
+    out['HT_Burly'] = v(xe * (0.22 * jaw + 0.10 * cheek + 0.07 * (1 - neck)) * face + xe * 0.04 * temple,
+                        (-0.012 * brow - 0.008 * chin) * face, -(z - z0 - 0.85 * Hh).clip(0) * 0.15 * crown)
+    # RUGGED: chiselled jawline, firm forward chin, pronounced brow
+    out['HT_Rugged'] = v(xe * (0.17 * jaw + 0.07 * cheek) * face + xe * 0.03 * temple,
+                         (-0.014 * brow - 0.006 * chin) * face, 0)
     if skull_only:
         for k in out: out[k][:, 0] = np.where(True, out[k][:, 0], 0)
     return out
-KEYS = ['HT_Square', 'HT_Long', 'HT_Angular', 'HT_Broad', 'HT_Round', 'HT_Heart']
+KEYS = ['HT_Square', 'HT_Long', 'HT_Angular', 'HT_Broad', 'HT_Round', 'HT_Heart', 'HT_Burly', 'HT_Rugged']
 def apply(mesh, skull_only):
     ex = mesh.setdefault('extras', {}); names = ex.setdefault('targetNames', [])
     if 'HT_Square' in names: return

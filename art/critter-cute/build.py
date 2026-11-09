@@ -913,7 +913,7 @@ def eye_types(st):
     return st
 
 # face types (the game blends these in game: scripts/lib/data/faces.yml "types"). Head space: x across, y forward, z up, centre HC; the chin is about z -.27, the eyes near z 0
-FT_KEYS = ["FT_Round", "FT_Long", "FT_Broad", "FT_Narrow", "FT_Heart", "FT_Square", "FT_Snub", "FT_Snout", "FT_Chubby"]
+FT_KEYS = ["FT_Round", "FT_Long", "FT_Broad", "FT_Narrow", "FT_Heart", "FT_Square", "FT_Snub", "FT_Snout", "FT_Chubby", "FT_Burly", "FT_Rugged"]
 def _sm(a, b, x):
     t = max(0.0, min(1.0, (x - a) / (b - a))); return t * t * (3 - 2 * t)
 def ft_delta(key, p, bone):
@@ -934,6 +934,8 @@ def ft_delta(key, p, bone):
     if key == "FT_Snub":    return Vector((0, -0.040 * front * lo, 0.006 * front * lo))
     if key == "FT_Snout":   return Vector((0, 0.054 * front * lo, -0.006 * front * lo))
     if key == "FT_Chubby":  return Vector((x * (0.03 + 0.10 * lo), 0.004 * lo, -0.03 * z))
+    if key == "FT_Burly":   return Vector((x * (0.18 * jaw + 0.08 * lo), 0.010 * front * lo, -0.02 * z + 0.016 * chin))
+    if key == "FT_Rugged":  return Vector((x * (0.13 * jaw + 0.03 * lo), 0.015 * front * chin, 0.010 * chin))
     return Vector()
 
 class HeadMesh:
@@ -1345,6 +1347,22 @@ def build_face(H, sp):
         "Open": t_open, "Blep": t_blep
     }, fan(18), "tongue", outs={"Basis": -.0026, "Smile": -.0026, "Frown": -.0026, "Open": .0154, "Blep": .0160})
 
+def build_facial_hair(H, sp):
+    if sp.get("faceless"): return
+    is_human = bool(sp.get("human"))
+    MV = -.295 if "snout" not in sp["ex"] and not (sp.get("bignose") and "bigantlers" not in sp["ex"]) else -.34
+    NV = -.185 if not sp.get("human") else -.18
+    # Sculpted moustache decal on upper lip
+    mst_v = (NV + MV) * 0.5
+    mw, mh = (0.040, 0.015) if is_human else (0.046, 0.018)
+    mst_pts, mst_f = disc(mw, mh, 16, 2, 0, 0)
+    add_decal(H, 0, mst_v, .0142, {"Basis": mst_pts, "Smile": [(x * 1.10, y + 0.003) for x, y in mst_pts]}, mst_f, "beard", outs={"Basis": .0142, "Smile": .0142, "Open": .0170})
+    # Sculpted chin beard / goatee
+    chin_v = -.44 if is_human else -.42
+    cw, ch = (0.034, 0.026) if is_human else (0.038, 0.030)
+    chin_pts, chin_f = disc(cw, ch, 14, 2, 0, 0)
+    add_decal(H, 0, chin_v, .0138, {"Basis": chin_pts, "Open": [(x, y - 0.010) for x, y in chin_pts]}, chin_f, "beard", outs={"Basis": .0138, "Open": .0155})
+
 # ---- Smooth vector-clean fur markings via layered decals (zero stair-stepping, zero Z-fighting) ----
 def rot2d(pts, ang, cx=0.0, cy=0.0):
     ca, sa = math.cos(ang), math.sin(ang)
@@ -1747,6 +1765,7 @@ def build_head(name, sp, rig, F):
 
     build_markings(H, sp)
     build_face(H, sp)
+    build_facial_hair(H, sp)
     kind, sc = sp["ears"]
     inner = "inner" if sp.get("inner") else "belly"
     for s in (-1, 1):
@@ -1759,7 +1778,7 @@ def build_head(name, sp, rig, F):
     me.from_pydata([tuple(p) for p in H.v], [], [f for f, _ in H.f])
     me.update()
     for mname in H.mats:
-        col = {"eyewhite": "#ffffff", "eyeink": "#241c2a", "pupil": "#050505", "mouth": "#4a1622", "tongue": "#ff7f93", "blush": "#ff7fa6"}.get(mname) or sp.get(mname) or sp["fur"]
+        col = {"eyewhite": "#ffffff", "eyeink": "#241c2a", "pupil": "#050505", "mouth": "#4a1622", "tongue": "#ff7f93", "blush": "#ff7fa6", "beard": "#3a2418"}.get(mname) or sp.get(mname) or sp["fur"]
         rough = 1.0 if mname in ("pupil", "eyeink") else 0.9 if mname in ("eyewhite",) else 0.85
         me.materials.append(mat(name + "_" + mname, col, rough))
     for i, (_, mi) in enumerate(H.f): me.polygons[i].material_index = mi

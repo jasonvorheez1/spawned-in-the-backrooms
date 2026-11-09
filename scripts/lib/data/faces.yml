@@ -49,6 +49,9 @@ types:
   delicate: { w: 1.0, FT_Heart: 0.4, FT_Round: 0.4, FT_Snub: 0.2 }
   broad:    { w: 1.0, FT_Broad: 0.6, FT_Round: 0.4 }
   chiseled: { w: 0.8, FT_Broad: 0.45, FT_Heart: 0.35, FT_Square: 0.20, FT_Round: 0.30 }
+  burly:    { w: 0.85, FT_Burly: 0.85, FT_Broad: 0.45, FT_Square: 0.35 }
+  rugged:   { w: 0.80, FT_Rugged: 0.80, FT_Square: 0.40, FT_Broad: 0.30 }
+  diamond:  { w: 0.65, FT_Heart: 0.45, FT_Broad: 0.35, FT_Narrow: 0.20 }
   plump:    { w: 1.8, FT_Chubby: 0.85, FT_Round: 0.70, FT_Snub: 0.25 }
   foxlike:  { w: 1.2, FT_Heart: 0.55, FT_Narrow: 0.25, FT_Snout: 0.35, FT_Round: 0.30 }
   pixie:    { w: 1.4, FT_Snub: 0.65, FT_Heart: 0.45, FT_Round: 0.45 }

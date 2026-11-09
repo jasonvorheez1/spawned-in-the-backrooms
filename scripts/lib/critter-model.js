@@ -56,6 +56,41 @@ export function seatHair(ctx, o, l) {
   if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== m.materials.hair.color) h.model = m; return }
   ctx.spawn(HAIR_ID, { parent: o.id, ...hairChild(l, o.audience === 'local') })
 }
+export const BEARD_ID = 'critter-beard'
+export const beardChild = (l, local) => {
+  if (!l?.beard || l.beard === 'none' || maskOf(l)) return null
+  const col = l.beardc || l.hairc || '#5a3a26'
+  const isH = speciesOf(l) === 'human' || HUMAN
+  return {
+    id: BEARD_ID,
+    attachment: { bone: 'Head' },
+    primitive: {
+      kind: 'scripted',
+      script: 'scripts/critter-beard-geo.js',
+      params: { beard: l.beard, col, isHuman: Boolean(isH), sex: l.sex }
+    },
+    material: { roughness: 0.65, metalness: 0.02 },
+    ...(local ? { audience: 'local' } : {})
+  }
+}
+export function seatBeard(ctx, o, l) {
+  const id = o.id + '/' + BEARD_ID, b = ctx.getObject(id)
+  if (!l?.beard || l.beard === 'none' || maskOf(l)) {
+    if (b) ctx.destroy(id)
+    return
+  }
+  const child = beardChild(l, o.audience === 'local')
+  if (!child) {
+    if (b) ctx.destroy(id)
+    return
+  }
+  if (b) {
+    b.primitive = child.primitive
+    b.material = child.material
+    return
+  }
+  ctx.spawn(BEARD_ID, { parent: o.id, ...child })
+}
 export const HEAD_ID = 'critter-head'
 // a head-covering mask (the Level 11 shop's bag and shell): its own GLB skinned whole to the Head bone, a second skin child; the row's `mask` names it
 export const MASK_ID = 'critter-mask'
@@ -128,6 +163,13 @@ function furMats(l) {
     m.mark = { color: (spName === 'human' ? (l.hairc || mark || '#2e201c') : mark), roughness: 0.82, metalness: 0 }
   }
   if (antlerCol) m.antler = { color: antlerCol, roughness: 0.65, metalness: 0.05 }
+  const wearsBeard = Boolean(l?.beard && l.beard !== 'none')
+  const beardCol = l?.beardc || l?.hairc || '#5a3a26'
+  if (wearsBeard) {
+    m.beard = { color: beardCol, roughness: 0.65, metalness: 0.02 }
+  } else {
+    m.beard = { color: beardCol, visible: false, transparent: true, opacity: 0, depthWrite: false }
+  }
   return m
 }
 const only = (m, keys) => { const o = {}; for (const k of keys || []) if (m[k]) o[k] = m[k]; return o }
@@ -187,6 +229,9 @@ const FT_HEAD = {
   oval: ['HT_Long', { FaceLong: 0.2 }], heart: ['HT_Heart'], delicate: ['HT_Heart', { JawNarrow: 0.8, JawWide: 0, BrowHeavy: 0 }], broad: ['HT_Broad'],
   chiseled: ['HT_Angular', { CheekFull: 0, ChinLong: 0.6 }], plump: ['HT_Round', { CheekFull: 0.7 }], pixie: ['HT_Heart', { ChinLong: 0.5, JawNarrow: 0.7, JawWide: 0 }], noble: ['HT_Long', { NoseBig: 0.6, ChinLong: 0.5 }],
   square: ['HT_Square'], strong: ['HT_Square', { BrowHeavy: 0.8 }], sharp: ['HT_Angular', { JawNarrow: 0.6, JawWide: 0 }], long: ['HT_Long', { FaceLong: 0.6 }], narrow: ['HT_Long', { JawNarrow: 0.9, JawWide: 0 }],
+  burly: ['HT_Burly', { JawWide: 0.85, BrowHeavy: 0.80, ChinLong: 0.35 }],
+  rugged: ['HT_Rugged', { JawWide: 0.70, BrowHeavy: 0.85, CheekFull: 0 }],
+  diamond: ['HT_Angular', { JawNarrow: 0.45, CheekFull: 0.35 }],
 }
 const H_KEYS = ['JawWide', 'JawNarrow', 'ChinLong', 'NoseBig', 'CheekFull', 'BrowHeavy', 'FaceLong', 'HeadRound']
 export function humanMorph(l) {
@@ -197,14 +242,14 @@ export function humanMorph(l) {
   if (o.JawWide > o.JawNarrow) o.JawNarrow = 0; else o.JawWide = 0
   if (m) { o.JawWide = Math.max(o.JawWide, 0.35 + u() * 0.5); o.JawNarrow = 0; o.BrowHeavy = 0.4 + o.BrowHeavy * 0.6 } else { o.BrowHeavy *= 0.3; o.JawWide *= 0.35 }
   // the head type: a whole skull and face shape, one per person, a second softly mixed in so no two match
-  const T = m ? ['HT_Square', 'HT_Square', 'HT_Angular', 'HT_Angular', 'HT_Broad', 'HT_Long', 'HT_Round', 'HT_Heart'] : ['HT_Heart', 'HT_Heart', 'HT_Round', 'HT_Round', 'HT_Long', 'HT_Angular', 'HT_Square', 'HT_Broad']
+  const T = m ? ['HT_Burly', 'HT_Square', 'HT_Rugged', 'HT_Angular', 'HT_Broad', 'HT_Long', 'HT_Round', 'HT_Heart'] : ['HT_Heart', 'HT_Heart', 'HT_Round', 'HT_Round', 'HT_Long', 'HT_Angular', 'HT_Square', 'HT_Broad']
   for (const k of new Set(T)) o[k] = 0
   const FT = FT_HEAD[l?.ftype] // the creator's FACE SHAPE pick leads the skull; the seed still mixes a second in (johnadams2 Nov 9: face gen)
   const a0 = T[Math.floor(u() * T.length)], b = T[Math.floor(u() * T.length)], a = FT?.[0] ?? a0
   o[a] = Math.round((0.6 + u() * 0.4) * 100) / 100; if (b !== a) o[b] = Math.round(u() * 0.35 * 100) / 100
   if (FT?.[1]) for (const [k, v] of Object.entries(FT[1])) o[k] = v
   if (o.HT_Long > 0.4) o.FaceLong *= 0.4; if (o.HT_Round > 0.4) o.HeadRound *= 0.4 // no doubled stretch
-  o.HeadRound = Math.round(o.HeadRound * 0.4 * 100) / 100; o.CheekFull = Math.round(o.CheekFull * 0.45 * 100) / 100; if (o.HT_Broad) o.HT_Broad = Math.round(o.HT_Broad * 0.45 * 100) / 100; if (o.HT_Round) o.HT_Round = Math.round(o.HT_Round * 0.6 * 100) / 100; if (o.JawWide) o.JawWide = Math.min(o.JawWide, m ? 0.6 : 0.2) // human proportions: no wide, round critter skulls
+  o.HeadRound = Math.round(o.HeadRound * 0.4 * 100) / 100; o.CheekFull = Math.round(o.CheekFull * 0.45 * 100) / 100; if (o.HT_Broad) o.HT_Broad = Math.round(o.HT_Broad * 0.45 * 100) / 100; if (o.HT_Round) o.HT_Round = Math.round(o.HT_Round * 0.6 * 100) / 100; if (o.HT_Burly) o.HT_Burly = Math.round(o.HT_Burly * 0.75 * 100) / 100; if (o.HT_Rugged) o.HT_Rugged = Math.round(o.HT_Rugged * 0.75 * 100) / 100; if (o.JawWide) o.JawWide = Math.min(o.JawWide, m ? 0.6 : 0.2) // human proportions: no wide, round critter skulls
   if (!m) { // the female human Body carries a Bust key: the slider leads, else a per-person roll (rule: breast size more random)
     const b = l?.bust != null || l?.bustS != null ? _bust(l).Bust : 0.15 + u() * 0.85
     o.Bust = Math.round(b * 100) / 100
@@ -247,6 +292,8 @@ export function headModel(l0) {
   const blushCol = (typeof l?.blush === 'string' && l.blush.startsWith('#'))
     ? l.blush
     : (isFemale ? '#ff6588' : '#ff7b94');
+  const wearsBeard = Boolean(l?.beard && l.beard !== 'none');
+  const beardCol = l?.beardc || l?.hairc || '#5a3a26';
   const icon = ICONIC[spName] || {};
   return {
     id: (isFemale ? sp.headF : sp.headM) || sp.head,
@@ -267,7 +314,10 @@ export function headModel(l0) {
         : { color: blushCol, visible: false, transparent: true, opacity: 0, depthWrite: false },
       mouth: { color: '#44141e', roughness: 0.82 },
       tongue: { color: '#ff758c', roughness: 0.45 },
-      nose: { color: l?.nose || icon.nose || sp.nose || '#221614', roughness: 0.28, metalness: 0.05 }
+      nose: { color: l?.nose || icon.nose || sp.nose || '#221614', roughness: 0.28, metalness: 0.05 },
+      beard: wearsBeard
+        ? { color: beardCol, roughness: 0.65, metalness: 0.02 }
+        : { color: beardCol, visible: false, transparent: true, opacity: 0, depthWrite: false }
     }, sp.mats)
   }
 }
@@ -596,11 +646,11 @@ function eyeClean(f, eyes) {
 export const MESH = M.mesh === true
 export function critterSpec(l) {
   if (HUMAN) {
-    const hc = hairChild(l)
+    const hc = hairChild(l), bc = beardChild(l)
     return {
       model: humanBody(l),
       morph: humanMorph(l),
-      children: hc ? [hc] : [],
+      children: [hc, bc].filter(Boolean),
       ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {})
     }
   }
@@ -616,7 +666,7 @@ export function critterSpec(l) {
       morph: faceMorph(l?.expr, false, isF, l),
       jiggle: { bones: ['EarL', 'EarR'], amount: 0.58, bounce: 0.72 },
       ...(maskOf(l) ? { visible: false } : {})
-    }, maskChild(l), hairChild(l)].filter(Boolean),
+    }, maskChild(l), hairChild(l), beardChild(l)].filter(Boolean),
     material: { outline: { color: '#1d1420', width: 2.4 } },
     jiggle: { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.68, bounce: 0.72 },
     ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {})
@@ -663,13 +713,13 @@ export function strayHeads(ctx, obj) {
   return out
 }
 export function seatHead(ctx, obj, l) {
-  if (HUMAN) { for (const k of [HEAD_ID, MASK_ID]) if (ctx.getObject(obj.id + '/' + k)) ctx.destroy(obj.id + '/' + k); seatHumanHair(ctx, obj, l); for (const h of strayHeads(ctx, obj)) ctx.destroy(h.id); obj.jiggle = null; obj.morph = humanMorph(l); if (obj.material?.outline) obj.material = null; return } // a human body carries its own head; its face keys rolled per NPC
+  if (HUMAN) { for (const k of [HEAD_ID, MASK_ID]) if (ctx.getObject(obj.id + '/' + k)) ctx.destroy(obj.id + '/' + k); seatHumanHair(ctx, obj, l); seatBeard(ctx, obj, l); for (const h of strayHeads(ctx, obj)) ctx.destroy(h.id); obj.jiggle = null; obj.morph = humanMorph(l); if (obj.material?.outline) obj.material = null; return } // a human body carries its own head; its face keys rolled per NPC
   const want = critterSpec(l).children[0]; let h = ctx.getObject(obj.id + '/' + HEAD_ID)
   // a head skinned to the body's old model loses its skin when the body swaps: re-spawn it on the new one
   const body = obj.model?.id ?? obj.model
   if (h && obj.state && obj.state.headBody !== body) { ctx.destroy(h.id ?? obj.id + '/' + HEAD_ID); h = null }
   if (obj.state && obj.state.headBody !== body) obj.state.headBody = body
-  seatMask(ctx, obj, l); seatHair(ctx, obj, l)
+  seatMask(ctx, obj, l); seatHair(ctx, obj, l); seatBeard(ctx, obj, l)
   if (!h) { ctx.spawn(HEAD_ID, { parent: obj.id, ...want }); return }
   if (!h.attachment?.skin) {
     h.primitive = null; h.attachment = { skin: true }; h.feetPosition = { x: 0, y: 0, z: 0 }; h.rotation = 0;
@@ -735,7 +785,7 @@ export function restyle(ctx, o) {
   const want = HUMAN ? 'h' : 'f'
   const stray = strayHeads(ctx, o)
   if (want === 'f' && isF) return false
-  if (want === 'h' && isH && Object.values(M.human).includes(mid)) { if (!stray.length && !o.material?.outline) { const w = o.state?.wear, h = ctx.getObject(o.id + '/' + HAIR_ID); if (w && !h && w.hair !== 'none' && !maskOf(w)) { seatHumanHair(ctx, o, w); return true } return false } if (o.state && !o.state.wear) o.state.wear = { ...(lookFromModel(o.model, stray[0]?.model?.id ?? stray[0]?.model) ?? {}) }; seatHead(ctx, o, o.state?.wear ?? {}); return true }
+  if (want === 'h' && isH && Object.values(M.human).includes(mid)) { if (!stray.length && !o.material?.outline) { const w = o.state?.wear, h = ctx.getObject(o.id + '/' + HAIR_ID); if (w && !h && w.hair !== 'none' && !maskOf(w)) { seatHumanHair(ctx, o, w); seatBeard(ctx, o, w); return true } return false } if (o.state && !o.state.wear) o.state.wear = { ...(lookFromModel(o.model, stray[0]?.model?.id ?? stray[0]?.model) ?? {}) }; seatHead(ctx, o, o.state?.wear ?? {}); return true }
   const local = String(o.id).split('/').pop()
   const hm = ctx.getObject(o.id + '/' + HEAD_ID)?.model ?? stray[0]?.model
   const l = { ...(lookFromModel(o.model, hm?.id ?? hm) ?? {}), ...(o.state?.wear ?? {}) }

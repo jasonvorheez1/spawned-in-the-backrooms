@@ -205,6 +205,18 @@ export function npcLook(id, look, faction, level, role) {
       l.hairc = C.hairc[(hashOf(id + ':hairc') >>> 3) % C.hairc.length]
     }
   }
+  if (!look?.beard && l.sex === 'm') {
+    const br = hashOf(id + ':beard')
+    if (br % 100 < 38) {
+      const beards = ['stubble', 'stubble', 'mustache', 'goatee', 'handlebars', 'fullbeard', 'chinstrap', 'anchor']
+      l.beard = beards[(br >>> 4) % beards.length]
+      if (br % 100 < 12) {
+        l.beardc = (br % 2 === 0) ? '#8a8a90' : '#4a3a30'
+      }
+    } else {
+      l.beard = 'none'
+    }
+  }
   l.fseed = h0 // the face (scripts/lib/critter-model.js faceFill) rolls from the id, so it never changes with the clothes
   if (!look?.trait) l.trait = '' // fullLook gave the player default; an NPC rolls its own
   return l
