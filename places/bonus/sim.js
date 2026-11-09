@@ -1,7 +1,7 @@
 // The Bonus Room's referee: lays the four counter people once (Tom, Andrew, Dawn, Rico) at their bonus.yml spots.
 // They're staff, not traders: E at the counter in front of each opens its menu (scripts/bonus-counter.js, scripts/hub-ui.js).
 import B from "../../scripts/lib/data/bonus.yml"
-import { critterSpec } from "../../scripts/lib/critter-model.js"
+import { critterSpec, seatHumanHair, STYLE_V } from "../../scripts/lib/critter-model.js"
 import { npcLook } from "../../scripts/lib/clothes.js"
 export const cadence = "2s"
 const STAFF = {
@@ -37,6 +37,11 @@ function people(ctx) {
 export function tick(ctx) {
   const s = ctx.place.state
   if (s.peopleV !== 1) { people(ctx); s.peopleV = 1 }
+  if (s.hairV !== STYLE_V) { // the mall's people keep their look on state.wear so a hair rebuild re-seats on them too
+    s.hairV = STYLE_V
+    const rows = [...Object.entries(SHOPPERS).map(([id, p]) => [id, p.look, "civilian"]), ...Object.entries(LOUNGERS).map(([id, p]) => [id, p.look, "civilian"]), ...Object.entries(STAFF).map(([id, p]) => [id, p.look, "trader"])]
+    for (const [id, look, role] of rows) { const o = ctx.place.objects[id]; if (!o) continue; const l = o.state?.wear ?? npcLook(id, look, role, 5); if (o.state && !o.state.wear) o.state.wear = l; seatHumanHair(ctx, o, l) }
+  }
   if (s.staffV === 1) return
   for (const [id, p] of Object.entries(B.people ?? {})) {
     const st = STAFF[id]; if (!st || ctx.place.objects[id]) continue
