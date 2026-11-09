@@ -871,7 +871,7 @@ def dress(head, body, r, is_male, aw):
     col = torus("col", nr + 0.03, 0.012, "cloth_top", (0, 0.08, 1.525), scale=(1.05, 1.1, 1.0)); weighted(col, r, NW); i = out.index(jk); out[i] = join("Top_jacket", [jk, col])
     # neck pieces
     # Nov 9 (Andrew): the scarf read as a red tie stuck on the shirt. a thick knit wrap above the collar, a knot at the throat, two tapered tails over the chest
-    sc = torus("Neck_scarf", nr + 0.03, 0.026, "cloth_neck", (0, 0.078, 1.535), rot=(math.radians(-8), 0, 0), scale=(1.05, 1.12, 1.25), seg=40, mseg=14)
+    sc = torus("Neck_scarf", nr + 0.024, 0.02, "cloth_neck", (0, 0.078, 1.535), rot=(math.radians(-8), 0, 0), scale=(1.0, 1.1, 1.35), seg=40, mseg=14)
     chest = lambda z, x: min((v.co.y for v in body.data.vertices if abs(v.co.z - z) < 0.02 and abs(v.co.x - x) < 0.02 and aw[v.index] < 0.3), default=-0.05)
     ky = chest(1.49, 0.03) - 0.03
     knot = prim("knot", "uv_sphere", "cloth_neck", (0.03, ky, 1.49), scale=(0.034, 0.024, 0.03), segments=20, ring_count=12)
@@ -882,7 +882,7 @@ def dress(head, body, r, is_male, aw):
         for v in t.data.vertices:
             u = v.co.y + 0.5  # 0 at the knot, 1 at the fringe
             zz = 1.48 - u * ln; xx = x + v.co.x * (0.05 - 0.012 * u) + math.sin(u * 3.1) * 0.006
-            v.co = Vector((xx + math.sin(math.radians(ang)) * u * ln, chest(zz, xx) - 0.018 + dy + 0.004 * math.sin(v.co.x * 6.3), zz))
+            v.co = Vector((xx + math.sin(math.radians(ang)) * u * ln, chest(zz, xx) - 0.03 + dy + 0.004 * math.sin(v.co.x * 6.3), zz))
         t.data.materials.append(MATS["cloth_neck"])
         sd = t.modifiers.new("sd", "SOLIDIFY"); sd.thickness = 0.008; sd.offset = 0
         bpy.ops.object.select_all(action="DESELECT"); t.select_set(True); bpy.context.view_layer.objects.active = t; bpy.ops.object.modifier_apply(modifier="sd")
