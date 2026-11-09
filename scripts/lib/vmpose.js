@@ -6,6 +6,7 @@
 // a pump stroke that throws the spent hull. Everything: sway that lags the look, strafe lean, walking bob,
 // breathing at rest, a dip on landing, a lowered carry when sprinting, a raise with overshoot on equip.
 // Springs and timelines run on real frame time; the object is posed with interpolation off.
+import { SPLIT } from './weapon-look.js'
 import W, { baseOf } from './weapons.js'
 import { handling } from './stats.js'
 import { cndOf } from './condition.js'
@@ -153,6 +154,7 @@ export function poseViewmodel(ctx, dt) {
       m.sv[5] += (rc.twist ?? 70) * rnd(-0.4, 1) * aimDamp
       const muzzle = ctx.getObjectSocket(ps.vmId, 'muzzle')
       if (muzzle && muzzle.position) ctx.emit('fx', { position: muzzle.position, attachTo: ps.vmId, script: wp.pellets ? FLASH_BIG : FLASH })
+      m.shotT = 0 // the slide's blowback
       if (wp.pellets || wp.tube) m.eject = true // the pump or lever throws the spent case
       else if (muzzle && muzzle.position && view) emitCasing(ctx, muzzle.position, view.yaw, false)
     }
@@ -312,7 +314,36 @@ export function poseViewmodel(ctx, dt) {
   if (gun) { pitch -= lo * 35; roll += lo * 18; x += lo * 0.04 } else { roll += lo * 10 }
 
   vm.feetPosition = { attach: 'camera', x, y, depth: d, fov: VM_FOV }
+  partsPose(ctx, ps, kind, dt, m)
   vm.rotation = { yaw, pitch, roll }
+}
+
+// the split pistol's own parts: the slide blows back on a shot and racks in the reload, the magazine drops out and slides home
+const PARTS = { pistol: Object.fromEntries(SPLIT.pistol.map(([id, , at]) => [id, at])) }
+function partsPose(ctx, ps, kind, dt, m) {
+  const base = PARTS[kind]; if (!base) return
+  const gun = ctx.getObject(ps.vmId + '/gun'); if (!gun) return
+  const kids = (gun.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).filter(Boolean)
+  const part = (n) => kids.find((c) => c.id === n || c.id?.endsWith('/' + n))
+  m.shotT = (m.shotT ?? 9) + dt
+  const empty = (ps['loaded_' + kind] ?? 1) <= 0
+  let back = m.shotT < 0.03 ? m.shotT / 0.03 : Math.max(0, 1 - (m.shotT - 0.03) / 0.07) // 10 cm/s snap back, spring home
+  let magDown = 0, magHide = false
+  if (m.relOn) {
+    const t = m.relT / ((W[kind] ?? {}).reloadTime ?? 1.7)
+    if (t > 0.17 && t < 0.3) magDown = (t - 0.17) / 0.13
+    else if (t >= 0.3 && t < 0.48) { magDown = 1; magHide = true }
+    else if (t >= 0.48 && t < 0.56) magDown = 1 - (t - 0.48) / 0.08
+    if (m.relEmpty) back = t < 0.8 ? 1 : Math.max(0, 1 - (t - 0.8) / 0.03)
+    else if (t > 0.74 && t < 0.86) back = t < 0.8 ? (t - 0.74) / 0.06 : 1 - (t - 0.8) / 0.06
+  } else if (empty) back = 1 // locked back on the last round
+  const sl = part('slide'), mg = part('mag'), sb = base.slide, mb = base.mag
+  if (sl) { const z = sb[2] + back * 0.032; if (Math.abs((m.slideZ ?? sb[2]) - z) > 1e-4) { m.slideZ = z; sl.feetPosition = { x: sb[0], y: sb[1], z } } }
+  if (mg) {
+    const y = mb[1] - magDown * magDown * 0.16, z = mb[2] + magDown * 0.02
+    if (Math.abs((m.magY ?? mb[1]) - y) > 1e-4) { m.magY = y; mg.feetPosition = { x: mb[0], y, z } }
+    if (mg.visible !== !magHide) mg.visible = !magHide
+  }
 }
 
 // a spent case thrown out to the right (brass for the pistol, a red hull from the shotgun's pump)

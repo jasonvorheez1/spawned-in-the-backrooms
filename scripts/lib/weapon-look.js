@@ -54,11 +54,18 @@ const CENTER = { table_leg: [0, 0.3325], pipe_scrap: [0, 0.415], crowbar: [0, 0.
 // the butt, head-side offset turned forward): the child's local position and rotation that put the grip at the fist's
 // origin with the handle running up +Y and the blade facing -Z. The engine stands a model centred on its box (x, z).
 export const MESHGRIP = {"table_leg": {"at": [-0.205, 0.3532, 0.0032], "q": [0.5202, 0.3007, -0.5034, 0.6209]}, "pipe_scrap": {"at": [-0.0056, 0.3459, 0.1018], "q": [-0.7142, 0.0025, -0.0025, 0.6999]}, "crowbar": {"at": [0.0002, 0.4031, 0.0438], "q": [-0.0281, 0.794, -0.6055, 0.0456]}, "bat": {"at": [0.0111, 0.4275, 0.0859], "q": [-0.0571, -0.703, 0.7089, -0.0051]}, "hatchet": {"at": [0.0619, 0.3438, 0.0075], "q": [-0.5163, 0.4987, 0.4812, 0.5032]}, "fire_axe": {"at": [0.0216, 0.6145, -0.271], "q": [0.3232, 0.4489, 0.809, 0.1988]}}
+export const SPLIT = { pistol: [
+  ["frame", "/cdn/value.339fa3189b24b09cd4c4333f21c90f49e5ecb5ba0050a12203a9518c9203f34f.glb", [-0.0049, -0.0533, 0.0299]],
+  ["slide", "/cdn/value.de102cb046cad8bf072449b2258194dc2e8a3d97ef2216add66e3be21e1b8720.glb", [0.0114, 0.0846, -0.0047]],
+  ["mag", "/cdn/value.98a0e360dcb08df9ad6b19ed459e7b3c162a69e9d4520f99e43285bb3afd2608.glb", [-0.0148, -0.064, 0.0564]],
+] }
 export const HOLD = {
   fists: null, soup_bowl: 0.0, table_leg: 0.16, pipe_scrap: 0.12, crowbar: 0.14, bat: 0.14, hatchet: 0.12, fire_axe: 0.18, pistol: 0.04, shotgun: 0.14, rebar: 0.14, wrench: 0.12, screwdriver: 0.05, sledgehammer: 0.14, stun_baton: 0.10, lineman_machete: 0.09, knife: 0.05, smg: 0.14, golf_club: 0.14, tire_iron: 0.12, pickaxe: 0.16, baton: 0.1, cleaver: 0.06, revolver: 0.05, coach_gun: 0.14, lever_rifle: 0.14, hunting_rifle: 0.14, carbine: 0.14, fishing_rod: 0.14,
 }
 export function weaponBody(kind) {
   const base = baseOf(kind), w = W[kind] ?? {}, m = MESH[base], look = w.look, short = look === 'sawn' ? 0.72 : 1
+  // the pistol in three parts (art/weapon-split/pistol.py): frame, slide, magazine, each standing where it sat in the whole mesh, so the reload moves real parts
+  if (base === 'pistol' && !look && !w.tint) return { children: SPLIT.pistol.map(([id, url, at]) => ({ id, model: { id: url }, feetPosition: { x: at[0], y: at[1], z: at[2] }, castShadow: false })) }
   const body = m
     ? { model: { id: m[0], offset: [0, m[1], 0] } }
     : { primitive: { kind: "scripted", script: "scripts/weapon-geo.js", params: { kind: base } }, ...(w.tint ? { material: { color: w.tint } } : {}) }
