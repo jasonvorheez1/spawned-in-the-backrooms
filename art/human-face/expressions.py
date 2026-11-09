@@ -17,8 +17,16 @@ def ss(e0, e1, x):
     t = max(0.0, min(1.0, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t)
 
 bm = bmesh.new(); bm.from_mesh(H.data); bm.verts.ensure_lookup_table(); bm.faces.ensure_lookup_table()
+XK = ["X_Blink", "X_Squint", "X_Open", "X_Wide", "X_Round", "X_Smile", "X_Frown", "X_BrowUp", "X_BrowAngry", "X_BrowSad"]
+_b = bm.verts.layers.shape.get("Basis")
+for n in XK: bm.verts.layers.shape.new(n)
+bm.verts.ensure_lookup_table(); _b = bm.verts.layers.shape.get("Basis")
+for n in XK:
+    _L = bm.verts.layers.shape.get(n)
+    for v in bm.verts: v[_L] = v[_b].copy()
 uvl = bm.loops.layers.uv.active; dl = bm.verts.layers.deform.active
-keyl = {k.name: bm.verts.layers.shape.get(k.name) for k in H.data.shape_keys.key_blocks}
+keyl0 = {k.name: bm.verts.layers.shape.get(k.name) for k in H.data.shape_keys.key_blocks}
+keyl = {**keyl0, **{n: bm.verts.layers.shape.get(n) for n in XK}}
 basisL = keyl["Basis"]
 W = lambda v: MW @ v[basisL]
 def vset(name):
@@ -31,11 +39,14 @@ def contour(vs):
     top = [-1e9] * n; bot = [1e9] * n
     for p in ps:
         i = min(n - 1, int((p.x - x0) / (x1 - x0) * n)); top[i] = max(top[i], p.z); bot[i] = min(bot[i], p.z)
+    for arr, bad in ((top, -1e9), (bot, 1e9)):
+        for i in range(n):
+            if arr[i] == bad: arr[i] = next((arr[j] for d in range(1, n) for j in (i - d, i + d) if 0 <= j < n and arr[j] != bad), 0)
     xs = [x0 + (i + 0.5) * (x1 - x0) / n for i in range(n)]
     def f(arr, x):
         if x <= xs[0]: return arr[0]
         if x >= xs[-1]: return arr[-1]
-        i = int((x - xs[0]) / (xs[1] - xs[0])); i = min(i, n - 2); t = (x - xs[i]) / (xs[1] - xs[i]); return arr[i] * (1 - t) + arr[i + 1] * t
+        i = int((x - xs[0]) / (xs[1] - xs[0])); i = min(i, n - 2); t = (x - xs[i]) / (xs[i + 1] - xs[i]); return arr[i] * (1 - t) + arr[i + 1] * t
     return (lambda x: f(top, x)), (lambda x: f(bot, x)), x0, x1
 sides = {}
 for s in (1, -1):
@@ -67,9 +78,7 @@ for f in eye_faces:
 bm.normal_update()
 
 def addkey(name):
-    L = bm.verts.layers.shape.new(name)
-    for v in bm.verts: v[L] = v[basisL].copy()
-    return L
+    return keyl[name]
 def put(L, v, dw):  # dw: world-space offset from basis
     v[L] = v[basisL] + MI @ dw
 
@@ -152,7 +161,7 @@ for name, f in (("X_BrowUp", lambda t: 0.0035), ("X_BrowAngry", lambda t: -0.003
         w = math.exp(-((p.z - bz) / 0.009) ** 2)
         if w > 0.05: t = min(1, abs(p.x) / bx); put(L, v, Vector((0, 0, f(t) * 0.55 * w)))
 bm.to_mesh(H.data); bm.free(); H.data.update()
-print("keys", [k.name for k in H.data.shape_keys.key_blocks], "verts", len(H.data.vertices))
+print("keys", [k.name for k in H.data.shape_keys.key_blocks][-11:], "verts", len(H.data.vertices))
 
 if proof:
     for o in bpy.data.objects:
