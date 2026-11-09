@@ -24,7 +24,14 @@ def build(sex, side):
     body.modifiers.clear()
     mw = body.matrix_world.copy()
     W, T = B["RightHand"]; a = (T - W).normalized()
-    n = (V((0, 0, 1)) - a * a.z).normalized(); s = a.cross(n).normalized()
+    import numpy as np   # the hand's own axes from its mesh: fingers along the longest spread, palm normal the thinnest
+    hp = [mw @ v.co for v in me.vertices if any(g.group == gi["RightHand"] and g.weight > 0.5 for g in v.groups)]
+    tips = sorted(hp, key=lambda p: -(p - W).dot(a))[:40]
+    a = ((sum(tips, V()) / len(tips)) - W).normalized()
+    X = np.array([tuple(p) for p in hp]); X = X - X.mean(0); ev, evec = np.linalg.eigh(X.T @ X)
+    n = V(evec[:, 0]); n = (n - a * n.dot(a)).normalized()
+    if n.z < 0: n = -n   # back of the hand up (rest pose palm down)
+    s = a.cross(n).normalized()
     if s.y > 0: s = -s   # s points to the thumb side (front, -Y)
     dele = []; P = {}
     for v in me.vertices:
