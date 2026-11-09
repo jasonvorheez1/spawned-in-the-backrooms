@@ -54,13 +54,13 @@ def rot_world(pb, axis, deg):
     pb.rotation_mode = "QUATERNION"; pb.rotation_quaternion = Quaternion(Mb.inverted() @ Vector(axis), math.radians(deg)) @ pb.rotation_quaternion
 
 # the stance in the body's frame: facing -Y, left +X. Blade 24 deg, stock in the right pocket, cheek down on the gun.
-PIV = Vector((-0.10, 0.06, 1.36))
-RW, LW = Vector((-0.11, -0.05, 1.30)), Vector((-0.05, -0.33, 1.29))  # wrists: grip, foregrip
-READY_R, READY_L = Vector((-0.15, -0.06, 1.16)), Vector((-0.02, -0.30, 1.02))
+PIV = Vector((-0.12, 0.02, 1.40))
+RW, LW = Vector((-0.14, -0.20, 1.36)), Vector((0.0, -0.38, 1.35))  # wrists: grip, foregrip
+READY_R, READY_L = Vector((-0.16, -0.16, 1.14)), Vector((0.02, -0.30, 1.04))
 def pose(frame, pitch=0.0, kick=0.0, breath=0.0, ready=False, curl=True):
     for pb in P:
         pb.rotation_mode = "QUATERNION"; pb.rotation_quaternion = Quaternion(); pb.location = (0, 0, 0)
-    blade = -12 if not ready else -8
+    blade = -15 if not ready else -10
     rot_world(P["Spine1"], (0, 0, 1), blade); rot_world(P["Spine2"], (0, 0, 1), blade)
     sp = pitch * 0.22 + kick * 4 + breath * 0.8          # the chest follows the barrel part way
     rot_world(P["Spine1"], (1, 0, 0), sp * 0.5); rot_world(P["Spine2"], (1, 0, 0), sp * 0.5)
