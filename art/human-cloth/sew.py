@@ -287,8 +287,7 @@ for name, (ease, cuts) in PLAN.items():
     tri = sum(len(p.vertices) - 2 for p in me.polygons); BUDGET = 9000 if name.startswith("Top_") else 6000   # Savi's pick: a crowd of NPCs wears these
     if tri > BUDGET:
         dc = n.modifiers.new("d", "DECIMATE"); dc.ratio = BUDGET / tri; bpy.ops.object.modifier_apply(modifier="d")
-    sb2 = bmesh.new(); sb2.from_mesh(me)                     # the centre seam tears where decimate meets the mirror: weld and patch small holes
-    bmesh.ops.remove_doubles(sb2, verts=sb2.verts[:], dist=0.0025)
+    sb2 = bmesh.new(); sb2.from_mesh(me)                     # after decimate: patch true holes only. a weld here merged the cloth's inner and outer skins and folded the back over
     bmesh.ops.holes_fill(sb2, edges=[e for e in sb2.edges if e.is_boundary], sides=40)
     bmesh.ops.recalc_face_normals(sb2, faces=sb2.faces[:]); sb2.to_mesh(me); sb2.free()
     for p in me.polygons: p.use_smooth = True
