@@ -58,7 +58,7 @@ def build(sex, side):
     body = bpy.data.objects["Body"]
     if body.data.shape_keys: body.shape_key_clear()
     PO = kf_pose(rig, body)
-    B = {b.name: (rig.matrix_world @ b.head_local, rig.matrix_world @ b.tail_local) for b in rig.data.bones}
+    B = {b.name: (rig.matrix_world @ b.head, rig.matrix_world @ b.tail) for b in rig.pose.bones}   # the NV-posed bones
     bpy.ops.object.select_all(action="DESELECT"); body.select_set(True); bpy.context.view_layer.objects.active = body
     bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
     for o in list(bpy.data.objects):
@@ -76,9 +76,9 @@ def build(sex, side):
     a = ((sum(tips, V()) / len(tips)) - W).normalized()
     X = np.array([tuple(p) for p in hp]); X = X - X.mean(0); ev, evec = np.linalg.eigh(X.T @ X)
     n = V(evec[:, 0]); n = (n - a * n.dot(a)).normalized()
-    if n.z < 0: n = -n   # back of the hand up (rest pose palm down)
+    if n.dot(PO["n"]) < 0: n = -n   # back of the hand, as kf_pose laid it
     s = a.cross(n).normalized()
-    if s.y > 0: s = -s   # s points to the thumb side (front, -Y)
+    if s.dot(PO["s"]) < 0: s = -s   # thumb side
     dele = []; P = {}
     for v in me.vertices:
         ws = {g.group: g.weight for g in v.groups}
@@ -110,11 +110,13 @@ def build(sex, side):
     fingers = [c for c in comps({i for i in H if P[i][1] > TK}) if len(c) > 30]
     thumbs = [c for c in comps({i for i in P if P[i][3] > 0.03 and P[i][1] > -0.03 and P[i][3] > 0.03}) if len(c) > 10]
     print(sex, "fingers", len(fingers), "thumb", [len(c) for c in thumbs])
-    ANG = (72, 95, 55)   # knuckle, middle, tip flexion: a cylinder grasp around the grip, not a crushed fist
+    FLEX = kf_flex()   # index..pinky knuckle, middle, tip flexion from NV 1hmAim
+    fingers.sort(key=lambda c: -sum(P[i][3] for i in c) / len(c))   # thumb side first: index, middle, ring, pinky
     def rot(pt, piv, ax, deg): return mu.Quaternion(ax, math.radians(deg)) @ (pt - piv) + piv
     newp = {i: P[i][0].copy() for i in P}
     hinge = V(); rings1 = []
-    for c in fingers:
+    for fi, c in enumerate(fingers):
+        ANG = FLEX[min(fi, 3)]
         pts = [P[i][0] for i in c]; cen = sum(pts, V()) / len(pts)
         X = np.array([tuple(q - cen) for q in pts]); f = V(np.linalg.eigh(X.T @ X)[1][:, 2])
         if f.dot(a) < 0: f = -f
@@ -182,14 +184,14 @@ def build(sex, side):
     S = V((0, 1, 0)); S = (S - A * S.dot(A)).normalized()  # thumb side: up
     N = A.cross(S) * (-1 if side == "R" else 1)            # back of hand: outward (right for the right hand)
     gA, gS, gN = [g2b(*x) for x in (A, S, N)]
-    src = mu.Matrix((a, s, n)).transposed(); dst = mu.Matrix((gA, gS, gN)).transposed()
+    src = mu.Matrix((a, s, n)).transposed(); dst = src.copy()   # the arm stays as NV lays it before the camera; only the fist moves to the origin
     R = dst @ src.inverted()
     M = mu.Matrix.Translation(V((0, 0, 0))) @ R.to_4x4() @ mu.Matrix.Translation(-fist)
     if side == "L":   # mirror the right arm's mesh first, then lay it
         Mi = mu.Matrix.Scale(-1, 4, V((1, 0, 0)))
         fistM = Mi @ fist
         aM, sM, nM = [V((-x.x, x.y, x.z)) for x in (a, s, n)]
-        src = mu.Matrix((aM, sM, nM)).transposed(); R = dst @ src.inverted()
+        R = mu.Matrix.Identity(3)
         M = R.to_4x4() @ mu.Matrix.Translation(-fistM) @ Mi
     me.transform(M)
     if side == "L": me.flip_normals()
