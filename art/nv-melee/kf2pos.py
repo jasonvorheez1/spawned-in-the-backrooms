@@ -84,5 +84,16 @@ for fi in range(nf):
             pp, pq = world(par); p = tuple(a+b for a, b in zip(pp, qrot(pq, p))); q = qmul(pq, q)
         W[n] = (p, q); return W[n]
     frames.append({n: [round(c, 4) for c in world(n)[0]] for n in PARENT if n in S})
-json.dump({"name": seq.name.decode(), "fps": FPS, "duration": dur, "cycle": seq.cycle_type, "frames": frames}, open(sys.argv[2], "w"))
+    # the arms in the NECK's own frame: the FP spine bends with the camera, the chest a body wears stays upright
+    nq = world("Bip01 Neck")[1]; inv = (nq[0], -nq[1], -nq[2], -nq[3]); loc = {}
+    for s in "LR":
+        for a, b in (("Clavicle", "UpperArm"), ("UpperArm", "Forearm"), ("Forearm", "Hand"), ("Hand", "Finger2")):
+            A, B = f"Bip01 {s} {a}", f"Bip01 {s} {b}"
+            if A in W or A in S:
+                v = tuple(y - x for x, y in zip(world(A)[0], world(B)[0])); loc[f"{s}{a}"] = [round(c, 5) for c in qrot(inv, v)]
+    frames[-1]["_neck"] = loc
+    if fi == 0:
+        def lp(n): return qrot(inv, tuple(y - x for x, y in zip(world("Bip01 Neck")[0], world(n)[0])))
+        axes = {"up": lp("Bip01 Neck1") if "Bip01 Neck1" in S else lp("Bip01 Neck"), "right": tuple(r - l for l, r in zip(lp("Bip01 L Clavicle"), lp("Bip01 R Clavicle")))}
+json.dump({"axes": axes, "name": seq.name.decode(), "fps": FPS, "duration": dur, "cycle": seq.cycle_type, "frames": frames}, open(sys.argv[2], "w"))
 print("OK", seq.name.decode(), nf, "frames", len(frames[0]), "bones")
