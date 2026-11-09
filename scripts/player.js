@@ -369,6 +369,11 @@ export function onInput(ctx, input) {
     ctx.self.velocity = { x: v.x, y: PLAYER.jumpSpeed, z: v.z }
     sound(ctx, (STEPS[floorOf(ctx)] ?? Object.values(STEPS)[0]).walk, 0.4, true)
   }
+  { // update aim before firing, including when both buttons change on the same tick
+    const sv = ctx.self.state, aw = W[sv.equipped]
+    const ads = !!(input.held.aim && aw?.ranged && !sv.reloading && !sv.sheathed && !sv.building && !sv.invOpen && !sv.lootOpen && !(sv.downAt && ctx.now() - sv.downAt < 1200))
+    if (!!sv.ads !== ads) { sv.ads = ads; if (ads) sv.adsAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.25, true) }
+  }
   {
     // melee: hold to wind up, release to swing (a heavy past power.min); a gun fires on the press
     const sv = ctx.self.state, aw = weaponOf(sv), P = W.power
@@ -398,12 +403,6 @@ export function onInput(ctx, input) {
     if (input.pressed.reload && !bld) { w.rDown = ctx.now(); w.rHeld = false }
     if (w.rDown && input.held.reload && !w.rHeld && ctx.now() - w.rDown >= 450) { w.rHeld = true; toggleHolster(ctx) }
     if (input.released.reload || (w.rDown && !input.held.reload)) { if (w.rDown && !w.rHeld && !bld) startReload(ctx); w.rDown = 0; w.rHeld = false } // R turns the piece in build mode
-  }
-  {
-    // aiming down the sights: a ranged weapon, button held, not mid-reload, not downed
-    const sv = ctx.self.state, aw = W[sv.equipped]
-    const ads = !!(input.held.aim && aw?.ranged && !sv.reloading && !(sv.downAt && ctx.now() - sv.downAt < 1200))
-    if (!!sv.ads !== ads) { sv.ads = ads; if (ads) sv.adsAt = ctx.now(); sound(ctx, 'gun-raise-cloth-rustle', 0.25, true) }
   }
   if (input.pressed.flashlight) toggleLight(ctx)
 }
@@ -504,7 +503,7 @@ function swing(ctx, power = 0) {
   if (s.equipped !== 'fists') s['cnd_' + s.equipped] = Math.max(0, (s['cnd_' + s.equipped] ?? 100) - useWear(wp) * derived(s).wear) // weapons wear with use; Repair slows it
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   if (wp.ranged) { // real bullets: spread, drop and drag down each pellet's path (scripts/lib/ballistics.js)
-    let pc = ctx.self.camera?.rotation?.pitch ?? 0; if (Math.abs(pc) > 1.6) pc = pc * Math.PI / 180
+    const pc = s.aimPitch ?? 0
     const eye = { x: p.x, y: p.y + (s.crouch ? 1.0 : 1.45), z: p.z }, crit = ctx.random() < derived(s).crit
     const base = (wp.damage + (s.level - 1) * L.perLevel.damage * wp.levelScale) * dmgMul(s, wp) * wMul(cndOf(s, s.equipped)) * (crit ? D.crit : 1)
     let fv = f, pv = pc // in third person the shot goes from your eye to the point under the crosshair (scripts/camera.js keeps it in state.aimPt)
