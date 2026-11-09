@@ -237,6 +237,79 @@ const CSS = `<style>
   .nv-vitals { display: none }
   .nv-mode-tabs { display: none }
 }
+/* HALOGEN items screen (Shelly #141205: different, friendlier, animated) */
+.pbp.hg { width:min(1020px, calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset, 50px) + 16px))); max-height:min(700px, 92vh); padding:0; border-width:0; border-radius:10px; background:linear-gradient(180deg, rgba(26,17,5,.98), rgba(9,6,2,.99)); box-shadow:0 0 0 2px var(--a), 0 0 0 6px rgba(20,13,4,.95), 0 0 0 7px var(--ad), 0 18px 60px rgba(0,0,0,.8), 0 0 50px rgba(255,170,40,.18); animation:hgBoot .45s cubic-bezier(.2,.9,.3,1.2) both }
+@keyframes hgBoot { 0% { transform:translateY(24px) scale(.94); opacity:0; filter:brightness(2.6) blur(2px) } 60% { opacity:1; filter:brightness(1.4) } 100% { transform:none; filter:none } }
+.hg-top { display:flex; align-items:center; gap:18px; padding:12px 18px 10px; background:linear-gradient(90deg, rgba(255,182,66,.14), rgba(255,182,66,.02) 60%); border-bottom:2px solid var(--a) }
+.hg-brand { display:flex; align-items:center; gap:8px }
+.hg-brand h2 { margin:0; font-size:24px; font-weight:400; letter-spacing:.14em; text-shadow:0 0 10px rgba(255,170,40,.9) }
+.hg-brand sup { font-size:10px }
+.hg-led { width:9px; height:9px; border-radius:50%; background:var(--ab); box-shadow:0 0 8px var(--a); animation:hgLed 1.6s ease-in-out infinite }
+@keyframes hgLed { 50% { opacity:.25 } }
+.hg-cur { animation:nvBlink 1s steps(1) infinite; font-size:20px }
+.hg-modes { display:flex; gap:4px }
+.hg-modes button { font:inherit; font-size:12px; letter-spacing:.1em; padding:5px 12px; color:var(--ad); background:rgba(0,0,0,.3); border:1px solid var(--al); border-radius:3px; cursor:pointer; transition:all .15s }
+.hg-modes button:hover { color:var(--a); border-color:var(--a); transform:translateY(-1px) }
+.hg-modes button.on { color:#140c02; background:var(--a); border-color:var(--ab); box-shadow:0 0 12px rgba(255,170,40,.55) }
+.hg-modes kbd { font-family:inherit; font-size:9px; border:1px solid currentColor; padding:0 3px; margin-right:5px; opacity:.7 }
+.hg-vit { margin-left:auto; display:flex; gap:10px; align-items:stretch }
+.hg-gauge, .hg-chip { display:flex; flex-direction:column; justify-content:center; padding:3px 10px; border:1px solid var(--al); background:rgba(0,0,0,.35); border-radius:3px; min-width:70px }
+.hg-gauge { min-width:110px }
+.hg-gauge span, .hg-chip span { font-size:9px; letter-spacing:.18em; color:var(--ad) }
+.hg-gauge b, .hg-chip b { font-weight:400; font-size:15px; color:var(--ab) }
+.hg-gauge b i { font-style:normal; font-size:10px; color:var(--ad); margin-left:2px }
+.hg-gauge .bar { height:3px; background:var(--al); margin-top:2px; overflow:hidden }
+.hg-gauge .bar em { display:block; height:100%; background:var(--a); box-shadow:0 0 6px var(--a); transition:width .4s ease }
+.hg-gauge.warn b, .hg-gauge.warn .bar em { color:#ff5544; background:#ff5544; animation:nvBlink .8s infinite }
+.hg-chip.cash b { color:#9ee08a; text-shadow:0 0 6px rgba(140,230,120,.5) }
+
+.hg-qrow { display:flex; gap:5px; align-items:stretch; padding:8px 18px; border-bottom:1px solid var(--al); background:rgba(0,0,0,.25) }
+.hg-qt { font-size:9px; letter-spacing:.16em; color:var(--ad); line-height:1.25; align-self:center; margin-right:4px }
+.hg-q { position:relative; flex:1; min-width:0; height:42px; display:flex; flex-direction:column; justify-content:flex-end; padding:3px 5px; border:1px dashed var(--al); border-radius:3px; cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s, transform .15s }
+.hg-q:hover { border-color:var(--a); background:rgba(255,182,66,.08); transform:translateY(-2px) }
+.hg-q.set { border-style:solid; border-color:var(--ad); background:rgba(255,182,66,.07) }
+.hg-q.out { opacity:.45 }
+.hg-q .k { position:absolute; top:2px; left:4px; font-size:10px; color:var(--ab) }
+.hg-q .v { font-size:9px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--a) }
+.hg-q .c { position:absolute; top:2px; right:4px; font-size:9px; color:var(--ad) }
+.hg-q select { position:absolute; inset:0; opacity:0; cursor:pointer; width:100% }
+
+.hg-bd { display:flex; gap:0; flex:1; min-height:0 }
+.hg-rail { flex:0 0 132px; display:flex; flex-direction:column; gap:2px; padding:10px 8px; border-right:1px solid var(--al); background:rgba(0,0,0,.2); overflow-y:auto }
+.hg-rb { position:relative; display:flex; align-items:center; gap:8px; font:inherit; font-size:12px; letter-spacing:.08em; padding:7px 8px; color:var(--ad); background:none; border:1px solid transparent; border-radius:3px; cursor:pointer; text-align:left; animation:hgRail .35s calc(var(--i) * 35ms) both; transition:color .15s, background .15s, padding .15s }
+@keyframes hgRail { from { opacity:0; transform:translateX(-14px) } }
+.hg-rb .g { width:16px; text-align:center; font-size:14px }
+.hg-rb .n { margin-left:auto; font-size:10px; padding:0 5px; border-radius:8px; background:var(--al); color:var(--a) }
+.hg-rb:hover { color:var(--a); background:rgba(255,182,66,.07); padding-left:12px }
+.hg-rb.on { color:#140c02; background:var(--a); border-color:var(--ab); box-shadow:0 0 10px rgba(255,170,40,.45) }
+.hg-rb.on .n { background:#140c02; color:var(--a) }
+.hg-mid { flex:1 1 0; min-width:0; display:flex; flex-direction:column; padding:8px 12px 6px }
+.hg-sort { display:flex; align-items:center; gap:4px; font-size:10px; letter-spacing:.14em; color:var(--ad); padding-bottom:5px; border-bottom:1px solid var(--al); margin-bottom:6px }
+.hg-sort .sp { flex:1 }
+.hg-sort button { font:inherit; font-size:10px; letter-spacing:.08em; padding:2px 7px; color:var(--ad); background:none; border:1px solid transparent; border-radius:10px; cursor:pointer }
+.hg-sort button:hover { color:var(--a); border-color:var(--al) }
+.hg-sort button.on { color:var(--a); border-color:var(--a) }
+.pbp.hg .ls { flex:1; padding-right:6px }
+.pbp.hg .it { border-radius:3px; margin-bottom:2px; animation:hgRow .3s ease-out both; padding:6px 8px }
+@keyframes hgRow { from { opacity:0; transform:translateX(10px) } }
+.pbp.hg .it:hover { transform:translateX(3px) }
+.pbp.hg .it.sel { background:linear-gradient(90deg, rgba(255,182,66,.26), rgba(255,182,66,.06)); box-shadow:inset 3px 0 0 var(--ab) }
+.pbp.hg .it.sel .cur { animation:nvBlink 1s steps(1) infinite; color:var(--ab) }
+.pbp.hg .sec { font-size:10px; margin:10px 0 4px; display:flex; align-items:center; gap:8px }
+.pbp.hg .sec::after { content:''; flex:1; height:1px; background:linear-gradient(90deg, var(--ad), transparent) }
+.hg-card { flex:0 0 330px; display:flex; min-height:0; border-left:1px solid var(--al); padding:10px 14px; background:radial-gradient(ellipse at 50% 0%, rgba(255,182,66,.08), transparent 70%); animation:hgCard .3s ease-out both; overflow-y:auto }
+@keyframes hgCard { from { opacity:0; transform:translateY(8px) } }
+.hg-card .dt { border-left:none; padding-left:0; flex:1 }
+.hg-card .art-box { height:84px; border-radius:4px; border-color:var(--ad); box-shadow:inset 0 0 20px rgba(255,170,40,.08) }
+.hg-card .art-box svg { transform:scale(1.35) }
+.hg-card .acts .act { flex:1; border-radius:3px; font-size:13px; padding:8px 12px }
+.hg-ft { display:flex; align-items:center; gap:12px; padding:8px 18px; border-top:2px solid var(--a); font-size:11px; background:rgba(0,0,0,.3) }
+.hg-ft .hint { color:var(--ad); letter-spacing:.06em }
+.hg-ft kbd { font-family:inherit; font-size:9px; border:1px solid var(--ad); padding:0 4px; margin-right:5px; border-radius:2px }
+.hg-ft .c { margin-left:auto; color:var(--ad) }
+.hg-ft button { font:inherit; font-size:12px; letter-spacing:.1em; color:var(--a); background:none; border:1px solid var(--a); padding:4px 12px; border-radius:3px; cursor:pointer }
+.hg-ft button:hover { background:var(--a); color:#140c02 }
+@media (max-width: 760px) { .hg-card { display:none } .hg-rail { flex-basis:46px } .hg-rb .l, .hg-rb .n { display:none } .hg-vit .hg-chip, .hg-ft .hint { display:none } .hg-qrow { overflow-x:auto } .hg-q { flex:0 0 64px } }
 </style>`
 
 const owned = (s) => ['fists', ...(s.weapons ? s.weapons.split(',').filter(Boolean) : [])]
@@ -644,66 +717,59 @@ function inventory(s) {
     ? Object.values(SECS).filter(([, h]) => h && !/class="em"/.test(h)).map(([t, h]) => `<div class="sec">${t}</div>${h}`).join('') || '<div class="em">Empty pockets.</div>'
     : (SECS[tab][1] || '<div class="em">None.</div>')
 
-  const tabs = ['all', ...Object.keys(SECS)].map((t) => `
-    <button class="${t === tab ? 'on' : ''}" onclick="sendAction('inv',{k:'tab',t:'${t}'})">${t.toUpperCase()}</button>`).join('')
+  const cnt = (h) => (String(h).match(/class="it/g) || []).length
+  const GLY = { all: '◈', key: '✦', weapons: '⚔', apparel: '⛨', aid: '✚', misc: '✎', ammo: '⁂', repair: '⚙' }
+  const rail = ['all', ...Object.keys(SECS)].map((t, i) => {
+    const n = t === 'all' ? Object.values(SECS).reduce((a, [, h]) => a + cnt(h), 0) : cnt(SECS[t][1])
+    return `<button class="hg-rb${t === tab ? ' on' : ''}" style="--i:${i}" onclick="sendAction('inv',{k:'tab',t:'${t}'})"><span class="g">${GLY[t]}</span><span class="l">${t === 'all' ? 'ALL' : SECS[t][0].toUpperCase()}</span>${n ? `<span class="n">${n}</span>` : ''}</button>`
+  }).join('')
 
   let cap = 0, kg = 0; try { cap = derived(s).carry; kg = carried(s) } catch {}
   const isOver = cap > 0 && kg > cap
-  const wb = cap ? `<div class="wb-wrap"><span>WEIGHT</span><div class="wb${isOver ? ' ov' : ''}"><i style="width:${Math.min(100, (kg / cap) * 100).toFixed(0)}%"></i></div><span>${kg.toFixed(1)} / ${cap} KG</span>${isOver ? '<span class="warn">[OVERLOADED]</span>' : ''}</div>` : ''
+  const pct = cap ? Math.min(100, (kg / cap) * 100) : 0
 
   const eq = W[eqKey] ?? W.fists
-  const dropBtn = eqKey !== 'fists' ? `<button onclick="sendAction('inv',{k:'drop',w:'${eqKey}'})"><kbd>X</kbd>Drop ${eq.name}</button>` : ''
   const cashStr = `$${((s.cents ?? 0) / 100).toFixed(2)}`
+  const hp = Math.round(s.hp ?? 0), hpMax = maxHp(lv, s), hpPct = Math.max(0, Math.min(100, hp / hpMax * 100))
+  const qi = quickItems(s)
+  const slots = Array.from({ length: 10 }, (_, slot) => {
+    const id = s.quickSlots?.[slot], it = qi.find((x) => x.id === id)
+    return `<label class="hg-q${id ? ' set' : ''}${id && it && !it.count ? ' out' : ''}" title="Quick slot ${slot}"><span class="k">${slot}</span><span class="v">${it ? it.name : id ? 'EMPTY' : '—'}</span>${it?.count ? `<span class="c">×${it.count}</span>` : ''}<select aria-label="Quick slot ${slot}" onchange="sendAction('inv',{k:'quickAssign',slot:${slot},id:this.value})"><option value="">Unassigned</option>${qi.filter((x) => x.count > 0 || x.id === id).map((x) => `<option value="${x.id}" ${x.id === id ? 'selected' : ''}>${x.name} (×${x.count})</option>`).join('')}</select></label>`
+  }).join('')
 
-  return `<div class="pbw pb"><div class="pbp inv" data-modal>
-    <!-- Pip-Boy 3000 Header Bar -->
-    <div class="nv-top">
-      <div class="nv-top-left">
-        <h2>HALOGEN&trade; · ITEMS</h2>
-        <div class="nv-mode-tabs">
-          <button class="nv-mode-btn" onclick="sendAction('inv',{k:'sheet'})">STATS</button>
-          <button class="nv-mode-btn on">ITEMS</button>
-          <button class="nv-mode-btn" onclick="sendAction('inv',{k:'tab',t:'misc'})">NOTES</button>
-          <button class="nv-mode-btn" onclick="sendAction('inv',{k:'quests'})">QUESTS</button>
+  return `<div class="pbw pb"><div class="pbp inv hg" data-modal>
+    <div class="hg-top">
+      <div class="hg-brand"><span class="hg-led"></span><h2>HALOGEN<sup>™</sup></h2><span class="hg-cur">_</span></div>
+      <div class="hg-modes">
+        <button onclick="sendAction('inv',{k:'sheet'})"><kbd>K</kbd>STATS</button>
+        <button class="on">ITEMS</button>
+        <button onclick="sendAction('inv',{k:'quests'})">QUESTS</button>
+      </div>
+      <div class="hg-vit">
+        <div class="hg-gauge"><span>HP</span><b>${hp}<i>/${hpMax}</i></b><div class="bar"><em style="width:${hpPct.toFixed(0)}%"></em></div></div>
+        <div class="hg-gauge${isOver ? ' warn' : ''}"><span>LOAD</span><b>${kg.toFixed(1)}<i>kg</i></b><div class="bar"><em style="width:${pct.toFixed(0)}%"></em></div></div>
+        <div class="hg-chip"><span>DR</span><b>${wornDR(s.look)}</b></div>
+        <div class="hg-chip cash"><span>CASH</span><b>${cashStr}</b></div>
+      </div>
+    </div>
+
+    <div class="hg-qrow"><span class="hg-qt">QUICK<br>SLOTS</span>${slots}</div>
+
+    <div class="hg-bd">
+      <nav class="hg-rail">${rail}</nav>
+      <div class="hg-mid">
+        <div class="hg-sort"><span>${tab === 'all' ? 'EVERYTHING YOU CARRY' : SECS[tab][0].toUpperCase()}</span><span class="sp"></span>
+          ${[['name', 'A–Z'], ['dam', 'POWER'], ['wg', 'WEIGHT'], ['cnd', 'WEAR']].map(([k, l]) => `<button class="${sortMode === k ? 'on' : ''}" onclick="sendAction('inv',{k:'sort',s:'${k}'})">${l}</button>`).join('')}
         </div>
+        <div class="ls">${list}</div>
       </div>
-      <div class="nv-vitals">
-        <span><b>HP</b>${Math.round(s.hp ?? 0)}/${maxHp(lv, s)}</span>
-        <span><b>DR</b>${wornDR(s.look)}</span>
-        <span class="${isOver ? 'warn' : ''}"><b>WG</b>${kg.toFixed(1)}/${cap}</span>
-        <span><b>CASH</b>${cashStr}</span>
-      </div>
+      <div class="hg-card" id="hgc-${String(sel).replace(/[^a-z0-9]/gi, '_')}">${pane(s, sel, eqKey)}</div>
     </div>
 
-    <!-- Weight capacity bar -->
-    ${wb}
-
-    <details style="padding:8px 12px;border-bottom:1px solid var(--al)"><summary style="cursor:pointer">QUICK SLOTS · assign items to keys 0–9</summary><div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:8px">${Array.from({length:10},(_,slot)=>`<label style="font-size:12px">${slot} <select aria-label="Quick slot ${slot}" style="max-width:160px;background:#21190e;color:#ffe0a6;padding:6px;border:1px solid #927249" onchange="sendAction('inv',{k:'quickAssign',slot:${slot},id:this.value})"><option value="">Unassigned</option>${quickItems(s).filter(x=>x.count>0||x.id===s.quickSlots?.[slot]).map(x=>`<option value="${x.id}" ${x.id===s.quickSlots?.[slot]?'selected':''}>${x.name} (×${x.count})</option>`).join('')}</select></label>`).join('')}</div><div style="font-size:11px;padding-top:6px">Use a number during play. Assignments stay when supplies run out.</div></details>
-    <!-- Category sub-tabs -->
-    <div class="tabs">${tabs}</div>
-
-    <!-- Sorting Controls -->
-    <div class="sort-bar">
-      <span>LIST // ${tab.toUpperCase()}</span>
-      <div class="sort-btns">
-        <span>SORT:</span>
-        <button class="sort-btn ${sortMode === 'name' ? 'on' : ''}" onclick="sendAction('inv',{k:'sort',s:'name'})">NAME</button>
-        <button class="sort-btn ${sortMode === 'dam' ? 'on' : ''}" onclick="sendAction('inv',{k:'sort',s:'dam'})">DAM/DR</button>
-        <button class="sort-btn ${sortMode === 'wg' ? 'on' : ''}" onclick="sendAction('inv',{k:'sort',s:'wg'})">WG</button>
-        <button class="sort-btn ${sortMode === 'cnd' ? 'on' : ''}" onclick="sendAction('inv',{k:'sort',s:'cnd'})">CND</button>
-      </div>
-    </div>
-
-    <!-- Main 2-column body: List (left) + Detail (right) -->
-    <div class="bd">
-      <div class="ls">${list}</div>
-      ${pane(s, sel, eqKey)}
-    </div>
-
-    <!-- Footer action bar -->
-    <div class="ft">
-      <span class="c">${s.kills ?? 0} confirmed kills · Level ${lv}</span>
-      <button onclick="sendAction('inv',{k:'close'})"><kbd>I</kbd>Close</button>
+    <div class="hg-ft">
+      <span class="hint"><kbd>CLICK</kbd>inspect</span><span class="hint"><kbd>2×CLICK</kbd>use / equip</span><span class="hint"><kbd>0–9</kbd>quick slot</span>
+      <span class="c">${s.kills ?? 0} kills · LV ${lv} · holding ${eq.name}</span>
+      <button onclick="sendAction('inv',{k:'close'})"><kbd>I</kbd>CLOSE</button>
     </div>
   </div></div>`
 }
