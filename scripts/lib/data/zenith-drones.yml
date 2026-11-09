@@ -4,6 +4,12 @@
 watcher:  { name: "Watcher drone",  hp: 55,  sight: 16, keep: 9,  speed: 2.2, hover: 1.9, dmg: 7,  burst: 1, gap: 0,    cool: 1.5, aim: 0.6,  charge: 0,   size: 0.55, beam: "#ff3b3b", xp: 25, drops: [[cells, 0.7]] }
 enforcer: { name: "Enforcer drone", hp: 110, sight: 20, keep: 11, speed: 1.6, hover: 1.7, dmg: 6,  burst: 3, gap: 0.16, cool: 2.4, aim: 0.55, charge: 0,   size: 0.75, beam: "#ff7a2a", xp: 45, drops: [[cells, 1], [cells, 0.5], ["weapon:laser_pistol", 0.3]] }
 warden:   { name: "Warden drone",   hp: 220, sight: 24, keep: 14, speed: 1.0, hover: 2.1, dmg: 24, burst: 1, gap: 0,    cool: 3.8, aim: 0.75, charge: 1.1, size: 1.05, beam: "#b04bff", xp: 90, drops: [[cells, 1], [cells, 1], ["weapon:laser_rifle", 0.4]] }
-lostAfter: 5      # s without sight before it gives up
+lostAfter: 5      # s without sight before it flies to where it last saw you
+searchFor: 7      # s it hunts around that spot before it goes home
+backup: 18        # m: a drone that spots you calls every drone this close
+dodge: { chance: 0.55, dist: 2.2, cd: 2.5 }   # a hit makes it juke sideways this far, at most once per cd seconds
+kamikaze: 0.3     # a watcher under this share of its hp rams you instead of shooting
+fall: 0.7         # s of smoking spiral between ko and the blast
+blast: { radius: 4, dmg: 34, drone: 60 }      # the ko blast: player damage at the centre falling to 0 at radius; other drones take `drone`
 alertFor: 0.9     # s between spotting you and opening fire
 voiceGap: 3.5     # s between two lines from one drone

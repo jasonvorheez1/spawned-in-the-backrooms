@@ -54,57 +54,108 @@ function bolt(ctx, d, t, p) { // one laser bolt: a beam from the drone to where 
   ctx.emit("screenFlash", { color: t.beam, duration: 0.15, intensity: t.size > 1 ? 0.4 : 0.2 }, { audience: { player: p.id } });
   ctx.emit("cameraPunch", { direction: { x: dx / len, y: 0, z: dz / len }, intensity: t.size > 1 ? 0.5 : 0.22 }, { audience: { player: p.id } });
 }
-function die(ctx, d, t) {
-  const f = d.feetPosition;
-  say(ctx, d, "death");
+function blast(ctx, d, t, f) { // the ko: a fireball that hurts every player and drone in reach, falling off with distance
+  const B = T.blast, big = t.size / 0.75;
   ctx.emit("fx", { position: f, script: BOOM });
-  ctx.emit("shockwave", { position: f, speed: 7, thickness: 0.3, intensity: 0.35 });
-  ctx.emit("playSound", { clip: SND("small-drone-explodes-metal-burst-sparks"), position: f, volume: 1, maxDistance: 45 });
+  ctx.emit("shockwave", { position: f, speed: 9, thickness: 0.4, intensity: 0.5 * big });
+  ctx.emit("playSound", { clip: SND("small-drone-explodes-metal-burst-sparks"), position: f, volume: 1, maxDistance: 50 });
+  ctx.emit("decal", { position: { x: f.x, y: 0.02, z: f.z }, normal: { x: 0, y: 1, z: 0 }, texture: "cdn/texture-scorch-mark-burnt-floor-decal.png", size: 1.6 * big, lifetime: 120, fade: 4 });
+  for (const p of ctx.place.players ?? []) {
+    const c = chest(p), r = Math.hypot(c.x - f.x, c.y - f.y, c.z - f.z), k = 1 - r / (B.radius * big);
+    if (k <= 0) continue;
+    const dmg = Math.round(B.dmg * big * k); p.state.hp -= dmg; p.state.hurtAt = ctx.now();
+    ctx.emit("damageNumber", { position: c, value: dmg, color: "#ffb347" });
+    ctx.emit("screenShake", { intensity: 0.5 * k, duration: 0.35 }, { audience: { player: p.id } });
+    ctx.emit("screenFlash", { color: "#ffcf8a", duration: 0.25, intensity: 0.5 * k }, { audience: { player: p.id } });
+    ctx.emit("impulse", { target: p.id, impulse: { x: (c.x - f.x) / (r || 1) * 6 * k, y: 3 * k, z: (c.z - f.z) / (r || 1) * 6 * k } });
+  }
+  for (const o of ctx.query({ tags: ["zdrone"], center: f, radius: B.radius * big })) if (o.id !== d.id && !o.state.dead) { o.state.hp -= B.drone * big; ctx.emit("damageNumber", { position: o.feetPosition, value: B.drone * big, color: "#ffb347" }); }
+  for (const o of ctx.query({ tags: ["loose"], center: f, radius: B.radius * big })) ctx.emit("impulse", { target: o.id, impulse: { x: (o.feetPosition.x - f.x) * 8, y: 6, z: (o.feetPosition.z - f.z) * 8 } });
+}
+function die(ctx, d, t) {
+  const f = { ...d.feetPosition };
+  blast(ctx, d, t, f);
   const items = (t.drops ?? []).filter(([, c]) => ctx.random() < c).map(([k]) => k);
   spawnRubble(ctx, { x: f.x, y: 0.02, z: f.z }, items, `${t.name} wreck`);
+  delete ctx.self.session.m?.[d.id];
   ctx.destroy(d.id);
 }
+const SMOKE = `fx
+pop smoke rate=40 on=point() life=.6..1.1 v=up(.3)+sdir()*.3 size=.12..0.2 acc=buoy(.2)+drag(1) col=<.12,.12,.13> a=0>.6:.5>0 sz=$size*(1>2.6) r=sprite(smoke-puff,alpha)
+pop spark rate=30 on=point() life=.15..0.35 v=sdir()*(2..4) size=.012..0.02 acc=grav() col=hdr(6,3.5,1.2) a=1>0 r=sprite(ember,add,velocity,.02)`;
+const free = (ctx, d, from, dir, dist, size) => { const w = raycast(ctx, from, dir, { distance: dist + size * 0.6, ignoreEntities: [d.id], physicsOnly: true }); return !w ? dist : Math.max(0, w.distance - size * 0.6); };
+function call(ctx, d, tgt, at) { // backup: every drone in earshot learns where you are
+  for (const o of ctx.query({ tags: ["zdrone"], center: d.feetPosition, radius: T.backup })) {
+    if (o.id === d.id || o.state.dead || o.state.mode === "combat") continue;
+    o.state.mode = "alert"; o.state.target = tgt.id; o.state.last = { x: at.x, z: at.z };
+    const mm = (ctx.self.session.m ??= {})[o.id] ??= { bob: ctx.random() * 6 }; mm.alertAt = ctx.now(); mm.saw = ctx.now();
+  }
+}
 export function update(ctx, dt) {
-  const now = ctx.now(), players = ctx.place.players ?? [];
-  for (const row of ctx.query({ tags: ["zdrone"], radius: 1e4, center: { x: 0, y: 0, z: 0 } })) {
-    const d = ctx.getObject(row.id); if (!d) continue;
-    const s = d.state, t = T[s.type] ?? T.watcher, f = d.feetPosition, M = (ctx.self.session.m ??= {}), m = (M[d.id] ??= { bob: ctx.random() * 6 });
-    if (s.dead || s.hp <= 0) { die(ctx, d, t); continue; }
-    if (s.lastHp != null && s.hp < s.lastHp) { if (ctx.random() < 0.5) say(ctx, d, "hit"); ctx.emit("fx", { position: f, script: SPARKS }); if (!s.target) { s.mode = "combat"; m.saw = now; } }
+  const now = ctx.now(), players = ctx.place.players ?? [], M = (ctx.self.session.m ??= {});
+  const all = ctx.query({ tags: ["zdrone"], radius: 1e4, center: { x: 0, y: 0, z: 0 } });
+  all.forEach((row, idx) => {
+    const d = ctx.getObject(row.id); if (!d) return;
+    const s = d.state, t = T[s.type] ?? T.watcher, f = d.feetPosition, m = (M[d.id] ??= { bob: ctx.random() * 6, slot: idx });
+    // ko: a smoking spiral, then the blast
+    if (s.hp <= 0 || s.dead) {
+      if (!m.fallAt) { m.fallAt = now; s.dead = true; s.mode = "down"; d.fx = { script: SMOKE }; say(ctx, d, "death"); ctx.emit("playSound", { clip: SND("damaged-drone-rotor-sputtering-failing-whine"), position: f, volume: 1, maxDistance: 30 }); }
+      const k = Math.min(1, (now - m.fallAt) / (T.fall * 1000));
+      d.feetPosition = { x: f.x, y: Math.max(0.25, t.hover * (1 - k * k)), z: f.z }; d.rotation = { yaw: (d.rotation?.yaw ?? 0) + 900 * dt, roll: 35 * k };
+      if (k >= 1) die(ctx, d, t);
+      return;
+    }
+    if (s.lastHp != null && s.hp < s.lastHp) { // hurt: it squeals, sparks, juke sideways, and turns on you
+      if (ctx.random() < 0.5) say(ctx, d, "hit"); ctx.emit("fx", { position: f, script: SPARKS });
+      if (s.mode !== "combat") { s.mode = "combat"; m.saw = now; const p = players.reduce((a, q) => (!a || Math.hypot(q.feetPosition.x - f.x, q.feetPosition.z - f.z) < Math.hypot(a.feetPosition.x - f.x, a.feetPosition.z - f.z) ? q : a), null); if (p) { s.target = p.id; call(ctx, d, p, p.feetPosition); } }
+      if (now > (m.dodgeCd ?? 0) && ctx.random() < T.dodge.chance) { m.dodgeCd = now + T.dodge.cd * 1000; const side = ctx.random() < 0.5 ? -1 : 1, yaw = (d.rotation?.yaw ?? 0) * Math.PI / 180; m.dodge = { x: Math.cos(yaw) * side, z: -Math.sin(yaw) * side, until: now + 280 }; }
+      if (s.hp < s.maxHp * 0.5 && !m.hurtFx) { m.hurtFx = true; d.fx = { script: SMOKE.replace("rate=40", "rate=8").replace("rate=30", "rate=4") }; } // smoking when half gone
+    }
     s.lastHp = s.hp;
     // who it hunts: the nearest player it can see
     let tgt = null, best = 1e9;
     for (const p of players) { const dd = Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z); if (dd < best && (p.state?.hp ?? 1) > 0 && sees(ctx, d, p, s.mode === "combat" ? t.sight * 1.4 : t.sight)) { best = dd; tgt = p; } }
-    if (!tgt && s.mode === "combat" && s.target) { const p = players.find((q) => q.id === s.target); if (p && now - (m.saw ?? 0) < T.lostAfter * 1000) tgt = p; }
-    else if (tgt) m.saw = now;
-    if (tgt && s.mode !== "combat" && s.mode !== "alert") { s.mode = "alert"; m.alertAt = now; say(ctx, d, "normaltoalert"); }
-    if (s.mode === "alert" && tgt && now - m.alertAt > T.alertFor * 1000) { s.mode = "combat"; say(ctx, d, "alerttocombat"); m.next = now + 300; }
-    if (s.mode === "combat" && !tgt) { s.mode = "idle"; s.target = null; say(ctx, d, "combattolost"); }
-    if (tgt) s.target = tgt.id;
-    // where it goes: its post when idle, a ring at its keep range around the target in a fight, strafing
+    if (tgt) { m.saw = now; s.target = tgt.id; s.last = { x: tgt.feetPosition.x, z: tgt.feetPosition.z }; }
+    if (tgt && (s.mode === "idle" || s.mode === "search" || !s.mode)) { s.mode = "alert"; m.alertAt = now; say(ctx, d, "normaltoalert"); call(ctx, d, tgt, tgt.feetPosition); }
+    if (s.mode === "alert" && tgt && now - (m.alertAt ?? 0) > T.alertFor * 1000) { s.mode = "combat"; say(ctx, d, "alerttocombat"); m.next = now + 300; }
+    if ((s.mode === "combat" || s.mode === "alert") && !tgt && now - (m.saw ?? 0) > (s.mode === "alert" ? 8000 : T.lostAfter * 1000)) { s.mode = "search"; m.searchAt = now; say(ctx, d, "combattolost"); }
+    if (s.mode === "search" && now - (m.searchAt ?? 0) > T.searchFor * 1000) { s.mode = "idle"; s.target = null; s.last = null; }
     m.bob += dt * 2.2;
-    let goal = s.home;
-    if (tgt && s.mode === "combat") {
-      const tp = tgt.feetPosition, ax = f.x - tp.x, az = f.z - tp.z, dd = Math.hypot(ax, az) || 1, side = Math.sin(now / 1700 + m.bob) * 0.9;
-      goal = { x: tp.x + (ax / dd) * t.keep - (az / dd) * side * 2, z: tp.z + (az / dd) * t.keep + (ax / dd) * side * 2 };
-    } else if (!tgt) goal = { x: s.home.x + Math.cos(now / 4000 + m.bob) * 1.5, z: s.home.z + Math.sin(now / 4000 + m.bob) * 1.5 };
-    const gx = goal.x - f.x, gz = goal.z - f.z, gd = Math.hypot(gx, gz), step = Math.min(gd, t.speed * dt);
+    // where it goes
+    const kami = s.type === "watcher" && s.hp < s.maxHp * T.kamikaze && tgt && s.mode === "combat";
+    let goal = s.home, speed = t.speed;
+    if (kami) { goal = tgt.feetPosition; speed = t.speed * 2.6; if (!m.kamiSaid) { m.kamiSaid = true; say(ctx, d, "attack"); ctx.emit("playSound", { clip: SND("drone-overload-beeping-faster-alarm"), position: f, volume: 1, maxDistance: 25 }); } if (best < 1.4) { s.hp = 0; return; } }
+    else if (tgt && s.mode === "combat") { // each drone takes its own bearing round you: two drones never stack, they pinch
+      const tp = tgt.feetPosition, base = Math.atan2(f.z - tp.z, f.x - tp.x), off = ((m.slot % 3) - 1) * 0.7 + Math.sin(now / 1900 + m.bob) * 0.35;
+      const a = base + off * dt * 2, r = s.hp < s.maxHp * 0.35 && s.type !== "watcher" ? t.keep * 1.4 : t.keep; // a hurt enforcer or warden backs off
+      goal = { x: tp.x + Math.cos(a + off * 0.15) * r, z: tp.z + Math.sin(a + off * 0.15) * r };
+    } else if ((s.mode === "search" || (s.mode === "alert" && !tgt)) && s.last) goal = { x: s.last.x + Math.cos(now / 1500 + m.bob) * 2, z: s.last.z + Math.sin(now / 1500 + m.bob) * 2 }; // circles where you were
+    else goal = { x: s.home.x + Math.cos(now / 4000 + m.bob) * 1.5, z: s.home.z + Math.sin(now / 4000 + m.bob) * 1.5 };
     let nx = f.x, nz = f.z;
-    if (gd > 0.05) {
-      const dir = { x: gx / gd, y: 0, z: gz / gd }, wall = raycast(ctx, f, dir, { distance: step + t.size * 0.6, ignoreEntities: [d.id], physicsOnly: true });
-      if (!wall || players.some((p) => p.id === wall.id)) { nx += dir.x * step; nz += dir.z * step; }
+    if (m.dodge && now < m.dodge.until) { const dir = { x: m.dodge.x, y: 0, z: m.dodge.z }, st = free(ctx, d, f, dir, T.dodge.dist * dt / 0.28, t.size); nx += dir.x * st; nz += dir.z * st; }
+    else {
+      const gx = goal.x - f.x, gz = goal.z - f.z, gd = Math.hypot(gx, gz);
+      if (gd > 0.05) { // steer: straight if it can, else slide along the wall
+        const want = Math.min(gd, speed * dt), dir = { x: gx / gd, y: 0, z: gz / gd };
+        let st = free(ctx, d, f, dir, want, t.size);
+        if (st >= want * 0.9) { nx += dir.x * st; nz += dir.z * st; }
+        else for (const sd of [1, -1]) { const sl = { x: -dir.z * sd, y: 0, z: dir.x * sd }; const s2 = free(ctx, d, f, sl, want, t.size); if (s2 > want * 0.5) { nx += sl.x * s2; nz += sl.z * s2; break; } }
+      }
+      // keep apart from the other drones
+      for (const o of all) { if (o.id === d.id) continue; const ox = nx - o.feetPosition.x, oz = nz - o.feetPosition.z, od = Math.hypot(ox, oz); if (od > 0.01 && od < 1.4) { nx += ox / od * 0.6 * dt; nz += oz / od * 0.6 * dt; } }
     }
-    d.feetPosition = { x: nx, y: t.hover + Math.sin(m.bob) * 0.08, z: nz };
+    d.feetPosition = { x: nx, y: t.hover + Math.sin(m.bob) * 0.08 + (kami ? -0.6 : 0), z: nz };
     const look = tgt ? tgt.feetPosition : goal;
-    if (Math.hypot(look.x - nx, look.z - nz) > 0.2) d.rotation = { yaw: Math.atan2(-(look.x - nx), -(look.z - nz)) * 180 / Math.PI };
-    // the volley
+    if (Math.hypot(look.x - nx, look.z - nz) > 0.2) d.rotation = { yaw: Math.atan2(-(look.x - nx), -(look.z - nz)) * 180 / Math.PI, roll: m.dodge && now < m.dodge.until ? 25 : 0 };
+    if (kami) return;
+    // the volley: it leads a running target a little
     if (s.mode === "combat" && tgt && now >= (m.next ?? 0)) {
-      if (t.charge && !m.chargeAt) { m.chargeAt = now; ctx.emit("fx", { position: f, script: CHARGE(hex(t.beam).map((v) => (v * 4).toFixed(2)).join(",")) }); ctx.emit("playSound", { clip: SND("energy-weapon-charging-rising-whine"), position: f, volume: 0.9, maxDistance: 30 }); continue; }
-      if (t.charge && now - m.chargeAt < t.charge * 1000) continue;
-      if (!sees(ctx, d, tgt, t.sight * 1.4)) { m.chargeAt = 0; m.next = now + 400; continue; }
+      if (t.charge && !m.chargeAt) { m.chargeAt = now; ctx.emit("fx", { position: f, script: CHARGE(hex(t.beam).map((v) => (v * 4).toFixed(2)).join(",")) }); ctx.emit("playSound", { clip: SND("energy-weapon-charging-rising-whine"), position: f, volume: 0.9, maxDistance: 30 }); return; }
+      if (t.charge && now - m.chargeAt < t.charge * 1000) return;
+      if (!sees(ctx, d, tgt, t.sight * 1.4)) { m.chargeAt = 0; m.next = now + 400; return; }
       m.chargeAt = 0; m.shots = t.burst; m.shotAt = 0; m.next = now + (t.cool + t.burst * t.gap) * 1000 * (0.85 + ctx.random() * 0.3);
       if (ctx.random() < 0.3) say(ctx, d, "attack");
     }
     if (m.shots > 0 && tgt && now >= (m.shotAt ?? 0)) { m.shots -= 1; m.shotAt = now + t.gap * 1000; bolt(ctx, d, t, tgt); }
-  }
+  });
 }
