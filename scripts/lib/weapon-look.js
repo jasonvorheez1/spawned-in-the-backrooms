@@ -45,7 +45,7 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
   hatchet:    ["/cdn/value.d5b03aa12f7ca58bef143468cf20432b163cb8a0b43a9d4d72190c9228502761.glb", 0.012, 0, "tripo_material_be6f1bf1-a677-4411-ad71-24b6df60e92c"],
   fire_axe:   ["/cdn/value.4cfc50ea098875687d7a11fbd93a6b8adc191957807e0b002f30007a8eead02e.glb", 0.008, 0.62, "tripo_material_3cfa6f0b-ba20-4b5f-9185-3a08bf3967ed"],
   pistol:     ["/cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb", -0.064, 0, "tripo_material_b831ab79-8033-43a9-83a4-7a26d07345fd"],
-  laser_pistol: ["/cdn/value.a2c46be9dfea3b3f7ca0d1f4bdf51d28242f35e62244068b0368e5460602d63c.glb", -0.05, 0.26, "tripo_material_f3f04c5a-c731-4a15-be64-91e2d56cb4f6", "+z", 0.36], // Tripo ZL-2 (Shelly, Nov 9: "too simplistic use tripo"); file barrel points +Z, grip 0.36 behind centre
+  laser_pistol: ["/cdn/value.a2c46be9dfea3b3f7ca0d1f4bdf51d28242f35e62244068b0368e5460602d63c.glb", -0.07, 0.36, "tripo_material_f3f04c5a-c731-4a15-be64-91e2d56cb4f6", "+z", 0.36], // Tripo ZL-2 (Shelly, Nov 9: "too simplistic use tripo"); file barrel points +Z, grip 0.36 behind centre
   shotgun:    ["/cdn/value.104163217085585686f5b41208ef60d422b0c1836d7ef20078f129b016e8fdaf.glb", -0.18, 0, "tripo_material_7b83893e-ced9-4331-b685-1a4a787052e6"],
 };
 // each mesh's box centre in the scripted frame (x, z), from art/weapons/fit.json
