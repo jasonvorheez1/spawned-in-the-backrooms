@@ -134,7 +134,7 @@ function driveBay(ctx) {
     ] });
 }
 // modeled furniture (art/zfurn/build.py) over the kit's code-shape desks and chairs; ids, breakable state and colliders kept
-const FURNV = 1;
+const FURNV = 2;
 const FURN = {
   desk: { id: "/cdn/value.e3215f58bcdde6d876cea7966507245a59de5ecef0103689e913a695d05207f6.glb", forward: "+z" },
   chair: { id: "/cdn/value.ae5e296c6ba88216876102ddfc99d58c663b522c6cc4fe32321f3718ab60cee1.glb", forward: "+z" },
@@ -144,7 +144,7 @@ function furnish(ctx) {
     const o = ctx.getObject(`z-f${i}`); if (!o) continue;
     const p = o.primitive?.params ?? o.state?.zp; const kind = p?.kind ?? o.state?.zkind; if (!FURN[kind]) continue;
     const m = { ...FURN[kind] };
-    if (kind === "desk") { const on = p.on ?? 1; m.materials = { screen: on > 0 ? { color: "#0d1f24", emissive: p.cracked ? "#9fc6c9" : "#8fe6ff", emissiveIntensity: 2.2 * on } : { color: "#08090a", emissiveIntensity: 0, roughness: 0.15, metalness: 0.3 } }; }
+    if (kind === "desk") { const on = p.on ?? 1; m.materials = { screen: on > 0 ? { color: "#0d1f24", emissive: p.cracked ? "#9fc6c9" : "#8fe6ff", emissiveIntensity: 0.75 * on } : { color: "#08090a", emissiveIntensity: 0, roughness: 0.15, metalness: 0.3 } }; }
     o.state = { ...(o.state ?? {}), zkind: kind, zp: p };
     o.primitive = null; o.model = m;
     o.physics = { body: "static", collider: "box" };
