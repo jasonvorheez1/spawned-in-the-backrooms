@@ -58,32 +58,34 @@ def chair(x, z, yaw):  # a hydraulic styling chair: chrome disc foot, post, pink
     for o in g: o.select_set(True)
     piv = Vector((*W(x, z), 0)); bpy.context.scene.cursor.location = piv
     bpy.ops.transform.rotate(value=yaw, orient_axis="Z", center_override=piv)
+TRIPO = True  # furniture comes as fitted Tripo meshes placed beside this room (bonus-salon-*), the room keeps walls, rugs, wainscot, dais
 stations = [12.8, 15.6, 18.4]
-for sx in stations:  # north wall: vanity, arched bulb mirror, styling chair facing it
+for sx in ([] if TRIPO else stations):  # north wall: vanity, arched bulb mirror, styling chair facing it
     box(sx, 3.62, 0, 1.6, 0.55, 0.82, "lacquer", 0.03); box(sx, 3.6, 0.82, 1.7, 0.6, 0.05, "marble", 0.02)
     arch(sx, 3.85, 0.9, 1.1, 1.75, 0.04, "lacquer", 0, True)
     m = arch(sx, 3.815, 0.95, 0.98, 1.65, 0.02, "mirror"); 
     cyl(sx - 0.55, 3.55, 0.87, 0.06, 0.18, "teal"); cyl(sx + 0.5, 3.6, 0.87, 0.04, 0.24, "vinyl"); sph(sx + 0.3, 3.55, 0.92, 0.05, "chrome")
     chair(sx, 2.2, math.pi)
 # south wall: two hood dryers
-for dx in (13.5, 16.3):
+for dx in (() if TRIPO else (13.5, 16.3)):
     chair(dx, -4.6, 0)
     cyl(dx, -5.25, 0, 0.04, 1.35, "chrome"); h = sph(dx, -4.85, 1.45, 0.3, "lacquer", (1, 1.15, 0.95)); tor(dx, -4.7, 1.32, 0.27, 0.03, "teal", (math.radians(-25), 0, 0))
 # reception: a curved desk by the door
-bm = bmesh.new(); seg = 24; R0, R1 = 1.25, 1.65
-for i in range(seg + 1):
-    a = math.pi * 0.5 + i / seg * math.pi * 0.75
-    for r in (R0, R1):
-        for hz in (0, 1.05): bm.verts.new((r * math.cos(a), r * math.sin(a), hz))
-bm.verts.ensure_lookup_table(); V = bm.verts
-for i in range(seg):
-    b = i * 4; n = b + 4
-    for q in ((b, n, n + 1, b + 1), (b + 2, b + 3, n + 3, n + 2), (b + 1, n + 1, n + 3, b + 3), (b, b + 2, n + 2, n)): bm.faces.new([V[k] for k in q])
-bm.faces.new([V[k] for k in (0, 1, 3, 2)]); e = seg * 4; bm.faces.new([V[k] for k in (e, e + 2, e + 3, e + 1)])
-bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
-me = bpy.data.meshes.new("desk"); bm.to_mesh(me); d = bpy.data.objects.new("desk", me); bpy.context.collection.objects.link(d); d.location = (*W(12.0, -2.4), 0); fin(d, "lacquer", 0.03)
-tor(12.0, -2.4, 1.07, 1.45, 0.22, "marble", (0, 0, 0)); bpy.context.object.scale = (1, 1, 0.12)
-tor(12.0, -2.4, 0.15, 1.66, 0.02, "neon")
+if not TRIPO:
+  bm = bmesh.new(); seg = 24; R0, R1 = 1.25, 1.65
+  for i in range(seg + 1):
+      a = math.pi * 0.5 + i / seg * math.pi * 0.75
+      for r in (R0, R1):
+          for hz in (0, 1.05): bm.verts.new((r * math.cos(a), r * math.sin(a), hz))
+  bm.verts.ensure_lookup_table(); V = bm.verts
+  for i in range(seg):
+      b = i * 4; n = b + 4
+      for q in ((b, n, n + 1, b + 1), (b + 2, b + 3, n + 3, n + 2), (b + 1, n + 1, n + 3, b + 3), (b, b + 2, n + 2, n)): bm.faces.new([V[k] for k in q])
+  bm.faces.new([V[k] for k in (0, 1, 3, 2)]); e = seg * 4; bm.faces.new([V[k] for k in (e, e + 2, e + 3, e + 1)])
+  bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+  me = bpy.data.meshes.new("desk"); bm.to_mesh(me); d = bpy.data.objects.new("desk", me); bpy.context.collection.objects.link(d); d.location = (*W(12.0, -2.4), 0); fin(d, "lacquer", 0.03)
+  tor(12.0, -2.4, 1.07, 1.45, 0.22, "marble", (0, 0, 0)); bpy.context.object.scale = (1, 1, 0.12)
+  tor(12.0, -2.4, 0.15, 1.66, 0.02, "neon")
 # the makeover dais and tri-fold mirror at the back wall
 cyl(21.8, -1.0, 0, 1.15, 0.18, "marble", 0.05, 64); tor(21.8, -1.0, 0.09, 1.16, 0.03, "neon")
 for i, a in enumerate((-0.55, 0, 0.55)):
@@ -93,7 +95,7 @@ for i, a in enumerate((-0.55, 0, 0.55)):
 tor(21.8, -1.0, 3.6, 0.7, 0.05, "bulb", (0, 0, 0))
 cyl(21.8, -1.0, 3.62, 0.02, 1.38, "chrome")
 # plants and a pink round rug
-for px, pz in ((10.8, 3.4), (23.2, 3.4), (23.2, -5.4)):
+for px, pz in (() if TRIPO else ((10.8, 3.4), (23.2, 3.4), (23.2, -5.4))):
     cyl(px, pz, 0, 0.26, 0.55, "lacquer", 0.03); cyl(px, pz, 0.5, 0.23, 0.04, "soil")
     for k in range(9):
         a = k * 2.4; sph(px + 0.18 * math.cos(a) * (k % 3) / 2, pz + 0.18 * math.sin(a) * (k % 3) / 2, 0.75 + (k % 4) * 0.18, 0.2, "plant", (1, 0.45, 1.6))
@@ -103,19 +105,19 @@ for wz, sgn in ((4.05, -1), (-5.85, 1)):
     for k in range(7):
         box(10.6 + k * 2.0, wz + sgn * 0.0, 0, 1.9, 0.06, 1.0, "vinyl", 0.025)
     box(16.6, wz + sgn * 0.04, 1.0, 13.9, 0.1, 0.07, "lacquer", 0.03)
-for shx in (19.4, 21.4):
+for shx in (() if TRIPO else (19.4, 21.4)):
     for lv in (1.25, 1.75):
         box(shx, -5.7, lv, 1.4, 0.26, 0.04, "lacquer", 0.015)
         for b in range(6):
             bx = shx - 0.55 + b * 0.22; mtl = ("vinyl", "teal", "chrome")[b % 3]
             cyl(bx, -5.68, lv + 0.04, 0.045 + 0.01 * (b % 2), 0.16 + 0.05 * (b % 3), mtl, 0.01, 20)
             sph(bx, -5.68, lv + 0.24 + 0.05 * (b % 3), 0.03, "chrome")
-for t in range(5):
+for t in range(0 if TRIPO else 5):
     bpy.ops.mesh.primitive_cylinder_add(radius=0.09, depth=0.36, vertices=24, location=(*W(10.9 + (t % 3) * 0.2, -0.6 + 0.0), 0.95 + (t // 3) * 0.18), rotation=(0, math.pi / 2, 0)); fin(bpy.context.object, "lacquer", 0.03)
-box(11.1, -0.6, 0, 0.8, 0.5, 0.86, "vinyl", 0.04)
+if not TRIPO: box(11.1, -0.6, 0, 0.8, 0.5, 0.86, "vinyl", 0.04)
 for k in range(28):
     a = k / 28 * math.tau; sph(16.0 + 2.25 * math.cos(a), 2.25 * math.sin(a), 0.01, 0.16, "teal", (1, 1, 0.08))
-bpy.ops.object.select_all(action="SELECT"); bpy.context.view_layer.objects.active = bpy.data.objects["desk"]
+bpy.ops.object.select_all(action="SELECT"); bpy.context.view_layer.objects.active = [o for o in bpy.context.scene.objects if o.type == "MESH"][0]
 bpy.ops.object.convert(target="MESH"); bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM"); bpy.ops.object.join(); salon = bpy.context.object; salon.name = "salon"
 bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
 dg = bpy.context.evaluated_depsgraph_get(); print("tris", len(salon.evaluated_get(dg).data.loop_triangles))
