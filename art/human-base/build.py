@@ -499,7 +499,7 @@ def finfo(o, r):
     return info, arms
 
 def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=(), xcuts=()):
-    push = push + 0.004
+    push = push + 0.004 + (0.003 if name.startswith("Top_") else 0.0)  # a top rides 3 mm over the bottom it meets at the waist: one plane z-fought
     o = body.copy(); o.data = body.data.copy(); o.name = name
     bpy.context.collection.objects.link(o)
     for m in list(o.modifiers):
@@ -524,7 +524,7 @@ def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=(), 
     gi = {g.index: g.name for g in o.vertex_groups}
     for v in bm.verts:  # the shoulder's blend band: linear skinning shrinks an offset where arm and torso rotations mix, so the skin poked through a lowered sleeve; give that band more room
         wa = sum(x for g, x in v[dl].items() if gi[g] in ("LeftArm", "RightArm"))
-        v.co += v.normal * (push + 0.012 * max(0.0, 1 - abs(2 * wa - 1)) + 0.006 * min(1.0, wa))  # the upper arm's back showed skin through the sleeve
+        v.co += v.normal * (push + 0.012 * max(0.0, 1 - abs(2 * wa - 1)) + 0.014 * min(1.0, wa))  # the upper arm's back showed skin through the sleeve
     bm.to_mesh(o.data); bm.free()
     o.data.materials.clear(); o.data.materials.append(MATS[mname])
     if thick:
