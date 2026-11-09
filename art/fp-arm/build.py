@@ -99,6 +99,9 @@ def build(sex, side):
         for i in c:
             q = rot(newp[i], piv, a, 62)
             newp[i] = rot(q, piv, n, 38)
+    import json
+    fs = set(i for c in fingers for i in c); ts = set(i for c in thumbs for i in c)
+    json.dump([[(newp[i]-W).dot(a), (newp[i]-W).dot(s), (newp[i]-W).dot(n), 1 if i in fs else 2 if i in ts else 0] for i in P if P[i][1] > -0.03], open(f"/tmp/curl-{sex}.json", "w"))
     for i in P: P[i] = (newp[i],) + P[i][1:]
     for i, q in P.items(): me.vertices[i].co = mw.inverted() @ q[0]
     import bmesh
@@ -149,6 +152,6 @@ def proof(sex):
     for nm, eye, look in (("fp", g2b(-0.2, 0.2, 0.42), g2b(-0.2, 0.2, -1)), ("side", g2b(0.6, 0.05, -0.05), g2b(0, -0.1, 0.1))):
         cam.location = eye; cam.rotation_euler = (look - eye).to_track_quat("-Z", "Z").to_euler()
         sc.render.filepath = f"/tmp/arm/{sex}-{nm}.png"; bpy.ops.render.render(write_still=True)
-for sex in ("f", "m"):
+for sex in (sys.argv[sys.argv.index("--")+1:] or ["f", "m"]):
     for sd in ("R", "L"): build(sex, sd)
     proof(sex)
