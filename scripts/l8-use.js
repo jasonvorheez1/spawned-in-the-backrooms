@@ -54,7 +54,7 @@ export const ears = {
         return say(who, `${cn}: "${line}" (Press again to pay $3.00)`, ctx);
       }
       delete ask[uid]; w.cents -= PRICE; cool[uid] = now; snd("pot-lid-clink-and-ladle-in-soup", 0.5);
-      w.weapons = [...(w.weapons ? w.weapons.split(',') : []), 'soup_bowl'].join(','); // held like a weapon: equip it, click throws, Q eats (scripts/player.js)
+      w.weapons = [...(w.weapons ? w.weapons.split(',') : []), 'soup_bowl'].join(','); // held like a weapon: equip it, click throws, use from inventory or quick slot (scripts/player.js)
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "-$3.00 (SOUP)", color: "#ffcf60", size: 1.0 }, { audience: { player: who.id } });
       const line = "Eat it or wear it, it's yours now.";
       heard(ctx, { clip: vo(cv, line), position: pos, volume: 0.9, maxDistance: 14 });

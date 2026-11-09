@@ -51,7 +51,7 @@ export const ears = {
       if (!(now - (ask[uid] ?? -1e9) < 10000)) { s.ask = { ...ask, [uid]: now }; return tell("Camp stew, $2 backdollars. Buy?  (E again to pay $2.00)"); }
       if ((w.cents ?? 0) < PRICE) { s.ask = { ...ask, [uid]: 0 }; return tell("Two backdollars a bowl. You're short.", "#ff9a7a"); }
       s.ask = { ...ask, [uid]: 0 }; s.cool = { ...cool, [uid]: now }; w.cents -= PRICE;
-      w.weapons = [...(w.weapons ? w.weapons.split(",") : []), "soup_bowl"].join(","); // the bowl: equip it, Q eats, click throws (scripts/player.js)
+      w.weapons = [...(w.weapons ? w.weapons.split(",") : []), "soup_bowl"].join(","); // the bowl: equip it, use from inventory or quick slot, click throws (scripts/player.js)
       snd("pot-lid-clink-and-ladle-in-soup", 0.55, 10);
       return tell("-$2.00  +BOWL OF CAMP STEW", "#ffcf60");
     }

@@ -5,7 +5,8 @@ import { attrsOf as attrsOfS } from './lib/stats.js'
 // The wanderer: walk/sprint on stamina, sanity that the halls eat, a flashlight on battery,
 // almond water, swings at smilers, xp and levels. Every number lives in lib/data/level0.yml.
 // player.state is the player's save: their level, xp and almonds follow them between visits.
-import { canOpen, openWrist } from './lib/screen.js'
+import { canOpen, openWrist, screen } from './lib/screen.js'
+import { quickItems, assignQuick } from './lib/quick-items.js'
 import { heard } from "./lib/hear.js";
 import PLAYER from './lib/data/player.yml'
 import L from './lib/data/level0.yml'
@@ -317,9 +318,9 @@ function takeToken1(ctx, token) {
     s.nvg = true; s.pickedAt = now; s.notice = { text: 'Night vision goggles · Press F to activate · Essential in the anomalous darkness of Level 6', at: now }
     sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true }
   }
-  if (token === 'compass') { // an old compass: a few reads left in it (G uses it)
+  if (token === 'compass') { // an old compass: a few reads left in it (use it from the inventory or a quick slot)
     s.compass = (s.compass ?? 0) + COMPASS.charges; s.pickedAt = now
-    s.notice = { text: `Old compass · ${s.compass} reads · press G`, at: now }
+    s.notice = { text: `Old compass · ${s.compass} reads · assign a quick slot in the inventory`, at: now }
     sound(ctx, 'pickup-ammo', 0.5, true)
     return { ok: true }
   }
@@ -394,8 +395,10 @@ export function onInput(ctx, input) {
   }
   if (input.pressed.inventory) { const sv = ctx.self.state; if (sv.invOpen) sv.invOpen = false; else if (canOpen(sv, ctx.self.place, 'inventory')) openWrist(sv, 'inventory'); sound(ctx, 'flashlight-switch-click', 0.35, true) }
   if (input.pressed.inv && input.actionData?.inv) invAction(ctx, input.actionData.inv)
-  if (input.pressed.drink) { if (ctx.self.state.equipped === 'soup_bowl') soupEat(ctx); else drink(ctx) } // holding the soup, Q eats it
-  if (input.pressed.compass) useCompass(ctx)
+  if (input.pressed.drink && canOpen(ctx.self.state, ctx.self.place, 'inventory')) { openWrist(ctx.self.state, 'inventory'); ctx.self.state.invTab = 'aid' }
+  for (let slot=0; slot<10; slot++) if (input.pressed['quick'+slot]) quickUse(ctx, slot)
+  if (input.pressed.quickUse) quickUse(ctx, input.actionData?.quickUse?.slot)
+  if (input.pressed.compass && canOpen(ctx.self.state, ctx.self.place, 'inventory')) { openWrist(ctx.self.state, 'inventory'); ctx.self.state.invTab = 'misc' }
   if (input.pressed.cycleWeapon && !ctx.self.state.building) cycleWeapon(ctx)
   if (input.pressed.holster) toggleHolster(ctx) // H: put it away, H again: draw the last one
   { // R: a tap reloads, a hold (0.45 s) holsters or draws (Fallout)
@@ -680,8 +683,18 @@ export function pullToken(ctx, t) { // one carried thing out of the bag as its p
 }
 
 // the inventory's buttons (scripts/loot-ui.js): equip a weapon, drink almond water, drop a weapon at your feet, close
+function quickUse(ctx, slot) {
+  const s=ctx.self.state, w=walkOf(ctx)
+  if (!Number.isInteger(slot) || slot<0 || slot>9 || screen(s,ctx.self.place)!=='play' || s.building || s.dead || s.downAt && ctx.now()-s.downAt<3200 || ctx.now()<(w.quickAt??0)) return
+  const item=quickItems(s).find(x=>x.id===s.quickSlots?.[slot])
+  if (!item) return
+  w.quickAt=ctx.now()+300
+  if (item.count<=0) { s.notice={text:item.name+' is used up',at:ctx.now()}; return }
+  invAction(ctx,item.action)
+}
 function invAction(ctx, d) {
   const s = ctx.self.state
+  if (d.k === 'quickAssign') { if (s.invOpen) assignQuick(s, d.slot, String(d.id??'')); return }
   if (d.k === 'close') { s.invOpen = false; return }
   if (d.k === 'dropItem') { // anything that isn't a weapon: taken out of the bag as its pickup token, into a canvas bag at your feet (looted back with E)
     const tok = pullToken(ctx, String(d.t || ''))

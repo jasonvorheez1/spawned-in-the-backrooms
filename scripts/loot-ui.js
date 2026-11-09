@@ -2,6 +2,7 @@
 // balanced 2-column Pip-Boy 3000 terminal with CRT scanlines, animated vector wireframes, condition bracket meters,
 // direct one-click repair actions, multi-column sorting, and tactile audio feedback.
 import AW from './lib/data/almond.yml'
+import { quickItems } from './lib/quick-items.js'
 import SNACKS from './lib/data/snacks.yml'
 import { describe, itemsOf, MEAT } from './lib/items.js'
 import L from './lib/data/level0.yml'
@@ -677,6 +678,7 @@ function inventory(s) {
     <!-- Weight capacity bar -->
     ${wb}
 
+    <details style="padding:8px 12px;border-bottom:1px solid var(--al)"><summary style="cursor:pointer">QUICK SLOTS · assign items to keys 0–9</summary><div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:8px">${Array.from({length:10},(_,slot)=>`<label style="font-size:12px">${slot} <select aria-label="Quick slot ${slot}" style="max-width:160px;background:#21190e;color:#ffe0a6;padding:6px;border:1px solid #927249" onchange="sendAction('inv',{k:'quickAssign',slot:${slot},id:this.value})"><option value="">Unassigned</option>${quickItems(s).filter(x=>x.count>0||x.id===s.quickSlots?.[slot]).map(x=>`<option value="${x.id}" ${x.id===s.quickSlots?.[slot]?'selected':''}>${x.name} (×${x.count})</option>`).join('')}</select></label>`).join('')}</div><div style="font-size:11px;padding-top:6px">Use a number during play. Assignments stay when supplies run out.</div></details>
     <!-- Category sub-tabs -->
     <div class="tabs">${tabs}</div>
 
