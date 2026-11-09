@@ -6,7 +6,7 @@ const LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', ru
 const FEM = { ...LIB, idle: 'cdn/clip-idle-female-loop.glb', walk: 'cdn/clip-walk-female-loop.glb' }
 export function onSpawn(ctx) {
   const me = ctx.self, s = me.state
-  me.model = humanBody({ sex: s.sex ?? 'm', skin: s.skin ?? 2 })
+  me.model = humanBody({ sex: s.sex ?? 'm', skin: s.skin ?? (s.sex === 'f' ? '#e8b896' : '#c58c66') })
   s.gaitClips = s.sex === 'f' ? FEM : LIB
   if (s.kind && s.kind !== 'fists') me.session.held = ctx.spawn({ parent: me.id, attachment: { bone: 'RightHand' }, tags: ['temp'], ...weaponBody(s.kind) })
   me.session.t0 = ctx.now(); me.session.n = 0; me.session.next = 0
