@@ -23,7 +23,7 @@ hub/box1:
   state: {}
   tags: []
 hub/box2:
-  feetPosition: {x: 5.7, y: 0.45, z: -5.2}
+  feetPosition: {x: 5.52, y: 0.45, z: -5.48}
   id: hub/box2
   layout: {box: {max: {x: 0.225, y: 0.35, z: 0.18}, min: {x: -0.225, y: 0, z: -0.18}}}
   model: {forward: "+z", id: /cdn/value.21e3f0ebfb04327cc1724b58d1af47132267e6c03c9f01e6896f2d211d3dc6fe.glb}
