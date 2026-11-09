@@ -6,6 +6,11 @@ l10-fun-poster:
   material: {roughness: 0.95, texture: /cdn/value.8d29187c9d1ff71bb79ca79db24e350421d27f62bad5cee4c68ce68bb2ce32f2.png}
   primitive: {height: 0.66, kind: plane, width: 0.45}
   rotation: {pitch: -90, roll: 23}
+l10-ladder-silo:
+  feetPosition: {x: -42, y: {terrain: 0}, z: -25.35}
+  id: l10-ladder-silo
+  state: {ladder: {h: 10.9, mat: metal, top: false, yaw: 180}}
+  tags: [ladder]
 l10-worms:
   behavior: scripts/l10-worms.js
   feetPosition: {x: 0, y: 0, z: -60}
