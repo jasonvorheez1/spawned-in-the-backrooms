@@ -167,12 +167,15 @@ function moodFace(ctx, l) {
 
 // Shelly's Universal Animation Library: a human NPC stands its own way (arms folded, on the phone), picked once by its id; players keep the plain idle
 const WARRIOR = { walk: 'cdn/clip-warrior-walk-cycle-589b8756-loop.glb', run: 'cdn/clip-warrior-run-cycle-9a42782f-loop.glb' } // Shelly's warrior gait, refit to the human rig
+const GAIT_FEM = { ...GAIT_LIB, idle: 'cdn/clip-idle-female-loop.glb', walk: 'cdn/clip-walk-female-loop.glb' }
 const NPC_IDLES = ['cdn/clip-idle-loop.glb', 'cdn/clip-ual-idle-foldarms-257968ed-loop.glb', 'cdn/clip-ual-idle-talkingphone-5737f83c-loop.glb', 'cdn/clip-ual-idle-foldarms-257968ed-loop.glb']
 function gaitFor(ctx) {
   const ss = ctx.self.session
   if (ss.isPlayer == null) ss.isPlayer = ctx.place.players.some((p) => p.id === ctx.self.id)
-  if (!HUMAN || ss.isPlayer) return GAIT_LIB
-  if (!ss.gaitNpc) { const h = [...String(ctx.self.id)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7); ss.gaitNpc = { ...GAIT_LIB, idle: NPC_IDLES[h % NPC_IDLES.length] } }
+  if (!HUMAN) return GAIT_LIB
+  const fem = ss.cachedLook?.sex === 'f', base = fem ? GAIT_FEM : GAIT_LIB // the library's woman's walk and idle on a human woman
+  if (ss.isPlayer) return base
+  if (ss.gaitNpcF !== fem) { ss.gaitNpcF = fem; ss.gaitArmed = null; const h = [...String(ctx.self.id)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7), i = NPC_IDLES[h % NPC_IDLES.length]; ss.gaitNpc = { ...base, idle: fem && i === GAIT_LIB.idle ? GAIT_FEM.idle : i } }
   if (!ctx.self.state.armed) return ss.gaitNpc
   // Shelly: "not everyone is a warrior": the warrior cycles only while a fighter has a weapon out
   return (ss.gaitArmed ??= { ...ss.gaitNpc, walk: WARRIOR.walk, run: WARRIOR.run, sprint: WARRIOR.run })
