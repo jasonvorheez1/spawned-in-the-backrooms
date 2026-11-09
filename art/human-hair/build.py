@@ -104,7 +104,8 @@ def make_cap(hatted, mat):
     bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
     if not bm.faces: bm.free(); return None
     bm.normal_update()
-    for v in bm.verts: v.co += v.normal * 0.004
+    ctr = Vector((0, H["cy"], H["hz"] + 0.02))
+    for v in bm.verts: v.co += (v.co - ctr).normalized() * 0.005   # radial: the head's normals aren't all outward
     me = bpy.data.meshes.new("scalpcap"); bm.to_mesh(me); bm.free()
     me.validate(clean_customdata=True)
     for a in [a.name for a in me.attributes if a.name not in ("position", ".edge_verts", ".corner_vert", ".corner_edge", "sharp_face") and not a.name.startswith(".") and a.domain != "CORNER"]: me.attributes.remove(me.attributes[a])
