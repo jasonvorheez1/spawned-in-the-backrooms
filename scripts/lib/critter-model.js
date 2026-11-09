@@ -612,9 +612,9 @@ const _bust = (l) => {
 
 // ---- the BODIES switch for everyone already standing: every person in a place (NPCs, scene-laid people, corpses) re-dressed on the human or furry body
 // their look rides in state.wear (read back off the model when it never had one), so a flip and a flip back returns the same clothes, face and species
-const OLD_HUMAN = ['/cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb', '/cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb', '/cdn/value.4802b6cd4b09d80a1b730817fb9ec8620f5d861e9e208cd3d6b6b811a18d0df4.glb', '/cdn/value.59bdc78b4240c5fd51dda3dcd5d717d6636cb08500bbd87acb891a290756daee.glb', '/cdn/value.571a6f2a3b9368cb26c62e6dd96129a7eb7a1b680a6358295b76445e8d5fa96b.glb']
+const OLD_HUMAN = ['/cdn/value.fd49318b8e8c14d0e98cf8d8b38433601bad2db2515aa8ed3585e8842e2cd80c.glb', '/cdn/value.8d0f43bf3da06253fd58a24473034d2ff3ff1ad4b551d69fcbced89ff58251c1.glb', '/cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb', '/cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb', '/cdn/value.4802b6cd4b09d80a1b730817fb9ec8620f5d861e9e208cd3d6b6b811a18d0df4.glb', '/cdn/value.59bdc78b4240c5fd51dda3dcd5d717d6636cb08500bbd87acb891a290756daee.glb', '/cdn/value.571a6f2a3b9368cb26c62e6dd96129a7eb7a1b680a6358295b76445e8d5fa96b.glb']
 const FURRY_IDS = () => Object.values(M.body), HUMAN_IDS = () => [...Object.values(M.human ?? {}), ...OLD_HUMAN]
-export const STYLE_V = 'sw1'
+export const STYLE_V = 'sw2'
 export function furrySpec(l) { const h = HUMAN; HUMAN = null; try { return critterSpec(l) } finally { HUMAN = h } } // a character who stays a critter in both modes (Phoebe)
 export function restyle(ctx, o) {
   const mid = o?.model?.id ?? o?.model
