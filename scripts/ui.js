@@ -109,10 +109,12 @@ function compass(yaw) {
 function questPip(ctx, player, yaw) {
   const p = player.feetPosition; if (!p) return ''
   let out = ''
+  const side = { l: 0, r: 0 } // pinned arrows on one edge step outward so none hides another
   for (const q of tracked(player.state)) { // one pip per tracked quest, in that quest's tint
     const t = questMark(ctx, player, q); if (!t) continue
     const o = ((Math.round(yawTo(p, t)) - Math.round(yaw)) % 360 + 540) % 360 - 180, a = Math.abs(o)
-    const x = a < 75 ? 50 + o / 75 * 50 : (o < 0 ? 0 : 100), edge = a >= 75
+    const edge = a >= 75, n = edge ? side[o < 0 ? 'l' : 'r']++ : 0
+    const x = !edge ? 50 + o / 75 * 50 : (o < 0 ? -n * 4.5 : 100 + n * 4.5)
     out += `<div style="position:absolute;left:${x}%;top:-9px;transform:translateX(-50%);color:${q.tint};font-size:${edge ? 13 : 12}px;text-shadow:0 0 6px ${q.tint},0 1px 2px #000">${edge ? (o < 0 ? '◀' : '▶') : '◆'}</div>`
   }
   return out ? `<div style="position:absolute;left:28px;width:300px;bottom:6px;height:22px;pointer-events:none">${out}</div>` : ''
