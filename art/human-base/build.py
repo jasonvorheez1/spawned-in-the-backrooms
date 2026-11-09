@@ -499,10 +499,10 @@ def finfo(o, r):
     return info, arms
 
 HANG = ("Top_tee", "Top_longsleeve", "Top_pajamas", "Top_sweater", "Top_hoodie", "Top_jacket")
-def hang(bm, top=1.30, taper=0.985, nb=48):
+def hang(bm, top=1.30, taper=0.93, nb=48, low=1.0):
     # Nov 9: a top below the bust hung skin-tight: the sweater and jacket showed the stomach and the buttocks as a pouch.
     # Cloth falls from the widest ring above it: each 1 cm slice keeps the convex hull of itself and the slice over it.
-    vs = [v for v in bm.verts if v.co.z < top + 0.02 and abs(v.co.x) < 0.26]
+    vs = [v for v in bm.verts if low < v.co.z < top + 0.02 and abs(v.co.x) < 0.26]
     if not vs: return
     ys = [v.co.y for v in vs]; cy = (min(ys) + max(ys)) / 2
     zb = lambda z: int(math.floor((top - z) / 0.01))
@@ -550,7 +550,7 @@ def hang(bm, top=1.30, taper=0.985, nb=48):
         a = math.atan2(y, x); f = (top - v.co.z) / 0.01; k = max(0, int(math.floor(f))); t = min(1.0, max(0.0, f - k))
         r0 = R.get(k, R[max(R)])[ab(a)]; r1 = R.get(k + 1, R[max(R)])[ab(a)]
         tr = r0 * (1 - t) + r1 * t
-        w = smooth(top + 0.01, top - 0.06, v.co.z)  # meets the fitted chest without a step
+        w = smooth(top + 0.01, top - 0.06, v.co.z) * smooth(low, low + 0.05, v.co.z)  # meets the fitted chest and the hip without a step
         if tr > r: s = 1 + (tr / r - 1) * w; v.co.x = x * s; v.co.y = cy + y * s
 
 def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=(), xcuts=()):
