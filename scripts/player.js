@@ -983,8 +983,8 @@ const CUT = [/head$|neck/i, /(^|[^a-z])(l|left)[_. ]?(clavicle|shoulder|upperarm
 const HUMAN_ARM = { f: { q: { x: -0.4041, y: 0.3447, z: 0.8277, w: 0.1811 }, at: { x: 0.939, y: 0.538, z: -0.014 } }, m: { q: { x: -0.4026, y: 0.3501, z: 0.8263, w: 0.1806 }, at: { x: 1.038, y: 0.577, z: -0.001 } } }
 // first-person arms cut from Shelly's human bodies (art/fp-arm/build.py): forearm, hand closed in a fist, the fist's centre at the origin
 const FP_ARM = {
-  f: { R: '/cdn/value.a25d0b3b84d4a6075bd40e584101ee572c004a5257fc5403dcaf954853a5f6d1.glb', L: '/cdn/value.e5219c95da63a8da9c4b5ebe3e3694d8ae8510c1ff75f8beb76bae904655f01b.glb' },
-  m: { R: '/cdn/value.de3e0bc1b84ae788a8ef2a49cef1b1a0c25d87518c651cf0f08f87225e32b7ba.glb', L: '/cdn/value.9f20c689115a64e7db8631e6dabc4e87074cde0a47c3e7eb065eea8173d504a4.glb' } }
+  f: { R: '/cdn/value.6e0da97a912703bd110b3522e01191ab35a225e07186fcaba0ac785bcf4407d4.glb', L: '/cdn/value.6850dc026a36e91fb051d2e36f2097c1db9c225ec4d01ddc912564bdc8a9f594.glb' },
+  m: { R: '/cdn/value.bb20e01e1ea52ac6d15f2666875e24c0fc82adde427270734aa04f79594b271c.glb', L: '/cdn/value.ff20a5f74ed7b4dd7605a973045bf51332f41168a2e4af0d52755b5d58fd1b25.glb' } }
 function wp_two(kind) { return W[kind]?.two ? { y: W[kind].two[0], z: W[kind].two[1] } : null }
 function plyArm(ctx, w) {
   const body = ctx.getObject(w.vm + '/plyarm') ?? ctx.getObject('plyarm') ?? (ctx.getObject(w.vm)?.children ?? []).map((c) => (typeof c === 'string' ? ctx.getObject(c) : c)).find((c) => c?.model)
