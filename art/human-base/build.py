@@ -519,6 +519,7 @@ def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=(), 
     gone = [f for f in bm.faces if not keep(info(f, dl))]
     bmesh.ops.delete(bm, geom=gone, context="FACES")
     bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=0.0004)
+    bmesh.ops.remove_doubles(bm, verts=[v for v in bm.verts if v.is_boundary], dist=0.004)  # the raw body's arm/torso islands drift apart after the T-pose bake: an open slit along the sleeve
     bm.normal_update()
     gi = {g.index: g.name for g in o.vertex_groups}
     for v in bm.verts:  # the shoulder's blend band: linear skinning shrinks an offset where arm and torso rotations mix, so the skin poked through a lowered sleeve; give that band more room
