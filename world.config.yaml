@@ -52,11 +52,6 @@ inputs:
     drink:
       keys:
         - q
-    splash:
-      keys:
-        - j
-      touch:
-        button: false
     compass:
       keys:
         - g

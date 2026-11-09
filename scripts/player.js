@@ -395,7 +395,6 @@ export function onInput(ctx, input) {
   if (input.pressed.inventory) { const sv = ctx.self.state; if (sv.invOpen) sv.invOpen = false; else if (canOpen(sv, ctx.self.place, 'inventory')) openWrist(sv, 'inventory'); sound(ctx, 'flashlight-switch-click', 0.35, true) }
   if (input.pressed.inv && input.actionData?.inv) invAction(ctx, input.actionData.inv)
   if (input.pressed.drink) { if (ctx.self.state.equipped === 'soup_bowl') soupEat(ctx); else drink(ctx) } // holding the soup, Q eats it
-  if (input.pressed.splash) splash(ctx)
   if (input.pressed.compass) useCompass(ctx)
   if (input.pressed.cycleWeapon && !ctx.self.state.building) cycleWeapon(ctx)
   if (input.pressed.holster) toggleHolster(ctx) // H: put it away, H again: draw the last one
@@ -697,6 +696,7 @@ function invAction(ctx, d) {
   if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc'].includes(d.t) ? d.t : 'all'; return }
   if (d.k === 'sort') { s.invSort = ['name', 'dam', 'wg', 'cnd'].includes(d.s) ? d.s : 'name'; return }
   if (d.k === 'sheet') { s.invOpen = false; s.sheetOpen = true; return }
+  if (d.k === 'quests') { s.invOpen = false; s.jrnOpen = true; return } // HALOGEN's QUESTS tab: the journal (scripts/quest-marker.js)
   if (d.k === 'drink') { drink(ctx, d.c); return }
   if (d.k === 'eat') {
     const c = d.c, n = s.meat?.[c] ?? 0; if (!MEAT[c] || n <= 0) return

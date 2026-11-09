@@ -569,7 +569,7 @@ function inventory(s) {
       <span class="cur">&gt;</span><span class="nm" style="color:${col}">${nm}</span>
       <span class="stat-r"><span>×${s[k]}</span><span style="color:#9ee08a">+${AW[c]?.hp ?? 25} HP</span></span>
       
-    </button>`).join('') + `<button class="it" onclick="sendAction('inv',{k:'splash'})"><span class="cur">&gt;</span><span class="nm">Splash a bottle</span><span class="stat-r">[ J ]</span></button>` : ''
+    </button>`).join('') + `` : ''
 
   const meatRows = Object.entries(s.meat ?? {}).filter(([c, n]) => n > 0 && MEAT[c]).map(([c, n]) => `
     <button class="it${sel === 'meat:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'meat:${c}'})" ondblclick="sendAction('inv',{k:'eat',c:'${c}'})">
@@ -663,6 +663,7 @@ function inventory(s) {
           <button class="nv-mode-btn" onclick="sendAction('inv',{k:'sheet'})">STATS</button>
           <button class="nv-mode-btn on">ITEMS</button>
           <button class="nv-mode-btn" onclick="sendAction('inv',{k:'tab',t:'misc'})">NOTES</button>
+          <button class="nv-mode-btn" onclick="sendAction('inv',{k:'quests'})">QUESTS</button>
         </div>
       </div>
       <div class="nv-vitals">
