@@ -34,21 +34,21 @@ gun:
     fireCrouch: { clip: cdn/clip-pistol-w1-crouch-fire-single-f21022b9-loop.glb, weight: 6, mask: upper, blendIn: 0.03, blendOut: 0.2, speed: 1.6, cut: 0.45, recoil: 6 }
     reload: { clip: cdn/clip-gunplay-584dc731.glb, weight: 5, mask: upper, blendIn: 0.15, blendOut: 0.3, time: 0.9, speed: 1.2, cut: 1.3 }
     flourish: { clip: cdn/clip-gunplay-584dc731.glb, weight: 5, mask: upper, blendIn: 0.15, blendOut: 0.35 }
-  long: # no rifle takes in the packs: the pistol stance squares the torso, IK puts the stock at the shoulder and the left hand on the foregrip
-    ready: { clip: cdn/clip-pistol-w1-stand-relaxed-idle-ipc-5cbecb9f.glb, weight: 2, mask: upper, blendIn: 0.25, blendOut: 0.3, loop: true, grip: true }
-    aim: { clip: cdn/clip-pistol-w1-stand-aim-idle-ipc-1e51f0f0.glb, weight: 4, mask: upper, blendIn: 0.15, blendOut: 0.3, loop: true, grip: true }
-    aimWalk: { clip: cdn/clip-pistol-w1-walk-aim-f-loop-ipc-c02edbce-loop.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true, grip: true }
-    aimJog: { clip: cdn/clip-pistol-w1-jog-aim-f-loop-ipc-66839d46-loop.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true, grip: true }
-    aimCrouch: { clip: cdn/clip-pistol-w1-crouch-aim-idle-ipc-829f36eb.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true, grip: true }
-    aimCrouchWalk: { clip: cdn/clip-pistol-w1-crouchwalk-aim-f-loop-ipc-5b4132eb-loop.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true, grip: true }
-    up: { clip: cdn/clip-pistol-w1-stand-aim-point-u90-4a1608e0-loop.glb, mask: upper, loop: true }
-    down: { clip: cdn/clip-pistol-w1-stand-aim-point-d90-b10ae0fd-loop.glb, mask: upper, loop: true }
-    upCrouch: { clip: cdn/clip-pistol-w1-crouch-aim-point-u90-1e5b624c-loop.glb, mask: upper, loop: true }
-    downCrouch: { clip: cdn/clip-pistol-w1-crouch-aim-point-d90-dedccff2-loop.glb, mask: upper, loop: true }
-    fire: { clip: cdn/clip-pistol-w1-stand-fire-single-40b6bdfc-loop.glb, weight: 6, mask: upper, blendIn: 0.03, blendOut: 0.25, speed: 1.2, cut: 0.6, recoil: 11 }
-    fireCrouch: { clip: cdn/clip-pistol-w1-crouch-fire-single-f21022b9-loop.glb, weight: 6, mask: upper, blendIn: 0.03, blendOut: 0.25, speed: 1.2, cut: 0.6, recoil: 11 }
-    reload: { clip: cdn/clip-gunplay-584dc731.glb, weight: 5, mask: upper, blendIn: 0.15, blendOut: 0.3, time: 0.9, speed: 1.0, cut: 1.5 }
-    flourish: { clip: cdn/clip-gunplay-584dc731.glb, weight: 5, mask: upper, blendIn: 0.15, blendOut: 0.35 }
+  long: # Shelly's Commando KF rifle pack (art/rifle-clips/retarget3.py): ready is the low carry, aim the iron-sight hold, up/down blend the look pitch; the legs keep the gait under the upper mask
+    ready: { clip: /cdn/clip-rifle-rifle-aim-50e5c9c1.glb, weight: 2, mask: upper, blendIn: 0.25, blendOut: 0.3, loop: true }
+    aim: { clip: /cdn/clip-rifle-2hraimis-c6be86ad.glb, weight: 4, mask: upper, blendIn: 0.15, blendOut: 0.3, loop: true }
+    aimWalk: { clip: /cdn/clip-rifle-2hraimis-c6be86ad.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
+    aimJog: { clip: /cdn/clip-rifle-2hraimis-c6be86ad.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
+    aimCrouch: { clip: /cdn/clip-rifle-2hraimis-c6be86ad.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
+    aimCrouchWalk: { clip: /cdn/clip-rifle-2hraimis-c6be86ad.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
+    up: { clip: /cdn/clip-rifle-2hraimisup-48ec984a.glb, mask: upper, loop: true }
+    down: { clip: /cdn/clip-rifle-2hraimisdown-b98450f8.glb, mask: upper, loop: true }
+    upCrouch: { clip: /cdn/clip-rifle-2hraimisup-48ec984a.glb, mask: upper, loop: true }
+    downCrouch: { clip: /cdn/clip-rifle-2hraimisdown-b98450f8.glb, mask: upper, loop: true }
+    fire: { clip: /cdn/clip-rifle-2hrattack3is-db1e228f.glb, weight: 6, mask: upper, blendIn: 0.03, blendOut: 0.2, speed: 1.0, cut: 0.6 }
+    fireCrouch: { clip: /cdn/clip-rifle-2hrattack3is-db1e228f.glb, weight: 6, mask: upper, blendIn: 0.03, blendOut: 0.2, speed: 1.0, cut: 0.6 }
+    reload: { clip: /cdn/clip-rifle-2hrreloadz-94bc26d5.glb, weight: 5, mask: upper, blendIn: 0.15, blendOut: 0.3, cut: 2.0 }
+    flourish: { clip: /cdn/clip-gunplay-584dc731.glb, weight: 5, mask: upper, blendIn: 0.15, blendOut: 0.35 }
 melee: # Shelly's New Vegas melee pack, retargeted from first person onto the human rig (art/nv-melee/retarget.py); combo rows play in turn, heavy is the power swing
   fists:
     combo:

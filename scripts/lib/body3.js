@@ -10,8 +10,8 @@ const FAM = {}
 for (const [f, ks] of Object.entries(CA.families ?? {})) for (const k of ks) FAM[k] = f
 // which family a weapon plays: the table first, then what the weapon is (ranged two-handed = long gun)
 // a long gun's mesh runs along its own +Z; turned pitch -90 it lies along the Mixamo hand's fingers, and sits back so the grip (not its middle) is in the palm
-// a long gun in the RightHand bone's frame: the inverse of the hand's world turn in the gun aim clip (T-pose rest), so the barrel runs along the body's facing; grip sits in the palm
-export const heldRot = (kind) => famOf(kind) === 'long' ? { rotation: { x: -0.352, y: 0.433, z: 0.342, w: 0.756 }, feetPosition: { x: -0.041, y: -0.056, z: -0.048 } } : {}
+// a long gun in the RightHand bone's frame, turned 180 about its up for the KF rifle clips (checked on debug mannequins Nov 9): the inverse of the hand's world turn in the gun aim clip (T-pose rest), so the barrel runs along the body's facing; grip sits in the palm
+export const heldRot = (kind) => famOf(kind) === 'long' ? { rotation: { x: -0.342, y: 0.756, z: -0.352, w: -0.433 }, feetPosition: { x: -0.041, y: -0.056, z: -0.048 } } : {}
 export function famOf(kind) {
   const base = baseOf(kind ?? 'fists'), wp = W[kind] ?? W[base] ?? {}
   if (FAM[base]) return FAM[base]
