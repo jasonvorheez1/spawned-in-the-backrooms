@@ -48,7 +48,8 @@ export function update(ctx, dt) {
       ctx.emit("playSound", { clip: SND("inhuman-shriek-in-a-dead-relatives-voice"), position: p.feetPosition, volume: 0.7 })
       continue
     }
-    if (s.dying) { if (now - s.dying < 2200) { p.velocity = { x: 0, y: p.velocity.y + g * dt, z: 0 }; continue }
+    if (s.dying) { // the body lies where it fell for an hour (rules: bodies removed after 1 h), then the black smoke takes it
+      if (now - s.dying < 3600000) { if (now - s.dying < 2200) p.velocity = { x: 0, y: p.velocity.y + g * dt, z: 0 }; else if (!s.corpse) { s.corpse = true; p.velocity = { x: 0, y: 0, z: 0 }; p.anim.act = { clip: "cdn/clip-die.glb", loop: false, weight: 1, clamp: true }; p.anim.base = null; p.anim.party = null } continue }
       ctx.emit("fx", { position: { ...p.feetPosition, y: p.feetPosition.y + 1 }, script: `fx
 pop smoke burst=30 on=sphere(.4) life=1.5..2.5 v=up(1.2)+sdir()*.6 size=.3..0.6 acc=buoy(.6)+drag(1) sz=$size*(.6>2.2) col=<.05,.05,.05> a=0>.7:.5>.7:.3>0 r=sprite(smoke-puff,alpha)` })
       ctx.emit("playSound", { clip: SND("deflating-party-balloon-squeal-and-thud"), position: p.feetPosition, volume: 0.8 })
