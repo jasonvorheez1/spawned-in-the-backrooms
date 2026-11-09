@@ -143,7 +143,7 @@ def build(sex, side):
         r1 = [newp[i] for i in c if J[1] < u[i] < J[2]]; rings1.append((sum(r1, V()) / max(1, len(r1)), cen.dot(s)))
     hinge.normalize()
     # thumb: swing its tip onto the outside of the index finger's middle segment, wrapping the grip
-    idx = max(rings1, key=lambda r: r[1])[0]
+    idx = rings1[0][0]   # the index finger (fingers sort thumb side first): the thumb closes over it
     for c in thumbs:
         base = [P[i][0] for i in c if P[i][3] < 0.036] or [min((P[i][0] for i in c), key=lambda q: (q - W).dot(s))]
         piv = sum(base, V()) / len(base)
