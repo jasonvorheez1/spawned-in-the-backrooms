@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3812,
-  "updatedAt": "2026-11-09T23:48:17.899Z",
-  "summary": "The Backrooms: Level 0 is a persistent multiplayer survival RPG spanning authored Backrooms levels, player-specific rooms, and shared destinations. `templates/player.js` composes player behaviors; place simulations and scenes supply local worlds while shared scripts own combat, NPCs, loot, UI, avatar presentation, and player progression. The shared journal carries level-specific quest records, including Dina's trail from Cabin 23 to Phoebe's new lower-deck encounter on the SS Fun.",
+  "basedOnSpecVersion": 3822,
+  "updatedAt": "2026-11-09T23:54:06.152Z",
+  "summary": "The Backrooms: Level 0 is a persistent multiplayer survival RPG spanning authored Backrooms levels, player-specific rooms, and shared destinations. `templates/player.js` composes player behaviors; place simulations and scenes supply local worlds while shared scripts own combat, NPCs, loot, UI, avatar presentation, and player progression. Level 26's SS Fun =) contains Dina's trail to Phoebe and a set of party rooms dressed with cakes and gifts.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games, and Glow Up Salon styling stations.",
@@ -11,8 +11,8 @@
     "places/intake (3D) + places/tutorial0 (solo ephemeral 3D) - bedroom character-creation/waking space and authored tutorial route with staged encounter and HALOGEN.",
     "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams, and Locked; Dina's camp and M.E.G./B.N.T.G. quests, Refrigerator Paradise operations, and The Edges.",
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office, and Terror Hotel; residents, hazards, office/home systems, Boiler Room rats, and climbable library ladders.",
-    "places/level6, places/level7, places/level10, places/level11, places/level12, places/level26 (3D) - Lights Out, Thalassophobia, Bumper Crop, Infinite City, Matrix, and SS Fun =) liner; Level 26 has Cabin 23, wet shoeprints into the lower-deck party, Phoebe's encounter, cabin Partygoers and Carnivorous Balloons.",
-    "places/debug, places/spamton and other configured places (3D) - debug mannequin/body gallery and switch pad, Spamton's fight space, and auxiliary routes."
+    "places/level6, places/level7, places/level10, places/level11, places/level12, places/level26 (3D) - Lights Out, Thalassophobia, Bumper Crop, Infinite City, Matrix, and SS Fun =) liner; Level 26 includes Cabin 23, the Phoebe cutscene on deck, and party rooms with placed cakes and gift piles.",
+    "places/debug, places/spamton, places/level01 and other configured places (3D) - debug mannequin/body gallery and switch pad, Spamton's fight space, Zenith Station and auxiliary routes."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, player/camera setup, and ordered behavior composition; quick0-quick9 and quickUse actions feed the player behavior.",
@@ -20,7 +20,7 @@
     "scripts/main-menu.js + scripts/main-menu-ui.js - title/pause, character creation, arrival, tutorial routing, first-arrival cutscene driver, BODIES toggle, and solo-place pause time-scale.",
     "places/intake/cells/x0z0.scene + scripts/intake-geo.js + scripts/lib/intro-cut.js - bedroom shell and waking sequence; tutorial scene and tut0 scripts own its route and beats.",
     "places/level1/cells/x0z0.scene + scripts/dina-diary.js + scripts/lib/dina-quest.js - Dina camp/diary entry and main-quest progression; scripts/l26-cabin23.js is attached to the Cabin 23 case in Level 26.",
-    "scripts/camera.js + scripts/view3.js + scripts/ui.js - camera and third-person toggle, HUD and panels; scripts/loot-ui.js renders the HALOGEN inventory and quick-slot assignment interface.",
+    "scripts/camera.js + scripts/view3.js + scripts/ui.js - camera and third-person toggle, HUD and panels; scripts/loot-ui.js renders HALOGEN inventory and quick-slot assignment.",
     "scripts/quest-marker.js + scripts/lib/quests.js + scripts/lib/quest-mark.js - per-player journal, tracking input, objective markers and distances; folds legacy quest state into shared records.",
     "places/level12/sim.js + places/level12/cells/*.scene - versioned Matrix room/void construction and shared ticking ritual clock; avatar art/scripts and tools build/validate presentation assets."
   ],
@@ -32,7 +32,7 @@
     "scripts/lib/maze.js + scripts/lib/maze0path.js - seeded Level 0 cell/zone/wall/pit/pillar layout and open-point/BFS doorway steering shared by place simulation and smiler/lurker navigation.",
     "scripts/lib/clothes.js + clothes.yml + wardrobe.yml + wardrobe-split.yml + critter data + scripts/lib/critter-model.js - clothing loot/armor, deterministic looks, species/head/hair presentation and wardrobe fitting.",
     "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml + scripts/lib/knock.js - shared combat animation channels for player and M.E.G. agents; knock handling serves player heavy melee and enemy kick knockdowns.",
-    "scripts/lib/sneak.js + scripts/lib/data/sneak.yml + scripts/lib/rep.js - shared crouch visibility/awareness tuning for hunters and faction-standing tiers/effects."
+    "scripts/lib/sneak.js + scripts/lib/data/sneak.yml + scripts/lib/rep.js - shared crouch visibility/awareness tuning for hunters and faction-standing tiers/effects; scripts/lib/sight.js shares physics line-of-sight checks among hounds, smilers, and lurkers."
   ],
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 container/loot helpers; scripts/lib/weapons.js - baseOf, variantOf, rollVariant, rarityIdx, rarityCap, default.",
@@ -42,17 +42,17 @@
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
     "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec and wardrobe fitting/restyling helpers.",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
-    "scripts/lib/dina-quest.js - DINA, CAMP, DCUT_LEN, PAGE1, PAGE2, PAGES, dinaTick; scripts/l26-phoebe-early.js - onTriggerEnter, lightsBack, line, gone, drop, restore."
+    "scripts/lib/sight.js - clearSight; scripts/lib/dina-quest.js - DINA, CAMP, DCUT_LEN, PAGE1, PAGE2, PAGES, dinaTick; scripts/l26-phoebe-early.js - onTriggerEnter, lightsBack, line, gone, drop, restore."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo (including cells), needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, and heat/cold meters.",
-    "scripts/lib/dina-quest.js - Dina progression fields dinaQ, dinaDiary and dcut; scripts/lib/quests.js - player.state.quests, qtrack and qdone (including completed/failed outcome records); quest-marker.js folds legacy quest state into active records.",
+    "scripts/lib/dina-quest.js - Dina progression fields dinaQ, dinaDiary and dcut; scripts/lib/quests.js - player.state.quests, qtrack and qdone (including completed/failed outcome records); quest-marker.js folds legacy quest state into active journal state.",
     "scripts/lib/level1-quests.js - per-player rationsQ/waterQ steps, route and failed-check flags, rewards, faction/karma changes and objective markers; journal records are written through lib/quests.js.",
     "scripts/lib/level8-quests.js, level10-quests.js, level11-quests.js, level21-quests.js, zenith-quest.js and l5-goggles.js - level-specific quest step keys and turn-in/reward effects, synchronized with shared journal records/markers.",
     "scripts/kick.js + scripts/grab.js - per-player kick rolls/cooldowns, carried prop/body IDs, held-body grip, and throw/carry session fields; target body state.heldBy/down controls hold/release.",
     "scripts/lib/loose.js - arms matched props with state.loose/mat/hp/maxHp and owns broke/act effects; per-player session.loose tracks kicked/thrown item flights until impact.",
     "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state and write player-targeting sneakTarget.",
-    "scripts/lib/quick-items.js + scripts/player.js - player.state.quickSlots maps digit slots to item IDs; assignQuick validates and uniquely assigns carried items, while player quick-use executes their action."
+    "scripts/lib/quick-items.js + scripts/player.js - player.state.quickSlots maps digit slots to item IDs; assignQuick validates and uniquely assigns carried items, while player quick-use executes their action; scripts/meg-agent.js keeps per-agent pursuit/visibility memory including lastEnemy."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker.",
@@ -66,17 +66,17 @@
     "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; lib/stats.js and ballistics.js apply weapon skill/handling, while kick.js handles foes.",
     "Level 0 main sim → maze.js seeded geometry/cell helpers and level0-moments.js; moments.js handles placed moments; smilers/lurkers use maze0path and sneak.crouchMul while hunter managers publish pursuit cues.",
     "scripts/lib/quests.js writes player.state.quests/qtrack/qdone; level quest handlers and quest-marker.js sync active records, resolve goals through quest-mark.js, then draw player-only markers and journal rows.",
-    "HALOGEN inventory in scripts/loot-ui.js assigns item IDs via inv quickAssign → player.js/lib/quick-items.js stores quickSlots; world.config.yaml digit/quickUse actions → player.js quickUse → invAction equips, wears or consumes; HUD in ui.js displays assigned slots."
+    "HALOGEN inventory in scripts/loot-ui.js sends quickSlot/quickAssign actions → scripts/player.js + lib/quick-items.js update player.state.quickSlots; when inventory is closed, configured digit actions use the assigned items."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js + scripts/salon-stylist.js/scripts/salon-ui.js - authored mall shops/landmarks and simulated mall life; salon chairs queue sitters and style them.",
+    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js + scripts/salon-stylist.js/scripts/salon-ui.js - authored mall shops/landmarks and simulated mall life; salon chairs queue sitters and styling UI.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence and rebuild path; CRT TV builds attach screen, sound and glow.",
-    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith station geometry, breaches, mechanisms, bots and interactions.",
+    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith Station layout and interacting fixtures/hazards.",
     "places/level4/cells/x0z0.scene + l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml - office layout/fixtures and resident schedules, roles and home claims.",
     "scripts/lib/l5-people.js + level5-people.yml - Level 5 per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
     "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/* + art/human-head/* + art/human-hair/build.py - deterministic avatar looks, fitted wardrobe meshes and validation/build tooling.",
     "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared human combat/gait, idles, head tracking, fidgets, expressions, and dialogue.",
-    "scripts/lib/quests.js + scripts/quest-marker.js + scripts/lib/{dina,level1,level8,level10,level11,level21,zenith}-quest.js - level-specific steps/turn-ins feed common tracked records and destination markers; Dina's route reaches the SS Fun lower-deck Phoebe scene."
+    "scripts/lib/quests.js + scripts/quest-marker.js + scripts/lib/{dina,level1,level8,level10,level11,level21,zenith}-quest.js - level-specific steps/turn-ins feed common tracked records and destination markers; Dina's route reaches the SS Fun."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -87,7 +87,7 @@
     "Found-item rarity gates apply to found weapon tokens; search gating excludes storage and NPC containers. Weapon IDs may include a ~variant suffix; baseOf handles kind lookup and W[k] resolves the full variant.",
     "Level 0 place.state.momentsV is 7: migration deletes old tagged moment entities before relaying them. Selected Level 0 furniture/clutter has explicit visibleRange and disabled shadows; preserve interaction tags/state alongside placements.",
     "Level 12 ritual tuning is in scripts/lib/data/level12.yml: sit/hour/tol are seconds (45/180/12 currently); r12.back is a ctx.now() millisecond timestamp and the exit requires the return-door attempt within tol seconds of one hour.",
-    "scripts/lib/data/sneak.yml tunes crouch visibility and awareness; crouch still/moving, dark and flashlight multipliers combine in crouchMul. Hunter managers publish player state.sneakTarget while pursuing and clear it when knocked.",
-    "Level 26's lower-deck wet shoeprint planes use the uploaded print2 texture and are authored scene placements; Phoebe's early trigger tracks/restores nearby lamp intensities, advances Dina step 4 to 5, and the updated step 5 has no marker. Partygoer corpses remain for 3,600,000 ms before smoke removal."
+    "scripts/lib/data/sneak.yml tunes crouch visibility and awareness; crouch still/moving, dark and flashlight multipliers combine in crouchMul. Hunter managers publish player state.sneakTarget while pursuing and clear it when sight is lost; lib/sight.clearSight raycasts against all physics bodies so doors/movable cover block sight, but tagged actors and pickups are excluded.",
+    "Level 26 lower-deck wet shoeprint planes are authored scene placements; Phoebe's early trigger tracks/restores nearby lamp intensities and advances Dina step 4 to 5 (step 5 has no marker). The later l26-cut camera keeps Phoebe at the edge of frame; her final line directs the player below deck, and the party cake/gift meshes are static authored placements."
   ]
 }
