@@ -987,7 +987,7 @@ const FP_ARM = {
   m: { R: '/cdn/value.bbce6a18a979eae8f5c13a54cceccfae03835e0df388d3a57f79d2bb9aa709e7.glb', L: '/cdn/value.aaa12d87242c96c062824b1a3ccfbfb55c7f08af6829002e1ea2d0a88201b3d1.glb' } }
 // the engine stands a model's bounds bottom-centre on feetPosition, so the fist (the mesh origin) needs that offset back; BC = bounds bottom-centre of each GLB
 const FP_BC = { f: { x: 0.0304, y: -0.2624, z: 0.1128 }, m: { x: 0.0375, y: -0.2836, z: 0.1145 } }
-const FP_SEAT = { x: 0, y: 0.07, z: 0.075 } // her pick, tuned in game: the fist under and around the pistol grip
+const FP_SEAT = { x: 0, y: 0.039, z: 0.096 } // the pistol grip's centre in viewmodel space, measured off the mesh (art/weapon-split/fitview.py): the fist's hollow lands on it
 const FP_AT = (sx) => ({ x: FP_BC[sx].x + FP_SEAT.x, y: FP_BC[sx].y + FP_SEAT.y, z: FP_BC[sx].z + FP_SEAT.z }), FP_ROT = { yaw: 0, pitch: 0, roll: 0 }
 function wp_two(kind) { return W[kind]?.two ? { y: W[kind].two[0], z: W[kind].two[1] } : null }
 function plyArm(ctx, w) {
