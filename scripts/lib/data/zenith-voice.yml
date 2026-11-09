@@ -1,0 +1,44 @@
+# Zenith sentinel combat lines: Shelly's Fallout 3 sentry bot pack (Nov 9), one list per moment (scripts/zenith-drones.js picks one)
+normaltoalert:
+  - /cdn/value.defb89559a59ed62af1c90e59b95287b1cb6dd3ae54b0c09ae893ba412acec5a.mp3
+  - /cdn/value.2f6230630f83773d47db7d6b970c28367798e627fd9dcb5d8c517703a8feae12.mp3
+  - /cdn/value.1328a5425b5b884298c07041db9e934c18121a09b0a855d52e1207940a191b9d.mp3
+alerttocombat:
+  - /cdn/value.c69fb43419dd31bb3294eb4a4b1eafc07569e841c5025597a7f619e139d8ffc7.mp3
+  - /cdn/value.436369c96140b28af4faebe60a1f18df9f9f937c859dd8ab3fca4bc4fa66cf19.mp3
+  - /cdn/value.e3052dbf931f9c181e4f637dc1853fe7882f51cb312697135bd631b07f6a9564.mp3
+attack:
+  - /cdn/value.fa24113d1fcb826f65c711227a925d994a6913692e5df1ed1de9b3d63b2a8ffe.mp3
+  - /cdn/value.68df517715457c5b88a8a2785c12fd6190f1d5f4acf7cfca4cb1aa224675a52b.mp3
+  - /cdn/value.dc581ed0a7e3670da34d649de344c232e15ffee98f2bc699372f7eefc4d59fbd.mp3
+  - /cdn/value.107805e81f5c5d895e9233fd8bfd45cbecf2d0144c7745f36dd04c722792fe3f.mp3
+  - /cdn/value.deca62165c84890a0a6923ee99deda0550ec4a2e7a7d8b3dbb06d44b71ffefdc.mp3
+  - /cdn/value.65ba0decb3133cb11d4f7801482786a4257a3963ecbdb98f616f00fc2307420a.mp3
+  - /cdn/value.a681c41fa63494f818f9e7c5f494e6b138fa9d4c5dbec7090c49b112327e46ba.mp3
+  - /cdn/value.fd813622e99fd550b66a10113f2070fdf44906ee0e9cdebe4de15b97b38e86c0.mp3
+hit:
+  - /cdn/value.be2cd95c9de3de53a98f86919589f0c24b616c80ad936fe1e0de40428a203459.mp3
+  - /cdn/value.0644757e0175a393be12951727ccfcf026335f4ff82cbd734e86e7e90198c5cb.mp3
+  - /cdn/value.c9fbc8ba2d834fd6af3420576f4c6ffb7b0f0a036c79ad77e503fdcf52282e02.mp3
+  - /cdn/value.5ee7bbc68bc1d943761f50fa73241cdcc9bad6409a630c8c7504b0b68227c9c3.mp3
+  - /cdn/value.69aec13c3225888135b96f6f5574103f0e0b7432d6dfaa791eaa9209966a2532.mp3
+  - /cdn/value.2fa1ff4d221b541700d3892505933f1073fc2854353047a07aec5dbd330378d8.mp3
+combattolost:
+  - /cdn/value.5db4d87cf621258e2a6b857faec77672313c899382a511d041eae499977f5dfc.mp3
+  - /cdn/value.ae4d1182ccf9213924d0d3798da7ace687fd3b9fb44aed8525a631dea9f5105f.mp3
+  - /cdn/value.9f177da8d3de82774d5ba544112cb2b3daedf764073ed805d6c4541363aadb56.mp3
+losttocombat:
+  - /cdn/value.3cfbe36ca5b368fd36cb2f7c486027576907d25e34a7d43e5a7ac5b1e1ea27bf.mp3
+  - /cdn/value.6eb4b3de4913bed52ea63dc244c69ad4401c0a11a513a1c447a7e81c44910bf7.mp3
+  - /cdn/value.6dfe7d09237cea42d023ec8aa58738d1924c1ed398ec879cdbcb0ab036f2437c.mp3
+death:
+  - /cdn/value.eeff9dd712b1f8831c3694afbcb7df820e61153323cb6dce79a8a78263471a5d.mp3
+  - /cdn/value.17e9652180c398b546706b22d47ffeab2302419648895f931608b3016d1cc7e3.mp3
+  - /cdn/value.9f07242afd274ffcfebca3ce432a2e79a1c13b0d3d012cfa9d224b5e3da9740f.mp3
+  - /cdn/value.05979f5ef4dfeb77044068693a1100e9d13a95e8c396fcdb18a458a01ff180f5.mp3
+  - /cdn/value.a6de08802888d9555876555aa27942803eb770a0aad0698a3935fd6ef67156f0.mp3
+  - /cdn/value.e2f870ab174561e81981d581fba56ab5a4ca25045f79a2dcb4a1c7e045cdd5fc.mp3
+alertidle:
+  - /cdn/value.af5d1a110358a91158e061bcd3f54ca1eab06568e001c192329f8f3ce834be0a.mp3
+  - /cdn/value.9ca61875de9b6269e75922f61743bc0885acc7371bc96df5ba221fbfd892eddd.mp3
+  - /cdn/value.2298617456b8a509e5ef156efef963c2580131271c5cb7949c6af788a9256158.mp3
