@@ -6,7 +6,8 @@
 import { heard } from "./lib/hear.js";
 import { hearOf, sighting, leadOf, raise, alertFor } from "./lib/hunt.js";
 import L from "./lib/data/level0.yml";
-import { cellAt, cellCenter, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
+import { cellAt, cellCenter as cellMid, openPoint, hasPillar, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
+const cellCenter = openPoint; // every standing spot this pack picks is clear of the cell's pillar
 import { stepToward as stepToward0 } from "./lib/maze0path.js";
 import { raycast } from "builtin/physics";
 import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
@@ -54,6 +55,18 @@ function neighbor(ctx, pos) {
 
 // roam: a patrol leg several rooms long, often drifting toward the nearest wanderer's part of the maze, with a listening pause at each stop
 // search: after losing a wanderer, sweep a few rooms around the spot they vanished before going back to patrol
+// keep the body off walls and pillars: its model is wider than its capsule, so it stays ~1 m clear of each wall face and pillar
+function wallPush(pos) {
+  const { cx, cz } = cellAt(pos.x, pos.z), lx = pos.x - (cx * 4 - (N * 4) / 2), lz = pos.z - (cz * 4 - (N * 4) / 2), R = 1.0;
+  let px = 0, pz = 0;
+  if ((cx <= 0 || wallX(cx - 1, cz)) && lx < R) px += R - lx;
+  if ((cx >= N - 1 || wallX(cx, cz)) && lx > 4 - R) px -= lx - (4 - R);
+  if ((cz <= 0 || wallZ(cx, cz - 1)) && lz < R) pz += R - lz;
+  if ((cz >= N - 1 || wallZ(cx, cz)) && lz > 4 - R) pz -= lz - (4 - R);
+  if (hasPillar(cx, cz)) { const dx = lx - 2, dz = lz - 2, d = Math.hypot(dx, dz) || 0.01; if (d < 1.6) { px += (dx / d) * (1.6 - d); pz += (dz / d) * (1.6 - d); } }
+  return { x: px, z: pz };
+}
+
 function searchTarget(ctx, pos, at) {
   for (let t = 0; t < 6; t++) {
     const c = cellAt(at.x + (ctx.random() * 2 - 1) * 9, at.z + (ctx.random() * 2 - 1) * 9);
@@ -364,6 +377,7 @@ export function update(ctx, dt) {
       uz += m.sep.z * 1.1;
     }
 
+    { const wp = wallPush(pos); ux += wp.x * 2.2; uz += wp.z * 2.2; }
     const ul = Math.hypot(ux, uz) || 1;
     ux /= ul;
     uz /= ul;

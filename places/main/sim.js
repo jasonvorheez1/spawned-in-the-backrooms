@@ -8,7 +8,7 @@ const MID = (L.hub[0] + L.hub[1]) / 2; // the safe room's centre cell
 import W, { rarityCap, rarityIdx } from "../../scripts/lib/weapons.js";
 import { spawnAlmond, spawnWeapon, rollWeapon, rollCash } from "../../scripts/lib/loot.js";
 import { spawnFurniture, pickKind, wallSpot0 } from "../../scripts/lib/furniture.js";
-import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ, EXIT } from "../../scripts/lib/maze.js";
+import { N, S, H, HALF, zoneOf, inHub, hasPit, hasPillar, cellCenter, cellAt, wallX, wallZ, EXIT, openPoint } from "../../scripts/lib/maze.js";
 const PAPER = { texture: "/cdn/value.00a4e744acf9ab763779bbb0cc7f26fb1dd20aeafc69448c536939cd7212caeb.png", color: "oklch(0.98 0.01 90)", repeat: [1, 1] };
 import B from "../../scripts/lib/data/breakables.yml";
 import { syncLevel0 } from "../../scripts/lib/breakables.js";
@@ -94,7 +94,7 @@ function unstick(ctx, s, now) {
     const f = c.feetPosition, hit = overlapPoint(ctx, { x: f.x, y: f.y + 0.9, z: f.z });
     const inWall = (hit?.objects ?? []).some((o) => (o.id ?? o) !== c.id && !String(o.id ?? o).startsWith(c.id + "/"));
     if (!inWall) continue;
-    const { cx, cz } = cellAt(f.x, f.z), m = cellCenter(cx, cz);
+    const { cx, cz } = cellAt(f.x, f.z), m = openPoint(cx, cz);
     const o = ctx.place.objects[c.id]; if (!o) continue;
     o.feetPosition = { x: m.x, y: Math.max(0.02, f.y), z: m.z }; o.velocity = { x: 0, y: 0, z: 0 };
   }
