@@ -51,9 +51,9 @@ export function onInput(ctx, input) {
   ctx.after(0.6, 'kickEnd')
   // first person: your leg swings up from below the screen and snaps forward, then drops away
   const l = s.look ?? {}
-  const leg = (s.tp || l.modelUrl) ? null : ctx.spawn({ audience: 'local', scope: 'session', lifetime: 0.5, feetPosition: { attach: 'camera', x: 0.16, y: -1.32, depth: 0.25 }, rotation: { pitch: -10 }, visibleInFirstPerson: true, castShadow: false,
+  const leg = (s.tp || l.modelUrl) ? null : ctx.spawn({ audience: 'local', scope: 'session', lifetime: 0.5, feetPosition: { attach: 'camera', x: 0.14, y: -1.37, depth: 0.12 }, pivot: 'top', rotation: { pitch: -10 }, visibleInFirstPerson: true, castShadow: false,
     primitive: { kind: 'scripted', script: 'scripts/kick-leg-geo.js', params: { species: l.species, fur: l.fur, botw: l.botw, bottom: l.bottom, shoes: l.shoes, shoec: l.shoec } } }) // first person only: third person shows the body's own kick clip
-  if (leg) animate(ctx, leg, { 'feetPosition.y': [-1.32, -0.92, -0.95, -1.37], 'rotation.pitch': [-10, 75, 70, -5] }, { duration: 0.45, easing: 'easeOutCubic' })
+  if (leg) animate(ctx, leg, { 'rotation.pitch': [-10, 82, 76, -10] }, { duration: 0.45, easing: 'easeOutCubic' }) // swings from the hip (pivot top): the foot rises into the bottom of the view
   ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 0.12 }, { audience: { player: ctx.self.id } })
   if (!o && kickFoe(ctx, s, f, p)) return
   if (!o && kickLoose(ctx, f, s)) return

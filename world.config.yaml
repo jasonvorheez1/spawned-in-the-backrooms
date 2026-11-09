@@ -69,12 +69,12 @@ inputs:
         button: false
     kick:
       keys:
+        - h
         - l
       touch:
         button: false
     holster:
-      keys:
-        - h
+      keys: []
       touch:
         button: false
     interact:
