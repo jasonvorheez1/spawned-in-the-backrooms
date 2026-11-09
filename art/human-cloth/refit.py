@@ -186,7 +186,7 @@ for o in bpy.data.objects:
         for v in lowv:
             x, y = v.co.x, v.co.y - cy; r = math.hypot(x, y)
             if r < 1e-5: continue
-            tr = rows[zk(v.co.z)][ak(x, y)] + 0.002
+            tr = rows[min(max(zk(v.co.z), ks[0]), ks[-1])][ak(x, y)] + 0.002
             wv = max(0.0, min(1.0, (HEM + 0.04 - v.co.z) / 0.05))  # eases in from the fitted waist
             if tr > r:
                 s_ = 1 + (tr / r - 1) * wv; dv = Vector((x * s_ - x, y * s_ - y, 0))
@@ -199,7 +199,8 @@ for o in bpy.data.objects:
             c = f.calc_center_median()
             if c.z > HEM + 0.02: continue
             x, y = c.x, c.y - cy; r = math.hypot(x, y)
-            if r < 0.8 * rows[zk(c.z)][ak(x, y)]: inner.append(f)
+            row = rows.get(min(max(zk(c.z), ks[0]), ks[-1]))
+            if row and r < 0.8 * row[ak(x, y)]: inner.append(f)
         bmesh.ops.delete(bm, geom=inner, context="FACES_ONLY")
         print("hem", o.name, "hung out", fixed, "inner faces cut", len(inner))
     moved = sum(1 for x in delta.values() if x.length > 0.002)
