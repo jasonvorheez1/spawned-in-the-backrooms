@@ -87,6 +87,7 @@ const DRONE = { id: "/cdn/value.bf200211dd9298d9c54c509cd3e666e3a503169f5f4448b1
 const POSTS = [["watcher", 0, -14], ["watcher", 0, -30], ["enforcer", -7.6, -17], ["watcher", 7.6, -17], ["enforcer", 7.6, -29], ["watcher", 0, -44], ["warden", 0, -56], ["watcher", -5, -58]]; // Savi's picks: the vestibule and control room stay quiet
 // a downed drone's post stays empty an hour, then a fresh one flies it (Shelly's rule: dead NPCs return after an hour); place.state.droneGone[id] = when it fell
 const DRONE_BACK_MS = 3600000;
+let droneChk = -1e9;
 function drones(ctx, fresh) {
   if (fresh) for (const r of ctx.query({ tags: ["zdrone"], radius: 1e4, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(r.id);
   const gone = ctx.place.state.droneGone ?? {}, now = ctx.now();
@@ -188,7 +189,7 @@ export function tick(ctx) {
   if (s.breakV !== BREAKV && s.layV === LAYV && ctx.place.players?.length) { s.breakV = BREAKV; breakable(ctx); }
   if (s.layV !== LAYV && ctx.place.players?.length) { s.layV = LAYV; lay(ctx); }
   if (s.droneV !== DRONEV && ctx.place.players?.length) { s.droneV = DRONEV; drones(ctx, true); }
-  else if (ctx.place.players?.length && ctx.now() - (ctx.self.session.droneChk ?? -1e9) > 10000) { ctx.self.session.droneChk = ctx.now(); drones(ctx, false); } // empty posts refill
+  else if (ctx.place.players?.length && ctx.now() - droneChk > 10000) { droneChk = ctx.now(); drones(ctx, false); } // empty posts refill
   if (s.driveV !== DRIVEV && s.layV === LAYV && ctx.place.players?.length) { s.driveV = DRIVEV; driveBay(ctx); }
   const now = ctx.now();
   for (const p of ctx.place.players ?? []) {
