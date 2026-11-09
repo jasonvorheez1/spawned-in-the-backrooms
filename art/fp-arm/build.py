@@ -151,9 +151,11 @@ def build(sex, side):
         goal = idx + s * 0.004 - n * 0.006
         Q = (tip - piv).normalized().rotation_difference((goal - piv).normalized())
         L = (tip - piv).length
+        Qc = mu.Quaternion().slerp(Q, min(1, math.radians(55) / max(1e-6, Q.angle)))   # a thumb folds ~55 degrees over the grip, no more
         for i in c:
-            wgt = min(1, max(0, (P[i][0] - piv).dot((tip - piv).normalized()) / (0.25 * L) + 0.3))
-            q = mu.Quaternion().slerp(Q, wgt)
+            t = min(1, max(0, (P[i][0] - piv).dot((tip - piv).normalized()) / (0.55 * L)))
+            wgt = t * t * (3 - 2 * t)   # 0 at the thumb's root, so the palm skin it joins never tears into a spike
+            q = mu.Quaternion().slerp(Qc, wgt)
             newp[i] = q @ (newp[i] - piv) + piv
     import json
     fs = set(i for c in fingers for i in c); ts = set(i for c in thumbs for i in c)
