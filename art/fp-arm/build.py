@@ -184,7 +184,7 @@ def build(sex, side):
     S = V((0, 1, 0)); S = (S - A * S.dot(A)).normalized()  # thumb side: up
     N = A.cross(S) * (-1 if side == "R" else 1)            # back of hand: outward (right for the right hand)
     gA, gS, gN = [g2b(*x) for x in (A, S, N)]
-    hg = hinge if hinge.dot(s) > 0 else -hinge          # the curled fingers' tube axis, index end up: the grip runs through it
+    hg = -hinge if hinge.dot(s) > 0 else hinge          # the curled fingers' tube axis, index end up: the grip runs through it
     fw = (a - hg * a.dot(hg)).normalized()               # knuckles forward, square to the grip
     G = g2b(0, 0.96, -0.28).normalized(); F = g2b(0, 0, -1); F = (F - G * F.dot(G)).normalized()   # a pistol grip's rake, barrel forward
     src = mu.Matrix((fw, hg, fw.cross(hg))).transposed(); dst = mu.Matrix((F, G, F.cross(G))).transposed()   # NV's wrist and elbow bend ride along
