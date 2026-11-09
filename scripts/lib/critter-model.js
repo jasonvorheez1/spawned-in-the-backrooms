@@ -17,6 +17,15 @@ export function seatHair(ctx, o, l) {
   if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== m.materials.hair.color) h.model = m; return }
   ctx.spawn(HAIR_ID, { parent: o.id, ...hairChild(l, o.audience === 'local') })
 }
+// the human body's hair: the pack style its look picks, on the body's own sex, the brim cut when a hat sits on it; the scalp takes the hair's colour
+export const humanHairOf = (l) => { if (!l?.hair || l.hair === 'none' || maskOf(l)) return null; const n = HAIR.humanPick?.[l.hair]; const row = n == null ? null : HAIR.human?.[l.sex === 'f' ? 'f' : 'm']?.[n]; return row ? (l.hat && l.hat !== 'none' ? row.hat : row.free) : null }
+export function seatHumanHair(ctx, o, l) {
+  const want = humanHairOf(l), id = o.id + '/' + HAIR_ID, h = ctx.getObject(id)
+  if (!want) { if (h) ctx.destroy(id); return }
+  const c = l.hairc || '#5a3a26', m = { id: want, materials: { hair: { color: c }, scalp: { color: c } } }
+  if (h) { if ((h.model?.id ?? h.model) !== want || h.model?.materials?.hair?.color !== c) h.model = m; return }
+  ctx.spawn(HAIR_ID, { parent: o.id, id: HAIR_ID, attachment: { skin: true }, model: m, ...(o.audience === 'local' ? { audience: 'local' } : {}) })
+}
 export const HEAD_ID = 'critter-head'
 // a head-covering mask (the Level 11 shop's bag and shell): its own GLB skinned whole to the Head bone, a second skin child; the row's `mask` names it
 export const MASK_ID = 'critter-mask'
@@ -561,7 +570,7 @@ export function strayHeads(ctx, obj) {
   return out
 }
 export function seatHead(ctx, obj, l) {
-  if (HUMAN) { for (const k of [HEAD_ID, MASK_ID, HAIR_ID]) if (ctx.getObject(obj.id + '/' + k)) ctx.destroy(obj.id + '/' + k); for (const h of strayHeads(ctx, obj)) ctx.destroy(h.id); obj.jiggle = null; obj.morph = humanMorph(l); if (obj.material?.outline) obj.material = null; return } // a human body carries its own head; its face keys rolled per NPC
+  if (HUMAN) { for (const k of [HEAD_ID, MASK_ID]) if (ctx.getObject(obj.id + '/' + k)) ctx.destroy(obj.id + '/' + k); seatHumanHair(ctx, obj, l); for (const h of strayHeads(ctx, obj)) ctx.destroy(h.id); obj.jiggle = null; obj.morph = humanMorph(l); if (obj.material?.outline) obj.material = null; return } // a human body carries its own head; its face keys rolled per NPC
   const want = critterSpec(l).children[0]; let h = ctx.getObject(obj.id + '/' + HEAD_ID)
   // a head skinned to the body's old model loses its skin when the body swaps: re-spawn it on the new one
   const body = obj.model?.id ?? obj.model

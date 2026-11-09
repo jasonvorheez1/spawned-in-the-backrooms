@@ -62,3 +62,37 @@ hatted:
   m_slick: "/cdn/value.0d71bd13ed6aa8e67bf81fecab7eb397ebc78b43ba8fc4c9fb71fe7806691f83.glb"
   m_spiky: "/cdn/value.c36e31ebb8d1be53923fc85b889296a15645ad9053ba19852017294cba70cd74.glb"
   m_undercut: "/cdn/value.07fa087c75f1a1509b974db1dfb6c519bb1972de1eb1210a044f31afa79d1b57.glb"
+
+# Human heads (Shelly's hair pack #101894, art/human-hair/build.py): per body sex, pack style n bare and cut under a hat brim. humanPick: each look's style key to its pack style.
+human:
+  f:
+    0: { free: "/cdn/value.69ede05fa73d3283d220ead7a5e0070022f2dea96806794dc49bd837b9738ad2.glb", hat: "/cdn/value.6d7e567278042c1a905479e4d1b6d4e4f3968ee126e95d41a8e40c09b93f3af2.glb" }
+    1: { free: "/cdn/value.b89444620ae9592d776a6385f0d110c2934d07b4be538dd19efc9745f3089c3e.glb", hat: "/cdn/value.96c7026e1a02a05d7bcf459dd61437746a04a931adfa8c8783028041a33b7502.glb" }
+    2: { free: "/cdn/value.28cf539cae1cfcfde27921f99d5e4c922ef1eb512e05c5d50af496f1b5fed0a4.glb", hat: "/cdn/value.8ac60337dedf2564b309bba2bc39c0d3b6d6fc0b120a8b4a83c8695d4b898321.glb" }
+    3: { free: "/cdn/value.cf3ff87df44951e6a04a7213a55a1095e9dfcfc975cb2eaae45e1af10000f765.glb", hat: "/cdn/value.955f1c5fd4c9d062903cd0855580bd942970d5e7d3d038e5013d6745ce10dab3.glb" }
+    4: { free: "/cdn/value.97b9848b37c44b291ef06d058b995dbcb9fecfa97fcb8edbd34a11f51a8a3f30.glb", hat: "/cdn/value.5c564c1bcada075f90ed706e22e0ba2e2f4f550c51c21cd3ed42512e94af4812.glb" }
+    5: { free: "/cdn/value.12c621ea8f765a0b9da251ae3438de75b99cf4c6d024b14c2ff2861fa8fd6a76.glb", hat: "/cdn/value.a77bd2227a63e92a16111174020164e8e2c4e97ca71ac4d20961a527d71b1f0d.glb" }
+    6: { free: "/cdn/value.6219a722c379d5b9234640ef6d3178acc95cbeeb67925fe72676fc12f2c555ed.glb", hat: "/cdn/value.cfa90090807fdae9824a1552a55d2fdfa751a946ab8b8ff6b6ce17bbdeb0cbd6.glb" }
+    7: { free: "/cdn/value.14bb661b0843a8d09bcab1c42fad797b33f4e922e29fcb3426988ec9dd2da65c.glb", hat: "/cdn/value.7953fe805031e983f061276b18ef87ce79f9d9328a55b7df028eff6fa8fc38fe.glb" }
+    8: { free: "/cdn/value.f7e7f5412bebeacc0447b2dd6bf0b8365296951828333041d1aecfac52ecd593.glb", hat: "/cdn/value.49b479917c3b9136fe57d27030255dfc4239b22c2ec6429718f4962b382f67f9.glb" }
+    9: { free: "/cdn/value.a140e6155929490bd227339f997f5aadbf7284739c14d0d396e0769a428c8963.glb", hat: "/cdn/value.d1763a81e4a7e60b8a1dc0ea740e774776dc4c674c235a0ebf66c30b0863dfbe.glb" }
+    10: { free: "/cdn/value.e8a07a2335a4d6fcc9ab95379dd26df77370468e5b61542c15428e51af6092d3.glb", hat: "/cdn/value.707793c4353a9e818f2f2b2af08cb239040b70b7f1a6ca27987faa792ce47b4b.glb" }
+    11: { free: "/cdn/value.9a751795f4a9d069d003f03f5f36492d7492d54c510ef6af53a1922d069a03b8.glb", hat: "/cdn/value.52e40f33272d58c07ae3f55fdc27eb61b00bb5abba0302bea37dd435d75866a6.glb" }
+    12: { free: "/cdn/value.3a1155282fc1090b3246a80ccb2addfb4a512b77912878e25cdec23988ba4033.glb", hat: "/cdn/value.1fbc72e6fb0ea2e69ca20e60d42a53d63577c4d767884e7bcb3d2e777113ae94.glb" }
+    13: { free: "/cdn/value.c4bab1b7c593a921564d73a2c057e1831169f75a550b34561e2cbed6c9d3e099.glb", hat: "/cdn/value.0e4aa72791b8121b967f5b2c5e508dc0806be81d0801e9fc77b6d4317083a2bb.glb" }
+  m:
+    0: { free: "/cdn/value.62bcfc7d43a17649fd0ed1c8df68fc3c46ec5870c9d1f08326cd24c0870e6b98.glb", hat: "/cdn/value.b8047663a7b2ccd2a981ef3e546ed3c168fa5d5027aadd5d4b36cfc75b56451b.glb" }
+    1: { free: "/cdn/value.e8dae8c358b6355c1948f2b59163901b2b94f31c38db8926a07bd8c01cf6350a.glb", hat: "/cdn/value.3d70e8c94e1bc0a167e863e9b85831965a4322369e1ed05a9d31f9908d12b006.glb" }
+    2: { free: "/cdn/value.a00cec62d20d41e3fca87da91f7dd176f132c09fb6241d05fe8386214f343d0a.glb", hat: "/cdn/value.8f8ea23342660269a4bd01497098a66bcbe139094900d2be82fe46cda40c43b4.glb" }
+    3: { free: "/cdn/value.3c124b5b5d384b2c3a7bba4786d7727d0d21422170a1f4da36ed475ad141ecb4.glb", hat: "/cdn/value.55d1b5feace268ff2e3534d99a23a40813fea563f404fb49d6a1db2ea6c773cf.glb" }
+    4: { free: "/cdn/value.4e55c9ee31068cccabce0aab3edff1da3c6d9ba4ee5474bb4912f0bf469fa386.glb", hat: "/cdn/value.35984f162ebc3b4794f8f37d35f0f6eff98f477dee999b0552cb20c495d9d95c.glb" }
+    5: { free: "/cdn/value.a7bc261c63631760b53da7dec76d734f3e8df94278453dd3ecb28733666b5a41.glb", hat: "/cdn/value.a71db98ca546ab51355d4147e7c5ac38b1019af1d7f77c422551fb395253571a.glb" }
+    6: { free: "/cdn/value.62e3862f7c038d61bcd91974394ce5db470815cdcc51664b5f99b7258725a696.glb", hat: "/cdn/value.6285a9fc622d6e052426bf121c0405ae9ce8aa7c2617fd24be0d0b2bf981a655.glb" }
+    7: { free: "/cdn/value.5bb3763ba8bc67bb78b23417b728e445ea751f845b4f04043fb82f852bb4eb47.glb", hat: "/cdn/value.b73ffc38c374dd9cff379ec7889e7836e91686b754ca6ec9e4ec926b69f68469.glb" }
+    8: { free: "/cdn/value.d07e08997b2a599316e6d35bf1bb8012cda8161f7ceb227ce887d82c7280b984.glb", hat: "/cdn/value.8e679c3661bdcea3f078c81aeb145b4e8678800ddf105fd62ea15a961928d032.glb" }
+    9: { free: "/cdn/value.3700a8e6c34a4ffb60396e1b6b996cee35b3e1a53d68d0ad3a4e8faec5f981de.glb", hat: "/cdn/value.3eec30f4eab2f729708d06eddd06807fa46ab46c407b220b08ee579104efc40e.glb" }
+    10: { free: "/cdn/value.e21e088a66c445296be64ed3492f71d4e327e9e0527af8191fe886b82f3e488c.glb", hat: "/cdn/value.04758812bec7b44f602b01669a07d304b0b79a7c11e001278ce0db27f72be67e.glb" }
+    11: { free: "/cdn/value.97d3811ba3c07cc62d38f042841223bfdce27ace4f434902a7156edd54c6d8bc.glb", hat: "/cdn/value.cac1550bb3de60e877c6334410e09d6b937be15227f7d2dca004783d48b74686.glb" }
+    12: { free: "/cdn/value.a2922088a8a002d555392d9b7f75b7f5c17b53ea7bae1aabdc38922b27ef1695.glb", hat: "/cdn/value.c5ac94c2e01a87c9101b45b3e4467bff8a164769f228eb68677665ea7a2b54e6.glb" }
+    13: { free: "/cdn/value.d8bf0f61fe09a5e5ebaea3c68d7c5b84503cbae707f5fba6e8f0b52a0e19648b.glb", hat: "/cdn/value.fde60f20aae7ce49d2cb399b4eb6e6da1dffaa5aaecb900f29b94dc2d18a261d.glb" }
+humanPick: { f_afropuff: 6, f_bob: 5, f_curly: 6, f_curtainmid: 7, f_halfup: 4, f_hime: 2, f_long: 2, f_messybun: 10, f_pixie: 7, f_ponytail: 10, f_ringlets: 4, f_sidebraid: 4, f_sidetail: 10, f_spacebuns: 10, f_twinbraids: 2, f_twintails: 10, f_wavy: 4, f_wolfcut: 13, m_buzz: 1, m_crop: 1, m_curlytop: 3, m_curtains: 7, m_fluffy: 6, m_manbun: 0, m_mohawk: 9, m_shaggy: 12, m_sidepart: 5, m_slick: 8 }
