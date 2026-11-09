@@ -418,7 +418,7 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
   const hit = { x: m.feetPosition.x, y: m.feetPosition.y + 1.5, z: m.feetPosition.z }
   if (loud) sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)
   ctx.emit('damageNumber', { position: hit, value: dmg, color: '#f7d98b' })
-  ctx.emit('fx', { position: hit, script: m.tags?.includes('stealer') ? CLEAR : ICHOR }) // blood runs clear, don't get near
+  ctx.emit('fx', { position: hit, script: m.tags?.includes('stealer') ? CLEAR : m.tags?.includes('zdrone') ? ZAP : ICHOR }) // a drone throws sparks, not blood // blood runs clear, don't get near
   if (L3I.stun.kinds.includes(baseOf(s.equipped ?? 'fists'))) { // the baton arcs: sparks, a zap, and the thing struck staggers
     m.state.stunUntil = ctx.now() + L3I.stun.ms
     ctx.emit('fx', { position: hit, script: ZAP })
@@ -522,7 +522,7 @@ function swing(ctx, power = 0) {
   let cone = wp.cone || 0.4
   const radius = wp.ranged ? wp.range : wp.reach + 0.6 + power * P.reach
   const found = []
-  for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius }), ...ctx.query({ tags: ['hound'], radius }), ...ctx.query({ tags: ['stealer'], radius }), ...ctx.query({ tags: ['moths'], radius }), ...ctx.query({ tags: ['l8spider'], radius }), ...ctx.query({ tags: ['npc'], radius }), ...ctx.query({ tags: ['l61fc'], radius }), ...ctx.query({ tags: ['spamboss'], radius }), ...ctx.query({ tags: ['l8-hostile'], radius, excludeTags: ['l8spider'] })]) {
+  for (const m of [...ctx.query({ tags: ['smiler'], radius }), ...ctx.query({ tags: ['lurker'], radius }), ...ctx.query({ tags: ['hound'], radius }), ...ctx.query({ tags: ['stealer'], radius }), ...ctx.query({ tags: ['moths'], radius }), ...ctx.query({ tags: ['l8spider'], radius }), ...ctx.query({ tags: ['npc'], radius }), ...ctx.query({ tags: ['l61fc'], radius }), ...ctx.query({ tags: ['spamboss'], radius }), ...ctx.query({ tags: ['zdrone'], radius }), ...ctx.query({ tags: ['l8-hostile'], radius, excludeTags: ['l8spider'] })]) {
     if (m.state?.dead) continue
     const dx = m.feetPosition.x - p.x, dz = m.feetPosition.z - p.z, d = Math.hypot(dx, dz)
     if (d > 0.3 && (dx * f.x + dz * f.z) / d < cone) continue

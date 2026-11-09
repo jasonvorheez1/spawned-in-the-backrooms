@@ -81,9 +81,23 @@ function lay(ctx) {
   ctx.spawn("z-hallsparks", { feetPosition: { x: -1.9, y: 2.2, z: -33 }, fx: { script: `fx\npop spark rate=flick(.2,1)*9 on=point() life=.2..0.5 v=sdir()*(1.5..3.5)+<.8,0,0> size=.012..0.025 acc=grav()*.8 col=hdr(5,3,1) a=1>0 sz=$size floor=bounce(.3) r=sprite(ember,add,velocity,.02)\npop glow n=1 at=point() g=flick(.2,1) r=light(<.6,.75,1>,$g*4,4)` } });
   return n;
 }
+// security drones (scripts/zenith-drones.js): watchers in the halls, an enforcer at the lab and the gym, a warden over the failing north end and the gallery
+const DRONE = { id: "/cdn/value.bf200211dd9298d9c54c509cd3e666e3a503169f5f4448b112578d516c67eaab.glb", forward: "+z" }, DRONEV = 1;
+const POSTS = [["watcher", 0, -14], ["watcher", 0, -30], ["enforcer", -7.6, -17], ["watcher", 7.6, -17], ["enforcer", 7.6, -29], ["watcher", 0, -44], ["warden", 0, -56], ["watcher", -5, -58]]; // Savi's picks: the vestibule and control room stay quiet
+function drones(ctx) {
+  for (const r of ctx.query({ tags: ["zdrone"], radius: 1e4, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(r.id);
+  POSTS.forEach(([type, x, z], i) => {
+    const sz = { watcher: 0.55, enforcer: 0.75, warden: 1.05 }[type], hp = { watcher: 55, enforcer: 110, warden: 220 }[type];
+    ctx.spawn(`z-drone${i}`, { tags: ["zdrone"], feetPosition: { x, y: 1.8, z }, model: DRONE, layout: { box: { min: { x: -sz / 2, y: -sz * 0.35, z: -sz / 2 }, max: { x: sz / 2, y: sz * 0.35, z: sz / 2 } } }, physics: { body: "kinematic", collider: "sphere" },
+      audio: { clip: "cdn/sfx-hovering-security-drone-rotor-hum-and-servo-whir-loop.mp3", loop: true, gain: 0.22, maxDistance: 14 },
+      state: { type, hp, maxHp: hp, home: { x, z }, mode: "idle", name: type[0].toUpperCase() + type.slice(1) + " drone" } });
+  });
+  if (!ctx.place.objects["z-dronebrain"]) ctx.spawn("z-dronebrain", { behavior: "scripts/zenith-drones.js" });
+}
 export function tick(ctx) {
   const s = ctx.place.state;
   if (s.layV !== LAYV && ctx.place.players?.length) { s.layV = LAYV; lay(ctx); }
+  if (s.droneV !== DRONEV && ctx.place.players?.length) { s.droneV = DRONEV; drones(ctx); }
   const now = ctx.now();
   for (const p of ctx.place.players ?? []) {
     const ps = p.state; if (!ps) continue;

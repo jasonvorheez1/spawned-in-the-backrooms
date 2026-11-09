@@ -14,8 +14,8 @@ export const prof = (wp) => ({ mv: wp.mv ?? DEF.mv, drag: wp.drag ?? DEF.drag, a
 const RAD = Math.PI / 180
 const norm = (v) => { const l = Math.hypot(v.x, v.y, v.z) || 1; return { x: v.x / l, y: v.y / l, z: v.z / l } }
 const cross = (a, b) => ({ x: a.y * b.z - a.z * b.y, y: a.z * b.x - a.x * b.z, z: a.x * b.y - a.y * b.x })
-const HEADS = { hound: 0.55, smiler: 0.8 } // body height by kind (m); anything else stands about 1.9
-const TARGETS = ['smiler', 'lurker', 'hound', 'stealer', 'moths', 'l8spider', 'l8-hostile', 'npc', 'l61fc', 'spamboss']
+const HEADS = { hound: 0.55, smiler: 0.8, zdrone: 9 } // body height by kind (m); anything else stands about 1.9
+const TARGETS = ['smiler', 'lurker', 'hound', 'stealer', 'moths', 'l8spider', 'l8-hostile', 'npc', 'l61fc', 'spamboss', 'zdrone']
 
 // the cone half-angle, degrees, for the next bullet: the weapon at rest, then what you are doing and what you can handle
 export function spreadDeg(ctx, s, wp, w) {
@@ -78,7 +78,7 @@ export function fire(ctx, s, wp, w, eye, fwd, pitch, base) {
     const e = f.hit.id ? rootOf(ctx, f.hit.id) : null
     const energy = Math.max(0.25, Math.min(1, (f.v / P.mv) ** 2)) * Math.max(0.35, 1 - Math.max(0, f.travelled - (wp.range ?? 30)) / ((wp.range ?? 30) * 0.5)) // a slowed bullet, or one past its range, hits softer
     if (isTarget(e) && !e.state?.dead) {
-      const H0 = (e.tags?.includes?.('hound') ? HEADS.hound : e.tags?.includes?.('smiler') ? HEADS.smiler : 1.9) * (e.scale?.y ?? 1)
+      const H0 = (e.tags?.includes?.('zdrone') ? HEADS.zdrone : e.tags?.includes?.('hound') ? HEADS.hound : e.tags?.includes?.('smiler') ? HEADS.smiler : 1.9) * (e.scale?.y ?? 1)
       const head = f.hit.position.y - (e.feetPosition?.y ?? 0) > 0.78 * H0
       b.body = true
       const r = hits.get(e.id) ?? { m: e, dmg: 0, head: false, n: 0 }; r.dmg += per * energy * (head ? headMul(n) : 1); r.head ||= head; r.n++; hits.set(e.id, r)
