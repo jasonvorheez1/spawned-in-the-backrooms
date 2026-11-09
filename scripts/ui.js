@@ -8,6 +8,7 @@ import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
 import { ZONE_NAMES } from './lib/maze.js'
 import { wardrobe } from './wardrobe-ui.js'
+import { salon } from './salon-ui.js'
 import { mainMenu } from './main-menu-ui.js'
 import { hubUi } from './hub-ui.js'
 import { cutUi, t0Fade } from './cutscene-ui.js'
@@ -276,6 +277,7 @@ function renderHud(ctx, player) {
   if (s.level == null) return ''
   if (s.cut || s.l26cut || s.arrive || s.arrivePending || (s.t0cut && !s.sheetOpen)) return cutUi(ctx, player)
   if (s.menuOpen) return mainMenu(ctx, player)
+  if (s.wardrobeOpen && s.salonOpen && !s.wrMenu) return `<div id="hud" style="position:fixed;inset:0;pointer-events:none">${salon(ctx, player)}</div>`
   if (s.wardrobeOpen) return `${THEME}<div id="hud" style="position:fixed;inset:0;pointer-events:none">${wardrobe(ctx, player)}</div>`
   if (s.mj?.seats) return `${THEME}${LIVE}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">${mahjongPanel(s, ctx.now())}${chatBubbles(ctx, ctx.now(), player)}</div>` // at the mahjong table: only the game and who's talking
   const now = ctx.now(), lv = s.level, mh = maxHp(lv, s), ms = maxSan(lv, s)

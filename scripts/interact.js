@@ -338,6 +338,7 @@ function press(ctx) {
     ctx.self.parent = f.id; ctx.self.feetPosition = { ...(it.state?.seat ?? { x: -0.48, y: 0.32, z: 0.25 }) }; ctx.self.rotation = { yaw: 0 }
     ctx.self.velocity = { x: 0, y: 0, z: 0 }; m.carAt = ctx.now(); m.key = ''; return
   }
+  if (f.tag === 'usable' && it.state?.kind === 'salon') { s.salonOpen = true; s.salonTab = s.salonTab || 'hair'; s.wrMenu = false; s.wardrobeOpen = true; m.key = ''; return } // Glow Up Salon: its own makeover menu (scripts/salon-ui.js)
   if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); if (it.tags?.includes?.('l5-elev-panel')) s.elevPanel = f.id; m.key = ''; return } // an elevator plate opens a clickable floor list (ui.js)
   if (f.tag === 'seat') { if (sitDown(ctx, it) && it.state?.boat) ctx.emit('press', { by: ctx.self.id }, { to: it.id }); m.key = ''; return } // a boat's seat also takes the oars
   if (f.tag === 'bench') { s.craftOpen = 'bench'; s.craftBench = f.id; return }
