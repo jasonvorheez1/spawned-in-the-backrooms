@@ -1,0 +1,8 @@
+# spawn-scene v2 yaml objects
+surv-hollis/critter-head:
+  attachment: {skin: true}
+  id: surv-hollis/critter-head
+  jiggle: {amount: 0.58, bones: [EarL, EarR], bounce: 0.72}
+  model: {id: /cdn/value.170fa73e75cae61e09980a273cf94cb053a841fc6471d8a547a2282024432e25.glb, materials: {beard: {color: "#5a3a26", depthWrite: false, opacity: 0, transparent: true, visible: false}, belly: {color: "#e4cdac", metalness: 0, roughness: 0.88}, blush: {color: "#ff7b94", depthWrite: false, opacity: 0, transparent: true, visible: false}, eyeink: {color: "#16101c", metalness: 0, roughness: 0.95}, eyewhite: {color: "#fffdf8", metalness: 0, roughness: 0.35}, fur: {color: "#e0c090", metalness: 0, roughness: 0.82}, inner: {color: "#dec4ac", metalness: 0, roughness: 0.9}, iris: {color: "#d4902a", metalness: 0.05, roughness: 0.22}, mark: {color: "#e6d4ba", metalness: 0, roughness: 0.82}, mouth: {color: "#44141e", roughness: 0.82}, nose: {color: "#1a1412", metalness: 0.05, roughness: 0.28}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#987f60", metalness: 0, roughness: 0.82}, tongue: {color: "#ff758c", roughness: 0.45}}}
+  morph: {FT_Broad: 0.18, FT_Chubby: 0, FT_Heart: 0.432, FT_Round: 0.42, FT_Snout: 0.3, FT_Snub: 0.624, Frown: 0.1602, Half: 0.08900000000000001}
+  parent: surv-hollis
