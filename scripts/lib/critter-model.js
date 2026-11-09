@@ -124,7 +124,7 @@ export const skinOf = (l) => l?.skin || SKIN[[...String(l?.fur || l?.species || 
 // human bodies (art/human-base/build.py): the same parts and cloth_* slots as the furry bodies, skin tinted per look, eyes/brows tinted, face keys rolled per NPC
 const warm = (c, k) => toHex(hx(c).map((v, i) => v * k * [1, 0.42, 0.3][i]))
 export const humanBody = (l) => {
-  const c = skinOf(l), skin = { color: c, roughness: 0.6, metalness: 0, emissive: warm(c, 0.55), emissiveIntensity: 0.12 }
+  const c = warm(skinOf(l), 1) && toHex(hx(skinOf(l)).map((v) => v * 0.82)), skin = { color: c, roughness: 0.75, metalness: 0, emissive: '#000000', emissiveIntensity: 0 } // no glow: the third-person body reads the same skin as the first-person arms (Shelly, Nov 9)
   const m = l ? bodyModel({ ...l, _human: true }) : { materials: {}, parts: {} }
   const parts = { ...(m.parts || {}), Under_top: { visible: l?.sex === 'f' }, Under_bottom: { visible: true } }
   const hairc = l?.hairc || '#3a2a20', eye = l?.eye && l.eye !== '#000000' ? l.eye : '#5b4a3a'
