@@ -65,7 +65,7 @@ def build(sex, side):
     fingers = [c for c in comps({i for i in H if P[i][1] > TK}) if len(c) > 30]
     thumbs = [c for c in comps({i for i in P if P[i][3] > 0.03 and P[i][1] > -0.03 and P[i][3] > 0.03}) if len(c) > 10]
     print(sex, "fingers", len(fingers), "thumb", [len(c) for c in thumbs])
-    ANG = (50, 85, 45)   # knuckle, middle, tip flexion: a cylinder grasp around the grip, not a crushed fist
+    ANG = (72, 95, 55)   # knuckle, middle, tip flexion: a cylinder grasp around the grip, not a crushed fist
     def rot(pt, piv, ax, deg): return mu.Quaternion(ax, math.radians(deg)) @ (pt - piv) + piv
     newp = {i: P[i][0].copy() for i in P}
     hinge = V(); rings1 = []
@@ -80,7 +80,8 @@ def build(sex, side):
             else: rings[-1].append(x)
         rc = [sum(r) / len(r) for r in rings]
         while len(rc) < 4: rc.append(rc[-1] + 0.01)
-        L0 = min(u.values()); J = (L0 - 0.007, (rc[0] + rc[1]) / 2, (rc[1] + rc[2]) / 2)
+        L0 = min(u.values()); L1 = max(u.values()); FL = L1 - L0 + 0.007
+        J = (L0 - 0.007, L0 - 0.007 + FL * 0.46, L0 - 0.007 + FL * 0.72)   # knuckle, middle, tip joints by real phalanx proportions (the ring scan merged on a dense mesh)
         ax = f.cross(n).normalized(); hinge += ax
         def axpt(x):   # the finger's centre line at u=x, nudged to the palm side
             near = [P[i][0] for i in c if abs(u[i] - x) < 0.006] or pts
