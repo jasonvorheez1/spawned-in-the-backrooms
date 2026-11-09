@@ -765,7 +765,7 @@ def dress(head, body, r, is_male, aw):
     G("Bot_shorts", lambda f: PANT(f, 0.64), "cloth_bottom", 0.009, cuts=(0.64, 1.0))
     G("Bot_pjpants", lambda f: PANT(f, 0.09, 1.01), "cloth_bottom", 0.008, cuts=(0.09, 1.01))
     G("Bot_overalls", lambda f: PANT(f, 0.11) or (TORSO(f, 0.95, 1.36) and f["y"] < 0.07 and f["ax"] < 0.1) or (TORSO(f, 0.95, 1.52) and 0.05 < f["ax"] < 0.08),
-      "cloth_bottom", 0.012, cuts=(0.11, 1.36, 1.52))
+      "cloth_bottom", 0.025, cuts=(0.11, 1.36, 1.52))  # final 2.9 cm: clear of every top (tee 1.6, jacket 2.7, plate 3.1); 1.2 sat on the tee plane and z-fought
     # shoes
     FOOT = lambda f, hi: f["leg"] > 0.5 and f["z"] < hi
     G("Shoes_sneakers", lambda f: FOOT(f, 0.12), "cloth_shoes", 0.011, 0.008, cuts=(0.12,))
