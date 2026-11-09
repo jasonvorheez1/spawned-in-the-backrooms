@@ -65,7 +65,6 @@ function blast(ctx, d, t, f) { // the ko: a fireball that hurts every player and
     const dmg = Math.round(B.dmg * big * k); p.state.hp -= dmg; p.state.hurtAt = ctx.now();
     ctx.emit("damageNumber", { position: c, value: dmg, color: "#ffb347" });
     ctx.emit("screenShake", { intensity: 0.5 * k, duration: 0.35 }, { audience: { player: p.id } });
-    ctx.emit("screenFlash", { color: "#ffcf8a", duration: 0.25, intensity: 0.5 * k }, { audience: { player: p.id } });
     ctx.emit("impulse", { target: p.id, impulse: { x: (c.x - f.x) / (r || 1) * 6 * k, y: 3 * k, z: (c.z - f.z) / (r || 1) * 6 * k } });
   }
   for (const o of ctx.query({ tags: ["zdrone"], center: f, radius: B.radius * big })) if (o.id !== d.id && !o.state.dead) { o.state.hp -= B.drone * big; ctx.emit("damageNumber", { position: o.feetPosition, value: B.drone * big, color: "#ffb347" }); }
