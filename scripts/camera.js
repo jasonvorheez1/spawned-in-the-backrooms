@@ -190,8 +190,9 @@ export function update(ctx, dt) {
     const by = (typeof r0 === 'number' ? r0 : r0?.yaw ?? 0) * Math.PI / 180, a = by + 1.25 + (ps.wrSpin || 0) * Math.PI / 180
     const b = { x: wp.x, y: wp.y + 1.0, z: wp.z } // chest of the seated body
     const dir = { x: -Math.sin(a), y: 0.17, z: -Math.cos(a) }, dl = Math.hypot(dir.x, dir.y, dir.z) // in front and a little up: forward is (-sin, -cos)
-    const wall = raycast(ctx, b, { x: dir.x / dl, y: dir.y / dl, z: dir.z / dl }, { distance: 2.6, radius: 0.15, physicsOnly: true, ignoreEntities: [ctx.player.id] })
-    const reach = wall ? Math.max(0.9, wall.distance - 0.25) : 2.5 // a wall or a mirror cuts the eye in before it can sit inside it
+    const nd = { x: dir.x / dl, y: dir.y / dl, z: dir.z / dl }, r0p = { x: b.x + nd.x * 0.7, y: b.y + nd.y * 0.7, z: b.z + nd.z * 0.7 } // start clear of the chair you sit in
+    const wall = raycast(ctx, r0p, nd, { distance: 2.0, radius: 0.15, physicsOnly: true, bodies: 'static', ignoreEntities: [ctx.player.id, st.id] })
+    const reach = wall ? Math.max(1.3, 0.7 + wall.distance - 0.25) : 2.6 // a wall or a mirror cuts the eye in before it can sit inside it
     const out = { x: b.x + dir.x / dl * reach, y: b.y + dir.y / dl * reach + 0.1, z: b.z + dir.z / dl * reach }
     const k = sk.k * sk.k * (3 - 2 * sk.k), e0 = ctx.self.feetPosition
     ctx.self.feetPosition = { x: e0.x + (out.x - e0.x) * k, y: e0.y + (out.y - e0.y) * k, z: e0.z + (out.z - e0.z) * k }
