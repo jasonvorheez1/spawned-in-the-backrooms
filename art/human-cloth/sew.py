@@ -94,10 +94,6 @@ for name, (ease, cuts) in PLAN.items():
             need = max(0.004, E[v] * 0.7)
             if out < need: v.co = v.co + n * (need - out)
             elif out > E[v] * 1.6 + 0.004: v.co = v.co - n * (out - E[v] * 1.6 - 0.004)
-        bm.normal_update()
-        for v in bm.verts:                                   # under a second skin layer (the head's yoke over the body)? come out past it
-            h = bvhW.ray_cast(v.co + v.normal * 0.0005, v.normal, 0.04)
-            if h[0] is not None and h[1].dot(v.normal) > 0: v.co = h[0] + v.normal * max(0.004, E[v] * 0.7)
     if hasattr(ease, "drape"):                               # cloth falls from the chest: each slice no narrower than the one above x drape
         cy = B["Spine1"].y; BINS = 72; cells = {}
         for v in bm.verts:
@@ -159,6 +155,10 @@ for name, (ease, cuts) in PLAN.items():
     sd = n.modifiers.new("t", "SOLIDIFY"); sd.thickness = THICK; sd.offset = 1; sd.use_even_offset = False; sd.use_rim = True
     bpy.ops.object.modifier_apply(modifier="t")
     ss = n.modifiers.new("s", "SUBSURF"); ss.levels = 1; bpy.ops.object.modifier_apply(modifier="s")
+    tri = sum(len(p.vertices) - 2 for p in me.polygons); BUDGET = 9000 if name.startswith("Top_") else 6000   # Savi's pick: a crowd of NPCs wears these
+    if tri > BUDGET:
+        dc = n.modifiers.new("d", "DECIMATE"); dc.ratio = BUDGET / tri; bpy.ops.object.modifier_apply(modifier="d")
+    for p in me.polygons: p.use_smooth = True
     # skin + Bust key from the body at the nearest point
     n.shape_key_add(name="Basis", from_mix=False); kb = n.shape_key_add(name="Bust", from_mix=False) if KB else None
     groups = {}
