@@ -323,6 +323,18 @@ for o in bpy.data.objects:
                     s_ = 1 + (tr / r - 1) * w; dv = Vector((x * s_ - x, y * s_ - y, 0))
                     v.co += dv
                     for L in shapes: v[L] += dv
+        # folded panels (belly V, the bow over the seat): faces turned edge-on to the body go, the hole they leave is stitched flat
+        bm.normal_update()
+        fold = []
+        for f in bm.faces:
+            c = f.calc_center_median(); rv = Vector((c.x, c.y - cy, 0))
+            if c.z < HEM + 0.12 and abs(c.x) < 0.14 and rv.length > 1e-4 and abs(f.normal.dot(rv.normalized())) < 0.45:
+                fold.append(f)
+        if fold:
+            bmesh.ops.delete(bm, geom=fold, context="FACES_ONLY")
+            ring = [e for e in bm.edges if e.is_boundary and min(v.co.z for v in e.verts) > min(v.co.z for v in bm.verts if v.link_faces) + 0.02]
+            if ring: bmesh.ops.holes_fill(bm, edges=ring, sides=0)
+        print("folds cut", o.name, len(fold))
         # the back seam: its two open edges meet on the spine line, so no slit shows (indices kept for the skin)
         for v in bm.verts:
             if v.is_boundary and abs(v.co.x) < 0.03 and v.co.z > HEM + 0.03 and v.co.y - cy > 0:
