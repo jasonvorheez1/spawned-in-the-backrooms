@@ -330,10 +330,6 @@ for name, (ease, cuts) in PLAN.items():
             D = {v: D[v].lerp(sum((D[e.other_vert(v)] for e in v.link_edges), Vector()) / max(1, len(v.link_edges)), 0.6) for v in fb.verts}
         for v in fb.verts: v.co += D[v]
         print("SKINLIFT", name, _pass, hit)
-    _seat = [v for v in fb.verts if abs(v.co.x) < 0.07 and v.co.z < _SEATZ and v.co.y > _SEATY and not v.is_boundary]   # the seat's cleft: the cloth spans it, a relaxed sheet, no fold
-    for _ in range(25):
-        _new = {v: v.co.lerp(sum((e.other_vert(v).co for e in v.link_edges), Vector()) / len(v.link_edges), 0.5) for v in _seat if v.link_edges}
-        for v, c in _new.items(): v.co = c
     fb.to_mesh(me); fb.free()
     # skin + Bust key from the body at the nearest point
     n.shape_key_add(name="Basis", from_mix=False); kb = n.shape_key_add(name="Bust", from_mix=False) if KB else None
