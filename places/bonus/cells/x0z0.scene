@@ -1331,6 +1331,7 @@ bm-shell:
   model: {id: /cdn/value.3aa893f298b84baeb2f37a68486d08c12bb05ec9bd9c96958e7f46128a726d7f.glb}
   physics: {body: static, collider: mesh}
   receiveShadow: true
+  state: {floor: terrazzo polished mall floor}
   tags: [bonus-mall]
 bonus-ctr-clothes:
   behavior: scripts/bonus-counter.js
