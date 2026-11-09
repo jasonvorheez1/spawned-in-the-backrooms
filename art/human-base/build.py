@@ -722,7 +722,7 @@ def dress(head, body, r, is_male, aw):
     mat("metal", C("#2a2a30"), 0.35, 0.8); mat("strap", C("#3b2a1f"), 0.62); mat("button", C("#d9d2c2"), 0.4); mat("lens", C("#1a1824"), 0.1, 0.5); mat("gold", C("#e8c35a"), 0.3, 0.9)
     out = []
     G = lambda *a, **k: out.append(garment(body, r, *a, **k)) or out[-1]
-    TORSO = lambda f, lo, hi: f["arm"] < 0.5 and f["leg"] < 0.6 and lo < f["z"] < hi
+    TORSO = lambda f, lo, hi: f["arm"] < 0.5 and (f["leg"] < 0.6 or f["z"] > 0.9) and lo < f["z"] < hi  # Nov 9: hip faces carry leg weight; the hem is the z cut, not a ragged weight edge
     NECK = lambda f, d=0.0: f["z"] < (1.495 - d if f["y"] < 0.06 else 1.525 - d) + max(0.0, math.hypot(f["x"], f["y"] - 0.08) - 0.075) * 1.4  # Nov 9: a ring round the neck, the shoulder tops stay clothed
     SLV = lambda f, s: f["arm"] >= 0.5 and f["t"] < s and f["hand"] < 0.4
     hemt = 1.0
