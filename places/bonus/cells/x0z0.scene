@@ -1383,7 +1383,7 @@ bonus-music:
 bonus-salon:
   feetPosition: {x: 17, y: 0, z: -1}
   id: bonus-salon
-  model: {id: /cdn/value.c6193ac2d391d6212de63ce2ec39dfee275ba4d905d8a08c4f5f2a31fad377ab.glb}
+  model: {id: /cdn/value.ec2d06fc1a5af1f62053ac1b27ccef135cb141abf2c5c0f4d76e7e68600e5544.glb}
   physics: {body: static, collider: mesh}
   receiveShadow: true
   tags: [bonus-mall]
