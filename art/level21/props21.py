@@ -103,6 +103,7 @@ def sorttable():
         parts.append(box("brace", (0.03, W - 0.2, 0.03), (x, 0, 0.18), steel, 0.003, 1))
     parts.append(box("stretcher", (L - 0.5, 0.03, 0.03), (0, 0, 0.18), steel, 0.003, 1))
     for k in range(14):
+        if k % 7 in (3, 4): continue  # the middle is the interactive carton stack (l21-saltines)
         x = -1.5 + (k % 7) * 0.42 + random.uniform(-0.05, 0.05); y = -0.45 + (k // 7) * 0.62 + random.uniform(-0.08, 0.08)
         h = 1 + (k % 3 == 0); a = random.uniform(-0.25, 0.25)
         for j in range(h):
