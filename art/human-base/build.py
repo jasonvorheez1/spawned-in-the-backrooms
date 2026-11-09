@@ -369,3 +369,527 @@ def tpose(r, meshes):
     bpy.ops.object.mode_set(mode="POSE"); bpy.ops.pose.armature_apply(selected=False); bpy.ops.object.mode_set(mode="OBJECT")
     print("tpose applied")
 
+# ---------------- Nov 9 pass: real skin, a face that reads, clothes fitted per body ----------------
+import bmesh, numpy as np
+MATS = {}
+def mat(name, color, rough=0.75, metal=0.0, image=None):
+    if name in MATS: return MATS[name]
+    m = bpy.data.materials.new(name); m.use_nodes = True
+    b = m.node_tree.nodes["Principled BSDF"]
+    b.inputs["Base Color"].default_value = color; b.inputs["Roughness"].default_value = rough; b.inputs["Metallic"].default_value = metal
+    if image is not None:
+        t = m.node_tree.nodes.new("ShaderNodeTexImage"); t.image = image
+        m.node_tree.links.new(t.outputs["Color"], b.inputs["Base Color"])
+    MATS[name] = m; return m
+
+def skin_mat(name, image):
+    # Cycles proof only: the game's skin is the glTF base colour + the tint skinOf(l) and a warm emissive lift
+    m = bpy.data.materials.new(name); m.use_nodes = True; b = m.node_tree.nodes["Principled BSDF"]
+    t = m.node_tree.nodes.new("ShaderNodeTexImage"); t.image = image
+    mix = m.node_tree.nodes.new("ShaderNodeMix"); mix.data_type = "RGBA"; mix.blend_type = "MULTIPLY"; mix.inputs["Factor"].default_value = 1
+    m.node_tree.links.new(t.outputs["Color"], mix.inputs[6]); mix.inputs[7].default_value = (0.86, 0.66, 0.52, 1)
+    m.node_tree.links.new(mix.outputs[2], b.inputs["Base Color"])
+    b.inputs["Roughness"].default_value = 0.6
+    b.inputs["Subsurface Weight"].default_value = 0.25; b.inputs["Subsurface Radius"].default_value = (1.0, 0.35, 0.2)
+    b.inputs["Subsurface Scale"].default_value = 0.01
+    return m
+
+def img_np(im):
+    a = np.array(im.pixels[:], dtype=np.float32).reshape(im.size[1], im.size[0], 4); return a
+def np_img(name, a):
+    h, w = a.shape[:2]; im = bpy.data.images.new(name, w, h, alpha=True)
+    im.pixels.foreach_set(a.ravel()); im.pack(); return im
+def shrink(a, n=1024):
+    f = a.shape[0] // n
+    return a.reshape(n, f, n, f, 4).mean(axis=(1, 3))
+
+def textures(is_male):
+    hi = img_np(bpy.data.images["Image_0"]); bo = img_np(bpy.data.images["Image_1"])
+    H = hi.shape[0]
+    def box(a, u0, u1, v0, v1):
+        n = a.shape[0]; return slice(int(v0 * n), int(v1 * n)), slice(int(u0 * n), int(u1 * n))
+    # skin: divided by its own cream so the tint skinOf(l) lands true; blush, knuckles, creases keep their darkening
+    def norm(a):
+        c = np.median(a[..., :3].reshape(-1, 3), axis=0); out = a.copy(); out[..., :3] = np.clip(a[..., :3] / c * 0.97, 0, 1); return out
+    hs = norm(hi); bs = norm(bo)
+    # lips: a soft rose over the mouth line (face is upside down in the atlas: mouth at v .553, nose below it at v .48)
+    n = hs.shape[0]; vv, uu = np.mgrid[0:n, 0:n] / n
+    for (cu, cv, rx, ry, k) in ((0.5, 0.556, 0.03, 0.0075, 1.0), (0.5, 0.548, 0.026, 0.006, 0.8)):
+        d = ((uu - cu) / rx) ** 2 + ((vv - cv) / ry) ** 2; w = np.clip(1 - d, 0, 1) ** 1.5 * k
+        lip = (0.9, 0.62, 0.62) if not is_male else (0.93, 0.76, 0.74)
+        for ch in range(3): hs[..., ch] *= 1 - w * (1 - lip[ch])
+    # features: iris and brows to grey so the game tints them (eye colour, hair colour)
+    ft = hi.copy()
+    lum = lambda a: a[..., 0] * 0.3 + a[..., 1] * 0.59 + a[..., 2] * 0.11
+    s = box(ft, 0.0, 0.17, 0.81, 1.0); L = lum(ft[s]); g = np.clip(L / np.percentile(L, 97), 0, 1) ** 0.9
+    for ch in range(3): ft[s][..., ch] = g
+    s = box(ft, 0.2, 0.56, 0.0, 0.07); L = lum(ft[s]); g = np.clip(L / 0.62, 0, 1)
+    for ch in range(3): ft[s][..., ch] = g
+    return np_img("SkinHead", shrink(hs)), np_img("SkinBody", shrink(bs)), np_img("Features", shrink(ft))
+
+def face_features(head, body, is_male):
+    sh, sb, ft = textures(is_male)
+    head.data.materials.clear(); body.data.materials.clear()
+    head.data.materials.append(skin_mat("Head_Skin", sh)); body.data.materials.append(skin_mat("Body_Skin", sb))
+    slots = {"Eye": mat("Eye", (1, 1, 1, 1), 0.3, image=ft), "Iris": mat("Iris", (1, 1, 1, 1), 0.28, image=ft),
+             "Lash": mat("Lash", (1, 1, 1, 1), 0.8, image=ft), "Brow": mat("Brow", (1, 1, 1, 1), 0.9, image=ft),
+             "Mouth": mat("Mouth", (1, 1, 1, 1), 0.5, image=ft), "Teeth": mat("Teeth", (1, 1, 1, 1), 0.35, image=ft)}
+    idx = {}
+    for k, m in slots.items(): head.data.materials.append(m); idx[k] = len(head.data.materials) - 1
+    bm = bmesh.new(); bm.from_mesh(head.data); bm.faces.ensure_lookup_table(); uv = bm.loops.layers.uv.active
+    seen = set(); kill = []; cnt = {}
+    for f in bm.faces:
+        if f.index in seen: continue
+        st = [f]; seen.add(f.index); fs = []
+        while st:
+            g = st.pop(); fs.append(g)
+            for e in g.edges:
+                for h in e.link_faces:
+                    if h.index not in seen: seen.add(h.index); st.append(h)
+        us = [l[uv].uv for g in fs for l in g.loops]
+        uc = sum(u.x for u in us) / len(us); vc = sum(u.y for u in us) / len(us)
+        k = None
+        if uc < 0.06 and 0.76 < vc < 0.81: k = "kill"
+        elif 0.14 < uc < 0.2 and 0.82 < vc < 0.88 and len(fs) < 40: k = "kill"
+        elif uc < 0.16 and vc > 0.82: k = "Iris"
+        elif uc < 0.23 and vc < 0.21: k = "Lash"
+        elif 0.2 < uc < 0.55 and vc < 0.06: k = "Brow"
+        elif uc > 0.84 and vc > 0.5 and len(fs) < 400: k = "Mouth"
+        elif 0.3 < uc < 0.7 and 0.35 < vc < 0.46 and len(fs) < 200: k = "Eye"
+        elif 0.15 < uc < 0.55 and vc > 0.9: k = "Teeth"
+        cnt[k] = cnt.get(k, 0) + len(fs)
+        if k == "kill": kill += fs
+        elif k: 
+            for g in fs: g.material_index = idx[k]
+    bmesh.ops.delete(bm, geom=kill, context="FACES")
+    # male: heavier brows, lighter lashes; both: irises a touch smaller than the doll base
+    def scale_isl(key, sx, sz, dz=0.0):
+        vs = {v for f in bm.faces if f.material_index == idx[key] for v in f.verts}
+        for side in (1, -1):
+            ss = [v for v in vs if (v.co.x > 0) == (side > 0)]
+            if not ss: continue
+            c = sum((v.co for v in ss), Vector()) / len(ss)
+            for v in ss: v.co = Vector((c.x + (v.co.x - c.x) * sx, v.co.y, c.z + (v.co.z - c.z) * sz + dz))
+    scale_isl("Iris", 0.9, 0.9)
+    if is_male: scale_isl("Brow", 1.08, 1.7, -0.002); scale_isl("Lash", 1.0, 0.75)
+    bm.to_mesh(head.data); bm.free(); head.data.update()
+    print("face islands", cnt)
+
+def finfo(o, r):
+    # per-face: bone weights averaged, arm param along the arm (0 shoulder joint .. 1 wrist)
+    gi = {g.index: g.name for g in o.vertex_groups}
+    arms = {}
+    for s in ("Left", "Right"):
+        h = r.data.bones[s + "Arm"].head_local.copy(); w = r.data.bones[s + "Hand"].head_local.copy(); arms[s] = (h, w - h)
+    def info(f, dl):
+        W = {}
+        for v in f.verts:
+            for g, x in v[dl].items(): n = gi[g]; W[n] = W.get(n, 0) + x / len(f.verts)
+        c = f.calc_center_median()
+        arm = sum(x for n, x in W.items() if n.endswith(("Arm", "ForeArm", "Hand")) and "Up" not in n)
+        hand = sum(x for n, x in W.items() if n.endswith("Hand"))
+        leg = sum(x for n, x in W.items() if n.endswith(("UpLeg", "Leg", "Foot", "ToeBase")))
+        h, d = arms["Left" if c.x > 0 else "Right"]
+        t = (c - h).dot(d) / d.length_squared
+        return dict(c=c, z=c.z, x=c.x, ax=abs(c.x), y=c.y, arm=arm, hand=hand, leg=leg, t=t)
+    return info, arms
+
+def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=()):
+    o = body.copy(); o.data = body.data.copy(); o.name = name
+    bpy.context.collection.objects.link(o)
+    for m in list(o.modifiers):
+        if m.type != "ARMATURE": o.modifiers.remove(m)
+    bm = bmesh.new(); bm.from_mesh(o.data); dl = bm.verts.layers.deform.active
+    info, arms = finfo(o, r)
+    for zc in cuts:
+        bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=(0, 0, zc), plane_no=(0, 0, 1))
+    for t in armcuts:
+        for s, (h, d) in arms.items():
+            g = [e for e in bm.edges if ((e.verts[0].co.x > 0) == (s == "Left"))]
+            if not g: continue
+            bmesh.ops.bisect_plane(bm, geom=list({v for e in g for v in e.verts}) + g + list({f for e in g for f in e.link_faces}), plane_co=h + d * t, plane_no=d.normalized())
+    gone = [f for f in bm.faces if not keep(info(f, dl))]
+    bmesh.ops.delete(bm, geom=gone, context="FACES")
+    bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=0.0004)
+    bm.normal_update()
+    for v in bm.verts: v.co += v.normal * push
+    bm.to_mesh(o.data); bm.free()
+    o.data.materials.clear(); o.data.materials.append(MATS[mname])
+    if thick:
+        sd = o.modifiers.new("solid", "SOLIDIFY"); sd.thickness = thick; sd.offset = 1; sd.use_rim = True
+        bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); bpy.context.view_layer.objects.active = o
+        bpy.ops.object.modifier_move_to_index(modifier="solid", index=0); bpy.ops.object.modifier_apply(modifier="solid")
+    for p in o.data.polygons: p.use_smooth = True
+    o.parent = r
+    return o
+
+def weighted(o, r, wfun):
+    # a generated piece: weights by position, wfun(co) -> {bone: w}
+    o.vertex_groups.clear()
+    for v in o.data.vertices:
+        ws = wfun(v.co); tot = sum(ws.values()) or 1
+        for n, w in ws.items():
+            if w <= 1e-3: continue
+            g = o.vertex_groups.get(n) or o.vertex_groups.new(name=n); g.add([v.index], w / tot, "REPLACE")
+    o.modifiers.new("skin", "ARMATURE").object = r; o.parent = r
+    for p in o.data.polygons: p.use_smooth = True
+
+def mesh_obj(name, bm, mname):
+    me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free(); o = bpy.data.objects.new(name, me)
+    bpy.context.collection.objects.link(o); me.materials.append(MATS[mname]); return o
+
+def solidify(o, t):
+    sd = o.modifiers.new("solid", "SOLIDIFY"); sd.thickness = t; sd.offset = 1; sd.use_rim = True
+    bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); bpy.context.view_layer.objects.active = o
+    bpy.ops.object.modifier_apply(modifier="solid")
+
+def body_radii(body, aw, z, cy, nb=36):
+    # star radius of the body (arms out) around (0, cy) at height z, per angle bin
+    R = [0.0] * nb
+    for i, v in enumerate(body.data.vertices):
+        if aw[i] > 0.3 or abs(v.co.z - z) > 0.02: continue
+        a = math.atan2(v.co.y - cy, v.co.x); k = int((a + math.pi) / (2 * math.pi) * nb) % nb
+        R[k] = max(R[k], math.hypot(v.co.x, v.co.y - cy))
+    m = max(R) or 0.1
+    R = [x if x > 0 else m for x in R]
+    for _ in range(3): R = [(R[k - 1] + 2 * R[k] + R[(k + 1) % nb]) / 4 for k in range(nb)]
+    return R
+
+def ring_piece(name, body, aw, mname, z0, z1, flare, slack, cy, arc=None, rows=14, seg=40, thick=0.004):
+    # a hanging cloth (skirt, dress skirt, cape, apron) as rings following the widest body below its top + flare
+    nb = 36; prof = []; acc = None
+    for j in range(rows + 1):
+        z = z0 + (z1 - z0) * j / rows
+        Rz = body_radii(body, aw, z, cy, nb)
+        acc = Rz if acc is None else [max(a, b) for a, b in zip(acc, Rz)]
+        prof.append((z, list(acc), j / rows))
+    bm = bmesh.new(); grid = []
+    a0, a1 = arc if arc else (-math.pi, math.pi)
+    closed = arc is None; ns = seg if closed else seg + 1
+    for z, R, t in prof:
+        row = []
+        for i in range(ns):
+            a = a0 + (a1 - a0) * i / seg
+            k = (a + math.pi) / (2 * math.pi) * nb; k0 = int(k) % nb; f = k - int(k)
+            rr = R[k0] * (1 - f) + R[(k0 + 1) % nb] * f + slack + flare * t ** 1.3
+            row.append(bm.verts.new((math.cos(a) * rr, cy + math.sin(a) * rr, z)))
+        grid.append(row)
+    for j in range(rows):
+        for i in range(seg):
+            a, b = grid[j][i], grid[j][(i + 1) % ns]; c, d = grid[j + 1][(i + 1) % ns], grid[j + 1][i]
+            bm.faces.new((a, b, c, d))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    o = mesh_obj(name, bm, mname)
+    if thick: solidify(o, thick)
+    return o
+
+def skirt_w(z0, z1, top="Hips"):
+    def w(co):
+        t = max(0.0, min(1.0, (z0 - co.z) / max(1e-3, z0 - z1)))
+        lt = 0.65 * t; sl = max(0.0, min(1.0, 0.5 + co.x / 0.16))
+        return {top: 1 - lt, "LeftUpLeg": lt * sl, "RightUpLeg": lt * (1 - sl)}
+    return w
+
+def head_fit(head):
+    P = [v.co for v in head.data.vertices]
+    sk = [p for p in P if p.z > 1.76 and abs(p.x) < 0.105]
+    top = max(p.z for p in P)
+    xs = [abs(p.x) for p in P if 1.76 < p.z < 1.86]; ys = [p.y for p in P if p.z > 1.74]
+    rx = max(xs); y0, y1 = min(ys), max(ys); cy = (y0 + y1) / 2; ry = (y1 - y0) / 2
+    cz = 1.775; rz = top - cz
+    brow = max((p.z for p in P if p.y < y0 + 0.03 and abs(p.x) < 0.03 and p.z < 1.86), default=1.8)
+    print("head fit rx", round(rx, 3), "ry", round(ry, 3), "cy", round(cy, 3), "rz", round(rz, 3), "top", round(top, 3), "front y", round(y0, 3))
+    return dict(rx=rx, ry=ry, cy=cy, cz=cz, rz=rz, top=top, y0=y0, y1=y1)
+
+def dome(name, H, off, cut_front, cut_back, mname, thick=0.005, extra_z=0.0):
+    bm = bmesh.new(); bmesh.ops.create_uvsphere(bm, u_segments=40, v_segments=24, radius=1.0)
+    for v in bm.verts:
+        v.co = Vector((v.co.x * (H["rx"] + off), H["cy"] + v.co.y * (H["ry"] + off), H["cz"] + v.co.z * (H["rz"] + off + extra_z)))
+    def cut(y):
+        t = (y - H["y0"]) / (H["y1"] - H["y0"]); return cut_front + (cut_back - cut_front) * max(0, min(1, t))
+    bmesh.ops.delete(bm, geom=[f for f in bm.faces if all(v.co.z < cut(v.co.y) for v in f.verts)], context="FACES")
+    for v in bm.verts:
+        c = cut(v.co.y)
+        if v.co.z < c: v.co.z = c
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+    o = mesh_obj(name, bm, mname)
+    if thick: solidify(o, thick)
+    return o, cut
+
+def add(objs, o, r, wfun):
+    weighted(o, r, wfun); objs.append(o); return o
+
+def torus(name, R, rr, mname, loc, rot=(0, 0, 0), scale=(1, 1, 1), seg=32, mseg=10):
+    bpy.ops.mesh.primitive_torus_add(major_radius=R, minor_radius=rr, major_segments=seg, minor_segments=mseg, location=loc, rotation=rot)
+    o = bpy.context.object; o.name = name; o.scale = scale; bpy.ops.object.transform_apply(scale=True, rotation=True, location=True)
+    o.data.materials.append(MATS[mname]); return o
+
+def prim(name, kind, mname, loc, rot=(0, 0, 0), scale=(1, 1, 1), **kw):
+    getattr(bpy.ops.mesh, "primitive_" + kind + "_add")(location=loc, rotation=rot, **kw)
+    o = bpy.context.object; o.name = name; o.scale = scale; bpy.ops.object.transform_apply(scale=True, rotation=True, location=True)
+    o.data.materials.append(MATS[mname]); return o
+
+def join(name, objs):
+    bpy.ops.object.select_all(action="DESELECT")
+    for o in objs: o.select_set(True)
+    bpy.context.view_layer.objects.active = objs[0]; bpy.ops.object.join(); o = bpy.context.object; o.name = name; return o
+
+def dress(head, body, r, is_male, aw):
+    C = lambda h: (*[int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)], 1)
+    for n, c in (("cloth_top", "#c9c2b4"), ("cloth_bottom", "#3b4a63"), ("cloth_shoes", "#e8e4dc"), ("cloth_hat", "#8a2f2f"), ("cloth_neck", "#7d5a8c"), ("under", "#2b2a30")):
+        mat(n, C(c), 0.8)
+    mat("metal", C("#2a2a30"), 0.35, 0.8); mat("lens", C("#1a1824"), 0.1, 0.5); mat("gold", C("#e8c35a"), 0.3, 0.9)
+    out = []
+    G = lambda *a, **k: out.append(garment(body, r, *a, **k)) or out[-1]
+    TORSO = lambda f, lo, hi: f["arm"] < 0.5 and f["leg"] < 0.6 and lo < f["z"] < hi
+    NECK = lambda f, d=0.0: f["z"] < (1.495 - d if f["y"] < 0.06 else 1.525 - d)
+    SLV = lambda f, s: f["arm"] >= 0.5 and f["t"] < s and f["hand"] < 0.4
+    hemt = 0.98
+    # underwear: nobody is naked by default
+    if not is_male: G("Under_top", lambda f: TORSO(f, 1.27, 1.43), "under", 0.003, 0.002, cuts=(1.27, 1.43))
+    G("Under_bottom", lambda f: f["arm"] < 0.3 and 0.8 < f["z"] < 1.04, "under", 0.003, 0.002, cuts=(0.8, 1.04))
+    # tops
+    G("Top_tee", lambda f: (TORSO(f, hemt, 1.6) and NECK(f)) or SLV(f, 0.4), "cloth_top", 0.009, cuts=(hemt, 1.495, 1.525), armcuts=(0.4,))
+    G("Top_tank", lambda f: TORSO(f, hemt, 1.6) and NECK(f, 0.04) and (f["ax"] < 0.105 or f["z"] < 1.39), "cloth_top", 0.009, cuts=(hemt, 1.39, 1.455, 1.485))
+    G("Top_longsleeve", lambda f: (TORSO(f, hemt, 1.6) and NECK(f)) or SLV(f, 0.97), "cloth_top", 0.009, cuts=(hemt, 1.495, 1.525), armcuts=(0.97,))
+    G("Top_pajamas", lambda f: (TORSO(f, 0.92, 1.6) and NECK(f, 0.01)) or SLV(f, 0.95), "cloth_top", 0.011, cuts=(0.92, 1.485, 1.515), armcuts=(0.95,))
+    sw = G("Top_sweater", lambda f: (TORSO(f, 0.93, 1.6) and f["z"] < 1.56) or SLV(f, 0.97), "cloth_top", 0.013, 0.006, cuts=(0.93, 1.56), armcuts=(0.97,))
+    hd = G("Top_hoodie", lambda f: (TORSO(f, 0.9, 1.6) and NECK(f, -0.01)) or SLV(f, 0.98), "cloth_top", 0.015, 0.006, cuts=(0.9, 1.505, 1.535), armcuts=(0.98,))
+    jk = G("Top_jacket", lambda f: (TORSO(f, 0.88, 1.6) and NECK(f, -0.01)) or SLV(f, 0.96), "cloth_top", 0.02, 0.006, cuts=(0.88, 1.505, 1.535), armcuts=(0.96,))
+    dr = G("Top_dress", lambda f: (TORSO(f, 0.92, 1.6) and NECK(f, 0.02) and (f["ax"] < 0.11 or f["z"] < 1.41)), "cloth_top", 0.009, cuts=(0.92, 1.41, 1.475, 1.505))
+    ap = G("Top_apron", lambda f: TORSO(f, 0.92, 1.42) and f["y"] < 0.075 and f["ax"] < 0.12, "cloth_top", 0.017, cuts=(0.92, 1.42))
+    # bottoms
+    PANT = lambda f, lo, hi=1.0: f["arm"] < 0.3 and lo < f["z"] < hi and (f["leg"] > 0.2 or f["z"] > 0.7)
+    G("Bot_pants", lambda f: PANT(f, 0.1), "cloth_bottom", 0.006, cuts=(0.1, 1.0))
+    G("Bot_shorts", lambda f: PANT(f, 0.64), "cloth_bottom", 0.006, cuts=(0.64, 1.0))
+    G("Bot_pjpants", lambda f: PANT(f, 0.09, 1.01), "cloth_bottom", 0.008, cuts=(0.09, 1.01))
+    G("Bot_overalls", lambda f: PANT(f, 0.11) or (TORSO(f, 0.95, 1.36) and f["y"] < 0.07 and f["ax"] < 0.1) or (TORSO(f, 0.95, 1.52) and 0.05 < f["ax"] < 0.08),
+      "cloth_bottom", 0.012, cuts=(0.11, 1.36, 1.52))
+    # shoes
+    FOOT = lambda f, hi: f["leg"] > 0.5 and f["z"] < hi
+    G("Shoes_sneakers", lambda f: FOOT(f, 0.12), "cloth_shoes", 0.011, 0.008, cuts=(0.12,))
+    G("Shoes_boots", lambda f: FOOT(f, 0.36), "cloth_shoes", 0.014, 0.008, cuts=(0.36,))
+    G("Shoes_slippers", lambda f: FOOT(f, 0.075), "cloth_shoes", 0.01, 0.01, cuts=(0.075,))
+    # hanging cloth: skirts, the dress's skirt, apron bib's skirt, cape
+    cy = 0.1
+    add(out, ring_piece("Bot_skirt", body, aw, "cloth_bottom", 0.97, 0.6, 0.07, 0.012, cy), r, skirt_w(0.97, 0.6))
+    add(out, ring_piece("Bot_longskirt", body, aw, "cloth_bottom", 0.97, 0.16, 0.13, 0.012, cy, rows=20), r, skirt_w(0.97, 0.16))
+    dsk = ring_piece("dsk", body, aw, "cloth_top", 0.94, 0.52, 0.1, 0.017, cy)
+    weighted(dsk, r, skirt_w(0.94, 0.52)); dr = join("Top_dress", [dr, dsk]); out[out.index(next(o for o in out if o.name.startswith("Top_dress")))] = dr
+    ask = ring_piece("ask", body, aw, "cloth_top", 0.95, 0.5, 0.05, 0.022, cy, arc=(-math.pi * 0.86, -math.pi * 0.14), rows=12, seg=20)
+    weighted(ask, r, skirt_w(0.95, 0.5, "Hips")); ap2 = join("Top_apron", [ap, ask]); out[out.index(next(o for o in out if o.name.startswith("Top_apron")))] = ap2
+    def capew(co):
+        t = max(0.0, min(1.0, (1.5 - co.z) / 0.95))
+        return {"Spine2": max(0, 1 - 2 * t), "Spine": max(0, 1 - abs(t - 0.5) * 2), "Hips": max(0, 2 * t - 1)}
+    add(out, ring_piece("Neck_cape", body, aw, "cloth_neck", 1.5, 0.55, 0.12, 0.03, cy, arc=(math.pi * 0.06, math.pi * 0.94), rows=16, seg=22), r, capew)
+    NW = lambda co: {"Neck": 0.5, "Spine2": 0.5}
+    nk = body_radii(body, aw, 1.52, 0.075)
+    nr = sum(nk) / len(nk)
+    # hood collapsed at the nape, on the hoodie
+    hood = torus("hood", nr + 0.035, 0.03, "cloth_top", (0, 0.085, 1.52), scale=(1.0, 1.15, 0.9))
+    bm = bmesh.new(); bm.from_mesh(hood.data); bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.y < 0.05], context="VERTS"); bm.to_mesh(hood.data); bm.free()
+    weighted(hood, r, NW); i = out.index(hd); out[i] = join("Top_hoodie", [hd, hood])
+    col = torus("col", nr + 0.03, 0.012, "cloth_top", (0, 0.08, 1.525), scale=(1.05, 1.1, 1.0)); weighted(col, r, NW); i = out.index(jk); out[i] = join("Top_jacket", [jk, col])
+    # neck pieces
+    sc = torus("Neck_scarf", nr + 0.022, 0.022, "cloth_neck", (0, 0.075, 1.52), scale=(1.0, 1.1, 1.0))
+    tail = prim("tail", "cube", "cloth_neck", (0.035, -0.0 + 0.0, 1.38), scale=(0.035, 0.01, 0.13))
+    tail.location.y = min(v.co.y for v in body.data.vertices if abs(v.co.z - 1.4) < 0.02 and abs(v.co.x - 0.035) < 0.02 and aw[v.index] < 0.3) - 0.025
+    bpy.ops.object.select_all(action="DESELECT"); tail.select_set(True); bpy.context.view_layer.objects.active = tail; bpy.ops.object.transform_apply(location=True)
+    bv = tail.modifiers.new("bv", "BEVEL"); bv.width = 0.006; bv.segments = 2; bpy.ops.object.modifier_apply(modifier="bv")
+    add(out, join("Neck_scarf", [sc, tail]), r, lambda co: {"Neck": 0.5, "Spine2": 0.5} if co.z > 1.47 else {"Spine2": 1})
+    fy = min(v.co.y for v in body.data.vertices if abs(v.co.z - 1.5) < 0.015 and abs(v.co.x) < 0.02) - 0.012
+    b1 = prim("bt", "cone", "cloth_neck", (0.022, fy, 1.5), rot=(0, -math.pi / 2, 0), vertices=12, radius1=0.016, depth=0.04)
+    b2 = prim("bt2", "cone", "cloth_neck", (-0.022, fy, 1.5), rot=(0, math.pi / 2, 0), vertices=12, radius1=0.016, depth=0.04)
+    b3 = prim("knot", "uv_sphere", "cloth_neck", (0, fy - 0.004, 1.5), radius=0.009, segments=12, ring_count=8)
+    add(out, join("Neck_bowtie", [b1, b2, b3]), r, NW)
+    cl = torus("Neck_bell", nr + 0.006, 0.006, "cloth_neck", (0, 0.075, 1.53), scale=(1.0, 1.1, 1.0))
+    bl = prim("bell", "uv_sphere", "gold", (0, fy - 0.012, 1.495), radius=0.016, segments=16, ring_count=10)
+    add(out, join("Neck_bell", [cl, bl]), r, NW)
+    # head pieces: fitted to this head's own ellipsoid, 2.8 cm off the scalp to leave room for hair
+    H = head_fit(head); HW = lambda co: {"Head": 1.0}; O = 0.028
+    brow = 1.8
+    cap, cut = dome("Hat_cap", H, O, brow + 0.012, H["cz"] - 0.02, "cloth_hat", 0.005)
+    # brim: a curved half-disc forward of the front cut
+    bm = bmesh.new(); rows = []
+    for j in range(5):
+        row = []
+        for i in range(17):
+            a = math.pi * (0.12 + 0.76 * i / 16); t = j / 4
+            rx, ry = H["rx"] + O + 0.004, H["ry"] + O + 0.004 + 0.075 * t * math.sin(a) ** 1.5
+            y = H["cy"] - math.sin(a) * ry; x = math.cos(a) * rx * (1 - 0.15 * t)
+            row.append(bm.verts.new((x, y, cut(y) - 0.002 - 0.012 * t * t)))
+        rows.append(row)
+    for j in range(4):
+        for i in range(16): bm.faces.new((rows[j][i], rows[j][i + 1], rows[j + 1][i + 1], rows[j + 1][i]))
+    brim = mesh_obj("brim", bm, "cloth_hat"); solidify(brim, 0.006)
+    bt = prim("button", "uv_sphere", "cloth_hat", (0, H["cy"], H["cz"] + H["rz"] + O + 0.003), radius=0.009, segments=12, ring_count=6)
+    add(out, join("Hat_cap", [cap, brim, bt]), r, HW)
+    bn, cut = dome("Hat_beanie", H, O + 0.004, brow + 0.006, H["cz"] - 0.075, "cloth_hat", 0.006, extra_z=0.02)
+    cuff, _ = dome("cuff", H, O + 0.016, brow + 0.006, H["cz"] - 0.075, "cloth_hat", 0.006)
+    bm = bmesh.new(); bm.from_mesh(cuff.data)
+    bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.calc_center_median().z > cut(f.calc_center_median().y) + 0.045], context="FACES"); bm.to_mesh(cuff.data); bm.free()
+    pom = prim("pom", "uv_sphere", "cloth_hat", (0, H["cy"], H["cz"] + H["rz"] + O + 0.03), radius=0.03, segments=16, ring_count=10)
+    add(out, join("Hat_beanie", [bn, cuff, pom]), r, HW)
+    ztop = H["cz"] + H["rz"] + O
+    th = prim("Hat_tophat", "cylinder", "cloth_hat", (0, H["cy"], ztop + 0.06), vertices=32, radius=1, depth=0.16, scale=(H["rx"] + O - 0.005, H["ry"] + O - 0.01, 1))
+    tb = prim("tbrim", "cylinder", "cloth_hat", (0, H["cy"], ztop - 0.02), vertices=32, radius=1, depth=0.008, scale=(H["rx"] + O + 0.05, H["ry"] + O + 0.05, 1))
+    add(out, join("Hat_tophat", [th, tb]), r, HW)
+    ph = prim("Hat_partyhat", "cone", "cloth_hat", (0, H["cy"] - 0.01, ztop + 0.075), rot=(-0.2, 0, 0), vertices=24, radius1=0.065, radius2=0.004, depth=0.17)
+    pp = prim("pp", "uv_sphere", "gold", (0, H["cy"] - 0.027, ztop + 0.16), radius=0.014, segments=10, ring_count=6)
+    add(out, join("Hat_partyhat", [ph, pp]), r, HW)
+    cr = prim("Hat_crown", "cylinder", "gold", (0, H["cy"], ztop - 0.005), vertices=40, radius=1, depth=0.035, end_fill_type="NOTHING", scale=(H["rx"] * 0.75, H["ry"] * 0.75, 1))
+    spikes = [prim(f"sp{i}", "cone", "gold", (math.cos(a) * H["rx"] * 0.75, H["cy"] + math.sin(a) * H["ry"] * 0.75, ztop + 0.03), vertices=8, radius1=0.012, depth=0.04)
+              for i, a in enumerate([k * math.pi / 4 for k in range(8)])]
+    add(out, join("Hat_crown", [cr, *spikes]), r, HW)
+    bx, by, bz = H["rx"] * 0.55, H["cy"] - 0.01, ztop - 0.02
+    l1 = prim("bw1", "cone", "cloth_hat", (bx + 0.025, by, bz), rot=(0, -math.pi / 2, 0), vertices=12, radius1=0.024, depth=0.05)
+    l2 = prim("bw2", "cone", "cloth_hat", (bx - 0.025, by, bz), rot=(0, math.pi / 2, 0), vertices=12, radius1=0.024, depth=0.05)
+    kn = prim("bwk", "uv_sphere", "cloth_hat", (bx, by, bz), radius=0.012, segments=10, ring_count=6)
+    add(out, join("Hat_bow", [l1, l2, kn]), r, HW)
+    fx, fz = -H["rx"] * 0.75, H["cz"] + 0.06
+    pet = [prim(f"pt{i}", "uv_sphere", "cloth_hat", (fx - 0.02 * abs(math.cos(a)) * 0.2, H["cy"] - 0.02 + math.cos(a) * 0.016, fz + math.sin(a) * 0.016), radius=0.012, segments=10, ring_count=6, scale=(0.6, 1, 1)) for i, a in enumerate([k * 1.2566 for k in range(5)])]
+    ctr = prim("fc", "uv_sphere", "gold", (fx - 0.006, H["cy"] - 0.02, fz), radius=0.008, segments=10, ring_count=6)
+    add(out, join("Hat_flower", [*pet, ctr]), r, HW)
+    band = torus("Hat_headphones", 1.0, 0.012, "metal", (0, H["cy"], H["cz"]), rot=(0, math.pi / 2, 0), scale=(1, H["rx"] + O, H["rz"] + O))
+    bm = bmesh.new(); bm.from_mesh(band.data); bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.z < H["cz"] - 0.01], context="VERTS"); bm.to_mesh(band.data); bm.free()
+    cups = [prim(f"cup{s}", "cylinder", "cloth_hat", (s * (H["rx"] + 0.02), H["cy"] + 0.015, H["cz"] - 0.035), rot=(0, math.pi / 2, 0), vertices=24, radius=0.04, depth=0.035) for s in (1, -1)]
+    add(out, join("Hat_headphones", [band, *cups]), r, HW)
+    # eyewear: frames ring each eye, temples back over the ears
+    ev = [head.matrix_world @ v.co for v in head.data.vertices]
+    eyes = [v for f in head.data.polygons if head.data.materials[f.material_index].name == "Eye" for v in [sum((head.data.vertices[k].co for k in f.vertices), Vector()) / len(f.vertices)]]
+    ez = sum(v.z for v in eyes) / len(eyes); ex = sum(abs(v.x) for v in eyes) / len(eyes); ey = min(v.y for v in eyes) - 0.022
+    for nm, mm, lens in (("Eyew_glasses", "metal", False), ("Eyew_shades", "metal", True)):
+        parts = []
+        for s in (1, -1):
+            parts.append(torus(f"{nm}r{s}", 0.026, 0.0028, mm, (s * ex, ey, ez), rot=(math.pi / 2, 0, 0), scale=(1.15, 1, 0.82), mseg=6))
+            if lens: parts.append(prim(f"{nm}l{s}", "cylinder", "lens", (s * ex, ey + 0.001, ez), rot=(math.pi / 2, 0, 0), vertices=24, radius=0.026, depth=0.002, scale=(1.15, 0.82, 1)))
+            tl = prim(f"{nm}t{s}", "cube", mm, (s * (H["rx"] + 0.004), ey + 0.05, ez + 0.006), scale=(0.002, 0.05, 0.0025)); parts.append(tl)
+        parts.append(prim(f"{nm}b", "cylinder", mm, (0, ey, ez + 0.006), rot=(0, math.pi / 2, 0), vertices=8, radius=0.0025, depth=ex * 2 - 0.055))
+        add(out, join(nm, parts), r, HW)
+    print("garments", sorted(o.name for o in out))
+    return out, H
+
+# ---- shape keys: Bust on her body and every piece over it; identity keys on every head piece ----
+def field_keys(objs, name, fn):
+    for o in objs:
+        D = [fn(v.co) for v in o.data.vertices]
+        if max((d.length for d in D), default=0) < 1e-4: continue
+        if not o.data.shape_keys: o.shape_key_add(name="Basis", from_mix=False)
+        k = o.shape_key_add(name=name, from_mix=False)
+        for i, d in enumerate(D): k.data[i].co = o.data.vertices[i].co + d
+
+def bust_field(body):
+    P = [v.co for v in body.data.vertices]
+    out = []
+    for s in (1, -1):
+        c = min((p for p in P if 1.22 < p.z < 1.45 and 0.03 < p.x * s < 0.15), key=lambda p: p.y)
+        out.append(c.copy())
+    print("bust centres", [tuple(round(x, 3) for x in c) for c in out])
+    def fn(p):
+        d = Vector()
+        for c in out:
+            q = p - c; r = Vector((q.x, q.y * 0.7, q.z)).length / 0.095
+            if r < 1 and p.y < c.y + 0.07:
+                w = (1 - r * r) ** 2
+                d += Vector((q.x * 0.25, -0.03 - q.y * 0.1, q.z * 0.18 - 0.012)) * w
+        return d
+    return fn
+
+def head_fields(H):
+    cz, cy = H["cz"], H["cy"]; y0 = H["y0"]
+    def mask(p): return smooth(1.655, 1.69, p.z)  # the neck seam never moves
+    front = lambda p: 1 - smooth(y0 + 0.02, y0 + 0.07, p.y)
+    return {
+        "JawWide": lambda p: Vector((p.x * 0.12 * bump(1.64, 1.67, 1.72, 1.76, p.z) * mask(p), 0, 0)),
+        "JawNarrow": lambda p: Vector((-p.x * 0.1 * bump(1.64, 1.67, 1.72, 1.76, p.z) * mask(p), 0, 0)),
+        "ChinLong": lambda p: Vector((0, -0.004 * front(p), -0.016 * (1 - smooth(1.66, 1.73, p.z)) * front(p) * mask(p))),
+        "NoseBig": lambda p: Vector((p.x * 0.25, -0.008, 0)) * bump(1.69, 1.705, 1.735, 1.75, p.z) * (1 - smooth(0.0, 0.025, abs(p.x))) * front(p),
+        "CheekFull": lambda p: Vector((p.x * 0.07, -0.002, 0)) * bump(1.68, 1.71, 1.74, 1.77, p.z) * smooth(0.02, 0.05, abs(p.x)) * mask(p),
+        "BrowHeavy": lambda p: Vector((0, -0.006, -0.002)) * bump(1.77, 1.785, 1.805, 1.82, p.z) * front(p),
+        "FaceLong": lambda p: Vector((0, 0, 0.022 * (smooth(1.66, 1.94, p.z)) * (1 - 0.0))) if p.z > 1.69 else Vector((0, 0, 0)),
+        "HeadRound": lambda p: Vector((p.x * 0.06, (p.y - cy) * 0.04, 0)) * smooth(1.76, 1.82, p.z),
+        "EyeSmall": None,
+    }
+
+def build(name, is_male, height):
+    MATS.clear()
+    head, body = load()
+    face_features(head, body, is_male)
+    if is_male: male(head, body)
+    aw, _ = arm_leg_weights(head, body)
+    r = rig(head, body, 0.26 if is_male else 0.0)
+    extra, H = dress(head, body, r, is_male, aw)
+    s = height / 1.94
+    r.scale = (s, s, s); bpy.ops.object.select_all(action="DESELECT")
+    for o in (r, head, body, *extra): o.select_set(True)
+    bpy.context.view_layer.objects.active = r
+    bpy.ops.object.transform_apply(scale=True)
+    tpose(r, (head, body, *extra))
+    # keys in the final rest frame (metres): fields scaled from the source frame
+    sv = lambda fn: (lambda p: fn(p / s) * s)
+    torso = [o for o in (body, *extra) if not o.name.startswith(("Hat_", "Eyew_", "Shoes_"))]
+    if not is_male: field_keys(torso, "Bust", sv(bust_field_scaled(body, s)))
+    HS = {k: v for k, v in H.items()}
+    heads = [head] + [o for o in extra if o.name.startswith(("Hat_", "Eyew_"))]
+    for k, fn in head_fields(HS).items():
+        if fn is None: continue
+        field_keys(heads if k in ("HeadRound", "FaceLong") else [head], k, sv(fn))
+    print("head top m", round(max(v.co.z for v in head.data.vertices), 4), "head bone", "Head",
+          "head bone z", round((r.matrix_world @ r.data.bones["Head"].head_local).z, 4))
+    proof(name, r, extra)
+    bpy.ops.object.select_all(action="DESELECT")
+    for o in (r, head, body, *extra): o.select_set(True)
+    for o in list(bpy.data.objects):
+        if o.name.startswith("Icosphere"): bpy.data.objects.remove(o, do_unlink=True)
+    for o in extra: o.hide_render = False; o.hide_set(False); o.select_set(True)
+    bpy.ops.export_scene.gltf(filepath=f"{OUT}/{name}.glb", use_selection=True, export_apply=False, export_animations=False, export_morph=True, export_image_format="JPEG", export_jpeg_quality=88)
+    print("exported", name)
+
+def bust_field_scaled(body, s):
+    # body is in metres now; the field was written in source units
+    class P: pass
+    tmp = [v.co / s for v in body.data.vertices]
+    out = []
+    for sg in (1, -1):
+        c = min((p for p in tmp if 1.22 < p.z < 1.45 and 0.03 < p.x * sg < 0.15), key=lambda p: p.y); out.append(c.copy())
+    def fn(p):
+        d = Vector()
+        for c in out:
+            q = p - c; rr = Vector((q.x, q.y * 0.7, q.z)).length / 0.095
+            if rr < 1 and p.y < c.y + 0.07:
+                w = (1 - rr * rr) ** 2; d += Vector((q.x * 0.25, -0.03 - q.y * 0.1, q.z * 0.18 - 0.012)) * w
+        return d
+    return fn
+
+SHOW = {"human_male": ("Top_jacket", "Bot_pants", "Shoes_boots", "Hat_cap", "Under_bottom"),
+        "human_female": ("Top_tee", "Bot_skirt", "Shoes_sneakers", "Hat_beanie", "Under_bottom", "Under_top")}
+def proof(name, r, extra):
+    sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 24
+    sc.render.resolution_x, sc.render.resolution_y = 520, 760
+    w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True
+    w.node_tree.nodes["Background"].inputs[0].default_value = (0.55, 0.5, 0.32, 1)
+    for loc, e in (((1.5, -3, 3.5), 3.0), ((-3, 1, 2), 1.0)):
+        bpy.ops.object.light_add(type="SUN", location=loc); bpy.context.object.data.energy = e; bpy.context.object.data.color = (1, 0.95, 0.75)
+        bpy.context.object.rotation_euler = (Vector((0, 0, 1)) - Vector(loc)).to_track_quat("-Z", "Y").to_euler()
+    bpy.ops.object.camera_add(); cam = bpy.context.object; sc.camera = cam; cam.data.lens = 45
+    def shot(tag, pos, aim=(0, 0.05, 0.9), lens=45):
+        cam.data.lens = lens; cam.location = pos; cam.rotation_euler = (Vector(aim) - Vector(pos)).to_track_quat("-Z", "Y").to_euler()
+        sc.render.filepath = f"/tmp/hb/{name}_{tag}.png"; bpy.ops.render.render(write_still=True)
+    def wear(names):
+        for o in extra: o.hide_render = o.name not in names
+    wear(("Under_bottom", "Under_top")); shot("front", (0, -3.4, 0.95)); shot("face", (0.25, -0.8, 1.5), (0, 0.02, 1.5), 85)
+    wear(SHOW[name]); shot("dressed", (2.0, -2.8, 1.0))
+    pb = r.pose.bones
+    for b in pb: b.rotation_mode = "XYZ"
+    pb["LeftArm"].rotation_euler = (0, 0, math.radians(-75)); pb["LeftForeArm"].rotation_euler = (math.radians(80), 0, 0)
+    pb["RightArm"].rotation_euler = (math.radians(40), 0, math.radians(60))
+    pb["RightUpLeg"].rotation_euler = (math.radians(-60), 0, 0); pb["RightLeg"].rotation_euler = (math.radians(80), 0, 0)
+    pb["LeftUpLeg"].rotation_euler = (math.radians(25), 0, 0)
+    bpy.context.view_layer.update(); shot("pose", (2.4, -2.8, 1.0))
+    wear(("Top_hoodie", "Bot_longskirt" if "female" in name else "Bot_overalls", "Shoes_sneakers", "Eyew_glasses", "Neck_scarf", "Under_bottom", "Under_top"))
+    shot("pose2", (-2.4, -2.8, 1.0))
+    for b in pb: b.rotation_euler = (0, 0, 0)
+
+which = sys.argv[sys.argv.index("--") + 1]
+if which == "female": build("human_female", False, 1.65)
+else: build("human_male", True, 1.78)
