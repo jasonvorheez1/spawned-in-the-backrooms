@@ -119,25 +119,18 @@ function breakable(ctx) {
   }
 }
 // the drive Kade wants: a bay on the control room's island desk, its front toward the room (+Z)
-const DRIVEV = 2;
+const DRIVEV = 3;
 function driveBay(ctx) {
   if (ctx.place.objects["z-drive"]) ctx.destroy("z-drive");
   const gun = { color: "#2b3036", metalness: 0.75, roughness: 0.38 };
   ctx.spawn("z-drive", { tags: ["usable"], feetPosition: { x: -6.75, y: 0.76, z: -5.9 }, physics: "none",
-    primitive: { kind: "box", width: 0.3, height: 0.12, depth: 0.26 }, material: gun, behavior: "scripts/zenith-use.js",
+    model: { id: "/cdn/value.4dc164d69828f09737d500759de3083228feda52c407d9a0bf64b053318fa38d.glb", forward: "+z" }, behavior: "scripts/zenith-use.js",
     state: { kind: "drive", name: "Flight-recorder bay", verb: "Pull the flight-recorder drive", info: "ZENITH FDR-4. Its amber light still blinks." },
     children: [
-      { id: "lip", feetPosition: { x: 0, y: 0.115, z: 0 }, primitive: { kind: "box", width: 0.31, height: 0.012, depth: 0.27 }, material: { color: "#3c434b", metalness: 0.8, roughness: 0.3 } },
-      { id: "slot", feetPosition: { x: 0, y: 0.022, z: 0.131 }, primitive: { kind: "box", width: 0.21, height: 0.064, depth: 0.004 }, material: { color: "#050607", roughness: 1 } },
-      { id: "plate", feetPosition: { x: -0.08, y: 0.1, z: 0.131 }, primitive: { kind: "box", width: 0.1, height: 0.012, depth: 0.003 }, material: { color: "#c9ced2", emissive: "#c9ced2", emissiveIntensity: 0.15 } },
-      { id: "led", feetPosition: { x: 0.125, y: 0.094, z: 0.132 }, primitive: { kind: "sphere", radius: 0.007 }, material: { color: "#111", emissive: "#ffa020", emissiveIntensity: 2.5 } },
-      { id: "cart", feetPosition: { x: 0, y: 0.03, z: 0.015 }, primitive: { kind: "box", width: 0.19, height: 0.046, depth: 0.22 }, material: { color: "#1d2024", metalness: 0.6, roughness: 0.45 },
-        children: [
-          { id: "label", feetPosition: { x: 0, y: 0.046, z: 0.02 }, primitive: { kind: "box", width: 0.15, height: 0.002, depth: 0.12 }, material: { color: "#ff9a2a", emissive: "#ff9a2a", emissiveIntensity: 0.35 } },
-          { id: "grip", feetPosition: { x: 0, y: 0.008, z: 0.112 }, primitive: { kind: "box", width: 0.12, height: 0.03, depth: 0.014 }, material: { color: "#111316", roughness: 0.8 } },
-        ] },
+      { id: "led", feetPosition: { x: 0.125, y: 0.087, z: 0.134 }, primitive: { kind: "sphere", radius: 0.0075 }, material: { color: "#111", emissive: "#ffa020", emissiveIntensity: 2.5 } },
+      { id: "cart", feetPosition: { x: 0, y: 0.03, z: 0.015 }, model: { id: "/cdn/value.bcfbeb0642d6af0c9850b019699a63b1facc62aef21e6ef53f6b53de844a64cc.glb", forward: "+z" } },
       { id: "hinge", feetPosition: { x: 0, y: 0.098, z: 0.137 },
-        children: [{ id: "cover", feetPosition: { x: 0, y: -0.088, z: 0.004 }, primitive: { kind: "box", width: 0.25, height: 0.088, depth: 0.006 }, material: { color: "#3a2a12", transparent: true, opacity: 0.55, roughness: 0.15, metalness: 0.1 } }] },
+        children: [{ id: "cover", feetPosition: { x: 0, y: -0.088, z: 0.004 }, model: { id: "/cdn/value.67720653fdef55ccd8b522798c069cd2927fefcb259788e5e93734d76dcbd27d.glb", forward: "+z" } }] },
     ] });
 }
 export function tick(ctx) {

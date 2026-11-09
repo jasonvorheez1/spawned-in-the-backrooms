@@ -27,9 +27,9 @@ export const ears = {
 export function slide(ctx) {
   const p = ctx.self.feetPosition;
   ctx.emit("playSound", { clip: "cdn/sfx-drive-cartridge-unlatch-click-slide-out-beep.mp3", position: p, volume: 0.7 });
-  const c = part(ctx, "cart"); if (c) animate(ctx, c, { "feetPosition.z": 0.22 }, { duration: 0.7, easing: "easeOutCubic" });
+  const c = part(ctx, "cart"); if (c) animate(ctx, c, { "feetPosition.z": 0.22 }, { duration: 0.9, easing: "easeOutCubic" });
   const l = part(ctx, "led"); if (l) l.material = LED(true, "#30ff6a");
-  ctx.after(1.0, "grab", {});
+  ctx.after(1.5, "grab", {});
 }
 export function grab(ctx) {
   const st = ctx.self.state, who = ctx.getObject(st.by), c = part(ctx, "cart");
