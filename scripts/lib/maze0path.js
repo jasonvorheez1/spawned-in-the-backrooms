@@ -41,7 +41,9 @@ export function stepToward(x, z, tx, tz, maxCells = 35) {
   let j = goal, n = 1;
   while (prev[j] !== start) { j = prev[j]; n++; }
   if (n > maxCells) return null;
-  return { cells: n, next: cellCenter(j % N, (j / N) | 0) };
+  // aim through the doorway: a point 0.6 m past the shared edge, centred on it, so a pillar in the next cell's middle is never the waypoint
+  const ac = cellCenter(a.cx, a.cz), bc = cellCenter(j % N, (j / N) | 0), k = (0.5 + 0.6 / 4);
+  return { cells: n, next: { x: ac.x + (bc.x - ac.x) * k * 2 * (4 / 4) / 2 * 2 > 0 ? ac.x + (bc.x - ac.x) * (0.5 + 0.15) : ac.x + (bc.x - ac.x) * (0.5 + 0.15), z: ac.z + (bc.z - ac.z) * (0.5 + 0.15) } };
 }
 
 // a random reachable cell near (cx,cz) within r cells, filtered by ok(cx,cz)
