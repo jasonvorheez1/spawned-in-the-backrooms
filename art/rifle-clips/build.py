@@ -64,16 +64,16 @@ def pose(frame, pitch=0.0, kick=0.0, breath=0.0, ready=False, curl=True):
     rot_world(P["RightForeArm"], (0, 0, 1), 40); rot_world(P["LeftForeArm"], (0, 0, 1), -40)
     blade = -15 if not ready else -10
     rot_world(P["Spine1"], (0, 0, 1), blade); rot_world(P["Spine2"], (0, 0, 1), blade)
-    sp = pitch * 0.22 + kick * 4 + breath * 0.8          # the chest follows the barrel part way
+    sp = -pitch * 0.3 - kick * 4 + breath * 0.8  # +X turns lean forward / look down in Blender          # the chest follows the barrel part way
     rot_world(P["Spine1"], (1, 0, 0), sp * 0.5); rot_world(P["Spine2"], (1, 0, 0), sp * 0.5)
     rot_world(P["Neck"], (0, 0, 1), 10); rot_world(P["Head"], (0, 0, 1), 12)  # face back to the sights
-    rot_world(P["Head"], (1, 0, 0), (-8 if not ready else -4) + pitch * 0.45)
+    rot_world(P["Head"], (1, 0, 0), (8 if not ready else 4) - pitch * 0.45)  # cheek down onto the sights
     rot_world(P["RightShoulder"], (0, 0, 1), 6); rot_world(P["LeftShoulder"], (0, 0, 1), -4)
     rp, lp = (READY_R, READY_L) if ready else (RW, LW)
     Rx = Matrix.Rotation(math.radians(-pitch), 3, "X")
     back = Vector((0, kick * 0.045, kick * 0.02)); up = Vector((0, 0, breath * 0.004))
     tR.location = PIV + Rx @ (rp - PIV) + back + up; tL.location = PIV + Rx @ (lp - PIV) + back * 0.8 + up
-    tilt = Quaternion(Vector((1, 0, 0)), math.radians(pitch if not ready else -32))
+    tilt = Quaternion(Vector((1, 0, 0)), math.radians(-pitch if not ready else 32))
     base = R.matrix_world.inverted().to_quaternion()
     tR.rotation_quaternion = base @ tilt @ RH_ROT; tL.rotation_quaternion = base @ tilt @ LH_ROT
     # fingers close: right round the grip (index on the trigger guard), left cradles the foregrip
@@ -98,7 +98,7 @@ elif CLIP == "fire":
     for f, k in ((0, 0), (2, 1), (5, 0.55), (9, 0.12), (14, 0)): pose(f, kick=k)
     end = 14
 else:
-    pt = 75 if CLIP == "up" else -75
+    pt = 70 if CLIP == "up" else -70
     pose(0, pitch=pt); pose(3, pitch=pt); end = 3
 sc.frame_start, sc.frame_end = 0, end
 bpy.context.view_layer.objects.active = R; bpy.ops.object.mode_set(mode="POSE"); bpy.ops.pose.select_all(action="SELECT")
@@ -110,8 +110,8 @@ for o in (tR, tL, pR, pL): bpy.data.objects.remove(o)
 if PROOF:
     sc.frame_set({"fire": 2}.get(CLIP, 0))
     # a stand-in barrel from the stock pocket forward, to judge the hands against
-    gl = 0.9; Rx = Matrix.Rotation(math.radians(-(75 if CLIP == "up" else -75 if CLIP == "down" else 0)), 3, "X")
-    if CLIP == "ready": Rx = Matrix.Rotation(math.radians(32), 3, "X")
+    gl = 0.9; Rx = Matrix.Rotation(math.radians(-(70 if CLIP == "up" else -70 if CLIP == "down" else 0)), 3, "X")
+    if CLIP == "ready": Rx = Matrix.Rotation(math.radians(32), 3, "X")  # ready: muzzle down
     d = Rx @ Vector((0, -1, 0)); s = PIV + Rx @ (Vector((-0.10, 0.06, 1.37)) - PIV)
     bpy.ops.mesh.primitive_cylinder_add(radius=0.022, depth=gl, location=s + d * gl * 0.42)
     cyl = bpy.context.object; cyl.rotation_euler = d.to_track_quat("Z", "Y").to_euler()
