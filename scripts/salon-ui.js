@@ -1,7 +1,7 @@
 // Glow Up Salon (Bonus Room, east ground floor): the in-world makeover menu. A salon service card, not the intake form.
 // Every button sends the same 'dress' action scripts/critter.js already handles; 'stab' picks the service tab.
 import C from './lib/data/critter.yml'
-const SERVICES = [['hair', 'Cut & Colour', '✂'], ['face', 'Face', '✿'], ['body', 'Body', '◐'], ['wear', 'Wardrobe', '♡']]
+const SERVICES = [['hair', 'Hair', '✂'], ['face', 'Face', '✿'], ['body', 'Body', '◐'], ['wear', 'Clothes', '♡']]
 const NM = { m: 'boy', f: 'girl', none: 'none', longsleeve: 'long sleeve', pjpants: 'pj pants', pajamas: 'pj top', longskirt: 'long skirt', tophat: 'top hat', partyhat: 'party hat', bowtie: 'bow tie', fullbeard: 'full beard' }
 const nice = (v) => NM[v] ?? String(v ?? 'none').replace(/^[mf]_/, '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ')
 const act = (k, v = '') => `sendAction('dress',{k:'${k}',v:'${v}'})`
@@ -59,7 +59,6 @@ export function salon(ctx, player) {
     body = row('The cut', nice(l.hair)) + chips('hair', ['none', ...(l.sex === 'f' ? C.hairF : C.hairM)])
       + (l.hair && l.hair !== 'none' ? row('Colour', '') + dots('hairc', C.hairc) : '')
       + (l.sex !== 'f' || !human ? row('Beard', nice(l.beard)) + chips('beard', C.beard || ['none', 'stubble', 'mustache', 'goatee', 'fullbeard']) + (l.beard && l.beard !== 'none' ? row('Beard colour', '') + dots('beardc', C.hairc) : '') : '')
-      + `<div class="tip">sit back. Dawn swears the 80s are coming back any day now.</div>`
   } else if (tab === 'face') {
     const FT = ['snouty', 'foxlike']
     body = row('Eyes', nice(l.eyes)) + chips('eyes', C.eyes) + row('Eye colour', '') + dots('eye', C.eye)
@@ -79,7 +78,7 @@ export function salon(ctx, player) {
       + row('Saved looks', '') + Array.from({ length: C.outfitSlots || 0 }, (_, i) => `<div class="sl" style="grid-template-columns:1fr auto auto"><span>${i + 1}. ${fits[i] ? `${nice(fits[i].topw)} · ${nice(fits[i].botw)}` : 'empty'}</span>${fits[i] ? `<button style="width:auto;border-radius:12px;padding:0 10px" onclick="${act('wear', i)}">wear</button>` : '<span></span>'}<button style="width:auto;border-radius:12px;padding:0 10px" onclick="${act('save', i)}">save</button></div>`).join('')
   }
   return `${CSS}<div id="gl" data-modal>
-  <div class="hd"><h2>Glow Up Salon</h2><div class="sub">bonus room · walk-ins welcome · no refunds</div><button class="x" onclick="${act('close')}">✕</button></div>
+  <div class="hd"><h2>Glow Up Salon</h2><button class="x" onclick="${act('close')}">✕</button></div>
   <div class="svc">${SERVICES.map(([k, n, i]) => `<button class="${tab === k ? 'on' : ''}" onclick="${act('stab', k)}"><span class="i">${i}</span>${n}</button>`).join('')}</div>
   <div class="bd">${body}</div>
   <div class="ft"><button onclick="${act('spin', -45)}">◀ turn</button><button onclick="${act('spin', 45)}">turn ▶</button><button onclick="${act('random', 'all')}">surprise me</button><button class="go" onclick="${act('close')}">love it</button></div>
