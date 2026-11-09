@@ -200,7 +200,7 @@ for o in bpy.data.objects:
             c = f.calc_center_median()
             if c.z > HEM + 0.02: continue
             x, y = c.x, c.y - cy; r = math.hypot(x, y)
-            if r < 0.9 * rowAt(c.z)[ak(x, y)]: inner.append(f)
+            if r < 0.7 * rowAt(c.z)[ak(x, y)]: inner.append(f)  # only what sits deep inside (between the legs); 0.9 also ate the belly's front panel and split the sweater at the waist
         bmesh.ops.delete(bm, geom=inner, context="FACES_ONLY")
         # the cut leaves teeth: faces hanging by one edge go, then the hem's edge loop is eased level so it reads as a sewn hem
         for _ in range(4):
