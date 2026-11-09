@@ -499,7 +499,7 @@ def finfo(o, r):
     return info, arms
 
 HANG = ("Top_tee", "Top_longsleeve", "Top_pajamas", "Top_sweater", "Top_hoodie", "Top_jacket")
-def hang(bm, top=1.30, taper=0.9965, nb=72):
+def hang(bm, top=1.30, taper=0.985, nb=48):
     # Nov 9: a top below the bust hung skin-tight: the sweater and jacket showed the stomach and the buttocks as a pouch.
     # Cloth falls from the widest ring above it: each 1 cm slice keeps the convex hull of itself and the slice over it.
     vs = [v for v in bm.verts if v.co.z < top + 0.02 and abs(v.co.x) < 0.26]
@@ -540,6 +540,10 @@ def hang(bm, top=1.30, taper=0.9965, nb=72):
         row = [ray(H, (i + 0.5) / nb * 2 * math.pi - math.pi) if H else 0.0 for i in range(nb)]
         if prev: row = [max(row[i], prev[i] * taper) for i in range(nb)]
         R[k] = row; prev = row
+    ks = sorted(R)  # blur: thin 1 cm slices give ragged hulls; cloth is smooth over a hand's width
+    for _ in range(3):
+        R = {k: [(R[k][(i - 1) % nb] + 2 * R[k][i] + R[k][(i + 1) % nb]) / 4 for i in range(nb)] for k in ks}
+        R = {k: [(R.get(k - 1, R[k])[i] + 2 * R[k][i] + R.get(k + 1, R[k])[i]) / 4 for i in range(nb)] for k in ks}
     for v in vs:
         x, y = v.co.x, v.co.y - cy; r = math.hypot(x, y)
         if r < 1e-5: continue
