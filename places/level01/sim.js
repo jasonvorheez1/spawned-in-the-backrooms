@@ -119,11 +119,11 @@ function breakable(ctx) {
   }
 }
 // the drive Kade wants: a bay on the control room's island desk, its front toward the room (+Z)
-const DRIVEV = 1;
+const DRIVEV = 2;
 function driveBay(ctx) {
   if (ctx.place.objects["z-drive"]) ctx.destroy("z-drive");
   const gun = { color: "#2b3036", metalness: 0.75, roughness: 0.38 };
-  ctx.spawn("z-drive", { tags: ["usable"], feetPosition: { x: -6.25, y: 0.76, z: -5.95 }, physics: "none",
+  ctx.spawn("z-drive", { tags: ["usable"], feetPosition: { x: -6.75, y: 0.76, z: -5.9 }, physics: "none",
     primitive: { kind: "box", width: 0.3, height: 0.12, depth: 0.26 }, material: gun, behavior: "scripts/zenith-use.js",
     state: { kind: "drive", name: "Flight-recorder bay", verb: "Pull the flight-recorder drive", info: "ZENITH FDR-4. Its amber light still blinks." },
     children: [
