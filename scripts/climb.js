@@ -41,6 +41,7 @@ export function update(ctx, dt) {
   const now = ctx.now()
 
   if (!m.on) {
+    if (s.climbing) s.climbing = false // a climb cut by a reload or a crossing leaves no hold behind: hands and weapon come back
     if (now - m.scanAt > 300) { m.scanAt = now; m.near = ctx.query({ tags: ['ladder'], radius: 12, select: 'ids' }) }
     if (!m.near?.length) { m.jump = false; return }
     const look = me.camera?.rotation?.yaw ?? (typeof me.rotation === 'number' ? me.rotation : me.rotation?.yaw ?? 0)
