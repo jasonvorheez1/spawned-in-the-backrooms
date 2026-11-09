@@ -172,9 +172,20 @@ for o in bpy.data.objects:
         cy = sum((v.co.y for v in lowv), 0.0) / max(1, len(lowv)); NB = 48
         zk = lambda z: int((HEM + 0.04 - z) / 0.01)
         ak = lambda x, y: int((math.atan2(y, x) + math.pi) / (2 * math.pi) * NB) % NB
-        Rm = {}
+        Rm = {}; min_lz = min(v.co.z for v in lowv)
         for v in lowv:
             k = (zk(v.co.z), ak(v.co.x, v.co.y - cy)); Rm[k] = max(Rm.get(k, 0), math.hypot(v.co.x, v.co.y - cy))
+        # what the top hangs over (the hips, the butt, the undershirt, the waistband) pushes the tube out too, 1.2 cm clear, or it pokes through as crumples
+        for un in ("Body", "Under_top", "Under_bottom"):
+            u = bpy.data.objects.get(un)
+            if not u or u.type != "MESH": continue
+            for uv in u.data.vertices:
+                c = u.matrix_world @ uv.co
+                if not (min(v.co.z for v in lowv[:1]) - 1 < c.z < HEM + 0.04): continue
+                if c.z < min_lz: continue
+                k = (zk(c.z), ak(c.x, c.y - cy))
+                if k[0] < 0: continue
+                Rm[k] = max(Rm.get(k, 0), math.hypot(c.x, c.y - cy) + 0.012)
         ks = sorted({k for k, _ in Rm}); rows = {}; prev = None
         for k in ks:
             row = [Rm.get((k, i), 0) for i in range(NB)]
