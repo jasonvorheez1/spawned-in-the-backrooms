@@ -1061,8 +1061,10 @@ export function update(ctx, dt) {
   const along = intent.x * v.x + intent.z * v.z > 0 || (v.x === 0 && v.z === 0 && moving)
   if (now0(ctx) >= (w.slickAt ?? 0)) { w.slickAt = now0(ctx) + 150; w.onSlick = ctx.query({ tags: ['soupslick'], radius: 1.3, select: 'ids' }).length > 0 } // checked a few times a second, not every tick
   const step = (along ? PLAYER.acceleration : PLAYER.deceleration) * dt * (w.onSlick ? 0.07 : 1) // soup underfoot: you skate
-  const dx = intent.x - v.x, dz = intent.z - v.z, gap = Math.hypot(dx, dz), k = gap > step ? step / gap : 1
-  ctx.self.velocity = { x: v.x + dx * k, y: v.y + ctx.place.gravity.y * dt, z: v.z + dz * k }
+  if (!Number.isFinite(intent.x) || !Number.isFinite(intent.z)) { intent.x = 0; intent.z = 0; if (!Number.isFinite(w.bur)) w.bur = undefined; w.dv = undefined } // a fresh save's sheet can read NaN for a beat: stand still, re-derive next tick
+  const vx = Number.isFinite(v.x) ? v.x : 0, vz = Number.isFinite(v.z) ? v.z : 0, vy = Number.isFinite(v.y) ? v.y : 0
+  const dx = intent.x - vx, dz = intent.z - vz, gap = Math.hypot(dx, dz), k = gap > step ? step / gap : 1
+  ctx.self.velocity = { x: vx + dx * k, y: vy + ctx.place.gravity.y * dt, z: vz + dz * k }
 
   // Footsteps (scripts/lib/footsteps.js): the floor under you, a step per stride, left/right feet, weight, scuffs and landings
   stepTick(ctx, w, dt, { moving, sprinting, crouched, wet: w.wet, bur: w.bur ?? 1, fallback: floorOf(ctx), clip: SND })
