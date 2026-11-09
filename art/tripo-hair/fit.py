@@ -48,9 +48,10 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     t = max(v.z for v in vs); b0 = min(v.z for v in vs); hgt = t - b0
     crown = sorted([v for v in vs if v.z > t - 0.18 * hgt], key=lambda v: v.x)
     q = lambda arr, f: arr[min(len(arr) - 1, int(f * len(arr)))]
-    cw = q([v.x for v in crown], 0.97) - q([v.x for v in crown], 0.03)
+    lo, hi = (0.12, 0.88) if key.startswith("t_s_") else (0.03, 0.97)  # the soft wigs: ties and flyaways off the crown don't set the size
+    cw = q([v.x for v in crown], hi) - q([v.x for v in crown], lo)
     cys = sorted(v.y for v in crown); ccx = (q([v.x for v in crown], 0.97) + q([v.x for v in crown], 0.03)) / 2; ccy = (cys[0] + cys[-1]) / 2
-    W = {"t_s_twintails": 1.05, "t_s_ponytail": 1.1, "t_twintails": 1.05, "t_long": 1.1, "t_silver": 1.1}.get(key, 1.18)
+    W = {"t_s_twintails": 1.25, "t_s_ponytail": 1.3, "t_s_wolfcut": 1.3, "t_s_wavy": 1.3, "t_twintails": 1.05, "t_long": 1.1, "t_silver": 1.1}.get(key, 1.18)
     s = (2 * rx * W) / max(cw, 1e-4)
     # the crown band is the top 18%, so its width runs a little under the skull's: the push-out below seats whatever lands inside
     M = Matrix.Translation(Vector((0, cy + 0.004, top + 0.014))) @ Matrix.Scale(s, 4) @ Matrix.Translation(Vector((-ccx, -ccy, -t)))
@@ -63,7 +64,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     if b1n >= b0n: me.transform(R)
     print("face", key, b0n, b1n)
     # a lopsided Tripo mesh: its fuller side mirrored onto the other, so the curtain falls even on both shoulders
-    if key in ("t_silver", "t_softbob", "t_s_wavy", "t_s_wolfcut"):
+    if key in ("t_silver", "t_softbob"):
         side = 1 if sum(1 for v in me.vertices if v.co.x > 0) >= sum(1 for v in me.vertices if v.co.x < 0) else -1
         bmS = bmesh.new(); bmS.from_mesh(me)
         bmesh.ops.symmetrize(bmS, input=bmS.verts[:] + bmS.edges[:] + bmS.faces[:], direction="X" if side > 0 else "-X", dist=0.0005)
@@ -76,7 +77,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
                 sgn = 1 if c.x >= 0 else -1; k = min(1.0, (c.z - (hz - 0.14)) / 0.08)
                 c.x = c.x + (sgn * rx * (0.78 + 0.1 * abs(c.x) / rx) - c.x) * k
     # a painted wig leaves Tripo a filled face mask inside the hair: for these, what hangs in front of the face is cut away, not folded
-    if key == "t_softbob" or key.startswith("t_s_"):
+    if key == "t_softbob":  # the t_s_ wigs were painted hollow: nothing to cut
         bmC = bmesh.new(); bmC.from_mesh(me)
         cut = [f for f in bmC.faces if (lambda c: hz - 0.13 < c.z < fz1 - 0.005 and c.y < cy - 0.01 and abs(c.x) < rx * 0.8)(f.calc_center_median())]
         bmesh.ops.delete(bmC, geom=cut, context="FACES"); bmesh.ops.delete(bmC, geom=[v for v in bmC.verts if not v.link_faces], context="VERTS")
