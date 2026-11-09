@@ -29,7 +29,7 @@ export function geometry(ctx) {
   for (let i = 0; i < NF; i++) {
     const a = -Math.PI / 2 + ((i + 0.5 * h3(i, 2)) / NF) * Math.PI * 2, p = at(a);
     if (p[1] < 0.25 || h3(i, 5) < 0.2) continue;
-    const r = [Math.cos(a), Math.sin(a)], t = [-r[1], r[0]], wdt = 0.09 + 0.1 * h3(i, 7), len = 0.12 + 0.22 * h3(i, 9), curl = 0.5 + 0.9 * h3(i, 11);
+    const r = [Math.cos(a), Math.sin(a)], t = [-r[1], r[0]], wdt = 0.13 + 0.14 * h3(i, 7), len = 0.22 + 0.3 * h3(i, 9), curl = 0.5 + 0.9 * h3(i, 11);
     const rows = 5, strip = [];
     for (let k = 0; k <= rows; k++) {
       const s = k / rows, ang = s * curl * 2.2, out = Math.sin(ang) / (curl * 2.2) * len * (k ? 1 : 0), dz = -(1 - Math.cos(ang)) / (curl * 2.2) * len - 0.02;
@@ -42,7 +42,7 @@ export function geometry(ctx) {
   // frost: rime on the low hull and a ragged white-blue tongue out across the carpet
   ctx.albedo(null); ctx.color("oklch(0.86 0.035 225)"); ctx.roughness(0.3); ctx.emissive(0.03, 0.05, 0.08);
   for (let i = 0; i < 40; i++) { const x = (h3(i, 13) - 0.5) * 2.2, y = 0.05 + h3(i, 15) * 0.55 * (1 - Math.abs(x) / 1.3); if (y > 0) sphere(ctx, [x, y, -0.02], 0.03 + 0.05 * h3(i, 17), 6, [1.4, 0.6, 0.35]); }
-  const FN = 28, fr = []; for (let i = 0; i <= FN; i++) { const a = Math.PI + (i / FN) * Math.PI, r = 1.1 + 0.55 * Math.sin(a * 3 + 0.7) * 0.5 + 0.35 * h3(i, 19); fr.push([Math.cos(a) * r * 1.25, 0.008, Math.sin(a) * r * 0.9 - 0.02]); }
+  const FN = 28, fr = []; for (let i = 0; i <= FN; i++) { const a = Math.PI + (i / FN) * Math.PI, r = 0.55 + 0.12 * Math.sin(a * 3 + 0.7) + 0.25 * h3(i, 19); fr.push([Math.cos(a) * r * 1.7, 0.008, Math.sin(a) * r * 0.8 - 0.02]); }
   for (let i = 0; i < FN; i++) ctx.tri(0, 0.008, -0.02, ...fr[i + 1], ...fr[i]);
   ctx.emissive(0, 0, 0);
   // cables sagging out of the gap: two black, one with its orange jacket split
