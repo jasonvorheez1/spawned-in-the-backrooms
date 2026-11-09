@@ -140,7 +140,7 @@ for o in bpy.data.objects:
     me = o.data; bm = bmesh.new(); bm.from_mesh(me); bm.verts.ensure_lookup_table()
     shapes = [bm.verts.layers.shape[k] for k in bm.verts.layers.shape.keys()]
     lim = FIT[o.name]; delta = {}; skin = {}
-    top = o.name.startswith("Top_") or o.name == "Under_top"
+    top = o.name.startswith("Top_")  # the undershirt stays skin-tight under whatever top hangs over it
     HEM = min(v.co.z for v in bm.verts) + 0.2 if top else -9  # a top's lowest 20 cm: the hem that hangs past the hips
     for v in bm.verts:
         co, n, d, w = skin_at(v.co)
@@ -193,7 +193,15 @@ for o in bpy.data.objects:
                 if dv.length > 0.001: fixed += 1
                 v.co += dv
                 for L in shapes: v[L] += dv
-        print("hem", o.name, "hung out", fixed)
+        # faces the cut carried across between the legs: inside the hung tube, they read as a pouch from outside and flaps from below
+        inner = []
+        for f in bm.faces:
+            c = f.calc_center_median()
+            if c.z > HEM + 0.02: continue
+            x, y = c.x, c.y - cy; r = math.hypot(x, y)
+            if r < 0.8 * rows[zk(c.z)][ak(x, y)]: inner.append(f)
+        bmesh.ops.delete(bm, geom=inner, context="FACES_ONLY")
+        print("hem", o.name, "hung out", fixed, "inner faces cut", len(inner))
     moved = sum(1 for x in delta.values() if x.length > 0.002)
     bm.to_mesh(me); bm.free()
     if o.name in WEIGHTS:
