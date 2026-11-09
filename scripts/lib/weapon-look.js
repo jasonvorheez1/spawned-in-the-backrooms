@@ -45,7 +45,7 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
   hatchet:    ["/cdn/value.d5b03aa12f7ca58bef143468cf20432b163cb8a0b43a9d4d72190c9228502761.glb", 0.012, 0, "tripo_material_be6f1bf1-a677-4411-ad71-24b6df60e92c"],
   fire_axe:   ["/cdn/value.4cfc50ea098875687d7a11fbd93a6b8adc191957807e0b002f30007a8eead02e.glb", 0.008, 0.62, "tripo_material_3cfa6f0b-ba20-4b5f-9185-3a08bf3967ed"],
   pistol:     ["/cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb", -0.064, 0, "tripo_material_b831ab79-8033-43a9-83a4-7a26d07345fd"],
-  shotgun:    ["/cdn/value.5a2a421d33cd848a6df5ae7bf263814fc33ed17392a1dca306d6006fc6b33c34.glb", -0.032, 0, "tripo_material_7b83893e-ced9-4331-b685-1a4a787052e6"],
+  shotgun:    ["/cdn/value.104163217085585686f5b41208ef60d422b0c1836d7ef20078f129b016e8fdaf.glb", -0.18, 0, "tripo_material_7b83893e-ced9-4331-b685-1a4a787052e6"],
 };
 // each mesh's box centre in the scripted frame (x, z), from art/weapons/fit.json
 const CENTER = { table_leg: [0, 0.3325], pipe_scrap: [0, 0.415], crowbar: [0, 0.4425], bat: [0, 0.4895], hatchet: [0.07, 0.417], fire_axe: [0.0175, 0.5395], pistol: [0, 0.114], shotgun: [0.002, 0.452] }
