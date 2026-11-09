@@ -12,7 +12,7 @@ import { N, H, zoneOf, lampAt, cellCenter, shelfSlots, BACK, ONWARD, ARRIVE, has
 import { spawnAlmond } from "../../scripts/lib/loot.js";
 import { spawnFurniture, pickKind, wallSpot1, sizeOf } from "../../scripts/lib/furniture.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
-const L1M = { door: "/cdn/value.020545cb36957131cc5f5eab3f6c2c38511e55076fb5e5542b93aff45e424288.glb", wall: "/cdn/value.1aa1542440b2b55ab177731e12bade8dfdb7ca60226cb2b55ff2491a998298fe.glb", board: "/cdn/value.1ed44cd9733b0a1d469ee47af7a8f609fcaee84b4aef6828e976544608979e8b.glb", wallDx: 0, boardYaw: 180 }; // Blender builds: art/level1/build.py
+const L1M = { door: "/cdn/value.020545cb36957131cc5f5eab3f6c2c38511e55076fb5e5542b93aff45e424288.glb", wall: "/cdn/value.1aa1542440b2b55ab177731e12bade8dfdb7ca60226cb2b55ff2491a998298fe.glb", board: "/cdn/value.1ed44cd9733b0a1d469ee47af7a8f609fcaee84b4aef6828e976544608979e8b.glb", wallDx: 0, boardYaw: 0 }; // Blender builds: art/level1/build.py
 
 export const cadence = "250ms";
 const LAMP_ON = 9;
