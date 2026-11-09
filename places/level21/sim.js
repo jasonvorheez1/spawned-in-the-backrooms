@@ -129,7 +129,7 @@ function lay(ctx) {
   // ---- the rock vault from the tunnel photo: four 9 m Blender stretches (art/level21/edgevault.py) down the lane's north side, rising from the floor and curving into the roof
   const VAULT = ["/cdn/value.c103abe13d41e3acce6ae6c16bb1ba596b04a0338bcdbff5b73d6ee36e07692c.glb"], VOFF = [[-0.05, -0.164, 3.075], [-0.05, -0.197, 3.075]];
   const vx0 = EDGE_X * S - HALF, vz = LANE.z0 * S - HALF;
-  for (let k = 0; k < 4; k++) sp(`l21-vault-${k}`, { feetPosition: { x: vx0 + 4.5 + k * 9, y: 0, z: vz }, visibleRange: { max: 80 }, castShadow: false, receiveShadow: true, physics: { body: "static", collider: "mesh" }, model: { id: VAULT[0], offset: VOFF[0], materials: { rock: { texture: "cdn/texture-pale-grey-smooth-shotcrete-tunnel-rock.png", color: "oklch(0.78 0.005 250)", roughness: 0.9, vertexColors: false } } }, scale: { x: 1.06, y: 1, z: 1 } });
+  for (let k = 0; k < 4; k++) sp(`l21-vault-${k}`, { feetPosition: { x: vx0 + 4.5 + k * 9, y: 0, z: vz }, visibleRange: { max: 80 }, castShadow: false, receiveShadow: true, physics: { body: "static", collider: "mesh" }, model: { id: VAULT[0], offset: VOFF[0], materials: { rock: { texture: "cdn/texture-pale-grey-smooth-shotcrete-tunnel-rock.png", color: "oklch(0.80 0.012 80)", roughness: 0.9, vertexColors: false } } }, scale: { x: 1.06, y: 1, z: 1 } });
 
   // ---- the photo's green EXIT signs, hung from the ceiling down the length of The Edges, both faces lit
   for (let cx = EDGE_X + 1; cx < N; cx += 4) { const c = cellCenter(cx, LANE.z0 + 1), h = heightOf(cx, LANE.z0 + 1), face = (f) => `<div face="${f}" emissive style="width:0.42m;height:0.16m;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;font-size:110px;color:#eafff0;background:#118a3a">EXIT</div>`;
@@ -413,7 +413,7 @@ export function tick(ctx) {
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state, now = ctx.now();
   if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); dress21(ctx); s.peopleV = 0; }
-  if ((s.vaultTintV ?? 0) < 5) { s.vaultTintV = 5; for (let k = 0; k < 4; k++) { const o = ctx.place.objects[`l21-vault-${k}`]; const m = o?.model; const rock = m?.parts?.rock ?? m?.materials?.rock; if (rock) { const { parts, materials, ...rest } = m; o.model = { ...rest, materials: { rock: { ...rock, color: "oklch(0.78 0.005 250)" } } }; o.scale = { x: 1.06, y: 1, z: 1 }; } } } // the Edges stone: neutral grey, vault slimmer over the walkway, in rooms already built (a model reads its slots back as parts)
+  if ((s.vaultTintV ?? 0) < 6) { s.vaultTintV = 6; for (let k = 0; k < 4; k++) { const o = ctx.place.objects[`l21-vault-${k}`]; const m = o?.model; const rock = m?.parts?.rock ?? m?.materials?.rock; if (rock) { const { parts, materials, ...rest } = m; o.model = { ...rest, parts: { rock: { ...rock, color: "oklch(0.80 0.012 80)" } } }; o.scale = { x: 1.06, y: 1, z: 1 }; } } } // the Edges stone: neutral grey, vault slimmer over the walkway, in rooms already built (a model reads its slots back as parts)
   if (!ctx.getObject("l21-life")) ctx.spawn("l21-life", { behavior: "scripts/l21-use.js" });
   if (!s.peopleV || s.peopleV < 2) {
     s.peopleV = 2;
