@@ -156,7 +156,7 @@ export function update(ctx, dt) {
       m.mode = null;
     }
 
-    if (knocked(ctx, w, now, dt)) continue; // kicked or power-hit flat: down a beat, no AI till it's up
+    if (knocked(ctx, w, now, dt)) { if (st.sneakTarget) st.sneakTarget = null; continue; } // kicked or power-hit flat: down a beat, no AI till it's up
     // Death: drops as a ragdoll along the killing blow, then its shade dissolves
     if (st.dead) {
       if (!m.dieAt) {
@@ -218,6 +218,7 @@ export function update(ctx, dt) {
       if (st.horde && players.some((p) => p.id === st.horde)) {
         m.prey = st.horde; // blackout horde hunts its player
       }
+      if ((st.sneakTarget ?? null) !== m.prey) st.sneakTarget = m.prey;
 
       // Audio cues if not visually spotted
       if (!best && !m.prey) {

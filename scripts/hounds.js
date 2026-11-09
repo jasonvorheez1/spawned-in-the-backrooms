@@ -1,6 +1,7 @@
 // Level 1's hounds: one manager steps the pack. They roam the halls, hunt when they see or hear you,
 // hunt harder in a Flickering, and never cross into the corridors (safe ground).
 import { knocked } from "./lib/knock.js";
+import { crouchMul } from "./lib/sneak.js";
 import { heard } from "./lib/hear.js";
 import { raycast } from "builtin/physics";
 import L from "./lib/data/level1.yml";
@@ -68,7 +69,7 @@ export function update(ctx, dt) {
   for (const h of allHounds) {
     if (!(h.id in ctx.place.objects)) { mem.allHounds = null; delete mem[h.id]; continue; } // gone since the census: re-count next tick
     const m = (mem[h.id] ??= {}), pos = h.feetPosition, st = h.state ?? {}, mu = npcMul(st);
-    if (knocked(ctx, h, now, dt)) continue; // kicked flat or shoved: it tumbles, no AI till it is up
+    if (knocked(ctx, h, now, dt)) { if (st.sneakTarget) st.sneakTarget = null; continue; } // kicked flat or shoved: it tumbles, no AI till it is up
     if (ctx.self.place === "level5" && !st.dead && zoneAt5(pos.x, pos.z)?.id !== "boiler") { h.feetPosition = { x: [37.5, 28.5, 40.5][Math.floor(ctx.random() * 3)], y: 0.05, z: [2.5, -0.5, -9.5][Math.floor(ctx.random() * 3)] }; m.roam = null; continue; } // level 5: the pack lives in the Boiler Room alone
     if (now >= (m.meshChk ?? 0)) { m.meshChk = now + 2000; const o = ctx.getObject(h.id); if (o && !String(o.model?.id ?? o.model ?? "").includes(MODEL.slice(5))) { o.primitive = null; o.model = { id: MODEL }; } } // the old coded body gives way to the mesh
     if (m.bleed && now >= m.bleed.next) { // the maul's wound: 2 a second for 4 s, dealt from here
@@ -106,7 +107,7 @@ export function update(ctx, dt) {
     const checkTarget = (p, isNpc) => {
       const d = Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z);
       const loud = (p.state?.sprinting ? L.houndHear : 0) || (dark && p.state?.light ? L.houndHearLight : 0);
-      if (!(d < Math.max(sight, loud) * sn(p) && d < best)) return;
+      if (!(d < Math.max(sight * crouchMul(p), loud) * sn(p) && d < best)) return;
       if (!sees(ctx, h, p) && (isNpc || !(loud && d < loud * sn(p)))) return;
       best = d; prey = p;
     };
@@ -145,6 +146,7 @@ export function update(ctx, dt) {
       if (prey && st.lurk) { h.state.lurk = false; h.scale = 1; m.lurkAt = null; }
       if (!prey && m.hunting) m.lurkAt = null; // a lost hunt picks a fresh hiding spot
     }
+    if ((st.sneakTarget ?? null) !== (prey?.id ?? null)) st.sneakTarget = prey?.id ?? null;
     let goal;
     if (prey) goal = prey.feetPosition;
     else if (L3 && m.lurkAt) goal = m.lurkAt;

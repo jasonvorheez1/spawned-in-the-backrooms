@@ -218,7 +218,7 @@ export function update(ctx, dt) {
     const st = w.state ?? {};
     const pos = w.feetPosition;
     const mu = npcMul(st);
-    if (knocked(ctx, w, now, dt)) continue;
+    if (knocked(ctx, w, now, dt)) { if (st.sneakTarget) st.sneakTarget = null; continue; }
 
     if (st.mesh !== 3) {
       w.primitive = null;
@@ -285,6 +285,7 @@ export function update(ctx, dt) {
       if (st.horde && players.some((p) => p.id === st.horde)) {
         m.prey = st.horde;
       }
+      if ((st.sneakTarget ?? null) !== m.prey) st.sneakTarget = m.prey;
 
       if (watched && !m.watched) {
         let k;
