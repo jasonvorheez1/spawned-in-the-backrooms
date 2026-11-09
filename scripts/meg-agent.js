@@ -14,6 +14,7 @@ import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor
 import { navPath } from "./lib/nav.js";
 import { raycast } from "builtin/physics";
 import { animate } from "builtin/tween";
+import { swing3, fire3, aimPose, aimMode, longHands, famOf, tick3 } from "./lib/body3.js";
 import G from "./lib/data/meg.yml";
 import WP from "./lib/data/weapons.yml";
 import { weaponBody } from "./lib/weapon-look.js";
@@ -38,9 +39,9 @@ function arm(ctx, me, m) {
   const held = heldOf(ctx, me), given = held?.state?.kind;
   if (!s.arm) s.arm = given && given !== "pistol" ? given : hashN(me.id, 31) < UNARMED[s.nerve] ? "fists" : s.nerve === "frenzied" ? rollArm(me.id, ARMS.civ.filter(([k]) => !WP[k]?.ranged)) : rollArm(me.id, poolOf(s));
   if (s.arm === "fists") { if (held) ctx.destroy(held.id); m.armed = true; m.drawn = undefined; return; }
-  if (held && given === s.arm) { m.armed = true; return; }
+  if (held && given === s.arm) { m.armed = true; m.heldId = held.id; return; }
   if (held) ctx.destroy(held.id);
-  ctx.spawn({ parent: me.id, attachment: { bone: "RightHand" }, visible: false, state: { kind: s.arm }, ...weaponBody(s.arm) });
+  m.heldId = ctx.spawn({ parent: me.id, attachment: { bone: "RightHand" }, visible: false, state: { kind: s.arm }, ...weaponBody(s.arm) });
   m.drawn = undefined; m.armed = true;
 }
 const SHOTS = { shotgun: "/cdn/moodboard-realistic-gritty/sfx-shotgun-blast-heavy-boom.mp3", smg: "/cdn/moodboard-realistic-gritty/sfx-smg-tommy-gun-loud-rattle-shot.mp3" };
@@ -48,7 +49,7 @@ const WHOOSH = "/cdn/moodboard-realistic-gritty/sfx-heavy-object-throw-whoosh.mp
 // a melee swing: the arm hauls back and through, a whoosh, and on a connect a thud, blood and the hit
 function swing(ctx, me, t, A) {
   const o = me.feetPosition, q = chest(t.feetPosition), dx = q.x - o.x, dz = q.z - o.z, l = Math.hypot(dx, dz) || 1;
-  animate(ctx, me.id, { "bones.RightArm.pitch": [0, -100, 45, 0], "bones.RightForeArm.pitch": [0, -40, 10, 0], [me.model ? "bones.Spine02.yaw" : "bones.Spine2.yaw"]: [0, 25, -20, 0] }, { duration: 0.5 });
+  { const now = ctx.now(); m3(me).n = now - (m3(me).at ?? 0) > 1600 ? 0 : (m3(me).n ?? 0) + 1; m3(me).at = now; swing3(ctx, me.state.arm, 0, m3(me).n, me); } // the same combo takes a player swings (scripts/lib/data/combat-anims.yml)
   heard(ctx, { clip: WHOOSH, position: q, volume: 0.6, pitch: 1.3 - Math.min(0.5, (A.length ?? 0.7) * 0.4), maxDistance: 16 });
   if (ctx.random() > Math.min(0.92, G.hitChance + 0.1)) return;
   const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), base = isPlayer ? G.playerShot : G.shot;
@@ -212,7 +213,7 @@ function shoot(ctx, me, t, A = WP.pistol) {
   const muzzle = { x: o.x + dx / l * 0.5, y: o.y + 0.15, z: o.z + dz / l * 0.5 };
   ctx.emit("fx", { position: muzzle, script: FLASH });
   heard(ctx, { clip: SHOTS[me.state.arm] ?? SHOT, position: muzzle, volume: 0.9, maxDistance: 45 });
-  animate(ctx, me.id, { [me.model ? "bones.Spine02.pitch" : "bones.Spine2.pitch"]: [0, 7, 0], "bones.RightArm.pitch": [0, 12, 0] }, { duration: 0.2 }); // the kick
+  fire3(ctx, me, me.state.arm); // the player's own fire take and kick (scripts/lib/body3.js)
   if (ctx.random() > G.hitChance) return;
   const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), dmg = dmgAfterArmor(isPlayer ? t.state.look : lookOfNpc(t), Math.round((isPlayer ? G.playerShot : G.shot) * Math.min(1.9, Math.max(0.35, (A.damage ?? 34) / 34)) * npcMul(me.state).dmg)); // the target's clothes soak it
   t.state.hp -= dmg;
@@ -332,10 +333,18 @@ function inspect(ctx, me, m, now, dt) {
   if (now > I.until) { m.inspect = null; work(me, m, null); holster(ctx, me, m, false); bark(ctx, me, "inspected", true); if (o?.state) o.state.inspectUntil = now; return false; } // the body can go now
   return true;
 }
+const m3 = (me) => (me.session.c3 ??= {});
+// a gun on a target: the player's aim takes (level, walk, crouch, pitched up or down) and, for a long gun, both hands on it; null lowers it
 function aim(me, m, t) {
-  const id = t?.id ?? null;
-  if (m.aimAt === id) return; m.aimAt = id;
-  me.bones = id ? { ...baseBones(me.state.build), RightHand: { reach: { to: { object: id, offset: { x: 0, y: 1.1, z: 0 } }, blendIn: 0.15, blendOut: 0.3 } }, LeftHand: { reach: { to: { object: id, offset: { x: 0, y: 1.05, z: 0 } }, blendIn: 0.2, blendOut: 0.3 } } } : baseBones(me.state.build);
+  const id = t?.id ?? null, now = m.nowT ?? 0, A = WP[me.state.arm];
+  if (m.aimAt === id && (!id || now < (m.aimNext ?? 0))) return;
+  const fresh = m.aimAt !== id; m.aimAt = id; m.aimNext = now + 300;
+  if (!id || !A?.ranged) { aimPose(me, null, null); if (fresh) me.bones = baseBones(me.state.build); return; }
+  const o = chest(me.feetPosition), q = chest(t.feetPosition), dx = q.x - o.x, dz = q.z - o.z, hh = Math.hypot(dx, dz) || 1;
+  const fam = famOf(me.state.arm), pitch = Math.atan2(q.y - o.y, hh), yaw = Math.atan2(-dx, -dz);
+  aimPose(me, fam, aimMode(me, true, false), pitch);
+  if (fam === "long") me.bones = { ...baseBones(me.state.build), ...longHands(me, m.heldId, yaw, pitch, true, false, (A.length ?? 0.9) * 0.55) };
+  else if (fresh) me.bones = baseBones(me.state.build);
 }
 
 
@@ -379,6 +388,7 @@ function life(ctx, me, m, now) {
 export function update(ctx, dt) {
   if (!ctx.self.state.temperV && ctx.self.state.attr) shapeTemper(ctx.self);
   const me = ctx.self, s = me.state, m = (me.session.m ??= { waved: {}, next: 0, shots: 0 }), now = ctx.now();
+  m.nowT = now; tick3(me, now); // release finished combat takes
   if (m.dressed !== 4) { m.dressed = 4; if (!s.dead) dress(ctx, me); }
   // empty level or far-off NPC: sleep to save CPU (perf)
   if (!ctx.place.players.length) { ctx.sleep(2); return; }
