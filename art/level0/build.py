@@ -51,7 +51,9 @@ def finish(name, uvscale=1.0, smooth=True):
                 l[uv].uv = (a / uvscale, b / uvscale)
         bm.to_mesh(o.data); bm.free()
         if smooth:
-            o.data.shade_smooth_by_angle(angle=math.radians(35)) if hasattr(o.data, "shade_smooth_by_angle") else None
+            bpy.ops.object.select_all(action="DESELECT"); o.select_set(True)
+            try: bpy.ops.object.shade_smooth_by_angle(angle=math.radians(35))
+            except Exception as e: print("smooth", e)
     bpy.ops.object.select_all(action="SELECT")
     dg = bpy.context.evaluated_depsgraph_get()
     tris = sum(len(o.evaluated_get(dg).data.loop_triangles) for o in bpy.context.scene.objects if o.type == "MESH")
@@ -61,7 +63,7 @@ def proof(name, dist, h, look=(0, 0, 0.5)):
     sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 16; sc.render.resolution_x = sc.render.resolution_y = 500
     w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (0.5, 0.48, 0.4, 1); w.node_tree.nodes["Background"].inputs[1].default_value = 0.8
     sun = bpy.data.lights.new("s", "SUN"); sun.energy = 3; so = bpy.data.objects.new("s", sun); sc.collection.objects.link(so); so.rotation_euler = (0.7, 0.2, 0.8)
-    for i, ang in enumerate((-0.6, 2.4)):
+    for i, ang in enumerate((-0.35, 2.6) if name != "stairs" else (0.0, 0.25)):
         cam = bpy.data.cameras.new("c"); co = bpy.data.objects.new("c", cam); sc.collection.objects.link(co)
         co.location = (math.sin(ang)*-dist, -math.cos(ang)*dist, h); d = Vector(look) - co.location
         co.rotation_euler = d.to_track_quat("-Z", "Y").to_euler(); sc.camera = co
@@ -94,7 +96,8 @@ for v in bm.verts:
     v.co = Vector((x, y, 0.405 - s + random.uniform(-0.003, 0.003)))
 c = obj("canvas", bm, canvas); md = c.modifiers.new("t", "SOLIDIFY"); md.thickness = 0.006
 p = cube("pillow", cotton, 0.5, 0.32, 0.11, (0, 0.78, 0.43)); p.modifiers.new("s", "SUBSURF").levels = 2
-bl = cube("blanket", wool, 0.68, 0.5, 0.06, (0.02, -0.55, 0.39)); bl.rotation_euler = (0, 0.02, 0.06); bl.modifiers.new("s", "SUBSURF").levels = 2
+bl = cube("blanket", wool, 0.66, 0.5, 0.05, (0.02, -0.55, 0.395), bev=0.02, seg=4); bl.rotation_euler = (0, 0.02, 0.06)
+cube("fold", wool, 0.66, 0.08, 0.05, (0.02, -0.31, 0.43), bev=0.024, seg=4).rotation_euler = (0, 0.02, 0.06)
 proof("cot", 3.0, 1.8, (0, 0, 0.3)); finish("cot")
 
 # ---------- floor lamp 1.65 m, drum shade ----------
@@ -161,4 +164,4 @@ for i in range(4):
     y = -1.6 + i * 1.0; z = 0.9 + (y + 1.95) / TREAD * RISE
     tube("bracket", mat("steel", (0.5, 0.5, 0.5), 0.4, 0.9), [(x, y, z - 0.06), (x - 0.06, y, z - 0.06), (x - 0.06, y, z - 0.01)], 0.006)
 tube("handrail", rail, [(x - 0.06, -1.95, 0.9 + 0 * RISE), (x - 0.06, back, 0.9 + STEPS * RISE * (back + 1.95) / (back + 1.95))], 0.022)
-proof("stairs", 5.0, 2.4, (0, 0, 1.2)); finish("stairs", uvscale=1.0)
+proof("stairs", 5.5, 1.7, (0, 0, 1.2)); finish("stairs", uvscale=1.0)
