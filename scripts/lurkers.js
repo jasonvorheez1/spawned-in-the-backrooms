@@ -458,7 +458,16 @@ export function update(ctx, dt) {
     }
 
     const curVy = w.velocity?.y ?? 0;
-    w.velocity = { x: vx, y: curVy + ctx.place.gravity.y * dt, z: vz };
+    // jump: out of a floor hole, or when something low blocks the way (it wants to move, but barely does)
+    let vy = curVy + ctx.place.gravity.y * dt;
+    const want = Math.hypot(vx, vz), got = Math.hypot(w.velocity?.x ?? 0, w.velocity?.z ?? 0), onGround = w.grounded ?? Math.abs(curVy) < 0.4;
+    m.blocked = want > 0.8 && got < want * 0.3 ? (m.blocked ?? 0) + dt : 0;
+    if (onGround && now >= (m.jumpAt ?? 0) && want > 0.3 && (pos.y < -0.4 || m.blocked > 0.35)) {
+      vy = pos.y < -0.4 ? 7.2 : 5.2; m.jumpAt = now + 1100; m.blocked = 0;
+      ctx.emit("squash", { target: w.id, axis: "y", intensity: 0.18, duration: 0.18 });
+      ctx.emit("playSound", { clip: "cdn/moodboard-realistic-gritty/sfx-creature-leap-scrape-thud.mp3", position: pos, volume: 0.45 });
+    }
+    w.velocity = { x: vx, y: vy, z: vz };
 
     if (m.grab) {
       const gp = ctx.place.players.find((p) => p.id === m.grab.id);
