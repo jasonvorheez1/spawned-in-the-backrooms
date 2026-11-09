@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3453,
-  "updatedAt": "2026-11-09T15:51:41.571Z",
+  "basedOnSpecVersion": 3455,
+  "updatedAt": "2026-11-09T16:53:05.245Z",
   "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place scenes and simulations supply local environments, while shared systems own combat, NPCs, loot, building, and avatar presentation.",
   "scriptPaths": [],
   "places": [
@@ -51,7 +51,7 @@
     "scripts/lurkers.js - player.state.lurkHold while caught and lurker entity grab/frenzy/prey state; release clears the player's hold.",
     "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim.",
     "scripts/hub.js - mall offer/shop/food and room-hop flags plus player trainHid/stungUntil; session.ride/rideTrain holds transient transit scene and spawned train.",
-    "scripts/climb.js owns local climb session/player.state.climbing and first-person arm viewmodel; scripts/interact.js/critter.js own salon/wardrobe state and player.js persists look/style; bonus-stylist session orders sitters and writes stylist.state.queue."
+    "scripts/climb.js owns local climb session/player.state.climbing and first-person arm viewmodel; scripts/interact.js/critter.js own salon/wardrobe state and player.js persists look/style; bonus-stylist session orders sitters and writes stylist state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3.",
@@ -65,16 +65,16 @@
     "L input → scripts/kick.js tries foe kick then loose.js kickLoose; Z input → scripts/grab.js carries/throws eligible bodies and calls loose.js arm/track/impact.",
     "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; long guns use Commando KF clips and calibrated held-gun transforms.",
     "scripts/climb.js scans ladder-tagged objects, manages attachment/progress and local first-person skin-toned arms; crossing/reload clears a stale climbing hold and restores the weapon.",
-    "Bonus salon: mirror-chair seat state + player.state.salonOpen → scripts/salon-stylist.js orders active sitters by arrival, writes bonus-stylist.state.queue and voices waits; scripts/salon-ui.js reads that queue, while dress actions update the player's look."
+    "Bonus salon: mirror-chair seat state + player.state.salonOpen → scripts/salon-stylist.js orders active sitters by arrival, writes bonus-stylist.state.queue and voices waits; scripts/salon-ui.js reads that queue, while dress actions update player appearance."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js - authored mall shops/landmarks with data-driven stock and simulated staff, shoppers, loungers, and arcade games.",
-    "places/bonus/cells/x0z0.scene + art/salon/build.py + scripts/salon-stylist.js + scripts/salon-ui.js - Glow Up Salon shell/furniture and mirror-chair styling stations; Gina serves sitters first-come-first-served, queue state drives wait UI and dialogue.",
+    "places/bonus/cells/x0z0.scene + art/salon/build.py + scripts/salon-stylist.js + scripts/salon-ui.js - Glow Up Salon shell/furniture and mirror-chair styling stations; Gina serves sitters first-come-first-served, queue state drives wait UI …",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence, and rebuild path; CRT TV builds attach screen, sound, and glow.",
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props, Boiler Room Death Rat packs, fitted residents, and ladder-tagged library climbs.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model data + art/human-cloth/* + art/human-head/* + art/human-hair/build.py + art/tripo-hair/refit.py - deterministic human/furry looks and fitted appearance; hair.yml selects refitted, head-fitted human hair, and build.py tucks scalp-cap edges beneath hairlines.",
+    "scripts/lib/critter-model.js + critter/faces/hair/model data + art/human-cloth/* + art/human-head/* + art/human-hair/build.py + art/tripo-hair/refit.py - deterministic human/furry looks and fitted appearance; hair.yml selects refitted, head-fitted pack assets.",
     "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared combat channels and human gait with NPC idles, head tracking, fidgets, expressions, and dialogue."
   ],
   "probableOrphans": [
@@ -86,7 +86,7 @@
     "Found-item rarity gates apply only to found weapon tokens; existing weapon ownership/use and non-weapon loot are not level-gated. Search gating excludes storage and NPC containers.",
     "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic. Time 4 Fun poster/door is no longer placed in Level 0.",
     "Footstep surface detection checks visible geometry within 0.45 m before collider; terrain chunk hits use terrain.materialAt. Keep material words/tags and mapping priority in scripts/lib/data/footsteps.yml.",
-    "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static to avoid falling through before floor mesh cooking; Level 2.1 revisioned rebuild preserves generated placement identity.",
+    "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static to avoid falling through before floor mesh cooking. Level 2.1 revisioned rebuild preserves generated placement identity; EXIT/DANGER UI panels require width and height attributes in metres to render at their world-panel size.",
     "critter-model.js STYLE_V participates in place.state.bodyStyleV, triggering one place-wide restyle when raised; hair.yml now maps human hair keys to refitted head-fitted pack assets (Tripo rows 14+ no longer selected)."
   ]
 }
