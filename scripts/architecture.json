@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3752,
-  "updatedAt": "2026-11-09T23:10:30.259Z",
-  "summary": "The Backrooms is a persistent multiplayer survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes provide local environments, while shared systems own combat, NPCs, loot, dialogue, avatar presentation, stealth, and quests. Hunter pursuit now feeds directly into the player's stealth danger detection alongside crouch, darkness, and awareness cues.",
+  "basedOnSpecVersion": 3759,
+  "updatedAt": "2026-11-09T23:25:17.753Z",
+  "summary": "The Backrooms is a persistent multiplayer survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes provide local environments, while shared systems own combat, NPCs, loot, dialogue, avatar presentation, stealth, and player-specific quests. A shared quest journal unifies objectives and destination markers from the main story and multiple level questlines, while quest turn-ins record completed entries and faction changes in player state.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games, and Glow Up Salon styling stations.",
     "places/main (3D) - authored Level 0/Lobby maze; sim generates furniture and loot, safe-room systems, shifting walls, creature ecology, route guidance, Kade, and Zenith's sealed far-east breach; selected clutter is range-culled.",
     "places/level01 (3D) - Level 0.1, Zenith Station: versioned station/gallery, doors, breakables, bots/hazards, climate rooms, flight-recorder quest, and drones that refill destroyed posts after an hour.",
     "places/intake (3D) + places/tutorial0 (solo ephemeral 3D) - bedroom character-creation/waking space and authored tutorial route with staged encounter and HALOGEN.",
-    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams, and Locked; Level 1's Dina camp and M.E.G. agents Callum, Ortiz, and Ale support Short Rations and Bad Water; B.N.T.G. broker Voss offers paid information or …",
+    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams, and Locked; Level 1's Dina camp, M.E.G. agents and B.N.T.G. broker support questlines; Level 2.1 includes Refrigerator Paradise operations and The Edges.",
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office, and Terror Hotel; residents, hazards, office/home systems, Boiler Room rats, and climbable library ladders.",
-    "places/level6, places/level7, places/level10, places/level11, places/level12, places/level26 (3D) - Lights Out, Thalassophobia, Bumper Crop, Infinite City, Matrix, and SS Fun =) liner; authored place systems include farming, canals, ritual…",
+    "places/level6, places/level7, places/level10, places/level11, places/level12, places/level26 (3D) - Lights Out, Thalassophobia, Bumper Crop, Infinite City, Matrix, and SS Fun =) liner; farming, canals, ritual systems, and Dina's Cabin 23 objective span these places.",
     "places/debug, places/spamton and other configured places (3D) - debug mannequin/body gallery and switch pad, Spamton's fight space, and auxiliary routes."
   ],
   "roots": [
@@ -19,20 +19,20 @@
     "places/<place>/config.yaml + cells/*.scene + sim.js - place settings, authored placements, and local generated/ticked behavior; main sim owns Level 0 generation and place sims own local layouts/rebuilds/ticks.",
     "scripts/main-menu.js + scripts/main-menu-ui.js - title/pause, character creation, arrival, tutorial routing, first-arrival cutscene driver, BODIES toggle, and solo-place pause time-scale.",
     "places/intake/cells/x0z0.scene + scripts/intake-geo.js + scripts/lib/intro-cut.js - bedroom shell and waking sequence; tutorial scene and tut0 scripts own its route and beats.",
-    "places/level1/cells/x0z0.scene + scripts/dina-diary.js + scripts/lib/dina-quest.js - Dina camp/diary entry sequence; M.E.G. and Voss dialogue quests dispatch through talk.js and level1-quests.js.",
+    "places/level1/cells/x0z0.scene + scripts/dina-diary.js + scripts/lib/dina-quest.js - Dina camp/diary entry and main-quest progression toward the SS Fun, Cabin 23, and River's missing drive.",
     "scripts/camera.js + scripts/view3.js + scripts/ui.js - camera and third-person toggle, HUD and panels; scripts/lib/screen.js names the screen state shared by UI and behaviors.",
-    "scripts/quest-marker.js + scripts/lib/quests.js + scripts/lib/quest-mark.js - per-player quest journal, tracking input and world markers; quest-marker also folds legacy quest state into the journal.",
+    "scripts/quest-marker.js + scripts/lib/quests.js + scripts/lib/quest-mark.js - per-player journal, tracking input, objective markers and distances; folds legacy quest state into the shared records.",
     "places/level12/sim.js + places/level12/cells/*.scene - versioned Matrix room/void construction and shared ticking ritual clock; art/human-base, human-head/face/cloth/hair scripts and tools build/validate avatar assets."
   ],
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings, and last-level names including level01 and level12; routing and hub handlers use it.",
     "scripts/lib/loot.js + items.js + weapons.js/weapons.yml - common loot spawning, container rolls, remains, place pools, weapon definitions/rarity and weapon variants reused by search and combat; unique variants are excluded from rolls.",
     "scripts/lib/build-piece.js + breakables.yml + furniture.yml - canonical build specs/models shared by B-mode and home reconstruction; CRT TV builds attach scripts/built-tv.js.",
-    "scripts/lib/screen.js - derived read-only screen classifier and wrist gates; scripts/lib/quests.js + scripts/lib/quest-mark.js - shared quest records/tracking and resolving {place,id} or coordinate objectives for the journal, HUD and world…",
+    "scripts/lib/screen.js - derived read-only screen classifier and wrist gates; scripts/lib/quests.js + scripts/lib/quest-mark.js - shared quest records/tracking and resolving {place,id} or coordinates for journal, HUD and world markers.",
     "scripts/lib/maze.js + scripts/lib/maze0path.js - seeded Level 0 cell/zone/wall/pit/pillar layout and open-point/BFS doorway steering shared by place simulation and smiler/lurker navigation.",
-    "scripts/lib/clothes.js + clothes.yml + wardrobe.yml + wardrobe-split.yml + critter.yml/faces.yml/hair.yml/critter-models.yml + scripts/lib/critter-model.js - clothing loot/armor, deterministic looks, species/head/hair presentation; wardrob…",
+    "scripts/lib/clothes.js + clothes.yml + wardrobe.yml + wardrobe-split.yml + critter.yml/faces.yml/hair.yml/critter-models.yml + scripts/lib/critter-model.js - clothing loot/armor, deterministic looks, species/head/hair presentation; wardrobe pieces are fitted/restyled as skinned children.",
     "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml + scripts/lib/knock.js - shared combat animation channels for player and M.E.G. agents; knock handling serves player heavy melee and enemy kick knockdowns.",
-    "scripts/lib/sneak.js + scripts/lib/data/sneak.yml - crouch visibility multiplier shared by smilers.js, lurkers.js, and hounds.js hunter sight; player.js uses sneak tuning for awareness/HUD detection. scripts/lib/rep.js maps NPC factions and pr…"
+    "scripts/lib/sneak.js + scripts/lib/data/sneak.yml - crouch visibility multiplier shared by smilers.js, lurkers.js, and hounds.js hunter sight; player.js uses sneak tuning for awareness/HUD detection. scripts/lib/rep.js maps faction standings used by quest eligibility/rewards."
   ],
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 container/loot helpers; scripts/lib/weapons.js - baseOf, variantOf, rollVariant, rarityIdx, rarityCap, default.",
@@ -41,18 +41,18 @@
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
     "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec and wardrobe fitting/restyling helpers, plus wardChildren and seatWardrobe.",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
-    "scripts/lib/zenith-quest.js - KADE, ZEN_ENTRY, setZen, migrateZen, handleDialogueQuestZ, zenithChoice, layZenithEntry; scripts/level12-use.js - ears, shut; scripts/level12-window.js - onTriggerEnter.",
-    "scripts/lib/level1-quests.js - UNIQUE, QUESTS1, l1Choice, setStep1, handleDialogueQuest1, questLift1, questKill1; scripts/lib/quests.js - MAX_TRACK, TINT, qid, setQuest, endQuest, tracked, toggleTrack; scripts/quest-marker.js - updateSched…"
+    "scripts/lib/zenith-quest.js - TIPS, KADE, ZEN_ENTRY, MARKS, setZen, migrateZen, handleDialogueQuestZ, zenithChoice, layZenithEntry; scripts/l26-cabin23.js - ears.",
+    "scripts/lib/quests.js - MAX_TRACK, TINT, PLACE_NAMES, qid, setQuest, endQuest, tracked, toggleTrack; scripts/lib/dina-quest.js - DINA, CAMP, DCUT_LEN, PAGE1, PAGE2, PAGES, dinaTick, setDinaStep."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo (including cells), needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, and heat/cold meters;…",
-    "scripts/lib/dina-quest.js - Dina progression fields dinaQ, dinaDiary and dcut; scripts/lib/quests.js - persistent player.state.quests and qtrack records, plus automatic tracking of new/main quests; quest-marker folds legacy quest state int…",
-    "scripts/lib/level1-quests.js - per-player quest steps rationsQ/waterQ, path and failed-check flags, rewards, faction/karma changes and markers; quest journal records are written through lib/quests.js.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo (including cells), needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, and heat/cold meters.",
+    "scripts/lib/dina-quest.js - Dina progression fields dinaQ, dinaDiary and dcut; scripts/lib/quests.js - player.state.quests, qtrack and qdone; quest-marker.js folds legacy quest state into active records and ends/completes records.",
+    "scripts/lib/level1-quests.js - per-player rationsQ/waterQ steps, route and failed-check flags, rewards, faction/karma changes and objective markers; journal records are written through lib/quests.js.",
+    "scripts/lib/level8-quests.js, level10-quests.js, level11-quests.js, level21-quests.js, zenith-quest.js and l5-goggles.js - their level-specific quest step keys and turn-in/reward effects; each synchronizes objective records/markers to the common journal.",
     "scripts/kick.js + scripts/grab.js - per-player kick rolls/cooldowns, carried prop/body IDs, held-body grip, and throw/carry session fields; target body state.heldBy/down controls hold/release.",
     "scripts/lib/loose.js - arms matched props with state.loose/mat/hp/maxHp and owns broke/act effects; per-player session.loose tracks kicked/thrown item flights until impact.",
-    "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state and write player-targeting sneakTarget (cleared while knocked), while lurkers own caught-player lurkHold/lurkFree and stare/frenzy timing.",
-    "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim. scripts/hub.js owns mall offers/shop/food, room-hop flags, trainHid/stungUntil, and transient …",
-    "scripts/lib/zenith-quest.js + places/main/sim.js + places/level01/sim.js + scripts/zenith-use.js - player zenQ/zenV/zenKey/zenDrive progression, versioned breach and station layout/drive bay, recorder animation state, local drone/climate s…"
+    "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state and write player-targeting sneakTarget, while lurkers own caught-player lurk state.",
+    "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim. scripts/hub.js owns mall offers/shop/food, room-hop flags and transient hub interaction state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player/foe-steps, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker.",
@@ -62,32 +62,34 @@
     "scripts/main-menu.js BODIES action or debug pad → world.state.bodyStyle (menu also persists player.state.bodyStyle); root sim.js/critter.js select avatar and restyle occupants via critter-model.js.",
     "Human avatar look/state.wear → critter-model.js humanBody + humanMorph and wardrobe-split.yml; visible Ward_ outfit pieces become tinted, morphed skinned children using cloth_ material slots, while seatWardrobe removes stale children.",
     "scripts/lib/hub.js toHub/toSolo → room/place crossings and roomHop distinguishes intentional crossings from launch/resume; hub.js hubOffer → hub-ui.js and mall counters write shop/food state for handlers and UI.",
-    "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; weapon variants roll through weapons.js, while unique Lucky Thirteen is not rolle…",
-    "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; scripts/lib/stats.js and ballistics.js apply weapon skill/handling, with energy weapons consuming cells; scripts/kick.js handles foes…",
-    "Level 0 main sim → maze.js seeded geometry/cell helpers and level0-moments.js; scripts/moments.js handles placed moments; smilers.js/lurkers.js use maze0path and sneak.crouchMul while lurkers cap chase speed; hounds/smilers/lurkers write player.state.sneakTarget, which player.js treats as active danger and immediate detection.",
-    "Each local player behavior scripts/foe-steps.js queries nearby tagged hound/smiler/lurker/partygoer movement and emits playSound only to that player; scripts/lib/data/foe-steps.yml supplies stride, clip, pitch, loudness and hearing range.",
-    "Level 1 arrival → scripts/main-menu.js calls dinaTick; scripts/dina-diary.js ears.press sets dcut, while dinaTick owns Dina's camera/movement and advances dinaQ; cutscene-ui renders its cue."
+    "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; weapon variants roll through weapons.js, while unique Lucky Thirteen is not rolled.",
+    "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; scripts/lib/stats.js and ballistics.js apply weapon skill/handling, with energy weapons consuming cells; scripts/kick.js handles foes.",
+    "Level 0 main sim → maze.js seeded geometry/cell helpers and level0-moments.js; scripts/moments.js handles placed moments; smilers.js/lurkers.js use maze0path and sneak.crouchMul while hounds/smilers/lurkers publish player pursuit cues.",
+    "scripts/lib/quests.js writes player.state.quests/qtrack/qdone; level quest handlers and quest-marker.js keep active records in sync, resolve {place,id}/coordinate goals through quest-mark.js, then draw player-only tinted markers and journal entries.",
+    "Loot/inventory HUD QUESTS tab → scripts/player.js handles inv action 'quests' and opens jrnOpen → scripts/quest-marker.js journal; P toggles journal, and qtrack actions track up to three objectives.",
+    "Level 1 arrival/diary → scripts/main-menu.js calls dinaTick; diary press sets dcut, dinaTick advances Dina quest/cutscene; current objective points to Level 4's Time 4 Fun poster, then Level 26 target id l26-cabin23, and finally the missing-drive investigation."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js + scripts/salon-stylist.js/scripts/salon-ui.js - authored mall shops/landmarks and simulated mall life; salon chairs queue sitters a…",
+    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js + scripts/salon-stylist.js/scripts/salon-ui.js - authored mall shops/landmarks and simulated mall life; salon chairs queue sitters and style avatars.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence, and rebuild path; CRT TV builds attach screen, sound, and glow.",
-    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenit…",
+    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith station/breach structures, doors, hazards, climate, repair/repopulation, and quest interactions.",
     "places/level4/cells/x0z0.scene + l4-office.js/l4-office-geo.js/l4-home.js + scripts/lib/l4-people.js/level4-people.yml - office layout/fixtures and resident schedules, roles and home claims.",
     "scripts/lib/l5-people.js + level5-people.yml - Level 5 per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
     "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/* + art/human-head/* + art/human-hair/build.py - deterministic avatar looks, fitted wardrobe meshes and validation/build tooling.",
-    "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared human combat/gait, idles, head tracking, fidgets, expressions, and dialogue; player/enemy combat…",
-    "scripts/lib/sneak.js + scripts/lib/data/sneak.yml - shared crouch visibility tuning for smilers, lurkers, and hounds, varied by crouch movement, darkness, and flashlight; player.js derives dark from zone/place and accumulates awareness for HUD feedback, while pursuit state forces danger detection."
+    "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared human combat/gait, idles, head tracking, fidgets, expressions, and dialogue; player/enemy combat reuses animation channels.",
+    "scripts/lib/quests.js + scripts/quest-marker.js + scripts/lib/{dina,level1,level8,level10,level11,level21,zenith}-quest.js - level-specific steps/turn-ins map into common tracked records and goal markers; destination maps and faction eligibility/reward vary by quest giver."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
-    "scripts/hairtest-rig.js - header marks it as a temporary hair lane test rig; no tree/package references found."
+    "scripts/hairtest-rig.js - header marks it as a temporary hair lane test rig; no tree/package references found.",
+    "scripts/l26-cabin23.js - press handler exists for the Cabin 23 quest beat, but no scene or package attachment references this script; the quest objective only names target id l26-cabin23."
   ],
   "migrationNotes": [
     "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room and overflow mall rooms use bonus-N IDs. Teleport Station travel derives from savePlace; level01 is named in hub/feed data and is not a solo home.",
-    "Found-item rarity gates apply to found weapon tokens; search gating excludes storage and NPC containers. Weapon IDs may include a ~variant suffix; baseOf handles kind lookup and W[k] resolves the full variant. Lucky Thirteen is revolver~lu…",
-    "Level 0 place.state.momentsV is 7: migration deletes old tagged moment entities before relaying them. Selected Level 0 furniture/clutter has explicit visibleRange and disabled shadows; preserve interaction tags/state alongside those placem…",
+    "Found-item rarity gates apply to found weapon tokens; search gating excludes storage and NPC containers. Weapon IDs may include a ~variant suffix; baseOf handles kind lookup and W[k] resolves the full variant. Lucky Thirteen is revolver~lucky-thirteen and remains excluded from random rolls.",
+    "Level 0 place.state.momentsV is 7: migration deletes old tagged moment entities before relaying them. Selected Level 0 furniture/clutter has explicit visibleRange and disabled shadows; preserve interaction tags/state alongside those placements.",
     "Level 12 ritual tuning is in scripts/lib/data/level12.yml: sit/hour/tol are seconds (45/180/12 currently); r12.back is a ctx.now() millisecond timestamp and the exit requires the return-door attempt within tol seconds of one hour.",
-    "scripts/lib/data/sneak.yml tunes crouch visibility and awareness; crouch still/moving, dark and flashlight multipliers combine in crouchMul. Hunter managers publish player state.sneakTarget while pursuing and clear it when knocked; player.js treats it as danger (awareness 1), resets awareness when uncrouched, and derives state.dark from dark zones/Level 6. Enemy footsteps are separate local-player audio: foe-steps.yml distances/stride are metres, and sc…",
-    "Dina's state.dinaQ values 1/2 mean follow static/find SS Fun cabin 23; diary reading sets per-player dcut and completion writes dinaDiary plus quest state. Level 1 talk quests instead use rationsQ/waterQ values 1..n and 99 done; Voss's bou…"
+    "scripts/lib/data/sneak.yml tunes crouch visibility and awareness; crouch still/moving, dark and flashlight multipliers combine in crouchMul. Hunter managers publish player state.sneakTarget while pursuing and clear it when knocked; player.js consumes danger cues.",
+    "Dina's dinaQ route is 1 radio/static, 2 reach SS Fun via Level 4's Time 4 Fun posters, 3 find Cabin 23, 4 investigate who took River's drive; Cabin 23's handler advances to step 4 if attached. Older quests retain their own numeric step keys; quest-marker folds them into player.state.quests, and completion moves them to qdone while removing tracking."
   ]
 }
