@@ -340,7 +340,7 @@ function journalUi(s, player, ctx) {
 }
 
 // F3: the LAGSCOPE lag panel floats over whatever the HUD draws (builders only; players never see it)
-export default function render(ctx, player) { return renderHud(ctx, player) + lagscopeOverlay(ctx, player) + modelingStudio.render(ctx, player) }
+export default function render(ctx, player) { return renderHud(ctx, player) + lagscopeOverlay(ctx, player) } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
 function renderHud(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
