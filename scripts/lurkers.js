@@ -206,7 +206,8 @@ export function update(ctx, dt) {
     mem.lurkersAt = now + 1200;
     mem.allLurkers = ctx.query({ tags: ["lurker"] });
   }
-  const allLurkers = mem.allLurkers;
+  const objs = ctx.place.objects;
+  const allLurkers = mem.allLurkers.filter((w) => w.id in objs);
 
   for (const w of allLurkers) {
     const m = (mem[w.id] ??= {});

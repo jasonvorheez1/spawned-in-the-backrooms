@@ -87,16 +87,18 @@ function cell(ctx, zones) {
 
 const CREATURES = ["smiler", "lurker", "hound", "stealer", "npc"];
 // a creature found inside a wall (a shifted wall, a lunge through a corner) is set back in the middle of the nearest open cell
+function nearOpen(cx, cz) { for (let r = 1; r < 4; r++) for (let dx = -r; dx <= r; dx++) for (let dz = -r; dz <= r; dz++) { const x = cx + dx, z = cz + dz; if (x >= 0 && z >= 0 && x < N && z < N && !hasPit(x, z) && !inHub(x, z)) return { cx: x, cz: z }; } return { cx, cz }; }
 function unstick(ctx, s, now) {
   if (now < (s.unstickAt ?? 0)) return; s.unstickAt = now + 1500;
   for (const c of ctx.query({ anyTags: CREATURES, radius: 60, center: ctx.place.players[0].feetPosition })) {
     if (c.state?.dead) continue;
     const f = c.feetPosition, hit = overlapPoint(ctx, { x: f.x, y: f.y + 0.9, z: f.z });
     const inWall = (hit?.objects ?? []).some((o) => (o.id ?? o) !== c.id && !String(o.id ?? o).startsWith(c.id + "/"));
-    if (!inWall) continue;
-    const { cx, cz } = cellAt(f.x, f.z), m = openPoint(cx, cz);
+    const pc = cellAt(f.x, f.z), inPit = f.y < -0.4 && hasPit(pc.cx, pc.cz); // dropped into a floor hole: set back up on the nearest open floor
+    if (!inWall && !inPit) continue;
+    const { cx, cz } = inPit ? nearOpen(pc.cx, pc.cz) : pc, m = openPoint(cx, cz);
     const o = ctx.place.objects[c.id]; if (!o) continue;
-    o.feetPosition = { x: m.x, y: Math.max(0.02, f.y), z: m.z }; o.velocity = { x: 0, y: 0, z: 0 };
+    o.feetPosition = { x: m.x, y: inPit ? 0.05 : Math.max(0.02, f.y), z: m.z }; o.velocity = { x: 0, y: 0, z: 0 };
   }
 }
 function shift(ctx, s, now) {
