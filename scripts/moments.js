@@ -2,6 +2,7 @@
 // and the far-sound emitter in the dark sector. state.kind picks the job.
 import { heard } from "./lib/hear.js";
 import { distance } from "builtin/vec3";
+import { animate } from "builtin/tween";
 const G = "cdn/moodboard-realistic-gritty/";
 const RING = G + "sfx-old-payphone-mechanical-bell-ringing-loop.mp3";
 const STATIC = G + "sfx-telephone-earpiece-line-static-hiss-and-crackle.mp3";
@@ -9,6 +10,10 @@ const PICKUP = G + "sfx-payphone-handset-lifted-off-metal-hook-clunk.mp3";
 const WHISPER = "cdn/voice-dry-breathy-close-whispering-stranger-saying-" + encodeURIComponent("you walked past the way out twice. it moved again. don't trust the lights.") + ".mp3";
 const FAR = [G + "sfx-distant-heavy-door-slam-echo-down-empty-hallway.mp3", G + "sfx-distant-slow-footsteps-on-damp-carpet-echo.mp3", G + "sfx-distant-fluorescent-tube-pop-and-glass-tinkle-echo.mp3"];
 const DRIP = G + "sfx-slow-water-drips-into-shallow-puddle-loop.mp3";
+const TEAR = G + "sfx-damp-wallpaper-strip-tearing-off-drywall.mp3";
+const BUZZ = G + "sfx-exposed-live-wire-electrical-buzz-and-crackle.mp3";
+const SPARK = `fx
+pop spark burst=10..16 life=.2..0.5 v=sdir()*(1..2.5)+up(.5) size=.01..0.02 acc=grav() col=hdr(5,3.4,1.2) a=1>0 sz=$size r=sprite(ember,add,velocity,.02)`;
 export { DRIP, STATIC };
 
 export const ears = {
@@ -49,21 +54,11 @@ export const ears = {
         d: 6500,
       };
       if (who.state.sanity > 5) who.state.sanity -= 2;
-    } else if (s.kind === "peeling-wallpaper" && who) {
-      heard(ctx, { clip: G + "sfx-clothing-rustle-getting-up-from-seat.mp3", position: pos, volume: 0.8, maxDistance: 10 });
-      const WALL_NOTES = [
-        "Behind the peeling yellow wallpaper: Damp grey drywall marked with faint pencil: 'Room 409? Mom, if you're looking for me, I went west.'",
-        "Behind the peeling yellow wallpaper: Raw copper wiring and buzzing conduits embedded directly into the plaster. A low 60Hz hum vibrates against your fingers.",
-        "Behind the peeling yellow wallpaper: Scratched into the gypsum: 'DON'T SLEEP ON THE CARPET. THE WALLS SHIFT WHEN YOU BLINK.'",
-        "Behind the peeling yellow wallpaper: A faded surveyor arrow in blue ink pointing toward the outer perimeter.",
-      ];
-      s.idx = ((s.idx ?? -1) + 1) % WALL_NOTES.length;
-      who.state.sub = {
-        who: "PEELING WALLPAPER",
-        t: WALL_NOTES[s.idx],
-        at: now,
-        d: 6500,
-      };
+    } else if (s.kind === "peeling-wallpaper") { // no caption: the paper comes down and the wall says it
+      const flap = ctx.getObject(ctx.self.id + "/flap"); s.open = !s.open; s.verb = s.open ? "Press It Back" : "Peel It Back";
+      if (flap) animate(ctx, flap, { "rotation.pitch": s.open ? -168 : -9 }, { duration: s.open ? 0.7 : 0.45, easing: s.open ? "easeOutBounce" : "easeOutCubic" });
+      heard(ctx, { clip: s.open ? TEAR : G + "sfx-clothing-rustle-getting-up-from-seat.mp3", position: pos, volume: 0.8, maxDistance: 10 });
+      if (s.open && s.idx === 1) { heard(ctx, { clip: BUZZ, position: pos, volume: 0.5, maxDistance: 8 }); ctx.emit("fx", { position: { ...pos, y: 1.3 }, script: SPARK }); }
     } else if (s.kind === "meg-board" && who) {
       heard(ctx, { clip: G + "sfx-clothing-rustle-getting-up-from-seat.mp3", position: pos, volume: 0.7, maxDistance: 10 });
       who.state.sub = {

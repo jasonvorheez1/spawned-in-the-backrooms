@@ -33,6 +33,15 @@ function picker(used) {
     return null;
   };
 }
+// what's under each seam's paper: grey drywall, a water bloom, and one thing someone left
+const WALLPAPER = "/cdn/value.00a4e744acf9ab763779bbb0cc7f26fb1dd20aeafc69448c536939cd7212caeb.png";
+const DRY = (inner) => `<svg viewBox='0 0 120 220' width='0.6m'><defs><radialGradient id='st' cx='.35' cy='.8' r='.6'><stop offset='0' stop-color='#6d6450' stop-opacity='.55'/><stop offset='1' stop-color='#8c8a80' stop-opacity='0'/></radialGradient></defs><rect x='0' y='0' width='120' height='220' fill='#9a978c'/><rect x='0' y='0' width='120' height='220' fill='url(#st)'/><path d='M0 30 L120 34 M0 140 L120 137' stroke='#7f7c72' stroke-width='1.2'/><g fill='#5e5a4e'>${[[14, 22], [100, 26], [18, 132], [104, 135]].map(([x, y]) => `<circle cx='${x}' cy='${y}' r='1.6'/>`).join("")}</g>${inner}<path d='M0 0 L0 220 M120 0 L120 220' stroke='#c9b46a' stroke-width='3' stroke-dasharray='5 3'/></svg>`;
+const UNDER = [
+  DRY(`<g font-family='serif' font-style='italic' fill='#3b3a36' fill-opacity='.8' transform='rotate(-3 60 100)'><text x='60' y='78' text-anchor='middle' font-size='13'>Room 409?</text><text x='60' y='100' text-anchor='middle' font-size='10'>Mom, if you're</text><text x='60' y='116' text-anchor='middle' font-size='10'>looking for me,</text><text x='60' y='136' text-anchor='middle' font-size='13'>I went west.</text></g><path d='M30 150 L58 152' stroke='#3b3a36' stroke-opacity='.6' stroke-width='1.2'/>`),
+  DRY(`<rect x='42' y='0' width='36' height='220' fill='#3a342b'/><g fill='none' stroke-linecap='round'><path d='M50 0 C46 60 56 110 49 220' stroke='#b8693a' stroke-width='4'/><path d='M60 0 C64 70 55 130 61 220' stroke='#c47a44' stroke-width='3.5'/><path d='M70 0 C74 50 66 150 71 220' stroke='#8e4f2c' stroke-width='4'/><path d='M60 96 L66 88 L62 92 L70 84' stroke='#fff6c8' stroke-width='1.5' filter='drop-shadow(0 0 3px #ffd36a)'/></g><g fill='#2a2620'><rect x='38' y='60' width='44' height='6' rx='2'/><rect x='38' y='160' width='44' height='6' rx='2'/></g>`),
+  DRY(`<g fill='none' stroke='#d9d4c6' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' transform='rotate(2 60 110)'><path d='M16 64 L16 84 C26 84 28 64 16 64 M32 64 L32 84 L42 84 L42 64 Z M48 84 L48 64 L58 84 L58 64 M64 64 L70 64 M67 64 L67 70 M76 64 L84 64 M80 64 L80 84'/><path d='M16 100 C26 96 26 108 18 106 C10 104 12 116 24 112 M32 98 L32 116 L42 116 M48 98 L48 116 M48 98 L58 98 M48 107 L56 107 M64 98 L64 116 M64 98 L72 98 M64 107 L70 107 M64 116 L72 116 M80 98 L80 116 C92 112 92 100 80 98'/><path d='M14 136 L104 132 M14 152 L100 150 M14 168 L96 168' stroke-width='1.6' stroke-dasharray='9 4 3 4'/></g><text x='60' y='196' text-anchor='middle' font-family='sans-serif' font-size='8' fill='#d9d4c6' fill-opacity='.85'>WALLS SHIFT WHEN YOU BLINK</text>`),
+  DRY(`<g stroke='#2f56a8' stroke-opacity='.75' fill='none' stroke-linecap='round' stroke-linejoin='round'><path d='M14 112 L96 112' stroke-width='5'/><path d='M76 90 L100 112 L76 134' stroke-width='5'/><path d='M14 104 L14 120 M30 106 L30 118 M46 106 L46 118 M62 106 L62 118' stroke-width='2'/></g><text x='58' y='154' text-anchor='middle' font-family='sans-serif' font-size='9' fill='#2f56a8' fill-opacity='.7'>PERIM. 0.4 KM</text><text x='22' y='86' font-family='sans-serif' font-size='7' fill='#2f56a8' fill-opacity='.55'>S-17</text>`),
+];
 const walls = (cx, cz) => [0, 1, 2, 3].filter((d) => hasWall(cx, cz, d));
 const corner = (cx, cz) => [[1, 2, 0], [0, 1, 90], [3, 0, 180], [2, 3, -90]].find(([a, b]) => hasWall(cx, cz, a) && hasWall(cx, cz, b)); // [back, left, yaw]
 const plainZone = (cx, cz) => ["halls", "expanse", "offices"].includes(zoneOf(cx, cz));
@@ -172,19 +181,19 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
   }
   out.routeLen = path.length;
   // 8 · Peeling Wallpaper Seams (Wikidot lore: wanderers peeling wallpaper looking for pipes / drywall / exits)
-  for (let i = 0; i < 3; i++) {
+  // show, don't tell: a flap of the wall's own paper hangs half loose; a press peels it down and what's under it is drawn on the drywall
+  for (let i = 0; i < 4; i++) {
     one(540 + i, any, (cx, cz, d) => {
-      const w = wallPose(cx, cz, d, (hash(cx, cz, 12 + i) - 0.5) * 1.5, 0.015);
-      put("peeling", {
+      const w = wallPose(cx, cz, d, (hash(cx, cz, 12 + i) - 0.5) * 1.5, 0.012);
+      const id = put("peeling", {
         tags: ["moment", "m-peeling", "usable"],
         feetPosition: { x: w.x, y: 1.35, z: w.z },
         rotation: w.yaw + 180,
-        primitive: { kind: "plane", width: 0.6, height: 1.1 },
-        material: { color: "oklch(0.72 0.08 85)", roughness: 0.8 },
-        ui: `<div face="front" width="0.6m" style="width:100%;height:100%;border-left:3px dashed #664422;background:rgba(215,195,145,0.85);color:#332211;font-family:serif;padding:8px;font-size:18px"><i>peeling wallpaper...</i></div>`,
+        vector: UNDER[i],
         behavior: "scripts/moments.js",
-        state: { kind: "peeling-wallpaper", name: "Torn Wallpaper Seam", verb: "Inspect Seam", idx: i },
+        state: { kind: "peeling-wallpaper", name: "Torn Wallpaper Seam", verb: "Peel It Back", idx: i },
       });
+      ctx.spawn({ id: "flap", parent: id, feetPosition: { x: 0, y: -0.56, z: -0.008 }, pivot: [0.5, 0, 0.5], rotation: { pitch: -9 }, primitive: { kind: "plane", width: 0.62, height: 1.14 }, material: { texture: WALLPAPER, repeat: [0.62 / 1.2, 1.14 / 1.2], color: "oklch(0.86 0.07 88)", roughness: 0.9, side: "double" }, castShadow: false });
     }, 4, 18);
   }
   // 9 · The Noclip Wall (Exit to Level 1, Wikidot Lore)
