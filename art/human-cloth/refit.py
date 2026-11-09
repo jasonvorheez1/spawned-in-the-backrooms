@@ -202,6 +202,11 @@ for o in bpy.data.objects:
             x, y = c.x, c.y - cy; r = math.hypot(x, y)
             if r < 0.9 * rowAt(c.z)[ak(x, y)]: inner.append(f)
         bmesh.ops.delete(bm, geom=inner, context="FACES_ONLY")
+        # after the cut, the tube bridges hollows (the butt cleft, the small of the back) so cloth spans them instead of sinking in
+        for k in ks:
+            row = rows[k]
+            for _ in range(2): row = [max([row[i]] + [(row[(i - j) % NB] + row[(i + j) % NB]) / 2 * 0.995 for j in range(1, 7)]) for i in range(NB)]
+            rows[k] = row
         # then every hem vertex sits ON the hung tube, in or out: folds and crumples have nowhere to be
         fixed = 0
         hv = [v for v in bm.verts if v.co.z < HEM + 0.04]
