@@ -98,6 +98,23 @@ for px, pz in ((10.8, 3.4), (23.2, 3.4), (23.2, -5.4)):
     for k in range(9):
         a = k * 2.4; sph(px + 0.18 * math.cos(a) * (k % 3) / 2, pz + 0.18 * math.sin(a) * (k % 3) / 2, 0.75 + (k % 4) * 0.18, 0.2, "plant", (1, 0.45, 1.6))
 cyl(16.0, 0.0, 0.003, 2.2, 0.012, "teal", 0.004, 64)
+# finishing: rounded pink wainscot along the side walls, product shelves with bottles, towel rolls, a scalloped rug edge
+for wz, sgn in ((4.05, -1), (-5.85, 1)):
+    for k in range(7):
+        box(10.6 + k * 2.0, wz + sgn * 0.0, 0, 1.9, 0.06, 1.0, "vinyl", 0.025)
+    box(16.6, wz + sgn * 0.04, 1.0, 13.9, 0.1, 0.07, "lacquer", 0.03)
+for shx in (19.4, 21.4):
+    for lv in (1.25, 1.75):
+        box(shx, -5.7, lv, 1.4, 0.26, 0.04, "lacquer", 0.015)
+        for b in range(6):
+            bx = shx - 0.55 + b * 0.22; mtl = ("vinyl", "teal", "chrome")[b % 3]
+            cyl(bx, -5.68, lv + 0.04, 0.045 + 0.01 * (b % 2), 0.16 + 0.05 * (b % 3), mtl, 0.01, 20)
+            sph(bx, -5.68, lv + 0.24 + 0.05 * (b % 3), 0.03, "chrome")
+for t in range(5):
+    bpy.ops.mesh.primitive_cylinder_add(radius=0.09, depth=0.36, vertices=24, location=(*W(10.9 + (t % 3) * 0.2, -0.6 + 0.0), 0.95 + (t // 3) * 0.18), rotation=(0, math.pi / 2, 0)); fin(bpy.context.object, "lacquer", 0.03)
+box(11.1, -0.6, 0, 0.8, 0.5, 0.86, "vinyl", 0.04)
+for k in range(28):
+    a = k / 28 * math.tau; sph(16.0 + 2.25 * math.cos(a), 2.25 * math.sin(a), 0.01, 0.16, "teal", (1, 1, 0.08))
 bpy.ops.object.select_all(action="SELECT"); bpy.context.view_layer.objects.active = bpy.data.objects["desk"]
 bpy.ops.object.convert(target="MESH"); bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM"); bpy.ops.object.join(); salon = bpy.context.object; salon.name = "salon"
 bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
