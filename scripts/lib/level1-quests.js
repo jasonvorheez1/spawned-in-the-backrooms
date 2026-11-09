@@ -61,13 +61,11 @@ const C = {
 const TAG = { rTrack: "Survival 30", rAleSpeech: "Speech 40", rAleBarter: "Barter 30", rAleThreat: "Speech 55", rCover: "Speech 45", rVossTip: "Barter 35", wMed: "Medicine 35", wBuy: "Barter 25" };
 const CHECK = { rTrack: ["survival", 30], rAleSpeech: ["speech", 40], rAleBarter: ["barter", 30], rAleThreat: ["speech", 55], rCover: ["speech", 45], rVossTip: ["barter", 35], wMed: ["medicine", 35], wBuy: ["barter", 25] };
 const opt = (k, tag) => ({ text: C[k], tag: tag ?? TAG[k] ?? "Quest" });
-let FAILED = {}; // this choice list's player: a failed check stays failed, Fallout style
 const who = (it) => String(it?.id ?? "").split("/").pop();
 
 export function l1Choice(ctx, it, s, list) {
   if (!Array.isArray(list) || !s) return list;
-  const id = who(it), r = s.rationsQ ?? 0, w = s.waterQ ?? 0, add = [];
-  FAILED = s.l1Fail ?? {};
+  const id = who(it), r = s.rationsQ ?? 0, w = s.waterQ ?? 0, add = [], failed = s.l1Fail ?? {};
   if (id === "meg-callum") {
     if (!r && (s.rep?.meg ?? 0) > -35) add.push(opt("rStart", "Quest"));
     if (r === 1 && !s.rTracked) add.push(opt("rTrack"));
@@ -85,7 +83,7 @@ export function l1Choice(ctx, it, s, list) {
   } else if (id === "meg-ale") {
     if (r === 2) { add.push(opt("rAleSpeech")); add.push(opt("rAleBarter")); add.push(opt("rAleThreat")); }
   }
-  for (let i = add.length - 1; i >= 0; i--) if (FAILED[Object.keys(C).find((k) => C[k] === add[i].text)]) add.splice(i, 1);
+  for (let i = add.length - 1; i >= 0; i--) if (failed[Object.keys(C).find((k) => C[k] === add[i].text)]) add.splice(i, 1);
   if (!add.length) return list;
   return [...add, ...list.filter((c) => !add.some((a) => a.text === c?.text))].slice(0, Math.max(4, add.length));
 }
@@ -93,13 +91,13 @@ export function l1Choice(ctx, it, s, list) {
 // ---- steps, rewards, standing
 function note(ctx, p, text, kind = "info") { const s = p.state, now = ctx.now(); s.notice = { text, at: now }; pushFeed(s, text, now, kind); }
 function ding(ctx, p, clip = CHIME, v = 0.7) { const pos = p.worldFeetPosition ?? p.feetPosition; if (pos) heard(ctx, { clip, position: pos, volume: v, maxDistance: 16 }, { audience: { player: p.id } }); }
-export function setStep1(ctx, p, q, step, text) {
+export function setStep1(ctx, p, q, step, text, doneSummary) {
   const Q = QUESTS1[q], s = p?.state; if (!Q || !s) return;
   if ((s[Q.key] ?? 0) >= step && step !== 99) return;
   s[Q.key] = step;
   const id = Q.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   if (Q.tips[step]) setQuest(s, id, { name: Q.name, step: Q.tips[step], mark: Q.marks[step] ?? null });
-  else endQuest(s, id);
+  else endQuest(s, id, doneSummary ?? text);
   if (text) note(ctx, p, text); ding(ctx, p);
 }
 // friends pay better: Liked +25 %, Accepted +10 % on the giver's faction (her pick)
@@ -107,7 +105,7 @@ const BONUS = (s, g) => { const v = repOf(s, g); return v >= 35 ? 0.25 : v >= 12
 function finish(ctx, p, q, { xp = 100, cents = 0, items = [], text, rep = [], by = "meg" }) {
   const s = p.state, msgs = [text], b = BONUS(s, by);
   if (b && cents) { const extra = Math.round(cents * b); cents += extra; msgs.push(`${NAMES[by] ?? by} bonus +$${(extra / 100).toFixed(2)}`); }
-  setStep1(ctx, p, q, 99);
+  setStep1(ctx, p, q, 99, null, text);
   for (const [g, d] of rep) { if (!d) continue; const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d); msgs.push(tier || `${g === "karma" ? "Karma" : NAMES[g] ?? g} ${d > 0 ? "+" : ""}${d}`); }
   s.cents = (s.cents ?? 0) + cents;
   s.payout = { xp, items, text }; // scripts/craft.js hands these over on the player's own machine

@@ -5,9 +5,13 @@
 //   drop  — the M.E.G. drop box in the Cold Room: hand in the goggles plus one battery cell; she tests them and they're yours
 // Progress is the player's own: player.state.nvgQ 1 asked · 2 case found empty · 3 goggles taken (cracked, no cell) · 4 done.
 import { heard } from "./lib/hear.js";
+import { setQuest, endQuest, qid } from "./lib/quests.js";
+import { addRep } from "./lib/rep.js";
+import { pushFeed } from "./lib/feed.js";
 const VO = (t) => `/cdn/voice-tired-young-woman-mechanic-over-crackly-radio-saying-${encodeURIComponent(t)}.mp3`;
 const CLICK = "/cdn/moodboard-realistic-gritty/sfx-walkie-talkie-radio-click-static-burst.mp3";
 const NAME = "Ines's goggles";
+const QID = qid(NAME);
 const LINES = {
   ask: "Hey. You, by the door. I'm holed up by the drop box and I dropped my goggle case by the compressor, south end. Bring me what's in it and a pair is yours.",
   ask2: "South end, by the compressor. Keep moving near the furnaces.",
@@ -20,12 +24,27 @@ const LINES = {
   had: "Already gave you a pair. Go on, I'm fine in here.",
 };
 const TIP = { 1: "Find Ines's goggle case at the south end of the Boiler Room", 2: "Follow the drag marks east to the hound den", 3: "Bring the goggles and a battery to the M.E.G. drop box, northeast" };
+const MARK = {
+  1: { place: "level5", id: "l5-nvg-case", x: 31.5, y: 0, z: 23.4 },
+  2: { place: "level5", id: "l5-nvg-den", x: 44, y: 0, z: 1 },
+  3: { place: "level5", id: "l5-nvg-drop", x: 45.2, y: 0, z: -19.6 },
+};
 function say(ctx, p, key, at) {
   heard(ctx, { clip: CLICK, position: at, volume: 0.6, maxDistance: 14, refDistance: 2 }, { audience: { player: p.id } });
   heard(ctx, { clip: VO(LINES[key]), position: at, volume: 1, maxDistance: 30, refDistance: 3 }, { audience: { player: p.id } });
   p.state.notice = { text: `Ines (radio): "${LINES[key]}"`, at: ctx.now() };
 }
-const step = (ctx, s, q) => { s.nvgQ = q; s.quest = TIP[q] ? { name: NAME, step: TIP[q], at: ctx.now() } : null; };
+const step = (ctx, s, q, doneText) => {
+  s.nvgQ = q;
+  if (TIP[q]) {
+    const mark = MARK[q] ?? null;
+    s.quest = { name: NAME, step: TIP[q], mark, at: ctx.now() };
+    setQuest(s, QID, { name: NAME, step: TIP[q], mark });
+  } else {
+    if (s.quest?.name === NAME) s.quest = null;
+    endQuest(s, QID, doneText);
+  }
+};
 export const ears = {
   press: (ctx, d) => {
     const p = ctx.getObject(d?.by); if (!p?.state) return;
@@ -65,10 +84,11 @@ export const ears = {
       if ((s.battery ?? 0) < 25) return say(ctx, p, "nocell", at); // a cell's worth of charge from the torch pool
       s.battery = Math.max(0, (s.battery ?? 100) - 25);
       s.nvgCell = true;
-      step(ctx, s, 4);
+      step(ctx, s, 4, "Recovered Ines's night vision goggles in the Boiler Room");
       if (s.nvg) s.nvgSpare = (s.nvgSpare ?? 0) + 1;
       else s.nvg = true;
-      s.cents = (s.cents ?? 0) + 25;
+      s.cents = (s.cents ?? 0) + 2500;
+      addRep(s, "meg", 8);
       s.pickedAt = now;
       ctx.emit("milestone", { step: 1, name: "ines-goggles" }, { audience: { player: p.id } });
       say(ctx, p, "done", at);
@@ -78,6 +98,8 @@ export const ears = {
 };
 export function reward(ctx, { id }) {
   const p = ctx.getObject(id); if (!p?.state) return;
-  p.state.notice = { text: "Night vision goggles · $25 · Press F to activate · Essential in Level 6", at: ctx.now() };
-  p.state.xpPop = { amount: 75, at: ctx.now() };
+  const now = ctx.now(), text = "Quest Completed: Ines's goggles · Night vision goggles, +$25.00, M.E.G. +8 · Press F to activate";
+  p.state.notice = { text, at: now };
+  pushFeed(p.state, text, now, "good");
+  p.state.payout = { xp: 75, items: [], text };
 }

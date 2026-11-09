@@ -8,7 +8,7 @@ import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
 import { ZONE_NAMES } from './lib/maze.js'
 import { questMark, yawTo } from './lib/quest-mark.js'
-import { tracked, MAX_TRACK } from './lib/quests.js'
+import { tracked, MAX_TRACK, PLACE_NAMES } from './lib/quests.js'
 import { wardrobe } from './wardrobe-ui.js'
 import { salon } from './salon-ui.js'
 import { mainMenu } from './main-menu-ui.js'
@@ -273,30 +273,69 @@ function underwater(s) {
 
 const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 const Q_CACHE = { key: '', html: '' }
-function questTracker(s) {
+function questTracker(s, player, ctx) {
   const list = tracked(s)
   if (!list.length || s.jrnOpen) return ''
-  const key = list.map((q) => `${q.id}|${q.step}`).join('~')
+  const here = player?.place ?? ctx?.place?.id ?? 'main'
+  const key = list.map((q) => `${q.id}|${q.step}|${q.mark?.place ?? ''}`).join('~') + `~${here}`
   if (key === Q_CACHE.key) return Q_CACHE.html
   Q_CACHE.key = key
-  const row = (q) => `<div style="border-left:3px solid ${q.tint};padding:5px 12px 6px;background:linear-gradient(rgba(18,12,3,0.92),rgba(10,6,1,0.96));box-shadow:0 0 10px rgba(0,0,0,0.8)">
-    <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:${q.tint};letter-spacing:.05em"><span style="font-size:9px">◆</span><span>${esc(q.name).toUpperCase()}</span></div>
-    <div class="qs" style="font-size:12px;color:#fff2d4;opacity:.92;text-transform:none;letter-spacing:.02em;line-height:1.3;margin-top:2px">${esc(q.step)}</div></div>`
+  const row = (q) => {
+    const targetPlace = q.mark?.place
+    const isOff = targetPlace && targetPlace !== here
+    const placeBadge = isOff ? `<span style="font-size:9.5px;padding:1px 5px;background:rgba(255,255,255,0.14);border-radius:2px;letter-spacing:0.04em;margin-left:auto;opacity:0.9;color:#fff">${esc(PLACE_NAMES[targetPlace] ?? targetPlace).toUpperCase()}</span>` : ''
+    return `<div style="border-left:3px solid ${q.tint};padding:5px 12px 6px;background:linear-gradient(rgba(18,12,3,0.92),rgba(10,6,1,0.96));box-shadow:0 0 10px rgba(0,0,0,0.8)">
+      <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:${q.tint};letter-spacing:.05em"><span style="font-size:9px">◆</span><span>${esc(q.name).toUpperCase()}</span>${placeBadge}</div>
+      <div class="qs" style="font-size:12px;color:#fff2d4;opacity:.92;text-transform:none;letter-spacing:.02em;line-height:1.3;margin-top:2px">${esc(q.step)}</div></div>`
+  }
   return (Q_CACHE.html = `<style>@media (max-width:520px){#hud-quest{width:126px!important;font-size:10px}#hud-quest .qs{display:none}#hud-quest span{font-size:10px}}</style><div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;width:min(340px,42vw);display:flex;flex-direction:column;gap:5px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:auto;cursor:pointer;z-index:40;animation:hud-pop .3s ease-out" onclick="sendAction('journal')">${list.map(row).join('')}</div>`)
 }
 // the journal (P): every quest you hold; a press on a row tracks or untracks it, three at most
-function journalUi(s) {
+function journalUi(s, player, ctx) {
   if (!s.jrnOpen) return ''
   const all = Object.entries(s.quests ?? {}).map(([id, q]) => ({ id, ...q })).sort((a, b) => (b.main ? 1 : 0) - (a.main ? 1 : 0) || (b.at ?? 0) - (a.at ?? 0))
+  const done = Object.entries(s.qdone ?? {}).map(([id, q]) => ({ id, ...q })).sort((a, b) => (b.at ?? 0) - (a.at ?? 0))
   const tr = tracked(s)
-  const row = (q) => { const t = tr.find((x) => x.id === q.id), c = t?.tint ?? 'rgba(255,182,66,0.55)'
+  const here = player?.place ?? ctx?.place?.id ?? 'main'
+  const row = (q) => {
+    const t = tr.find((x) => x.id === q.id), c = t?.tint ?? 'rgba(255,182,66,0.55)'
+    const targetPlace = q.mark?.place
+    const isOff = targetPlace && targetPlace !== here
+    const target = !isOff ? questMark(ctx, player, q) : null
+    const dist = target && player?.feetPosition ? Math.round(Math.hypot(target.x - player.feetPosition.x, target.z - player.feetPosition.z)) : null
+    const badgeText = targetPlace ? (PLACE_NAMES[targetPlace] ?? targetPlace) : null
+    const locTag = isOff && badgeText
+      ? `<span style="font-size:9.5px;padding:1px 5px;background:rgba(255,182,66,0.15);border:1px solid rgba(255,182,66,0.3);border-radius:2px;letter-spacing:.05em;color:#ffdf99">${esc(badgeText).toUpperCase()}</span>`
+      : (badgeText || dist != null
+        ? `<span style="font-size:10px;letter-spacing:.06em;color:rgba(255,182,66,0.7)">${esc(badgeText ? badgeText.toUpperCase() : '')}${badgeText && dist != null ? ' · ' : ''}${dist != null ? `${dist}m` : ''}</span>`
+        : '')
     return `<button onclick="sendAction('qtrack',{id:'${q.id}'})" style="display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:${t ? 'rgba(255,182,66,0.07)' : 'transparent'};border:0;border-left:3px solid ${c};padding:8px 10px;margin:0 0 6px;font:inherit;color:inherit;cursor:pointer">
       <span style="color:${c};font-size:13px;line-height:1.3">${t ? '◆' : '◇'}</span>
-      <span style="flex:1"><span style="display:block;font-size:13.5px;color:${t ? c : '#ffb642'};letter-spacing:.05em">${esc(q.name).toUpperCase()}${q.main ? ' <span style="font-size:9px;letter-spacing:.2em;opacity:.7">· MAIN</span>' : ''}</span>
-      <span style="display:block;font-size:12px;color:#fff2d4;opacity:.85;text-transform:none;line-height:1.35;margin-top:2px">${esc(q.step)}</span></span></button>` }
+      <span style="flex:1">
+        <span style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+          <span style="font-size:13.5px;color:${t ? c : '#ffb642'};letter-spacing:.05em">${esc(q.name).toUpperCase()}${q.main ? ' <span style="font-size:9px;letter-spacing:.2em;opacity:.7">· MAIN</span>' : ''}</span>
+          ${locTag}
+        </span>
+        <span style="display:block;font-size:12px;color:#fff2d4;opacity:.85;text-transform:none;line-height:1.35;margin-top:2px">${esc(q.step)}</span>
+      </span></button>`
+  }
+  const doneRow = (q) => {
+    const pl = q.place ? `<span style="font-size:9.5px;letter-spacing:.06em;opacity:.75;color:#b2e2a8">${esc(PLACE_NAMES[q.place] ?? q.place).toUpperCase()}</span>` : ''
+    return `<div style="display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:rgba(133,196,120,0.06);border-left:3px solid #85c478;padding:7px 10px;margin:0 0 6px">
+      <span style="color:#85c478;font-size:12px;line-height:1.3">✓</span>
+      <span style="flex:1">
+        <span style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+          <span style="font-size:12.5px;color:#b2e2a8;letter-spacing:.04em">${esc(q.name).toUpperCase()}</span>
+          ${pl}
+        </span>
+        <span style="display:block;font-size:11.5px;color:#d8eed0;opacity:.8;text-transform:none;line-height:1.3;margin-top:2px">${esc(q.text ?? 'Completed')}</span>
+      </span>
+    </div>`
+  }
   return `<div data-modal style="font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:#ffb642;position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;pointer-events:auto;z-index:60"><div style="width:min(520px,92vw);max-height:80vh;overflow:auto;background:oklch(0.14 0.02 75 / .96);border:1px solid rgba(255,182,66,0.55);box-shadow:0 0 30px #000;padding:16px 18px;text-shadow:0 1px 2px #000">
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px"><span style="font-size:15px;letter-spacing:.25em;color:#ffb642">JOURNAL</span><span style="font-size:10px;letter-spacing:.18em;color:rgba(255,182,66,0.55)">TRACKING ${tr.length} OF ${MAX_TRACK}</span></div>
-    ${all.length ? all.map(row).join('') : '<div style="font-size:12px;color:rgba(255,182,66,0.55);text-transform:none;padding:14px 0">Nothing written here yet.</div>'}
+    ${all.length ? all.map(row).join('') : '<div style="font-size:12px;color:rgba(255,182,66,0.55);text-transform:none;padding:10px 0">No active quests. Press P or Esc to close.</div>'}
+    ${done.length ? `<div style="display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 8px;border-top:1px solid rgba(255,182,66,0.22);padding-top:10px"><span style="font-size:12px;letter-spacing:.2em;color:#85c478">COMPLETED (${done.length})</span></div>${done.map(doneRow).join('')}` : ''}
   </div></div>`
 }
 
@@ -327,7 +366,7 @@ function renderHud(ctx, player) {
 
   return `${THEME}${LIVE}
 ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
-  ${questTracker(s)}
+  ${questTracker(s, player, ctx)}
   ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${tutUi(s, now)}${t0Fade(ctx, player)}${restUi(ctx, s)}${mahjongPanel(s, now)}
   ${chatBubbles(ctx, now, player)}
   ${sniperScope(s, wp)}
@@ -421,5 +460,5 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>
 
-</div>${journalUi(s)}${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
+</div>${journalUi(s, player, ctx)}${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
 }

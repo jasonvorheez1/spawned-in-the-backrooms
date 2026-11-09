@@ -171,7 +171,9 @@ export const ears = {
         d: 6000,
       };
 
-      setCellarStep(ctx, who, 2, "Storm cellar unlatched! The subterranean pantry is secure.");
+      if ((w.cellarQ ?? 0) < 2) {
+        setCellarStep(ctx, who, 2, "Storm cellar unlatched! Report the secured subterranean pantry to Homesteader Cooper.");
+      }
     }
 
     // 7. Outpost Shortwave Radio

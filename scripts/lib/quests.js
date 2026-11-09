@@ -4,6 +4,11 @@
 // folds those in, so nothing a quest giver wrote is lost when a second quest starts.
 export const MAX_TRACK = 3; // her number
 export const TINT = ["#ffc44d", "#8fd8ff", "#a6f08e"]; // slot 1 amber, 2 pale blue, 3 pale green (my picks)
+export const PLACE_NAMES = {
+  main: "Level 0", level01: "Zenith Station", level1: "Level 1", level2: "Level 2", level21: "Level 2.1",
+  level3: "Level 3", gamma: "Base Gamma", level4: "Level 4", level5: "Level 5", level6: "Level 6",
+  level61: "Level 6.1", level7: "Level 7", level8: "Level 8", level10: "Level 10", level11: "Level 11", level26: "SS Fun",
+};
 export const qid = (name) => String(name ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export function setQuest(s, id, q) {
   const cur = s.quests ?? {}, old = cur[id];
@@ -14,10 +19,18 @@ export function setQuest(s, id, q) {
   s.qtrack = tr;
   return !old;
 }
-export function endQuest(s, id) {
-  if (!s.quests?.[id]) return;
-  const { [id]: gone, ...rest } = s.quests; s.quests = rest;
-  s.qtrack = (s.qtrack ?? []).filter((k) => k !== id);
+export function endQuest(s, id, doneText) {
+  const old = s.quests?.[id];
+  if (old) {
+    const { [id]: gone, ...rest } = s.quests; s.quests = rest;
+    s.qtrack = (s.qtrack ?? []).filter((k) => k !== id);
+    if (doneText !== false) {
+      const place = old.mark?.place ?? null;
+      s.qdone = { ...(s.qdone ?? {}), [id]: { name: old.name, text: typeof doneText === "string" ? doneText : "Completed", place, main: !!old.main, at: Date.now() } };
+    }
+  } else if (typeof doneText === "string" && id) {
+    s.qdone = { ...(s.qdone ?? {}), [id]: { name: s.qdone?.[id]?.name ?? id, text: doneText, at: Date.now() } };
+  }
 }
 export const tracked = (s) => (s?.qtrack ?? []).filter((id) => s.quests?.[id]).slice(0, MAX_TRACK).map((id, i) => ({ id, ...s.quests[id], tint: TINT[i] }));
 // true = now tracked, false = untracked, null = all three slots taken

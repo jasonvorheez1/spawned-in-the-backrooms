@@ -3,7 +3,10 @@
 // and the keycard comes mid-quest, once you've proved you can reach it (Shelly, Nov 9: "give you ACCESS to level 0.1 mid-way as in lore its locked up by bntg").
 // zenQ: 1 find the seal · 2 report back · 3 keycard in hand · 4 inside the station · 5 holding the drive · 99 paid. zenV 2 = this numbering.
 import { pushFeed } from "./feed.js";
+import { setQuest, endQuest, qid } from "./quests.js";
+import { addRep, addKarma, repOf } from "./rep.js";
 const NAME = "The Zenith Survey";
+const QID = qid(NAME);
 export const TIPS = {
   1: "Find the B.N.T.G. seal on Level 0's far east wall, past where the lights die",
   2: "Tell Kade in the Level 0 safe room you found the seal",
@@ -13,9 +16,24 @@ export const TIPS = {
 };
 export const KADE = "l0-bntg-kade";
 export const ZEN_ENTRY = { x: 111.62, z: 6 }; // the breach: cell (55, 29), the outer east wall, a blackout block (zone map in scripts/lib/maze.js)
+const ZEN_WALL = { place: "main", x: ZEN_ENTRY.x - 1, y: 0, z: ZEN_ENTRY.z };
+export const MARKS = {
+  1: ZEN_WALL,
+  2: { place: "main", id: KADE, x: 5.6, y: 0.3, z: -0.4 },
+  3: ZEN_WALL,
+  4: { place: "level01", id: "z-drive" },
+  5: { place: "main", id: KADE, x: 5.6, y: 0.3, z: -0.4 },
+};
 export function setZen(ctx, p, step, note) {
   const s = p.state; s.zenQ = step; s.zenV = 2; const now = ctx.now();
-  s.quest = TIPS[step] ? { name: NAME, step: TIPS[step], at: Date.now() } : null;
+  if (TIPS[step]) {
+    const mark = MARKS[step] ?? null;
+    s.quest = { name: NAME, step: TIPS[step], mark, at: Date.now() };
+    setQuest(s, QID, { name: NAME, step: TIPS[step], mark });
+  } else {
+    if (s.quest?.name === NAME) s.quest = null;
+    endQuest(s, QID);
+  }
   if (note) { s.notice = { text: note, at: now }; pushFeed(s, note, now, "info"); }
 }
 // saves from the old five-step quest land on the matching new step once
@@ -28,6 +46,7 @@ export function handleDialogueQuestZ(ctx, p, npc, text) {
   migrateZen(ctx, p);
   const t = String(text ?? "").toLowerCase();
   if (!s.zenQ && /job|work|zenith|station|keycard|hire|money|need/.test(t)) {
+    if (repOf(s, "bntg") <= -35) return { reply: "We know your face at the Guild. Walk away before I call security.", mood: "angry" };
     setZen(ctx, p, 1, "Quest Started: The Zenith Survey");
     return { reply: "There's a station grown into this level. Metal and glass, calls itself Zenith. We sealed the only way in. Far east, outer wall, where the lights give up. Go find it first. Come back in one piece and you get the card.", mood: "neutral" };
   }
@@ -37,8 +56,16 @@ export function handleDialogueQuestZ(ctx, p, npc, text) {
     return { reply: "You came back. That's more than the last two did. Here's the card. The black box is at the far end, in the gallery over the hollow. Sixty Backdollars when it's in my hand. Don't touch the bots.", mood: "happy" };
   }
   if (s.zenQ === 5 && s.zenDrive && /drive|recorder|box|got|found|here/.test(t)) {
-    s.zenDrive = false; s.zenQ = 99; s.quest = null; s.cents = (s.cents ?? 0) + 6000;
-    s.payout = { xp: 150, items: ["almond"], text: "Quest Completed: The Zenith Survey · +150 XP, +$60.00, Almond Water" };
+    const rep = repOf(s, "bntg"), bonus = rep >= 35 ? 0.25 : rep >= 12 ? 0.1 : 0;
+    const extra = Math.round(6000 * bonus), cents = 6000 + extra;
+    s.zenDrive = false; s.zenQ = 99; if (s.quest?.name === NAME) s.quest = null;
+    endQuest(s, QID, "Recovered the Zenith Station flight recorder for Kade");
+    s.cents = (s.cents ?? 0) + cents;
+    const tier = addRep(s, "bntg", 12); addKarma(s, 2);
+    const parts = [`Quest Completed: The Zenith Survey · +150 XP, +$${(cents / 100).toFixed(2)}, Almond Water`];
+    if (extra) parts.push(`B.N.T.G. bonus +$${(extra / 100).toFixed(2)}`);
+    parts.push(tier || "B.N.T.G. +12");
+    s.payout = { xp: 150, items: ["almond"], text: parts.join(" · ") };
     s.notice = { text: s.payout.text, at: ctx.now() }; pushFeed(s, s.payout.text, ctx.now(), "good");
     return { reply: "Still warm. You'd think a dead station would stop recording. Sixty, as promised, and keep the card. We'll want more out of there.", mood: "happy" };
   }
@@ -47,6 +74,7 @@ export function handleDialogueQuestZ(ctx, p, npc, text) {
 }
 export function zenithChoice(ctx, it, s, list) {
   if (String(it?.id ?? "").split("/").pop() !== KADE || !Array.isArray(list) || s?.zenQ === 99) return list;
+  if (!s?.zenQ && repOf(s, "bntg") <= -35) return list;
   const q = s?.zenQ;
   const pick = !q ? { text: "You look like you're hiring. What's the job?", tag: "Job" }
     : q === 2 ? { text: "I found your seal out east.", tag: "Quest" }

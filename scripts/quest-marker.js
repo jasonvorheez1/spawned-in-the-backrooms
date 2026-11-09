@@ -5,12 +5,17 @@ import { setQuest, endQuest, tracked, toggleTrack, qid, MAX_TRACK } from "./lib/
 import { canOpen, openWrist } from "./lib/screen.js";
 export const updateSchedule = { every: { seconds: 0.25 } };
 const art = (c) => `<svg viewBox='0 0 60 80' width='0.55m' billboard='full'><g filter='drop-shadow(0 0 5px ${c})'><path d='M30 4 L46 26 L30 48 L14 26 Z' fill='${c}' stroke='#1a1004' stroke-width='3'/><path d='M30 14 L38 26 L30 38 L22 26 Z' fill='#fffbe8'/></g><text x='30' y='72' font-family='sans-serif' font-size='15' font-weight='bold' text-anchor='middle' fill='${c}' stroke='#1a1004' stroke-width='3' paint-order='stroke'>{{ state.d }} m</text></svg>`;
-let REG = null, regAsked = false; // the older quests' own tables: { key, name, tips } rows, read once
+const NVG_Q = {
+  key: "nvgQ", name: "Ines's goggles",
+  tips: { 1: "Find Ines's goggle case at the south end of the Boiler Room", 2: "Follow the drag marks east to the hound den", 3: "Bring the goggles and a battery to the M.E.G. drop box, northeast" },
+  marks: { 1: { place: "level5", id: "l5-nvg-case", x: 31.5, y: 0, z: 23.4 }, 2: { place: "level5", id: "l5-nvg-den", x: 44, y: 0, z: 1 }, 3: { place: "level5", id: "l5-nvg-drop", x: 45.2, y: 0, z: -19.6 } },
+};
+const REG_STATE = { list: null, asked: false }; // the older quests' own tables: { key, name, tips, marks } rows, read once
 function registry() {
-  if (regAsked) return; regAsked = true;
+  if (REG_STATE.asked) return; REG_STATE.asked = true;
   Promise.all([import("./lib/level10-quests.js"), import("./lib/level11-quests.js"), import("./lib/level21-quests.js"), import("./lib/level8-quests.js"), import("./lib/zenith-quest.js")])
-    .then(([a, b, c, d, z]) => { REG = [...Object.values(a.QUESTS10 ?? {}), ...Object.values(b.QUESTS ?? {}), ...Object.values(c.QUESTS21 ?? {}), ...Object.values(d.QUESTS8 ?? {}), { key: "zenQ", name: "The Zenith Survey", tips: z.TIPS ?? {} }].filter((q) => q?.key && q?.name && q?.tips); })
-    .catch(() => { REG = []; });
+    .then(([a, b, c, d, z]) => { REG_STATE.list = [...Object.values(a.QUESTS10 ?? {}), ...Object.values(b.QUESTS ?? {}), ...Object.values(c.QUESTS21 ?? {}), ...Object.values(d.QUESTS8 ?? {}), { key: "zenQ", name: "The Zenith Survey", tips: z.TIPS ?? {}, marks: z.MARKS ?? {} }, NVG_Q].filter((q) => q?.key && q?.name && q?.tips); })
+    .catch(() => { REG_STATE.list = []; });
 }
 function fold(ctx, s, ses) {
   const q = s.quest, sig = q?.step ? q.name + "|" + q.step : "";
@@ -20,12 +25,11 @@ function fold(ctx, s, ses) {
     ses.qsig = sig; ses.qlast = q?.step ? q.name : null;
   }
   const now = ctx.now(); if (now - (ses.qregAt ?? -1e9) < 2000) return; ses.qregAt = now;
-  registry(); if (!REG) { ses.qregAt = now - 1500; return; }
-  for (const r of REG) { // each older quest's own step number is the truth: in progress = in the journal, finished = out of it
-    const id = qid(r.name), tip = r.tips[s[r.key]];
-    if (tip) setQuest(s, id, { name: r.name, step: tip }); else if (s.quests?.[id]) endQuest(s, id);
+  registry(); if (!REG_STATE.list) { ses.qregAt = now - 1500; return; }
+  for (const r of REG_STATE.list) { // each older quest's own step number is the truth: in progress = in the journal, finished = out of it
+    const id = qid(r.name), step = s[r.key], tip = r.tips[step];
+    if (tip) setQuest(s, id, { name: r.name, step: tip, mark: r.marks?.[step] ?? null }); else if (s.quests?.[id]) endQuest(s, id);
   }
-  if ((s.nvgQ ?? 0) >= 4 && s.quests?.["ines-s-goggles"]) endQuest(s, "ines-s-goggles");
 }
 export function onInput(ctx, input) {
   const s = ctx.self.state;

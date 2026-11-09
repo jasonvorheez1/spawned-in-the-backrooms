@@ -4,6 +4,7 @@
 //   loop (the end of the crawl: the first time, it brings you out where you started), exit (the asphalt, a dim glow ahead).
 import { heard } from "./lib/hear.js";
 import { vo } from "./lib/voices.js";
+import { setCarlaStep, setKarstStep, finishQuest8 } from "./lib/level8-quests.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const say = (who, text, ctx) => { if (who?.state) who.state.notice = { text, at: ctx.now() }; };
 const CARLA = [
@@ -83,6 +84,7 @@ export const ears = {
       w.kazoo = true;
       snd("walkie-talkie-radio-click-static-burst", 0.4);
       ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, text: "+STONE KAZOO", color: "#f2d870", size: 1.2 }, { audience: { player: who.id } });
+      if ((w.carlaQ ?? 0) < 3) setCarlaStep(ctx, who, 3, "Recovered the Stone Kazoo! Deliver it to Carla at the 9th Road campfire.");
       return ctx.destroy(ctx.self.id);
     }
     if (s.kind === "altar") {
@@ -174,14 +176,16 @@ export const ears = {
     if (s.kind === "carla") {
       if (w.kazoo && !w.kazooGiven) {
         w.kazoo = false; w.kazooGiven = true; w.sanity = Math.min(100, (w.sanity ?? 80) + 35);
-        heard(ctx, { clip: G("level-up-jingle-retro-terminal-chime-rising-three-notes"), position: pos, volume: 0.85, maxDistance: 16 });
-        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.8, z: pos.z }, text: "+90 XP", color: "#ffd700", size: 1.3 }, { audience: { player: who.id } });
-        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.4, z: pos.z }, text: "+35 SANITY", color: "#80ffaa", size: 1.1 }, { audience: { player: who.id } });
-        ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.0, z: pos.z }, text: "+ALMOND WATER & BANDAGE", color: "#60c0ff", size: 0.9 }, { audience: { player: who.id } });
-        w.payout = { xp: 90, items: ["almond", "bandage"] };
+        finishQuest8(ctx, who, "carla", {
+          xp: 90,
+          cents: 3000,
+          items: ["almond", "bandage"],
+          rep: [["survivors", 8], ["karma", 4]],
+          text: "Quest Completed: Carla's Melody · +90 XP, +$30.00, +35 Sanity, Almond Water, Clean Bandage",
+        });
         const line = "A kazoo! Listen to this! Thank you! Mum, look what I got!";
         heard(ctx, { clip: vo("penny", line), position: pos, volume: 1.0, maxDistance: 14 });
-        return say(who, `Carla: "${line}"`, ctx);
+        return;
       }
       const n = (s.said ??= {})[uid] = ((s.said ?? {})[uid] ?? -1) + 1;
       const line = CARLA[n % CARLA.length];
@@ -197,6 +201,7 @@ export function onTriggerEnter(ctx, other) {
   if (s.kind === "loop") {
     if ((w.l8Loops ?? 0) >= 1) return; // only the first crawl is wrong: the second time through, the path leads on
     w.l8Loops = (w.l8Loops ?? 0) + 1;
+    if ((w.karstQ ?? 0) >= 1 && (w.karstQ ?? 0) < 3) setKarstStep(ctx, other, 3, "Loop threshold recorded! Report your Face Rock compass readings back to Ivo.");
     // Show, don't tell: disorienting spatial anomaly flash, camera punch, and static burst sound
     ctx.emit("screenFlash", { color: "#000000", duration: 0.7, intensity: 1.0 }, { audience: { player: other.id } });
     ctx.emit("cameraPunch", { direction: { x: 0, y: -0.2, z: 0.6 }, intensity: 0.4 }, { audience: { player: other.id } });
