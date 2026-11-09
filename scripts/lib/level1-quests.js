@@ -49,6 +49,8 @@ const C = {
   rTruth: "It was Ale. She's been taking your cans.",
   rCover: "Rats got into the crates. Gnawed tins everywhere. Nobody took anything.",
   rKilled: "It was Ale. She won't be taking anything anymore.",
+  rVossTip: "Callum's cans are walking. You see everything that moves here. Who?",
+  rVossSell: "Ale's skimming Callum's crates for a family in the east halls. What's that worth to you?",
   wStart: "You look worried, doc. What's going on?",
   wAsk: "Ortiz needs purification tablets. She says you've got a tin.",
   wMed: "Bad water means sick runners, and sick runners eat your rations lying down.",
@@ -56,8 +58,8 @@ const C = {
   wGive: "Here. Purification tablets, straight from Callum's shelf.",
   wDone: "How's the patient?",
 };
-const TAG = { rTrack: "Survival 30", rAleSpeech: "Speech 40", rAleBarter: "Barter 30", rAleThreat: "Speech 55", rCover: "Speech 45", wMed: "Medicine 35", wBuy: "Barter 25" };
-const CHECK = { rTrack: ["survival", 30], rAleSpeech: ["speech", 40], rAleBarter: ["barter", 30], rAleThreat: ["speech", 55], rCover: ["speech", 45], wMed: ["medicine", 35], wBuy: ["barter", 25] };
+const TAG = { rTrack: "Survival 30", rAleSpeech: "Speech 40", rAleBarter: "Barter 30", rAleThreat: "Speech 55", rCover: "Speech 45", rVossTip: "Barter 35", wMed: "Medicine 35", wBuy: "Barter 25" };
+const CHECK = { rTrack: ["survival", 30], rAleSpeech: ["speech", 40], rAleBarter: ["barter", 30], rAleThreat: ["speech", 55], rCover: ["speech", 45], rVossTip: ["barter", 35], wMed: ["medicine", 35], wBuy: ["barter", 25] };
 const opt = (k, tag) => ({ text: C[k], tag: tag ?? TAG[k] ?? "Quest" });
 let FAILED = {}; // this choice list's player: a failed check stays failed, Fallout style
 const who = (it) => String(it?.id ?? "").split("/").pop();
@@ -77,6 +79,9 @@ export function l1Choice(ctx, it, s, list) {
     if (!w) add.push(opt("wStart", "Quest"));
     if (w === 2) add.push(opt("wGive", "Quest"));
     if (w === 3) add.push(opt("wDone", "Quest"));
+  } else if (id === "bntg-voss") {
+    if (r === 1 && (s.cents ?? 0) >= 1000) add.push(opt("rVossTip"));
+    if (r === 3 && !s.rAleDead && s.rAleTalked && s.rAleTalked !== "lift") add.push(opt("rVossSell", "Quest"));
   } else if (id === "meg-ale") {
     if (r === 2) { add.push(opt("rAleSpeech")); add.push(opt("rAleBarter")); add.push(opt("rAleThreat")); }
   }
@@ -161,6 +166,19 @@ export function handleDialogueQuest1(ctx, p, it, text) {
     aleFeels(ctx, p, 45);
     finish(ctx, p, "rations", { xp: 120, cents: 1000, items: ["almond", "almond", "ration"], text: "Quest completed: Short Rations · you covered for Ale", rep: [["survivors", 8], ["karma", 5]] });
     return { reply: "Rats. Great. I'll set traps. Here, for your time. Don't tell anyone how many cans we have left.", mood: "calm" };
+  }
+
+  // ---------------- B.N.T.G.: buy the name, or sell Ale out
+  if (id === "bntg-voss" && k === "rVossTip" && r === 1) {
+    if (!roll(ctx, p, it, k)) return { reply: "Information costs more than a smile. Come back with a better offer.", mood: "calm" };
+    s.cents = Math.max(0, (s.cents ?? 0) - 1000); addRep(s, "bntg", 2);
+    setStep1(ctx, p, "rations", 2, "Paid Voss $10: Ale's been trading tins in the east halls.");
+    return { reply: "Ten. Pleasure. Ale's been swapping tins in the east halls. Not to me, which is the part that annoys me.", mood: "happy" };
+  }
+  if (id === "bntg-voss" && k === "rVossSell" && r === 3) {
+    aleFeels(ctx, p, -80);
+    finish(ctx, p, "rations", { xp: 110, cents: 4000, items: [], text: "Quest completed: Short Rations · sold Ale's debt to the B.N.T.G.", rep: [["bntg", 12], ["survivors", -6], ["karma", -5]] });
+    return { reply: "Unlicensed supply line. That's a debt now, and debts get paid. She'll work it off hauling for us. Forty, and you never heard my name.", mood: "happy" };
   }
 
   // ---------------- Bad Water

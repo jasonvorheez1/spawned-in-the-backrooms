@@ -165,3 +165,4 @@ Optional, never forced. Story is Savi's draft. Your HALOGEN keeps flashing an ow
 - Short Rations (Callum): find the thief (Survival check at the crates, or ask Ortiz) → deal with Ale (Speech/Barter/Speech-threat, pickpocket her, or kill her) → report the truth (Lucky Thirteen revolver, M.E.G. +10) or cover for her (Speech check, Survivors +8, karma). Killing Ale: paid, M.E.G. -4, no gun.
 - Bad Water (Ortiz): get tablets from Callum (Medicine or Barter check, or pickpocket, or kill) → bring to Ortiz → return later. M.E.G. +8.
 - Callum's Lucky Thirteen: revolver variant `lucky13`, unique: never rolled as loot.
+- 2026-11-09 (Shelly: "sure"): B.N.T.G. faction added; Voss the broker at the Level 1 camp sells the thief's name (Barter 35, $10) or buys Ale's secret ($40, B.N.T.G. +12, Survivors -6, karma -5, Ale hostile-cold).

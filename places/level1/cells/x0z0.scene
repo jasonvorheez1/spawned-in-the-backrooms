@@ -1,4 +1,28 @@
 # spawn-scene v2 yaml x0z0
+bntg-voss:
+  behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js]
+  feetPosition: {x: 13.2, y: 0, z: 3.1}
+  id: bntg-voss
+  jiggle: {amount: 0.6, bones: [Tail, Tail1, EarL, EarR], bounce: 0.6}
+  material: {outline: {color: "#1d1420", width: 2.4}}
+  model: {id: /cdn/value.72a8b9bf28216baab5b949a31bbff68251f892d11e4ca39e3b68c27ef0557e76.glb, materials: {cloth_bottom: {color: "#2e2a26", kind: scripted, metalness: 0, params: {pat: weave, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, cloth_hat: {color: "#e85d75", metalness: 0, roughness: 0.75}, cloth_neck: {color: "#f3c64a", metalness: 0, roughness: 0.75}, cloth_shoes: {color: "#2b2b33", kind: scripted, metalness: 0, params: {pat: canvas, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, cloth_top: {color: "#3d4a5c", kind: scripted, metalness: 0, params: {pat: weave, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, fur: {color: "#c9783f", metalness: 0, roughness: 0.82}, limb: {color: "#c9783f", metalness: 0, roughness: 0.82}, pad: {color: "#ff9fb4", metalness: 0, roughness: 0.6}}, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: true}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: true}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: true}, Top_pajamas: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}}}
+  morph: {Bust: -1}
+  physics: character
+  rotation: {yaw: 150}
+  scale: {x: 0.9, y: 1.05, z: 0.9}
+  state: {angry: {}, build: {h: 0.919}, faction: bntg, home: {x: 13.2, z: 3.1}, name: "Voss · B.N.T.G. Broker", role: trader, wear: {blush: "#ff6285", botp: weave, bottom: "#2e2a26", botw: pants, buildS: 0.9, bustS: 0.88, earS: 1.21, expr: smirk, eye: "#2b2233", eyes: round, eyew: shades, fseed: 318204471, fur: "#c9783f", hat: none, hatc: "#e85d75", hatp: denim, headS: 0.92, heightS: 1.05, hipS: 0.95, marks: heart, model: "", neck: none, neckc: "#f3c64a", nose: "", sex: m, shoec: "#2b2b33", shoep: canvas, shoes: sneakers, snoutS: 0.82, species: fox, tailS: 1.16, top: "#3d4a5c", topp: weave, topw: longsleeve, trait: "", waistS: 1.03}}
+  tags: [npc]
+bntg-voss/critter-head:
+  attachment: {skin: true}
+  id: bntg-voss/critter-head
+  model: {id: /cdn/value.45ed3621aa8ebac43fed22f92d9a5061efe5226ff977a8e7badbb7dc047b02a2.glb, materials: {belly: {color: "#ebdfd0", metalness: 0, roughness: 0.88}, blush: {color: "#ff6285", emissive: "#ff4065", emissiveIntensity: 0.22, roughness: 0.85}, eyeink: {color: "#161214", roughness: 0.85}, eyewhite: {color: "#fffdfa", roughness: 0.4}, fur: {color: "#c9783f", metalness: 0, roughness: 0.82}, inner: {color: "#ffc2d1", metalness: 0, roughness: 0.9}, iris: {color: "#e0b838", roughness: 0.25}, mark: {color: "#ede3d6", metalness: 0, roughness: 0.82}, mouth: {color: "#661625", roughness: 0.9}, nose: {color: "#e0a090", metalness: 0.05, roughness: 0.35}, pupil: {color: "#000000", metalness: 0, roughness: 1}, tip: {color: "#ebdfd0", metalness: 0, roughness: 0.82}, tongue: {color: "#ff7b95", roughness: 0.6}}}
+  morph: {Angry: 0.22319999999999998, Blush: 0.25, Half: 0.124, Open: 0.4, Smile: 1}
+  parent: bntg-voss
+bntg-voss/object/xba5b309b4f070466/1:
+  attachment: {bone: RightHand}
+  id: bntg-voss/object/xba5b309b4f070466/1
+  model: {id: /cdn/value.bd1a0ff99d2e34491523ee49853ebddcbe4ec10b685abfb66bab58f6db1cbb00.glb, offset: [0, -0.064, 0]}
+  parent: bntg-voss
 dina-camp:
   castShadow: false
   feetPosition: {x: 22.3, y: 0, z: 38.4}
