@@ -1,0 +1,85 @@
+# Third-person combat clips for every human (and furry) body: players seen from outside and NPCs (scripts/lib/body3.js reads this).
+# Sources are Shelly's packs: pistol-w1 (aim/fire), UAL2 (sword combos, hook, block, knockback, throw), Gunplay (handling/reload).
+# Row keys: clip, weight (beats the gait's 1 per bone), mask (upper = from Spine, legs keep the gait; full = whole body),
+#   blendIn/blendOut (s), speed, hit (clip seconds where the blow lands), lead (s from the click to the blow), cut (s: channel released early).
+lead: 0.12
+families:
+  pistol: [pistol, revolver, magnum, flare_gun]
+  long: [shotgun, rifle, smg, hunting_rifle, carbine, sawed_off, lever_action, assault_rifle]
+  fists: [fists]
+  club: [table_leg, pipe_scrap, crowbar, bat, rebar, wrench, stun_baton, golf_club, tire_iron, baton]
+  slash: [lineman_machete, machete, katana, sword]
+  stab: [knife, screwdriver, shiv, switchblade]
+  chop: [hatchet, cleaver]
+  heavy: [fire_axe, sledgehammer, pickaxe]
+common:
+  hit: { clip: cdn/clip-hit-react.glb, weight: 3, mask: upper, blendIn: 0.05, blendOut: 0.3, cut: 0.8 }
+  knockdown: { clip: cdn/clip-ual-hit-knockback-a79b859a.glb, weight: 6, mask: full, blendIn: 0.05, blendOut: 0.2, clamp: true }
+  getup: { clip: cdn/clip-ual-laytoidle-3a7ed6c0.glb, weight: 6, mask: full, blendIn: 0.15, blendOut: 0.35 }
+  throw: { clip: cdn/clip-ual-overhandthrow-ada55cac.glb, weight: 5, mask: upper, blendIn: 0.08, blendOut: 0.3, hit: 0.55 }
+  block: { clip: cdn/clip-ual-sword-block-f2918589-loop.glb, weight: 5, mask: upper, blendIn: 0.12, blendOut: 0.25, loop: true }
+gun:
+  pistol:
+    ready: { clip: cdn/clip-pistol-w1-stand-relaxed-idle-ipc-5cbecb9f.glb, weight: 2.5, mask: upper, blendIn: 0.25, blendOut: 0.3, loop: true }
+    aim: { clip: cdn/clip-pistol-w1-stand-aim-idle-ipc-1e51f0f0.glb, weight: 4, mask: upper, blendIn: 0.15, blendOut: 0.3, loop: true }
+    aimWalk: { clip: cdn/clip-pistol-w1-walk-aim-f-loop-ipc-c02edbce-loop.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
+    aimJog: { clip: cdn/clip-pistol-w1-jog-aim-f-loop-ipc-66839d46-loop.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
+    aimCrouch: { clip: cdn/clip-pistol-w1-crouch-aim-idle-ipc-829f36eb.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
+    aimCrouchWalk: { clip: cdn/clip-pistol-w1-crouchwalk-aim-f-loop-ipc-5b4132eb-loop.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
+    up: { clip: cdn/clip-pistol-w1-stand-aim-point-u90-4a1608e0-loop.glb, mask: upper, loop: true }
+    down: { clip: cdn/clip-pistol-w1-stand-aim-point-d90-b10ae0fd-loop.glb, mask: upper, loop: true }
+    upCrouch: { clip: cdn/clip-pistol-w1-crouch-aim-point-u90-1e5b624c-loop.glb, mask: upper, loop: true }
+    downCrouch: { clip: cdn/clip-pistol-w1-crouch-aim-point-d90-dedccff2-loop.glb, mask: upper, loop: true }
+    fire: { clip: cdn/clip-pistol-w1-stand-fire-single-40b6bdfc-loop.glb, weight: 6, mask: upper, blendIn: 0.03, blendOut: 0.2, speed: 1.6, cut: 0.45, recoil: 6 }
+    fireCrouch: { clip: cdn/clip-pistol-w1-crouch-fire-single-f21022b9-loop.glb, weight: 6, mask: upper, blendIn: 0.03, blendOut: 0.2, speed: 1.6, cut: 0.45, recoil: 6 }
+    reload: { clip: cdn/clip-gunplay-584dc731.glb, weight: 5, mask: upper, blendIn: 0.15, blendOut: 0.3, time: 0.9, speed: 1.2, cut: 1.3 }
+    flourish: { clip: cdn/clip-gunplay-584dc731.glb, weight: 5, mask: upper, blendIn: 0.15, blendOut: 0.35 }
+  long: # no rifle takes in the packs: the pistol stance squares the torso, IK puts the stock at the shoulder and the left hand on the foregrip
+    ready: { clip: cdn/clip-pistol-w1-stand-relaxed-idle-ipc-5cbecb9f.glb, weight: 2, mask: upper, blendIn: 0.25, blendOut: 0.3, loop: true, grip: true }
+    aim: { clip: cdn/clip-pistol-w1-stand-aim-idle-ipc-1e51f0f0.glb, weight: 4, mask: upper, blendIn: 0.15, blendOut: 0.3, loop: true, grip: true }
+    aimWalk: { clip: cdn/clip-pistol-w1-walk-aim-f-loop-ipc-c02edbce-loop.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true, grip: true }
+    aimJog: { clip: cdn/clip-pistol-w1-jog-aim-f-loop-ipc-66839d46-loop.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true, grip: true }
+    aimCrouch: { clip: cdn/clip-pistol-w1-crouch-aim-idle-ipc-829f36eb.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true, grip: true }
+    aimCrouchWalk: { clip: cdn/clip-pistol-w1-crouchwalk-aim-f-loop-ipc-5b4132eb-loop.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true, grip: true }
+    up: { clip: cdn/clip-pistol-w1-stand-aim-point-u90-4a1608e0-loop.glb, mask: upper, loop: true }
+    down: { clip: cdn/clip-pistol-w1-stand-aim-point-d90-b10ae0fd-loop.glb, mask: upper, loop: true }
+    upCrouch: { clip: cdn/clip-pistol-w1-crouch-aim-point-u90-1e5b624c-loop.glb, mask: upper, loop: true }
+    downCrouch: { clip: cdn/clip-pistol-w1-crouch-aim-point-d90-dedccff2-loop.glb, mask: upper, loop: true }
+    fire: { clip: cdn/clip-pistol-w1-stand-fire-single-40b6bdfc-loop.glb, weight: 6, mask: upper, blendIn: 0.03, blendOut: 0.25, speed: 1.2, cut: 0.6, recoil: 11 }
+    fireCrouch: { clip: cdn/clip-pistol-w1-crouch-fire-single-f21022b9-loop.glb, weight: 6, mask: upper, blendIn: 0.03, blendOut: 0.25, speed: 1.2, cut: 0.6, recoil: 11 }
+    reload: { clip: cdn/clip-gunplay-584dc731.glb, weight: 5, mask: upper, blendIn: 0.15, blendOut: 0.3, time: 0.9, speed: 1.0, cut: 1.5 }
+    flourish: { clip: cdn/clip-gunplay-584dc731.glb, weight: 5, mask: upper, blendIn: 0.15, blendOut: 0.35 }
+melee: # combo rows play in turn (light swings); heavy is a charged/power swing
+  fists:
+    combo:
+      - { clip: cdn/clip-ual-melee-hook-975fbe48.glb, weight: 5, mask: upper, blendIn: 0.05, blendOut: 0.2, hit: 0.22, speed: 1.1 }
+      - { clip: cdn/clip-attack.glb, weight: 5, mask: upper, blendIn: 0.05, blendOut: 0.25, hit: 0.35, speed: 1.4, cut: 0.7 }
+    heavy: { clip: cdn/clip-ual-melee-hook-975fbe48.glb, weight: 5, mask: upper, blendIn: 0.05, blendOut: 0.25, hit: 0.22, speed: 0.8 }
+    recover: { clip: cdn/clip-ual-melee-hook-rec-530bc103.glb, weight: 4, mask: upper, blendIn: 0.05, blendOut: 0.25 }
+  club:
+    combo:
+      - { clip: cdn/clip-ual-sword-regular-a-6a6aed9a.glb, weight: 5, mask: upper, blendIn: 0.05, blendOut: 0.25, hit: 0.2 }
+      - { clip: cdn/clip-ual-sword-regular-b-b27428d3.glb, weight: 5, mask: upper, blendIn: 0.05, blendOut: 0.25, hit: 0.24 }
+      - { clip: cdn/clip-ual-sword-regular-c-142e474a.glb, weight: 5, mask: upper, blendIn: 0.05, blendOut: 0.3, hit: 0.62, speed: 1.4, cut: 1.0 }
+    heavy: { clip: cdn/clip-ual-sword-regular-c-142e474a.glb, weight: 5, mask: upper, blendIn: 0.08, blendOut: 0.3, hit: 0.62, speed: 1.0, cut: 1.3 }
+  slash:
+    combo:
+      - { clip: cdn/clip-ual-sword-regular-a-6a6aed9a.glb, weight: 5, mask: upper, blendIn: 0.04, blendOut: 0.22, hit: 0.2, speed: 1.15 }
+      - { clip: cdn/clip-ual-sword-regular-b-b27428d3.glb, weight: 5, mask: upper, blendIn: 0.04, blendOut: 0.22, hit: 0.24, speed: 1.15 }
+      - { clip: cdn/clip-ual-sword-regular-c-142e474a.glb, weight: 5, mask: upper, blendIn: 0.05, blendOut: 0.3, hit: 0.62, speed: 1.5, cut: 0.95 }
+    heavy: { clip: cdn/clip-ual-sword-heavy-combo-1e1d2870.glb, weight: 5, mask: upper, blendIn: 0.08, blendOut: 0.3, hit: 0.7, cut: 1.3 }
+  stab:
+    combo:
+      - { clip: cdn/clip-ual-melee-hook-975fbe48.glb, weight: 5, mask: upper, blendIn: 0.04, blendOut: 0.2, hit: 0.22, speed: 1.3 }
+      - { clip: cdn/clip-ual-sword-regular-b-b27428d3.glb, weight: 5, mask: upper, blendIn: 0.04, blendOut: 0.2, hit: 0.24, speed: 1.3 }
+    heavy: { clip: cdn/clip-attack.glb, weight: 5, mask: upper, blendIn: 0.05, blendOut: 0.25, hit: 0.35, speed: 1.1, cut: 0.8 }
+  chop:
+    combo:
+      - { clip: cdn/clip-ual-treechopping-d55e5d3a-loop.glb, weight: 5, mask: upper, blendIn: 0.06, blendOut: 0.25, hit: 0.55, speed: 1.2, once: true, cut: 0.8 }
+      - { clip: cdn/clip-ual-sword-regular-a-6a6aed9a.glb, weight: 5, mask: upper, blendIn: 0.05, blendOut: 0.25, hit: 0.2 }
+    heavy: { clip: cdn/clip-ual-treechopping-d55e5d3a-loop.glb, weight: 5, mask: upper, blendIn: 0.08, blendOut: 0.3, hit: 0.55, speed: 0.9, once: true, cut: 1.0 }
+  heavy:
+    combo:
+      - { clip: cdn/clip-ual-treechopping-d55e5d3a-loop.glb, weight: 5, mask: upper, blendIn: 0.08, blendOut: 0.3, hit: 0.55, speed: 0.9, once: true, cut: 1.0 }
+      - { clip: cdn/clip-ual-sword-regular-c-142e474a.glb, weight: 5, mask: upper, blendIn: 0.08, blendOut: 0.3, hit: 0.62, speed: 1.1, cut: 1.2 }
+    heavy: { clip: cdn/clip-ual-sword-heavy-combo-1e1d2870.glb, weight: 5, mask: upper, blendIn: 0.1, blendOut: 0.3, hit: 0.7, speed: 0.9, cut: 1.5 }
