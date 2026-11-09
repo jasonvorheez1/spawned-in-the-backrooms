@@ -61,7 +61,7 @@ THICK = 0.0035
 # body: welded copy for sampling and the base surface
 dg = bpy.context.evaluated_depsgraph_get()
 sb = bmesh.new(); sb.from_mesh(body.data)
-bmesh.ops.remove_doubles(sb, verts=sb.verts[:], dist=0.0015); bmesh.ops.recalc_face_normals(sb, faces=sb.faces[:])
+bmesh.ops.remove_doubles(sb, verts=sb.verts[:], dist=0.0015); bmesh.ops.holes_fill(sb, edges=sb.edges[:], sides=24); bmesh.ops.recalc_face_normals(sb, faces=sb.faces[:])
 bmesh.ops.triangulate(sb, faces=sb.faces[:]); sb.verts.ensure_lookup_table(); sb.faces.ensure_lookup_table()
 dl = sb.verts.layers.deform.active; KB = sb.verts.layers.shape.get("Bust")
 bvh = BVHTree.FromBMesh(sb)
@@ -93,6 +93,8 @@ for name, (ease, cuts) in PLAN.items():
     if not old: continue
     mat = old.data.materials[0]
     bm = bmesh.new(); bm.from_mesh(body.data); bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=0.0015); bm.transform(MW); bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    _fill = bmesh.ops.holes_fill(bm, edges=bm.edges[:], sides=24)          # the source body has small holes at the back of the shoulders; cloth cut from it inherited them as tears
+    bmesh.ops.triangulate(bm, faces=_fill['faces']); bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
     # region: generous box around the cuts, then the cuts make it exact after easing
     zs = [c[0].z for c in cuts if abs(c[1].z) > 0.5]; lo, hi = min(zs) - 0.04, (max(zs) + 0.06 if len(zs) > 1 else 9)
     kill = [v for v in bm.verts if not (lo < v.co.z < hi)]
