@@ -80,7 +80,10 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     if key == "t_softbob" or key.startswith("t_s_"):
         bmC = bmesh.new(); bmC.from_mesh(me)
         XW = 0.8 if key == "t_softbob" else 0.66  # the soft wigs: a face-wide hole, tails and side locks left whole
-        cut = [f for f in bmC.faces if (lambda c: hz - 0.13 < c.z < fz1 - 0.005 and c.y < cy - 0.02 and abs(c.x) < rx * XW)(f.calc_center_median())]
+        zc, zh = (fz1 - 0.005 + hz - 0.13) / 2, (fz1 - 0.005 - (hz - 0.13)) / 2
+        if key == "t_softbob": inside = lambda c: hz - 0.13 < c.z < fz1 - 0.005 and abs(c.x) < rx * XW
+        else: inside = lambda c: (c.x / (rx * XW)) ** 2 + ((c.z - zc) / zh) ** 2 < 1  # an oval the shape of the face, so the edge reads as hair parting round it
+        cut = [f for f in bmC.faces if (lambda c: c.y < cy - 0.02 and inside(c))(f.calc_center_median())]
         bmesh.ops.delete(bmC, geom=cut, context="FACES"); bmesh.ops.delete(bmC, geom=[v for v in bmC.verts if not v.link_faces], context="VERTS")
         bmC.to_mesh(me); bmC.free(); print("cut face mask", key, len(cut))
     # whatever still hangs over the face folds up into a fringe that ends at the brow, no holes cut
