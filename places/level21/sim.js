@@ -127,7 +127,7 @@ function lay(ctx) {
   }
 
   // ---- the rock vault from the tunnel photo: four 9 m Blender stretches (art/level21/edgevault.py) down the lane's north side, rising from the floor and curving into the roof
-  const VAULT = ["/cdn/value.e85935897157fee060cd4f98091ed886f0e0387533648da72c2474d8848c2717.glb", "/cdn/value.55c581a8a81c72674b5f1d6759fa8db34c5822572786a7d243bb004ba4a1c07b.glb"], VOFF = [[-0.05, -0.174, 2.375], [-0.05, -0.204, 2.375]];
+  const VAULT = ["/cdn/value.7f23537f28502dcf9e8eefee13cbc7daeab46345e1cd787474a0f0b40fee50e2.glb", "/cdn/value.2aec8d36a7b47be02fa536ad5fdcff5984ce5c81e7c60aa74f8da5121521b068.glb"], VOFF = [[-0.05, -0.164, 3.075], [-0.05, -0.197, 3.075]];
   const vx0 = EDGE_X * S - HALF, vz = LANE.z0 * S - HALF;
   for (let k = 0; k < 4; k++) sp(`l21-vault-${k}`, { feetPosition: { x: vx0 + 4.5 + k * 9, y: 0, z: vz }, visibleRange: { max: 80 }, castShadow: false, receiveShadow: true, physics: { body: "static", collider: "mesh" }, model: { id: VAULT[k % 2], offset: VOFF[k % 2] } });
 
