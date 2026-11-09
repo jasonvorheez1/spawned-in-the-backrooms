@@ -27,6 +27,22 @@ top = max(p.z for p in P); band = [p for p in P if p.z > top - 0.09]
 rx = max(abs(p.x) for p in band); y0 = min(p.y for p in band); y1 = max(p.y for p in band); cy = (y0 + y1) / 2
 print("head", round(top, 3), round(hz, 3), round(rx, 3), round(y0, 3), round(y1, 3))
 for o in meshes: o.hide_set(True)
+import colorsys
+MANNEQUIN = {"t_s_hime", "t_s_messybun", "t_s_sidebraid", "t_s_pixie"}  # Tripo modelled these on a display head: its pale grey skin goes, the hair stays
+def strip_mannequin(o, m2):
+    img = next((n.image for ms in o.material_slots if ms.material and ms.material.use_nodes for n in ms.material.node_tree.nodes if n.type == "TEX_IMAGE" and n.image), None)
+    if img is None or not m2.uv_layers: return
+    W, H = img.size; px = list(img.pixels); uv = m2.uv_layers.active.data
+    def col(u, v):
+        x = min(W - 1, max(0, int((u % 1) * W))); y = min(H - 1, max(0, int((v % 1) * H))); i = (y * W + x) * 4
+        return px[i], px[i + 1], px[i + 2]
+    bmM = bmesh.new(); bmM.from_mesh(m2); lay = bmM.loops.layers.uv.active; kill = []
+    for f in bmM.faces:
+        u = sum(l[lay].uv.x for l in f.loops) / len(f.loops); v = sum(l[lay].uv.y for l in f.loops) / len(f.loops)
+        h, sat, val = colorsys.rgb_to_hsv(*col(u, v))
+        if val > 0.55 and sat < 0.32: kill.append(f)  # pale, unsaturated: the display head, never brown, black or golden hair
+    bmesh.ops.delete(bmM, geom=kill, context="FACES"); bmesh.ops.delete(bmM, geom=[v for v in bmM.verts if not v.link_faces], context="VERTS")
+    bmM.to_mesh(m2); bmM.free(); print("mannequin faces off", o.name[:20], len(kill))
 mat = bpy.data.materials.new("hair"); mat.use_nodes = True
 b = mat.node_tree.nodes["Principled BSDF"]; b.inputs["Base Color"].default_value = (0.8, 0.8, 0.8, 1); b.inputs["Roughness"].default_value = 0.5
 for f in sorted(glob.glob(f"{SRC}/*.glb")):
@@ -38,7 +54,9 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     dg = bpy.context.evaluated_depsgraph_get()
     me = bpy.data.meshes.new(NAMES[stem]); bm = bmesh.new()
     for o in parts:
-        m2 = bpy.data.meshes.new_from_object(o.evaluated_get(dg)); m2.transform(o.matrix_world); bm.from_mesh(m2)
+        m2 = bpy.data.meshes.new_from_object(o.evaluated_get(dg)); m2.transform(o.matrix_world)
+        if NAMES[stem] in MANNEQUIN: strip_mannequin(o, m2)
+        bm.from_mesh(m2)
     for o in new: bpy.data.objects.remove(o, do_unlink=True)
     key = NAMES[stem]
     vs = [v.co for v in bm.verts]
