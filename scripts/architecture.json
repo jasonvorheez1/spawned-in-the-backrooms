@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2757,
-  "updatedAt": "2026-11-08T23:43:30.218Z",
-  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes supply local environments, while shared systems handle loot, building, breakables, loose-item physics and player/NPC avatar rendering. The BODIES setting switches room-wide avatar rendering between furry and human rigs.",
+  "basedOnSpecVersion": 2819,
+  "updatedAt": "2026-11-09T00:38:50.816Z",
+  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes supply local environments, while shared systems handle loot, building, combat, NPCs and avatar rendering. Human NPCs use ordinary gaits until armed in a fight; first-person weapon poses now combine human-model arms and decoded New Vegas melee swings.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with authored shops and landmarks, simulated staff, shoppers and balcony loungers.",
     "places/main (3D) - authored Level 0/Lobby maze; sim generates furniture and loot, safe-room almond water, shifting walls, creature ecology and route-guidance moments.",
     "places/intake (3D) + places/tutorial0 (solo ephemeral 3D) - bedroom character-creation/waking space and authored tutorial route with staged encounter and HALOGEN.",
-    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; local generation and loot; Level 2 uses Tripo room/hall props over its collider shell.",
+    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; Level 2 uses Tripo room/hall props over its collider shell; Level 2.1's Edges now have pale rock vaults, bright tube lights, EXIT signs and Tripo-dressed rooms/halls.",
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; residents, hazards, office/home systems and Boiler Room rats.",
     "places/level6, places/level7, places/level10, places/level11 (3D) - later authored/generated levels including city, farm and venues; Level 10's poster routes to Level 26.",
     "places/level26 (3D) - SS Fun =), Adventure liner in green fog with authored ship, decks, wrecked venues and Partygoers; lower decks reach y=-80 within worldBounds bottom=-110.",
-    "places/debug (3D) - x1z0 includes a 12-mannequin animation gallery driven by scripts/dbg-pose.js and a HUMAN/FURRY switch pad; places/spamton and other configured places are auxiliary/fight spaces or continuing Backrooms routes."
+    "places/debug (3D) - x1z0 includes a 12-mannequin animation gallery and HUMAN/FURRY switch pad; places/spamton and other configured places are auxiliary/fight spaces or continuing Backrooms routes."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, player/camera setup and ordered behavior composition; L maps to kick and Z to grab.",
@@ -21,8 +21,8 @@
     "places/intake/cells/x0z0.scene + scripts/intake-geo.js + scripts/lib/intro-cut.js - bedroom shell and waking sequence; tutorial scene and tut0 geometry/sim scripts own its route and beats.",
     "scripts/camera.js + scripts/view3.js - camera and third-person toggle; scripts/ui.js and specialized UI scripts present HUD, panels and cutscenes.",
     "places/debug/cells/x1z0.scene + scripts/dbg-pose.js + scripts/dbg-bodypad.js - clip gallery mannequins and in-world body-style switch.",
-    "art/l26-ship/{build,hull,super,lib,tex}.py - Blender source pipeline exporting Level 26 liner hull/superstructure GLBs and ship textures.",
-    "art/level2/{build,compact,encode,pack}.py and art/human-base/build.py - offline Level 2 kit packing and human-body Blender authoring/export; human rig weights blend shoulders across torso/arm seams."
+    "art/l26-ship/{build,hull,super,lib,tex}.py and art/level2/{build,compact,encode,pack}.py - offline Blender/packing sources for ship and Level 2 kit assets.",
+    "art/human-base/build.py + art/human-base/identity.py + art/fp-arm/build.py - human body export, identity-joint postpass and sex-specific first-person arm meshes used by player.js."
   ],
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings; used by routing and hub handlers and defines last-level selection/names.",
@@ -30,9 +30,9 @@
     "scripts/lib/build-piece.js + breakables.yml + furniture.yml - canonical build specs/models shared by B-mode and home reconstruction; CRT TV builds attach scripts/built-tv.js.",
     "scripts/lib/screen.js - derived read-only panel classifier and wrist gates shared by player, stats, craft, rest and menu input.",
     "scripts/lib/maze.js and scripts/lib/level*.js + level data - grids, zones, layouts and paths reused by place sims, geometry and navigation.",
-    "scripts/lib/clothes.js + clothes.yml + critter.yml + hair.yml + scripts/lib/critter-model.js - wardrobe/look rules and player/NPC avatars; shared renderer chooses sex-specific human GLBs or furry bodies and supports hair, heads, skin and gait clips.",
+    "scripts/lib/clothes.js + clothes.yml + critter.yml + hair.yml + scripts/lib/critter-model.js - wardrobe/look rules and player/NPC avatars; renderer chooses sex-specific human GLBs or furry bodies and handles hair, heads and skin.",
     "scripts/lib/l2kit.js - Level 2 model-instance drawing/decoding from l2kit-data, used by scripts/l2kit/*-geo.js; scripts/lib/knock.js provides enemy-manager recovery helpers.",
-    "scripts/lib/l2props.js + scripts/lib/data/l2props.yml - real-size Tripo prop definitions, fitted colliders, room/hall dressing and container/crate models; Level 2 sim and loot reuse them. scripts/lib/loose.js + loose.yml serve shared prop break/kick/grab behavior."
+    "scripts/lib/l2props.js + scripts/lib/data/l2props.yml - metre-sized Tripo prop definitions/fitting reused by Level 2 and Level 2.1; scripts/lib/loose.js + loose.yml serve shared kick/grab/flight/breakable prop effects."
   ],
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 container/loot helpers; scripts/lib/weapons.js - rarityIdx, rarityCap and weapon registry.",
@@ -41,8 +41,8 @@
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget and fishing handlers.",
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
     "sim.js - cadence, tick, onOutOfBounds; places/main/sim.js and places/bonus/sim.js - cadence, tick.",
-    "scripts/partygoers.js - update; manager for tagged Partygoers and Carnivorous Balloons on Level 26. scripts/lib/knock.js - knocked, foeStats.",
-    "scripts/lib/critter-model.js - skinOf, humanBody, bodyModel, critterSpec, hairOf/seatHair, seatHead, rewear, toMesh, faceMorph and shared avatar helpers; scripts/lib/loose.js - looseOf, arm, impact, breakIt, kickLoose, track, stepFlights."
+    "scripts/critter.js - update; scripts/lib/critter-model.js - skinOf, humanBody, bodyModel, critterSpec, hairOf/seatHair, seatHead, rewear, toMesh, faceMorph and shared avatar helpers; scripts/lib/data/nv-swings.js - NV_SWINGS.",
+    "scripts/lib/vmpose.js - VM_FOV, poseViewmodel; scripts/talk.js - gestEnd (clears one-shot wave gesture after its scheduled hold)."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards and level access; saved place/position and one-shot wakeAtSave restoration.",
@@ -52,7 +52,7 @@
     "scripts/lurkers.js - player.state.lurkHold while caught and lurker entity grab/frenzy/prey state; release clears the player's hold.",
     "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim.",
     "scripts/hub.js - mall offer/shop/food and room-hop flags plus player trainHid/stungUntil; session.ride/rideTrain holds transient transit scene and spawned train.",
-    "places/level2/sim.js - place.state seeded/kitV/rev/sludgeV/propsV migration markers and room layout; scripts/lib/l2props.js creates prop state.mat/hp/maxHp, while loot.js owns container item/lock state. scripts/main-menu.js and scripts/dbg-bodypad.js write world.state.bodyStyle; main-menu.js also saves the player's bodyStyle choice."
+    "places/level2/sim.js - place.state seeded/kitV/rev/sludgeV/propsV migration markers and room layout; places/level21/sim.js owns its generated build revision and seeded local dressing; scripts/lib/l2props.js creates prop material/hp state."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/spamton-fight/horde/critter/main-menu/hub/view3.",
@@ -66,7 +66,7 @@
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickups enter player.js inventory.",
     "L input → scripts/kick.js tries foe kick then loose.js kickLoose; Z input → scripts/grab.js picks/carries/throws eligible bodies, plays the UAL overhand throw clip and calls loose.js arm/track/impact; flight tracking detects hard stops.",
     "scripts/lib/breakables.js strike/damageEntity → loose.js breakIt for matched loose props, otherwise generic rubble; loose.yml supplies material/hp/act rules and joule breakAt thresholds; explosions emit damage/noise/shockwave.",
-    "scripts/critter.js avatar behavior → scripts/lib/critter-model.js reads critter-models.yml and hair.yml; HUMAN selects sex-specific full-head body with deterministic skin, furry mode uses the furry model; gait/idles and Partygoer actions use imported clips. places/debug/cells/x1z0.scene mannequins read state.clip and scripts/dbg-pose.js loops it."
+    "scripts/meg-agent.js writes NPC state.armed when weapons are drawn → scripts/critter.js uses warrior walk/run clips only for armed human NPCs; scripts/player.js builds first-person human arms and scripts/lib/vmpose.js poses weapons, sampling NV_SWINGS for melee at 55% source duration."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js - authored mall shops/landmarks with data-driven stock and simulated staff, waypoint shoppers and balcony loungers.",
@@ -74,9 +74,9 @@
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props and Boiler Room Death Rat packs.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml - shared player/NPC appearance rules; selected sex-specific human GLBs include head and receive deterministic skin on body/head; shared BODIES style switches every room character to furry or human.",
+    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml - shared player/NPC appearance rules; human GLBs include head and deterministic body/head skin; BODIES switches room-wide rendering, with player.state.bodyStyle retaining menu choice.",
     "art/level2/{build,compact,encode,pack}.py + scripts/lib/data/l2kit-data/* + scripts/lib/l2kit.js - module meshes are compact-packed and decoded into runtime instances; optional UV data, otherwise triplanar projection.",
-    "scripts/lib/data/l2props.yml + scripts/lib/l2props.js + places/level2/sim.js + scripts/lib/loot.js - data-driven Tripo props/containers fitted to metre dimensions and tagged for shared breakable, kick and grab systems; Level 2 props spawn static with floor-based box colliders."
+    "scripts/lib/data/l2props.yml + scripts/lib/l2props.js + places/level2/sim.js + places/level21/sim.js - metre-fitted Tripo props reuse spawnProp; Level 2.1's revisioned dress21 lays storage/work props and danger signs alongside procedural geometry."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -87,7 +87,7 @@
     "Teleport Station 'last' travel derives from savePlace (excluding bonus, intake and debug; tutorial0 maps to main); keepPos preserves savePos and wakeAtSave restores it only when the arriving place matches; transit depends on bc-train asset.",
     "Found-item rarity gates apply only to found weapon tokens; existing weapon ownership/use and non-weapon loot are not level-gated. Search gating excludes storage and NPC containers.",
     "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout.",
-    "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static because dynamic bodies created before floor mesh cooking fall through; propsV re-dresses old rooms in batches and preserves container/crate loot while changing visuals.",
-    "BODIES is shared world.state.bodyStyle and is applied by scripts/critter.js to all room characters; player.state.bodyStyle retains the menu pick. Human GLBs include their own head and body/head skin materials; Level 26 lower decks sit at y=-80, so worldBounds.bottom must remain below that."
+    "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static because dynamic bodies created before floor mesh cooking fall through; Level 2.1 uses sim revision V and clears old l2prop-tagged dressing before rebuild.",
+    "BODIES is shared world.state.bodyStyle and is applied by scripts/critter.js to all room characters; player.state.bodyStyle retains the menu pick. Human GLBs include their own head and body/head skin; human first-person arm assets are separate fist/grip meshes."
   ]
 }
