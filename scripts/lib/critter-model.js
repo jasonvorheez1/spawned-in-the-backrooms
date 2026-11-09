@@ -9,16 +9,17 @@ import HAIR from './data/hair.yml'
 export const HAIR_ID = 'critter-hair'
 const HAIR_HATCUT = { 14: 0, 15: 1, 16: 2 }
 export const humanHairOf = (l) => {
-  if (!l?.hair || l.hair === 'none' || maskOf(l)) return null
+  if (l?.hair == null || l.hair === '' || l.hair === 'none' || maskOf(l)) return null
   if (speciesOf(l) === 'faceling') return null
   const n = typeof l.hair === 'number' ? l.hair : (HAIR.humanPick?.[l.hair] ?? (Number.isFinite(Number(l.hair)) ? Number(l.hair) : null))
   const hat = Boolean(l.hat && l.hat !== 'none')
   const set = HAIR.human?.[l.sex === 'f' ? 'f' : 'm']
-  const row = n == null ? null : set?.[hat && (n in HAIR_HATCUT) ? HAIR_HATCUT[n] : n]
+  const pick = hat && (n in HAIR_HATCUT) ? HAIR_HATCUT[n] : n
+  const row = n == null ? null : (set?.[pick] ?? HAIR.human?.[l.sex === 'f' ? 'm' : 'f']?.[pick])
   return row ? (hat ? row.hat : row.free) : null
 }
 export const hairOf = (l) => {
-  if (!l?.hair || l.hair === 'none' || maskOf(l)) return null
+  if (l?.hair == null || l.hair === '' || l.hair === 'none' || maskOf(l)) return null
   const sp = speciesOf(l)
   if (sp === 'faceling') return null
   if (sp === 'human' || HUMAN) return humanHairOf(l)
@@ -40,7 +41,7 @@ export const hairChild = (l, local) => {
 }
 export function seatHumanHair(ctx, o, l) {
   if (speciesOf(l) === 'faceling') { const id = o.id + '/' + HAIR_ID; if (ctx.getObject(id)) ctx.destroy(id); return }
-  if (l && !l.hair) { const ks = Object.keys(HAIR.humanPick ?? {}).filter((k) => k[0] === (l.sex === 'f' ? 'f' : 'm')); let h = 7; for (const c of String(o.id)) h = (h * 31 + c.charCodeAt(0)) >>> 0; const cs = ['#2a1d16', '#4a3122', '#6b4a2e', '#1a1a1a', '#8a6a3c', '#b08a52']; l = { ...l, hair: ks[h % ks.length], hairc: l.hairc || cs[(h >>> 4) % cs.length] } }
+  if (l && (l.hair == null || l.hair === '')) { const ks = Object.keys(HAIR.humanPick ?? {}).filter((k) => k[0] === (l.sex === 'f' ? 'f' : 'm')); let h = 7; for (const c of String(o.id)) h = (h * 31 + c.charCodeAt(0)) >>> 0; const cs = ['#2a1d16', '#4a3122', '#6b4a2e', '#1a1a1a', '#8a6a3c', '#b08a52']; l = { ...l, hair: ks[h % ks.length], hairc: l.hairc || cs[(h >>> 4) % cs.length] } }
   const want = humanHairOf(l), id = o.id + '/' + HAIR_ID, h = ctx.getObject(id)
   if (!want) { if (h) ctx.destroy(id); return }
   const c = l.hairc || '#5a3a26', m = { id: want, materials: hairMats(c) }
@@ -58,6 +59,7 @@ export function seatHair(ctx, o, l) {
 }
 export const BEARD_ID = 'critter-beard'
 export const beardChild = (l, local) => {
+  if (HUMAN) return null // fitted human facial hair lives on the body's skinned face
   if (!l?.beard || l.beard === 'none' || maskOf(l)) return null
   const col = l.beardc || l.hairc || '#5a3a26'
   const isH = speciesOf(l) === 'human' || HUMAN
@@ -216,12 +218,15 @@ export const humanBody = (l) => {
   const c = warm(skinOf(l), 1) && toHex(hx(skinOf(l)).map((v) => v * 0.82)), skin = { color: c, roughness: 0.6, metalness: 0, emissive: '#000000', emissiveIntensity: 0 } // no glow: the third-person body reads the same skin as the first-person arms (Shelly, Nov 9)
   const m = l ? bodyModel({ ...l, _human: true }) : { materials: {}, parts: {} }
   const parts = { ...(m.parts || {}), Under_top: { visible: l?.sex === 'f' }, Under_bottom: { visible: true } }
+  for (const name of ['stubble', 'mustache', 'goatee', 'handlebars', 'fullbeard', 'chinstrap', 'anchor']) parts['Beard_' + name] = { visible: !maskOf(l) && (l?.beard === 'moustache' ? 'mustache' : l?.beard) === name }
+  const blush = l?.blush && l.blush !== 'none' && l.blush !== 'false' ? (['heart', 'star', 'hash'].includes(l.blush) ? l.blush : 'soft') : null
+  for (const name of ['soft', 'heart', 'star', 'hash']) parts['Blush_' + name] = { visible: !maskOf(l) && blush === name }
   // a closed top hides the overalls' bib, and the bib's straps poked through it: under one, the overalls are just their legs (Dolores, Nov 9)
   if (parts.Bot_overalls?.visible && ['Top_jacket', 'Top_sweater', 'Top_hoodie', 'Top_longsleeve', 'Top_pajamas'].some((k) => parts[k]?.visible)) { parts.Bot_overalls = { visible: false }; parts.Bot_pants = { visible: true } }
   const hairc = l?.hairc || '#3a2a20', eye = l?.eye && l.eye !== '#000000' ? l.eye : '#5b4a3a'
   return { id: HUMAN[l?.sex === 'f' ? 'f' : 'm'], forward: '+z', parts, materials: { ...(m.materials || {}),
     Body_Skin: skin, Head_Skin: skin, under: { color: '#2b2a30', roughness: 0.85, metalness: 0 },
-    Iris: { color: eye, roughness: 0.25, metalness: 0 }, Brow: { color: hairc, roughness: 0.9, metalness: 0 }, Lash: { color: '#2a2024', roughness: 0.9, metalness: 0 } } }
+    Iris: { color: eye, roughness: 0.25, metalness: 0 }, Brow: { color: hairc, roughness: 0.9, metalness: 0 }, Lash: { color: '#2a2024', roughness: 0.9, metalness: 0 }, Beard: { color: l?.beardc || hairc, roughness: 0.86, metalness: 0 }, Blush: { color: typeof l?.blush === 'string' && l.blush.startsWith('#') ? l.blush : '#ed7890', roughness: 0.9, metalness: 0 } } }
 }
 // FACE SHAPE → the human head: [lead head type, keys set outright]
 const FT_HEAD = {
@@ -229,8 +234,8 @@ const FT_HEAD = {
   oval: ['HT_Long', { FaceLong: 0.2 }], heart: ['HT_Heart'], delicate: ['HT_Heart', { JawNarrow: 0.8, JawWide: 0, BrowHeavy: 0 }], broad: ['HT_Broad'],
   chiseled: ['HT_Angular', { CheekFull: 0, ChinLong: 0.6 }], plump: ['HT_Round', { CheekFull: 0.7 }], pixie: ['HT_Heart', { ChinLong: 0.5, JawNarrow: 0.7, JawWide: 0 }], noble: ['HT_Long', { NoseBig: 0.6, ChinLong: 0.5 }],
   square: ['HT_Square'], strong: ['HT_Square', { BrowHeavy: 0.8 }], sharp: ['HT_Angular', { JawNarrow: 0.6, JawWide: 0 }], long: ['HT_Long', { FaceLong: 0.6 }], narrow: ['HT_Long', { JawNarrow: 0.9, JawWide: 0 }],
-  burly: ['HT_Burly', { JawWide: 0.85, BrowHeavy: 0.80, ChinLong: 0.35 }],
-  rugged: ['HT_Rugged', { JawWide: 0.70, BrowHeavy: 0.85, CheekFull: 0 }],
+  burly: ['HT_Square', { JawWide: 0.85, BrowHeavy: 0.80, ChinLong: 0.35 }],
+  rugged: ['HT_Angular', { JawWide: 0.70, BrowHeavy: 0.85, CheekFull: 0 }],
   diamond: ['HT_Angular', { JawNarrow: 0.45, CheekFull: 0.35 }],
 }
 const H_KEYS = ['JawWide', 'JawNarrow', 'ChinLong', 'NoseBig', 'CheekFull', 'BrowHeavy', 'FaceLong', 'HeadRound']
@@ -242,7 +247,7 @@ export function humanMorph(l) {
   if (o.JawWide > o.JawNarrow) o.JawNarrow = 0; else o.JawWide = 0
   if (m) { o.JawWide = Math.max(o.JawWide, 0.35 + u() * 0.5); o.JawNarrow = 0; o.BrowHeavy = 0.4 + o.BrowHeavy * 0.6 } else { o.BrowHeavy *= 0.3; o.JawWide *= 0.35 }
   // the head type: a whole skull and face shape, one per person, a second softly mixed in so no two match
-  const T = m ? ['HT_Burly', 'HT_Square', 'HT_Rugged', 'HT_Angular', 'HT_Broad', 'HT_Long', 'HT_Round', 'HT_Heart'] : ['HT_Heart', 'HT_Heart', 'HT_Round', 'HT_Round', 'HT_Long', 'HT_Angular', 'HT_Square', 'HT_Broad']
+  const T = m ? ['HT_Square', 'HT_Square', 'HT_Angular', 'HT_Angular', 'HT_Broad', 'HT_Long', 'HT_Round', 'HT_Heart'] : ['HT_Heart', 'HT_Heart', 'HT_Round', 'HT_Round', 'HT_Long', 'HT_Angular', 'HT_Square', 'HT_Broad']
   for (const k of new Set(T)) o[k] = 0
   const FT = FT_HEAD[l?.ftype] // the creator's FACE SHAPE pick leads the skull; the seed still mixes a second in (johnadams2 Nov 9: face gen)
   const a0 = T[Math.floor(u() * T.length)], b = T[Math.floor(u() * T.length)], a = FT?.[0] ?? a0
@@ -774,8 +779,9 @@ const _bust = (l) => {
 // ---- the BODIES switch for everyone already standing: every person in a place (NPCs, scene-laid people, corpses) re-dressed on the human or furry body
 // their look rides in state.wear (read back off the model when it never had one), so a flip and a flip back returns the same clothes, face and species
 const OLD_HUMAN = ['/cdn/value.fd49318b8e8c14d0e98cf8d8b38433601bad2db2515aa8ed3585e8842e2cd80c.glb', '/cdn/value.8d0f43bf3da06253fd58a24473034d2ff3ff1ad4b551d69fcbced89ff58251c1.glb', '/cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb', '/cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb', '/cdn/value.4802b6cd4b09d80a1b730817fb9ec8620f5d861e9e208cd3d6b6b811a18d0df4.glb', '/cdn/value.59bdc78b4240c5fd51dda3dcd5d717d6636cb08500bbd87acb891a290756daee.glb', '/cdn/value.571a6f2a3b9368cb26c62e6dd96129a7eb7a1b680a6358295b76445e8d5fa96b.glb', '/cdn/value.10792bc623f260a37572790868aab1cd2ead38a1846531279036279fa8c4ad02.glb', '/cdn/value.551f4e076eedd9dccfef9bee30c7daf33456a882eae186be97c104ebd4216151.glb', '/cdn/value.fd4025b2266d959bfa29cd593f61d69d34d73fd7d8f8c6009c7f18cd9f3325d4.glb', '/cdn/value.215e73e7f0164538308a283c66bc194938e60bc791594a8cc7a01adc4fcbd5e4.glb', '/cdn/value.2258e9d53f054bba011a1c4debaaf11ada9d46cd13f286a0f3488d7ea9fa7d0a.glb', '/cdn/value.d953bd900d564f7cc054655d9303e4a91cec7ca3b504b00da73e20f620c53442.glb', '/cdn/value.b42693b9f0cb8c435569bee04cb525e504ea3bd6d71d08769fcdb6fc9a256de1.glb', '/cdn/value.0033bae86efe9c3c2592b24d12521cb4a3a67eb297d6793f28439be336017d55.glb', '/cdn/value.3ebbead620d2a09b8b27374f5ce9779c98c6098ac45ee2cc789b7ab1a9f01267.glb', '/cdn/value.00b66aa4a9630ab5e5de51193052868d52103a14d1f121559e366a19761c7b47.glb', '/cdn/value.945580877b9ce16d0a234ad063cc4202d2565dcb5265c2422d8af80fa9b2c17d.glb', '/cdn/value.471a036ab6de34d7962d0c8b2eafd12bf4d52ce8868594e3544a6ad699e0cea0.glb', '/cdn/value.f472a5f4ffdbcca87896d905eac6a9dbc746234980aa3841933abbf854808144.glb', '/cdn/value.a72d639444162250d9952ce8abf7c92aa06a6085f867c5cda3dabffd461b8809.glb', '/cdn/value.4ea845d5772c35f3c8923973f3078cb9153a7ef21e0ae2f8776f7643c0b519cb.glb']
+OLD_HUMAN.push('/cdn/value.0f804808a2834486f121cadfec8de8784cfdbead3a5d0939ca0e6f027bd8526d.glb', '/cdn/value.6f11c2c9ec0cbb44c796db314811f269b1c5cdc19a5f7f34c42ecd221208fe48.glb')
 const FURRY_IDS = () => Object.values(M.body), HUMAN_IDS = () => [...Object.values(M.human ?? {}), ...OLD_HUMAN]
-export const STYLE_V = 'sw15' // sw15: scarf knot at the side, overalls drop to pants under closed tops; sw13: scarf is a thick wrap with short splayed ends; sw12: male longsleeve collar smoothed, scarf wraps the neck; sw11: tops hang off the chest (no belly pouch); sw10: tripo hair rows 14-16; sw9: overalls clear of tops (no z-fight); sw8: sleeves cover the upper arm's back, the shoulder blend band has room; sw7: bodies with head types; sw6: skirt waist below the top hem; sw5: skirts tucked under tops (new body glbs); sw4: the hair pack on human heads
+export const STYLE_V = 'sw16' // sw15: scarf knot at the side, overalls drop to pants under closed tops; sw13: scarf is a thick wrap with short splayed ends; sw12: male longsleeve collar smoothed, scarf wraps the neck; sw11: tops hang off the chest (no belly pouch); sw10: tripo hair rows 14-16; sw9: overalls clear of tops (no z-fight); sw8: sleeves cover the upper arm's back, the shoulder blend band has room; sw7: bodies with head types; sw6: skirt waist below the top hem; sw5: skirts tucked under tops (new body glbs); sw4: the hair pack on human heads
 export function furrySpec(l) { const h = HUMAN; HUMAN = null; try { return critterSpec(l) } finally { HUMAN = h } } // a character who stays a critter in both modes (Phoebe)
 export function restyle(ctx, o) {
   const mid = o?.model?.id ?? o?.model
@@ -789,7 +795,7 @@ export function restyle(ctx, o) {
   const local = String(o.id).split('/').pop()
   const hm = ctx.getObject(o.id + '/' + HEAD_ID)?.model ?? stray[0]?.model
   const l = { ...(lookFromModel(o.model, hm?.id ?? hm) ?? {}), ...(o.state?.wear ?? {}) }
-  if (isH && !o.state?.wear) l.sex = mid === M.human.f || mid === '/cdn/value.4ea845d5772c35f3c8923973f3078cb9153a7ef21e0ae2f8776f7643c0b519cb.glb' || mid === OLD_HUMAN[1] || mid === OLD_HUMAN[3] || mid === OLD_HUMAN[4] || mid === OLD_HUMAN[6] || mid === OLD_HUMAN[8] || mid === OLD_HUMAN[9] || mid === OLD_HUMAN[12] || mid === OLD_HUMAN[14] || mid === OLD_HUMAN[19] ? 'f' : (l.sex ?? 'm')
+  if (isH && !o.state?.wear) l.sex = mid === M.human.f || mid === OLD_HUMAN[23] || mid === '/cdn/value.4ea845d5772c35f3c8923973f3078cb9153a7ef21e0ae2f8776f7643c0b519cb.glb' || mid === OLD_HUMAN[1] || mid === OLD_HUMAN[3] || mid === OLD_HUMAN[4] || mid === OLD_HUMAN[6] || mid === OLD_HUMAN[8] || mid === OLD_HUMAN[9] || mid === OLD_HUMAN[12] || mid === OLD_HUMAN[14] || mid === OLD_HUMAN[19] ? 'f' : (l.sex ?? 'm')
   l.species ??= speciesFor(local); l.sex ??= 'm'; l.fseed ??= hashOf(local)
   if (o.state) o.state.wear = l
   if (want === 'h') { const s = critterSpec(l); o.model = s.model; o.material = null; seatHead(ctx, o, l) }

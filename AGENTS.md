@@ -116,3 +116,6 @@ The right-middle block of the game screen (one reservation, vertically centered 
 the engine's, published to ui.js as CSS variables — the game-ui skill names them) belongs to the platform — home,
 creator, like, comments in play; Savi's face while creating. Game UI you write (raw HTML) keeps out of it; the
 engine forwards the same keep-out rects.
+
+## Human appearance parts
+Human body GLBs include Beard_stubble/mustache/goatee/handlebars/fullbeard/chinstrap/anchor and Blush_soft/heart/star/hash. humanBody explicitly hides every unused appearance part. Human beards use these skinned meshes, not critter-beard-geo.js; keep beardChild null in human mode. Each surface carries the same expression/structure targets as the head. art/human-head/revamp.py rebuilds assets (cache outside the tree). Hair rows permit a style on either body; missing per-sex rows fall back to the other rig-compatible row. Burly/rugged use supported HT_Square/HT_Angular keys.
