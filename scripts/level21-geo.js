@@ -117,9 +117,14 @@ export function geometry(ctx) {
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const x0 = cx * S - HALF, z0 = cz * S - HALF, z = zoneOf(cx, cz), h = heightOf(cx, cz), r = hash(cx, cz, 5);
     ctx.albedo(isEdge(cx, cz) ? FLOOR : VINYL);
-    if (TILED.has(z)) { // black and grey vinyl, in 1 m squares like a school
+    const rm = roomAt(cx, cz);
+    if (z === "lockers" && rm) { // the ref photo: worn off-white tile, a black-and-grey checker runner only down the walkway (the room's middle column)
+      const mid = cx === rm.x0 + Math.floor(rm.w / 2);
+      for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j, g = (hash(cx * 4 + i, cz * 4 + j, 11) - 0.5) * 0.05;
+        ctx.color(mid && i > 0 && i < 3 ? ((i + j + cz) % 2 ? "oklch(0.24 0.01 270)" : `oklch(${0.7 + g} 0.008 250)`) : `oklch(${0.86 + g} 0.012 90)`); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
+    } else if (TILED.has(z)) { // black and grey vinyl, in 1 m squares like a school
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j; ctx.color((i + j + cx + cz) % 2 ? "oklch(0.28 0.01 270)" : "oklch(0.78 0.01 250)"); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
-    } else if (z === "edge" || z === "edgecave") { ctx.color("oklch(0.72 0.035 105)"); ctx.quad(x0, 0, z0, x0, 0, z0 + S, x0 + S, 0, z0 + S, x0 + S, 0, z0); }
+    } else if (z === "edge" || z === "edgecave") { ctx.roughness(z === "edge" ? 0.35 : 0.88); ctx.color(z === "edge" ? "oklch(0.84 0.02 95)" : "oklch(0.62 0.03 100)"); ctx.quad(x0, 0, z0, x0, 0, z0 + S, x0 + S, 0, z0 + S, x0 + S, 0, z0); }
     else if (z === "fridges") {
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j; ctx.color((i + j) % 2 ? "oklch(0.86 0.015 95)" : "oklch(0.76 0.025 195)"); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
     }
@@ -127,7 +132,7 @@ export function geometry(ctx) {
       ctx.albedo(null); const base = r < 0.18 ? [0.6, 0.04, 200] : r < 0.3 ? [0.7, 0.03, 60] : [0.86, 0.02, 85];
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j, tone = base[0] + (((i + j + cx * 3 + cz) % 2) ? 0.03 : -0.02) + (hash(cx * 4 + i, cz * 4 + j, 9) - 0.5) * 0.05; ctx.color(`oklch(${tone} ${base[1]} ${base[2]})`); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
     } // a threadbare carpet, or bare grime
-    ctx.albedo(isEdge(cx, cz) ? CEIL : TILE); ctx.color(isEdge(cx, cz) ? "oklch(0.38 0.01 150)" : z === "fridges" || z === "restroom" ? "oklch(0.95 0.01 90)" : "oklch(0.9 0.014 90)");
+    ctx.roughness(0.88); ctx.albedo(isEdge(cx, cz) ? CEIL : TILE); ctx.color(isEdge(cx, cz) ? (z === "edge" ? "oklch(0.62 0.008 240)" : "oklch(0.38 0.01 150)") : z === "fridges" || z === "restroom" ? "oklch(0.95 0.01 90)" : "oklch(0.9 0.014 90)");
     ctx.quad(x0, h, z0, x0 + S, h, z0, x0 + S, h, z0 + S, x0, h, z0 + S);
   }
 
