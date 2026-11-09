@@ -696,10 +696,11 @@ export function critterSpec(l) {
 }
 // a mesh critter's look read back off its own model (the bodies laid before state.wear existed): parts shown = garments, cloth_* = their colours, head GLB = species and sex
 const CLOTH_KEY = { topw: 'top', botw: 'bottom', shoes: 'shoec', hat: 'hatc', neck: 'neckc' }
+const femaleBody = (id) => [M.body.f, M.human?.f].includes(id) || [WARDROBE.legacyHuman, WARDROBE.legacyFur].some((rows) => Object.entries(rows ?? {}).some(([sex, ref]) => sex.startsWith('f') && ref === id))
 export function lookFromModel(model, headId) {
   if (!model || typeof model !== 'object') return null
   const vis = (n) => model.parts?.[n]?.visible
-  const l = { sex: model.id === M.body.f || vis('Bot_skirt') || vis('Bot_longskirt') || vis('Top_dress') ? 'f' : 'm' }
+  const l = { sex: femaleBody(model.id) || vis('Bot_skirt') || vis('Bot_longskirt') || vis('Top_dress') ? 'f' : 'm' }
   for (const [slot, pre] of Object.entries(M.slots)) { l[slot] = 'none'; for (const [n, v] of Object.entries(model.parts || {})) if (v?.visible && n.startsWith(pre + '_')) l[slot] = n.slice(pre.length + 1) }
   for (const row of CL.rows) if (vis('Ward_' + row.id)) l[row.slot] = row.id
   const mats = { ...(model.parts || {}), ...(model.materials || {}) }
@@ -800,7 +801,7 @@ const OLD_HUMAN = ['/cdn/value.fd49318b8e8c14d0e98cf8d8b38433601bad2db2515aa8ed3
 OLD_HUMAN.push('/cdn/value.0f804808a2834486f121cadfec8de8784cfdbead3a5d0939ca0e6f027bd8526d.glb', '/cdn/value.6f11c2c9ec0cbb44c796db314811f269b1c5cdc19a5f7f34c42ecd221208fe48.glb')
 OLD_HUMAN.push('/cdn/value.89d74113d2bb60c5fcf7de629388fd77d62b8c67452400f826bdce3f35ce4267.glb', '/cdn/value.20023a98cea753bd84c6ff72d4e8cc2d8506b70f0dc65170a0f69b31bd82830a.glb')
 const FURRY_IDS = () => [...Object.values(M.body), ...Object.values(WARDROBE.legacyFur ?? {})], HUMAN_IDS = () => [...Object.values(M.human ?? {}), ...OLD_HUMAN, ...Object.values(WARDROBE.legacyHuman ?? {})]
-export const STYLE_V = 'sw25' // sw25: distinct wardrobe meshes and skin masks; sw24: furry bodies missing their head re-seat it; sw23: worn hair re-seats when its file changed; sw22: rebuilt scalp caps (smooth shell, feathered root-textured hairline), cap tint near the hair colour; sw20: hair keys on the head-fitted pack (Tripo rows off); sw19: skin swatch unshaded, wider tones; sw18: men's lid-line lashes and M_Jaw/M_Chin head; sw15: scarf knot at the side, overalls drop to pants under closed tops; sw13: scarf is a thick wrap with short splayed ends; sw12: male longsleeve collar smoothed, scarf wraps the neck; sw11: tops hang off the chest (no belly pouch); sw10: tripo hair rows 14-16; sw9: overalls clear of tops (no z-fight); sw8: sleeves cover the upper arm's back, the shoulder blend band has room; sw7: bodies with head types; sw6: skirt waist below the top hem; sw5: skirts tucked under tops (new body glbs); sw4: the hair pack on human heads
+export const STYLE_V = 'sw26' // sw26: constructed footwear, old wardrobe bodies migrate with their sex; sw25: distinct wardrobe meshes and skin masks; sw24: furry bodies missing their head re-seat it; sw23: worn hair re-seats when its file changed; sw22: rebuilt scalp caps (smooth shell, feathered root-textured hairline), cap tint near the hair colour; sw20: hair keys on the head-fitted pack (Tripo rows off); sw19: skin swatch unshaded, wider tones; sw18: men's lid-line lashes and M_Jaw/M_Chin head; sw15: scarf knot at the side, overalls drop to pants under closed tops; sw13: scarf is a thick wrap with short splayed ends; sw12: male longsleeve collar smoothed, scarf wraps the neck; sw11: tops hang off the chest (no belly pouch); sw10: tripo hair rows 14-16; sw9: overalls clear of tops (no z-fight); sw8: sleeves cover the upper arm's back, the shoulder blend band has room; sw7: bodies with head types; sw6: skirt waist below the top hem; sw5: skirts tucked under tops (new body glbs); sw4: the hair pack on human heads
 export function furrySpec(l) { const h = HUMAN; HUMAN = null; try { return critterSpec(l) } finally { HUMAN = h } } // a character who stays a critter in both modes (Phoebe)
 export function restyle(ctx, o) {
   const mid = o?.model?.id ?? o?.model
@@ -817,7 +818,7 @@ export function restyle(ctx, o) {
   const local = String(o.id).split('/').pop()
   const hm = ctx.getObject(o.id + '/' + HEAD_ID)?.model ?? stray[0]?.model
   const l = { ...(lookFromModel(o.model, hm?.id ?? hm) ?? {}), ...(o.state?.wear ?? {}) }
-  if (isH && !o.state?.wear) l.sex = mid === M.human.f || mid === OLD_HUMAN[23] || mid === OLD_HUMAN[25] || mid === WARDROBE.legacyHuman?.f || mid === '/cdn/value.4ea845d5772c35f3c8923973f3078cb9153a7ef21e0ae2f8776f7643c0b519cb.glb' || mid === OLD_HUMAN[1] || mid === OLD_HUMAN[3] || mid === OLD_HUMAN[4] || mid === OLD_HUMAN[6] || mid === OLD_HUMAN[8] || mid === OLD_HUMAN[9] || mid === OLD_HUMAN[12] || mid === OLD_HUMAN[14] || mid === OLD_HUMAN[19] ? 'f' : (l.sex ?? 'm')
+  if (isH && !o.state?.wear) l.sex = femaleBody(mid) || mid === OLD_HUMAN[23] || mid === OLD_HUMAN[25] || mid === '/cdn/value.4ea845d5772c35f3c8923973f3078cb9153a7ef21e0ae2f8776f7643c0b519cb.glb' || mid === OLD_HUMAN[1] || mid === OLD_HUMAN[3] || mid === OLD_HUMAN[4] || mid === OLD_HUMAN[6] || mid === OLD_HUMAN[8] || mid === OLD_HUMAN[9] || mid === OLD_HUMAN[12] || mid === OLD_HUMAN[14] || mid === OLD_HUMAN[19] ? 'f' : (l.sex ?? 'm')
   l.species ??= speciesFor(local); l.sex ??= 'm'; l.fseed ??= hashOf(local)
   if (o.state) o.state.wear = l
   if (want === 'h') { const s = critterSpec(l); o.model = s.model; o.material = null; seatHead(ctx, o, l) }

@@ -139,3 +139,5 @@ Optional, never forced. Story is Savi's draft. Your HALOGEN keeps flashing an ow
 - 2026-11-09: Shelly supplied male anime head references and requested a leaner, lifted face. The male sculpt now preserves the authored facial construction with narrower eyes, separate pupils, defined brows/nose/lips and a shorter, leaner lower face. The rejected procedural skull was never pushed.
 
 - 2026-11-09: Shelly requested a complete geometry-based clothing overhaul. Every named catalog garment now selects its own Blender-built mesh, including modeled garment shells, openings, pockets, collars, hoods, footwear and accessories. All four bodies retain their skeletons and heads; equipment masks hide covered skin. Original item stats and old inventory tokens are preserved.
+
+- 2026-11-09: Shelly asked to keep improving outfits with ponytail. Footwear now separates rubber soles from uppers; boots have crisscross lacing and protective toe bumpers, slippers have open heel beds, and pumps have raised arches and block heels without sneaker laces. The existing equipment slots, colors and stats are unchanged.

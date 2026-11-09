@@ -79,6 +79,10 @@ legacyHuman:
   m: /cdn/value.2062fd6ff20cebe8843a20cdc10e446ffe08df184d1c4f42b4e4ada4f82464b7.glb
   f: /cdn/value.c77d4bba1677b19045e36567b00c8d010099e68fdf364280aab568ab44e2d511.glb
   m_prior: /cdn/value.0f4d6b4922fbd0e8a97b8d6b71836871b2def3b39574b7e0d21aea73d7586843.glb
+  m_sw25: /cdn/value.4ada18398ca10f6fa39b42d0d2b7d8260f185b6af0ff6dbd1a79be604b55e8dd.glb
+  f_sw25: /cdn/value.c34a7483d2fcba49866b8b23c16a5d35d3d81cc3eb1ce50edd149e7fe8d0a75f.glb
 legacyFur:
   m: /cdn/value.72a8b9bf28216baab5b949a31bbff68251f892d11e4ca39e3b68c27ef0557e76.glb
   f: /cdn/value.234a83fd493cd046995cd5526a69249cd845b14a19372cdf61be068d24fc5d56.glb
+  m_sw25: /cdn/value.79ae2a0afd0403a8cc798b2cda82158f74396c20a726c6703908e399b7254281.glb
+  f_sw25: /cdn/value.03d31287b502989db43c1311df1763ca16a292e0a9a203b2619268e3022502e8.glb

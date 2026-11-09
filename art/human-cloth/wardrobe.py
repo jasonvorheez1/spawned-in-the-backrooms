@@ -231,24 +231,62 @@ def clean_mantle(row,old):
  for i,p in enumerate(pts):kd.insert(p,i)
  kd.balance();weights(ob,old,kd);return ob
 def clean_shoes(row,old):
- pts=[old.matrix_world@v.co for v in old.data.vertices];verts=[];faces=[];n=40
+ pts=[old.matrix_world@v.co for v in old.data.vertices];verts=[];faces=[];mats=[];n=40;rid=row['id']
+ def face(ids,mat=0):faces.append(ids);mats.append(mat)
+ def tube(coords,radius,mat=0):
+  start=len(verts)
+  for i,p in enumerate(coords):
+   direction=Vector(coords[min(i+1,len(coords)-1)])-Vector(coords[max(0,i-1)]);direction.normalize();u=direction.cross(Vector((0,1,0))).normalized();v=direction.cross(u)
+   for k in range(6):a=k*math.tau/6;verts.append(Vector(p)+radius*(u*math.cos(a)+v*math.sin(a)))
+  for j in range(len(coords)-1):
+   for k in range(6):a=start+j*6+k;b=start+j*6+(k+1)%6;face((a,b,b+6,a+6),mat)
  for side in [-1,1]:
   ps=[p for p in pts if p.x*side>0];cx=(max(p.x for p in ps)+min(p.x for p in ps))/2;y0=min(p.y for p in ps);y1=max(p.y for p in ps);z0=min(p.z for p in ps);z1=max(p.z for p in ps);cy=(y0+y1)/2;rx=max(.015,min(abs(cx)-.008,(max(p.x for p in ps)-min(p.x for p in ps))/2+.006));ry=(y1-y0)/2+.007
-  heelcy=y1-.045;shaft=row['kind']=='boots';start=len(verts)
-  profiles=[(z0,rx*1.07,ry*1.04,cy),(z0+.018,rx*1.07,ry*1.04,cy),(z0+.024,rx,ry,cy),(z0+.064,rx*.96,ry*.94,cy+.005),(z0+.09,rx*.83,ry*.60,cy+.025)]
-  if shaft:profiles.extend([(z0+.13,rx*.83,.055,heelcy),(z1-.015,rx*.92,.06,heelcy),(z1,rx*.98,.064,heelcy)])
+  heelcy=y1-.044;shaft=row['kind']=='boots';pump=rid=='heels';slip=rid in ['slippers','hotelslip'];start=len(verts)
+  sole=.012 if slip or pump else .022 if rid=='ballastboots' else .016
+  profiles=[(z0,rx*1.03,ry,cy),(z0+sole,rx*1.03,ry,cy),(z0+sole+.006,rx*.98,ry*.98,cy)]
+  if not slip:
+   profiles.extend([(z0+.052,rx*.96,ry*.90,cy+.006),(z0+.080,rx*.72,.058,heelcy-.010)])
+   if shaft:profiles.extend([(z0+.13,rx*.77,.052,heelcy),(z1-.018,rx*.86,.053,heelcy),(z1,rx*.89,.056,heelcy)])
+   elif not pump:profiles.append((z0+.100,rx*.73,.052,heelcy))
   for z,w,d,yc in profiles:
    for k in range(n):
-    a=2*math.pi*k/n;c=math.cos(a);s=math.sin(a);yy=yc+d*math.copysign(abs(s)**.72,s);zz=z+(.035*max(0,min(1,(yy-y0)/(y1-y0))) if row['id']=='heels' else 0);verts.append([cx+w*math.copysign(abs(c)**.72,c),yy,zz])
+    a=2*math.pi*k/n;c=math.cos(a);s=math.sin(a);yy=yc+d*math.copysign(abs(s)**.78,s);rise=.044*sm(y0+(y1-y0)*.37,y1-.015,yy) if pump else 0;verts.append([cx+w*math.copysign(abs(c)**.78,c),yy,z+rise])
   for j in range(len(profiles)-1):
-   for k in range(n):a=start+j*n+k;b=start+j*n+(k+1)%n;faces.append((a,b,b+n,a+n))
-  faces.append(tuple(start+k for k in reversed(range(n))))
-  if row['id']=='heels':
+   for k in range(n):a=start+j*n+k;b=start+j*n+(k+1)%n;face((a,b,b+n,a+n),1 if j<2 else 0)
+  face(tuple(start+k for k in reversed(range(n))),1)
+  if slip:
+   # A front vamp leaves the heel bed exposed instead of a hole over the toes.
+   st=len(verts);last=[]
+   for j in range(13):
+    t=j/12;yy=y0+.004+(cy+.018-y0)*t;width=rx*math.sqrt(max(.001,1-((yy-cy)/ry)**2))*.98;last=[]
+    for k in range(21):
+     a=math.pi*k/20;p=[cx+width*math.cos(a),yy,z0+sole+(.039 if rid=='slippers' else .029)*math.sin(a)*sm(0,.20,t)];verts.append(p);last.append(p)
+   for j in range(12):
+    for k in range(20):a=st+j*21+k;face((a+21,a+22,a+1,a))
+   tube(last,.0035)
+  else:
+   ring=verts[start+(len(profiles)-1)*n:start+len(profiles)*n];tube([list(p) for p in ring]+[list(ring[0])],.0025)
+  if pump:
    st=len(verts);hy=y1-.023
-   for z in [z0,z0+.038]:
+   for z in [z0,z0+.048]:
     for x,y in [(-.015,-.018),(.015,-.018),(.015,.018),(-.015,.018)]:verts.append([cx+x,hy+y,z])
-   faces.extend([(st,st+1,st+2,st+3),(st+4,st+7,st+6,st+5),(st,st+4,st+5,st+1),(st+1,st+5,st+6,st+2),(st+2,st+6,st+7,st+3),(st+3,st+7,st+4,st)])
- ob=detail('Constructed sole toe box and shaft',verts,faces,old,'cloth_shoes',.004)
+   for ids in [(0,1,2,3),(4,7,6,5),(0,4,5,1),(1,5,6,2),(2,6,7,3),(3,7,4,0)]:face(tuple(st+i for i in ids),1)
+  elif not slip:
+   count=7 if shaft else 4
+   for i in range(count):
+    t=i/(count-1);yy=heelcy-.055 if shaft else cy-.025+.047*t;zz=z0+.095+(z1-z0-.12)*t if shaft else z0+.073+.022*t
+    tube([(cx-.019,yy,zz),(cx+.019,yy-.002,zz+.008)],.0018,2);tube([(cx+.019,yy,zz),(cx-.019,yy-.002,zz+.008)],.0018,2)
+   tube([(cx-.012,y1+.002,z0+.085),(cx-.012,y1+.009,z0+.113),(cx+.012,y1+.009,z0+.113),(cx+.012,y1+.002,z0+.085)],.003)
+  if rid in ['steeltoe','ballastboots','pitchboots']:
+   # A toe bumper wraps the front edge rather than a pocket on the shin.
+   coords=[]
+   for k in range(21):a=math.pi+math.pi*k/20;coords.append([cx+rx*1.02*math.cos(a),cy+ry*1.01*math.sin(a),z0+sole+.014])
+   tube(coords,.006,1)
+ ob=detail('Constructed sole vamp collar and fastening',verts,faces,old,'cloth_shoes',0)
+ ob.data.materials.append(material('sole'));ob.data.materials.append(material('button'))
+ for poly,mat in zip(ob.data.polygons,mats):poly.material_index=mat
+ bpy.context.view_layer.objects.active=ob;shell=ob.modifiers.new('Upper and sole lining','SOLIDIFY');shell.thickness=.002;shell.offset=0;bpy.ops.object.modifier_apply(modifier=shell.name)
  sideattr=ob.data.attributes.new(name='RigSide',type='INT',domain='POINT')
  for v in ob.data.vertices:sideattr.data[v.index].value=1 if (ob.matrix_world@v.co).x>=0 else -1
  kd=KDTree(len(pts))
@@ -416,12 +454,6 @@ def construct(row):
   if rid in ['pants','cargo','slacks','pinstripe','shorts','jeans']:
    for x in [-.105,-.045,.045,.105]:panel('Belt loop',x-.004,x+.004,zmax-.045,zmax-.004,.013)
   if rid=='jeans':buttons(zmax-.025,zmax-.025,1);trim('Raised fly seam',[surface(.008,z,.008) for z in [zmax-.13,zmax-.035]],.002)
- elif slot=='shoes':
-  for s in [-1,1]:
-   if rid not in ['slippers','hotelslip']:
-    for i in range(4):
-     z=zmin+(zmax-zmin)*(.38+i*.11); trim('Lace crossover',[surface(s*.08-.020,z,.009),surface(s*.08+.020,z+.009,.009)],.002,'strap')
-   if rid in ['steeltoe','ballastboots','pitchboots']:pocket(s*.08,zmin+.045,.09,.035,False)
  elif slot=='hat':
   if rid in ['cap','divehelm','chitinhelm','souwester']:
    trim('Reinforced brow brim',[surface(x,zmin+.035,.012) for x in [-.11,-.06,0,.06,.11]],.006,'metal' if rid=='divehelm' else mat)
