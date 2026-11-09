@@ -152,7 +152,7 @@ export function update(ctx, dt) {
     ctx.self.hideLocalPlayer = tc.k < 0.3
     const v = ctx.player.velocity ?? { x: 0, z: 0 }, speed = Math.hypot(v.x, v.z), ads = !!ps?.ads, crouch = !!ps?.crouch, sprint = speed > 6.2 && !ads
     const bTop = ctx.player.bounds?.max?.y, fy = (ctx.player.worldFeetPosition ?? ctx.player.feetPosition).y, headH = bTop != null ? Math.min(1.9, Math.max(1.2, bTop - fy)) : 1.7 // the body's height (a tall hat capped)
-    const wantD = ads ? 1.8 : sprint ? 3.6 : crouch ? 2.6 : 3.0, wantSh = ads ? 0.45 : sprint ? 0.35 : 0.6, wantH = (crouch ? headH * 0.62 : headH * 0.86) // Shelly: the pivot at shoulder height, not over the head, ez = Math.min(1, dt * 6)
+    const wantD = ads ? 1.8 : sprint ? 3.6 : crouch ? 2.6 : 3.0, wantSh = ads ? 0.45 : sprint ? 0.35 : 0.6, wantH = (crouch ? headH * 0.62 : headH * 0.86), ez = Math.min(1, dt * 6) // Shelly: the pivot at shoulder height, not over the head
     tc.sh += (wantSh - tc.sh) * ez; tc.h += (wantH - tc.h) * ez; tc.sp += ((sprint ? 1 : 0) - tc.sp) * Math.min(1, dt * 4)
     const wp = ctx.player.worldFeetPosition ?? ctx.player.feetPosition, pivot = { x: wp.x, y: wp.y + tc.h, z: wp.z }
     const yw = rot.yaw * Math.PI / 180, pt = rot.pitch * Math.PI / 180
