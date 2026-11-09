@@ -140,7 +140,7 @@ export function humanMorph(l) {
   for (const k of H_KEYS) o[k] = Math.round(u() * 100) / 100
   if (o.JawWide > o.JawNarrow) o.JawNarrow = 0; else o.JawWide = 0
   if (m) { o.JawWide = Math.max(o.JawWide, 0.35 + u() * 0.5); o.JawNarrow = 0; o.BrowHeavy = 0.4 + o.BrowHeavy * 0.6 } else { o.BrowHeavy *= 0.3; o.JawWide *= 0.35 }
-  return { ...o, ...(bustMorph(l) ?? {}) }
+  return o // the human bodies carry no Bust key: their curves are built into the female mesh
 }
 export function bodyModel(l) {
   if (HUMAN && !l?._human) return humanBody(l)
