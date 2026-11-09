@@ -17,6 +17,7 @@ def build(sex, side):
     bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
     for o in list(bpy.data.objects):
         if o is not body: bpy.data.objects.remove(o)
+    if body.data.shape_keys: body.shape_key_clear()   # the bust morph keys would override every vertex edit on export
     gi = {g.name: g.index for g in body.vertex_groups}
     keep = {gi["RightArm"], gi["RightForeArm"], gi["RightHand"]}
     body = bpy.data.objects["Body"]; me = body.data
