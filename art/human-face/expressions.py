@@ -69,6 +69,20 @@ def front_y(x, z):
     return min(W(front[h[1]]).y for h in hits)
 def nearest_eye(x, z):
     return front[fkd.find(Vector((x, 0, z)))[1]]
+# lash islands: an island whose centre sits above the eye's middle is an upper lash
+UPLASH = set(); seen = set()
+for v0 in LASH:
+    if v0 in seen: continue
+    isl = []; st = [v0]; seen.add(v0)
+    while st:
+        v = st.pop(); isl.append(v)
+        for e in v.link_edges:
+            o = e.other_vert(v)
+            if o in LASH and o not in seen: seen.add(o); st.append(o)
+    cz = sum(W(v).z for v in isl) / len(isl); cx = sum(W(v).x for v in isl) / len(isl); sd = 1 if cx > 0 else -1
+    xc = min(max(cx, sides[sd][2]), sides[sd][3])
+    if cz > (sides[sd][0](xc) + sides[sd][1](xc)) / 2: UPLASH.update(isl)
+print("lash", len(LASH), "upper", len(UPLASH))
 C, R = 14, 7
 lids = []  # (vert, side, x, row)
 for s in (1, -1):
@@ -95,7 +109,7 @@ def lid_pos(s, x, j, frac):
     z = t - (t - b + 0.0012) * frac * j / (R - 1)
     return Vector((x, front_y(xc, z) - 0.0016 - 0.0008 * math.sin(math.pi * j / (R - 1)), z))
 for nv, s, x, j, e in lids:
-    rest = lid_pos(s, x, j, 0)
+    rest = lid_pos(s, x, j, 0); nv.co = MW.inverted() @ rest
     for k, L in keyl.items():
         nv[L] = (MW.inverted() @ rest) + (e[L] - e[basisL])
 bm.normal_update()
@@ -109,7 +123,7 @@ for name, frac in (("X_Blink", 1.0), ("X_Squint", 0.45)):
         put(L, nv, lid_pos(s, x, j, frac) - lid_pos(s, x, j, 0))
     for v in LASH:
         p = W(v); s = 1 if p.x > 0 else -1; top, bot, x0, x1 = sides[s]; xc = min(max(p.x, x0), x1)
-        if p.z < bot(xc) + 0.4 * (top(xc) - bot(xc)): continue  # lower lash stays
+        if v not in UPLASH: continue  # lower lash islands stay
         put(L, v, Vector((0, -0.0018 * frac, -(top(xc) - bot(xc) + 0.0012) * frac * 0.97)))
     if frac < 1:
         for v in bm.verts:
