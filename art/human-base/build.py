@@ -770,8 +770,8 @@ def dress(head, body, r, is_male, aw):
     # hanging cloth: skirts, the dress's skirt, apron bib's skirt, cape
     cy = 0.1
     TUCK = lambda z: 0.002 + 0.022 * smooth(1.0, 0.9, z)  # tucked under every top (hems 0.95-1.0), full ease below
-    add(out, ring_piece("Bot_skirt", body, aw, "cloth_bottom", 1.05, 0.62, 0.08, TUCK, cy), r, skirt_w(1.05, 0.62))
-    add(out, ring_piece("Bot_longskirt", body, aw, "cloth_bottom", 1.05, 0.16, 0.13, TUCK, cy, rows=20), r, skirt_w(1.05, 0.16))
+    add(out, ring_piece("Bot_skirt", body, aw, "cloth_bottom", 0.995, 0.62, 0.08, TUCK, cy), r, skirt_w(0.995, 0.62))
+    add(out, ring_piece("Bot_longskirt", body, aw, "cloth_bottom", 0.995, 0.16, 0.13, TUCK, cy, rows=20), r, skirt_w(0.995, 0.16))
     dsk = ring_piece("dsk", body, aw, "cloth_top", 0.94, 0.52, 0.1, 0.017, cy)
     weighted(dsk, r, skirt_w(0.94, 0.52)); dr = join("Top_dress", [dr, dsk]); out[out.index(next(o for o in out if o.name.startswith("Top_dress")))] = dr
     ask = ring_piece("ask", body, aw, "cloth_top", 0.95, 0.5, 0.05, 0.022, cy, arc=(-math.pi * 0.86, -math.pi * 0.14), rows=12, seg=20)
@@ -1010,6 +1010,10 @@ def proof(name, r, extra):
     bpy.context.view_layer.update(); shot("pose", (2.4, -2.8, 1.0))
     wear(("Top_hoodie", "Bot_longskirt" if "female" in name else "Bot_overalls", "Shoes_sneakers", "Eyew_glasses", "Neck_scarf", "Under_bottom", "Under_top"))
     shot("pose2", (-2.4, -2.8, 1.0))
+    for b in pb: b.rotation_euler = (0, 0, 0)
+    pb["LeftArm"].rotation_euler = (0, 0, math.radians(-70)); pb["RightArm"].rotation_euler = (0, 0, math.radians(70))
+    wear(("Top_longsleeve", "Bot_skirt" if "female" in name else "Bot_pants", "Shoes_sneakers", "Under_bottom", "Under_top"))
+    bpy.context.view_layer.update(); shot("back", (-1.6, 1.9, 1.3), (0, 0.05, 1.15), 60)
     for b in pb: b.rotation_euler = (0, 0, 0)
 
 which = sys.argv[sys.argv.index("--") + 1]
