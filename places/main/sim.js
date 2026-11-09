@@ -40,7 +40,7 @@ function furnish(ctx) {
     const along = ctx.random() < 0.5, side = ctx.random() < 0.5 ? -1 : 1, off = kind === "shelf" || kind === "copier" ? S / 2 - 0.35 : (ctx.random() - 0.5) * 1.6;
     const pos = along ? { x: c.x + side * off, y: 0, z: c.z + (ctx.random() - 0.5) } : { x: c.x + (ctx.random() - 0.5), y: 0, z: c.z + side * off };
     const yaw = kind === "chair" ? ctx.random() * 360 : (along ? 90 : 0) + (side < 0 ? 180 : 0);
-    ctx.spawn({ tags: kind === "desk" ? ["breakable", "furniture", kind, "container"] : ["breakable", "furniture", kind], feetPosition: pos, rotation: yaw, physics: { body: "static", collider: "box" }, model: fmodel(kind), state: { mat, hp, maxHp: hp, name: kind === "desk" ? "Desk drawers" : kind[0].toUpperCase() + kind.slice(1), ...(kind === "desk" ? { items: deskItems(ctx) } : {}) } });
+    ctx.spawn({ tags: kind === "desk" ? ["breakable", "furniture", kind, "container"] : ["breakable", "furniture", kind], feetPosition: pos, rotation: yaw, visibleRange: { max: 46 }, castShadow: kind !== "chair", physics: { body: "static", collider: "box" }, model: fmodel(kind), state: { mat, hp, maxHp: hp, name: kind === "desk" ? "Desk drawers" : kind[0].toUpperCase() + kind.slice(1), ...(kind === "desk" ? { items: deskItems(ctx) } : {}) } });
     n++;
   }
 }
@@ -56,10 +56,10 @@ function sink(ctx) {
     const h = SUNK_H[kind], depth = h * (0.35 + ctx.random() * 0.4); // 35-75% under the carpet
     const x = c.x + (ctx.random() - 0.5) * 1.6, z = c.z + (ctx.random() - 0.5) * 1.6;
     const tilt = (ctx.random() - 0.5) * 36, roll = (ctx.random() - 0.5) * 28;
-    const id = ctx.spawn({ tags: ["furniture", "sunken", "breakable", kind], feetPosition: { x, y: -depth, z }, rotation: { yaw: ctx.random() * 360, pitch: tilt, roll }, physics: { body: "static", collider: "box" }, model: fmodel(kind), state: { name: "Sunken " + kind, mat: kind === "chair" ? "wood" : "metal", hp: 60, maxHp: 60 } }); // Z heaves it out of the carpet (grab.js), a swing breaks it
+    const id = ctx.spawn({ tags: ["furniture", "sunken", "breakable", kind], feetPosition: { x, y: -depth, z }, rotation: { yaw: ctx.random() * 360, pitch: tilt, roll }, visibleRange: { max: 46 }, castShadow: false, physics: { body: "static", collider: "box" }, model: fmodel(kind), state: { name: "Sunken " + kind, mat: kind === "chair" ? "wood" : "metal", hp: 60, maxHp: 60 } }); // Z heaves it out of the carpet (grab.js), a swing breaks it
     // the carpet slumps into a wet dark ring where it went down
-    ctx.spawn({ tags: ["sunken-stain"], feetPosition: { x, y: 0.012, z }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.9 + h * 0.5, segments: 20 }, material: { color: "oklch(0.2 0.03 70 / 0.55)", transparent: true, roughness: 0.35, depthWrite: false }, receiveShadow: true });
-    ctx.spawn({ tags: ["sunken-stain"], feetPosition: { x, y: 0.014, z }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.45 + h * 0.3, segments: 16 }, material: { color: "oklch(0.13 0.02 70 / 0.7)", transparent: true, roughness: 0.2, depthWrite: false } });
+    ctx.spawn({ tags: ["sunken-stain"], feetPosition: { x, y: 0.012, z }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.9 + h * 0.5, segments: 20 }, material: { color: "oklch(0.2 0.03 70 / 0.55)", transparent: true, roughness: 0.35, depthWrite: false }, receiveShadow: true, castShadow: false, visibleRange: { max: 34 } });
+    ctx.spawn({ tags: ["sunken-stain"], feetPosition: { x, y: 0.014, z }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.45 + h * 0.3, segments: 16 }, material: { color: "oklch(0.13 0.02 70 / 0.7)", transparent: true, roughness: 0.2, depthWrite: false }, castShadow: false, visibleRange: { max: 34 } });
     n++;
   }
 }
