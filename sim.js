@@ -1,7 +1,8 @@
 // The world's program: the referee. Behaviors write their own rows (ctx.self.state.*); this reads what
 // changed and writes the rows everyone reads: ctx.world.state.* and ctx.place.state.*.
 export const cadence = "1s";
-export function tick(ctx) {}
+import { setStyle } from "./scripts/lib/critter-model.js";
+export function tick(ctx) { setStyle(ctx.world.state.bodyStyle) } // this machine's spawns follow the BODIES pick
 
 // Something that falls below a place's worldBounds would respawn at the place's spawn point, which is
 // where players arrive: fallen creatures used to pile up in front of every arrival (Shelly 2026-11-08).

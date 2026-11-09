@@ -609,3 +609,32 @@ const _bust = (l) => {
   else if (l.bustS != null) val = Math.max(0.15, Math.min(1.0, 0.38 + (Number(l.bustS) - 1) * 2.0))
   return { Bust: Math.round(val * 100) / 100 }
 }
+
+// ---- the BODIES switch for everyone already standing: every person in a place (NPCs, scene-laid people, corpses) re-dressed on the human or furry body
+// their look rides in state.wear (read back off the model when it never had one), so a flip and a flip back returns the same clothes, face and species
+const OLD_HUMAN = ['/cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb', '/cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb', '/cdn/value.4802b6cd4b09d80a1b730817fb9ec8620f5d861e9e208cd3d6b6b811a18d0df4.glb']
+const FURRY_IDS = () => Object.values(M.body), HUMAN_IDS = () => [...Object.values(M.human ?? {}), ...OLD_HUMAN]
+export const STYLE_V = 'sw1'
+export function furrySpec(l) { const h = HUMAN; HUMAN = null; try { return critterSpec(l) } finally { HUMAN = h } } // a character who stays a critter in both modes (Phoebe)
+export function restyle(ctx, o) {
+  const mid = o?.model?.id ?? o?.model
+  if (!mid || typeof mid !== 'string') return false
+  const isH = HUMAN_IDS().includes(mid), isF = FURRY_IDS().includes(mid)
+  if (!isH && !isF) return false
+  const want = HUMAN ? 'h' : 'f'
+  if ((want === 'h' && isH && Object.values(M.human).includes(mid)) || (want === 'f' && isF)) return false
+  const local = String(o.id).split('/').pop()
+  const l = { ...(lookFromModel(o.model, ctx.getObject(o.id + '/' + HEAD_ID)?.model?.id) ?? {}), ...(o.state?.wear ?? {}) }
+  if (isH && !o.state?.wear) l.sex = mid === M.human.f || mid === OLD_HUMAN[1] || mid === OLD_HUMAN[2] ? 'f' : (l.sex ?? 'm')
+  l.species ??= speciesFor(local); l.sex ??= 'm'; l.fseed ??= hashOf(local)
+  if (o.state) o.state.wear = l
+  if (want === 'h') { const s = critterSpec(l); o.model = s.model; o.material = null; seatHead(ctx, o, l) }
+  else { o.model = bodyModel(l); o.morph = bustMorph(l) ?? null; o.material = { outline: { color: '#1d1420', width: 2.4 } }; o.jiggle = { bones: ['Tail', 'Tail1', 'EarL', 'EarR'], amount: 0.68, bounce: 0.72 }; seatHead(ctx, o, l) }
+  return true
+}
+// one pass over a place: skips players and what only one machine sees; returns how many changed
+export function restylePlace(ctx, place) {
+  const P = place ?? ctx.place, skip = new Set((P.players ?? []).map((p) => p.id)); let n = 0
+  for (const id in P.objects) { if (skip.has(id) || id.startsWith('player/')) continue; const o = P.objects[id]; if (!o || o.audience === 'local') continue; if (restyle(ctx, o)) n++ }
+  return n
+}
