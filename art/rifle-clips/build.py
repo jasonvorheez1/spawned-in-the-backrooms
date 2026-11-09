@@ -60,6 +60,8 @@ READY_R, READY_L = Vector((-0.16, -0.16, 1.14)), Vector((0.02, -0.30, 1.04))
 def pose(frame, pitch=0.0, kick=0.0, breath=0.0, ready=False, curl=True):
     for pb in P:
         pb.rotation_mode = "QUATERNION"; pb.rotation_quaternion = Quaternion(); pb.location = (0, 0, 0)
+    # IK cannot bend a dead-straight T-pose arm: start each elbow bent the way it should fold
+    rot_world(P["RightForeArm"], (0, 0, 1), 40); rot_world(P["LeftForeArm"], (0, 0, 1), -40)
     blade = -15 if not ready else -10
     rot_world(P["Spine1"], (0, 0, 1), blade); rot_world(P["Spine2"], (0, 0, 1), blade)
     sp = pitch * 0.22 + kick * 4 + breath * 0.8          # the chest follows the barrel part way
