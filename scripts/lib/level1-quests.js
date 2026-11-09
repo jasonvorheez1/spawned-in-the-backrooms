@@ -3,7 +3,7 @@
 // Each quest's step lives on player.state (<key>: 1..n, 99 done). Choices are offered at the top of an npc's card (l1Choice),
 // answered here (handleDialogueQuest1), and the two non-talk routes ring in from interact.js (a lift) and player.js (a kill).
 // Every number is Savi's pick.
-import { rollCheck } from "./npc-talk.js";
+import { rollCheck, keyOf } from "./npc-talk.js";
 import { addRep, addKarma, GROUPS } from "./rep.js";
 const NAMES = Object.fromEntries(Object.entries(GROUPS).map(([k, v]) => [k, v.name]));
 import { setQuest, endQuest } from "./quests.js";
@@ -59,16 +59,18 @@ const C = {
 const TAG = { rTrack: "Survival 30", rAleSpeech: "Speech 40", rAleBarter: "Barter 30", rAleThreat: "Speech 55", rCover: "Speech 45", wMed: "Medicine 35", wBuy: "Barter 25" };
 const CHECK = { rTrack: ["survival", 30], rAleSpeech: ["speech", 40], rAleBarter: ["barter", 30], rAleThreat: ["speech", 55], rCover: ["speech", 45], wMed: ["medicine", 35], wBuy: ["barter", 25] };
 const opt = (k, tag) => ({ text: C[k], tag: tag ?? TAG[k] ?? "Quest" });
+let FAILED = {}; // this choice list's player: a failed check stays failed, Fallout style
 const who = (it) => String(it?.id ?? "").split("/").pop();
 
 export function l1Choice(ctx, it, s, list) {
   if (!Array.isArray(list) || !s) return list;
   const id = who(it), r = s.rationsQ ?? 0, w = s.waterQ ?? 0, add = [];
+  FAILED = s.l1Fail ?? {};
   if (id === "meg-callum") {
     if (!r && (s.rep?.meg ?? 0) > -35) add.push(opt("rStart", "Quest"));
     if (r === 1 && !s.rTracked) add.push(opt("rTrack"));
     if (r === 3) { add.push(opt(s.rAleDead ? "rKilled" : "rTruth", "Quest")); if (!s.rAleDead) add.push(opt("rCover")); }
-    if (r === 4) add.push(opt("rCover"));
+    if (r === 4) add.push(opt(s.rAleDead ? "rKilled" : "rTruth", "Quest"));
     if (w === 1) { add.push(opt("wAsk", "Quest")); add.push(opt("wMed")); if ((s.cents ?? 0) >= 1500) add.push(opt("wBuy")); }
   } else if (id === "meg-ortiz") {
     if (r === 1) add.push(opt("rOrtiz", "Quest"));
@@ -78,6 +80,7 @@ export function l1Choice(ctx, it, s, list) {
   } else if (id === "meg-ale") {
     if (r === 2) { add.push(opt("rAleSpeech")); add.push(opt("rAleBarter")); add.push(opt("rAleThreat")); }
   }
+  for (let i = add.length - 1; i >= 0; i--) if (FAILED[Object.keys(C).find((k) => C[k] === add[i].text)]) add.splice(i, 1);
   if (!add.length) return list;
   return [...add, ...list.filter((c) => !add.some((a) => a.text === c?.text))].slice(0, Math.max(4, add.length));
 }
@@ -107,8 +110,12 @@ function finish(ctx, p, q, { xp = 100, cents = 0, items = [], text, rep = [] }) 
 function roll(ctx, p, it, k) {
   const [skill, difficulty] = CHECK[k], c = rollCheck(ctx, p.state, { skill, difficulty });
   ding(ctx, p, c.ok ? CHIME : FAIL, 0.5);
+  if (!c.ok) p.state.l1Fail = { ...(p.state.l1Fail ?? {}), [k]: true };
   return c.ok;
 }
+
+// Ale's own memory of what you did: cold greeting and no favours, or a friend (scripts/talk.js reads rapport)
+function aleFeels(ctx, p, v) { const a = ctx.getObject("meg-ale"); if (a && !a.state.dead) a.state.rapport = { ...(a.state.rapport ?? {}), [keyOf(p)]: v }; }
 
 export function handleDialogueQuest1(ctx, p, it, text) {
   const s = p?.state; if (!s) return null;
@@ -139,17 +146,19 @@ export function handleDialogueQuest1(ctx, p, it, text) {
     setStep1(ctx, p, "rations", 3, k === "rAleBarter" ? "Paid Ale $20. The cans stop walking." : "Ale admitted it. The cans go to a family hiding in the east halls.");
     return { reply: k === "rAleBarter" ? "Fine. Deal. It stops. Don't make that face, they were going to a good cause." : "There's a family in the east halls. Two kids. M.E.G. won't take them in without papers. So yeah, Callum's short. Tell him or don't.", mood: "calm" };
   }
-  if (id === "meg-callum" && r === 3 && (k === "rTruth" || k === "rKilled")) {
+  if (id === "meg-callum" && (r === 3 || r === 4) && (k === "rTruth" || k === "rKilled")) {
     if (k === "rKilled") {
       finish(ctx, p, "rations", { xp: 90, cents: 2500, items: [], text: "Quest completed: Short Rations · +$25.00", rep: [["meg", -4]] });
       return { reply: "...I asked you to find out. Not that. Take your money and don't stand near my crates.", mood: "scared" };
     }
     const kind = s.rAleTalked !== "rAleBarter"; // she told you why
+    aleFeels(ctx, p, -60);
     finish(ctx, p, "rations", { xp: 150, cents: 1500, items: ["weapon:" + UNIQUE, "ammo"], text: "Quest completed: Short Rations · Callum's Lucky Thirteen", rep: [["meg", 10], ["survivors", kind ? -3 : 0]] });
     return { reply: "Ale. Figures. I'll handle her. Here. My old thirty-eight, thirteen notches on the grip. Never jammed on me once. You earned it.", mood: "happy" };
   }
   if (k === "rCover" && id === "meg-callum" && (r === 3 || r === 4)) {
     if (!roll(ctx, p, it, k)) { setStep1(ctx, p, "rations", 4); addRep(s, "meg", -3); return { reply: "Rats don't open tins with a knife. Try again, and this time don't lie to me.", mood: "angry" }; }
+    aleFeels(ctx, p, 45);
     finish(ctx, p, "rations", { xp: 120, cents: 1000, items: ["almond", "almond", "ration"], text: "Quest completed: Short Rations · you covered for Ale", rep: [["survivors", 8], ["karma", 5]] });
     return { reply: "Rats. Great. I'll set traps. Here, for your time. Don't tell anyone how many cans we have left.", mood: "calm" };
   }
