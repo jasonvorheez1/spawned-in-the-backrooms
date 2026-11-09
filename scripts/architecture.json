@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3676,
-  "updatedAt": "2026-11-09T20:47:35.126Z",
-  "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes provide local environments, while shared systems own combat, NPCs, loot, building, dialogue, and avatar presentation. Active objectives feed both a compass pip and a player-local world marker through a shared target resolver.",
+  "basedOnSpecVersion": 3680,
+  "updatedAt": "2026-11-09T20:55:47.135Z",
+  "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes provide local environments, while shared systems own combat, NPCs, loot, building, dialogue, avatar presentation, and stealth sensing.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games, and Glow Up Salon styling stations.",
@@ -12,32 +12,32 @@
     "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams, and Locked; Level 2 uses Tripo props over its collider shell and placed survivor head attachments; Level 2.1 has Base Alef and its authored route.",
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office, and Terror Hotel; residents, hazards, office/home systems, Boiler Room rats, and climbable library ladders.",
     "places/level6, places/level7, places/level10, places/level11, places/level26 (3D) - later authored levels; Level 7 sea/islands and forts, Level 10 silo, Level 11 city, Level 26 SS Fun =) liner in green fog.",
-    "places/debug, places/spamton, places/bonus, places/tutorial0 and remaining configured places (3D) - debug mannequin/body gallery and switch pad, Spamton's fight space, and auxiliary routes."
+    "places/debug, places/spamton and auxiliary configured places (3D) - debug mannequin/body gallery and switch pad, Spamton's fight space, and other routes."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, player/camera setup, and ordered behavior composition; climb.js runs after swim.js and quest-marker.js is the final player behavior.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - place settings, authored placements, and local generated/ticked behavior; main sim owns Level 0 generation and place sims own local layouts/rebuilds/ticks.",
     "scripts/main-menu.js + scripts/main-menu-ui.js - title/pause, character creation, arrival, tutorial routing, first-arrival cutscene driver, BODIES toggle, and solo-place pause time-scale.",
     "places/intake/cells/x0z0.scene + scripts/intake-geo.js + scripts/lib/intro-cut.js - bedroom shell and waking sequence; tutorial scene and tut0 scripts own its route and beats.",
-    "scripts/camera.js + scripts/view3.js - camera and third-person toggle; scripts/ui.js and specialized UI scripts present HUD and panels, including the active-objective compass pip.",
+    "scripts/camera.js + scripts/view3.js - camera and third-person toggle; scripts/ui.js and specialized UI scripts present HUD and panels, including objective compass pip and crouch awareness readout.",
     "places/debug/cells/x1z0.scene + scripts/dbg-pose.js + scripts/dbg-bodypad.js - clip-gallery mannequins and in-world body-style switch.",
-    "places/level01/sim.js - versioned Level 0.1 layout, station furniture/door initialization, modeled furniture substitution, gallery recorder bay, and drones with timed post refills; scripts/zenith-geo.js supplies procedural station and Level 0 bulkhead/stanchion pieces.",
+    "places/level01/sim.js - versioned Level 0.1 layout, station furniture/door initialization, modeled furniture substitution, gallery recorder bay, and drones with timed post refills; scripts/zenith-geo.js supplies procedural station geometry.",
     "art/human-base/build.py + art/human-head/* + art/human-face/* + art/human-cloth/* + art/human-hair/build.py + art/tripo-hair/refit.py - offline human rig, heads/expressions, fitted wardrobe meshes and validation."
   ],
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings, and last-level names including level01; routing and hub handlers use it.",
     "scripts/lib/loot.js + items.js + weapons.js/weapons.yml - common loot spawning, container rolls, remains, place pools, and weapon definitions/rarity reused by search and combat; cells feed Zenith laser weapons.",
     "scripts/lib/build-piece.js + breakables.yml + furniture.yml - canonical build specs/models shared by B-mode and home reconstruction; CRT TV builds attach scripts/built-tv.js.",
-    "scripts/lib/screen.js - derived read-only panel classifier and wrist gates shared by player, stats, craft, rest, menu input, and vmpose hand-visibility rules; scripts/lib/footsteps.js handles player surface stride sounds.",
+    "scripts/lib/screen.js + scripts/lib/footsteps.js - derived read-only panel classifier and wrist gates shared by player/stats/craft/rest/menu/vmpose; footsteps maps player stride sounds to surfaces.",
     "scripts/lib/maze.js + scripts/lib/maze0path.js - seeded Level 0 cell/zone/wall/pit/pillar layout and open-point/BFS doorway steering shared by place simulation and smiler/lurker navigation.",
     "scripts/lib/clothes.js + clothes.yml + wardrobe.yml + critter.yml/faces.yml/hair.yml/critter-models.yml + scripts/lib/critter-model.js - clothing loot/armor, deterministic looks, named wardrobe meshes, species/head/hair presentation and restyling.",
     "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml + scripts/lib/knock.js - shared combat animation channels for player and M.E.G. agents; knock handling serves player heavy melee and enemy kick knockdowns.",
-    "scripts/lib/quest-mark.js - resolves explicit player.state.quest.mark targets or built-in Zenith Survey step targets for reuse by scripts/ui.js and scripts/quest-marker.js."
+    "scripts/lib/sneak.js + scripts/lib/data/sneak.yml - crouch visibility multiplier shared by smilers.js and lurkers.js hunter sight; player.js uses sneak tuning for gradual awareness/HUD detection."
   ],
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 container/loot helpers; scripts/lib/weapons.js - rarityIdx, rarityCap and weapon registry.",
     "scripts/grab.js - setDown, onInput, update, looseSpent; scripts/kick.js - onInput, kickSnap, kickEnd, update.",
-    "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, and fishing handlers; scripts/lib/footsteps.js - surfaceUnder, stepTick.",
+    "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, and fishing handlers; scripts/lib/sneak.js - SNEAK, crouchMul.",
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
     "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec and wardrobe fitting/restyling helpers.",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
@@ -48,11 +48,11 @@
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo (including cells), needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, and heat/cold meters.",
     "scripts/kick.js + scripts/grab.js - per-player kick rolls/cooldowns, carried prop/body IDs, held-body grip, and throw/carry session fields; target body state.heldBy/down controls hold/release.",
     "scripts/lib/loose.js - arms matched props with state.loose/mat/hp/maxHp and owns broke/act effects; per-player session.loose tracks kicked/thrown item flights until impact.",
-    "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state, while lurkers own caught-player lurkHold, stare/frenzy timing, and entity grab/frenzy/presentation state.",
+    "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state, while lurkers own caught-player lurkHold/lurkFree, stare/frenzy timing, and entity grab/frenzy/presentation state.",
     "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim. scripts/hub.js owns mall offers/shop/food, room-hop flags, trainHid/stungUntil, and transient hub state.",
     "scripts/climb.js owns local climb session/player.state.climbing and first-person arm viewmodel; scripts/lib/vmpose.js records session.vmHidKey and controls viewmodel visibility from scene/camera/screen context.",
-    "scripts/lib/zenith-quest.js + places/main/sim.js + places/level01/sim.js + scripts/zenith-use.js - player zenQ/zenV/zenKey/zenDrive progression, versioned breach and station layout/drive bay, recorder animation state, local drone/climate state; level01 place.state.droneGone owns per-drone down timestamps.",
-    "Quest handlers (scripts/lib/level8-quests.js, level10-quests.js, level11-quests.js, level21-quests.js; Zenith uses zenith-quest.js) write player.state.quest or its quest progress; quest-mark.js resolves targets, while the marker owns local presentation."
+    "scripts/lib/zenith-quest.js + places/main/sim.js + places/level01/sim.js + scripts/zenith-use.js - player zenQ/zenV/zenKey/zenDrive progression, versioned breach and station layout/drive bay, recorder animation state, local drone/climate state.",
+    "Player.js owns crouch awareness state player.state.aware/detect; its per-player behavior session holds awareness accumulation, while smilers.js/lurkers.js own hunter AI and lurkers write player.state.lurkFree after release."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3/quest-marker.",
@@ -63,20 +63,20 @@
     "scripts/lib/hub.js toHub/toSolo → room/place crossings and roomHop distinguishes intentional crossings from launch/resume; hub.js hubOffer → hub-ui.js and mall counters write shop/food state for handlers and UI.",
     "Teleport Station UI in scripts/hub-ui.js renders lastLevel(s) from scripts/lib/hub.js; travel requests reach scripts/lib/hub.js, which boards the player via bc-train and crosses to the destination.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickups, including cells, enter player.js inventory.",
-    "Kick action → scripts/kick.js handles foes/loose objects and wheeled furniture; first-person kick spawns articulated thigh/shin geometry from scripts/kick-leg-geo.js and delayed kickSnap camera feedback; scripts/grab.js carries/throws eligible bodies.",
+    "Kick action → scripts/kick.js handles foes/loose objects and wheeled furniture; first-person kick spawns articulated thigh/shin geometry from scripts/kick-leg-geo.js and delayed kickSnap camera feedback; scripts/grab.js carries/throws eligible bodies and props.",
     "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; scripts/lib/stats.js and ballistics.js apply weapon skill/handling, with energy weapons consuming cells.",
-    "Level 0 main sim → maze.js seeded geometry/cell helpers; smilers.js/lurkers.js use maze0path BFS doorway waypoints plus pillar/wall steering and hunt/hearing state; lurkers accumulate watched stare toward a timed scream.",
-    "Zenith Survey handlers write quest progress; quest-mark.js resolves marks/Zenith steps → scripts/ui.js compass pip and scripts/quest-marker.js local amber diamond. Destroyed zdrone → scripts/zenith-drones.js records place.state.droneGone[id]=ctx.now(); places/level01/sim.js checks every 10 s and respawns that post after 3,600,000 ms."
+    "Level 0 main sim → maze.js seeded geometry/cell helpers; smilers.js/lurkers.js use maze0path BFS and shared sneak.crouchMul for sight; lurkers gate grabs on player.state.lurkFree and set an 8-second grace after release. player.js accumulates crouched awareness from clear watchers into state.aware/detect; ui.js displays caution/detected/danger and the awareness bar.",
+    "Zenith Survey handlers write quest progress; quest-mark.js resolves marks/Zenith steps → scripts/ui.js compass pip and scripts/quest-marker.js local amber diamond. Destroyed zdrone → scripts/zenith-drones.js records place.state.droneGone keyed by post ID; level01 sim restores each missing post after an hour."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js + scripts/salon-stylist.js/scripts/salon-ui.js - authored mall shops/landmarks and simulated mall life; salon chairs queue sitters and style them.",
+    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js + scripts/salon-stylist.js/scripts/salon-ui.js - authored mall shops/landmarks and simulated mall life; salon chairs queue sitters and stylist behavior varies by station.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence, and rebuild path; CRT TV builds attach screen, sound, and glow.",
-    "art/level0/build.py + art/level1/paint.py/build.py/props.py/props_paint.py + art/level2/fixtures.py + art/level21/props21.py - offline generators for Level 0 props/stairs, Level 1 textures/door/breach/map and props, Level 2 fixtures, and Level 2.1 props.",
-    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith station geometry, machinery, security and quest interactions; drones have scheduled destruction recovery.",
+    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith Station layout, breaches, interactables, bots and timed drone-post restoration.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/{wardrobe.py,check-bust.py,compile_wardrobe.py,wardrobe-check.mjs} + art/human-head/* + art/human-hair/build.py - deterministic appearance and fitted clothing/head assets.",
-    "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared human combat/gait, idles, head tracking, fidgets, expressions, and dialogue; player/enemy combat varies by role."
+    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/{wardrobe.py,check-bust.py,compile_wardrobe.py,wardrobe-check.mjs} + art/human-head/* + art/human-hair/build.py - deterministic appearance and fitted clothing/head/hair variants.",
+    "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared human combat/gait, idles, head tracking, fidgets, expressions, and dialogue; player/enemy combat use common animation foundations.",
+    "scripts/lib/sneak.js + scripts/lib/data/sneak.yml - common crouch sight multiplier for smilers and lurkers, varied by crouch movement, darkness, and flashlight; player detection independently accumulates awareness for HUD feedback."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -85,9 +85,9 @@
   "migrationNotes": [
     "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room and overflow mall rooms use bonus-N IDs. Teleport Station travel derives from savePlace; level01 is named in hub/feed data and is not a solo home.",
     "Found-item rarity gates apply only to found weapon tokens; existing weapon ownership/use and non-weapon loot are not level-gated. Search gating excludes storage and NPC containers.",
-    "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic. Level 0 sim sweeps loose ammo once under deskV and does not seed floor ammo.",
-    "Footstep surface detection checks visible geometry within 0.45 m before collider; terrain chunk hits use terrain.materialAt. Keep material words/tags and mapping priority in scripts/lib/data/footsteps.yml. Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0, and props spawn static before floor mesh cooking.",
-    "Level 2.1 revisioned rebuild preserves generated placement identity. Quest target resolution requires player.state.quest.step; explicit mark supports {place,x,y,z} or {place,id}, and id targets use target-object feetPosition; keep place IDs and Zenith IDs aligned.",
-    "Zenith drone deaths write place.state.droneGone keyed by z-drone post ID with ctx.now() milliseconds; level01 sim polls at 10-second intervals and restores each missing post after 3,600,000 ms. Keep fresh layout migration separate from the refill check so surviving drones are not duplicated."
+    "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; lurkerGrabGrace in level0.yml is seconds (8), stored as player.state.lurkFree in ctx.now() milliseconds and checked by every lurker grab.",
+    "scripts/lib/data/sneak.yml tunes crouch visibility and awareness rates: crouch still/moving, dark and flashlight multipliers combine in crouchMul; preserve skill-based hunter sight and the crouch-only awareness/HUD state path.",
+    "Footstep surface detection checks visible geometry within 0.45 m before collider; terrain chunk hits use terrain.materialAt. Keep material words/tags and mapping priority in scripts/lib/data/footsteps.yml; Level 2 l2props.yml sizes are metres.",
+    "Level 2.1 revisioned rebuild preserves generated placement identity. Quest target resolution requires player.state.quest.step; Zenith drone deaths write place.state.droneGone keyed by post ID with ctx.now() milliseconds and level01 sim restores after 3,600,000 ms."
   ]
 }
