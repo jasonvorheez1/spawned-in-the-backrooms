@@ -135,3 +135,5 @@ Optional, never forced. Story is Savi's draft. Your HALOGEN keeps flashing an ow
 - 2026-11-08: first-person melee swings come from Shelly's New Vegas melee overhaul: decoded by art/nv-melee (kf2pos → swings) into scripts/lib/data/nv-swings.js; vmpose plays them at 55% of NV's length (my pick), with NV's own left swing as the combo's second hit.
 
 - 2026-11-09: Shelly requested a full hair/head refresh and a dedicated male head, including working human beards and blush. Human facial hair and cheek makeup are now skinned face parts that follow face shape and expressions; existing style choices stay available.
+
+- 2026-11-09: Shelly supplied male anime head references and requested a leaner, lifted face. The male sculpt now preserves the authored facial construction with narrower eyes, separate pupils, defined brows/nose/lips and a shorter, leaner lower face. The rejected procedural skull was never pushed.
