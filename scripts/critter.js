@@ -278,6 +278,10 @@ export function update(ctx) {
   // the wardrobe mirror: only on this player's own screen
   const me = ctx.place.players.find((p) => p.id === ctx.self.id)
   if (!me?.isLocal) return
+  { // first person: the body's own held gun stays off this screen (an aim clip lifts it into the eye); third person shows it
+    const hideHeld = ses.heldObj && !ctx.self.state.tp ? ses.heldObj : null
+    if (ses.hidHeld !== hideHeld) { const h = (me.hidden ?? []).filter((i) => i !== ses.hidHeld); if (hideHeld) h.push(hideHeld); me.hidden = h; ses.hidHeld = hideHeld }
+  }
   if (ctx.self.state.wardrobeOpen) {
     const yaw = ((me.camera?.rotation?.yaw ?? 0) * Math.PI) / 180, f = ctx.self.feetPosition
     const fx = -Math.sin(yaw), fz = -Math.cos(yaw), rx = Math.cos(yaw), rz = -Math.sin(yaw)
