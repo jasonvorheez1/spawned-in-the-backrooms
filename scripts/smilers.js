@@ -136,7 +136,8 @@ export function update(ctx, dt) {
     mem.smilersAt = now + 1200;
     mem.allSmilers = ctx.query({ tags: ["smiler"] });
   }
-  const allSmilers = mem.allSmilers;
+  const objs = ctx.place.objects;
+  const allSmilers = mem.allSmilers.filter((w) => w.id in objs); // one destroyed since the last census is skipped, never written to
 
   for (const w of allSmilers) {
     const m = (mem[w.id] ??= {});
