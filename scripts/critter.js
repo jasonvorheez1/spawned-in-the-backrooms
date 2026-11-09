@@ -4,7 +4,7 @@
 import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
 const SCRIPT = 'scripts/critter2-geo.js'
-import { bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, STYLE_V, seatHead, humanMorph, HEAD_ID, maskChild, seatMask, hairChild, seatHair } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
+import { bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, STYLE_V, seatHead, humanMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
 const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 import { weaponBody, HOLD } from './lib/weapon-look.js'
@@ -32,6 +32,19 @@ function applyBones(ctx) {
   if (ses.tailS && ses.tailS !== 1) b.Tail = { scale: ses.tailS }
   if (ses.pose) Object.assign(b, ses.pose) // the hands on a gun: IK reach points (scripts/lib/body3.js)
   ctx.self.bones = b
+}
+// human faces (Shelly Nov 9 #116046): the body's X_ keys wear the mood face and blink on their own; a line the player's character speaks (state.line) moves the mouth letter by letter
+function humanFaceTick(ctx, face) {
+  const ses = ctx.self.session, now = ctx.now()
+  if (ses.hBlinkAt == null) ses.hBlinkAt = now + 1500 + ctx.random() * 2500
+  if (now >= ses.hBlinkAt) { ses.hBlinkAt = now + 2600 + ctx.random() * 3800; ses.hBlinkUntil = now + 140 }
+  const blink = now < (ses.hBlinkUntil ?? 0) && !EYES_SHUT.includes(face)
+  const ln = ctx.self.state.line, mouth = ln?.t ? mouthAt(ln.t, now - ln.at - 120) : null
+  const k = (ses.key ?? '') + face + (blink ? 1 : 0) + (mouth ? mouth.map((v) => v.toFixed(1)).join() : '')
+  if (k === ses.hFaceK) return
+  ses.hFaceK = k
+  if (ses.hBaseK !== ses.key) { ses.hBaseK = ses.key; ses.hBase = humanMorph(ses.cachedParams) ?? {} }
+  ctx.self.morph = { ...ses.hBase, ...humanFace(face, blink, mouth) }
 }
 export function blinkEnd(ctx) { if (ctx.self.session.flair === 'worn') return; ctx.self.session.lids = false; applyBones(ctx) }
 export function blinkNow(ctx) { if (ctx.self.session.flair === 'worn') return; ctx.self.session.lids = true; applyBones(ctx); ctx.after(0.12, 'blinkEnd', {}) }
@@ -216,6 +229,7 @@ export function update(ctx) {
     // the Blender critter's file carries no clips of its own: its humanoid bones play the library gait; the scripted one has its own
     if (MESH) { const g = gaitFor(ctx); if (ctx.self.state.gaitClips?.idle !== g.idle || ctx.self.state.gaitClips?.walk !== g.walk) ctx.self.state.gaitClips = g } else if (ctx.self.state.gaitClips) delete ctx.self.state.gaitClips
     if (HUMAN) { if (ses.flair !== 'human') { ses.flair = 'human'; ctx.self.anim.flair = null; ctx.self.anim.cute = null; ctx.self.bones = {}; ses.lids = false; ses.twitch = null } } // the human rig has no tail, ears or lids
+    if (HUMAN && ses.cachedParams) humanFaceTick(ctx, face)
     else {
     if (ses.flair !== face) { ses.flair = face; flair(ctx.self, face) }
     life(ctx, face)
