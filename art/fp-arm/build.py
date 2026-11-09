@@ -42,12 +42,12 @@ def build(sex, side):
         P[v.index] = (p, d.dot(a), d.dot(n), d.dot(s), ws.get(gi["RightHand"], 0))
     # each finger is its own island past the webbing: find them, then bend each at three hinges (knuckle, middle, tip)
     H = {i for i, q in P.items() if q[4] > 0.1}
-    adj = {i: set() for i in H}
+    adj = {i: set() for i in P}
     for e in me.edges:
         i, j = e.vertices
-        if i in H and j in H: adj[i].add(j); adj[j].add(i)
+        if i in P and j in P: adj[i].add(j); adj[j].add(i)
     byp = {}
-    for i in H: byp.setdefault(tuple(round(c, 4) for c in P[i][0]), []).append(i)
+    for i in P: byp.setdefault(tuple(round(c, 4) for c in P[i][0]), []).append(i)
     for L in byp.values():
         for i in L: adj[i].update(L)
     def comps(sel):
