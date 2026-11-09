@@ -52,7 +52,7 @@ def borrow(dst, src):
     return src
 from mathutils.bvhtree import BVHTree
 _hb = bmesh.new(); _hm = bpy.data.meshes.new_from_object(head.evaluated_get(bpy.context.evaluated_depsgraph_get())); _hb.from_mesh(_hm); _hb.transform(head.matrix_world); bpy.data.meshes.remove(_hm)
-HEAD_BVH = BVHTree.FromBMesh(_hb)
+HEAD_BVH = BVHTree.FromBMesh(_hb); HEAD_P = [v.co.copy() for v in _hb.verts]
 def refit(k, objs):
     # Shelly: "either the hair is too big to fit my character or too small". The bbox fit left styles floating off the skull or cutting the ears.
     # Shrink-to-fit about the skull centre: the smallest scale where under 2% of the near verts sink into the head, then push the stragglers out 4 mm.
@@ -98,45 +98,104 @@ def finish(o):
     o.parent = rig; mod = o.modifiers.new("skin", "ARMATURE"); mod.object = rig
 
 CAPMAT = None
+CAPTEX = "/workspace/hair/captex.png"   # art/human-hair/captex.py: the pack's strands as a root band, alpha breaking into strands at the hairline
 def capmat():
     global CAPMAT
     if CAPMAT is None:
-        CAPMAT = bpy.data.materials.new("scalp_cap"); CAPMAT.use_nodes = True
-        b = CAPMAT.node_tree.nodes["Principled BSDF"]; b.inputs["Base Color"].default_value = (0.42, 0.40, 0.38, 1); b.inputs["Roughness"].default_value = 0.85
+        CAPMAT = bpy.data.materials.new("scalp_cap"); CAPMAT.use_nodes = True; t = CAPMAT.node_tree
+        b = t.nodes["Principled BSDF"]; b.inputs["Roughness"].default_value = 0.85
+        im = t.nodes.new("ShaderNodeTexImage"); im.image = bpy.data.images.load(CAPTEX); im.image.alpha_mode = "STRAIGHT"
+        rd = t.nodes.new("ShaderNodeMath"); rd.operation = "ROUND"          # glTF alpha MASK: the edge is cut strand by strand, no sorting
+        t.links.new(im.outputs["Color"], b.inputs["Base Color"]); t.links.new(im.outputs["Alpha"], rd.inputs[0]); t.links.new(rd.outputs[0], b.inputs["Alpha"])
     return CAPMAT
+
+def _cr(p0, p1, p2, p3, t):
+    return 0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (-p0 + 3 * p1 - 3 * p2 + p3) * t ** 3)
+# the hairline: height above the Head bone as a share of the skull's height (top - hz), by azimuth |a| from the face (0) round to the nape (180)
+HAIRLINE = {
+    "f": [(0, 0.735), (10, 0.75), (24, 0.762), (40, 0.75), (54, 0.70), (64, 0.60), (72, 0.50), (80, 0.47), (100, 0.47), (118, 0.44), (135, 0.33), (155, 0.21), (180, 0.17)],
+    "m": [(0, 0.765), (10, 0.775), (24, 0.79), (38, 0.795), (50, 0.74), (60, 0.62), (70, 0.48), (78, 0.43), (100, 0.45), (118, 0.42), (135, 0.30), (155, 0.18), (180, 0.14)],
+}
+def hairline_frac(a):
+    a = abs(((a + 180) % 360) - 180)
+    P = HAIRLINE[SEX]; P = [(-x, y) for x, y in reversed(P[1:])] + P + [(360 - x, y) for x, y in reversed(P[:-1])]
+    for i in range(len(P) - 1):
+        if P[i][0] <= a <= P[i + 1][0]:
+            t = (a - P[i][0]) / max(1e-6, P[i + 1][0] - P[i][0])
+            return _cr(P[max(0, i - 1)][1], P[i][1], P[i + 1][1], P[min(len(P) - 1, i + 2)][1], t)
+    return P[-1][1]
 def make_cap(hatted, mat):
-    # a painted scalp under every cut: the head's crown and back, pushed out 4 mm, so no skin shows between strands (Andrew's bald patches, Nov 9)
-    global CAPMAT
+    # Shelly Nov 9 ("this is ugly fix hairs"): the old cap was the head's own faces cut out, so its edge stair-stepped across the forehead.
+    # Now a fresh shell: rays from the skull centre find the skin, the shell rides 3 mm off it, rows end on a smooth drawn hairline
+    # (widow's dip, rounded temples, a short sideburn, lifted clear over the ears, down to the nape), the last rows tuck under the skin,
+    # and its texture's alpha breaks the edge into single strands.
     mat = capmat()
-    if False:
-        if CAPMAT is None:
-            CAPMAT = bpy.data.materials.new("scalp_cap"); CAPMAT.use_nodes = True
-            CAPMAT.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.09, 0.06, 0.04, 1)
-            CAPMAT.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.9
-        mat = CAPMAT
-    dg = bpy.context.evaluated_depsgraph_get(); hm = bpy.data.meshes.new_from_object(head.evaluated_get(dg), depsgraph=dg)
-    bm = bmesh.new(); bm.from_mesh(hm); bm.transform(head.matrix_world); bpy.data.meshes.remove(hm)   # the head as it draws, not its rest data
-    depth = H["y1"] - H["y0"]
-    def keepf(f):
-        c = f.calc_center_median()
-        if c.z < H["hz"] + 0.035: return False            # above the ears only
-        front = (c.y - H["y0"]) / depth                     # 0 = face, 1 = back of head
-        hairline = H["top"] - 0.03                           # forehead stays skin; the cap ends behind the bangs (Shelly's jagged hairline, Nov 9)
-        if front < 0.5 and c.z < hairline: return False
-        if abs(c.x) > H["rx"] * 0.93 and front < 0.55 and c.z < H["top"] - 0.07: return False  # temples
-        if hatted and c.z > H["top"] - 0.075: return False
-        return True
-    bmesh.ops.delete(bm, geom=[f for f in bm.faces if not keepf(f)], context="FACES")
-    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
-    if not bm.faces: bm.free(); return None
+    hh = H["top"] - H["hz"]; C = Vector((0, H["cy"], H["hz"] + 0.40 * hh))
+    def hit(az, el):
+        d = Vector((math.sin(az) * math.cos(el), -math.cos(az) * math.cos(el), math.sin(el)))
+        loc, n, i, dist = HEAD_BVH.ray_cast(C + d * 0.5, -d, 0.5)
+        if loc is None: return None, d, None
+        return loc, d, n
+    # the ears: where the head mesh stands out past the skull's side; the hairline lifts 1.4 cm clear of their top
+    ear = [p for p in HEAD_P if H["hz"] + 0.03 < p.z < H["hz"] + 0.6 * hh and abs(p.x) > H["rx"] + 0.004]
+    etop = max((p.z for p in ear), default=H["hz"] + 0.45 * hh)
+    eaz = [abs(math.degrees(math.atan2(abs(p.x), -(p.y - C.y)))) for p in ear]
+    ea0, ea1 = (min(eaz), max(eaz)) if eaz else (80, 110)
+    print("ears top", round(etop - H["hz"], 3), "az", round(ea0), round(ea1))
+    NA, NR = 144, 34
+    zl = []
+    for j in range(NA):
+        ad = j * 360.0 / NA; aa = abs(((ad + 180) % 360) - 180)
+        z = H["hz"] + hairline_frac(ad) * hh
+        if ea0 - 14 <= aa <= ea1 + 10: z = max(z, etop + 0.014)
+        zl.append(z)
+    for _ in range(6): zl = [(zl[j - 1] + 2 * zl[j] + zl[(j + 1) % NA]) / 4 for j in range(NA)]   # round every corner
+    ztop = H["top"] - 0.075 if hatted else None
+    bm = bmesh.new(); uvl = bm.loops.layers.uv.new("UVMap")
+    grid = []; R = 14
+    for j in range(NA):
+        az = math.radians(j * 360.0 / NA)
+        def zat(el):
+            loc, d, n = hit(az, el); return loc.z if loc else C.z + 0.2 * math.sin(el)
+        lo, hi = math.radians(-60), math.radians(88)                 # the elevation where this azimuth's skin meets the hairline
+        for _ in range(30):
+            mid = (lo + hi) / 2
+            if zat(mid) > zl[j]: hi = mid
+            else: lo = mid
+        el_end = hi
+        el_start = math.radians(88.5)
+        if ztop is not None:
+            lo2, hi2 = el_end, math.radians(88.5)
+            for _ in range(30):
+                mid = (lo2 + hi2) / 2
+                if zat(mid) > ztop: hi2 = mid
+                else: lo2 = mid
+            el_start = hi2
+        col = []
+        for r in range(NR + 1):
+            t = r / NR; el = el_start + (el_end - el_start) * t
+            loc, d, n = hit(az, el)
+            if loc is None: loc = C + d * 0.1; n = d
+            w = max(0.0, min(1.0, (t - 0.86) / 0.14)); w = w * w * (3 - 2 * w)
+            off = 0.0032 * (1 - w) - 0.0012 * w                            # 3 mm off the skin, the last rows tuck 1 mm under it
+            off /= max(0.6, d.dot(n))
+            col.append((bm.verts.new(loc + d * off), t))
+        grid.append(col)
+    pole = None
+    if ztop is None:
+        loc, d, n = hit(0, math.radians(90)); pole = bm.verts.new((loc or C + Vector((0, 0, 0.15))) + Vector((0, 0, 0.0032)))
+    for j in range(NA):
+        j2 = (j + 1) % NA; u0, u1 = j * R / NA, (j + 1) * R / NA
+        for r in range(NR):
+            q = [grid[j][r], grid[j][r + 1], grid[j2][r + 1], grid[j2][r]]
+            f = bm.faces.new([v for v, t in q]); f.smooth = True
+            for lp, (uu, tt) in zip(f.loops, [(u0, q[0][1]), (u0, q[1][1]), (u1, q[2][1]), (u1, q[3][1])]): lp[uvl].uv = (uu, 1 - tt)
+        if pole is not None:
+            f = bm.faces.new([pole, grid[j2][0][0], grid[j][0][0]]); f.smooth = True
+            for lp, uu in zip(f.loops, [(u0 + u1) / 2, u1, u0]): lp[uvl].uv = (uu, 1.0)
     bm.normal_update()
-    ctr = Vector((0, H["cy"], H["hz"] + 0.02))
-    edge = {v for e in bm.edges if e.is_boundary for v in e.verts}
-    ring = {o for v in edge for e in v.link_edges for o in e.verts} - edge
-    for v in bm.verts: v.co += (v.co - ctr).normalized() * (-0.002 if v in edge else 0.004 if v in ring else 0.008)   # radial; the rim tucks under the skin so its stepped outline never draws as a line
+    if sum(f.normal.dot(f.calc_center_median() - C) for f in bm.faces) < 0: bmesh.ops.reverse_faces(bm, faces=list(bm.faces))
     me = bpy.data.meshes.new("scalpcap"); bm.to_mesh(me); bm.free()
-    me.validate(clean_customdata=True)
-    for a in [a.name for a in me.attributes if a.name not in ("position", ".edge_verts", ".corner_vert", ".corner_edge", "sharp_face") and not a.name.startswith(".") and a.domain != "CORNER"]: me.attributes.remove(me.attributes[a])
     me.materials.append(mat)
     o = bpy.data.objects.new("scalpcap", me); bpy.context.scene.collection.objects.link(o)
     return o
@@ -145,6 +204,7 @@ def export(k, hatted):
     bpy.ops.object.select_all(action="DESELECT")
     keep = []
     for kind, o in made[k]:
+        if kind == "scalp": continue   # the pack's scalp patch (its own stepped edge) gives way to the drawn cap
         c = o.copy(); c.data = o.data.copy(); bpy.context.scene.collection.objects.link(c)
         first = next(o2 for kd, o2 in made[k] if kd == kind)  # one material per kind: the engine tints the slot named hair
         c.data.materials.clear(); c.data.materials.append(capmat() if kind == "scalp" else first.data.materials[0])  # the pack's scalp texture is skin-toned: tinted it read as bald patches
