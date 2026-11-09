@@ -10,7 +10,8 @@ BODY = f"/workspace/human/ht/{SEX}.glb"; SRC = "/workspace/tripo-hair"; OUT = "/
 NAMES = {"long_straight_anime_hair_with_": "t_long", "short_spiky_anime_hair__male": "t_spiky", "anime_twin_ponytails_hair_with": "t_twintails",
          "messy_medium_anime_hair__male_": "t_messy", "anime_bob_cut_hair_with_blunt_": "t_bob", "anime_high_ponytail_hair_with_": "t_ponytail",
          "anime_silver_long_hair_with_": "t_silver",
-         "anime_soft_bob": "t_softbob"}  # johnadams2 Nov 9: soft clumped wavy bob off his bob sheet (/cdn/image-u06qves5w.webp)  # johnadams2 Nov 9: long silver curtain from his reference (/cdn/image-u60fav89f.webp)
+         "anime_soft_bob": "t_softbob", "anime_soft_twintails": "t_s_twintails", "anime_soft_ponytail": "t_s_ponytail",
+         "anime_soft_wolfcut": "t_s_wolfcut", "anime_soft_wavy": "t_s_wavy"}  # johnadams2 Nov 9: soft clumped wavy bob off his bob sheet (/cdn/image-u06qves5w.webp)  # johnadams2 Nov 9: long silver curtain from his reference (/cdn/image-u60fav89f.webp)
 # per style: overall width against the skull width, crown lift over the head top, shift back (m) — tuned from the proof renders
 FIT = {"t_bob": (1.42, 0.03, 0.01), "t_long": (1.45, 0.03, 0.02), "t_messy": (1.6, 0.035, 0.01), "t_ponytail": (1.5, 0.03, 0.03),
        "t_spiky": (1.55, 0.04, 0.01), "t_twintails": (2.9, 0.03, 0.01)}
@@ -49,7 +50,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     q = lambda arr, f: arr[min(len(arr) - 1, int(f * len(arr)))]
     cw = q([v.x for v in crown], 0.97) - q([v.x for v in crown], 0.03)
     cys = sorted(v.y for v in crown); ccx = (q([v.x for v in crown], 0.97) + q([v.x for v in crown], 0.03)) / 2; ccy = (cys[0] + cys[-1]) / 2
-    W = {"t_twintails": 1.05, "t_long": 1.1, "t_silver": 1.1}.get(key, 1.18)
+    W = {"t_s_twintails": 1.05, "t_s_ponytail": 1.1, "t_twintails": 1.05, "t_long": 1.1, "t_silver": 1.1}.get(key, 1.18)
     s = (2 * rx * W) / max(cw, 1e-4)
     # the crown band is the top 18%, so its width runs a little under the skull's: the push-out below seats whatever lands inside
     M = Matrix.Translation(Vector((0, cy + 0.004, top + 0.014))) @ Matrix.Scale(s, 4) @ Matrix.Translation(Vector((-ccx, -ccy, -t)))
@@ -62,7 +63,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     if b1n >= b0n: me.transform(R)
     print("face", key, b0n, b1n)
     # a lopsided Tripo mesh: its fuller side mirrored onto the other, so the curtain falls even on both shoulders
-    if key in ("t_silver", "t_softbob"):
+    if key in ("t_silver", "t_softbob", "t_s_wavy", "t_s_wolfcut"):
         side = 1 if sum(1 for v in me.vertices if v.co.x > 0) >= sum(1 for v in me.vertices if v.co.x < 0) else -1
         bmS = bmesh.new(); bmS.from_mesh(me)
         bmesh.ops.symmetrize(bmS, input=bmS.verts[:] + bmS.edges[:] + bmS.faces[:], direction="X" if side > 0 else "-X", dist=0.0005)
@@ -75,7 +76,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
                 sgn = 1 if c.x >= 0 else -1; k = min(1.0, (c.z - (hz - 0.14)) / 0.08)
                 c.x = c.x + (sgn * rx * (0.78 + 0.1 * abs(c.x) / rx) - c.x) * k
     # a painted wig leaves Tripo a filled face mask inside the hair: for these, what hangs in front of the face is cut away, not folded
-    if key in ("t_softbob",):
+    if key == "t_softbob" or key.startswith("t_s_"):
         bmC = bmesh.new(); bmC.from_mesh(me)
         cut = [f for f in bmC.faces if (lambda c: hz - 0.13 < c.z < fz1 - 0.005 and c.y < cy - 0.01 and abs(c.x) < rx * 0.8)(f.calc_center_median())]
         bmesh.ops.delete(bmC, geom=cut, context="FACES"); bmesh.ops.delete(bmC, geom=[v for v in bmC.verts if not v.link_faces], context="VERTS")
