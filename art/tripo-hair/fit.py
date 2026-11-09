@@ -74,6 +74,12 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
             if hz - 0.14 < c.z < fz1 - 0.01 and c.y < cy - 0.02 and abs(c.x) < rx * 0.78:
                 sgn = 1 if c.x >= 0 else -1; k = min(1.0, (c.z - (hz - 0.14)) / 0.08)
                 c.x = c.x + (sgn * rx * (0.78 + 0.1 * abs(c.x) / rx) - c.x) * k
+    # a painted wig leaves Tripo a filled face mask inside the hair: for these, what hangs in front of the face is cut away, not folded
+    if key in ("t_softbob",):
+        bmC = bmesh.new(); bmC.from_mesh(me)
+        cut = [f for f in bmC.faces if (lambda c: hz - 0.13 < c.z < fz1 - 0.005 and c.y < cy - 0.01 and abs(c.x) < rx * 0.8)(f.calc_center_median())]
+        bmesh.ops.delete(bmC, geom=cut, context="FACES"); bmesh.ops.delete(bmC, geom=[v for v in bmC.verts if not v.link_faces], context="VERTS")
+        bmC.to_mesh(me); bmC.free(); print("cut face mask", key, len(cut))
     # whatever still hangs over the face folds up into a fringe that ends at the brow, no holes cut
     for v in me.vertices:
         c = v.co
