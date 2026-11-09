@@ -55,6 +55,10 @@ function findFocus(ctx, ray) {
     const wp = !it.state?.c && tag === 'usable' ? ctx.getObject(it.id)?.worldFeetPosition : null
     const p = it.state?.c ?? (wp ? { x: wp.x, y: wp.y + (it.state?.kind === 'boilerdoor' ? 0.9 : 0), z: wp.z } : it.feetPosition)
     let lift = it.state?.c ? 0 : big ? 0.28 : 0.1
+    if (tag === 'seat' && it.state?.c) { // a chair is its whole height: aim at its seat, its back or its cushion from front or side and the look finds it
+      const hd = Math.hypot(d.x, d.z) || 1e-3, along = ((p.x - o.x) * d.x + (p.z - o.z) * d.z) / hd
+      lift = Math.max(-0.45, Math.min(0.65, o.y + d.y / hd * Math.max(0, along) - p.y))
+    }
     if (tag === 'npc' && !it.state?.dead && (it.state?.hp ?? 1) > 0) { // a standing person is a whole body: the look ray picks the height it crosses at their spot, shins to head
       const top = Math.max(1.1, (it.state?.build?.h ?? 1) * 1.55), hd = Math.hypot(d.x, d.z) || 1e-3
       const along = ((p.x - o.x) * d.x + (p.z - o.z) * d.z) / hd // horizontal metres to their spot along the look
@@ -94,8 +98,8 @@ function refocus(ctx, force = false) {
       } else if (f.tag === 'usable') {
         info = { id: f.id, name: it.state?.name ?? 'Thing', info: it.state?.info ?? '', verb: it.state?.verb ?? 'Use', color: it.state?.tint ?? '#d9d3b8' }
       } else if (f.tag === 'seat') {
-        const full = spotsOf(it).every((sp) => it.state?.by?.[sp.i] && it.state.by[sp.i] !== ctx.self.id)
-        info = { id: f.id, name: it.state?.name ?? 'Chair', info: full ? 'taken' : '', verb: full ? 'Taken:' : 'Sit', color: full ? '#e0644f' : '#d9d3b8' }
+        const full = spotsOf(it).every((sp) => { const h = holder(ctx, it, sp.i); return h && h !== ctx.self.id })
+        info = { id: f.id, name: it.state?.name ?? 'Chair', info: full ? (it.state?.salon ? 'taken · try another chair' : 'taken') : '', verb: full ? 'Taken:' : 'Sit', color: full ? '#e0644f' : '#d9d3b8' }
       } else if (f.tag === 'bench') {
         info = { id: f.id, name: it.state?.name ?? 'Workbench', info: 'Craft ammo, repair kits, batteries, fuses', verb: 'Use', color: '#f2c14e' }
       } else if (f.tag === 'npc') {
@@ -316,7 +320,7 @@ function caught(ctx, it, who) {
 function press(ctx) {
   const m = mem(ctx), s = ctx.self.state
   if (s.lootOpen) { closeLoot(ctx); return }
-  if (s.sit) { standUp(ctx); m.key = ''; return }
+  if (s.sit) { if (s.salonOpen) { s.salonOpen = false; s.wardrobeOpen = false } standUp(ctx); m.key = ''; return }
   const f = m.focus
   if (!f) return
   const it = ctx.getObject(f.id)
@@ -340,7 +344,7 @@ function press(ctx) {
   }
   if (f.tag === 'usable' && it.state?.kind === 'salon') { s.salonOpen = true; s.salonTab = s.salonTab || 'hair'; s.wrMenu = false; s.wardrobeOpen = true; m.key = ''; return } // Glow Up Salon: its own makeover menu (scripts/salon-ui.js)
   if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); if (it.tags?.includes?.('l5-elev-panel')) s.elevPanel = f.id; m.key = ''; return } // an elevator plate opens a clickable floor list (ui.js)
-  if (f.tag === 'seat' && it.state?.salon) { if (sitDown(ctx, it)) { s.salonOpen = true; s.salonTab = s.salonTab || 'hair'; s.wrMenu = false; s.wardrobeOpen = true } m.key = ''; return } // a salon chair at the mirrors: sit and the stylist comes over (scripts/salon-stylist.js)
+  if (f.tag === 'seat' && it.state?.salon) { if (spotsOf(it).every((sp) => { const h = holder(ctx, it, sp.i); return h && h !== ctx.self.id })) { note(ctx, 'That chair is taken'); m.key = ''; return } if (sitDown(ctx, it)) { s.salonOpen = true; s.salonTab = s.salonTab || 'hair'; s.wrMenu = false; s.wardrobeOpen = true } m.key = ''; return } // a salon chair at the mirrors: sit and the stylist comes over (scripts/salon-stylist.js)
   if (f.tag === 'seat') { if (sitDown(ctx, it) && it.state?.boat) ctx.emit('press', { by: ctx.self.id }, { to: it.id }); m.key = ''; return } // a boat's seat also takes the oars
   if (f.tag === 'bench') { s.craftOpen = 'bench'; s.craftBench = f.id; return }
   if (f.tag === 'container') { openLoot(ctx, it); return }
@@ -446,6 +450,7 @@ export function onInput(ctx, input) {
   if (input.pressed?.loot && d && typeof d.k === 'string') { lootAction(ctx, d); return }
   if (ctx.self.state.lootOpen && input.pressed?.reload) { lootAction(ctx, { k: 'all' }); return } // R takes everything, as in Fallout
   if (ctx.self.state.sit?.phase === 'sat' && (Math.abs(input.axes?.moveX ?? 0) > 0.3 || Math.abs(input.axes?.moveZ ?? 0) > 0.3 || input.pressed?.jump)) { if (ctx.self.state.salonOpen) { ctx.self.state.salonOpen = false; ctx.self.state.wardrobeOpen = false } standUp(ctx); return }
+  { const s = ctx.self.state; if (s.salonOpen && !s.sit && !s.wrMenu) { s.salonOpen = false; s.wardrobeOpen = false } } // a salon menu outlives no chair: crossing away or a lost seat closes it
   refocus(ctx)
   if (input.pressed?.interact) press(ctx)
 }

@@ -13,7 +13,7 @@ const fwdOf = (yaw) => { const r = (yaw * Math.PI) / 180; return { x: -Math.sin(
 // local spots on the seat (its own frame): x across, z toward the back
 function localSpots(seat) {
   const c = seat.state?.seat ?? {}, n = c.w ?? 1, gap = c.gap ?? 0.62, d = c.d ?? 0.0, out = []
-  for (let i = 0; i < n; i++) out.push({ i, lx: (i - (n - 1) / 2) * gap, lz: d, ly: c.y ?? LIFT })
+  for (let i = 0; i < n; i++) out.push({ i, lx: (i - (n - 1) / 2) * gap, lz: d, ly: c.y ?? LIFT, ox: c.out?.x ?? 0, oz: c.out?.z ?? -0.6 }) // out: where standing up steps to, in the seat's frame (a mirror chair steps aside, never into its vanity)
   return out
 }
 // world spots (for focus and NPCs)
@@ -26,11 +26,17 @@ function toLocal(seat, w) {
   const y = yawOf(seat.rotation), f = fwdOf(y), r = { x: -f.z, z: f.x }, p = seat.feetPosition, dx = w.x - p.x, dz = w.z - p.z
   return { x: dx * r.x + dz * r.z, z: -(dx * f.x + dz * f.z) }
 }
+// who holds spot i: a claim whose sitter left the room, crossed away or sits elsewhere is no claim (a stale chair never reads taken)
+export function holder(ctx, seat, i) {
+  const t = seat.state?.by?.[i]; if (!t) return null
+  const p = ctx.getObject(t)
+  return p && p.state?.sit?.id === seat.id ? t : null
+}
 export function seatFor(ctx, at, radius = 1.6, by = null) {
   let best = null, bd = radius
   for (const row of ctx.query({ tags: ['seat'], center: at, radius: radius + 1.5 })) {
     const seat = ctx.getObject(row.id); if (!seat) continue
-    for (const s of spotsOf(seat)) { const t = seat.state?.by?.[s.i]; if (t && t !== by) continue; const dd = Math.hypot(s.x - at.x, s.z - at.z); if (dd < bd) { bd = dd; best = { id: seat.id, ...s } } }
+    for (const s of spotsOf(seat)) { const t = holder(ctx, seat, s.i); if (t && t !== by) continue; const dd = Math.hypot(s.x - at.x, s.z - at.z); if (dd < bd) { bd = dd; best = { id: seat.id, ...s } } }
   }
   return best
 }
@@ -45,7 +51,7 @@ export function sitDown(ctx, seat) {
   if (s.sit) return false
   const lp = toLocal(seat, me.feetPosition)
   let best = null, bd = 1e9
-  for (const sp of localSpots(seat)) { const t = seat.state?.by?.[sp.i]; if (t && t !== me.id) continue; const dd = Math.hypot(sp.lx - lp.x, sp.lz - lp.z); if (dd < bd) { bd = dd; best = sp } }
+  for (const sp of localSpots(seat)) { const t = holder(ctx, seat, sp.i); if (t && t !== me.id) continue; const dd = Math.hypot(sp.lx - lp.x, sp.lz - lp.z); if (dd < bd) { bd = dd; best = sp } }
   if (!best) return false
   claim(ctx, seat.id, best.i, me.id)
   const fromYaw = ((yawOf(me.rotation) - yawOf(seat.rotation) + 540) % 360) - 180
@@ -53,7 +59,7 @@ export function sitDown(ctx, seat) {
   me.parent = seat.id
   me.feetPosition = { x: lp.x, y: 0, z: lp.z }
   me.rotation = { yaw: fromYaw }
-  s.sit = { id: seat.id, i: best.i, lx: best.lx, lz: best.lz, ly: best.ly, fx: lp.x, fz: lp.z, fromYaw, at: ctx.now(), phase: 'down' }
+  s.sit = { id: seat.id, i: best.i, lx: best.lx, lz: best.lz, ly: best.ly, ox: best.ox, oz: best.oz, fx: lp.x, fz: lp.z, fromYaw, at: ctx.now(), phase: 'down' }
   me.anim.sit = { clip: SIT_CLIP[sexOf(me)], loop: 'loop', weight: 1, blendIn: SIT_S }
   const w = spotsOf(seat)[best.i]
   heard(ctx, { clip: SIT_SND, position: { x: w.x, y: w.y + 0.5, z: w.z }, volume: 0.45, maxDistance: 8 }, { audience: { nearby: w, radius: 10 } })
@@ -83,10 +89,11 @@ export function seatTick(ctx) {
     me.rotation = { yaw: lerpYaw(s.fromYaw, 0, Math.min(1, e * 1.5)) }
     if (k >= 1) me.state.sit = { ...s, phase: 'sat', satAt: ctx.now() }
   } else if (s.phase === 'sat') {
+    if (seat.state?.by?.[s.i] && seat.state.by[s.i] !== me.id && ctx.now() - (s.satAt ?? 0) > 400) { me.parent = null; me.anim.sit = null; me.state.sit = null; me.state.notice = { text: 'Someone beat you to that seat', at: ctx.now() }; if (me.state.salonOpen) { me.state.salonOpen = false; me.state.wardrobeOpen = false } return true } // two sat in the same instant: the claim that landed last keeps it
     const p = me.feetPosition
     if (Math.abs(p.x - s.lx) + Math.abs(p.z - s.lz) > 0.01 || Math.abs(p.y - (s.ly ?? 0)) > 0.01) { me.feetPosition = { x: s.lx, y: s.ly ?? 0, z: s.lz }; me.rotation = { yaw: 0 } }
   } else {
-    me.feetPosition = { x: s.lx, y: (s.ly ?? 0) * (1 - e), z: s.lz - 0.6 * e }
+    me.feetPosition = { x: s.lx + (s.ox ?? 0) * e, y: (s.ly ?? 0) * (1 - e), z: s.lz + (s.oz ?? -0.6) * e }
     if (k >= 1) { me.parent = null; free(ctx, s.id, s.i, me.id); me.state.sit = null; if (s.land) { me.feetPosition = s.land; me.velocity = { x: 0, y: 0, z: 0 }; if (me.state.swimming) me.state.swimming = false } }
   }
   return true
