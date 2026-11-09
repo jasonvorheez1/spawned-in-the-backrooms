@@ -343,7 +343,7 @@ function aim(me, m, t) {
   const o = chest(me.feetPosition), q = chest(t.feetPosition), dx = q.x - o.x, dz = q.z - o.z, hh = Math.hypot(dx, dz) || 1;
   const fam = famOf(me.state.arm), pitch = Math.atan2(q.y - o.y, hh), yaw = Math.atan2(-dx, -dz);
   aimPose(me, fam, aimMode(me, true, false), pitch);
-  if (fam === "long") me.bones = { ...baseBones(me.state.build), ...longHands(me, m.heldId, yaw, pitch, true, false, (A.length ?? 0.9) * 0.55) };
+  // long guns: clips alone, no hand IK (see body3.js stance)
   else if (fresh) me.bones = baseBones(me.state.build);
 }
 

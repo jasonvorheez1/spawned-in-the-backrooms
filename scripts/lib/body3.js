@@ -127,7 +127,6 @@ export function stance(ctx) {
   // resting hands ride the BODY's facing; only an aimed gun follows the camera (Shelly: arms moving with the camera)
   const fam = famOf(s.equipped), yaw = aiming ? (cam.yaw ?? 0) * RAD : bodyYaw(me), pitch = aiming ? pitchOf(cam) : 0
   aimPose(me, fam, s.reloading ? 'ready' : aimMode(me, aiming, s.crouch), pitch)
-  if (fam !== 'long') return { bones: null, aiming }
-  const len = (wp.length ?? 0.9) * 0.55
-  return { bones: longHands(me, ss.heldObj, yaw, pitch, aiming, s.crouch, len), aiming }
+  // no IK on the hands: the clips alone pose the arms (the reach solver chased world points and read as floppy, physics arms)
+  return { bones: null, aiming }
 }
