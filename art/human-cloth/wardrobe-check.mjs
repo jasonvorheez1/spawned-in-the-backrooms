@@ -20,3 +20,11 @@ assert.equal(bare.parts.Under_top.visible, true)
 assert.equal(bare.parts.Under_bottom.visible, true)
 for (const bust of [.15, .5, 1]) assert.equal(humanMorph({ sex: 'f', bust }).Bust, bust)
 for (const input of [{ bust: 'invalid' }, { bustS: Infinity }]) assert.equal(humanMorph({ sex: 'f', ...input }).Bust, .38)
+for (const sex of ['m', 'f']) {
+  for (const topw of ['jacket', 'megjacket', 'sweater', 'hoodie', 'longsleeve', 'pajamas']) {
+    const parts = humanBody({ sex, topw, botw: 'overalls' }).parts
+    assert.equal(parts.Ward_overalls.visible, false)
+    assert.equal(parts.Ward_pants.visible, true)
+  }
+  assert.equal(humanBody({ sex, topw: 'tee', botw: 'overalls' }).parts.Ward_overalls.visible, true)
+}
