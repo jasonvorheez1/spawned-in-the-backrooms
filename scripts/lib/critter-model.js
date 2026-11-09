@@ -253,6 +253,7 @@ export function humanMorph(l) {
   const a0 = T[Math.floor(u() * T.length)], b = T[Math.floor(u() * T.length)], a = FT?.[0] ?? a0
   o[a] = Math.round((0.6 + u() * 0.4) * 100) / 100; if (b !== a) o[b] = Math.round(u() * 0.35 * 100) / 100
   if (FT?.[1]) for (const [k, v] of Object.entries(FT[1])) o[k] = v
+  if (m) { o.M_Jaw = Math.round((0.55 + u() * 0.45) * 100) / 100; o.M_Chin = Math.round((0.45 + u() * 0.5) * 100) / 100 } // men's own jaw and chin keys (art/human-face/male-jaw.py): a squarer jaw angle and a broad chin, never the female V
   if (o.HT_Long > 0.4) o.FaceLong *= 0.4; if (o.HT_Round > 0.4) o.HeadRound *= 0.4 // no doubled stretch
   o.HeadRound = Math.round(o.HeadRound * 0.4 * 100) / 100; o.CheekFull = Math.round(o.CheekFull * 0.45 * 100) / 100; if (o.HT_Broad) o.HT_Broad = Math.round(o.HT_Broad * 0.45 * 100) / 100; if (o.HT_Round) o.HT_Round = Math.round(o.HT_Round * 0.6 * 100) / 100; if (o.HT_Burly) o.HT_Burly = Math.round(o.HT_Burly * 0.75 * 100) / 100; if (o.HT_Rugged) o.HT_Rugged = Math.round(o.HT_Rugged * 0.75 * 100) / 100; if (o.JawWide) o.JawWide = Math.min(o.JawWide, m ? 0.6 : 0.2) // human proportions: no wide, round critter skulls
   if (!m) { // the female human Body carries a Bust key: the slider leads, else a per-person roll (rule: breast size more random)
