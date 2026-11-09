@@ -128,7 +128,7 @@ function inView(ctx, me, m, f, d) {
   const now = ctx.now(); m.vis ??= {}; m.ign ??= {};
   if ((m.ign[f.id] ?? 0) > now) return false;
   const v = m.vis[f.id] ??= { at: -Infinity, saw: null, near: d, since: now };
-  if (now - v.at > 500) { v.at = now; v.clear=seesIt(ctx, me, f); if (v.clear) v.saw = now; }
+  if (now - v.at > 500) { v.at = now; v.clear=seesIt(ctx, me, f); if (v.clear) { v.saw = now; v.since = now; v.near = d; } }
   if (d < v.near - 1) { v.near = d; v.since = now; } // getting closer: the chase is working
   if (!v.clear && now - v.since > 6000 && d > 1.6) { m.ign[f.id] = now + 20000; delete m.vis[f.id]; return false; } // six seconds without gaining: it can't be reached
   return v.saw != null && now - v.saw < 5000;
