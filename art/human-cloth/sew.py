@@ -115,6 +115,31 @@ for name, (ease, cuts) in PLAN.items():
             for v in bm.verts:
                 co, n, fi, d = bvhW.find_nearest(v.co); out = (v.co - co).dot(n)
                 if out < 0.004: v.co = v.co + n * (0.004 - out)
+    if hasattr(ease, "drape"):                               # below the waist a top is a hanging tube: cut the skin-shaped part away, loft rings to the hem
+        Z0 = B["Spine"].z + 0.03; hem = cuts[0][0].z; cy = B["Spine1"].y; NB = 96
+        bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.calc_center_median().z < Z0], context="FACES")
+        bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+        def hull(z0, z1):                                    # body's widest radius per angle in a slab
+            m = [0.0] * NB
+            for v in sw.verts:
+                if z0 <= v.co.z <= z1 and abs(v.co.x) < 0.3:
+                    a_ = math.atan2(v.co.y - cy, v.co.x); r = math.hypot(v.co.x, v.co.y - cy); b_ = int((a_ + math.pi) / (2 * math.pi) * NB) % NB
+                    m[b_] = max(m[b_], r)
+            for _ in range(2): m = [max(m[i], (m[i - 1] + m[(i + 1) % NB]) * 0.5) for i in range(NB)]
+            return m
+        ring = [e for e in bm.edges if e.is_boundary and all(v.co.z < Z0 + 0.03 for v in e.verts)]
+        z = min(v.co.z for e in ring for v in e.verts); steps = max(2, int((z - hem) / 0.012))
+        for k in range(1, steps + 1):
+            zz = z + (hem - z) * k / steps
+            ex = bmesh.ops.extrude_edge_only(bm, edges=ring)
+            nv = [g for g in ex["geom"] if isinstance(g, bmesh.types.BMVert)]
+            ring = [g for g in ex["geom"] if isinstance(g, bmesh.types.BMEdge) and all(v in nv for v in g.verts)]
+            H = hull(zz - 0.006, zz + 0.006); band_e = ease(Vector((0, 0, zz)))
+            for v in nv:
+                a_ = math.atan2(v.co.y - cy, v.co.x); r = math.hypot(v.co.x, v.co.y - cy); b_ = int((a_ + math.pi) / (2 * math.pi) * NB) % NB
+                r2 = max(r * ease.drape, H[b_] + max(0.005, band_e))
+                v.co = Vector((math.cos(a_) * r2, cy + math.sin(a_) * r2, zz))
+        bm.normal_update()
     for co, no in cuts:                                      # straight hems
         bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=co, plane_no=no, clear_outer=True)
     if hasattr(ease, "collar"):                              # round neckline: everything inside the collar ellipse above the yoke goes, the rim snaps to it
@@ -155,6 +180,9 @@ for name, (ease, cuts) in PLAN.items():
     sd = n.modifiers.new("t", "SOLIDIFY"); sd.thickness = THICK; sd.offset = 1; sd.use_even_offset = False; sd.use_rim = True
     bpy.ops.object.modifier_apply(modifier="t")
     ss = n.modifiers.new("s", "SUBSURF"); ss.levels = 1; bpy.ops.object.modifier_apply(modifier="s")
+    for v in me.vertices:                                    # subdivision shrinks over the shoulder: keep every point outside the skin
+        co, nn, fi, d = bvhW.find_nearest(v.co); out = (v.co - co).dot(nn)
+        if out < 0.0035: v.co = v.co + nn * (0.0035 - out)
     tri = sum(len(p.vertices) - 2 for p in me.polygons); BUDGET = 9000 if name.startswith("Top_") else 6000   # Savi's pick: a crowd of NPCs wears these
     if tri > BUDGET:
         dc = n.modifiers.new("d", "DECIMATE"); dc.ratio = BUDGET / tri; bpy.ops.object.modifier_apply(modifier="d")
