@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3457,
-  "updatedAt": "2026-11-09T16:54:04.526Z",
-  "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place scenes and simulations supply local environments, while shared systems own combat, NPCs, loot, building, and avatar presentation.",
+  "basedOnSpecVersion": 3460,
+  "updatedAt": "2026-11-09T16:55:23.498Z",
+  "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place scenes and simulations supply local environments, while shared systems own combat, NPCs, loot, building, and avatar presentation. Offline art scripts generate selected environment meshes and textures alongside the runtime-authored world.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games, and Glow Up Salon styling stations.",
@@ -22,7 +22,7 @@
     "scripts/camera.js + scripts/view3.js - camera and third-person toggle; scripts/ui.js and specialized UI scripts present HUD and panels.",
     "places/debug/cells/x1z0.scene + scripts/dbg-pose.js + scripts/dbg-bodypad.js - clip-gallery mannequins and in-world body-style switch.",
     "art/human-base/build.py + art/human-head/* + art/human-face/* + art/human-cloth/* + art/human-hair/build.py + art/tripo-hair/refit.py - offline human rig, heads, morphs, fitted appearance parts, and hair build/refit tools.",
-    "art/level0/build.py - offline Blender glTF generator for Level 0 safe-room props (folding table, camp cot, floor lamp, cardboard box) and stairs to nowhere; writes /workspace/level0/*.glb."
+    "art/level0/build.py, art/level1/paint.py, art/level2/fixtures.py - offline environment asset generators for Level 0 props/stairs, Level 1 textures, and Level 2 fixture meshes."
   ],
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings; routing and hub handlers use it for last-level selection and names.",
@@ -72,7 +72,7 @@
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js - authored mall shops/landmarks with data-driven stock and simulated staff, shoppers, loungers, and arcade games.",
     "places/bonus/cells/x0z0.scene + art/salon/build.py + scripts/salon-stylist.js + scripts/salon-ui.js - Glow Up Salon shell/furniture and mirror-chair styling stations; Gina serves sitters first-come-first-served, queue state drives wait UI …",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence, and rebuild path; CRT TV builds attach screen, sound, and glow.",
-    "art/level0/build.py + places/main/cells/* - Level 0's offline Blender source for safe-room props and stairs-to-nowhere alongside authored maze fixtures and local sound/light/zone variants; Level 5 includes portal/quest props, Boiler Room Death Rat packs, fitted residents, and ladder-tagged library climbs.",
+    "art/level0/build.py + art/level1/paint.py + art/level2/fixtures.py + places/main/cells/* - offline Blender Level 0 props/stairs source, Level 1 deterministic door/map/cork texture generator, and Level 2 fixture-mesh generator; runtime Level 0 placements and variants remain in authored scenes/sim.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
     "scripts/lib/critter-model.js + critter/faces/hair/model data + art/human-cloth/* + art/human-head/* + art/human-hair/build.py + art/tripo-hair/refit.py - deterministic human/furry looks and fitted appearance; hair.yml selects refitted, hea…",
@@ -87,7 +87,7 @@
     "Found-item rarity gates apply only to found weapon tokens; existing weapon ownership/use and non-weapon loot are not level-gated. Search gating excludes storage and NPC containers.",
     "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic. Time 4 Fun poster/door is no longer placed in Level 0.",
     "Footstep surface detection checks visible geometry within 0.45 m before collider; terrain chunk hits use terrain.materialAt. Keep material words/tags and mapping priority in scripts/lib/data/footsteps.yml.",
-    "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static to avoid falling through before floor mesh cooking. Level 2.1 revisioned rebuild preserves generated placement identity; EXIT/DANGER U…",
+    "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static to avoid falling through before floor mesh cooking. Level 2.1 revisioned rebuild preserves generated placement identity; art/level2/fixtures.py converts engine axes to Blender (x,-z,y), with fixtures authored around distinct top/floor origins.",
     "critter-model.js STYLE_V participates in place.state.bodyStyleV, triggering one place-wide restyle when raised; hair.yml now maps human hair keys to refitted head-fitted pack assets (Tripo rows 14+ no longer selected)."
   ]
 }
