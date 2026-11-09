@@ -487,7 +487,7 @@ export function update(ctx, dt) {
       m.lastBlink = isBlinking;
       const headObj = HUMAN ? null : ctx.getObject(me.id + "/" + HEAD_ID); // read fresh: a head rebuilt or gone never takes a stale write
       if (HUMAN && me.model) { // human faces (Shelly Nov 9 #116046): the body carries X_ keys; the mouth follows the line's letters, still once it is said
-        const mouth = s.line?.t ? mouthAt(s.line.t, now - s.line.at - 120) : null;
+        const lt = typeof s.line === "string" ? s.line : s.line?.t, la = typeof s.line === "string" ? (s.talkAt ?? 0) : (s.line?.at ?? 0), mouth = lt ? mouthAt(lt, now - la - 120) : null;
         const key = curExpr + (isBlinking ? 1 : 0) + (mouth ? mouth.map((v) => v.toFixed(1)).join() : "");
         if (key !== m.hFaceK) { m.hFaceK = key; const base = {}; for (const [k, v] of Object.entries(me.morph ?? {})) if (!k.startsWith("X_")) base[k] = v; me.morph = { ...base, ...humanFace(curExpr, isBlinking, mouth) }; }
       }
