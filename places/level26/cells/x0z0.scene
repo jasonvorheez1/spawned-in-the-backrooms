@@ -103,7 +103,7 @@ l26-c23-lamp:
   id: l26-c23-lamp
   light: {color: oklch(0.85 0.08 75), distance: 5, intensity: 1.2, kind: point, shadow: {enabled: false}}
 l26-c23-plate:
-  feetPosition: {x: 7.02, y: 2.12, z: -11.6}
+  feetPosition: {x: 7.02, y: 2.34, z: -11.6}
   id: l26-c23-plate
   material: {color: oklch(0.72 0.09 80), metalness: 0.85, roughness: 0.35}
   physics: none
@@ -392,11 +392,10 @@ l26-funnel-top:
   primitive: {height: 1.2, kind: cylinder, radialSegments: 32, radiusBottom: 2.05, radiusTop: 2.05}
   visible: false
 l26-graffiti:
-  feetPosition: {x: 0, y: 0.4, z: -18.06}
+  feetPosition: {x: -0.3, y: 1.55, z: -18.09}
   id: l26-graffiti
-  material: {alphaTest: 0.4, roughness: 0.6, texture: /cdn/value.dc923d85bf1e1c1d3cd2656a30d7cc80053590ddd32311b333ab4612a0ca6d4b.png, transparent: true}
-  primitive: {height: 6, kind: plane, width: 9}
-  rotation: {yaw: 180}
+  rotation: {pitch: 0, roll: -3, yaw: 0}
+  vector: "<svg viewBox='0 0 620 260' width='5.4m'><g stroke-linecap='round' stroke-linejoin='round' fill='none'><path d='M62 52 C22 40 18 96 56 100 C98 106 96 162 48 154 M142 50 C104 40 100 94 138 99 C178 104 176 160 130 153 M206 162 L209 46 L262 41 M207 101 L249 97 M286 44 L288 128 C290 162 338 162 339 128 L341 46 M374 164 L371 50 L428 158 L431 44 M468 86 L514 82 M470 120 L516 117 M546 40 C592 80 590 132 540 170' stroke='#b8231a' stroke-width='30' opacity='0.18'/><path d='M62 52 C22 40 18 96 56 100 C98 106 96 162 48 154 M142 50 C104 40 100 94 138 99 C178 104 176 160 130 153 M206 162 L209 46 L262 41 M207 101 L249 97 M286 44 L288 128 C290 162 338 162 339 128 L341 46 M374 164 L371 50 L428 158 L431 44 M468 86 L514 82 M470 120 L516 117 M546 40 C592 80 590 132 540 170' stroke='#b8231a' stroke-width='15' filter='drop-shadow(0 0 2 #b8231a)'/><path d='M50 156 L51 184 M136 154 L135 172 M208 162 L209 192 M314 152 L315 176 M374 164 L375 186 M429 158 L430 181 M541 170 L542 196 M498 118 L499 134' stroke='#b8231a' stroke-width='4' opacity='0.85'/></g><text x='300' y='238' text-anchor='middle' font-family='sans-serif' font-size='22' fill='#23201c' opacity='0.8' transform='rotate(2 300 238)'>the party never ends. come on in</text></svg>"
 l26-hat-0:
   feetPosition: {x: -9.441529034004327, y: 0, z: -13.704070549320463}
   id: l26-hat-0
@@ -575,10 +574,10 @@ l26-liftdoor:
 l26-liftsign:
   feetPosition: {x: 0, y: 2.3, z: 22.06}
   id: l26-liftsign
-  material: {color: oklch(0.75 0.15 140), emissive: oklch(0.75 0.15 140), emissiveIntensity: 1.5}
+  material: {color: oklch(0.42 0.08 155), emissive: oklch(0.42 0.08 155), emissiveIntensity: 0.25, metalness: 0.2, roughness: 0.5}
   primitive: {height: 0.25, kind: plane, width: 0.9}
   rotation: {yaw: 180}
-  ui: "<div face=\"front\" style=\"font:700 120px Georgia;color:#123;text-align:center\">DOWN</div>"
+  ui: "<div face=\"front\" style=\"height:250px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font-family:Georgia,serif;color:#f1ead8;border:10px solid #c9b27a;box-sizing:border-box\"><span style=\"font-size:110px\">&#9660;</span><span style=\"text-align:center;line-height:1\"><div style=\"font-size:90px;letter-spacing:10px\">LOWER DECKS</div><div style=\"font-size:44px;letter-spacing:6px;opacity:.8\">CABINS 1 &ndash; 40</div></span><span style=\"font-size:110px\">&#9660;</span></div>"
 l26-litter-poster:
   feetPosition: {x: -8.6, y: 0.01, z: 20}
   id: l26-litter-poster
@@ -630,7 +629,7 @@ l26-mast:
 l26-name:
   feetPosition: {x: 0, y: 2.2, z: -18.03}
   id: l26-name
-  vector: "<svg viewBox='0 0 400 60' width='9m'><text x='200' y='44' text-anchor='middle' font-family='serif' font-size='40' fill='#1b2a52' letter-spacing='8'>ADVENTURE</text><path d='M20 18 L380 40 M24 42 L376 16' stroke='#9c1a12' stroke-width='9' stroke-linecap='round'/></svg>"
+  vector: "<svg viewBox='0 0 400 80' width='9m'><text x='200' y='40' text-anchor='middle' font-family='serif' font-size='38' fill='#1b2a52' letter-spacing='10'>ADVENTURE</text><text x='200' y='62' text-anchor='middle' font-family='serif' font-size='11' fill='#1b2a52' letter-spacing='6' opacity='0.7'>PORT OF REGISTRY  ·  HALIFAX</text><path d='M70 22 L150 19 L148 46 L72 48 Z M168 18 L262 21 L258 44 L170 47 Z' fill='#e9e6dc' opacity='0.88'/><path d='M66 20 L262 17 M70 47 L258 46' stroke='#e9e6dc' stroke-width='3' opacity='0.6'/></svg>"
 l26-overboard:
   behavior: scripts/level-door.js
   feetPosition: {x: 0, y: -13, z: 0}
