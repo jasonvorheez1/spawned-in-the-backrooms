@@ -392,7 +392,7 @@ export function fixtures(ctx) {
   }
   const s0 = ctx.getObject("l2-stair-0");
   if (s0 && !ctx.getObject("l2-stair-flight")) {
-    const yaw = (s0.rotation?.yaw ?? 0) + 180; // the steps climb along their own +Z; the flight climbs along -Z
+    const q = s0.rotation ?? {}, yaw = (q.yaw ?? (q.w != null ? 2 * Math.atan2(q.y, q.w) * 180 / Math.PI : 0)) + 180; // the steps climb along their own +Z; the flight climbs along -Z
     ctx.spawn("l2-stair-flight", { feetPosition: { ...s0.feetPosition }, rotation: { yaw }, visibleRange: { max: 45 }, castShadow: false, receiveShadow: true,
       model: { id: FIX.stair, materials: { concrete: { texture: "cdn/texture-worn-poured-concrete-stair-tread.png", wrap: "repeat", repeat: [1.5, 1.5], color: "oklch(0.92 0.01 80)", roughness: 0.9 } } } });
     for (let i = 0; i < 13; i++) { const b = ctx.getObject(`l2-stair-${i}`); if (b) b.visible = false; const n = ctx.getObject(`l2-sd-nose-${i}`); if (n) n.visible = false; } // the boxes stay as the walkable colliders
