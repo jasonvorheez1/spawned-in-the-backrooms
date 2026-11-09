@@ -385,7 +385,7 @@ export function update(ctx, dt) {
   const idleWeight = rung === 'walk' || creeping ? Math.max(0.001, 1 - walkShare) : rung === 'idle' ? 1 : 0.001
   const walkRate = Math.max(1 / PACE_BAND, paceRate(clipSpeed, walkPace))
   const sprintRate = paceRate(clipSpeed, sprintPace, true)
-  ctx.self.anim.idle = { clip: clips.idle || 'Idle', loop: 'loop', weight: idleWeight, blendIn: 0.15 }
+  ctx.self.anim.idle = { clip: clips.idle || 'Idle', loop: 'loop', weight: idleWeight, blendIn: 0.15, ...(human && !steered ? { speed: idleRate(ctx) } : {}) }
   ctx.self.anim.walk = { clip: walkClip, loop: 'loop', weight: walkShare, speed: walkRate, blendIn: 0.15 }
   ctx.self.anim.run = { clip: runClip, loop: 'loop', weight: rung === 'run' ? 1 : 0.001, speed: runRate, blendIn: 0.15 }
   if (hasSprint) ctx.self.anim.sprint = { clip: sprintClip, loop: 'loop', weight: rung === 'sprint' ? 1 : 0.001, speed: sprintRate, blendIn: 0.15 }
@@ -401,6 +401,11 @@ export function update(ctx, dt) {
     ctx.self.anim.run = { clip: runClip, loop: 'loop', weight: 0.001, blendIn: 0.2 }
     if (ctx.self.anim.sprint) ctx.self.anim.sprint = { ...ctx.self.anim.sprint, weight: 0.001 }
   }
+  // Life (Savi's picks, johnadams2 "more realistic and interesting"): a standing human NPC turns its head to a player who
+  // comes within 5 m in front of it, and every 9-20 s does a small upper-body thing (a shrug, a nod, a head shake, a glance
+  // off to the side). Each person's idle plays at their own rate so a room of them never breathes in step.
+  const lifeOn = !steered && !!human && !ctx.self.tags?.includes?.('helper')
+  if (lifeOn) lifeTick(ctx, gait, rung === 'idle' && !creeping && !ctx.self.state?.crouch)
   // Air and landing (AAA kit's aaa-anim-3d: a one-time takeoff, a held fall, a landing that bends the knees, sized to the drop).
   // Off the ground past AIR_GRACE (stairs and curbs never count): a rising body plays the Jump once, a falling one holds the
   // fall loop, the gait channels hand their weight over. Back down after a real drop: the Land plays once at a weight the
@@ -431,5 +436,55 @@ export function update(ctx, dt) {
   if (airborne || gait.landUntil) return
   // Standing, facing where it was told to: the clips hold their weights until the body moves or onInput
   // writes a new heading, either wakes this update.
-  if (speed === 0 && (typeof targetYaw !== 'number' || gait.bodyYaw === targetYaw)) ctx.sleep()
+  if (speed === 0 && (typeof targetYaw !== 'number' || gait.bodyYaw === targetYaw)) { if (lifeOn) ctx.sleep(0.4); else ctx.sleep() }
+}
+
+// ---- life layer for human NPCs (see update) ----
+const FIDGETS = ['cdn/clip-shrug.glb', 'cdn/clip-nod-yes.glb', 'cdn/clip-shake-no.glb', 'glance', 'glance'] // Savi's picks: glances twice as often as a gesture
+const LOOK_RANGE = 5, FIDGET_MIN = 9000, FIDGET_SPAN = 11000, FIDGET_HOLD = 2600
+function idHash(ctx) { const ss = ctx.self.session; if (ss.lifeHash == null) { let h = 7; for (const c of String(ctx.self.id)) h = (h * 31 + c.charCodeAt(0)) >>> 0; ss.lifeHash = h } return ss.lifeHash }
+function idleRate(ctx) { return 0.85 + (idHash(ctx) % 31) / 100 }
+function lifeTick(ctx, gait, standing) {
+  const now = ctx.now(), b = ctx.self.bones
+  // a fidget ends on its own clock
+  if (gait.fidgetUntil && now > gait.fidgetUntil) { gait.fidgetUntil = 0; if (ctx.self.anim.fidget) ctx.self.anim.fidget = null; if (gait.glance) { gait.glance = false; if (!gait.lookAt) b.Head.aim = null } }
+  if (!standing || ctx.self.state?.dead || ctx.self.state?.talking) {
+    if (gait.lookAt) { gait.lookAt = null; b.Head.aim = null }
+    if (ctx.self.anim.fidget) { ctx.self.anim.fidget = null; gait.fidgetUntil = 0 }
+    gait.nextFidget = now + FIDGET_MIN
+    return
+  }
+  // who is near and in front: look at them
+  if (!gait.lookCheck || now >= gait.lookCheck) {
+    gait.lookCheck = now + 400
+    const me = ctx.self.feetPosition, yaw = ((ctx.self.yaw ?? 0) * Math.PI) / 180, fx = -Math.sin(yaw), fz = -Math.cos(yaw)
+    let best = null, bd = LOOK_RANGE
+    for (const p of ctx.place.players) {
+      const f = p.feetPosition; if (!f || p.id === ctx.self.id) continue
+      const dx = f.x - me.x, dz = f.z - me.z, d = Math.hypot(dx, dz)
+      if (d < bd && d > 0.3 && (dx * fx + dz * fz) / d > 0.15) { bd = d; best = p.id }
+    }
+    if (best !== gait.lookAt) {
+      gait.lookAt = best
+      if (best) b.Head.aim = { to: { object: best, offset: { x: 0, y: 1.55, z: 0 } }, weight: 0.8, blendIn: 0.5, blendOut: 0.8 }
+      else if (!gait.glance) b.Head.aim = null
+    }
+  }
+  if (gait.lookAt && !b.Head?.aim) b.Head.aim = { to: { object: gait.lookAt, offset: { x: 0, y: 1.55, z: 0 } }, weight: 0.8, blendIn: 0.5, blendOut: 0.8 } // another script rewrote the bones whole
+  // the fidget
+  if (gait.nextFidget == null) gait.nextFidget = now + 2000 + (idHash(ctx) % FIDGET_SPAN)
+  if (now >= gait.nextFidget && !gait.fidgetUntil) {
+    gait.nextFidget = now + FIDGET_MIN + ctx.random() * FIDGET_SPAN
+    const pick = FIDGETS[Math.floor(ctx.random() * FIDGETS.length)]
+    if (pick === 'glance') {
+      if (!gait.lookAt) { // eyes drift off to one side, a little down, then come back
+        const me = ctx.self.feetPosition, a = ((ctx.self.yaw ?? 0) + (ctx.random() < 0.5 ? -1 : 1) * (35 + ctx.random() * 40)) * Math.PI / 180
+        b.Head.aim = { to: { x: me.x - Math.sin(a) * 3, y: me.y + 0.9 + ctx.random() * 0.8, z: me.z - Math.cos(a) * 3 }, weight: 0.7, blendIn: 0.6, blendOut: 0.9 }
+        gait.glance = true; gait.fidgetUntil = now + 1800 + ctx.random() * 1400
+      }
+    } else if (!(gait.lookAt && pick === 'cdn/clip-shake-no.glb')) {
+      ctx.self.anim.fidget = { clip: pick, loop: 'once', weight: 1.4, mask: { from: 'Spine' }, blendIn: 0.35, blendOut: 0.45 }
+      gait.fidgetUntil = now + FIDGET_HOLD
+    }
+  }
 }
