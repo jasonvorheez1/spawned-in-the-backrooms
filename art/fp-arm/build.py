@@ -12,18 +12,13 @@ def build(sex, side):
     bpy.ops.import_scene.gltf(filepath=SRC[sex])
     rig = next(o for o in bpy.data.objects if o.type == "ARMATURE")
     body = bpy.data.objects["Body"]
+    B = {b.name: (rig.matrix_world @ b.head_local, rig.matrix_world @ b.tail_local) for b in rig.data.bones}
+    bpy.ops.object.select_all(action="DESELECT"); body.select_set(True); bpy.context.view_layer.objects.active = body
+    bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
     for o in list(bpy.data.objects):
         if o is not body: bpy.data.objects.remove(o)
-    hb = rig.data.bones if False else None
-    me = body.data
     gi = {g.name: g.index for g in body.vertex_groups}
     keep = {gi["RightArm"], gi["RightForeArm"], gi["RightHand"]}
-    # joint positions (world == mesh space after import, armature removed: read them from the file again)
-    bpy.ops.import_scene.gltf(filepath=SRC[sex])
-    rig = next(o for o in bpy.data.objects if o.type == "ARMATURE")
-    B = {b.name: (rig.matrix_world @ b.head_local, rig.matrix_world @ b.tail_local) for b in rig.data.bones}
-    for o in list(bpy.data.objects):
-        if o.name != "Body": bpy.data.objects.remove(o)
     body = bpy.data.objects["Body"]; me = body.data
     body.modifiers.clear()
     mw = body.matrix_world.copy()
