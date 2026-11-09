@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3430,
-  "updatedAt": "2026-11-09T14:58:20.603Z",
+  "basedOnSpecVersion": 3436,
+  "updatedAt": "2026-11-09T15:13:27.127Z",
   "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place scenes and simulations supply local environments, while shared systems own combat, NPCs, loot, building, and avatar presentation.",
   "scriptPaths": [],
   "places": [
-    "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games and Glow Up Salon.",
+    "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games and Glow Up Salon with four mirror styling stations.",
     "places/main (3D) - authored Level 0/Lobby maze; sim generates furniture and loot, safe-room almond water, shifting walls, creature ecology, and route-guidance moments.",
     "places/intake (3D) + places/tutorial0 (solo ephemeral 3D) - bedroom character-creation/waking space and authored tutorial route with staged encounter and HALOGEN.",
     "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams, and Locked; Level 2 uses Tripo props over its collider shell, Level 2.1 has Base Alef and generated rooms.",
@@ -21,7 +21,7 @@
     "places/intake/cells/x0z0.scene + scripts/intake-geo.js + scripts/lib/intro-cut.js - bedroom shell and waking sequence; tutorial scene and tut0 scripts own its route and beats.",
     "scripts/camera.js + scripts/view3.js - camera and third-person toggle; scripts/ui.js and specialized UI scripts present HUD and panels.",
     "places/debug/cells/x1z0.scene + scripts/dbg-pose.js + scripts/dbg-bodypad.js - clip-gallery mannequins and in-world body-style switch.",
-    "art/human-base/build.py + art/human-head/* + art/human-face/* + art/human-cloth/* - offline human rig, heads, morphs, fitted appearance parts, and garments."
+    "art/human-base/build.py + art/human-head/* + art/human-face/* + art/human-cloth/* + art/human-hair/build.py + art/tripo-hair/refit.py - offline human rig, heads, morphs, fitted appearance parts, and hair build/refit tools."
   ],
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings; routing and hub handlers use it for last-level selection and names.",
@@ -65,16 +65,16 @@
     "L input → scripts/kick.js tries foe kick then loose.js kickLoose; Z input → scripts/grab.js carries/throws eligible bodies and calls loose.js arm/track/impact.",
     "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; long guns use Commando KF clips and calibrated held-gun transforms.",
     "scripts/climb.js scans ladder-tagged objects and manages attachment/progress; state.climbing suppresses weapon and air/fall behavior while attached.",
-    "Bonus salon: mirror-chair seat state + player.state.salonOpen → scripts/salon-stylist.js orders active sitters by arrival, writes bonus-stylist.state.queue and voices waits; scripts/salon-ui.js reads that queue, while dress actions in scripts/critter.js rebuild the appearance. Level 7 sim replaces the wharf-to-fort steps with a static ramp and rotates fort contents to align its gate."
+    "Bonus salon: mirror-chair seat state + player.state.salonOpen → scripts/salon-stylist.js orders active sitters by arrival, writes bonus-stylist.state.queue and voices waits; scripts/salon-ui.js reads that queue, while dress actions in scripts/salon-ui.js update the player's look."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js - authored mall shops/landmarks with data-driven stock and simulated staff, shoppers, loungers, and arcade games.",
-    "places/bonus/cells/x0z0.scene + art/salon/build.py + scripts/salon-stylist.js + scripts/salon-ui.js - Glow Up Salon shell/furniture and mirror-chair makeover; Gina serves sitters first-come-first-served, queue state drives waiting UI/voice, and dress actions reach critter.js.",
+    "places/bonus/cells/x0z0.scene + art/salon/build.py + scripts/salon-stylist.js + scripts/salon-ui.js - Glow Up Salon shell/furniture and four mirror-chair styling stations; Gina serves sitters first-come-first-served, queue state drives waiting UI/voice.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence, and rebuild path; CRT TV builds attach screen, sound, and glow.",
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props, Boiler Room Death Rat packs, fitted residents, and ladder-tagged library climbs.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model data + art/human-cloth/* + fitted hair/head tools - deterministic human/furry looks, skin choices, fitted hair and face parts; critter.js keys rebuilds on look including skin and beard, and scalp materials darken hair roots.",
+    "scripts/lib/critter-model.js + critter/faces/hair/model data + art/human-cloth/* + art/human-head/* + art/human-hair/build.py + art/tripo-hair/refit.py - deterministic human/furry looks, skin choices, and fitted hair/head/face parts; hair rows pair bare and hat-cut skinned GLBs.",
     "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared combat channels and human gait with NPC idles, head tracking, fidgets, expressions, and dialogue."
   ],
   "probableOrphans": [
@@ -87,6 +87,6 @@
     "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic. Time 4 Fun poster/door is no longer placed in Level 0.",
     "Footstep surface detection checks visible geometry within 0.45 m before collider; terrain chunk hits use terrain.materialAt. Keep material words/tags and mapping priority in scripts/lib/data/footsteps.yml.",
     "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static to avoid falling through before floor mesh cooking; Level 2.1 revisioned rebuild preserves generated placement identity.",
-    "Level 7 fort2V=3 rebuild clears every l7f-* entity before layFort2; fortPathV 1→2 destroys old step/gate-ramp IDs and recreates l7-ft-ramp, rotating nearby non-player objects and home/ladder data about (-70,-93). Preserve these migration guards and align later geometry to the walkable ramp."
+    "Level 7 fort2V=3 rebuild clears every l7f-* entity before layFort2; fortPathV 1→2 destroys old step/gate-ramp IDs and recreates l7-ft-ramp, rotating nearby non-player objects and home/ladder data about (-70,-93). Preserve these migration gates."
   ]
 }
