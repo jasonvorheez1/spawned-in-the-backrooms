@@ -1,3 +1,4 @@
+import { clearSight } from './lib/sight.js';
 import { knocked } from "./lib/knock.js";
 import { vo } from "./lib/voices.js";
 import { social } from "./lib/npc-social.js";
@@ -52,6 +53,7 @@ function swing(ctx, me, t, A) {
   { const now = ctx.now(); m3(me).n = now - (m3(me).at ?? 0) > 1600 ? 0 : (m3(me).n ?? 0) + 1; m3(me).at = now; swing3(ctx, me.state.arm, 0, m3(me).n, me); } // the same combo takes a player swings (scripts/lib/data/combat-anims.yml)
   heard(ctx, { clip: WHOOSH, position: q, volume: 0.6, pitch: 1.3 - Math.min(0.5, (A.length ?? 0.7) * 0.4), maxDistance: 16 });
   if (ctx.random() > Math.min(0.92, G.hitChance + 0.1)) return;
+  if (!clearSight(ctx, { x: o.x, y: o.y + 1.2, z: o.z }, q, [me.id, t.id])) return; // Shelly: no hits through walls
   const isPlayer = !!ctx.place.players.find((p) => p.id === t.id), base = isPlayer ? G.playerShot : G.shot;
   const dmg = dmgAfterArmor(isPlayer ? t.state.look : lookOfNpc(t), Math.round(base * Math.min(2.2, Math.max(0.5, (A.damage ?? 20) / 26)) * npcMul(me.state).dmg));
   t.state.hp -= dmg;

@@ -1,3 +1,5 @@
+import { clearSight } from './lib/sight.js'
+const walled = (ctx, a, b, ids) => !clearSight(ctx, { x: a.x, y: a.y + 1, z: a.z }, { x: b.x, y: b.y + 1, z: b.z }, ids) // Shelly: no hits through walls
 // Level 26 (Shelly's Entity 67 + 110 lore): one manager steps every Partygoer and every Carnivorous Balloon on the ship.
 // Partygoers: nearsighted (they see 9 m), slow, and never alone: the one that sees you calls the pack within 16 m.
 // Their arms end in toothed mouths: a bite every 1.3 s. Tagged l8-hostile so every weapon and kick hits them.
@@ -29,6 +31,7 @@ function party(ctx, p, on) { // a loop on its own channel: the pack dances and c
   p.anim.party = on ? { clip: k, loop: true, weight: 1, blend: 0.4 } : null
 }
 function bite(ctx, p, prey, dmg, snd) {
+  if (walled(ctx, p.feetPosition, prey.feetPosition, [p.id, prey.id])) return
   prey.state.hp -= dmgAfterArmor(prey.state.look, dmg)
   const at = { x: prey.feetPosition.x, y: prey.feetPosition.y + 1.1, z: prey.feetPosition.z }
   ctx.emit("damageNumber", { position: at, value: dmg, color: "#ff4040" })

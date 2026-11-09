@@ -1,3 +1,4 @@
+const walled = (ctx, a, b, ids) => !clearSight(ctx, { x: a.x, y: a.y + 1, z: a.z }, { x: b.x, y: b.y + 1, z: b.z }, ids) // Shelly: no hits through walls
 import { clearSight } from './lib/sight.js';
 // The pack manager: one script moves every smiler. They drift cell to cell along open doorways,
 // lock on to a wanderer they can see, stalk, then lunge and bite. They never cross into the safe room.
@@ -423,7 +424,7 @@ export function update(ctx, dt) {
     }
 
     // Lunge hit resolution
-    if (m.lunge && !m.lunge.hit && prey && pd < LUNGE.hit) {
+    if (m.lunge && !m.lunge.hit && prey && pd < LUNGE.hit && !walled(ctx, w.feetPosition, prey.feetPosition, [w.id, prey.id])) {
       m.lunge.hit = true;
       const dmg = Math.round(L.biteDamage * mu.dmg);
       prey.state.hp -= dmgAfterArmor(prey.state.look, dmg);
