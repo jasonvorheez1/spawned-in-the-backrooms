@@ -46,6 +46,8 @@ const C = {
   rAleSpeech: "Callum's cans. I know it's you, Ale. Why?",
   rAleBarter: "Twenty Backdollars and the cans stop walking. Deal?",
   rAleThreat: "Put them back or I tell Callum and he tells the M.E.G.",
+  rAid: "Take two bottles of my almond water. Help me find a way to keep that family fed.",
+  rResolve: "Ale took the cans for a family. I brought water. Can we help them instead of punishing her?",
   rTruth: "It was Ale. She's been taking your cans.",
   rCover: "Rats got into the crates. Gnawed tins everywhere. Nobody took anything.",
   rKilled: "It was Ale. She won't be taking anything anymore.",
@@ -69,7 +71,7 @@ export function l1Choice(ctx, it, s, list) {
   if (id === "meg-callum") {
     if (!r && (s.rep?.meg ?? 0) > -35) add.push(opt("rStart", "Quest"));
     if (r === 1 && !s.rTracked) add.push(opt("rTrack"));
-    if (r === 3) { add.push(opt(s.rAleDead ? "rKilled" : "rTruth", "Quest")); if (!s.rAleDead) add.push(opt("rCover")); }
+    if (r === 3) { add.push(opt(s.rAleDead ? "rKilled" : "rTruth", "Quest")); if (!s.rAleDead) { if (s.rAleTalked === "rAid") add.push(opt("rResolve", "Quest")); add.push(opt("rCover")); } }
     if (r === 4) add.push(opt(s.rAleDead ? "rKilled" : "rTruth", "Quest"));
     if (w === 1 && repOf(s, "meg") > -35) { add.push(opt("wAsk", "Quest")); add.push(opt("wMed")); if ((s.cents ?? 0) >= 1500) add.push(opt("wBuy")); }
   } else if (id === "meg-ortiz" && repOf(s, "meg") > -35) {
@@ -81,7 +83,7 @@ export function l1Choice(ctx, it, s, list) {
     if (r === 1 && (s.cents ?? 0) >= 1000) add.push(opt("rVossTip"));
     if (r === 3 && !s.rAleDead && s.rAleTalked && s.rAleTalked !== "lift") add.push(opt("rVossSell", "Quest"));
   } else if (id === "meg-ale") {
-    if (r === 2) { add.push(opt("rAleSpeech")); if ((s.cents ?? 0) >= 2000) add.push(opt("rAleBarter")); add.push(opt("rAleThreat")); }
+    if (r === 2) { add.push(opt("rAleSpeech")); if ((s.cents ?? 0) >= 2000) add.push(opt("rAleBarter")); add.push(opt("rAleThreat")); if ((s.almonds ?? 0) >= 2) add.push(opt("rAid", "2 almond water")); }
   }
   for (let i = add.length - 1; i >= 0; i--) if (failed[Object.keys(C).find((k) => C[k] === add[i].text)]) add.splice(i, 1);
   if (!add.length) return list;
@@ -142,6 +144,12 @@ export function handleDialogueQuest1(ctx, p, it, text) {
     setStep1(ctx, p, "rations", 2, "Ortiz: Ale cut her hand on a tin lid. Fresh cut.");
     return { reply: "Ale came in yesterday with a cut across her palm. Tin lid, clean edge. She told me it was a door. Doors don't do that.", mood: "calm" };
   }
+  if (id === "meg-ale" && r === 2 && k === "rAid") {
+    if ((s.almonds ?? 0) < 2) return { reply: "You said two bottles. Come back when you have them.", mood: "annoyed" };
+    s.almonds -= 2; s.rAleTalked = "rAid";
+    setStep1(ctx, p, "rations", 3, "Gave Ale two almond waters. Ask Callum to help the family.");
+    return { reply: "Two bottles. They'll last the kids a few days. It's a family out east. Callum won't like it, but maybe he'll listen to you.", mood: "happy" };
+  }
   if (id === "meg-ale" && r === 2 && (k === "rAleSpeech" || k === "rAleBarter" || k === "rAleThreat")) {
     if (k === "rAleBarter" && (s.cents ?? 0) < 2000) return { reply: "Come back when you've got the twenty.", mood: "annoyed" };
     if (!roll(ctx, p, it, k)) {
@@ -152,6 +160,11 @@ export function handleDialogueQuest1(ctx, p, it, text) {
     if (k === "rAleBarter") s.cents -= 2000;
     setStep1(ctx, p, "rations", 3, k === "rAleBarter" ? "Paid Ale $20. The cans stop walking." : "Ale admitted it. The cans go to a family hiding in the east halls.");
     return { reply: k === "rAleBarter" ? "Fine. Deal. It stops. Don't make that face, they were going to a good cause." : "There's a family in the east halls. Two kids. M.E.G. won't take them in without papers. So yeah, Callum's short. Tell him or don't.", mood: "calm" };
+  }
+  if (id === "meg-callum" && r === 3 && k === "rResolve" && s.rAleTalked === "rAid" && !s.rAleDead) {
+    aleFeels(ctx, p, 45);
+    finish(ctx, p, "rations", { xp: 130, cents: 500, items: ["bandage"], text: "Quest completed: Short Rations · found help for Ale's family", rep: [["meg", 3], ["survivors", 8], ["karma", 5]] });
+    return { reply: "She should have asked. But the kids need to eat. I'll set aside a share, and Ale can run it out there. You paid in already. Take this for the road.", mood: "calm" };
   }
   if (id === "meg-callum" && (r === 3 || r === 4) && (k === "rTruth" || k === "rKilled")) {
     if (k === "rKilled") {
