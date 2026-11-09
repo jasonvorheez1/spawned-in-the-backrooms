@@ -9,6 +9,7 @@ n0 = set(bpy.data.objects)
 bpy.ops.import_scene.gltf(filepath=clip, bone_heuristic="BLENDER")
 act = [x for x in bpy.data.actions][-1]
 rig.animation_data_create(); rig.animation_data.action = act
+if act.slots: rig.animation_data.action_slot = act.slots[0]
 bpy.context.scene.render.fps = 30; bpy.context.scene.frame_set(int(t*30)); bpy.context.view_layer.update()
 C = Matrix(((1,0,0),(0,0,1),(0,-1,0)))  # blender -> gltf
 for b in ("RightHand","LeftHand","RightArm","Head"):
