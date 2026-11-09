@@ -2,7 +2,7 @@
 // she walks behind the chair and cuts: a custom upper-body clip (lean, head down, shoulder sway) plus both hands on IK,
 // the right hand snipping in an arc beside the head with the shears, the left holding a lock at the crown.
 // Every change the sitter makes in the menu gets a snip flurry, falling clippings and a line. Done or standing up sends her home.
-const HOME = { x: 14.2, z: 1.0, yaw: 180 }
+const HOME = { x: 13.2, z: 1.2, yaw: 180 } // beside the first mirror chair, out of the walkway
 const WALK = 1.3, BEHIND = 0.5, SIDE = 0.42, HEAD_Y = 1.45 // Savi's picks: head height of a sitter above the chair's feet, measured on the 1.84 m body
 const SNIP = "/cdn/moodboard-realistic-gritty/sfx-steel-hair-shears-snip-close-crisp.mp3"
 const THROAT = "voice-warm-friendly-thirties-woman-hairstylist"
@@ -87,7 +87,7 @@ export function update(ctx, dt) {
       if (ses.sat) ctx.emit("playSound", { clip: say(pick(ctx, BYE)), position: { ...me.feetPosition, y: me.feetPosition.y + 1.6 }, bus: "Voice", volume: 0.9, maxDistance: 14, mode: "restart" })
       me.anim.flourish = { clip: FLOURISH, weight: 4, mask: { from: "Spine" } }
     }
-    ses.sat = false
+    ses.sat = false; if (me.state.with) me.state.with = null
     if (walkTo(ctx, HOME.x, HOME.z, HOME.yaw, dt)) ctx.sleep(0.5)
     return
   }
@@ -95,7 +95,8 @@ export function update(ctx, dt) {
   const spot = { x: ch.feetPosition.x - f.x * BEHIND + r.x * SIDE, z: ch.feetPosition.z - f.z * BEHIND + r.z * SIDE }
   if (ses.on !== ch.id) { ses.on = ch.id; ses.servedAt = now; ses.sat = false; ses.look = lookKey(p.state.look); ses.flurry = 0; letGo(ctx); me.anim.flourish = null
     ctx.emit("playSound", { clip: say(pick(ctx, HELLO)), position: { ...me.feetPosition, y: me.feetPosition.y + 1.6 }, bus: "Voice", volume: 0.9, maxDistance: 14, mode: "restart" }) }
-  if (!walkTo(ctx, spot.x, spot.z, y, dt)) return
+  if (!walkTo(ctx, spot.x, spot.z, y, dt)) { if (me.state.with) me.state.with = null; return }
+  if (me.state.with !== p.id) me.state.with = p.id // she stands behind this sitter: their menu opens (scripts/salon-ui.js)
   if (!ses.sat) { ses.sat = true; ses.t0 = now; me.anim.cut = { clip: CUT, loop: true, weight: 4, mask: { from: "Spine" }, blendIn: 0.4 } }
   const t = (now - ses.t0) / 1000, k = lookKey(p.state.look), flurry = now < (ses.flurry ?? 0)
   hands(ctx, ch, t, flurry)

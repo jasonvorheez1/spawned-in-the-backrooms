@@ -1,7 +1,7 @@
 import { regrowWrecks } from "./lib/breakables.js";
 import { vo } from './lib/voices.js';
 import { heard } from "./lib/hear.js";
-import { sitDown, standUp, seatTick, spotsOf } from './lib/seat.js'
+import { sitDown, standUp, seatTick, spotsOf, holder } from './lib/seat.js'
 import { rollItemL3 } from './lib/loot3.js'
 import { startPick } from './lockpick.js'
 import { startSpamton } from './spamton-fight.js'

@@ -79,7 +79,11 @@ export function salon(ctx, player) {
     body = slot('Top', 'topw', 'top') + slot('Bottom', 'botw', 'bottom') + slot('Shoes', 'shoes', 'shoec') + slot('Hat', 'hat', 'hatc') + slot('Glasses', 'eyew') + slot('Neck', 'neck', 'neckc')
       + row('Saved looks', '') + Array.from({ length: C.outfitSlots || 0 }, (_, i) => `<div class="sl" style="grid-template-columns:1fr auto auto"><span>${i + 1}. ${fits[i] ? `${nice(fits[i].topw)} · ${nice(fits[i].botw)}` : 'empty'}</span>${fits[i] ? `<button style="width:auto;border-radius:12px;padding:0 10px" onclick="${act('wear', i)}">wear</button>` : '<span></span>'}<button style="width:auto;border-radius:12px;padding:0 10px" onclick="${act('save', i)}">save</button></div>`).join('')
   }
-  const q = ctx.place.objects?.['bonus-stylist']?.state?.queue ?? [], qi = q.indexOf(player.id)
+  const gina = ctx.place.objects?.['bonus-stylist'], q = gina?.state?.queue ?? [], qi = q.indexOf(player.id)
+  if (gina && gina.state?.with !== player.id) { // not her turn yet, or she's still walking over: a small plate, the chair keeps the cursor
+    const w = qi > 0 ? `You're ${qi === 1 ? 'next' : '#' + (qi + 1)} in line` : 'Gina is on her way'
+    return `${CSS}<div id="glw" style="position:absolute;left:50%;bottom:120px;translate:-50% 0;padding:12px 20px;background:#2a1030;color:#ffe3f4;border:3px solid #ff71ce;box-shadow:4px 4px 0 #120616;font-size:20px;text-align:center;pointer-events:none"><div style="font-size:24px">✂ ${w}</div><div style="opacity:.75;font-size:15px;margin-top:4px">${qi > 0 ? 'Gina will come to your chair' : 'Sit tight'} · ${ctx.world.inputs?.actions?.interact?.label ?? 'E'} to get up</div></div>`
+  }
   const line = qi === 0 ? `<div class="q">✂ Gina is doing your hair</div>` : qi > 0 ? `<div class="q wait">Gina's finishing up with someone. You're ${qi === 1 ? 'next' : '#' + (qi + 1) + ' in line'}, change away meanwhile.</div>` : ''
   return `${CSS}<div id="gl" data-modal>
   <div class="hd"><h2>Glow Up Salon</h2><button class="x" onclick="${act('close')}">✕</button></div>
