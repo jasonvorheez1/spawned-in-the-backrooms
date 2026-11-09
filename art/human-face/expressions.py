@@ -32,13 +32,15 @@ EYE, IRIS, LASH, BROW, MOUTH, TEETH = (vset(n) for n in ("Eye", "Iris", "Lash", 
 
 # --- eye opening contour per side: top/bottom z as a function of x
 def contour(vs):
-    ps = [W(v) for v in vs]; x0 = min(p.x for p in ps); x1 = max(p.x for p in ps); n = 14
+    ps = [W(v) for v in vs]; x0 = min(p.x for p in ps); x1 = max(p.x for p in ps); n = 8
     top = [-1e9] * n; bot = [1e9] * n
     for p in ps:
         i = min(n - 1, int((p.x - x0) / (x1 - x0) * n)); top[i] = max(top[i], p.z); bot[i] = min(bot[i], p.z)
     for arr, bad in ((top, -1e9), (bot, 1e9)):
         for i in range(n):
             if arr[i] == bad: arr[i] = next((arr[j] for d in range(1, n) for j in (i - d, i + d) if 0 <= j < n and arr[j] != bad), 0)
+    for arr in (top, bot):
+        sm = [(arr[max(0, i - 1)] + 2 * arr[i] + arr[min(n - 1, i + 1)]) / 4 for i in range(n)]; arr[:] = sm
     xs = [x0 + (i + 0.5) * (x1 - x0) / n for i in range(n)]
     def f(arr, x):
         if x <= xs[0]: return arr[0]
@@ -124,7 +126,8 @@ for name, frac in (("X_Blink", 1.0), ("X_Squint", 0.45)):
     for v in LASH:
         p = W(v); s = 1 if p.x > 0 else -1; top, bot, x0, x1 = sides[s]; xc = min(max(p.x, x0), x1)
         if v not in UPLASH: continue  # lower lash islands stay
-        put(L, v, Vector((0, -0.0018 * frac, -(top(xc) - bot(xc) + 0.0012) * frac * 0.97)))
+        cx = (x0 + x1) / 2; hw = (x1 - x0) / 2; u = min(1.0, abs(p.x - cx) / hw)
+        put(L, v, Vector((0, -0.0018 * frac, -EH[s] * frac * 0.9 * (1 - 0.6 * u * u))))
     if frac < 1:
         for v in bm.verts:
             if v in EYE or v in LASH or v in IRIS: continue
