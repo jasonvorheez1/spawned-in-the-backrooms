@@ -60,6 +60,12 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     b0n = blocked(me); me.transform(R); b1n = blocked(me)
     if b1n >= b0n: me.transform(R)
     print("face", key, b0n, b1n)
+    # a lopsided Tripo mesh: its fuller side mirrored onto the other, so the curtain falls even on both shoulders
+    if key in ("t_silver",):
+        side = 1 if sum(1 for v in me.vertices if v.co.x > 0) >= sum(1 for v in me.vertices if v.co.x < 0) else -1
+        bmS = bmesh.new(); bmS.from_mesh(me)
+        bmesh.ops.symmetrize(bmS, input=bmS.verts[:] + bmS.edges[:] + bmS.faces[:], direction="X" if side > 0 else "-X", dist=0.0005)
+        bmS.to_mesh(me); bmS.free(); print("mirrored", key, side)
     # whatever still hangs over the face folds up into a fringe that ends at the brow, no holes cut
     for v in me.vertices:
         c = v.co
