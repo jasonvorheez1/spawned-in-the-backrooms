@@ -71,14 +71,14 @@ export function l26Tick(ctx, ses, st) {
   if (t < 24) {
     const u = ss(15, 23, t)
     const eye = { x: p.x + 0.5, y: p.y + 1.75, z: p.z - 0.9 }
-    ctx.view.camera = { eye, aim: L({ x: p.x + 0.8, y: p.y + 1.9, z: p.z + 6 }, herHead, u), fov: 58 - 18 * u }
+    ctx.view.camera = { eye, aim: L({ x: p.x + 0.8, y: p.y + 1.9, z: p.z + 6 }, { x: HER.x + 2.2, y: HER.y + 0.9, z: HER.z }, u), fov: 58 - 6 * u } // she drifts into the corner of the frame, never centered (Shelly: you shouldn't see her fully yet)
     once("l1", () => snd(ctx, V(L26_LINES[0][2]), 0.9, HER))
     return true
   }
   // D, 24-31: close, from below: her, smug, looking down at you
   if (t < 31) {
     const u = ss(24, 31, t)
-    ctx.view.camera = { eye: L({ x: HER.x - 1.6, y: HER.y + 1.25, z: HER.z - 5.5 }, { x: HER.x - 1.0, y: HER.y + 1.4, z: HER.z - 4.3 }, u), aim: herHead, fov: 34 }
+    ctx.view.camera = { eye: L(head, { x: p.x + 0.3, y: p.y + 1.55, z: p.z - 0.6 }, u), aim: { x: HER.x + 2.4, y: HER.y + 0.7, z: HER.z }, fov: 50 } // still from the deck below: a figure up at the rail, half out of frame
     once("l2", () => snd(ctx, V(L26_LINES[1][2]), 0.9, HER))
     if (t > 28.8) once("l3", () => snd(ctx, V(L26_LINES[2][2]), 0.9, HER))
     return true
@@ -91,7 +91,7 @@ export function l26Tick(ctx, ses, st) {
     })
     if (t > 31.6) once("drop", () => dropPhoebe(ctx, "phoebe-l26"))
     if (t > 33) once("l4", () => snd(ctx, V(L26_LINES[3][2]), 0.7, head))
-    ctx.view.camera = { eye: { x: HER.x - 1.0, y: HER.y + 1.4, z: HER.z - 4.3 }, aim: herHead, fov: 40 }
+    ctx.view.camera = { eye: { x: p.x + 0.3, y: p.y + 1.55, z: p.z - 0.6 }, aim: { x: HER.x + 2.4, y: HER.y + 0.7, z: HER.z }, fov: 50 }
     return true
   }
   // F, 36-38: back down to you, handing the view back
