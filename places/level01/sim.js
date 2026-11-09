@@ -94,8 +94,33 @@ function drones(ctx) {
   });
   if (!ctx.place.objects["z-dronebrain"]) ctx.spawn("z-dronebrain", { behavior: "scripts/zenith-drones.js" });
 }
+// breakable station (Shelly, Nov 9: "id like to break stuff, and have to break doors open"): furniture takes hits and wrecks into parts;
+// three doors whose motors died stay shut until you break a leaf out. Kinds → material and toughness are Savi's picks.
+const BREAKV = 1;
+const FMAT = { desk: ["machine", 140, "Workstation"], chair: ["metal", 60, "Chair"], rack: ["machine", 160, "Server rack"], locker: ["metal", 150, "Locker"], labbench: ["metal", 140, "Lab bench"], crate: ["metal", 90, "Crate"], table: ["metal", 80, "Table"], pod: ["metal", 180, "Sleep pod"], counter: ["metal", 140, "Counter"], treadmill: ["machine", 120, "Treadmill"], stall: ["metal", 70, "Stall"], growbed: ["metal", 90, "Grow bed"], pipes: ["pipe", 140, "Pipes"] };
+const JAMMED = ["z-lab-door", "z-wash-door", "z-gym-door"];
+function breakable(ctx) {
+  for (let i = 0; i < 200; i++) {
+    const o = ctx.getObject(`z-f${i}`); if (!o) continue;
+    const m = FMAT[o.primitive?.params?.kind]; if (!m) continue;
+    o.tags = [...new Set([...(o.tags ?? []), "breakable"])];
+    o.state = { ...(o.state ?? {}), mat: m[0], hp: m[1], maxHp: m[1], name: m[2] };
+  }
+  for (const id of JAMMED) {
+    const d = ctx.getObject(id); if (!d?.state?.leaves) continue;
+    d.state.mode = "jammed";
+    d.state.leaves.forEach((lid, i) => {
+      const leaf = ctx.getObject(lid); if (!leaf) return;
+      const b = d.state.base, ax = d.state.ax, off = (i === 0 ? -1 : 1) * 0.38;
+      leaf.feetPosition = { x: b.x + ax.x * off, y: 0, z: b.z + ax.z * off };
+      leaf.tags = [...new Set([...(leaf.tags ?? []), "breakable"])];
+      leaf.state = { ...(leaf.state ?? {}), mat: "metal", hp: 220, maxHp: 220, name: "Jammed door", door: id };
+    });
+  }
+}
 export function tick(ctx) {
   const s = ctx.place.state;
+  if (s.breakV !== BREAKV && s.layV === LAYV && ctx.place.players?.length) { s.breakV = BREAKV; breakable(ctx); }
   if (s.layV !== LAYV && ctx.place.players?.length) { s.layV = LAYV; lay(ctx); }
   if (s.droneV !== DRONEV && ctx.place.players?.length) { s.droneV = DRONEV; drones(ctx); }
   const now = ctx.now();

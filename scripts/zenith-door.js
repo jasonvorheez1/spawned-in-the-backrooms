@@ -20,6 +20,19 @@ function place(ctx, open, dur) {
 export function update(ctx) {
   const s = ctx.self.state, ses = ctx.self.session;
   if (!s.leaves || s.mode === "sealed") return ctx.sleep(30);
+  if (s.mode === "jammed") { // a dead motor: the door only opens when a leaf is broken out, then both give way
+    const L = s.leaves.map((id) => ctx.getObject(id));
+    if (L.some((l) => l && (l.state?.broke || l.visible === false))) {
+      for (const l of L) if (l && !l.state?.broke) { l.state.broke = true; l.visible = false; l.physics = "none"; }
+      s.mode = "broken";
+      const p = s.base;
+      ctx.emit("playSound", { clip: GRIND, position: { x: p.x, y: 1.6, z: p.z }, volume: 0.9, refDistance: 3, maxDistance: 22 });
+      ctx.emit("fx", { position: { x: p.x, y: 1.4, z: p.z }, script: SPARK });
+      ctx.emit("screenShake", { intensity: 0.25, duration: 0.3 }, { audience: { nearby: p, radius: 6 } });
+    }
+    return;
+  }
+  if (s.mode === "broken") return ctx.sleep(60);
   const p = s.base, now = ctx.now();
   if (s.mode === "stuck") {
     if (now < (ses.next ?? 0)) return;
