@@ -105,6 +105,10 @@ l26d-loop:
   primitive: {depth: 0.4, height: 2.6, kind: box, width: 3}
   state: {loop: true, to: {dz: 96}}
   visible: false
+l26d-party-door-lamp:
+  feetPosition: {x: 301.4, y: -77.9, z: -102}
+  id: l26d-party-door-lamp
+  light: {color: oklch(0.82 0.14 70), distance: 7, intensity: 1.6, kind: point}
 l26d-pg-1:
   feetPosition: {x: 300.3, y: -80, z: -66}
   id: l26d-pg-1
@@ -1585,3 +1589,73 @@ l26d-shell-n:
   material: {color: oklch(0.2 0.02 60)}
   physics: static
   primitive: {depth: 0.3, height: 2.7, kind: box, width: 22}
+l26d-wetprint-0:
+  castShadow: false
+  feetPosition: {x: 300.2, y: -79.995, z: -94}
+  id: l26d-wetprint-0
+  material: {color: oklch(0.18 0.03 30 / 0.75), roughness: 0.1, transparent: true}
+  primitive: {height: 0.3, kind: plane, width: 0.13}
+  rotation: {yaw: 0}
+l26d-wetprint-1:
+  castShadow: false
+  feetPosition: {x: 300.6, y: -79.995, z: -95.4}
+  id: l26d-wetprint-1
+  material: {color: oklch(0.18 0.03 30 / 0.75), roughness: 0.1, transparent: true}
+  primitive: {height: 0.3, kind: plane, width: 0.13}
+  rotation: {yaw: 0}
+l26d-wetprint-2:
+  castShadow: false
+  feetPosition: {x: 300.1, y: -79.995, z: -96.9}
+  id: l26d-wetprint-2
+  material: {color: oklch(0.18 0.03 30 / 0.75), roughness: 0.1, transparent: true}
+  primitive: {height: 0.3, kind: plane, width: 0.13}
+  rotation: {yaw: 0}
+l26d-wetprint-3:
+  castShadow: false
+  feetPosition: {x: 300.6, y: -79.995, z: -98.3}
+  id: l26d-wetprint-3
+  material: {color: oklch(0.18 0.03 30 / 0.75), roughness: 0.1, transparent: true}
+  primitive: {height: 0.3, kind: plane, width: 0.13}
+  rotation: {yaw: 0}
+l26d-wetprint-4:
+  castShadow: false
+  feetPosition: {x: 300.2, y: -79.995, z: -99.8}
+  id: l26d-wetprint-4
+  material: {color: oklch(0.18 0.03 30 / 0.75), roughness: 0.1, transparent: true}
+  primitive: {height: 0.3, kind: plane, width: 0.13}
+  rotation: {yaw: 0}
+l26d-wetprint-5:
+  castShadow: false
+  feetPosition: {x: 300.8, y: -79.995, z: -101.2}
+  id: l26d-wetprint-5
+  material: {color: oklch(0.18 0.03 30 / 0.75), roughness: 0.1, transparent: true}
+  primitive: {height: 0.3, kind: plane, width: 0.13}
+  rotation: {yaw: 0}
+l26d-wetprint-6:
+  castShadow: false
+  feetPosition: {x: 302.1, y: -79.995, z: -102.2}
+  id: l26d-wetprint-6
+  material: {color: oklch(0.18 0.03 30 / 0.75), roughness: 0.1, transparent: true}
+  primitive: {height: 0.3, kind: plane, width: 0.13}
+  rotation: {yaw: 90}
+l26d-wetprint-7:
+  castShadow: false
+  feetPosition: {x: 303.6, y: -79.995, z: -101.8}
+  id: l26d-wetprint-7
+  material: {color: oklch(0.18 0.03 30 / 0.75), roughness: 0.1, transparent: true}
+  primitive: {height: 0.3, kind: plane, width: 0.13}
+  rotation: {yaw: 90}
+l26d-wetprint-8:
+  castShadow: false
+  feetPosition: {x: 305.1, y: -79.995, z: -102.3}
+  id: l26d-wetprint-8
+  material: {color: oklch(0.18 0.03 30 / 0.75), roughness: 0.1, transparent: true}
+  primitive: {height: 0.3, kind: plane, width: 0.13}
+  rotation: {yaw: 90}
+l26d-wetprint-9:
+  castShadow: false
+  feetPosition: {x: 306.6, y: -79.995, z: -101.9}
+  id: l26d-wetprint-9
+  material: {color: oklch(0.18 0.03 30 / 0.75), roughness: 0.1, transparent: true}
+  primitive: {height: 0.3, kind: plane, width: 0.13}
+  rotation: {yaw: 90}
