@@ -304,6 +304,7 @@ bc-directory:
   rotation: {yaw: 90}
   tags: [bonus-court]
 bc-fern-1:
+  castShadow: false
   feetPosition: {x: -3.9, y: 0, z: 1.3}
   id: bc-fern-1
   layout: {box: {max: {x: 0.6, y: 1.15, z: 0.6}, min: {x: -0.6, y: 0, z: -0.6}}}
@@ -451,7 +452,7 @@ bc-glight-s:
   id: bc-glight-s
   light: {aim: {x: 17, y: 7, z: -14}, angle: 22, color: "#fff1d6", distance: 9, intensity: 7, kind: spot, penumbra: 0.7}
 bc-gottoman-1:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 13.9, y: 5.515, z: -14}
   id: bc-gottoman-1
   layout: {box: {max: {x: 0.75, y: 0.5, z: 0.75}, min: {x: -0.75, y: 0, z: -0.75}}}
@@ -459,7 +460,7 @@ bc-gottoman-1:
   physics: {body: static, collider: box}
   tags: [bonus-gallery]
 bc-gottoman-2:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: 20.1, y: 5.515, z: -14}
   id: bc-gottoman-2
   layout: {box: {max: {x: 0.75, y: 0.5, z: 0.75}, min: {x: -0.75, y: 0, z: -0.75}}}
@@ -467,6 +468,7 @@ bc-gottoman-2:
   physics: {body: static, collider: box}
   tags: [bonus-gallery]
 bc-gplaque-s:
+  castShadow: false
   feetPosition: {x: 17, y: 6.3, z: -13.4}
   id: bc-gplaque-s
   rotation: {yaw: 0}
@@ -596,38 +598,45 @@ bc-planter-6:
   scale: {x: 1.5, y: 1, z: 1.5}
   tags: [bonus-court]
 bc-plaque-1:
+  castShadow: false
   feetPosition: {x: 23.93, y: 7, z: -18.85}
   id: bc-plaque-1
   rotation: {yaw: 90}
   vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Untitled No. 1, 1996</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>Oil on canvas</text></svg>"
 bc-plaque-2:
+  castShadow: false
   feetPosition: {x: 23.93, y: 7, z: -6.85}
   id: bc-plaque-2
   rotation: {yaw: 90}
   vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Untitled No. 2, 1997</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>Oil on canvas</text></svg>"
 bc-plaque-3:
+  castShadow: false
   feetPosition: {x: 18.15, y: 7, z: -27.93}
   id: bc-plaque-3
   rotation: {yaw: 180}
   vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Untitled No. 3, 1998</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>Oil on canvas</text></svg>"
 bc-plaque-4:
+  castShadow: false
   feetPosition: {x: 15.85, y: 7, z: -0.07000000000000021}
   id: bc-plaque-4
   rotation: {yaw: 360}
   vector: "<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>Untitled No. 4, 1999</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>Oil on canvas</text></svg>"
 bc-poster-w12:
+  castShadow: false
   feetPosition: {x: -9.94, y: 7.1, z: 9.6}
   id: bc-poster-w12
   rotation: {yaw: 90}
   tags: [bonus-court]
   vector: "<svg viewBox='0 0 200 260' width='0.9m'><rect x='0' y='0' width='200' height='260' fill='#fff6fb'/><rect x='10' y='10' width='180' height='240' fill='none' stroke='#38f4ff' stroke-width='6'/><circle cx='100' cy='95' r='48' fill='#38f4ff' opacity='0.85'/><path d='M40 150 L160 150' stroke='#1a0f2e' stroke-width='3'/><text x='100' y='188' text-anchor='middle' font-family='display' font-size='22' fill='#1a0f2e'>STORE CLOSED</text><text x='100' y='214' text-anchor='middle' font-family='sans-serif' font-size='11' fill='#4a3a5a'>thanks for 9 great years</text><rect x='70' y='-6' width='60' height='16' fill='#f3e9c8' opacity='0.8' transform='rotate(-6 100 2)'/></svg>"
 bc-poster-w20:
+  castShadow: false
   feetPosition: {x: -9.94, y: 7.1, z: 20}
   id: bc-poster-w20
   rotation: {yaw: 90}
   tags: [bonus-court]
   vector: "<svg viewBox='0 0 200 260' width='0.9m'><rect x='0' y='0' width='200' height='260' fill='#fff6fb'/><rect x='10' y='10' width='180' height='240' fill='none' stroke='#b14cff' stroke-width='6'/><circle cx='100' cy='95' r='48' fill='#b14cff' opacity='0.85'/><path d='M40 150 L160 150' stroke='#1a0f2e' stroke-width='3'/><text x='100' y='188' text-anchor='middle' font-family='display' font-size='22' fill='#1a0f2e'>SPACE AVAILABLE</text><text x='100' y='214' text-anchor='middle' font-family='sans-serif' font-size='11' fill='#4a3a5a'>ask at the management office</text><rect x='70' y='-6' width='60' height='16' fill='#f3e9c8' opacity='0.8' transform='rotate(-6 100 2)'/></svg>"
 bc-poster-w4:
+  castShadow: false
   feetPosition: {x: -9.94, y: 7.1, z: 4}
   id: bc-poster-w4
   rotation: {yaw: 90}
@@ -649,12 +658,14 @@ bc-prize:
   rotation: {yaw: -90}
   tags: [bonus-arcade]
 bc-rope-1:
+  castShadow: false
   feetPosition: {x: 22.7, y: 5.5, z: -20}
   id: bc-rope-1
   layout: {box: {max: {x: 0.25, y: 1, z: 0.55}, min: {x: -0.25, y: 0, z: -0.55}}}
   model: /cdn/value.a32105de8f1f9be15c8f56c6218948585c0ebf74ed0d0eefad0913edfcde0933.glb
   physics: {body: static, collider: box}
 bc-rope-2:
+  castShadow: false
   feetPosition: {x: 22.7, y: 5.5, z: -8}
   id: bc-rope-2
   layout: {box: {max: {x: 0.25, y: 1, z: 0.55}, min: {x: -0.25, y: 0, z: -0.55}}}
@@ -691,6 +702,7 @@ bc-station-sign:
   rotation: {yaw: 90}
   vector: "<svg viewBox='0 0 400 70' width='3.9m'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#7df9ff'/><stop offset='1' stop-color='#ff6ec7'/></linearGradient></defs><rect x='4' y='4' width='392' height='62' rx='12' fill='#1a0f2e' stroke='url(#g)' stroke-width='4' filter='drop-shadow(0 0 6 #7df9ff)'/><text x='200' y='44' text-anchor='middle' font-family='display' font-size='34' fill='#7df9ff' filter='drop-shadow(0 0 8 #7df9ff)'>TELEPORT STATION</text><text x='200' y='60' text-anchor='middle' font-family='sans-serif' font-size='10' fill='#ff6ec7' letter-spacing='4'>PLATFORM 1 . ALL DESTINATIONS</text></svg>"
 bc-strash-1:
+  castShadow: false
   feetPosition: {x: -15.5, y: 5.5, z: -21.5}
   id: bc-strash-1
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
@@ -704,6 +716,7 @@ bc-train:
   physics: {body: static, collider: box}
   rotation: {yaw: 90}
 bc-trash-1:
+  castShadow: false
   feetPosition: {x: -5.8, y: 0, z: 14}
   id: bc-trash-1
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
@@ -712,6 +725,7 @@ bc-trash-1:
   rotation: {yaw: 0}
   tags: [bonus-court]
 bc-trash-2:
+  castShadow: false
   feetPosition: {x: 5.8, y: 0, z: 14}
   id: bc-trash-2
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
@@ -720,6 +734,7 @@ bc-trash-2:
   rotation: {yaw: 0}
   tags: [bonus-court]
 bc-trash-3:
+  castShadow: false
   feetPosition: {x: -5.8, y: 0, z: -20}
   id: bc-trash-3
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
@@ -728,6 +743,7 @@ bc-trash-3:
   rotation: {yaw: 0}
   tags: [bonus-court]
 bc-trash-4:
+  castShadow: false
   feetPosition: {x: 5.8, y: 0, z: -20}
   id: bc-trash-4
   layout: {box: {max: {x: 0.4, y: 0.95, z: 0.4}, min: {x: -0.4, y: 0, z: -0.4}}}
@@ -800,7 +816,7 @@ bd-backbar-5:
   tags: [bonus-diner]
 bd-boombox:
   audio: {clip: /cdn/level-1-toms-diner-ur1vbwxr.mp3, gain: 0.35, loop: true, maxDistance: 14, spatial: true}
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -21, y: 1.05, z: -20.5}
   id: bd-boombox
   model: {forward: "+x", id: /cdn/value.a941c94840b0adf52cc16d5fff142095c3c334724d91c70b19bbe93d66a98eee.glb}
@@ -808,7 +824,7 @@ bd-boombox:
   rotation: {yaw: -90}
   tags: [bonus-diner]
 bd-chair-1-1:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -15.599999999999998, y: 0, z: -20}
   id: bd-chair-1-1
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -817,7 +833,7 @@ bd-chair-1-1:
   rotation: {yaw: 90}
   tags: [bonus-diner]
 bd-chair-1-2:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -17.2, y: 0, z: -20}
   id: bd-chair-1-2
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -826,7 +842,7 @@ bd-chair-1-2:
   rotation: {yaw: -90}
   tags: [bonus-diner]
 bd-chair-1-3:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -16.4, y: 0, z: -19.2}
   id: bd-chair-1-3
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -835,7 +851,7 @@ bd-chair-1-3:
   rotation: {yaw: 0}
   tags: [bonus-diner]
 bd-chair-1-4:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -16.4, y: 0, z: -20.8}
   id: bd-chair-1-4
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -844,7 +860,7 @@ bd-chair-1-4:
   rotation: {yaw: 180}
   tags: [bonus-diner]
 bd-chair-2-1:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -11.799999999999999, y: 0, z: -20}
   id: bd-chair-2-1
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -853,7 +869,7 @@ bd-chair-2-1:
   rotation: {yaw: 90}
   tags: [bonus-diner]
 bd-chair-2-2:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -13.4, y: 0, z: -20}
   id: bd-chair-2-2
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -862,7 +878,7 @@ bd-chair-2-2:
   rotation: {yaw: -90}
   tags: [bonus-diner]
 bd-chair-2-3:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -12.6, y: 0, z: -19.2}
   id: bd-chair-2-3
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -871,7 +887,7 @@ bd-chair-2-3:
   rotation: {yaw: 0}
   tags: [bonus-diner]
 bd-chair-3-1:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -15.599999999999998, y: 0, z: -10.2}
   id: bd-chair-3-1
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -880,7 +896,7 @@ bd-chair-3-1:
   rotation: {yaw: 90}
   tags: [bonus-diner]
 bd-chair-3-2:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -17.2, y: 0, z: -10.2}
   id: bd-chair-3-2
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -889,7 +905,7 @@ bd-chair-3-2:
   rotation: {yaw: -90}
   tags: [bonus-diner]
 bd-chair-3-3:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -16.4, y: 0, z: -9.399999999999999}
   id: bd-chair-3-3
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -898,7 +914,7 @@ bd-chair-3-3:
   rotation: {yaw: 0}
   tags: [bonus-diner]
 bd-chair-3-4:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -16.4, y: 0, z: -11}
   id: bd-chair-3-4
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -907,7 +923,7 @@ bd-chair-3-4:
   rotation: {yaw: 180}
   tags: [bonus-diner]
 bd-chair-4-1:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -11.799999999999999, y: 0, z: -10.2}
   id: bd-chair-4-1
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -916,7 +932,7 @@ bd-chair-4-1:
   rotation: {yaw: 90}
   tags: [bonus-diner]
 bd-chair-4-2:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -13.4, y: 0, z: -10.2}
   id: bd-chair-4-2
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -925,7 +941,7 @@ bd-chair-4-2:
   rotation: {yaw: -90}
   tags: [bonus-diner]
 bd-chair-4-3:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -12.6, y: 0, z: -11}
   id: bd-chair-4-3
   model: {forward: "+x", id: /cdn/value.3493be6fa4868a8e11a714ced266844e881ca307a0dfb6872164f273dbb7c1ae.glb}
@@ -934,7 +950,7 @@ bd-chair-4-3:
   rotation: {yaw: 180}
   tags: [bonus-diner]
 bd-coffee:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -23.5, y: 0.9, z: -17.6}
   id: bd-coffee
   model: {forward: "+x", id: /cdn/value.6fd5817efd4dcf472f9dfe25b04d117ca9faf65d880f5ee6d965c1ba3f407eec.glb}
@@ -1007,7 +1023,7 @@ bd-jukebox-glow:
   receiveShadow: true
   tags: [bonus-diner]
 bd-ketchup-1:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -16.24, y: 0.75, z: -19.88}
   id: bd-ketchup-1
   model: {forward: "+x", id: /cdn/value.d61aa4714379134421e81efb768d65b602715becf19fdb87aad623b31ceafd39.glb}
@@ -1015,7 +1031,7 @@ bd-ketchup-1:
   rotation: {yaw: -60}
   tags: [bonus-diner]
 bd-ketchup-2:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -12.44, y: 0.75, z: -19.88}
   id: bd-ketchup-2
   model: {forward: "+x", id: /cdn/value.d61aa4714379134421e81efb768d65b602715becf19fdb87aad623b31ceafd39.glb}
@@ -1023,7 +1039,7 @@ bd-ketchup-2:
   rotation: {yaw: -60}
   tags: [bonus-diner]
 bd-ketchup-3:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -16.24, y: 0.75, z: -10.08}
   id: bd-ketchup-3
   model: {forward: "+x", id: /cdn/value.d61aa4714379134421e81efb768d65b602715becf19fdb87aad623b31ceafd39.glb}
@@ -1031,7 +1047,7 @@ bd-ketchup-3:
   rotation: {yaw: -60}
   tags: [bonus-diner]
 bd-ketchup-4:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -12.44, y: 0.75, z: -10.08}
   id: bd-ketchup-4
   model: {forward: "+x", id: /cdn/value.d61aa4714379134421e81efb768d65b602715becf19fdb87aad623b31ceafd39.glb}
@@ -1061,7 +1077,7 @@ bd-menu:
   tags: [bonus-diner]
   vector: "<svg viewBox='0 0 240 200' width='2.4m'><rect x='3' y='3' width='234' height='194' rx='10' fill='#15121a' stroke='#d8d8e0' stroke-width='5'/><text x='120' y='34' font-family='serif' font-style='italic' font-size='24' fill='#ff8fd0' text-anchor='middle' filter='drop-shadow(0 0 6 #ff3fa8)'>Tom's Menu</text><path d='M22 44 H218' stroke='#7ff3ff' stroke-width='2'/><text x='22' y='66' font-family='sans-serif' font-size='14' fill='#fff6e8'>Hot dog</text><text x='218' y='66' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$3</text><text x='22' y='85' font-family='sans-serif' font-size='14' fill='#fff6e8'>Fries</text><text x='218' y='85' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$2</text><text x='22' y='104' font-family='sans-serif' font-size='14' fill='#fff6e8'>Pizza slice</text><text x='218' y='104' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$4</text><text x='22' y='123' font-family='sans-serif' font-size='14' fill='#fff6e8'>Cheezburger</text><text x='218' y='123' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$5</text><text x='22' y='142' font-family='sans-serif' font-size='14' fill='#fff6e8'>Coca-Cola</text><text x='218' y='142' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$2</text><text x='22' y='161' font-family='sans-serif' font-size='14' fill='#fff6e8'>Minute Maid Lemonade</text><text x='218' y='161' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$2</text><text x='22' y='180' font-family='sans-serif' font-size='14' fill='#fff6e8'>Dasani water</text><text x='218' y='180' font-family='sans-serif' font-size='14' fill='#ffd84a' text-anchor='end'>$1</text></svg>"
 bd-mixer:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -23.5, y: 0.9, z: -19.6}
   id: bd-mixer
   model: {forward: "+x", id: /cdn/value.e824e06bdf642c26a7bf028e1015bcfdd28e8c7c993e9b095a69d7ae6ef58822.glb}
@@ -1069,7 +1085,7 @@ bd-mixer:
   rotation: {yaw: -90}
   tags: [bonus-diner]
 bd-mustard-1:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -16.54, y: 0.75, z: -19.85}
   id: bd-mustard-1
   model: {forward: "+x", id: /cdn/value.6ac2a787f498c47a1d85a476e4a808a345c24d0da4b7ec8f2ee023884161047c.glb}
@@ -1077,7 +1093,7 @@ bd-mustard-1:
   rotation: {yaw: 40}
   tags: [bonus-diner]
 bd-mustard-2:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -12.74, y: 0.75, z: -19.85}
   id: bd-mustard-2
   model: {forward: "+x", id: /cdn/value.6ac2a787f498c47a1d85a476e4a808a345c24d0da4b7ec8f2ee023884161047c.glb}
@@ -1085,7 +1101,7 @@ bd-mustard-2:
   rotation: {yaw: 40}
   tags: [bonus-diner]
 bd-mustard-3:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -16.54, y: 0.75, z: -10.049999999999999}
   id: bd-mustard-3
   model: {forward: "+x", id: /cdn/value.6ac2a787f498c47a1d85a476e4a808a345c24d0da4b7ec8f2ee023884161047c.glb}
@@ -1093,7 +1109,7 @@ bd-mustard-3:
   rotation: {yaw: 40}
   tags: [bonus-diner]
 bd-mustard-4:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -12.74, y: 0.75, z: -10.049999999999999}
   id: bd-mustard-4
   model: {forward: "+x", id: /cdn/value.6ac2a787f498c47a1d85a476e4a808a345c24d0da4b7ec8f2ee023884161047c.glb}
@@ -1101,7 +1117,7 @@ bd-mustard-4:
   rotation: {yaw: 40}
   tags: [bonus-diner]
 bd-napkin-1:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -16.419999999999998, y: 0.75, z: -20.05}
   id: bd-napkin-1
   model: {id: /cdn/value.5dbf5e49a99548e423963a955af081b8d15b90689d6f4bb4f719ff167a93150f.glb}
@@ -1109,7 +1125,7 @@ bd-napkin-1:
   rotation: {yaw: 0}
   tags: [bonus-diner]
 bd-napkin-2:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -12.62, y: 0.75, z: -20.05}
   id: bd-napkin-2
   model: {id: /cdn/value.5dbf5e49a99548e423963a955af081b8d15b90689d6f4bb4f719ff167a93150f.glb}
@@ -1117,7 +1133,7 @@ bd-napkin-2:
   rotation: {yaw: 90}
   tags: [bonus-diner]
 bd-napkin-3:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -16.419999999999998, y: 0.75, z: -10.25}
   id: bd-napkin-3
   model: {id: /cdn/value.5dbf5e49a99548e423963a955af081b8d15b90689d6f4bb4f719ff167a93150f.glb}
@@ -1125,7 +1141,7 @@ bd-napkin-3:
   rotation: {yaw: 0}
   tags: [bonus-diner]
 bd-napkin-4:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -12.62, y: 0.75, z: -10.25}
   id: bd-napkin-4
   model: {id: /cdn/value.5dbf5e49a99548e423963a955af081b8d15b90689d6f4bb4f719ff167a93150f.glb}
@@ -1148,7 +1164,7 @@ bd-sign-glow:
   receiveShadow: true
   tags: [bonus-diner]
 bd-soda:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -23.5, y: 0.9, z: -12.6}
   id: bd-soda
   model: {forward: "+x", id: /cdn/value.f26d91063aa7de3ad41ea3d286efe21ab60a12dbf7626345ee4d66dbaa0ba979.glb}
@@ -1157,7 +1173,7 @@ bd-soda:
   scale: 1.3
   tags: [bonus-diner]
 bd-stool-1:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -19.3, y: 0, z: -20.3}
   id: bd-stool-1
   model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
@@ -1165,7 +1181,7 @@ bd-stool-1:
   receiveShadow: true
   tags: [bonus-diner]
 bd-stool-2:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -19.3, y: 0, z: -18.6}
   id: bd-stool-2
   model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
@@ -1173,7 +1189,7 @@ bd-stool-2:
   receiveShadow: true
   tags: [bonus-diner]
 bd-stool-3:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -19.3, y: 0, z: -16.9}
   id: bd-stool-3
   model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
@@ -1181,7 +1197,7 @@ bd-stool-3:
   receiveShadow: true
   tags: [bonus-diner]
 bd-stool-4:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -19.3, y: 0, z: -13.1}
   id: bd-stool-4
   model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
@@ -1189,7 +1205,7 @@ bd-stool-4:
   receiveShadow: true
   tags: [bonus-diner]
 bd-stool-5:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -19.3, y: 0, z: -11.4}
   id: bd-stool-5
   model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
@@ -1197,7 +1213,7 @@ bd-stool-5:
   receiveShadow: true
   tags: [bonus-diner]
 bd-stool-6:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -19.3, y: 0, z: -9.7}
   id: bd-stool-6
   model: {id: /cdn/value.9cf818a1155e9ad9d714906c67daaa3abacf3ca8ed08256d97194e3829b47bee.glb}
@@ -1205,7 +1221,7 @@ bd-stool-6:
   receiveShadow: true
   tags: [bonus-diner]
 bd-table-1:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -16.4, y: 0, z: -20}
   id: bd-table-1
   model: {id: /cdn/value.f5ac1ed53601a4c7b4064f0ef64ad3be787b38ac2ff5b08bd3a19a3054d8a21f.glb}
@@ -1213,7 +1229,7 @@ bd-table-1:
   receiveShadow: true
   tags: [bonus-diner]
 bd-table-2:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -12.6, y: 0, z: -20}
   id: bd-table-2
   model: {id: /cdn/value.f5ac1ed53601a4c7b4064f0ef64ad3be787b38ac2ff5b08bd3a19a3054d8a21f.glb}
@@ -1221,7 +1237,7 @@ bd-table-2:
   receiveShadow: true
   tags: [bonus-diner]
 bd-table-3:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -16.4, y: 0, z: -10.2}
   id: bd-table-3
   model: {id: /cdn/value.f5ac1ed53601a4c7b4064f0ef64ad3be787b38ac2ff5b08bd3a19a3054d8a21f.glb}
@@ -1229,7 +1245,7 @@ bd-table-3:
   receiveShadow: true
   tags: [bonus-diner]
 bd-table-4:
-  castShadow: true
+  castShadow: false
   feetPosition: {x: -12.6, y: 0, z: -10.2}
   id: bd-table-4
   model: {id: /cdn/value.f5ac1ed53601a4c7b4064f0ef64ad3be787b38ac2ff5b08bd3a19a3054d8a21f.glb}
@@ -1237,6 +1253,7 @@ bd-table-4:
   receiveShadow: true
   tags: [bonus-diner]
 bl-arm-1:
+  castShadow: false
   feetPosition: {x: -8, y: 5.5, z: 12.2}
   id: bl-arm-1
   layout: {box: {max: {x: 0.52, y: 1.05, z: 0.475}, min: {x: -0.52, y: 0, z: -0.475}}}
@@ -1244,6 +1261,7 @@ bl-arm-1:
   physics: static
   rotation: {yaw: 180}
 bl-arm-2:
+  castShadow: false
   feetPosition: {x: -8, y: 5.5, z: 15.8}
   id: bl-arm-2
   layout: {box: {max: {x: 0.52, y: 1.05, z: 0.475}, min: {x: -0.52, y: 0, z: -0.475}}}
@@ -1262,6 +1280,7 @@ bl-lamp:
   physics: static
   rotation: {yaw: 0}
 bl-lava:
+  castShadow: false
   feetPosition: {x: -9.5, y: 5.5, z: 15.7}
   id: bl-lava
   layout: {box: {max: {x: 0.22, y: 0.95, z: 0.22}, min: {x: -0.22, y: 0, z: -0.22}}}
@@ -1282,6 +1301,7 @@ bl-sofa:
   physics: static
   rotation: {yaw: 90}
 bl-table:
+  castShadow: false
   feetPosition: {x: -8.2, y: 5.5, z: 14}
   id: bl-table
   layout: {box: {max: {x: 0.575, y: 0.46, z: 0.295}, min: {x: -0.575, y: 0, z: -0.295}}}
