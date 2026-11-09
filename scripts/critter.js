@@ -262,10 +262,13 @@ export function update(ctx) {
   if (ses.heldKind !== eq) {
     ses.heldKind = eq
     if (ses.heldObj) { try { ctx.destroy(ses.heldObj) } catch (e) {} ses.heldObj = null }
+    // a reload or a new machine forgets ses.heldObj but the gun stays on the body: sweep every tagged held gun of ours
+    for (const r of ctx.query({ tags: ['held3p'], radius: 4 })) if (r.id.startsWith(ctx.self.id + '/')) { try { ctx.destroy(r.id) } catch (e) {} }
     if (eq !== 'fists') {
       const bk = baseOf(eq), g = HOLD[bk] ?? 0
       ses.heldObj = ctx.spawn({
         parent: ctx.self.id,
+        tags: ['held3p'],
         attachment: { bone: 'RightHand' },
         feetPosition: { x: 0, y: 0, z: -g },
         visibleInFirstPerson: false,
