@@ -1593,125 +1593,125 @@ l26d-shoeprint-0:
   castShadow: false
   feetPosition: {x: 300.13, y: -79.993, z: -90.5}
   id: l26d-shoeprint-0
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.7), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.8, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: 0}
-  scale: {x: 1.15, y: 1.15, z: 1.15}
+  scale: {x: 1.1, y: 1.1, z: 1.1}
 l26d-shoeprint-1:
   castShadow: false
   feetPosition: {x: 299.87, y: -79.993, z: -91.95}
   id: l26d-shoeprint-1
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.715), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.8150000000000001, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: 0}
-  scale: {x: -1.15, y: 1.15, z: 1.15}
+  scale: {x: -1.1, y: 1.1, z: 1.1}
 l26d-shoeprint-10:
   castShadow: false
   feetPosition: {x: 302.5, y: -79.993, z: -101.87}
   id: l26d-shoeprint-10
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.85), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.9500000000000001, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: -90}
-  scale: {x: 1.15, y: 1.15, z: 1.15}
+  scale: {x: 1.1, y: 1.1, z: 1.1}
 l26d-shoeprint-11:
   castShadow: false
   feetPosition: {x: 303.8, y: -79.993, z: -102.13}
   id: l26d-shoeprint-11
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.865), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.9650000000000001, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: -90}
-  scale: {x: -1.15, y: 1.15, z: 1.15}
+  scale: {x: -1.1, y: 1.1, z: 1.1}
 l26d-shoeprint-12:
   castShadow: false
   feetPosition: {x: 305.09999999999997, y: -79.993, z: -101.87}
   id: l26d-shoeprint-12
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.8799999999999999), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.98, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: -90}
-  scale: {x: 1.15, y: 1.15, z: 1.15}
+  scale: {x: 1.1, y: 1.1, z: 1.1}
 l26d-shoeprint-13:
   castShadow: false
   feetPosition: {x: 306.4, y: -79.993, z: -102.13}
   id: l26d-shoeprint-13
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.895), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.9950000000000001, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: -90}
-  scale: {x: -1.15, y: 1.15, z: 1.15}
+  scale: {x: -1.1, y: 1.1, z: 1.1}
 l26d-shoeprint-2:
   castShadow: false
   feetPosition: {x: 300.13, y: -79.993, z: -93.4}
   id: l26d-shoeprint-2
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.73), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.8300000000000001, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: 0}
-  scale: {x: 1.15, y: 1.15, z: 1.15}
+  scale: {x: 1.1, y: 1.1, z: 1.1}
 l26d-shoeprint-3:
   castShadow: false
   feetPosition: {x: 299.87, y: -79.993, z: -94.85000000000001}
   id: l26d-shoeprint-3
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.745), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.8450000000000001, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: 0}
-  scale: {x: -1.15, y: 1.15, z: 1.15}
+  scale: {x: -1.1, y: 1.1, z: 1.1}
 l26d-shoeprint-4:
   castShadow: false
   feetPosition: {x: 300.13, y: -79.993, z: -96.30000000000001}
   id: l26d-shoeprint-4
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.76), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.8600000000000001, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: 0}
-  scale: {x: 1.15, y: 1.15, z: 1.15}
+  scale: {x: 1.1, y: 1.1, z: 1.1}
 l26d-shoeprint-5:
   castShadow: false
   feetPosition: {x: 299.87, y: -79.993, z: -97.75000000000001}
   id: l26d-shoeprint-5
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.7749999999999999), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.875, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: 0}
-  scale: {x: -1.15, y: 1.15, z: 1.15}
+  scale: {x: -1.1, y: 1.1, z: 1.1}
 l26d-shoeprint-6:
   castShadow: false
   feetPosition: {x: 300.13, y: -79.993, z: -99.20000000000002}
   id: l26d-shoeprint-6
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.7899999999999999), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.89, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: 0}
-  scale: {x: 1.15, y: 1.15, z: 1.15}
+  scale: {x: 1.1, y: 1.1, z: 1.1}
 l26d-shoeprint-7:
   castShadow: false
   feetPosition: {x: 299.87, y: -79.993, z: -100.65000000000002}
   id: l26d-shoeprint-7
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.8049999999999999), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.905, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: 0}
-  scale: {x: -1.15, y: 1.15, z: 1.15}
+  scale: {x: -1.1, y: 1.1, z: 1.1}
 l26d-shoeprint-8:
   castShadow: false
   feetPosition: {x: 300.4, y: -79.993, z: -102.15}
   id: l26d-shoeprint-8
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.82), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.92, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: -45}
-  scale: {x: 1.15, y: 1.15, z: 1.15}
+  scale: {x: 1.1, y: 1.1, z: 1.1}
 l26d-shoeprint-9:
   castShadow: false
   feetPosition: {x: 301.2, y: -79.993, z: -102.13}
   id: l26d-shoeprint-9
-  material: {alphaTest: 0.15, color: oklch(0.62 0.05 80 / 0.835), depthWrite: false, metalness: 0, roughness: 0.12, texture: /cdn/value.c797e436f9a0887bc32aaff6089c451eab251aa323a3c51b67290909a4bb10dc.png, transparent: true}
+  material: {color: oklch(0.16 0.03 30), depthWrite: false, metalness: 0.2, opacity: 0.935, roughness: 0.08, texture: /cdn/value.3fe31ada200695b2626e4df0b93e9dc597e82a075d7bea36725f839cb1b121ea.png, transparent: true}
   primitive: {height: 0.32, kind: plane, width: 0.32}
   receiveShadow: true
   rotation: {pitch: -90, yaw: -90}
-  scale: {x: -1.15, y: 1.15, z: 1.15}
+  scale: {x: -1.1, y: 1.1, z: 1.1}
