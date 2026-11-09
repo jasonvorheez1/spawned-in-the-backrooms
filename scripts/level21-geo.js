@@ -161,7 +161,7 @@ export function geometry(ctx) {
       const rock = (isEdge(cx, cz) || isEdge(nx, nz)) && !(cz === LANE.z0 + LANE.d - 1 && d === 1 && cx >= 21) && !(cx === 20 && d === 0);
       const h = wallH(cx, cz, nx, nz);
       if (rock) {
-        ctx.albedo(isEdge(cx, cz) && zoneOf(cx, cz) === "edge" ? null : WALL); ctx.color(isEdge(cx, cz) && zoneOf(cx, cz) === "edge" ? "oklch(0.66 0.006 240)" : "oklch(0.52 0.012 110)"); ctx.roughness(0.95); // the photo: pale grey blasted rock
+        const lit = zoneOf(cx, cz) === "edge" || zoneOf(nx, nz) === "edge"; ctx.albedo(null); ctx.color(lit ? "oklch(0.68 0.006 240)" : "oklch(0.5 0.008 240)"); ctx.roughness(0.95); // the photo: pale grey blasted rock
         if (d === 0) rockWall(xe, xe, z0, z0 + S, h, cx * 131 + cz * 17 + 3); else rockWall(x0, x0 + S, ze, ze, h, cx * 91 + cz * 31 + 9);
       } else {
         ctx.albedo(WALL); ctx.color(isEdge(cx, cz) || isEdge(nx, nz) ? "oklch(0.93 0.008 95)" : "oklch(0.9 0.014 95)"); ctx.roughness(0.9);
