@@ -66,6 +66,13 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
         bmS = bmesh.new(); bmS.from_mesh(me)
         bmesh.ops.symmetrize(bmS, input=bmS.verts[:] + bmS.edges[:] + bmS.faces[:], direction="X" if side > 0 else "-X", dist=0.0005)
         bmS.to_mesh(me); bmS.free(); print("mirrored", key, side)
+    # the long curtain parts round the face: strands hanging in front of the face and throat swing out to frame it, side locks down the chest
+    if key in ("t_silver",):
+        for v in me.vertices:
+            c = v.co
+            if hz - 0.14 < c.z < fz1 - 0.01 and c.y < cy - 0.02 and abs(c.x) < rx * 0.78:
+                sgn = 1 if c.x >= 0 else -1; k = min(1.0, (c.z - (hz - 0.14)) / 0.08)
+                c.x = c.x + (sgn * rx * (0.78 + 0.1 * abs(c.x) / rx) - c.x) * k
     # whatever still hangs over the face folds up into a fringe that ends at the brow, no holes cut
     for v in me.vertices:
         c = v.co
