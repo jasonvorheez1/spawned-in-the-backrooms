@@ -132,7 +132,7 @@ function lay(ctx) {
   for (let k = 0; k < 4; k++) sp(`l21-vault-${k}`, { feetPosition: { x: vx0 + 4.5 + k * 9, y: 0, z: vz }, visibleRange: { max: 80 }, castShadow: false, receiveShadow: true, physics: { body: "static", collider: "mesh" }, model: { id: VAULT[0], offset: VOFF[0], materials: { rock: { texture: "cdn/texture-pale-grey-smooth-shotcrete-tunnel-rock.png", color: "oklch(0.80 0.012 80)", roughness: 0.9, vertexColors: false } } }, scale: { x: 1.06, y: 1, z: 1 } });
 
   // ---- the photo's green EXIT signs, hung from the ceiling down the length of The Edges, both faces lit
-  for (let cx = EDGE_X + 1; cx < N; cx += 4) { const c = cellCenter(cx, LANE.z0 + 1), h = heightOf(cx, LANE.z0 + 1), face = (f) => `<div face="${f}" emissive style="width:0.42m;height:0.16m;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;font-size:110px;color:#eafff0;background:#118a3a">EXIT</div>`;
+  for (let cx = EDGE_X + 1; cx < N; cx += 4) { const c = cellCenter(cx, LANE.z0 + 1), h = heightOf(cx, LANE.z0 + 1), face = (f) => `<div face="${f}" emissive width="0.42m" height="0.16m" style="display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;font-size:110px;color:#eafff0;background:#118a3a">EXIT</div>`;
     sp(`l21-edge-exit-${cx}`, { tags: ["l21-sign"], feetPosition: { x: c.x, y: h - 0.85, z: c.z - 0.3 }, rotation: { yaw: 90 }, castShadow: false, primitive: { kind: "box", width: 0.44, height: 0.18, depth: 0.06 }, material: { color: "oklch(0.9 0.01 240)", emissive: "oklch(0.6 0.18 150)", emissiveIntensity: 0.6 }, ui: face("front") + face("back") }); }
 
   // ---- the way down and the way east (the breathing cave mouth to Level 8)
@@ -402,7 +402,7 @@ function dress21(ctx) {
       const d = [0, 1, 2, 3].find((k) => k !== opens[0] && k === (opens[0] + 2) % 4), [nx, nz] = D4W[d], w = S / 2 - W - 0.06;
       if (hash(cx, cz, 731) < 0.55) ctx.spawn(`l21-danger-${cx}-${cz}`, { tags: ["l21-sign"], feetPosition: { x: c.x + nx * w, y: 1.35, z: c.z + nz * w }, rotation: { yaw: yawOf(-nx, -nz) }, visibleRange: { max: 30 }, castShadow: false,
         primitive: { kind: "box", width: 0.5, height: 0.34, depth: 0.012 }, material: { color: "oklch(0.95 0.01 90)", roughness: 0.6 },
-        ui: `<div face="front" class="w-full h-full flex flex-col" style="width:500px;height:340px;background:#f2efe6;border:10px solid #111"><div style="background:#c8102e;color:#fff;font:900 92px sans-serif;text-align:center;letter-spacing:6px;padding:8px 0">DANGER</div><div style="color:#111;font:800 44px sans-serif;text-align:center;padding-top:26px;line-height:1.15">AUTHORIZED<br>PERSONNEL ONLY</div></div>` });
+        ui: `<div face="front" width="0.5m" height="0.34m" class="w-full h-full flex flex-col" style="background:#f2efe6;border:10px solid #111"><div style="background:#c8102e;color:#fff;font:900 92px sans-serif;text-align:center;letter-spacing:6px;padding:8px 0">DANGER</div><div style="color:#111;font:800 44px sans-serif;text-align:center;padding-top:26px;line-height:1.15">AUTHORIZED<br>PERSONNEL ONLY</div></div>` });
     }
     if (hash(cx, cz, 733) > 0.17) continue;
     const walls = [0, 1, 2, 3].filter((d) => !isOpen(cx, cz, d)); if (!walls.length) continue;
