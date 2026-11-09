@@ -159,6 +159,9 @@ for name, (ease, cuts) in PLAN.items():
         z = min(v.co.z for e in ring for v in e.verts); steps = max(2, int((z - hem) / 0.012))
         rv = {v for e in ring for v in e.verts}
         for v in rv: v.co.z = z                              # one level ring: every column starts at the same height
+        _n0 = len(bm.verts); bmesh.ops.remove_doubles(bm, verts=list(rv), dist=0.006)   # the mirror seam left two ring ends overlapping at the back: weld them or the loft splits there
+        ring = [e for e in bm.edges if e.is_valid and e.is_boundary and all(abs(v.co.z - z) < 1e-5 for v in e.verts)]
+        rv = {v for e in ring for v in e.verts}; print("RINGWELD", name, _n0 - len(bm.verts), len(rv), len(ring))
         rad = {v: math.hypot(v.co.x, v.co.y - cy) for v in rv}
         for _ in range(4):                                   # and an even radius round it
             rad = {v: (rad[v] * 2 + sum(rad[e.other_vert(v)] for e in v.link_edges if e.is_boundary and e.other_vert(v) in rad)) / (2 + sum(1 for e in v.link_edges if e.is_boundary and e.other_vert(v) in rad)) for v in rv}
