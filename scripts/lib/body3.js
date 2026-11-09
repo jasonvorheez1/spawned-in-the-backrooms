@@ -54,9 +54,7 @@ export function swing3(ctx, kind, heavy, combo, me = ctx.self) {
 export function fire3(ctx, me = ctx.self, kind) {
   const fam = famOf(kind ?? me.state.arm ?? me.state.equipped), G = CA.gun[fam] ?? CA.gun.pistol, now = ctx.now()
   const row = me.state.crouch ? G.fireCrouch ?? G.fire : G.fire
-  play(me, ALT(me, 'fire0', 'fire1'), row, { now })
-  const k = row.recoil ?? 6, sp = me.model ? 'bones.Spine02' : 'bones.Spine2'
-  animate(ctx, me.id, { [`${sp}.pitch`]: [0, k * 0.6, 0], 'bones.RightArm.pitch': [0, k, 0] }, { duration: 0.16 })
+  play(me, ALT(me, 'fire0', 'fire1'), row, { now }) // the clip's own recoil only: no keyed kick over it (Shelly Nov 9: procedural poses look off)
 }
 // a reload or flourish take (Gunplay), once
 export function handle3(ctx, me = ctx.self, what = 'reload', kind) {
