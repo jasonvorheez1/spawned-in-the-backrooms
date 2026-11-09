@@ -35,10 +35,9 @@ def top(hem, cuff, loose, rib, drape=0.985):
             if ax > cuff - 0.035: e = 0.004                                         # ribbed cuff hugs the wrist
             if p.z < hem + 0.035 and ax < 0.2: e = 0.006                            # ribbed hem hugs the hips
         return e * (1 - 0.6 * smooth(p.z, NECK - 0.07, NECK - 0.01))                # collar sits close
-    cuts = [(Vector((0, 0, hem)), Vector((0, 0, -1))),
-            (Vector((0, B["Neck"].y, NECK - 0.012)), Vector((0, -0.18, 1)).normalized())]
+    cuts = [(Vector((0, 0, hem)), Vector((0, 0, -1)))]
     cuts += [(Vector((s * cuff, 0, 0)), Vector((s, 0, 0))) for s in (1, -1)]
-    ease.drape = drape
+    ease.drape = drape; ease.collar = (0.068, 0.062, -0.012)   # neck hole: half-width x, half-depth y, centre shift toward the front
     return ease, cuts
 def bottom(hem, waist, loose, cuffrib):
     def ease(p):
@@ -77,7 +76,7 @@ for name, (ease, cuts) in PLAN.items():
     mat = old.data.materials[0]
     bm = bmesh.new(); bm.from_mesh(body.data); bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=0.0015); bm.transform(MW); bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
     # region: generous box around the cuts, then the cuts make it exact after easing
-    zs = [c[0].z for c in cuts if abs(c[1].z) > 0.5]; lo, hi = min(zs) - 0.04, max(zs) + 0.06
+    zs = [c[0].z for c in cuts if abs(c[1].z) > 0.5]; lo, hi = min(zs) - 0.04, (max(zs) + 0.06 if len(zs) > 1 else 9)
     kill = [v for v in bm.verts if not (lo < v.co.z < hi)]
     bmesh.ops.delete(bm, geom=kill, context="VERTS")
     bm.verts.ensure_lookup_table(); bm.normal_update()
@@ -122,6 +121,16 @@ for name, (ease, cuts) in PLAN.items():
                 if out < 0.004: v.co = v.co + n * (0.004 - out)
     for co, no in cuts:                                      # straight hems
         bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=co, plane_no=no, clear_outer=True)
+    if hasattr(ease, "collar"):                              # round neckline: everything inside the collar ellipse above the yoke goes, the rim snaps to it
+        rx, ry, dy = ease.collar; cy = B["Neck"].y + dy
+        def rr(co): return math.hypot(co.x / rx, (co.y - cy) / ry)
+        gone = [f for f in bm.faces if f.calc_center_median().z > NECK - 0.07 and rr(f.calc_center_median()) < 1.0]
+        bmesh.ops.delete(bm, geom=gone, context="FACES")
+        bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+        for v in bm.verts:
+            if v.is_boundary and v.co.z > NECK - 0.09:
+                k = rr(v.co); a = math.atan2((v.co.y - cy) / ry, v.co.x / rx)
+                v.co.x, v.co.y = math.cos(a) * rx, cy + math.sin(a) * ry
     bmesh.ops.dissolve_degenerate(bm, dist=0.002, edges=bm.edges[:])
     bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=0.0025)
     # drop slivers left by cuts
