@@ -154,3 +154,4 @@ Optional, never forced. Story is Savi's draft. Your HALOGEN keeps flashing an ow
 - The Hub: unnumbered, accessed regularly as a transit level, not the endgame (Shelly).
 - Endgame: The Mind Palace (unnumbered, Shelly's pick). Built from what the player actually met; unmet things are blank. Body lies comatose in the war outside while the player decides in their head.
 - Savi ideas awaiting Shelly: Phoebe in the Mind Palace only if the player truly met her; a minor named person from brief wikidot notes as a key figure (not found yet).
+- 2026-11-09 Shelly: player is NOT a courier. Spark of the war: Dina A.'s (Plane #52 diary) undelivered package; the nobody player finds her diary and is the only one who knows where her body lies. Approved.
