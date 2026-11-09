@@ -559,6 +559,14 @@ def body_radii(body, aw, z, cy, nb=36):
         a = math.atan2(v.co.y - cy, v.co.x); k = int((a + math.pi) / (2 * math.pi) * nb) % nb
         R[k] = max(R[k], math.hypot(v.co.x, v.co.y - cy))
     m = max(R) or 0.1
+    # an empty bin (sparse rows at the waist) takes its nearest filled neighbours, never the max: max made tabs stick out of skirts
+    full = [k for k in range(nb) if R[k] > 0]
+    if full:
+        R0 = list(R)
+        for k in range(nb):
+            if R0[k] > 0: continue
+            lo = next(d for d in range(1, nb) if R0[(k - d) % nb] > 0); hi = next(d for d in range(1, nb) if R0[(k + d) % nb] > 0)
+            R[k] = (R0[(k - lo) % nb] * hi + R0[(k + hi) % nb] * lo) / (lo + hi)
     R = [x if x > 0 else m for x in R]
     for _ in range(3): R = [(R[k - 1] + 2 * R[k] + R[(k + 1) % nb]) / 4 for k in range(nb)]
     return R
