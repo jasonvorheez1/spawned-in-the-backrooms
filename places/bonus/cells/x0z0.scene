@@ -1382,36 +1382,47 @@ bonus-salon:
   tags: [bonus-mall]
 bonus-salon-chair-1:
   castShadow: true
-  feetPosition: {x: 12.8, y: 0, z: 2.2}
+  feetPosition: {x: 12.8, y: 0, z: 2.5}
   id: bonus-salon-chair-1
   model: {forward: "+x", id: /cdn/value.af73f38a4652489738efd29e3102b18c292f9391917b983c743e409cb1ba55f9.glb}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 180}
   scale: 1.2
-  state: {c: {x: 12.8, y: 0.6, z: 2.2}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  state: {c: {x: 12.8, y: 0.6, z: 2.5}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
   tags: [bonus-mall, salon-prop, seat]
 bonus-salon-chair-2:
   castShadow: true
-  feetPosition: {x: 15.6, y: 0, z: 2.2}
+  feetPosition: {x: 15.6, y: 0, z: 2.5}
   id: bonus-salon-chair-2
   model: {forward: "+x", id: /cdn/value.af73f38a4652489738efd29e3102b18c292f9391917b983c743e409cb1ba55f9.glb}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 180}
   scale: 1.2
-  state: {c: {x: 15.6, y: 0.6, z: 2.2}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  state: {c: {x: 15.6, y: 0.6, z: 2.5}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
   tags: [bonus-mall, salon-prop, seat]
 bonus-salon-chair-3:
   castShadow: true
-  feetPosition: {x: 18.4, y: 0, z: 2.2}
+  feetPosition: {x: 18.4, y: 0, z: 2.5}
   id: bonus-salon-chair-3
   model: {forward: "+x", id: /cdn/value.af73f38a4652489738efd29e3102b18c292f9391917b983c743e409cb1ba55f9.glb}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 180}
   scale: 1.2
-  state: {c: {x: 18.4, y: 0.6, z: 2.2}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  state: {c: {x: 18.4, y: 0.6, z: 2.5}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  tags: [bonus-mall, salon-prop, seat]
+bonus-salon-chair-4:
+  castShadow: true
+  feetPosition: {x: 21.2, y: 0, z: 2.5}
+  id: bonus-salon-chair-4
+  model: {forward: "+x", id: /cdn/value.af73f38a4652489738efd29e3102b18c292f9391917b983c743e409cb1ba55f9.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  scale: 1.2
+  state: {c: {x: 21.2, y: 0.6, z: 2.5}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
   tags: [bonus-mall, salon-prop, seat]
 bonus-salon-desk:
   castShadow: true
@@ -1465,7 +1476,7 @@ bonus-salon-plant-1:
   tags: [bonus-mall, salon-prop]
 bonus-salon-plant-2:
   castShadow: true
-  feetPosition: {x: 23.2, y: 0, z: 3.4}
+  feetPosition: {x: 23.4, y: 0, z: 1.2}
   id: bonus-salon-plant-2
   model: {id: /cdn/value.fa0deceaea26c570f5c0dad725222a72998e350a847ea106fba91634d11ebbdc.glb}
   physics: {body: static, collider: cylinder}
@@ -1532,6 +1543,16 @@ bonus-salon-vanity-3:
   castShadow: true
   feetPosition: {x: 18.4, y: 0, z: 3.68}
   id: bonus-salon-vanity-3
+  model: {forward: "-x", id: /cdn/value.97637d66d8205e0ce9bc23f1aa815cb958b5a1b1effaf9007a9343a87925b211.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  scale: 1.75
+  tags: [bonus-mall, salon-prop]
+bonus-salon-vanity-4:
+  castShadow: true
+  feetPosition: {x: 21.2, y: 0, z: 3.68}
+  id: bonus-salon-vanity-4
   model: {forward: "-x", id: /cdn/value.97637d66d8205e0ce9bc23f1aa815cb958b5a1b1effaf9007a9343a87925b211.glb}
   physics: {body: static, collider: box}
   receiveShadow: true
