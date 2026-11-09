@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3212,
-  "updatedAt": "2026-11-09T07:22:05.283Z",
-  "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors, while place simulations and scenes supply local environments and shared systems own combat, NPCs, loot, building, and avatar presentation. Human and furry rigs share runtime appearance/animation systems; the human pipeline now includes refitted clothing, fingers, fitted anime hair, and authored third-person rifle clips.",
+  "basedOnSpecVersion": 3224,
+  "updatedAt": "2026-11-09T07:30:29.304Z",
+  "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors, while place simulations and scenes supply local environments and shared systems own combat, NPCs, loot, building, and avatar presentation. Human and furry rigs share runtime appearance/animation systems; human hair uses fitted, tintable attachments and authored rifle clips drive third-person combat animation.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with authored shops and landmarks, simulated staff, shoppers, balcony loungers, and arcade games.",
@@ -22,7 +22,7 @@
     "scripts/camera.js + scripts/view3.js - camera and third-person toggle; camera handles collision-constrained orbit, scripts/ui.js and specialized UI scripts present HUD and panels.",
     "places/debug/cells/x1z0.scene + scripts/dbg-pose.js + scripts/dbg-bodypad.js - clip-gallery mannequins and in-world body-style switch.",
     "art/human-base/build.py + art/human-head/{male,hats,headtypes}.py + art/human-cloth/refit.py + art/human-base/shoulders.py + art/human-hair/build.py - offline human rig, head, fitted clothing/fingers, shoulder weights, and hair pipeline.",
-    "art/rifle-clips/{build.py,kf2body.py,retarget3.py} + art/tripo-hair/fit.py - offline generation/retarget of human rifle clips and fitted tintable human hairstyles."
+    "art/rifle-clips/{build.py,kf2body.py,retarget3.py} + art/tripo-hair/fit.py - offline rifle clip generation/retargeting and fitted tintable hairstyles; gripcheck.py and gripcheck_bl.py compare animated hand frames in glTF and Blender."
   ],
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings; routing and hub handlers use it for last-level selection/names.",
@@ -52,7 +52,7 @@
     "scripts/lurkers.js - player.state.lurkHold while caught and lurker entity grab/frenzy/prey state; release clears the player's hold.",
     "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim.",
     "scripts/hub.js - mall offer/shop/food and room-hop flags plus player trainHid/stungUntil; session.ride/rideTrain holds transient transit scene and spawned train.",
-    "places/level2/sim.js owns seeded kit/layout and generated prop state; places/level21/sim.js owns generated geometry revision; scripts/critter-model.js and scripts/critter.js own avatar look/style presentation."
+    "places/level2/sim.js owns seeded kit/layout and generated prop state; places/level21/sim.js owns generated geometry revision; scripts/lib/critter-model.js and scripts/critter.js own avatar look/style presentation."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/spamton-fight/horde/critter/main-menu/hub/view3.",
@@ -74,8 +74,8 @@
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props, Boiler Room Death Rat packs, and fitted human residents.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/critter-model.js + critter.yml/hair.yml/critter-models.yml and art/human-cloth/refit.py + art/tripo-hair/fit.py - deterministic human/furry looks; human hair is separately fitted/skinned and tintable, with hat variants mapped in hair.yml.",
-    "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js - upper-body animation families shared by player and M.E.G. agents; long guns use authored Commando rifle aim/up/down/fire/reload clips, rather than pistol clips with procedural arm IK.",
+    "scripts/lib/critter-model.js + critter.yml/hair.yml/critter-models.yml and art/human-cloth/refit.py + art/tripo-hair/fit.py - deterministic human/furry looks; human hair is separately fitted/skinned and tintable, with sex-specific free/hat rows and hair.yml humanPick mapping look styles to rows. The fitter now handles soft anime bob/twintails/ponytail/wolfcut/wavy variants and trims the face-mask region on soft styles.",
+    "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js - upper-body animation families shared by player and M.E.G. agents; long guns use authored Commando rifle aim/up/down/fire/reload clips, rather than pistol clips with procedural arm poses.",
     "scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - human gait/weapon pose integration, individual NPC idles, head tracking/fidgets, and timed conversational face/mouth morphs."
   ],
   "probableOrphans": [
@@ -88,6 +88,6 @@
     "Found-item rarity gates apply only to found weapon tokens; existing weapon ownership/use and non-weapon loot are not level-gated. Search gating excludes storage and NPC containers.",
     "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout.",
     "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static to avoid falling through before floor mesh cooking; Level 2.1 revisioned rebuild must preserve generated placement identity.",
-    "Human body GLBs in critter-models.yml are shared T-pose rigs for body3.js and humanoid-locomotion.js; preserve body IDs, sex mappings, face/head morph keys, garment part names, and hair.yml pick/hat row mappings. Rifle clip channels now pose both arms directly; do not restore long-gun hand IK, and retain the matching weapon heldRot/grip alignment."
+    "Human body GLBs in critter-models.yml are shared T-pose rigs for body3.js and humanoid-locomotion.js; preserve body IDs, sex mappings, face/head morph keys, garment part names, and hair.yml indices: f_bob now maps to female row 18, with a distinct hat-cut model. Rifle clip channels map directly to body bones; gripcheck.py and gripcheck_bl.py are offline hand-frame checks, not runtime handlers."
   ]
 }
