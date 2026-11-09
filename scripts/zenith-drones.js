@@ -78,6 +78,7 @@ function die(ctx, d, t) {
   const items = (t.drops ?? []).filter(([, c]) => ctx.random() < c).map(([k]) => k);
   spawnRubble(ctx, { x: f.x, y: 0.02, z: f.z }, items, `${t.name} wreck`);
   delete ctx.self.session.m?.[d.id];
+  ctx.place.state.droneGone = { ...(ctx.place.state.droneGone ?? {}), [d.id]: ctx.now() }; // the sim refills the post an hour on
   ctx.destroy(d.id);
 }
 const SMOKE = `fx

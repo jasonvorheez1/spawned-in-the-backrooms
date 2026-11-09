@@ -85,14 +85,23 @@ function lay(ctx) {
 // security drones (scripts/zenith-drones.js): watchers in the halls, an enforcer at the lab and the gym, a warden over the failing north end and the gallery
 const DRONE = { id: "/cdn/value.bf200211dd9298d9c54c509cd3e666e3a503169f5f4448b112578d516c67eaab.glb", forward: "+z" }, DRONEV = 1;
 const POSTS = [["watcher", 0, -14], ["watcher", 0, -30], ["enforcer", -7.6, -17], ["watcher", 7.6, -17], ["enforcer", 7.6, -29], ["watcher", 0, -44], ["warden", 0, -56], ["watcher", -5, -58]]; // Savi's picks: the vestibule and control room stay quiet
-function drones(ctx) {
-  for (const r of ctx.query({ tags: ["zdrone"], radius: 1e4, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(r.id);
+// a downed drone's post stays empty an hour, then a fresh one flies it (Shelly's rule: dead NPCs return after an hour); place.state.droneGone[id] = when it fell
+const DRONE_BACK_MS = 3600000;
+function drones(ctx, fresh) {
+  if (fresh) for (const r of ctx.query({ tags: ["zdrone"], radius: 1e4, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(r.id);
+  const gone = ctx.place.state.droneGone ?? {}, now = ctx.now();
+  let left = false;
   POSTS.forEach(([type, x, z], i) => {
+    const id = `z-drone${i}`;
+    if (ctx.place.objects[id]) return;
+    if (!fresh && gone[id] != null && now - gone[id] < DRONE_BACK_MS) { left = true; return; }
+    delete gone[id];
     const sz = { watcher: 0.55, enforcer: 0.75, warden: 1.05 }[type], hp = { watcher: 55, enforcer: 110, warden: 220 }[type];
     ctx.spawn(`z-drone${i}`, { tags: ["zdrone"], feetPosition: { x, y: 1.8, z }, model: DRONE, layout: { box: { min: { x: -sz / 2, y: -sz * 0.35, z: -sz / 2 }, max: { x: sz / 2, y: sz * 0.35, z: sz / 2 } } }, physics: { body: "kinematic", collider: "sphere" },
       audio: { clip: "cdn/sfx-hovering-security-drone-rotor-hum-and-servo-whir-loop.mp3", loop: true, gain: 0.22, maxDistance: 14 },
       state: { type, hp, maxHp: hp, home: { x, z }, mode: "idle", name: type[0].toUpperCase() + type.slice(1) + " drone" } });
   });
+  ctx.place.state.droneGone = left ? { ...gone } : null;
   if (!ctx.place.objects["z-dronebrain"]) ctx.spawn("z-dronebrain", { behavior: "scripts/zenith-drones.js" });
 }
 // breakable station (Shelly, Nov 9: "id like to break stuff, and have to break doors open"): furniture takes hits and wrecks into parts;
@@ -178,7 +187,8 @@ export function tick(ctx) {
   if (s.furnV !== FURNV && s.layV === LAYV && ctx.place.players?.length) { s.furnV = FURNV; furnish(ctx); }
   if (s.breakV !== BREAKV && s.layV === LAYV && ctx.place.players?.length) { s.breakV = BREAKV; breakable(ctx); }
   if (s.layV !== LAYV && ctx.place.players?.length) { s.layV = LAYV; lay(ctx); }
-  if (s.droneV !== DRONEV && ctx.place.players?.length) { s.droneV = DRONEV; drones(ctx); }
+  if (s.droneV !== DRONEV && ctx.place.players?.length) { s.droneV = DRONEV; drones(ctx, true); }
+  else if (ctx.place.players?.length && ctx.now() - (ctx.self.session.droneChk ?? -1e9) > 10000) { ctx.self.session.droneChk = ctx.now(); drones(ctx, false); } // empty posts refill
   if (s.driveV !== DRIVEV && s.layV === LAYV && ctx.place.players?.length) { s.driveV = DRIVEV; driveBay(ctx); }
   const now = ctx.now();
   for (const p of ctx.place.players ?? []) {
