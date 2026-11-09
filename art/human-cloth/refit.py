@@ -276,6 +276,53 @@ for o in bpy.data.objects:
             if len(comp) > 80: continue
             r = bmesh.ops.holes_fill(bm, edges=comp, sides=0); patched += 1
         print("patched", o.name, patched, "of", len(loops), "loops")
+        # the belly and the small of the back: knit lies over them as one smooth tube that follows the body, never folded or crumpled
+        # (per 1 cm slice and 48 angle bins: the outermost of cloth and body + 1.2 cm, smoothed round; each vertex sits on it, the lining 6 mm under)
+        TOP_BAND = HEM + 0.25
+        band = [v for v in bm.verts if HEM - 0.01 < v.co.z < TOP_BAND and v.link_faces]
+        if band:
+            env = {}
+            sk = lambda z: int((z - HEM) / 0.01)
+            for v in band:
+                k = (sk(v.co.z), ak(v.co.x, v.co.y - cy)); env[k] = max(env.get(k, 0), math.hypot(v.co.x, v.co.y - cy) * 0.985)
+            for un in ("Body", "Under_top"):
+                u = bpy.data.objects.get(un)
+                if not u or u.type != "MESH": continue
+                for uv in u.data.vertices:
+                    c = u.matrix_world @ uv.co
+                    if HEM - 0.01 < c.z < TOP_BAND:
+                        k = (sk(c.z), ak(c.x, c.y - cy)); env[k] = max(env.get(k, 0), math.hypot(c.x, c.y - cy) + 0.012)
+            ks2 = sorted({k for k, _ in env})
+            rows2 = {k: [env.get((k, i), 0) for i in range(NB)] for k in ks2}
+            for k in ks2:  # empty bins borrow their neighbours
+                r = rows2[k]
+                for _ in range(NB):
+                    r = [r[i] or max(r[(i - 1) % NB], r[(i + 1) % NB]) for i in range(NB)]
+                rows2[k] = r
+            for _ in range(4): rows2 = {k: [(r[(i - 1) % NB] + 2 * r[i] + r[(i + 1) % NB]) / 4 for i in range(NB)] for k, r in rows2.items()}
+            for _ in range(2):  # and smooth up and down
+                rows2 = {k: [(rows2.get(k - 1, r)[i] + 2 * r[i] + rows2.get(k + 1, r)[i]) / 4 for i in range(NB)] for k, r in rows2.items()}
+            bm.normal_update()
+            for it in range(8):
+                if it:  # relax heights so vertical crumples open out
+                    nz = {}
+                    for v in band:
+                        if v.is_boundary: continue
+                        nb_ = [e.other_vert(v).co.z for e in v.link_edges]
+                        if nb_: nz[v] = v.co.z * 0.5 + sum(nb_) / len(nb_) * 0.5
+                    for v, z in nz.items():
+                        dz = z - v.co.z; v.co.z = z
+                        for L in shapes: v[L].z += dz
+                for v in band:
+                    x, y = v.co.x, v.co.y - cy; r = math.hypot(x, y)
+                    if r < 1e-5: continue
+                    k = min(ks2, key=lambda q: abs(q - sk(v.co.z)))
+                    lin = v.normal.dot(Vector((x, y, 0)).normalized()) < 0
+                    tr = rows2[k][ak(x, y)] + (-0.006 if lin else 0.0)
+                    w = 1.0 if v.co.z < HEM + 0.15 else max(0.0, (TOP_BAND - v.co.z) / 0.10)
+                    s_ = 1 + (tr / r - 1) * w; dv = Vector((x * s_ - x, y * s_ - y, 0))
+                    v.co += dv
+                    for L in shapes: v[L] += dv
         # the back seam: its two open edges meet on the spine line, so no slit shows (indices kept for the skin)
         for v in bm.verts:
             if v.is_boundary and abs(v.co.x) < 0.03 and v.co.z > HEM + 0.03 and v.co.y - cy > 0:
