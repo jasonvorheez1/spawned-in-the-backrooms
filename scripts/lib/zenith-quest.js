@@ -4,7 +4,7 @@
 // zenQ: 1 find the seal · 2 report back · 3 keycard in hand · 4 inside the station · 5 holding the drive · 99 paid. zenV 2 = this numbering.
 import { pushFeed } from "./feed.js";
 const NAME = "The Zenith Survey";
-const TIPS = {
+export const TIPS = {
   1: "Find the B.N.T.G. seal on Level 0's far east wall, past where the lights die",
   2: "Tell Kade in the Level 0 safe room you found the seal",
   3: "Use the B.N.T.G. keycard on the seal at Level 0's far east wall",

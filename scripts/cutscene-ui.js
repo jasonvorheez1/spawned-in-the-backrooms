@@ -1,6 +1,7 @@
 import { PACE } from "./lib/tut0.js"
 // letterbox and fades over the intro (scripts/lib/intro-cut.js); timed off state.cut so a re-render picks up where it was
 export function cutUi(ctx, player) {
+  if (player.state.dcut) return dUi(ctx, player)
   if (player.state.l26cut) return l26Ui(ctx, player)
   if (player.state.t0cut) return t0Ui(ctx, player)
   if (player.state.arrive || player.state.arrivePending) return arriveUi(ctx, player)
@@ -74,4 +75,19 @@ function l26Ui(ctx, player) {
 .ls{position:fixed;left:0;right:0;top:calc(40% + 60px);text-align:center;z-index:54;color:#e05a4a;font:400 14px/1 Georgia,serif;letter-spacing:.5em;opacity:0;animation:lt 5.4s ease both;animation-delay:${d(2.4)}}
 .lk{position:fixed;right:28px;bottom:3vh;z-index:55;color:#8a8a7a;font:400 11px/1 Georgia,serif;letter-spacing:.2em}
 </style><div class="lb" style="top:0"></div><div class="lb" style="bottom:0"></div><div class="lt">LEVEL 26</div><div class="ls">THE SS FUN =)</div>${caps}<div class="lk">HOLD JUMP TO SKIP</div>`
+}
+
+// Dina's diary (scripts/lib/dina-quest.js): letterbox over the camp shots, and her two spreads held up to the lens. No captions: the pages are the words
+import { PAGE1, PAGE2, PAGES, DCUT_LEN } from "./lib/dina-quest.js"
+function dUi(ctx, player) {
+  const e = ctx.now() - player.state.dcut.at, d = (s) => `${s * 1000 - e}ms`
+  const page = (src, [a, b], i) => `<div class="dp" style="animation-duration:${(b - a) * 1000}ms;animation-delay:${d(a)}"><img src="${src}" style="animation-duration:${(b - a) * 1000}ms;animation-delay:${d(a)};transform-origin:${i ? '62% 42%' : '38% 45%'}"></div>`
+  return `<style>
+@keyframes db{from{height:0}to{height:11vh}} @keyframes dbo{from{height:11vh}to{height:0}}
+@keyframes dp{0%{opacity:0}9%{opacity:1}90%{opacity:1}100%{opacity:0}} @keyframes dz{from{transform:scale(1.04)}to{transform:scale(1.2)}}
+.db{position:fixed;left:0;right:0;height:11vh;background:#000;z-index:52;animation:db 1.2s ease-out both,dbo 1s ease-in both;animation-delay:${d(0)},${d(DCUT_LEN - 1)}}
+.dp{position:fixed;inset:0;background:#050403;z-index:50;opacity:0;overflow:hidden;animation:dp linear both}
+.dp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:dz linear both}
+.dv{position:fixed;inset:0;z-index:51;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.72) 100%)}
+</style>${page(PAGE1, PAGES[0], 0)}${page(PAGE2, PAGES[1], 1)}<div class="dv"></div><div class="db" style="top:0"></div><div class="db" style="bottom:0"></div>`
 }

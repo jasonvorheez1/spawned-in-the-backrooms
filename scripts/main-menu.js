@@ -8,6 +8,7 @@ import { arriveTick } from "./lib/arrive-cut.js"
 import { tutStart, tutTick, tutInput } from "./lib/tutorial.js"
 import { t0Tick } from "./lib/tut0-cut.js"
 import { l26Tick } from "./lib/l26-cut.js"
+import { dinaTick } from "./lib/dina-quest.js"
 import { animate } from "builtin/tween";
 import { toHub } from "./lib/hub.js"
 const MUSIC = "/cdn/moodboard-lowpoly-cozy/music-soft-mellow-fingerpicked-acoustic-guitar-and-warm-rhodes-early-2000s-bedroom-calm-loop.mp3"; // the drone was exhausting (johnadams2): soft and quiet instead
@@ -52,6 +53,7 @@ export function update(ctx) {
   } else ses.inT0 = false
   // Level 26: the first time aboard, the ship in the fog and Phoebe at the rail (scripts/lib/l26-cut.js)
   if (place === "level26" && !st.menuOpen && (st.l26cut || !st.l26seen)) { if (l26Tick(ctx, ses, st)) return ctx.sleep(0) }
+  if ((place === "level1" || st.dcut || (st.dinaQ && !st.quests?.["the-undelivered"])) && dinaTick(ctx, ses, st)) return ctx.sleep(0) // Dina's camp and her diary (scripts/lib/dina-quest.js)
   if (st.tut) tutTick(ctx, st)
   const playing = music(ctx, (st.menuOpen && st.menuKind === "title") || (place === "intake" && !st.cut))
   // behind the title the camera slowly looks around the halls from head height; gone the moment it closes
@@ -74,6 +76,7 @@ export function update(ctx) {
 export function onInput(ctx, input) {
   const st = ctx.self.state
   if (st.tut) tutInput(ctx, st, input)
+  if (st.dcut) { const ss = ctx.session; if (input.held?.jump) ss.dskip ??= ctx.now(); else ss.dskip = null } // hold jump 1.2 s skips the diary cutscene
   if (st.l26cut) { const ss = ctx.session; if (input.held?.jump) ss.l26skip ??= ctx.now(); else ss.l26skip = null } // hold jump 1.2 s skips Level 26's cutscene
   if (input.pressed?.mainmenu && ctx.self.place !== "intake" && (st.menuOpen || !['talk', 'mahjong', 'cutscene'].includes(screen(st, ctx.self.place)))) { // pause never stacks on a talk, the mahjong table or a cutscene it couldn't draw over
     st.menuOpen = !st.menuOpen
