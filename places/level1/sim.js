@@ -83,8 +83,10 @@ export function tick(ctx) {
     if (d) { d.ui = null; d.primitive = null; d.model = { id: L1M.door }; d.physics = { body: "static", collider: "box" }; d.visibleRange = { max: 60 }; }
     if (!ctx.place.objects["l1-backwall"]) ctx.spawn("l1-backwall", { feetPosition: { x: BACK.x - 0.2 + L1M.wallDx, y: 0, z: BACK.z }, physics: "static", model: { id: L1M.wall }, receiveShadow: true, castShadow: false });
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz);
-    for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id], f = o.feetPosition; if (o.light && o.primitive?.kind === "sphere" && f && Math.abs(f.x - a.x - 1) < 0.1 && Math.abs(f.z - a.z - 8.2) < 0.1) ctx.destroy(id); } // the old map lamp sat inside the board
     if (!ctx.place.objects["l1-mapboard"]) ctx.spawn("l1-mapboard", { feetPosition: { x: a.x + 1, y: 0, z: a.z + 8.6 }, rotation: { yaw: L1M.boardYaw }, physics: { body: "static", collider: "box" }, model: { id: L1M.board }, visibleRange: { max: 50 }, castShadow: false });
+  }
+  if ((s.envV ?? 0) < 2) { s.envV = 2; const a = cellCenter(ARRIVE.cx, ARRIVE.cz);
+    for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id], f = o.feetPosition; if (o.light && o.primitive?.kind === "sphere" && f && Math.abs(f.x - a.x - 1) < 0.1 && Math.abs(f.z - a.z - 8.2) < 0.1) ctx.destroy(id); } // the old map lamp sat inside the board
   }
   if (!s.megCamp) { s.megCamp = true; // the M.E.G. waypoint: the camp, its fire, its lamps, and three agents
     if (ctx.place.objects["meg-cloth"]) ctx.destroy("meg-cloth");
