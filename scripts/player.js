@@ -927,7 +927,7 @@ const Q_GUN = { x: 0, y: 1, z: 0, w: 0 } // yaw 180: lays the mesh's +Z barrel f
 // degrees to a quaternion: yaw about Y, then pitch about X, then roll about Z (the viewmodel's children take quaternions; an euler rotation on a mesh child was ignored)
 const eulerQ = (yaw, pitch, roll) => { const h = Math.PI / 360, [cy, sy, cp, sp, cr, sr] = [Math.cos(yaw * h), Math.sin(yaw * h), Math.cos(pitch * h), Math.sin(pitch * h), Math.cos(roll * h), Math.sin(roll * h)]; return { x: cy * sp * cr + sy * cp * sr, y: sy * cp * cr - cy * sp * sr, z: cy * cp * sr - sy * sp * cr, w: cy * cp * cr + sy * sp * sr } }
 // q: the correction, from the mesh itself (measured from its vertices, art/weapons: the barrel axis leans 23.8 deg to +x and 32.4 deg up; q = Ry(10) * Rx(32.4) * Ry(-23.8) lays it along +Z, the 10 being the sights lined up on the crosshair). A child's rotation must be a quaternion: the euler form is ignored on a mesh child.
-const GUN_FIX = { shotgun: { outer: { x: 0, y: 0, z: 0, w: 1 }, q: { x: 0.2021, y: 0.91937, z: -0.31702, w: 0.11581 }, at: { x: -0.139, y: -0.22, z: -0.086 } } } // the engine stands the mesh on its lowest point, so the wrist is lifted 0.308 m in mesh y before the turn; solved from the glb's own vertices (art/weapons: barrel axis (0.341,0.536,0.772), trigger side (-0.298,-0.717,0.63)): the muzzle runs down -Z, the trigger guard hangs below, the wrist of the stock sits in the fist
+const GUN_FIX = { shotgun: { outer: { x: 0, y: 0, z: 0, w: 1 }, q: { x: -0.31702, y: -0.11581, z: -0.2021, w: 0.91937 }, at: { x: -0.153, y: -0.243, z: -0.068 } } } // the engine stands the mesh on its lowest point AND turned half round about its box centre (file (x,y,z) -> (cx-x, y-ymin+oy, cz-z)): q undoes that turn before laying the barrel down -Z; solved from the glb's own vertices (art/weapons: barrel axis (0.341,0.536,0.772), trigger side (-0.298,-0.717,0.63)): the muzzle runs down -Z, the trigger guard hangs below, the wrist of the stock sits in the fist
 function toggleHolster(ctx) {
   const s = ctx.self.state; cancelReload(ctx); s.ads = false
   if (!s.sheathed) { if (s.equipped !== 'fists') s.holstered = s.equipped; s.equipped = 'fists'; s.sheathed = true; s.sheathAt = ctx.now() } // hands away: nothing in view
@@ -945,7 +945,7 @@ function viewmodel(ctx, moving, sprinting) {
   w.vmEq = kind; w.vmCheck = false
   const hb = !l.modelUrl && HUMAN ? humanBody(l) : null // human bodies: Shelly's own model's arm holds the weapon (her rule: first-person arms come from her model or a PLYMODEL)
   const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '')
-  const arm = hb ? { hidden: true } : ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v24' + JSON.stringify(s.vmTune ?? null)
+  const arm = hb ? { hidden: true } : ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v25' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     w.plyRig = null
