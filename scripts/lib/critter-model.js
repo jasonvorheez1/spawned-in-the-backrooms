@@ -784,7 +784,7 @@ const OLD_HUMAN = ['/cdn/value.fd49318b8e8c14d0e98cf8d8b38433601bad2db2515aa8ed3
 OLD_HUMAN.push('/cdn/value.0f804808a2834486f121cadfec8de8784cfdbead3a5d0939ca0e6f027bd8526d.glb', '/cdn/value.6f11c2c9ec0cbb44c796db314811f269b1c5cdc19a5f7f34c42ecd221208fe48.glb')
 OLD_HUMAN.push('/cdn/value.89d74113d2bb60c5fcf7de629388fd77d62b8c67452400f826bdce3f35ce4267.glb', '/cdn/value.20023a98cea753bd84c6ff72d4e8cc2d8506b70f0dc65170a0f69b31bd82830a.glb')
 const FURRY_IDS = () => Object.values(M.body), HUMAN_IDS = () => [...Object.values(M.human ?? {}), ...OLD_HUMAN]
-export const STYLE_V = 'sw23' // sw23: worn hair re-seats when its file changed; sw22: rebuilt scalp caps (smooth shell, feathered root-textured hairline), cap tint near the hair colour; sw20: hair keys on the head-fitted pack (Tripo rows off); sw19: skin swatch unshaded, wider tones; sw18: men's lid-line lashes and M_Jaw/M_Chin head; sw15: scarf knot at the side, overalls drop to pants under closed tops; sw13: scarf is a thick wrap with short splayed ends; sw12: male longsleeve collar smoothed, scarf wraps the neck; sw11: tops hang off the chest (no belly pouch); sw10: tripo hair rows 14-16; sw9: overalls clear of tops (no z-fight); sw8: sleeves cover the upper arm's back, the shoulder blend band has room; sw7: bodies with head types; sw6: skirt waist below the top hem; sw5: skirts tucked under tops (new body glbs); sw4: the hair pack on human heads
+export const STYLE_V = 'sw24' // sw24: furry bodies missing their head re-seat it; sw23: worn hair re-seats when its file changed; sw22: rebuilt scalp caps (smooth shell, feathered root-textured hairline), cap tint near the hair colour; sw20: hair keys on the head-fitted pack (Tripo rows off); sw19: skin swatch unshaded, wider tones; sw18: men's lid-line lashes and M_Jaw/M_Chin head; sw15: scarf knot at the side, overalls drop to pants under closed tops; sw13: scarf is a thick wrap with short splayed ends; sw12: male longsleeve collar smoothed, scarf wraps the neck; sw11: tops hang off the chest (no belly pouch); sw10: tripo hair rows 14-16; sw9: overalls clear of tops (no z-fight); sw8: sleeves cover the upper arm's back, the shoulder blend band has room; sw7: bodies with head types; sw6: skirt waist below the top hem; sw5: skirts tucked under tops (new body glbs); sw4: the hair pack on human heads
 export function furrySpec(l) { const h = HUMAN; HUMAN = null; try { return critterSpec(l) } finally { HUMAN = h } } // a character who stays a critter in both modes (Phoebe)
 export function restyle(ctx, o) {
   const mid = o?.model?.id ?? o?.model
@@ -793,7 +793,10 @@ export function restyle(ctx, o) {
   if (!isH && !isF) return false
   const want = HUMAN ? 'h' : 'f'
   const stray = strayHeads(ctx, o)
-  if (want === 'f' && isF) return false
+  if (want === 'f' && isF) { // a furry body whose species head went missing (a human pass dropped it) gets it back (Shelly, Nov 9: "npcs have no head sometimes")
+    if (ctx.getObject(o.id + '/' + HEAD_ID) || stray.length || !o.state?.wear || maskOf(o.state.wear)) return false
+    seatHead(ctx, o, o.state.wear); return true
+  }
   if (want === 'h' && isH && Object.values(M.human).includes(mid)) { if (!stray.length && !o.material?.outline) { const w = o.state?.wear, h = ctx.getObject(o.id + '/' + HAIR_ID); if (w && w.hair !== 'none' && !maskOf(w) && (!h || (h.model?.id ?? h.model) !== humanHairOf({ sex: w.sex ?? (mid === M.human.f ? 'f' : 'm'), ...w }))) { seatHumanHair(ctx, o, w); if (!h) seatBeard(ctx, o, w); return true } return false } if (o.state && !o.state.wear) o.state.wear = { ...(lookFromModel(o.model, stray[0]?.model?.id ?? stray[0]?.model) ?? {}) }; seatHead(ctx, o, o.state?.wear ?? {}); return true }
   const local = String(o.id).split('/').pop()
   const hm = ctx.getObject(o.id + '/' + HEAD_ID)?.model ?? stray[0]?.model
