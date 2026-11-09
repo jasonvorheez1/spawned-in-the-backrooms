@@ -1,3 +1,4 @@
+import { raycast } from 'builtin/physics'
 // Ladder climbing, every level. A ladder is any object tagged "ladder" with state.ladder = { h, yaw, mat }:
 // its feet at the foot of the rungs, yaw = the way a climber faces it (forward = into the ladder), h = rise to the top step-off.
 // Walk into it holding W: you take hold. W climbs, S climbs down, Space lets go and drops you back. At the top, W steps you off onto
@@ -63,9 +64,19 @@ export function update(ctx, dt) {
     return
   }
   const want = m.z // W is +1 here: up
-  if (want > 0.3 && L.top && dy >= L.h - 0.9) { // over the top: step off onto the deck
-    letGo(ctx, m)
-    me.feetPosition = { x: L.base.x + L.f.x * 0.75, y: L.base.y + L.h + 0.08, z: L.base.z + L.f.z * 0.75 }
+  // stalled under a deck or rail while pushing up near the top counts as reaching it
+  if (want > 0.3 && dy > L.h - 2.2) { if (p.y - (m.lastY ?? p.y) < 0.004) m.stall = (m.stall ?? 0) + dt; else m.stall = 0 } else m.stall = 0
+  m.lastY = p.y
+  if (want > 0.3 && L.top && (dy >= L.h - 0.9 || m.stall > 0.2)) { // over the top: step off onto the deck, found by ray
+    let land = null
+    for (const d of [0.9, 1.2, 1.6, 2.0]) {
+      const o = { x: L.base.x + L.f.x * d, y: L.base.y + L.h + 2.5, z: L.base.z + L.f.z * d }
+      const r = raycast(ctx, o, { x: 0, y: -1, z: 0 }, { distance: 5, physicsOnly: true, ignoreEntities: [me.id] })
+      if (r && r.distance > 0.05 && r.position.y > L.base.y + L.h - 0.6) { land = { x: o.x, y: r.position.y + 0.05, z: o.z }; break }
+    }
+    land ??= { x: L.base.x + L.f.x * 0.9, y: L.base.y + L.h + 0.1, z: L.base.z + L.f.z * 0.9 }
+    letGo(ctx, m); m.stall = 0
+    me.feetPosition = land
     me.velocity = { x: L.f.x * 1.5, y: 0, z: L.f.z * 1.5 }
     sound(ctx, L, p, 0.5)
     return
