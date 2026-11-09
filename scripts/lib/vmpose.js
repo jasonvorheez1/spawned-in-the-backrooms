@@ -10,6 +10,9 @@ import { SPLIT } from './weapon-look.js'
 import W, { baseOf } from './weapons.js'
 import { handling } from './stats.js'
 import { cndOf } from './condition.js'
+import { screen } from './screen.js'
+const NO_HANDS_PLACES = new Set(['bonus', 'intake'])
+const NO_HANDS_SCREENS = new Set(['cutscene', 'menu', 'wardrobe', 'mahjong'])
 import { NV_SWINGS } from './data/nv-swings.js' // Shelly's New Vegas melee overhaul, decoded (art/nv-melee)
 
 export const VM_FOV = 55
@@ -127,8 +130,11 @@ export function poseViewmodel(ctx, dt) {
   const vm = ctx.getObject(ps.vmId)
   if (!vm) return
   const downNow = ps.downAt && ctx.now() - ps.downAt < 3200 // the death cam is third person: no arm in front of it
-  if (!!downNow !== !!ctx.self.session.vmHid) { ctx.self.session.vmHid = !!downNow; vm.visible = !downNow }
-  if (downNow) return
+  // no hands where nobody fights or the camera isn't yours: cutscenes, menus, the wardrobe, mahjong, and the hand-free places (mall, bedroom)
+  const scr = screen(ps, ctx.self.place)
+  const off = downNow || NO_HANDS_PLACES.has(ctx.self.place) || NO_HANDS_SCREENS.has(scr)
+  if (!!off !== !!ctx.self.session.vmHid) { ctx.self.session.vmHid = !!off; vm.visible = !off }
+  if (off) return
   dt = Math.min(Math.max(dt, 0.0005), 0.05)
   const m = (ctx.self.session.vm2 ??= {
     id: null, sp: [0, 0, 0, 0, 0, 0], sv: [0, 0, 0, 0, 0, 0], off: [0, 0, 0, 0, 0, 0],
