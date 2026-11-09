@@ -275,8 +275,10 @@ export function update(ctx) {
 
   // held weapon in third person: attached to RightHand bone so other players and third-person camera see it
   const eq = ctx.self.state.equipped ?? 'fists'
-  if (ses.heldKind !== eq) {
-    ses.heldKind = eq
+  if (ses.heldKind !== eq || !ses.heldSwept) {
+    ses.heldKind = eq; ses.heldSwept = true
+    // old held guns from earlier sessions (some from before the held3p tag) stay parented to the body: clear every hand-held child but the mall's food
+    for (const c of ctx.getObject(ctx.self.id)?.children ?? []) { const cid = c?.id ?? c; const o = ctx.getObject(cid); if (o?.attachment?.bone === 'RightHand' && cid !== ctx.session?.hubHeld && cid !== ses.heldObj) { try { ctx.destroy(cid) } catch (e) {} } }
     if (ses.heldObj) { try { ctx.destroy(ses.heldObj) } catch (e) {} ses.heldObj = null }
     // a reload or a new machine forgets ses.heldObj but the gun stays on the body: sweep every tagged held gun of ours
     for (const r of ctx.query({ tags: ['held3p'], radius: 4 })) if (r.id.startsWith(ctx.self.id + '/')) { try { ctx.destroy(r.id) } catch (e) {} }
