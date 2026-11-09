@@ -67,7 +67,7 @@ function layBreach(ctx) {
   ctx.spawn("l0-zenith", { feetPosition: { x: x + 0.12, y: 0, z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.25, height: 2.2, depth: 1.4 }, visible: false, behavior: "scripts/zenith-hatch.js" });
   ctx.spawn("main-from-l01", { feetPosition: { x: x - 1.6, y: 0.1, z }, rotation: { yaw: 90 } });
   // the B.N.T.G.'s claim on it: a placard, a red lamp that never goes off, tape across the approach, and the scout trigger that moves the quest on
-  ctx.spawn("l0-zenith-sign", { feetPosition: { x: x - 0.3, y: 2.45, z }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.5, height: 0.32, depth: 0.03 }, material: { color: "#1c1f22", metalness: 0.5, roughness: 0.5 },
+  ctx.spawn("l0-zenith-sign", { feetPosition: { x: x - 0.3, y: 2.66, z }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.5, height: 0.32, depth: 0.03 }, material: { color: "#1c1f22", metalness: 0.5, roughness: 0.5 },
     ui: `<div face="front" width="1.5m" emissive style="text-align:center;font-family:Arial;line-height:1.05"><div style="color:#e8c24a;font:900 92px Arial">B.N.T.G. SEAL</div><div style="color:#d8d2c0;font:700 44px Arial">PROPERTY OF THE B.N.T.G. · KEYCARD ONLY</div></div>` });
   ctx.spawn("l0-zb-lamp", { feetPosition: { x: x - 0.32, y: 2.85, z: z - 1.45 }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: "#300", emissive: "#ff2a1a", emissiveIntensity: 4 },
     light: { kind: "point", color: "#ff3a22", intensity: 2.2, distance: 9 } });
