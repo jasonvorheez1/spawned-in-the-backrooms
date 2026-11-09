@@ -18,7 +18,8 @@ export function seatHair(ctx, o, l) {
   ctx.spawn(HAIR_ID, { parent: o.id, ...hairChild(l, o.audience === 'local') })
 }
 // the human body's hair: the pack style its look picks, on the body's own sex, the brim cut when a hat sits on it; the scalp takes the hair's colour
-export const humanHairOf = (l) => { if (!l?.hair || l.hair === 'none' || maskOf(l)) return null; const n = HAIR.humanPick?.[l.hair]; const row = n == null ? null : HAIR.human?.[l.sex === 'f' ? 'f' : 'm']?.[n]; return row ? (l.hat && l.hat !== 'none' ? row.hat : row.free) : null }
+const HAIR_HATCUT = { 14: 0, 15: 1, 16: 2 }
+export const humanHairOf = (l) => { if (!l?.hair || l.hair === 'none' || maskOf(l)) return null; const n = HAIR.humanPick?.[l.hair]; const hat = l.hat && l.hat !== 'none', set = HAIR.human?.[l.sex === 'f' ? 'f' : 'm'], row = n == null ? null : set?.[hat && n >= 14 ? HAIR_HATCUT[n] ?? 0 : n]; return row ? (hat ? row.hat : row.free) : null } // the Tripo cuts (14-16) tore under a brim and hung a strand over the face (Dolores, Nov 9): under a hat they wear the pack's under-brim cut
 export function seatHumanHair(ctx, o, l) {
   if (l && !l.hair) { const ks = Object.keys(HAIR.humanPick ?? {}).filter((k) => k[0] === (l.sex === 'f' ? 'f' : 'm')); let h = 7; for (const c of String(o.id)) h = (h * 31 + c.charCodeAt(0)) >>> 0; const cs = ['#2a1d16', '#4a3122', '#6b4a2e', '#1a1a1a', '#8a6a3c', '#b08a52']; l = { ...l, hair: ks[h % ks.length], hairc: l.hairc || cs[(h >>> 4) % cs.length] } }
   const want = humanHairOf(l), id = o.id + '/' + HAIR_ID, h = ctx.getObject(id)
