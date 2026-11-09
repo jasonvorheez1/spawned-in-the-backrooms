@@ -43,9 +43,9 @@ LH_ROT = hand_rot("LeftHand", (-0.25, -0.95, 0.15), (-0.35, 0, 0.94))
 # --- rig: IK on each forearm, hand turn copied from an empty -------------------------------
 def empty(name, loc=(0, 0, 0)):
     e = bpy.data.objects.new(name, None); sc.collection.objects.link(e); e.location = loc; e.rotation_mode = "QUATERNION"; return e
-tR, tL, pR, pL = empty("tR"), empty("tL"), empty("pR", (-0.6, 0.25, 1.0)), empty("pL", (0.25, -0.1, 0.8))
+tR, tL, pR, pL = empty("tR"), empty("tL"), empty("pR", (-0.45, 0.05, 0.95)), empty("pL", (0.25, -0.3, 0.85))
 for side, t, p in (("Right", tR, pR), ("Left", tL, pL)):
-    c = P[side + "ForeArm"].constraints.new("IK"); c.target = t; c.pole_target = p; c.chain_count = 2; c.pole_angle = math.radians(-90 if side == "Right" else -90)
+    c = P[side + "ForeArm"].constraints.new("IK"); c.target = t; c.pole_target = p; c.chain_count = 2; c.pole_angle = math.radians(0 if side == "Right" else 120)  # right elbow out and down, left tucked under the foregrip
     r = P[side + "Hand"].constraints.new("COPY_ROTATION"); r.target = t
     t.rotation_quaternion = (R.matrix_world.inverted().to_quaternion() @ (RH_ROT if side == "Right" else LH_ROT))
 
