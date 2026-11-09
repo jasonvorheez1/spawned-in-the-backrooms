@@ -7,7 +7,7 @@ import { seatFor } from "./lib/seat.js";
 import { rollLoot, garmentsOf } from "./lib/loot.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
 import { lifeOf, FEAR_TAGS, FEAR_LINES, WANT_LINES } from "./lib/npc-life.js";
-import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec, faceMorph, baseBones, HUMAN } from "./lib/critter-model.js";
+import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec, faceMorph, baseBones, HUMAN, humanFace, mouthAt } from "./lib/critter-model.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
@@ -485,8 +485,13 @@ export function update(ctx, dt) {
     if (curExpr !== m.lastExpr || isBlinking !== m.lastBlink || talking) {
       m.lastExpr = curExpr;
       m.lastBlink = isBlinking;
-      const headObj = ctx.getObject(me.id + "/" + HEAD_ID); // read fresh: a head rebuilt or gone never takes a stale write
-      if (headObj) {
+      const headObj = HUMAN ? null : ctx.getObject(me.id + "/" + HEAD_ID); // read fresh: a head rebuilt or gone never takes a stale write
+      if (HUMAN && me.model) { // human faces (Shelly Nov 9 #116046): the body carries X_ keys; the mouth follows the line's letters, still once it is said
+        const mouth = s.line?.t ? mouthAt(s.line.t, now - s.line.at - 120) : null;
+        const key = curExpr + (isBlinking ? 1 : 0) + (mouth ? mouth.map((v) => v.toFixed(1)).join() : "");
+        if (key !== m.hFaceK) { m.hFaceK = key; const base = {}; for (const [k, v] of Object.entries(me.morph ?? {})) if (!k.startsWith("X_")) base[k] = v; me.morph = { ...base, ...humanFace(curExpr, isBlinking, mouth) }; }
+      }
+      else if (headObj) {
         const lookData = { ...(s.wear ?? s.look) };
         if (talking) {
           lookData.talking = true;
