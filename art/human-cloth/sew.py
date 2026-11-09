@@ -146,6 +146,7 @@ for name, (ease, cuts) in PLAN.items():
             T = [t if t else max(T[i - 1], T[(i + 1) % NB]) for i, t in enumerate(T)]
         def at(T, co):
             f = bin_of(co); i = int(f) % NB; w = f - int(f); return T[i] * (1 - w) + T[(i + 1) % NB] * w
+        RT = {v: T for v in rv}
         for k in range(1, steps + 1):
             zz = z + (hem - z) * k / steps
             ex = bmesh.ops.extrude_edge_only(bm, edges=ring)
@@ -158,7 +159,17 @@ for name, (ease, cuts) in PLAN.items():
                 T = [(T[i - 1] + 2 * T[i] + T[(i + 1) % NB]) * 0.25 for i in range(NB)]
             for v in nv:
                 a_ = math.atan2(v.co.y - cy, v.co.x); r2 = at(T, v.co)
-                v.co = Vector((math.cos(a_) * r2, cy + math.sin(a_) * r2, zz))
+                v.co = Vector((math.cos(a_) * r2, cy + math.sin(a_) * r2, zz)); RT[v] = T
+        for _ in range(12):                                  # untangle: each ring vertex slides to the mean angle of its ring neighbours
+            na = {}
+            for v in RT:
+                nb = [e.other_vert(v) for e in v.link_edges if e.other_vert(v) in RT and abs(e.other_vert(v).co.z - v.co.z) < 1e-4]
+                if len(nb) != 2 or v in rv: continue
+                c = sum((complex(w.co.x, w.co.y - cy) / max(1e-6, abs(complex(w.co.x, w.co.y - cy))) for w in nb), 0j) + 2 * complex(v.co.x, v.co.y - cy) / max(1e-6, abs(complex(v.co.x, v.co.y - cy)))
+                na[v] = math.atan2(c.imag, c.real)
+            for v, a_ in na.items():
+                fake = Vector((math.cos(a_), cy + math.sin(a_), 0)); r2 = at(RT[v], fake)
+                v.co.x, v.co.y = math.cos(a_) * r2, cy + math.sin(a_) * r2
         bm.normal_update()
     for co, no in cuts:                                      # straight hems
         bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=co, plane_no=no, clear_outer=True)
