@@ -174,6 +174,11 @@ export function geometry(ctx) {
           ctx.color("oklch(0.55 0.005 240)");
           if (d === 0) box(ctx, xe - T - 0.015, xe + T + 0.015, 0, 0.1, z0 - T, z0 + S + T); else box(ctx, x0 - T, x0 + S + T, 0, 0.1, ze - T - 0.015, ze + T + 0.015);
           for (let k = 1; k < 4; k++) { ctx.color("oklch(0.86 0.004 240)"); if (d === 0) box(ctx, xe - T - 0.008, xe + T + 0.008, 0.1, h, z0 + k * 1.2 - 0.01, z0 + k * 1.2 + 0.01); else box(ctx, x0 + k * 1.2 - 0.01, x0 + k * 1.2 + 0.01, 0.1, h, ze - T - 0.008, ze + T + 0.008); } // panel seams
+        } else if ((cx >= 0 && cz >= 0 && zoneOf(cx, cz) === "lockers") || (nx < N && nz < N && zoneOf(nx, nz) === "lockers")) { // the locker room photo: flat white painted plaster, a thin dark rubber base
+          ctx.albedo(null); ctx.color("oklch(0.9 0.006 95)"); ctx.roughness(0.75);
+          if (d === 0) box(ctx, xe - T, xe + T, 0, h, z0 - T, z0 + S + T); else box(ctx, x0 - T, x0 + S + T, 0, h, ze - T, ze + T);
+          ctx.color("oklch(0.2 0.01 60)");
+          if (d === 0) box(ctx, xe - T - 0.015, xe + T + 0.015, 0, 0.09, z0 - T, z0 + S + T); else box(ctx, x0 - T, x0 + S + T, 0, 0.09, ze - T - 0.015, ze + T + 0.015);
         } else if (d === 0) {
           ctx.albedo(null); ctx.color("oklch(0.6 0.04 165)"); box(ctx, xe - T, xe + T, 0, 1.12, z0 - T, z0 + S + T); // the lower wall: satin institutional green
           ctx.albedo(BLOCK); ctx.color(isEdge(cx, cz) || isEdge(nx, nz) ? "oklch(0.97 0.006 95)" : "oklch(0.95 0.016 92)"); box(ctx, xe - T, xe + T, 1.12, h, z0 - T, z0 + S + T);
