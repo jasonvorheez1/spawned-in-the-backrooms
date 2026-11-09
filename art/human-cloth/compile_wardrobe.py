@@ -48,7 +48,7 @@ for pr in bm['primitives']:
   elif 'UpLeg' in name:region='thigh_hi' if y>.60*scale else 'thigh_low'
   elif 'Leg' in name:region='shin_low' if y<.30*scale else 'shin_hi'
   elif name=='Hips':region='hips'
-  elif 'Neck' in name or 'Head' in name:region='neck'
+  elif 'Neck' in name or 'Head' in name:region='neck' if float(np.abs(positions[t,0]).max())<.085*scale else 'torso'
   else:
    front=float(positions[t,2].mean())>-.08*scale
    region='torso_upper_front' if front and y>float(positions[:,1].max())-.19*scale else 'torso_front' if abs(float(positions[t,0].mean()))<.035*scale and front else 'torso'

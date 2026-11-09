@@ -100,7 +100,7 @@ def clean_top(row,old):
  armgroups={g.index for g in old.vertex_groups if any(t in g.name for t in ['Arm','ForeArm','Shoulder'])}
  armpts=[old.matrix_world@v.co for v in old.data.vertices if sum(w.weight for w in v.groups if w.group in armgroups)>.5]
  if rid in ['platevest','chitinplate','abysshauberk']:kind='armor'
- zmax=max(p.z for p in pts); zmin=min(p.z for p in pts); cy=(max(p.y for p in pts)+min(p.y for p in pts))/2
+ zmax=(R.matrix_world@R.data.bones[BONE_NECK].head_local).z+.020; zmin=min(p.z for p in pts); cy=(max(p.y for p in pts)+min(p.y for p in pts))/2
  isdress=kind=='dress'; isapron=kind=='apron'; bottom=zmax-.54
  if kind in ['tee','tank','longsleeve']:bottom=zmax-.51
  if isdress:bottom=zmax-.50
