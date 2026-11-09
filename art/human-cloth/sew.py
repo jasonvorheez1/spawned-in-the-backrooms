@@ -116,7 +116,7 @@ for name, (ease, cuts) in PLAN.items():
                 co, n, fi, d = bvhW.find_nearest(v.co); out = (v.co - co).dot(n)
                 if out < 0.004: v.co = v.co + n * (0.004 - out)
     if hasattr(ease, "drape"):                               # below the waist a top is a hanging tube: cut the skin-shaped part away, loft rings to the hem
-        Z0 = B["Spine"].z + 0.03; hem = cuts[0][0].z; cy = B["Spine1"].y; NB = 96
+        Z0 = (B["Spine"].z + B["Spine1"].z) * 0.5 + 0.02; hem = cuts[0][0].z; cy = B["Spine1"].y; NB = 96
         bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.calc_center_median().z < Z0], context="FACES")
         bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
         def hull(z0, z1):                                    # body's widest radius per angle in a slab
@@ -176,8 +176,8 @@ for name, (ease, cuts) in PLAN.items():
     n = bpy.data.objects.new(name + "_n", me); bpy.context.collection.objects.link(n); n.matrix_world = body.matrix_world
     me.materials.append(mat)
     sb2 = bmesh.new(); sb2.from_mesh(me)                     # the centre seam tears where decimate meets the mirror: weld and patch small holes
-    bmesh.ops.remove_doubles(sb2, verts=sb2.verts[:], dist=0.0012)
-    bmesh.ops.holes_fill(sb2, edges=[e for e in sb2.edges if e.is_boundary], sides=8)
+    bmesh.ops.remove_doubles(sb2, verts=sb2.verts[:], dist=0.0025)
+    bmesh.ops.holes_fill(sb2, edges=[e for e in sb2.edges if e.is_boundary], sides=40)
     bmesh.ops.recalc_face_normals(sb2, faces=sb2.faces[:]); sb2.to_mesh(me); sb2.free()
     for p in me.polygons: p.use_smooth = True
     bpy.ops.object.select_all(action="DESELECT"); n.select_set(True); bpy.context.view_layer.objects.active = n
@@ -191,8 +191,8 @@ for name, (ease, cuts) in PLAN.items():
     if tri > BUDGET:
         dc = n.modifiers.new("d", "DECIMATE"); dc.ratio = BUDGET / tri; bpy.ops.object.modifier_apply(modifier="d")
     sb2 = bmesh.new(); sb2.from_mesh(me)                     # the centre seam tears where decimate meets the mirror: weld and patch small holes
-    bmesh.ops.remove_doubles(sb2, verts=sb2.verts[:], dist=0.0012)
-    bmesh.ops.holes_fill(sb2, edges=[e for e in sb2.edges if e.is_boundary], sides=8)
+    bmesh.ops.remove_doubles(sb2, verts=sb2.verts[:], dist=0.0025)
+    bmesh.ops.holes_fill(sb2, edges=[e for e in sb2.edges if e.is_boundary], sides=40)
     bmesh.ops.recalc_face_normals(sb2, faces=sb2.faces[:]); sb2.to_mesh(me); sb2.free()
     for p in me.polygons: p.use_smooth = True
     # skin + Bust key from the body at the nearest point
