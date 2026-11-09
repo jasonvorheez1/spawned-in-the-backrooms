@@ -15,6 +15,7 @@ match:
   - [carpet, "carpet|rug|canvas|fabric|velvet"]
   - [field, "wheat|barley|stubble|straw|canola|crop"]
   - [soil, "dirt|soil|mud|farm-track|ruts"]
+  - [rock, "rock|basalt|cliff|boulder"]
   - [gravel, "gravel|sand|rubble"]
   - [grass, "grass|lawn|moss|turf"]
   - [asphalt, "asphalt|road|street|tarmac"]
@@ -53,6 +54,7 @@ surfaces:
   tile:     { walk: footstep-sneaker-on-vinyl-school-floor-tile-single-step, run: footstep-sneaker-running-on-vinyl-floor-tile-single-step, v: 0.11, land: landing-hard }
   terrazzo: { walk: footstep-sneaker-on-polished-mall-terrazzo-floor-squeak-single-step, run: footstep-sneaker-running-on-polished-mall-floor-single-step, v: 0.09, land: landing-hard }
   checker:  { walk: footstep-boot-on-worn-checkered-linoleum-locker-room-single-step, run: footstep-boot-running-on-worn-linoleum-tile-single-step, v: 0.11, land: landing-hard }
+  rock:     { walk: "@stone", run: "@stone", v: 0.28, land: landing-hard }   # Nov 9: Shelly, Level 7 island had no footsteps: bare rock
   gravel:   { walk: footstep-boot-crunch-on-loose-cave-gravel-single-step, run: footstep-boot-running-on-loose-cave-gravel-single-step, v: 0.26, land: landing-gravel }
   field:    { walk: footstep-sneaker-swishing-through-dry-wheat-stalks-soft-crunch-single-step-v2, run: footstep-sneaker-running-through-dry-wheat-field-swish-single-step-v2, v: 0.13, land: landing-soil }
   soil:     { walk: "@dirt", run: "@dirt", v: 0.16, land: landing-soil }

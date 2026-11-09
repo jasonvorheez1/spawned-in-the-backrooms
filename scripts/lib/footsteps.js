@@ -31,9 +31,10 @@ export function surfaceUnder(ctx, fallback, at) {
   const h = raycast(ctx, from, down, { distance: 1.0, ignoreEntities: [ctx.self.id], physicsOnly: true })
   if (!h) return fallback
   const o = h.id ? ctx.getObject(h.id) : null
-  let words = texWords(o)
-  if (o && !words.trim()) words = String(o.id ?? '')
-  if (!words.trim() && !o) { // terrain: its material, or the heaviest of a blend
+  const terr = !o || String(h.id ?? '').startsWith('terrain/') // a terrain chunk hit: read the ground's own material (Level 7's rock and sand)
+  let words = terr ? '' : texWords(o)
+  if (o && !terr && !words.trim()) words = String(o.id ?? '')
+  if (!words.trim() && terr) { // terrain: its material, or the heaviest of a blend
     const m = ctx.place.terrain?.materialAt?.(p.x, p.z)
     words = m && typeof m === 'object' ? (Object.entries(m).sort((a, b) => b[1] - a[1])[0]?.[0] ?? '') : String(m ?? '')
   }
