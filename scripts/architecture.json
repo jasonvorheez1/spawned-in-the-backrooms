@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2819,
-  "updatedAt": "2026-11-09T00:38:50.816Z",
+  "basedOnSpecVersion": 2822,
+  "updatedAt": "2026-11-09T00:39:44.439Z",
   "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes supply local environments, while shared systems handle loot, building, combat, NPCs and avatar rendering. Human NPCs use ordinary gaits until armed in a fight; first-person weapon poses now combine human-model arms and decoded New Vegas melee swings.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with authored shops and landmarks, simulated staff, shoppers and balcony loungers.",
     "places/main (3D) - authored Level 0/Lobby maze; sim generates furniture and loot, safe-room almond water, shifting walls, creature ecology and route-guidance moments.",
     "places/intake (3D) + places/tutorial0 (solo ephemeral 3D) - bedroom character-creation/waking space and authored tutorial route with staged encounter and HALOGEN.",
-    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; Level 2 uses Tripo room/hall props over its collider shell; Level 2.1's Edges now have pale rock vaults, bright tube lights, EXIT signs and Tripo-dressed rooms/halls.",
+    "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams and Locked; Level 2 uses Tripo room/hall props over its collider shell; scripts/level21-geo.js builds Level 2.1's Edges with smoother pale rock vaults/roof haunches sharing the stone texture, plus bright tube lights, EXIT signs and Tripo-d…",
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office and Terror Hotel; residents, hazards, office/home systems and Boiler Room rats.",
     "places/level6, places/level7, places/level10, places/level11 (3D) - later authored/generated levels including city, farm and venues; Level 10's poster routes to Level 26.",
     "places/level26 (3D) - SS Fun =), Adventure liner in green fog with authored ship, decks, wrecked venues and Partygoers; lower decks reach y=-80 within worldBounds bottom=-110.",
@@ -66,7 +66,7 @@
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickups enter player.js inventory.",
     "L input → scripts/kick.js tries foe kick then loose.js kickLoose; Z input → scripts/grab.js picks/carries/throws eligible bodies, plays the UAL overhand throw clip and calls loose.js arm/track/impact; flight tracking detects hard stops.",
     "scripts/lib/breakables.js strike/damageEntity → loose.js breakIt for matched loose props, otherwise generic rubble; loose.yml supplies material/hp/act rules and joule breakAt thresholds; explosions emit damage/noise/shockwave.",
-    "scripts/meg-agent.js writes NPC state.armed when weapons are drawn → scripts/critter.js uses warrior walk/run clips only for armed human NPCs; scripts/player.js builds first-person human arms and scripts/lib/vmpose.js poses weapons, sampling NV_SWINGS for melee at 55% source duration."
+    "scripts/meg-agent.js writes NPC state.armed when weapons are drawn → scripts/critter.js uses warrior walk/run clips only for armed human NPCs; scripts/player.js builds first-person human arms and scripts/lib/vmpose.js poses weapons, sampli…"
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js - authored mall shops/landmarks with data-driven stock and simulated staff, waypoint shoppers and balcony loungers.",
@@ -74,9 +74,9 @@
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props and Boiler Room Death Rat packs.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml - shared player/NPC appearance rules; human GLBs include head and deterministic body/head skin; BODIES switches room-wide rendering, with player.state.bodyStyle retaining menu choice.",
+    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml - shared player/NPC appearance rules; human GLBs include head and deterministic body/head skin; BODIES switches room-wide rendering, with player.state.bodyStyle r…",
     "art/level2/{build,compact,encode,pack}.py + scripts/lib/data/l2kit-data/* + scripts/lib/l2kit.js - module meshes are compact-packed and decoded into runtime instances; optional UV data, otherwise triplanar projection.",
-    "scripts/lib/data/l2props.yml + scripts/lib/l2props.js + places/level2/sim.js + places/level21/sim.js - metre-fitted Tripo props reuse spawnProp; Level 2.1's revisioned dress21 lays storage/work props and danger signs alongside procedural geometry."
+    "scripts/lib/data/l2props.yml + scripts/lib/l2props.js + places/level2/sim.js + places/level21/sim.js - metre-fitted Tripo props reuse spawnProp; Level 2.1's revisioned dress21 lays storage/work props and danger signs alongside procedural g…"
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -87,7 +87,7 @@
     "Teleport Station 'last' travel derives from savePlace (excluding bonus, intake and debug; tutorial0 maps to main); keepPos preserves savePos and wakeAtSave restores it only when the arriving place matches; transit depends on bc-train asset.",
     "Found-item rarity gates apply only to found weapon tokens; existing weapon ownership/use and non-weapon loot are not level-gated. Search gating excludes storage and NPC containers.",
     "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout.",
-    "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static because dynamic bodies created before floor mesh cooking fall through; Level 2.1 uses sim revision V and clears old l2prop-tagged dressing before rebuild.",
-    "BODIES is shared world.state.bodyStyle and is applied by scripts/critter.js to all room characters; player.state.bodyStyle retains the menu pick. Human GLBs include their own head and body/head skin; human first-person arm assets are separate fist/grip meshes."
+    "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static because dynamic bodies created before floor mesh cooking fall through; Level 2.1 uses sim revision V and clears old l2prop-tagged dres…",
+    "BODIES is shared world.state.bodyStyle and is applied by scripts/critter.js to all room characters; player.state.bodyStyle retains the menu pick. Human GLBs include their own head and body/head skin; human first-person arm assets are separ…"
   ]
 }
