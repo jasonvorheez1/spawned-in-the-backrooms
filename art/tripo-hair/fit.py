@@ -5,7 +5,7 @@
 import bpy, bmesh, sys, os, glob
 from mathutils import Vector, Matrix
 SEX = sys.argv[sys.argv.index("--") + 1]
-BODY = f"/workspace/human/live_{SEX}.glb"; SRC = "/workspace/tripo-hair"; OUT = "/workspace/tripo-hair/out"; os.makedirs(OUT, exist_ok=True)
+BODY = f"/workspace/human/ht/{SEX}.glb"; SRC = "/workspace/tripo-hair"; OUT = "/workspace/tripo-hair/out"; os.makedirs(OUT, exist_ok=True)
 NAMES = {"long_straight_anime_hair_with_": "t_long", "short_spiky_anime_hair__male": "t_spiky", "anime_twin_ponytails_hair_with": "t_twintails",
          "messy_medium_anime_hair__male_": "t_messy", "anime_bob_cut_hair_with_blunt_": "t_bob", "anime_high_ponytail_hair_with_": "t_ponytail"}
 # per style: overall width against the skull width, crown lift over the head top, shift back (m) — tuned from the proof renders
@@ -36,28 +36,46 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     for o in parts:
         m2 = bpy.data.meshes.new_from_object(o.evaluated_get(dg)); m2.transform(o.matrix_world); bm.from_mesh(m2)
     for o in new: bpy.data.objects.remove(o, do_unlink=True)
-    key = NAMES[stem]; W, LIFT, DY = FIT[key]
+    key = NAMES[stem]
     vs = [v.co for v in bm.verts]
     if (max(v.y for v in vs) - min(v.y for v in vs)) > 1.3 * (max(v.z for v in vs) - min(v.z for v in vs)):  # Tripo laid it down: stand it up, the tail hanging
         bmesh.ops.rotate(bm, verts=bm.verts, cent=Vector(), matrix=Matrix.Rotation(-1.5708, 3, "X")); vs = [v.co for v in bm.verts]
-    t = max(v.z for v in vs)
-    cx0, cx1 = min(v.x for v in vs), max(v.x for v in vs); cy0, cy1 = min(v.y for v in vs), max(v.y for v in vs)
-    s = (2 * rx * W) / (cx1 - cx0)
-    M = Matrix.Translation(Vector((0, cy + DY, top + LIFT))) @ Matrix.Scale(s, 4) @ Matrix.Translation(Vector((-(cx0 + cx1) / 2, -(cy0 + cy1) / 2, -t)))
+    # scale from the CROWN, never the whole silhouette (tails and twintails hang wide): the top 18% of the mesh is the skull cover
+    t = max(v.z for v in vs); b0 = min(v.z for v in vs); hgt = t - b0
+    crown = sorted([v for v in vs if v.z > t - 0.18 * hgt], key=lambda v: v.x)
+    q = lambda arr, f: arr[min(len(arr) - 1, int(f * len(arr)))]
+    cw = q([v.x for v in crown], 0.97) - q([v.x for v in crown], 0.03)
+    cys = sorted(v.y for v in crown); ccx = (q([v.x for v in crown], 0.97) + q([v.x for v in crown], 0.03)) / 2; ccy = (cys[0] + cys[-1]) / 2
+    W = {"t_twintails": 1.05, "t_long": 1.1}.get(key, 1.18)
+    s = (2 * rx * W) / max(cw, 1e-4)
+    # the crown band is the top 18%, so its width runs a little under the skull's: the push-out below seats whatever lands inside
+    M = Matrix.Translation(Vector((0, cy + 0.004, top + 0.014))) @ Matrix.Scale(s, 4) @ Matrix.Translation(Vector((-ccx, -ccy, -t)))
     bm.to_mesh(me); bm.free(); me.transform(M)
     if len(me.polygons) > 9000:
         o = bpy.data.objects.new("tmp", me); bpy.context.scene.collection.objects.link(o)
         d = o.modifiers.new("d", "DECIMATE"); d.ratio = 9000 / len(me.polygons); bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier="d"); bpy.data.objects.remove(o)
-    cap = bpy.data.meshes.new("cap"); hb = bmesh.new(); hm = bpy.data.meshes.new_from_object(head.evaluated_get(dg)) if head else None
-    if hm:
-        hm.transform(head.matrix_world); hb.from_mesh(hm)
-        line = lambda co: top - 0.075 - max(0.0, co.y - cy) * 0.6  # lower at the back of the skull
-        bmesh.ops.delete(hb, geom=[f for f in hb.faces if any(v.co.z < line(v.co) for v in f.verts)], context="FACES")
-        bmesh.ops.delete(hb, geom=[v for v in hb.verts if not v.link_faces], context="VERTS")
-        hb.normal_update()
-        for v in hb.verts: v.co += v.normal * 0.004
-        bm2 = bmesh.new(); bm2.from_mesh(me); hb.to_mesh(cap); bm2.from_mesh(cap); bm2.to_mesh(me); bm2.free()
-    hb.free()
+    # no hair inside the head: every vertex within 7 mm of the skin (or under it) is pushed out along the skin normal
+    from mathutils.bvhtree import BVHTree
+    hm0 = bpy.data.meshes.new_from_object(head.evaluated_get(dg)); hm0.transform(head.matrix_world)
+    hb0 = bmesh.new(); hb0.from_mesh(hm0); tree = BVHTree.FromBMesh(hb0)
+    for v in me.vertices:
+        loc, nrm, idx, dist = tree.find_nearest(v.co)
+        if loc is None: continue
+        d = (v.co - loc).dot(nrm)
+        if d < 0.007: v.co = loc + nrm * 0.007
+    hb0.free()
+    # the scalp: the head's own skin above the hairline, lifted 3 mm, in the hair's colour, so no skin shows between strands
+    bz = sorted((head.matrix_world @ v.co).z for v in head.data.vertices); z0h = bz[0]; Hh = top - z0h
+    cap = bpy.data.meshes.new("cap"); hb = bmesh.new(); hm = bpy.data.meshes.new_from_object(head.evaluated_get(dg))
+    hm.transform(head.matrix_world); hb.from_mesh(hm)
+    fy0 = min(v.co.y for v in hb.verts); by0 = max(v.co.y for v in hb.verts)
+    line = lambda co: z0h + Hh * (0.72 - 0.42 * max(0.0, min(1.0, (co.y - fy0) / (by0 - fy0) - 0.35) / 0.65))  # forehead hairline at 72%, down the back to the nape
+    ear = lambda co: abs(co.x) > rx * 0.86 and z0h + Hh * 0.36 < co.z < z0h + Hh * 0.62
+    bmesh.ops.delete(hb, geom=[f for f in hb.faces if any(v.co.z < line(v.co) or ear(v.co) for v in f.verts) or f.material_index != 0], context="FACES")
+    bmesh.ops.delete(hb, geom=[v for v in hb.verts if not v.link_faces], context="VERTS")
+    hb.normal_update()
+    for v in hb.verts: v.co += v.normal * 0.003
+    bm2 = bmesh.new(); bm2.from_mesh(me); hb.to_mesh(cap); bm2.from_mesh(cap); bm2.to_mesh(me); bm2.free(); hb.free()
     me.materials.clear(); me.materials.append(mat)
     for p in me.polygons: p.use_smooth = True
     for hat in (False, True):
