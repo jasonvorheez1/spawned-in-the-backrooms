@@ -290,7 +290,7 @@ export function update(ctx, dt) {
         m.next = null;
       }
       // wedged: a body that has not budged for ~2 s while trying to walk (a wall shifted onto it) is lifted back to open floor
-      m.wedge = moved < 0.05 && Math.hypot(w.velocity?.x ?? 0, w.velocity?.z ?? 0) > 0.3 ? (m.wedge ?? 0) + 1 : 0;
+      m.wedge = moved < 0.05 && !lit && speed > 0.5 ? (m.wedge ?? 0) + 1 : 0;
       if (m.wedge >= 3) { const c = cellAt(pos.x, pos.z), cc = cellCenter(c.cx, c.cz), far = Math.hypot(cc.x - pos.x, cc.z - pos.z) > 0.6, to = far ? cc : neighbor(ctx, pos); w.feetPosition = { x: to.x, y: pos.y + 0.05, z: to.z }; w.velocity = { x: 0, y: 0, z: 0 }; m.wedge = 0; m.next = null; m.side = null; }
       m.sk = { x: pos.x, z: pos.z, at: now };
     }
