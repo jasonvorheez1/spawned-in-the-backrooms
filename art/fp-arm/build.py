@@ -167,6 +167,6 @@ def proof(sex):
     for nm, eye, look in (("fp", g2b(-0.2, 0.2, 0.42), g2b(-0.2, 0.2, -1)), ("side", g2b(0.6, 0.05, -0.05), g2b(0, -0.1, 0.1))):
         cam.location = eye; cam.rotation_euler = (look - eye).to_track_quat("-Z", "Z").to_euler()
         sc.render.filepath = f"/tmp/arm/{sex}-{nm}.png"; bpy.ops.render.render(write_still=True)
-for sex in (sys.argv[sys.argv.index("--")+1:] or ["f", "m"]):
+for sex in ((sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else []) or ["f", "m"]):
     for sd in ("R", "L"): build(sex, sd)
     proof(sex)
