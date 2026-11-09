@@ -689,8 +689,9 @@ function quickUse(ctx, slot) {
   const item=quickItems(s).find(x=>x.id===s.quickSlots?.[slot])
   if (!item) return
   w.quickAt=ctx.now()+300
-  if (item.count<=0) { s.notice={text:item.name+' is used up',at:ctx.now()}; return }
+  if (item.count<=0) { s.notice={text:item.name+' is unavailable',at:ctx.now()}; return }
   invAction(ctx,item.action)
+  if(item.action.k==='equip' && s.equipped===item.action.w && s.sheathed) { s.sheathed=false; s.equipAt=ctx.now(); w0vm(ctx) }
 }
 function invAction(ctx, d) {
   const s = ctx.self.state
