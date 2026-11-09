@@ -63,6 +63,7 @@ hatted:
   m_spiky: "/cdn/value.c36e31ebb8d1be53923fc85b889296a15645ad9053ba19852017294cba70cd74.glb"
   m_undercut: "/cdn/value.07fa087c75f1a1509b974db1dfb6c519bb1972de1eb1210a044f31afa79d1b57.glb"
 
+# 14-16: Tripo anime hair (Shelly #107325, art/tripo-hair/fit.py) fitted to the head-type bodies.
 # Human heads (Shelly's hair pack #101894, art/human-hair/build.py): per body sex, pack style n bare and cut under a hat brim. humanPick: each look's style key to its pack style.
 human:
   f:
@@ -80,6 +81,9 @@ human:
     11: { free: "/cdn/value.9a751795f4a9d069d003f03f5f36492d7492d54c510ef6af53a1922d069a03b8.glb", hat: "/cdn/value.52e40f33272d58c07ae3f55fdc27eb61b00bb5abba0302bea37dd435d75866a6.glb" }
     12: { free: "/cdn/value.3a1155282fc1090b3246a80ccb2addfb4a512b77912878e25cdec23988ba4033.glb", hat: "/cdn/value.1fbc72e6fb0ea2e69ca20e60d42a53d63577c4d767884e7bcb3d2e777113ae94.glb" }
     13: { free: "/cdn/value.c4bab1b7c593a921564d73a2c057e1831169f75a550b34561e2cbed6c9d3e099.glb", hat: "/cdn/value.0e4aa72791b8121b967f5b2c5e508dc0806be81d0801e9fc77b6d4317083a2bb.glb" }
+    14: { free: "/cdn/value.1fe00643a1e5075b6313ec6e36b9295bad70c641d4e60a32264a5e6227f86266.glb", hat: "/cdn/value.ca6e4bde688e7b0fe5922fcbbd0d2c7e7ed28322f7b16261a1830a0874fe20fb.glb" }  # tripo ponytail
+    15: { free: "/cdn/value.a3e23bd022c364bf64d3bf629a756da88de09d5d4aab28eb783d72f922e0acb8.glb", hat: "/cdn/value.15d9206da96a3e482ade9737c79ff36291428b6d0ba0d2c730ac1f3f1ce322ab.glb" }  # tripo spiky
+    16: { free: "/cdn/value.fbe740756d23b3b9287fe7491dddfbb1decf8812966be050aa6ff986fd5b29cd.glb", hat: "/cdn/value.cae4d99f7970130c1d6de632ae9eb98d87953c73691b84a17573511775f78046.glb" }  # tripo long
   m:
     0: { free: "/cdn/value.62bcfc7d43a17649fd0ed1c8df68fc3c46ec5870c9d1f08326cd24c0870e6b98.glb", hat: "/cdn/value.b8047663a7b2ccd2a981ef3e546ed3c168fa5d5027aadd5d4b36cfc75b56451b.glb" }
     1: { free: "/cdn/value.e8dae8c358b6355c1948f2b59163901b2b94f31c38db8926a07bd8c01cf6350a.glb", hat: "/cdn/value.3d70e8c94e1bc0a167e863e9b85831965a4322369e1ed05a9d31f9908d12b006.glb" }
@@ -95,4 +99,7 @@ human:
     11: { free: "/cdn/value.97d3811ba3c07cc62d38f042841223bfdce27ace4f434902a7156edd54c6d8bc.glb", hat: "/cdn/value.cac1550bb3de60e877c6334410e09d6b937be15227f7d2dca004783d48b74686.glb" }
     12: { free: "/cdn/value.a2922088a8a002d555392d9b7f75b7f5c17b53ea7bae1aabdc38922b27ef1695.glb", hat: "/cdn/value.c5ac94c2e01a87c9101b45b3e4467bff8a164769f228eb68677665ea7a2b54e6.glb" }
     13: { free: "/cdn/value.d8bf0f61fe09a5e5ebaea3c68d7c5b84503cbae707f5fba6e8f0b52a0e19648b.glb", hat: "/cdn/value.fde60f20aae7ce49d2cb399b4eb6e6da1dffaa5aaecb900f29b94dc2d18a261d.glb" }
-humanPick: { f_afropuff: 6, f_bob: 5, f_curly: 6, f_curtainmid: 7, f_halfup: 4, f_hime: 2, f_long: 2, f_messybun: 10, f_pixie: 7, f_ponytail: 10, f_ringlets: 4, f_sidebraid: 4, f_sidetail: 10, f_spacebuns: 10, f_twinbraids: 2, f_twintails: 10, f_wavy: 4, f_wolfcut: 13, m_buzz: 1, m_crop: 1, m_curlytop: 3, m_curtains: 7, m_fluffy: 6, m_manbun: 0, m_mohawk: 9, m_shaggy: 12, m_sidepart: 5, m_slick: 8 }
+    14: { free: "/cdn/value.2ce2041adf96ff2ae6d275101f112114ea9221a4cc207bf561be73ac06cf89e6.glb", hat: "/cdn/value.147d156875dd62d9852d5da0c265335f7046027f536b3f766edf4c57a707274b.glb" }  # tripo ponytail
+    15: { free: "/cdn/value.038051c7b263247a35446a32205156e8691c33efd9824af094a4072f8f243bfb.glb", hat: "/cdn/value.b6c1944d8cc99766874489315f9984a4ee1d5b9b285be6a81225fe80ebcbabed.glb" }  # tripo spiky
+    16: { free: "/cdn/value.a50ecfdce64c933e4b4812b6f35f8bc43ae76c1285d4e635cdf6c30ebb039c18.glb", hat: "/cdn/value.56f92c8a0456b3940906fd9fcc6e39042fb52d9999c18b6bd97165d60c57bdcb.glb" }  # tripo long
+humanPick: { m_spiky: 15, m_undercut: 15, f_afropuff: 6, f_bob: 5, f_curly: 6, f_curtainmid: 7, f_halfup: 4, f_hime: 16, f_long: 16, f_messybun: 10, f_pixie: 7, f_ponytail: 14, f_ringlets: 4, f_sidebraid: 4, f_sidetail: 10, f_spacebuns: 10, f_twinbraids: 2, f_twintails: 10, f_wavy: 4, f_wolfcut: 15, m_buzz: 1, m_crop: 1, m_curlytop: 3, m_curtains: 7, m_fluffy: 6, m_manbun: 14, m_mohawk: 9, m_shaggy: 15, m_sidepart: 5, m_slick: 8 }
