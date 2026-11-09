@@ -1,18 +1,63 @@
 # First-person arms cut from Shelly's human bodies (art/human-base exports): right arm (shoulder off) with the
 # fingers curled into a grip and the thumb folded over, laid in the viewmodel's frame (glTF: x right, y up, -z forward),
 # its fist centred on the grip at the origin. A mirrored left arm for two-handed weapons. Static meshes: no skin, no IK.
-import bpy, sys, math, mathutils as mu, os
+import bpy, sys, math, json, mathutils as mu, os
 import numpy as np
 V = mu.Vector
 SRC = {"f": "/workspace/arm/f.glb", "m": "/workspace/arm/m.glb"}
 OUT = "/workspace/arm/out"; os.makedirs(OUT, exist_ok=True)
 R_CURL = 0.014   # finger curl radius: a tight fist around the grip
 def g2b(x, y, z): return V((x, -z, y))  # glTF frame -> Blender frame
+
+KF = json.load(open("/workspace/kfhand/1hm.json"))   # New Vegas 1hmAim (Shelly's melee pack), first frame, in Camera1st's frame: art/fp-arm/kfhand.py
+def kfv(v): return g2b(-v[2], v[1], v[0])            # kf camera (forward -x, up +y, left +z) -> glTF (x right, y up, z back) -> Blender
+def kfax(n, i): return kfv(tuple(mu.Quaternion(KF[n]["q"]) @ V([(1, 0, 0), (0, 1, 0), (0, 0, 1)][i])))
+def kf_flex():                                       # knuckle, middle, tip flexion of each finger, index..pinky, from the bones' own axes
+    out = []
+    for f in "1234":
+        ch = ["Bip01 R Hand"] + [f"Bip01 R Finger{f}{k}" for k in ("", "1", "2")]
+        out.append(tuple(math.degrees(kfax(a, 0).angle(kfax(b, 0))) for a, b in zip(ch, ch[1:])))
+    return out
+def kf_pose(rig, body):
+    """pose the human rig's right arm, forearm and hand to the NV first-person aim, so the cut arm already sits as NV holds it"""
+    rig.rotation_mode = "XYZ"; rig.rotation_euler[2] += math.pi; bpy.context.view_layer.update()   # face the camera's forward (+Y here)
+    mw = rig.matrix_world; bn = rig.data.bones
+    hw = lambda n: mw @ bn[n].head_local
+    S0, E0, W0, T0 = hw("RightArm"), hw("RightForeArm"), hw("RightHand"), mw @ bn["RightHand"].tail_local
+    gi = {g.name: g.index for g in body.vertex_groups}; bmw = body.matrix_world
+    hp = [bmw @ v.co for v in body.data.vertices if any(g.group == gi["RightHand"] and g.weight > 0.5 for g in v.groups)]
+    a = (T0 - W0).normalized(); tips = sorted(hp, key=lambda q: -(q - W0).dot(a))[:40]
+    a = (sum(tips, V()) / len(tips) - W0).normalized()
+    X = np.array([tuple(q) for q in hp]); X = X - X.mean(0); n = V(np.linalg.eigh(X.T @ X)[1][:, 0]); n = (n - a * n.dot(a)).normalized()
+    if n.z < 0: n = -n
+    s = a.cross(n).normalized()
+    if s.y < 0: s = -s                                # the thumb points front in the rest pose
+    up = (kfv(KF["Bip01 R Forearm"]["p"]) - kfv(KF["Bip01 R UpperArm"]["p"])).normalized()
+    fo = (kfv(KF["Bip01 R Hand"]["p"]) - kfv(KF["Bip01 R Forearm"]["p"])).normalized()
+    a2 = kfax("Bip01 R Hand", 0); s2 = kfax("Bip01 R Hand", 2); s2 = (s2 - a2 * s2.dot(a2)).normalized()   # Biped hand: x along the hand, z the thumb side
+    Ru = (E0 - S0).normalized().rotation_difference(up)
+    Rh = (mu.Matrix((a2, s2, a2.cross(s2))).transposed() @ mu.Matrix((a, s, a.cross(s))).transposed().inverted()).to_quaternion()
+    Rf = (W0 - E0).normalized().rotation_difference(fo)
+    sf, sh = Rf @ s, Rh @ s
+    p1 = (sf - fo * sf.dot(fo)).normalized(); p2 = (sh - fo * sh.dot(fo)).normalized()
+    Rf = mu.Quaternion(fo, math.atan2(p1.cross(p2).dot(fo), p1.dot(p2)) * 0.6) @ Rf   # the forearm takes most of the wrist's roll, as a real radius does
+    E1 = S0 + Ru @ (E0 - S0); W1 = E1 + Rf @ (W0 - E0)
+    def setp(name, R, head):
+        Mr = mw @ bn[name].matrix_local
+        rig.pose.bones[name].matrix = mw.inverted() @ (mu.Matrix.Translation(head) @ (R.to_matrix() @ Mr.to_3x3()).to_4x4())
+        bpy.context.view_layer.update()
+    setp("RightArm", Ru, S0); setp("RightForeArm", Rf, E1); setp("RightHand", Rh, W1)
+    dg = bpy.context.evaluated_depsgraph_get()
+    nm = bpy.data.meshes.new_from_object(body.evaluated_get(dg), preserve_all_data_layers=True, depsgraph=dg)
+    body.data = nm; body.modifiers.clear()
+    return {"W": W1, "T": W1 + Rh @ (T0 - W0), "n": Rh @ n, "s": Rh @ s, "grip": s2}
 def build(sex, side):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=SRC[sex])
     rig = next(o for o in bpy.data.objects if o.type == "ARMATURE")
     body = bpy.data.objects["Body"]
+    if body.data.shape_keys: body.shape_key_clear()
+    PO = kf_pose(rig, body)
     B = {b.name: (rig.matrix_world @ b.head_local, rig.matrix_world @ b.tail_local) for b in rig.data.bones}
     bpy.ops.object.select_all(action="DESELECT"); body.select_set(True); bpy.context.view_layer.objects.active = body
     bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
