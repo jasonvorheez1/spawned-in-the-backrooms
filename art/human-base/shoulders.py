@@ -14,7 +14,7 @@ R = next(o for o in bpy.data.objects if o.type == "ARMATURE")
 def ss(e0, e1, x):
     t = max(0.0, min(1.0, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t)
 # Savi's picks, metres
-IN_TOP, OUT_TOP = -0.07, 0.045   # deltoid cap: ramp start/end along the arm
+IN_TOP, OUT_TOP = -0.11, 0.035   # deltoid cap: ramp start/end along the arm
 IN_PIT, OUT_PIT = -0.02, 0.05    # armpit: later, the chest wall must not follow the arm
 REACH = 0.17                     # radial reach from the arm axis
 FAR = ("ForeArm", "Hand")
