@@ -7,7 +7,7 @@ function play(ctx, name, volume = 0.8) {
   const p = ctx.self.feetPosition
   heard(ctx, { clip: SND(name), position: { x: p.x, y: p.y + 1.2, z: p.z }, volume, maxDistance: 40 }, { audience: { player: ctx.self.id } })
 }
-export function noclipCue(ctx, d) { play(ctx, d.n, d.v) }
+export function noclipCue(ctx, d) { if (/buzz/.test(d.n) && ctx.self.place !== 'main') return; play(ctx, d.n, d.v) } // the light buzz is Level 0's: landing anywhere else (the mall) stays quiet (Shelly Nov 9)
 
 function schedule(ctx, list) { for (const [t, n, v] of list) ctx.after(t, 'noclipCue', { n, v }) }
 
