@@ -67,6 +67,10 @@ export function update(ctx, dt) {
 
   // The presented facing (radians) as the one rotation grammar (degrees): undefined before the first frame.
   const view = ctx.self.view
+  if (view && ps && W[ps.equipped]?.ranged) {
+    const pitch = Math.round(view.pitch * 1000) / 1000
+    if (ps.aimPitch !== pitch) ps.aimPitch = pitch
+  }
   let rot = view ? { yaw: view.yaw * RAD_TO_DEG, pitch: view.pitch * RAD_TO_DEG } : null
 
   // At a computer: you sit, and the eye glides in until the monitor fills the view (Back OS draws over it).
