@@ -21,8 +21,8 @@ export function geometry(ctx) {
   if (hi) {
     // red sprinkler mains along x, branches along z, heads and hangers
     ctx.color("oklch(0.5 0.2 28)"); ctx.roughness(0.45); ctx.metalness(0.4);
-    for (let j = 1; j < N; j += 2) { const z = j * S - HALF + 1.9; box(ctx, -HALF, HALF, H - 0.7, H - 0.62, z - 0.04, z + 0.04); box(ctx, -HALF, HALF, H - 0.7, H - 0.62, z + 0.1, z + 0.18); }
-    for (let i = 1; i < N; i += 2) { const x = i * S - HALF - 1.5; box(ctx, x - 0.04, x + 0.04, H - 0.66, H - 0.58, -HALF, HALF); }
+    for (let j = 1; j < N; j += 2) { const z = j * S - HALF + 1.9; pipe(ctx, [[-HALF, H - 0.66, z], [HALF, H - 0.66, z]], [0.042, 0.042], 10, [1, 1], 0, 1, 1); pipe(ctx, [[-HALF, H - 0.66, z + 0.14], [HALF, H - 0.66, z + 0.14]], [0.042, 0.042], 10, [1, 1], 0, 1, 1); }
+    for (let i = 1; i < N; i += 2) { const x = i * S - HALF - 1.5; pipe(ctx, [[x, H - 0.62, -HALF], [x, H - 0.62, HALF]], [0.035, 0.035], 10, [1, 1], 0, 1, 1); }
     ctx.color("oklch(0.7 0.14 40)");
     for (let j = 1; j < N; j += 2) for (let i = 0; i < N; i += 2) { const x = i * S - HALF + 2, z = j * S - HALF + 1.9; box(ctx, x - 0.025, x + 0.025, H - 0.9, H - 0.7, z - 0.025, z + 0.025); box(ctx, x - 0.07, x + 0.07, H - 0.92, H - 0.9, z - 0.07, z + 0.07); }
     ctx.color("oklch(0.45 0.02 250)");

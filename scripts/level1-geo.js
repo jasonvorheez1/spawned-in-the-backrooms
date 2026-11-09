@@ -1,11 +1,14 @@
 // Level 1 "The Habitable Zone": concrete floor and ceiling, banded pillars, corridor walls with push-door gaps
 // and green EXIT signs, steel storage racks, ceiling pipes, the flickering wall home. Layout: scripts/lib/level1.js.
 import { N, S, H, HALF, DOOR, zoneOf, edge, hasPillar, sectorOf, cellCenter, RACK, hash, BACK, ARRIVE } from "./lib/level1.js";
-import { slab } from "./lib/shapes.js";
+import { slab, prism, tube } from "./lib/shapes.js";
 
 const FLOOR = "cdn/texture-stained-concrete-floor.png", WALL = "cdn/texture-painted-cinder-block-wall-clean.png", CEIL = "cdn/texture-concrete-ceiling-panels.png";
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [(x1 - x0) / 2, (y1 - y0) / 2, (z1 - z0) / 2]);
-const T = 0.12; // half wall thickness
+const T = 0.12;
+const PILLAR = "cdn/texture-painted-concrete-column-scuffed.png";
+// a square column with chamfered arrises (c = chamfer), as cast concrete has
+const chamf = (x, z, r, c) => [[x - r + c, z - r], [x + r - c, z - r], [x + r, z - r + c], [x + r, z + r - c], [x + r - c, z + r], [x - r + c, z + r], [x - r, z + r - c], [x - r, z - r + c]]; // half wall thickness
 
 // one wall segment along the edge; axis "x" = a wall at fixed x running along z
 function wallSeg(ctx, axis, fixed, a, b, y0 = 0, y1 = H) {
@@ -55,10 +58,13 @@ export function geometry(ctx) {
   // pillars: concrete, a sector-coloured band at eye height, chipped feet
   for (let i = 1; i < N; i++) for (let j = 1; j < N; j++) {
     if (!hasPillar(i, j)) continue;
-    const x = i * S - HALF, z = j * S - HALF, r = 0.45;
-    ctx.color("oklch(0.82 0.008 250)"); box(ctx, x - r, x + r, 0, H, z - r, z + r);
-    ctx.color(sectorOf(Math.min(N - 1, i), Math.min(N - 1, j)).band); box(ctx, x - r - 0.01, x + r + 0.01, 1.4, 1.75, z - r - 0.01, z + r + 0.01);
-    if (hi) { ctx.color("oklch(0.55 0.01 250)"); box(ctx, x - r - 0.04, x + r + 0.04, 0, 0.12, z - r - 0.04, z + r + 0.04); }
+    const x = i * S - HALF, z = j * S - HALF, r = 0.45, c = hi ? 0.035 : 0;
+    ctx.albedo(PILLAR); ctx.roughness(0.92); ctx.color("oklch(0.95 0.006 250)");
+    if (hi) { prism(ctx, chamf(x, z, r, c), 0.14, 1.4); prism(ctx, chamf(x, z, r, c), 1.75, H); } else box(ctx, x - r, x + r, 0, H, z - r, z + r);
+    ctx.albedo(null); ctx.roughness(0.7);
+    ctx.color(sectorOf(Math.min(N - 1, i), Math.min(N - 1, j)).band); if (hi) prism(ctx, chamf(x, z, r + 0.004, c), 1.4, 1.75); else box(ctx, x - r - 0.01, x + r + 0.01, 1.4, 1.75, z - r - 0.01, z + r + 0.01);
+    if (hi) { ctx.color("oklch(0.42 0.01 250)"); ctx.roughness(0.85); prism(ctx, chamf(x, z, r + 0.03, c + 0.02), 0, 0.14); } // tarred kick plinth where the forklifts scuff
+    ctx.roughness(null);
   }
   // storage racks: steel uprights and plank shelves
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
@@ -75,7 +81,7 @@ export function geometry(ctx) {
   // pipes along the ceiling, every other row
   if (hi) {
     ctx.color("oklch(0.45 0.02 60)"); ctx.metalness(0.7); ctx.roughness(0.45);
-    for (let cz = 0; cz < N; cz += 3) box(ctx, -HALF, HALF, H - 0.35, H - 0.22, cz * S - HALF + 1.1, cz * S - HALF + 1.24);
+    for (let cz = 0; cz < N; cz += 3) { const z = cz * S - HALF + 1.17; tube(ctx, [[-HALF, H - 0.285, z], [HALF, H - 0.285, z]], [0.065, 0.065], 10, [1, 1], 0, 1, 1); }
     ctx.metalness(0);
   }
   // the flickering wall home: a warped panel of level 0 wallpaper on a freestanding wall
