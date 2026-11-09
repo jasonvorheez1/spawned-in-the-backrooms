@@ -58,10 +58,12 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     b0n = blocked(me); me.transform(R); b1n = blocked(me)
     if b1n >= b0n: me.transform(R)
     print("face", key, b0n, b1n)
-    # whatever still hangs in the face window is cut away: bangs stop at the brow
-    fb = bmesh.new(); fb.from_mesh(me)
-    bmesh.ops.delete(fb, geom=[f for f in fb.faces if all(fz0 < v.co.z < fz1 - 0.01 and v.co.y < y0 + 0.04 and abs(v.co.x) < rx * 0.5 for v in f.verts)], context="FACES")
-    bmesh.ops.delete(fb, geom=[v for v in fb.verts if not v.link_faces], context="VERTS"); fb.to_mesh(me); fb.free()
+    # whatever still hangs over the face folds up into a fringe that ends at the brow, no holes cut
+    for v in me.vertices:
+        c = v.co
+        if fz0 < c.z < fz1 and c.y < cy - 0.02 and abs(c.x) < rx * 0.62:
+            k = max(0.0, 1 - abs(c.x) / (rx * 0.62))  # the middle rises to the brow, the temples keep some length
+            c.z = c.z + (fz1 + 0.004 - c.z) * min(1.0, 0.35 + k)
     if len(me.polygons) > 9000:
         o = bpy.data.objects.new("tmp", me); bpy.context.scene.collection.objects.link(o)
         d = o.modifiers.new("d", "DECIMATE"); d.ratio = 9000 / len(me.polygons); bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier="d"); bpy.data.objects.remove(o)
