@@ -331,7 +331,7 @@ function partsPose(ctx, ps, kind, dt, m) {
   const part = (n) => kids.find((c) => c.id === n || c.id?.endsWith('/' + n))
   m.shotT = (m.shotT ?? 9) + dt
   const empty = (ps['loaded_' + kind] ?? 1) <= 0
-  let back = m.shotT < 0.03 ? m.shotT / 0.03 : Math.max(0, 1 - (m.shotT - 0.03) / 0.07) // 10 cm/s snap back, spring home
+  let back = m.shotT < 0.035 ? m.shotT / 0.035 : Math.max(0, 1 - (m.shotT - 0.035) / 0.11) // snap back, spring home: ~9 frames so the eye catches it
   let magDown = 0, magHide = false
   if (m.relOn) {
     const t = m.relT / (ps.reloadDur || (W[kind] ?? {}).reloadTime || 1.7)
