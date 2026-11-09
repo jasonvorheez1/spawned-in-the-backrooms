@@ -131,7 +131,7 @@ l26d-phoebe-room:
   id: l26d-phoebe-room
   physics: {body: static, trigger: true}
   primitive: {depth: 10.5, height: 2.4, kind: box, width: 7.5}
-  state: {seat: {x: 310, y: -80, z: -102}, yaw: 90}
+  state: {seat: {x: 308.22, y: -80, z: -103.15}, yaw: 176}
   visible: false
 l26d-r5e-back:
   feetPosition: {x: 310.8, y: -80, z: -66}
