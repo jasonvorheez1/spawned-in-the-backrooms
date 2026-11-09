@@ -520,7 +520,10 @@ def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=(), 
     bmesh.ops.delete(bm, geom=gone, context="FACES")
     bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=0.0004)
     bm.normal_update()
-    for v in bm.verts: v.co += v.normal * push
+    gi = {g.index: g.name for g in o.vertex_groups}
+    for v in bm.verts:  # the shoulder's blend band: linear skinning shrinks an offset where arm and torso rotations mix, so the skin poked through a lowered sleeve; give that band more room
+        wa = sum(x for g, x in v[dl].items() if gi[g] in ("LeftArm", "RightArm"))
+        v.co += v.normal * (push + 0.012 * max(0.0, 1 - abs(2 * wa - 1)))
     bm.to_mesh(o.data); bm.free()
     o.data.materials.clear(); o.data.materials.append(MATS[mname])
     if thick:
