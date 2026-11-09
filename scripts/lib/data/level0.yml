@@ -69,6 +69,7 @@ lurkerGaze: 1.5      # sanity lost per second while watching one
 lurkerBite: 12
 lurkerSanity: 8
 lurkerBiteCooldown: 1.4
+lurkerGrabGrace: 8   # her pick: seconds after a lurker lets go before any lurker can grab you again (Shelly: they stun lock me)
 lurkerRespawn: 180
 xpLurker: 80
 

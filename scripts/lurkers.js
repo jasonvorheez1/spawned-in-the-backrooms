@@ -142,6 +142,7 @@ function held(ctx, dt) {
   const now = ctx.now();
 
   const drop = () => {
+    s.lurkFree = ctx.now() + (L.lurkerGrabGrace ?? 8) * 1000; // let go: no lurker may grab you again for a breath (Shelly: they stun lock me)
     if (ctx.self.isLocal) ctx.view.camera = null;
     ctx.self.session.lh = null;
     if (ctx.self.state.crouch) ctx.self.state.crouch = false; // let go: you stand back up
@@ -192,6 +193,8 @@ function held(ctx, dt) {
     ctx.emit("screenShake", { intensity: 1.1, duration: 0.9 }, { audience: { player: ctx.self.id } });
     ctx.emit("screenFlash", { color: "#c8a94a", duration: 0.35, intensity: 0.55 }, { audience: { player: ctx.self.id } });
     s.lurkHold = null;
+    const k = 7 / (Math.hypot(p.x - f.x, p.z - f.z) || 1); // the scream throws you clear of it
+    ctx.self.velocity = { x: (p.x - f.x) * k, y: 3, z: (p.z - f.z) * k };
     drop();
   }
 }
@@ -513,7 +516,7 @@ export function update(ctx, dt) {
     }
 
     // The catch: reached unseen, grabs and holds
-    if (prey && !m.watched && !m.grab && !prey.state.lurkHold && Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z) < 1.6 && now >= (m.bite ?? 0)) {
+    if (prey && !m.watched && !m.grab && !prey.state.lurkHold && now >= (prey.state.lurkFree ?? 0) && Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z) < 1.6 && now >= (m.bite ?? 0)) {
       m.grab = { id: prey.id, at: now };
       prey.state.lurkHold = {
         by: w.id,
