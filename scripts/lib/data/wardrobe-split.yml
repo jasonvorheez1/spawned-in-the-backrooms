@@ -1,0 +1,4 @@
+# the packed human bodies split apart (art/human-cloth/split_wardrobe.py): a bare body per sex, each Ward_ garment its own skinned glb
+# riding the body as a child (attachment: { skin: true }). Empty until the split uploads land; then critter-models.yml human: points at body.
+m: {}
+f: {}

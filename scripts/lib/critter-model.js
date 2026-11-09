@@ -6,6 +6,7 @@ import CL from './data/clothes.yml'
 import { rowOf, patOk } from './clothes.js'
 import HAIR from './data/hair.yml'
 import WARDROBE from './data/wardrobe.yml'
+import SPLIT from './data/wardrobe-split.yml'
 // hair: its own GLB skinned whole to the Head bone (scripts/lib/data/hair.yml), tinted by the look's hairc; a mask hides it
 export const HAIR_ID = 'critter-hair'
 const HAIR_HATCUT = { 14: 0, 15: 1, 16: 2 }
@@ -94,6 +95,25 @@ export function seatBeard(ctx, o, l) {
     return
   }
   ctx.spawn(BEARD_ID, { parent: o.id, ...child })
+}
+// split wardrobe: each worn garment is its own skinned child of the bare body, so a body loads only what it wears
+const WARD_PRE = 'critter-ward-', wardKey = (n) => WARD_PRE + n.slice(5).toLowerCase()
+const splitOf = (l) => { const r = SPLIT?.[l?.sex === 'f' ? 'f' : 'm']; return r?.parts && Object.keys(r.parts).length ? r : null }
+export function wardChildren(l, local) {
+  const r = splitOf(l); if (!r) return []
+  const b = humanBody(l), morph = humanMorph(l), out = []
+  for (const [n, v] of Object.entries(b.parts)) if (n.startsWith('Ward_') && v.visible && r.parts[n]) out.push({ id: wardKey(n), attachment: { skin: true }, model: { id: r.parts[n], forward: '+z', materials: b.materials }, morph, ...(local ? { audience: 'local' } : {}) })
+  return out
+}
+export function seatWardrobe(ctx, o, l) {
+  const want = new Map(wardChildren(l, o.audience === 'local').map((c) => [c.id, c]))
+  for (const n of WARDROBE.parts) { const k = wardKey(n); if (!want.has(k) && ctx.getObject(o.id + '/' + k)) ctx.destroy(o.id + '/' + k) }
+  for (const [k, c] of want) {
+    const h = ctx.getObject(o.id + '/' + k)
+    if (!h) { ctx.spawn(k, { parent: o.id, ...c }); continue }
+    if (JSON.stringify(h.model?.materials ?? null) !== JSON.stringify(c.model.materials)) h.model = c.model
+    if (JSON.stringify(h.morph ?? null) !== JSON.stringify(c.morph)) h.morph = c.morph
+  }
 }
 export const HEAD_ID = 'critter-head'
 // a head-covering mask (the Level 11 shop's bag and shell): its own GLB skinned whole to the Head bone, a second skin child; the row's `mask` names it
@@ -672,7 +692,7 @@ export function critterSpec(l) {
     return {
       model: humanBody(l),
       morph: humanMorph(l),
-      children: [hc, bc].filter(Boolean),
+      children: [hc, bc, ...wardChildren(l)].filter(Boolean),
       ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {})
     }
   }
@@ -737,7 +757,7 @@ export function strayHeads(ctx, obj) {
   return out
 }
 export function seatHead(ctx, obj, l) {
-  if (HUMAN) { for (const k of [HEAD_ID, MASK_ID]) if (ctx.getObject(obj.id + '/' + k)) ctx.destroy(obj.id + '/' + k); seatHumanHair(ctx, obj, l); seatBeard(ctx, obj, l); for (const h of strayHeads(ctx, obj)) ctx.destroy(h.id); obj.jiggle = null; obj.morph = humanMorph(l); if (obj.material?.outline) obj.material = null; return } // a human body carries its own head; its face keys rolled per NPC
+  if (HUMAN) { for (const k of [HEAD_ID, MASK_ID]) if (ctx.getObject(obj.id + '/' + k)) ctx.destroy(obj.id + '/' + k); seatHumanHair(ctx, obj, l); seatBeard(ctx, obj, l); seatWardrobe(ctx, obj, l); for (const h of strayHeads(ctx, obj)) ctx.destroy(h.id); obj.jiggle = null; obj.morph = humanMorph(l); if (obj.material?.outline) obj.material = null; return } // a human body carries its own head; its face keys rolled per NPC
   const want = critterSpec(l).children[0]; let h = ctx.getObject(obj.id + '/' + HEAD_ID)
   // a head skinned to the body's old model loses its skin when the body swaps: re-spawn it on the new one
   const body = obj.model?.id ?? obj.model
