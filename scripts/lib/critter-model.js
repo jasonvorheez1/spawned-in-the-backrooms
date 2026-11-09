@@ -210,12 +210,12 @@ const MESH_SWAP = {
 }
 export let HUMAN = M.human ?? null // live: the menu's BODIES setting flips it (setStyle)
 export function setStyle(v) { const h = v === 'furry' ? null : (M.human ?? null); if (h !== HUMAN) HUMAN = h; return v === 'furry' ? 'furry' : 'human' }
-const SKIN = ['#f6dcc8', '#efcfb4', '#e2b896', '#c99a74', '#a7764f', '#7d5436', '#5c3a26'] // her picks: pale to deep
+const SKIN = ['#fde7d9', '#f3d2b3', '#e8c39c', '#d1a27b', '#c48d63', '#b07a52', '#9a6744', '#835538', '#6c442c', '#573522'] // her picks: pale to deep
 export const skinOf = (l) => l?.skin || SKIN[[...String(l?.fur || l?.species || '')].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % SKIN.length]
 // human bodies (art/human-base/build.py): the same parts and cloth_* slots as the furry bodies, skin tinted per look, eyes/brows tinted, face keys rolled per NPC
 const warm = (c, k) => toHex(hx(c).map((v, i) => v * k * [1, 0.42, 0.3][i]))
 export const humanBody = (l) => {
-  const c = warm(skinOf(l), 1) && toHex(hx(skinOf(l)).map((v) => v * 0.82)), skin = { color: c, roughness: 0.6, metalness: 0, emissive: '#000000', emissiveIntensity: 0 } // no glow: the third-person body reads the same skin as the first-person arms (Shelly, Nov 9)
+  const c = skinOf(l), skin = { color: c, roughness: 0.6, metalness: 0, emissive: '#000000', emissiveIntensity: 0 } // no glow: the third-person body reads the same skin as the first-person arms (Shelly, Nov 9)
   const m = l ? bodyModel({ ...l, _human: true }) : { materials: {}, parts: {} }
   const parts = { ...(m.parts || {}), Under_top: { visible: l?.sex === 'f' }, Under_bottom: { visible: true } }
   for (const name of ['stubble', 'mustache', 'goatee', 'handlebars', 'fullbeard', 'chinstrap', 'anchor']) parts['Beard_' + name] = { visible: !maskOf(l) && (l?.beard === 'moustache' ? 'mustache' : l?.beard) === name }
@@ -783,7 +783,7 @@ const OLD_HUMAN = ['/cdn/value.fd49318b8e8c14d0e98cf8d8b38433601bad2db2515aa8ed3
 OLD_HUMAN.push('/cdn/value.0f804808a2834486f121cadfec8de8784cfdbead3a5d0939ca0e6f027bd8526d.glb', '/cdn/value.6f11c2c9ec0cbb44c796db314811f269b1c5cdc19a5f7f34c42ecd221208fe48.glb')
 OLD_HUMAN.push('/cdn/value.89d74113d2bb60c5fcf7de629388fd77d62b8c67452400f826bdce3f35ce4267.glb', '/cdn/value.20023a98cea753bd84c6ff72d4e8cc2d8506b70f0dc65170a0f69b31bd82830a.glb')
 const FURRY_IDS = () => Object.values(M.body), HUMAN_IDS = () => [...Object.values(M.human ?? {}), ...OLD_HUMAN]
-export const STYLE_V = 'sw18' // sw18: men's lid-line lashes and M_Jaw/M_Chin head; sw15: scarf knot at the side, overalls drop to pants under closed tops; sw13: scarf is a thick wrap with short splayed ends; sw12: male longsleeve collar smoothed, scarf wraps the neck; sw11: tops hang off the chest (no belly pouch); sw10: tripo hair rows 14-16; sw9: overalls clear of tops (no z-fight); sw8: sleeves cover the upper arm's back, the shoulder blend band has room; sw7: bodies with head types; sw6: skirt waist below the top hem; sw5: skirts tucked under tops (new body glbs); sw4: the hair pack on human heads
+export const STYLE_V = 'sw19' // sw19: skin swatch unshaded, wider tones; sw18: men's lid-line lashes and M_Jaw/M_Chin head; sw15: scarf knot at the side, overalls drop to pants under closed tops; sw13: scarf is a thick wrap with short splayed ends; sw12: male longsleeve collar smoothed, scarf wraps the neck; sw11: tops hang off the chest (no belly pouch); sw10: tripo hair rows 14-16; sw9: overalls clear of tops (no z-fight); sw8: sleeves cover the upper arm's back, the shoulder blend band has room; sw7: bodies with head types; sw6: skirt waist below the top hem; sw5: skirts tucked under tops (new body glbs); sw4: the hair pack on human heads
 export function furrySpec(l) { const h = HUMAN; HUMAN = null; try { return critterSpec(l) } finally { HUMAN = h } } // a character who stays a critter in both modes (Phoebe)
 export function restyle(ctx, o) {
   const mid = o?.model?.id ?? o?.model
