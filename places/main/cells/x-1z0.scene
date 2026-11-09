@@ -774,6 +774,7 @@ level0-lights/l9_41:
   parent: level0-lights
   visibleRange: {max: 42}
 object/x05249135d8ba8922/11:
+  castShadow: false
   feetPosition: {x: -75.53500000000001, y: 0.01, z: -25.07433602011297}
   id: object/x05249135d8ba8922/11
   physics: {body: static, collider: box}
@@ -781,7 +782,9 @@ object/x05249135d8ba8922/11:
   rotation: {yaw: -90}
   state: {hp: 35, items: "shells,kit", kind: desk, mat: wood, maxHp: 35, name: Desk drawers}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/23:
+  castShadow: false
   feetPosition: {x: -111.67500000000001, y: 0.01, z: 18.052111541479825}
   id: object/x05249135d8ba8922/23
   physics: {body: static, collider: box}
@@ -789,7 +792,9 @@ object/x05249135d8ba8922/23:
   rotation: {yaw: -90}
   state: {hp: 80, items: "almond,almond,almond", kind: cabinet, lock: "lockpick:50", mat: metal, maxHp: 80, name: Office supply cabinet (locked)}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/5:
+  castShadow: false
   feetPosition: {x: -109.96348024394828, y: 0.01, z: -28.465}
   id: object/x05249135d8ba8922/5
   physics: {body: static, collider: box}
@@ -797,3 +802,4 @@ object/x05249135d8ba8922/5:
   rotation: {yaw: 0}
   state: {hp: 35, items: "almond,ammo,almond,bar", kind: desk, mat: wood, maxHp: 35, name: Desk drawers}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}

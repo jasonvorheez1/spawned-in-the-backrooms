@@ -240,6 +240,7 @@ level0-lights/l55_55:
   parent: level0-lights
   visibleRange: {max: 42}
 object/x05249135d8ba8922/18:
+  castShadow: false
   feetPosition: {x: 64.32499999999999, y: 0.01, z: 77.27909811325371}
   id: object/x05249135d8ba8922/18
   physics: {body: static, collider: box}
@@ -247,7 +248,9 @@ object/x05249135d8ba8922/18:
   rotation: {yaw: -90}
   state: {hp: 80, items: "almond,ammo,ammo,almond,lobby_wafer", kind: cabinet, lock: "lockpick:100", mat: metal, maxHp: 80, name: Office supply cabinet (locked)}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/29:
+  castShadow: false
   feetPosition: {x: 72.425, y: 0.01, z: 78.78770184264053}
   id: object/x05249135d8ba8922/29
   physics: {body: static, collider: box}
@@ -255,7 +258,9 @@ object/x05249135d8ba8922/29:
   rotation: {yaw: -90}
   state: {hp: 80, items: "almond,weapon:table_leg,almond,lobby_wafer", kind: filing, lock: "lockpick:25", mat: metal, maxHp: 80, name: Filing cabinet (locked)}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/30:
+  castShadow: false
   feetPosition: {x: 70.29704132968094, y: 0.01, z: 80.425}
   id: object/x05249135d8ba8922/30
   physics: {body: static, collider: box}
@@ -263,3 +268,4 @@ object/x05249135d8ba8922/30:
   rotation: {yaw: 180}
   state: {hp: 80, items: "weapon:pipe_scrap~rusty,weapon:pipe_scrap,ration", kind: filing, mat: metal, maxHp: 80, name: Filing cabinet}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}

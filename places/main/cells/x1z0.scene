@@ -330,6 +330,7 @@ level0-lights/l55_35:
   parent: level0-lights
   visibleRange: {max: 42}
 object/x05249135d8ba8922/1:
+  castShadow: false
   feetPosition: {x: 78.85155978947878, y: 0.01, z: 55.535}
   id: object/x05249135d8ba8922/1
   physics: {body: static, collider: box}
@@ -337,7 +338,9 @@ object/x05249135d8ba8922/1:
   rotation: {yaw: 0}
   state: {hp: 35, items: almond, kind: desk, mat: wood, maxHp: 35, name: Desk drawers}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/12:
+  castShadow: false
   feetPosition: {x: 92.46499999999999, y: 0.01, z: -18.555805014562793}
   id: object/x05249135d8ba8922/12
   physics: {body: static, collider: box}
@@ -345,7 +348,9 @@ object/x05249135d8ba8922/12:
   rotation: {yaw: -90}
   state: {hp: 35, items: ammo, kind: desk, mat: wood, maxHp: 35, name: Desk drawers}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/26:
+  castShadow: false
   feetPosition: {x: 70.60247364591342, y: 0.01, z: -40.465}
   id: object/x05249135d8ba8922/26
   physics: {body: static, collider: box}
@@ -353,7 +358,9 @@ object/x05249135d8ba8922/26:
   rotation: {yaw: 0}
   state: {hp: 35, items: "weapon:table_leg,weapon:crowbar~rusty,weapon:pipe_scrap,bar", kind: desk, mat: wood, maxHp: 35, name: Desk drawers}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/28:
+  castShadow: false
   feetPosition: {x: 84.425, y: 0.01, z: -2.3506305063236503}
   id: object/x05249135d8ba8922/28
   physics: {body: static, collider: box}
@@ -361,7 +368,9 @@ object/x05249135d8ba8922/28:
   rotation: {yaw: -90}
   state: {hp: 80, items: "weapon:pipe_scrap,weapon:crowbar~rusty,shells,almond,weapon:crowbar~rusty,ration", kind: filing, lock: "lockpick:100", mat: metal, maxHp: 80, name: Filing cabinet (locked)}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/4:
+  castShadow: false
   feetPosition: {x: 100.24499999999999, y: 0.01, z: 49.39222025007941}
   id: object/x05249135d8ba8922/4
   physics: {body: static, collider: box}
@@ -369,7 +378,9 @@ object/x05249135d8ba8922/4:
   rotation: {yaw: -90}
   state: {hp: 35, items: "almond,ammo,cloth:topw:tank:ffffff,ration", kind: backpack, lock: "science:100", mat: wood, maxHp: 35, name: Dropped backpack (locked)}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/6:
+  castShadow: false
   feetPosition: {x: 72.425, y: 0.01, z: -49.63094611808658}
   id: object/x05249135d8ba8922/6
   physics: {body: static, collider: box}
@@ -377,7 +388,9 @@ object/x05249135d8ba8922/6:
   rotation: {yaw: -90}
   state: {hp: 80, items: "almond,lobby_wafer", kind: filing, mat: metal, maxHp: 80, name: Filing cabinet}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/8:
+  castShadow: false
   feetPosition: {x: 99.575, y: 0.01, z: -31.33310203271918}
   id: object/x05249135d8ba8922/8
   physics: {body: static, collider: box}
@@ -385,3 +398,4 @@ object/x05249135d8ba8922/8:
   rotation: {yaw: 90}
   state: {hp: 80, items: "ammo,almond", kind: filing, mat: metal, maxHp: 80, name: Filing cabinet}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}

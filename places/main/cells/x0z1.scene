@@ -696,6 +696,7 @@ level0-lights/l43_55:
   parent: level0-lights
   visibleRange: {max: 42}
 object/x05249135d8ba8922/10:
+  castShadow: false
   feetPosition: {x: -11.32561776213348, y: 0.01, z: 84.24499999999999}
   id: object/x05249135d8ba8922/10
   physics: {body: static, collider: box}
@@ -703,7 +704,9 @@ object/x05249135d8ba8922/10:
   rotation: {yaw: 180}
   state: {hp: 35, items: "almond,shells,book:repair,ammo", kind: backpack, lock: "lockpick:50", mat: wood, maxHp: 35, name: Dropped backpack (locked)}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/22:
+  castShadow: false
   feetPosition: {x: 1.5742063275258988, y: 0.01, z: 68.24499999999999}
   id: object/x05249135d8ba8922/22
   physics: {body: static, collider: box}
@@ -711,7 +714,9 @@ object/x05249135d8ba8922/22:
   rotation: {yaw: 180}
   state: {hp: 35, items: "almond,ammo,shells", kind: backpack, mat: wood, maxHp: 35, name: Dropped backpack}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/24:
+  castShadow: false
   feetPosition: {x: -42.93047289390117, y: 0.01, z: 76.24499999999999}
   id: object/x05249135d8ba8922/24
   physics: {body: static, collider: box}
@@ -719,7 +724,9 @@ object/x05249135d8ba8922/24:
   rotation: {yaw: 180}
   state: {hp: 35, items: almond, kind: backpack, mat: wood, maxHp: 35, name: Dropped backpack}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/27:
+  castShadow: false
   feetPosition: {x: 9.039400034882128, y: 0.01, z: 111.575}
   id: object/x05249135d8ba8922/27
   physics: {body: static, collider: box}
@@ -727,7 +734,9 @@ object/x05249135d8ba8922/27:
   rotation: {yaw: 0}
   state: {hp: 80, items: "weapon:hatchet~rusty,ammo,weapon:pipe_scrap~rusty,bar", kind: filing, mat: metal, maxHp: 80, name: Filing cabinet}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
 object/x05249135d8ba8922/9:
+  castShadow: false
   feetPosition: {x: -38.189884487167, y: 0.01, z: 96.32499999999999}
   id: object/x05249135d8ba8922/9
   physics: {body: static, collider: box}
@@ -735,3 +744,4 @@ object/x05249135d8ba8922/9:
   rotation: {yaw: 180}
   state: {hp: 80, items: "almond,almond,almond", kind: cabinet, mat: metal, maxHp: 80, name: Office supply cabinet}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}

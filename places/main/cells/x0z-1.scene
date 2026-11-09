@@ -828,6 +828,7 @@ level0-lights/l43_9:
   parent: level0-lights
   visibleRange: {max: 42}
 object/x05249135d8ba8922/20:
+  castShadow: false
   feetPosition: {x: -26.727722256770356, y: 0.01, z: -111.53500000000001}
   id: object/x05249135d8ba8922/20
   physics: {body: static, collider: box}
@@ -835,3 +836,4 @@ object/x05249135d8ba8922/20:
   rotation: {yaw: 180}
   state: {hp: 35, items: "almond,almond,almond,lobby_wafer", kind: desk, mat: wood, maxHp: 35, name: Desk drawers}
   tags: [container, furniture, lootfurn, breakable]
+  visibleRange: {max: 45}
