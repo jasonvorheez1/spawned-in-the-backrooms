@@ -9,6 +9,7 @@
 import W, { baseOf } from './weapons.js'
 import { handling } from './stats.js'
 import { cndOf } from './condition.js'
+import { NV_SWINGS } from './data/nv-swings.js' // Shelly's New Vegas melee overhaul, decoded (art/nv-melee)
 
 export const VM_FOV = 55
 const REST = [0.19, -0.17, 0.44]
@@ -93,6 +94,7 @@ const SWING = {
 const STYLE = { table_leg: 'club', pipe_scrap: 'club', crowbar: 'club', bat: 'club', rebar: 'club', wrench: 'club', stun_baton: 'club',
   hatchet: 'chop', fire_axe: 'heavy', sledgehammer: 'heavy', knife: 'stab', screwdriver: 'stab', lineman_machete: 'slash', fishing_rod: 'cast' }
 
+const NV_PACE = 0.55 // NV's takes run long with their recovery: played at 55% of their length so a swing keeps this game's rhythm (my pick)
 const ZERO_POSE = [0, 0, 0, 0, 0, 0]
 const SAMPLE_BUF = [0, 0, 0, 0, 0, 0]
 const PUMP_BUF = [0, 0, 0, 0, 0, 0]
@@ -198,7 +200,10 @@ export function poseViewmodel(ctx, dt) {
   }
   if (ps.swingAt !== m.heavyFor) { m.heavyFor = ps.swingAt; m.heavy = ps.swingHeavy ?? 0 }
   const style = SWING[STYLE[baseOf(kind)]] ?? SWING.club
-  if (m.swingT != null && m.swingT < 1) m.swingT = Math.min(1, m.swingT + dt / ((kind === 'fists' ? 0.2 : style.dur) * (1 + 0.45 * m.heavy)))
+  // the New Vegas take for this style: a combo's next swing plays NV's own left-hand-side swing instead of a mirror
+  const nvKey = kind === 'fists' ? 'fists' : (STYLE[baseOf(kind)] ?? 'club'), nv = NV_SWINGS[(m.combo ?? 0) % 2 && NV_SWINGS[nvKey + '2'] ? nvKey + '2' : nvKey] ?? null
+  m.nv = nv
+  if (m.swingT != null && m.swingT < 1) m.swingT = Math.min(1, m.swingT + dt / ((nv ? nv.dur * NV_PACE : kind === 'fists' ? 0.2 : style.dur) * (1 + 0.45 * m.heavy)))
   // the wind-up: how far into a held power attack, 0..1, eased in the pose below
   const wind = !gun && ps.chargeAt ? Math.min(1, (ctx.now() - ps.chargeAt) / ((W.power?.charge ?? 0.9) * 1000)) : 0
   m.wind = (m.wind ?? 0) + (wind - (m.wind ?? 0)) * Math.min(1, dt * (wind ? 14 : 30))
@@ -265,7 +270,11 @@ export function poseViewmodel(ctx, dt) {
   if (!gun && m.swingT != null && m.swingT < 1) {
     const e = ease(Math.sin(m.swingT * Math.PI))
     const h = 1 + 0.7 * (m.heavy ?? 0), side = (m.combo ?? 0) % 2 ? -1 : 1
-    if (kind === 'fists') { d += 0.28 * e * h; x -= 0.07 * e * h * side; y += 0.03 * e; roll -= 10 * e * side; yaw += 8 * e * side }
+    if (m.nv) { // the decoded NV path, unmirrored (its own left swing rides the combo)
+      const o = sample(m.nv.f, m.swingT, SAMPLE_BUF), g = 1 + 0.45 * (m.heavy ?? 0)
+      x += o[0] * g; y += o[1] * g; d += o[2] * g; pitch += o[3]; yaw += o[4]; roll += o[5]
+      if (style === SWING.heavy && m.swingT > 0.4 && !m.thud) { m.thud = true; ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: -0.3 }, intensity: 0.22 + 0.3 * (m.heavy ?? 0) }, { audience: { player: ctx.self.id } }) }
+    } else if (kind === 'fists') { d += 0.28 * e * h; x -= 0.07 * e * h * side; y += 0.03 * e; roll -= 10 * e * side; yaw += 8 * e * side }
     else {
       const o = sample(style.f, m.swingT, SAMPLE_BUF), g = 1 + 0.45 * (m.heavy ?? 0)
       x += o[0] * g * side; y += o[1] * g; d += o[2] * g; pitch += o[3] * g; yaw += o[4] * g * side; roll += o[5] * g * side
