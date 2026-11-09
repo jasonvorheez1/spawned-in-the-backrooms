@@ -119,11 +119,31 @@ const MESH_SWAP = {
 }
 export let HUMAN = M.human ?? null // live: the menu's BODIES setting flips it (setStyle)
 export function setStyle(v) { const h = v === 'furry' ? null : (M.human ?? null); if (h !== HUMAN) HUMAN = h; return v === 'furry' ? 'furry' : 'human' }
-const SKIN = ['#f6dcc8', '#efcfb4', '#e2b896', '#c99a74', '#a7764f', '#7d5436'] // her picks: pale to deep
+const SKIN = ['#f6dcc8', '#efcfb4', '#e2b896', '#c99a74', '#a7764f', '#7d5436', '#5c3a26'] // her picks: pale to deep
 export const skinOf = (l) => l?.skin || SKIN[[...String(l?.fur || l?.species || '')].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % SKIN.length]
-export const humanBody = (l) => { const c = skinOf(l), skin = { color: c, roughness: 0.62, metalness: 0 }; return { id: HUMAN[l?.sex === 'f' ? 'f' : 'm'], forward: '+z', materials: { Body_Skin: skin, Head_Skin: skin } } }
+// human bodies (art/human-base/build.py): the same parts and cloth_* slots as the furry bodies, skin tinted per look, eyes/brows tinted, face keys rolled per NPC
+const warm = (c, k) => toHex(hx(c).map((v, i) => v * k * [1, 0.42, 0.3][i]))
+export const humanBody = (l) => {
+  const c = skinOf(l), skin = { color: c, roughness: 0.6, metalness: 0, emissive: warm(c, 0.55), emissiveIntensity: 0.12 }
+  const m = l ? bodyModel({ ...l, _human: true }) : { materials: {}, parts: {} }
+  const parts = { ...(m.parts || {}), Under_top: { visible: l?.sex === 'f' }, Under_bottom: { visible: true } }
+  const hairc = l?.hairc || '#3a2a20', eye = l?.eye && l.eye !== '#000000' ? l.eye : '#5b4a3a'
+  return { id: HUMAN[l?.sex === 'f' ? 'f' : 'm'], forward: '+z', parts, materials: { ...(m.materials || {}),
+    Body_Skin: skin, Head_Skin: skin, under: { color: '#2b2a30', roughness: 0.85, metalness: 0 },
+    Iris: { color: eye, roughness: 0.25, metalness: 0 }, Brow: { color: hairc, roughness: 0.9, metalness: 0 }, Lash: { color: '#2a2024', roughness: 0.9, metalness: 0 } } }
+}
+const H_KEYS = ['JawWide', 'JawNarrow', 'ChinLong', 'NoseBig', 'CheekFull', 'BrowHeavy', 'FaceLong', 'HeadRound']
+export function humanMorph(l) {
+  let h = [...String(l?.fseed ?? l?.id ?? l?.name ?? ((l?.skin || '') + (l?.eye || '') + (l?.hair || '') + (l?.hairc || '')))].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 2166136261)
+  const u = () => { h = (h * 1664525 + 1013904223) >>> 0; return h / 4294967296 }
+  const m = l?.sex !== 'f', o = {}
+  for (const k of H_KEYS) o[k] = Math.round(u() * 100) / 100
+  if (o.JawWide > o.JawNarrow) o.JawNarrow = 0; else o.JawWide = 0
+  if (m) { o.JawWide = Math.max(o.JawWide, 0.35 + u() * 0.5); o.JawNarrow = 0; o.BrowHeavy = 0.4 + o.BrowHeavy * 0.6 } else { o.BrowHeavy *= 0.3; o.JawWide *= 0.35 }
+  return { ...o, ...(bustMorph(l) ?? {}) }
+}
 export function bodyModel(l) {
-  if (HUMAN) return humanBody(l)
+  if (HUMAN && !l?._human) return humanBody(l)
   const parts = {}
   for (const p of M.parts) parts[p] = { visible: false }
   for (const [slot, pre] of Object.entries(M.slots)) { const k = MESH_SWAP[slot]?.[l[slot]] ?? l[slot]; if (k && k !== 'none' && parts[pre + '_' + k]) parts[pre + '_' + k].visible = true }
@@ -481,7 +501,7 @@ function eyeClean(f, eyes) {
 // a whole critter for a spawn (place sims): body, head child, gait clips on the library
 export const MESH = M.mesh === true
 export function critterSpec(l) {
-  if (HUMAN) return { model: humanBody(l), children: [], ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {}) }
+  if (HUMAN) return { model: humanBody(l), morph: humanMorph(l), children: [], ...(l?.heightS || l?.buildS ? { scale: { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 } } : {}) }
   if (!MESH) return { primitive: { kind: 'scripted', script: 'scripts/critter2-geo.js', params: l }, material: { outline: { color: '#1d1420', width: 2.4 } }, jiggle: { bones: ['Tail*', 'Ear*'], amount: 0.65, bounce: 0.72 } }
   const isF = l?.sex === 'f'
   return {
@@ -534,7 +554,7 @@ export function toMesh(ctx, obj) {
 }
 // the head rides the body's skin, at its origin: an old scripted head (hung on Hips) is re-seated, a missing one spawned
 export function seatHead(ctx, obj, l) {
-  if (HUMAN) { for (const k of [HEAD_ID, MASK_ID, HAIR_ID]) if (ctx.getObject(obj.id + '/' + k)) ctx.destroy(obj.id + '/' + k); obj.jiggle = null; obj.morph = null; return } // a human body carries its own head
+  if (HUMAN) { for (const k of [HEAD_ID, MASK_ID, HAIR_ID]) if (ctx.getObject(obj.id + '/' + k)) ctx.destroy(obj.id + '/' + k); obj.jiggle = null; obj.morph = humanMorph(l); return } // a human body carries its own head; its face keys rolled per NPC
   const want = critterSpec(l).children[0]; let h = ctx.getObject(obj.id + '/' + HEAD_ID)
   // a head skinned to the body's old model loses its skin when the body swaps: re-spawn it on the new one
   const body = obj.model?.id ?? obj.model
