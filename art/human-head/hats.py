@@ -3,7 +3,7 @@
 # centre and drops it onto the hair line, head-type morph deltas narrowed alike. python3 art/human-head/hats.py <in> <out>
 import json, struct, sys, numpy as np
 src, dst = sys.argv[1], sys.argv[2]
-FIT = {'Hat_tophat': (0.74, 1.738), 'Hat_crown': (0.92, 1.742), 'Hat_partyhat': (1.0, 1.748)}  # (xz scale, bottom y): my picks
+FIT = {'Hat_tophat': (0.95, 1.700), 'Hat_crown': (0.92, 1.742), 'Hat_partyhat': (1.0, 1.748)}  # (xz scale, bottom y): my picks
 d = open(src, 'rb').read()
 jl = struct.unpack('<I', d[12:16])[0]; J = json.loads(d[20:20 + jl]); bo = 20 + jl
 bl = struct.unpack('<I', d[bo:bo + 4])[0]; B = bytearray(d[bo + 8:bo + 8 + bl])
