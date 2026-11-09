@@ -94,6 +94,22 @@ for name, (ease, cuts) in PLAN.items():
             need = max(0.004, E[v] * 0.7)
             if out < need: v.co = v.co + n * (need - out)
             elif out > E[v] * 1.6 + 0.004: v.co = v.co - n * (out - E[v] * 1.6 - 0.004)
+    def untangle(bm, adj, rounds=4):                         # armpit crush: faces turned against the skin, plus two rings round them, ironed flat with the edge pinned
+        for r in range(rounds):
+            bm.normal_update(); bad = set()
+            for f in bm.faces:
+                co, n, fi, d = bvhW.find_nearest(f.calc_center_median())
+                if f.normal.dot(n) < 0.25: bad.update(f.verts)
+            if not bad: break
+            for _ in range(2): bad |= {w for v in list(bad) for w in adj.get(v, ())}
+            for it in range(12):
+                new = {v: v.co.lerp(sum((w.co for w in adj[v]), Vector()) / len(adj[v]), 0.6) for v in bad if len(adj.get(v, ())) > 2}
+                for v, c in new.items(): v.co = c
+                for v in bad:
+                    co, n, fi, d = bvhW.find_nearest(v.co); out = (v.co - co).dot(n)
+                    if out < 0.004: v.co = v.co + n * (0.004 - out)
+        return r
+    print(name, "untangle rounds", untangle(bm, adj))
     if hasattr(ease, "drape"):                               # cloth falls from the chest: each slice no narrower than the one above x drape
         cy = B["Spine1"].y; BINS = 72; cells = {}
         for v in bm.verts:
@@ -115,6 +131,7 @@ for name, (ease, cuts) in PLAN.items():
             for v in bm.verts:
                 co, n, fi, d = bvhW.find_nearest(v.co); out = (v.co - co).dot(n)
                 if out < 0.004: v.co = v.co + n * (0.004 - out)
+    untangle(bm, adj, 2)
     if hasattr(ease, "drape"):                               # below the waist a top is a hanging tube: cut the skin-shaped part away, loft rings to the hem
         Z0 = (B["Spine"].z + B["Spine1"].z) * 0.5 + 0.02; hem = cuts[0][0].z; cy = B["Spine1"].y; NB = 96
         bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.calc_center_median().z < Z0], context="FACES")
