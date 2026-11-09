@@ -81,6 +81,8 @@ export function wardrobe(ctx, player) {
   if (!st.wardrobeOpen) return ''
   const l = { ...C.default, ...(st.look || {}) }
   SL_LOOK = l
+  const human = (st.bodyStyle ?? ctx.world.state?.bodyStyle) !== 'furry' // human mode: no animal, fur, ears, snout or tail
+  const FURRY_SL = ['earS', 'snoutS', 'tailS'], FURRY_FT = ['snouty', 'foxlike']
   const tabs = st.wrMenu ? TABS.slice(0, 2) : TABS // from the main menu: body and face only, clothes come from the world
   const tab = st.wrMenu && !['body', 'face'].includes(st.wrTab) ? 'body' : (st.wrTab || 'body')
   const grid = (k, list, names = NAMES) => `<div class="grid">${list.map((v) => tile(k, v, l[k] === v, names[v] || v)).join('')}</div>`
@@ -88,24 +90,24 @@ export function wardrobe(ctx, player) {
   const slot = (title, k, colourKey) => `<div class="slot"><div class="sec" style="margin-top:2px"><span>${title}</span><span>${NAMES[l[k]] || l[k]}</span></div>${grid(k, C[k])}${colourKey && l[k] !== 'none' ? sws(colourKey, C.cloth) : ''}</div>`
   let body = ''
   if (tab === 'body') body = `
-    <div class="sec"><span>ANIMAL</span><span>${l.species}</span></div>${grid('species', C.species)}
+    ${human ? '' : `<div class="sec"><span>ANIMAL</span><span>${l.species}</span></div>${grid('species', C.species)}`}
     <div class="sec"><span>BODY</span></div>${grid('sex', C.sex)}
     <div class="sec"><span>STATURE</span><span>${Math.round(170 * (Number(l.heightS) || 1))} cm</span></div><div class="big">${sliderRows(C.sliders.filter((r) => ['heightS', 'buildS'].includes(r[0])))}</div>
-    <div class="sec"><span>FUR</span></div>${sws('fur', C.fur)}
-    <div class="sec"><span>MARKINGS</span></div>${grid('marks', C.marks)}
+    ${human ? `<div class="sec"><span>SKIN</span></div>${sws('skin', C.skin)}` : `<div class="sec"><span>FUR</span></div>${sws('fur', C.fur)}`}
+    <div class="sec"><span>MARKINGS</span></div>${grid('marks', human ? C.marks.filter((m) => ['none', 'freckles'].includes(m)) : C.marks)}
     <div class="sec"><span>HAIR</span><span>${HN(l.hair)}</span></div><div class="grid">${['none', ...(l.sex === 'f' ? C.hairF : C.hairM)].map((v) => tile('hair', v, (l.hair || 'none') === v, HN(v))).join('')}</div>
     ${l.hair && l.hair !== 'none' ? `<div class="sec"><span>HAIR COLOUR</span></div>${sws('hairc', C.hairc)}` : ''}
-    <div class="sec"><span>PROPORTIONS</span><span>${l.model || l.modelUrl ? 'critter only' : ''}</span></div>${sliderRows(C.sliders.filter((r) => !['heightS', 'buildS'].includes(r[0]) && (l.sex === 'f' || !['hipS', 'bustS'].includes(r[0]))))}
-    <div class="sec"><span>IMPORTED MODELS</span><span>${l.modelUrl ? 'your upload' : l.model ? C.models[l.model]?.name || '' : 'critter'}</span></div><div class="grid">${tile('model', '', !l.model && !l.modelUrl, 'critter')}${Object.entries(C.models || {}).map(([k, m]) => tile('model', k, l.model === k, m.name)).join('')}</div>
+    <div class="sec"><span>PROPORTIONS</span></div>${sliderRows(C.sliders.filter((r) => !['heightS', 'buildS'].includes(r[0]) && !(human && FURRY_SL.includes(r[0])) && (l.sex === 'f' || !['hipS', 'bustS'].includes(r[0]))))}
+    <div class="sec"><span>IMPORTED MODELS</span><span>${l.modelUrl ? 'your upload' : l.model ? C.models[l.model]?.name || '' : human ? 'yours' : 'critter'}</span></div><div class="grid">${tile('model', '', !l.model && !l.modelUrl, human ? 'your body' : 'critter')}${Object.entries(C.models || {}).map(([k, m]) => tile('model', k, l.model === k, m.name)).join('')}</div>
     <div style="font-size:11px;line-height:1.5;opacity:.85;margin:4px 0 6px;text-transform:none;letter-spacing:.02em">HOW TO GET A PLYMODEL<br>1. install <a href="https://developer.valvesoftware.com/wiki/SteamCMD" target="_blank" rel="noopener" style="color:#ffb642;text-decoration:underline;pointer-events:auto">SteamCMD</a> and open it<br>2. type <b>login anonymous</b> and press enter<br>3. on the <a href="https://steamcommunity.com/app/394690/workshop/" target="_blank" rel="noopener" style="color:#ffb642;text-decoration:underline;pointer-events:auto">Tower Unite workshop</a>, copy the link of the playermodel you want<br>4. paste it into <a href="https://steamworkshopdownloader.io/" target="_blank" rel="noopener" style="color:#ffb642;text-decoration:underline;pointer-events:auto">steamworkshopdownloader.io</a>, copy the line it gives you and paste that into SteamCMD<br>5. SteamCMD says where it saved it (steamapps/workshop/content/394690/...). press upload below and pick the .plymodel in that folder</div>
     <div class="sl"><button style="flex:1;width:auto;padding:6px 0" onclick="this.nextElementSibling.click()">⬆ upload .plymodel</button><input type="file" accept=".plymodel" style="display:none" onchange="plyUpload(this)"></div><div id="ply-st" style="font-size:11px;opacity:.75;margin-top:4px">${l.modelUrl ? 'wearing your upload' : 'any tower unite .plymodel, worn as your body'}</div>`
   else if (tab === 'face') body = `
     <div class="sec"><span>EYE SHAPE</span></div>${grid('eyes', C.eyes)}
     <div class="sec"><span>EYE COLOUR</span></div>${sws('eye', C.eye)}
-    <div class="sec"><span>FACE SHAPE</span><span>${l.ftype || 'oval'}</span></div>${grid('ftype', C.ftype)}
+    <div class="sec"><span>FACE SHAPE</span><span>${l.ftype || 'oval'}</span></div>${grid('ftype', human ? C.ftype.filter((f) => !FURRY_FT.includes(f)) : C.ftype)}
     <div class="sec"><span>DEMEANOR</span><span>${NAMES[l.trait] || l.trait || 'placid'}</span></div>${grid('trait', C.trait)}
     <div class="sec"><span>CHEEKS</span></div>${sws('blush', C.blush)}
-    <div class="sec"><span>NOSE</span><span>${l.nose ? '' : 'the animal’s own'}</span></div>${sws('nose', C.nose)}
+    ${human ? '' : `<div class="sec"><span>NOSE</span><span>${l.nose ? '' : 'the animal’s own'}</span></div>${sws('nose', C.nose)}`}
     <div class="sec"><span>RESTING FACE</span><span>${l.expr}</span></div>${grid('expr', C.expr, {})}
     <div class="hint">T cycles faces while you play. getting hit, low hp and low sanity show on your face on their own.</div>`
   else if (tab === 'clothes') body = `
@@ -116,12 +118,12 @@ export function wardrobe(ctx, player) {
     const fits = st.outfits || []
     body = `<div class="sec"><span>SAVED OUTFITS</span></div>` + Array.from({ length: C.outfitSlots }, (_, i) => {
       const f = fits[i]
-      const nm = f ? `${f.species} · ${NAMES[f.topw] || f.topw || '?'} · ${NAMES[f.botw] || f.botw || '?'}` : 'empty'
+      const nm = f ? `${human ? '' : f.species + ' · '}${NAMES[f.topw] || f.topw || '?'} · ${NAMES[f.botw] || f.botw || '?'}` : 'empty'
       return `<div class="fit slot"><span class="nm">${i + 1}. ${nm}</span>${f ? `<button class="on" onclick="${act('wear', i)}">wear</button>` : ''}<button onclick="${act('save', i)}">save here</button></div>`
-    }).join('') + `<div class="hint">saving keeps your whole look: animal, colours, face and clothes. wear it again in one click.</div>`
+    }).join('') + `<div class="hint">saving keeps your whole look: ${human ? 'skin' : 'animal'}, colours, face and clothes. wear it again in one click.</div>`
   }
   return `${CSS}<div id="cc" data-modal>
-  <div class="hd"><div class="ttl"><h2>CRITTER CREATOR</h2><div class="sub">${l.species} · ${NAMES[l.sex] || l.sex} · ${Math.round(170 * (Number(l.heightS) || 1))} cm · M.E.G. intake form 7-B</div></div><button class="x" onclick="${act('close')}">✕</button></div>
+  <div class="hd"><div class="ttl"><h2>${human ? 'CHARACTER CREATOR' : 'CRITTER CREATOR'}</h2><div class="sub">${human ? '' : l.species + ' · '}${NAMES[l.sex] || l.sex} · ${Math.round(170 * (Number(l.heightS) || 1))} cm · M.E.G. intake form 7-B</div></div><button class="x" onclick="${act('close')}">✕</button></div>
   <div class="main"><div class="tabs">${tabs.map(([k, n, i]) => `<button class="${tab === k ? 'on' : ''}" onclick="${act('tab', k)}"><span class="n">${i}</span>${n}</button>`).join('')}</div>
   <div class="bd">${body}</div></div>
   <div class="ft"><button onclick="${act('spin', -45)}">◀ turn</button><button onclick="${act('spin', 45)}">turn ▶</button><button onclick="${act('random', 'all')}">randomize</button><button onclick="${act('reset')}">reset</button><button class="go" onclick="${act('close')}">done</button></div>

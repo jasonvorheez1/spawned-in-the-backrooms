@@ -1,5 +1,5 @@
 # Custom critter options: what the creator offers and what a new player wears (her picks)
-default: { species: cat, sex: m, fur: "", eye: "#2b2233", eyes: round, marks: none, ftype: round, trait: placid, blush: none, nose: "", expr: grin, topw: tee, botw: pants, shoes: sneakers, hat: none, eyew: none, neck: none, top: "#e85d75", bottom: "#3d5a98", shoec: "#f4f1ea", hatc: "#e85d75", neckc: "#f3c64a", model: "", headS: 1, earS: 1, snoutS: 1, waistS: 1, hipS: 1, bustS: 1, tailS: 1, heightS: 1, buildS: 1, hair: none, hairc: "#5a3a26" }
+default: { species: cat, sex: m, fur: "", eye: "#2b2233", eyes: round, marks: none, ftype: round, trait: placid, blush: none, nose: "", expr: grin, topw: tee, botw: pants, shoes: sneakers, hat: none, eyew: none, neck: none, top: "#e85d75", bottom: "#3d5a98", shoec: "#f4f1ea", hatc: "#e85d75", neckc: "#f3c64a", model: "", headS: 1, earS: 1, snoutS: 1, waistS: 1, hipS: 1, bustS: 1, tailS: 1, heightS: 1, buildS: 1, hair: none, hairc: "#5a3a26", skin: "" }
 species: [human, faceling, cat, dog, fox, bunny, bear, deer, mouse, wolf, raccoon, panda, pig, sheep, lion, tiger, redpanda, skunk, hamster, otter, koala, rat, squirrel, leopard, jackal, badger, ferret, beaver, capybara, lop, fennec]
 sex: [m, f]
 # clothing slots: each is worn on its own, each has its own colour
@@ -12,6 +12,8 @@ neck: [none, scarf, bowtie, bell, cape]
 expr: [grin, smile, beam, fang, shock, teary, joy, laugh, wink, blep, love, sparkle, kiss, shy, smug, lidded, sideeye, unimpressed, cocky, pout, evil, bored, surprised, scared, sad, cry, angry, dizzy, sleepy, catmouth, curious, nervous, flustered, determined, disgusted, relieved, neutral, talking, smirk, pensive, gasp, wary, resolute, wistful, intense]
 eyes: [round, tall, wide]
 marks: [none, freckles, stripes, patch, heart]
+# human skin tones (human bodies; "" = the look's own roll)
+skin: ["", "#f6dcc8", "#efcfb4", "#e2b896", "#c99a74", "#a7764f", "#7d5436", "#5c3a26"]
 fur: ["", "#f2a65a", "#c98b55", "#9a6440", "#f07a2e", "#f4efe9", "#b9b3c2", "#6f7d93", "#3b3440", "#ffb3cf", "#9fd3ff", "#b8e986", "#c9a0ff", "#ffe066", "#fde2cb", "#fae1dc", "#f3cfad", "#dfa273", "#c68652", "#8d5524", "#53341b", "#362114"]
 eye: ["#2b2233", "#3a2418", "#8a6a2a", "#d4902a", "#2f9a5a", "#2aa0a0", "#3f7fd9", "#7ab8e8", "#8a4fd8", "#d4547a", "#d03a3a", "#e0b838", "#8a909a", "#6a8a2a", "#48bfe3", "#ff758f", "#7209b7", "#e76f51", "#52b788", "#b5838d", "#ffb703"]
 ftype: [round, soft, chubby, button, oval, heart, delicate, broad, chiseled, plump, foxlike, pixie, noble, square, strong, snouty, sharp, long, narrow]
