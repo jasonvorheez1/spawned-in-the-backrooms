@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3424,
-  "updatedAt": "2026-11-09T14:50:09.478Z",
+  "basedOnSpecVersion": 3430,
+  "updatedAt": "2026-11-09T14:58:20.603Z",
   "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place scenes and simulations supply local environments, while shared systems own combat, NPCs, loot, building, and avatar presentation.",
   "scriptPaths": [],
   "places": [
@@ -9,20 +9,19 @@
     "places/main (3D) - authored Level 0/Lobby maze; sim generates furniture and loot, safe-room almond water, shifting walls, creature ecology, and route-guidance moments.",
     "places/intake (3D) + places/tutorial0 (solo ephemeral 3D) - bedroom character-creation/waking space and authored tutorial route with staged encounter and HALOGEN.",
     "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams, and Locked; Level 2 uses Tripo props over its collider shell, Level 2.1 has Base Alef and generated rooms.",
-    "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office, and Terror Hotel; residents, hazards, office/home systems, Boiler Room rats, fitted residents, and climbable library ladders in Level 5.",
-    "places/level6, places/level7, places/level10, places/level11 (3D) - later levels; Level 7's sea, islands and Fort Surrender include a modeled timber wharf stair, climbable tower ladder, dory and wharf props; Level 10 silo and Level 11 scaffold have ladders.",
+    "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office, and Terror Hotel; residents, hazards, office/home systems, Boiler Room rats, fitted residents, and climbable library ladders.",
+    "places/level6, places/level7, places/level10, places/level11 (3D) - later levels; Level 7 sea/islands and Fort Surrender, Seawatch, modeled wharf/stair, climbable tower ladder and dory; Level 10 silo and Level 11 scaffolding.",
     "places/level26 (3D) - SS Fun =) Adventure liner in green fog with authored ship, decks, wrecked venues, Partygoers, and Phoebe; lower decks reach y=-80 within worldBounds bottom=-110.",
-    "places/debug (3D) - mannequin animation/body gallery and HUMAN/FURRY switch pad; places/spamton and other configured places are auxiliary/fight spaces or continuing Backrooms routes."
+    "places/debug (3D) - mannequin animation/body gallery and HUMAN/FURRY switch pad; places/spamton and remaining configured places are auxiliary/fight spaces or continuing Backrooms routes."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, player/camera setup, and ordered behavior composition; climb.js runs after swim.js.",
-    "places/<place>/config.yaml + cells/*.scene + sim.js - place settings, authored placements, and local generated/ticked behavior; main/sim.js owns Level 0 generation and Level 7 sim owns its layout/rebuild and tick.",
+    "places/<place>/config.yaml + cells/*.scene + sim.js - place settings, authored placements, and local generated/ticked behavior; main/sim.js owns Level 0 generation and Level 7 sim owns layout/rebuild/tick.",
     "scripts/main-menu.js + scripts/main-menu-ui.js - title/pause, character creation, arrival, tutorial routing, first-arrival cutscene driver, and BODIES toggle.",
     "places/intake/cells/x0z0.scene + scripts/intake-geo.js + scripts/lib/intro-cut.js - bedroom shell and waking sequence; tutorial scene and tut0 scripts own its route and beats.",
     "scripts/camera.js + scripts/view3.js - camera and third-person toggle; scripts/ui.js and specialized UI scripts present HUD and panels.",
     "places/debug/cells/x1z0.scene + scripts/dbg-pose.js + scripts/dbg-bodypad.js - clip-gallery mannequins and in-world body-style switch.",
-    "art/human-base/build.py + art/human-head/* + art/human-face/* + art/human-cloth/* - offline human rig, heads, morphs, fitted appearance parts, and garments.",
-    "art/l7-stair/build.py - builds the Level 7 weathered timber stair GLB placed as l7w-stair; sim supplies its invisible step colliders and terrain cutting."
+    "art/human-base/build.py + art/human-head/* + art/human-face/* + art/human-cloth/* - offline human rig, heads, morphs, fitted appearance parts, and garments."
   ],
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings; routing and hub handlers use it for last-level selection and names.",
@@ -32,7 +31,7 @@
     "scripts/lib/maze.js and scripts/lib/level*.js + level data - grids, zones, layouts, and paths reused by place simulations, geometry, and navigation.",
     "scripts/lib/clothes.js + clothes.yml + critter.yml + faces.yml + hair.yml + critter-models.yml + scripts/lib/critter-model.js - player/NPC wardrobe, species, deterministic looks, body/head/hair presentation and restyling.",
     "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml - shared third-person stance and combat animation channels for player and M.E.G. agents; long guns use authored Commando KF rifle clips.",
-    "scripts/lib/seat.js - shared chair/sofa/stool seating; interact.js uses standUp for dory exit, with an optional land position applied at the end of the stand animation."
+    "scripts/lib/seat.js - shared chair/sofa/stool seating; interact.js uses standUp for dory exit, with optional land position applied after stand animation."
   ],
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 container/loot helpers; scripts/lib/weapons.js - rarityIdx, rarityCap and weapon registry.",
@@ -52,7 +51,7 @@
     "scripts/lurkers.js - player.state.lurkHold while caught and lurker entity grab/frenzy/prey state; release clears the player's hold.",
     "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim.",
     "scripts/hub.js - mall offer/shop/food and room-hop flags plus player trainHid/stungUntil; session.ride/rideTrain holds transient transit scene and spawned train.",
-    "scripts/climb.js - local session climb target/progress/arms and player.state.climbing while attached to a ladder; scripts/interact.js/critter.js manage salon/wardrobe state, camera.js salon interpolation, and player.js persists look/style."
+    "scripts/climb.js owns local climb session/player.state.climbing; scripts/interact.js/critter.js own salon/wardrobe state and player.js persists look/style; bonus-stylist session orders sitters and writes stylist.state.queue."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim/climb, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/fights/horde/critter/menu/hub/view3.",
@@ -65,17 +64,17 @@
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickups enter player.js inventory.",
     "L input → scripts/kick.js tries foe kick then loose.js kickLoose; Z input → scripts/grab.js carries/throws eligible bodies and calls loose.js arm/track/impact.",
     "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; long guns use Commando KF clips and calibrated held-gun transforms.",
-    "Player behavior scripts/climb.js scans nearby objects tagged ladder with state.ladder; walk into rung while facing it to attach, W/S climb, Space releases, and top/bottom transitions detach; state.climbing suppresses weapon and air/fall gait.",
-    "scripts/l7-dory.js emits boatOff with nearby dry land → scripts/interact.js ears calls seat standUp and adds land to sit state → scripts/lib/seat.js applies that position after standing; player.stepTick reads floor/terrain material for footstep sound."
+    "scripts/climb.js scans ladder-tagged objects and manages attachment/progress; state.climbing suppresses weapon and air/fall behavior while attached.",
+    "Bonus salon: mirror-chair seat state + player.state.salonOpen → scripts/salon-stylist.js orders active sitters by arrival, writes bonus-stylist.state.queue and voices waits; scripts/salon-ui.js reads that queue, while dress actions in scripts/critter.js rebuild the appearance. Level 7 sim replaces the wharf-to-fort steps with a static ramp and rotates fort contents to align its gate."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js - authored mall shops/landmarks with data-driven stock and simulated staff, shoppers, loungers, and arcade games.",
-    "places/bonus/cells/x0z0.scene + art/salon/build.py + scripts/salon-stylist.js + scripts/salon-ui.js - Glow Up Salon shell/furniture, mirror-chair service spots, Gina's custom cut/hand-IK/voice/fx behavior and stylist UI.",
+    "places/bonus/cells/x0z0.scene + art/salon/build.py + scripts/salon-stylist.js + scripts/salon-ui.js - Glow Up Salon shell/furniture and mirror-chair makeover; Gina serves sitters first-come-first-served, queue state drives waiting UI/voice, and dress actions reach critter.js.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence, and rebuild path; CRT TV builds attach screen, sound, and glow.",
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props, Boiler Room Death Rat packs, fitted residents, and ladder-tagged library climbs.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model data + art/human-cloth/* + fitted hair/head tools - deterministic human/furry looks, skin choices, fitted hair and face parts.",
+    "scripts/lib/critter-model.js + critter/faces/hair/model data + art/human-cloth/* + fitted hair/head tools - deterministic human/furry looks, skin choices, fitted hair and face parts; critter.js keys rebuilds on look including skin and beard, and scalp materials darken hair roots.",
     "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared combat channels and human gait with NPC idles, head tracking, fidgets, expressions, and dialogue."
   ],
   "probableOrphans": [
@@ -88,6 +87,6 @@
     "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic. Time 4 Fun poster/door is no longer placed in Level 0.",
     "Footstep surface detection checks visible geometry within 0.45 m before collider; terrain chunk hits use terrain.materialAt. Keep material words/tags and mapping priority in scripts/lib/data/footsteps.yml.",
     "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static to avoid falling through before floor mesh cooking; Level 2.1 revisioned rebuild preserves generated placement identity.",
-    "Level 7 fort2V=3 rebuild clears every l7f-* entity before layFort2; preserve the l7f- prefix and fort anchor/orientation. Timber stair l7w-stair is visual while l7-ft-step-* are invisible walking colliders; terrain7 cuts a stair channel. Ladder objects require tag ladder and state.ladder {h,yaw,mat,top}; maintain feet base/yaw alignment, and keep climb.js after swim.js."
+    "Level 7 fort2V=3 rebuild clears every l7f-* entity before layFort2; fortPathV 1→2 destroys old step/gate-ramp IDs and recreates l7-ft-ramp, rotating nearby non-player objects and home/ladder data about (-70,-93). Preserve these migration guards and align later geometry to the walkable ramp."
   ]
 }
