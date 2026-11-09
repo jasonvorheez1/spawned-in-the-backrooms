@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3548,
-  "updatedAt": "2026-11-09T17:13:46.325Z",
+  "basedOnSpecVersion": 3551,
+  "updatedAt": "2026-11-09T17:16:18.085Z",
   "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes provide local environments, while shared systems own combat, NPCs, loot, building, dialogue, and avatar presentation. Offline art generators supply selected environment and character assets alongside runtime-authored geometry.",
   "scriptPaths": [],
   "places": [
@@ -22,7 +22,7 @@
     "scripts/camera.js + scripts/view3.js - camera and third-person toggle; scripts/ui.js and specialized UI scripts present HUD and panels.",
     "places/debug/cells/x1z0.scene + scripts/dbg-pose.js + scripts/dbg-bodypad.js - clip-gallery mannequins and in-world body-style switch.",
     "art/human-base/build.py + art/human-head/* + art/human-face/* + art/human-cloth/* + art/human-hair/build.py + art/tripo-hair/refit.py - offline human rig, heads, morphs, fitted appearance parts, and hair build/refit tools.",
-    "art/level0/build.py + art/level1/{paint.py,build.py,props.py,props_paint.py} + art/level2/fixtures.py + art/level21/props21.py - offline level props, textures, and fixture/prop generators; Zenith Station itself is laid by places/level01/sim.js and scripts/zenith-geo.js."
+    "art/level0/build.py + art/level1/{paint.py,build.py,props.py,props_paint.py} + art/level2/fixtures.py + art/level21/props21.py - offline level props, textures, and fixture/prop generators; Zenith Station itself is laid by places/level01/sim.js."
   ],
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings, and last-level names including level01; routing and hub handlers use it.",
@@ -32,7 +32,7 @@
     "scripts/lib/maze.js and scripts/lib/level*.js + level data - grids, zones, layouts, and paths reused by place simulations, geometry, and navigation.",
     "scripts/lib/clothes.js + clothes.yml + critter.yml + faces.yml + hair.yml + critter-models.yml + scripts/lib/critter-model.js - player/NPC wardrobe, species, deterministic looks, body/head/hair presentation and restyling.",
     "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml - shared third-person stance and combat animation channels for player and M.E.G. agents; long guns use authored Commando KF rifle clips.",
-    "scripts/lib/zenith-quest.js - The Zenith Survey state/dialogue, Kade and Level 0 entrance placement; scripts/talk.js and scripts/lib/npc-starters.js route dialogue and choices, while Level 0.1 use/door/hatch behaviors consume its quest state."
+    "scripts/lib/zenith-quest.js - The Zenith Survey state/dialogue, Kade and Level 0 entrance placement; scripts/talk.js and scripts/lib/npc-starters.js route dialogue and choices, while Level 0.1 use/door/hatch behaviors consume quest state."
   ],
   "notableExports": [
     "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 container/loot helpers; scripts/lib/weapons.js - rarityIdx, rarityCap and weapon registry.",
@@ -40,7 +40,7 @@
     "scripts/grab.js - setDown, onInput, update, looseSpent; scripts/kick.js - onInput, kickEnd, update.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, and fishing handlers; scripts/lib/footsteps.js - surfaceUnder, stepTick.",
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
-    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec and restyling helpers, STYLE_V.",
+    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec and restyling helpers, STYLE_V (currently sw23).",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
     "scripts/lib/zenith-quest.js - KADE, setZen, handleDialogueQuestZ, zenithChoice, layZenithEntry; scripts/zenith-use.js - ears; places/level01/sim.js - cadence, tick."
   ],
@@ -51,7 +51,7 @@
     "scripts/lib/knock.js + scripts/lurkers.js - down/kb and thrown/overboard recovery records; enemy managers retain AI state, while lurkers own caught-player lurkHold and entity grab/frenzy/prey state.",
     "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim.",
     "scripts/hub.js - mall offer/shop/food and room-hop flags plus player trainHid/stungUntil; session.ride/rideTrain holds transient transit scene and spawned train.",
-    "scripts/climb.js owns local climb session/player.state.climbing and first-person arm viewmodel; scripts/salon-stylist.js owns sitter order/active client and bonus-stylist.state.queue, while salonOpen/sit/look state is read from the player and look persistence is in player.js.",
+    "scripts/climb.js owns local climb session/player.state.climbing and first-person arm viewmodel; scripts/salon-stylist.js owns sitter order/active client and bonus-stylist.state.queue, while salonOpen/sit/look state is read from the player.",
     "scripts/lib/zenith-quest.js and places/level01/sim.js - player zenQ/zenKey/zenDrive/quest and payout/notice progression; station layout revision and seen climate notices are managed by the Level 0.1 sim."
   ],
   "flows": [
@@ -66,16 +66,16 @@
     "L input → scripts/kick.js tries foe kick then loose.js kickLoose; Z input → scripts/grab.js carries/throws eligible bodies and calls loose.js arm/track/impact.",
     "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; long guns use Commando KF clips and calibrated held-gun transforms.",
     "scripts/climb.js scans ladder-tagged objects, manages attachment/progress and local first-person skin-toned arms; crossing/reload clears a stale climbing hold and restores the weapon.",
-    "The Zenith Survey: talk.js + npc-starters.js route Kade dialogue to lib/zenith-quest.js (grants zenKey/zenQ); main/sim.js lays the locked east-wall bulkhead and hatch to level01; level01 hatch crosses back, sim advances quest on entry, zenith-use.js takes the drive, and returning dialogue pays reward."
+    "The Zenith Survey: talk.js + npc-starters.js route Kade dialogue to lib/zenith-quest.js (grants zenKey/zenQ); main/sim.js lays the locked east-wall bulkhead and hatch to level01; level01 hatch crosses back and sim advances quest on entry."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js + scripts/salon-stylist.js/scripts/salon-ui.js - authored mall shops/landmarks and simulated mall life, with Glow Up Salon mirror-chair styling, first-come service and queue UI.",
+    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js + scripts/salon-stylist.js/scripts/salon-ui.js - authored mall shops/landmarks and simulated mall life, with Glow Up Salon mirror-chair styling flow.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence, and rebuild path; CRT TV builds attach screen, sound, and glow.",
-    "art/level0/build.py + art/level1/paint.py/build.py/props.py/props_paint.py + art/level2/fixtures.py + art/level21/props21.py - offline generators for Level 0 props/stairs, Level 1 textures/door/breach/map and props, Level 2 fixtures, and Level 2.1 props; runtime place sims lay environment behavior.",
-    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js - one procedural kit/layout variation for Zenith's modular rooms, sliding-door modes, routed cleaning bots, lighting and Level 0 crossings.",
+    "art/level0/build.py + art/level1/paint.py/build.py/props.py/props_paint.py + art/level2/fixtures.py + art/level21/props21.py - offline generators for Level 0 props/stairs, Level 1 textures/door/breach/map and props, Level 2 fixtures, and Level 2.1 props.",
+    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js - procedural kit/layout for Zenith's modular rooms, sliding-door modes, roaming bots, hazards and quest hatch.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model data + art/human-cloth/* + art/human-head/* + art/human-hair/build.py + art/tripo-hair/refit.py - deterministic human/furry looks and fitted appearance; hair.yml selects fitted hair assets and model builds scalp caps/hairlines.",
+    "scripts/lib/critter-model.js + critter/faces/hair/model data + art/human-cloth/* + art/human-head/* + art/human-hair/build.py + art/tripo-hair/refit.py - deterministic human/furry looks and fitted appearance; STYLE_V-triggered restyling reseats worn human hair when its model changes.",
     "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared combat channels and human gait with NPC idles, head tracking, fidgets, expressions, and dialogue."
   ],
   "probableOrphans": [
@@ -88,6 +88,6 @@
     "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic. Time 4 Fun poster/door is no longer placed in Level 0.",
     "Footstep surface detection checks visible geometry within 0.45 m before collider; terrain chunk hits use terrain.materialAt. Keep material words/tags and mapping priority in scripts/lib/data/footsteps.yml.",
     "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static to avoid falling through before floor mesh cooking. Level 2.1 revisioned rebuild preserves generated placement identity.",
-    "critter-model.js STYLE_V participates in place.state.bodyStyleV: raise it to restyle existing occupants after appearance-mesh changes; hair caps now use roots tinted near hair colour. Zenith quest stages are zenQ 1/2/3/99 (keycard/in station/drive/paid), with zenKey and zenDrive separately persisted."
+    "critter-model.js STYLE_V participates in place.state.bodyStyleV: raise it to restyle existing occupants after appearance-mesh changes. Current sw23 also refreshes an existing worn human hair child when its resolved hair model changes; hair caps use roots tinted near hair colour. Zenith quest stages are zenQ 1/2/3/99."
   ]
 }
