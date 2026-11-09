@@ -3,7 +3,7 @@ dbg-anim-0:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 89.5, y: 0, z: -7.5}
   id: dbg-anim-0
-  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb}
+  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: true}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: true}, Under_bottom: {visible: true}, Under_top: {visible: true}, cloth_bottom: {color: "#3b4558", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#6d8fb3", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-idle-loop.glb}
   tags: [dbg-gallery]
@@ -11,7 +11,7 @@ dbg-anim-1:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 91.4, y: 0, z: -7.5}
   id: dbg-anim-1
-  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb}
+  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: true}, Top_tank: {visible: false}, Top_tee: {visible: false}, Under_bottom: {visible: true}, Under_top: {visible: false}, cloth_bottom: {color: "#4a5a52", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#b8a27a", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-walk-loop.glb}
   tags: [dbg-gallery]
@@ -19,7 +19,7 @@ dbg-anim-10:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 108.5, y: 0, z: -7.5}
   id: dbg-anim-10
-  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb}
+  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: true}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, Under_bottom: {visible: true}, Under_top: {visible: true}, cloth_bottom: {color: "#2f3440", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#5a4a3a", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-ual-walk-carry-adbb76cf-loop.glb}
   tags: [dbg-gallery]
@@ -27,7 +27,7 @@ dbg-anim-11:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 110.4, y: 0, z: -7.5}
   id: dbg-anim-11
-  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb}
+  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: false}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: true}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: true}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: true}, Top_tee: {visible: false}, Under_bottom: {visible: true}, Under_top: {visible: false}, cloth_bottom: {color: "#4f6a8a", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#d9d6cc", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-ual-treechopping-d55e5d3a-loop.glb}
   tags: [dbg-gallery]
@@ -35,7 +35,7 @@ dbg-anim-12:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 87.6, y: 0, z: -4.8}
   id: dbg-anim-12
-  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb}
+  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: true}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: true}, Under_bottom: {visible: true}, Under_top: {visible: true}, cloth_bottom: {color: "#3b4558", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#6d8fb3", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 90}
   state: {clip: cdn/clip-warrior-walk-cycle-589b8756-loop.glb}
   tags: [dbg-gallery]
@@ -43,7 +43,7 @@ dbg-anim-13:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 89.5, y: 0, z: -4.8}
   id: dbg-anim-13
-  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb}
+  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: true}, Top_tank: {visible: false}, Top_tee: {visible: false}, Under_bottom: {visible: true}, Under_top: {visible: false}, cloth_bottom: {color: "#4a5a52", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#b8a27a", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 90}
   state: {clip: cdn/clip-warrior-run-cycle-9a42782f-loop.glb}
   tags: [dbg-gallery]
@@ -51,7 +51,7 @@ dbg-anim-2:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 93.3, y: 0, z: -7.5}
   id: dbg-anim-2
-  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb}
+  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: false}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: true}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: true}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: true}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, Under_bottom: {visible: true}, Under_top: {visible: true}, cloth_bottom: {color: "#5c6e78", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#8a5a7a", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-run-loop.glb}
   tags: [dbg-gallery]
@@ -59,7 +59,7 @@ dbg-anim-3:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 95.2, y: 0, z: -7.5}
   id: dbg-anim-3
-  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb}
+  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb, parts: {Bot_longskirt: {visible: true}, Bot_overalls: {visible: false}, Bot_pants: {visible: false}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: true}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, Under_bottom: {visible: true}, Under_top: {visible: false}, cloth_bottom: {color: "#6a7f86", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#e8dfc8", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-pistol-w1-stand-fire-single-40b6bdfc-loop.glb}
   tags: [dbg-gallery]
@@ -67,7 +67,7 @@ dbg-anim-4:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 97.1, y: 0, z: -7.5}
   id: dbg-anim-4
-  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb}
+  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: true}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, Under_bottom: {visible: true}, Under_top: {visible: true}, cloth_bottom: {color: "#2f3440", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#5a4a3a", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-pistol-w1-walk-aim-f-loop-ipc-c02edbce-loop.glb}
   tags: [dbg-gallery]
@@ -75,7 +75,7 @@ dbg-anim-5:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 99, y: 0, z: -7.5}
   id: dbg-anim-5
-  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb}
+  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: false}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: true}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: true}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: true}, Top_tee: {visible: false}, Under_bottom: {visible: true}, Under_top: {visible: false}, cloth_bottom: {color: "#4f6a8a", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#d9d6cc", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-pistol-w1-jog-aim-f-loop-ipc-66839d46-loop.glb}
   tags: [dbg-gallery]
@@ -83,7 +83,7 @@ dbg-anim-6:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 100.9, y: 0, z: -7.5}
   id: dbg-anim-6
-  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb}
+  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: true}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: true}, Under_bottom: {visible: true}, Under_top: {visible: true}, cloth_bottom: {color: "#3b4558", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#6d8fb3", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-pistol-w1-crouchwalk-aim-f-loop-ipc-5b4132eb-loop.glb}
   tags: [dbg-gallery]
@@ -91,7 +91,7 @@ dbg-anim-7:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 102.8, y: 0, z: -7.5}
   id: dbg-anim-7
-  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb}
+  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: true}, Top_tank: {visible: false}, Top_tee: {visible: false}, Under_bottom: {visible: true}, Under_top: {visible: false}, cloth_bottom: {color: "#4a5a52", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#b8a27a", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-ual-sword-regular-combo-fe7524ef-loop.glb}
   tags: [dbg-gallery]
@@ -99,7 +99,7 @@ dbg-anim-8:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 104.7, y: 0, z: -7.5}
   id: dbg-anim-8
-  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb}
+  model: {forward: "+z", id: /cdn/value.eda40a29ccf5af43dc9191e621ae583ed807b91617a8c5d51edda844e70aa954.glb, parts: {Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: false}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: true}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: true}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: true}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, Under_bottom: {visible: true}, Under_top: {visible: true}, cloth_bottom: {color: "#5c6e78", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#8a5a7a", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-ual-sword-block-f2918589-loop.glb}
   tags: [dbg-gallery]
@@ -107,7 +107,7 @@ dbg-anim-9:
   behavior: scripts/dbg-pose.js
   feetPosition: {x: 106.6, y: 0, z: -7.5}
   id: dbg-anim-9
-  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb}
+  model: {forward: "+z", id: /cdn/value.4ce89ff4ffddfb836972a7c1747ead16933027097299b8525187d61fa7916773.glb, parts: {Bot_longskirt: {visible: true}, Bot_overalls: {visible: false}, Bot_pants: {visible: false}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: true}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: false}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: true}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: false}, Under_bottom: {visible: true}, Under_top: {visible: false}, cloth_bottom: {color: "#6a7f86", metalness: 0, roughness: 0.8}, cloth_shoes: {color: "#2e2620", metalness: 0, roughness: 0.85}, cloth_top: {color: "#e8dfc8", metalness: 0, roughness: 0.8}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   rotation: {yaw: 180}
   state: {clip: cdn/clip-ual-zombie-walk-fwd-065f2615-loop.glb}
   tags: [dbg-gallery]
