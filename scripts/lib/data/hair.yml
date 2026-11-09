@@ -1,122 +1,122 @@
 # Critter hair (Shelly, Nov 8; rebuilt Nov 9 from art/critter-hair/build.py): 18 for girls, 12 for boys. Thick cap shell over the real head bounds, parted round the ears; teardrop tails at a tie. Each GLB skinned to the Head bone, rides the head as attachment skin. Slots: hair (tinted), hairtie.
 styles:
-  f_afropuff: "/cdn/value.fc747a7a21799567042625aa3a6ae83577dab26b6eb23c0d7e0db9b01405fccb.glb"
-  f_bob: "/cdn/value.2d189275a971da9be8fe9d5a6f2cb2c52347232cdaeed3acb86c1ce9fe371723.glb"
-  f_curly: "/cdn/value.3cde5abd49094aff4c4cdc9c17de9237d4ff19101f8f687ae1d4ae28aa2f5638.glb"
-  f_curtainmid: "/cdn/value.e3694f9bfeea60458519a0e1bf6edcc4aefc026914933eba9181eec0219ceef6.glb"
-  f_halfup: "/cdn/value.b5fd426db1e3b1e0d7ac2f59eb22d54542b283a87a802f6d4b733a4c5ec593cb.glb"
-  f_hime: "/cdn/value.25268cab9bbad1c359d1d4d36e22649952258c27073cb87d3c474293f98de370.glb"
-  f_long: "/cdn/value.39a0afc8e606415634cfc922cbe14b3f8b53c65d42289992515297d9a6c5b747.glb"
-  f_silver: "/cdn/value.39a0afc8e606415634cfc922cbe14b3f8b53c65d42289992515297d9a6c5b747.glb"  # furry bodies wear the long cap
-  f_messybun: "/cdn/value.3101ccb634af119918b80ccdd6c8aef1027510d866158562bcbb8872892676b8.glb"
-  f_pixie: "/cdn/value.a9adad941a6631cea01c9656b70efffb3bcfe649e7d1d46560d2b63352791f81.glb"
-  f_ponytail: "/cdn/value.7e9284967ed77ea8b70084052863734ffcecdd5f5aece41db03566d1a1b2baa5.glb"
-  f_ringlets: "/cdn/value.a372fb3969a7c1186c984d2b74214f1c783c9cd176dfb7a71544b6dd384efca8.glb"
-  f_sidebraid: "/cdn/value.764f50d07f2ece3758b8d021d6159dccee90a013bd12f0455668903375c487e4.glb"
-  f_sidetail: "/cdn/value.54f01a0dbf10aa272af6db079ceb6250c27624fe4f3ca51443be3b4908830ac0.glb"
-  f_spacebuns: "/cdn/value.f747563cb340af74bc92a39475d1fa5d2611eabbfdb5b4668892eac54d7859c7.glb"
-  f_twinbraids: "/cdn/value.5ee9d012fdbd4159a35f790ada3b2e98eea70d3399dbe953f08a9431c123bb70.glb"
-  f_twintails: "/cdn/value.d1c7733044d1b8414fbebbc136c4877f6e0fd97ac9ad6b5f272321033b6cd339.glb"
-  f_wavy: "/cdn/value.736ced7f9438ded7e60cf0abb5d5278c8560d8f8b940f22dd52913c939ece220.glb"
-  f_wolfcut: "/cdn/value.5268d8f0eee19baef8d87f99dd250d8d4e5478b30871df6ee79e4f0efec3abd2.glb"
-  m_buzz: "/cdn/value.819f21087cda6d373e7d6d0b399542114a89876261ee9252955b4d5c0063431a.glb"
-  m_crop: "/cdn/value.cbb8e65a914008aa2f0747f1898e4d1d831d4b07b9a0b37d517f843c97edc7df.glb"
-  m_curlytop: "/cdn/value.7ae751f264bbe93d1af99eddb8e5334843a1ca8ebb5b5f5a2655c113096a3e3a.glb"
-  m_curtains: "/cdn/value.f641e9a372d8af0cf3fa929c6cb3b3f448893130e31e87524b457802f3550c95.glb"
-  m_fluffy: "/cdn/value.e6b3aad312436da8f3ba8cd80a2454e09ac1c91f37917139b3ab5a5f8bbb7baa.glb"
-  m_manbun: "/cdn/value.31f43f5ee8f411f32ad1113d0d42ec154f278ffc457f3f9bf2a15d61c384a64b.glb"
-  m_mohawk: "/cdn/value.f70d5762dee50ce17078a5667e8323a85698ecf7f416550b42e69b6f661aaa40.glb"
-  m_shaggy: "/cdn/value.50f150f3cf1430fe2591c05d47f488b4ea5168064c350a97c83f12f7351204f7.glb"
-  m_sidepart: "/cdn/value.811580c4ef63f213661845813cdb33b75fa62c67f088ffd7ce2f9a69b6face55.glb"
-  m_slick: "/cdn/value.de3b1199a1e3bd0d4a52b6a8f733423267a0f52684b658c10408e6a79f896cef.glb"
-  m_spiky: "/cdn/value.7ee07d648332df3368bde8ebea44633415d72ffa60e2a9866434efcf3f6a01ab.glb"
-  m_undercut: "/cdn/value.cf6101e6d93055c28cb4d1ec6381739dfd62bd0975ce5ab62eb05488de709543.glb"
-  m_ponytail: "/cdn/value.7e9284967ed77ea8b70084052863734ffcecdd5f5aece41db03566d1a1b2baa5.glb"
-  m_long: "/cdn/value.39a0afc8e606415634cfc922cbe14b3f8b53c65d42289992515297d9a6c5b747.glb"
+  f_afropuff: "/cdn/value.c8a9d5bdd38c0fb5b406aae178bdaa10c76270ac684f38dd2dd756336dd44fb1.glb"
+  f_bob: "/cdn/value.2d9b11ea1e03f514d972fc88a501811c1207ef24577598f592e191e244af2d0e.glb"
+  f_curly: "/cdn/value.6b46372ad2bdd66996ad32cdabdab0f8caf02bf557de97691afcecc2d5f22b40.glb"
+  f_curtainmid: "/cdn/value.9432cc9e12f7ea0133001d6f05cdb3163e86052e452265bb420da60242f59673.glb"
+  f_halfup: "/cdn/value.9d35a7a548fdfacf51901621baf0d9efd29e3727b34de86c4f694d2f41d3bd09.glb"
+  f_hime: "/cdn/value.31afc95a810298675cb6a34150aa9fceb620be2109fcec27ec5877c9d7e9535e.glb"
+  f_long: "/cdn/value.ab0d7be5a5c3eff5378e4abb133f88bb20db3d45583b9bb4d489cd75215ca16c.glb"
+  f_silver: "/cdn/value.ab0d7be5a5c3eff5378e4abb133f88bb20db3d45583b9bb4d489cd75215ca16c.glb"  # furry bodies wear the long cap
+  f_messybun: "/cdn/value.b2339e6be32ad35bf0591e92aed4bb09a19870a11333b5860702be48de71b714.glb"
+  f_pixie: "/cdn/value.1c91831bb411f9a2170eae4f091d231e5eca9694368baa043103f5c4eef8be76.glb"
+  f_ponytail: "/cdn/value.c1abdd32884f5944825aec8c1f5e0458883bb161ae450e1f8fb9c325f75bef13.glb"
+  f_ringlets: "/cdn/value.937b1ad9c3aefba3a08b021dbeab5d7959577b018c7bf775f18ce703c387ed2a.glb"
+  f_sidebraid: "/cdn/value.5681c0f34c6730aec9c609ad3743eb8c267ba479fe49e64cb67b601ad6f2a862.glb"
+  f_sidetail: "/cdn/value.80f0e2b92158fc01747f6efc981f4aded7769513b44d524be1c676ef7f6fbbb5.glb"
+  f_spacebuns: "/cdn/value.c2cbb57029f95f8996003166027b0695a486faa38550e0f71bbeda5ae843f440.glb"
+  f_twinbraids: "/cdn/value.60faa48a7193d39f51f37ffffc9e83e2f6328abbcd714cd1bd4c3e78193ba135.glb"
+  f_twintails: "/cdn/value.4da1cff2e5048f9858ae9009edd454fc219c4e4b23e310b2b732d8f86009963c.glb"
+  f_wavy: "/cdn/value.4e5e7b8e56d1f67bbfeacc7f1810b2cc51aff5c0c76ffdee43a4ee50fe382569.glb"
+  f_wolfcut: "/cdn/value.5989f4a68c3803b32e112a1c72db8e3680bfa7c69926655732033956a9da8de9.glb"
+  m_buzz: "/cdn/value.d2f2d66ff4df1883feb80eddc4325c7d1c236728499872b86425228f52d7afbb.glb"
+  m_crop: "/cdn/value.fd23ca47268c42086b88d64676516533e9fcbeaeb13cb3d3dc12b4d4051b6151.glb"
+  m_curlytop: "/cdn/value.26a91394856e364d949786bfd5fe48bcdfdc626f4825a1a420a81e602aafee4f.glb"
+  m_curtains: "/cdn/value.da05b2ff8f8969edcca8fa6b12be61c10c6cab58089ad33f9c70dee83ae154a2.glb"
+  m_fluffy: "/cdn/value.a918732d3217829e1c1133d6672166159cdfac5deb88fdc06b13a246134760e4.glb"
+  m_manbun: "/cdn/value.2d0985355d1628756ce2bcb196af13b61f59a21793479481b5526ef5e11af5a0.glb"
+  m_mohawk: "/cdn/value.aabd7058bdce9328383c2535abce659c4430a4203aafbee3c0fe3c7e9af871c6.glb"
+  m_shaggy: "/cdn/value.b17244261acfc0167b5af4344dd20ee4792522366d045fce94d39a9b02a48662.glb"
+  m_sidepart: "/cdn/value.68f4f4c8a5d99f4b0b835cafe05b8cbf8dd1fa00965902f3ba88dd598d850d1b.glb"
+  m_slick: "/cdn/value.92da2ebf280c35e1e5f4c7fba7135008ed542efcfa1b26d66b844fc702e94e3d.glb"
+  m_spiky: "/cdn/value.cfc24fd3b3e6aad2e4182908cdb8346ffd416367399f4021bf352d4009f0c4d7.glb"
+  m_undercut: "/cdn/value.80a27e6b7b65a5f6346119544991c602ff267b30a44b755ede835ddabf50dad5.glb"
+  m_ponytail: "/cdn/value.c1abdd32884f5944825aec8c1f5e0458883bb161ae450e1f8fb9c325f75bef13.glb"
+  m_long: "/cdn/value.ab0d7be5a5c3eff5378e4abb133f88bb20db3d45583b9bb4d489cd75215ca16c.glb"
 # worn under a hat (cap, beanie, partyhat, tophat ...): crown flattened below the hat line, back and sides still show
 hatted:
-  f_afropuff: "/cdn/value.de3b35e56f7717707f42f2e03bc0a52644acb23746de7d7f1ad5e476843ec57a.glb"
-  f_bob: "/cdn/value.f6afe95bebd6f5fbd8fa033f049d64d2aee1723c7950b5fedb2e8f67fd7e253c.glb"
-  f_curly: "/cdn/value.857195d284d3fc3b86fc8e103e4a90d654e74161c4cfda9a2f18d04ed4468f4e.glb"
-  f_curtainmid: "/cdn/value.30ed5e8de181b91a9a3cf173303b05b9ac73ba167957a07ca5717bd2b1780ead.glb"
-  f_halfup: "/cdn/value.3edc9655695352b9c776ed7574ecae5f7fb01779d2b50d2882c9ed76a5bf88cd.glb"
-  f_hime: "/cdn/value.4d2656ddd8634e3973cf49b439073c6ece1d77312fc6c1b5dce1ca54ba22dcee.glb"
-  f_long: "/cdn/value.be077f7958c9fd4e25a285e7699ba0dece8a839fdd4cb85d8e1fa6599889e112.glb"
-  f_silver: "/cdn/value.be077f7958c9fd4e25a285e7699ba0dece8a839fdd4cb85d8e1fa6599889e112.glb"
-  f_messybun: "/cdn/value.14628e6821a74763b7c4e2aed1ad053051220f20d517f6e4034219a91bf50ffb.glb"
-  f_pixie: "/cdn/value.b47267e74fe12c4beda1c2163f80919e4c7318825639ebc61169e751aad168bb.glb"
-  f_ponytail: "/cdn/value.c3b83c9962464275e1147551182de25b7bc07c0234795464ae5d538e5d1ed9cd.glb"
-  f_ringlets: "/cdn/value.82a247ae24b36a49e1e6d6420f98d0c55ab79b12dda27510d48f9ac9c0de36f3.glb"
-  f_sidebraid: "/cdn/value.6eccbba67ae87f4380e7cc634251d958004af39ad4127e7a434612f9f24a03bb.glb"
-  f_sidetail: "/cdn/value.42291bdead5d1c4cec89dfa0194fe234ba646be01fdf2ecbcb6f3b0514cd2625.glb"
-  f_spacebuns: "/cdn/value.e7c1fc0c38d9fb8b4d00823d7a3d59ca6f9e146f5b7331dbe87fa9a7463e553d.glb"
-  f_twinbraids: "/cdn/value.a48a9f56683e7742d36c8cc175b67ae7839ed5232ab4f79d3dd3e5a0e22873da.glb"
-  f_twintails: "/cdn/value.f8c5be1f1c56599ac6c23a650c9a62c291394a7be856757e54a0580797a19457.glb"
-  f_wavy: "/cdn/value.4ff0501961b8eb5e4093199218ae86d7f99b6bb93190b95b025c7023c213fc33.glb"
-  f_wolfcut: "/cdn/value.ff4daae3fb02d64e7ae942053667d07e83f588adee2f218035d5d12157582cc1.glb"
-  m_buzz: "/cdn/value.dea87a813067e3986a74efd63467e60261ec050eae6aae09504c8f78241140bc.glb"
-  m_crop: "/cdn/value.9f8cb82ea03903786dc1a49c0ab79bc53f6fb2ddec2bd423255d9785ad744a4d.glb"
-  m_curlytop: "/cdn/value.b27e170e9401ce36caac0a2ebf1cf934de9f41910ba2086394f21bf7c890f87c.glb"
-  m_curtains: "/cdn/value.d6cf52d4a7732af27c6ef73f742a0fea47821fe9abf078ca20262ca90bb6cd9c.glb"
-  m_fluffy: "/cdn/value.bb71136c7086700ea1d2d98a0a3bed1b712e8a828b65bd6ca54194bcaf07cb03.glb"
-  m_manbun: "/cdn/value.c338487b969945ed16e088fc54a75af9fbdb1aec536c544c40afba35cd7aae86.glb"
-  m_mohawk: "/cdn/value.05c98dc2a1d3295f0de6afe90ddc0f42246008976e62e479258e001d27243767.glb"
-  m_shaggy: "/cdn/value.dc9d5f2d5c8f8863a28fadb9098e269c665f509c76214ee99911641cc2f90d72.glb"
-  m_sidepart: "/cdn/value.fffab6dd64bf4e895c945f400d81dc761d6dc30b6653e0f611775098e3a97a22.glb"
-  m_slick: "/cdn/value.0d71bd13ed6aa8e67bf81fecab7eb397ebc78b43ba8fc4c9fb71fe7806691f83.glb"
-  m_spiky: "/cdn/value.c36e31ebb8d1be53923fc85b889296a15645ad9053ba19852017294cba70cd74.glb"
-  m_undercut: "/cdn/value.07fa087c75f1a1509b974db1dfb6c519bb1972de1eb1210a044f31afa79d1b57.glb"
-  m_ponytail: "/cdn/value.c3b83c9962464275e1147551182de25b7bc07c0234795464ae5d538e5d1ed9cd.glb"
-  m_long: "/cdn/value.be077f7958c9fd4e25a285e7699ba0dece8a839fdd4cb85d8e1fa6599889e112.glb"
+  f_afropuff: "/cdn/value.6f8f13380cda0f2ac68366b59716d009164938643e1fc9b4cfe1cb5ec790297f.glb"
+  f_bob: "/cdn/value.7b6ae24d31ea181e1a516bde7d156d3268fb7f428859ea88fc063b2eba28bd53.glb"
+  f_curly: "/cdn/value.4fd3f9e765ad30fe05a5d98eb7c056e7de6a23bd5a739ec7e8349db2fceb5f3b.glb"
+  f_curtainmid: "/cdn/value.eed5ef95791d946834747adfed18caee9c6e7ef2ffdfa76be2c4197e68873c6d.glb"
+  f_halfup: "/cdn/value.b807cba559f9866b6695553d0bd128f4fbd45557ac643e2eb8750c04cba9ce4c.glb"
+  f_hime: "/cdn/value.b7caa82c2beb68c17b16b7a1065bbcfd085bf4e4a34c903afd95102de52fe595.glb"
+  f_long: "/cdn/value.42efb0758d31dad6bd0bb41cc755c01c7a6df7eaff42a296f9bf3b7271b888dd.glb"
+  f_silver: "/cdn/value.42efb0758d31dad6bd0bb41cc755c01c7a6df7eaff42a296f9bf3b7271b888dd.glb"
+  f_messybun: "/cdn/value.95118d4156df1f58847bf97ce0efb3f7fd9641e7eb155c2229c37cbb8fce5259.glb"
+  f_pixie: "/cdn/value.e257760223338e2ab896961e1ee820c10c9c57b8df34301678bd492edb593d37.glb"
+  f_ponytail: "/cdn/value.9fd10d23f17fa56b95e5cf27a4317f0e0b36bc0c5e9547c939f30fd3f26b1f4c.glb"
+  f_ringlets: "/cdn/value.ebc178ff1a2fd499c3f6f592e3fbb1b05d2f33620442f068e42dbf742e57f95f.glb"
+  f_sidebraid: "/cdn/value.7e1f48d1d038a1dee8cdad2dcfab62f1432047ef0b14070d54b6951fc9956c8a.glb"
+  f_sidetail: "/cdn/value.fa8ccc246fffaa40fe5acfcbd78d3d9878895921b982ed1c3532aaa96ffb16aa.glb"
+  f_spacebuns: "/cdn/value.d13c44b863bc59f2291e8b28f2f550b57c41c130c9115b639dd9e84dd8f11fb3.glb"
+  f_twinbraids: "/cdn/value.ca1455b16f64e99996ff8fef3a43df1626e8be34dec53cba6ab6ea4833721c2e.glb"
+  f_twintails: "/cdn/value.0c734b4ff0b7b71fb85a6a818f5a83bca6fe58919b9ff3ff82b78863674d6491.glb"
+  f_wavy: "/cdn/value.a56defdac585a52020f4ed72c327718946f64bd510cd37fd3c7b2cec18c0493a.glb"
+  f_wolfcut: "/cdn/value.45404d3f32ebbc17ed280c45a52780667ba5a6b6d48620536a764e15d4d6c613.glb"
+  m_buzz: "/cdn/value.4cf37e597a1561f4b9d846713cbebf76147e625b993ebe14a3379a81fa4a623e.glb"
+  m_crop: "/cdn/value.e2532d82a27b7ec02dd5b3c52a019d519ec322f1cb3e65256516d6700b43776a.glb"
+  m_curlytop: "/cdn/value.296fc5d675b643bb83a14eeca9c71c1ab37e0efa58ba215d392d0299219beb9a.glb"
+  m_curtains: "/cdn/value.1593efa61927776c148c05901eac7766b608fa100d9016b1802c63de2a4cffed.glb"
+  m_fluffy: "/cdn/value.4ba055035a331664154b510ed558405d4e80ac9bea587e2035b491c9fcf3d960.glb"
+  m_manbun: "/cdn/value.fa45cde53d4e4b7a419b174ad6c2381d7510043f2ef9b542425deeecae137fbc.glb"
+  m_mohawk: "/cdn/value.a56241b0a244e0f323426a34206e64cb02dd08a6ff82e094a4f93e0ff4692218.glb"
+  m_shaggy: "/cdn/value.7a004c367d5d35b9068a5108cc2cfff740a8c146fdee676d24b6dc457aa39a05.glb"
+  m_sidepart: "/cdn/value.03d6549685201de2fb66f86c73905adee9cd2aa80876f6dffbdee52c1266f7fb.glb"
+  m_slick: "/cdn/value.a78f12a7e963cfedc76fe60dd9ec58bc3d3d1e25fe2467a5bd567344a7431ee4.glb"
+  m_spiky: "/cdn/value.dec496c716dc0b6ab699debcb251dcc5787e7aaf628fe509108e65bcca0f8b33.glb"
+  m_undercut: "/cdn/value.c23151f8a4368dbad723eb2efba0a74bbf48a0e2ee30dcd44244ec0cbde89cb8.glb"
+  m_ponytail: "/cdn/value.9fd10d23f17fa56b95e5cf27a4317f0e0b36bc0c5e9547c939f30fd3f26b1f4c.glb"
+  m_long: "/cdn/value.42efb0758d31dad6bd0bb41cc755c01c7a6df7eaff42a296f9bf3b7271b888dd.glb"
 
 # 14-16: Tripo anime hair; under a hat they wear the pack's under-brim cut 0-2 (the Tripo hat cuts floated tails outside the beanie, Nov 9).
 # 14-16 (orig): (Shelly #107325, art/tripo-hair/fit.py) fitted to the head-type bodies.
 # Human heads (Shelly's hair pack #101894, art/human-hair/build.py): per body sex, pack style n bare and cut under a hat brim. humanPick: each look's style key to its pack style.
 human:
   f:
-    0: { free: "/cdn/value.5262bc97ee00fa1e7cb16baa10da03729e41f83eb14b3c22d967d7db6f753217.glb", hat: "/cdn/value.8975b0a068a7ff82dce015c0e7fc9221e45b4584fbd62f6b5fb9590c00030a6a.glb" }
-    1: { free: "/cdn/value.6028619895918978aeba8a90d8553315b31a4b547b8594c54e5b4d30a1ddb27e.glb", hat: "/cdn/value.fd3a06629f8e40849d20381aa73630d96cc5b588f0dbdaf0f75b0a9c6734f61b.glb" }
-    2: { free: "/cdn/value.a0e27bad7cc1f96e1ec7d7e1bcb8dc86dff3bc69c231f5f7abdc2a479b375c77.glb", hat: "/cdn/value.a9af44cec3d9dabb0b238af639e00c69f5447cadec6b661c912078661db0e9db.glb" }
-    3: { free: "/cdn/value.843c8cd849b2a9f394078adb4b2efb15c9a82f7dd03f0bf4c9d3b08dd8718256.glb", hat: "/cdn/value.452cd2f3ac554d7d42866f0c88aeb5c4ab9ee036772e956260fba98f14f1f538.glb" }
-    4: { free: "/cdn/value.715ad97aa115f41e9def755b7f5ad14c5a9c5d564a33940187e1e9ca1c94e000.glb", hat: "/cdn/value.a34f2bf85692705f4237dc53a86e2a33b7cc16da2dc91c0270584d5d0fed572c.glb" }
-    5: { free: "/cdn/value.8d520abf519922e009bf3ad0ed07add36d8495aae5a290ed8529664292947f8f.glb", hat: "/cdn/value.d9d157457c76859c114d5dd1b04272ca49cbe02d7993df2a6866309787715c75.glb" }
-    6: { free: "/cdn/value.4020149bbbf155718e099970b03a1b22540da9d00a7aea990a65ed7955c5dac5.glb", hat: "/cdn/value.4ed870f9361dc4ff3998d4f1106fe0ea2a7a940e1598ca58f1e7dbe9dca3c6b7.glb" }
-    7: { free: "/cdn/value.a644c37bf75c1b2dad4b72c9e74923652faa00b68ae4507a8184adbbe83ca69d.glb", hat: "/cdn/value.ffb6d66dcb4d1bf114a7ef1ae11f976504a8eeef9812015b810180579e975727.glb" }
-    8: { free: "/cdn/value.1ca32d2394224942e8e047b732f5b5cbf6b20c0efca2f62bebeb1ee9f0ec638d.glb", hat: "/cdn/value.8af7241656ce8e267f42ea8bd8fa189ad0bb30f3b1ffff201303e6a42c1342d9.glb" }
-    9: { free: "/cdn/value.fb8ccc977f267a66f069c40cc93e907ba4adfde13f66a902990d83c3e98f29c8.glb", hat: "/cdn/value.ec203422f7a13351689b6c5dc180ff1e54b6419c0fdce520e7be572fd5228ab8.glb" }
-    10: { free: "/cdn/value.fd5b3fe80cf278fc6d8ae02f027a7768f90d578b09766c23b6d79a3f5741c4c4.glb", hat: "/cdn/value.efd6e57b150e51f3dbb92bfabec3480456d2c51b56bfe3f5e12e0d5dc6735493.glb" }
-    11: { free: "/cdn/value.1624b81d90a7bee61627b939ba6a998c73cee13c234672d56654c3ee957618b0.glb", hat: "/cdn/value.5f029c0b02def9f88ee1e5639c1c2752924f397d8edb78f1aa4e60d6b524b1dc.glb" }
-    12: { free: "/cdn/value.2ad8a21f31c1d2f21418f9955945656630c400539e8f3c18c31812be9fcbf67b.glb", hat: "/cdn/value.c41650a0fbc0249954eb6fb81b86f70737f2db3a4e6473a5fb65b3ee803c2b70.glb" }
-    13: { free: "/cdn/value.c318bdcb9bb8bd3bb27d236e2c62cd28c308d954af883fff14fcffb19a4cfb68.glb", hat: "/cdn/value.fc1aa4ff19363d09b97345aab4f8e2358918bb5fe36b33219116d73110535060.glb" }
-    14: { free: "/cdn/value.1fe00643a1e5075b6313ec6e36b9295bad70c641d4e60a32264a5e6227f86266.glb", hat: "/cdn/value.8975b0a068a7ff82dce015c0e7fc9221e45b4584fbd62f6b5fb9590c00030a6a.glb" }  # tripo ponytail
-    15: { free: "/cdn/value.a3e23bd022c364bf64d3bf629a756da88de09d5d4aab28eb783d72f922e0acb8.glb", hat: "/cdn/value.fd3a06629f8e40849d20381aa73630d96cc5b588f0dbdaf0f75b0a9c6734f61b.glb" }  # tripo spiky
-    16: { free: "/cdn/value.fbe740756d23b3b9287fe7491dddfbb1decf8812966be050aa6ff986fd5b29cd.glb", hat: "/cdn/value.a9af44cec3d9dabb0b238af639e00c69f5447cadec6b661c912078661db0e9db.glb" }  # tripo long
-    17: { free: "/cdn/value.72dc013ace750fe78bc1c979e91984a5fd1edf7613f0a167423daaab1d86ddb0.glb", hat: "/cdn/value.8cdd419ed201102e33c36f75f8e4dcc275a7f760ed06071e21bd8ccbb3e6afc9.glb" }  # tripo silver curtain (johnadams2 #16830)
-    18: { free: "/cdn/value.69c85e563f6b80473fb75b7ffea51c7722cb3901ffdc7f17fda3a83381ea4fab.glb", hat: "/cdn/value.8d520abf519922e009bf3ad0ed07add36d8495aae5a290ed8529664292947f8f.glb" }  # tripo soft wavy bob (johnadams2: remake every hairstyle like his bob sheet /cdn/image-u06qves5w.webp); under a hat the pack bob
-    19: { free: "/cdn/value.2c3b82c777112feb9b47905ce0b8413d621c249360f856d0542947f2b299a79e.glb", hat: "/cdn/value.aece56346d2a224c96f5620114857ebad23ff0a7df609f0bfd64f3aa204ada92.glb" }  # tripo soft high ponytail (johnadams2 #17349 remake)
-    20: { free: "/cdn/value.220d9bf1d476a0fc9c6409616ec9dbde98fd5cfe4a971598117a8d67d673932d.glb", hat: "/cdn/value.a0f4c731a675d66732703a31490c5d083f2e42fbb61e174f808076515df0772f.glb" }  # tripo soft long waves (johnadams2 #17349 remake)
-    21: { free: "/cdn/value.0a03b8288345eaffb92de8e31c6445f83e2f7763d8fd388ef791495d5d3bfc80.glb", hat: "/cdn/value.51489766192b8801b91ebed35fa5591dea9b59306d2e814b36865f44514ab840.glb" }  # tripo soft twin tails (johnadams2 #17349 remake)
-    22: { free: "/cdn/value.749f13f44e0107e05f988c91651c7274d0a9778b082cd88ee7d02385c2cef06b.glb", hat: "/cdn/value.7cd2851f44fa80f05cd20f3d587d6a3197426af9811d8513cb0eccf8cce05dfc.glb" }  # tripo soft wolf cut (johnadams2 #17349 remake)
-    23: { free: "/cdn/value.fea528ec38f6efa3aaea9f76ce77e3622d54765a829192186c28117ddb3550d4.glb", hat: "/cdn/value.3f090d23515ca213e81328dc59524520e5f280b86870f4beaff1ee5cc39f009e.glb" }  # tripo soft messy bun (johnadams2 #17349 remake)
-    24: { free: "/cdn/value.d69e34984d6f682ee963d447216dfbdb4b5eebd517c2912b77aade3ad0366f9b.glb", hat: "/cdn/value.11883d67b85415d5df4063212cd7223fc4a2067eee77220c9b304adfb3bb502d.glb" }  # tripo soft pixie (johnadams2 #17349 remake)
-    25: { free: "/cdn/value.7dc112386e36d520fadcc80824a6e215afd72bda34ff2e59625ec3502ef62d37.glb", hat: "/cdn/value.79935311e913778501414577a5c0bc5bb33753671eb3433b1e00b1973b86f789.glb" }  # tripo soft hime (johnadams2 #17349 remake)
-    26: { free: "/cdn/value.9a6d5cc06004f8eaf7365e2c4cb736ce7c09e7261e6340b7c6aeb6148322828e.glb", hat: "/cdn/value.e4bf81466b0c36c5f36777a341c20152462bf210ca80baa58b9ca8552ffc4a6c.glb" }  # tripo soft sidebraid (johnadams2 #17349 remake)
+    0: { free: "/cdn/value.58275821f31cf5110097d190f207e3fe0a812b733171c0d444b351f6fbeb73e8.glb", hat: "/cdn/value.38a6e74897b562f4d25b3d03e0289b18762d620fefc5a95f512a19555c498312.glb" }
+    1: { free: "/cdn/value.cfcbf3745511eb9f41f6496cdb4607682c3dca26ad741e002dec8d5031f54d92.glb", hat: "/cdn/value.37092192a19c87d47200b0059c914495900394e59876eef4ae78ae2ea5e42378.glb" }
+    2: { free: "/cdn/value.6b4be0e9452f6cbe3e4ffcadbe61390b573e8713a88f592199955cf2e76081a7.glb", hat: "/cdn/value.687e6012e916693de5f5d5f56c2e81770bf4dbbccb7e5eede14b00cc5a3339ac.glb" }
+    3: { free: "/cdn/value.9c126a7d4a15f92663b370015c9c573e846bb5b4db9e89fcf0a2440790d04c3d.glb", hat: "/cdn/value.acef34c03eecf6fbb134da8c47049cb9616b1a3dc79595a798f1589fd1919f8b.glb" }
+    4: { free: "/cdn/value.3df21eccb6e7b43348c04df07105e59b3b970227183f6f2f5ba531b63e6f93a8.glb", hat: "/cdn/value.f62c7f536af20b7ccd30de7acba9355981ed5e787e56e42ffc62b1a4bcdc6000.glb" }
+    5: { free: "/cdn/value.59de8720f3643308dfa880359806fa76c20647ac73cb85d2d234ce3fd89a841d.glb", hat: "/cdn/value.cb086a3130b08db68c6325059b037f23e014c1636d508213909d708ad235d84a.glb" }
+    6: { free: "/cdn/value.b0d121d4c59a9a0ce4d1eca0f91f0c5b31e938427fb6236d70006129845189f2.glb", hat: "/cdn/value.903dff28524f7d81b21a787cad09e8a14bbff89caeb9e1f42723c137eb4b62b1.glb" }
+    7: { free: "/cdn/value.127fd7cb42535b4d3aa1a78fa9f8dfb11d1731bd0b7657b2c219fbaff8bc9783.glb", hat: "/cdn/value.76ad523f8c0036e27c10ff177b628f7dc6285aac3e994c8f415caafd9812ff6f.glb" }
+    8: { free: "/cdn/value.c022e638dc40b74e75d3126a542176165ed388300cd5038bdbeeb53dc0b5b386.glb", hat: "/cdn/value.6dcd971eb0f4c9875ca3f55f4535094bf161f2bd59ee5ff6576d30f0b5050a91.glb" }
+    9: { free: "/cdn/value.41569c2311468fb7308371ab2815d6da20ac44490b96cd9076a22e680da9ce85.glb", hat: "/cdn/value.c1193b4c01615d2b4f0877fb8a41a23daa8b936f128ff16349953b9955a947c2.glb" }
+    10: { free: "/cdn/value.c4383324dd87c9fb3f116e3a4326fdc870a3ff8544657becc34d6dab8a921173.glb", hat: "/cdn/value.1fad2c9b13237a92dfe795a26683d6f16dafbb3aecba1a6c4b5fcaaec6c89e0e.glb" }
+    11: { free: "/cdn/value.e20ab67c761d56f2ccc2ec0cf0cc67387b7c3848b8833dccc99b4792b9c8337c.glb", hat: "/cdn/value.01f2b778060e681ee75dd580c21bd9778645370f85941663ceac96b3fe228c43.glb" }
+    12: { free: "/cdn/value.4c3986b1a9634f2aa7f6a95c6d913d814830c9e92702e3b1291fbfc0a8835044.glb", hat: "/cdn/value.c30a70cdbcd5b57aca2ea57fe719eb3c89ff45425d550c58b78053176215e915.glb" }
+    13: { free: "/cdn/value.6a3efba97046de753f4dd665c70d76046c35ae0bdce09aa558c910873067ff1c.glb", hat: "/cdn/value.281c08c4dd341484a1028c30a6c8fe6f35cc4a196c298f4209bc0eaee31e3b89.glb" }
+    14: { free: "/cdn/value.1ce03d68339fcf3e9125f1e0f5c2bd18622f9203f883125a272adc7f1fb755bd.glb", hat: "/cdn/value.38a6e74897b562f4d25b3d03e0289b18762d620fefc5a95f512a19555c498312.glb" }  # tripo ponytail
+    15: { free: "/cdn/value.d77dc74f1b2539c169e7925dd33cc105878b476e6b7d791603fb8c5f8652f69e.glb", hat: "/cdn/value.37092192a19c87d47200b0059c914495900394e59876eef4ae78ae2ea5e42378.glb" }  # tripo spiky
+    16: { free: "/cdn/value.ae3af9da26ee4442e0bf27786bc59393dce273c2adbb199234e12f58d0f58a78.glb", hat: "/cdn/value.687e6012e916693de5f5d5f56c2e81770bf4dbbccb7e5eede14b00cc5a3339ac.glb" }  # tripo long
+    17: { free: "/cdn/value.1002c9e86093ecbc27f6511daf8c80cabc05f7413f9c2a687eeaf608df69b962.glb", hat: "/cdn/value.e6acaa257282af1f957faef841be18c1700cbfb560e57703d3fea9f50d6b0473.glb" }  # tripo silver curtain (johnadams2 #16830)
+    18: { free: "/cdn/value.8d1c89a715a558f330a58f8ac70d3056f33dc06c1b5b82a61c8f67dc2df511f7.glb", hat: "/cdn/value.59de8720f3643308dfa880359806fa76c20647ac73cb85d2d234ce3fd89a841d.glb" }  # tripo soft wavy bob (johnadams2: remake every hairstyle like his bob sheet /cdn/image-u06qves5w.webp); under a hat the pack bob
+    19: { free: "/cdn/value.0ef62d24037d31e0e1dcc4d59e1c46fcfed84be9d642f684ddb9baaf18624253.glb", hat: "/cdn/value.33227a2c0a4e63f4054a4d6ac03443b1b31b140e9c1942573478b980cc1f8fa4.glb" }  # tripo soft high ponytail (johnadams2 #17349 remake)
+    20: { free: "/cdn/value.500a46896e2783e4272b02511a42ddb88226027cdfd8802599a3131eeb916235.glb", hat: "/cdn/value.a137f578aa6e92af8f870dc7a53f251a1e7b27c7e5abfed8fd440cd75c7a8ba2.glb" }  # tripo soft long waves (johnadams2 #17349 remake)
+    21: { free: "/cdn/value.86f3f19835da40d527532a8393f8ab71985afb65a2540934fb6bad0b79d44b75.glb", hat: "/cdn/value.eb05b31ecdb610469159b089b54aa62cb13ec910987bee2937fa9ced4b208b3e.glb" }  # tripo soft twin tails (johnadams2 #17349 remake)
+    22: { free: "/cdn/value.6659f47e53fc38f8acc4d4f0bea10a5e6c41d276af99a4b961aabffb6d016fcd.glb", hat: "/cdn/value.de92070ca1fa6889c416049c6a0cf0723cf937ff7f1b405b86805b12b0eb59b2.glb" }  # tripo soft wolf cut (johnadams2 #17349 remake)
+    23: { free: "/cdn/value.057304fdbe712abbda3b4c66ae4df9db5ab4cd4473bfe3966fd6decbfd569b6a.glb", hat: "/cdn/value.a171098afe4fa3f372ef5db38bdaaead5d04d5c282a4009426986ddcefc0cb02.glb" }  # tripo soft messy bun (johnadams2 #17349 remake)
+    24: { free: "/cdn/value.cc6f43c5f580e5ff53ee4abfc8e346ddfcfcffc123fe81e679bf2592bbfc8216.glb", hat: "/cdn/value.765b6e15664cc0952ab37b3aca536916f74e2df160adf8205d47246a3d5627a5.glb" }  # tripo soft pixie (johnadams2 #17349 remake)
+    25: { free: "/cdn/value.4cb98b3f174fa1d70c93537ea03770301d0a858de38db2709f3f8579bb5abdd6.glb", hat: "/cdn/value.ce871781bdb8d985f9669680d73f420eb6bdf5d57cd2f24a4e01b4503c27bc12.glb" }  # tripo soft hime (johnadams2 #17349 remake)
+    26: { free: "/cdn/value.3eb160b54cb5ed302f161c3dc642ebd8ef80888f60bdccc5f150186c27c628d2.glb", hat: "/cdn/value.8c816c654972b595925b543799b5596fb9dceb9ee1de45d9ff1e9664c2a0e396.glb" }  # tripo soft sidebraid (johnadams2 #17349 remake)
   m:
-    0: { free: "/cdn/value.3dff0f727fbbbcc466b12732b867875cefc975f7823def2db8061410d8408c5a.glb", hat: "/cdn/value.c4a9dbbbfc680be5997b40c841472e02e01e2120167042faa84a502d8f3236f9.glb" }
-    1: { free: "/cdn/value.6e3e3eb1837088247cb727367512dc54a4a253ae2580017f1aa9798abbfe0c03.glb", hat: "/cdn/value.e93449a9e38590ef32c311ef8b4dda74c30ac833f821bbda3a2524cb3f357af8.glb" }
-    2: { free: "/cdn/value.98b6cbe4287bd5a99c3b2ca9d9bc38120fa0907db1a7a123ce9a03b77fb5eb39.glb", hat: "/cdn/value.026bad780246f33284607de89e06db9c170601e1beb67e94a7524463589e8fbc.glb" }
-    3: { free: "/cdn/value.84217e79e3dfccba004a146b7457c578f203ceb7a8d606144a87a3986c657ec3.glb", hat: "/cdn/value.2b7fab97256b9b4fb7f76ce2dbc0376259c567e211975ee85abaca8ba486bbdd.glb" }
-    4: { free: "/cdn/value.555f1dd6c0b3fbafe63f724d3064cdb768d54194c883d161ec8fe8d366fe4248.glb", hat: "/cdn/value.d060e73765eee60587bc3050a9e2f25fa79830a40f3ccfc17ec969ff88e3095e.glb" }
-    5: { free: "/cdn/value.47fb88b87078188e5c65fed10ff6b02b57430b759a8e0e895d6759c8adf5449c.glb", hat: "/cdn/value.b7844071827a9b9bf0224373dcc08f0c5de035bffd0fe0306fa808a13266dcc6.glb" }
-    6: { free: "/cdn/value.63429d264e25cb7f6513b6881cd41bed284d08ad6c5d8a01ca10d73482e6749e.glb", hat: "/cdn/value.071655f7af68dbaedb06b821545870492407a9aebaf4e4f03d87e7037ef9a982.glb" }
-    7: { free: "/cdn/value.308d7d6260115dc4f49e8208fc6298d9924e8c544cb88f433e3c7c5ea6a67e5e.glb", hat: "/cdn/value.0ebc7ae732e2b9958d035a1acca11b7dc600bc486b9e47959a37d68fe4ef2135.glb" }
-    8: { free: "/cdn/value.35dab697e881ca389979a756d882cd4bc9789817bb57a6cde53ca13619422fb4.glb", hat: "/cdn/value.bb2953ee6b3dc12c7cdb2b4c6d1d14d6cfb9f1c739f3698584a89b5b19b99065.glb" }
-    9: { free: "/cdn/value.b305e13b707167d4dd0003285ab63c0da01ef1710892606fda2a39823aa8121b.glb", hat: "/cdn/value.e42d0c1529c688121187d7c9af2a29b8fcf3406134bd73ff54106e026a4e91c6.glb" }
-    10: { free: "/cdn/value.9804e82229911a0b7e9dad6a97f5e193afc820bde6ba8237125e3f230f38f2a7.glb", hat: "/cdn/value.c671f8d64f2ef8fdf5c42059d136e560a7037f178c6519f88d94e8293f7528c9.glb" }
-    11: { free: "/cdn/value.6236d99e39a8ab11c7ff004e442227ee0d42f1f6d3842f6e0f6ee4bea8a1719f.glb", hat: "/cdn/value.71cc2c8a7caa8054752c44ec6b6f0e08c80cab9e94f2608e896949208d855ff9.glb" }
-    12: { free: "/cdn/value.81ae2eb3c15af3facc7e133368c22186f77288332b0c99b7ee7a15913e30cf4e.glb", hat: "/cdn/value.c5374a9bd3c174d29f0e1df64131e40d5db80c550011a9cf1379dab0ccbbbf0d.glb" }
-    13: { free: "/cdn/value.0bcd6bf57556165411de5e98d64c942a96b6a54c081590c13cc58b6f387baaef.glb", hat: "/cdn/value.d2b742a17753a80e0fb7dbfb8da5590294dc4cb9d6f04d10453167f1b2de9ff1.glb" }
-    14: { free: "/cdn/value.2ce2041adf96ff2ae6d275101f112114ea9221a4cc207bf561be73ac06cf89e6.glb", hat: "/cdn/value.c4a9dbbbfc680be5997b40c841472e02e01e2120167042faa84a502d8f3236f9.glb" }  # tripo ponytail
-    15: { free: "/cdn/value.038051c7b263247a35446a32205156e8691c33efd9824af094a4072f8f243bfb.glb", hat: "/cdn/value.e93449a9e38590ef32c311ef8b4dda74c30ac833f821bbda3a2524cb3f357af8.glb" }  # tripo spiky
-    16: { free: "/cdn/value.a50ecfdce64c933e4b4812b6f35f8bc43ae76c1285d4e635cdf6c30ebb039c18.glb", hat: "/cdn/value.026bad780246f33284607de89e06db9c170601e1beb67e94a7524463589e8fbc.glb" }  # tripo long
+    0: { free: "/cdn/value.525abfd0d290c8dc4b29e8d992989455e159f045e5b488972c7826d15fb49c50.glb", hat: "/cdn/value.ad20491ed0f255eb0173595896c231995e84eeacd7ee6c9f22747de684836340.glb" }
+    1: { free: "/cdn/value.47a3fe134015f353b3e0f321246a1d185e0fef1a199e2c2a5ffa4a80cbe435cb.glb", hat: "/cdn/value.e571ed59eacbd691eabb64980d0013dc3454b9bcf334007f35dfa0de48a9e90a.glb" }
+    2: { free: "/cdn/value.11e9e104a664dcfb9f7ca80d7bc71e8eca576b92b3bc2e5a37629f856af48cd2.glb", hat: "/cdn/value.443cf27d27bb0ff640fb989a12c79717794892aaecb1703d8ebae0a9e777e366.glb" }
+    3: { free: "/cdn/value.077d9eece8b4b4462efd948b721ad4f86b638ed3d260c01ae7239073e79d337a.glb", hat: "/cdn/value.7707959a6ad1f3b493173c750e1478fee3f8527db7e4ca07d99dcaf8efb25ffa.glb" }
+    4: { free: "/cdn/value.83936d4254193009c3f6741a5143a7c7fe9019d81217310103f958a403465798.glb", hat: "/cdn/value.8e5e3f4e15796d6b533767406faebe52fb3cf442904a664bf8990fa8388148f2.glb" }
+    5: { free: "/cdn/value.dd835ed0a9bb6aebae01ec6f96a5c9a8f4eab4c7d68387b2577dce9ba8955445.glb", hat: "/cdn/value.873926f267676ded666d21a5dfd50fe7a82711f6de456a0984d8204769ee7208.glb" }
+    6: { free: "/cdn/value.9b011006718e1263114ce7fa11bea6742bebc4655c2e50ffbf4a22dd9d944054.glb", hat: "/cdn/value.cb871acf46d86866fd6804a13056c2546ea666f50c9bddf9915678c6fed094f7.glb" }
+    7: { free: "/cdn/value.2c8bb381fd963b5b55eaef750e88d973d40ba991f6d3e93ce78df225c1fe65cd.glb", hat: "/cdn/value.9a4256130a9ea14442eecfc11299658d2be72f86bd5ef8c016326380125eb7ee.glb" }
+    8: { free: "/cdn/value.cdd9d5abfe9ef58e1fb98fd966735233711b23e6d714237c434dfa460c2d10f3.glb", hat: "/cdn/value.6f26ab79aaeb9fc6e69ed2d0394d931029fcec5896d702258c61f3db9b89ef12.glb" }
+    9: { free: "/cdn/value.3e3c65ccec47b4125f867f9e2faddff217d2ff63d6bb45bdf99e29a9d3c0046b.glb", hat: "/cdn/value.4354b4c4154b981166a4c93fcb3ff09fcf013da6eafc638b64a9d0c107e0c9d0.glb" }
+    10: { free: "/cdn/value.fb9d09d4abcec62bba2eadf428c810fac573ef951a38a37ff64cbdc86bdea53d.glb", hat: "/cdn/value.8c9395917d2d49a52f5ed24adf5db3b851d74215e3295829355cc939638269ec.glb" }
+    11: { free: "/cdn/value.b953e5ce975a4c34c685166410ff6694fe64e36201d7dbb27bc185be40093d1e.glb", hat: "/cdn/value.5a7cdde1628c003ff78cc2f934e40acb925b3c5bfd4a0e8759f32cd489e5001f.glb" }
+    12: { free: "/cdn/value.60d323f61094063daeb2b3bc5921464c1285d57751da7c40291bc6c707e8cb17.glb", hat: "/cdn/value.36f0f51236478e1e11a28c87516e1123a79db529ef970c9e7a68c2894a18c5ee.glb" }
+    13: { free: "/cdn/value.e2b034a2a57ee4dd61f8d6f7df48d45683506453d3e5953458792893f4a6def9.glb", hat: "/cdn/value.f3dc1a69d0c58041222cf947e2d9686b9b65f5050d25adf06ba7a8369e186d98.glb" }
+    14: { free: "/cdn/value.585bbe6dde7af8413584b2859339eeaf994ec266225bc5fd3729e0f327018cc6.glb", hat: "/cdn/value.ad20491ed0f255eb0173595896c231995e84eeacd7ee6c9f22747de684836340.glb" }  # tripo ponytail
+    15: { free: "/cdn/value.090276af2243ab0141afdcb90e578e90ac86946b3bf0b257533b547d4f13d77f.glb", hat: "/cdn/value.e571ed59eacbd691eabb64980d0013dc3454b9bcf334007f35dfa0de48a9e90a.glb" }  # tripo spiky
+    16: { free: "/cdn/value.939224d5044243608a7a8343ea858124218229cad807b8fa4a7c7fd30a27e71b.glb", hat: "/cdn/value.443cf27d27bb0ff640fb989a12c79717794892aaecb1703d8ebae0a9e777e366.glb" }  # tripo long
 humanPick: { f_afropuff: 3, f_bob: 18, f_curly: 6, f_curtainmid: 7, f_halfup: 4, f_hime: 25, f_long: 16, f_messybun: 23, f_pixie: 24, f_ponytail: 19, f_ringlets: 5, f_sidebraid: 26, f_sidetail: 14, f_spacebuns: 10, f_twinbraids: 2, f_twintails: 21, f_wavy: 20, f_wolfcut: 22, f_silver: 17, m_buzz: 1, m_crop: 2, m_curlytop: 3, m_curtains: 7, m_fluffy: 6, m_manbun: 0, m_mohawk: 10, m_shaggy: 12, m_sidepart: 5, m_slick: 8, m_spiky: 15, m_undercut: 9, m_ponytail: 14, m_long: 16 }
