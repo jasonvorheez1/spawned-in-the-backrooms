@@ -37,78 +37,91 @@ l2-sd-nose-0:
   material: {color: oklch(0.78 0.15 90), roughness: 0.6}
   primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
   rotation: {yaw: -180}
+  visible: false
 l2-sd-nose-1:
   feetPosition: {x: 27.5, y: 0.48, z: -40.82}
   id: l2-sd-nose-1
   material: {color: oklch(0.78 0.15 90), roughness: 0.6}
   primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
   rotation: {yaw: -180}
+  visible: false
 l2-sd-nose-10:
   feetPosition: {x: 27.5, y: 2.73, z: -43.519999999999996}
   id: l2-sd-nose-10
   material: {color: oklch(0.78 0.15 90), roughness: 0.6}
   primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
   rotation: {yaw: -180}
+  visible: false
 l2-sd-nose-11:
   feetPosition: {x: 27.5, y: 2.98, z: -43.82}
   id: l2-sd-nose-11
   material: {color: oklch(0.78 0.15 90), roughness: 0.6}
   primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
   rotation: {yaw: -180}
+  visible: false
 l2-sd-nose-12:
   feetPosition: {x: 27.5, y: 3.23, z: -44.12}
   id: l2-sd-nose-12
   material: {color: oklch(0.78 0.15 90), roughness: 0.6}
   primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
   rotation: {yaw: -180}
+  visible: false
 l2-sd-nose-2:
   feetPosition: {x: 27.5, y: 0.73, z: -41.12}
   id: l2-sd-nose-2
   material: {color: oklch(0.78 0.15 90), roughness: 0.6}
   primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
   rotation: {yaw: -180}
+  visible: false
 l2-sd-nose-3:
   feetPosition: {x: 27.5, y: 0.98, z: -41.42}
   id: l2-sd-nose-3
   material: {color: oklch(0.78 0.15 90), roughness: 0.6}
   primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
   rotation: {yaw: -180}
+  visible: false
 l2-sd-nose-4:
   feetPosition: {x: 27.5, y: 1.23, z: -41.72}
   id: l2-sd-nose-4
   material: {color: oklch(0.78 0.15 90), roughness: 0.6}
   primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
   rotation: {yaw: -180}
+  visible: false
 l2-sd-nose-5:
   feetPosition: {x: 27.5, y: 1.48, z: -42.019999999999996}
   id: l2-sd-nose-5
   material: {color: oklch(0.78 0.15 90), roughness: 0.6}
   primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
   rotation: {yaw: -180}
+  visible: false
 l2-sd-nose-6:
   feetPosition: {x: 27.5, y: 1.73, z: -42.32}
   id: l2-sd-nose-6
   material: {color: oklch(0.78 0.15 90), roughness: 0.6}
   primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
   rotation: {yaw: -180}
+  visible: false
 l2-sd-nose-7:
   feetPosition: {x: 27.5, y: 1.98, z: -42.62}
   id: l2-sd-nose-7
   material: {color: oklch(0.78 0.15 90), roughness: 0.6}
   primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
   rotation: {yaw: -180}
+  visible: false
 l2-sd-nose-8:
   feetPosition: {x: 27.5, y: 2.23, z: -42.92}
   id: l2-sd-nose-8
   material: {color: oklch(0.78 0.15 90), roughness: 0.6}
   primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
   rotation: {yaw: -180}
+  visible: false
 l2-sd-nose-9:
   feetPosition: {x: 27.5, y: 2.48, z: -43.22}
   id: l2-sd-nose-9
   material: {color: oklch(0.78 0.15 90), roughness: 0.6}
   primitive: {depth: 0.05, height: 0.03, kind: box, width: 1.7}
   rotation: {yaw: -180}
+  visible: false
 l2-sd-pipe0:
   feetPosition: {x: 27.5, y: 0, z: -40.65}
   id: l2-sd-pipe0
@@ -145,6 +158,14 @@ l2-sd-tube:
   material: {color: white, emissive: oklch(0.97 0.03 100), emissiveIntensity: 3}
   primitive: {depth: 0.14, height: 0.06, kind: box, width: 1.2}
   rotation: {yaw: -180}
+l2-stair-flight:
+  castShadow: false
+  feetPosition: {x: 27.5, y: 0, z: -40.65}
+  id: l2-stair-flight
+  model: {id: /cdn/value.2fc266851ba0826982af9d80d704e390d10316e214b0ce362a851ee748c3aae4.glb, materials: {concrete: {color: oklch(0.92 0.01 80), repeat: [1.5, 1.5], roughness: 0.9, texture: cdn/texture-worn-poured-concrete-stair-tread.png, wrap: repeat}}}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  visibleRange: {max: 45}
 wp-z_4_4:
   castShadow: false
   feetPosition: {x: -37.5, y: 0, z: -35}
