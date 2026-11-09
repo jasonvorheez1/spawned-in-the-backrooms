@@ -1,0 +1,8 @@
+# spawn-scene v2 yaml x0z0
+z-floorsafe:
+  castShadow: false
+  feetPosition: {x: 0, y: -1, z: -28}
+  id: z-floorsafe
+  physics: static
+  primitive: {depth: 80, height: 1, kind: box, width: 30}
+  visible: false
