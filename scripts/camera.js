@@ -184,14 +184,15 @@ export function update(ctx, dt) {
   // the salon chair: while the makeover menu is open the eye steps out in front of you at a three-quarter angle, so you watch the cut land on your own body (TURN swings it round)
   const sk = ctx.self.session.salonCam ??= { k: 0 }, salonWant = ps?.salonOpen && st && st.phase === 'sat' && down >= 3200 ? 1 : 0
   sk.k += (salonWant - sk.k) * Math.min(1, dt * 4)
-  if (sk.k > 0.01 && ctx.player) {
+  const spl = ctx.player
+  if (sk.k > 0.01 && spl) {
     ctx.self.hideLocalPlayer = false
-    const wp = ctx.player.worldFeetPosition ?? ctx.player.feetPosition, r0 = ctx.player.worldRotation ?? ctx.player.rotation
-    const by = (typeof r0 === 'number' ? r0 : r0?.yaw ?? 0) * Math.PI / 180, a = by + 1.25 + (ps.wrSpin || 0) * Math.PI / 180
+    const wp = spl.worldFeetPosition ?? spl.feetPosition, r0 = spl.worldRotation ?? spl.rotation
+    const by = (typeof r0 === 'number' ? r0 : r0?.yaw ?? 0) * Math.PI / 180, a = by + 1.25 + (ps?.wrSpin || 0) * Math.PI / 180
     const b = { x: wp.x, y: wp.y + 1.0, z: wp.z } // chest of the seated body
     const dir = { x: -Math.sin(a), y: 0.17, z: -Math.cos(a) }, dl = Math.hypot(dir.x, dir.y, dir.z) // in front and a little up: forward is (-sin, -cos)
     const nd = { x: dir.x / dl, y: dir.y / dl, z: dir.z / dl }, r0p = { x: b.x + nd.x * 0.7, y: b.y + nd.y * 0.7, z: b.z + nd.z * 0.7 } // start clear of the chair you sit in
-    const wall = raycast(ctx, r0p, nd, { distance: 2.0, radius: 0.15, physicsOnly: true, bodies: 'static', ignoreEntities: [ctx.player.id, st.id] })
+    const wall = raycast(ctx, r0p, nd, { distance: 2.0, radius: 0.15, physicsOnly: true, bodies: 'static', ignoreEntities: [spl.id, st?.id].filter(Boolean) })
     const reach = wall ? Math.max(1.3, 0.7 + wall.distance - 0.25) : 2.6 // a wall or a mirror cuts the eye in before it can sit inside it
     const out = { x: b.x + dir.x / dl * reach, y: b.y + dir.y / dl * reach + 0.1, z: b.z + dir.z / dl * reach }
     const k = sk.k * sk.k * (3 - 2 * sk.k), e0 = ctx.self.feetPosition
