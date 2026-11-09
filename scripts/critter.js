@@ -233,8 +233,8 @@ export function update(ctx) {
     ses.lastFace = face
   }
   const key = ses.lookKey
-  if (key !== ses.key) {
-    ses.key = key
+  if (key !== ses.key || ses.keyPlace !== ctx.self.place || (MESH && !ses.cachedWorn && typeof ctx.self.model === 'string')) { // a place crossing restamps the body: dress it again there
+    ses.key = key; ses.keyPlace = ctx.self.place
     const params = ses.cachedParams, worn = ses.cachedWorn
     if (worn) { ctx.self.primitive = null; ctx.self.model = wornModel(worn); dropHead(ctx, ctx.self); ctx.self.jiggle = null }
     else if (MESH) {
