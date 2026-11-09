@@ -25,7 +25,8 @@ export function fullLook(look) {
 export function rowOf(slot, kind, colour) {
   if (!kind || kind === 'none') return null
   const c = hex(colour)
-  return CL.rows.find((r) => r.slot === slot && r.kind === kind && r.strict && r.colours.includes(c))
+  return CL.rows.find((r) => r.slot === slot && r.id === kind && r.id !== r.kind)
+    ?? CL.rows.find((r) => r.slot === slot && r.kind === kind && r.strict && r.colours.includes(c))
     ?? CL.rows.find((r) => r.slot === slot && r.kind === kind && !r.strict) ?? null
 }
 // a garment's fabric (data patKey/pats): the row's own list, the first its usual one; anything else reads as that first
@@ -45,7 +46,7 @@ export const normToken = (token) => { const p = parseCloth(token); return p ? cl
 const colourOf = (l, slot) => (CL.colourKey[slot] ? hex(l[CL.colourKey[slot]]) : '000000')
 export function clothToken(slot, kind, colour, pat) {
   const row = rowOf(slot, kind, colour), pt = pat && row ? patOk(row, pat) : null
-  return `cloth:${slot}:${kind}:${hex(colour)}` + (pt && pt !== patsOf(row)[0] ? ':' + pt : '')
+  return `cloth:${slot}:${row?.id ?? kind}:${hex(colour)}` + (pt && pt !== patsOf(row)[0] ? ':' + pt : '')
 }
 const tokOf = (l, slot) => { const c = colourOf(l, slot), row = rowOf(slot, l[slot], c); return row ? clothToken(slot, l[slot], c, patOf(l, slot, row)) : null }
 // every garment a critter wears, as tokens (unknown kinds, like a bare 'shirt', are skipped)

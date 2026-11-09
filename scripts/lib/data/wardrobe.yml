@@ -1,0 +1,78 @@
+parts:
+- Ward_tee
+- Ward_tank
+- Ward_longsleeve
+- Ward_pajamas
+- Ward_dress
+- Ward_sweater
+- Ward_hoodie
+- Ward_apron
+- Ward_jacket
+- Ward_megjacket
+- Ward_pants
+- Ward_shorts
+- Ward_pjpants
+- Ward_skirt
+- Ward_longskirt
+- Ward_overalls
+- Ward_sneakers
+- Ward_slippers
+- Ward_boots
+- Ward_cap
+- Ward_beanie
+- Ward_tophat
+- Ward_headphones
+- Ward_bow
+- Ward_flower
+- Ward_partyhat
+- Ward_crown
+- Ward_glasses
+- Ward_shades
+- Ward_scarf
+- Ward_bowtie
+- Ward_bell
+- Ward_cape
+- Ward_officeshirt
+- Ward_slacks
+- Ward_cargo
+- Ward_carpetponcho
+- Ward_padbeanie
+- Ward_canvasskirt
+- Ward_padjacket
+- Ward_wirehood
+- Ward_steeltoe
+- Ward_platevest
+- Ward_bellhop
+- Ward_tailcoat
+- Ward_gown
+- Ward_maidapron
+- Ward_hotelrobe
+- Ward_pinstripe
+- Ward_velvetskirt
+- Ward_hotelslip
+- Ward_balltie
+- Ward_opera
+- Ward_seawatchsuit
+- Ward_oilskin
+- Ward_abysshauberk
+- Ward_tarwaders
+- Ward_ballastboots
+- Ward_souwester
+- Ward_divehelm
+- Ward_chitinplate
+- Ward_chitinhelm
+- Ward_pitchboots
+- Ward_silkcloak
+- Ward_lifemantle
+- Ward_pgcoat
+- Ward_jerrytee
+- Ward_pphoodie
+- Ward_pghoodie
+- Ward_gmhoodie
+legacyHuman:
+  m: /cdn/value.2062fd6ff20cebe8843a20cdc10e446ffe08df184d1c4f42b4e4ada4f82464b7.glb
+  f: /cdn/value.c77d4bba1677b19045e36567b00c8d010099e68fdf364280aab568ab44e2d511.glb
+  m_prior: /cdn/value.0f4d6b4922fbd0e8a97b8d6b71836871b2def3b39574b7e0d21aea73d7586843.glb
+legacyFur:
+  m: /cdn/value.72a8b9bf28216baab5b949a31bbff68251f892d11e4ca39e3b68c27ef0557e76.glb
+  f: /cdn/value.234a83fd493cd046995cd5526a69249cd845b14a19372cdf61be068d24fc5d56.glb
