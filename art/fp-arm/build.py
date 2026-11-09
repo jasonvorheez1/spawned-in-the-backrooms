@@ -2,6 +2,7 @@
 # fingers curled into a grip and the thumb folded over, laid in the viewmodel's frame (glTF: x right, y up, -z forward),
 # its fist centred on the grip at the origin. A mirrored left arm for two-handed weapons. Static meshes: no skin, no IK.
 import bpy, sys, math, mathutils as mu, os
+import numpy as np
 V = mu.Vector
 SRC = {"f": "/workspace/arm/f.glb", "m": "/workspace/arm/m.glb"}
 OUT = "/workspace/arm/out"; os.makedirs(OUT, exist_ok=True)
@@ -39,23 +40,66 @@ def build(sex, side):
         if sum(w for k, w in ws.items() if k in keep) < 0.5: dele.append(v.index); continue
         p = mw @ v.co; d = p - W
         P[v.index] = (p, d.dot(a), d.dot(n), d.dot(s), ws.get(gi["RightHand"], 0))
-    hand = [q for q in P.values() if q[4] > 0.3 and q[1] > -0.01]
-    Tmax = max(q[1] for q in hand)
-    wrist_half = max(abs(q[3]) for q in hand if 0.0 < q[1] < 0.15 * Tmax)
-    k = 0.42 * Tmax
-    print(sex, "hand len", round(Tmax, 3), "wrist half", round(wrist_half, 3))
-    for i, (p, t, h, l, hw) in P.items():
-        thumb = l > wrist_half * 1.15 and 0.12 * Tmax < t < k + 0.03 and hw > 0.3
-        if thumb:   # fold the thumb down over the fingers: about the hand axis, then toward the knuckles
-            piv = W + s * wrist_half
-            q = mu.Quaternion(a, math.radians(-95)) @ (p - piv) + piv
-            q = mu.Quaternion(n, math.radians(-40)) @ (q - piv) + piv
-            P[i] = (q,) + P[i][1:]
-        elif t > k and hw > 0.3:   # bend the fingers around a cylinder under the palm
-            u = t - k; th = min(u / R_CURL, math.radians(235)); rho = R_CURL + h
-            nt = k + rho * math.sin(th); nh = -R_CURL + rho * math.cos(th)
-            P[i] = (W + a * nt + n * nh + s * l,) + P[i][1:]
-    print('moved', sum(1 for i in P if (P[i][0] - mw @ me.vertices[i].co).length > 1e-4), 'of', len(P), 'k', round(k,3))
+    # each finger is its own island past the webbing: find them, then bend each at three hinges (knuckle, middle, tip)
+    H = {i for i, q in P.items() if q[4] > 0.1}
+    adj = {i: set() for i in H}
+    for e in me.edges:
+        i, j = e.vertices
+        if i in H and j in H: adj[i].add(j); adj[j].add(i)
+    byp = {}
+    for i in H: byp.setdefault(tuple(round(c, 4) for c in P[i][0]), []).append(i)
+    for L in byp.values():
+        for i in L: adj[i].update(L)
+    def comps(sel):
+        seen, out = set(), []
+        for i in sel:
+            if i in seen: continue
+            st, c = [i], []; seen.add(i)
+            while st:
+                k = st.pop(); c.append(k)
+                for j in adj[k]:
+                    if j in sel and j not in seen: seen.add(j); st.append(j)
+            out.append(c)
+        return out
+    TK = 0.32 * max(P[i][1] for i in H)
+    fingers = [c for c in comps({i for i in H if P[i][1] > TK}) if len(c) > 30]
+    thumbs = [c for c in comps({i for i in P if P[i][3] > 0.03 and P[i][1] > -0.03 and P[i][3] > 0.03}) if len(c) > 10]
+    print(sex, "fingers", len(fingers), "thumb", [len(c) for c in thumbs])
+    ANG = (78, 98, 62)   # knuckle, middle, tip flexion
+    def rot(pt, piv, ax, deg): return mu.Quaternion(ax, math.radians(deg)) @ (pt - piv) + piv
+    newp = {i: P[i][0].copy() for i in P}
+    hinge = V(); rings1 = []
+    for c in fingers:
+        pts = [P[i][0] for i in c]; cen = sum(pts, V()) / len(pts)
+        X = np.array([tuple(q - cen) for q in pts]); f = V(np.linalg.eigh(X.T @ X)[1][:, 2])
+        if f.dot(a) < 0: f = -f
+        u = {i: (P[i][0] - cen).dot(f) for i in c}
+        us = sorted(set(round(x, 3) for x in u.values())); rings = [[us[0]]]
+        for x in us[1:]:
+            if x - rings[-1][-1] > 0.004: rings.append([x])
+            else: rings[-1].append(x)
+        rc = [sum(r) / len(r) for r in rings]
+        while len(rc) < 4: rc.append(rc[-1] + 0.01)
+        L0 = min(u.values()); J = (L0 - 0.007, (rc[0] + rc[1]) / 2, (rc[1] + rc[2]) / 2)
+        ax = f.cross(n).normalized(); hinge += ax
+        def axpt(x):   # the finger's centre line at u=x, nudged to the palm side
+            near = [P[i][0] for i in c if abs(u[i] - x) < 0.006] or pts
+            return sum(near, V()) / len(near) - n * 0.003
+        pivs = [axpt(max(j, L0 + 0.001)) - f * max(0, L0 + 0.001 - j) for j in J]
+        for k in (2, 1, 0):
+            for i in c:
+                if u[i] > J[k]: newp[i] = rot(newp[i], pivs[k], ax, -ANG[k])
+            for k2 in range(k + 1, 3): pass
+        r1 = [newp[i] for i in c if J[1] < u[i] < J[2]]; rings1.append(sum(r1, V()) / max(1, len(r1)))
+    hinge.normalize()
+    # thumb: roll it under the palm and swing it forward so it lies across the curled index and middle
+    for c in thumbs:
+        base = min((P[i][0] for i in c), key=lambda q: (q - W).dot(s))
+        piv = W + s * (base - W).dot(s) * 0.8 + a * (base - W).dot(a) - n * 0.006
+        for i in c:
+            q = rot(newp[i], piv, a, 62)
+            newp[i] = rot(q, piv, n, 38)
+    for i in P: P[i] = (newp[i],) + P[i][1:]
     for i, q in P.items(): me.vertices[i].co = mw.inverted() @ q[0]
     import bmesh
     bm = bmesh.new(); bm.from_mesh(me)
@@ -66,7 +110,7 @@ def build(sex, side):
     bpy.context.view_layer.objects.active = body; body.select_set(True)
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     # fist centre: the curled finger mass
-    fist = W + a * (k + 0.004) - n * R_CURL
+    fist = sum(rings1, V()) / len(rings1); fist = fist + (W + a * (fist - W).dot(a) - fist) * 0.45   # inside the fist: between the middle phalanges and the palm
     # target frame in the viewmodel: forearm runs from the fist back toward the camera, down and out to its side
     sx = 1 if side == "R" else -1
     fore = V((0.22 * sx, -0.30, 0.93)).normalized()        # glTF, wrist -> elbow
