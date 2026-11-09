@@ -125,7 +125,7 @@ export function geometry(ctx) {
         ctx.color(mid && i > 0 && i < 3 ? ((i + j + cz) % 2 ? "oklch(0.24 0.01 270)" : `oklch(${0.7 + g} 0.008 250)`) : `oklch(${0.86 + g} 0.012 90)`); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
     } else if (TILED.has(z)) { // black and grey vinyl, in 1 m squares like a school
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j; ctx.color((i + j + cx + cz) % 2 ? "oklch(0.28 0.01 270)" : "oklch(0.78 0.01 250)"); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
-    } else if (z === "edge" || z === "edgecave") { ctx.roughness(z === "edge" ? 0.28 : 0.88); ctx.color(z === "edge" ? "oklch(0.84 0.01 100)" : "oklch(0.62 0.03 100)"); ctx.quad(x0, 0, z0, x0, 0, z0 + S, x0 + S, 0, z0 + S, x0 + S, 0, z0); }
+    } else if (z === "edge" || z === "edgecave") { ctx.roughness(z === "edge" ? 0.28 : 0.88); ctx.color(z === "edge" ? "oklch(0.76 0.012 110)" : "oklch(0.62 0.03 100)"); ctx.quad(x0, 0, z0, x0, 0, z0 + S, x0 + S, 0, z0 + S, x0 + S, 0, z0); }
     else if (z === "fridges") {
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j; ctx.color((i + j) % 2 ? "oklch(0.86 0.015 95)" : "oklch(0.76 0.025 195)"); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
     }
@@ -334,8 +334,13 @@ export function geometry(ctx) {
   ctx.albedo(WALL); ctx.color("oklch(0.62 0.008 240)"); ctx.roughness(0.95);
   for (let k = 0; k < 6; k++) {
     const rx = jb.x - 0.8 + (k % 3) * 0.75, rz = jb.z - 0.7 + Math.floor(k / 3) * 0.85, rh = 0.22 + (k % 3) * 0.14;
-    box(ctx, rx - 0.32, rx + 0.32, 0, rh, rz - 0.28, rz + 0.28);
+    const sides = 6 + (k % 3), pts = []; // a broken chunk: a jagged ring, wider at the foot, a smaller tilted lump on top
+    for (let i = 0; i < sides; i++) { const t = (i / sides) * Math.PI * 2, rr = 0.22 + hash(k, i, 81) * 0.16; pts.push([rx + Math.cos(t) * rr, rz + Math.sin(t) * rr * 0.85]); }
+    prism(ctx, pts, 0, rh);
+    prism(ctx, pts.map(([x, z]) => [rx + (x - rx) * 0.6 + (hash(k, 7, 82) - 0.5) * 0.12, rz + (z - rz) * 0.6]), rh, rh + 0.08 + hash(k, 8, 83) * 0.1);
   }
+  ctx.color("oklch(0.5 0.01 240)"); // grit and small shards spread round the heap
+  for (let k = 0; k < 14; k++) { const gx = jb.x - 1.3 + hash(k, 1, 84) * 2.6, gz = jb.z - 1.2 + hash(k, 2, 85) * 2.4, gr = 0.05 + hash(k, 3, 86) * 0.08; prism(ctx, [[gx - gr, gz], [gx, gz - gr * 0.8], [gx + gr, gz + gr * 0.2], [gx + gr * 0.2, gz + gr]], 0, 0.03 + gr * 0.5); }
   // the dark mouth of the cave: a karst fissure in the rock the lane runs into, edged with wet stalactites & climbing rope pitons
   ctx.albedo(WALL); ctx.color("oklch(0.42 0.012 110)");
   for (let k = 0; k < 9; k++) {
