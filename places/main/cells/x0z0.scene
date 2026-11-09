@@ -5,56 +5,65 @@ hub:
 hub/box0:
   feetPosition: {x: 5.5, y: 0, z: -5.5}
   id: hub/box0
-  material: {color: oklch(0.62 0.07 70), roughness: 0.95}
+  layout: {box: {max: {x: 0.3, y: 0.45, z: 0.24}, min: {x: -0.3, y: 0, z: -0.24}}}
+  model: {forward: "+z", id: /cdn/value.21e3f0ebfb04327cc1724b58d1af47132267e6c03c9f01e6896f2d211d3dc6fe.glb}
   parent: hub
-  physics: static
-  primitive: {depth: 0.48, height: 0.45, kind: box, width: 0.6}
-  castShadow: false
-  visibleRange: {max: 45}
-  rotation: 20
+  physics: {body: static, collider: box}
+  rotation: {w: 0.9848077297210693, x: 0, y: 0.1736481785774231, z: 0}
+  state: {}
+  tags: []
 hub/box1:
   feetPosition: {x: 6, y: 0, z: -4.6}
   id: hub/box1
-  material: {color: oklch(0.62 0.07 70), roughness: 0.95}
+  layout: {box: {max: {x: 0.25, y: 0.4, z: 0.2}, min: {x: -0.25, y: 0, z: -0.2}}}
+  model: {forward: "+z", id: /cdn/value.21e3f0ebfb04327cc1724b58d1af47132267e6c03c9f01e6896f2d211d3dc6fe.glb}
   parent: hub
-  physics: static
-  primitive: {depth: 0.4, height: 0.4, kind: box, width: 0.5}
-  castShadow: false
-  visibleRange: {max: 45}
-  rotation: -10
+  physics: {body: static, collider: box}
+  rotation: {w: 0.9961947202682495, x: 0, y: -0.08715574443340302, z: 0}
+  state: {}
+  tags: []
 hub/box2:
   feetPosition: {x: 5.7, y: 0.45, z: -5.2}
   id: hub/box2
-  material: {color: oklch(0.62 0.07 70), roughness: 0.95}
+  layout: {box: {max: {x: 0.225, y: 0.35, z: 0.18}, min: {x: -0.225, y: 0, z: -0.18}}}
+  model: {forward: "+z", id: /cdn/value.21e3f0ebfb04327cc1724b58d1af47132267e6c03c9f01e6896f2d211d3dc6fe.glb}
   parent: hub
-  physics: static
-  primitive: {depth: 0.36000000000000004, height: 0.35, kind: box, width: 0.45}
-  castShadow: false
-  visibleRange: {max: 45}
-  rotation: 40
+  physics: {body: static, collider: box}
+  rotation: {w: 0.9396926164627075, x: 0, y: 0.3420201539993286, z: 0}
+  state: {}
+  tags: []
 hub/box3:
   feetPosition: {x: -6, y: 0, z: 5}
   id: hub/box3
-  material: {color: oklch(0.62 0.07 70), roughness: 0.95}
+  layout: {box: {max: {x: 0.35, y: 0.5, z: 0.28}, min: {x: -0.35, y: 0, z: -0.28}}}
+  model: {forward: "+z", id: /cdn/value.21e3f0ebfb04327cc1724b58d1af47132267e6c03c9f01e6896f2d211d3dc6fe.glb}
   parent: hub
-  physics: static
-  primitive: {depth: 0.5599999999999999, height: 0.5, kind: box, width: 0.7}
-  castShadow: false
-  visibleRange: {max: 45}
-  rotation: 5
+  physics: {body: static, collider: box}
+  rotation: {w: 0.9990482330322266, x: 0, y: 0.04361938685178757, z: 0}
+  state: {}
+  tags: []
 hub/cot:
-  children: [{feetPosition: {x: 0, y: 0.38, z: 0}, material: {color: oklch(0.45 0.05 130), roughness: 1}, primitive: {depth: 1.95, height: 0.06, kind: box, width: 0.75}}, {feetPosition: {x: 0, y: 0.44, z: -0.75}, material: {color: oklch(0.9 0.01 90), roughness: 1}, primitive: {depth: 0.32, height: 0.1, kind: box, width: 0.5}}, {feetPosition: {x: -0.35, y: 0, z: -0.9}, material: {color: oklch(0.45 0.01 250)}, primitive: {depth: 0.04, height: 0.38, kind: box, width: 0.04}}, {feetPosition: {x: 0.35, y: 0, z: -0.9}, material: {color: oklch(0.45 0.01 250)}, primitive: {depth: 0.04, height: 0.38, kind: box, width: 0.04}}, {feetPosition: {x: -0.35, y: 0, z: 0.9}, material: {color: oklch(0.45 0.01 250)}, primitive: {depth: 0.04, height: 0.38, kind: box, width: 0.04}}, {feetPosition: {x: 0.35, y: 0, z: 0.9}, material: {color: oklch(0.45 0.01 250)}, primitive: {depth: 0.04, height: 0.38, kind: box, width: 0.04}}]
+  children: []
   feetPosition: {x: 4.5, y: 0, z: 4.5}
   id: hub/cot
+  layout: {box: {max: {x: 0.39, y: 0.5, z: 0.975}, min: {x: -0.39, y: 0, z: -0.975}}}
+  model: {forward: "+z", id: /cdn/value.424403c4a2206bb97e6dbda0c91caecb68075a573ca0ab4ab6bf7c0a96f92126.glb}
   parent: hub
-  physics: static
-  rotation: -80
+  physics: {body: static, collider: box}
+  rotation: {w: 0.7660444378852844, x: 0, y: -0.6427876353263855, z: 0}
+  state: {}
+  tags: []
 hub/lamp:
-  children: [{feetPosition: {x: 0, y: 0, z: 0}, material: {color: oklch(0.45 0.01 250)}, primitive: {height: 0.04, kind: cylinder, radiusBottom: 0.18, radiusTop: 0.15}}, {feetPosition: {x: 0, y: 0.04, z: 0}, material: {color: oklch(0.45 0.01 250), metalness: 0.6}, primitive: {height: 1.45, kind: cylinder, radiusBottom: 0.015, radiusTop: 0.015}}, {feetPosition: {x: 0, y: 1.42, z: 0}, material: {color: oklch(0.75 0.1 70), emissive: oklch(0.8 0.15 65), emissiveIntensity: 1.2, side: double}, primitive: {height: 0.3, kind: cylinder, openEnded: true, radiusBottom: 0.24, radiusTop: 0.14}}, {feetPosition: {x: 0, y: 1.45, z: 0}, light: {color: oklch(0.8 0.14 60), distance: 9, intensity: 4, kind: point}}]
+  children: [{feetPosition: {x: 0, y: 1.4500000476837158, z: 0}, layout: null, light: {color: 4294944345, distance: 9, intensity: 4, kind: point}, material: null, model: null, primitive: null, ui: null}]
   feetPosition: {x: -5.5, y: 0, z: 4}
   id: hub/lamp
+  layout: {box: {max: {x: 0.2, y: 1.65, z: 0.2}, min: {x: -0.2, y: 0, z: -0.2}}}
+  model: {forward: "+z", id: /cdn/value.eecf3a9050a065dacc2e08b35958b36ea0eee1567e010391bd19ed9f76bc4975.glb}
   parent: hub
-  physics: static
+  physics: {body: static, collider: box}
+  rotation: {w: 1, x: 0, y: 0, z: 0}
+  state: {}
+  tags: []
 hub/rug:
   feetPosition: {x: 0, y: 0.005, z: 0}
   id: hub/rug
@@ -62,12 +71,16 @@ hub/rug:
   parent: hub
   primitive: {depth: 4.5, height: 0.01, kind: box, width: 6}
 hub/table:
-  children: [{feetPosition: {x: 0, y: 0.72, z: 0}, material: {color: oklch(0.88 0.02 90), roughness: 0.6}, primitive: {depth: 0.75, height: 0.04, kind: box, width: 1.8}}, {feetPosition: {x: -0.8, y: 0, z: -0.3}, material: {color: oklch(0.45 0.01 250), metalness: 0.7, roughness: 0.4}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.02, radiusTop: 0.02}}, {feetPosition: {x: 0.8, y: 0, z: -0.3}, material: {color: oklch(0.45 0.01 250), metalness: 0.7, roughness: 0.4}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.02, radiusTop: 0.02}}, {feetPosition: {x: -0.8, y: 0, z: 0.3}, material: {color: oklch(0.45 0.01 250), metalness: 0.7, roughness: 0.4}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.02, radiusTop: 0.02}}, {feetPosition: {x: 0.8, y: 0, z: 0.3}, material: {color: oklch(0.45 0.01 250), metalness: 0.7, roughness: 0.4}, primitive: {height: 0.72, kind: cylinder, radiusBottom: 0.02, radiusTop: 0.02}}, {feetPosition: {x: -0.5, y: 0.74, z: -0.1}, layout: {box: {max: {x: 0.08, y: 0.32, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}, model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb}, {feetPosition: {x: -0.3, y: 0.74, z: 0.04999999999999999}, layout: {box: {max: {x: 0.08, y: 0.32, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}, model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb}, {feetPosition: {x: 0.1, y: 0.74, z: -0.1}, layout: {box: {max: {x: 0.08, y: 0.32, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}, model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb}, {feetPosition: {x: 0.35, y: 0.74, z: 0.04999999999999999}, layout: {box: {max: {x: 0.08, y: 0.32, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}, model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb}, {feetPosition: {x: 0.7, y: 0.74, z: 0.1}, material: {color: oklch(0.95 0.01 90)}, primitive: {depth: 0.24, height: 0.02, kind: box, width: 0.32}, ui: "<div face=\"top\" width=\"0.32m\" style=\"font-size:26px;color:#3a2a14;padding:14px;font-family:serif\">day 41. the smilers don't come past the doorway. drink the water. find the wall that flickers.</div>"}]
+  children: [{feetPosition: {x: -0.5, y: 0.7400000095367432, z: -0.10000000149011612}, layout: {box: {max: {x: 0.08, y: 0.32, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}, light: null, material: null, model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb, primitive: null, ui: null}, {feetPosition: {x: -0.30000001192092896, y: 0.7400000095367432, z: 0.05000000074505806}, layout: {box: {max: {x: 0.08, y: 0.32, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}, light: null, material: null, model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb, primitive: null, ui: null}, {feetPosition: {x: 0.10000000149011612, y: 0.7400000095367432, z: -0.10000000149011612}, layout: {box: {max: {x: 0.08, y: 0.32, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}, light: null, material: null, model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb, primitive: null, ui: null}, {feetPosition: {x: 0.3499999940395355, y: 0.7400000095367432, z: 0.05000000074505806}, layout: {box: {max: {x: 0.08, y: 0.32, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}, light: null, material: null, model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb, primitive: null, ui: null}, {feetPosition: {x: 0.699999988079071, y: 0.7400000095367432, z: 0.10000000149011612}, layout: null, light: null, material: {color: 4294045415, key: Std/PBR}, model: null, primitive: {depth: 0.24, height: 0.02, kind: box, width: 0.32}, ui: "<div face=\"top\" width=\"0.32m\" style=\"font-size:26px;color:#3a2a14;padding:14px;font-family:serif\">day 41. the smilers don't come past the doorway. drink the water. find the wall that flickers.</div>"}]
   feetPosition: {x: -4.5, y: 0, z: -4}
   id: hub/table
+  layout: {box: {max: {x: 0.9, y: 0.74, z: 0.375}, min: {x: -0.9, y: 0, z: -0.375}}}
+  model: {forward: "+z", id: /cdn/value.ca20031dbeb456381fa62da1b54c46f2d86b9d5f4f814e8c257634a4d39e72c6.glb}
   parent: hub
-  physics: static
-  rotation: 12
+  physics: {body: static, collider: box}
+  rotation: {w: 0.9945219159126282, x: 0, y: 0.10452846437692642, z: 0}
+  state: {}
+  tags: []
 hum-bed:
   audio: {bus: Ambience, clip: /cdn/value.4f2ca6969e3919a947a1bb8c8c957185a3a208f8fdd1d35ecd8daa87bd5495ce.mp3, gain: 0.25, loop: true, spatial: false}
   feetPosition: {x: 0, y: 1, z: 0}
