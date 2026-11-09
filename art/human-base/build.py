@@ -644,7 +644,7 @@ def dress(head, body, r, is_male, aw):
     TORSO = lambda f, lo, hi: f["arm"] < 0.5 and f["leg"] < 0.6 and lo < f["z"] < hi
     NECK = lambda f, d=0.0: f["z"] < (1.495 - d if f["y"] < 0.06 else 1.525 - d)
     SLV = lambda f, s: f["arm"] >= 0.5 and f["t"] < s and f["hand"] < 0.4
-    hemt = 0.98
+    hemt = 0.985
     # underwear: nobody is naked by default
     if not is_male: G("Under_top", lambda f: TORSO(f, 1.27, 1.43), "under", 0.003, 0.002, cuts=(1.27, 1.43))
     G("Under_bottom", lambda f: f["arm"] < 0.3 and 0.8 < f["z"] < 1.04, "under", 0.003, 0.002, cuts=(0.8, 1.04))
@@ -652,10 +652,10 @@ def dress(head, body, r, is_male, aw):
     G("Top_tee", lambda f: (TORSO(f, hemt, 1.6) and NECK(f)) or SLV(f, 0.4), "cloth_top", 0.009, cuts=(hemt, 1.495, 1.525), armcuts=(0.4,))
     G("Top_tank", lambda f: TORSO(f, hemt, 1.6) and NECK(f, 0.04) and (f["ax"] < 0.105 or f["z"] < 1.39), "cloth_top", 0.009, cuts=(hemt, 1.39, 1.455, 1.485))
     G("Top_longsleeve", lambda f: (TORSO(f, hemt, 1.6) and NECK(f)) or SLV(f, 0.97), "cloth_top", 0.009, cuts=(hemt, 1.495, 1.525), armcuts=(0.97,))
-    G("Top_pajamas", lambda f: (TORSO(f, 0.92, 1.6) and NECK(f, 0.01)) or SLV(f, 0.95), "cloth_top", 0.011, cuts=(0.92, 1.485, 1.515), armcuts=(0.95,))
-    sw = G("Top_sweater", lambda f: (TORSO(f, 0.93, 1.6) and f["z"] < 1.56) or SLV(f, 0.97), "cloth_top", 0.013, 0.006, cuts=(0.93, 1.56), armcuts=(0.97,))
-    hd = G("Top_hoodie", lambda f: (TORSO(f, 0.9, 1.6) and NECK(f, -0.01)) or SLV(f, 0.98), "cloth_top", 0.015, 0.006, cuts=(0.9, 1.505, 1.535), armcuts=(0.98,))
-    jk = G("Top_jacket", lambda f: (TORSO(f, 0.88, 1.6) and NECK(f, -0.01)) or SLV(f, 0.96), "cloth_top", 0.02, 0.006, cuts=(0.88, 1.505, 1.535), armcuts=(0.96,))
+    G("Top_pajamas", lambda f: (TORSO(f, 0.95, 1.6) and NECK(f, 0.01)) or SLV(f, 0.95), "cloth_top", 0.011, cuts=(0.95, 1.485, 1.515), armcuts=(0.95,))
+    sw = G("Top_sweater", lambda f: (TORSO(f, 0.95, 1.6) and f["z"] < 1.56) or SLV(f, 0.97), "cloth_top", 0.013, 0.006, cuts=(0.95, 1.56), armcuts=(0.97,))
+    hd = G("Top_hoodie", lambda f: (TORSO(f, 0.95, 1.6) and NECK(f, -0.01)) or SLV(f, 0.98), "cloth_top", 0.015, 0.006, cuts=(0.95, 1.505, 1.535), armcuts=(0.98,))
+    jk = G("Top_jacket", lambda f: (TORSO(f, 0.95, 1.6) and NECK(f, -0.01)) or SLV(f, 0.96), "cloth_top", 0.02, 0.006, cuts=(0.95, 1.505, 1.535), armcuts=(0.96,))
     dr = G("Top_dress", lambda f: (TORSO(f, 0.92, 1.6) and NECK(f, 0.02) and (f["ax"] < 0.11 or f["z"] < 1.41)), "cloth_top", 0.009, cuts=(0.92, 1.41, 1.475, 1.505))
     ap = G("Top_apron", lambda f: TORSO(f, 0.92, 1.42) and f["y"] < 0.075 and f["ax"] < 0.12, "cloth_top", 0.017, cuts=(0.92, 1.42))
     # bottoms
@@ -684,7 +684,7 @@ def dress(head, body, r, is_male, aw):
     add(out, ring_piece("Neck_cape", body, aw, "cloth_neck", 1.5, 0.55, 0.12, 0.03, cy, arc=(math.pi * 0.06, math.pi * 0.94), rows=16, seg=22), r, capew)
     NW = lambda co: {"Neck": 0.5, "Spine2": 0.5}
     nk = body_radii(body, aw, 1.52, 0.075)
-    nr = sum(nk) / len(nk)
+    nr = min(sorted(nk)[len(nk) // 2], 0.062)
     # hood collapsed at the nape, on the hoodie
     hood = torus("hood", nr + 0.035, 0.03, "cloth_top", (0, 0.085, 1.52), scale=(1.0, 1.15, 0.9))
     bm = bmesh.new(); bm.from_mesh(hood.data); bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.y < 0.05], context="VERTS"); bm.to_mesh(hood.data); bm.free()
