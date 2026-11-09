@@ -95,6 +95,10 @@ for name, (ease, cuts) in PLAN.items():
             need = max(0.004, E[v] * 0.7)
             if out < need: v.co = v.co + n * (need - out)
             elif out > E[v] * 1.6 + 0.004: v.co = v.co - n * (out - E[v] * 1.6 - 0.004)
+        bm.normal_update()
+        for v in bm.verts:                                   # under a second skin layer (the head's yoke over the body)? come out past it
+            h = bvhW.ray_cast(v.co + v.normal * 0.0005, v.normal, 0.04)
+            if h[0] is not None and h[1].dot(v.normal) > 0: v.co = h[0] + v.normal * max(0.004, E[v] * 0.7)
     if hasattr(ease, "drape"):                               # cloth falls from the chest: each slice no narrower than the one above x drape
         cy = B["Spine1"].y; BINS = 72; cells = {}
         for v in bm.verts:
