@@ -135,6 +135,12 @@ export function geometry(ctx) {
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j, tone = base[0] + (((i + j + cx * 3 + cz) % 2) ? 0.03 : -0.02) + (hash(cx * 4 + i, cz * 4 + j, 9) - 0.5) * 0.05; ctx.color(`oklch(${tone} ${base[1]} ${base[2]})`); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
     } // a threadbare carpet, or bare grime
     ctx.roughness(0.88); ctx.albedo(z === "edge" ? null : isEdge(cx, cz) ? CEIL : TILE); ctx.color(isEdge(cx, cz) ? (z === "edge" ? "oklch(0.56 0.008 240)" : "oklch(0.38 0.01 150)") : z === "fridges" || z === "restroom" ? "oklch(0.95 0.01 90)" : "oklch(0.9 0.014 90)");
+    if (z === "lockers") { // the locker room photo: off-white 2x2 ft drop tiles on a grey grid, a few water-stained
+      ctx.albedo(null); ctx.roughness(0.9); const g = S / 6;
+      for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) { const a = x0 + i * g, b = z0 + j * g, st = hash(cx * 6 + i, cz * 6 + j, 17);
+        ctx.color(st < 0.08 ? "oklch(0.8 0.03 80)" : `oklch(${0.92 - st * 0.04} 0.006 95)`); ctx.quad(a + 0.015, h - 0.002, b + 0.015, a + g - 0.015, h - 0.002, b + 0.015, a + g - 0.015, h - 0.002, b + g - 0.015, a + 0.015, h - 0.002, b + g - 0.015); }
+      ctx.color("oklch(0.62 0.005 250)"); ctx.quad(x0, h - 0.001, z0, x0 + S, h - 0.001, z0, x0 + S, h - 0.001, z0 + S, x0, h - 0.001, z0 + S);
+    } else
     ctx.quad(x0, h, z0, x0 + S, h, z0, x0 + S, h, z0 + S, x0, h, z0 + S);
   }
 
