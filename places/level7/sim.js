@@ -644,7 +644,7 @@ function lay(ctx) {
     box(ctx, `l7-ft-step-${k}`, -48.5 - k * 1.35, PY + 0.45 + k * 0.7, -66.5 - k * 1.65, 2.4, 0.72, 1.7, {
       ...CONCRETE,
       color: "oklch(0.32 0.015 240)",
-    });
+    }, { visible: false }); // invisible walking collider: the timber stair l7w-stair (scene) is what shows
   }
 
   // Fort Surrender Summit Checkpoint & Lashed-Furniture Palisades (x: -70, y: 11.0, z: -95)
@@ -933,6 +933,10 @@ export function tick(ctx) {
     s.builtV = V;
   }
 
+  if ((s.stairV ?? 0) < 1) { // the concrete steps hide under the timber stair: rooms built before keep them as invisible colliders
+    for (let k = 0; k < 14; k++) { const o = ctx.getObject(`l7-ft-step-${k}`); if (o) o.visible = false; }
+    s.stairV = 1;
+  }
   if ((s.fort2V ?? 0) < 3) { // Fort Surrender pass 2 (scripts/lib/level7-fort2.js): its fire, smoke, textures and sound
     for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("l7f-")) ctx.destroy(id);
     layFort2(ctx); s.fort2V = 3;

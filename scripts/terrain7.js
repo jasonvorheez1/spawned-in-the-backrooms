@@ -45,7 +45,15 @@ export function heightAt(ctx) {
   // shore() beaches the waterline but flattens every height above it (a 7 m island came out under 1 m, so the camps built on the tops hovered); keep the
   // beach where the land meets the sea and the island's own height from 3 m up, blended between
   const w = clamp01((h - 0.5) / 2.5);
-  return shore(h, 0) * (1 - w) + (h - 0.1) * w;
+  let out = shore(h, 0) * (1 - w) + (h - 0.1) * w;
+  // the timber stair (l7w-stair over the l7-ft-step-* colliders) runs in a cutting: the slope is dug down under its treads so none is buried
+  const sd = stairDist(x, z);
+  if (sd < 4.5) {
+    const [a, b] = STAIR, dx = b.x - a.x, dz = b.z - a.z, t = clamp01(((x - a.x) * dx + (z - a.z) * dz) / (dx * dx + dz * dz));
+    const cut = 2.27 + 0.7 * 13 * t - 1.07, k = 1 - ss(clamp01((sd - 1.9) / 2.6));
+    if (out > cut) out -= (out - cut) * k;
+  }
+  return out;
 }
 export function materialAt(ctx) {
   const { worldHeight, slope, noise, x, z, seedOffset } = ctx;
