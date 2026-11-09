@@ -30,8 +30,12 @@ def build(v, seed):
             off = p.x + nrm2.x * d; h = p.y + nrm2.y * d
             row.append(bm.verts.new((x, -off, h))); disp.append(d)
         grid.append(row)
+    uvl = bm.loops.layers.uv.new("UVMap"); arc = [0.0]
+    for j in range(1, nv + 1): arc.append(arc[-1] + (prof(j / nv) - prof((j - 1) / nv)).length)
     for j in range(nv):
-        for i in range(nu - 1): bm.faces.new((grid[j][i], grid[j][i + 1], grid[j + 1][i + 1], grid[j + 1][i]))
+        for i in range(nu - 1):
+            f = bm.faces.new((grid[j][i], grid[j][i + 1], grid[j + 1][i + 1], grid[j + 1][i]))
+            for lp, (ii, jj) in zip(f.loops, ((i, j), (i + 1, j), (i + 1, j + 1), (i, j + 1))): lp[uvl].uv = (ii * L / nu / 2.5, arc[jj] / 2.5)
     bm.normal_update(); bm.to_mesh(me); bm.free()
     ob = bpy.data.objects.new(f"edgevault_{v}", me); bpy.context.scene.collection.objects.link(ob)
     # vertex colour: pale grey rock, darker in the hollows and toward the foot, faint warm and cold mottling
@@ -48,10 +52,10 @@ def build(v, seed):
     vc = nt.nodes.new("ShaderNodeVertexColor"); vc.layer_name = "Col"; nt.links.new(vc.outputs["Color"], bsdf.inputs["Base Color"])
     bsdf.inputs["Roughness"].default_value = 0.93; ob.data.materials.append(mat)
     bpy.ops.object.select_all(action="DESELECT"); ob.select_set(True); bpy.context.view_layer.objects.active = ob
-    bpy.ops.export_scene.gltf(filepath=f"{OUT}/edgevault2_{v}.glb", use_selection=True, export_apply=True)
+    bpy.ops.export_scene.gltf(filepath=f"{OUT}/edgevault3_{v}.glb", use_selection=True, export_apply=True)
     return ob
 
-for v, s in (("a", 1), ("b", 2)): ob = build(v, s)
+for v, s in (("a", 1),): ob = build(v, s)
 # proof: look down the tunnel at variant b
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 16; sc.render.resolution_x, sc.render.resolution_y = 960, 540
 cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam); sc.camera = cam
