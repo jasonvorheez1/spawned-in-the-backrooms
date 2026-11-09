@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3705,
-  "updatedAt": "2026-11-09T22:00:17.311Z",
+  "basedOnSpecVersion": 3708,
+  "updatedAt": "2026-11-09T22:10:02.062Z",
   "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes provide local environments, while shared systems own combat, NPCs, loot, building, dialogue, avatar presentation, and stealth sensing. Human avatars use a bare body with only worn outfit pieces attached as separate skinned models.",
   "scriptPaths": [],
   "places": [
@@ -11,7 +11,7 @@
     "places/intake (3D) + places/tutorial0 (solo ephemeral 3D) - bedroom character-creation/waking space and authored tutorial route with staged encounter and HALOGEN.",
     "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams, and Locked; Level 2 uses Tripo props over its collider shell and placed survivor head attachments; Level 2.1 has Base Alef and its authored route.",
     "places/level3, places/gamma, places/level4, places/level5 (3D) - Electrical Station, Base Gamma, Abandoned Office, and Terror Hotel; residents, hazards, office/home systems, Boiler Room rats, and climbable library ladders.",
-    "places/level6, places/level7, places/level10, places/level11, places/level12, places/level26 (3D) - Lights Out, Thalassophobia, Bumper Crop, Infinite City, Matrix, and SS Fun =) liner; Level 12 is a white room and furniture-strewn void with a ritual clock.",
+    "places/level6, places/level7, places/level10, places/level11, places/level12, places/level26 (3D) - Lights Out, Thalassophobia, Bumper Crop, Infinite City, Matrix, and SS Fun =) liner; Level 12 is a white room and furniture-strewn void with its ritual clock.",
     "places/debug, places/spamton and other configured places (3D) - debug mannequin/body gallery and switch pad, Spamton's fight space, and auxiliary routes."
   ],
   "roots": [
@@ -30,7 +30,7 @@
     "scripts/lib/build-piece.js + breakables.yml + furniture.yml - canonical build specs/models shared by B-mode and home reconstruction; CRT TV builds attach scripts/built-tv.js.",
     "scripts/lib/screen.js + scripts/lib/footsteps.js - derived read-only panel classifier and wrist gates shared by player/stats/craft/rest/menu/vmpose; footsteps maps player stride sounds to surfaces.",
     "scripts/lib/maze.js + scripts/lib/maze0path.js - seeded Level 0 cell/zone/wall/pit/pillar layout and open-point/BFS doorway steering shared by place simulation and smiler/lurker navigation.",
-    "scripts/lib/clothes.js + clothes.yml + wardrobe.yml + wardrobe-split.yml + critter.yml/faces.yml/hair.yml/critter-models.yml + scripts/lib/critter-model.js - clothing loot/armor, deterministic looks, species/head/hair presentation; wardrobe-split maps sex-specific standalone garment GLBs attached to bare human bodies.",
+    "scripts/lib/clothes.js + clothes.yml + wardrobe.yml + wardrobe-split.yml + critter.yml/faces.yml/hair.yml/critter-models.yml + scripts/lib/critter-model.js - clothing loot/armor, deterministic looks, species/head/hair presentation; wardrobe models are fitted and attached per worn piece.",
     "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml + scripts/lib/knock.js - shared combat animation channels for player and M.E.G. agents; knock handling serves player heavy melee and enemy kick knockdowns.",
     "scripts/lib/sneak.js + scripts/lib/data/sneak.yml - crouch visibility multiplier shared by smilers.js and lurkers.js hunter sight; player.js uses sneak tuning for gradual awareness/HUD detection."
   ],
@@ -42,14 +42,14 @@
     "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec and wardrobe fitting/restyling helpers, plus wardChildren and seatWardrobe.",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
     "scripts/lib/zenith-quest.js - KADE, ZEN_ENTRY, setZen, migrateZen, handleDialogueQuestZ, zenithChoice, layZenithEntry; scripts/zenith-use.js - ears, onSpawn, slide, grab, gone; scripts/zenith-scout.js - onTriggerEnter.",
-    "scripts/level12-use.js - ears, shut; scripts/level12-window.js - onTriggerEnter; scripts/lib/quest-mark.js - questMark, yawTo; scripts/quest-marker.js - updateSchedule, update; scripts/lib/knock.js - knocked, foeStats, RAG, powerKnock, death."
+    "scripts/level12-use.js - ears, shut; scripts/level12-window.js - onTriggerEnter; scripts/lib/quest-mark.js - questMark, yawTo; scripts/quest-marker.js - updateSchedule, update; scripts/lib/knock.js - knocked, foeStats, RAG, powerKnock, death outcomes."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo (including cells), needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, and heat/cold meters.",
     "scripts/kick.js + scripts/grab.js - per-player kick rolls/cooldowns, carried prop/body IDs, held-body grip, and throw/carry session fields; target body state.heldBy/down controls hold/release.",
     "scripts/lib/loose.js - arms matched props with state.loose/mat/hp/maxHp and owns broke/act effects; per-player session.loose tracks kicked/thrown item flights until impact.",
-    "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state, while lurkers own caught-player lurkHold/lurkFree, stare/frenzy timing, and entity grab/frenzy/presence fields.",
-    "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim. scripts/hub.js owns mall offers/shop/food, room-hop flags, trainHid/stungUntil, and transient crossing state.",
+    "scripts/lib/knock.js + scripts/lib/stats.js - foe attributes/weight and shared down/stagger knock outcomes; enemy managers retain AI state, while lurkers own caught-player lurkHold/lurkFree, stare/frenzy timing, and entity grab/frenzy presentation.",
+    "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim. scripts/hub.js owns mall offers/shop/food, room-hop flags, trainHid/stungUntil, and transient hub state.",
     "scripts/climb.js owns local climb session/player.state.climbing and first-person arm viewmodel; scripts/lib/vmpose.js records session.vmHidKey and controls viewmodel visibility from scene/camera/screen context.",
     "scripts/lib/zenith-quest.js + places/main/sim.js + places/level01/sim.js + scripts/zenith-use.js - player zenQ/zenV/zenKey/zenDrive progression, versioned breach and station layout/drive bay, recorder animation state, local drone/climate state.",
     "places/level12/sim.js owns place.state.v and session.clock12 construction/clock animation; player.state.r12 tracks seat seconds and tried/back timestamps, know12 records hearing Harris's log, and l12out counts successful exits."
@@ -60,7 +60,7 @@
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done; menu UI renders on menuOpen and solo pause sets place.timeScale.",
     "scripts/main-menu.js BODIES action or debug pad → world.state.bodyStyle (menu also persists player.state.bodyStyle); root sim.js/critter.js select avatar and restyle occupants via critter-model.js.",
-    "Human avatar look/state.wear → critter-model.js humanBody + humanMorph and wardrobe-split.yml; each visible Ward_ outfit piece becomes a tinted, morphed skinned child, while seatWardrobe removes stale children and updates existing ones.",
+    "Human avatar look/state.wear → critter-model.js humanBody + humanMorph and wardrobe-split.yml; each visible Ward_ outfit piece becomes a tinted, morphed skinned child using only cloth_ material slots, while seatWardrobe removes stale children and updates existing ones.",
     "scripts/lib/hub.js toHub/toSolo → room/place crossings and roomHop distinguishes intentional crossings from launch/resume; hub.js hubOffer → hub-ui.js and mall counters write shop/food state for handlers and UI.",
     "Teleport Station UI in scripts/hub-ui.js renders lastLevel(s) from scripts/lib/hub.js; travel requests reach scripts/lib/hub.js, which boards the player via bc-train and crosses to the destination.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickups, including cells, enter player.js inventory.",
@@ -69,13 +69,13 @@
     "Level 0 main sim → maze.js seeded geometry/cell helpers and level0-moments.js; scripts/moments.js handles placed moments (including peelable wallpaper); smilers.js/lurkers.js use maze0path and sneak.crouchMul, while lurkers cap chase speed."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js + scripts/salon-stylist.js/scripts/salon-ui.js - authored mall shops/landmarks and simulated mall life; salon chairs queue sitters and expose styling UI.",
+    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js + scripts/salon-stylist.js/scripts/salon-ui.js - authored mall shops/landmarks and simulated mall life; salon chairs queue sitters and styling UI drives salon services.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence, and rebuild path; CRT TV builds attach screen, sound, and glow.",
-    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith Station geometry, breach, doors, robots, hazards and mission props share a versioned layout and quest state.",
+    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js - Zenith Station layout, breach and machinery share versioned construction and quest triggers.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/{wardrobe.py,split_wardrobe.py,check-bust.py,compile_wardrobe.py,wardrobe-check.mjs} + art/human-head/* + art/human-hair/build.py - deterministic avatar looks; furry clothing is body material/parts, while human wear uses bare bodies with only the look's standalone skinned garment children.",
-    "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared human combat/gait, idles, head tracking, fidgets, expressions, and dialogue; player/enemy combat uses common body animation routines.",
+    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/{wardrobe.py,split_wardrobe.py,check-bust.py,compile_wardrobe.py,wardrobe-check.mjs} + art/human-head/* + art/human-hair/build.py - deterministic avatar/species/head/hair and fitted separate wardrobe pieces.",
+    "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared human combat/gait, idles, head tracking, fidgets, expressions, and dialogue; player/enemy combat handlers reuse the animation channels.",
     "scripts/lib/sneak.js + scripts/lib/data/sneak.yml - common crouch sight multiplier for smilers and lurkers, varied by crouch movement, darkness, and flashlight; player detection independently accumulates awareness for HUD feedback."
   ],
   "probableOrphans": [
@@ -85,9 +85,9 @@
   "migrationNotes": [
     "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room and overflow mall rooms use bonus-N IDs. Teleport Station travel derives from savePlace; level01 is named in hub/feed data and is not a solo home.",
     "Found-item rarity gates apply only to found weapon tokens; existing weapon ownership/use and non-weapon loot are not level-gated. Search gating excludes storage and NPC containers.",
-    "Level 0 place.state.momentsV is now 7: migration deletes old tagged moment entities before relaying them. lurkerGrabGrace in level0.yml is seconds (8), stored as player.state.lurkFree in ctx.now() milliseconds and checked by every lurker grab.",
-    "Level 12 ritual tuning is in scripts/lib/data/level12.yml: sit/hour/tol are seconds (45/180/12 currently); r12.back is a ctx.now() millisecond timestamp and the exit requires the return-door attempt within tol seconds of one hour. The log/window knowledge is player state.",
+    "Level 0 place.state.momentsV is now 7: migration deletes old tagged moment entities before relaying them. lurkerGrabGrace in level0.yml is seconds (8), stored as player.state.lurkFree in ctx.now() milliseconds and checked by every lurker grab path.",
+    "Level 12 ritual tuning is in scripts/lib/data/level12.yml: sit/hour/tol are seconds (45/180/12 currently); r12.back is a ctx.now() millisecond timestamp and the exit requires the return-door attempt within tol seconds of one hour. The log/clock/exit state is split between player and place/session ownership.",
     "scripts/lib/data/sneak.yml tunes crouch visibility and awareness rates: crouch still/moving, dark and flashlight multipliers combine in crouchMul; preserve skill-based hunter sight and the crouch-only awareness/HUD state path.",
-    "Footstep surface detection checks visible geometry within 0.45 m before collider; terrain chunk hits use terrain.materialAt. Keep material words/tags and mapping priority in scripts/lib/data/footsteps.yml. Human split wardrobe sw31 uses bare bodies plus per-garment skinned children; keep SPLIT garment keys aligned with WARDROBE.parts and bump STYLE_V when changing bodies/outfit assets so existing occupants are restyled."
+    "Footstep surface detection checks visible geometry within 0.45 m before collider; terrain chunk hits use terrain.materialAt. Keep material words/tags and mapping priority in scripts/lib/data/footsteps.yml. Human split wardrobe sw31 uses body-matched cloth pieces; critter-model.js must pass only cloth_ material slots to garment attachment models, which have no matching skin/fur slots."
   ]
 }
