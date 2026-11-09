@@ -85,7 +85,7 @@ function clearLine(ctx, me, a, b) {
     ctx,
     { x: a.x, y: (a.y ?? 0) + 0.5, z: a.z },
     { x: dx / d, y: 0, z: dz / d },
-    { distance: d, radius: 0.3, ignoreEntities: [me.id], bodies: "static", physicsOnly: true }
+    { distance: d, radius: 0.32, ignoreEntities: [me.id], excludeTags: ["npc", "player"], bodies: "all", physicsOnly: true }
   );
 }
 
@@ -96,7 +96,7 @@ function waypoint(ctx, me, m, goal) {
 
   // Repath when goal shifts or path has expired
   const goalShifted = N.goal ? (g.x - N.goal.x) ** 2 + (g.z - N.goal.z) ** 2 > 1 : true;
-  if (!N.path || now > (N.repath ?? 0) || goalShifted) {
+  if (now >= (N.repath ?? 0) || goalShifted) {
     const r = navPath(ctx, { x: p.x, y: p.y ?? 0, z: p.z }, g);
     if (!r?.wait) {
     N.path = r?.points?.length ? r.points : null;
@@ -126,6 +126,8 @@ function waypoint(ctx, me, m, goal) {
     }
     to = N.path[N.i] ?? g;
   }
+
+  if (!clearLine(ctx,me,p,to)) { N.path=null; N.repath=Math.min(N.repath??0,now+350); return {ux:0,uz:0,hold:true}; }
 
   // Stuck detection: if we haven't moved much in 1.2s despite having distant goal
   N.stuckCheck ??= { x: p.x, z: p.z, at: now };

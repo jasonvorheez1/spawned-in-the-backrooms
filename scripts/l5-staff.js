@@ -20,7 +20,7 @@ const clearLine = (ctx, meId, a, b) => {
     ctx,
     { x: a.x, y: (a.y ?? 0) + 0.8, z: a.z },
     { x: dx / d, y: 0, z: dz / d },
-    { distance: d, radius: 0.25, ignoreEntities: [meId], bodies: "static", physicsOnly: true }
+    { distance: d, radius: 0.32, ignoreEntities: [meId], excludeTags: ["npc", "player"], bodies: "all", physicsOnly: true }
   );
   return !h;
 };
@@ -286,7 +286,7 @@ export function update(ctx, dt) {
 
     if (goal && sp) {
       // Pathfinding along hotel corridors
-      if (!m.path || now - (m.pathAt ?? 0) > (m.repathMs ?? 1000) || flat(m.pathGoal ?? goal, goal) > 1.5) {
+      if (now - (m.pathAt ?? -Infinity) > (m.repathMs ?? 1000) || flat(m.pathGoal ?? goal, goal) > 1.5) {
         const r = navPath(ctx, { x: pos.x, y: pos.y ?? 0, z: pos.z }, { x: goal.x, y: goal.y ?? pos.y ?? 0, z: goal.z });
         if (r?.wait) { /* this tick's search budget is spent: keep walking the old path */ } else if (r?.points?.length) {
           m.path = r.points;
@@ -295,6 +295,7 @@ export function update(ctx, dt) {
           m.repathMs = r.partial ? 350 : 1200;
         } else {
           m.path = null;
+          m.pathAt = now; m.pathGoal={...goal};
           m.repathMs = 500;
         }
       }
@@ -306,6 +307,7 @@ export function update(ctx, dt) {
         aim = m.path[0] ?? goal;
       }
 
+      if (!clearLine(ctx,o.id,pos,aim)) { m.path=null; m.repathMs=350; o.velocity={x:0,y:o.velocity?.y??0,z:0}; continue; }
       dx = aim.x - pos.x;
       dz = aim.z - pos.z;
       const d = Math.hypot(dx, dz) || 1;

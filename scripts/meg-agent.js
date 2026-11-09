@@ -229,7 +229,7 @@ function shoot(ctx, me, t, A = WP.pistol) {
 // nextbot-style walking: a path from builtin/nav, smoothed by line of sight (skip to the farthest corner it can see),
 // a shove away from other people so crowds slide past each other, and a stuck check that sidesteps and repaths.
 const clearLine = (ctx, me, a, b) => { const dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz); if (d < 0.3) return true;
-  const h = raycast(ctx, { x: a.x, y: a.y + 0.5, z: a.z }, { x: dx / d, y: 0, z: dz / d }, { distance: d, radius: 0.3, ignoreEntities: [me.id], bodies: "static", physicsOnly: true }); return !h; };
+  const h = raycast(ctx, { x: a.x, y: a.y + 0.5, z: a.z }, { x: dx / d, y: 0, z: dz / d }, { distance: d, radius: 0.32, ignoreEntities: [me.id], excludeTags: ["npc", "player"], bodies: "all", physicsOnly: true }); return !h; };
 // at most two path searches a tick across every agent on this machine: a crowd that loses its target together no longer pays them all in one tick (the 37 ms spikes); the rest ask next tick
 let PB_AT = -1, PB_N = 0;
 const pathBudget = (now) => { if (now !== PB_AT) { PB_AT = now; PB_N = 0; } return PB_N++ < 2; };
@@ -237,8 +237,9 @@ function moveAlong(ctx, me, m, goal, speed, dt) {
   const p = me.feetPosition, now = ctx.now();
   const fin = (q, y0) => ({ x: Number.isFinite(q?.x) ? q.x : p.x, y: Number.isFinite(q?.y) ? q.y : y0, z: Number.isFinite(q?.z) ? q.z : p.z });
   goal = fin(goal, Number.isFinite(p.y) ? p.y : 0);
-  const r = (!m.path || now > m.repath || flat(goal, m.pathGoal ?? goal) > 2) ? navPath(ctx, fin(p, goal.y), goal) : null;
-  if (r && !r.wait) { // shared search budget (scripts/lib/nav.js): a spent tick keeps the old path and asks next tick
+  const r = (now >= (m.repath ?? 0) || flat(goal, m.pathGoal ?? goal) > 2) ? navPath(ctx, fin(p, goal.y), goal, {fresh:(m.blocked??0)>=2}) : null;
+  if (r && !r.wait) {
+    m.pathGoal={...goal}; // shared search budget (scripts/lib/nav.js): a spent tick keeps the old path and asks next tick
     if (r?.points?.length) { m.path = r.points; m.i = 0; m.pathGoal = { ...goal }; m.seeAt = 0; }
     else if (!r?.partial && clearLine(ctx, me, p, goal)) { m.path = [goal]; m.i = 0; m.pathGoal = { ...goal }; }
     else m.path = null;
@@ -263,7 +264,7 @@ function moveAlong(ctx, me, m, goal, speed, dt) {
       for (let k = Math.min(m.path.length - 1, m.i + 4); k > m.i; k--) if (clearLine(ctx, me, p, m.path[k])) { m.i = k; break; } }
     to = m.path[m.i] ?? goal;
     // the way ahead has closed since the path was made (a door shut, something set down): ask again now, not in a second
-    if (now > (m.blockAt ?? 0)) { m.blockAt = now + 400; if (flat(to, p) < 4 && flat(to, p) > 0.9 && !clearLine(ctx, me, p, to)) { m.blocked = (m.blocked ?? 0) + 1; if (m.blocked === 2) m.repath = 0; } else m.blocked = 0; }
+    if (now > (m.blockAt ?? 0)) { m.blockAt = now + 400; if (flat(to, p) < 4 && flat(to, p) > 0.9 && !clearLine(ctx, me, p, to)) { m.blocked = (m.blocked ?? 0) + 1; if (m.blocked >= 2) { m.path=null; m.repath=0; stop(me,dt); return; } } else m.blocked = 0; }
   }
   // stuck: trying to move but barely moved in a second: sidestep for a beat, then a fresh path
   m.sk ??= { x: p.x, z: p.z, at: now };
