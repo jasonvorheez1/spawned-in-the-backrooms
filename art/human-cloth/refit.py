@@ -133,14 +133,22 @@ for (side, nm), (root, d, L, c, segs) in plan.items():
 print("finger bones", len([b for b in R.data.bones if "Hand" in b.name and b.name[-1].isdigit()]))
 
 # ---------- 2+3. garments ----------
+CROTCH = (R.matrix_world @ R.data.bones["LeftUpLeg"].head_local).z - 0.05
+print("crotch z", CROTCH)
 for o in bpy.data.objects:
     if o.type != "MESH" or o.name not in FIT: continue
     me = o.data; bm = bmesh.new(); bm.from_mesh(me); bm.verts.ensure_lookup_table()
     shapes = [bm.verts.layers.shape[k] for k in bm.verts.layers.shape.keys()]
     lim = FIT[o.name]; delta = {}; skin = {}
+    top = o.name.startswith("Top_") or o.name == "Under_top"
     for v in bm.verts:
-        co, n, d, w = skin_at(v.co); skin[v.index] = w
-        if lim:
+        co, n, d, w = skin_at(v.co)
+        low = top and v.co.z < CROTCH + 0.06
+        if low:  # a top's hem below the crotch hangs from the hips as a tube: no leg weights, no pull into the crotch
+            hw = sum(x for g, x in w.items() if "Leg" in g or "Foot" in g)
+            w = {g: x for g, x in w.items() if not ("Leg" in g or "Foot" in g)}; w["Hips"] = w.get("Hips", 0) + hw
+        skin[v.index] = w
+        if lim and not low:
             side = (v.co - co).dot(n)
             want = max(lim[0], min(lim[1], side))
             if abs(want - side) > 1e-5: delta[v.index] = n * (want - side)
@@ -157,6 +165,21 @@ for o in bpy.data.objects:
         if dv is None: continue
         v.co += dv
         for L in shapes: v[L] += dv
+    if top:  # the inner flaps a top grew between the legs fold out onto its own outer shell: a clean hem tube
+        cy = sum((v.co.y for v in bm.verts), 0.0) / len(bm.verts)
+        ring = {}
+        def key(v): return (int((v.co.z - 0.0) / 0.012), int((math.atan2(v.co.y - cy, v.co.x) + math.pi) / (2 * math.pi) * 36) % 36)
+        def rad(v): return math.hypot(v.co.x, v.co.y - cy)
+        lowv = [v for v in bm.verts if v.co.z < CROTCH + 0.1]
+        for v in lowv: k = key(v); ring[k] = max(ring.get(k, 0), rad(v))
+        fixed = 0
+        for v in lowv:
+            r = rad(v); R0 = ring[key(v)]
+            if r < R0 * 0.9:
+                a = math.atan2(v.co.y - cy, v.co.x); dv = Vector((math.cos(a) * R0, cy + math.sin(a) * R0, v.co.z)) - v.co
+                dv.z = 0; v.co += dv; fixed += 1
+                for L in shapes: v[L] += dv
+        print("hem", o.name, "folded out", fixed)
     moved = sum(1 for x in delta.values() if x.length > 0.002)
     bm.to_mesh(me); bm.free()
     if o.name in WEIGHTS:
