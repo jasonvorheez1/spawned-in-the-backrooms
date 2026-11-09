@@ -289,6 +289,9 @@ export function update(ctx, dt) {
         m.side = { s: ctx.random() < 0.5 ? -1 : 1, until: now + 500 };
         m.next = null;
       }
+      // wedged: a body that has not budged for ~2 s while trying to walk (a wall shifted onto it) is lifted back to open floor
+      m.wedge = moved < 0.05 && Math.hypot(w.velocity?.x ?? 0, w.velocity?.z ?? 0) > 0.3 ? (m.wedge ?? 0) + 1 : 0;
+      if (m.wedge >= 3) { const c = cellAt(pos.x, pos.z), cc = cellCenter(c.cx, c.cz), far = Math.hypot(cc.x - pos.x, cc.z - pos.z) > 0.6, to = far ? cc : neighbor(ctx, pos); w.feetPosition = { x: to.x, y: pos.y + 0.05, z: to.z }; w.velocity = { x: 0, y: 0, z: 0 }; m.wedge = 0; m.next = null; m.side = null; }
       m.sk = { x: pos.x, z: pos.z, at: now };
     }
 
@@ -369,7 +372,6 @@ export function update(ctx, dt) {
       m.lunge = null;
     }
 
-    if (now > (mem.dbg ?? 0) && w === allSmilers[0]) { mem.dbg = now + 3000; ctx.log('SMDBG', JSON.stringify({ id: w.id, vx, vz, speed, lit, prey: !!prey, goal, pos, next: m.next, way: way && { c: way.cells, n: way.next }, side: m.side, sep: m.sep, hub: inHub(ahead.cx, ahead.cz) })); }
     const curVy = w.velocity?.y ?? 0;
     w.velocity = { x: vx, y: curVy + ctx.place.gravity.y * dt, z: vz };
 
