@@ -129,6 +129,14 @@ for name, (ease, cuts) in PLAN.items():
             return m
         ring = [e for e in bm.edges if e.is_boundary and all(v.co.z < Z0 + 0.03 for v in e.verts)]
         z = min(v.co.z for e in ring for v in e.verts); steps = max(2, int((z - hem) / 0.012))
+        rv = {v for e in ring for v in e.verts}
+        for v in rv: v.co.z = z                              # one level ring: every column starts at the same height
+        rad = {v: math.hypot(v.co.x, v.co.y - cy) for v in rv}
+        for _ in range(4):                                   # and an even radius round it
+            rad = {v: (rad[v] * 2 + sum(rad[e.other_vert(v)] for e in v.link_edges if e.is_boundary and e.other_vert(v) in rad)) / (2 + sum(1 for e in v.link_edges if e.is_boundary and e.other_vert(v) in rad)) for v in rv}
+        for v in rv:
+            a_ = math.atan2(v.co.y - cy, v.co.x); r = max(rad[v], math.hypot(v.co.x, v.co.y - cy) * 0.98)
+            v.co.x, v.co.y = math.cos(a_) * r, cy + math.sin(a_) * r
         for k in range(1, steps + 1):
             zz = z + (hem - z) * k / steps
             ex = bmesh.ops.extrude_edge_only(bm, edges=ring)
