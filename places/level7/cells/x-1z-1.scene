@@ -1,0 +1,68 @@
+# spawn-scene v2 yaml x-1z-1
+l7f-gate-ramp:
+  feetPosition: {x: -70, y: 10.92, z: -82.85}
+  id: l7f-gate-ramp
+  material: {color: oklch(0.62 0.03 70), repeat: [2, 2], roughness: 0.9, texture: cdn/texture-weathered-grey-sea-soaked-wood-planks.png}
+  physics: static
+  pivot: center
+  primitive: {depth: 4.274604275264033, height: 0.18, kind: box, width: 3.6}
+  receiveShadow: true
+  rotation: {pitch: 16.833930820679193}
+l7f-gate-ramp-cleat-0:
+  feetPosition: {x: -70, y: 10.498333333333333, z: -81.22500000000001}
+  id: l7f-gate-ramp-cleat-0
+  material: {color: oklch(0.5 0.03 60), texture: cdn/texture-dark-tarred-weathered-log-bark-wood.png}
+  pivot: center
+  primitive: {depth: 0.07, height: 0.05, kind: box, width: 3.3}
+  rotation: {pitch: 16.833930820679193}
+l7f-gate-ramp-cleat-1:
+  feetPosition: {x: -70, y: 10.695, z: -81.875}
+  id: l7f-gate-ramp-cleat-1
+  material: {color: oklch(0.5 0.03 60), texture: cdn/texture-dark-tarred-weathered-log-bark-wood.png}
+  pivot: center
+  primitive: {depth: 0.07, height: 0.05, kind: box, width: 3.3}
+  rotation: {pitch: 16.833930820679193}
+l7f-gate-ramp-cleat-2:
+  feetPosition: {x: -70, y: 10.891666666666667, z: -82.525}
+  id: l7f-gate-ramp-cleat-2
+  material: {color: oklch(0.5 0.03 60), texture: cdn/texture-dark-tarred-weathered-log-bark-wood.png}
+  pivot: center
+  primitive: {depth: 0.07, height: 0.05, kind: box, width: 3.3}
+  rotation: {pitch: 16.833930820679193}
+l7f-gate-ramp-cleat-3:
+  feetPosition: {x: -70, y: 11.088333333333333, z: -83.175}
+  id: l7f-gate-ramp-cleat-3
+  material: {color: oklch(0.5 0.03 60), texture: cdn/texture-dark-tarred-weathered-log-bark-wood.png}
+  pivot: center
+  primitive: {depth: 0.07, height: 0.05, kind: box, width: 3.3}
+  rotation: {pitch: 16.833930820679193}
+l7f-gate-ramp-cleat-4:
+  feetPosition: {x: -70, y: 11.285, z: -83.825}
+  id: l7f-gate-ramp-cleat-4
+  material: {color: oklch(0.5 0.03 60), texture: cdn/texture-dark-tarred-weathered-log-bark-wood.png}
+  pivot: center
+  primitive: {depth: 0.07, height: 0.05, kind: box, width: 3.3}
+  rotation: {pitch: 16.833930820679193}
+l7f-gate-ramp-cleat-5:
+  feetPosition: {x: -70, y: 11.481666666666667, z: -84.475}
+  id: l7f-gate-ramp-cleat-5
+  material: {color: oklch(0.5 0.03 60), texture: cdn/texture-dark-tarred-weathered-log-bark-wood.png}
+  pivot: center
+  primitive: {depth: 0.07, height: 0.05, kind: box, width: 3.3}
+  rotation: {pitch: 16.833930820679193}
+l7f-gate-ramp-rail-0:
+  feetPosition: {x: -71.85, y: 10.89, z: -82.85}
+  id: l7f-gate-ramp-rail-0
+  material: {color: oklch(0.6 0.03 60), roughness: 0.9, texture: cdn/texture-dark-tarred-weathered-log-bark-wood.png}
+  physics: static
+  pivot: center
+  primitive: {depth: 4.374604275264033, height: 0.24, kind: box, width: 0.16}
+  rotation: {pitch: 16.833930820679193}
+l7f-gate-ramp-rail-1:
+  feetPosition: {x: -68.15, y: 10.89, z: -82.85}
+  id: l7f-gate-ramp-rail-1
+  material: {color: oklch(0.6 0.03 60), roughness: 0.9, texture: cdn/texture-dark-tarred-weathered-log-bark-wood.png}
+  physics: static
+  pivot: center
+  primitive: {depth: 4.374604275264033, height: 0.24, kind: box, width: 0.16}
+  rotation: {pitch: 16.833930820679193}
