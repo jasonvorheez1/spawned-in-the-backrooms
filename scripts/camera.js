@@ -181,5 +181,22 @@ export function update(ctx, dt) {
       if (!o || Math.hypot(o.x - pt3.x, o.y - pt3.y, o.z - pt3.z) > 0.15) ps.aimPt = { x: Math.round(pt3.x * 100) / 100, y: Math.round(pt3.y * 100) / 100, z: Math.round(pt3.z * 100) / 100 }
     }
   } else if (ps?.aimPt) ps.aimPt = null
+  // the salon chair: while the makeover menu is open the eye steps out in front of you at a three-quarter angle, so you watch the cut land on your own body (TURN swings it round)
+  const sk = ctx.self.session.salonCam ??= { k: 0 }, salonWant = ps?.salonOpen && st && st.phase === 'sat' && down >= 3200 ? 1 : 0
+  sk.k += (salonWant - sk.k) * Math.min(1, dt * 4)
+  if (sk.k > 0.01 && ctx.player) {
+    ctx.self.hideLocalPlayer = false
+    const wp = ctx.player.worldFeetPosition ?? ctx.player.feetPosition, r0 = ctx.player.worldRotation ?? ctx.player.rotation
+    const by = (typeof r0 === 'number' ? r0 : r0?.yaw ?? 0) * Math.PI / 180, a = by + 0.75 + (ps.wrSpin || 0) * Math.PI / 180
+    const b = { x: wp.x, y: wp.y + 1.0, z: wp.z } // chest of the seated body
+    const out = { x: b.x - Math.sin(a) * 1.75, y: b.y + 0.35, z: b.z - Math.cos(a) * 1.75 } // in front: forward is (-sin, -cos)
+    const k = sk.k * sk.k * (3 - 2 * sk.k), e0 = ctx.self.feetPosition
+    ctx.self.feetPosition = { x: e0.x + (out.x - e0.x) * k, y: e0.y + (out.y - e0.y) * k, z: e0.z + (out.z - e0.z) * k }
+    // aim a little to the body's right of centre so the body sits clear of the menu on the left of the screen
+    const rx = Math.cos(a), rz = -Math.sin(a), tgt = { x: b.x - rx * 0.45, y: b.y + 0.05, z: b.z - rz * 0.45 }
+    const dx = tgt.x - out.x, dy = tgt.y - out.y, dz = tgt.z - out.z
+    const look = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
+    if (rot) { const dyaw = ((look.yaw - rot.yaw + 540) % 360) - 180; rot = { yaw: rot.yaw + dyaw * k, pitch: rot.pitch + (look.pitch - rot.pitch) * k } } else rot = look
+  }
   if (rot) ctx.self.rotation = rot
 }

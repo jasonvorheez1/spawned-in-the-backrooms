@@ -301,7 +301,7 @@ export function update(ctx) {
     const hideHeld = ses.heldObj && !ctx.self.state.tp ? ses.heldObj : null
     if (ses.hidHeld !== hideHeld) { const h = (me.hidden ?? []).filter((i) => i !== ses.hidHeld); if (hideHeld) h.push(hideHeld); me.hidden = h; ses.hidHeld = hideHeld }
   }
-  if (ctx.self.state.wardrobeOpen) {
+  if (ctx.self.state.wardrobeOpen && !ctx.self.state.salonOpen) { // the salon shows your real seated body instead (scripts/camera.js)
     const yaw = ((me.camera?.rotation?.yaw ?? 0) * Math.PI) / 180, f = ctx.self.feetPosition
     const fx = -Math.sin(yaw), fz = -Math.cos(yaw), rx = Math.cos(yaw), rz = -Math.sin(yaw)
     ses.spin = (ses.spin || 0) + 0.2 * 40
