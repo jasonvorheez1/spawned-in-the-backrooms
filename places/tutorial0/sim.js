@@ -21,5 +21,5 @@ export function tick(ctx) {
   ctx.spawn({ id: "t0-halogen", tags: ["t0prop", "halogen-machine"], feetPosition: { x: HALO.x, y: 0, z: HALO.z }, rotation: HALO.yaw, physics: { body: "static", collider: "box" }, model: HALO_MODEL })
   // corridor E and room F: the notes someone taped up on the way to the wet spot
   for (const [n, x, z, yaw, w] of DRAWINGS) ctx.spawn({ tags: ["t0prop", "t0-drawing"], feetPosition: { x, y: 1.45, z }, rotation: { yaw }, castShadow: false, primitive: { kind: "plane", width: w, height: w }, material: { texture: DRAW[n], transparent: true, alphaTest: 0.4, roughness: 0.95, side: "double" } })
-  ctx.spawn({ id: "t0-almond", tags: ["almond"], feetPosition: ALMOND, rotation: 30, castShadow: false, model: "/cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb", layout: { box: { min: { x: -0.07, y: 0, z: -0.07 }, max: { x: 0.07, y: 0.32, z: 0.07 } } } })
+  ctx.spawn({ id: "t0-almond", tags: ["almond"], feetPosition: ALMOND, rotation: 30, castShadow: false, model: "/cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb", layout: { box: { min: { x: -0.07, y: 0, z: -0.07 }, max: { x: 0.07, y: 0.32, z: 0.07 } } } })
 }

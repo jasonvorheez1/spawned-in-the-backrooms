@@ -152,7 +152,7 @@ export function tick(ctx) {
   unstick(ctx, s, now);
   if (!s.furnished) { s.furnished = true; furnish(ctx); }
   if (s.tableAlmondV !== 1) { // the four bottles on the safe room table were set dressing; now they're real almond water you can take
-    const MODEL = "/cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb";
+    const MODEL = "/cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb";
     [[-5.01, -3.99], [-4.78, -3.89], [-4.42, -4.12], [-4.15, -4.02]].forEach(([x, z], i) => {
       const d = ctx.place.objects["hub/table/child-" + (5 + i)]; if (d) d.visible = false;
       ctx.spawn("hub-almond-" + i, { tags: ["almond"], feetPosition: { x, y: 0.74, z }, castShadow: false, model: MODEL, layout: { box: { min: { x: -0.08, y: 0, z: -0.08 }, max: { x: 0.08, y: 0.32, z: 0.08 } } } });

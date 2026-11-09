@@ -411,7 +411,7 @@ dbg/almond-model:
   feetPosition: {x: 108.6, y: 0.9, z: -6.5}
   id: dbg/almond-model
   layout: {box: {max: {x: 0.15, y: 0.45, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
-  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  model: /cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb
 dbg/ceiling:
   feetPosition: {x: 100, y: 3, z: 0}
   id: dbg/ceiling
@@ -788,48 +788,48 @@ object/x955101e2a6d7f07b/11:
   feetPosition: {x: 70.65163172362372, y: 0.01, z: -5.330910932738334}
   id: object/x955101e2a6d7f07b/11
   layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
-  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  model: /cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb
   rotation: {w: 0.09155640751123428, x: 0, y: 0.9957998991012573, z: 0}
   tags: [almond]
 object/x955101e2a6d7f07b/14:
   feetPosition: {x: 69.33996817888692, y: 0.01, z: 37.30715975118801}
   id: object/x955101e2a6d7f07b/14
   layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
-  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  model: /cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb
   rotation: {w: 0.2285141795873642, x: 0, y: 0.9735406041145325, z: 0}
   tags: [almond]
 object/x955101e2a6d7f07b/32:
   feetPosition: {x: 69.01482674432918, y: 0.01, z: 6.819801561534405}
   id: object/x955101e2a6d7f07b/32
   layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
-  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  model: /cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb
   rotation: {w: 0.9582619071006775, x: 0, y: 0.2858918011188507, z: 0}
   tags: [almond]
 object/x955101e2a6d7f07b/40:
   feetPosition: {x: 110.4, y: 0.02, z: -4}
   id: object/x955101e2a6d7f07b/40
   layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
-  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  model: /cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb
   rotation: {w: 1, x: 0, y: 0, z: 0}
   tags: [almond]
 object/x955101e2a6d7f07b/41:
   feetPosition: {x: 110.4, y: 0.02, z: -2}
   id: object/x955101e2a6d7f07b/41
   layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
-  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  model: /cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb
   rotation: {w: 1, x: 0, y: 0, z: 0}
   tags: [almond]
 object/x955101e2a6d7f07b/42:
   feetPosition: {x: 110.4, y: 0.02, z: 0}
   id: object/x955101e2a6d7f07b/42
   layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
-  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  model: /cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb
   rotation: {w: 1, x: 0, y: 0, z: 0}
   tags: [almond]
 object/x955101e2a6d7f07b/43:
   feetPosition: {x: 110.4, y: 0.02, z: 2}
   id: object/x955101e2a6d7f07b/43
   layout: {box: {max: {x: 0.07, y: 0.32, z: 0.07}, min: {x: -0.07, y: 0, z: -0.07}}}
-  model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb
+  model: /cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb
   rotation: {w: 1, x: 0, y: 0, z: 0}
   tags: [almond]
