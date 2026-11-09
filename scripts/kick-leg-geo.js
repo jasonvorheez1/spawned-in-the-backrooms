@@ -8,10 +8,11 @@ export function geometry(ctx) {
   const FUR = P.fur || sp?.fur || "oklch(0.74 0.055 55)", CLOTH = P.bottom || "#3d5a98"
   const pants = !BARE.has(P.botw), shoe = P.shoes && P.shoes !== "none"
   ctx.smooth()
+  const part = P.part ?? "all" // "thigh" = hip to knee, "shin" = knee to foot (it bends about the knee at y 0.49), "all" = both
   // thigh then shin, a slight bend at the knee
   ctx.color(pants ? CLOTH : FUR)
-  tube(ctx, [[0, 1.02, 0.02], [0, 0.72, 0], [0, 0.49, -0.03]], [0.115, 0.1, 0.085], M)
-  sphere(ctx, [0, 0.49, -0.03], 0.088, M)
+  if (part !== "shin") { tube(ctx, [[0, 1.02, 0.02], [0, 0.72, 0], [0, 0.49, -0.03]], [0.115, 0.1, 0.085], M); sphere(ctx, [0, 0.49, -0.03], 0.088, M) }
+  if (part === "thigh") { ctx.color(null); return }
   ctx.color(pants && P.botw !== "capris" ? CLOTH : FUR)
   tube(ctx, [[0, 0.49, -0.03], [0, 0.29, -0.01], [0, 0.13, 0]], [0.085, 0.072, 0.062], M)
   // foot: a shoe in its colour with a white sole, or a soft paw

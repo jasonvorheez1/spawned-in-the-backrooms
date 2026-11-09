@@ -55,10 +55,18 @@ export function onInput(ctx, input) {
   // an empty hip joint rides the camera; the leg hangs 1.02 m below it, so turning the hip swings the foot up into view
   // one piece on the camera, its top (the hip) the pivot: the leg hangs below the view and swings up and forward into it
   const hb = !l.modelUrl && HUMAN ? humanBody(l) : null, skin = hb?.materials?.Body_Skin?.color
-  const leg = s.tp ? null : ctx.spawn({ audience: 'local', scope: 'session', lifetime: 0.55, feetPosition: { attach: 'camera', x: 0.14, y: -1.15, depth: 0.5, fov: 55 }, pivot: 'top', rotation: { pitch: -8 },
-    visibleInFirstPerson: true, castShadow: false,
-    primitive: { kind: 'scripted', script: 'scripts/kick-leg-geo.js', params: { species: hb ? null : l.species, fur: skin || l.fur, botw: l.botw, bottom: l.bottom, shoes: l.shoes, shoec: l.shoec } } })
-  if (leg) animate(ctx, leg, { 'rotation.pitch': [-8, 60, 55, -8] }, { duration: 0.5, easing: 'easeOutCubic' })
+  const lp = { species: hb ? null : l.species, fur: skin || l.fur, botw: l.botw, bottom: l.bottom, shoes: l.shoes, shoec: l.shoec }
+  // two pieces: the thigh swings from the hip on the camera, the shin from the knee: chamber high, snap the foot out, pull it back
+  const leg = s.tp ? null : ctx.spawn({ audience: 'local', scope: 'session', lifetime: 0.7, feetPosition: { attach: 'camera', x: 0.12, y: -1.12, depth: 0.42, fov: 55 }, pivot: { x: 0, y: 1.02, z: 0 }, rotation: { pitch: -10, yaw: -6 },
+    visibleInFirstPerson: true, castShadow: false, primitive: { kind: 'scripted', script: 'scripts/kick-leg-geo.js', params: { ...lp, part: 'thigh' } },
+    children: [{ id: 'shin', feetPosition: { x: 0, y: 0, z: 0 }, pivot: { x: 0, y: 0.49, z: -0.03 }, rotation: { pitch: -15 }, visibleInFirstPerson: true, castShadow: false,
+      primitive: { kind: 'scripted', script: 'scripts/kick-leg-geo.js', params: { ...lp, part: 'shin' } } }] })
+  if (leg) {
+    animate(ctx, leg, { 'rotation.pitch': [-10, 78, 66, 30, -10] }, { duration: 0.62, easing: 'easeOutQuad' })
+    const shin = ctx.getObject(leg + '/shin') ?? ctx.getObject(leg.id ? leg.id + '/shin' : leg + '/shin')
+    if (shin) animate(ctx, shin, { 'rotation.pitch': [-15, -100, 8, -50, -15] }, { duration: 0.62, easing: 'easeOutQuad' })
+    ctx.after(0.2, 'kickSnap')
+  }
   ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 0.12 }, { audience: { player: ctx.self.id } })
   if (!o && kickFoe(ctx, s, f, p)) return
   if (!o && kickLoose(ctx, f, s)) return
@@ -69,6 +77,9 @@ export function onInput(ctx, input) {
   ctx.emit('cameraPunch', { direction: { x: f.x, y: 0, z: f.z }, intensity: 0.25 }, { audience: { player: ctx.self.id } })
   ctx.emit('squash', { target: o.id, axis: 'z', intensity: 0.2, duration: 0.18 })
   ctx.emit('noise', { position: at, radius: 14, kind: 'kick' }, { audience: { nearby: at, radius: 14 } })
+}
+export function kickSnap(ctx) { // the foot snaps out: a forward punch on the extension
+  const f = fwd(ctx); ctx.emit('cameraPunch', { direction: { x: f.x, y: 0, z: f.z }, intensity: 0.18 }, { audience: { player: ctx.self.id } })
 }
 export function kickEnd(ctx) { ctx.self.anim.kick = null }
 
