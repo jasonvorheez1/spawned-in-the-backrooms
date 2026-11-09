@@ -945,7 +945,7 @@ function viewmodel(ctx, moving, sprinting) {
   w.vmEq = kind; w.vmCheck = false
   const hb = !l.modelUrl && HUMAN ? humanBody(l) : null // human bodies: Shelly's own model's arm holds the weapon (her rule: first-person arms come from her model or a PLYMODEL)
   const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '')
-  const arm = hb ? { hidden: true } : ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v27' + JSON.stringify(s.vmTune ?? null)
+  const arm = hb ? { hidden: true } : ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v28' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     w.plyRig = null
@@ -960,7 +960,9 @@ function viewmodel(ctx, moving, sprinting) {
         : { feetPosition: s.vmTune?.mat ?? { x: 0, y: -g, z: 0 }, rotation: s.vmTune?.mrot ?? Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
     // a two-handed weapon: the off hand rides the viewmodel too, on the fore-end (guns, ahead of the trigger hand) or up the haft (melee), at weapons.yml two: [up, forward-is-negative, radius]
     const fpa = hb ? FP_ARM[l.sex === 'f' ? 'f' : 'm'] : null, skinM = hb ? { Body_Skin: { ...hb.materials.Body_Skin, color: vmSkin(hb.materials.Body_Skin.color), roughness: 0.78, metalness: 0, emissive: '#000000' } } : null
-    if (wp.two && fpa) child.push({ id: 'fparm-l', feetPosition: { x: (wp.two[3] ?? -0.01) - FP_BC[l.sex === 'f' ? 'f' : 'm'].x, y: wp.two[0] + FP_BC[l.sex === 'f' ? 'f' : 'm'].y, z: wp.two[1] + FP_BC[l.sex === 'f' ? 'f' : 'm'].z }, model: { id: fpa.L, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }) // her own left arm, fist closed on the fore-end
+    if (wp.two && fpa) { const bc = FP_BC[l.sex === 'f' ? 'f' : 'm'], arm = { id: 'fparm-l', model: { id: fpa.L, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }
+      if (gun) child.push({ id: 'fphold-l', feetPosition: s.vmTune?.lat ?? { x: wp.two[3] ?? -0.01, y: wp.two[0], z: wp.two[1] }, rotation: s.vmTune?.lq ?? FP_TWO_Q, audience: 'local', children: [{ ...arm, feetPosition: { x: -bc.x, y: bc.y, z: bc.z } }] }) // a gun's fore-end: the fist turned palm-up under it, its hollow along the barrel, the forearm in from the lower left (the arm mesh is laid for a pistol grip, which left it a claw beside the gun)
+      else child.push({ ...arm, feetPosition: { x: (wp.two[3] ?? -0.01) - bc.x, y: wp.two[0] + bc.y, z: wp.two[1] + bc.z } }) } // a haft: the pistol-grip fist already closes round it
     else if (wp.two && !ply) child.push({ feetPosition: { x: 0, y: wp.two[0], z: wp.two[1] }, castShadow: false, audience: 'local', primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: { ...arm, support: { axis: gun ? 'z' : 'y', r: wp.two[2] } } } })
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
     // human: the body turned to face the look, its right shoulder just right of and below the eye (female shoulder 1.19 m, male scaled by height)
@@ -988,6 +990,7 @@ const FP_ARM = {
   f: { R: '/cdn/value.2d938d9446aaeb01c15e41213e80f5a4d2c7e1507bc655714fb04eac001794fa.glb', L: '/cdn/value.7f8d66209a679e498e2b417b0accaf0b9ce819769be93f697762794ff5dc409b.glb' },
   m: { R: '/cdn/value.7217b9235387299104686cdd782ec11f1801444037bd8eceefe445e11001b020.glb', L: '/cdn/value.70fede1b834eff766531f0b51f4772832f8ac989f9f48cffe988120bba1970cb.glb' } }
 // the engine stands a model's bounds bottom-centre on feetPosition, so the fist (the mesh origin) needs that offset back; BC = bounds bottom-centre of each GLB
+const FP_TWO_Q = { x: -0.2804, y: -0.5107, z: 0.4678, w: 0.6646 } // the left fist re-laid for a fore-end: forearm (-0.75,-0.45,0.48), back of hand down, grip hollow forward along the barrel
 const FP_BC = { f: { x: 0.0304, y: -0.2624, z: 0.1128 }, m: { x: 0.0375, y: -0.2836, z: 0.1145 } }
 const FP_SEAT = { x: 0, y: 0.039, z: 0.096 } // the pistol grip's centre in viewmodel space, measured off the mesh (art/weapon-split/fitview.py): the fist's hollow lands on it
 const FP_AT = (sx) => ({ x: FP_BC[sx].x + FP_SEAT.x, y: FP_BC[sx].y + FP_SEAT.y, z: FP_BC[sx].z + FP_SEAT.z }), FP_ROT = { yaw: 0, pitch: 0, roll: 0 }
