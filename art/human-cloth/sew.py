@@ -274,6 +274,20 @@ for name, (ease, cuts) in PLAN.items():
             N[v] = c if c.length >= D[v].length else D[v]
         D = N
     for v in fb.verts: v.co += D[v]
+    for _pass in range(5):                                   # sealed-body clearance, repeated: a push out of one crease can land in the next face's
+        D = {}
+        for v in fb.verts:
+            co, nn, fi, d = bvhSeal.find_nearest(MW @ v.co); out = (MW @ v.co - co).dot(nn)
+            D[v] = (MI.to_3x3() @ nn).normalized() * max(0.0, 0.007 - out) if d is not None and d < 0.06 else Vector()
+        if not any(x.length > 0 for x in D.values()): break
+        for _ in range(3):
+            N = {}
+            for v in fb.verts:
+                nb = [e.other_vert(v) for e in v.link_edges]
+                c = D[v].lerp(sum((D[w] for w in nb), Vector()) / max(1, len(nb)), 0.5)
+                N[v] = c if c.length >= D[v].length else D[v]
+            D = N
+        for v in fb.verts: v.co += D[v]
     fb.to_mesh(me); fb.free()
     # skin + Bust key from the body at the nearest point
     n.shape_key_add(name="Basis", from_mix=False); kb = n.shape_key_add(name="Bust", from_mix=False) if KB else None
