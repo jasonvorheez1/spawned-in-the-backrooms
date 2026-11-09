@@ -156,3 +156,4 @@ Optional, never forced. Story is Savi's draft. Your HALOGEN keeps flashing an ow
 - Savi ideas awaiting Shelly: Phoebe in the Mind Palace only if the player truly met her; a minor named person from brief wikidot notes as a key figure (not found yet).
 - 2026-11-09 Shelly: player is NOT a courier. Spark of the war: Dina A.'s (Plane #52 diary) undelivered package; the nobody player finds her diary and is the only one who knows where her body lies. Approved.
 - 2026-11-09 Shelly: Phoebe has done this before. Mike Sunderland (Backrooms [REDACTED] lore) was her last nobody; the player is her next. Mike is only heard about (rumor, notes, NPC talk), never met. Savi's add (unconfirmed): Dina's diary has a drawing of the player's face.
+- 2026-11-09 Shelly: "The Surge": years ago the wall between worlds thinned and thousands noclipped in at once; B.N.T.G. sold guns through the Hub to the frightened. Why every wanderer is armed and factions count soldiers.
