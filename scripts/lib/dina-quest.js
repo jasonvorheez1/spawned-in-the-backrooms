@@ -12,8 +12,11 @@ export const PAGE2 = "/cdn/value.3dff2011e2fa82e3cd6426f6aa4cc9ca4a5306ed13cac0a
 export const PAGES = [[9, 16.2], [16, 23]]; // each page's seconds on screen
 const STEP = {
   1: { step: "Follow the radio static along the south wall of Level 1", mark: { place: "level1", id: "dina-radio", x: CAMP.x, y: 0, z: CAMP.z } },
-  2: { step: "Find Cabin 23 aboard the SS Fun", mark: null },
+  2: { step: "Get aboard the SS Fun. Survivors swear the Time 4 Fun posters on Level 4 lead there", mark: { place: "level4", id: "l4-fun-poster" } },
+  3: { step: "Find Cabin 23 on the SS Fun's cabin deck", mark: { place: "level26", id: "l26-cabin23" } },
+  4: { step: "Someone took River's drive before you. Find out who", mark: null },
 };
+export { setStep as setDinaStep };
 const RADIO = "Patrol to base. There's a light on at the courier's camp. Say again, someone is at Dina's camp. Moving to check.";
 const VO = `/cdn/voice-gruff-tired-man-field-operative-over-crackly-two-way-radio-saying-${encodeURIComponent(RADIO)}.mp3`;
 const CLICK = "/cdn/moodboard-realistic-gritty/sfx-walkie-talkie-radio-click-static-burst.mp3";
@@ -34,7 +37,9 @@ export function dinaTick(ctx, ses, st) {
   const me = ctx.self, place = me.place;
   if (!st.dcut) {
     if (place === "level1" && !st.dinaQ && !st.menuOpen && !st.cut) setStep(ctx, st, 1, "Quest Started: The Undelivered");
+    else if (place === "level26" && st.dinaQ === 2 && !st.l26cut) setStep(ctx, st, 3, "Quest Updated: The Undelivered"); // aboard: now the cabin
     else if (st.dinaQ && !st.quests?.[DINA.id] && STEP[st.dinaQ]) setStep(ctx, st, st.dinaQ); // a save from before the journal
+    else if (st.dinaQ === 2 && st.quests?.[DINA.id]?.step !== STEP[2].step) setStep(ctx, st, 2); // older saves: the old step had no way there
     return false;
   }
   const t = (ctx.now() - st.dcut.at) / 1000;

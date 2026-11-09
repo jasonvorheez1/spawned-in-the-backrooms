@@ -53,7 +53,7 @@ export function update(ctx) {
   } else ses.inT0 = false
   // Level 26: the first time aboard, the ship in the fog and Phoebe at the rail (scripts/lib/l26-cut.js)
   if (place === "level26" && !st.menuOpen && (st.l26cut || !st.l26seen)) { if (l26Tick(ctx, ses, st)) return ctx.sleep(0) }
-  if ((place === "level1" || st.dcut || (st.dinaQ && !st.quests?.["the-undelivered"])) && dinaTick(ctx, ses, st)) return ctx.sleep(0) // Dina's camp and her diary (scripts/lib/dina-quest.js)
+  if ((place === "level1" || st.dcut || (place === "level26" && st.dinaQ === 2) || (st.dinaQ === 2 && st.quests?.["the-undelivered"]?.mark == null) || (st.dinaQ && !st.quests?.["the-undelivered"])) && dinaTick(ctx, ses, st)) return ctx.sleep(0) // Dina's camp and her diary (scripts/lib/dina-quest.js)
   if (st.tut) tutTick(ctx, st)
   const playing = music(ctx, (st.menuOpen && st.menuKind === "title") || (place === "intake" && !st.cut))
   // behind the title the camera slowly looks around the halls from head height; gone the moment it closes
