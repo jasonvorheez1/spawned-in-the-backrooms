@@ -190,7 +190,6 @@ for o in bpy.data.objects:
         for k in ks:
             row = [Rm.get((k, i), 0) for i in range(NB)]
             row = [max(row[i], row[(i - 1) % NB] * 0.97, row[(i + 1) % NB] * 0.97) for i in range(NB)]
-            for _ in range(2): row = [max([row[i]] + [(row[(i - k) % NB] + row[(i + k) % NB]) / 2 * 0.995 for k in range(1, 9)]) for i in range(NB)]  # cloth bridges a hollow (the butt cleft, the small of the back), never dips into it
             if prev: row = [max(row[i], prev[i]) for i in range(NB)]
             rows[k] = row; prev = row
         for _ in range(3): rows = {k: [(r[(i - 1) % NB] + 2 * r[i] + r[(i + 1) % NB]) / 4 for i in range(NB)] for k, r in rows.items()}
