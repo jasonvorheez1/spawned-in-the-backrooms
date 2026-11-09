@@ -189,7 +189,13 @@ def build(sex, side):
     G = g2b(0, 0.96, -0.28).normalized(); F = g2b(0, 0, -1); F = (F - G * F.dot(G)).normalized()   # a pistol grip's rake, barrel forward
     src = mu.Matrix((fw, hg, fw.cross(hg))).transposed(); dst = mu.Matrix((F, G, F.cross(G))).transposed()   # NV's wrist and elbow bend ride along
     R = dst @ src.inverted()
-    M = mu.Matrix.Translation(V((0, 0, 0))) @ R.to_4x4() @ mu.Matrix.Translation(-fist)
+    el = B["RightForeArm"][0]; d = R @ (el - fist)          # the NV elbow, as the fist now lies
+    want = g2b(0.42, 0, 1.0)                                 # her pick: the forearm runs back and out to the right, clear of the sights
+    dp = (d - G * d.dot(G)).normalized(); wp = (want - G * want.dot(G)).normalized()
+    ang = math.atan2(dp.cross(wp).dot(G), dp.dot(wp))
+    R = mu.Matrix.Rotation(ang, 3, G) @ R                    # a turn about the grip itself: the fist stays wrapped on it
+    print(sex, side, "elbow in view (glTF x,y,z)", tuple(round(c, 3) for c in (lambda q: (q.x, q.z, -q.y))(R @ (el - fist))))
+    M = R.to_4x4() @ mu.Matrix.Translation(-fist)
     if side == "L":   # mirror the right arm's mesh first, then lay it
         Mi = mu.Matrix.Scale(-1, 4, V((1, 0, 0)))
         fistM = Mi @ fist
