@@ -14,7 +14,8 @@ const STEP = {
   1: { step: "Follow the radio static along the south wall of Level 1", mark: { place: "level1", id: "dina-radio", x: CAMP.x, y: 0, z: CAMP.z } },
   2: { step: "Get aboard the SS Fun. Survivors swear the Time 4 Fun posters on Level 4 lead there", mark: { place: "level4", id: "l4-fun-poster" } },
   3: { step: "Find Cabin 23 on the SS Fun's cabin deck", mark: { place: "level26", id: "l26-cabin23" } },
-  4: { step: "Someone took River's drive before you. Find out who", mark: null },
+  4: { step: "Someone took River's drive before you. The wet prints lead below decks, to the party", mark: { place: "level26", id: "l26d-phoebe-room" } },
+  5: { step: "The girl at the party said to find the poster that looks wrong", mark: null }, // the story past here is unwritten
 };
 export { setStep as setDinaStep };
 const RADIO = "Patrol to base. There's a light on at the courier's camp. Say again, someone is at Dina's camp. Moving to check.";
