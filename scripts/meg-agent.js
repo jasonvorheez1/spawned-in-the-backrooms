@@ -7,7 +7,7 @@ import { seatFor } from "./lib/seat.js";
 import { rollLoot, garmentsOf } from "./lib/loot.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
 import { lifeOf, FEAR_TAGS, FEAR_LINES, WANT_LINES } from "./lib/npc-life.js";
-import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec, faceMorph, baseBones, HUMAN, humanFace, mouthAt } from "./lib/critter-model.js";
+import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec, faceMorph, baseBones, HUMAN, humanFace, mouthAt, setStyle } from "./lib/critter-model.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
@@ -102,6 +102,7 @@ export function onSpawn(ctx) {
 // every agent wears the cute Blender critter: an old scripted body swaps in place, and the look it wears is kept in state.wear (garments to loot, redress)
 function dress(ctx, me) {
   if (me.model && me.primitive) me.primitive = null; // a body caught half-swapped
+  setStyle(ctx.world.state.bodyStyle); // read the BODIES pick first: on a fresh machine HUMAN defaults to human, and seatHead would drop a furry's head (Shelly, Nov 9: "npcs have no head sometimes")
   if (me.model && me.state.wear) seatHead(ctx, me, me.state.wear);
   const was = toMesh(ctx, me);
   if (was) me.state.wear = was;
