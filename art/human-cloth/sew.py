@@ -152,7 +152,8 @@ for name, (ease, cuts) in PLAN.items():
                     m[b_] = max(m[b_], r)
             for _ in range(2): m = [max(m[i], (m[i - 1] + m[(i + 1) % NB]) * 0.5) for i in range(NB)]
             return m
-        ring = [e for e in bm.edges if e.is_boundary and all(v.co.z < Z0 + 0.03 for v in e.verts)]
+        bmesh.ops.remove_doubles(bm, verts=[v for v in bm.verts if abs(v.co.x) < 0.012], dist=0.005)   # the centre seam welds first: left open, its edges joined the hem ring and the loft split the back
+        ring = [e for e in bm.edges if e.is_boundary and all(v.co.z < Z0 + 0.03 for v in e.verts) and abs(e.verts[0].co.z - e.verts[1].co.z) < 0.02]
         z = min(v.co.z for e in ring for v in e.verts); steps = max(2, int((z - hem) / 0.012))
         rv = {v for e in ring for v in e.verts}
         for v in rv: v.co.z = z                              # one level ring: every column starts at the same height
