@@ -85,6 +85,9 @@ for v in sh.verts:
     co, n, fi, d = bvhSkin.find_nearest(v.co); out = (v.co - co).dot(n)
     if out < 0: v.co = co
 bvhW = BVHTree.FromBMesh(sh); bvhSkinL = bvhSkin   # same space the old final pass used
+_sl = bmesh.new(); _sl.from_mesh(body0.data); _sl.transform(body0.matrix_world); bmesh.ops.remove_doubles(_sl, verts=_sl.verts[:], dist=0.0015)
+_f = bmesh.ops.holes_fill(_sl, edges=_sl.edges[:], sides=64); bmesh.ops.triangulate(_sl, faces=_f["faces"]); bmesh.ops.recalc_face_normals(_sl, faces=_sl.faces[:])
+bvhSeal = BVHTree.FromBMesh(_sl)   # the whole body sealed (shoulder slits, neck): its nearest face never points sideways, so skin can't print through the yoke
 print("MW", [list(map(lambda x: round(x, 3), r)) for r in MW])
 gnames = {g.index: g.name for g in body.vertex_groups}
 done = {}
@@ -261,6 +264,8 @@ for name, (ease, cuts) in PLAN.items():
     for v in fb.verts:
         co, nn, fi, d = bvhSkinL.find_nearest(v.co); out = (v.co - co).dot(nn)
         D[v] = nn * max(0.0, 0.006 - out)
+        co, nn, fi, d = bvhSeal.find_nearest(MW @ v.co); out = (MW @ v.co - co).dot(nn)
+        if d < 0.05 and 0.006 - out > D[v].length: D[v] = (MI.to_3x3() @ nn).normalized() * (0.006 - out)
     for _ in range(4):
         N = {}
         for v in fb.verts:
