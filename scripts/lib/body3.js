@@ -70,7 +70,7 @@ export function aimPose(me, fam, mode, pitch = 0) {
   const ss = me.session, G = CA.gun[fam]
   const key = mode && G ? fam + mode : null
   if (ss.aim3 !== key) { ss.aim3 = key; me.anim.aim = key ? { ...chan(G[mode] ?? G.aim) } : null; ss.aimP3 = null }
-  const step = key && mode !== 'ready' ? Math.round(pitch / RAD / 6) * 6 : 0
+  const step = !key ? 0 : mode === 'ready' ? (G.readyPitch ?? 0) : Math.round(pitch / RAD / 6) * 6 // ready: the aim hold dipped low (readyPitch), so the gun stays seated in both hands
   if (ss.aimP3 !== step) {
     ss.aimP3 = step
     if (!step) { if (me.anim.aimp) me.anim.aimp = null }
