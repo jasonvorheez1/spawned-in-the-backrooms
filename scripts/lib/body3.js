@@ -90,7 +90,8 @@ export function longHands(me, held, yaw, pitch, aiming, crouch, len = 0.62) {
   const R = aiming ? at(0.3, 0.13, -0.04) : at(0.26, 0.2, -0.32)
   const L = held ? { object: held, offset: { x: 0, y: 0, z: -len } } : (aiming ? at(0.3 + len, 0.0, -0.06) : at(0.26 + len * 0.8, 0.02, -0.32))
   const pole = { x: p.x - r.x * 0.6, y: y0 - 0.6, z: p.z - r.z * 0.6 }
-  return { RightHand: { reach: { to: R, blendIn: 0.15, blendOut: 0.25 } }, LeftHand: { reach: { to: L, pole, blendIn: 0.18, blendOut: 0.25 } } }
+  // aiming, the pistol-stance clip already squares the right hand along the look; only the left hand is solved, onto the foregrip
+  return { RightHand: { reach: aiming ? null : { to: R, blendIn: 0.15, blendOut: 0.25 } }, LeftHand: { reach: { to: L, pole, blendIn: 0.18, blendOut: 0.25 } } }
 }
 
 const pitchOf = (cam) => { let p = cam?.pitch ?? 0; if (Math.abs(p) > 1.6) p *= RAD; return p }
