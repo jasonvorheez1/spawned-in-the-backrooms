@@ -67,38 +67,38 @@ hatted:
 # Human heads (Shelly's hair pack #101894, art/human-hair/build.py): per body sex, pack style n bare and cut under a hat brim. humanPick: each look's style key to its pack style.
 human:
   f:
-    0: { free: "/cdn/value.69ede05fa73d3283d220ead7a5e0070022f2dea96806794dc49bd837b9738ad2.glb", hat: "/cdn/value.6d7e567278042c1a905479e4d1b6d4e4f3968ee126e95d41a8e40c09b93f3af2.glb" }
-    1: { free: "/cdn/value.b89444620ae9592d776a6385f0d110c2934d07b4be538dd19efc9745f3089c3e.glb", hat: "/cdn/value.96c7026e1a02a05d7bcf459dd61437746a04a931adfa8c8783028041a33b7502.glb" }
-    2: { free: "/cdn/value.28cf539cae1cfcfde27921f99d5e4c922ef1eb512e05c5d50af496f1b5fed0a4.glb", hat: "/cdn/value.8ac60337dedf2564b309bba2bc39c0d3b6d6fc0b120a8b4a83c8695d4b898321.glb" }
-    3: { free: "/cdn/value.cf3ff87df44951e6a04a7213a55a1095e9dfcfc975cb2eaae45e1af10000f765.glb", hat: "/cdn/value.955f1c5fd4c9d062903cd0855580bd942970d5e7d3d038e5013d6745ce10dab3.glb" }
-    4: { free: "/cdn/value.97b9848b37c44b291ef06d058b995dbcb9fecfa97fcb8edbd34a11f51a8a3f30.glb", hat: "/cdn/value.5c564c1bcada075f90ed706e22e0ba2e2f4f550c51c21cd3ed42512e94af4812.glb" }
-    5: { free: "/cdn/value.12c621ea8f765a0b9da251ae3438de75b99cf4c6d024b14c2ff2861fa8fd6a76.glb", hat: "/cdn/value.a77bd2227a63e92a16111174020164e8e2c4e97ca71ac4d20961a527d71b1f0d.glb" }
-    6: { free: "/cdn/value.6219a722c379d5b9234640ef6d3178acc95cbeeb67925fe72676fc12f2c555ed.glb", hat: "/cdn/value.cfa90090807fdae9824a1552a55d2fdfa751a946ab8b8ff6b6ce17bbdeb0cbd6.glb" }
-    7: { free: "/cdn/value.14bb661b0843a8d09bcab1c42fad797b33f4e922e29fcb3426988ec9dd2da65c.glb", hat: "/cdn/value.7953fe805031e983f061276b18ef87ce79f9d9328a55b7df028eff6fa8fc38fe.glb" }
-    8: { free: "/cdn/value.f7e7f5412bebeacc0447b2dd6bf0b8365296951828333041d1aecfac52ecd593.glb", hat: "/cdn/value.49b479917c3b9136fe57d27030255dfc4239b22c2ec6429718f4962b382f67f9.glb" }
-    9: { free: "/cdn/value.a140e6155929490bd227339f997f5aadbf7284739c14d0d396e0769a428c8963.glb", hat: "/cdn/value.d1763a81e4a7e60b8a1dc0ea740e774776dc4c674c235a0ebf66c30b0863dfbe.glb" }
-    10: { free: "/cdn/value.e8a07a2335a4d6fcc9ab95379dd26df77370468e5b61542c15428e51af6092d3.glb", hat: "/cdn/value.707793c4353a9e818f2f2b2af08cb239040b70b7f1a6ca27987faa792ce47b4b.glb" }
-    11: { free: "/cdn/value.9a751795f4a9d069d003f03f5f36492d7492d54c510ef6af53a1922d069a03b8.glb", hat: "/cdn/value.52e40f33272d58c07ae3f55fdc27eb61b00bb5abba0302bea37dd435d75866a6.glb" }
-    12: { free: "/cdn/value.3a1155282fc1090b3246a80ccb2addfb4a512b77912878e25cdec23988ba4033.glb", hat: "/cdn/value.1fbc72e6fb0ea2e69ca20e60d42a53d63577c4d767884e7bcb3d2e777113ae94.glb" }
-    13: { free: "/cdn/value.c4bab1b7c593a921564d73a2c057e1831169f75a550b34561e2cbed6c9d3e099.glb", hat: "/cdn/value.0e4aa72791b8121b967f5b2c5e508dc0806be81d0801e9fc77b6d4317083a2bb.glb" }
+    0: { free: "/cdn/value.5262bc97ee00fa1e7cb16baa10da03729e41f83eb14b3c22d967d7db6f753217.glb", hat: "/cdn/value.8975b0a068a7ff82dce015c0e7fc9221e45b4584fbd62f6b5fb9590c00030a6a.glb" }
+    1: { free: "/cdn/value.6028619895918978aeba8a90d8553315b31a4b547b8594c54e5b4d30a1ddb27e.glb", hat: "/cdn/value.fd3a06629f8e40849d20381aa73630d96cc5b588f0dbdaf0f75b0a9c6734f61b.glb" }
+    2: { free: "/cdn/value.a0e27bad7cc1f96e1ec7d7e1bcb8dc86dff3bc69c231f5f7abdc2a479b375c77.glb", hat: "/cdn/value.a9af44cec3d9dabb0b238af639e00c69f5447cadec6b661c912078661db0e9db.glb" }
+    3: { free: "/cdn/value.843c8cd849b2a9f394078adb4b2efb15c9a82f7dd03f0bf4c9d3b08dd8718256.glb", hat: "/cdn/value.452cd2f3ac554d7d42866f0c88aeb5c4ab9ee036772e956260fba98f14f1f538.glb" }
+    4: { free: "/cdn/value.715ad97aa115f41e9def755b7f5ad14c5a9c5d564a33940187e1e9ca1c94e000.glb", hat: "/cdn/value.a34f2bf85692705f4237dc53a86e2a33b7cc16da2dc91c0270584d5d0fed572c.glb" }
+    5: { free: "/cdn/value.8d520abf519922e009bf3ad0ed07add36d8495aae5a290ed8529664292947f8f.glb", hat: "/cdn/value.d9d157457c76859c114d5dd1b04272ca49cbe02d7993df2a6866309787715c75.glb" }
+    6: { free: "/cdn/value.4020149bbbf155718e099970b03a1b22540da9d00a7aea990a65ed7955c5dac5.glb", hat: "/cdn/value.4ed870f9361dc4ff3998d4f1106fe0ea2a7a940e1598ca58f1e7dbe9dca3c6b7.glb" }
+    7: { free: "/cdn/value.a644c37bf75c1b2dad4b72c9e74923652faa00b68ae4507a8184adbbe83ca69d.glb", hat: "/cdn/value.ffb6d66dcb4d1bf114a7ef1ae11f976504a8eeef9812015b810180579e975727.glb" }
+    8: { free: "/cdn/value.1ca32d2394224942e8e047b732f5b5cbf6b20c0efca2f62bebeb1ee9f0ec638d.glb", hat: "/cdn/value.8af7241656ce8e267f42ea8bd8fa189ad0bb30f3b1ffff201303e6a42c1342d9.glb" }
+    9: { free: "/cdn/value.fb8ccc977f267a66f069c40cc93e907ba4adfde13f66a902990d83c3e98f29c8.glb", hat: "/cdn/value.ec203422f7a13351689b6c5dc180ff1e54b6419c0fdce520e7be572fd5228ab8.glb" }
+    10: { free: "/cdn/value.fd5b3fe80cf278fc6d8ae02f027a7768f90d578b09766c23b6d79a3f5741c4c4.glb", hat: "/cdn/value.efd6e57b150e51f3dbb92bfabec3480456d2c51b56bfe3f5e12e0d5dc6735493.glb" }
+    11: { free: "/cdn/value.1624b81d90a7bee61627b939ba6a998c73cee13c234672d56654c3ee957618b0.glb", hat: "/cdn/value.5f029c0b02def9f88ee1e5639c1c2752924f397d8edb78f1aa4e60d6b524b1dc.glb" }
+    12: { free: "/cdn/value.2ad8a21f31c1d2f21418f9955945656630c400539e8f3c18c31812be9fcbf67b.glb", hat: "/cdn/value.c41650a0fbc0249954eb6fb81b86f70737f2db3a4e6473a5fb65b3ee803c2b70.glb" }
+    13: { free: "/cdn/value.c318bdcb9bb8bd3bb27d236e2c62cd28c308d954af883fff14fcffb19a4cfb68.glb", hat: "/cdn/value.fc1aa4ff19363d09b97345aab4f8e2358918bb5fe36b33219116d73110535060.glb" }
     14: { free: "/cdn/value.1fe00643a1e5075b6313ec6e36b9295bad70c641d4e60a32264a5e6227f86266.glb", hat: "/cdn/value.ca6e4bde688e7b0fe5922fcbbd0d2c7e7ed28322f7b16261a1830a0874fe20fb.glb" }  # tripo ponytail
     15: { free: "/cdn/value.a3e23bd022c364bf64d3bf629a756da88de09d5d4aab28eb783d72f922e0acb8.glb", hat: "/cdn/value.15d9206da96a3e482ade9737c79ff36291428b6d0ba0d2c730ac1f3f1ce322ab.glb" }  # tripo spiky
     16: { free: "/cdn/value.fbe740756d23b3b9287fe7491dddfbb1decf8812966be050aa6ff986fd5b29cd.glb", hat: "/cdn/value.cae4d99f7970130c1d6de632ae9eb98d87953c73691b84a17573511775f78046.glb" }  # tripo long
   m:
-    0: { free: "/cdn/value.62bcfc7d43a17649fd0ed1c8df68fc3c46ec5870c9d1f08326cd24c0870e6b98.glb", hat: "/cdn/value.b8047663a7b2ccd2a981ef3e546ed3c168fa5d5027aadd5d4b36cfc75b56451b.glb" }
-    1: { free: "/cdn/value.e8dae8c358b6355c1948f2b59163901b2b94f31c38db8926a07bd8c01cf6350a.glb", hat: "/cdn/value.3d70e8c94e1bc0a167e863e9b85831965a4322369e1ed05a9d31f9908d12b006.glb" }
-    2: { free: "/cdn/value.a00cec62d20d41e3fca87da91f7dd176f132c09fb6241d05fe8386214f343d0a.glb", hat: "/cdn/value.8f8ea23342660269a4bd01497098a66bcbe139094900d2be82fe46cda40c43b4.glb" }
-    3: { free: "/cdn/value.3c124b5b5d384b2c3a7bba4786d7727d0d21422170a1f4da36ed475ad141ecb4.glb", hat: "/cdn/value.55d1b5feace268ff2e3534d99a23a40813fea563f404fb49d6a1db2ea6c773cf.glb" }
-    4: { free: "/cdn/value.4e55c9ee31068cccabce0aab3edff1da3c6d9ba4ee5474bb4912f0bf469fa386.glb", hat: "/cdn/value.35984f162ebc3b4794f8f37d35f0f6eff98f477dee999b0552cb20c495d9d95c.glb" }
-    5: { free: "/cdn/value.a7bc261c63631760b53da7dec76d734f3e8df94278453dd3ecb28733666b5a41.glb", hat: "/cdn/value.a71db98ca546ab51355d4147e7c5ac38b1019af1d7f77c422551fb395253571a.glb" }
-    6: { free: "/cdn/value.62e3862f7c038d61bcd91974394ce5db470815cdcc51664b5f99b7258725a696.glb", hat: "/cdn/value.6285a9fc622d6e052426bf121c0405ae9ce8aa7c2617fd24be0d0b2bf981a655.glb" }
-    7: { free: "/cdn/value.5bb3763ba8bc67bb78b23417b728e445ea751f845b4f04043fb82f852bb4eb47.glb", hat: "/cdn/value.b73ffc38c374dd9cff379ec7889e7836e91686b754ca6ec9e4ec926b69f68469.glb" }
-    8: { free: "/cdn/value.d07e08997b2a599316e6d35bf1bb8012cda8161f7ceb227ce887d82c7280b984.glb", hat: "/cdn/value.8e679c3661bdcea3f078c81aeb145b4e8678800ddf105fd62ea15a961928d032.glb" }
-    9: { free: "/cdn/value.3700a8e6c34a4ffb60396e1b6b996cee35b3e1a53d68d0ad3a4e8faec5f981de.glb", hat: "/cdn/value.3eec30f4eab2f729708d06eddd06807fa46ab46c407b220b08ee579104efc40e.glb" }
-    10: { free: "/cdn/value.e21e088a66c445296be64ed3492f71d4e327e9e0527af8191fe886b82f3e488c.glb", hat: "/cdn/value.04758812bec7b44f602b01669a07d304b0b79a7c11e001278ce0db27f72be67e.glb" }
-    11: { free: "/cdn/value.97d3811ba3c07cc62d38f042841223bfdce27ace4f434902a7156edd54c6d8bc.glb", hat: "/cdn/value.cac1550bb3de60e877c6334410e09d6b937be15227f7d2dca004783d48b74686.glb" }
-    12: { free: "/cdn/value.a2922088a8a002d555392d9b7f75b7f5c17b53ea7bae1aabdc38922b27ef1695.glb", hat: "/cdn/value.c5ac94c2e01a87c9101b45b3e4467bff8a164769f228eb68677665ea7a2b54e6.glb" }
-    13: { free: "/cdn/value.d8bf0f61fe09a5e5ebaea3c68d7c5b84503cbae707f5fba6e8f0b52a0e19648b.glb", hat: "/cdn/value.fde60f20aae7ce49d2cb399b4eb6e6da1dffaa5aaecb900f29b94dc2d18a261d.glb" }
+    0: { free: "/cdn/value.3dff0f727fbbbcc466b12732b867875cefc975f7823def2db8061410d8408c5a.glb", hat: "/cdn/value.c4a9dbbbfc680be5997b40c841472e02e01e2120167042faa84a502d8f3236f9.glb" }
+    1: { free: "/cdn/value.6e3e3eb1837088247cb727367512dc54a4a253ae2580017f1aa9798abbfe0c03.glb", hat: "/cdn/value.e93449a9e38590ef32c311ef8b4dda74c30ac833f821bbda3a2524cb3f357af8.glb" }
+    2: { free: "/cdn/value.98b6cbe4287bd5a99c3b2ca9d9bc38120fa0907db1a7a123ce9a03b77fb5eb39.glb", hat: "/cdn/value.026bad780246f33284607de89e06db9c170601e1beb67e94a7524463589e8fbc.glb" }
+    3: { free: "/cdn/value.84217e79e3dfccba004a146b7457c578f203ceb7a8d606144a87a3986c657ec3.glb", hat: "/cdn/value.2b7fab97256b9b4fb7f76ce2dbc0376259c567e211975ee85abaca8ba486bbdd.glb" }
+    4: { free: "/cdn/value.555f1dd6c0b3fbafe63f724d3064cdb768d54194c883d161ec8fe8d366fe4248.glb", hat: "/cdn/value.d060e73765eee60587bc3050a9e2f25fa79830a40f3ccfc17ec969ff88e3095e.glb" }
+    5: { free: "/cdn/value.47fb88b87078188e5c65fed10ff6b02b57430b759a8e0e895d6759c8adf5449c.glb", hat: "/cdn/value.b7844071827a9b9bf0224373dcc08f0c5de035bffd0fe0306fa808a13266dcc6.glb" }
+    6: { free: "/cdn/value.63429d264e25cb7f6513b6881cd41bed284d08ad6c5d8a01ca10d73482e6749e.glb", hat: "/cdn/value.071655f7af68dbaedb06b821545870492407a9aebaf4e4f03d87e7037ef9a982.glb" }
+    7: { free: "/cdn/value.308d7d6260115dc4f49e8208fc6298d9924e8c544cb88f433e3c7c5ea6a67e5e.glb", hat: "/cdn/value.0ebc7ae732e2b9958d035a1acca11b7dc600bc486b9e47959a37d68fe4ef2135.glb" }
+    8: { free: "/cdn/value.35dab697e881ca389979a756d882cd4bc9789817bb57a6cde53ca13619422fb4.glb", hat: "/cdn/value.bb2953ee6b3dc12c7cdb2b4c6d1d14d6cfb9f1c739f3698584a89b5b19b99065.glb" }
+    9: { free: "/cdn/value.b305e13b707167d4dd0003285ab63c0da01ef1710892606fda2a39823aa8121b.glb", hat: "/cdn/value.e42d0c1529c688121187d7c9af2a29b8fcf3406134bd73ff54106e026a4e91c6.glb" }
+    10: { free: "/cdn/value.9804e82229911a0b7e9dad6a97f5e193afc820bde6ba8237125e3f230f38f2a7.glb", hat: "/cdn/value.c671f8d64f2ef8fdf5c42059d136e560a7037f178c6519f88d94e8293f7528c9.glb" }
+    11: { free: "/cdn/value.6236d99e39a8ab11c7ff004e442227ee0d42f1f6d3842f6e0f6ee4bea8a1719f.glb", hat: "/cdn/value.71cc2c8a7caa8054752c44ec6b6f0e08c80cab9e94f2608e896949208d855ff9.glb" }
+    12: { free: "/cdn/value.81ae2eb3c15af3facc7e133368c22186f77288332b0c99b7ee7a15913e30cf4e.glb", hat: "/cdn/value.c5374a9bd3c174d29f0e1df64131e40d5db80c550011a9cf1379dab0ccbbbf0d.glb" }
+    13: { free: "/cdn/value.0bcd6bf57556165411de5e98d64c942a96b6a54c081590c13cc58b6f387baaef.glb", hat: "/cdn/value.d2b742a17753a80e0fb7dbfb8da5590294dc4cb9d6f04d10453167f1b2de9ff1.glb" }
     14: { free: "/cdn/value.2ce2041adf96ff2ae6d275101f112114ea9221a4cc207bf561be73ac06cf89e6.glb", hat: "/cdn/value.147d156875dd62d9852d5da0c265335f7046027f536b3f766edf4c57a707274b.glb" }  # tripo ponytail
     15: { free: "/cdn/value.038051c7b263247a35446a32205156e8691c33efd9824af094a4072f8f243bfb.glb", hat: "/cdn/value.b6c1944d8cc99766874489315f9984a4ee1d5b9b285be6a81225fe80ebcbabed.glb" }  # tripo spiky
     16: { free: "/cdn/value.a50ecfdce64c933e4b4812b6f35f8bc43ae76c1285d4e635cdf6c30ebb039c18.glb", hat: "/cdn/value.56f92c8a0456b3940906fd9fcc6e39042fb52d9999c18b6bd97165d60c57bdcb.glb" }  # tripo long
