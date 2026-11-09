@@ -84,7 +84,7 @@ bvhSkin = BVHTree.FromBMesh(sw)
 for v in sh.verts:
     co, n, fi, d = bvhSkin.find_nearest(v.co); out = (v.co - co).dot(n)
     if out < 0: v.co = co
-bvhW = BVHTree.FromBMesh(sh)
+bvhW = BVHTree.FromBMesh(sh); bvhSkinL = bvhSkin   # same space the old final pass used
 print("MW", [list(map(lambda x: round(x, 3), r)) for r in MW])
 gnames = {g.index: g.name for g in body.vertex_groups}
 done = {}
