@@ -215,6 +215,7 @@ function npcHeading(ctx, gait, vel, walking) {
 
 export function onInput(ctx, input) {
   if (ctx.self.sprite || !steeredBody(ctx)) return
+  const fz = ctx.self.state?.freeze; if (fz && ctx.now() < fz.until) { const v = ctx.self.velocity ?? {}; ctx.self.velocity = { x: 0, y: v.y ?? 0, z: 0 }; return } // Shelly: frozen while Phoebe talks
   const sin = input.axes.aimYawSin
   const cos = input.axes.aimYawCos
   if (typeof sin !== 'number' || typeof cos !== 'number') return

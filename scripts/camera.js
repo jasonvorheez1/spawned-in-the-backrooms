@@ -146,6 +146,8 @@ export function update(ctx, dt) {
     const look = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
     if (rot) { const dyaw = ((look.yaw - rot.yaw + 540) % 360) - 180; rot = { yaw: rot.yaw + dyaw * k, pitch: rot.pitch + (look.pitch - rot.pitch) * k } } else rot = look
   } else if (!want3) sc.yaw = null
+  // Shelly: frozen while Phoebe whispers behind you (scripts/l26-phoebe-early.js writes state.freeze): the view holds where it was
+  if (ps?.freeze && ctx.now() < ps.freeze.until && rot) rot = { yaw: ps.freeze.yaw, pitch: ps.freeze.pitch ?? 0 }
   // third person (middle mouse toggles it, scripts/view3.js): over the right shoulder. The distance and shoulder follow what you are doing (aiming tucks the eye in,
   // sprinting backs it off and widens the view, crouching lowers it); a thick ray sweeps from the shoulder so a wall or a low ceiling pushes the eye in without
   // clipping, and it eases back out slowly so it never pops. While it is out, the point under the crosshair is kept in player.state.aimPt so shots fly where it points.
