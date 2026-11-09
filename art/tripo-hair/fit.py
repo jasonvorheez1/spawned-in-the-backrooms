@@ -106,13 +106,20 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     # no hair inside the head: every vertex within 7 mm of the skin (or under it) is pushed out along the skin normal
     from mathutils.bvhtree import BVHTree
     hm0 = bpy.data.meshes.new_from_object(head.evaluated_get(dg)); hm0.transform(head.matrix_world)
-    hb0 = bmesh.new(); hb0.from_mesh(hm0); tree = BVHTree.FromBMesh(hb0)
+    hb0 = bmesh.new(); hb0.from_mesh(hm0); tree = BVHTree.FromBMesh(hb0); smeared = set()
     for v in me.vertices:
         loc, nrm, idx, dist = tree.find_nearest(v.co)
         if loc is None: continue
         d = (v.co - loc).dot(nrm)
-        if d < 0.007: v.co = loc + nrm * 0.007
+        if d < 0.007:
+            v.co = loc + nrm * 0.007
+            if key.startswith("t_s_") and v.co.y < cy - 0.02 and abs(v.co.x) < rx * 0.7 and v.co.z < fz1: smeared.add(v.index)  # pushed out onto the face: it would smear a shard across the cheek
     hb0.free()
+    if smeared:
+        bmS = bmesh.new(); bmS.from_mesh(me); bmS.verts.ensure_lookup_table()
+        bmesh.ops.delete(bmS, geom=list({f for i in smeared for f in bmS.verts[i].link_faces}), context="FACES")
+        bmesh.ops.delete(bmS, geom=[v for v in bmS.verts if not v.link_faces], context="VERTS")
+        bmS.to_mesh(me); bmS.free(); print("smeared faces off", key, len(smeared))
     # the scalp: the head's own skin above the hairline, lifted 3 mm, in the hair's colour, so no skin shows between strands
     bz = sorted((head.matrix_world @ v.co).z for v in head.data.vertices); z0h = bz[0]; Hh = top - z0h
     cap = bpy.data.meshes.new("cap"); hb = bmesh.new(); hm = bpy.data.meshes.new_from_object(head.evaluated_get(dg))
