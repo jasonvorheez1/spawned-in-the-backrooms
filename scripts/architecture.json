@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3234,
-  "updatedAt": "2026-11-09T07:49:57.590Z",
-  "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors, while place simulations and scenes supply local environments and shared systems own combat, NPCs, loot, building, and avatar presentation. Human and furry rigs share runtime appearance/animation systems; fitted tintable human hair and authored Commando rifle clips feed third-person presentation.",
+  "basedOnSpecVersion": 3237,
+  "updatedAt": "2026-11-09T07:53:26.015Z",
+  "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors, while place simulations and scenes supply local environments and shared systems own combat, NPCs, loot, building, and avatar presentation. Human and furry rigs share runtime appearance and animation systems; fitted tintable hair and authored combat clips feed third-person presentation.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with authored shops and landmarks, simulated staff, shoppers, balcony loungers, and arcade games.",
@@ -31,7 +31,7 @@
     "scripts/lib/screen.js - derived read-only panel classifier and wrist gates shared by player, stats, craft, rest, and menu input.",
     "scripts/lib/maze.js and scripts/lib/level*.js + level data - grids, zones, layouts, and paths reused by place simulations, geometry, and navigation.",
     "scripts/lib/clothes.js + clothes.yml + critter.yml + hair.yml + scripts/lib/critter-model.js - shared player/NPC wardrobe, species selection, human/furry body, face, hair, and garment fit.",
-    "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml - shared third-person stance and combat animation channels for player and M.E.G. agents; long guns now use authored Commando KF rifle clips and a matching held-gun transform.",
+    "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml - shared third-person stance and combat animation channels for player and M.E.G. agents; long guns use authored Commando KF rifle clips and matching held-gun transforms.",
     "scripts/lib/l2kit.js + scripts/lib/l2props.js and data - Level 2 kit decoding and metre-fitted Tripo props reused by Level 2/2.1; scripts/lib/loose.js + loose.yml serve shared kick/grab/flight/breakable prop effects."
   ],
   "notableExports": [
@@ -65,7 +65,7 @@
     "Teleport Station UI in scripts/hub-ui.js renders lastLevel(s) from scripts/lib/hub.js; travel requests reach scripts/hub.js, which boards the player via bc-train, animates a session train, and crosses to the destination.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickups enter player.js inventory.",
     "L input → scripts/kick.js tries foe kick then loose.js kickLoose; Z input → scripts/grab.js carries/throws eligible bodies and calls loose.js arm/track/impact; flight tracking detects hard stops.",
-    "Player and M.E.G. gun/combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → scripts/lib/data/combat-anims.yml clip rows; long guns use the Commando KF rifle set, upper-body masked over gait with heldRot's hand-frame transform; viewmodel arms remain scripts/lib/vmpose.js.",
+    "Player and M.E.G. gun/combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → scripts/lib/data/combat-anims.yml clip rows; long guns use Commando KF clips with upper-body masking over gait and calibrated heldRot hand-frame transforms.",
     "Wardrobe/UI look data in critter.yml + hair.yml + critter-models.yml → wardrobe-ui.js choices and critter-model.js body/head/hair/material attachment; NPCs use critterSpec/restyle and per-ID seeded looks."
   ],
   "behaviorFamilies": [
@@ -74,7 +74,7 @@
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props, Boiler Room Death Rat packs, and fitted human residents.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/critter-model.js + critter.yml/hair.yml/critter-models.yml and art/human-cloth/refit.py + art/tripo-hair/fit.py - deterministic human/furry looks; human hair is separately fitted/skinned and tintable, with soft wigs face-cut and crown-fit variations.",
+    "scripts/lib/critter-model.js + critter.yml/hair.yml/critter-models.yml and art/human-cloth/refit.py + art/tripo-hair/fit.py - deterministic human/furry looks; human hair is separately fitted, skinned, and tintable; soft Tripo styles 18-22 add wavy bob, ponytail, long waves, twin tails, and wolf cut with hat-cut variants.",
     "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js - upper-body animation families shared by player and M.E.G. agents; long guns use Commando KF low-carry, iron-sight, pitch, fire, and reload clips with a calibrated held-gun rotation.",
     "scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - human gait/weapon pose integration, individual NPC idles, head tracking/fidgets, and timed conversational face/mouth morphs."
   ],
@@ -88,6 +88,6 @@
     "Found-item rarity gates apply only to found weapon tokens; existing weapon ownership/use and non-weapon loot are not level-gated. Search gating excludes storage and NPC containers.",
     "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout.",
     "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static to avoid falling through before floor mesh cooking; Level 2.1 revisioned rebuild must preserve generated placement identity.",
-    "Human body GLBs in critter-models.yml are shared T-pose rigs for body3.js and humanoid-locomotion.js; preserve body IDs, sex mappings, face/head morph keys, garment part names, and hair.yml indices: f_bob remains 18, new soft ponytail and wavy styles are 19 and 20 and humanPick selects them; long-gun heldRot is calibrated to the Commando clips."
+    "Human body GLBs in critter-models.yml are shared T-pose rigs for body3.js and humanoid-locomotion.js; preserve body IDs, sex mappings, face/head morph keys, garment part names, and hair.yml indices: f_bob remains 18; the new fitted soft hairstyles use indices 18-22 and humanPick mappings (twin tails 21, wolf cut 22)."
   ]
 }
