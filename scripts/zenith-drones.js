@@ -12,11 +12,12 @@ const SPARKS = `fx
 pop spark burst=10..16 on=point() life=.15..0.4 v=sdir()*(2..5) size=.012..0.025 acc=grav()*.7 col=hdr(6,4,2) a=1>0 floor=bounce(.3) r=sprite(ember,add,velocity,.02)
 pop smoke burst=2 life=.5..0.9 v=up(.4) size=.08..0.14 acc=buoy(.3)+drag(1.4) col=<.3,.3,.32> a=0>.4:.4>0 sz=$size*(1>2) r=sprite(smoke-puff,alpha)`;
 const BOOM = `fx
-pop flash burst=1 life=.18 size=1.6 col=hdr(8,5,3) a=1>0 sz=$size*(.4>1.4) r=sprite(soft-disc,add)
-pop shard burst=24..34 on=sphere(.15) life=.7..1.4 v=sdir()*(2.5..6)+up(1..2) size=.02..0.06 spin=-12..12 acc=grav()+drag(.3) col=<.55,.58,.62> a=1 sz=$size rot=$age*$spin floor=stick r=mesh(box,1,.3,.7)
-pop spark burst=30 on=sphere(.2) life=.3..0.8 v=sdir()*(3..7) size=.015..0.03 acc=grav()*.6 col=hdr(7,4,1.5) a=1>0 floor=bounce(.3) r=sprite(ember,add,velocity,.02)
-pop smoke burst=8 on=sphere(.3) life=1.5..2.6 v=up(.6..1.2)+sdir()*.4 size=.3..0.6 acc=buoy(.4)+curl(.3)+drag(1.1) col=<.18,.18,.2> a=0>.55:.4>0 sz=$size*(.6>2.6) r=sprite(smoke-puff,alpha)
-pop glow burst=1 life=.4 r=light(<1,.6,.3>,40*(1>0),8)`;
+pop flash burst=1 life=.22 size=3 col=hdr(9,6,3) a=1>0 sz=$size*(.4>1.6) r=sprite(soft-disc,add)
+pop fire burst=18..24 on=sphere(.35) life=.35..0.7 v=sdir()*(1.5..3.5)+up(.6) size=.4..0.8 acc=buoy(1.2)+drag(2) col=hdr(5,2.6,.7)>.4:hdr(2.4,.8,.15)>hdr(.5,.12,.03) a=1>.5:.8>0 sz=$size*(.6>1.5) rot=spin(.4) r=sprite(flame-wisp,add)
+pop shard burst=24..34 on=sphere(.15) life=.8..1.4 v=sdir()*(2.5..6)+up(1..2) size=.02..0.06 spin=-12..12 acc=grav()+drag(.3) col=<.55,.58,.62> a=1>.8:1>0 sz=$size rot=$age*$spin floor=bounce(.2) r=mesh(box,1,.3,.7)
+pop spark burst=30 on=sphere(.2) life=.3..0.8 v=sdir()*(3..7) size=.015..0.03 acc=grav()*.6 col=hdr(7,4,1.5) a=1>0 floor=die r=sprite(ember,add,velocity,.02)
+pop smoke burst=10 on=sphere(.35) life=1.5..2.6 v=up(.6..1.2)+sdir()*.5 size=.35..0.7 acc=buoy(.4)+curl(.3)+drag(1.1) col=<.16,.16,.18> a=0>.55:.4>0 sz=$size*(.6>2.8) r=sprite(smoke-puff,alpha)
+pop glow burst=1 life=.5 r=light(<1,.6,.3>,60*(1>0),10)`; // every pop ends: no floor=stick, so the effect finishes and nothing lingers
 const CHARGE = (c) => `fx
 pop c burst=14 on=sphere(.5) life=.5..0.9 v=<0,0,0> acc=attract(3) size=.02..0.04 col=hdr(${c}) a=0>1:1>0 r=sprite(ember,add)
 pop glow burst=1 life=1 r=light(<${c}>,6*(0>1),4)`;
@@ -56,7 +57,7 @@ function bolt(ctx, d, t, p) { // one laser bolt: a beam from the drone to where 
 }
 function blast(ctx, d, t, f) { // the ko: a fireball that hurts every player and drone in reach, falling off with distance
   const B = T.blast, big = t.size / 0.75;
-  ctx.emit("fx", { position: f, script: BOOM });
+  ctx.spawn({ feetPosition: f, fx: { script: BOOM }, lifetime: 3, tags: ["zboom"] }); // a row with a lifetime: the blast is gone 3 s later, whatever the effect does
   ctx.emit("shockwave", { position: f, speed: 9, thickness: 0.4, intensity: 0.5 * big });
   ctx.emit("playSound", { clip: SND("small-drone-explodes-metal-burst-sparks"), position: f, volume: 1, maxDistance: 50 });
   for (const p of ctx.place.players ?? []) {
