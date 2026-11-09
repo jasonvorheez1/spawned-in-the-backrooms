@@ -269,6 +269,7 @@ export function poseViewmodel(ctx, dt) {
   // sprinting: lower it and turn it away
   y -= run * 0.07; pitch -= run * 18; yaw += run * 14; x -= run * 0.03
 
+  const r0 = [pitch, yaw, roll] // the carried turn, before a swing adds its own
   // a melee chop (or a jab for the fists), eased
   if (!gun && m.swingT != null && m.swingT < 1) {
     const e = ease(Math.sin(m.swingT * Math.PI))
@@ -317,9 +318,22 @@ export function poseViewmodel(ctx, dt) {
   // a weapon's own carry: weapons.yml hold: [x, y, depth, pitch, yaw, roll] added to the rest pose, eased out while aiming (vmTune.hold tunes it live)
   const hold = ps.vmTune?.hold ?? wp.hold
   if (hold) { const k = 1 - m.ads; x += hold[0] * k; y += hold[1] * k; d += hold[2] * k; pitch += hold[3] * k; yaw += hold[4] * k; roll += hold[5] * k }
+  // a swing turns the arm about its shoulder, not about the fist: the rigid arm's far end stays put below the frame instead of sweeping across it
+  if (!gun && m.nv && m.swingT != null && m.swingT < 1) { const P = ps.vmTune?.piv ?? SHOULDER, k = P[3], a0 = turnPt(P, r0[0], r0[1], r0[2]), a1 = turnPt(P, pitch, yaw, roll); x += (a0[0] - a1[0]) * k; y += (a0[1] - a1[1]) * k; d -= (a0[2] - a1[2]) * k }
   vm.feetPosition = { attach: 'camera', x, y, depth: d, fov: VM_FOV }
   partsPose(ctx, ps, kind, dt, m)
   vm.rotation = { yaw, pitch, roll }
+}
+
+// the arm's shoulder end in the viewmodel's frame (x right, y up, z back) and how much of a swing's turn pivots there
+const SHOULDER = [0.08, -0.12, 0.4, 0.85]
+const R = Math.PI / 180
+function turnPt(p, pitch, yaw, roll) { // YXZ: yaw over pitch over roll, as the viewmodel's rotation reads
+  const [cx, sx, cy, sy, cz, sz] = [Math.cos(pitch * R), Math.sin(pitch * R), Math.cos(yaw * R), Math.sin(yaw * R), Math.cos(roll * R), Math.sin(roll * R)]
+  let x = p[0] * cz - p[1] * sz, y = p[0] * sz + p[1] * cz, z = p[2]
+  const y2 = y * cx - z * sx, z2 = y * sx + z * cx; y = y2; z = z2
+  const x2 = x * cy + z * sy, z3 = -x * sy + z * cy
+  return [x2, y, z3]
 }
 
 // the split pistol's own parts: the slide blows back on a shot and racks in the reload, the magazine drops out and slides home
