@@ -42,6 +42,28 @@ def par(n): return PB[n].parent.name if PB[n].parent else None
 def rest_side(m):
     if m == "Spine2": return (hp["RightShoulder"] - hp["LeftShoulder"]).normalized() if False else (hp["RightArm"] - hp["LeftArm"]).normalized()
     s = m[:-4]; return (hp[f"{s}HandIndex1"] - hp[f"{s}HandPinky1"]).normalized()
+# the gun rides RightHand at body3.js heldRot: with the hand at RH_ROT (world) the barrel points -Y. Turn the hand so the barrel
+# runs from the right hand to the left (the foregrip), as in the pack.
+import struct
+def gltf_rest(path, name):
+    d = open(path, "rb").read(); n = struct.unpack("<I", d[12:16])[0]; J = json.loads(d[20:20+n])
+    nodes = J["nodes"]; pr = {}
+    for i, nd in enumerate(nodes):
+        for c in nd.get("children", []): pr[c] = i
+    i = next(k for k, nd in enumerate(nodes) if nd.get("name") == name); q = Quaternion()
+    while i is not None:
+        r = nodes[i].get("rotation", [0, 0, 0, 1]); q = Quaternion((r[3], r[0], r[1], r[2])) @ q; i = pr.get(i)
+    return q
+Mg = Matrix(((1, 0, 0), (0, 0, -1), (0, 1, 0)))
+HELD = Quaternion((0.756, -0.352, 0.433, 0.342))
+Dg = (HELD.conjugated() @ gltf_rest(hum, "RightHand").conjugated()).to_matrix()
+RH_ROT = (Mg @ Dg @ Mg.inverted() @ (RW @ rig.data.bones["RightHand"].matrix_local).to_3x3()).to_quaternion()
+def gun_hand(fr):
+    D = (G @ (Vector(fr[B("L Hand")]) - Vector(fr[B("R Hand")]))).normalized()
+    # keep the gun upright: turn -Y onto D about a level axis first, then pitch
+    yaw = Vector((0, -1, 0)).rotation_difference(Vector((D.x, D.y, 0)).normalized())
+    pit = Vector((D.x, D.y, 0)).normalized().rotation_difference(D)
+    return pit @ yaw @ RH_ROT
 sc = bpy.context.scene; sc.render.fps = 30
 for f in files:
     J = json.load(open(f)); F = J["frames"]; stem = os.path.splitext(os.path.basename(f))[0]
@@ -61,6 +83,7 @@ for f in files:
                     s1 = V(fr, *sd); s0 = d @ rest_side(m)
                     a0 = (s0 - s0.project(d1)); a1 = (s1 - s1.project(d1))
                     if a0.length > 1e-4 and a1.length > 1e-4: d = a0.normalized().rotation_difference(a1.normalized()) @ d
+            if m == "RightHand" and B("L Hand") in fr: d = gun_hand(fr) @ hq[m].inverted()
             delta[m] = d
             M = (d @ hq[m]).to_matrix().to_4x4(); M.translation = RW @ PB[m].head
             PB[m].matrix = RW.inverted() @ M
@@ -76,7 +99,12 @@ for f in files:
         cam = sc.camera
         for k, (loc, rot) in enumerate([((1.2, -2.6, 1.3), (82, 0, 25)), ((2.6, 0.4, 1.3), (82, 0, 98))]):
             cam.location = loc; cam.rotation_euler = tuple(math.radians(v) for v in rot)
-            sc.frame_set(len(F) // 2); sc.render.filepath = f"{PR}/{stem}_{k}.png"; bpy.ops.render.render(write_still=True)
+            sc.frame_set(len(F) // 2)
+            if not bpy.data.objects.get("gunbar"):
+                bpy.ops.mesh.primitive_cylinder_add(radius=0.02, depth=0.8); g = bpy.context.object; g.name = "gunbar"
+            g = bpy.data.objects["gunbar"]; hw = (RW @ PB["RightHand"].matrix).to_quaternion(); bar = (hw @ RH_ROT.inverted()) @ Vector((0, -1, 0))
+            g.location = (RW @ PB["RightHand"].head) + bar * 0.3; g.rotation_euler = bar.to_track_quat("Z", "Y").to_euler()
+            sc.render.filepath = f"{PR}/{stem}_{k}.png"; bpy.ops.render.render(write_still=True)
         bpy.context.view_layer.objects.active = rig; bpy.ops.object.mode_set(mode="POSE")
     bpy.ops.object.mode_set(mode="OBJECT")
     bpy.ops.object.select_all(action="DESELECT"); rig.select_set(True)
