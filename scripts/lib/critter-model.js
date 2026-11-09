@@ -613,10 +613,12 @@ export function buildFor(id, sex) {
   const ear = +(0.82 + ((hashOf(id + ':ear') % 1000) / 1000) * 0.38).toFixed(2)
   // female critters have curvy bodies with breasts: 0.25..0.95; head 0.92..1.1; tail curl 0.7..1.3
   const bust = +(0.25 + Math.pow(c, 0.85) * 0.70).toFixed(2), head = +(0.92 + d * 0.18).toFixed(3), curl = +(0.7 + e * 0.6).toFixed(2)
-  return sex === 'f' ? { v: 2, h, w, bust, head, curl, ear } : { v: 2, h, w, head, curl, ear } // stable per npc
+  if (HUMAN) { const hw = +(h * (0.97 + b * 0.08)).toFixed(3); return sex === 'f' ? { v: 3, h, w: hw, bust, head: 1, human: true } : { v: 3, h, w: hw, head: 1, human: true } } // a human: one build, height-led, no head or tail rolls
+  return sex === 'f' ? { v: 3, h, w, bust, head, curl, ear } : { v: 3, h, w, head, curl, ear } // stable per npc
 }
 // the resting pose every npc keeps under its other bone writes: its head size and an S-curve in the tail (up off the hips, tip curling back)
 export function baseBones(b, l) {
+  if (HUMAN) return { Head: { scale: 1 } } // the human rig: true head size, no tail or ears
   const k = b?.curl ?? 1, hs = b?.head ?? l?.headS ?? 1
   const es = b?.ear ?? l?.earS ?? 1
   const bones = { Head: { scale: hs }, Tail: { rotate: [-28 * k, 0, 0] }, Tail1: { rotate: [34 * k, 0, 0] } }

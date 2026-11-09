@@ -7,7 +7,7 @@ import { seatFor } from "./lib/seat.js";
 import { rollLoot, garmentsOf } from "./lib/loot.js";
 import { stripTo, SLOTS } from "./lib/clothes.js";
 import { lifeOf, FEAR_TAGS, FEAR_LINES, WANT_LINES } from "./lib/npc-life.js";
-import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec, faceMorph, baseBones } from "./lib/critter-model.js";
+import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor, buildFor, critterSpec, faceMorph, baseBones, HUMAN } from "./lib/critter-model.js";
 // An M.E.G. agent: holds its post, greets players, and fights. It paths (builtin/nav) to the nearest creature
 // (hound, stealer) or a player who attacked the camp, shoots from range with line of sight, and goes home after.
 // Hostility is per player: scripts/player.js marks state.angry when a player hits an agent; every agent nearby adopts it.
@@ -112,9 +112,9 @@ function dress(ctx, me) {
     const spec = critterSpec(l); me.model = spec.model; me.material = spec.material; me.jiggle = spec.jiggle; me.state.wear = l; seatHead(ctx, me, l);
   }
   const sc = me.scale, plain = !sc || (typeof sc === "number" ? sc === 1 : sc.x === 1 && sc.y === 1);
-  if (me.state.build && me.state.build.v !== 2) { const sx = me.scale; me.state.build = null; if (sx && typeof sx === 'object' && Math.abs(sx.x - sx.y) < 1e-6) {} } // the reset: rebuilt with the new ranges
+  if (me.state.build && (me.state.build.v !== 3 || !!me.state.build.human !== !!HUMAN)) { if (HUMAN && me.scale && typeof me.scale === 'object') { const y = me.scale.y ?? 1; me.scale = { x: y, y, z: y }; } } if (me.state.build && (me.state.build.v !== 3 || !!me.state.build.human !== !!HUMAN)) { const sx = me.scale; me.state.build = null; if (sx && typeof sx === 'object' && Math.abs(sx.x - sx.y) < 1e-6) {} } // the reset: rebuilt with the new ranges
   const sc2 = me.scale, plain2 = !sc2 || (typeof sc2 === "number" ? sc2 === 1 : sc2.x === 1 && sc2.y === 1);
-  if (!me.state.build && !plain2) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = { ...b, h: typeof sc2 === "number" ? sc2 : sc2.y, w: typeof sc2 === "number" ? sc2 : sc2.x }; } // a hand-cast height stays; bust, head and tail still roll
+  if (!me.state.build && !plain2) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = { ...b, h: typeof sc2 === "number" ? sc2 : sc2.y, w: typeof sc2 === "number" ? sc2 : sc2.x }; if (HUMAN && typeof sc2 === "object") { const y = sc2.y ?? 1, r = b.w / b.h; me.scale = { x: y * r, y, z: y * r }; me.state.build.w = y * r; } } // a hand-cast height stays; bust, head and tail still roll
   if (!me.state.build && plain2) { const b = buildFor(String(me.id).split("/").pop(), me.state.wear?.sex); me.state.build = b; me.scale = { x: b.w, y: b.h, z: b.w }; } // its own height and build
   if (me.model && (me.state.wear?.sex ?? me.state.look?.sex) === 'f' && (me.morph?.Bust == null || me.session.bustV !== 2)) { me.session.bustV = 2; me.bones = baseBones(me.state.build); const b = me.state.build?.bust != null ? me.state.build : buildFor(String(me.id).split("/").pop(), 'f'); me.morph = { ...(me.morph ?? {}), Bust: b.bust }; } // her own bust
 }
