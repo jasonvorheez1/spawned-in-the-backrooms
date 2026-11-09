@@ -1,6 +1,6 @@
 // Below the SS Fun's party (Level 26): where the drive thief slept, at the dead end past Phoebe's room. Damp bedroll, a wet coat
 // for a pillow, and a train stub. Searching it is the beat (show, don't tell: no caption reads it for you): rustle, a creak of the
-// hull, and the quest turns from "they're still aboard" to the Bonus Room's Teleport Station (scripts/lib/dina-quest.js step 6).
+// hull, and the quest turns from "they're still aboard" to the B.N.T.G. trader Voss on Level 1 (scripts/lib/dina-quest.js step 6).
 import { setDinaStep } from "./lib/dina-quest.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 export const ears = {
