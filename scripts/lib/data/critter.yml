@@ -33,7 +33,7 @@ models:
   maxpayne: { name: "max payne", url: "/cdn/value.115c0f2d4fad4963162481c8e3c4b77cdd85e4c49199387d1ccc21e19adc62b6.glb" }
 
 # hair (Shelly, Nov 8): 18 girl styles, 12 boy styles; scripts/lib/data/hair.yml holds the models
-hairF: [f_bob, f_pixie, f_long, f_wavy, f_curly, f_ponytail, f_sidetail, f_twintails, f_twinbraids, f_sidebraid, f_messybun, f_spacebuns, f_afropuff, f_halfup, f_hime, f_ringlets, f_wolfcut, f_curtainmid]
+hairF: [f_bob, f_pixie, f_long, f_wavy, f_curly, f_ponytail, f_sidetail, f_twintails, f_twinbraids, f_sidebraid, f_messybun, f_spacebuns, f_afropuff, f_halfup, f_hime, f_ringlets, f_wolfcut, f_curtainmid, f_silver]
 hairM: [m_crop, m_buzz, m_sidepart, m_slick, m_curtains, m_fluffy, m_shaggy, m_curlytop, m_spiky, m_undercut, m_mohawk, m_manbun]
 hair: [none, f_bob, f_pixie, f_long, f_wavy, f_curly, f_ponytail, f_sidetail, f_twintails, f_twinbraids, f_sidebraid, f_messybun, f_spacebuns, f_afropuff, f_halfup, f_hime, f_ringlets, f_wolfcut, f_curtainmid, m_crop, m_buzz, m_sidepart, m_slick, m_curtains, m_fluffy, m_shaggy, m_curlytop, m_spiky, m_undercut, m_mohawk, m_manbun]
 hairc: ["#1c1614", "#3a2418", "#5a3a26", "#8a5a34", "#b8823e", "#e0b868", "#f2dca0", "#c44a2a", "#e07a3a", "#9a9aa2", "#f4efe9", "#e86a9a", "#7a5ae0", "#3a8ae0", "#3aa07a"]
