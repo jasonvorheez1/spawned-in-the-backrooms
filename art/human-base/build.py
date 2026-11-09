@@ -498,7 +498,7 @@ def finfo(o, r):
         return dict(c=c, z=c.z, x=c.x, ax=abs(c.x), y=c.y, arm=arm, hand=hand, leg=leg, t=t)
     return info, arms
 
-def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=()):
+def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=(), xcuts=()):
     push = push + 0.004
     o = body.copy(); o.data = body.data.copy(); o.name = name
     bpy.context.collection.objects.link(o)
@@ -508,6 +508,9 @@ def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=()):
     info, arms = finfo(o, r)
     for zc in cuts:
         bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=(0, 0, zc), plane_no=(0, 0, 1))
+    for xc in xcuts:  # clean vertical edges (a vest's side, a strap): face picks alone leave a sawtooth
+        for sg in (1, -1):
+            bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=(xc * sg, 0, 0), plane_no=(1, 0, 0))
     for t in armcuts:
         for s, (h, d) in arms.items():
             g = [e for e in bm.edges if ((e.verts[0].co.x > 0) == (s == "Left"))]
@@ -720,7 +723,7 @@ def dress(head, body, r, is_male, aw):
     out = []
     G = lambda *a, **k: out.append(garment(body, r, *a, **k)) or out[-1]
     TORSO = lambda f, lo, hi: f["arm"] < 0.5 and f["leg"] < 0.6 and lo < f["z"] < hi
-    NECK = lambda f, d=0.0: f["z"] < (1.495 - d if f["y"] < 0.06 else 1.525 - d)
+    NECK = lambda f, d=0.0: f["z"] < (1.495 - d if f["y"] < 0.06 else 1.525 - d) + max(0.0, math.hypot(f["x"], f["y"] - 0.08) - 0.075) * 1.4  # Nov 9: a ring round the neck, the shoulder tops stay clothed
     SLV = lambda f, s: f["arm"] >= 0.5 and f["t"] < s and f["hand"] < 0.4
     hemt = 1.0
     # underwear: nobody is naked by default
@@ -735,8 +738,8 @@ def dress(head, body, r, is_male, aw):
     hd = G("Top_hoodie", lambda f: (TORSO(f, 0.95, 1.6) and NECK(f, -0.01)) or SLV(f, 0.98), "cloth_top", 0.015, 0.006, cuts=(0.95, 1.505, 1.535), armcuts=(0.98,))
     jk = G("Top_jacket", lambda f: (TORSO(f, 0.95, 1.6) and NECK(f, -0.01)) or SLV(f, 0.96), "cloth_top", 0.02, 0.006, cuts=(0.95, 1.505, 1.535), armcuts=(0.96,))
     dr = G("Top_dress", lambda f: (TORSO(f, 0.92, 1.6) and NECK(f, 0.02) and (f["ax"] < 0.11 or f["z"] < 1.41)), "cloth_top", 0.009, cuts=(0.92, 1.41, 1.475, 1.505))
-    pl = G("Top_plate", lambda f: TORSO(f, 0.98, 1.6) and NECK(f, 0.035) and f["ax"] < 0.14, "cloth_top", 0.024, 0.009, cuts=(0.98, 1.46, 1.49))
-    sa = garment(body, r, "Strap_a", lambda f: TORSO(f, 0.98, 1.6) and NECK(f, 0.0) and abs(f["ax"] - 0.105) < 0.017 and f["z"] > 1.33, "strap", 0.035, 0.005)
+    pl = G("Top_plate", lambda f: TORSO(f, 0.98, 1.6) and f["z"] < 1.47 and f["ax"] < 0.14, "cloth_top", 0.024, 0.009, cuts=(0.98, 1.47), xcuts=(0.14,))
+    sa = garment(body, r, "Strap_a", lambda f: TORSO(f, 0.98, 1.6) and f["z"] < 1.56 and abs(f["ax"] - 0.105) < 0.017 and f["z"] > 1.33, "strap", 0.035, 0.005, cuts=(1.33, 1.56), xcuts=(0.088, 0.122))
     sb = garment(body, r, "Strap_b", lambda f: TORSO(f, 0.98, 1.6) and 1.07 < f["z"] < 1.115, "strap", 0.035, 0.005, cuts=(1.07, 1.115))
     for o in (pl, sa, sb): bevel_rim(o)
     fy = lambda z: min(v.co.y for v in body.data.vertices if abs(v.co.x) < 0.015 and abs(v.co.z - z) < 0.012)
