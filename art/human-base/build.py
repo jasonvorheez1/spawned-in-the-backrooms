@@ -589,7 +589,7 @@ def ring_piece(name, body, aw, mname, z0, z1, flare, slack, cy, arc=None, rows=1
         for i in range(ns):
             a = a0 + (a1 - a0) * i / seg
             k = (a + math.pi) / (2 * math.pi) * nb; k0 = int(k) % nb; f = k - int(k)
-            rr = R[k0] * (1 - f) + R[(k0 + 1) % nb] * f + slack + flare * t ** 1.3
+            rr = R[k0] * (1 - f) + R[(k0 + 1) % nb] * f + (slack(z) if callable(slack) else slack) + flare * t ** 1.3
             if fa:  # drape: soft folds that open toward the hem, each a little different
                 u = (a - a0) / (a1 - a0) if arc else (a + math.pi) / (2 * math.pi)
                 ph = fn_ * u * 2 * math.pi + 0.9 * math.sin(u * 17.0 + t * 2.0)
@@ -769,8 +769,9 @@ def dress(head, body, r, is_male, aw):
     G("Shoes_slippers", lambda f: FOOT(f, 0.075), "cloth_shoes", 0.01, 0.01, cuts=(0.075,))
     # hanging cloth: skirts, the dress's skirt, apron bib's skirt, cape
     cy = 0.1
-    add(out, ring_piece("Bot_skirt", body, aw, "cloth_bottom", 1.05, 0.62, 0.08, 0.024, cy), r, skirt_w(1.05, 0.62))
-    add(out, ring_piece("Bot_longskirt", body, aw, "cloth_bottom", 1.05, 0.16, 0.13, 0.024, cy, rows=20), r, skirt_w(1.05, 0.16))
+    TUCK = lambda z: 0.002 + 0.022 * smooth(1.0, 0.9, z)  # tucked under every top (hems 0.95-1.0), full ease below
+    add(out, ring_piece("Bot_skirt", body, aw, "cloth_bottom", 1.05, 0.62, 0.08, TUCK, cy), r, skirt_w(1.05, 0.62))
+    add(out, ring_piece("Bot_longskirt", body, aw, "cloth_bottom", 1.05, 0.16, 0.13, TUCK, cy, rows=20), r, skirt_w(1.05, 0.16))
     dsk = ring_piece("dsk", body, aw, "cloth_top", 0.94, 0.52, 0.1, 0.017, cy)
     weighted(dsk, r, skirt_w(0.94, 0.52)); dr = join("Top_dress", [dr, dsk]); out[out.index(next(o for o in out if o.name.startswith("Top_dress")))] = dr
     ask = ring_piece("ask", body, aw, "cloth_top", 0.95, 0.5, 0.05, 0.022, cy, arc=(-math.pi * 0.86, -math.pi * 0.14), rows=12, seg=20)
