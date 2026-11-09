@@ -155,3 +155,4 @@ Optional, never forced. Story is Savi's draft. Your HALOGEN keeps flashing an ow
 - Endgame: The Mind Palace (unnumbered, Shelly's pick). Built from what the player actually met; unmet things are blank. Body lies comatose in the war outside while the player decides in their head.
 - Savi ideas awaiting Shelly: Phoebe in the Mind Palace only if the player truly met her; a minor named person from brief wikidot notes as a key figure (not found yet).
 - 2026-11-09 Shelly: player is NOT a courier. Spark of the war: Dina A.'s (Plane #52 diary) undelivered package; the nobody player finds her diary and is the only one who knows where her body lies. Approved.
+- 2026-11-09 Shelly: Phoebe has done this before. Mike Sunderland (Backrooms [REDACTED] lore) was her last nobody; the player is her next. Mike is only heard about (rumor, notes, NPC talk), never met. Savi's add (unconfirmed): Dina's diary has a drawing of the player's face.
