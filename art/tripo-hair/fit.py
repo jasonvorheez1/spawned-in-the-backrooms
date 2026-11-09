@@ -51,6 +51,17 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     # the crown band is the top 18%, so its width runs a little under the skull's: the push-out below seats whatever lands inside
     M = Matrix.Translation(Vector((0, cy + 0.004, top + 0.014))) @ Matrix.Scale(s, 4) @ Matrix.Translation(Vector((-ccx, -ccy, -t)))
     bm.to_mesh(me); bm.free(); me.transform(M)
+    # face it the right way: of yaw 0 and 180, keep the one that leaves the face window (brow to chin, in front of the eyes) clearest
+    fz0, fz1 = hz + 0.02, top - 0.075
+    def blocked(mm): return sum(1 for v in mm.vertices if fz0 < v.co.z < fz1 and v.co.y < y0 + 0.05 and abs(v.co.x) < rx * 0.55)
+    R = Matrix.Translation(Vector((0, cy, 0))) @ Matrix.Rotation(3.14159, 4, "Z") @ Matrix.Translation(Vector((0, -cy, 0)))
+    b0n = blocked(me); me.transform(R); b1n = blocked(me)
+    if b1n >= b0n: me.transform(R)
+    print("face", key, b0n, b1n)
+    # whatever still hangs in the face window is cut away: bangs stop at the brow
+    fb = bmesh.new(); fb.from_mesh(me)
+    bmesh.ops.delete(fb, geom=[f for f in fb.faces if all(fz0 < v.co.z < fz1 - 0.01 and v.co.y < y0 + 0.04 and abs(v.co.x) < rx * 0.5 for v in f.verts)], context="FACES")
+    bmesh.ops.delete(fb, geom=[v for v in fb.verts if not v.link_faces], context="VERTS"); fb.to_mesh(me); fb.free()
     if len(me.polygons) > 9000:
         o = bpy.data.objects.new("tmp", me); bpy.context.scene.collection.objects.link(o)
         d = o.modifiers.new("d", "DECIMATE"); d.ratio = 9000 / len(me.polygons); bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier="d"); bpy.data.objects.remove(o)
