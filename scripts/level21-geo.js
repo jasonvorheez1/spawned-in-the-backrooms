@@ -216,9 +216,9 @@ export function geometry(ctx) {
         pipe(ctx, [c.x + S * 0.5, h - 0.9, c.z + 1.2], [c.x + S * 0.5 + 0.08, h - 0.9, c.z + 1.2], 0.53, M + 2);
       }
       if (laneCell(cx, cz) && cz === LANE.z0) { // the photo's rock: the left wall rolls over into a rough rock haunch where it meets the roof
-        const zl = c.z - S / 2; ctx.albedo(ROCKROOF); ctx.metalness(0); ctx.roughness(0.95); ctx.color("oklch(0.78 0.012 80)"); // the vault's own stone (johnadams2 photo: neutral warm grey, no blue)
+        const zl = c.z - S / 2; ctx.albedo(ROCKROOF); ctx.metalness(0); ctx.roughness(0.95); ctx.color("oklch(0.76 0.005 250)"); // the vault's own stone (johnadams2 photo: neutral grey)
         tube(ctx, [[c.x - 0.3, h - 0.05, zl + 1.1], [c.x + S / 2, h - 0.1, zl + 1.25], [c.x + S + 0.3, h - 0.05, zl + 1.1]], [1.05, 1.2, 1.05], 48, [1, 0.6], 0.12, cx * 7 + 3, 3);
-        ctx.color("oklch(0.70 0.012 80)");
+        ctx.color("oklch(0.68 0.005 250)");
         tube(ctx, [[c.x - 0.3, h + 0.25, zl + 2.6], [c.x + S + 0.3, h + 0.25, zl + 2.75]], [0.6, 0.6], 36, [1, 0.4], 0.12, cx * 7 + 5, 3);
         ctx.color("oklch(0.72 0.01 230)"); ctx.metalness(0.72); ctx.roughness(0.38);
       }
