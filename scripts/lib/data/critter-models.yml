@@ -11,8 +11,8 @@ mesh: true
 # shoulders (Nov 9, Shelly "work on the rig"): refit bodies run through art/human-base/shoulders.py; pipeline: build.py -> refit.py -> shoulders.py
 # faces (Shelly Nov 9 #116046): bodies re-exported through art/human-face/expressions.py with X_ expression and talk keys; before: m a72d639444162250d9952ce8abf7c92aa06a6085f867c5cda3dabffd461b8809 f 4ea845d5772c35f3c8923973f3078cb9153a7ef21e0ae2f8776f7643c0b519cb
 # men (Shelly Nov 9 #121141/#121179): art/human-face/male-jaw.py trims the winged lashes to a lid line and adds M_Jaw/M_Chin; before: m 0f4d6b4922fbd0e8a97b8d6b71836871b2def3b39574b7e0d21aea73d7586843
-human: { m: "/cdn/value.4121d77853bc0106ac7c5edbbf1eb8b122546bbcfd931cce72f9e7a3db3837a4.glb", f: "/cdn/value.b395fa3f5e40d8fe366ae277e1bbfad8dc47ba6398cde63e9b9337c42aa519c0.glb" }
-body: { m: "/cdn/value.a644c5e07659bd246d75bf010bfc44368cdab9487ccfaf07747e3021c7ae66ed.glb", f: "/cdn/value.57f1b595fcb0343934caf73333dc3f57441bcd10a7abb1a801b0a4ac4ef84c67.glb" }
+human: { m: "/cdn/value.d82142cbd4cbc765a74d66d1c173331b0ac36acf43f797401baeadfb7f3e85f5.glb", f: "/cdn/value.2d1bbaee0031bfd438983387c3d069bef8265909f5b035bb5dc3224f5d25996c.glb" }
+body: { m: "/cdn/value.730e6983aa94b48c822d4dcda7636d3661b500371dca9a347302063d340f9ff1.glb", f: "/cdn/value.5652a750747ab80e733997dd63f823355fe4bbfecdf992da15e32b51f516caf9.glb" }
 bodyMats: [fur, limb, pad, cloth_top, cloth_bottom, cloth_shoes, cloth_hat, cloth_neck, button, metal, lens, gold, sole]
 slots: { topw: Top, botw: Bot, shoes: Shoes, hat: Hat, eyew: Eyew, neck: Neck }
 parts: [Top_apron, Top_dress, Top_hoodie, Top_jacket, Top_longsleeve, Top_pajamas, Top_sweater, Top_tank, Top_tee, Top_plate, Bot_longskirt, Bot_overalls, Bot_pants, Bot_pjpants, Bot_shorts, Bot_skirt, Shoes_boots, Shoes_slippers, Shoes_sneakers, Hat_beanie, Hat_bow, Hat_cap, Hat_crown, Hat_flower, Hat_headphones, Hat_partyhat, Hat_tophat, Eyew_glasses, Eyew_shades, Neck_bell, Neck_bowtie, Neck_cape, Neck_scarf]

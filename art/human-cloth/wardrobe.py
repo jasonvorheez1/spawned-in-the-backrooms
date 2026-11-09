@@ -106,7 +106,11 @@ def clean_top(row,old):
  if isdress:bottom=zmax-.50
  if isapron:bottom=zmax-.42
  # Fit dimensions come from the torso block, with ease independent of skin creases.
- sexscale=zmax/1.48; sx=sexscale; ry=.114*sx;torso=[p for v,p in zip(old.data.vertices,pts) if zmax-.38<p.z<zmax-.15 and sum(g.weight for g in v.groups if g.group in armgroups)<.2];width=max(.170*sx,max((abs(p.x) for p in torso),default=0)*1.02)
+ sexscale=zmax/1.48; sx=sexscale; ry=.114*sx
+ body=sources['Body'];trunk={g.index for g in body.vertex_groups if g.name=='Hips' or g.name.startswith('Spine')}
+ torso=[body.matrix_world@v.co for v in body.data.vertices if zmax-.38<(body.matrix_world@v.co).z<zmax-.15 and sum(g.weight for g in v.groups if g.group in trunk)>.7]
+ width=max(.170*sx,max((abs(p.x) for p in torso),default=0)+.012)
+ assert width<abs((R.matrix_world@R.data.bones['LeftArm'].head_local).x)*1.5,'Torso fit reached outside the shoulder landmarks: '+rid
  rings=[(bottom,width*.95,ry*.91),(bottom+.04,width*.95,ry*.92),(zmax-.38,width*.94,ry*.93),(zmax-.23,width*1.05,ry*1.04),(zmax-.12,width*1.06,ry),(zmax-.055,width*.94,ry*.83),(zmax,.064*sx,.061*sx)]
  if kind=='sweater':rings=[(z,w*1.045,d*1.045) for z,w,d in rings]
  if isdress:rings=[(z,w*(.91 if z<zmax-.25 else 1),d) for z,w,d in rings]
