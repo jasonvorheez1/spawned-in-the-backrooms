@@ -635,9 +635,9 @@ const _bust = (l) => {
 
 // ---- the BODIES switch for everyone already standing: every person in a place (NPCs, scene-laid people, corpses) re-dressed on the human or furry body
 // their look rides in state.wear (read back off the model when it never had one), so a flip and a flip back returns the same clothes, face and species
-const OLD_HUMAN = ['/cdn/value.fd49318b8e8c14d0e98cf8d8b38433601bad2db2515aa8ed3585e8842e2cd80c.glb', '/cdn/value.8d0f43bf3da06253fd58a24473034d2ff3ff1ad4b551d69fcbced89ff58251c1.glb', '/cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb', '/cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb', '/cdn/value.4802b6cd4b09d80a1b730817fb9ec8620f5d861e9e208cd3d6b6b811a18d0df4.glb', '/cdn/value.59bdc78b4240c5fd51dda3dcd5d717d6636cb08500bbd87acb891a290756daee.glb', '/cdn/value.571a6f2a3b9368cb26c62e6dd96129a7eb7a1b680a6358295b76445e8d5fa96b.glb', '/cdn/value.10792bc623f260a37572790868aab1cd2ead38a1846531279036279fa8c4ad02.glb', '/cdn/value.551f4e076eedd9dccfef9bee30c7daf33456a882eae186be97c104ebd4216151.glb', '/cdn/value.fd4025b2266d959bfa29cd593f61d69d34d73fd7d8f8c6009c7f18cd9f3325d4.glb', '/cdn/value.215e73e7f0164538308a283c66bc194938e60bc791594a8cc7a01adc4fcbd5e4.glb']
+const OLD_HUMAN = ['/cdn/value.fd49318b8e8c14d0e98cf8d8b38433601bad2db2515aa8ed3585e8842e2cd80c.glb', '/cdn/value.8d0f43bf3da06253fd58a24473034d2ff3ff1ad4b551d69fcbced89ff58251c1.glb', '/cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb', '/cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb', '/cdn/value.4802b6cd4b09d80a1b730817fb9ec8620f5d861e9e208cd3d6b6b811a18d0df4.glb', '/cdn/value.59bdc78b4240c5fd51dda3dcd5d717d6636cb08500bbd87acb891a290756daee.glb', '/cdn/value.571a6f2a3b9368cb26c62e6dd96129a7eb7a1b680a6358295b76445e8d5fa96b.glb', '/cdn/value.10792bc623f260a37572790868aab1cd2ead38a1846531279036279fa8c4ad02.glb', '/cdn/value.551f4e076eedd9dccfef9bee30c7daf33456a882eae186be97c104ebd4216151.glb', '/cdn/value.fd4025b2266d959bfa29cd593f61d69d34d73fd7d8f8c6009c7f18cd9f3325d4.glb', '/cdn/value.215e73e7f0164538308a283c66bc194938e60bc791594a8cc7a01adc4fcbd5e4.glb', '/cdn/value.2258e9d53f054bba011a1c4debaaf11ada9d46cd13f286a0f3488d7ea9fa7d0a.glb', '/cdn/value.d953bd900d564f7cc054655d9303e4a91cec7ca3b504b00da73e20f620c53442.glb']
 const FURRY_IDS = () => Object.values(M.body), HUMAN_IDS = () => [...Object.values(M.human ?? {}), ...OLD_HUMAN]
-export const STYLE_V = 'sw7' // sw7: bodies with head types; sw6: skirt waist below the top hem; sw5: skirts tucked under tops (new body glbs); sw4: the hair pack on human heads
+export const STYLE_V = 'sw8' // sw8: sleeves cover the upper arm's back, the shoulder blend band has room; sw7: bodies with head types; sw6: skirt waist below the top hem; sw5: skirts tucked under tops (new body glbs); sw4: the hair pack on human heads
 export function furrySpec(l) { const h = HUMAN; HUMAN = null; try { return critterSpec(l) } finally { HUMAN = h } } // a character who stays a critter in both modes (Phoebe)
 export function restyle(ctx, o) {
   const mid = o?.model?.id ?? o?.model
@@ -651,7 +651,7 @@ export function restyle(ctx, o) {
   const local = String(o.id).split('/').pop()
   const hm = ctx.getObject(o.id + '/' + HEAD_ID)?.model ?? stray[0]?.model
   const l = { ...(lookFromModel(o.model, hm?.id ?? hm) ?? {}), ...(o.state?.wear ?? {}) }
-  if (isH && !o.state?.wear) l.sex = mid === M.human.f || mid === OLD_HUMAN[1] || mid === OLD_HUMAN[3] || mid === OLD_HUMAN[4] || mid === OLD_HUMAN[6] || mid === OLD_HUMAN[8] || mid === OLD_HUMAN[9] ? 'f' : (l.sex ?? 'm')
+  if (isH && !o.state?.wear) l.sex = mid === M.human.f || mid === OLD_HUMAN[1] || mid === OLD_HUMAN[3] || mid === OLD_HUMAN[4] || mid === OLD_HUMAN[6] || mid === OLD_HUMAN[8] || mid === OLD_HUMAN[9] || mid === OLD_HUMAN[12] ? 'f' : (l.sex ?? 'm')
   l.species ??= speciesFor(local); l.sex ??= 'm'; l.fseed ??= hashOf(local)
   if (o.state) o.state.wear = l
   if (want === 'h') { const s = critterSpec(l); o.model = s.model; o.material = null; seatHead(ctx, o, l) }
