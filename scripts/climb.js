@@ -124,13 +124,13 @@ function sound(ctx, L, p, volume) {
   ctx.emit('playSound', { clip: SND[L.mat] ?? SND.wood, position: { x: p.x, y: p.y + 1, z: p.z }, volume, pitch: 0.9 + ctx.random() * 0.2, maxDistance: 14 })
 }
 
-// first person: both forearms in front of the eye, fists on the rungs, one reaching up while the other pulls down (camera-attached, this machine only)
+// first person: both forearms in front of the eye, fists on the rungs, one reaching up while the other pulls down (riding the body, which faces the ladder, so looking around leaves the hands on the rungs; this machine only)
 function hands(ctx, m, dir) {
   const me = ctx.self, s = me.state
   if (s.tp) { if (m.fp) { ctx.destroy(m.fp); m.fp = null } return }
   const sx = s.look?.sex === 'f' || s.look?.sex == null ? 'f' : 'm'
   if (!m.fp) {
-    m.fp = ctx.spawn({ feetPosition: { attach: 'camera', x: 0, y: 0, depth: 0.45 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
+    m.fp = ctx.spawn({ parent: me.id, feetPosition: { x: 0, y: 1.6, z: -0.45 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
       children: [
         { id: 'r', feetPosition: { x: 0.24, y: -0.88, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, model: FP_ARM[sx].R, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
         { id: 'l', feetPosition: { x: -0.24, y: -0.88, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, scale: { x: -1, y: 1, z: 1 }, model: FP_ARM[sx].R, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
