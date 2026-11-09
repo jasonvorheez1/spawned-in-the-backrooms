@@ -9,7 +9,8 @@ ONLY = sys.argv[sys.argv.index("--") + 2:]  # optional style keys: fit only thes
 BODY = f"/workspace/human/ht/{SEX}.glb"; SRC = "/workspace/tripo-hair"; OUT = "/workspace/tripo-hair/out"; os.makedirs(OUT, exist_ok=True)
 NAMES = {"long_straight_anime_hair_with_": "t_long", "short_spiky_anime_hair__male": "t_spiky", "anime_twin_ponytails_hair_with": "t_twintails",
          "messy_medium_anime_hair__male_": "t_messy", "anime_bob_cut_hair_with_blunt_": "t_bob", "anime_high_ponytail_hair_with_": "t_ponytail",
-         "anime_silver_long_hair_with_": "t_silver"}  # johnadams2 Nov 9: long silver curtain from his reference (/cdn/image-u60fav89f.webp)
+         "anime_silver_long_hair_with_": "t_silver",
+         "anime_soft_bob": "t_softbob"}  # johnadams2 Nov 9: soft clumped wavy bob off his bob sheet (/cdn/image-u06qves5w.webp)  # johnadams2 Nov 9: long silver curtain from his reference (/cdn/image-u60fav89f.webp)
 # per style: overall width against the skull width, crown lift over the head top, shift back (m) — tuned from the proof renders
 FIT = {"t_bob": (1.42, 0.03, 0.01), "t_long": (1.45, 0.03, 0.02), "t_messy": (1.6, 0.035, 0.01), "t_ponytail": (1.5, 0.03, 0.03),
        "t_spiky": (1.55, 0.04, 0.01), "t_twintails": (2.9, 0.03, 0.01)}
@@ -61,7 +62,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     if b1n >= b0n: me.transform(R)
     print("face", key, b0n, b1n)
     # a lopsided Tripo mesh: its fuller side mirrored onto the other, so the curtain falls even on both shoulders
-    if key in ("t_silver",):
+    if key in ("t_silver", "t_softbob"):
         side = 1 if sum(1 for v in me.vertices if v.co.x > 0) >= sum(1 for v in me.vertices if v.co.x < 0) else -1
         bmS = bmesh.new(); bmS.from_mesh(me)
         bmesh.ops.symmetrize(bmS, input=bmS.verts[:] + bmS.edges[:] + bmS.faces[:], direction="X" if side > 0 else "-X", dist=0.0005)
