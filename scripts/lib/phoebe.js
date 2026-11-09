@@ -1,7 +1,7 @@
 // Phoebe (johnadams2, Nov 8): a quiet critter in a Partygoer's yellow coat who watches the intro and turns up,
 // face in shadow, at the tutorial's end. Nothing about her is told yet: no name tag, no lines, no tag a player can read.
 // Look from the creator's picture (/cdn/image-u2bhqzx6j.webp): ginger, mustard coat over black, a red tie at the collar.
-import { furrySpec, critterSpec, HUMAN, humanFace } from "./critter-model.js"
+import { furrySpec, critterSpec, HUMAN, humanFace, setStyle } from "./critter-model.js"
 export const PHOEBE_LOOK = {
   species: "cat", sex: "f", fur: "#d9824a", belly: "#f3d9c4", tip: "#f3d9c4", nose: "#c86f6a", 
   topw: "longsleeve", top: "#141216", botw: "skirt", bottom: "#17141a", shoes: "boots", shoec: "#121014",
@@ -25,7 +25,8 @@ function humanPhoebe() {
 const OUTFIT = "/cdn/value.e43b3c8653d59ec8a87df263e493204dce99174142ce49d7deb6f7ae68473092.glb"
 export function spawnPhoebe(ctx, id, at, yaw, life, pose) {
   if (ctx.getObject(id)) return id
-  const human = !!HUMAN
+  setStyle(ctx.world.state.bodyStyle) // this script's own copy of the BODIES switch reads the world's setting, not its boot default
+  const human = ctx.world.state.bodyStyle !== "furry" && !!HUMAN
   const spec = human ? humanPhoebe() : furrySpec(PHOEBE_LOOK) // BODIES human: her human self; furry: the ginger cat in her fitted outfit
   return ctx.spawn(id, {
     tags: ["phoebe"], audience: "local", lifetime: life, feetPosition: at, rotation: { yaw },
