@@ -250,6 +250,18 @@ for name, (ease, cuts) in PLAN.items():
         if it < 4:
             new = {v: v.co.lerp(sum((w.co for w in nb), Vector()) / len(nb), 0.4) for v, nb in adj2.items() if len(nb) > 2 and not v.is_boundary}
             for v, c in new.items(): v.co = c
+    if name.startswith("Top_"):                              # the small of the back hangs as a curtain across the seat's cleft: each height takes its y from the cloth either side
+        _cy = B["Spine1"].y; _top = B["Spine1"].z; _bins = {}
+        for v in bm.verts:
+            if v.co.y > _cy and v.co.z < _top and 0.05 < abs(v.co.x) < 0.075: _bins.setdefault(round(v.co.z * 100), []).append(v.co.y)
+        _moved = 0
+        for v in bm.verts:
+            if v.co.y > _cy and v.co.z < _top and abs(v.co.x) <= 0.05:
+                ys = _bins.get(round(v.co.z * 100)) or _bins.get(round(v.co.z * 100) - 1) or _bins.get(round(v.co.z * 100) + 1)
+                if ys:
+                    t = sum(ys) / len(ys) + 0.006 * (1 - (abs(v.co.x) / 0.05) ** 2); w = smooth(_top - v.co.z, 0.0, 0.04)
+                    v.co.y = v.co.y + (t - v.co.y) * w; _moved += 1
+        print("CURTAIN", name, _moved)
     bm.transform(MI); bm.normal_update()
     me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free()
     n = bpy.data.objects.new(name + "_n", me); bpy.context.collection.objects.link(n); n.matrix_world = body.matrix_world
