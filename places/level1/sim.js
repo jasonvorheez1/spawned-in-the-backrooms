@@ -51,7 +51,7 @@ export function tick(ctx) {
         light: { kind: "point", color: tube ? "oklch(0.95 0.02 220)" : "oklch(0.9 0.08 80)", intensity: tube ? LAMP_ON : 2.5, distance: tube ? 20 : 9, shadow: { enabled: false } } });
     }
     ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level1-props-geo.js" }, material: { roughness: 0.85 } }); // clutter, camp and guide line
-    { const c = cellCenter(ARRIVE.cx, ARRIVE.cz); for (const [dx, dz, col] of [[3.4, 3.4, "oklch(0.85 0.14 70)"], [-5, 0, "oklch(0.85 0.12 80)"], [1, 8.2, "oklch(0.9 0.08 90)"]]) ctx.spawn({ feetPosition: { x: c.x + dx, y: 0.9, z: c.z + dz }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: col, emissive: col, emissiveIntensity: 2 }, visibleRange: { max: 42 }, castShadow: false, light: { kind: "point", color: col, intensity: 4, distance: 11, shadow: { enabled: false } } }); } // camp lanterns
+    { const c = cellCenter(ARRIVE.cx, ARRIVE.cz); for (const [dx, dz, col] of [[3.4, 3.4, "oklch(0.85 0.14 70)"], [-5, 0, "oklch(0.85 0.12 80)"]]) ctx.spawn({ feetPosition: { x: c.x + dx, y: 0.9, z: c.z + dz }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: col, emissive: col, emissiveIntensity: 2 }, visibleRange: { max: 42 }, castShadow: false, light: { kind: "point", color: col, intensity: 4, distance: 11, shadow: { enabled: false } } }); } // camp lanterns
     ctx.spawn({ feetPosition: { x: 0, y: 0, z: 0 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/level1-details-geo.js" }, material: { roughness: 0.85 } }); // beams, sprinkler pipes, wet stains, strip lights
     for (let i = 2; i < N; i += 2) for (let j = 2; j < N; j += 2) { // stencilled grid letters and numbers on the pillars, as in a real car park
       if (!hasPillar(i, j) || hash(i, j, 401) > 0.55) continue;
@@ -83,6 +83,7 @@ export function tick(ctx) {
     if (d) { d.ui = null; d.primitive = null; d.model = { id: L1M.door }; d.physics = { body: "static", collider: "box" }; d.visibleRange = { max: 60 }; }
     if (!ctx.place.objects["l1-backwall"]) ctx.spawn("l1-backwall", { feetPosition: { x: BACK.x - 0.2 + L1M.wallDx, y: 0, z: BACK.z }, physics: "static", model: { id: L1M.wall }, receiveShadow: true, castShadow: false });
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz);
+    for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id], f = o.feetPosition; if (o.light && o.primitive?.kind === "sphere" && f && Math.abs(f.x - a.x - 1) < 0.1 && Math.abs(f.z - a.z - 8.2) < 0.1) ctx.destroy(id); } // the old map lamp sat inside the board
     if (!ctx.place.objects["l1-mapboard"]) ctx.spawn("l1-mapboard", { feetPosition: { x: a.x + 1, y: 0, z: a.z + 8.6 }, rotation: { yaw: L1M.boardYaw }, physics: { body: "static", collider: "box" }, model: { id: L1M.board }, visibleRange: { max: 50 }, castShadow: false });
   }
   if (!s.megCamp) { s.megCamp = true; // the M.E.G. waypoint: the camp, its fire, its lamps, and three agents
