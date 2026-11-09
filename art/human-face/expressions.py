@@ -18,12 +18,9 @@ def ss(e0, e1, x):
 
 bm = bmesh.new(); bm.from_mesh(H.data); bm.verts.ensure_lookup_table(); bm.faces.ensure_lookup_table()
 XK = ["X_Blink", "X_Squint", "X_Open", "X_Wide", "X_Round", "X_Smile", "X_Frown", "X_BrowUp", "X_BrowAngry", "X_BrowSad"]
-_b = bm.verts.layers.shape.get("Basis")
-for n in XK: bm.verts.layers.shape.new(n)
-bm.verts.ensure_lookup_table(); _b = bm.verts.layers.shape.get("Basis")
-for n in XK:
-    _L = bm.verts.layers.shape.get(n)
-    for v in bm.verts: v[_L] = v[_b].copy()
+bm.free()
+for n in XK: H.shape_key_add(name=n, from_mix=False)
+bm = bmesh.new(); bm.from_mesh(H.data); bm.verts.ensure_lookup_table(); bm.faces.ensure_lookup_table()
 uvl = bm.loops.layers.uv.active; dl = bm.verts.layers.deform.active
 keyl0 = {k.name: bm.verts.layers.shape.get(k.name) for k in H.data.shape_keys.key_blocks}
 keyl = {**keyl0, **{n: bm.verts.layers.shape.get(n) for n in XK}}
@@ -51,6 +48,8 @@ def contour(vs):
 sides = {}
 for s in (1, -1):
     sides[s] = contour([v for v in EYE if (W(v).x > 0) == (s > 0)])
+EH = {s: max(sides[s][0](x) - sides[s][1](x) for x in [sides[s][2] + (sides[s][3] - sides[s][2]) * i / 20 for i in range(21)]) for s in (1, -1)}
+print("eye heights", EH)
 iris_kd = kdtree.KDTree(len(IRIS)); ilist = list(IRIS)
 for i, v in enumerate(ilist): iris_kd.insert(Vector((W(v).x, 0, W(v).z)), i)
 iris_kd.balance()
@@ -97,8 +96,9 @@ for name, frac, lashk in (("X_Blink", 1.0, 0.86), ("X_Squint", 0.5, 0.42)):
     for nv, e in lid_src.items():
         q, _, _ = lid_closed(e, frac); put(L, nv, q - W(nv))
     for v in LASH:
-        p = W(v); s = 1 if p.x > 0 else -1; top = sides[s][0](p.x); bot = sides[s][1](p.x)
-        put(L, v, Vector((0, -0.001 * frac, -(top - bot) * lashk)))
+        p = W(v); s = 1 if p.x > 0 else -1; x0, x1 = sides[s][2], sides[s][3]; cx = (x0 + x1) / 2; hw = (x1 - x0) / 2
+        u = min(1.0, abs(p.x - cx) / hw); h = EH[s] * (1 - 0.55 * u * u)
+        put(L, v, Vector((0, -0.0012 * frac, -h * lashk)))
     if frac < 1:  # a squint lifts the cheek under the eye a touch
         for v in bm.verts:
             if v in lid_src or v in EYE or v in LASH: continue
