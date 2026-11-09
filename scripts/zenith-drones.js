@@ -18,7 +18,7 @@ pop spark burst=30 on=sphere(.2) life=.3..0.8 v=sdir()*(3..7) size=.015..0.03 ac
 pop smoke burst=8 on=sphere(.3) life=1.5..2.6 v=up(.6..1.2)+sdir()*.4 size=.3..0.6 acc=buoy(.4)+curl(.3)+drag(1.1) col=<.18,.18,.2> a=0>.55:.4>0 sz=$size*(.6>2.6) r=sprite(smoke-puff,alpha)
 pop glow burst=1 life=.4 r=light(<1,.6,.3>,40*(1>0),8)`;
 const CHARGE = (c) => `fx
-pop c burst=14 on=sphere(.5) life=.5..0.9 v=<0,0,0> attract(3) size=.02..0.04 col=hdr(${c}) a=0>1:1>0 r=sprite(ember,add)
+pop c burst=14 on=sphere(.5) life=.5..0.9 v=<0,0,0> acc=attract(3) size=.02..0.04 col=hdr(${c}) a=0>1:1>0 r=sprite(ember,add)
 pop glow burst=1 life=1 r=light(<${c}>,6*(0>1),4)`;
 const hex = (h) => { const n = parseInt(h.slice(1), 16); return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255]; };
 const say = (ctx, d, kind) => { // one sentry line from the drone itself, never two over each other
