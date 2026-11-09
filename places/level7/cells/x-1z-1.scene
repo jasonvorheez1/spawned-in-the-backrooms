@@ -1,4 +1,9 @@
 # spawn-scene v2 yaml x-1z-1
+l7-ladder-tower:
+  feetPosition: {x: -70, y: 11.6, z: -99.45}
+  id: l7-ladder-tower
+  state: {ladder: {h: 5.42, mat: wood, yaw: 0}}
+  tags: [ladder]
 l7f-gate-ramp:
   feetPosition: {x: -70, y: 10.92, z: -82.85}
   id: l7f-gate-ramp
