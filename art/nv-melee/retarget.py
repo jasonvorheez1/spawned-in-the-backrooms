@@ -68,9 +68,9 @@ for f in files:
             sc.frame_set((len(F) - 1) * k // 3); sc.render.filepath = f"/tmp/nvp/{stem}_{k}.png"; bpy.ops.render.render(write_still=True)
         bpy.context.view_layer.objects.active = rig; bpy.ops.object.mode_set(mode="POSE")
     # export this clip alone
-    for o in meshes: o.hide_set(False)
     bpy.ops.object.mode_set(mode="OBJECT")
-    bpy.ops.export_scene.gltf(filepath=os.path.join(outdir, stem + ".glb"), export_animations=True, export_force_sampling=True, export_animation_mode="ACTIVE_ACTIONS")
+    bpy.ops.object.select_all(action="DESELECT"); rig.select_set(True)  # a clip is the motion alone: the armature, no mesh
+    bpy.ops.export_scene.gltf(filepath=os.path.join(outdir, stem + ".glb"), use_selection=True, export_animations=True, export_force_sampling=True, export_animation_mode="ACTIVE_ACTIONS")
     bpy.context.view_layer.objects.active = rig; bpy.ops.object.mode_set(mode="POSE")
     for pb in rig.pose.bones: pb.rotation_quaternion = (1, 0, 0, 0)
     bpy.data.actions.remove(act)
