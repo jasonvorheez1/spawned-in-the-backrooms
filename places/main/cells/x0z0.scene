@@ -67,9 +67,9 @@ hub/lamp:
 hub/rug:
   feetPosition: {x: 0, y: 0.005, z: 0}
   id: hub/rug
-  material: {color: oklch(0.42 0.09 35), roughness: 1}
+  material: {color: oklch(0.95 0.02 40), roughness: 1, texture: cdn/texture-worn-faded-burgundy-persian-area-rug.png}
   parent: hub
-  primitive: {depth: 4.5, height: 0.01, kind: box, width: 6}
+  primitive: {depth: 2.3, height: 0.012, kind: box, width: 3.2}
 hub/table:
   children: [{feetPosition: {x: -0.5, y: 0.7400000095367432, z: -0.10000000149011612}, layout: {box: {max: {x: 0.08, y: 0.32, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}, light: null, material: null, model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb, primitive: null, ui: null}, {feetPosition: {x: -0.30000001192092896, y: 0.7400000095367432, z: 0.05000000074505806}, layout: {box: {max: {x: 0.08, y: 0.32, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}, light: null, material: null, model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb, primitive: null, ui: null}, {feetPosition: {x: 0.10000000149011612, y: 0.7400000095367432, z: -0.10000000149011612}, layout: {box: {max: {x: 0.08, y: 0.32, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}, light: null, material: null, model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb, primitive: null, ui: null}, {feetPosition: {x: 0.3499999940395355, y: 0.7400000095367432, z: 0.05000000074505806}, layout: {box: {max: {x: 0.08, y: 0.32, z: 0.08}, min: {x: -0.08, y: 0, z: -0.08}}}, light: null, material: null, model: /cdn/value.a762c3c5b45b825a10d0e93b00d009ae455200b423a5b63cda9e8d34bbc7750c.glb, primitive: null, ui: null}, {feetPosition: {x: 0.699999988079071, y: 0.7400000095367432, z: 0.10000000149011612}, layout: null, light: null, material: {color: 4294045415, key: Std/PBR}, model: null, primitive: {depth: 0.24, height: 0.02, kind: box, width: 0.32}, ui: "<div face=\"top\" width=\"0.32m\" style=\"font-size:26px;color:#3a2a14;padding:14px;font-family:serif\">day 41. the smilers don't come past the doorway. drink the water. find the wall that flickers.</div>"}]
   feetPosition: {x: -4.5, y: 0, z: -4}
