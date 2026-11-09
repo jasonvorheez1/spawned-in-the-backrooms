@@ -175,6 +175,10 @@ for name, (ease, cuts) in PLAN.items():
     me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free()
     n = bpy.data.objects.new(name + "_n", me); bpy.context.collection.objects.link(n); n.matrix_world = body.matrix_world
     me.materials.append(mat)
+    sb2 = bmesh.new(); sb2.from_mesh(me)                     # the centre seam tears where decimate meets the mirror: weld and patch small holes
+    bmesh.ops.remove_doubles(sb2, verts=sb2.verts[:], dist=0.0012)
+    bmesh.ops.holes_fill(sb2, edges=[e for e in sb2.edges if e.is_boundary], sides=8)
+    bmesh.ops.recalc_face_normals(sb2, faces=sb2.faces[:]); sb2.to_mesh(me); sb2.free()
     for p in me.polygons: p.use_smooth = True
     bpy.ops.object.select_all(action="DESELECT"); n.select_set(True); bpy.context.view_layer.objects.active = n
     sd = n.modifiers.new("t", "SOLIDIFY"); sd.thickness = THICK; sd.offset = 1; sd.use_even_offset = False; sd.use_rim = True
@@ -186,6 +190,10 @@ for name, (ease, cuts) in PLAN.items():
     tri = sum(len(p.vertices) - 2 for p in me.polygons); BUDGET = 9000 if name.startswith("Top_") else 6000   # Savi's pick: a crowd of NPCs wears these
     if tri > BUDGET:
         dc = n.modifiers.new("d", "DECIMATE"); dc.ratio = BUDGET / tri; bpy.ops.object.modifier_apply(modifier="d")
+    sb2 = bmesh.new(); sb2.from_mesh(me)                     # the centre seam tears where decimate meets the mirror: weld and patch small holes
+    bmesh.ops.remove_doubles(sb2, verts=sb2.verts[:], dist=0.0012)
+    bmesh.ops.holes_fill(sb2, edges=[e for e in sb2.edges if e.is_boundary], sides=8)
+    bmesh.ops.recalc_face_normals(sb2, faces=sb2.faces[:]); sb2.to_mesh(me); sb2.free()
     for p in me.polygons: p.use_smooth = True
     # skin + Bust key from the body at the nearest point
     n.shape_key_add(name="Basis", from_mix=False); kb = n.shape_key_add(name="Bust", from_mix=False) if KB else None
