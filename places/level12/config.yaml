@@ -1,0 +1,21 @@
+# Level 12 "Matrix" (backrooms-wiki.wikidot.com/level-12): a small white room, a table, a chair, a locked door,
+# and past the nooks an endless white abyss full of old furniture sinking into the floor. Reached only by noclipping
+# through a window entity in Level 11, and only by someone who has learned the ritual.
+mode: 3d
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 0, y: 0.05, z: 1.6 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -30 }
+atmosphere:
+  sky: { kind: color, color: oklch(0.97 0.004 95) }
+  fog: { kind: linear, near: 8, far: 75, color: oklch(0.96 0.004 95) }
+  clouds: { enabled: false }
+  stars: { enabled: false }
+  moon: { enabled: false }
+  cycle: { frozen: 12 }
+  sun: { light: { intensity: 0.35, color: oklch(0.98 0.01 95), shadow: { enabled: true } } }
+  ambient: { light: { color: oklch(0.97 0.005 95), intensity: 1.15 } }
+  hemisphere: { skyColor: oklch(0.99 0 0), groundColor: oklch(0.86 0.005 95), intensity: 0.8 }
+acoustics: { reverb: 0.55 }

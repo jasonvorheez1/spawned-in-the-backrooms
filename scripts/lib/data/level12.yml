@@ -1,0 +1,7 @@
+# Level 12 "Matrix" ritual timing. Lore says 15 minutes in the chair and exactly one hour; time runs wrong in 12,
+# so the room's clock does a full hour in `hour` real seconds and the chair's quarter hour is a quarter turn.
+sit: 45      # Savi's pick: seconds seated without getting up (a quarter turn of the clock)
+hour: 180    # Savi's pick: seconds of one clock hour
+tol: 12      # Savi's pick: seconds either side of the hour the door still turns
+exits: [level1, level4, level10]
+farDrain: 40 # metres from the table where the memory fog starts eating sanity
