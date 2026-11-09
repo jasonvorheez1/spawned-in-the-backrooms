@@ -3,6 +3,7 @@
 // Body: a Blender crawler (art/smiler/build.py) with baked clips idle, skitter, freeze, lunge-bite, recoil, death.
 // A flashlight held on one makes it flinch (recoil) and lock rigid (freeze) until the beam leaves it.
 
+import { knocked, deathRag } from "./lib/knock.js";
 import { heard } from "./lib/hear.js";
 import { hearOf, sighting, leadOf, raise, alertFor } from "./lib/hunt.js";
 import L from "./lib/data/level0.yml";
@@ -154,15 +155,15 @@ export function update(ctx, dt) {
       m.mode = null;
     }
 
-    // Death: folds and melts into the carpet, then shade dissolves
+    if (knocked(ctx, w, now, dt)) continue; // kicked or power-hit flat: down a beat, no AI till it's up
+    // Death: drops as a ragdoll along the killing blow, then its shade dissolves
     if (st.dead) {
       if (!m.dieAt) {
         m.dieAt = now;
         w.velocity = { x: 0, y: 0, z: 0 };
-        w.anim.body = null;
-        act(w, "death", { clampWhenFinished: true });
+        deathRag(w);
         heard(ctx, { clip: SND("shadow-creature-dissolve-hiss"), position: pos, volume: 0.9, maxDistance: 35 });
-      } else if (!m.gone && now - m.dieAt > 1700 && now > (st.inspectUntil ?? 0)) {
+      } else if (!m.gone && now - m.dieAt > 3200 && now > (st.inspectUntil ?? 0)) {
         m.gone = true;
         ctx.emit("fx", { position: { x: pos.x, y: pos.y + 0.3, z: pos.z }, script: POOF });
         ctx.destroy(w.id);

@@ -1,3 +1,4 @@
+import { powerKnock } from './lib/knock.js'
 // The wanderer: walk/sprint on stamina, sanity that the halls eat, a flashlight on battery,
 // almond water, swings at smilers, xp and levels. Every number lives in lib/data/level0.yml.
 // player.state is the player's save: their level, xp and almonds follow them between visits.
@@ -414,6 +415,8 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
   }
   if (npc) dmg = pellets > 1 ? pellets * dmgAfterArmor(lookOfNpc(m), dmg / pellets, false, pen) : dmgAfterArmor(lookOfNpc(m), dmg, false, pen) // an agent's or survivor's clothes soak the hit like yours do: a shotgun's pellets one by one, and a hit's armor penetration takes some of it off
   m.state.hp -= dmg
+  m.state.hitDir = { x: Math.round(f.x * 100) / 100, z: Math.round(f.z * 100) / 100, p: Math.round(heavy * 100) / 100 } // the killing blow's push for a ragdoll death
+  if (heavy && !W[s.equipped]?.ranged && powerKnock(ctx, m, f, heavy)) { ctx.emit('damageNumber', { position: { x: m.feetPosition.x, y: m.feetPosition.y + 2.2, z: m.feetPosition.z }, text: 'KNOCKDOWN', color: '#ff9a3c', size: 1.2 }); sound(ctx, 'brutal-kick-body-flies-and-crashes', 1) }
   if (npc || m.tags?.includes('l61fc')) { m.state.angry = { ...(m.state.angry ?? {}), [ctx.self.id]: true }; m.state.fresh = { ...(m.state.fresh ?? {}), [ctx.self.id]: true } } // the camp remembers who shot first; a fresh shot spreads even after a pardon
   const hit = { x: m.feetPosition.x, y: m.feetPosition.y + 1.5, z: m.feetPosition.z }
   if (loud) sound(ctx, 'heavy-pipe-hit-flesh-thud', 0.95)

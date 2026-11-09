@@ -2,7 +2,7 @@
 // holds it still (and pays sanity for it); look away, or break the line of sight, and it closes the gap fast.
 // They wander the halls like smilers, but never cross into the safe room. Dead lurkers are cleared here.
 
-import { knocked } from "./lib/knock.js";
+import { knocked, deathRag } from "./lib/knock.js";
 import { heard } from "./lib/hear.js";
 import { hearOf, sighting, leadOf, raise, alertFor } from "./lib/hunt.js";
 import L from "./lib/data/level0.yml";
@@ -227,8 +227,8 @@ export function update(ctx, dt) {
     if (st.dead) {
       if (!m.dying) {
         m.dying = now;
-        playAnim(w, m, "Death", false);
-        w.velocity = { x: 0, y: -2, z: 0 };
+        w.velocity = { x: 0, y: 0, z: 0 };
+        deathRag(w); // limp along the killing blow
         heard(ctx, { clip: SND("bone-crack-twist"), position: pos, volume: 0.9, maxDistance: 24 });
       }
       if (now - m.dying > 3200 && !m.gone && now > (st.inspectUntil ?? 0)) {
