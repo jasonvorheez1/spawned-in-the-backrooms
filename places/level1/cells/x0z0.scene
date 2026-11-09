@@ -26,7 +26,7 @@ dina-lantern:
 dina-radio:
   audio: {clip: cdn/moodboard-realistic-gritty/sfx-shortwave-radio-static-hiss-with-faint-warbling-tones-loop.mp3, gain: 0.5, loop: true, maxDistance: 34, spatial: true}
   castShadow: false
-  children: [{feetPosition: {x: 0, y: 0.34, z: -0.12}, id: glow, light: {color: oklch(0.78 0.14 65), distance: 2.5, intensity: 0.5, kind: point}}]
+  children: [{feetPosition: {x: 0, y: 0.34, z: -0.12}, id: glow, light: {color: oklch(0.78 0.14 65), distance: 2.5, intensity: 0.3, kind: point}}]
   feetPosition: {x: 21.55, y: 0, z: 37.2}
   id: dina-radio
   model: {id: /cdn/value.cfec526c4a998af568ac373df79772da89efb155e26028bfa6c96e3413e5fa8b.glb}
