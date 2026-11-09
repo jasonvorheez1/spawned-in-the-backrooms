@@ -625,7 +625,7 @@ export function restyle(ctx, o) {
   if ((want === 'h' && isH && Object.values(M.human).includes(mid)) || (want === 'f' && isF)) return false
   const local = String(o.id).split('/').pop()
   const l = { ...(lookFromModel(o.model, ctx.getObject(o.id + '/' + HEAD_ID)?.model?.id) ?? {}), ...(o.state?.wear ?? {}) }
-  if (isH && !o.state?.wear) l.sex = mid === M.human.f || mid === OLD_HUMAN[1] || mid === OLD_HUMAN[2] || mid === OLD_HUMAN[4] ? 'f' : (l.sex ?? 'm')
+  if (isH && !o.state?.wear) l.sex = mid === M.human.f || mid === OLD_HUMAN[1] || mid === OLD_HUMAN[3] || mid === OLD_HUMAN[4] || mid === OLD_HUMAN[6] ? 'f' : (l.sex ?? 'm')
   l.species ??= speciesFor(local); l.sex ??= 'm'; l.fseed ??= hashOf(local)
   if (o.state) o.state.wear = l
   if (want === 'h') { const s = critterSpec(l); o.model = s.model; o.material = null; seatHead(ctx, o, l) }
