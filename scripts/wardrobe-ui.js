@@ -53,7 +53,7 @@ const CSS = `<style>
 #cc .big .sl .bar .th{width:10px;height:18px}
 </style>`
 const act = (k, v = '') => `sendAction('dress',{k:'${k}',v:'${v}'})`
-const HN = (v) => !v || v === 'none' ? 'none' : ({ afropuff: 'afro puff', curtainmid: 'curtains', halfup: 'half up', messybun: 'messy bun', sidebraid: 'side braid', sidetail: 'side tail', spacebuns: 'space buns', twinbraids: 'twin braids', twintails: 'twin tails', wolfcut: 'wolf cut', curlytop: 'curly top', sidepart: 'side part', manbun: 'man bun' })[v.slice(2)] || v.slice(2)
+const HN = (v) => !v || v === 'none' ? 'none' : ({ afropuff: 'afro puff', curtainmid: 'curtains', halfup: 'half up', messybun: 'messy bun', sidebraid: 'side braid', sidetail: 'side tail', spacebuns: 'space buns', twinbraids: 'twin braids', twintails: 'twin tails', wolfcut: 'wolf cut', curlytop: 'curly top', sidepart: 'side part', manbun: 'man bun', silver: 'cascade' })[v.slice(2)] || v.slice(2)
 const tile = (k, v, on, label) => `<button class="${on ? 'on' : ''}" onclick="${act(k, v)}">${label}</button>`
 const sw = (k, v, on) => {
   let bg = v || 'conic-gradient(#f2a65a,#9a6440,#f4efe9,#6f7d93,#f2a65a)';
