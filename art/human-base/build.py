@@ -498,6 +498,57 @@ def finfo(o, r):
         return dict(c=c, z=c.z, x=c.x, ax=abs(c.x), y=c.y, arm=arm, hand=hand, leg=leg, t=t)
     return info, arms
 
+HANG = ("Top_tee", "Top_longsleeve", "Top_pajamas", "Top_sweater", "Top_hoodie", "Top_jacket")
+def hang(bm, top=1.30, taper=0.9965, nb=72):
+    # Nov 9: a top below the bust hung skin-tight: the sweater and jacket showed the stomach and the buttocks as a pouch.
+    # Cloth falls from the widest ring above it: each 1 cm slice keeps the convex hull of itself and the slice over it.
+    vs = [v for v in bm.verts if v.co.z < top + 0.02 and abs(v.co.x) < 0.26]
+    if not vs: return
+    ys = [v.co.y for v in vs]; cy = (min(ys) + max(ys)) / 2
+    zb = lambda z: int(math.floor((top - z) / 0.01))
+    ab = lambda a: int((a + math.pi) / (2 * math.pi) * nb) % nb
+    pts = {}
+    for v in vs:
+        k = zb(v.co.z)
+        if k < 0: k = 0
+        pts.setdefault(k, []).append((v.co.x, v.co.y - cy))
+    def hull(P):
+        P = sorted(set(P))
+        if len(P) < 3: return P
+        cr = lambda o, a, b: (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+        lo, up = [], []
+        for q in P:
+            while len(lo) >= 2 and cr(lo[-2], lo[-1], q) <= 0: lo.pop()
+            lo.append(q)
+        for q in reversed(P):
+            while len(up) >= 2 and cr(up[-2], up[-1], q) <= 0: up.pop()
+            up.append(q)
+        return lo[:-1] + up[:-1]
+    def ray(H, a):  # distance from the axis to the hull along angle a
+        dx, dy = math.cos(a), math.sin(a); best = 0.0
+        for i in range(len(H)):
+            (x1, y1), (x2, y2) = H[i], H[(i + 1) % len(H)]
+            ex, ey = x2 - x1, y2 - y1; den = dx * ey - dy * ex
+            if abs(den) < 1e-9: continue
+            t = (x1 * ey - y1 * ex) / den; u = (x1 * dy - y1 * dx) / den
+            if t > 0 and -1e-6 <= u <= 1 + 1e-6: best = max(best, t)
+        return best
+    R = {}; prev = None
+    for k in range(0, max(pts) + 1):
+        P = pts.get(k, [])
+        H = hull(P) if len(P) >= 3 else []
+        row = [ray(H, (i + 0.5) / nb * 2 * math.pi - math.pi) if H else 0.0 for i in range(nb)]
+        if prev: row = [max(row[i], prev[i] * taper) for i in range(nb)]
+        R[k] = row; prev = row
+    for v in vs:
+        x, y = v.co.x, v.co.y - cy; r = math.hypot(x, y)
+        if r < 1e-5: continue
+        a = math.atan2(y, x); f = (top - v.co.z) / 0.01; k = max(0, int(math.floor(f))); t = min(1.0, max(0.0, f - k))
+        r0 = R.get(k, R[max(R)])[ab(a)]; r1 = R.get(k + 1, R[max(R)])[ab(a)]
+        tr = r0 * (1 - t) + r1 * t
+        w = smooth(top + 0.01, top - 0.06, v.co.z)  # meets the fitted chest without a step
+        if tr > r: s = 1 + (tr / r - 1) * w; v.co.x = x * s; v.co.y = cy + y * s
+
 def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=(), xcuts=()):
     push = push + 0.004 + (0.003 if name.startswith("Top_") else 0.0)  # a top rides 3 mm over the bottom it meets at the waist: one plane z-fought
     o = body.copy(); o.data = body.data.copy(); o.name = name
@@ -525,6 +576,7 @@ def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=(), 
     for v in bm.verts:  # the shoulder's blend band: linear skinning shrinks an offset where arm and torso rotations mix, so the skin poked through a lowered sleeve; give that band more room
         wa = sum(x for g, x in v[dl].items() if gi[g] in ("LeftArm", "RightArm"))
         v.co += v.normal * (push + 0.012 * max(0.0, 1 - abs(2 * wa - 1)) + 0.014 * min(1.0, wa))  # the upper arm's back showed skin through the sleeve
+    if name in HANG: hang(bm)
     bm.to_mesh(o.data); bm.free()
     o.data.materials.clear(); o.data.materials.append(MATS[mname])
     if thick:
