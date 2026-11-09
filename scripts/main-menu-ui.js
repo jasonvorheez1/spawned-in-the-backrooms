@@ -9,8 +9,8 @@ const CSS = `<style>
 #mm button:hover{opacity:1;border-bottom-color:rgba(243,238,223,.8)}
 @keyframes mm-in{from{opacity:0}to{opacity:1}}
 </style>`
-export function mainMenu(ctx, player) {
-  const pause = player.state?.menuKind === "pause"
+export function mainMenu(ctx, player, launch = false) {
+  const pause = !launch && player.state?.menuKind === "pause"
   const k = pause ? "resume" : "start"
   return `${CSS}<div id="mm" data-modal><div class="col">
     <h1>The Backrooms</h1>

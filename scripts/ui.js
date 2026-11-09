@@ -271,11 +271,14 @@ function questTracker(s) {
 }
 
 // F3: the LAGSCOPE lag panel floats over whatever the HUD draws (builders only; players never see it)
+let UI_BOOTED = false // this page's own mark: a reload starts it over, a walk between rooms keeps it
 export default function render(ctx, player) { return renderHud(ctx, player) + lagscopeOverlay(ctx, player) + modelingStudio.render(ctx, player) }
 function renderHud(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
   if (s.cut || s.l26cut || s.arrive || s.arrivePending || (s.t0cut && !s.sheetOpen)) return cutUi(ctx, player)
+  // launch: the title stands from the very first frame this page draws, before scripts/main-menu.js's first tick opens it (no HUD flash first)
+  if (!UI_BOOTED) { if (s.menuOpen || s.roomHop || s.wardrobeOpen || player.place === 'intake' || String(player.place ?? '').startsWith('tutorial0')) UI_BOOTED = true; else return mainMenu(ctx, player, true) }
   if (s.menuOpen) return mainMenu(ctx, player)
   if (s.wardrobeOpen && s.salonOpen && !s.wrMenu) return `<div id="hud" style="position:fixed;inset:0;pointer-events:none">${salon(ctx, player)}</div>`
   if (s.wardrobeOpen) return `${THEME}<div id="hud" style="position:fixed;inset:0;pointer-events:none">${wardrobe(ctx, player)}</div>`
