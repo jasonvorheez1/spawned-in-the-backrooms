@@ -943,7 +943,7 @@ function viewmodel(ctx, moving, sprinting) {
   w.vmEq = kind; w.vmCheck = false
   const hb = !l.modelUrl && HUMAN ? humanBody(l) : null // human bodies: Shelly's own model's arm holds the weapon (her rule: first-person arms come from her model or a PLYMODEL)
   const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '')
-  const arm = hb ? { hidden: true } : ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v17' + JSON.stringify(s.vmTune ?? null)
+  const arm = hb ? { hidden: true } : ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v18' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     w.plyRig = null
@@ -983,10 +983,10 @@ const CUT = [/head$|neck/i, /(^|[^a-z])(l|left)[_. ]?(clavicle|shoulder|upperarm
 const HUMAN_ARM = { f: { q: { x: -0.4041, y: 0.3447, z: 0.8277, w: 0.1811 }, at: { x: 0.939, y: 0.538, z: -0.014 } }, m: { q: { x: -0.4026, y: 0.3501, z: 0.8263, w: 0.1806 }, at: { x: 1.038, y: 0.577, z: -0.001 } } }
 // first-person arms cut from Shelly's human bodies (art/fp-arm/build.py): forearm, hand closed in a fist, the fist's centre at the origin
 const FP_ARM = {
-  f: { R: '/cdn/value.9bbf297bb06c11e8e9e2ed0cd6d159fd753d45e921a5940341c837cad60b3720.glb', L: '/cdn/value.6941e18f063732106a904c91a13e9e1134c10d8b9926d85956988caa70f52702.glb' },
-  m: { R: '/cdn/value.ba0240a1f193138ac86b13d6bb7c663df712b67baf45965697377f38915c8ebb.glb', L: '/cdn/value.59c48467d14cb60c1b3bd4cfd6da61fef18f878b4c7b5a954f287954942c6bc6.glb' } }
+  f: { R: '/cdn/value.4360d0d8eda8f6d4c3cf06342072ee7e963ce84be9a677586d43165ae9915ed0.glb', L: '/cdn/value.385305849d905e99b3ca3c220ff960f2062beeecf9673a2959a2e4d4e262491e.glb' },
+  m: { R: '/cdn/value.90fb8cb78512075881940407d6cabd5362589269bccd4d03b3bfb5b7ee12bd39.glb', L: '/cdn/value.4683f8c71ff779a5331f37cffb3b040373f2fa59b2b98fff33dd2467b7d5aaf9.glb' } }
 // the engine stands a model's bounds bottom-centre on feetPosition, so the fist (the mesh origin) needs that offset back; BC = bounds bottom-centre of each GLB
-const FP_BC = { f: { x: 0.0992, y: -0.0618, z: 0.1057 }, m: { x: 0.1014, y: -0.0729, z: 0.1121 } }
+const FP_BC = { f: { x: -0.0436, y: -0.0417, z: 0.162 }, m: { x: -0.036, y: -0.0631, z: 0.1671 } }
 const FP_SEAT = { x: 0, y: 0.07, z: 0.075 } // her pick, tuned in game: the fist under and around the pistol grip
 const FP_AT = (sx) => ({ x: FP_BC[sx].x + FP_SEAT.x, y: FP_BC[sx].y + FP_SEAT.y, z: FP_BC[sx].z + FP_SEAT.z }), FP_ROT = { yaw: 0, pitch: 0, roll: 0 }
 function wp_two(kind) { return W[kind]?.two ? { y: W[kind].two[0], z: W[kind].two[1] } : null }
