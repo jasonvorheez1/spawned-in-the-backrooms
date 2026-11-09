@@ -102,7 +102,8 @@ const splitOf = (l) => { const r = SPLIT?.[l?.sex === 'f' ? 'f' : 'm']; return r
 export function wardChildren(l, local) {
   const r = splitOf(l); if (!r) return []
   const b = humanBody(l), morph = humanMorph(l), out = []
-  for (const [n, v] of Object.entries(b.parts)) if (n.startsWith('Ward_') && v.visible && r.parts[n]) out.push({ id: wardKey(n), attachment: { skin: true }, model: { id: r.parts[n], forward: '+z', materials: b.materials }, morph, ...(local ? { audience: 'local' } : {}) })
+  const clothMats = Object.fromEntries(Object.entries(b.materials || {}).filter(([k]) => k.startsWith('cloth_'))) // a garment file carries only its cloth_ slots: skin and fur keys there matched nothing
+  for (const [n, v] of Object.entries(b.parts)) if (n.startsWith('Ward_') && v.visible && r.parts[n]) out.push({ id: wardKey(n), attachment: { skin: true }, model: { id: r.parts[n], forward: '+z', materials: clothMats }, morph, ...(local ? { audience: 'local' } : {}) })
   return out
 }
 export function seatWardrobe(ctx, o, l) {
