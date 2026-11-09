@@ -120,6 +120,7 @@ for o in S.objects:
     if o.type == 'MESH' and not o.data.uv_layers: o.data.uv_layers.new(name='UVMap')
 bpy.ops.object.select_all(action='SELECT'); bpy.context.view_layer.objects.active = crt; bpy.ops.object.join()
 J = bpy.context.view_layer.objects.active
+J.name = 'Cabinet'; J.data.name = 'Cabinet'  # a node named like a slot takes that slot's override over every face
 uvd = J.data.uv_layers.active.data
 for slot in ('screen', 'marquee'):
     i = [m.name for m in J.data.materials].index(slot)
