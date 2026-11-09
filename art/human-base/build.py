@@ -499,6 +499,7 @@ def finfo(o, r):
     return info, arms
 
 def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=()):
+    push = push + 0.004
     o = body.copy(); o.data = body.data.copy(); o.name = name
     bpy.context.collection.objects.link(o)
     for m in list(o.modifiers):
