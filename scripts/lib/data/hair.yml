@@ -74,20 +74,20 @@ hatted:
 # Human heads (Shelly's hair pack #101894, art/human-hair/build.py): per body sex, pack style n bare and cut under a hat brim. humanPick: each look's style key to its pack style.
 human:
   f:
-    0: { free: "/cdn/value.58275821f31cf5110097d190f207e3fe0a812b733171c0d444b351f6fbeb73e8.glb", hat: "/cdn/value.38a6e74897b562f4d25b3d03e0289b18762d620fefc5a95f512a19555c498312.glb" }
-    1: { free: "/cdn/value.cfcbf3745511eb9f41f6496cdb4607682c3dca26ad741e002dec8d5031f54d92.glb", hat: "/cdn/value.37092192a19c87d47200b0059c914495900394e59876eef4ae78ae2ea5e42378.glb" }
-    2: { free: "/cdn/value.6b4be0e9452f6cbe3e4ffcadbe61390b573e8713a88f592199955cf2e76081a7.glb", hat: "/cdn/value.687e6012e916693de5f5d5f56c2e81770bf4dbbccb7e5eede14b00cc5a3339ac.glb" }
-    3: { free: "/cdn/value.9c126a7d4a15f92663b370015c9c573e846bb5b4db9e89fcf0a2440790d04c3d.glb", hat: "/cdn/value.acef34c03eecf6fbb134da8c47049cb9616b1a3dc79595a798f1589fd1919f8b.glb" }
-    4: { free: "/cdn/value.3df21eccb6e7b43348c04df07105e59b3b970227183f6f2f5ba531b63e6f93a8.glb", hat: "/cdn/value.f62c7f536af20b7ccd30de7acba9355981ed5e787e56e42ffc62b1a4bcdc6000.glb" }
-    5: { free: "/cdn/value.59de8720f3643308dfa880359806fa76c20647ac73cb85d2d234ce3fd89a841d.glb", hat: "/cdn/value.cb086a3130b08db68c6325059b037f23e014c1636d508213909d708ad235d84a.glb" }
-    6: { free: "/cdn/value.b0d121d4c59a9a0ce4d1eca0f91f0c5b31e938427fb6236d70006129845189f2.glb", hat: "/cdn/value.903dff28524f7d81b21a787cad09e8a14bbff89caeb9e1f42723c137eb4b62b1.glb" }
-    7: { free: "/cdn/value.127fd7cb42535b4d3aa1a78fa9f8dfb11d1731bd0b7657b2c219fbaff8bc9783.glb", hat: "/cdn/value.76ad523f8c0036e27c10ff177b628f7dc6285aac3e994c8f415caafd9812ff6f.glb" }
-    8: { free: "/cdn/value.c022e638dc40b74e75d3126a542176165ed388300cd5038bdbeeb53dc0b5b386.glb", hat: "/cdn/value.6dcd971eb0f4c9875ca3f55f4535094bf161f2bd59ee5ff6576d30f0b5050a91.glb" }
-    9: { free: "/cdn/value.41569c2311468fb7308371ab2815d6da20ac44490b96cd9076a22e680da9ce85.glb", hat: "/cdn/value.c1193b4c01615d2b4f0877fb8a41a23daa8b936f128ff16349953b9955a947c2.glb" }
-    10: { free: "/cdn/value.c4383324dd87c9fb3f116e3a4326fdc870a3ff8544657becc34d6dab8a921173.glb", hat: "/cdn/value.1fad2c9b13237a92dfe795a26683d6f16dafbb3aecba1a6c4b5fcaaec6c89e0e.glb" }
-    11: { free: "/cdn/value.e20ab67c761d56f2ccc2ec0cf0cc67387b7c3848b8833dccc99b4792b9c8337c.glb", hat: "/cdn/value.01f2b778060e681ee75dd580c21bd9778645370f85941663ceac96b3fe228c43.glb" }
-    12: { free: "/cdn/value.4c3986b1a9634f2aa7f6a95c6d913d814830c9e92702e3b1291fbfc0a8835044.glb", hat: "/cdn/value.c30a70cdbcd5b57aca2ea57fe719eb3c89ff45425d550c58b78053176215e915.glb" }
-    13: { free: "/cdn/value.6a3efba97046de753f4dd665c70d76046c35ae0bdce09aa558c910873067ff1c.glb", hat: "/cdn/value.281c08c4dd341484a1028c30a6c8fe6f35cc4a196c298f4209bc0eaee31e3b89.glb" }
+    0: { free: "/cdn/value.e8d03b5b58d3c1409237b1c4d90bc76b1365344f728b39cf37fa4d31fa5c6480.glb", hat: "/cdn/value.07b2242f8583ebd66dfd12bd459d017041ff30dcde58cce4257727a6bdddcc73.glb" }
+    1: { free: "/cdn/value.d7f8c9d5c1fa28368c1b1239d0a2676270008872cb1c7f425fc9b6483eb215a3.glb", hat: "/cdn/value.4e25c1cb570b396dbd81800651fe1af79021dfa128bc3db171725e5e1298fdee.glb" }
+    2: { free: "/cdn/value.f31867a903f6cebb967e8dc44d39f3cd019276e5a7618f12101f5ab625cb9674.glb", hat: "/cdn/value.b6c71b51329b97f330a604a05af47c7d5c50aa0ea5473556bea3a944b26bfb42.glb" }
+    3: { free: "/cdn/value.48363410bf8f6f7a1e9e396cdfd6217d41e0fb67cb90aaff7e3fe33b462862c9.glb", hat: "/cdn/value.11050de5fa548c3ce48316afb3b8daa2873e719067bfbf9b2feaec7ce7a36abc.glb" }
+    4: { free: "/cdn/value.c305665971c7536303ffad9f1a9257d465362d5dea22bd430c1c28bd93641908.glb", hat: "/cdn/value.8dfaeafd2ed4b29502a405d5e566e15f59339c65b63bb6c9577577d3ba6c8441.glb" }
+    5: { free: "/cdn/value.37bcf4263aac4df541f523ad3aba92662cd72575dbb3ad616b4aa4bcefc70f78.glb", hat: "/cdn/value.e56426d537d544c9c1fe0de9df1a952c504ac91ab2fa653125bab7ab57c3ff60.glb" }
+    6: { free: "/cdn/value.fbb7640c0bac10551e8f9cad9fca79cf23e834dc2b5e042e73aceb49b96e2713.glb", hat: "/cdn/value.fff6b6c85f252350d3956fd0708472f662ab160975669700681881aafdd24e0f.glb" }
+    7: { free: "/cdn/value.b7e198487d722beec98429c0d1da510c5d5a2ddbc5e65f5e22e96379f906af4a.glb", hat: "/cdn/value.3b46b776e9cc2edab7675042966576e5ee96ebfb7178384f55b0b36e8d6fd010.glb" }
+    8: { free: "/cdn/value.e4e7fe18bb675ce937f47966ebe9440a3c0310fee8bffdf09520f24ab696cb91.glb", hat: "/cdn/value.faca3bd358ada056c7c6cb579dc7435269d913f758233a25246611c092c97bba.glb" }
+    9: { free: "/cdn/value.00a0be6a914bc46e80f6122177721899417b2ba65fd5ae8b6ea69b5d97280906.glb", hat: "/cdn/value.b6260fc6496f0fd2429e2cc988af7d441e46f60ef763cc09e1a4efa858c88d8b.glb" }
+    10: { free: "/cdn/value.6fec28d27c1aee6cea03ffc68e436eba6b5dca794aa386a3900b055c657dedbc.glb", hat: "/cdn/value.74f2dd93974370df5b2316115870fbc9ab4e9972ddfcbd02c606f9a1019fd70a.glb" }
+    11: { free: "/cdn/value.d2f60d9e9735904b81ee9c63fd38e77e173e9dd50a143b72263a47bfea6996b8.glb", hat: "/cdn/value.8ae30f230636d4eff36227d28f278fad788a7022d8650e55c2399b9538b106dc.glb" }
+    12: { free: "/cdn/value.bb8ad90ce12e61a00aaff9af24cc4ce0bdb12d24da40c8761a1d2a0d8416a480.glb", hat: "/cdn/value.69955d309a1e325f9c94c746d410d5f873ba52ff96b2019a3a01f7f17d061343.glb" }
+    13: { free: "/cdn/value.6283abb9ac88620d569e3f94b5051739d758ab65afe606cafff8eb7623ac19d6.glb", hat: "/cdn/value.19202ce794106fd5bc3138f5d1dcacdef8cdd1d73e324abd5f8f2a36b74ef328.glb" }
     14: { free: "/cdn/value.1ce03d68339fcf3e9125f1e0f5c2bd18622f9203f883125a272adc7f1fb755bd.glb", hat: "/cdn/value.38a6e74897b562f4d25b3d03e0289b18762d620fefc5a95f512a19555c498312.glb" }  # tripo ponytail
     15: { free: "/cdn/value.d77dc74f1b2539c169e7925dd33cc105878b476e6b7d791603fb8c5f8652f69e.glb", hat: "/cdn/value.37092192a19c87d47200b0059c914495900394e59876eef4ae78ae2ea5e42378.glb" }  # tripo spiky
     16: { free: "/cdn/value.ae3af9da26ee4442e0bf27786bc59393dce273c2adbb199234e12f58d0f58a78.glb", hat: "/cdn/value.687e6012e916693de5f5d5f56c2e81770bf4dbbccb7e5eede14b00cc5a3339ac.glb" }  # tripo long
@@ -102,20 +102,20 @@ human:
     25: { free: "/cdn/value.4cb98b3f174fa1d70c93537ea03770301d0a858de38db2709f3f8579bb5abdd6.glb", hat: "/cdn/value.ce871781bdb8d985f9669680d73f420eb6bdf5d57cd2f24a4e01b4503c27bc12.glb" }  # tripo soft hime (johnadams2 #17349 remake)
     26: { free: "/cdn/value.3eb160b54cb5ed302f161c3dc642ebd8ef80888f60bdccc5f150186c27c628d2.glb", hat: "/cdn/value.8c816c654972b595925b543799b5596fb9dceb9ee1de45d9ff1e9664c2a0e396.glb" }  # tripo soft sidebraid (johnadams2 #17349 remake)
   m:
-    0: { free: "/cdn/value.525abfd0d290c8dc4b29e8d992989455e159f045e5b488972c7826d15fb49c50.glb", hat: "/cdn/value.ad20491ed0f255eb0173595896c231995e84eeacd7ee6c9f22747de684836340.glb" }
-    1: { free: "/cdn/value.47a3fe134015f353b3e0f321246a1d185e0fef1a199e2c2a5ffa4a80cbe435cb.glb", hat: "/cdn/value.e571ed59eacbd691eabb64980d0013dc3454b9bcf334007f35dfa0de48a9e90a.glb" }
-    2: { free: "/cdn/value.11e9e104a664dcfb9f7ca80d7bc71e8eca576b92b3bc2e5a37629f856af48cd2.glb", hat: "/cdn/value.443cf27d27bb0ff640fb989a12c79717794892aaecb1703d8ebae0a9e777e366.glb" }
-    3: { free: "/cdn/value.077d9eece8b4b4462efd948b721ad4f86b638ed3d260c01ae7239073e79d337a.glb", hat: "/cdn/value.7707959a6ad1f3b493173c750e1478fee3f8527db7e4ca07d99dcaf8efb25ffa.glb" }
-    4: { free: "/cdn/value.83936d4254193009c3f6741a5143a7c7fe9019d81217310103f958a403465798.glb", hat: "/cdn/value.8e5e3f4e15796d6b533767406faebe52fb3cf442904a664bf8990fa8388148f2.glb" }
-    5: { free: "/cdn/value.dd835ed0a9bb6aebae01ec6f96a5c9a8f4eab4c7d68387b2577dce9ba8955445.glb", hat: "/cdn/value.873926f267676ded666d21a5dfd50fe7a82711f6de456a0984d8204769ee7208.glb" }
-    6: { free: "/cdn/value.9b011006718e1263114ce7fa11bea6742bebc4655c2e50ffbf4a22dd9d944054.glb", hat: "/cdn/value.cb871acf46d86866fd6804a13056c2546ea666f50c9bddf9915678c6fed094f7.glb" }
-    7: { free: "/cdn/value.2c8bb381fd963b5b55eaef750e88d973d40ba991f6d3e93ce78df225c1fe65cd.glb", hat: "/cdn/value.9a4256130a9ea14442eecfc11299658d2be72f86bd5ef8c016326380125eb7ee.glb" }
-    8: { free: "/cdn/value.cdd9d5abfe9ef58e1fb98fd966735233711b23e6d714237c434dfa460c2d10f3.glb", hat: "/cdn/value.6f26ab79aaeb9fc6e69ed2d0394d931029fcec5896d702258c61f3db9b89ef12.glb" }
-    9: { free: "/cdn/value.3e3c65ccec47b4125f867f9e2faddff217d2ff63d6bb45bdf99e29a9d3c0046b.glb", hat: "/cdn/value.4354b4c4154b981166a4c93fcb3ff09fcf013da6eafc638b64a9d0c107e0c9d0.glb" }
-    10: { free: "/cdn/value.fb9d09d4abcec62bba2eadf428c810fac573ef951a38a37ff64cbdc86bdea53d.glb", hat: "/cdn/value.8c9395917d2d49a52f5ed24adf5db3b851d74215e3295829355cc939638269ec.glb" }
-    11: { free: "/cdn/value.b953e5ce975a4c34c685166410ff6694fe64e36201d7dbb27bc185be40093d1e.glb", hat: "/cdn/value.5a7cdde1628c003ff78cc2f934e40acb925b3c5bfd4a0e8759f32cd489e5001f.glb" }
-    12: { free: "/cdn/value.60d323f61094063daeb2b3bc5921464c1285d57751da7c40291bc6c707e8cb17.glb", hat: "/cdn/value.36f0f51236478e1e11a28c87516e1123a79db529ef970c9e7a68c2894a18c5ee.glb" }
-    13: { free: "/cdn/value.e2b034a2a57ee4dd61f8d6f7df48d45683506453d3e5953458792893f4a6def9.glb", hat: "/cdn/value.f3dc1a69d0c58041222cf947e2d9686b9b65f5050d25adf06ba7a8369e186d98.glb" }
+    0: { free: "/cdn/value.80bc1e9533c90a5e5f1c95540e32c10363417b744b9b1ba6225be0a8b1d4dbc8.glb", hat: "/cdn/value.45d0002f9231ae29c5d82736acda2539ebd02a9c8aa626cea2b0ad515f88391a.glb" }
+    1: { free: "/cdn/value.832e85ffe19d18e4007a71091bccd199c4479965d927ac581420949cf3cceaaf.glb", hat: "/cdn/value.df534843286b11cb3fc96f026696d3ec0b4a1b5146975cab26ef99659c7c0e5d.glb" }
+    2: { free: "/cdn/value.53ac15487a86e210f578bc9858f0265f03207563d5cdf2fdffcab2de68a439bd.glb", hat: "/cdn/value.f35cf84ebe18b8f7d0d56f41018dd8d1aa5c4eeaa4c6821507d37f21b7b286dd.glb" }
+    3: { free: "/cdn/value.d45406448f38614b4be0dab2e917fcb8198272622284c2436fc44e3f10bb141a.glb", hat: "/cdn/value.3a8b39f9985963992d5e0c82e7c9c94f2c6e8f6eef79c7ceda68e0bec2e23511.glb" }
+    4: { free: "/cdn/value.9049d09a9f374b0ae12fee28cbcdae422f0dc9ed22346e1a134b1ac2608deac8.glb", hat: "/cdn/value.b9b2f255080f6c49096be25557e92621fd2fbed870fc161feb4c05694d80eb5c.glb" }
+    5: { free: "/cdn/value.d51e634eb19e79bc68cdfcb45ef1c9c2e39054fb351bde2a01813026244f83c9.glb", hat: "/cdn/value.7c1a3f18f79360f8db274a514c833f01defb6d8c5d504ed45a962364d71baee0.glb" }
+    6: { free: "/cdn/value.f3d30929324ab85d46c9e69efaaebec521b0b402ee77e01e0896a16d2074dc94.glb", hat: "/cdn/value.979cfa3abb1a804751250f581a9c18a09749868fd7469e4982e5cd5cbf45f8d2.glb" }
+    7: { free: "/cdn/value.62623d1d3b88aa99de3d1051db2c46dfabd05e07d96907a4c2f49e5109cd05b2.glb", hat: "/cdn/value.8e17c222edd870dece63b15ed1e4a596b3778c66eaaf67d83db6224b9dd98a31.glb" }
+    8: { free: "/cdn/value.b78347ab3c58cd60cdd4069bedf940e57a8617790c8a1a9e1c11916fb063eea4.glb", hat: "/cdn/value.bab40e62e6886bf574c2fdccfe8ea129b1f6c60418c42e6d0ef53c4dad835bba.glb" }
+    9: { free: "/cdn/value.9004c56f97a1961101780c8beda3474efb20e295651701cb9f4da1ae7a1c0b0c.glb", hat: "/cdn/value.b6b3ead3af1044e811e34c7fb39214c3d5c20c7f02d5b23243b0ad30868a6c64.glb" }
+    10: { free: "/cdn/value.35426d7058fb813bb8229bf6437d5a33990caf344de1e83c6072c47f65422a7a.glb", hat: "/cdn/value.c8a77d68837148045851480772ebadb9d444273393d4621864083eaa97de54e1.glb" }
+    11: { free: "/cdn/value.e224651387c62e042b6f215f157c0a382c98cd96911426c9e438e85630052ebe.glb", hat: "/cdn/value.f05ce85ed3b7e27a8d8bcd61d37560f0a587d13f4ecc133daca20e3ddca06819.glb" }
+    12: { free: "/cdn/value.62b70bb021fe83fb612a8c02e3f1abd533b36ab15419f3fb73c0c884058816e5.glb", hat: "/cdn/value.cfc8a100893419068eeea0fefeaf7c6a7820c62e51eafa58c2e3f6c5fba27ffd.glb" }
+    13: { free: "/cdn/value.51df41a32a6d69f9a5f178b11dfbc2eef04fbb74c394793673fa121ed9671058.glb", hat: "/cdn/value.3e32003c4046c7da7932510401f915d9cdd34e6e63a176b26e4690b9fb2af6fc.glb" }
     14: { free: "/cdn/value.585bbe6dde7af8413584b2859339eeaf994ec266225bc5fd3729e0f327018cc6.glb", hat: "/cdn/value.ad20491ed0f255eb0173595896c231995e84eeacd7ee6c9f22747de684836340.glb" }  # tripo ponytail
     15: { free: "/cdn/value.090276af2243ab0141afdcb90e578e90ac86946b3bf0b257533b547d4f13d77f.glb", hat: "/cdn/value.e571ed59eacbd691eabb64980d0013dc3454b9bcf334007f35dfa0de48a9e90a.glb" }  # tripo spiky
     16: { free: "/cdn/value.939224d5044243608a7a8343ea858124218229cad807b8fa4a7c7fd30a27e71b.glb", hat: "/cdn/value.443cf27d27bb0ff640fb989a12c79717794892aaecb1703d8ebae0a9e777e366.glb" }  # tripo long
