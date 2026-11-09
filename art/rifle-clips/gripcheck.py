@@ -7,7 +7,12 @@ def glb(p):
     return J, bin_
 def acc(J, B, i):
     a = J['accessors'][i]; v = J['bufferViews'][a['bufferView']]; o = v.get('byteOffset', 0) + a.get('byteOffset', 0)
-    k = {'SCALAR': 1, 'VEC3': 3, 'VEC4': 4}[a['type']]; return [struct.unpack_from('<%df' % k, B, o + j*4*k) for j in range(a['count'])]
+    k = {'SCALAR': 1, 'VEC3': 3, 'VEC4': 4}[a['type']]; ct = a['componentType']
+    fmt, sz, nm = {5126: ('f', 4, 1), 5122: ('h', 2, 32767.0), 5123: ('H', 2, 65535.0), 5120: ('b', 1, 127.0)}[ct]
+    st = v.get('byteStride', sz*k)
+    out = [struct.unpack_from('<%d%s' % (k, fmt), B, o + j*st) for j in range(a['count'])]
+    if ct != 5126: out = [tuple(max(-1, x/nm) for x in r) for r in out]
+    return out
 def qm(a, b):
     ax, ay, az, aw = a; bx, by, bz, bw = b
     return (aw*bx+ax*bw+ay*bz-az*by, aw*by-ax*bz+ay*bw+az*bx, aw*bz+ax*by-ay*bx+az*bw, aw*bw-ax*bx-ay*by-az*bz)
