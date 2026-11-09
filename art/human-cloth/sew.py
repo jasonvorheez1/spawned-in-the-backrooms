@@ -10,7 +10,14 @@ from mathutils.geometry import barycentric_transform
 a = sys.argv[sys.argv.index("--") + 1:]; src, dst = a[0], a[1]
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src, bone_heuristic="BLENDER")
-body = bpy.data.objects["Body"]; arm = body.find_armature()
+body0 = bpy.data.objects["Body"]; arm = body0.find_armature()
+# the skin a top covers runs from the Body mesh up through the Head mesh's neck and yoke: one joined surface to cut from
+body = body0.copy(); body.data = body0.data.copy(); bpy.context.collection.objects.link(body)
+hd = bpy.data.objects["Head"].copy(); hd.data = bpy.data.objects["Head"].data.copy(); bpy.context.collection.objects.link(hd)
+hd.shape_key_clear()
+hb = bmesh.new(); hb.from_mesh(hd.data); bmesh.ops.delete(hb, geom=[v for v in hb.verts if v.co.z > 1.32], context="VERTS"); hb.to_mesh(hd.data); hb.free()
+bpy.ops.object.select_all(action="DESELECT"); hd.select_set(True); body.select_set(True); bpy.context.view_layer.objects.active = body
+bpy.ops.object.join(); body.data.materials.clear()
 B = {b.name: arm.matrix_world @ b.head_local for b in arm.data.bones}
 NECK, WAIST, HIP = B["Neck"].z, B["Spine"].z + 0.01, B["Hips"].z
 WRIST = B["LeftHand"].x - 0.03; ELBOW = B["LeftForeArm"].x; KNEE = B["LeftLeg"].z
@@ -42,11 +49,11 @@ def bottom(hem, waist, loose, cuffrib):
         return e
     return ease, [(Vector((0, 0, hem)), Vector((0, 0, -1))), (Vector((0, 0, waist)), Vector((0, 0.18, 1)).normalized())]
 PLAN = {
-    "Top_hoodie":     top(HIP + 0.045, WRIST, 0.022, True, 0.997),
-    "Top_sweater":    top(HIP + 0.06, WRIST, 0.016, True, 0.993),
-    "Top_longsleeve": top(HIP + 0.07, WRIST + 0.005, 0.009, False, 0.975),
-    "Top_pajamas":    top(HIP + 0.055, WRIST - 0.01, 0.018, False, 0.996),
-    "Top_tee":        top(HIP + 0.075, B["LeftArm"].x + 0.11, 0.010, False, 0.982),
+    "Top_hoodie":     top(HIP + 0.045 + 0.03, WRIST, 0.022, True, 0.997),
+    "Top_sweater":    top(HIP + 0.06 + 0.03, WRIST, 0.016, True, 0.993),
+    "Top_longsleeve": top(HIP + 0.07 + 0.03, WRIST + 0.005, 0.009, False, 0.975),
+    "Top_pajamas":    top(HIP + 0.055 + 0.03, WRIST - 0.01, 0.018, False, 0.996),
+    "Top_tee":        top(HIP + 0.07 + 0.035, B["LeftArm"].x + 0.11, 0.010, False, 0.982),
     "Bot_pants":      bottom(ANKLE + 0.01, WAIST + 0.02, 0.012, False),
     "Bot_pjpants":    bottom(ANKLE + 0.02, WAIST + 0.02, 0.02, True),
     "Bot_shorts":     bottom(KNEE + 0.1, WAIST + 0.02, 0.014, False),
@@ -55,7 +62,7 @@ THICK = 0.0035
 # body: welded copy for sampling and the base surface
 dg = bpy.context.evaluated_depsgraph_get()
 sb = bmesh.new(); sb.from_mesh(body.data)
-bmesh.ops.remove_doubles(sb, verts=sb.verts[:], dist=1e-5)
+bmesh.ops.remove_doubles(sb, verts=sb.verts[:], dist=0.0015)
 bmesh.ops.triangulate(sb, faces=sb.faces[:]); sb.verts.ensure_lookup_table(); sb.faces.ensure_lookup_table()
 dl = sb.verts.layers.deform.active; KB = sb.verts.layers.shape.get("Bust")
 bvh = BVHTree.FromBMesh(sb)
@@ -68,7 +75,7 @@ for name, (ease, cuts) in PLAN.items():
     old = bpy.data.objects.get(name)
     if not old: continue
     mat = old.data.materials[0]
-    bm = bmesh.new(); bm.from_mesh(body.data); bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-5); bm.transform(MW)
+    bm = bmesh.new(); bm.from_mesh(body.data); bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=0.0015); bm.transform(MW)
     # region: generous box around the cuts, then the cuts make it exact after easing
     zs = [c[0].z for c in cuts if abs(c[1].z) > 0.5]; lo, hi = min(zs) - 0.04, max(zs) + 0.06
     kill = [v for v in bm.verts if not (lo < v.co.z < hi)]
@@ -158,5 +165,5 @@ for name, (ease, cuts) in PLAN.items():
     n.parent = old.parent; n.matrix_parent_inverse = old.matrix_parent_inverse.copy()
     bpy.data.objects.remove(old); n.name = name; me.name = name
     done[name] = sum(len(p.vertices) - 2 for p in me.polygons)
-print("SEWN", done)
+bpy.data.objects.remove(body); print("SEWN", done)
 bpy.ops.export_scene.gltf(filepath=dst, export_format="GLB", export_morph=True, export_skins=True, export_animations=False)
