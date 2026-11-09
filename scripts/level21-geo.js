@@ -331,7 +331,7 @@ export function geometry(ctx) {
   }
   // John Banks's dynamite blast site at the entrance to The Edges (cell EDGE_X, LANE.z0): scorched ceiling crater & fallen concrete rubble
   const jb = cellCenter(EDGE_X, LANE.z0);
-  ctx.albedo(WALL); ctx.color("oklch(0.34 0.02 80)"); ctx.roughness(0.95);
+  ctx.albedo(WALL); ctx.color("oklch(0.62 0.008 240)"); ctx.roughness(0.95);
   for (let k = 0; k < 6; k++) {
     const rx = jb.x - 0.8 + (k % 3) * 0.75, rz = jb.z - 0.7 + Math.floor(k / 3) * 0.85, rh = 0.22 + (k % 3) * 0.14;
     box(ctx, rx - 0.32, rx + 0.32, 0, rh, rz - 0.28, rz + 0.28);
