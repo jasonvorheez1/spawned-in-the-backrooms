@@ -28,7 +28,7 @@ export const ATTRS = [
 // the thirteen skills, in Fallout order. `info` is what each does in this game today.
 export const SKILLS = [
   { k: 'barter', name: 'Barter', attr: 'g', info: 'The quartermaster gives you more' },
-  { k: 'energy', name: 'Energy Weapons', attr: 'o', info: 'No energy weapons exist yet' },
+  { k: 'energy', name: 'Energy Weapons', attr: 'o', info: 'Laser weapons: damage, a steadier beam' },
   { k: 'explosives', name: 'Explosives', attr: 'o', info: 'No explosives exist yet' },
   { k: 'guns', name: 'Guns', attr: 'a', info: 'Gun damage, a tighter spread, a little faster reloads' },
   { k: 'lockpick', name: 'Lockpick', attr: 'o', info: 'Opens locked crates up to its level' },
@@ -64,12 +64,12 @@ export function skillsOf(s) {
   return o
 }
 // a weapon's class: fists are Unarmed, guns are Guns, everything else Melee Weapons
-export const wclass = (w) => (w?.ranged ? 'guns' : w && w.name !== 'Fists' ? 'melee' : 'unarmed')
+export const wclass = (w) => (w?.energy ? 'energy' : w?.ranged ? 'guns' : w && w.name !== 'Fists' ? 'melee' : 'unarmed')
 const skillMul = (v) => 0.94 + v / 250 // 15 is about the old balance, 100 is +30%
 // the damage multiplier for a weapon: its skill and the attribute behind it
 export function dmgMul(s, w) {
   const a = attrsOf(s), k = skillsOf(s), c = wclass(w), hd = handling(s, w).dmg
-  return hd * (c === 'guns' ? (1 + (a.o - 5) * 0.04) * skillMul(k.guns) : c === 'melee' ? (1 + (a.h - 5) * 0.06) * skillMul(k.melee) : (1 + (a.h - 5) * 0.05) * skillMul(k.unarmed))
+  return hd * (c === 'energy' ? (1 + (a.o - 5) * 0.04) * skillMul(k.energy ?? 15) : c === 'guns' ? (1 + (a.o - 5) * 0.04) * skillMul(k.guns) : c === 'melee' ? (1 + (a.h - 5) * 0.06) * skillMul(k.melee) : (1 + (a.h - 5) * 0.05) * skillMul(k.unarmed))
 }
 // What a weapon asks of the one holding it (weapons.yml req: { h: Hardiness, guns | melee: skill }) and what falling short costs; being
 // stronger than it asks steadies it a little. A heavy gun in weak arms: a wider spread, more kick, a wandering aim, slower to bring up;
@@ -77,7 +77,7 @@ export function dmgMul(s, w) {
 export function handling(s, w) {
   const o = { str: 0, skill: 0, spread: 1, recoil: 1, sway: 0, dmg: 1, stam: 1, swing: 1, raise: 1, hold: 0, notes: [] }
   const r = w?.req; if (!r) return o
-  const a = attrsOf(s), k = skillsOf(s), cls = w.ranged ? 'guns' : 'melee'
+  const a = attrsOf(s), k = skillsOf(s), cls = w.energy ? 'energy' : w.ranged ? 'guns' : 'melee'
   const ds = (r.h ?? 0) - a.h, dk = r[cls] ? r[cls] - (k[cls] ?? 0) : 0
   o.str = ds; o.skill = dk
   const sh = Math.max(0, ds), sp = Math.max(0, -ds), kh = Math.max(0, dk), kp = Math.max(0, -dk)

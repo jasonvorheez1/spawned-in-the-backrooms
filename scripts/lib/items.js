@@ -68,6 +68,7 @@ function describe0(token) {
   if (token === 'compass') return { name: 'Old compass', info: 'Senses what is near · wears out', color: '#d8b56a' }
   if (token === 'almond') return { name: 'Almond water', info: `+${L.almondHp} HP · +${L.almondSanity} sanity`, color: '#f3e7b0' }
   if (token === 'ammo') return { name: 'Pistol rounds', info: `x${W.ammo.perPickup}`, color: '#e9c46a' }
+  if (token === 'cells') return { name: 'Energy cells', info: `x${W.cells.perPickup}`, color: '#7fe3ff' }
   if (token === 'shells') return { name: 'Shotgun shells', info: `x${W.shells.perPickup}`, color: '#e76f51' }
   if (token === 'ration') return { name: 'Canned ration', info: `+${L1.rationHp} HP · +${L1.rationSanity} sanity`, color: '#c9b48a' }
   if (token === 'bandage') return { name: 'Bandage', info: `+${L1.bandageHp} HP`, color: '#f2f2ee' }

@@ -198,6 +198,11 @@ function takeToken0(ctx, token) {
     sound(ctx, 'pickup-ammo', 0.7, true)
     return { ok: true }
   }
+  if (token === 'cells') { // Zenith energy cells for the laser weapons
+    s.cells = (s.cells ?? 0) + W.cells.perPickup; s.pickedAt = now
+    sound(ctx, 'pickup-ammo', 0.7, true)
+    return { ok: true }
+  }
   if (token === 'shells') {
     s.shells = (s.shells ?? 0) + W.shells.perPickup; s.pickedAt = now
     sound(ctx, 'pickup-ammo', 0.7, true)
@@ -436,7 +441,7 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
     const tg = m.tags ?? [], ent = tg.includes('smiler') || tg.includes('lurker')
     if (ent) dropLoot(ctx, m.feetPosition, tg.includes('lurker') ? 'Lurker remains' : 'Smiler remains', npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)) // only smilers and lurkers leave smiler/lurker remains
-    else if (!npc && !tg.some((g) => g === 'l5staff' || g === 'l5rat' || g === 'l10worm' || g === 'l7beast' || g === 'remains' || g === 'spamboss')) becomeCorpse(ctx, m, (m.state?.name ?? 'Body').split(' ·')[0] + "'s body", rollLoot(ctx, npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)), ctx.self.feetPosition) // anything else stays its own body, limp and searchable // an agent's own body is searched (scripts/meg-agent.js)
+    else if (!npc && !tg.some((g) => g === 'zdrone' || g === 'l5staff' || g === 'l5rat' || g === 'l10worm' || g === 'l7beast' || g === 'remains' || g === 'spamboss')) becomeCorpse(ctx, m, (m.state?.name ?? 'Body').split(' ·')[0] + "'s body", rollLoot(ctx, npcMul(m.state).loot, derived(s).clothFind, poolOf(ctx.self.place)), ctx.self.feetPosition) // anything else stays its own body, limp and searchable // an agent's own body is searched (scripts/meg-agent.js)
   }
 }
 
@@ -664,7 +669,7 @@ export function pullToken(ctx, t) { // one carried thing out of the bag as its p
     else if (t.startsWith('almond:')) { const k = AW_KEY[t.slice(7)]; if (k && s[k] > 0) { s[k] -= 1; tok = t } }
     else if (t.startsWith('meat:')) { const c = t.slice(5); if ((s.meat?.[c] ?? 0) > 0) { s.meat = { ...s.meat, [c]: s.meat[c] - 1 }; tok = t } }
     else if (t.startsWith('snack:')) { const c = t.slice(6); if ((s.snacks?.[c] ?? 0) > 0) { s.snacks = { ...s.snacks, [c]: s.snacks[c] - 1 }; tok = c } }
-    else if (t === 'ammo' || t === 'shells') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= per) { s[t] -= per; tok = t } else s.notice = { text: `Need a full box (${per})`, at: ctx.now() } }
+    else if (t === 'ammo' || t === 'shells' || t === 'cells') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= per) { s[t] -= per; tok = t } else s.notice = { text: `Need a full box (${per})`, at: ctx.now() } }
     else if (t === 'bobbypin') { if (s.bobbypins > 0) { s.bobbypins -= 1; tok = 'bobbypin' } }
   return tok
 }

@@ -378,7 +378,7 @@ function detail(t, s, def) {
         ${cell('PEN', `${Math.round(penOf(w, k) * 100)}% ARMOR`)}
         ${cell('WG', `${w.kg ?? 1.0} KG`)}
         ${cell('VAL', `$${val}.00`)}
-        ${w.ranged ? cell('MAG', `${s['loaded_' + k] ?? 0}/${w.magSize}`) + cell(w.ammoType === 'shells' ? 'SHELLS' : 'ROUNDS', s[w.ammoType ?? 'ammo'] ?? 0) : ''}
+        ${w.ranged ? cell('MAG', `${s['loaded_' + k] ?? 0}/${w.magSize}`) + cell(w.ammoType === 'shells' ? 'SHELLS' : w.ammoType === 'cells' ? 'CELLS' : 'ROUNDS', s[w.ammoType ?? 'ammo'] ?? 0) : ''}
         ${w.pellets ? cell('PELLETS', `${w.pellets} BUCKSHOT`, true) : ''}
         ${w.sneak && w.sneak > 1 ? cell('SNEAK CRIT', `x${w.sneak} DAMAGE`, true) : ''}
       </div>
@@ -448,7 +448,7 @@ function detail(t, s, def) {
       </div>
     </div>`
   }
-  if (t === 'ammo' || t === 'shells') {
+  if (t === 'ammo' || t === 'shells' || t === 'cells') {
     const a = W[t], nm = t === 'ammo' ? 'Pistol rounds' : 'Shotgun shells'
     return `<div class="${cls}">
       <div class="dt-header"><h4>${nm}</h4><span class="dt-rarity">AMMO</span></div>
@@ -499,7 +499,7 @@ function pane(s, sel, eqKey) {
     const v = SNACKS[sel.slice(6)]
     card = `<div class="dt def"><div class="dt-header"><h4>${v.name}</h4><span class="dt-rarity">${v.drink ? 'DRINK' : 'FOOD'}</span></div><div class="art-box">${SVG_AID}</div><div class="g">${v.drink ? cell('THIRST', '+' + v.thirst) : cell('HUNGER', '+' + v.hunger)}${cell('CARRIED', s.snacks[sel.slice(6)], true)}</div></div>`
     acts.push(btn(v.drink ? 'DRINK' : 'EAT', { k: 'snack', c: sel.slice(6) }), btn('DROP ONE', { k: 'dropItem', t: sel }))
-  } else if ((sel === 'ammo' || sel === 'shells') && s[sel] > 0) { card = detail(sel, s, true); acts.push(btn('DROP A BOX', { k: 'dropItem', t: sel })) }
+  } else if ((sel === 'ammo' || sel === 'shells' || sel === 'cells') && s[sel] > 0) { card = detail(sel, s, true); acts.push(btn('DROP A BOX', { k: 'dropItem', t: sel })) }
   else if (sel === 'bobbypin' && s.bobbypins > 0) { card = detail(sel, s, true); acts.push(btn('DROP ONE', { k: 'dropItem', t: sel })) }
   if (!card) { card = detail(eqKey, s, true); acts = eqKey !== 'fists' ? [btn('DROP ONE', { k: 'drop', w: eqKey })] : [] }
   const bar = acts.length ? `<div class="acts">${acts.join('')}</div>` : ''
@@ -614,7 +614,7 @@ function inventory(s) {
   }).join('') || '<div class="em">No apparel carried.</div>'
 
   // Ammo list
-  const ammo = ['ammo', 'shells'].filter((t) => s[t]).map((t) => `
+  const ammo = ['ammo', 'shells', 'cells'].filter((t) => s[t]).map((t) => `
     <button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})">
       <span class="cur">&gt;</span>
       <span class="nm">${t === 'ammo' ? 'Pistol rounds (9mm)' : 'Shotgun shells (12ga)'}</span>
@@ -738,7 +738,7 @@ function container(s, key) {
     return `<button class="it" onclick="sendAction('loot',{k:'take',i:${i}})">
       <span class="cur">&gt;</span>
       <span class="nm" style="color:${t.startsWith('weapon:') ? d.color : 'inherit'}">${t.startsWith('almond:') && AW[t.slice(7)]?.name ? AW[t.slice(7)].name : d.name}</span>
-      <span class="stat-r">${t.startsWith('weapon:') || t.startsWith('cloth:') ? cndMini(c) : ''}<span>${t === 'ammo' ? `+${W.ammo.perPickup}` : t === 'shells' ? `+${W.shells.perPickup}` : ''}</span></span>
+      <span class="stat-r">${t.startsWith('weapon:') || t.startsWith('cloth:') ? cndMini(c) : ''}<span>${t === 'ammo' ? `+${W.ammo.perPickup}` : t === 'shells' ? `+${W.shells.perPickup}` : t === 'cells' ? `+${W.cells.perPickup}` : ''}</span></span>
       ${detail(t, s, false)}
     </button>`
   }).join('')

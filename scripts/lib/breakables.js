@@ -305,7 +305,7 @@ export function strike(ctx, s, wp, kind, base, fwd, pitch = 0) {
   if (!hit?.id) return false
   const mul = (B.materials.drywall.mul[cls] ?? 1)
   // skill: the weapon's own skill (guns, melee, unarmed) adds up to +40% at 100; luck: a crit lands at LCK x 1.5 %, for x1.8
-  const sk = skillsOf(s)[wp.ranged ? 'guns' : kind === 'fists' ? 'unarmed' : 'melee'] ?? 0, a = attrsOf(s)
+  const sk = skillsOf(s)[wp.energy ? 'energy' : wp.ranged ? 'guns' : kind === 'fists' ? 'unarmed' : 'melee'] ?? 0, a = attrsOf(s)
   const crit = ctx.random() < (a.l ?? 5) * B.critPer
   const fac = (wp.ranged ? 1 : strFactor(s)) * (kind === 'fists' ? B.fistsMul : 1) * (1 + sk / 250) * (crit ? B.critMul : 1)
   if (crit) ctx.emit('damageNumber', { position: { x: p.x + fwd.x * 1.2, y: p.y + 1.6, z: p.z + fwd.z * 1.2 }, text: 'CRITICAL', color: '#ffb347', size: 0.8 }, { audience: { player: ctx.self.id } })

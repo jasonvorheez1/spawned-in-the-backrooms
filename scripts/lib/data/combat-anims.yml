@@ -4,8 +4,8 @@
 #   blendIn/blendOut (s), speed, hit (clip seconds where the blow lands), lead (s from the click to the blow), cut (s: channel released early).
 lead: 0.12
 families:
-  pistol: [pistol, revolver, magnum, flare_gun]
-  long: [shotgun, rifle, smg, hunting_rifle, carbine, sawed_off, lever_action, assault_rifle]
+  pistol: [pistol, revolver, magnum, flare_gun, laser_pistol]
+  long: [shotgun, rifle, smg, hunting_rifle, carbine, sawed_off, lever_action, assault_rifle, laser_rifle]
   fists: [fists]
   club: [table_leg, pipe_scrap, crowbar, bat, rebar, wrench, stun_baton, golf_club, tire_iron, baton]
   slash: [lineman_machete, machete, katana, sword]
