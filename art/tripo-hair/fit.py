@@ -97,7 +97,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     # a painted wig leaves Tripo a filled face mask inside the hair: for these, what hangs in front of the face is cut away, not folded
     if key == "t_softbob" or key.startswith("t_s_"):
         bmC = bmesh.new(); bmC.from_mesh(me)
-        XW = 0.8 if key == "t_softbob" else 0.66  # the soft wigs: a face-wide hole, tails and side locks left whole
+        XW = 0.8 if key == "t_softbob" else {"t_s_hime": 0.52, "t_s_sidebraid": 0.54, "t_s_pixie": 0.58}.get(key, 0.66)  # long side locks frame the face: a narrower hole keeps them  # the soft wigs: a face-wide hole, tails and side locks left whole
         zc, zh = (fz1 - 0.005 + hz - 0.13) / 2, (fz1 - 0.005 - (hz - 0.13)) / 2
         if key == "t_softbob": inside = lambda c: hz - 0.13 < c.z < fz1 - 0.005 and abs(c.x) < rx * XW
         else: inside = lambda c: (c.x / (rx * XW)) ** 2 + ((c.z - zc) / zh) ** 2 < 1  # an oval the shape of the face, so the edge reads as hair parting round it
