@@ -242,20 +242,13 @@ export function geometry(ctx) {
     ctx.color(lit ? (zone === "red" ? "#ff4a3a" : "#fffaf0") : "oklch(0.45 0.01 90)");
     face(ctx, [mx - hx, H - 0.045, mz - hz], [mx + hx, H - 0.045, mz - hz], [mx + hx, H - 0.045, mz + hz], [mx - hx, H - 0.045, mz + hz], [0, -1, 0]);
     ctx.emissive(null);
-    if (ctx.lod <= 2) { // a 2x4 troffer reads as one: a centre T-bar splitting two diffuser lenses, end caps, and a grimy flange
-      ctx.color("oklch(0.78 0.012 85)");
-      if (rot) box(ctx, mx - hx, H - 0.05, mz - 0.012, mx + hx, H - 0.045, mz + 0.012);
-      else box(ctx, mx - 0.012, H - 0.05, mz - hz, mx + 0.012, H - 0.045, mz + hz);
-      ctx.color("oklch(0.6 0.03 80)");
-      box(ctx, mx - hx - 0.05, H - 0.046, mz - hz - 0.05, mx + hx + 0.05, H - 0.04, mz - hz); // dust-dark lip, near side
-      box(ctx, mx - hx - 0.05, H - 0.046, mz + hz, mx + hx + 0.05, H - 0.04, mz + hz + 0.05);
-      box(ctx, mx - hx - 0.05, H - 0.046, mz - hz, mx - hx, H - 0.04, mz + hz);
-      box(ctx, mx + hx, H - 0.046, mz - hz, mx + hx + 0.05, H - 0.04, mz + hz);
-      if (ctx.lod <= 1 && lit && hash(cx, cz, 41) < 0.25) { // dead flies and a brown water ring in a few lenses
-        ctx.color("oklch(0.55 0.06 70)");
-        const fx = mx + (hash(cx, cz, 43) - 0.5) * hx, fz = mz + (hash(cx, cz, 47) - 0.5) * hz;
-        face(ctx, [fx - 0.08, H - 0.047, fz - 0.06], [fx + 0.08, H - 0.047, fz - 0.06], [fx + 0.08, H - 0.047, fz + 0.06], [fx - 0.08, H - 0.047, fz + 0.06], [0, -1, 0]);
-      }
+    if (ctx.lod <= 1) { // a 2x4 troffer reads as one: a centre T-bar splitting two diffuser lenses and a grimy lip; flat faces only (10 tris a fixture)
+      const Y = H - 0.047, F = (x0, z0, x1, z1) => face(ctx, [x0, Y, z0], [x1, Y, z0], [x1, Y, z1], [x0, Y, z1], [0, -1, 0]);
+      ctx.color("oklch(0.74 0.012 85)");
+      if (rot) F(mx - hx, mz - 0.014, mx + hx, mz + 0.014); else F(mx - 0.014, mz - hz, mx + 0.014, mz + hz);
+      ctx.color("oklch(0.58 0.035 78)");
+      F(mx - hx - 0.05, mz - hz - 0.05, mx + hx + 0.05, mz - hz); F(mx - hx - 0.05, mz + hz, mx + hx + 0.05, mz + hz + 0.05);
+      F(mx - hx - 0.05, mz - hz, mx - hx, mz + hz); F(mx + hx, mz - hz, mx + hx + 0.05, mz + hz);
     }
     // a vent now and then
     if (hash(cx, cz, 37) < 0.08) {
