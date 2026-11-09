@@ -219,15 +219,15 @@ export function update(ctx) {
     life(ctx, face)
     }
   }
-  if (ses.lookKey == null || ses.lookVer !== 'human3' || (!MESH && ses.lastFace !== face)) {
-    ses.lookVer = 'human3' // a body built before the human swap rebuilds once
+  if (ses.lookKey == null || ses.lookVer !== 'human4' || (!MESH && ses.lastFace !== face)) {
+    ses.lookVer = 'human4' // a body built before the human swap rebuilds once
     const params = { species: l.species, sex: l.sex, ftype: l.ftype || 'oval', trait: l.trait || 'placid', blush: l.blush, nose: l.nose || undefined, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, marks: l.marks, hair: l.hair, hairc: l.hairc }
     if (l.fur) params.fur = l.fur
     const worn = l.modelUrl ? { url: l.modelUrl } : l.model && C.models?.[l.model] // an imported model worn instead of the critter
     for (const [k] of C.sliders) if (k !== 'headS' && k !== 'tailS' && (l.sex === 'f' || (k !== 'hipS' && k !== 'bustS')) && Number(l[k]) && Number(l[k]) !== 1) params[k] = Number(l[k])
     ses.cachedParams = params
     ses.cachedWorn = worn
-    ses.lookKey = JSON.stringify(MESH ? { ...params, expr: 0 } : params) + (worn ? '|' + worn.url : '') + (HUMAN ? '|human3' : '|furry')
+    ses.lookKey = JSON.stringify(MESH ? { ...params, expr: 0 } : params) + (worn ? '|' + worn.url : '') + (HUMAN ? '|human4' : '|furry')
     ses.lastFace = face
   }
   const key = ses.lookKey
