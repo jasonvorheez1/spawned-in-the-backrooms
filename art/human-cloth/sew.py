@@ -371,8 +371,31 @@ for name, (ease, cuts) in PLAN.items():
     dtm = n.modifiers.new("dt", "DATA_TRANSFER"); dtm.object = body0; dtm.use_vert_data = True
     dtm.data_types_verts = {"VGROUP_WEIGHTS"}; dtm.vert_mapping = "POLYINTERP_NEAREST"; dtm.layers_vgroup_select_src = "ALL"; dtm.layers_vgroup_select_dst = "NAME"
     bpy.ops.object.modifier_apply(modifier="dt")
-    bpy.ops.object.mode_set(mode="WEIGHT_PAINT"); bpy.ops.object.vertex_group_smooth(group_select_mode="ALL", factor=0.15, repeat=1)   # light: smoothed weights let the armpit skin slide out past the cloth when the arm rises
+    bpy.ops.object.mode_set(mode="WEIGHT_PAINT"); bpy.ops.object.vertex_group_smooth(group_select_mode="ALL", factor=0.5, repeat=3)
     bpy.ops.object.vertex_group_normalize_all(lock_active=False); bpy.ops.object.vertex_group_clean(group_select_mode="ALL", limit=0.01)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    if name.startswith("Top_"):                              # underarm: the cloth bridges the pit, so arm and torso weights meet in a cliff and a raised arm splits it. blend them wide there
+        _pits = [Vector((sx * (abs(B["LeftArm"].x) - 0.01), B["LeftArm"].y + 0.01, B["LeftArm"].z - 0.06)) for sx in (1, -1)]
+        _nb = [[] for _ in me.vertices]
+        for e in me.edges: a_, b_ = e.vertices; _nb[a_].append(b_); _nb[b_].append(a_)
+        _mask = [max(1 - smooth(((MW @ v.co) - c).length, 0.06, 0.12) for c in _pits) for v in me.vertices]
+        _idx = [i for i, m_ in enumerate(_mask) if m_ > 0]
+        _W = [{g.group: g.weight for g in me.vertices[i].groups} for i in range(len(me.vertices))]
+        for _ in range(24):
+            _new = {}
+            for i in _idx:
+                if not _nb[i]: continue
+                avg = {}
+                for j in _nb[i]:
+                    for g_, w_ in _W[j].items(): avg[g_] = avg.get(g_, 0) + w_ / len(_nb[i])
+                m_ = _mask[i] * 0.6; keys = set(avg) | set(_W[i])
+                _new[i] = {g_: _W[i].get(g_, 0) * (1 - m_) + avg.get(g_, 0) * m_ for g_ in keys}
+            for i, d_ in _new.items(): _W[i] = d_
+        for i in _idx:
+            for g_, w_ in _W[i].items():
+                if w_ > 0.002: n.vertex_groups[g_].add([i], w_, "REPLACE")
+                else: n.vertex_groups[g_].remove([i])
+    bpy.ops.object.mode_set(mode="WEIGHT_PAINT")
     bpy.ops.object.vertex_group_limit_total(group_select_mode="ALL", limit=4); bpy.ops.object.vertex_group_normalize_all(lock_active=False)
     bpy.ops.object.mode_set(mode="OBJECT")
     am = n.modifiers.new("skin", "ARMATURE"); am.object = arm
