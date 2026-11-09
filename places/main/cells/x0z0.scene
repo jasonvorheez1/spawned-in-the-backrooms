@@ -6,7 +6,7 @@ hub/box0:
   feetPosition: {x: 5.5, y: 0, z: -5.5}
   id: hub/box0
   layout: {box: {max: {x: 0.3, y: 0.45, z: 0.24}, min: {x: -0.3, y: 0, z: -0.24}}}
-  model: {forward: "+z", id: /cdn/value.21e3f0ebfb04327cc1724b58d1af47132267e6c03c9f01e6896f2d211d3dc6fe.glb}
+  model: {forward: "+z", id: /cdn/value.21e3f0ebfb04327cc1724b58d1af47132267e6c03c9f01e6896f2d211d3dc6fe.glb, materials: {cardboard: {color: oklch(0.95 0.02 75), roughness: 0.9, texture: cdn/texture-corrugated-brown-cardboard-box.png}}}
   parent: hub
   physics: {body: static, collider: box}
   rotation: {w: 0.9848077297210693, x: 0, y: 0.1736481785774231, z: 0}
@@ -16,7 +16,7 @@ hub/box1:
   feetPosition: {x: 6, y: 0, z: -4.6}
   id: hub/box1
   layout: {box: {max: {x: 0.25, y: 0.4, z: 0.2}, min: {x: -0.25, y: 0, z: -0.2}}}
-  model: {forward: "+z", id: /cdn/value.21e3f0ebfb04327cc1724b58d1af47132267e6c03c9f01e6896f2d211d3dc6fe.glb}
+  model: {forward: "+z", id: /cdn/value.21e3f0ebfb04327cc1724b58d1af47132267e6c03c9f01e6896f2d211d3dc6fe.glb, materials: {cardboard: {color: oklch(0.95 0.02 75), roughness: 0.9, texture: cdn/texture-corrugated-brown-cardboard-box.png}}}
   parent: hub
   physics: {body: static, collider: box}
   rotation: {w: 0.9961947202682495, x: 0, y: -0.08715574443340302, z: 0}
@@ -26,7 +26,7 @@ hub/box2:
   feetPosition: {x: 5.52, y: 0.45, z: -5.48}
   id: hub/box2
   layout: {box: {max: {x: 0.225, y: 0.35, z: 0.18}, min: {x: -0.225, y: 0, z: -0.18}}}
-  model: {forward: "+z", id: /cdn/value.21e3f0ebfb04327cc1724b58d1af47132267e6c03c9f01e6896f2d211d3dc6fe.glb}
+  model: {forward: "+z", id: /cdn/value.21e3f0ebfb04327cc1724b58d1af47132267e6c03c9f01e6896f2d211d3dc6fe.glb, materials: {cardboard: {color: oklch(0.95 0.02 75), roughness: 0.9, texture: cdn/texture-corrugated-brown-cardboard-box.png}}}
   parent: hub
   physics: {body: static, collider: box}
   rotation: {w: 0.9396926164627075, x: 0, y: 0.3420201539993286, z: 0}
@@ -36,7 +36,7 @@ hub/box3:
   feetPosition: {x: -6, y: 0, z: 5}
   id: hub/box3
   layout: {box: {max: {x: 0.35, y: 0.5, z: 0.28}, min: {x: -0.35, y: 0, z: -0.28}}}
-  model: {forward: "+z", id: /cdn/value.21e3f0ebfb04327cc1724b58d1af47132267e6c03c9f01e6896f2d211d3dc6fe.glb}
+  model: {forward: "+z", id: /cdn/value.21e3f0ebfb04327cc1724b58d1af47132267e6c03c9f01e6896f2d211d3dc6fe.glb, materials: {cardboard: {color: oklch(0.95 0.02 75), roughness: 0.9, texture: cdn/texture-corrugated-brown-cardboard-box.png}}}
   parent: hub
   physics: {body: static, collider: box}
   rotation: {w: 0.9990482330322266, x: 0, y: 0.04361938685178757, z: 0}
