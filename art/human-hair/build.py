@@ -121,8 +121,8 @@ def make_cap(hatted, mat):
         c = f.calc_center_median()
         if c.z < H["hz"] + 0.035: return False            # above the ears only
         front = (c.y - H["y0"]) / depth                     # 0 = face, 1 = back of head
-        hairline = H["top"] - 0.045                          # forehead stays skin
-        if front < 0.42 and c.z < hairline: return False
+        hairline = H["top"] - 0.03                           # forehead stays skin; the cap ends behind the bangs (Shelly's jagged hairline, Nov 9)
+        if front < 0.5 and c.z < hairline: return False
         if abs(c.x) > H["rx"] * 0.93 and front < 0.55 and c.z < H["top"] - 0.07: return False  # temples
         if hatted and c.z > H["top"] - 0.075: return False
         return True
@@ -131,7 +131,9 @@ def make_cap(hatted, mat):
     if not bm.faces: bm.free(); return None
     bm.normal_update()
     ctr = Vector((0, H["cy"], H["hz"] + 0.02))
-    for v in bm.verts: v.co += (v.co - ctr).normalized() * 0.008   # radial: the head's normals aren't all outward
+    edge = {v for e in bm.edges if e.is_boundary for v in e.verts}
+    ring = {o for v in edge for e in v.link_edges for o in e.verts} - edge
+    for v in bm.verts: v.co += (v.co - ctr).normalized() * (-0.002 if v in edge else 0.004 if v in ring else 0.008)   # radial; the rim tucks under the skin so its stepped outline never draws as a line
     me = bpy.data.meshes.new("scalpcap"); bm.to_mesh(me); bm.free()
     me.validate(clean_customdata=True)
     for a in [a.name for a in me.attributes if a.name not in ("position", ".edge_verts", ".corner_vert", ".corner_edge", "sharp_face") and not a.name.startswith(".") and a.domain != "CORNER"]: me.attributes.remove(me.attributes[a])
