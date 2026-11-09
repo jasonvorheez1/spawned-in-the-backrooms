@@ -129,7 +129,7 @@ bm = bmesh.new(); vs_a = [bm.verts.new((-0.3, y, z)) for y, z in outline]; vs_b 
 bm.faces.new(vs_a[::-1]); bm.faces.new(vs_b)
 for i in range(len(outline)):
     j = (i + 1) % len(outline); bm.faces.new((vs_a[i], vs_a[j], vs_b[j], vs_b[i]))
-me = bpy.data.meshes.new("cut"); bm.to_mesh(me); bm.free(); cut = bpy.data.objects.new("cut", me); bpy.context.collection.objects.link(cut)
+bmesh.ops.recalc_face_normals(bm, faces=bm.faces); me = bpy.data.meshes.new("cut"); bm.to_mesh(me); bm.free(); cut = bpy.data.objects.new("cut", me); bpy.context.collection.objects.link(cut)
 bpy.context.view_layer.objects.active = wall; bm_ = wall.modifiers.new("x", "BOOLEAN"); bm_.object = cut; bm_.operation = "DIFFERENCE"; bm_.solver = "EXACT"
 bpy.ops.object.modifier_apply(modifier="x"); bpy.data.objects.remove(cut)
 boxuv(wall, 2.4)
@@ -182,7 +182,8 @@ for (x, z, sx, sz) in [(0, Z0, BW + 0.06, 0.04), (0, Z0 + BH, BW + 0.06, 0.04), 
 # the map: one sheet, UV 0..1 on its front
 bpy.ops.mesh.primitive_plane_add(size=1, location=(0, 0.019, Z0 + BH / 2 + 0.02), rotation=(math.pi / 2, 0, 0)); mp = bpy.context.object
 mp.scale = (2.3, 1.15, 1); bpy.ops.object.transform_apply(scale=True, rotation=True); mp.data.materials.append(mapm)
-for v in mp.data.vertices: pass
+uvl = mp.data.uv_layers.active.data
+for l in uvl: l.uv = (1 - l.uv[0], l.uv[1])
 P.append(mp)
 for i in range(3):
     P.append(cube("note", (BW / 2 - 0.2 - i * 0.03, 0.02 + i * 0.001, Z0 + 0.22 + i * 0.05), (0.18, 0.002, 0.13), note, 0))
