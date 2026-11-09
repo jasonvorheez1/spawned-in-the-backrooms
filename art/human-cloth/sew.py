@@ -68,10 +68,10 @@ bvh = BVHTree.FromBMesh(sb)
 MW = body.matrix_world.copy(); MI = MW.inverted()
 sw = sb.copy(); sw.transform(MW)
 # cloth shell: the skin closed over creases narrower than ~4 cm (armpit, groin): out, smoothed, back in. Cloth never follows a crease it can't reach into
-sh = sw.copy(); sh.normal_update(); CL = 0.035
+sh = sw.copy(); sh.normal_update(); CL = 0.02
 for v in sh.verts: v.co += v.normal * CL
 sadj = {v: [e.other_vert(v) for e in v.link_edges] for v in sh.verts}
-for _ in range(18):
+for _ in range(10):
     new = {v: v.co.lerp(sum((w.co for w in nb), Vector()) / len(nb), 0.5) for v, nb in sadj.items() if nb}
     for v, c in new.items(): v.co = c
 sh.normal_update()
