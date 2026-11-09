@@ -205,7 +205,11 @@ export function humanMorph(l) {
   if (FT?.[1]) for (const [k, v] of Object.entries(FT[1])) o[k] = v
   if (o.HT_Long > 0.4) o.FaceLong *= 0.4; if (o.HT_Round > 0.4) o.HeadRound *= 0.4 // no doubled stretch
   o.HeadRound = Math.round(o.HeadRound * 0.4 * 100) / 100; o.CheekFull = Math.round(o.CheekFull * 0.45 * 100) / 100; if (o.HT_Broad) o.HT_Broad = Math.round(o.HT_Broad * 0.45 * 100) / 100; if (o.HT_Round) o.HT_Round = Math.round(o.HT_Round * 0.6 * 100) / 100; if (o.JawWide) o.JawWide = Math.min(o.JawWide, m ? 0.6 : 0.2) // human proportions: no wide, round critter skulls
-  return o // the human bodies carry no Bust key: their curves are built into the female mesh
+  if (!m) { // the female human Body carries a Bust key: the slider leads, else a per-person roll (rule: breast size more random)
+    const b = l?.bust != null || l?.bustS != null ? _bust(l).Bust : 0.15 + u() * 0.85
+    o.Bust = Math.round(b * 100) / 100
+  }
+  return o
 }
 export function bodyModel(l) {
   if (HUMAN && !l?._human) return humanBody(l)
