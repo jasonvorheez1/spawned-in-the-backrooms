@@ -3943,6 +3943,16 @@ l5-l6-plate:
   rotation: {yaw: 90}
   ui: "<div face=\"front\" width=\"1.2m\" style=\"font-family:serif;text-align:center;color:#c9c4b8;background:#121418;border:14px solid #3a3e44;padding:18px 10px;line-height:1.05\"><div style=\"font-size:130px;font-weight:900;letter-spacing:10px\">LEVEL 6</div><div style=\"font-size:64px;font-style:italic;opacity:.85\">▼ lights out</div></div>"
   visibleRange: {max: 40, min: 0}
+l5-ladder-lib0:
+  feetPosition: {x: -27.4, y: 0, z: -19.9}
+  id: l5-ladder-lib0
+  state: {ladder: {h: 3.1, mat: wood, top: false, yaw: 0}}
+  tags: [ladder]
+l5-ladder-lib1:
+  feetPosition: {x: -28.9, y: 0, z: -17.2}
+  id: l5-ladder-lib1
+  state: {ladder: {h: 3.1, mat: wood, top: false, yaw: 90}}
+  tags: [ladder]
 l5-lift3:
   behavior: scripts/level-door.js
   feetPosition: {x: -44.800000000000004, y: 0, z: -2.4492935982947065e-17}
