@@ -5,7 +5,7 @@ import json, struct, sys, pathlib, copy
 src, out = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2]); out.mkdir(parents=True, exist_ok=True)
 b = src.read_bytes(); L = struct.unpack('<I', b[12:16])[0]; J = json.loads(b[20:20 + L])
 off = 20 + L; BL = struct.unpack('<I', b[off:off + 4])[0]; BIN = b[off + 8:off + 8 + BL]
-SPLIT = lambda n: n.startswith('Ward_') or n.startswith('Beard_')
+SPLIT = lambda n: n.startswith('Ward_')  # beards ride the face's expression keys: they stay on the body
 
 def write(keep_mesh_nodes, path):
     j = copy.deepcopy(J)
