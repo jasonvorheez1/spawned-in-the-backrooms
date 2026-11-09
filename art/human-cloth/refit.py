@@ -276,6 +276,22 @@ for o in bpy.data.objects:
             if len(comp) > 80: continue
             r = bmesh.ops.holes_fill(bm, edges=comp, sides=0); patched += 1
         print("patched", o.name, patched, "of", len(loops), "loops")
+        # the back seam: its two open edges meet on the spine line, so no slit shows (indices kept for the skin)
+        for v in bm.verts:
+            if v.is_boundary and abs(v.co.x) < 0.03 and v.co.z > HEM + 0.03 and v.co.y - cy > 0:
+                dx = -v.co.x; v.co.x = 0.0
+                for L in shapes: v[L].x += dx
+        # the belly: a knit drapes over the stomach, it never folds in. dents pushed out to their ring's line, outward only
+        for _ in range(6):
+            bm.verts.ensure_lookup_table(); push = {}
+            for v in bm.verts:
+                if not (HEM - 0.02 < v.co.z < HEM + 0.3) or v.co.y - cy > 0.02 or v.is_boundary or not v.link_edges: continue
+                r = math.hypot(v.co.x, v.co.y - cy)
+                rn = sum(math.hypot(e.other_vert(v).co.x, e.other_vert(v).co.y - cy) for e in v.link_edges) / len(v.link_edges)
+                if rn - r > 0.003 and r > 1e-4: push[v] = (rn - r) * 0.8 / r
+            for v, k in push.items():
+                dv = Vector((v.co.x * k, (v.co.y - cy) * k, 0)); v.co += dv
+                for L in shapes: v[L] += dv
         print("hem", o.name, "hung out", fixed, "inner faces cut", len(inner))
     moved = sum(1 for x in delta.values() if x.length > 0.002)
     bm.to_mesh(me); bm.free()
