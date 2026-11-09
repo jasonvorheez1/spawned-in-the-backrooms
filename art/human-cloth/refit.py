@@ -202,6 +202,22 @@ for o in bpy.data.objects:
             x, y = c.x, c.y - cy; r = math.hypot(x, y)
             if r < 0.9 * rowAt(c.z)[ak(x, y)]: inner.append(f)
         bmesh.ops.delete(bm, geom=inner, context="FACES_ONLY")
+        # the cut leaves teeth: faces hanging by one edge go, then the hem's edge loop is eased level so it reads as a sewn hem
+        for _ in range(4):
+            teeth = [f for f in bm.faces if f.calc_center_median().z < HEM + 0.02 and sum(1 for e in f.edges if e.is_boundary or len(e.link_faces) < 2) >= 2]
+            if not teeth: break
+            bmesh.ops.delete(bm, geom=teeth, context="FACES_ONLY")
+        loose = [v for v in bm.verts if not v.link_faces]
+        if loose: bmesh.ops.delete(bm, geom=loose, context="VERTS")
+        rim = [v for v in bm.verts if v.is_boundary and v.co.z < HEM + 0.02]
+        for _ in range(8):
+            nz = {}
+            for v in rim:
+                nb_ = [e.other_vert(v) for e in v.link_edges if e.is_boundary]
+                if nb_: nz[v] = v.co.z * 0.4 + sum(u.co.z for u in nb_) / len(nb_) * 0.6
+            for v, z in nz.items():
+                dz = z - v.co.z; v.co.z = z
+                for L in shapes: v[L].z += dz
         # then every hem vertex sits ON the hung tube, in or out: folds and crumples have nowhere to be
         fixed = 0
         hv = [v for v in bm.verts if v.co.z < HEM + 0.04]
