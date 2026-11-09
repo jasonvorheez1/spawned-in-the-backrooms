@@ -9,7 +9,7 @@ const LID_SCALE = 1000 // the lids are modelled this many times too small (scrip
 const GAIT_LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 import { weaponBody, HOLD } from './lib/weapon-look.js'
 import { baseOf } from './lib/weapons.js'
-import { stance } from './lib/body3.js'
+import { stance, heldRot } from './lib/body3.js'
 const MENU_CLOTH = ['topw', 'botw', 'shoes', 'hat', 'eyew', 'neck', 'top', 'bottom', 'shoec', 'hatc', 'neckc', 'topp', 'botp', 'shoep', 'hatp', 'neckp']
 const WARDROBE_OFF = true // Shelly, Nov 7: character creator off for now; false brings it back
 export const updateSchedule = { every: { seconds: 0.1 } } // 10 Hz: the hands follow the aim (scripts/lib/body3.js)
@@ -268,6 +268,7 @@ export function update(ctx) {
         feetPosition: { x: 0, y: 0, z: -g },
         visibleInFirstPerson: false,
         ...weaponBody(eq),
+        ...heldRot(eq),
       })
     }
   }

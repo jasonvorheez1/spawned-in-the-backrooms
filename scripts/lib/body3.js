@@ -9,6 +9,8 @@ const RAD = Math.PI / 180
 const FAM = {}
 for (const [f, ks] of Object.entries(CA.families ?? {})) for (const k of ks) FAM[k] = f
 // which family a weapon plays: the table first, then what the weapon is (ranged two-handed = long gun)
+// a long gun's mesh runs along its own +Z; in the Mixamo right hand that is turned level along the fingers
+export const heldRot = (kind) => famOf(kind) === 'long' ? { rotation: { pitch: -90 } } : {}
 export function famOf(kind) {
   const base = baseOf(kind ?? 'fists'), wp = W[kind] ?? W[base] ?? {}
   if (FAM[base]) return FAM[base]

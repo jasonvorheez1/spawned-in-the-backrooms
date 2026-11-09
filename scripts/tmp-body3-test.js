@@ -1,5 +1,5 @@
 // TEMP test rig (wisp combat lane): drives body3 on a human body; deleted after checks
-import { swing3, fire3, aimPose, aimMode, longHands, famOf, tick3 } from './lib/body3.js'
+import { swing3, fire3, aimPose, aimMode, longHands, famOf, tick3, heldRot } from './lib/body3.js'
 import { humanBody } from './lib/critter-model.js'
 import { weaponBody } from './lib/weapon-look.js'
 const LIB = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-sprint-loop.glb' }
@@ -8,7 +8,7 @@ export function onSpawn(ctx) {
   const me = ctx.self, s = me.state
   me.model = humanBody({ sex: s.sex ?? 'm', skin: s.skin ?? (s.sex === 'f' ? '#e8b896' : '#c58c66') })
   s.gaitClips = s.sex === 'f' ? FEM : LIB
-  if (s.kind && s.kind !== 'fists') me.session.held = ctx.spawn({ parent: me.id, attachment: { bone: 'RightHand' }, tags: ['temp'], ...weaponBody(s.kind), ...(s.gunRot ? { rotation: s.gunRot } : {}) })
+  if (s.kind && s.kind !== 'fists') me.session.held = ctx.spawn({ parent: me.id, attachment: { bone: 'RightHand' }, tags: ['temp'], ...weaponBody(s.kind), ...(s.gunRot ? { rotation: s.gunRot } : heldRot(s.kind)) })
   me.session.t0 = ctx.now(); me.session.n = 0; me.session.next = 0
 }
 export function update(ctx, dt) {

@@ -14,7 +14,7 @@ import { toMesh, lookFromModel, rewear, seatHead, HEAD_ID, staleBody, speciesFor
 import { navPath } from "./lib/nav.js";
 import { raycast } from "builtin/physics";
 import { animate } from "builtin/tween";
-import { swing3, fire3, aimPose, aimMode, longHands, famOf, tick3 } from "./lib/body3.js";
+import { swing3, fire3, aimPose, aimMode, longHands, famOf, tick3, heldRot } from "./lib/body3.js";
 import G from "./lib/data/meg.yml";
 import WP from "./lib/data/weapons.yml";
 import { weaponBody } from "./lib/weapon-look.js";
@@ -41,7 +41,7 @@ function arm(ctx, me, m) {
   if (s.arm === "fists") { if (held) ctx.destroy(held.id); m.armed = true; m.drawn = undefined; return; }
   if (held && given === s.arm) { m.armed = true; m.heldId = held.id; return; }
   if (held) ctx.destroy(held.id);
-  m.heldId = ctx.spawn({ parent: me.id, attachment: { bone: "RightHand" }, visible: false, state: { kind: s.arm }, ...weaponBody(s.arm) });
+  m.heldId = ctx.spawn({ parent: me.id, attachment: { bone: "RightHand" }, visible: false, state: { kind: s.arm }, ...weaponBody(s.arm), ...heldRot(s.arm) });
   m.drawn = undefined; m.armed = true;
 }
 const SHOTS = { shotgun: "/cdn/moodboard-realistic-gritty/sfx-shotgun-blast-heavy-boom.mp3", smg: "/cdn/moodboard-realistic-gritty/sfx-smg-tommy-gun-loud-rattle-shot.mp3" };
