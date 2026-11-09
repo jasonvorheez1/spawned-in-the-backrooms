@@ -110,6 +110,7 @@ def build(sex, side):
     fingers = [c for c in comps({i for i in H if P[i][1] > TK}) if len(c) > 30]
     thumbs = [c for c in comps({i for i in P if P[i][3] > 0.03 and P[i][1] > -0.03 and P[i][3] > 0.03}) if len(c) > 10]
     print(sex, "fingers", len(fingers), "thumb", [len(c) for c in thumbs])
+    thumbs = [[i for c in thumbs for i in c]] if thumbs else []   # the thumb splits into islands at its knuckle: swing it as one piece, or its tip flies off as a spike
     FLEX = kf_flex()   # index..pinky knuckle, middle, tip flexion from NV 1hmAim
     fingers.sort(key=lambda c: -sum(P[i][3] for i in c) / len(c))   # thumb side first: index, middle, ring, pinky
     def rot(pt, piv, ax, deg): return mu.Quaternion(ax, math.radians(deg)) @ (pt - piv) + piv
