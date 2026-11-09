@@ -202,6 +202,18 @@ for o in bpy.data.objects:
             row = rows.get(min(max(zk(c.z), ks[0]), ks[-1]))
             if row and r < 0.8 * row[ak(x, y)]: inner.append(f)
         bmesh.ops.delete(bm, geom=inner, context="FACES_ONLY")
+        # iron: the crease the old crotch fold left on the front relaxes over its neighbours, then sits back on the hung ring
+        zone = [v for v in bm.verts if v.co.z < HEM + 0.02 and v.link_faces and not v.is_boundary]
+        for _ in range(6):
+            new = {}
+            for v in zone:
+                nb_ = [e.other_vert(v).co for e in v.link_edges if e.other_vert(v).link_faces]
+                if nb_: new[v] = v.co * 0.4 + (sum(nb_, Vector()) / len(nb_)) * 0.6
+            for v, c in new.items():
+                x, y = c.x, c.y - cy; r = math.hypot(x, y); tr = rows[min(max(zk(c.z), ks[0]), ks[-1])][ak(x, y)]
+                if r > 1e-5 and r < tr: c.x, c.y = x * tr / r, cy + y * tr / r
+                dv = c - v.co; v.co = c
+                for L in shapes: v[L] += dv
         print("hem", o.name, "hung out", fixed, "inner faces cut", len(inner))
     moved = sum(1 for x in delta.values() if x.length > 0.002)
     bm.to_mesh(me); bm.free()
