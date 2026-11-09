@@ -355,6 +355,7 @@ const BVO = (who, line) => vo(who, line)
 export function bark(ctx, o, kind, force) {
   const pool = o?.state?.barks?.[kind] ?? CHAT.barks?.[kind], now = ctx.now(), st = o?.state;
   if (!pool?.length || !st) return;
+  if (st.dead || st.down || (st.hp ?? 1) <= 0) return; // KO'd or dead: silent (Shelly, Nov 9)
   if (!force && now - (st.line?.at ?? -1e9) < 3500) return;
   const t = pool[Math.floor(ctx.random() * pool.length)], d = 1300 + t.length * 55, who = st.voice ?? VOICES[o.id] ?? `${String(o.id).split('/').pop()}#${(o.state?.wear?.sex ?? o.state?.look?.sex) === 'f' ? 'f' : 'm'}`;
   st.line = { t, at: now, d };

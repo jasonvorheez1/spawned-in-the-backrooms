@@ -24,8 +24,9 @@ pop glow burst=1 life=1 r=light(<${c}>,6*(0>1),4)`;
 const hex = (h) => { const n = parseInt(h.slice(1), 16); return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255]; };
 const say = (ctx, d, kind) => { // one sentry line from the drone itself, never two over each other
   const list = V[kind], m = (ctx.self.session.voice ??= {}); if (!list?.length) return;
+  if (d.state.dead || (d.state.hp ?? 1) <= 0) return; // KO'd: silent (Shelly, Nov 9)
   if (ctx.now() - (m[d.id] ?? -1e9) < T.voiceGap * 1000) return; m[d.id] = ctx.now();
-  ctx.emit("playSound", { clip: list[Math.floor(ctx.random() * list.length)], position: d.feetPosition, volume: 1, refDistance: 3, maxDistance: 30, bus: "Voice" });
+  (ctx.self.session.vid ??= {})[d.id] = ctx.emit("playSound", { clip: list[Math.floor(ctx.random() * list.length)], position: d.feetPosition, volume: 1, refDistance: 3, maxDistance: 30, bus: "Voice" });
 };
 const chest = (p) => ({ x: p.feetPosition.x, y: p.feetPosition.y + 1.3, z: p.feetPosition.z });
 function sees(ctx, d, p, range) {
@@ -98,7 +99,7 @@ export function update(ctx, dt) {
     const s = d.state, t = T[s.type] ?? T.watcher, f = d.feetPosition, m = (M[d.id] ??= { bob: ctx.random() * 6, slot: idx });
     // ko: a smoking spiral, then the blast
     if (s.hp <= 0 || s.dead) {
-      if (!m.fallAt) { m.fallAt = now; s.dead = true; s.mode = "down"; d.fx = { script: SMOKE }; say(ctx, d, "death"); ctx.emit("playSound", { clip: SND("damaged-drone-rotor-sputtering-failing-whine"), position: f, volume: 1, maxDistance: 30 }); }
+      if (!m.fallAt) { m.fallAt = now; s.dead = true; s.mode = "down"; d.fx = { script: SMOKE }; const vid = ctx.self.session.vid?.[d.id]; if (vid) ctx.emit("stopSound", { soundId: vid }); ctx.emit("playSound", { clip: SND("damaged-drone-rotor-sputtering-failing-whine"), position: f, volume: 1, maxDistance: 30 }); }
       const k = Math.min(1, (now - m.fallAt) / (T.fall * 1000));
       d.feetPosition = { x: f.x, y: Math.max(0.25, t.hover * (1 - k * k)), z: f.z }; d.rotation = { yaw: (d.rotation?.yaw ?? 0) + 900 * dt, roll: 35 * k };
       if (k >= 1) die(ctx, d, t);
