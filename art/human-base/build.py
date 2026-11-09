@@ -44,14 +44,14 @@ def arm_leg_weights(head, body):
 
 def male(head, body):
     aw, lw = arm_leg_weights(head, body)
-    SH = 0.04  # arms ride out this far with the broader shoulders
+    SH = 0.065  # arms ride out this far with the broader shoulders
     old = [v.co.copy() for v in body.data.vertices]
     # pass 1, the big frame: shoulders out, waist and hips in, arms carried. smoothed after, so no lumps at the joins
     for i, v in enumerate(body.data.vertices):
         x, y, z = v.co; sg = 1 if x >= 0 else -1
         A = aw[i]; T = 1 - A
         sh = bump(1.34, 1.44, 1.54, 1.6, z)
-        x = x * (1 + 0.2 * sh * T) + sg * SH * A
+        x = x * (1 + 0.32 * sh * T) + sg * SH * A
         if y > 0.1: y = 0.1 + (y - 0.1) * (1 - 0.5 * bump(0.9, 1.0, 1.14, 1.24, z) * T)
         v.co = Vector((x, y, z))
     key = lambda c: (round(c.x, 4), round(c.y, 4), round(c.z, 4))
@@ -84,7 +84,7 @@ def male(head, body):
         k = int(z / 0.02); ks = [j for j in (k - 1, k, k + 1) if j in bins]
         return sum(bins[j] for j in ks) / len(ks) if ks else 0
     C = at(half, 1.46)
-    G = [(0.9, 0.9), (1.0, 0.88), (1.12, 0.88), (1.22, 0.9), (1.32, 0.94), (1.4, 1.0)]
+    G = [(0.9, 0.84), (1.0, 0.8), (1.12, 0.8), (1.22, 0.84), (1.32, 0.92), (1.4, 1.0)]
     def target(z):
         if z <= G[0][0]: return C * G[0][1]
         for (z0, g0), (z1, g1) in zip(G, G[1:]):
@@ -113,8 +113,8 @@ def male(head, body):
     for i, v in enumerate(body.data.vertices):
         x, y, z = v.co; sg = 1 if x >= 0 else -1; A = aw[i]; L = lw[i]; T = 1 - A
         nk = bump(1.48, 1.53, 1.6, 1.66, z) * T
-        x *= 1 + 0.25 * nk; y = 0.075 + (y - 0.075) * (1 + 0.14 * nk)
-        if A > 0.5: y = 0.075 + (y - 0.075) * (1 + 0.12 * A)
+        x *= 1 + 0.36 * nk; y = 0.075 + (y - 0.075) * (1 + 0.2 * nk)
+        if A > 0.5: y = 0.075 + (y - 0.075) * (1 + 0.2 * A)
         if L > 0.5 and z < 0.45:
             c = bump(0.12, 0.22, 0.34, 0.42, z); cx = sg * 0.08
             x = cx + (x - cx) * (1 + 0.1 * c); y = 0.12 + (y - 0.12) * (1 + 0.08 * c)
@@ -123,7 +123,9 @@ def male(head, body):
     relax(3)
     for v in head.data.vertices:
         x, y, z = v.co
-        x *= 1 + 0.08 * bump(1.56, 1.62, 1.74, 1.8, z)  # squarer, wider jaw
+        x *= 1 + 0.13 * bump(1.56, 1.62, 1.72, 1.78, z)  # squarer, wider jaw
+        if y < 0.02: y -= 0.006 * bump(1.775, 1.79, 1.81, 1.83, z) * (1 - smooth(0.03, 0.08, abs(x)))  # brow ridge
+        if y < 0.0: y -= 0.005 * bump(1.62, 1.645, 1.67, 1.69, z) * (1 - smooth(0.02, 0.05, abs(x)))  # squarer chin
         v.co = Vector((x, y, z))
     body.data.update(); head.data.update()
 
@@ -367,32 +369,3 @@ def tpose(r, meshes):
     bpy.ops.object.mode_set(mode="POSE"); bpy.ops.pose.armature_apply(selected=False); bpy.ops.object.mode_set(mode="OBJECT")
     print("tpose applied")
 
-def build(name, is_male, height):
-    head, body = load()
-    if is_male: male(head, body)
-    r = rig(head, body, 0.26 if is_male else 0.0)
-    extra = []
-    if not is_male:
-        extra.append(garment(body, r, "Bra", lambda c, a: 1.25 < c.z < 1.42 and a < 0.3, (0.07, 0.07, 0.08, 1), cuts=(1.25, 1.42)))
-        extra.append(garment(body, r, "Shorts", lambda c, a: 0.82 < c.z < 1.07 and a < 0.3, (0.08, 0.1, 0.16, 1), cuts=(0.82, 1.07)))
-    if is_male:  # 16+: plain trunks on him too (Shelly #94829 asked the same floor for her)
-        extra.append(garment(body, r, "Shorts", lambda c, a: 0.80 < c.z < 1.08 and a < 0.3, (0.09, 0.11, 0.17, 1), cuts=(0.80, 1.08)))
-    # the proxy weights replace the old shoulder patch (shoulder_weights), kept below for reference
-    s = height / 1.94
-    r.scale = (s, s, s); bpy.ops.object.select_all(action="DESELECT")
-    for o in (r, head, body, *extra): o.select_set(True)
-    bpy.context.view_layer.objects.active = r
-    bpy.ops.object.transform_apply(scale=True)
-    head.data.materials[0].name = "Head_Skin"; body.data.materials[0].name = "Body_Skin"
-    tpose(r, (head, body, *extra))
-    proof(name, r)
-    bpy.ops.object.select_all(action="DESELECT")
-    for o in (r, head, body, *extra): o.select_set(True)
-    for o in list(bpy.data.objects):
-        if o.name.startswith("Icosphere"): bpy.data.objects.remove(o, do_unlink=True)
-    bpy.ops.export_scene.gltf(filepath=f"{OUT}/{name}.glb", use_selection=True, export_apply=False, export_animations=False)
-    print("exported", name)
-
-which = sys.argv[sys.argv.index("--") + 1]
-if which == "female": build("human_female", False, 1.65)
-else: build("human_male", True, 1.78)
