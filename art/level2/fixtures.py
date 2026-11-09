@@ -126,10 +126,10 @@ me = bpy.data.meshes.new("flight"); bmesh.ops.recalc_face_normals(bm, faces=bm.f
 o = bpy.data.objects.new("flight", me); bpy.context.collection.objects.link(o); put(o, "concrete", smooth=False)
 for i in range(13):
     zf = z0 - i * G
-    box(W - 0.1, 0.006, 0.05, E(0, (i + 1) * R + 0.002, zf - 0.04), "nosing", 0.002)
+    box(W - 0.1, 0.05, 0.006, E(0, (i + 1) * R + 0.002, zf - 0.04), "nosing", 0.002)
 import math as _m
 ang = _m.atan2(13 * R, 13 * G); Ls = _m.hypot(13 * R, 13 * G)
 for s in (-1, 1):
-    o = box(0.012, 0.22, Ls, E(s * (W / 2 + 0.006), 13 * R / 2 - 0.05, z0 - 13 * G / 2), "steel", 0.003)
-    o.rotation_euler = (-ang, 0, 0)
+    o = box(0.012, Ls, 0.22, E(s * (W / 2 + 0.006), 13 * R / 2 - 0.05, z0 - 13 * G / 2), "steel", 0.003)
+    o.rotation_euler = (ang, 0, 0)
 export("l2-stair")
