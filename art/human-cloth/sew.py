@@ -200,14 +200,15 @@ for name, (ease, cuts) in PLAN.items():
     for c in comps:
         if len(c) < big * 0.03: bmesh.ops.delete(bm, geom=c, context="VERTS")
     # folds (the armpit crush): faces flipped against their neighbours get relaxed flat, then held outside the skin
-    for it in range(3):
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    for it in range(2):
         bm.normal_update()
         bad = set()
         for e in bm.edges:
-            if len(e.link_faces) == 2 and e.link_faces[0].normal.dot(e.link_faces[1].normal) < 0.2: bad.update(e.verts)
+            if len(e.link_faces) == 2 and e.link_faces[0].normal.dot(e.link_faces[1].normal) < -0.3 and e.verts[0].co.z > 1.0: bad.update(e.verts)
         if not bad: break
-        for _ in range(3): bad |= {e.other_vert(v) for v in list(bad) for e in v.link_edges}
-        for _ in range(10):
+        for _ in range(2): bad |= {e.other_vert(v) for v in list(bad) for e in v.link_edges}
+        for _ in range(6):
             new = {}
             for v in bad:
                 nb = [e.other_vert(v) for e in v.link_edges]
