@@ -50,6 +50,30 @@ def borrow(dst, src):
     dst.node_tree.nodes.clear()
     # copy by duplicating the source material's tree
     return src
+from mathutils.bvhtree import BVHTree
+_hb = bmesh.new(); _hm = bpy.data.meshes.new_from_object(head.evaluated_get(bpy.context.evaluated_depsgraph_get())); _hb.from_mesh(_hm); _hb.transform(head.matrix_world); bpy.data.meshes.remove(_hm)
+HEAD_BVH = BVHTree.FromBMesh(_hb)
+def refit(k, objs):
+    # Shelly: "either the hair is too big to fit my character or too small". The bbox fit left styles floating off the skull or cutting the ears.
+    # Shrink-to-fit about the skull centre: the smallest scale where under 2% of the near verts sink into the head, then push the stragglers out 4 mm.
+    C = Vector((0, H["cy"], H["hz"] + 0.035))
+    pts = [(o, v) for kind, o in objs for v in o.data.vertices]
+    def inside(q):
+        loc, n, i, d = HEAD_BVH.find_nearest(q)
+        return loc is not None and d < 0.05 and (q - loc).dot(n) < 0
+    near = [(o, v) for o, v in pts if (HEAD_BVH.find_nearest(v.co)[3] or 1) < 0.05]
+    sample = near[:: max(1, len(near) // 1500)] or pts[:: max(1, len(pts) // 1500)]
+    best = 1.0
+    for f in [0.70 + i * 0.025 for i in range(21)]:
+        bad = sum(1 for o, v in sample if inside(C + (v.co - C) * f))
+        if bad / max(1, len(sample)) < 0.02: best = f; break
+    for o, v in pts: v.co = C + (v.co - C) * best
+    pushed = 0
+    for o, v in pts:
+        loc, n, i, d = HEAD_BVH.find_nearest(v.co)
+        if loc is not None and d < 0.05 and (v.co - loc).dot(n) < 0.003: v.co = loc + n * 0.004; pushed += 1
+    for kind, o in objs: o.data.update()
+    print("refit", k, "scale", round(best, 3), "pushed", pushed, "of", len(pts))
 made = {}
 ROT = Matrix.Rotation(math.radians(90), 4, "Z")  # pack faces -X; ours faces -Y
 for k, parts in sorted(ST.items()):
@@ -66,6 +90,7 @@ for k, parts in sorted(ST.items()):
         mat = m.copy(); mat.name = f"{kind}_{k}"
         me2.materials.clear(); me2.materials.append(mat)
         o = bpy.data.objects.new(f"{kind}_{k}", me2); bpy.context.scene.collection.objects.link(o); objs.append((kind, o))
+    refit(k, objs)
     made[k] = objs
 
 def finish(o):
