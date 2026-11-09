@@ -2,7 +2,7 @@
 // dead end, once its steel shutter is broken); hot, humid storage halls of lockers and janitorial gear, Base Alef's gutted atrium and wings, Refrigerator Paradise (with Saltine
 // stockpiles, coil-water collector, workbench and Quartermaster errand board), and in the east The Edges: deep, dark rock-cut concrete caves stalked by Smilers whose last tunnel
 // runs into a cold cave mouth leading to Level 8. Layout: scripts/lib/level21.js; geometry: scripts/level21-geo.js; use & Smilers: scripts/l21-use.js.
-import { N, S, H, HALF, ROOMS, zoneOf, cellCenter, hash, openings, isOpen, roomAt, laneCell, isEdge, DOWN, CAVE, LANE, EDGE_X, ARRIVE } from "../../scripts/lib/level21.js";
+import { N, S, H, HALF, ROOMS, zoneOf, cellCenter, hash, openings, isOpen, roomAt, laneCell, isEdge, DOWN, CAVE, LANE, EDGE_X, ARRIVE, heightOf } from "../../scripts/lib/level21.js";
 import L from "../../scripts/lib/data/level21.yml";
 import { spawnContainerL2, spawnCrateL2, spawnRemains, spawnWeapon, rollWeaponL2 } from "../../scripts/lib/loot.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
@@ -15,7 +15,7 @@ import { terminalSpec } from "../../scripts/lib/terminal.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { spawnProp } from "../../scripts/lib/l2props.js";
 export const cadence = "500ms";
-const V = 23; // 18: locker room floor and mat to the ref photo, The Edges lit bright down every lane cell; // 17: Tripo props dress the rooms and halls (dress21), DANGER signs at dead ends; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist; 14: survey road flares, freezer frost, blast sparks, sandbags, show-don't-tell
+const V = 24; // 18: locker room floor and mat to the ref photo, The Edges lit bright down every lane cell; // 17: Tripo props dress the rooms and halls (dress21), DANGER signs at dead ends; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist; 14: survey road flares, freezer frost, blast sparks, sandbags, show-don't-tell
 const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
 const rm = (type) => ROOMS.filter((r) => r.type === type);
 const center = (r) => cellCenter(r.x0 + (r.w - 1) / 2, r.z0 + (r.d - 1) / 2); // the middle of a room block
