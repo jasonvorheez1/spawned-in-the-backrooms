@@ -28,7 +28,7 @@ function ladderOf(ctx, id) {
   const o = ctx.getObject(id), L = o?.state?.ladder
   if (!o || !L) return null
   const b = o.worldFeetPosition ?? o.feetPosition
-  return { id, base: { x: b.x, y: b.y, z: b.z }, h: L.h ?? 3, yaw: L.yaw ?? 0, mat: L.mat ?? 'wood', f: fwd(L.yaw ?? 0) }
+  return { id, base: { x: b.x, y: b.y, z: b.z }, h: L.h ?? 3, yaw: L.yaw ?? 0, mat: L.mat ?? 'wood', top: L.top !== false, f: fwd(L.yaw ?? 0) }
 }
 
 export function update(ctx, dt) {
@@ -48,7 +48,7 @@ export function update(ctx, dt) {
       // from below: in front of it, facing it, pushing forward
       if (m.z < -0.3 && along > -1.0 && along < 0.15 && dy > -0.5 && dy < L.h - 0.4 && Math.abs(wrap(look - L.yaw)) < 65) { grab(ctx, m, L, Math.max(dy, 0.05)); break }
       // from the top: standing on the deck behind it, facing away, walking back over the edge
-      if (m.z < -0.3 && along > -0.2 && along < 1.1 && Math.abs(dy - L.h) < 0.45 && Math.abs(wrap(look - L.yaw - 180)) < 60) { grab(ctx, m, L, L.h - 1.05); break }
+      if (m.z < -0.3 && along > -0.2 && along < 1.1 && L.top && Math.abs(dy - L.h) < 0.45 && Math.abs(wrap(look - L.yaw - 180)) < 60) { grab(ctx, m, L, L.h - 1.05); break }
     }
     m.jump = false
     return
@@ -63,7 +63,7 @@ export function update(ctx, dt) {
     return
   }
   const want = -m.z // moveZ -1 is forward = up
-  if (want > 0.3 && dy >= L.h - 0.9) { // over the top: step off onto the deck
+  if (want > 0.3 && L.top && dy >= L.h - 0.9) { // over the top: step off onto the deck
     letGo(ctx, m)
     me.feetPosition = { x: L.base.x + L.f.x * 0.75, y: L.base.y + L.h + 0.08, z: L.base.z + L.f.z * 0.75 }
     me.velocity = { x: L.f.x * 1.5, y: 0, z: L.f.z * 1.5 }
