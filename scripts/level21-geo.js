@@ -207,7 +207,22 @@ export function geometry(ctx) {
         pipe(ctx, [c.x + S * 0.5, h - 0.9, c.z + 1.2], [c.x + S * 0.5, h, c.z + 1.2], 0.035, 5);
         pipe(ctx, [c.x + S * 0.5, h - 0.9, c.z + 1.2], [c.x + S * 0.5 + 0.08, h - 0.9, c.z + 1.2], 0.53, M + 2);
       }
-      ctx.color("oklch(0.4 0.01 250)"); box(ctx, c.x, c.x + S, h - 0.12, h - 0.06, c.z + 0.55, c.z + 1.0); ctx.metalness(0.2); ctx.roughness(0.7);
+      if (laneCell(cx, cz) && cz === LANE.z0 + 1) { // the photo's ladder cable tray on drop rods: two rails, rungs every 0.3 m, a cable bundle lying in it
+        const ty = h - 0.45, za = c.z + 0.45, zb = c.z + 0.95;
+        ctx.color("oklch(0.62 0.01 240)"); ctx.metalness(0.7); ctx.roughness(0.4);
+        box(ctx, c.x, c.x + S, ty, ty + 0.09, za, za + 0.03); box(ctx, c.x, c.x + S, ty, ty + 0.09, zb - 0.03, zb);
+        for (let k = 0; k < S / 0.3; k++) box(ctx, c.x + k * 0.3, c.x + k * 0.3 + 0.03, ty, ty + 0.02, za, zb);
+        for (const zz of [za - 0.02, zb + 0.02]) pipe(ctx, [c.x + S / 2, ty, zz], [c.x + S / 2, h, zz], 0.01, 4);
+        ctx.color("oklch(0.25 0.01 250)"); ctx.metalness(0.1); ctx.roughness(0.8);
+        for (let k = 0; k < 4; k++) run(c, 0, ty + 0.04, 0.45 + 0.08 + k * 0.1, 0.025);
+      } else if (!laneCell(cx, cz)) { ctx.color("oklch(0.4 0.01 250)"); box(ctx, c.x, c.x + S, h - 0.12, h - 0.06, c.z + 0.55, c.z + 1.0); }
+      if (laneCell(cx, cz) && cz === LANE.z0) { // the rock vault: blasted stone bulging out of the north wall and curving over into the ceiling, three jittered tiers per metre
+        const zw = cz * S - HALF; ctx.albedo(null); ctx.color("oklch(0.66 0.006 240)"); ctx.metalness(0); ctx.roughness(0.95);
+        const tiers = [[h * 0.55, h * 0.75, 0.35], [h * 0.75, h * 0.9, 0.85], [h * 0.9, h, 1.5]];
+        for (let k = 0; k < S; k++) tiers.forEach(([y0, y1, d], t) => { const j = hash(cx * 8 + k, t, 941), j2 = hash(cx * 8 + k, t, 942), dd = d * (0.75 + j * 0.5);
+          prism(ctx, [[c.x + k - 0.05, zw], [c.x + k + 0.5, zw + dd * (0.8 + j2 * 0.4)], [c.x + k + 1.05, zw], [c.x + k + 1.05, zw + dd * 0.85], [c.x + k - 0.05, zw + dd * 0.9]], y0 - j2 * 0.12, y1 + 0.02); });
+      }
+      ctx.metalness(0.2); ctx.roughness(0.7);
       continue;
     }
     for (const d of [0, 1]) if (isOpen(cx, cz, d)) for (let k = 0; k < 5; k++) {
