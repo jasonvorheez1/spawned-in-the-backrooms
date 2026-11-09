@@ -20,6 +20,7 @@ export function seatHair(ctx, o, l) {
 // the human body's hair: the pack style its look picks, on the body's own sex, the brim cut when a hat sits on it; the scalp takes the hair's colour
 export const humanHairOf = (l) => { if (!l?.hair || l.hair === 'none' || maskOf(l)) return null; const n = HAIR.humanPick?.[l.hair]; const row = n == null ? null : HAIR.human?.[l.sex === 'f' ? 'f' : 'm']?.[n]; return row ? (l.hat && l.hat !== 'none' ? row.hat : row.free) : null }
 export function seatHumanHair(ctx, o, l) {
+  if (l && !l.hair) { const ks = Object.keys(HAIR.humanPick ?? {}).filter((k) => k[0] === (l.sex === 'f' ? 'f' : 'm')); let h = 7; for (const c of String(o.id)) h = (h * 31 + c.charCodeAt(0)) >>> 0; const cs = ['#2a1d16', '#4a3122', '#6b4a2e', '#1a1a1a', '#8a6a3c', '#b08a52']; l = { ...l, hair: ks[h % ks.length], hairc: l.hairc || cs[(h >>> 4) % cs.length] } }
   const want = humanHairOf(l), id = o.id + '/' + HAIR_ID, h = ctx.getObject(id)
   if (!want) { if (h) ctx.destroy(id); return }
   const c = l.hairc || '#5a3a26', m = { id: want, materials: { hair: { color: c }, scalp: { color: c } } }
@@ -640,7 +641,7 @@ export function restyle(ctx, o) {
   const want = HUMAN ? 'h' : 'f'
   const stray = strayHeads(ctx, o)
   if (want === 'f' && isF) return false
-  if (want === 'h' && isH && Object.values(M.human).includes(mid)) { if (!stray.length && !o.material?.outline) { const w = o.state?.wear, want = w && humanHairOf(w), h = ctx.getObject(o.id + '/' + HAIR_ID); if (want && (h?.model?.id ?? h?.model) !== want) { seatHumanHair(ctx, o, w); return true } return false } if (o.state && !o.state.wear) o.state.wear = { ...(lookFromModel(o.model, stray[0]?.model?.id ?? stray[0]?.model) ?? {}) }; seatHead(ctx, o, o.state?.wear ?? {}); return true }
+  if (want === 'h' && isH && Object.values(M.human).includes(mid)) { if (!stray.length && !o.material?.outline) { const w = o.state?.wear, h = ctx.getObject(o.id + '/' + HAIR_ID); if (w && !h && w.hair !== 'none' && !maskOf(w)) { seatHumanHair(ctx, o, w); return true } return false } if (o.state && !o.state.wear) o.state.wear = { ...(lookFromModel(o.model, stray[0]?.model?.id ?? stray[0]?.model) ?? {}) }; seatHead(ctx, o, o.state?.wear ?? {}); return true }
   const local = String(o.id).split('/').pop()
   const hm = ctx.getObject(o.id + '/' + HEAD_ID)?.model ?? stray[0]?.model
   const l = { ...(lookFromModel(o.model, hm?.id ?? hm) ?? {}), ...(o.state?.wear ?? {}) }
