@@ -196,6 +196,13 @@ for name, (ease, cuts) in PLAN.items():
             for v, a_ in na.items():
                 fake = Vector((math.cos(a_), cy + math.sin(a_), 0)); r2 = at(RT[v], fake)
                 v.co.x, v.co.y = math.cos(a_) * r2, cy + math.sin(a_) * r2
+        for v in bm.verts:                                   # the back over the seat: cloth bridges the cleft straight across, never dips into it
+            if v.co.z < Z0 + 0.12 and abs(v.co.x) < 0.07 and v.co.y > cy:
+                band = [w for w in bm.verts if abs(w.co.z - v.co.z) < 0.008 and 0.07 <= abs(w.co.x) < 0.1 and w.co.y > cy]
+                L = [w for w in band if w.co.x < 0]; R = [w for w in band if w.co.x > 0]
+                if L and R:
+                    yl = max(w.co.y for w in L); yr = max(w.co.y for w in R)
+                    t = (v.co.x + 0.085) / 0.17; v.co.y = max(v.co.y, yl + (yr - yl) * t + 0.002)
         bm.normal_update()
     for co, no in cuts:                                      # straight hems
         bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=co, plane_no=no, clear_outer=True)
