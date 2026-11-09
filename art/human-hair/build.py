@@ -99,8 +99,8 @@ def make_cap(hatted, mat):
     bm.normal_update()
     for v in bm.verts: v.co += v.normal * 0.004
     me = bpy.data.meshes.new("scalpcap"); bm.to_mesh(me); bm.free()
-    for k in list(me.attributes):
-        pass
+    me.validate(clean_customdata=True)
+    for a in [a.name for a in me.attributes if a.name not in ("position", ".edge_verts", ".corner_vert", ".corner_edge", "sharp_face") and not a.name.startswith(".") and a.domain != "CORNER"]: me.attributes.remove(me.attributes[a])
     me.materials.append(mat)
     o = bpy.data.objects.new("scalpcap", me); bpy.context.scene.collection.objects.link(o)
     return o
