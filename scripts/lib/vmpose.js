@@ -132,8 +132,12 @@ export function poseViewmodel(ctx, dt) {
   const downNow = ps.downAt && ctx.now() - ps.downAt < 3200 // the death cam is third person: no arm in front of it
   // no hands where nobody fights or the camera isn't yours: cutscenes, menus, the wardrobe, mahjong, and the hand-free places (mall, bedroom)
   const scr = screen(ps, ctx.self.place)
-  const off = downNow || NO_HANDS_PLACES.has(ctx.self.place) || NO_HANDS_SCREENS.has(scr)
-  if (!!off !== !!ctx.self.session.vmHid) { ctx.self.session.vmHid = !!off; vm.visible = !off }
+  let camHeld = false; try { camHeld = !!ctx.view?.camera } catch (e) { /* no view on this machine */ }
+  const ss = ctx.self.session
+  const off = !!(downNow || NO_HANDS_PLACES.has(ctx.self.place) || NO_HANDS_SCREENS.has(scr) || ps.l26cut || ps.cut3 || ss.ride || ss.rideTrain || camHeld) // any scene that holds the camera is no place for an arm
+  // keyed on the viewmodel's id too: a fresh arm spawned while hidden (a new place, a weapon swap) starts visible and must be hidden again
+  const key = `${ps.vmId}|${off}`
+  if (ss.vmHidKey !== key || (off && vm.visible !== false)) { ss.vmHidKey = key; vm.visible = !off }
   if (off) return
   dt = Math.min(Math.max(dt, 0.0005), 0.05)
   const m = (ctx.self.session.vm2 ??= {
