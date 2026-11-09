@@ -1,8 +1,9 @@
 # Zenith Station's security drones (Shelly, Nov 9: "different types that have ranged weapons and have combat dialogue"). Every number is Savi's pick.
 # hp, sight (m), keep (the range it holds), speed (m/s), hover (m off the floor), dmg per bolt, burst (bolts a volley), gap (s between bolts),
 # cool (s between volleys), aim (hit chance at rest, 0..1), charge (s of warning glow before it fires), size (body width m), beam colour, drops [token, chance]
+# no laser pistol from drones (Shelly, Nov 9)
 watcher:  { name: "Watcher drone",  hp: 55,  sight: 16, keep: 9,  speed: 2.2, hover: 1.9, dmg: 7,  burst: 1, gap: 0,    cool: 1.5, aim: 0.6,  charge: 0,   size: 0.55, beam: "#ff3b3b", xp: 25, drops: [[cells, 0.7]] }
-enforcer: { name: "Enforcer drone", hp: 110, sight: 20, keep: 11, speed: 1.6, hover: 1.7, dmg: 6,  burst: 3, gap: 0.16, cool: 2.4, aim: 0.55, charge: 0,   size: 0.75, beam: "#ff7a2a", xp: 45, drops: [[cells, 1], [cells, 0.5]]  # no laser pistol from drones (Shelly, Nov 9) }
+enforcer: { name: "Enforcer drone", hp: 110, sight: 20, keep: 11, speed: 1.6, hover: 1.7, dmg: 6,  burst: 3, gap: 0.16, cool: 2.4, aim: 0.55, charge: 0,   size: 0.75, beam: "#ff7a2a", xp: 45, drops: [[cells, 1], [cells, 0.5]] }
 warden:   { name: "Warden drone",   hp: 220, sight: 24, keep: 14, speed: 1.0, hover: 2.1, dmg: 24, burst: 1, gap: 0,    cool: 3.8, aim: 0.75, charge: 1.1, size: 1.05, beam: "#b04bff", xp: 90, drops: [[cells, 1], [cells, 1], ["weapon:laser_rifle", 0.4]] }
 lostAfter: 5      # s without sight before it flies to where it last saw you
 searchFor: 7      # s it hunts around that spot before it goes home
