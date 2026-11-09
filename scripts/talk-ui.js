@@ -31,90 +31,24 @@ const feel = (r) => (r <= -60 ? 'HOSTILE' : r <= -25 ? 'COLD' : r < 10 ? 'WARY' 
 const SVC = { scout: 'Ask for tactical tips', medic: 'Medical triage & healing', quarter: 'Collect ration supplies', smith: 'Repair damaged gear' }
 
 const CSS = `<style>
-@keyframes tcOpen{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
-@keyframes tcPulse{0%,100%{opacity:.35}50%{opacity:1}}
-@keyframes tcGlow{0%,100%{box-shadow:0 0 16px rgba(255,182,66,.2)}50%{box-shadow:0 0 24px rgba(255,182,66,.4)}}
-@keyframes tcType{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
-@keyframes tcQuest{0%,100%{border-color:#ffd700;box-shadow:0 0 8px rgba(255,215,0,.3)}50%{border-color:#fff275;box-shadow:0 0 14px rgba(255,215,0,.6)}}
-
-.tkw{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;background:linear-gradient(0deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 38%);pointer-events:none;font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;z-index:90}
-.tc-chassis{position:relative;width:min(1180px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 20px)));max-height:min(38vh,340px);box-sizing:border-box;display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(16,11,4,.97) 0%,rgba(8,5,2,.98) 100%);border:2px solid #ffb642;box-shadow:0 0 0 1px #000,0 8px 32px rgba(0,0,0,.8),0 0 24px rgba(255,182,66,.18) inset;padding:8px 16px 7px;pointer-events:auto;animation:tcOpen .3s cubic-bezier(.16,1,.3,1) both;color:#ffb642}
-.tc-chassis::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(rgba(0,0,0,.2) 0 1px,transparent 1px 3px);z-index:2}
-.tc-corner{position:absolute;width:8px;height:8px;border-color:#ffe2a8;pointer-events:none;z-index:3}
-.tc-c-tl{top:-2px;left:-2px;border-top:3px solid #ffe2a8;border-left:3px solid #ffe2a8}
-.tc-c-tr{top:-2px;right:-2px;border-top:3px solid #ffe2a8;border-right:3px solid #ffe2a8}
-.tc-c-bl{bottom:-2px;left:-2px;border-bottom:3px solid #ffe2a8;border-left:3px solid #ffe2a8}
-.tc-c-br{bottom:-2px;right:-2px;border-bottom:3px solid #ffe2a8;border-right:3px solid #ffe2a8}
-
-/* Header */
-.tc-hdr{display:flex;align-items:center;gap:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,182,66,.35);position:relative;z-index:3}
-.tc-name-grp{display:flex;flex-direction:column;gap:2px}
-.tc-name{font-size:20px;font-weight:400;color:#ffe2a8;letter-spacing:.08em;margin:0;text-shadow:0 0 8px rgba(255,182,66,.5)}
-.tc-subhead{display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(255,182,66,.65);text-transform:uppercase;letter-spacing:.06em}
-.tc-badge{background:rgba(255,182,66,.12);border:1px solid rgba(255,182,66,.3);padding:1px 6px;color:#ffcf87;border-radius:2px}
-.tc-rep-grp{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
-.tc-rep-lbl{font-size:11px;letter-spacing:.12em;font-weight:400;display:flex;align-items:center;gap:6px}
-.tc-rep-bar-wrap{width:110px;height:5px;background:#000;border:1px solid rgba(255,182,66,.3);position:relative;overflow:hidden}
-.tc-rep-bar-fill{height:100%;transition:width .3s}
-.tc-close-btn{background:none;border:1px solid rgba(255,182,66,.35);color:#ffb642;font:inherit;font-size:11px;padding:3px 8px;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;margin-left:8px}
-.tc-close-btn:hover{background:#ffb642;color:#100b04;box-shadow:0 0 8px rgba(255,182,66,.6)}
-
-/* Transcript Stream */
-.tc-stream{display:flex;flex-direction:column;gap:4px;max-height:52px;overflow-y:auto;padding:2px 0;scrollbar-width:thin;scrollbar-color:rgba(255,182,66,.4) transparent;position:relative;z-index:3}
-.tc-hist-line{font-size:13px;line-height:1.35;opacity:.65;transition:opacity .2s}
-.tc-hist-line:hover{opacity:1}
-.tc-hist-line.p{color:#f5ebcf}.tc-hist-line.p b{color:rgba(255,182,66,.6);font-weight:400}
-.tc-hist-line.n{color:#ffcf87}.tc-hist-line.n b{color:rgba(255,182,66,.7);font-weight:400}
-.tc-chk-banner{font-size:12px;padding:2px 8px;margin:2px 0;letter-spacing:.08em;text-transform:uppercase;border-left:3px solid;background:rgba(0,0,0,.4);width:fit-content}
-.tc-chk-pass{color:#60ff90;border-color:#60ff90;text-shadow:0 0 6px rgba(96,255,144,.4)}
-.tc-chk-fail{color:#ff5a4a;border-color:#ff5a4a;text-shadow:0 0 6px rgba(255,90,74,.4)}
-.tc-chk-info{color:#7cd2ff;border-color:#7cd2ff}
-
-/* Active Line */
-.tc-active-line{padding:8px 10px;background:rgba(255,182,66,.06);border:1px solid rgba(255,182,66,.2);margin:4px 0 8px;position:relative;z-index:3}
-.tc-now-spk{font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:3px;opacity:.75}
-.tc-now-txt{font-size:17px;line-height:1.42;color:#ffe2a8;text-shadow:0 0 4px rgba(255,180,50,.35)}
-.tc-dots span{animation:tcPulse 1.2s infinite;font-size:22px}.tc-dots span:nth-child(2){animation-delay:.2s}.tc-dots span:nth-child(3){animation-delay:.4s}
-
-/* Choices Grid */
-.tc-choices-hdr{font-size:11px;letter-spacing:.16em;color:rgba(255,182,66,.6);text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:6px;position:relative;z-index:3}
-.tc-choices-hdr::after{content:"";flex:1;height:1px;background:rgba(255,182,66,.2)}
-.tc-choices-list{display:grid;grid-template-columns:1fr 1fr;gap:3px 6px;max-height:96px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,182,66,.4) transparent;position:relative;z-index:3}
-.tc-choice{background:rgba(255,182,66,.03);border:1px solid rgba(255,182,66,.18);color:#ffe2a8;font:inherit;font-size:15px;padding:5px 10px;cursor:pointer;display:flex;align-items:baseline;gap:8px;text-align:left;text-shadow:0 0 2px rgba(255,170,40,.25);transition:all .15s ease}
-.tc-choice:hover,.tc-choice:focus{background:linear-gradient(90deg,rgba(255,182,66,.22) 0%,rgba(255,182,66,.08) 100%);border-color:#ffb642;outline:none;transform:translateX(3px);box-shadow:0 0 10px rgba(255,182,66,.2)}
-.tc-ch-num{color:#ffb642;font-size:13px;font-weight:400;min-width:20px}
-.tc-ch-tag{font-size:12px;padding:1px 6px;border-radius:2px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;font-weight:400}
-.tc-tag-quest{background:rgba(255,215,0,.18);border:1px solid #ffd700;color:#fff275;animation:tcQuest 2s infinite}
-.tc-tag-speech{background:rgba(255,182,66,.18);border:1px solid #ffb642;color:#ffe2a8}
-.tc-tag-barter{background:rgba(96,255,144,.15);border:1px solid #60ff90;color:#9affb8}
-.tc-tag-med{background:rgba(124,210,255,.15);border:1px solid #7cd2ff;color:#a8e5ff}
-.tc-tag-surv{background:rgba(255,150,70,.18);border:1px solid #ff9646;color:#ffbe90}
-.tc-tag-guns{background:rgba(255,90,74,.18);border:1px solid #ff5a4a;color:#ffa094}
-.tc-tag-sci{background:rgba(190,140,255,.18);border:1px solid #be8cff;color:#e2caff}
-.tc-tag-sneak{background:rgba(215,120,255,.18);border:1px solid #d778ff;color:#ecc2ff}
-.tc-tag-lore{background:rgba(140,180,255,.15);border:1px solid #8cb4ff;color:#bdd4ff}
-.tc-tag-help{background:rgba(120,220,180,.15);border:1px solid #78dcb4;color:#abf0d4}
-.tc-ch-txt{flex:1;line-height:1.35}
-
-/* Prompt Bar */
-.tc-prompt-bar{display:flex;align-items:center;gap:8px;padding-top:7px;border-top:1px solid rgba(255,182,66,.25);position:relative;z-index:3}
-.tc-prompt-glyph{color:#ffb642;font-size:13px;letter-spacing:.1em;white-space:nowrap}
-.tc-prompt-inp{flex:1;background:rgba(0,0,0,.45);border:1px solid rgba(255,182,66,.3);color:#ffe2a8;font:inherit;font-size:14px;padding:5px 8px;outline:none;border-radius:2px}
-.tc-prompt-inp:focus{border-color:#ffb642;box-shadow:0 0 6px rgba(255,182,66,.3)}
-.tc-prompt-inp::placeholder{color:rgba(255,182,66,.35)}
-.tc-send-btn{background:rgba(255,182,66,.12);border:1px solid rgba(255,182,66,.4);color:#ffe2a8;font:inherit;font-size:12px;padding:5px 12px;cursor:pointer;letter-spacing:.08em;text-transform:uppercase}
-.tc-send-btn:hover{background:#ffb642;color:#100b04}
-
-/* Action Deck */
-.tc-deck{display:flex;gap:5px;flex-wrap:wrap;align-items:center;padding-top:5px;position:relative;z-index:3}
-.tc-act-btn{background:none;border:1px solid rgba(255,182,66,.3);color:#ffb642;font:inherit;font-size:11px;padding:3px 9px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .15s}
-.tc-act-btn:hover{background:rgba(255,182,66,.2);border-color:#ffb642;color:#fff}
-.tc-act-btn.gold{border-color:#ffd700;color:#ffd700;background:rgba(255,215,0,.1)}
-.tc-act-btn.gold:hover{background:#ffd700;color:#100b04}
-.tc-act-btn.cyan{border-color:#7cd2ff;color:#7cd2ff;background:rgba(124,210,255,.1)}
-.tc-act-btn.cyan:hover{background:#7cd2ff;color:#100b04}
-.tc-act-btn.leave{margin-left:auto;border-color:rgba(255,90,74,.4);color:#ff9080}
-.tc-act-btn.leave:hover{background:#ff5a4a;color:#fff}
+@keyframes tcOpen{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes tcPulse{0%,100%{opacity:.4}50%{opacity:1}}
+.tkw{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:0 calc(var(--spawn-chrome-reservation-right-inset, 50px) + 12px) 18px;background:linear-gradient(0deg,rgba(0,0,0,.34),transparent 55%);pointer-events:none;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;z-index:90}
+.tc-chassis{width:min(780px,100%);max-height:min(78vh,640px);overflow-y:auto;box-sizing:border-box;background:rgba(20,17,13,.97);border:1px solid rgba(218,177,107,.6);border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.55);padding:18px 22px;pointer-events:auto;animation:tcOpen .2s ease-out;color:#eee4d2;scrollbar-width:thin;scrollbar-color:#8e7650 transparent}
+.tc-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.tc-name-grp{min-width:0}.tc-name{font-size:18px;font-weight:650;color:#fff4df;letter-spacing:.01em;margin:0}.tc-subhead{font-size:12px;color:#b8a98f;margin-top:3px}.tc-badge+.tc-badge:before{content:' · ';color:#7f725f}
+.tc-rep-grp{margin-left:auto;color:#c2ae88;font-size:12px;white-space:nowrap}.tc-rep-lbl{display:flex;gap:5px}.tc-rep-bar-wrap{display:none}
+.tc-close-btn{border:0;background:transparent;color:#cbbda7;font:inherit;font-size:13px;padding:8px;cursor:pointer}.tc-close-btn:hover,.tc-close-btn:focus-visible{color:#fff;background:#473b2a;border-radius:4px;outline:2px solid #d1ad70}
+.tc-stream{max-height:140px;overflow-y:auto;scrollbar-width:thin;padding:8px 0;color:#b9aa91}.tc-hist-line{font-size:13px;line-height:1.5;margin:3px 0}.tc-hist-line b{font-weight:600;color:#e6c68f}.tc-chk-banner{font-size:12px;padding:4px 0}.tc-chk-pass{color:#9dd9aa}.tc-chk-fail{color:#ef9a8c}.tc-chk-info{color:#a8c5d8}
+.tc-active-line{border-left:2px solid #c9a36c;padding:2px 0 2px 16px;margin:0 0 18px}.tc-now-spk{font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;color:#cbb48f}.tc-now-txt{font-size:18px;line-height:1.45;color:#fff2dd;overflow-wrap:anywhere}.tc-dots span{animation:tcPulse 1.2s infinite}.tc-dots span:nth-child(2){animation-delay:.2s}.tc-dots span:nth-child(3){animation-delay:.4s}
+.tc-choices-hdr{font-size:11px;letter-spacing:.1em;color:#b7a487;text-transform:uppercase;margin-bottom:8px}.tc-choices-list{display:flex;flex-direction:column;gap:5px}
+.tc-choice{width:100%;background:rgba(255,255,255,.035);border:1px solid rgba(218,177,107,.18);border-radius:4px;color:#f3e5cf;font:inherit;font-size:14px;line-height:1.35;padding:9px 11px;cursor:pointer;display:flex;align-items:baseline;gap:10px;text-align:left}
+.tc-choice:hover,.tc-choice:focus-visible{background:rgba(218,177,107,.16);border-color:#d6b77d;outline:2px solid transparent}.tc-ch-num{color:#caa96f;font-size:12px;min-width:16px}.tc-ch-tag{font-size:11px;letter-spacing:.03em;color:#e4bf7f;white-space:nowrap}.tc-ch-txt{flex:1;min-width:0;overflow-wrap:anywhere}
+.tc-extra{margin-top:10px;color:#cbb99b;font-size:13px}.tc-extra summary{cursor:pointer;width:fit-content;padding:5px 0}.tc-extra summary:hover,.tc-extra summary:focus-visible{color:#fff1da;outline-color:#d1ad70}
+.tc-prompt-bar{display:flex;align-items:center;gap:8px;margin-top:12px}.tc-prompt-inp{flex:1;min-width:0;background:rgba(0,0,0,.26);border:1px solid #75644b;color:#fff4df;font:inherit;font-size:14px;padding:9px 10px;border-radius:4px}.tc-prompt-inp:focus{outline:2px solid #d1ad70;outline-offset:1px}.tc-prompt-inp::placeholder{color:#9b8e79}.tc-send-btn{background:#d5b57f;border:1px solid #d5b57f;border-radius:4px;color:#241b10;font:inherit;font-size:13px;font-weight:650;padding:9px 13px;cursor:pointer}.tc-send-btn:hover,.tc-send-btn:focus-visible{background:#f0d4a1;outline:2px solid #f0d4a1}
+.tc-deck{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:12px}.tc-act-btn{background:transparent;border:1px solid #6c5d47;border-radius:4px;color:#decaab;font:inherit;font-size:12px;padding:7px 10px;cursor:pointer}.tc-act-btn:hover,.tc-act-btn:focus-visible{background:#55442d;border-color:#d7b77f;color:#fff;outline:2px solid transparent}.tc-act-btn.gold,.tc-act-btn.cyan{color:#f3d39d;border-color:#aa8957}.tc-social{display:flex;gap:6px;flex-wrap:wrap;padding-top:5px}
+@media(max-width:600px){.tkw{padding:0 10px 10px}.tc-chassis{max-height:78vh;padding:14px}.tc-name{font-size:16px}.tc-now-txt{font-size:16px}.tc-choice{padding:8px}.tc-rep-grp{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.tc-chassis,.tc-dots span{animation:none}}
 
 /* Shop Modal */
 .tkp{background:linear-gradient(180deg,rgba(16,11,4,.98) 0%,rgba(8,5,2,.99) 100%);padding:14px 20px 12px;width:min(660px,calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px)));max-height:min(580px,88vh);box-sizing:border-box;display:flex;flex-direction:column;gap:8px;border:2px solid #ffb642;box-shadow:0 0 0 1px #000,0 8px 32px rgba(0,0,0,.85),0 0 24px rgba(255,182,66,.15) inset;color:#ffb642}
@@ -203,7 +137,6 @@ export function talkUi(ctx, player) {
   const col = MOOD[mood] ?? MOOD.calm
   const feelStatus = feel(r)
   const feelCol = FEEL_COLOR[feelStatus] ?? col
-  const repPct = Math.max(0, Math.min(100, Math.round((r + 100) / 2)))
 
   const isCompanion = isMine(it, player)
   const perk = isCompanion ? PERKS[perkOf(it)] : null
@@ -243,13 +176,12 @@ export function talkUi(ctx, player) {
   let nowHtml = ''
   if (s.talkBusy) {
     nowHtml = `<div class="tc-active-line">
-      <div class="tc-now-spk" style="color:${col}">${who} · FORMULATING RESPONSE...</div>
-      <div class="tc-now-txt tc-dots" style="color:${col}"><span>◉</span> <span>◉</span> <span>◉</span></div>
+      <div class="tc-now-spk" style="color:${col}">${who} is thinking</div>
+      <div class="tc-now-txt tc-dots" style="color:${col}"><span>·</span> <span>·</span> <span>·</span></div>
     </div>`
   } else if (activeLine) {
     nowHtml = `<div class="tc-active-line">
-      <div class="tc-now-spk" style="color:${col}">${who} [${mood.toUpperCase()}]</div>
-      <div class="tc-now-txt" style="color:${col}">"${esc(activeLine)}"</div>
+      <div class="tc-now-txt">${esc(activeLine)}</div>
     </div>`
   } else {
     nowHtml = `<div class="tc-active-line" style="opacity:.6">
@@ -299,8 +231,8 @@ export function talkUi(ctx, player) {
     const clickAction = `sendAction('talk',{id:'${q(it.id)}',text:'${q(txt)}'${ck ? `,check:{skill:'${q(ck.skill)}',difficulty:${Number(ck.difficulty) || 50}}` : ''}})`
 
     return `<button class="tc-choice" data-interactive onclick="${clickAction}">
-      <span class="tc-ch-num">[${i + 1}]</span>
-      ${tag ? `<span class="tc-ch-tag ${tagCls}">${esc(tag)}</span>` : ''}
+      <span class="tc-ch-num">${i + 1}.</span>
+      ${tag && tag.toLowerCase() !== 'reply' ? `<span class="tc-ch-tag ${tagCls}">${esc(tag)}</span>` : ''}
       <span class="tc-ch-txt">${esc(txt)}</span>
     </button>`
   }).join('')
@@ -308,10 +240,10 @@ export function talkUi(ctx, player) {
   // Contextual system actions
   const sysActions = []
   if (isTrader(it)) {
-    sysActions.push(`<button class="tc-act-btn gold" data-interactive onclick="sendAction('talkdo',{k:'trade'})">🛒 Trade Goods</button>`)
+    sysActions.push(`<button class="tc-act-btn gold" data-interactive onclick="sendAction('talkdo',{k:'trade'})">Trade</button>`)
   }
   if (SVC[role]) {
-    sysActions.push(`<button class="tc-act-btn cyan" data-interactive onclick="sendAction('talkdo',{k:'svc'})">✚ ${esc(SVC[role])}</button>`)
+    sysActions.push(`<button class="tc-act-btn cyan" data-interactive onclick="sendAction('talkdo',{k:'svc'})">${esc(SVC[role])}</button>`)
   }
   if (isCompanion) {
     const isWaiting = it.state.cmd === 'wait'
@@ -324,7 +256,7 @@ export function talkUi(ctx, player) {
     }
     sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'cdismiss'})">Dismiss</button>`)
   } else if (!isTrader(it) && !['smith', 'quarter'].includes(role) && !it.tags?.includes?.('faceling')) {
-    sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'crecruit'})">🤝 Recruit</button>`)
+    sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'crecruit'})">Recruit</button>`)
   }
 
   // NPC special custom offers (e.g. Samantha, Level 5 hotel residents)
@@ -334,28 +266,18 @@ export function talkUi(ctx, player) {
     }
   }
 
-  // Social gestures
-  sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'wave'})">👋 Wave</button>`)
-  sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'gift'})">🎁 Gift</button>`)
-  sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'dance'})">💃 Dance</button>`)
-  sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'insult'})">⚡ Insult</button>`)
-  sysActions.push(`<button class="tc-act-btn leave" data-interactive onclick="sendAction('talkdo',{k:'leave'})">🚪 Leave</button>`)
+  const socialActions = [
+    ['wave', 'Wave'], ['gift', 'Give a gift'], ['dance', 'Dance'], ['insult', 'Insult'],
+  ].map(([k, label]) => `<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'${k}'})">${label}</button>`).join('')
 
   const factionName = esc(it.state?.factionName ?? faction(it, ctx.self?.place ?? ''))
   const roleName = esc(it.state?.role ?? 'wanderer').toUpperCase()
-  const hpCurr = Math.max(0, Math.round(it.state?.hp ?? 100))
-  const hpMax = Math.round(it.state?.maxHp ?? 100)
 
   const kd = `if(event.key==='Escape'){sendAction('talkdo',{k:'leave'})}else if(event.target.id!=='tkin'&&event.key>='1'&&event.key<='5'){const c=document.querySelectorAll('.tc-choice');const b=c[parseInt(event.key)-1];if(b)b.click()}`
 
   return `${CSS}
   <div class="tkw" data-modal tabindex="0" onkeydown="${kd}">
-    <div class="tc-chassis">
-      <div class="tc-corner tc-c-tl"></div>
-      <div class="tc-corner tc-c-tr"></div>
-      <div class="tc-corner tc-c-bl"></div>
-      <div class="tc-corner tc-c-br"></div>
-
+    <div class="tc-chassis" data-interactive>
       <!-- Header & Dossier -->
       <div class="tc-hdr">
         <div class="tc-name-grp">
@@ -363,8 +285,7 @@ export function talkUi(ctx, player) {
           <div class="tc-subhead">
             <span class="tc-badge">${factionName}</span>
             <span class="tc-badge">${roleName}</span>
-            <span>HP ${hpCurr}/${hpMax}</span>
-            ${isCompanion ? `<span class="tc-badge" style="color:#60ff90">⭐ ${esc(perk?.name ?? 'Companion')} (${Math.round(it.state.loyal ?? 50)}% Loyalty)</span>` : ''}
+            ${isCompanion ? `<span class="tc-badge" style="color:#60ff90">${esc(perk?.name ?? 'Companion')} · ${Math.round(it.state.loyal ?? 50)}% loyalty</span>` : ''}
           </div>
         </div>
 
@@ -373,39 +294,34 @@ export function talkUi(ctx, player) {
             <span>${feelStatus}</span>
             <span>(${r > 0 ? '+' : ''}${Math.round(r)})</span>
           </div>
-          <div class="tc-rep-bar-wrap">
-            <div class="tc-rep-bar-fill" style="width:${repPct}%;background:${feelCol}"></div>
-          </div>
         </div>
 
-        <button class="tc-close-btn" data-interactive onclick="sendAction('talkdo',{k:'leave'})">✕ [ESC]</button>
+        <button class="tc-close-btn" data-interactive onclick="sendAction('talkdo',{k:'leave'})" aria-label="Leave conversation">Leave · Esc</button>
       </div>
 
       <!-- Transcript History -->
-      ${histHtml ? `<div class="tc-stream" data-interactive><div style="margin-top:auto"></div>${histHtml}</div>` : ''}
+      ${histHtml ? `<details class="tc-extra" data-interactive><summary>Conversation history</summary><div class="tc-stream">${histHtml}</div></details>` : ''}
 
       <!-- Live NPC Speech / Busy Indicator -->
       ${nowHtml}
 
       <!-- Interactive Choices -->
       <div class="tc-choices-hdr">
-        <span>Responses [Press 1-${Math.max(1, choices.length)} or Click]</span>
+        <span>Choose a response${choices.length ? ` · 1–${choices.length}` : ''}</span>
       </div>
       <div class="tc-choices-list" data-interactive>
-        ${choiceItems || '<div style="font-size:13px;opacity:.6;padding:8px 10px">No scripted responses available. Use the command prompt below.</div>'}
+        ${choiceItems || '<div style="font-size:13px;opacity:.6;padding:8px 10px">Ask a question below to continue.</div>'}
       </div>
 
       <!-- Freeform Text Command Line -->
       <div class="tc-prompt-bar" data-interactive>
-        <span class="tc-prompt-glyph">PROMPT &gt;</span>
-        <input id="tkin" class="tc-prompt-inp" data-interactive maxlength="${T.maxText}" autocomplete="off" placeholder="Type a custom inquiry or message..." onkeydown="if(event.key==='Enter'&&this.value.trim()){event.stopPropagation();sendAction('talk',{id:'${q(it.id)}',text:this.value});this.value=''}else if(event.key==='Escape'){this.blur()}else if(!this.value&&event.key>='1'&&event.key<='5'){event.preventDefault();event.stopPropagation();const b=document.querySelectorAll('.tc-choice')[parseInt(event.key)-1];if(b)b.click()}else{event.stopPropagation()}"/>
-        <button class="tc-send-btn" data-interactive onclick="const i=document.getElementById('tkin');if(i&&i.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:i.value});i.value=''}">Send [↵]</button>
+        <input id="tkin" class="tc-prompt-inp" data-interactive maxlength="${T.maxText}" autocomplete="off" aria-label="Say something" placeholder="Say something…" onkeydown="if(event.key==='Enter'&&this.value.trim()){event.stopPropagation();sendAction('talk',{id:'${q(it.id)}',text:this.value});this.value=''}else if(event.key==='Escape'){event.stopPropagation();this.blur()}else if(!this.value&&event.key>='1'&&event.key<='5'){event.preventDefault();event.stopPropagation();const b=document.querySelectorAll('.tc-choice')[parseInt(event.key)-1];if(b)b.click()}else{event.stopPropagation()}"/>
+        <button class="tc-send-btn" data-interactive onclick="const i=document.getElementById('tkin');if(i&&i.value.trim()){sendAction('talk',{id:'${q(it.id)}',text:i.value});i.value=''}">Send</button>
       </div>
 
       <!-- Actions & Gestures Deck -->
-      <div class="tc-deck" data-interactive>
-        ${sysActions.join('')}
-      </div>
+      ${sysActions.length ? `<div class="tc-deck" data-interactive>${sysActions.join('')}</div>` : ''}
+      <details class="tc-extra" data-interactive><summary>More actions</summary><div class="tc-social">${socialActions}</div></details>
     </div>
   </div>`
 }
