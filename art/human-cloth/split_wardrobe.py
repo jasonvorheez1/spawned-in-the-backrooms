@@ -25,14 +25,23 @@ def write(keep_mesh_nodes, path):
     for a in j.get('animations', []):
         for sm in a['samplers']: acc.update([sm['input'], sm['output']])
     acc = sorted(acc); aremap = {o: k for k, o in enumerate(acc)}
-    views = sorted({J['accessors'][o]['bufferView'] for o in acc if 'bufferView' in J['accessors'][o]} | {im['bufferView'] for im in J.get('images', []) if 'bufferView' in im})
+    def aviews(a):
+        v = [a['bufferView']] if 'bufferView' in a else []
+        if 'sparse' in a: v += [a['sparse']['indices']['bufferView'], a['sparse']['values']['bufferView']]
+        return v
+    views = sorted({v for o in acc for v in aviews(J['accessors'][o])} | {im['bufferView'] for im in J.get('images', []) if 'bufferView' in im})
     blob = bytearray(); vremap = {}; nviews = []
     for o in views:
         v = copy.deepcopy(J['bufferViews'][o]); data = BIN[v.get('byteOffset', 0):v.get('byteOffset', 0) + v['byteLength']]
         while len(blob) % 4: blob.append(0)
         v['byteOffset'] = len(blob); blob += data; vremap[o] = len(nviews); nviews.append(v)
     j['bufferViews'] = nviews
-    j['accessors'] = [dict(J['accessors'][o], **({'bufferView': vremap[J['accessors'][o]['bufferView']]} if 'bufferView' in J['accessors'][o] else {})) for o in acc]
+    def remap_acc(a):
+        a = copy.deepcopy(a)
+        if 'bufferView' in a: a['bufferView'] = vremap[a['bufferView']]
+        if 'sparse' in a: a['sparse']['indices']['bufferView'] = vremap[a['sparse']['indices']['bufferView']]; a['sparse']['values']['bufferView'] = vremap[a['sparse']['values']['bufferView']]
+        return a
+    j['accessors'] = [remap_acc(J['accessors'][o]) for o in acc]
     for m in j['meshes']:
         for p in m['primitives']:
             p['attributes'] = {k: aremap[v] for k, v in p['attributes'].items()}
