@@ -459,6 +459,46 @@ const builders = {
     bar(ctx, 0, B - 0.014, 0.0145, 0.03, -0.17, -0.1, 0.005); // the stock, adjustable
     plain(ctx, "oklch(0.14 0.01 60)", 0.95); bar(ctx, 0, B - 0.014, 0.0155, 0.036, -0.175, -0.165, 0.004); // butt pad
   },
+  laser_pistol(ctx, M, hi) { // Zenith ZL-2: a white composite body over a steel emitter, three focusing coils, a cyan charge line and a cell in the grip
+    const B = Y + 0.03, glow = (on) => ctx.emissive?.(on ? "oklch(0.85 0.14 215)" : null);
+    plain(ctx, "oklch(0.9 0.008 240)", 0.45, 0.1);
+    bar(ctx, 0, B + 0.006, 0.016, 0.022, 0.08, 0.27, 0.007); // receiver shell
+    bar(ctx, 0, B + 0.03, 0.009, 0.005, 0.1, 0.25, 0.003); // spine
+    steel(ctx, "oklch(0.6 0.01 250)", 0.3);
+    rod(ctx, [[0, B + 0.01, 0.27], [0, B + 0.01, 0.36]], [0.011, 0.009], M); // emitter barrel
+    for (const z of [0.285, 0.305, 0.325]) rod(ctx, [[0, B + 0.01, z], [0, B + 0.01, z + 0.009]], [0.0145, 0.0145], M); // focusing coils
+    plain(ctx, "oklch(0.2 0.01 250)", 0.5, 0.6);
+    rod(ctx, [[0, B + 0.01, 0.36], [0, B + 0.01, 0.368]], [0.0115, 0.0115], M); // muzzle collar
+    glow(true); plain(ctx, "oklch(0.88 0.12 215)", 0.2);
+    bar(ctx, 0.0165, B + 0.012, 0.0012, 0.003, 0.11, 0.24, 0.001, 1); bar(ctx, -0.0165, B + 0.012, 0.0012, 0.003, 0.11, 0.24, 0.001, 1); // charge lines
+    if (hi) rod(ctx, [[0, B + 0.01, 0.366], [0, B + 0.01, 0.37]], [0.006, 0.006], 8); // the lens
+    glow(false);
+    plain(ctx, "oklch(0.24 0.01 250)", 0.7, 0.2);
+    rod(ctx, [[0, B - 0.025, 0.2], [0, B - 0.05, 0.19], [0, B - 0.05, 0.14], [0, B - 0.025, 0.13]], [0.0028, 0.0028, 0.0028, 0.0028], 6); // trigger guard
+    const g = (t) => [0.14 - t * 0.035, B - 0.02 - t * 0.09];
+    for (let k = 0; k < 6; k++) { const [z, y] = g(k / 6), [, y2] = g((k + 1) / 6); bar(ctx, 0, (y + y2) / 2, 0.0145, (y - y2) / 2 + 0.002, z - 0.036, z + 0.004, 0.006); } // grip
+    glow(true); plain(ctx, "oklch(0.85 0.13 215)", 0.2); bar(ctx, 0, B - 0.105, 0.011, 0.006, 0.08, 0.12, 0.003); glow(false); // the cell's glowing cap under the grip
+  },
+  laser_rifle(ctx, M, hi) { // Zenith ZR-7: a long white composite rifle, finned heat sink over a stepped emitter, a cell well, a skeletal stock
+    const B = Y + 0.03, glow = (on) => ctx.emissive?.(on ? "oklch(0.85 0.14 215)" : null);
+    plain(ctx, "oklch(0.9 0.008 240)", 0.45, 0.1);
+    bar(ctx, 0, B + 0.006, 0.02, 0.028, 0.0, 0.36, 0.008); // receiver
+    bar(ctx, 0, B + 0.038, 0.011, 0.006, 0.04, 0.32, 0.003); // top rail
+    steel(ctx, "oklch(0.55 0.01 250)", 0.3);
+    rod(ctx, [[0, B + 0.01, 0.36], [0, B + 0.01, 0.58], [0, B + 0.01, 0.66]], [0.016, 0.014, 0.011], M); // emitter
+    if (hi) { plain(ctx, "oklch(0.3 0.01 250)", 0.5, 0.7); for (let z = 0.38; z < 0.56; z += 0.022) rod(ctx, [[0, B + 0.01, z], [0, B + 0.01, z + 0.008]], [0.022, 0.022], M); } // heat-sink fins
+    glow(true); plain(ctx, "oklch(0.88 0.12 215)", 0.2);
+    bar(ctx, 0.0205, B + 0.012, 0.0012, 0.004, 0.04, 0.34, 0.001, 1); bar(ctx, -0.0205, B + 0.012, 0.0012, 0.004, 0.04, 0.34, 0.001, 1); // charge lines
+    rod(ctx, [[0, B + 0.01, 0.658], [0, B + 0.01, 0.664]], [0.0075, 0.0075], 8); // lens
+    bar(ctx, 0, B - 0.04, 0.012, 0.03, 0.2, 0.26, 0.004); // energy cell in its well
+    glow(false);
+    plain(ctx, "oklch(0.24 0.01 250)", 0.7, 0.2);
+    rod(ctx, [[0, B - 0.03, 0.16], [0, B - 0.055, 0.15], [0, B - 0.055, 0.1], [0, B - 0.03, 0.09]], [0.0028, 0.0028, 0.0028, 0.0028], 6); // trigger guard
+    const g = (t) => [0.08 - t * 0.03, B - 0.03 - t * 0.09]; for (let k = 0; k < 5; k++) { const [z, y] = g(k / 5), [, y2] = g((k + 1) / 5); bar(ctx, 0, (y + y2) / 2, 0.0135, (y - y2) / 2 + 0.002, z - 0.03, z + 0.004, 0.005); } // grip
+    plain(ctx, "oklch(0.9 0.008 240)", 0.45, 0.1);
+    rod(ctx, [[0, B + 0.02, 0.0], [0, B + 0.005, -0.2]], [0.008, 0.008], 8); rod(ctx, [[0, B - 0.03, 0.0], [0, B - 0.03, -0.2]], [0.008, 0.008], 8); // skeletal stock struts
+    plain(ctx, "oklch(0.2 0.01 250)", 0.9); bar(ctx, 0, B - 0.008, 0.014, 0.038, -0.215, -0.195, 0.005); // butt pad
+  },
   soup_bowl(ctx, M, hi) { // a chipped blue-rimmed enamel camp bowl, axis along +Z (the hand holds it upright): curved wall, foot ring, broth with fat beads, carrot and meat, a bent tin spoon
     const R = (z) => [0, Y, z], N = hi ? 24 : 12;
     plain(ctx, "oklch(0.93 0.015 95)", 0.22, 0.1); // white enamel, glossy
