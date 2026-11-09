@@ -15,8 +15,15 @@ import { terminalSpec } from "../../scripts/lib/terminal.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { spawnProp } from "../../scripts/lib/l2props.js";
 export const cadence = "500ms";
-const V = 28; // 28: locker room and restroom lamps dimmed to 2.2; // 27: restroom + back hall off the lockers; // 26: locker vents; // 18: locker room floor and mat to the ref photo, The Edges lit bright down every lane cell; // 17: Tripo props dress the rooms and halls (dress21), DANGER signs at dead ends; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist; 14: survey road flares, freezer frost, blast sparks, sandbags, show-don't-tell
+const V = 29; // 29: Blender props for the bunks, sorting table, locker benches, sandbags, coil cooler, plunger, specimen case, saltines; 28: locker room and restroom lamps dimmed to 2.2; // 27: restroom + back hall off the lockers; // 26: locker vents; // 18: locker room floor and mat to the ref photo, The Edges lit bright down every lane cell; // 17: Tripo props dress the rooms and halls (dress21), DANGER signs at dead ends; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist; 14: survey road flares, freezer frost, blast sparks, sandbags, show-don't-tell
 const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
+const MD = (h) => ({ id: `/cdn/value.${h}.glb`, forward: "-z" }), BOXC = { body: "static", collider: "box" }; // art/level21/props21.py
+const L21M = {
+  bunk: MD("c84f03a98f1de83e7342dba2a966fe1f0408ad8027238e86175dc4ab6177c00f"), table: MD("423d5d877702fc5ffe6b2ed390d6e51f2840c95a8412b0073eeb2dbf28a89894"),
+  lbench: MD("55eacd129561eb2fe37d52c15cfc2a7ed6d5c3e098900897d0bddf976dd28a10"), sandbags: MD("0675d1b56486d8a1da76599479ce987b97d2835307372a4bd721e4637b25d617"),
+  cooler: MD("9d4a6ecfd5e7770e931715eec27046f6b1cc2290cf522fa94aaf7565148943ab"), plunger: MD("98ab0f5bd66292b87c22edb0c639b9fbecf24b31ff17bf443cb915a10c9ea1d2"),
+  specimen: MD("395dd5dfd86e2af5912819865046b768739e8529ef874fd73ea863559c769504"), saltines: MD("26e920f8ff93aaaf33e3b4afe6e2550479301c2f9a544f665d56617c576399ca"),
+};
 const rm = (type) => ROOMS.filter((r) => r.type === type);
 const center = (r) => cellCenter(r.x0 + (r.w - 1) / 2, r.z0 + (r.d - 1) / 2); // the middle of a room block
 const edgeOf = (r, d) => { const c = center(r); return d === 0 ? c.x + (r.w * S) / 2 : d === 2 ? c.x - (r.w * S) / 2 : d === 1 ? c.z + (r.d * S) / 2 : c.z - (r.d * S) / 2; };
@@ -152,8 +159,8 @@ function lay(ctx) {
   const L1 = rm("base")[0], bc = center(L1);
   sp("l21-sign-alef", { feetPosition: { x: cellCenter(2, ARRIVE.cz).x - 1.6, y: 2.3, z: DOWN.z }, rotation: { yaw: -90 }, ...sign(2.6, 0.9, `${MEG(2.6)}<div style="font-size:84px">M.E.G. BASE ALEF</div><div style="font-size:40px;color:#e8e0c0">sublevel storage &amp; quarters · 53 staff</div><div style="font-size:34px;color:#e8a098">COMMS DOWN · ACCESS SUSPENDED</div></div>`) });
   // Sandbag redoubts defending Base Alef perimeter (Fallout / 7DTD survival outpost fortification)
-  sp("l21-sandbags-0", { feetPosition: { x: cellCenter(2, ARRIVE.cz).x - 0.8, y: 0, z: DOWN.z + 1.6 }, primitive: { kind: "box", width: 1.4, height: 0.75, depth: 0.45 }, material: { color: "oklch(0.55 0.08 75)", roughness: 0.95 }, physics: "static" });
-  sp("l21-sandbags-1", { feetPosition: { x: cellCenter(2, ARRIVE.cz).x - 0.8, y: 0, z: DOWN.z - 1.6 }, primitive: { kind: "box", width: 1.4, height: 0.75, depth: 0.45 }, material: { color: "oklch(0.52 0.08 72)", roughness: 0.95 }, physics: "static" });
+  sp("l21-sandbags-0", { feetPosition: { x: cellCenter(2, ARRIVE.cz).x - 0.8, y: 0, z: DOWN.z + 1.6 }, model: L21M.sandbags, physics: BOXC });
+  sp("l21-sandbags-1", { feetPosition: { x: cellCenter(2, ARRIVE.cz).x - 0.8, y: 0, z: DOWN.z - 1.6 }, rotation: { yaw: 180 }, model: L21M.sandbags, physics: BOXC });
   const ex = rm("explo")[0]; sp("l21-sign-explo", { feetPosition: { x: edgeOf(ex, 2) + 0.25, y: 2.3, z: center(ex).z }, rotation: { yaw: -90 }, ...sign(1.8, 0.5, `${MEG(1.8)}<div style="font-size:66px">EXPLORATION WING</div><div style="font-size:34px;color:#c8d8b8">team gear · sign out all equipment</div></div>`) });
   const fr = rm("fridges")[0], fc = center(fr); sp("l21-sign-fridge", { feetPosition: { x: fc.x, y: 2.4, z: edgeOf(fr, 3) + 0.2 }, rotation: { yaw: 0 }, ...sign(2.6, 0.7, `<div face="front" width="2.6m" style="font-family:Arial,sans-serif;font-weight:900;color:#f0f4f8;text-align:center;line-height:1.05"><div style="font-size:84px">REFRIGERATOR PARADISE</div><div style="font-size:36px;color:#a8d8c8">saltines · enough for the rest of our lives</div></div>`, "oklch(0.3 0.04 200)") });
   sp("l21-sign-edges", { feetPosition: { x: cellCenter(EDGE_X - 1, LANE.z0 + 1).x + 1.6, y: 2.3, z: cellCenter(0, LANE.z0 + 1).z }, rotation: { yaw: -90 }, ...sign(2.0, 0.7, `${MEG(2.0)}<div style="font-size:80px">THE EDGES</div><div style="font-size:36px;color:#e8a098">edge of the survey · no light beyond · smilers reported</div></div>`) });
@@ -180,12 +187,10 @@ function lay(ctx) {
     ...sign(0.48, 0.62, `<div face="front" width="0.48m" style="font-family:Arial,sans-serif;color:#181818;background:#f5edd0;padding:8px;line-height:1.15;border:2px solid #8b7355"><div style="font-size:26px;font-weight:900;color:#a81010;border-bottom:2px solid #a81010;margin-bottom:4px;text-align:center">ADMIN MEMO #13</div><div style="font-size:16px;margin-bottom:4px"><b>SUBJECT:</b> Specimen #09</div><div style="font-size:15px;color:#333">Under NO circumstances are the crimson berries to be ingested. Severe hallucinogenic and mutational risks observed. Violators will forfeit ration quotas.</div></div>`, "oklch(0.85 0.08 85)"),
   });
   sp("l21-berries", {
-    feetPosition: { x: exc.x, y: 0.0, z: exc.z - 0.6 }, tags: ["usable"], physics: "static", behavior: "scripts/l21-use.js",
-    primitive: { kind: "box", width: 0.85, height: 0.88, depth: 0.65 }, material: STEEL,
+    feetPosition: { x: exc.x, y: 0.0, z: exc.z - 0.6 }, tags: ["usable"], physics: BOXC, behavior: "scripts/l21-use.js",
+    model: L21M.specimen,
     state: { kind: "berries", name: "Specimen Jar #09 (Forbidden Berries)", verb: "Eat the strange berries", info: "A sealed glass specimen cylinder labeled: 'DO NOT CONSUME — BY ORDER OF ALEF ADMINISTRATION (SEE MEMO #13)'.", tint: "#ff5a78" },
     children: [
-      { feetPosition: { x: 0, y: 0.88, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.22, height: 0.44 }, material: { color: "oklch(0.75 0.06 200)", opacity: 0.42, transparent: true, roughness: 0.15 } },
-      { feetPosition: { x: 0, y: 0.94, z: 0 }, primitive: { kind: "sphere", radius: 0.14 }, material: { color: "oklch(0.55 0.22 20)", emissive: "oklch(0.6 0.24 18)", emissiveIntensity: 2.2 } },
       { feetPosition: { x: 0, y: 1.25, z: 0 }, light: { kind: "point", color: "oklch(0.62 0.22 20)", intensity: 1.1, distance: 5 } },
     ],
   });
@@ -193,12 +198,13 @@ function lay(ctx) {
 
   // ---- quarters, the offices, the locker room (checkered tile, grey and brown lockers), restrooms, break room, storage rooms
   const bk = rm("bunks")[0], kc = center(bk);
-  for (let i = 0; i < 6; i++) sp(`l21-bunk-${i}`, { feetPosition: { x: kc.x - 3.4 + (i % 3) * 3.4, y: 0.32, z: kc.z - 2.4 + Math.floor(i / 3) * 4.2 }, primitive: { kind: "box", width: 0.95, height: 0.1, depth: 1.95 }, material: { color: "oklch(0.35 0.05 30)", roughness: 0.9 }, physics: "static" });
+  for (let i = 0; i < 6; i++) sp(`l21-bunk-${i}`, { feetPosition: { x: kc.x - 3.4 + (i % 3) * 3.4, y: 0, z: kc.z - 2.4 + Math.floor(i / 3) * 4.2 }, model: L21M.bunk, physics: BOXC });
   spawnContainerL2(ctx, "cabinet", { x: kc.x, z: edgeOf(bk, 1) - 0.8 }, 180, { room: 72 });
   const of = rm("office")[0], oc = center(of);
   [["filing", -4], ["filing", -2.4], ["desk", 0.5], ["desk", 3]].forEach(([k, a], i) => spawnContainerL2(ctx, k, { x: oc.x + a, z: edgeOf(of, 1) - (k === "desk" ? 1.6 : 0.7) }, 180, { room: 73 + i }));
   spawnRemains(ctx, { x: oc.x - 1, z: oc.z + 1 }, ["bar", "keycard", "page:13"], "Alef administrator's remains");
   const lk = rm("lockers")[0], lc = center(lk);
+  [-1.2, 1.4].forEach((dz, i) => sp(`l21-lkbench-${i}`, { feetPosition: { x: lc.x - 0.4, y: 0, z: lc.z + dz }, model: L21M.lbench, physics: BOXC }));
   // the ref's two kinds: a long row of tall brown perforated lockers, shoulder to shoulder, and banks of grey six-tier box lockers
   const VENT = { id: "/cdn/value.b8e3419a87b05bec8b066f3103daee6b0726b980c7aede0c36ffbf208bc02ae2.glb", paints: ["#3b2a20", "#432f23", "#36261c", "#4a3426"] };
   const BOXL = { id: "/cdn/value.441b77290ec0c2949a34dfde8f17c29c43443b39ae05f3b1914924257234d008.glb", paints: ["#b9b6ab", "#c2bfb3", "#aeaba0"] };
@@ -220,21 +226,18 @@ function lay(ctx) {
   for (let i = 0; i < 4; i++) spawnContainerL2(ctx, "fridge", { x: fc.x - 7 + i * 4.5, z: edgeOf(fr, 1) - 0.55 }, 180, { bonus: 1, noLock: true, room: 110 + i });
   spawnContainerL2(ctx, "cabinet", { x: edgeOf(fr, 0) - 0.5, z: fc.z - 2 }, 90, { bonus: 1, noLock: true, room: 120 }); spawnContainerL2(ctx, "cabinet", { x: edgeOf(fr, 0) - 0.5, z: fc.z + 1.5 }, 90, { bonus: 1, noLock: true, room: 121 });
   sp("l21-fridge-glow", { feetPosition: { x: fc.x, y: 2.5, z: fc.z }, light: { kind: "point", color: "oklch(0.92 0.04 200)", intensity: 4.5, distance: 15 } });
+  sp("l21-sorttable", { feetPosition: { x: fc.x - 0.6, y: 0, z: fc.z }, model: L21M.table, physics: BOXC });
   // Interactive Saltine Cracker Stockpile on the central table
   sp("l21-saltines", {
     feetPosition: { x: fc.x - 0.6, y: 0.8, z: fc.z }, tags: ["usable"], behavior: "scripts/l21-use.js",
-    primitive: { kind: "box", width: 0.65, height: 0.34, depth: 0.45 }, material: { color: "oklch(0.82 0.14 85)", roughness: 0.65 },
+    model: L21M.saltines,
     state: { kind: "saltines", name: "Carton of Saltine crackers", verb: "Grab a handful of Saltines", info: "Crisp, salted crackers in wax-paper sleeves. Refrigerator Paradise has enough of them to last a lifetime.", tint: "#f5d468" },
   });
   // Interactive Freezer-Coil Condensation Water Collector
   sp("l21-cooler", {
-    feetPosition: { x: edgeOf(fr, 2) + 0.65, y: 0.0, z: fc.z - 2.2 }, tags: ["usable"], physics: "static", behavior: "scripts/l21-use.js",
-    primitive: { kind: "box", width: 0.52, height: 0.85, depth: 0.52 }, material: { color: "oklch(0.86 0.015 220)", roughness: 0.4 },
+    feetPosition: { x: edgeOf(fr, 2) + 0.65, y: 0.0, z: fc.z - 2.2 }, tags: ["usable"], physics: BOXC, behavior: "scripts/l21-use.js",
+    model: L21M.cooler,
     state: { kind: "cooler", name: "Freezer-coil water collector", verb: "Drink cold coil water", info: "Ned rigged copper tubing from the freezer condensers into a 5-gallon jug. Ice-cold, clean water.", tint: "#74d4f8" },
-    children: [
-      { feetPosition: { x: 0, y: 0.85, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.19, radiusBottom: 0.21, height: 0.52 }, material: { color: "oklch(0.65 0.14 230)", opacity: 0.72, transparent: true, roughness: 0.15 } },
-      { feetPosition: { x: -0.16, y: 1.15, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.014, radiusBottom: 0.014, height: 0.95 }, rotation: { pitch: 18 }, material: { color: "#b87333", metalness: 0.85, roughness: 0.3 } },
-    ],
   });
   sp("l21-cooler-puddle", { feetPosition: { x: edgeOf(fr, 2) + 0.65, y: 0.005, z: fc.z - 2.2 }, primitive: { kind: "cylinder", radiusTop: 0.45, radiusBottom: 0.48, height: 0.01 }, material: { color: "#0e1a22", roughness: 0.08, metalness: 0.1 } });
   sp("l21-fridge-frost", { feetPosition: { x: fc.x - 1.5, y: 0.1, z: edgeOf(fr, 3) + 0.6 }, fx: { script: FROST_FX } });
@@ -281,14 +284,9 @@ function lay(ctx) {
     ],
   });
   sp("l21-blaster", {
-    feetPosition: { x: jbX + 0.45, y: 0.0, z: jbZ + 0.55 }, tags: ["usable"], physics: "static", behavior: "scripts/l21-use.js",
-    primitive: { kind: "box", width: 0.42, height: 0.48, depth: 0.36 }, material: { color: "oklch(0.45 0.12 45)", roughness: 0.8 },
+    feetPosition: { x: jbX + 0.45, y: 0.0, z: jbZ + 0.55 }, tags: ["usable"], physics: BOXC, behavior: "scripts/l21-use.js",
+    model: L21M.plunger,
     state: { kind: "blaster", name: "John Banks's blasting plunger & crate", verb: "Inspect blasting gear", info: "A wooden T-handle dynamo detonator wired to the blasted concrete ceiling above, beside a crate of spare demolition supplies.", tint: "#ff9a52" },
-    children: [
-      { feetPosition: { x: 0, y: 0.48, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.02, height: 0.28 }, material: STEEL },
-      { feetPosition: { x: 0, y: 0.74, z: 0 }, primitive: { kind: "box", width: 0.28, height: 0.045, depth: 0.045 }, material: WOOD }, // T-handle
-      { feetPosition: { x: 0.45, y: 0.0, z: 0.1 }, primitive: { kind: "box", width: 0.36, height: 0.24, depth: 0.28 }, material: { color: "oklch(0.52 0.2 28)", roughness: 0.7 } }, // dynamite box
-    ],
   });
   // Emergency chemical road flares marking the survey trail into the pitch darkness of The Edges
   [
