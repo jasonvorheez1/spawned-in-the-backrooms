@@ -117,12 +117,13 @@ export function geometry(ctx) {
   // ---- floors and ceilings, a cell at a time: tiles in the locker rooms, carpet runners in some halls, poured concrete in The Edges
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const x0 = cx * S - HALF, z0 = cz * S - HALF, z = zoneOf(cx, cz), h = heightOf(cx, cz), r = hash(cx, cz, 5);
-    ctx.albedo(z === "edge" ? null : isEdge(cx, cz) ? FLOOR : VINYL); // the Edges: smooth sealed cream concrete, no grime texture
+    ctx.albedo(z === "edge" || z === "lockers" ? null : isEdge(cx, cz) ? FLOOR : VINYL); // the Edges: smooth sealed cream concrete, no grime texture
     const rm = roomAt(cx, cz);
     if (z === "lockers" && rm) { // the ref photo: worn off-white tile, a black-and-grey checker runner only down the walkway (the room's middle column)
       const mid = cx === rm.x0 + Math.floor(rm.w / 2);
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j, g = (hash(cx * 4 + i, cz * 4 + j, 11) - 0.5) * 0.05;
-        ctx.color(mid && i > 0 && i < 3 ? ((i + j + cz) % 2 ? "oklch(0.24 0.01 270)" : `oklch(${0.7 + g} 0.008 250)`) : `oklch(${0.86 + g} 0.012 90)`); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
+        ctx.color(mid && i > 0 && i < 3 ? ((i + j + cz) % 2 ? "oklch(0.24 0.01 270)" : `oklch(${0.7 + g} 0.008 250)`) : `oklch(${0.84 + g} 0.006 95)`); ctx.quad(a + 0.01, 0, b + 0.01, a + 0.01, 0, b + 0.99, a + 0.99, 0, b + 0.99, a + 0.99, 0, b + 0.01); }
+      ctx.color("oklch(0.5 0.01 90)"); ctx.quad(x0, -0.002, z0, x0, -0.002, z0 + S, x0 + S, -0.002, z0 + S, x0 + S, -0.002, z0); // the grout showing between the tiles
     } else if (TILED.has(z)) { // black and grey vinyl, in 1 m squares like a school
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j; ctx.color((i + j + cx + cz) % 2 ? "oklch(0.28 0.01 270)" : "oklch(0.78 0.01 250)"); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
     } else if (z === "edge" || z === "edgecave") { ctx.roughness(z === "edge" ? 0.28 : 0.88); ctx.color(z === "edge" ? "oklch(0.76 0.012 110)" : "oklch(0.62 0.03 100)"); ctx.quad(x0, 0, z0, x0, 0, z0 + S, x0 + S, 0, z0 + S, x0 + S, 0, z0); }
@@ -204,7 +205,7 @@ export function geometry(ctx) {
   ctx.albedo(null); ctx.metalness(0.2); ctx.roughness(0.7);
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const z = zoneOf(cx, cz), c = cellCenter(cx, cz), h = heightOf(cx, cz);
-    if (z === "fridges" || z === "restroom" || z === "landing") continue;
+    if (z === "fridges" || z === "restroom" || z === "landing" || z === "lockers") continue; // the locker room photo: a bare tile ceiling, nothing run under it
     if (isEdge(cx, cz)) {
       if (!isOpen(cx, cz, 0)) continue;
       ctx.color("oklch(0.72 0.01 230)"); ctx.metalness(0.72); ctx.roughness(0.38);
