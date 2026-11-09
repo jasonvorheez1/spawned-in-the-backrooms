@@ -81,6 +81,6 @@ export function salon(ctx, player) {
   <div class="hd"><h2>Glow Up Salon</h2><button class="x" onclick="${act('close')}">✕</button></div>
   <div class="svc">${SERVICES.map(([k, n, i]) => `<button class="${tab === k ? 'on' : ''}" onclick="${act('stab', k)}"><span class="i">${i}</span>${n}</button>`).join('')}</div>
   <div class="bd">${body}</div>
-  <div class="ft"><button onclick="${act('spin', -45)}">◀ turn</button><button onclick="${act('spin', 45)}">turn ▶</button><button onclick="${act('random', 'all')}">surprise me</button><button class="go" onclick="${act('close')}">love it</button></div>
+  <div class="ft"><button onclick="${act('spin', -45)}">◀ turn</button><button onclick="${act('spin', 45)}">turn ▶</button><button onclick="${act('random', 'all')}">random</button><button class="go" onclick="${act('close')}">done</button></div>
 </div>`
 }
