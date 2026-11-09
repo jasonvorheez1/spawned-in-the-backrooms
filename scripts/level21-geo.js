@@ -116,7 +116,7 @@ export function geometry(ctx) {
   // ---- floors and ceilings, a cell at a time: tiles in the locker rooms, carpet runners in some halls, poured concrete in The Edges
   for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
     const x0 = cx * S - HALF, z0 = cz * S - HALF, z = zoneOf(cx, cz), h = heightOf(cx, cz), r = hash(cx, cz, 5);
-    ctx.albedo(isEdge(cx, cz) ? FLOOR : VINYL);
+    ctx.albedo(z === "edge" ? null : isEdge(cx, cz) ? FLOOR : VINYL); // the Edges: smooth sealed cream concrete, no grime texture
     const rm = roomAt(cx, cz);
     if (z === "lockers" && rm) { // the ref photo: worn off-white tile, a black-and-grey checker runner only down the walkway (the room's middle column)
       const mid = cx === rm.x0 + Math.floor(rm.w / 2);
@@ -132,7 +132,7 @@ export function geometry(ctx) {
       ctx.albedo(null); const base = r < 0.18 ? [0.6, 0.04, 200] : r < 0.3 ? [0.7, 0.03, 60] : [0.86, 0.02, 85];
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j, tone = base[0] + (((i + j + cx * 3 + cz) % 2) ? 0.03 : -0.02) + (hash(cx * 4 + i, cz * 4 + j, 9) - 0.5) * 0.05; ctx.color(`oklch(${tone} ${base[1]} ${base[2]})`); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
     } // a threadbare carpet, or bare grime
-    ctx.roughness(0.88); ctx.albedo(isEdge(cx, cz) ? CEIL : TILE); ctx.color(isEdge(cx, cz) ? (z === "edge" ? "oklch(0.62 0.008 240)" : "oklch(0.38 0.01 150)") : z === "fridges" || z === "restroom" ? "oklch(0.95 0.01 90)" : "oklch(0.9 0.014 90)");
+    ctx.roughness(0.88); ctx.albedo(isEdge(cx, cz) ? CEIL : TILE); ctx.color(isEdge(cx, cz) ? (z === "edge" ? "oklch(0.72 0.006 240)" : "oklch(0.38 0.01 150)") : z === "fridges" || z === "restroom" ? "oklch(0.95 0.01 90)" : "oklch(0.9 0.014 90)");
     ctx.quad(x0, h, z0, x0 + S, h, z0, x0 + S, h, z0 + S, x0, h, z0 + S);
   }
 
@@ -161,7 +161,7 @@ export function geometry(ctx) {
       const rock = (isEdge(cx, cz) || isEdge(nx, nz)) && !(cz === LANE.z0 + LANE.d - 1 && d === 1 && cx >= 21) && !(cx === 20 && d === 0);
       const h = wallH(cx, cz, nx, nz);
       if (rock) {
-        ctx.albedo(WALL); ctx.color("oklch(0.48 0.015 110)"); ctx.roughness(0.95);
+        ctx.albedo(WALL); ctx.color(isEdge(cx, cz) && zoneOf(cx, cz) === "edge" ? "oklch(0.74 0.008 240)" : "oklch(0.52 0.012 110)"); ctx.roughness(0.95); // the photo: pale grey blasted rock
         if (d === 0) rockWall(xe, xe, z0, z0 + S, h, cx * 131 + cz * 17 + 3); else rockWall(x0, x0 + S, ze, ze, h, cx * 91 + cz * 31 + 9);
       } else {
         ctx.albedo(WALL); ctx.color(isEdge(cx, cz) || isEdge(nx, nz) ? "oklch(0.93 0.008 95)" : "oklch(0.9 0.014 95)"); ctx.roughness(0.9);
