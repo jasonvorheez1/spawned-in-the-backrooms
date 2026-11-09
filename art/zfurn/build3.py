@@ -12,7 +12,7 @@ def mat(name, rgb, metal=0.0, rough=0.5, emit=None, es=2.0):
 WHITE = mat("composite", (0.82, 0.81, 0.77), 0.05, 0.45); STEEL = mat("steel", (0.55, 0.57, 0.6), 0.85, 0.3)
 DARK = mat("dark_trim", (0.03, 0.033, 0.038), 0.4, 0.45); TEAL = mat("teal", (0.12, 0.38, 0.42), 0.2, 0.4)
 BRUSH = mat("brushed_top", (0.62, 0.64, 0.66), 0.9, 0.22); HOB = mat("hob_glass", (0.01, 0.01, 0.012), 0.1, 0.08)
-RUB = mat("rubber", (0.02, 0.02, 0.022), 0, 0.85); SOIL = mat("substrate", (0.09, 0.06, 0.04), 0, 0.95)
+RUB = mat("rubber", (0.09, 0.095, 0.1), 0, 0.7); SOIL = mat("substrate", (0.09, 0.06, 0.04), 0, 0.95)
 LEAF = mat("leaf", (0.16, 0.42, 0.12), 0, 0.6); DEAD = mat("dead_leaf", (0.35, 0.28, 0.12), 0, 0.8)
 GROW = mat("grow_light", (1, 0.4, 0.9), 0, 0.3, emit=(1, 0.35, 0.85), es=5); YEL = mat("hazard", (0.75, 0.55, 0.05), 0.1, 0.5)
 ORNG = mat("case_shell", (0.3, 0.33, 0.35), 0.3, 0.55); RED = mat("ring_red", (0.9, 0.1, 0.05), 0, 0.4, emit=(1, 0.1, 0.05), es=3)
@@ -92,7 +92,7 @@ def growbed():
 
 def treadmill():
     P = []
-    P.append(box((0.84, 1.9, 0.16), (0, 0.05, 0.1), DARK, 0.02, 3))
+    P.append(box((0.84, 1.9, 0.16), (0, 0.05, 0.1), WHITE, 0.02, 3))
     P.append(box((0.56, 1.7, 0.02), (0, 0.05, 0.19), RUB, 0.004))
     for sx in (-1, 1):
         P.append(box((0.1, 1.75, 0.04), (sx * 0.36, 0.05, 0.2), WHITE, 0.01))
