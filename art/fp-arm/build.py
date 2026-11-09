@@ -116,7 +116,7 @@ def build(sex, side):
     newp = {i: P[i][0].copy() for i in P}
     hinge = V(); rings1 = []
     for fi, c in enumerate(fingers):
-        ANG = FLEX[min(fi, 3)]
+        ANG = tuple(max(x, m) for x, m in zip(FLEX[min(fi, 3)], (62 + fi * 4, 88, 58)))   # NV's aim pose is a loose hand: a held grip closes to a real fist
         pts = [P[i][0] for i in c]; cen = sum(pts, V()) / len(pts)
         X = np.array([tuple(q - cen) for q in pts]); f = V(np.linalg.eigh(X.T @ X)[1][:, 2])
         if f.dot(a) < 0: f = -f
