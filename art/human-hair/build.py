@@ -72,6 +72,39 @@ def finish(o):
     vg = o.vertex_groups.new(name="Head"); vg.add(list(range(len(o.data.vertices))), 1.0, "REPLACE")
     o.parent = rig; mod = o.modifiers.new("skin", "ARMATURE"); mod.object = rig
 
+CAPMAT = None
+def make_cap(hatted, mat):
+    # a painted scalp under every cut: the head's crown and back, pushed out 4 mm, so no skin shows between strands (Andrew's bald patches, Nov 9)
+    global CAPMAT
+    if mat is None:
+        if CAPMAT is None:
+            CAPMAT = bpy.data.materials.new("scalp_cap"); CAPMAT.use_nodes = True
+            CAPMAT.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.09, 0.06, 0.04, 1)
+            CAPMAT.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.9
+        mat = CAPMAT
+    bm = bmesh.new(); bm.from_mesh(head.data); bm.transform(head.matrix_world)
+    depth = H["y1"] - H["y0"]
+    def keepf(f):
+        c = f.calc_center_median()
+        if c.z < H["hz"] + 0.035: return False            # above the ears only
+        front = (c.y - H["y0"]) / depth                     # 0 = face, 1 = back of head
+        hairline = H["top"] - 0.045                          # forehead stays skin
+        if front < 0.42 and c.z < hairline: return False
+        if abs(c.x) > H["rx"] * 0.93 and front < 0.55 and c.z < H["top"] - 0.07: return False  # temples
+        if hatted and c.z > H["top"] - 0.075: return False
+        return True
+    bmesh.ops.delete(bm, geom=[f for f in bm.faces if not keepf(f)], context="FACES")
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
+    if not bm.faces: bm.free(); return None
+    bm.normal_update()
+    for v in bm.verts: v.co += v.normal * 0.004
+    me = bpy.data.meshes.new("scalpcap"); bm.to_mesh(me); bm.free()
+    for k in list(me.attributes):
+        pass
+    me.materials.append(mat)
+    o = bpy.data.objects.new("scalpcap", me); bpy.context.scene.collection.objects.link(o)
+    return o
+
 def export(k, hatted):
     bpy.ops.object.select_all(action="DESELECT")
     keep = []
@@ -90,6 +123,8 @@ def export(k, hatted):
             d = c.modifiers.new("dec", "DECIMATE"); d.ratio = 7000 / len(c.data.polygons)
             bpy.context.view_layer.objects.active = c; bpy.ops.object.modifier_apply(modifier="dec")
         finish(c); c.select_set(True); keep.append(c)
+    cap = make_cap(hatted, next((c.data.materials[0] for c in keep if c.data.materials[0].name.startswith("scalp")), None))
+    if cap: finish(cap); cap.select_set(True); keep.append(cap)
     if not keep: return None
     rig.select_set(True)
     # materials named for the tint: hair / scalp
