@@ -241,6 +241,16 @@ for name, (ease, cuts) in PLAN.items():
             if w / tot < 0.01: continue
             nm = gnames[g]; vg = groups.get(nm) or n.vertex_groups.new(name=nm); groups[nm] = vg; vg.add([v.index], w / tot, "REPLACE")
         if kb: kb.data[v.index].co = v.co + sum(((t[KB] - t.co) * x for t, x in zip(tv, bc)), Vector())
+    for vg in list(n.vertex_groups): n.vertex_groups.remove(vg)  # weights: the real skin's own, by Blender's transfer, smoothed
+    for vg in body0.vertex_groups: n.vertex_groups.new(name=vg.name)
+    bpy.ops.object.select_all(action="DESELECT"); n.select_set(True); bpy.context.view_layer.objects.active = n
+    dtm = n.modifiers.new("dt", "DATA_TRANSFER"); dtm.object = body0; dtm.use_vert_data = True
+    dtm.data_types_verts = {"VGROUP_WEIGHTS"}; dtm.vert_mapping = "POLYINTERP_NEAREST"; dtm.layers_vgroup_select_src = "ALL"; dtm.layers_vgroup_select_dst = "NAME"
+    bpy.ops.object.modifier_apply(modifier="dt")
+    bpy.ops.object.mode_set(mode="WEIGHT_PAINT"); bpy.ops.object.vertex_group_smooth(group_select_mode="ALL", factor=0.5, repeat=3)
+    bpy.ops.object.vertex_group_normalize_all(lock_active=False); bpy.ops.object.vertex_group_clean(group_select_mode="ALL", limit=0.01)
+    bpy.ops.object.vertex_group_limit_total(group_select_mode="ALL", limit=4); bpy.ops.object.vertex_group_normalize_all(lock_active=False)
+    bpy.ops.object.mode_set(mode="OBJECT")
     am = n.modifiers.new("skin", "ARMATURE"); am.object = arm
     n.parent = old.parent; n.matrix_parent_inverse = old.matrix_parent_inverse.copy()
     bpy.data.objects.remove(old); n.name = name; me.name = name
