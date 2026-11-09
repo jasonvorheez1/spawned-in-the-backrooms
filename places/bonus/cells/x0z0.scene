@@ -1388,7 +1388,7 @@ bonus-salon-chair-1:
   receiveShadow: true
   rotation: {yaw: 180}
   scale: 1.2
-  state: {name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  state: {c: {x: 12.8, y: 0.6, z: 2.2}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
   tags: [bonus-mall, salon-prop, seat]
 bonus-salon-chair-2:
   castShadow: true
@@ -1399,7 +1399,7 @@ bonus-salon-chair-2:
   receiveShadow: true
   rotation: {yaw: 180}
   scale: 1.2
-  state: {name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  state: {c: {x: 15.6, y: 0.6, z: 2.2}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
   tags: [bonus-mall, salon-prop, seat]
 bonus-salon-chair-3:
   castShadow: true
@@ -1410,7 +1410,7 @@ bonus-salon-chair-3:
   receiveShadow: true
   rotation: {yaw: 180}
   scale: 1.2
-  state: {name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  state: {c: {x: 18.4, y: 0.6, z: 2.2}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
   tags: [bonus-mall, salon-prop, seat]
 bonus-salon-desk:
   castShadow: true
