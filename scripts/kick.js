@@ -72,7 +72,6 @@ export function onInput(ctx, input) {
   ctx.emit('noise', { position: at, radius: 14, kind: 'kick' }, { audience: { nearby: at, radius: 14 } })
 }
 export function kickEnd(ctx) {
-  for (const o of ctx.query({ radius: 3 })) if (o.id.includes('kick') || o.id.includes('leg')) ctx.log('[kickleg-end]', o.id) ctx.self.anim.kick = null }
 
 export function update(ctx, dt) {
   const m = mem(ctx), p = ctx.self.feetPosition, v = ctx.self.velocity
