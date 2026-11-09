@@ -124,3 +124,5 @@ Appearance sw17: male eyes have a separate Pupil material/primitive; preserve it
 
 ## Distinct wardrobe meshes (Nov 9)
 Clothing uses stable catalog row IDs and Ward_<id> meshes, with legacy kind/color tokens still accepted. art/human-cloth/wardrobe.py constructs 76 garments per body in Blender; compile_wardrobe.py appends them while retaining original head, rig, body and morph accessors. Skin_<region> parts supply equipment masks. Regenerate all four body variants together and update CDN references atomically; runtime requires these meshes. Masks are separate GLBs finished by mask_finish.py. Preserve current head/body revisions when compiling. Never commit GLB or blend bytes.
+
+Chest fit: wardrobe.py samples a smoothed front envelope of Body, and transfers top Bust deltas from Body rather than legacy clothes. Female Under_top is replaced from the generated Fit_under_top mesh during compilation; its original skin/head/rig stay intact. Run Blender art/human-cloth/check-bust.py against the compiled output folder at three bust values, plus check-fit.py. Do not use individual skin triangles as a cloth front or the surface becomes noisy.

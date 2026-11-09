@@ -1,7 +1,7 @@
 // Run with bun art/human-cloth/wardrobe-check.mjs.
 import assert from 'node:assert/strict'
 import W from '../../scripts/lib/data/wardrobe.yml'
-import { humanBody, lookFromModel } from '../../scripts/lib/critter-model.js'
+import { humanBody, humanMorph, lookFromModel } from '../../scripts/lib/critter-model.js'
 
 // Scene-laid characters may have no saved wear state when a new body arrives.
 for (const legacy of [W.legacyHuman, W.legacyFur]) {
@@ -18,3 +18,5 @@ assert.equal(dressed.parts.Under_bottom.visible, false)
 const bare = humanBody({ sex: 'f', topw: 'none', botw: 'none' })
 assert.equal(bare.parts.Under_top.visible, true)
 assert.equal(bare.parts.Under_bottom.visible, true)
+for (const bust of [.15, .5, 1]) assert.equal(humanMorph({ sex: 'f', bust }).Bust, bust)
+for (const input of [{ bust: 'invalid' }, { bustS: Infinity }]) assert.equal(humanMorph({ sex: 'f', ...input }).Bust, .38)

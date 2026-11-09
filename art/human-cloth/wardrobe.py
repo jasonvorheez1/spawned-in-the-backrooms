@@ -105,25 +105,53 @@ def clean_top(row,old):
  if kind in ['tee','tank','longsleeve']:bottom=zmax-.51
  if isdress:bottom=zmax-.50
  if isapron:bottom=zmax-.42
+ if rid=='under_top':bottom=zmax-.29
  # Fit dimensions come from the torso block, with ease independent of skin creases.
  sexscale=zmax/1.48; sx=sexscale; ry=.114*sx
  body=sources['Body'];trunk={g.index for g in body.vertex_groups if g.name=='Hips' or g.name.startswith('Spine')}
  torso=[body.matrix_world@v.co for v in body.data.vertices if zmax-.38<(body.matrix_world@v.co).z<zmax-.15 and sum(g.weight for g in v.groups if g.group in trunk)>.7]
+ cy=(min(p.y for p in torso)+max(p.y for p in torso))/2
  width=max(.170*sx,max((abs(p.x) for p in torso),default=0)+.012)
  assert width<abs((R.matrix_world@R.data.bones['LeftArm'].head_local).x)*1.5,'Torso fit reached outside the shoulder landmarks: '+rid
- rings=[(bottom,width*.95,ry*.91),(bottom+.04,width*.95,ry*.92),(zmax-.38,width*.94,ry*.93),(zmax-.23,width*1.05,ry*1.04),(zmax-.12,width*1.06,ry),(zmax-.055,width*.94,ry*.83),(zmax,.064*sx,.061*sx)]
+ rings=[(bottom,width*.95,ry*.91),(bottom+.04,width*.95,ry*.92),(zmax-.38,width*.94,ry*.93),(zmax-.23,width*1.05,ry*1.04),(zmax-.12,width*1.06,ry),(zmax-.055,width*.94,ry*.83),(zmax,.072*sx,.074*sx)]
  if kind=='sweater':rings=[(z,w*1.045,d*1.045) for z,w,d in rings]
  if isdress:rings=[(z,w*(.91 if z<zmax-.25 else 1),d) for z,w,d in rings]
  verts=[];faces=[]
+ fitted=kind in ['tee','tank','longsleeve','dress'] or rid in ['shirt','officeshirt','vest','under_top']
+ ease=.009 if rid=='under_top' else .015 if fitted else .024
+ frontpoints=[body.matrix_world@v.co for v in body.data.vertices if (body.matrix_world.to_3x3()@v.normal).y<-.25]
+ fronttree=KDTree(len(frontpoints))
+ for i,p in enumerate(frontpoints):fronttree.insert(Vector((p.x,0,p.z)),i)
+ fronttree.balance()
+ def front_at(x,z):
+  near=fronttree.find_n(Vector((x,0,z)),16)
+  if not near or near[0][2]>.075*sx:return None
+  low=min(frontpoints[i].y for _,i,dist in near);acc=total=0
+  for _,i,dist in near:
+   y=frontpoints[i].y;w=math.exp(-(dist/(.038*sx))**2-(y-low)/(.025*sx));acc+=y*w;total+=w
+  return acc/total-ease if total else None
  def loft(profiles,n=48,pleat=0):
+  dense=[]
+  for aa,bb in zip(profiles,profiles[1:]):
+   steps=max(1,math.ceil(abs(bb[0]-aa[0])/.025))
+   for j in range(steps):t=j/steps;dense.append(tuple(a+(b-a)*t for a,b in zip(aa,bb)))
+  profiles=dense+[profiles[-1]]
   start=len(verts)
   for z,w,d in profiles:
-   sample=[p for p in pts if abs(p.z-z)<.035 and abs(p.x)<.17*sexscale]
+   sample=[p for p in torso if abs(p.z-z)<.035]
    ringcy=cy
    if sample:
     front=min(cy-d,min(p.y for p in sample)-.008);back=max(cy+d,max(p.y for p in sample)+.008);ringcy=(front+back)/2;d=(back-front)/2
+   collar=sm(zmax-.04,zmax,z);ringcy=ringcy*(1-collar)+(R.matrix_world@R.data.bones[BONE_NECK].head_local).y*collar
    for k in range(n):
-    a=2*math.pi*k/n; fold=1+pleat*math.cos(12*a);verts.append([w*math.cos(a)*fold,ringcy+d*math.sin(a)*fold,z])
+    a=2*math.pi*k/n; fold=1+pleat*math.cos(12*a);x=w*math.cos(a)*fold;y=ringcy+d*math.sin(a)*fold
+    if math.sin(a)<0 and z>=bottom-.001:
+     front=front_at(x,z)
+     if front is not None:
+      if not fitted or z<zmax-.12:
+       above=[front_at(x,z+dz) for dz in [.04,.08]];front=min([front]+[v+.2*dz for v,dz in zip(above,[.04,.08]) if v is not None])
+      blend=(-math.sin(a))**1.5*(1-collar);y=y*(1-blend)+front*blend
+    verts.append([x,y,z])
   for j in range(len(profiles)-1):
    for k in range(n):a=start+j*n+k;b=start+j*n+(k+1)%n;faces.append((a,b,b+n,a+n))
  loft(rings)
@@ -169,7 +197,7 @@ def clean_top(row,old):
    cutplanes.extend([((s*(length-.006),0,0),(s,0,0)) for s in [-1,1]])
   for point,normal in cutplanes:bmesh.ops.bisect_plane(bm,geom=list(bm.verts)+list(bm.edges)+list(bm.faces),dist=.0001,plane_co=point,plane_no=normal,clear_outer=True)
   if kind in ['tank','dress','armor']:
-   holes=[f for f in bm.faces if abs(f.calc_center_median().x)>width*.66 and ((f.calc_center_median().y-cy)/(.080*sx))**2+((f.calc_center_median().z-(zmax-.12))/.095)**2<1]
+   holes=[f for f in bm.faces if abs(f.calc_center_median().x)>width*.85 and ((f.calc_center_median().y-cy)/(.080*sx))**2+((f.calc_center_median().z-(zmax-.04))/.065)**2<1]
    bmesh.ops.delete(bm,geom=holes,context='FACES')
   bm.transform(ob.matrix_world.inverted());bm.to_mesh(ob.data);bm.free()
   # Small construction folds at cuffs and waist; loose cloth does not print anatomy.
@@ -192,7 +220,7 @@ def clean_top(row,old):
   for p in ob.data.polygons:p.use_smooth=True
  kd=KDTree(len(pts))
  for i,p in enumerate(pts):kd.insert(p,i)
- kd.balance();weights(ob,old,kd)
+ kd.balance();weights(ob,body,kd)
  return ob
 def clean_hat(row,old):
  pts=[old.matrix_world@v.co for v in old.data.vertices];rid=row['id'];head=next((o for o in sources.values() if any(m and m.name.startswith('Head_Skin') for m in o.data.materials)),None)
@@ -507,8 +535,13 @@ def construct(row):
 for row in rows:
  ob=construct(row)
  if ob is None:report.append({'id':row['id'],'externalMask':row.get('mask'),'status':'external asset must be audited separately'})
+underwear=[]
+if sources['Body'].data.shape_keys and 'Bust' in sources['Body'].data.shape_keys.key_blocks and 'Under_top' in sources:
+ CURRENT_ROW={'id':'under_top','slot':'topw','kind':'tank'}
+ ob=clean_top(CURRENT_ROW,sources['Top_tank']);ob.name='Fit_under_top';ob.data.materials.clear();ob.data.materials.append(material('under'))
+ bpy.context.view_layer.objects.active=ob;bpy.ops.object.select_all(action='DESELECT');ob.select_set(True);bpy.ops.object.mode_set(mode='EDIT');bpy.ops.mesh.select_all(action='SELECT');bpy.ops.uv.smart_project(island_margin=.02);bpy.ops.object.mode_set(mode='OBJECT');underwear.append(ob)
 bpy.ops.object.select_all(action='DESELECT'); R.select_set(True)
-for o in made:o.select_set(True)
+for o in made+underwear:o.select_set(True)
 bpy.ops.export_scene.gltf(filepath=dst,export_format='GLB',use_selection=True,export_animations=False,export_morph=True,export_skins=True)
 Path(dst+'.audit.json').write_text(json.dumps(report,indent=2)); bpy.ops.wm.save_as_mainfile(filepath=dst+'.blend')
 Path(dst+'.source-sha256.txt').write_text(SOURCE_HASH)

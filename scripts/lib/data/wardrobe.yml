@@ -85,6 +85,8 @@ legacyHuman:
   f_sw26: /cdn/value.b395fa3f5e40d8fe366ae277e1bbfad8dc47ba6398cde63e9b9337c42aa519c0.glb
   m_sw27: /cdn/value.d82142cbd4cbc765a74d66d1c173331b0ac36acf43f797401baeadfb7f3e85f5.glb
   f_sw27: /cdn/value.2d1bbaee0031bfd438983387c3d069bef8265909f5b035bb5dc3224f5d25996c.glb
+  m_sw28: /cdn/value.1627ae4ddde78fc6953105799956116d9ea9dbaa8a8df28ea7346c8830928ae6.glb
+  f_sw28: /cdn/value.b9653c9c28376fd8fab3f02b1cf42e3584cd477be702c2d015f1b1e2d573e08a.glb
 legacyFur:
   m: /cdn/value.72a8b9bf28216baab5b949a31bbff68251f892d11e4ca39e3b68c27ef0557e76.glb
   f: /cdn/value.234a83fd493cd046995cd5526a69249cd845b14a19372cdf61be068d24fc5d56.glb
@@ -94,3 +96,5 @@ legacyFur:
   f_sw26: /cdn/value.57f1b595fcb0343934caf73333dc3f57441bcd10a7abb1a801b0a4ac4ef84c67.glb
   m_sw27: /cdn/value.730e6983aa94b48c822d4dcda7636d3661b500371dca9a347302063d340f9ff1.glb
   f_sw27: /cdn/value.5652a750747ab80e733997dd63f823355fe4bbfecdf992da15e32b51f516caf9.glb
+  m_sw28: /cdn/value.8e9ddde409ed3d049db653114aa767829a6eec7b0abf6c88e87b36f44b4fefdd.glb
+  f_sw28: /cdn/value.eae9cfe2ed4dfdcffbb95f59894f3712d64034c0a49b2c0dc8ff42f97498ef33.glb

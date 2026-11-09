@@ -6,15 +6,20 @@ ns={};exec(compile(ast.Module(body=nodes,type_ignores=[]),'asset-reader','exec')
 body,wardrobe,dst=map(pathlib.Path,sys.argv[1:4]);g=GLB(body.read_bytes());w=GLB(wardrobe.read_bytes())
 J=g.j;W=w.j
 original_skin=J['skins'][0]; old_joint_names=[J['nodes'][i]['name'] for i in original_skin['joints']]
+neck_joint=next(i for i,n in enumerate(old_joint_names) if n in ['Neck','neck'])
+neck_center=np.linalg.inv(g.get(original_skin['inverseBindMatrices'])[neck_joint].reshape(4,4).T)[:3,3]
 template=next(n for n in J['nodes'] if n.get('name')=='Top_jacket'); ti=J['nodes'].index(template)
 parent=next(n for n in J['nodes'] if ti in n.get('children',[]))
 material_index={m['name']:i for i,m in enumerate(J['materials'])}
+source_body=J['meshes'][next(n['mesh'] for n in J['nodes'] if n.get('name')=='Body')]
+body_defaults=dict(zip(source_body.get('extras',{}).get('targetNames',[]),source_body.get('weights',[])))
 created=[]
 for node in W['nodes']:
- if not node.get('name','').startswith('Ward_') or 'mesh' not in node:continue
+ if not (node.get('name','').startswith('Ward_') or node.get('name')=='Fit_under_top') or 'mesh' not in node:continue
  if any(k in node for k in ['translation','rotation','scale','matrix']):raise ValueError('Unexpected garment bind-space transform: '+node['name'])
  skin=W['skins'][node['skin']];names=[W['nodes'][i]['name'] for i in skin['joints']];remap=np.array([old_joint_names.index(n) for n in names],dtype='<u2')
  m=copy.deepcopy(W['meshes'][node['mesh']]);m['name']=node['name']
+ if 'Bust' in m.get('extras',{}).get('targetNames',[]):m['weights'][m['extras']['targetNames'].index('Bust')]=body_defaults.get('Bust',0)
  for p in m['primitives']:
   name=W['materials'][p['material']]['name'];name=name.split('.')[0]
   if name not in material_index:
@@ -29,7 +34,11 @@ for node in W['nodes']:
   p['indices']=g.add(w.get(p['indices']))
   for target in p.get('targets',[]):
    for key,idx in list(target.items()):target[key]=g.add(w.get(idx))
- mi=len(J['meshes']);J['meshes'].append(m);new=copy.deepcopy(template);new['name']=node['name'];new['mesh']=mi;new.pop('children',None)
+ mi=len(J['meshes']);J['meshes'].append(m)
+ if node['name']=='Fit_under_top':
+  next(n for n in J['nodes'] if n.get('name')=='Under_top')['mesh']=mi
+  continue
+ new=copy.deepcopy(template);new['name']=node['name'];new['mesh']=mi;new.pop('children',None)
  ni=len(J['nodes']);J['nodes'].append(new);parent['children'].append(ni);created.append(node['name'])
 expected=yaml.safe_load((root/'scripts/lib/data/wardrobe.yml').read_text())['parts'];assert set(created)==set(expected),(len(created),len(expected))
 # Split the underlying skin into equipment masks, retaining the same indices,
@@ -40,7 +49,7 @@ for pr in bm['primitives']:
  positions=g.get(pr['attributes']['POSITION']);joints=g.get(pr['attributes']['JOINTS_0']);weights=g.get(pr['attributes']['WEIGHTS_0']);tri=g.get(pr['indices']).reshape(-1,3)
  dominant=joints[np.arange(len(joints)),weights.argmax(1)];scale=float(positions[:,1].max())/1.48
  for t in tri:
-  names=[old_joint_names[int(dominant[v])] for v in t];name=max(set(names),key=names.count);y=float(positions[t,1].mean())
+  names=[old_joint_names[int(dominant[v])] for v in t];name=max(sorted(set(names)),key=names.count);y=float(positions[t,1].mean())
   if 'Hand' in name or any(k in name for k in ['Thumb','Index','Middle','Ring','Pinky']):region='hands'
   elif 'Foot' in name or 'Toe' in name:region='feet'
   elif 'ForeArm' in name:region='forearms'
@@ -48,7 +57,7 @@ for pr in bm['primitives']:
   elif 'UpLeg' in name:region='thigh_hi' if y>.60*scale else 'thigh_low'
   elif 'Leg' in name:region='shin_low' if y<.30*scale else 'shin_hi'
   elif name=='Hips':region='hips'
-  elif 'Neck' in name or 'Head' in name:region='neck' if float(np.abs(positions[t,0]).max())<.085*scale else 'torso'
+  elif 'Neck' in name or 'Head' in name:region='neck' if float(np.linalg.norm(positions[t][:,[0,2]]-neck_center[[0,2]],axis=1).max())<.080*scale else 'torso'
   else:
    front=float(positions[t,2].mean())>-.08*scale
    region='torso_upper_front' if front and y>float(positions[:,1].max())-.19*scale else 'torso_front' if abs(float(positions[t,0].mean()))<.035*scale and front else 'torso'
