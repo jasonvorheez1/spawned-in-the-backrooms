@@ -3,6 +3,7 @@
 // wait exactly one clock hour, try the door again. scripts/level12-use.js owns the doors.
 import R from "../../scripts/lib/data/level12.yml";
 import { heard } from "../../scripts/lib/hear.js";
+import { animate } from "builtin/tween";
 export const cadence = "1s";
 const V = 1;
 const MODEL = {
@@ -59,7 +60,7 @@ function lay(ctx) {
   const COPIES = [[-34, -22, 35], [41, 9, -80], [-12, 58, 170], [27, -51, 20], [-63, 31, 110]];
   COPIES.forEach(([x, z, yaw], i) => doorAt(ctx, `l12-copy-${i}`, x, z, yaw, { kind: "copydoor", name: "Door", verb: "Open the Door" }, false));
   // the blandest furniture there is, old and beaten up, some of it halfway through the floor
-  const r = rng(12), kinds = Object.keys(MODEL).filter((k) => k !== "office" || true);
+  const r = rng(12), kinds = Object.keys(MODEL);
   for (let i = 0; i < 46; i++) {
     const a = r() * Math.PI * 2, d = 10 + r() * 85, k = kinds[Math.floor(r() * kinds.length)];
     const sink = r() < 0.45 ? -(0.2 + r() * 0.6) : 0, tilt = sink ? (r() - 0.5) * 30 : 0;
@@ -84,7 +85,7 @@ export function tick(ctx) {
   const st = ctx.place.state;
   if (st.v !== V) { st.v = V; lay(ctx); }
   // the clock's minute hand: one turn per clock hour, on the room's clock so every machine agrees
-  if (!st.clockOn) { st.clockOn = true; const h = ctx.place.objects["l12-hand-m"]; if (h) import("builtin/tween").then(({ animate }) => animate(ctx, h, { "rotation.roll": [0, -360] }, { duration: R.hour, loop: true, easing: "linear" })); }
+  if (!st.clockOn) { st.clockOn = true; const h = ctx.place.objects["l12-hand-m"]; if (h) animate(ctx, h, { "rotation.roll": [0, -360] }, { duration: R.hour, loop: true, easing: "linear" }); }
   for (const p of ctx.place.players) {
     const s = p.state; const r = s.r12 ?? {};
     const seated = s.sit?.id && s.sit.id === st.chair && s.sit.phase !== "up";

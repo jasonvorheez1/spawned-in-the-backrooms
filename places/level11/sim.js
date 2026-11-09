@@ -20,7 +20,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import MODELS from "../../scripts/lib/data/level11-models.yml";
 
 export const cadence = "1s";
-const V = 102; // bump to rebuild the city in rooms that are already open
+const V = 103; // bump to rebuild the city in rooms that are already open
 
 // Photorealistic PBR textures from CDN
 const T = (name, rep = 1) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat" });
@@ -1010,6 +1010,30 @@ function lay(ctx) {
     bx("l11-spam-floor", AX, 0.04, Z0 + LEN / 2, W, 0.08, LEN, GRIME);
     bx("l11-spam-puddle", AX - 0.6, 0.085, Z0 + 5, 1.6, 0.01, 1.1, { color: "oklch(0.2 0.02 240)", roughness: 0.05, metalness: 0.3 }, { physics: undefined });
 
+    // the window entity (Level 12's door): a warm lit window in a wall nobody lives behind. scripts/level12-window.js
+    {
+      const WX = AX - W / 2 + 0.16, WZ = Z0 + 4.5;
+      const FRAME = { color: "oklch(0.93 0.01 90)", roughness: 0.5 };
+      bx("l11-win12-wall", WX - 0.16, 0, WZ, 0.3, 3.4, 2.4, BRICK);
+      sp("l11-win12", {
+        feetPosition: { x: WX, y: 1.0, z: WZ }, rotation: { yaw: 90 },
+        primitive: { kind: "box", width: 1.1, height: 1.4, depth: 0.02 },
+        material: { color: "oklch(0.95 0.04 85)", emissive: "oklch(0.9 0.09 80)", emissiveIntensity: 1.6, roughness: 0.15 },
+        physics: { body: "static", collider: "box", trigger: true },
+        behavior: "scripts/level12-window.js",
+        children: [
+          { feetPosition: { x: 0, y: -0.06, z: 0.03 }, primitive: { kind: "box", width: 1.26, height: 0.07, depth: 0.12 }, material: FRAME },
+          { feetPosition: { x: 0, y: 1.4, z: 0.03 }, primitive: { kind: "box", width: 1.26, height: 0.07, depth: 0.12 }, material: FRAME },
+          { feetPosition: { x: -0.6, y: 0, z: 0.03 }, primitive: { kind: "box", width: 0.07, height: 1.4, depth: 0.12 }, material: FRAME },
+          { feetPosition: { x: 0.6, y: 0, z: 0.03 }, primitive: { kind: "box", width: 0.07, height: 1.4, depth: 0.12 }, material: FRAME },
+          { feetPosition: { x: 0, y: 0.68, z: 0.03 }, primitive: { kind: "box", width: 1.1, height: 0.04, depth: 0.05 }, material: FRAME },
+          { feetPosition: { x: 0, y: 0, z: 0.03 }, primitive: { kind: "box", width: 0.04, height: 1.4, depth: 0.05 }, material: FRAME },
+          { feetPosition: { x: 0, y: -0.14, z: 0.1 }, primitive: { kind: "box", width: 1.4, height: 0.06, depth: 0.22 }, material: FRAME },
+          { feetPosition: { x: 0, y: 0.7, z: 0.6 }, light: { kind: "point", color: "oklch(0.92 0.08 80)", intensity: 1.4, distance: 6 } },
+        ],
+        audio: { clip: "cdn/moodboard-realistic-gritty/sfx-faint-warm-room-tone-and-soft-tv-murmur-behind-glass-loop.mp3", loop: true, gain: 0.15, spatial: true, maxDistance: 7 },
+      });
+    }
     sp("l11-spamton-dumpster", {
       tags: ["usable"],
       feetPosition: { x: AX + 0.4, y: 0.08, z: Z0 + LEN - 1.1 },
@@ -1159,6 +1183,20 @@ function lay(ctx) {
     note: "pw: pegasus11",
   }));
 
+  // Cmdr. Harris's expedition log "Matrix": the only way to learn the Level 12 ritual (scripts/level12-use.js)
+  sp("l11-harris-log", {
+    tags: ["usable"],
+    feetPosition: { x: OUTPOST_X + 0.35, y: 0.86, z: OUTPOST_Z + 0.1 }, rotation: { yaw: 200 },
+    primitive: { kind: "box", width: 0.24, height: 0.07, depth: 0.15 },
+    material: { color: "oklch(0.25 0.01 250)", roughness: 0.6 },
+    behavior: "scripts/level12-use.js",
+    state: { kind: "harris-log", name: "Tape Recorder · \"MATRIX\"", verb: "Play Tape" },
+    children: [
+      { feetPosition: { x: -0.05, y: 0.07, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: 0.01 }, material: { color: "oklch(0.85 0.01 90)" } },
+      { feetPosition: { x: 0.05, y: 0.07, z: 0 }, primitive: { kind: "cylinder", radiusTop: 0.025, radiusBottom: 0.025, height: 0.01 }, material: { color: "oklch(0.85 0.01 90)" } },
+      { feetPosition: { x: 0, y: 0.07, z: 0.05 }, primitive: { kind: "box", width: 0.07, height: 0.012, depth: 0.03 }, material: { color: "oklch(0.55 0.15 25)" } },
+    ],
+  });
   sp("l11-meg-cache", {
     tags: ["usable"],
     feetPosition: { x: OUTPOST_X + 2.5, y: 0.1, z: OUTPOST_Z - 2 },

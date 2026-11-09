@@ -21,7 +21,7 @@ export const ears = {
       heard(ctx, { clip: CLICK, position: pos, volume: 0.7, maxDistance: 8 });
       heard(ctx, { clip: HARRIS(LOG), position: pos, volume: 1, maxDistance: 8, bus: "Voice" });
       who.state.know12 = true;
-      who.state.sub = { who: "CMDR. HARRIS · EXPEDITION LOG \"MATRIX\"", t: "\"" + LOG + " The window down the pizza-place alley that isn't a window, that's how we got in. Walk straight through it. Don't try it unless you know all this.\"", at: now, d: 11000 };
+      who.state.sub = { who: "CMDR. HARRIS · EXPEDITION LOG \"MATRIX\"", t: "\"" + LOG + " The lit window in the alley with the green dumpster. It isn't a window. Walk straight into it. Don't try it unless you know all this.\"", at: now, d: 11000 };
       return;
     }
     const slab = ctx.getObject(ctx.self.id + "/slab");
