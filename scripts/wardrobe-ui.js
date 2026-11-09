@@ -82,7 +82,7 @@ export function wardrobe(ctx, player) {
   const l = { ...C.default, ...(st.look || {}) }
   SL_LOOK = l
   const human = (st.bodyStyle ?? ctx.world.state?.bodyStyle) !== 'furry' // human mode: no animal, fur, ears, snout or tail
-  const FURRY_SL = ['earS', 'snoutS', 'tailS', 'waistS', 'hipS', 'headS'] // the human bodies carry no keys for these, FURRY_FT = ['snouty', 'foxlike']
+  const FURRY_SL = ['earS', 'snoutS', 'tailS', 'waistS', 'hipS', 'headS'], FURRY_FT = ['snouty', 'foxlike'] // the human bodies carry no keys for these
   const tabs = st.wrMenu ? TABS.slice(0, 2) : TABS // from the main menu: body and face only, clothes come from the world
   const tab = st.wrMenu && !['body', 'face'].includes(st.wrTab) ? 'body' : (st.wrTab || 'body')
   const grid = (k, list, names = NAMES) => `<div class="grid">${list.map((v) => tile(k, v, l[k] === v, names[v] || v)).join('')}</div>`
@@ -104,7 +104,7 @@ export function wardrobe(ctx, player) {
   else if (tab === 'face') body = `
     <div class="sec"><span>EYE SHAPE</span></div>${grid('eyes', C.eyes)}
     <div class="sec"><span>EYE COLOUR</span></div>${sws('eye', C.eye)}
-    <div class="sec"><span>FACE SHAPE</span><span>${l.ftype || 'oval'}</span></div>${grid('ftype', human ? C.ftype.filter((f) => !FURRY_FT.includes(f)) : C.ftype)}
+    <div class="sec"><span>FACE SHAPE</span><span>${human && FURRY_FT.includes(l.ftype) ? 'mixed' : l.ftype || 'oval'}</span></div>${grid('ftype', human ? C.ftype.filter((f) => !FURRY_FT.includes(f)) : C.ftype)}
     <div class="sec"><span>DEMEANOR</span><span>${NAMES[l.trait] || l.trait || 'placid'}</span></div>${grid('trait', C.trait)}
     <div class="sec"><span>CHEEKS</span></div>${sws('blush', C.blush)}
     ${human ? '' : `<div class="sec"><span>NOSE</span><span>${l.nose ? '' : 'the animal’s own'}</span></div>${sws('nose', C.nose)}`}
