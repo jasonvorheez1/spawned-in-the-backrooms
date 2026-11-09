@@ -78,11 +78,11 @@ export function afterDR(dr, dmg, pen = 0) { return mitigated(dr, dmg, pen) }
 export function wear(look, token) {
   const p = parseCloth(token); if (!p) return null
   const l = fullLook(look), old = l[p.slot] && l[p.slot] !== 'none' ? tokOf(l, p.slot) : null
-  const next = { ...l, [p.slot]: p.kind }
+  const next = { ...l, [p.slot]: p.row.id }
   if (CL.colourKey[p.slot]) next[CL.colourKey[p.slot]] = '#' + p.colour
   if (CL.patKey?.[p.slot]) next[CL.patKey[p.slot]] = p.pat ?? ''
-  if (p.slot === 'topw' && p.kind === 'dress') next.botw = 'none' // a dress is the whole outfit
-  return { look: next, back: old, extra: p.slot === 'topw' && p.kind === 'dress' && l.botw !== 'none' && rowOf('botw', l.botw, l.bottom) ? tokOf(l, 'botw') : null }
+  if (p.slot === 'topw' && p.row.kind === 'dress') next.botw = 'none' // a dress is the whole outfit
+  return { look: next, back: old, extra: p.slot === 'topw' && p.row.kind === 'dress' && l.botw !== 'none' && rowOf('botw', l.botw, l.bottom) ? tokOf(l, 'botw') : null }
 }
 // take a garment off: { look, back }
 export function takeOff(look, slot) {
@@ -131,9 +131,9 @@ export function rollCloth(ctx, regular = false, level) {
   const lv = level ?? rollLevel(ctx)
   const here = ctx?.self?.place, inSpecial = here === 'level5' || here === 'level7'
   const list = leveledRows(regular ? 1 : lv, (r) => (r.places ? r.places.includes(here) && !regular : regular ? r.regular : true))
-  if (inSpecial && !regular && ctx.random() < 0.65) { const h = list.filter(([r]) => r.places); if (h.length) { const row = pickW(h, ctx.random()); return clothToken(row.slot, row.kind, row.colours[Math.floor(ctx.random() * row.colours.length)], pickPat(row, () => ctx.random())) } } // Level 5 & Level 7 mostly turn up their own wardrobe
+  if (inSpecial && !regular && ctx.random() < 0.65) { const h = list.filter(([r]) => r.places); if (h.length) { const row = pickW(h, ctx.random()); return clothToken(row.slot, row.id, row.colours[Math.floor(ctx.random() * row.colours.length)], pickPat(row, () => ctx.random())) } } // Level 5 & Level 7 mostly turn up their own wardrobe
   const row = pickW(list, ctx.random()) ?? CL.rows[0]
-  return clothToken(row.slot, row.kind, row.colours[Math.floor(ctx.random() * row.colours.length)], pickPat(row, () => ctx.random()))
+  return clothToken(row.slot, row.id, row.colours[Math.floor(ctx.random() * row.colours.length)], pickPat(row, () => ctx.random()))
 }
 // an NPC dressed from its faction's leveled list, the same every time for the same id: species, fur, face and a signature
 // agency top (the M.E.G. lime) stay; everything else is rolled from what that faction wears at that level
@@ -187,14 +187,14 @@ export function npcLook(id, look, faction, level, role) {
     const list = jl.length ? jl : leveledRows(level, (r) => r.slot === slot && F.rows.includes(r.id))
     if (!list.length) { if (CL.patKey[slot] && l[slot] && l[slot] !== 'none') { const r0 = rowOf(slot, l[slot], l[CL.colourKey[slot]]); if (r0 && !l[CL.patKey[slot]]) l[CL.patKey[slot]] = pickPat(r0, u) ?? '' } continue }
     const row = pickW(list, u())
-    l[slot] = row.kind; if (CL.colourKey[slot]) { const cu = u(), own = row.colours[Math.floor(u() * row.colours.length)] // the top wears the accent, legs and feet go neutral, small pieces echo the accent now and then
+    l[slot] = row.id; if (CL.colourKey[slot]) { const cu = u(), own = row.colours[Math.floor(u() * row.colours.length)] // the top wears the accent, legs and feet go neutral, small pieces echo the accent now and then
       l[CL.colourKey[slot]] = '#' + (row.strict ? own : slot === 'topw' ? (cu < 0.6 ? accent : own) : (slot === 'botw' || slot === 'shoes') ? (cu < 0.65 ? neutral() : own) : (cu < 0.35 ? accent : own)) } // colour variety (Shelly)
     if (CL.patKey[slot]) l[CL.patKey[slot]] = pickPat(row, u, J?.pats) ?? ''
   }
-  if (l.topw === 'dress') l.botw = 'none'
+  if (rowOf('topw', l.topw, l.top)?.kind === 'dress') l.botw = 'none'
   if (F.rows.length && l.neck === 'none' && !look?.neck && u() < 0.24) { // some NPCs just wear a scarf, a cape, a bow tie or a bell collar, whatever the faction's list says
     const row = CL.rows.find((r) => r.id === ['scarf', 'cape', 'cape', 'bowtie', 'bell', 'cape'][Math.floor(u() * 6)])
-    if (row) { l.neck = row.kind; l.neckc = '#' + row.colours[Math.floor(u() * row.colours.length)] }
+    if (row) { l.neck = row.id; l.neckc = '#' + row.colours[Math.floor(u() * row.colours.length)] }
   }
   if (!look?.bodyOwn) bodyRoll(sid, l, look) // a fresh body per NPC: fur, markings, height, build, proportions (species and sex stay: their stories name them)
   if (!look?.hair && (!l.hair || l.hair === 'none')) { // hair, spread by id (Shelly): most people wear some, a few go bare
@@ -227,7 +227,7 @@ export function plainLook(ctx, cur) {
   const l = { ...cur, hat: 'none', eyew: 'none', neck: 'none' }, pick = (a) => a[Math.floor(ctx.random() * a.length)]
   for (const slot of ['topw', 'botw', 'shoes']) {
     const row = pick(CL.rows.filter((r) => r.regular && r.slot === slot && (slot !== 'topw' || r.kind !== 'tank')))
-    l[slot] = row.kind; l[CL.colourKey[slot]] = '#' + pick(CL.regularColours)
+    l[slot] = row.id; l[CL.colourKey[slot]] = '#' + pick(CL.regularColours)
     l[CL.patKey[slot]] = pickPat(row, () => ctx.random()) ?? ''
   }
   return l

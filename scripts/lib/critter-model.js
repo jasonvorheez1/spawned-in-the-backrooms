@@ -271,9 +271,11 @@ export function bodyModel(l) {
   for (const p of WARDROBE.parts) parts[p] = { visible: false }
   parts.Body = { visible: false }
   const topRow = rowOf('topw', l.topw, l.top), bottomRow = rowOf('botw', l.botw, l.bottom), shoeRow = rowOf('shoes', l.shoes, l.shoec)
-  const covered = Boolean(topRow) && topRow.kind !== 'apron', sleeves = topRow && !['tank', 'dress', 'apron'].includes(topRow.kind), longSleeves = sleeves && topRow.kind !== 'tee'
-  const trousers = bottomRow && ['pants', 'pjpants', 'overalls'].includes(bottomRow.kind), bottom = Boolean(bottomRow) || topRow?.kind === 'dress'
-  const skin = { torso: !covered, torso_front: !covered || topRow?.kind === 'jacket' || topRow?.id === 'hotelrobe', hips: !bottom, upperarms: !sleeves, forearms: !longSleeves, hands: true, neck: true, thigh_hi: !bottom, thigh_low: !trousers, shin_hi: !trousers, shin_low: !trousers && shoeRow?.kind !== 'boots', feet: !shoeRow }
+  const covered = Boolean(topRow) && topRow.kind !== 'apron', sleeves = topRow && !['tank', 'dress', 'apron', 'vest'].includes(topRow.kind), longSleeves = sleeves && topRow.kind !== 'tee'
+  const trousers = bottomRow && ['pants', 'pjpants', 'overalls', 'jeans'].includes(bottomRow.kind), bottom = Boolean(bottomRow) || topRow?.kind === 'dress'
+  const openFront = ['jacket', 'blazer', 'vest'].includes(topRow?.kind) || topRow?.id === 'hotelrobe'
+  const longSkirt = bottomRow?.kind === 'longskirt' || topRow?.id === 'gown'
+  const skin = { torso: !covered, torso_front: !covered || openFront, torso_upper_front: !covered || openFront, hips: !bottom, upperarms: !sleeves, forearms: !longSleeves, hands: true, neck: true, thigh_hi: !bottom, thigh_low: !trousers && !longSkirt, shin_hi: !trousers && !longSkirt, shin_low: !trousers && !longSkirt && shoeRow?.kind !== 'boots', feet: !shoeRow }
   for (const [region, visible] of Object.entries(skin)) parts['Skin_' + region] = { visible }
   for (const [slot, pre] of Object.entries(M.slots)) {
     const row = rowOf(slot, l[slot], l[CL.colourKey[slot]])

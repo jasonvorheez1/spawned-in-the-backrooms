@@ -126,10 +126,17 @@ rows:
   - { id: silkcloak,   slot: neck, kind: cape,       name: "Silk caving cloak",  dr: 3, kg: 0.6, rarity: uncommon, places: [level8], strict: true, colours: [dfe6ea], crafted: true, pats: [canvas] }
   - { id: lifemantle,  slot: neck, kind: cape,       name: "Cork lifebelt mantle",  dr: 3, kg: 1.1, rarity: rare, places: [level7], strict: true, colours: [c85a28, 3a4e54], pats: [canvas] }
   # the Level 11 clothing shop's own stock (scripts/lib/level11-shop.js): sold by its clerk only, in no faction, role or loot list
-  - { id: pgmask,      slot: hat,  kind: bagmask,    name: Partygoer mask,       dr: 1, kg: 0.2, rarity: rare, strict: true, shop: true, colours: [c4a46a], mask: /cdn/value.5224d797ee3c620174d7d2c9de5ca4d8d05a0a6148df00937643b5b6022cd171.glb }
-  - { id: ppmask,      slot: hat,  kind: shellmask,  name: Partypooper mask,     dr: 3, kg: 0.6, rarity: rare, strict: true, shop: true, colours: [3a3878], mask: /cdn/value.7f5f9805ea9e1c42c92a150e7128ee72cb6bfeb8fc152ef3e28e363047152d0a.glb }
+  - { id: pgmask,      slot: hat,  kind: bagmask,    name: Partygoer mask,       dr: 1, kg: 0.2, rarity: rare, strict: true, shop: true, colours: [c4a46a], mask: /cdn/value.5f5897c1fc70b33b855b53254e2071094b84b6fec7b8eceabf63578dba0f3d07.glb }
+  - { id: ppmask,      slot: hat,  kind: shellmask,  name: Partypooper mask,     dr: 3, kg: 0.6, rarity: rare, strict: true, shop: true, colours: [3a3878], mask: /cdn/value.4089c36c6bec1ba705d995d5f0d898aed3c53e7d554e15425904e8e098a1cc5b.glb }
   - { id: pgcoat,      slot: topw, kind: jacket,     name: Partygoer coat,       dr: 3, kg: 1.4, rarity: rare, strict: true, shop: true, colours: [b8975c], pats: [pgcoat] }
   - { id: jerrytee,    slot: topw, kind: tee,        name: All Hail Jerry shirt, dr: 1, kg: 0.2, rarity: rare, strict: true, shop: true, colours: [1d2540], pats: [jerry] }
   - { id: pphoodie,    slot: topw, kind: hoodie,     name: Partypooper hoodie,   dr: 2, kg: 0.8, rarity: rare, strict: true, shop: true, colours: [2a2033], pats: [ppsad] }
   - { id: pghoodie,    slot: topw, kind: hoodie,     name: Partygoer hoodie,     dr: 2, kg: 0.8, rarity: rare, strict: true, shop: true, colours: [c4a46a], pats: [pgsmile] }
   - { id: gmhoodie,    slot: topw, kind: hoodie,     name: Game Master hoodie,   dr: 2, kg: 0.8, rarity: rare, strict: true, shop: true, colours: [c8a878], pats: [gmsplit] }
+
+  - {"id": "vest", "slot": "topw", "kind": "vest", "meshBase": "tank", "name": "Tailored waistcoat", "dr": 0, "kg": 0.35, "rarity": "common", "shop": true, "colours": ["6a1b24", "8a5a3a", "2b2b33"], "pats": ["weave", "velvet"]}
+  - {"id": "blazer", "slot": "topw", "kind": "blazer", "meshBase": "jacket", "name": "Tailored blazer", "dr": 0, "kg": 0.7, "rarity": "common", "shop": true, "colours": ["2e4a3a", "2b2b33"], "pats": ["weave", "pinstripe"]}
+  - {"id": "shirt", "slot": "topw", "kind": "shirt", "meshBase": "longsleeve", "name": "Button-down shirt", "dr": 0, "kg": 0.3, "rarity": "common", "shop": true, "colours": ["f4f1ea", "3d5a98"], "pats": ["weave", "plaid"]}
+  - {"id": "jeans", "slot": "botw", "kind": "jeans", "meshBase": "pants", "name": "Denim jeans", "dr": 0, "kg": 0.6, "rarity": "common", "shop": true, "colours": ["3d5a98", "2b2b33"], "pats": ["denim"]}
+  - {"id": "heels", "slot": "shoes", "kind": "heels", "meshBase": "slippers", "name": "Block-heel pumps", "dr": 0, "kg": 0.4, "rarity": "common", "shop": true, "colours": ["2b2b33", "8a5a3a"], "pats": ["leather"]}
+  - {"id": "beret", "slot": "hat", "kind": "beret", "meshBase": "beanie", "name": "Wool beret", "dr": 0, "kg": 0.2, "rarity": "common", "shop": true, "colours": ["2b2b33", "8a5a3a"], "pats": ["weave", "velvet"]}

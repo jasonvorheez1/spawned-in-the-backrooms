@@ -69,6 +69,12 @@ parts:
 - Ward_pphoodie
 - Ward_pghoodie
 - Ward_gmhoodie
+- Ward_vest
+- Ward_blazer
+- Ward_shirt
+- Ward_jeans
+- Ward_heels
+- Ward_beret
 legacyHuman:
   m: /cdn/value.2062fd6ff20cebe8843a20cdc10e446ffe08df184d1c4f42b4e4ada4f82464b7.glb
   f: /cdn/value.c77d4bba1677b19045e36567b00c8d010099e68fdf364280aab568ab44e2d511.glb

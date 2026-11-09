@@ -1,5 +1,5 @@
 """Merge Blender-built garments into the existing body without re-exporting its rig/head."""
-import ast,copy,json,sys,pathlib,numpy as np
+import ast,copy,json,sys,pathlib,numpy as np,yaml
 root=pathlib.Path(__file__).resolve().parents[2]; src=(root/'art/human-head/revamp.py').read_text(); tree=ast.parse(src)
 nodes=[n for n in tree.body if isinstance(n,(ast.Import,ast.ImportFrom,ast.ClassDef)) or isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id in ['DT','NC'] for t in n.targets)]
 ns={};exec(compile(ast.Module(body=nodes,type_ignores=[]),'asset-reader','exec'),ns);GLB=ns['GLB']
@@ -31,7 +31,7 @@ for node in W['nodes']:
    for key,idx in list(target.items()):target[key]=g.add(w.get(idx))
  mi=len(J['meshes']);J['meshes'].append(m);new=copy.deepcopy(template);new['name']=node['name'];new['mesh']=mi;new.pop('children',None)
  ni=len(J['nodes']);J['nodes'].append(new);parent['children'].append(ni);created.append(node['name'])
-assert len(created)==70,(len(created),created)
+expected=yaml.safe_load((root/'scripts/lib/data/wardrobe.yml').read_text())['parts'];assert set(created)==set(expected),(len(created),len(expected))
 # Split the underlying skin into equipment masks, retaining the same indices,
 # weights and morph targets. Hands/neck and uncovered limbs remain independent.
 bn=next(n for n in J['nodes'] if n.get('name')=='Body'); bi=J['nodes'].index(bn);bp=next(n for n in J['nodes'] if bi in n.get('children',[]));bm=J['meshes'][bn['mesh']]
@@ -49,7 +49,9 @@ for pr in bm['primitives']:
   elif 'Leg' in name:region='shin_low' if y<.30*scale else 'shin_hi'
   elif name=='Hips':region='hips'
   elif 'Neck' in name or 'Head' in name:region='neck'
-  else:region='torso_front' if abs(float(positions[t,0].mean()))<.035*scale and float(positions[t,2].mean())>-.08*scale else 'torso'
+  else:
+   front=float(positions[t,2].mean())>-.08*scale
+   region='torso_upper_front' if front and y>float(positions[:,1].max())-.19*scale else 'torso_front' if abs(float(positions[t,0].mean()))<.035*scale and front else 'torso'
   regions.setdefault((region,id(pr)),(pr,[]))[1].append(t)
 for (region,_),(pr,tris) in regions.items():
  p=copy.deepcopy(pr);p['indices']=g.add(np.asarray(tris,dtype='<u4').reshape(-1,1));m={k:copy.deepcopy(v) for k,v in bm.items() if k!='primitives'};m['name']='Skin_'+region;m['primitives']=[p]
