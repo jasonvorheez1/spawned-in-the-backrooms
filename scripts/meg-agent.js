@@ -293,7 +293,7 @@ function gait(me, m, kind) { m.gait = kind; }
 function holster(ctx, me, m, drawn) {
   if (m.drawn === drawn && m.holsterV === 2) return;
   const gun = (me.children ?? []).map((c) => (typeof c === "string" ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) : c)).find((c) => c && !String(c.id).endsWith("/" + HEAD_ID) && (c.model || c.primitive)); // the gun, never the head
-  if (!gun) return; m.drawn = drawn; m.holsterV = 2;
+  if (!gun) return; m.drawn = drawn; m.holsterV = 2; if (!!me.state.armed !== !!drawn) me.state.armed = !!drawn; // critter.js: a drawn weapon walks and runs the warrior's way
   const ranged = !!(WP[me.state.arm ?? gun.state?.kind ?? "pistol"] ?? WP.pistol).ranged;
   // calm: a gun rides slung across the back; a melee weapon is put away out of sight. a fight brings either to the right hand
   gun.visible = drawn || ranged;

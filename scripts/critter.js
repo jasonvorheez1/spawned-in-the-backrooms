@@ -166,13 +166,16 @@ function moodFace(ctx, l) {
 }
 
 // Shelly's Universal Animation Library: a human NPC stands its own way (arms folded, on the phone), picked once by its id; players keep the plain idle
+const WARRIOR = { walk: 'cdn/clip-warrior-walk-cycle-589b8756-loop.glb', run: 'cdn/clip-warrior-run-cycle-9a42782f-loop.glb' } // Shelly's warrior gait, refit to the human rig
 const NPC_IDLES = ['cdn/clip-idle-loop.glb', 'cdn/clip-ual-idle-foldarms-257968ed-loop.glb', 'cdn/clip-ual-idle-talkingphone-5737f83c-loop.glb', 'cdn/clip-ual-idle-foldarms-257968ed-loop.glb']
 function gaitFor(ctx) {
   const ss = ctx.self.session
   if (ss.isPlayer == null) ss.isPlayer = ctx.place.players.some((p) => p.id === ctx.self.id)
   if (!HUMAN || ss.isPlayer) return GAIT_LIB
   if (!ss.gaitNpc) { const h = [...String(ctx.self.id)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7); ss.gaitNpc = { ...GAIT_LIB, idle: NPC_IDLES[h % NPC_IDLES.length] } }
-  return ss.gaitNpc
+  if (!ctx.self.state.armed) return ss.gaitNpc
+  // Shelly: "not everyone is a warrior": the warrior cycles only while a fighter has a weapon out
+  return (ss.gaitArmed ??= { ...ss.gaitNpc, walk: WARRIOR.walk, run: WARRIOR.run, sprint: WARRIOR.run })
 }
 export function update(ctx) {
   { const sty = setStyle(ctx.world.state.bodyStyle), ss = ctx.self.session; if (ss.style !== sty) { if (ss.style) { ss.lookKey = null; ss.key = null; ss.flair = null; ss.headSwept = false; if (sty === 'furry') ctx.self.anim.idle = null } ss.style = sty } } // the menu's BODIES: humans or furries, everyone in the room
