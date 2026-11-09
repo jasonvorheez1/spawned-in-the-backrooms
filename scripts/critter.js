@@ -228,7 +228,7 @@ export function update(ctx) {
     for (const [k] of C.sliders) if (k !== 'headS' && k !== 'tailS' && (l.sex === 'f' || (k !== 'hipS' && k !== 'bustS')) && Number(l[k]) && Number(l[k]) !== 1) params[k] = Number(l[k])
     ses.cachedParams = params
     ses.cachedWorn = worn
-    ses.lookKey = JSON.stringify(MESH ? { ...params, expr: 0 } : params) + (worn ? '|' + worn.url : '') + (HUMAN ? '|human4' : '|furry')
+    ses.lookKey = JSON.stringify(MESH ? { ...params, expr: 0 } : params) + (worn ? '|' + worn.url : '') + (HUMAN ? '|human4' + HUMAN.m + HUMAN.f : '|furry')
     ses.lastFace = face
   }
   const key = ses.lookKey
