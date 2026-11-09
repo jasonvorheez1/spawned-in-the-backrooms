@@ -1849,3 +1849,30 @@ l26d-shoeprint-9:
   receiveShadow: true
   rotation: {pitch: -90, yaw: -90}
   scale: 1.35
+l26d-shoeprint-n0:
+  castShadow: false
+  feetPosition: {x: 300.1, y: -79.993, z: -103.6}
+  id: l26d-shoeprint-n0
+  material: {depthWrite: false, key: Std/PBR, map: /cdn/value.9c129c27d5537583d74bb82f2a051e9e3841e66669a59cc2c8499a63c2daa743.png, metalness: 0.1, opacity: 0.95, roughness: 0.05, tint: 4292796126, transparent: true}
+  primitive: {height: 0.32, kind: plane, width: 0.32}
+  receiveShadow: true
+  rotation: {pitch: -90, yaw: 0}
+  scale: 1.35
+l26d-shoeprint-n1:
+  castShadow: false
+  feetPosition: {x: 299.9, y: -79.993, z: -104.9}
+  id: l26d-shoeprint-n1
+  material: {depthWrite: false, key: Std/PBR, map: /cdn/value.9c129c27d5537583d74bb82f2a051e9e3841e66669a59cc2c8499a63c2daa743.png, metalness: 0.1, opacity: 0.95, roughness: 0.05, tint: 4292796126, transparent: true}
+  primitive: {height: 0.32, kind: plane, width: 0.32}
+  receiveShadow: true
+  rotation: {pitch: -90, yaw: 0}
+  scale: 1.35
+l26d-shoeprint-n2:
+  castShadow: false
+  feetPosition: {x: 300.1, y: -79.993, z: -106.1}
+  id: l26d-shoeprint-n2
+  material: {depthWrite: false, key: Std/PBR, map: /cdn/value.9c129c27d5537583d74bb82f2a051e9e3841e66669a59cc2c8499a63c2daa743.png, metalness: 0.1, opacity: 0.95, roughness: 0.05, tint: 4292796126, transparent: true}
+  primitive: {height: 0.32, kind: plane, width: 0.32}
+  receiveShadow: true
+  rotation: {pitch: -90, yaw: 0}
+  scale: 1.35
