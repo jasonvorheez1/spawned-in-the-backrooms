@@ -27,6 +27,19 @@
 // camera do. Read after the walker's write, the same dot answers the walker's ask, and a blocked body
 // would walk in place for every other player.
 import PLAYER from './lib/data/player.yml'
+import BODIES from './lib/data/critter-models.yml'
+// a human body with no gait named (residents, staff, shoppers): the library's human cycles, the woman's walk and idle on a woman, an idle of its own per person
+const HUMAN_IDS = new Set(Object.values(BODIES.human ?? {}))
+const HUM = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-run-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
+const HUM_F = { ...HUM, idle: 'cdn/clip-idle-female-loop.glb', walk: 'cdn/clip-walk-female-loop.glb' }
+const NPC_IDLES = ['cdn/clip-ual-idle-foldarms-257968ed-loop.glb', 'cdn/clip-ual-idle-talkingphone-5737f83c-loop.glb']
+function humanClips(ctx) {
+  const m = ctx.self.model?.id ?? ctx.self.model
+  if (!HUMAN_IDS.has(m)) return null
+  const ss = ctx.self.session
+  if (ss.humClipsFor !== m) { ss.humClipsFor = m; const base = m === BODIES.human?.f ? HUM_F : HUM; let h = 7; for (const c of String(ctx.self.id)) h = (h * 31 + c.charCodeAt(0)) >>> 0; ss.humClips = h % 3 === 0 ? base : { ...base, idle: NPC_IDLES[h % NPC_IDLES.length] } }
+  return ss.humClips
+}
 import { stepAngle } from 'builtin/math'
 
 // The body's own word, else the world's default.
@@ -238,7 +251,8 @@ export function update(ctx, dt) {
   if (ctx.self.sprite) return // sprites animate via the 2D mixer, never these GLB clips
   if (ctx.self.state?.dead || (ctx.self.tags?.includes?.('npc') && (ctx.self.state?.hp ?? 1) <= 0)) { if (ctx.self.anim.idle || ctx.self.anim.walk || ctx.self.anim.run) { ctx.self.anim.idle = null; ctx.self.anim.walk = null; ctx.self.anim.run = null } return } // a corpse holds no gait
 
-  const clips = ctx.self.state.gaitClips || PLAYER.clips || {} // a body wearing an imported rig names its gait clips (scripts/critter.js)
+  const human = humanClips(ctx)
+  const clips = ctx.self.state.gaitClips || human || PLAYER.clips || {} // a body wearing an imported rig names its gait clips (scripts/critter.js)
   // Seated: attached to a hull, a mount, a chair, or a sit someone else wrote on the sit channel
   // (mixer and anim read one table, so the script remembers whether the sit is its own). The seat
   // carries the body; this script holds the sit and sleeps until a row of this body lands from outside it
@@ -379,7 +393,7 @@ export function update(ctx, dt) {
   // the cute layer: standing still, a body sways side to side, tilts its head and breathes, layered over the Idle (critter bones; another rig just ignores it)
   { const still = rung === 'idle' && !creeping && !ctx.self.state?.crouch && !ctx.self.state?.sit && !ctx.self.state?.dead
     let h = 0; for (const c of String(ctx.self.id)) h = (h * 31 + c.charCodeAt(0)) | 0
-    ctx.self.anim.cute = { clip: CUTE, loop: 'loop', weight: still ? 0.35 : 0.001, speed: 0.85 + (Math.abs(h) % 30) / 100, blendIn: 0.6 } }
+    if (human) { if (ctx.self.anim.cute) ctx.self.anim.cute = null } else ctx.self.anim.cute = { clip: CUTE, loop: 'loop', weight: still ? 0.35 : 0.001, speed: 0.85 + (Math.abs(h) % 30) / 100, blendIn: 0.6 } }
   if (ctx.self.state?.crouch) { // crouched: the crouch pair takes the body; the walk's share is the crouch-walk's
     const go = Math.min(1, Math.max(0.001, 1 - idleWeight))
     ctx.self.anim.idle = { clip: 'cdn/clip-crouch-idle-loop.glb', loop: 'loop', weight: Math.max(0.001, 1 - go), blendIn: 0.2 }
