@@ -58,7 +58,6 @@ export function onInput(ctx, input) {
   const leg = s.tp ? null : ctx.spawn({ audience: 'local', scope: 'session', lifetime: 0.55, feetPosition: { attach: 'camera', x: 0.16, y: -1.38, depth: 0.1 }, pivot: 'top', rotation: { pitch: -8 },
     visibleInFirstPerson: true, castShadow: false,
     primitive: { kind: 'scripted', script: 'scripts/kick-leg-geo.js', params: { species: hb ? null : l.species, fur: skin || l.fur, botw: l.botw, bottom: l.bottom, shoes: l.shoes, shoec: l.shoec } } })
-  ctx.log('[kickleg]', leg, JSON.stringify(ctx.getObject(leg)?.worldFeetPosition), JSON.stringify(ctx.self.camera?.position))
   if (leg) animate(ctx, leg, { 'rotation.pitch': [-8, 78, 72, -8] }, { duration: 0.5, easing: 'easeOutCubic' })
   ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 0.12 }, { audience: { player: ctx.self.id } })
   if (!o && kickFoe(ctx, s, f, p)) return
