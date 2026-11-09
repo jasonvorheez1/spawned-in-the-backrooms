@@ -33,9 +33,8 @@ export function spawnPhoebe(ctx, id, at, yaw, life, pose) {
     ...spec,
     children: [...(spec.children || []), ...(human ? [] : [{ id: "phoebe-outfit", attachment: { skin: true }, model: OUTFIT }])],
     state: { cutPose: true },
+    anim: { pose: { clip: pose ?? (human ? "cdn/clip-idle-female-loop.glb" : "cdn/clip-idle-loop.glb"), loop: "loop", weight: 1 } }, // never a bind pose: a clip from her first frame (Shelly: "t posing phoebe")
   })
-  const h = ctx.getObject(id) // never a bind pose: she holds a clip from her first frame (Shelly: "t posing phoebe")
-  if (h) h.anim.pose = { clip: pose ?? (human ? "cdn/clip-idle-female-loop.glb" : "cdn/clip-idle-loop.glb"), loop: true, weight: 1 }
   return id
 }
 export function dropPhoebe(ctx, id) { if (ctx.getObject(id)) ctx.destroy(id) }
