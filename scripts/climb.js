@@ -46,9 +46,9 @@ export function update(ctx, dt) {
       const dx = p.x - L.base.x, dz = p.z - L.base.z, along = dx * L.f.x + dz * L.f.z, side = Math.abs(dx * L.f.z - dz * L.f.x), dy = p.y - L.base.y
       if (side > 0.55) continue
       // from below: in front of it, facing it, pushing forward
-      if (m.z < -0.3 && along > -1.0 && along < 0.15 && dy > -0.5 && dy < L.h - 0.4 && Math.abs(wrap(look - L.yaw)) < 65) { grab(ctx, m, L, Math.max(dy, 0.05)); break }
+      if (m.z > 0.3 && along > -1.0 && along < 0.15 && dy > -0.5 && dy < L.h - 0.4 && Math.abs(wrap(look - L.yaw)) < 65) { grab(ctx, m, L, Math.max(dy, 0.05)); break }
       // from the top: standing on the deck behind it, facing away, walking back over the edge
-      if (m.z < -0.3 && along > -0.2 && along < 1.1 && L.top && Math.abs(dy - L.h) < 0.45 && Math.abs(wrap(look - L.yaw - 180)) < 60) { grab(ctx, m, L, L.h - 1.05); break }
+      if (m.z > 0.3 && along > -0.2 && along < 1.1 && L.top && Math.abs(dy - L.h) < 0.45 && Math.abs(wrap(look - L.yaw - 180)) < 60) { grab(ctx, m, L, L.h - 1.05); break }
     }
     m.jump = false
     return
@@ -62,7 +62,7 @@ export function update(ctx, dt) {
     me.velocity = { x: -L.f.x * 2.2, y: 2.5, z: -L.f.z * 2.2 }
     return
   }
-  const want = -m.z // moveZ -1 is forward = up
+  const want = m.z // W is +1 here: up
   if (want > 0.3 && L.top && dy >= L.h - 0.9) { // over the top: step off onto the deck
     letGo(ctx, m)
     me.feetPosition = { x: L.base.x + L.f.x * 0.75, y: L.base.y + L.h + 0.08, z: L.base.z + L.f.z * 0.75 }
