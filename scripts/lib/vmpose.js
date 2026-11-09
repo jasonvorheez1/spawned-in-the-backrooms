@@ -134,7 +134,7 @@ export function poseViewmodel(ctx, dt) {
   const scr = screen(ps, ctx.self.place)
   let camHeld = false; try { camHeld = !!ctx.view?.camera } catch (e) { /* no view on this machine */ }
   const ss = ctx.self.session
-  const off = !!(downNow || NO_HANDS_PLACES.has(ctx.self.place) || NO_HANDS_SCREENS.has(scr) || ps.l26cut || ps.cut3 || ss.ride || ss.rideTrain || camHeld) // any scene that holds the camera is no place for an arm
+  const off = !!(downNow || NO_HANDS_PLACES.has(ctx.self.place) || NO_HANDS_SCREENS.has(scr) || ps.l26cut || ps.cut3 || ctx.session?.ride || camHeld) // any scene that holds the camera is no place for an arm
   // keyed on the viewmodel's id too: a fresh arm spawned while hidden (a new place, a weapon swap) starts visible and must be hidden again
   const key = `${ps.vmId}|${off}`
   if (ss.vmHidKey !== key || (off && vm.visible !== false)) { ss.vmHidKey = key; vm.visible = !off }
