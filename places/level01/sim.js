@@ -134,7 +134,7 @@ function driveBay(ctx) {
     ] });
 }
 // modeled furniture (art/zfurn/build.py) over the kit's code-shape desks and chairs; ids, breakable state and colliders kept
-const FURNV = 4;
+const FURNV = 5;
 const FURN = {
   desk: { id: "/cdn/value.e3215f58bcdde6d876cea7966507245a59de5ecef0103689e913a695d05207f6.glb", forward: "+z" },
   chair: { id: "/cdn/value.ae5e296c6ba88216876102ddfc99d58c663b522c6cc4fe32321f3718ab60cee1.glb", forward: "+z" },
@@ -142,6 +142,10 @@ const FURN = {
   rack: { id: "/cdn/value.0feb94aed216f72bcd2e7a4bea3f75143041feb7122e58b511dddcb56490c99c.glb", forward: "+z" },
   labbench: { id: "/cdn/value.2c02c22663991e744f9c29c21ba8fca7ab09529b1df91b1313be88d4c05b97ec.glb", forward: "+z" },
   pod: { id: "/cdn/value.4cdb00ae0fcc6bdfb9e39fe40017283699d22b0a49cf125a53d6c2a51c9fe01e.glb", forward: "-z", offset: [0, 0, 0.04] },
+  counter: { id: "/cdn/value.5eef9af32c6bd5430b834f37676b16152d22c7d2d3ca416af712b65d7cedba36.glb", forward: "-z", offset: [0, 0, -0.01] },
+  growbed: { id: "/cdn/value.59c8ab13009f593ed4740eaa9aff96b45e4a2ff326a9b7991c4e77dc05ce8bf7.glb", forward: "-z" },
+  treadmill: { id: "/cdn/value.32c5caf049d17fd04e58b11bb62c1b8bc477faf8be0b2b6d5f89dcc5f985f7f4.glb", forward: "-z" },
+  crate: { id: "/cdn/value.5c295bfa25ffb15c8ac3fe9fbfeeb0e06785096cdcd0637b2f18b1763a618cc9.glb", forward: "-z" },
 };
 const LOCKER4 = "/cdn/value.b513967746ce4201f7b4fcaff0b615fd6923554b07d2053bcb65d6d69a7e4689.glb";
 function furnModel(kind, p) {
@@ -149,6 +153,9 @@ function furnModel(kind, p) {
   if (kind === "locker") { const n = p.n ?? 3; if (n === 4) m.id = LOCKER4; else if (n !== 3) return { m, scale: { x: n / 3, y: 1, z: 1 } }; }
   if (kind === "labbench" && (p.w ?? 3) !== 3) return { m, scale: { x: (p.w ?? 3) / 3, y: 1, z: 1 } };
   if (kind === "pod" && (p.stack ?? 2) !== 2) return null;
+  if (kind === "counter" && (p.w ?? 3) !== 3) return { m, scale: { x: (p.w ?? 3) / 3, y: 1, z: 1 } };
+  if (kind === "growbed" && (p.w ?? 3.6) !== 3.6) return { m, scale: { x: (p.w ?? 3.6) / 3.6, y: 1, z: 1 } };
+  if (kind === "crate") return { m, scale: { x: (p.w ?? 1.2) / 1.2, y: (p.h ?? 0.8) / 0.8, z: (p.d ?? 0.8) / 0.8 } };
   return { m };
 }
 function furnish(ctx) {
