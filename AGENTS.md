@@ -119,3 +119,5 @@ engine forwards the same keep-out rects.
 
 ## Human appearance parts
 Human body GLBs include Beard_stubble/mustache/goatee/handlebars/fullbeard/chinstrap/anchor and Blush_soft/heart/star/hash. humanBody explicitly hides every unused appearance part. Human beards use these skinned meshes, not critter-beard-geo.js; keep beardChild null in human mode. Each surface carries the same expression/structure targets as the head. art/human-head/revamp.py rebuilds assets (cache outside the tree). Hair rows permit a style on either body; missing per-sex rows fall back to the other rig-compatible row. Burly/rugged use supported HT_Square/HT_Angular keys.
+
+Appearance sw17: male eyes have a separate Pupil material/primitive; preserve it with the Iris material and all expression targets. The head sculpt uses the authored mesh/UVs. The asset writer removes unused buffers and packs sparse morphs; this reduces download size. Refit facial parts from the final eye/mouth landmarks after changing proportions.

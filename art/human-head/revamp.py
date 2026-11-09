@@ -31,6 +31,37 @@ class GLB:
   if p.dtype.kind=='f': a.update(min=p.min(0).tolist(),max=p.max(0).tolist())
   j['accessors'].append(a); return len(j['accessors'])-1
  def bytes(self):
+  # Drop replaced geometry and store mostly-zero morph targets sparsely.
+  refs=[]
+  for mesh in self.j['meshes']:
+   for pr in mesh['primitives']:
+    refs.extend((pr['attributes'],k) for k in pr['attributes'])
+    if 'indices' in pr: refs.append((pr,'indices'))
+    for t in pr.get('targets',[]): refs.extend((t,k) for k in t)
+  for skin in self.j.get('skins',[]):
+   if 'inverseBindMatrices' in skin: refs.append((skin,'inverseBindMatrices'))
+  for anim in self.j.get('animations',[]):
+   for sampler in anim['samplers']: refs.extend([(sampler,'input'),(sampler,'output')])
+  newacc=[]; views=[]; binary=bytearray(); lookup={}; remap={}
+  def store(data):
+   binary.extend(b'\0'*(-len(binary)%4)); off=len(binary); binary.extend(data); views.append({'buffer':0,'byteOffset':off,'byteLength':len(data)}); return len(views)-1
+  for ob,key in refs:
+   old=ob[key]
+   if old not in remap:
+    arr=self.get(old); a=self.j['accessors'][old]; signature=(arr.dtype.str,arr.shape,a.get('normalized',False),hashlib.sha256(arr.tobytes()).digest())
+    if signature in lookup: remap[old]=lookup[signature]
+    else:
+     na={k:v for k,v in a.items() if k not in ['bufferView','byteOffset','sparse']}; nonzero=np.where(np.any(arr!=0,axis=1))[0]
+     if len(nonzero)==0: pass
+     elif arr.dtype.kind=='f' and len(nonzero)<len(arr)*.5:
+      ids=nonzero.astype('<u4'); vals=np.ascontiguousarray(arr[nonzero]); na['sparse']={'count':len(ids),'indices':{'bufferView':store(ids.tobytes()),'componentType':5125},'values':{'bufferView':store(vals.tobytes())}}
+     else: na['bufferView']=store(arr.tobytes())
+     remap[old]=len(newacc); lookup[signature]=len(newacc); newacc.append(na)
+   ob[key]=remap[old]
+  for img in self.j.get('images',[]):
+   if 'bufferView' in img:
+    v=self.j['bufferViews'][img['bufferView']]; off=v.get('byteOffset',0); img['bufferView']=store(self.b[off:off+v['byteLength']])
+  self.j['accessors']=newacc; self.j['bufferViews']=views; self.b=binary
   self.j['buffers'][0]['byteLength']=len(self.b); js=json.dumps(self.j,separators=(',',':')).encode(); js+=b' '*(-len(js)%4); self.b.extend(b'\0'*(-len(self.b)%4))
   return struct.pack('<III',0x46546c67,2,28+len(js)+len(self.b))+struct.pack('<II',len(js),0x4e4f534a)+js+struct.pack('<II',len(self.b),0x004e4942)+self.b
 
@@ -70,23 +101,68 @@ def rebuild_body(ref,sex):
   orig=p; p=canonical(p); x,y,z=p.T; q=p.copy(); face=smooth(-.15,-.05,z); low=np.exp(-((y-1.51)/.047)**2)*face
   # Distinct male skull: firm jaw corners, longer chin, narrower eye opening,
   # developed nasal bridge and brow; crown/neck anchors stay fixed for hats.
-  q[:,0]+=x*low*(.16 if male else -.025)
-  q[:,1]-=(.009 if male else .002)*np.exp(-((y-1.49)/.04)**2)*face
+  q[:,0]+=x*low*(-.16 if male else -.025)
+  q[:,1]-=(.004 if male else .002)*np.exp(-((y-1.49)/.04)**2)*face
   q[:,2]+=(.009 if male else .003)*np.exp(-((y-1.62)/.018)**2)*np.exp(-(x/.025)**2)*face
   q[:,2]+=(.005 if male else .0015)*np.exp(-((y-1.646)/.014)**2)*face
-  eye=np.exp(-((np.abs(x)-.05)/.038)**4)*np.exp(-((y-1.605)/.036)**4)*face
-  q[:,1]+=(1.605-y)*eye*(.38 if male else .035)
+  eye=smooth(.004,.018,np.abs(x))*(1-smooth(.085,.105,np.abs(x)))*smooth(1.545,1.570,y)*(1-smooth(1.632,1.655,y))*face
+  q[:,1]+=((1.605-y)*.50+.010)*eye if male else (1.605-y)*eye*.035
+  if male:
+   lower=smooth(1.455,1.49,y)*(1-smooth(1.590,1.620,y))*face
+   q[:,1]+=(1.615-y)*.16*lower
+   lean=np.exp(-((y-1.555)/.060)**4)*face
+   q[:,0]-=x*.13*lean
+   q[:,0]+=(np.sign(x)*.05-x)*.08*eye
+   lip=np.exp(-((y-1.525)/.014)**4)*np.exp(-(x/.036)**4)*face
+   q[:,0]+=x*.30*lip
+   q[:,2]+=.014*np.exp(-((y-1.599)/.027)**2)*np.exp(-(x/.012)**2)*face
+   q[:,2]+=.004*np.exp(-((y-1.490)/.018)**2)*np.exp(-(x/.032)**2)*face
+   cheek=np.exp(-((y-1.57)/.023)**2)*np.exp(-((np.abs(x)-.074)/.022)**2)*face
+   q[:,2]+=.004*cheek
   q[:,0]/=xs; q[:,1]=(q[:,1]-1.605)/ys+ey
   return q
  for pr in head['primitives']:
   tri=subdiv(g,pr)
-  if j['materials'][pr['material']]['name']=='Head_Skin': tri=subdiv(g,pr)
   old=g.get(pr['attributes']['POSITION']); new=sculpt(old); pr['attributes']['POSITION']=g.add(new)
+  relax=lambda a:a
+  if male and j['materials'][pr['material']]['name']=='Head_Skin':
+   _,gid=np.unique(np.round(old,6),axis=0,return_inverse=True); ng=gid.max()+1
+   edge=np.unique(np.sort(gid[np.concatenate([tri[:,[0,1]],tri[:,[1,2]],tri[:,[2,0]]])],axis=1),axis=0); edge=edge[edge[:,0]!=edge[:,1]]
+   nc=np.bincount(gid,minlength=ng)[:,None]; degree=np.bincount(edge.ravel(),minlength=ng)[:,None]
+   cp=canonical(old); w=smooth(1.455,1.48,cp[:,1])*(1-smooth(1.51,1.535,cp[:,1]))*smooth(-.13,-.04,old[:,2])
+   wg=np.zeros(ng); np.add.at(wg,gid,w); wg=(wg/nc[:,0])[:,None]
+   def relax(a):
+    pp=np.zeros((ng,3)); np.add.at(pp,gid,a); pp/=nc
+    for _ in range(8):
+     total=np.zeros_like(pp); np.add.at(total,edge[:,0],pp[edge[:,1]]); np.add.at(total,edge[:,1],pp[edge[:,0]])
+     pp+=(total/np.maximum(degree,1)-pp)*wg*.24
+    return pp[gid].astype('<f4')
+   new=relax(new); pr['attributes']['POSITION']=g.add(new)
+  if male and j['materials'][pr['material']]['name']=='Brow':
+   def brows(a):
+    q=a.copy(); q[:,1]=1.642+(q[:,1]-1.642)*1.35+.004*(np.abs(q[:,0])-.05)/.035; return q
+   new=brows(new); pr['attributes']['POSITION']=g.add(new)
   for target in pr.get('targets',[]):
-   if 'POSITION' in target: target['POSITION']=g.add(sculpt(old+g.get(target['POSITION']))-new)
+   if 'POSITION' in target:
+    shaped=relax(sculpt(old+g.get(target['POSITION'])))
+    if male and j['materials'][pr['material']]['name']=='Brow': shaped=brows(shaped)
+    target['POSITION']=g.add(shaped-new)
   pr['attributes']['NORMAL']=g.add(normals(new,tri))
  head['name']='Human_Male_Dedicated_Head' if male else 'Human_Female_Refined_Head'
- if male: head['primitives']=[p for p in head['primitives'] if j['materials'][p['material']]['name']!='Lash']
+ if male:
+  irispr=next(p for p in head['primitives'] if j['materials'][p['material']]['name']=='Iris')
+  pupil=copy.deepcopy(irispr); j['materials'].append({'name':'Pupil','pbrMetallicRoughness':{'baseColorFactor':[.015,.012,.018,1],'metallicFactor':0,'roughnessFactor':.65}}); pupil['material']=len(j['materials'])-1
+  old=g.get(pupil['attributes']['POSITION']); center=np.array([np.abs(old[:,0]).mean(),old[:,1].mean(),0])
+  def pupilshape(a):
+   b=a.copy(); b[:,0]=np.sign(a[:,0])*center[0]+(a[:,0]-np.sign(a[:,0])*center[0])*.38; b[:,1]=center[1]+(a[:,1]-center[1])*.65; b[:,2]+=.0012; return b
+  new=pupilshape(old); pupil['attributes']['POSITION']=g.add(new)
+  for t in pupil.get('targets',[]):
+   if 'POSITION' in t: t['POSITION']=g.add(pupilshape(old+g.get(t['POSITION']))-new)
+  head['primitives'].append(pupil)
+  im=j['materials'][irispr['material']]; im['pbrMetallicRoughness'].pop('baseColorTexture',None)
+ iris=g.get(next(p for p in head['primitives'] if j['materials'][p['material']]['name']=='Iris')['attributes']['POSITION'])
+ mouth=g.get(next(p for p in head['primitives'] if j['materials'][p['material']]['name']=='Mouth')['attributes']['POSITION'])
+ ey=float(iris[:,1].mean()); my=float(mouth[:,1].mean()); ys=.08/(ey-my); xs=.05/float(np.abs(iris[:,0]).mean())
  skinpr=next(p for p in head['primitives'] if j['materials'][p['material']]['name']=='Head_Skin')
  p=g.get(skinpr['attributes']['POSITION']); tri=g.get(skinpr['indices']).reshape(-1,3); cent=canonical(p[tri].mean(1)); x,y,z=cent.T; ax=np.abs(x); front=z>-.065
  n=g.get(skinpr['attributes']['NORMAL']); base=p+n*.0018; base_index=g.add(base)
