@@ -20,6 +20,11 @@ l11-footbridge-rail-w:
   id: l11-footbridge-rail-w
   material: {color: oklch(0.25 0.01 250), metalness: 0.8, roughness: 0.45}
   spline: {height: 1, kind: handrail, points: [[0, 0.39999999999999997, -12], [0, 0.7444150891285808, -9], [0, 1.0363961030678928, -6], [0, 1.231491579260158, -3], [0, 1.3, 0], [0, 1.231491579260158, 3], [0, 1.0363961030678928, 6], [0, 0.7444150891285809, 9], [0, 0.4000000000000001, 12]], spacing: 1.5}
+l11-ladder-scaf:
+  feetPosition: {x: 20.5, y: 0.1, z: 32.8}
+  id: l11-ladder-scaf
+  state: {ladder: {h: 4.78, mat: metal, yaw: 0}}
+  tags: [ladder]
 l11-mall-sign-derma:
   feetPosition: {x: -15.67, y: 3.57, z: 29.5}
   id: l11-mall-sign-derma
