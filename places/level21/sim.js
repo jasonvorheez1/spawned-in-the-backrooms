@@ -121,7 +121,7 @@ function lay(ctx) {
     const spec = { feetPosition: { x: c.x, y: h - 0.1, z: c.z }, rotation: { yaw: along }, primitive: { kind: "box", width: 1.2, height: 0.06, depth: 0.2 }, material: { color: col, emissive: col, emissiveIntensity: 2.4 } };
     if (hash(cx, cz, 203) < (z === "base" ? 0.6 : 0.1) && z !== "edge") sp(`l21-lamp-${cx}-${cz}`, { ...spec, fx: { script: `fx\npop flick n=1 r=light(<.9,.95,1>,flick(5,.5)*5,9)` } });
     else if (hash(cx, cz, 207) < 0.07 && z === "hall") sp(`l21-lamp-${cx}-${cz}`, { ...spec, behavior: "scripts/ambient-anim.js", state: { anim: { kind: "sway", deg: 4, sec: 3.1 + hash(cx, cz, 208), axis: "roll", phase: hash(cx, cz, 209) } }, light: { kind: "point", color: col, intensity: 5, distance: 11, shadow: { enabled: false } } }); // a tube hanging from one chain, swinging in the draught
-    else sp(`l21-lamp-${cx}-${cz}`, { ...spec, light: { kind: "point", color: col, intensity: z === "edge" ? 11 : 5, distance: z === "edge" ? 20 : 11, shadow: { enabled: false } } });
+    else sp(`l21-lamp-${cx}-${cz}`, { ...spec, light: { kind: "point", color: col, intensity: z === "edge" ? 4.5 : 5, distance: z === "edge" ? 20 : 11, shadow: { enabled: false } } });
     // Occasional hissing ceiling steam leak in the hot storage halls
     if (z === "hall" && hash(cx, cz, 209) < 0.045) sp(`l21-steam-${cx}-${cz}`, { feetPosition: { x: c.x + 0.9, y: h - 0.28, z: c.z }, fx: { script: STEAM_FX } });
   }
