@@ -1,3 +1,4 @@
+import { hearOf } from './lib/hunt.js';
 import { clearSight } from './lib/sight.js';
 // Level 1's hounds: one manager steps the pack. They roam the halls, hunt when they see or hear you,
 // hunt harder in a Flickering, and never cross into the corridors (safe ground).
@@ -99,12 +100,8 @@ export function update(ctx, dt) {
     let prey = null, best = Infinity;
     const checkTarget = (p, isNpc) => {
       const d = Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z);
-      const loud = (p.state?.sprinting ? L.houndHear : 0) || (dark && p.state?.light ? L.houndHearLight : 0);
-      if (!(d < Math.max(sight * crouchMul(p), loud) * sn(p) && d < best)) return;
-      if (!sees(ctx,h,p)) {
-        if (!isNpc && loud && d<loud*sn(p)) m.lastSeen={x:p.feetPosition.x,z:p.feetPosition.z,at:now};
-        return;
-      }
+      if (!isNpc && hearOf(pos,[p],null,ctx)) m.lastSeen={x:p.feetPosition.x,z:p.feetPosition.z,at:now};
+      if (!(d < sight * crouchMul(p) * sn(p) && d < best) || !sees(ctx,h,p)) return;
       best = d; prey = p;
     };
     for (const p of players) checkTarget(p, false);
