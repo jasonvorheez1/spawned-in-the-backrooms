@@ -273,28 +273,28 @@ const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').
 const Q_CACHE = { key: '', html: '' }
 function questTracker(s) {
   const list = tracked(s)
-  if (!list.length) return ''
+  if (!list.length || s.jrnOpen) return ''
   const key = list.map((q) => `${q.id}|${q.step}`).join('~')
   if (key === Q_CACHE.key) return Q_CACHE.html
   Q_CACHE.key = key
   const row = (q) => `<div style="border-left:3px solid ${q.tint};padding:5px 12px 6px;background:linear-gradient(rgba(18,12,3,0.92),rgba(10,6,1,0.96));box-shadow:0 0 10px rgba(0,0,0,0.8)">
     <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:${q.tint};letter-spacing:.05em"><span style="font-size:9px">◆</span><span>${esc(q.name).toUpperCase()}</span></div>
     <div style="font-size:12px;color:#fff2d4;opacity:.92;text-transform:none;letter-spacing:.02em;line-height:1.3;margin-top:2px">${esc(q.step)}</div></div>`
-  return (Q_CACHE.html = `<div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;width:min(340px,42vw);display:flex;flex-direction:column;gap:5px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:none;z-index:40;animation:hud-pop .3s ease-out">${list.map(row).join('')}</div>`)
+  return (Q_CACHE.html = `<div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;width:min(340px,42vw);display:flex;flex-direction:column;gap:5px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:auto;cursor:pointer;z-index:40;animation:hud-pop .3s ease-out" onclick="sendAction('journal')">${list.map(row).join('')}</div>`)
 }
 // the journal (P): every quest you hold; a press on a row tracks or untracks it, three at most
 function journalUi(s) {
   if (!s.jrnOpen) return ''
   const all = Object.entries(s.quests ?? {}).map(([id, q]) => ({ id, ...q })).sort((a, b) => (b.main ? 1 : 0) - (a.main ? 1 : 0) || (b.at ?? 0) - (a.at ?? 0))
   const tr = tracked(s)
-  const row = (q) => { const t = tr.find((x) => x.id === q.id), c = t?.tint ?? 'var(--ad)'
+  const row = (q) => { const t = tr.find((x) => x.id === q.id), c = t?.tint ?? 'rgba(255,182,66,0.55)'
     return `<button onclick="sendAction('qtrack',{id:'${q.id}'})" style="display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:${t ? 'rgba(255,182,66,0.07)' : 'transparent'};border:0;border-left:3px solid ${c};padding:8px 10px;margin:0 0 6px;font:inherit;color:inherit;cursor:pointer">
       <span style="color:${c};font-size:13px;line-height:1.3">${t ? '◆' : '◇'}</span>
-      <span style="flex:1"><span style="display:block;font-size:13.5px;color:${t ? c : 'var(--a)'};letter-spacing:.05em">${esc(q.name).toUpperCase()}${q.main ? ' <span style="font-size:9px;letter-spacing:.2em;opacity:.7">· MAIN</span>' : ''}</span>
+      <span style="flex:1"><span style="display:block;font-size:13.5px;color:${t ? c : '#ffb642'};letter-spacing:.05em">${esc(q.name).toUpperCase()}${q.main ? ' <span style="font-size:9px;letter-spacing:.2em;opacity:.7">· MAIN</span>' : ''}</span>
       <span style="display:block;font-size:12px;color:#fff2d4;opacity:.85;text-transform:none;line-height:1.35;margin-top:2px">${esc(q.step)}</span></span></button>` }
-  return `<div data-modal style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto;z-index:60"><div style="width:min(520px,92vw);max-height:80vh;overflow:auto;background:oklch(0.14 0.02 75 / .96);border:1px solid var(--ad);box-shadow:0 0 30px #000;padding:16px 18px;text-shadow:0 1px 2px #000">
-    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px"><span style="font-size:15px;letter-spacing:.25em;color:var(--a)">JOURNAL</span><span style="font-size:10px;letter-spacing:.18em;color:var(--ad)">TRACKING ${tr.length} OF ${MAX_TRACK}</span></div>
-    ${all.length ? all.map(row).join('') : '<div style="font-size:12px;color:var(--ad);text-transform:none;padding:14px 0">Nothing written here yet.</div>'}
+  return `<div data-modal style="font-family:'Monofonto','Share Tech Mono','Geist Pixel',ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;color:#ffb642;position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;pointer-events:auto;z-index:60"><div style="width:min(520px,92vw);max-height:80vh;overflow:auto;background:oklch(0.14 0.02 75 / .96);border:1px solid rgba(255,182,66,0.55);box-shadow:0 0 30px #000;padding:16px 18px;text-shadow:0 1px 2px #000">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px"><span style="font-size:15px;letter-spacing:.25em;color:#ffb642">JOURNAL</span><span style="font-size:10px;letter-spacing:.18em;color:rgba(255,182,66,0.55)">TRACKING ${tr.length} OF ${MAX_TRACK}</span></div>
+    ${all.length ? all.map(row).join('') : '<div style="font-size:12px;color:rgba(255,182,66,0.55);text-transform:none;padding:14px 0">Nothing written here yet.</div>'}
   </div></div>`
 }
 

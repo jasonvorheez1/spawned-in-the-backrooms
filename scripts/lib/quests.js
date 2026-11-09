@@ -10,7 +10,7 @@ export function setQuest(s, id, q) {
   if (old && old.step === q.step && old.name === q.name && JSON.stringify(old.mark ?? null) === JSON.stringify(q.mark ?? old.mark ?? null)) return false;
   s.quests = { ...cur, [id]: { name: q.name, step: q.step, mark: q.mark ?? old?.mark ?? null, main: !!(q.main ?? old?.main), at: Date.now() } };
   const tr = (s.qtrack ?? []).filter((k) => s.quests[k]);
-  if (!old && !tr.includes(id)) { if (tr.length < MAX_TRACK) tr.push(id); else if (q.main) tr[MAX_TRACK - 1] = id; } // a new quest is tracked while a slot is free; the main quest always takes one
+  if (!old && !tr.includes(id)) { if (q.main) { tr.unshift(id); tr.length = Math.min(tr.length, MAX_TRACK); } else if (tr.length < MAX_TRACK) tr.push(id); } // a new quest is tracked while a slot is free; the main quest always takes one
   s.qtrack = tr;
   return !old;
 }
