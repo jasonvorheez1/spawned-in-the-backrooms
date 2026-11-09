@@ -195,6 +195,9 @@ for o in bpy.data.objects:
         # then every hem vertex sits ON the hung tube, in or out: folds and crumples have nowhere to be
         fixed = 0
         hv = [v for v in bm.verts if v.co.z < HEM + 0.04]
+        bm.normal_update()
+        # the cloth is two walls, a face and a lining facing inward: the lining sits 8 mm under the face, or the two fight and read as crumples
+        lining = {v for v in hv if v.normal.dot(Vector((v.co.x, v.co.y - cy, 0)).normalized()) < 0}
         for it in range(4):  # relax heights too, so vertical crumples open out; the bottom ring keeps its line
             if it:
                 nz = {}
@@ -208,7 +211,7 @@ for o in bpy.data.objects:
             for v in hv:
                 x, y = v.co.x, v.co.y - cy; r = math.hypot(x, y)
                 if r < 1e-5: continue
-                tr = rowAt(v.co.z)[ak(x, y)] + 0.002
+                tr = rowAt(v.co.z)[ak(x, y)] + (-0.006 if v in lining else 0.002)
                 wv = max(0.0, min(1.0, (HEM + 0.04 - v.co.z) / 0.06))  # eases in from the fitted waist
                 s_ = 1 + (tr / r - 1) * wv; dv = Vector((x * s_ - x, y * s_ - y, 0))
                 if it == 0 and dv.length > 0.001: fixed += 1
