@@ -1,0 +1,22 @@
+# Level 0.1 "Zenith Station": a spherical research megastructure no-clipped into Level 0. Metal and glass, smooth panelled halls,
+# automatic doors that mostly still work, cleaning automatons still on shift, and sectors that froze, cooked or went dark.
+# The gallery at the north end looks out across the hollow inside the shell. Laid by places/level01/sim.js from scripts/zenith-geo.js.
+mode: 3d
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 0, y: 0.1, z: 1.5 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -40 }
+atmosphere:
+  look: { script: scripts/look-photo.js }
+  clouds: { enabled: false }
+  fog: { kind: linear, near: 70, far: 950, color: oklch(0.16 0.02 70) }
+  moon: { enabled: false, intensity: 0 }
+  sky: { kind: color, color: oklch(0.04 0.006 70) }
+  stars: { enabled: false }
+  timeOfDay: 0
+  wind: { direction: 0, speed: 0 }
+  ambient: { light: { color: oklch(0.7 0.02 230), intensity: 0.35 } }
+  hemisphere: { skyColor: oklch(0.45 0.03 70), groundColor: oklch(0.14 0.01 240), intensity: 0.35 }
+acoustics: { reverb: 0.55 }
