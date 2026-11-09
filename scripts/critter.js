@@ -169,7 +169,7 @@ function moodFace(ctx, l) {
 const WARRIOR = { walk: 'cdn/clip-warrior-walk-cycle-589b8756-loop.glb', run: 'cdn/clip-warrior-run-cycle-9a42782f-loop.glb' } // Shelly's warrior gait, refit to the human rig
 const GAIT_HUM = { ...GAIT_LIB, sprint: GAIT_LIB.run } // Shelly: the library sprint swings the arms out behind; humans sprint on the run cycle
 const GAIT_FEM = { ...GAIT_HUM, idle: 'cdn/clip-idle-female-loop.glb', walk: 'cdn/clip-walk-female-loop.glb' }
-const NPC_IDLES = ['cdn/clip-idle-loop.glb', 'cdn/clip-ual-idle-foldarms-257968ed-loop.glb', 'cdn/clip-ual-idle-talkingphone-5737f83c-loop.glb', 'cdn/clip-ual-idle-foldarms-257968ed-loop.glb']
+const NPC_IDLES = ['cdn/clip-idle-loop.glb', 'cdn/clip-idle-loop.glb', 'cdn/clip-ual-idle-talkingphone-5737f83c-loop.glb'] // no folded arms: they pass through a human chest
 function gaitFor(ctx) {
   const ss = ctx.self.session
   if (ss.isPlayer == null) ss.isPlayer = ctx.place.players.some((p) => p.id === ctx.self.id)

@@ -32,7 +32,7 @@ import BODIES from './lib/data/critter-models.yml'
 const HUMAN_IDS = new Set(Object.values(BODIES.human ?? {}))
 const HUM = { idle: 'cdn/clip-idle-loop.glb', walk: 'cdn/clip-walk-loop.glb', run: 'cdn/clip-run-loop.glb', sprint: 'cdn/clip-run-loop.glb', sit: 'cdn/clip-sit-loop.glb' }
 const HUM_F = { ...HUM, idle: 'cdn/clip-idle-female-loop.glb', walk: 'cdn/clip-walk-female-loop.glb' }
-const NPC_IDLES = ['cdn/clip-ual-idle-foldarms-257968ed-loop.glb', 'cdn/clip-ual-idle-talkingphone-5737f83c-loop.glb']
+const NPC_IDLES = ['cdn/clip-ual-idle-talkingphone-5737f83c-loop.glb'] // Shelly: the folded-arms idle drives the arms through a human chest
 function humanClips(ctx) {
   const m = ctx.self.model?.id ?? ctx.self.model
   if (!HUMAN_IDS.has(m)) return null
