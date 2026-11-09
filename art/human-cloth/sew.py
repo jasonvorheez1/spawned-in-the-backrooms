@@ -220,6 +220,14 @@ for name, (ease, cuts) in PLAN.items():
     # rolled edge: boundary loops nudged outward and slightly in, so hems read as turned cloth
     bm.normal_update()
     for v in [v for v in bm.verts if v.is_boundary]: v.co += v.normal * 0.0015
+    adj2 = {v: [e.other_vert(v) for e in v.link_edges] for v in bm.verts}   # clear of the real skin's bumps (shoulder caps, collarbone), smoothed so the push leaves no dents
+    for it in range(5):
+        for v in bm.verts:
+            co, nn, fi, d = bvhSkinL.find_nearest(v.co); out = (v.co - co).dot(nn)
+            if out < 0.008: v.co = v.co + nn * (0.008 - out)
+        if it < 4:
+            new = {v: v.co.lerp(sum((w.co for w in nb), Vector()) / len(nb), 0.4) for v, nb in adj2.items() if len(nb) > 2 and not v.is_boundary}
+            for v, c in new.items(): v.co = c
     bm.transform(MI); bm.normal_update()
     me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free()
     n = bpy.data.objects.new(name + "_n", me); bpy.context.collection.objects.link(n); n.matrix_world = body.matrix_world
@@ -234,9 +242,8 @@ for name, (ease, cuts) in PLAN.items():
     bpy.ops.object.modifier_apply(modifier="t")
     ss = n.modifiers.new("s", "SUBSURF"); ss.levels = 1; bpy.ops.object.modifier_apply(modifier="s")
     for v in me.vertices:                                    # subdivision shrinks over the shoulder: keep every point outside the skin
-        for tree, gap in ((bvhW, 0.0035), (bvhSkinL, 0.006)):   # over the shell, and clear of the real skin's own bumps (shoulder caps, collarbone)
-            co, nn, fi, d = tree.find_nearest(v.co); out = (v.co - co).dot(nn)
-            if out < gap: v.co = v.co + nn * (gap - out)
+        co, nn, fi, d = bvhW.find_nearest(v.co); out = (v.co - co).dot(nn)
+        if out < 0.0035: v.co = v.co + nn * (0.0035 - out)
     tri = sum(len(p.vertices) - 2 for p in me.polygons); BUDGET = 9000 if name.startswith("Top_") else 6000   # Savi's pick: a crowd of NPCs wears these
     if tri > BUDGET:
         dc = n.modifiers.new("d", "DECIMATE"); dc.ratio = BUDGET / tri; bpy.ops.object.modifier_apply(modifier="d")
