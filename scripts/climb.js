@@ -130,16 +130,16 @@ function hands(ctx, m, dir) {
   if (s.tp) { if (m.fp) { ctx.destroy(m.fp); m.fp = null } return }
   const sx = s.look?.sex === 'f' || s.look?.sex == null ? 'f' : 'm'
   if (!m.fp) {
-    m.fp = ctx.spawn({ parent: me.id, feetPosition: { x: 0, y: 1.6, z: -0.45 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
+    m.fp = ctx.spawn({ parent: me.id, feetPosition: { x: 0, y: 1.6, z: -0.38 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
       children: [
-        { id: 'r', feetPosition: { x: 0.24, y: -0.88, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, model: FP_ARM[sx].R, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
-        { id: 'l', feetPosition: { x: -0.24, y: -0.88, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, scale: { x: -1, y: 1, z: 1 }, model: FP_ARM[sx].R, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
+        { id: 'r', feetPosition: { x: 0.24, y: -0.62, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, model: FP_ARM[sx].R, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
+        { id: 'l', feetPosition: { x: -0.24, y: -0.62, z: 0 }, rotation: { pitch: 15, yaw: 0, roll: 0 }, scale: { x: -1, y: 1, z: 1 }, model: FP_ARM[sx].R, castShadow: false, visibleInFirstPerson: true, audience: 'local' },
       ] })
     m.fpR = m.fp + '/r'; m.fpL = m.fp + '/l'
   }
   // a hand reaches up a rung while the other pulls down, swapping every rung; at rest both hold where they are
   const a = Math.sin(m.ph * Math.PI * 2), lift = 0.11
   const R = ctx.getObject(m.fpR), Lh = ctx.getObject(m.fpL)
-  if (R) R.feetPosition = { x: 0.24, y: -0.88 + a * lift, z: -Math.max(0, a) * 0.04 }
-  if (Lh) Lh.feetPosition = { x: -0.24, y: -0.88 - a * lift, z: -Math.max(0, -a) * 0.04 }
+  if (R) R.feetPosition = { x: 0.24, y: -0.62 + a * lift, z: -Math.max(0, a) * 0.04 }
+  if (Lh) Lh.feetPosition = { x: -0.24, y: -0.62 - a * lift, z: -Math.max(0, -a) * 0.04 }
 }
