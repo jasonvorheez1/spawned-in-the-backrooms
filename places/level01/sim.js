@@ -1,3 +1,4 @@
+import { setZen, migrateZen } from "../../scripts/lib/zenith-quest.js";
 // Level 0.1 "Zenith Station": a fragment of a spherical research megastructure grown into Level 0. One kit (scripts/zenith-geo.js), one layout:
 // vestibule (the way back to Level 0) → a spine hall running north, intact at the south end and failing toward the north → eight rooms off it →
 // the gallery, a seven-metre window over the hollow inside the shell with its lit spindle. Rooms: control (the drive for Kade's job), lab, crew quarters,
@@ -118,12 +119,14 @@ function breakable(ctx) {
     });
   }
 }
-// the drive Kade wants: a bay on the control room's island desk, its front toward the room (+Z)
-const DRIVEV = 3;
+// the drive Kade wants: a bay on a lone console under the gallery window, the last thing in the station, its front toward the room (+Z)
+const DRIVEV = 4; // 4: moved to the gallery at the station's far end (Shelly, Nov 9: "move the quest goal to the end of level 0.1")
 function driveBay(ctx) {
   if (ctx.place.objects["z-drive"]) ctx.destroy("z-drive");
+  if (!ctx.place.objects["z-drive-desk"]) ctx.spawn("z-drive-desk", { feetPosition: { x: 0, y: 0, z: -61.6 }, rotation: { yaw: 0 }, physics: "static", primitive: geo({ kind: "desk", seed: 77 }) });
+  if (!ctx.place.objects["z-drive-lamp"]) ctx.spawn("z-drive-lamp", { feetPosition: { x: 0, y: 1.9, z: -61 }, light: { kind: "point", color: "#ffb060", intensity: 1.4, distance: 6 } });
   const gun = { color: "#2b3036", metalness: 0.75, roughness: 0.38 };
-  ctx.spawn("z-drive", { tags: ["usable"], feetPosition: { x: -6.75, y: 0.76, z: -5.9 }, physics: "none",
+  ctx.spawn("z-drive", { tags: ["usable"], feetPosition: { x: 0, y: 0.76, z: -61.5 }, physics: "none",
     model: { id: "/cdn/value.4dc164d69828f09737d500759de3083228feda52c407d9a0bf64b053318fa38d.glb", forward: "+z" }, behavior: "scripts/zenith-use.js",
     state: { kind: "drive", name: "Flight-recorder bay", verb: "Pull the flight-recorder drive", info: "ZENITH FDR-4. Its amber light still blinks." },
     children: [
@@ -180,7 +183,7 @@ export function tick(ctx) {
   const now = ctx.now();
   for (const p of ctx.place.players ?? []) {
     const ps = p.state; if (!ps) continue;
-    if (ps.zenQ === 1) { ps.zenQ = 2; ps.quest = { name: "The Zenith Survey", step: "Find the flight-recorder drive in Zenith Station's control room", at: Date.now() }; }
+    migrateZen(ctx, p); if (ps.zenQ === 3) setZen(ctx, p, 4);
     const f = p.feetPosition, seen = (ps.zenZones ??= "");
     ZONES.forEach(([x0, x1, z0, z1, line], i) => { if (f.x > x0 && f.x < x1 && f.z > z0 && f.z < z1 && !seen.includes(i)) { ps.zenZones = seen + i; ps.notice = { text: line, at: now }; } });
   }

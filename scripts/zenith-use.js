@@ -41,7 +41,7 @@ export function grab(ctx) {
   st.pulled = true; st.busy = false;
   const s = who?.state; if (!s) return;
   s.zenDrive = true;
-  if (s.zenQ && s.zenQ < 3) setZen(ctx, who, 3, "Picked up: Zenith flight-recorder drive");
+  if (s.zenQ && s.zenQ < 5) setZen(ctx, who, 5, "Picked up: Zenith flight-recorder drive");
   else s.notice = { text: "Picked up: Zenith flight-recorder drive. Somebody in the B.N.T.G. would pay for this.", at: ctx.now() };
 }
 export function gone(ctx) { const c = part(ctx, "cart"); if (c) c.visible = false; }
