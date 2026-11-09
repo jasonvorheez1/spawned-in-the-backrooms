@@ -151,14 +151,14 @@ export function update(ctx, dt) {
   if (tc.k > 0.01 && ctx.player && rot) {
     ctx.self.hideLocalPlayer = tc.k < 0.3
     const v = ctx.player.velocity ?? { x: 0, z: 0 }, speed = Math.hypot(v.x, v.z), ads = !!ps?.ads, crouch = !!ps?.crouch, sprint = speed > 6.2 && !ads
-    const bTop = ctx.player.bounds?.max?.y, fy = (ctx.player.worldFeetPosition ?? ctx.player.feetPosition).y, headH = bTop != null ? Math.min(2.2, Math.max(1.2, bTop - fy)) : 1.6 // the pivot rides over your own head, whatever its size
-    const wantD = ads ? 1.8 : sprint ? 3.6 : crouch ? 2.6 : 3.0, wantSh = ads ? 0.45 : sprint ? 0.35 : 0.6, wantH = (crouch ? headH * 0.75 : headH) + 0.15, ez = Math.min(1, dt * 6)
+    const bTop = ctx.player.bounds?.max?.y, fy = (ctx.player.worldFeetPosition ?? ctx.player.feetPosition).y, headH = bTop != null ? Math.min(1.9, Math.max(1.2, bTop - fy)) : 1.7 // the body's height (a tall hat capped)
+    const wantD = ads ? 1.8 : sprint ? 3.6 : crouch ? 2.6 : 3.0, wantSh = ads ? 0.45 : sprint ? 0.35 : 0.6, wantH = (crouch ? headH * 0.62 : headH * 0.86) // Shelly: the pivot at shoulder height, not over the head, ez = Math.min(1, dt * 6)
     tc.sh += (wantSh - tc.sh) * ez; tc.h += (wantH - tc.h) * ez; tc.sp += ((sprint ? 1 : 0) - tc.sp) * Math.min(1, dt * 4)
     const wp = ctx.player.worldFeetPosition ?? ctx.player.feetPosition, pivot = { x: wp.x, y: wp.y + tc.h, z: wp.z }
     const yw = rot.yaw * Math.PI / 180, pt = rot.pitch * Math.PI / 180
     const back = { x: Math.sin(yw) * Math.cos(pt), y: -Math.sin(pt), z: Math.cos(yw) * Math.cos(pt) }, right = { x: Math.cos(yw), z: -Math.sin(yw) }
     let sh = tc.sh; const hs = raycast(ctx, pivot, { x: right.x, y: 0, z: right.z }, { distance: sh + 0.25, radius: 0.12, physicsOnly: true, ignoreEntities: [ctx.player.id] }); if (hs) sh = Math.max(0, hs.distance - 0.25)
-    const from = { x: pivot.x + right.x * sh, y: pivot.y + 0.1, z: pivot.z + right.z * sh }
+    const from = { x: pivot.x + right.x * sh, y: pivot.y, z: pivot.z + right.z * sh }
     let hit = raycast(ctx, from, back, { distance: wantD + 0.3, radius: 0.22, physicsOnly: true, ignoreEntities: [ctx.player.id] })
     if (hit && hit.distance < wantD * 0.7 && back.y > 0.05) { // looking down under a low ceiling: the eye slides back along it instead of collapsing into your head
       const hl = Math.hypot(back.x, back.z) || 1, flat = { x: back.x / hl, y: 0.12, z: back.z / hl }, fl = Math.hypot(flat.x, flat.y, flat.z)
