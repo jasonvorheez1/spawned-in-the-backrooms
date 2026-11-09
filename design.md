@@ -166,3 +166,4 @@ Optional, never forced. Story is Savi's draft. Your HALOGEN keeps flashing an ow
 - Bad Water (Ortiz): get tablets from Callum (Medicine or Barter check, or pickpocket, or kill) → bring to Ortiz → return later. M.E.G. +8.
 - Callum's Lucky Thirteen: revolver variant `lucky13`, unique: never rolled as loot.
 - 2026-11-09 (Shelly: "sure"): B.N.T.G. faction added; Voss the broker at the Level 1 camp sells the thief's name (Barter 35, $10) or buys Ale's secret ($40, B.N.T.G. +12, Survivors -6, karma -5, Ale hostile-cold).
+- 2026-11-09 (her pick): quest cash +10% at Accepted, +25% at Liked with the giver's faction; Hated (-35) factions offer no quest lines; Vilified (-60) NPCs already attack on sight (meg-agent).

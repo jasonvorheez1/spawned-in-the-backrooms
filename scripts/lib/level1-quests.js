@@ -4,7 +4,7 @@
 // answered here (handleDialogueQuest1), and the two non-talk routes ring in from interact.js (a lift) and player.js (a kill).
 // Every number is Savi's pick.
 import { rollCheck, keyOf } from "./npc-talk.js";
-import { addRep, addKarma, GROUPS } from "./rep.js";
+import { addRep, addKarma, GROUPS, repOf } from "./rep.js";
 const NAMES = Object.fromEntries(Object.entries(GROUPS).map(([k, v]) => [k, v.name]));
 import { setQuest, endQuest } from "./quests.js";
 import { pushFeed } from "./feed.js";
@@ -73,13 +73,13 @@ export function l1Choice(ctx, it, s, list) {
     if (r === 1 && !s.rTracked) add.push(opt("rTrack"));
     if (r === 3) { add.push(opt(s.rAleDead ? "rKilled" : "rTruth", "Quest")); if (!s.rAleDead) add.push(opt("rCover")); }
     if (r === 4) add.push(opt(s.rAleDead ? "rKilled" : "rTruth", "Quest"));
-    if (w === 1) { add.push(opt("wAsk", "Quest")); add.push(opt("wMed")); if ((s.cents ?? 0) >= 1500) add.push(opt("wBuy")); }
-  } else if (id === "meg-ortiz") {
+    if (w === 1 && repOf(s, "meg") > -35) { add.push(opt("wAsk", "Quest")); add.push(opt("wMed")); if ((s.cents ?? 0) >= 1500) add.push(opt("wBuy")); }
+  } else if (id === "meg-ortiz" && repOf(s, "meg") > -35) {
     if (r === 1) add.push(opt("rOrtiz", "Quest"));
     if (!w) add.push(opt("wStart", "Quest"));
     if (w === 2) add.push(opt("wGive", "Quest"));
     if (w === 3) add.push(opt("wDone", "Quest"));
-  } else if (id === "bntg-voss") {
+  } else if (id === "bntg-voss" && repOf(s, "bntg") > -35) {
     if (r === 1 && (s.cents ?? 0) >= 1000) add.push(opt("rVossTip"));
     if (r === 3 && !s.rAleDead && s.rAleTalked && s.rAleTalked !== "lift") add.push(opt("rVossSell", "Quest"));
   } else if (id === "meg-ale") {
@@ -102,8 +102,11 @@ export function setStep1(ctx, p, q, step, text) {
   else endQuest(s, id);
   if (text) note(ctx, p, text); ding(ctx, p);
 }
-function finish(ctx, p, q, { xp = 100, cents = 0, items = [], text, rep = [] }) {
-  const s = p.state, msgs = [text];
+// friends pay better: Liked +25 %, Accepted +10 % on the giver's faction (her pick)
+const BONUS = (s, g) => { const v = repOf(s, g); return v >= 35 ? 0.25 : v >= 12 ? 0.1 : 0; };
+function finish(ctx, p, q, { xp = 100, cents = 0, items = [], text, rep = [], by = "meg" }) {
+  const s = p.state, msgs = [text], b = BONUS(s, by);
+  if (b && cents) { const extra = Math.round(cents * b); cents += extra; msgs.push(`${NAMES[by] ?? by} bonus +$${(extra / 100).toFixed(2)}`); }
   setStep1(ctx, p, q, 99);
   for (const [g, d] of rep) { if (!d) continue; const tier = g === "karma" ? addKarma(s, d) : addRep(s, g, d); msgs.push(tier || `${g === "karma" ? "Karma" : NAMES[g] ?? g} ${d > 0 ? "+" : ""}${d}`); }
   s.cents = (s.cents ?? 0) + cents;
@@ -177,7 +180,7 @@ export function handleDialogueQuest1(ctx, p, it, text) {
   }
   if (id === "bntg-voss" && k === "rVossSell" && r === 3) {
     aleFeels(ctx, p, -80);
-    finish(ctx, p, "rations", { xp: 110, cents: 4000, items: [], text: "Quest completed: Short Rations · sold Ale's debt to the B.N.T.G.", rep: [["bntg", 12], ["survivors", -6], ["karma", -5]] });
+    finish(ctx, p, "rations", { xp: 110, cents: 4000, items: [], by: "bntg", text: "Quest completed: Short Rations · sold Ale's debt to the B.N.T.G.", rep: [["bntg", 12], ["survivors", -6], ["karma", -5]] });
     return { reply: "Unlicensed supply line. That's a debt now, and debts get paid. She'll work it off hauling for us. Forty, and you never heard my name.", mood: "happy" };
   }
 
