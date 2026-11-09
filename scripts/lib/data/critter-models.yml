@@ -6,7 +6,7 @@
 mesh: true
 # human bodies (Shelly #94499; Nov 9: T-pose rest, masculine male, fitted clothes parts, face keys): every critter body wears these; art/human-base/build.py
 # T-pose rest (Nov 9): the old A-pose rest splayed elbows out on every clip; art/human-base output must stay T-posed
-human: { m: "/cdn/value.9e924b3f6f0c6e9ecac4b2b991968b7d084497a4c22c5d86ab224a79c123d3c4.glb", f: "/cdn/value.dc6d643e1df3a31209fdfde6a3cf901992389152646f2ea96e2b2df8dfa5c3c0.glb" }
+human: { m: "/cdn/value.ac3116891e6fd29f03e0174c74672778f8b18c9e0810040e12e4be7cf5122a97.glb", f: "/cdn/value.22c6613839dd795861ec75afe7a404d1c2f1de7cabe2d0ec10769b66c7a73a97.glb" }
 body: { m: "/cdn/value.72a8b9bf28216baab5b949a31bbff68251f892d11e4ca39e3b68c27ef0557e76.glb", f: "/cdn/value.234a83fd493cd046995cd5526a69249cd845b14a19372cdf61be068d24fc5d56.glb" }
 bodyMats: [fur, limb, pad, cloth_top, cloth_bottom, cloth_shoes, cloth_hat, cloth_neck, button, metal, lens, gold, sole]
 slots: { topw: Top, botw: Bot, shoes: Shoes, hat: Hat, eyew: Eyew, neck: Neck }
