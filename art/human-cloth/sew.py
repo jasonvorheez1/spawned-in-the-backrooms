@@ -143,7 +143,8 @@ for name, (ease, cuts) in PLAN.items():
                 co, n, fi, d = bvhW.find_nearest(v.co); n = _nf(v.co, n); out = (v.co - co).dot(n)
                 if out < 0.004: v.co = v.co + n * (0.004 - out)
     if hasattr(ease, "drape"):                               # below the waist a top is a hanging tube: cut the skin-shaped part away, loft rings to the hem
-        Z0 = (B["Spine"].z + B["Spine1"].z) * 0.5 + 0.02; hem = cuts[0][0].z; cy = B["Spine1"].y; NB = 96
+        Z0 = B["Spine1"].z + 0.05;   # the hanging tube starts on the flat of the lower back, above where the seat's cleft begins
+        hem = cuts[0][0].z; cy = B["Spine1"].y; NB = 96
         bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.calc_center_median().z < Z0], context="FACES")
         bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context="VERTS")
         def hull(z0, z1):                                    # body's widest radius per angle in a slab
