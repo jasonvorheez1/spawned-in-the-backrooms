@@ -22,6 +22,12 @@ B = {b.name: arm.matrix_world @ b.head_local for b in arm.data.bones}
 NECK, WAIST, HIP = B["Neck"].z, B["Spine"].z + 0.01, B["Hips"].z
 WRIST = B["LeftHand"].x - 0.03; ELBOW = B["LeftForeArm"].x; KNEE = B["LeftLeg"].z
 ANKLE = 0.075 * (NECK / 1.276)
+_SEATZ = (B["Spine"].z + B["Spine1"].z) * 0.5 + 0.14; _SEATY = B["Spine1"].y
+def _nf(co, n):                                              # over the seat's cleft a skin normal points sideways: two sides pushed at each other fold the cloth. straight back there
+    if abs(co.x) < 0.06 and co.z < _SEATZ and co.y > _SEATY:
+        k = Vector((n.x * abs(co.x) / 0.06, n.y, n.z))
+        if k.length > 1e-6: return k.normalized()
+    return n
 def smooth(x, a, b): t = min(1, max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t)
 def band(x, edge, w): return 1 - smooth(abs(x - edge), w * 0.6, w)  # 1 inside a band of width w at edge
 # garment plans: ease(p) in metres; cuts: (point, normal) keeps the side the normal points away from. Savi's picks
@@ -138,7 +144,7 @@ for name, (ease, cuts) in PLAN.items():
                 new = {v: v.co + (sum((w.co for w in nb), Vector()) / len(nb) - v.co) * f for v, nb in adj.items() if len(nb) > 2}
                 for v, c in new.items(): v.co = c
             for v in bm.verts:
-                co, n, fi, d = bvhW.find_nearest(v.co); out = (v.co - co).dot(n)
+                co, n, fi, d = bvhW.find_nearest(v.co); n = _nf(v.co, n); out = (v.co - co).dot(n)
                 if out < 0.004: v.co = v.co + n * (0.004 - out)
     if hasattr(ease, "drape"):                               # below the waist a top is a hanging tube: cut the skin-shaped part away, loft rings to the hem
         Z0 = (B["Spine"].z + B["Spine1"].z) * 0.5 + 0.02; hem = cuts[0][0].z; cy = B["Spine1"].y; NB = 96
@@ -239,7 +245,7 @@ for name, (ease, cuts) in PLAN.items():
     adj2 = {v: [e.other_vert(v) for e in v.link_edges] for v in bm.verts}   # clear of the real skin's bumps (shoulder caps, collarbone), smoothed so the push leaves no dents
     for it in range(5):
         for v in bm.verts:
-            co, nn, fi, d = bvhSkinL.find_nearest(v.co); out = (v.co - co).dot(nn)
+            co, nn, fi, d = bvhSkinL.find_nearest(v.co); nn = _nf(v.co, nn); out = (v.co - co).dot(nn)
             if out < 0.008: v.co = v.co + nn * (0.008 - out)
         if it < 4:
             new = {v: v.co.lerp(sum((w.co for w in nb), Vector()) / len(nb), 0.4) for v, nb in adj2.items() if len(nb) > 2 and not v.is_boundary}
@@ -264,7 +270,7 @@ for name, (ease, cuts) in PLAN.items():
     bpy.ops.object.modifier_apply(modifier="t")
     ss = n.modifiers.new("s", "SUBSURF"); ss.levels = 1; bpy.ops.object.modifier_apply(modifier="s")
     for v in me.vertices:                                    # subdivision shrinks over the shoulder: keep every point outside the skin
-        co, nn, fi, d = bvhW.find_nearest(v.co); out = (v.co - co).dot(nn)
+        co, nn, fi, d = bvhW.find_nearest(v.co); nn = _nf(v.co, nn); out = (v.co - co).dot(nn)
         if out < 0.0035: v.co = v.co + nn * (0.0035 - out)
     tri = sum(len(p.vertices) - 2 for p in me.polygons); BUDGET = 9000 if name.startswith("Top_") else 6000   # Savi's pick: a crowd of NPCs wears these
     if tri > BUDGET:
@@ -277,10 +283,10 @@ for name, (ease, cuts) in PLAN.items():
     fb = bmesh.new(); fb.from_mesh(me); fb.verts.ensure_lookup_table()   # final clearance: what decimate pulled under the skin rises, as a smooth swell, not per-vertex dents
     D = {}
     for v in fb.verts:
-        co, nn, fi, d = bvhSkinL.find_nearest(v.co); out = (v.co - co).dot(nn)
+        co, nn, fi, d = bvhSkinL.find_nearest(v.co); nn = _nf(v.co, nn); out = (v.co - co).dot(nn)
         D[v] = nn * max(0.0, 0.006 - out)
         co, nn, fi, d = bvhSeal.find_nearest(MW @ v.co); out = (MW @ v.co - co).dot(nn)
-        if d < 0.05 and 0.006 - out > D[v].length: D[v] = (MI.to_3x3() @ nn).normalized() * (0.006 - out)
+        if d < 0.05 and 0.006 - out > D[v].length: D[v] = _nf(v.co, (MI.to_3x3() @ nn).normalized()) * (0.006 - out)
     for _ in range(4):
         N = {}
         for v in fb.verts:
@@ -293,7 +299,7 @@ for name, (ease, cuts) in PLAN.items():
         D = {}
         for v in fb.verts:
             co, nn, fi, d = bvhSeal.find_nearest(MW @ v.co); out = (MW @ v.co - co).dot(nn)
-            D[v] = (MI.to_3x3() @ nn).normalized() * max(0.0, 0.007 - out) if d is not None and d < 0.06 else Vector()
+            D[v] = _nf(v.co, (MI.to_3x3() @ nn).normalized()) * max(0.0, 0.007 - out) if d is not None and d < 0.06 else Vector()
         if not any(x.length > 0 for x in D.values()): break
         for _ in range(3):
             N = {}
