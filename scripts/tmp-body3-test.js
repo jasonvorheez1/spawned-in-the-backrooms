@@ -8,7 +8,7 @@ export function onSpawn(ctx) {
   const me = ctx.self, s = me.state
   me.model = humanBody({ sex: s.sex ?? 'm', skin: s.skin ?? (s.sex === 'f' ? '#e8b896' : '#c58c66') })
   s.gaitClips = s.sex === 'f' ? FEM : LIB
-  if (s.kind && s.kind !== 'fists') me.session.held = ctx.spawn({ parent: me.id, attachment: { bone: 'RightHand' }, tags: ['temp'], ...weaponBody(s.kind) })
+  if (s.kind && s.kind !== 'fists') me.session.held = ctx.spawn({ parent: me.id, attachment: { bone: 'RightHand' }, tags: ['temp'], ...weaponBody(s.kind), ...(s.gunRot ? { rotation: s.gunRot } : {}) })
   me.session.t0 = ctx.now(); me.session.n = 0; me.session.next = 0
 }
 export function update(ctx, dt) {
