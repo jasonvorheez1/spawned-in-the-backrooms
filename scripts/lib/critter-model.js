@@ -553,8 +553,15 @@ export function toMesh(ctx, obj) {
   return l
 }
 // the head rides the body's skin, at its origin: an old scripted head (hung on Hips) is re-seated, a missing one spawned
+// critter heads a scene laid as children under their own minted ids (Level 4 office people): a human body drops them too
+const HEAD_IDS = () => new Set(Object.values(M.species).flatMap((r) => [r.head, r.headM, r.headF]))
+export function strayHeads(ctx, obj) {
+  const ids = HEAD_IDS(), out = []
+  for (const c of obj?.children ?? []) { const h = typeof c === 'string' ? ctx.getObject(c) : c?.id ? ctx.getObject(c.id) ?? c : c; const m = h?.model?.id ?? h?.model; if (h?.id && typeof m === 'string' && ids.has(m)) out.push(h) }
+  return out
+}
 export function seatHead(ctx, obj, l) {
-  if (HUMAN) { for (const k of [HEAD_ID, MASK_ID, HAIR_ID]) if (ctx.getObject(obj.id + '/' + k)) ctx.destroy(obj.id + '/' + k); obj.jiggle = null; obj.morph = humanMorph(l); return } // a human body carries its own head; its face keys rolled per NPC
+  if (HUMAN) { for (const k of [HEAD_ID, MASK_ID, HAIR_ID]) if (ctx.getObject(obj.id + '/' + k)) ctx.destroy(obj.id + '/' + k); for (const h of strayHeads(ctx, obj)) ctx.destroy(h.id); obj.jiggle = null; obj.morph = humanMorph(l); if (obj.material?.outline) obj.material = null; return } // a human body carries its own head; its face keys rolled per NPC
   const want = critterSpec(l).children[0]; let h = ctx.getObject(obj.id + '/' + HEAD_ID)
   // a head skinned to the body's old model loses its skin when the body swaps: re-spawn it on the new one
   const body = obj.model?.id ?? obj.model
@@ -614,7 +621,7 @@ const _bust = (l) => {
 // their look rides in state.wear (read back off the model when it never had one), so a flip and a flip back returns the same clothes, face and species
 const OLD_HUMAN = ['/cdn/value.fd49318b8e8c14d0e98cf8d8b38433601bad2db2515aa8ed3585e8842e2cd80c.glb', '/cdn/value.8d0f43bf3da06253fd58a24473034d2ff3ff1ad4b551d69fcbced89ff58251c1.glb', '/cdn/value.20d3f3631f90a37ce5dc3131af7fe01f6ad38cdbfd21516e1ba50a5ebfc10234.glb', '/cdn/value.80059b609922b38626d38fbf30c31a25046ecff490b20427cb02e791988fe6bc.glb', '/cdn/value.4802b6cd4b09d80a1b730817fb9ec8620f5d861e9e208cd3d6b6b811a18d0df4.glb', '/cdn/value.59bdc78b4240c5fd51dda3dcd5d717d6636cb08500bbd87acb891a290756daee.glb', '/cdn/value.571a6f2a3b9368cb26c62e6dd96129a7eb7a1b680a6358295b76445e8d5fa96b.glb']
 const FURRY_IDS = () => Object.values(M.body), HUMAN_IDS = () => [...Object.values(M.human ?? {}), ...OLD_HUMAN]
-export const STYLE_V = 'sw2'
+export const STYLE_V = 'sw3'
 export function furrySpec(l) { const h = HUMAN; HUMAN = null; try { return critterSpec(l) } finally { HUMAN = h } } // a character who stays a critter in both modes (Phoebe)
 export function restyle(ctx, o) {
   const mid = o?.model?.id ?? o?.model
@@ -622,9 +629,12 @@ export function restyle(ctx, o) {
   const isH = HUMAN_IDS().includes(mid), isF = FURRY_IDS().includes(mid)
   if (!isH && !isF) return false
   const want = HUMAN ? 'h' : 'f'
-  if ((want === 'h' && isH && Object.values(M.human).includes(mid)) || (want === 'f' && isF)) return false
+  const stray = strayHeads(ctx, o)
+  if (want === 'f' && isF) return false
+  if (want === 'h' && isH && Object.values(M.human).includes(mid)) { if (!stray.length && !o.material?.outline) return false; if (o.state && !o.state.wear) o.state.wear = { ...(lookFromModel(o.model, stray[0]?.model?.id ?? stray[0]?.model) ?? {}) }; seatHead(ctx, o, o.state?.wear ?? {}); return true }
   const local = String(o.id).split('/').pop()
-  const l = { ...(lookFromModel(o.model, ctx.getObject(o.id + '/' + HEAD_ID)?.model?.id) ?? {}), ...(o.state?.wear ?? {}) }
+  const hm = ctx.getObject(o.id + '/' + HEAD_ID)?.model ?? stray[0]?.model
+  const l = { ...(lookFromModel(o.model, hm?.id ?? hm) ?? {}), ...(o.state?.wear ?? {}) }
   if (isH && !o.state?.wear) l.sex = mid === M.human.f || mid === OLD_HUMAN[1] || mid === OLD_HUMAN[3] || mid === OLD_HUMAN[4] || mid === OLD_HUMAN[6] ? 'f' : (l.sex ?? 'm')
   l.species ??= speciesFor(local); l.sex ??= 'm'; l.fseed ??= hashOf(local)
   if (o.state) o.state.wear = l
