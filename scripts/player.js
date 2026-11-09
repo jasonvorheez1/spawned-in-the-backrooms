@@ -927,7 +927,7 @@ const Q_GUN = { x: 0, y: 1, z: 0, w: 0 } // yaw 180: lays the mesh's +Z barrel f
 // degrees to a quaternion: yaw about Y, then pitch about X, then roll about Z (the viewmodel's children take quaternions; an euler rotation on a mesh child was ignored)
 const eulerQ = (yaw, pitch, roll) => { const h = Math.PI / 360, [cy, sy, cp, sp, cr, sr] = [Math.cos(yaw * h), Math.sin(yaw * h), Math.cos(pitch * h), Math.sin(pitch * h), Math.cos(roll * h), Math.sin(roll * h)]; return { x: cy * sp * cr + sy * cp * sr, y: sy * cp * cr - cy * sp * sr, z: cy * cp * sr - sy * sp * cr, w: cy * cp * cr + sy * sp * sr } }
 // q: the correction, from the mesh itself (measured from its vertices, art/weapons: the barrel axis leans 23.8 deg to +x and 32.4 deg up; q = Ry(10) * Rx(32.4) * Ry(-23.8) lays it along +Z, the 10 being the sights lined up on the crosshair). A child's rotation must be a quaternion: the euler form is ignored on a mesh child.
-const GUN_FIX = { shotgun: { q: { x: 0.26702, y: -0.11563, z: -0.0812, w: 0.95328 }, at: { x: 0, y: -0.271, z: -0.036 } } } // q = yaw(10) * the exact correction above: the barrel lies along the look; at: the receiver sits at the fist and the pump under the off hand (weapons.yml two) // measured on a render: the engine centres the mesh on its box, so the trigger sat ~0.5 m above the fist
+const GUN_FIX = { shotgun: { outer: { x: 0, y: 0, z: 0, w: 1 }, q: { x: 0.2021, y: 0.91937, z: -0.31702, w: 0.11581 }, at: { x: -0.002, y: 0.001, z: -0.251 } } } // solved from the glb's own vertices (art/weapons: barrel axis (0.341,0.536,0.772), trigger side (-0.298,-0.717,0.63)): the muzzle runs down -Z, the trigger guard hangs below, the wrist of the stock sits in the fist
 function toggleHolster(ctx) {
   const s = ctx.self.state; cancelReload(ctx); s.ads = false
   if (!s.sheathed) { if (s.equipped !== 'fists') s.holstered = s.equipped; s.equipped = 'fists'; s.sheathed = true; s.sheathAt = ctx.now() } // hands away: nothing in view
@@ -945,7 +945,7 @@ function viewmodel(ctx, moving, sprinting) {
   w.vmEq = kind; w.vmCheck = false
   const hb = !l.modelUrl && HUMAN ? humanBody(l) : null // human bodies: Shelly's own model's arm holds the weapon (her rule: first-person arms come from her model or a PLYMODEL)
   const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '')
-  const arm = hb ? { hidden: true } : ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v22' + JSON.stringify(s.vmTune ?? null)
+  const arm = hb ? { hidden: true } : ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v23' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     w.plyRig = null
@@ -953,7 +953,7 @@ function viewmodel(ctx, moving, sprinting) {
     const child = g == null ? [] : [gun
       ? (GUN_FIX[bk]
         // the Tripo shotgun mesh lies tilted ~35 deg muzzle-up with its butt at the origin: level it and put its trigger in the fist
-        ? { feetPosition: { x: 0, y: 0.01, z: 0.02 }, rotation: s.vmTune?.rot ?? Q_GUN, audience: 'local', children: [{ feetPosition: s.vmTune?.at ?? GUN_FIX[bk].at, rotation: s.vmTune?.q ?? (s.vmTune?.pitch != null || s.vmTune?.yaw != null ? eulerQ(s.vmTune?.yaw ?? 0, s.vmTune?.pitch ?? 0, s.vmTune?.roll ?? 0) : GUN_FIX[bk].q), castShadow: false, ...weaponBody(kind), audience: 'local' }] }
+        ? { feetPosition: { x: 0, y: 0.01, z: 0.02 }, rotation: s.vmTune?.rot ?? GUN_FIX[bk].outer ?? Q_GUN, audience: 'local', children: [{ feetPosition: s.vmTune?.at ?? GUN_FIX[bk].at, rotation: s.vmTune?.q ?? (s.vmTune?.pitch != null || s.vmTune?.yaw != null ? eulerQ(s.vmTune?.yaw ?? 0, s.vmTune?.pitch ?? 0, s.vmTune?.roll ?? 0) : GUN_FIX[bk].q), castShadow: false, ...weaponBody(kind), audience: 'local' }] }
         : { id: 'gun', feetPosition: s.vmTune?.at ?? { x: 0, y: bk === 'pistol' ? 0.03 : -0.04, z: bk === 'pistol' ? 0.04 : 0.14 }, rotation: s.vmTune?.rot ?? (bk === 'pistol' ? Q_ID : Q_GUN), castShadow: false, ...weaponBody(kind), audience: 'local' })
       : MESHGRIP[bk]
         ? { feetPosition: s.vmTune?.mat ?? { x: MESHGRIP[bk].at[0], y: MESHGRIP[bk].at[1], z: MESHGRIP[bk].at[2] }, rotation: s.vmTune?.mrot ?? { x: MESHGRIP[bk].q[0], y: MESHGRIP[bk].q[1], z: MESHGRIP[bk].q[2], w: MESHGRIP[bk].q[3] }, castShadow: false, ...weaponBody(kind), audience: 'local' }
