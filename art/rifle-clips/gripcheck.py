@@ -34,13 +34,13 @@ for ch in C['animations'][0]['channels']:
 def world(i):
     chain = []
     while i is not None: chain.append(i); i = par.get(i)
-    q = (0, 0, 0, 1); p = (0, 0, 0)
+    q = (0, 0, 0, 1); p = (0, 0, 0); sc = 1.0
     for j in reversed(chain):
         n = nodes[j]; lr = anim.get(n.get('name'), n.get('rotation', [0, 0, 0, 1])); lt = n.get('translation', [0, 0, 0]); s = n.get('scale', [1, 1, 1])
-        lt = tuple(lt[k]*1 for k in range(3)); d = qv(q, lt); p = tuple(p[k]+d[k] for k in range(3)); q = qm(q, tuple(lr))
+        lt = tuple(lt[k]*sc for k in range(3)); d = qv(q, lt); p = tuple(p[k]+d[k] for k in range(3)); q = qm(q, tuple(lr)); sc *= s[0]
     return q, p
 idx = {v: k for k, v in name.items()}
-R = world(idx['RightHand']); L = world(idx['LeftHand']); S = world(idx['RightArm']); H = world(idx['Head'])
+R = world(idx['RightHand']); L = world(idx['LeftHand']); S = world(idx['RightArm']); H = world([k for k,v in name.items() if v=='Head'][0])
 f = lambda v: '(' + ', '.join('%.3f' % x for x in v) + ')'
 print('RH pos', f(R[1]), 'LH pos', f(L[1]), 'Rshoulder', f(S[1]), 'head', f(H[1]))
 d = tuple(L[1][k]-R[1][k] for k in range(3)); print('R->L', f(d))
