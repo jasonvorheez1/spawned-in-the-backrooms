@@ -369,6 +369,7 @@ export function update(ctx, dt) {
       m.lunge = null;
     }
 
+    if (now > (mem.dbg ?? 0) && w === allSmilers[0]) { mem.dbg = now + 3000; ctx.log('SMDBG', JSON.stringify({ id: w.id, vx, vz, speed, lit, prey: !!prey, goal, pos, next: m.next, way: way && { c: way.cells, n: way.next }, side: m.side, sep: m.sep, hub: inHub(ahead.cx, ahead.cz) })); }
     const curVy = w.velocity?.y ?? 0;
     w.velocity = { x: vx, y: curVy + ctx.place.gravity.y * dt, z: vz };
 
