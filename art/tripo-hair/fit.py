@@ -61,7 +61,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     def blocked(mm): return sum(1 for v in mm.vertices if fz0 < v.co.z < fz1 and v.co.y < y0 + 0.05 and abs(v.co.x) < rx * 0.55)
     R = Matrix.Translation(Vector((0, cy, 0))) @ Matrix.Rotation(3.14159, 4, "Z") @ Matrix.Translation(Vector((0, -cy, 0)))
     b0n = blocked(me); me.transform(R); b1n = blocked(me)
-    if b1n >= b0n or key.startswith("t_s_"): me.transform(R)  # the soft wigs were painted front-on: their front is the file's front
+    if b1n >= b0n: me.transform(R)
     print("face", key, b0n, b1n)
     # a lopsided Tripo mesh: its fuller side mirrored onto the other, so the curtain falls even on both shoulders
     if key in ("t_silver", "t_softbob"):
@@ -77,9 +77,10 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
                 sgn = 1 if c.x >= 0 else -1; k = min(1.0, (c.z - (hz - 0.14)) / 0.08)
                 c.x = c.x + (sgn * rx * (0.78 + 0.1 * abs(c.x) / rx) - c.x) * k
     # a painted wig leaves Tripo a filled face mask inside the hair: for these, what hangs in front of the face is cut away, not folded
-    if key == "t_softbob":  # the t_s_ wigs were painted hollow: nothing to cut
+    if key == "t_softbob" or key.startswith("t_s_"):
         bmC = bmesh.new(); bmC.from_mesh(me)
-        cut = [f for f in bmC.faces if (lambda c: hz - 0.13 < c.z < fz1 - 0.005 and c.y < cy - 0.01 and abs(c.x) < rx * 0.8)(f.calc_center_median())]
+        XW = 0.8 if key == "t_softbob" else 0.66  # the soft wigs: a face-wide hole, tails and side locks left whole
+        cut = [f for f in bmC.faces if (lambda c: hz - 0.13 < c.z < fz1 - 0.005 and c.y < cy - 0.02 and abs(c.x) < rx * XW)(f.calc_center_median())]
         bmesh.ops.delete(bmC, geom=cut, context="FACES"); bmesh.ops.delete(bmC, geom=[v for v in bmC.verts if not v.link_faces], context="VERTS")
         bmC.to_mesh(me); bmC.free(); print("cut face mask", key, len(cut))
     # whatever still hangs over the face folds up into a fringe that ends at the brow, no holes cut
