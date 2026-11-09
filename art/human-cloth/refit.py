@@ -146,8 +146,9 @@ for o in bpy.data.objects:
         co, n, d, w = skin_at(v.co)
         low = top and v.co.z < HEM
         if low:  # a top's hem below the crotch hangs from the hips as a tube: no leg weights, no pull into the crotch
-            hw = sum(x for g, x in w.items() if "Leg" in g or "Foot" in g)
-            w = {g: x for g, x in w.items() if not ("Leg" in g or "Foot" in g)}; w["Hips"] = w.get("Hips", 0) + hw
+            f = max(0.0, min(1.0, (HEM - v.co.z) / 0.05))  # leg weight hands over to the hips across 5 cm
+            hw = sum(x for g, x in w.items() if "Leg" in g or "Foot" in g) * f
+            w = {g: (x * (1 - f) if ("Leg" in g or "Foot" in g) else x) for g, x in w.items()}; w["Hips"] = w.get("Hips", 0) + hw
         skin[v.index] = w
         if lim and not low:
             side = (v.co - co).dot(n)
@@ -166,21 +167,33 @@ for o in bpy.data.objects:
         if dv is None: continue
         v.co += dv
         for L in shapes: v[L] += dv
-    if top:  # the inner flaps a top grew between the legs fold out onto its own outer shell: a clean hem tube
-        cy = sum((v.co.y for v in bm.verts), 0.0) / len(bm.verts)
-        ring = {}
-        def key(v): return (int((v.co.z - 0.0) / 0.012), int((math.atan2(v.co.y - cy, v.co.x) + math.pi) / (2 * math.pi) * 36) % 36)
-        def rad(v): return math.hypot(v.co.x, v.co.y - cy)
-        lowv = [v for v in bm.verts if v.co.z < HEM]
-        for v in lowv: k = key(v); ring[k] = max(ring.get(k, 0), rad(v))
+    if top:  # the hem past the hips falls straight like cloth: each slice no narrower than the one over it, every dimple and inner flap pushed out
+        lowv = [v for v in bm.verts if v.co.z < HEM + 0.04]
+        cy = sum((v.co.y for v in lowv), 0.0) / max(1, len(lowv)); NB = 48
+        zk = lambda z: int((HEM + 0.04 - z) / 0.01)
+        ak = lambda x, y: int((math.atan2(y, x) + math.pi) / (2 * math.pi) * NB) % NB
+        Rm = {}
+        for v in lowv:
+            k = (zk(v.co.z), ak(v.co.x, v.co.y - cy)); Rm[k] = max(Rm.get(k, 0), math.hypot(v.co.x, v.co.y - cy))
+        ks = sorted({k for k, _ in Rm}); rows = {}; prev = None
+        for k in ks:
+            row = [Rm.get((k, i), 0) for i in range(NB)]
+            row = [max(row[i], row[(i - 1) % NB] * 0.97, row[(i + 1) % NB] * 0.97) for i in range(NB)]
+            if prev: row = [max(row[i], prev[i]) for i in range(NB)]
+            rows[k] = row; prev = row
+        for _ in range(3): rows = {k: [(r[(i - 1) % NB] + 2 * r[i] + r[(i + 1) % NB]) / 4 for i in range(NB)] for k, r in rows.items()}
         fixed = 0
         for v in lowv:
-            r = rad(v); R0 = ring[key(v)]
-            if r < R0 * 0.9:
-                a = math.atan2(v.co.y - cy, v.co.x); dv = Vector((math.cos(a) * R0, cy + math.sin(a) * R0, v.co.z)) - v.co
-                dv.z = 0; v.co += dv; fixed += 1
+            x, y = v.co.x, v.co.y - cy; r = math.hypot(x, y)
+            if r < 1e-5: continue
+            tr = rows[zk(v.co.z)][ak(x, y)] + 0.002
+            wv = max(0.0, min(1.0, (HEM + 0.04 - v.co.z) / 0.05))  # eases in from the fitted waist
+            if tr > r:
+                s_ = 1 + (tr / r - 1) * wv; dv = Vector((x * s_ - x, y * s_ - y, 0))
+                if dv.length > 0.001: fixed += 1
+                v.co += dv
                 for L in shapes: v[L] += dv
-        print("hem", o.name, "folded out", fixed)
+        print("hem", o.name, "hung out", fixed)
     moved = sum(1 for x in delta.values() if x.length > 0.002)
     bm.to_mesh(me); bm.free()
     if o.name in WEIGHTS:
