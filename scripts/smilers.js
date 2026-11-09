@@ -1,3 +1,4 @@
+import { clearSight } from './lib/sight.js';
 // The pack manager: one script moves every smiler. They drift cell to cell along open doorways,
 // lock on to a wanderer they can see, stalk, then lunge and bite. They never cross into the safe room.
 // Body: a Blender crawler (art/smiler/build.py) with baked clips idle, skitter, freeze, lunge-bite, recoil, death.
@@ -11,7 +12,6 @@ import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter as cellMid, openPoint, hasPillar, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
 const cellCenter = openPoint; // every standing spot this pack picks is clear of the cell's pillar
 import { stepToward as stepToward0 } from "./lib/maze0path.js";
-import { raycast } from "builtin/physics";
 import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
 
 const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1) * crouchMul(p); // sneak skill, and a crouch hides you (scripts/lib/sneak.js)
@@ -81,11 +81,8 @@ function searchTarget(ctx, pos, at) {
 }
 
 function roamTarget(ctx, pos, players) {
-  let near = null, nd = 70;
-  for (const p of players) { const d = Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z); if (d < nd) { nd = d; near = p; } }
   for (let t = 0; t < 6; t++) {
-    const base = near && ctx.random() < 0.6 ? near.feetPosition : pos;
-    const spread = base === pos ? 18 : 10;
+    const base = pos, spread = 18;
     const c = cellAt(base.x + (ctx.random() * 2 - 1) * spread, base.z + (ctx.random() * 2 - 1) * spread);
     const cx = Math.max(0, Math.min(N - 1, c.cx)), cz = Math.max(0, Math.min(N - 1, c.cz));
     if (inHub(cx, cz) || hasPit(cx, cz)) continue;
@@ -99,35 +96,7 @@ function act(w, clip, extra) {
   w.anim.act = { clip: CLIP[clip] ?? clip, loop: "once", blend: "override", weight: 4, time: 0, ...extra };
 }
 
-// Throttled raycast line of sight check
-function checkSightThrottled(ctx, m, now, a, b, ignoreId, targetId) {
-  const dx = b.x - a.x;
-  const dy = (b.y ?? 0) - (a.y ?? 0);
-  const dz = b.z - a.z;
-  const d2 = dx * dx + dz * dz;
 
-  if (d2 > 14 * 14) return false;
-
-  if (m.los && now < m.los.until && m.los.targetId === targetId) {
-    return m.los.clear;
-  }
-
-  const l = Math.sqrt(d2 + dy * dy) || 1;
-  const hit = raycast(
-    ctx,
-    { x: a.x, y: (a.y ?? 0) + EYE, z: a.z },
-    { x: dx / l, y: dy / l, z: dz / l },
-    { distance: l, physicsOnly: true, bodies: "static", ignoreEntities: [ignoreId, targetId] }
-  );
-
-  const clear = !hit;
-  m.los = {
-    clear,
-    until: now + 150 + (dx % 40),
-    targetId,
-  };
-  return clear;
-}
 
 export function update(ctx, dt) {
   if (!ctx.place.players.length) { ctx.sleep(2); return; }
@@ -197,14 +166,7 @@ export function update(ctx, dt) {
 
         if (d >= reach || d >= bd) continue;
 
-        const L3 = Math.hypot(dx, dy, dz) || 1;
-        const hit = raycast(
-          ctx,
-          { x: pos.x, y: pos.y + EYE, z: pos.z },
-          { x: dx / L3, y: dy / L3, z: dz / L3 },
-          { distance: L3, physicsOnly: true, ignoreEntities: [w.id, p.id], bodies: "static" }
-        );
-        if (hit) continue;
+        if (!clearSight(ctx, {x:pos.x,y:pos.y+EYE,z:pos.z}, {x:pp.x,y:pp.y+(p.state?.crouch?0.8:1.3),z:pp.z}, [w.id,p.id])) continue;
 
         best = p;
         bd = d;
@@ -216,7 +178,7 @@ export function update(ctx, dt) {
 
       m.prey = best?.id ?? null;
       if (st.horde && players.some((p) => p.id === st.horde)) {
-        m.prey = st.horde; // blackout horde hunts its player
+        m.prey = best?.id === st.horde ? st.horde : null; // visual lock still requires sight
       }
       if ((st.sneakTarget ?? null) !== m.prey) st.sneakTarget = m.prey;
 
@@ -252,7 +214,9 @@ export function update(ctx, dt) {
       }
     }
 
-    const prey = m.prey ? players.find((p) => p.id === m.prey) : null;
+    let prey = m.prey ? players.find((p) => p.id === m.prey) : null;
+    if (prey && !clearSight(ctx,{x:pos.x,y:pos.y+EYE,z:pos.z},{x:prey.feetPosition.x,y:prey.feetPosition.y+(prey.state?.crouch?0.8:1.3),z:prey.feetPosition.z},[w.id,prey.id])) { prey=null; m.prey=null; }
+    if ((st.sneakTarget??null)!==(prey?.id??null)) st.sneakTarget=prey?.id??null;
     let goal;
     let speed;
     let lit = false;
@@ -293,7 +257,7 @@ export function update(ctx, dt) {
           m.lead = null;
           m.last = { ...m.last, x: goal.x, z: goal.z };
         } else {
-          m.search = { x: m.last.x, z: m.last.z, left: 3 };
+          m.search = { x: m.last.x, z: m.last.z, left: 3, until: now + 6000 };
           m.next = null;
           m.restUntil = 0;
           m.last = null;
@@ -301,6 +265,8 @@ export function update(ctx, dt) {
         }
       }
     } else {
+      m.last=null; m.lead=null;
+      if(m.search && now>m.search.until) { m.search=null; m.next=null; m.restUntil=0; }
       if (m.next && Math.hypot(m.next.x - pos.x, m.next.z - pos.z) < 0.6 && !m.restUntil) m.restUntil = now + 1500 + ctx.random() * 2500;
       if (!m.next || now > (m.nextBy ?? 0) || (m.restUntil && now > m.restUntil)) {
         const sg = m.search && m.search.left-- > 0 ? searchTarget(ctx, pos, m.search) : null;
@@ -321,7 +287,7 @@ export function update(ctx, dt) {
       }
     }
 
-    const sight = prey && checkSightThrottled(ctx, m, now, pos, prey.feetPosition, w.id, prey.id);
+    const sight = !!prey;
     let way = null;
     if ((prey || m.last || m.next) && !sight) {
       way = stepToward0(pos.x, pos.z, goal.x, goal.z, 25);

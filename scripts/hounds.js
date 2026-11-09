@@ -1,9 +1,9 @@
+import { clearSight } from './lib/sight.js';
 // Level 1's hounds: one manager steps the pack. They roam the halls, hunt when they see or hear you,
 // hunt harder in a Flickering, and never cross into the corridors (safe ground).
 import { knocked } from "./lib/knock.js";
 import { crouchMul } from "./lib/sneak.js";
 import { heard } from "./lib/hear.js";
-import { raycast } from "builtin/physics";
 import L from "./lib/data/level1.yml";
 import { zoneAt, safeZone, cellCenter, N } from "./lib/level1.js";
 import { zoneAt as zoneAt2 } from "./lib/level2.js";
@@ -21,12 +21,8 @@ const H3 = C.hounds3;
 const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1);
 const SND = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 
-function hasClearSight(ctx, a, b, ignoreId, targetId) {
-  const dx = b.x - a.x, dy = (b.y ?? 0) - (a.y ?? 0), dz = b.z - a.z, d = Math.hypot(dx, dz);
-  if (d > 14) return false;
-  const l = Math.hypot(dx, dy, dz) || 1;
-  const hit = raycast(ctx, { x: a.x, y: (a.y ?? 0) + 0.6, z: a.z }, { x: dx / l, y: dy / l, z: dz / l }, { distance: l, physicsOnly: true, bodies: "static", ignoreEntities: [ignoreId, targetId] });
-  return !hit;
+function hasClearSight(ctx,a,b,ignoreId,targetId) {
+  return clearSight(ctx,{x:a.x,y:a.y+0.7,z:a.z},{x:b.x,y:b.y+1,z:b.z},[ignoreId,targetId]);
 }
 // The body: a rigged Blender mesh (art/hound/build.py) with its own clips; every row the sims spawn wears it.
 const MODEL = "/cdn/value.180d1072a97d34551e1394960b70202777c9d0b51fb0ca67779a59e429ef6fa7.glb";
@@ -45,11 +41,8 @@ pop dust burst=16 life=.6..1 on=box(.5,.5,.8).c(.5) v=sdir()*(.4..1)+up(.4) size
 const BLOOD = `fx
 pop drip burst=6..9 life=.4..0.7 v=sdir()*(.6..1.4)+up(.3) size=.03..0.06 acc=grav()*.8 col=<.35,.02,.03> a=1>0 sz=$size floor=die r=sprite(soft-disc,alpha)`;
 // line of sight: nothing static between the hound's head and the prey's chest
-function sees(ctx, h, p) {
-  const a = { x: h.feetPosition.x, y: h.feetPosition.y + 0.7, z: h.feetPosition.z }, b = { x: p.feetPosition.x, y: p.feetPosition.y + 1, z: p.feetPosition.z };
-  const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z, d = Math.hypot(dx, dy, dz);
-  if (d < 0.8) return true;
-  return !raycast(ctx, a, { x: dx / d, y: dy / d, z: dz / d }, { distance: d - 0.4, bodies: "all", physicsOnly: true, excludeTags: ["hound", "npc", "player"], ignoreEntities: [h.id, p.id] }); // doors are kinematic: "all" sees them
+function sees(ctx,h,p) {
+  return clearSight(ctx,{x:h.feetPosition.x,y:h.feetPosition.y+0.7,z:h.feetPosition.z},{x:p.feetPosition.x,y:p.feetPosition.y+(p.state?.crouch?0.65:1),z:p.feetPosition.z},[h.id,p.id]);
 }
 export function update(ctx, dt) {
   const place = ctx.self.place;
@@ -108,25 +101,28 @@ export function update(ctx, dt) {
       const d = Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z);
       const loud = (p.state?.sprinting ? L.houndHear : 0) || (dark && p.state?.light ? L.houndHearLight : 0);
       if (!(d < Math.max(sight * crouchMul(p), loud) * sn(p) && d < best)) return;
-      if (!sees(ctx, h, p) && (isNpc || !(loud && d < loud * sn(p)))) return;
+      if (!sees(ctx,h,p)) {
+        if (!isNpc && loud && d<loud*sn(p)) m.lastSeen={x:p.feetPosition.x,z:p.feetPosition.z,at:now};
+        return;
+      }
       best = d; prey = p;
     };
     for (const p of players) checkTarget(p, false);
     for (const n of ctx.query({ tags: ["npc"], radius: sight, center: pos })) {
       if (!n.state?.dead && !safeAt(n.feetPosition.x, n.feetPosition.z)) checkTarget(n, true);
     }
-    if (st.horde) { const hp = players.find((p) => p.id === st.horde); if (hp) { prey = hp; best = Math.hypot(hp.feetPosition.x - pos.x, hp.feetPosition.z - pos.z); } } // a blackout horde hunts its player
+    if (st.horde) { const hp = players.find((p) => p.id === st.horde); if (hp && Math.hypot(hp.feetPosition.x-pos.x,hp.feetPosition.z-pos.z)<sight*sn(hp) && sees(ctx,h,hp)) { prey = hp; best = Math.hypot(hp.feetPosition.x - pos.x, hp.feetPosition.z - pos.z); } } // a blackout horde hunts its player
     if (L3) { // brigades: share the spotter's prey, and lie in wait in dead ends
     }
     if (prey && !m.hunting && !m.howled) { // it HOWLS once on sight: head back, jaw wide, and every hound in 30 m comes
       m.howled = true; m.howlUntil = now + T.howlMs; anim(h, m, "howl", false);
       h.rotation = { yaw: Math.atan2(-(prey.feetPosition.x - pos.x), -(prey.feetPosition.z - pos.z)) * 57.2958 };
       heard(ctx, { clip: SND("hound-bark-howl-call"), position: pos, volume: 1, maxDistance: 60 });
-      for (const o of ctx.query({ tags: ["hound"], radius: T.callRadius, center: pos })) if (o.id !== h.id) { const om = (mem[o.id] ??= {}); om.pack = prey.id; om.packUntil = now + T.callHold * 1000; om.howled = true; }
+      for (const o of ctx.query({ tags: ["hound"], radius: T.callRadius, center: pos })) if (o.id !== h.id) { const om = (mem[o.id] ??= {}); om.lastSeen={x:prey.feetPosition.x,z:prey.feetPosition.z,at:now}; om.pack = prey.id; om.packUntil = now + T.callHold * 1000; om.howled = true; }
     }
     if (!prey && m.pack && now < m.packUntil) {
       prey = players.find((p) => p.id === m.pack) ?? (() => { const n = ctx.getObject(m.pack); return n && !n.state?.dead ? n : null; })() ?? null;
-      if (prey && !sees(ctx, h, prey)) { m.lastSeen ??= { x: prey.feetPosition.x, z: prey.feetPosition.z }; prey = null; }
+      if (prey && (Math.hypot(prey.feetPosition.x-pos.x,prey.feetPosition.z-pos.z)>sight*sn(prey) || !sees(ctx,h,prey))) prey=null;
       if (prey) best = Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z);
     }
     if (prey) m.lastSeen = { x: prey.feetPosition.x, z: prey.feetPosition.z, at: now };
@@ -139,7 +135,7 @@ export function update(ctx, dt) {
           for (const p of players) {
             const dx = pos.x - p.feetPosition.x, dz = pos.z - p.feetPosition.z, d = Math.hypot(dx, dz), yaw = (p.camera?.rotation?.yaw ?? 0) / 57.2958;
             const back = (-Math.sin(yaw) * dx - Math.cos(yaw) * dz) < 0; // the hound is behind where they look
-            if (d < H3.pounceNear * sn(p) || (back && d < H3.pounceBack * sn(p))) { prey = p; best = d; m.pounceUntil = now + H3.pounceTime * 1000; break; }
+            if ((d < H3.pounceNear * sn(p) || (back && d < H3.pounceBack * sn(p))) && sees(ctx,h,p)) { prey = p; best = d; m.pounceUntil = now + H3.pounceTime * 1000; break; }
           }
         }
       }

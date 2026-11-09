@@ -127,11 +127,11 @@ const chest = (p) => ({ x: p.x, y: p.y + 1.1, z: p.z });
 function inView(ctx, me, m, f, d) {
   const now = ctx.now(); m.vis ??= {}; m.ign ??= {};
   if ((m.ign[f.id] ?? 0) > now) return false;
-  const v = m.vis[f.id] ??= { at: 0, saw: 0, near: d, since: now };
-  if (now - v.at > 500) { v.at = now; if (d < 1.2 || seesIt(ctx, me, f)) v.saw = now; }
+  const v = m.vis[f.id] ??= { at: -Infinity, saw: null, near: d, since: now };
+  if (now - v.at > 500) { v.at = now; v.clear=seesIt(ctx, me, f); if (v.clear) v.saw = now; }
   if (d < v.near - 1) { v.near = d; v.since = now; } // getting closer: the chase is working
-  if (now - v.since > 6000 && d > 1.6) { m.ign[f.id] = now + 20000; delete m.vis[f.id]; return false; } // six seconds without gaining: it can't be reached
-  return now - v.saw < 5000;
+  if (!v.clear && now - v.since > 6000 && d > 1.6) { m.ign[f.id] = now + 20000; delete m.vis[f.id]; return false; } // six seconds without gaining: it can't be reached
+  return v.saw != null && now - v.saw < 5000;
 }
 function pickTarget(ctx, me, m) {
   const p = me.feetPosition, now = ctx.now();
@@ -546,6 +546,15 @@ export function update(ctx, dt) {
   if (!fighting && m.inspect && inspect(ctx, me, m, now, dt)) return;
   holster(ctx, me, m, fighting);
   if (fighting) {
+    const visible=seesIt(ctx,me,t);
+    if(visible) m.lastEnemy={id:t.id,at:now,pos:{...t.feetPosition}};
+    else {
+      aim(me,m,null);
+      const last=m.lastEnemy;
+      if(last?.id===t.id && now-last.at<5000 && flat(last.pos,me.feetPosition)>0.8) { gait(me,m,"run"); moveAlong(ctx,me,m,last.pos,G.run,dt); }
+      else { m.curTarget=null; gait(me,m,"idle"); stop(me,dt); }
+      return;
+    }
     work(me, m, m.cover && now < m.cover.until && flat(m.cover, me.feetPosition) < 0.9 ? CROUCH : null);
     // nerve: break and run when it fails them; cornered (arm's length) they lash out anyway. Armed people stand and fight: a lone coward still runs,
     // but one with a friend near holds until it is badly hurt; the unarmed (fists) run unless brave.

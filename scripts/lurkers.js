@@ -1,3 +1,4 @@
+import { clearSight } from './lib/sight.js';
 // The lurker pack: pale things that only move when nobody is looking at them. A wanderer who keeps one in view
 // holds it still (and pays sanity for it); look away, or break the line of sight, and it closes the gap fast.
 // They wander the halls like smilers, but never cross into the safe room. Dead lurkers are cleared here.
@@ -10,7 +11,6 @@ import L from "./lib/data/level0.yml";
 import { cellAt, cellCenter as cellMid, openPoint, hasPillar, inHub, wallX, wallZ, hasPit, N } from "./lib/maze.js";
 const cellCenter = openPoint; // every standing spot this pack picks is clear of the cell's pillar
 import { stepToward as stepToward0 } from "./lib/maze0path.js";
-import { raycast } from "builtin/physics";
 import { npcMul, derived, dmgAfterArmor } from "./lib/stats.js";
 
 const sn = (p) => (p?.state?.attr ? derived(p.state).sneak : 1) * crouchMul(p); // sneak skill, and a crouch hides you (scripts/lib/sneak.js)
@@ -80,11 +80,8 @@ function searchTarget(ctx, pos, at) {
 }
 
 function roamTarget(ctx, pos, players) {
-  let near = null, nd = 70;
-  for (const p of players) { const d = Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z); if (d < nd) { nd = d; near = p; } }
   for (let t = 0; t < 6; t++) {
-    const base = near && ctx.random() < 0.6 ? near.feetPosition : pos;
-    const spread = base === pos ? 18 : 10;
+    const base = pos, spread = 18;
     const c = cellAt(base.x + (ctx.random() * 2 - 1) * spread, base.z + (ctx.random() * 2 - 1) * spread);
     const cx = Math.max(0, Math.min(N - 1, c.cx)), cz = Math.max(0, Math.min(N - 1, c.cz));
     if (inHub(cx, cz) || hasPit(cx, cz)) continue;
@@ -95,39 +92,7 @@ function roamTarget(ctx, pos, players) {
 }
 
 
-// Raycast check: open air between two points
-function clear(ctx, a, b, ignore) {
-  const dx = b.x - a.x;
-  const dy = b.y - a.y;
-  const dz = b.z - a.z;
-  const d = Math.hypot(dx, dy, dz) || 1;
-  return !raycast(ctx, a, { x: dx / d, y: dy / d, z: dz / d }, { distance: d, physicsOnly: true, ignoreEntities: ignore, bodies: "static" });
-}
-
-// Throttled raycast check for pursuit line of sight
-function checkClearThrottled(ctx, m, now, a, b, ignore, targetId) {
-  const dx = b.x - a.x;
-  const dy = b.y - a.y;
-  const dz = b.z - a.z;
-  const d2 = dx * dx + dz * dz;
-
-  if (d2 > 16 * 16) return false;
-
-  if (m.los && now < m.los.until && m.los.targetId === targetId) {
-    return m.los.clear;
-  }
-
-  const d = Math.sqrt(d2 + dy * dy) || 1;
-  const hit = raycast(ctx, a, { x: dx / d, y: dy / d, z: dz / d }, { distance: d, physicsOnly: true, ignoreEntities: ignore, bodies: "static" });
-  const isClear = !hit;
-
-  m.los = {
-    clear: isClear,
-    until: now + 150 + (dx % 40),
-    targetId,
-  };
-  return isClear;
-}
+const clear = clearSight;
 
 function playAnim(w, m, clip, loop = true) {
   if (m.clip === clip) return;
@@ -263,7 +228,7 @@ export function update(ctx, dt) {
         const d = Math.hypot(dx, dz);
         if (d >= L.lurkerSight * mu.sight * sn(p)) continue;
 
-        const head = { x: pp.x, y: pp.y + 1.5, z: pp.z };
+        const head = { x: pp.x, y: pp.y + (p.state?.crouch ? 0.8 : 1.5), z: pp.z };
         if (!clear(ctx, eye, head, [w.id, p.id])) continue;
 
         // Is the wanderer facing it?
@@ -283,7 +248,7 @@ export function update(ctx, dt) {
       }
       m.prey = best?.id ?? null;
       if (st.horde && players.some((p) => p.id === st.horde)) {
-        m.prey = st.horde;
+        m.prey = best?.id === st.horde ? st.horde : null;
       }
       if ((st.sneakTarget ?? null) !== m.prey) st.sneakTarget = m.prey;
 
@@ -341,7 +306,9 @@ export function update(ctx, dt) {
       }
     }
 
-    const prey = m.prey ? players.find((p) => p.id === m.prey) : null;
+    let prey = m.prey ? players.find((p) => p.id === m.prey) : null;
+    if (prey && !clearSight(ctx,eye,{x:prey.feetPosition.x,y:prey.feetPosition.y+(prey.state?.crouch?0.8:1.5),z:prey.feetPosition.z},[w.id,prey.id])) { prey=null; m.prey=null; m.watched=false; }
+    if ((st.sneakTarget??null)!==(prey?.id??null)) st.sneakTarget=prey?.id??null;
     let goal;
     let speed;
 
@@ -358,7 +325,7 @@ export function update(ctx, dt) {
           m.lead = null;
           m.last = { ...m.last, x: goal.x, z: goal.z };
         } else {
-          m.search = { x: m.last.x, z: m.last.z, left: 3 };
+          m.search = { x: m.last.x, z: m.last.z, left: 3, until: now + 6000 };
           m.next = null;
           m.restUntil = 0;
           m.last = null;
@@ -366,6 +333,8 @@ export function update(ctx, dt) {
         }
       }
     } else {
+      m.last=null; m.lead=null;
+      if(m.search && now>m.search.until) { m.search=null; m.next=null; m.restUntil=0; }
       if (m.next && Math.hypot(m.next.x - pos.x, m.next.z - pos.z) < 0.6 && !m.restUntil) m.restUntil = now + 2000 + ctx.random() * 3000;
       if (!m.next || now > (m.nextBy ?? 0) || (m.restUntil && now > m.restUntil)) {
         const sg = m.search && m.search.left-- > 0 ? searchTarget(ctx, pos, m.search) : null;
@@ -378,7 +347,7 @@ export function update(ctx, dt) {
       speed = m.restUntil ? 0 : m.search ? L.lurkerSpeed * 0.4 : 1.7;
     }
 
-    const sight = prey && checkClearThrottled(ctx, m, now, eye, { x: prey.feetPosition.x, y: prey.feetPosition.y + 1.5, z: prey.feetPosition.z }, [w.id, prey.id], prey.id);
+    const sight = !!prey;
     let way = null;
     if ((prey || m.last || m.next) && !sight) {
       way = stepToward0(pos.x, pos.z, goal.x, goal.z, 25);
