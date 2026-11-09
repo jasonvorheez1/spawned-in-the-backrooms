@@ -219,6 +219,11 @@ for o in bpy.data.objects:
             for v, z in nz.items():
                 dz = z - v.co.z; v.co.z = z
                 for L in shapes: v[L].z += dz
+        # cloth never hangs below the crotch between the legs: what the cut left there (a bow knotted at the fly) folds up flat into the hem line
+        for v in bm.verts:
+            if abs(v.co.x) < 0.12 and v.co.z < CROTCH + 0.012:
+                dz = CROTCH + 0.012 - v.co.z; v.co.z += dz
+                for L in shapes: v[L].z += dz
         # then every hem vertex sits ON the hung tube, in or out: folds and crumples have nowhere to be
         fixed = 0
         hv = [v for v in bm.verts if v.co.z < HEM + 0.04]
