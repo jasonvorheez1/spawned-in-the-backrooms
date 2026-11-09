@@ -234,8 +234,9 @@ for name, (ease, cuts) in PLAN.items():
     bpy.ops.object.modifier_apply(modifier="t")
     ss = n.modifiers.new("s", "SUBSURF"); ss.levels = 1; bpy.ops.object.modifier_apply(modifier="s")
     for v in me.vertices:                                    # subdivision shrinks over the shoulder: keep every point outside the skin
-        co, nn, fi, d = bvhW.find_nearest(v.co); out = (v.co - co).dot(nn)
-        if out < 0.0035: v.co = v.co + nn * (0.0035 - out)
+        for tree, gap in ((bvhW, 0.0035), (bvhSkinL, 0.006)):   # over the shell, and clear of the real skin's own bumps (shoulder caps, collarbone)
+            co, nn, fi, d = tree.find_nearest(v.co); out = (v.co - co).dot(nn)
+            if out < gap: v.co = v.co + nn * (gap - out)
     tri = sum(len(p.vertices) - 2 for p in me.polygons); BUDGET = 9000 if name.startswith("Top_") else 6000   # Savi's pick: a crowd of NPCs wears these
     if tri > BUDGET:
         dc = n.modifiers.new("d", "DECIMATE"); dc.ratio = BUDGET / tri; bpy.ops.object.modifier_apply(modifier="d")
