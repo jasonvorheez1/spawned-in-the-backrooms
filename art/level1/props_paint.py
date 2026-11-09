@@ -42,3 +42,10 @@ for i in range(80):
     x, y, r = R.randint(0, S), R.randint(0, S), R.randint(2, 10); d.ellipse([x - r, y - r, x + r, y + r], fill=(84, 60, 48, R.randint(80, 200)))
 grain(im, 9).filter(ImageFilter.GaussianBlur(0.7)).save(OUT + "drum.png")
 print("ok")
+# disconnect label: yellow plate, red bolt, 480V
+from PIL import ImageFont
+im = Image.new("RGB", (256, 256), (214, 176, 40)); d = ImageDraw.Draw(im)
+d.rectangle([6, 6, 249, 249], outline=(20, 18, 16), width=8)
+d.polygon([(140, 30), (82, 132), (124, 132), (100, 214), (176, 104), (132, 104), (160, 30)], fill=(190, 30, 24))
+d.text((128, 236), "480V", fill=(20, 18, 16), anchor="ms", font=ImageFont.truetype("DejaVuSans-Bold.ttf", 34))
+im.save(OUT + "label480.png")
