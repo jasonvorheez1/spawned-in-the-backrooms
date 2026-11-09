@@ -29,7 +29,7 @@ def top(hem, cuff, loose, rib):
             if p.z < hem + 0.035 and ax < 0.2: e = 0.006                            # ribbed hem hugs the hips
         return e * (1 - 0.6 * smooth(p.z, NECK - 0.07, NECK - 0.01))                # collar sits close
     cuts = [(Vector((0, 0, hem)), Vector((0, 0, -1))),
-            (Vector((0, B["Neck"].y - 0.02, NECK - 0.035)), Vector((0, -0.45, 1)).normalized())]
+            (Vector((0, B["Neck"].y, NECK - 0.012)), Vector((0, -0.18, 1)).normalized())]
     cuts += [(Vector((s * cuff, 0, 0)), Vector((s, 0, 0))) for s in (1, -1)]
     return ease, cuts
 def bottom(hem, waist, loose, cuffrib):
@@ -41,11 +41,11 @@ def bottom(hem, waist, loose, cuffrib):
         return e
     return ease, [(Vector((0, 0, hem)), Vector((0, 0, -1))), (Vector((0, 0, waist)), Vector((0, 0.18, 1)).normalized())]
 PLAN = {
-    "Top_hoodie":     top(HIP - 0.02, WRIST, 0.022, True),
-    "Top_sweater":    top(HIP + 0.01, WRIST, 0.016, True),
-    "Top_longsleeve": top(HIP + 0.02, WRIST + 0.005, 0.009, False),
-    "Top_pajamas":    top(HIP, WRIST - 0.01, 0.018, False),
-    "Top_tee":        top(HIP + 0.03, B["LeftArm"].x + 0.11, 0.010, False),
+    "Top_hoodie":     top(HIP + 0.045, WRIST, 0.022, True),
+    "Top_sweater":    top(HIP + 0.06, WRIST, 0.016, True),
+    "Top_longsleeve": top(HIP + 0.07, WRIST + 0.005, 0.009, False),
+    "Top_pajamas":    top(HIP + 0.055, WRIST - 0.01, 0.018, False),
+    "Top_tee":        top(HIP + 0.075, B["LeftArm"].x + 0.11, 0.010, False),
     "Bot_pants":      bottom(ANKLE + 0.01, WAIST + 0.02, 0.012, False),
     "Bot_pjpants":    bottom(ANKLE + 0.02, WAIST + 0.02, 0.02, True),
     "Bot_shorts":     bottom(KNEE + 0.1, WAIST + 0.02, 0.014, False),
@@ -68,7 +68,6 @@ for name, (ease, cuts) in PLAN.items():
     zs = [c[0].z for c in cuts if abs(c[1].z) > 0.5]; lo, hi = min(zs) - 0.04, max(zs) + 0.06
     kill = [v for v in bm.verts if not (lo < v.co.z < hi)]
     bmesh.ops.delete(bm, geom=kill, context="VERTS")
-    sub = bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=1, use_grid_fill=True, smooth=0.0)
     bm.verts.ensure_lookup_table(); bm.normal_update()
     base = {v: v.co.copy() for v in bm.verts}; nrm = {v: v.normal.copy() for v in bm.verts}
     E = {v: ease(base[v]) for v in bm.verts}
@@ -86,6 +85,8 @@ for name, (ease, cuts) in PLAN.items():
             elif out > E[v] * 1.6 + 0.004: v.co = v.co - n * (out - E[v] * 1.6 - 0.004)
     for co, no in cuts:                                      # straight hems
         bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=co, plane_no=no, clear_outer=True)
+    bmesh.ops.dissolve_degenerate(bm, dist=0.002, edges=bm.edges[:])
+    bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=0.0025)
     # drop slivers left by cuts
     bm.verts.ensure_lookup_table(); seen = set(); comps = []
     for v in bm.verts:
@@ -108,7 +109,7 @@ for name, (ease, cuts) in PLAN.items():
     me.materials.append(mat)
     for p in me.polygons: p.use_smooth = True
     bpy.ops.object.select_all(action="DESELECT"); n.select_set(True); bpy.context.view_layer.objects.active = n
-    sd = n.modifiers.new("t", "SOLIDIFY"); sd.thickness = THICK; sd.offset = -1; sd.use_even_offset = True; sd.use_rim = True
+    sd = n.modifiers.new("t", "SOLIDIFY"); sd.thickness = THICK; sd.offset = -1; sd.use_even_offset = False; sd.use_rim = True
     bpy.ops.object.modifier_apply(modifier="t")
     ss = n.modifiers.new("s", "SUBSURF"); ss.levels = 1; bpy.ops.object.modifier_apply(modifier="s")
     # skin + Bust key from the body at the nearest point
