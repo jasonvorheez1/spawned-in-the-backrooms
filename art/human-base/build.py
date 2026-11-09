@@ -555,7 +555,7 @@ def body_radii(body, aw, z, cy, nb=36):
     # star radius of the body (arms out) around (0, cy) at height z, per angle bin
     R = [0.0] * nb
     for i, v in enumerate(body.data.vertices):
-        if aw[i] > 0.3 or abs(v.co.z - z) > 0.02: continue
+        if aw[i] > 0.3 or abs(v.co.z - z) > 0.035: continue  # wide band: a sparse vertex row never leaves skin poking through the cloth
         a = math.atan2(v.co.y - cy, v.co.x); k = int((a + math.pi) / (2 * math.pi) * nb) % nb
         R[k] = max(R[k], math.hypot(v.co.x, v.co.y - cy))
     m = max(R) or 0.1
