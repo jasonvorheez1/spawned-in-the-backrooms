@@ -63,7 +63,8 @@ hatted:
   m_spiky: "/cdn/value.c36e31ebb8d1be53923fc85b889296a15645ad9053ba19852017294cba70cd74.glb"
   m_undercut: "/cdn/value.07fa087c75f1a1509b974db1dfb6c519bb1972de1eb1210a044f31afa79d1b57.glb"
 
-# 14-16: Tripo anime hair (Shelly #107325, art/tripo-hair/fit.py) fitted to the head-type bodies.
+# 14-16: Tripo anime hair; under a hat they wear the pack's under-brim cut 0-2 (the Tripo hat cuts floated tails outside the beanie, Nov 9).
+# 14-16 (orig): (Shelly #107325, art/tripo-hair/fit.py) fitted to the head-type bodies.
 # Human heads (Shelly's hair pack #101894, art/human-hair/build.py): per body sex, pack style n bare and cut under a hat brim. humanPick: each look's style key to its pack style.
 human:
   f:
@@ -81,9 +82,9 @@ human:
     11: { free: "/cdn/value.1624b81d90a7bee61627b939ba6a998c73cee13c234672d56654c3ee957618b0.glb", hat: "/cdn/value.5f029c0b02def9f88ee1e5639c1c2752924f397d8edb78f1aa4e60d6b524b1dc.glb" }
     12: { free: "/cdn/value.2ad8a21f31c1d2f21418f9955945656630c400539e8f3c18c31812be9fcbf67b.glb", hat: "/cdn/value.c41650a0fbc0249954eb6fb81b86f70737f2db3a4e6473a5fb65b3ee803c2b70.glb" }
     13: { free: "/cdn/value.c318bdcb9bb8bd3bb27d236e2c62cd28c308d954af883fff14fcffb19a4cfb68.glb", hat: "/cdn/value.fc1aa4ff19363d09b97345aab4f8e2358918bb5fe36b33219116d73110535060.glb" }
-    14: { free: "/cdn/value.1fe00643a1e5075b6313ec6e36b9295bad70c641d4e60a32264a5e6227f86266.glb", hat: "/cdn/value.ca6e4bde688e7b0fe5922fcbbd0d2c7e7ed28322f7b16261a1830a0874fe20fb.glb" }  # tripo ponytail
-    15: { free: "/cdn/value.a3e23bd022c364bf64d3bf629a756da88de09d5d4aab28eb783d72f922e0acb8.glb", hat: "/cdn/value.15d9206da96a3e482ade9737c79ff36291428b6d0ba0d2c730ac1f3f1ce322ab.glb" }  # tripo spiky
-    16: { free: "/cdn/value.fbe740756d23b3b9287fe7491dddfbb1decf8812966be050aa6ff986fd5b29cd.glb", hat: "/cdn/value.cae4d99f7970130c1d6de632ae9eb98d87953c73691b84a17573511775f78046.glb" }  # tripo long
+    14: { free: "/cdn/value.1fe00643a1e5075b6313ec6e36b9295bad70c641d4e60a32264a5e6227f86266.glb", hat: "/cdn/value.8975b0a068a7ff82dce015c0e7fc9221e45b4584fbd62f6b5fb9590c00030a6a.glb" }  # tripo ponytail
+    15: { free: "/cdn/value.a3e23bd022c364bf64d3bf629a756da88de09d5d4aab28eb783d72f922e0acb8.glb", hat: "/cdn/value.fd3a06629f8e40849d20381aa73630d96cc5b588f0dbdaf0f75b0a9c6734f61b.glb" }  # tripo spiky
+    16: { free: "/cdn/value.fbe740756d23b3b9287fe7491dddfbb1decf8812966be050aa6ff986fd5b29cd.glb", hat: "/cdn/value.a9af44cec3d9dabb0b238af639e00c69f5447cadec6b661c912078661db0e9db.glb" }  # tripo long
   m:
     0: { free: "/cdn/value.3dff0f727fbbbcc466b12732b867875cefc975f7823def2db8061410d8408c5a.glb", hat: "/cdn/value.c4a9dbbbfc680be5997b40c841472e02e01e2120167042faa84a502d8f3236f9.glb" }
     1: { free: "/cdn/value.6e3e3eb1837088247cb727367512dc54a4a253ae2580017f1aa9798abbfe0c03.glb", hat: "/cdn/value.e93449a9e38590ef32c311ef8b4dda74c30ac833f821bbda3a2524cb3f357af8.glb" }
@@ -99,7 +100,7 @@ human:
     11: { free: "/cdn/value.6236d99e39a8ab11c7ff004e442227ee0d42f1f6d3842f6e0f6ee4bea8a1719f.glb", hat: "/cdn/value.71cc2c8a7caa8054752c44ec6b6f0e08c80cab9e94f2608e896949208d855ff9.glb" }
     12: { free: "/cdn/value.81ae2eb3c15af3facc7e133368c22186f77288332b0c99b7ee7a15913e30cf4e.glb", hat: "/cdn/value.c5374a9bd3c174d29f0e1df64131e40d5db80c550011a9cf1379dab0ccbbbf0d.glb" }
     13: { free: "/cdn/value.0bcd6bf57556165411de5e98d64c942a96b6a54c081590c13cc58b6f387baaef.glb", hat: "/cdn/value.d2b742a17753a80e0fb7dbfb8da5590294dc4cb9d6f04d10453167f1b2de9ff1.glb" }
-    14: { free: "/cdn/value.2ce2041adf96ff2ae6d275101f112114ea9221a4cc207bf561be73ac06cf89e6.glb", hat: "/cdn/value.147d156875dd62d9852d5da0c265335f7046027f536b3f766edf4c57a707274b.glb" }  # tripo ponytail
-    15: { free: "/cdn/value.038051c7b263247a35446a32205156e8691c33efd9824af094a4072f8f243bfb.glb", hat: "/cdn/value.b6c1944d8cc99766874489315f9984a4ee1d5b9b285be6a81225fe80ebcbabed.glb" }  # tripo spiky
-    16: { free: "/cdn/value.a50ecfdce64c933e4b4812b6f35f8bc43ae76c1285d4e635cdf6c30ebb039c18.glb", hat: "/cdn/value.56f92c8a0456b3940906fd9fcc6e39042fb52d9999c18b6bd97165d60c57bdcb.glb" }  # tripo long
+    14: { free: "/cdn/value.2ce2041adf96ff2ae6d275101f112114ea9221a4cc207bf561be73ac06cf89e6.glb", hat: "/cdn/value.c4a9dbbbfc680be5997b40c841472e02e01e2120167042faa84a502d8f3236f9.glb" }  # tripo ponytail
+    15: { free: "/cdn/value.038051c7b263247a35446a32205156e8691c33efd9824af094a4072f8f243bfb.glb", hat: "/cdn/value.e93449a9e38590ef32c311ef8b4dda74c30ac833f821bbda3a2524cb3f357af8.glb" }  # tripo spiky
+    16: { free: "/cdn/value.a50ecfdce64c933e4b4812b6f35f8bc43ae76c1285d4e635cdf6c30ebb039c18.glb", hat: "/cdn/value.026bad780246f33284607de89e06db9c170601e1beb67e94a7524463589e8fbc.glb" }  # tripo long
 humanPick: { m_spiky: 15, m_undercut: 15, f_afropuff: 6, f_bob: 5, f_curly: 6, f_curtainmid: 7, f_halfup: 4, f_hime: 16, f_long: 16, f_messybun: 10, f_pixie: 7, f_ponytail: 14, f_ringlets: 4, f_sidebraid: 4, f_sidetail: 10, f_spacebuns: 10, f_twinbraids: 2, f_twintails: 10, f_wavy: 4, f_wolfcut: 15, m_buzz: 1, m_crop: 1, m_curlytop: 3, m_curtains: 7, m_fluffy: 6, m_manbun: 14, m_mohawk: 9, m_shaggy: 15, m_sidepart: 5, m_slick: 8 }
