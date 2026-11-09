@@ -874,9 +874,9 @@ def dress(head, body, r, is_male, aw):
     sc = torus("Neck_scarf", nr + 0.03, 0.03, "cloth_neck", (0, 0.078, 1.545), rot=(math.radians(-8), 0, 0), scale=(1.0, 1.1, 1.35), seg=40, mseg=14)
     chest = lambda z, x: min((v.co.y for v in body.data.vertices if abs(v.co.z - z) < 0.02 and abs(v.co.x - x) < 0.02 and aw[v.index] < 0.3), default=-0.05)
     ky = chest(1.49, 0.03) - 0.03
-    knot = prim("knot", "uv_sphere", "cloth_neck", (0.03, ky, 1.5), scale=(0.042, 0.03, 0.036), segments=20, ring_count=12)
+    knot = prim("knot", "uv_sphere", "cloth_neck", (0.065, ky + 0.012, 1.505), scale=(0.038, 0.03, 0.034), segments=20, ring_count=12)
     tails = [knot]
-    for (x, ln, ang, dy) in ((0.05, 0.12, 14, 0.0), (0.008, 0.09, -12, -0.006)):  # short, splayed: a scarf end, not a tie
+    for (x, ln, ang, dy) in ((0.08, 0.06, 28, 0.0), (0.06, 0.05, 8, -0.006)):  # Nov 9: knotted at the side, two stubby ends: a scarf, never a tie down the chest
         bpy.ops.mesh.primitive_grid_add(x_subdivisions=4, y_subdivisions=14, size=1)
         t = bpy.context.object; t.name = "tail"
         for v in t.data.vertices:

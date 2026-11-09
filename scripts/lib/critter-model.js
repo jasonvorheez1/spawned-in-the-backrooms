@@ -137,6 +137,8 @@ export const humanBody = (l) => {
   const c = warm(skinOf(l), 1) && toHex(hx(skinOf(l)).map((v) => v * 0.82)), skin = { color: c, roughness: 0.6, metalness: 0, emissive: '#000000', emissiveIntensity: 0 } // no glow: the third-person body reads the same skin as the first-person arms (Shelly, Nov 9)
   const m = l ? bodyModel({ ...l, _human: true }) : { materials: {}, parts: {} }
   const parts = { ...(m.parts || {}), Under_top: { visible: l?.sex === 'f' }, Under_bottom: { visible: true } }
+  // a closed top hides the overalls' bib, and the bib's straps poked through it: under one, the overalls are just their legs (Dolores, Nov 9)
+  if (parts.Bot_overalls?.visible && ['Top_jacket', 'Top_sweater', 'Top_hoodie', 'Top_longsleeve', 'Top_pajamas'].some((k) => parts[k]?.visible)) { parts.Bot_overalls = { visible: false }; parts.Bot_pants = { visible: true } }
   const hairc = l?.hairc || '#3a2a20', eye = l?.eye && l.eye !== '#000000' ? l.eye : '#5b4a3a'
   return { id: HUMAN[l?.sex === 'f' ? 'f' : 'm'], forward: '+z', parts, materials: { ...(m.materials || {}),
     Body_Skin: skin, Head_Skin: skin, under: { color: '#2b2a30', roughness: 0.85, metalness: 0 },
