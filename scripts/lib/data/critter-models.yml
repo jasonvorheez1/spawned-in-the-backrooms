@@ -14,6 +14,8 @@ slots: { topw: Top, botw: Bot, shoes: Shoes, hat: Hat, eyew: Eyew, neck: Neck }
 parts: [Top_apron, Top_dress, Top_hoodie, Top_jacket, Top_longsleeve, Top_pajamas, Top_sweater, Top_tank, Top_tee, Top_plate, Bot_longskirt, Bot_overalls, Bot_pants, Bot_pjpants, Bot_shorts, Bot_skirt, Shoes_boots, Shoes_slippers, Shoes_sneakers, Hat_beanie, Hat_bow, Hat_cap, Hat_crown, Hat_flower, Hat_headphones, Hat_partyhat, Hat_tophat, Eyew_glasses, Eyew_shades, Neck_bell, Neck_bowtie, Neck_cape, Neck_scarf]
 pad: "#ff9fb4"
 species:
+  human: { head: "/cdn/value.2529052ebc9355813cd469535a3e0b8749fb8c4f854b84191152860edea22712.glb", headM: "/cdn/value.2529052ebc9355813cd469535a3e0b8749fb8c4f854b84191152860edea22712.glb", headF: "/cdn/value.24b1f5174b988da0a1851d4bbd28165162c35d2063bee073ec5632506cf45a2a.glb", fur: "#f0d5be", belly: "#fff0e4", nose: "#e8a898", tip: "#fff0e4", mark: "#2e201c", inner: "#f4c2b0", mats: [eyewhite, eyeink, pupil, iris, mouth, tongue, blush, fur, belly, tip, nose, mark, inner, antler] }
+  faceling: { head: "/cdn/value.153cb1282e68644fd60220bf258c2a4b6a681ec533231c705ec54de76f335d8c.glb", headM: "/cdn/value.153cb1282e68644fd60220bf258c2a4b6a681ec533231c705ec54de76f335d8c.glb", headF: "/cdn/value.5d3f4f7d046c43c6196dbfa325f261909346b60cbcaf3c975785b07e5482a309.glb", fur: "#ebd4c2", belly: "#fff0e4", nose: "#e8a898", tip: "#fff0e4", mark: "#3c2a22", inner: "#f4c2b0", mats: [eyewhite, eyeink, pupil, iris, mouth, tongue, blush, fur, belly, tip, nose, mark, inner, antler] }
   cat: { head: "/cdn/value.de385f3a252d2dba941dd3db0bc84d2eba7c85f616d69643cdd6db2c1d02cf35.glb", headM: "/cdn/value.de385f3a252d2dba941dd3db0bc84d2eba7c85f616d69643cdd6db2c1d02cf35.glb", headF: "/cdn/value.3d0c7a40842b083847209ea19da4f78ef3ec1900c59fda6b1f5e5b47ad954442.glb", fur: "#f2a65a", belly: "#fff1dc", nose: "#ff8fa3", tip: "#fff1dc", mark: "#d9843a", inner: "#ffb8c6", mats: [eyewhite, eyeink, pupil, iris, mouth, tongue, blush, fur, belly, tip, nose, mark, inner, antler] }
   dog: { head: "/cdn/value.687c2dc4592a9f43585a93892f93a52664a77650bcdfa7ec8e67e8e70a870704.glb", headM: "/cdn/value.687c2dc4592a9f43585a93892f93a52664a77650bcdfa7ec8e67e8e70a870704.glb", headF: "/cdn/value.1463931b9d3687ef4bcc0e3237d00ea22e719a642a50245d20021d7649f8ccb8.glb", fur: "#c98b55", belly: "#fbe8cf", nose: "#2a1c18", tip: "#fbe8cf", mark: "#8a5a36", inner: "#f6d4be", mats: [eyewhite, eyeink, pupil, iris, mouth, tongue, blush, fur, belly, tip, nose, mark, inner, antler] }
   fox: { head: "/cdn/value.86169c3636306270eea49ae70962aa51a15c48df465ab3812563b3a981071cda.glb", headM: "/cdn/value.86169c3636306270eea49ae70962aa51a15c48df465ab3812563b3a981071cda.glb", headF: "/cdn/value.6966c348ad730a8add9bd4825c8b0104b3b3a715e4fdb2456bd005fb5484be6e.glb", fur: "#f07a2e", belly: "#ffffff", nose: "#231816", tip: "#ffffff", mark: "#2c1c18", inner: "#f8d2bd", mats: [eyewhite, eyeink, pupil, iris, mouth, tongue, blush, fur, belly, tip, nose, mark, inner, antler] }
@@ -82,3 +84,12 @@ faces:
   determined: { Angry: .65, Smile: .45, Half: .2 }
   disgusted: { Angry: .5, Frown: .8, Half: .4 }
   relieved: { Happy: .65, Smile: .75, Half: .3 }
+  neutral: { Smile: .08 }
+  talking: { Smile: .24, Open: .38, Wide: .12 }
+  smirk: { Half: .55, Smile: .65, Open: .12, Angry: .1 }
+  pensive: { Half: .45, Wide: .2, Frown: .12, Smile: .1 }
+  gasp: { Wide: 1, O: .85, Open: .45, Sad: .15 }
+  wary: { Half: .55, Angry: .25, Frown: .3, Wide: .1 }
+  resolute: { Angry: .4, Wide: .18, Smile: .22 }
+  wistful: { Sad: .35, Half: .4, Smile: .25 }
+  intense: { Angry: .75, Wide: .35, Frown: .45, Open: .15 }

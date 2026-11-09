@@ -63,7 +63,9 @@ const ICONIC = {
   deer: { antler: '#e9d8b4', mark: '#4a2a1c' },
   reindeer: { nose: '#e0404c', antler: '#efe0bd', mark: '#4a2e20' },
   pig: { nose: '#ff8ca2' },
-  koala: { nose: '#2a2830' }
+  koala: { nose: '#2a2830' },
+  human: { fur: '#f0d5be', belly: '#fff0e4', nose: '#e8a898', inner: '#f4c2b0', mark: '#2e201c' },
+  faceling: { fur: '#ebd4c2', belly: '#fff0e4', nose: '#e8a898', inner: '#f4c2b0', mark: '#3c2a22' }
 }
 function furMats(l) {
   const spName = speciesOf(l), sp = M.species[spName], fur = l.fur || sp.fur
@@ -89,7 +91,7 @@ function furMats(l) {
     inner: { color: innerCol, roughness: 0.9, metalness: 0 },
     nose: { color: noseCol, roughness: 0.35, metalness: 0.05 }
   }
-  if (l.marks === 'none') mark = fur // markings off: the head's mark faces (cheek dots, brow tufts) wear the plain fur (johnadams2)
+  if (l.marks === 'none' && !['human', 'faceling'].includes(spName)) mark = fur // markings off: animal cheek dots wear fur; humans keep hair
   if (mark) m.mark = { color: mark, roughness: 0.82, metalness: 0 }
   if (antlerCol) m.antler = { color: antlerCol, roughness: 0.65, metalness: 0.05 }
   return m
@@ -270,7 +272,14 @@ export function faceFill(l) {
     o.tstr = Math.round((s0 + u() * (s1 - s0)) * 100) / 100
   }
 
-  // 2. Eyes, blush, nose
+  // 2. Eyes, blush, nose & humanoid palettes
+  const isHumanoid = ['human', 'faceling'].includes(speciesOf(o))
+  const HUMAN_SKINS = ['#fde2cb', '#fae1dc', '#f3cfad', '#dfa273', '#c68652', '#8d5524', '#53341b', '#362114']
+  const HUMAN_HAIR = ['#1a1412', '#2c1b14', '#4e2f1d', '#8c5432', '#c49258', '#e8c47e', '#b04a28', '#8a8a90']
+  if (isHumanoid) {
+    if (own || !o.fur) o.fur = pickOf(HUMAN_SKINS, u)
+    if (own || !o.mark || o.mark === 'none') o.mark = pickOf(HUMAN_HAIR, u)
+  }
   if (own || !o.eye || o.eye === '#2b2233') o.eye = pickOf(FACES.eye, u)
   if (own || !o.blush) o.blush = pickOf(FACES.blush, u)
   const icon = ICONIC[speciesOf(l)] || {}
@@ -320,13 +329,16 @@ export function faceMorph(expr, blink, isFemale, look) {
   // --- Dynamic Speech Viseme Technology (phonetic mouth shapes during dialogue) ---
   if (look?.talking || look?.speech || look?.talk || expr === 'talking') {
     const t = Number(look?.talkTime ?? (Date.now() / 1000))
-    // Multi-harmonic phonetic syllable rhythm (approx 4-5 Hz speech rate)
-    const syllable = (Math.sin(t * 18) * 0.5 + 0.5) * (Math.sin(t * 8) * 0.35 + 0.65)
-    const oVowel = (Math.cos(t * 12) * 0.5 + 0.5) * 0.35
-    const intensity = Number(look?.talkIntensity ?? 0.72)
-    f.Open = Math.min(1, (f.Open ?? 0) + syllable * intensity)
-    f.O = Math.min(1, (f.O ?? 0) + oVowel * intensity * 0.55)
-    f.Smile = Math.min(1, (f.Smile ?? 0) + 0.15)
+    // Enhanced multi-phonemic syllable oscillation (vowel opening + rounded labial variation)
+    const ph = (t * 22) % (Math.PI * 4)
+    const openSyllable = Math.max(0, Math.sin(ph) * 0.72 + Math.sin(ph * 0.5) * 0.28)
+    const roundO = Math.max(0, Math.cos(ph * 1.3) * 0.40)
+    const intensity = Number(look?.talkIntensity ?? 0.76)
+    f.Open = Math.min(0.85, (f.Open ?? 0) + openSyllable * intensity)
+    f.O = Math.min(0.68, (f.O ?? 0) + roundO * intensity * 0.65)
+    f.Smile = Math.min(0.92, (f.Smile ?? 0) + 0.18)
+    // Conversational brow articulation
+    f.Wide = Math.min(0.35, (f.Wide ?? 0) + Math.max(0, Math.sin(t * 6)) * 0.12)
   }
 
   // --- Hurt / Flinch Expression Technology ---
@@ -350,7 +362,20 @@ export function faceMorph(expr, blink, isFemale, look) {
   // --- Species Anatomical Snout & Head Profiles ---
   // Each animal species establishes its authentic cranial and snout profile
   const spName = speciesOf(ff ?? look)
-  if (['wolf', 'dog', 'fox', 'jackal', 'fennec'].includes(spName)) {
+  if (['human', 'faceling'].includes(spName)) {
+    // Human cranial anatomy: ZERO animal snout protrusion, refined jawline & cheek structure
+    f.FT_Snout = 0
+    if (isFemale) {
+      f.FT_Heart = Math.min(0.42, Math.max(f.FT_Heart ?? 0, 0.28))
+      f.FT_Round = Math.min(0.38, Math.max(f.FT_Round ?? 0, 0.22))
+      f.FT_Chubby = Math.min(0.24, (f.FT_Chubby ?? 0) * 0.45)
+    } else {
+      f.FT_Broad = Math.min(0.38, Math.max(f.FT_Broad ?? 0, 0.24))
+      f.FT_Square = Math.min(0.30, Math.max(f.FT_Square ?? 0, 0.18))
+      f.FT_Round = Math.min(0.28, Math.max(f.FT_Round ?? 0, 0.15))
+      f.FT_Chubby = Math.min(0.20, (f.FT_Chubby ?? 0) * 0.35)
+    }
+  } else if (['wolf', 'dog', 'fox', 'jackal', 'fennec'].includes(spName)) {
     // Canines & Vulpines: distinct muzzle/snout, sleek cheeks, alert tapering jaw
     if (spName === 'wolf') {
       f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, 0.52) + (isFemale ? 0.04 : 0.10))
@@ -456,7 +481,7 @@ export function faceMorph(expr, blink, isFemale, look) {
   // --- Interactive Snout Slider Scaling (snoutS: 0.3..1.8) ---
   // Gracefully multiplies or reduces the snout length on top of species anatomy
   const snoutS = Number(look?.snoutS ?? ff?.snoutS)
-  if (snoutS && snoutS !== 1) {
+  if (snoutS && snoutS !== 1 && !['human', 'faceling'].includes(spName)) {
     if (snoutS > 1.0) {
       const bonus = (snoutS - 1.0) * 0.75
       f.FT_Snout = Math.min(1, (f.FT_Snout ?? 0) * (1 + bonus * 0.8) + bonus * 0.6)
@@ -469,13 +494,15 @@ export function faceMorph(expr, blink, isFemale, look) {
   }
 
   // --- Open Mouth & Speech Anatomical Compensation ---
-  // When critters open their mouth (laughing, speaking, shouting, smiling wide),
-  // reinforce the lower jaw and forward snout projection to prevent the mouth
+  // When characters open their mouth (laughing, speaking, shouting, smiling wide),
+  // reinforce the lower jaw and forward projection to prevent the mouth
   // cavity from feeling hollow or caved into the skull.
   const openAmt = Math.max(f.Open ?? 0, (f.O ?? 0) * 0.8)
   if (openAmt > 0.04) {
-    // 1. Maintain forward muzzle and mandibular volume under open-mouth tension
-    f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, (f.FT_Snout ?? 0) + openAmt * 0.14))
+    if (!['human', 'faceling'].includes(spName)) {
+      // 1. Maintain forward muzzle and mandibular volume under open-mouth tension
+      f.FT_Snout = Math.min(1, Math.max(f.FT_Snout ?? 0, (f.FT_Snout ?? 0) + openAmt * 0.14))
+    }
     // 2. Prevent narrow/long face types from over-stretching the open mouth cavity inward
     if (f.FT_Narrow) f.FT_Narrow = Math.max(0, f.FT_Narrow * (1 - openAmt * 0.45))
     if (f.FT_Long) f.FT_Long = Math.max(0, f.FT_Long * (1 - openAmt * 0.35))
@@ -603,7 +630,7 @@ export function seatHead(ctx, obj, l) {
 export const staleBody = (model) => !!model && !Object.values(M.body).includes(model.id ?? model) && !Object.values(M.human ?? {}).includes(model.id ?? model)
 const SPECIES = Object.keys(M.species)
 const hashOf = (str) => { let h = 2166136261; for (const c of String(str)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
-const NEWSP = ['rat', 'squirrel', 'leopard', 'jackal', 'badger', 'ferret', 'beaver', 'capybara', 'lop', 'fennec'].filter((k) => SPECIES.includes(k)), OLDSP = SPECIES.filter((k) => !NEWSP.includes(k))
+const NEWSP = ['rat', 'squirrel', 'leopard', 'jackal', 'badger', 'ferret', 'beaver', 'capybara', 'lop', 'fennec'].filter((k) => SPECIES.includes(k)), OLDSP = SPECIES.filter((k) => !NEWSP.includes(k) && !['human', 'faceling'].includes(k))
 // about a third of the people with no species of their own are one of the newer ones; the rest keep the species they always had
 export const speciesFor = (id) => (NEWSP.length && hashOf(id + ':sp2') % 100 < 34 ? NEWSP[hashOf(id + ':sp3') % NEWSP.length] : OLDSP[hashOf(id + ':sp') % OLDSP.length])
 // each body its own height and build, stable by id: h 0.86..1.14, w 0.88..1.16 (Savi's picks)
