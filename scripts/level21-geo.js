@@ -215,6 +215,15 @@ export function geometry(ctx) {
         pipe(ctx, [c.x + S * 0.5, h - 0.9, c.z + 1.2], [c.x + S * 0.5, h, c.z + 1.2], 0.035, 5);
         pipe(ctx, [c.x + S * 0.5, h - 0.9, c.z + 1.2], [c.x + S * 0.5 + 0.08, h - 0.9, c.z + 1.2], 0.53, M + 2);
       }
+      if (laneCell(cx, cz) && cz === LANE.z0 + LANE.d - 1 && !isOpen(cx, cz, 1)) { // the photo's right wall: a steel cabinet, a small window, a wall ladder, an electrical box with conduit
+        const zw = c.z + S / 2 - T, kind = Math.floor(hash(cx, cz, 31) * 4), x = c.x + 0.6 + hash(cx, cz, 32) * 1.6;
+        ctx.albedo(null);
+        if (kind === 0) { ctx.color("oklch(0.7 0.008 240)"); ctx.metalness(0.6); ctx.roughness(0.45); box(ctx, x, x + 0.9, 0, 1.7, zw - 0.55, zw); ctx.color("oklch(0.45 0.008 240)"); box(ctx, x + 0.44, x + 0.46, 0.1, 1.6, zw - 0.56, zw - 0.55); box(ctx, x + 0.36, x + 0.4, 0.9, 1.05, zw - 0.58, zw - 0.55); }
+        else if (kind === 1) { ctx.color("oklch(0.82 0.005 240)"); ctx.metalness(0.3); ctx.roughness(0.5); box(ctx, x, x + 1.3, 1.25, 2.25, zw - 0.06, zw); ctx.color("oklch(0.22 0.015 230)"); ctx.metalness(0.1); ctx.roughness(0.08); box(ctx, x + 0.07, x + 1.23, 1.32, 2.18, zw - 0.075, zw - 0.06); ctx.color("oklch(0.82 0.005 240)"); box(ctx, x + 0.63, x + 0.67, 1.32, 2.18, zw - 0.085, zw - 0.06); }
+        else if (kind === 2) { ctx.color("oklch(0.72 0.01 240)"); ctx.metalness(0.7); ctx.roughness(0.4); for (const dx of [0, 0.45]) pipe(ctx, [x + dx, 0, zw - 0.18], [x + dx, 3.6, zw - 0.18], 0.022, M); for (let y = 0.3; y < 3.5; y += 0.3) pipe(ctx, [x, y, zw - 0.18], [x + 0.45, y, zw - 0.18], 0.016, M); for (const y of [0.4, 3.2]) for (const dx of [0, 0.45]) pipe(ctx, [x + dx, y, zw - 0.18], [x + dx, y, zw], 0.015, 4); }
+        else { ctx.color("oklch(0.78 0.006 240)"); ctx.metalness(0.5); ctx.roughness(0.5); box(ctx, x, x + 0.6, 1.4, 2.05, zw - 0.25, zw); ctx.color("oklch(0.6 0.006 240)"); box(ctx, x + 0.04, x + 0.56, 1.44, 2.01, zw - 0.26, zw - 0.25); ctx.color("oklch(0.75 0.005 240)"); ctx.metalness(0.6); for (const dx of [0.12, 0.3, 0.48]) pipe(ctx, [x + dx, 2.05, zw - 0.08], [x + dx, h - 0.2, zw - 0.08], 0.022, M); pipe(ctx, [x + 0.2, 0, zw - 0.08], [x + 0.2, 1.4, zw - 0.08], 0.03, M); }
+        ctx.color("oklch(0.72 0.01 230)"); ctx.metalness(0.72); ctx.roughness(0.38);
+      }
       if (laneCell(cx, cz) && cz === LANE.z0 + 1) { // the photo's ladder cable tray on drop rods: two rails, rungs every 0.3 m, a cable bundle lying in it
         const ty = h - 0.45, za = c.z + 0.45, zb = c.z + 0.95;
         ctx.color("oklch(0.62 0.01 240)"); ctx.metalness(0.7); ctx.roughness(0.4);
