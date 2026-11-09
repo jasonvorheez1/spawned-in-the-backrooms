@@ -162,7 +162,7 @@ l2-stair-flight:
   castShadow: false
   feetPosition: {x: 27.5, y: 0, z: -40.65}
   id: l2-stair-flight
-  model: {id: /cdn/value.2fc266851ba0826982af9d80d704e390d10316e214b0ce362a851ee748c3aae4.glb, materials: {concrete: {color: oklch(0.92 0.01 80), repeat: [1.5, 1.5], roughness: 0.9, texture: cdn/texture-worn-poured-concrete-stair-tread.png, wrap: repeat}}}
+  model: {id: /cdn/value.c87f6a52dd9d4f2f53a70e152aa3054234d843a2548da341d84992f8597a1fb6.glb, materials: {concrete: {color: oklch(0.92 0.01 80), repeat: [1.5, 1.5], roughness: 0.9, texture: cdn/texture-worn-poured-concrete-stair-tread.png, wrap: repeat}}, offset: [0, 0, -1.052]}
   receiveShadow: true
   rotation: {yaw: 0}
   visibleRange: {max: 45}
