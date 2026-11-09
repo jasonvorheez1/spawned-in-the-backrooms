@@ -575,6 +575,15 @@ def garment(body, r, name, keep, mname, push, thick=0.004, cuts=(), armcuts=(), 
     bmesh.ops.delete(bm, geom=gone, context="FACES")
     bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=0.0004)
     bmesh.ops.remove_doubles(bm, verts=[v for v in bm.verts if v.is_boundary], dist=0.004)  # the raw body's arm/torso islands drift apart after the T-pose bake: an open slit along the sleeve
+    if name.startswith("Top_"):  # Nov 9 (Andrew's torn collar): face picks leave a sawtooth round the neck; relax that boundary along itself
+        nk = [v for v in bm.verts if v.is_boundary and v.co.z > 1.42 and abs(v.co.x) < 0.16]
+        nks = set(nk)
+        for _ in range(24):
+            mv = {}
+            for v in nk:
+                nb = [e.other_vert(v) for e in v.link_edges if e.is_boundary and e.other_vert(v) in nks]
+                if len(nb) == 2: mv[v] = v.co * 0.5 + (nb[0].co + nb[1].co) * 0.25
+            for v, c in mv.items(): v.co = c
     bm.normal_update()
     gi = {g.index: g.name for g in o.vertex_groups}
     for v in bm.verts:  # the shoulder's blend band: linear skinning shrinks an offset where arm and torso rotations mix, so the skin poked through a lowered sleeve; give that band more room
@@ -861,12 +870,25 @@ def dress(head, body, r, is_male, aw):
     i = out.index(jk); jk = join("Top_jacket", [jk, *bts]); out[i] = jk
     col = torus("col", nr + 0.03, 0.012, "cloth_top", (0, 0.08, 1.525), scale=(1.05, 1.1, 1.0)); weighted(col, r, NW); i = out.index(jk); out[i] = join("Top_jacket", [jk, col])
     # neck pieces
-    sc = torus("Neck_scarf", nr + 0.022, 0.022, "cloth_neck", (0, 0.075, 1.52), scale=(1.0, 1.1, 1.0))
-    tail = prim("tail", "cube", "cloth_neck", (0.035, -0.0 + 0.0, 1.38), scale=(0.035, 0.01, 0.13))
-    tail.location.y = min(v.co.y for v in body.data.vertices if abs(v.co.z - 1.4) < 0.02 and abs(v.co.x - 0.035) < 0.02 and aw[v.index] < 0.3) - 0.025
-    bpy.ops.object.select_all(action="DESELECT"); tail.select_set(True); bpy.context.view_layer.objects.active = tail; bpy.ops.object.transform_apply(location=True)
-    bv = tail.modifiers.new("bv", "BEVEL"); bv.width = 0.006; bv.segments = 2; bpy.ops.object.modifier_apply(modifier="bv")
-    add(out, join("Neck_scarf", [sc, tail]), r, lambda co: {"Neck": 0.5, "Spine2": 0.5} if co.z > 1.47 else {"Spine2": 1})
+    # Nov 9 (Andrew): the scarf read as a red tie stuck on the shirt. a thick knit wrap above the collar, a knot at the throat, two tapered tails over the chest
+    sc = torus("Neck_scarf", nr + 0.03, 0.026, "cloth_neck", (0, 0.078, 1.535), rot=(math.radians(-8), 0, 0), scale=(1.05, 1.12, 1.25), seg=40, mseg=14)
+    chest = lambda z, x: min((v.co.y for v in body.data.vertices if abs(v.co.z - z) < 0.02 and abs(v.co.x - x) < 0.02 and aw[v.index] < 0.3), default=-0.05)
+    ky = chest(1.49, 0.03) - 0.03
+    knot = prim("knot", "uv_sphere", "cloth_neck", (0.03, ky, 1.49), scale=(0.034, 0.024, 0.03), segments=20, ring_count=12)
+    tails = [knot]
+    for (x, ln, ang, dy) in ((0.042, 0.21, 6, 0.0), (0.012, 0.16, -4, -0.006)):
+        bpy.ops.mesh.primitive_grid_add(x_subdivisions=4, y_subdivisions=14, size=1)
+        t = bpy.context.object; t.name = "tail"
+        for v in t.data.vertices:
+            u = v.co.y + 0.5  # 0 at the knot, 1 at the fringe
+            zz = 1.48 - u * ln; xx = x + v.co.x * (0.05 - 0.012 * u) + math.sin(u * 3.1) * 0.006
+            v.co = Vector((xx + math.sin(math.radians(ang)) * u * ln, chest(zz, xx) - 0.018 + dy + 0.004 * math.sin(v.co.x * 6.3), zz))
+        t.data.materials.append(MATS["cloth_neck"])
+        sd = t.modifiers.new("sd", "SOLIDIFY"); sd.thickness = 0.008; sd.offset = 0
+        bpy.ops.object.select_all(action="DESELECT"); t.select_set(True); bpy.context.view_layer.objects.active = t; bpy.ops.object.modifier_apply(modifier="sd")
+        bevel_rim(t, 0.003); tails.append(t)
+    for o in (sc, knot): [setattr(p, "use_smooth", True) for p in o.data.polygons]
+    add(out, join("Neck_scarf", [sc] + tails), r, lambda co: {"Neck": 0.5, "Spine2": 0.5} if co.z > 1.5 else {"Spine2": 1})
     fy = min(v.co.y for v in body.data.vertices if abs(v.co.z - 1.5) < 0.015 and abs(v.co.x) < 0.02) - 0.012
     b1 = prim("bt", "cone", "cloth_neck", (0.022, fy, 1.5), rot=(0, -math.pi / 2, 0), vertices=12, radius1=0.016, depth=0.04)
     b2 = prim("bt2", "cone", "cloth_neck", (-0.022, fy, 1.5), rot=(0, math.pi / 2, 0), vertices=12, radius1=0.016, depth=0.04)
