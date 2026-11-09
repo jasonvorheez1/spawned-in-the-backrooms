@@ -28,6 +28,7 @@ rx = max(abs(p.x) for p in band); y0 = min(p.y for p in band); y1 = max(p.y for 
 print("head", round(top, 3), round(hz, 3), round(rx, 3), round(y0, 3), round(y1, 3))
 for o in meshes: o.hide_set(True)
 import colorsys
+FINE_CUT = {"t_s_hime", "t_s_sidebraid", "t_s_pixie"}
 MANNEQUIN = {"t_s_hime", "t_s_messybun", "t_s_sidebraid", "t_s_pixie"}  # Tripo modelled these on a display head: its pale grey skin goes, the hair stays
 def strip_mannequin(o, m2):
     img = next((n.image for ms in o.material_slots if ms.material and ms.material.use_nodes for n in ms.material.node_tree.nodes if n.type == "TEX_IMAGE" and n.image), None)
@@ -109,7 +110,11 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
                     for w in (0.1, 0.3, 0.5, 0.7):
                         if u + w < 0.95: out.append(a + (b - a) * u + (c - a) * w)
             return out
-        cut = [f for f in bmC.faces if (lambda c: c.y < cy - 0.02 and inside(c))(f.calc_center_median()) or (key != "t_softbob" and any(c.y < cy - 0.02 and inside(c) for c in samples(f)))]  # a long shard reaching into the face goes whole
+        if key in FINE_CUT:  # big Tripo shards make a square-edged hole: split the ones near the face fine first, then cut by centre so the opening follows the oval
+            near = [e for e in bmC.edges if all(v.co.y < cy + 0.02 and hz - 0.2 < v.co.z < fz1 + 0.05 and abs(v.co.x) < rx * 1.05 for v in e.verts)]
+            bmesh.ops.subdivide_edges(bmC, edges=near, cuts=4, use_grid_fill=True); bmesh.ops.triangulate(bmC, faces=bmC.faces[:])
+            cut = [f for f in bmC.faces if (lambda c: c.y < cy - 0.02 and inside(c))(f.calc_center_median())]
+        else: cut = [f for f in bmC.faces if (lambda c: c.y < cy - 0.02 and inside(c))(f.calc_center_median()) or (key != "t_softbob" and any(c.y < cy - 0.02 and inside(c) for c in samples(f)))]  # a long shard reaching into the face goes whole
         bmesh.ops.delete(bmC, geom=cut, context="FACES"); bmesh.ops.delete(bmC, geom=[v for v in bmC.verts if not v.link_faces], context="VERTS")
         bmC.to_mesh(me); bmC.free(); print("cut face mask", key, len(cut))
     # whatever still hangs over the face folds up into a fringe that ends at the brow, no holes cut
