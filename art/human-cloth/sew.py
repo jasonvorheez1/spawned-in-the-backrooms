@@ -125,7 +125,9 @@ for name, (ease, cuts) in PLAN.items():
                 if not c: continue
                 tgt = max(max(r for _, _, r in c), prev.get(b, 0) * ease.drape); prev[b] = tgt
                 for v, ang, r in c:
-                    if r < tgt: v.co.x, v.co.y = math.cos(ang) * tgt, cy + math.sin(ang) * tgt
+                    if r < tgt:                              # faded toward the arm and the yoke: a hard edge here tore the male back
+                        wgt = (1 - smooth(abs(v.co.x), 0.08, 0.15)) * (1 - smooth(v.co.z, B["Spine2"].z - 0.03, B["Spine2"].z + 0.04))
+                        r2 = r + (tgt - r) * wgt; v.co.x, v.co.y = math.cos(ang) * r2, cy + math.sin(ang) * r2
         for it in range(3):
             for f in (0.5, -0.52):
                 new = {v: v.co + (sum((w.co for w in nb), Vector()) / len(nb) - v.co) * f for v, nb in adj.items() if len(nb) > 2}
