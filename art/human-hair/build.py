@@ -108,6 +108,7 @@ def export(k, hatted):
 if "--proof" not in sys.argv:
     for k in made:
         for hat in (False, True): print("exported", export(k, hat))
+if "--noproof" in sys.argv: sys.exit(0)
 # proof: every style on this head, a 3/4 front, in a grid
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 400
 w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (0.62, 0.6, 0.55, 1)
