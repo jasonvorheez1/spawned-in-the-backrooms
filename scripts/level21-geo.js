@@ -162,10 +162,17 @@ export function geometry(ctx) {
       const h = wallH(cx, cz, nx, nz);
       if (rock) {
         const lit = zoneOf(cx, cz) === "edge" || zoneOf(nx, nz) === "edge"; ctx.albedo(null); ctx.color(lit ? "oklch(0.68 0.006 240)" : "oklch(0.5 0.008 240)"); ctx.roughness(0.95); // the photo: pale grey blasted rock
-        if (d === 0) rockWall(xe, xe, z0, z0 + S, h, cx * 131 + cz * 17 + 3); else rockWall(x0, x0 + S, ze, ze, h, cx * 91 + cz * 31 + 9);
+        if (d === 1 && nz === LANE.z0 && nx >= EDGE_X) { box(ctx, x0, x0 + S, 0, h, ze - 0.35, ze - 0.05); } // the vault mesh (edgevault_a/b) is this wall's face
+        else if (d === 0) rockWall(xe, xe, z0, z0 + S, h, cx * 131 + cz * 17 + 3); else rockWall(x0, x0 + S, ze, ze, h, cx * 91 + cz * 31 + 9);
       } else {
         ctx.albedo(WALL); ctx.color(isEdge(cx, cz) || isEdge(nx, nz) ? "oklch(0.93 0.008 95)" : "oklch(0.9 0.014 95)"); ctx.roughness(0.9);
-        if (d === 0) {
+        if (isEdge(cx, cz) || isEdge(nx, nz)) {
+          ctx.albedo(null); ctx.color("oklch(0.94 0.004 240)"); ctx.roughness(0.6);
+          if (d === 0) box(ctx, xe - T, xe + T, 0, h, z0 - T, z0 + S + T); else box(ctx, x0 - T, x0 + S + T, 0, h, ze - T, ze + T);
+          ctx.color("oklch(0.55 0.005 240)");
+          if (d === 0) box(ctx, xe - T - 0.015, xe + T + 0.015, 0, 0.1, z0 - T, z0 + S + T); else box(ctx, x0 - T, x0 + S + T, 0, 0.1, ze - T - 0.015, ze + T + 0.015);
+          for (let k = 1; k < 4; k++) { ctx.color("oklch(0.86 0.004 240)"); if (d === 0) box(ctx, xe - T - 0.008, xe + T + 0.008, 0.1, h, z0 + k * 1.2 - 0.01, z0 + k * 1.2 + 0.01); else box(ctx, x0 + k * 1.2 - 0.01, x0 + k * 1.2 + 0.01, 0.1, h, ze - T - 0.008, ze + T + 0.008); } // panel seams
+        } else if (d === 0) {
           ctx.albedo(null); ctx.color("oklch(0.6 0.04 165)"); box(ctx, xe - T, xe + T, 0, 1.12, z0 - T, z0 + S + T); // the lower wall: satin institutional green
           ctx.albedo(BLOCK); ctx.color(isEdge(cx, cz) || isEdge(nx, nz) ? "oklch(0.97 0.006 95)" : "oklch(0.95 0.016 92)"); box(ctx, xe - T, xe + T, 1.12, h, z0 - T, z0 + S + T);
           ctx.albedo(null); ctx.color("oklch(0.85 0.02 90)"); box(ctx, xe - T - 0.025, xe + T + 0.025, 1.08, 1.17, z0 - T, z0 + S + T); // chair rail
@@ -216,12 +223,6 @@ export function geometry(ctx) {
         ctx.color("oklch(0.25 0.01 250)"); ctx.metalness(0.1); ctx.roughness(0.8);
         for (let k = 0; k < 4; k++) run(c, 0, ty + 0.04, 0.45 + 0.08 + k * 0.1, 0.025);
       } else if (!laneCell(cx, cz)) { ctx.color("oklch(0.4 0.01 250)"); box(ctx, c.x, c.x + S, h - 0.12, h - 0.06, c.z + 0.55, c.z + 1.0); }
-      if (laneCell(cx, cz) && cz === LANE.z0) { // the rock vault: blasted stone bulging out of the north wall and curving over into the ceiling, three jittered tiers per metre
-        const zw = cz * S - HALF; ctx.albedo(null); ctx.color("oklch(0.66 0.006 240)"); ctx.metalness(0); ctx.roughness(0.95);
-        const tiers = [[h * 0.55, h * 0.75, 0.35], [h * 0.75, h * 0.9, 0.85], [h * 0.9, h, 1.5]];
-        for (let k = 0; k < S; k++) tiers.forEach(([y0, y1, d], t) => { const j = hash(cx * 8 + k, t, 941), j2 = hash(cx * 8 + k, t, 942), dd = d * (0.75 + j * 0.5);
-          prism(ctx, [[c.x + k - 0.05, zw], [c.x + k + 0.5, zw + dd * (0.8 + j2 * 0.4)], [c.x + k + 1.05, zw], [c.x + k + 1.05, zw + dd * 0.85], [c.x + k - 0.05, zw + dd * 0.9]], y0 - j2 * 0.12, y1 + 0.02); });
-      }
       ctx.metalness(0.2); ctx.roughness(0.7);
       continue;
     }

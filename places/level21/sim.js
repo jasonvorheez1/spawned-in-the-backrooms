@@ -15,7 +15,7 @@ import { terminalSpec } from "../../scripts/lib/terminal.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { spawnProp } from "../../scripts/lib/l2props.js";
 export const cadence = "500ms";
-const V = 24; // 18: locker room floor and mat to the ref photo, The Edges lit bright down every lane cell; // 17: Tripo props dress the rooms and halls (dress21), DANGER signs at dead ends; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist; 14: survey road flares, freezer frost, blast sparks, sandbags, show-don't-tell
+const V = 25; // 18: locker room floor and mat to the ref photo, The Edges lit bright down every lane cell; // 17: Tripo props dress the rooms and halls (dress21), DANGER signs at dead ends; // 7: modeled cots, bunks and workbench; 8: stairwell props; 9: memo13, blast crater, survivor chatter; 10: fans, swinging cables and lamps, drips, dust and mist; 14: survey road flares, freezer frost, blast sparks, sandbags, show-don't-tell
 const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
 const rm = (type) => ROOMS.filter((r) => r.type === type);
 const center = (r) => cellCenter(r.x0 + (r.w - 1) / 2, r.z0 + (r.d - 1) / 2); // the middle of a room block
@@ -125,6 +125,11 @@ function lay(ctx) {
     // Occasional hissing ceiling steam leak in the hot storage halls
     if (z === "hall" && hash(cx, cz, 209) < 0.045) sp(`l21-steam-${cx}-${cz}`, { feetPosition: { x: c.x + 0.9, y: h - 0.28, z: c.z }, fx: { script: STEAM_FX } });
   }
+
+  // ---- the rock vault from the tunnel photo: four 9 m Blender stretches (art/level21/edgevault.py) down the lane's north side, rising from the floor and curving into the roof
+  const VAULT = ["/cdn/value.e85935897157fee060cd4f98091ed886f0e0387533648da72c2474d8848c2717.glb", "/cdn/value.55c581a8a81c72674b5f1d6759fa8db34c5822572786a7d243bb004ba4a1c07b.glb"], VOFF = [[-0.05, -0.174, 2.375], [-0.05, -0.204, 2.375]];
+  const vx0 = EDGE_X * S - HALF, vz = LANE.z0 * S - HALF;
+  for (let k = 0; k < 4; k++) sp(`l21-vault-${k}`, { feetPosition: { x: vx0 + 4.5 + k * 9, y: 0, z: vz }, visibleRange: { max: 80 }, castShadow: false, receiveShadow: true, physics: { body: "static", collider: "mesh" }, model: { id: VAULT[k % 2], offset: VOFF[k % 2] } });
 
   // ---- the photo's green EXIT signs, hung from the ceiling down the length of The Edges, both faces lit
   for (let cx = EDGE_X + 1; cx < N; cx += 4) { const c = cellCenter(cx, LANE.z0 + 1), h = heightOf(cx, LANE.z0 + 1), face = (f) => `<div face="${f}" emissive style="width:0.42m;height:0.16m;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;font-size:110px;color:#eafff0;background:#118a3a">EXIT</div>`;
