@@ -55,13 +55,25 @@ export function onControlBegin(ctx, player) {
   return true;
 }
 export function onControlEnd(ctx) { const m = mem(ctx); m.mz = 0; m.mx = 0; ctx.self.state.leftAt = ctx.now(); }
+// stepping out beside a pier or a shore lands you on it, not in the water: the nearest dry footing within 3.5 m (Shelly: "cant reach it with my boat")
+function landing(ctx, rider) {
+  const b = ctx.self.feetPosition; let best = null;
+  for (let r = 1; r <= 3.5; r += 0.5) for (let a = 0; a < 16; a++) {
+    const t = (a / 16) * Math.PI * 2, x = b.x + Math.cos(t) * r, z = b.z + Math.sin(t) * r;
+    const h = raycast(ctx, { x, y: b.y + 6, z }, { x: 0, y: -1, z: 0 }, { distance: 9, physicsOnly: true, ignoreEntities: [ctx.self.id, rider].filter(Boolean) });
+    const g = ctx.place.terrain?.heightAt?.(x, z);
+    const y = Math.max(h && !String(h.id ?? "").startsWith("l7-sea") ? h.position.y : -99, g ?? -99);
+    if (y > 0.15 && y < b.y + 3.2 && (!best || r < best.r)) best = { r, x, y: y + 0.05, z };
+  }
+  return best ? { x: best.x, y: best.y, z: best.z } : null;
+}
 export function onInput(ctx, input) {
   const m = mem(ctx);
   m.mz = input.axes?.moveZ ?? 0; m.mx = input.axes?.moveX ?? 0;
   if (input.pressed?.interact) {
     const rider = ctx.self.state.rower;
     ctx.self.controller = null; ctx.self.state.rower = null;
-    if (rider) ctx.emit("boatOff", { boat: ctx.self.id }, { to: rider });
+    if (rider) ctx.emit("boatOff", { boat: ctx.self.id, land: landing(ctx, rider) }, { to: rider });
   }
 }
 export function update(ctx, dt) {

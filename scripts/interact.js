@@ -429,7 +429,7 @@ pop dust burst=10..14 on=disc(.5) life=.7..1.3 v=up(.3..0.8)+sdir()*.5 size=.25.
 pop bits burst=6..9 on=disc(.4) life=.5..0.8 v=up(1..2)+sdir()*1 size=.04..0.08 acc=grav() col=<.6,.55,.45> a=1 sz=$size floor=stick r=sprite(soft-disc,alpha)`
 
 // the dory hands your keys back when you press E in it: you stand up out of the boat
-export const ears = { boatOff: (ctx) => standUp(ctx) }
+export const ears = { boatOff: (ctx, e) => { standUp(ctx); if (e?.land && ctx.self.state.sit) ctx.self.state.sit = { ...ctx.self.state.sit, land: e.land } } }
 export function onInput(ctx, input) {
   const m = mem(ctx)
   const ray = getInputRay(ctx, input)

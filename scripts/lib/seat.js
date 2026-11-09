@@ -87,7 +87,7 @@ export function seatTick(ctx) {
     if (Math.abs(p.x - s.lx) + Math.abs(p.z - s.lz) > 0.01 || Math.abs(p.y - (s.ly ?? 0)) > 0.01) { me.feetPosition = { x: s.lx, y: s.ly ?? 0, z: s.lz }; me.rotation = { yaw: 0 } }
   } else {
     me.feetPosition = { x: s.lx, y: (s.ly ?? 0) * (1 - e), z: s.lz - 0.6 * e }
-    if (k >= 1) { me.parent = null; free(ctx, s.id, s.i, me.id); me.state.sit = null }
+    if (k >= 1) { me.parent = null; free(ctx, s.id, s.i, me.id); me.state.sit = null; if (s.land) { me.feetPosition = s.land; me.velocity = { x: 0, y: 0, z: 0 }; if (me.state.swimming) me.state.swimming = false } }
   }
   return true
 }
