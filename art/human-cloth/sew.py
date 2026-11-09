@@ -288,11 +288,11 @@ for name, (ease, cuts) in PLAN.items():
                 N[v] = c if c.length >= D[v].length else D[v]
             D = N
         for v in fb.verts: v.co += D[v]
-    for _pass in range(4):                                   # from the skin's side: a body point the cloth fails to cover by 7 mm lifts the cloth over it (folds the nearest-point test misreads)
+    for _pass in range(8):                                   # from the skin's side: a body point the cloth fails to cover by 7 mm lifts the cloth over it (folds the nearest-point test misreads)
         fb.verts.ensure_lookup_table(); fb.faces.ensure_lookup_table(); gb = BVHTree.FromBMesh(fb); D = {v: Vector() for v in fb.verts}; hit = 0
         for bv in _sl.verts:
             nb = MI.to_3x3() @ bv.normal; p0 = MI @ bv.co
-            if nb.length < 1e-6: continue
+            if nb.length < 1e-6 or bv.co.z < NECK - 0.16 or abs(bv.co.x) > 0.3: continue   # the shoulder yoke only: cuffs and hems stay as cut
             nb.normalize(); h = gb.ray_cast(p0 + nb * 0.04, -nb, 0.08)
             if h[0] is None: continue
             off = 0.04 - h[3]                                # where the cloth's outer face sits along this skin normal
@@ -302,13 +302,15 @@ for name, (ease, cuts) in PLAN.items():
                     want = nb * (0.007 - off)
                     if want.length > D[v].length: D[v] = want
         if not hit: break
-        for _ in range(3):
+        for _ in range(3):                                   # grow the push a ring out, then relax it: a swell, never a ruffle
             N = {}
             for v in fb.verts:
                 nbv = [e.other_vert(v) for e in v.link_edges]
                 c = D[v].lerp(sum((D[w] for w in nbv), Vector()) / max(1, len(nbv)), 0.5)
                 N[v] = c if c.length >= D[v].length else D[v]
             D = N
+        for _ in range(8):
+            D = {v: D[v].lerp(sum((D[e.other_vert(v)] for e in v.link_edges), Vector()) / max(1, len(v.link_edges)), 0.6) for v in fb.verts}
         for v in fb.verts: v.co += D[v]
         print("SKINLIFT", name, _pass, hit)
     fb.to_mesh(me); fb.free()
