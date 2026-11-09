@@ -71,7 +71,7 @@ export function onInput(ctx, input) {
   ctx.emit('squash', { target: o.id, axis: 'z', intensity: 0.2, duration: 0.18 })
   ctx.emit('noise', { position: at, radius: 14, kind: 'kick' }, { audience: { nearby: at, radius: 14 } })
 }
-export function kickEnd(ctx) {
+export function kickEnd(ctx) { ctx.self.anim.kick = null }
 
 export function update(ctx, dt) {
   const m = mem(ctx), p = ctx.self.feetPosition, v = ctx.self.velocity
