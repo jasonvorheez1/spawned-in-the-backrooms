@@ -8,7 +8,7 @@ export const L26_LINES = [ // [at s, for s, text]: Phoebe's own words, captioned
   [16.2, 4.5, "Oh. Somebody touched a poster."],
   [24.6, 3.8, "Don't wander below deck, stray. They're setting up for you."],
   [28.8, 2.6, "I'd stay and watch. But I've got somewhere to be."],
-  [33.0, 3.0, "Try the poster that looks wrong."],
+  [33.0, 3.0, "Go on below. They saved you a seat."],
 ]
 const V = (w) => `/cdn/voice-soft-breathy-young-woman-whispering-amused-saying-${encodeURIComponent(w)}.mp3` // her one voice, the tutorial's too
 const SCORE = "/cdn/moodboard-realistic-gritty/music-horror-film-cue-38-seconds-ghostly-ocean-drone-warped-distant-calliope-swell-at-8-seconds-music-box-enters-at-16-seconds-strings-sting-at-31-seconds-then-fading.mp3"
