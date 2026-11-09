@@ -242,6 +242,29 @@ for o in bpy.data.objects:
                 if it == 0 and dv.length > 0.001: fixed += 1
                 v.co += dv
                 for L in shapes: v[L] += dv
+        # holes the cuts opened in the torso (a slit over the belt, a tear in the back) are closed with cloth; the hem's own opening, the neck and the cuffs stay open
+        be = [e for e in bm.edges if e.is_boundary]; seen = set(); loops = []
+        adj = {}
+        for e in be:
+            for v in e.verts: adj.setdefault(v, []).append(e)
+        for e in be:
+            if e in seen: continue
+            stack = [e]; comp = []
+            while stack:
+                x = stack.pop()
+                if x in seen: continue
+                seen.add(x); comp.append(x)
+                for v in x.verts: stack.extend(y for y in adj[v] if y not in seen)
+            loops.append(comp)
+        zmin = min(v.co.z for v in bm.verts if v.link_faces)
+        patched = 0
+        for comp in loops:
+            vs = {v for e in comp for v in e.verts}
+            if min(v.co.z for v in vs) < zmin + 0.015: continue  # the hem opening
+            if max(abs(v.co.x) for v in vs) > 0.26 or max(v.co.z for v in vs) > HEM + 0.45: continue  # cuffs, neck
+            if len(comp) > 80: continue
+            r = bmesh.ops.holes_fill(bm, edges=comp, sides=0); patched += 1
+        print("patched", o.name, patched, "of", len(loops), "loops")
         print("hem", o.name, "hung out", fixed, "inner faces cut", len(inner))
     moved = sum(1 for x in delta.values() if x.length > 0.002)
     bm.to_mesh(me); bm.free()
