@@ -39,6 +39,8 @@ const CSS = `<style>
 #gl .ft{display:flex;gap:8px;padding:12px 16px;background:#fff8;border-top:2px dashed #ffb3e1}
 #gl .ft button{flex:1;font:inherit;font-size:12px;font-weight:bold;letter-spacing:.08em;text-transform:uppercase;border:2px solid #ffb3e1;background:#fff;color:#7a2f8a;border-radius:14px;padding:9px 0;cursor:pointer}
 #gl .ft .go{background:linear-gradient(90deg,#ff71ce,#b967ff);color:#fff;border-color:#fff;box-shadow:0 4px 14px #b967ff66}
+#gl .q{margin:8px 14px 0;padding:7px 12px;border-radius:12px;background:#fff;border:1.5px solid #ff71ce;color:#b0368f;font-size:12px;font-weight:bold}
+#gl .q.wait{border-style:dashed;color:#7a5a80;font-weight:normal}
 #gl .tip{font-size:11.5px;color:#7a5a80;margin-top:14px;font-style:italic}
 </style>`
 export function salon(ctx, player) {
@@ -77,10 +79,12 @@ export function salon(ctx, player) {
     body = slot('Top', 'topw', 'top') + slot('Bottom', 'botw', 'bottom') + slot('Shoes', 'shoes', 'shoec') + slot('Hat', 'hat', 'hatc') + slot('Glasses', 'eyew') + slot('Neck', 'neck', 'neckc')
       + row('Saved looks', '') + Array.from({ length: C.outfitSlots || 0 }, (_, i) => `<div class="sl" style="grid-template-columns:1fr auto auto"><span>${i + 1}. ${fits[i] ? `${nice(fits[i].topw)} · ${nice(fits[i].botw)}` : 'empty'}</span>${fits[i] ? `<button style="width:auto;border-radius:12px;padding:0 10px" onclick="${act('wear', i)}">wear</button>` : '<span></span>'}<button style="width:auto;border-radius:12px;padding:0 10px" onclick="${act('save', i)}">save</button></div>`).join('')
   }
+  const q = ctx.place.objects?.['bonus-stylist']?.state?.queue ?? [], qi = q.indexOf(player.id)
+  const line = qi === 0 ? `<div class="q">✂ Gina is doing your hair</div>` : qi > 0 ? `<div class="q wait">Gina's finishing up with someone. You're ${qi === 1 ? 'next' : '#' + (qi + 1) + ' in line'}, change away meanwhile.</div>` : ''
   return `${CSS}<div id="gl" data-modal>
   <div class="hd"><h2>Glow Up Salon</h2><button class="x" onclick="${act('close')}">✕</button></div>
   <div class="svc">${SERVICES.map(([k, n, i]) => `<button class="${tab === k ? 'on' : ''}" onclick="${act('stab', k)}"><span class="i">${i}</span>${n}</button>`).join('')}</div>
-  <div class="bd">${body}</div>
+  ${line}<div class="bd">${body}</div>
   <div class="ft"><button onclick="${act('spin', -45)}">◀ turn</button><button onclick="${act('spin', 45)}">turn ▶</button><button onclick="${act('random', 'all')}">random</button><button class="go" onclick="${act('close')}">done</button></div>
 </div>`
 }

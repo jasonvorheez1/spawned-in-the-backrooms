@@ -24,13 +24,35 @@ const yawOf = (r) => (typeof r === "number" ? r : r?.yaw ?? 0)
 const fwd = (yaw) => { const r = (yaw * Math.PI) / 180; return { x: -Math.sin(r), z: -Math.cos(r) } }
 const lookKey = (l) => JSON.stringify(l ?? {})
 
-function client(ctx) { // the first salon chair whose sitter has the makeover open
+const WAIT = ["Be right with you!", "One sec, hon, you're next.", "Get comfy, I'm coming."]
+const IDLE_SWAP = 20000 // Savi's pick: a sitter who changes nothing for 20 s while another waits gets passed to the next chair
+function sitters(ctx) { // every salon chair whose sitter has the makeover open
+  const out = []
   for (const r of ctx.query({ tags: ["seat"], center: ctx.self.feetPosition, radius: 12 })) {
     const ch = ctx.getObject(r.id); if (!ch?.state?.salon) continue
     const who = ch.state.by?.[0]; if (!who) continue
-    const p = ctx.getObject(who); if (p?.state?.salonOpen && p.state.sit?.id === ch.id) return { ch, p }
+    const p = ctx.getObject(who); if (p?.state?.salonOpen && p.state.sit?.id === ch.id) out.push({ ch, p })
   }
-  return null
+  return out
+}
+function client(ctx) { // first come, first served: the earliest sitter, kept until they leave or idle past IDLE_SWAP while someone waits
+  const ses = ctx.self.session, now = ctx.now(), all = sitters(ctx)
+  ses.since ??= {}; ses.active ??= {}
+  const ids = new Set(all.map((c) => c.p.id))
+  for (const k of Object.keys(ses.since)) if (!ids.has(k)) { delete ses.since[k]; delete ses.active[k] }
+  for (const c of all) { ses.since[c.p.id] ??= now; const k = lookKey(c.p.state.look); if (ses.active[c.p.id]?.k !== k) ses.active[c.p.id] = { k, at: now } }
+  all.sort((a, b) => ses.since[a.p.id] - ses.since[b.p.id])
+  let cur = all.find((c) => c.ch.id === ses.on)
+  const waiting = all.filter((c) => c !== cur)
+  if (cur && waiting.length && now - ses.active[cur.p.id].at > IDLE_SWAP && now - (ses.servedAt ?? 0) > IDLE_SWAP) { ses.since[cur.p.id] = now; cur = null } // to the back of the line
+  if (!cur) { all.sort((a, b) => ses.since[a.p.id] - ses.since[b.p.id]); cur = all[0] ?? null }
+  // the line everyone's menu reads: who she's with, who waits; written only when it changes
+  const line = cur ? [cur.p.id, ...all.filter((c) => c !== cur).map((c) => c.p.id)] : []
+  if (JSON.stringify(ctx.self.state.queue ?? []) !== JSON.stringify(line)) {
+    for (const id of line.slice(1)) if (!(ctx.self.state.queue ?? []).includes(id) && now > (ses.waitTalk ?? 0)) { ses.waitTalk = now + 4000; ctx.emit("playSound", { clip: say(pick(ctx, WAIT)), position: { ...ctx.self.feetPosition, y: ctx.self.feetPosition.y + 1.6 }, bus: "Voice", volume: 0.9, maxDistance: 14, mode: "restart" }) }
+    ctx.self.state.queue = line
+  }
+  return cur
 }
 function walkTo(ctx, x, z, faceYaw, dt) {
   const me = ctx.self, dx = x - me.feetPosition.x, dz = z - me.feetPosition.z, d = Math.hypot(dx, dz)
@@ -71,7 +93,7 @@ export function update(ctx, dt) {
   }
   const { ch, p } = c, y = yawOf(ch.rotation), f = fwd(y), r = { x: -f.z, z: f.x }
   const spot = { x: ch.feetPosition.x - f.x * BEHIND + r.x * SIDE, z: ch.feetPosition.z - f.z * BEHIND + r.z * SIDE }
-  if (ses.on !== ch.id) { ses.on = ch.id; ses.sat = false; ses.look = lookKey(p.state.look); ses.flurry = 0; letGo(ctx); me.anim.flourish = null
+  if (ses.on !== ch.id) { ses.on = ch.id; ses.servedAt = now; ses.sat = false; ses.look = lookKey(p.state.look); ses.flurry = 0; letGo(ctx); me.anim.flourish = null
     ctx.emit("playSound", { clip: say(pick(ctx, HELLO)), position: { ...me.feetPosition, y: me.feetPosition.y + 1.6 }, bus: "Voice", volume: 0.9, maxDistance: 14, mode: "restart" }) }
   if (!walkTo(ctx, spot.x, spot.z, y, dt)) return
   if (!ses.sat) { ses.sat = true; ses.t0 = now; me.anim.cut = { clip: CUT, loop: true, weight: 4, mask: { from: "Spine" }, blendIn: 0.4 } }
