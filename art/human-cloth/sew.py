@@ -164,7 +164,7 @@ for name, (ease, cuts) in PLAN.items():
             na = {}
             for v in RT:
                 nb = [e.other_vert(v) for e in v.link_edges if e.other_vert(v) in RT and abs(e.other_vert(v).co.z - v.co.z) < 1e-4]
-                if len(nb) != 2 or v in rv: continue
+                if len(nb) != 2: continue
                 c = sum((complex(w.co.x, w.co.y - cy) / max(1e-6, abs(complex(w.co.x, w.co.y - cy))) for w in nb), 0j) + 2 * complex(v.co.x, v.co.y - cy) / max(1e-6, abs(complex(v.co.x, v.co.y - cy)))
                 na[v] = math.atan2(c.imag, c.real)
             for v, a_ in na.items():
