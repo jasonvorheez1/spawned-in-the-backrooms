@@ -96,6 +96,7 @@ export function longHands(me, held, yaw, pitch, aiming, crouch, len = 0.62) {
   return { RightHand: { reach: { to: R, blendIn: 0.15, blendOut: 0.25 } }, LeftHand: { reach: held ? { object: held, offset: { x: 0, y: -0.04, z: len * 0.7 }, pole, blendIn: 0.18, blendOut: 0.25 } : { to: L, pole, blendIn: 0.18, blendOut: 0.25 } } }
 }
 
+const bodyYaw = (me) => { const q = me.rotation; if (typeof q === 'number') return q * RAD; if (q && q.w != null) return Math.atan2(2 * (q.w * q.y + q.x * q.z), 1 - 2 * (q.x * q.x + q.y * q.y)); return (q?.yaw ?? 0) * RAD }
 const pitchOf = (cam) => { let p = cam?.pitch ?? 0; if (Math.abs(p) > 1.6) p *= RAD; return p }
 // the player's hands each tick (scripts/critter.js merges the bones it returns): aim/ready clips for guns, IK only for a long gun's grip, the rows and the rod.
 // `aiming` also tells the body to face the camera.
@@ -123,8 +124,9 @@ export function stance(ctx) {
   if (s.reloading && wp?.ranged) { if (!ss.rel3) { ss.rel3 = true; handle3(ctx, me, 'reload', s.equipped) } } else ss.rel3 = false
   if (!wp?.ranged || s.sheathed || s.sit || s.downAt || s.os || s.talkWith || s.mj?.seats || s.building) { aimPose(me, null, null); return null }
   const cam = me.camera?.rotation ?? null; if (!cam) return null
-  const fam = famOf(s.equipped), yaw = (cam.yaw ?? 0) * RAD, pitch = pitchOf(cam)
   const aiming = !s.reloading && (!!s.ads || now - (s.swingAt ?? 0) < 1400)
+  // resting hands ride the BODY's facing; only an aimed gun follows the camera (Shelly: arms moving with the camera)
+  const fam = famOf(s.equipped), yaw = aiming ? (cam.yaw ?? 0) * RAD : bodyYaw(me), pitch = aiming ? pitchOf(cam) : 0
   aimPose(me, fam, s.reloading ? 'ready' : aimMode(me, aiming, s.crouch), pitch)
   if (fam !== 'long') return { bones: null, aiming }
   const len = (wp.length ?? 0.9) * 0.55
