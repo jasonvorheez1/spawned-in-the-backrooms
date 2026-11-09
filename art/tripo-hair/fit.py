@@ -83,7 +83,15 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
         zc, zh = (fz1 - 0.005 + hz - 0.13) / 2, (fz1 - 0.005 - (hz - 0.13)) / 2
         if key == "t_softbob": inside = lambda c: hz - 0.13 < c.z < fz1 - 0.005 and abs(c.x) < rx * XW
         else: inside = lambda c: (c.x / (rx * XW)) ** 2 + ((c.z - zc) / zh) ** 2 < 1  # an oval the shape of the face, so the edge reads as hair parting round it
-        cut = [f for f in bmC.faces if (lambda c: c.y < cy - 0.02 and inside(c))(f.calc_center_median()) or (key != "t_softbob" and any(v.co.y < cy - 0.02 and inside(v.co) for v in f.verts))]  # a long shard reaching into the face goes whole
+        def samples(f):  # points spread over the whole face: a big shard can span the face with every corner outside it
+            vs = [v.co for v in f.verts]; out = list(vs)
+            for i in range(1, len(vs) - 1):
+                a, b, c = vs[0], vs[i], vs[i + 1]
+                for u in (0.1, 0.3, 0.5, 0.7):
+                    for w in (0.1, 0.3, 0.5, 0.7):
+                        if u + w < 0.95: out.append(a + (b - a) * u + (c - a) * w)
+            return out
+        cut = [f for f in bmC.faces if (lambda c: c.y < cy - 0.02 and inside(c))(f.calc_center_median()) or (key != "t_softbob" and any(c.y < cy - 0.02 and inside(c) for c in samples(f)))]  # a long shard reaching into the face goes whole
         bmesh.ops.delete(bmC, geom=cut, context="FACES"); bmesh.ops.delete(bmC, geom=[v for v in bmC.verts if not v.link_faces], context="VERTS")
         bmC.to_mesh(me); bmC.free(); print("cut face mask", key, len(cut))
     # whatever still hangs over the face folds up into a fringe that ends at the brow, no holes cut
