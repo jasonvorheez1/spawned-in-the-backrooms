@@ -242,7 +242,7 @@ export function poseViewmodel(ctx, dt) {
   const brY = Math.sin(m.breath * 1.7) * 0.0025 * bre, brP = Math.sin(m.breath * 1.7 + 0.6) * 0.5 * bre, brYaw = Math.sin(m.breath * 0.9) * 0.35 * bre
 
   // ---- compose: position
-  const ads = wp.ads ?? REST, a = ease(m.ads), sway = 1 - 0.7 * m.ads
+  const ads = ps.vmTune?.ads ?? wp.ads ?? REST, a = ease(m.ads), sway = 1 - 0.7 * m.ads
   let x = REST[0] + (ads[0] - REST[0]) * a, y = REST[1] + (ads[1] - REST[1]) * a, d = REST[2] + (ads[2] - REST[2]) * a
   if (!gun && kind !== 'fists') { x += wp.two ? 0.03 : 0.1; y -= 0.1; d += 0.3 } // a melee weapon rides out at the right edge, the fist low; two hands bring it to the middle
   else if (gun && wp.two) { x -= 0.07 * (1 - m.ads); y += 0.015 } // a long gun is held in both hands, nearer the centre of the screen
