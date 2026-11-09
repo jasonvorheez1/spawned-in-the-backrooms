@@ -65,7 +65,7 @@ def build(sex, side):
     fingers = [c for c in comps({i for i in H if P[i][1] > TK}) if len(c) > 30]
     thumbs = [c for c in comps({i for i in P if P[i][3] > 0.03 and P[i][1] > -0.03 and P[i][3] > 0.03}) if len(c) > 10]
     print(sex, "fingers", len(fingers), "thumb", [len(c) for c in thumbs])
-    ANG = (78, 98, 62)   # knuckle, middle, tip flexion
+    ANG = (50, 85, 45)   # knuckle, middle, tip flexion: a cylinder grasp around the grip, not a crushed fist
     def rot(pt, piv, ax, deg): return mu.Quaternion(ax, math.radians(deg)) @ (pt - piv) + piv
     newp = {i: P[i][0].copy() for i in P}
     hinge = V(); rings1 = []
@@ -90,15 +90,21 @@ def build(sex, side):
             for i in c:
                 if u[i] > J[k]: newp[i] = rot(newp[i], pivs[k], ax, -ANG[k])
             for k2 in range(k + 1, 3): pass
-        r1 = [newp[i] for i in c if J[1] < u[i] < J[2]]; rings1.append(sum(r1, V()) / max(1, len(r1)))
+        r1 = [newp[i] for i in c if J[1] < u[i] < J[2]]; rings1.append((sum(r1, V()) / max(1, len(r1)), cen.dot(s)))
     hinge.normalize()
-    # thumb: roll it under the palm and swing it forward so it lies across the curled index and middle
+    # thumb: swing its tip onto the outside of the index finger's middle segment, wrapping the grip
+    idx = max(rings1, key=lambda r: r[1])[0]
     for c in thumbs:
-        base = min((P[i][0] for i in c), key=lambda q: (q - W).dot(s))
-        piv = W + s * (base - W).dot(s) * 0.8 + a * (base - W).dot(a) - n * 0.006
+        base = [P[i][0] for i in c if P[i][3] < 0.036] or [min((P[i][0] for i in c), key=lambda q: (q - W).dot(s))]
+        piv = sum(base, V()) / len(base)
+        tip = max((P[i][0] for i in c), key=lambda q: (q - piv).length)
+        goal = idx + s * 0.004 - n * 0.006
+        Q = (tip - piv).normalized().rotation_difference((goal - piv).normalized())
+        L = (tip - piv).length
         for i in c:
-            q = rot(newp[i], piv, a, 62)
-            newp[i] = rot(q, piv, n, 38)
+            wgt = min(1, max(0, (P[i][0] - piv).dot((tip - piv).normalized()) / (0.25 * L) + 0.3))
+            q = mu.Quaternion().slerp(Q, wgt)
+            newp[i] = q @ (newp[i] - piv) + piv
     import json
     fs = set(i for c in fingers for i in c); ts = set(i for c in thumbs for i in c)
     json.dump([[(newp[i]-W).dot(a), (newp[i]-W).dot(s), (newp[i]-W).dot(n), 1 if i in fs else 2 if i in ts else 0] for i in P if P[i][1] > -0.03], open(f"/tmp/curl-{sex}.json", "w"))
@@ -113,7 +119,15 @@ def build(sex, side):
     bpy.context.view_layer.objects.active = body; body.select_set(True)
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     # fist centre: the curled finger mass
-    fist = sum(rings1, V()) / len(rings1); fist = fist + (W + a * (fist - W).dot(a) - fist) * 0.45   # inside the fist: between the middle phalanges and the palm
+    pts2 = [((q[0] - W).dot(a), (q[0] - W).dot(n)) for i, q in P.items() if q[4] > 0.3 and abs((q[0] - W).dot(s) - idx.dot(s) + W.dot(s)) < 0.03]
+    best = (-1, 0, 0)
+    for ti in range(0, 70):
+        for hi in range(0, 50):
+            t0, h0 = ti * 0.001, -hi * 0.001
+            dmin = min(math.hypot(t0 - x, h0 - y) for x, y in pts2)
+            if dmin > best[0]: best = (dmin, t0, h0)
+    print(sex, "grip hole r", round(best[0], 4), "at", best[1:], "fit", round(best[0], 4))
+    fist = W + a * best[1] + n * best[2] + s * (idx - W).dot(s) * 0.4   # the grip runs through the hollow of the fist
     # target frame in the viewmodel: forearm runs from the fist back toward the camera, down and out to its side
     sx = 1 if side == "R" else -1
     fore = V((0.22 * sx, -0.30, 0.93)).normalized()        # glTF, wrist -> elbow
