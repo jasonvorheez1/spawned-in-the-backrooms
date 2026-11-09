@@ -127,9 +127,15 @@ o = bpy.data.objects.new("flight", me); bpy.context.collection.objects.link(o); 
 for i in range(13):
     zf = z0 - i * G
     box(W - 0.1, 0.05, 0.006, E(0, (i + 1) * R + 0.002, zf - 0.04), "nosing", 0.002)
-import math as _m
-ang = _m.atan2(13 * R, 13 * G); Ls = _m.hypot(13 * R, 13 * G)
-for s in (-1, 1):
-    o = box(0.012, Ls, 0.22, E(s * (W / 2 + 0.006), 13 * R / 2 - 0.05, z0 - 13 * G / 2), "steel", 0.003)
-    o.rotation_euler = (ang, 0, 0)
+# steel stringer plates on both sides, built from verts in place (string line from the first nose to the landing, 0.22 deep)
+for sx in (-1, 1):
+    x0 = sx * (W / 2 + 0.001); x1 = sx * (W / 2 + 0.013)
+    a = (z0 + 0.05, 0.30); b = (z0 - 13 * G, 13 * R + 0.05)
+    pts = [(a[0], a[1]), (b[0], b[1]), (b[0], b[1] - 0.24), (a[0], a[1] - 0.24)]
+    bm2 = bmesh.new(); vs = [[bm2.verts.new(E(x, y, z)) for (z, y) in pts] for x in (x0, x1)]
+    bm2.faces.new(vs[0][::-1]); bm2.faces.new(vs[1])
+    for i in range(4):
+        j = (i + 1) % 4; bm2.faces.new((vs[0][i], vs[0][j], vs[1][j], vs[1][i]))
+    bmesh.ops.recalc_face_normals(bm2, faces=bm2.faces); me2 = bpy.data.meshes.new("stringer"); bm2.to_mesh(me2); bm2.free()
+    o = bpy.data.objects.new("stringer", me2); bpy.context.collection.objects.link(o); put(o, "steel", smooth=False)
 export("l2-stair")
