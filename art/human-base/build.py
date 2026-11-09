@@ -1,6 +1,6 @@
 # Shelly's anime base (female, as uploaded) + a male built off the same mesh. Both rigged on Mixamo names.
 import bpy, math, sys
-from mathutils import Vector
+from mathutils import Matrix, Vector
 OUT = "/workspace/human"
 def smooth(a, b, x):
     t = max(0.0, min(1.0, (x - a) / (b - a))); return t * t * (3 - 2 * t)
@@ -338,6 +338,35 @@ def garment(body, r, name, keep, color, cuts=(), push=0.005):
     o.parent = r
     return o
 
+def tpose(r, meshes):
+    # the library clips (cdn/clip-*.glb) are authored on a T-pose rig whose every joint is world-aligned: their arm turns
+    # assume an arm lying flat along X. Our A-pose bind (arms ~30 deg down) took those turns from the wrong start, so the
+    # idle bowed the elbows out and swung the hands behind the hips (Shelly: "THE ARMS are a huge problem").
+    # Raise each arm flat, bake that pose into the meshes, make it the rest. identity.py then aligns the joint frames.
+    bpy.ops.object.select_all(action="DESELECT"); r.select_set(True); bpy.context.view_layer.objects.active = r
+    bpy.ops.object.mode_set(mode="POSE")
+    for s, sg in (("Left", 1), ("Right", -1)):
+        for n in (f"{s}Arm", f"{s}ForeArm", f"{s}Hand"):
+            pb = r.pose.bones[n]; bpy.context.view_layer.update()
+            M = r.matrix_world @ pb.matrix
+            d = (M.to_3x3() @ Vector((0, 1, 0))).normalized()
+            q = d.rotation_difference(Vector((sg, 0, 0)))
+            head = M.translation.copy()
+            R = q.to_matrix().to_4x4()
+            M2 = Matrix.Translation(head) @ R @ Matrix.Translation(-head) @ M
+            pb.matrix = r.matrix_world.inverted() @ M2
+    bpy.context.view_layer.update()
+    bpy.ops.object.mode_set(mode="OBJECT")
+    for o in meshes:
+        mod = next((m for m in o.modifiers if m.type == "ARMATURE"), None)
+        if not mod: continue
+        bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); bpy.context.view_layer.objects.active = o
+        nm = mod.name; bpy.ops.object.modifier_apply(modifier=nm)
+        o.modifiers.new(nm, "ARMATURE").object = r
+    bpy.ops.object.select_all(action="DESELECT"); r.select_set(True); bpy.context.view_layer.objects.active = r
+    bpy.ops.object.mode_set(mode="POSE"); bpy.ops.pose.armature_apply(selected=False); bpy.ops.object.mode_set(mode="OBJECT")
+    print("tpose applied")
+
 def build(name, is_male, height):
     head, body = load()
     if is_male: male(head, body)
@@ -355,6 +384,7 @@ def build(name, is_male, height):
     bpy.context.view_layer.objects.active = r
     bpy.ops.object.transform_apply(scale=True)
     head.data.materials[0].name = "Head_Skin"; body.data.materials[0].name = "Body_Skin"
+    tpose(r, (head, body, *extra))
     proof(name, r)
     bpy.ops.object.select_all(action="DESELECT")
     for o in (r, head, body, *extra): o.select_set(True)
