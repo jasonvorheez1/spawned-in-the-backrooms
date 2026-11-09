@@ -3,6 +3,7 @@
 // game's moods show on the face: a hit makes you wince, low hp is sad, low sanity is scared.
 import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
+import { standUp } from './lib/seat.js'
 const SCRIPT = 'scripts/critter2-geo.js'
 import { bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, STYLE_V, seatHead, humanMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
 const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
@@ -128,7 +129,7 @@ export function onInput(ctx, input) {
   const d = input.actionData?.dress
   if (input.pressed?.dress && d && typeof d.k === 'string') {
     if (d.k === 'stab') { if (['hair', 'face', 'body', 'wear'].includes(d.v)) st.salonTab = d.v; return } // the salon's service tabs
-    if (d.k === 'close') { st.wardrobeOpen = false; st.salonOpen = false; if (st.wrMenu) { st.wrMenu = false; if (ctx.self.place !== 'intake') { st.menuOpen = true; st.menuKind = 'pause' } } return } // in the intake room, done walks you out (main-menu.js)
+    if (d.k === 'close') { if (st.salonOpen && st.sit) standUp(ctx); st.wardrobeOpen = false; st.salonOpen = false; if (st.wrMenu) { st.wrMenu = false; if (ctx.self.place !== 'intake') { st.menuOpen = true; st.menuKind = 'pause' } } return } // in the intake room, done walks you out (main-menu.js)
     if (d.k === 'face') { st.face = { expr: d.v, until: ctx.now() + C.holdFace * 1000 }; return }
     if (d.k === 'tab') { if ((st.wrMenu ? ['body', 'face'] : ['body', 'face', 'clothes', 'outfits']).includes(d.v)) st.wrTab = d.v; return }
     if (st.wrMenu) { // the menu's creator shapes the critter alone: clothes are loot, never picked here (Shelly)
