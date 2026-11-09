@@ -36,7 +36,9 @@ def bunk():
         parts.append(box("stripe", (W - 0.05, 0.02, 0.122), (0, -0.4, z + 0.07), stripe, 0.0, 1))
     parts.append(box("blanket", (W - 0.02, 0.9, 0.04), (0.02, 0.35, 0.32 + 0.14), blanket, 0.02, 2))
     parts.append(box("pillow", (0.5, 0.3, 0.08), (0, -L / 2 + 0.25, 1.2 + 0.17), mattress, 0.035, 3))
-    for k in range(4): parts.append(cyl("ladder", 0.012, W * 0.5, (W / 2, L / 2 - 0.05, 0.5 + k * 0.22), steel, rot=(0, math.pi / 2, 0), verts=8))
+    parts.append(cyl("stile", 0.016, 1.3, (W / 2 - 0.4, L / 2 + 0.03, 0.65), steel, verts=10))
+    for z in (0.32, 1.2): parts.append(cyl("stay", 0.012, 0.05, (W / 2 - 0.4, L / 2 + 0.005, z), steel, rot=(math.pi / 2, 0, 0), verts=8))
+    for k in range(4): parts.append(cyl("ladder", 0.012, 0.4, (W / 2 - 0.2, L / 2 + 0.03, 0.5 + k * 0.22), steel, rot=(0, math.pi / 2, 0), verts=8))
     ob = join_export("l21_bunk", parts); preview("l21_bunk", ob); return ob
 
 def cooler():
