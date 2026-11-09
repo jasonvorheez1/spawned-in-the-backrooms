@@ -10,6 +10,7 @@ export function update(ctx) {
     ss.held = ctx.spawn({ parent: me.id, attachment: { bone: 'RightHand' }, feetPosition: { x: 0, y: 0, z: -g }, tags: ['temp'], ...weaponBody(k), ...heldRot(k) })
   }
   tick3(me, now)
+  if (!me.anim.base) me.anim.base = { clip: 'cdn/clip-idle-loop.glb', loop: 'loop', weight: 1 }
   const fam = famOf(k)
   if (fam === 'pistol' || fam === 'long') {
     aimPose(me, fam, s.mode ?? 'aim', 0)
