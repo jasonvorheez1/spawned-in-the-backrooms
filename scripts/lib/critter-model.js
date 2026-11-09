@@ -794,7 +794,7 @@ export function restyle(ctx, o) {
   const want = HUMAN ? 'h' : 'f'
   const stray = strayHeads(ctx, o)
   if (want === 'f' && isF) return false
-  if (want === 'h' && isH && Object.values(M.human).includes(mid)) { if (!stray.length && !o.material?.outline) { const w = o.state?.wear, h = ctx.getObject(o.id + '/' + HAIR_ID); if (w && !h && w.hair !== 'none' && !maskOf(w)) { seatHumanHair(ctx, o, w); seatBeard(ctx, o, w); return true } return false } if (o.state && !o.state.wear) o.state.wear = { ...(lookFromModel(o.model, stray[0]?.model?.id ?? stray[0]?.model) ?? {}) }; seatHead(ctx, o, o.state?.wear ?? {}); return true }
+  if (want === 'h' && isH && Object.values(M.human).includes(mid)) { if (!stray.length && !o.material?.outline) { const w = o.state?.wear, h = ctx.getObject(o.id + '/' + HAIR_ID); if (w && w.hair !== 'none' && !maskOf(w) && (!h || (h.model?.id ?? h.model) !== humanHairOf({ sex: w.sex ?? (mid === M.human.f ? 'f' : 'm'), ...w }))) { seatHumanHair(ctx, o, w); if (!h) seatBeard(ctx, o, w); return true } return false } if (o.state && !o.state.wear) o.state.wear = { ...(lookFromModel(o.model, stray[0]?.model?.id ?? stray[0]?.model) ?? {}) }; seatHead(ctx, o, o.state?.wear ?? {}); return true }
   const local = String(o.id).split('/').pop()
   const hm = ctx.getObject(o.id + '/' + HEAD_ID)?.model ?? stray[0]?.model
   const l = { ...(lookFromModel(o.model, hm?.id ?? hm) ?? {}), ...(o.state?.wear ?? {}) }
