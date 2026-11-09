@@ -87,7 +87,7 @@ for v in sh.verts:
 bvhW = BVHTree.FromBMesh(sh); bvhSkinL = bvhSkin   # same space the old final pass used
 _sl = bmesh.new(); _sl.from_mesh(body0.data); _sl.transform(body0.matrix_world); bmesh.ops.remove_doubles(_sl, verts=_sl.verts[:], dist=0.0015)
 _f = bmesh.ops.holes_fill(_sl, edges=_sl.edges[:], sides=64); bmesh.ops.triangulate(_sl, faces=_f["faces"]); bmesh.ops.recalc_face_normals(_sl, faces=_sl.faces[:])
-bvhSeal = BVHTree.FromBMesh(_sl)   # the whole body sealed (shoulder slits, neck): its nearest face never points sideways, so skin can't print through the yoke
+_sl.normal_update(); bvhSeal = BVHTree.FromBMesh(_sl)   # the whole body sealed (shoulder slits, neck): its nearest face never points sideways, so skin can't print through the yoke
 print("MW", [list(map(lambda x: round(x, 3), r)) for r in MW])
 gnames = {g.index: g.name for g in body.vertex_groups}
 done = {}
@@ -288,6 +288,29 @@ for name, (ease, cuts) in PLAN.items():
                 N[v] = c if c.length >= D[v].length else D[v]
             D = N
         for v in fb.verts: v.co += D[v]
+    for _pass in range(4):                                   # from the skin's side: a body point the cloth fails to cover by 7 mm lifts the cloth over it (folds the nearest-point test misreads)
+        fb.verts.ensure_lookup_table(); fb.faces.ensure_lookup_table(); gb = BVHTree.FromBMesh(fb); D = {v: Vector() for v in fb.verts}; hit = 0
+        for bv in _sl.verts:
+            nb = MI.to_3x3() @ bv.normal; p0 = MI @ bv.co
+            if nb.length < 1e-6: continue
+            nb.normalize(); h = gb.ray_cast(p0 + nb * 0.04, -nb, 0.08)
+            if h[0] is None: continue
+            off = 0.04 - h[3]                                # where the cloth's outer face sits along this skin normal
+            if -0.03 < off < 0.007:
+                hit += 1
+                for v in fb.faces[h[2]].verts:
+                    want = nb * (0.007 - off)
+                    if want.length > D[v].length: D[v] = want
+        if not hit: break
+        for _ in range(3):
+            N = {}
+            for v in fb.verts:
+                nbv = [e.other_vert(v) for e in v.link_edges]
+                c = D[v].lerp(sum((D[w] for w in nbv), Vector()) / max(1, len(nbv)), 0.5)
+                N[v] = c if c.length >= D[v].length else D[v]
+            D = N
+        for v in fb.verts: v.co += D[v]
+        print("SKINLIFT", name, _pass, hit)
     fb.to_mesh(me); fb.free()
     # skin + Bust key from the body at the nearest point
     n.shape_key_add(name="Basis", from_mix=False); kb = n.shape_key_add(name="Bust", from_mix=False) if KB else None
