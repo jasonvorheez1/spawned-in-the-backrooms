@@ -8,6 +8,7 @@ import L from './lib/data/level0.yml'
 import W from './lib/weapons.js'
 import { ZONE_NAMES } from './lib/maze.js'
 import { questMark, yawTo } from './lib/quest-mark.js'
+import { tracked, MAX_TRACK } from './lib/quests.js'
 import { wardrobe } from './wardrobe-ui.js'
 import { salon } from './salon-ui.js'
 import { mainMenu } from './main-menu-ui.js'
@@ -106,10 +107,15 @@ function compass(yaw) {
 }
 // the objective's pip on the compass: inside the strip it slides with your view, past its edge it pins there as an arrow
 function questPip(ctx, player, yaw) {
-  const t = questMark(ctx, player), p = player.feetPosition; if (!t || !p) return ''
-  const o = ((Math.round(yawTo(p, t)) - Math.round(yaw)) % 360 + 540) % 360 - 180, a = Math.abs(o)
-  const x = a < 75 ? 50 + o / 75 * 50 : (o < 0 ? 0 : 100), edge = a >= 75
-  return `<div style="position:absolute;left:28px;width:300px;bottom:6px;height:22px;pointer-events:none"><div style="position:absolute;left:${x}%;top:-9px;transform:translateX(-50%);color:#ffc44d;font-size:${edge ? 13 : 12}px;text-shadow:0 0 6px #ffb040,0 1px 2px #000">${edge ? (o < 0 ? '◀' : '▶') : '◆'}</div></div>`
+  const p = player.feetPosition; if (!p) return ''
+  let out = ''
+  for (const q of tracked(player.state)) { // one pip per tracked quest, in that quest's tint
+    const t = questMark(ctx, player, q); if (!t) continue
+    const o = ((Math.round(yawTo(p, t)) - Math.round(yaw)) % 360 + 540) % 360 - 180, a = Math.abs(o)
+    const x = a < 75 ? 50 + o / 75 * 50 : (o < 0 ? 0 : 100), edge = a >= 75
+    out += `<div style="position:absolute;left:${x}%;top:-9px;transform:translateX(-50%);color:${q.tint};font-size:${edge ? 13 : 12}px;text-shadow:0 0 6px ${q.tint},0 1px 2px #000">${edge ? (o < 0 ? '◀' : '▶') : '◆'}</div>`
+  }
+  return out ? `<div style="position:absolute;left:28px;width:300px;bottom:6px;height:22px;pointer-events:none">${out}</div>` : ''
 }
 
 const CND_CACHE = { key: '', html: '' }
@@ -266,19 +272,30 @@ function underwater(s) {
 const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 const Q_CACHE = { key: '', html: '' }
 function questTracker(s) {
-  const q = s.quest
-  if (!q || !q.step) return ''
-  const key = `${q.name ?? ''}|${q.step ?? ''}`
+  const list = tracked(s)
+  if (!list.length) return ''
+  const key = list.map((q) => `${q.id}|${q.step}`).join('~')
   if (key === Q_CACHE.key) return Q_CACHE.html
   Q_CACHE.key = key
-  return (Q_CACHE.html = `<div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;max-width:340px;background:linear-gradient(rgba(18,12,3,0.92),rgba(10,6,1,0.96));border-left:3px solid var(--a);box-shadow:0 0 10px rgba(0,0,0,0.8),inset 0 0 15px rgba(255,182,66,0.06);padding:7px 12px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:none;z-index:40;animation:hud-pop .3s ease-out">
-    <div style="display:flex;align-items:center;gap:6px;font-size:9.5px;letter-spacing:.22em;color:var(--ad)">
-      <span style="display:inline-block;width:5px;height:5px;background:var(--a);border-radius:1px"></span>
-      <span>ACTIVE OBJECTIVE</span>
-    </div>
-    <div style="font-size:13.5px;color:var(--a);font-weight:400;margin:2px 0 3px;letter-spacing:.05em">${esc(q.name).toUpperCase()}</div>
-    <div style="font-size:12px;color:#fff2d4;opacity:.92;text-transform:none;letter-spacing:.02em;line-height:1.3">${esc(q.step)}</div>
-  </div>`)
+  const row = (q) => `<div style="border-left:3px solid ${q.tint};padding:5px 12px 6px;background:linear-gradient(rgba(18,12,3,0.92),rgba(10,6,1,0.96));box-shadow:0 0 10px rgba(0,0,0,0.8)">
+    <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:${q.tint};letter-spacing:.05em"><span style="font-size:9px">◆</span><span>${esc(q.name).toUpperCase()}</span></div>
+    <div style="font-size:12px;color:#fff2d4;opacity:.92;text-transform:none;letter-spacing:.02em;line-height:1.3;margin-top:2px">${esc(q.step)}</div></div>`
+  return (Q_CACHE.html = `<div id="hud-quest" style="position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset, 50px) + 24px);top:18px;width:min(340px,42vw);display:flex;flex-direction:column;gap:5px;font-family:inherit;text-shadow:0 1px 2px #000;pointer-events:none;z-index:40;animation:hud-pop .3s ease-out">${list.map(row).join('')}</div>`)
+}
+// the journal (P): every quest you hold; a press on a row tracks or untracks it, three at most
+function journalUi(s) {
+  if (!s.jrnOpen) return ''
+  const all = Object.entries(s.quests ?? {}).map(([id, q]) => ({ id, ...q })).sort((a, b) => (b.main ? 1 : 0) - (a.main ? 1 : 0) || (b.at ?? 0) - (a.at ?? 0))
+  const tr = tracked(s)
+  const row = (q) => { const t = tr.find((x) => x.id === q.id), c = t?.tint ?? 'var(--ad)'
+    return `<button onclick="sendAction('qtrack',{id:'${q.id}'})" style="display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:${t ? 'rgba(255,182,66,0.07)' : 'transparent'};border:0;border-left:3px solid ${c};padding:8px 10px;margin:0 0 6px;font:inherit;color:inherit;cursor:pointer">
+      <span style="color:${c};font-size:13px;line-height:1.3">${t ? '◆' : '◇'}</span>
+      <span style="flex:1"><span style="display:block;font-size:13.5px;color:${t ? c : 'var(--a)'};letter-spacing:.05em">${esc(q.name).toUpperCase()}${q.main ? ' <span style="font-size:9px;letter-spacing:.2em;opacity:.7">· MAIN</span>' : ''}</span>
+      <span style="display:block;font-size:12px;color:#fff2d4;opacity:.85;text-transform:none;line-height:1.35;margin-top:2px">${esc(q.step)}</span></span></button>` }
+  return `<div data-modal style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto;z-index:60"><div style="width:min(520px,92vw);max-height:80vh;overflow:auto;background:oklch(0.14 0.02 75 / .96);border:1px solid var(--ad);box-shadow:0 0 30px #000;padding:16px 18px;text-shadow:0 1px 2px #000">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px"><span style="font-size:15px;letter-spacing:.25em;color:var(--a)">JOURNAL</span><span style="font-size:10px;letter-spacing:.18em;color:var(--ad)">TRACKING ${tr.length} OF ${MAX_TRACK}</span></div>
+    ${all.length ? all.map(row).join('') : '<div style="font-size:12px;color:var(--ad);text-transform:none;padding:14px 0">Nothing written here yet.</div>'}
+  </div></div>`
 }
 
 // F3: the LAGSCOPE lag panel floats over whatever the HUD draws (builders only; players never see it)
@@ -286,7 +303,7 @@ export default function render(ctx, player) { return renderHud(ctx, player) + la
 function renderHud(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null) return ''
-  if (s.cut || s.l26cut || s.arrive || s.arrivePending || (s.t0cut && !s.sheetOpen)) return cutUi(ctx, player)
+  if (s.cut || s.dcut || s.l26cut || s.arrive || s.arrivePending || (s.t0cut && !s.sheetOpen)) return cutUi(ctx, player)
   if (s.menuOpen) return mainMenu(ctx, player)
   if (s.wardrobeOpen && s.salonOpen && !s.wrMenu) return `<div id="hud" style="position:fixed;inset:0;pointer-events:none">${salon(ctx, player)}</div>`
   if (s.wardrobeOpen) return `${THEME}<div id="hud" style="position:fixed;inset:0;pointer-events:none">${wardrobe(ctx, player)}</div>`
@@ -402,5 +419,5 @@ ${underwater(s)}<div id="hud" style="position:fixed;inset:0;pointer-events:none;
     <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
   </div>
 
-</div>${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
+</div>${journalUi(s)}${feedUi(ctx, player)}${lootUi(ctx, player)}${pickUi(ctx, player)}${spamUi(ctx, player)}${spamArenaUi(ctx, player)}${talkUi(ctx, player)}${hubUi(ctx, player)}${buildUi(ctx, player)}${statsUi(ctx, player)}${craftUi(ctx, player)}${osUi(ctx, player)}${hordeUi(ctx, player)}${noclipUi(ctx, player)}`
 }
