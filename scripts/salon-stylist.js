@@ -25,7 +25,7 @@ const fwd = (yaw) => { const r = (yaw * Math.PI) / 180; return { x: -Math.sin(r)
 const lookKey = (l) => JSON.stringify(l ?? {})
 
 const WAIT = ["Be right with you!", "One sec, hon, you're next.", "Get comfy, I'm coming."]
-const IDLE_SWAP = 20000 // Savi's pick: a sitter who changes nothing for 20 s while another waits gets passed to the next chair
+const IDLE_SWAP = 60000 // a sitter who changes nothing for 60 s while another waits gets passed to the next chair
 function sitters(ctx) { // every salon chair whose sitter has the makeover open
   const out = []
   for (const r of ctx.query({ tags: ["seat"], center: ctx.self.feetPosition, radius: 12 })) {
