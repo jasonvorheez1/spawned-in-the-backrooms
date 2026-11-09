@@ -1,0 +1,9 @@
+# Enemy footsteps (Nov 9, Shelly: "also give enemies footsteps"). Every number is Savi's pick.
+# Each player's own machine hears the enemies near it: a step plays every stride an enemy moves, louder and faster when it runs.
+# stride: metres per step · v: loudness at 1 m · run: speed (m/s) past which the step plays the run pitch · hear: metres
+hear: 26
+kinds:
+  hound:     { clip: /cdn/moodboard-gothic-horror/sfx-hound-claws-click-on-floor-single-step.mp3, stride: 0.75, v: 0.55, run: 4, pitch: [0.9, 1.1] }
+  smiler:    { clip: /cdn/moodboard-gothic-horror/sfx-creature-wet-bare-footstep-padding-single.mp3, stride: 0.95, v: 0.5, run: 4, pitch: [0.8, 0.95] }
+  lurker:    { clip: /cdn/moodboard-gothic-horror/sfx-creature-heavy-dragging-footstep-single.mp3, stride: 1.1, v: 0.65, run: 3.5, pitch: [0.75, 0.9] }
+  partygoer: { clip: /cdn/moodboard-gothic-horror/sfx-rubbery-squeaky-footstep-single.mp3, stride: 0.7, v: 0.5, run: 4, pitch: [0.95, 1.15] }
