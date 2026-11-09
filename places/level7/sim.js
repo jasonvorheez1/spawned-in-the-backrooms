@@ -13,6 +13,7 @@
 import { keepPeople, every } from "../../scripts/lib/level-kit.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { layExtras } from "../../scripts/lib/level7-extras.js";
+import { layFort2, FORT_MATS } from "../../scripts/lib/level7-fort2.js";
 import { layHouse } from "../../scripts/lib/level7-house.js";
 export const cadence = "2s";
 
@@ -649,7 +650,7 @@ function lay(ctx) {
   // Fort Surrender Summit Checkpoint & Lashed-Furniture Palisades (x: -70, y: 11.0, z: -95)
   ctx.spawn("l7-fort-spawn", { feetPosition: { x: -68.0, y: 11.1, z: -89.0 }, rotation: { yaw: 180 } });
   // the fort itself: two rows of wardrobes, dressers, beds and doors stacked and tarred, lean-to shanties inside, a watchtower of lashed wardrobes; the gate faces the wharf (south)
-  ctx.spawn("l7-fort", { feetPosition: { x: -70.0, y: 10.95, z: -93.0 }, rotation: { yaw: 0 }, physics: { body: "static", collider: "mesh" }, model: { id: GLB.fort }, receiveShadow: true, visibleRange: { max: 70 } });
+  ctx.spawn("l7-fort", { feetPosition: { x: -70.0, y: 10.95, z: -93.0 }, rotation: { yaw: 0 }, physics: { body: "static", collider: "mesh" }, model: { id: GLB.fort, materials: FORT_MATS }, receiveShadow: true, visibleRange: { max: 70 } });
   // the Thing's worshippers keep tar lamps along the wall: the only light here, low and red-black
   [[-6, -7], [6, -7], [-8, 1], [8, 1], [0, -9]].forEach(([dx, dz], i) => ctx.spawn(`l7-fort-lamp-${i}`, { feetPosition: { x: -70 + dx, y: 12.4, z: -93 + dz }, light: { kind: "point", color: "oklch(0.7 0.16 45)", intensity: 1.6, distance: 11, shadow: { enabled: false }, visibleRange: { max: 35 } } }));
 
@@ -932,6 +933,10 @@ export function tick(ctx) {
     s.builtV = V;
   }
 
+  if ((s.fort2V ?? 0) < 1) { // Fort Surrender pass 2 (scripts/lib/level7-fort2.js): its fire, smoke, textures and sound
+    for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("l7f-")) ctx.destroy(id);
+    layFort2(ctx); s.fort2V = 1;
+  }
   if (!ctx.getObject("l7-fauna")) ctx.spawn("l7-fauna", { behavior: "scripts/l7-fauna.js" }); // tidecrawlers on the shores, the Deep in open water
   // Ensure NPCs come back home after respawn window via level-kit
   if (every(ctx, "people", 5000)) {
