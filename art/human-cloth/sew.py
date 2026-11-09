@@ -180,7 +180,8 @@ for name, (ease, cuts) in PLAN.items():
             H = hull(zz - 0.008, zz + 0.008); e_ = max(0.006, ease(Vector((0, 0, zz))))
             T = [max(T[i] * ease.drape, H[i] + e_) for i in range(NB)]
             for _ in range(6):                               # cloth bridges the dip between the thighs: a hull, then a blur
-                T = [max(T[i], (T[i - 2] + T[(i + 2) % NB]) * 0.5) for i in range(NB)]
+                for k_ in (2, 4, 7):                         # wide spans too: cloth spans the seat's cleft, it never follows it in
+                    T = [max(T[i], (T[i - k_] + T[(i + k_) % NB]) * 0.5) for i in range(NB)]
                 T = [(T[i - 1] + 2 * T[i] + T[(i + 1) % NB]) * 0.25 for i in range(NB)]
             for v in nv:
                 a_ = math.atan2(v.co.y - cy, v.co.x); r2 = at(T, v.co)
