@@ -19,6 +19,14 @@ l26d-cb-2:
   physics: {body: kinematic, collider: sphere}
   state: {home: {x: 309.5, y: -80, z: -88.5}, hp: 10}
   tags: [l26-balloon, l8-hostile]
+l26d-cb-h3:
+  feetPosition: {x: 302.8, y: -80, z: -84}
+  id: l26d-cb-h3
+  layout: {box: {max: {x: 0.28, y: 1.85, z: 0.28}, min: {x: -0.28, y: 0.15, z: -0.28}}}
+  model: {id: /cdn/value.bbcd28912111e39613cec71f06224b7742148d3493106c89a76f739e3003f366.glb, materials: {tripo_material_1f70d4b8-d0f3-475f-8a5a-cbffff762cc5: {color: oklch(0.7 0.17 140), metalness: 0.05, roughness: 0.15}}}
+  physics: {body: kinematic, collider: sphere}
+  state: {home: {x: 302.8, y: -80, z: -84}, hp: 10}
+  tags: [l26-balloon, l8-hostile]
 l26d-cl-108:
   children: [{feetPosition: {x: 0, y: -0.2, z: 0}, light: {color: oklch(0.9 0.08 90), distance: 9, intensity: 1.4, kind: point}}]
   feetPosition: {x: 300, y: -77.35, z: -108}
