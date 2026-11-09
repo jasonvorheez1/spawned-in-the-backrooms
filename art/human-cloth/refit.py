@@ -207,8 +207,7 @@ for o in bpy.data.objects:
             teeth = [f for f in bm.faces if f.calc_center_median().z < HEM + 0.02 and sum(1 for e in f.edges if e.is_boundary or len(e.link_faces) < 2) >= 2]
             if not teeth: break
             bmesh.ops.delete(bm, geom=teeth, context="FACES_ONLY")
-        loose = [v for v in bm.verts if not v.link_faces]
-        if loose: bmesh.ops.delete(bm, geom=loose, context="VERTS")
+        # verts stay (skin weights are keyed by vertex index); a vertex with no face draws nothing
         rim = [v for v in bm.verts if v.is_boundary and v.co.z < HEM + 0.02]
         for _ in range(8):
             nz = {}
