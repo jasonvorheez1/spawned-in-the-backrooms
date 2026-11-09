@@ -34,7 +34,7 @@ for (const k of Y.order.slice(1)) {
 // the variants a kind can roll, with their weights
 export function rollVariant(ctx, k) {
   const opts = [[k, Y.variantPlain ?? 50]]
-  for (const [vk, v] of Object.entries(Y.variants ?? {})) if (W[k + '~' + vk]) opts.push([k + '~' + vk, v.chance ?? 5])
+  for (const [vk, v] of Object.entries(Y.variants ?? {})) if (W[k + '~' + vk] && !v.unique) opts.push([k + '~' + vk, v.chance ?? 5])
   let r = ctx.random() * opts.reduce((a, o) => a + o[1], 0)
   for (const [key, c] of opts) { r -= c; if (r <= 0) return key }
   return k

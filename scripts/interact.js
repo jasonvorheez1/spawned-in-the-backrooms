@@ -6,6 +6,7 @@ import { rollItemL3 } from './lib/loot3.js'
 import { startPick } from './lockpick.js'
 import { startSpamton } from './spamton-fight.js'
 import { openDialogue } from './talk.js'
+import { questLift1 } from './lib/level1-quests.js'
 // Fallout-style looting. Nothing is picked up by walking over it any more: look at an item and the HUD
 // names it ("[E] Take  Pipe scrap"), press E to take it. Crates and the remains of what you kill are
 // containers: look at one, press E, and a loot menu lists what is inside (take one thing, take all,
@@ -283,6 +284,7 @@ function liftOne(ctx, it, i) {
     if (!r.ok) { note(ctx, r.msg || "You can't carry that."); return }
     items.splice(i, 1); it.state.pockets = items.join(','); s.lootList = it.state.pockets
     note(ctx, `Lifted ${describe(t).name} from ${who}`)
+    questLift1(ctx, ctx.self, it)
     snd(ctx, 'loot-take-all-rustle', 0.25)
     s.xp = (s.xp ?? 0) + 8
     if (!items.length) closeLoot(ctx)

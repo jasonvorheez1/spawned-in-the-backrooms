@@ -19,6 +19,7 @@ import { dropLoot, rollLoot, spawnWeapon, poolOf, spawnRemains } from './lib/loo
 import { becomeCorpse } from './lib/l5-hostile.js'
 import { markKill } from './lib/witness.js'
 import { repKill } from './lib/rep.js'
+import { questKill1 } from './lib/level1-quests.js'
 import D from './lib/data/difficulty.yml'
 import { penOf, vary } from './lib/combat.js'
 import { derived, canCarry, burden, npcMul, START, dmgMul, handling, skillsOf, spentOf, SKILLS, SKILL_MAX, dmgAfterArmor, lookOfNpc } from './lib/stats.js'
@@ -441,7 +442,7 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
   }
   if (m.state.hp <= 0 && !m.state.dead) {
     m.state.dead = true
-    { const seen = markKill(ctx, m, ctx.self); if ((m.tags ?? []).includes('npc')) repKill(ctx, m, ctx.self, seen); if (!seen.length && s.crouch) s.notice = { text: 'Nobody saw that', at: ctx.now() } } // witnesses: scripts/lib/witness.js
+    { const seen = markKill(ctx, m, ctx.self); if ((m.tags ?? []).includes('npc')) { repKill(ctx, m, ctx.self, seen); questKill1(ctx, ctx.self, m) } if (!seen.length && s.crouch) s.notice = { text: 'Nobody saw that', at: ctx.now() } } // witnesses: scripts/lib/witness.js
     s.kills += 1
     gain(ctx, m.state?.kind === 'lurker' ? L.xpLurker : L.xpKill)
     const tg = m.tags ?? [], ent = tg.includes('smiler') || tg.includes('lurker')
