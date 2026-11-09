@@ -24,13 +24,13 @@ export function geometry(ctx) {
   const M = ctx.lod <= 2 ? 16 : 9, P0 = ctx.params ?? {}
   if (P0.hidden) { ctx.tri(0, 0, 0, 0.0001, 0, 0, 0, 0.0001, 0); return } // a worn model's own arm holds the weapon
   const HU = !!P0.human, sp = HU ? null : SPECIES[P0.species] ?? null, FUR = HU ? (P0.skin || "oklch(0.88 0.035 60)") : P0.fur || sp?.fur || "oklch(0.74 0.055 55)", PAD = sp?.nose && sp.nose !== "#2a1c18" ? "#ffb3c1" : "oklch(0.45 0.03 40)"
-  const sleeved = HU ? LONG.has(P0.topw) : !sp || LONG.has(P0.topw), SLEEVE = sp || HU ? (P0.top || "#7a8aa0") : "oklch(0.36 0.03 85)"
+  const sleeved = P0.handOnly ? false : HU ? LONG.has(P0.topw) : !sp || LONG.has(P0.topw), SLEEVE = sp || HU ? (P0.top || "#7a8aa0") : "oklch(0.36 0.03 85)"
   ctx.smooth()
   if (P0.support) { supportHand(ctx, P0, { sp, FUR, PAD, sleeved, SLEEVE, M }); ctx.color(null); return } // the off hand on a two-handed weapon
 
   // ---- sleeve: worn canvas jacket, two cuff folds at the wrist
   ctx.color(sleeved ? SLEEVE : FUR); ctx.roughness(0.95)
-  rod(ctx, [[0.03, -0.075, 0.075], [0.06, -0.15, 0.2], [0.1, -0.26, 0.4], [0.14, -0.4, 0.62]], [0.056, 0.062, 0.07, 0.078], M, [1, 0.92])
+  if (!P0.handOnly) rod(ctx, [[0.03, -0.075, 0.075], [0.06, -0.15, 0.2], [0.1, -0.26, 0.4], [0.14, -0.4, 0.62]], [0.056, 0.062, 0.07, 0.078], M, [1, 0.92]) // handOnly: the worn human model's own forearm runs in from below
   if (sleeved) {
     ctx.color(sp || P0.human ? mix(SLEEVE, 0.82) : "oklch(0.3 0.03 85)")
     rod(ctx, [[0.03, -0.066, 0.062], [0.036, -0.094, 0.1]], [0.057, 0.059], M, [1, 0.92]) // cuff, inner fold
@@ -98,6 +98,7 @@ function supportHand(ctx, P0, C) {
     ctx.color(TIP); const e = pts[steps]; ball(ctx, e, 0.0075 * (sp ? 1.3 : 1), 6, [1, 0.8, 1]); ctx.color(SKIN)
   }
   rod(ctx, [at(0.065, rr + 0.016, -0.6), at(0.01, rr + 0.016, -0.6), at(-0.03, rr + 0.014, -0.45)], [0.0165, 0.014, 0.011], M, [1, 0.9]) // the thumb, along the top
+  if (P0.handOnly) return
   ctx.color(sleeved ? SLEEVE : FUR); ctx.roughness(0.95)
   rod(ctx, [along(0.06), along(0.2), along(0.42), along(0.66)], [0.056, 0.062, 0.07, 0.078], M, [1, 0.92]) // the forearm, back past the camera
 }

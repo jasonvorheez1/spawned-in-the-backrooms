@@ -943,7 +943,7 @@ function viewmodel(ctx, moving, sprinting) {
   w.vmEq = kind; w.vmCheck = false
   const hb = !l.modelUrl && HUMAN ? humanBody(l) : null // human bodies: Shelly's own model's arm holds the weapon (her rule: first-person arms come from her model or a PLYMODEL)
   const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '')
-  const arm = ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v12' + JSON.stringify(s.vmTune ?? null)
+  const arm = hb ? { human: true, handOnly: true, skin: hb.materials.Body_Skin.color } : ply ? { hidden: true } : { human: true, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v13' + JSON.stringify(s.vmTune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     w.plyRig = null
@@ -957,10 +957,10 @@ function viewmodel(ctx, moving, sprinting) {
         ? { feetPosition: s.vmTune?.mat ?? { x: MESHGRIP[bk].at[0], y: MESHGRIP[bk].at[1], z: MESHGRIP[bk].at[2] }, rotation: s.vmTune?.mrot ?? { x: MESHGRIP[bk].q[0], y: MESHGRIP[bk].q[1], z: MESHGRIP[bk].q[2], w: MESHGRIP[bk].q[3] }, castShadow: false, ...weaponBody(kind), audience: 'local' }
         : { feetPosition: s.vmTune?.mat ?? { x: 0, y: -g, z: 0 }, rotation: s.vmTune?.mrot ?? Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
     // a two-handed weapon: the off hand rides the viewmodel too, on the fore-end (guns, ahead of the trigger hand) or up the haft (melee), at weapons.yml two: [up, forward-is-negative, radius]
-    if (wp.two && !ply) child.push({ feetPosition: { x: 0, y: wp.two[0], z: wp.two[1] }, castShadow: false, audience: 'local', primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: { ...arm, support: { axis: gun ? 'z' : 'y', r: wp.two[2] } } } })
+    if (wp.two && (!ply || hb)) child.push({ feetPosition: { x: 0, y: wp.two[0], z: wp.two[1] }, castShadow: false, audience: 'local', primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: { ...arm, support: { axis: gun ? 'z' : 'y', r: wp.two[2] } } } })
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
     // human: the body turned to face the look, its right shoulder just right of and below the eye (female shoulder 1.19 m, male scaled by height)
-    if (hb) { const sh = l.sex === 'f' ? 1.19 : 1.285; child.push({ id: 'plyarm', model: hb, rotation: { x: 0, y: 1, z: 0, w: 0 }, feetPosition: { x: -0.175, y: -0.03 - sh, z: 0.41 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'cdn/clip-idle-loop.glb', loop: 'loop', weight: 1 } } }) }
+    if (hb) { const sh = l.sex === 'f' ? 1.19 : 1.285; child.push({ id: 'plyarm', model: hb, rotation: { x: 0, y: 1, z: 0, w: 0 }, feetPosition: { x: -0.125, y: -0.15 - sh, z: 0.46 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'cdn/clip-idle-loop.glb', loop: 'loop', weight: 1 } } }) }
     else if (ply) child.push({ id: 'plyarm', model: ply, feetPosition: { x: 0.02, y: -1.62, z: 0.62 }, castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
     w.vm = ctx.spawn({
       feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
@@ -968,7 +968,7 @@ function viewmodel(ctx, moving, sprinting) {
     })
     w.vmKind = armKey
   }
-  w.plyWant = !!ply; w.plyTwo = wp_two(kind) // a two-handed weapon keeps the left arm: its hand reaches the fore-end
+  w.plyWant = !!ply; w.plyHuman = !!hb; w.plyTwo = wp_two(kind) // a two-handed weapon keeps the left arm: its hand reaches the fore-end
   if (ply && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 500; plyArm(ctx, w) } // its skeleton arrives with the model: look twice a second, not every tick
   if (w.vm && s.vmId !== w.vm) s.vmId = w.vm // scripts/lib/vmpose.js poses it every display frame from the camera rig
 }
@@ -990,9 +990,9 @@ function plyArm(ctx, w) {
     if (!par) bones[n] = { scale: 0 }
   }
   const hand = names.find((n) => RH.test(n.replace(/^mixamorig:/, '')))
-  if (hand) bones[hand] = { reach: { to: { object: w.vm, offset: { x: 0.03, y: -0.02, z: 0.05 } }, pole: { object: w.vm, offset: { x: 0.6, y: -0.6, z: 0.4 } } } }
+  if (hand) bones[hand] = { ...(w.plyHuman ? { scale: 0 } : {}), reach: { to: { object: w.vm, offset: w.plyHuman ? { x: 0.029, y: -0.066, z: 0.066 } : { x: 0.03, y: -0.02, z: 0.05 } }, pole: { object: w.vm, offset: { x: 0.6, y: -0.6, z: 0.4 } } } }
   const lh = w.plyTwo && names.find((n) => /(^|[^a-z])(l|left)[_. ]?hand$|hand[_. ]?(l|left)$/i.test(n.replace(/^mixamorig:/, '')))
-  if (lh) bones[lh] = { reach: { to: { object: w.vm, offset: { x: -0.03, y: w.plyTwo.y - 0.02, z: w.plyTwo.z } }, pole: { object: w.vm, offset: { x: -0.7, y: -0.6, z: 0.4 } } } }
+  if (lh) bones[lh] = { ...(w.plyHuman ? { scale: 0 } : {}), reach: { to: { object: w.vm, offset: { x: -0.06, y: w.plyTwo.y - 0.08, z: w.plyTwo.z + 0.1 } }, pole: { object: w.vm, offset: { x: -0.7, y: -0.6, z: 0.4 } } } }
   body.bones = bones
   w.plyRig = true
   ctx.log('[plyarm] rigged', hand ?? 'no right hand', 'cut', Object.keys(bones).join(','), 'all', names.join(','))
