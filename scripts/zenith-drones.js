@@ -16,10 +16,10 @@ pop flash burst=1 life=.18 size=1.6 col=hdr(8,5,3) a=1>0 sz=$size*(.4>1.4) r=spr
 pop shard burst=24..34 on=sphere(.15) life=.7..1.4 v=sdir()*(2.5..6)+up(1..2) size=.02..0.06 spin=-12..12 acc=grav()+drag(.3) col=<.55,.58,.62> a=1 sz=$size rot=$age*$spin floor=stick r=mesh(box,1,.3,.7)
 pop spark burst=30 on=sphere(.2) life=.3..0.8 v=sdir()*(3..7) size=.015..0.03 acc=grav()*.6 col=hdr(7,4,1.5) a=1>0 floor=bounce(.3) r=sprite(ember,add,velocity,.02)
 pop smoke burst=8 on=sphere(.3) life=1.5..2.6 v=up(.6..1.2)+sdir()*.4 size=.3..0.6 acc=buoy(.4)+curl(.3)+drag(1.1) col=<.18,.18,.2> a=0>.55:.4>0 sz=$size*(.6>2.6) r=sprite(smoke-puff,alpha)
-pop glow n=1 life=.4 r=light(<1,.6,.3>,40*(1>0),8)`;
+pop glow burst=1 life=.4 r=light(<1,.6,.3>,40*(1>0),8)`;
 const CHARGE = (c) => `fx
 pop c burst=14 on=sphere(.5) life=.5..0.9 v=<0,0,0> attract(3) size=.02..0.04 col=hdr(${c}) a=0>1:1>0 r=sprite(ember,add)
-pop glow n=1 life=1 r=light(<${c}>,6*(0>1),4)`;
+pop glow burst=1 life=1 r=light(<${c}>,6*(0>1),4)`;
 const hex = (h) => { const n = parseInt(h.slice(1), 16); return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255]; };
 const say = (ctx, d, kind) => { // one sentry line from the drone itself, never two over each other
   const list = V[kind], m = (ctx.self.session.voice ??= {}); if (!list?.length) return;
@@ -59,7 +59,6 @@ function blast(ctx, d, t, f) { // the ko: a fireball that hurts every player and
   ctx.emit("fx", { position: f, script: BOOM });
   ctx.emit("shockwave", { position: f, speed: 9, thickness: 0.4, intensity: 0.5 * big });
   ctx.emit("playSound", { clip: SND("small-drone-explodes-metal-burst-sparks"), position: f, volume: 1, maxDistance: 50 });
-  ctx.emit("decal", { position: { x: f.x, y: 0.02, z: f.z }, normal: { x: 0, y: 1, z: 0 }, texture: "cdn/texture-scorch-mark-burnt-floor-decal.png", size: 1.6 * big, lifetime: 120, fade: 4 });
   for (const p of ctx.place.players ?? []) {
     const c = chest(p), r = Math.hypot(c.x - f.x, c.y - f.y, c.z - f.z), k = 1 - r / (B.radius * big);
     if (k <= 0) continue;
