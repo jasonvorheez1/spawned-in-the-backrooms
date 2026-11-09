@@ -89,7 +89,8 @@ def make_cap(hatted, mat):
             CAPMAT.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.09, 0.06, 0.04, 1)
             CAPMAT.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.9
         mat = CAPMAT
-    bm = bmesh.new(); bm.from_mesh(head.data); bm.transform(head.matrix_world)
+    dg = bpy.context.evaluated_depsgraph_get(); hm = bpy.data.meshes.new_from_object(head.evaluated_get(dg), depsgraph=dg)
+    bm = bmesh.new(); bm.from_mesh(hm); bm.transform(head.matrix_world); bpy.data.meshes.remove(hm)   # the head as it draws, not its rest data
     depth = H["y1"] - H["y0"]
     def keepf(f):
         c = f.calc_center_median()
@@ -105,7 +106,7 @@ def make_cap(hatted, mat):
     if not bm.faces: bm.free(); return None
     bm.normal_update()
     ctr = Vector((0, H["cy"], H["hz"] + 0.02))
-    for v in bm.verts: v.co += (v.co - ctr).normalized() * 0.005   # radial: the head's normals aren't all outward
+    for v in bm.verts: v.co += (v.co - ctr).normalized() * 0.008   # radial: the head's normals aren't all outward
     me = bpy.data.meshes.new("scalpcap"); bm.to_mesh(me); bm.free()
     me.validate(clean_customdata=True)
     for a in [a.name for a in me.attributes if a.name not in ("position", ".edge_verts", ".corner_vert", ".corner_edge", "sharp_face") and not a.name.startswith(".") and a.domain != "CORNER"]: me.attributes.remove(me.attributes[a])
