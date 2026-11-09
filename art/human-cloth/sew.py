@@ -282,7 +282,11 @@ for name, (ease, cuts) in PLAN.items():
     bpy.ops.object.modifier_apply(modifier="t")
     ss = n.modifiers.new("s", "SUBSURF"); ss.levels = 1; bpy.ops.object.modifier_apply(modifier="s")
     for v in me.vertices:                                    # subdivision shrinks over the shoulder: keep every point outside the skin
-        co, nn, fi, d = bvhW.find_nearest(v.co); nn = _nf(v.co, nn); out = (v.co - co).dot(nn)
+        co, nn, fi, d = bvhW.find_nearest(v.co); nn = _nf(v.co, nn)
+        _w = MW @ v.co
+        if name.startswith("Top_") and abs(_w.x) < 0.07 and _w.y > B["Spine1"].y and _w.z < B["Spine1"].z:   # over the seat's cleft the skin's normal points sideways: both sides pushed across folded the back. straight back there
+            nn = (MI.to_3x3() @ Vector((0, 1, 0))).normalized()
+        out = (v.co - co).dot(nn)
         if out < 0.0035: v.co = v.co + nn * (0.0035 - out)
     tri = sum(len(p.vertices) - 2 for p in me.polygons); BUDGET = 9000 if name.startswith("Top_") else 6000   # Savi's pick: a crowd of NPCs wears these
     if tri > BUDGET:
