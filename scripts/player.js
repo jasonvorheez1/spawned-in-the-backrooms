@@ -396,7 +396,7 @@ export function onInput(ctx, input) {
   if (input.pressed.inventory) { const sv = ctx.self.state; if (sv.invOpen) sv.invOpen = false; else if (canOpen(sv, ctx.self.place, 'inventory')) openWrist(sv, 'inventory'); sound(ctx, 'flashlight-switch-click', 0.35, true) }
   if (input.pressed.inv && input.actionData?.inv) invAction(ctx, input.actionData.inv)
   if (input.pressed.drink && canOpen(ctx.self.state, ctx.self.place, 'inventory')) { openWrist(ctx.self.state, 'inventory'); ctx.self.state.invTab = 'aid' }
-  for (let slot=0; slot<10; slot++) if (input.pressed['quick'+slot]) quickUse(ctx, slot)
+  for (let slot=0; slot<10; slot++) if (input.pressed['quick'+slot]) { if (ctx.self.state.invOpen) invAction(ctx, { k: 'quickSlot', slot }); else quickUse(ctx, slot) } // in HALOGEN a number key files the picked item there
   if (input.pressed.quickUse) quickUse(ctx, input.actionData?.quickUse?.slot)
   if (input.pressed.compass && canOpen(ctx.self.state, ctx.self.place, 'inventory')) { openWrist(ctx.self.state, 'inventory'); ctx.self.state.invTab = 'misc' }
   if (input.pressed.cycleWeapon && !ctx.self.state.building) cycleWeapon(ctx)
@@ -696,6 +696,13 @@ function quickUse(ctx, slot) {
 function invAction(ctx, d) {
   const s = ctx.self.state
   if (d.k === 'quickAssign') { if (s.invOpen) assignQuick(s, d.slot, String(d.id??'')); return }
+  if (d.k === 'quickSlot') { // one press: the picked item goes in (pressed again: comes out); nothing picked: the slot's item gets picked
+    if (!s.invOpen) return
+    const qi = quickItems(s), sel = s.invSel || s.equipped || 'fists', it = qi.find((x) => (x.id === sel || x.id === 'weapon:' + sel) && x.count > 0), cur = s.quickSlots?.[d.slot]
+    if (it) { assignQuick(s, d.slot, cur === it.id ? '' : it.id); s.notice = { text: cur === it.id ? `Slot ${d.slot} cleared` : `${it.name} → slot ${d.slot}`, at: ctx.now() }; return }
+    if (cur) s.invSel = cur.startsWith('weapon:') ? cur.slice(7) : cur
+    return
+  }
   if (d.k === 'close') { s.invOpen = false; return }
   if (d.k === 'dropItem') { // anything that isn't a weapon: taken out of the bag as its pickup token, into a canvas bag at your feet (looted back with E)
     const tok = pullToken(ctx, String(d.t || ''))

@@ -265,14 +265,22 @@ const CSS = `<style>
 
 .hg-qrow { display:flex; gap:5px; align-items:stretch; padding:8px 18px; border-bottom:1px solid var(--al); background:rgba(0,0,0,.25) }
 .hg-qt { font-size:9px; letter-spacing:.16em; color:var(--ad); line-height:1.25; align-self:center; margin-right:4px }
-.hg-q { position:relative; flex:1; min-width:0; height:42px; display:flex; flex-direction:column; justify-content:flex-end; padding:3px 5px; border:1px dashed var(--al); border-radius:3px; cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s, transform .15s }
+.hg-q { position:relative; flex:1; min-width:0; height:52px; display:flex; flex-direction:column; justify-content:flex-end; padding:4px 6px; border:1px dashed var(--al); border-radius:3px; cursor:pointer; overflow:hidden; transition:border-color .15s, background .15s, transform .15s; pointer-events:auto }
+.hg-q.arm { border-color:var(--a); animation:hgq-pulse 1.4s ease-in-out infinite }
+@keyframes hgq-pulse { 50% { background:rgba(255,182,66,.13) } }
+.hg-q.mine { border-style:solid; border-width:2px; border-color:var(--ab); background:rgba(255,182,66,.2); animation:none }
+.hg-q .x { position:absolute; bottom:3px; right:3px; width:16px; height:16px; line-height:14px; font-size:10px; border:1px solid var(--ad); border-radius:2px; color:var(--ad); background:rgba(0,0,0,.4); opacity:0; transition:opacity .15s; cursor:pointer }
+.hg-q:hover .x { opacity:1 }
+.hg-q .x:hover { color:var(--ab); border-color:var(--ab) }
+.hg-qs { display:flex; gap:5px; flex:1; min-width:0 }
+.hg-qt small { display:block; margin-top:3px; font-size:10px; letter-spacing:0; color:var(--ad); text-transform:none; white-space:nowrap }
+.hg-qt small b { color:var(--ab); font-weight:normal }
 .hg-q:hover { border-color:var(--a); background:rgba(255,182,66,.08); transform:translateY(-2px) }
 .hg-q.set { border-style:solid; border-color:var(--ad); background:rgba(255,182,66,.07) }
 .hg-q.out { opacity:.45 }
 .hg-q .k { position:absolute; top:2px; left:4px; font-size:10px; color:var(--ab) }
-.hg-q .v { font-size:9px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--a) }
+.hg-q .v { font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--a) }
 .hg-q .c { position:absolute; top:2px; right:4px; font-size:9px; color:var(--ad) }
-.hg-q select { position:absolute; inset:0; opacity:0; cursor:pointer; width:100% }
 
 .hg-bd { display:flex; gap:0; flex:1; min-height:0 }
 .hg-rail { flex:0 0 132px; display:flex; flex-direction:column; gap:2px; padding:10px 8px; border-right:1px solid var(--al); background:rgba(0,0,0,.2); overflow-y:auto }
@@ -732,10 +740,12 @@ function inventory(s) {
   const cashStr = `$${((s.cents ?? 0) / 100).toFixed(2)}`
   const hp = Math.round(s.hp ?? 0), hpMax = maxHp(lv, s), hpPct = Math.max(0, Math.min(100, hp / hpMax * 100))
   const qi = quickItems(s)
-  const slots = Array.from({ length: 10 }, (_, slot) => {
-    const id = s.quickSlots?.[slot], it = qi.find((x) => x.id === id)
-    return `<label class="hg-q${id ? ' set' : ''}${id && it && !it.count ? ' out' : ''}" title="Quick slot ${slot}"><span class="k">${slot}</span><span class="v">${it ? it.name : id ? 'EMPTY' : '—'}</span>${it?.count ? `<span class="c">×${it.count}</span>` : ''}<select aria-label="Quick slot ${slot}" onchange="sendAction('inv',{k:'quickAssign',slot:${slot},id:this.value})"><option value="">Unassigned</option>${qi.filter((x) => x.count > 0 || x.id === id).map((x) => `<option value="${x.id}" ${x.id === id ? 'selected' : ''}>${x.name} (×${x.count})</option>`).join('')}</select></label>`
+  const selQ = qi.find((x) => (x.id === sel || x.id === 'weapon:' + sel) && x.count > 0) // the picked item, when it can ride a slot
+  const slots = [1,2,3,4,5,6,7,8,9,0].map((slot) => {
+    const id = s.quickSlots?.[slot], it = qi.find((x) => x.id === id), mine = selQ && id === selQ.id
+    return `<div class="hg-q${id ? ' set' : ''}${id && it && !it.count ? ' out' : ''}${selQ ? ' arm' : ''}${mine ? ' mine' : ''}" data-interactive onclick="sendAction('inv',{k:'quickSlot',slot:${slot}})" title="${selQ ? (mine ? 'Take ' + selQ.name + ' off slot ' + slot : 'Put ' + selQ.name + ' on slot ' + slot) : 'Quick slot ' + slot}"><span class="k">${slot}</span><span class="v">${it ? it.name : id ? 'EMPTY' : selQ ? '+ ADD' : 'empty'}</span>${it?.count ? `<span class="c">×${it.count}</span>` : ''}${id ? `<button class="x" onclick="event.stopPropagation();sendAction('inv',{k:'quickAssign',slot:${slot},id:''})" title="Clear slot ${slot}">✕</button>` : ''}</div>`
   }).join('')
+  const qHint = selQ ? `<b>${selQ.name}</b>: click a slot or press its number` : 'Pick an item below, then click a slot or press 0–9'
 
   return `<div class="pbw pb"><div class="pbp inv hg" data-modal>
     <div class="hg-top">
@@ -753,7 +763,7 @@ function inventory(s) {
       </div>
     </div>
 
-    <div class="hg-qrow"><span class="hg-qt">QUICK<br>SLOTS</span>${slots}</div>
+    <div class="hg-qrow"><div class="hg-qt">QUICK SLOTS<small>${qHint}</small></div><div class="hg-qs">${slots}</div></div>
 
     <div class="hg-bd">
       <nav class="hg-rail">${rail}</nav>
@@ -767,7 +777,7 @@ function inventory(s) {
     </div>
 
     <div class="hg-ft">
-      <span class="hint"><kbd>CLICK</kbd>inspect</span><span class="hint"><kbd>2×CLICK</kbd>use / equip</span><span class="hint"><kbd>0–9</kbd>quick slot</span>
+      <span class="hint"><kbd>CLICK</kbd>inspect</span><span class="hint"><kbd>2×CLICK</kbd>use / equip</span><span class="hint"><kbd>0–9</kbd>put picked item on a slot</span>
       <span class="c">${s.kills ?? 0} kills · LV ${lv} · holding ${eq.name}</span>
       <button onclick="sendAction('inv',{k:'close'})"><kbd>I</kbd>CLOSE</button>
     </div>
