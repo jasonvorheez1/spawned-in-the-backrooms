@@ -1382,47 +1382,47 @@ bonus-salon:
   tags: [bonus-mall]
 bonus-salon-chair-1:
   castShadow: true
-  feetPosition: {x: 12.8, y: 0, z: 2.5}
+  feetPosition: {x: 14.45, y: 0, z: 2.5}
   id: bonus-salon-chair-1
   model: {forward: "+x", id: /cdn/value.af73f38a4652489738efd29e3102b18c292f9391917b983c743e409cb1ba55f9.glb}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 180}
   scale: 1.2
-  state: {c: {x: 12.8, y: 0.6, z: 2.5}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  state: {c: {x: 14.45, y: 0.6, z: 2.5}, name: Salon chair, salon: true, seat: {d: 0.05, out: {x: 0.85, z: 0}, y: 0.12}}
   tags: [bonus-mall, salon-prop, seat]
 bonus-salon-chair-2:
   castShadow: true
-  feetPosition: {x: 15.6, y: 0, z: 2.5}
+  feetPosition: {x: 16.15, y: 0, z: 2.5}
   id: bonus-salon-chair-2
   model: {forward: "+x", id: /cdn/value.af73f38a4652489738efd29e3102b18c292f9391917b983c743e409cb1ba55f9.glb}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 180}
   scale: 1.2
-  state: {c: {x: 15.6, y: 0.6, z: 2.5}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  state: {c: {x: 16.15, y: 0.6, z: 2.5}, name: Salon chair, salon: true, seat: {d: 0.05, out: {x: 0.85, z: 0}, y: 0.12}}
   tags: [bonus-mall, salon-prop, seat]
 bonus-salon-chair-3:
   castShadow: true
-  feetPosition: {x: 18.4, y: 0, z: 2.5}
+  feetPosition: {x: 17.85, y: 0, z: 2.5}
   id: bonus-salon-chair-3
   model: {forward: "+x", id: /cdn/value.af73f38a4652489738efd29e3102b18c292f9391917b983c743e409cb1ba55f9.glb}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 180}
   scale: 1.2
-  state: {c: {x: 18.4, y: 0.6, z: 2.5}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  state: {c: {x: 17.85, y: 0.6, z: 2.5}, name: Salon chair, salon: true, seat: {d: 0.05, out: {x: 0.85, z: 0}, y: 0.12}}
   tags: [bonus-mall, salon-prop, seat]
 bonus-salon-chair-4:
   castShadow: true
-  feetPosition: {x: 21.2, y: 0, z: 2.5}
+  feetPosition: {x: 19.55, y: 0, z: 2.5}
   id: bonus-salon-chair-4
   model: {forward: "+x", id: /cdn/value.af73f38a4652489738efd29e3102b18c292f9391917b983c743e409cb1ba55f9.glb}
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {yaw: 180}
   scale: 1.2
-  state: {c: {x: 21.2, y: 0.6, z: 2.5}, name: Salon chair, salon: true, seat: {d: 0.05, y: 0.12}}
+  state: {c: {x: 19.55, y: 0.6, z: 2.5}, name: Salon chair, salon: true, seat: {d: 0.05, out: {x: 0.85, z: 0}, y: 0.12}}
   tags: [bonus-mall, salon-prop, seat]
 bonus-salon-desk:
   castShadow: true
@@ -1521,7 +1521,7 @@ bonus-salon-sign:
   vector: "<svg viewBox='0 0 400 80' width='5m' billboard='none'><text x='200' y='58' text-anchor='middle' font-family='display' font-size='56' font-style='italic' fill='#ff71ce' filter='drop-shadow(0 0 6px #ff71ce)'>Glow Up Salon</text></svg>"
 bonus-salon-vanity-1:
   castShadow: true
-  feetPosition: {x: 12.8, y: 0, z: 3.68}
+  feetPosition: {x: 14.45, y: 0, z: 3.68}
   id: bonus-salon-vanity-1
   model: {forward: "-x", id: /cdn/value.97637d66d8205e0ce9bc23f1aa815cb958b5a1b1effaf9007a9343a87925b211.glb}
   physics: {body: static, collider: box}
@@ -1531,7 +1531,7 @@ bonus-salon-vanity-1:
   tags: [bonus-mall, salon-prop]
 bonus-salon-vanity-2:
   castShadow: true
-  feetPosition: {x: 15.6, y: 0, z: 3.68}
+  feetPosition: {x: 16.15, y: 0, z: 3.68}
   id: bonus-salon-vanity-2
   model: {forward: "-x", id: /cdn/value.97637d66d8205e0ce9bc23f1aa815cb958b5a1b1effaf9007a9343a87925b211.glb}
   physics: {body: static, collider: box}
@@ -1541,7 +1541,7 @@ bonus-salon-vanity-2:
   tags: [bonus-mall, salon-prop]
 bonus-salon-vanity-3:
   castShadow: true
-  feetPosition: {x: 18.4, y: 0, z: 3.68}
+  feetPosition: {x: 17.85, y: 0, z: 3.68}
   id: bonus-salon-vanity-3
   model: {forward: "-x", id: /cdn/value.97637d66d8205e0ce9bc23f1aa815cb958b5a1b1effaf9007a9343a87925b211.glb}
   physics: {body: static, collider: box}
@@ -1551,7 +1551,7 @@ bonus-salon-vanity-3:
   tags: [bonus-mall, salon-prop]
 bonus-salon-vanity-4:
   castShadow: true
-  feetPosition: {x: 21.2, y: 0, z: 3.68}
+  feetPosition: {x: 19.55, y: 0, z: 3.68}
   id: bonus-salon-vanity-4
   model: {forward: "-x", id: /cdn/value.97637d66d8205e0ce9bc23f1aa815cb958b5a1b1effaf9007a9343a87925b211.glb}
   physics: {body: static, collider: box}
@@ -1562,7 +1562,7 @@ bonus-salon-vanity-4:
 bonus-stylist:
   behavior: scripts/salon-stylist.js
   children: [{attachment: {skin: true}, id: critter-hair, model: {id: /cdn/value.2c3b82c777112feb9b47905ce0b8413d621c249360f856d0542947f2b299a79e.glb, materials: {hair: {color: "#8a5a34", metalness: 0.02, roughness: 0.58}, hairtie: {color: "#e85d75", metalness: 0.05, roughness: 0.45}, scalp: {color: "#8a5a34", metalness: 0, roughness: 0.75}, scalp_cap: {color: "#8a5a34", metalness: 0, roughness: 0.75}}}}, {attachment: {bone: RightHand}, feetPosition: {x: 0.03, y: 0.06, z: -0.02}, id: shears, model: {forward: "+z", id: /cdn/value.43513b3c44328044d3ac0b81971ed3890dcde0ab93cb39c996f7d52e0e22c1a0.glb}, rotation: {pitch: 90}}]
-  feetPosition: {x: 14.2, y: 0.05, z: 1}
+  feetPosition: {x: 13.2, y: 0.05, z: 1.2}
   id: bonus-stylist
   model: {forward: "+z", id: /cdn/value.6f11c2c9ec0cbb44c796db314811f269b1c5cdc19a5f7f34c42ecd221208fe48.glb, parts: {Body_Skin: {color: "#cab4a4", emissive: "#000000", emissiveIntensity: 0, metalness: 0, roughness: 0.6}, Bot_longskirt: {visible: false}, Bot_overalls: {visible: false}, Bot_pants: {visible: true}, Bot_pjpants: {visible: false}, Bot_shorts: {visible: false}, Bot_skirt: {visible: false}, Brow: {color: "#8a5a34", metalness: 0, roughness: 0.9}, Eyew_glasses: {visible: false}, Eyew_shades: {visible: false}, Hat_beanie: {visible: false}, Hat_bow: {visible: false}, Hat_cap: {visible: false}, Hat_crown: {visible: false}, Hat_flower: {visible: false}, Hat_headphones: {visible: false}, Hat_partyhat: {visible: false}, Hat_tophat: {visible: false}, Head_Skin: {color: "#cab4a4", emissive: "#000000", emissiveIntensity: 0, metalness: 0, roughness: 0.6}, Iris: {color: "#2b2233", metalness: 0, roughness: 0.25}, Lash: {color: "#2a2024", metalness: 0, roughness: 0.9}, Neck_bell: {visible: false}, Neck_bowtie: {visible: false}, Neck_cape: {visible: false}, Neck_scarf: {visible: false}, Shoes_boots: {visible: false}, Shoes_slippers: {visible: false}, Shoes_sneakers: {visible: true}, Top_apron: {visible: false}, Top_dress: {visible: false}, Top_hoodie: {visible: false}, Top_jacket: {visible: false}, Top_longsleeve: {visible: false}, Top_pajamas: {visible: false}, Top_plate: {visible: false}, Top_sweater: {visible: false}, Top_tank: {visible: false}, Top_tee: {visible: true}, Under_bottom: {visible: true}, Under_top: {visible: true}, button: {color: "#f5f3ec", metalness: 0.05, roughness: 0.4}, cloth_bottom: {color: "#20202a", kind: scripted, metalness: 0, params: {pat: denim, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, cloth_hat: {color: "#7a3a2a", metalness: 0, roughness: 0.75}, cloth_neck: {color: "#c0392b", metalness: 0, roughness: 0.75}, cloth_shoes: {color: "#3a3a40", kind: scripted, metalness: 0, params: {pat: weave, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, cloth_top: {color: "#20202a", kind: scripted, metalness: 0, params: {pat: weave, s: 1}, roughness: 0.8, script: scripts/mat-cloth.js}, fur: {color: "#f4efe9", metalness: 0, roughness: 0.82}, gold: {color: "#e8c35a", metalness: 0.9, roughness: 0.3}, lens: {color: "#1a1824", metalness: 0.9, opacity: 0.75, roughness: 0.1, transparent: true}, limb: {color: "#2b2530", metalness: 0, roughness: 0.82}, metal: {color: "#c8cbd0", metalness: 0.85, roughness: 0.3}, pad: {color: "#ff9fb4", metalness: 0, roughness: 0.52}, sole: {color: "#2a2430", metalness: 0, roughness: 0.85}, under: {color: "#2b2a30", metalness: 0, roughness: 0.85}}}
   morph: {BrowHeavy: 0.11399999999999999, Bust: 0.28, CheekFull: 0.42, ChinLong: 0.84, FaceLong: 0.55, HT_Angular: 0, HT_Broad: 0, HT_Heart: 0.03, HT_Long: 0, HT_Round: 0.56, HT_Square: 0, HeadRound: 0.06, JawNarrow: 0, JawWide: 0.2, NoseBig: 0.11}
