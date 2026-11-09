@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 2825,
-  "updatedAt": "2026-11-09T00:48:11.522Z",
-  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes supply local environments, while shared systems handle loot, building, combat, NPCs, and avatar rendering. Human NPCs use ordinary gaits until armed; first-person weapon poses combine human-model arms and decoded New Vegas melee swings.",
+  "basedOnSpecVersion": 2870,
+  "updatedAt": "2026-11-09T02:00:59.722Z",
+  "summary": "The Backrooms is a survival RPG spanning authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes supply local environments, while shared systems handle loot, building, combat, NPCs, and avatar rendering. First-person weapons use a camera-attached viewmodel, with static human arms fitted to the grip and weapon-specific pose/reload timelines.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with authored shops and landmarks, simulated staff, shoppers, and balcony loungers.",
@@ -22,7 +22,7 @@
     "scripts/camera.js + scripts/view3.js - camera and third-person toggle; scripts/ui.js and specialized UI scripts present HUD, panels, and cutscenes.",
     "places/debug/cells/x1z0.scene + scripts/dbg-pose.js + scripts/dbg-bodypad.js - clip gallery mannequins and in-world body-style switch.",
     "art/l26-ship/{build,hull,super,lib,tex}.py and art/level2/{build,compact,encode,pack}.py - offline Blender/packing sources for ship and Level 2 kit assets.",
-    "art/human-base/build.py + art/human-base/identity.py + art/fp-arm/build.py - human body export, identity-joint postpass, and f/m × R/L static first-person arm meshes used by player.js; fp-arm finds finger islands, curls three hinges, and folds the thumb over the grip."
+    "art/human-base/{build,identity}.py + art/fp-arm/{build,kfhand}.py + art/weapon-split/*.py - human body export, static New Vegas-pose first-person arms, and fitted/split weapon source meshes."
   ],
   "shared": [
     "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings; used by routing and hub handlers and defines last-level selection/names.",
@@ -42,17 +42,17 @@
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
     "sim.js - cadence, tick, onOutOfBounds; places/main/sim.js and places/bonus/sim.js - cadence, tick.",
     "scripts/critter.js - update; scripts/lib/critter-model.js - skinOf, humanBody, bodyModel, critterSpec, hairOf/seatHair, seatHead, rewear, toMesh, faceMorph and shared avatar helpers; scripts/lib/data/nv-swings.js - NV_SWINGS.",
-    "scripts/lib/vmpose.js - VM_FOV, poseViewmodel; scripts/talk.js - gestEnd (clears one-shot wave gesture after its scheduled hold)."
+    "scripts/lib/vmpose.js - VM_FOV, poseViewmodel; scripts/lib/weapon-look.js - MESHGRIP, SPLIT, HOLD, weaponBody; scripts/talk.js - gestEnd."
   ],
   "ownership": [
-    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards, and level access; saved place/position and one-shot wakeAtSave restoration.",
+    "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo, needs, money, appearance, combat/rewards, and level access; saved place/position and one-shot wakeAtSave restoration; reload timing in reloadDur.",
     "scripts/kick.js + scripts/grab.js - per-player kick rolls/cooldowns, carried prop/body IDs, held-body grip, and throw/carry session fields; target body state.heldBy/down controls hold and release.",
     "scripts/lib/loose.js - arms matched props with state.loose/mat/hp/maxHp and owns broke/act effects; per-player session.loose tracks kicked/thrown item flights until impact.",
     "scripts/lib/knock.js - shared physics/timing recovery for down/kb and thrown/overboard records; enemy managers retain AI state and pause it while held or recovering.",
     "scripts/lurkers.js - player.state.lurkHold while caught and lurker entity grab/frenzy/prey state; release clears the player's hold.",
     "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim.",
     "scripts/hub.js - mall offer/shop/food and room-hop flags plus player trainHid/stungUntil; session.ride/rideTrain holds transient transit scene and spawned train.",
-    "places/level2/sim.js - place.state seeded/kitV/rev/sludgeV/propsV migration markers and room layout; places/level21/sim.js owns its generated build revision and seeded local dressing; scripts/lib/l2props.js creates prop material/hp state."
+    "places/level2/sim.js - place.state seeded/kitV/rev/sludgeV/propsV migration markers and room layout; places/level21/sim.js owns its generated build revision and seeded local dressing; scripts/lib/vmpose.js keeps transient viewmodel pose/reload animation in per-machine session."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/spamton-fight/horde/critter/main-menu/hub/view3.",
@@ -66,7 +66,7 @@
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickups enter player.js inventory.",
     "L input → scripts/kick.js tries foe kick then loose.js kickLoose; Z input → scripts/grab.js picks/carries/throws eligible bodies, plays the UAL overhand throw clip, and calls loose.js arm/track/impact; flight tracking detects hard stops.",
     "scripts/lib/breakables.js strike/damageEntity → loose.js breakIt for matched loose props, otherwise generic rubble; loose.yml supplies material/hp/act rules and joule breakAt thresholds; explosions emit damage/noise/shockwave.",
-    "scripts/meg-agent.js writes NPC state.armed when weapons are drawn → scripts/critter.js uses warrior walk/run clips only for armed human NPCs; scripts/player.js builds first-person human arms and scripts/lib/vmpose.js poses weapons with NV swing data."
+    "player.js equips weapon and spawns camera-attached local viewmodel (static skin-matched arms from art/fp-arm and weaponBody from weapon-look); vmpose reads equipped/reloading/swing state and weapons.yml pose/timing data to animate it, including split pistol slide/mag and shotgun pump/off-hand grip."
   ],
   "behaviorFamilies": [
     "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js - authored mall shops/landmarks with data-driven stock and simulated staff, waypoint shoppers, and balcony loungers.",
@@ -74,7 +74,7 @@
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props and Boiler Room Death Rat packs.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml - shared player/NPC appearance rules; human GLBs include head and deterministic body/head skin; BODIES changes room-wide rendering while player.state.bodyStyle retains the menu pick.",
+    "scripts/lib/clothes.js + scripts/lib/critter-model.js + critter.yml/hair.yml - shared player/NPC appearance rules; human GLBs include head and deterministic body/head skin; BODIES changes room-wide rendering while player.state.bodyStyle retains menu choice.",
     "art/level2/{build,compact,encode,pack}.py + scripts/lib/data/l2kit-data/* + scripts/lib/l2kit.js - module meshes are compact-packed and decoded into runtime instances; optional UV data, otherwise triplanar projection.",
     "scripts/lib/data/l2props.yml + scripts/lib/l2props.js + places/level2/sim.js + places/level21/sim.js - metre-fitted Tripo props reuse spawnProp; Level 2.1's revisioned dress21 lays local storage/work props and danger signs."
   ],
@@ -84,10 +84,10 @@
   ],
   "migrationNotes": [
     "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room and overflow mall rooms use bonus-N IDs. Keep routing and hub identity aligned.",
-    "Teleport Station 'last' travel derives from savePlace (excluding bonus, intake, and debug; tutorial0 maps to main); keepPos preserves savePos and wakeAtSave restores it only when the arriving place matches; transit depends on bc-train asset.",
+    "Teleport Station 'last' travel derives from savePlace (excluding bonus, intake, and debug; tutorial0 maps to main); keepPos preserves savePos and wakeAtSave restores it only when the arriving place matches; transit depends on bc-train assembly.",
     "Found-item rarity gates apply only to found weapon tokens; existing weapon ownership/use and non-weapon loot are not level-gated. Search gating excludes storage and NPC containers.",
     "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout.",
     "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static because dynamic bodies created before floor mesh cooking fall through; Level 2.1 uses a sim revision to replace prior l2prop-tagged dressing.",
-    "BODIES is shared world.state.bodyStyle and is applied by scripts/critter.js to all room characters; player.state.bodyStyle retains the menu pick. Human GLBs include their own head and body/head skin; static first-person arms are separately exported by art/fp-arm/build.py for f/m and R/L, with the fist center defining the weapon grip origin."
+    "First-person human arms are static sex-specific cutouts generated by art/fp-arm/build.py from New Vegas 1hmAim data in art/fp-arm/kfhand.py; player.js fits them to the weapon grip and applies body skin. Keep weapons.yml two-hand coordinates and the weapon mesh grip/split-part transforms aligned."
   ]
 }
