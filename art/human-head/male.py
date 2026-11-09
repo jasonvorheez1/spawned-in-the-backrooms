@@ -14,7 +14,7 @@ def view(i):
 def get(i): a, o = view(i); return np.frombuffer(bytes(B[o:o + a['count'] * 12]), dtype='<f4').reshape(-1, 3).copy()
 def put(i, arr):
     a, o = view(i); B[o:o + arr.nbytes] = arr.astype('<f4').tobytes(); a['min'] = arr.min(0).tolist(); a['max'] = arr.max(0).tolist()
-head = next(m for m in J['meshes'] if m['name'] == 'Head')
+head = J['meshes'][next(n['mesh'] for n in J['nodes'] if n.get('name') == 'Head' and 'mesh' in n)]
 mats = [J['materials'][p['material']]['name'] for p in head['primitives']]
 skin = get(head['primitives'][mats.index('Head_Skin')]['attributes']['POSITION'])
 iris = get(head['primitives'][mats.index('Iris')]['attributes']['POSITION'])
