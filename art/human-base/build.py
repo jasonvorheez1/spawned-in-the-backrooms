@@ -499,7 +499,7 @@ def finfo(o, r):
     return info, arms
 
 HANG = ("Top_tee", "Top_longsleeve", "Top_pajamas", "Top_sweater", "Top_hoodie", "Top_jacket")
-def hang(bm, top=1.30, taper=0.93, nb=48, low=1.0):
+def hang(bm, top=1.30, taper=0.93, nb=48, low=0.9, fall=1.06):
     # Nov 9: a top below the bust hung skin-tight: the sweater and jacket showed the stomach and the buttocks as a pouch.
     # Cloth falls from the widest ring above it: each 1 cm slice keeps the convex hull of itself and the slice over it.
     vs = [v for v in bm.verts if low < v.co.z < top + 0.02 and abs(v.co.x) < 0.26]
@@ -538,7 +538,7 @@ def hang(bm, top=1.30, taper=0.93, nb=48, low=1.0):
         P = pts.get(k, [])
         H = hull(P) if len(P) >= 3 else []
         row = [ray(H, (i + 0.5) / nb * 2 * math.pi - math.pi) if H else 0.0 for i in range(nb)]
-        if prev: row = [max(row[i], prev[i] * taper) for i in range(nb)]
+        if prev: tp = taper if top - k * 0.01 > fall else 1.0; row = [max(row[i], prev[i] * tp) for i in range(nb)]  # below the hip, cloth falls straight off the widest ring
         R[k] = row; prev = row
     ks = sorted(R)  # blur: thin 1 cm slices give ragged hulls; cloth is smooth over a hand's width
     for _ in range(3):
