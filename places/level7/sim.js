@@ -933,9 +933,9 @@ export function tick(ctx) {
     s.builtV = V;
   }
 
-  if ((s.fort2V ?? 0) < 2) { // Fort Surrender pass 2 (scripts/lib/level7-fort2.js): its fire, smoke, textures and sound
+  if ((s.fort2V ?? 0) < 3) { // Fort Surrender pass 2 (scripts/lib/level7-fort2.js): its fire, smoke, textures and sound
     for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("l7f-")) ctx.destroy(id);
-    layFort2(ctx); s.fort2V = 2;
+    layFort2(ctx); s.fort2V = 3;
   }
   if (!ctx.getObject("l7-fauna")) ctx.spawn("l7-fauna", { behavior: "scripts/l7-fauna.js" }); // tidecrawlers on the shores, the Deep in open water
   // Ensure NPCs come back home after respawn window via level-kit

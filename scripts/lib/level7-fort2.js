@@ -42,6 +42,18 @@ export function layFort2(ctx) {
   const f = ctx.place.objects["l7-fort"];
   if (f) { try { f.model = { id: f.model?.id ?? f.model, materials: FORT_MATS }; } catch (e) {} }
 
+  // solid walls (Shelly: "the fort had no collision"): the model's own mesh collider holds nothing, so plain invisible blocks stand in it:
+  // the palisade and the furniture stacked on it (radius 8.6 to 9.4 in the model), the gate posts, the watchtower's legs and deck
+  for (let i = 0; i < 48; i++) {
+    const a = ((i + 0.5) / 48) * Math.PI * 2, deg = (a * 180) / Math.PI;
+    if (Math.abs(deg - 270) < 17) continue; // the gate gap faces the wharf
+    const p = W(a, 8.95);
+    sp(`col-wall-${i}`, { feetPosition: { x: p.x, y: FC.y - 0.3, z: p.z }, rotation: { yaw: -deg }, primitive: { kind: "box", width: 1.3, height: 3.6, depth: 1.3 }, physics: "static", visible: false });
+  }
+  [-2.6, 2.6].forEach((x, i) => sp(`col-gatepost-${i}`, { feetPosition: { x: FC.x + x, y: FC.y, z: FC.z + 8.6 }, primitive: { kind: "box", width: 0.45, height: 4.2, depth: 0.45 }, physics: "static", visible: false }));
+  [[-1.2, 6.8], [1.2, 6.8], [-1.2, 9.2], [1.2, 9.2]].forEach(([x, y], i) => sp(`col-towerleg-${i}`, { feetPosition: { x: FC.x + x, y: FC.y, z: FC.z - y }, primitive: { kind: "box", width: 0.3, height: 6.0, depth: 0.3 }, physics: "static", visible: false }));
+  sp("col-towerdeck", { feetPosition: { x: FC.x, y: FC.y + 5.95, z: FC.z - 8 }, primitive: { kind: "box", width: 3.1, height: 0.12, depth: 3.1 }, physics: "static", visible: false });
+
   // burning tar on both gate posts (Blender (±2.6, -8.6), cap at 3.9 m): the gate reads from the wharf
   [-2.6, 2.6].forEach((x, i) => sp(`gatefire-${i}`, { feetPosition: { x: FC.x + x, y: FC.y + 3.95, z: FC.z + 8.6 }, fx: { script: TARFIRE, params: { n: 38, w: 0.13, i: 26, d: 20 } } }));
   // and on six of the palisade's post tops (posts at radius 8.44, top 2.8 m), skipping the gate gap and the tower
