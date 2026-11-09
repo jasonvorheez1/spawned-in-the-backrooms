@@ -430,6 +430,8 @@ def textures(is_male):
 def face_features(head, body, is_male):
     sh, sb, ft = textures(is_male)
     head.data.materials.clear(); body.data.materials.clear()
+    for m in list(bpy.data.materials):
+        if m.name.startswith(("Head_Skin", "Body_Skin")): m.name = "old_" + m.name
     head.data.materials.append(skin_mat("Head_Skin", sh)); body.data.materials.append(skin_mat("Body_Skin", sb))
     slots = {"Eye": mat("Eye", (1, 1, 1, 1), 0.3, image=ft), "Iris": mat("Iris", (1, 1, 1, 1), 0.28, image=ft),
              "Lash": mat("Lash", (1, 1, 1, 1), 0.8, image=ft), "Brow": mat("Brow", (1, 1, 1, 1), 0.9, image=ft),
@@ -840,7 +842,7 @@ def build(name, is_male, height):
     bpy.ops.object.select_all(action="DESELECT")
     for o in (r, head, body, *extra): o.select_set(True)
     for o in list(bpy.data.objects):
-        if o.name.startswith("Icosphere"): bpy.data.objects.remove(o, do_unlink=True)
+        if o.type == "MESH" and (o.name.startswith("Icosphere") or o.data.name.startswith("Icosphere")) or (o.type == "MESH" and o not in (head, body, *extra)): bpy.data.objects.remove(o, do_unlink=True)
     for o in extra: o.hide_render = False; o.hide_set(False); o.select_set(True)
     bpy.ops.export_scene.gltf(filepath=f"{OUT}/{name}.glb", use_selection=True, export_apply=False, export_animations=False, export_morph=True, export_image_format="JPEG", export_jpeg_quality=88)
     print("exported", name)
