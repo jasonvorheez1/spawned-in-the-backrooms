@@ -43,11 +43,11 @@ export function layFort2(ctx) {
   if (f) { try { f.model = { id: f.model?.id ?? f.model, materials: FORT_MATS }; } catch (e) {} }
 
   // burning tar on both gate posts (Blender (±2.6, -8.6), cap at 3.9 m): the gate reads from the wharf
-  [-2.6, 2.6].forEach((x, i) => sp(`gatefire-${i}`, { feetPosition: { x: FC.x + x, y: FC.y + 3.95, z: FC.z + 8.6 }, fx: { script: TARFIRE, params: { n: 34, w: 0.12, i: 12, d: 16 } } }));
+  [-2.6, 2.6].forEach((x, i) => sp(`gatefire-${i}`, { feetPosition: { x: FC.x + x, y: FC.y + 3.95, z: FC.z + 8.6 }, fx: { script: TARFIRE, params: { n: 38, w: 0.13, i: 26, d: 20 } } }));
   // and on six of the palisade's post tops (posts at radius 8.44, top 2.8 m), skipping the gate gap and the tower
-  [0, 3, 7, 10, 13, 19].forEach((k, i) => {
+  [0, 2, 4, 7, 9, 11, 13, 16, 19, 21].forEach((k, i) => {
     const a = ((k + 0.5) / 22) * Math.PI * 2, p = W(a, 8.44);
-    sp(`postfire-${i}`, { feetPosition: { x: p.x, y: FC.y + 2.85, z: p.z }, fx: { script: TARFIRE, params: { n: 22, i: 8, d: 12 } } });
+    sp(`postfire-${i}`, { feetPosition: { x: p.x, y: FC.y + 2.85, z: p.z }, fx: { script: TARFIRE, params: { n: 24, i: 18, d: 15 } } });
   });
   // the ritual brazier's smoke column and its fire's crackle
   sp("column", { feetPosition: { x: FC.x, y: FC.y + 1.6, z: FC.z - 0.5 }, fx: { script: COLUMN }, audio: { clip: G("crackling-tar-and-driftwood-bonfire-loop"), loop: true, gain: 0.32, spatial: true, refDistance: 3, maxDistance: 20 } });
