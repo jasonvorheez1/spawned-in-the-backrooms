@@ -313,6 +313,9 @@ export function poseViewmodel(ctx, dt) {
   y -= lo * 0.3
   if (gun) { pitch -= lo * 35; roll += lo * 18; x += lo * 0.04 } else { roll += lo * 10 }
 
+  // a weapon's own carry: weapons.yml hold: [x, y, depth, pitch, yaw, roll] added to the rest pose, eased out while aiming (vmTune.hold tunes it live)
+  const hold = ps.vmTune?.hold ?? wp.hold
+  if (hold) { const k = 1 - m.ads; x += hold[0] * k; y += hold[1] * k; d += hold[2] * k; pitch += hold[3] * k; yaw += hold[4] * k; roll += hold[5] * k }
   vm.feetPosition = { attach: 'camera', x, y, depth: d, fov: VM_FOV }
   partsPose(ctx, ps, kind, dt, m)
   vm.rotation = { yaw, pitch, roll }
