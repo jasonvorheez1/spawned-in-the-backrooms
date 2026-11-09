@@ -1,0 +1,4 @@
+{"contentHash":"214:bd9f91c1","duration":2,"fps":30,"identity":"tracks#anim-a4a0e4a9","tracks":[
+{"bone":"RightForeArm","prop":"rotation","times":[0,2],"values":[-0.5,0,0,0.86603,-0.5,0,0,0.86603]},
+{"bone":"RightArm","prop":"rotation","times":[0,2],"values":[0,0,0,1,0,0,0,1]}
+]}
