@@ -1,3 +1,4 @@
+import { rotationFromDirection } from "builtin/vec3";
 // Level 7 "Thalassophobia" Simulation:
 // Wikidot Backrooms Level 7 - An infinite subterranean ocean beneath a towering concrete ceiling void.
 // - Room 1 ("The Floating House" / Drowned Parlor): knee-deep floodwater, floral wallpaper, white wainscoting,
@@ -940,6 +941,30 @@ export function tick(ctx) {
   if ((s.fort2V ?? 0) < 3) { // Fort Surrender pass 2 (scripts/lib/level7-fort2.js): its fire, smoke, textures and sound
     for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("l7f-")) ctx.destroy(id);
     layFort2(ctx); s.fort2V = 3;
+  }
+  if ((s.fortPathV ?? 0) < 1) { // Shelly: "make the path actually walkable without having to jump and rotate fort surrender so it connects"
+    // 1) the stepped colliders (0.7 m risers) give way to one smooth 18 degree ramp under the timber stair, wharf (y 1.2) to the fort floor
+    for (let k = 0; k < 14; k++) ctx.destroy(`l7-ft-step-${k}`);
+    const at = (k) => ({ x: -48.5 - 1.35 * k, y: 2.27 + 0.7 * k, z: -66.5 - 1.65 * k });
+    const A = at(-1.55), B = at(13.3), d = { x: B.x - A.x, y: B.y - A.y, z: B.z - A.z }, len = Math.hypot(d.x, d.y, d.z);
+    const f = { x: d.x / len, y: d.y / len, z: d.z / len };
+    ctx.spawn("l7-ft-ramp", { feetPosition: { x: (A.x + B.x) / 2, y: (A.y + B.y) / 2 - 0.17, z: (A.z + B.z) / 2 }, pivot: "center",
+      rotation: rotationFromDirection(f), primitive: { kind: "box", width: 2.6, height: 0.3, depth: len }, physics: "static", visible: false, material: { color: "oklch(0.4 0.03 60)" } });
+    // 2) the fort turns 38.7 degrees about its centre so the gate gap faces where the stair meets the palisade
+    const th = 38.7 * Math.PI / 180, cx = -70, cz = -93, qy = { x: 0, y: Math.sin(th / 2), z: 0, w: Math.cos(th / 2) };
+    const mul = (a, b) => ({ w: a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z, x: a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y, y: a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x, z: a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w });
+    for (const id of Object.keys(ctx.place.objects)) {
+      if (id.startsWith("l7-ft-") || id.startsWith("l7w-")) continue;
+      const o = ctx.place.objects[id]; if (!o || o.parent || o.tags?.includes?.("player")) continue;
+      const p = o.feetPosition; if (!p || p.y < 8.5 || Math.hypot(p.x - cx, p.z - cz) > 13) continue;
+      const dx = p.x - cx, dz = p.z - cz;
+      o.feetPosition = { x: cx + dx * Math.cos(th) + dz * Math.sin(th), y: p.y, z: cz - dx * Math.sin(th) + dz * Math.cos(th) };
+      const r = o.rotation; const q = r && typeof r === "object" && "w" in r ? r : { x: 0, y: 0, z: 0, w: 1 };
+      o.rotation = mul(qy, q);
+      if (o.state?.ladder) o.state.ladder = { ...o.state.ladder, yaw: (o.state.ladder.yaw ?? 0) + 38.7 };
+      if (o.state?.home && typeof o.state.home.x === "number") { const h = o.state.home, hx = h.x - cx, hz = h.z - cz; o.state.home = { ...h, x: cx + hx * Math.cos(th) + hz * Math.sin(th), z: cz - hx * Math.sin(th) + hz * Math.cos(th) }; }
+    }
+    s.fortPathV = 1;
   }
   if (!ctx.getObject("l7-fauna")) ctx.spawn("l7-fauna", { behavior: "scripts/l7-fauna.js" }); // tidecrawlers on the shores, the Deep in open water
   // Ensure NPCs come back home after respawn window via level-kit
