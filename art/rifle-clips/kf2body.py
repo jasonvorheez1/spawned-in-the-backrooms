@@ -68,6 +68,7 @@ def sampler(i):
         return p, q
     return f
 
+PARENT["Bip01 Spine"] = "Bip01 NonAccum"
 # third person: every Biped joint the human rig has, legs and fingers too
 for s in "LR":
     PARENT.update({f"Bip01 {s} Thigh": "Bip01 Pelvis", f"Bip01 {s} Calf": f"Bip01 {s} Thigh", f"Bip01 {s} Foot": f"Bip01 {s} Calf", f"Bip01 {s} Toe0": f"Bip01 {s} Foot",
