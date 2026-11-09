@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3665,
-  "updatedAt": "2026-11-09T20:18:15.817Z",
-  "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes provide local environments, while shared systems own combat, NPCs, loot, building, dialogue, and avatar presentation. Level 0's seeded maze is shared by generation and enemy steering; smilers and lurkers now route through doorways, avoid pillars/walls, recover from holes or obstructions, and use the common hunt/listen behavior.",
+  "basedOnSpecVersion": 3668,
+  "updatedAt": "2026-11-09T20:23:27.634Z",
+  "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors; place simulations and scenes provide local environments, while shared systems own combat, NPCs, loot, building, dialogue, and avatar presentation. Level 0's seeded maze guides enemies; lurkers can break their gaze-locked stillness after a prolonged stare, and melee power hits plus smiler/lurker deaths use shared ragdoll handling.",
   "scriptPaths": [],
   "places": [
     "places/bonus (3D) - shared vaporwave mall with shops, landmarks, simulated staff/shoppers, arcade games, and Glow Up Salon styling stations.",
@@ -35,20 +35,20 @@
     "scripts/lib/stats.js + scripts/lib/ballistics.js + scripts/lib/data/weapons.yml + scripts/lib/weapon-look.js - weapon handling/ammo, skill scaling, projectile hits, and presentation across player viewmodels, loot, and NPC-held weapons."
   ],
   "notableExports": [
-    "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 container/loot helpers; scripts/lib/weapons.js - rarityIdx, rarityCap and weapon registry.",
-    "scripts/lib/l2props.js - PROPS, fitBox, spawnProp, dressRoom, dressHall, containerModel, crateModel.",
+    "scripts/lib/loot.js - POOL, poolOf, rollWeapon, gateItems, rollLock, rollCash, rollItem, spawnCrate and Level 2 container/loot helpers; scripts/lib/weapons.js - rarityIdx, rarityCap and weapon registry; scripts/lib/l2props.js - PROPS, fitBox, spawnProp, dressRoom, dressHall, containerModel, crateModel.",
     "scripts/grab.js - setDown, onInput, update, looseSpent; scripts/kick.js - onInput, kickSnap, kickEnd, update.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, and fishing handlers; scripts/lib/footsteps.js - surfaceUnder, stepTick.",
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
     "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - body/face/head/spec, wardrobe fitting/restyling helpers, STYLE_V sw30.",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
-    "scripts/lib/zenith-quest.js - KADE, ZEN_ENTRY, setZen, migrateZen, handleDialogueQuestZ, zenithChoice, layZenithEntry; scripts/zenith-use.js - ears, onSpawn, slide, grab, gone; scripts/zenith-scout.js - onTriggerEnter."
+    "scripts/lib/zenith-quest.js - KADE, ZEN_ENTRY, setZen, migrateZen, handleDialogueQuestZ, zenithChoice, layZenithEntry; scripts/zenith-use.js - ears, onSpawn, slide, grab, gone; scripts/zenith-scout.js - onTriggerEnter.",
+    "scripts/lib/knock.js - knocked, foeStats, RAG, powerKnock, deathRag; player.js uses powerKnock for sufficiently heavy melee hits, and smilers.js/lurkers.js share knocked/deathRag."
   ],
   "ownership": [
     "scripts/player.js - persistent player.state progression, health/sanity, inventory/equipment/ammo (including cells), needs, money, appearance, combat/rewards, level access, saved place/position, wakeAtSave restoration, and heat/cold meters.",
     "scripts/kick.js + scripts/grab.js - per-player kick rolls/cooldowns, carried prop/body IDs, held-body grip, and throw/carry session fields; kick.js also owns transient first-person leg swing; target body state.heldBy/down controls hold/recovery.",
     "scripts/lib/loose.js - arms matched props with state.loose/mat/hp/maxHp and owns broke/act effects; per-player session.loose tracks kicked/thrown item flights until impact.",
-    "scripts/lib/knock.js + scripts/lurkers.js - down/kb and thrown/overboard recovery records; enemy managers retain AI state, while lurkers own caught-player lurkHold and entity grab/frenzy/prey state.",
+    "scripts/lib/knock.js + scripts/lurkers.js - shared down/ragdoll knock recovery records and foe mass/power thresholds; enemy managers retain AI state, while lurkers own caught-player lurkHold, stare/frenzy timing, and entity grab/frenzy/prey state.",
     "scripts/build.js - active B-mode selection/ghost/session and placed build pieces; homeKeep.built persists home builds reconstructed by home sim.",
     "scripts/hub.js - mall offer/shop/food and room-hop flags plus player trainHid/stungUntil; session.ride/rideTrain holds transient transit scene and spawned train.",
     "scripts/climb.js owns local climb session/player.state.climbing and first-person arm viewmodel; scripts/lib/vmpose.js records session.vmHidKey and controls viewmodel visibility from scene/camera/screen context.",
@@ -63,20 +63,20 @@
     "scripts/lib/hub.js toHub/toSolo → room/place crossings and roomHop distinguishes intentional crossings from launch/resume; hub.js hubOffer → hub-ui.js and mall counters write shop/food state for handlers and UI.",
     "Teleport Station UI in scripts/hub-ui.js renders lastLevel(s) from scripts/lib/hub.js; travel requests reach scripts/lib/hub.js, which boards the player via bc-train and crosses to the destination.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickups, including cells, enter player.js inventory.",
-    "Kick action → scripts/kick.js handles foes/loose objects and wheeled furniture; first-person kick spawns articulated thigh/shin geometry from scripts/kick-leg-geo.js and delayed kickSnap camera feedback; scripts/grab.js carries/throws eligible bodies through loose.js.",
-    "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; scripts/lib/stats.js and ballistics.js apply weapon skill/handling, with energy weapons consuming cells.",
-    "Level 0 main sim → maze.js seeded geometry/cell helpers and `unstick` recovery; smilers.js/lurkers.js use maze0path BFS doorway waypoints plus pillar/wall steering, jumping when stuck or below floor, and hunt/hearing state to pursue/search without entering the safe room.",
-    "Zenith Survey: Level 0 sim calls lib/zenith-quest.js layZenithEntry for the versioned far-east bulkhead breach, warning sign, tape posts and Kade; zenith-scout.js advances zenQ on approach, Kade dialogue grants zenKey, and Zenith Station scripts continue the quest."
+    "Kick action → scripts/kick.js handles foes/loose objects and wheeled furniture; first-person kick spawns articulated thigh/shin geometry from scripts/kick-leg-geo.js and delayed kickSnap camera feedback; scripts/grab.js carries/throws eligible bodies and props.",
+    "Player and M.E.G. combat handlers → scripts/lib/body3.js stance/swing/fire/aim/reload → combat-anims.yml; scripts/lib/stats.js and ballistics.js apply weapon skill/handling, with energy weapons consuming cells; player.js sends heavy melee hit direction/power to knock.js for knockdown.",
+    "Level 0 main sim → maze.js seeded geometry/cell helpers and unstick recovery; smilers.js/lurkers.js use maze0path BFS doorway waypoints plus pillar/wall steering and hunt/hearing state; lurkers accumulate watched stare toward a timed scream/frenzy rush, and both enemy managers use knock.js for knock recovery and death ragdolls.",
+    "Zenith Survey: Level 0 sim calls lib/zenith-quest.js layZenithEntry for the versioned far-east bulkhead breach, warning sign, tape posts and Kade; zenith-scout.js advances zenQ on approach, Kade dialogue grants zenKey, and Zenith Station systems consume the quest state."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js + scripts/salon-stylist.js/scripts/salon-ui.js - authored mall shops/landmarks and simulated mall life; salon chairs queue sitters and styling stations share salon UI.",
+    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js + scripts/salon-stylist.js/scripts/salon-ui.js - authored mall shops/landmarks and simulated mall life; salon chairs queue sitters and styling stations share salon state.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence, and rebuild path; CRT TV builds attach screen, sound, and glow.",
     "art/level0/build.py + art/level1/paint.py/build.py/props.py/props_paint.py + art/level2/fixtures.py + art/level21/props21.py - offline generators for Level 0 props/stairs, Level 1 textures/door/breach/map and props, Level 2 fixtures, and Level 2.1 props.",
-    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js + scripts/zenith-scout.js - versioned station and linked Level 0 breach quest systems.",
+    "places/level01/sim.js + scripts/zenith-geo.js + scripts/zenith-breach-geo.js + scripts/zenith-door.js + scripts/zenith-bots.js + scripts/zenith-hatch.js + scripts/zenith-flicker.js + scripts/zenith-drones.js + scripts/zenith-use.js + scripts/lib/zenith-quest.js - versioned Zenith layout, breach, machinery, drone, and recorder quest systems.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/{wardrobe.py,check-bust.py,compile_wardrobe.py,wardrobe-check.mjs} + art/human-head/* + art/human-hair/build.py - deterministic appearance and fitted clothing/head assets.",
-    "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared human combat/gait, idles, head tracking, fidgets, expressions, and dialogue; Level 0 smilers/lurkers separately share maze0path steering over maze.js cells."
+    "scripts/lib/critter-model.js + critter/faces/hair/model/wardrobe data + art/human-cloth/{wardrobe.py,check-bust.py,compile_wardrobe.py,wardrobe-check.mjs} + art/human-head/* + art/human-hair/build.py - deterministic appearance and fitted character meshes with validation.",
+    "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared human combat/gait, idles, head tracking, fidgets, expressions, and dialogue; player/enemy combat now also uses shared knock.js power-hit and ragdoll handling."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - exports procedural balloon geometry/skeleton/collider but Level 26 scene placements and barrage use uploaded models instead.",
@@ -88,6 +88,6 @@
     "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic. Level 0 sim sweeps loose ammo once under deskV and does not seed floor ammo.",
     "Footstep surface detection checks visible geometry within 0.45 m before collider; terrain chunk hits use terrain.materialAt. Keep material words/tags and mapping priority in scripts/lib/data/footsteps.yml.",
     "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static to avoid falling through before floor mesh cooking. Level 2.1 revisioned rebuild preserves generated placement identity.",
-    "Level 0 maze cells are 4 m; maze0path BFS blocks walls, pits, and the hub, and waypoints stop 65% across a doorway rather than at a pillar-prone cell center. openPoint offsets pillar cells; wallPush and jump/recovery in smilers/lurkers and main sim's unstick keep creatures out of walls/pits."
+    "Level 0 maze cells are 4 m; maze0path BFS blocks walls, pits, and the hub, and waypoints stop 65% across a doorway rather than at a pillar-prone cell center. lurkerStareSnap (4.5 s) and lurkerSnapRush (2.2 s) tune its anti-gaze frenzy; knock.js power knockdown is gated at 0.7, lasts 1.6 s before recovery, and deathRag uses the stored hitDir/killing-blow power."
   ]
 }
