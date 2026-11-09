@@ -909,6 +909,17 @@ def head_fields(H):
         "EyeSmall": None,
     }
 
+def lighten(objs, cap=3200):
+    """garments over cap triangles collapse to it before keys and rest pose: shape holds, the body file stays a body a crowd can carry"""
+    for o in objs:
+        if o.type != "MESH" or o.data.shape_keys: continue
+        n = sum(len(p.vertices) - 2 for p in o.data.polygons)
+        if n <= cap: continue
+        dm = o.modifiers.new("lite", "DECIMATE"); dm.ratio = cap / n; dm.use_collapse_triangulate = False
+        bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); bpy.context.view_layer.objects.active = o
+        bpy.ops.object.modifier_move_to_index(modifier="lite", index=0); bpy.ops.object.modifier_apply(modifier="lite")
+        for p in o.data.polygons: p.use_smooth = True
+
 def build(name, is_male, height):
     MATS.clear()
     head, body = load()
@@ -917,6 +928,7 @@ def build(name, is_male, height):
     aw, _ = arm_leg_weights(head, body)
     r = rig(head, body, 0.26 if is_male else 0.0)
     extra, H = dress(head, body, r, is_male, aw)
+    lighten(extra)
     s = height / 1.94
     r.scale = (s, s, s); bpy.ops.object.select_all(action="DESELECT")
     for o in (r, head, body, *extra): o.select_set(True)
