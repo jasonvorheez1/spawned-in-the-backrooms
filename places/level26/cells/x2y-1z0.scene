@@ -1,4 +1,44 @@
 # spawn-scene v2 yaml x2y-1z0
+l26d-cake-r0e:
+  castShadow: false
+  feetPosition: {x: 307.7, y: -79.24, z: -8}
+  id: l26d-cake-r0e
+  layout: {box: {max: {x: 0.24, y: 0.4, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {id: /cdn/value.6f0c2d689d1280ba2c89239b8671d7f139d826033807a7f03c26e5667e7bf8dc.glb}
+  rotation: {yaw: 317.69020149484277}
+  visibleRange: {max: 40}
+l26d-cake-r1w:
+  castShadow: false
+  feetPosition: {x: 292.3, y: -79.24, z: -20}
+  id: l26d-cake-r1w
+  layout: {box: {max: {x: 0.24, y: 0.4, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {id: /cdn/value.6f0c2d689d1280ba2c89239b8671d7f139d826033807a7f03c26e5667e7bf8dc.glb}
+  rotation: {yaw: 247.39355150610209}
+  visibleRange: {max: 40}
+l26d-cake-r2e:
+  castShadow: false
+  feetPosition: {x: 307.7, y: -79.24, z: -32}
+  id: l26d-cake-r2e
+  layout: {box: {max: {x: 0.24, y: 0.4, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {id: /cdn/value.6f0c2d689d1280ba2c89239b8671d7f139d826033807a7f03c26e5667e7bf8dc.glb}
+  rotation: {yaw: 207.5502237305045}
+  visibleRange: {max: 40}
+l26d-cake-r3w:
+  castShadow: false
+  feetPosition: {x: 292.3, y: -79.24, z: -44}
+  id: l26d-cake-r3w
+  layout: {box: {max: {x: 0.24, y: 0.4, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {id: /cdn/value.6f0c2d689d1280ba2c89239b8671d7f139d826033807a7f03c26e5667e7bf8dc.glb}
+  rotation: {yaw: 229.600269170478}
+  visibleRange: {max: 40}
+l26d-cake-r4e:
+  castShadow: false
+  feetPosition: {x: 307.7, y: -79.24, z: -56}
+  id: l26d-cake-r4e
+  layout: {box: {max: {x: 0.24, y: 0.4, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
+  model: {id: /cdn/value.6f0c2d689d1280ba2c89239b8671d7f139d826033807a7f03c26e5667e7bf8dc.glb}
+  rotation: {yaw: 100.89687251485884}
+  visibleRange: {max: 40}
 l26d-cb-0:
   children: [{feetPosition: {x: 0, y: 1.15, z: 0}, material: {color: oklch(0.55 0.2 25), roughness: 0.2}, primitive: {kind: sphere, radius: 0.32}, scale: {x: 1, y: 1.2, z: 1}}]
   children.child-0: null
@@ -165,6 +205,86 @@ l26d-floor:
   material: {repeat: [0.5, 0.5], roughness: 0.95, texture: cdn/texture-stained-red-cruise-ship-corridor-carpet-pattern.png, wrap: repeat}
   physics: static
   primitive: {depth: 124, height: 0.3, kind: box, width: 22}
+l26d-gifts-r0e:
+  feetPosition: {x: 309.40000000000003, y: -80, z: -5.8}
+  id: l26d-gifts-r0e
+  layout: {box: {max: {x: 0.45, y: 0.8, z: 0.4}, min: {x: -0.45, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.2d207144e4ae76730ded1026e5351ae3e532574f105b12027e21856167079c2e.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 194.7457124479115}
+  visibleRange: {max: 40}
+l26d-gifts-r0w:
+  feetPosition: {x: 290.59999999999997, y: -80, z: -5.8}
+  id: l26d-gifts-r0w
+  layout: {box: {max: {x: 0.45, y: 0.8, z: 0.4}, min: {x: -0.45, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.2d207144e4ae76730ded1026e5351ae3e532574f105b12027e21856167079c2e.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 209.86530320718884}
+  visibleRange: {max: 40}
+l26d-gifts-r1e:
+  feetPosition: {x: 309.40000000000003, y: -80, z: -17.8}
+  id: l26d-gifts-r1e
+  layout: {box: {max: {x: 0.45, y: 0.8, z: 0.4}, min: {x: -0.45, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.2d207144e4ae76730ded1026e5351ae3e532574f105b12027e21856167079c2e.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 175.4653300344944}
+  visibleRange: {max: 40}
+l26d-gifts-r1w:
+  feetPosition: {x: 290.59999999999997, y: -80, z: -17.8}
+  id: l26d-gifts-r1w
+  layout: {box: {max: {x: 0.45, y: 0.8, z: 0.4}, min: {x: -0.45, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.2d207144e4ae76730ded1026e5351ae3e532574f105b12027e21856167079c2e.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 53.02982191555202}
+  visibleRange: {max: 40}
+l26d-gifts-r2e:
+  feetPosition: {x: 309.40000000000003, y: -80, z: -29.8}
+  id: l26d-gifts-r2e
+  layout: {box: {max: {x: 0.45, y: 0.8, z: 0.4}, min: {x: -0.45, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.2d207144e4ae76730ded1026e5351ae3e532574f105b12027e21856167079c2e.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 120.76412301510572}
+  visibleRange: {max: 40}
+l26d-gifts-r2w:
+  feetPosition: {x: 290.59999999999997, y: -80, z: -29.8}
+  id: l26d-gifts-r2w
+  layout: {box: {max: {x: 0.45, y: 0.8, z: 0.4}, min: {x: -0.45, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.2d207144e4ae76730ded1026e5351ae3e532574f105b12027e21856167079c2e.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 3.8021033629775047}
+  visibleRange: {max: 40}
+l26d-gifts-r3e:
+  feetPosition: {x: 309.40000000000003, y: -80, z: -41.8}
+  id: l26d-gifts-r3e
+  layout: {box: {max: {x: 0.45, y: 0.8, z: 0.4}, min: {x: -0.45, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.2d207144e4ae76730ded1026e5351ae3e532574f105b12027e21856167079c2e.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 102.4392741266638}
+  visibleRange: {max: 40}
+l26d-gifts-r3w:
+  feetPosition: {x: 290.59999999999997, y: -80, z: -41.8}
+  id: l26d-gifts-r3w
+  layout: {box: {max: {x: 0.45, y: 0.8, z: 0.4}, min: {x: -0.45, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.2d207144e4ae76730ded1026e5351ae3e532574f105b12027e21856167079c2e.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 227.7348466962576}
+  visibleRange: {max: 40}
+l26d-gifts-r4e:
+  feetPosition: {x: 309.40000000000003, y: -80, z: -53.8}
+  id: l26d-gifts-r4e
+  layout: {box: {max: {x: 0.45, y: 0.8, z: 0.4}, min: {x: -0.45, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.2d207144e4ae76730ded1026e5351ae3e532574f105b12027e21856167079c2e.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 157.4573570676148}
+  visibleRange: {max: 40}
+l26d-gifts-r4w:
+  feetPosition: {x: 290.59999999999997, y: -80, z: -53.8}
+  id: l26d-gifts-r4w
+  layout: {box: {max: {x: 0.45, y: 0.8, z: 0.4}, min: {x: -0.45, y: 0, z: -0.4}}}
+  model: {id: /cdn/value.2d207144e4ae76730ded1026e5351ae3e532574f105b12027e21856167079c2e.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 47.12072828784585}
+  visibleRange: {max: 40}
 l26d-lift-up:
   behavior: scripts/l26-lift.js
   feetPosition: {x: 300, y: -80, z: 6.1}
