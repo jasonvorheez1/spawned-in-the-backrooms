@@ -27,9 +27,11 @@ l7w-lantern-1:
   primitive: {kind: scripted, params: {kind: lantern}, script: scripts/l7-ocean-geo.js}
   visibleRange: {max: 40}
 l7w-stair:
-  feetPosition: {x: -57, y: 1.1, z: -77}
+  castShadow: true
+  children: [{castShadow: false, children: [{feetPosition: {x: 0, y: 0.22, z: 0}, id: light, light: {color: oklch(0.86 0.15 70), distance: 9, intensity: 1.8, kind: point, shadow: {enabled: false}}, visibleRange: {max: 40}}], feetPosition: {x: 7.669000000000004, y: 6.782, z: 7.346000000000004}, id: lantern-0, primitive: {kind: scripted, params: {kind: lantern}, script: scripts/l7-ocean-geo.js}, visibleRange: {max: 60}}, {castShadow: false, children: [{feetPosition: {x: 0, y: 0.22, z: 0}, id: light, light: {color: oklch(0.86 0.15 70), distance: 9, intensity: 1.8, kind: point, shadow: {enabled: false}}, visibleRange: {max: 40}}], feetPosition: {x: -0.4309999999999974, y: 11.013000000000002, z: -2.554000000000002}, id: lantern-1, primitive: {kind: scripted, params: {kind: lantern}, script: scripts/l7-ocean-geo.js}, visibleRange: {max: 60}}]
+  feetPosition: {x: -57.139, y: -2.72, z: -77.146}
   id: l7w-stair
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 24, height: 11, kind: box, width: 20}
-  tags: [blueprint]
+  model: {id: /cdn/value.656b4f31f661897249cf7de2d04f291648e1d1aa21ea387b5039f70540c7a694.glb}
+  receiveShadow: true
+  tags: [l7-stair]
+  visibleRange: {max: 110}
