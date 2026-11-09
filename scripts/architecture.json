@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 3386,
-  "updatedAt": "2026-11-09T14:06:41.263Z",
-  "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors, place simulations and scenes provide local environments, and shared systems own combat, NPCs, loot, building, and avatar presentation. Human and furry avatars share deterministic looks and fitted assets; human faces now include refined lean male sculpting and dedicated male jaw/chin morphs.",
+  "basedOnSpecVersion": 3389,
+  "updatedAt": "2026-11-09T14:08:57.389Z",
+  "summary": "The Backrooms is a persistent survival RPG across authored maze levels, player-specific rooms, and shared destinations such as the Bonus Room mall. `templates/player.js` composes player behaviors while place scenes and simulations supply local environments; shared systems own combat, NPCs, loot, building, and avatar presentation. `scripts/lib/critter-model.js` builds deterministic human and furry looks, including the expanded human skin-tone palette.",
   "scriptPaths": [],
   "places": [
-    "places/bonus (3D) - shared vaporwave mall with authored shops and landmarks, simulated staff, shoppers, balcony loungers, arcade games, and the east-ground-floor Glow Up Salon with usable mirror chairs and Gina; mall floor is tagged for footsteps.",
+    "places/bonus (3D) - shared vaporwave mall with authored shops and landmarks, simulated staff, shoppers, balcony loungers, arcade games, and the east-ground-floor Glow Up Salon with usable mirror chairs and Gina; the mall floor is tagged for footsteps.",
     "places/main (3D) - authored Level 0/Lobby maze; sim generates furniture and loot, safe-room almond water, shifting walls, creature ecology, and route-guidance moments.",
     "places/intake (3D) + places/tutorial0 (solo ephemeral 3D) - bedroom character-creation/waking space and authored tutorial route with staged encounter and HALOGEN.",
     "places/level1, places/level2, places/level21 (3D) - Habitable Zone, Pipe Dreams, and Locked; Level 2 uses Tripo props over its collider shell, Level 2.1 has Base Alef and generated rooms.",
@@ -21,16 +21,16 @@
     "places/intake/cells/x0z0.scene + scripts/intake-geo.js + scripts/lib/intro-cut.js - bedroom shell and waking sequence; tutorial scene and tut0 scripts own its route and beats.",
     "scripts/camera.js + scripts/view3.js - camera and third-person toggle, including the seated salon self-view; scripts/ui.js and specialized UI scripts present HUD and panels.",
     "places/debug/cells/x1z0.scene + scripts/dbg-pose.js + scripts/dbg-bodypad.js - clip-gallery mannequins and in-world body-style switch.",
-    "art/human-base/build.py + art/human-head/{male,hats,headtypes,revamp}.py + art/human-face/{expressions,male-jaw}.py + art/human-cloth/* - offline human rig, dedicated/refined heads, male jaw/chin morphs, fitted appearance parts, garments, and facial expression/talk keys.",
+    "art/human-base/build.py + art/human-head/{male,hats,headtypes,revamp}.py + art/human-face/{expressions,male-jaw}.py + art/human-cloth/* - offline human rig, dedicated/refined heads, male jaw/chin morphs, fitted appearance parts, and garments.",
     "art/rifle-clips/{build.py,kf2body.py,retarget3.py} + art/tripo-hair/fit.py + art/salon/build.py + art/scissors/build.py - offline rifle clips, fitted hairstyles, salon storefront, and stylist shears."
   ],
   "shared": [
-    "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings; routing and hub handlers use it for last-level selection/names.",
+    "scripts/lib/hub.js - shared/solo room IDs, Bonus Room and home destinations/crossings; routing and hub handlers use it for last-level selection and names.",
     "scripts/lib/loot.js + items.js + weapons.js/weapons.yml - common loot spawning, container rolls, remains, place pools, and weapon definitions/rarity reused by search and combat.",
     "scripts/lib/build-piece.js + breakables.yml + furniture.yml - canonical build specs/models shared by B-mode and home reconstruction; CRT TV builds attach scripts/built-tv.js.",
     "scripts/lib/screen.js - derived read-only panel classifier and wrist gates shared by player, stats, craft, rest, and menu input; scripts/lib/footsteps.js - surface classification and stride sounds used by scripts/player.js.",
     "scripts/lib/maze.js and scripts/lib/level*.js + level data - grids, zones, layouts, and paths reused by place simulations, geometry, and navigation.",
-    "scripts/lib/clothes.js + clothes.yml + critter.yml + faces.yml + hair.yml + critter-models.yml + scripts/lib/critter-model.js - player/NPC wardrobe, species and deterministic looks, human/furry bodies, heads, fitted hair, face parts, and garment presentation.",
+    "scripts/lib/clothes.js + clothes.yml + critter.yml + faces.yml + hair.yml + critter-models.yml + scripts/lib/critter-model.js - player/NPC wardrobe, species and deterministic looks, human/furry bodies, heads, fitted hair, face parts, and garments.",
     "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml - shared third-person stance and combat animation channels for player and M.E.G. agents; long guns use authored Commando KF rifle clips and matching held-gun transforms.",
     "scripts/lib/l2kit.js + scripts/lib/l2props.js and data - Level 2 kit decoding and metre-fitted Tripo props reused by Level 2/2.1; scripts/lib/loose.js + loose.yml serve shared kick/grab/flight/breakable prop effects."
   ],
@@ -40,7 +40,7 @@
     "scripts/grab.js - setDown, onInput, update, looseSpent; scripts/kick.js - onInput, kickEnd, update.",
     "scripts/player.js - maxHp, maxSan, xpNeed, weaponOf, gain, takeToken, useSnack, onInput, hitTarget, and fishing handlers; scripts/lib/footsteps.js - surfaceUnder, stepTick.",
     "scripts/lib/screen.js - WRIST, screen, canOpen, openWrist; scripts/routing.js - pickRoom.",
-    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - humanBody, humanMorph, humanFace, headModel, faceMorph, bodyModel, critterSpec, restyle/restylePlace, hair/head/beard seating, furrySpec and appearance helpers.",
+    "scripts/critter.js - update, onInput and face/blink handlers; scripts/lib/critter-model.js - humanBody, humanMorph, humanFace, headModel, faceMorph, bodyModel, critterSpec, restyle/restylePlace, hair/head/beard seating, furrySpec, and appearance helpers.",
     "scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, react3, aimPose, aimMode, longHands, stance; scripts/lib/vmpose.js - VM_FOV, poseViewmodel.",
     "scripts/wardrobe-ui.js - wardrobe; scripts/salon-ui.js - salon; scripts/salon-stylist.js - onSpawn, update; scripts/noclip.js - noclipCue, update; scripts/critter-beard-geo.js - geometry; scripts/dbg-pose.js - onSpawn, update."
   ],
@@ -55,12 +55,12 @@
     "scripts/player.js owns persistent look/style; scripts/critter.js and scripts/lib/critter-model.js present avatars; scripts/interact.js and scripts/critter.js manage salonOpen/wardrobeOpen; salon camera interpolation is scripts/camera.js state."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/spamton-fight/horde/critter/main-menu/hub/view3; noclip update detects state.noclipIn/state.exitAt, schedules noclipCue, and scripts/noclip-ui.js reads those timestamps.",
+    "world.config.yaml actions → templates/player.js ordered behaviors: locomotion/player, swim, interact/grab/kick/rest/mahjong/talk/build/noclip/stats/craft/OS/lockpick/spamton-fight/horde/critter/main-menu/hub/view3; noclip update detects state transitions.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → third-person camera; camera writes player.state.aimPt → player.js crosshair-aligned shots.",
     "scripts/routing.js accepts permitted requested rooms; otherwise scripts/lib/hub.js soloRoom selects the player's solo Backrooms room and bonus overflow IDs.",
     "Fresh visit → scripts/main-menu.js; START enters intake for creation or bonus for completed characters; wardrobe close runs intro-cut then tutorial0 unless t0Done.",
     "scripts/main-menu.js BODIES action or debug pad → world.state.bodyStyle (menu also persists player.state.bodyStyle); root sim.js/critter.js select human or furry avatar and restyle people in occupied places via critter-model.js.",
-    "scripts/lib/hub.js toHub/toSolo → room/place crossings and roomHop distinguishes intentional crossings from launch/resume; hub.js hubOffer → hub-ui.js for death recovery, while mall counters write hubShop for the hub handler/UI and purchases.",
+    "scripts/lib/hub.js toHub/toSolo → room/place crossings and roomHop distinguishes intentional crossings from launch/resume; hub.js hubOffer → hub-ui.js for death recovery, while mall counters write hubShop for the hub handler/UI and purchase flow.",
     "Teleport Station UI in scripts/hub-ui.js renders lastLevel(s) from scripts/lib/hub.js; travel requests reach scripts/hub.js, which boards the player via bc-train, animates a session train, and crosses to the destination.",
     "Found loot search → scripts/interact.js calls loot.gateItems for non-storage/non-NPC contents; rarity caps are level 1-2 common, 3-5 uncommon, 6-9 rare, 10+ elite; pickups enter player.js inventory.",
     "L input → scripts/kick.js tries foe kick then loose.js kickLoose; Z input → scripts/grab.js carries/throws eligible bodies and calls loose.js arm/track/impact; flight tracking detects hard stops.",
@@ -69,13 +69,13 @@
     "scripts/player.js calls scripts/lib/footsteps.js stepTick → detects drawn floor geometry first, then collider/terrain or floorOf fallback; surface and stride state select walk/run, crouch/weight, scuff and landing clips heard by nearby friends."
   ],
   "behaviorFamilies": [
-    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js - authored mall shops/landmarks with data-driven stock and simulated staff, waypoint shoppers, balcony loungers, arcade games, and tagged floor surfaces.",
-    "places/bonus/cells/x0z0.scene + art/salon/build.py + scripts/salon-stylist.js + scripts/salon-ui.js - Glow Up Salon shell and fitted furniture, three mirror-chair service spots, Gina's custom upper-body cut/hand-IK/voice/fx behavior, and seated live-look editing.",
+    "places/bonus/cells/x0z0.scene + scripts/lib/data/bonus.yml + places/bonus/sim.js + scripts/mall-shopper.js - authored mall shops/landmarks with data-driven stock and simulated staff, waypoint shoppers, balcony loungers, arcade games, and traffic.",
+    "places/bonus/cells/x0z0.scene + art/salon/build.py + scripts/salon-stylist.js + scripts/salon-ui.js - Glow Up Salon shell and fitted furniture, three mirror-chair service spots, Gina's custom upper-body cut/hand-IK/voice/fx behavior, and salon UI.",
     "scripts/lib/data/furniture.yml + scripts/lib/build-piece.js + scripts/build.js + places/home11/sim.js - per-piece models/dimensions with common placement, persistence, and rebuild path; CRT TV builds attach screen, sound, and glow.",
     "places/main/cells/* and places/level5/cells/* - authored fixtures with local sound/light and zone variants; Level 5 includes portal/quest props, Boiler Room Death Rat packs, and fitted human residents.",
     "places/level4/cells/x0z0.scene + Level 4 geometry/detail/prop/look and l4-office.js/l4-office-geo.js/l4-home.js - office layout and fixtures with resident schedules/home claims.",
     "scripts/lib/l4-people.js + level4-people.yml and scripts/lib/l5-people.js + level5-people.yml - per-NPC role/dialogue/look/routine on shared meg-agent behavior.",
-    "scripts/lib/critter-model.js + critter.yml/faces.yml/hair.yml/critter-models.yml + art/human-cloth/* + art/tripo-hair/fit.py + art/human-head/revamp.py + art/human-face/male-jaw.py - deterministic human/furry looks; sex-specific bodies/heads, expression and face parts, fitted hair, and men's lid-line lashes plus M_Jaw/M_Chin morphs.",
+    "scripts/lib/critter-model.js + critter.yml/faces.yml/hair.yml/critter-models.yml + art/human-cloth/* + art/tripo-hair/fit.py + art/human-head/revamp.py + art/human-face/male-jaw.py - deterministic human/furry looks; human skin choices span porcelain to espresso and are applied without extra darkening, alongside sex-specific bodies/heads, fitted hair, face parts, and garments.",
     "scripts/lib/data/combat-anims.yml + scripts/lib/body3.js + scripts/humanoid-locomotion.js + scripts/critter.js + scripts/meg-agent.js - shared upper-body combat and human gait with NPC idles, head tracking/fidgets, expressions and dialogue."
   ],
   "probableOrphans": [
@@ -85,9 +85,9 @@
   "migrationNotes": [
     "Bonus Room uses shared room/place bonus; soloRoom(userId) names each player's Backrooms room and overflow mall rooms use bonus-N IDs. Teleport Station last travel derives from savePlace (excluding bonus, intake, debug; tutorial0 maps to main).",
     "Found-item rarity gates apply only to found weapon tokens; existing weapon ownership/use and non-weapon loot are not level-gated. Search gating excludes storage and NPC containers.",
-    "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout. The Time 4 Fun poster/door is no longer placed in Level 0; it belongs only in Level 4.",
-    "Footstep surface detection checks visible geometry within 0.45 m before the collider (so non-colliding rugs can supply the sound), then terrain/material and player.js floorOf fallback; retain material words/tags such as the Bonus floor's polish tag.",
+    "Level 0 place.state.momentsV is 4: migration deletes old tagged moment entities before relaying them; preserve deterministic route/arrow direction logic when changing moment layout. The Time 4 Fun poster/door is no longer placed in Level 0.",
+    "Footstep surface detection checks visible geometry within 0.45 m before the collider (so non-colliding rugs can supply the sound), then terrain/material and player.js floorOf fallback; retain material words/tags such as the Bonus floor's carpet tag.",
     "Level 2 l2props.yml sizes are metres; fitBox places its mesh collider from floor y=0. Props spawn static to avoid falling through before floor mesh cooking; Level 2.1 revisioned rebuild must preserve generated placement identity.",
-    "Human body/head GLBs are shared skinned rigs: keep sex-specific asset IDs, body part/material and shape-key names (including X_* expressions, Beard_*/Blush_*, and male M_Jaw/M_Chin) consistent with critter-model.js; STYLE_V sw18 invalidates old styled looks. Noclip timestamps are owned by player.js and consumed by noclip-ui.js; buzz cues only play when ctx.self.place is main."
+    "Human body/head GLBs are shared skinned rigs: keep sex-specific asset IDs, body part/material and shape-key names (including X_* expressions, Beard_*/Blush_*, and male M_Jaw/M_Chin) consistent with critter-model.js; STYLE_V is sw19, and human skin swatches are applied directly without the prior darkening multiplier."
   ]
 }
