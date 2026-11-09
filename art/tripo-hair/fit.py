@@ -51,7 +51,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     lo, hi = (0.12, 0.88) if key.startswith("t_s_") else (0.03, 0.97)  # the soft wigs: ties and flyaways off the crown don't set the size
     cw = q([v.x for v in crown], hi) - q([v.x for v in crown], lo)
     cys = sorted(v.y for v in crown); ccx = (q([v.x for v in crown], 0.97) + q([v.x for v in crown], 0.03)) / 2; ccy = (cys[0] + cys[-1]) / 2
-    W = {"t_s_twintails": 1.25, "t_s_ponytail": 1.3, "t_s_wolfcut": 1.3, "t_s_wavy": 1.3, "t_twintails": 1.05, "t_long": 1.1, "t_silver": 1.1}.get(key, 1.18)
+    W = {"t_s_twintails": 1.15, "t_s_ponytail": 1.22, "t_s_wolfcut": 1.3, "t_s_wavy": 1.12, "t_twintails": 1.05, "t_long": 1.1, "t_silver": 1.1}.get(key, 1.18)
     s = (2 * rx * W) / max(cw, 1e-4)
     # the crown band is the top 18%, so its width runs a little under the skull's: the push-out below seats whatever lands inside
     M = Matrix.Translation(Vector((0, cy + 0.004, top + 0.014))) @ Matrix.Scale(s, 4) @ Matrix.Translation(Vector((-ccx, -ccy, -t)))
@@ -61,7 +61,7 @@ for f in sorted(glob.glob(f"{SRC}/*.glb")):
     def blocked(mm): return sum(1 for v in mm.vertices if fz0 < v.co.z < fz1 and v.co.y < y0 + 0.05 and abs(v.co.x) < rx * 0.55)
     R = Matrix.Translation(Vector((0, cy, 0))) @ Matrix.Rotation(3.14159, 4, "Z") @ Matrix.Translation(Vector((0, -cy, 0)))
     b0n = blocked(me); me.transform(R); b1n = blocked(me)
-    if b1n >= b0n: me.transform(R)
+    if b1n >= b0n or key.startswith("t_s_"): me.transform(R)  # the soft wigs were painted front-on: their front is the file's front
     print("face", key, b0n, b1n)
     # a lopsided Tripo mesh: its fuller side mirrored onto the other, so the curtain falls even on both shoulders
     if key in ("t_silver", "t_softbob"):
