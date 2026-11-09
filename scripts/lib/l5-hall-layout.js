@@ -90,7 +90,6 @@ add("cart", "cart", -7.3, 11.4, 62, {}, { loot: L("meat:chicken,almond", "Room-s
 for (const [i, x] of [[0, -29.05], [1, -27.4], [2, -24.6], [3, -22.95]]) add(`lib-shelf${i}`, "bookshelf", x, -20.715, 180, { w: 1.6, h: 3.3, seed: 80 + i });
 for (const [i, z] of [[0, -18.2], [1, -16.5]]) { add(`lib-shelfW${i}`, "bookshelf", -29.715, z, -90, { w: 1.6, h: 3.3, seed: 90 + i }); add(`lib-shelfE${i}`, "bookshelf", -22.285, z, 90, { w: 1.6, h: 3.3, seed: 95 + i }); }
 add("lib-ladder0", "ladder", -27.4, -20.45, 180, { h: 3.1 }); add("lib-ladder1", "ladder", -29.45, -17.2, -90, { h: 3.1 });
-// lib-ladder0/1 are climbable: their scene rows carry tags [ladder] and state.ladder {h: 2.4, yaw: rotation+180, top: false}; keep that if this layout is ever re-laid
 add("lib-map", "maptable", -26, -17.3, 0, {}); add("lib-tomes", "tomes", -25.4, -17.2, 20, { seed: 7 }, { y: 0.82 });
 add("lib-lectern", "lectern", -23.4, -14.3, 135, {}); add("lib-arm", "sofa", -28.8, -14.4, -135, { w: 1.0, up: "leather", col: "oklch(0.45 0.08 30)" });
 add("lib-desk", "wdesk", -23.2, -19.2, 90, { wood: "walnut" }, { loot: L("battery,tape", "Society desk", "desk", "lockpick:35") });

@@ -2219,7 +2219,7 @@ l5-hall-lib-ladder0:
   primitive: {kind: scripted, params: {h: 3.1, kind: ladder}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
   state: {hp: 60, ladder: {h: 2.4, mat: wood, top: false, yaw: 0}, mat: wood, maxHp: 60}
-  tags: [l5-hall, furniture, breakable, ladder]
+  tags: [l5-hall, furniture, breakable]
   visibleRange: {max: 80, min: 0}
 l5-hall-lib-ladder1:
   feetPosition: {x: -29.45, y: 0, z: -17.2}
@@ -2228,7 +2228,7 @@ l5-hall-lib-ladder1:
   primitive: {kind: scripted, params: {h: 3.1, kind: ladder}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: -90}
   state: {hp: 60, ladder: {h: 2.4, mat: wood, top: false, yaw: 90}, mat: wood, maxHp: 60}
-  tags: [l5-hall, furniture, breakable, ladder]
+  tags: [l5-hall, furniture, breakable]
   visibleRange: {max: 80, min: 0}
 l5-hall-lib-lectern:
   feetPosition: {x: -23.4, y: 0, z: -14.3}
