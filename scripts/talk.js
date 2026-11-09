@@ -304,6 +304,7 @@ function gesture(ctx, it, k) {
   const r = rapportOf(ctx, it)
   if (k === 'wave') {
     ctx.self.anim.gest = { clip: 'cdn/clip-wave-loop.glb', weight: 0.9, loop: 'once', mask: { from: 'Spine' }, blendIn: 0.15, blendOut: 0.3 }
+    ctx.after(2.2, 'gestEnd') // a once-clip holds its last frame until cleared: without this the arms froze mid-wave forever
     setRapport(ctx, it, r + 2)
     send(ctx, { id: it.id, text: '*waves at you*' }); return
   }
@@ -334,6 +335,7 @@ function gesture(ctx, it, k) {
     send(ctx, { id: it.id, text: '*sneers and insults you to your face*' }); return
   }
 }
+export function gestEnd(ctx) { if (ctx.self.anim?.gest) ctx.self.anim.gest = null }
 export function stopDance(ctx, p) {
   const it = ctx.getObject(p?.id); if (it?.anim?.groove) it.anim.groove = null
   if (ctx.self.anim?.groove) ctx.self.anim.groove = null
