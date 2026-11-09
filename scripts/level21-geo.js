@@ -6,6 +6,7 @@ import { N, S, H, HALF, isOpen, openings, zoneOf, roomAt, ROOMS, hash, cellCente
 import { slab, tube, prism } from "./lib/shapes.js";
 
 const FLOOR = "cdn/texture-grimy-wet-utility-concrete-floor.png", WALL = "cdn/texture-chalky-stained-concrete-wall.png", BLOCK = "cdn/texture-painted-white-cinder-block-wall-smooth.png", VINYL = "cdn/texture-worn-grey-vinyl-composition-floor-tile.png", TILE = "cdn/texture-acoustic-drop-ceiling-tiles-water-stained.png", CEIL = "cdn/texture-dirty-concrete-ceiling-slab.png", RUSTY = "cdn/texture-scratched-worn-steel.png", WOOD = "cdn/texture-worn-hardwood-grain.png";
+const ROCKROOF = "cdn/texture-pale-grey-smooth-shotcrete-tunnel-rock.png";
 const T = 0.18; // half wall thickness: the walls of this level are thin
 const D4 = [[1, 0], [0, 1], [-1, 0], [0, -1]];
 const box = (ctx, x0, x1, y0, y1, z0, z1) => slab(ctx, [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], [Math.abs(x1 - x0) / 2, Math.abs(y1 - y0) / 2, Math.abs(z1 - z0) / 2]);
@@ -132,7 +133,7 @@ export function geometry(ctx) {
       ctx.albedo(null); const base = r < 0.18 ? [0.6, 0.04, 200] : r < 0.3 ? [0.7, 0.03, 60] : [0.86, 0.02, 85];
       for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { const a = x0 + i, b = z0 + j, tone = base[0] + (((i + j + cx * 3 + cz) % 2) ? 0.03 : -0.02) + (hash(cx * 4 + i, cz * 4 + j, 9) - 0.5) * 0.05; ctx.color(`oklch(${tone} ${base[1]} ${base[2]})`); ctx.quad(a, 0, b, a, 0, b + 1, a + 1, 0, b + 1, a + 1, 0, b); }
     } // a threadbare carpet, or bare grime
-    ctx.roughness(0.88); ctx.albedo(z === "edge" ? null : isEdge(cx, cz) ? CEIL : TILE); ctx.color(isEdge(cx, cz) ? (z === "edge" ? "oklch(0.72 0.006 240)" : "oklch(0.38 0.01 150)") : z === "fridges" || z === "restroom" ? "oklch(0.95 0.01 90)" : "oklch(0.9 0.014 90)");
+    ctx.roughness(0.88); ctx.albedo(z === "edge" ? ROCKROOF : isEdge(cx, cz) ? CEIL : TILE); ctx.color(isEdge(cx, cz) ? (z === "edge" ? "oklch(0.5 0.006 240)" : "oklch(0.38 0.01 150)") : z === "fridges" || z === "restroom" ? "oklch(0.95 0.01 90)" : "oklch(0.9 0.014 90)");
     ctx.quad(x0, h, z0, x0 + S, h, z0, x0 + S, h, z0 + S, x0, h, z0 + S);
   }
 
@@ -208,7 +209,7 @@ export function geometry(ctx) {
       if (!isOpen(cx, cz, 0)) continue;
       ctx.color("oklch(0.72 0.01 230)"); ctx.metalness(0.72); ctx.roughness(0.38);
       if (laneCell(cx, cz) && cz === LANE.z0 + LANE.d - 1) {
-        run(c, 0, h - 0.9, 1.2, 0.5); run(c, 0, h - 0.5, 0.2, 0.28);
+        { const duct = (y, off, r) => tube(ctx, [[c.x - 0.02, y, c.z + off], [c.x + S + 0.02, y, c.z + off]], [r, r], 20, [1, 1], 0, 1, 1); duct(h - 0.9, 1.2, 0.5); duct(h - 0.75, 0.05, 0.36); duct(h - 0.4, -0.7, 0.12); }
         // Steel duct collar straps & ceiling hangers every cell
         ctx.color("oklch(0.35 0.01 250)");
         pipe(ctx, [c.x + S * 0.5, h - 0.9, c.z + 1.2], [c.x + S * 0.5, h, c.z + 1.2], 0.035, 5);
