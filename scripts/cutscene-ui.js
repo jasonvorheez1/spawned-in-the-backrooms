@@ -34,11 +34,12 @@ function arriveUi(ctx, player) {
 }
 
 // the tutorial Level 0's cutscenes (scripts/lib/tut0-cut.js): letterbox, captions, and the title at the end
-const T0CAP = { // plain and useful, said once: what it is, what to do
-  encounter: [[13400, 3000, "RUN."]],
-  halogen: [[2700, 1800, "Backrooms Robotics HALOGEN unit. Still works."]],
-  final: [[3000, 2600, "<i>found another one.</i>"]],
-}
+const T0CAP = {} // told through shots, never captions (the creator's rule): the whisper and the machine speak for themselves
+// film: grain that crawls and a soft vignette over every tutorial shot (johnadams2, Nov 9: "bootleg mobile games")
+const GRAIN = "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")"
+const FILM = `<style>@keyframes tgr{0%{transform:translate(0,0)}20%{transform:translate(-37px,21px)}40%{transform:translate(29px,-44px)}60%{transform:translate(-18px,-9px)}80%{transform:translate(41px,33px)}100%{transform:translate(0,0)}}
+.tgr{position:fixed;inset:-60px;z-index:52;pointer-events:none;background-image:${GRAIN};opacity:.11;mix-blend-mode:overlay;animation:tgr .5s steps(5) infinite}
+.tvg{position:fixed;inset:0;z-index:52;pointer-events:none;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%)}</style><div class="tvg"></div><div class="tgr"></div>`
 function t0Ui(ctx, player) {
   const c = player.state.t0cut, e = ctx.now() - c.at, d = (ms) => `${ms * PACE - e}ms`, fin = c.id === "final"
   const caps = (T0CAP[c.id] || []).map(([at, len, txt]) => `<div class="tcc" style="animation-duration:${len * PACE}ms;animation-delay:${d(at)}">${txt}</div>`).join("")
@@ -52,7 +53,7 @@ function t0Ui(ctx, player) {
 .tt{position:fixed;left:0;right:0;top:41%;text-align:center;z-index:54;color:#f2c14e;font:400 46px/1.1 Georgia,serif;text-shadow:0 0 18px rgba(242,193,78,.35);opacity:0;animation:ttitle ${9 * PACE}s ease both;animation-delay:${d(13700)}}
 .tcr{position:fixed;left:0;right:0;top:calc(41% + 104px);text-align:center;z-index:54;color:#a89a74;font:400 11px/1 Georgia,serif;letter-spacing:.45em;opacity:0;animation:tsub ${7.4 * PACE}s ease both;animation-delay:${d(15600)}}
 .ts{position:fixed;left:0;right:0;top:calc(41% + 64px);text-align:center;z-index:54;color:#d9cfae;font:400 13px/1 Georgia,serif;letter-spacing:.5em;opacity:0;animation:tsub ${8.2 * PACE}s ease both;animation-delay:${d(14700)}}
-</style><div class="tb" style="top:0"></div><div class="tb" style="bottom:0"></div>${fin ? `<div class="tbk"></div><div class="tt">SPAWN IN THE BACKROOMS</div><div class="ts">LEVEL 1 · HABITABLE ZONE</div>` : ""}${caps}`
+</style>${FILM}<div class="tb" style="top:0"></div><div class="tb" style="bottom:0"></div>${fin ? `<div class="tbk"></div><div class="tt">SPAWN IN THE BACKROOMS</div><div class="ts">LEVEL 1 · HABITABLE ZONE</div>` : ""}${caps}`
 }
 export function t0Fade(ctx, player) {
   const f = player.state.t0fade; if (!f || ctx.now() - f > 3000) return ""

@@ -7,7 +7,16 @@ import { spawnPhoebe, dropPhoebe } from "./phoebe.js"
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const SMILER_MODEL = { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" } // scripts/smilers.js
 export const LEN = { encounter: 16.5, smiler: 11, halogen: 6, drawings: 10, final: 23 }
-const GASP = "/cdn/value.1f5d195f954552c9304c8d13f9177b97b62b100316d004215a918c9282445aad.mp3"   // Shelly's horror pack: Gasp.wav
+const GASP = "/cdn/value.1f5d195f954552c9304c8d13f9177b97b62b100316d004215a918c9282445aad.mp3"   // johnadams2 (Nov 9): "the cutscenes feel like bootleg mobile games": every shot is held by a person, never a tripod.
+// Savi's picks: a slow breathing drift (~1.5 cm at the eye, ~0.35 deg of aim) made of three sines, so no two seconds repeat
+const wob = (t, s) => Math.sin(t * 0.83 + s) * 0.6 + Math.sin(t * 2.1 + s * 2.3) * 0.3 + Math.sin(t * 4.7 + s * 3.7) * 0.1
+function handheld(ctx, t) {
+  const cam = ctx.view.camera
+  if (!cam?.eye || !cam.aim || typeof cam.aim !== "object" || cam.aim.x == null) return
+  const e = cam.eye, a = cam.aim, d = Math.hypot(a.x - e.x, a.y - e.y, a.z - e.z) || 1, k = d * 0.006
+  ctx.view.camera = { ...cam, eye: { x: e.x + wob(t, 1) * 0.012, y: e.y + wob(t, 2) * 0.009, z: e.z + wob(t, 3) * 0.012 }, aim: { x: a.x + wob(t, 4) * k, y: a.y + wob(t, 5) * k * 0.7, z: a.z + wob(t, 6) * k } }
+}
+// Shelly's horror pack: Gasp.wav
 const BREATHF = "/cdn/value.92bf175ed8ff7226b4ca07fa700883e57e814e1ef5cefa26e09a4a8eac38b2b6.mp3" // Breathing_fast.wav
 const PHOEBE_WHISPER = `/cdn/voice-soft-breathy-young-woman-whispering-amused-saying-${encodeURIComponent("Found another one.")}.mp3`
 const BREATH = "/cdn/value.60bf2d4498f8ed4068160ee05c1cfd064e645f3eb921729cf5a8fd3f1d127754.mp3"  // Breathing_slow.wav
@@ -41,7 +50,9 @@ export function t0Tick(ctx, ses, st) {
   me.velocity = { x: 0, y: 0, z: 0 }
   if (CUE[id]) once("cue", () => raw(ctx, CUE[id], 0.75))
   const done = BEAT[id](ctx, c, t, once, st)
+  handheld(ctx, t)
   if (!done) return true
+  if (id === "halogen") me.bones.RightHand.reach = null
   if (id === "halogen") { st.creating = false; st.sheetOpen = false }
   for (const k of ["smiler", "glint", "dust", "leg", "ent"]) if (c[k]) ctx.destroy(c[k]) // the knocked-down entity (c.ent) stays where it fell
   me.anim.cut = null; ctx.view.camera = null; me.hidden = (me.hidden || []).filter((i) => i !== me.id)
@@ -166,7 +177,7 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
       c.glint = ctx.spawn({ audience: "local", scope: "session", feetPosition: { x: HALO.x - 0.6, y: 1.4, z: HALO.z }, light: { kind: "point", color: "#ffb347", intensity: 0, distance: 3.5 } })
       animate(ctx, c.glint, { "light.intensity": 2.2 }, { duration: 1.6, easing: "easeInQuad" })
     })
-    if (t > 1.7) once("arm", () => { me.anim.cut = { clip: "cdn/clip-cast.glb", weight: 4 } })
+    if (t > 1.7) once("arm", () => { me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" }; me.bones.RightHand.reach = { to: port, blendIn: 0.6 } }) // the hand goes into the port itself
     if (t > 2.6) once("clamp", () => { raw(ctx, H.rhiss, 1.0, port); fx1(ctx, "screenShake", { intensity: 0.18, duration: 0.3 }); fx1(ctx, "screenFlash", { color: "#ffb347", duration: 0.25, intensity: 0.35 }) })
     if (t > 3.6) once("open", () => { raw(ctx, H.switch, 0.8); st.creating = true; st.sheetOpen = true; me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
     if (t < 1.6) ctx.view.camera = { eye: { x: 43.2, y: 1.7, z: -25.2 }, aim: L3({ x: 46, y: 1.3, z: -27.5 }, scr, ss(0, 1.6, t)), fov: 55 } // the machine across the room
@@ -210,8 +221,7 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
     if (t > S + 2.2) once("score", () => raw(ctx, SCORE, 1.0)) // the score comes up as they touch the wall and carries the fall and the title
     if (t > S + 2.4) once("through", () => {
       raw(ctx, H.sting2, 1.0, wall); raw(ctx, GASP, 0.8)
-      fx1(ctx, "screenFlash", { color: "#fffbe0", duration: 0.35, intensity: 0.7 }); fx1(ctx, "screenShake", { intensity: 0.35, duration: 1.2 })
-      fx1(ctx, "shockwave", { position: wall, speed: 6, thickness: 0.5, intensity: 0.7 })
+      fx1(ctx, "screenFlash", { color: "#fffbe0", duration: 0.6, intensity: 0.35 }); fx1(ctx, "screenShake", { intensity: 0.18, duration: 0.8 })
     })
     if (t > S + 2.7) once("gone", () => { me.hidden = [...(me.hidden || []), me.id]; raw(ctx, H.scream, 0.35) })
     if (t > S + 6.2) once("thud", () => raw(ctx, H.slowst, 0.8))
