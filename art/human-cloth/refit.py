@@ -194,13 +194,15 @@ for o in bpy.data.objects:
             rows[k] = row; prev = row
         for _ in range(3): rows = {k: [(r[(i - 1) % NB] + 2 * r[i] + r[(i + 1) % NB]) / 4 for i in range(NB)] for k, r in rows.items()}
         rowAt = lambda z: rows[min(ks, key=lambda k: abs(k - zk(z)))]  # nearest slice that has cloth
+        _b = bpy.data.objects.get("Body")
+        CROTCH = min(((_b.matrix_world @ bv.co).z for bv in _b.data.vertices if abs((_b.matrix_world @ bv.co).x) < 0.012 and 0.55 < (_b.matrix_world @ bv.co).z < 1.05), default=-9) if _b else -9
         # faces the cut carried across between the legs sit deep inside the hung tube: a pouch from outside, flaps from below. cut them first
         inner = []
         for f in bm.faces:
             c = f.calc_center_median()
             if c.z > HEM + 0.02: continue
             x, y = c.x, c.y - cy; r = math.hypot(x, y)
-            if r < 0.7 * rowAt(c.z)[ak(x, y)]: inner.append(f)  # only what sits deep inside (between the legs); 0.9 also ate the belly's front panel and split the sweater at the waist
+            if r < 0.5 * rowAt(c.z)[ak(x, y)] or (abs(c.x) < 0.11 and c.z < CROTCH + 0.035): inner.append(f)  # the flap between the legs goes as one straight cut just over the crotch; the r test alone (0.9) split the belly open, and nothing left a bow knotted at the fly
         bmesh.ops.delete(bm, geom=inner, context="FACES_ONLY")
         # the cut leaves teeth: faces hanging by one edge go, then the hem's edge loop is eased level so it reads as a sewn hem
         for _ in range(4):
