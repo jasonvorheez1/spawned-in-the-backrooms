@@ -296,6 +296,78 @@ PIECES.doorleaf = (ctx, p) => {
   paint(ctx, "dark"); for (const sz of [-1, 1]) cbox(ctx, -0.09, 1.25, sz * t / 2, 0.09, 1.95, sz * (t / 2 + 0.006), 0.01);
   paint(ctx, "glass", 0.35); for (const sz of [-1, 1]) F(ctx, [[-0.07, 1.27, sz * (t / 2 + 0.007)], [0.07, 1.27, sz * (t / 2 + 0.007)], [0.07, 1.93, sz * (t / 2 + 0.007)], [-0.07, 1.93, sz * (t / 2 + 0.007)]], [0, 0, sz]);
 };
+// the B.N.T.G. seal on Level 0's east wall: a heavy rounded bulkhead round the 1.5 x 2.3 opening, a pillowed composite
+// surround with a steel lip, a hazard band, bolts, hydraulic rams, a card reader and a sign housing; origin as doorframe
+PIECES.bulkhead = (ctx, p) => {
+  const hz = (p.depth ?? 0.56) / 2, ow = 0.75, oh = 2.3, W = 1.2, H = 2.95, R = 0.55, cy = 1.2, N = ctx.lod <= 2 ? 112 : 56, K = 7, BULGE = 0.085;
+  const inner = (a) => { const c = Math.cos(a), s = Math.sin(a); let t = Math.abs(c) > 1e-6 ? ow / Math.abs(c) : 1e9; if (s > 1e-6) t = Math.min(t, (oh - cy) / s); if (s < -1e-6) t = Math.min(t, cy / -s); return [c * t, cy + s * t]; };
+  const ins = (x, y) => { if (y < 0 || y > H || Math.abs(x) > W) return false; if (y > H - R && Math.abs(x) > W - R) return (Math.abs(x) - (W - R)) ** 2 + (y - (H - R)) ** 2 <= R * R; return true; };
+  const outer = (a) => { const c = Math.cos(a), s = Math.sin(a); let lo = 0, hi = 4; for (let i = 0; i < 28; i++) { const m = (lo + hi) / 2; if (ins(c * m, cy + s * m)) lo = m; else hi = m; } return [c * lo, Math.max(0, cy + s * lo)]; };
+  const A = (i) => -Math.PI / 2 + (i / N) * Math.PI * 2;
+  const rings = []; for (let i = 0; i <= N; i++) { const a = A(i), I = inner(a), O = outer(a); rings.push({ I, O }); }
+  const P = (i, t, side) => { const r = rings[i], x = r.I[0] + (r.O[0] - r.I[0]) * t, y = r.I[1] + (r.O[1] - r.I[1]) * t, b = Math.pow(Math.sin(Math.PI * Math.min(1, t * 1.15)), 0.55) * BULGE; return [x, y, side * (hz + b)]; };
+  const band = (k, i) => k === 0 || k === K - 1 ? "steel" : k === K - 2 ? (Math.floor(i / 3) % 2 ? "hazard" : "dark") : "panel";
+  ctx.smooth();
+  for (const side of [-1, 1]) for (let k = 0; k < K; k++) {
+    for (let i = 0; i < N; i++) {
+      const q = [P(i, k / K, side), P(i + 1, k / K, side), P(i + 1, (k + 1) / K, side), P(i, (k + 1) / K, side)];
+      if (Math.abs(q[0][1] - q[3][1]) + Math.abs(q[0][0] - q[3][0]) < 1e-4 && Math.abs(q[1][1] - q[2][1]) + Math.abs(q[1][0] - q[2][0]) < 1e-4) continue;
+      paint(ctx, band(k, i)); F(ctx, q, [0, 0, side]);
+    }
+  }
+  // the jamb through the wall and the outer skirt that meets the hull
+  paint(ctx, "steel");
+  for (let i = 0; i < N; i++) {
+    const a = rings[i].I, b = rings[i + 1].I; if (a[1] < 0.001 && b[1] < 0.001) continue;
+    const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+    F(ctx, [[a[0], a[1], -hz], [b[0], b[1], -hz], [b[0], b[1], hz], [a[0], a[1], hz]], [-mx, cy - my, 0]);
+    const c = rings[i].O, d = rings[i + 1].O; if (c[1] < 0.001 && d[1] < 0.001) continue;
+    F(ctx, [[c[0], c[1], -hz], [d[0], d[1], -hz], [d[0], d[1], hz], [c[0], c[1], hz]], [(c[0] + d[0]) / 2, (c[1] + d[1]) / 2 - cy, 0]);
+  }
+  ctx.flat();
+  for (const side of [-1, 1]) {
+    // bolts round the outer lip
+    paint(ctx, "metal");
+    for (let i = 2; i < N; i += 4) { const q = P(i, (K - 0.5) / K, side); if (q[1] < 0.08) continue; rod(ctx, q, [q[0], q[1], q[2] + side * 0.018], 0.017, 6); }
+    // hydraulic rams up each side: a dark sleeve, a bright rod, end clevises
+    for (const sx of [-1, 1]) {
+      const x = sx * 0.97, z = side * (hz + 0.13);
+      paint(ctx, "dark"); rod(ctx, [x, 0.35, z], [x, 1.25, z], 0.045, 12);
+      paint(ctx, "metal"); rod(ctx, [x, 1.25, z], [x, 2.15, z], 0.024, 12);
+      paint(ctx, "steel"); cbox(ctx, x - 0.05, 0.22, z - 0.05, x + 0.05, 0.36, z + 0.05, 0.015); cbox(ctx, x - 0.05, 2.12, z - 0.05, x + 0.05, 2.26, z + 0.05, 0.015);
+    }
+    // the sign housing on the header: a dark rounded tray the placard sits in, amber light strip under it
+    paint(ctx, "dark"); cbox(ctx, -0.82, 2.36, side * (hz + 0.06), 0.82, 2.8, side * (hz + 0.11), 0.04);
+    glow(ctx, 2.4, 1.3, 0.25); cbox(ctx, -0.6, 2.335, side * (hz + 0.07), 0.6, 2.35, side * (hz + 0.1));
+    // a status bead over the opening
+    paint(ctx, "dark"); rod(ctx, [0, 2.32, side * (hz + 0.02)], [0, 2.32, side * (hz + 0.07)], 0.05, 14);
+  }
+  // the card reader on the room side (-z), slot lit red until a key opens it
+  const zr = -(hz + 0.1);
+  paint(ctx, "dark"); cbox(ctx, -1.08, 1.02, zr - 0.06, -0.9, 1.38, zr, 0.02);
+  glow(ctx, 2.8, 0.25, 0.15); cbox(ctx, -1.03, 1.27, zr - 0.065, -0.95, 1.3, zr - 0.06);
+  paint(ctx, "seam"); cbox(ctx, -1.035, 1.1, zr - 0.064, -0.945, 1.115, zr - 0.06);
+  // the leaf track and the floor sill
+  paint(ctx, "dark"); cbox(ctx, -1.15, oh - 0.06, -0.06, 1.15, oh, 0.06);
+  paint(ctx, "steel"); cbox(ctx, -ow, 0, -hz, ow, 0.014, hz, 0.005);
+  paint(ctx, "hazard"); for (const sz of [-1, 1]) cbox(ctx, -ow, 0.014, sz * (hz - 0.08), ow, 0.018, sz * (hz - 0.02));
+};
+// a pair of crowd-control posts with a band of tape sagging between them; origin at the middle, posts along x
+PIECES.stanchions = (ctx, p) => {
+  const w = p.w ?? 2.6, h = 0.95, ends = [[-w / 2, 0, 0], [w / 2, 0, 0]];
+  for (const [x] of ends) {
+    paint(ctx, "dark"); rod(ctx, [x, 0, 0], [x, 0.03, 0], 0.17, 18);
+    paint(ctx, "metal"); rod(ctx, [x, 0.03, 0], [x, h, 0], 0.024, 12); rod(ctx, [x, h, 0], [x, h + 0.05, 0], 0.04, 12);
+    paint(ctx, "hazard"); rod(ctx, [x, h - 0.06, 0], [x, h - 0.02, 0], 0.03, 12);
+  }
+  const pts = sag([-w / 2, h - 0.04, 0], [w / 2, h - 0.04, 0], 0.09, 16), bw = 0.035;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const a = pts[i], b = pts[i + 1];
+    paint(ctx, i % 2 ? "dark" : "hazard");
+    const q = [[a[0], a[1] - bw, 0], [b[0], b[1] - bw, 0], [b[0], b[1] + bw, 0], [a[0], a[1] + bw, 0]];
+    F(ctx, q, [0, 0, -1]); F(ctx, q, [0, 0, 1]);
+  }
+};
 // a workstation: a long white desk, pedestals, a bank of monitors (on: 1 lit, 0 dark, cracked: one split screen)
 PIECES.desk = (ctx, p) => {
   const w = p.w ?? 2.4, on = p.on ?? 1, n = p.screens ?? 3;
@@ -578,6 +650,8 @@ export function collider(ctx) {
       return out;
     }
     case "doorframe": { const dp = (p.depth ?? 0.7) / 2, h = p.h ?? 3.4; return [B(-1.22, 0, -dp, -0.75, h, dp), B(0.75, 0, -dp, 1.22, h, dp), B(-0.75, 2.3, -dp, 0.75, h, dp)]; }
+    case "bulkhead": { const dp = (p.depth ?? 0.56) / 2; return [B(-1.2, 0, -dp, -0.75, 2.95, dp), B(0.75, 0, -dp, 1.2, 2.95, dp), B(-0.75, 2.3, -dp, 0.75, 2.95, dp)]; }
+    case "stanchions": { const w = p.w ?? 2.6; return [B(-w / 2 - 0.05, 0, -0.04, w / 2 + 0.05, 1, 0.04)]; }
     case "doorleaf": return [B(-0.38, 0, -0.04, 0.38, 2.28, 0.04)];
     case "desk": { const w = p.w ?? 2.4; return [B(-w / 2, 0, -0.4, w / 2, 0.8, 0.4)]; }
     case "chair": return p.tipped ? [B(-0.3, 0, -0.6, 0.3, 0.3, 0.85)] : [B(-0.28, 0, -0.28, 0.28, 0.6, 0.3)];

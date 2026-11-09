@@ -55,24 +55,24 @@ export function zenithChoice(ctx, it, s, list) {
   return [pick, ...list].slice(0, 4);
 }
 // laid by places/main/sim.js: the sealed breach on the outer east wall (ZEN_ENTRY), and Kade in the safe room. ENTRYV 2 moved it out of the safe room.
-const ENTRYV = 2;
-const OLD = ["l0-zenith-frame", "l0-zenith-void", "l0-zenith-leafA", "l0-zenith-leafB", "l0-zenith-door", "l0-zenith", "main-from-l01", "l0-zenith-sign"];
+const ENTRYV = 3;
+const OLD = ["l0-zenith-frame", "l0-zenith-void", "l0-zenith-leafA", "l0-zenith-leafB", "l0-zenith-door", "l0-zenith", "main-from-l01", "l0-zenith-sign", "l0-zb-tape0", "l0-zb-tape1", "l0-zb-posts", "l0-zb-lamp", "l0-zb-hole", "l0-zb-hum", "l0-zb-scout"];
 function layBreach(ctx) {
   const { x, z } = ZEN_ENTRY, W = x + 0.26; // W: the outer wall's face
   ctx.spawn("l0-zb-hole", { feetPosition: { x: W - 0.01, y: 0, z }, rotation: { yaw: 90 }, physics: "none", primitive: { kind: "scripted", script: "scripts/zenith-breach-geo.js" } });
-  ctx.spawn("l0-zenith-frame", { feetPosition: { x, y: 0, z }, rotation: { yaw: 90 }, physics: "static", primitive: { kind: "scripted", script: "scripts/zenith-geo.js", params: { kind: "doorframe", depth: 0.56, h: 2.98, state: "stuck" } } });
+  ctx.spawn("l0-zenith-frame", { feetPosition: { x, y: 0, z }, rotation: { yaw: 90 }, physics: "static", primitive: { kind: "scripted", script: "scripts/zenith-geo.js", params: { kind: "bulkhead", depth: 0.56 } } });
   const A = ctx.spawn("l0-zenith-leafA", { feetPosition: { x, y: 0, z: z - 0.38 }, rotation: { yaw: 90 }, physics: "kinematic", primitive: { kind: "scripted", script: "scripts/zenith-geo.js", params: { kind: "doorleaf" } } });
   const B = ctx.spawn("l0-zenith-leafB", { feetPosition: { x, y: 0, z: z + 0.38 }, rotation: { yaw: 90 }, physics: "kinematic", primitive: { kind: "scripted", script: "scripts/zenith-geo.js", params: { kind: "doorleaf" } } });
   ctx.spawn("l0-zenith-door", { feetPosition: { x, y: 0, z }, behavior: "scripts/zenith-door.js", state: { leaves: [A, B], base: { x, y: 0, z }, ax: { x: 0, z: 1 }, mode: "auto", needs: "zenKey" } });
   ctx.spawn("l0-zenith", { feetPosition: { x: x + 0.12, y: 0, z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.25, height: 2.2, depth: 1.4 }, visible: false, behavior: "scripts/zenith-hatch.js" });
   ctx.spawn("main-from-l01", { feetPosition: { x: x - 1.6, y: 0.1, z }, rotation: { yaw: 90 } });
   // the B.N.T.G.'s claim on it: a placard, a red lamp that never goes off, tape across the approach, and the scout trigger that moves the quest on
-  ctx.spawn("l0-zenith-sign", { feetPosition: { x: x - 0.3, y: 2.66, z }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.5, height: 0.32, depth: 0.03 }, material: { color: "#1c1f22", metalness: 0.5, roughness: 0.5 },
+  ctx.spawn("l0-zenith-sign", { feetPosition: { x: x - 0.41, y: 2.42, z }, rotation: { yaw: 90 }, primitive: { kind: "box", width: 1.46, height: 0.34, depth: 0.02 }, material: { color: "#14171a", metalness: 0.3, roughness: 0.35 },
     ui: `<div face="front" width="1.5m" emissive style="text-align:center;font-family:Arial;line-height:1.05"><div style="color:#e8c24a;font:900 92px Arial">B.N.T.G. SEAL</div><div style="color:#d8d2c0;font:700 44px Arial">PROPERTY OF THE B.N.T.G. · KEYCARD ONLY</div></div>` });
-  ctx.spawn("l0-zb-lamp", { feetPosition: { x: x - 0.32, y: 2.85, z: z - 1.45 }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: "#300", emissive: "#ff2a1a", emissiveIntensity: 4 },
+  ctx.spawn("l0-zb-lamp", { feetPosition: { x: x - 0.32, y: 2.7, z: z - 1.45 }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: "#300", emissive: "#ff2a1a", emissiveIntensity: 4 },
     light: { kind: "point", color: "#ff3a22", intensity: 2.2, distance: 9 } });
   ctx.spawn("l0-zb-hum", { feetPosition: { x: x - 0.5, y: 1.2, z }, audio: { clip: "cdn/sfx-deep-industrial-machine-hum-behind-steel-hull-wind-howl-loop.mp3", loop: true, gain: 0.25, spatial: true, maxDistance: 18 } });
-  for (const [i, dz] of [-1, 1].entries()) ctx.spawn(`l0-zb-tape${i}`, { feetPosition: { x: x - 2.4, y: 0.95, z: z + dz * 0.9 }, rotation: { yaw: dz * 18 }, primitive: { kind: "box", width: 0.01, height: 0.07, depth: 2.2 }, material: { color: "#e8c22a", emissive: "#4a3a00", emissiveIntensity: 0.6 } });
+  ctx.spawn("l0-zb-posts", { feetPosition: { x: x - 2.4, y: 0, z }, rotation: { yaw: 90 }, physics: "static", primitive: { kind: "scripted", script: "scripts/zenith-geo.js", params: { kind: "stanchions", w: 2.6 } } });
   ctx.spawn("l0-zb-scout", { feetPosition: { x: x - 3, y: 0, z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 6, height: 2.6, depth: 7 }, visible: false, behavior: "scripts/zenith-scout.js" });
 }
 export function layZenithEntry(ctx) {
