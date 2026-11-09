@@ -193,7 +193,7 @@ pop buzz n=1 at=point().c(2.92) size=.9 col=hdr(1.6,1.4,.9) a=.35+.4*flick(.9,.5
         behavior: "scripts/moments.js",
         state: { kind: "peeling-wallpaper", name: "Torn Wallpaper Seam", verb: "Peel It Back", idx: i },
       });
-      ctx.spawn({ id: "flap", parent: id, feetPosition: { x: 0, y: 0, z: 0.01 }, pivot: [0.5, 0, 0.5], rotation: { pitch: -9 }, primitive: { kind: "plane", width: 0.62, height: 1.14 }, material: { texture: WALLPAPER, repeat: [0.62 / 1.2, 1.14 / 1.2], color: "oklch(0.86 0.07 88)", roughness: 0.9, side: "double" }, castShadow: false });
+      ctx.spawn({ id: "flap", parent: id, feetPosition: { x: 0, y: 0, z: 0.012 }, pivot: [0, 0.5, 0.5], rotation: { yaw: -14 }, primitive: { kind: "plane", width: 0.62, height: 1.14 }, material: { texture: WALLPAPER, repeat: [0.62 / 1.2, 1.14 / 1.2], color: "oklch(0.86 0.07 88)", roughness: 0.9, side: "double" }, castShadow: false });
     }, 4, 18);
   }
   // 9 · The Noclip Wall (Exit to Level 1, Wikidot Lore)

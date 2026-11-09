@@ -56,7 +56,7 @@ export const ears = {
       if (who.state.sanity > 5) who.state.sanity -= 2;
     } else if (s.kind === "peeling-wallpaper") { // no caption: the paper comes down and the wall says it
       const flap = ctx.getObject(ctx.self.id + "/flap"); s.open = !s.open; s.verb = s.open ? "Press It Back" : "Peel It Back";
-      if (flap) animate(ctx, flap, { "rotation.pitch": s.open ? -168 : -9 }, { duration: s.open ? 0.7 : 0.45, easing: s.open ? "easeOutBounce" : "easeOutCubic" });
+      if (flap) animate(ctx, flap, { "rotation.yaw": s.open ? -150 : -14 }, { duration: s.open ? 0.7 : 0.45, easing: s.open ? "easeOutBounce" : "easeOutCubic" });
       heard(ctx, { clip: s.open ? TEAR : G + "sfx-clothing-rustle-getting-up-from-seat.mp3", position: pos, volume: 0.8, maxDistance: 10 });
       if (s.open && s.idx === 1) { heard(ctx, { clip: BUZZ, position: pos, volume: 0.5, maxDistance: 8 }); ctx.emit("fx", { position: { ...pos, y: 1.3 }, script: SPARK }); }
     } else if (s.kind === "meg-board" && who) {

@@ -141,11 +141,11 @@ export function tick(ctx) {
       n++;
     }
   }
-  if (s.momentsV !== 6) {
+  if (s.momentsV !== 7) {
     if (s.momentsV) {
       for (const m of ctx.query({ tags: ["moment"] })) ctx.destroy(m.id);
     }
-    s.momentsV = 6;
+    s.momentsV = 7;
     s.moments = layMoments(ctx);
   }
   shift(ctx, s, now);
