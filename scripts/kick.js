@@ -55,10 +55,10 @@ export function onInput(ctx, input) {
   // an empty hip joint rides the camera; the leg hangs 1.02 m below it, so turning the hip swings the foot up into view
   // one piece on the camera, its top (the hip) the pivot: the leg hangs below the view and swings up and forward into it
   const hb = !l.modelUrl && HUMAN ? humanBody(l) : null, skin = hb?.materials?.Body_Skin?.color
-  const leg = s.tp ? null : ctx.spawn({ audience: 'local', scope: 'session', lifetime: 4, feetPosition: { attach: 'camera', x: 0.14, y: -1.15, depth: 0.5, fov: 55 }, pivot: 'top', rotation: { pitch: -8 },
+  const leg = s.tp ? null : ctx.spawn({ audience: 'local', scope: 'session', lifetime: 0.55, feetPosition: { attach: 'camera', x: 0.14, y: -1.15, depth: 0.5, fov: 55 }, pivot: 'top', rotation: { pitch: -8 },
     visibleInFirstPerson: true, castShadow: false,
     primitive: { kind: 'scripted', script: 'scripts/kick-leg-geo.js', params: { species: hb ? null : l.species, fur: skin || l.fur, botw: l.botw, bottom: l.bottom, shoes: l.shoes, shoec: l.shoec } } })
-  if (leg) animate(ctx, leg, { 'rotation.pitch': [-8, 60, 60, 60] }, { duration: 3.5, easing: 'easeOutCubic' })
+  if (leg) animate(ctx, leg, { 'rotation.pitch': [-8, 60, 55, -8] }, { duration: 0.5, easing: 'easeOutCubic' })
   ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 0.12 }, { audience: { player: ctx.self.id } })
   if (!o && kickFoe(ctx, s, f, p)) return
   if (!o && kickLoose(ctx, f, s)) return
