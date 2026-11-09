@@ -36,6 +36,15 @@ for o in [o for o in bpy.data.objects if o.type == "MESH"]:
     bnb = [set() for _ in range(n)]
     for (x, y), c in ecount.items():
         if c == 1: bnb[x].add(y); bnb[y].add(x)
+    # a solidified hem has no open edge: its rim is a crease loop. creases (faces meeting past 55 deg) count as hems too
+    fn = {}
+    for p in me.polygons:
+        vs = [g_of[i] for i in p.vertices]
+        for j in range(len(vs)):
+            x, y = vs[j], vs[(j + 1) % len(vs)]
+            if x != y: fn.setdefault((min(x, y), max(x, y)), []).append(p.normal.copy())
+    for (x, y), ns in fn.items():
+        if len(ns) == 2 and ns[0].dot(ns[1]) < 0.57: bnb[x].add(y); bnb[y].add(x)
     B = [g for g in range(n) if len(bnb[g]) == 2]; Bs = set(g for g in range(n) if bnb[g])
     p0 = [c.copy() for c in pos]
     for _ in range(P[0]):
