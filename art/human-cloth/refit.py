@@ -200,7 +200,7 @@ for o in bpy.data.objects:
             c = f.calc_center_median()
             if c.z > HEM + 0.02: continue
             x, y = c.x, c.y - cy; r = math.hypot(x, y)
-            if r < 0.8 * rowAt(c.z)[ak(x, y)]: inner.append(f)
+            if r < 0.9 * rowAt(c.z)[ak(x, y)]: inner.append(f)
         bmesh.ops.delete(bm, geom=inner, context="FACES_ONLY")
         for v in [v for v in bm.verts if not v.link_faces]: bm.verts.remove(v)
         # then every hem vertex sits ON the hung tube, in or out: folds and crumples have nowhere to be
