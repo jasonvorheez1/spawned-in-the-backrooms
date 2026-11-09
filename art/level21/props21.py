@@ -3,7 +3,7 @@
 import bpy, os, sys, math, random
 src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "props", "build.py")).read().split("# ------------------------------------------------------------ a maintenance locker")[0]
 exec(src)
-which = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else ["sandbags", "bunk", "cooler", "plunger", "saltines", "specimen"]
+which = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else ["sandbags", "bunk", "cooler", "plunger", "saltines", "specimen", "sorttable", "lbench"]
 def pillow(name, size, loc, m, rot=(0, 0, 0)):
     bpy.ops.mesh.primitive_uv_sphere_add(segments=14, ring_count=8, location=loc, rotation=rot); o = bpy.context.active_object; o.name = name; o.scale = (size[0] / 2, size[1] / 2, size[2] / 2)
     bpy.ops.object.transform_apply(scale=True, rotation=True)
@@ -84,5 +84,42 @@ def specimen():
         bpy.ops.mesh.primitive_uv_sphere_add(segments=8, ring_count=6, radius=0.03, location=(random.uniform(-0.09, 0.09), random.uniform(-0.09, 0.09), 0.95 + random.uniform(0, 0.12))); o = bpy.context.active_object; o.data.materials.append(berry); parts.append(o)
     parts.append(box("tape", (0.81, 0.61, 0.04), (0, 0, 0.75), tape, 0.0, 1))
     ob = join_export("l21_specimen", parts); preview("l21_specimen", ob); return ob
+
+def sorttable():
+    # Refrigerator Paradise sorting table: 3.6 x 1.7 m, top at 0.80, plank top on welded steel trestles, saltine cartons piled on it
+    reset(); random.seed(11); wood = mat("plank", (0.36, 0.24, 0.13), 0.82); worn = mat("plank_worn", (0.45, 0.32, 0.19), 0.85); steel = mat("steel", (0.2, 0.21, 0.2), 0.5, 0.7)
+    card = mat("carton", (0.82, 0.72, 0.45), 0.85); red = mat("brand", (0.7, 0.12, 0.1), 0.7); wax = mat("sleeve", (0.92, 0.88, 0.75), 0.5)
+    L, W, T = 3.6, 1.7, 0.8; parts = []
+    n = 6
+    for k in range(n):
+        pw = W / n; y = -W / 2 + pw * (k + 0.5)
+        parts.append(box("plank", (L + random.uniform(-0.03, 0.03), pw - 0.008, 0.045), (random.uniform(-0.01, 0.01), y, T - 0.0225), wood if k % 2 else worn, 0.006, 2))
+    for sx in (-1, 1):
+        x = sx * (L / 2 - 0.25)
+        parts.append(box("apron", (0.05, W - 0.1, 0.08), (x, 0, T - 0.085), steel, 0.004, 1))
+        for sy in (-1, 1): parts.append(box("leg", (0.045, 0.045, T - 0.045), (x, sy * (W / 2 - 0.1), (T - 0.045) / 2), steel, 0.005, 1)); parts.append(box("foot", (0.08, 0.12, 0.012), (x, sy * (W / 2 - 0.1), 0.006), steel, 0.003, 1))
+        parts.append(box("brace", (0.03, W - 0.2, 0.03), (x, 0, 0.18), steel, 0.003, 1))
+    parts.append(box("stretcher", (L - 0.5, 0.03, 0.03), (0, 0, 0.18), steel, 0.003, 1))
+    for k in range(14):
+        x = -1.5 + (k % 7) * 0.42 + random.uniform(-0.05, 0.05); y = -0.45 + (k // 7) * 0.62 + random.uniform(-0.08, 0.08)
+        h = 1 + (k % 3 == 0); a = random.uniform(-0.25, 0.25)
+        for j in range(h):
+            b = box("carton", (0.19, 0.11, 0.17), (x, y, T + 0.085 + j * 0.17), card, 0.006, 1); b.rotation_euler[2] = a; parts.append(b)
+            c = box("band", (0.192, 0.112, 0.04), (x, y, T + 0.12 + j * 0.17), red, 0.0, 1); c.rotation_euler[2] = a; parts.append(c)
+    for k in range(5): parts.append(box("sleeve", (0.055, 0.15, 0.055), (1.2 + k * 0.07, 0.55 - k * 0.05, T + 0.0275), wax, 0.02, 3))
+    for k in range(4):
+        b = box("carton", (0.19, 0.11, 0.17), (-1.0 + k * 0.6, -1.05 + random.uniform(-0.05, 0.05), 0.085), card, 0.006, 1); b.rotation_euler[2] = random.uniform(-0.6, 0.6); parts.append(b)
+    ob = join_export("l21_sorttable", parts); preview("l21_sorttable", ob); return ob
+
+def lbench():
+    # locker-room bench, 4.4 m: two hardwood boards on cast steel pedestals, bolted to the tile
+    reset(); random.seed(12); wood = mat("hardwood", (0.42, 0.27, 0.13), 0.6); steel = mat("pedestal", (0.16, 0.17, 0.17), 0.5, 0.75)
+    L = 4.4; parts = []
+    for k, y in enumerate((-0.12, 0.12)): parts.append(box("board", (L, 0.22, 0.045), (0, y, 0.4575), wood, 0.012, 3))
+    for x in (-1.8, 0, 1.8):
+        parts.append(box("cleat", (0.06, 0.46, 0.04), (x, 0, 0.415), steel, 0.006, 1))
+        parts.append(cyl("post", 0.03, 0.4, (x, 0, 0.2), steel, verts=16))
+        parts.append(cyl("flange", 0.09, 0.015, (x, 0, 0.0075), steel, verts=20))
+    ob = join_export("l21_lbench", parts); preview("l21_lbench", ob); return ob
 
 for w in which: globals()[w]()
