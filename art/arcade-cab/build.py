@@ -55,7 +55,7 @@ def slab(name, w, h, d, m, off=0.0, bev=0.01):
 bez = slab('Bezel', W - 0.07, L - 0.04, 0.03, 'bezel', 0.005, 0.012)
 # CRT: a bulged grid, UV 0..1
 bm = bmesh.new(); sw, sh = 0.56, 0.42; nx, ny = 16, 12; vs = []
-uv = bm.loops.layers.uv.new()
+uv = bm.loops.layers.uv.new('UVMap')
 for j in range(ny + 1):
     row = []
     for i in range(nx + 1):
@@ -71,7 +71,7 @@ crt = obj('Screen', bm, 'screen'); crt.rotation_euler = (-math.atan2(up.y, up.z)
 for p in crt.data.polygons: p.use_smooth = True
 # marquee: a backlit box front between (-0.06,1.47) and (-0.10,1.72), face UV 0..1
 mq0, mq1 = Vector((0, -0.065, 1.485)), Vector((0, -0.095, 1.705)); mu = (mq1 - mq0).normalized(); mn = Vector((0, -mu.z, mu.y)).normalized()
-bm = bmesh.new(); uvl = bm.loops.layers.uv.new(); mw = W - 0.06; mh = (mq1 - mq0).length
+bm = bmesh.new(); uvl = bm.loops.layers.uv.new('UVMap'); mw = W - 0.06; mh = (mq1 - mq0).length
 c = [bm.verts.new((x, 0, z)) for x, z in ((-mw / 2, -mh / 2), (mw / 2, -mh / 2), (mw / 2, mh / 2), (-mw / 2, mh / 2))]
 f = bm.faces.new(c)
 for l, t in zip(f.loops, ((0, 0), (1, 0), (1, 1), (0, 1))): l[uvl].uv = t
@@ -116,7 +116,15 @@ for o in S.objects:
     if o.type == 'MESH':
         bpy.context.view_layer.objects.active = o
         for m in list(o.modifiers): bpy.ops.object.modifier_apply(modifier=m.name)
-bpy.ops.object.select_all(action='SELECT'); bpy.context.view_layer.objects.active = shell; bpy.ops.object.join()
+for o in S.objects:
+    if o.type == 'MESH' and not o.data.uv_layers: o.data.uv_layers.new(name='UVMap')
+bpy.ops.object.select_all(action='SELECT'); bpy.context.view_layer.objects.active = crt; bpy.ops.object.join()
+J = bpy.context.view_layer.objects.active
+uvd = J.data.uv_layers.active.data
+for slot in ('screen', 'marquee'):
+    i = [m.name for m in J.data.materials].index(slot)
+    us = [uvd[l].uv[:] for p in J.data.polygons if p.material_index == i for l in p.loop_indices]
+    print('uvcheck', slot, round(min(u[0] for u in us), 2), round(max(u[0] for u in us), 2), round(min(u[1] for u in us), 2), round(max(u[1] for u in us), 2))
 bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
 dg = bpy.context.evaluated_depsgraph_get(); print('tris', sum(len(o.evaluated_get(dg).data.loop_triangles) for o in S.objects if o.type == 'MESH'))
 import os; os.makedirs('/workspace/arcade', exist_ok=True)
