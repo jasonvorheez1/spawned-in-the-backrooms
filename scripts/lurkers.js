@@ -290,6 +290,17 @@ export function update(ctx, dt) {
         m.pose = k;
       }
       m.watched = !!watched;
+      // stared at too long, it snaps: a scream, then it lurches at you in bursts even under your gaze
+      m.stare = watched && best ? (m.stare ?? 0) + 0.2 : Math.max(0, (m.stare ?? 0) - 0.4);
+      if (m.stare >= (L.lurkerStareSnap ?? 4.5) && now >= (m.frenzy ?? 0)) {
+        m.stare = 0; m.screamEnd = now + 900; m.frenzy = now + 900 + (L.lurkerSnapRush ?? 2.2) * 1000;
+        heard(ctx, { clip: SND("lurker-distorted-tearing-scream"), position: { x: pos.x, y: pos.y + 2, z: pos.z }, volume: 1, maxDistance: 40 });
+        ctx.emit("shake", { target: w.id, intensity: 0.15, duration: 0.8 });
+        if (watched) {
+          ctx.emit("screenShake", { intensity: 0.25, duration: 0.35 }, { audience: { player: watched.id } });
+          watched.state.sanity = Math.max(0, watched.state.sanity - L.lurkerSanity);
+        }
+      }
       if (watched) {
         watched.state.sanity = Math.max(0, watched.state.sanity - L.lurkerGaze * 0.2);
       }

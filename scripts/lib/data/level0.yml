@@ -63,6 +63,8 @@ chaseMemory: 16    # s a hunter keeps after losing sight, heading where you were
 leadSeconds: 1.6   # how far ahead along your path it guesses
 lurkerSight: 28
 lurkerWatchCos: 0.5  # how squarely you must face one to hold it still
+lurkerStareSnap: 4.5  # my pick: seconds of staring before it snaps and rushes you anyway
+lurkerSnapRush: 2.2   # my pick: seconds it rushes after snapping, your gaze can't stop it
 lurkerGaze: 1.5      # sanity lost per second while watching one
 lurkerBite: 12
 lurkerSanity: 8
