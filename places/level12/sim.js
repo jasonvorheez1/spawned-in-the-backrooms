@@ -93,6 +93,11 @@ export function tick(ctx) {
       const sat = (r.sat ?? 0) + 1; s.r12 = { ...r, sat };
       if (sat >= R.sit) heard(ctx, { clip: "cdn/moodboard-realistic-gritty/sfx-door-deadbolt-lock-single-soft-click.mp3", position: { x: 0, y: 1, z: -3 }, volume: 0.7, maxDistance: 10 }); // the door clicks: that's the cue to try it
     } else if (!seated && r.sat && r.sat < R.sit) s.r12 = { ...r, sat: 0 }; // got up too early: the quarter hour starts over
+    if (r.back) { // the hour's window: a soft chime when it opens, the door's knob glows while it's open
+      const t = (ctx.now() - r.back) / 1000, open = Math.abs(t - R.hour) <= R.tol, k = "w12" + p.id;
+      if (open && !ctx.session[k]) { ctx.session[k] = true; ctx.emit("playSound", { clip: "cdn/moodboard-realistic-gritty/sfx-single-soft-clear-bell-chime-in-empty-room.mp3", volume: 0.6 }, { audience: { player: p.id } }); ctx.emit("highlightSet", { target: "l12-door", color: "#ffd9a0", style: "glow", duration: R.tol * 2, intensity: 0.8 }, { audience: { player: p.id } }); }
+      if (!open && ctx.session[k]) ctx.session[k] = false;
+    }
     const f = p.feetPosition; const d = Math.hypot(f.x, f.z);
     if (d > R.farDrain && (s.sanity ?? 100) > 15) s.sanity -= 0.25; // the memory fog, worse the farther from the table
   }

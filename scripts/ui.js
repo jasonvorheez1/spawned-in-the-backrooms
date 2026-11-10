@@ -6,6 +6,7 @@ export { m3dPvDown, m3dPvWheel, m3dPvReset, m3dPvTool, m3dPvDraft, m3dPvEdit, m3
 // Clean, minimal, and atmospheric.
 // Designed with quiet restraint: unobstructed sightlines, crisp typography, and non-intrusive status readouts.
 import L from './lib/data/level0.yml'
+import R12 from './lib/data/level12.yml'
 import W from './lib/weapons.js'
 import { ZONE_NAMES } from './lib/maze.js'
 import { questMark, yawTo } from './lib/quest-mark.js'
@@ -351,7 +352,23 @@ function unlock12(ctx, player) { // shows once as Harris's tape ends: Level 12's
   const wait = Math.max(0, (at - ctx.now()) / 1000).toFixed(1)
   return `<style>@keyframes u12{0%{opacity:0;transform:translateY(8px)}8%{opacity:1;transform:none}85%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="u12-${Math.round(at)}" style="position:fixed;left:0;right:0;top:22%;display:flex;justify-content:center;pointer-events:none;opacity:0;animation:u12 7s ${wait}s forwards"><div style="background:rgba(10,8,4,.88);border:2px solid #ffb43c;box-shadow:4px 4px 0 #000;padding:10px 22px;text-align:center;font-family:monospace;color:#ffb43c;letter-spacing:.12em"><div style="font-size:13px;opacity:.75">NEW WAY THROUGH</div><div style="font-size:30px;font-weight:900;margin:2px 0">LEVEL 12 UNLOCKED</div><div style="font-size:13px;color:#ffe2a8">walk into the lit window in the alley</div></div></div>`
 }
-export default function render(ctx, player) { return renderHud(ctx, player) + unlock12(ctx, player) + lagscopeOverlay(ctx, player) } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
+function ritual12(ctx, player) { // Level 12: Harris's ritual as a checklist that ticks off as it's done
+  if (player.place !== 'level12') return ""
+  const r = player.state.r12 ?? {}, now = ctx.now(), sat = r.sat ?? 0
+  const satDone = sat >= R12.sit, back = r.back ? (now - r.back) / 1000 : null
+  const min = back == null ? 0 : Math.floor(back / R12.hour * 60), early = back != null && back < R12.hour - R12.tol, open = back != null && Math.abs(back - R12.hour) <= R12.tol, late = back != null && back > R12.hour + R12.tol
+  const row = (done, live, text, sub = "") => `<div style="display:flex;gap:8px;align-items:baseline;opacity:${done ? .45 : live ? 1 : .6}"><span style="width:14px;color:${done ? '#4ade80' : live ? '#ffd9a0' : '#a8924b'}">${done ? '✓' : live ? '▸' : '·'}</span><span style="${done ? 'text-decoration:line-through' : ''}">${text}${sub ? `<div style="font-size:11px;color:#d4b96a;margin-top:2px">${sub}</div>` : ''}</span></div>`
+  const bar = (f) => `<div style="height:4px;background:rgba(255,255,255,.12);margin-top:4px;width:180px"><div style="height:100%;width:${Math.round(Math.min(1, f) * 100)}%;background:#ffd9a0;transition:width 1s linear"></div></div>`
+  const rows = [
+    row(satDone, !satDone, 'Sit in the chair a quarter hour', !satDone ? (sat ? `don't get up ${bar(sat / R12.sit)}` : 'the clock above the door keeps time') : ''),
+    row(!!r.tried, satDone && !r.tried, 'Try the door, even though it\'s locked'),
+    row(!!r.back, !!r.tried && !r.back, 'Leave through a copy door out in the white'),
+    row(false, !!r.back && !late, 'Wait exactly one hour', back == null ? '' : late ? '<span style="color:#ff8a6a">you missed it. try the door to start over</span>' : open ? '<span style="color:#4ade80">NOW</span>' : `minute ${min} of 60 ${bar(back / R12.hour)}`),
+    row(false, open, 'Try the door again'),
+  ].join('')
+  return `<div style="position:fixed;left:24px;top:96px;pointer-events:none;font-family:inherit;font-size:13px;color:#fffde8;background:rgba(22,20,14,.78);box-shadow:0 0 0 2px #5a503d;padding:10px 14px;display:flex;flex-direction:column;gap:6px;min-width:250px;text-shadow:1px 1px #16140e"><div style="font-size:11px;letter-spacing:.14em;color:#d4b96a">HARRIS'S RITUAL</div>${rows}</div>`
+}
+export default function render(ctx, player) { return renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + lagscopeOverlay(ctx, player) } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
 function renderHud(ctx, player) {
   const s = player.state ?? {}
   const quick = !s.building && screen(s,player.place)==='play' && Object.keys(s.quickSlots??{}).length ? quickItems(s) : []
