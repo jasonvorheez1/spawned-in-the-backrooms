@@ -8,6 +8,7 @@ import HAIR from './data/hair.yml'
 import WARDROBE from './data/wardrobe.yml'
 import SPLIT from './data/wardrobe-split.yml'
 import HAIR_SLOTS from './data/hair-slots.yml'
+import WARD_SLOTS from './data/ward-slots.yml'
 // hair: its own GLB skinned whole to the Head bone (scripts/lib/data/hair.yml), tinted by the look's hairc; a mask hides it
 export const HAIR_ID = 'critter-hair'
 const HAIR_HATCUT = { 14: 0, 15: 1, 16: 2 }
@@ -107,7 +108,7 @@ export function wardChildren(l, local) {
   const r = splitOf(l); if (!r) return []
   const b = humanBody(l), morph = humanMorph(l), out = []
   const clothMats = Object.fromEntries(Object.entries(b.materials || {}).filter(([k]) => k.startsWith('cloth_'))) // a garment file carries only its cloth_ slots: skin and fur keys there matched nothing
-  for (const [n, v] of Object.entries(b.parts)) if (n.startsWith('Ward_') && v.visible && r.parts[n]) out.push({ id: wardKey(n), attachment: { skin: true }, model: { id: r.parts[n], forward: '+z', materials: clothMats }, morph, ...(local ? { audience: 'local' } : {}) })
+  for (const [n, v] of Object.entries(b.parts)) if (n.startsWith('Ward_') && v.visible && r.parts[n]) out.push({ id: wardKey(n), attachment: { skin: true }, model: { id: r.parts[n], forward: '+z', materials: WARD_SLOTS?.[r.parts[n]] ? Object.fromEntries(Object.entries(clothMats).filter(([k]) => WARD_SLOTS[r.parts[n]].includes(k))) : clothMats }, morph, ...(local ? { audience: 'local' } : {}) })
   return out
 }
 export function seatWardrobe(ctx, o, l) {
