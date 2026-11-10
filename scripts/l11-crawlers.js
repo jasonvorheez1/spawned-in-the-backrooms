@@ -58,11 +58,12 @@ export function update(ctx, dt) {
     const f = ctx.place.objects[id]; if (!f) continue;
     const K = D.kinds[f.state.kind], m = (mem[id] ??= {}), pos = f.feetPosition;
     if (f.state.dead || f.state.hp <= 0) { // player.js marks the kill; we lay it down and clear it
-      if (!m.died) { m.died = now; st.deadAt = { ...st.deadAt, [i]: now }; f.velocity = { x: 0, y: 0, z: 0 }; f.audio = null;
+      if (!m.died && f.state.diedAt) m.died = f.state.diedAt; // a fresh machine remembers the corpse, no second death cry
+      if (!m.died) { m.died = now; f.state.diedAt = now; st.deadAt = { ...st.deadAt, [i]: now }; f.velocity = { x: 0, y: 0, z: 0 }; f.audio = null;
         if (f.state.kind === "hound") f.anim.main = { clip: "death", loop: false, clampWhenFinished: true, weight: 1 };
         else if (BOTS.has(f.state.kind)) { m.talkUntil = 0; speak(ctx, f, m, "die", now); ctx.emit("fx", { position: { x: pos.x, y: pos.y + 1.2, z: pos.z }, script: BOLT }); f.anim.main = null; f.anim.aim = null; f.anim.fire = null; f.state.kg = 160; deathRag(f); }
         else { ctx.emit("playSound", { clip: SND("wet-bone-crunch-and-limp-limbs-collapsing"), position: pos, volume: 0.9 }); f.anim.main = null; f.state.kg = 70; deathRag(f); } }
-      if (now - m.died > (f.visible === false ? 300 : BOTS.has(f.state.kind) ? 60000 : 20000)) delete ctx.place.objects[id];
+      if (now - m.died > (f.visible === false ? 300 : BOTS.has(f.state.kind) ? 15000 : 20000)) delete ctx.place.objects[id];
       continue;
     }
     if (knocked(ctx, f, now, dt)) { m.limbs = m.sclip = m.clip = null; continue; }
