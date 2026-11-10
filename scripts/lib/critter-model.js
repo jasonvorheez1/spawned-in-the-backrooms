@@ -312,8 +312,7 @@ export function bodyModel(l) {
   const trousers = bottomRow && ['pants', 'pjpants', 'overalls', 'jeans'].includes(bottomRow.kind), bottom = Boolean(bottomRow) || topRow?.kind === 'dress'
   const openFront = ['jacket', 'blazer', 'vest'].includes(topRow?.kind) || topRow?.id === 'hotelrobe'
   const longSkirt = bottomRow?.kind === 'longskirt' || topRow?.id === 'gown'
-  const skin = { torso: !covered, torso_front: !covered || openFront, torso_upper_front: !covered || openFront || topRow?.kind === 'tank', // a tank's deep neckline shows the chest under it: hiding it left a void and the neck region's saw edge in the V (shelly Nov 10: 'my breasts are cracked')
-    _x:0, hips: !bottom, upperarms: !sleeves, forearms: !longSleeves, hands: true, neck: true, thigh_hi: !bottom, thigh_low: !trousers && !longSkirt, shin_hi: !trousers && !longSkirt, shin_low: !trousers && !longSkirt && shoeRow?.kind !== 'boots', feet: !shoeRow }
+  const skin = { torso: !covered, torso_front: !covered || openFront, torso_upper_front: !covered || openFront || topRow?.kind === 'tank', // a tank's deep neckline shows the chest under it: hiding it left a void and the neck region's saw edge in the V (shelly Nov 10: 'my breasts are cracked') hips: !bottom, upperarms: !sleeves, forearms: !longSleeves, hands: true, neck: true, thigh_hi: !bottom, thigh_low: !trousers && !longSkirt, shin_hi: !trousers && !longSkirt, shin_low: !trousers && !longSkirt && shoeRow?.kind !== 'boots', feet: !shoeRow }
   for (const [region, visible] of Object.entries(skin)) parts['Skin_' + region] = { visible }
   for (const [slot, pre] of Object.entries(M.slots)) {
     const row = rowOf(slot, l[slot], l[CL.colourKey[slot]])
