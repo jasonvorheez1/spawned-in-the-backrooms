@@ -76,6 +76,8 @@ parts:
 - Ward_heels
 - Ward_beret
 legacyHuman:
+  m_rig59: /cdn/value.676a7377bc2fe94502419eb2cab00a5bcf96bd39cf6a09f722970103b2d4fb6b.glb
+  f_rig59: /cdn/value.6ac26ce6cfb58e129717047c207f7dba71b604eb915760af7e3b597a091404d9.glb
   m_sw30: /cdn/value.782c66141cd458981ef1d9ed690ac6340e2474b8d2a7835f2ac425bf481d7e76.glb
   f_sw30: /cdn/value.de9de999de60dd53e3a0436b61eaa396585817ed8946d6c56a94e03e9818d595.glb
   m: /cdn/value.2062fd6ff20cebe8843a20cdc10e446ffe08df184d1c4f42b4e4ada4f82464b7.glb
@@ -90,6 +92,8 @@ legacyHuman:
   m_sw28: /cdn/value.1627ae4ddde78fc6953105799956116d9ea9dbaa8a8df28ea7346c8830928ae6.glb
   f_sw28: /cdn/value.b9653c9c28376fd8fab3f02b1cf42e3584cd477be702c2d015f1b1e2d573e08a.glb
 legacyFur:
+  m_rig59: /cdn/value.5e4ed0ba1c6446e180d1b8ef9af4d5f64755f4d355fe58514abe6bbeb93ac8c2.glb
+  f_rig59: /cdn/value.1f11cf8da23ff31afae5780810d368c734a9ee749282a9d2c2b03496e2ec4c80.glb
   m_predandy: /cdn/value.9cf50c5021c4443970c1fe193d6917865363c1be778845f8870cda68c2607fd8.glb  # the bodies before the Dandy key (Nov 10)
   f_predandy: /cdn/value.deabd82b6e4ad3959a0713f9e21a48658b70eb954ae75649ebdc0a08efb6a97d.glb
   m_dandy1: /cdn/value.1ea0f00936d3fd7f60854f578e894d7ed0d441795635306855045f09b605403c.glb  # the first Dandy bodies, whose neck term widened every hat (Nov 10)

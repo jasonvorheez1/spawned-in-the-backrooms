@@ -178,3 +178,6 @@ Optional, never forced. Story is Savi's draft. Your HALOGEN keeps flashing an ow
 - 2026-11-10 (Shelly): Level 0 keeps its entities (Smilers and the rest) on purpose, to keep it interesting, though the wiki's Level 0 has none. Lore text should not remove them.
 - 2026-11-10 (Shelly): the Snackrooms' sliding glass doors to a Level 11 restaurant match the wiki (Level 6.1's safest exit, on its perimeter); keep them.
 - 2026-11-10 (Shelly): keep the survivor story that Banks blasted the Base Alef vault and tore rifts in Level 2.1, a liberty beyond the wiki's audio logs.
+
+- 2026-11-10 (shelly, bodies and rig): round the shoulder caps, remove neck influence from the upper-arm transition, blend elbows/knees, and share skin seam coordinates/weights/normals. Apply the same warp to fitted clothes; retain bone names, animation axes and face/body targets; move human elbow pivots 20 mm along the T-pose arm and rebuild the upper-arm/forearm profile. Keep chest and pelvis skin behind clothing openings.
+
