@@ -1,0 +1,21 @@
+# The Test Range (Shelly, Nov 10: "make a new test map: physics testing, gun and melee testing, interactables, crafting, and a test quest"
+# + "consumables too. basically every gun and melee is there and i use it for testing"). Built by places/testlab/sim.js.
+mode: 3d
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 0, y: 0.05, z: 20 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -20 }
+atmosphere:
+  look: { script: scripts/look-photo.js }
+  clouds: { enabled: false }
+  fog: { kind: linear, near: 40, far: 120, color: oklch(0.3 0.01 250) }
+  moon: { enabled: false, intensity: 0 }
+  sky: { kind: color, color: oklch(0.12 0.01 250) }
+  stars: { enabled: false }
+  timeOfDay: 12
+  wind: { direction: 0, speed: 0 }
+  ambient: { light: { color: oklch(0.9 0.01 250), intensity: 0.55 } }
+  hemisphere: { skyColor: oklch(0.92 0.01 250), groundColor: oklch(0.45 0.01 250), intensity: 0.45 }
+acoustics: { reverb: 0.55 }
