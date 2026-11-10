@@ -113,14 +113,23 @@ export function tick(ctx) {
     for (const sz of [-1, 1]) for (let x = -3; x <= 2; x += 1.6) put("meg-t-bags-" + n++, "bags", x, sz * 10.5, 1.6, 1.0, 90)
     for (const sz of [-1, 1]) for (let z = 2.8; z <= 8.5; z += 1.6) put("meg-t-bags-" + n++, "bags", 15.4, sz * z, 1.6, 1.0, 0)
   }
-  if (s.l1Tripo !== 2) { s.l1Tripo = 2; // the halls' drums and box pallets as real models, each a loose thing you can hit, kick, grab and break (Shelly: less blocky)
+  if (s.l1Tripo !== 3) { s.l1Tripo = 3; // the halls' drums and box pallets as real models, each a loose thing you can hit, kick, grab and break (Shelly: less blocky)
     const DRUM = "/cdn/value.de68d3453156f6d0341dc0143da17f0a5f60f2da731a9b018363a51fcf233712.glb", PAL = "/cdn/value.52adc0a974c9920d51033154da8dae242fd9a7271b1190ad5a9d3a0f0b9f6c1f.glb";
     for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id]; if (o.primitive?.script === "scripts/level1-props-geo.js") o.primitive = { ...o.primitive, params: { tripo: true } }; }
     const drum = (id, x, z, yaw) => ctx.spawn(id, { tags: ["l1prop"], feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: DRUM }, layout: { box: { min: { x: -0.3, y: 0, z: -0.3 }, max: { x: 0.3, y: 0.9, z: 0.3 } } }, physics: { body: "static", collider: "cylinder" }, visibleRange: { max: 45 }, state: { name: "Oil Drum", loose: "metal", mat: "sheet_steel" } });
-    const pal = (id, x, z, yaw) => { // a stack of separate cartons (Shelly: "the boxes in this model should be separated"): each its own box you grab, kick or open
-      const n = 2 + Math.floor(hash(x, z, 7) * 3); let y = 0;
-      for (let i = 0; i < n; i++) { const w = 0.62 - i * 0.08, d = 0.5 - i * 0.05, h = 0.42 - i * 0.05, ox = (hash(x, i, 3) - 0.5) * 0.12, oz = (hash(z, i, 5) - 0.5) * 0.12;
-        ctx.spawn(id + "-b" + i, { tags: ["l1prop", "container", "breakable"], feetPosition: { x: x + ox, y, z: z + oz }, rotation: { yaw: yaw + (hash(x, z, i) - 0.5) * 24 }, primitive: { kind: "scripted", script: "scripts/l1-stock-geo.js", params: { kind: "carton", w, d, h } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 }, state: { name: "Cardboard Box", loose: "wood", mat: "wood", hp: 20, maxHp: 20, items: "scrap_wood" } }); y += h; }
+    const BOXSTACK = [ // the Tripo pallet-of-boxes cut into its pallet and three boxes in Blender (art/l1-boxstack/build.py): [model, y, width, height, depth]
+      ["/cdn/value.55df1d3983bde51837c396491fff9015cc09598507749cb199fa144a6b53fd9b.glb", 0, 0.954, 0.261, 1.36],
+      ["/cdn/value.bd7c0cbac7eefbb5c1584bd63005a7c39bfacfb2beb3d4e60a47252820cf552e.glb", 0.165, 0.677, 0.461, 0.991],
+      ["/cdn/value.b38dc81280c35d3f87435921844ff0ee4594c8f1609dc3b020faf26416d137c6.glb", 0.612, 0.552, 0.421, 0.766],
+      ["/cdn/value.d4da0db276e9457c56a83cce2ef518cccc8065d0f8e158c7c82f747f45c97b2f.glb", 0.982, 0.467, 0.318, 0.554]];
+    const pal = (id, x, z, yaw) => { // separate pieces (Shelly: "the boxes in this model should be separated"): the pallet, then each box its own thing you open, kick, grab or break
+      for (const k of ["", "-p", "-b0", "-b1", "-b2", "-b3"]) if (ctx.place.objects[id + k]) delete ctx.place.objects[id + k];
+      const n = 2 + Math.floor(hash(x, z, 7) * 2.99); // 1 to 3 boxes still on it
+      BOXSTACK.slice(0, n + 1).forEach(([m, y, w, h, d], i) => {
+        const box = i > 0, j = box ? (hash(x, z, 30 + i) - 0.5) : 0;
+        ctx.spawn(id + (box ? "-b" + (i - 1) : "-p"), { tags: box ? ["l1prop", "container", "breakable"] : ["l1prop"], feetPosition: { x: x + j * 0.08, y, z: z - j * 0.06 }, rotation: { yaw: yaw + j * 14 }, model: { id: m }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" }, visibleRange: { max: 45 },
+          state: box ? { name: "Cardboard Box", loose: "wood", mat: "wood", hp: 20, maxHp: 20, items: "scrap_wood" } : { name: "Pallet", loose: "wood", mat: "wood", items: "scrap_wood" } });
+      });
     };
     for (let cx = 0; cx < N; cx++) for (let cz = 0; cz < N; cz++) {
       const zone = zoneOf(cx, cz); if (zone !== "halls" && zone !== "storage") continue;
