@@ -135,7 +135,7 @@ export function tick(ctx) {
   if (!s.officeV) { s.officeV = 1; layOffice(ctx); }
   if (s.kitV !== 1) { s.kitV = 1; // rooms laid before the real models: swap the boxes in place by tag
     const all = (t) => ctx.query({ tags: [t], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
-    const swap = (o, k, extra) => { const h = ctx.place.objects[o.id]; if (!h) return; h.primitive = null; h.material = null; Object.assign(h, KITROW[k], extra ?? {}); };
+    const swap = (o, k, extra) => { const h = ctx.place.objects[o.id]; if (!h) return; h.primitive = null; h.material = null; const { children: kids, ...rest } = extra ?? {}; if (kids) for (const c of [...(h.children ?? [])]) if (!kids.some((k2) => k2.light && c.light)) ctx.destroy(c.id); Object.assign(h, KITROW[k], rest); };
     for (const o of all("l4-fountain")) swap(o, "fountain", { children: [] });
     for (const o of all("l4-vend")) { const h = ctx.place.objects[o.id]; swap(o, "vend", { children: (h?.children ?? []).filter((c) => c.light).map((c) => ({ feetPosition: c.feetPosition, light: c.light })) }); }
     for (const o of all("l4-phone")) { swap(o, "phone", { children: [], rotation: { yaw: o.feetPosition.z - Math.round(o.feetPosition.z) > 0 ? 180 : 0 } }); }
