@@ -53,7 +53,7 @@ export function layHouse(ctx, FY) {
   sp("hearth", {
     feetPosition: { x: 2.82, y: FY, z: 0.35 },
     rotation: { yaw: -90 },
-    model: "/cdn/value.4c34d29e6734a84a27729cbb266a8336c429b583b1dcfda07c30d6fab7660ebd.glb", layout: { box: { min: { x: -0.84, y: 0, z: -0.28 }, max: { x: 0.84, y: 1.9, z: 0.28 } } },
+    model: "/cdn/value.4c34d29e6734a84a27729cbb266a8336c429b583b1dcfda07c30d6fab7660ebd.glb", layout: { box: { min: { x: -0.95, y: 0, z: -0.6 }, max: { x: 0.95, y: 1.9, z: 0.6 } } },
     physics: { body: "static", collider: "box" },
   });
 
