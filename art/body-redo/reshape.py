@@ -1,12 +1,14 @@
 # body redo (Shelly Nov 10 #177511): your smooth base, thickened around its own bones: no bone moves, no new geometry
-import bpy, sys, json
+import bpy, sys, json, math
 from mathutils import Vector
 args = sys.argv[sys.argv.index('--')+1:]; src, dst, sex = args[0], args[1], args[2]
 # k = cross-section scale along each bone, [at head, at tail]; picked against the refs (Anime Girl / Miyu, Zhongli)
 K = {
  'f': {'LeftShoulder': (1.03, 1.07), 'LeftUpLeg': (1.14, 1.13), 'LeftLeg': (1.11, 1.0), 'Hips': (1.06, 1.06), 'Spine': (1.04, 1.0), 'LeftArm': (1.07, 1.05), 'LeftForeArm': (1.05, 1.0)},
- 'm': {'LeftUpLeg': (1.18, 1.12), 'LeftLeg': (1.14, 1.04), 'Hips': (1.06, 1.08), 'Spine': (1.02, 1.06), 'Spine1': (1.08, 1.16), 'Spine2': (1.2, 1.2), 'LeftShoulder': (1.12, 1.18), 'LeftArm': (1.2, 1.12), 'LeftForeArm': (1.14, 1.06), 'Neck': (1.12, 1.05)},
+ 'm': {'LeftUpLeg': (1.18, 1.12), 'LeftLeg': (1.14, 1.04), 'Hips': (1.06, 1.08), 'Spine': (1.02, 1.06), 'Spine1': (1.08, 1.16), 'Spine2': (1.2, 1.2), 'LeftShoulder': (1.12, 1.18), 'LeftArm': (1.3, 1.14), 'LeftForeArm': (1.18, 1.08), 'Neck': (1.12, 1.05)},
 }[sex]
+# Shelly #178124 + "still look off": no deltoid and a tall trapezius ramp read as a coat hanger. a cap on the arm, the ramp lowered
+DELT, TRAP = {'f': 0.12, 'm': 0.26}[sex], {'f': 0.006, 'm': 0.018}[sex]
 for n in list(K):
     if n.startswith('Left'): K['Right' + n[4:]] = K[n]
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -18,6 +20,7 @@ def disp(p, b):
     if L < 1e-6: return Vector()
     u = ax / L; s = max(0.0, min(1.0, (p - h).dot(u) / L))
     k0, k1 = K[b]; k = k0 + (k1 - k0) * s
+    if b.endswith('Arm') and not b.endswith('ForeArm'): k += DELT * math.exp(-((s - 0.16) / 0.14) ** 2)  # the deltoid: a round cap just under the joint, not a tube
     foot = h + u * (s * L); r = p - foot
     if b in ('Hips', 'Spine', 'Spine1', 'Spine2', 'Neck'): r.z = 0; r.y *= 0.35  # trunk: widen across, barely deeper (no belly), never up
     return r * (k - 1)
@@ -40,6 +43,9 @@ for o in objs:
             if g.weight <= 0: continue
             if nm in K: d += disp(p, nm) * g.weight
             if SHIFT: d.x += (1 if p.x > 0 else -1) * SHIFT * arm_w(nm, g.weight)
+            if nm in ('LeftShoulder', 'RightShoulder'):
+                h, t = bones[nm]
+                if p.z > h.z: d.z -= TRAP * g.weight * min(1, (p.z - h.z) / 0.04)  # the top of the shoulder sits lower, the neck reads longer
         sw = sum(g.weight for g in v.groups if (gi.get(g.group) or '').endswith(('Shoulder', 'Arm', 'ForeArm')))
         k = key(p); KP[k] = p; KS[k] = max(KS.get(k, 0), sw); ks.append(k); KD[k] = KD.get(k, Vector()) + d; KN[k] = KN.get(k, 0) + 1; KADJ.setdefault(k, set())
     for e in o.data.edges:
