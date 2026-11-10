@@ -4,7 +4,7 @@ visible skin so nothing pokes through. Shape keys get the same delta. Usage: -- 
 import bpy, sys, bmesh
 from mathutils.bvhtree import BVHTree
 a = sys.argv[sys.argv.index('--') + 1:]; body, garm, out = a[:3]
-Z0 = float(a[3]) if len(a) > 3 else 1.06; IT = int(a[4]) if len(a) > 4 else 25; GAP = 0.0045
+Z0 = float(a[3]) if len(a) > 3 else 1.06; IT = int(a[4]) if len(a) > 4 else 25; GAP = float(__import__("os").environ.get("GAP", "0.0045"))
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=body)
 dg = bpy.context.evaluated_depsgraph_get()
