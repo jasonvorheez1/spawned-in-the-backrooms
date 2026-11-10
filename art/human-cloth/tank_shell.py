@@ -47,6 +47,19 @@ def necklim(x, y):  # a U scoop, deep in front, shallow at the back
     depth = (0.025 + 0.05 * front) * s * NECKD
     return min(capz, neckz + 0.01 * s) - depth * (1 - u * u) ** 0.5
 me = body.data
+if os.environ.get('DBG'):
+    sy0=sy
+    for zz in [1.47,1.45,1.43,1.41,1.39,1.37,1.35,1.33,1.31,1.29,1.27,1.25]:
+        row=''
+        for i in range(0,16):
+            x=i*0.01
+            c=[p for p in _P if abs(p.x-x)<0.005 and abs(p.z-zz)<0.01 and p.y>sy0+0.02]
+            if not c: row+=' '; continue
+            p=max(c,key=lambda p:p.y)
+            v=min(p.z-hem, armlim(p.z)-abs(p.x), necklim(p.x,p.y)-p.z)
+            row+='#' if v>0 else ('a' if armlim(p.z)-abs(p.x)<=0 else 'n')
+        print('ROW',zz,row)
+    print('neckz',neckz,'sy',sy,'NW',NW*s,'shz',shz,'xstrap',xstrap)
 M = body.matrix_world.copy(); Mi = M.inverted(); R = Mi.to_3x3()
 W = lambda co: M @ co   # the tests run in world space (glTF bodies sit under a rotated armature)
 bm = bmesh.new(); bm.from_mesh(me)
