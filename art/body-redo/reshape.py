@@ -27,8 +27,8 @@ ARMB = lambda nm: nm and any(nm.startswith(sd + k) for sd in ('Left', 'Right') f
 def arm_w(nm, w): return w if ARMB(nm) else (0.5 * w if nm in ('LeftShoulder', 'RightShoulder') else 0)
 # one move field over the welded surface: split verts (uv seams, part borders) share one key, so nothing tears (Nov 10)
 objs = [o for o in bpy.data.objects if o.type == 'MESH' and o.vertex_groups]
-key = lambda p: (round(p.x, 4), round(p.y, 4), round(p.z, 4))
-KD, KN, KADJ, per = {}, {}, {}, []
+key = lambda p: (round(p.x, 3), round(p.y, 3), round(p.z, 3))  # 1 mm weld
+KD, KN, KADJ, per, KP, KS = {}, {}, {}, [], {}, {}
 for o in objs:
     gi = {g.index: g.name for g in o.vertex_groups}; mw = o.matrix_world; ks = []
     for v in o.data.vertices:
@@ -38,13 +38,19 @@ for o in objs:
             if g.weight <= 0: continue
             if nm in K: d += disp(p, nm) * g.weight
             if SHIFT: d.x += (1 if p.x > 0 else -1) * SHIFT * arm_w(nm, g.weight)
-        k = key(p); ks.append(k); KD[k] = KD.get(k, Vector()) + d; KN[k] = KN.get(k, 0) + 1; KADJ.setdefault(k, set())
+        sw = sum(g.weight for g in v.groups if (gi.get(g.group) or '').endswith(('Shoulder', 'Arm', 'ForeArm')) or gi.get(g.group) == 'Spine2')
+        k = key(p); KP[k] = p; KS[k] = max(KS.get(k, 0), sw); ks.append(k); KD[k] = KD.get(k, Vector()) + d; KN[k] = KN.get(k, 0) + 1; KADJ.setdefault(k, set())
     for e in o.data.edges:
         i, j = e.vertices; KADJ[ks[i]].add(ks[j]); KADJ[ks[j]].add(ks[i])
     per.append((o, ks))
 D = {k: KD[k] / KN[k] for k in KD}
 for _ in range(10):
     D = {k: D[k] * 0.4 + sum((D[j] for j in KADJ[k]), Vector()) * (0.6 / len(KADJ[k])) if KADJ[k] else D[k] for k in D}
+# iron the shoulder/arm surface: the base's facets and the armpit pinch read blocky in T-pose (Shelly #177961, Nov 10)
+P = {k: KP[k] + D[k] for k in D}
+for _ in range(6):
+    P = {k: (P[k] * (1 - 0.5 * min(1, KS[k])) + (sum((P[j] for j in KADJ[k]), Vector()) / len(KADJ[k])) * 0.5 * min(1, KS[k])) if KADJ[k] and KS[k] > 0.05 else P[k] for k in P}
+D = {k: P[k] - KP[k] for k in P}
 n = 0
 for o, ks in per:
     inv = o.matrix_world.inverted().to_3x3()
