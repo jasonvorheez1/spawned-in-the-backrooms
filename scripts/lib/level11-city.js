@@ -161,7 +161,16 @@ pop steam rate=14 on=disc(.35) life=1.6..2.6 v=up(.9..1.5)+sdir()*.12 size=.18..
   for (const [i, [x, z]] of [[3.4, 32], [-3.6, -8], [2.4, 66], [-3, -60]].entries()) { cyl(`l11-manhole-${i}`, x, 0.06, z, 0.5, 0.5, 0.04, { color: "oklch(0.2 0.01 250)", metalness: 0.7, roughness: 0.5 }, { physics: undefined }); sp(`l11-manhole-steam-${i}`, { feetPosition: { x, y: 0.15, z }, fx: { script: STEAM } }); }
   const SUB = { x: 13.6, z: 60.5 };
   for (const w of [-1, 1]) bx(`l11-sub-well-${w}`, SUB.x + w * 1.3, -2.9, SUB.z, 0.2, 3.24, 4.2, { color: "oklch(0.72 0.05 160)", roughness: 0.7 }); // the stairwell's tiled sides, down to the platform corridor
-  for (let k = 0; k < 7; k++) bx(`l11-sub-step-${k}`, SUB.x, -0.1 - k * 0.38, SUB.z - 1.6 + k * 0.5, 2.2, 0.12, 0.5, { color: "oklch(0.5 0.02 250)", roughness: 0.8 });
+  // the flight: sidewalk top (0.336, z 58.4) down to the hall landing (-2.6, z 62.6): 11 solid risers of 0.267 m (under the body's 0.3 m step),
+  // each with a worn steel nosing; an unseen 35° ramp under them carries the feet smoothly
+  const ST = { n: 11, top: 0.336, z0: 58.4, run: 4.2, drop: 2.94 }, rise = ST.drop / ST.n, tread = ST.run / ST.n;
+  for (let k = 0; k < ST.n; k++) {
+    const y = ST.top - (k + 1) * rise, z = ST.z0 + (k + 0.5) * tread;
+    bx(`l11-sub-step-${k}`, SUB.x, -2.9, z, 2.4, y + 2.9, tread, { color: "oklch(0.52 0.015 80)", roughness: 0.9 });
+    bx(`l11-sub-nose-${k}`, SUB.x, y - 0.02, z - tread / 2 + 0.04, 2.4, 0.03, 0.08, { color: "oklch(0.62 0.02 90)", metalness: 0.7, roughness: 0.35 }, { physics: undefined });
+  }
+  { const len = Math.hypot(ST.run, ST.drop), a = Math.atan2(ST.drop, ST.run) * 180 / Math.PI, n = 0.06 / Math.cos(a * Math.PI / 180);
+    sp("l11-sub-ramp", { feetPosition: { x: SUB.x, y: ST.top - ST.drop / 2 - n, z: ST.z0 + ST.run / 2 }, pivot: "center", rotation: { pitch: a }, primitive: { kind: "box", width: 2.4, height: 0.12, depth: len }, visible: false, physics: { body: "static", collider: "box" } }); }
   const IRON = { color: "oklch(0.3 0.09 150)", metalness: 0.65, roughness: 0.45 }; // MTA green cast iron, worn at the grip
   for (const s of [-1, 1]) {
     const kids = [
